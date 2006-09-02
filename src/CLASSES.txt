@@ -1,0 +1,176 @@
+----------------------------------------------------------------
+ CLASS DEFINITIONS
+----------------------------------------------------------------
+
+class Plan
+{
+  w, h  : size (cells)
+  cells : array_2D(PlanCell)
+
+  blk_w, blk_h: total blocks
+  blocks : array_2D(Block)
+
+  quests : array(Quest)
+  deathmatch  -- true for deathmatch levels
+  
+  all_cells  : array(Cell)  -- all used cells
+  all_links  : array(Link)
+  all_things : array(Thing)
+
+  floor_min, floor_max : number
+  used_items : table[ITEM_NAME] -> usage count
+
+  models : table[SK] -> HModel, SK = easy|medium|hard
+
+  liquid : liquid type
+
+  free_tag : an available tag number
+}
+
+
+class Quest
+  level : main quest number
+  kind : one of "key" | "switch" | "exit"
+         (for mini-quests: "weapon" | "item")
+  item : name of key / switch_tex / weapon / item
+
+  path : array(Cell), includes start and end
+  first, last : Cell  -- convenience
+
+  mini : true for mini quests
+  parent : Quest ref -- nil for main quests
+  children : array(Quest)
+
+  tag : tag number for switch
+end
+
+
+class Cell
+  x, y  : location (for convenience)
+  quest : Quest reference
+  along : how far along current quest (1 to #path)
+
+  theme : Theme
+  scenic : bool -- if true, cell only for scenery (no walk)
+
+  link : table[DIR] -> Link
+  exit_dir  : next cell in stage
+  entry_dir : previous cell in stage
+  
+  window : table[DIR] -> Link
+  border : table[DIR] -> type string: "solid" | ...
+  teleport : array(Cell)
+
+  floor_h, ceil_h : floor/ceiling heights
+
+  f_min/max : lowest/highest floor including all links
+  c_min/max : lowest/highest ceiling including all links
+
+  dm_item : item for deathmatch
+  dm_player : player start for deathmatch
+
+  toughness : amount of monster toughness in this cell
+  monsters  : array(Thing)
+
+  new_mons  : array of { name, horde }
+  new_items : array of { name, horde }
+
+  chunks : array_2D(Chunk)
+end
+
+
+class Link
+  kind  : string: "a" arch | "d" door | "f" fall-off | "b" bridge
+  src, dest : Cell
+
+  build : Cell -- which side we build the wall,door (etc)
+                  must be == either src or dest.
+                  The _other_ side is responsible for
+                  meeting the correct height (stair etc)
+
+  quest : Quest for locked/switched doors.
+
+  where : position of door/arch/etc along side
+               0 = centre of middle chunk,
+            +/-1 = straddling middle/corner chunks
+            +/-2 = near side of corner chunk
+            +/-3 = far side of corner chunk
+            "double" = BOTH corner chunks
+end
+
+
+class Chunk
+  link : Link  -- for link chunks
+  player : true  -- player start location
+  quest  : true  -- quest item location
+  walk   : true  -- walkable ground
+  void   : true  -- void space
+
+  floor_h, ceil_h -- base heights
+  stair_dir  -- present to build a stair to neighbour chunk
+end
+
+
+class Block
+  fragments : array_2D(Block)  -- optional
+  
+  sector : Sector  -- unset for solid wall
+
+  l_tex, u_tex  -- lower/upper textures
+                   (solid walls use l_tex)
+
+  overrides : table [DIR] --> Block
+  -- override textures and other info:
+  --   e.g. l_tex, u_tex, rail, x_offset, y_offset
+
+  door_kind  :  DOOM door type -- optional
+  switch_kind : DOOM switch type -- optional
+  lift_kind  :  DOOM lift type -- optional
+  lift_walk
+
+  block_sound : left/bottom line will block sound
+
+  things : array(Thing)
+
+  has_blocker : this (64x64) block is occupied by a solid thing.
+  has_pickup  : this block occupied by pickup item(s)
+end
+
+
+class Theme
+  wall, void  : texture name
+  floor, ceil : flat name
+  outdoor : boolean
+end
+
+
+class Thing
+  x, y   : map coords -- only set when writing
+  dx, dy : delta value (from centre of block)
+  kind   : number
+  angle  : 0 to 359
+
+  options : table[OPT_NAME] --> bool
+       -- EASY, MEDIUM, HARD : skills
+       -- AMBUSH
+end
+
+
+class HModel
+  skill : skill type: "easy" | "medium" | "hard"
+
+toughness
+
+  health, armor : numeric
+  <ammo name>   : numeric
+
+  <weapon name>  : boolean (nil == false)
+
+  <powerup name> : countdown: 2 per cell
+
+  -- Note: negative values mean player *needs* that
+  -- quantity of health/ammo to win the battle.
+
+  -- Note 2: we don't distinguish green/blue armor.
+end
+

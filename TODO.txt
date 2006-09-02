@@ -1,0 +1,111 @@
+
+TODO
+----
+
+>> Monster/Item placement: create list of usable places
+   + add_item (initial shotty etc)
+   - alloc_spot, honor "want_big", have a "near" mode
+
+-  fix builder code for sector-less building
+!!  lifts and doors
+
+-  pillar cages:
+   -  different monsters (dm >= 10, r <= 64, !melee, !float)
+   -  no-top cages
+   -  no-top no-rail cages (center of room only)
+   -  pillar patterns, esp. 1359 and 2468, straight lines too.
+   -  chunk-size!! (always have rail) (arach possible!)
+
+-  windows:
+   +  midmasker: good textures
+   -  prefer not to create void space next to windows
+
+-  lights:
+   -  consistency! theme based??
+ 
+-  doors:
+   -  consistency! theme based??
+   -  sometimes use narrow/short
+   -  bottom of door (underneath): should match door tex.
+
+-  overhang pillars: (a) thick and central
+-  overhang: proper positioning
+
+HMMM:  decide monster: take damage into account
+
+
+GUI TODO
+--------
+
++  output filename and directory !!
+
+-  about screen.
+
+-  backup file (.BAK)
+
+wish: collect log, view it, save it, clear it.
+
+
+MILESTONE 0  (reached!)
+===========
+
+Able to create a map of connected areas, with a
+few items / monsters, and which works in DOOM.
+
+
+MILESTONE 1  (reached!)
+===========
+
+a) Planning:
+
+   #  proper quest structure, E branches off a cell
+      between S and K.
+
+   #  quests: KEY, SWITCH, WEAPON
+
+b) Builder:
+ 
+   #  create a reasonable room in each cell,
+
+   #  create doors between rooms, KEYED when required
+
+   #  add exit switch to final room
+
+   #  player model: (health, armour, ammo, weapons)
+
+   #  add some monsters
+ 
+   #  add some supplies (health, ammo)
+
+c) Writer:
+
+   #  texture X alignment (esp. fragments)
+
+   #  support fragments
+
+
+MILESTONE 2
+===========
+
+-  working GUI interface using FLTK
+
+   >>>  File/Directory.
+
+#  build WAD files directly (no wadlc step).
+
+#  use GLBSP plugin to build nodes automatically.
+
+-  more architecture features:
+
+   -  switches in the wall
+   -  paintings/computers/lights in the wall (esp. void areas)
+
+   -  monster closets (esp. in backtrack room)
+   >> monster cages
+
+   ?? liquid pools (traps too)
+
+   #  pillars
+   #  lights in the ceiling
+   #  sky holes / beams
+ 
