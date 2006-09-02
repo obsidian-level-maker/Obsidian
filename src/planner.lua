@@ -1098,7 +1098,7 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
     
     local function toughen_quest(Q)
       
-      local peak = 30 * (Q.level ^ 0.7) * (1 + rand_skew()/6)
+      local peak = 50 * (Q.level ^ 0.7) * (1 + rand_skew()/6)
       local skip = 0
 
       -- go backwards from quest cell to start cell

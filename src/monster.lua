@@ -429,13 +429,14 @@ end
 
 function random_turn(angle)
   local r = math.random() * 100
+  local step = sel(rand_odds(22), 90, 45)
 
   if r < 33 then
     -- no change
   elseif r < 66 then
-    angle = angle - 45
+    angle = angle - step
   else
-    angle = angle + 45
+    angle = angle + step
   end
 
   if angle <  0   then angle = angle + 360 end
@@ -829,26 +830,6 @@ function distribute_pickups(p, c, HM)
     table.insert(c.pickup_set[SK], { name=name, info=info, cluster=cluster })
   end
 
-  local function R_average()
-    return (R.easy + R.medium + R.hard) / 3.0
-  end
-
-  local function R_max()
-    return math.max(R.easy, R.medium, R.hard)
-  end
-
-
-
-  local function add_item(c, name, mx, my, angle, options)
-
---!!!!! FIXME FIXME
-    --[[
-    local mx, my = find_place(c, BW/2, BH/2, eval_item_spot)
-    assert(mx)
-
-    return add_thing(p, c, mx, my, THING_NUMS[name], false, angle, options)
-    --]]
-  end
 
   local function be_nice_to_player()
 
@@ -857,18 +838,17 @@ function distribute_pickups(p, c, HM)
     if c.along == #c.quest.path then return end
 
     if not HM.shotty and rand_odds(66) then
-      add_item(c, "shotty", nil, nil, 0, { [SK]=true })
+      add_pickup(c, "shotty", WEAPON_DEFS.shotty, 1)
       hm_give_weapon(HM, "shotty")
-print(SK, "GETS SHOTTY AT", c.x, c.y)
     end
 
     if not HM.chain and c.quest.level >= 3 and rand_odds(11) then
-      add_item(c, "chain", nil, nil, 0, { [SK]=true })
+      add_pickup(c, "chain", WEAPON_DEFS.chain, 1)
       hm_give_weapon(HM, "chain")
     end
 
     if HM.armor <= 0 and rand_odds(2) then
-      add_item(c, "green_armor", nil, nil, 0, { [SK]=true })
+      add_pickup(c, "green_armor", ARMOR_THINGS.green_armor, 1)
       hm_give_armor(HM, 100, 100)
     end
   end
@@ -975,19 +955,70 @@ function place_battle_stuff(p, c)
     return copies
   end
 
-  local function alloc_spot(spaces, want_big)
+  local function dump_spots(list)
+    print("{")
+    for zzz, sp in ipairs(list) do
+      print(string.format("  (%d,%d) %s",
+        sp.x, sp.y, sel(sp.double, "DOUBLE", "-")))
+    end
+    print("}")
+  end
+  
+  local function spot_dist(s1, s2)
+    local dx = math.abs(s1.x - s2.x)
+    local dy = math.abs(s1.y - s2.y)
+    return math.max(dx, dy)
+  end
+  
+  local function alloc_spot(spots, want_big, near_to)
 
-    if #spaces == 0 then return nil, nil end
+    if #spots == 0 then return nil, nil end
 
-    -- FIXME TEST ONLY !!!!
-    local spot = table.remove(spaces, 1)
+    if near_to and not want_big then
+      local best = 0
+      local best_d = 999
+
+      -- our search is not exhaustive (too expensive!)
+      for i = 1,math.min(#spots,BW) do
+        if not spots[i].double then
+          local d = spot_dist(spots[i], near_to)
+          if d < best_d then best, best_d = i, d end
+        end
+      end
+
+      if best > 0 then
+        return table.remove(spots, best)
+      end
+    end
+    
+    for i = 1,#spots do
+      if (not spots[i].double) == (not want_big) then
+        return table.remove(spots, i)
+      end
+    end
+
+    local spot = table.remove(spots, 1)
+
+    -- split the double into four singles
+    if spot.double then
+      assert(not want_big)
+
+      spot.double = nil
+
+      table.insert(spots, { x=spot.x+1, y=spot.y+0 })
+      table.insert(spots, { x=spot.x+0, y=spot.y+1 })
+      table.insert(spots, { x=spot.x+1, y=spot.y+1 })
+
+      -- intermingle the new singles
+      rand_shuffle(spots)
+    end
 
     return spot
   end
 
-  local function place_pickup(spaces, dat)
+  local function place_pickup(spots, dat)
 
-    local spot = alloc_spot(spaces, dat.cluster >= 5)
+    local spot = alloc_spot(spots, dat.cluster >= 5)
 
     if not spot then
       io.stderr:write("UNABLE TO PLACE: ", dat.name, "\n")
@@ -1010,28 +1041,29 @@ function place_battle_stuff(p, c)
 
   local function place_pickup_list(pickups)
 
-    local spaces = copy_shuffle_spots(c.free_spots)
+    local spots = copy_shuffle_spots(c.free_spots)
 
     -- perform two passes, place big clusters first
     for pass = 1,2 do
       for zzz,dat in ipairs(pickups) do
         if (pass==1) == (dat.cluster >= 5) then
-          place_pickup(spaces, dat)
+          place_pickup(spots, dat)
         end
       end
     end
   end
 
-  local function place_monster(spaces, dat)
+  local function place_monster(spots, dat)
     assert(dat.info)
 
     local angle = math.random(0,7) * 45
 
-    local spot = alloc_spot(spaces, dat.info.r >= 32)
+    local is_big = (dat.info.r >= 32)
+    local spot = alloc_spot(spots, is_big)
 
     for i = 1,dat.horde do
 
-      if not spot then
+      if not spot or (is_big and not spot.double) then
         io.stderr:write("UNABLE TO PLACE: ", dat.name, "\n")
         -- FIXME: put in next cell
         return
@@ -1046,29 +1078,28 @@ function place_battle_stuff(p, c)
       local th = add_thing(p, c, spot.x, spot.y, dat.info.kind, true, angle, options)
       th.mon_name = dat.name
 
-      if dat.info.r >= 32 then
-        local bk_num = 2
-        th.dx = (bk_num - 1) * 32
-        th.dy = th.dx
+      if is_big then
+        -- Note: cannot handle monsters with radius >= 64 
+        th.dx = 32
+        th.dy = 32
       end
 
       angle = random_turn(angle)
 
-      -- FIXME: find spot near previous monster
-      spot = alloc_spot(spaces, dat.info.r >= 32)
+      spot = alloc_spot(spots, is_big, spot)
     end
   end
 
   local function place_monster_list(mons)
 
-    local spaces = copy_shuffle_spots(c.free_spots)
+    local spots = copy_shuffle_spots(c.free_spots)
 
     -- perform two passes, place big monsters first
     for pass = 1,2 do
       for zzz, dat in ipairs(mons) do
         local info = MONSTER_DEFS[dat.name]
         if (pass==1) == (info.r >= 32) then
-          place_monster(spaces, dat)
+          place_monster(spots, dat)
         end
       end
     end
@@ -1093,7 +1124,11 @@ end
 function place_quest_stuff(p, Q)
 
   for zzz,c in ipairs(Q.path) do
-    place_battle_stuff(p, c)
+    if c.mon_set or c.pickup_set then
+      place_battle_stuff(p, c)
+      c.mon_set = nil
+      c.pickup_set = nil
+    end
   end
 end
 
@@ -1156,37 +1191,39 @@ function battle_in_cell(p, c)
     return f_max <= (f_min + 10)
   end
 
-  local function how_much_space()
-    local count = 0
-    for bx = 1,BW do
-      for by = 1,BH do
-        if free_spot(bx, by) then
-          count = count + 1
-        end
-      end
-    end
-
-    return count / (BW * BH / 2)
-  end
-
   local function find_free_spots()
     local list = {}
+    local total = 0
     for bx = 1,BW,2 do
       for by = 1,BH,2 do
         if bx < BW and by < BH and free_double_spot(bx, by) then
           table.insert(list, { x=bx, y=by, double=true})
+          total = total + 4
         else
           for dx = 0,1 do for dy = 0,1 do
-            if free_spot(bx+dx, by+dy) then
+            if bx+dx <= BW and by+dy <= BH and free_spot(bx+dx, by+dy) then
               table.insert(list, { x=bx+dx, y=by+dy })
+              total = total + 1
             end
           end end
         end
       end
     end
 
-    return list
+    return list, total
   end
+
+---###  local function how_much_space()
+---###    local count = 0
+---###    for bx = 1,BW do
+---###      for by = 1,BH do
+---###        if free_spot(bx, by) then
+---###          count = count + 1
+---###        end
+---###      end
+---###    end
+---###    return count / (BW * BH / 2)
+---###  end
 
 
   local function decide_monster(firepower)
@@ -1231,8 +1268,23 @@ function battle_in_cell(p, c)
     return name, horde
   end
 
+  local function caged_toughness()
+    local total = 0
+    if c.monsters then
+      for zzz,th in ipairs(c.monsters) do
+        local info = MONSTER_DEFS[th.mon_name]
+        assert(info)
 
-  local function create_monsters(space)
+        if th.options[SK] then
+          total = total + info.pow
+        end
+      end
+    end
+    return total
+  end
+
+
+  local function create_monsters()
 
     local fp = fire_power(best_weapon(SK))
 
@@ -1249,20 +1301,18 @@ function battle_in_cell(p, c)
         T = T - horde * MONSTER_DEFS[name].pow
       end
     end
-
-    -- left over toughness gets compounded
-    -- (but never negative) 
-    p.models[SK].toughness = math.max(0, (T + U) / space)
   end
 
   ---=== battle_in_cell ===---
 
 zprint("BATTLE IN", c.x, c.y)
 
-  local space = how_much_space()
-  if space <= 0.01 then return end
+  local spots, free_space = find_free_spots()
 
-  c.free_spots = find_free_spots()
+  c.free_spots = spots
+
+  if free_space < 2 then return end
+  free_space = free_space * 1.5 / (BW * BH)
 
   c.mon_set = { easy={}, medium={}, hard={} }
 
@@ -1270,21 +1320,17 @@ zprint("BATTLE IN", c.x, c.y)
   
     SK = skill
 
-    T = c.toughness + p.models[SK].toughness
-    T = T * (space ^ 0.7) * TOUGH_FACTOR[SK]
+    T = c.toughness * (free_space ^ 0.7) * TOUGH_FACTOR[SK]
+    T = T + p.models[SK].toughness
     U = 0
 
-    -- take existing (caged) monsters into account
-    if c.monsters then
-      for zzz,th in ipairs(c.monsters) do
-        local info = MONSTER_DEFS[th.mon_name]
-        assert(info)
-
-        if th.options[SK] then T = T - info.pow end
-      end
-    end
+    -- take existing monsters into account
+    T = T - caged_toughness()
 
     create_monsters(space)
+
+    -- left over toughness gets compounded (but never decreased)
+    p.models[SK].toughness = math.max(0, T + U)
 
     local quest = (c.along == #c.quest.path) and c.quest
 
@@ -1308,7 +1354,7 @@ end
 
 function battle_through_level(p)
 
-  -- step one, decide monsters, simulate battles, decide health/ammo
+  -- step 1: decide monsters, simulate battles, decide health/ammo
 
   for zzz,Q in ipairs(p.quests) do
     battle_in_quest(p, Q)
@@ -1317,7 +1363,7 @@ function battle_through_level(p)
     end
   end
 
-  -- step two, place monsters and health/ammo into level
+  -- step 2: place monsters and health/ammo into level
 
   for zzz,Q in ipairs(p.quests) do
     place_quest_stuff(p, Q)

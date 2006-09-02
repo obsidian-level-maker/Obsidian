@@ -2,10 +2,6 @@
 TODO
 ----
 
->> Monster/Item placement: create list of usable places
-   + add_item (initial shotty etc)
-   - alloc_spot, honor "want_big", have a "near" mode
-
 -  fix builder code for sector-less building
 !!  lifts and doors
 
@@ -84,7 +80,7 @@ c) Writer:
    #  support fragments
 
 
-MILESTONE 2
+MILESTONE 2 (getting there...)
 ===========
 
 -  working GUI interface using FLTK
