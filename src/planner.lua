@@ -1026,7 +1026,7 @@ io.stderr:write("CREATED SCENIC AT ", c.x, ",", c.y, "\n")
 
         if other and not c.link[dir] and
            can_make_falloff(c, other) and
-           rand_odds(88) then
+           rand_odds(90) then
  
 io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 --print("SRC_MIN ", c.f_min, "  DEST_MAX", other.f_max)
