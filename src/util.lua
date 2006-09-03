@@ -19,12 +19,48 @@
 function do_nothing()
 end
 
-function sel(cond, yes_val, no_val)
-  if cond then return yes_val else return no_val end
+INHERIT_META =
+{
+  __index = function(t, k)
+    if t.__parent then return t.__parent[k] end
+  end
+}
+
+function inherit(child, parent)
+  child.__parent = parent
+  return setmetatable(child, INHERIT_META)
 end
 
 function int(val)
   return math.floor(val)
+end
+
+function sel(cond, yes_val, no_val)
+  if cond then return yes_val else return no_val end
+end
+
+function dump_table(t, name)
+	print((name or "ANON") .. " = {")
+	for k,v in pairs(t) do
+		print("  " .. tostring(k) .. " => " .. tostring(v))
+	end
+	print("}")
+end
+
+function merge_table(dest, src)
+  assert(dest)
+  if src then
+    for k,v in pairs(src) do
+      dest[k] = v
+    end
+  end
+  return dest
+end
+
+-- Note: shallow copy
+function copy_table(t)
+  if t then return merge_table({}, t) end
+  return nil
 end
 
 function array_2D(w, h)
@@ -47,37 +83,6 @@ function iterate_2D(arr, func, sx, sy, ex, ey)
       end
     end
   end
-end
-
-function dump_table(t, name)
-	print((name or "ANON") .. " = {")
-	for k,v in pairs(t) do
-		print("  " .. tostring(k) .. " => " .. tostring(v))
-	end
-	print("}")
-end
-
--- note: shallow copy
-function copy_table(t)
-  if not t  then return nil end
-  
-  local copy = {}
-	for k,v in pairs(t) do
-    copy[k] = v
-  end
-  return copy
-end
-
-INHERIT_META =
-{
-  __index = function(t, k)
-    if t.__parent then return t.__parent[k] end
-  end
-}
-
-function inherit(child, parent)
-  child.__parent = parent
-  return setmetatable(child, INHERIT_META)
 end
 
 -- note: assumes Y axis points upwards
