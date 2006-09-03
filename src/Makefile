@@ -8,21 +8,13 @@ all:
 
 TEST.wad:
 	lua run_it.lua $(SEED)
-	./wadlc TEST.txt TEMP.wad
+	wadlc TEMP.txt TEMP.wad
 	glbsp -pack TEMP.wad -o TEST.wad
 
 clean:
-	rm -f TEST.txt TEST*.wad TEMP.wad
-	cd gui && $(MAKE) clean
+	rm -f TEMP.txt TEST*.wad TEMP.wad
 
-test: TEST.wad
-	chocolate-doom -iwad ~/doom/doom2.wad -file TEST.wad -warp 1
-
-backup: clean
-	test ! -z $(VER)  # VER must be set
-	cd .. && tar cvzf ~/backups/oblige_ng_$(VER).tgz ObligeNG
-
-.PHONY: all clean run_it test backup
+.PHONY: all clean run_it
 
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab
