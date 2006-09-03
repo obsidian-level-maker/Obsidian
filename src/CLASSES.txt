@@ -53,6 +53,8 @@ class Cell
   theme : Theme
   scenic : bool -- if true, cell only for scenery (no walk)
 
+  blk_x, blk_y : block ref for lowest left corner
+
   link : table[DIR] -> Link
   exit_dir  : next cell in stage
   entry_dir : previous cell in stage
@@ -72,8 +74,8 @@ class Cell
   toughness : amount of monster toughness in this cell
   monsters  : array(Thing)
 
-  new_mons  : array of { name, horde }
-  new_items : array of { name, horde }
+  mon_set    : array(skill) -> array(MonDat)
+  pickup_set : array(skill0 -> array(PickupDat)
 
   chunks : array_2D(Chunk)
 end
@@ -114,12 +116,21 @@ end
 class Block
   fragments : array_2D(Block)  -- optional
   
-  sector : Sector  -- unset for solid wall
+  solid : bool  -- true for solid areas (void space)
 
   l_tex, u_tex  -- lower/upper textures
-                   (solid walls use l_tex)
+                   (solid walls use l_tex only)
 
-  overrides : table [DIR] --> Block
+  f_h, f_tex   -- floor height and texture
+  c_h, c_tex   -- ceiling height and texture
+  
+  light -- sector lighting
+  kind  -- sector special kind  (optional)
+  tag   -- sector tag  (optional)
+
+  mark  -- used to differentiate blocks (prevent merging)
+
+  overrides : table [DIR] -> Block
   -- override textures and other info:
   --   e.g. l_tex, u_tex, rail, x_offset, y_offset
 
@@ -128,7 +139,7 @@ class Block
   lift_kind  :  DOOM lift type -- optional
   lift_walk
 
-  block_sound : left/bottom line will block sound
+  block_sound : sound blocking, 1 = single, 2 = double
 
   things : array(Thing)
 
@@ -159,14 +170,14 @@ end
 class HModel
   skill : skill type: "easy" | "medium" | "hard"
 
-toughness
-
   health, armor : numeric
   <ammo name>   : numeric
 
   <weapon name>  : boolean (nil == false)
 
   <powerup name> : countdown: 2 per cell
+
+  toughness : left over toughness
 
   -- Note: negative values mean player *needs* that
   -- quantity of health/ammo to win the battle.
