@@ -96,6 +96,9 @@ function write_level(p, lev_name)
 
   local tx_file  -- text mode output
 
+  local DUMMY_BLOCK = { solid=ERROR_TEX }
+
+
   local function make_mini_map()
 
     con.map_begin(p.blk_w, p.blk_h)
@@ -181,8 +184,42 @@ function write_level(p, lev_name)
       return block and block.overrides and block.overrides[dir]
     end
 
+--[[
+    local function frag_coords(n)
+      local fn, bn
+
+      n, fn = div_mod(n, FW)
+      n, bn = div_mod(n, BW)
+
+      assert(1 <= bn and bn <= BW)
+      assert(1 <= fn and fn <= FW)
+
+      return n, bn, fn
+    end
+--]]
+    local function push_line()
+      if not cur_line then return end
+
+      assert(cur_line.front)
+
+      -- swap vertices for backward lines
+      if cur_line.norm == 4 or cur_line.norm == 8 then
+        cur_line.sx, cur_line.ex = cur_line.ex, cur_line.sx
+        cur_line.sy, cur_line.ey = cur_line.ey, cur_line.sy
+      end
+
+      cur_line.v1 = create_vertex(cur_line.sx, cur_line.sy)
+      cur_line.v2 = create_vertex(cur_line.ex, cur_line.ey)
+
+      table.insert(line_list, cur_line)
+
+      cur_line = nil
+    end
+
     local function create_sidedef(f, b, norm, sx, sy) 
-      if not f or f.solid then return nil end
+      if f.solid then return nil end
+
+assert(not f.fragments)
 
       local SIDE = { block=f }
 
@@ -190,10 +227,8 @@ function write_level(p, lev_name)
       local f_over = get_override(f, 10-norm)
 
       -- set textures
-      if not b then
-        SIDE.mid = ERROR_TEX
-      elseif b.solid then
-        SIDE.mid = (b_over and b_over.l_tex) or b.l_tex or ERROR_TEX
+      if b.solid then
+        SIDE.mid = (b_over and b_over.l_tex) or b.solid
       else
         SIDE.upper = (b_over and b_over.u_tex) or b.u_tex or ERROR_TEX
         SIDE.lower = (b_over and b_over.l_tex) or b.l_tex or ERROR_TEX
@@ -206,22 +241,11 @@ function write_level(p, lev_name)
 
       if b_over and b_over.y_offset then
         SIDE.y_offset = b_over.y_offset
-      elseif b and b.y_offset then
+      elseif b.y_offset then
         SIDE.y_offset = b.y_offset
       end
 
       return SIDE
-    end
-
-    local function match_sidedefs(s1, s2)
-      if not s1 or not s2 then return s1 == s2 end
-
-      return (s1.sector == s2.sector and
-         s1.lower == s2.lower and
-         s1.upper == s2.upper and
-         s1.mid == s2.mid and
-         s1.x_offset == s2.x_offset and
-         s1.y_offset == s2.y_offset)
     end
 
     local function old_corner_Adj(front, back, dir, sx,sy, ex,ey, len)
@@ -257,45 +281,10 @@ function write_level(p, lev_name)
       end
     end
 
---[[
-    local function frag_coords(n)
-      local fn, bn
-
-      n, fn = div_mod(n, FW)
-      n, bn = div_mod(n, BW)
-
-      assert(1 <= bn and bn <= BW)
-      assert(1 <= fn and fn <= FW)
-
-      return n, bn, fn
-    end
---]]
-    local function push_line()
-      if not cur_line then return end
-
-      assert(cur_line.front)
-
-      -- swap vertices for backward lines
-      if cur_line.norm == 4 or cur_line.norm == 8 then
-        cur_line.sx, cur_line.ex = cur_line.ex, cur_line.sx
-        cur_line.sy, cur_line.ey = cur_line.ey, cur_line.sy
-      end
-
-      cur_line.v1 = create_vertex(cur_line.sx, cur_line.sy)
-      cur_line.v2 = create_vertex(cur_line.ex, cur_line.ey)
-
-      table.insert(line_list, cur_line)
-
-      cur_line = nil
-    end
-
     local function compute_line_flags(f,b, f_side,b_side, norm)
       local flags = 0
 
---    local f_over = get_override(f, norm)
---    local b_over = get_override(b, 10-norm)
-
-      if b and not b.solid then
+      if not b.solid then
 
         flags = flags + ML_TWO_SIDED
 
@@ -317,9 +306,20 @@ function write_level(p, lev_name)
 
         flags = flags + ML_IMPASSABLE
 
-        if f.door_kind or (b and b.switch_kind) then
+        if f.door_kind or b.switch_kind then
           flags = flags + ML_LOWER_UNPEG
         end
+      end
+
+      -- sound blocking.  Note some subtlety here, when (count == 1)
+      -- we only want a single edge to block, for (count == 2) we
+      -- allow all edges to block sound.
+      local w = sel(norm < 5, f, b)
+      if (w.block_sound == 1) or
+         (f.block_sound == 2) or
+         (b.block_sound == 2)
+      then
+        flags = flags + ML_BLOCK_SOUND
       end
 
       return flags
@@ -357,7 +357,7 @@ function write_level(p, lev_name)
 
     local function same_sector(b1, b2)
 
-      return (b1.solid == b2.solid) and
+      return (not b1.solid == not b2.solid) and
              (b1.f_h   == b2.f_h) and
              (b1.c_h   == b2.c_h) and
              (b1.f_tex == b2.f_tex) and
@@ -365,14 +365,14 @@ function write_level(p, lev_name)
              (b1.light == b2.light) and
              (b1.tag   == b2.tag) and
              (b1.kind  == b2.kind) and
-             (b1.misc  == b2.misc)
+             (b1.mark  == b2.mark)
     end
 
     local function same_sector_w_merge(b1, b2)
 
       if b1 == b2 then return true end
 
-      if not b1 or not b2 then return false end
+---###  if not b1 or not b2 then return false end
       
       if b1.group and b2.group and (b1.group.id == b2.group.id) then
         return true
@@ -393,16 +393,13 @@ function write_level(p, lev_name)
         return true
 
       else  -- not same sector
-        
+
         -- we DONT create new groups here, since there is a very
         -- good chance that the block will share a group later.
         --
         -- THIS MEANS: singleton blocks (no matching neighbour)
-        -- never get a 'group' field.
+        -- will never get a 'group' field.
  
---???   if not b1.group then b1.group = new_group() end
---???   if not b2.group then b2.group = new_group() end
-
         return false
       end
     end
@@ -410,7 +407,7 @@ function write_level(p, lev_name)
     local function match_sidedefs(s1, s2)
       if not s1 or not s2 then return s1 == s2 end
 
-      -- Note: does not check sector/block reference
+      -- Note: no need to check sector/block reference
 
       return
          (s1.lower == s2.lower) and
@@ -426,7 +423,10 @@ function write_level(p, lev_name)
         return push_line()
       end
 
-      if (not f or f.solid) and (not b or b.solid) then
+      if not f then f = DUMMY_BLOCK end
+      if not b then b = DUMMY_BLOCK end
+
+      if f.solid and b.solid then
         return push_line()
       end
 
@@ -436,22 +436,17 @@ function write_level(p, lev_name)
 
       -- linedefs must have a front, flip if needed.
       -- Also some lines need to face out (doors)
-      if not f or (f.solid and b and not b.solid) or
-        (b and not b.solid and
-         (f.door_kind or f.lift_kind or f.switch_kind))
+      if f.solid or
+        (not b.solid and (f.door_kind or f.lift_kind or f.switch_kind))
       then
         norm = 10 - norm
         f, b = b, f
       end
 
-      assert(f and not f.solid)
+      assert(not f.solid)
 
       local f_side = create_sidedef(f, b, norm)
       local b_side = create_sidedef(b, f, 10-norm)
-
----###      if same_sec and not (f_side and f_side.mid) and not (b_side and b_side.mid) then
----###        return push_line()
----###      end
 
       local flags = compute_line_flags(f,b, f_side,b_side, norm)
 
@@ -493,10 +488,10 @@ function write_level(p, lev_name)
         sx = sx, sy = sy,
         ex = ex, ey = ey,
 
-        kind = b and not b.solid and (b.door_kind or b.lift_kind)
+        kind = not b.solid and (b.door_kind or b.lift_kind)
       }
 
-      if b and not b.solid and b.lift_kind then
+      if not b.solid and b.lift_kind then
         cur_line.tag = b.tag
 
         if b.lift_walk and (b.f_h == f.f_h) then
@@ -504,19 +499,9 @@ function write_level(p, lev_name)
         end
       end
 
-      if b and b.switch_kind then
+      if b.switch_kind then
         cur_line.kind = b.switch_kind
         cur_line.tag  = b.switch_tag
---FIXME        cur_line.flags = L.flags + ML_LOWER_UNPEG
-      end
-
-      -- FIXME : PUT INTO compute_line_flags!!
-      --
-      -- sound blocking.  Note some subtlety here, normally
-      -- we only want one a single edge to block (count == 1)
-      -- so ignore the back, but count == 2 does both.
-      if (f and f.block_sound) or (b and b.block_sound == 2) then
-        cur_line.flags = cur_line.flags + ML_BLOCK_SOUND
       end
     end
 
@@ -546,7 +531,7 @@ function write_level(p, lev_name)
         if b1 and not b1.fragments then f1 = b1 end
 
         local count = 1
-        if f1 == b1 and f0 == b0 then count = 4 end
+        if f0 == b0 and f1 == b1 then count = 4 end
 
         frag_pair(f0,f1,2, x,y,count,0)
 
@@ -580,7 +565,7 @@ print("TOTAL_GROUPS ", total_group)
         if b1 and not b1.fragments then f1 = b1 end
 
         local count = 1
-        if f1 == b1 and f0 == b0 then count = 4 end
+        if f0 == b0 and f1 == b1 then count = 4 end
 
         frag_pair(f1,f0,6, x,y,0,count)
 
@@ -594,7 +579,7 @@ print("TOTAL_GROUPS ", total_group)
   end
 
     local function create_sector(B)
-      if not B or B.solid then return nil end
+      if B.solid then return nil end
 
       if B.new_sec then return B.new_sec end
 
@@ -634,8 +619,8 @@ print("TOTAL_GROUPS ", total_group)
       if L.front and L.front.block then
         L.front.sector = create_sector(L.front.block)
       end
-      if L.back  and L.back .block then
-        L.back.sector = create_sector(L.back .block)
+      if L.back and L.back.block then
+        L.back.sector = create_sector(L.back.block)
       end
     end
   end
@@ -806,8 +791,8 @@ print("TOTAL_GROUPS ", total_group)
   construct_sectors()
 
   if not doom then
-    tx_file = io.open("TEST.txt", "w")
-    if not tx_file then error("Unable to create file: TEST.txt") end
+    tx_file = io.open("TEMP.txt", "w")
+    if not tx_file then error("Unable to create file: TEMP.txt") end
     
     tx_file:write("LEVEL_START 0 1 0 Doom2\n")
 
