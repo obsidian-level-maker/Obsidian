@@ -116,7 +116,7 @@ end
 class Block
   fragments : array_2D(Block)  -- optional
   
-  solid : bool  -- true for solid areas (void space)
+  solid  -- texture name for solid areas (void space)
 
   l_tex, u_tex  -- lower/upper textures
                    (solid walls use l_tex only)
@@ -130,9 +130,8 @@ class Block
 
   mark  -- used to differentiate blocks (prevent merging)
 
-  overrides : table [DIR] -> Block
-  -- override textures and other info:
-  --   e.g. l_tex, u_tex, rail, x_offset, y_offset
+  [2|4|6|8] : overrides, textures etc (e.g. l_tex, rail, x_offset)
+  [1|3|7|9] : corner adjustments
 
   door_kind  :  DOOM door type -- optional
   switch_kind : DOOM switch type -- optional
