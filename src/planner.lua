@@ -249,7 +249,7 @@ function get_base_plan(cw, ch)
     things = {},
 
     free_tag = 10,
-    free_misc = 1,
+    mark = 1,
   }
 
   PLAN.blocks = array_2D(PLAN.blk_w, PLAN.blk_h)

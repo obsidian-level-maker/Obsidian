@@ -26,12 +26,13 @@ require 'monster'
 function copy_block(B)
   local b2 = copy_table(B)
   
-  if B.overrides then
-    b2.overrides = copy_table(B.overrides)
-  end
-
   b2.things = {}
   
+  -- copy the overrides and corner adjustments
+  for i = 1,9 do
+    if B[i] then b2[i] = copy_table(B[i]) end
+  end
+
   return b2
 end
 
@@ -170,11 +171,14 @@ function fill(p, c, sx, sy, ex, ey, B, B2)
   if sy > ey then sy, ey = ey, sy end
   for x = sx,ex do
     for y = sy,ey do
-      p.blocks[c.blk_x+x][c.blk_y+y] = copy_block(B)
+      local N = copy_block(B)
+      p.blocks[c.blk_x+x][c.blk_y+y] = N
 
       if B2 then
-        merge_table(p.blocks[c.blk_x+x][c.blk_y+y], B2)
+        merge_table(N, B2)
       end
+
+      N.mark = p.mark
     end
   end
 end
@@ -215,11 +219,14 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
         B.fragments = array_2D(FW, FH)
       end
 
-      B.fragments[fx][fy] = copy_block(F)
+      local N = copy_block(F)
+      B.fragments[fx][fy] = N
 
       if F2 then
-        merge_table(B.fragments[fx][fy], F2)
+        merge_table(N, F2)
       end
+
+      N.mark = p.mark
     end
   end
 end
@@ -478,11 +485,9 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
     }
 
     frag_fill (p,c, fx,fy, fx+sx+dx*far,fy+zy-sy+dy*far,
-      { solid=key_tex, overrides =
-        { [adir] = override }})
+      { solid=key_tex, [adir] = override })
     frag_fill (p,c, fx+zx-sx,fy+zy-sy, fx+zx+dx*far,fy+zy+dy*far, 
-      { solid=key_tex, overrides =
-        { [10-adir] = override }})
+      { solid=key_tex, [10-adir] = override })
 
     for ff = 1,step do
       frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, d_front)
@@ -569,20 +574,16 @@ function B_exitdoor(p, c, link, x, y, z, dir)
   -- align inner sides with outside wall
   local y_diff = link_other(link, c).ceil_h - d_front.c_h
   frag_fill(p,c, fx+ax, fy+ay, fx+ax+dx*7, fy+ay+dy*7,
-    { solid=wall_tex,
-      overrides = { [adir]={ l_tex=c.theme.misc, y_offset=y_diff }}} )
+    { solid=wall_tex, [adir]={ l_tex=c.theme.misc, y_offset=y_diff }} )
   frag_fill(p,c, fx+zx-ax, fy+zy-ay, fx+zx-ax+dx*7, fy+zy-ay+dy*7,
-    { solid=wall_tex,
-      overrides={ [10-adir]={ l_tex=c.theme.misc, y_offset=y_diff }}} )
+    { solid=wall_tex, [10-adir]={ l_tex=c.theme.misc, y_offset=y_diff }} )
 
   for ff = 1,4 do
     if ff == 4 then
       frag_fill (p,c, fx+ax,fy+ay, fx+ax,fy+ay,
-        { solid=key_tex,
-          overrides = { [adir] = { x_offset = 112 }}} )
+        { solid=key_tex, [adir] = { x_offset = 112 }} )
       frag_fill (p,c, fx+zx-ax,fy+zy-ay, fx+zx-ax,fy+zy-ay,
-        { solid=key_tex,
-          overrides = { [10-adir] = { x_offset = 112 }}} )
+        { solid=key_tex, [10-adir] = { x_offset = 112 }} )
     end
 
     frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, d_front)
@@ -590,9 +591,9 @@ function B_exitdoor(p, c, link, x, y, z, dir)
     -- EXIT SIGN
     if ff == 2 then
       frag_fill (p,c, fx+ax*3,fy+ay*3, fx+ax*3,fy+ay*3, d_exit,
-        { overrides = { [10-adir] = { x_offset = 32 }}} )
+        { [10-adir] = { x_offset = 32 }} )
       frag_fill (p,c, fx+ax*4,fy+ay*4, fx+ax*4,fy+ay*4, d_exit,
-        { overrides = { [adir] = { x_offset = 32 }}} )
+        { [adir] = { x_offset = 32 }} )
     end
 
     fx = fx + dx; fy = fy + dy
@@ -607,11 +608,9 @@ function B_exitdoor(p, c, link, x, y, z, dir)
   for bb = 1,3 do
     if bb == 1 then
       frag_fill (p,c, fx+ax,fy+ay, fx+ax,fy+ay,
-        { solid=key_tex,
-          overrides={ [adir] = { x_offset = 112 }}} )
+        { solid=key_tex, [adir] = { x_offset = 112 }} )
       frag_fill (p,c, fx+zx-ax,fy+zy-ay, fx+zx-ax,fy+zy-ay,
-        { solid=key_tex,
-          overrides={ [10-adir] = { x_offset = 112 }}} )
+        { solid=key_tex, [10-adir] = { x_offset = 112 }} )
     end
     frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, d_back)
     fx = fx + dx; fy = fy + dy
@@ -654,7 +653,7 @@ function B_stair(p, c, bx, by, z, dir, long, deep, step)
                   l_tex = c.theme.wall,
                   u_tex = c.theme.wall,
 
-                  overrides = { [out_dir]={ l_tex = c.theme.step }},
+                  [out_dir]={ l_tex = c.theme.step },
                 }
 
     frag_fill(p,c, fx, fy, fx+zx, fy+zy, sec)
@@ -785,11 +784,9 @@ function B_wall_switch(p,c, x,y,z, side, info, kind, tag)
   -- lights
   local lit_dir = sel(side==2 or side==8, 6, 8)
   frag_fill(p,c, fx+sx-ax,fy+sy-ay, fx+sx-ax,fy+sy-ay,
-       { solid=c.theme.wall, 
-         overrides={ [lit_dir]={ l_tex = "LITE5" }}} )
+       { solid=c.theme.wall, [lit_dir]={ l_tex = "LITE5" }} )
   frag_fill(p,c, fx+ex+ax,fy+ey+ay, fx+ex+ax,fy+ey+ay,
-       { solid=c.theme.wall, 
-         overrides={ [10-lit_dir]={ l_tex = "LITE5" }}} )
+       { solid=c.theme.wall, [10-lit_dir]={ l_tex = "LITE5" }} )
 
   sx,sy = sx+dx, sy+dy
   ex,ey = ex+dx, ey+dy
@@ -2030,9 +2027,8 @@ function build_cell(p, c)
 
         sec.l_tex = b_theme.wall
         sec.u_tex = b_theme.wall
-        sec.overrides = overrides
 
-        gap_fill(p,c, sx,sy, ex,ey, sec)
+        gap_fill(p,c, sx,sy, ex,ey, sec, overrides)
       end
     end
   end
@@ -2113,7 +2109,7 @@ function build_cell(p, c)
 
     -- !!!! FIXME: test crud
     if not bar and what ~= "fence" then
-      sec.overrides = { [side] = { rail = "MIDGRATE" } }
+      sec[side] = { rail = "MIDGRATE" }
     end
 
     for d_pos = first, BW-long, step do
@@ -2337,12 +2333,34 @@ if rand_odds( 9) then
   fill(p,c, x1+1, y1+1, x1+1, y1+1, CAGE)
 
   add_cage_monster(p,c, x1+1, y1+1, mon_name, 225)
+
+--[[ corner adjustment testing (REMOVE)
+elseif true then
+
+   local fx = x1 * FW
+   local fy = y1 * FH
+
+   local sec = copy_block(c.room_sec)
+
+   frag_fill(p,c, fx+1,fy+1, fx+FW, fy+FH, { solid="CRACKLE2" })
+
+   frag_fill(p,c, fx+1 ,fy+1 , fx+1 ,fy+1 , { solid="CRACKLE2", short=1, [1] = { dx=5, dy=5 }})
+   frag_fill(p,c, fx+FW,fy+1,  fx+FW,fy+1,  { solid="CRACKLE2", short=2, [3] = { dx=-5, dy=5 }})
+   frag_fill(p,c, fx+1, fy+FH, fx+1, fy+FH, { solid="CRACKLE2", short=3, [7] = { dx=5,  dy=-5 }})
+   frag_fill(p,c, fx+FW,fy+FH, fx+FW,fy+FH, { solid="CRACKLE2", short=4, [9] = { dx=-5, dy=-5 }})
+
+   local sec2 = copy_block(c.room_sec)
+   sec2.f_tex = "LAVA1"
+   
+   gap_fill(p,c, x1+0,y1+1, x1+0,y1+1, sec2, { [1]={dx= 9,dy=9}, [7]={dx= 9,dy=-9}, short=true })
+   gap_fill(p,c, x1+2,y1+1, x1+2,y1+1, sec2, { [3]={dx=-9,dy=9}, [9]={dx=-9,dy=-9}, short=true })
+--]]
 else
         fill(p,c, x1+1, y1+1, x1+1, y1+1,
           { solid= c.theme.pillar or c.theme.void,
             y_offset= 128 - (sec.c_h - sec.f_h) })
 end
-        blocked = true
+      blocked = true
       end
 
       sec.l_tex = l_tex
@@ -2554,6 +2572,8 @@ end
 
   assert(not c.blk_x)
 
+  p.mark = p.mark + 1
+
   -- these refer to the bottom/left corner block
   -- (not actually in the cell, but in the border)
   c.blk_x = BORDER_BLK + (c.x-1) * (BW+1)
@@ -2566,7 +2586,8 @@ end
 
   c.room_sec = { f_h=c.floor_h, c_h=c.ceil_h,
                  f_tex=c.theme.floor, c_tex=c.theme.ceil,
-                 light=c.lighting }
+                 light=c.lighting,
+                 }
 
   if not c.theme.outdoor and not c.is_exit and rand_odds(35+60) then
     c.sky_light =
