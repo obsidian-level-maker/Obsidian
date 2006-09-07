@@ -9,7 +9,7 @@ all:
 TEST.wad:
 	lua run_it.lua $(SEED)
 	wadlc TEMP.txt TEMP.wad
-	glbsp -pack TEMP.wad -o TEST.wad
+	glbsp -pack -warn TEMP.wad -o TEST.wad
 
 clean:
 	rm -f TEMP.txt TEST*.wad TEMP.wad
