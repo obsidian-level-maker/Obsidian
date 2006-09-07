@@ -91,6 +91,9 @@ function write_level(p, lev_name)
   local total_vert  = 0
   local total_side  = 0
 
+  local vert_map = {}  -- acting as a set.  key is string "%d:%d" | value is index
+  local vert_num = 0
+
   local sec_map = {}
   local total_group = 0
 
@@ -151,14 +154,12 @@ function write_level(p, lev_name)
 
   local function construct_linedefs()
 
-    local vert_map = {}  -- acting as a set.  key is string "%d:%d" | value is index
-    local vert_num = 0
-
     local cur_line = nil
 
     local function create_vertex(x, y)
       local str = string.format("%d:%d", x, y)
       local index
+
       if vert_map[str] then
         index = vert_map[str]
         local V = vert_list[index]
@@ -166,37 +167,23 @@ function write_level(p, lev_name)
         return V
       end
 
-        index = vert_num
-        vert_num = vert_num + 1
+      index = vert_num
+      vert_num = vert_num + 1
 
-        local V = { x=x, y=y, refcount=1 }
-        vert_list[index] = V
-        vert_map[str] = index
-        return V
-
+      local V = { x=x, y=y, refcount=1 }
+      vert_list[index] = V
+      vert_map[str] = index
+      return V
     end
 
     local function is_step(tex)
       return tex and string.find(tex, "^STEP")
     end
 
-    local function get_override(block, dir)
-      return block and block.overrides and block.overrides[dir]
-    end
+---###    local function get_override(block, dir)
+---###      return block and block.overrides and block.overrides[dir]
+---###    end
 
---[[
-    local function frag_coords(n)
-      local fn, bn
-
-      n, fn = div_mod(n, FW)
-      n, bn = div_mod(n, BW)
-
-      assert(1 <= bn and bn <= BW)
-      assert(1 <= fn and fn <= FW)
-
-      return n, bn, fn
-    end
---]]
     local function push_line()
       if not cur_line then return end
 
@@ -219,66 +206,24 @@ function write_level(p, lev_name)
     local function create_sidedef(f, b, norm, sx, sy) 
       if f.solid then return nil end
 
-assert(not f.fragments)
-
       local SIDE = { block=f }
 
-      local b_over = get_override(b, norm)
-      local f_over = get_override(f, 10-norm)
+      local b_over = b[norm]    or DUMMY_BLOCK
+      local f_over = f[10-norm] or DUMMY_BLOCK
 
       -- set textures
       if b.solid then
-        SIDE.mid = (b_over and b_over.l_tex) or b.solid
+        SIDE.mid = b_over.l_tex or b.solid
       else
-        SIDE.upper = (b_over and b_over.u_tex) or b.u_tex or ERROR_TEX
-        SIDE.lower = (b_over and b_over.l_tex) or b.l_tex or ERROR_TEX
-        SIDE.mid   = (b_over and b_over.rail ) or (f_over and f_over.rail) or b.rail or f.rail
+        SIDE.upper = b_over.u_tex or b.u_tex or ERROR_TEX
+        SIDE.lower = b_over.l_tex or b.l_tex or ERROR_TEX
+        SIDE.mid   = b_over.rail  or f_over.rail or b.rail or f.rail
       end
 
-      if b_over and b_over.x_offset then
-        SIDE.x_offset = b_over.x_offset
-      end
-
-      if b_over and b_over.y_offset then
-        SIDE.y_offset = b_over.y_offset
-      elseif b.y_offset then
-        SIDE.y_offset = b.y_offset
-      end
+      SIDE.x_offset = b_over.x_offset or b.x_offset
+      SIDE.y_offset = b_over.y_offset or b.y_offset
 
       return SIDE
-    end
-
-    local function old_corner_Adj(front, back, dir, sx,sy, ex,ey, len)
-
-      -- handle corner adjustments -- FIXME FIXME !!!!!!
-      do
-        local v1, v2 = vert_list[L.v1], vert_list[L.v2]
-
-        local function adjust_vert(V, corner)
-          V.dx, V.dy = corner.dx, corner.dy
-        end
-
-        if dir == 4 and back and back.corner_ne then
-          adjust_vert(v2, back.corner_ne)
-        end
-        if dir == 4 and back and back.corner_se then
-          adjust_vert(v1, back.corner_se)
-        end
-
-        if dir == 4 and front and front.corner_nw then
-          adjust_vert(v2, front.corner_nw)
-        end
-        if dir == 4 and front and front.corner_sw then
-          adjust_vert(v1, front.corner_sw)
-        end
-
-        if dir == 6 and back and back.corner_nw then
-          adjust_vert(v1, back.corner_nw)
-        end
-        if dir == 6 and back and back.corner_sw then
-          adjust_vert(v2, back.corner_sw)
-        end
-      end
     end
 
     local function compute_line_flags(f,b, f_side,b_side, norm)
@@ -417,6 +362,12 @@ assert(not f.fragments)
          (s1.y_offset == s2.y_offset)
     end
 
+    local function line_length(L)
+      local dx = L.ex - L.sx
+      local dy = L.ey - L.sy
+      return int(math.sqrt(dx*dx + dy*dy) + 0.5)
+    end
+
     local function frag_pair(f,b,norm, x,y,dx,dy)
 
       if f == b then
@@ -463,12 +414,13 @@ assert(not f.fragments)
             cur_line.norm  == norm and
             cur_line.flags == flags and
             match_sidedefs(cur_line.front, f_side) and
-            match_sidedefs(cur_line.back,  b_side) and
-            true -- FIXME: vertex positioning!!
+            match_sidedefs(cur_line.back,  b_side)
         then
-          -- simply extend current line
-          cur_line.ex, cur_line.ey = ex, ey
-          return
+          if not (f.short or b.short or cur_line.short) then
+            -- simply extend current line
+            cur_line.ex, cur_line.ey = ex, ey
+            return
+          end
         end
       end
 
@@ -481,9 +433,11 @@ assert(not f.fragments)
 
         f_block = f,
         b_block = b,
-        
+
         front = f_side,
         back  = b_side,
+
+        short = f.short or b.short,
 
         sx = sx, sy = sy,
         ex = ex, ey = ey,
@@ -578,40 +532,81 @@ print("TOTAL_GROUPS ", total_group)
 print("TOTAL_GROUPS ", total_group)
   end
 
-    local function create_sector(B)
-      if B.solid then return nil end
+  local function adjust_vertices()
 
-      if B.new_sec then return B.new_sec end
-
-      local singleton = not B.group
-
-      if B.group then
-        while B.group.ptr do B.group = B.group.ptr end
-
-        if sec_map[B.group.id] then return sec_map[B.group.id] end
+    local function v_adjust(x, y, adj)
+      local str = string.format("%d:%d", x, y)
+      local V = vert_map[str]
+      if V then
+        vert_list[V].dx = adj.dx
+        vert_list[V].dy = adj.dy
       end
-
-      SECT =
-      {
-        f_h = B.f_h,
-        c_h = B.c_h,
-        f_tex = B.f_tex,
-        c_tex = B.c_tex,
-        tag = B.tag,
-        light = B.light,
-        kind = B.kind,
-
-        index = #sec_list
-      }
-
-      B.new_sec = SECT
-
-      if B.group then sec_map[B.group.id] = SECT end
-
-      table.insert(sec_list, SECT)
-
-      return SECT
     end
+
+    local function do_block(B, fx, fy, d)
+
+      local x = FRAGMENT_X(fx)
+      local y = FRAGMENT_Y(fy)
+
+      if B[1] then v_adjust(x,   y,   B[1]) end
+      if B[3] then v_adjust(x+d, y,   B[3]) end
+      if B[7] then v_adjust(x,   y+d, B[7]) end
+      if B[9] then v_adjust(x+d, y+d, B[9]) end
+    end
+
+    -- adjust_vertices --
+
+    for bx = 1,p.blk_w do
+      for by = 1,p.blk_h do
+        local B = p.blocks[bx][by]
+        if B and B.fragments then
+          for fx=1,4 do for fy=1,4 do
+            local F = B.fragments[fx][fy]
+            if F then
+              do_block(F, (bx-1)*4+fx, (by-1)*4+fy, 16)
+            end
+          end end
+        elseif B then
+          do_block(B, bx*4-3, by*4-3, 64)
+        end
+      end
+    end
+  end
+
+  local function create_sector(B)
+    if B.solid then return nil end
+
+    if B.new_sec then return B.new_sec end
+
+    local singleton = not B.group
+
+    if B.group then
+      while B.group.ptr do B.group = B.group.ptr end
+
+      if sec_map[B.group.id] then return sec_map[B.group.id] end
+    end
+
+    SECT =
+    {
+      f_h = B.f_h,
+      c_h = B.c_h,
+      f_tex = B.f_tex,
+      c_tex = B.c_tex,
+      tag = B.tag,
+      light = B.light,
+      kind = B.kind,
+
+      index = #sec_list
+    }
+
+    B.new_sec = SECT
+
+    if B.group then sec_map[B.group.id] = SECT end
+
+    table.insert(sec_list, SECT)
+
+    return SECT
+  end
 
   local function construct_sectors()
 
@@ -630,11 +625,8 @@ print("TOTAL_GROUPS ", total_group)
     vert.index = total_vert
     total_vert = total_vert + 1
 
-    -- only move "free" vertices   FIXME: MOVE OUT OF HERE
-    if vert.refcount == 2 then
-      if vert.dx then vert.x = vert.x + vert.dx end
-      if vert.dy then vert.y = vert.y + vert.dy end
-    end
+    if vert.dx then vert.x = vert.x + vert.dx end
+    if vert.dy then vert.y = vert.y + vert.dy end
 
     doom.add_vertex(NORMALIZE(vert.x), NORMALIZE(vert.y))
   end
@@ -700,11 +692,8 @@ print("TOTAL_GROUPS ", total_group)
     tx_file:write("VERTEXES_START\n")
 
     for IDX,vert in pairs(vert_list) do
-      -- only move "free" vertices   FIXME: MOVE OUT OF HERE
-      if vert.refcount == 2 then
-        if vert.dx then vert.x = vert.x + vert.dx end
-        if vert.dy then vert.y = vert.y + vert.dy end
-      end
+      if vert.dx then vert.x = vert.x + vert.dx end
+      if vert.dy then vert.y = vert.y + vert.dy end
 
       vert.index = IDX-1
       tx_file:write(
@@ -789,6 +778,8 @@ print("TOTAL_GROUPS ", total_group)
  
   construct_linedefs()
   construct_sectors()
+
+  adjust_vertices()
 
   if not doom then
     tx_file = io.open("TEMP.txt", "w")
