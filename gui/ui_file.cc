@@ -74,7 +74,7 @@ UI_File::UI_File(int x, int y, int w, int h, const char *label) :
 	add(dir_name);
 
 
-	browse = new Fl_Button(dir_name->x() + dir_name->w() + 16, cy, 70, 24, "Change...");
+	browse = new Fl_Button(dir_name->x() + dir_name->w() + 16, cy, 70, 24, "Browse...");
 	browse->callback(browse_callback, this);
 
 	add(browse);
