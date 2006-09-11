@@ -64,26 +64,26 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
 	game = new Fl_Choice(x+70, cy, 150, 24, "Game: ");
 	game->align(FL_ALIGN_LEFT);
-	game->add("Doom 1|Doom 2|Heretic 1|Hexen 1");
+	game->add("Doom 1|Doom 2|Heretic|Hexen");
 	game->value(1);
 
 	add(game);
 
-	addon = new Fl_Choice(x+300, cy, 150, 24, "Add-on: ");
-	addon->align(FL_ALIGN_LEFT);
-	addon->add("None|Batman TC|Eternal 3|Gothic DM|HacX|Osiris");
-	addon->value(0);
-
-	add(addon);
-
-	cy += 32;
-
-	mode = new Fl_Choice(x+70, cy, 150, 24, "Mode:   ");
+	mode = new Fl_Choice(x+300, cy, 150, 24, "Mode:   ");
 	mode->align(FL_ALIGN_LEFT);
 	mode->add("Single Player|Co-op|Deathmatch");
 	mode->value(0);
-	
+
 	add(mode);
+
+	cy += 32;
+
+	addon = new Fl_Choice(x+70, cy, 150, 24, "Add-on: ");
+	addon->align(FL_ALIGN_LEFT);
+	addon->add("None|Eternal 3|Osiris|Gothic DM");
+	addon->value(0);
+	
+	add(addon);
 
 	length = new Fl_Choice(x +300, cy, 150, 24, "Size:   ");
 	length->align(FL_ALIGN_LEFT);
@@ -172,7 +172,7 @@ const char * UI_Setup::game_syms[] =
 
 const char * UI_Setup::addon_syms[] =
 {
-	"none", "batman", "eternal", "gothic", "hacx", "osiris"
+	"none", "eternal", "osiris", "gothic"
 };
 
 const char * UI_Setup::mode_syms[] =
