@@ -19,8 +19,8 @@
 #ifndef __MP_MAIN_H__
 #define __MP_MAIN_H__
 
-#define OBLIGE_VERSION  "0.49"
-#define OBLIGE_VER_HEX  0x049
+#define OBLIGE_VERSION  "0.66"
+#define OBLIGE_VER_HEX  0x066
 
 #define MPS_DEF_MAX_CLIENT  32
 #define MPS_DEF_MAX_GAME     8
