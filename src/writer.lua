@@ -229,6 +229,9 @@ function write_level(p, lev_name)
     local function compute_line_flags(f,b, f_side,b_side, norm)
       local flags = 0
 
+      local b_over = b[norm]    or DUMMY_BLOCK
+      local f_over = f[10-norm] or DUMMY_BLOCK
+
       if not b.solid then
 
         flags = flags + ML_TWO_SIDED
@@ -596,7 +599,7 @@ print("TOTAL_GROUPS ", total_group)
       light = B.light,
       kind = B.kind,
 
-      index = #sec_list
+      T_index = #sec_list
     }
 
     B.new_sec = SECT
@@ -712,7 +715,7 @@ print("TOTAL_GROUPS ", total_group)
       sec.index = IDX-1
       tx_file:write(
         string.format("S%d : %d %d %s %s %d %d %d\n",
-          sec.index, sec.f_h, sec.c_h,
+          sec.T_index, sec.f_h, sec.c_h,
           sec.f_tex or ERROR_FLAT,
           sec.c_tex or ERROR_FLAT, sec.light,
           sec.kind or 0, sec.tag or 0))
