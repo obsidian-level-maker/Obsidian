@@ -186,6 +186,14 @@ void UI_File::browse_callback(Fl_Widget *w, void *data)
 {
 	UI_File *that = (UI_File *)data;
 
-	// FIXME: browse button
+	char *new_dir = fl_dir_chooser("Oblige: Select output folder", that->full_path);
+
+  if (new_dir)
+  {
+    strncpy(that->full_path, new_dir, FL_PATH_MAX);
+    that->full_path[FL_PATH_MAX-1] = 0;
+
+    that->AbbreviatePath();
+  }
 }
 
