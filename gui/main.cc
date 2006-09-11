@@ -222,6 +222,8 @@ int main(int argc, char **argv)
 	
 	main_win = new UI_MainWin(MY_TITLE);
 
+  main_win->file_box->SetDefaultLocation();
+
 	/*
 	LogPrintf(0,
 		"\n*** " MY_TITLE " (C) 2005 Andrew Apted ***\n\n"

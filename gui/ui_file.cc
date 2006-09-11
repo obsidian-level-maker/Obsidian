@@ -24,11 +24,18 @@
 
 #include "lib_util.h"
 
+#ifdef WIN32
+#define DIR_SEP  '\\'
+#else
+#define DIR_SEP  '/'
+#endif
+
 //
 // File Constructor
 //
 UI_File::UI_File(int x, int y, int w, int h, const char *label) :
-    Fl_Group(x, y, w, h, label)
+    Fl_Group(x, y, w, h, label),
+    full_path(NULL)
 {
 	end(); // cancel begin() in Fl_Group constructor
  
@@ -61,14 +68,13 @@ UI_File::UI_File(int x, int y, int w, int h, const char *label) :
 	cy += 32;
 
 
-	dir_name = new Fl_Input(x+92, cy, 260, 24, "Location:  ");
+	dir_name = new Fl_Output(x+92, cy, 260, 24, "Location:  ");
 	dir_name->align(FL_ALIGN_LEFT);
-	// value
 
 	add(dir_name);
 
 
-	browse = new Fl_Button(dir_name->x() + dir_name->w() + 16, cy, 70, 24, "Browse...");
+	browse = new Fl_Button(dir_name->x() + dir_name->w() + 16, cy, 70, 24, "Change...");
 	browse->callback(browse_callback, this);
 
 	add(browse);
@@ -84,16 +90,80 @@ UI_File::~UI_File()
 {
 }
 
-void UI_File::InitialFocus()
+void UI_File::SetDefaultLocation()
 {
-	// FIXME ???? filename->take_focus();
+  if (! full_path)
+  {
+    full_path = new char[FL_PATH_MAX];
+  }
+
+#if 1 // ifdef WIN32
+  fl_filename_absolute(full_path, ".");
+#else
+  fl_filename_expand(full_path, "$HOME");
+#endif
+
+  // FIXME: ensure full_path ends with DIR_SEP
+ 
+  AbbreviatePath();
 }
 
-void UI_File::browse_callback(Fl_Widget *w, void *data)
+void UI_File::AbbreviatePath()
 {
-	UI_File *that = (UI_File *)data;
+  // set correct font for fl_width()
+  fl_font(dir_name->textfont(), dir_name->textsize());
 
-	// FIXME: browse button
+  int want_w = dir_name->w() - 10;
+  int orig_w = (int)fl_width(full_path);
+
+  if (orig_w <= want_w)
+  {
+    dir_name->value(full_path);
+    return;
+  }
+  
+  char *abbr = new char[FL_PATH_MAX+10];
+
+  int total = strlen(full_path);
+  int half = MAX(1, total / 2 - 2);
+
+  float char_w = orig_w / float(total);  // average char width
+
+  while (half > 1)
+  {
+    memcpy(abbr, full_path, half);
+
+    abbr[half+0] = '.';
+    abbr[half+1] = '.';
+    abbr[half+2] = '.';
+
+    memcpy(abbr+half+3, full_path+total-half, half+1);
+
+    int new_w = (int)fl_width(abbr);
+
+    if (new_w <= want_w)
+      break;
+
+    // compute number of characters to drop, with 1.5 penalty
+    // to prevent over-shooting the mark.
+    int cut = int( (new_w - want_w) / char_w / 3.0 );
+
+    half -= MAX(1, cut);
+  }
+
+  dir_name->value(abbr);
+
+  delete[] abbr;
+}
+
+void UI_File::resize(int X, int Y, int W, int H)
+{
+  bool change_W = (W != w());
+
+  Fl_Group::resize(X, Y, W, H);
+
+  if (change_W)
+    AbbreviatePath();
 }
 
 void UI_File::Locked(bool value)
@@ -111,3 +181,11 @@ void UI_File::Locked(bool value)
 		browse->activate();
 	}
 }
+
+void UI_File::browse_callback(Fl_Widget *w, void *data)
+{
+	UI_File *that = (UI_File *)data;
+
+	// FIXME: browse button
+}
+

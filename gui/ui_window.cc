@@ -101,8 +101,6 @@ fprintf(stderr, "cy = %d\n", cy);
 	char *argv[] = { "ObligeNG", NULL };
 
 	show(argc, argv);
-
-//	file_box->InitialFocus();
 }
 
 //

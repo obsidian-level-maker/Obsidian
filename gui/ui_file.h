@@ -25,17 +25,22 @@ private:
 	Fl_Input *filename;
 	Fl_Box   *ext;
 
-	Fl_Input *dir_name;
+	Fl_Output *dir_name;
 	Fl_Button *browse;
 
+  char *full_path;
+    
 public:
 	UI_File(int x, int y, int w, int h, const char *label = NULL);
 	virtual ~UI_File();
 
 public:
-	void InitialFocus();
+	void SetDefaultLocation();
+	void AbbreviatePath();
 
 	void Locked(bool value);
+
+  void resize(int X, int Y, int W, int H);
 
 private:
 	static void browse_callback(Fl_Widget *, void*);
