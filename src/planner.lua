@@ -18,7 +18,7 @@
 
 require 'defs'
 require 'util'
-require 'theme'
+require 'th_doom'
 
 
 QUEST_MAP =
