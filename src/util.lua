@@ -39,6 +39,12 @@ function sel(cond, yes_val, no_val)
   if cond then return yes_val else return no_val end
 end
 
+function count_entries(t)
+  local count = 0;
+  for k,v in pairs(t) do count = count+1 end
+  return count
+end
+
 function dump_table(t, name)
 	print((name or "ANON") .. " = {")
 	for k,v in pairs(t) do
