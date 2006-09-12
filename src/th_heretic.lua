@@ -16,6 +16,9 @@
 --
 ----------------------------------------------------------------
 
+ERROR_TEX  = "DRIPWALL"
+ERROR_FLAT = "FLOOR09"
+
 ---- INDOOR ------------
 
 TH_EXITROOM =
@@ -25,7 +28,7 @@ TH_EXITROOM =
   wall = "METL2",
   void = "SKULLSB1",
   
-  floor = "FLOOR08",
+  floor = "FLOOR03",
   ceil = "FLOOR03",
 }
 
@@ -82,6 +85,11 @@ TH_METAL =
   ceil  = "FLOOR28",
 }
 
+TH_LIFT =
+{
+  wall = "DOORSTON", floor = "FLOOR08"
+}
+
 TH_PEDESTAL =
 {
   wall = "CTYSTUCI4",
@@ -123,9 +131,9 @@ TH_SWITCHES =
 
 TH_DOORS =
 {
-  d_demon  = { tex="DMNMSK",   w=128, h=129 },
-  d_stone  = { tex="DOORSTON", w=64,  h=128 },
-  d_wood   = { tex="DOORWOOD", bottom="FLOOR10", w=128, h=128 },
+  d_demon  = { tex="DMNMSK",   w=128, h=128 },
+  d_wood   = { tex="DOORWOOD", bottom="FLOOR10", w=64, h=128 },
+--  d_stone  = { tex="DOORSTON", w=64,  h=128 },
 
   d_exit   = { tex="DOOREXIT", w=64, h=96 },
 }

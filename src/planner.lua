@@ -842,12 +842,18 @@ function plan_sp_level()  -- returns Plan
     ---- decide_quests ----
     
     local keys, switches, weapons, items, total, ratio
+    local k_max, sw_max, wp_max, it_max;
+
+    k_max  = math.min(3, count_entries(QUEST_MAP.key))
+    sw_max = math.min(3, count_entries(QUEST_MAP.switch))
+    wp_max = math.min(4, count_entries(QUEST_MAP.weapon))
+    it_max = math.min(2, count_entries(QUEST_MAP.item))
 
     repeat
-      keys     = math.random(1,3)
-      switches = math.random(0,3)
-      weapons  = math.random(1,4)
-      items    = math.random(0,2)
+      keys     = math.random(1, k_max)
+      switches = math.random(0, sw_max)
+      weapons  = math.random(1, wp_max)
+      items    = math.random(0, it_max)
 
       total    = keys + switches + weapons + items
       ratio    = (keys + switches) / (weapons + items)

@@ -677,7 +677,7 @@ function B_lift(p, c, x, y, z, dir, long, deep)
   {
     f_h = z,
     c_h = c.ceil_h,
-    f_tex = c.theme.lift_flat or "STEP2",
+    f_tex = c.theme.lift_flat or TH_LIFT.floor,
     c_tex = c.theme.ceil,
     light = c.lighting,
 
@@ -685,7 +685,7 @@ function B_lift(p, c, x, y, z, dir, long, deep)
     lift_walk = 120,  -- 88 for slower kind
     tag = allocate_tag(p),
 
-    l_tex = c.theme.lift or "SUPPORT2",
+    l_tex = c.theme.lift or TH_LIFT.wall,
     u_tex = c.theme.wall
   }
 

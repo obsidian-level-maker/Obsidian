@@ -27,8 +27,5 @@ JH = BH/KH
 
 BORDER_BLK = 5  -- number of spare blocks around plan
 
-ERROR_TEX  = "FIREBLU1"
-ERROR_FLAT = "SFLR6_4"
-
 SKILLS = { "easy", "medium", "hard" }
 

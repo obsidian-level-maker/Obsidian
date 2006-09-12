@@ -16,6 +16,9 @@
 --
 ----------------------------------------------------------------
 
+ERROR_TEX  = "FIREBLU1"
+ERROR_FLAT = "SFLR6_4"
+
 ---- INDOOR ------------
 
 TH_EXITROOM =
@@ -369,6 +372,11 @@ TH_SHINY =
 
   floor = "FLAT23",
   ceil  = "FLAT23",
+}
+
+TH_LIFT =
+{
+  wall = "SUPPORT2", floor = "STEP2"
 }
 
 TH_PEDESTAL =
