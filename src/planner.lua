@@ -18,7 +18,7 @@
 
 require 'defs'
 require 'util'
-require 'th_heretic'
+require 'theme'
 
 
 QUEST_MAP =
