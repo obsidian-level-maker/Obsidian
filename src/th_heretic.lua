@@ -168,5 +168,28 @@ SCENERY_NUMS =
 {
   wall_torch = 50,
   serpent_torch = 27,
+  fire_brazier = 76,
+  chandelier = 28,
+
+  barrel = 44,
+  small_pillar = 29,
+  brown_pillar = 47,
+
+  blue_statue = 94,
+  green_statue = 95,
+  yellow_statue = 96,
+
+  moss1 = 48,
+  moss2 = 49,
+  small_stal_F = 37,
+  small_stal_C = 39,
+  big_stal_F = 38,
+  big_stal_C = 40,
+
+  hang_corpse = 51,
+  hang_skull_1 = 17,
+  hang_skull_2 = 24,
+  hang_skull_3 = 25,
+  hang_skull_4 = 26
 }
 

@@ -43,7 +43,7 @@ TH_GOLD =
   floor = "F_089",
   ceil = "F_014",
 
-  scenery = "burner",
+  scenery = "brass_brazier",
 }
 
 
@@ -175,7 +175,48 @@ EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
 
 SCENERY_NUMS =
 {
-  tree_left = 79,
-  burner = 8061
+  candle = 119,
+  blue_candle = 8066,
+  brass_brazier = 8061,
+  wall_torch = 54,
+  wall_torch_out = 55,
+  twine_torch = 116,
+  twine_torch_out = 117,
+
+  tree1 = 25,
+  tree2 = 8062,
+  lean_tree_R = 78,
+  lean_tree_L = 79,
+  gnarled_tree_R = 80,
+  gnarled_tree_L = 87,
+  dead_tree = 24,
+
+  hedge = 8068,
+  shrub1 = 8101,
+  shrub2 = 8102,
+  rock1 = 6,
+  rock2 = 7,
+  rock3 = 9,
+  rock4 = 15,
+
+  winged_statue = 5,
+  garg_statue = 72,
+  short_statue = 74,
+  iron_maiden = 8067,
+  vase_pillar = 103,
+
+  bell = 8065,  -- we are saved!!
+  bucket = 8103,
+  banner = 77,
+
+  stal_pillar = 48,
+  big_stal_F = 49,
+  big_stal_C = 52,
+  medium_stal_F = 50,
+  medium_stal_C = 56,
+  small_stal_F = 51,
+  small_stal_C = 57,
+
+  -- FIXME: lots more...
 }
 
