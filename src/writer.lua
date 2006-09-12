@@ -631,7 +631,7 @@ print("TOTAL_GROUPS ", total_group)
     if vert.dx then vert.x = vert.x + vert.dx end
     if vert.dy then vert.y = vert.y + vert.dy end
 
-    doom.add_vertex(NORMALIZE(vert.x), NORMALIZE(vert.y))
+    wad.add_vertex(NORMALIZE(vert.x), NORMALIZE(vert.y))
   end
 
   local function write_sector(sec)
@@ -639,7 +639,7 @@ print("TOTAL_GROUPS ", total_group)
     sec.index = total_sec
     total_sec = total_sec + 1
 
-    doom.add_sector(sec.f_h, sec.c_h,
+    wad.add_sector(sec.f_h, sec.c_h,
       sec.f_tex or ERROR_FLAT, sec.c_tex or ERROR_FLAT,
       sec.light or 0, sec.kind or 0, sec.tag or 0)
   end
@@ -653,7 +653,7 @@ print("TOTAL_GROUPS ", total_group)
       write_sector(sd.sector)
     end
 
-    doom.add_sidedef(sd.sector.index,
+    wad.add_sidedef(sd.sector.index,
       sd.lower or "-", sd.mid   or "-", sd.upper or "-",
       sd.x_offset or 0, sd.y_offset or 0)
   end
@@ -673,7 +673,7 @@ print("TOTAL_GROUPS ", total_group)
         write_sidedef(L.back)
       end
     
-      doom.add_linedef(L.v1.index, L.v2.index,
+      wad.add_linedef(L.v1.index, L.v2.index,
             L.front and L.front.index or -1,
             L.back  and L.back.index  or -1,
             L.kind or 0, L.tag or 0, L.flags or 0);
@@ -684,7 +684,7 @@ print("TOTAL_GROUPS ", total_group)
     
     for zzz,th in pairs(thing_list) do
 
-      doom.add_thing(NORMALIZE(th.x), NORMALIZE(th.y), th.z or 0,
+      wad.add_thing(NORMALIZE(th.x), NORMALIZE(th.y), th.z or 0,
             th.kind, th.angle or 0, th.flags or 7);
     end
   end
@@ -784,7 +784,7 @@ print("TOTAL_GROUPS ", total_group)
 
   adjust_vertices()
 
-  if not doom then
+  if not wad then
     tx_file = io.open("TEMP.txt", "w")
     if not tx_file then error("Unable to create file: TEMP.txt") end
     
@@ -803,12 +803,12 @@ print("TOTAL_GROUPS ", total_group)
 
     if con.map_begin then make_mini_map() end
 
-    doom.begin_level(lev_name);
+    wad.begin_level(lev_name);
 
     write_things()
     write_linedefs()  -- does vert/side/secs along the way
 
-    doom.end_level()
+    wad.end_level()
 
     con.progress(100)
   end

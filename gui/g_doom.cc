@@ -138,7 +138,7 @@ void WAD_Append(lump_c *lump, const void *data, u32_t len)
 
 //------------------------------------------------------------------------
 
-namespace doom
+namespace wad
 {
 
 // LUA: begin_level(name)
@@ -340,21 +340,21 @@ int add_linedef(lua_State *L)
 	return 0;
 }
 
-} // namespace doom
+} // namespace wad
 
 
 //------------------------------------------------------------------------
 
-static const luaL_Reg doom_funcs[] =
+static const luaL_Reg wad_funcs[] =
 {
-	{ "begin_level", doom::begin_level },
-	{ "end_level",   doom::end_level   },
+	{ "begin_level", wad::begin_level },
+	{ "end_level",   wad::end_level   },
 
-	{ "add_thing",   doom::add_thing   },
-	{ "add_vertex",  doom::add_vertex  },
-	{ "add_sector",  doom::add_sector  },
-	{ "add_sidedef", doom::add_sidedef },
-	{ "add_linedef", doom::add_linedef },
+	{ "add_thing",   wad::add_thing   },
+	{ "add_vertex",  wad::add_vertex  },
+	{ "add_sector",  wad::add_sector  },
+	{ "add_sidedef", wad::add_sidedef },
+	{ "add_linedef", wad::add_linedef },
 
 	{ NULL, NULL } // the end
 };
@@ -362,7 +362,7 @@ static const luaL_Reg doom_funcs[] =
 
 void Doom_InitLua(lua_State *L)
 {
-	luaL_register(L, "doom", doom_funcs);
+	luaL_register(L, "wad", wad_funcs);
 }
 
 bool Doom_CreateWAD(const char *filename, bool is_hexen)
