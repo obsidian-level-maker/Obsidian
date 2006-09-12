@@ -525,8 +525,8 @@ function B_exitdoor(p, c, link, x, y, z, dir)
   assert (link.kind == "door")
 
   local wall_tex = c.theme.wall
-  local door_tex = "EXITDOOR"
-  local key_tex  = "EXITDOOR"
+  local door_tex = TH_DOORS.d_exit.tex
+  local key_tex  = door_tex
   local track_tex = "DOORTRAK"
 
   local door = { f_h = z+8, c_h = z+8,
@@ -1685,7 +1685,7 @@ function build_cell(p, c)
         arch.c_h = math.max(arch.c_h, c.ceil_h - 48)
         arch.c_tex = "SLIME14"
 
-        tex = "METAL"
+        tex = TH_METAL.wall  -- FIXME: TH_ARCH
       end
 
       arch.l_tex = tex
@@ -1996,7 +1996,7 @@ function build_cell(p, c)
 --"Cell %d,%d Side %d Themes: %s/%s/%s R %d",
 --c.x, c.y, side, c.theme.floor, b_theme.floor, other.theme.floor, rsd))
 
-      overrides = { [rsd] = { rail = "MIDBARS3" }}
+      overrides = { [rsd] = { rail = TH_RAILS["r_1"].tex }}
     end
 
     for n = 1,KW do
@@ -2109,7 +2109,7 @@ function build_cell(p, c)
 
     -- !!!! FIXME: test crud
     if not bar and what ~= "fence" then
-      sec[side] = { rail = "MIDGRATE" }
+      sec[side] = { rail = TH_RAILS["r_2"].tex }
     end
 
     for d_pos = first, BW-long, step do
@@ -2327,7 +2327,7 @@ if rand_odds( 9) then
   CAGE.light = 192
   CAGE.l_tex = TH_METAL.wall
   CAGE.u_tex = TH_METAL.wall
-  CAGE.rail  = "MIDBARS3"
+  CAGE.rail  = TH_RAILS["r_1"].tex
   CAGE.is_cage = true
 
   fill(p,c, x1+1, y1+1, x1+1, y1+1, CAGE)
@@ -2486,7 +2486,7 @@ end
     elseif K.quest then
 
       if c.quest.kind == "key" or c.quest.kind == "weapon" or c.quest.kind == "item" then
-        B_pedestal(p, c, bx, by, K.floor_h + 24, "GATE4", "METAL")
+        B_pedestal(p, c, bx, by, K.floor_h + 24, TH_PEDESTAL.floor, TH_PEDESTAL.wall)
         add_thing(p, c, bx, by, THING_NUMS[c.quest.item], true)
 
       elseif c.quest.kind == "switch" then
@@ -2559,7 +2559,7 @@ if c.sky_light then
 
   K.sky_light_sec = copy_block(sec)
   K.sky_light_sec.c_h = sec.c_h + c.sky_light.h
-  K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, TH_GRASSY.ceil, c.sky_light.light_info.flat)
+  K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, TH_STONY.ceil, c.sky_light.light_info.flat)
   K.sky_light_sec.light = 176
   K.sky_light_utex = c.sky_light.light_info.side
 end

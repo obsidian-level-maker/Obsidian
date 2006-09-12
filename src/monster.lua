@@ -205,32 +205,6 @@ THING_NUMS =  -- FIXME duplicated in above tables
 
 ------------------------------------------------------------
 
-SCENERY_NUMS =
-{
-  green_column = 36,
-  red_column = 37,
-  tech_column = 48,
-  lamp = 2028,
-
-  blue_torch = 44,
-  green_torch = 45,
-  red_torch = 46,
-
-  candelabra = 35,
-  mercury_lamp = 85, 
-  barrel = 2035,
-  burning_barrel = 70,
-
-  skull_pole = 27,
-  skull_rock = 42,
-  brown_stub = 47,
-  burnt_tree = 43,
-  big_tree = 54,  
-}
-
-
-------------------------------------------------------------
-
 TOUGH_FACTOR = { easy=0.75, medium=1.00, hard=1.33 }
 ACCURACIES   = { easy=0.65, medium=0.75, hard=0.85 }
 

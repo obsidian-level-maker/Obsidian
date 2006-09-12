@@ -18,16 +18,8 @@
 
 require 'defs'
 require 'util'
-require 'theme'
+require 'th_heretic'
 
-
--- the numbers are the relative probability
-KEY_LIST    = { k_blue=10, k_red=10, k_yellow=10 }
-SWITCH_LIST = { sw_blue=50, sw_hot=30,  sw_vine=10, sw_skin=40,
-                sw_wood=30, sw_metl=50, sw_gray=20, sw_rock=10 }
-WEAPON_LIST = { saw=10, super=40, launch=80, plasma=60, bfg=4 }
-ITEM_LIST   = { armor=40, invis=40, mega=25, backpack=25, berserk=20, goggle=5, invul=2 }
-EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
 
 QUEST_MAP =
 {

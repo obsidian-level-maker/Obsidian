@@ -371,6 +371,15 @@ TH_SHINY =
   ceil  = "FLAT23",
 }
 
+TH_PEDESTAL =
+{
+  wall = "METAL",
+  void = "METAL1",
+
+  floor = "GATE4",
+  ceil  = "GATE4",
+}
+
 
 ---- OVERHANGS ------------
 
@@ -474,6 +483,12 @@ TH_DOORS =
   d_exit   = { tex="EXITDOOR", w=64, h=72 },
 }
 
+TH_RAILS =
+{
+  r_1 = { tex="MIDBARS3", w=128, h=64  },
+  r_2 = { tex="MIDGRATE", w=128, h=128 },
+}
+
 TH_LIGHTS =
 {
   { tex="LITE3",    w=32 },
@@ -494,4 +509,42 @@ TH_LIGHTS =
   { flat="TLITE6_5", side="METAL" },
   { flat="TLITE6_6", side="METAL" },
 }
+
+
+---- MISC STUFF ------------
+
+-- the numbers are the relative probability
+KEY_LIST    = { k_blue=10, k_red=10, k_yellow=10 }
+SWITCH_LIST = { sw_blue=50, sw_hot=30,  sw_vine=10, sw_skin=40,
+                sw_wood=30, sw_metl=50, sw_gray=20, sw_rock=10 }
+WEAPON_LIST = { saw=10, super=40, launch=80, plasma=60, bfg=4 }
+ITEM_LIST   = { armor=40, invis=40, mega=25, backpack=25, berserk=20, goggle=5, invul=2 }
+EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
+
+
+------------------------------------------------------------
+
+SCENERY_NUMS =
+{
+  green_column = 36,
+  red_column = 37,
+  tech_column = 48,
+  lamp = 2028,
+
+  blue_torch = 44,
+  green_torch = 45,
+  red_torch = 46,
+
+  candelabra = 35,
+  mercury_lamp = 85, 
+  barrel = 2035,
+  burning_barrel = 70,
+
+  skull_pole = 27,
+  skull_rock = 42,
+  brown_stub = 47,
+  burnt_tree = 43,
+  big_tree = 54,  
+}
+
 
