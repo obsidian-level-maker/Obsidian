@@ -2,42 +2,41 @@
 TODO
 ----
 
--  fix builder code for sector-less building
-!!  lifts and doors
-
--  pillar cages:
++  pillar cages:
    -  different monsters (dm >= 10, r <= 64, !melee, !float)
    -  no-top cages
    -  no-top no-rail cages (center of room only)
    -  pillar patterns, esp. 1359 and 2468, straight lines too.
    -  chunk-size!! (always have rail) (arach possible!)
 
+-  floor switches: y_offset
+
+-  wall switches: place in the wall! or not at all!
+
 -  windows:
-   +  midmasker: good textures
    -  prefer not to create void space next to windows
 
--  lights:
-   -  consistency! theme based??
- 
 -  doors:
-   -  consistency! theme based??
-   -  sometimes use narrow/short
    -  bottom of door (underneath): should match door tex.
 
--  overhang pillars: (a) thick and central
--  overhang: proper positioning
+-  overhangs:
+   +  don't create pillar in front of door
 
-HMMM:  decide monster: take damage into account
+-  compute_line_flags: more explicit flags (esp. override)
+
+HMMM: decide monster: taking damage into account
 
 
 GUI TODO
 --------
 
-+  output filename and directory !!
++  about screen.
 
--  about screen.
++  use the output filename and directory
 
 -  backup file (.BAK)
+
+wish: a *good* directory selector.
 
 wish: collect log, view it, save it, clear it.
 
@@ -80,7 +79,7 @@ c) Writer:
    #  support fragments
 
 
-MILESTONE 2 (getting there...)
+MILESTONE 2  (getting there...)
 ===========
 
 -  working GUI interface using FLTK
@@ -96,12 +95,32 @@ MILESTONE 2 (getting there...)
    -  switches in the wall
    -  paintings/computers/lights in the wall (esp. void areas)
 
-   -  monster closets (esp. in backtrack room)
    >> monster cages
-
-   ?? liquid pools (traps too)
 
    #  pillars
    #  lights in the ceiling
    #  sky holes / beams
  
+
+MILESTONE 3  (not started)
+===========
+
++  monster closets (esp. along a back-track route)
+
++  teleporters!
+
+-  liquid pools and traps
+
+-  bridge switches
+
+-  good support for the different games (Doom 1/2, Heretic, Hexen),
+   and initial support for add-ons (Eternal, Osiris)
+
+-  wall switches: "small" mode (32x32)
+
+-  overhangs: thick and central pillars
+
+-  more mid-masked textures (esp. on windows)
+
++  overall consistency (doors/lights/overhangs/windows)
+
