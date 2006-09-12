@@ -25,30 +25,18 @@ function get_level_names(settings)
 
   local LEVELS = {}
 
-  if settings.game == "wolf" then
+  if (settings.game == "doom1") or (settings.game == "heretic") then
 
-    local TS = { one=1, episode=10, full=60 }
-
-    local total = TS[settings.size]
-    assert(total)
-
-    for i = 1,total do
-      table.insert(LEVELS, i)
-    end
-
-  elseif settings.game == "doom1" then
-
-    if settings.size == "one" then return { "E1M1" } end
-
-    local epi_num = (settings.size == "full") and 4 or 1
+    local epi_num = sel(settings.size == "full", 3, 1)
+    local lev_num = sel(settings.size == "one",  1, 9)
 
     for e = 1,epi_num do
-      for m = 1,9 do
+      for m = 1,lev_num do
         table.insert(LEVELS, string.format("E%dM%d", e, m))
       end
     end
 
-  else  -- doom2, heretic, hexen
+  else  -- doom2 / hexen
 
     local TS = { one=1, episode=10, full=32 }
     local total = TS[settings.size]
@@ -90,7 +78,7 @@ io.stderr:write("\nSEED = ", settings.seed, "\n\n")
 
     if con.abort() then return "abort" end
 
-if true then -- not doom then
+do
 con.printf("=======  %s  ======================\n", lev)
 show_quests(PLAN)
 show_path(PLAN)
