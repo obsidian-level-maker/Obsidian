@@ -1,0 +1,23 @@
+
+body {	
+  background-color: white;
+  color: black;
+  font-family: palatino, verdana, sans-serif;
+  margin: 0; 
+  padding: 1em;
+  }
+
+h1 {
+  color: #44a;
+  font-size: xx-large;
+  text-decoration: underline;
+  }
+
+.legal {
+  font-family: mono;
+  background-color: #bdd;
+  color: black;
+  border: 1px solid black;
+  padding: 1em;
+  }
+
