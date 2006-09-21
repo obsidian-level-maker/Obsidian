@@ -607,7 +607,8 @@ function plan_sp_level()  -- returns Plan
 
     -- FIXME: TEMP JUNK
     for zzz,c in ipairs(p.all_cells) do
-    c.floor_h = rand_index_by_probs{ 3,1,5,1,4 } * 32 - 32
+      c.floor_h = rand_index_by_probs{ 3,1,5,1,4 } * 32 - 32
+      if c.is_exit then c.ceil_h = c.floor_h + 128 end
     end
   end
 
