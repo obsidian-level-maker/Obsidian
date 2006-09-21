@@ -45,6 +45,9 @@ TH_BASE =
   lift = "PLAT1",
   pillar = "COMPWERD",
 
+  pic_wd = "COMPSTA2",    -- "COMP2" for Doom 1 !!
+  pic_wd_h = 64,
+
   floor = "FLOOR4_8",
   ceil = "CEIL3_6",
   step_flat = "STEP2",
@@ -61,6 +64,7 @@ TH_BASE2 =
   step = "STEP1",
   lift = "PLAT1",
   pillar = "METAL4",
+  pic_wd = "COMPBLUE",
 
   floor = "FLOOR5_1",
   ceil = "FLOOR4_5",
@@ -77,6 +81,7 @@ TH_MARBLE =
   void = "MARBGRAY",
   step = "STEP1",
   pillar = "MARBFAC4",
+  pic_wd  = "SP_DUDE1",
 
   floor = "GRNROCK",
   ceil = "RROCK04",
@@ -95,6 +100,7 @@ TH_WOOD =
   void = "WOOD3",
   step = "STEP1",
   pillar = "WOODMET4",
+  pic_wd = "MARBFACE",
 
   floor = "CEIL1_1",
   ceil = "FLAT5_1",
@@ -108,6 +114,7 @@ TH_BRICK =
   void = "BRICK5",
   step = "STEP1",
   pillar = "BRICKLIT",
+  pic_wd = "BRWINDOW",
 
   floor = "FLOOR0_7",
   ceil = "CEIL5_2",
@@ -138,6 +145,7 @@ TH_PANEL =
   void = "PANBOOK",
   step = "STEP2",
   pillar = "PANBLUE",
+  pic_wd = "SPACEW3",
 
   floor = "FLOOR5_4",
   ceil = "CEIL1_2",
@@ -170,6 +178,8 @@ TH_GRNTECH =
   step = "STEP1",
   pillar = "TEKLITE2",
 
+  pic_wd = "COMPSTA1", pic_wd_h = 64,
+
   floor = "FLOOR1_1",
   ceil = "FLAT4",
 
@@ -186,6 +196,7 @@ TH_SLAD =
   void = "SLADSKUL",
   step = "STEP1",
   pillar = "SLADPOIS",
+  pic_wd = "BSTONE3",
 
   floor = "FLOOR0_5",
   ceil = "CEIL5_1",
@@ -204,6 +215,7 @@ TH_GRAY =
   step = "STEP1",
   lift = "SUPPORT3",
   pillar = "CRATE1",
+  pic_wd = "REDWALL",
 
   floor = "FLOOR0_5",
   ceil = "FLAT1",
@@ -258,6 +270,7 @@ TH_ASHY =
   void = "BLAKWAL2",
   step = "STEP4",
   piller = "STONE5",
+  pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
 
   floor = "MFLR8_4",
   ceil = "F_SKY1",
@@ -388,6 +401,14 @@ TH_PEDESTAL =
   ceil  = "GATE4",
 }
 
+TH_CAGE =
+{
+  wall = "METAL",
+  floor = "CEIL5_2",
+  ceil = "TLITE6_4",
+  rail = "r_1"  -- lookup in TH_RAILS
+}
+
 
 ---- OVERHANGS ------------
 
@@ -493,7 +514,7 @@ TH_DOORS =
 
 TH_RAILS =
 {
-  r_1 = { tex="MIDBARS3", w=128, h=64  },
+  r_1 = { tex="MIDBARS3", w=128, h=72  },
   r_2 = { tex="MIDGRATE", w=128, h=128 },
 }
 
@@ -502,7 +523,7 @@ TH_LIGHTS =
   { tex="LITE3",    w=32 },
   { tex="LITE5",    w=16 },
   { tex="LITEBLU4", w=32 },
-  { tex="REDWALL",  w=32 },
+--  { tex="REDWALL",  w=32 },
 
   { flat="CEIL1_2",  side="METAL" },
   { flat="CEIL1_3",  side="WOOD1" },
@@ -516,6 +537,31 @@ TH_LIGHTS =
   { flat="TLITE6_4", side="METAL" },
   { flat="TLITE6_5", side="METAL" },
   { flat="TLITE6_6", side="METAL" },
+}
+
+TH_PICS =
+{
+  { tex="LITE3",    w=128, h=16 },
+
+  { tex="MARBFACE", w=128, h=128 },
+  { tex="MARBFAC2", w=128, h=128 },
+  { tex="MARBFAC3", w=128, h=128 },
+
+  { tex="FIRELAVA", w=128, h=128 },
+  { tex="FIREMAG1", w=128, h=128 },
+  { tex="FIREWALL", w=128, h=112 },
+
+  { tex="SHAWN1",   w=128, h=128 },
+  { tex="SKINEDGE", w=128, h=128 },
+  { tex="TEKBRON1", w=128, h=128 },
+  { tex="WOOD10",   w=128, h=128 },
+  { tex="WOOD3",    w=128, h=128 },
+
+--  { tex="SKSPINE2", w=128, h=128, scroll=48 },
+--  { tex="SPFACE1",  w=128, h=96,  scroll=48 },
+
+  { tex="ZZWOLF6",  w=128, h=128 },
+  { tex="ZZWOLF7",  w=128, h=128 },
 }
 
 

@@ -22,7 +22,6 @@ require 'planner'
 require 'monster'
 
 
-
 function copy_block(B)
   local b2 = copy_table(B)
   
@@ -875,6 +874,67 @@ function B_bars(p,c, x,y, dir,long, size,step, bar_theme, sec,tex, tag)
 end
 
 
+--
+-- fill a chunk with void, with pictures on the wall
+--
+function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
+
+  local x1 = chunk_to_block(kx)
+  local y1 = chunk_to_block(ky)
+  local x2 = chunk_to_block(kx + 1) - 1
+  local y2 = chunk_to_block(ky + 1) - 1
+
+  local fx = (x1 - 1) * FW
+  local fy = (y1 - 1) * FH
+
+  frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+3*FH, { solid=c.theme.wall })
+  frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, { solid=pic })
+
+  CUTOUT =
+  {
+    f_h = z1,
+    c_h = z2,
+    f_tex = c.theme.floor,
+    c_tex = c.theme.floor, -- F_SKY1 is no good
+    light = c.lighting,
+
+    l_tex = c.theme.wall,
+    u_tex = c.theme.wall,
+  }
+
+  if cuts >= 3 then
+    CUTOUT.light = 255
+    CUTOUT.kind  = 8  -- GLOW TYPE  (FIXME)
+  end
+
+  for side = 2,8,2 do
+
+      local ax,ay = dir_to_across(side)
+--  local dx,dy = dir_to_delta(side)
+
+      local sx,sy, ex,ey = side_to_corner(side, FW*3, FH*3)
+
+      if cuts == 1 then
+        frag_fill(p,c, fx+sx+2*ax,fy+sy+2*ay, fx+ex-2*ax,fy+ey-2*ay, CUTOUT)
+      elseif cuts == 2 then
+        frag_fill(p,c, fx+sx+ax,fy+sy+ay, fx+sx+4*ax,fy+sy+4*ay, CUTOUT)
+        frag_fill(p,c, fx+ex-4*ax,fy+ey-4*ay, fx+ex-ax,fy+ey-ay, CUTOUT)
+      elseif cuts == 3 then
+        for i = 0,2 do
+          local j = i*FW + 1
+          frag_fill(p,c, fx+sx+j*ax,fy+sy+j*ay, fx+sx+(j+1)*ax,fy+sy+(j+1)*ay, CUTOUT)
+        end
+      elseif cuts == 4 then
+        for i = 0,2,2 do
+          local j = i*FW + sel(i==0, 2, 1)
+          frag_fill(p,c, fx+sx+j*ax,fy+sy+j*ay, fx+sx+j*ax,fy+sy+j*ay, CUTOUT)
+        end
+      end
+
+  end
+end
+
+
 SKY_LIGHT_FUNCS =
 {
   all      = function(kx,ky, x,y) return true end,
@@ -1604,6 +1664,24 @@ function build_cell(p, c)
     return math.random(0,7) * 45
   end
 
+  local function decide_void_pic(p, c)
+    if c.theme.pic_wd and rand_odds(66) then
+      c.void_pic = { tex=c.theme.pic_wd, w=128, h=c.theme.pic_wd_h or 128 }
+      c.void_cut = 1
+    elseif not c.theme.outdoor and rand_odds(50) then
+      local pic
+      repeat
+        pic = TH_LIGHTS[math.random(1, #TH_LIGHTS)]
+      until pic.tex
+      c.void_pic = pic
+      c.void_cut = math.random(3,4)
+    else
+      local idx = math.random(1, #TH_PICS)
+      c.void_pic = TH_PICS[idx]
+      c.void_cut = 1
+    end
+  end
+
   local function build_real_link(link, side, where, what, b_theme)
 
     -- DIR here points to center of current cell
@@ -2247,8 +2325,8 @@ function build_cell(p, c)
   local function build_chunk(kx, ky)
 
     local function add_overhang_pillars(c, K, kx, ky, sec, l_tex, u_tex)
-      local bx = (kx - 1) * JW + 1
-      local by = (ky - 1) * JH + 1
+      local basex = (kx - 1) * JW + 1
+      local basey = (ky - 1) * JH + 1
       
       sec = copy_block(sec)
       sec.l_tex = l_tex
@@ -2259,10 +2337,13 @@ function build_cell(p, c)
           local jx, jy = dir_to_corner(side, JW, JH)
           local fx, fy = dir_to_corner(side, FW, FH)
 
-          jx,jy = (bx + jx-1 - 1)*FW, (by + jy-1 - 1)*FH
+          local bx, by = (basex + jx-1), (basey + jy-1)
 
-          -- FIXME: leave stairs alone
-          -- if (find_fragment(p,c, jx+1, jy+1)) then return end
+          -- FIXME: don't put pillar on "must_walk" blocks
+
+          jx,jy = (bx - 1)*FW, (by - 1)*FH
+
+          -- FIXME: interact well with stairs/lift
 
           frag_fill(p,c, jx+1, jy+1, jx+FW, jy+FH, sec)
           frag_fill(p,c, jx+fx, jy+fy, jx+fx, jy+fy, { solid=K.sup_tex})
@@ -2317,22 +2398,39 @@ function build_cell(p, c)
       if K.pillar and not blocked then
 
 -- TEST CRUD
-if rand_odds( 9) then
-  local mon_name = "gunner" -- !!!!
+if rand_odds(24) and TH_CAGE then
   local CAGE = copy_block(c.room_sec)
   local z = (c.f_max + c.ceil_h) / 2
-  CAGE.c_h = z + 32
-  CAGE.f_h = z - 32
-  CAGE.c_tex = "TLITE6_1"
-  CAGE.light = 192
-  CAGE.l_tex = TH_METAL.wall
-  CAGE.u_tex = TH_METAL.wall
-  CAGE.rail  = TH_RAILS["r_1"].tex
+  CAGE.f_tex = TH_CAGE.floor
+  CAGE.l_tex = TH_CAGE.wall
+  CAGE.u_tex = TH_CAGE.wall
   CAGE.is_cage = true
+
+  if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
+    CAGE.f_h = z
+    CAGE.c_h = c.ceil_h
+    CAGE.c_tex = c.theme.ceil
+
+    if rand_odds(50) then
+      CAGE.rail = TH_RAILS["r_1"].tex
+      if CAGE.f_h > CAGE.c_h - 72 then
+        CAGE.f_h = CAGE.c_h - 72
+      end
+    end
+  else
+    CAGE.f_h = z - 32
+    CAGE.c_h = z + 40
+    CAGE.c_tex = TH_CAGE.ceil
+    CAGE.light = 192
+    CAGE.rail  = TH_RAILS[TH_CAGE.rail].tex
+  end
 
   fill(p,c, x1+1, y1+1, x1+1, y1+1, CAGE)
 
-  add_cage_monster(p,c, x1+1, y1+1, mon_name, 225)
+  local spot = {x=x1+1, y=y1+1}
+  if kx==2 and ky==2 then spot.different = true end
+
+  add_cage_spot(p,c, spot)
 
 --[[ corner adjustment testing (REMOVE)
 elseif true then
@@ -2351,7 +2449,7 @@ elseif true then
 
    local sec2 = copy_block(c.room_sec)
    sec2.f_tex = "LAVA1"
-   
+
    gap_fill(p,c, x1+0,y1+1, x1+0,y1+1, sec2, { [1]={dx= 9,dy=9}, [7]={dx= 9,dy=-9}, short=true })
    gap_fill(p,c, x1+2,y1+1, x1+2,y1+1, sec2, { [3]={dx=-9,dy=9}, [9]={dx=-9,dy=-9}, short=true })
 --]]
@@ -2382,7 +2480,15 @@ end
     assert(K)
 
     if K.void then
-      chunk_fill(c, K, kx, ky, nil, c.theme.void, c.theme.void)
+
+      if rand_odds(90) and TH_PICS then
+        if not c.void_pic then decide_void_pic(p, c) end
+        local h = c.void_pic.h or (c.c_min - c.f_max - 32)
+        local z = (c.c_min + c.f_max) / 2
+        B_void_pic(p,c, kx,ky, c.void_pic.tex,c.void_cut, z-h/2, z+h/2)
+      else
+        chunk_fill(c, K, kx, ky, nil, c.theme.void, c.theme.void)
+      end
       return
     end
 
@@ -2526,7 +2632,8 @@ end
 
 -- TEST CRUD : overhangs
 if rand_odds(15) and -- kx==2 and ky==2 and  -- K.link
-  c.theme.outdoor -- and not link_other(K.link,c).theme.outdoor
+  c.theme.outdoor and -- and not link_other(K.link,c).theme.outdoor
+  not (c.quest.kind == "exit" and c.along == #c.quest.path-1)
 then
   sec = copy_block(sec) -- FIXME??
   K.overhang = true
@@ -2546,7 +2653,7 @@ end
 
 -- TEST CRUD : pillars
 if sec and not c.is_exit and not c.scenic and not K.stair_dir and
-   dual_odds(c.theme.outdoor, 7, 22) --!!!!
+  dual_odds(c.theme.outdoor, 12, 25)
 then
   K.pillar = true
 end

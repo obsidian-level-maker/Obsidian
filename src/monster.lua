@@ -28,20 +28,20 @@
 
 MONSTER_DEFS =
 {
-  zombie    = { kind=3004, prob=81, r=20,h=56, t=20,  dm=4,  fp=10, hitscan=true, humanoid=true },
-  shooter   = { kind=9,    prob=41, r=20,h=56, t=30,  dm=10, fp=10, hitscan=true, humanoid=true },
-  gunner    = { kind=65,   prob=17, r=20,h=56, t=70,  dm=40, fp=40, hitscan=true, humanoid=true },
+  zombie    = { kind=3004, prob=81, r=20,h=56, t=20,  dm=4,  fp=10, cage_prob=10, hitscan=true, humanoid=true },
+  shooter   = { kind=9,    prob=41, r=20,h=56, t=30,  dm=10, fp=10, cage_prob= 5, hitscan=true, humanoid=true },
+  gunner    = { kind=65,   prob=17, r=20,h=56, t=70,  dm=40, fp=40, cage_prob=70, hitscan=true, humanoid=true },
 
-  imp       = { kind=3001, prob=90, r=20,h=56, t=60,  dm=20, fp=20 },
-  caco      = { kind=3005, prob=90, r=31,h=56, t=400, dm=45, fp=30, float=true },
-  revenant  = { kind=66,   prob=70, r=20,h=64, t=300, dm=55, fp=48 },
-  knight    = { kind=69,   prob=70, r=24,h=64, t=500, dm=45, fp=60 },
-  baron     = { kind=3003, prob=50, r=24,h=64, t=1000,dm=45, fp=110 },
+  imp       = { kind=3001, prob=90, r=20,h=56, t=60,  dm=20, fp=20, cage_prob=90, },
+  caco      = { kind=3005, prob=90, r=31,h=56, t=400, dm=45, fp=30, cage_prob= 0, float=true },
+  revenant  = { kind=66,   prob=70, r=20,h=64, t=300, dm=55, fp=48, cage_prob=50, },
+  knight    = { kind=69,   prob=70, r=24,h=64, t=500, dm=45, fp=60, cage_prob=50, },
+  baron     = { kind=3003, prob=50, r=24,h=64, t=1000,dm=45, fp=110,cage_prob= 2, },
 
-  mancubus  = { kind=67,   prob=70, r=48,h=64, t=600, dm=80, fp=110 },
-  arach     = { kind=68,   prob=20, r=64,h=64, t=500, dm=70, fp=90 },
-  pain      = { kind=71,   prob= 4, r=31,h=56, t=400, dm=91, fp=40, float=true },
-  vile      = { kind=64,   prob= 8, r=20,h=56, t=700, dm=30, fp=110, hitscan=true },
+  mancubus  = { kind=67,   prob=70, r=48,h=64, t=600, dm=80, fp=110,cage_prob= 0, },
+  arach     = { kind=68,   prob=20, r=64,h=64, t=500, dm=70, fp=90, cage_prob= 0, },
+  pain      = { kind=71,   prob= 4, r=31,h=56, t=400, dm=91, fp=40, cage_prob= 0, float=true },
+  vile      = { kind=64,   prob= 8, r=20,h=56, t=700, dm=30, fp=110,cage_prob=50, hitscan=true },
 
   -- MELEE only monsters
   demon     = { kind=3002, prob=80, r=30,h=56, t=150, dm=25, fp=30, melee=true },
@@ -223,8 +223,8 @@ HEALTH_DISTRIB = { 10, 70, 80, 40, 5 }
 ------------------------------------------------------------
 
 
-function zprint() end
-function zdump_table() end
+zprint = do_nothing
+zdump_table = do_nothing
 
 
 function compute_pow_factors()
@@ -283,32 +283,36 @@ io.stderr:write("INSERTING ",kind," INTO BLOCK ", c.blk_x+bx, ",", c.blk_y+by, "
 end
 
 
-function add_cage_monster(p,c, mx,my, name, angle)
-
-  local info = MONSTER_DEFS[name]
-  if not info then error("Unknown monster: " .. name) end
-
-  local options = { easy=true, medium=true, hard=true }
-
-  local th = add_thing(p,c, mx,my, info.kind, true, angle, options)
-  th.mon_name = name
-  th.caged = true
-
-  -- big monsters      FIXME duplicated code (add_monster)
-  if info.r >= 32 then
-    local bk_num = 1 + int(info.r / 32)
-
-    for dx = 0,bk_num-1 do
-      for dy = 0,bk_num-1 do
-        p.blocks[c.blk_x+mx+dx][c.blk_y+my+dy].has_blocker = true
-      end
-    end
-
-    th.dx = (bk_num - 1) * 32
-    th.dy = th.dx
+function add_cage_spot(p,c, spot)
+  if not c.cage_spots then
+    c.cage_spots = {}
   end
 
-  table.insert(c.monsters, th)
+  table.insert(c.cage_spots, spot)
+end
+  
+function add_cage_area(p,c, x,y,w,h)
+  if not c.cage_spots then
+    c.cage_spots = {}
+  end
+
+  if h > 2 then
+    add_cage_area(p,c, x, y, w, int(h/2))
+    add_cage_area(p,c, x, y+int(h/2), w, h-int(h/2))
+  elseif w > 2 then
+    add_cage_area(p,c, x, y, int(w/2), h)
+    add_cage_area(p,c, x+int(w/2), y, w-int(w/2), h)
+  else
+    assert(w > 0 and h > 0)
+
+    if (w==2) and (h==2) then
+      table.insert(c.cage_spots, {x=x, y=y, double=true })
+    else
+      for ay = 1,h do for ax = 1,w do
+        table.insert(c.cage_spots, {x=x+ax-1, y=y+ay-1})
+      end end
+    end
+  end
 end
 
 
@@ -430,7 +434,7 @@ end
 -- Simulate the battle for skill SK (2|3|4).
 -- Updates the given player HModel.
 --
-function simulate_battle(HM, old_mons, new_mons, quest)
+function simulate_battle(HM, mon_set, quest)
  
   local shoot_accuracy = ACCURACIES[HM.skill]
 
@@ -718,22 +722,12 @@ zprint(active_mon, #active_mon, active_mon[1])
   update_powerups(HM)  -- tick 1 of 2
 
   -- create list of monsters
-  if old_mons then
-    for zzz,th in ipairs(old_mons) do
-      local info = MONSTER_DEFS[th.mon_name]
-      assert(info)
+  assert(mon_set)
 
-      if th.options[HM.skill] then
-        table.insert(active_mon,
-          { name=th.mon_name, info=info, tough=info.t, caged=th.caged })
-      end
-    end
-  end
-
-  if new_mons then
-    for zzz,th in ipairs(new_mons) do
+  for zzz,th in ipairs(mon_set) do
+    for num = 1,th.horde do
       table.insert(active_mon,
-        { name=th.name, info=th.info, tough=th.info.t })
+        { name=th.name, info=th.info, tough=th.info.t, caged=th.caged })
     end
   end
 
@@ -1030,6 +1024,8 @@ function place_battle_stuff(p, c)
   local function place_monster(spots, dat)
     assert(dat.info)
 
+    if dat.caged then return end
+
     local angle = math.random(0,7) * 45
 
     local is_big = (dat.info.r >= 32)
@@ -1242,22 +1238,6 @@ function battle_in_cell(p, c)
     return name, horde
   end
 
-  local function caged_toughness()
-    local total = 0
-    if c.monsters then
-      for zzz,th in ipairs(c.monsters) do
-        local info = MONSTER_DEFS[th.mon_name]
-        assert(info)
-
-        if th.options[SK] then
-          total = total + info.pow
-        end
-      end
-    end
-    return total
-  end
-
-
   local function create_monsters()
 
     local fp = fire_power(best_weapon(SK))
@@ -1271,9 +1251,71 @@ function battle_in_cell(p, c)
       if name == "none" then
         T = T-20; U = U+20
       else
-        table.insert(c.mon_set[SK], { name=name, horde=horde, info = MONSTER_DEFS[name] })
-        T = T - horde * MONSTER_DEFS[name].pow
+        local info = MONSTER_DEFS[name]
+        table.insert(c.mon_set[SK], { name=name, horde=horde, info=info })
+        T = T - horde * info.pow
       end
+    end
+  end
+
+  local function decide_cage_monster(firepower, horde)
+
+    local names = {}
+    local probs = {}
+
+    for name,info in pairs(MONSTER_DEFS) do
+      if (info.dm < 10) or 
+         ((info.pow * horde < T*2) and (info.fp < firepower*2))
+      then
+        local prob = info.cage_prob or 0
+
+        if prob > 0 then
+          table.insert(names, name)
+          table.insert(probs, prob)
+        end
+      end
+    end
+
+    assert(#probs > 0)
+
+    local idx = rand_index_by_probs(probs)
+
+    return names[idx]
+  end
+
+  local function fill_cages()
+    
+    if not c.cage_spots then return end
+
+    local fp = fire_power(best_weapon(SK))
+    local name = decide_cage_monster(fp, #c.cage_spots)
+
+print("fill_cages with", name or "NIL!");
+
+    local info = MONSTER_DEFS[name]
+    assert(info)
+
+    for zzz,spot in ipairs(c.cage_spots) do
+
+      local m_name = name
+      local m_info = info
+
+      if spot.different then
+        m_name = decide_cage_monster(fp, 1)
+        m_info = MONSTER_DEFS[m_name]
+      end
+
+      local angle = math.random(0,7) * 45
+      local options = { [SK]=true }
+
+      local th = add_thing(p, c, spot.x, spot.y, m_info.kind, true, angle, options)
+      th.mon_name = m_name
+
+      -- allow monster to take part in battle simulation
+      table.insert(c.mon_set[SK], { name=m_name, horde=1, info=m_info, caged=true })
+
+      -- caged monsters affect the total toughness
+      T = T - m_info.pow
     end
   end
 
@@ -1298,8 +1340,7 @@ zprint("BATTLE IN", c.x, c.y)
     T = T + p.models[SK].toughness
     U = 0
 
-    -- take existing monsters into account
-    T = T - caged_toughness()
+    fill_cages()
 
     create_monsters(space)
 
@@ -1310,7 +1351,7 @@ zprint("BATTLE IN", c.x, c.y)
 
 zprint("SIMULATE in CELL", c.x, c.y, SK)
 
-    simulate_battle(p.models[SK], c.monsters, c.mon_set[SK], quest)
+    simulate_battle(p.models[SK], c.mon_set[SK], quest)
 
     distribute_pickups(p, c, p.models[SK])
   end
