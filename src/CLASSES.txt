@@ -72,7 +72,9 @@ class Cell
   dm_player : player start for deathmatch
 
   toughness : amount of monster toughness in this cell
-  monsters  : array(Thing)
+  
+  cage_spots
+  free_spots
 
   mon_set    : array(skill) -> array(MonDat)
   pickup_set : array(skill0 -> array(PickupDat)
