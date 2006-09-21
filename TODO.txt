@@ -3,24 +3,19 @@ TODO
 ----
 
 +  pillar cages:
-   -  different monsters (dm >= 10, r <= 64, !melee, !float)
-   -  no-top cages
-   -  no-top no-rail cages (center of room only)
    -  pillar patterns, esp. 1359 and 2468, straight lines too.
-   -  chunk-size!! (always have rail) (arach possible!)
+   +  chunk-size!! (always have rail) (arach possible!)
 
 -  floor switches: y_offset
 
--  wall switches: place in the wall! or not at all!
+-  wall switches: place in the wall! 
 
 -  windows:
-   -  prefer not to create void space next to windows
 
 -  doors:
    -  bottom of door (underneath): should match door tex.
 
 -  overhangs:
-   +  don't create pillar in front of door
 
 -  compute_line_flags: more explicit flags (esp. override)
 
@@ -92,11 +87,9 @@ MILESTONE 2  (getting there...)
 
 -  more architecture features:
 
-   -  switches in the wall
-   -  paintings/computers/lights in the wall (esp. void areas)
-
    >> monster cages
 
+   #  paintings/computers/lights in the wall
    #  pillars
    #  lights in the ceiling
    #  sky holes / beams
@@ -119,8 +112,10 @@ MILESTONE 3  (not started)
 -  wall switches: "small" mode (32x32)
 
 -  overhangs: thick and central pillars
+   -  don't create pillar in front of door
 
 -  more mid-masked textures (esp. on windows)
+-  prefer not to create void space next to windows
 
 +  overall consistency (doors/lights/overhangs/windows)
 
