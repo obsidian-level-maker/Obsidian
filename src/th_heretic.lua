@@ -119,7 +119,8 @@ ALL_OVERHANGS =
 
 TH_LIQUIDS =
 {
-  water  = { floor="FLTFLWW1" },
+  { name="water", floor="FLTFLWW1" },
+  -- FIXME
 }
 
 TH_SWITCHES =

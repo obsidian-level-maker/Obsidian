@@ -53,6 +53,7 @@ TH_BASE =
   step_flat = "STEP2",
 
   scenery = "lamp",
+  good_liquid = "blood",
 }
 
 TH_BASE2 =
@@ -466,11 +467,11 @@ ALL_OVERHANGS =
 
 TH_LIQUIDS =
 {
-  water  = { floor="FWATER1" },
-  blood  = { floor="BLOOD1"  }, -- no damage
-  slime  = { floor="SLIME01", sec_kind=7 },  --  5% damage
-  nukage = { floor="NUKAGE1", sec_kind=5 },  -- 10% damage
-  lava   = { floor="LAVA1",   sec_kind=16, light=64 }, -- 20% damage
+  { name="water",  floor="FWATER1" },
+  { name="blood",  floor="BLOOD1"  }, -- no damage
+  { name="slime",  floor="SLIME01", sec_kind=7 },  --  5% damage
+  { name="nukage", floor="NUKAGE1", sec_kind=5 },  -- 10% damage
+  { name="lava",   floor="LAVA1",   sec_kind=16, light=64 }, -- 20% damage
 }
 
 TH_SWITCHES =
@@ -551,11 +552,11 @@ TH_PICS =
   { tex="FIREMAG1", w=128, h=128 },
   { tex="FIREWALL", w=128, h=112 },
 
-  { tex="SHAWN1",   w=128, h=128 },
+  { tex="SHAWN1",   w=128, h=96  },
   { tex="SKINEDGE", w=128, h=128 },
   { tex="TEKBRON1", w=128, h=128 },
   { tex="WOOD10",   w=128, h=128 },
-  { tex="WOOD3",    w=128, h=128 },
+  { tex="WOOD3",    w=128, h=64  },
 
 --  { tex="SKSPINE2", w=128, h=128, scroll=48 },
 --  { tex="SPFACE1",  w=128, h=96,  scroll=48 },

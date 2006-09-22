@@ -119,9 +119,9 @@ ALL_OVERHANGS =
 
 TH_LIQUIDS =
 {
-  water  = { floor="X_005" },
-  lava   = { floor="X_001" },
-  slime  = { floor="X_009" },
+  { name="water", floor="X_005" },
+  { name="lava",  floor="X_001" },
+  { name="slime", floor="X_009" },
 }
 
 TH_SWITCHES =

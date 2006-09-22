@@ -289,10 +289,19 @@ end
 
 function choose_liquid()
   local probs = {}
-  for liq,info in pairs(TH_LIQUIDS) do
+  for zzz,info in ipairs(TH_LIQUIDS) do
     table.insert(probs, info.prob or 50)
   end
-  return TH_LIQUIDS[rand_index_by_probs(probs)]
+
+  local idx = rand_index_by_probs(probs)
+  return TH_LIQUIDS[idx]
+end
+
+function find_liquid(name)
+  for zzz,info in ipairs(TH_LIQUIDS) do
+    if info.name == name then return info end
+  end
+  error("Unknown liquid: " .. name)
 end
 
 
@@ -520,7 +529,6 @@ function plan_sp_level()  -- returns Plan
   end
 
 
-
   function make_quest_path(Q)
  
     -- TODO: better system for choosing themes
@@ -531,6 +539,20 @@ function plan_sp_level()  -- returns Plan
 
     Q.theme = theme
     assert(theme)
+
+    -- decide liquid
+    if rand_odds(30+50) then
+      if (theme.bad_liquid or "none") == p.liquid.name then
+        Q.liquid = find_liquid(theme.good_liquid)
+      elseif theme.good_liquid and dual_odds(Q.mini, 15, 66) then
+        Q.liquid = find_liquid(theme.good_liquid)
+      elseif Q.mini then
+        Q.liquid = Q.parent.liquid
+      else
+        Q.liquid = p.liquid
+      end
+print("====>", Q.liquid and Q.liquid.name)
+    end
 
     -- add very first room
     if not Q.mini and Q.level == 1 then
@@ -1138,6 +1160,8 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
   p.models = initial_models()
   p.liquid = choose_liquid()
+
+print("LIQUID:", p.liquid)
 
   decide_quests()
 
