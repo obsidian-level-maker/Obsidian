@@ -291,7 +291,7 @@ function add_cage_spot(p,c, spot)
   table.insert(c.cage_spots, spot)
 end
   
-function add_cage_area(p,c, x,y,w,h)
+function add_cage_area(p,c, x,y,w,h)  -- UNUSED
   if not c.cage_spots then
     c.cage_spots = {}
   end
@@ -917,7 +917,7 @@ function place_battle_stuff(p, c)
   local function copy_shuffle_spots(list)
     local copies = {}
     for zzz, spot in ipairs(list) do
-      table.insert(copies, { x=spot.x, y=spot.y, double=spot.double })
+      table.insert(copies, copy_table(spot))
     end
     rand_shuffle(copies)
     return copies
@@ -1004,6 +1004,9 @@ function place_battle_stuff(p, c)
 
       local th = add_thing(p, c, spot.x, spot.y, dat.info.kind, false, 0, options)
       th.dx, th.dy = dx, dy
+
+      if spot.dx then th.dx = (th.dx or 0) + spot.dx end
+      if spot.dy then th.dy = (th.dy or 0) + spot.dy end
     end
   end
 
@@ -1053,6 +1056,9 @@ function place_battle_stuff(p, c)
         th.dx = 32
         th.dy = 32
       end
+
+      if spot.dx then th.dx = (th.dx or 0) + spot.dx end
+      if spot.dy then th.dy = (th.dy or 0) + spot.dy end
 
       angle = random_turn(angle)
 
@@ -1138,7 +1144,7 @@ function battle_in_cell(p, c)
     local B = p.blocks[c.blk_x+bx][c.blk_y+by]
 
     return (B and not B.solid and (not B.fragments or B.can_thing) and
-            not B.has_blocker and not B.is_cage)
+            not B.has_blocker and not B.is_cage and not B.near_player)
   end
 
   local function free_double_spot(bx, by)
@@ -1164,21 +1170,19 @@ function battle_in_cell(p, c)
   local function find_free_spots()
     local list = {}
     local total = 0
-    for bx = 1,BW,2 do
-      for by = 1,BH,2 do
-        if bx < BW and by < BH and free_double_spot(bx, by) then
-          table.insert(list, { x=bx, y=by, double=true})
-          total = total + 4
-        else
-          for dx = 0,1 do for dy = 0,1 do
-            if bx+dx <= BW and by+dy <= BH and free_spot(bx+dx, by+dy) then
-              table.insert(list, { x=bx+dx, y=by+dy })
-              total = total + 1
-            end
-          end end
-        end
+    for bx = 1,BW,2 do for by = 1,BH,2 do
+      if bx < BW and by < BH and free_double_spot(bx, by) then
+        table.insert(list, { x=bx, y=by, double=true})
+        total = total + 4
+      else
+        for dx = 0,1 do for dy = 0,1 do
+          if bx+dx <= BW and by+dy <= BH and free_spot(bx+dx, by+dy) then
+            table.insert(list, { x=bx+dx, y=by+dy })
+            total = total + 1
+          end
+        end end
       end
-    end
+    end end
 
     return list, total
   end
@@ -1310,6 +1314,9 @@ print("fill_cages with", name or "NIL!");
 
       local th = add_thing(p, c, spot.x, spot.y, m_info.kind, true, angle, options)
       th.mon_name = m_name
+
+      if spot.dx then th.dx = (th.dx or 0) + spot.dx end
+      if spot.dy then th.dy = (th.dy or 0) + spot.dy end
 
       -- allow monster to take part in battle simulation
       table.insert(c.mon_set[SK], { name=m_name, horde=1, info=m_info, caged=true })
