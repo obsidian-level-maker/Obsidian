@@ -298,9 +298,12 @@ function choose_liquid()
 end
 
 function find_liquid(name)
+  if not name then return nil end
+
   for zzz,info in ipairs(TH_LIQUIDS) do
     if info.name == name then return info end
   end
+
   error("Unknown liquid: " .. name)
 end
 
@@ -541,7 +544,7 @@ function plan_sp_level()  -- returns Plan
     assert(theme)
 
     -- decide liquid
-    if rand_odds(30+50) then
+    if rand_odds(50) then
       if (theme.bad_liquid or "none") == p.liquid.name then
         Q.liquid = find_liquid(theme.good_liquid)
       elseif theme.good_liquid and dual_odds(Q.mini, 15, 66) then

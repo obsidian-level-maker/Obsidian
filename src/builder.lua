@@ -1412,7 +1412,7 @@ end
 
     -- FIXME get info from theme
     local kinds = { "room", "void", "flush", "cage", "liquid" }
-    local probs = { 33, 5, 50, 2+19, 2+99 }
+    local probs = { 33, 5, 50, 10, 50 }
 
     if not c.outdoor then probs[2] = 20 end
 
@@ -2169,7 +2169,7 @@ function build_cell(p, c)
 
       local K1, K2 = chunk_pair(c, other, side,n)
 
-      if K1.void and K2.void then
+      if (K1.void or K1.cage) and (K2.void or K2.cage) then
         gap_fill(p,c, sx,sy, ex,ey, { solid=b_theme.void})
       else
         local sec
@@ -2804,7 +2804,7 @@ end
                  light=c.lighting,
                  }
 
-  if not c.theme.outdoor and not c.is_exit and rand_odds(35+60) then
+  if not c.theme.outdoor and not c.is_exit and rand_odds(70) then
     c.sky_light =
     {
       h  = 8 * math.random(2,4),
