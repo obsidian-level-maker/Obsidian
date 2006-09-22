@@ -33,15 +33,15 @@ MONSTER_DEFS =
   gunner    = { kind=65,   prob=17, r=20,h=56, t=70,  dm=40, fp=40, cage_prob=70, hitscan=true, humanoid=true },
 
   imp       = { kind=3001, prob=90, r=20,h=56, t=60,  dm=20, fp=20, cage_prob=90, },
-  caco      = { kind=3005, prob=90, r=31,h=56, t=400, dm=45, fp=30, cage_prob= 0, float=true },
+  caco      = { kind=3005, prob=90, r=31,h=56, t=400, dm=45, fp=30, cage_prob=10, float=true },
   revenant  = { kind=66,   prob=70, r=20,h=64, t=300, dm=55, fp=48, cage_prob=50, },
   knight    = { kind=69,   prob=70, r=24,h=64, t=500, dm=45, fp=60, cage_prob=50, },
   baron     = { kind=3003, prob=50, r=24,h=64, t=1000,dm=45, fp=110,cage_prob= 2, },
 
-  mancubus  = { kind=67,   prob=70, r=48,h=64, t=600, dm=80, fp=110,cage_prob= 0, },
-  arach     = { kind=68,   prob=20, r=64,h=64, t=500, dm=70, fp=90, cage_prob= 0, },
+  mancubus  = { kind=67,   prob=70, r=48,h=64, t=600, dm=80, fp=110,cage_prob= 95, },
+  arach     = { kind=68,   prob=20, r=64,h=64, t=500, dm=70, fp=90, cage_prob=115, },
   pain      = { kind=71,   prob= 4, r=31,h=56, t=400, dm=91, fp=40, cage_prob= 0, float=true },
-  vile      = { kind=64,   prob= 8, r=20,h=56, t=700, dm=30, fp=110,cage_prob=50, hitscan=true },
+  vile      = { kind=64,   prob= 8, r=20,h=56, t=700, dm=25, fp=110,cage_prob=30, hitscan=true },
 
   -- MELEE only monsters
   demon     = { kind=3002, prob=80, r=30,h=56, t=150, dm=25, fp=30, melee=true },
@@ -1019,6 +1019,11 @@ function place_battle_stuff(p, c)
       for zzz,dat in ipairs(pickups) do
         if (pass==1) == (dat.cluster >= 5) then
           place_pickup(spots, dat)
+
+          -- re-use spots if we run out
+          if #spots == 0 then 
+            spots = copy_shuffle_spots(c.free_spots)
+          end
         end
       end
     end
@@ -1053,8 +1058,7 @@ function place_battle_stuff(p, c)
 
       if is_big then
         -- Note: cannot handle monsters with radius >= 64 
-        th.dx = 32
-        th.dy = 32
+        th.dx = 32; th.dy = 32
       end
 
       if spot.dx then th.dx = (th.dx or 0) + spot.dx end
@@ -1262,7 +1266,7 @@ function battle_in_cell(p, c)
     end
   end
 
-  local function decide_cage_monster(firepower, horde)
+  local function decide_cage_monster(firepower, horde, allow_big)
 
     local names = {}
     local probs = {}
@@ -1272,6 +1276,8 @@ function battle_in_cell(p, c)
          ((info.pow * horde < T*2) and (info.fp < firepower*2))
       then
         local prob = info.cage_prob or 0
+
+        if info.r >= 25 and not allow_big then prob = 0 end
 
         if prob > 0 then
           table.insert(names, name)
@@ -1283,47 +1289,70 @@ function battle_in_cell(p, c)
     assert(#probs > 0)
 
     local idx = rand_index_by_probs(probs)
+    local info = MONSTER_DEFS[names[idx]]
+    assert(info)
 
-    return names[idx]
+    local horde = 1
+    if allow_big and (info.r < 25) then
+      horde = 3 -- FIXME: better decision
+    end
+
+    return names[idx], horde
   end
 
   local function fill_cages()
     
     if not c.cage_spots then return end
 
+    local orig_T = T
+
     local fp = fire_power(best_weapon(SK))
-    local name = decide_cage_monster(fp, #c.cage_spots)
-
-print("fill_cages with", name or "NIL!");
-
-    local info = MONSTER_DEFS[name]
-    assert(info)
+    
+    local sml_name, sml_horde = decide_cage_monster(fp, #c.cage_spots)
+    local big_name, big_horde = decide_cage_monster(fp, #c.cage_spots, true)
 
     for zzz,spot in ipairs(c.cage_spots) do
 
-      local m_name = name
-      local m_info = info
+      local m_name  = sel(spot.double, big_name, sml_name)
+      local m_horde = sel(spot.double, big_horde,sml_horde)
 
       if spot.different then
-        m_name = decide_cage_monster(fp, 1)
-        m_info = MONSTER_DEFS[m_name]
+        m_name, m_horde = decide_cage_monster(fp, sel(spot.double,2,1), spot.double)
       end
 
-      local angle = math.random(0,7) * 45
-      local options = { [SK]=true }
+      local m_info = MONSTER_DEFS[m_name]
+      assert(m_info)
 
-      local th = add_thing(p, c, spot.x, spot.y, m_info.kind, true, angle, options)
-      th.mon_name = m_name
+      for i = 1,m_horde do
+        local angle = math.random(0,7) * 45
+        local options = { [SK]=true }
 
-      if spot.dx then th.dx = (th.dx or 0) + spot.dx end
-      if spot.dy then th.dy = (th.dy or 0) + spot.dy end
+        local dx = int((i-1)%2) * 64
+        local dy = int((i-1)/2) * 64
 
-      -- allow monster to take part in battle simulation
-      table.insert(c.mon_set[SK], { name=m_name, horde=1, info=m_info, caged=true })
+        local th = add_thing(p, c, spot.x, spot.y, m_info.kind, true, angle, options)
+        th.mon_name = m_name
 
-      -- caged monsters affect the total toughness
-      T = T - m_info.pow
+        if m_info.r >= 32 then  -- big monster
+          dx, dy = dx+32, dy+32
+        end
+
+        if spot.dx then dx = dx + spot.dx end
+        if spot.dy then dy = dy + spot.dy end
+
+        th.dx = dx
+        th.dy = dy
+
+        -- allow monster to take part in battle simulation
+        table.insert(c.mon_set[SK], { name=m_name, horde=1, info=m_info, caged=true })
+
+        -- caged monsters affect the total toughness
+        T = T - m_info.pow
+      end
     end
+
+    -- don't use up all the toughness, allow non-caged monsters
+    T = math.max(T, orig_T / 3)
   end
 
   ---=== battle_in_cell ===---
