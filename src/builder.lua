@@ -54,6 +54,8 @@ function copy_chunk(K)
     room = K.room,
     void = K.void,
     link = K.link,
+    cage = K.cage,
+    liquid = K.liquid,
 
     player = K.player,
     weapon = K.weapon,
@@ -934,6 +936,41 @@ function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
   end
 end
 
+--
+-- create a chunk-sized monster cage
+--
+function B_big_cage(p,c, kx,ky)
+
+  local bx = chunk_to_block(kx)
+  local by = chunk_to_block(ky)
+
+  CAGE =
+  {
+    f_h = c.ceil_h - 16 - 72,
+    c_h = c.ceil_h - 16,
+    f_tex = TH_CAGE.floor,
+    c_tex = TH_CAGE.ceil,
+    light = 176,
+
+    l_tex = TH_CAGE.wall,
+    u_tex = TH_CAGE.wall,
+    is_cage = true
+  }
+
+  for x = 0,2 do for y = 0,2 do
+    local overrides = {}
+    if x == 0 then overrides[4] = { rail="MIDBARS3" } end
+    if x == 2 then overrides[6] = { rail="MIDBARS3" } end
+    if y == 0 then overrides[2] = { rail="MIDBARS3" } end
+    if y == 2 then overrides[8] = { rail="MIDBARS3" } end
+
+    fill(p,c, bx+x,by+y, bx+x,by+y, CAGE, overrides)
+  end end
+
+  local spot = {x=bx, y=by, double=true, dx=32, dy=32}
+  add_cage_spot(p,c, spot)
+end
+
 
 SKY_LIGHT_FUNCS =
 {
@@ -1257,6 +1294,7 @@ end
     assert(k1 and k2)
     if k1.void and k2.void then return true end
     if k1.room and k2.room then return true end
+    if k1.cage and k2.cage then return true end
     if k1.link and k2.link then return k1.link == k2.link end
     return false
   end
@@ -1311,7 +1349,7 @@ end
       local nx,ny = dir_to_delta(dir)
       nx, ny = kx+nx, ky+ny
 
-      if valid_chunk(nx, nx) then
+      if valid_chunk(nx, ny) then
         if not c.chunks[nx][ny] then
           c.chunks[nx][ny] = { room=true }
           return -- SUCCESS --
@@ -1320,43 +1358,81 @@ end
     end
   end
 
-  local function flesh_out_cell(c)
+  local function void_it_up(c)
+    for kx = 1,KW do
+      for ky = 1,KH do
+        if not c.chunks[kx][ky] then
+          c.chunks[kx][ky] = { void=true }
+        end
+      end
+    end
+  end
+
+  local function try_add_special(c, name)
     
-    local function void_it_up()
-      for kx = 1,KW do
-        for ky = 1,KH do
-          if not c.chunks[kx][ky] then
-            c.chunks[kx][ky] = { void=true }
+    if name == "liquid" then
+      if not c.quest.liquid then return end
+      if c.is_exit then return end -- never in exit room
+    end
+
+    local posits = {}
+
+    for kx = 1,KW do
+      for ky = 1,KH do
+        if not c.chunks[kx][ky] then
+          -- make sure cage has a walkable neighbour
+          for dir = 2,8,2 do
+            local nx,ny = dir_to_delta(dir)
+            nx, ny = kx+nx, ky+ny
+
+            if valid_chunk(nx, ny) and c.chunks[nx][ny] and
+               (c.chunks[nx][ny].room or c.chunks[nx][ny].link)
+            then
+              table.insert(posits, {x=kx, y=ky})
+              break;
+            end
           end
         end
       end
     end
 
-    local void_chance = 94
-    if not c.outdoor then void_chance = 86 end
+    if #posits == 0 then return end
 
-      -- FIXME get info from theme
-    local room_chance = 25
-    if c.scenic then room_chance = 95 end
+    local p = posits[math.random(1,#posits)]
+
+    c.chunks[p.x][p.y] = { [name]=true }
+  end
+
+  local function flesh_out_cell(c)
+    
+    -- possibilities:
+    --   (a) fill unused chunks with void
+    --   (b) fill unused chunks with room
+    --   (c) fill unused chunk from nearby ledge
+
+    -- FIXME get info from theme
+    local kinds = { "room", "void", "flush", "cage", "liquid" }
+    local probs = { 33, 5, 50, 2+19, 2+99 }
+
+    if not c.outdoor then probs[2] = 20 end
+
+    if c.scenic then probs[1] = 120 end
 
     while count_empty_chunks(c) > 0 do
 
-      -- possibilities:
-      --   (a) fill unused chunks with void
-      --   (b) fill unused chunks with room
-      --   (c) fill unused chunk from nearby ledge
+      local idx = rand_index_by_probs(probs)
+      local kind = kinds[idx]
 
-      local r = math.random(100)
-
-      if r < room_chance then
+      if kind == "room" then
         try_grow_room(c)
-      elseif r > void_chance then
-        void_it_up()
-      else
+      elseif kind == "void" then
+        void_it_up(c)
+      elseif kind == "flush" then
         try_flush_side(c)
+      else
+        try_add_special(c, kind)
       end
     end
-
   end
 
   local function connect_chunks(c)
@@ -1365,21 +1441,28 @@ end
     --   1 for connected chunk 
     --   0 for not-yet connected chunk 
     --   nil for unconnectable chunks (void space)
+
     local function init_connx()
       for kx = 1,KW do
         for ky = 1,KH do
           local K = c.chunks[kx][ky]
           assert(K)
 
-          K.delta_floor = 0
-
-          if K.void then
+          if K.void or K.cage then
             -- skip it
+
           elseif K.room then
             K.connected = 1
 
             K.floor_h = c.floor_h
             K.ceil_h  = c.ceil_h
+
+          elseif K.liquid then
+            K.connected = 0
+
+            K.floor_h = c.f_min - 12
+            K.ceil_h  = c.ceil_h
+            
           else
             assert(K.link)
             local other = link_other(K.link, c)
@@ -1392,7 +1475,6 @@ end
               -- Note: cannot assume that it connects
               -- (it might be an isolated corner).
             else
-              K.delta_floor = other.floor_h - c.floor_h
               
               K.floor_h = other.floor_h
               K.ceil_h  = math.max(c.ceil_h, other.ceil_h) --FIXME
@@ -1403,29 +1485,28 @@ end
     end
 
     local function grow_pass()
-      local function try_grow_pair(K, N)
-        if N.connected ~= 0 then return end
-        
-        if K.delta_floor == N.delta_floor then
-          N.connected = 1
-        end
-      end
 
-      for kx = 1,KW do
-        for ky = 1,KH do
-          local K = c.chunks[kx][ky]
-
-          if K.connected == 1 then
-            for dir = 2,8,2 do
-              local dx,dy = dir_to_delta(dir)
-
-              if valid_chunk(kx+dx,ky+dy) then
-                try_grow_pair(K, c.chunks[kx+dx][ky+dy])
-              end
-            end
+      local function grow_a_pair(K, N)
+        if N.connected == 0 then
+          if math.abs(K.floor_h - N.floor_h) <= 16 then
+            N.connected = 1
           end
         end
       end
+
+      for kx = 1,KW do for ky = 1,KH do
+        local K = c.chunks[kx][ky]
+
+        if K.connected == 1 then
+          for dir = 2,8,2 do
+            local dx,dy = dir_to_delta(dir)
+
+            if valid_chunk(kx+dx,ky+dy) then
+              grow_a_pair(K, c.chunks[kx+dx][ky+dy])
+            end
+          end
+        end
+      end end
     end
 
     local function grow_connx()
@@ -1438,35 +1519,33 @@ end
       local best_diff = 999999
       local coords = {}
 
-      for kx = 1,KW do
-        for ky = 1,KH do
-          local K = c.chunks[kx][ky]
+      for kx = 1,KW do for ky = 1,KH do
+        local K = c.chunks[kx][ky]
 
-          if K.connected == 0 then
-            for dir = 2,8,2 do
-              local dx,dy = dir_to_delta(dir)
+        if K.connected == 0 then
+          for dir = 2,8,2 do
+            local dx,dy = dir_to_delta(dir)
 
-              if valid_chunk(kx+dx, ky+dy) and
-                 c.chunks[kx+dx][ky+dy].connected == 1 then
+            if valid_chunk(kx+dx, ky+dy) and
+               c.chunks[kx+dx][ky+dy].connected == 1
+            then
+              local N = c.chunks[kx+dx][ky+dy]
+              local diff = math.abs(K.floor_h - N.floor_h)
 
-                 local N = c.chunks[kx+dx][ky+dy]
-                 local diff = math.abs(K.delta_floor - N.delta_floor)
+              if diff < best_diff then
+                -- clear out previous (worse) results
+                coords = {}
+                best_diff = diff
+              end
 
-                 if diff < best_diff then
-                   -- clear out previous (worse) results
-                   coords = {}
-                   best_diff = diff
-                 end
-
-                 if diff == best_diff then
-                   local loc = { x=kx, y=ky, dir=dir }
-                   table.insert(coords, loc)
-                 end
+              if diff == best_diff then
+                local loc = { x=kx, y=ky, dir=dir }
+                table.insert(coords, loc)
               end
             end
           end
         end
-      end
+      end end
 
       if #coords == 0 then return nil end
 
@@ -1541,7 +1620,7 @@ io.stdout:write(string.format(
 
     for kx = 1,KW do
       for ky = 1,KH do
-        if c.chunks[kx][ky] and not c.chunks[kx][ky].void then
+        if c.chunks[kx][ky] and not (c.chunks[kx][ky].void or c.chunks[kx][ky].cage) then
           local score = k_dist(kx, ky)
           score = score + math.random() * 0.5
           if c.chunks[kx][ky].floor_h == c.floor_h then score = score + 1.7 end
@@ -1581,24 +1660,24 @@ io.stdout:write(string.format(
     end
   end
 
-  local function liquify_cell(c)
-
-    if c.is_exit then return end
-
-    for kx = 1,KW do
-      for ky = 1,KH do
-        local K = c.chunks[kx][ky]
-        if K and not K.void then
-
--- TEST CRUD ONLY
-if rand_odds(49) and p.liquid and K.floor_h == c.f_min then
-  K.liquid = p.liquid;
-  K.floor_h = K.floor_h - 12
-end
-        end
-      end
-    end
-  end
+---###  local function liquify_cell(c) -- UNUSED
+---###
+---###    if c.is_exit then return end
+---###
+---###    for kx = 1,KW do
+---###      for ky = 1,KH do
+---###        local K = c.chunks[kx][ky]
+---###        if K and not K.void and not K.cage then
+---###
+---###-- TEST CRUD ONLY
+---###if rand_odds(49) and p.liquid and K.floor_h == c.f_min then
+---###  K.liquid = p.liquid;
+---###  K.floor_h = K.floor_h - 12
+---###end
+---###        end
+---###      end
+---###    end
+---###  end
 
   --==-- make_chunks --==--
 
@@ -1633,7 +1712,7 @@ end
 
       position_stuff_cell(cell)
 
-      liquify_cell(cell)
+--      liquify_cell(cell)
   end
 end
 
@@ -1665,10 +1744,10 @@ function build_cell(p, c)
   end
 
   local function decide_void_pic(p, c)
-    if c.theme.pic_wd and rand_odds(66) then
+    if c.theme.pic_wd and rand_odds(60) then
       c.void_pic = { tex=c.theme.pic_wd, w=128, h=c.theme.pic_wd_h or 128 }
       c.void_cut = 1
-    elseif not c.theme.outdoor and rand_odds(50) then
+    elseif not c.theme.outdoor and rand_odds(25) then
       local pic
       repeat
         pic = TH_LIGHTS[math.random(1, #TH_LIGHTS)]
@@ -1861,11 +1940,11 @@ function build_cell(p, c)
     for n = 1,KW do
       local K1, K2 = chunk_pair(c, other, side,n)
  
-      if not K1.void then
+      if not (K1.void or K1.cage) then
         f_max = math.max(f_max, K1.floor_h)
         f_min = math.min(f_min, K1.floor_h)
       end
-      if not K2.void then
+      if not (K2.void or K2.cage) then
         f_max = math.max(f_max, K2.floor_h)
         f_min = math.min(f_min, K2.floor_h)
       end
@@ -2474,6 +2553,21 @@ end
       end
     end
 
+    local function wall_switch_dir(kx, ky, entry_dir)
+      if not entry_dir then
+        entry_dir = math.random(1,4)*2
+      end
+      
+      if kx==2 and ky==2 then
+        return entry_dir
+      end
+
+      if kx==2 then return sel(ky < 2, 8, 2) end
+      if ky==2 then return sel(kx < 2, 6, 4) end
+
+      return entry_dir
+    end
+
     -- build_chunk --
 
     local K = c.chunks[kx][ky]
@@ -2481,7 +2575,7 @@ end
 
     if K.void then
 
-      if rand_odds(90) and TH_PICS then
+      if TH_PICS and dual_odds(c.theme.outdoor, 10, 50) then
         if not c.void_pic then decide_void_pic(p, c) end
         local h = c.void_pic.h or (c.c_min - c.f_max - 32)
         local z = (c.c_min + c.f_max) / 2
@@ -2489,6 +2583,11 @@ end
       else
         chunk_fill(c, K, kx, ky, nil, c.theme.void, c.theme.void)
       end
+      return
+    end
+
+    if K.cage then
+      B_big_cage(p,c, kx,ky)
       return
     end
 
@@ -2599,12 +2698,16 @@ end
         local info = TH_SWITCHES[c.quest.item]
         assert(info.switch)
         local kind = 103; if info.bars then kind = 23 end
-        local side = math.random(1,4)*2 -- FIXME
-        B_wall_switch(p, c, bx, by, K.floor_h, side, info, kind, c.quest.tag + 1)
+        if rand_odds(50) then
+          local side = wall_switch_dir(kx, ky, c.entry_dir)
+          B_wall_switch(p,c, bx,by, K.floor_h, side, info, kind, c.quest.tag + 1)
+        else
+          B_pillar_switch(p,c, bx,by, info,kind, c.quest.tag + 1)
+        end
 
       elseif c.quest.kind == "exit" then
-        local side = math.random(1,4)*2 -- FIXME
-        B_floor_switch(p, c, bx, by, K.floor_h, side, TH_SWITCHES.sw_exit, 11)
+        local side = wall_switch_dir(kx, ky, c.entry_dir)
+        B_floor_switch(p,c, bx,by, K.floor_h, side, TH_SWITCHES.sw_exit, 11)
       end
     end
 
@@ -2625,9 +2728,14 @@ end
 
     if K.liquid then
       sec = copy_block(sec) -- FIXME??
-      sec.f_tex = TH_LIQUIDS[K.liquid].floor
-      sec.kind = TH_LIQUIDS[K.liquid].sec_kind
+      sec.f_tex = c.quest.liquid.floor
+      sec.kind = c.quest.liquid.sec_kind
       sec.f_h = K.floor_h
+    end
+
+    if K.player then
+      sec = copy_block(sec) -- FIXME??
+      sec.near_player = true;
     end
 
 -- TEST CRUD : overhangs
