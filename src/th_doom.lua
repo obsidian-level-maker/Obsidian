@@ -121,6 +121,7 @@ TH_BRICK =
   ceil = "CEIL5_2",
 
   scenery = "red_torch",
+  bad_liquid = "slime",
 }
 
 TH_BRICK2 =

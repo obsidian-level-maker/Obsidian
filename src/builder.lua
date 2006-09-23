@@ -125,8 +125,8 @@ function random_where(link)
      15, 40, 15, 90, 15, 40, 15
   }
 
-  if (link.kind == "door" and rand_odds(5)) or
-     (link.kind ~= "door" and rand_odds(20)) then
+  if (link.kind == "door" and rand_odds(4)) or
+     (link.kind ~= "door" and rand_odds(15)) then
     link.where = "double";
     return
   end
@@ -413,7 +413,7 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
           sec.c_h = sec.c_h - 32
           if b_theme.outdoor then sec.c_tex = sec.f_tex end
         end
-        local bar = rand_index_by_probs { 20, 90 }
+        local bar = link.bar_size
         B_bars(p,c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_theme.wall, door.tag)
         return;
       end
@@ -1412,7 +1412,7 @@ end
 
     -- FIXME get info from theme
     local kinds = { "room", "void", "flush", "cage", "liquid" }
-    local probs = { 33, 5, 50, 10, 50 }
+    local probs = { 33, 5, 50, 7, 35 }
 
     if not c.outdoor then probs[2] = 20 end
 
@@ -1874,7 +1874,7 @@ function build_cell(p, c)
 
       local kind = link.wide_door
 
-      if link.src.quest == link.dest.quest and rand_odds(25) then
+      if link.src.quest == link.dest.quest and (link.door_rand < 25) then
         kind = link.narrow_door
       end
 
@@ -1895,7 +1895,9 @@ function build_cell(p, c)
     link.narrow_door = random_door_kind(64)
     link.wide_door   = random_door_kind(128)
     link.block_sound = rand_odds(90)
+    link.bar_size    = rand_index_by_probs { 20,90 }
     link.arch_rand   = math.random(0,100)
+    link.door_rand   = math.random(0,100)
 
     if link.where == "double" then
       local awh = math.random(2,3)
@@ -1982,7 +1984,7 @@ function build_cell(p, c)
         return "fence"
       end
 
-      local i_W = sel(link, 5, 20)
+      local i_W = sel(link, 3, 20)
       local i_F = sel(cell.theme == other.theme, 5, 0)
 
       if dual_odds(cell.theme.outdoor, 25, i_W) then return "wire" end
@@ -2739,8 +2741,7 @@ end
     end
 
 -- TEST CRUD : overhangs
-if rand_odds(15) and -- kx==2 and ky==2 and  -- K.link
-  c.theme.outdoor and -- and not link_other(K.link,c).theme.outdoor
+if rand_odds(10) and c.theme.outdoor and
   not (c.quest.kind == "exit" and c.along == #c.quest.path-1)
 then
   sec = copy_block(sec) -- FIXME??

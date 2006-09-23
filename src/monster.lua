@@ -33,15 +33,15 @@ MONSTER_DEFS =
   gunner    = { kind=65,   prob=17, r=20,h=56, t=70,  dm=40, fp=40, cage_prob=70, hitscan=true, humanoid=true },
 
   imp       = { kind=3001, prob=90, r=20,h=56, t=60,  dm=20, fp=20, cage_prob=90, },
-  caco      = { kind=3005, prob=90, r=31,h=56, t=400, dm=45, fp=30, cage_prob=10, float=true },
+  caco      = { kind=3005, prob=90, r=31,h=56, t=400, dm=45, fp=30, cage_prob=14, float=true },
   revenant  = { kind=66,   prob=70, r=20,h=64, t=300, dm=55, fp=48, cage_prob=50, },
   knight    = { kind=69,   prob=70, r=24,h=64, t=500, dm=45, fp=60, cage_prob=50, },
   baron     = { kind=3003, prob=50, r=24,h=64, t=1000,dm=45, fp=110,cage_prob= 2, },
 
-  mancubus  = { kind=67,   prob=70, r=48,h=64, t=600, dm=80, fp=110,cage_prob= 95, },
-  arach     = { kind=68,   prob=20, r=64,h=64, t=500, dm=70, fp=90, cage_prob=115, },
-  pain      = { kind=71,   prob= 4, r=31,h=56, t=400, dm=91, fp=40, cage_prob= 0, float=true },
-  vile      = { kind=64,   prob= 8, r=20,h=56, t=700, dm=25, fp=110,cage_prob=30, hitscan=true },
+  mancubus  = { kind=67,   prob=70, r=48,h=64, t=600, dm=80, fp=110,cage_prob=70, },
+  arach     = { kind=68,   prob=26, r=64,h=64, t=500, dm=70, fp=90, cage_prob=90, },
+  pain      = { kind=71,   prob= 8, r=31,h=56, t=400, dm=88, fp=40, cage_prob= 0, float=true },
+  vile      = { kind=64,   prob=10, r=20,h=56, t=700, dm=20, fp=120,cage_prob=17, hitscan=true },
 
   -- MELEE only monsters
   demon     = { kind=3002, prob=80, r=30,h=56, t=150, dm=25, fp=30, melee=true },
