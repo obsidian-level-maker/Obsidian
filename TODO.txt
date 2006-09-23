@@ -2,28 +2,16 @@
 TODO
 ----
 
-+  pillar cages:
-   -  pillar patterns, esp. 1359 and 2468, straight lines too.
-   +  chunk-size!! (always have rail) (arach possible!)
-
--  floor switches: y_offset
-
--  wall switches: place in the wall! 
-
--  windows:
-
 -  doors:
    -  bottom of door (underneath): should match door tex.
-
--  overhangs:
-
--  compute_line_flags: more explicit flags (esp. override)
 
 HMMM: decide monster: taking damage into account
 
 
 GUI TODO
 --------
+
+*  put scripts (etc) in a "obl_data" directory.
 
 +  about screen.
 
@@ -74,7 +62,7 @@ c) Writer:
    #  support fragments
 
 
-MILESTONE 2  (getting there...)
+MILESTONE 2  (close!!)
 ===========
 
 -  working GUI interface using FLTK
@@ -85,22 +73,20 @@ MILESTONE 2  (getting there...)
 
 #  use GLBSP plugin to build nodes automatically.
 
--  more architecture features:
+#  more architecture features:
 
-   >> monster cages
-
-   #  paintings/computers/lights in the wall
    #  pillars
-   #  lights in the ceiling
-   #  sky holes / beams
+   #  lights / sky-holes in the ceiling
+   #  paintings / computers / lights in the wall
+   #  monster cages
  
 
-MILESTONE 3  (not started)
+MILESTONE 3  (not started...)
 ===========
 
-+  monster closets (esp. along a back-track route)
-
 +  teleporters!
+
++  monster closets (esp. along a back-track route)
 
 -  liquid pools and traps
 
@@ -109,6 +95,11 @@ MILESTONE 3  (not started)
 -  good support for the different games (Doom 1/2, Heretic, Hexen),
    and initial support for add-ons (Eternal, Osiris)
 
+-  pillar cage patterns, 1359 and 2468, straight lines too.
+-  chunk-size cages: outdoor and top-less
+
+-  floor switches: y_offset
+-  wall switches: place in the wall! 
 -  wall switches: "small" mode (32x32)
 
 -  overhangs: thick and central pillars
@@ -116,6 +107,7 @@ MILESTONE 3  (not started)
 
 -  more mid-masked textures (esp. on windows)
 -  prefer not to create void space next to windows
+-  compute_line_flags: more explicit flags (esp. override)
 
 +  overall consistency (doors/lights/overhangs/windows)
 
