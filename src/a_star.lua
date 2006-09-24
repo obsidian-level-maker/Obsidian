@@ -18,7 +18,13 @@
 
 require 'util'
 
-function find_path(arr, sx, sy, ex, ey, scorer)
+--
+-- Find path from start (sx,sy) to end (ex,ey)
+--
+-- Score function:
+--   f(arr, cx,cy, nx,ny) -> distance, negative for impossible
+--
+function astar_find_path(arr, sx, sy, ex, ey, scorer)
   local open   = array_2D(arr.w, arr.h)
   local closed = array_2D(arr.w, arr.h)
   local cx, cy
@@ -52,21 +58,21 @@ function find_path(arr, sx, sy, ex, ey, scorer)
     if nx < 1 or nx > arr.w then return end
     if ny < 1 or ny > arr.h then return end
 
-    if nx == ex and ny == ey then return true end
-
-    if closed[nx][ny] then return end
-
     local G = scorer(arr, cx, cy, nx, ny)
 
-    if G < 0 then return end  -- impassible
+    if G < 0 then return false end
+
+    if nx == ex and ny == ey then return true end
+
+    if closed[nx][ny] then return false end
 
     G = G + closed[cx][cy].G  -- get total distance
 
     if not open[nx][ny] or G < open[nx][ny].G then
       open[nx][ny] = { G=G, H=calc_H(nx,ny), px=cx, py=cy }
     end
-
-    -- return false
+    
+    return false
   end
 
   local function collect_path()
