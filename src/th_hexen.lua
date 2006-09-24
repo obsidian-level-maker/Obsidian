@@ -90,14 +90,19 @@ TH_LIFT =
   wall = "PLAT02", floor = "F_065"
 }
 
-TH_PEDESTAL =
-{
-  wall = "CTYSTUCI4",
-  void = "CTYSTUCI4",
 
-  floor = "FLOOR11",
-  ceil  = "FLOOR11",
+---- PEDESTALS ------------
+
+PED_PLAYER =
+{
+  wall = "CTYSTUCI4", void = "CTYSTUCI4",
+  floor = "FLOOR11",  ceil = "FLOOR11",
+  h = 8,
 }
+
+PED_QUEST = PED_PLAYER  -- FIXME
+
+PED_WEAPON = PED_PLAYER  -- FIXME
 
 
 ---- OVERHANGS ------------

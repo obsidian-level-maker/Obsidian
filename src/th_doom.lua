@@ -394,21 +394,36 @@ TH_LIFT =
   wall = "SUPPORT2", floor = "STEP2"
 }
 
-TH_PEDESTAL =
-{
-  wall = "METAL",
-  void = "METAL1",
-
-  floor = "GATE4",
-  ceil  = "GATE4",
-}
-
 TH_CAGE =
 {
   wall = "METAL",
   floor = "CEIL5_2",
   ceil = "TLITE6_4",
   rail = "r_1"  -- lookup in TH_RAILS
+}
+
+
+--- PEDESTALS --------------
+
+PED_PLAYER =
+{
+  wall = "SHAWN2",  void = "SHAWN2",
+  floor = "FLAT22", ceil = "FLAT22",
+  h = 8,
+}
+
+PED_QUEST =
+{
+  wall  = "METAL", void = "METAL",
+  floor = "GATE4", ceil = "GATE4",
+  h = 24,
+}
+
+PED_WEAPON =
+{
+  wall  = "METAL",   void = "METAL",
+  floor = "CEIL1_2", ceil = "CEIL1_2",
+  h = 12,
 }
 
 
