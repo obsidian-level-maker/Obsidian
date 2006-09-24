@@ -18,6 +18,8 @@
 
 require 'defs'
 require 'util'
+require 'a_star'
+
 require 'th_doom'
 
 
@@ -260,6 +262,7 @@ function create_cell(p, x, y, quest, along, theme)
     x = x, y = y, quest = quest, along = along,
     link = {}, border = {}, window = {},
     theme = theme,
+    liquid = quest.liquid,
     floor_h = 0, ceil_h  = 256, -- dummy values
     monsters = {}
   }
@@ -338,11 +341,12 @@ function shuffle_build_sites(p)
 
     if link.kind == "falloff" then chance = 0 end
 
-    if math.random(1,100) <= chance then
+    if rand_odds(chance) then
       link.build = link.dest
     end
   end
 
+--[[
   -- make sure cells are never "full" of build sites
   -- (Note: in reality this happens only very rarely)
   for loop = 1,9 do
@@ -357,6 +361,7 @@ function shuffle_build_sites(p)
     con.ticker();
     if not modified then break end
   end
+--]]
 end
 
 function compute_height_minmax(p)
@@ -1058,16 +1063,6 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
           create_link(p, c, other, dir)
           c.link[dir].kind = "falloff"
----###          local LINK =
----###          {
----###            kind="falloff", src=c, dest=other,
----###            build=c
----###          }
----###
----###          table.insert(p.all_links, LINK)
----###
----###          c.link[dir] = LINK
----###          other.link[10-dir] = LINK
         end
       end
     end
@@ -1076,14 +1071,14 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
   local function add_windows()
     
     local function can_make_window(a, b)
-      
-      local aq = a.quest.parent or a.quest
-      local bq = b.quest.parent or b.quest
 
-      if aq.level <  bq.level then return false end
-      if aq.level == bq.level and a.along < b.along then return false end
+---###   local aq = a.quest.parent or a.quest
+---###   local bq = b.quest.parent or b.quest
+---###
+---###   if aq.level <  bq.level then return false end
+---###   if aq.level == bq.level and a.along < b.along then return false end
       
-      if (a.is_exit or b.is_exit) and rand_odds(98) then return false end
+      if (a.is_exit or b.is_exit) and rand_odds(96) then return false end
       if b.lava_bridge then return false end
 
       local cc = math.min(a.ceil_h, b.ceil_h) - 32
@@ -1095,20 +1090,20 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 ---###   if (b.ceil_h - a.floor_h) < 64 then return false end
       
       if a.theme.outdoor and b.theme.outdoor and a.ceil_h ~= b.ceil_h then return false end
-      if a.theme.outdoor and not b.theme.outdoor and b.ceil_h > b.ceil_h + 32 then return false end
-      if b.theme.outdoor and not a.theme.outdoor and a.ceil_h > a.ceil_h + 32 then return false end
+--!!      if a.theme.outdoor and not b.theme.outdoor and b.ceil_h > b.ceil_h + 32 then return false end
+--!!      if b.theme.outdoor and not a.theme.outdoor and a.ceil_h > a.ceil_h + 32 then return false end
 
       return true
     end
 
     for zzz,c in ipairs(p.all_cells) do
-      for dir = 2,8,2 do
+      for dir = 6,8,2 do
         local dx, dy = dir_to_delta(dir)
         local other = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
 
         if other and
            can_make_window(c, other) and
-           rand_odds(88)
+           rand_odds(85)
         then
           c.window[dir] = "window"
           other.window[10-dir] = "dest"

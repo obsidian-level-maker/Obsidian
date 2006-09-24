@@ -51,6 +51,7 @@ class Cell
   along : how far along current quest (1 to #path)
 
   theme : Theme
+  liquid : liquid type (nil for none)
   scenic : bool -- if true, cell only for scenery (no walk)
 
   blk_x, blk_y : block ref for lowest left corner
