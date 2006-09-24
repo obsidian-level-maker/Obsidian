@@ -16,9 +16,30 @@
 --
 ----------------------------------------------------------------
 
+DM_WEAPON_LIST =
+{
+  shotty=60, super=40, chain=20, launch=40, plasma=30,
+  saw=10, bfg=3
+}
 
-DM_WEAPON_LIST = { saw=10, shotty=60, super=40, chain=20,
-  launch=40, plasma=30, bfg=5 }
+DM_HEALTH_LIST =
+{ 
+  potion=5, stimpack=60, medikit=20
+}
+
+DM_AMMO_LIST =
+{ 
+  bullets=5,  bullet_box=30,
+  shells=60,  shell_box=5,
+  rockets=10, rocket_box=20,
+  cells=40,   cell_pack=1,
+}
+
+DM_ITEM_LIST =
+{
+  invis=40, goggle=10, berserk=50,
+  soul=5, green_armor=40, blue_armor=5,
+}
 
 
 function show_dm_links(p)
@@ -74,6 +95,26 @@ function show_dm_links(p)
 end
 
 
+function choose_dm_thing(p, LIST, adjusted)
+  local wp_names = {}
+  local wp_probs = {}
+
+  for name,prob in pairs(LIST) do
+    local used_count = p.used_items[name] or 0
+
+    table.insert(wp_names, name)
+    table.insert(wp_probs, prob / (1 + sel(adjusted,used_count,0)))
+  end
+
+  local idx = rand_index_by_probs(wp_probs)
+  local name = wp_names[idx]
+
+  -- increase usage count
+  p.used_items[name] = 1 + (p.used_items[name] or 0)
+  return name
+end
+
+
 function plan_dm_arena()
 
 	local p = get_base_plan(PL_W, PL_H)
@@ -97,41 +138,39 @@ function plan_dm_arena()
     end
   end
 
-  local function test_coverage()
+  local function test_coverage(sx, sy)
     local visited = array_2D(p.w, p.h)
     local count
 
-    visited[1][1] = true  -- seed point
+    visited[sx][sy] = true  -- seed point
     
     for loop = 1,(p.w + p.h + 10) do
       count = 0
 
       -- flood-fill type algorithm
-      for x = 1,p.w do
-        for y = 1,p.h do
-          local c = p.cells[x][y]
-          if visited[x][y] then
-            count = count + 1
-            for dir = 2,8,2 do
-              if c.link[dir] then
-                local other = link_other(c.link[dir], c)
-                visited[other.x][other.y] = true
-                assert(other.link[10 - dir] == c.link[dir])
-              end
+      for x = 1,p.w do for y = 1,p.h do
+        local c = p.cells[x][y]
+        if visited[x][y] then
+          count = count + 1
+          for dir = 2,8,2 do
+            if c.link[dir] then
+              local other = link_other(c.link[dir], c)
+              visited[other.x][other.y] = true
+              assert(other.link[10 - dir] == c.link[dir])
             end
           end
         end
-      end
+      end end
     end
-io.stderr:write("COVERAGE: ", count, "\n")
+print("COVERAGE", count)
     return count == (p.w * p.h)
   end
 
   local function remove_dm_links(num)
-    initial_links()
 
     local coords = {}
     local index = 1
+
     rand_shuffle(coords, p.w * p.h * 2)
 
     local x, y, dir
@@ -175,10 +214,9 @@ io.stderr:write("COVERAGE: ", count, "\n")
     for idx = 1,num do
       remove_one_link()
     end
-
-    return test_coverage()
   end
 
+--[[ OLD STUFF : REMOVE
   local function empty_dm_loc()
     for loop = 1,999 do
       local x,y = random_cell(p)
@@ -202,26 +240,9 @@ io.stderr:write("COVERAGE: ", count, "\n")
       p.cells[x][y].dm_player = true
     end
   end
+--]]
 
-  local function choose_weapon()
-    local wp_names = {}
-    local wp_probs = {}
-
-    for name,prob in pairs(DM_WEAPON_LIST) do
-      local used_count = p.used_items[name] or 0
-
-      table.insert(wp_names, name)
-      table.insert(wp_probs, prob / (1 + used_count))
-    end
-
-    local idx = rand_index_by_probs(wp_probs)
-    local name = wp_names[idx]
-
-    -- increase usage count
-    p.used_items[name] = 1 + (p.used_items[name] or 0)
-    return name
-  end
-
+--[[ OLD STUFF : REMOVE
   local function assign_dm_weapons()
     con.ticker();
 
@@ -235,11 +256,12 @@ io.stderr:write("COVERAGE: ", count, "\n")
           -- tough titties
         elseif not p.cells[x][y].dm_player then
           p.cells[x][y].dm_weapon = choose_weapon()
-io.stderr:write("WEAPON === ", p.cells[x][y].dm_weapon, "\n")
+print("WEAPON === ", p.cells[x][y].dm_weapon, "\n")
         end
       end
     end
   end
+--]]
 
   local function unused_theme_pos()
     for loop = 1,999 do
@@ -285,7 +307,7 @@ io.stderr:write("WEAPON === ", p.cells[x][y].dm_weapon, "\n")
 
     local num_themes = math.random(min_t, p.h)
     assert(num_themes <= #ALL_THEMES)
-io.stderr:write("NUMBER of THEMES: ", num_themes, "\n")
+print("NUMBER of THEMES:", num_themes)
 
     local theme_list = {}
     rand_shuffle(theme_list, #ALL_THEMES)
@@ -303,23 +325,189 @@ io.stderr:write("NUMBER of THEMES: ", num_themes, "\n")
       grow_dm_themes()
       con.ticker();
     end
+
+  end
+
+  local function create_dm_links(min_links, max_links)
+    local min_links = p.w * p.h
+    local max_links = p.w * (p.h-1) + p.h * (p.w-1)
+
+    if min_links < max_links then
+      min_links = min_links + 1
+    end
+
+    for tries = 1,50 do
+      local num_links = math.random(min_links, max_links)
+
+      for tries = 1,5 do
+        print(string.format("TRYING: %d <= %d <= %d", min_links, num_links, max_links))
+
+        initial_links()
+
+        remove_dm_links(max_links - num_links)
+        
+        if test_coverage(1,1) then return end  -- Yay, success!
+      end
+    end
+    error("FAILED TRYING TO CREATING LINKS")
+  end
+
+  local function select_heights()
+    -- FIXME: TEMP JUNK
+    for zzz,c in ipairs(p.all_cells) do
+      c.floor_h = rand_index_by_probs{ 1,2,4,2,1 } * 32 - 32
+    end
+  end
+
+  local function add_falloffs()
+
+    -- converts an existing two-way link into a falloff.
+    -- checks if map still playable by finding a path back up.
+
+    local function can_make_falloff(a, b)
+
+      if not (a.floor_h >= b.f_max + 48)  then return false end
+      if not (a.floor_h + 64 <= b.ceil_h) then return false end
+
+      return true
+    end
+
+    local function verify_scorer(arr, cx,cy, nx,ny)
+      local c = arr[cx][cy]
+      local n = arr[nx][ny]
+
+          if ny > cy then dir = 8
+      elseif ny < cy then dir = 2
+      elseif nx < cx then dir = 4
+      elseif nx > cx then dir = 6
+      else
+        error("verify_scorer: weird direction!")
+      end
+
+      local L = c.link[dir]
+
+      if not L then return -1 end  -- blocked
+
+--print(string.format("*** VERIFY (%d,%d) %d --> (%d,%d) %d  L=%s", cx, cy, c.floor_h, nx, ny, n.floor_h, L.kind))
+
+      if L.kind == "falloff" then
+        if c.floor_h < n.floor_h then return -1 end  -- cannot go up
+      end
+
+      return 0.2
+    end
+
+    local function verify_falloff(L)
+      local low  = L.src
+      local high = L.dest
+
+      if low.floor_h > high.floor_h then
+        low, high = high, low
+      end
+--print(string.format("Low (%d,%d) %d -> High (%d,%d) %d", low.x,low.y, low.floor_h,  high.x, high.y, high.floor_h))
+
+      -- use A* to find a path
+      local path = astar_find_path(p.cells, low.x,low.y, high.x,high.y, verify_scorer)
+
+print("ASTAR_FIND_PATH: path_len", path and #path)
+
+      return path -- and #path <= 8
+    end
+
+    --- add_falloffs ---
+
+    local locs = {}
+
+    for zzz,c in ipairs(p.all_cells) do
+      for dir = 2,8,2 do
+        if c.link[dir] then
+          local other = link_other(c.link[dir], c)
+
+          if can_make_falloff(c, other) then
+-- print("FALL-OFF POSSIBLE AT", c.x, c.y, dir)
+            table.insert(locs, {c=c, dir=dir, other=other })
+          end
+        end
+      end
+    end
+
+    rand_shuffle(locs)
+
+    local num_f = int((p.w + p.h) / 4)
+
+    while #locs > 0 and num_f > 0 do
+
+      local cur = table.remove(locs)
+
+      local c = cur.c
+      local other = cur.other
+
+      local L = c.link[cur.dir]
+      local old_kind = L.kind
+
+      L.kind = "falloff"
+
+      if verify_falloff(L) then
+        print("FALL-OFF @", c.x, c.y, cur.dir)
+        num_f = num_f - 1
+      else
+        print("IMPOSSIBLE FALL-OFF @", c.x, c.y, cur.dir)
+        L.kind = old_kind
+      end
+    end
+  end
+
+  local function add_windows()
+
+    local function can_make_window(a, b)
+      
+      local cc = math.min(a.ceil_h, b.ceil_h) - 32
+      local ff = math.max(a.f_max,  b.f_max)  + 32
+
+      if (cc - ff) < 32 then return false end
+
+      if a.theme.outdoor and b.theme.outdoor and a.ceil_h ~= b.ceil_h then return false end
+--!!      if a.theme.outdoor and not b.theme.outdoor and b.ceil_h > b.ceil_h + 32 then return false end
+--!!      if b.theme.outdoor and not a.theme.outdoor and a.ceil_h > a.ceil_h + 32 then return false end
+
+      return true
+    end
+
+    for zzz,c in ipairs(p.all_cells) do
+      for dir = 6,8,2 do
+        local dx, dy = dir_to_delta(dir)
+        local other = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
+
+        if other and
+           can_make_window(c, other) and
+           rand_odds(64)
+        then
+          c.window[dir] = "window"
+          other.window[10-dir] = "dest"
+        end
+      end
+    end
   end
 
   ---=== plan_dm_arena ===---
 
+--[[
   local W = rand_index_by_probs{ 0,0,70,90,50,20 }
   local H = W
 
   -- occasionally create very small maps (3x2 and 4x2)
   if H > 3 and rand_odds(30) then H = H - 1 end
   if H > 2 and rand_odds( 3) then H = H - 1 end
+]]
+
+  local W = rand_index_by_probs { 0,22,90,55,15,4 }
+  local H = rand_index_by_probs { 0,22,90,55,15,4 }
+
+  --print(string.format("%dx%d", math.min(W,H), math.max(W,H)))
 
   assert(W <= p.w and H <= p.h)
 
   p.w, p.h = W, H
-
-  local min_links = W * H
-  local max_links = W * (H-1) + H * (W-1)
 
   -- dummy quest
   p.quests[1] =
@@ -334,26 +522,17 @@ io.stderr:write("NUMBER of THEMES: ", num_themes, "\n")
     end
   end
 
+  p.liquid = choose_liquid()
+
   choose_dm_themes()
+  create_dm_links()
 
-  for tries = 1,99 do
-    local num_links = math.random(min_links, max_links)
-
-    io.stderr:write(string.format("TRYING: %d <= %d <= %d\n", min_links, num_links, max_links))
-
-    if remove_dm_links(max_links - num_links) then break end
-
-    if tries >= 99 then
-      error("FAILED TRYING TO CREATING LINKS")
-    end
-  end
-
-  assign_dm_players()
-  assign_dm_weapons()
-
--- !!!!  select_heights()
+  select_heights()
   shuffle_build_sites(p)
   compute_height_minmax(p);
+
+  add_falloffs()
+  add_windows()
 
   con.ticker();
 
