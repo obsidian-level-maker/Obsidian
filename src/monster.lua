@@ -190,16 +190,31 @@ THING_NUMS =  -- FIXME duplicated in above tables
   saw    = 2005,
   bfg    = 2006,
 
-  armor  = 2019,
   invis  = 2024,
-  soul   = 2013,
   goggle = 2045,
   berserk= 2023,
   mega   =   83,
   invul  = 2022,
   backpack =  8,
 
+  potion   = 2014,
+  stimpack = 2011,
+  medikit  = 2012,
+  soul     = 2013,
+
+  helmet      = 2015,
   green_armor = 2018,
+  blue_armor  = 2019,
+  armor  = 2019,     --- FIXME!!
+
+  bullets    = 2007,
+  bullet_box = 2048,
+  shells     = 2008,
+  shell_box  = 2049,
+  rockets    = 2010,
+  rocket_box = 2046,
+  cells      = 2047,
+  cell_pack  =   17,
 }
 
 
