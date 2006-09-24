@@ -57,9 +57,9 @@ function copy_chunk(K)
     cage = K.cage,
     liquid = K.liquid,
 
-    player = K.player,
-    weapon = K.weapon,
-    quest  = K.quest,
+---##    player = K.player,
+---##    weapon = K.weapon,
+---##    quest  = K.quest,
 
     floor_h = K.floor_h,
     ceil_h  = K.ceil_h,
@@ -76,10 +76,10 @@ end
 
 
 function side_to_chunk(side)
-  if side == 2 then return int((KW+1)/2), 1  end
-  if side == 8 then return int((KW+1)/2), KH end
-  if side == 4 then return 1,  int((KH+1)/2) end
-  if side == 6 then return KH, int((KH+1)/2) end
+  if side == 2 then return 2, 1 end
+  if side == 8 then return 2, 3 end
+  if side == 4 then return 1, 2 end
+  if side == 6 then return 3, 2 end
   error ("side_to_chunk: bad side " .. side)
 end
 
@@ -232,103 +232,6 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
   end
 end
 
---[[ OLD VERSIONS -- REMOVE
-function fill(p, c, sx, sy, ex, ey, sec, l_tex, u_tex, overrides, extras)
-  if sx > ex then sx, ex = ex, sx end
-  if sy > ey then sy, ey = ey, sy end
-  for x = sx,ex do
-    for y = sy,ey do
-      local B = { l_tex=l_tex, u_tex=u_tex, overrides=overrides }
-      if sec then
-        B.f_h = sec.f_h
-        B.c_h = sec.c_h
-        B.f_tex = sec.f_tex
-        B.c_tex = sec.c_tex
-        B.light = sec.light
-        B.tag = sec.tag
-        B.kind = sec.kind
-        B.mark = (c.x*100 + c.y)  -- crude cell marking
-      else
-        B.solid = true
-      end
-      if extras then
-        for name,val in pairs(extras) do B[name] = val end
-      end
-      p.blocks[c.blk_x+x][c.blk_y+y] = B
-    end
-  end
-end
-
-function gap_fill(p, c, sx, sy, ex, ey, sec, l_tex, u_tex, overrides, extras)
-  if sx > ex then sx, ex = ex, sx end
-  if sy > ey then sy, ey = ey, sy end
-  for x = sx,ex do
-    for y = sy,ey do
-
-      if not p.blocks[c.blk_x+x][c.blk_y+y] then
-        fill(p,c, x,y, x,y, sec, l_tex,u_tex, overrides, extras)
---##        p.blocks[c.blk_x+x][c.blk_y+y] =
---##        { sector=sec, l_tex=l_tex, u_tex=u_tex, overrides=overrides,
--- FIXME          block_sound= sec and sec.block_sound }
-      end
-    end
-  end
-end
-
-function frag_fill(p, c, sx, sy, ex, ey, sec, l_tex, u_tex, overrides, extras)
-  if sx > ex then sx, ex = ex, sx end
-  if sy > ey then sy, ey = ey, sy end
-  for x = sx,ex do
-    for y = sy,ey do
-      local bx, fx = div_mod(x, FW)
-      local by, fy = div_mod(y, FH)
-      
-      if not p.blocks[c.blk_x+bx][c.blk_y+by] then
-        p.blocks[c.blk_x+bx][c.blk_y+by] = {}
-      end
-
-      local B = p.blocks[c.blk_x+bx][c.blk_y+by]
-      B.solid = false
-
-      if not B.fragments then
-        B.fragments = array_2D(FW, FH)
-      end
-
-      local F = { l_tex=l_tex, u_tex=u_tex, overrides=overrides }
-      if sec then
-        F.f_h = sec.f_h
-        F.c_h = sec.c_h
-        F.f_tex = sec.f_tex
-        F.c_tex = sec.c_tex
-        F.light = sec.light
-        F.tag = sec.tag
-        F.kind = sec.kind
-        F.mark = (c.x*100 + c.y)  -- crude cell marking
-      else
-        F.solid = true
-      end
-      
-      if extras then
-        for name,val in pairs(extras) do F[name] = val end
-      end
-      B.fragments[fx][fy] = F
-    end
-  end
-end
---]]
-
---[[
-function block_sound(p, c, sx,sy, ex,ey, degree)
-  if sx > ex then sx, ex = ex, sx end
-  if sy > ey then sy, ey = ey, sy end
-  for x = sx,ex do
-    for y = sy,ey do
-      local B = p.blocks[c.blk_x+x][c.blk_y+y]
-      if B then B.block_sound = degree end
-    end
-  end
-end
---]]
  
 -- convert 'where' value into block position
 function where_to_block(wh, long)
@@ -804,26 +707,26 @@ end
 --
 -- Build a pedestal (items, players)
 -- 
-function B_pedestal(p, c, x, y, z, floor, l_tex)
-  
-  local pedestal =
+function B_pedestal(p, c, x, y, z, info)
+ 
+  local PEDESTAL =
   {
-    f_h = z,
-    c_h = c.ceil_h,
-    f_tex = floor,
+    f_h   = z + info.h,
+    f_tex = info.floor,
+    c_h   = c.ceil_h,
     c_tex = c.theme.ceil,
     light = c.lighting,
 
-    l_tex = l_tex,
+    l_tex = info.wall,
     u_tex = c.theme.wall
   }
 
 --FIXME temp (shouldn't be needed)
-if (pedestal.c_h - pedestal.f_h) < 64 then
-  pedestal.c_h = pedestal.f_h + 64
+if (PEDESTAL.c_h - PEDESTAL.f_h) < 64 then
+  PEDESTAL.c_h = PEDESTAL.f_h + 64
 end
 
-  fill(p,c, x,y, x,y, pedestal)
+  fill(p,c, x,y, x,y, PEDESTAL)
 end
 
 
@@ -970,6 +873,81 @@ function B_big_cage(p,c, kx,ky)
   local spot = {x=bx, y=by, double=true, dx=32, dy=32}
   add_cage_spot(p,c, spot)
 end
+
+--
+-- create a deathmatch exit room
+--
+-- FIXME: it always faces south
+--
+function B_deathmatch_exit(p,c, kx,ky)
+
+  local theme = TH_EXITROOM
+
+  local x1 = chunk_to_block(kx)
+  local y1 = chunk_to_block(ky)
+  local x2 = chunk_to_block(kx + 1) - 1
+  local y2 = chunk_to_block(ky + 1) - 1
+
+  local fx = (x1 - 1) * FW
+  local fy = (y1 - 1) * FH
+
+  local ROOM =
+  {
+    f_h = c.room_sec.f_h,
+    c_h = c.room_sec.f_h + 72,
+    f_tex = theme.floor,
+    c_tex = theme.ceil,
+    light = 176,
+
+    l_tex = theme.void,
+    u_tex = theme.void,
+  }
+
+  frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+3*FH, { solid=theme.void })
+  frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, ROOM)
+
+  local STEP =
+  {
+    f_h = c.room_sec.f_h + 8,
+    c_h = c.room_sec.f_h + 80,
+    f_tex = "FLAT1",
+    c_tex = "FLAT1",
+    light = 255,
+
+    l_tex = "STEP1",
+    u_tex = theme.void,
+  }
+
+  frag_fill(p,c, fx+4,fy+1, fx+9,fy+4, { solid=theme.void})
+  frag_fill(p,c, fx+5,fy+1, fx+8,fy+4, STEP)
+
+  local DOOR =
+  {
+    f_h = c.room_sec.f_h + 8,
+    c_h = c.room_sec.f_h + 8,
+    f_tex = "FLAT1",
+    c_tex = "FLAT1",
+    light = 255,
+
+    l_tex = c.theme.wall,
+    u_tex = TH_DOORS.d_exit.tex,
+    door_kind = 117,  -- blaze door
+  }
+
+  frag_fill(p,c, fx+4,fy+2, fx+9,fy+3, { solid="DOORTRAK" })
+  frag_fill(p,c, fx+5,fy+2, fx+8,fy+3, DOOR)
+
+  local SWITCH =
+  {
+    solid = "SW1COMM",
+    switch_kind = 11
+  }
+
+  frag_fill(p,c, fx+5,fy+11, fx+8,fy+12, SWITCH)
+end
+
+
+----------------------------------------------------------------
 
 
 SKY_LIGHT_FUNCS =
@@ -1371,8 +1349,8 @@ end
   local function try_add_special(c, name)
     
     if name == "liquid" then
-      if not c.quest.liquid then return end
-      if c.is_exit then return end -- never in exit room
+      if not c.liquid then return end
+      if c.is_exit and rand_odds(98) then return end
     end
 
     local posits = {}
@@ -1403,6 +1381,20 @@ end
     c.chunks[p.x][p.y] = { [name]=true }
   end
 
+  local function add_dm_exit(c)
+    local kx, ky = 1, 3
+
+    if c.chunks[1][3] then
+      print("WARNING: deathmatch exit stomped a chunk!")
+    end
+
+    c.chunks[1][3] = { void=true, dm_exit=true, dir=2 }
+
+    if not c.chunks[1][2] then
+      c.chunks[1][2] = { room=true }
+    end
+  end
+
   local function flesh_out_cell(c)
     
     -- possibilities:
@@ -1415,8 +1407,13 @@ end
     local probs = { 33, 5, 50, 7, 35 }
 
     if not c.outdoor then probs[2] = 20 end
+    if p.deathmatch then probs[4] = 0 end
 
-    if c.scenic then probs[1] = 120 end
+    if c.scenic then probs[1] = 200 end
+
+    if c.x == 1 and c.y == p.h then
+      add_dm_exit(c)
+    end
 
     while count_empty_chunks(c) > 0 do
 
@@ -1598,16 +1595,10 @@ io.stdout:write(string.format(
 
     local in_x, in_y
 
-    if p.deathmatch then
-      do return 2,2 end -- FIXME TEST ONLY FIXME
-      in_x, in_y = side_to_chunk(math.random(1,4)*2) -- FIXME
-    else
-      in_x, in_y = side_to_chunk(c.entry_dir or c.exit_dir)
-    end
+    assert(not p.deathmatch)
+    -- in_x, in_y = side_to_chunk(math.random(1,4)*2) -- FIXME
 
-    local function dist(x1,y1, x2,y2)
-      return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
-    end
+    in_x, in_y = side_to_chunk(c.entry_dir or c.exit_dir)
 
     local function k_dist(kx,ky)
       local side = c.entry_dir or c.exit_dir or 2
@@ -1638,46 +1629,98 @@ io.stdout:write(string.format(
     return best_x, best_y
   end
 
-  local function position_stuff_cell(c)
+  local function position_sp_stuff(c)
 
-    if (p.deathmatch and c.dm_player) or
-       (not p.deathmatch and c == p.quests[1].first) then
-
+    if c == p.quests[1].first then
       local kx, ky = good_Q_spot(c)
       c.chunks[kx][ky].player=true
     end
 
-    if p.deathmatch and c.dm_weapon then
-      
-      local kx, ky = good_Q_spot(c)
-      c.chunks[kx][ky].weapon=c.dm_weapon
-    end
-
-    if not p.deathmatch and c == c.quest.last then
-
+    if c == c.quest.last then
       local kx, ky = good_Q_spot(c)
       c.chunks[kx][ky].quest=true
     end
   end
 
----###  local function liquify_cell(c) -- UNUSED
----###
----###    if c.is_exit then return end
----###
----###    for kx = 1,KW do
----###      for ky = 1,KH do
----###        local K = c.chunks[kx][ky]
----###        if K and not K.void and not K.cage then
----###
----###-- TEST CRUD ONLY
----###if rand_odds(49) and p.liquid and K.floor_h == c.f_min then
----###  K.liquid = p.liquid;
----###  K.floor_h = K.floor_h - 12
----###end
----###        end
----###      end
----###    end
----###  end
+  local function position_dm_stuff(c)
+
+    local spots = {}
+
+    local function get_spot()
+      if #spots == 0 then return nil end
+      return table.remove(spots, 1)
+    end
+
+    local function reusable_spot()
+      if #spots == 0 then return nil end
+      local S = table.remove(spots,1)
+      table.insert(spots, S)
+      return S
+    end
+    
+    --- position_dm_stuff ---
+
+    for kx = 1,KW do for ky = 1,KH do
+      local K = c.chunks[kx][ky]
+      if K and (K.room or K.liquid or K.link) and not K.stair_dir then
+        table.insert(spots, {x=kx, y=ky, K=K})
+      end
+    end end
+
+    rand_shuffle(spots)
+
+    -- guarantee at least 4 players (each corner)
+    if (c.x==1) or (c.x==p.w) or (c.y==1) or (c.y==p.h) or rand_odds(75) then
+      local spot = get_spot()
+      if spot then spot.K.player = true end
+    end
+
+    -- guarantee at least one weapon (central cell)
+    if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(90) then
+      local spot = get_spot()
+      if spot then spot.K.dm_weapon = choose_dm_thing(p, DM_WEAPON_LIST, true) end
+    end
+
+    -- secondary players and weapons
+    if rand_odds(33) then
+      local spot = get_spot()
+      if spot then spot.K.player = true end
+    end
+    if rand_odds(20) then
+      local spot = get_spot()
+      if spot then spot.K.dm_weapon = choose_dm_thing(p, DM_WEAPON_LIST, true) end
+    end
+
+    -- from here on we REUSE the spots --
+
+    if #spots == 0 then return end
+
+    -- health, ammo and items
+    if rand_odds(70) then
+      local spot = reusable_spot()
+      spot.K.dm_health = choose_dm_thing(p, DM_HEALTH_LIST, false)
+    end
+
+    if rand_odds(90) then
+      local spot = reusable_spot()
+      spot.K.dm_ammo = choose_dm_thing(p, DM_AMMO_LIST, true)
+    end
+ 
+    if rand_odds(10) then
+      local spot = reusable_spot()
+      spot.K.dm_item = choose_dm_thing(p, DM_ITEM_LIST, true)
+    end
+
+    -- secondary health and ammo
+    if rand_odds(10) then
+      local spot = reusable_spot()
+      spot.K.dm_health = choose_dm_thing(p, DM_HEALTH_LIST, false)
+    end
+    if rand_odds(30) then
+      local spot = reusable_spot()
+      spot.K.dm_ammo = choose_dm_thing(p, DM_AMMO_LIST, true)
+    end
+  end
 
   --==-- make_chunks --==--
 
@@ -1710,9 +1753,11 @@ io.stdout:write(string.format(
 
       connect_chunks(cell)
 
-      position_stuff_cell(cell)
-
---      liquify_cell(cell)
+      if p.deathmatch then
+        position_dm_stuff(cell)
+      else
+        position_sp_stuff(cell)
+      end
   end
 end
 
@@ -1726,20 +1771,34 @@ function build_cell(p, c)
     return valid_cell(p, cx, cy) and not p.cells[cx][cy]
   end
 
-  local function player_angle(bx, by)
+  local function player_angle(kx, ky)
 
     if c.exit_dir then
       return dir_to_angle(c.exit_dir)
     end
 
-    -- look towards center of room (FIXME: improvable??)
-    local px = int(bx/BW * 2.9)
-    local py = int(by/BH * 2.9)
+    -- when in middle of room, find an exit to look at
+    if (kx==2 and ky==2) then
+      for i = 1,20 do
+        local dir = math.random(1,4)*2
+        if c.link[dir] then
+          return dir_to_angle(dir)
+        end
+      end
+    end
 
-    local idx = 1 + py*3 + px
-    local angles = { 45, 90, 135, 0, 0, 180, 315, 270, 225 }
+    -- look towards center of room
+    local ANGLES =
+    {
+      [11] =  45, [21] =  90, [31] = 135,
+      [12] =   0,             [32] = 180,
+      [13] = 315, [23] = 270, [33] = 225
+    }
 
-    if angles[idx] then return angles[idx] end
+    local kk = (kx * 10) + ky
+
+    if ANGLES[kk] then return ANGLES[kk] end
+
     return math.random(0,7) * 45
   end
 
@@ -2159,7 +2218,7 @@ function build_cell(p, c)
     end
 
     for n = 1,KW do
-        -- FIXME: ICK!!!
+        -- FIXME: ICK!!! FIXME
         local sx = x1 + (x2-x1+1) * (n-1) / KW
         local sy = y1 + (y2-y1+1) * (n-1) / KH
         local ex = x1 + (x2-x1+1) * (n  ) / KW
@@ -2178,7 +2237,15 @@ function build_cell(p, c)
 
         if what == "empty" then
           sec = copy_block(EMPTY)
-          sec.f_h = math.min(K1.floor_h or 65536, K2.floor_h or 65536)
+
+          if K1.liquid or K2.liquid then
+            sec.f_h = math.max(K1.floor_h or -65536, K2.floor_h or -65536)
+            if K1.liquid == K2.liquid and K1.floor_h == K2.floor_h then
+              sec.f_h = sec.f_h + 16
+            end
+          else
+            sec.f_h = math.min(K1.floor_h or  65536, K2.floor_h or  65536)
+          end
 
         else -- wire fence (floor already set)
           sec = EMPTY
@@ -2193,7 +2260,7 @@ function build_cell(p, c)
   end
 
   local function build_window(link, other, side, what, b_theme)
-    
+
     if what == "empty" then return end
 
     -- don't build 'castley' walls indoors
@@ -2274,7 +2341,7 @@ function build_cell(p, c)
     for d_pos = first, BW-long, step do
       local wx, wy = x + ax*d_pos, y + ay*d_pos
 
-      if d_pos >= min_x and (d_pos+long-1) <= max_x then
+      if (d_pos+1) >= min_x and (d_pos+long) <= max_x then
         if bar then
           B_bars(p,c, wx,wy, math.min(side,10-side),long, bar,bar_step, TH_METAL, sec,b_theme.wall)
         else
@@ -2479,7 +2546,7 @@ function build_cell(p, c)
       if K.pillar and not blocked then
 
 -- TEST CRUD
-if rand_odds(24) and TH_CAGE then
+if rand_odds(24) and TH_CAGE and not p.deathmatch then
   local CAGE = copy_block(c.room_sec)
   local z = (c.f_max + c.ceil_h) / 2
   CAGE.f_tex = TH_CAGE.floor
@@ -2570,18 +2637,29 @@ end
       return entry_dir
     end
 
+    local function chunk_dm_offset()
+      while true do
+        local dx = math.random(1,3) - 2
+        local dy = math.random(1,3) - 2
+        if not (dx==0 and dy==0) then return dx,dy end
+      end
+    end
+
     -- build_chunk --
 
     local K = c.chunks[kx][ky]
     assert(K)
 
     if K.void then
+      if K.dm_exit then
+        B_deathmatch_exit(p,c, kx,ky,K.dir)
 
-      if TH_PICS and dual_odds(c.theme.outdoor, 10, 50) then
+      elseif TH_PICS and dual_odds(c.theme.outdoor, 10, 50) then
         if not c.void_pic then decide_void_pic(p, c) end
         local h = c.void_pic.h or (c.c_min - c.f_max - 32)
         local z = (c.c_min + c.f_max) / 2
         B_void_pic(p,c, kx,ky, c.void_pic.tex,c.void_cut, z-h/2, z+h/2)
+
       else
         chunk_fill(c, K, kx, ky, nil, c.theme.void, c.theme.void)
       end
@@ -2603,7 +2681,8 @@ end
       local long = 2
       local deep = 1
 
-      if diff <= 64 and rand_odds(88) then deep = 1 end
+      -- prefer no lifts in deathmatch
+      if p.deathmatch and diff > 64 and rand_odds(88) then deep = 2 end
 
       -- FIXME: replace with proper "can walk" test !!!!
       if (K.stair_dir == 6 and kx == 1 and c.border[4]) or
@@ -2678,22 +2757,21 @@ end
     local by = chunk_to_block(ky) + 1
 
     if K.player then
-      B_pedestal(p, c, bx, by, K.floor_h + 8, "FLAT22", "SHAWN2")
+      B_pedestal(p, c, bx, by, K.floor_h, PED_PLAYER)
+      add_thing(p, c, bx, by, p.deathmatch and 11 or 1, true, player_angle(kx, ky))
 
-      add_thing(p, c, bx, by, p.deathmatch and 11 or 1, true, player_angle(bx+1, by+1))
-
-    elseif K.weapon then
-      B_pedestal(p, c, bx, by, K.floor_h + 8, "FLAT22", "SHAWN2")
-
-      -- weapon and keys are non-blocking, but we don't want
-      -- a monster sitting on top of our quest item (especially
-      -- when it has a pedestal).
-      add_thing(p, c, bx, by, THING_NUMS[K.weapon], true)
+    elseif K.dm_weapon then
+      B_pedestal(p, c, bx, by, K.floor_h, PED_WEAPON)
+      add_thing(p, c, bx, by, THING_NUMS[K.dm_weapon], true)
 
     elseif K.quest then
 
       if c.quest.kind == "key" or c.quest.kind == "weapon" or c.quest.kind == "item" then
-        B_pedestal(p, c, bx, by, K.floor_h + 24, TH_PEDESTAL.floor, TH_PEDESTAL.wall)
+        B_pedestal(p, c, bx, by, K.floor_h, PED_QUEST)
+
+        -- weapon and keys are non-blocking, but we don't want
+        -- a monster sitting on top of our quest item (especially
+        -- when it has a pedestal).
         add_thing(p, c, bx, by, THING_NUMS[c.quest.item], true)
 
       elseif c.quest.kind == "switch" then
@@ -2730,8 +2808,8 @@ end
 
     if K.liquid then
       sec = copy_block(sec) -- FIXME??
-      sec.f_tex = c.quest.liquid.floor
-      sec.kind = c.quest.liquid.sec_kind
+      sec.f_tex = c.liquid.floor
+      sec.kind = c.liquid.sec_kind
       sec.f_h = K.floor_h
     end
 
@@ -2781,6 +2859,19 @@ if c.sky_light then
 end
  
     chunk_fill(c, K, kx, ky, sec, c.theme.wall, u_tex)
+
+    if K.dm_health then
+      local dx, dy = chunk_dm_offset()
+      add_thing(p, c, bx+dx, by+dy, THING_NUMS[K.dm_health], false)
+
+    elseif K.dm_ammo then
+      local dx, dy = chunk_dm_offset()
+      add_thing(p, c, bx+dx, by+dy, THING_NUMS[K.dm_ammo], false)
+
+    elseif K.dm_item then
+      local dx, dy = chunk_dm_offset()
+      add_thing(p, c, bx+dx, by+dy, THING_NUMS[K.dm_item], false)
+    end
   end
 
 
