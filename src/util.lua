@@ -39,6 +39,10 @@ function sel(cond, yes_val, no_val)
   if cond then return yes_val else return no_val end
 end
 
+function dist(x1,y1, x2,y2)
+  return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
+end
+
 function count_entries(t)
   local count = 0;
   for k,v in pairs(t) do count = count+1 end
@@ -172,7 +176,7 @@ function rand_shuffle(t, fill_size)
     for i = 1,fill_size do t[i] = i end
   end
 
-  assert(#t > 0)
+  if #t == 0 then return end
 
   for i = 1,(#t-1) do
     local j = math.random(i,#t)
