@@ -79,10 +79,13 @@ io.stderr:write("\nSEED = ", settings.seed, "\n\n")
     if con.abort() then return "abort" end
 
 do
-con.printf("=======  %s  ======================\n", lev)
-show_quests(PLAN)
-show_path(PLAN)
---show_dm_links(PLAN)
+  con.printf("=======  %s  ==============================\n", lev)
+  show_quests(PLAN)
+  if settings.mode == "dm" then
+    show_dm_links(PLAN)
+  else
+    show_path(PLAN)
+  end
 end
 
     build_level(PLAN)
