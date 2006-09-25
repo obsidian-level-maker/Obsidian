@@ -288,6 +288,8 @@ function create_link(p, c, other, dir)
   other.link[10-dir] = LINK
 
   table.insert(p.all_links, LINK)
+
+  return LINK
 end
 
 function choose_liquid()
@@ -536,6 +538,25 @@ function plan_sp_level()  -- returns Plan
     end
   end
 
+  local function liquid_for_quest(Q)
+    if rand_odds(50) then
+      return nil
+    end
+
+    if Q.theme.bad_liquid == p.liquid.name then
+      return find_liquid(Q.theme.good_liquid)
+    end
+
+    if Q.theme.good_liquid and dual_odds(Q.mini, 15, 66) then
+      return find_liquid(Q.theme.good_liquid)
+    end
+
+    if Q.mini then
+      return Q.parent.liquid
+    end
+
+    return p.liquid
+  end
 
   function make_quest_path(Q)
  
@@ -549,18 +570,7 @@ function plan_sp_level()  -- returns Plan
     assert(theme)
 
     -- decide liquid
-    if rand_odds(50) then
-      if (theme.bad_liquid or "none") == p.liquid.name then
-        Q.liquid = find_liquid(theme.good_liquid)
-      elseif theme.good_liquid and dual_odds(Q.mini, 15, 66) then
-        Q.liquid = find_liquid(theme.good_liquid)
-      elseif Q.mini then
-        Q.liquid = Q.parent.liquid
-      else
-        Q.liquid = p.liquid
-      end
-print("====>", Q.liquid and Q.liquid.name)
-    end
+    Q.liquid = liquid_for_quest(Q.theme)
 
     -- add very first room
     if not Q.mini and Q.level == 1 then
@@ -727,7 +737,7 @@ print("====>", Q.liquid and Q.liquid.name)
       end
     end
 
-    -- BEGIN select_heights --
+    -- BEGIN old_select_heights --
 
     local prev_floors = {}
 
@@ -1061,8 +1071,8 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 --print("SRC_MIN ", c.f_min, "  DEST_MAX", other.f_max)
 --print("SRC_CEIL ", c.ceil_h, "  DEST_CEIL", other.ceil_h)
 
-          create_link(p, c, other, dir)
-          c.link[dir].kind = "falloff"
+          local L = create_link(p, c, other, dir)
+          L.kind = "falloff"
         end
       end
     end
