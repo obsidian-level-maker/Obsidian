@@ -87,7 +87,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
 	length = new Fl_Choice(x +300, cy, 150, 24, "Size:   ");
 	length->align(FL_ALIGN_LEFT);
-	length->add("Single Level|One Episode|Full Game");
+	length->add("One Level|One Episode|Full Game");
 	length->value(1);
 
 	add(length);
