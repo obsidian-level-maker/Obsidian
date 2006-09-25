@@ -176,6 +176,17 @@ PICKUP_MAP =
 }
 
 
+CLUSTER_THINGS =
+{
+  potion = 8,
+  helmet = 8,
+  stimpack = 2,
+
+  bullets = 3,
+  shells  = 2,
+  rocket  = 4,
+}
+
 THING_NUMS =  -- FIXME duplicated in above tables
 {
   k_red    = 38,
