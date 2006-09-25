@@ -570,7 +570,7 @@ function plan_sp_level()  -- returns Plan
     assert(theme)
 
     -- decide liquid
-    Q.liquid = liquid_for_quest(Q.theme)
+    Q.liquid = liquid_for_quest(Q)
 
     -- add very first room
     if not Q.mini and Q.level == 1 then

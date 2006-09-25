@@ -1412,7 +1412,7 @@ end
 
     if c.scenic then probs[1] = 200 end
 
-    if c.x == 1 and c.y == p.h then
+    if p.deathmatch and c.x == 1 and c.y == p.h then
       add_dm_exit(c)
     end
 
