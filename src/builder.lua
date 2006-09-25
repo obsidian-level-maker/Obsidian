@@ -281,6 +281,7 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
   end
 
   local door_kind = 1
+  if p.deathmatch and rand_odds(66) then door_kind = 117 end -- blaze
     
   local door = { f_h = z+8, c_h = z+8,
                  f_tex = "FLAT1",
@@ -931,7 +932,7 @@ function B_deathmatch_exit(p,c, kx,ky)
 
     l_tex = c.theme.wall,
     u_tex = TH_DOORS.d_exit.tex,
-    door_kind = 117,  -- blaze door
+    door_kind = 1,  -- blaze door
   }
 
   frag_fill(p,c, fx+4,fy+2, fx+9,fy+3, { solid="DOORTRAK" })
@@ -1676,7 +1677,7 @@ io.stdout:write(string.format(
     end
 
     -- guarantee at least one weapon (central cell)
-    if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(90) then
+    if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(80) then
       local spot = get_spot()
       if spot then spot.K.dm_weapon = choose_dm_thing(p, DM_WEAPON_LIST, true) end
     end
@@ -1686,7 +1687,7 @@ io.stdout:write(string.format(
       local spot = get_spot()
       if spot then spot.K.player = true end
     end
-    if rand_odds(20) then
+    if rand_odds(25) then
       local spot = get_spot()
       if spot then spot.K.dm_weapon = choose_dm_thing(p, DM_WEAPON_LIST, true) end
     end
@@ -1867,8 +1868,10 @@ function build_cell(p, c)
       local tex = c.theme.wall
 
       -- sometimes leave it empty
-      if what == "wire" then link.arch_rand = link.arch_rand * 3 end
+      if what == "wire" then link.arch_rand = link.arch_rand * 4 end
+
       if link.kind == "arch" and link.where ~= "wide" and
+        c.theme.outdoor == other.theme.outdoor and
         ((c.theme.outdoor and link.arch_rand < 50) or
          (not c.theme.outdoor and link.arch_rand < 10))
       then
@@ -2645,6 +2648,21 @@ end
       end
     end
 
+    local function add_dm_pickup(c, bx,by, name)
+      -- FIXME: (a) check if middle blocked, (b) good patterns
+
+      local cluster = CLUSTER_THINGS[name] or 1
+      assert(cluster >= 1 and cluster <= 8)
+
+      local offsets = { 1,2,3,4, 6,7,8,9 }
+      rand_shuffle(offsets)
+
+      for i = 1,cluster do
+        local dx, dy = dir_to_delta(offsets[i])
+        add_thing(p, c, bx+dx, by+dy, THING_NUMS[name], false)
+      end
+    end
+
     -- build_chunk --
 
     local K = c.chunks[kx][ky]
@@ -2861,16 +2879,15 @@ end
     chunk_fill(c, K, kx, ky, sec, c.theme.wall, u_tex)
 
     if K.dm_health then
-      local dx, dy = chunk_dm_offset()
-      add_thing(p, c, bx+dx, by+dy, THING_NUMS[K.dm_health], false)
-
-    elseif K.dm_ammo then
-      local dx, dy = chunk_dm_offset()
-      add_thing(p, c, bx+dx, by+dy, THING_NUMS[K.dm_ammo], false)
-
-    elseif K.dm_item then
-      local dx, dy = chunk_dm_offset()
-      add_thing(p, c, bx+dx, by+dy, THING_NUMS[K.dm_item], false)
+      add_dm_pickup(c, bx,by, K.dm_health)
+    end
+    
+    if K.dm_ammo then
+      add_dm_pickup(c, bx,by, K.dm_ammo)
+    end
+    
+    if K.dm_item then
+      add_dm_pickup(c, bx,by, K.dm_item)
     end
   end
 

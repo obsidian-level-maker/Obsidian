@@ -18,8 +18,8 @@
 
 DM_WEAPON_LIST =
 {
-  shotty=60, super=40, chain=20, launch=40, plasma=30,
-  saw=10, bfg=3
+  shotty=50, super=36, chain=31, launch=40, plasma=24,
+  saw=12, bfg=3
 }
 
 DM_HEALTH_LIST =
@@ -103,14 +103,14 @@ function choose_dm_thing(p, LIST, adjusted)
     local used_count = p.used_items[name] or 0
 
     table.insert(wp_names, name)
-    table.insert(wp_probs, prob / (1 + sel(adjusted,used_count,0)))
+    table.insert(wp_probs, prob / (1.5 + sel(adjusted,used_count,0)))
   end
 
   local idx = rand_index_by_probs(wp_probs)
   local name = wp_names[idx]
 
   -- increase usage count
-  p.used_items[name] = 1 + (p.used_items[name] or 0)
+  p.used_items[name] = (p.used_items[name] or 0) + 1
   return name
 end
 
@@ -216,52 +216,21 @@ print("COVERAGE", count)
     end
   end
 
---[[ OLD STUFF : REMOVE
-  local function empty_dm_loc()
-    for loop = 1,999 do
-      local x,y = random_cell(p)
-      if p.cells[x][y] and
-         not p.cells[x][y].dm_player and
-         not p.cells[x][y].dm_weapon then return x, y
-      end
+  local function liquid_for_seed(theme)
+    if rand_odds(64) then
+      return nil
     end
-  end
 
-  local function assign_dm_players()
-    con.ticker();
-
-    local num_spots = math.floor(p.w * p.h * 0.4)
-
-    if num_spots < 4 then num_spots = 4 end
-
-    for zzz = 1,num_spots do
-      local x,y = empty_dm_loc()
-      if not x then error("No place for DM player!") end
-      p.cells[x][y].dm_player = true
+    if theme.bad_liquid == p.liquid.name then
+      return find_liquid(theme.good_liquid)
     end
-  end
---]]
 
---[[ OLD STUFF : REMOVE
-  local function assign_dm_weapons()
-    con.ticker();
-
-    local chance = 90
-    if p.w == 4 then chance = 80 end
-    if p.w == 5 then chance = 70 end
-    
-    for x = 1,p.w do
-      for y = 1,p.h do
-        if not rand_odds(chance) then
-          -- tough titties
-        elseif not p.cells[x][y].dm_player then
-          p.cells[x][y].dm_weapon = choose_weapon()
-print("WEAPON === ", p.cells[x][y].dm_weapon, "\n")
-        end
-      end
+    if theme.good_liquid and rand_odds(40) then
+      return find_liquid(theme.good_liquid)
     end
+
+    return p.liquid
   end
---]]
 
   local function unused_theme_pos()
     for loop = 1,999 do
@@ -290,6 +259,7 @@ print("WEAPON === ", p.cells[x][y].dm_weapon, "\n")
             local other = p.cells[cx+dx][cy+dy]
             if not other.theme then
               other.theme = c.theme
+              other.liquid = c.liquid
             end
           end
         end
@@ -317,7 +287,9 @@ print("NUMBER of THEMES:", num_themes)
     for i =1,num_themes do
       local cx, cy = unused_theme_pos()
       if cx then
-        p.cells[cx][cy].theme = ALL_THEMES[theme_list[i]]
+        local c = p.cells[cx][cy]
+        c.theme = ALL_THEMES[theme_list[i]]
+        c.liquid = liquid_for_seed(c.theme)
       end
     end
 
@@ -356,6 +328,21 @@ print("NUMBER of THEMES:", num_themes)
     -- FIXME: TEMP JUNK
     for zzz,c in ipairs(p.all_cells) do
       c.floor_h = rand_index_by_probs{ 1,2,4,2,1 } * 32 - 32
+    end
+  end
+
+  local function add_doors()
+    for zzz,link in ipairs(p.all_links) do
+      -- FIXME: theme based (more doors in bases)
+      local c = link.src
+      local d = link.dest
+      local door_chance = 10
+
+      if c.theme.outdoor and d.theme.outdoor then door_chance = 3
+      elseif c.theme ~= d.theme then door_chance = 30
+      end
+
+      if rand_odds(door_chance) then link.kind = "door" end
     end
   end
 
@@ -409,9 +396,9 @@ print("NUMBER of THEMES:", num_themes)
       -- use A* to find a path
       local path = astar_find_path(p.cells, low.x,low.y, high.x,high.y, verify_scorer)
 
-print("ASTAR_FIND_PATH: path_len", path and #path)
+--print("ASTAR_FIND_PATH: path_len", path and #path)
 
-      return path -- and #path <= 8
+      return path
     end
 
     --- add_falloffs ---
@@ -491,17 +478,10 @@ print("ASTAR_FIND_PATH: path_len", path and #path)
 
   ---=== plan_dm_arena ===---
 
---[[
-  local W = rand_index_by_probs{ 0,0,70,90,50,20 }
-  local H = W
-
-  -- occasionally create very small maps (3x2 and 4x2)
-  if H > 3 and rand_odds(30) then H = H - 1 end
-  if H > 2 and rand_odds( 3) then H = H - 1 end
-]]
-
   local W = rand_index_by_probs { 0,22,90,55,15,4 }
   local H = rand_index_by_probs { 0,22,90,55,15,4 }
+
+  if W < H then W,H = H,W end
 
   --print(string.format("%dx%d", math.min(W,H), math.max(W,H)))
 
@@ -531,6 +511,7 @@ print("ASTAR_FIND_PATH: path_len", path and #path)
   shuffle_build_sites(p)
   compute_height_minmax(p);
 
+  add_doors()
   add_falloffs()
   add_windows()
 
