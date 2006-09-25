@@ -57,7 +57,7 @@ UI_File::UI_File(int x, int y, int w, int h, const char *label) :
 
 	cy += 28;
 
-	filename = new Fl_Input(x+92, cy, 120, 24, "Filename: ");
+	filename = new Fl_NameInput(x+92, cy, 120, 24, "Filename: ");
 	filename->align(FL_ALIGN_LEFT);
 	filename->value("TEST");
 

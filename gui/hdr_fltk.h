@@ -59,5 +59,8 @@
 #include <FL/filename.H>
 #include <FL/fl_file_chooser.H>
 
+/* Customisations */
+
+#include "zf_input.h"
 
 #endif /*_*/

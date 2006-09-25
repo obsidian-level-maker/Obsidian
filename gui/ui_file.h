@@ -22,8 +22,9 @@
 class UI_File : public Fl_Group
 {
 private:
-	Fl_Input *filename;
-	Fl_Box   *ext;
+	Fl_NameInput *filename;
+
+	Fl_Box *ext;
 
 	Fl_Output *dir_name;
 	Fl_Button *browse;
