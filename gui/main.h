@@ -22,10 +22,7 @@
 #define OBLIGE_VERSION  "0.66"
 #define OBLIGE_VER_HEX  0x066
 
-#define MPS_DEF_MAX_CLIENT  32
-#define MPS_DEF_MAX_GAME     8
-
-#define MPS_DEF_ALIVE_WAIT  60 /* seconds */
+#define DATA_DIR  "./obl_data"
 
 void Main_FatalError(const char *msg, ...);
 

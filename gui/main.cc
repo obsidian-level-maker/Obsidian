@@ -137,13 +137,22 @@ void Build_Cool_Shit()
 {
 	UI_Build *that = main_win->build_box;
 
+  char *filename = main_win->file_box->CopyFilename(".wad");
+
+  if (! filename)
+  {
+    DLG_ShowError("Invalid output filename.");
+		that->P_Status("Error");
+    return;
+  }
+
 	// lock most widgets of user interface
 	main_win->Locked(true);
 	that->P_SetButton(true);
 
 	bool is_hexen = (strcmp(main_win->setup_box->cur_Game(), "hexen") == 0);
 
-	bool was_ok = Doom_CreateWAD("TEMP.wad", is_hexen);
+	bool was_ok = Doom_CreateWAD(DATA_DIR "/TEMP.wad", is_hexen);
 
 	if (was_ok)
 	{
@@ -161,7 +170,9 @@ void Build_Cool_Shit()
 	{
 		that->P_Status("Adding nodes");
 
-		was_ok = GB_BuildNodes("TEMP.wad", "TEST.wad");
+    DebugPrintf("FILENAME: [%s]\n", filename);
+
+		was_ok = GB_BuildNodes(DATA_DIR "/TEMP.wad", filename);
 	}
 
 	// FIXME: distinguish between Failure and Aborted

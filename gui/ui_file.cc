@@ -25,9 +25,11 @@
 #include "lib_util.h"
 
 #ifdef WIN32
-#define DIR_SEP  '\\'
+#define DIR_SEP_CH   '\\'
+#define DIR_SEP_STR  "\\"
 #else
-#define DIR_SEP  '/'
+#define DIR_SEP_CH   '/'
+#define DIR_SEP_STR  "/"
 #endif
 
 //
@@ -94,7 +96,7 @@ void UI_File::SetDefaultLocation()
 {
   if (! full_path)
   {
-    full_path = new char[FL_PATH_MAX];
+    full_path = new char[FL_PATH_MAX + 4];
   }
 
 #if 1 // ifdef WIN32
@@ -103,7 +105,14 @@ void UI_File::SetDefaultLocation()
   fl_filename_expand(full_path, "$HOME");
 #endif
 
-  // FIXME: ensure full_path ends with DIR_SEP
+  // ensure full_path ends with DIR_SEP
+  int len = strlen(full_path);
+
+  if (len > 0 && full_path[len-1] != DIR_SEP_CH)
+  {
+    full_path[len] = DIR_SEP_CH;
+    full_path[len+1] = 0;
+  }
  
   AbbreviatePath();
 }
@@ -154,6 +163,24 @@ void UI_File::AbbreviatePath()
   dir_name->value(abbr);
 
   delete[] abbr;
+}
+
+char *UI_File::CopyFilename(const char *ext)
+{
+  const char *name = filename->value();
+
+  int len = strlen(name);
+
+  if (len == 0)
+    return NULL;  // error!
+
+  char *result = StringNew(strlen(full_path) + len + strlen(ext) + 4);
+
+  strcpy(result, full_path);
+  strcat(result, name);
+  strcat(result, ext);
+ 
+  return result;
 }
 
 void UI_File::resize(int X, int Y, int W, int H)

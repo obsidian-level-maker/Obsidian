@@ -200,6 +200,20 @@ static int p_init_lua(lua_State *L)
 	return 0;
 }
 
+static void Script_SetLoadPath(lua_State *L)
+{
+  lua_getglobal(LUA_ST, "package");
+
+  if (lua_type(LUA_ST, -1) == LUA_TNIL)
+		Main_FatalError("LUA SetPath failed: no 'package' module!");
+
+  lua_pushstring(LUA_ST, DATA_DIR "/?.lua");
+
+	lua_setfield(LUA_ST, -2, "path");
+
+  lua_pop(LUA_ST, 1);
+}
+
 void Script_Init()
 {
 	LUA_ST = lua_open();
@@ -212,6 +226,8 @@ void Script_Init()
 
 	Doom_InitLua(LUA_ST);
 
+  Script_SetLoadPath(LUA_ST);
+
 	Script_Load();
 }
 
@@ -222,7 +238,7 @@ void Script_Done()
 
 void Script_Load()
 {
-	int status = luaL_loadfile(LUA_ST, "./oblige.lua"); 
+	int status = luaL_loadstring(LUA_ST, "require 'oblige'");
 
 	if (status != 0)
 	{

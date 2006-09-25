@@ -38,6 +38,9 @@ public:
 	void SetDefaultLocation();
 	void AbbreviatePath();
 
+  char *CopyFilename(const char *ext);
+  // free the result using StringFree()
+  
 	void Locked(bool value);
 
   void resize(int X, int Y, int W, int H);
