@@ -51,7 +51,8 @@ OBJS=	main.o      \
 	ui_file.o   \
 	ui_menu.o   \
 	ui_setup.o  \
-	ui_window.o
+	ui_window.o \
+	zf_input.o
 
 
 #--- Targets and Rules ------------------------------------------
