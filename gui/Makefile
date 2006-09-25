@@ -5,7 +5,7 @@
 # GNU Makefile for Unix/Linux version
 #
 
-PROGRAM=../src/Oblige_NG
+PROGRAM=../Oblige_NG
 
 CXX=g++
 
