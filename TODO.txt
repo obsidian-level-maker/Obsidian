@@ -2,11 +2,6 @@
 TODO
 ----
 
--  doors:
-   -  bottom of door (underneath): should match door tex.
-
-HMMM: decide monster: taking damage into account
-
 
 GUI TODO
 --------
@@ -107,6 +102,7 @@ MILESTONE 3  (not started...)
 
 -  more mid-masked textures (esp. on windows)
 -  prefer not to create void space next to windows
+-  doors: underneath flat should match side texture.
 -  compute_line_flags: more explicit flags (esp. override)
 
 +  overall consistency (doors/lights/overhangs/windows)
