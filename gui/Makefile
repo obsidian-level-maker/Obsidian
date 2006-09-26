@@ -10,7 +10,7 @@ PROGRAM=../Oblige_NG
 CXX=g++
 
 ### FIXME
-FLTK_DIR=/home/aapted/other/fltk-1.1.7
+FLTK_DIR=/home/aapted/other/fltk-1.1.x-r5479
 
 LUA_DIR=/home/aapted/other/lua-5.1
 
@@ -47,6 +47,7 @@ OBJS=	main.o      \
 	g_glbsp.o   \
 	g_lua.o     \
 	ui_build.o  \
+	ui_chooser.o \
 	ui_dialog.o \
 	ui_file.o   \
 	ui_menu.o   \
