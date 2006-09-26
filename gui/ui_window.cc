@@ -28,15 +28,15 @@
 
 #if (FL_MAJOR_VERSION != 1 ||  \
 	 FL_MINOR_VERSION != 1 ||  \
-	 FL_PATCH_VERSION != 7)
-#error "FLTK headers are not from FLTK 1.1.7"
+	 FL_PATCH_VERSION < 7)
+#error "FLTK headers are not from FLTK 1.1.7 or later"
 #endif
 
 
 UI_MainWin *main_win;
 
 #define MAIN_WINDOW_W  470
-#define MAIN_WINDOW_H  364
+#define MAIN_WINDOW_H  264
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
@@ -81,10 +81,12 @@ UI_MainWin::UI_MainWin(const char *title) :
 
 	cy += setup_box->h();
 
+#if 0
 	file_box = new UI_File(0, cy, w(), 104);
 	add(file_box);
 
 	cy += file_box->h();
+#endif
 
 	build_box = new UI_Build(0, cy, w(), h() - cy);
 	add(build_box);
@@ -113,6 +115,6 @@ UI_MainWin::~UI_MainWin()
 void UI_MainWin::Locked(bool value)
 {
 	setup_box->Locked(value);
-	 file_box->Locked(value);
 	build_box->Locked(value);
+//  file_box->Locked(value);
 }
