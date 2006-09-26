@@ -28,6 +28,7 @@
 #include "g_lua.h"
 
 #include "hdr_fltk.h"
+#include "ui_chooser.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
 
@@ -67,7 +68,6 @@ static void ShowInfo(void)
 		"\n"
 	);
 }
-
 
 void MainSetDefaults(void)
 {
@@ -137,14 +137,11 @@ void Build_Cool_Shit()
 {
 	UI_Build *that = main_win->build_box;
 
-  char *filename = main_win->file_box->CopyFilename(".wad");
-
+  char *filename = Select_Output_File(); //--- main_win->file_box->CopyFilename(".wad");
   if (! filename)
-  {
-    DLG_ShowError("Invalid output filename.");
-		that->P_Status("Error");
     return;
-  }
+
+  Fl::check();
 
 	// lock most widgets of user interface
 	main_win->Locked(true);
@@ -156,7 +153,7 @@ void Build_Cool_Shit()
 
 	if (was_ok)
 	{
-		that->P_Status("Building levels");
+		that->P_Status("Making levels");
 		that->P_Begin(100, false);
 
 		was_ok = Script_Run();
@@ -168,12 +165,14 @@ void Build_Cool_Shit()
 
 	if (was_ok)
 	{
-		that->P_Status("Adding nodes");
+		that->P_Status("Building nodes");
 
     DebugPrintf("FILENAME: [%s]\n", filename);
 
 		was_ok = GB_BuildNodes(DATA_DIR "/TEMP.wad", filename);
 	}
+
+  StringFree(filename);
 
 	// FIXME: distinguish between Failure and Aborted
 	if (was_ok)
@@ -233,7 +232,10 @@ int main(int argc, char **argv)
 	
 	main_win = new UI_MainWin(MY_TITLE);
 
+  Default_Location();
+#if 0
   main_win->file_box->SetDefaultLocation();
+#endif
 
 	/*
 	LogPrintf(0,
