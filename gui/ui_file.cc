@@ -24,14 +24,6 @@
 
 #include "lib_util.h"
 
-#ifdef WIN32
-#define DIR_SEP_CH   '\\'
-#define DIR_SEP_STR  "\\"
-#else
-#define DIR_SEP_CH   '/'
-#define DIR_SEP_STR  "/"
-#endif
-
 //
 // File Constructor
 //

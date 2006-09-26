@@ -19,18 +19,26 @@
 #ifndef __LIB_UTIL_H__
 #define __LIB_UTIL_H__
 
+#ifdef WIN32
+#define DIR_SEP_CH   '\\'
+#define DIR_SEP_STR  "\\"
+#else
+#define DIR_SEP_CH   '/'
+#define DIR_SEP_STR  "/"
+#endif
+
 // file utilities
 bool FileExists(const char *filename);
 bool HasExtension(const char *filename);
 bool CheckExtension(const char *filename, const char *ext);
-const char *ReplaceExtension(const char *filename, const char *ext);
+char *ReplaceExtension(const char *filename, const char *ext);
 const char *FileBaseName(const char *filename);
 
 // string utilities
 int StrCaseCmp(const char *A, const char *B);
 int StrCaseCmpPartial(const char *A, const char *B);
 void StrMaxCopy(char *dest, const char *src, int max);
-const char *StrUpper(const char *name);
+char *StrUpper(const char *name);
 char *StringNew(int length);
 char *StringDup(const char *orig);
 void StringFree(const char *str);

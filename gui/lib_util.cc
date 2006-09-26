@@ -98,19 +98,19 @@ bool CheckExtension(const char *filename, const char *ext)
 // ReplaceExtension
 //
 // When ext is NULL, any existing extension is removed.
-// NOTE: returned string is static storage.
 //
-const char *ReplaceExtension(const char *filename, const char *ext)
+// Returned string is a COPY.
+//
+char *ReplaceExtension(const char *filename, const char *ext)
 {
-	char *dot_pos;
-	static char buffer[1024];  // FIXME
-
-	SYS_ASSERT(strlen(filename)+(ext ? strlen(ext) : 0)+4 < sizeof(buffer));
 	SYS_ASSERT(filename[0] != 0);
+
+	static char *buffer =
+     StringNew(strlen(filename) + (ext ? strlen(ext) : 0) + 10);
 
 	strcpy(buffer, filename);
 
-	dot_pos = buffer + strlen(buffer) - 1;
+	char *dot_pos = buffer + strlen(buffer) - 1;
 
 	for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--)
 	{
@@ -222,7 +222,7 @@ void StrMaxCopy(char *dest, const char *src, int max)
 //
 // StrUpper
 //
-const char *StrUpper(const char *name)
+char *StrUpper(const char *name)
 {
 	char *copy = StringDup(name);
 
