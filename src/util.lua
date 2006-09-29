@@ -102,6 +102,7 @@ function dir_to_delta(dir)
   if dir == 3 then return  1, -1 end
 
   if dir == 4 then return -1, 0 end
+  if dir == 5 then return  0, 0 end
   if dir == 6 then return  1, 0 end
 
   if dir == 7 then return -1, 1 end
