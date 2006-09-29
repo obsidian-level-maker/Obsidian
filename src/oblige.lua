@@ -75,6 +75,10 @@ io.stderr:write("\nSEED = ", settings.seed, "\n\n")
     else
       PLAN = plan_sp_level()
     end
+    
+    if settings.mode == "coop" then
+      PLAN.coop = true
+    end
 
     if con.abort() then return "abort" end
 

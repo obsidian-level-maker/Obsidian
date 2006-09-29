@@ -2775,8 +2775,18 @@ end
     local by = chunk_to_block(ky) + 1
 
     if K.player then
-      B_pedestal(p, c, bx, by, K.floor_h, PED_PLAYER)
-      add_thing(p, c, bx, by, p.deathmatch and 11 or 1, true, player_angle(kx, ky))
+      local angle = player_angle(kx, ky)
+      local offsets = sel(rand_odds(50), {1,3,7,9}, {2,4,6,8})
+      if p.coop then
+        for i = 1,4 do
+          local dx,dy = dir_to_delta(offsets[i])
+          B_pedestal(p, c, bx+dx, by+dy, K.floor_h, PED_PLAYER)
+          add_thing(p, c, bx+dx, by+dy, i, true, angle)
+        end
+      else
+        B_pedestal(p, c, bx, by, K.floor_h, PED_PLAYER)
+        add_thing(p, c, bx, by, p.deathmatch and 11 or 1, true, angle)
+      end
 
     elseif K.dm_weapon then
       B_pedestal(p, c, bx, by, K.floor_h, PED_WEAPON)
