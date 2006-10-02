@@ -33,7 +33,7 @@ void DebugInit(bool enable)
 	{
 		debug_fp = fopen(DEBUGGING_FILE, "w");
 
-		DebugPrintf("====== START OF MPSERVER DEBUG FILE ======\n\n");
+		DebugPrintf("====== START OF DEBUG FILE ======\n\n");
 	}
 }
 
@@ -44,7 +44,7 @@ void DebugTerm(void)
 {
 	if (debug_fp)
 	{
-		DebugPrintf("\n====== END OF MPSERVER DEBUG FILE ======\n");
+		DebugPrintf("\n====== END OF DEBUG FILE ======\n");
 
 		fclose(debug_fp);
 		debug_fp = NULL;

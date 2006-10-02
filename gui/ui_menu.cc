@@ -42,10 +42,10 @@ static void menu_do_exit(Fl_Widget *w, void * data)
 //------------------------------------------------------------------------
 
 static const char *about_Info =
-  "By Andrew Apted (C) 2004\n"
+  "By Andrew Apted (C) 2006\n"
   "\n"
   "This program is free software, under the terms of\n"
-  "the GNU General Public License, and comes with\n"
+  "the GNU General Public License.  It comes with\n"
   "ABSOLUTELY NO WARRANTY.\n"
   "\n";
 
@@ -54,7 +54,7 @@ static void menu_do_about(Fl_Widget *w, void * data)
 {
 	menu_want_to_quit = false;
 
-	Fl_Window *ab_win = new Fl_Window(600, 340, "About Edge MultiPlayer Server");
+	Fl_Window *ab_win = new Fl_Window(320, 440, "About Oblige Level Maker");
 	ab_win->end();
 
 	// non-resizable
