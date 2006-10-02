@@ -109,7 +109,7 @@ void GB_DisplaySetBarLimit(int barnum, int limit)
 {
 	if (display_mode == DIS_BUILDPROGRESS && barnum == 2)
 	{
-		main_win->build_box->P_Begin(limit, true);
+		main_win->build_box->P_Begin(limit, 2);
 	}
 }
 

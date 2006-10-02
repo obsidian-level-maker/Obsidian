@@ -26,7 +26,9 @@ private:
 	Fl_Progress *progress;
 
 	char prog_msg[20];
-		
+  int  prog_pass;    // 1 or 2
+  float prog_limit;
+
 	Fl_Button *build;
 	Fl_Button *stop;
 	Fl_Button *quit;
@@ -45,7 +47,7 @@ public:
 	virtual ~UI_Build();
 
 public:
-	void P_Begin(float limit, bool is_glbsp);
+	void P_Begin(float limit, int pass);
 	void P_Update(float val);
 	void P_Finish();
 	void P_Status(const char *msg);

@@ -98,25 +98,31 @@ UI_Build::~UI_Build()
 {
 }
 
-void UI_Build::P_Begin(float limit, bool is_glbsp)
+void UI_Build::P_Begin(float limit, int pass)
 {
-	progress->minimum(0.0);
-	progress->maximum(limit);
-	progress->value(0.0);
+  prog_pass  = pass;
+  prog_limit = limit;
 
-	progress->color(PROGRESS_BG, is_glbsp ? GLBSP_FG : PROGRESS_FG);
+	progress->minimum(0.0);
+	progress->maximum(100.0);
+
+	progress->value((pass == 1) ? 0.0 : 75.0);
+
+	progress->color(PROGRESS_BG, (pass==1) ? PROGRESS_FG : GLBSP_FG);
 	progress->show();
 }
 
 void UI_Build::P_Update(float val)
 {
-	if (val < 0)
-		val = 0;
+	if (val < 0) val = 0;
+	if (val > prog_limit) val = prog_limit;
 
-	if (val > progress->maximum())
-		val = progress->maximum();
+  if (prog_pass == 1)
+    val = val * 75.0 / prog_limit;
+  else
+    val = 75.0 + (val * 25.0 / prog_limit);
 
-	sprintf(prog_msg, "%d%%", int(val *100.0 / progress->maximum()));
+	sprintf(prog_msg, "%d%%", int(val));
 
 	progress->value(val);
 	progress->label(prog_msg);

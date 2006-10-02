@@ -50,7 +50,7 @@ static void ShowInfo(void)
 	);
 
 	printf(
-		"Usage: mp_server [options...]\n"
+		"Usage: oblige [options...]\n"
 		"\n"
 		"Available options:\n"
 		"  -l  -local [ADDR]      Set local computer's IP address\n"
@@ -154,13 +154,13 @@ void Build_Cool_Shit()
 	if (was_ok)
 	{
 		that->P_Status("Making levels");
-		that->P_Begin(100, false);
+		that->P_Begin(100, 1);
 
 		was_ok = Script_Run();
 
 		Doom_FinishWAD();
 
-		that->P_Finish();
+///???		that->P_Finish();
 	}
 
 	if (was_ok)
