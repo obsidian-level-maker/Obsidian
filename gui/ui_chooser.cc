@@ -21,6 +21,7 @@
 
 #include "ui_chooser.h"
 #include "lib_util.h"
+#include "main.h"
 
 static char *last_file;
 
@@ -50,7 +51,20 @@ void Default_Location()
 
 char *Select_Output_File()
 {
+  SYS_ASSERT(last_file);
+
 #ifdef WIN32
+  // remember current directory and restore it after the call to
+  // GetSaveFileName(), which might change it.
+  char *cur_dir = StringNew(MAX_PATH);
+
+  DWORD gcd_res = ::GetCurrentDirectory(cur_dir, MAX_PATH);
+
+  if (0 == gcd_res || gcd_res > MAX_PATH)
+    Main_FatalError("GetCurrentDirectory failed!");
+
+  // --- call the bitch ---
+
   char *name = StringNew(FL_PATH_MAX);
   strcpy(name, last_file);
 
@@ -60,20 +74,48 @@ char *Select_Output_File()
   ofn.lStructSize = sizeof(OPENFILENAME); 
   ofn.hwndOwner = fl_xid(main_win);
   ofn.lpstrFilter = "Wad Files\0*.wad\0\0";
-  ofn.lpstrFile= name;
-  ofn.nMaxFile = FL_PATH_MAX;
+  ofn.lpstrFile = name;
+  ofn.nMaxFile  = FL_PATH_MAX;
   ofn.lpstrFileTitle = (LPSTR)NULL;
   ofn.lpstrInitialDir = (LPSTR)NULL; 
   ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT; 
   ofn.lpstrTitle = "Select output file"; 
  
-  if (0 == GetSaveFileName(&ofn))
+  BOOL result = ::GetSaveFileName(&ofn);
+
+  if (result == 0)
   {
     // user cancelled, or error occurred
+    ::SetCurrentDirectory(cur_dir);
     return NULL;
   }
 
-  name = ofn.lpstrFile;
+  if (ofn.lpstrFile != name)
+  {
+    SYS_ASSERT(ofn.lpstrFile);
+
+    // NOTE: memory leak.  I cannot be sure what the GetSaveFileName()
+    // call has placed into lpstrFile field, maybe a subset of our
+    // existing buffer, maybe something entirely different.
+
+    name = StringDup(ofn.lpstrFile);
+  }
+
+  if (name[0] != '\\' && ! (name[0] && name[1] == ':'))
+  {
+    // name was relative.  Since I'm assuming the GetSaveFileName()
+    // call might modify the current directory, we need to make the
+    // filename absolute _BEFORE_ we restore the original dir.
+
+    char *copy = StringNew(FL_PATH_MAX);
+
+    fl_filename_absolute(copy, FL_PATH_MAX, name);
+
+    StringFree(name);
+    name = copy;
+  }
+
+  ::SetCurrentDirectory(cur_dir);
 
 #else  // Linux and MacOSX
 
@@ -93,9 +135,7 @@ char *Select_Output_File()
   
   if (FileExists(name))
   {
-    // FIXME
-    // DIALOG : confirm overwrite
-    // OR!!!  : make a backup
+    // FIXME: make a backup
   }
 
   StringFree(last_file);
