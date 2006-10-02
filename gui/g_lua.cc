@@ -25,6 +25,7 @@
 #include "main.h"
 
 #include "hdr_fltk.h"
+#include "twister.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
 
@@ -34,6 +35,14 @@ static lua_State *LUA_ST;
 
 namespace con
 {
+
+// random number generator (Mersenne Twister)
+MT_rand_c RNG(0);
+
+// state needed for progress() call
+int lev_IDX = 0;
+int lev_TOTAL = 0;
+
 
 // LUA: printf(fmt_str, ...)
 //
@@ -66,9 +75,6 @@ int print_f(lua_State *L)
 	return 0;
 }
 
-
-static int lev_IDX = 0;
-static int lev_TOTAL = 0;
 
 
 // LUA: at_level(name, idx, total)
@@ -108,7 +114,7 @@ int ticker(lua_State *L)
 
 // LUA: abort() -> boolean
 //
-static int abort(lua_State *L)
+int abort(lua_State *L)
 {
 	int value = 0;
 
@@ -155,6 +161,30 @@ int map_pixel(lua_State *L)
 	return 0;
 }
 
+// LUA: rand_seed(seed)
+//
+int rand_seed(lua_State *L)
+{
+	int the_seed = luaL_checkint(L, 1) & 0x7FFFFFFF;
+
+  RNG.Seed(the_seed);
+
+  return 0;
+}
+
+// LUA: random()
+//
+int random(lua_State *L)
+{
+	int raw = RNG.Rand() & 0x7FFFFFFF;
+
+  // range is [0-1), including 0 but not including 1
+  lua_Number value = (lua_Number)raw / 2147483648.0;
+
+	lua_pushnumber(L, value);
+	return 1;
+}
+
 } // namespace con
 
 
@@ -169,6 +199,9 @@ static const luaL_Reg videolib[] =
 	{ "map_begin",  con::map_begin },
 	{ "map_pixel",  con::map_pixel },
 	{ "map_end",    con::map_end },
+
+	{ "rand_seed",  con::rand_seed },
+	{ "random",     con::random },
 
 	{ NULL, NULL } // the end
 };
