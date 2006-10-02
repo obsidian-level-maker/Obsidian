@@ -46,6 +46,7 @@ OBJS=	main.o      \
 	g_doom.o    \
 	g_glbsp.o   \
 	g_lua.o     \
+	twister.o   \
 	ui_build.o  \
 	ui_chooser.o \
 	ui_dialog.o \
