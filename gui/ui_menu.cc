@@ -21,6 +21,7 @@
 
 #include "ui_menu.h"
 #include "ui_window.h"
+#include "main.h"
 
 
 static bool menu_want_to_quit;
@@ -54,46 +55,54 @@ static void menu_do_about(Fl_Widget *w, void * data)
 {
 	menu_want_to_quit = false;
 
-	Fl_Window *ab_win = new Fl_Window(320, 440, "About Oblige Level Maker");
-	ab_win->end();
+	Fl_Window *about = new Fl_Window(340, 366, "About Oblige");
+	about->end();
 
 	// non-resizable
-	ab_win->size_range(ab_win->w(), ab_win->h(), ab_win->w(), ab_win->h());
-///	ab_win->position(guix_prefs.manual_x, guix_prefs.manual_y);
-	ab_win->callback((Fl_Callback *) menu_quit_CB);
+	about->size_range(about->w(), about->h(), about->w(), about->h());
+	about->callback((Fl_Callback *) menu_quit_CB);
 
 #if 0
 	// add the about image
-	Fl_Group *group = new Fl_Group(0, 0, 230, ab_win->h());
+	Fl_Group *group = new Fl_Group(0, 0, 230, about->h());
 	group->end();
 	group->box(FL_FLAT_BOX);
 	group->color(FL_BLACK, FL_BLACK);
-	ab_win->add(group);
+	about->add(group);
 
 	Fl_Box *box = new Fl_Box(20, 90, ABOUT_IMG_W+2, ABOUT_IMG_H+2);
 	box->image(about_image);
 	group->add(box); 
-
-
-	// nice big logo text
-	box = new Fl_Box(240, 5, 350, 50, "glBSPX  " GLBSP_VER);
-	box->labelsize(24);
-	ab_win->add(box);
-
-	// about text
-	box = new Fl_Box(240, 60, 350, 270, about_Info);
-	box->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
-	ab_win->add(box);
 #endif
 
+	// nice big logo text
+	Fl_Box *box1 = new Fl_Box(0, 0, about->w(), 80, "Oblige Level Maker " OBLIGE_VERSION);
+  box1->labelcolor(FL_BLUE);
+	box1->labelsize(24);
+//  box1->box(FL_FLAT_BOX);
+//  box1->color(FL_BACKGROUND_COLOR, FL_BACKGROUND_COLOR);
+	about->add(box1);
+
+	// about text
+	Fl_Box *box2 = new Fl_Box(10, 96, about->w()-20, 220, about_Info);
+	box2->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
+  box2->box(FL_UP_BOX);
+  box2->color(FL_DARK3, FL_DARK3);
+	about->add(box2);
+
+	Fl_Box *box3 = new Fl_Box(0, 320, about->w(), about->h()-320);
+	box3->box(FL_FLAT_BOX);
+	box3->color(FL_DARK3, FL_DARK3);
+  about->add(box3);
+
 	// finally add an "OK" button
-	Fl_Button *button = new Fl_Button(ab_win->w()-10-60, ab_win->h()-10-30, 
+	Fl_Button *button = new Fl_Button(about->w()-10-60, about->h()-10-30, 
 			60, 30, "OK");
 	button->callback((Fl_Callback *) menu_quit_CB);
-	ab_win->add(button);
+	about->add(button);
 
-///	ab_win->set_modal();
-	ab_win->show();
+///	about->set_modal();
+	about->show();
 
 	// run the GUI until the user closes
 	while (! menu_want_to_quit)
@@ -109,7 +118,7 @@ static void menu_do_about(Fl_Widget *w, void * data)
 #endif
 
 	// this deletes all the child widgets too...
-	delete ab_win;
+	delete about;
 }
 
 static void menu_do_save_log(Fl_Widget *w, void * data)
