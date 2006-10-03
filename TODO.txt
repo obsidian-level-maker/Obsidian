@@ -6,17 +6,17 @@ TODO
 GUI TODO
 --------
 
-*  put scripts (etc) in a "obl_data" directory.
+TEST:  backup file (.BAK)
 
-+  about screen.
+TEST:  commdlg32, GetSaveFileName
 
-+  use the output filename and directory
+-  tidy up fprintf (etc).
 
--  backup file (.BAK)
+-  add an 'OBLIGDAT' lump.
 
-wish: a *good* directory selector.
++  about window.
 
-wish: collect log, view it, save it, clear it.
+-- collect log, view it, save it, clear it.
 
 
 MILESTONE 0  (reached!)
@@ -60,9 +60,10 @@ c) Writer:
 MILESTONE 2  (close!!)
 ===========
 
--  working GUI interface using FLTK
+>>  working GUI interface using FLTK
 
-   >>>  File/Directory.
+   -  Directory selector under Win32.
+   -  About window.
 
 #  build WAD files directly (no wadlc step).
 
