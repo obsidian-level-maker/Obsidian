@@ -56,11 +56,10 @@ function build_cool_shit()
   assert(settings)
 --dump_table(settings, "settings"); do return end
 
-  -- FIXME: custom random generators
-  math.randomseed(settings.seed)
+  con.rand_seed(settings.seed)
 
 --!!  con.printf("\nSEED = %d\n\n", settings.seed)
-io.stderr:write("\nSEED = ", settings.seed, "\n\n")
+print("\nSEED = ", settings.seed, "\n\n")
 
   local LEVELS = get_level_names(settings)
 

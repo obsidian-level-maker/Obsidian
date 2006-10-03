@@ -275,7 +275,7 @@ print("COVERAGE", count)
     if p.h >= 4 then min_t = 2 end
     if p.w >= 6 then min_t = 3 end
 
-    local num_themes = math.random(min_t, p.h)
+    local num_themes = rand_irange(min_t, p.h)
     assert(num_themes <= #ALL_THEMES)
 print("NUMBER of THEMES:", num_themes)
 
@@ -309,7 +309,7 @@ print("NUMBER of THEMES:", num_themes)
     end
 
     for tries = 1,50 do
-      local num_links = math.random(min_links, max_links)
+      local num_links = rand_irange(min_links, max_links)
 
       for tries = 1,5 do
         print(string.format("TRYING: %d <= %d <= %d", min_links, num_links, max_links))

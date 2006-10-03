@@ -189,7 +189,7 @@ end
 
 
 function random_cell(p)
-  return math.random(1, p.w), math.random(1, p.h)
+  return rand_irange(1, p.w), rand_irange(1, p.h)
 end
 
 function valid_cell(p, cx, cy)
@@ -348,22 +348,20 @@ function shuffle_build_sites(p)
     end
   end
 
---[[
-  -- make sure cells are never "full" of build sites
-  -- (Note: in reality this happens only very rarely)
-  for loop = 1,9 do
-    local modified = false
-    for zzz,c in ipairs(p.all_cells) do
-      if builds_in_cell(c) == 4 then
-        local dir = math.random(1,4) * 2
-        c.link[dir].build = link_other(c.link[dir], c)
-        modified = true
-      end
-    end
-    con.ticker();
-    if not modified then break end
-  end
---]]
+---###  -- make sure cells are never "full" of build sites
+---###  -- (Note: in reality this happens only very rarely)
+---###  for loop = 1,9 do
+---###    local modified = false
+---###    for zzz,c in ipairs(p.all_cells) do
+---###      if builds_in_cell(c) == 4 then
+---###        local dir = math.random(1,4) * 2
+---###        c.link[dir].build = link_other(c.link[dir], c)
+---###        modified = true
+---###      end
+---###    end
+---###    con.ticker();
+---###    if not modified then break end
+---###  end
 end
 
 function compute_height_minmax(p)
@@ -563,7 +561,7 @@ function plan_sp_level()  -- returns Plan
     -- TODO: better system for choosing themes
     local theme
     if Q.mini then theme = Q.parent.theme
-    else theme = ALL_THEMES[math.random(1,#ALL_THEMES)]
+    else theme = rand_element(ALL_THEMES)
     end
 
     Q.theme = theme
@@ -723,12 +721,12 @@ function plan_sp_level()  -- returns Plan
      
       if calc_new then
         c.ceil_h = c.floor_h + 128
-        if math.random(1,100) < 20 then
+        if rand_irange(1,100) < 20 then
           c.ceil_h = c.ceil_h + 64
         end
 
         -- FIXME
-        -- if cave_theme and math.random(1,100) < 30 then c.ceil_h = c.ceil_h - 64  end
+        -- if cave_theme and rand_odds(30) then c.ceil_h = c.ceil_h - 64  end
       
       else
         for tdir = 2,8,2 do
@@ -778,7 +776,7 @@ function plan_sp_level()  -- returns Plan
         calc_ceil(cell, loop == 1)
       end
     end
-  end
+  end    -- END old_select_heights --
 
   
   local function decide_quests()
@@ -891,10 +889,10 @@ function plan_sp_level()  -- returns Plan
     it_max = math.min(2, count_entries(QUEST_MAP.item))
 
     repeat
-      keys     = math.random(1, k_max)
-      switches = math.random(0, sw_max)
-      weapons  = math.random(1, wp_max)
-      items    = math.random(0, it_max)
+      keys     = rand_irange(1, k_max)
+      switches = rand_irange(0, sw_max)
+      weapons  = rand_irange(1, wp_max)
+      items    = rand_irange(0, it_max)
 
       total    = keys + switches + weapons + items
       ratio    = (keys + switches) / (weapons + items)

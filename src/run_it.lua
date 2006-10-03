@@ -29,6 +29,9 @@ con =
   progress = do_nothing,
   ticker   = do_nothing,
   abort    = function() return false end,
+
+  random    = function() return math.random() end,
+  rand_seed = function(seed) math.randomseed(seed) end,
 }
 
 settings =

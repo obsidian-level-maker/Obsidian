@@ -150,15 +150,24 @@ end
 
 
 function rand_range(L,H)
-  return L + math.random() * (H-L)
+  return L + con.random() * (H-L)
+end
+
+function rand_irange(L,H)
+  return math.floor(L + con.random() * (H-L+0.9999))
+end
+
+function rand_element(list)
+  if #list == 0 then return nil end
+  return list[rand_irange(1,#list)]
 end
 
 function rand_skew()
-  return math.random() - math.random()
+  return con.random() - con.random()
 end
 
 function rand_odds(chance)
-  return math.random() * 100 <= chance
+  return (con.random() * 100) <= chance
 end
 
 function dual_odds(test,t_chance,f_chance)
@@ -180,7 +189,7 @@ function rand_shuffle(t, fill_size)
   if #t == 0 then return end
 
   for i = 1,(#t-1) do
-    local j = math.random(i,#t)
+    local j = rand_irange(i,#t)
 
     -- swap the pair of values
     t[i], t[j] = t[j], t[i]
@@ -200,7 +209,7 @@ function rand_index_by_probs(p)
 
   if total == 0 then return nil end
 
-  local value = math.random() * total
+  local value = con.random() * total
 
   for idx, prob in ipairs(p) do
     value = value - prob

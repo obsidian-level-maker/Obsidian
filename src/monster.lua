@@ -432,7 +432,7 @@ end
 
 
 function random_turn(angle)
-  local r = math.random() * 100
+  local r = con.random() * 100
   local step = sel(rand_odds(22), 90, 45)
 
   if r < 33 then
@@ -589,7 +589,7 @@ function simulate_battle(HM, mon_set, quest)
       local info = WEAPON_DEFS[wp]
       assert(info)
 
-      remain_shots = 1 + math.random() + math.random()
+      remain_shots = 1 + con.random() + con.random()
       remain_shots = int(remain_shots * info.rate)
 
       if remain_shots < 1 then remain_shots = 1 end
@@ -875,7 +875,7 @@ function distribute_pickups(p, c, HM)
     local idx = rand_index_by_probs(probs)
     local th_info = infos[idx]
 
-    local cluster = int(math.random(10,40) / th_info.give)
+    local cluster = int(rand_range(10,40) / th_info.give)
 
     if cluster < 1 then cluster = 1 end
     if cluster > 9 then cluster = 9 end  -- FIXME
@@ -1060,7 +1060,7 @@ function place_battle_stuff(p, c)
 
     if dat.caged then return end
 
-    local angle = math.random(0,7) * 45
+    local angle = rand_irange(0,7) * 45
 
     local is_big = (dat.info.r >= 32)
     local spot = alloc_spot(spots, is_big)
@@ -1350,7 +1350,7 @@ function battle_in_cell(p, c)
       assert(m_info)
 
       for i = 1,m_horde do
-        local angle = math.random(0,7) * 45
+        local angle = rand_irange(0,7) * 45
         local options = { [SK]=true }
 
         local dx = int((i-1)%2) * 64

@@ -1005,7 +1005,7 @@ function random_sky_light()
   for kind,func in pairs(SKY_LIGHT_FUNCS) do
     table.insert(names,kind)
   end
-  return names[math.random(1,#names)]
+  return rand_element(names)
 end
 
 function random_light_kind(is_flat)
@@ -1016,7 +1016,7 @@ function random_light_kind(is_flat)
     end
   end
   assert(#infos > 0)
-  return infos[math.random(1,#infos)]
+  return rand_element(infos)
 end
 
 function random_door_kind(w)
@@ -1027,7 +1027,7 @@ function random_door_kind(w)
     end
   end
   assert(#names > 0)
-  return names[math.random(1,#names)]
+  return rand_element(names)
 end
 
 
@@ -1052,8 +1052,8 @@ function make_chunks(p)
   local function empty_chunk(c)
     -- OPTIMISE with rand_shuffle
     for loop = 1,999 do
-      local kx = math.random(1,KW)
-      local ky = math.random(1,KH)
+      local kx = rand_irange(1,KW)
+      local ky = rand_irange(1,KH)
 
       if not c.chunks[kx][ky] then return kx, ky end
     end
@@ -1075,7 +1075,7 @@ function make_chunks(p)
       table.insert(coords, {x=kx-ax, y=ky-ay})
 
       -- what shall we put in-between?
-      local r = math.random(1,100)
+      local r = con.random() * 100
       if r < 40 then
         c.chunks[kx][ky] = { link=link }
       elseif r < 80 then
@@ -1281,7 +1281,7 @@ end
   local function try_flush_side(c)
 
     -- select a side
-    local side = math.random(1,4) * 2
+    local side = rand_irange(1,4) * 2
     local x1, y1, x2, y2 = side_to_corner(side, KW, KH)
 
     local common
@@ -1318,7 +1318,7 @@ end
     local kx, ky
 
     repeat
-      kx, ky = math.random(1,KW), math.random(1,KH)
+      kx, ky = rand_irange(1,KW), rand_irange(1,KH)
     until c.chunks[kx][ky] and c.chunks[kx][ky].room
 
     local dir_order = { 2,4,6,8 }
@@ -1377,7 +1377,7 @@ end
 
     if #posits == 0 then return end
 
-    local p = posits[math.random(1,#posits)]
+    local p = rand_element(posits)
 
     c.chunks[p.x][p.y] = { [name]=true }
   end
@@ -1591,15 +1591,8 @@ io.stdout:write(string.format(
   end
 
   local function good_Q_spot(c) -- REMOVE (use block-based alloc)
-    local best_x, best_y
-    local best_score = -10
-
-    local in_x, in_y
 
     assert(not p.deathmatch)
-    -- in_x, in_y = side_to_chunk(math.random(1,4)*2) -- FIXME
-
-    in_x, in_y = side_to_chunk(c.entry_dir or c.exit_dir)
 
     local function k_dist(kx,ky)
       local side = c.entry_dir or c.exit_dir or 2
@@ -1610,11 +1603,18 @@ io.stdout:write(string.format(
       if side==8 then return KH-ky end
     end
 
+---##  local in_x, in_y = side_to_chunk(c.entry_dir or c.exit_dir)
+
+    local best_x, best_y
+    local best_score = -10
+
     for kx = 1,KW do
       for ky = 1,KH do
-        if c.chunks[kx][ky] and not (c.chunks[kx][ky].void or c.chunks[kx][ky].cage) then
+        if c.chunks[kx][ky] and
+           not (c.chunks[kx][ky].void or c.chunks[kx][ky].cage or c.chunks[kx][ky].quest)
+        then
           local score = k_dist(kx, ky)
-          score = score + math.random() * 0.5
+          score = score + con.random() * 0.5
           if c.chunks[kx][ky].floor_h == c.floor_h then score = score + 1.7 end
 
           if score > best_score then
@@ -1625,7 +1625,7 @@ io.stdout:write(string.format(
       end
     end
 
-    if not best_x then error("NO FREE SPOT!") end
+---##  if not best_x then error("NO FREE SPOT!") end
 
     return best_x, best_y
   end
@@ -1634,12 +1634,24 @@ io.stdout:write(string.format(
 
     if c == p.quests[1].first then
       local kx, ky = good_Q_spot(c)
+      if not kx then error("NO FREE SPOT for Player!") end
       c.chunks[kx][ky].player=true
     end
 
     if c == c.quest.last then
       local kx, ky = good_Q_spot(c)
+      if not kx then error("NO FREE SPOT for Quest Item!") end
       c.chunks[kx][ky].quest=true
+
+      --[[ NOT NEEDED?
+      if p.coop and (c.quest.kind == "weapon") then
+        local total = rand_index_by_probs { 10, 50, 90, 50 }
+        for i = 2,total do
+          local kx, ky = good_Q_spot(c)
+          if kx then c.chunks[kx][ky].quest=true end
+        end
+      end
+      --]]
     end
   end
 
@@ -1781,7 +1793,7 @@ function build_cell(p, c)
     -- when in middle of room, find an exit to look at
     if (kx==2 and ky==2) then
       for i = 1,20 do
-        local dir = math.random(1,4)*2
+        local dir = rand_irange(1,4)*2
         if c.link[dir] then
           return dir_to_angle(dir)
         end
@@ -1800,7 +1812,7 @@ function build_cell(p, c)
 
     if ANGLES[kk] then return ANGLES[kk] end
 
-    return math.random(0,7) * 45
+    return rand_irange(0,7) * 45
   end
 
   local function decide_void_pic(p, c)
@@ -1810,13 +1822,12 @@ function build_cell(p, c)
     elseif not c.theme.outdoor and rand_odds(25) then
       local pic
       repeat
-        pic = TH_LIGHTS[math.random(1, #TH_LIGHTS)]
+        pic = rand_element(TH_LIGHTS)
       until pic.tex
       c.void_pic = pic
-      c.void_cut = math.random(3,4)
+      c.void_cut = rand_irange(3,4)
     else
-      local idx = math.random(1, #TH_PICS)
-      c.void_pic = TH_PICS[idx]
+      c.void_pic = rand_element(TH_PICS)
       c.void_cut = 1
     end
   end
@@ -1958,11 +1969,11 @@ function build_cell(p, c)
     link.wide_door   = random_door_kind(128)
     link.block_sound = rand_odds(90)
     link.bar_size    = rand_index_by_probs { 20,90 }
-    link.arch_rand   = math.random(0,100)
-    link.door_rand   = math.random(0,100)
+    link.arch_rand   = con.random() * 100
+    link.door_rand   = con.random() * 100
 
     if link.where == "double" then
-      local awh = math.random(2,3)
+      local awh = rand_irange(2,3)
       build_real_link(link, side, -awh, what, b_theme)
       build_real_link(link, side,  awh, what, b_theme)
     else
@@ -2627,7 +2638,7 @@ end
 
     local function wall_switch_dir(kx, ky, entry_dir)
       if not entry_dir then
-        entry_dir = math.random(1,4)*2
+        entry_dir = rand_irange(1,4)*2
       end
       
       if kx==2 and ky==2 then
@@ -2642,8 +2653,8 @@ end
 
     local function chunk_dm_offset()
       while true do
-        local dx = math.random(1,3) - 2
-        local dy = math.random(1,3) - 2
+        local dx = rand_irange(1,3) - 2
+        local dy = rand_irange(1,3) - 2
         if not (dx==0 and dy==0) then return dx,dy end
       end
     end
@@ -2854,7 +2865,7 @@ then
   K.overhang = true
 
   if not c.overhang then
-    c.overhang = ALL_OVERHANGS[math.random(1,#ALL_OVERHANGS)]
+    c.overhang = rand_element(ALL_OVERHANGS)
   end
   local overhang = c.overhang
 
@@ -2926,7 +2937,7 @@ end
   if not c.theme.outdoor and not c.is_exit and rand_odds(70) then
     c.sky_light =
     {
-      h  = 8 * math.random(2,4),
+      h  = 8 * rand_irange(2,4),
       pattern = random_sky_light(),
       is_sky = rand_odds(33),
       light_info = random_light_kind(true)
