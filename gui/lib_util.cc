@@ -170,6 +170,41 @@ const char *FileBaseName(const char *filename)
 	return filename;
 }
 
+bool CopyFile(const char *src_name, const char *dest_name)
+{
+  char buffer[1024];
+
+  FILE *src = fopen(src_name, "rb");
+  if (! src)
+    return false;
+
+  FILE *dest = fopen(dest_name, "wb");
+  if (! dest)
+  {
+    fclose(src);
+    return false;
+  }
+
+  while (true)
+  {
+    int rlen = fread(buffer, 1, sizeof(buffer), src);
+    if (rlen <= 0)
+      break;
+
+    int wlen = fwrite(buffer, 1, rlen, dest);
+    if (wlen != rlen)
+      break;
+  }
+
+  bool was_OK = !ferror(src) && !ferror(dest);
+
+  fclose(dest);
+  fclose(src);
+
+  return was_OK;
+}
+
+
 //------------------------------------------------------------------------
 
 //

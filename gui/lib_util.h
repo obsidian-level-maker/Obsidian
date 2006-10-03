@@ -33,6 +33,7 @@ bool HasExtension(const char *filename);
 bool CheckExtension(const char *filename, const char *ext);
 char *ReplaceExtension(const char *filename, const char *ext);
 const char *FileBaseName(const char *filename);
+bool CopyFile(const char *src_name, const char *dest_name);
 
 // string utilities
 int StrCaseCmp(const char *A, const char *B);
