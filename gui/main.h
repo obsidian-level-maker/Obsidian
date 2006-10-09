@@ -16,11 +16,13 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __MP_MAIN_H__
-#define __MP_MAIN_H__
+#ifndef __OBLIGE_MAIN_H__
+#define __OBLIGE_MAIN_H__
 
-#define OBLIGE_VERSION  "0.72"
-#define OBLIGE_VER_HEX  0x072
+#define OBLIGE_TITLE  "Oblige Level Maker"
+
+#define OBLIGE_VERSION  "0.76"
+#define OBLIGE_HEX_VER  0x076
 
 #define DATA_DIR  "./obl_data"
 
@@ -28,4 +30,4 @@ void Main_FatalError(const char *msg, ...);
 
 void Main_Ticker();
 
-#endif /* __MP_MAIN_H__ */
+#endif /* __OBLIGE_MAIN_H__ */

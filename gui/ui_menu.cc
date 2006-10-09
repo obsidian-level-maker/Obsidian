@@ -42,80 +42,89 @@ static void menu_do_exit(Fl_Widget *w, void * data)
 
 //------------------------------------------------------------------------
 
-static const char *about_Info =
-  "By Andrew Apted (C) 2006\n"
+static const char *about_Text =
+  "Copyright (C) 2006 by Andrew Apted\n"
   "\n"
-  "This program is free software, under the terms of\n"
-  "the GNU General Public License.  It comes with\n"
-  "ABSOLUTELY NO WARRANTY.\n"
-  "\n";
+  "Oblige is a random level generator for DOOM\n"
+  "\n"
+  "This program is free software, and may be\n"
+  "distributed and modified under the terms of\n"
+  "the GNU General Public License\n"
+  "\n"
+  "There is ABSOLUTELY NO WARRANTY\n"
+  "Use at your OWN RISK";
 
+static const char *about_Web =
+  "http://oblige.sourceforge.net";
+
+#define TITLE_COLOR  FL_BLUE
+
+#define INFO_COLOR  fl_color_cube(0,6,4)
+  
 
 static void menu_do_about(Fl_Widget *w, void * data)
 {
 	menu_want_to_quit = false;
 
-	Fl_Window *about = new Fl_Window(340, 366, "About Oblige");
+	Fl_Window *about = new Fl_Window(330, 356, "About Oblige");
 	about->end();
 
 	// non-resizable
 	about->size_range(about->w(), about->h(), about->w(), about->h());
 	about->callback((Fl_Callback *) menu_quit_CB);
 
-#if 0
-	// add the about image
-	Fl_Group *group = new Fl_Group(0, 0, 230, about->h());
-	group->end();
-	group->box(FL_FLAT_BOX);
-	group->color(FL_BLACK, FL_BLACK);
-	about->add(group);
-
-	Fl_Box *box = new Fl_Box(20, 90, ABOUT_IMG_W+2, ABOUT_IMG_H+2);
-	box->image(about_image);
-	group->add(box); 
-#endif
+  int cy = 0;
 
 	// nice big logo text
-	Fl_Box *box1 = new Fl_Box(0, 0, about->w(), 80, "Oblige Level Maker " OBLIGE_VERSION);
-  box1->labelcolor(FL_BLUE);
-	box1->labelsize(24);
-//  box1->box(FL_FLAT_BOX);
-//  box1->color(FL_BACKGROUND_COLOR, FL_BACKGROUND_COLOR);
-	about->add(box1);
+	Fl_Box *box = new Fl_Box(0, cy, about->w(), 50, OBLIGE_TITLE " " OBLIGE_VERSION);
+	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+  box->labelcolor(TITLE_COLOR);
+	box->labelsize(24);
+	about->add(box);
 
-	// about text
-	Fl_Box *box2 = new Fl_Box(10, 96, about->w()-20, 220, about_Info);
-	box2->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
-  box2->box(FL_UP_BOX);
-  box2->color(FL_DARK3, FL_DARK3);
-	about->add(box2);
 
-	Fl_Box *box3 = new Fl_Box(0, 320, about->w(), about->h()-320);
-	box3->box(FL_FLAT_BOX);
-	box3->color(FL_DARK3, FL_DARK3);
-  about->add(box3);
+  cy += box->h() + 10;
+  
+	// the very informative text
+	box = new Fl_Box(10, cy, about->w()-20, 184, about_Text);
+	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+  box->box(FL_UP_BOX);
+  box->color(INFO_COLOR);
+	about->add(box);
+
+  cy += box->h() + 10;
+
+
+	// website address
+	box = new Fl_Box(10, cy, about->w()-20, 30, about_Web);
+	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+	box->labelsize(20);
+	about->add(box);
+
+  cy += box->h() + 10;
+
+
+  SYS_ASSERT(cy < about->h());
+
+	Fl_Group *darkish = new Fl_Group(0, cy, about->w(), about->h()-cy);
+  darkish->end();
+	darkish->box(FL_FLAT_BOX);
+	darkish->color(FL_DARK3, FL_DARK3);
+  about->add(darkish);
 
 	// finally add an "OK" button
 	Fl_Button *button = new Fl_Button(about->w()-10-60, about->h()-10-30, 
 			60, 30, "OK");
 	button->callback((Fl_Callback *) menu_quit_CB);
-	about->add(button);
+	darkish->add(button);
 
 ///	about->set_modal();
+
 	about->show();
 
 	// run the GUI until the user closes
 	while (! menu_want_to_quit)
 		Fl::wait();
-
-#if 0
-	// check if the user moved/resized the window
-	if (ab_win->x() != init_x || ab_win->y() != init_y)
-	{
-		guix_prefs.manual_x = ab_win->x();
-		guix_prefs.manual_y = ab_win->y();
-	}
-#endif
 
 	// this deletes all the child widgets too...
 	delete about;
