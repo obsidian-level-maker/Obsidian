@@ -84,7 +84,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	add(build);
 
-	map_box = new Fl_Box(x+w - 308, cy - 40, 120, 70);
+	map_box = new Fl_Box(x+w - 308, y + h - 94, 120, 90);
 //	map_box->color(MAP_BG, MAP_BG);
 
 	add(map_box);
@@ -194,11 +194,11 @@ void UI_Build::MapBegin(int pixel_W, int pixel_H)
 
 void UI_Build::MapPixel(int kind)
 {
-	SYS_ASSERT(0 <= kind && kind <= 3);
+	SYS_ASSERT(0 <= kind && kind <= 4);
 
-	static u8_t colors[4*3] =
+	static u8_t colors[5*3] =
 	{
-		0,0,0, 224,224,224,  192,96,96,  96,96,192
+		0,0,0,  224,216,208,  192,96,96,  96,96,192,  0,224,96
 	};
 
 	SYS_ASSERT(map_pos < map_end);
