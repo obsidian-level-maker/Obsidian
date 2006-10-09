@@ -26,7 +26,7 @@ function FRAGMENT_Y(y) return (y-1-(BORDER_BLK+0)*FH)*16 end
 function BLOCK_X(x) return FRAGMENT_X((x-1)*FW + 1) end
 function BLOCK_Y(y) return FRAGMENT_Y((y-1)*FH + 1) end
 
-function NORMALIZE(n) return math.floor(n / 1.0) end
+function NORMALIZE(n) return math.floor(n * 1.0) end
 
 --[[
 
@@ -111,6 +111,7 @@ function write_level(p, lev_name)
         local B = p.blocks[bx][by]
         if not B then con.map_pixel(0)
         elseif B.solid then con.map_pixel(1)
+        elseif B.kind  then con.map_pixel(4)
         elseif (B.c_tex == "F_SKY1" or
                 B.c_tex == "F_SKY") then con.map_pixel(3)
         else con.map_pixel(2)
@@ -270,6 +271,10 @@ function write_level(p, lev_name)
         flags = flags + ML_BLOCK_SOUND
       end
 
+      if b_over.block_mon or f_over.block_mon then
+        flags = flags + ML_NO_MONSTER
+      end
+
       return flags
     end
 
@@ -313,7 +318,8 @@ function write_level(p, lev_name)
              (b1.light == b2.light) and
              (b1.tag   == b2.tag) and
              (b1.kind  == b2.kind) and
-             (b1.mark  == b2.mark)
+             (b1.mark  == b2.mark) and
+             (b1.same_sec == b2.same_sec)
     end
 
     local function same_sector_w_merge(b1, b2)
@@ -323,6 +329,10 @@ function write_level(p, lev_name)
 ---###  if not b1 or not b2 then return false end
       
       if b1.group and b2.group and (b1.group.id == b2.group.id) then
+        return true
+      end
+
+      if b1.same_sec and b1.same_sec == b2.same_sec then
         return true
       end
 
@@ -459,6 +469,15 @@ function write_level(p, lev_name)
       if b.switch_kind then
         cur_line.kind = b.switch_kind
         cur_line.tag  = b.switch_tag
+
+      elseif (f.walk_kind ~= b.walk_kind) or (f.walk_tag ~= b.walk_tag) then
+        if f.walk_kind then
+          cur_line.kind = f.walk_kind
+          cur_line.tag  = f.walk_tag
+        else
+          cur_line.kind = b.walk_kind
+          cur_line.tag  = b.walk_tag
+        end
       end
     end
 
@@ -580,6 +599,8 @@ print("TOTAL_GROUPS ", total_group)
     if B.solid then return nil end
 
     if B.new_sec then return B.new_sec end
+
+    if B.same_sec then return create_sector(B.same_sec) end
 
     local singleton = not B.group
 
@@ -717,8 +738,8 @@ print("TOTAL_GROUPS ", total_group)
         string.format("S%d : %d %d %s %s %d %d %d\n",
           sec.T_index, sec.f_h, sec.c_h,
           sec.f_tex or ERROR_FLAT,
-          sec.c_tex or ERROR_FLAT, sec.light,
-          sec.kind or 0, sec.tag or 0))
+          sec.c_tex or ERROR_FLAT,
+          sec.light or 0, sec.kind or 0, sec.tag or 0))
     end
 
     tx_file:write("SECTORS_END\n")
