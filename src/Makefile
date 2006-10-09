@@ -3,16 +3,16 @@
 #----------------------------------------------------------------
 
 all:
-	rm -f TEST.wad
-	$(MAKE) TEST.wad
+	rm -f ../TEST.wad
+	$(MAKE) ../TEST.wad
 
-TEST.wad:
+../TEST.wad:
 	lua run_it.lua $(SEED)
 	wadlc TEMP.txt TEMP.wad
-	glbsp -pack -warn TEMP.wad -o TEST.wad
+	glbsp -pack -warn TEMP.wad -o ../TEST.wad
 
 clean:
-	rm -f TEMP.txt TEST*.wad TEMP.wad
+	rm -f ../TEST.wad TEMP.txt TEMP.wad
 
 .PHONY: all clean run_it
 
