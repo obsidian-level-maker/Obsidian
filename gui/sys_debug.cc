@@ -19,7 +19,7 @@
 #include "headers.h"
 
 
-#define DEBUGGING_FILE  "mp_debug.txt"
+#define DEBUGGING_FILE  "obl_debug.txt"
 
 static FILE *debug_fp = NULL;
 
