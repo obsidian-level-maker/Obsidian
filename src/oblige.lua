@@ -56,7 +56,7 @@ function build_cool_shit()
   assert(settings)
 --dump_table(settings, "settings"); do return end
 
-  con.rand_seed(settings.seed)
+  compute_pow_factors()
 
 --!!  con.printf("\nSEED = %d\n\n", settings.seed)
 print("\nSEED = ", settings.seed, "\n\n")
@@ -66,17 +66,17 @@ print("\nSEED = ", settings.seed, "\n\n")
   for idx,lev in ipairs(LEVELS) do
 
     con.at_level(lev, idx, #LEVELS)
+
+    con.rand_seed(settings.seed * 100 + idx)
  
     local PLAN
 
     if settings.mode == "dm" then
       PLAN = plan_dm_arena()
+    elseif settings.mode == "coop" then
+      PLAN = plan_sp_level(true)
     else
-      PLAN = plan_sp_level()
-    end
-    
-    if settings.mode == "coop" then
-      PLAN.coop = true
+      PLAN = plan_sp_level(false)
     end
 
     if con.abort() then return "abort" end

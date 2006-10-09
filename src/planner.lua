@@ -48,7 +48,7 @@ function show_quests(p)
   local function display_mini_quest(idx, Q)
     io.stderr:write(string.format(
       "  Mini-Quest %d.%d: Find %s (%s) Len %d\n",
-        Q.level, idx, Q.kind, Q.item, Q.want_len))
+        Q.level, Q.sub_level, Q.kind, Q.item, Q.want_len))
   end
 
   for q_idx,Q in ipairs(p.quests) do
@@ -71,6 +71,7 @@ function show_path(p)
           if c.dm_player then kind = "P"
       elseif c.dm_weapon then kind = "W"
       elseif c.scenic    then kind = "C"
+      elseif c.is_depot  then kind = "D"
       elseif c.along == 1 then kind = "S"
       elseif c.along < #c.quest.path then
         if c.quest.mini then kind = "q" else kind = "p" end
@@ -111,7 +112,6 @@ function show_path(p)
 
   divider(p.w)
 
-	local x, y
 	for y = p.h,1,-1 do
 	  for x = 1,p.w do
 	    show_cell(p.cells[x][y])
@@ -133,6 +133,7 @@ function show_chunks(p)
 
       if not K then return " " end
 
+      if K.closet then return "c" end
       if K.void   then return "." end
       if K.room   then return "/" end
 
@@ -175,7 +176,6 @@ function show_chunks(p)
 
   divider(p.w)
 
-	local x, y
 	for y = p.h,1,-1 do
     for row = KH,1,-1 do
       for x = 1,p.w do
@@ -233,6 +233,7 @@ function get_base_plan(cw, ch)
     quests = {},
 
     all_cells  = {},
+    all_depots = {},
     all_links  = {},
     all_things = {},
 
@@ -256,19 +257,30 @@ function allocate_tag(p)
   return p.free_tag
 end
 
-function create_cell(p, x, y, quest, along, theme)
+function allocate_mark(p)
+  p.mark = p.mark + 1
+  return p.mark
+end
+
+function create_cell(p, x, y, quest, along, theme, is_depot)
   local CELL =
   {
     x = x, y = y, quest = quest, along = along,
-    link = {}, border = {}, window = {},
+    link = {}, border = {}, window = {}, closet = {},
     theme = theme,
+    is_depot = is_depot,
     liquid = quest.liquid,
     floor_h = 0, ceil_h  = 256, -- dummy values
     monsters = {}
   }
 
   p.cells[x][y] = CELL
-  table.insert(p.all_cells, CELL)
+
+  if is_depot then
+    table.insert(p.all_depots, CELL)
+  else
+    table.insert(p.all_cells, CELL)
+  end
 
   return CELL
 end
@@ -389,7 +401,7 @@ end
 
 
 
-function plan_sp_level()  -- returns Plan
+function plan_sp_level(is_coop)  -- returns Plan
 
 	local p = get_base_plan(PL_W, PL_H)
 
@@ -645,11 +657,13 @@ function plan_sp_level()  -- returns Plan
 
     -- FIXME: TEMP JUNK
     for zzz,c in ipairs(p.all_cells) do
+      -- c.floor_h = 128 - (5-c.quest.level) * 128
       c.floor_h = rand_index_by_probs{ 3,1,5,1,4 } * 32 - 32
       if c.is_exit then c.ceil_h = c.floor_h + 128 end
     end
   end
 
+--[[
   local function old_select_heights()
 
     local function calc_floor(c, prev)
@@ -777,7 +791,7 @@ function plan_sp_level()  -- returns Plan
       end
     end
   end    -- END old_select_heights --
-
+--]]
   
   local function decide_quests()
     
@@ -860,6 +874,7 @@ function plan_sp_level()  -- returns Plan
       if parent then
         table.insert(parent.children, QUEST)
         QUEST.level = parent.level
+        QUEST.sub_level = #parent.children
       else
         table.insert(p.quests, QUEST)
         QUEST.level = #p.quests
@@ -1019,7 +1034,7 @@ io.stderr:write("CREATED SCENIC AT ", c.x, ",", c.y, "\n")
     end
   end
 
-  local function add_lava_bridges()
+  local function add_bridges()
     --[[
     for zzz,c in ipairs(p.all_cells) do
       for dir = 2,8,2 do
@@ -1034,24 +1049,23 @@ io.stderr:write("CREATED SCENIC AT ", c.x, ",", c.y, "\n")
 
   local function add_falloffs()
     
-    local function can_make_falloff(a, b)
+    local function can_make_falloff(a, b, dir)
       
+      if b.is_depot or b.is_bridge or b.scenic then return false end
+      if a.is_exit or b.is_exit then return false end
+
       local aq = a.quest.parent or a.quest
       local bq = b.quest.parent or b.quest
 
       if aq.level <  bq.level then return false end
       if aq.level == bq.level and a.along < b.along then return false end
-      
+
       if a.f_min < (b.f_max + 64) then return false end
       if (b.ceil_h - a.floor_h) < 64 then return false end
       
       if a.theme.outdoor and b.theme.outdoor and a.ceil_h ~= b.ceil_h then return false end
       if a.theme.outdoor and not b.theme.outdoor and a.ceil_h <= b.ceil_h then return false end
       if b.theme.outdoor and not a.theme.outdoor and b.ceil_h <= a.ceil_h then return false end
-
-      if a.is_exit or b.is_exit then return false end
-      if b.lava_bridge then return false end
-      if b.scenic then return false end
 
       return true
     end
@@ -1062,7 +1076,7 @@ io.stderr:write("CREATED SCENIC AT ", c.x, ",", c.y, "\n")
         local other = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
 
         if other and not c.link[dir] and
-           can_make_falloff(c, other) and
+           can_make_falloff(c, other, dir) and
            rand_odds(90) then
  
 io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
@@ -1086,8 +1100,8 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 ---###   if aq.level <  bq.level then return false end
 ---###   if aq.level == bq.level and a.along < b.along then return false end
       
-      if (a.is_exit or b.is_exit) and rand_odds(96) then return false end
-      if b.lava_bridge then return false end
+      if b.is_depot or b.is_bridge then return false end
+      if (a.is_exit or b.is_exit) and rand_odds(90) then return false end
 
       local cc = math.min(a.ceil_h, b.ceil_h) - 32
       local ff = math.max(a.f_max, b.f_max) + 32
@@ -1121,12 +1135,137 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
   end
 
 
+  local function add_surprises()
+
+    local function add_closet(Q)
+
+      -- FIXME: prioritise
+      local locs  = {}
+
+      for idx,c in ipairs(Q.path) do
+        local side = rand_irange(1,4) * 2
+        
+        if c.link[side] then side = rand_irange(1,4) * 2 end
+
+        if idx >= 2 and not c.link[side] then
+          table.insert(locs, {c=c, side=side})
+        end
+      end
+
+      if #locs == 0 then return end
+
+      local L = rand_element(locs)
+
+      local trig_c  = Q.path[#Q.path]
+
+      con.printf("ADDING CLOSET IN (%d,%d), TRIGGERED IN (%d,%d)\n",
+          L.c.x, L.c.y, trig_c.x, trig_c.y)
+      print(" QUEST", Q.level, Q.sub_level or 0)
+      print(" ALONG", L.c.along);
+      print(" Q", Q, "c.quest", L.c.quest)
+
+      L.c.closet[L.side] = true
+
+--##      Q.closet_build = L.c
+--##      Q.closet_trig  = trig_c
+--##      Q.closet_tag   = allocate_tag(p)
+--##      Q.closet_side  = L.side
+
+      local SURPRISE =
+      {
+        trigger_cell = Q.last,
+        door_tag = allocate_tag(p),
+
+        places =
+        {
+          { c = L.c, side = L.side, tag = allocate_tag(p) }
+        }
+      }
+
+      Q.closet = SURPRISE
+    end
+
+    local function add_depot(Q)
+
+      local pos_x, pos_y
+      local best_score = -999
+
+      local start = p.quests[1].first
+
+      for x = 1,p.w do for y = 1,p.h do
+        if not p.cells[x][y] then
+          local score = dist(x, y, start.x, start.y)
+          if score > best_score then
+            best_score = score
+            pos_x, pos_y = x, y
+          end
+        end
+      end end
+
+      if not pos_x then return end
+
+      con.printf("CREATING DEPOT @ %d,%d\n", pos_x, pos_y)
+
+      local CELL = create_cell(p, pos_x, pos_y, Q, 1, TH_EXITROOM, "depot")
+
+      local SURPRISE =
+      {
+        trigger_cell = Q.last,
+        depot_cell = CELL,
+        door_tag = allocate_tag(p),
+
+        places =
+        {
+          { c = Q.last, tag = allocate_tag(p) },
+          { c = Q.last, tag = allocate_tag(p) },
+          { c = Q.last, tag = allocate_tag(p) },
+          { c = Q.last, tag = allocate_tag(p) },
+        }
+      }
+
+      Q.depot = SURPRISE
+
+---##      Q.depot_trig  = Q.path[#Q.path]
+---##      Q.depot_dest  = Q.depot_trig   --!!!! FIXME
+---##      Q.depot_cell  = c
+---##      Q.depot_tags  = { allocate_tag(p), allocate_tag(p), allocate_tag(p), allocate_tag(p) }
+    end
+
+    local function try_add_surprise(Q)
+      if Q.kind == "exit" then return end
+      
+      if Q.mini then  -- FIXME: better selection
+        add_closet(Q)
+      else
+        add_depot(Q)
+      end
+    end
+
+    --- add_surprises ---
+
+    for zzz,Q in ipairs(p.quests) do
+      try_add_surprise(Q)
+
+      for xxx,R in ipairs(Q.children) do
+        try_add_surprise(R)
+      end
+    end
+  end
+
+
   local function toughen_it_up()
     
     local function toughen_quest(Q)
       
-      local peak = 42 * (Q.level ^ 0.7) * (1 + rand_skew()/6)
+      local peak = 180 + #Q.path * 5
       local skip = 0
+
+      peak = peak + 15 * (Q.sub_level or 0)
+      peak = peak * (Q.level ^ 0.7) * (1 + rand_skew()/5)
+
+      if p.coop then
+        peak = peak * p.coop_toughness
+      end
 
       -- go backwards from quest cell to start cell
       for i = #Q.path,1,-1 do
@@ -1169,6 +1308,12 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
 print("LIQUID:", p.liquid)
 
+  if is_coop then
+    p.coop = true
+    p.coop_toughness = rand_range(1.5, 2.5)
+    print("coop_toughness =", p.coop_toughness);
+  end
+
   decide_quests()
 
   for zzz,Q in ipairs(p.quests) do
@@ -1194,14 +1339,13 @@ print("LIQUID:", p.liquid)
 
   compute_height_minmax(p)
 
---[[ FIXME
-  add_lava_bridges()
---]] 
+  toughen_it_up()
+
+-- FIXME add_bridges()
 
   add_falloffs()
+  add_surprises()
   add_windows()
-
-  toughen_it_up()
 
   return p
 end

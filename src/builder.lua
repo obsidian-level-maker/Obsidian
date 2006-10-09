@@ -56,6 +56,7 @@ function copy_chunk(K)
     link = K.link,
     cage = K.cage,
     liquid = K.liquid,
+    closet = K.closet,
 
 ---##    player = K.player,
 ---##    weapon = K.weapon,
@@ -179,7 +180,7 @@ function fill(p, c, sx, sy, ex, ey, B, B2)
         merge_table(N, B2)
       end
 
-      N.mark = p.mark
+      N.mark = N.mark or c.mark
     end
   end
 end
@@ -227,7 +228,7 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
         merge_table(N, F2)
       end
 
-      N.mark = p.mark
+      N.mark = N.mark or c.mark
     end
   end
 end
@@ -282,7 +283,7 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
 
   local door_kind = 1
   if p.deathmatch and rand_odds(66) then door_kind = 117 end -- blaze
-    
+
   local door = { f_h = z+8, c_h = z+8,
                  f_tex = "FLAT1",
                  c_tex = door_info.bottom or "FLAT1",
@@ -295,9 +296,9 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
   if link.quest then
 
     if link.quest.kind == "key" then
-          if link.quest.item == "k_red"    then door.door_kind = 28; key_tex = "DOORRED2"
-      elseif link.quest.item == "k_blue"   then door.door_kind = 26; key_tex = "DOORBLU2"
-      elseif link.quest.item == "k_yellow" then door.door_kind = 27; key_tex = "DOORYEL2"
+          if link.quest.item == "k_blue"   then door.door_kind = sel(p.coop,32,26); key_tex = "DOORBLU2"
+      elseif link.quest.item == "k_yellow" then door.door_kind = sel(p.coop,34,27); key_tex = "DOORYEL2"
+      elseif link.quest.item == "k_red"    then door.door_kind = sel(p.coop,33,28); key_tex = "DOORRED2"
       end
 
     elseif link.quest.kind == "switch" then
@@ -553,7 +554,7 @@ function B_stair(p, c, bx, by, z, dir, long, deep, step)
                   c_h = c.ceil_h,   -- FIXME
                   f_tex = c.theme.step_flat or c.theme.floor,
                   c_tex = c.theme.ceil,
-                  light = c.lighting,
+                  light = c.light,
 
                   l_tex = c.theme.wall,
                   u_tex = c.theme.wall,
@@ -584,7 +585,7 @@ function B_lift(p, c, x, y, z, dir, long, deep)
     c_h = c.ceil_h,
     f_tex = c.theme.lift_flat or TH_LIFT.floor,
     c_tex = c.theme.ceil,
-    light = c.lighting,
+    light = c.light,
 
     lift_kind = 123,  -- 62 for slower kind
     lift_walk = 120,  -- 88 for slower kind
@@ -642,7 +643,7 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
     c_h = c.ceil_h,
     f_tex = TH_METAL.floor,
     c_tex = c.theme.ceil,
-    light = c.lighting,
+    light = c.light,
 
     l_tex = info.switch,
     u_tex = c.theme.wall,
@@ -716,7 +717,7 @@ function B_pedestal(p, c, x, y, z, info)
     f_tex = info.floor,
     c_h   = c.ceil_h,
     c_tex = c.theme.ceil,
-    light = c.lighting,
+    light = c.light,
 
     l_tex = info.wall,
     u_tex = c.theme.wall
@@ -802,7 +803,7 @@ function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
     c_h = z2,
     f_tex = c.theme.floor,
     c_tex = c.theme.floor, -- F_SKY1 is no good
-    light = c.lighting,
+    light = c.light,
 
     l_tex = c.theme.wall,
     u_tex = c.theme.wall,
@@ -840,6 +841,43 @@ function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
   end
 end
 
+function B_pillar_cage(p,c, kx,ky, bx,by)
+
+  local CAGE = copy_block(c.room_sec)
+  local z = (c.f_max + c.ceil_h) / 2
+
+  CAGE.f_tex = TH_CAGE.floor
+  CAGE.l_tex = TH_CAGE.wall
+  CAGE.u_tex = TH_CAGE.wall
+  CAGE.is_cage = true
+
+  if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
+    CAGE.f_h = z
+    CAGE.c_h = c.ceil_h
+    CAGE.c_tex = c.theme.ceil
+
+    if rand_odds(50) then
+      CAGE.rail = TH_RAILS["r_1"].tex
+      if CAGE.f_h > CAGE.c_h - 72 then
+        CAGE.f_h = CAGE.c_h - 72
+      end
+    end
+  else
+    CAGE.f_h = z - 32
+    CAGE.c_h = z + 40
+    CAGE.c_tex = TH_CAGE.ceil
+    CAGE.light = 192
+    CAGE.rail  = TH_RAILS[TH_CAGE.rail].tex
+  end
+
+  fill(p,c, bx,by, bx,by, CAGE)
+
+  local spot = {x=bx, y=by}
+  if kx==2 and ky==2 then spot.different = true end
+
+  add_cage_spot(p,c, spot)
+end
+
 --
 -- create a chunk-sized monster cage
 --
@@ -873,6 +911,47 @@ function B_big_cage(p,c, kx,ky)
 
   local spot = {x=bx, y=by, double=true, dx=32, dy=32}
   add_cage_spot(p,c, spot)
+end
+
+--
+-- create a hidden monster closet
+--
+function B_monster_closet(p,c, kx,ky, z, tag)
+
+  local bx = chunk_to_block(kx)
+  local by = chunk_to_block(ky)
+
+  INNER =
+  {
+    f_h = z,
+    c_h = c.ceil_h,
+    f_tex = "FLAT10", -- c.theme.floor,
+    c_tex = "FLAT10", -- FIXME c.theme.ceil,
+    light = c.light,
+
+    l_tex = c.theme.void,
+    u_tex = c.theme.void, -- "CRACKLE2"
+    is_cage = true
+  }
+
+  OUTER = copy_block(INNER)
+
+  OUTER.c_h = OUTER.f_h
+  OUTER.c_tex = OUTER.f_tex
+  OUTER.tag = tag
+
+  local x1 = chunk_to_block(kx)
+  local y1 = chunk_to_block(ky)
+  local x2 = chunk_to_block(kx + 1) - 1
+  local y2 = chunk_to_block(ky + 1) - 1
+
+  local fx = (x1 - 1) * FW
+  local fy = (y1 - 1) * FH
+
+  frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+3*FH, OUTER);
+  frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, INNER)
+
+  return { c=c, x=bx, y=by, double=true, dx=32, dy=32}
 end
 
 --
@@ -1073,12 +1152,14 @@ function make_chunks(p)
     if link.where == "double" then
       table.insert(coords, {x=kx+ax, y=ky+ay})
       table.insert(coords, {x=kx-ax, y=ky-ay})
+      
+      local no_void = c.closet[2] or c.closet[4] or c.closet[6] or c.closet[8]
 
       -- what shall we put in-between?
       local r = con.random() * 100
       if r < 40 then
         c.chunks[kx][ky] = { link=link }
-      elseif r < 80 then
+      elseif r < 80 or no_void then
         c.chunks[kx][ky] = { room=true }
       else
         c.chunks[kx][ky] = { void=true }
@@ -1274,6 +1355,7 @@ end
     if k1.void and k2.void then return true end
     if k1.room and k2.room then return true end
     if k1.cage and k2.cage then return true end
+    if k1.liquid and k2.liquid then return true end
     if k1.link and k2.link then return k1.link == k2.link end
     return false
   end
@@ -1303,7 +1385,7 @@ end
       end
     end
 
-    if possible and common and common.link then
+    if possible and common --[[ and common.link --]] then
       for x = x1,x2 do
         for y = y1,y2 do
           if not c.chunks[x][y] then
@@ -1382,6 +1464,31 @@ end
     c.chunks[p.x][p.y] = { [name]=true }
   end
 
+  local function add_closet_chunks(c)
+    if not c.quest.closet then return end
+
+    local closet = c.quest.closet
+
+    for zzz,place in ipairs(closet.places) do
+      if place.c == c then
+
+        -- !!! FIXME: determine side _HERE_ (not in planner)
+        local kx,ky = side_to_chunk(place.side)
+
+        if c.chunks[kx][ky] then
+          print("WARNING: monster closet stomped a chunk!")
+          print("CELL", c.x, c.y)
+          print("CHUNK", kx, ky)
+          print(table_to_string(c.chunks[kx][ky], 2))
+          show_chunks(p)
+        end
+
+print("ADDING CLOSET CHUNK @", c.x,c.y)
+        c.chunks[kx][ky] = {void=true, closet=true}
+      end
+    end
+  end
+
   local function add_dm_exit(c)
     local kx, ky = 1, 3
 
@@ -1398,6 +1505,10 @@ end
 
   local function flesh_out_cell(c)
     
+    if p.deathmatch and c.x == 1 and c.y == p.h then
+      add_dm_exit(c)
+    end
+
     -- possibilities:
     --   (a) fill unused chunks with void
     --   (b) fill unused chunks with room
@@ -1405,16 +1516,12 @@ end
 
     -- FIXME get info from theme
     local kinds = { "room", "void", "flush", "cage", "liquid" }
-    local probs = { 33, 5, 50, 7, 35 }
+    local probs = { 60, 10, 97, 5, 70 }
 
     if not c.outdoor then probs[2] = 20 end
     if p.deathmatch then probs[4] = 0 end
 
     if c.scenic then probs[1] = 200 end
-
-    if p.deathmatch and c.x == 1 and c.y == p.h then
-      add_dm_exit(c)
-    end
 
     while count_empty_chunks(c) > 0 do
 
@@ -1653,6 +1760,12 @@ io.stdout:write(string.format(
       end
       --]]
     end
+
+---###    if c == c.quest.depot_dest then
+---###      local kx, ky = good_Q_spot(c)
+---###      if not kx then con.printf("NO FREE SPOT for Invasion!\n"); return end
+---###      c.chunks[kx][ky].invasion = true
+---###    end
   end
 
   local function position_dm_stuff(c)
@@ -1760,10 +1873,10 @@ io.stdout:write(string.format(
 
   for zzz,cell in ipairs(p.all_cells) do
 
+      add_closet_chunks(cell)
       add_essential_chunks(cell)
 
       flesh_out_cell(cell)
-
       connect_chunks(cell)
 
       if p.deathmatch then
@@ -1798,21 +1911,11 @@ function build_cell(p, c)
           return dir_to_angle(dir)
         end
       end
+
+      return rand_irange(1,4)*2
     end
 
-    -- look towards center of room
-    local ANGLES =
-    {
-      [11] =  45, [21] =  90, [31] = 135,
-      [12] =   0,             [32] = 180,
-      [13] = 315, [23] = 270, [33] = 225
-    }
-
-    local kk = (kx * 10) + ky
-
-    if ANGLES[kk] then return ANGLES[kk] end
-
-    return rand_irange(0,7) * 45
+    return delta_to_angle(2-kx, 2-ky)
   end
 
   local function decide_void_pic(p, c)
@@ -2138,7 +2241,7 @@ function build_cell(p, c)
     {
       f_h = c.f_max + 48, c_h = c.ceil_h,
       f_tex = c.theme.floor, c_tex = c.theme.ceil,
-      light = c.lighting,
+      light = c.light,
       l_tex = c.theme.wall,
       u_tex = c.theme.wall,
     }
@@ -2147,7 +2250,7 @@ function build_cell(p, c)
     {
       f_h = c.f_min - 512, c_h = c.f_min - 508,
       f_tex = c.theme.floor, c_tex = c.theme.ceil,
-      light = c.lighting,
+      light = c.light,
       l_tex = c.theme.wall,
       u_tex = c.theme.wall,
     }
@@ -2181,7 +2284,7 @@ function build_cell(p, c)
     {
       f_h = c.f_max + 48, c_h = c.ceil_h,
       f_tex = c.theme.floor, c_tex = c.theme.ceil,
-      light = c.lighting,
+      light = c.light,
       l_tex = c.theme.wall,
       u_tex = c.theme.wall,
     }
@@ -2190,7 +2293,7 @@ function build_cell(p, c)
     {
       f_h = c.f_min - 512, c_h = c.f_min - 508,
       f_tex = c.theme.floor, c_tex = c.theme.ceil,
-      light = c.lighting,
+      light = c.light,
       l_tex = c.theme.wall,
       u_tex = c.theme.wall,
     }
@@ -2213,7 +2316,7 @@ function build_cell(p, c)
       c_h = c.ceil_h,
       f_tex = b_theme.floor,
       c_tex = b_theme.ceil,
-      light = c.lighting
+      light = c.light
     }
 
     local overrides
@@ -2426,7 +2529,7 @@ function build_cell(p, c)
         c_h = c.ceil_h,
         f_tex = b_theme.floor,
         c_tex = b_theme.ceil,
-        light = c.lighting
+        light = c.light
       }
       if rand_odds(95) then FENCE.block_sound = 2 end
 
@@ -2561,66 +2664,14 @@ function build_cell(p, c)
 
 -- TEST CRUD
 if rand_odds(24) and TH_CAGE and not p.deathmatch then
-  local CAGE = copy_block(c.room_sec)
-  local z = (c.f_max + c.ceil_h) / 2
-  CAGE.f_tex = TH_CAGE.floor
-  CAGE.l_tex = TH_CAGE.wall
-  CAGE.u_tex = TH_CAGE.wall
-  CAGE.is_cage = true
 
-  if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
-    CAGE.f_h = z
-    CAGE.c_h = c.ceil_h
-    CAGE.c_tex = c.theme.ceil
-
-    if rand_odds(50) then
-      CAGE.rail = TH_RAILS["r_1"].tex
-      if CAGE.f_h > CAGE.c_h - 72 then
-        CAGE.f_h = CAGE.c_h - 72
-      end
-    end
-  else
-    CAGE.f_h = z - 32
-    CAGE.c_h = z + 40
-    CAGE.c_tex = TH_CAGE.ceil
-    CAGE.light = 192
-    CAGE.rail  = TH_RAILS[TH_CAGE.rail].tex
-  end
-
-  fill(p,c, x1+1, y1+1, x1+1, y1+1, CAGE)
-
-  local spot = {x=x1+1, y=y1+1}
-  if kx==2 and ky==2 then spot.different = true end
-
-  add_cage_spot(p,c, spot)
-
---[[ corner adjustment testing (REMOVE)
-elseif true then
-
-   local fx = x1 * FW
-   local fy = y1 * FH
-
-   local sec = copy_block(c.room_sec)
-
-   frag_fill(p,c, fx+1,fy+1, fx+FW, fy+FH, { solid="CRACKLE2" })
-
-   frag_fill(p,c, fx+1 ,fy+1 , fx+1 ,fy+1 , { solid="CRACKLE2", short=1, [1] = { dx=5, dy=5 }})
-   frag_fill(p,c, fx+FW,fy+1,  fx+FW,fy+1,  { solid="CRACKLE2", short=2, [3] = { dx=-5, dy=5 }})
-   frag_fill(p,c, fx+1, fy+FH, fx+1, fy+FH, { solid="CRACKLE2", short=3, [7] = { dx=5,  dy=-5 }})
-   frag_fill(p,c, fx+FW,fy+FH, fx+FW,fy+FH, { solid="CRACKLE2", short=4, [9] = { dx=-5, dy=-5 }})
-
-   local sec2 = copy_block(c.room_sec)
-   sec2.f_tex = "LAVA1"
-
-   gap_fill(p,c, x1+0,y1+1, x1+0,y1+1, sec2, { [1]={dx= 9,dy=9}, [7]={dx= 9,dy=-9}, short=true })
-   gap_fill(p,c, x1+2,y1+1, x1+2,y1+1, sec2, { [3]={dx=-9,dy=9}, [9]={dx=-9,dy=-9}, short=true })
---]]
+  B_pillar_cage(p,c, kx,ky, x1+1,y1+1)
 else
-        fill(p,c, x1+1, y1+1, x1+1, y1+1,
-          { solid= c.theme.pillar or c.theme.void,
-            y_offset= 128 - (sec.c_h - sec.f_h) })
+  fill(p,c, x1+1, y1+1, x1+1, y1+1,
+        { solid= c.theme.pillar or c.theme.void,
+          y_offset= 128 - (sec.c_h - sec.f_h) })
 end
-      blocked = true
+        blocked = true
       end
 
       sec.l_tex = l_tex
@@ -2680,7 +2731,13 @@ end
     assert(K)
 
     if K.void then
-      if K.dm_exit then
+      if K.closet then
+print("BUILDING CLOSET @", c.x,c.y)
+        local spot = B_monster_closet(p,c, kx,ky, c.room_sec.f_h + 0,
+          c.quest.closet.door_tag)
+        c.quest.closet.places[1].spots = { spot }  -- FIXME allow multiple places
+
+      elseif K.dm_exit then
         B_deathmatch_exit(p,c, kx,ky,K.dir)
 
       elseif TH_PICS and dual_odds(c.theme.outdoor, 10, 50) then
@@ -2793,10 +2850,12 @@ end
           local dx,dy = dir_to_delta(offsets[i])
           B_pedestal(p, c, bx+dx, by+dy, K.floor_h, PED_PLAYER)
           add_thing(p, c, bx+dx, by+dy, i, true, angle)
+          c.player_pos = {x=bx+dx, y=by+dy}
         end
       else
         B_pedestal(p, c, bx, by, K.floor_h, PED_PLAYER)
         add_thing(p, c, bx, by, p.deathmatch and 11 or 1, true, angle)
+        c.player_pos = {x=bx, y=by}
       end
 
     elseif K.dm_weapon then
@@ -2843,6 +2902,15 @@ end
 
       sec.f_h = K.floor_h
       sec.c_h = K.ceil_h
+    end
+
+    local surprise = c.quest.closet or c.quest.depot
+
+    if K.quest and surprise and c == surprise.trigger_cell then
+      sec = copy_block(sec)
+      sec.mark = allocate_mark(p)
+      sec.walk_kind = 2
+      sec.walk_tag  = surprise.door_tag
     end
 
     if K.liquid then
@@ -2917,21 +2985,21 @@ end
 
   assert(not c.blk_x)
 
-  p.mark = p.mark + 1
+  c.mark = allocate_mark(p)
 
   -- these refer to the bottom/left corner block
   -- (not actually in the cell, but in the border)
   c.blk_x = BORDER_BLK + (c.x-1) * (BW+1)
   c.blk_y = BORDER_BLK + (c.y-1) * (BH+1)
 
-  c.lighting = 144
+  c.light = 144
   if (c.theme.outdoor) then
-    c.lighting = 192
+    c.light = 192
   end
 
   c.room_sec = { f_h=c.floor_h, c_h=c.ceil_h,
                  f_tex=c.theme.floor, c_tex=c.theme.ceil,
-                 light=c.lighting,
+                 light=c.light,
                  }
 
   if not c.theme.outdoor and not c.is_exit and rand_odds(70) then
@@ -2960,9 +3028,8 @@ end
     end
   end
 
-  -- FIXME: pre-battle stuff (monster cages, cyberdemon)
 
---[[  -- TEST ONLY!
+--[[  TEST ONLY
     local middle = { f_h=room.f_h+24/3, c_h=room.f_h+192,
                    f_tex="FLAT1", c_tex="FLAT1",
                    light=128 }
@@ -2976,7 +3043,69 @@ end
     fill(c, H, L, H, L, nil, "WOOD10"); -- c.blocks[H][L].corner_nw = { dx= 12, dy=-12 }
     fill(c, H, H, H, H, nil, "WOOD10"); -- c.blocks[H][H].corner_sw = { dx= 12, dy= 12 }
 --]]
+end
 
+
+local function build_depot(p, c)
+
+  c.blk_x = BORDER_BLK + (c.x-1) * (BW+1)
+  c.blk_y = BORDER_BLK + (c.y-1) * (BH+1)
+
+  local depot = c.quest.depot
+  assert(depot)
+
+  local places = depot.places
+  assert(#places >= 2)
+  assert(#places <= 4)
+
+  local start = p.quests[1].first
+  assert(start.player_pos)
+
+  local B = p.blocks[start.blk_x + start.player_pos.x][start.blk_y + start.player_pos.y]
+
+  local sec = { f_h = B.f_h, c_h = B.f_h + 128,
+                f_tex = c.theme.floor, c_tex = c.theme.ceil,
+                l_tex = c.theme.void,  u_tex = c.theme.void,
+                light = 0
+              }
+
+  mon_sec = copy_block(sec)
+  mon_sec[8] = { block_mon=true }
+
+  door_sec = copy_block(sec)
+  door_sec.c_h = door_sec.f_h
+  door_sec.tag = depot.door_tag
+
+  tele_sec = copy_block(sec)
+  tele_sec.walk_kind = 126
+
+  local m1,m2 = 1,4
+  local t1,t2 = 6,BW
+
+  -- mirror the room horizontally
+  if c.x > start.x then
+    m1,m2, t1,t2 = t1,t2, m1,m2
+  end
+
+  for y = 1,#places do
+    fill(p, c, 1,y*2-1, BW,y*2, mon_sec, { mark=y })
+    places[y].spots = rectangle_to_spots(c, m1,y*2-1, m1+0,y*2) -- FIXME
+
+    for x = t1,t2 do
+      local t = 1 + ((x + y) % #places)
+      fill(p, c, x,y*2-1, x,y*2, tele_sec, { mark=x*10+y, walk_tag=places[t].tag})
+    end
+  end
+
+  -- door separating monsters from teleporter lines
+  fill(p, c, 5,1, 5,2*#places, door_sec)
+
+  -- bottom corner block is same sector as player start,
+  -- to allow sound to wake up these monsters.
+  fill(p, c, m1,1, m1,1, copy_block(B), { same_sec=B })
+
+  -- put a border around the room
+  gap_fill(p, c, 0, 0, BW+1, BH+1, { solid=c.theme.wall })
 end
 
 
@@ -2989,6 +3118,10 @@ function build_level(p)
     build_cell(p, cell)
   end
 
+  for zzz,cell in ipairs(p.all_depots) do
+    build_depot(p, cell)
+  end
+
   con.progress(25); if con.abort() then return end
  
   if not p.deathmatch then
@@ -2996,7 +3129,5 @@ function build_level(p)
   end
 
   con.progress(40); if con.abort() then return end
-
-  -- DETAIL CELL (???)
 end
 

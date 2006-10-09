@@ -28,6 +28,7 @@
 
 MONSTER_DEFS =
 {
+  -- FIXME: probs for CLOSET/DEPOT
   zombie    = { kind=3004, prob=81, r=20,h=56, t=20,  dm=4,  fp=10, cage_prob=10, hitscan=true, humanoid=true },
   shooter   = { kind=9,    prob=41, r=20,h=56, t=30,  dm=10, fp=10, cage_prob= 5, hitscan=true, humanoid=true },
   gunner    = { kind=65,   prob=17, r=20,h=56, t=70,  dm=40, fp=40, cage_prob=70, hitscan=true, humanoid=true },
@@ -41,12 +42,12 @@ MONSTER_DEFS =
   mancubus  = { kind=67,   prob=70, r=48,h=64, t=600, dm=80, fp=110,cage_prob=70, },
   arach     = { kind=68,   prob=26, r=64,h=64, t=500, dm=70, fp=90, cage_prob=90, },
   pain      = { kind=71,   prob= 8, r=31,h=56, t=400, dm=88, fp=40, cage_prob= 0, float=true },
-  vile      = { kind=64,   prob=10, r=20,h=56, t=700, dm=20, fp=120,cage_prob=17, hitscan=true },
+  vile      = { kind=64,   prob=10, r=20,h=56, t=700, dm=30, fp=120,cage_prob=14, hitscan=true },
 
   -- MELEE only monsters
-  demon     = { kind=3002, prob=80, r=30,h=56, t=150, dm=25, fp=30, melee=true },
-  spectre   = { kind=58,   prob=15, r=30,h=56, t=150, dm=25, fp=30, melee=true },
-  skull     = { kind=3006, prob=20, r=16,h=56, t=100, dm=7,  fp=40, melee=true, float=true },
+  demon     = { kind=3002, prob=80, r=30,h=56, t=150, dm=25, fp=30, cage_prob=140,melee=true },
+  spectre   = { kind=58,   prob=15, r=30,h=56, t=150, dm=25, fp=30, cage_prob=40, melee=true },
+  skull     = { kind=3006, prob=20, r=16,h=56, t=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
 }
 
 -- these monsters only created in special circumstances
@@ -189,6 +190,8 @@ CLUSTER_THINGS =
 
 THING_NUMS =  -- FIXME duplicated in above tables
 {
+  teleport_spot = 14,
+
   k_red    = 38,
   k_blue   = 40,
   k_yellow = 39,
@@ -226,6 +229,7 @@ THING_NUMS =  -- FIXME duplicated in above tables
   rocket_box = 2046,
   cells      = 2047,
   cell_pack  =   17,
+
 }
 
 
@@ -242,8 +246,8 @@ HITSCAN_DODGES = { easy=0.11, medium=0.22, hard=0.33 }
 MISSILE_DODGES = { easy=0.71, medium=0.81, hard=0.91 }
 MELEE_DODGES   = { easy=0.85, medium=0.95, hard=0.99 }
 
-AMMO_DISTRIB   = { 30, 75, 50, 20, 2 }
-HEALTH_DISTRIB = { 10, 70, 80, 40, 5 }
+HEALTH_DISTRIB = { 24, 50, 90, 40, 5 }
+AMMO_DISTRIB   = { 50, 80, 50, 10, 2 }
 
 
 ------------------------------------------------------------
@@ -256,7 +260,7 @@ zdump_table = do_nothing
 function compute_pow_factors()
 
   local function pow_factor(info)
-    return 2 + 2 * info.t ^ 0.5 * (info.dm / 50) ^ 0.8
+    return 5 + 19 * info.t ^ 0.5 * (info.dm / 50) ^ 1.2
   end
 
   for name,info in pairs(MONSTER_DEFS) do
@@ -267,8 +271,6 @@ function compute_pow_factors()
     info.pow = pow_factor(info)
   end
 end
-
-compute_pow_factors()
 
 
 function add_thing(p, c, bx, by, kind, blocking, angle, options)
@@ -317,28 +319,38 @@ function add_cage_spot(p,c, spot)
   table.insert(c.cage_spots, spot)
 end
   
-function add_cage_area(p,c, x,y,w,h)  -- UNUSED
-  if not c.cage_spots then
-    c.cage_spots = {}
-  end
+function rectangle_to_spots(c, x,y, x2,y2)
 
-  if h > 2 then
-    add_cage_area(p,c, x, y, w, int(h/2))
-    add_cage_area(p,c, x, y+int(h/2), w, h-int(h/2))
-  elseif w > 2 then
-    add_cage_area(p,c, x, y, int(w/2), h)
-    add_cage_area(p,c, x+int(w/2), y, w-int(w/2), h)
-  else
-    assert(w > 0 and h > 0)
+  local w = x2-x+1
+  local h = y2-y+1
 
-    if (w==2) and (h==2) then
-      table.insert(c.cage_spots, {x=x, y=y, double=true })
+  local spots = {}
+
+  local function carve_it_up(x,y, w,h)
+    local w2, h2 = int(w/2), int(h/2)
+    
+    if h > 2 then
+      carve_it_up(x, y, w, h2)
+      carve_it_up(x, y+h2, w, h-h2)
+    elseif w > 2 then
+      carve_it_up(x, y, w2, h)
+      carve_it_up(x+w2, y, w-w2, h)
     else
-      for ay = 1,h do for ax = 1,w do
-        table.insert(c.cage_spots, {x=x+ax-1, y=y+ay-1})
-      end end
+      assert(w > 0 and h > 0)
+
+      if (w==2) and (h==2) then
+        table.insert(spots, {c=c, x=x, y=y, double=true })
+      else
+        for dx = 0,w-1 do for dy = 0,h-1 do
+          table.insert(spots, {c=c, x=x+dx, y=y+dy})
+        end end
+      end
     end
   end
+
+  carve_it_up(x,y, w,h)
+  
+  return spots
 end
 
 
@@ -460,7 +472,7 @@ end
 -- Simulate the battle for skill SK (2|3|4).
 -- Updates the given player HModel.
 --
-function simulate_battle(HM, mon_set, quest)
+function simulate_battle(p, HM, mon_set, quest)
  
   local shoot_accuracy = ACCURACIES[HM.skill]
 
@@ -906,6 +918,25 @@ end ]]
     return distrib, targets
   end
 
+  local function add_coop_pickup(targets, ...)
+    add_pickup(targets[3], ...)
+
+    local L = targets[2] or targets[1] or targets[4]
+    local H = targets[4] or targets[5] or targets[2]
+
+    if L and rand_odds(70) then
+      add_pickup(L, ...)
+    end
+
+    if H and rand_odds(70) then
+      add_pickup(H, ...)
+    end
+
+    if not L and not H then
+      add_pickup(targets[3], ...)
+    end
+  end
+
 
   ---=== distribute_pickups ===---
 
@@ -917,6 +948,7 @@ end ]]
 
     local want = compute_want(stat, HM)
 
+
     -- create pickups until target reached
     while HM[stat] < want do
 
@@ -926,9 +958,12 @@ end ]]
 
       if not info then break end
 
-      local tc = targets[rand_index_by_probs(distrib)]
-
-      add_pickup(tc, stat, info, cluster)
+      if p.coop and stat ~= "health" then
+        add_coop_pickup(targets, stat, info, cluster)
+      else
+        local tc = targets[rand_index_by_probs(distrib)]
+        add_pickup(tc, stat, info, cluster)
+      end
 
       HM[stat] = HM[stat] + cluster * info.give
     end
@@ -1015,7 +1050,7 @@ function place_battle_stuff(p, c)
     local spot = alloc_spot(spots, dat.cluster >= 5)
 
     if not spot then
-      io.stderr:write("UNABLE TO PLACE: ", dat.name, "\n")
+      con.printf("UNABLE TO PLACE: %s\n", dat.name)
       -- FIXME: put in next cell
       return
     end
@@ -1027,6 +1062,7 @@ function place_battle_stuff(p, c)
       
       local dx = (int(i / 3) - 1) * 20 -- TEMP JUNK
       local dy = (int(i % 3) - 1) * 20
+      if dat.cluster == 1 then dx,dy = 0,0 end
 
       local th = add_thing(p, c, spot.x, spot.y, dat.info.kind, false, 0, options)
       th.dx, th.dy = dx, dy
@@ -1045,6 +1081,11 @@ function place_battle_stuff(p, c)
       for zzz,dat in ipairs(pickups) do
         if (pass==1) == (dat.cluster >= 5) then
           place_pickup(spots, dat)
+
+---###          -- more stuff for CO-OP gameplay
+---###          if p.coop and rand_odds(72) then
+---###            place_pickup(spots, dat)
+---###          end
 
           -- re-use spots if we run out
           if #spots == 0 then 
@@ -1068,7 +1109,7 @@ function place_battle_stuff(p, c)
     for i = 1,dat.horde do
 
       if not spot or (is_big and not spot.double) then
-        io.stderr:write("UNABLE TO PLACE: ", dat.name, "\n")
+        con.printf("UNABLE TO PLACE: %s\n", dat.name)
         -- FIXME: put in next cell
         return
       end
@@ -1202,12 +1243,12 @@ function battle_in_cell(p, c)
     local total = 0
     for bx = 1,BW,2 do for by = 1,BH,2 do
       if bx < BW and by < BH and free_double_spot(bx, by) then
-        table.insert(list, { x=bx, y=by, double=true})
+        table.insert(list, { c=c, x=bx, y=by, double=true})
         total = total + 4
       else
         for dx = 0,1 do for dy = 0,1 do
           if bx+dx <= BW and by+dy <= BH and free_spot(bx+dx, by+dy) then
-            table.insert(list, { x=bx+dx, y=by+dy })
+            table.insert(list, { c=c, x=bx+dx, y=by+dy })
             total = total + 1
           end
         end end
@@ -1292,18 +1333,19 @@ function battle_in_cell(p, c)
     end
   end
 
-  local function decide_cage_monster(firepower, horde, allow_big)
+  local function decide_cage_monster(firepower, x_horde, allow_big, allow_horde, allow_melee)
 
     local names = {}
     local probs = {}
 
     for name,info in pairs(MONSTER_DEFS) do
       if (info.dm < 10) or 
-         ((info.pow * horde < T*2) and (info.fp < firepower*2))
+         ((info.pow * x_horde < T*2) and (info.fp < firepower*2))
       then
         local prob = info.cage_prob or 0
 
-        if info.r >= 25 and not allow_big then prob = 0 end
+        if info.melee and not allow_melee then prob = 0 end
+        if info.r >= 31 and not allow_big then prob = 0 end
 
         if prob > 0 then
           table.insert(names, name)
@@ -1319,8 +1361,11 @@ function battle_in_cell(p, c)
     assert(info)
 
     local horde = 1
-    if allow_big and (info.r < 25) then
-      horde = 3 -- FIXME: better decision
+    if allow_horde and (info.r < 25) then
+      if info.t <= 100 then horde = 4
+      elseif info.t <= 450 then horde = 3
+      else horde = 2
+      end
     end
 
     return names[idx], horde
@@ -1335,7 +1380,7 @@ function battle_in_cell(p, c)
     local fp = fire_power(best_weapon(SK))
     
     local sml_name, sml_horde = decide_cage_monster(fp, #c.cage_spots)
-    local big_name, big_horde = decide_cage_monster(fp, #c.cage_spots, true)
+    local big_name, big_horde = decide_cage_monster(fp, #c.cage_spots, true, true)
 
     for zzz,spot in ipairs(c.cage_spots) do
 
@@ -1343,7 +1388,7 @@ function battle_in_cell(p, c)
       local m_horde = sel(spot.double, big_horde,sml_horde)
 
       if spot.different then
-        m_name, m_horde = decide_cage_monster(fp, sel(spot.double,2,1), spot.double)
+        m_name, m_horde = decide_cage_monster(fp, sel(spot.double,2,1), spot.double, spot.double)
       end
 
       local m_info = MONSTER_DEFS[m_name]
@@ -1381,13 +1426,90 @@ function battle_in_cell(p, c)
     T = math.max(T, orig_T / 3)
   end
 
+  local function try_fill_closet(surp)
+    if not surp then return end
+    if surp.trigger_cell ~= c then return end
+
+    local fp = fire_power(best_weapon(SK))
+    local mon_list = {}
+
+--print(c.x, c.y, table_to_string(surp,3))
+
+    for zzz,place in ipairs(surp.places) do
+      for yyy,spot in ipairs(place.spots) do
+
+        local allow_big = not surp.depot_cell and spot.double
+        local m_name, m_horde = decide_cage_monster(fp, 1, allow_big, spot.double, true)
+        local m_info = MONSTER_DEFS[m_name]
+        assert(m_info)
+
+        for i = 1,m_horde do
+          local dx = int((i-1)%2) * 64
+          local dy = int((i-1)/2) * 64
+
+          local angle = delta_to_angle(5-(spot.x+dx/64), 5-(spot.y+dy/64))
+          local options = { [SK]=true }
+
+--con.printf("CLOSET %s @ cell %d,%d  block %d,%d\n",
+--m_name, spot.c.x, spot.c.y, spot.x, spot.y)
+
+          local th = add_thing(p, spot.c, spot.x, spot.y, m_info.kind, true, angle, options)
+          th.mon_name = m_name
+
+          if m_info.r >= 32 then  -- big monster
+            dx, dy = dx+32, dy+32
+          end
+
+          if spot.dx then dx = dx + spot.dx end
+          if spot.dy then dy = dy + spot.dy end
+
+          th.dx = dx
+          th.dy = dy
+
+          table.insert(mon_list, { name=m_name, horde=1, info=m_info, caged=true })
+        end
+      end  -- spots
+    end  -- places
+
+    -- FIXME: simulate battle (with COPY of model) then
+    --        fill closet with the health/ammo.
+  end
+
+  local function fill_closets()
+    try_fill_closet(c.quest.closet)
+    try_fill_closet(c.quest.depot)
+  end
+
+  local function add_teleports_for_depot(spots)
+    if not c.quest.depot then return end
+
+    local prev
+    
+    for zzz,place in ipairs(c.quest.depot.places) do
+      if place.c == c then
+
+        if not prev or #spots >= 2 then
+print("ADD_TELEPORTERS", c.x, c.y)
+          assert(#spots >= 1)
+          prev = table.remove(spots)
+        end
+
+        local x,y = prev.x, prev.y
+        add_thing(p, c, x, y, THING_NUMS["teleport_spot"], true)
+        p.blocks[c.blk_x+x][c.blk_y+y].tag = place.tag
+      end
+    end
+  end
+
   ---=== battle_in_cell ===---
 
 zprint("BATTLE IN", c.x, c.y)
 
-  local spots, free_space = find_free_spots()
-
+  local spots, free_space = find_free_spots() --FIXME: move out of here
+  rand_shuffle(spots)
   c.free_spots = spots
+
+  add_teleports_for_depot(c.free_spots)
 
   if free_space < 2 then return end
   free_space = free_space * 1.5 / (BW * BH)
@@ -1402,6 +1524,7 @@ zprint("BATTLE IN", c.x, c.y)
     T = T + p.models[SK].toughness
     U = 0
 
+    fill_closets()
     fill_cages()
 
     create_monsters(space)
@@ -1413,7 +1536,7 @@ zprint("BATTLE IN", c.x, c.y)
 
 zprint("SIMULATE in CELL", c.x, c.y, SK)
 
-    simulate_battle(p.models[SK], c.mon_set[SK], quest)
+    simulate_battle(p, p.models[SK], c.mon_set[SK], quest)
 
     distribute_pickups(p, c, p.models[SK])
   end
