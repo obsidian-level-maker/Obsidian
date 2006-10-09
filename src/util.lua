@@ -49,12 +49,36 @@ function count_entries(t)
   return count
 end
 
-function dump_table(t, name)
-	print((name or "ANON") .. " = {")
+function table_to_string(t, depth, prefix)
+  if not t then return "NIL" end
+  if not next(t) then return "{}" end
+
+  depth = depth or 1
+  prefix = prefix or ""
+
+  local keys = {}
 	for k,v in pairs(t) do
-		print("  " .. tostring(k) .. " => " .. tostring(v))
+    table.insert(keys, k)
+  end
+
+  table.sort(keys, function (A,B) return tostring(A) < tostring(B) end)
+
+  local result = "{\n"
+
+  for idx,k in ipairs(keys) do
+    local v = t[k]
+    result = result .. prefix .. "  " .. tostring(k) .. " = "
+		if type(v) == "table" and depth > 1 then
+      result = result .. table_to_string(v, depth-1, prefix .. "  ")
+    else
+      result = result .. tostring(v)
+    end
+    result = result .. "\n"
 	end
-	print("}")
+
+  result = result .. prefix .. "}"
+
+	return result
 end
 
 function merge_table(dest, src)
@@ -141,6 +165,20 @@ function dir_to_angle(dir)
   return DIR_ANGLES[dir]
 end
 
+function delta_to_angle(dx,dy)
+  if math.abs(dy) < math.abs(dx)/2 then
+    return sel(dx < 0, 180, 0)
+  end
+  if math.abs(dx) < math.abs(dy)/2 then
+    return sel(dy < 0, 270, 90)
+  end
+  if dy > 0 then
+    return sel(dx < 0, 135, 45)
+  else
+    return sel(dx < 0, 225, 315)
+  end
+end
+
 -- convert position into block/sub-block pair,
 -- where all the index values start at 1
 function div_mod(x, mod)
@@ -216,7 +254,7 @@ function rand_index_by_probs(p)
     if (value <= 0) then return idx end
   end
 
-  io.stderr:write("rand_index_by_probs: REACHED END" .. value)
+  -- shouldn't get here, but if we do, return a valid index
   return 1
 end
 
