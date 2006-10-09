@@ -25,7 +25,6 @@
 #include "lib_util.h"
 
 
-
 //
 // Setup Constructor
 //
@@ -65,6 +64,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 	game = new Fl_Choice(x+70, cy, 150, 24, "Game: ");
 	game->align(FL_ALIGN_LEFT);
 	game->add("Doom 1|Doom 2|Heretic|Hexen");
+	game->callback(game_callback, this);
 	game->value(1);
 
 	add(game);
@@ -85,9 +85,9 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 	
 	add(addon);
 
-	length = new Fl_Choice(x +300, cy, 150, 24, "Size:   ");
+	length = new Fl_Choice(x +300, cy, 150, 24, "Length:   ");
 	length->align(FL_ALIGN_LEFT);
-	length->add("One Level|One Episode|Full Game");
+	length->add("Single Level|One Episode|Full Game");
 	length->value(1);
 
 	add(length);
@@ -137,6 +137,16 @@ void UI_Setup::bump_callback(Fl_Widget *w, void *data)
 	UI_Setup *that = (UI_Setup *)data;
 
 	that->BumpSeed();
+}
+
+void UI_Setup::game_callback(Fl_Widget *w, void *data)
+{
+	UI_Setup *that = (UI_Setup *)data;
+
+  if (that->game->value() == 1)
+    that->addon->show();
+  else
+    that->addon->hide();
 }
 
 void UI_Setup::Locked(bool value)
