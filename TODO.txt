@@ -2,21 +2,32 @@
 TODO
 ----
 
+++  give health and ammo for Surprise battles.
+    - consider ammo gotten from teleported monsters.
+
+-  depots: pick dest cells away from quest (probs for 1/2/3/4/5)
+   - prefer "off peak" cells ?
+
+-  closets: 
+   (a) fix way closet is put in chunk (remove side field)
+   (b) support multiple cells
+   (c) support multiple chunks per cell (esp. from flush)
+
 
 GUI TODO
 --------
 
-TEST:  backup file (.BAK)
+Win32 TEST: commdlg32, GetSaveFileName
 
-TEST:  commdlg32, GetSaveFileName
+Win32 TEST: backup file (.BAK)  | none if aborted before nodes
 
--  tidy up fprintf (etc).
++  tidy up fprintf (etc).
 
--  add an 'OBLIGDAT' lump.
+-  main window: doesn't need to be resizable
 
-+  about window.
++  data_dir ("obl_data") abd cache_dir: find them, use them
 
--- collect log, view it, save it, clear it.
+-  collect log, view it, save it, clear it.
 
 
 MILESTONE 0  (reached!)
@@ -63,7 +74,6 @@ MILESTONE 2  (close!!)
 >>  working GUI interface using FLTK
 
    -  Directory selector under Win32.
-   -  About window.
 
 #  build WAD files directly (no wadlc step).
 
@@ -76,13 +86,14 @@ MILESTONE 2  (close!!)
    #  paintings / computers / lights in the wall
    #  monster cages
  
+   >>  monster closets (esp. along a back-track route)
+   >>  monsters teleporting in
+
 
 MILESTONE 3  (not started...)
 ===========
 
 +  teleporters!
-
-+  monster closets (esp. along a back-track route)
 
 -  liquid pools and traps
 
@@ -91,7 +102,12 @@ MILESTONE 3  (not started...)
 -  good support for the different games (Doom 1/2, Heretic, Hexen),
    and initial support for add-ons (Eternal, Osiris)
 
--  pillar cage patterns, 1359 and 2468, straight lines too.
++  heights: (a) each quest, target height (at end)
+            (b) maybe a "middle" target height
+            (c) approach modes: sharp vs gradual change
+
++  pillar patterns: line thru center (based on entry and exit).
+-  pillar cage patterns, 1359 and 2468
 -  chunk-size cages: outdoor and top-less
 
 -  floor switches: y_offset
@@ -99,11 +115,11 @@ MILESTONE 3  (not started...)
 -  wall switches: "small" mode (32x32)
 
 -  overhangs: thick and central pillars
-   -  don't create pillar in front of door
+   +  don't create pillar in front of door
 
 -  more mid-masked textures (esp. on windows)
--  prefer not to create void space next to windows
--  doors: underneath flat should match side texture.
+-  prefer not to create void chunks next to windows
+-  doors: underneath flat should match front texture.
 -  compute_line_flags: more explicit flags (esp. override)
 
 +  overall consistency (doors/lights/overhangs/windows)
