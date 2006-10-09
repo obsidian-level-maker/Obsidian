@@ -30,6 +30,8 @@ class Plan
 
 class Quest
   level : main quest number
+  sub_level : index for mini-quest
+
   kind : one of "key" | "switch" | "exit"
          (for mini-quests: "weapon" | "item")
   item : name of key / switch_tex / weapon / item
@@ -42,6 +44,9 @@ class Quest
   children : array(Quest)
 
   tag : tag number for switch
+
+  closet : Surprise  -- optional
+  depot  : Surprise  -- optional
 end
 
 
@@ -185,5 +190,13 @@ class HModel
   -- quantity of health/ammo to win the battle.
 
   -- Note 2: we don't distinguish green/blue armor.
+end
+
+
+class Surprise  -- Closet or Depot
+  trigger_cell
+  depot_cell  -- only for depots
+  door_tag
+  places[N] : { c, tag, spots }
 end
 
