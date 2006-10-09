@@ -20,7 +20,6 @@
 #define __UI_WINDOW_H__
 
 #include "ui_build.h"
-#include "ui_file.h"
 #include "ui_menu.h"
 #include "ui_setup.h"
 
@@ -38,7 +37,7 @@ public:
 #endif
 
 	UI_Setup *setup_box;
-	UI_File  *file_box;
+
 	UI_Build *build_box;
 
 	enum  // actions

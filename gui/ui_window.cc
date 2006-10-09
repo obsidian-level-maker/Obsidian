@@ -36,7 +36,7 @@
 UI_MainWin *main_win;
 
 #define MAIN_WINDOW_W  470
-#define MAIN_WINDOW_H  264
+#define MAIN_WINDOW_H  284
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
@@ -93,8 +93,7 @@ UI_MainWin::UI_MainWin(const char *title) :
 
 	cy += build_box->h();
 
-fprintf(stderr, "cy = %d\n", cy);
-
+  DebugPrintf("Final main_win.cy = %d\n", cy);
 
 	resizable(build_box);
 
