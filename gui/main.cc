@@ -33,9 +33,6 @@
 #include "ui_window.h"
 
 
-#define MY_TITLE  "Oblige Level Maker " OBLIGE_VERSION
-
-
 #define TICKER_TIME  20 /* ms */
 
 
@@ -45,7 +42,7 @@ static void ShowInfo(void)
 {
 	printf(
 		"\n"
-		"** " MY_TITLE " (C) Andrew Apted 2006 **\n"
+		"** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) Andrew Apted 2006 **\n"
 		"\n"
 	);
 
@@ -53,8 +50,6 @@ static void ShowInfo(void)
 		"Usage: oblige [options...]\n"
 		"\n"
 		"Available options:\n"
-		"  -l  -local [ADDR]      Set local computer's IP address\n"
-		"  -p  -port  [PORT]      Set server's port number\n"
 		"  -d  -debug             Enable debugging\n"
 		"  -h  -help              Show this help message\n"
 		"\n"
@@ -114,9 +109,9 @@ void Main_FatalError(const char *msg, ...)
 
 	va_list arg_pt;
 
-	va_start (arg_pt, msg);
-	vsnprintf (buffer, MSG_BUF_LEN, msg, arg_pt);
-	va_end (arg_pt);
+	va_start(arg_pt, msg);
+	vsnprintf(buffer, MSG_BUF_LEN, msg, arg_pt);
+	va_end(arg_pt);
 
 	buffer[MSG_BUF_LEN] = 0;
 
@@ -147,7 +142,7 @@ void Build_Cool_Shit()
 	main_win->Locked(true);
 	that->P_SetButton(true);
 
-	bool is_hexen = (strcmp(main_win->setup_box->cur_Game(), "hexen") == 0);
+	bool is_hexen = !strcmp(main_win->setup_box->cur_Game(), "hexen");
 
 	bool was_ok = Doom_CreateWAD(DATA_DIR "/TEMP.wad", is_hexen);
 
@@ -160,21 +155,36 @@ void Build_Cool_Shit()
 
 		Doom_FinishWAD();
 
-///???		that->P_Finish();
+///  that->P_Finish();
 	}
 
 	if (was_ok)
 	{
-		that->P_Status("Building nodes");
-
     DebugPrintf("FILENAME: [%s]\n", filename);
+
+    if (FileExists(filename))
+    {
+      // FIXME: con_printf("Backing up existing file: XXX");
+      
+      // make a backup
+      char *backup_name = ReplaceExtension(filename, "bak");
+
+      if (! CopyFile(filename, backup_name))
+      {
+        // FIXME: either show a warning OR fatal error
+      }
+
+      StringFree(backup_name);
+    }
+
+		that->P_Status("Building nodes");
 
 		was_ok = GB_BuildNodes(DATA_DIR "/TEMP.wad", filename);
 	}
 
   StringFree(filename);
 
-	// FIXME: distinguish between Failure and Aborted
+	// FIXME !!! distinguish between Failure and Aborted
 	if (was_ok)
 		that->P_Status("Success");
 	else
@@ -216,7 +226,7 @@ int main(int argc, char **argv)
 	cookie_status_t cookie_ret = CookieReadAll();
 #endif
 
-   	if (1) Fl::scheme("plastic");
+  Fl::scheme("plastic");
 
 	fl_message_font(FL_HELVETICA /* _BOLD */, 18);
 
@@ -230,17 +240,14 @@ int main(int argc, char **argv)
 	Script_Init();
 
 	
-	main_win = new UI_MainWin(MY_TITLE);
+	main_win = new UI_MainWin(OBLIGE_TITLE);
 
   Default_Location();
 #if 0
   main_win->file_box->SetDefaultLocation();
 #endif
 
-	/*
-	LogPrintf(0,
-		"\n*** " MY_TITLE " (C) 2005 Andrew Apted ***\n\n"
-	); */
+	/// TITLE --> log file
 
 	try
 	{

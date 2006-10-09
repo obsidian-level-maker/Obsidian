@@ -133,21 +133,6 @@ char *Select_Output_File()
     name = new_name;
   }
   
-  if (FileExists(name))
-  {
-    // FIXME: con_printf("Backing up existing file: XXX");
-    
-    // make a backup
-    char *backup_name = ReplaceExtension(name, "bak");
-
-    if (! CopyFile(name, backup_name))
-    {
-      // FIXME: either show a warning OR fatal error
-    }
-
-    StringFree(backup_name);
-  }
-
   StringFree(last_file);
   last_file = StringDup(name);
 
