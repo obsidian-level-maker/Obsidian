@@ -22,7 +22,9 @@
 #include "g_doom.h"
 
 #include "hdr_fltk.h"
-#include "ui_dialog.h"  // DLG_ShowError
+#include "ui_dialog.h"
+#include "ui_window.h"
+#include "main.h"
 
 
 typedef std::vector<u8_t> lump_c;
@@ -68,7 +70,7 @@ void WAD_RawWrite(const void *data, u32_t len)
 
 	if (1 != fwrite(data, len, 1, wad_fp))
 	{
-		// FIXME: log??
+		// FIXME: log
 		fprintf(stderr, "Failure writing to wad file!\n");
 	}
 }
@@ -77,10 +79,11 @@ void WAD_WriteLump(const char *name, const void *data, u32_t len)
 {
 	SYS_ASSERT(strlen(name) <= 8);
 
+  // create entry for directory (written out later)
 	raw_dir_entry_t entry;
 
 	entry.start  = LE_U32((u32_t)ftell(wad_fp));
-	entry.length = LE_U32(AlignLen(len));
+	entry.length = LE_U32(len);
 
 	strncpy(entry.name, name, 8);
 
@@ -133,6 +136,40 @@ void WAD_Append(lump_c *lump, const void *data, u32_t len)
 
 		memcpy(& (*lump)[old_size], data, len);
 	}
+}
+
+void WAD_Printf(lump_c *lump, const char *str, ...)
+{
+  static char buffer[MSG_BUF_LEN + 4];
+
+	va_list args;
+
+	va_start(args, str);
+	vsnprintf(buffer, MSG_BUF_LEN, str, args);
+	va_end(args);
+
+	buffer[MSG_BUF_LEN] = 0;
+
+  WAD_Append(lump, buffer, strlen(buffer));
+}
+
+void WAD_CreateInfoLump()
+{
+  lump_c *L = new lump_c();
+
+  WAD_Printf(L, "# Levels created by OBLIGE %s\n", OBLIGE_VERSION);
+  WAD_Printf(L, "# Oblige Level Maker (C) 2006 Andrew Apted\n");
+  WAD_Printf(L, "# http://oblige.sourceforge.net/\n");
+  WAD_Printf(L, "\n");
+
+  WAD_Printf(L, "# settings:\n");
+	WAD_Printf(L, "seed = %s\n", main_win->setup_box->cur_Seed());
+	WAD_Printf(L, "game = %s\n", main_win->setup_box->cur_Game());
+	WAD_Printf(L, "addon = %s\n",main_win->setup_box->cur_Addon());
+	WAD_Printf(L, "mode = %s\n", main_win->setup_box->cur_Mode());
+	WAD_Printf(L, "length = %s\n", main_win->setup_box->cur_Size());
+
+  WAD_WriteLump("OBLIGDAT", L);
 }
 
 
@@ -227,6 +264,8 @@ int add_thing(lua_State *L)
 		WAD_Append(thing_lump, &thing, sizeof(thing));
 	}
 
+DebugPrintf("Thing lump size: %d\n", thing_lump->size());
+  
 	return 0;
 }
 
@@ -259,6 +298,18 @@ int add_sector(lua_State *L)
 	sec.light   = LE_U16(luaL_checkint(L,5));
 	sec.special = LE_U16(luaL_checkint(L,6));
 	sec.tag     = LE_S16(luaL_checkint(L,7));
+
+#if 0
+  // hexen uses a different flat for skies
+  if (wad_hexen)
+  {
+    if (strncmp(sec.floor_tex, "F_SKY1", 6) == 0)
+      strcpy(sec.floor_tex, "F_SKY");
+
+    if (strncmp(sec.ceil_tex, "F_SKY1", 6) == 0)
+      strcpy(sec.ceil_tex, "F_SKY");
+  }
+#endif
 
 	WAD_Append(sector_lump, &sec, sizeof(sec));
 
@@ -367,14 +418,11 @@ void Doom_InitLua(lua_State *L)
 
 bool Doom_CreateWAD(const char *filename, bool is_hexen)
 {
-	// FIXME: MakeBackup(filename)
-
 	wad_fp = fopen(filename, "wb");
 
 	if (! wad_fp)
 	{
-		DLG_ShowError("Unable to create wad file:\n%s",
-				strerror(errno));
+		DLG_ShowError("Unable to create wad file:\n%s", strerror(errno));
 		return false;
 	}
 
@@ -391,7 +439,7 @@ bool Doom_CreateWAD(const char *filename, bool is_hexen)
 
 	WAD_RawWrite(&header, sizeof(header));
 
-	//// INFO LUMP
+	WAD_CreateInfoLump();
 
 	return true; //OK
 }
@@ -420,7 +468,8 @@ bool Doom_FinishWAD()
 	WAD_RawSeek(0);
 	WAD_RawWrite(&header, sizeof(header));
 
-	fclose(wad_fp); wad_fp = NULL;
+	fclose(wad_fp);
+  wad_fp = NULL;
 
 	// FIXME: free memory
 
