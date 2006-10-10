@@ -20,8 +20,13 @@
 #include "hdr_fltk.h"
 
 #include "ui_chooser.h"
+#include "ui_window.h"
 #include "lib_util.h"
 #include "main.h"
+
+#ifdef WIN32
+#include <commdlg.h>
+#endif
 
 static char *last_file;
 
@@ -58,7 +63,7 @@ char *Select_Output_File()
   // GetSaveFileName(), which might change it.
   char *cur_dir = StringNew(MAX_PATH);
 
-  DWORD gcd_res = ::GetCurrentDirectory(cur_dir, MAX_PATH);
+  DWORD gcd_res = ::GetCurrentDirectory(MAX_PATH, cur_dir);
 
   if (0 == gcd_res || gcd_res > MAX_PATH)
     Main_FatalError("GetCurrentDirectory failed!");
@@ -69,7 +74,7 @@ char *Select_Output_File()
   strcpy(name, last_file);
 
   OPENFILENAME ofn;
-  memset(ofn, 0, sizeof(ofn));
+  memset(&ofn, 0, sizeof(ofn));
 
   ofn.lStructSize = sizeof(OPENFILENAME); 
   ofn.hwndOwner = fl_xid(main_win);
