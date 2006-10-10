@@ -1234,10 +1234,12 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
     local function try_add_surprise(Q)
       if Q.kind == "exit" then return end
       
-      if Q.mini then  -- FIXME: better selection
-        add_closet(Q)
-      else
-        add_depot(Q)
+      if rand_odds(sel(Q.mini, 30, 50)) then
+        if rand_odds(sel(Q.mini, 10, 60)) then
+          add_depot(Q)
+        else
+          add_closet(Q)
+        end
       end
     end
 
