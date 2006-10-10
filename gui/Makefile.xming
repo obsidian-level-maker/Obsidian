@@ -1,0 +1,71 @@
+#----------------------------------------------------------------
+# Oblige
+#----------------------------------------------------------------
+#
+# GNU Makefile for WIN32, using CROSS-COMPILER on Linux
+#
+
+PROGRAM=../Oblige_NG.exe
+
+CXX=i586-mingw32msvc-g++
+
+### FIXME
+FLTK_DIR=/home/aapted/ebuild/fltk-1.1.7
+
+LUA_DIR=/home/aapted/ebuild/lua-5.1
+
+GLBSP_DIR=/home/aapted/ebuild/glbsp-2.20
+
+# operating system choices: UNIX WIN32
+OS=WIN32
+
+
+#--- Internal stuff from here -----------------------------------
+
+FLTK_FLAGS=-I$(FLTK_DIR)
+FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
+          $(FLTK_DIR)/lib/libfltk.a \
+          $(FLTK_DIR)/lib/libfltk_z.a
+
+LUA_FLAGS=-I$(LUA_DIR)/src
+LUA_LIBS=$(LUA_DIR)/src/liblua.a
+
+GLBSP_FLAGS=-I$(GLBSP_DIR)
+GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
+
+CXXFLAGS=-O -g -Wall -D$(OS) \
+         $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
+LDFLAGS=
+LIBS=-lm $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
+
+OBJS=	main.o      \
+	lib_argv.o  \
+	lib_util.o  \
+	sys_assert.o \
+	sys_debug.o \
+	g_doom.o    \
+	g_glbsp.o   \
+	g_lua.o     \
+	twister.o   \
+	ui_build.o  \
+	ui_chooser.o \
+	ui_dialog.o \
+	ui_menu.o   \
+	ui_setup.o  \
+	ui_window.o
+
+
+#--- Targets and Rules ------------------------------------------
+
+all: $(PROGRAM)
+
+$(PROGRAM): $(OBJS)
+	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
+
+bin: all
+	mingw32-strip --strip-unneeded $(PROGRAM)
+
+.PHONY: all clean bin
+
+#--- editor settings ------------
+# vi:ts=8:sw=8:noexpandtab
