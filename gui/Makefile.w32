@@ -5,7 +5,7 @@
 # GNU Makefile for WIN32
 #
 
-PROGRAM=../Oblige_NG.exe
+PROGRAM=../Oblige.exe
 
 CXX=mingw32-g++
 
@@ -16,6 +16,8 @@ LUA_DIR=../../lua-5.1
 
 GLBSP_DIR=../../glbsp-2.20
 
+ZLIB_DIR=../../zlib-1.2.3
+
 # operating system choices: UNIX WIN32
 OS=WIN32
 
@@ -24,8 +26,7 @@ OS=WIN32
 
 FLTK_FLAGS=-I$(FLTK_DIR)
 FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
-          $(FLTK_DIR)/lib/libfltk.a \
-          -lpng -ljpeg
+          $(FLTK_DIR)/lib/libfltk.a
 
 LUA_FLAGS=-I$(LUA_DIR)/src
 LUA_LIBS=$(LUA_DIR)/src/liblua.a
@@ -33,10 +34,15 @@ LUA_LIBS=$(LUA_DIR)/src/liblua.a
 GLBSP_FLAGS=-I$(GLBSP_DIR)
 GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
+ZLIB_FLAGS=-I$(ZLIB_DIR)
+ZLIB_LIBS=$(ZLIB_DIR)/libz.a
+
 CXXFLAGS=-O -g -Wall -D$(OS) \
          $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=
-LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
+LIBS=-lm $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS) $(ZLIB_LIBS) \
+     -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
+     -lcomctl32 -lwsock32 -lsupc++
 
 OBJS=	main.o      \
 	lib_argv.o  \
