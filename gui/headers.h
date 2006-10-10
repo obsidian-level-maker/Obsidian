@@ -16,8 +16,14 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __MP_INCLUDES_H__
-#define __MP_INCLUDES_H__
+#ifndef __OBLIGE_INCLUDES_H__
+#define __OBLIGE_INCLUDES_H__
+
+/* OS specifics */
+#ifdef WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
 
 /* C library */
 
@@ -47,4 +53,4 @@
 
 #define MSG_BUF_LEN  2000
 
-#endif /* __MP_INCLUDES_H__ */
+#endif /* __OBLIGE_INCLUDES_H__ */
