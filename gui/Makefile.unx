@@ -25,7 +25,7 @@ OS=UNIX
 FLTK_FLAGS=-I$(FLTK_DIR)
 FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
           $(FLTK_DIR)/lib/libfltk.a \
-		  -lX11 -lXext -lpng -ljpeg
+          -lX11 -lXext -lpng -ljpeg
 
 LUA_FLAGS=-I$(LUA_DIR)/src
 LUA_LIBS=$(LUA_DIR)/src/liblua.a
@@ -36,7 +36,7 @@ GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 CXXFLAGS=-O -g -Wall -D$(OS) \
          $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib 
-LIBS=-lm $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
+LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
 
 OBJS=	main.o      \
 	lib_argv.o  \
