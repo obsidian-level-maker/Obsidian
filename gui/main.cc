@@ -234,20 +234,17 @@ int main(int argc, char **argv)
 	Fl_File_Icon::load_system_icons();
 
 
-	
 //	LogInit();
 
+/// TITLE --> log file
+
 	Script_Init();
+
+  Default_Location();
 
 	
 	main_win = new UI_MainWin(OBLIGE_TITLE);
 
-  Default_Location();
-#if 0
-  main_win->file_box->SetDefaultLocation();
-#endif
-
-	/// TITLE --> log file
 
 	try
 	{
