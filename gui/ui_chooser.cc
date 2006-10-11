@@ -52,6 +52,8 @@ void Default_Location()
 #endif
 
   strcat(last_file, "TEST.wad");
+
+  DebugPrintf("Default_Location: [%s]\n", last_file);
 }
 
 char *Select_Output_File()
@@ -68,10 +70,13 @@ char *Select_Output_File()
   if (0 == gcd_res || gcd_res > MAX_PATH)
     Main_FatalError("GetCurrentDirectory failed!");
 
+  DebugPrintf("Select_Output_File: cur_dir=[%s]\n", cur_dir);
+  
   // --- call the bitch ---
 
   char *name = StringNew(FL_PATH_MAX);
-  strcpy(name, last_file);
+  name[0] = 0;
+  // THIS FUCKS UP: strcpy(name, last_file);
 
   OPENFILENAME ofn;
   memset(&ofn, 0, sizeof(ofn));
@@ -81,15 +86,20 @@ char *Select_Output_File()
   ofn.lpstrFilter = "Wad Files\0*.wad\0\0";
   ofn.lpstrFile = name;
   ofn.nMaxFile  = FL_PATH_MAX;
-  ofn.lpstrFileTitle = (LPSTR)NULL;
   ofn.lpstrInitialDir = (LPSTR)NULL; 
-  ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT; 
+  ofn.Flags = OFN_EXPLORER | OFN_HIDEREADONLY |
+              OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT |
+              OFN_NONETWORKBUTTON;
   ofn.lpstrTitle = "Select output file"; 
  
   BOOL result = ::GetSaveFileName(&ofn);
 
   if (result == 0)
   {
+    DWORD err = ::CommDlgExtendedError();
+
+    DebugPrintf("Select_Output_File: failed, err=0x%08x\n", err);
+
     // user cancelled, or error occurred
     ::SetCurrentDirectory(cur_dir);
     return NULL;
@@ -138,6 +148,8 @@ char *Select_Output_File()
     name = new_name;
   }
   
+  DebugPrintf("Select_Output_File: OK, name=[%s]\n", name);
+
   StringFree(last_file);
   last_file = StringDup(name);
 
