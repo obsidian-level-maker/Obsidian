@@ -1,0 +1,8 @@
+
+Minimal BEHAVIOUR lump:
+
+'ACS' 0   // marker
+0x0C      // infoOffset
+0         // code
+0         // scriptCount
+
