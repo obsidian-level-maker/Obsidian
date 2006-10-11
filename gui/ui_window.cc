@@ -55,7 +55,9 @@ UI_MainWin::UI_MainWin(const char *title) :
 {
 	end(); // cancel begin() in Fl_Group constructor
 
-	size_range(MAIN_WINDOW_W, MAIN_WINDOW_H);
+  // no need for window to be resizable
+	size_range(MAIN_WINDOW_W, MAIN_WINDOW_H,
+             MAIN_WINDOW_W, MAIN_WINDOW_H);
 
 	callback((Fl_Callback *) main_win_close_CB);
 
