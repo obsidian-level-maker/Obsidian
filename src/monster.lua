@@ -29,32 +29,29 @@
 MONSTER_DEFS =
 {
   -- FIXME: probs for CLOSET/DEPOT
-  zombie    = { kind=3004, prob=81, r=20,h=56, t=20,  dm=4,  fp=10, cage_prob=10, hitscan=true, humanoid=true },
-  shooter   = { kind=9,    prob=41, r=20,h=56, t=30,  dm=10, fp=10, cage_prob= 5, hitscan=true, humanoid=true },
-  gunner    = { kind=65,   prob=17, r=20,h=56, t=70,  dm=40, fp=40, cage_prob=70, hitscan=true, humanoid=true },
+  zombie    = { prob=81, r=20,h=56, t=20,  dm=4,  fp=10, cage_prob=10, hitscan=true, },
+  shooter   = { prob=41, r=20,h=56, t=30,  dm=10, fp=10, cage_prob= 5, hitscan=true, },
+  gunner    = { prob=17, r=20,h=56, t=70,  dm=40, fp=40, cage_prob=70, hitscan=true, },
 
-  imp       = { kind=3001, prob=90, r=20,h=56, t=60,  dm=20, fp=20, cage_prob=90, },
-  caco      = { kind=3005, prob=90, r=31,h=56, t=400, dm=45, fp=30, cage_prob=14, float=true },
-  revenant  = { kind=66,   prob=70, r=20,h=64, t=300, dm=55, fp=48, cage_prob=50, },
-  knight    = { kind=69,   prob=70, r=24,h=64, t=500, dm=45, fp=60, cage_prob=50, },
-  baron     = { kind=3003, prob=50, r=24,h=64, t=1000,dm=45, fp=110,cage_prob= 2, },
+  imp       = { prob=90, r=20,h=56, t=60,  dm=20, fp=20, cage_prob=90, },
+  caco      = { prob=90, r=31,h=56, t=400, dm=45, fp=30, cage_prob=14, float=true },
+  revenant  = { prob=70, r=20,h=64, t=300, dm=55, fp=48, cage_prob=50, },
+  knight    = { prob=70, r=24,h=64, t=500, dm=45, fp=60, cage_prob=50, },
+  baron     = { prob=50, r=24,h=64, t=1000,dm=45, fp=110,cage_prob= 2, },
 
-  mancubus  = { kind=67,   prob=70, r=48,h=64, t=600, dm=80, fp=110,cage_prob=70, },
-  arach     = { kind=68,   prob=26, r=64,h=64, t=500, dm=70, fp=90, cage_prob=90, },
-  pain      = { kind=71,   prob= 8, r=31,h=56, t=400, dm=88, fp=40, cage_prob= 0, float=true },
-  vile      = { kind=64,   prob=10, r=20,h=56, t=700, dm=30, fp=120,cage_prob=14, hitscan=true },
+  mancubus  = { prob=70, r=48,h=64, t=600, dm=80, fp=110,cage_prob=70, },
+  arach     = { prob=26, r=64,h=64, t=500, dm=70, fp=90, cage_prob=90, },
+  pain      = { prob= 8, r=31,h=56, t=400, dm=88, fp=40, cage_prob= 0, float=true },
+  vile      = { prob=10, r=20,h=56, t=700, dm=30, fp=120,cage_prob=14, hitscan=true },
 
   -- MELEE only monsters
-  demon     = { kind=3002, prob=80, r=30,h=56, t=150, dm=25, fp=30, cage_prob=140,melee=true },
-  spectre   = { kind=58,   prob=15, r=30,h=56, t=150, dm=25, fp=30, cage_prob=40, melee=true },
-  skull     = { kind=3006, prob=20, r=16,h=56, t=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
-}
+  demon     = { prob=80, r=30,h=56, t=150, dm=25, fp=30, cage_prob=140,melee=true },
+  spectre   = { prob=15, r=30,h=56, t=150, dm=25, fp=30, cage_prob=40, melee=true },
+  skull     = { prob=20, r=16,h=56, t=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
 
--- these monsters only created in special circumstances
-SPECIAL_MONSTERS =
-{
-  cyber     = { kind=16, r=40,  h=110,t=4000,dm=150, fp=150 },
-  spider    = { kind=7,  r=128, h=100,t=3000,dm=200, fp=240, hitscan=true }
+  -- special monsters (only for boss levels)
+  cyber     = { prob=0, r=40,  h=110,t=4000,dm=150, fp=150 },
+  spider    = { prob=0, r=128, h=100,t=3000,dm=200, fp=240, hitscan=true },
 }
 
 MONSTER_GIVE =
@@ -188,50 +185,6 @@ CLUSTER_THINGS =
   rocket  = 4,
 }
 
-THING_NUMS =  -- FIXME duplicated in above tables
-{
-  teleport_spot = 14,
-
-  k_red    = 38,
-  k_blue   = 40,
-  k_yellow = 39,
-
-  shotty = 2001,
-  super  =   82,
-  chain  = 2002,
-  launch = 2003,
-  plasma = 2004,
-  saw    = 2005,
-  bfg    = 2006,
-
-  invis  = 2024,
-  goggle = 2045,
-  berserk= 2023,
-  mega   =   83,
-  invul  = 2022,
-  backpack =  8,
-
-  potion   = 2014,
-  stimpack = 2011,
-  medikit  = 2012,
-  soul     = 2013,
-
-  helmet      = 2015,
-  green_armor = 2018,
-  blue_armor  = 2019,
-  armor  = 2019,     --- FIXME!!
-
-  bullets    = 2007,
-  bullet_box = 2048,
-  shells     = 2008,
-  shell_box  = 2049,
-  rockets    = 2010,
-  rocket_box = 2046,
-  cells      = 2047,
-  cell_pack  =   17,
-
-}
-
 
 ------------------------------------------------------------
 
@@ -266,14 +219,13 @@ function compute_pow_factors()
   for name,info in pairs(MONSTER_DEFS) do
     info.pow = pow_factor(info)
   end
-
-  for name,info in pairs(SPECIAL_MONSTERS) do
-    info.pow = pow_factor(info)
-  end
 end
 
 
-function add_thing(p, c, bx, by, kind, blocking, angle, options)
+function add_thing(p, c, bx, by, name, blocking, angle, options)
+
+  local kind = DM_THING_NUMS[name]
+  assert(kind)
 
 --[[
 if c.x==3 and c.y==3 then
@@ -285,15 +237,15 @@ end]]
 
   local B = p.blocks[c.blk_x+bx][c.blk_y+by]
   assert(B)
-  assert(kind)
 
   if not B.things then B.things = {} end
 
   local THING =
   {
-    kind=kind,
-    angle=angle,
-    options=options
+    name = name,
+    kind = kind,
+    angle = angle,
+    options = options
   }
 
 --[[
@@ -899,7 +851,7 @@ function distribute_pickups(p, c, HM)
 --[[ if stat ~= "health" then
 print("PICKUP ", names[idx], cluster, c.x, c.y)
 end ]]
-    return th_info, cluster
+    return names[idx], th_info, cluster
   end
 
   local function get_distrib_targets(c)
@@ -954,15 +906,15 @@ end ]]
 
       local r_max = want - HM[stat]
 
-      local info, cluster = decide_pickup(stat, things, r_max)
+      local name, info, cluster = decide_pickup(stat, things, r_max)
 
       if not info then break end
 
       if p.coop and stat ~= "health" then
-        add_coop_pickup(targets, stat, info, cluster)
+        add_coop_pickup(targets, name, info, cluster)
       else
         local tc = targets[rand_index_by_probs(distrib)]
-        add_pickup(tc, stat, info, cluster)
+        add_pickup(tc, name, info, cluster)
       end
 
       HM[stat] = HM[stat] + cluster * info.give
@@ -1064,7 +1016,7 @@ function place_battle_stuff(p, c)
       local dy = (int(i % 3) - 1) * 20
       if dat.cluster == 1 then dx,dy = 0,0 end
 
-      local th = add_thing(p, c, spot.x, spot.y, dat.info.kind, false, 0, options)
+      local th = add_thing(p, c, spot.x, spot.y, dat.name, false, 0, options)
       th.dx, th.dy = dx, dy
 
       if spot.dx then th.dx = (th.dx or 0) + spot.dx end
@@ -1120,7 +1072,7 @@ function place_battle_stuff(p, c)
         options.ambush = true
       end
 
-      local th = add_thing(p, c, spot.x, spot.y, dat.info.kind, true, angle, options)
+      local th = add_thing(p, c, spot.x, spot.y, dat.name, true, angle, options)
       th.mon_name = dat.name
 
       if is_big then
@@ -1401,7 +1353,7 @@ function battle_in_cell(p, c)
         local dx = int((i-1)%2) * 64
         local dy = int((i-1)/2) * 64
 
-        local th = add_thing(p, c, spot.x, spot.y, m_info.kind, true, angle, options)
+        local th = add_thing(p, c, spot.x, spot.y, m_name, true, angle, options)
         th.mon_name = m_name
 
         if m_info.r >= 32 then  -- big monster
@@ -1453,7 +1405,7 @@ function battle_in_cell(p, c)
 --con.printf("CLOSET %s @ cell %d,%d  block %d,%d\n",
 --m_name, spot.c.x, spot.c.y, spot.x, spot.y)
 
-          local th = add_thing(p, spot.c, spot.x, spot.y, m_info.kind, true, angle, options)
+          local th = add_thing(p, spot.c, spot.x, spot.y, m_name, true, angle, options)
           th.mon_name = m_name
 
           if m_info.r >= 32 then  -- big monster
@@ -1495,7 +1447,7 @@ print("ADD_TELEPORTERS", c.x, c.y)
         end
 
         local x,y = prev.x, prev.y
-        add_thing(p, c, x, y, THING_NUMS["teleport_spot"], true)
+        add_thing(p, c, x, y, "teleport_spot", true)
         p.blocks[c.blk_x+x][c.blk_y+y].tag = place.tag
       end
     end

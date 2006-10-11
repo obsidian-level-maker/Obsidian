@@ -2682,7 +2682,7 @@ end
       if not blocked and c.theme.scenery and not K.stair_dir and
          dual_odds(c.theme.outdoor, 45, 22)
       then
-        add_thing(p, c, x1+1, y1+1, SCENERY_NUMS[c.theme.scenery], true)
+        add_thing(p, c, x1+1, y1+1, c.theme.scenery, true)
         p.blocks[c.blk_x+x1+1][c.blk_y+y1+1].has_scenery = true
       end
     end
@@ -2721,7 +2721,7 @@ end
 
       for i = 1,cluster do
         local dx, dy = dir_to_delta(offsets[i])
-        add_thing(p, c, bx+dx, by+dy, THING_NUMS[name], false)
+        add_thing(p, c, bx+dx, by+dy, name, false)
       end
     end
 
@@ -2849,18 +2849,18 @@ print("BUILDING CLOSET @", c.x,c.y)
         for i = 1,4 do
           local dx,dy = dir_to_delta(offsets[i])
           B_pedestal(p, c, bx+dx, by+dy, K.floor_h, PED_PLAYER)
-          add_thing(p, c, bx+dx, by+dy, i, true, angle)
+          add_thing(p, c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
           c.player_pos = {x=bx+dx, y=by+dy}
         end
       else
         B_pedestal(p, c, bx, by, K.floor_h, PED_PLAYER)
-        add_thing(p, c, bx, by, p.deathmatch and 11 or 1, true, angle)
+        add_thing(p, c, bx, by, sel(p.deathmatch, "dm_player", "player1"), true, angle)
         c.player_pos = {x=bx, y=by}
       end
 
     elseif K.dm_weapon then
       B_pedestal(p, c, bx, by, K.floor_h, PED_WEAPON)
-      add_thing(p, c, bx, by, THING_NUMS[K.dm_weapon], true)
+      add_thing(p, c, bx, by, K.dm_weapon, true)
 
     elseif K.quest then
 
@@ -2870,7 +2870,7 @@ print("BUILDING CLOSET @", c.x,c.y)
         -- weapon and keys are non-blocking, but we don't want
         -- a monster sitting on top of our quest item (especially
         -- when it has a pedestal).
-        add_thing(p, c, bx, by, THING_NUMS[c.quest.item], true)
+        add_thing(p, c, bx, by, c.quest.item, true)
 
       elseif c.quest.kind == "switch" then
         local info = TH_SWITCHES[c.quest.item]

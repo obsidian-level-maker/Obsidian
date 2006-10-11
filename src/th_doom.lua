@@ -595,8 +595,77 @@ EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
 
 ------------------------------------------------------------
 
-SCENERY_NUMS =
+DM_THING_NUMS =
 {
+  --- special stuff ---
+  player1 = 1,
+  player2 = 2,
+  player3 = 3,
+  player4 = 4,
+  dm_player = 11,
+  teleport_spot = 14,
+
+  --- monsters ---
+  zombie    = 3004,
+  shooter   = 9,
+  gunner    = 65,
+  imp       = 3001,
+  caco      = 3005,
+  revenant  = 66,
+  knight    = 69,
+  baron     = 3003,
+
+  mancubus  = 67,
+  arach     = 68,
+  pain      = 71,
+  vile      = 64,
+  demon     = 3002,
+  spectre   = 58,
+  skull     = 3006,
+
+  cyber     = 16,
+  spider    = 7,
+
+  --- pickups ---
+  k_red    = 38,
+  k_blue   = 40,
+  k_yellow = 39,
+
+  shotty = 2001,
+  super  =   82,
+  chain  = 2002,
+  launch = 2003,
+  plasma = 2004,
+  saw    = 2005,
+  bfg    = 2006,
+
+  invis  = 2024,
+  goggle = 2045,
+  berserk= 2023,
+  mega   =   83,
+  invul  = 2022,
+  backpack =  8,
+
+  potion   = 2014,
+  stimpack = 2011,
+  medikit  = 2012,
+  soul     = 2013,
+
+  helmet      = 2015,
+  green_armor = 2018,
+  blue_armor  = 2019,
+  armor  = 2019,     --- FIXME!!
+
+  bullets    = 2007,
+  bullet_box = 2048,
+  shells     = 2008,
+  shell_box  = 2049,
+  rockets    = 2010,
+  rocket_box = 2046,
+  cells      = 2047,
+  cell_pack  =   17,
+
+  --- scenery ---
   green_column = 36,
   red_column = 37,
   tech_column = 48,
@@ -617,5 +686,4 @@ SCENERY_NUMS =
   burnt_tree = 43,
   big_tree = 54,  
 }
-
 
