@@ -47,7 +47,7 @@ public:
 	const char *cur_Game();
 	const char *cur_Addon();
 	const char *cur_Mode();
-	const char *cur_Size();
+	const char *cur_Length();
 	
 private:
 	static void bump_callback(Fl_Widget *, void*);
@@ -56,7 +56,7 @@ private:
 	static const char *game_syms[];
 	static const char *addon_syms[];
 	static const char *mode_syms[];
-	static const char *size_syms[];
+	static const char *length_syms[];
 };
 
 #endif /* __UI_SETUP_H__ */

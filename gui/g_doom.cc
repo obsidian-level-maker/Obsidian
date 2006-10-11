@@ -163,11 +163,11 @@ void WAD_CreateInfoLump()
   WAD_Printf(L, "\n");
 
   WAD_Printf(L, "# settings:\n");
-	WAD_Printf(L, "seed = %s\n", main_win->setup_box->cur_Seed());
-	WAD_Printf(L, "game = %s\n", main_win->setup_box->cur_Game());
-	WAD_Printf(L, "addon = %s\n",main_win->setup_box->cur_Addon());
-	WAD_Printf(L, "mode = %s\n", main_win->setup_box->cur_Mode());
-	WAD_Printf(L, "length = %s\n", main_win->setup_box->cur_Size());
+	WAD_Printf(L, "seed = %s\n",  main_win->setup_box->cur_Seed());
+	WAD_Printf(L, "game = %s\n",  main_win->setup_box->cur_Game());
+	WAD_Printf(L, "addon = %s\n", main_win->setup_box->cur_Addon());
+	WAD_Printf(L, "mode = %s\n",  main_win->setup_box->cur_Mode());
+	WAD_Printf(L, "length = %s\n",main_win->setup_box->cur_Length());
 
   WAD_WriteLump("OBLIGDAT", L);
 }

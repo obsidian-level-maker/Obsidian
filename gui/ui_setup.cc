@@ -190,9 +190,9 @@ const char * UI_Setup::mode_syms[] =
 	"sp", "coop", "dm"
 };
 
-const char * UI_Setup::size_syms[] =
+const char * UI_Setup::length_syms[] =
 {
-	"one", "episode", "full"
+	"single", "episode", "full"
 };
 
 
@@ -216,8 +216,8 @@ const char *UI_Setup::cur_Mode()
 	return mode_syms[mode->value()];
 }
 
-const char *UI_Setup::cur_Size()
+const char *UI_Setup::cur_Length()
 {
-	return size_syms[length->value()];
+	return length_syms[length->value()];
 }
 

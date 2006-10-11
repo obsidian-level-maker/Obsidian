@@ -306,11 +306,11 @@ void Script_MakeSettings(lua_State *L)
 {
 	lua_newtable(L);
 
-	AddField(L, "seed", main_win->setup_box->cur_Seed());
-	AddField(L, "game", main_win->setup_box->cur_Game());
-	AddField(L, "addon",main_win->setup_box->cur_Addon());
-	AddField(L, "mode", main_win->setup_box->cur_Mode());
-	AddField(L, "size", main_win->setup_box->cur_Size());
+	AddField(L, "seed",  main_win->setup_box->cur_Seed());
+	AddField(L, "game",  main_win->setup_box->cur_Game());
+	AddField(L, "addon", main_win->setup_box->cur_Addon());
+	AddField(L, "mode",  main_win->setup_box->cur_Mode());
+	AddField(L, "length",main_win->setup_box->cur_Length());
 
 	lua_setglobal(LUA_ST, "settings");
 }

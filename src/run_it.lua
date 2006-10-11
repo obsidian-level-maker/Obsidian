@@ -51,7 +51,7 @@ settings =
   seed = arg[1] or (os.time() % 1000)
   ,
   game = "doom2", addon = "none",
-  mode = "sp",  size  = "one",
+  mode = "sp",  length = "single",
 }
 
 build_cool_shit()

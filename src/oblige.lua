@@ -27,8 +27,8 @@ function get_level_names(settings)
 
   if (settings.game == "doom1") or (settings.game == "heretic") then
 
-    local epi_num = sel(settings.size == "full", 3, 1)
-    local lev_num = sel(settings.size == "one",  1, 9)
+    local epi_num = sel(settings.length == "full",   3, 1)
+    local lev_num = sel(settings.length == "single", 1, 9)
 
     for e = 1,epi_num do
       for m = 1,lev_num do
@@ -38,8 +38,8 @@ function get_level_names(settings)
 
   else  -- doom2 / hexen
 
-    local TS = { one=1, episode=10, full=32 }
-    local total = TS[settings.size]
+    local TS = { single=1, episode=10, full=32 }
+    local total = TS[settings.length]
     assert(total)
 
     for i = 1,total do
