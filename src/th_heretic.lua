@@ -170,8 +170,27 @@ EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
 
 ------------------------------------------------------------
 
-SCENERY_NUMS =
+HT_THING_NUMS =
 {
+  --- monsters ---
+  gargoyle    = 66,
+  fire_garg   = 5,
+  golem       = 68,
+  golem_inv   = 69,
+  nitro       = 45,
+  nitro_inv   = 46,
+  warrior     = 64,
+  warrior_inv = 65,
+
+  disciple   = 15,
+  sabreclaw  = 90,
+  weredragon = 70,
+  ophidian   = 92,
+  ironlich   = 6,
+  maulotaur  = 9,
+  d_sparil   = 7,
+
+  --- scenery ---
   wall_torch = 50,
   serpent_torch = 27,
   fire_brazier = 76,
@@ -197,5 +216,27 @@ SCENERY_NUMS =
   hang_skull_2 = 24,
   hang_skull_3 = 25,
   hang_skull_4 = 26
+}
+
+HT_MONSTERS =
+{
+  -- FIXME: firepower values
+  gargoyle    = { prob=30, r=16,h=36, hp=20,  dm= 7, fp=10, melee=true },
+  fire_garg   = { prob=20, r=16,h=36, hp=80,  dm=21, fp=10, },
+  golem       = { prob=90, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
+  golem_inv   = { prob=20, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
+  nitro       = { prob=70, r=22,h=64, hp=100, dm=21, fp=10, },
+  nitro_inv   = { prob=10, r=22,h=64, hp=100, dm=21, fp=10, },
+  warrior     = { prob=70, r=24,h=80, hp=200, dm=15, fp=10, },
+  warrior_inv = { prob=20, r=24,h=80, hp=200, dm=15, fp=10, },
+
+  disciple    = { prob=25, r=16,h=72, hp=180, dm=30, fp=10, },
+  sabreclaw   = { prob=25, r=20,h=64, hp=150, dm=30, fp=10, melee=true },
+  weredragon  = { prob=20, r=34,h=80, hp=220, dm=50, fp=10, },
+  ophidian    = { prob=20, r=22,h=72, hp=280, dm=50, fp=10, },
+
+  ironlich    = { prob= 4, r=40,h=72, hp=700, dm=99, fp=10, },
+  maulotaur   = { prob= 0, r=28,h=104,hp=3000,dm=99, fp=10, },
+  d_sparil    = { prob= 0, r=28,h=104,hp=2000,dm=99, fp=10, },
 }
 
