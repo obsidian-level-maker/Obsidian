@@ -16,16 +16,13 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __ZZLUA__
-#define __ZZLUA__
+#ifndef __OB_HDR_LUA__
+#define __OB_HDR_LUA__
 
 /* LUA Scripting Language */
 
-extern "C"
-{
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
-}
 
-#endif /*_*/
+#endif // __OB_HDR_LUA__
