@@ -1073,7 +1073,6 @@ function place_battle_stuff(p, c)
       end
 
       local th = add_thing(p, c, spot.x, spot.y, dat.name, true, angle, options)
-      th.mon_name = dat.name
 
       if is_big then
         -- Note: cannot handle monsters with radius >= 64 
@@ -1354,7 +1353,6 @@ function battle_in_cell(p, c)
         local dy = int((i-1)/2) * 64
 
         local th = add_thing(p, c, spot.x, spot.y, m_name, true, angle, options)
-        th.mon_name = m_name
 
         if m_info.r >= 32 then  -- big monster
           dx, dy = dx+32, dy+32
@@ -1406,7 +1404,6 @@ function battle_in_cell(p, c)
 --m_name, spot.c.x, spot.c.y, spot.x, spot.y)
 
           local th = add_thing(p, spot.c, spot.x, spot.y, m_name, true, angle, options)
-          th.mon_name = m_name
 
           if m_info.r >= 32 then  -- big monster
             dx, dy = dx+32, dy+32
