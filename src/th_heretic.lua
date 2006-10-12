@@ -229,7 +229,7 @@ HC_THING_NUMS =
   bag     = 8,
   wings   = 23,
   ovum    = 30,
-  torch   = 33
+  torch   = 33,
   bomb    = 34,
   map     = 35,
   chaos   = 36,
@@ -265,7 +265,7 @@ HC_THING_NUMS =
   hang_skull_1 = 17,
   hang_skull_2 = 24,
   hang_skull_3 = 25,
-  hang_skull_4 = 26
+  hang_skull_4 = 26,
 
   --- ambient sounds ---
   amb_scream = 1200,
@@ -346,11 +346,45 @@ HC_PICKUPS =
   shield2 = { stat="armor", give=200, prob=10 },
 }
 
+HC_DEATHMATCH =
+{
+  weapons =
+  {
+    gauntlets=10, crossbow=60,
+    claw=30, hellstaff=30, phoenix=30
+  },
+
+  health =
+  { 
+    vial=70, flask=25, urn=5
+  },
+
+  ammo =
+  { 
+    crystal=10, geode=20,
+    arrows=20, quiver=60,
+    claw_orb1=10, claw_orb2=40,
+    runes1=10, runes2=30,
+    flame_orb1=10, flame_orb2=30,
+  },
+
+  items =
+  {
+    shield1=70, shield2=10,
+    bag=10, torch=10,
+    wings=50, ovum=50,
+    bomb=30, chaos=30,
+    shadow=50, tome=30,
+  },
+
+  cluster = {}
+}
+
 
 ------------------------------------------------------------
 
 function create_heretic_theme()
-  local T = { dm={} }
+  local T = {}
 
   T.ERROR_TEX  = "DRIPWALL"
   T.ERROR_FLAT = "FLOOR09"
@@ -363,6 +397,7 @@ function create_heretic_theme()
   T.pickups = HC_PICKUPS
   T.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
                      "runes", "flame_orb", "mace_orb" }
+  T.dm = HC_DEATHMATCH
 
   return T
 end
