@@ -99,7 +99,7 @@ function write_level(p, lev_name)
 
   local tx_file  -- text mode output
 
-  local DUMMY_BLOCK = { solid=ERROR_TEX }
+  local DUMMY_BLOCK = { solid=THEME.ERROR_TEX }
 
 
   local function make_mini_map()
@@ -112,8 +112,7 @@ function write_level(p, lev_name)
         if not B then con.map_pixel(0)
         elseif B.solid then con.map_pixel(1)
         elseif B.kind  then con.map_pixel(4)
-        elseif (B.c_tex == "F_SKY1" or
-                B.c_tex == "F_SKY") then con.map_pixel(3)
+        elseif B.c_tex == THEME.SKY_TEX then con.map_pixel(3)
         else con.map_pixel(2)
         end
       end
@@ -216,8 +215,8 @@ function write_level(p, lev_name)
       if b.solid then
         SIDE.mid = b_over.l_tex or b.solid
       else
-        SIDE.upper = b_over.u_tex or b.u_tex or ERROR_TEX
-        SIDE.lower = b_over.l_tex or b.l_tex or ERROR_TEX
+        SIDE.upper = b_over.u_tex or b.u_tex or THEME.ERROR_TEX
+        SIDE.lower = b_over.l_tex or b.l_tex or THEME.ERROR_TEX
         SIDE.mid   = b_over.rail  or f_over.rail or b.rail or f.rail
       end
 
@@ -661,7 +660,8 @@ print("TOTAL_GROUPS ", total_group)
     total_sec = total_sec + 1
 
     wad.add_sector(sec.f_h, sec.c_h,
-      sec.f_tex or ERROR_FLAT, sec.c_tex or ERROR_FLAT,
+      sec.f_tex or THEME.ERROR_FLAT,
+      sec.c_tex or THEME.ERROR_FLAT,
       sec.light or 0, sec.kind or 0, sec.tag or 0)
   end
   
@@ -737,8 +737,8 @@ print("TOTAL_GROUPS ", total_group)
       tx_file:write(
         string.format("S%d : %d %d %s %s %d %d %d\n",
           sec.T_index, sec.f_h, sec.c_h,
-          sec.f_tex or ERROR_FLAT,
-          sec.c_tex or ERROR_FLAT,
+          sec.f_tex or THEME.ERROR_FLAT,
+          sec.c_tex or THEME.ERROR_FLAT,
           sec.light or 0, sec.kind or 0, sec.tag or 0))
     end
 
