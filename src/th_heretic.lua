@@ -170,8 +170,16 @@ EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
 
 ------------------------------------------------------------
 
-HT_THING_NUMS =
+HC_THING_NUMS =
 {
+  --- special stuff ---
+  player1 = 1,
+  player2 = 2,
+  player3 = 3,
+  player4 = 4,
+  dm_player = 11,
+  teleport_spot = 14,
+
   --- monsters ---
   gargoyle    = 66,
   fire_garg   = 5,
@@ -189,6 +197,48 @@ HT_THING_NUMS =
   ironlich   = 6,
   maulotaur  = 9,
   d_sparil   = 7,
+
+  --- pickups ---
+  k_yellow   = 80,
+  k_green    = 73,
+  k_blue     = 79,
+
+  gauntlets  = 2005,
+  crossbow   = 2001,
+  claw       = 53,
+  hellstaff  = 2004,
+  phoenix    = 2003,
+  mace       = 2002,
+
+  crystal    = 10,
+  geode      = 12,
+  arrows     = 18,
+  quiver     = 19,
+  claw_orb1  = 54,
+  claw_orb2  = 55,
+  runes1     = 20,
+  runes2     = 21,
+  flame_orb1 = 22,
+  flame_orb2 = 23,
+  mace_orbs  = 13,
+  mace_pile  = 16,
+
+  vial    = 81,
+  flask   = 82,
+  urn     = 32,
+  shield1 = 85,
+  shield2 = 31,
+
+  bag     = 8,
+  wings   = 23,
+  ovum    = 30,
+  torch   = 33
+  bomb    = 34,
+  map     = 35,
+  chaos   = 36,
+  shadow  = 75,
+  ring    = 84,
+  tome    = 86,
 
   --- scenery ---
   wall_torch = 50,
@@ -216,27 +266,43 @@ HT_THING_NUMS =
   hang_skull_2 = 24,
   hang_skull_3 = 25,
   hang_skull_4 = 26
+
+  --- ambient sounds ---
+  amb_scream = 1200,
+  amb_squish = 1201,
+  amb_drip   = 1202,
+  amb_feet   = 1203,
+  amb_heart  = 1204,
+  amb_bells  = 1205,
+  amb_growl  = 1206,
+  amb_magic  = 1207,
+  amb_laugh  = 1208,
+  amb_run    = 1209,
+
+  env_water  = 41,
+  env_wind   = 42,
 }
 
-HT_MONSTERS =
+HC_MONSTERS =
 {
-  -- FIXME: firepower values
+  -- FIXME: dm and fp values are CRAP
   gargoyle    = { prob=30, r=16,h=36, hp=20,  dm= 7, fp=10, melee=true },
-  fire_garg   = { prob=20, r=16,h=36, hp=80,  dm=21, fp=10, },
+  fire_garg   = { prob=20, r=16,h=36, hp=80,  dm=21, fp=30, },
   golem       = { prob=90, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
   golem_inv   = { prob=20, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
-  nitro       = { prob=70, r=22,h=64, hp=100, dm=21, fp=10, },
-  nitro_inv   = { prob=10, r=22,h=64, hp=100, dm=21, fp=10, },
-  warrior     = { prob=70, r=24,h=80, hp=200, dm=15, fp=10, },
-  warrior_inv = { prob=20, r=24,h=80, hp=200, dm=15, fp=10, },
 
-  disciple    = { prob=25, r=16,h=72, hp=180, dm=30, fp=10, },
-  sabreclaw   = { prob=25, r=20,h=64, hp=150, dm=30, fp=10, melee=true },
-  weredragon  = { prob=20, r=34,h=80, hp=220, dm=50, fp=10, },
-  ophidian    = { prob=20, r=22,h=72, hp=280, dm=50, fp=10, },
+  nitro       = { prob=70, r=22,h=64, hp=100, dm=21, fp=30, },
+  nitro_inv   = { prob=10, r=22,h=64, hp=100, dm=21, fp=30, },
+  warrior     = { prob=70, r=24,h=80, hp=200, dm=15, fp=50, },
+  warrior_inv = { prob=20, r=24,h=80, hp=200, dm=15, fp=50, },
 
-  ironlich    = { prob= 4, r=40,h=72, hp=700, dm=99, fp=10, },
-  maulotaur   = { prob= 0, r=28,h=104,hp=3000,dm=99, fp=10, },
-  d_sparil    = { prob= 0, r=28,h=104,hp=2000,dm=99, fp=10, },
+  disciple    = { prob=25, r=16,h=72, hp=180, dm=30, fp=90, },
+  sabreclaw   = { prob=25, r=20,h=64, hp=150, dm=30, fp=90, melee=true },
+  weredragon  = { prob=20, r=34,h=80, hp=220, dm=50, fp=90, },
+  ophidian    = { prob=20, r=22,h=72, hp=280, dm=50, fp=90, },
+
+  ironlich    = { prob= 4, r=40,h=72, hp=700, dm=99, fp=200, },
+  maulotaur   = { prob= 0, r=28,h=104,hp=3000,dm=99, fp=200, },
+  d_sparil    = { prob= 0, r=28,h=104,hp=2000,dm=99, fp=200, },
 }
 
