@@ -178,8 +178,80 @@ EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
 
 ------------------------------------------------------------
 
-SCENERY_NUMS =
+HXN_THING_NUMS =
 {
+  --- special stuff ---
+  player1 = 1,
+  player2 = 2,
+  player3 = 3,
+  player4 = 4,
+  dm_player = 11,
+  teleport_spot = 14,
+  
+  --- monsters ---
+  ettin    = 10030,
+  afrit    = 10060,
+  serpent1 = 121,
+  serpent2 = 120,
+  wendigo  = 8020,   -- FIXME: correct?
+  centaur1 = 107,
+  centaur2 = 115,
+
+  stalker1   = 31,   -- FIXME: correct???
+  stalker2   = 8080,
+  bishop     = 114,
+  reiver     = 112,  -- FIXME: correct???
+  wyvern     = 254,
+  heresiarch = 10080,
+  korax      = 10200,
+
+  fighter_boss = 10100,
+  cleric_boss  = 10101, 
+  mage_boss    = 10102,
+
+  --- pickups ---
+  k_steel   = 8030,
+  k_cave    = 8031,
+  k_axe     = 8032,
+  k_fire    = 8033,
+  k_castle  = 8034,
+  k_dungeon = 8035,
+  k_silver  = 8036,
+  k_rusty   = 8037,
+  k_waste   = 8038,
+  k_swamp   = 8039,
+  k_gold    = 8200,
+ 
+  c_staff   = 10,
+  c_fire    = 8009,
+  c1_shaft  = 20,
+  c2_cross  = 19,
+  c3_arc    = 18,
+
+  f_axe     = 8010,
+  f_hammer  = 123,
+  f1_hilt   = 16,
+  f2_cross  = 13,
+  f3_blade  = 12,
+
+  m_cone    = 53,
+  m_blitz   = 8040,
+  m1_stick  = 23,
+  m2_stub   = 22,
+  m3_skull  = 21,
+
+  blue_mana  = 122,
+  green_mana = 124,
+  combo_mana = 8004,
+
+  ar_mesh   = 8005,
+  ar_shield = 8006,
+  ar_helmet = 8007,
+  ar_amulet = 8008,
+
+
+  
+  --- scenery ---
   candle = 119,
   blue_candle = 8066,
   brass_brazier = 8061,
@@ -223,5 +295,17 @@ SCENERY_NUMS =
   small_stal_C = 57,
 
   -- FIXME: lots more...
+
+  --- sounds ---
+  snd_stone  = 1400,
+  snd_heavy  = 1401,
+  snd_metal1 = 1402,
+  snd_creak  = 1403,
+  snd_silent = 1404,
+  snd_lava   = 1405,
+  snd_water  = 1406,
+  snd_ice    = 1407,
+  snd_earth  = 1408,
+  snd_metal2 = 1409,
 }
 
