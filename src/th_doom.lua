@@ -791,10 +791,15 @@ DM_MONSTER_GIVE =
 -- rate : firing rate (shots per second)
 -- dm   : damage can inflict per shot
 -- freq : usage frequency (in the ideal)
+-- held : already held at level start
 
 DM_WEAPONS =
 {
-  pistol = { ammo="bullet",         per=1, rate=1.8, dm=10 , freq=10 },
+  fist    = { melee=true, rate=1.5, dm=10, freq=0.1, held=true },
+  berserk = { melee=true, rate=1.5, dm=50, freq=10 },
+  saw     = { melee=true, rate=8.7, dm=10, freq=2 },
+
+  pistol = { ammo="bullet",         per=1, rate=1.8, dm=10 , freq=10, held=true },
   shotty = { ammo="shell",  give=8, per=1, rate=0.9, dm=70 , freq=81 },
   super  = { ammo="shell",  give=8, per=2, rate=0.6, dm=200, freq=50 },
   chain  = { ammo="bullet", give=20,per=1, rate=8.5, dm=10 , freq=91 },
@@ -802,11 +807,6 @@ DM_WEAPONS =
   launch = { ammo="rocket", give=2, per=1, rate=1.7, dm=90,  freq=50, dangerous=true },
   plasma = { ammo="cell",   give=40,per=1, rate=11,  dm=22 , freq=80 },
   bfg    = { ammo="cell",   give=40,per=40,rate=0.8, dm=450, freq=30 },
-
-  -- MELEE weapons
-  fist    = { melee=true, rate=1.5, dm=10, freq=0.1 },
-  berserk = { melee=true, rate=1.5, dm=50, freq=10 },
-  saw     = { melee=true, rate=8.7, dm=10, freq=2 },
 
   -- Note: Berserk is not really an extra weapon, but a powerup
   -- which makes fist do much more damage.  The effect lasts till
@@ -837,19 +837,19 @@ DM_MONSTER_WEAPON_PREFS =
 DM_PICKUPS =
 {
   bullets    = { stat="bullet", give=10, prob=10 },
-  bullet_box = { stat="bullet", give=50, prob=x0 },
-  shells     = { stat="shell",  give= 4, prob=20 },
-  shell_box  = { stat="shell",  give=20, prob=x0 },
+  bullet_box = { stat="bullet", give=50, prob=70 },
+  shells     = { stat="shell",  give= 4, prob=30 },
+  shell_box  = { stat="shell",  give=20, prob=70 },
 
-  rockets    = { stat="rocket", give= 1, prob=10 },
-  rocket_box = { stat="rocket", give= 5, prob=x0 },
-  cells      = { stat="cell",   give=20, prob=20 },
-  cell_pack  = { stat="cell",   give=100,prob=x0 },
+  rockets    = { stat="rocket", give= 1, prob=20 },
+  rocket_box = { stat="rocket", give= 5, prob=70 },
+  cells      = { stat="cell",   give=20, prob=30 },
+  cell_pack  = { stat="cell",   give=100,prob=70 },
 
-  potion   = { stat="health", give=1,  prob=20 },
-  stimpack = { stat="health", give=10, prob=30 },
-  medikit  = { stat="health", give=25, prob=x0 },
-  soul     = { stat="health", give=100,prob=10, limit=200 },
+  potion   = { stat="health", give=1,  prob=30 },
+  stimpack = { stat="health", give=10, prob=40 },
+  medikit  = { stat="health", give=25, prob=70 },
+  soul     = { stat="health", give=100,prob=15, limit=200 },
 
   -- BERSERK and MEGA are quest items
 
