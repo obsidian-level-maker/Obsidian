@@ -70,22 +70,22 @@ function show_dm_links(p)
 end
 
 
-function choose_dm_thing(p, LIST, adjusted)
+function choose_dm_thing(LIST, adjusted)
   local wp_names = {}
   local wp_probs = {}
 
   for name,prob in pairs(LIST) do
-    local used_count = p.used_items[name] or 0
+    local used_count = PLAN.used_items[name] or 0
 
     table.insert(wp_names, name)
-    table.insert(wp_probs, prob / (1.5 + sel(adjusted,used_count,0)))
+    table.insert(wp_probs, prob / (1.4 + sel(adjusted,used_count,0)))
   end
 
   local idx = rand_index_by_probs(wp_probs)
   local name = wp_names[idx]
 
   -- increase usage count
-  p.used_items[name] = (p.used_items[name] or 0) + 1
+  PLAN.used_items[name] = (PLAN.used_items[name] or 0) + 1
   return name
 end
 

@@ -1804,7 +1804,7 @@ io.stdout:write(string.format(
     -- guarantee at least one weapon (central cell)
     if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(70) then
       local spot = get_spot()
-      if spot then spot.K.dm_weapon = choose_dm_thing(p, THEME.dm.weapons, true) end
+      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
     end
 
     -- secondary players and weapons
@@ -1814,7 +1814,7 @@ io.stdout:write(string.format(
     end
     if rand_odds(15) then
       local spot = get_spot()
-      if spot then spot.K.dm_weapon = choose_dm_thing(p, THEME.dm.weapons, true) end
+      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
     end
 
     -- from here on we REUSE the spots --
@@ -1824,27 +1824,27 @@ io.stdout:write(string.format(
     -- health, ammo and items
     if rand_odds(70) then
       local spot = reusable_spot()
-      spot.K.dm_health = choose_dm_thing(p, THEME.dm.health, false)
+      spot.K.dm_health = choose_dm_thing(THEME.dm.health, false)
     end
 
     if rand_odds(90) then
       local spot = reusable_spot()
-      spot.K.dm_ammo = choose_dm_thing(p, THEME.dm.ammo, true)
+      spot.K.dm_ammo = choose_dm_thing(THEME.dm.ammo, true)
     end
  
     if rand_odds(10) then
       local spot = reusable_spot()
-      spot.K.dm_item = choose_dm_thing(p, THEME.dm.items, true)
+      spot.K.dm_item = choose_dm_thing(THEME.dm.items, true)
     end
 
     -- secondary health and ammo
     if rand_odds(10) then
       local spot = reusable_spot()
-      spot.K.dm_health = choose_dm_thing(p, THEME.dm.health, false)
+      spot.K.dm_health = choose_dm_thing(THEME.dm.health, false)
     end
     if rand_odds(30) then
       local spot = reusable_spot()
-      spot.K.dm_ammo = choose_dm_thing(p, THEME.dm.ammo, true)
+      spot.K.dm_ammo = choose_dm_thing(THEME.dm.ammo, true)
     end
   end
 
