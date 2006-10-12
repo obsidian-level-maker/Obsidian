@@ -249,8 +249,25 @@ HXN_THING_NUMS =
   ar_helmet = 8007,
   ar_amulet = 8008,
 
+  h_vial  = 81,
+  h_flask = 82,
+  h_urn   = 32,
 
-  
+  wings = 83,
+  chaos = 36,
+  torch = 33,
+
+  banish    = 10040,
+  boots     = 8002,
+  bracer    = 8041,
+  repulser  = 8000,
+  flechette = 10110,
+  servant   = 86, 
+  porkies   = 30,
+  incant    = 10120,
+  defender  = 84,
+  krater    = 8003,
+
   --- scenery ---
   candle = 119,
   blue_candle = 8066,
