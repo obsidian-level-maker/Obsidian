@@ -29,3 +29,7 @@ BORDER_BLK = 5  -- number of spare blocks around plan
 
 SKILLS = { "easy", "medium", "hard" }
 
+PLAN = {}
+
+THEME = {}
+

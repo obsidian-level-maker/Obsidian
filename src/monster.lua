@@ -17,53 +17,6 @@
 ----------------------------------------------------------------
 
 
--- Monster list
--- ============
---
--- r : radius
--- h : height
--- t : toughness (health)
--- dm : damage can inflict per second (rough approx)
--- fp : firepower needed by player
-
-MONSTER_DEFS =
-{
-  -- FIXME: probs for CLOSET/DEPOT
-  zombie    = { prob=81, r=20,h=56, t=20,  dm=4,  fp=10, cage_prob=10, hitscan=true, },
-  shooter   = { prob=41, r=20,h=56, t=30,  dm=10, fp=10, cage_prob= 5, hitscan=true, },
-  gunner    = { prob=17, r=20,h=56, t=70,  dm=40, fp=40, cage_prob=70, hitscan=true, },
-
-  imp       = { prob=90, r=20,h=56, t=60,  dm=20, fp=20, cage_prob=90, },
-  caco      = { prob=90, r=31,h=56, t=400, dm=45, fp=30, cage_prob=14, float=true },
-  revenant  = { prob=70, r=20,h=64, t=300, dm=55, fp=48, cage_prob=50, },
-  knight    = { prob=70, r=24,h=64, t=500, dm=45, fp=60, cage_prob=50, },
-  baron     = { prob=50, r=24,h=64, t=1000,dm=45, fp=110,cage_prob= 2, },
-
-  mancubus  = { prob=70, r=48,h=64, t=600, dm=80, fp=110,cage_prob=70, },
-  arach     = { prob=26, r=64,h=64, t=500, dm=70, fp=90, cage_prob=90, },
-  pain      = { prob= 8, r=31,h=56, t=400, dm=88, fp=40, cage_prob= 0, float=true },
-  vile      = { prob=10, r=20,h=56, t=700, dm=30, fp=120,cage_prob=14, hitscan=true },
-
-  -- MELEE only monsters
-  demon     = { prob=80, r=30,h=56, t=150, dm=25, fp=30, cage_prob=140,melee=true },
-  spectre   = { prob=15, r=30,h=56, t=150, dm=25, fp=30, cage_prob=40, melee=true },
-  skull     = { prob=20, r=16,h=56, t=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
-
-  -- special monsters (only for boss levels)
-  cyber     = { prob=0, r=40,  h=110,t=4000,dm=150, fp=150 },
-  spider    = { prob=0, r=128, h=100,t=3000,dm=200, fp=240, hitscan=true },
-}
-
-MONSTER_GIVE =
-{
-  zombie   = { { ammo="bullet", give=10 } },
-  shooter  = { { weapon="shotty" } },
-  gunner   = { { weapon="chain" } }
-}
-
-
-------------------------------------------------------------
-
 -- Weapon list
 -- ===========
 --
@@ -74,18 +27,18 @@ MONSTER_GIVE =
 
 WEAPON_DEFS =
 {
-  pistol = {            ammo="bullet",         per=1, rate=1.8, dm=10 , freq=10 },
-  shotty = { kind=2001, ammo="shell",  give=8, per=1, rate=0.9, dm=70 , freq=81 },
-  super  = { kind=  82, ammo="shell",  give=8, per=2, rate=0.6, dm=200, freq=50 },
-  chain  = { kind=2002, ammo="bullet", give=20,per=1, rate=8.5, dm=10 , freq=91 },
+  pistol = { ammo="bullet",         per=1, rate=1.8, dm=10 , freq=10 },
+  shotty = { ammo="shell",  give=8, per=1, rate=0.9, dm=70 , freq=81 },
+  super  = { ammo="shell",  give=8, per=2, rate=0.6, dm=200, freq=50 },
+  chain  = { ammo="bullet", give=20,per=1, rate=8.5, dm=10 , freq=91 },
 
-  launch = { kind=2003, ammo="rocket", give=2, per=1, rate=1.7, dm=90,  freq=50, dangerous=true },
-  plasma = { kind=2004, ammo="cell",   give=40,per=1, rate=11,  dm=22 , freq=80 },
-  bfg    = { kind=2006, ammo="cell",   give=40,per=40,rate=0.8, dm=450, freq=30 },
+  launch = { ammo="rocket", give=2, per=1, rate=1.7, dm=90,  freq=50, dangerous=true },
+  plasma = { ammo="cell",   give=40,per=1, rate=11,  dm=22 , freq=80 },
+  bfg    = { ammo="cell",   give=40,per=40,rate=0.8, dm=450, freq=30 },
 
   -- MELEE weapons
-  fist   = {            melee=true, rate=1.5, dm=10, freq=1 },
-  saw    = { kind=2005, melee=true, rate=8.7, dm=10, freq=3 }
+  fist   = { melee=true, rate=1.5, dm=10, freq=1 },
+  saw    = { melee=true, rate=8.7, dm=10, freq=3 }
 }
 
 -- sometimes a certain weapon is preferred against a certain monster.
@@ -117,43 +70,43 @@ AMMO_LIMITS =  -- double these for backpack
 
 BULLET_THINGS =
 {
-  bullets    = { kind=2007, ammo="bullet", give=10, prob=10 },
-  bullet_box = { kind=2048, ammo="bullet", give=50 },
+  bullets    = { ammo="bullet", give=10, prob=10 },
+  bullet_box = { ammo="bullet", give=50 },
 }
 
 SHELL_THINGS =
 {
-  shells     = { kind=2008, ammo="shell",  give= 4, prob=20 },
-  shell_box  = { kind=2049, ammo="shell",  give=20 },
+  shells     = { ammo="shell",  give= 4, prob=20 },
+  shell_box  = { ammo="shell",  give=20 },
 }
 
 ROCKET_THINGS =
 {
-  rockets    = { kind=2010, ammo="rocket", give= 1, prob=10 },
-  rocket_box = { kind=2046, ammo="rocket", give= 5 },
+  rockets    = { ammo="rocket", give= 1, prob=10 },
+  rocket_box = { ammo="rocket", give= 5 },
 }
 
 CELL_THINGS =
 {
-  cells      = { kind=2047, ammo="cell",   give=20, prob=20 },
-  cell_pack  = { kind=  17, ammo="cell",   give=100 },
+  cells      = { ammo="cell",   give=20, prob=20 },
+  cell_pack  = { ammo="cell",   give=100 },
 }
 
 HEALTH_THINGS =
 {
-  potion   = { kind=2014, give=1,  prob=20 },
-  stimpack = { kind=2011, give=10, prob=30 },
-  medikit  = { kind=2012, give=25, prob=50 },
-  soul     = { kind=2013, give=100, limit=200, prob=10 }
+  potion   = { give=1,  prob=20 },
+  stimpack = { give=10, prob=30 },
+  medikit  = { give=25, prob=50 },
+  soul     = { give=100, limit=200, prob=10 }
 
   -- BERSERK and MEGA are quest items
 }
 
 ARMOR_THINGS =
 {
-  helmet      = { kind=2015, give=   1, limit=200 },
-  green_armor = { kind=2018, give= 100, limit=100 },
-  blue_armor  = { kind=2019, give= 200, limit=200 }
+  helmet      = { give=   1, limit=200 },
+  green_armor = { give= 100, limit=100 },
+  blue_armor  = { give= 200, limit=200 }
 
   -- BLUE ARMOR is a quest item
 }
@@ -216,7 +169,7 @@ function compute_pow_factors()
     return 5 + 19 * info.t ^ 0.5 * (info.dm / 50) ^ 1.2
   end
 
-  for name,info in pairs(MONSTER_DEFS) do
+  for name,info in pairs(THEME.monsters) do
     info.pow = pow_factor(info)
   end
 end
@@ -224,7 +177,7 @@ end
 
 function add_thing(p, c, bx, by, name, blocking, angle, options)
 
-  local kind = DM_THING_NUMS[name]
+  local kind = THEME.thing_nums[name]
   assert(kind)
 
 --[[
@@ -443,16 +396,17 @@ function simulate_battle(p, HM, mon_set, quest)
   end
 
   local function give_monster_stuff(AC)
+    if not THEME.mon_give then return end
     if AC.caged then return end
 
-    local stuff = MONSTER_GIVE[AC.name]
+    local stuff = THEME.mon_give[AC.name]
     if not stuff then return end
 
     for zzz,item in ipairs(stuff) do
       if item.weapon then
         hm_give_weapon(HM, item.weapon, 0.5) -- dropped
       elseif item.ammo then
-        HM[item.ammo] = HM[item.ammo] + item.give
+        HM[item.ammo] = HM[item.ammo] + item.give * 0.5
       else
         error("UKNOWN ITEM GIVEN BY " .. AC.name)
       end
@@ -616,7 +570,7 @@ zprint(active_mon, #active_mon, active_mon[1])
 
     local function mon_hurts_mon(m1, m2)
       if m1 == m2 then
-        return MONSTER_DEFS[m1].hitscan and (m1 ~= "vile")
+        return THEME.monsters[m1].hitscan and (m1 ~= "vile")
       end
 
       if (m1 == "knight" and m2 == "baron") or
@@ -1095,7 +1049,7 @@ function place_battle_stuff(p, c)
     -- perform two passes, place big monsters first
     for pass = 1,2 do
       for zzz, dat in ipairs(mons) do
-        local info = MONSTER_DEFS[dat.name]
+        local info = THEME.monsters[dat.name]
         if (pass==1) == (info.r >= 32) then
           place_monster(spots, dat)
         end
@@ -1227,7 +1181,7 @@ function battle_in_cell(p, c)
     local names = { "none" }
     local probs = { 30     }
 
-    for name,info in pairs(MONSTER_DEFS) do
+    for name,info in pairs(THEME.monsters) do
       if (info.pow < T*2) and (info.fp < firepower*2) then
 
         local prob = info.prob
@@ -1250,7 +1204,7 @@ function battle_in_cell(p, c)
 
     if name == "none" then return name, 0 end
 
-    local info = MONSTER_DEFS[name]
+    local info = THEME.monsters[name]
     assert(info)
 
     local horde = 1
@@ -1277,7 +1231,7 @@ function battle_in_cell(p, c)
       if name == "none" then
         T = T-20; U = U+20
       else
-        local info = MONSTER_DEFS[name]
+        local info = THEME.monsters[name]
         table.insert(c.mon_set[SK], { name=name, horde=horde, info=info })
         T = T - horde * info.pow
       end
@@ -1289,7 +1243,7 @@ function battle_in_cell(p, c)
     local names = {}
     local probs = {}
 
-    for name,info in pairs(MONSTER_DEFS) do
+    for name,info in pairs(THEME.monsters) do
       if (info.dm < 10) or 
          ((info.pow * x_horde < T*2) and (info.fp < firepower*2))
       then
@@ -1308,7 +1262,7 @@ function battle_in_cell(p, c)
     assert(#probs > 0)
 
     local idx = rand_index_by_probs(probs)
-    local info = MONSTER_DEFS[names[idx]]
+    local info = THEME.monsters[names[idx]]
     assert(info)
 
     local horde = 1
@@ -1342,7 +1296,7 @@ function battle_in_cell(p, c)
         m_name, m_horde = decide_cage_monster(fp, sel(spot.double,2,1), spot.double, spot.double)
       end
 
-      local m_info = MONSTER_DEFS[m_name]
+      local m_info = THEME.monsters[m_name]
       assert(m_info)
 
       for i = 1,m_horde do
@@ -1390,7 +1344,7 @@ function battle_in_cell(p, c)
 
         local allow_big = not surp.depot_cell and spot.double
         local m_name, m_horde = decide_cage_monster(fp, 1, allow_big, spot.double, true)
-        local m_info = MONSTER_DEFS[m_name]
+        local m_info = THEME.monsters[m_name]
         assert(m_info)
 
         for i = 1,m_horde do

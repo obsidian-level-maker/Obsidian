@@ -16,6 +16,7 @@
 --
 ----------------------------------------------------------------
 
+require 'defs'
 require 'planner'
 require 'plan_dm'
 require 'builder'
@@ -51,15 +52,36 @@ function get_level_names(settings)
 end
 
 
+function create_theme()
+
+  if settings.game == "doom1" then
+    THEME = create_doom1_theme()
+
+  elseif settings.game == "doom2" then
+    THEME = create_doom2_theme()
+
+  elseif settings.game == "heretic" then
+    THEME = create_heretic_theme()
+
+  elseif settings.game == "hexen" then
+    THEME = create_hexen_theme()
+
+  else
+    error("UNKNOWN GAME '" .. settings.game .. "'")
+  end
+
+  compute_pow_factors()
+end
+
+
 function build_cool_shit()
 
   assert(settings)
 --dump_table(settings, "settings"); do return end
 
-  compute_pow_factors()
+con.printf("\nSEED = %d\n\n", settings.seed)
 
---!!  con.printf("\nSEED = %d\n\n", settings.seed)
-print("\nSEED = ", settings.seed, "\n\n")
+  create_theme()
 
   local LEVELS = get_level_names(settings)
 
@@ -69,8 +91,6 @@ print("\nSEED = ", settings.seed, "\n\n")
 
     con.rand_seed(settings.seed * 100 + idx)
  
-    local PLAN
-
     if settings.mode == "dm" then
       PLAN = plan_dm_arena()
     elseif settings.mode == "coop" then

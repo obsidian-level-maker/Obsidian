@@ -326,3 +326,14 @@ HXN_THING_NUMS =
   snd_metal2 = 1409,
 }
 
+
+------------------------------------------------------------
+
+function create_hexen_theme()
+  local T = {}
+
+  T.thing_nums = HXN_THING_NUMS;
+
+  return T
+end
+

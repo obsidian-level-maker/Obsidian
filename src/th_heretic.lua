@@ -289,8 +289,8 @@ HC_THING_NUMS =
 HC_MONSTERS =
 {
   -- FIXME: dm and fp values are CRAP
-  gargoyle    = { prob=30, r=16,h=36, hp=20,  dm= 7, fp=10, melee=true },
-  fire_garg   = { prob=20, r=16,h=36, hp=80,  dm=21, fp=30, },
+  gargoyle    = { prob=30, r=16,h=36, hp=20,  dm= 7, fp=10, float=true, melee=true },
+  fire_garg   = { prob=20, r=16,h=36, hp=80,  dm=21, fp=30, float=true },
   golem       = { prob=90, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
   golem_inv   = { prob=20, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
 
@@ -299,13 +299,24 @@ HC_MONSTERS =
   warrior     = { prob=70, r=24,h=80, hp=200, dm=15, fp=50, },
   warrior_inv = { prob=20, r=24,h=80, hp=200, dm=15, fp=50, },
 
-  disciple    = { prob=25, r=16,h=72, hp=180, dm=30, fp=90, },
+  disciple    = { prob=25, r=16,h=72, hp=180, dm=30, fp=90, float=true },
   sabreclaw   = { prob=25, r=20,h=64, hp=150, dm=30, fp=90, melee=true },
   weredragon  = { prob=20, r=34,h=80, hp=220, dm=50, fp=90, },
   ophidian    = { prob=20, r=22,h=72, hp=280, dm=50, fp=90, },
 
-  ironlich    = { prob= 4, r=40,h=72, hp=700, dm=99, fp=200, },
+  ironlich    = { prob= 4, r=40,h=72, hp=700, dm=99, fp=200, float=true },
   maulotaur   = { prob= 0, r=28,h=104,hp=3000,dm=99, fp=200, },
   d_sparil    = { prob= 0, r=28,h=104,hp=2000,dm=99, fp=200, },
 }
+
+
+------------------------------------------------------------
+
+function create_heretic_theme()
+  local T = {}
+
+  T.thing_nums = HC_THING_NUMS;
+
+  return T
+end
 
