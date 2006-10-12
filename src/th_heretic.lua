@@ -249,6 +249,8 @@ HC_THING_NUMS =
   barrel = 44,
   small_pillar = 29,
   brown_pillar = 47,
+  pod = 2035,
+  glitter = 74,
 
   blue_statue = 94,
   green_statue = 95,
@@ -256,10 +258,11 @@ HC_THING_NUMS =
 
   moss1 = 48,
   moss2 = 49,
-  small_stal_F = 37,
-  small_stal_C = 39,
-  big_stal_F = 38,
-  big_stal_C = 40,
+  stal_small_F = 37,
+  stal_small_C = 39,
+  stal_big_F = 38,
+  stal_big_C = 40,
+  volcano = 87,
 
   hang_corpse = 51,
   hang_skull_1 = 17,

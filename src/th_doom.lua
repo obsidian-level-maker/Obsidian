@@ -87,7 +87,7 @@ TH_MARBLE =
   floor = "GRNROCK",
   ceil = "RROCK04",
 
-  scenery = "red_column",
+  scenery = "red_column_skl",
 
   bad_liquid = "nukage",
   good_liquid = "blood",
@@ -223,7 +223,7 @@ TH_GRAY =
   ceil = "FLAT1",
 --  lift_flat = "FLOOR4_8",
 
-  scenery = "green_column",
+  scenery = "green_column_hrt",
 }
 
 
@@ -625,11 +625,16 @@ DM_THING_NUMS =
 
   cyber     = 16,
   spider    = 7,
+  keen      = 72,
 
   --- pickups ---
-  k_red    = 38,
-  k_blue   = 40,
-  k_yellow = 39,
+  k_red     = 38,
+  k_yellow  = 39,
+  k_blue    = 40,
+
+  kc_blue   = 5,
+  kc_yellow = 6,
+  kc_red    = 13,
 
   shotty = 2001,
   super  =   82,
@@ -667,24 +672,69 @@ DM_THING_NUMS =
   cell_pack  =   17,
 
   --- scenery ---
-  green_column = 36,
-  red_column = 37,
-  tech_column = 48,
   lamp = 2028,
-
-  blue_torch = 44,
-  green_torch = 45,
-  red_torch = 46,
-
-  candelabra = 35,
   mercury_lamp = 85, 
+  short_lamp = 86,
+  tech_column = 48,
+
   barrel = 2035,
+  candle = 34,  -- non-blocking
+  candelabra = 35,
   burning_barrel = 70,
 
-  skull_pole = 27,
-  skull_rock = 42,
+  blue_torch     = 44,
+  blue_torch_sm  = 55,
+  green_torch    = 45,
+  green_torch_sm = 56,
+  red_torch      = 46,
+  red_torch_sm   = 57,
+
+  green_pillar = 30,
+  green_column = 31,
+  green_column_hrt = 36,
+
+  red_pillar = 32,
+  red_column = 33,
+  red_column_skl = 37,
+
   brown_stub = 47,
   burnt_tree = 43,
   big_tree = 54,  
+
+  evil_eye    = 41,
+  skull_rock  = 42,
+  skull_pole  = 27,
+  skull_kebab = 28,
+  skull_cairn = 29,
+
+  impaled_human  = 25,
+  impaled_twitch = 26,
+
+  gutted_victim1 = 73,
+  gutted_victim2 = 74,
+  gutted_torso1  = 75,
+  gutted_torso2  = 76,
+  gutted_torso3  = 77,
+  gutted_torso4  = 78,
+
+  -- all the rest are non-blocking
+  hang_twitching = 63,
+  hang_arm_pair  = 59,
+  hang_leg_pair  = 60,
+  hang_leg_gone  = 61,
+  hang_leg       = 62,
+
+  gibs = 24,
+  gibbed_player = 10,
+  pool_blood_1 = 79,
+  pool_blood_2 = 80,
+  pool_brains  = 81,
+
+  dead_player  = 15,
+  dead_zombie  = 18,
+  dead_shooter = 19,
+  dead_imp     = 20,
+  dead_demon   = 21,
+  dead_caco    = 23,
 }
 
