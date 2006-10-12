@@ -16,9 +16,6 @@
 --
 ----------------------------------------------------------------
 
-ERROR_TEX  = "ABADONE"
-ERROR_FLAT = "F_033"
-
 ---- INDOOR ------------
 
 TH_EXITROOM =
@@ -178,7 +175,7 @@ EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
 
 ------------------------------------------------------------
 
-HXN_THING_NUMS =
+HX_THING_NUMS =
 {
   --- special stuff ---
   player1 = 1,
@@ -332,7 +329,11 @@ HXN_THING_NUMS =
 function create_hexen_theme()
   local T = {}
 
-  T.thing_nums = HXN_THING_NUMS;
+  T.thing_nums = HX_THING_NUMS;
+
+  T.ERROR_TEX  = "ABADONE"
+  T.ERROR_FLAT = "F_033"
+  T.SKY_TEX    = "F_SKY"
 
   return T
 end

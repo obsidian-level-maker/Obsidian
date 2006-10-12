@@ -16,9 +16,6 @@
 --
 ----------------------------------------------------------------
 
-ERROR_TEX  = "DRIPWALL"
-ERROR_FLAT = "FLOOR09"
-
 ---- INDOOR ------------
 
 TH_EXITROOM =
@@ -316,6 +313,10 @@ function create_heretic_theme()
   local T = {}
 
   T.thing_nums = HC_THING_NUMS;
+
+  T.ERROR_TEX  = "DRIPWALL"
+  T.ERROR_FLAT = "FLOOR09"
+  T.SKY_TEX    = "F_SKY1"
 
   return T
 end
