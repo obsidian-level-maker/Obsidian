@@ -205,7 +205,7 @@ HC_THING_NUMS =
   claw       = 53,
   hellstaff  = 2004,
   phoenix    = 2003,
-  mace       = 2002,
+  firemace   = 2002,
 
   crystal    = 10,
   geode      = 12,
@@ -285,7 +285,7 @@ HC_THING_NUMS =
 
 HC_MONSTERS =
 {
-  -- FIXME: dm and fp values are CRAP
+  -- FIXME: dm and fp values are CRAP!
   gargoyle    = { prob=30, r=16,h=36, hp=20,  dm= 7, fp=10, float=true, melee=true },
   fire_garg   = { prob=20, r=16,h=36, hp=80,  dm=21, fp=30, float=true },
   golem       = { prob=90, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
@@ -306,17 +306,63 @@ HC_MONSTERS =
   d_sparil    = { prob= 0, r=28,h=104,hp=2000,dm=99, fp=200, },
 }
 
+HC_WEAPONS =
+{
+  -- FIXME: all these stats are CRAP!
+  staff      = { melee=true, rate=3.0, dm=10 , freq= 2, held=true },
+  gauntlets  = { melee=true, rate=6.0, dm=50 , freq= 8 },
+
+  wand       = { ammo="crystal",           per=1, rate=1.1, dm=10, freq=15, held=true },
+  crossbow   = { ammo="arrow",     give=4, per=1, rate=1.1, dm=30, freq=90 },
+  claw       = { ammo="claw_orb",  give=4, per=1, rate=1.1, dm=50, freq=50 },
+  hellstaff  = { ammo="runes",     give=4, per=1, rate=1.1, dm=60, freq=50 },
+  phoenix    = { ammo="flame_orb", give=4, per=1, rate=1.1, dm=70, freq=50 },
+  firemace   = { ammo="mace_orb",  give=4, per=1, rate=1.1, dm=90, freq=25 },
+}
+
+HC_PICKUPS =
+{
+  -- FIXME: the ammo 'give' numbers are CRAP!
+  crystal = { stat="crystal", give=5,  },
+  geode   = { stat="crystal", give=20, },
+  arrows  = { stat="arrow",   give=5,  },
+  quiver  = { stat="arrow",   give=20, },
+
+  claw_orb1 = { stat="claw_orb", give=5,  },
+  claw_orb2 = { stat="claw_orb", give=20, },
+  runes1    = { stat="runes",    give=5,  },
+  runes2    = { stat="runes",    give=20, },
+
+  flame_orb1 = { stat="flame_orb", give=5,  },
+  flame_orb2 = { stat="flame_orb", give=20, },
+  mace_orbs  = { stat="mace_orb",  give=5,  },
+  mace_pile  = { stat="mace_orb",  give=20, },
+
+  h_vial  = { stat="health", give=10,  prob=70 },
+  h_flask = { stat="health", give=25,  prob=25 },
+  h_urn   = { stat="health", give=100, prob=5  },
+
+  shield1 = { stat="armor", give=100, prob=70 },
+  shield2 = { stat="armor", give=200, prob=10 },
+}
+
 
 ------------------------------------------------------------
 
 function create_heretic_theme()
-  local T = {}
-
-  T.thing_nums = HC_THING_NUMS;
+  local T = { dm={} }
 
   T.ERROR_TEX  = "DRIPWALL"
   T.ERROR_FLAT = "FLOOR09"
   T.SKY_TEX    = "F_SKY1"
+
+  T.thing_nums = HC_THING_NUMS
+  T.monsters   = HC_MONSTERS
+  T.weapons    = HC_WEAPONS
+
+  T.pickups = HC_PICKUPS
+  T.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
+                     "runes", "flame_orb", "mace_orb" }
 
   return T
 end
