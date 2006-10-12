@@ -672,7 +672,7 @@ function B_wall_switch(p,c, x,y,z, side, info, kind, tag)
     f_h = z,
     c_h = z + 64,
     f_tex = c.theme.floor,
-    c_tex = c.theme.floor, -- F_SKY1 is no good
+    c_tex = c.theme.floor, -- SKY is no good
     light = 224,
 
     l_tex = c.theme.wall,
@@ -802,7 +802,7 @@ function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
     f_h = z1,
     c_h = z2,
     f_tex = c.theme.floor,
-    c_tex = c.theme.floor, -- F_SKY1 is no good
+    c_tex = c.theme.floor, -- SKY is no good
     light = c.light,
 
     l_tex = c.theme.wall,
@@ -1796,15 +1796,15 @@ io.stdout:write(string.format(
     rand_shuffle(spots)
 
     -- guarantee at least 4 players (each corner)
-    if (c.x==1) or (c.x==p.w) or (c.y==1) or (c.y==p.h) or rand_odds(75) then
+    if (c.x==1) or (c.x==p.w) or (c.y==1) or (c.y==p.h) or rand_odds(66) then
       local spot = get_spot()
       if spot then spot.K.player = true end
     end
 
     -- guarantee at least one weapon (central cell)
-    if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(80) then
+    if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(70) then
       local spot = get_spot()
-      if spot then spot.K.dm_weapon = choose_dm_thing(p, DM_WEAPON_LIST, true) end
+      if spot then spot.K.dm_weapon = choose_dm_thing(p, THEME.dm.weapons, true) end
     end
 
     -- secondary players and weapons
@@ -1812,9 +1812,9 @@ io.stdout:write(string.format(
       local spot = get_spot()
       if spot then spot.K.player = true end
     end
-    if rand_odds(25) then
+    if rand_odds(15) then
       local spot = get_spot()
-      if spot then spot.K.dm_weapon = choose_dm_thing(p, DM_WEAPON_LIST, true) end
+      if spot then spot.K.dm_weapon = choose_dm_thing(p, THEME.dm.weapons, true) end
     end
 
     -- from here on we REUSE the spots --
@@ -1824,27 +1824,27 @@ io.stdout:write(string.format(
     -- health, ammo and items
     if rand_odds(70) then
       local spot = reusable_spot()
-      spot.K.dm_health = choose_dm_thing(p, DM_HEALTH_LIST, false)
+      spot.K.dm_health = choose_dm_thing(p, THEME.dm.health, false)
     end
 
     if rand_odds(90) then
       local spot = reusable_spot()
-      spot.K.dm_ammo = choose_dm_thing(p, DM_AMMO_LIST, true)
+      spot.K.dm_ammo = choose_dm_thing(p, THEME.dm.ammo, true)
     end
  
     if rand_odds(10) then
       local spot = reusable_spot()
-      spot.K.dm_item = choose_dm_thing(p, DM_ITEM_LIST, true)
+      spot.K.dm_item = choose_dm_thing(p, THEME.dm.items, true)
     end
 
     -- secondary health and ammo
     if rand_odds(10) then
       local spot = reusable_spot()
-      spot.K.dm_health = choose_dm_thing(p, DM_HEALTH_LIST, false)
+      spot.K.dm_health = choose_dm_thing(p, THEME.dm.health, false)
     end
     if rand_odds(30) then
       local spot = reusable_spot()
-      spot.K.dm_ammo = choose_dm_thing(p, DM_AMMO_LIST, true)
+      spot.K.dm_ammo = choose_dm_thing(p, THEME.dm.ammo, true)
     end
   end
 
@@ -2713,7 +2713,8 @@ end
     local function add_dm_pickup(c, bx,by, name)
       -- FIXME: (a) check if middle blocked, (b) good patterns
 
-      local cluster = CLUSTER_THINGS[name] or 1
+      local cluster = 1
+      if THEME.dm.cluster then cluster = THEME.dm.cluster[name] or 1 end
       assert(cluster >= 1 and cluster <= 8)
 
       local offsets = { 1,2,3,4, 6,7,8,9 }

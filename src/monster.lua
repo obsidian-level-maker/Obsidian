@@ -17,49 +17,7 @@
 ----------------------------------------------------------------
 
 
--- Weapon list
--- ===========
---
--- per  : ammo per shot
--- rate : firing rate (shots per second)
--- dm   : damage can inflict per shot
--- freq : usage frequency (in the ideal)
-
-WEAPON_DEFS =
-{
-  pistol = { ammo="bullet",         per=1, rate=1.8, dm=10 , freq=10 },
-  shotty = { ammo="shell",  give=8, per=1, rate=0.9, dm=70 , freq=81 },
-  super  = { ammo="shell",  give=8, per=2, rate=0.6, dm=200, freq=50 },
-  chain  = { ammo="bullet", give=20,per=1, rate=8.5, dm=10 , freq=91 },
-
-  launch = { ammo="rocket", give=2, per=1, rate=1.7, dm=90,  freq=50, dangerous=true },
-  plasma = { ammo="cell",   give=40,per=1, rate=11,  dm=22 , freq=80 },
-  bfg    = { ammo="cell",   give=40,per=40,rate=0.8, dm=450, freq=30 },
-
-  -- MELEE weapons
-  fist   = { melee=true, rate=1.5, dm=10, freq=1 },
-  saw    = { melee=true, rate=8.7, dm=10, freq=3 }
-}
-
--- sometimes a certain weapon is preferred against a certain monster.
--- These values are multiplied with the weapon's "freq" field.
-
-MONSTER_WEAPON_PREFS =
-{
-  zombie  = { shotty=5.0 },
-  shooter = { shotty=5.0 },
-  imp     = { shotty=5.0 },
-  demon   = { super=3.0 },
-  spectre = { super=3.0 },
-
-  pain    = { launch=0.1 },
-  skull   = { launch=0.1 },
-
-  cyber   = { launch=3.0, bfg=6.0 },
-  spider  = { bfg=9.0 },
-}
-
-
+-- FIXME: some kind of "inventory" info
 AMMO_LIMITS =  -- double these for backpack
 {
   bullet = 200, 
@@ -67,77 +25,6 @@ AMMO_LIMITS =  -- double these for backpack
   rocket = 50,
   cell   = 300
 }
-
-BULLET_THINGS =
-{
-  bullets    = { ammo="bullet", give=10, prob=10 },
-  bullet_box = { ammo="bullet", give=50 },
-}
-
-SHELL_THINGS =
-{
-  shells     = { ammo="shell",  give= 4, prob=20 },
-  shell_box  = { ammo="shell",  give=20 },
-}
-
-ROCKET_THINGS =
-{
-  rockets    = { ammo="rocket", give= 1, prob=10 },
-  rocket_box = { ammo="rocket", give= 5 },
-}
-
-CELL_THINGS =
-{
-  cells      = { ammo="cell",   give=20, prob=20 },
-  cell_pack  = { ammo="cell",   give=100 },
-}
-
-HEALTH_THINGS =
-{
-  potion   = { give=1,  prob=20 },
-  stimpack = { give=10, prob=30 },
-  medikit  = { give=25, prob=50 },
-  soul     = { give=100, limit=200, prob=10 }
-
-  -- BERSERK and MEGA are quest items
-}
-
-ARMOR_THINGS =
-{
-  helmet      = { give=   1, limit=200 },
-  green_armor = { give= 100, limit=100 },
-  blue_armor  = { give= 200, limit=200 }
-
-  -- BLUE ARMOR is a quest item
-}
-
-PICKUP_MAP =
-{
-  health = HEALTH_THINGS,
-
-  bullet = BULLET_THINGS,
-  shell  = SHELL_THINGS,
-  rocket = ROCKET_THINGS,
-  cell   = CELL_THINGS,
-
-  -- Note: armor is handled with special code, since
-  --       BLUE ARMOR is a quest item.
-  --
-  -- Note 2: the BACKPACK is a quest item
-}
-
-
-CLUSTER_THINGS =
-{
-  potion = 8,
-  helmet = 8,
-  stimpack = 2,
-
-  bullets = 3,
-  shells  = 2,
-  rocket  = 4,
-}
-
 
 ------------------------------------------------------------
 
@@ -275,7 +162,7 @@ function hm_give_weapon(HM, weapon, ammo_mul)
 
   HM[weapon] = true
 
-  local info = WEAPON_DEFS[weapon]
+  local info = THEME.weapons[weapon]
   assert(info)
 
   if info.ammo then
@@ -463,7 +350,7 @@ function simulate_battle(p, HM, mon_set, quest)
       --[[ DISABLED -- provides better ammo 
       local wp
 
-      for name,info in pairs(WEAPON_DEFS) do
+      for name,info in pairs(THEME.weapons) do
         if HM[name] and info.ammo and HM[info.ammo] > 0 then
 
           if not wp or firepower(wp) < firepower(name) then
@@ -483,12 +370,13 @@ function simulate_battle(p, HM, mon_set, quest)
       assert(first_mon)
 
       -- preferred weapon based on monster
-      local MW_prefs = MONSTER_WEAPON_PREFS[first_mon]
-      
+      local MW_prefs
+      if THEME.mon_weap_prefs then MW_prefs = THEME.mon_weap_prefs[first_mon] end
+
       local names = {}
       local probs = {}
       
-      for name,info in pairs(WEAPON_DEFS) do
+      for name,info in pairs(THEME.weapons) do
         if HM[name] then
           local freq = info.freq
           freq = freq * (MW_prefs and MW_prefs[name] or 1.0)
@@ -504,7 +392,7 @@ function simulate_battle(p, HM, mon_set, quest)
       local idx = rand_index_by_probs(probs)
 
       local wp = names[idx]
-      local info = WEAPON_DEFS[wp]
+      local info = THEME.weapons[wp]
       assert(info)
 
       remain_shots = 1 + con.random() + con.random()
@@ -557,7 +445,7 @@ zprint(active_mon, #active_mon, active_mon[1])
 
     cur_weap = select_weapon()
 
-    local info = WEAPON_DEFS[cur_weap]
+    local info = THEME.weapons[cur_weap]
     assert(info)
 
     shoot_weapon(cur_weap, info)
@@ -750,17 +638,17 @@ function distribute_pickups(p, c, HM)
     if c.along == #c.quest.path then return end
 
     if not HM.shotty and rand_odds(66) then
-      add_pickup(c, "shotty", WEAPON_DEFS.shotty, 1)
+      add_pickup(c, "shotty", THEME.weapons.shotty, 1)
       hm_give_weapon(HM, "shotty")
     end
 
     if not HM.chain and c.quest.level >= 3 and rand_odds(11) then
-      add_pickup(c, "chain", WEAPON_DEFS.chain, 1)
+      add_pickup(c, "chain", THEME.weapons.chain, 1)
       hm_give_weapon(HM, "chain")
     end
 
     if HM.armor <= 0 and rand_odds(2) then
-      add_pickup(c, "green_armor", ARMOR_THINGS.green_armor, 1)
+      add_pickup(c, "green_armor", THEME.pickups.green_armor, 1)
       hm_give_armor(HM, 100, 100)
     end
   end
@@ -770,21 +658,23 @@ function distribute_pickups(p, c, HM)
     return sel(stat == "health", 75, 0)
   end
 
-  local function decide_pickup(stat, things, R)
+  local function decide_pickup(stat, R)
 
     local infos = {}
     local probs = {}
     local names = {}
 
-    for name,info in pairs(things) do
-      if info.give <= R * 3 then
-        local prob = info.prob or 50
-        if info.give > R then
-          prob = prob / 3
+    for name,info in pairs(THEME.pickups) do
+      if info.stat == stat then
+        if info.give <= R * 3 then
+          local prob = info.prob or 50
+          if info.give > R then
+            prob = prob / 3
+          end
+          table.insert(names, name)
+          table.insert(infos, info)
+          table.insert(probs, prob)
         end
-        table.insert(names, name)
-        table.insert(infos, info)
-        table.insert(probs, prob)
       end
     end
     
@@ -850,7 +740,8 @@ end ]]
 
   be_nice_to_player()
 
-  for stat,things in pairs(PICKUP_MAP) do
+
+  for zzz,stat in ipairs(THEME.pickup_stats) do
 
     local want = compute_want(stat, HM)
 
@@ -860,7 +751,7 @@ end ]]
 
       local r_max = want - HM[stat]
 
-      local name, info, cluster = decide_pickup(stat, things, r_max)
+      local name, info, cluster = decide_pickup(stat, r_max)
 
       if not info then break end
 
@@ -1103,9 +994,9 @@ function battle_in_cell(p, c)
   local function best_weapon(skill)
     -- get firepower of best held weapon
     local best_name = "fist"
-    local best_info = WEAPON_DEFS[best_name]
+    local best_info = THEME.weapons[best_name]
 
-    for name,info in pairs(WEAPON_DEFS) do
+    for name,info in pairs(THEME.weapons) do
       if p.models[skill][name] and not info.melee then
         if fire_power(info) > fire_power(best_info) then
           best_name, best_info = name, info

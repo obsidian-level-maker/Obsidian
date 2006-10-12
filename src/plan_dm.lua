@@ -16,31 +16,6 @@
 --
 ----------------------------------------------------------------
 
-DM_WEAPON_LIST =
-{
-  shotty=50, super=36, chain=31, launch=40, plasma=24,
-  saw=12, bfg=3
-}
-
-DM_HEALTH_LIST =
-{ 
-  potion=5, stimpack=60, medikit=20
-}
-
-DM_AMMO_LIST =
-{ 
-  bullets=5,  bullet_box=30,
-  shells=60,  shell_box=5,
-  rockets=10, rocket_box=20,
-  cells=40,   cell_pack=1,
-}
-
-DM_ITEM_LIST =
-{
-  invis=40, goggle=10, berserk=50,
-  soul=5, green_armor=40, blue_armor=5,
-}
-
 
 function show_dm_links(p)
 

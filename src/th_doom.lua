@@ -16,9 +16,6 @@
 --
 ----------------------------------------------------------------
 
-ERROR_TEX  = "FIREBLU1"
-ERROR_FLAT = "SFLR6_4"
-
 ---- INDOOR ------------
 
 TH_EXITROOM =
@@ -787,12 +784,135 @@ DM_MONSTER_GIVE =
   gunner   = { { weapon="chain" } }
 }
 
+-- Weapon list
+-- ===========
+--
+-- per  : ammo per shot
+-- rate : firing rate (shots per second)
+-- dm   : damage can inflict per shot
+-- freq : usage frequency (in the ideal)
+
+DM_WEAPONS =
+{
+  pistol = { ammo="bullet",         per=1, rate=1.8, dm=10 , freq=10 },
+  shotty = { ammo="shell",  give=8, per=1, rate=0.9, dm=70 , freq=81 },
+  super  = { ammo="shell",  give=8, per=2, rate=0.6, dm=200, freq=50 },
+  chain  = { ammo="bullet", give=20,per=1, rate=8.5, dm=10 , freq=91 },
+
+  launch = { ammo="rocket", give=2, per=1, rate=1.7, dm=90,  freq=50, dangerous=true },
+  plasma = { ammo="cell",   give=40,per=1, rate=11,  dm=22 , freq=80 },
+  bfg    = { ammo="cell",   give=40,per=40,rate=0.8, dm=450, freq=30 },
+
+  -- MELEE weapons
+  fist    = { melee=true, rate=1.5, dm=10, freq=0.1 },
+  berserk = { melee=true, rate=1.5, dm=50, freq=10 },
+  saw     = { melee=true, rate=8.7, dm=10, freq=2 },
+
+  -- Note: Berserk is not really an extra weapon, but a powerup
+  -- which makes fist do much more damage.  The effect lasts till
+  -- the end of the level, so a weapon is a pretty good fit.
+}
+
+-- sometimes a certain weapon is preferred against a certain monster.
+-- These values are multiplied with the weapon's "freq" field.
+
+DM_MONSTER_WEAPON_PREFS =
+{
+  zombie  = { shotty=6.0 },
+  shooter = { shotty=6.0 },
+  imp     = { shotty=6.0 },
+  demon   = { super=3.0, launch=0.3 },
+  spectre = { super=3.0, launch=0.3 },
+
+  pain    = { launch=0.1 },
+  skull   = { launch=0.1 },
+
+  cyber   = { launch=3.0, bfg=6.0 },
+  spider  = { launch=3.0, bfg=9.0 },
+}
+
+-- Pickup List
+-- ===========
+
+DM_PICKUPS =
+{
+  bullets    = { stat="bullet", give=10, prob=10 },
+  bullet_box = { stat="bullet", give=50, prob=x0 },
+  shells     = { stat="shell",  give= 4, prob=20 },
+  shell_box  = { stat="shell",  give=20, prob=x0 },
+
+  rockets    = { stat="rocket", give= 1, prob=10 },
+  rocket_box = { stat="rocket", give= 5, prob=x0 },
+  cells      = { stat="cell",   give=20, prob=20 },
+  cell_pack  = { stat="cell",   give=100,prob=x0 },
+
+  potion   = { stat="health", give=1,  prob=20 },
+  stimpack = { stat="health", give=10, prob=30 },
+  medikit  = { stat="health", give=25, prob=x0 },
+  soul     = { stat="health", give=100,prob=10, limit=200 },
+
+  -- BERSERK and MEGA are quest items
+
+  helmet      = { stat="armor", give=   1, limit=200 },
+  green_armor = { stat="armor", give= 100, limit=100 },
+  blue_armor  = { stat="armor", give= 200, limit=200 },
+
+  -- BLUE ARMOR is a quest item
+
+  -- Note: armor is handled with special code, since
+  --       BLUE ARMOR is a quest item.
+
+  -- Note 2: the BACKPACK is a quest item
+}
+
 
 ------------------------------------------------------------
 
 function common_doom_theme(T)
+  T.dm = {}
+
+  T.ERROR_TEX  = "FIREBLU1"
+  T.ERROR_FLAT = "SFLR6_4"
+  T.SKY_TEX    = "F_SKY1"
+
   T.thing_nums = DM_THING_NUMS
   T.mon_give = DM_MONSTER_GIVE
+  T.mon_weap_prefs = DM_MONSTER_WEAPON_PREFS
+
+  T.pickups = DM_PICKUPS
+  T.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" }
+
+  -- deathmatch --
+  T.dm.weapons =
+  {
+    shotty=60, super=40, chain=40, launch=40, plasma=20, saw=10, bfg=3
+  }
+
+  T.dm.health =
+  { 
+    potion=10, stimpack=60, medikit=20
+  }
+
+  T.dm.ammo =
+  { 
+    bullets=5,  bullet_box=30,
+    shells=60,  shell_box=5,
+    rockets=10, rocket_box=20,
+    cells=40,   cell_pack=1,
+  }
+
+  T.dm.items =
+  {
+    invis=40, goggle=10, berserk=50,
+    soul=5, green_armor=40, blue_armor=5,
+  }
+
+  T.dm.cluster =
+  {
+    potion = 8, helmet = 8, stimpack = 2,
+    bullets = 3, shells = 2, rocket = 4,
+  }
+
 end
 
 function create_doom1_theme()
@@ -812,6 +932,12 @@ function create_doom1_theme()
   T.monsters.mancubus = nil
   T.monsters.wolf_ss = nil
 
+  T.weapons = copy_table(DM_WEAPONS)
+
+  -- remove the DOOM2-only weapons
+  T.weapons.super = nil
+  T.dm.weapons.super = nil
+
   return T
 end
 
@@ -821,6 +947,7 @@ function create_doom2_theme()
   common_doom_theme(T)
 
   T.monsters = DM_MONSTERS
+  T.weapons  = DM_WEAPONS
 
   return T
 end
