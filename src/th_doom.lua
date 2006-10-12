@@ -589,7 +589,7 @@ KEY_LIST    = { k_blue=10, k_red=10, k_yellow=10 }
 SWITCH_LIST = { sw_blue=50, sw_hot=30,  sw_vine=10, sw_skin=40,
                 sw_wood=30, sw_metl=50, sw_gray=20, sw_rock=10 }
 WEAPON_LIST = { saw=10, super=40, launch=80, plasma=60, bfg=4 }
-ITEM_LIST   = { armor=40, invis=40, mega=25, backpack=25, berserk=20, goggle=5, invul=2 }
+ITEM_LIST   = { blue_armor=40, invis=40, mega=25, backpack=25, berserk=20, goggle=5, invul=2, map=3 }
 EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
 
 
@@ -639,12 +639,14 @@ DM_THING_NUMS =
   saw    = 2005,
   bfg    = 2006,
 
-  invis  = 2024,
-  goggle = 2045,
-  berserk= 2023,
+  backpack =  8,
   mega   =   83,
   invul  = 2022,
-  backpack =  8,
+  berserk= 2023,
+  invis  = 2024,
+  suit   = 2025,
+  map    = 2026,
+  goggle = 2045,
 
   potion   = 2014,
   stimpack = 2011,
@@ -654,7 +656,6 @@ DM_THING_NUMS =
   helmet      = 2015,
   green_armor = 2018,
   blue_armor  = 2019,
-  armor  = 2019,     --- FIXME!!
 
   bullets    = 2007,
   bullet_box = 2048,
