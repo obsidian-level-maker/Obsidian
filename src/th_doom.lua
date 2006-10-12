@@ -865,6 +865,43 @@ DM_PICKUPS =
   -- Note 2: the BACKPACK is a quest item
 }
 
+-- DeathMatch stuff
+-- ================
+
+DM_DEATHMATCH =
+{
+  weapons =
+  {
+    shotty=60, super=40, chain=40, launch=40,
+    plasma=20, saw=10, bfg=3
+  },
+
+  health =
+  { 
+    potion=10, stimpack=60, medikit=20
+  },
+
+  ammo =
+  { 
+    bullets=5,  bullet_box=30,
+    shells=60,  shell_box=5,
+    rockets=10, rocket_box=20,
+    cells=40,   cell_pack=1,
+  },
+
+  items =
+  {
+    invis=40, goggle=10, berserk=50,
+    soul=5, green_armor=40, blue_armor=5,
+  },
+
+  cluster =
+  {
+    potion = 8, helmet = 8, stimpack = 2,
+    bullets = 3, shells = 2, rocket = 4,
+  },
+}
+
 
 ------------------------------------------------------------
 
@@ -875,6 +912,9 @@ function common_doom_theme(T)
   T.ERROR_FLAT = "SFLR6_4"
   T.SKY_TEX    = "F_SKY1"
 
+  T.monsters = DM_MONSTERS
+  T.weapons  = DM_WEAPONS
+
   T.thing_nums = DM_THING_NUMS
   T.mon_give = DM_MONSTER_GIVE
   T.mon_weap_prefs = DM_MONSTER_WEAPON_PREFS
@@ -882,37 +922,7 @@ function common_doom_theme(T)
   T.pickups = DM_PICKUPS
   T.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" }
 
-  -- deathmatch --
-  T.dm.weapons =
-  {
-    shotty=60, super=40, chain=40, launch=40, plasma=20, saw=10, bfg=3
-  }
-
-  T.dm.health =
-  { 
-    potion=10, stimpack=60, medikit=20
-  }
-
-  T.dm.ammo =
-  { 
-    bullets=5,  bullet_box=30,
-    shells=60,  shell_box=5,
-    rockets=10, rocket_box=20,
-    cells=40,   cell_pack=1,
-  }
-
-  T.dm.items =
-  {
-    invis=40, goggle=10, berserk=50,
-    soul=5, green_armor=40, blue_armor=5,
-  }
-
-  T.dm.cluster =
-  {
-    potion = 8, helmet = 8, stimpack = 2,
-    bullets = 3, shells = 2, rocket = 4,
-  }
-
+  T.dm = DM_DEATHMATCH
 end
 
 function create_doom1_theme()
@@ -920,9 +930,9 @@ function create_doom1_theme()
 
   common_doom_theme(T)
 
-  T.monsters = copy_table(DM_MONSTERS)
-
   -- remove the DOOM2-only monsters
+  T.monsters = copy_table(T.monsters)
+
   T.monsters.gunner = nil
   T.monsters.revenant = nil
   T.monsters.knight = nil
@@ -932,10 +942,12 @@ function create_doom1_theme()
   T.monsters.mancubus = nil
   T.monsters.wolf_ss = nil
 
-  T.weapons = copy_table(DM_WEAPONS)
-
   -- remove the DOOM2-only weapons
+  T.weapons = copy_table(T.weapons)
   T.weapons.super = nil
+
+  T.dm = copy_table(T.dm)
+  T.dm.weapons = copy_table(T.dm.weapons)
   T.dm.weapons.super = nil
 
   return T
@@ -945,9 +957,6 @@ function create_doom2_theme()
   local T = {}
 
   common_doom_theme(T)
-
-  T.monsters = DM_MONSTERS
-  T.weapons  = DM_WEAPONS
 
   return T
 end
