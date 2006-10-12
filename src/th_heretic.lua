@@ -223,9 +223,9 @@ HC_THING_NUMS =
   mace_orbs  = 13,
   mace_pile  = 16,
 
-  vial    = 81,
-  flask   = 82,
-  urn     = 32,
+  h_vial  = 81,
+  h_flask = 82,
+  h_urn   = 32,
   shield1 = 85,
   shield2 = 31,
 
