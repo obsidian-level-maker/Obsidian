@@ -245,6 +245,7 @@ print("COVERAGE", count)
   end
 
   local function choose_dm_themes()
+    --[[ OLD METHOD (maybe use it sometimes??)
     -- how many themes?
     local min_t = 1
     if p.h >= 4 then min_t = 2 end
@@ -257,22 +258,30 @@ print("NUMBER of THEMES:", num_themes)
     local theme_list = {}
     rand_shuffle(theme_list, #THEME.arch.themes)
 
-    -- place themes at random spots on the plan,
-    -- then "grow" them until all cells are themed.
     for i =1,num_themes do
       local cx, cy = unused_theme_pos()
       if cx then
         local c = p.cells[cx][cy]
-        c.theme = THEME.arch.themes[theme_list[i]]
+        c.theme = THEME.arch.themes[theme_list[i] ]
         c.liquid = liquid_for_seed(c.theme)
       end
     end
+    --]]
 
-    for pass = 1,(p.w+p.h+4) do
+    -- place themes at random spots on the plan,
+    -- then "grow" them until all cells are themed.
+
+    for cy = 1,p.h do
+      cx = rand_irange(1,p.w)
+      local c = p.cells[cx][cy]
+      c.theme = get_rand_theme()
+      c.liquid = liquid_for_seed(c.theme)
+    end
+
+    for pass = 1,(p.w+p.h+10) do  -- FIXME: exit when no empty spots
       grow_dm_themes()
       con.ticker();
     end
-
   end
 
   local function create_dm_links(min_links, max_links)
