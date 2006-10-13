@@ -20,14 +20,6 @@ require 'defs'
 require 'util'
 
 
-function FRAGMENT_X(x) return (x-1-(BORDER_BLK+0)*FW)*16 end
-function FRAGMENT_Y(y) return (y-1-(BORDER_BLK+0)*FH)*16 end
-
-function BLOCK_X(x) return FRAGMENT_X((x-1)*FW + 1) end
-function BLOCK_Y(y) return FRAGMENT_Y((y-1)*FH + 1) end
-
-function NORMALIZE(n) return math.floor(n * 1.0) end
-
 --[[
 
 private class Vertex
@@ -100,6 +92,15 @@ function write_level(p, lev_name)
   local tx_file  -- text mode output
 
   local DUMMY_BLOCK = { solid=THEME.ERROR_TEX }
+
+
+  local function FRAGMENT_X(x) return (x-1-(BORDER_BLK+0)*FW)*16 end
+  local function FRAGMENT_Y(y) return (y-1-(BORDER_BLK+0)*FH)*16 end
+
+  local function BLOCK_X(x) return FRAGMENT_X((x-1)*FW + 1) end
+  local function BLOCK_Y(y) return FRAGMENT_Y((y-1)*FH + 1) end
+
+  local function NORMALIZE(n) return math.floor(n * 1.0) end
 
 
   local function make_mini_map()
