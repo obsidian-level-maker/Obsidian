@@ -165,14 +165,37 @@ HC_PICS =
 }
 
 
----- MISC STUFF ------------
+---- QUEST STUFF ----------------
 
--- the numbers are the relative probability
-KEY_LIST    = { k_yellow=10 }
-SWITCH_LIST = { sw_rock=50 }
-WEAPON_LIST = { saw=10, super=40, launch=80, plasma=60, bfg=4 }
-ITEM_LIST   = { armor=40, invis=40, mega=25, backpack=25, berserk=20, goggle=5, invul=2 }
-EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
+HC_QUESTS =
+{
+  key =
+  {
+    k_blue=10, k_green=10, k_yellow=20
+  },
+  switch =
+  {
+    sw_rock=50
+  },
+  weapon =
+  {
+    gauntlets=10, crossbow=60,
+    claw=30, hellstaff=30, phoenix=30,
+    firemace=20
+  },
+  item =
+  {
+    shield2=10,
+    bag=10, torch=10,
+    wings=50, ovum=50,
+    bomb=30, chaos=30,
+    shadow=50, -- tome=30,
+  },
+  exit =
+  {
+    ex_stone=50
+  }
+}
 
 
 ------------------------------------------------------------
@@ -407,6 +430,8 @@ function create_heretic_theme()
   T.pickups = HC_PICKUPS
   T.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
                      "runes", "flame_orb", "mace_orb" }
+
+  T.quests = HC_QUESTS
   T.dm = HC_DEATHMATCH
 
   T.arch =

@@ -173,14 +173,38 @@ XN_PICS =
 }
 
 
----- MISC STUFF ------------
+---- QUEST STUFF ----------------
 
--- the numbers are the relative probability
-KEY_LIST    = { k_yellow=10 }
-SWITCH_LIST = { sw_rock=50 }
-WEAPON_LIST = { saw=10, super=40, launch=80, plasma=60, bfg=4 }
-ITEM_LIST   = { armor=40, invis=40, mega=25, backpack=25, berserk=20, goggle=5, invul=2 }
-EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
+XN_QUESTS = --FIXME
+{
+  key =
+  {
+    k_steel   = 80, k_cave    = 80,
+    k_axe     = 80, k_fire    = 80,
+    k_castle  = 80, k_dungeon = 80,
+    k_silver  = 80, k_rusty   = 80,
+    k_waste   = 80, k_swamp   = 80,
+    k_gold    = 80,
+  },
+  switch =
+  {
+    sw_rock=50
+  },
+  weapon =
+  {
+    torch=50, --FIXME!!! class-specific weapons
+  },
+  item =
+  {
+    torch=10,
+    wings=50
+    chaos=30,
+  },
+  exit =
+  {
+    ex_stone=50
+  }
+}
 
 
 ------------------------------------------------------------
@@ -344,6 +368,9 @@ function create_hexen_theme()
   T.SKY_TEX    = "F_SKY"
 
   T.thing_nums = XN_THING_NUMS;
+
+  T.quests = XN_QUESTS
+  -- T.dm = XN_DEATHMATCH
 
   T.arch =
   {

@@ -23,16 +23,6 @@ require 'a_star'
 require 'th_doom'
 
 
-QUEST_MAP =
-{
-  key    = KEY_LIST,
-  switch = SWITCH_LIST,
-  weapon = WEAPON_LIST,
-  item   = ITEM_LIST,
-  exit   = EXIT_LIST
-}
-
-
 function show_quests(p)
   if p.deathmatch then
     io.stderr:write("Deathmatch Quest: frag fest!\n")
@@ -425,7 +415,7 @@ function plan_sp_level(is_coop)  -- returns Plan
   end
 
   local function get_quest_item(quest)
-    local tab = QUEST_MAP[quest]
+    local tab = THEME.quests[quest]
     assert(tab)
 
     local t_items = {}
@@ -907,10 +897,10 @@ function plan_sp_level(is_coop)  -- returns Plan
     local keys, switches, weapons, items, total, ratio
     local k_max, sw_max, wp_max, it_max;
 
-    k_max  = math.min(3, count_entries(QUEST_MAP.key))
-    sw_max = math.min(3, count_entries(QUEST_MAP.switch))
-    wp_max = math.min(4, count_entries(QUEST_MAP.weapon))
-    it_max = math.min(2, count_entries(QUEST_MAP.item))
+    k_max  = math.min(3, count_entries(THEME.quests.key))
+    sw_max = math.min(3, count_entries(THEME.quests.switch))
+    wp_max = math.min(4, count_entries(THEME.quests.weapon))
+    it_max = math.min(2, count_entries(THEME.quests.item))
 
     repeat
       keys     = rand_irange(1, k_max)

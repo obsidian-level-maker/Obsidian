@@ -572,15 +572,33 @@ DM_PICS =
 }
 
 
----- MISC STUFF ------------
+---- QUEST STUFF ----------------
 
--- the numbers are the relative probability
-KEY_LIST    = { k_blue=10, k_red=10, k_yellow=10 }
-SWITCH_LIST = { sw_blue=50, sw_hot=30,  sw_vine=10, sw_skin=40,
-                sw_wood=30, sw_metl=50, sw_gray=20, sw_rock=10 }
-WEAPON_LIST = { saw=10, super=40, launch=80, plasma=60, bfg=4 }
-ITEM_LIST   = { blue_armor=40, invis=40, mega=25, backpack=25, berserk=20, goggle=5, invul=2, map=3 }
-EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
+DM_QUESTS =
+{
+  key =
+  {
+    k_blue=10, k_red=10, k_yellow=10
+  },
+  switch =
+  {
+    sw_blue=50, sw_hot=30,  sw_vine=10, sw_skin=40,
+    sw_wood=30, sw_metl=50, sw_gray=20, sw_rock=10
+  },
+  weapon =
+  {
+    saw=10, super=40, launch=80, plasma=60, bfg=4
+  },
+  item =
+  {
+    blue_armor=40, invis=40, mega=25, backpack=25,
+    berserk=20, goggle=5, invul=2, map=3
+  },
+  exit =
+  {
+    ex_tech=90, ex_stone=30
+  }
+}
 
 
 ------------------------------------------------------------
@@ -899,7 +917,6 @@ DM_DEATHMATCH =
 ------------------------------------------------------------
 
 function common_doom_theme(T)
-  T.dm = {}
 
   T.ERROR_TEX  = "FIREBLU1"
   T.ERROR_FLAT = "SFLR6_4"
@@ -915,6 +932,7 @@ function common_doom_theme(T)
   T.pickups = DM_PICKUPS
   T.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" }
 
+  T.quests = DM_QUESTS
   T.dm = DM_DEATHMATCH
 
   T.arch =
@@ -949,9 +967,15 @@ function create_doom1_theme()
   T.monsters.mancubus = nil
   T.monsters.wolf_ss = nil
 
-  -- remove the DOOM2-only weapons
+  -- remove the DOOM2-only weapons and items
   T.weapons = copy_table(T.weapons)
   T.weapons.super = nil
+
+  T.quests = copy_table(T.quests)
+  T.quests.weapons = copy_table(T.quests.weapons)
+  T.quests.weapons.super = nil
+  T.quests.items = copy_table(T.quests.items)
+  T.quests.items.mega = nil
 
   T.dm = copy_table(T.dm)
   T.dm.weapons = copy_table(T.dm.weapons)
