@@ -306,18 +306,18 @@ end
 
 function choose_liquid()
   local probs = {}
-  for zzz,info in ipairs(TH_LIQUIDS) do
+  for zzz,info in ipairs(THEME.arch.liquids) do
     table.insert(probs, info.prob or 50)
   end
 
   local idx = rand_index_by_probs(probs)
-  return TH_LIQUIDS[idx]
+  return THEME.arch.liquids[idx]
 end
 
 function find_liquid(name)
   if not name then return nil end
 
-  for zzz,info in ipairs(TH_LIQUIDS) do
+  for zzz,info in ipairs(THEME.arch.liquids) do
     if info.name == name then return info end
   end
 
@@ -573,7 +573,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     -- TODO: better system for choosing themes
     local theme
     if Q.mini then theme = Q.parent.theme
-    else theme = rand_element(ALL_THEMES)
+    else theme = rand_element(THEME.arch.themes)
     end
 
     Q.theme = theme

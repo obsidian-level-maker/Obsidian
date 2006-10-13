@@ -61,7 +61,7 @@ TH_STONY =
 }
 
 
-ALL_THEMES =
+XN_THEMES =
 {
   TH_GOLD,
 
@@ -111,7 +111,7 @@ HANG_WOOD =
   thin = "WOOD01",
 }
 
-ALL_OVERHANGS =
+XN_OVERHANGS =
 {
   HANG_WOOD
 }
@@ -119,21 +119,21 @@ ALL_OVERHANGS =
 
 ---- MISC STUFF ------------
 
-TH_LIQUIDS =
+XN_LIQUIDS =
 {
   { name="water", floor="X_005" },
   { name="lava",  floor="X_001" },
   { name="slime", floor="X_009" },
 }
 
-TH_SWITCHES =
+XN_SWITCHES =
 {
   sw_rock = { wall="STEEL01", switch="SW_1_UP" },
 
   sw_exit = { wall="STEEL01", switch="SW_2_UP" },
 }
 
-TH_DOORS =
+XN_DOORS =
 {
   d_big    = { tex="DOOR51",   w=128, h=128 },
   d_brass1 = { tex="BRASS3",   w=128, h=128 },
@@ -147,19 +147,23 @@ TH_DOORS =
   d_exit   = { tex="D_CAST",   w=64,  h=128 },
 }
 
-TH_RAILS =
+XN_RAILS =
 {
   r_1 = { tex="GATE03", w=64, h=64  },
   r_2 = { tex="GATE02", w=64, h=128 },
 }
 
-TH_LIGHTS =
+XN_LIGHTS =
 {
   { tex="X_FIRE01", w=16 },
 
   { flat="F_081", side="FIRE07" },
   { flat="F_084", side="FIRE07" },
   { flat="X_012", side="FIRE07" },
+}
+
+XN_PICS =
+{
 }
 
 
@@ -175,7 +179,7 @@ EXIT_LIST   = { ex_tech=90, ex_stone=30, ex_hole=10 }
 
 ------------------------------------------------------------
 
-HX_THING_NUMS =
+XN_THING_NUMS =
 {
   --- special stuff ---
   player1 = 1,
@@ -329,12 +333,24 @@ HX_THING_NUMS =
 function create_hexen_theme()
   local T = {}
 
-  T.thing_nums = HX_THING_NUMS;
-
   T.ERROR_TEX  = "ABADONE"
   T.ERROR_FLAT = "F_033"
   T.SKY_TEX    = "F_SKY"
 
+  T.thing_nums = XN_THING_NUMS;
+
+  T.arch =
+  {
+    themes   = XN_THEMES,
+    hangs    = XN_OVERHANGS,
+
+    liquids  = XN_LIQUIDS,
+    switches = XN_SWITCHES,
+    doors    = XN_DOORS,
+    lights   = XN_LIGHTS,
+    rails    = XN_RAILS,
+    pics     = XN_PICS,
+  }
   return T
 end
 

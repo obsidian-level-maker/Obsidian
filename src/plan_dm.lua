@@ -251,11 +251,11 @@ print("COVERAGE", count)
     if p.w >= 6 then min_t = 3 end
 
     local num_themes = rand_irange(min_t, p.h)
-    assert(num_themes <= #ALL_THEMES)
+    assert(num_themes <= #THEME.arch.themes)
 print("NUMBER of THEMES:", num_themes)
 
     local theme_list = {}
-    rand_shuffle(theme_list, #ALL_THEMES)
+    rand_shuffle(theme_list, #THEME.arch.themes)
 
     -- place themes at random spots on the plan,
     -- then "grow" them until all cells are themed.
@@ -263,7 +263,7 @@ print("NUMBER of THEMES:", num_themes)
       local cx, cy = unused_theme_pos()
       if cx then
         local c = p.cells[cx][cy]
-        c.theme = ALL_THEMES[theme_list[i]]
+        c.theme = THEME.arch.themes[theme_list[i]]
         c.liquid = liquid_for_seed(c.theme)
       end
     end

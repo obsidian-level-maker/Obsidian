@@ -305,7 +305,7 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
       door.door_kind = nil;
       door.tag = link.quest.tag + 1
 ---###      door_tex = "BIGDOOR3"
-      local info = TH_SWITCHES[link.quest.item]
+      local info = THEME.arch.switches[link.quest.item]
       key_tex = info.wall
       assert(key_tex)
 
@@ -431,7 +431,7 @@ function B_exitdoor(p, c, link, x, y, z, dir)
   assert (link.kind == "door")
 
   local wall_tex = c.theme.wall
-  local door_tex = TH_DOORS.d_exit.tex
+  local door_tex = THEME.arch.doors.d_exit.tex
   local key_tex  = door_tex
   local track_tex = "DOORTRAK"
 
@@ -857,7 +857,7 @@ function B_pillar_cage(p,c, kx,ky, bx,by)
     CAGE.c_tex = c.theme.ceil
 
     if rand_odds(50) then
-      CAGE.rail = TH_RAILS["r_1"].tex
+      CAGE.rail = THEME.arch.rails["r_1"].tex
       if CAGE.f_h > CAGE.c_h - 72 then
         CAGE.f_h = CAGE.c_h - 72
       end
@@ -867,7 +867,7 @@ function B_pillar_cage(p,c, kx,ky, bx,by)
     CAGE.c_h = z + 40
     CAGE.c_tex = TH_CAGE.ceil
     CAGE.light = 192
-    CAGE.rail  = TH_RAILS[TH_CAGE.rail].tex
+    CAGE.rail  = THEME.arch.rails[TH_CAGE.rail].tex
   end
 
   fill(p,c, bx,by, bx,by, CAGE)
@@ -1010,7 +1010,7 @@ function B_deathmatch_exit(p,c, kx,ky)
     light = 255,
 
     l_tex = c.theme.wall,
-    u_tex = TH_DOORS.d_exit.tex,
+    u_tex = THEME.arch.doors.d_exit.tex,
     door_kind = 1,  -- blaze door
   }
 
@@ -1089,7 +1089,7 @@ end
 
 function random_light_kind(is_flat)
   local infos = {}
-  for zzz,info in ipairs(TH_LIGHTS) do
+  for zzz,info in ipairs(THEME.arch.lights) do
     if sel(is_flat, info.flat, info.tex) then
       table.insert(infos,info)
     end
@@ -1100,7 +1100,7 @@ end
 
 function random_door_kind(w)
   local names = {}
-  for kind,info in pairs(TH_DOORS) do
+  for kind,info in pairs(THEME.arch.doors) do
     if kind ~= "d_exit" and info.w == w then
       table.insert(names,kind)
     end
@@ -1925,12 +1925,12 @@ function build_cell(p, c)
     elseif not c.theme.outdoor and rand_odds(25) then
       local pic
       repeat
-        pic = rand_element(TH_LIGHTS)
+        pic = rand_element(THEME.arch.lights)
       until pic.tex
       c.void_pic = pic
       c.void_cut = rand_irange(3,4)
     else
-      c.void_pic = rand_element(TH_PICS)
+      c.void_pic = rand_element(THEME.arch.pics)
       c.void_cut = 1
     end
   end
@@ -2054,7 +2054,7 @@ function build_cell(p, c)
         kind = link.narrow_door
       end
 
-      local info = TH_DOORS[kind]
+      local info = THEME.arch.doors[kind]
       assert(info)
 
       B_door(p, c, link, b_theme, x-dx, y-dy, c.floor_h, dir,
@@ -2331,7 +2331,7 @@ function build_cell(p, c)
 --"Cell %d,%d Side %d Themes: %s/%s/%s R %d",
 --c.x, c.y, side, c.theme.floor, b_theme.floor, other.theme.floor, rsd))
 
-      overrides = { [rsd] = { rail = TH_RAILS["r_1"].tex }}
+      overrides = { [rsd] = { rail = THEME.arch.rails["r_1"].tex }}
     end
 
     for n = 1,KW do
@@ -2452,7 +2452,7 @@ function build_cell(p, c)
 
     -- !!!! FIXME: test crud
     if not bar and what ~= "fence" then
-      sec[side] = { rail = TH_RAILS["r_2"].tex }
+      sec[side] = { rail = THEME.arch.rails["r_2"].tex }
     end
 
     for d_pos = first, BW-long, step do
@@ -2741,7 +2741,7 @@ print("BUILDING CLOSET @", c.x,c.y)
       elseif K.dm_exit then
         B_deathmatch_exit(p,c, kx,ky,K.dir)
 
-      elseif TH_PICS and dual_odds(c.theme.outdoor, 10, 50) then
+      elseif THEME.arch.pics and dual_odds(c.theme.outdoor, 10, 50) then
         if not c.void_pic then decide_void_pic(p, c) end
         local h = c.void_pic.h or (c.c_min - c.f_max - 32)
         local z = (c.c_min + c.f_max) / 2
@@ -2874,7 +2874,7 @@ print("BUILDING CLOSET @", c.x,c.y)
         add_thing(p, c, bx, by, c.quest.item, true)
 
       elseif c.quest.kind == "switch" then
-        local info = TH_SWITCHES[c.quest.item]
+        local info = THEME.arch.switches[c.quest.item]
         assert(info.switch)
         local kind = 103; if info.bars then kind = 23 end
         if rand_odds(50) then
@@ -2886,7 +2886,7 @@ print("BUILDING CLOSET @", c.x,c.y)
 
       elseif c.quest.kind == "exit" then
         local side = wall_switch_dir(kx, ky, c.entry_dir)
-        B_floor_switch(p,c, bx,by, K.floor_h, side, TH_SWITCHES.sw_exit, 11)
+        B_floor_switch(p,c, bx,by, K.floor_h, side, THEME.arch.switches.sw_exit, 11)
       end
     end
 
@@ -2934,7 +2934,7 @@ then
   K.overhang = true
 
   if not c.overhang then
-    c.overhang = rand_element(ALL_OVERHANGS)
+    c.overhang = rand_element(THEME.arch.hangs)
   end
   local overhang = c.overhang
 
@@ -2961,7 +2961,7 @@ if c.sky_light then
 
   K.sky_light_sec = copy_block(sec)
   K.sky_light_sec.c_h = sec.c_h + c.sky_light.h
-  K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, TH_STONY.ceil, c.sky_light.light_info.flat)
+  K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, THEME.SKY_TEX, c.sky_light.light_info.flat)
   K.sky_light_sec.light = 176
   K.sky_light_utex = c.sky_light.light_info.side
 end

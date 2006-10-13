@@ -353,7 +353,7 @@ TH_BROWN =
 }
 
 
-ALL_THEMES =
+DM_THEMES =
 {
   TH_BASE, TH_BASE2, TH_GRNTECH, TH_SLAD,
   TH_MARBLE, TH_WOOD, TH_BRICK, TH_BRICK2,
@@ -469,7 +469,7 @@ HANG_WOOD =
   ceil = "FLAT5_1",
 }
 
-ALL_OVERHANGS =
+DM_OVERHANGS =
 {
   HANG_METAL, HANG_MARBLE, HANG_PANEL,
   HANG_STONE, HANG_STONE2, HANG_WOOD
@@ -478,7 +478,7 @@ ALL_OVERHANGS =
 
 ---- MISC STUFF ------------
 
-TH_LIQUIDS =
+DM_LIQUIDS =
 {
   { name="water",  floor="FWATER1" },
   { name="blood",  floor="BLOOD1"  }, -- no damage
@@ -487,7 +487,7 @@ TH_LIQUIDS =
   { name="lava",   floor="LAVA1",   sec_kind=16, light=64 }, -- 20% damage
 }
 
-TH_SWITCHES =
+DM_SWITCHES =
 {
   sw_blue = { wall="COMPBLUE", switch="SW1BLUE" },
   sw_hot  = { wall="SP_HOT1",  switch="SW1HOT" },
@@ -502,7 +502,7 @@ TH_SWITCHES =
   sw_exit = { wall="COMPSPAN", switch="SW1COMP" },
 }
 
-TH_DOORS =
+DM_DOORS =
 {
   -- Note: most of these with h=112 are really 128 pixels
   --       tall, but work fine when truncated/
@@ -526,13 +526,13 @@ TH_DOORS =
   d_exit   = { tex="EXITDOOR", w=64, h=72 },
 }
 
-TH_RAILS =
+DM_RAILS =
 {
   r_1 = { tex="MIDBARS3", w=128, h=72  },
   r_2 = { tex="MIDGRATE", w=128, h=128 },
 }
 
-TH_LIGHTS =
+DM_LIGHTS =
 {
   { tex="LITE3",    w=32 },
   { tex="LITE5",    w=16 },
@@ -553,7 +553,7 @@ TH_LIGHTS =
   { flat="TLITE6_6", side="METAL" },
 }
 
-TH_PICS =
+DM_PICS =
 {
   { tex="LITE3",    w=128, h=16 },
 
@@ -923,6 +923,19 @@ function common_doom_theme(T)
   T.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" }
 
   T.dm = DM_DEATHMATCH
+
+  T.arch =
+  {
+    themes   = DM_THEMES,
+    hangs    = DM_OVERHANGS,
+
+    liquids  = DM_LIQUIDS,
+    switches = DM_SWITCHES,
+    doors    = DM_DOORS,
+    lights   = DM_LIGHTS,
+    rails    = DM_RAILS,
+    pics     = DM_PICS,
+  }
 end
 
 function create_doom1_theme()

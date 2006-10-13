@@ -61,7 +61,7 @@ TH_STONY =
 }
 
 
-ALL_THEMES =
+HC_THEMES =
 {
   TH_GOLD,
 
@@ -111,7 +111,7 @@ HANG_WOOD =
   thin = "WOODWL",
 }
 
-ALL_OVERHANGS =
+HC_OVERHANGS =
 {
   HANG_WOOD
 }
@@ -119,20 +119,20 @@ ALL_OVERHANGS =
 
 ---- MISC STUFF ------------
 
-TH_LIQUIDS =
+HC_LIQUIDS =
 {
   { name="water", floor="FLTFLWW1" },
   -- FIXME
 }
 
-TH_SWITCHES =
+HC_SWITCHES =
 {
   sw_rock = { wall="RCKSNMUD", switch="SW1OFF" },
 
   sw_exit = { wall="METL2", switch="SW2OFF" },
 }
 
-TH_DOORS =
+HC_DOORS =
 {
   d_demon  = { tex="DMNMSK",   w=128, h=128 },
   d_wood   = { tex="DOORWOOD", bottom="FLOOR10", w=64, h=128 },
@@ -141,17 +141,21 @@ TH_DOORS =
   d_exit   = { tex="DOOREXIT", w=64, h=96 },
 }
 
-TH_RAILS =
+HC_RAILS =
 {
   r_1 = { tex="WDGAT64", w=128, h=64  },
   r_2 = { tex="STNGLS1", w=128, h=128 },
 }
 
-TH_LIGHTS =
+HC_LIGHTS =
 {
   { tex="REDWALL", w=32 },
 
   { flat="FLOOR26",  side="ORNGRAY" },
+}
+
+HC_PICS =
+{
 }
 
 
@@ -398,6 +402,19 @@ function create_heretic_theme()
   T.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
                      "runes", "flame_orb", "mace_orb" }
   T.dm = HC_DEATHMATCH
+
+  T.arch =
+  {
+    themes   = HC_THEMES,
+    hangs    = HC_OVERHANGS,
+
+    liquids  = HC_LIQUIDS,
+    switches = HC_SWITCHES,
+    doors    = HC_DOORS,
+    lights   = HC_LIGHTS,
+    rails    = HC_RAILS,
+    pics     = HC_PICS,
+  }
 
   return T
 end
