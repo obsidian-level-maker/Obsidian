@@ -195,11 +195,6 @@ function rand_irange(L,H)
   return math.floor(L + con.random() * (H-L+0.9999))
 end
 
-function rand_element(list)
-  if #list == 0 then return nil end
-  return list[rand_irange(1,#list)]
-end
-
 function rand_skew()
   return con.random() - con.random()
 end
@@ -214,6 +209,26 @@ function dual_odds(test,t_chance,f_chance)
   else
     return rand_odds(f_chance)
   end
+end
+
+function rand_element(list)
+  if #list == 0 then return nil end
+  return list[rand_irange(1,#list)]
+end
+
+function rand_table_pair(tab)
+  local count = 0
+  for k,v in pairs(tab) do count = count+1 end
+
+  if count == 0 then return nil, nil end
+  local index = rand_irange(1,count)
+
+  for k,v in pairs(tab) do
+    if index==1 then return k,v end
+    index = index-1
+  end
+
+  error("rand_table_kv: miscounted!")
 end
 
 -- implements Knuth's random shuffle algorithm.
