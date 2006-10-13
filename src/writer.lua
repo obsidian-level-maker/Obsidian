@@ -19,7 +19,6 @@
 require 'defs'
 require 'util'
 
-
 --[[
 
 private class Vertex
@@ -60,6 +59,13 @@ MTF_MEDIUM  = 2
 MTF_HARD    = 4
 MTF_AMBUSH  = 8
 
+-- hexen thing flags
+XTF_FIGHTER = 32
+XTF_CLERIC  = 64
+XTF_MAGE    = 128
+XTF_SP      = 256
+XTF_COOP    = 512
+XTF_DM      = 1024
 
 -- linedef flags
 ML_IMPASSABLE  = 1
@@ -70,6 +76,14 @@ ML_LOWER_UNPEG = 16
 ML_SECRET      = 32
 ML_BLOCK_SOUND = 64
 ML_MAPPED      = 128
+
+-- hexen linedef flags
+XL_REPEATABLE  = 512
+XL_ACT_WALK    = (0 * 1024)
+XL_ACT_USE     = (1 * 1024)
+XL_ACT_MONSTER = (2 * 1024)
+XL_ACT_SHOOT   = (3 * 1024)
+XL_ACT_BUMP    = (4 * 1024)
 
 
 function write_level(p, lev_name)
