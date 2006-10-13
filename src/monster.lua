@@ -53,7 +53,7 @@ zdump_table = do_nothing
 function compute_pow_factors()
 
   local function pow_factor(info)
-    return 5 + 19 * info.t ^ 0.5 * (info.dm / 50) ^ 1.2
+    return 5 + 19 * info.hp ^ 0.5 * (info.dm / 50) ^ 1.2
   end
 
   for name,info in pairs(THEME.monsters) do
@@ -198,38 +198,13 @@ end
 
 
 function initial_models()
+  local MODELS = {}
 
-  -- Note: bullet numbers are understated (should be 50)
-  -- so that the player isn't forced to empty the pistol.
-  local MODELS =
-  {
-    easy = 
-    {
-      skill="easy",
-      health=100, armor=0,
-      bullet=20, shell=0, rocket=0, cell=0,
-      fist=true, pistol=true,
-      toughness=0
-    },
-
-    medium = 
-    {
-      skill="medium",
-      health=100, armor=0,
-      bullet=20, shell=0, rocket=0, cell=0,
-      fist=true, pistol=true,
-      toughness=0
-    },
-    
-    hard = 
-    {
-      skill="hard",
-      health=100, armor=0,
-      bullet=20, shell=0, rocket=0, cell=0,
-      fist=true, pistol=true,
-      toughness=0
-    }
-  }
+  for zzz,SK in ipairs(SKILLS) do
+    MODELS[SK] = copy_table(THEME.initial_model)
+    MODELS[SK].skill = SK
+    MODELS[SK].toughness = 0
+  end
 
   return MODELS
 end
@@ -277,7 +252,7 @@ function simulate_battle(p, HM, mon_set, quest)
   local function dump_active_mon()
     zprint("  Monsters {")
     for zzz,AC in ipairs(active_mon) do
-      zprint("    ", AC.name, AC.tough)
+      zprint("    ", AC.name, AC.health)
     end
     zprint("  }")
   end
@@ -302,7 +277,7 @@ function simulate_battle(p, HM, mon_set, quest)
 
   local function remove_dead_mon()
     for i = #active_mon,1,-1 do
-      if active_mon[i].tough <= 0 then
+      if active_mon[i].health <= 0 then
         give_monster_stuff(active_mon[i])
         table.remove(active_mon, i)
       end
@@ -312,15 +287,15 @@ function simulate_battle(p, HM, mon_set, quest)
   local function active_toughness()
     local T = 0
     for zzz,AC in ipairs(active_mon) do
-      T = T + AC.tough
+      T = T + AC.health
     end
     return T
   end
 
   local function hurt_mon(idx, damage)
     local AC = active_mon[idx]
-    if AC and AC.tough > 0 then
-      AC.tough = AC.tough - damage
+    if AC and AC.health > 0 then
+      AC.health = AC.health - damage
     end
   end
 
@@ -419,7 +394,7 @@ info.ammo and HM[info.ammo] or "-")
 zprint(active_mon, #active_mon, active_mon[1])
       -- shotguns can kill multiple monsters
       if (name == "shotty" or name == "super") and
-          active_mon[1].tough <= 0 and active_mon[2] then
+          active_mon[1].health <= 0 and active_mon[2] then
         hurt_mon(2, info.dm * shoot_accuracy / 2.0)
       end
 
@@ -498,7 +473,7 @@ zprint(active_mon, #active_mon, active_mon[1])
     -- 3c. melee: dodged 80%
 
     for idx,AC in ipairs(active_mon) do
-      if AC.tough > 0 then
+      if AC.health > 0 then
         local ratio = distance_ratio(idx, AC)
         local dodge = 1.0 - dodge_ratio(AC)
 
@@ -559,7 +534,7 @@ zprint(active_mon, #active_mon, active_mon[1])
   for zzz,th in ipairs(mon_set) do
     for num = 1,th.horde do
       table.insert(active_mon,
-        { name=th.name, info=th.info, tough=th.info.t, caged=th.caged })
+        { name=th.name, info=th.info, health=th.info.hp, caged=th.caged })
     end
   end
 
@@ -571,7 +546,7 @@ zprint(active_mon, #active_mon, active_mon[1])
   end
 
   -- put toughest monster first, weakest last.
-  table.sort(active_mon, function(A,B) return A.tough > B.tough end)
+  table.sort(active_mon, function(A,B) return A.health > B.health end)
 
   local do_quest = true
 
@@ -632,6 +607,7 @@ function distribute_pickups(p, c, HM)
 
 
   local function be_nice_to_player()
+do return end  --!!!!!!
 
     -- let poor ol' player have a shotgun near start
 
@@ -992,9 +968,19 @@ function battle_in_cell(p, c)
   end
 
   local function best_weapon(skill)
-    -- get firepower of best held weapon
-    local best_name = "fist"
-    local best_info = THEME.weapons[best_name]
+    local best_name
+    local best_info
+
+    -- most basic weapon
+    for name,info in pairs(THEME.weapons) do
+      if info.melee and info.held then
+        best_name = name
+        best_info = info
+        break;
+      end
+    end
+
+    assert(best_name)
 
     for name,info in pairs(THEME.weapons) do
       if p.models[skill][name] and not info.melee then
@@ -1101,8 +1087,8 @@ function battle_in_cell(p, c)
     local horde = 1
     local max_horde = 1 + int(T / info.pow)
 
-    if info.t <= 500 and rand_odds(30) then horde = horde + 1 end
-    if info.t <= 100 then horde = horde + rand_index_by_probs { 90, 40, 10, 3, 0.5 } end
+    if info.hp <= 500 and rand_odds(30) then horde = horde + 1 end
+    if info.hp <= 100 then horde = horde + rand_index_by_probs { 90, 40, 10, 3, 0.5 } end
 
     if horde > max_horde then horde = max_horde end
 
@@ -1158,8 +1144,8 @@ function battle_in_cell(p, c)
 
     local horde = 1
     if allow_horde and (info.r < 25) then
-      if info.t <= 100 then horde = 4
-      elseif info.t <= 450 then horde = 3
+      if info.hp <= 100 then horde = 4
+      elseif info.hp <= 450 then horde = 3
       else horde = 2
       end
     end

@@ -66,22 +66,24 @@ HC_THEMES =
 
 ---- BASE MATERIALS ------------
 
-TH_METAL =
+HC_MATS =
 {
-  mat_pri = 5,
+  METAL =
+  {
+    mat_pri = 5,
 
-  wall = "METL2",
-  void = "METL1",
+    wall  = "METL2",
+    void  = "METL1",
+    floor = "FLOOR28",
+    ceil  = "FLOOR28",
+  },
 
-  floor = "FLOOR28",
-  ceil  = "FLOOR28",
+  LIFT =
+  {
+    wall = "DOORSTON",
+    floor = "FLOOR08"
+  },
 }
-
-TH_LIFT =
-{
-  wall = "DOORSTON", floor = "FLOOR08"
-}
-
 
 --- PEDESTALS --------------
 
@@ -109,7 +111,6 @@ HC_PEDESTALS =
   },
 }
 
-
 ---- OVERHANGS ------------
 
 HC_OVERHANGS =
@@ -121,7 +122,6 @@ HC_OVERHANGS =
     thin = "WOODWL",
   },
 }
-
 
 ---- MISC STUFF ------------
 
@@ -163,7 +163,6 @@ HC_LIGHTS =
 HC_PICS =
 {
 }
-
 
 ---- QUEST STUFF ----------------
 
@@ -319,7 +318,7 @@ HC_THING_NUMS =
 HC_MONSTERS =
 {
   -- FIXME: dm and fp values are CRAP!
-  gargoyle    = { prob=30, r=16,h=36, hp=20,  dm= 7, fp=10, float=true, melee=true },
+  gargoyle    = { prob=30, r=16,h=36, hp=20,  dm= 7, fp=10, cage_prob=10, float=true, melee=true },
   fire_garg   = { prob=20, r=16,h=36, hp=80,  dm=21, fp=30, float=true },
   golem       = { prob=90, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
   golem_inv   = { prob=20, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
@@ -342,8 +341,8 @@ HC_MONSTERS =
 HC_WEAPONS =
 {
   -- FIXME: all these stats are CRAP!
-  staff      = { melee=true, rate=3.0, dm=10 , freq= 2, held=true },
-  gauntlets  = { melee=true, rate=6.0, dm=50 , freq= 8 },
+  staff      = { melee=true, rate=3.0, dm=10, freq= 2, held=true },
+  gauntlets  = { melee=true, rate=6.0, dm=50, freq= 8 },
 
   wand       = { ammo="crystal",           per=1, rate=1.1, dm=10, freq=15, held=true },
   crossbow   = { ammo="arrow",     give=4, per=1, rate=1.1, dm=30, freq=90 },
@@ -389,7 +388,7 @@ HC_DEATHMATCH =
 
   health =
   { 
-    vial=70, flask=25, urn=5
+    h_vial=70, h_flask=25, h_urn=5
   },
 
   ammo =
@@ -413,6 +412,14 @@ HC_DEATHMATCH =
   cluster = {}
 }
 
+HC_INITIAL_MODEL =
+{
+  health=100, armor=0,
+  crystal=30, arrow=0, runes=0,
+  claw_orb=0, flame_orb=0, mace_orb=0,
+  staff=true, wand=true,
+}
+
 
 ------------------------------------------------------------
 
@@ -430,6 +437,7 @@ function create_heretic_theme()
   T.pickups = HC_PICKUPS
   T.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
                      "runes", "flame_orb", "mace_orb" }
+  T.initial_model = HC_INITIAL_MODEL
 
   T.quests = HC_QUESTS
   T.dm = HC_DEATHMATCH
@@ -439,13 +447,14 @@ function create_heretic_theme()
     themes    = HC_THEMES,
     hangs     = HC_OVERHANGS,
     pedestals = HC_PEDESTALS,
+    mats      = HC_MATS,
 
     liquids  = HC_LIQUIDS,
     switches = HC_SWITCHES,
     doors    = HC_DOORS,
     lights   = HC_LIGHTS,
     rails    = HC_RAILS,
-    pics     = HC_PICS,
+--  pics     = HC_PICS,
   }
 
   return T

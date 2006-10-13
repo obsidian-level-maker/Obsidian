@@ -67,22 +67,24 @@ XN_THEMES =
 
 ---- BASE MATERIALS ------------
 
-TH_METAL =
+XN_MATS =
 {
-  mat_pri = 5,
+  METAL =
+  {
+    mat_pri = 5,
 
-  wall = "METL2",
-  void = "METL1",
+    wall  = "METL2",
+    void  = "METL1",
+    floor = "FLOOR28",
+    ceil  = "FLOOR28",
+  },
 
-  floor = "FLOOR28",
-  ceil  = "FLOOR28",
+  LIFT =
+  {
+    wall  = "PLAT02",
+    floor = "F_065"
+  },
 }
-
-TH_LIFT =
-{
-  wall = "PLAT02", floor = "F_065"
-}
-
 
 ---- PEDESTALS ------------
 
@@ -197,7 +199,7 @@ XN_QUESTS = --FIXME
   item =
   {
     torch=10,
-    wings=50
+    wings=50,
     chaos=30,
   },
   exit =
@@ -357,6 +359,12 @@ XN_THING_NUMS =
   snd_metal2 = 1409,
 }
 
+XN_INITIAL_MODEL =
+{
+  health=100, armor=0,
+  blue_mana=0, green_mana=0,
+  -- FIXME: weapon
+}
 
 ------------------------------------------------------------
 
@@ -372,18 +380,21 @@ function create_hexen_theme()
   T.quests = XN_QUESTS
   -- T.dm = XN_DEATHMATCH
 
+  T.initial_model = XN_INITIAL_MODEL
+
   T.arch =
   {
     themes    = XN_THEMES,
     hangs     = XN_OVERHANGS,
     pedestals = XN_PEDESTALS,
+    mats      = XN_MATS,
 
     liquids  = XN_LIQUIDS,
     switches = XN_SWITCHES,
     doors    = XN_DOORS,
     lights   = XN_LIGHTS,
     rails    = XN_RAILS,
-    pics     = XN_PICS,
+--  pics     = XN_PICS,
   }
   return T
 end

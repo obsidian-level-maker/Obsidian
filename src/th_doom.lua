@@ -359,39 +359,47 @@ DM_THEMES =
 
 ---- BASE MATERIALS ------------
 
-TH_METAL =
+DM_MATS =
 {
-  mat_pri = 5,
+  METAL =
+  {
+    mat_pri = 5,
 
-  wall = "METAL",
-  void = "METAL1",
+    wall  = "METAL",
+    void  = "METAL1",
+    floor = "CEIL5_2",
+    ceil  = "CEIL5_2",
+  },
 
-  floor = "CEIL5_2",
-  ceil  = "CEIL5_2",
+  ARCH =
+  {
+    wall  = "METAL",
+    void  = "METAL1",
+    floor = "SLIME14",
+    ceil  = "SLIME14",
+  },
+
+  SHINY =
+  {
+    wall  = "SHAWN2",
+    void  = "SHAWN1",
+    floor = "FLAT23",
+    ceil  = "FLAT23",
+  },
+
+  LIFT =
+  {
+    wall  = "SUPPORT2",
+    floor = "STEP2"
+  },
+
+  CAGE =
+  {
+    wall  = "METAL",
+    floor = "CEIL5_2",
+    ceil  = "TLITE6_4",
+  },
 }
-
-TH_SHINY =
-{
-  wall = "SHAWN2",
-  void = "SHAWN1",
-
-  floor = "FLAT23",
-  ceil  = "FLAT23",
-}
-
-TH_LIFT =
-{
-  wall = "SUPPORT2", floor = "STEP2"
-}
-
-TH_CAGE =
-{
-  wall = "METAL",
-  floor = "CEIL5_2",
-  ceil = "TLITE6_4",
-  rail = "r_1"  -- lookup in TH_RAILS
-}
-
 
 --- PEDESTALS --------------
 
@@ -418,7 +426,6 @@ DM_PEDESTALS =
     h = 12,
   },
 }
-
 
 ---- OVERHANGS ------------
 
@@ -469,7 +476,7 @@ DM_OVERHANGS =
 }
 
 
----- MISC STUFF ------------
+---- ARCH STUFF ------------
 
 DM_LIQUIDS =
 {
@@ -762,30 +769,30 @@ DM_THING_NUMS =
 DM_MONSTERS =
 {
   -- FIXME: probs for CLOSET/DEPOT
-  zombie    = { prob=81, r=20,h=56, t=20,  dm=4,  fp=10, cage_prob=10, hitscan=true, },
-  shooter   = { prob=41, r=20,h=56, t=30,  dm=10, fp=10, cage_prob= 5, hitscan=true, },
-  gunner    = { prob=17, r=20,h=56, t=70,  dm=40, fp=40, cage_prob=70, hitscan=true, },
+  zombie    = { prob=81, r=20,h=56, hp=20,  dm=4,  fp=10, cage_prob=10, hitscan=true, },
+  shooter   = { prob=41, r=20,h=56, hp=30,  dm=10, fp=10, cage_prob= 5, hitscan=true, },
+  gunner    = { prob=17, r=20,h=56, hp=70,  dm=40, fp=40, cage_prob=70, hitscan=true, },
 
-  imp       = { prob=90, r=20,h=56, t=60,  dm=20, fp=20, cage_prob=90, },
-  caco      = { prob=90, r=31,h=56, t=400, dm=45, fp=30, cage_prob=14, float=true },
-  revenant  = { prob=70, r=20,h=64, t=300, dm=55, fp=48, cage_prob=50, },
-  knight    = { prob=70, r=24,h=64, t=500, dm=45, fp=60, cage_prob=50, },
-  baron     = { prob=50, r=24,h=64, t=1000,dm=45, fp=110,cage_prob= 2, },
+  imp       = { prob=90, r=20,h=56, hp=60,  dm=20, fp=20, cage_prob=90, },
+  caco      = { prob=90, r=31,h=56, hp=400, dm=45, fp=30, cage_prob=14, float=true },
+  revenant  = { prob=70, r=20,h=64, hp=300, dm=55, fp=48, cage_prob=50, },
+  knight    = { prob=70, r=24,h=64, hp=500, dm=45, fp=60, cage_prob=50, },
+  baron     = { prob=50, r=24,h=64, hp=1000,dm=45, fp=110,cage_prob= 2, },
 
-  mancubus  = { prob=70, r=48,h=64, t=600, dm=80, fp=110,cage_prob=70, },
-  arach     = { prob=26, r=64,h=64, t=500, dm=70, fp=90, cage_prob=90, },
-  pain      = { prob= 8, r=31,h=56, t=400, dm=88, fp=40, cage_prob= 0, float=true },
-  vile      = { prob=10, r=20,h=56, t=700, dm=30, fp=120,cage_prob=14, hitscan=true },
+  mancubus  = { prob=70, r=48,h=64, hp=600, dm=80, fp=110,cage_prob=70, },
+  arach     = { prob=26, r=64,h=64, hp=500, dm=70, fp=90, cage_prob=90, },
+  pain      = { prob= 8, r=31,h=56, hp=400, dm=88, fp=40, cage_prob= 0, float=true },
+  vile      = { prob=10, r=20,h=56, hp=700, dm=30, fp=120,cage_prob=14, hitscan=true },
 
   -- MELEE only monsters
-  demon     = { prob=80, r=30,h=56, t=150, dm=25, fp=30, cage_prob=140,melee=true },
-  spectre   = { prob=15, r=30,h=56, t=150, dm=25, fp=30, cage_prob=40, melee=true },
-  skull     = { prob=20, r=16,h=56, t=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
+  demon     = { prob=80, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=140,melee=true },
+  spectre   = { prob=15, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=40, melee=true },
+  skull     = { prob=20, r=16,h=56, hp=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
 
   -- special monsters (only for boss levels)
-  cyber     = { prob=0, r=40,  h=110,t=4000,dm=150, fp=150 },
-  spider    = { prob=0, r=128, h=100,t=3000,dm=200, fp=240, hitscan=true },
-  wolf_ss   = { prob=1, r=20,  h=56, t=50,  dm=15,  fp=120, hitscan=true },
+  cyber     = { prob=0, r=40, h=110,hp=4000,dm=150, fp=150 },
+  spider    = { prob=0, r=128,h=100,hp=3000,dm=200, fp=240, hitscan=true },
+  wolf_ss   = { prob=1, r=20, h=56, hp=50,  dm=15,  fp=120, hitscan=true },
 }
 
 DM_MONSTER_GIVE =
@@ -913,6 +920,16 @@ DM_DEATHMATCH =
   },
 }
 
+DM_INITIAL_MODEL =
+{
+  -- Note: bullet numbers are understated (should be 50)
+  -- so that the player isn't forced to empty the pistol.
+
+  health=100, armor=0,
+  bullet=20, shell=0, rocket=0, cell=0,
+  fist=true, pistol=true,
+}
+
 
 ------------------------------------------------------------
 
@@ -926,8 +943,10 @@ function common_doom_theme(T)
   T.weapons  = DM_WEAPONS
 
   T.thing_nums = DM_THING_NUMS
+
   T.mon_give = DM_MONSTER_GIVE
   T.mon_weap_prefs = DM_MONSTER_WEAPON_PREFS
+  T.initial_model  = DM_INITIAL_MODEL
 
   T.pickups = DM_PICKUPS
   T.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" }
@@ -940,6 +959,7 @@ function common_doom_theme(T)
     themes    = DM_THEMES,
     hangs     = DM_OVERHANGS,
     pedestals = DM_PEDESTALS,
+    mats      = DM_MATS,
 
     liquids  = DM_LIQUIDS,
     switches = DM_SWITCHES,

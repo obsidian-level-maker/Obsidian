@@ -16,10 +16,10 @@
 --
 ----------------------------------------------------------------
 
-require 'defs'
-require 'util'
-require 'planner'
-require 'monster'
+---### require 'defs'
+---### require 'util'
+---### require 'planner'
+---### require 'monster'
 
 
 function copy_block(B)
@@ -304,7 +304,6 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
     elseif link.quest.kind == "switch" then
       door.door_kind = nil;
       door.tag = link.quest.tag + 1
----###      door_tex = "BIGDOOR3"
       local info = THEME.arch.switches[link.quest.item]
       key_tex = info.wall
       assert(key_tex)
@@ -583,7 +582,7 @@ function B_lift(p, c, x, y, z, dir, long, deep)
   {
     f_h = z,
     c_h = c.ceil_h,
-    f_tex = c.theme.lift_flat or TH_LIFT.floor,
+    f_tex = c.theme.lift_flat or THEME.arch.mats.LIFT.floor,
     c_tex = c.theme.ceil,
     light = c.light,
 
@@ -591,7 +590,7 @@ function B_lift(p, c, x, y, z, dir, long, deep)
     lift_walk = 120,  -- 88 for slower kind
     tag = allocate_tag(p),
 
-    l_tex = c.theme.lift or TH_LIFT.wall,
+    l_tex = c.theme.lift or THEME.arch.mats.LIFT.wall,
     u_tex = c.theme.wall
   }
 
@@ -641,7 +640,7 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
   {
     f_h = z + 64,
     c_h = c.ceil_h,
-    f_tex = TH_METAL.floor,
+    f_tex = THEME.arch.mats.METAL.floor,
     c_tex = c.theme.ceil,
     light = c.light,
 
@@ -846,9 +845,9 @@ function B_pillar_cage(p,c, kx,ky, bx,by)
   local CAGE = copy_block(c.room_sec)
   local z = (c.f_max + c.ceil_h) / 2
 
-  CAGE.f_tex = TH_CAGE.floor
-  CAGE.l_tex = TH_CAGE.wall
-  CAGE.u_tex = TH_CAGE.wall
+  CAGE.f_tex = THEME.arch.mats.CAGE.floor
+  CAGE.l_tex = THEME.arch.mats.CAGE.wall
+  CAGE.u_tex = THEME.arch.mats.CAGE.wall
   CAGE.is_cage = true
 
   if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
@@ -865,9 +864,9 @@ function B_pillar_cage(p,c, kx,ky, bx,by)
   else
     CAGE.f_h = z - 32
     CAGE.c_h = z + 40
-    CAGE.c_tex = TH_CAGE.ceil
+    CAGE.c_tex = THEME.arch.mats.CAGE.ceil
     CAGE.light = 192
-    CAGE.rail  = THEME.arch.rails[TH_CAGE.rail].tex
+    CAGE.rail  = THEME.arch.rails["r_1"].tex
   end
 
   fill(p,c, bx,by, bx,by, CAGE)
@@ -890,12 +889,12 @@ function B_big_cage(p,c, kx,ky)
   {
     f_h = c.ceil_h - 16 - 72,
     c_h = c.ceil_h - 16,
-    f_tex = TH_CAGE.floor,
-    c_tex = TH_CAGE.ceil,
+    f_tex = THEME.arch.mats.CAGE.floor,
+    c_tex = THEME.arch.mats.CAGE.ceil,
     light = 176,
 
-    l_tex = TH_CAGE.wall,
-    u_tex = TH_CAGE.wall,
+    l_tex = THEME.arch.mats.CAGE.wall,
+    u_tex = THEME.arch.mats.CAGE.wall,
     is_cage = true
   }
 
@@ -1435,6 +1434,8 @@ end
       if not c.liquid then return end
       if c.is_exit and rand_odds(98) then return end
     end
+
+    if name == "cage" and not THEME.arch.mats.CAGE then return end
 
     local posits = {}
 
@@ -2012,13 +2013,13 @@ function build_cell(p, c)
 
       local special_arch
 
-      if link.where == "wide" and rand_odds(70) then
+      if link.where == "wide" and THEME.arch.mats.ARCH and rand_odds(70) then
         special_arch = true
 
         arch.c_h = math.max(arch.c_h, c.ceil_h - 48)
-        arch.c_tex = "SLIME14"
+        arch.c_tex = THEME.arch.mats.ARCH.ceil
 
-        tex = TH_METAL.wall  -- FIXME: TH_ARCH
+        tex = THEME.arch.mats.ARCH.wall
       end
 
       arch.l_tex = tex
@@ -2460,7 +2461,7 @@ function build_cell(p, c)
 
       if (d_pos+1) >= min_x and (d_pos+long) <= max_x then
         if bar then
-          B_bars(p,c, wx,wy, math.min(side,10-side),long, bar,bar_step, TH_METAL, sec,b_theme.wall)
+          B_bars(p,c, wx,wy, math.min(side,10-side),long, bar,bar_step, THEME.arch.mats.METAL, sec,b_theme.wall)
         else
           gap_fill(p,c, wx,wy, wx+ax*(long-1),wy+ay*(long-1), sec)
         end
@@ -2663,7 +2664,7 @@ function build_cell(p, c)
       if K.pillar and not blocked then
 
 -- TEST CRUD
-if rand_odds(24) and TH_CAGE and not p.deathmatch then
+if rand_odds(24) and THEME.arch.mats.CAGE and not p.deathmatch then
 
   B_pillar_cage(p,c, kx,ky, x1+1,y1+1)
 else
@@ -2722,6 +2723,7 @@ end
 
       for i = 1,cluster do
         local dx, dy = dir_to_delta(offsets[i])
+print(name)
         add_thing(p, c, bx+dx, by+dy, name, false)
       end
     end

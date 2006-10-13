@@ -17,8 +17,16 @@
 ----------------------------------------------------------------
 
 require 'defs'
+require 'util'
+require 'a_star'
+
+require 'th_doom'
+require 'th_heretic'
+require 'th_hexen'
+
 require 'planner'
 require 'plan_dm'
+require 'monster'
 require 'builder'
 require 'writer'
 
@@ -75,7 +83,7 @@ end
 
 
 function build_cool_shit()
-
+ 
   assert(settings)
 --dump_table(settings, "settings"); do return end
 

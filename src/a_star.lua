@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-require 'util'
+---### require 'util'
 
 --
 -- Find path from start (sx,sy) to end (ex,ey)
