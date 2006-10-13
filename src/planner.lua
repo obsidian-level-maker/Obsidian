@@ -304,6 +304,15 @@ function create_link(p, c, other, dir)
   return LINK
 end
 
+function get_rand_theme()
+  while true do
+    local name,info = rand_table_pair(THEME.arch.themes)
+    if not info.is_special then
+      return info
+    end
+  end
+end
+
 function choose_liquid()
   local probs = {}
   for zzz,info in ipairs(THEME.arch.liquids) do
@@ -573,7 +582,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     -- TODO: better system for choosing themes
     local theme
     if Q.mini then theme = Q.parent.theme
-    else theme = rand_element(THEME.arch.themes)
+    else theme = get_rand_theme()
     end
 
     Q.theme = theme
@@ -971,7 +980,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     -- FIXME: handle secret exits too
     local c = p.quests[#p.quests].last
 
-    c.theme = TH_EXITROOM
+    c.theme = THEME.arch.themes.EXITROOM
     c.is_exit = true
     c.light = 192
 
@@ -1206,7 +1215,7 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
       con.printf("CREATING DEPOT @ %d,%d\n", pos_x, pos_y)
 
-      local CELL = create_cell(p, pos_x, pos_y, Q, 1, TH_EXITROOM, "depot")
+      local CELL = create_cell(p, pos_x, pos_y, Q, 1, THEME.arch.themes.EXITROOM, "depot")
 
       local SURPRISE =
       {

@@ -16,58 +16,53 @@
 --
 ----------------------------------------------------------------
 
----- INDOOR ------------
-
-TH_EXITROOM =
-{
-  mat_pri = 9,
-
-  wall = "METL2",
-  void = "SKULLSB1",
-  
-  floor = "FLOOR03",
-  ceil = "FLOOR03",
-}
-
-TH_GOLD =
-{
-  mat_pri = 6,
-
-  wall = "SANDSQ2",
-  void = "SNDBLCKS",
-  pillar = "SNDCHNKS",
-
-  floor = "FLOOR06",
-  ceil = "FLOOR11",
-
-  scenery = "wall_torch",
-}
-
-
----- OUTDOOR ------------
-
-TH_STONY =
-{
-  outdoor = true,
-  mat_pri = 3,
-
-  wall = "GRSTNPB",
-  void = "GRSTNPBV",
-
-  floor = "FLOOR00",
-  ceil = "F_SKY1",
-
-  scenery = "serpent_torch",
-}
-
-
 HC_THEMES =
 {
-  TH_GOLD,
+  ---- INDOOR ------------
 
-  TH_STONY,
+  EXITROOM =
+  {
+    mat_pri = 9,
+
+    wall = "METL2",
+    void = "SKULLSB1",
+    
+    floor = "FLOOR03",
+    ceil = "FLOOR03",
+
+    is_special = true,
+  },
+
+  GOLD =
+  {
+    mat_pri = 6,
+
+    wall = "SANDSQ2",
+    void = "SNDBLCKS",
+    pillar = "SNDCHNKS",
+
+    floor = "FLOOR06",
+    ceil = "FLOOR11",
+
+    scenery = "wall_torch",
+  },
+
+  ---- OUTDOOR ------------
+
+  STONY =
+  {
+    outdoor = true,
+    mat_pri = 3,
+
+    wall = "GRSTNPB",
+    void = "GRSTNPBV",
+
+    floor = "FLOOR00",
+    ceil = "F_SKY1",
+
+    scenery = "serpent_torch",
+  },
 }
-
 
 ---- BASE MATERIALS ------------
 
@@ -90,30 +85,41 @@ TH_LIFT =
 
 --- PEDESTALS --------------
 
-PED_PLAYER =
+HC_PEDESTALS =
 {
-  wall  = "CTYSTUCI4", void = "CTYSTUCI4",
-  floor = "FLOOR11",   ceil = "FLOOR11",
-  h = 8,
+  PLAYER =
+  {
+    wall  = "CTYSTUCI4", void = "CTYSTUCI4",
+    floor = "FLOOR11",   ceil = "FLOOR11",
+    h = 8,
+  },
+
+  QUEST = -- FIXME
+  {
+    wall  = "CTYSTUCI4", void = "CTYSTUCI4",
+    floor = "FLOOR11",   ceil = "FLOOR11",
+    h = 8,
+  },
+
+  WEAPON = -- FIXME
+  {
+    wall  = "CTYSTUCI4", void = "CTYSTUCI4",
+    floor = "FLOOR11",   ceil = "FLOOR11",
+    h = 8,
+  },
 }
-
-PED_QUEST = PED_PLAYER  -- FIXME
-
-PED_WEAPON = PED_PLAYER  -- FIXME
 
 
 ---- OVERHANGS ------------
 
-HANG_WOOD =
-{
-  ceil = "FLOOR10",
-  upper = "CTYSTUC3",
-  thin = "WOODWL",
-}
-
 HC_OVERHANGS =
 {
-  HANG_WOOD
+  WOOD =
+  {
+    ceil = "FLOOR10",
+    upper = "CTYSTUC3",
+    thin = "WOODWL",
+  },
 }
 
 
@@ -405,8 +411,9 @@ function create_heretic_theme()
 
   T.arch =
   {
-    themes   = HC_THEMES,
-    hangs    = HC_OVERHANGS,
+    themes    = HC_THEMES,
+    hangs     = HC_OVERHANGS,
+    pedestals = HC_PEDESTALS,
 
     liquids  = HC_LIQUIDS,
     switches = HC_SWITCHES,

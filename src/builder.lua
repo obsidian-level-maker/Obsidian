@@ -961,7 +961,7 @@ end
 --
 function B_deathmatch_exit(p,c, kx,ky)
 
-  local theme = TH_EXITROOM
+  local theme = THEME.arch.themes.EXITROOM
 
   local x1 = chunk_to_block(kx)
   local y1 = chunk_to_block(ky)
@@ -2849,24 +2849,24 @@ print("BUILDING CLOSET @", c.x,c.y)
       if p.coop then
         for i = 1,4 do
           local dx,dy = dir_to_delta(offsets[i])
-          B_pedestal(p, c, bx+dx, by+dy, K.floor_h, PED_PLAYER)
+          B_pedestal(p, c, bx+dx, by+dy, K.floor_h, THEME.arch.pedestals.PLAYER)
           add_thing(p, c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
           c.player_pos = {x=bx+dx, y=by+dy}
         end
       else
-        B_pedestal(p, c, bx, by, K.floor_h, PED_PLAYER)
+        B_pedestal(p, c, bx, by, K.floor_h, THEME.arch.pedestals.PLAYER)
         add_thing(p, c, bx, by, sel(p.deathmatch, "dm_player", "player1"), true, angle)
         c.player_pos = {x=bx, y=by}
       end
 
     elseif K.dm_weapon then
-      B_pedestal(p, c, bx, by, K.floor_h, PED_WEAPON)
+      B_pedestal(p, c, bx, by, K.floor_h, THEME.arch.pedestals.WEAPON)
       add_thing(p, c, bx, by, K.dm_weapon, true)
 
     elseif K.quest then
 
       if c.quest.kind == "key" or c.quest.kind == "weapon" or c.quest.kind == "item" then
-        B_pedestal(p, c, bx, by, K.floor_h, PED_QUEST)
+        B_pedestal(p, c, bx, by, K.floor_h, THEME.arch.pedestals.QUEST)
 
         -- weapon and keys are non-blocking, but we don't want
         -- a monster sitting on top of our quest item (especially
@@ -2934,7 +2934,8 @@ then
   K.overhang = true
 
   if not c.overhang then
-    c.overhang = rand_element(THEME.arch.hangs)
+    local name
+    name, c.overhang = rand_table_pair(THEME.arch.hangs)
   end
   local overhang = c.overhang
 

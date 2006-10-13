@@ -16,56 +16,52 @@
 --
 ----------------------------------------------------------------
 
----- INDOOR ------------
-
-TH_EXITROOM =
-{
-  mat_pri = 9,
-
-  wall = "METL2",
-  void = "SKULLSB1",
-  
-  floor = "FLOOR03",
-  ceil = "FLOOR03",
-}
-
-TH_GOLD =
-{
-  mat_pri = 6,
-
-  wall = "FOREST01",
-  void = "WINNOW02",
-  pillar = "PILLAR01",
-
-  floor = "F_089",
-  ceil = "F_014",
-
-  scenery = "brass_brazier",
-}
-
-
----- OUTDOOR ------------
-
-TH_STONY =
-{
-  outdoor = true,
-  mat_pri = 3,
-
-  wall = "CAVE03",
-  void = "CAVE02",
-
-  floor = "F_007",
-  ceil = "F_SKY",
-
-  scenery = "tree_left",
-}
-
-
 XN_THEMES =
 {
-  TH_GOLD,
+  ---- INDOOR ------------
 
-  TH_STONY,
+  EXITROOM =
+  {
+    mat_pri = 9,
+
+    wall = "METL2",
+    void = "SKULLSB1",
+    
+    floor = "FLOOR03",
+    ceil = "FLOOR03",
+
+    is_special = true,
+  },
+
+  GOLD =
+  {
+    mat_pri = 6,
+
+    wall = "FOREST01",
+    void = "WINNOW02",
+    pillar = "PILLAR01",
+
+    floor = "F_089",
+    ceil = "F_014",
+
+    scenery = "brass_brazier",
+  },
+
+  ---- OUTDOOR ------------
+
+  STONY =
+  {
+    outdoor = true,
+    mat_pri = 3,
+
+    wall = "CAVE03",
+    void = "CAVE02",
+
+    floor = "F_007",
+    ceil = "F_SKY",
+
+    scenery = "tree_left",
+  },
 }
 
 
@@ -90,30 +86,40 @@ TH_LIFT =
 
 ---- PEDESTALS ------------
 
-PED_PLAYER =
+XN_PEDESTALS =
 {
-  wall = "CTYSTUCI4", void = "CTYSTUCI4",
-  floor = "FLOOR11",  ceil = "FLOOR11",
-  h = 8,
+  PLAYER =
+  {
+    wall = "CTYSTUCI4", void = "CTYSTUCI4",
+    floor = "FLOOR11",  ceil = "FLOOR11",
+    h = 8,
+  },
+
+  QUEST = -- FIXME
+  {
+    wall = "CTYSTUCI4", void = "CTYSTUCI4",
+    floor = "FLOOR11",  ceil = "FLOOR11",
+    h = 8,
+  },
+
+  WEAPON = -- FIXME
+  {
+    wall = "CTYSTUCI4", void = "CTYSTUCI4",
+    floor = "FLOOR11",  ceil = "FLOOR11",
+    h = 8,
+  },
 }
-
-PED_QUEST = PED_PLAYER  -- FIXME
-
-PED_WEAPON = PED_PLAYER  -- FIXME
-
 
 ---- OVERHANGS ------------
 
-HANG_WOOD =
-{
-  ceil = "F_054",
-  upper = "D_WD07",
-  thin = "WOOD01",
-}
-
 XN_OVERHANGS =
 {
-  HANG_WOOD
+  WOOD =
+  {
+    ceil = "F_054",
+    upper = "D_WD07",
+    thin = "WOOD01",
+  },
 }
 
 
@@ -341,8 +347,9 @@ function create_hexen_theme()
 
   T.arch =
   {
-    themes   = XN_THEMES,
-    hangs    = XN_OVERHANGS,
+    themes    = XN_THEMES,
+    hangs     = XN_OVERHANGS,
+    pedestals = XN_PEDESTALS,
 
     liquids  = XN_LIQUIDS,
     switches = XN_SWITCHES,

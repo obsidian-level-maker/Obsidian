@@ -16,351 +16,344 @@
 --
 ----------------------------------------------------------------
 
----- INDOOR ------------
-
-TH_EXITROOM =
-{
-  mat_pri = 9,
-
-  wall = "TEKWALL6",
-  void = "TEKWALL4",
-  misc = "BROWN96",
-  step = "STEP1",
-  
-  floor = "CEIL4_3",
-  ceil = "TLITE6_5",
-
-}
-
-TH_BASE =
-{
-  mat_pri = 8,
-
-  wall = "STARTAN3",
-  void = "STARTAN2",
-  step = "STEP1",
-  lift = "PLAT1",
-  pillar = "COMPWERD",
-
-  pic_wd = "COMPSTA2",    -- "COMP2" for Doom 1 !!
-  pic_wd_h = 64,
-
-  floor = "FLOOR4_8",
-  ceil = "CEIL3_6",
-  step_flat = "STEP2",
-
-  scenery = "lamp",
-  good_liquid = "blood",
-}
-
-TH_BASE2 =
-{
-  mat_pri = 8,
-
-  wall = "STARG3",
-  void = "STARG2",
-  step = "STEP1",
-  lift = "PLAT1",
-  pillar = "METAL4",
-  pic_wd = "COMPBLUE",
-
-  floor = "FLOOR5_1",
-  ceil = "FLOOR4_5",
-  step_flat = "STEP1",
-
-  scenery = "tech_column",
-}
-
-TH_MARBLE =
-{
-  mat_pri = 6,
-
-  wall = "MARBLE2",
-  void = "MARBGRAY",
-  step = "STEP1",
-  pillar = "MARBFAC4",
-  pic_wd  = "SP_DUDE1",
-
-  floor = "GRNROCK",
-  ceil = "RROCK04",
-
-  scenery = "red_column_skl",
-
-  bad_liquid = "nukage",
-  good_liquid = "blood",
-}
-
-TH_WOOD =
-{
-  mat_pri = 7,
-
-  wall = "WOOD1",
-  void = "WOOD3",
-  step = "STEP1",
-  pillar = "WOODMET4",
-  pic_wd = "MARBFACE",
-
-  floor = "CEIL1_1",
-  ceil = "FLAT5_1",
-}
-
-TH_BRICK =
-{
-  mat_pri = 6,
-
-  wall = "BRICK7",
-  void = "BRICK5",
-  step = "STEP1",
-  pillar = "BRICKLIT",
-  pic_wd = "BRWINDOW",
-
-  floor = "FLOOR0_7",
-  ceil = "CEIL5_2",
-
-  scenery = "red_torch",
-  bad_liquid = "slime",
-}
-
-TH_BRICK2 =
-{
-  mat_pri = 6,
-
-  wall = "BIGBRIK1",
-  void = "BIGBRIK3",
-  step = "STEP1",
-  pillar = "BRICK12",
-
-  floor = "RROCK12",
-  ceil = "FLAT1",
-
-  scenery = "green_torch",
-}
-
-TH_PANEL =
-{
-  mat_pri = 6,
-
-  wall = "PANEL7",
-  void = "PANBOOK",
-  step = "STEP2",
-  pillar = "PANBLUE",
-  pic_wd = "SPACEW3",
-
-  floor = "FLOOR5_4",
-  ceil = "CEIL1_2",
-
-  scenery = "candelabra",
-}
-
-TH_CEMENT =
-{
-  mat_pri = 1,
-
-  wall = "CEMENT6",
-  void = "CEMENT4",
-  step = "STEP1",
-  lift = "SUPPORT3",
-  pillar = "CEMENT8",
-
-  floor = "FLAT9",
-  ceil = "SLIME14",
---  lift_flat = "FLOOR4_8",
-
-}
-
-TH_GRNTECH =
-{
-  mat_pri = 4,
-
-  wall = "TEKGREN2",
-  void = "TEKGREN1",
-  step = "STEP1",
-  pillar = "TEKLITE2",
-
-  pic_wd = "COMPSTA1", pic_wd_h = 64,
-
-  floor = "FLOOR1_1",
-  ceil = "FLAT4",
-
-  scenery = "mercury_lamp",
-
-  bad_liquid = "water",
-}
-
-TH_SLAD =
-{
-  mat_pri = 4,
-
-  wall = "SLADWALL",
-  void = "SLADSKUL",
-  step = "STEP1",
-  pillar = "SLADPOIS",
-  pic_wd = "BSTONE3",
-
-  floor = "FLOOR0_5",
-  ceil = "CEIL5_1",
-
-  scenery = "burning_barrel",
-
-  good_liquid = "nukage",
-}
-
-TH_GRAY =
-{
-  mat_pri = 3,
-
-  wall = "GRAY7",
-  void = "ICKWALL3",
-  step = "STEP1",
-  lift = "SUPPORT3",
-  pillar = "CRATE1",
-  pic_wd = "REDWALL",
-
-  floor = "FLOOR0_5",
-  ceil = "FLAT1",
---  lift_flat = "FLOOR4_8",
-
-  scenery = "green_column_hrt",
-}
-
-
----- OUTDOOR ------------
-
-TH_GRASSY =
-{
-  outdoor = true,
-  mat_pri = 2,
-
-  wall = "ZIMMER7",
-  void = "ZIMMER8",
-  step = "STEP5",
-
-  floor = "RROCK19",
-  ceil = "F_SKY1",
-
-  scenery = "brown_stub",
-
-  bad_liquid = "nukage",
-}
-
-TH_MUDDY =
-{
-  outdoor = true,
-  mat_pri = 2,
-
-  wall = "ASHWALL4",
-  void = "TANROCK5",
-  step = "STEP5",
-
-  floor = "FLAT10",
-  ceil = "F_SKY1",
-
-  scenery = "burnt_tree",
-
-  bad_liquid = "slime",
-}
-
-TH_ASHY =
-{
-  outdoor = true,
-  mat_pri = 6,
-
-  wall = "ASHWALL2",
-  void = "BLAKWAL2",
-  step = "STEP4",
-  piller = "STONE5",
-  pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
-
-  floor = "MFLR8_4",
-  ceil = "F_SKY1",
-
-  scenery = "skull_rock",
-}
-
-TH_STONY =
-{
-  outdoor = true,
-  mat_pri = 5,
-
-  wall = "STONE",
-  void = "STONE3",
-  step = "STEP4",
-  piller = "STONE5",
-
-  floor = "MFLR8_1",
-  ceil = "F_SKY1",
-
-  scenery = "blue_torch",
-}
-
-TH_ROCKY =
-{
-  outdoor = true,
-  mat_pri = 3,
-
-  wall = "TANROCK7",
-  void = "ZIMMER4",
-  step = "STEP6",
-  lift = "SUPPORT3",
-  piller = "ASHWALL7",
-
-  floor = "RROCK04",
-  ceil = "F_SKY1",
---  lift_flat = "FLOOR4_8",
-
-  scenery = "burnt_tree", -- "big_tree",
-
-  bad_liquid = "slime",
-}
-
-TH_ROCKY2 =
-{
-  outdoor = true,
-  mat_pri = 3,
-
-  wall = "TANROCK8",
-  void = "ROCK4",
-  step = "STEP6",
-  lift = "SUPPORT3",
-
-  floor = "RROCK17",
-  ceil = "F_SKY1",
---  lift_flat = "FLOOR4_8",
-
-  scenery = "brown_stub",
-
-  bad_liquid = "slime",
-}
-
-TH_BROWN =
-{
-  outdoor = true,
-  mat_pri = 3,
-
-  wall = "BROWN1",
-  void = "BROWNPIP",
-  step = "STEP5",
-  lift = "SUPPORT3",
-  pillar = "BRONZE2",
-
-  floor = "RROCK16",
-  ceil = "F_SKY1",
---  lift_flat = "FLOOR4_8",
-
-  scenery = "skull_pole",
-
-  good_liquid = "blood",
-}
-
-
 DM_THEMES =
 {
-  TH_BASE, TH_BASE2, TH_GRNTECH, TH_SLAD,
-  TH_MARBLE, TH_WOOD, TH_BRICK, TH_BRICK2,
-  TH_PANEL, TH_CEMENT, TH_GRAY,
+---- INDOOR ------------
 
-  TH_GRASSY, TH_MUDDY, TH_ASHY, TH_STONY,
-  TH_ROCKY,  TH_ROCKY2, TH_BROWN,
+  EXITROOM =
+  {
+    mat_pri = 9,
+
+    wall = "TEKWALL6",
+    void = "TEKWALL4",
+    misc = "BROWN96",
+    step = "STEP1",
+    
+    floor = "CEIL4_3",
+    ceil = "TLITE6_5",
+
+    is_special = true,
+  },
+
+  BASE =
+  {
+    mat_pri = 8,
+
+    wall = "STARTAN3",
+    void = "STARTAN2",
+    step = "STEP1",
+    lift = "PLAT1",
+    pillar = "COMPWERD",
+
+    pic_wd = "COMPSTA2",    -- "COMP2" for Doom 1 !!
+    pic_wd_h = 64,
+
+    floor = "FLOOR4_8",
+    ceil = "CEIL3_6",
+    step_flat = "STEP2",
+
+    scenery = "lamp",
+    good_liquid = "blood",
+  },
+
+  BASE2 =
+  {
+    mat_pri = 8,
+
+    wall = "STARG3",
+    void = "STARG2",
+    step = "STEP1",
+    lift = "PLAT1",
+    pillar = "METAL4",
+    pic_wd = "COMPBLUE",
+
+    floor = "FLOOR5_1",
+    ceil = "FLOOR4_5",
+    step_flat = "STEP1",
+
+    scenery = "tech_column",
+  },
+
+  MARBLE =
+  {
+    mat_pri = 6,
+
+    wall = "MARBLE2",
+    void = "MARBGRAY",
+    step = "STEP1",
+    pillar = "MARBFAC4",
+    pic_wd  = "SP_DUDE1",
+
+    floor = "GRNROCK",
+    ceil = "RROCK04",
+
+    scenery = "red_column_skl",
+
+    bad_liquid = "nukage",
+    good_liquid = "blood",
+  },
+
+  WOOD =
+  {
+    mat_pri = 7,
+
+    wall = "WOOD1",
+    void = "WOOD3",
+    step = "STEP1",
+    pillar = "WOODMET4",
+    pic_wd = "MARBFACE",
+
+    floor = "CEIL1_1",
+    ceil = "FLAT5_1",
+  },
+
+  BRICK =
+  {
+    mat_pri = 6,
+
+    wall = "BRICK7",
+    void = "BRICK5",
+    step = "STEP1",
+    pillar = "BRICKLIT",
+    pic_wd = "BRWINDOW",
+
+    floor = "FLOOR0_7",
+    ceil = "CEIL5_2",
+
+    scenery = "red_torch",
+    bad_liquid = "slime",
+  },
+
+  BRICK2 =
+  {
+    mat_pri = 6,
+
+    wall = "BIGBRIK1",
+    void = "BIGBRIK3",
+    step = "STEP1",
+    pillar = "BRICK12",
+
+    floor = "RROCK12",
+    ceil = "FLAT1",
+
+    scenery = "green_torch",
+  },
+
+  PANEL =
+  {
+    mat_pri = 6,
+
+    wall = "PANEL7",
+    void = "PANBOOK",
+    step = "STEP2",
+    pillar = "PANBLUE",
+    pic_wd = "SPACEW3",
+
+    floor = "FLOOR5_4",
+    ceil = "CEIL1_2",
+
+    scenery = "candelabra",
+  },
+
+  CEMENT =
+  {
+    mat_pri = 1,
+
+    wall = "CEMENT6",
+    void = "CEMENT4",
+    step = "STEP1",
+    lift = "SUPPORT3",
+    pillar = "CEMENT8",
+
+    floor = "FLAT9",
+    ceil = "SLIME14",
+  --  lift_flat = "FLOOR4_8",
+
+  },
+
+  GRNTECH =
+  {
+    mat_pri = 4,
+
+    wall = "TEKGREN2",
+    void = "TEKGREN1",
+    step = "STEP1",
+    pillar = "TEKLITE2",
+
+    pic_wd = "COMPSTA1", pic_wd_h = 64,
+
+    floor = "FLOOR1_1",
+    ceil = "FLAT4",
+
+    scenery = "mercury_lamp",
+
+    bad_liquid = "water",
+  },
+
+  SLAD =
+  {
+    mat_pri = 4,
+
+    wall = "SLADWALL",
+    void = "SLADSKUL",
+    step = "STEP1",
+    pillar = "SLADPOIS",
+    pic_wd = "BSTONE3",
+
+    floor = "FLOOR0_5",
+    ceil = "CEIL5_1",
+
+    scenery = "burning_barrel",
+
+    good_liquid = "nukage",
+  },
+
+  GRAY =
+  {
+    mat_pri = 3,
+
+    wall = "GRAY7",
+    void = "ICKWALL3",
+    step = "STEP1",
+    lift = "SUPPORT3",
+    pillar = "CRATE1",
+    pic_wd = "REDWALL",
+
+    floor = "FLOOR0_5",
+    ceil = "FLAT1",
+  --  lift_flat = "FLOOR4_8",
+
+    scenery = "green_column_hrt",
+  },
+
+
+  ---- OUTDOOR ------------
+
+  GRASSY =
+  {
+    outdoor = true,
+    mat_pri = 2,
+
+    wall = "ZIMMER7",
+    void = "ZIMMER8",
+    step = "STEP5",
+
+    floor = "RROCK19",
+    ceil = "F_SKY1",
+
+    scenery = "brown_stub",
+
+    bad_liquid = "nukage",
+  },
+
+  MUDDY =
+  {
+    outdoor = true,
+    mat_pri = 2,
+
+    wall = "ASHWALL4",
+    void = "TANROCK5",
+    step = "STEP5",
+
+    floor = "FLAT10",
+    ceil = "F_SKY1",
+
+    scenery = "burnt_tree",
+
+    bad_liquid = "slime",
+  },
+
+  ASHY =
+  {
+    outdoor = true,
+    mat_pri = 6,
+
+    wall = "ASHWALL2",
+    void = "BLAKWAL2",
+    step = "STEP4",
+    piller = "STONE5",
+    pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
+
+    floor = "MFLR8_4",
+    ceil = "F_SKY1",
+
+    scenery = "skull_rock",
+  },
+
+  STONY =
+  {
+    outdoor = true,
+    mat_pri = 5,
+
+    wall = "STONE",
+    void = "STONE3",
+    step = "STEP4",
+    piller = "STONE5",
+
+    floor = "MFLR8_1",
+    ceil = "F_SKY1",
+
+    scenery = "blue_torch",
+  },
+
+  ROCKY =
+  {
+    outdoor = true,
+    mat_pri = 3,
+
+    wall = "TANROCK7",
+    void = "ZIMMER4",
+    step = "STEP6",
+    lift = "SUPPORT3",
+    piller = "ASHWALL7",
+
+    floor = "RROCK04",
+    ceil = "F_SKY1",
+  --  lift_flat = "FLOOR4_8",
+
+    scenery = "burnt_tree", -- "big_tree",
+
+    bad_liquid = "slime",
+  },
+
+  ROCKY2 =
+  {
+    outdoor = true,
+    mat_pri = 3,
+
+    wall = "TANROCK8",
+    void = "ROCK4",
+    step = "STEP6",
+    lift = "SUPPORT3",
+
+    floor = "RROCK17",
+    ceil = "F_SKY1",
+  --  lift_flat = "FLOOR4_8",
+
+    scenery = "brown_stub",
+
+    bad_liquid = "slime",
+  },
+
+  BROWN =
+  {
+    outdoor = true,
+    mat_pri = 3,
+
+    wall = "BROWN1",
+    void = "BROWNPIP",
+    step = "STEP5",
+    lift = "SUPPORT3",
+    pillar = "BRONZE2",
+
+    floor = "RROCK16",
+    ceil = "F_SKY1",
+  --  lift_flat = "FLOOR4_8",
+
+    scenery = "skull_pole",
+
+    good_liquid = "blood",
+  },
 }
 
 
@@ -402,77 +395,77 @@ TH_CAGE =
 
 --- PEDESTALS --------------
 
-PED_PLAYER =
+DM_PEDESTALS =
 {
-  wall = "SHAWN2",  void = "SHAWN2",
-  floor = "FLAT22", ceil = "FLAT22",
-  h = 8,
-}
+  PLAYER =
+  {
+    wall = "SHAWN2",  void = "SHAWN2",
+    floor = "FLAT22", ceil = "FLAT22",
+    h = 8,
+  },
 
-PED_QUEST =
-{
-  wall  = "METAL", void = "METAL",
-  floor = "GATE4", ceil = "GATE4",
-  h = 24,
-}
+  QUEST =
+  {
+    wall  = "METAL", void = "METAL",
+    floor = "GATE4", ceil = "GATE4",
+    h = 24,
+  },
 
-PED_WEAPON =
-{
-  wall  = "METAL",   void = "METAL",
-  floor = "CEIL1_2", ceil = "CEIL1_2",
-  h = 12,
+  WEAPON =
+  {
+    wall  = "METAL",   void = "METAL",
+    floor = "CEIL1_2", ceil = "CEIL1_2",
+    h = 12,
+  },
 }
 
 
 ---- OVERHANGS ------------
 
-HANG_METAL =
-{
-  ceil = "CEIL5_1",
-  upper = "METAL6",
-  thin = "METAL",
-}
-
-HANG_PANEL =
-{
-  thin = "PANBORD2",
-  thick = "PANBORD1",
-  upper = "PANCASE2",
-  ceil = "CEIL3_1",
-}
-
-HANG_MARBLE =
-{
-  thin = "MARBLE1",
-  upper = "MARBLE3",
-  ceil = "SLIME13",
-}
-
-HANG_STONE =
-{
-  thin = "STONE4",
-  upper = "STONE4",
-  ceil = "FLAT5_4",
-}
-
-HANG_STONE2 =
-{
-  thin = "STONE6",
-  upper = "STONE6",
-  ceil = "FLAT5_5",
-}
-
-HANG_WOOD =
-{
-  thin = "WOOD9",
-  upper = "WOOD12",
-  ceil = "FLAT5_1",
-}
-
 DM_OVERHANGS =
 {
-  HANG_METAL, HANG_MARBLE, HANG_PANEL,
-  HANG_STONE, HANG_STONE2, HANG_WOOD
+  METAL =
+  {
+    ceil = "CEIL5_1",
+    upper = "METAL6",
+    thin = "METAL",
+  },
+
+  PANEL =
+  {
+    thin = "PANBORD2",
+    thick = "PANBORD1",
+    upper = "PANCASE2",
+    ceil = "CEIL3_1",
+  },
+
+  MARBLE =
+  {
+    thin = "MARBLE1",
+    upper = "MARBLE3",
+    ceil = "SLIME13",
+  },
+
+  STONE =
+  {
+    thin = "STONE4",
+    upper = "STONE4",
+    ceil = "FLAT5_4",
+  },
+
+  STONE2 =
+  {
+    thin = "STONE6",
+    upper = "STONE6",
+    ceil = "FLAT5_5",
+  },
+
+  WOOD =
+  {
+    thin = "WOOD9",
+    upper = "WOOD12",
+    ceil = "FLAT5_1",
+  },
 }
 
 
@@ -926,8 +919,9 @@ function common_doom_theme(T)
 
   T.arch =
   {
-    themes   = DM_THEMES,
-    hangs    = DM_OVERHANGS,
+    themes    = DM_THEMES,
+    hangs     = DM_OVERHANGS,
+    pedestals = DM_PEDESTALS,
 
     liquids  = DM_LIQUIDS,
     switches = DM_SWITCHES,
