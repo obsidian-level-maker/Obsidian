@@ -105,8 +105,7 @@ char *ReplaceExtension(const char *filename, const char *ext)
 {
 	SYS_ASSERT(filename[0] != 0);
 
-	static char *buffer =
-     StringNew(strlen(filename) + (ext ? strlen(ext) : 0) + 10);
+	char *buffer = StringNew(strlen(filename) + (ext ? strlen(ext) : 0) + 10);
 
 	strcpy(buffer, filename);
 
