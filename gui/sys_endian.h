@@ -104,11 +104,11 @@ static inline u32_t UT_Swap32(u32_t x) {
 #if (UT_BYTEORDER == UT_LIL_ENDIAN)
 #define LE_U16(X)  ((u16_t)(X))
 #define LE_U32(X)  ((u32_t)(X))
-#define BE_U16(X)  Swap16(X)
-#define BE_U32(X)  Swap32(X)
+#define BE_U16(X)  UT_Swap16(X)
+#define BE_U32(X)  UT_Swap32(X)
 #else
-#define LE_U16(X)  Swap16(X)
-#define LE_U32(X)  Swap32(X)
+#define LE_U16(X)  UT_Swap16(X)
+#define LE_U32(X)  UT_Swap32(X)
 #define BE_U16(X)  ((u16_t)(X))
 #define BE_U32(X)  ((u32_t)(X))
 #endif
