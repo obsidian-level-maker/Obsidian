@@ -78,6 +78,12 @@ XN_MATS =
     floor = "F_065",  ceil = "F_065",
   },
 
+  STEP =
+  {
+    wall  = "S_09",
+    floor = "F_014",
+  },
+
   LIFT =
   {
     wall  = "PLAT02",
@@ -109,14 +115,14 @@ XN_PEDESTALS =
     h = 8,
   },
 
-  WEAPON =
+  QUEST =
   {
     wall = "T2_STEP", void = "FIRE06",
     floor = "F_042",  ceil = "F_042",
     h = 8,
   },
 
-  QUEST =
+  WEAPON =
   {
     wall = "T2_STEP", void = "FIRE06",
     floor = "F_091",  ceil = "F_091",

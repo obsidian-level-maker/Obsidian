@@ -327,7 +327,7 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
                     f_tex = door.f_tex,
                     c_tex = ceil_tex,
                     light=224,
-                    l_tex = c.theme.step,
+                    l_tex = door_info.step or c.theme.step or THEME.arch.mats.STEP.wall,
                     u_tex = wall_tex }
 
   local d_back = d_front
@@ -449,7 +449,7 @@ function B_exitdoor(p, c, link, x, y, z, dir)
                     f_tex = door.f_tex,
                     c_tex = "TLITE6_5",
                     light=255,
-                    l_tex = c.theme.step,
+                    l_tex = door_info.step or c.theme.step or THEME.arch.mats.STEP.wall,
                     u_tex = wall_tex }
 
   local d_back = d_front
@@ -1008,7 +1008,7 @@ function B_deathmatch_exit(p,c, kx,ky)
     c_tex = THEME.arch.mats.DOOR_FRAME.floor,
     light = 255,
 
-    l_tex = "STEP1",
+    l_tex = theme.step or THEME.arch.mats.STEP.wall,
     u_tex = theme.void,
   }
 

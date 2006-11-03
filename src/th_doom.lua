@@ -27,7 +27,6 @@ DM_THEMES =
     wall = "TEKWALL1", -- TEKWALL6 (not in doom 1)
     void = "TEKWALL4",
     misc = "BROWN96",
-    step = "STEP1",
     dm_switch = "SW1COMM",
     
     floor = "CEIL4_3",
@@ -81,7 +80,6 @@ DM_THEMES =
 
     wall = "MARBLE2",
     void = "MARBGRAY",
-    step = "STEP1",
     pillar = "MARBFAC4",
     pic_wd  = "SP_DUDE1",
 
@@ -100,7 +98,6 @@ DM_THEMES =
 
     wall = "WOOD1",
     void = "WOOD3",
-    step = "STEP1",
     pillar = "WOODGARG", -- "WOODMET4" not in doom 1
     pic_wd = "MARBFACE",
 
@@ -114,7 +111,6 @@ DM_THEMES =
 
     wall = "BRICK7",
     void = "BRICK5",
-    step = "STEP1",
     pillar = "BRICKLIT",
     pic_wd = "BRWINDOW",
 
@@ -131,7 +127,6 @@ DM_THEMES =
 
     wall = "BIGBRIK1",
     void = "BIGBRIK3",
-    step = "STEP1",
     pillar = "BRICK12",
 
     floor = "RROCK12",
@@ -162,7 +157,6 @@ DM_THEMES =
 
     wall = "CEMENT6",
     void = "CEMENT4",
-    step = "STEP1",
     lift = "SUPPORT3",
     pillar = "BROWNGRN",  -- "CEMENT8" not in doom 1
 
@@ -178,7 +172,6 @@ DM_THEMES =
 
     wall = "TEKGREN2",
     void = "TEKGREN1",
-    step = "STEP1",
     pillar = "TEKLITE2",  -- TODO: doom 1: "COMPUTE1"
 
     pic_wd = "COMPSTA1", pic_wd_h = 64,
@@ -197,7 +190,6 @@ DM_THEMES =
 
     wall = "SLADWALL",
     void = "SLADSKUL",
-    step = "STEP1",
     pillar = "SLADPOIS",
     pic_wd = "BSTONE3",
 
@@ -215,7 +207,6 @@ DM_THEMES =
 
     wall = "GRAY7",
     void = "ICKWALL3",
-    step = "STEP1",
     lift = "SUPPORT3",
     pillar = "CRATE1",
     pic_wd = "REDWALL",
@@ -386,6 +377,12 @@ DM_MATS =
     void  = "SHAWN1",
     floor = "FLAT23",
     ceil  = "FLAT23",
+  },
+
+  STEP =
+  {
+    wall  = "STEP1",
+    floor = "FLAT1",
   },
 
   LIFT =

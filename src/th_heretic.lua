@@ -79,6 +79,12 @@ HC_MATS =
     ceil  = "FLOOR28",
   },
 
+  STEP =
+  {
+    wall  = "SNDPLAIN",
+    floor = "FLOOR27",
+  },
+
   LIFT =
   {
     wall = "DOORSTON",
