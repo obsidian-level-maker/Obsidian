@@ -78,7 +78,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	add(quit);
 
-	build = new Fl_Button(x+w - 168, cy, 70, 30, "Build");
+	build = new Fl_Button(x+w - 170, cy, 76, 30, "Build...");
 	build->labelfont(FL_HELVETICA_BOLD);
 	build->callback(build_callback, this);
 
@@ -150,7 +150,7 @@ void UI_Build::P_SetButton(bool abort)
 	}
 	else
 	{
-		build->label("Build");
+		build->label("Build...");
 		build->labelcolor(FL_FOREGROUND_COLOR);
 		build->callback(build_callback, this);
 	}
