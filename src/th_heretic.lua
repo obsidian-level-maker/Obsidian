@@ -449,12 +449,12 @@ function create_heretic_theme()
     pedestals = HC_PEDESTALS,
     mats      = HC_MATS,
 
-    liquids  = HC_LIQUIDS,
-    switches = HC_SWITCHES,
-    doors    = HC_DOORS,
-    lights   = HC_LIGHTS,
-    rails    = HC_RAILS,
---  pics     = HC_PICS,
+    liquids   = HC_LIQUIDS,
+    switches  = HC_SWITCHES,
+    doors     = HC_DOORS,
+    lights    = HC_LIGHTS,
+    rails     = HC_RAILS,
+--  pics      = HC_PICS,
   }
 
   return T

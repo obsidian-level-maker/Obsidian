@@ -961,12 +961,12 @@ function common_doom_theme(T)
     pedestals = DM_PEDESTALS,
     mats      = DM_MATS,
 
-    liquids  = DM_LIQUIDS,
-    switches = DM_SWITCHES,
-    doors    = DM_DOORS,
-    lights   = DM_LIGHTS,
-    rails    = DM_RAILS,
-    pics     = DM_PICS,
+    liquids   = DM_LIQUIDS,
+    switches  = DM_SWITCHES,
+    doors     = DM_DOORS,
+    lights    = DM_LIGHTS,
+    rails     = DM_RAILS,
+    pics      = DM_PICS,
   }
 end
 
