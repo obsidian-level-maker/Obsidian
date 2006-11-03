@@ -16,12 +16,6 @@
 --
 ----------------------------------------------------------------
 
----### require 'defs'
----### require 'util'
----### require 'a_star'
----### 
----### require 'th_doom'
-
 
 function show_quests(p)
   if p.deathmatch then
