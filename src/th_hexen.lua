@@ -194,11 +194,13 @@ XN_QUESTS = --FIXME
   },
   weapon =
   {
-    torch=50, --FIXME!!! class-specific weapons
+    c_staff = 40, c_fire   = 40,
+    f_axe   = 40, f_hammer = 40,
+    m_cone  = 40, m_blitz  = 40,
   },
   item =
   {
-    torch=10,
+    -- torch=10,
     wings=50,
     chaos=30,
   },
@@ -366,6 +368,55 @@ XN_INITIAL_MODEL =
   -- FIXME: weapon
 }
 
+XN_MONSTERS =
+{
+  -- FIXME: these stats are CRAP!
+  ettin      = { prob=70, r=24,h=64, hp=60,  dm= 5, fp= 1, melee=true },
+  afrit      = { prob=70, r=24,h=64, hp=60,  dm=10, fp= 1, float=true },
+  serpent1   = { prob=30, r=24,h=64, hp=60,  dm=10, fp=10, },
+  serpent2   = { prob=20, r=24,h=64, hp=60,  dm=15, fp=10, },
+  wendigo    = { prob=20, r=24,h=64, hp=60,  dm=25, fp=10, environ="ice" },
+  centaur1   = { prob=30, r=24,h=64, hp=60,  dm=10, fp=10, melee=true},
+  centaur2   = { prob=15, r=24,h=64, hp=60,  dm=20, fp=10, },
+
+  stalker1   = { prob=30, r=24,h=64, hp=60,  dm=60, fp=10, environ="swamp", melee=true },
+  stalker2   = { prob=10, r=24,h=64, hp=60,  dm=30, fp=10, environ="swamp" },
+  bishop     = { prob=10, r=24,h=64, hp=60,  dm=40, fp=70, float=true },
+  reiver     = { prob= 5, r=24,h=64, hp=60,  dm=50, fp=70, float=true },
+  wyvern     = { prob= 5, r=24,h=64, hp=60,  dm=60, fp=70, float=true },
+  heresiarch = { prob= 1, r=24,h=64, hp=60,  dm=70, fp=70, },
+  korax      = { prob= 0, r=24,h=64, hp=60,  dm=90, fp=70, },
+}
+
+XN_WEAPONS =
+{
+  -- FIXME: all these stats are CRAP!
+  c_mace    = { melee=true,                rate=1.1, dm=12, freq=10, held=true, },
+  c_staff   = { ammo="blue_mana",  per=1,  rate=1.1, dm= 6, freq=62, },
+  c_fire    = { ammo="green_mana", per=4,  rate=1.1, dm=27, freq=62, },
+  c_wraith  = { ammo="combo_mana", per=18, rate=2.2, dm=85, freq=30, pieces={c1_shaft, c2_cross, c3_arc} },
+
+  f_gaunt   = { melee=true,                rate=1.1, dm=20, freq=10, held=true, },
+  f_axe     = { ammo="blue_mana",  per=2,  rate=1.1, dm=60, freq=62, melee=true },
+  f_hammer  = { ammo="green_mana", per=3,  rate=1.1, dm=27, freq=62, },
+  f_quietus = { ammo="combo_mana", per=14, rate=2.2, dm=50, freq=30, pieces={f1_hilt, f2_cross, f3_blade} },
+
+  m_wand    = { held=true,                 rate=1.1, dm= 8, freq=10, continues=true },
+  m_cone    = { ammo="blue_mana",  per=3,  rate=1.1, dm=27, freq=62, },
+  m_blitz   = { ammo="green_mana", per=5,  rate=1.1, dm=60, freq=62, },
+  m_scourge = { ammo="combo_mana", per=15, rate=2.2, dm=50, freq=30, pieces={m1_stick, m2_stub, m3_skull} },
+}
+
+XN_PICKUPS =
+{
+  -- FIXME: the ammo 'give' numbers are CRAP!
+  crystal = { stat="crystal", give=5,  },
+  geode   = { stat="crystal", give=20, },
+  arrows  = { stat="arrow",   give=5,  },
+  quiver  = { stat="arrow",   give=20, },
+}
+
+
 ------------------------------------------------------------
 
 function create_hexen_theme()
@@ -375,11 +426,16 @@ function create_hexen_theme()
   T.ERROR_FLAT = "F_033"
   T.SKY_TEX    = "F_SKY"
 
+  T.monsters = XN_MONSTERS
+  T.weapons  = XN_WEAPONS
+
   T.thing_nums = XN_THING_NUMS;
 
   T.quests = XN_QUESTS
-  -- T.dm = XN_DEATHMATCH
+  T.dm = XN_DEATHMATCH
 
+  T.pickups = XN_PICKUPS
+  T.pickup_stats = { "health", "blue_mana", "green_mana" }
   T.initial_model = XN_INITIAL_MODEL
 
   T.arch =
