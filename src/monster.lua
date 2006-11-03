@@ -274,7 +274,7 @@ function simulate_battle(p, HM, mon_set, quest)
       if item.weapon then
         hm_give_weapon(HM, item.weapon, 0.5) -- dropped
       elseif item.ammo then
-        assert(info.ammo ~= "combo_mana")
+        assert(item.ammo ~= "combo_mana")
         HM[item.ammo] = HM[item.ammo] + item.give * 0.5
       else
         error("UKNOWN ITEM GIVEN BY " .. AC.name)
@@ -1138,10 +1138,10 @@ function battle_in_cell(p, c)
     local probs = {}
 
     for name,info in pairs(THEME.monsters) do
-      if (info.dm < 10) or 
+      if (info.cage_fallback) or 
          ((info.pow * x_horde < T*2) and (info.fp < firepower*2))
       then
-        local prob = info.cage_prob or 0
+        local prob = info.cage_prob or info.cage_fallback or 0
 
         if info.melee and not allow_melee then prob = 0 end
         if info.r >= 31 and not allow_big then prob = 0 end

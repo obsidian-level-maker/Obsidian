@@ -769,7 +769,7 @@ DM_THING_NUMS =
 DM_MONSTERS =
 {
   -- FIXME: probs for CLOSET/DEPOT
-  zombie    = { prob=81, r=20,h=56, hp=20,  dm=4,  fp=10, cage_prob=10, hitscan=true, },
+  zombie    = { prob=81, r=20,h=56, hp=20,  dm=4,  fp=10, cage_fallback=10, hitscan=true, },
   shooter   = { prob=41, r=20,h=56, hp=30,  dm=10, fp=10, cage_prob= 5, hitscan=true, },
   gunner    = { prob=17, r=20,h=56, hp=70,  dm=40, fp=40, cage_prob=70, hitscan=true, },
 

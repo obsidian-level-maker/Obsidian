@@ -318,7 +318,7 @@ HC_THING_NUMS =
 HC_MONSTERS =
 {
   -- FIXME: dm and fp values are CRAP!
-  gargoyle    = { prob=30, r=16,h=36, hp=20,  dm= 7, fp=10, cage_prob=10, float=true, melee=true },
+  gargoyle    = { prob=30, r=16,h=36, hp=20,  dm= 7, fp=10, cage_fallback=10, float=true, melee=true },
   fire_garg   = { prob=20, r=16,h=36, hp=80,  dm=21, fp=30, float=true },
   golem       = { prob=90, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
   golem_inv   = { prob=20, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
