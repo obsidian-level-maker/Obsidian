@@ -60,7 +60,7 @@ XN_THEMES =
     floor = "F_007",
     ceil = "F_SKY",
 
-    scenery = "tree_left",
+    scenery = "lean_tree_L",
   },
 }
 
@@ -365,7 +365,7 @@ XN_INITIAL_MODEL =
 {
   health=100, armor=0,
   blue_mana=0, green_mana=0,
-  -- FIXME: weapon
+  f_gaunt=true -- FIXME: classes
 }
 
 XN_MONSTERS =
@@ -373,7 +373,7 @@ XN_MONSTERS =
   -- FIXME: these stats are CRAP!
   ettin      = { prob=70, r=24,h=64, hp=60,  dm= 5, fp= 1, melee=true },
   afrit      = { prob=70, r=24,h=64, hp=60,  dm=10, fp= 1, float=true },
-  serpent1   = { prob=30, r=24,h=64, hp=60,  dm=10, fp=10, },
+  serpent1   = { prob=30, r=24,h=64, hp=60,  dm=10, fp=10, cage_prob=10 },
   serpent2   = { prob=20, r=24,h=64, hp=60,  dm=15, fp=10, },
   wendigo    = { prob=20, r=24,h=64, hp=60,  dm=25, fp=10, environ="ice" },
   centaur1   = { prob=30, r=24,h=64, hp=60,  dm=10, fp=10, melee=true},
@@ -409,11 +409,48 @@ XN_WEAPONS =
 
 XN_PICKUPS =
 {
-  -- FIXME: the ammo 'give' numbers are CRAP!
-  crystal = { stat="crystal", give=5,  },
-  geode   = { stat="crystal", give=20, },
-  arrows  = { stat="arrow",   give=5,  },
-  quiver  = { stat="arrow",   give=20, },
+  h_vial  = { stat="health", give=10,  prob=70 },
+  h_flask = { stat="health", give=25,  prob=25 },
+  h_urn   = { stat="health", give=100, prob=5  },
+
+  -- FIXME: these give values are CRAP!
+  ar_mesh   = { stat="armor", give=100, prob=50 },
+  ar_shield = { stat="armor", give=100, prob=70 },
+  ar_helmet = { stat="armor", give=100, prob=90 },
+  ar_amulet = { stat="armor", give=100, prob=50 },
+
+  blue_mana  = { stat="blue_mana",  give=10 },
+  green_mana = { stat="green_mana", give=10 },
+  combo_mana = { stat="combo_mana", give=20 },
+}
+
+XN_DEATHMATCH =
+{
+  weapons =
+  {
+    c_staff=40, c_fire  =40, c1_shaft=20, c2_cross=20, c3_arc  =20,
+    f_axe  =40, f_hammer=40, f1_hilt =20, f2_cross=20, f3_blade=20,
+    m_cone =40, m_blitz =40, m1_stick=20, m2_stub =20, m3_skull=20,
+  },
+
+  health =
+  { 
+    h_vial=70, h_flask=25, h_urn=5
+  },
+
+  ammo =
+  { 
+    blue_mana=40, green_mana=40, combo_mana=15
+  },
+
+  items =
+  {
+    ar_mesh=50, ar_shield=70, ar_helmet=90, ar_amulet=50,
+
+    --FIXME: artifacts!
+  },
+
+  cluster = {}
 }
 
 
@@ -445,12 +482,12 @@ function create_hexen_theme()
     pedestals = XN_PEDESTALS,
     mats      = XN_MATS,
 
-    liquids  = XN_LIQUIDS,
-    switches = XN_SWITCHES,
-    doors    = XN_DOORS,
-    lights   = XN_LIGHTS,
-    rails    = XN_RAILS,
---  pics     = XN_PICS,
+    liquids   = XN_LIQUIDS,
+    switches  = XN_SWITCHES,
+    doors     = XN_DOORS,
+    lights    = XN_LIGHTS,
+    rails     = XN_RAILS,
+--  pics      = XN_PICS,
   }
   return T
 end
