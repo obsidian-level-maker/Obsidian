@@ -24,10 +24,11 @@ DM_THEMES =
   {
     mat_pri = 9,
 
-    wall = "TEKWALL6",
+    wall = "TEKWALL1", -- TEKWALL6 (not in doom 1)
     void = "TEKWALL4",
     misc = "BROWN96",
     step = "STEP1",
+    dm_switch = "SW1COMM",
     
     floor = "CEIL4_3",
     ceil = "TLITE6_5",
@@ -100,7 +101,7 @@ DM_THEMES =
     wall = "WOOD1",
     void = "WOOD3",
     step = "STEP1",
-    pillar = "WOODMET4",
+    pillar = "WOODGARG", -- "WOODMET4" not in doom 1
     pic_wd = "MARBFACE",
 
     floor = "CEIL1_1",
@@ -163,10 +164,10 @@ DM_THEMES =
     void = "CEMENT4",
     step = "STEP1",
     lift = "SUPPORT3",
-    pillar = "CEMENT8",
+    pillar = "BROWNGRN",  -- "CEMENT8" not in doom 1
 
     floor = "FLAT9",
-    ceil = "SLIME14",
+    ceil = "CEIL3_5",  -- "SLIME14" not in doom 1
   --  lift_flat = "FLOOR4_8",
 
   },
@@ -178,7 +179,7 @@ DM_THEMES =
     wall = "TEKGREN2",
     void = "TEKGREN1",
     step = "STEP1",
-    pillar = "TEKLITE2",
+    pillar = "TEKLITE2",  -- TODO: doom 1: "COMPUTE1"
 
     pic_wd = "COMPSTA1", pic_wd_h = 64,
 
@@ -346,7 +347,7 @@ DM_THEMES =
     lift = "SUPPORT3",
     pillar = "BRONZE2",
 
-    floor = "RROCK16",
+    floor = "MFLR8_2",  -- "RROCK16" (not in doom 1)
     ceil = "F_SKY1",
   --  lift_flat = "FLOOR4_8",
 
@@ -398,6 +399,25 @@ DM_MATS =
     wall  = "METAL",
     floor = "CEIL5_2",
     ceil  = "TLITE6_4",
+  },
+
+  TRACK =
+  {
+    wall  = "DOORTRAK",
+    floor = "FLOOR6_2",
+  },
+
+  DOOR_FRAME =
+  {
+    wall  = "LITE5",
+    floor = "FLAT1",
+    ceil  = "TLITE6_5",
+  },
+
+  SW_FRAME =
+  {
+    wall  = "LITE5",
+    floor = "TLITE6_6",
   },
 }
 
@@ -523,7 +543,7 @@ DM_DOORS =
 
   d_small1 = { tex="DOOR1",    w=64, h=72 },
   d_small2 = { tex="DOOR3",    w=64, h=72 },
-  d_exit   = { tex="EXITDOOR", w=64, h=72 },
+  d_exit   = { tex="EXITDOOR", w=64, h=72, sign="EXITSIGN" },
 }
 
 DM_RAILS =
@@ -978,28 +998,38 @@ function create_doom1_theme()
   -- remove the DOOM2-only monsters
   T.monsters = copy_table(T.monsters)
 
-  T.monsters.gunner = nil
-  T.monsters.revenant = nil
-  T.monsters.knight = nil
-  T.monsters.vile = nil
-  T.monsters.pain = nil
-  T.monsters.arach = nil
-  T.monsters.mancubus = nil
-  T.monsters.wolf_ss = nil
+  T.monsters["gunner"] = nil
+  T.monsters["revenant"] = nil
+  T.monsters["knight"] = nil
+  T.monsters["vile"] = nil
+  T.monsters["pain"] = nil
+  T.monsters["arach"] = nil
+  T.monsters["mancubus"] = nil
+  T.monsters["wolf_ss"] = nil
 
   -- remove the DOOM2-only weapons and items
   T.weapons = copy_table(T.weapons)
-  T.weapons.super = nil
+  T.weapons["super"] = nil
 
   T.quests = copy_table(T.quests)
-  T.quests.weapons = copy_table(T.quests.weapons)
-  T.quests.weapons.super = nil
-  T.quests.items = copy_table(T.quests.items)
-  T.quests.items.mega = nil
+  T.quests.weapon = copy_table(T.quests.weapon)
+  T.quests.weapon["super"] = nil
+  T.quests.item = copy_table(T.quests.item)
+  T.quests.item["mega"] = nil
 
   T.dm = copy_table(T.dm)
   T.dm.weapons = copy_table(T.dm.weapons)
-  T.dm.weapons.super = nil
+  T.dm.weapons["super"] = nil
+
+  -- remove DOOM2-only themes (FIXME: merge DM1 + DM_COMMON)
+  T.arch.themes = copy_table(T.arch.themes)
+  T.arch.themes["PANEL"] = nil
+  T.arch.themes["GRNTECH"] = nil
+  T.arch.themes["BRICK"] = nil
+  T.arch.themes["ASHY"] = nil
+  T.arch.themes["MUDDY"] = nil
+  T.arch.themes["GRASSY"] = nil
+  T.arch.themes["ROCKY"] = nil
 
   return T
 end

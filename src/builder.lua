@@ -16,11 +16,6 @@
 --
 ----------------------------------------------------------------
 
----### require 'defs'
----### require 'util'
----### require 'planner'
----### require 'monster'
-
 
 function copy_block(B)
   local b2 = copy_table(B)
@@ -271,22 +266,22 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
 
   local wall_tex = c.theme.wall
   local key_tex  = wall_tex
-  local track_tex = door_info.track or "DOORTRAK"
+  local track_tex = door_info.track or THEME.arch.mats.TRACK.wall
   local door_tex = door_info.tex
-  local side_tex = "LITE5"
-  local ceil_tex = "FLAT1"
+  local side_tex = THEME.arch.mats.DOOR_FRAME.wall -- might be nil
+  local ceil_tex = THEME.arch.mats.DOOR_FRAME.floor
 
   if deep >= 2 then
     side_tex = key_tex
-    ceil_tex = "TLITE6_5"
+    ceil_tex = door_info.ceil_tex or THEME.arch.mats.DOOR_FRAME.ceil
   end
 
   local door_kind = 1
   if p.deathmatch and rand_odds(66) then door_kind = 117 end -- blaze
 
   local door = { f_h = z+8, c_h = z+8,
-                 f_tex = "FLAT1",
-                 c_tex = door_info.bottom or "FLAT1",
+                 f_tex = door_info.frame_bottom or THEME.arch.mats.DOOR_FRAME.floor,
+                 c_tex = door_info.bottom       or THEME.arch.mats.DOOR_FRAME.floor,
                  light = 255,
                  l_tex = door_tex,
                  u_tex = door_tex,
@@ -324,12 +319,13 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
     end
 
     side_tex = key_tex
-    ceil_tex = "TLITE6_6"
+    ceil_tex = door_info.frame_top or THEME.arch.mats.DOOR_FRAME.ceil
   end
 
 
   local d_front = { f_h = z+8, c_h = z+8 + door_info.h,
-                    f_tex = "FLAT1", c_tex = ceil_tex,
+                    f_tex = door.f_tex,
+                    c_tex = ceil_tex,
                     light=224,
                     l_tex = c.theme.step,
                     u_tex = wall_tex }
@@ -383,11 +379,15 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
     local y_diff = link_other(link, c).ceil_h - d_front.c_h
     local far = deep * FW - 1
 
-    local override =
-    {
-      l_tex = side_tex,
-      y_offset = y_diff
-    }
+    local override
+
+    if side_tex then
+      override =
+      {
+        l_tex = side_tex,
+        y_offset = y_diff
+      }
+    end
 
     frag_fill (p,c, fx,fy, fx+sx+dx*far,fy+zy-sy+dy*far,
       { solid=key_tex, [adir] = override })
@@ -429,13 +429,16 @@ function B_exitdoor(p, c, link, x, y, z, dir)
 
   assert (link.kind == "door")
 
+  local door_info = THEME.arch.doors.d_exit
+
   local wall_tex = c.theme.wall
-  local door_tex = THEME.arch.doors.d_exit.tex
-  local key_tex  = door_tex
-  local track_tex = "DOORTRAK"
+  local door_tex = door_info.tex
+  local key_tex  = door_info.tex
+  local track_tex = door_info.track or THEME.arch.mats.TRACK.wall
 
   local door = { f_h = z+8, c_h = z+8,
-                 f_tex = "FLAT1", c_tex = "FLAT1",
+                 f_tex = THEME.arch.mats.DOOR_FRAME.floor,
+                 c_tex = THEME.arch.mats.DOOR_FRAME.floor,
                  light = 255,
                  door_kind = 1,
                  l_tex = c.theme.wall,
@@ -443,17 +446,22 @@ function B_exitdoor(p, c, link, x, y, z, dir)
                }
 
   local d_front = { f_h = z+8, c_h = z+8+high,
-                    f_tex = "FLAT1", c_tex = "TLITE6_5",
+                    f_tex = door.f_tex,
+                    c_tex = "TLITE6_5",
                     light=255,
                     l_tex = c.theme.step,
                     u_tex = wall_tex }
 
   local d_back = d_front
 
-  local d_exit = { f_h = z+8, c_h = z+8+high-16,
-                   f_tex = d_front.f_tex, c_tex = "CEIL5_2",
-                   light=255,
-                   l_tex = "EXITSIGN", u_tex = "EXITSIGN" }
+  local d_exit
+  
+  if door_info.sign then
+    d_exit = { f_h = z+8, c_h = z+8+high-16,
+               f_tex = d_front.f_tex, c_tex = "CEIL5_2",
+               light=255,
+               l_tex = door_info.sign, u_tex = door_info.sign }
+  end
 
   local fx = 1 + (x-1)*FW
   local fy = 1 + (y-1)*FH
@@ -494,7 +502,7 @@ function B_exitdoor(p, c, link, x, y, z, dir)
     frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, d_front)
 
     -- EXIT SIGN
-    if ff == 2 then
+    if d_exit and (ff == 2) then
       frag_fill (p,c, fx+ax*3,fy+ay*3, fx+ax*3,fy+ay*3, d_exit,
         { [10-adir] = { x_offset = 32 }} )
       frag_fill (p,c, fx+ax*4,fy+ay*4, fx+ax*4,fy+ay*4, d_exit,
@@ -687,11 +695,15 @@ function B_wall_switch(p,c, x,y,z, side, info, kind, tag)
   frag_fill(p,c, fx+sx,fy+sy, fx+ex,fy+ey, SWITCH)
 
   -- lights
-  local lit_dir = sel(side==2 or side==8, 6, 8)
-  frag_fill(p,c, fx+sx-ax,fy+sy-ay, fx+sx-ax,fy+sy-ay,
-       { solid=c.theme.wall, [lit_dir]={ l_tex = "LITE5" }} )
-  frag_fill(p,c, fx+ex+ax,fy+ey+ay, fx+ex+ax,fy+ey+ay,
-       { solid=c.theme.wall, [10-lit_dir]={ l_tex = "LITE5" }} )
+  if THEME.arch.mats.SW_FRAME then
+    local sw_side = THEME.arch.mats.SW_FRAME.wall
+
+    local lit_dir = sel(side==2 or side==8, 6, 8)
+    frag_fill(p,c, fx+sx-ax,fy+sy-ay, fx+sx-ax,fy+sy-ay,
+         { solid=c.theme.wall, [lit_dir]={ l_tex = sw_side }} )
+    frag_fill(p,c, fx+ex+ax,fy+ey+ay, fx+ex+ax,fy+ey+ay,
+         { solid=c.theme.wall, [10-lit_dir]={ l_tex = sw_side }} )
+  end
 
   sx,sy = sx+dx, sy+dy
   ex,ey = ex+dx, ey+dy
@@ -899,11 +911,12 @@ function B_big_cage(p,c, kx,ky)
   }
 
   for x = 0,2 do for y = 0,2 do
+    local rail = THEME.arch.rails["r_1"].tex
     local overrides = {}
-    if x == 0 then overrides[4] = { rail="MIDBARS3" } end
-    if x == 2 then overrides[6] = { rail="MIDBARS3" } end
-    if y == 0 then overrides[2] = { rail="MIDBARS3" } end
-    if y == 2 then overrides[8] = { rail="MIDBARS3" } end
+    if x == 0 then overrides[4] = { rail=rail } end
+    if x == 2 then overrides[6] = { rail=rail } end
+    if y == 0 then overrides[2] = { rail=rail } end
+    if y == 2 then overrides[8] = { rail=rail } end
 
     fill(p,c, bx+x,by+y, bx+x,by+y, CAGE, overrides)
   end end
@@ -924,12 +937,12 @@ function B_monster_closet(p,c, kx,ky, z, tag)
   {
     f_h = z,
     c_h = c.ceil_h,
-    f_tex = "FLAT10", -- c.theme.floor,
-    c_tex = "FLAT10", -- FIXME c.theme.ceil,
+    f_tex = c.theme.floor,
+    c_tex = c.theme.floor,
     light = c.light,
 
     l_tex = c.theme.void,
-    u_tex = c.theme.void, -- "CRACKLE2"
+    u_tex = c.theme.void,
     is_cage = true
   }
 
@@ -970,6 +983,8 @@ function B_deathmatch_exit(p,c, kx,ky)
   local fx = (x1 - 1) * FW
   local fy = (y1 - 1) * FH
 
+  local door_info = THEME.arch.doors.d_exit
+
   local ROOM =
   {
     f_h = c.room_sec.f_h,
@@ -989,8 +1004,8 @@ function B_deathmatch_exit(p,c, kx,ky)
   {
     f_h = c.room_sec.f_h + 8,
     c_h = c.room_sec.f_h + 80,
-    f_tex = "FLAT1",
-    c_tex = "FLAT1",
+    f_tex = THEME.arch.mats.DOOR_FRAME.floor,
+    c_tex = THEME.arch.mats.DOOR_FRAME.floor,
     light = 255,
 
     l_tex = "STEP1",
@@ -1004,8 +1019,8 @@ function B_deathmatch_exit(p,c, kx,ky)
   {
     f_h = c.room_sec.f_h + 8,
     c_h = c.room_sec.f_h + 8,
-    f_tex = "FLAT1",
-    c_tex = "FLAT1",
+    f_tex = door_info.frame_bottom or STEP.f_tex,
+    c_tex = door_info.bottom       or STEP.f_tex,
     light = 255,
 
     l_tex = c.theme.wall,
@@ -1013,12 +1028,12 @@ function B_deathmatch_exit(p,c, kx,ky)
     door_kind = 1,  -- blaze door
   }
 
-  frag_fill(p,c, fx+4,fy+2, fx+9,fy+3, { solid="DOORTRAK" })
+  frag_fill(p,c, fx+4,fy+2, fx+9,fy+3, { solid=THEME.arch.mats.TRACK.wall })
   frag_fill(p,c, fx+5,fy+2, fx+8,fy+3, DOOR)
 
   local SWITCH =
   {
-    solid = "SW1COMM",
+    solid = theme.dm_switch,
     switch_kind = 11
   }
 
@@ -3030,22 +3045,6 @@ end
       build_chunk(kx, ky)
     end
   end
-
-
---[[  TEST ONLY
-    local middle = { f_h=room.f_h+24/3, c_h=room.f_h+192,
-                   f_tex="FLAT1", c_tex="FLAT1",
-                   light=128 }
-
-    local L, H = (BW/4+1), (BW*3/4)
-
-    fill(c, L, L, H, H, room, "METAL6", "METAL7")
-
-    fill(c, L, L, L, L, nil, "WOOD10"); -- c.blocks[L][L].corner_ne = { dx=-12, dy=-12 }
-    fill(c, L, H, L, H, nil, "WOOD10"); -- c.blocks[L][H].corner_se = { dx=-12, dy= 12 }
-    fill(c, H, L, H, L, nil, "WOOD10"); -- c.blocks[H][L].corner_nw = { dx= 12, dy=-12 }
-    fill(c, H, H, H, H, nil, "WOOD10"); -- c.blocks[H][H].corner_sw = { dx= 12, dy= 12 }
---]]
 end
 
 

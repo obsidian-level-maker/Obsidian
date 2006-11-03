@@ -26,6 +26,7 @@ HC_THEMES =
 
     wall = "METL2",
     void = "SKULLSB1",
+    dm_switch = "SW1OFF",
     
     floor = "FLOOR03",
     ceil = "FLOOR03",
@@ -82,6 +83,19 @@ HC_MATS =
   {
     wall = "DOORSTON",
     floor = "FLOOR08"
+  },
+
+  TRACK =
+  {
+    wall  = "METL2",
+    floor = "FLOOR28",
+  },
+
+  DOOR_FRAME =
+  {
+    wall  = nil,  -- this means: use plain wall
+    floor = "FLOOR04",
+    ceil  = "FLOOR04",
   },
 }
 

@@ -24,11 +24,12 @@ XN_THEMES =
   {
     mat_pri = 9,
 
-    wall = "METL2",
-    void = "SKULLSB1",
+    wall = "STEEL01",
+    void = "STEEL02",
+    dm_switch = "SW_1_UP",
     
-    floor = "FLOOR03",
-    ceil = "FLOOR03",
+    floor = "F_022",
+    ceil = "F_044",
 
     is_special = true,
   },
@@ -73,16 +74,27 @@ XN_MATS =
   {
     mat_pri = 5,
 
-    wall  = "METL2",
-    void  = "METL1",
-    floor = "FLOOR28",
-    ceil  = "FLOOR28",
+    wall  = "PLAT01", void = "PLAT01",
+    floor = "F_065",  ceil = "F_065",
   },
 
   LIFT =
   {
     wall  = "PLAT02",
     floor = "F_065"
+  },
+
+  TRACK =
+  {
+    wall  = "STEEL08",
+    floor = "F_008",
+  },
+
+  DOOR_FRAME =
+  {
+    wall  = nil,  -- this means: use plain wall
+    floor = "F_009",
+    ceil  = "F_009",
   },
 }
 
@@ -92,24 +104,25 @@ XN_PEDESTALS =
 {
   PLAYER =
   {
-    wall = "CTYSTUCI4", void = "CTYSTUCI4",
-    floor = "FLOOR11",  ceil = "FLOOR11",
+    wall = "T2_STEP", void = "FIRE06",
+    floor = "F_062",  ceil = "F_062",  -- TODO: F_061..F_064
     h = 8,
   },
 
-  QUEST = -- FIXME
+  WEAPON =
   {
-    wall = "CTYSTUCI4", void = "CTYSTUCI4",
-    floor = "FLOOR11",  ceil = "FLOOR11",
+    wall = "T2_STEP", void = "FIRE06",
+    floor = "F_042",  ceil = "F_042",
     h = 8,
   },
 
-  WEAPON = -- FIXME
+  QUEST =
   {
-    wall = "CTYSTUCI4", void = "CTYSTUCI4",
-    floor = "FLOOR11",  ceil = "FLOOR11",
+    wall = "T2_STEP", void = "FIRE06",
+    floor = "F_091",  ceil = "F_091",
     h = 8,
   },
+
 }
 
 ---- OVERHANGS ------------
@@ -136,9 +149,9 @@ XN_LIQUIDS =
 
 XN_SWITCHES =
 {
-  sw_rock = { wall="STEEL01", switch="SW_1_UP" },
+  sw_rock = { wall="STEEL06", switch="SW_1_UP" },
 
-  sw_exit = { wall="STEEL01", switch="SW_2_UP" },
+  sw_exit = { wall="STEEL06", switch="SW_2_UP" },
 }
 
 XN_DOORS =
@@ -152,7 +165,9 @@ XN_DOORS =
   d_wood3  = { tex="D_WD10",   w=64,  h=128 },
 
   d_silver = { tex="D_SILVER", w=64,  h=128 },
-  d_exit   = { tex="D_CAST",   w=64,  h=128 },
+  d_iron   = { tex="D_CAST",   w=64,  h=128 },
+
+  d_exit   = { tex="FIRE04",   w=64,  h=128 },
 }
 
 XN_RAILS =
