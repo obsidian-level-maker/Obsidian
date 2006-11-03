@@ -80,7 +80,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
 	addon = new Fl_Choice(x+70, cy, 150, 24, "Add-on: ");
 	addon->align(FL_ALIGN_LEFT);
-	addon->add("None|Eternal 3|Osiris|Gothic DM");
+	addon->add("None"); //TODO: Eternal 3|Osiris|Gothic DM
 	addon->value(0);
 	
 	add(addon);
@@ -143,10 +143,12 @@ void UI_Setup::game_callback(Fl_Widget *w, void *data)
 {
 	UI_Setup *that = (UI_Setup *)data;
 
+#if 0
   if (that->game->value() == 1)
     that->addon->show();
   else
     that->addon->hide();
+#endif
 }
 
 void UI_Setup::Locked(bool value)
