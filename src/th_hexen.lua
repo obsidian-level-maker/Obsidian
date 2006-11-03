@@ -228,21 +228,22 @@ XN_THING_NUMS =
   afrit    = 10060,
   serpent1 = 121,
   serpent2 = 120,
-  wendigo  = 8020,   -- FIXME: correct?
+  wendigo  = 8020,
   centaur1 = 107,
   centaur2 = 115,
 
-  stalker1   = 31,   -- FIXME: correct???
+  stalker1   = 31,
   stalker2   = 8080,
   bishop     = 114,
-  reiver     = 112,  -- FIXME: correct???
+  reiver     = 34,
+  reiver_bd  = 10011,
   wyvern     = 254,
-  heresiarch = 10080,
-  korax      = 10200,
 
+  heresiarch   = 10080,
   fighter_boss = 10100,
   cleric_boss  = 10101, 
   mage_boss    = 10102,
+  korax        = 10200,
 
   --- pickups ---
   k_steel   = 8030,
@@ -371,21 +372,22 @@ XN_INITIAL_MODEL =
 XN_MONSTERS =
 {
   -- FIXME: these stats are CRAP!
-  ettin      = { prob=70, r=24,h=64, hp=60,  dm= 5, fp= 1, melee=true },
-  afrit      = { prob=70, r=24,h=64, hp=60,  dm=10, fp= 1, float=true },
-  serpent1   = { prob=30, r=24,h=64, hp=60,  dm=10, fp=10, cage_prob=10 },
-  serpent2   = { prob=20, r=24,h=64, hp=60,  dm=15, fp=10, },
-  wendigo    = { prob=20, r=24,h=64, hp=60,  dm=25, fp=10, environ="ice" },
-  centaur1   = { prob=30, r=24,h=64, hp=60,  dm=10, fp=10, melee=true},
-  centaur2   = { prob=15, r=24,h=64, hp=60,  dm=20, fp=10, },
+  ettin      = { prob=70, r=24,h=64, hp=170, dm= 5, fp= 1, melee=true },
+  serpent1   = { prob=30, r=33,h=70, hp=90,  dm= 9, fp=10, },
+  afrit      = { prob=70, r=24,h=64, hp=80,  dm=10, fp= 1, float=true, cage_fallback=2 },
+  serpent2   = { prob=20, r=33,h=70, hp=90,  dm=15, fp=10, },
+  wendigo    = { prob=20, r=24,h=80, hp=120, dm=25, fp=10, environ="ice" },
+  centaur1   = { prob=30, r=20,h=64, hp=200, dm=10, fp=10, melee=true},
+  centaur2   = { prob=15, r=20,h=64, hp=250, dm=20, fp=10, },
 
-  stalker1   = { prob=30, r=24,h=64, hp=60,  dm=60, fp=10, environ="swamp", melee=true },
-  stalker2   = { prob=10, r=24,h=64, hp=60,  dm=30, fp=10, environ="swamp" },
-  bishop     = { prob=10, r=24,h=64, hp=60,  dm=40, fp=70, float=true },
-  reiver     = { prob= 5, r=24,h=64, hp=60,  dm=50, fp=70, float=true },
-  wyvern     = { prob= 5, r=24,h=64, hp=60,  dm=60, fp=70, float=true },
-  heresiarch = { prob= 1, r=24,h=64, hp=60,  dm=70, fp=70, },
-  korax      = { prob= 0, r=24,h=64, hp=60,  dm=90, fp=70, },
+  stalker1   = { prob=30, r=33,h=64, hp=250, dm=60, fp=10, environ="swamp", melee=true },
+  stalker2   = { prob=10, r=33,h=64, hp=250, dm=30, fp=10, environ="swamp" },
+  bishop     = { prob=10, r=24,h=64, hp=130, dm=40, fp=70, float=true },
+  reiver     = { prob= 5, r=24,h=64, hp=150, dm=50, fp=70, float=true },
+  wyvern     = { prob= 5, r=20,h=64, hp=640, dm=60, fp=70, float=true },
+
+  heresiarch = { prob= 0, r=40,h=120,hp=5000,dm=70, fp=70 },
+  korax      = { prob= 0, r=66,h=120,hp=5000,dm=90, fp=70 },
 }
 
 XN_WEAPONS =
