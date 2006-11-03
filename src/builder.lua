@@ -2723,7 +2723,6 @@ end
 
       for i = 1,cluster do
         local dx, dy = dir_to_delta(offsets[i])
-print(name)
         add_thing(p, c, bx+dx, by+dy, name, false)
       end
     end

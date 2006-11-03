@@ -165,7 +165,13 @@ function hm_give_weapon(HM, weapon, ammo_mul)
   local info = THEME.weapons[weapon]
   assert(info)
 
-  if info.ammo then
+  if info.ammo and info.give then
+    if info.ammo == "combo_mana" then
+      HM.blue_mana  = HM.blue_mana  + info.give * (ammo_mul or 1)
+      HM.green_mana = HM.green_mana + info.give * (ammo_mul or 1)
+      return
+    end
+
     HM[info.ammo] = HM[info.ammo] + info.give * (ammo_mul or 1)
   end
 end
@@ -268,6 +274,7 @@ function simulate_battle(p, HM, mon_set, quest)
       if item.weapon then
         hm_give_weapon(HM, item.weapon, 0.5) -- dropped
       elseif item.ammo then
+        assert(info.ammo ~= "combo_mana")
         HM[item.ammo] = HM[item.ammo] + item.give * 0.5
       else
         error("UKNOWN ITEM GIVEN BY " .. AC.name)
@@ -402,7 +409,12 @@ zprint(active_mon, #active_mon, active_mon[1])
       if name == "launch" then blast_monsters(3, 64) end
 
       if info.ammo then
-        HM[info.ammo] = HM[info.ammo] - info.per
+        if info.ammo == "combo_mana" then
+          HM[blue_mana]  = HM[blue_mana]  - info.per
+          HM[green_mana] = HM[green_mana] - info.per
+        else
+          HM[info.ammo] = HM[info.ammo] - info.per
+        end
       end
 
       remain_shots = remain_shots - 1
@@ -607,25 +619,30 @@ function distribute_pickups(p, c, HM)
 
 
   local function be_nice_to_player()
-do return end  --!!!!!!
 
-    -- let poor ol' player have a shotgun near start
+    if (settings.game == "doom") or (settings.game == "doom2") then
 
-    if c.along == #c.quest.path then return end
+      -- let poor ol' player have a shotgun near start
 
-    if not HM.shotty and rand_odds(66) then
-      add_pickup(c, "shotty", THEME.weapons.shotty, 1)
-      hm_give_weapon(HM, "shotty")
-    end
+      if c.along == #c.quest.path then return end
 
-    if not HM.chain and c.quest.level >= 3 and rand_odds(11) then
-      add_pickup(c, "chain", THEME.weapons.chain, 1)
-      hm_give_weapon(HM, "chain")
-    end
+      if not HM.shotty and rand_odds(66) then
+        add_pickup(c, "shotty", THEME.weapons.shotty, 1)
+        hm_give_weapon(HM, "shotty")
+      end
 
-    if HM.armor <= 0 and rand_odds(2) then
-      add_pickup(c, "green_armor", THEME.pickups.green_armor, 1)
-      hm_give_armor(HM, 100, 100)
+      if not HM.chain and c.quest.level >= 3 and rand_odds(11) then
+        add_pickup(c, "chain", THEME.weapons.chain, 1)
+        hm_give_weapon(HM, "chain")
+      end
+
+      if HM.armor <= 0 and rand_odds(2) then
+        add_pickup(c, "green_armor", THEME.pickups.green_armor, 1)
+        hm_give_armor(HM, 100, 100)
+      end
+
+    else
+      -- FIXME: be nice to Heretic and Hexen players too!!
     end
   end
 
