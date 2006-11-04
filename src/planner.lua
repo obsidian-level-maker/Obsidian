@@ -565,7 +565,7 @@ function plan_sp_level(is_coop)  -- returns Plan
  
     -- TODO: better system for choosing themes
     local theme
-    if Q.mini then theme = Q.parent.theme
+    if Q.mini and rand_odds(77) then theme = Q.parent.theme  --!!!!!
     else theme = get_rand_theme()
     end
 
