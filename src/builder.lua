@@ -1081,7 +1081,7 @@ end
 function random_door_kind(w)
   local names = {}
   for kind,info in pairs(THEME.arch.doors) do
-    if not kind.is_special and info.w == w then
+    if not info.is_special and info.w == w then
       table.insert(names,kind)
     end
   end
