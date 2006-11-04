@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-DM_THEMES =
+DM_COMMON_THEMES =
 {
 ---- INDOOR ------------
 
@@ -64,7 +64,7 @@ DM_THEMES =
     void = "STARG2",
     step = "STEP1",
     lift = "PLAT1",
-    pillar = "METAL4",
+    pillar = "METAL",  -- was "METAL4", not in doom 1
     pic_wd = "COMPBLUE",
 
     floor = "FLOOR5_1",
@@ -79,13 +79,13 @@ DM_THEMES =
     mat_pri = 6,
 
     wall = "MARBLE2",
-    void = "MARBGRAY",
+    void = "SP_DUDE5",
     step = "STEP1",
-    pillar = "MARBFAC4",
+    pillar = "GSTLION",
     pic_wd  = "SP_DUDE1",
 
-    floor = "GRNROCK",
-    ceil = "RROCK04",
+    floor = "FLOOR7_2",
+    ceil = "FLOOR7_1",
 
     scenery = "red_column_skl",
 
@@ -107,54 +107,6 @@ DM_THEMES =
     ceil = "FLAT5_1",
   },
 
-  BRICK =
-  {
-    mat_pri = 6,
-
-    wall = "BRICK7",
-    void = "BRICK5",
-    step = "STEP1",
-    pillar = "BRICKLIT",
-    pic_wd = "BRWINDOW",
-
-    floor = "FLOOR0_7",
-    ceil = "CEIL5_2",
-
-    scenery = "red_torch",
-    bad_liquid = "slime",
-  },
-
-  BRICK2 =
-  {
-    mat_pri = 6,
-
-    wall = "BIGBRIK1",
-    void = "BIGBRIK3",
-    step = "STEP1",
-    pillar = "BRICK12",
-
-    floor = "RROCK12",
-    ceil = "FLAT1",
-
-    scenery = "green_torch",
-  },
-
-  PANEL =
-  {
-    mat_pri = 6,
-
-    wall = "PANEL7",
-    void = "PANBOOK",
-    step = "STEP2",
-    pillar = "PANBLUE",
-    pic_wd = "SPACEW3",
-
-    floor = "FLOOR5_4",
-    ceil = "CEIL1_2",
-
-    scenery = "candelabra",
-  },
-
   CEMENT =
   {
     mat_pri = 1,
@@ -171,25 +123,6 @@ DM_THEMES =
 
   },
 
-  GRNTECH =
-  {
-    mat_pri = 4,
-
-    wall = "TEKGREN2",
-    void = "TEKGREN1",
-    step = "STEP1",
-    pillar = "TEKLITE2",  -- TODO: doom 1: "COMPUTE1"
-
-    pic_wd = "COMPSTA1", pic_wd_h = 64,
-
-    floor = "FLOOR1_1",
-    ceil = "FLAT4",
-
-    scenery = "mercury_lamp",
-
-    bad_liquid = "water",
-  },
-
   SLAD =
   {
     mat_pri = 4,
@@ -198,7 +131,7 @@ DM_THEMES =
     void = "SLADSKUL",
     step = "STEP1",
     pillar = "SLADPOIS",
-    pic_wd = "BSTONE3",
+--FIXME: (not in doom1)   pic_wd = "BSTONE3",
 
     floor = "FLOOR0_5",
     ceil = "CEIL5_1",
@@ -228,57 +161,6 @@ DM_THEMES =
 
   ---- OUTDOOR ------------
 
-  GRASSY =
-  {
-    outdoor = true,
-    mat_pri = 2,
-
-    wall = "ZIMMER7",
-    void = "ZIMMER8",
-    step = "STEP5",
-
-    floor = "RROCK19",
-    ceil = "F_SKY1",
-
-    scenery = "brown_stub",
-
-    bad_liquid = "nukage",
-  },
-
-  MUDDY =
-  {
-    outdoor = true,
-    mat_pri = 2,
-
-    wall = "ASHWALL4",
-    void = "TANROCK5",
-    step = "STEP5",
-
-    floor = "FLAT10",
-    ceil = "F_SKY1",
-
-    scenery = "burnt_tree",
-
-    bad_liquid = "slime",
-  },
-
-  ASHY =
-  {
-    outdoor = true,
-    mat_pri = 6,
-
-    wall = "ASHWALL2",
-    void = "BLAKWAL2",
-    step = "STEP4",
-    piller = "STONE5",
-    pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
-
-    floor = "MFLR8_4",
-    ceil = "F_SKY1",
-
-    scenery = "skull_rock",
-  },
-
   STONY =
   {
     outdoor = true,
@@ -295,45 +177,6 @@ DM_THEMES =
     scenery = "blue_torch",
   },
 
-  ROCKY =
-  {
-    outdoor = true,
-    mat_pri = 3,
-
-    wall = "TANROCK7",
-    void = "ZIMMER4",
-    step = "STEP6",
-    lift = "SUPPORT3",
-    piller = "ASHWALL7",
-
-    floor = "RROCK04",
-    ceil = "F_SKY1",
-  --  lift_flat = "FLOOR4_8",
-
-    scenery = "burnt_tree", -- "big_tree",
-
-    bad_liquid = "slime",
-  },
-
-  ROCKY2 =
-  {
-    outdoor = true,
-    mat_pri = 3,
-
-    wall = "TANROCK8",
-    void = "ROCK4",
-    step = "STEP6",
-    lift = "SUPPORT3",
-
-    floor = "RROCK17",
-    ceil = "F_SKY1",
-  --  lift_flat = "FLOOR4_8",
-
-    scenery = "brown_stub",
-
-    bad_liquid = "slime",
-  },
-
   BROWN =
   {
     outdoor = true,
@@ -343,7 +186,7 @@ DM_THEMES =
     void = "BROWNPIP",
     step = "STEP5",
     lift = "SUPPORT3",
-    pillar = "BRONZE2",
+    pillar = "BROWN96",  -- was "BRONZE2" (not in doom 1)
 
     floor = "MFLR8_2",  -- "RROCK16" (not in doom 1)
     ceil = "F_SKY1",
@@ -374,7 +217,7 @@ DM_MATS =
   {
     wall  = "METAL",
     void  = "METAL1",
-    floor = "SLIME14",
+    floor = "SLIME14",  -- !!! FIXME: not in doom 1
     ceil  = "SLIME14",
   },
 
@@ -458,43 +301,28 @@ DM_OVERHANGS =
   METAL =
   {
     ceil = "CEIL5_1",
-    upper = "METAL6",
+    upper = "METAL",
     thin = "METAL",
-  },
-
-  PANEL =
-  {
-    thin = "PANBORD2",
-    thick = "PANBORD1",
-    upper = "PANCASE2",
-    ceil = "CEIL3_1",
   },
 
   MARBLE =
   {
     thin = "MARBLE1",
     upper = "MARBLE3",
-    ceil = "SLIME13",
+    ceil = "DEM1_6",
   },
 
   STONE =
   {
-    thin = "STONE4",
-    upper = "STONE4",
+    thin = "STONE",
+    upper = "STONE",
     ceil = "FLAT5_4",
-  },
-
-  STONE2 =
-  {
-    thin = "STONE6",
-    upper = "STONE6",
-    ceil = "FLAT5_5",
   },
 
   WOOD =
   {
-    thin = "WOOD9",
-    upper = "WOOD12",
+    thin = "WOOD1",
+    upper = "WOOD1",
     ceil = "FLAT5_1",
   },
 }
@@ -506,7 +334,6 @@ DM_LIQUIDS =
 {
   { name="water",  floor="FWATER1" },
   { name="blood",  floor="BLOOD1"  }, -- no damage
-  { name="slime",  floor="SLIME01", sec_kind=7 },  --  5% damage
   { name="nukage", floor="NUKAGE1", sec_kind=5 },  -- 10% damage
   { name="lava",   floor="LAVA1",   sec_kind=16, light=64 }, -- 20% damage
 }
@@ -518,10 +345,10 @@ DM_SWITCHES =
   sw_vine = { wall="SKINFACE", switch="SW1SKIN" },
   sw_skin = { wall="GRAYVINE", switch="SW1VINE" },
 
-  sw_wood = { wall="WOODMET1", switch="SW1WDMET", floor="FLAT5_1", bars=true, stand_h=128 },
   sw_metl = { wall="SUPPORT3", switch="SW1GARG",  floor="CEIL5_2", bars=true },
   sw_gray = { wall="GRAY7",    switch="SW1GRAY1", floor="FLAT1",   bars=true },
-  sw_rock = { wall="ROCK3",    switch="SW1ROCK",  floor="RROCK13", bars=true },
+--FIXME: (not in doom1)  sw_rock = { wall="ROCK3",    switch="SW1ROCK",  floor="RROCK13", bars=true },
+--FIXME:  sw_wood = { wall="WOODMET1", switch="SW1WDMET", floor="FLAT5_1", bars=true, stand_h=128 },
 
   sw_exit = { wall="COMPSPAN", switch="SW1COMP" },
 }
@@ -540,22 +367,19 @@ DM_DOORS =
   d_wood2  = { tex="BIGDOOR6", bottom="CEIL5_2", w=128, h=112 }, -- this is the real height!
   d_wood3  = { tex="BIGDOOR7", bottom="CEIL5_2", w=128, h=112 },
 
+  -- FIXME: doom 2 only
+  --[[
   d_thin1  = { tex="SPCDOOR1", w=64, h=112 },
   d_thin2  = { tex="SPCDOOR2", w=64, h=112 },
   d_thin3  = { tex="SPCDOOR3", w=64, h=112 },
   d_weird  = { tex="SPCDOOR4", w=64, h=112 },
+  --]]
 
   d_small1 = { tex="DOOR1",    w=64, h=72 },
   d_small2 = { tex="DOOR3",    w=64, h=72 },
 
   d_exit   = { tex="EXITDOOR", w=64, h=72, is_special=true,
                frame_top="TLITE6_5", sign="EXITSIGN", sign_bottom="CEIL5_2" },
-}
-
-DM_RAILS =
-{
-  r_1 = { tex="MIDBARS3", w=128, h=72  },
-  r_2 = { tex="MIDGRATE", w=128, h=128 },
 }
 
 DM_LIGHTS =
@@ -571,7 +395,8 @@ DM_LIGHTS =
   { flat="FLAT2",    side="GRAY5" },
   { flat="FLAT17",   side="GRAY5" },
   { flat="FLOOR1_7", side="SP_HOT1" },
-  { flat="GRNLITE1", side="TEKGREN2" },
+
+--FIXME (not in doom 1)  { flat="GRNLITE1", side="TEKGREN2" },
 
   { flat="TLITE6_1", side="METAL" },
   { flat="TLITE6_4", side="METAL" },
@@ -593,15 +418,15 @@ DM_PICS =
 
   { tex="SHAWN1",   w=128, h=96  },
   { tex="SKINEDGE", w=128, h=128 },
-  { tex="TEKBRON1", w=128, h=128 },
-  { tex="WOOD10",   w=128, h=128 },
   { tex="WOOD3",    w=128, h=64  },
 
 --  { tex="SKSPINE2", w=128, h=128, scroll=48 },
 --  { tex="SPFACE1",  w=128, h=96,  scroll=48 },
 
-  { tex="ZZWOLF6",  w=128, h=128 },
-  { tex="ZZWOLF7",  w=128, h=128 },
+--FIXME (not in doom 1)  { tex="ZZWOLF6",  w=128, h=128 },
+--FIXME (not in doom 1)  { tex="ZZWOLF7",  w=128, h=128 },
+--FIXME  { tex="WOOD10",   w=128, h=128 },
+--FIXME  { tex="TEKBRON1", w=128, h=128 },
 }
 
 DM_KEY_BITS =
@@ -623,7 +448,7 @@ DM_QUESTS =
   switch =
   {
     sw_blue=50, sw_hot=30,  sw_vine=10, sw_skin=40,
-    sw_wood=30, sw_metl=50, sw_gray=20, sw_rock=10
+    sw_wood=30, sw_metl=50, sw_gray=20, -- FIXME: sw_rock=10
   },
   weapon =
   {
@@ -643,153 +468,6 @@ DM_QUESTS =
 
 ------------------------------------------------------------
 
-DM_THING_NUMS =
-{
-  --- special stuff ---
-  player1 = 1,
-  player2 = 2,
-  player3 = 3,
-  player4 = 4,
-  dm_player = 11,
-  teleport_spot = 14,
-
-  --- monsters ---
-  zombie    = 3004,
-  shooter   = 9,
-  gunner    = 65,
-  imp       = 3001,
-  caco      = 3005,
-  revenant  = 66,
-  knight    = 69,
-  baron     = 3003,
-
-  mancubus  = 67,
-  arach     = 68,
-  pain      = 71,
-  vile      = 64,
-  demon     = 3002,
-  spectre   = 58,
-  skull     = 3006,
-
-  cyber     = 16,
-  spider    = 7,
-  keen      = 72,
-  wolf_ss   = 84,
-
-  --- pickups ---
-  k_red     = 38,
-  k_yellow  = 39,
-  k_blue    = 40,
-
-  kc_blue   = 5,
-  kc_yellow = 6,
-  kc_red    = 13,
-
-  shotty = 2001,
-  super  =   82,
-  chain  = 2002,
-  launch = 2003,
-  plasma = 2004,
-  saw    = 2005,
-  bfg    = 2006,
-
-  backpack =  8,
-  mega   =   83,
-  invul  = 2022,
-  berserk= 2023,
-  invis  = 2024,
-  suit   = 2025,
-  map    = 2026,
-  goggle = 2045,
-
-  potion   = 2014,
-  stimpack = 2011,
-  medikit  = 2012,
-  soul     = 2013,
-
-  helmet      = 2015,
-  green_armor = 2018,
-  blue_armor  = 2019,
-
-  bullets    = 2007,
-  bullet_box = 2048,
-  shells     = 2008,
-  shell_box  = 2049,
-  rockets    = 2010,
-  rocket_box = 2046,
-  cells      = 2047,
-  cell_pack  =   17,
-
-  --- scenery ---
-  lamp = 2028,
-  mercury_lamp = 85, 
-  short_lamp = 86,
-  tech_column = 48,
-
-  barrel = 2035,
-  candle = 34,  -- non-blocking
-  candelabra = 35,
-  burning_barrel = 70,
-
-  blue_torch     = 44,
-  blue_torch_sm  = 55,
-  green_torch    = 45,
-  green_torch_sm = 56,
-  red_torch      = 46,
-  red_torch_sm   = 57,
-
-  green_pillar = 30,
-  green_column = 31,
-  green_column_hrt = 36,
-
-  red_pillar = 32,
-  red_column = 33,
-  red_column_skl = 37,
-
-  brown_stub = 47,
-  burnt_tree = 43,
-  big_tree = 54,  
-
-  evil_eye    = 41,
-  skull_rock  = 42,
-  skull_pole  = 27,
-  skull_kebab = 28,
-  skull_cairn = 29,
-
-  impaled_human  = 25,
-  impaled_twitch = 26,
-
-  gutted_victim1 = 73,
-  gutted_victim2 = 74,
-  gutted_torso1  = 75,
-  gutted_torso2  = 76,
-  gutted_torso3  = 77,
-  gutted_torso4  = 78,
-
-  -- all the rest are non-blocking
-  hang_twitching = 63,
-  hang_arm_pair  = 59,
-  hang_leg_pair  = 60,
-  hang_leg_gone  = 61,
-  hang_leg       = 62,
-
-  gibs = 24,
-  gibbed_player = 10,
-  pool_blood_1 = 79,
-  pool_blood_2 = 80,
-  pool_brains  = 81,
-
-  dead_player  = 15,
-  dead_zombie  = 18,
-  dead_shooter = 19,
-  dead_imp     = 20,
-  dead_demon   = 21,
-  dead_caco    = 23,
-}
-
-
-------------------------------------------------------------
-
 -- Monster list
 -- ============
 --
@@ -804,18 +482,10 @@ DM_MONSTERS =
   -- FIXME: probs for CLOSET/DEPOT
   zombie    = { prob=81, r=20,h=56, hp=20,  dm=4,  fp=10, cage_fallback=10, hitscan=true, },
   shooter   = { prob=41, r=20,h=56, hp=30,  dm=10, fp=10, cage_prob= 5, hitscan=true, },
-  gunner    = { prob=17, r=20,h=56, hp=70,  dm=40, fp=40, cage_prob=70, hitscan=true, },
 
   imp       = { prob=90, r=20,h=56, hp=60,  dm=20, fp=20, cage_prob=90, },
   caco      = { prob=90, r=31,h=56, hp=400, dm=45, fp=30, cage_prob=14, float=true },
-  revenant  = { prob=70, r=20,h=64, hp=300, dm=55, fp=48, cage_prob=50, },
-  knight    = { prob=70, r=24,h=64, hp=500, dm=45, fp=60, cage_prob=50, },
   baron     = { prob=50, r=24,h=64, hp=1000,dm=45, fp=110,cage_prob= 2, },
-
-  mancubus  = { prob=70, r=48,h=64, hp=600, dm=80, fp=110,cage_prob=70, },
-  arach     = { prob=26, r=64,h=64, hp=500, dm=70, fp=90, cage_prob=90, },
-  pain      = { prob= 8, r=31,h=56, hp=400, dm=88, fp=40, cage_prob= 0, float=true },
-  vile      = { prob=10, r=20,h=56, hp=700, dm=30, fp=120,cage_prob=14, hitscan=true },
 
   -- MELEE only monsters
   demon     = { prob=80, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=140,melee=true },
@@ -823,9 +493,22 @@ DM_MONSTERS =
   skull     = { prob=20, r=16,h=56, hp=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
 
   -- special monsters (only for boss levels)
-  cyber     = { prob=0, r=40, h=110,hp=4000,dm=150, fp=150 },
+  cyber     = { prob=1, r=40, h=110,hp=4000,dm=150, fp=150 },
   spider    = { prob=0, r=128,h=100,hp=3000,dm=200, fp=240, hitscan=true },
-  wolf_ss   = { prob=1, r=20, h=56, hp=50,  dm=15,  fp=120, hitscan=true },
+}
+
+D2_MONSTERS =
+{
+  gunner    = { prob=17, r=20,h=56, hp=70,  dm=40, fp=40,  hitscan=true, cage_prob=70, },
+  wolf_ss   = { prob= 1, r=20,h=56, hp=50,  dm=15, fp=120, hitscan=true },
+
+  revenant  = { prob=70, r=20,h=64, hp=300, dm=55, fp=48, cage_prob=50, },
+  knight    = { prob=70, r=24,h=64, hp=500, dm=45, fp=60, cage_prob=50, },
+  mancubus  = { prob=70, r=48,h=64, hp=600, dm=80, fp=110,cage_prob=70, },
+
+  arach     = { prob=26, r=64,h=64, hp=500, dm=70, fp=90, cage_prob=90, },
+  vile      = { prob=10, r=20,h=56, hp=700, dm=30, fp=120,cage_prob=14, hitscan=true },
+  pain      = { prob= 8, r=31,h=56, hp=400, dm=88, fp=40, float=true },
 }
 
 DM_MONSTER_GIVE =
@@ -966,6 +649,19 @@ DM_INITIAL_MODEL =
 
 ------------------------------------------------------------
 
+D1_THEMES =
+{
+}
+
+D1_RAILS =
+{
+  r_1 = { tex="BRNSMALC", w=128, h=64  },
+  r_2 = { tex="MIDGRATE", w=128, h=128 },
+}
+
+
+------------------------------------------------------------
+
 function common_doom_theme(T)
 
   T.ERROR_TEX  = "FIREBLU1"
@@ -989,7 +685,7 @@ function common_doom_theme(T)
 
   T.arch =
   {
-    themes    = DM_THEMES,
+    themes    = DM_COMMON_THEMES,
     hangs     = DM_OVERHANGS,
     pedestals = DM_PEDESTALS,
     mats      = DM_MATS,
@@ -998,7 +694,6 @@ function common_doom_theme(T)
     switches  = DM_SWITCHES,
     doors     = DM_DOORS,
     lights    = DM_LIGHTS,
-    rails     = DM_RAILS,
     pics      = DM_PICS,
     key_bits  = DM_KEY_BITS,
   }
@@ -1009,17 +704,10 @@ function create_doom1_theme()
 
   common_doom_theme(T)
 
-  -- remove the DOOM2-only monsters
-  T.monsters = copy_table(T.monsters)
+  T.arch.themes = copy_table(T.arch.themes)
+  merge_table(T.arch.themes, D1_THEMES)
 
-  T.monsters["gunner"] = nil
-  T.monsters["revenant"] = nil
-  T.monsters["knight"] = nil
-  T.monsters["vile"] = nil
-  T.monsters["pain"] = nil
-  T.monsters["arach"] = nil
-  T.monsters["mancubus"] = nil
-  T.monsters["wolf_ss"] = nil
+  T.arch.rails = D1_RAILS
 
   -- remove the DOOM2-only weapons and items
   T.weapons = copy_table(T.weapons)
@@ -1034,16 +722,6 @@ function create_doom1_theme()
   T.dm = copy_table(T.dm)
   T.dm.weapons = copy_table(T.dm.weapons)
   T.dm.weapons["super"] = nil
-
-  -- remove DOOM2-only themes (FIXME: merge DM1 + DM_COMMON)
-  T.arch.themes = copy_table(T.arch.themes)
-  T.arch.themes["PANEL"] = nil
-  T.arch.themes["GRNTECH"] = nil
-  T.arch.themes["BRICK"] = nil
-  T.arch.themes["ASHY"] = nil
-  T.arch.themes["MUDDY"] = nil
-  T.arch.themes["GRASSY"] = nil
-  T.arch.themes["ROCKY"] = nil
 
   return T
 end
