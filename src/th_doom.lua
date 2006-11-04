@@ -80,6 +80,7 @@ DM_THEMES =
 
     wall = "MARBLE2",
     void = "MARBGRAY",
+    step = "STEP1",
     pillar = "MARBFAC4",
     pic_wd  = "SP_DUDE1",
 
@@ -98,6 +99,7 @@ DM_THEMES =
 
     wall = "WOOD1",
     void = "WOOD3",
+    step = "STEP1",
     pillar = "WOODGARG", -- "WOODMET4" not in doom 1
     pic_wd = "MARBFACE",
 
@@ -111,6 +113,7 @@ DM_THEMES =
 
     wall = "BRICK7",
     void = "BRICK5",
+    step = "STEP1",
     pillar = "BRICKLIT",
     pic_wd = "BRWINDOW",
 
@@ -127,6 +130,7 @@ DM_THEMES =
 
     wall = "BIGBRIK1",
     void = "BIGBRIK3",
+    step = "STEP1",
     pillar = "BRICK12",
 
     floor = "RROCK12",
@@ -157,6 +161,7 @@ DM_THEMES =
 
     wall = "CEMENT6",
     void = "CEMENT4",
+    step = "STEP1",
     lift = "SUPPORT3",
     pillar = "BROWNGRN",  -- "CEMENT8" not in doom 1
 
@@ -172,6 +177,7 @@ DM_THEMES =
 
     wall = "TEKGREN2",
     void = "TEKGREN1",
+    step = "STEP1",
     pillar = "TEKLITE2",  -- TODO: doom 1: "COMPUTE1"
 
     pic_wd = "COMPSTA1", pic_wd_h = 64,
@@ -190,6 +196,7 @@ DM_THEMES =
 
     wall = "SLADWALL",
     void = "SLADSKUL",
+    step = "STEP1",
     pillar = "SLADPOIS",
     pic_wd = "BSTONE3",
 
@@ -408,7 +415,7 @@ DM_MATS =
   {
     wall  = "LITE5",
     floor = "FLAT1",
-    ceil  = "TLITE6_5",
+    ceil  = "TLITE6_6",
   },
 
   SW_FRAME =
@@ -540,7 +547,9 @@ DM_DOORS =
 
   d_small1 = { tex="DOOR1",    w=64, h=72 },
   d_small2 = { tex="DOOR3",    w=64, h=72 },
-  d_exit   = { tex="EXITDOOR", w=64, h=72, sign="EXITSIGN" },
+
+  d_exit   = { tex="EXITDOOR", w=64, h=72, is_special=true,
+               frame_top="TLITE6_5", sign="EXITSIGN", sign_bottom="CEIL5_2" },
 }
 
 DM_RAILS =
@@ -595,6 +604,13 @@ DM_PICS =
   { tex="ZZWOLF7",  w=128, h=128 },
 }
 
+DM_KEY_BITS =
+{
+  k_blue   = { wall="DOORBLU2", kind_rep=26, kind_once=32, },
+  k_yellow = { wall="DOORYEL2", kind_rep=27, kind_once=34, },
+  k_red    = { wall="DOORRED2", kind_rep=28, kind_once=33, },
+}
+
 
 ---- QUEST STUFF ----------------
 
@@ -602,7 +618,7 @@ DM_QUESTS =
 {
   key =
   {
-    k_blue=10, k_red=10, k_yellow=10
+    k_blue=50, k_red=50, k_yellow=50
   },
   switch =
   {
@@ -984,6 +1000,7 @@ function common_doom_theme(T)
     lights    = DM_LIGHTS,
     rails     = DM_RAILS,
     pics      = DM_PICS,
+    key_bits  = DM_KEY_BITS,
   }
 end
 

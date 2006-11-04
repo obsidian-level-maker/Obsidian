@@ -170,10 +170,12 @@ XN_DOORS =
   d_wood2  = { tex="D_WD08",   w=64,  h=128 },
   d_wood3  = { tex="D_WD10",   w=64,  h=128 },
 
-  d_silver = { tex="D_SILVER", w=64,  h=128 },
-  d_iron   = { tex="D_CAST",   w=64,  h=128 },
+  -- lockable doors -- FIXME: the rest??
+  d_silver = { tex="D_SILVER", w=64,  h=128, is_special=true },
+  d_castle = { tex="D_CAST",   w=64,  h=128, is_special=true },
+  d_fire   = { tex="D_FIRE",   w=64,  h=128, is_special=true },
 
-  d_exit   = { tex="FIRE04",   w=64,  h=128 },
+  d_exit   = { tex="FIRE04",   w=64,  h=128, is_special=true },
 }
 
 XN_RAILS =
@@ -195,6 +197,13 @@ XN_PICS =
 {
 }
 
+XN_KEY_BITS =
+{
+  k_fire   = { door="d_fire",   kind_rep=13, kind_once=13 },
+  k_castle = { door="d_castle", kind_rep=13, kind_once=13 },
+  k_silver = { door="d_silver", kind_rep=13, kind_once=13 },
+}
+
 
 ---- QUEST STUFF ----------------
 
@@ -202,12 +211,12 @@ XN_QUESTS = --FIXME
 {
   key =
   {
-    k_steel   = 80, k_cave    = 80,
-    k_axe     = 80, k_fire    = 80,
-    k_castle  = 80, k_dungeon = 80,
-    k_silver  = 80, k_rusty   = 80,
-    k_waste   = 80, k_swamp   = 80,
-    k_gold    = 80,
+    k_fire = 50, k_castle = 50, k_silver = 50,
+
+--    k_steel   = 80, k_cave    = 80,
+--    k_axe     = 80, k_dungeon = 80,
+--    k_waste   = 80, k_swamp   = 80,
+--    k_rusty   = 80, k_gold    = 80,
   },
   switch =
   {
@@ -511,6 +520,7 @@ function create_hexen_theme()
     lights    = XN_LIGHTS,
     rails     = XN_RAILS,
 --  pics      = XN_PICS,
+    key_bits  = XN_KEY_BITS,
   }
   return T
 end

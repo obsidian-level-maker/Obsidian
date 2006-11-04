@@ -160,11 +160,11 @@ HC_SWITCHES =
 
 HC_DOORS =
 {
+  d_wood   = { tex="DOORWOOD", w=64,  h=128, bottom="FLOOR10" },
   d_demon  = { tex="DMNMSK",   w=128, h=128 },
-  d_wood   = { tex="DOORWOOD", bottom="FLOOR10", w=64, h=128 },
 --  d_stone  = { tex="DOORSTON", w=64,  h=128 },
 
-  d_exit   = { tex="DOOREXIT", w=64, h=96 },
+  d_exit   = { tex="DOOREXIT", w=64, h=96, is_special=true },
 }
 
 HC_RAILS =
@@ -184,13 +184,20 @@ HC_PICS =
 {
 }
 
+HC_KEY_BITS =
+{
+  k_blue   = { thing="blue_statue",   kind_rep=26, kind_once=32, },
+  k_green  = { thing="green_statue",  kind_rep=28, kind_once=33, },
+  k_yellow = { thing="yellow_statue", kind_rep=27, kind_once=34, },
+}
+
 ---- QUEST STUFF ----------------
 
 HC_QUESTS =
 {
   key =
   {
-    k_blue=10, k_green=10, k_yellow=20
+    k_blue=20, k_green=40, k_yellow=60
   },
   switch =
   {
@@ -475,6 +482,7 @@ function create_heretic_theme()
     lights    = HC_LIGHTS,
     rails     = HC_RAILS,
 --  pics      = HC_PICS,
+    key_bits  = HC_KEY_BITS,
   }
 
   return T
