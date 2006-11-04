@@ -16,3 +16,13 @@
 --
 ----------------------------------------------------------------
 
+
+
+function create_doom2_theme()
+  local T = {}
+
+  common_doom_theme(T)
+
+  return T
+end
+
