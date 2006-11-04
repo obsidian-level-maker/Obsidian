@@ -254,7 +254,8 @@ end
 --    3x3  3x2  3x1
 --    2x3  2x2  2x1
 --
-function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
+function B_door(p, c, link, b_theme, x,y,z, dir, long,deep, door_info,
+                kind,tag, key_tex)
  
   local high = door_info.h
   
@@ -265,72 +266,39 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
   assert (link.kind == "door")
 
   local wall_tex = c.theme.wall
-  local key_tex  = wall_tex
   local track_tex = door_info.track or THEME.arch.mats.TRACK.wall
   local door_tex = door_info.tex
-  local side_tex = THEME.arch.mats.DOOR_FRAME.wall -- might be nil
+  local side_tex
   local ceil_tex = THEME.arch.mats.DOOR_FRAME.floor
 
-  if deep >= 2 then
-    side_tex = key_tex
-    ceil_tex = door_info.ceil_tex or THEME.arch.mats.DOOR_FRAME.ceil
+  if key_tex then
+    side_tex = nil
+  else
+    key_tex  = wall_tex
+    side_tex = THEME.arch.mats.DOOR_FRAME.wall -- can be nil
   end
 
-  local door_kind = 1
-  if p.deathmatch and rand_odds(66) then door_kind = 117 end -- blaze
+  if deep >= 2 then
+--    side_tex = key_tex
+--    ceil_tex = door_info.ceil_tex or THEME.arch.mats.DOOR_FRAME.ceil
+  end
 
-  local door = { f_h = z+8, c_h = z+8,
+  local DOOR = { f_h = z+8, c_h = z+8,
                  f_tex = door_info.frame_bottom or THEME.arch.mats.DOOR_FRAME.floor,
                  c_tex = door_info.bottom       or THEME.arch.mats.DOOR_FRAME.floor,
                  light = 255,
                  l_tex = door_tex,
                  u_tex = door_tex,
-                 door_kind = door_kind }
+                 door_kind = kind,
+                 tag = tag,
+                 }
 
-  -- FIXME MOVE OUT OF HERE PLEASE !!!
-  if link.quest then
-
-    if link.quest.kind == "key" then
-          if link.quest.item == "k_blue"   then door.door_kind = sel(p.coop,32,26); key_tex = "DOORBLU2"
-      elseif link.quest.item == "k_yellow" then door.door_kind = sel(p.coop,34,27); key_tex = "DOORYEL2"
-      elseif link.quest.item == "k_red"    then door.door_kind = sel(p.coop,33,28); key_tex = "DOORRED2"
-      end
-
-    elseif link.quest.kind == "switch" then
-      door.door_kind = nil;
-      door.tag = link.quest.tag + 1
-      local info = THEME.arch.switches[link.quest.item]
-      key_tex = info.wall
-      assert(key_tex)
-
-      if info.bars then
-        local sec = copy_block(c.room_sec)
-        sec.f_h = z
-        sec.f_tex = b_theme.floor
-        sec.c_tex = b_theme.ceil
-        if not link.src.outdoor or not link.dest.outdoor then
-          sec.c_h = sec.c_h - 32
-          if b_theme.outdoor then sec.c_tex = sec.f_tex end
-        end
-        local bar = link.bar_size
-        B_bars(p,c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_theme.wall, door.tag)
-        return;
-      end
-    end
-
-    side_tex = key_tex
-    ceil_tex = door_info.frame_top or THEME.arch.mats.DOOR_FRAME.ceil
-  end
-
-
-  local d_front = { f_h = z+8, c_h = z+8 + door_info.h,
-                    f_tex = door.f_tex,
-                    c_tex = ceil_tex,
+  local STEP = { f_h = z+8, c_h = z+8 + door_info.h,
+                    f_tex = DOOR.f_tex,
+                    c_tex = door_info.frame_top or THEME.arch.mats.DOOR_FRAME.ceil,
                     light=224,
                     l_tex = door_info.step or c.theme.step or THEME.arch.mats.STEP.wall,
                     u_tex = wall_tex }
-
-  local d_back = d_front
 
   -- block based door (big 'n bulky)
 
@@ -340,15 +308,15 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
     local ex, ey = (long-2)*ax, (long-2)*ay
 
     fill (p,c, x,   y,    x+zx,y+zy, { solid=key_tex })
-    fill (p,c, x+ax,y+ay, x+ex,y+ey, d_back )
+    fill (p,c, x+ax,y+ay, x+ex,y+ey, STEP )
     x = x + dx; y = y + dy
 
     fill (p,c, x,   y,    x+zx,y+zy, { solid=wall_tex })
-    fill (p,c, x+ax,y+ay, x+ex,y+ey, door)
+    fill (p,c, x+ax,y+ay, x+ex,y+ey, DOOR)
     x = x + dx; y = y + dy
 
     fill (p,c, x,   y,    x+zx,y+zy, { solid=key_tex })
-    fill (p,c, x+ax,y+ay, x+ex,y+ey, d_front )
+    fill (p,c, x+ax,y+ay, x+ex,y+ey, STEP )
 
     return
   end
@@ -376,7 +344,7 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
     local sx, sy = ax*side, ay*side
 
     -- align inner sides with outside wall
-    local y_diff = link_other(link, c).ceil_h - d_front.c_h
+    local y_diff = link_other(link, c).ceil_h - STEP.c_h
     local far = deep * FW - 1
 
     local override
@@ -395,18 +363,18 @@ function B_door(p, c, link, b_theme, x, y, z, dir, long,deep, door_info)
       { solid=key_tex, [10-adir] = override })
 
     for ff = 1,step do
-      frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, d_front)
+      frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, STEP)
       fx = fx + dx; fy = fy + dy
     end
 
     for mm = 1,2 do
       frag_fill (p,c, fx+ax,fy+ay, fx+zx-ax,fy+zy-ay, { solid=track_tex })
-      frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, door)
+      frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, DOOR)
       fx = fx + dx; fy = fy + dy
     end
 
     for bb = 1,step do
-      frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, d_back)
+      frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, STEP)
       fx = fx + dx; fy = fy + dy
     end
 
@@ -436,7 +404,7 @@ function B_exitdoor(p, c, link, x, y, z, dir)
   local key_tex  = door_info.tex
   local track_tex = door_info.track or THEME.arch.mats.TRACK.wall
 
-  local door = { f_h = z+8, c_h = z+8,
+  local DOOR = { f_h = z+8, c_h = z+8,
                  f_tex = THEME.arch.mats.DOOR_FRAME.floor,
                  c_tex = THEME.arch.mats.DOOR_FRAME.floor,
                  light = 255,
@@ -445,20 +413,18 @@ function B_exitdoor(p, c, link, x, y, z, dir)
                  u_tex = door_tex
                }
 
-  local d_front = { f_h = z+8, c_h = z+8+high,
-                    f_tex = door.f_tex,
-                    c_tex = "TLITE6_5",
+  local STEP = { f_h = z+8, c_h = z+8+high,
+                    f_tex = DOOR.f_tex,
+                    c_tex = door_info.frame_top or DOOR.f_tex,
                     light=255,
                     l_tex = door_info.step or c.theme.step or THEME.arch.mats.STEP.wall,
                     u_tex = wall_tex }
 
-  local d_back = d_front
-
-  local d_exit
+  local SIGN
   
   if door_info.sign then
-    d_exit = { f_h = z+8, c_h = z+8+high-16,
-               f_tex = d_front.f_tex, c_tex = "CEIL5_2",
+    SIGN = { f_h = z+8, c_h = z+8+high-16,
+               f_tex = STEP.f_tex, c_tex = door_info.sign_bottom,
                light=255,
                l_tex = door_info.sign, u_tex = door_info.sign }
   end
@@ -485,7 +451,7 @@ function B_exitdoor(p, c, link, x, y, z, dir)
   frag_fill(p,c, fx, fy, fx+zx+dx*7, fy+zy+dy*7, { solid=wall_tex })
 
   -- align inner sides with outside wall
-  local y_diff = link_other(link, c).ceil_h - d_front.c_h
+  local y_diff = link_other(link, c).ceil_h - STEP.c_h
   frag_fill(p,c, fx+ax, fy+ay, fx+ax+dx*7, fy+ay+dy*7,
     { solid=wall_tex, [adir]={ l_tex=c.theme.misc, y_offset=y_diff }} )
   frag_fill(p,c, fx+zx-ax, fy+zy-ay, fx+zx-ax+dx*7, fy+zy-ay+dy*7,
@@ -499,13 +465,13 @@ function B_exitdoor(p, c, link, x, y, z, dir)
         { solid=key_tex, [10-adir] = { x_offset = 112 }} )
     end
 
-    frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, d_front)
+    frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, STEP)
 
     -- EXIT SIGN
-    if d_exit and (ff == 2) then
-      frag_fill (p,c, fx+ax*3,fy+ay*3, fx+ax*3,fy+ay*3, d_exit,
+    if SIGN and (ff == 2) then
+      frag_fill (p,c, fx+ax*3,fy+ay*3, fx+ax*3,fy+ay*3, SIGN,
         { [10-adir] = { x_offset = 32 }} )
-      frag_fill (p,c, fx+ax*4,fy+ay*4, fx+ax*4,fy+ay*4, d_exit,
+      frag_fill (p,c, fx+ax*4,fy+ay*4, fx+ax*4,fy+ay*4, SIGN,
         { [adir] = { x_offset = 32 }} )
     end
 
@@ -514,7 +480,7 @@ function B_exitdoor(p, c, link, x, y, z, dir)
 
   for mm = 1,1 do
     frag_fill (p,c, fx+ax,fy+ay, fx+zx-ax,fy+zy-ay, { solid=track_tex })
-    frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, door)
+    frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, DOOR)
     fx = fx + dx; fy = fy + dy
   end
 
@@ -525,7 +491,7 @@ function B_exitdoor(p, c, link, x, y, z, dir)
       frag_fill (p,c, fx+zx-ax,fy+zy-ay, fx+zx-ax,fy+zy-ay,
         { solid=key_tex, [10-adir] = { x_offset = 112 }} )
     end
-    frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, d_back)
+    frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, STEP)
     fx = fx + dx; fy = fy + dy
   end
 end
@@ -1115,7 +1081,7 @@ end
 function random_door_kind(w)
   local names = {}
   for kind,info in pairs(THEME.arch.doors) do
-    if kind ~= "d_exit" and info.w == w then
+    if not kind.is_special and info.w == w then
       table.insert(names,kind)
     end
   end
@@ -1198,7 +1164,6 @@ function make_chunks(p)
         assert (0 <= j and j < KW)
         table.insert(coords,
           { x = kx-ax + ax * j, y = ky-ay + ay * j })
----### print("d_pos", d_pos, "j", j, "K", kx, ky, "A", ax, ay)
       end
 
 ---###      if wh < 0 then wh, ax, ay = -wh, -ax, -ay end
@@ -2062,6 +2027,24 @@ function build_cell(p, c)
 
       B_exitdoor(p, c, link,  x-dx, y-dy, c.floor_h, dir)
 
+    elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
+       THEME.arch.switches[link.quest.item].bars
+    then
+      local info = THEME.arch.switches[link.quest.item]
+      local sec = copy_block(c.room_sec)
+      sec.f_h = c.floor_h
+      sec.f_tex = b_theme.floor
+      sec.c_tex = b_theme.ceil
+      if not link.src.outdoor or not link.dest.outdoor then
+        sec.c_h = sec.c_h - 32
+        if b_theme.outdoor then sec.c_tex = sec.f_tex end
+      end
+
+      local bar = link.bar_size
+      local tag = link.quest.tag + 1
+
+      B_bars(p,c, x-dx,y-dy, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_theme.wall, tag)
+
     elseif link.kind == "door" then
 
       local kind = link.wide_door
@@ -2073,9 +2056,38 @@ function build_cell(p, c)
       local info = THEME.arch.doors[kind]
       assert(info)
 
-      B_door(p, c, link, b_theme, x-dx, y-dy, c.floor_h, dir,
-             1 + int(info.w / 64), 1, info)
+      local door_kind = 1
+      local tag = nil
+      local key_tex = nil
 
+      if dual_odds(p.deathmatch, 75, 15) then
+        door_kind = 117 -- Blaze
+      end
+
+      if link.quest and link.quest.kind == "key" then
+        local bit = THEME.arch.key_bits[link.quest.item]
+        assert(bit)
+        door_kind = sel(p.coop, bit.kind_once, bit.kind_rep)
+        key_tex = bit.wall -- can be nil
+        if bit.thing then
+          -- FIXME: heretic statues !!!
+        end
+        if bit.door then
+          kind = bit.door
+          info = THEME.arch.doors[kind]
+          assert(info)
+        end
+      end
+
+      if link.quest and link.quest.kind == "switch" then
+        door_kind = nil
+        tag = link.quest.tag + 1
+        key_tex = THEME.arch.switches[link.quest.item].wall
+        assert(key_tex)
+      end
+
+      B_door(p, c, link, b_theme, x-dx, y-dy, c.floor_h, dir,
+             1 + int(info.w / 64), 1, info, door_kind, tag, key_tex)
     else
       error("build_link: bad kind: " .. tostring(link.kind))
     end
