@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- ObligeNG
+--  Oblige
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006 Andrew Apted
@@ -20,7 +20,8 @@ require 'defs'
 require 'util'
 require 'a_star'
 
-require 'th_doom'
+require 'th_doom1'
+require 'th_doom2'
 require 'th_heretic'
 require 'th_hexen'
 
