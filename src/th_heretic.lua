@@ -29,7 +29,7 @@ HC_THEMES =
     dm_switch = "SW1OFF",
     
     floor = "FLOOR03",
-    ceil = "FLOOR03",
+    ceil = "FLOOR19",
 
     is_special = true,
   },
@@ -48,6 +48,61 @@ HC_THEMES =
     scenery = "wall_torch",
   },
 
+  BLOCK =
+  {
+    mat_pri = 7,
+
+    wall = "GRSTNPB",
+    void = "GRSTNPBW",
+    pillar = "WOODWL",
+
+    floor = "FLOOR03",
+    ceil = "FLOOR03",
+
+    scenery = "barrel",
+  },
+
+  MOSSY =
+  {
+    mat_pri = 2,
+
+    wall = "MOSSRCK1",
+    void = "MOSSRCK1",
+    pillar = "SKULLSB1", -- SPINE1
+    
+    floor = "FLOOR00",
+    ceil  = "FLOOR04",
+
+    scenery = "chandelier",
+  },
+
+  WOOD =
+  {
+    mat_pri = 2,
+
+    wall = "WOODWL",
+    void = "CTYSTUC3",
+
+    floor = "FLOOR10",
+    ceil  = "FLOOR12",
+
+    scenery = "hang_skull_1",
+  },
+
+  HUT =
+  {
+    mat_pri = 1,
+    
+    wall = "CTYSTUC3",
+    void = "CTYSTUC4",
+    
+    floor = "FLOOR10",
+    ceil  = "FLOOR11",
+
+    scenery = "barrel",
+  },
+
+
   ---- OUTDOOR ------------
 
   STONY =
@@ -63,6 +118,49 @@ HC_THEMES =
 
     scenery = "serpent_torch",
   },
+
+  MUDDY =
+  {
+    outdoor = true,
+    mat_pri = 3,
+
+    wall = "CSTLRCK",
+    void = "SQPEB1",
+    pillar = "SPINE1",
+
+    floor = "FLOOR17",
+    ceil  = "F_SKY1",
+
+    scenery = "fire_brazier",
+  },
+  
+  WATERY =
+  {
+    outdoor = true,
+    mat_pri = 1,
+
+    wall = "SNDBLCKS",
+    void = "CTYSTCI4",
+
+    floor = "FLTWAWA1",
+    ceil  = "F_SKY1",
+  },
+
+  SANDY =
+  {
+    outdoor = true,
+    mat_pri = 2,
+    
+    wall = "CTYSTUC2",
+    void = "CTYSTUC3",
+    pillar = "SPINE2",
+
+    floor = "FLOOR27",
+    ceil  = "F_SKY1",
+
+    scenery = "small_pillar",
+  },
+  
 }
 
 ---- BASE MATERIALS ------------

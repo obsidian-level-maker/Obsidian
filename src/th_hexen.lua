@@ -48,14 +48,69 @@ XN_THEMES =
     scenery = "brass_brazier",
   },
 
+  ICY =
+  {
+    mat_pri = 1,
+
+    wall = "ICE06",
+    void = "ICE02",
+    pillar = "ICE01",
+
+    floor = "F_033",  -- F_013
+    ceil  = "F_009",
+
+    bad_liquid = "lava",
+  },
+
+  FIREY =
+  {
+    mat_pri = 5,
+
+    wall = "FIRE01",
+    void = "FIRE09",
+    pillar = "FIRE15",
+
+    floor = "F_012",
+    ceil  = "F_032",
+
+    good_liquid = "lava",
+  },
+
+  CAVE =
+  {
+    mat_pri = 2,
+
+    wall = "CAVE06",
+    void = "CAVE03",
+    
+    floor = "F_040",
+    ceil  = "F_040",
+
+    scenery = "stal_pillar",
+  },
+
   ---- OUTDOOR ------------
 
+  GRAY =
+  {
+    outdoor = true,
+    mat_pri = 4,
+
+    wall = "PRTL02",
+    void = "PRTL03",
+
+    floor = "F_019",
+    ceil  = "F_SKY",
+
+    scenery = "short_statue",
+  },
+  
   STONY =
   {
     outdoor = true,
     mat_pri = 3,
 
-    wall = "CAVE03",
+    wall = "CAVE01",
     void = "CAVE02",
 
     floor = "F_007",
@@ -175,7 +230,7 @@ XN_DOORS =
   d_castle = { tex="D_CAST",   w=64,  h=128, is_special=true },
   d_fire   = { tex="D_FIRE",   w=64,  h=128, is_special=true },
 
-  d_exit   = { tex="FIRE04",   w=64,  h=128, is_special=true },
+  d_exit   = { tex="FIRE14",   w=64,  h=128, is_special=true },
 }
 
 XN_RAILS =
