@@ -345,6 +345,17 @@ D2_THEMES =
 
 }
 
+D2_MATS =
+{
+  ARCH =
+  {
+    wall  = "METAL",
+    void  = "METAL1",
+    floor = "SLIME14",
+    ceil  = "SLIME14",
+  },
+}
+
 D2_OVERHANGS =
 {
   METAL =
@@ -405,6 +416,9 @@ function create_doom2_theme()
   merge_table(T.arch.themes, D2_THEMES)
 
   T.arch.rails = D2_RAILS
+
+  T.arch.mats = copy_table(T.arch.mats)
+  merge_table(T.arch.mats, D2_MATS)
 
   T.arch.hangs = copy_table(T.arch.hangs)
   merge_table(T.arch.hangs, D2_OVERHANGS)

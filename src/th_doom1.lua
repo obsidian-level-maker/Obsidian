@@ -280,8 +280,8 @@ DM_MATS =
   {
     wall  = "METAL",
     void  = "METAL1",
-    floor = "SLIME14",  -- !!! FIXME: not in doom 1
-    ceil  = "SLIME14",
+    floor = "CEIL5_2",
+    ceil  = "CEIL5_2",
   },
 
   SHINY =
@@ -510,8 +510,11 @@ DM_QUESTS =
   },
   switch =
   {
-    sw_blue=50, sw_hot=30,  sw_vine=10, sw_skin=40,
-    sw_wood=30, sw_metl=50, sw_gray=20, -- FIXME: sw_rock=10
+    sw_blue=50, sw_hot=30,
+    sw_vine=10, sw_skin=40,
+    sw_metl=50, sw_gray=20,
+    -- FIXME: sw_rock=10,
+    -- FIXME: sw_wood=30, 
   },
   weapon =
   {
