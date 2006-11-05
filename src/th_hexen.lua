@@ -619,21 +619,19 @@ function create_hexen_theme()
   T.pickup_stats = { "health", "blue_mana", "green_mana" }
   T.initial_model = XN_INITIAL_MODEL
 
-  T.arch =
-  {
-    themes    = XN_THEMES,
-    hangs     = XN_OVERHANGS,
-    pedestals = XN_PEDESTALS,
-    mats      = XN_MATS,
+  T.themes    = XN_THEMES
+  T.hangs     = XN_OVERHANGS
+  T.pedestals = XN_PEDESTALS
+  T.mats      = XN_MATS
 
-    liquids   = XN_LIQUIDS,
-    switches  = XN_SWITCHES,
-    doors     = XN_DOORS,
-    lights    = XN_LIGHTS,
-    rails     = XN_RAILS,
---  pics      = XN_PICS,
-    key_bits  = XN_KEY_BITS,
-  }
+  T.liquids   = XN_LIQUIDS
+  T.switches  = XN_SWITCHES
+  T.doors     = XN_DOORS
+  T.lights    = XN_LIGHTS
+  T.rails     = XN_RAILS
+--T.pics      = XN_PICS
+  T.key_bits  = XN_KEY_BITS
+
   return T
 end
 

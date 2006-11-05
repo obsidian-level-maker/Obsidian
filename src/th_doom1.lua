@@ -749,20 +749,17 @@ function common_doom_theme(T)
   T.quests = DM_QUESTS
   T.dm = DM_DEATHMATCH
 
-  T.arch =
-  {
-    themes    = DM_COMMON_THEMES,
-    hangs     = DM_OVERHANGS,
-    pedestals = DM_PEDESTALS,
-    mats      = DM_MATS,
+  T.themes    = DM_COMMON_THEMES
+  T.hangs     = DM_OVERHANGS
+  T.pedestals = DM_PEDESTALS
+  T.mats      = DM_MATS
 
-    liquids   = DM_LIQUIDS,
-    switches  = DM_SWITCHES,
-    doors     = DM_DOORS,
-    lights    = DM_LIGHTS,
-    pics      = DM_PICS,
-    key_bits  = DM_KEY_BITS,
-  }
+  T.liquids   = DM_LIQUIDS
+  T.switches  = DM_SWITCHES
+  T.doors     = DM_DOORS
+  T.lights    = DM_LIGHTS
+  T.pics      = DM_PICS
+  T.key_bits  = DM_KEY_BITS
 end
 
 function create_doom1_theme()
@@ -770,10 +767,10 @@ function create_doom1_theme()
 
   common_doom_theme(T)
 
-  T.arch.themes = copy_table(T.arch.themes)
-  merge_table(T.arch.themes, D1_THEMES)
+  T.themes = copy_table(T.themes)
+  merge_table(T.themes, D1_THEMES)
 
-  T.arch.rails = D1_RAILS
+  T.rails = D1_RAILS
 
   -- remove the DOOM2-only weapons and items
   T.weapons = copy_table(T.weapons)

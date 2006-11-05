@@ -252,17 +252,17 @@ print("COVERAGE", count)
     if p.w >= 6 then min_t = 3 end
 
     local num_themes = rand_irange(min_t, p.h)
-    assert(num_themes <= #THEME.arch.themes)
+    assert(num_themes <= #THEME.themes)
 print("NUMBER of THEMES:", num_themes)
 
     local theme_list = {}
-    rand_shuffle(theme_list, #THEME.arch.themes)
+    rand_shuffle(theme_list, #THEME.themes)
 
     for i =1,num_themes do
       local cx, cy = unused_theme_pos()
       if cx then
         local c = p.cells[cx][cy]
-        c.theme = THEME.arch.themes[theme_list[i] ]
+        c.theme = THEME.themes[theme_list[i] ]
         c.liquid = liquid_for_seed(c.theme)
       end
     end

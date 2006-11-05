@@ -290,7 +290,7 @@ end
 
 function get_rand_theme()
   while true do
-    local name,info = rand_table_pair(THEME.arch.themes)
+    local name,info = rand_table_pair(THEME.themes)
     if not info.is_special then
       return info
     end
@@ -299,18 +299,18 @@ end
 
 function choose_liquid()
   local probs = {}
-  for zzz,info in ipairs(THEME.arch.liquids) do
+  for zzz,info in ipairs(THEME.liquids) do
     table.insert(probs, info.prob or 50)
   end
 
   local idx = rand_index_by_probs(probs)
-  return THEME.arch.liquids[idx]
+  return THEME.liquids[idx]
 end
 
 function find_liquid(name)
   if not name then return nil end
 
-  for zzz,info in ipairs(THEME.arch.liquids) do
+  for zzz,info in ipairs(THEME.liquids) do
     if info.name == name then return info end
   end
 
@@ -964,7 +964,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     -- FIXME: handle secret exits too
     local c = p.quests[#p.quests].last
 
-    c.theme = THEME.arch.themes.EXITROOM
+    c.theme = THEME.themes.EXITROOM
     c.is_exit = true
     c.light = 192
 
@@ -1199,7 +1199,7 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
       con.printf("CREATING DEPOT @ %d,%d\n", pos_x, pos_y)
 
-      local CELL = create_cell(p, pos_x, pos_y, Q, 1, THEME.arch.themes.EXITROOM, "depot")
+      local CELL = create_cell(p, pos_x, pos_y, Q, 1, THEME.themes.EXITROOM, "depot")
 
       local SURPRISE =
       {

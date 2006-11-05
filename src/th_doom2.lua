@@ -412,19 +412,19 @@ function create_doom2_theme()
 
   common_doom_theme(T)
 
-  T.arch.themes = copy_table(T.arch.themes)
-  merge_table(T.arch.themes, D2_THEMES)
+  T.themes = copy_table(T.themes)
+  merge_table(T.themes, D2_THEMES)
 
-  T.arch.rails = D2_RAILS
+  T.rails = D2_RAILS
 
-  T.arch.mats = copy_table(T.arch.mats)
-  merge_table(T.arch.mats, D2_MATS)
+  T.mats = copy_table(T.mats)
+  merge_table(T.mats, D2_MATS)
 
-  T.arch.hangs = copy_table(T.arch.hangs)
-  merge_table(T.arch.hangs, D2_OVERHANGS)
+  T.hangs = copy_table(T.hangs)
+  merge_table(T.hangs, D2_OVERHANGS)
 
-  T.arch.liquids = copy_table(T.arch.liquids)
-  table.insert(T.arch.liquids, D2_LIQUID)
+  T.liquids = copy_table(T.liquids)
+  table.insert(T.liquids, D2_LIQUID)
 
   T.monsters = copy_table(T.monsters)
   merge_table(T.monsters, D2_MONSTERS)

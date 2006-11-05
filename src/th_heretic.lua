@@ -594,21 +594,18 @@ function create_heretic_theme()
   T.quests = HC_QUESTS
   T.dm = HC_DEATHMATCH
 
-  T.arch =
-  {
-    themes    = HC_THEMES,
-    hangs     = HC_OVERHANGS,
-    pedestals = HC_PEDESTALS,
-    mats      = HC_MATS,
+  T.themes    = HC_THEMES
+  T.hangs     = HC_OVERHANGS
+  T.pedestals = HC_PEDESTALS
+  T.mats      = HC_MATS
 
-    liquids   = HC_LIQUIDS,
-    switches  = HC_SWITCHES,
-    doors     = HC_DOORS,
-    lights    = HC_LIGHTS,
-    rails     = HC_RAILS,
---  pics      = HC_PICS,
-    key_bits  = HC_KEY_BITS,
-  }
+  T.liquids   = HC_LIQUIDS
+  T.switches  = HC_SWITCHES
+  T.doors     = HC_DOORS
+  T.lights    = HC_LIGHTS
+  T.rails     = HC_RAILS
+--T.pics      = HC_PICS
+  T.key_bits  = HC_KEY_BITS
 
   return T
 end
