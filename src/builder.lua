@@ -2181,6 +2181,7 @@ function build_cell(p, c)
     -- fencing anyone?
     if (cell.theme.outdoor == other.theme.outdoor) and
        (not cell.is_exit and not other.is_exit) and
+       (not cell.is_depot and not other.is_depot) and
        math.min(cell.ceil_h, other.ceil_h) - math.max(cell.f_max, other.f_max) > 64
     then
       if cell.scenic or other.scenic then
