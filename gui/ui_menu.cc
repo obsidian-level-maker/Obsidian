@@ -43,9 +43,9 @@ static void menu_do_exit(Fl_Widget *w, void * data)
 //------------------------------------------------------------------------
 
 static const char *about_Text =
-  "Copyright (C) 2006 by Andrew Apted\n"
-  "\n"
   "Oblige is a random level generator for DOOM\n"
+  "\n"
+  "Copyright (C) 2006,2007 Andrew Apted\n"
   "\n"
   "This program is free software, and may be\n"
   "distributed and modified under the terms of\n"
@@ -66,7 +66,7 @@ static void menu_do_about(Fl_Widget *w, void * data)
 {
 	menu_want_to_quit = false;
 
-	Fl_Window *about = new Fl_Window(330, 356, "About Oblige");
+	Fl_Window *about = new Fl_Window(340, 356, "About Oblige");
 	about->end();
 
 	// non-resizable

@@ -42,7 +42,7 @@ static void ShowInfo(void)
 {
 	printf(
 		"\n"
-		"** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) Andrew Apted 2006 **\n"
+		"** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006,2007 Andrew Apted **\n"
 		"\n"
 	);
 
