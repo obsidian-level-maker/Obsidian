@@ -172,6 +172,34 @@ void WAD_CreateInfoLump()
   WAD_WriteLump("OBLIGDAT", L);
 }
 
+int Hexen_GrabArgs(lua_State *L, u8_t *args, int stack_pos)
+{
+  memset(args, 0, 5);
+
+  int what = lua_type(L, stack_pos);
+
+  if (what == LUA_TNONE || what == LUA_TNIL)
+    return 0;
+
+  if (what != LUA_TTABLE)
+    return luaL_argerror(L, stack_pos, "expected a table");
+
+  for (int i = 0; i < 5; i++)
+  {
+    lua_pushinteger(L, i+1);
+    lua_gettable(L, stack_pos);
+
+    if (lua_isnumber(L, -1))
+    {
+      args[i] = lua_tointeger(L, -1);
+    }
+
+    lua_pop(L, 1);
+  }
+
+  return 0;
+}
+
 
 //------------------------------------------------------------------------
 
@@ -229,7 +257,7 @@ int end_level(lua_State *L)
 }
 
 
-// LUA: add_thing(x, y, h, type, angle, flags)
+// LUA: add_thing(x, y, h, type, angle, flags, tid, special, args)
 //
 int add_thing(lua_State *L)
 {
@@ -261,11 +289,14 @@ int add_thing(lua_State *L)
 		thing.angle   = LE_S16(luaL_checkint(L,5));
 		thing.options = LE_U16(luaL_checkint(L,6));
 
+		thing.tid     = LE_S16(luaL_checkint(L,7));
+		thing.special = luaL_checkint(L,8);  // 8 bits
+
+    Hexen_GrabArgs(L, thing.args, 9);
+
 		WAD_Append(thing_lump, &thing, sizeof(thing));
 	}
 
-DebugPrintf("Thing lump size: %d\n", thing_lump->size());
-  
 	return 0;
 }
 
@@ -299,18 +330,6 @@ int add_sector(lua_State *L)
 	sec.special = LE_U16(luaL_checkint(L,6));
 	sec.tag     = LE_S16(luaL_checkint(L,7));
 
-#if 0
-  // hexen uses a different flat for skies
-  if (wad_hexen)
-  {
-    if (strncmp(sec.floor_tex, "F_SKY1", 6) == 0)
-      strcpy(sec.floor_tex, "F_SKY");
-
-    if (strncmp(sec.ceil_tex, "F_SKY1", 6) == 0)
-      strcpy(sec.ceil_tex, "F_SKY");
-  }
-#endif
-
 	WAD_Append(sector_lump, &sec, sizeof(sec));
 
 	return 0;
@@ -336,7 +355,7 @@ int add_sidedef(lua_State *L)
 	return 0;
 }
 
-// LUA: add_linedef(vert1, vert2, side1, side2, type, tag, flags)
+// LUA: add_linedef(vert1, vert2, side1, side2, type, flags, tag, args)
 //
 int add_linedef(lua_State *L)
 {
@@ -354,8 +373,8 @@ int add_linedef(lua_State *L)
 		line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
 
 		line.type  = LE_U16(luaL_checkint(L,5));
-		line.tag   = LE_S16(luaL_checkint(L,6));
-		line.flags = LE_U16(luaL_checkint(L,7));
+		line.flags = LE_U16(luaL_checkint(L,6));
+		line.tag   = LE_S16(luaL_checkint(L,7));
 
 		WAD_Append(linedef_lump, &line, sizeof(line));
 	}
@@ -376,14 +395,11 @@ int add_linedef(lua_State *L)
 		line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
 
 		line.special = luaL_checkint(L,5); // 8 bits
+		line.flags = LE_U16(luaL_checkint(L,6));
 
-		// tag is packed with 3 specials (LSB to MSB)
-		u32_t tag = luaL_checkint(L,6);
+		// tag value is UNUSED
 
-		for (int i = 0; i < 3; i++, tag >>= 8)
-			line.args[i] = tag & 0xFF;
-
-		line.flags = LE_U16(luaL_checkint(L,7));
+    Hexen_GrabArgs(L, line.args, 8);
 
 		WAD_Append(linedef_lump, &line, sizeof(line));
 	}

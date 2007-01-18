@@ -710,10 +710,10 @@ print("TOTAL_GROUPS ", total_group)
       wad.add_linedef(L.v1.index, L.v2.index,
             L.front and L.front.index or -1,
             L.back  and L.back.index  or -1,
-            L.kind or 0, L.tag or 0, L.flags or 0);
+            L.kind or 0, L.flags or 0, L.tag or 0, L.args);
     end
   end
-  
+
   local function write_things()
     
     for zzz,th in pairs(thing_list) do
