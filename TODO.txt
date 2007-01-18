@@ -2,8 +2,12 @@
 TODO
 ----
 
+TEST:  pass full args to GUI code (Hexen_GrabArgs)
+
 ++  give health and ammo for Surprise battles.
-    - consider ammo gotten from teleported monsters.
+    - consider weapon/ammo gotten from teleported monsters.
+
++  BUG: non-working lift (near depot trigger) : seed=347,game=doom1
 
 -  depots: pick dest cells away from quest (probs for 1/2/3/4/5)
    - prefer "off peak" cells ?
@@ -17,15 +21,11 @@ TODO
 GUI TODO
 --------
 
-Win32 TEST: commdlg32, GetSaveFileName
-
-Win32 TEST: backup file (.BAK)  | none if aborted before nodes
+Win32 TEST: backup file (.BAK)
 
 +  tidy up fprintf (etc).
 
--  main window: doesn't need to be resizable
-
-+  data_dir ("obl_data") abd cache_dir: find them, use them
+-  data_dir ("obl_data") and cache_dir: find them, use them
 
 -  collect log, view it, save it, clear it.
 
@@ -71,13 +71,13 @@ c) Writer:
 MILESTONE 2  (close!!)
 ===========
 
->>  working GUI interface using FLTK
-
-   -  Directory selector under Win32.
+#  working GUI interface using FLTK
 
 #  build WAD files directly (no wadlc step).
 
 #  use GLBSP plugin to build nodes automatically.
+
+>>  working (albeit primitive) support each different game.
 
 #  more architecture features:
 
@@ -99,12 +99,12 @@ MILESTONE 3  (not started...)
 
 -  bridge switches
 
--  good support for the different games (Doom 1/2, Heretic, Hexen),
++  good support for the different games (Doom 1/2, Heretic, Hexen),
    and initial support for add-ons (Eternal, Osiris)
 
 +  heights: (a) each quest, target height (at end)
             (b) maybe a "middle" target height
-            (c) approach modes: sharp vs gradual change
+            (c) approach modes: sharp vs gradual change, bumpy
 
 +  pillar patterns: line thru center (based on entry and exit).
 -  pillar cage patterns, 1359 and 2468
@@ -115,7 +115,7 @@ MILESTONE 3  (not started...)
 -  wall switches: "small" mode (32x32)
 
 -  overhangs: thick and central pillars
-   +  don't create pillar in front of door
+   +  BUG: don't create pillar in front of door
 
 -  more mid-masked textures (esp. on windows)
 -  prefer not to create void chunks next to windows
