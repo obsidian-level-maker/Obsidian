@@ -2,32 +2,17 @@
 TODO
 ----
 
-TEST:  pass full args to GUI code (Hexen_GrabArgs)
-
-++  give health and ammo for Surprise battles.
-    - consider weapon/ammo gotten from teleported monsters.
-
-+  BUG: non-working lift (near depot trigger) : seed=347,game=doom1
-
--  depots: pick dest cells away from quest (probs for 1/2/3/4/5)
-   - prefer "off peak" cells ?
-
--  closets: 
-   (a) fix way closet is put in chunk (remove side field)
-   (b) support multiple cells
-   (c) support multiple chunks per cell (esp. from flush)
-
 
 GUI TODO
 --------
 
 Win32 TEST: backup file (.BAK)
 
-+  tidy up fprintf (etc).
++  collect log, view it, save it, clear it.
+
+-  tidy up fprintf (etc).
 
 -  data_dir ("obl_data") and cache_dir: find them, use them
-
--  collect log, view it, save it, clear it.
 
 
 MILESTONE 0  (reached!)
@@ -63,9 +48,9 @@ b) Builder:
 
 c) Writer:
 
-   #  texture X alignment (esp. fragments)
-
    #  support fragments
+
+   #  texture X alignment (esp. fragments)
 
 
 MILESTONE 2  (close!!)
@@ -77,17 +62,14 @@ MILESTONE 2  (close!!)
 
 #  use GLBSP plugin to build nodes automatically.
 
->>  working (albeit primitive) support each different game.
-
 #  more architecture features:
 
    #  pillars
    #  lights / sky-holes in the ceiling
    #  paintings / computers / lights in the wall
    #  monster cages
- 
-   >>  monster closets (esp. along a back-track route)
-   >>  monsters teleporting in
+   #  monster closets (esp. along a back-track route)
+   #  monsters teleporting in
 
 
 MILESTONE 3  (not started...)
@@ -115,12 +97,15 @@ MILESTONE 3  (not started...)
 -  wall switches: "small" mode (32x32)
 
 -  overhangs: thick and central pillars
-   +  BUG: don't create pillar in front of door
+   ++ BUG: don't create pillar in front of door
 
 -  more mid-masked textures (esp. on windows)
 -  prefer not to create void chunks next to windows
 -  doors: underneath flat should match front texture.
 -  compute_line_flags: more explicit flags (esp. override)
+
+-  closets: 
+   (a) fix way closet is put in chunk (remove side field)
 
 +  overall consistency (doors/lights/overhangs/windows)
 
