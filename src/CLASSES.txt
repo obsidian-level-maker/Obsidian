@@ -198,5 +198,6 @@ class Surprise  -- Closet or Depot
   depot_cell  -- only for depots
   door_tag
   places[N] : { c, tag, spots }
+  spread    : keyword: "first", "last", "linear", "random"
 end
 
