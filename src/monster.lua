@@ -846,7 +846,7 @@ function place_battle_stuff(p, c)
     end
 
     local options = { [SK]=true }
-    
+
     assert(dat.cluster <= 9)
     for i = 1,dat.cluster do
       
@@ -1171,7 +1171,7 @@ function battle_in_cell(p, c)
   end
 
   local function fill_cages()
-    
+
     if not c.cage_spots then return end
 
     local orig_T = T
@@ -1229,11 +1229,11 @@ function battle_in_cell(p, c)
     if surp.trigger_cell ~= c then return end
 
     local fp = fire_power(best_weapon(SK))
-    local mon_list = {}
 
 --print(c.x, c.y, table_to_string(surp,3))
 
     for zzz,place in ipairs(surp.places) do
+
       for yyy,spot in ipairs(place.spots) do
 
         local allow_big = not surp.depot_cell and spot.double
@@ -1263,13 +1263,12 @@ function battle_in_cell(p, c)
           th.dx = dx
           th.dy = dy
 
-          table.insert(mon_list, { name=m_name, horde=1, info=m_info, caged=true })
+          table.insert(place.mon_set[SK], { name=m_name, horde=1, info=m_info, caged=true })
         end
       end  -- spots
     end  -- places
 
-    -- FIXME: simulate battle (with COPY of model) then
-    --        fill closet with the health/ammo.
+    -- health/ammo are added later (in backtrack_to_cell)
   end
 
   local function fill_closets()
@@ -1278,18 +1277,21 @@ function battle_in_cell(p, c)
   end
 
   local function add_teleports_for_depot(spots)
-    if not c.quest.depot then return end
-
     local prev
     
     for zzz,place in ipairs(c.quest.depot.places) do
       if place.c == c then
 
-        if not prev or #spots >= 2 then
-print("ADD_TELEPORTERS", c.x, c.y)
-          assert(#spots >= 1)
+        if not prev or #spots >= 3 then
           prev = table.remove(spots)
         end
+
+        if not prev then
+          print("No room for TELEPORTER @ ", c.x, c.y)
+          return
+        end
+
+print("ADD_TELEPORTER @ ", c.x, c.y, "tag", place.tag)
 
         local x,y = prev.x, prev.y
         add_thing(p, c, x, y, "teleport_spot", true)
@@ -1306,7 +1308,9 @@ zprint("BATTLE IN", c.x, c.y)
   rand_shuffle(spots)
   c.free_spots = spots
 
-  add_teleports_for_depot(c.free_spots)
+  if c.quest.depot then
+    add_teleports_for_depot(c.free_spots)
+  end
 
   if free_space < 2 then return end
   free_space = free_space * 1.5 / (BW * BH)
@@ -1339,11 +1343,43 @@ zprint("SIMULATE in CELL", c.x, c.y, SK)
   end
 end
 
+function backtrack_to_cell(p, c)
+
+  local function surprise_me(surp)
+    for zzz,place in ipairs(surp.places) do
+      if c == place.c then
+        for zzz,SK in ipairs(SKILLS) do
+
+          simulate_battle(p, p.models[SK], place.mon_set[SK]) 
+
+          -- FIXME!!! (a) put stuff in closet (b) don't be_nice_to_player
+          distribute_pickups(p, c, p.models[SK])
+        end
+      end
+    end
+  end
+
+  if c.quest.closet then
+    surprise_me(c.quest.closet)
+  end
+
+  if c.quest.depot then
+    surprise_me(c.quest.depot)
+  end
+end
+
 
 function battle_in_quest(p, Q)
   for zzz,c in ipairs(Q.path) do
     if c.toughness then
       battle_in_cell(p, c)
+    end
+  end
+
+  for idx = #Q.path,1,-1 do
+    local c = Q.path[idx]
+    if c.toughness then
+      backtrack_to_cell(p, Q.path[idx])
       c.toughness = nil
     end
   end

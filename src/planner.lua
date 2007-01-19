@@ -565,7 +565,7 @@ function plan_sp_level(is_coop)  -- returns Plan
  
     -- TODO: better system for choosing themes
     local theme
-    if Q.mini and rand_odds(77) then theme = Q.parent.theme  --!!!!!
+    if Q.mini and rand_odds(77) then theme = Q.parent.theme
     else theme = get_rand_theme()
     end
 
@@ -1136,46 +1136,58 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
       local locs  = {}
 
       for idx,c in ipairs(Q.path) do
-        local side = rand_irange(1,4) * 2
-        
-        if c.link[side] then side = rand_irange(1,4) * 2 end
-
-        if idx >= 2 and not c.link[side] then
-          table.insert(locs, {c=c, side=side})
+        for side = 2,8,2 do
+          if idx >= 2 and not c.link[side] then
+            table.insert(locs, {c=c, side=side})
+          end
         end
       end
 
-      if #locs == 0 then return end
+      if #locs < 1 then return end
 
-      local L = rand_element(locs)
-
-      local trig_c  = Q.path[#Q.path]
-
-      con.printf("ADDING CLOSET IN (%d,%d), TRIGGERED IN (%d,%d)\n",
-          L.c.x, L.c.y, trig_c.x, trig_c.y)
-      print(" QUEST", Q.level, Q.sub_level or 0)
-      print(" ALONG", L.c.along);
-      print(" Q", Q, "c.quest", L.c.quest)
-
-      L.c.closet[L.side] = true
-
---##      Q.closet_build = L.c
---##      Q.closet_trig  = trig_c
---##      Q.closet_tag   = allocate_tag(p)
---##      Q.closet_side  = L.side
+      rand_shuffle(locs)
 
       local SURPRISE =
       {
         trigger_cell = Q.last,
         door_tag = allocate_tag(p),
-
-        places =
-        {
-          { c = L.c, side = L.side, tag = allocate_tag(p) }
-        }
+        places = {}
       }
 
+      for zzz,L in ipairs(locs) do
+        table.insert(SURPRISE.places,
+          { c = L.c, side = L.side, tag = allocate_tag(p),
+            mon_set = { easy={}, medium={}, hard={} }, spots = {} })
+        L.c.closet[L.side] = true
+        if rand_odds(40) then break end
+      end
+
       Q.closet = SURPRISE
+    end
+
+    local DEPOT_RAND_TARGETS = { 90, 70, 50, 33, 15, 6, 2 }
+    
+    local function choose_depot_target(Q, num, spread)
+      if #Q.path < 2 then return Q.path[1] end
+
+      local idx
+
+          if spread == "last"   then idx = #Q.path
+      elseif spread == "first"  then idx = 2
+      elseif spread == "linear" then idx = #Q.path - (num-1)
+      else -- "random"
+        idx = #Q.path - (rand_index_by_probs(DEPOT_RAND_TARGETS) - 1)
+      end
+
+      while idx < 2 do
+        idx = idx + (#Q.path - 1)
+        assert(idx <= #Q.path)
+      end
+
+      io.stderr:write("..Depot target #", num, " @ ",
+         Q.path[idx].x, ",", Q.path[idx].y, " tag #", p.free_tag+1, "\n");
+
+      return Q.path[idx]
     end
 
     local function add_depot(Q)
@@ -1201,38 +1213,33 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
       local CELL = create_cell(p, pos_x, pos_y, Q, 1, THEME.themes.EXITROOM, "depot")
 
+      local SPREAD = rand_key_by_probs { linear=44, random=55, last=33, first=16 }
+
       local SURPRISE =
       {
         trigger_cell = Q.last,
         depot_cell = CELL,
+        spread = SPREAD,
         door_tag = allocate_tag(p),
-
-        places =
-        {
-          { c = Q.last, tag = allocate_tag(p) },
-          { c = Q.last, tag = allocate_tag(p) },
-          { c = Q.last, tag = allocate_tag(p) },
-          { c = Q.last, tag = allocate_tag(p) },
-        }
+        places = {}
       }
 
-      Q.depot = SURPRISE
+      for num = 1,4 do
+        table.insert(SURPRISE.places,
+          { c = choose_depot_target(Q,num,SPREAD), tag = allocate_tag(p),
+            mon_set = { easy={}, medium={}, hard={} }, spots = {} })
+      end
 
----##      Q.depot_trig  = Q.path[#Q.path]
----##      Q.depot_dest  = Q.depot_trig   --!!!! FIXME
----##      Q.depot_cell  = c
----##      Q.depot_tags  = { allocate_tag(p), allocate_tag(p), allocate_tag(p), allocate_tag(p) }
+      Q.depot = SURPRISE
     end
 
     local function try_add_surprise(Q)
       if Q.kind == "exit" then return end
       
-      if rand_odds(sel(Q.mini, 30, 50)) then
-        if rand_odds(sel(Q.mini, 10, 60)) then
-          add_depot(Q)
-        else
+      if rand_odds(sel(Q.mini, 30, 40)) then
           add_closet(Q)
-        end
+      elseif rand_odds(sel(Q.mini, 4, 10)) then
+          add_depot(Q)
       end
     end
 

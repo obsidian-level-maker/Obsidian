@@ -52,6 +52,7 @@ function copy_chunk(K)
     cage = K.cage,
     liquid = K.liquid,
     closet = K.closet,
+    place  = K.place,
 
 ---##    player = K.player,
 ---##    weapon = K.weapon,
@@ -929,7 +930,7 @@ function B_monster_closet(p,c, kx,ky, z, tag)
   frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+3*FH, OUTER);
   frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, INNER)
 
-  return { c=c, x=bx, y=by, double=true, dx=32, dy=32}
+  return { c=c, x=bx, y=by, double=true, dx=32, dy=32 }
 end
 
 --
@@ -1181,7 +1182,7 @@ function make_chunks(p)
     -- now check for clashes
     local has_clash = false
 
---[[!!!!
+--[[!!!
 if (link.src.x==1 and link.src.y>1 and link.dest.x==1 and link.dest.y>1) then
  print("cell ", c.x, c.y)
  print("link where=", link.where)
@@ -1450,7 +1451,7 @@ end
 
     local closet = c.quest.closet
 
-    for zzz,place in ipairs(closet.places) do
+    for idx,place in ipairs(closet.places) do
       if place.c == c then
 
         -- !!! FIXME: determine side _HERE_ (not in planner)
@@ -1465,7 +1466,7 @@ end
         end
 
 print("ADDING CLOSET CHUNK @", c.x,c.y)
-        c.chunks[kx][ky] = {void=true, closet=true}
+        c.chunks[kx][ky] = {void=true, closet=true, place=place}
       end
     end
   end
@@ -2479,7 +2480,7 @@ function build_cell(p, c)
       end
     end
 
-    -- !!!! FIXME: test crud
+    -- !!! FIXME: test crud
     if not bar and what ~= "fence" then
       sec[side] = { rail = THEME.rails["r_2"].tex }
     end
@@ -2763,9 +2764,9 @@ end
     if K.void then
       if K.closet then
 print("BUILDING CLOSET @", c.x,c.y)
-        local spot = B_monster_closet(p,c, kx,ky, c.room_sec.f_h + 0,
-          c.quest.closet.door_tag)
-        c.quest.closet.places[1].spots = { spot }  -- FIXME allow multiple places
+        table.insert(K.place.spots,
+          B_monster_closet(p,c, kx,ky, c.room_sec.f_h + 0,
+            c.quest.closet.door_tag))
 
       elseif K.dm_exit then
         B_deathmatch_exit(p,c, kx,ky,K.dir)
@@ -2800,7 +2801,7 @@ print("BUILDING CLOSET @", c.x,c.y)
       -- prefer no lifts in deathmatch
       if p.deathmatch and diff > 64 and rand_odds(88) then deep = 2 end
 
-      -- FIXME: replace with proper "can walk" test !!!!
+      -- FIXME: replace with proper "can walk" test !!!
       if (K.stair_dir == 6 and kx == 1 and c.border[4]) or
          (K.stair_dir == 4 and kx == 3 and c.border[6]) or
          (K.stair_dir == 8 and ky == 1 and c.border[2]) or
