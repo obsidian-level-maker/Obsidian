@@ -1236,9 +1236,9 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
     local function try_add_surprise(Q)
       if Q.kind == "exit" then return end
       
-      if rand_odds(sel(Q.mini, 30, 40)) then
+      if rand_odds(sel(Q.mini, 25, 40)) then
           add_closet(Q)
-      elseif rand_odds(sel(Q.mini, 4, 10)) then
+      elseif rand_odds(sel(Q.mini, 15, 15)) then
           add_depot(Q)
       end
     end
