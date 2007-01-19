@@ -54,7 +54,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
 	add(seed);
 
-	bump = new Fl_Button(x+210, cy, 70, 24, "Bump");
+	bump = new Fl_Button(x+208, cy, 96, 24, "New Seed");
 	bump->callback(bump_callback, this);
 
 	add(bump);
