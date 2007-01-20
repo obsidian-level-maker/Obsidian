@@ -537,9 +537,9 @@ DM_QUESTS =
 -- Monster list
 -- ============
 --
--- r : radius
--- h : height
--- t : toughness (health)
+-- r  : radius
+-- h  : height
+-- hp : health-points
 -- dm : damage can inflict per second (rough approx)
 -- fp : firepower needed by player
 
