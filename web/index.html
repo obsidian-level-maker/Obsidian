@@ -23,7 +23,7 @@ by Andrew Apted. &nbsp; January 2007
 <h2>INTRODUCTION</h2>
 
 OBLIGE is a random level maker for the following games:
-DOOM 1, DOOM 2, Heretic 1 and Hexen 1.
+DOOM&nbsp;1, DOOM&nbsp;2, Heretic&nbsp;1 and Hexen&nbsp;1.
 These games all share the same basic level structure.
 
 <p>
@@ -46,7 +46,12 @@ from existing programs
 OBLIGE 0.81 was the very first public release.
 The core level-making algorithm exists and works quite well,
 and the GUI is mostly usable (still missing some bells and
-whistles).
+whistles).  The battle simulator seems to produce reasonable
+ammo/health for the monsters in the map.
+
+<p>
+There is no support yet for the special levels, such as E1M8
+(end of episode) of DOOM 1 and MAP30 (end of game) of DOOM 2.
 
 <p>
 Nearly every decision in OBLIGE, such as what monsters to
@@ -59,10 +64,10 @@ need to be a programmer!
 
 <h2>SCREENSHOT</h2>
 
-(Created with SEED = 5)
+(Created with SEED = 1234)
 <p>
 
-<img src="screenshot.jpg" width="400" height="280"
+<img src="screenshot.jpg" width="400" height="300"
      alt="Picture">
 
 
@@ -77,8 +82,7 @@ Using the same SEED number always produces the exact same level
 <p>
 Other settings include:
 <ul>
-  <li>the "Game" type (DOOM 1, DOOM 2, HERETIC or
-HEXEN), 
+  <li>the "Game" type (DOOM 1, DOOM 2, HERETIC or HEXEN), 
   <li>the "Mode" of the game (SINGLE-PLAYER, CO-OP, or DEATHMATCH)
   <li>the "Length" of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
 </ul>
@@ -87,6 +91,17 @@ After you've chosen the desired settings, press the "Build..." button,
 which will open a Save-File dialog asking you what the output file
 should be. Enter something appropriate, e.g. TEST, and after that
 OBLIGE will starting building the levels.
+
+<p>
+The levels created by OBLIGE are ready to play.  There is no
+need to run the output WAD file through a node-builder program,
+since OBLIGE does this automatically.
+
+<p>
+You should use a Source Port to play the levels, because the
+original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
+architecture which OBLIGE creates.  For example, you might
+get the dreaded "Visplane Overflow" error, which is fatal. 
 
 
 <h2>STATUS OF EACH GAME</h2>
