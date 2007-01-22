@@ -1,6 +1,6 @@
 
-OBLIGE 0.81 Readme
-==================
+OBLIGE 0.81 Read-Me
+===================
 
 by Andrew Apted.   January 2007
 
