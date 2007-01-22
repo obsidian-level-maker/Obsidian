@@ -2,6 +2,8 @@
 TODO
 ----
 
+-  delete TEMP.wad when build is finished.
+
 
 GUI TODO
 --------
