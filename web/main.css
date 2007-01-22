@@ -4,7 +4,7 @@ body {
   color: black;
   font-family: palatino, verdana, sans-serif;
   margin: 0; 
-  padding: 1em;
+  padding: 16px;
   }
 
 h1 {
@@ -13,9 +13,19 @@ h1 {
   text-decoration: underline;
   }
 
+h2 {
+  color: #88a;
+  text-decoration: underline;
+  padding-top: 20px;
+  }
+
+a:link    { color: #c66; font-weight: bold }
+a:visited { color: #c66; font-weight: bold }
+a:hover   { color: #faa; font-weight: bold }
+
 .legal {
   font-family: mono;
-  background-color: #bdd;
+  background-color: #edc;
   color: black;
   border: 1px solid black;
   padding: 1em;

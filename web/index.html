@@ -4,7 +4,7 @@
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
   <meta name="robots" content="all">
 
-  <title> Oblige Home </title>
+  <title> OBLIGE Home </title>
 
   <script type="text/javascript"></script>
 
@@ -15,19 +15,19 @@
 
 <body>
 
-<h1>Oblige Level Generator</h1>
+<h1>OBLIGE Level Maker</h1>
 
 by Andrew Apted. &nbsp; January 2007
 
 
 <h2>INTRODUCTION</h2>
 
-Oblige is a random level maker for the following games:
+OBLIGE is a random level maker for the following games:
 DOOM 1, DOOM 2, Heretic 1 and Hexen 1.
 These games all share the same basic level structure.
 
 <p>
-Oblige will have the following features which set it apart
+OBLIGE will have the following features which set it apart
 from existing programs
 (like <a href="http://www.doomworld.com/slige/">SLIGE</a> by David Chess)
 
@@ -35,7 +35,7 @@ from existing programs
   <li>higher quality levels, e.g. outdoor areas!
   <li>easy to use GUI interface (no messing with command lines)
   <li>built-in node builder, so the created levels are ready to play
-  <li>uses the Lua scripting language for easy customisation and experimentation
+  <li>uses the LUA scripting language for easy experimentation
   <li>can create Deathmatch levels
   <li>Heretic and Hexen support!
 </ul>
@@ -43,13 +43,18 @@ from existing programs
 
 <h2>STATUS</h2>
 
-Oblige is still under development, but is getting close to the first
-public release.
+OBLIGE 0.81 was the very first public release.
 The core level-making algorithm exists and works quite well,
 and the GUI is mostly usable (still missing some bells and
 whistles).
-Heretic and Hexen support has been started, but needs a lot
-more work, and hence they won't be available in the first release.
+
+<p>
+Nearly every decision in OBLIGE, such as what monsters to
+make and what themes to use for rooms, is just roll-of-the-die
+random. There is still so much potential for using much better
+algorithms (and hence creating much nicer levels). Send me an
+email if you are interested in helping out, you certainly don't
+need to be a programmer!
 
 
 <h2>SCREENSHOT</h2>
@@ -61,19 +66,80 @@ more work, and hence they won't be available in the first release.
      alt="Picture">
 
 
+<h2>USAGE GUIDE</h2>
+
+The graphical interface that OBLIGE is quite easy to use.
+The first control is the "SEED" number.
+Each SEED number produces a unique, distinctive level. 
+Using the same SEED number always produces the exact same level
+(as long as the other settings are the same).
+
+<p>
+Other settings include:
+<ul>
+  <li>the "Game" type (DOOM 1, DOOM 2, HERETIC or
+HEXEN), 
+  <li>the "Mode" of the game (SINGLE-PLAYER, CO-OP, or DEATHMATCH)
+  <li>the "Length" of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
+</ul>
+
+After you've chosen the desired settings, press the "Build..." button,
+which will open a Save-File dialog asking you what the output file
+should be. Enter something appropriate, e.g. TEST, and after that
+OBLIGE will starting building the levels.
+
+
+<h2>STATUS OF EACH GAME</h2>
+
+<b>DOOM 2</b>: by far the most well tested and stable game target,
+and contains the most number of different themes.
+<p>
+
+<b>DOOM 1</b>: has been tested and works pretty well, although it's
+possible that a invalid texture might be used by mistake.  Some
+extra themes would be nice to have (e.g. for hell levels that
+DOOM 1 does so well).
+<p>
+
+<b>HERETIC</b>: poorly tested and very lacking in different themes,
+and it's possible that some keyed doors might not work properly
+(requiring the wrong key) or other similar problems.
+<p>
+
+<b>HEXEN</b>: basically borked, can create levels but they won't work
+properly, e.g. none of the linedefs have the correct line-types
+(for doors and lifts etc). Also very lacking in themes. Plus
+none of the HEXEN specialities, such as the hub system, player
+classes, and three-part weapons, are supported yet.
+
+
+<h2>DOWNLOAD</h2>
+
+<b>Win32 Package</b>:
+<a href="http://XXXXX">oblige_081_win.zip</a> (XXX KB)
+
+<p>
+<b>Linux Package</b>:
+<a href="http://XXXXX">oblige_081_linux.zip</a> (XXX KB)
+
+<p>
+<b>Source Code</b>:
+<a href="http://XXXXX">oblige_081_src.zip</a> (XXX KB)
+
+
 <h2>COPYRIGHT and LICENSE</h2>
 
 <div class="legal">
-Copyright (c) 2006,2007 Andrew Apted
+OBLIGE Level Maker &nbsp; Copyright (C) 2006-2007 Andrew Apted
 
 <p>
-Oblige is free software; you can redistribute it and/or
+OBLIGE is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or (at your option) any later version.
 
 <p>
-Oblige is distributed in the hope that it will be useful,
+OBLIGE is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 See the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> for more details.
@@ -83,10 +149,19 @@ See the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public Licens
 
 <h2>CONTACT DETAILS</h2>
 
-Email: ajapted AT users.sourceforge.net
+Email:
+<a href="mailto:ajapted@users.sf.net">
+&lt;ajapted@users.sf.net&gt;</a>
 
 <p>
-Website: http://oblige.sourceforge.net/
+Website:
+<a href="http://oblige.sourceforge.net/">
+http://oblige.sourceforge.net/</a>
+
+<p>
+Project page:
+<a href="http://sourceforge.net/projects/oblige/">
+http://sourceforge.net/projects/oblige/</a>
 
 <div class="logo">
 Hosted by:&nbsp;
