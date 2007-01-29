@@ -439,7 +439,10 @@ function write_level(p, lev_name)
             cur_line.norm  == norm and
             cur_line.flags == flags and
             match_sidedefs(cur_line.front, f_side) and
-            match_sidedefs(cur_line.back,  b_side)
+            match_sidedefs(cur_line.back,  b_side) and
+            -- make sure line #0 is short (try to avoid intercept
+            -- overflow in older DOOM engines)
+            #line_list > 0
         then
           if not (f.short or b.short or cur_line.short) then
             -- simply extend current line
