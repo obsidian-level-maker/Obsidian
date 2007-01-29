@@ -482,7 +482,10 @@ function write_level(p, lev_name)
         cur_line.kind = b.switch_kind
         cur_line.tag  = b.switch_tag
 
-      elseif (f.walk_kind ~= b.walk_kind) or (f.walk_tag ~= b.walk_tag) then
+      elseif ((f.walk_kind ~= b.walk_kind) or (f.walk_tag ~= b.walk_tag))
+             and not b.solid and not cur_line.kind
+             and not (b.near_switch or f.near_switch)
+      then
         if f.walk_kind then
           cur_line.kind = f.walk_kind
           cur_line.tag  = f.walk_tag

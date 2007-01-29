@@ -608,6 +608,7 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
   BASE.f_h = z
   BASE.l_tex = c.theme.wall
   BASE.u_tex = c.theme.wall
+  BASE.near_switch = true
 
   frag_fill(p,c, fx+1,fy+1, fx+FW,fy+FH, BASE)
 
@@ -651,6 +652,7 @@ function B_wall_switch(p,c, x,y,z, side, info, kind, tag)
 
     l_tex = c.theme.wall,
     u_tex = c.theme.wall,
+    near_switch = true,
   }
 
   local sx,sy, ex,ey = side_to_corner(side, FW, FH)
