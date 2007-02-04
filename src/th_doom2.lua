@@ -342,7 +342,22 @@ D2_THEMES =
 
     scenery = "green_torch",
   },
+}
 
+D2_HALLWAYS =
+{
+  HALLWAY =
+  {
+    mat_pri = 0,
+
+    wall = "PIPEWAL2",
+    void = "PIPEWAL1",
+    step   = "STEP4",
+    pillar = "STONE4",
+
+    floor = "FLAT5_4",
+    ceil = "FLAT5_4",
+  },
 }
 
 D2_MATS =
@@ -419,6 +434,8 @@ function create_doom2_theme()
 
   T.mats = copy_table(T.mats)
   merge_table(T.mats, D2_MATS)
+
+  T.hallways = D2_HALLWAYS  -- FIXME: allow for DOOM-1 !!!!
 
   T.hangs = copy_table(T.hangs)
   merge_table(T.hangs, D2_OVERHANGS)
