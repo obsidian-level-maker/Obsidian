@@ -2627,7 +2627,18 @@ function build_cell(p, c)
     gap_fill(p,c, corn_x2,corn_y2, corn_x2,corn_y2, { solid=corn_t2.void })
   end
 
+  local function chunk_touches_side(kx, ky, side)
+    if side == 4 then return kx == 1 end
+    if side == 6 then return kx == 3 end
+    if side == 2 then return ky == 1 end
+    if side == 8 then return ky == 3 end
+  end
+
   local function build_chunk(kx, ky)
+
+    local function link_is_door(c, side)
+      return c.link[side] and c.link[side].kind == "door"
+    end
 
     local function add_overhang_pillars(c, K, kx, ky, sec, l_tex, u_tex)
       local basex = (kx - 1) * JW + 1
@@ -2644,14 +2655,25 @@ function build_cell(p, c)
 
           local bx, by = (basex + jx-1), (basey + jy-1)
 
-          -- FIXME: don't put pillar on "must_walk" blocks
+          local pillar = true
+
+          if (bx ==  1 and link_is_door(c, 4)) or
+             (bx == BW and link_is_door(c, 6)) or
+             (by ==  1 and link_is_door(c, 2)) or
+             (by == BH and link_is_door(c, 8))
+          then
+            pillar = false
+          end
+
+          -- FIXME: interact better with stairs/lift
 
           jx,jy = (bx - 1)*FW, (by - 1)*FH
 
-          -- FIXME: interact well with stairs/lift
-
           frag_fill(p,c, jx+1, jy+1, jx+FW, jy+FH, sec)
-          frag_fill(p,c, jx+fx, jy+fy, jx+fx, jy+fy, { solid=K.sup_tex})
+
+          if pillar then
+            frag_fill(p,c, jx+fx, jy+fy, jx+fx, jy+fy, { solid=K.sup_tex})
+          end
         end
       end
     end
