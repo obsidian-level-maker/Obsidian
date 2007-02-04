@@ -463,7 +463,7 @@ D2_HALLWAYS =
 
     floor = "FLAT14",
     ceil  = "TLITE6_4",
-    arch_floor = "FLAT22",
+    arch_floor = "FLAT20",
     arch_ceil  = "CEIL3_2",
 
     well_lit = true,
