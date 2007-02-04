@@ -652,7 +652,7 @@ function B_wall_switch(p,c, x,y,z, side, info, kind, tag)
     f_h = z,
     c_h = z + 64,
     f_tex = c.theme.floor,
-    c_tex = c.theme.floor, -- SKY is no good
+    c_tex = c.theme.arch_ceil or c.theme.floor, -- SKY is no good
     light = 224,
 
     l_tex = c.theme.wall,
@@ -786,8 +786,8 @@ function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
   {
     f_h = z1,
     c_h = z2,
-    f_tex = c.theme.floor,
-    c_tex = c.theme.floor, -- SKY is no good
+    f_tex = c.theme.arch_floor or c.theme.floor,
+    c_tex = c.theme.arch_ceil  or c.theme.floor, -- SKY is no good
     light = c.light,
 
     l_tex = c.theme.wall,
@@ -912,7 +912,7 @@ function B_monster_closet(p,c, kx,ky, z, tag)
     f_h = z,
     c_h = c.ceil_h,
     f_tex = c.theme.floor,
-    c_tex = c.theme.floor,
+    c_tex = c.theme.arch_ceil or c.theme.floor,
     light = c.light,
 
     l_tex = c.theme.void,
@@ -923,7 +923,7 @@ function B_monster_closet(p,c, kx,ky, z, tag)
   OUTER = copy_block(INNER)
 
   OUTER.c_h = OUTER.f_h
-  OUTER.c_tex = OUTER.f_tex
+  OUTER.c_tex = c.theme.arch_ceil or OUTER.f_tex
   OUTER.tag = tag
 
   local x1 = chunk_to_block(kx)
@@ -1989,7 +1989,8 @@ function build_cell(p, c)
 
       local arch = copy_block(c.room_sec)
       arch.c_h = math.min(c.ceil_h-32, other.ceil_h-32, c.floor_h+128)
-      arch.c_tex = c.room_sec.f_tex --!!
+      arch.f_tex = c.theme.arch_floor or c.room_sec.f_tex
+      arch.c_tex = c.theme.arch_ceil  or arch.f_tex
 
       if (arch.c_h - arch.f_h) < 64 then
         arch.c_h = arch.f_h + 64
@@ -2047,7 +2048,7 @@ function build_cell(p, c)
       sec.c_tex = b_theme.ceil
       if not link.src.outdoor or not link.dest.outdoor then
         sec.c_h = sec.c_h - 32
-        if b_theme.outdoor then sec.c_tex = sec.f_tex end
+        if b_theme.outdoor then sec.c_tex = b_theme.arch_ceil or sec.f_tex end
       end
 
       local bar = link.bar_size
@@ -2461,7 +2462,7 @@ function build_cell(p, c)
       sec.c_h = c.ceil_h
     else
       sec.light = sec.light - 16
-      sec.c_tex = sec.f_tex
+      sec.c_tex = b_theme.arch_ceil or sec.f_tex
 
       if (sec.c_h - sec.f_h) > 64 and rand_odds(30) then
         sec.c_h = sec.f_h + 64
@@ -2987,8 +2988,8 @@ then
 end
 
 -- TEST CRUD : pillars
-if sec and not c.is_exit and not c.scenic and not K.stair_dir and
-  dual_odds(c.theme.outdoor, 12, 25)
+if sec and not c.is_exit and not c.scenic and not K.stair_dir
+  and dual_odds(c.theme.outdoor, 12, 25)
   and (not c.hallway or rand_odds(20))
 then
   K.pillar = true
@@ -3034,9 +3035,8 @@ end
   c.blk_x = BORDER_BLK + (c.x-1) * (BW+1)
   c.blk_y = BORDER_BLK + (c.y-1) * (BH+1)
 
-  c.light = 144
-  if (c.theme.outdoor) then
-    c.light = 192
+  if not c.light then
+    c.light = sel(c.theme.outdoor, 192, 144)
   end
 
   c.room_sec = { f_h=c.floor_h, c_h=c.ceil_h,
