@@ -58,7 +58,9 @@ function show_path(p)
       elseif c.is_depot  then kind = "D"
       elseif c.along == 1 then kind = "S"
       elseif c.along < #c.quest.path then
-        if c.quest.mini then kind = "q" else kind = "p" end
+        if c.hallway then kind = "h"
+        elseif c.quest.mini then kind = "q"
+        else kind = "p" end
       elseif c.quest.kind == "exit" then kind = "E"
       elseif c.quest.kind == "item" or
              c.quest.kind == "weapon" then kind = "W"
@@ -341,6 +343,9 @@ function shuffle_build_sites(p)
     elseif SL > DL then chance = 50 + SL * 10
     end
 
+    if link.src.hallway and not link.dest.hallway then chance =  5 end
+    if link.dest.hallway and not link.src.hallway then chance = 95 end
+
     -- this ensures we see a metallic wall outside
     -- (rather than a rocky wall inside)
     if link.dest.theme.outdoor and not link.src.theme.outdoor then chance =  1 end
@@ -371,7 +376,7 @@ end
 
 function compute_height_minmax(p)
 
-  for zzz,c in ipairs(p.all_cells) do
+  local function minmax(c)
     c.f_min = c.floor_h
     c.f_max = c.floor_h
     c.c_min = c.ceil_h
@@ -389,6 +394,18 @@ function compute_height_minmax(p)
         end
       end
     end
+  end
+
+  local function fix_ceils(c)
+    if c.ceil_h < (c.f_max + 128) then
+      c.ceil_h = c.f_max + 128
+      minmax(c)
+    end
+  end
+
+  for zzz,c in ipairs(p.all_cells) do
+    minmax(c)
+    fix_ceils(c)
   end
 end
 
@@ -561,7 +578,30 @@ function plan_sp_level(is_coop)  -- returns Plan
     return p.liquid
   end
 
-  function make_quest_path(Q)
+  local function make_hallways(Q)
+    
+    -- FIXME: more than one HALLWAY theme!!!!
+    if not THEME.hallways then return end
+    local theme = THEME.hallways.HALLWAY
+    assert(theme)
+
+    if rand_odds(sel(Q.theme.outdoor,90,50)) then return end
+
+    if #Q.path < 4 then return end
+
+    local start  = 2 ---!!! rand_irange(sel(Q.path[1].hallway, 1, 2), #Q.path-1)
+    local finish = #Q.path-1 ---!!! rand_irange(start, #Q.path-1)
+
+    if start == 1 then theme = Q.path[1].theme end
+
+print("ADDING HALLWAY", start, finish)
+    for idx = start,finish do
+      Q.path[idx].theme = theme
+      Q.path[idx].hallway = true
+    end
+  end
+  
+  local function make_quest_path(Q)
  
     -- TODO: better system for choosing themes
     local theme
@@ -614,6 +654,8 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     Q.first = Q.path[1]
     Q.last  = Q.path[#Q.path]
+
+    make_hallways(Q)
   end
 
 
@@ -648,16 +690,91 @@ function plan_sp_level(is_coop)  -- returns Plan
 
   local function select_heights()
 
-    -- FIXME: TEMP JUNK
+    local DIFF_H     = {  0, 16, 32, 64, 128, 256 }
+    local DIFF_PROBS = { 30, 30, 90, 50,  10, 0.1 }
+
+    local BUMP_PROBS =
+    {
+      {  1,  1, 70,  1,  1 },
+      {  1, 50, 70, 50,  1 },
+      { 50, 20, 70, 20, 50 },
+    }
+
+    local function quest_heights(Q)
+
+      -- first choose target height
+      local diff = DIFF_H[rand_index_by_probs(DIFF_PROBS)]
+
+      -- FIXME: theme dependent (e.g. cave goes down, tower goes up)
+      if rand_odds(50) then diff = -diff end
+
+print("QUEST_HEIGHTS", Q.level, Q.sub_level)
+print(string.format("QUEST %d.%d  diff: %d",
+Q.level, Q.sub_level or 0, diff))
+
+      local bumps = BUMP_PROBS[rand_index_by_probs { 50, 70, 10 }]
+
+      -- now traverse path and choose floor heights
+      for idx = 2,#Q.path do
+        local c = Q.path[idx]
+        local prev = Q.path[idx-1]
+
+        local change = math.abs(diff)
+
+        local r = rand_irange(1,8)
+        if r <= 2 then change = 0 end
+        if r == 3 and change > 16 then change = change / 2 end
+        if r == 4 then change = change * 2 end
+
+        if c.hallway and prev.hallway then
+          if change > 128 then change = 64
+          elseif change > 16 then change = change / 2
+          end
+        else
+          change = change + 32 * (rand_index_by_probs(bumps) - 3)
+        end
+
+        ---### if change > 128 then change = 128 end
+        ---### if change < -64 then change = -64 end
+
+        if diff < 0      then change = -change end
+        if rand_odds(98) then change = -change end
+
+print(string.format("  idx: %d  cur: %d  change: %d",
+idx, c.floor_h, change))
+
+        c.floor_h = prev.floor_h + change
+      end
+    end
+
+    --- select_heights ---
+
+    for zzz,Q in ipairs(p.quests) do
+      quest_heights(Q)
+
+      for xxx,R in ipairs(Q.children) do
+        quest_heights(R)
+      end
+    end
+
+    -- compute ceilings (FIXME!!!)
+
+    for zzz,c in ipairs(p.all_cells) do
+      c.ceil_h = c.floor_h + 256
+      if c.is_exit or c.hallway then c.ceil_h = c.floor_h + 128 end
+      -- FIXME: Outdoor Sky Equalisation
+    end
+
+    --[[ OLD METHOD (not bad)
     for zzz,c in ipairs(p.all_cells) do
       -- c.floor_h = 128 - (5-c.quest.level) * 128
       c.floor_h = rand_index_by_probs{ 3,1,5,1,4 } * 32 - 32
-      if c.is_exit then c.ceil_h = c.floor_h + 128 end
     end
+    --]]
   end
 
 --[[
-  local function old_select_heights()
+  local function very_old_select_heights()
 
     local function calc_floor(c, prev)
       if c.floor_h then return end -- already done
