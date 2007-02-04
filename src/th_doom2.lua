@@ -346,17 +346,127 @@ D2_THEMES =
 
 D2_HALLWAYS =
 {
-  HALLWAY =
+  BROWN1 =  -- FIXME: move into common (D1/D2) themes
+  {
+    mat_pri = 0,
+
+    wall = "BROWNPIP",
+    void = "BROWN1",
+    step = "BROWN1",
+    pillar = "BROVINE2",
+
+    floor = "FLOOR5_1",
+    ceil  = "CEIL5_2",
+  },
+
+  BSTONE =
+  {
+    mat_pri = 0,
+
+    wall = "BSTONE2",
+    void = "BSTONE2",
+    step = "METAL",
+    pillar = "BSTONE3",
+
+    floor = "FLAT5",
+    ceil  = "FLAT1",
+  },
+
+  CRACKLE =
+  {
+    mat_pri = 0,
+
+    wall = "SP_ROCK1",
+    void = "SP_ROCK1",
+    step = "STEP6",
+    pillar = "CRACKLE4",
+
+    floor = "MFLR8_3",
+    ceil  = "FLOOR6_2",
+  },
+
+  BRICK =
+  {
+    mat_pri = 0,
+
+    wall = "BIGBRIK1",
+    void = "BIGBRIK2",
+    step = "STEP4",
+    pillar = "STONE3",
+
+    floor = "FLAT5_7",
+    ceil  = "FLAT5_4",
+  },
+
+  WOOD =
+  {
+    mat_pri = 0,
+
+    wall = "WOODMET1",
+    void = "WOOD5",
+    step = "STEP5",
+    pillar = "WOODMET2",
+
+    floor = "FLAT5_2",
+    ceil  = "MFLR8_2",
+  },
+
+  METAL =
+  {
+    mat_pri = 0,
+
+    wall = "METAL3",
+    void = "METAL2",
+    step = "STEP5",
+    pillar = "SW1SATYR",
+
+    floor = "FLAT5_5",
+    ceil  = "CEIL5_1",
+  },
+
+  TEKGREN =
+  {
+    mat_pri = 0,
+
+    wall = "TEKGREN4",
+    void = "TEKGREN2",
+    step = "STEP2",
+    pillar = "BRONZE2",
+
+    floor = "FLOOR3_3",
+    ceil  = "GRNLITE1",
+
+    well_lit = true,
+  },
+
+  PIPES =
   {
     mat_pri = 0,
 
     wall = "PIPEWAL2",
     void = "PIPEWAL1",
-    step   = "STEP4",
+    step = "STEP4",
     pillar = "STONE4",
 
     floor = "FLAT5_4",
-    ceil = "FLAT5_4",
+    ceil  = "FLAT5_4",
+  },
+
+  BLUECARPET =
+  {
+    mat_pri = 0,
+
+    wall = "STARTAN2",
+    void = "STARTAN3",
+    step = "STEP1",
+    pillar = "WOOD4",
+
+    floor = "FLAT14",
+    ceil  = "TLITE6_4",
+    arch_floor = "FLAT22",
+    arch_ceil  = "CEIL3_2",
+
+    well_lit = true,
   },
 }
 
