@@ -122,6 +122,11 @@ function random_where(link)
      15, 40, 15, 90, 15, 40, 15
   }
 
+  if link.src.hallway or link.dest.hallway then
+    link.where = 0
+    return
+  end
+
   if (link.kind == "door" and rand_odds(4)) or
      (link.kind ~= "door" and rand_odds(15)) then
     link.where = "double";
@@ -1506,6 +1511,8 @@ print("ADDING CLOSET CHUNK @", c.x,c.y)
     if p.deathmatch then probs[4] = 0 end
 
     if c.scenic then probs[1] = 200 end
+
+    if c.hallway then void_it_up(c) end
 
     while count_empty_chunks(c) > 0 do
 
@@ -2982,6 +2989,7 @@ end
 -- TEST CRUD : pillars
 if sec and not c.is_exit and not c.scenic and not K.stair_dir and
   dual_odds(c.theme.outdoor, 12, 25)
+  and (not c.hallway or rand_odds(20))
 then
   K.pillar = true
 end
@@ -3036,7 +3044,9 @@ end
                  light=c.light,
                  }
 
-  if not c.theme.outdoor and not c.is_exit and rand_odds(70) then
+  if not c.theme.outdoor and not c.is_exit and not c.hallway
+     and rand_odds(70)
+  then
     c.sky_light =
     {
       h  = 8 * rand_irange(2,4),
