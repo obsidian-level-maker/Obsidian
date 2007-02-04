@@ -299,6 +299,11 @@ function get_rand_theme()
   end
 end
 
+function get_rand_hallway()
+  local name,info = rand_table_pair(THEME.hallways)
+  return info
+end
+
 function choose_liquid()
   local probs = {}
   for zzz,info in ipairs(THEME.liquids) do
@@ -578,26 +583,63 @@ function plan_sp_level(is_coop)  -- returns Plan
     return p.liquid
   end
 
+  local HALL_CHANCE = { 0, 0, 25, 36, 49, 64, 81 }
+
   local function make_hallways(Q)
-    
-    -- FIXME: more than one HALLWAY theme!!!!
+
     if not THEME.hallways then return end
-    local theme = THEME.hallways.HALLWAY
+
+    local function hall_lighting(start,idx,finish)
+      local level = 128
+      while (level > 80) and (idx > start) and (idx < finish) do
+        level = level - 16
+        start = start + 1
+        finish = finish - 1
+      end
+      return level
+    end
+
+    if #Q.path < 3 then return end
+
+    if Q.theme.outdoor and rand_odds(60) then return end
+
+    -- longer quests are more likely to add hallways
+    local chance = HALL_CHANCE[math.min(7, #Q.path)]
+    if not rand_odds(chance) then return end
+
+    local length
+    repeat
+      length = rand_index_by_probs { 30, 70, 40, 15, 7, 3, 3, 3 }
+    until length <= (#Q.path - 2)
+
+    local start
+    if Q.first.hallway and rand_odds(30) then
+      start = 2
+    else
+      start = rand_irange(2, #Q.path - length)
+    end
+
+    local finish = start + length - 1
+
+    local theme
+    if start == 2 and Q.first.hallway and rand_odds(96) then
+      theme = Q.first.theme
+    else
+      theme = get_rand_hallway()
+    end
     assert(theme)
 
-    if rand_odds(sel(Q.theme.outdoor,90,50)) then return end
+print("ADDING HALLWAY:", start, length, #Q.path)
 
-    if #Q.path < 4 then return end
-
-    local start  = 2 ---!!! rand_irange(sel(Q.path[1].hallway, 1, 2), #Q.path-1)
-    local finish = #Q.path-1 ---!!! rand_irange(start, #Q.path-1)
-
-    if start == 1 then theme = Q.path[1].theme end
-
-print("ADDING HALLWAY", start, finish)
     for idx = start,finish do
-      Q.path[idx].theme = theme
-      Q.path[idx].hallway = true
+      local c = Q.path[idx]
+      c.hallway = true
+      c.theme = theme
+      if theme.well_lit then
+        c.light = 176
+      else
+        c.light = hall_lighting(start,idx,finish)
+      end
     end
   end
   
@@ -708,9 +750,9 @@ print("ADDING HALLWAY", start, finish)
       -- FIXME: theme dependent (e.g. cave goes down, tower goes up)
       if rand_odds(50) then diff = -diff end
 
-print("QUEST_HEIGHTS", Q.level, Q.sub_level)
-print(string.format("QUEST %d.%d  diff: %d",
-Q.level, Q.sub_level or 0, diff))
+--- print("QUEST_HEIGHTS", Q.level, Q.sub_level)
+--- print(string.format("QUEST %d.%d  diff: %d",
+--- Q.level, Q.sub_level or 0, diff))
 
       local bumps = BUMP_PROBS[rand_index_by_probs { 50, 70, 10 }]
 
@@ -734,14 +776,11 @@ Q.level, Q.sub_level or 0, diff))
           change = change + 32 * (rand_index_by_probs(bumps) - 3)
         end
 
-        ---### if change > 128 then change = 128 end
-        ---### if change < -64 then change = -64 end
-
         if diff < 0      then change = -change end
         if rand_odds(98) then change = -change end
 
-print(string.format("  idx: %d  cur: %d  change: %d",
-idx, c.floor_h, change))
+--- print(string.format("  idx: %d  cur: %d  change: %d",
+--- idx, c.floor_h, change))
 
         c.floor_h = prev.floor_h + change
       end
@@ -953,11 +992,11 @@ idx, c.floor_h, change))
     -- probability tables for length of quests
     local LEN_PROB_TAB =
     {
-      key    = {  5, 25, 50, 90, 70, 30, 10, 5, 1, 1 },
-      exit   = {  5, 25, 50, 90, 70, 30, 10, 5, 1, 1 },
-      switch = { 15, 90, 90, 50, 10, 1 },
-      weapon = { 15, 90, 50, 10, 1 },
-      item   = { 15, 70, 70, 10, 1 }
+      key    = {  5, 25, 50, 90, 70, 30, 12, 6, 2, 2 },
+      exit   = {  5, 25, 50, 90, 70, 30, 12, 6, 2, 2 },
+      switch = { 15, 90, 90, 50, 12, 4, 2, 2 },
+      weapon = { 15, 90, 50, 12, 4, 2 },
+      item   = { 15, 70, 70, 12, 4, 2 }
     }
 
     local function add_quest(kind, is_mini)
