@@ -2032,6 +2032,8 @@ function build_cell(p, c)
         arch.c_tex = THEME.mats.ARCH.ceil
 
         tex = THEME.mats.ARCH.wall
+
+        fill(p,c, x-ax*2, y-ay*2, ex+ax*2, ey+ay*2, { solid=tex })
       end
 
       arch.l_tex = tex
@@ -2231,7 +2233,7 @@ function build_cell(p, c)
     return "solid"
   end
 
-  local function border_theme(other)
+  local function border_theme(c, other)
     if not other then return c.theme end
 
     local t1 = c.theme
@@ -2250,7 +2252,7 @@ function build_cell(p, c)
     return t1
   end
 
-  local function corner_theme(dx, dy)
+  local function corner_tex(c, dx, dy)
     -- FIXME: use *border* themes, not cell themes
 
     local themes = { }
@@ -2293,7 +2295,7 @@ function build_cell(p, c)
       end
     end --]]
 
-    return best
+    return best.void
   end
 
   local function build_sky_border(side, x1,y1, x2,y2)
@@ -2558,7 +2560,7 @@ function build_cell(p, c)
     if (pass == 1 and what ~= "sky") or
        (pass == 2 and what == "sky") then return end
 
-    local b_theme = border_theme(other)
+    local b_theme = border_theme(c, other)
 
     build_link(link, other, side, what, b_theme)
 
@@ -2645,11 +2647,11 @@ function build_cell(p, c)
     local corn_dx2 = (side == 4) and -1 or  1
     local corn_dy2 = (side == 2) and -1 or  1
 
-    local corn_t1 = corner_theme(corn_dx1, corn_dy1)
-    local corn_t2 = corner_theme(corn_dx2, corn_dy2)
+    local corn_tex1 = corner_tex(c, corn_dx1, corn_dy1)
+    local corn_tex2 = corner_tex(c, corn_dx2, corn_dy2)
 
-    gap_fill(p,c, corn_x1,corn_y1, corn_x1,corn_y1, { solid=corn_t1.void })
-    gap_fill(p,c, corn_x2,corn_y2, corn_x2,corn_y2, { solid=corn_t2.void })
+    gap_fill(p,c, corn_x1,corn_y1, corn_x1,corn_y1, { solid=corn_tex1 })
+    gap_fill(p,c, corn_x2,corn_y2, corn_x2,corn_y2, { solid=corn_tex2 })
   end
 
   local function chunk_touches_side(kx, ky, side)
