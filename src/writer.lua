@@ -245,13 +245,16 @@ function write_level(p, lev_name)
       local b_over = b[norm]    or DUMMY_BLOCK
       local f_over = f[10-norm] or DUMMY_BLOCK
 
+      local impassible = f.impassible or b.impassible
+
       if not b.solid then
 
         flags = flags + ML_TWO_SIDED
 
         -- railing textures (assume blocking)
         if f_side.mid or b_side.mid then
-          flags = flags + ML_LOWER_UNPEG + ML_IMPASSABLE
+          flags = flags + ML_LOWER_UNPEG
+          impassible = true
 
         elseif not b.lift_kind and not
           -- FIXME: remove special check on texture name!
@@ -265,11 +268,15 @@ function write_level(p, lev_name)
 
       else  -- one sided --
 
-        flags = flags + ML_IMPASSABLE
+        impassible = true
 
         if f.door_kind or b.switch_kind then
           flags = flags + ML_LOWER_UNPEG
         end
+      end
+
+      if impassible then
+        flags = flags + ML_IMPASSABLE
       end
 
       -- sound blocking.  Note some subtlety here, when (count == 1)
