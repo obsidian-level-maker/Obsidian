@@ -196,6 +196,19 @@ function link_other(link, cell)
   return nil
 end
 
+function neighbour_by_side(p, c, dir)
+  if dir == 4 and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
+  if dir == 6 and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
+  if dir == 2 and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
+  if dir == 8 and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
+end
+
+function get_bordering_cell(p, c, bx, by)
+  if bx == 1  and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
+  if bx == BW and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
+  if by == 1  and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
+  if by == BH and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
+end
 
 function links_in_cell(c)
   local count = 0
@@ -327,14 +340,6 @@ end
 
 function shuffle_build_sites(p)
 
-  local function builds_in_cell(c)
-    local count = 0
-    for dir = 2,8,2 do
-      if c.link[dir] and c.link[dir].build == c then count = count + 1 end
-    end
-    return count
-  end
-
   for zzz,link in ipairs(p.all_links) do
 
     con.ticker();
@@ -362,24 +367,17 @@ function shuffle_build_sites(p)
       link.build = link.dest
     end
   end
-
----###  -- make sure cells are never "full" of build sites
----###  -- (Note: in reality this happens only very rarely)
----###  for loop = 1,9 do
----###    local modified = false
----###    for zzz,c in ipairs(p.all_cells) do
----###      if builds_in_cell(c) == 4 then
----###        local dir = math.random(1,4) * 2
----###        c.link[dir].build = link_other(c.link[dir], c)
----###        modified = true
----###      end
----###    end
----###    con.ticker();
----###    if not modified then break end
----###  end
 end
 
+
 function compute_height_minmax(p)
+
+  local function merge_neighbour(c, other)
+    c.f_min = math.min(c.f_min, other.floor_h)
+    c.f_max = math.max(c.f_max, other.floor_h)
+    c.c_min = math.min(c.c_min, other.ceil_h)
+    c.c_max = math.max(c.c_max, other.ceil_h)
+  end
 
   local function minmax(c)
     c.f_min = c.floor_h
@@ -390,30 +388,17 @@ function compute_height_minmax(p)
     for dir = 2,8,2 do
       if c.link[dir] then
         local link = c.link[dir]
-        local other = link_other(link, c)
         if link.build ~= c then
-          c.f_min = math.min(c.f_min, other.floor_h)
-          c.f_max = math.max(c.f_max, other.floor_h)
-          c.c_min = math.min(c.c_min, other.ceil_h)
-          c.c_max = math.max(c.c_max, other.ceil_h)
+          merge_neighbour(c, link_other(link,c))
         end
       end
     end
   end
 
-  local function fix_ceils(c)
-    if c.ceil_h < (c.f_max + 128) then
-      c.ceil_h = c.f_max + 128
-      minmax(c)
-    end
-  end
-
   for zzz,c in ipairs(p.all_cells) do
     minmax(c)
-    fix_ceils(c)
   end
 end
-
 
 
 function plan_sp_level(is_coop)  -- returns Plan
@@ -730,10 +715,10 @@ print("ADDING HALLWAY:", start, length, #Q.path)
   end
 
 
-  local function select_heights()
+  local function select_floor_heights()
 
-    local DIFF_H     = {  0, 16, 32, 64, 128, 256 }
-    local DIFF_PROBS = { 30, 30, 90, 50,  10, 0.1 }
+    local DIFF_H     = {  0, 16, 32, 64, 128 }
+    local DIFF_PROBS = { 30, 30, 90, 50,  10 }
 
     local BUMP_PROBS =
     {
@@ -786,7 +771,7 @@ print("ADDING HALLWAY:", start, length, #Q.path)
       end
     end
 
-    --- select_heights ---
+    --- select_floor_heights ---
 
     for zzz,Q in ipairs(p.quests) do
       quest_heights(Q)
@@ -796,151 +781,80 @@ print("ADDING HALLWAY:", start, length, #Q.path)
       end
     end
 
-    -- compute ceilings (FIXME!!!)
-
-    for zzz,c in ipairs(p.all_cells) do
-      c.ceil_h = c.floor_h + 256
-      if c.is_exit or c.hallway then c.ceil_h = c.floor_h + 128 end
-      -- FIXME: Outdoor Sky Equalisation
-    end
-
-    --[[ OLD METHOD (not bad)
-    for zzz,c in ipairs(p.all_cells) do
-      -- c.floor_h = 128 - (5-c.quest.level) * 128
-      c.floor_h = rand_index_by_probs{ 3,1,5,1,4 } * 32 - 32
-    end
-    --]]
+    compute_height_minmax(p)
   end
 
---[[
-  local function very_old_select_heights()
+  local function select_ceiling_heights()
 
-    local function calc_floor(c, prev)
-      if c.floor_h then return end -- already done
+    local function initial_height(c)
 
-      if not prev[1] then
-        c.floor_h = p.f_min
-        return
-      end
+      -- FIXME: more imagination!
 
-      -- the real delta = (index - 5) * 64
-      local poss_delta = { 6,0,60,80,160,80,60,0,6 }
-
-      if p.deathmatch then
-        poss_delta[4] = 100
-        poss_delta[5] = 40
-        poss_delta[6] = 100
-
+      if c.is_exit then
+        c.ceil_h = c.floor_h + 128
+      elseif c.hallway then
+        c.ceil_h = c.floor_h + sel(rand_odds(50), 96, 128)
       else
-        -- try to avoid changing direction
-        if prev[2] and not c.theme.outdoor then
-          if prev[2] < prev[1] then
-            for i = 2,4 do poss_delta[i] = poss_delta[i] / 4 end
-          elseif prev[2] > prev[1] then
-            for i = 6,8 do poss_delta[i] = poss_delta[i] / 4 end
-          end
-        end
-
-        -- but we would like some variation
-        if prev[2] and prev[2] == prev[1] then
-          poss_delta[5] = 80
-          if prev[3] == prev[2] then
-            poss_delta[5] = 30
-          end
-        end
+        c.ceil_h = c.floor_h + 64 * rand_index_by_probs { 0, 40, 20, 90, 5, 3 }
       end
 
-      local mul = 64
-      if rand_odds(30) then mul = 32 end
-
-      c.floor_h = prev[1] + (rand_index_by_probs(poss_delta) - 5) * mul
+      -- sanity check
+      c.ceil_h = math.max(c.ceil_h, c.f_max + 80)
     end
 
-    local function calc_ceil(c, calc_new)
+    local function raise_the_rooves()
 
-      local function try_link(link)
-        if not link then return end
-
-        local other = link_other(link, c)
+      local function merge_neighbour(c, other)
         if not other then return end
 
         local need = 64
-        if c.outdoor then need = 96 end
+        if c.theme.outdoor then need = 96 end
 
         if c.ceil_h < other.floor_h + need then
            c.ceil_h = other.floor_h + need
         end
 
-        if c.theme.outdoor and not calc_new then
+        if c.theme.outdoor then
           if other.theme.outdoor then
             c.ceil_h = math.max(c.ceil_h, other.ceil_h)
           else
             c.ceil_h = math.max(c.ceil_h, other.ceil_h + 24)
           end
-        end
-      end
 
-      --| calc_ceil |--
-     
-      if calc_new then
-        c.ceil_h = c.floor_h + 128
-        if rand_irange(1,100) < 20 then
-          c.ceil_h = c.ceil_h + 64
-        end
-
-        -- FIXME
-        -- if cave_theme and rand_odds(30) then c.ceil_h = c.ceil_h - 64  end
-      
-      else
-        for tdir = 2,8,2 do
-          try_link(c.link[tdir])
-        end
-      end
-    end
-
-    -- BEGIN old_select_heights --
-
-    local prev_floors = {}
-
-    if not p.deathmatch then
-      for zzz,stage in ipairs(p.stages) do
-        for xxx,cell in ipairs(stage.path) do
-          calc_floor(cell, prev_floors)
-          table.insert(prev_floors, 1, cell.floor_h)
-        end
-      end
-    else  -- DEATHMATCH
-      for y = 1,p.h do
-        for x = 1,p.w do
-
-          if y > 1 then
-            table.insert(prev_floors, 1, p.cells[x][y-1].floor_h)
+          -- don't make sectors too tall!
+          if (c.ceil_h - c.floor_h) > 960 then
+            c.ceil_h = c.floor_h + 960
           end
-          if x > 1 then
-            table.insert(prev_floors, 1, p.cells[x-1][y].floor_h)
-          end
+        end
+      end
 
-          calc_floor(p.cells[x][y], prev_floors)
+      for loop=1,16 do
+        for zzz,c in ipairs(p.all_cells) do
+          for dir = 2,8,2 do
+            if c.link[dir] then
+              merge_neighbour(c, link_other(c.link[dir], c))
+            elseif c.theme.outdoor then
+              local other = neighbour_by_side(p, c, dir)
+              if other and other.theme.outdoor then
+                merge_neighbour(c, other)
+              end
+            end
+          end
         end
       end
     end
 
-    for yyy,cell in ipairs(p.all_cells) do
-      if p.f_min > cell.floor_h then
-         p.f_min = cell.floor_h
-      end
-      if p.f_max < cell.floor_h then
-         p.f_max = cell.floor_h
-      end
+    --- select_ceiling_heights ---
+
+    for zzz,c in ipairs(p.all_cells) do
+      initial_height(c)
     end
 
-    for loop=1,16 do
-      for xxx,cell in ipairs(p.all_cells) do
-        calc_ceil(cell, loop == 1)
-      end
-    end
-  end    -- END old_select_heights --
---]]
+    raise_the_rooves()
+
+    compute_height_minmax(p)
+  end
+
   
   local function decide_quests()
     
@@ -1148,12 +1062,15 @@ print("ADDING HALLWAY:", start, length, #Q.path)
       local empties = {}
       local innies  = {}
       local outies  = {}
+      local scenics = 0
 
       for dx = 0,1 do
         for dy = 0,1 do
           local c = p.cells[x+dx][y+dy]
           if not c then
             table.insert(empties, { x=x+dx, y=y+dy })
+          elseif c.scenic then
+            scenics = scenics + 1
           elseif c.theme.outdoor then
             table.insert(outies, c)
           else
@@ -1162,11 +1079,13 @@ print("ADDING HALLWAY:", start, length, #Q.path)
         end
       end
 
-      if #empties ~= 1 or #innies ~= 1 or #outies ~= 2 then return end
-
-      if (outies[1].x ~= outies[2].x) and
-         (outies[1].y ~= outies[2].y) then return end
-
+      if #empties ~= 1 or scenics > 1 or #outies < 2 then return end
+--[[
+      if #outies == 2 and #innies == 1 and
+         (outies[1].x ~= outies[2].x) and
+         (outies[1].y ~= outies[2].y)
+      then return end
+--]]
       local c = create_cell(p, empties[1].x, empties[1].y,
         outies[1].quest, outies[1].along, outies[1].theme)
 
@@ -1412,7 +1331,7 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
 
   local function toughen_it_up()
-    
+
     local function toughen_quest(Q)
       
       local peak = 180 + #Q.path * 5
@@ -1492,10 +1411,10 @@ print("LIQUID:", p.liquid)
     con.ticker();
   end
 
-  select_heights()
-  shuffle_build_sites(p)  -- this affects f_max
+  shuffle_build_sites(p)
 
-  compute_height_minmax(p)
+  select_floor_heights()
+  select_ceiling_heights()
 
   toughen_it_up()
 
