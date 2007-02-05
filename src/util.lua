@@ -97,6 +97,15 @@ function copy_table(t)
   return nil
 end
 
+function reverse_array(t)
+  if not t then return nil end
+  local result = {}
+  for zzz,val in ipairs(t) do
+    table.insert(result, 1, val)
+  end
+  return result
+end
+
 function array_2D(w, h)
   local t = { w=w, h=h }
   for x = 1,w do
