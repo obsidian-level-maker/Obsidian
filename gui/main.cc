@@ -35,6 +35,8 @@
 
 #define TICKER_TIME  20 /* ms */
 
+#define TEMP_FILENAME  DATA_DIR "/TEMP.wad"
+
 
 /* ----- user information ----------------------------- */
 
@@ -132,7 +134,7 @@ void Build_Cool_Shit()
 {
 	UI_Build *that = main_win->build_box;
 
-  char *filename = Select_Output_File(); //--- main_win->file_box->CopyFilename(".wad");
+  char *filename = Select_Output_File();
   if (! filename)
     return;
 
@@ -144,7 +146,7 @@ void Build_Cool_Shit()
 
 	bool is_hexen = !strcmp(main_win->setup_box->cur_Game(), "hexen");
 
-	bool was_ok = Doom_CreateWAD(DATA_DIR "/TEMP.wad", is_hexen);
+	bool was_ok = Doom_CreateWAD(TEMP_FILENAME, is_hexen);
 
 	if (was_ok)
 	{
@@ -169,18 +171,20 @@ void Build_Cool_Shit()
       // make a backup
       char *backup_name = ReplaceExtension(filename, "bak");
 
-      if (! CopyFile(filename, backup_name))
-      {
-        // FIXME: either show a warning OR fatal error
-      }
+      if (! FileCopy(filename, backup_name))
+        // FIXME: con_printf
+        fprintf (stderr, "WARNING: unable to backup file: %s\n", backup_name);
 
       StringFree(backup_name);
     }
 
 		that->P_Status("Building nodes");
 
-		was_ok = GB_BuildNodes(DATA_DIR "/TEMP.wad", filename);
+		was_ok = GB_BuildNodes(TEMP_FILENAME, filename);
 	}
+
+  if (! FileDelete(TEMP_FILENAME))
+    fprintf(stderr, "WARNING: unable to delete temp file: %s\n", TEMP_FILENAME);
 
   StringFree(filename);
 
