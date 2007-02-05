@@ -694,7 +694,7 @@ end
 --
 -- Build a pedestal (items, players)
 -- 
-function B_pedestal(p, c, x, y, z, info)
+function B_pedestal(p, c, x, y, z, info, shape)
  
   local PEDESTAL =
   {
@@ -712,6 +712,13 @@ function B_pedestal(p, c, x, y, z, info)
 if (PEDESTAL.c_h - PEDESTAL.f_h) < 64 then
   PEDESTAL.c_h = PEDESTAL.f_h + 64
 end
+
+  if shape == "diamond" then
+    PEDESTAL[1] = { dx= 32, dy= -8 }
+    PEDESTAL[3] = { dx=  8, dy= 32 }
+    PEDESTAL[9] = { dx=-32, dy=  8 }
+    PEDESTAL[7] = { dx= -8, dy=-32 }
+  end
 
   fill(p,c, x,y, x,y, PEDESTAL)
 end
@@ -831,6 +838,8 @@ function B_pillar_cage(p,c, kx,ky, bx,by)
   local CAGE = copy_block(c.room_sec)
   local z = (c.f_max + c.ceil_h) / 2
 
+  z = math.min(z, c.chunks[kx][ky].floor_h + 128)
+
   CAGE.f_tex = THEME.mats.CAGE.floor
   CAGE.l_tex = THEME.mats.CAGE.wall
   CAGE.u_tex = THEME.mats.CAGE.wall
@@ -883,6 +892,16 @@ function B_big_cage(p,c, kx,ky)
     u_tex = THEME.mats.CAGE.wall,
     is_cage = true
   }
+
+  if CAGE.f_h > c.floor_h + 160 then
+     CAGE.f_h = c.floor_h + 160
+    if c.theme.outdoor then
+      CAGE.c_h   = c.c_max
+      CAGE.c_tex = c.theme.ceil
+    else
+      CAGE.c_h = CAGE.f_h + 72
+    end
+  end
 
   for x = 0,2 do for y = 0,2 do
     local rail = THEME.rails["r_1"].tex
@@ -1507,7 +1526,7 @@ print("ADDING CLOSET CHUNK @", c.x,c.y)
     local kinds = { "room", "void", "flush", "cage", "liquid" }
     local probs = { 60, 10, 97, 5, 70 }
 
-    if not c.outdoor then probs[2] = 20 end
+    if not c.theme.outdoor then probs[2] = 15 end
     if p.deathmatch then probs[4] = 0 end
 
     if c.scenic then probs[1] = 200 end
@@ -1996,7 +2015,9 @@ function build_cell(p, c)
         arch.c_h = arch.f_h + 64
       end
 
-      if c.theme.outdoor then
+      if c.hallway and other.hallway then
+        arch.light = (c.light + other.light) / 2.0
+      elseif c.theme.outdoor then
         arch.light = arch.light - 32
       else
         arch.light = arch.light - 16
@@ -2123,19 +2144,19 @@ function build_cell(p, c)
     end
   end
 
-  local function get_bordering_cell(c, bx, by)
-    if bx == 1  and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
-    if bx == BW and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
-    if by == 1  and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
-    if by == BH and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
-  end
+---###  local function get_bordering_cell(c, bx, by)
+---###    if bx == 1  and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
+---###    if bx == BW and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
+---###    if by == 1  and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
+---###    if by == BH and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
+---###  end
   
-  local function neighbour_by_side(c, dir)
-    if dir == 4 and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
-    if dir == 6 and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
-    if dir == 2 and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
-    if dir == 8 and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
-  end
+---###  local function neighbour_by_side(c, dir)
+---###    if dir == 4 and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
+---###    if dir == 6 and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
+---###    if dir == 2 and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
+---###    if dir == 8 and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
+---###  end
 
   local function chunk_pair(cell, other, side,n)
     local cx,cy, ox,oy
@@ -2458,6 +2479,8 @@ function build_cell(p, c)
       u_tex = b_theme.wall,
     }
 
+    if other.scenic then sec.impassible = true end
+
     if what == "fence" then
       sec.c_h = c.ceil_h
     else
@@ -2511,21 +2534,22 @@ function build_cell(p, c)
   local function build_border(side, pass)
 
     local link = c.link[side]
-    local other = neighbour_by_side(c, side)
+    local other = neighbour_by_side(p, c, side)
 
     -- should *we* build it, or the other side?
     if link then
       if link.build ~= c then return end
-    else
-      local dx, dy = dir_to_delta(side)
-      local other = p.cells[c.x+dx] and p.cells[c.x+dx][c.y+dy]
 
-      if other then
-        if c.theme.outdoor == other.theme.outdoor then
-          if side > 5 then return end
-        else
-          if c.theme.outdoor then return end
-        end
+    elseif other then
+---###      local dx, dy = dir_to_delta(side)
+---###      local other = p.cells[c.x+dx] and p.cells[c.x+dx][c.y+dy]
+
+      if c.theme.outdoor ~= other.theme.outdoor then
+        if c.theme.outdoor then return end
+      elseif c.scenic ~= other.scenic then
+        if c.scenic then return end
+      else
+        if side > 5 then return end
       end
     end
 
@@ -2572,6 +2596,7 @@ function build_cell(p, c)
         light = c.light
       }
       if rand_odds(95) then FENCE.block_sound = 2 end
+      if other.scenic then FENCE.impassible = true end
 
       FENCE.l_tex = b_theme.void
       FENCE.u_tex = b_theme.void
@@ -2587,14 +2612,14 @@ function build_cell(p, c)
         if side == 2 or side == 8 then nb_side = 4 end
         if cr == 2 then nb_side = 10 - nb_side end
 
-        local NB = neighbour_by_side(c, nb_side)
+        local NB = neighbour_by_side(p, c, nb_side)
 
         local cx, cy = corn_x1, corn_y1
         if cr == 2 then cx, cy = corn_x2, corn_y2 end
 
         if NB then
           local NB_link = NB.link[side]
-          local NB_other = neighbour_by_side(NB, side)
+          local NB_other = neighbour_by_side(p, NB, side)
 
           if what_border_type(NB, NB_link, NB_other, side) == "sky" then
             build_sky_border(side, cx, cy, cx, cy)
@@ -2643,7 +2668,7 @@ function build_cell(p, c)
     local function add_overhang_pillars(c, K, kx, ky, sec, l_tex, u_tex)
       local basex = (kx - 1) * JW + 1
       local basey = (ky - 1) * JH + 1
-      
+
       sec = copy_block(sec)
       sec.l_tex = l_tex
       sec.u_tex = u_tex
@@ -2803,7 +2828,7 @@ print("BUILDING CLOSET @", c.x,c.y)
       elseif K.dm_exit then
         B_deathmatch_exit(p,c, kx,ky,K.dir)
 
-      elseif THEME.pics and dual_odds(c.theme.outdoor, 10, 50) then
+      elseif THEME.pics and rand_odds(sel(c.theme.outdoor, 10, sel(c.hallway,20, 50))) then
         if not c.void_pic then decide_void_pic(p, c) end
         local h = c.void_pic.h or (c.c_min - c.f_max - 32)
         local z = (c.c_min + c.f_max) / 2
@@ -2989,8 +3014,9 @@ print("BUILDING CLOSET @", c.x,c.y)
     end
 
 -- TEST CRUD : overhangs
-if rand_odds(10) and c.theme.outdoor and
-  not (c.quest.kind == "exit" and c.along == #c.quest.path-1)
+if rand_odds(9) and c.theme.outdoor
+  and (sec.c_h - sec.f_h <= 256)
+  and not (c.quest.kind == "exit" and c.along == #c.quest.path-1)
 then
   sec = copy_block(sec) -- FIXME??
   K.overhang = true
@@ -3024,10 +3050,13 @@ if c.sky_light then
   end
 
   K.sky_light_sec = copy_block(sec)
-  K.sky_light_sec.c_h = sec.c_h + c.sky_light.h
+  K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.c_max, sec.c_h) + c.sky_light.h
   K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, THEME.SKY_TEX, c.sky_light.light_info.flat)
   K.sky_light_sec.light = 176
   K.sky_light_utex = c.sky_light.light_info.side
+
+  -- make sure sky light doesn't come down too low
+  K.sky_light_sec.c_h = math.max(K.sky_light_sec.c_h, c.c_min)
 end
  
     chunk_fill(c, K, kx, ky, sec, c.theme.wall, u_tex)
