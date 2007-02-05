@@ -169,7 +169,7 @@ const char *FileBaseName(const char *filename)
 	return filename;
 }
 
-bool CopyFile(const char *src_name, const char *dest_name)
+bool FileCopy(const char *src_name, const char *dest_name)
 {
   char buffer[1024];
 
@@ -201,6 +201,21 @@ bool CopyFile(const char *src_name, const char *dest_name)
   fclose(src);
 
   return was_OK;
+}
+
+//
+// FileDelete
+//
+bool FileDelete(const char *filename)
+{
+#ifdef WIN32
+  
+  return (::DeleteFile(filename) != 0);
+
+#else // LINUX or MACOSX
+
+  return (remove(filename) == 0);
+#endif
 }
 
 
