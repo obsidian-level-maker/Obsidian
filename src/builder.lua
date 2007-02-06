@@ -866,7 +866,7 @@ function B_pillar_cage(p,c, kx,ky, bx,by)
 
   fill(p,c, bx,by, bx,by, CAGE)
 
-  local spot = {x=bx, y=by}
+  local spot = {c=c, x=bx, y=by}
   if kx==2 and ky==2 then spot.different = true end
 
   add_cage_spot(p,c, spot)
@@ -914,7 +914,7 @@ function B_big_cage(p,c, kx,ky)
     fill(p,c, bx+x,by+y, bx+x,by+y, CAGE, overrides)
   end end
 
-  local spot = {x=bx, y=by, double=true, dx=32, dy=32}
+  local spot = {c=c, x=bx, y=by, double=true, dx=32, dy=32}
   add_cage_spot(p,c, spot)
 end
 
@@ -931,7 +931,7 @@ function B_monster_closet(p,c, kx,ky, z, tag)
     f_h = z,
     c_h = c.ceil_h,
     f_tex = c.theme.floor,
-    c_tex = c.theme.arch_ceil or c.theme.floor,
+    c_tex = c.theme.ceil, --!!!! c.theme.arch_ceil or c.theme.floor,
     light = c.light,
 
     l_tex = c.theme.void,
@@ -2202,7 +2202,7 @@ function build_cell(p, c)
     if link and (link.kind == "arch") and
        (cell.quest.parent or cell.quest) == (other.quest.parent or other.quest) and
        cell.theme == other.theme and
-       dual_odds(cell.theme.outdoor, 40, 25)
+       dual_odds(cell.theme.outdoor, 50, 35)
     then
        return "empty"
     end
