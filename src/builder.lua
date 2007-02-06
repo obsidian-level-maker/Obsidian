@@ -931,7 +931,7 @@ function B_monster_closet(p,c, kx,ky, z, tag)
     f_h = z,
     c_h = c.ceil_h,
     f_tex = c.theme.floor,
-    c_tex = c.theme.ceil, --!!!! c.theme.arch_ceil or c.theme.floor,
+    c_tex = c.theme.ceil, --!!! c.theme.arch_ceil or c.theme.floor,
     light = c.light,
 
     l_tex = c.theme.void,
@@ -1391,12 +1391,17 @@ end
       end
     end
 
-    if possible and common --[[ and common.link --]] then
-      for x = x1,x2 do
-        for y = y1,y2 do
-          if not c.chunks[x][y] then
-            c.chunks[x][y] = copy_chunk(common)
-          end
+    if not (possible and common) then return end
+
+    if common.closet then
+      -- only make closets bigger sometimes
+      if rand_odds(50) then return end
+    end
+
+    for x = x1,x2 do
+      for y = y1,y2 do
+        if not c.chunks[x][y] then
+          c.chunks[x][y] = copy_chunk(common)
         end
       end
     end
