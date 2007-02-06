@@ -546,16 +546,16 @@ DM_QUESTS =
 DM_MONSTERS =
 {
   -- FIXME: probs for CLOSET/DEPOT
-  zombie    = { prob=81, r=20,h=56, hp=20,  dm=4,  fp=10, cage_fallback=10, hitscan=true, },
-  shooter   = { prob=41, r=20,h=56, hp=30,  dm=10, fp=10, cage_prob= 7, hitscan=true, },
+  zombie    = { prob=81, r=20,h=56, hp=20,  dm=4,  fp=10, cage_fallback=14, hitscan=true, },
+  shooter   = { prob=41, r=20,h=56, hp=30,  dm=10, fp=10, cage_prob= 8, hitscan=true, },
 
-  imp       = { prob=90, r=20,h=56, hp=60,  dm=20, fp=20, cage_prob=90, },
+  imp       = { prob=90, r=20,h=56, hp=60,  dm=20, fp=20, cage_prob=50, },
   caco      = { prob=90, r=31,h=56, hp=400, dm=45, fp=30, cage_prob=14, float=true },
   baron     = { prob=50, r=24,h=64, hp=1000,dm=45, fp=110,cage_prob= 3, },
 
   -- MELEE only monsters
-  demon     = { prob=80, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=100,melee=true },
-  spectre   = { prob=20, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=100,melee=true },
+  demon     = { prob=80, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=66,melee=true },
+  spectre   = { prob=20, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=40,melee=true },
   skull     = { prob=16, r=16,h=56, hp=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
 
   -- special monsters (only for boss levels)
