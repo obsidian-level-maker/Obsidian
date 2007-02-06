@@ -29,7 +29,7 @@ AMMO_LIMITS =  -- double these for backpack
 ------------------------------------------------------------
 
 TOUGH_FACTOR = { easy=0.75, medium=1.00, hard=1.33 }
-ACCURACIES   = { easy=0.65, medium=0.75, hard=0.85 }
+ACCURACIES   = { easy=0.60, medium=0.70, hard=0.75 }
 
 HITSCAN_RATIOS = { 1.0, 0.8, 0.6, 0.4, 0.2, 0.1 }
 MISSILE_RATIOS = { 1.0, 0.4, 0.1, 0.03 }
@@ -37,7 +37,7 @@ MELEE_RATIOS   = { 1.0 }
 
 HITSCAN_DODGES = { easy=0.11, medium=0.22, hard=0.33 }
 MISSILE_DODGES = { easy=0.71, medium=0.81, hard=0.91 }
-MELEE_DODGES   = { easy=0.85, medium=0.95, hard=0.99 }
+MELEE_DODGES   = { easy=0.85, medium=0.95, hard=0.98 }
 
 HEALTH_DISTRIB = { 24, 50, 90, 40, 5 }
 AMMO_DISTRIB   = { 50, 80, 50, 10, 2 }
@@ -62,7 +62,7 @@ function compute_pow_factors()
 end
 
 
-function add_thing(p, c, bx, by, name, blocking, angle, options)
+function add_thing(p,c, bx,by, name, blocking, angle, options)
 
   local kind = THEME.thing_nums[name]
   assert(kind)
@@ -100,6 +100,24 @@ io.stderr:write("INSERTING ",kind," INTO BLOCK ", c.blk_x+bx, ",", c.blk_y+by, "
   end
 
   return THING
+end
+
+function add_monster_to_spot(p, spot, dx,dy, name,info, angle,options)
+
+  local th = add_thing(p, spot.c, spot.x, spot.y, name, true, angle, options)
+
+  if info.r >= 32 then
+    -- Note: cannot handle monsters with radius >= 64 
+    dx, dy = dx+32, dy+32
+  end
+
+  if spot.dx then dx = dx + spot.dx end
+  if spot.dy then dy = dy + spot.dy end
+
+  th.dx = dx
+  th.dy = dy
+
+  return th
 end
 
 
@@ -491,14 +509,14 @@ zprint(active_mon, #active_mon, active_mon[1])
 
         if HM.invis then dodge = dodge / 2 end
 
-        local mon_walk = 0.5 -- monster walking/pain time
+        local mon_fight = 0.375 -- monster fight time (not walking/pain)
 
-        hurt_player(AC.info.dm * time * ratio * dodge * mon_walk)
+        hurt_player(AC.info.dm * time * ratio * dodge * mon_fight)
 
         -- simulate infighting
         local infight_prob = 0.75
         if idx >= 2 and mon_hurts_mon(AC.name, active_mon[idx-1].name) then
-          hurt_mon(idx-1, AC.info.dm * time * mon_walk * infight_prob)
+          hurt_mon(idx-1, AC.info.dm * time * mon_fight * infight_prob)
         end
       end 
     end
@@ -824,9 +842,9 @@ function place_battle_stuff(p, c)
 
       spot.double = nil
 
-      table.insert(spots, { x=spot.x+1, y=spot.y+0 })
-      table.insert(spots, { x=spot.x+0, y=spot.y+1 })
-      table.insert(spots, { x=spot.x+1, y=spot.y+1 })
+      table.insert(spots, { c=spot.c, x=spot.x+1, y=spot.y+0 })
+      table.insert(spots, { c=spot.c, x=spot.x+0, y=spot.y+1 })
+      table.insert(spots, { c=spot.c, x=spot.x+1, y=spot.y+1 })
 
       -- intermingle the new singles
       rand_shuffle(spots)
@@ -910,15 +928,7 @@ function place_battle_stuff(p, c)
         options.ambush = true
       end
 
-      local th = add_thing(p, c, spot.x, spot.y, dat.name, true, angle, options)
-
-      if is_big then
-        -- Note: cannot handle monsters with radius >= 64 
-        th.dx = 32; th.dy = 32
-      end
-
-      if spot.dx then th.dx = (th.dx or 0) + spot.dx end
-      if spot.dy then th.dy = (th.dy or 0) + spot.dy end
+      add_monster_to_spot(p, spot, 0,0, dat.name, dat.info, angle,options)
 
       angle = random_turn(angle)
 
@@ -1057,18 +1067,6 @@ function battle_in_cell(p, c)
     return list, total
   end
 
----###  local function how_much_space()
----###    local count = 0
----###    for bx = 1,BW do
----###      for by = 1,BH do
----###        if free_spot(bx, by) then
----###          count = count + 1
----###        end
----###      end
----###    end
----###    return count / (BW * BH / 2)
----###  end
-
 
   local function decide_monster(firepower)
 
@@ -1101,15 +1099,17 @@ function battle_in_cell(p, c)
     local info = THEME.monsters[name]
     assert(info)
 
+    return name, info
+  end
+
+  local function decide_monster_horde(info)
     local horde = 1
     local max_horde = 1 + int(T / info.pow)
 
     if info.hp <= 500 and rand_odds(30) then horde = horde + 1 end
     if info.hp <= 100 then horde = horde + rand_index_by_probs { 90, 40, 10, 3, 0.5 } end
 
-    if horde > max_horde then horde = max_horde end
-
-    return name, horde
+    return math.min(horde, max_horde)
   end
 
   local function create_monsters()
@@ -1118,28 +1118,28 @@ function battle_in_cell(p, c)
 
     -- create monsters until T is exhausted
     for loop = 1,99 do
-      local name, horde = decide_monster(fp)
+      local name, info = decide_monster(fp)
 
       if not name then break end
 
       if name == "none" then
         T = T-20; U = U+20
       else
-        local info = THEME.monsters[name]
+        horde = decide_monster_horde(info)
         table.insert(c.mon_set[SK], { name=name, horde=horde, info=info })
         T = T - horde * info.pow
       end
     end
   end
 
-  local function decide_cage_monster(firepower, x_horde, allow_big, allow_horde, allow_melee)
+  local function decide_cage_monster(T, firepower, x_horde, allow_big, allow_horde, allow_melee)
 
     local names = {}
     local probs = {}
 
     for name,info in pairs(THEME.monsters) do
       if (info.cage_fallback) or 
-         ((info.pow * x_horde < T*2) and (info.fp < firepower*2))
+         ((info.pow < T*2/x_horde) and (info.fp < firepower*2))
       then
         local prob = info.cage_prob or info.cage_fallback or 0
 
@@ -1159,15 +1159,18 @@ function battle_in_cell(p, c)
     local info = THEME.monsters[names[idx]]
     assert(info)
 
-    local horde = 1
-    if allow_horde and (info.r < 25) then
-      if info.hp <= 100 then horde = 4
-      elseif info.hp <= 450 then horde = 3
-      else horde = 2
-      end
-    end
+    return names[idx], info
+  end
 
-    return names[idx], horde
+  local function decide_cage_horde(spot, info)
+    if not spot.double then return 1 end
+
+    if info.r >= 31 then return 1 end  ---### >= 25
+
+    if info.hp <= 100 then return rand_index_by_probs { 10, 30, 50, 70 } end
+    if info.hp <= 450 then return rand_index_by_probs { 10, 30, 50 } end
+
+    return rand_index_by_probs { 10, 30 }
   end
 
   local function fill_cages()
@@ -1178,45 +1181,37 @@ function battle_in_cell(p, c)
 
     local fp = fire_power(best_weapon(SK))
     
-    local sml_name, sml_horde = decide_cage_monster(fp, #c.cage_spots)
-    local big_name, big_horde = decide_cage_monster(fp, #c.cage_spots, true, true)
+    local small = decide_cage_monster(T, fp, #c.cage_spots)
+    local big   = decide_cage_monster(T, fp, #c.cage_spots, true, true)
 
     for zzz,spot in ipairs(c.cage_spots) do
 
-      local m_name  = sel(spot.double, big_name, sml_name)
-      local m_horde = sel(spot.double, big_horde,sml_horde)
-
+      local name
       if spot.different then
-        m_name, m_horde = decide_cage_monster(fp, sel(spot.double,2,1), spot.double, spot.double)
+        name = decide_cage_monster(T, fp, sel(spot.double,2,1), spot.double, spot.double)
+      else
+        name = sel(spot.double, big, small)
       end
 
-      local m_info = THEME.monsters[m_name]
-      assert(m_info)
+      local info = THEME.monsters[name]
+      assert(info)
 
-      for i = 1,m_horde do
-        local angle = rand_irange(0,7) * 45
-        local options = { [SK]=true }
+      local horde = decide_cage_horde(spot, info)
 
+      for i = 1,horde do
         local dx = int((i-1)%2) * 64
         local dy = int((i-1)/2) * 64
 
-        local th = add_thing(p, c, spot.x, spot.y, m_name, true, angle, options)
+        local angle = rand_irange(0,7) * 45
+        local options = { [SK]=true }
 
-        if m_info.r >= 32 then  -- big monster
-          dx, dy = dx+32, dy+32
-        end
-
-        if spot.dx then dx = dx + spot.dx end
-        if spot.dy then dy = dy + spot.dy end
-
-        th.dx = dx
-        th.dy = dy
+        add_monster_to_spot(p, spot, dx,dy, name,info, angle,options)
 
         -- allow monster to take part in battle simulation
-        table.insert(c.mon_set[SK], { name=m_name, horde=1, info=m_info, caged=true })
+        table.insert(c.mon_set[SK], { name=name, horde=1, info=info, caged=true })
 
         -- caged monsters affect the total toughness
-        T = T - m_info.pow
+        T = T - info.pow
       end
     end
 
@@ -1224,46 +1219,32 @@ function battle_in_cell(p, c)
     T = math.max(T, orig_T / 3)
   end
 
-  local function try_fill_closet(surp)
-    if not surp then return end
-    if surp.trigger_cell ~= c then return end
+  local function try_fill_closet(surprise)
+    if not surprise or surprise.trigger_cell ~= c then return end
 
     local fp = fire_power(best_weapon(SK))
 
---print(c.x, c.y, table_to_string(surp,3))
+    local CT = surprise.toughness * TOUGH_FACTOR[SK]
 
-    for zzz,place in ipairs(surp.places) do
-
+    for zzz,place in ipairs(surprise.places) do
       for yyy,spot in ipairs(place.spots) do
 
-        local allow_big = not surp.depot_cell and spot.double
-        local m_name, m_horde = decide_cage_monster(fp, 1, allow_big, spot.double, true)
-        local m_info = THEME.monsters[m_name]
-        assert(m_info)
+        local allow_big = not surprise.depot_cell and spot.double
+        local name, info = decide_cage_monster(CT, fp, #place.spots, allow_big, spot.double, true)
+        assert(name)
 
-        for i = 1,m_horde do
+        local horde = decide_cage_horde(spot, info)
+
+        for i = 1,horde do
           local dx = int((i-1)%2) * 64
           local dy = int((i-1)/2) * 64
 
           local angle = delta_to_angle(5-(spot.x+dx/64), 5-(spot.y+dy/64))
           local options = { [SK]=true }
 
---con.printf("CLOSET %s @ cell %d,%d  block %d,%d\n",
---m_name, spot.c.x, spot.c.y, spot.x, spot.y)
+          add_monster_to_spot(p, spot, dx,dy, name,info, angle,options)
 
-          local th = add_thing(p, spot.c, spot.x, spot.y, m_name, true, angle, options)
-
-          if m_info.r >= 32 then  -- big monster
-            dx, dy = dx+32, dy+32
-          end
-
-          if spot.dx then dx = dx + spot.dx end
-          if spot.dy then dy = dy + spot.dy end
-
-          th.dx = dx
-          th.dy = dy
-
-          table.insert(place.mon_set[SK], { name=m_name, horde=1, info=m_info, caged=true })
+          table.insert(place.mon_set[SK], { name=name, horde=1, info=info, caged=true })
         end
       end  -- spots
     end  -- places
@@ -1345,8 +1326,8 @@ end
 
 function backtrack_to_cell(p, c)
 
-  local function surprise_me(surp)
-    for zzz,place in ipairs(surp.places) do
+  local function surprise_me(surprise)
+    for zzz,place in ipairs(surprise.places) do
       if c == place.c then
         for zzz,SK in ipairs(SKILLS) do
 
