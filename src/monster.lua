@@ -67,14 +67,6 @@ function add_thing(p,c, bx,by, name, blocking, angle, options)
   local kind = THEME.thing_nums[name]
   assert(kind)
 
---[[
-if c.x==3 and c.y==3 then
-print("add_thing",kind,bx,by,angle)
-if options then dump_table(options, "options")
-else print ("btw dude, no options")
-end
-end]]
-
   local B = p.blocks[c.blk_x+bx][c.blk_y+by]
   assert(B)
 
@@ -889,11 +881,6 @@ function place_battle_stuff(p, c)
       for zzz,dat in ipairs(pickups) do
         if (pass==1) == (dat.cluster >= 5) then
           place_pickup(spots, dat)
-
----###          -- more stuff for CO-OP gameplay
----###          if p.coop and rand_odds(72) then
----###            place_pickup(spots, dat)
----###          end
 
           -- re-use spots if we run out
           if #spots == 0 then 
