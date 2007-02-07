@@ -49,7 +49,7 @@ static void ShowInfo(void)
 	);
 
 	printf(
-		"Usage: oblige [options...]\n"
+		"Usage: Oblige [options...]\n"
 		"\n"
 		"Available options:\n"
 		"  -d  -debug             Enable debugging\n"
@@ -61,22 +61,10 @@ static void ShowInfo(void)
 		"This program is free software, under the terms of the GNU General\n"
 		"Public License, and comes with ABSOLUTELY NO WARRANTY.  See the\n"
 		"documentation for more details, or visit this web page:\n"
-		"    http://www.gnu.org/licenses/licenses.html\n"
+		"http://www.gnu.org/licenses/licenses.html\n"
 		"\n"
 	);
 }
-
-void MainSetDefaults(void)
-{
-#if 0
-  memcpy((guix_preferences_t *) &guix_prefs, &default_guiprefs,
-      sizeof(guix_prefs));
-
-  // set default filename for saving the log
-  guix_prefs.save_log_file = GlbspStrDup("glbsp.log");
-#endif
-}
-
 
 void Main_Ticker()
 {
@@ -101,7 +89,8 @@ void Main_Shutdown()
 	delete main_win;
 	main_win = NULL;
 
-	DebugTerm();
+	LogClose();
+
 	ArgvTerm();
 }
 
@@ -117,11 +106,8 @@ void Main_FatalError(const char *msg, ...)
 
 	buffer[MSG_BUF_LEN] = 0;
 
-	// FIXME: if (inited_fltk) ... else ...
-fprintf(stderr, "%s\n", buffer);
+	LogPrintf("%s\n", buffer);
 
-	DebugPrintf("%s\n", buffer);
-	
 	DLG_ShowError(buffer);
 
 	Main_Shutdown();
@@ -162,18 +148,17 @@ void Build_Cool_Shit()
 
 	if (was_ok)
 	{
-    DebugPrintf("FILENAME: [%s]\n", filename);
+    DebugPrintf("TARGET FILENAME: [%s]\n", filename);
 
     if (FileExists(filename))
     {
-      // FIXME: con_printf("Backing up existing file: XXX");
-      
+      LogPrintf("Backing up existing file: %s\n", filename);
+
       // make a backup
       char *backup_name = ReplaceExtension(filename, "bak");
 
       if (! FileCopy(filename, backup_name))
-        // FIXME: con_printf
-        fprintf (stderr, "WARNING: unable to backup file: %s\n", backup_name);
+        LogPrintf("WARNING: unable to create backup: %s\n", backup_name);
 
       StringFree(backup_name);
     }
@@ -184,7 +169,7 @@ void Build_Cool_Shit()
 	}
 
   if (! FileDelete(TEMP_FILENAME))
-    fprintf(stderr, "WARNING: unable to delete temp file: %s\n", TEMP_FILENAME);
+    LogPrintf("WARNING: unable to delete temp file: %s\n", TEMP_FILENAME);
 
   StringFree(filename);
 
@@ -211,17 +196,15 @@ int main(int argc, char **argv)
 
 	ArgvInit(argc, (const char **)argv);
 
-	if (ArgvFind('?', NULL) >= 0 ||
-		ArgvFind('h', "help") >= 0)
+  if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0)
 	{
 		ShowInfo();
 		exit(1);
 	}
 
-	DebugInit(ArgvFind('d', "debug") >= 0);
+	LogInit(ArgvFind('d', "debug") >= 0);
 
-	// set defaults, also initializes the nodebuildxxxx stuff
-	MainSetDefaults();
+/// TITLE --> log file
 
 #if 0
 	// read persistent data
@@ -237,18 +220,11 @@ int main(int argc, char **argv)
 	// load icons for file chooser
 	Fl_File_Icon::load_system_icons();
 
-
-//	LogInit();
-
-/// TITLE --> log file
-
 	Script_Init();
 
   Default_Location();
-
 	
 	main_win = new UI_MainWin(OBLIGE_TITLE);
-
 
 	try
 	{
