@@ -49,9 +49,13 @@ function count_entries(t)
   return count
 end
 
+function table_empty(t)
+  return not next(t)
+end
+
 function table_to_string(t, depth, prefix)
   if not t then return "NIL" end
-  if not next(t) then return "{}" end
+  if table_empty(t) then return "{}" end
 
   depth = depth or 1
   prefix = prefix or ""
@@ -95,6 +99,12 @@ end
 function copy_table(t)
   if t then return merge_table({}, t) end
   return nil
+end
+
+function copy_and_merge(t1, t2)
+  local result = copy_table(t1)
+  merge_table(result, t2)
+  return result
 end
 
 function reverse_array(t)
