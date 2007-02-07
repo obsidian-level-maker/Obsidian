@@ -64,75 +64,75 @@ static const char *about_Web =
 
 static void menu_do_about(Fl_Widget *w, void * data)
 {
-	menu_want_to_quit = false;
+  menu_want_to_quit = false;
 
-	Fl_Window *about = new Fl_Window(340, 356, "About Oblige");
-	about->end();
+  Fl_Window *about = new Fl_Window(340, 356, "About Oblige");
+  about->end();
 
-	// non-resizable
-	about->size_range(about->w(), about->h(), about->w(), about->h());
-	about->callback((Fl_Callback *) menu_quit_CB);
+  // non-resizable
+  about->size_range(about->w(), about->h(), about->w(), about->h());
+  about->callback((Fl_Callback *) menu_quit_CB);
 
   int cy = 0;
 
-	// nice big logo text
-	Fl_Box *box = new Fl_Box(0, cy, about->w(), 50, OBLIGE_TITLE " " OBLIGE_VERSION);
-	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+  // nice big logo text
+  Fl_Box *box = new Fl_Box(0, cy, about->w(), 50, OBLIGE_TITLE " " OBLIGE_VERSION);
+  box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->labelcolor(TITLE_COLOR);
-	box->labelsize(24);
-	about->add(box);
+  box->labelsize(24);
+  about->add(box);
 
 
   cy += box->h() + 10;
   
-	// the very informative text
-	box = new Fl_Box(10, cy, about->w()-20, 184, about_Text);
-	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+  // the very informative text
+  box = new Fl_Box(10, cy, about->w()-20, 184, about_Text);
+  box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->box(FL_UP_BOX);
   box->color(INFO_COLOR);
-	about->add(box);
+  about->add(box);
 
   cy += box->h() + 10;
 
 
-	// website address
-	box = new Fl_Box(10, cy, about->w()-20, 30, about_Web);
-	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
-	box->labelsize(20);
-	about->add(box);
+  // website address
+  box = new Fl_Box(10, cy, about->w()-20, 30, about_Web);
+  box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+  box->labelsize(20);
+  about->add(box);
 
   cy += box->h() + 10;
 
 
   SYS_ASSERT(cy < about->h());
 
-	Fl_Group *darkish = new Fl_Group(0, cy, about->w(), about->h()-cy);
+  Fl_Group *darkish = new Fl_Group(0, cy, about->w(), about->h()-cy);
   darkish->end();
-	darkish->box(FL_FLAT_BOX);
-	darkish->color(FL_DARK3, FL_DARK3);
+  darkish->box(FL_FLAT_BOX);
+  darkish->color(FL_DARK3, FL_DARK3);
   about->add(darkish);
 
-	// finally add an "OK" button
-	Fl_Button *button = new Fl_Button(about->w()-10-60, about->h()-10-30, 
-			60, 30, "OK");
-	button->callback((Fl_Callback *) menu_quit_CB);
-	darkish->add(button);
+  // finally add an "OK" button
+  Fl_Button *button = new Fl_Button(about->w()-10-60, about->h()-10-30, 
+      60, 30, "OK");
+  button->callback((Fl_Callback *) menu_quit_CB);
+  darkish->add(button);
 
-///	about->set_modal();
+/// about->set_modal();
 
-	about->show();
+  about->show();
 
-	// run the GUI until the user closes
-	while (! menu_want_to_quit)
-		Fl::wait();
+  // run the GUI until the user closes
+  while (! menu_want_to_quit)
+    Fl::wait();
 
-	// this deletes all the child widgets too...
-	delete about;
+  // this deletes all the child widgets too...
+  delete about;
 }
 
 static void menu_do_save_log(Fl_Widget *w, void * data)
 {
-	// TODO
+  // TODO
 }
 
 //------------------------------------------------------------------------
@@ -142,20 +142,20 @@ static void menu_do_save_log(Fl_Widget *w, void * data)
 
 static Fl_Menu_Item menu_items[] = 
 {
-	{ "&File", 0, 0, 0, FL_SUBMENU },
+  { "&File", 0, 0, 0, FL_SUBMENU },
 #ifdef MACOSX
-		{ "&Save Log",         0, FCAL menu_do_save_log },
+    { "&Save Log",         0, FCAL menu_do_save_log },
 #else
-		{ "&Save Log",         0, FCAL menu_do_save_log, 0, FL_MENU_DIVIDER },
-		{ "&Quit",  0 /* FL_ALT + 'q' */, FCAL menu_do_exit },
+    { "&Save Log",         0, FCAL menu_do_save_log, 0, FL_MENU_DIVIDER },
+    { "&Quit",  0 /* FL_ALT + 'q' */, FCAL menu_do_exit },
 #endif
-		{ 0 },
+    { 0 },
 
-	{ "&Help", 0, 0, 0, FL_SUBMENU },
-		{ "&About...",         0,  FCAL menu_do_about },
-		{ 0 },
+  { "&Help", 0, 0, 0, FL_SUBMENU },
+    { "&About...",         0,  FCAL menu_do_about },
+    { 0 },
 
-	{ 0 }
+  { 0 }
 };
 
 
@@ -165,16 +165,16 @@ static Fl_Menu_Item menu_items[] =
 #ifdef MACOSX
 Fl_Sys_Menu_Bar * MenuCreate(int x, int y, int w, int h)
 {
-	Fl_Sys_Menu_Bar *bar = new Fl_Sys_Menu_Bar(x, y, w, h);
-	bar->menu(menu_items);
-	return bar;
+  Fl_Sys_Menu_Bar *bar = new Fl_Sys_Menu_Bar(x, y, w, h);
+  bar->menu(menu_items);
+  return bar;
 }
 #else
 Fl_Menu_Bar * MenuCreate(int x, int y, int w, int h)
 {
-	Fl_Menu_Bar *bar = new Fl_Menu_Bar(x, y, w, h);
-	bar->menu(menu_items);
-	return bar;
+  Fl_Menu_Bar *bar = new Fl_Menu_Bar(x, y, w, h);
+  bar->menu(menu_items);
+  return bar;
 }
 #endif
 

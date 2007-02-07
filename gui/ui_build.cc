@@ -36,61 +36,60 @@
 
 UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label),
-	map(NULL)
+    map(NULL)
 {
-	end(); // cancel begin() in Fl_Group constructor
+  end(); // cancel begin() in Fl_Group constructor
  
-	box(FL_FLAT_BOX);
-	color(MAIN_BG_COLOR, MAIN_BG_COLOR);
+  box(FL_FLAT_BOX);
+  color(MAIN_BG_COLOR, MAIN_BG_COLOR);
 
 
-	int cy = y + 4;
+  int cy = y + 4;
 
-	Fl_Box *sizer = new Fl_Box(FL_NO_BOX, x+12 , cy, x+120, 8, NULL);
-	sizer->color(FL_RED, FL_RED);
+  Fl_Box *sizer = new Fl_Box(FL_NO_BOX, x+12 , cy, x+120, 8, NULL);
+  sizer->color(FL_RED, FL_RED);
 
-	add(sizer);
-
-
-	cy = y + h - 70;
-
-	progress = new Fl_Progress(x+12, cy+8, 136, 20);
-	progress->align(FL_ALIGN_INSIDE);
-	progress->box(FL_FLAT_BOX);
-	progress->color(PROGRESS_BG, PROGRESS_FG);
-	progress->value(50);
-
-	add(progress);
-
-	progress->hide();
+  add(sizer);
 
 
-	cy = y + h - 40;
+  cy = y + h - 70;
 
-	status = new Fl_Box(FL_FLAT_BOX, x+12, cy, 136, 24, "Ready to go!");
-	status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
-	status->color(MAIN_BG_COLOR, MAIN_BG_COLOR);
-	add(status);
+  progress = new Fl_Progress(x+12, cy+8, 136, 20);
+  progress->align(FL_ALIGN_INSIDE);
+  progress->box(FL_FLAT_BOX);
+  progress->color(PROGRESS_BG, PROGRESS_FG);
+  progress->value(50);
+
+  add(progress);
+
+  progress->hide();
 
 
-	quit = new Fl_Button(x+w - 82, cy, 70, 30, "Quit");
-	quit->callback(quit_callback, this);
+  cy = y + h - 40;
 
-	add(quit);
+  status = new Fl_Box(FL_FLAT_BOX, x+12, cy, 136, 24, "Ready to go!");
+  status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
+  status->color(MAIN_BG_COLOR, MAIN_BG_COLOR);
+  add(status);
 
-	build = new Fl_Button(x+w - 170, cy, 76, 30, "Build...");
-	build->labelfont(FL_HELVETICA_BOLD);
-	build->callback(build_callback, this);
 
-	add(build);
+  quit = new Fl_Button(x+w - 82, cy, 70, 30, "Quit");
+  quit->callback(quit_callback, this);
 
-	map_box = new Fl_Box(x+w - 308, y + h - 94, 120, 90);
-//	map_box->color(MAP_BG, MAP_BG);
+  add(quit);
 
-	add(map_box);
+  build = new Fl_Button(x+w - 170, cy, 76, 30, "Build...");
+  build->labelfont(FL_HELVETICA_BOLD);
+  build->callback(build_callback, this);
 
-	
-	resizable(sizer);
+  add(build);
+
+  map_box = new Fl_Box(x+w - 308, y + h - 94, 120, 90);
+//  map_box->color(MAP_BG, MAP_BG);
+
+  add(map_box);
+
+  resizable(sizer);
 }
 
 
@@ -103,158 +102,158 @@ void UI_Build::P_Begin(float limit, int pass)
   prog_pass  = pass;
   prog_limit = limit;
 
-	progress->minimum(0.0);
-	progress->maximum(100.0);
+  progress->minimum(0.0);
+  progress->maximum(100.0);
 
-	progress->value((pass == 1) ? 0.0 : 75.0);
+  progress->value((pass == 1) ? 0.0 : 75.0);
 
-	progress->color(PROGRESS_BG, (pass==1) ? PROGRESS_FG : GLBSP_FG);
-	progress->show();
+  progress->color(PROGRESS_BG, (pass==1) ? PROGRESS_FG : GLBSP_FG);
+  progress->show();
 }
 
 void UI_Build::P_Update(float val)
 {
-	if (val < 0) val = 0;
-	if (val > prog_limit) val = prog_limit;
+  if (val < 0) val = 0;
+  if (val > prog_limit) val = prog_limit;
 
   if (prog_pass == 1)
     val = val * 75.0 / prog_limit;
   else
     val = 75.0 + (val * 25.0 / prog_limit);
 
-	sprintf(prog_msg, "%d%%", int(val));
+  sprintf(prog_msg, "%d%%", int(val));
 
-	progress->value(val);
-	progress->label(prog_msg);
+  progress->value(val);
+  progress->label(prog_msg);
 
-	Main_Ticker();
+  Main_Ticker();
 }
 
 void UI_Build::P_Finish()
 {
-	progress->hide();
+  progress->hide();
 }
 
 void UI_Build::P_Status(const char *msg)
 {
-	status->label(msg);
+  status->label(msg);
 }
 
 void UI_Build::P_SetButton(bool abort)
 {
-	if (abort)
-	{
-		build->callback(stop_callback, this);
-		build->label("Abort");
-		build->labelcolor(ABORT_COLOR);
-	}
-	else
-	{
-		build->label("Build...");
-		build->labelcolor(FL_FOREGROUND_COLOR);
-		build->callback(build_callback, this);
-	}
+  if (abort)
+  {
+    build->callback(stop_callback, this);
+    build->label("Abort");
+    build->labelcolor(ABORT_COLOR);
+  }
+  else
+  {
+    build->label("Build...");
+    build->labelcolor(FL_FOREGROUND_COLOR);
+    build->callback(build_callback, this);
+  }
 }
 
 //----------------------------------------------------------------
 
 void UI_Build::Locked(bool value)
 {
-	if (value)
-	{
-		quit->deactivate();
-	}
-	else
-	{
-		quit->activate();
-	}
+  if (value)
+  {
+    quit->deactivate();
+  }
+  else
+  {
+    quit->activate();
+  }
 }
 
 void UI_Build::MapBegin(int pixel_W, int pixel_H)
 {
-	map_W = pixel_W;
-	map_H = pixel_H;
+  map_W = pixel_W;
+  map_H = pixel_H;
 
-	map_start = new u8_t[map_W * map_H * 3];
-	map_pos   = map_start;
-	map_end   = map_start + (map_W * map_H * 3);
+  map_start = new u8_t[map_W * map_H * 3];
+  map_pos   = map_start;
+  map_end   = map_start + (map_W * map_H * 3);
 
-	// clear map
-	u8_t r, g, b;
+  // clear map
+  u8_t r, g, b;
 
-	Fl::get_color(MAP_BG, r, g, b);
+  Fl::get_color(MAP_BG, r, g, b);
 
-	for (u8_t *pos = map_start; pos < map_end; )
-	{
-		*pos++ = r;
-		*pos++ = g;
-		*pos++ = b;
-	}
+  for (u8_t *pos = map_start; pos < map_end; )
+  {
+    *pos++ = r;
+    *pos++ = g;
+    *pos++ = b;
+  }
 }
 
 void UI_Build::MapPixel(int kind)
 {
-	SYS_ASSERT(0 <= kind && kind <= 4);
+  SYS_ASSERT(0 <= kind && kind <= 4);
 
-	static u8_t colors[5*3] =
-	{
-		0,0,0,  224,216,208,  192,96,96,  96,96,192,  0,224,96
-	};
+  static u8_t colors[5*3] =
+  {
+    0,0,0,  224,216,208,  192,96,96,  96,96,192,  0,224,96
+  };
 
-	SYS_ASSERT(map_pos < map_end);
+  SYS_ASSERT(map_pos < map_end);
 
-	if (kind == 0)
-	{
-		map_pos += 3;
-		return;
-	}
+  if (kind == 0)
+  {
+    map_pos += 3;
+    return;
+  }
 
-	*map_pos++ = colors[kind*3 + 0];
-	*map_pos++ = colors[kind*3 + 1];
-	*map_pos++ = colors[kind*3 + 2];
+  *map_pos++ = colors[kind*3 + 0];
+  *map_pos++ = colors[kind*3 + 1];
+  *map_pos++ = colors[kind*3 + 2];
 }
 
 void UI_Build::MapFinish()
 {
-	MapCorner(0, 0);
-	MapCorner(0, map_H-1);
-	MapCorner(map_W-1, 0);
-	MapCorner(map_W-1, map_H-1);
+  MapCorner(0, 0);
+  MapCorner(0, map_H-1);
+  MapCorner(map_W-1, 0);
+  MapCorner(map_W-1, map_H-1);
 
-	if (map) { map_box->image(NULL); delete map; }
+  if (map) { map_box->image(NULL); delete map; }
 
-	map = new Fl_RGB_Image(map_start, map_W, map_H);
+  map = new Fl_RGB_Image(map_start, map_W, map_H);
 
-	map_box->image(map);
-	map_box->redraw();
+  map_box->image(map);
+  map_box->redraw();
 }
 
 void UI_Build::MapCorner(int x, int y)
 {
-	u8_t *pos = map_start + (y*map_W+x)*3;
+  u8_t *pos = map_start + (y*map_W+x)*3;
 
-	Fl::get_color(MAIN_BG_COLOR, pos[0], pos[1], pos[2]);
+  Fl::get_color(MAIN_BG_COLOR, pos[0], pos[1], pos[2]);
 }
 
 //----------------------------------------------------------------
-	
+  
 void UI_Build::build_callback(Fl_Widget *w, void *data)
 {
-	if (main_win->action == UI_MainWin::NONE)
-	{
-		main_win->action = UI_MainWin::BUILD;
-	}
+  if (main_win->action == UI_MainWin::NONE)
+  {
+    main_win->action = UI_MainWin::BUILD;
+  }
 }
 
 void UI_Build::stop_callback(Fl_Widget *w, void *data)
 {
-	if (main_win->action != UI_MainWin::QUIT)
-	{
-		main_win->action = UI_MainWin::ABORT;
-	}
+  if (main_win->action != UI_MainWin::QUIT)
+  {
+    main_win->action = UI_MainWin::ABORT;
+  }
 }
 
 void UI_Build::quit_callback(Fl_Widget *w, void *data)
 {
-	main_win->action = UI_MainWin::QUIT;
+  main_win->action = UI_MainWin::QUIT;
 }

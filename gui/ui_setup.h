@@ -22,41 +22,41 @@
 class UI_Setup : public Fl_Group
 {
 private:
-	Fl_Int_Input *seed;
-	Fl_Button *bump;
+  Fl_Int_Input *seed;
+  Fl_Button *bump;
 
-	Fl_Choice *game;
-	Fl_Choice *addon;
-	Fl_Choice *length;
-	Fl_Choice *mode;
-
-public:
-	UI_Setup(int x, int y, int w, int h, const char *label = NULL);
-	virtual ~UI_Setup();
+  Fl_Choice *game;
+  Fl_Choice *addon;
+  Fl_Choice *length;
+  Fl_Choice *mode;
 
 public:
+  UI_Setup(int x, int y, int w, int h, const char *label = NULL);
+  virtual ~UI_Setup();
 
-	void SetSeed(u32_t new_val);
+public:
 
-	void FreshSeed();
-	void BumpSeed();
+  void SetSeed(u32_t new_val);
 
-	void Locked(bool value);
+  void FreshSeed();
+  void BumpSeed();
 
-	const char *cur_Seed();
-	const char *cur_Game();
-	const char *cur_Addon();
-	const char *cur_Mode();
-	const char *cur_Length();
-	
+  void Locked(bool value);
+
+  const char *cur_Seed();
+  const char *cur_Game();
+  const char *cur_Addon();
+  const char *cur_Mode();
+  const char *cur_Length();
+  
 private:
-	static void bump_callback(Fl_Widget *, void*);
-	static void game_callback(Fl_Widget *, void*);
+  static void bump_callback(Fl_Widget *, void*);
+  static void game_callback(Fl_Widget *, void*);
 
-	static const char *game_syms[];
-	static const char *addon_syms[];
-	static const char *mode_syms[];
-	static const char *length_syms[];
+  static const char *game_syms[];
+  static const char *addon_syms[];
+  static const char *mode_syms[];
+  static const char *length_syms[];
 };
 
 #endif /* __UI_SETUP_H__ */

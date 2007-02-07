@@ -22,49 +22,49 @@
 class UI_Build : public Fl_Group
 {
 private:
-	Fl_Box *status;
-	Fl_Progress *progress;
+  Fl_Box *status;
+  Fl_Progress *progress;
 
-	char prog_msg[20];
+  char prog_msg[20];
   int  prog_pass;    // 1 or 2
   float prog_limit;
 
-	Fl_Button *build;
-	Fl_Button *stop;
-	Fl_Button *quit;
+  Fl_Button *build;
+  Fl_Button *stop;
+  Fl_Button *quit;
 
-	Fl_Box *map_box;
-	Fl_RGB_Image *map;
+  Fl_Box *map_box;
+  Fl_RGB_Image *map;
 
-	int map_W, map_H;
+  int map_W, map_H;
 
-	u8_t *map_start;
-	u8_t *map_pos;
-	u8_t *map_end;
-
-public:
-	UI_Build(int x, int y, int w, int h, const char *label = NULL);
-	virtual ~UI_Build();
+  u8_t *map_start;
+  u8_t *map_pos;
+  u8_t *map_end;
 
 public:
-	void P_Begin(float limit, int pass);
-	void P_Update(float val);
-	void P_Finish();
-	void P_Status(const char *msg);
-	void P_SetButton(bool abort);
+  UI_Build(int x, int y, int w, int h, const char *label = NULL);
+  virtual ~UI_Build();
 
-	void Locked(bool value);
+public:
+  void P_Begin(float limit, int pass);
+  void P_Update(float val);
+  void P_Finish();
+  void P_Status(const char *msg);
+  void P_SetButton(bool abort);
 
-	void MapBegin(int pixel_W, int pixel_H);
-	void MapPixel(int kind);
-	void MapFinish();
+  void Locked(bool value);
 
-	void MapCorner(int x, int y);
+  void MapBegin(int pixel_W, int pixel_H);
+  void MapPixel(int kind);
+  void MapFinish();
+
+  void MapCorner(int x, int y);
 
 private:
-	static void build_callback(Fl_Widget *, void*);
-	static void stop_callback(Fl_Widget *, void*);
-	static void quit_callback(Fl_Widget *, void*);
+  static void build_callback(Fl_Widget *, void*);
+  static void stop_callback(Fl_Widget *, void*);
+  static void quit_callback(Fl_Widget *, void*);
 };
 
 #endif /* __UI_BUILD_H__ */

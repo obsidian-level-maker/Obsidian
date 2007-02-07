@@ -29,35 +29,35 @@
 class UI_MainWin : public Fl_Double_Window
 {
 public:
-	// main child widgets
+  // main child widgets
 
 #ifdef MACOSX
-	Fl_Sys_Menu_Bar *menu_bar;
+  Fl_Sys_Menu_Bar *menu_bar;
 #else
-	Fl_Menu_Bar *menu_bar;
+  Fl_Menu_Bar *menu_bar;
 #endif
 
-	UI_Setup *setup_box;
+  UI_Setup *setup_box;
 
   UI_Adjust *adjust_box;
 
-	UI_Build *build_box;
+  UI_Build *build_box;
 
-	enum  // actions
-	{
-		NONE = 0,
-		BUILD,
-		ABORT,
-		QUIT
-	};
-	
-	int action;
+  enum  // actions
+  {
+    NONE = 0,
+    BUILD,
+    ABORT,
+    QUIT
+  };
+  
+  int action;
 
 public:
-	UI_MainWin(const char *title);
-	virtual ~UI_MainWin();
+  UI_MainWin(const char *title);
+  virtual ~UI_MainWin();
 
-	void Locked(bool value);
+  void Locked(bool value);
 };
 
 extern UI_MainWin * main_win;

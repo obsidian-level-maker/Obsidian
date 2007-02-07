@@ -31,49 +31,49 @@ UI_File::UI_File(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label),
     full_path(NULL)
 {
-	end(); // cancel begin() in Fl_Group constructor
+  end(); // cancel begin() in Fl_Group constructor
  
-	box(FL_THIN_UP_BOX);
-//	align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
-//	labeltype(FL_NORMAL_LABEL);
-//	labelfont(FL_HELVETICA_BOLD);
+  box(FL_THIN_UP_BOX);
+//  align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
+//  labeltype(FL_NORMAL_LABEL);
+//  labelfont(FL_HELVETICA_BOLD);
 
-	int cy = y + 9;
+  int cy = y + 9;
 
-	Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Output");
-	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-	heading->labeltype(FL_NORMAL_LABEL);
-	heading->labelfont(FL_HELVETICA_BOLD);
+  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Output");
+  heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+  heading->labeltype(FL_NORMAL_LABEL);
+  heading->labelfont(FL_HELVETICA_BOLD);
 
-	add(heading);
+  add(heading);
 
-	cy += 28;
+  cy += 28;
 
-	filename = new Fl_NameInput(x+92, cy, 120, 24, "Filename: ");
-	filename->align(FL_ALIGN_LEFT);
-	filename->value("TEST");
+  filename = new Fl_NameInput(x+92, cy, 120, 24, "Filename: ");
+  filename->align(FL_ALIGN_LEFT);
+  filename->value("TEST");
 
-	add(filename);
+  add(filename);
 
-	ext = new Fl_Box(FL_FLAT_BOX, filename->x() + filename->w() + 16, cy, 80, 24, "Type: WAD");
+  ext = new Fl_Box(FL_FLAT_BOX, filename->x() + filename->w() + 16, cy, 80, 24, "Type: WAD");
 
-	add(ext);
+  add(ext);
 
-	cy += 32;
-
-
-	dir_name = new Fl_Output(x+92, cy, 260, 24, "Location:  ");
-	dir_name->align(FL_ALIGN_LEFT);
-
-	add(dir_name);
+  cy += 32;
 
 
-	browse = new Fl_Button(dir_name->x() + dir_name->w() + 16, cy, 70, 24, "Browse...");
-	browse->callback(browse_callback, this);
+  dir_name = new Fl_Output(x+92, cy, 260, 24, "Location:  ");
+  dir_name->align(FL_ALIGN_LEFT);
 
-	add(browse);
+  add(dir_name);
 
-	resizable(dir_name);
+
+  browse = new Fl_Button(dir_name->x() + dir_name->w() + 16, cy, 70, 24, "Browse...");
+  browse->callback(browse_callback, this);
+
+  add(browse);
+
+  resizable(dir_name);
 }
 
 
@@ -187,25 +187,25 @@ void UI_File::resize(int X, int Y, int W, int H)
 
 void UI_File::Locked(bool value)
 {
-	if (value)
-	{
-		filename->deactivate();
-		dir_name->deactivate();
-		browse->deactivate();
-	}
-	else
-	{
-		filename->activate();
-		dir_name->activate();
-		browse->activate();
-	}
+  if (value)
+  {
+    filename->deactivate();
+    dir_name->deactivate();
+    browse->deactivate();
+  }
+  else
+  {
+    filename->activate();
+    dir_name->activate();
+    browse->activate();
+  }
 }
 
 void UI_File::browse_callback(Fl_Widget *w, void *data)
 {
-	UI_File *that = (UI_File *)data;
+  UI_File *that = (UI_File *)data;
 
-	char *new_dir = fl_dir_chooser("Oblige: Select output folder", that->full_path);
+  char *new_dir = fl_dir_chooser("Oblige: Select output folder", that->full_path);
 
   if (new_dir)
   {

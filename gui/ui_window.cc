@@ -27,9 +27,9 @@
 #endif
 
 #if (FL_MAJOR_VERSION != 1 ||  \
-	 FL_MINOR_VERSION != 1 ||  \
-	 FL_PATCH_VERSION < 7)
-#error "FLTK headers are not from FLTK 1.1.7 or later"
+     FL_MINOR_VERSION != 1 ||  \
+     FL_PATCH_VERSION < 7)
+#error "Require FLTK version 1.1.7 or later"
 #endif
 
 
@@ -41,8 +41,8 @@ UI_MainWin *main_win;
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
 {
-	if (main_win)
-		main_win->action = UI_MainWin::QUIT;
+  if (main_win)
+    main_win->action = UI_MainWin::QUIT;
 }
 
 
@@ -51,57 +51,57 @@ static void main_win_close_CB(Fl_Widget *w, void *data)
 //
 UI_MainWin::UI_MainWin(const char *title) :
     Fl_Double_Window(MAIN_WINDOW_W, MAIN_WINDOW_H, title),
-	action(UI_MainWin::NONE)
+    action(UI_MainWin::NONE)
 {
-	end(); // cancel begin() in Fl_Group constructor
+  end(); // cancel begin() in Fl_Group constructor
 
   // no need for window to be resizable
-	size_range(MAIN_WINDOW_W, MAIN_WINDOW_H,
+  size_range(MAIN_WINDOW_W, MAIN_WINDOW_H,
              MAIN_WINDOW_W, MAIN_WINDOW_H);
 
-	callback((Fl_Callback *) main_win_close_CB);
+  callback((Fl_Callback *) main_win_close_CB);
 
-	color(MAIN_BG_COLOR, MAIN_BG_COLOR);
-	image(NULL);
+  color(MAIN_BG_COLOR, MAIN_BG_COLOR);
+  image(NULL);
 
 
-	int cy = 0;
+  int cy = 0;
 
-	/* ---- Menu bar ---- */
-	{
-		menu_bar = MenuCreate(0, 0, w(), 28);
-		add(menu_bar);
+  /* ---- Menu bar ---- */
+  {
+    menu_bar = MenuCreate(0, 0, w(), 28);
+    add(menu_bar);
 
 #ifndef MACOSX
-		cy += menu_bar->h();
-///		cy += 8;
+    cy += menu_bar->h();
+///   cy += 8;
 #endif
-	}
+  }
 
-	setup_box = new UI_Setup(0, cy, w(), 154);
-	add(setup_box);
+  setup_box = new UI_Setup(0, cy, w(), 154);
+  add(setup_box);
 
-	cy += setup_box->h();
+  cy += setup_box->h();
 
-	adjust_box = new UI_Adjust(0, cy, w(), 106);
-	add(adjust_box);
+  adjust_box = new UI_Adjust(0, cy, w(), 106);
+  add(adjust_box);
 
-	cy += adjust_box->h();
+  cy += adjust_box->h();
 
-	build_box = new UI_Build(0, cy, w(), h() - cy);
-	add(build_box);
+  build_box = new UI_Build(0, cy, w(), h() - cy);
+  add(build_box);
 
-	cy += build_box->h();
+  cy += build_box->h();
 
   DebugPrintf("Final main_win.cy = %d\n", cy);
 
-	resizable(build_box);
+  resizable(build_box);
 
-	// show window (pass some dummy arguments)
-	int argc = 1;
-	char *argv[] = { "ObligeNG", NULL };
+  // show window (pass some dummy arguments)
+  int argc = 1;
+  char *argv[] = { "ObligeNG", NULL };
 
-	show(argc, argv);
+  show(argc, argv);
 }
 
 //
@@ -113,7 +113,7 @@ UI_MainWin::~UI_MainWin()
 
 void UI_MainWin::Locked(bool value)
 {
-	setup_box->Locked(value);
-	adjust_box->Locked(value);
-	build_box->Locked(value);
+  setup_box->Locked(value);
+  adjust_box->Locked(value);
+  build_box->Locked(value);
 }
