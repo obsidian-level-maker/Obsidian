@@ -44,23 +44,39 @@ int lev_IDX = 0;
 int lev_TOTAL = 0;
 
 
-// LUA: raw_print(str)
+// LUA: raw_log_print(str)
 //
-int raw_print(lua_State *L)
+int raw_log_print(lua_State *L)
 {
-	int nargs = lua_gettop(L);
+  int nargs = lua_gettop(L);
 
   if (nargs >= 1)
   {
-		const char *res = luaL_checkstring(L,1);
-		SYS_ASSERT(res);
+    const char *res = luaL_checkstring(L,1);
+    SYS_ASSERT(res);
 
-		fprintf(stderr, "%s", res);
-	}
+    LogPrintf("%s", res);
+  }
 
-	return 0;
+  return 0;
 }
 
+// LUA: raw_debug_print(str)
+//
+int raw_debug_print(lua_State *L)
+{
+  int nargs = lua_gettop(L);
+
+  if (nargs >= 1)
+  {
+    const char *res = luaL_checkstring(L,1);
+    SYS_ASSERT(res);
+
+    DebugPrintf("%s", res);
+  }
+
+  return 0;
+}
 
 
 // LUA: at_level(name, idx, total)
@@ -164,7 +180,7 @@ int random(lua_State *L)
 {
 	int raw = RNG.Rand() & 0x7FFFFFFF;
 
-  // range is [0-1), including 0 but not including 1
+  // target range is [0-1), including 0 but not including 1
   lua_Number value = (lua_Number)raw / 2147483648.0;
 
 	lua_pushnumber(L, value);
@@ -176,7 +192,9 @@ int random(lua_State *L)
 
 static const luaL_Reg console_lib[] =
 {
-	{ "raw_print",  con::raw_print },
+	{ "raw_log_print",   con::raw_log_print },
+	{ "raw_debug_print", con::raw_debug_print },
+
 	{ "at_level",   con::at_level },
 	{ "progress",   con::progress },
 	{ "ticker",     con::ticker },
@@ -192,7 +210,7 @@ static const luaL_Reg console_lib[] =
 	{ NULL, NULL } // the end
 };
 
-int Script_open_video(lua_State *L)
+int Script_CreateConLib(lua_State *L)
 {
 	luaL_register(L, "con", console_lib);
 
@@ -210,9 +228,7 @@ static int p_init_lua(lua_State *L)
 	{
 		luaL_openlibs(L);  /* open libraries */
 
-		Script_open_video(L);
-
-//		Script_register_misc(L);
+		Script_CreateConLib(L);
 	}
 	lua_gc(L, LUA_GCRESTART, 0);
 
@@ -261,21 +277,18 @@ void Script_Load()
 
 	if (status != 0)
 	{
-fprintf(stderr, "status: %d\n", status);
 		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-fprintf(stderr, "ERR: %s\n", msg);
+
 		Main_FatalError("Unable to load script 'oblige.lua' (%d)\n%s", status, msg);
 	}
 
 	status = lua_pcall(LUA_ST, 0, 0, 0);
 	if (status != 0)
 	{
-fprintf(stderr, "status: %d\n", status);
 		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-fprintf(stderr, "ERR: %s\n", msg);
+
 		Main_FatalError("Error with script (%d)\n%s", status, msg);
 	}
-
 }
 
 
@@ -288,7 +301,7 @@ static void AddField(lua_State *L, const char *key, const char *value)
 	lua_rawset(L, -3);
 }
 
-void Script_MakeSettings(lua_State *L)
+static void Script_MakeSettings(lua_State *L)
 {
 	lua_newtable(L);
 
@@ -315,27 +328,26 @@ bool Script_Run()
 	//
 	lua_getglobal(LUA_ST, "build_cool_shit");
 
+  if (lua_type(LUA_ST, -1) == LUA_TNIL)
+    Main_FatalError("LUA script problem: missing build function!");
+
 	int status = lua_pcall(LUA_ST, 0, 1, 0);
 	if (status != 0)
 	{
-fprintf(stderr, "status: %d\n", status);
 		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-fprintf(stderr, "ERR: %s\n", msg);
 
 		DLG_ShowError("Problem occurred while making level:\n%s", msg);
 				
 		return false;
 	}
-	else
-	{
-		const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
-		if (res && strcmp(res, "ok") == 0)
-			return true;
+  const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
-		// FIXME: strcmp(res, "abort")
+  if (res && strcmp(res, "ok") == 0)
+    return true;
 
-		return false;
-	}
+  // FIXME: strcmp(res, "abort")
+
+  return false;
 }
 

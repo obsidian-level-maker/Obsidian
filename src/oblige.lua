@@ -31,6 +31,7 @@ require 'monster'
 require 'builder'
 require 'writer'
 
+
 function get_level_names(settings)
 
   local LEVELS = {}
@@ -86,12 +87,24 @@ end
 function build_cool_shit()
  
   assert(settings)
---dump_table(settings, "settings"); do return end
 
-con.printf("\nSEED = %d\n\n", settings.seed)
+  -- the missing console functions
+  con.printf = function (fmt, ...)
+    if fmt then con.raw_log_print(string.format(fmt, ...)) end
+  end
+
+  con.debugf = function (fmt, ...)
+    if fmt then con.raw_debug_print(string.format(fmt, ...)) end
+  end
+
+  con.printf("\n\n~~~~~~~ Build Begun ~~~~~~~\n\n")
+
+  con.printf("SEED = %d\n\n", settings.seed)
+  con.printf("Settings =\n%s\n", table_to_string(settings))
 
   create_theme()
 
+  local aborted = false
   local LEVELS = get_level_names(settings)
 
   for idx,lev in ipairs(LEVELS) do
@@ -108,26 +121,34 @@ con.printf("\nSEED = %d\n\n", settings.seed)
       PLAN = plan_sp_level(false)
     end
 
-    if con.abort() then return "abort" end
+    if con.abort() then aborted = true; break; end
 
-do
-  con.printf("=======  %s  ==============================\n", lev)
-  show_quests(PLAN)
-  if settings.mode == "dm" then
-    show_dm_links(PLAN)
-  else
-    show_path(PLAN)
-  end
-end
+    do
+      con.printf("\n=====| %s |=====\n\n", lev)
+
+      show_quests(PLAN)
+      if settings.mode == "dm" then
+        show_dm_links(PLAN)
+      else
+        show_path(PLAN)
+      end
+    end
 
     build_level(PLAN)
 
-    if con.abort() then return "abort" end
+    if con.abort() then aborted = true; break; end
 
     write_level(PLAN, lev)
 
-    if con.abort() then return "abort" end
+    if con.abort() then aborted = true; break; end
   end
+
+  if aborted then
+    con.printf("~~~~~~~ Build Aborted! ~~~~~~~\n\n")
+    return "abort"
+  end
+
+  con.printf("~~~~~~~ Build Finished ~~~~~~~\n\n")
 
   return "ok"
 end

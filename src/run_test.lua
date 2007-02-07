@@ -22,12 +22,16 @@ require 'oblige'
 
 con = { }
 
-function con.printf(...)
-  io.stderr:write(string.format(...))
+con.debugging = false
+
+function con.raw_log_print(str)
+  io.stderr:write(str)
 end
 
-function con.debugf(...)
-  -- io.stderr:write(string.format(...))
+function con.raw_debug_print(str)
+  if con.debugging then
+    io.stderr:write(str)
+  end
 end
 
 function con.at_level() end
@@ -50,8 +54,15 @@ settings =
 {
   seed = arg[1] or (os.time() % 1000)
   ,
-  game = "doom2", addon = "none",
-  mode = "sp",  length = "single",
+  game   = "doom2",
+  addon  = "none",
+  mode   = "sp",
+  length = "single",
+
+  health = "normal",
+  ammo   = "normal",
+  mons   = "normal",
+  traps  = "normal",
 }
 
 build_cool_shit()
