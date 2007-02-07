@@ -12,6 +12,7 @@ class Plan
 
   quests : array(Quest)
   deathmatch  -- true for deathmatch levels
+  exit_theme : Theme
   
   all_cells  : array(Cell)  -- all used cells
   all_links  : array(Link)
