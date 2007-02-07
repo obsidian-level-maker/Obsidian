@@ -162,12 +162,19 @@ void WAD_CreateInfoLump()
   WAD_Printf(L, "# http://oblige.sourceforge.net/\n");
   WAD_Printf(L, "\n");
 
-  WAD_Printf(L, "# settings:\n");
+  WAD_Printf(L, "# Settings:\n");
 	WAD_Printf(L, "seed = %s\n",  main_win->setup_box->cur_Seed());
 	WAD_Printf(L, "game = %s\n",  main_win->setup_box->cur_Game());
 	WAD_Printf(L, "addon = %s\n", main_win->setup_box->cur_Addon());
 	WAD_Printf(L, "mode = %s\n",  main_win->setup_box->cur_Mode());
 	WAD_Printf(L, "length = %s\n",main_win->setup_box->cur_Length());
+  WAD_Printf(L, "\n");
+
+  WAD_Printf(L, "# Adjustments:\n");
+  WAD_Printf(L, "health = %s\n", main_win->adjust_box->cur_Health());
+  WAD_Printf(L, "ammo = %s\n",   main_win->adjust_box->cur_Ammo());
+  WAD_Printf(L, "mons = %s\n",   main_win->adjust_box->cur_Monsters());
+  WAD_Printf(L, "traps = %s\n",  main_win->adjust_box->cur_Traps());
 
   WAD_WriteLump("OBLIGDAT", L);
 }

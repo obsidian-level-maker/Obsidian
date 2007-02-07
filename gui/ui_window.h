@@ -22,6 +22,7 @@
 #include "ui_build.h"
 #include "ui_menu.h"
 #include "ui_setup.h"
+#include "ui_adjust.h"
 
 #define MAIN_BG_COLOR  fl_gray_ramp(FL_NUM_GRAY * 7 / 24)
 
@@ -37,6 +38,8 @@ public:
 #endif
 
 	UI_Setup *setup_box;
+
+  UI_Adjust *adjust_box;
 
 	UI_Build *build_box;
 
