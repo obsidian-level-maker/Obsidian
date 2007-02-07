@@ -487,6 +487,7 @@ print("NUMBER of THEMES:", num_themes)
   end
 
   p.liquid = choose_liquid()
+  p.exit_theme = get_rand_exit_theme()
 
   choose_dm_themes()
   create_dm_links()

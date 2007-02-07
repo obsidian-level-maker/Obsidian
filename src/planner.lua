@@ -304,12 +304,13 @@ function create_link(p, c, other, dir)
 end
 
 function get_rand_theme()
-  while true do
-    local name,info = rand_table_pair(THEME.themes)
-    if not info.is_special then
-      return info
-    end
-  end
+  local name,info = rand_table_pair(THEME.themes)
+  return info
+end
+
+function get_rand_exit_theme()
+  local name,info = rand_table_pair(THEME.exits)
+  return info
 end
 
 function get_rand_hallway()
@@ -572,7 +573,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 
   local function make_hallways(Q)
 
-    if not THEME.hallways then return end
+    if table_empty(THEME.hallways) then return end
 
     local function hall_lighting(start,idx,finish)
       local level = 128
@@ -695,6 +696,7 @@ print("ADDING HALLWAY:", start, length, #Q.path)
 
         local door_chance = 15
         if c.theme.outdoor ~= d.theme.outdoor then door_chance = 70
+        elseif c.hallway and d.hallway then door_chance = 10
         elseif c.theme ~= d.theme then door_chance = 40
         elseif c.theme.outdoor then door_chance = 5
         end
@@ -908,7 +910,7 @@ print("ADDING HALLWAY:", start, length, #Q.path)
     {
       key    = {  5, 25, 50, 90, 70, 30, 12, 6, 2, 2 },
       exit   = {  5, 25, 50, 90, 70, 30, 12, 6, 2, 2 },
-      switch = { 15, 90, 90, 50, 12, 4, 2, 2 },
+      switch = {  5, 70, 90, 50, 12, 4, 2, 2 },
       weapon = { 15, 90, 50, 12, 4, 2 },
       item   = { 15, 70, 70, 12, 4, 2 }
     }
@@ -1034,7 +1036,7 @@ print("ADDING HALLWAY:", start, length, #Q.path)
     -- FIXME: handle secret exits too
     local c = p.quests[#p.quests].last
 
-    c.theme = THEME.themes.EXITROOM
+    c.theme = get_rand_exit_theme()
     c.is_exit = true
     c.light = 192
 
@@ -1308,7 +1310,7 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
       local spread = rand_key_by_probs { linear=3, random=3, last=5, behind=5, first=1 }
 
-      local CELL = create_cell(p, pos_x, pos_y, Q, 1, THEME.themes.EXITROOM, "depot")
+      local CELL = create_cell(p, pos_x, pos_y, Q, 1, Q.first.theme, "depot")
 
       local SURPRISE =
       {
@@ -1331,11 +1333,13 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
     local function try_add_surprise(Q)
       if Q.kind == "exit" then return end
-      
-      if rand_odds(sel(Q.mini, 25, 35)) then
+
+      if rand_odds(sel(Q.mini, 36, 60)) then
+        if rand_odds(70) then
           add_closet(Q)
-      elseif rand_odds(sel(Q.mini, 15, 25)) then
+        else
           add_depot(Q)
+        end
       end
     end
 
