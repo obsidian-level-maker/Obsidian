@@ -32,10 +32,10 @@
 
 #if defined(__LITTLE_ENDIAN__) || defined(WIN32) ||  \
     defined(__i386__) || defined(__i386) ||          \
-	defined(__ia64__) || defined(__x86_64__)  ||     \
-	defined(__alpha__) || defined(__alpha)  ||       \
-	defined(__arm__) || defined(__SYMBIAN32__) ||    \
-	(defined(__mips__) && defined(__MIPSEL__))
+    defined(__ia64__) || defined(__x86_64__)  ||     \
+    defined(__alpha__) || defined(__alpha)  ||       \
+    defined(__arm__) || defined(__SYMBIAN32__) ||    \
+    (defined(__mips__) && defined(__MIPSEL__))
 #define UT_BYTEORDER   UT_LIL_ENDIAN
 #else
 #define UT_BYTEORDER   UT_BIG_ENDIAN
@@ -47,54 +47,54 @@
 #if defined(__GNUC__) && defined(__i386__)
 static inline u16_t UT_Swap16(u16_t x)
 {
-	__asm__("xchgb %b0,%h0" : "=q" (x) :  "0" (x));
-	return x;
+  __asm__("xchgb %b0,%h0" : "=q" (x) :  "0" (x));
+  return x;
 }
 #elif defined(__GNUC__) && defined(__x86_64__)
 static inline u16_t UT_Swap16(u16_t x)
 {
-	__asm__("xchgb %b0,%h0" : "=Q" (x) :  "0" (x));
-	return x;
+  __asm__("xchgb %b0,%h0" : "=Q" (x) :  "0" (x));
+  return x;
 }
 #elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
 static inline u16_t UT_Swap16(u16_t x)
 {
-	u16_t result;
+  u16_t result;
 
-	__asm__("rlwimi %0,%2,8,16,23" : "=&r" (result) : "0" (x >> 8), "r" (x));
-	return result;
+  __asm__("rlwimi %0,%2,8,16,23" : "=&r" (result) : "0" (x >> 8), "r" (x));
+  return result;
 }
 #else
 static inline u16_t UT_Swap16(u16_t x) {
-	return((x<<8)|(x>>8));
+  return((x<<8)|(x>>8));
 }
 #endif
 
 #if defined(__GNUC__) && defined(__i386__)
 static inline u32_t UT_Swap32(u32_t x)
 {
-	__asm__("bswap %0" : "=r" (x) : "0" (x));
-	return x;
+  __asm__("bswap %0" : "=r" (x) : "0" (x));
+  return x;
 }
 #elif defined(__GNUC__) && defined(__x86_64__)
 static inline u32_t UT_Swap32(u32_t x)
 {
-	__asm__("bswapl %0" : "=r" (x) : "0" (x));
-	return x;
+  __asm__("bswapl %0" : "=r" (x) : "0" (x));
+  return x;
 }
 #elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
 static inline u32_t UT_Swap32(u32_t x)
 {
-	u32_t result;
+  u32_t result;
 
-	__asm__("rlwimi %0,%2,24,16,23" : "=&r" (result) : "0" (x>>24), "r" (x));
-	__asm__("rlwimi %0,%2,8,8,15"   : "=&r" (result) : "0" (result),    "r" (x));
-	__asm__("rlwimi %0,%2,24,0,7"   : "=&r" (result) : "0" (result),    "r" (x));
-	return result;
+  __asm__("rlwimi %0,%2,24,16,23" : "=&r" (result) : "0" (x>>24), "r" (x));
+  __asm__("rlwimi %0,%2,8,8,15"   : "=&r" (result) : "0" (result),    "r" (x));
+  __asm__("rlwimi %0,%2,24,0,7"   : "=&r" (result) : "0" (result),    "r" (x));
+  return result;
 }
 #else
 static inline u32_t UT_Swap32(u32_t x) {
-	return ((x<<24)|((x<<8)&0x00FF0000)|((x>>8)&0x0000FF00)|(x>>24));
+  return ((x<<24)|((x<<8)&0x00FF0000)|((x>>8)&0x0000FF00)|(x>>24));
 }
 #endif
 

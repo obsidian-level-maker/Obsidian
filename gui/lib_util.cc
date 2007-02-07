@@ -31,15 +31,15 @@
 //
 bool FileExists(const char *filename)
 {
-	FILE *fp = fopen(filename, "rb");
+  FILE *fp = fopen(filename, "rb");
 
-	if (fp)
-	{
-		fclose(fp);
-		return true;
-	}
+  if (fp)
+  {
+    fclose(fp);
+    return true;
+  }
 
-	return false;
+  return false;
 }
 
 //
@@ -47,26 +47,26 @@ bool FileExists(const char *filename)
 //
 bool HasExtension(const char *filename)
 {
-	int A = (int)strlen(filename) - 1;
+  int A = (int)strlen(filename) - 1;
 
-	if (A > 0 && filename[A] == '.')
-		return false;
+  if (A > 0 && filename[A] == '.')
+    return false;
 
-	for (; A >= 0; A--)
-	{
-		if (filename[A] == '.')
-			return true;
+  for (; A >= 0; A--)
+  {
+    if (filename[A] == '.')
+      return true;
 
-		if (filename[A] == '/')
-			break;
+    if (filename[A] == '/')
+      break;
 
 #ifdef WIN32
-		if (filename[A] == '\\' || filename[A] == ':')
-			break;
+    if (filename[A] == '\\' || filename[A] == ':')
+      break;
 #endif
-	}
+  }
 
-	return false;
+  return false;
 }
 
 //
@@ -76,22 +76,22 @@ bool HasExtension(const char *filename)
 //
 bool CheckExtension(const char *filename, const char *ext)
 {
-	if (! ext)
-		return ! HasExtension(filename);
+  if (! ext)
+    return ! HasExtension(filename);
 
-	int A = (int)strlen(filename) - 1;
-	int B = (int)strlen(ext) - 1;
+  int A = (int)strlen(filename) - 1;
+  int B = (int)strlen(ext) - 1;
 
-	for (; B >= 0; B--, A--)
-	{
-		if (A < 0)
-			return false;
+  for (; B >= 0; B--, A--)
+  {
+    if (A < 0)
+      return false;
 
-		if (toupper(filename[A]) != toupper(ext[B]))
-			return false;
-	}
+    if (toupper(filename[A]) != toupper(ext[B]))
+      return false;
+  }
 
-	return (A >= 1) && (filename[A] == '.');
+  return (A >= 1) && (filename[A] == '.');
 }
 
 //
@@ -103,44 +103,44 @@ bool CheckExtension(const char *filename, const char *ext)
 //
 char *ReplaceExtension(const char *filename, const char *ext)
 {
-	SYS_ASSERT(filename[0] != 0);
+  SYS_ASSERT(filename[0] != 0);
 
-	char *buffer = StringNew(strlen(filename) + (ext ? strlen(ext) : 0) + 10);
+  char *buffer = StringNew(strlen(filename) + (ext ? strlen(ext) : 0) + 10);
 
-	strcpy(buffer, filename);
+  strcpy(buffer, filename);
 
-	char *dot_pos = buffer + strlen(buffer) - 1;
+  char *dot_pos = buffer + strlen(buffer) - 1;
 
-	for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--)
-	{
-		if (*dot_pos == '/')
-			break;
+  for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--)
+  {
+    if (*dot_pos == '/')
+      break;
 
 #ifdef WIN32
-		if (*dot_pos == '\\' || *dot_pos == ':')
-			break;
+    if (*dot_pos == '\\' || *dot_pos == ':')
+      break;
 #endif
-	}
+  }
 
-	if (dot_pos < buffer || *dot_pos != '.')
-		dot_pos = NULL;
+  if (dot_pos < buffer || *dot_pos != '.')
+    dot_pos = NULL;
 
-	if (! ext)
-	{
-		if (dot_pos)
-			dot_pos[0] = 0;
+  if (! ext)
+  {
+    if (dot_pos)
+      dot_pos[0] = 0;
 
-		return buffer;
-	}
+    return buffer;
+  }
 
-	if (dot_pos)
-		dot_pos[1] = 0;
-	else
-		strcat(buffer, ".");
+  if (dot_pos)
+    dot_pos[1] = 0;
+  else
+    strcat(buffer, ".");
 
-	strcat(buffer, ext);
+  strcat(buffer, ext);
 
-	return buffer;
+  return buffer;
 }
 
 //
@@ -150,23 +150,23 @@ char *ReplaceExtension(const char *filename, const char *ext)
 // The result always points within the given string.
 //
 // Example:  "C:\Foo\Bar.wad"  ->  "Bar.wad"
-// 
+//
 const char *FileBaseName(const char *filename)
 {
-	const char *pos = filename + strlen(filename) - 1;
+  const char *pos = filename + strlen(filename) - 1;
 
-	for (; pos >= filename; pos--)
-	{
-		if (*pos == '/')
-			return pos + 1;
+  for (; pos >= filename; pos--)
+  {
+    if (*pos == '/')
+      return pos + 1;
 
 #ifdef WIN32
-		if (*pos == '\\' || *pos == ':')
-			return pos + 1;
+    if (*pos == '\\' || *pos == ':')
+      return pos + 1;
 #endif
-	}
+  }
 
-	return filename;
+  return filename;
 }
 
 bool FileCopy(const char *src_name, const char *dest_name)
@@ -209,7 +209,7 @@ bool FileCopy(const char *src_name, const char *dest_name)
 bool FileDelete(const char *filename)
 {
 #ifdef WIN32
-  
+
   return (::DeleteFile(filename) != 0);
 
 #else // LINUX or MACOSX
@@ -226,14 +226,14 @@ bool FileDelete(const char *filename)
 //
 int StrCaseCmp(const char *A, const char *B)
 {
-	for (; *A || *B; A++, B++)
-	{
-		// this test also catches end-of-string conditions
-		if (toupper(*A) != toupper(*B))
-			return (toupper(*A) - toupper(*B));
-	}
+  for (; *A || *B; A++, B++)
+  {
+    // this test also catches end-of-string conditions
+    if (toupper(*A) != toupper(*B))
+      return (toupper(*A) - toupper(*B));
+  }
 
-	return 0;
+  return 0;
 }
 
 //
@@ -245,14 +245,14 @@ int StrCaseCmp(const char *A, const char *B)
 //
 int StrCaseCmpPartial(const char *A, const char *B)
 {
-	for (; *B; A++, B++)
-	{
-		// this test also catches end-of-string conditions
-		if (toupper(*A) != toupper(*B))
-			return (toupper(*A) - toupper(*B));
-	}
+  for (; *B; A++, B++)
+  {
+    // this test also catches end-of-string conditions
+    if (toupper(*A) != toupper(*B))
+      return (toupper(*A) - toupper(*B));
+  }
 
-	return 0;
+  return 0;
 }
 
 //
@@ -260,12 +260,12 @@ int StrCaseCmpPartial(const char *A, const char *B)
 //
 void StrMaxCopy(char *dest, const char *src, int max)
 {
-	for (; *src && max > 0; max--)
-	{
-		*dest++ = *src++;
-	}
+  for (; *src && max > 0; max--)
+  {
+    *dest++ = *src++;
+  }
 
-	*dest = 0;
+  *dest = 0;
 }
 
 //
@@ -273,12 +273,12 @@ void StrMaxCopy(char *dest, const char *src, int max)
 //
 char *StrUpper(const char *name)
 {
-	char *copy = StringDup(name);
+  char *copy = StringDup(name);
 
-	for (char *p = copy; *p; p++)
-		*p = toupper(*p);
+  for (char *p = copy; *p; p++)
+    *p = toupper(*p);
 
-	return copy;
+  return copy;
 }
 
 //
@@ -288,12 +288,12 @@ char *StrUpper(const char *name)
 //
 char *StringNew(int length)
 {
-	char *s = (char *) calloc(length + 1, 1);
+  char *s = (char *) calloc(length + 1, 1);
 
-	if (! s)
-		AssertFail("Out of memory (%d bytes for string)\n", length);
+  if (! s)
+    AssertFail("Out of memory (%d bytes for string)\n", length);
 
-	return s;
+  return s;
 }
 
 //
@@ -301,12 +301,12 @@ char *StringNew(int length)
 //
 char *StringDup(const char *orig)
 {
-	char *s = strdup(orig);
+  char *s = strdup(orig);
 
-	if (! s)
-		AssertFail("Out of memory (copy string)\n");
-	
-	return s;
+  if (! s)
+    AssertFail("Out of memory (copy string)\n");
+
+  return s;
 }
 
 //
@@ -314,7 +314,7 @@ char *StringDup(const char *orig)
 //
 void StringFree(const char *str)
 {
-	free((void*) str);
+  free((void*) str);
 }
 
 
@@ -323,25 +323,25 @@ void StringFree(const char *str)
 /* Thomas Wang's 32-bit Mix function */
 u32_t IntHash(u32_t key)
 {
-	key += ~(key << 15);
-	key ^=  (key >> 10);
-	key +=  (key << 3);
-	key ^=  (key >> 6);
-	key += ~(key << 11);
-	key ^=  (key >> 16);
+  key += ~(key << 15);
+  key ^=  (key >> 10);
+  key +=  (key << 3);
+  key ^=  (key >> 6);
+  key += ~(key << 11);
+  key ^=  (key >> 16);
 
-	return key;
+  return key;
 }
 
 u32_t StringHash(const char *str)
 {
-	u32_t hash = 0;
+  u32_t hash = 0;
 
-	if (str)
-		while (*str)
-			hash = (hash << 5) - hash + *str++;
+  if (str)
+    while (*str)
+      hash = (hash << 5) - hash + *str++;
 
-	return hash;
+  return hash;
 }
 
 
@@ -367,10 +367,10 @@ u32_t TimeGetMillies()
 void TimeDelay(u32_t millies)
 {
 #ifdef WIN32
-	::Sleep(millies);
+  ::Sleep(millies);
 
 #else // LINUX or MacOSX
 
-	usleep(millies * 1000);
+  usleep(millies * 1000);
 #endif
 }

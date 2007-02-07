@@ -42,83 +42,83 @@
 
 static void ShowInfo(void)
 {
-	printf(
-		"\n"
-		"** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006,2007 Andrew Apted **\n"
-		"\n"
-	);
+  printf(
+    "\n"
+    "** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006,2007 Andrew Apted **\n"
+    "\n"
+  );
 
-	printf(
-		"Usage: Oblige [options...]\n"
-		"\n"
-		"Available options:\n"
-		"  -d  -debug             Enable debugging\n"
-		"  -h  -help              Show this help message\n"
-		"\n"
-	);
+  printf(
+    "Usage: Oblige [options...]\n"
+    "\n"
+    "Available options:\n"
+    "  -d  -debug             Enable debugging\n"
+    "  -h  -help              Show this help message\n"
+    "\n"
+  );
 
-	printf(
-		"This program is free software, under the terms of the GNU General\n"
-		"Public License, and comes with ABSOLUTELY NO WARRANTY.  See the\n"
-		"documentation for more details, or visit this web page:\n"
-		"http://www.gnu.org/licenses/licenses.html\n"
-		"\n"
-	);
+  printf(
+    "This program is free software, under the terms of the GNU General\n"
+    "Public License, and comes with ABSOLUTELY NO WARRANTY.  See the\n"
+    "documentation for more details, or visit this web page:\n"
+    "http://www.gnu.org/licenses/licenses.html\n"
+    "\n"
+  );
 }
 
 void Main_Ticker()
 {
-	// This function is called very frequently.
-	// To prevent a slow-down, we only call Fl::check()
-	// after a certain time has elapsed.
+  // This function is called very frequently.
+  // To prevent a slow-down, we only call Fl::check()
+  // after a certain time has elapsed.
 
-	static u32_t last_millis = 0;
+  static u32_t last_millis = 0;
 
-	u32_t cur_millis = TimeGetMillies();
+  u32_t cur_millis = TimeGetMillies();
 
-	if ((cur_millis - last_millis) >= TICKER_TIME)
-	{
-		Fl::check();
+  if ((cur_millis - last_millis) >= TICKER_TIME)
+  {
+    Fl::check();
 
-		last_millis = cur_millis;
-	}
+    last_millis = cur_millis;
+  }
 }
 
 void Main_Shutdown()
 {
-	delete main_win;
-	main_win = NULL;
+  delete main_win;
+  main_win = NULL;
 
-	LogClose();
+  LogClose();
 
-	ArgvTerm();
+  ArgvTerm();
 }
 
 void Main_FatalError(const char *msg, ...)
 {
-	static char buffer[MSG_BUF_LEN+4];
+  static char buffer[MSG_BUF_LEN+4];
 
-	va_list arg_pt;
+  va_list arg_pt;
 
-	va_start(arg_pt, msg);
-	vsnprintf(buffer, MSG_BUF_LEN, msg, arg_pt);
-	va_end(arg_pt);
+  va_start(arg_pt, msg);
+  vsnprintf(buffer, MSG_BUF_LEN, msg, arg_pt);
+  va_end(arg_pt);
 
-	buffer[MSG_BUF_LEN] = 0;
+  buffer[MSG_BUF_LEN] = 0;
 
-	LogPrintf("%s\n", buffer);
+  LogPrintf("%s\n", buffer);
 
-	DLG_ShowError(buffer);
+  DLG_ShowError(buffer);
 
-	Main_Shutdown();
+  Main_Shutdown();
 
-	exit(9);
+  exit(9);
 }
 
 
 void Build_Cool_Shit()
 {
-	UI_Build *that = main_win->build_box;
+  UI_Build *that = main_win->build_box;
 
   char *filename = Select_Output_File();
   if (! filename)
@@ -126,28 +126,28 @@ void Build_Cool_Shit()
 
   Fl::check();
 
-	// lock most widgets of user interface
-	main_win->Locked(true);
-	that->P_SetButton(true);
+  // lock most widgets of user interface
+  main_win->Locked(true);
+  that->P_SetButton(true);
 
-	bool is_hexen = !strcmp(main_win->setup_box->cur_Game(), "hexen");
+  bool is_hexen = !strcmp(main_win->setup_box->cur_Game(), "hexen");
 
-	bool was_ok = Doom_CreateWAD(TEMP_FILENAME, is_hexen);
+  bool was_ok = Doom_CreateWAD(TEMP_FILENAME, is_hexen);
 
-	if (was_ok)
-	{
-		that->P_Status("Making levels");
-		that->P_Begin(100, 1);
+  if (was_ok)
+  {
+    that->P_Status("Making levels");
+    that->P_Begin(100, 1);
 
-		was_ok = Script_Run();
+    was_ok = Script_Run();
 
-		Doom_FinishWAD();
+    Doom_FinishWAD();
 
 ///  that->P_Finish();
-	}
+  }
 
-	if (was_ok)
-	{
+  if (was_ok)
+  {
     DebugPrintf("TARGET FILENAME: [%s]\n", filename);
 
     if (FileExists(filename))
@@ -163,27 +163,27 @@ void Build_Cool_Shit()
       StringFree(backup_name);
     }
 
-		that->P_Status("Building nodes");
+    that->P_Status("Building nodes");
 
-		was_ok = GB_BuildNodes(TEMP_FILENAME, filename);
-	}
+    was_ok = GB_BuildNodes(TEMP_FILENAME, filename);
+  }
 
   if (! FileDelete(TEMP_FILENAME))
     LogPrintf("WARNING: unable to delete temp file: %s\n", TEMP_FILENAME);
 
   StringFree(filename);
 
-	// FIXME !!! distinguish between Failure and Aborted
-	if (was_ok)
-		that->P_Status("Success");
-	else
-		that->P_Status("Aborted");
+  // FIXME !!! distinguish between Failure and Aborted
+  if (was_ok)
+    that->P_Status("Success");
+  else
+    that->P_Status("Aborted");
 
-	that->P_SetButton(false);
-	main_win->Locked(false);
+  that->P_SetButton(false);
+  main_win->Locked(false);
 
-	if (main_win->action == UI_MainWin::ABORT)
-		main_win->action =  UI_MainWin::NONE;
+  if (main_win->action == UI_MainWin::ABORT)
+    main_win->action =  UI_MainWin::NONE;
 }
 
 
@@ -191,70 +191,70 @@ void Build_Cool_Shit()
 
 int main(int argc, char **argv)
 {
-	// skip program name
-	argv++, argc--;
+  // skip program name
+  argv++, argc--;
 
-	ArgvInit(argc, (const char **)argv);
+  ArgvInit(argc, (const char **)argv);
 
   if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0)
-	{
-		ShowInfo();
-		exit(1);
-	}
+  {
+    ShowInfo();
+    exit(1);
+  }
 
-	LogInit(ArgvFind('d', "debug") >= 0);
+  LogInit(ArgvFind('d', "debug") >= 0);
 
 /// TITLE --> log file
 
 #if 0
-	// read persistent data
-	CookieSetPath(argv[0]);
+  // read persistent data
+  CookieSetPath(argv[0]);
 
-	cookie_status_t cookie_ret = CookieReadAll();
+  cookie_status_t cookie_ret = CookieReadAll();
 #endif
 
   Fl::scheme("plastic");
 
-	fl_message_font(FL_HELVETICA /* _BOLD */, 18);
+  fl_message_font(FL_HELVETICA /* _BOLD */, 18);
 
-	// load icons for file chooser
-	Fl_File_Icon::load_system_icons();
+  // load icons for file chooser
+  Fl_File_Icon::load_system_icons();
 
-	Script_Init();
+  Script_Init();
 
   Default_Location();
-	
-	main_win = new UI_MainWin(OBLIGE_TITLE);
 
-	try
-	{
-		// run the GUI until the user quits
-		for (;;)
-		{
-			Fl::wait(0.2f);
+  main_win = new UI_MainWin(OBLIGE_TITLE);
 
-			if (main_win->action == UI_MainWin::QUIT)
-				break;
+  try
+  {
+    // run the GUI until the user quits
+    for (;;)
+    {
+      Fl::wait(0.2f);
 
-			if (main_win->action == UI_MainWin::BUILD)
-			{
-				main_win->action = UI_MainWin::NONE;
+      if (main_win->action == UI_MainWin::QUIT)
+        break;
 
-				Build_Cool_Shit();
-			}
-		}
-	}
-	catch (assert_fail_c err)
-	{
-		Main_FatalError("Sorry, an internal error occurred:\n%s", err.GetMessage());
-	}
-	catch (...)
-	{
-		Main_FatalError("An unknown problem occurred (UI code)");
-	}
+      if (main_win->action == UI_MainWin::BUILD)
+      {
+        main_win->action = UI_MainWin::NONE;
 
-	Main_Shutdown();
+        Build_Cool_Shit();
+      }
+    }
+  }
+  catch (assert_fail_c err)
+  {
+    Main_FatalError("Sorry, an internal error occurred:\n%s", err.GetMessage());
+  }
+  catch (...)
+  {
+    Main_FatalError("An unknown problem occurred (UI code)");
+  }
 
-	return 0;
+  Main_Shutdown();
+
+  return 0;
 }
 
