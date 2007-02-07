@@ -19,8 +19,10 @@
 #ifndef __SYS_DEBUG_H__
 #define __SYS_DEBUG_H__
 
-void DebugInit(bool enable);
-void DebugTerm(void);
+void LogInit(bool debug_enable);
+void LogClose(void);
+
+void LogPrintf(const char *str, ...);
 
 void DebugPrintf(const char *str, ...);
 

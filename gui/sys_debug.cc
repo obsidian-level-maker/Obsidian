@@ -17,38 +17,71 @@
 //------------------------------------------------------------------------
 
 #include "headers.h"
+#include "main.h"
+
+#define LOG_FILENAME  DATA_DIR "/LOGS.txt"
 
 
-#define DEBUGGING_FILE  "obl_debug.txt"
+static FILE *log_file = NULL;
 
-static FILE *debug_fp = NULL;
+static bool debugging = false;
+static char debug_buffer[MSG_BUF_LEN];
+
+static bool terminal = true;
 
 
 //
-// DebugInit
+// LogInit
 //
-void DebugInit(bool enable)
+void LogInit(bool debug_enable)
 {
-	if (enable)
-	{
-		debug_fp = fopen(DEBUGGING_FILE, "w");
+  log_file = fopen(LOG_FILENAME, "w");
 
-		DebugPrintf("====== START OF DEBUG FILE ======\n\n");
-	}
+  LogPrintf("========= START OF OBLIGE LOGS =========\n\n");
+
+  debugging = debug_enable;
 }
 
 //
-// DebugTerm
+// LogClose
 //
-void DebugTerm(void)
+void LogClose(void)
 {
-	if (debug_fp)
-	{
-		DebugPrintf("\n====== END OF DEBUG FILE ======\n");
+  LogPrintf("\n========= END OF OBLIGE LOGS =========\n");
 
-		fclose(debug_fp);
-		debug_fp = NULL;
-	}
+  if (log_file)
+  {
+    fclose(log_file);
+
+    log_file = NULL;
+  }
+}
+
+//
+// LogPrintf
+//
+void LogPrintf(const char *str, ...)
+{
+  if (log_file)
+  {
+    va_list args;
+
+    va_start(args, str);
+    vfprintf(log_file, str, args);
+    va_end(args);
+
+    fflush(log_file);
+  }
+
+  // show on the Linux terminal too
+  if (terminal)
+  {
+    va_list args;
+
+    va_start(args, str);
+    vfprintf(stderr, str, args);
+    va_end(args);
+  }
 }
 
 //
@@ -56,15 +89,31 @@ void DebugTerm(void)
 //
 void DebugPrintf(const char *str, ...)
 {
-	if (debug_fp)
-	{
-		va_list args;
+  if (log_file and debugging)
+  {
+    va_list args;
 
-		va_start(args, str);
-		vfprintf(debug_fp, str, args);
-		va_end(args);
+    va_start(args, str);
+    vsnprintf(debug_buffer, MSG_BUF_LEN, str, args);
+    va_end(args);
 
-		fflush(debug_fp);
-	}
+    debug_buffer[MSG_BUF_LEN] = 0;
+
+    // prefix each debugging line with a special symbol
+
+    char *pos = debug_buffer;
+    char *next;
+
+    while (pos && *pos)
+    {
+      next = strchr(pos, '\n');
+
+      if (next) *next++ = 0;
+
+      LogPrintf("@ %s\n", pos);
+
+      pos = next;
+    }
+  }
 }
 
