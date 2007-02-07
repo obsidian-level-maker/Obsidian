@@ -57,16 +57,16 @@ function show_dm_links(p)
 
   divider(p.w)
 
-	local x, y
-	for y = p.h,1,-1 do
+  local x, y
+  for y = p.h,1,-1 do
     for row = 3,1,-1 do
       for x = 1,p.w do
         show_cell(p.cells[x][y], row)
       end
       io.stderr:write("\n")
-	  end
+    end
     divider(p.w)
-	end
+  end
 end
 
 
@@ -92,7 +92,7 @@ end
 
 function plan_dm_arena()
 
-	local p = get_base_plan(PL_W, PL_H)
+  local p = get_base_plan(PL_W, PL_H)
 
   p.deathmatch = true
 

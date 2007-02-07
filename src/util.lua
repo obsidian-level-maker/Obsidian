@@ -61,7 +61,7 @@ function table_to_string(t, depth, prefix)
   prefix = prefix or ""
 
   local keys = {}
-	for k,v in pairs(t) do
+  for k,v in pairs(t) do
     table.insert(keys, k)
   end
 
@@ -72,17 +72,17 @@ function table_to_string(t, depth, prefix)
   for idx,k in ipairs(keys) do
     local v = t[k]
     result = result .. prefix .. "  " .. tostring(k) .. " = "
-		if type(v) == "table" and depth > 1 then
+    if type(v) == "table" and depth > 1 then
       result = result .. table_to_string(v, depth-1, prefix .. "  ")
     else
       result = result .. tostring(v)
     end
     result = result .. "\n"
-	end
+  end
 
   result = result .. prefix .. "}"
 
-	return result
+  return result
 end
 
 function merge_table(dest, src)

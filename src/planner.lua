@@ -98,13 +98,13 @@ function show_path(p)
 
   divider(p.w)
 
-	for y = p.h,1,-1 do
-	  for x = 1,p.w do
-	    show_cell(p.cells[x][y])
-	  end
-	  io.stderr:write("\n")
+  for y = p.h,1,-1 do
+    for x = 1,p.w do
+      show_cell(p.cells[x][y])
+    end
+    io.stderr:write("\n")
     divider(p.w)
-	end
+  end
 end
 
 
@@ -162,15 +162,15 @@ function show_chunks(p)
 
   divider(p.w)
 
-	for y = p.h,1,-1 do
+  for y = p.h,1,-1 do
     for row = KH,1,-1 do
       for x = 1,p.w do
         show_cell(p.cells[x][y], row)
       end
       io.stderr:write("\n")
-	  end
+    end
     divider(p.w)
-	end
+  end
 end
 
 
@@ -228,7 +228,7 @@ function get_base_plan(cw, ch)
     blk_w = BORDER_BLK*2 + cw * (BW+1) + 1,
     blk_h = BORDER_BLK*2 + ch * (BH+1) + 1,
 
-	  cells = array_2D(cw, ch),
+    cells = array_2D(cw, ch),
     quests = {},
 
     all_cells  = {},
@@ -404,7 +404,7 @@ end
 
 function plan_sp_level(is_coop)  -- returns Plan
 
-	local p = get_base_plan(PL_W, PL_H)
+  local p = get_base_plan(PL_W, PL_H)
 
   local function travel_cost(cells, cx, cy, nx, ny)
     if cells[nx][ny] then return -1 end -- impassible
