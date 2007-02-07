@@ -48,8 +48,7 @@ void GB_PrintMsg(const char *str, ...)
 
   message_buf[MSG_BUF_LEN] = 0;
 
-  // FIXME: logging / debug
-  fprintf(stderr, "GLBSP: %s", message_buf);
+  LogPrintf("GLBSP: %s", message_buf);
 }
 
 //
