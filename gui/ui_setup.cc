@@ -69,7 +69,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
 	add(game);
 
-	mode = new Fl_Choice(x+300, cy, 150, 24, "Mode:   ");
+	mode = new Fl_Choice(x+300, cy, 150, 24, "Mode: ");
 	mode->align(FL_ALIGN_LEFT);
 	mode->add("Single Player|Co-op|Deathmatch");
 	mode->value(0);
@@ -85,7 +85,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 	
 	add(addon);
 
-	length = new Fl_Choice(x +300, cy, 150, 24, "Length:   ");
+	length = new Fl_Choice(x +300, cy, 150, 24, "Length: ");
 	length->align(FL_ALIGN_LEFT);
 	length->add("Single Level|One Episode|Full Game");
 	length->value(1);
