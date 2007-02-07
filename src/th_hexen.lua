@@ -621,7 +621,7 @@ function create_hexen_theme()
     monsters = XN_MONSTERS,
     weapons  = XN_WEAPONS,
 
-    thing_nums = XN_THING_NUMS;,
+    thing_nums = XN_THING_NUMS,
 
     quests = XN_QUESTS,
     dm = XN_DEATHMATCH,
