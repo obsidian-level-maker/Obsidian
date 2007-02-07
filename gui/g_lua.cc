@@ -44,28 +44,14 @@ int lev_IDX = 0;
 int lev_TOTAL = 0;
 
 
-// LUA: printf(fmt_str, ...)
+// LUA: raw_print(str)
 //
-int print_f(lua_State *L)
+int raw_print(lua_State *L)
 {
 	int nargs = lua_gettop(L);
 
-	// LUA: string.format(...)
-	//
-	lua_getglobal(L, "string");
-	lua_getfield(L, -1, "format");
-
-	lua_insert(L, 1);  // move function to first slot
-
-	int status = lua_pcall(LUA_ST, nargs, 1, 0);
-	
-	if (status != 0)
-	{
-		// FIXME: lua_pcall failed - do what?
-	}
-	else
-	{
-		// formatted string
+  if (nargs >= 1)
+  {
 		const char *res = luaL_checkstring(L,1);
 		SYS_ASSERT(res);
 
@@ -188,9 +174,9 @@ int random(lua_State *L)
 } // namespace con
 
 
-static const luaL_Reg videolib[] =
+static const luaL_Reg console_lib[] =
 {
-	{ "printf",     con::print_f },
+	{ "raw_print",  con::raw_print },
 	{ "at_level",   con::at_level },
 	{ "progress",   con::progress },
 	{ "ticker",     con::ticker },
@@ -208,7 +194,7 @@ static const luaL_Reg videolib[] =
 
 int Script_open_video(lua_State *L)
 {
-	luaL_register(L, "con", videolib);
+	luaL_register(L, "con", console_lib);
 
 	return 0;
 }
@@ -235,16 +221,16 @@ static int p_init_lua(lua_State *L)
 
 static void Script_SetLoadPath(lua_State *L)
 {
-  lua_getglobal(LUA_ST, "package");
+  lua_getglobal(L, "package");
 
-  if (lua_type(LUA_ST, -1) == LUA_TNIL)
+  if (lua_type(L, -1) == LUA_TNIL)
 		Main_FatalError("LUA SetPath failed: no 'package' module!");
 
-  lua_pushstring(LUA_ST, DATA_DIR "/?.lua");
+  lua_pushstring(L, DATA_DIR "/?.lua");
 
-	lua_setfield(LUA_ST, -2, "path");
+	lua_setfield(L, -2, "path");
 
-  lua_pop(LUA_ST, 1);
+  lua_pop(L, 1);
 }
 
 void Script_Init()
@@ -307,12 +293,18 @@ void Script_MakeSettings(lua_State *L)
 	lua_newtable(L);
 
 	AddField(L, "seed",  main_win->setup_box->cur_Seed());
+
 	AddField(L, "game",  main_win->setup_box->cur_Game());
 	AddField(L, "addon", main_win->setup_box->cur_Addon());
 	AddField(L, "mode",  main_win->setup_box->cur_Mode());
 	AddField(L, "length",main_win->setup_box->cur_Length());
 
-	lua_setglobal(LUA_ST, "settings");
+	AddField(L, "health", main_win->adjust_box->cur_Health());
+	AddField(L, "ammo",   main_win->adjust_box->cur_Ammo());
+	AddField(L, "mons",   main_win->adjust_box->cur_Monsters());
+	AddField(L, "traps",  main_win->adjust_box->cur_Traps());
+
+	lua_setglobal(L, "settings");
 }
 
 bool Script_Run()
