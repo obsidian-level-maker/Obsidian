@@ -60,7 +60,6 @@ void WAD_RawSeek(u32_t pos)
 {
 	fflush(wad_fp);
 
-	// FIXME: check result
 	fseek(wad_fp, pos, SEEK_SET);
 }
 
@@ -177,6 +176,8 @@ void WAD_CreateInfoLump()
   WAD_Printf(L, "traps = %s\n",  main_win->adjust_box->cur_Traps());
 
   WAD_WriteLump("OBLIGDAT", L);
+
+  delete L;
 }
 
 int Hexen_GrabArgs(lua_State *L, u8_t *args, int stack_pos)
@@ -493,8 +494,6 @@ bool Doom_FinishWAD()
 
 	fclose(wad_fp);
   wad_fp = NULL;
-
-	// FIXME: free memory
 
 	return true; //OK
 }
