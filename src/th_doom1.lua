@@ -83,21 +83,6 @@ DM_COMMON_THEMES =
 {
 ---- INDOOR ------------
 
-  EXITROOM =
-  {
-    mat_pri = 9,
-
-    wall = "TEKWALL1", -- TEKWALL6 (not in doom 1)
-    void = "TEKWALL4",
-    misc = "BROWN96",
-    dm_switch = "SW1COMM",
-    
-    floor = "CEIL4_3",
-    ceil = "TLITE6_5",
-
-    is_special = true,
-  },
-
   BASE =
   {
     mat_pri = 8,
@@ -261,6 +246,108 @@ DM_COMMON_THEMES =
   },
 }
 
+DM_COMMON_EXITS =
+{
+--[[
+  TECH =
+  {
+    mat_pri = 9,
+
+    vall = "TEKWALL1", -- TEKWALL6 (not in doom 1)
+    void = "TEKWALL4",
+    dm_switch = "SW1COMM",
+
+    floor = "CEIL4_3",
+    ceil = "TLITE6_5",
+
+    sign = "EXITSIGN",
+    sign_bottom="CEIL5_2"
+
+    door = { tex="EXITDOOR", w=64, h=72,
+             frame_top="TLITE6_5",
+             Xrame_side="BROWN96" },
+  },
+--]]
+
+  STONE =
+  {
+    mat_pri = 9,
+
+    vall = "TEKWALL1", -- TEKWALL6 (not in doom 1)  !!!!!!
+    wall = "STONE2",
+    void = "TEKWALL4",
+    dm_switch = "SW1COMM",
+
+    floor = "CEIL4_3",
+    ceil = "FLAT1",
+
+    front_mark = "EXITSTON", 
+--## support = "SUPPORT2",
+
+    door = { tex="EXITDOOR", w=64, h=72,
+             frame_top="FLAT1",
+             frame_side="LITE5" },
+  },
+}
+
+DM_COMMON_HALLS =
+{
+  BROWN1 =
+  {
+    mat_pri = 0,
+
+    wall = "BROWNPIP",
+    void = "BROWN1",
+    step = "BROWN1",
+    pillar = "BROVINE2",
+
+    floor = "FLOOR5_1",
+    ceil  = "CEIL5_2",
+  },
+
+  BSTONE =
+  {
+    mat_pri = 0,
+
+    wall = "BSTONE2",
+    void = "BSTONE2",
+    step = "METAL",
+    pillar = "BSTONE3",
+
+    floor = "FLAT5",
+    ceil  = "FLAT1",
+  },
+
+  SP_ROCK =
+  {
+    mat_pri = 0,
+
+    wall = "SP_ROCK1",
+    void = "SP_ROCK1",
+    step = "STEP6",
+    pillar = "GRAYVINE",
+
+    floor = "MFLR8_3",
+    ceil  = "FLOOR6_2",
+  },
+
+  BLUECARPET =
+  {
+    mat_pri = 0,
+
+    wall = "STARTAN2",
+    void = "STARTAN3",
+    step = "STEP1",
+    pillar = "WOOD4",
+
+    floor = "FLAT14",
+    ceil  = "TLITE6_4",
+    arch_floor = "FLAT20",
+    arch_ceil  = "CEIL3_2",
+
+    well_lit = true,
+  },
+}
 
 ---- BASE MATERIALS ------------
 
@@ -441,8 +528,6 @@ DM_DOORS =
   d_small1 = { tex="DOOR1",    w=64, h=72 },
   d_small2 = { tex="DOOR3",    w=64, h=72 },
 
-  d_exit   = { tex="EXITDOOR", w=64, h=72, is_special=true,
-               frame_top="TLITE6_5", sign="EXITSIGN", sign_bottom="CEIL5_2" },
 }
 
 DM_LIGHTS =
@@ -719,6 +804,14 @@ D1_THEMES =
 {
 }
 
+D1_EXITS =
+{
+}
+
+D1_HALLWAYS =
+{
+}
+
 D1_RAILS =
 {
   r_1 = { tex="BRNSMALC", w=128, h=64  },
@@ -728,51 +821,60 @@ D1_RAILS =
 
 ------------------------------------------------------------
 
-function common_doom_theme(T)
+function common_doom_theme()
 
-  T.ERROR_TEX  = "FIREBLU1"
-  T.ERROR_FLAT = "SFLR6_4"
-  T.SKY_TEX    = "F_SKY1"
+  return
+  {
+    ERROR_TEX  = "FIREBLU1",
+    ERROR_FLAT = "SFLR6_4",
+    SKY_TEX    = "F_SKY1",
 
-  T.monsters = DM_MONSTERS
-  T.weapons  = DM_WEAPONS
+    monsters = DM_MONSTERS,
+    weapons  = DM_WEAPONS,
 
-  T.thing_nums = DM_THING_NUMS
+    thing_nums = DM_THING_NUMS,
 
-  T.mon_give = DM_MONSTER_GIVE
-  T.mon_weap_prefs = DM_MONSTER_WEAPON_PREFS
-  T.initial_model  = DM_INITIAL_MODEL
+    mon_give       = DM_MONSTER_GIVE,
+    mon_weap_prefs = DM_MONSTER_WEAPON_PREFS,
+    initial_model  = DM_INITIAL_MODEL,
 
-  T.pickups = DM_PICKUPS
-  T.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" }
+    pickups = DM_PICKUPS,
+    pickup_stats = { "health", "bullet", "shell", "rocket", "cell" },
 
-  T.quests = DM_QUESTS
-  T.dm = DM_DEATHMATCH
+    quests = DM_QUESTS,
+    dm = DM_DEATHMATCH,
 
-  T.themes    = DM_COMMON_THEMES
-  T.hangs     = DM_OVERHANGS
-  T.pedestals = DM_PEDESTALS
-  T.mats      = DM_MATS
+    themes    = DM_COMMON_THEMES,
+    exits     = DM_COMMON_EXITS,
+    hallways  = DM_COMMON_HALLS,
 
-  T.liquids   = DM_LIQUIDS
-  T.switches  = DM_SWITCHES
-  T.doors     = DM_DOORS
-  T.lights    = DM_LIGHTS
-  T.pics      = DM_PICS
-  T.key_bits  = DM_KEY_BITS
+    hangs     = DM_OVERHANGS,
+    pedestals = DM_PEDESTALS,
+    mats      = DM_MATS,
+
+    liquids   = DM_LIQUIDS,
+    switches  = DM_SWITCHES,
+    doors     = DM_DOORS,
+    lights    = DM_LIGHTS,
+    pics      = DM_PICS,
+    key_bits  = DM_KEY_BITS,
+  }
+
+---###  return T
 end
 
 function create_doom1_theme()
-  local T = {}
 
-  common_doom_theme(T)
+  local T = common_doom_theme()
 
-  T.themes = copy_table(T.themes)
-  merge_table(T.themes, D1_THEMES)
+  T.themes   = copy_and_merge(T.themes,   D1_THEMES)
+  T.exits    = copy_and_merge(T.exits,    D1_EXITS)
+  T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
 
   T.rails = D1_RAILS
 
-  -- remove the DOOM2-only weapons and items
+  -- remove DOOM2-only weapons and items --
+
   T.weapons = copy_table(T.weapons)
   T.weapons["super"] = nil
 

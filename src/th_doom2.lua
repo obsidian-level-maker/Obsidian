@@ -344,47 +344,12 @@ D2_THEMES =
   },
 }
 
+D2_EXITS =
+{
+}
+
 D2_HALLWAYS =
 {
-  BROWN1 =  -- FIXME: move into common (D1/D2) themes
-  {
-    mat_pri = 0,
-
-    wall = "BROWNPIP",
-    void = "BROWN1",
-    step = "BROWN1",
-    pillar = "BROVINE2",
-
-    floor = "FLOOR5_1",
-    ceil  = "CEIL5_2",
-  },
-
-  BSTONE =
-  {
-    mat_pri = 0,
-
-    wall = "BSTONE2",
-    void = "BSTONE2",
-    step = "METAL",
-    pillar = "BSTONE3",
-
-    floor = "FLAT5",
-    ceil  = "FLAT1",
-  },
-
-  CRACKLE =
-  {
-    mat_pri = 0,
-
-    wall = "SP_ROCK1",
-    void = "SP_ROCK1",
-    step = "STEP6",
-    pillar = "CRACKLE4",
-
-    floor = "MFLR8_3",
-    ceil  = "FLOOR6_2",
-  },
-
   BRICK =
   {
     mat_pri = 0,
@@ -452,22 +417,6 @@ D2_HALLWAYS =
     ceil  = "FLAT5_4",
   },
 
-  BLUECARPET =
-  {
-    mat_pri = 0,
-
-    wall = "STARTAN2",
-    void = "STARTAN3",
-    step = "STEP1",
-    pillar = "WOOD4",
-
-    floor = "FLAT14",
-    ceil  = "TLITE6_4",
-    arch_floor = "FLAT20",
-    arch_ceil  = "CEIL3_2",
-
-    well_lit = true,
-  },
 }
 
 D2_MATS =
@@ -527,34 +476,28 @@ D2_RAILS =
   r_2 = { tex="MIDGRATE", w=128, h=128 },
 }
 
-D2_LIQUID = { name="slime", floor="SLIME01", sec_kind=7 }  --  5% damage
-
+D2_LIQUIDS =
+{
+  { name="slime", floor="SLIME01", sec_kind=7 }  --  5% damage
+}
 
 ------------------------------------------------------------
 
 function create_doom2_theme()
-  local T = {}
 
-  common_doom_theme(T)
+  local T = common_doom_theme()
 
-  T.themes = copy_table(T.themes)
-  merge_table(T.themes, D2_THEMES)
+  T.themes   = copy_and_merge(T.themes,   D2_THEMES)
+  T.exits    = copy_and_merge(T.exits,    D2_EXITS)
+  T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
 
   T.rails = D2_RAILS
 
-  T.mats = copy_table(T.mats)
-  merge_table(T.mats, D2_MATS)
+  T.mats    = copy_and_merge(T.mats,    D2_MATS)
+  T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
+  T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
-  T.hallways = D2_HALLWAYS  -- FIXME: allow for DOOM-1 !!!!
-
-  T.hangs = copy_table(T.hangs)
-  merge_table(T.hangs, D2_OVERHANGS)
-
-  T.liquids = copy_table(T.liquids)
-  table.insert(T.liquids, D2_LIQUID)
-
-  T.monsters = copy_table(T.monsters)
-  merge_table(T.monsters, D2_MONSTERS)
+  T.monsters = copy_and_merge(T.monsters, D2_MONSTERS)
 
   return T
 end

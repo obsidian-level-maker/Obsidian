@@ -77,20 +77,6 @@ XN_THEMES =
 {
   ---- INDOOR ------------
 
-  EXITROOM =
-  {
-    mat_pri = 9,
-
-    wall = "STEEL01",
-    void = "STEEL02",
-    dm_switch = "SW_1_UP",
-    
-    floor = "F_022",
-    ceil = "F_044",
-
-    is_special = true,
-  },
-
   GOLD =
   {
     mat_pri = 6,
@@ -175,6 +161,29 @@ XN_THEMES =
 
     scenery = "lean_tree_L",
   },
+}
+
+XN_EXITS =
+{
+  STEEL =
+  {
+    mat_pri = 9,
+
+    wall = "STEEL01",
+    void = "STEEL02",
+    dm_switch = "SW_1_UP",
+    
+    floor = "F_022",
+    ceil = "F_044",
+
+    door = { tex="FIRE14", w=64,  h=128 },
+  },
+
+}
+
+XN_HALLWAYS =
+{
+  -- FIXME !!!!
 }
 
 
@@ -281,13 +290,14 @@ XN_DOORS =
   d_wood1  = { tex="D_WD07",   w=128, h=128 },
   d_wood2  = { tex="D_WD08",   w=64,  h=128 },
   d_wood3  = { tex="D_WD10",   w=64,  h=128 },
+}
 
+XN_LOCKED_DOORS =
+{
   -- lockable doors -- FIXME: the rest??
-  d_silver = { tex="D_SILVER", w=64,  h=128, is_special=true },
-  d_castle = { tex="D_CAST",   w=64,  h=128, is_special=true },
-  d_fire   = { tex="D_FIRE",   w=64,  h=128, is_special=true },
-
-  d_exit   = { tex="FIRE14",   w=64,  h=128, is_special=true },
+  d_silver = { tex="D_SILVER", w=64,  h=128 },
+  d_castle = { tex="D_CAST",   w=64,  h=128 },
+  d_fire   = { tex="D_FIRE",   w=64,  h=128 },
 }
 
 XN_RAILS =
@@ -601,37 +611,40 @@ XN_DEATHMATCH =
 ------------------------------------------------------------
 
 function create_hexen_theme()
-  local T = {}
 
-  T.ERROR_TEX  = "ABADONE"
-  T.ERROR_FLAT = "F_033"
-  T.SKY_TEX    = "F_SKY"
+  return
+  {
+    ERROR_TEX  = "ABADONE",
+    ERROR_FLAT = "F_033",
+    SKY_TEX    = "F_SKY",
 
-  T.monsters = XN_MONSTERS
-  T.weapons  = XN_WEAPONS
+    monsters = XN_MONSTERS,
+    weapons  = XN_WEAPONS,
 
-  T.thing_nums = XN_THING_NUMS;
+    thing_nums = XN_THING_NUMS;,
 
-  T.quests = XN_QUESTS
-  T.dm = XN_DEATHMATCH
+    quests = XN_QUESTS,
+    dm = XN_DEATHMATCH,
 
-  T.pickups = XN_PICKUPS
-  T.pickup_stats = { "health", "blue_mana", "green_mana" }
-  T.initial_model = XN_INITIAL_MODEL
+    pickups = XN_PICKUPS,
+    pickup_stats = { "health", "blue_mana", "green_mana" },
+    initial_model = XN_INITIAL_MODEL,
 
-  T.themes    = XN_THEMES
-  T.hangs     = XN_OVERHANGS
-  T.pedestals = XN_PEDESTALS
-  T.mats      = XN_MATS
+    themes    = XN_THEMES,
+    exits     = XN_EXITS,
+    hallways  = XN_HALLWAYS,
 
-  T.liquids   = XN_LIQUIDS
-  T.switches  = XN_SWITCHES
-  T.doors     = XN_DOORS
-  T.lights    = XN_LIGHTS
-  T.rails     = XN_RAILS
---T.pics      = XN_PICS
-  T.key_bits  = XN_KEY_BITS
+    hangs     = XN_OVERHANGS,
+    pedestals = XN_PEDESTALS,
+    mats      = XN_MATS,
 
-  return T
+    liquids   = XN_LIQUIDS,
+    switches  = XN_SWITCHES,
+    doors     = XN_DOORS,
+    lights    = XN_LIGHTS,
+    rails     = XN_RAILS,
+  --pics      = XN_PICS,
+    key_bits  = XN_KEY_BITS,
+  }
 end
 

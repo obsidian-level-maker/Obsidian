@@ -47,20 +47,6 @@ HC_THEMES =
 {
   ---- INDOOR ------------
 
-  EXITROOM =
-  {
-    mat_pri = 9,
-
-    wall = "METL2",
-    void = "SKULLSB1",
-    dm_switch = "SW1OFF",
-    
-    floor = "FLOOR03",
-    ceil = "FLOOR19",
-
-    is_special = true,
-  },
-
   GOLD =
   {
     mat_pri = 6,
@@ -190,6 +176,29 @@ HC_THEMES =
   
 }
 
+HC_EXITS =
+{
+  METAL =
+  {
+    mat_pri = 9,
+
+    wall = "METL2",
+    void = "SKULLSB1",
+    dm_switch = "SW1OFF",
+    
+    floor = "FLOOR03",
+    ceil = "FLOOR19",
+
+    door = { tex="DOOREXIT", w=64, h=96 },
+  },
+}
+
+HC_HALLWAYS =
+{
+  -- FIXME !!!!
+}
+
+
 ---- BASE MATERIALS ------------
 
 HC_MATS =
@@ -288,8 +297,6 @@ HC_DOORS =
   d_wood   = { tex="DOORWOOD", w=64,  h=128, bottom="FLOOR10" },
   d_demon  = { tex="DMNMSK",   w=128, h=128 },
 --  d_stone  = { tex="DOORSTON", w=64,  h=128 },
-
-  d_exit   = { tex="DOOREXIT", w=64, h=96, is_special=true },
 }
 
 HC_RAILS =
@@ -576,37 +583,40 @@ HC_INITIAL_MODEL =
 ------------------------------------------------------------
 
 function create_heretic_theme()
-  local T = {}
 
-  T.ERROR_TEX  = "DRIPWALL"
-  T.ERROR_FLAT = "FLOOR09"
-  T.SKY_TEX    = "F_SKY1"
+  return
+  {
+    ERROR_TEX  = "DRIPWALL",
+    ERROR_FLAT = "FLOOR09",
+    SKY_TEX    = "F_SKY1",
 
-  T.thing_nums = HC_THING_NUMS
-  T.monsters   = HC_MONSTERS
-  T.weapons    = HC_WEAPONS
+    thing_nums = HC_THING_NUMS,
+    monsters   = HC_MONSTERS,
+    weapons    = HC_WEAPONS,
 
-  T.pickups = HC_PICKUPS
-  T.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
-                     "runes", "flame_orb", "mace_orb" }
-  T.initial_model = HC_INITIAL_MODEL
+    pickups = HC_PICKUPS,
+    pickup_stats = { "health", "crystal", "arrow", "claw_orb",
+                       "runes", "flame_orb", "mace_orb" },
+    initial_model = HC_INITIAL_MODEL,
 
-  T.quests = HC_QUESTS
-  T.dm = HC_DEATHMATCH
+    quests = HC_QUESTS,
+    dm = HC_DEATHMATCH,
 
-  T.themes    = HC_THEMES
-  T.hangs     = HC_OVERHANGS
-  T.pedestals = HC_PEDESTALS
-  T.mats      = HC_MATS
+    themes    = HC_THEMES,
+    exits     = HC_EXITS,
+    hallways  = HC_HALLWAYS,
 
-  T.liquids   = HC_LIQUIDS
-  T.switches  = HC_SWITCHES
-  T.doors     = HC_DOORS
-  T.lights    = HC_LIGHTS
-  T.rails     = HC_RAILS
---T.pics      = HC_PICS
-  T.key_bits  = HC_KEY_BITS
+    hangs     = HC_OVERHANGS,
+    pedestals = HC_PEDESTALS,
+    mats      = HC_MATS,
 
-  return T
+    liquids   = HC_LIQUIDS,
+    switches  = HC_SWITCHES,
+    doors     = HC_DOORS,
+    lights    = HC_LIGHTS,
+    rails     = HC_RAILS,
+  --pics      = HC_PICS,
+    key_bits  = HC_KEY_BITS,
+  }
 end
 
