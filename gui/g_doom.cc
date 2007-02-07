@@ -45,6 +45,9 @@ static lump_c *sector_lump;
 static lump_c *sidedef_lump;
 static lump_c *linedef_lump;
 
+static bool write_error_seen;
+static bool seek_error_seen;
+
 
 
 //------------------------------------------------------------------------
@@ -60,7 +63,15 @@ void WAD_RawSeek(u32_t pos)
 {
   fflush(wad_fp);
 
-  fseek(wad_fp, pos, SEEK_SET);
+  if (fseek(wad_fp, pos, SEEK_SET) < 0)
+  {
+    if (! seek_error_seen)
+    {
+      LogPrintf("Failure seeking in wad file! (offset %u)\n", pos);
+
+      seek_error_seen = true;
+    }
+  }
 }
 
 void WAD_RawWrite(const void *data, u32_t len)
@@ -69,8 +80,12 @@ void WAD_RawWrite(const void *data, u32_t len)
 
   if (1 != fwrite(data, len, 1, wad_fp))
   {
-    // FIXME: log
-    fprintf(stderr, "Failure writing to wad file!\n");
+    if (! write_error_seen)
+    {
+      LogPrintf("Failure writing to wad file! (%u bytes)\n", len);
+
+      write_error_seen = true;
+    }
   }
 }
 
@@ -450,6 +465,9 @@ bool Doom_CreateWAD(const char *filename, bool is_hexen)
     return false;
   }
 
+  write_error_seen = false;
+  seek_error_seen  = false;
+
   wad_dir.clear();
   wad_hexen = is_hexen;
 
@@ -495,6 +513,6 @@ bool Doom_FinishWAD()
   fclose(wad_fp);
   wad_fp = NULL;
 
-  return true; //OK
+  return ! (write_error_seen || seek_error_seen);
 }
 
