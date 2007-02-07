@@ -83,25 +83,25 @@ int raw_debug_print(lua_State *L)
 //
 int at_level(lua_State *L)
 {
-	lev_IDX = luaL_checkint(L, 2);
-	lev_TOTAL = luaL_checkint(L, 3);
+  lev_IDX = luaL_checkint(L, 2);
+  lev_TOTAL = luaL_checkint(L, 3);
 
-	return 0;
+  return 0;
 }
 
 // LUA: progress(percent)
 //
 int progress(lua_State *L)
 {
-	lua_Number perc = luaL_checknumber(L, 1);
+  lua_Number perc = luaL_checknumber(L, 1);
 
-	SYS_ASSERT(lev_TOTAL > 0);
+  SYS_ASSERT(lev_TOTAL > 0);
 
-	perc = ((lev_IDX-1) * 100 + perc) / lev_TOTAL;
+  perc = ((lev_IDX-1) * 100 + perc) / lev_TOTAL;
 
-	main_win->build_box->P_Update(perc);
+  main_win->build_box->P_Update(perc);
 
-	return 0;
+  return 0;
 }
 
 
@@ -109,22 +109,22 @@ int progress(lua_State *L)
 //
 int ticker(lua_State *L)
 {
-	Main_Ticker();
+  Main_Ticker();
 
-	return 0;
+  return 0;
 }
 
 // LUA: abort() -> boolean
 //
 int abort(lua_State *L)
 {
-	int value = 0;
+  int value = 0;
 
-	if (main_win->action >= UI_MainWin::ABORT)
-		value = 1;
+  if (main_win->action >= UI_MainWin::ABORT)
+    value = 1;
 
-	lua_pushboolean(L, value);
-	return 1;
+  lua_pushboolean(L, value);
+  return 1;
 }
 
 
@@ -132,42 +132,42 @@ int abort(lua_State *L)
 //
 int map_begin(lua_State *L)
 {
-	int pixel_W = luaL_checkint(L, 1);
-	int pixel_H = luaL_checkint(L, 2);
+  int pixel_W = luaL_checkint(L, 1);
+  int pixel_H = luaL_checkint(L, 2);
 
-	SYS_ASSERT(1 <= pixel_W && pixel_W < 1000);
-	SYS_ASSERT(1 <= pixel_H && pixel_H < 1000);
+  SYS_ASSERT(1 <= pixel_W && pixel_W < 1000);
+  SYS_ASSERT(1 <= pixel_H && pixel_H < 1000);
 
-	main_win->build_box->MapBegin(pixel_W, pixel_H);
+  main_win->build_box->MapBegin(pixel_W, pixel_H);
 
-	return 0;
+  return 0;
 }
 
 // LUA: map_end()
 //
 int map_end(lua_State *L)
 {
-	main_win->build_box->MapFinish();
+  main_win->build_box->MapFinish();
 
-	return 0;
+  return 0;
 }
 
 // LUA: map_pixel(kind)
 //
 int map_pixel(lua_State *L)
 {
-	int kind = luaL_checkint(L, 1);
+  int kind = luaL_checkint(L, 1);
 
-	main_win->build_box->MapPixel(kind);
+  main_win->build_box->MapPixel(kind);
 
-	return 0;
+  return 0;
 }
 
 // LUA: rand_seed(seed)
 //
 int rand_seed(lua_State *L)
 {
-	int the_seed = luaL_checkint(L, 1) & 0x7FFFFFFF;
+  int the_seed = luaL_checkint(L, 1) & 0x7FFFFFFF;
 
   RNG.Seed(the_seed);
 
@@ -178,13 +178,13 @@ int rand_seed(lua_State *L)
 //
 int random(lua_State *L)
 {
-	int raw = RNG.Rand() & 0x7FFFFFFF;
+  int raw = RNG.Rand() & 0x7FFFFFFF;
 
   // target range is [0-1), including 0 but not including 1
   lua_Number value = (lua_Number)raw / 2147483648.0;
 
-	lua_pushnumber(L, value);
-	return 1;
+  lua_pushnumber(L, value);
+  return 1;
 }
 
 } // namespace con
@@ -192,29 +192,29 @@ int random(lua_State *L)
 
 static const luaL_Reg console_lib[] =
 {
-	{ "raw_log_print",   con::raw_log_print },
-	{ "raw_debug_print", con::raw_debug_print },
+  { "raw_log_print",   con::raw_log_print },
+  { "raw_debug_print", con::raw_debug_print },
 
-	{ "at_level",   con::at_level },
-	{ "progress",   con::progress },
-	{ "ticker",     con::ticker },
-	{ "abort",      con::abort },
-	
-	{ "map_begin",  con::map_begin },
-	{ "map_pixel",  con::map_pixel },
-	{ "map_end",    con::map_end },
+  { "at_level",   con::at_level },
+  { "progress",   con::progress },
+  { "ticker",     con::ticker },
+  { "abort",      con::abort },
+  
+  { "map_begin",  con::map_begin },
+  { "map_pixel",  con::map_pixel },
+  { "map_end",    con::map_end },
 
-	{ "rand_seed",  con::rand_seed },
-	{ "random",     con::random },
+  { "rand_seed",  con::rand_seed },
+  { "random",     con::random },
 
-	{ NULL, NULL } // the end
+  { NULL, NULL } // the end
 };
 
 int Script_CreateConLib(lua_State *L)
 {
-	luaL_register(L, "con", console_lib);
+  luaL_register(L, "con", console_lib);
 
-	return 0;
+  return 0;
 }
 
 
@@ -223,16 +223,16 @@ int Script_CreateConLib(lua_State *L)
 
 static int p_init_lua(lua_State *L)
 {
-	/* stop collector during initialization */
-	lua_gc(L, LUA_GCSTOP, 0);
-	{
-		luaL_openlibs(L);  /* open libraries */
+  /* stop collector during initialization */
+  lua_gc(L, LUA_GCSTOP, 0);
+  {
+    luaL_openlibs(L);  /* open libraries */
 
-		Script_CreateConLib(L);
-	}
-	lua_gc(L, LUA_GCRESTART, 0);
+    Script_CreateConLib(L);
+  }
+  lua_gc(L, LUA_GCRESTART, 0);
 
-	return 0;
+  return 0;
 }
 
 static void Script_SetLoadPath(lua_State *L)
@@ -240,106 +240,106 @@ static void Script_SetLoadPath(lua_State *L)
   lua_getglobal(L, "package");
 
   if (lua_type(L, -1) == LUA_TNIL)
-		Main_FatalError("LUA SetPath failed: no 'package' module!");
+    Main_FatalError("LUA SetPath failed: no 'package' module!");
 
   lua_pushstring(L, DATA_DIR "/?.lua");
 
-	lua_setfield(L, -2, "path");
+  lua_setfield(L, -2, "path");
 
   lua_pop(L, 1);
 }
 
 void Script_Init()
 {
-	LUA_ST = lua_open();
-	if (! LUA_ST)
-		Main_FatalError("LUA Init failed: cannot create new state");
+  LUA_ST = lua_open();
+  if (! LUA_ST)
+    Main_FatalError("LUA Init failed: cannot create new state");
 
-	int status = lua_cpcall(LUA_ST, &p_init_lua, NULL);
-	if (status != 0)
-		Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
+  int status = lua_cpcall(LUA_ST, &p_init_lua, NULL);
+  if (status != 0)
+    Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
 
-	Doom_InitLua(LUA_ST);
+  Doom_InitLua(LUA_ST);
 
   Script_SetLoadPath(LUA_ST);
 
-	Script_Load();
+  Script_Load();
 }
 
 void Script_Done()
 {
-	lua_close(LUA_ST);
+  lua_close(LUA_ST);
 }
 
 void Script_Load()
 {
-	int status = luaL_loadstring(LUA_ST, "require 'oblige'");
+  int status = luaL_loadstring(LUA_ST, "require 'oblige'");
 
-	if (status != 0)
-	{
-		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+  if (status != 0)
+  {
+    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-		Main_FatalError("Unable to load script 'oblige.lua' (%d)\n%s", status, msg);
-	}
+    Main_FatalError("Unable to load script 'oblige.lua' (%d)\n%s", status, msg);
+  }
 
-	status = lua_pcall(LUA_ST, 0, 0, 0);
-	if (status != 0)
-	{
-		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+  status = lua_pcall(LUA_ST, 0, 0, 0);
+  if (status != 0)
+  {
+    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-		Main_FatalError("Error with script (%d)\n%s", status, msg);
-	}
+    Main_FatalError("Error with script (%d)\n%s", status, msg);
+  }
 }
 
 
 static void AddField(lua_State *L, const char *key, const char *value)
 {
-	SYS_NULL_CHECK(value);
+  SYS_NULL_CHECK(value);
 
-	lua_pushstring(L, key);
-	lua_pushstring(L, value);
-	lua_rawset(L, -3);
+  lua_pushstring(L, key);
+  lua_pushstring(L, value);
+  lua_rawset(L, -3);
 }
 
 static void Script_MakeSettings(lua_State *L)
 {
-	lua_newtable(L);
+  lua_newtable(L);
 
-	AddField(L, "seed",  main_win->setup_box->cur_Seed());
+  AddField(L, "seed",  main_win->setup_box->cur_Seed());
 
-	AddField(L, "game",  main_win->setup_box->cur_Game());
-	AddField(L, "addon", main_win->setup_box->cur_Addon());
-	AddField(L, "mode",  main_win->setup_box->cur_Mode());
-	AddField(L, "length",main_win->setup_box->cur_Length());
+  AddField(L, "game",  main_win->setup_box->cur_Game());
+  AddField(L, "addon", main_win->setup_box->cur_Addon());
+  AddField(L, "mode",  main_win->setup_box->cur_Mode());
+  AddField(L, "length",main_win->setup_box->cur_Length());
 
-	AddField(L, "health", main_win->adjust_box->cur_Health());
-	AddField(L, "ammo",   main_win->adjust_box->cur_Ammo());
-	AddField(L, "mons",   main_win->adjust_box->cur_Monsters());
-	AddField(L, "traps",  main_win->adjust_box->cur_Traps());
+  AddField(L, "health", main_win->adjust_box->cur_Health());
+  AddField(L, "ammo",   main_win->adjust_box->cur_Ammo());
+  AddField(L, "mons",   main_win->adjust_box->cur_Monsters());
+  AddField(L, "traps",  main_win->adjust_box->cur_Traps());
 
-	lua_setglobal(L, "settings");
+  lua_setglobal(L, "settings");
 }
 
 bool Script_Run()
 {
-	Script_MakeSettings(LUA_ST);
+  Script_MakeSettings(LUA_ST);
 
-	// LUA: build_cool_shit()
-	//
-	lua_getglobal(LUA_ST, "build_cool_shit");
+  // LUA: build_cool_shit()
+  //
+  lua_getglobal(LUA_ST, "build_cool_shit");
 
   if (lua_type(LUA_ST, -1) == LUA_TNIL)
     Main_FatalError("LUA script problem: missing build function!");
 
-	int status = lua_pcall(LUA_ST, 0, 1, 0);
-	if (status != 0)
-	{
-		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+  int status = lua_pcall(LUA_ST, 0, 1, 0);
+  if (status != 0)
+  {
+    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-		DLG_ShowError("Problem occurred while making level:\n%s", msg);
-				
-		return false;
-	}
+    DLG_ShowError("Problem occurred while making level:\n%s", msg);
+        
+    return false;
+  }
 
   const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
