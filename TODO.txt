@@ -2,19 +2,34 @@
 TODO
 ----
 
--  delete TEMP.wad when build is finished.
+>> adjustment panel in the LUA scripts
+
++ more exit themes!
 
 
 GUI TODO
 --------
 
-Win32 TEST: backup file (.BAK)
++  remember settings (obl_data/SETTINGS.cfg)
 
-+  collect log, view it, save it, clear it.
+-  retab the gui files.
 
+-  collect log, view it, save it, clear it (obl_data/LOGGING.txt)
+-  way to enable/disable debugging, write it where??
 -  tidy up fprintf (etc).
 
--  data_dir ("obl_data") and cache_dir: find them, use them
+-  handle the Abort button better, also glbsp-failure.
+
+
+RECENT CHANGES
+--------------
+
+DONE: hallways!
+DONE: improved method of choosing floor/ceiling heights.
+DONE: surprise traps: improved placement, fairer monsters.
+DONE: fixed the (rare) non-working switches and lifts.
+DONE: tweaked battle simulator to provide more ammo.
+DONE: delete temporary wad when build has finished.
 
 
 MILESTONE 0  (reached!)
@@ -55,7 +70,7 @@ c) Writer:
    #  texture X alignment (esp. fragments)
 
 
-MILESTONE 2  (close!!)
+MILESTONE 2  (reached!)
 ===========
 
 #  working GUI interface using FLTK
@@ -74,27 +89,26 @@ MILESTONE 2  (close!!)
    #  monsters teleporting in
 
 
-MILESTONE 3  (not started...)
+MILESTONE 3  (heaps left to do!!)
 ===========
+
+#  heights: (a) each quest, target height (at end)
+            (b) approach modes: sharp vs gradual change, bumpy
 
 +  teleporters!
 
--  liquid pools and traps
-
 -  bridge switches
+
+-  liquid pools and traps
 
 +  good support for the different games (Doom 1/2, Heretic, Hexen),
    and initial support for add-ons (Eternal, Osiris)
-
-+  heights: (a) each quest, target height (at end)
-            (b) maybe a "middle" target height
-            (c) approach modes: sharp vs gradual change, bumpy
 
 +  pillar patterns: line thru center (based on entry and exit).
 -  pillar cage patterns, 1359 and 2468
 -  chunk-size cages: outdoor and top-less
 
--  floor switches: y_offset
++  floor switches: y_offset
 -  wall switches: place in the wall! 
 -  wall switches: "small" mode (32x32)
 
@@ -109,5 +123,12 @@ MILESTONE 3  (not started...)
 -  closets: 
    (a) fix way closet is put in chunk (remove side field)
 
-+  overall consistency (doors/lights/overhangs/windows)
+++ overall consistency (doors/lights/overhangs/windows)
+
+________________________
+|Key:                   |
+|    # completed item   |
+|    + important item   |
+|    - ordinary item    |
+|_______________________|
 
