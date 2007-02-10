@@ -246,6 +246,8 @@ function write_level(p, lev_name)
       local f_over = f[10-norm] or DUMMY_BLOCK
 
       local impassible = f.impassible or b.impassible
+      local lower_unpeg = not (f_over.lower_peg or b_over.lower_peg)
+      local upper_unpeg = not (f_over.upper_peg or b_over.upper_peg)
 
       if not b.solid then
 
@@ -253,31 +255,32 @@ function write_level(p, lev_name)
 
         -- railing textures (assume blocking)
         if f_side.mid or b_side.mid then
-          flags = flags + ML_LOWER_UNPEG
           impassible = true
 
-        elseif not b.lift_kind and not
-          -- FIXME: remove special check on texture name!
+        elseif b.lift_kind or
+          -- FIXME: remove special check on texture name! (set 'lower_peg' manually)
           (is_step(b_side.lower) or is_step(f_side.lower)) then
-          flags = flags + ML_LOWER_UNPEG
+          lower_unpeg = false
         end
 
-        if not b.door_kind then
-          flags = flags + ML_UPPER_UNPEG
+        -- FIXME: remove this check (set 'upper_peg' manually)
+        if b.door_kind then
+          upper_unpeg = false
         end
 
       else  -- one sided --
 
         impassible = true
 
-        if f.door_kind or b.switch_kind then
-          flags = flags + ML_LOWER_UNPEG
+        -- FIXME: remove this check (set 'lower_peg' manually)
+        if not (f.door_kind or b.switch_kind) then
+          lower_unpeg = false
         end
       end
 
-      if impassible then
-        flags = flags + ML_IMPASSABLE
-      end
+      if impassible  then flags = flags + ML_IMPASSABLE end
+      if lower_unpeg then flags = flags + ML_LOWER_UNPEG end
+      if upper_unpeg then flags = flags + ML_UPPER_UNPEG end
 
       -- sound blocking.  Note some subtlety here, when (count == 1)
       -- we only want a single edge to block, for (count == 2) we
@@ -543,7 +546,7 @@ function write_level(p, lev_name)
       push_line()
     end
 
-print("TOTAL_GROUPS ", total_group)
+    con.printf("TOTAL_GROUPS X = %d\n", total_group)
 
     con.progress(75); if con.abort() then return end
 
@@ -576,7 +579,8 @@ print("TOTAL_GROUPS ", total_group)
       con.ticker()
       push_line()
     end
-print("TOTAL_GROUPS ", total_group)
+
+    con.printf("TOTAL_GROUPS Y = %d\n", total_group)
   end
 
   local function adjust_vertices()
