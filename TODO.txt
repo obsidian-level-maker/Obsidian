@@ -2,34 +2,38 @@
 TODO
 ----
 
->> adjustment panel in the LUA scripts
++  more exit themes!
 
-+ more exit themes!
++  crates!
+
+-  tweak outside floor/ceil calcs, prevent very tall sectors
+   -  no  floor  lower  than  0 (liquids excepted).
+   -  no ceiling higher than 640.
 
 
 GUI TODO
 --------
 
-+  remember settings (obl_data/SETTINGS.cfg)
-
--  retab the gui files.
-
--  collect log, view it, save it, clear it (obl_data/LOGGING.txt)
--  way to enable/disable debugging, write it where??
--  tidy up fprintf (etc).
+>>>  remember settings (obl_data/SETTINGS.cfg)
 
 -  handle the Abort button better, also glbsp-failure.
+
+-  different adjustments for DM levels.
 
 
 RECENT CHANGES
 --------------
 
-DONE: hallways!
-DONE: improved method of choosing floor/ceiling heights.
-DONE: surprise traps: improved placement, fairer monsters.
-DONE: fixed the (rare) non-working switches and lifts.
-DONE: tweaked battle simulator to provide more ammo.
-DONE: delete temporary wad when build has finished.
++  hallways!
++  improved method of choosing floor/ceiling heights.
++  user adjustments in the GUI (health/ammo/monsters).
+
+-  fixed the (rare) non-working switches and lifts.
+-  surprise traps: improved placement, fairer monsters.
+-  more interesting health/ammo placement.
+-  tweaked battle simulation to provide more ammo.
+-  delete temporary wad when build has finished.
+-  collect all log messages into a file (LOGS.txt).
 
 
 MILESTONE 0  (reached!)
@@ -95,7 +99,13 @@ MILESTONE 3  (heaps left to do!!)
 #  heights: (a) each quest, target height (at end)
             (b) approach modes: sharp vs gradual change, bumpy
 
++  allocation system for blocks (can_walk tests).
+
+-  larger rooms (2-8 chunks in each dimension).
+
 +  teleporters!
+
++  secrets
 
 -  bridge switches
 
@@ -104,8 +114,8 @@ MILESTONE 3  (heaps left to do!!)
 +  good support for the different games (Doom 1/2, Heretic, Hexen),
    and initial support for add-ons (Eternal, Osiris)
 
-+  pillar patterns: line thru center (based on entry and exit).
--  pillar cage patterns, 1359 and 2468
++  pillar patterns: 1379, 2468, line thru center (based on entry and exit)
+-  chunk-size cages: center of room
 -  chunk-size cages: outdoor and top-less
 
 +  floor switches: y_offset
