@@ -260,7 +260,7 @@ DM_COMMON_EXITS =
     ceil = "TLITE6_5",
 
     sign = "EXITSIGN",
-    sign_bottom="CEIL5_2"
+    sign_bottom="CEIL5_2",
 
     door = { tex="EXITDOOR", w=64, h=72,
              frame_top="TLITE6_5",
