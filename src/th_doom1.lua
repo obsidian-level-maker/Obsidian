@@ -248,12 +248,11 @@ DM_COMMON_THEMES =
 
 DM_COMMON_EXITS =
 {
---[[
   TECH =
   {
     mat_pri = 9,
 
-    vall = "TEKWALL1", -- TEKWALL6 (not in doom 1)
+    vall = "TEKWALL1",
     void = "TEKWALL4",
     dm_switch = "SW1COMM",
 
@@ -267,22 +266,19 @@ DM_COMMON_EXITS =
              frame_top="TLITE6_5",
              Xrame_side="BROWN96" },
   },
---]]
 
   STONE =
   {
     mat_pri = 9,
 
-    vall = "TEKWALL1", -- TEKWALL6 (not in doom 1)  !!!!!!
     wall = "STONE2",
-    void = "TEKWALL4",
+    void = "STONE",
     dm_switch = "SW1COMM",
 
     floor = "CEIL4_3",
     ceil = "FLAT1",
 
     front_mark = "EXITSTON", 
---## support = "SUPPORT2",
 
     door = { tex="EXITDOOR", w=64, h=72,
              frame_top="FLAT1",
@@ -305,19 +301,6 @@ DM_COMMON_HALLS =
     ceil  = "CEIL5_2",
   },
 
-  BSTONE =
-  {
-    mat_pri = 0,
-
-    wall = "BSTONE2",
-    void = "BSTONE2",
-    step = "METAL",
-    pillar = "BSTONE3",
-
-    floor = "FLAT5",
-    ceil  = "FLAT1",
-  },
-
   SP_ROCK =
   {
     mat_pri = 0,
@@ -338,7 +321,7 @@ DM_COMMON_HALLS =
     wall = "STARTAN2",
     void = "STARTAN3",
     step = "STEP1",
-    pillar = "WOOD4",
+    pillar = "WOODSKUL",
 
     floor = "FLAT14",
     ceil  = "TLITE6_4",
@@ -474,6 +457,51 @@ DM_OVERHANGS =
     thin = "WOOD1",
     upper = "WOOD1",
     ceil = "FLAT5_1",
+  },
+}
+
+---- CRATES ------------
+
+COMMON_CRATES =
+{
+  CRATE1 =
+  {
+    wall = "CRATE1", h=64, floor = "CRATOP2"
+  },
+  
+  CRATE2 =
+  {
+    wall = "CRATE2", h=64, floor = "CRATOP1"
+  },
+  
+  CRATELIT =
+  {
+    wall = "CRATELIT", h=128, floor = "CRATOP1"
+  },
+
+  GRAY =
+  {
+    wall = "GRAY2", h=64, floor = "FLAT5_4", can_rotate=true
+  },
+
+  ICKWALL =
+  {
+    wall = "ICKWALL4", h=64, floor = "FLAT19", can_rotate=true
+  },
+
+  SHAWN =
+  {
+    wall = "SHAWN3", h=64, floor = "FLAT23"
+  },
+  
+  WOOD3 =
+  {
+    wall = "WOOD3", h=64, floor = "CEIL1_1"
+  },
+
+  WOOD4 =
+  {
+    wall = "WOOD4", h=64, floor = "CEIL1_1", can_rotate=true
   },
 }
 
@@ -650,15 +678,15 @@ DM_MONSTERS =
 
 D2_MONSTERS =
 {
-  gunner    = { prob=17, r=20,h=56, hp=70,  dm=40, fp=40,  hitscan=true, cage_prob=70, },
-  wolf_ss   = { prob= 1, r=20,h=56, hp=50,  dm=15, fp=120, hitscan=true },
+  gunner    = { prob=17, r=20,h=56, hp=70,  dm=40, fp=40, hitscan=true, cage_prob=70, },
+  wolf_ss   = { prob=0.2,r=20,h=56, hp=50,  dm=15, fp=90, hitscan=true, cage_prob=1 },
 
-  revenant  = { prob=70, r=20,h=64, hp=300, dm=55, fp=48, cage_prob=50, },
-  knight    = { prob=70, r=24,h=64, hp=500, dm=45, fp=60, cage_prob=50, },
-  mancubus  = { prob=95, r=48,h=64, hp=600, dm=80, fp=110,cage_prob=88, },
+  revenant  = { prob=70, r=20,h=64, hp=300, dm=55, fp=58, cage_prob=50, },
+  knight    = { prob=70, r=24,h=64, hp=500, dm=45, fp=70, cage_prob=50, },
+  mancubus  = { prob=95, r=48,h=64, hp=600, dm=80, fp=92, cage_prob=88, },
 
-  arach     = { prob=36, r=64,h=64, hp=500, dm=70, fp=90, cage_prob=95, },
-  vile      = { prob=10, r=20,h=56, hp=700, dm=30, fp=120,cage_prob=12, hitscan=true },
+  arach     = { prob=36, r=64,h=64, hp=500, dm=70, fp=92, cage_prob=95, },
+  vile      = { prob=20, r=20,h=56, hp=700, dm=50, fp=120,cage_prob=12, hitscan=true },
   pain      = { prob=14, r=31,h=56, hp=400, dm=88, fp=40, float=true },
 }
 
@@ -686,7 +714,7 @@ DM_WEAPONS =
 
   pistol = { ammo="bullet",         per=1, rate=1.8, dm=10 , freq=10, held=true },
   shotty = { ammo="shell",  give=8, per=1, rate=0.9, dm=70 , freq=81 },
-  super  = { ammo="shell",  give=8, per=2, rate=0.6, dm=200, freq=50 },
+  super  = { ammo="shell",  give=8, per=2, rate=0.6, dm=170, freq=50 },
   chain  = { ammo="bullet", give=20,per=1, rate=8.5, dm=10 , freq=91 },
 
   launch = { ammo="rocket", give=2, per=1, rate=1.7, dm=90,  freq=50, dangerous=true },
@@ -812,6 +840,29 @@ D1_HALLWAYS =
 {
 }
 
+D1_CRATES =
+{
+  COMPUTER =
+  {
+    wall = "COMPUTE1", h=128, floor = "FLAT23"
+  },
+
+  PLANET =
+  {
+    wall = "PLANET1", h=128, floor = "FLAT23"
+  },
+ 
+  SKIN =
+  {
+    wall = "SKINBORD", h=64, floor = "CEIL3_3", can_rotate=true
+  },
+
+  TEKWALL =
+  {
+    wall = "TEKWALL5", h=64, floor = "CEIL5_2"
+  },
+}
+
 D1_RAILS =
 {
   r_1 = { tex="BRNSMALC", w=128, h=64  },
@@ -851,6 +902,7 @@ function common_doom_theme()
     hangs     = DM_OVERHANGS,
     pedestals = DM_PEDESTALS,
     mats      = DM_MATS,
+    crates    = COMMON_CRATES,
 
     liquids   = DM_LIQUIDS,
     switches  = DM_SWITCHES,
@@ -870,6 +922,7 @@ function create_doom1_theme()
   T.themes   = copy_and_merge(T.themes,   D1_THEMES)
   T.exits    = copy_and_merge(T.exits,    D1_EXITS)
   T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
+  T.crates   = copy_and_merge(T.crates,   D1_CRATES)
 
   T.rails = D1_RAILS
 

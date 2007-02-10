@@ -363,6 +363,19 @@ D2_HALLWAYS =
     ceil  = "FLAT5_4",
   },
 
+  BSTONE =
+  {
+    mat_pri = 0,
+
+    wall = "BSTONE2",
+    void = "BSTONE2",
+    step = "METAL",
+    pillar = "BSTONE3",
+
+    floor = "FLAT5",
+    ceil  = "FLAT1",
+  },
+
   WOOD =
   {
     mat_pri = 0,
@@ -470,6 +483,34 @@ D2_OVERHANGS =
 
 }
 
+D2_CRATES =
+{
+  MODWALL =
+  {
+    wall = "MODWALL3", h=64, floor = "FLAT19"
+  },
+  
+  PIPES =
+  {
+    wall = "PIPES", h=64, floor = "CEIL3_2", can_rotate=true
+  },
+
+  SILVER2 =
+  {
+    wall = "SILVER2", h=64, floor = "FLAT23", can_rotate=true
+  },
+
+  SILVER3 =
+  {
+    wall = "SILVER3", h=128, floor = "FLAT23", can_rotate=true
+  },
+
+  TVS =
+  {
+    wall = "SPACEW3", h=64, floor = "CEIL5_1"
+  },
+}
+
 D2_RAILS =
 {
   r_1 = { tex="MIDBARS3", w=128, h=72  },
@@ -493,8 +534,9 @@ function create_doom2_theme()
 
   T.rails = D2_RAILS
 
-  T.mats    = copy_and_merge(T.mats,    D2_MATS)
   T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
+  T.mats    = copy_and_merge(T.mats,    D2_MATS)
+  T.crates  = copy_and_merge(T.crates,  D2_CRATES)
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
   T.monsters = copy_and_merge(T.monsters, D2_MONSTERS)
