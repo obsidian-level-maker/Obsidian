@@ -252,7 +252,7 @@ DM_COMMON_EXITS =
   {
     mat_pri = 9,
 
-    vall = "TEKWALL1",
+    wall = "TEKWALL1",
     void = "TEKWALL4",
     dm_switch = "SW1COMM",
 
