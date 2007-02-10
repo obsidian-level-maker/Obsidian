@@ -104,6 +104,13 @@ function chunk_to_block(K)
   return 1 + int((K-1) * BW / KW)
 end
 
+function chunk_touches_side(kx, ky, side)
+  if side == 4 then return kx == 1 end
+  if side == 6 then return kx == 3 end
+  if side == 2 then return ky == 1 end
+  if side == 8 then return ky == 3 end
+end
+
 function valid_chunk(kx,ky)
   return 1 <= kx and kx <= KW and
          1 <= ky and ky <= KH
@@ -126,6 +133,8 @@ function random_where(link)
     link.where = 0
     return
   end
+
+---??  if link.is_exit and rand_odds(50) then return 0 end
 
   if (link.kind == "door" and rand_odds(4)) or
      (link.kind ~= "door" and rand_odds(15)) then
@@ -150,10 +159,10 @@ function show_blocks(cell) -- FIXME
   for y = BH,1,-1 do
     for x = 1,BW do
       local B = cell.blocks[x][y]
-      io.stderr:write(B and (B.fragments and "%" or
+      con.printf(B and (B.fragments and "%" or
                       (B.sector and "/" or "#")) or ".")
     end
-    io.stderr:write("\n")
+    con.printf("\n")
   end
 end
 
@@ -162,9 +171,9 @@ function show_fragments(block)
   for y = FH,1,-1 do
     for x = 1,FW do
       local fg = block.fragments[x][y]
-      io.stderr:write(fg and (fg.sector and "/" or "#") or ".")
+      con.printf(fg and (fg.sector and "/" or "#") or ".")
     end
-    io.stderr:write("\n")
+    con.printf("\n")
   end
 end
 
@@ -232,6 +241,28 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
   end
 end
 
+function move_frag(p,c, x,y,side, dx,dy)
+  local bx, fx = div_mod(x, FW)
+  local by, fy = div_mod(y, FH)
+
+  local B = p.blocks[c.blk_x+bx][c.blk_y+by]
+  assert(B)
+  assert(B.fragments)
+
+  local F = B.fragments[fx][fy]
+  assert(F)
+
+  if not F[side] then
+    F[side] = {}
+  else
+    dx = dx + (F[side].dx or 0)
+    dy = dy + (F[side].dy or 0)
+  end
+
+  F[side].dx = dx
+  F[side].dy = dy
+end
+
  
 -- convert 'where' value into block position
 function where_to_block(wh, long)
@@ -249,6 +280,28 @@ function where_to_block(wh, long)
   error("bad where value: " .. tostring(wh))
 end
 
+
+function scale_block(B, scale)
+  scale = (scale - 1) * 32
+  B[1] = { dx=-scale, dy=-scale }
+  B[3] = { dx= scale, dy=-scale }
+  B[7] = { dx=-scale, dy= scale }
+  B[9] = { dx= scale, dy= scale }
+end
+
+function rotate_block(B, d)
+  if not d then d = 0 end
+  B[1] = { dx= 32, dy= -d }
+  B[3] = { dx=  d, dy= 32 }
+  B[9] = { dx=-32, dy=  d }
+  B[7] = { dx= -d, dy=-32 }
+
+  -- FIXME !!!! assumes d is 0
+  B[2] = { x_offset = 9 }
+  B[4] = { x_offset = 9 }
+  B[6] = { x_offset = 9 }
+  B[8] = { x_offset = 9 }
+end
 
 --
 -- Build a door.
@@ -536,6 +589,69 @@ end
 
 
 --
+-- Build an exit hole
+--
+function B_exit_hole(p,c, kx,ky, sec)
+
+  assert(sec)
+
+  local bx = chunk_to_block(kx)
+  local by = chunk_to_block(ky)
+
+  gap_fill(p,c, bx,by, bx+KW-1, by+KH-1, sec)
+
+  -- we want the central block
+  bx, by = bx+1,by+1
+
+  local fx = (bx - 1) * FW
+  local fy = (by - 1) * FH
+
+  local HOLE = copy_block(sec)
+
+  HOLE.f_h = HOLE.f_h - 24
+  HOLE.f_tex = THEME.SKY_TEX
+  HOLE.l_tex = c.theme.hole_tex or c.theme.void
+
+  HOLE.walk_kind = 52 -- "exit_W1"
+  HOLE.short = true
+
+  frag_fill(p,c, fx+1,fy+1, fx+FW,fy+FH, HOLE)
+
+  local radius = 60
+
+  for y = 1,FH+1 do
+    for x = 1,FW+1 do
+      if (x==1 or x==FW+1 or y==1 or y==FH+1) then
+
+        local zx = fx + math.min(x,FW)
+        local zy = fy + math.min(y,FH)
+
+        local dir
+        if y == FH+1 then
+          dir = sel(x==FW+1, 9, 7)
+        else
+          dir = sel(x==FW+1, 3, 1)
+        end
+
+        assert(dir)
+
+        local cur_x = (x - 3) * 16
+        local cur_y = (y - 3) * 16
+
+        local len = dist(0,0, cur_x,cur_y)
+        assert(len > 0)
+
+        local want_x = cur_x/len * radius
+        local want_y = cur_y/len * radius
+
+        move_frag(p,c, zx,zy,dir, want_x - cur_x, want_y - cur_y)
+      end
+    end
+  end
+end
+
+
+--
 -- Build a stair
 --
 -- Z is the starting height
@@ -641,7 +757,8 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
   local fx = (x - 1) * FW
   local fy = (y - 1) * FH
 
-  BASE = copy_block(c.room_sec)
+  local BASE = copy_block(c.room_sec)
+
   BASE.f_h = z
   BASE.l_tex = c.theme.wall
   BASE.u_tex = c.theme.wall
@@ -726,7 +843,7 @@ end
 --
 -- Build a pedestal (items, players)
 -- 
-function B_pedestal(p, c, x, y, z, info, shape)
+function B_pedestal(p, c, x, y, z, info)
  
   local PEDESTAL =
   {
@@ -744,13 +861,6 @@ function B_pedestal(p, c, x, y, z, info, shape)
 if (PEDESTAL.c_h - PEDESTAL.f_h) < 64 then
   PEDESTAL.c_h = PEDESTAL.f_h + 64
 end
-
-  if shape == "diamond" then
-    PEDESTAL[1] = { dx= 32, dy= -8 }
-    PEDESTAL[3] = { dx=  8, dy= 32 }
-    PEDESTAL[9] = { dx=-32, dy=  8 }
-    PEDESTAL[7] = { dx= -8, dy=-32 }
-  end
 
   fill(p,c, x,y, x,y, PEDESTAL)
 end
@@ -865,16 +975,63 @@ function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
   end
 end
 
-function B_pillar_cage(p,c, kx,ky, bx,by)
+function B_pillar(p,c, theme, kx,ky, bx,by)
+
+  local K = c.chunks[kx][ky]
+
+  local PILLAR =
+  {
+    solid = theme.pillar or theme.void or theme.wall,
+    y_offset = 128 - (K.ceil_h - K.floor_h)
+  }
+
+  fill(p,c, bx, by, bx, by, PILLAR)
+end
+
+function B_crate(p,c, crate_info, base, kx,ky, bx,by)
+
+  local K = c.chunks[kx][ky]
+
+  local CRATE = copy_block(base)
+
+  CRATE.f_h   = K.floor_h + crate_info.h
+  CRATE.c_h   = math.max(base.c_h, CRATE.f_h)
+  CRATE.f_tex = crate_info.floor
+  CRATE.l_tex = crate_info.wall
+  CRATE.is_cage = true  -- don't put monsters/pickups here
+
+  if c.theme.outdoor or not c.sky_light then
+    if crate_info.can_rotate and rand_odds(50) then
+      -- FIXME: the x_offsets are lost (overwritten by the lower_pegs)
+      rotate_block(CRATE)
+      CRATE.rotated = true
+    end
+  end
+
+  fill(p,c, bx, by, bx, by, CRATE,
+       { [2] = { lower_peg=true }, [4] = { lower_peg=true },
+         [6] = { lower_peg=true }, [8] = { lower_peg=true } })
+
+  -- sometimes put monsters on top
+  if not CRATE.rotated and (CRATE.c_h >= CRATE.f_h + 80) and rand_odds(33) then
+    local spot = { c=c, x=bx, y=by, different=true }
+    add_cage_spot(p,c, spot)
+  end
+
+end
+
+function B_pillar_cage(p,c, theme, kx,ky, bx,by)
+
+  local K = c.chunks[kx][ky]
 
   local CAGE = copy_block(c.room_sec)
   local z = (c.f_max + c.ceil_h) / 2
 
-  z = math.min(z, c.chunks[kx][ky].floor_h + 128)
+  z = math.min(z, K.floor_h + 128)
 
-  CAGE.f_tex = THEME.mats.CAGE.floor
-  CAGE.l_tex = THEME.mats.CAGE.wall
-  CAGE.u_tex = THEME.mats.CAGE.wall
+  CAGE.f_tex = theme.floor
+  CAGE.l_tex = theme.wall
+  CAGE.u_tex = theme.wall
   CAGE.is_cage = true
 
   if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
@@ -891,10 +1048,14 @@ function B_pillar_cage(p,c, kx,ky, bx,by)
   else
     CAGE.f_h = z - 32
     CAGE.c_h = z + 40
-    CAGE.c_tex = THEME.mats.CAGE.ceil
+    CAGE.c_tex = theme.ceil
     CAGE.light = 192
     CAGE.rail  = THEME.rails["r_1"].tex
   end
+
+---!!  if c.theme.outdoor or not c.sky_light then
+---!!    rotate_block(CAGE,32)
+---!!  end
 
   fill(p,c, bx,by, bx,by, CAGE)
 
@@ -958,7 +1119,7 @@ function B_monster_closet(p,c, kx,ky, z, tag)
   local bx = chunk_to_block(kx)
   local by = chunk_to_block(ky)
 
-  INNER =
+  local INNER =
   {
     f_h = z,
     c_h = c.ceil_h,
@@ -971,7 +1132,7 @@ function B_monster_closet(p,c, kx,ky, z, tag)
     is_cage = true
   }
 
-  OUTER = copy_block(INNER)
+  local OUTER = copy_block(INNER)
 
   OUTER.c_h = OUTER.f_h
   OUTER.c_tex = c.theme.arch_ceil or OUTER.f_tex
@@ -1240,16 +1401,6 @@ function make_chunks(p)
     -- now check for clashes
     local has_clash = false
 
---[[!!!
-if (link.src.x==1 and link.src.y>1 and link.dest.x==1 and link.dest.y>1) then
- print("cell ", c.x, c.y)
- print("link where=", link.where)
- for zzz,loc in ipairs(coords) do
- print("__", loc.x, loc.y);
- end
-end
---]]
-
     for zzz,loc in ipairs(coords) do
 
       kx, ky = loc.x, loc.y
@@ -1281,7 +1432,7 @@ end
       if not alloc_door_spot(c, side, L) then
         assert(c.chunks.clasher)
 
--- io.stderr:write(string.format("  CLASH IN (%d,%d)\n", c.x, c.y))
+        -- con.debugf("  CLASH IN (%d,%d)\n", c.x, c.y)
 
         -- be fair about which link we will blame
         if c.chunks.clasher.link and rand_odds(50) then
@@ -1398,6 +1549,15 @@ end
     return false
   end
 
+  local BIG_CLOSET_ADJUST =
+  {
+    scarce = 5, less = 30, normal = 50, more = 75, heaps = 100
+  }
+  local BIG_CAGE_ADJUST =
+  {
+    scarce = 25, less = 50, normal = 75, more = 90, heaps = 100
+  }
+
   local function try_flush_side(c)
 
     -- select a side
@@ -1425,9 +1585,15 @@ end
 
     if not (possible and common) then return end
 
-    if common.closet then
-      -- only make closets bigger sometimes
-      if rand_odds(50) then return end
+    if not p.coop then
+      -- let user adjustment parameters control whether closets and
+      -- cages are made bigger.
+      if common.closet and not rand_odds(BIG_CLOSET_ADJUST[settings.traps]) then
+        return
+      end
+      if common.cage and not rand_odds(BIG_CAGE_ADJUST[settings.mons]) then
+        return
+      end
     end
 
     for x = x1,x2 do
@@ -1479,6 +1645,7 @@ end
       if c.is_exit and rand_odds(98) then return end
     end
 
+    -- TODO: more cage themes...
     if name == "cage" and not THEME.mats.CAGE then return end
 
     local posits = {}
@@ -1521,14 +1688,15 @@ end
         local kx,ky = side_to_chunk(place.side)
 
         if c.chunks[kx][ky] then
-          print("WARNING: monster closet stomped a chunk!")
-          print("CELL", c.x, c.y)
-          print("CHUNK", kx, ky)
-          print(table_to_string(c.chunks[kx][ky], 2))
+          con.printf("WARNING: monster closet stomped a chunk!\n")
+          con.printf("CELL (%d,%d)  CHUNK (%d,%d)\n", c.x, c.y, kx, ky)
+          con.printf("%s\n", table_to_string(c.chunks[kx][ky], 2))
+
           show_chunks(p)
         end
 
-print("ADDING CLOSET CHUNK @", c.x,c.y)
+        con.debugf("CLOSET CHUNK @ (%d,%d)\n", c.x, c.y)
+
         c.chunks[kx][ky] = {void=true, closet=true, place=place}
       end
     end
@@ -1538,7 +1706,7 @@ print("ADDING CLOSET CHUNK @", c.x,c.y)
     local kx, ky = 1, 3
 
     if c.chunks[1][3] then
-      print("WARNING: deathmatch exit stomped a chunk!")
+      con.printf("WARNING: deathmatch exit stomped a chunk!\n")
     end
 
     c.chunks[1][3] = { void=true, dm_exit=true, dir=2 }
@@ -1559,16 +1727,26 @@ print("ADDING CLOSET CHUNK @", c.x,c.y)
     --   (b) fill unused chunks with room
     --   (c) fill unused chunk from nearby ledge
 
-    -- FIXME get info from theme
+    -- FIXME get probabilities from theme
     local kinds = { "room", "void", "flush", "cage", "liquid" }
     local probs = { 60, 10, 97, 5, 70 }
 
     if not c.theme.outdoor then probs[2] = 15 end
+
     if p.deathmatch then probs[4] = 0 end
+    if c.scenic     then probs[1] = 200 end
 
-    if c.scenic then probs[1] = 200 end
+    if settings.mons == "less"   then probs[4] = 3 end
+    if settings.mons == "scarce" then probs[4] = 1.5 end
+    if settings.mons == "heaps"  then probs[4] = 7.5 end
 
-    if c.hallway then void_it_up(c) end
+    -- special handling for hallways...
+    if c.hallway then
+      if rand_odds(probs[4]) then
+        try_add_special(c, "cage")
+      end
+      void_it_up(c)
+    end
 
     while count_empty_chunks(c) > 0 do
 
@@ -1718,11 +1896,11 @@ print("ADDING CLOSET CHUNK @", c.x,c.y)
 
 --[[  DEBUG STAIR LOCS
 local dx,dy = dir_to_delta(loc.dir)
-io.stdout:write(string.format(
+con.debugf(
   "CELL (%d,%d)  STAIR %d,%d facing %d  HT %d -> %d\n",
   c.x, c.y, loc.x, loc.y, loc.dir,
   K.delta_floor, c.chunks[loc.x+dx][loc.y+dy].delta_floor
-  ))
+  )
 --]]
       assert(not K.stair_dir)
 
@@ -1734,7 +1912,7 @@ io.stdout:write(string.format(
 
     --> result: certain chunks have a "stair_dir" field
     -->         Direction to neighbour chunk.  Stair will
-    -->         be built inside that chunk.
+    -->         be built inside this chunk.
 
     -- FIXME: randomly flip a few stairs.
     --   Requires:
@@ -1807,12 +1985,6 @@ io.stdout:write(string.format(
       end
       --]]
     end
-
----###    if c == c.quest.depot_dest then
----###      local kx, ky = good_Q_spot(c)
----###      if not kx then con.printf("NO FREE SPOT for Invasion!\n"); return end
----###      c.chunks[kx][ky].invasion = true
----###    end
   end
 
   local function position_dm_stuff(c)
@@ -1911,7 +2083,7 @@ io.stdout:write(string.format(
       end
     end
 
---  io.stderr:write("MAKING CHUNKS: ", clashes, " clashes\n")
+    con.debugf("MAKING CHUNKS: %d clashes\n", clashes)
 
     if clashes == 0 then break end
   end
@@ -2096,6 +2268,7 @@ function build_cell(p, c)
 
     elseif link.kind == "door" and link.is_exit and not link.quest then
 
+print("EXIT DOOR", where, long, link.long or "NIL")
       B_exit_door(p,c, c.theme, link, x-dx, y-dy, c.floor_h, dir)
 
     elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
@@ -2106,8 +2279,12 @@ function build_cell(p, c)
       sec.f_h = c.floor_h
       sec.f_tex = b_theme.floor
       sec.c_tex = b_theme.ceil
+
       if not link.src.outdoor or not link.dest.outdoor then
         sec.c_h = sec.c_h - 32
+        while sec.c_h > (sec.c_h+sec.f_h+128)/2 do
+          sec.c_h = sec.c_h - 32
+        end
         if b_theme.outdoor then sec.c_tex = b_theme.arch_ceil or sec.f_tex end
       end
 
@@ -2182,20 +2359,6 @@ function build_cell(p, c)
       build_real_link(link, side, link.where, what, b_theme)
     end
   end
-
----###  local function get_bordering_cell(c, bx, by)
----###    if bx == 1  and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
----###    if bx == BW and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
----###    if by == 1  and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
----###    if by == BH and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
----###  end
-  
----###  local function neighbour_by_side(c, dir)
----###    if dir == 4 and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
----###    if dir == 6 and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
----###    if dir == 2 and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
----###    if dir == 8 and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
----###  end
 
   local function chunk_pair(cell, other, side,n)
     local cx,cy, ox,oy
@@ -2691,13 +2854,6 @@ function build_cell(p, c)
     gap_fill(p,c, corn_x2,corn_y2, corn_x2,corn_y2, { solid=corn_tex2 })
   end
 
-  local function chunk_touches_side(kx, ky, side)
-    if side == 4 then return kx == 1 end
-    if side == 6 then return kx == 3 end
-    if side == 2 then return ky == 1 end
-    if side == 8 then return ky == 3 end
-  end
-
   local function build_chunk(kx, ky)
 
     local function link_is_door(c, side)
@@ -2786,17 +2942,19 @@ function build_cell(p, c)
       -- get this *after* doing sky lights
       local blocked = p.blocks[c.blk_x+x1+1][c.blk_y+y1+1]
 
+      if K.crate and not blocked then
+        B_crate(p,c, c.crate_theme, sec, kx,ky, x1+1,y1+1)
+        blocked = true
+      end
+
       if K.pillar and not blocked then
 
--- TEST CRUD
-if rand_odds(24) and THEME.mats.CAGE and not p.deathmatch then
-
-  B_pillar_cage(p,c, kx,ky, x1+1,y1+1)
-else
-  fill(p,c, x1+1, y1+1, x1+1, y1+1,
-        { solid= c.theme.pillar or c.theme.void,
-          y_offset= 128 - (sec.c_h - sec.f_h) })
-end
+        -- TEST CRUD
+        if rand_odds(22) and THEME.mats.CAGE and not p.deathmatch then
+          B_pillar_cage(p,c, THEME.mats.CAGE, kx,ky, x1+1,y1+1)
+        else
+          B_pillar(p,c, c.theme, kx,ky, x1+1,y1+1)
+        end
         blocked = true
       end
 
@@ -2859,7 +3017,8 @@ end
 
     if K.void then
       if K.closet then
-print("BUILDING CLOSET @", c.x,c.y)
+        con.debugf("BUILDING CLOSET @ (%d,%d)\n", c.x, c.y)
+
         table.insert(K.place.spots,
           B_monster_closet(p,c, kx,ky, c.room_sec.f_h + 0,
             c.quest.closet.door_tag))
@@ -2943,28 +3102,7 @@ print("BUILDING CLOSET @", c.x,c.y)
                math.max(K.floor_h, NB.floor_h), K.stair_dir,
                long, deep, { } )
       end
-
---[[ ???
-    if true and (c.floor_h ~= other.floor_h) then
-
-      if BW > 12 then
-        x = x + 1 * dx
-        y = y + 1 * dy
-      end
-
-      if diff < 128 or (diff == 128 and rand_odds(75)) then
-
-        B_stair(p, c, link,  x, y, other.floor_h, dir,
-                2, 2, (c.floor_h - other.floor_h) / 8,
-                { } )
-      else
-        B_lift(p, c, link,  x, y,
-               math.max(c.floor_h, other.floor_h), dir,
-                2, 2, { } )
-      end
-    end
---]]
-    end
+    end  -- if K.stair_dir
 
     local bx = chunk_to_block(kx) + 1
     local by = chunk_to_block(ky) + 1
@@ -3012,7 +3150,12 @@ print("BUILDING CLOSET @", c.x,c.y)
 
       elseif c.quest.kind == "exit" then
         local side = wall_switch_dir(kx, ky, c.entry_dir)
-        B_floor_switch(p,c, bx,by, K.floor_h, side, THEME.switches.sw_exit, 11)
+        if c.theme.hole_tex then
+          B_exit_hole(p,c, kx,ky, c.room_sec)
+          return
+        else
+          B_floor_switch(p,c, bx,by, K.floor_h, side, THEME.switches.sw_exit, 11)
+        end
       end
     end
 
@@ -3052,52 +3195,74 @@ print("BUILDING CLOSET @", c.x,c.y)
       sec.near_player = true;
     end
 
--- TEST CRUD : overhangs
-if rand_odds(9) and c.theme.outdoor
-  and (sec.c_h - sec.f_h <= 256)
-  and not (c.quest.kind == "exit" and c.along == #c.quest.path-1)
-then
-  sec = copy_block(sec) -- FIXME??
-  K.overhang = true
+    -- TEST CRUD : overhangs
+    if rand_odds(9) and c.theme.outdoor
+      and (sec.c_h - sec.f_h <= 256)
+      and not (c.quest.kind == "exit" and c.along == #c.quest.path-1)
+      and not K.stair_dir
+    then
+      sec = copy_block(sec) -- FIXME??
+      K.overhang = true
 
-  if not c.overhang then
-    local name
-    name, c.overhang = rand_table_pair(THEME.hangs)
-  end
-  local overhang = c.overhang
+      if not c.overhang then
+        local name
+        name, c.overhang = rand_table_pair(THEME.hangs)
+      end
+      local overhang = c.overhang
 
-  sec.c_tex = overhang.ceil
-  u_tex = overhang.upper
-  K.sup_tex = overhang.thin
+      sec.c_tex = overhang.ceil
+      u_tex = overhang.upper
+      K.sup_tex = overhang.thin
 
-  sec.c_h = sec.c_h - (overhang.h or 24)
-  sec.light = sec.light - 48
-end
+      sec.c_h = sec.c_h - (overhang.h or 24)
+      sec.light = sec.light - 48
+    end
 
--- TEST CRUD : pillars
-if sec and not c.is_exit and not c.scenic and not K.stair_dir
-  and dual_odds(c.theme.outdoor, 12, 25)
-  and (not c.hallway or rand_odds(20))
-then
-  K.pillar = true
-end
+    -- TEST CRUD : crates
+    if sec and not c.scenic and not K.stair_dir
+      and dual_odds(c.theme.outdoor, 22, 35)
+      and (not c.hallway or rand_odds(25))
+      and (not c.exit or rand_odds(50))
+    then
+      K.crate = true
+      if not c.crate_theme then
+        c.crate_theme = get_rand_crate()
+      end
+    end
 
--- TEST CRUD : sky lights
-if c.sky_light then
-  if kx==2 and ky==2 and c.sky_light.pattern == "pillar" then
-    K.pillar = true
-  end
+    -- TEST CRUD : pillars
+    if not K.crate and sec and not c.scenic and not K.stair_dir
+      and dual_odds(c.theme.outdoor, 12, 25)
+      and (not c.hallway or rand_odds(15))
+      and (not c.exit or rand_odds(22))
+    then
+      K.pillar = true
+    end
 
-  K.sky_light_sec = copy_block(sec)
-  K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.c_max, sec.c_h) + c.sky_light.h
-  K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, THEME.SKY_TEX, c.sky_light.light_info.flat)
-  K.sky_light_sec.light = 176
-  K.sky_light_utex = c.sky_light.light_info.side
+    --FIXME: very cruddy check...
+    if c.is_exit and chunk_touches_side(kx, ky, c.entry_dir) then
+      K.crate  = nil
+      K.pillar = nil
+    end
 
-  -- make sure sky light doesn't come down too low
-  K.sky_light_sec.c_h = math.max(K.sky_light_sec.c_h, c.c_min)
-end
+    -- TEST CRUD : sky lights
+    if c.sky_light then
+      if kx==2 and ky==2 and c.sky_light.pattern == "pillar" then
+        K.pillar = true
+      end
+
+      K.sky_light_sec = copy_block(sec)
+      K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.c_max, sec.c_h) + c.sky_light.h
+      K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, THEME.SKY_TEX, c.sky_light.light_info.flat)
+      K.sky_light_sec.light = 176
+      K.sky_light_utex = c.sky_light.light_info.side
+
+      -- make sure sky light doesn't come down too low
+      K.sky_light_sec.c_h = math.max(K.sky_light_sec.c_h, c.c_min)
+    end
  
+---###    K.final_sec = copy_block(sec)
+
     chunk_fill(c, K, kx, ky, sec, c.theme.wall, u_tex)
 
     if K.dm_health then
