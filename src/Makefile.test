@@ -12,7 +12,8 @@ all:
 	glbsp -pack -warn TEMP.wad -o ../TEST.wad
 
 clean:
-	rm -f ../TEST.wad TEMP.txt TEMP.wad
+	rm -f ../TEST.wad ../TEST.bak TEMP.wad
+	rm -f TEMP.txt LOGS.txt SETTINGS.txt
 
 .PHONY: all clean
 
