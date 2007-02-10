@@ -19,20 +19,18 @@
 
 function show_quests(p)
   if p.deathmatch then
-    io.stderr:write("Deathmatch Quest: frag fest!\n")
+    con.printf("Deathmatch Quest: frag fest!\n")
     return
   end
 
   local function display_quest(idx, Q)
-    io.stderr:write(string.format(
-      "Quest %d: Find %s (%s) Len %d\n",
-        Q.level, Q.kind, Q.item, Q.want_len))
+    con.printf("Quest %d: Find %s (%s) Len %d\n",
+        Q.level, Q.kind, Q.item, Q.want_len)
   end
 
   local function display_mini_quest(idx, Q)
-    io.stderr:write(string.format(
-      "  Mini-Quest %d.%d: Find %s (%s) Len %d\n",
-        Q.level, Q.sub_level, Q.kind, Q.item, Q.want_len))
+    con.printf("  Mini-Quest %d.%d: Find %s (%s) Len %d\n",
+        Q.level, Q.sub_level, Q.kind, Q.item, Q.want_len)
   end
 
   for q_idx,Q in ipairs(p.quests) do
@@ -48,7 +46,7 @@ function show_path(p)
 
   local function show_cell(c)
     if (c == nil) then
-      io.stderr:write("    |")
+      con.printf("    |")
     else
       local kind, L, R = " ", " ", " "
 
@@ -83,15 +81,15 @@ function show_path(p)
       end
       if R == "<" or L == ">" then L,R = R,L end
 
-      io.stderr:write(L .. kind .. c.quest.level .. R .. "|")
+      con.printf(L .. kind .. c.quest.level .. R .. "|")
     end
   end
 
   local function divider(len)
     for i = len,1,-1 do
-      io.stderr:write("----+")
+      con.printf("----+")
     end
-    io.stderr:write("\n")
+    con.printf("\n")
   end
 
   -- BEGIN show_path --
@@ -102,7 +100,7 @@ function show_path(p)
     for x = 1,p.w do
       show_cell(p.cells[x][y])
     end
-    io.stderr:write("\n")
+    con.printf("\n")
     divider(p.w)
   end
 end
@@ -143,19 +141,19 @@ function show_chunks(p)
     end
 
     for x = 1,KW do
-      io.stderr:write(chk(x))
+      con.printf(chk(x))
     end
-    io.stderr:write("|")
+    con.printf("|")
   end
 
   local function divider(len)
     for i = len,1,-1 do
       for x = 1,KW do
-        io.stderr:write("-")
+        con.printf("-")
       end
-      io.stderr:write("+")
+      con.printf("+")
     end
-    io.stderr:write("\n")
+    con.printf("\n")
   end
 
   -- BEGIN show_cell --
@@ -167,7 +165,7 @@ function show_chunks(p)
       for x = 1,p.w do
         show_cell(p.cells[x][y], row)
       end
-      io.stderr:write("\n")
+      con.printf("\n")
     end
     divider(p.w)
   end
@@ -315,6 +313,11 @@ end
 
 function get_rand_hallway()
   local name,info = rand_table_pair(THEME.hallways)
+  return info
+end
+
+function get_rand_crate()
+  local name,info = rand_table_pair(THEME.crates)
   return info
 end
 
@@ -490,14 +493,14 @@ function plan_sp_level(is_coop)  -- returns Plan
     local b_cells = {}  
     local b_probs = {}
 
---io.stderr:write(Q.mini and "MINI-Q: " or "QUEST: ", Q.level, "\n")
+--con.debugf(Q.mini and "MINI-Q: " or "QUEST: ", Q.level, "\n")
     for x = 1,p.w do for y = 1,p.h do
       local c = p.cells[x][y]
       if c then
         local prob = branch_spot_score(c, Q)
 
         if prob > 0 then
---io.stderr:write("  ",c.x, ",", c.y, " prob= ",prob,"\n")
+--con.debugf("  ",c.x, ",", c.y, " prob= ",prob,"\n")
           table.insert(b_cells, c)
           table.insert(b_probs, prob)
         end
@@ -615,7 +618,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     end
     assert(theme)
 
-print("ADDING HALLWAY:", start, length, #Q.path)
+    con.debugf("ADDING HALLWAY: start=%d len=%d QLEN:%d\n", start, length, #Q.path)
 
     for idx = start,finish do
       local c = Q.path[idx]
@@ -651,7 +654,8 @@ print("ADDING HALLWAY:", start, length, #Q.path)
 
 
     local cur = find_branch_spot(Q)
---io.stderr:write("  BRANCH SPOT --> ", cur.x, ",", cur.y, "\n")
+
+    con.debugf("BRANCH SPOT @ (%d,%d)\n", cur.x, cur.y)
 
     table.insert(Q.path, cur)
 
@@ -737,10 +741,6 @@ print("ADDING HALLWAY:", start, length, #Q.path)
       -- FIXME: theme dependent (e.g. cave goes down, tower goes up)
       if rand_odds(50) then diff = -diff end
 
---- print("QUEST_HEIGHTS", Q.level, Q.sub_level)
---- print(string.format("QUEST %d.%d  diff: %d",
---- Q.level, Q.sub_level or 0, diff))
-
       local bumps = BUMP_PROBS[rand_index_by_probs { 50, 70, 10 }]
 
       -- now traverse path and choose floor heights
@@ -765,9 +765,6 @@ print("ADDING HALLWAY:", start, length, #Q.path)
 
         if diff < 0      then change = -change end
         if rand_odds(98) then change = -change end
-
---- print(string.format("  idx: %d  cur: %d  change: %d",
---- idx, c.floor_h, change))
 
         c.floor_h = prev.floor_h + change
       end
@@ -981,9 +978,8 @@ print("ADDING HALLWAY:", start, length, #Q.path)
 
     assert(keys + switches >= 1)
 
-    io.stderr:write(
-      string.format("Keys %d, Switches %d, Weapons %d, Items %d\n",
-        keys, switches, weapons, items))
+    con.printf("Keys %d, Switches %d, Weapons %d, Items %d\n",
+        keys, switches, weapons, items)
 
     local qlist = {}
     for i = 1,20 do
@@ -1004,7 +1000,7 @@ print("ADDING HALLWAY:", start, length, #Q.path)
       if found then break end
     end
 
-    io.stderr:write("Final Score: " .. quest_score(qlist) .. "\n")
+    con.debugf("Final Score: %d\n", quest_score(qlist))
 
     -- find each main quest, pull it out, then all the
     -- mini-quests at the beginning of the list become
@@ -1030,6 +1026,19 @@ print("ADDING HALLWAY:", start, length, #Q.path)
     end
 
     con.ticker();
+  end
+
+  local function peak_toughness(Q)
+    local peak = 150 + 5 * #Q.path
+
+    peak = peak + 20 * (Q.sub_level or 0)
+    peak = peak * (Q.level ^ 0.7) * (1 + rand_skew()/5)
+
+    if p.coop then
+      peak = peak * p.coop_toughness
+    end
+
+    return peak
   end
 
   local function setup_exit_room()
@@ -1092,7 +1101,8 @@ print("ADDING HALLWAY:", start, length, #Q.path)
         outies[1].quest, outies[1].along, outies[1].theme)
 
       c.scenic = true
-io.stderr:write("CREATED SCENIC AT ", c.x, ",", c.y, "\n")
+
+      con.debugf("CREATED SCENIC AT (%d,%d)\n", c.x, c.y)
     end
 
     --- add_scenic_cells ---
@@ -1145,13 +1155,11 @@ io.stderr:write("CREATED SCENIC AT ", c.x, ",", c.y, "\n")
         local dx, dy = dir_to_delta(dir)
         local other = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
 
-        if other and not c.link[dir] and
-           can_make_falloff(c, other, dir) and
-           rand_odds(90) then
+        if other and not c.link[dir] and rand_odds(90)
+           and can_make_falloff(c, other, dir)
+        then
  
-io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
---print("SRC_MIN ", c.f_min, "  DEST_MAX", other.f_max)
---print("SRC_CEIL ", c.ceil_h, "  DEST_CEIL", other.ceil_h)
+          con.debugf("FALL-OFF @ (%d,%d) dir:%d\n", c.x, c.y, dir)
 
           local L = create_link(p, c, other, dir)
           L.kind = "falloff"
@@ -1210,6 +1218,14 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
     -- the chance we'll use the 1st/2nd/3rd/etc location
     local LOC_PROBS = { 100, 60, 40, 25, 10 }
 
+    local sm_prob = 36
+    local bg_prob = 60
+
+    if settings.traps == "scarce" then sm_prob, bg_prob =  7, 15 end
+    if settings.traps == "less"   then sm_prob, bg_prob = 20, 35 end
+    if settings.traps == "more"   then sm_prob, bg_prob = 60, 75 end
+    if settings.traps == "heaps"  then sm_prob, bg_prob = 80, 90 end
+
     local function add_closet(Q)
 
       local locs  = {}
@@ -1244,7 +1260,7 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
       {
         trigger_cell = Q.last,
         door_tag = allocate_tag(p),
-        toughness = Q.last.toughness * 1.4, --???
+        toughness = peak_toughness(Q) * 1.4,
         places = {}
       }
 
@@ -1254,7 +1270,7 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
             { c = L.c, side = L.side, tag = allocate_tag(p),
               mon_set = { easy={}, medium={}, hard={} }, spots = {} })
           L.c.closet[L.side] = true
-          con.printf("ADDING CLOSET @ %d,%d\n", L.c.x, L.c.y)
+          con.debugf("ADDING CLOSET @ %d,%d\n", L.c.x, L.c.y)
         end
       end
 
@@ -1280,8 +1296,8 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
         assert(idx <= #Q.path)
       end
 
-      io.stderr:write("..Depot target #", num, " @ ",
-         Q.path[idx].x, ",", Q.path[idx].y, " tag #", p.free_tag+1, "\n");
+      con.debugf("..Depot target %d @ (%d,%d) tag: %d\n", num,
+         Q.path[idx].x, Q.path[idx].y, p.free_tag+1);
 
       return Q.path[idx]
     end
@@ -1306,7 +1322,7 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
       if not pos_x then return end
 
-      con.printf("CREATING DEPOT @ %d,%d\n", pos_x, pos_y)
+      con.debugf("CREATING DEPOT @ (%d,%d)\n", pos_x, pos_y)
 
       local spread = rand_key_by_probs { linear=3, random=3, last=5, behind=5, first=1 }
 
@@ -1317,7 +1333,7 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
         trigger_cell = Q.last,
         depot_cell = CELL,
         spread = spread,
-        toughness = Q.last.toughness * 1.2, --???
+        toughness = peak_toughness(Q) * 1.2,
         door_tag = allocate_tag(p),
         places = {}
       }
@@ -1334,7 +1350,7 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
     local function try_add_surprise(Q)
       if Q.kind == "exit" then return end
 
-      if rand_odds(sel(Q.mini, 36, 60)) then
+      if rand_odds(sel(Q.mini, sm_prob, bg_prob)) then
         if rand_odds(70) then
           add_closet(Q)
         else
@@ -1359,15 +1375,13 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
 
     local function toughen_quest(Q)
       
-      local peak = 180 + #Q.path * 5
+      local peak = peak_toughness(Q)
       local skip = 0
 
-      peak = peak + 15 * (Q.sub_level or 0)
-      peak = peak * (Q.level ^ 0.7) * (1 + rand_skew()/5)
-
-      if p.coop then
-        peak = peak * p.coop_toughness
-      end
+      if settings.mons == "scarce" then peak = peak/2.5 end
+      if settings.mons == "less"   then peak = peak/1.5 end
+      if settings.mons == "more"   then peak = peak*1.5 end
+      if settings.mons == "heaps"  then peak = peak*2.5 end
 
       -- go backwards from quest cell to start cell
       for i = #Q.path,1,-1 do
@@ -1384,11 +1398,11 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
         end
       end
 
-      for j = 1,#Q.path do
-        io.stdout:write(string.format("%d%s",
-          Q.path[j].toughness or -789,
-          sel(j < #Q.path, ",", "\n")))
-      end
+---??  for j = 1,#Q.path do
+---??    con.printf("%d%s",
+---??      Q.path[j].toughness or -789,
+---??      sel(j < #Q.path, ",", "\n"))
+---??  end
     end
 
     -- toughen_it_up --
@@ -1408,12 +1422,17 @@ io.stderr:write("FALL-OFF @ (", c.x, ",", c.y, ") dir ", dir, "\n")
   p.models = initial_models()
   p.liquid = choose_liquid()
 
-print("LIQUID:", p.liquid)
+  if (p.liquid) then
+    con.printf("LIQUID: %s\n", p.liquid.name)
+  end
+
+  con.printf("\n")
 
   if is_coop then
     p.coop = true
-    p.coop_toughness = rand_range(1.5, 2.5)
-    print("coop_toughness =", p.coop_toughness);
+    p.coop_toughness = rand_range(1.66, 3.0)
+
+    con.debugf("coop_toughness = %d\n", p.coop_toughness);
   end
 
   decide_quests()
