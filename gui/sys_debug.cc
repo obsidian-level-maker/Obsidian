@@ -25,9 +25,7 @@
 static FILE *log_file = NULL;
 
 static bool debugging = false;
-static char debug_buffer[MSG_BUF_LEN];
-
-static bool terminal = true;
+static bool terminal  = true;
 
 
 //
@@ -40,6 +38,9 @@ void LogInit(bool debug_enable)
   LogPrintf("========= START OF OBLIGE LOGS =========\n\n");
 
   debugging = debug_enable;
+
+  if (debugging)
+    LogPrintf("DEBUGGING ENABLED.\n\n");
 }
 
 //
@@ -89,19 +90,21 @@ void LogPrintf(const char *str, ...)
 //
 void DebugPrintf(const char *str, ...)
 {
-  if (log_file and debugging)
+  if (log_file && debugging)
   {
+    static char buffer[MSG_BUF_LEN];
+
     va_list args;
 
     va_start(args, str);
-    vsnprintf(debug_buffer, MSG_BUF_LEN, str, args);
+    vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
     va_end(args);
 
-    debug_buffer[MSG_BUF_LEN] = 0;
+    buffer[MSG_BUF_LEN-2] = 0;
 
     // prefix each debugging line with a special symbol
 
-    char *pos = debug_buffer;
+    char *pos = buffer;
     char *next;
 
     while (pos && *pos)
@@ -110,7 +113,7 @@ void DebugPrintf(const char *str, ...)
 
       if (next) *next++ = 0;
 
-      LogPrintf("@ %s\n", pos);
+      LogPrintf("# %s\n", pos);
 
       pos = next;
     }

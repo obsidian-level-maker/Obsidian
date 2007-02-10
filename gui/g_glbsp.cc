@@ -35,7 +35,7 @@ static volatile nodebuildcomms_t nb_comms;
 
 static int display_mode = DIS_INVALID;
 
-static char message_buf[MSG_BUF_LEN+4];
+static char message_buf[MSG_BUF_LEN];
 
 
 void GB_PrintMsg(const char *str, ...)
@@ -43,10 +43,10 @@ void GB_PrintMsg(const char *str, ...)
   va_list args;
 
   va_start(args, str);
-  vsnprintf(message_buf, MSG_BUF_LEN, str, args);
+  vsnprintf(message_buf, MSG_BUF_LEN-1, str, args);
   va_end(args);
 
-  message_buf[MSG_BUF_LEN] = 0;
+  message_buf[MSG_BUF_LEN-2] = 0;
 
   LogPrintf("GLBSP: %s", message_buf);
 }
@@ -61,10 +61,10 @@ void GB_FatalError(const char *str, ...)
   va_list args;
 
   va_start(args, str);
-  vsnprintf(message_buf, MSG_BUF_LEN, str, args);
+  vsnprintf(message_buf, MSG_BUF_LEN-1, str, args);
   va_end(args);
 
-  message_buf[MSG_BUF_LEN] = 0;
+  message_buf[MSG_BUF_LEN-2] = 0;
 
   Main_FatalError("%s", message_buf);
   /* NOT REACHED */
@@ -142,6 +142,8 @@ const nodebuildfuncs_t edge_build_funcs =
 
 bool GB_BuildNodes(const char *filename, const char *out_name)
 {
+  LogPrintf("\n");
+      
   display_mode = DIS_INVALID;
 
   memcpy(&nb_info,  &default_buildinfo,  sizeof(default_buildinfo));

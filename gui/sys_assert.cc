@@ -50,15 +50,15 @@ assert_fail_c& assert_fail_c::operator=(const assert_fail_c &other)
 
 void AssertFail(const char *msg, ...)
 {
-  static char buffer[MSG_BUF_LEN+4];
+  static char buffer[MSG_BUF_LEN];
 
   va_list argptr;
 
   va_start(argptr, msg);
-  vsnprintf(buffer, MSG_BUF_LEN, msg, argptr);
+  vsnprintf(buffer, MSG_BUF_LEN-1, msg, argptr);
   va_end(argptr);
 
-  buffer[MSG_BUF_LEN] = 0;
+  buffer[MSG_BUF_LEN-2] = 0;
 
 // NO WORKY WITH LUA :( ---> throw assert_fail_c(buffer);
 

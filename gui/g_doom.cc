@@ -154,15 +154,15 @@ void WAD_Append(lump_c *lump, const void *data, u32_t len)
 
 void WAD_Printf(lump_c *lump, const char *str, ...)
 {
-  static char buffer[MSG_BUF_LEN + 4];
+  static char buffer[MSG_BUF_LEN];
 
   va_list args;
 
   va_start(args, str);
-  vsnprintf(buffer, MSG_BUF_LEN, str, args);
+  vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
   va_end(args);
 
-  buffer[MSG_BUF_LEN] = 0;
+  buffer[MSG_BUF_LEN-2] = 0;
 
   WAD_Append(lump, buffer, strlen(buffer));
 }
