@@ -97,7 +97,7 @@ function build_cool_shit()
     if fmt then con.raw_debug_print(string.format(fmt, ...)) end
   end
 
-  con.printf("\n\n~~~~~~~ Build Begun ~~~~~~~\n\n")
+  con.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
 
   con.printf("SEED = %d\n\n", settings.seed)
   con.printf("Settings =\n%s\n", table_to_string(settings))
@@ -111,6 +111,8 @@ function build_cool_shit()
 
     con.at_level(lev, idx, #LEVELS)
 
+    con.printf("\n=====| %s |=====\n\n", lev)
+
     con.rand_seed(settings.seed * 100 + idx)
  
     if settings.mode == "dm" then
@@ -123,16 +125,15 @@ function build_cool_shit()
 
     if con.abort() then aborted = true; break; end
 
-    do
-      con.printf("\n=====| %s |=====\n\n", lev)
+    show_quests(PLAN)
+    con.printf("\n")
 
-      show_quests(PLAN)
-      if settings.mode == "dm" then
-        show_dm_links(PLAN)
-      else
-        show_path(PLAN)
-      end
+    if settings.mode == "dm" then
+      show_dm_links(PLAN)
+    else
+      show_path(PLAN)
     end
+    con.printf("\n")
 
     build_level(PLAN)
 
@@ -144,11 +145,11 @@ function build_cool_shit()
   end
 
   if aborted then
-    con.printf("~~~~~~~ Build Aborted! ~~~~~~~\n\n")
+    con.printf("\n~~~~~~~ Build Aborted! ~~~~~~~\n\n")
     return "abort"
   end
 
-  con.printf("~~~~~~~ Build Finished ~~~~~~~\n\n")
+  con.printf("\n~~~~~~ Finished Making Levels ~~~~~~\n\n")
 
   return "ok"
 end
