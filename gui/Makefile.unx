@@ -43,6 +43,7 @@ OBJS=	main.o      \
 	lib_util.o  \
 	sys_assert.o \
 	sys_debug.o \
+	g_cookie.o  \
 	g_doom.o    \
 	g_glbsp.o   \
 	g_lua.o     \
