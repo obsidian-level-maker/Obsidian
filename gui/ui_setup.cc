@@ -69,12 +69,12 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   add(game);
 
-  mode = new Fl_Choice(x+300, cy, 150, 24, "Mode: ");
-  mode->align(FL_ALIGN_LEFT);
-  mode->add("Single Player|Co-op|Deathmatch");
-  mode->value(0);
+  length = new Fl_Choice(x +300, cy, 150, 24, "Length: ");
+  length->align(FL_ALIGN_LEFT);
+  length->add("Single Level|One Episode|Full Game");
+  length->value(1);
 
-  add(mode);
+  add(length);
 
   cy += 32;
 
@@ -85,12 +85,12 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
   
   add(addon);
 
-  length = new Fl_Choice(x +300, cy, 150, 24, "Length: ");
-  length->align(FL_ALIGN_LEFT);
-  length->add("Single Level|One Episode|Full Game");
-  length->value(1);
+  mode = new Fl_Choice(x+300, cy, 150, 24, "Mode: ");
+  mode->align(FL_ALIGN_LEFT);
+  mode->add("Single Player|Co-op|Deathmatch");
+  mode->value(0);
 
-  add(length);
+  add(mode);
 
   resizable(0);  // don't resize our children
 
