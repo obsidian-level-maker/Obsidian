@@ -23,6 +23,7 @@
 #include "lib_util.h"
 
 #include "main.h"
+#include "g_cookie.h"
 #include "g_doom.h"
 #include "g_glbsp.h"
 #include "g_lua.h"
@@ -35,7 +36,8 @@
 
 #define TICKER_TIME  20 /* ms */
 
-#define TEMP_FILENAME  DATA_DIR "/TEMP.wad"
+#define TEMP_FILENAME    DATA_DIR "/TEMP.wad"
+#define CONFIG_FILENAME  DATA_DIR "/SETTINGS.txt"
 
 
 /* ----- user information ----------------------------- */
@@ -86,6 +88,8 @@ void Main_Ticker()
 
 void Main_Shutdown()
 {
+  Cookie_Save(CONFIG_FILENAME);
+
   delete main_win;
   main_win = NULL;
 
@@ -96,15 +100,15 @@ void Main_Shutdown()
 
 void Main_FatalError(const char *msg, ...)
 {
-  static char buffer[MSG_BUF_LEN+4];
+  static char buffer[MSG_BUF_LEN];
 
   va_list arg_pt;
 
   va_start(arg_pt, msg);
-  vsnprintf(buffer, MSG_BUF_LEN, msg, arg_pt);
+  vsnprintf(buffer, MSG_BUF_LEN-1, msg, arg_pt);
   va_end(arg_pt);
 
-  buffer[MSG_BUF_LEN] = 0;
+  buffer[MSG_BUF_LEN-2] = 0;
 
   LogPrintf("%s\n", buffer);
 
@@ -206,12 +210,7 @@ int main(int argc, char **argv)
 
 /// TITLE --> log file
 
-#if 0
-  // read persistent data
-  CookieSetPath(argv[0]);
-
-  cookie_status_t cookie_ret = CookieReadAll();
-#endif
+  Cookie_Load(CONFIG_FILENAME);
 
   Fl::scheme("plastic");
 
