@@ -22,16 +22,14 @@ require 'oblige'
 
 con = { }
 
-con.debugging = false
-
 function con.raw_log_print(str)
   io.stderr:write(str)
 end
 
 function con.raw_debug_print(str)
-  if con.debugging then
-    io.stderr:write(str)
-  end
+-- [[
+  io.stderr:write("# ", str)
+--]]
 end
 
 function con.at_level() end
