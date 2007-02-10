@@ -720,7 +720,7 @@ function distribute_pickups(p, c, HM, backtrack)
 
     for name,info in pairs(THEME.pickups) do
       if info.stat == stat then
-        if info.give <= R * 3 then
+        if info.give <= R * 2 then
           local prob = info.prob or 50
           if info.give > R then
             prob = prob / 3
@@ -731,13 +731,14 @@ function distribute_pickups(p, c, HM, backtrack)
         end
       end
     end
-    
+
     if #infos == 0 then return nil, nil end  -- SHIT!
 
     local idx = rand_index_by_probs(probs)
     local th_info = infos[idx]
 
     local max_cluster = 1 + int(R / th_info.give)
+    if th_info.clu_max then max_cluster = math.min(max_cluster, th_info.clu_max) end
 
     local cluster = select_cluster_pattern(max_cluster)
     assert(#cluster/2 <= max_cluster)

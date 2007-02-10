@@ -275,13 +275,15 @@ DM_COMMON_EXITS =
     void = "STONE",
     dm_switch = "SW1COMM",
 
-    floor = "CEIL4_3",
-    ceil = "FLAT1",
+    floor = "FLAT5_2",
+    ceil  = "FLAT1",
 
+    hole_tex = "WOOD1",
+    
     front_mark = "EXITSTON", 
 
     door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="FLAT1",
+             frame_top="TLITE6_6",
              frame_side="LITE5" },
   },
 }
@@ -750,27 +752,25 @@ DM_MONSTER_WEAPON_PREFS =
 DM_PICKUPS =
 {
   bullets    = { stat="bullet", give=10, prob=10 },
-  bullet_box = { stat="bullet", give=50, prob=70 },
+  bullet_box = { stat="bullet", give=50, prob=70, clu_max=2 },
   shells     = { stat="shell",  give= 4, prob=30 },
-  shell_box  = { stat="shell",  give=20, prob=70 },
+  shell_box  = { stat="shell",  give=20, prob=70, clu_max=4 },
 
   rockets    = { stat="rocket", give= 1, prob=20 },
-  rocket_box = { stat="rocket", give= 5, prob=70 },
+  rocket_box = { stat="rocket", give= 5, prob=70, clu_max=4 },
   cells      = { stat="cell",   give=20, prob=30 },
-  cell_pack  = { stat="cell",   give=100,prob=70 },
+  cell_pack  = { stat="cell",   give=100,prob=70, clu_max=1 },
 
   potion   = { stat="health", give=1,  prob=30 },
   stimpack = { stat="health", give=10, prob=40 },
-  medikit  = { stat="health", give=25, prob=70 },
-  soul     = { stat="health", give=100,prob=15, limit=200 },
+  medikit  = { stat="health", give=25, prob=70, clu_max=4 },
+  soul     = { stat="health", give=100,prob=15, limit=200, clu_max=1 },
 
   -- BERSERK and MEGA are quest items
 
   helmet      = { stat="armor", give=   1, limit=200 },
-  green_armor = { stat="armor", give= 100, limit=100 },
-  blue_armor  = { stat="armor", give= 200, limit=200 },
-
-  -- BLUE ARMOR is a quest item
+  green_armor = { stat="armor", give= 100, limit=100, clu_max=1 },
+  blue_armor  = { stat="armor", give= 200, limit=200, clu_max=1 },
 
   -- Note: armor is handled with special code, since
   --       BLUE ARMOR is a quest item.
