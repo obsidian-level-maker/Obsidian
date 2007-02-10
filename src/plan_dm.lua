@@ -41,16 +41,16 @@ function show_dm_links(p)
     end
 
     for kx = 1,3 do
-      io.stderr:write(chk(kx))
+      con.printf("%s", chk(kx))
     end
-    io.stderr:write("|")
+    con.printf("|")
   end
 
   local function divider(len)
     for i = len,1,-1 do
-      io.stderr:write("---+")
+      con.printf("---+")
     end
-    io.stderr:write("\n")
+    con.printf("\n")
   end
 
   -- BEGIN show_dm_links --
@@ -63,7 +63,7 @@ function show_dm_links(p)
       for x = 1,p.w do
         show_cell(p.cells[x][y], row)
       end
-      io.stderr:write("\n")
+      con.printf("\n")
     end
     divider(p.w)
   end
@@ -137,7 +137,9 @@ function plan_dm_arena()
         end
       end end
     end
-print("COVERAGE", count)
+    
+    con.printf("COVERAGE = %d (want %d)\n", count, p.w * p.h)
+
     return count == (p.w * p.h)
   end
 
@@ -253,7 +255,6 @@ print("COVERAGE", count)
 
     local num_themes = rand_irange(min_t, p.h)
     assert(num_themes <= #THEME.themes)
-print("NUMBER of THEMES:", num_themes)
 
     local theme_list = {}
     rand_shuffle(theme_list, #THEME.themes)
@@ -296,7 +297,7 @@ print("NUMBER of THEMES:", num_themes)
       local num_links = rand_irange(min_links, max_links)
 
       for tries = 1,5 do
-        print(string.format("TRYING: %d <= %d <= %d", min_links, num_links, max_links))
+        con.printf("TRYING: %d <= %d <= %d\n", min_links, num_links, max_links)
 
         initial_links()
 
@@ -305,7 +306,8 @@ print("NUMBER of THEMES:", num_themes)
         if test_coverage(1,1) then return end  -- Yay, success!
       end
     end
-    error("FAILED TRYING TO CREATING LINKS")
+
+    con.printf("FAILED TRYING TO CREATING LINKS\n")
   end
 
   local function select_heights()
@@ -359,8 +361,6 @@ print("NUMBER of THEMES:", num_themes)
 
       if not L then return -1 end  -- blocked
 
---print(string.format("*** VERIFY (%d,%d) %d --> (%d,%d) %d  L=%s", cx, cy, c.floor_h, nx, ny, n.floor_h, L.kind))
-
       if L.kind == "falloff" then
         if c.floor_h < n.floor_h then return -1 end  -- cannot go up
       end
@@ -375,12 +375,9 @@ print("NUMBER of THEMES:", num_themes)
       if low.floor_h > high.floor_h then
         low, high = high, low
       end
---print(string.format("Low (%d,%d) %d -> High (%d,%d) %d", low.x,low.y, low.floor_h,  high.x, high.y, high.floor_h))
 
       -- use A* to find a path
       local path = astar_find_path(p.cells, low.x,low.y, high.x,high.y, verify_scorer)
-
---print("ASTAR_FIND_PATH: path_len", path and #path)
 
       return path
     end
@@ -395,7 +392,7 @@ print("NUMBER of THEMES:", num_themes)
           local other = link_other(c.link[dir], c)
 
           if can_make_falloff(c, other) then
--- print("FALL-OFF POSSIBLE AT", c.x, c.y, dir)
+            con.debugf("FALL-OFF POSSIBLE AT (%d,%d) dir:%d\n", c.x, c.y, dir)
             table.insert(locs, {c=c, dir=dir, other=other })
           end
         end
@@ -419,10 +416,10 @@ print("NUMBER of THEMES:", num_themes)
       L.kind = "falloff"
 
       if verify_falloff(L) then
-        print("FALL-OFF @", c.x, c.y, cur.dir)
+        con.printf("FALL-OFF @ (%d,%d) dir:%d\n", c.x, c.y, cur.dir)
         num_f = num_f - 1
       else
-        print("IMPOSSIBLE FALL-OFF @", c.x, c.y, cur.dir)
+        con.printf("IMPOSSIBLE FALL-OFF @ (%d,%d) dir:%d\n", c.x, c.y, cur.dir)
         L.kind = old_kind
       end
     end
@@ -467,7 +464,7 @@ print("NUMBER of THEMES:", num_themes)
 
   if W < H then W,H = H,W end
 
-  --print(string.format("%dx%d", math.min(W,H), math.max(W,H)))
+  con.debugf("ARENA SIZE %dx%d", W, H)
 
   assert(W <= p.w and H <= p.h)
 
