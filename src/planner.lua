@@ -321,6 +321,11 @@ function get_rand_crate()
   return info
 end
 
+function get_rand_rail()
+  local name,info = rand_table_pair(THEME.rails)
+  return info
+end
+
 function choose_liquid()
   local probs = {}
   for zzz,info in ipairs(THEME.liquids) do
@@ -1056,6 +1061,7 @@ function plan_sp_level(is_coop)  -- returns Plan
           link.kind = "door"
           link.build = c
           link.is_exit = true
+          ---?? link.long = sel(c.theme.front_mark, 3, 2)
         end
       end
     end
