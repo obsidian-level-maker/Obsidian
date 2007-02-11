@@ -305,17 +305,17 @@ static void Script_MakeSettings(lua_State *L)
 {
   lua_newtable(L);
 
-  AddField(L, "seed",  main_win->setup_box->cur_Seed());
+  AddField(L, "seed",  main_win->setup_box->get_Seed());
 
-  AddField(L, "game",  main_win->setup_box->cur_Game());
-  AddField(L, "addon", main_win->setup_box->cur_Addon());
-  AddField(L, "mode",  main_win->setup_box->cur_Mode());
-  AddField(L, "length",main_win->setup_box->cur_Length());
+  AddField(L, "game",  main_win->setup_box->get_Game());
+  AddField(L, "addon", main_win->setup_box->get_Addon());
+  AddField(L, "mode",  main_win->setup_box->get_Mode());
+  AddField(L, "length",main_win->setup_box->get_Length());
 
-  AddField(L, "health", main_win->adjust_box->cur_Health());
-  AddField(L, "ammo",   main_win->adjust_box->cur_Ammo());
-  AddField(L, "mons",   main_win->adjust_box->cur_Monsters());
-  AddField(L, "traps",  main_win->adjust_box->cur_Traps());
+  AddField(L, "health", main_win->adjust_box->get_Health());
+  AddField(L, "ammo",   main_win->adjust_box->get_Ammo());
+  AddField(L, "mons",   main_win->adjust_box->get_Monsters());
+  AddField(L, "traps",  main_win->adjust_box->get_Traps());
 
   lua_setglobal(L, "settings");
 }
