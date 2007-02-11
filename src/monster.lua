@@ -989,7 +989,7 @@ function place_battle_stuff(p, c, stats)
 
       local options = { [SK]=true }
 
-      if rand_odds(sel(c.along == #c.quest.path, 88, 44)) then
+      if dual_odds(c.along == #c.quest.path, 88, 44) then
         options.ambush = true
       end
 

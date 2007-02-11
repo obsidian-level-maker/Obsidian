@@ -1356,7 +1356,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     local function try_add_surprise(Q)
       if Q.kind == "exit" then return end
 
-      if rand_odds(sel(Q.mini, sm_prob, bg_prob)) then
+      if dual_odds(Q.mini, sm_prob, bg_prob) then
         if rand_odds(70) then
           add_closet(Q)
         else
