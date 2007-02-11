@@ -17,10 +17,11 @@
 //------------------------------------------------------------------------
 
 #include "headers.h"
+#include "hdr_fltk.h"
 
 #include "g_cookie.h"
 
-#include "hdr_fltk.h"
+#include "lib_util.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
 #include "main.h"
@@ -116,7 +117,7 @@ static bool Cookie_ParseLine(char *buf)
     return false;
   }
 
-  return Cookie_SetValue(name, value);
+  return Cookie_SetValue(name, buf);
 }
 
 //------------------------------------------------------------------------
