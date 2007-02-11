@@ -483,10 +483,10 @@ zprint(active_mon, #active_mon, active_mon[1])
     -- 3b. missile: dodged 50%
     -- 3c. melee: dodged 80%
 
-    local mon_fight = 0.40
-    if settings.health == "less" then mon_fight = 0.26 end
+    local mon_fight = 0.45
+    if settings.health == "less" then mon_fight = 0.30 end
     if settings.health == "more" then mon_fight = 0.60 end
-    
+
     for idx,AC in ipairs(active_mon) do
       if AC.health > 0 then
         local ratio = distance_ratio(idx, AC)
@@ -655,7 +655,7 @@ function distribute_pickups(p, c, HM, backtrack)
 
   local function be_nice_to_player()
 
-    if (settings.game == "doom") or (settings.game == "doom2") then
+    if (settings.game == "doom1") or (settings.game == "doom2") then
 
       -- let poor ol' player have a shotgun near start
 
