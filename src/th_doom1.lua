@@ -493,7 +493,7 @@ COMMON_CRATES =
 
   SHAWN =
   {
-    wall = "SHAWN3", h=64, floor = "FLAT23"
+    wall = "SHAWN3", h=64, floor = "FLAT23", can_rotate=true
   },
   
   WOOD3 =
