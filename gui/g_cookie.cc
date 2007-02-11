@@ -29,6 +29,40 @@
 static FILE *cookie_fp;
 
 
+static bool Cookie_SetValue(const char *name, const char *value)
+{
+  DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
+
+  // ignore the seed value
+  if (StrCaseCmp(name, "seed") == 0)
+    return true;
+
+  // Settings...
+
+  if (StrCaseCmp(name, "game") == 0)
+    return main_win->setup_box->set_Game(value);
+  if (StrCaseCmp(name, "addon") == 0)
+    return main_win->setup_box->set_Addon(value);
+  if (StrCaseCmp(name, "length") == 0)
+    return main_win->setup_box->set_Length(value);
+  if (StrCaseCmp(name, "mode") == 0)
+    return main_win->setup_box->set_Mode(value);
+
+  // Adjustments...
+
+  if (StrCaseCmp(name, "health") == 0)
+    return main_win->adjust_box->set_Health(value);
+  if (StrCaseCmp(name, "ammo") == 0)
+    return main_win->adjust_box->set_Ammo(value);
+  if (StrCaseCmp(name, "mons") == 0)
+    return main_win->adjust_box->set_Monsters(value);
+  if (StrCaseCmp(name, "traps") == 0)
+    return main_win->adjust_box->set_Traps(value);
+
+  LogPrintf("CONFIG: Ignoring unknown setting: %s = %s\n", name, value);
+  return false;
+}
+
 static bool Cookie_ParseLine(char *buf)
 {
   // remove whitespace
@@ -48,7 +82,10 @@ static bool Cookie_ParseLine(char *buf)
     return true;
 
   if (! isalpha(*buf))
+  {
+    DebugPrintf("Weird config line: [%s]\n", buf);
     return false;
+  }
 
   // Righteo, line starts with an identifier.  It should be of the
   // form "name = value".  We'll terminate the identifier, and pass
@@ -63,7 +100,10 @@ static bool Cookie_ParseLine(char *buf)
     *buf++ = 0;
   
   if (*buf != '=')
+  {
+    DebugPrintf("Config line missing '=': [%s]\n", buf);
     return false;
+  }
 
   *buf++ = 0;
 
@@ -71,14 +111,16 @@ static bool Cookie_ParseLine(char *buf)
     buf++;
 
   if (*buf == 0)
+  {
+    DebugPrintf("Config line missing value!\n");
     return false;
+  }
 
-  DebugPrintf("COOKIE: Name: [%s]  Value: [%s]\n", name, buf);
-
-  // FIXME: match name
-
-  return true;
+  return Cookie_SetValue(name, value);
 }
+
+//------------------------------------------------------------------------
+
 
 bool Cookie_Load(const char *filename)
 {
@@ -86,11 +128,11 @@ bool Cookie_Load(const char *filename)
 
   if (! cookie_fp)
   {
-    LogPrintf("Missing Settings file -- using defaults.\n\n");
+    LogPrintf("Missing Config file -- using defaults.\n\n");
     return false;
   }
 
-  LogPrintf("Loading Settings...\n");
+  LogPrintf("Loading Config...\n");
 
   // simple line-by-line parser
   char buffer[MSG_BUF_LEN];
@@ -122,29 +164,29 @@ bool Cookie_Save(const char *filename)
     return false;
   }
 
-  LogPrintf("Saving Settings...\n");
+  LogPrintf("Saving Config...\n");
 
   // header...
-  fprintf(cookie_fp, "-- SETTINGS FOR OBLIGE %s\n", OBLIGE_VERSION); 
+  fprintf(cookie_fp, "-- CONFIG FILE : OBLIGE %s\n", OBLIGE_VERSION); 
   fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006,2007 Andrew Apted\n");
   fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
   // FIXME: duplicate code from g_doom.cc : How to merge??
  
-  fprintf(cookie_fp, "-- General --\n");
-  fprintf(cookie_fp, "seed = %s\n",  main_win->setup_box->cur_Seed());
-  fprintf(cookie_fp, "game = %s\n",  main_win->setup_box->cur_Game());
-  fprintf(cookie_fp, "addon = %s\n", main_win->setup_box->cur_Addon());
-  fprintf(cookie_fp, "mode = %s\n",  main_win->setup_box->cur_Mode());
-  fprintf(cookie_fp, "length = %s\n",main_win->setup_box->cur_Length());
+  fprintf(cookie_fp, "-- Settings --\n");
+  fprintf(cookie_fp, "seed = %s\n",  main_win->setup_box->get_Seed());
+  fprintf(cookie_fp, "game = %s\n",  main_win->setup_box->get_Game());
+  fprintf(cookie_fp, "addon = %s\n", main_win->setup_box->get_Addon());
+  fprintf(cookie_fp, "mode = %s\n",  main_win->setup_box->get_Mode());
+  fprintf(cookie_fp, "length = %s\n",main_win->setup_box->get_Length());
   fprintf(cookie_fp, "\n");
 
   fprintf(cookie_fp, "-- Adjustments --\n");
-  fprintf(cookie_fp, "health = %s\n", main_win->adjust_box->cur_Health());
-  fprintf(cookie_fp, "ammo = %s\n",   main_win->adjust_box->cur_Ammo());
-  fprintf(cookie_fp, "mons = %s\n",   main_win->adjust_box->cur_Monsters());
-  fprintf(cookie_fp, "traps = %s\n",  main_win->adjust_box->cur_Traps());
-  
+  fprintf(cookie_fp, "health = %s\n", main_win->adjust_box->get_Health());
+  fprintf(cookie_fp, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
+  fprintf(cookie_fp, "mons = %s\n",   main_win->adjust_box->get_Monsters());
+  fprintf(cookie_fp, "traps = %s\n",  main_win->adjust_box->get_Traps());
+
   LogPrintf("DONE.\n\n");
 
   return true;
