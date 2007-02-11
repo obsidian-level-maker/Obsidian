@@ -27,6 +27,9 @@ JH = BH/KH
 
 BORDER_BLK = 5  -- number of spare blocks around plan
 
+MIN_FLOOR = 0
+MAX_CEIL  = 640
+
 SKILLS = { "easy", "medium", "hard" }
 
 PLAN = {}
