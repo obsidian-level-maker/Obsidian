@@ -79,7 +79,7 @@ DM_SECTOR_TYPES =
 
 ----------------------------------------------------------------
 
-DM_COMMON_THEMES =
+DM_ROOM_THEMES =
 {
 ---- INDOOR ------------
 
@@ -246,7 +246,7 @@ DM_COMMON_THEMES =
   },
 }
 
-DM_COMMON_EXITS =
+DM_EXITS =
 {
   TECH =
   {
@@ -288,7 +288,7 @@ DM_COMMON_EXITS =
   },
 }
 
-DM_COMMON_HALLS =
+DM_HALLWAYS =
 {
   BROWN1 =
   {
@@ -464,7 +464,7 @@ DM_OVERHANGS =
 
 ---- CRATES ------------
 
-COMMON_CRATES =
+DM_CRATES =
 {
   CRATE1 =
   {
@@ -895,14 +895,14 @@ function common_doom_theme()
     quests = DM_QUESTS,
     dm = DM_DEATHMATCH,
 
-    themes    = DM_COMMON_THEMES,
-    exits     = DM_COMMON_EXITS,
-    hallways  = DM_COMMON_HALLS,
+    themes    = DM_ROOM_THEMES,
+    exits     = DM_EXITS,
+    hallways  = DM_HALLWAYS,
 
     hangs     = DM_OVERHANGS,
     pedestals = DM_PEDESTALS,
     mats      = DM_MATS,
-    crates    = COMMON_CRATES,
+    crates    = DM_CRATES,
 
     liquids   = DM_LIQUIDS,
     switches  = DM_SWITCHES,
