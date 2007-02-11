@@ -37,7 +37,7 @@
 #define TICKER_TIME  20 /* ms */
 
 #define TEMP_FILENAME    DATA_DIR "/TEMP.wad"
-#define CONFIG_FILENAME  DATA_DIR "/SETTINGS.txt"
+#define CONFIG_FILENAME  DATA_DIR "/CONFIG.cfg"
 
 
 /* ----- user information ----------------------------- */
@@ -210,8 +210,6 @@ int main(int argc, char **argv)
 
 /// TITLE --> log file
 
-  Cookie_Load(CONFIG_FILENAME);
-
   Fl::scheme("plastic");
 
   fl_message_font(FL_HELVETICA /* _BOLD */, 18);
@@ -224,6 +222,8 @@ int main(int argc, char **argv)
   Default_Location();
 
   main_win = new UI_MainWin(OBLIGE_TITLE);
+
+  Cookie_Load(CONFIG_FILENAME);
 
   try
   {
