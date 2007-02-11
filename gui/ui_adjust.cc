@@ -129,23 +129,70 @@ const char * UI_Adjust::adjust_syms[5] =
   "scarce", "less", "normal", "more", "heaps"
 };
 
-const char *UI_Adjust::cur_Health()
+const char *UI_Adjust::get_Health()
 {
   return adjust_syms[1 + health->value()];
 }
 
-const char *UI_Adjust::cur_Ammo()
+const char *UI_Adjust::get_Ammo()
 {
   return adjust_syms[1 + ammo->value()];
 }
 
-const char *UI_Adjust::cur_Monsters()
+const char *UI_Adjust::get_Monsters()
 {
   return adjust_syms[mons->value()];
 }
 
-const char *UI_Adjust::cur_Traps()
+const char *UI_Adjust::get_Traps()
 {
   return adjust_syms[traps->value()];
+}
+
+//----------------------------------------------------------------
+
+int UI_Adjust::FindSym(const char *str)
+{
+  for (int i=0; adjust_syms[i]; i++)
+    if (StrCaseCmp(str, adjust_syms[i]) == 0)
+      return i;
+
+  return -1; // Unknown
+}
+
+bool UI_Adjust::set_Health(const char *str)
+{
+  int i = FindSym(str);
+
+  if (1 <= i && i <= 3) { health->value(i-1); return true; }
+
+  return false;
+}
+
+bool UI_Adjust::set_Ammo(const char *str)
+{
+  int i = FindSym(str);
+
+  if (1 <= i && i <= 3) { ammo->value(i-1); return true; }
+
+  return false;
+}
+
+bool UI_Adjust::set_Monsters(const char *str)
+{
+  int i = FindSym(str);
+
+  if (i >= 0) { mons->value(i); return true; }
+
+  return false;
+}
+
+bool UI_Adjust::set_Traps(const char *str)
+{
+  int i = FindSym(str);
+
+  if (i >= 0) { traps->value(i); return true; }
+
+  return false;
 }
 

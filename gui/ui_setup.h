@@ -43,11 +43,17 @@ public:
 
   void Locked(bool value);
 
-  const char *cur_Seed();
-  const char *cur_Game();
-  const char *cur_Addon();
-  const char *cur_Mode();
-  const char *cur_Length();
+  const char *get_Seed();
+  const char *get_Game();
+  const char *get_Addon();
+  const char *get_Mode();
+  const char *get_Length();
+  
+  bool set_Seed(const char *str);
+  bool set_Game(const char *str);
+  bool set_Addon(const char *str);
+  bool set_Mode(const char *str);
+  bool set_Length(const char *str);
   
 private:
   static void bump_callback(Fl_Widget *, void*);

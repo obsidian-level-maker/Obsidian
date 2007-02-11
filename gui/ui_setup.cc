@@ -184,7 +184,7 @@ const char * UI_Setup::game_syms[] =
 
 const char * UI_Setup::addon_syms[] =
 {
-  "none", "eternal", "osiris", "gothic"
+  "none" /// , "eternal", "osiris", "gothic"
 };
 
 const char * UI_Setup::mode_syms[] =
@@ -198,28 +198,89 @@ const char * UI_Setup::length_syms[] =
 };
 
 
-const char *UI_Setup::cur_Seed()
+const char *UI_Setup::get_Seed()
 {
   return seed->value();
 }
 
-const char *UI_Setup::cur_Game()
+const char *UI_Setup::get_Game()
 {
   return game_syms[game->value()];
 }
 
-const char *UI_Setup::cur_Addon()
+const char *UI_Setup::get_Addon()
 {
   return addon_syms[addon->value()];
 }
 
-const char *UI_Setup::cur_Mode()
+const char *UI_Setup::get_Mode()
 {
   return mode_syms[mode->value()];
 }
 
-const char *UI_Setup::cur_Length()
+const char *UI_Setup::get_Length()
 {
   return length_syms[length->value()];
+}
+
+//----------------------------------------------------------------
+
+bool UI_Setup::set_Seed(const char *str)
+{
+  seed->value(str);
+
+  return true;
+}
+
+bool UI_Setup::set_Game(const char *str)
+{
+  for (int i=0; game_syms[i]; i++)
+  {
+    if (StrCaseCmp(str, game_syms[i]) == 0)
+    {
+      game->value(i);
+      return true;
+    }
+  }
+  return false; // Unknown
+}
+
+bool UI_Setup::set_Addon(const char *str)
+{
+  for (int i=0; addon_syms[i]; i++)
+  {
+    if (StrCaseCmp(str, addon_syms[i]) == 0)
+    {
+      addon->value(i);
+      return true;
+    }
+  }
+  return false; // Unknown
+}
+
+bool UI_Setup::set_Mode(const char *str)
+{
+  for (int i=0; mode_syms[i]; i++)
+  {
+    if (StrCaseCmp(str, mode_syms[i]) == 0)
+    {
+      mode->value(i);
+      return true;
+    }
+  }
+  return false; // Unknown
+}
+
+bool UI_Setup::set_Length(const char *str)
+{
+  for (int i=0; length_syms[i]; i++)
+  {
+    if (StrCaseCmp(str, length_syms[i]) == 0)
+    {
+      length->value(i);
+      return true;
+    }
+  }
+  return false; // Unknown
 }
 

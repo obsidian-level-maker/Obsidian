@@ -35,13 +35,20 @@ public:
 
   void Locked(bool value);
 
-  const char *cur_Health();
-  const char *cur_Ammo();
-  const char *cur_Monsters();
-  const char *cur_Traps();
+  const char *get_Health();
+  const char *get_Ammo();
+  const char *get_Monsters();
+  const char *get_Traps();
+
+  bool set_Health(const char *str);
+  bool set_Ammo(const char *str);
+  bool set_Monsters(const char *str);
+  bool set_Traps(const char *str);
 
 private:
   static const char *adjust_syms[5];
+
+  int FindSym(const char *str);
 };
 
 #endif /* __UI_ADJUST_H__ */
