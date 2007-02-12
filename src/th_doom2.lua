@@ -498,7 +498,7 @@ D2_CRATES =
   SILVER2 =
   {
     wall = "SILVER2", h=64, floor = "FLAT23",
-    can_rotate=true, rot_xoffset=0
+    can_rotate=true, rot_x_offset=0
   },
 
   SILVER3 =

@@ -323,10 +323,11 @@ DM_HALLWAYS =
     wall = "STARTAN2",
     void = "STARTAN3",
     step = "STEP1",
-    pillar = "WOODSKUL",
+    pillar = "STARGR2", -- or STARBR2
 
     floor = "FLAT14",
     ceil  = "TLITE6_4",
+
     arch_floor = "FLAT20",
     arch_ceil  = "CEIL3_2",
 
@@ -488,7 +489,8 @@ DM_CRATES =
 
   ICKWALL =
   {
-    wall = "ICKWALL4", h=64, floor = "FLAT19", can_rotate=true
+    wall = "ICKWALL4", h=64, floor = "FLAT19",
+    can_rotate=true, can_yshift=64
   },
 
   SHAWN =
@@ -496,14 +498,22 @@ DM_CRATES =
     wall = "SHAWN3", h=64, floor = "FLAT23", can_rotate=true
   },
   
-  WOOD3 =
+  WOOD3A =
   {
-    wall = "WOOD3", h=64, floor = "CEIL1_1"
+    wall = "WOOD3", h=64, floor = "CEIL1_1",
+    side_x_offset=64
   },
 
-  WOOD4 =
+  WOOD3B =
   {
-    wall = "WOOD4", h=64, floor = "CEIL1_1", can_rotate=true
+    wall = "WOOD3", h=64, floor = "CEIL1_1",
+    x_offset=128, y_offset=59, side_x_offset=64
+  },
+
+  WOODSKUL =
+  {
+    wall = "WOOD4", h=64, floor = "CEIL1_1",
+    can_rotate=true, can_yshift=59
   },
 }
 
@@ -844,22 +854,25 @@ D1_CRATES =
 {
   COMPUTER =
   {
-    wall = "COMPUTE1", h=128, floor = "FLAT23"
+    wall = "COMPUTE1", h=128, floor = "FLAT23",
+    side_x_offset=67
   },
 
-  PLANET =
+  PLANET1 =
   {
-    wall = "PLANET1", h=128, floor = "FLAT23"
+    wall = "PLANET1", h=128, floor = "FLAT23",
+    side_x_offset=64
+  },
+ 
+  PLANET2 =
+  {
+    wall = "PLANET1", h=64, floor = "FLAT23",
+    x_offset=128, side_y_offset=64
   },
  
   SKIN =
   {
     wall = "SKINBORD", h=64, floor = "CEIL3_3", can_rotate=true
-  },
-
-  TEKWALL =
-  {
-    wall = "TEKWALL5", h=64, floor = "CEIL5_2"
   },
 }
 
