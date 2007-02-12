@@ -282,6 +282,7 @@ end
 
 
 function scale_block(B, scale)
+  -- Note: doesn't set x_offsets
   scale = (scale - 1) * 32
   B[1] = { dx=-scale, dy=-scale }
   B[3] = { dx= scale, dy=-scale }
@@ -290,17 +291,11 @@ function scale_block(B, scale)
 end
 
 function rotate_block(B, d)
-  if not d then d = 0 end
+  -- Note: doesn't set x_offsets
   B[1] = { dx= 32, dy= -d }
   B[3] = { dx=  d, dy= 32 }
   B[9] = { dx=-32, dy=  d }
   B[7] = { dx= -d, dy=-32 }
-
-  -- FIXME !!!! assumes d is 0
-  B[2] = { x_offset = 9 }
-  B[4] = { x_offset = 9 }
-  B[6] = { x_offset = 9 }
-  B[8] = { x_offset = 9 }
 end
 
 --
@@ -598,7 +593,8 @@ function B_exit_hole(p,c, kx,ky, sec)
   local bx = chunk_to_block(kx)
   local by = chunk_to_block(ky)
 
-  gap_fill(p,c, bx,by, bx+KW-1, by+KH-1, sec)
+  gap_fill(p,c, bx,by, bx+KW-1, by+KH-1, sec,
+           { l_tex = c.theme.hole_tex or c.theme.void })
 
   -- we want the central block
   bx, by = bx+1,by+1
@@ -608,12 +604,12 @@ function B_exit_hole(p,c, kx,ky, sec)
 
   local HOLE = copy_block(sec)
 
-  HOLE.f_h = HOLE.f_h - 24
+  HOLE.f_h = HOLE.f_h - 16
   HOLE.f_tex = THEME.SKY_TEX
-  HOLE.l_tex = c.theme.hole_tex or c.theme.void
 
   HOLE.walk_kind = 52 -- "exit_W1"
   HOLE.short = true
+  HOLE.is_cage = true  -- don't place items/monsters here
 
   frag_fill(p,c, fx+1,fy+1, fx+FW,fy+FH, HOLE)
 
@@ -1000,62 +996,114 @@ function B_crate(p,c, crate_info, base, kx,ky, bx,by)
   CRATE.l_tex = crate_info.wall
   CRATE.is_cage = true  -- don't put monsters/pickups here
 
+  local x_ofs = crate_info.x_offset
+  local y_ofs = crate_info.y_offset
+
   if c.theme.outdoor or not c.sky_light then
     if crate_info.can_rotate and rand_odds(50) then
-      -- FIXME: the x_offsets are lost (overwritten by the lower_pegs)
-      rotate_block(CRATE)
+      rotate_block(CRATE, 0)
       CRATE.rotated = true
+      x_ofs = crate_info.rot_x_offset or 9
     end
   end
 
+  if crate_info.can_xshift and rand_odds(50) then
+    x_ofs = (x_ofs or 0) + crate_info.can_xshift
+  end
+  if crate_info.can_yshift and rand_odds(50) then
+    y_ofs = (y_ofs or 0) + crate_info.can_yshift
+  end
+
+  local x_ofs2 = crate_info.side_x_offset or x_ofs
+  local y_ofs2 = crate_info.side_y_offset or y_ofs
+
+  if rand_odds(50) then x_ofs,x_ofs2 = x_ofs2,x_ofs end
+  if rand_odds(50) then y_ofs,y_ofs2 = y_ofs2,y_ofs end
+
   fill(p,c, bx, by, bx, by, CRATE,
-       { [2] = { lower_peg=true }, [4] = { lower_peg=true },
-         [6] = { lower_peg=true }, [8] = { lower_peg=true } })
+       { [2] = { lower_peg=true, x_offset=x_ofs,  y_offset=y_ofs  },
+         [4] = { lower_peg=true, x_offset=x_ofs2, y_offset=y_ofs2 },
+         [6] = { lower_peg=true, x_offset=x_ofs2, y_offset=y_ofs2 },
+         [8] = { lower_peg=true, x_offset=x_ofs,  y_offset=y_ofs  } })
 
   -- sometimes put monsters on top
   if not CRATE.rotated and (CRATE.c_h >= CRATE.f_h + 80) and rand_odds(33) then
     local spot = { c=c, x=bx, y=by, different=true }
     add_cage_spot(p,c, spot)
   end
+end
 
+function cage_select_height(p,c, kind, theme,rail, floor_h, ceil_h)
+
+  if c[kind] and rand_odds(80) then
+    return c[kind].z, c[kind].open_top
+  end
+  
+  local open_top = false
+
+  if rail.h < 72 then open_top = true end
+  if ceil_h >= floor_h + 256 then open_top = true end
+  if dual_odds(c.outdoor, 50, 10) then open_top = true end
+
+  local z1 = floor_h + 32
+  local z2 = math.min(floor_h + 128, ceil_h - 16 - rail.h)
+
+  local r = con.random() * 100
+      if r < 16 then z2 = z1
+  elseif r < 50 then z1 = z2
+  end
+
+  z1 = (z1+z2)/2
+
+  if not c[kind] then
+    c[kind] = { z=z1, open_top=open_top }
+  end
+
+  return (z1+z2)/2, open_top
 end
 
 function B_pillar_cage(p,c, theme, kx,ky, bx,by)
 
   local K = c.chunks[kx][ky]
 
+  local rail
+  if K.ceil_h < K.floor_h+192 then
+    rail = THEME.rails["r_1"]
+  else
+    rail = get_rand_rail()
+  end
+  assert(rail)
+
+---###  local z = (c.f_max + c.ceil_h) / 2
+---###  z = math.min(z, K.floor_h + 128)
+
+  local kind = sel(kx==2 and ky==2, "middle_cage", "pillar_cage")
+
+  local z, open_top = cage_select_height(p,c, kind, theme,rail, K.floor_h,K.ceil_h)
+
+  if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
+    open_top = true
+  end
+
   local CAGE = copy_block(c.room_sec)
-  local z = (c.f_max + c.ceil_h) / 2
 
-  z = math.min(z, K.floor_h + 128)
-
+  CAGE.f_h   = z
   CAGE.f_tex = theme.floor
   CAGE.l_tex = theme.wall
   CAGE.u_tex = theme.wall
+  CAGE.rail  = rail.tex
+
   CAGE.is_cage = true
 
-  if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
-    CAGE.f_h = z
-    CAGE.c_h = c.ceil_h
-    CAGE.c_tex = c.theme.ceil
-
-    if rand_odds(50) then
-      CAGE.rail = THEME.rails["r_1"].tex
-      if CAGE.f_h > CAGE.c_h - 72 then
-        CAGE.f_h = CAGE.c_h - 72
-      end
-    end
-  else
-    CAGE.f_h = z - 32
-    CAGE.c_h = z + 40
+  if not open_top then
+    CAGE.c_h = CAGE.f_h + rail.h
     CAGE.c_tex = theme.ceil
-    CAGE.light = 192
-    CAGE.rail  = THEME.rails["r_1"].tex
+    CAGE.light = 192  -- FIXME: from CAGE theme
   end
 
----!!  if c.theme.outdoor or not c.sky_light then
----!!    rotate_block(CAGE,32)
----!!  end
+--  if K.dud_chunk and (c.theme.outdoor or not c.sky_light) then
+--    rotate_block(CAGE,32)
+--  end
 
   fill(p,c, bx,by, bx,by, CAGE)
 
@@ -1066,53 +1114,62 @@ function B_pillar_cage(p,c, theme, kx,ky, bx,by)
 end
 
 --
--- create a chunk-sized monster cage
+-- Build a chunk-sized monster cage
 --
-function B_big_cage(p,c, kx,ky)
+function B_big_cage(p,c, theme, kx,ky)
 
   local bx = chunk_to_block(kx)
   local by = chunk_to_block(ky)
 
-  CAGE =
-  {
-    f_h = c.ceil_h - 16 - 72,
-    c_h = c.ceil_h - 16,
-    f_tex = THEME.mats.CAGE.floor,
-    c_tex = THEME.mats.CAGE.ceil,
-    light = 176,
+  local rail = get_rand_rail()
+  assert(rail)
 
-    l_tex = THEME.mats.CAGE.wall,
-    u_tex = THEME.mats.CAGE.wall,
-    is_cage = true
-  }
+  -- FIXME: some of this is duplicated above, merge it
+ 
+  local rail
+  if c.ceil_h < c.floor_h+192 then
+    rail = THEME.rails["r_1"]
+  else
+    rail = get_rand_rail()
+  end
+  assert(rail)
 
-  if CAGE.f_h > c.floor_h + 160 then
-     CAGE.f_h = c.floor_h + 160
-    if c.theme.outdoor then
-      CAGE.c_h   = c.c_max
-      CAGE.c_tex = c.theme.ceil
-    else
-      CAGE.c_h = CAGE.f_h + 72
-    end
+  local z, open_top = cage_select_height(p,c, "big_cage", theme,rail, c.floor_h,c.ceil_h)
+
+  local CAGE = copy_block(c.room_sec)
+
+  CAGE.f_h   = z
+  CAGE.f_tex = theme.floor
+  CAGE.l_tex = theme.wall
+  CAGE.u_tex = theme.wall
+
+  CAGE.is_cage = true
+
+  if not open_top then
+    CAGE.c_h = CAGE.f_h + rail.h
+    CAGE.c_tex = theme.ceil
+    CAGE.light = 176
   end
 
   for x = 0,2 do for y = 0,2 do
-    local rail = THEME.rails["r_1"].tex
+
     local overrides = {}
-    if x == 0 then overrides[4] = { rail=rail } end
-    if x == 2 then overrides[6] = { rail=rail } end
-    if y == 0 then overrides[2] = { rail=rail } end
-    if y == 2 then overrides[8] = { rail=rail } end
+    if x == 0 then overrides[4] = { rail=rail.tex } end
+    if x == 2 then overrides[6] = { rail=rail.tex } end
+    if y == 0 then overrides[2] = { rail=rail.tex } end
+    if y == 2 then overrides[8] = { rail=rail.tex } end
 
     fill(p,c, bx+x,by+y, bx+x,by+y, CAGE, overrides)
   end end
 
   local spot = {c=c, x=bx, y=by, double=true, dx=32, dy=32}
+  if kx==2 and ky==2 then spot.different = true end
+
   add_cage_spot(p,c, spot)
 end
 
 --
--- create a hidden monster closet
+-- Build a hidden monster closet
 --
 function B_monster_closet(p,c, kx,ky, z, tag)
 
@@ -1646,7 +1703,10 @@ function make_chunks(p)
     end
 
     -- TODO: more cage themes...
-    if name == "cage" and not THEME.mats.CAGE then return end
+    if name == "cage" then
+      if not THEME.mats.CAGE then return end
+      if c.scenic then return end
+    end
 
     local posits = {}
 
@@ -2268,7 +2328,6 @@ function build_cell(p, c)
 
     elseif link.kind == "door" and link.is_exit and not link.quest then
 
-print("EXIT DOOR", where, long, link.long or "NIL")
       B_exit_door(p,c, c.theme, link, x-dx, y-dy, c.floor_h, dir)
 
     elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
@@ -2950,7 +3009,9 @@ print("EXIT DOOR", where, long, link.long or "NIL")
       if K.pillar and not blocked then
 
         -- TEST CRUD
-        if rand_odds(22) and THEME.mats.CAGE and not p.deathmatch then
+        if rand_odds(22) and THEME.mats.CAGE and not p.deathmatch
+          and K.ceil_h >= K.floor_h + 128
+        then
           B_pillar_cage(p,c, THEME.mats.CAGE, kx,ky, x1+1,y1+1)
         else
           B_pillar(p,c, c.theme, kx,ky, x1+1,y1+1)
@@ -3039,7 +3100,7 @@ print("EXIT DOOR", where, long, link.long or "NIL")
     end
 
     if K.cage then
-      B_big_cage(p,c, kx,ky)
+      B_big_cage(p,c, THEME.mats.CAGE, kx,ky)
       return
     end
 
@@ -3157,7 +3218,7 @@ print("EXIT DOOR", where, long, link.long or "NIL")
           B_floor_switch(p,c, bx,by, K.floor_h, side, THEME.switches.sw_exit, 11)
         end
       end
-    end
+    end -- if K.player | K.quest etc...
 
     -- fill in the rest
 
