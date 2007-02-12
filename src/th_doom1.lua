@@ -275,10 +275,10 @@ DM_EXITS =
     void = "STONE",
     dm_switch = "SW1COMM",
 
-    floor = "FLAT5_2",
+    floor = "FLOOR7_2",  -- FLAT5_2
     ceil  = "FLAT1",
 
-    hole_tex = "WOOD1",
+    hole_tex = "MARBLE1",  -- WOOD1
     
     front_mark = "EXITSTON", 
 
