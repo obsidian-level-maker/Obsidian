@@ -46,7 +46,7 @@ public:
   bool set_Traps(const char *str);
 
 private:
-  static const char *adjust_syms[5];
+  static const char *adjust_syms[3];
 
   int FindSym(const char *str);
 };

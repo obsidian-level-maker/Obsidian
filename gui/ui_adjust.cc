@@ -50,7 +50,7 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
 #if 1
   health = new Fl_Choice(x+70, cy, 130, 24, "Health: ");
   health->align(FL_ALIGN_LEFT);
-  health->add("Less|Normal|More");
+  health->add("Less|Enough|More");
   health->value(1);
 
 #else  // SLIDER version (looks shite -- cannot set knob color)
@@ -72,8 +72,8 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
 
   mons = new Fl_Choice(x+300, cy, 150, 24, "Monsters: ");
   mons->align(FL_ALIGN_LEFT);
-  mons->add("Scarce|Less|Normal|More|Jam-packed");
-  mons->value(2);
+  mons->add("Scarce|Plenty|Hordes");
+  mons->value(1);
 
   add(mons);
 
@@ -81,15 +81,15 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
 
   ammo = new Fl_Choice(x+70, cy, 130, 24, "Ammo: ");
   ammo->align(FL_ALIGN_LEFT);
-  ammo->add("Less|Normal|More");
+  ammo->add("Less|Enough|More");
   ammo->value(1);
   
   add(ammo);
 
   traps = new Fl_Choice(x+300, cy, 150, 24, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
-  traps->add("Scarce|Less|Normal|More|Jam-packed");
-  traps->value(2);
+  traps->add("A few|Some|Heaps");
+  traps->value(1);
 
   add(traps);
 
@@ -124,19 +124,19 @@ void UI_Adjust::Locked(bool value)
 
 //----------------------------------------------------------------
 
-const char * UI_Adjust::adjust_syms[5] =
+const char * UI_Adjust::adjust_syms[3] =
 {
-  "scarce", "less", "normal", "more", "heaps"
+  "less", "normal", "more"
 };
 
 const char *UI_Adjust::get_Health()
 {
-  return adjust_syms[1 + health->value()];
+  return adjust_syms[health->value()];
 }
 
 const char *UI_Adjust::get_Ammo()
 {
-  return adjust_syms[1 + ammo->value()];
+  return adjust_syms[ammo->value()];
 }
 
 const char *UI_Adjust::get_Monsters()
@@ -164,7 +164,7 @@ bool UI_Adjust::set_Health(const char *str)
 {
   int i = FindSym(str);
 
-  if (1 <= i && i <= 3) { health->value(i-1); return true; }
+  if (i >= 0) { health->value(i); return true; }
 
   return false;
 }
@@ -173,7 +173,7 @@ bool UI_Adjust::set_Ammo(const char *str)
 {
   int i = FindSym(str);
 
-  if (1 <= i && i <= 3) { ammo->value(i-1); return true; }
+  if (i >= 0) { ammo->value(i); return true; }
 
   return false;
 }
