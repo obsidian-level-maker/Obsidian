@@ -208,7 +208,7 @@ int main(int argc, char **argv)
 
   LogInit(ArgvFind('d', "debug") >= 0);
 
-/// TITLE --> log file
+  LogPrintf(OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006,2007 Andrew Apted\n\n");
 
   Fl::scheme("plastic");
 
