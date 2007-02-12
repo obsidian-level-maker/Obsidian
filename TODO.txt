@@ -2,19 +2,37 @@
 TODO
 ----
 
-+  more exit themes!
+>>>  cage floor heights: more reasonable, random 
 
-+  crates!
+   -  pillar cages: base calcs on K.floor .. K.ceil
+   -  big cages:    base calcs on c.floor and c.ceil
+
+   -  minimum z = floor + 24
+   -  absolute maximum z = ceil - 16 - rail.h
+   -  reasonable max z = floor + 128
+
+   -  if rail.h < 80 then must be "open top"
+   -  if sector is very tall, must be open top
+   -  otherwise random (based on indoor/outdoor and sector space)
+
+>>>  more exit themes!
 
 -  tweak outside floor/ceil calcs, prevent very tall sectors
    -  no  floor  lower  than  0 (liquids excepted).
    -  no ceiling higher than 640.
 
+-  x_offset for rotated crates
+
+-  rename 'room_sec' to 'model_sec', CHUNK HAS ONE TOO.
+
+-  Monst/Trap adjustments: five choices too many ?!?!
+
+-  fix cage railing when cage borders a higher chunk or Fence
+-  don't put a railing _between_ cages
+
 
 GUI TODO
 --------
-
->>>  remember settings (obl_data/SETTINGS.cfg)
 
 -  handle the Abort button better, also glbsp-failure.
 
@@ -24,9 +42,10 @@ GUI TODO
 RECENT CHANGES
 --------------
 
-+  hallways!
-+  improved method of choosing floor/ceiling heights.
++  Hallways!  Crates!  New exits!
+>> improved method of choosing floor/ceiling heights.
 +  user adjustments in the GUI (health/ammo/monsters).
++  settings and adjustments are saved when you quit.
 
 -  fixed the (rare) non-working switches and lifts.
 -  surprise traps: improved placement, fairer monsters.
@@ -101,7 +120,7 @@ MILESTONE 3  (heaps left to do!!)
 
 +  allocation system for blocks (can_walk tests).
 
--  larger rooms (2-8 chunks in each dimension).
+?  larger rooms (2-8 chunks in each dimension).
 
 +  teleporters!
 
@@ -135,10 +154,12 @@ MILESTONE 3  (heaps left to do!!)
 
 ++ overall consistency (doors/lights/overhangs/windows)
 
-________________________
-|Key:                   |
-|    # completed item   |
-|    + important item   |
-|    - ordinary item    |
-|_______________________|
+_____________________
+|KEY:                |
+|    #  completed    |
+|    >> in progress  |
+|    -  plain item   |
+|    +  important    |
+|    ?  not sure     |
+|____________________|
 
