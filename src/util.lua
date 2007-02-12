@@ -88,26 +88,32 @@ function table_to_string(t, depth, prefix, sort_mode)
   return result
 end
 
-function merge_table(dest, src)
+function merge_table(dest, src1,src2,src3,src4)
   assert(dest)
-  if src then
-    for k,v in pairs(src) do
-      dest[k] = v
-    end
+  if src1 then
+    for k,v in pairs(src1) do dest[k] = v end
+  end
+  if src2 then
+    for k,v in pairs(src2) do dest[k] = v end
+  end
+  if src3 then
+    for k,v in pairs(src3) do dest[k] = v end
+  end
+  if src4 then
+    for k,v in pairs(src4) do dest[k] = v end
   end
   return dest
 end
 
--- Note: shallow copy
-function copy_table(t)
-  if t then return merge_table({}, t) end
-  return nil
+function copy_and_merge(t1, ...)
+  local result = {}
+  merge_table(result, t1, ...)
+  return result
 end
 
-function copy_and_merge(t1, t2)
-  local result = copy_table(t1)
-  merge_table(result, t2)
-  return result
+-- Note: shallow copy
+function copy_table(t)
+  return t and merge_table({}, t)
 end
 
 function reverse_array(t)
