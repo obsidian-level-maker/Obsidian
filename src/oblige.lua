@@ -22,6 +22,7 @@ require 'a_star'
 
 require 'th_doom1'
 require 'th_doom2'
+require 'th_freedoom'
 require 'th_heretic'
 require 'th_hexen'
 
@@ -47,7 +48,7 @@ function get_level_names(settings)
       end
     end
 
-  else  -- doom2 / hexen
+  else  -- doom2 / freedoom / hexen
 
     local TS = { single=1, episode=10, full=32 }
     local total = TS[settings.length]
@@ -69,6 +70,9 @@ function create_theme()
 
   elseif settings.game == "doom2" then
     THEME = create_doom2_theme()
+
+  elseif settings.game == "freedoom" then
+    THEME = create_freedoom_theme()
 
   elseif settings.game == "heretic" then
     THEME = create_heretic_theme()

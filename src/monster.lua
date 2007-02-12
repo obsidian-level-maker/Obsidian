@@ -655,7 +655,9 @@ function distribute_pickups(p, c, HM, backtrack)
 
   local function be_nice_to_player()
 
-    if (settings.game == "doom1") or (settings.game == "doom2") then
+    if (settings.game == "doom1") or (settings.game == "doom2") or
+       (settings.game == "freedoom")
+    then
 
       -- let poor ol' player have a shotgun near start
 
