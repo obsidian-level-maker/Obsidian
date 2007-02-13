@@ -755,7 +755,7 @@ function plan_sp_level(is_coop)  -- returns Plan
         if rand_odds(50) then slope = -slope end
       until (sl_min <= slope) and (slope <= sl_max)
 
-con.debugf("QUEST: f_h=%d slope=%d\n", Q.path[1].floor_h, slope)
+      con.debugf("QUEST> start:%d  slope:%d\n", Q.path[1].floor_h, slope)
 
       -- now traverse path and choose floor heights
       for idx = 2,#Q.path do
@@ -770,28 +770,23 @@ con.debugf("QUEST: f_h=%d slope=%d\n", Q.path[1].floor_h, slope)
           end
         end
 
---[[  WORSE OR BETTER ??
-        local r = con.random() * 100
-            if r < 15 then change = 0
-        elseif r < 20 and change > 16 then change = change / 2
-        elseif r < 25 then change = change * 2
-        elseif r < 30 then change = -change
-        end
---]]
         if slope < 0 then change = -change end
 
         c.floor_h = prev.floor_h + change
 
-        -- make our journey 
+        -- every journey has a few bumps along the way...
+        local bump
+
         if not (c.hallway and prev.hallway) then
-          local bump = BUMP_H[rand_index_by_probs(BUMP_PROBS)]
+          bump = BUMP_H[rand_index_by_probs(BUMP_PROBS)]
           c.floor_h = c.floor_h + bump
-con.debugf("(bump %d)\n", bump)
         end
 
         c.floor_h = math.max(c.floor_h, MIN_FLOOR)
         c.floor_h = math.min(c.floor_h, MAX_CEIL-128)
-con.debugf(".... floor_h=%d (change=%d)\n", c.floor_h, change)
+
+        con.debugf(".. floor:%d  bump:%d\n",
+            c.floor_h, bump or 0)
       end
     end
 
