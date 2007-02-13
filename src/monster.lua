@@ -957,10 +957,10 @@ function place_battle_stuff(p, c, stats)
 
       -- statistics....
       if dat.info.stat == "health" then
-        stats.health = stats.health + dat.info.give
+        stats[SK].health = stats[SK].health + dat.info.give
       elseif dat.info.stat ~= "armor" then
         -- not quite right, but close enough...
-        stats.ammo = stats.ammo + 1
+        stats[SK].ammo = stats[SK].ammo + (dat.info.give or 1)
       end
     end
   end
@@ -1013,8 +1013,8 @@ function place_battle_stuff(p, c, stats)
 
       add_monster_to_spot(p, spot, 0,0, dat.name, dat.info, angle,options)
 
-      stats.monsters = stats.monsters + 1
-      stats.power = stats.power + dat.info.pow
+      stats[SK].monsters = stats[SK].monsters + 1
+      stats[SK].power = stats[SK].power + dat.info.pow
 
       angle = random_turn(angle)
 
@@ -1459,6 +1459,17 @@ function battle_in_quest(p, Q)
   end
 end
 
+function dump_battle_stats(stats)
+  con.debugf("\n")
+  con.debugf("BATTLE STATS\n")
+
+  for zzz,SK in ipairs(SKILLS) do
+    con.debugf("%7s | h:%4d  ammo:%4d  mon:%4d  pow:%5d\n", SK,
+      stats[SK].health, stats[SK].ammo,
+      stats[SK].monsters, stats[SK].power)
+  end
+end
+
 function battle_through_level(p)
 
   -- step 1: decide monsters, simulate battles, decide health/ammo
@@ -1474,8 +1485,9 @@ function battle_through_level(p)
 
   local stats =
   {
-    monsters = 0, power = 0,
-    health = 0,   ammo = 0,
+    easy   = { health = 0, ammo = 0, monsters = 0, power = 0 },
+    medium = { health = 0, ammo = 0, monsters = 0, power = 0 },
+    hard   = { health = 0, ammo = 0, monsters = 0, power = 0 },
   }
 
   for zzz,Q in ipairs(p.quests) do
@@ -1485,8 +1497,6 @@ function battle_through_level(p)
     end
   end
 
-  con.debugf("Placed %d monsters, total power %d\n", stats.monsters, stats.power)
-  con.debugf("Placed %d total health\n", stats.health)
-  con.debugf("Placed %d ammo items\n", stats.ammo)
+  dump_battle_stats(stats)
 end
 
