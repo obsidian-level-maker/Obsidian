@@ -1227,10 +1227,8 @@ function plan_sp_level(is_coop)  -- returns Plan
     local sm_prob = 36
     local bg_prob = 60
 
-    if settings.traps == "scarce" then sm_prob, bg_prob =  7, 15 end
-    if settings.traps == "less"   then sm_prob, bg_prob = 20, 35 end
-    if settings.traps == "more"   then sm_prob, bg_prob = 60, 75 end
-    if settings.traps == "heaps"  then sm_prob, bg_prob = 80, 90 end
+    if settings.traps == "less" then sm_prob, bg_prob = 15, 25 end
+    if settings.traps == "more" then sm_prob, bg_prob = 60, 80 end
 
     local function add_closet(Q)
 
@@ -1384,10 +1382,8 @@ function plan_sp_level(is_coop)  -- returns Plan
       local peak = peak_toughness(Q)
       local skip = 0
 
-      if settings.mons == "scarce" then peak = peak/2.5 end
-      if settings.mons == "less"   then peak = peak/1.5 end
-      if settings.mons == "more"   then peak = peak*1.5 end
-      if settings.mons == "heaps"  then peak = peak*2.5 end
+      if settings.mons == "less"   then peak = peak/2.0 end
+      if settings.mons == "more"   then peak = peak*2.0 end
 
       -- go backwards from quest cell to start cell
       for i = #Q.path,1,-1 do
