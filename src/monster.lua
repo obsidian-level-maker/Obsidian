@@ -214,7 +214,7 @@ function hm_give_item(HM, item)
 end
 
 
-function initial_models()
+function initial_hmodels()
   local MODELS = {}
 
   for zzz,SK in ipairs(SKILLS) do
@@ -1100,7 +1100,7 @@ function battle_in_cell(p, c)
     assert(best_name)
 
     for name,info in pairs(THEME.weapons) do
-      if p.models[skill][name] and not info.melee then
+      if p.hmodels[skill][name] and not info.melee then
         if fire_power(info) > fire_power(best_info) then
           best_name, best_info = name, info
         end
@@ -1397,7 +1397,7 @@ zprint("BATTLE IN", c.x, c.y)
     SK = skill
 
     T = c.toughness * (free_space ^ 0.7) * TOUGH_FACTOR[SK]
-    T = T + p.models[SK].toughness
+    T = T + p.hmodels[SK].toughness
     U = 0
 
     fill_closets()
@@ -1406,15 +1406,15 @@ zprint("BATTLE IN", c.x, c.y)
     create_monsters(space)
 
     -- left over toughness gets compounded (but never decreased)
-    p.models[SK].toughness = math.max(0, T + U)
+    p.hmodels[SK].toughness = math.max(0, T + U)
 
     local quest = (c.along == #c.quest.path) and c.quest
 
 zprint("SIMULATE in CELL", c.x, c.y, SK)
 
-    simulate_battle(p, p.models[SK], c.mon_set[SK], quest)
+    simulate_battle(p, p.hmodels[SK], c.mon_set[SK], quest)
 
-    distribute_pickups(p, c, p.models[SK])
+    distribute_pickups(p, c, p.hmodels[SK])
   end
 end
 
@@ -1425,9 +1425,9 @@ function backtrack_to_cell(p, c)
       if c == place.c then
         for zzz,SK in ipairs(SKILLS) do
 
-          simulate_battle(p, p.models[SK], place.mon_set[SK]) 
+          simulate_battle(p, p.hmodels[SK], place.mon_set[SK]) 
 
-          distribute_pickups(p, c, p.models[SK], "backtrack")
+          distribute_pickups(p, c, p.hmodels[SK], "backtrack")
         end
       end
     end

@@ -1488,8 +1488,8 @@ function plan_sp_level(is_coop)  -- returns Plan
 
   ---=== plan_sp_level ===---
 
-  p.models = initial_models()
-  p.liquid = choose_liquid()
+  p.hmodels = initial_hmodels()
+  p.liquid  = choose_liquid()
 
   if (p.liquid) then
     con.printf("LIQUID: %s\n", p.liquid.name)
