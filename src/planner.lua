@@ -267,7 +267,7 @@ function create_cell(p, x, y, quest, along, theme, is_depot)
     theme = theme,
     is_depot = is_depot,
     liquid = quest.liquid,
-    floor_h = 0, ceil_h  = 256, -- dummy values
+    floor_h = 128, ceil_h = 256, -- dummy values
     monsters = {}
   }
 
@@ -795,6 +795,10 @@ con.debugf(".... floor_h=%d (change=%d)\n", c.floor_h, change)
       end
     end
 
+    local function scenic_floor(c)
+      -- FIXME
+    end
+
     --- select_floor_heights ---
 
     p.quests[1].path[1].floor_h = start_height()
@@ -804,6 +808,13 @@ con.debugf(".... floor_h=%d (change=%d)\n", c.floor_h, change)
 
       for xxx,R in ipairs(Q.children) do
         quest_heights(R)
+      end
+    end
+
+    -- do scenic cells
+    for zzz,c in ipairs(p.all_cells) do
+      if c.scenic then
+        scenic_floor(c);
       end
     end
 
@@ -826,62 +837,85 @@ con.debugf(".... floor_h=%d (change=%d)\n", c.floor_h, change)
 
       c.ceil_h = math.min(c.ceil_h, MAX_CEIL)
       c.ceil_h = math.max(c.ceil_h, c.f_max + 80)
+
+---###      c.sky_h  = c.ceil_h
     end
 
     local function raise_the_rooves()
 
       local function merge_sky(c, dir)
-        -- FIXME
+        local other = neighbour_by_side(p, c, dir)
+        if other then
+          -- FIXME: when border is 100% solid (no windows/doors/fences)
+          --        then we don't need to merge sky heights.
+
+          if c.theme.outdoor then
+            if c.sky_h < other.sky_h then
+               c.sky_h = other.sky_h
+               return true;
+            end
+          else
+            -- indoor rooms only need a rudimentary sky_h
+            -- (this prevents spreading the same value to every cell)
+
+            if c.sky_h < other.ceil_h then
+               c.sky_h = other.ceil_h
+               return true;
+            end
+          end
+        end
       end
 
-      local function merge_neighbour(c, other)
+      local function merge_link(c, dir)
+
+        local other = neighbour_by_side(p, c, dir)
         if not other then return end
 
-        local need = 64
-        if c.theme.outdoor then need = 96 end
+        local need = sel(c.theme.outdoor, 96, 64)
 
         if c.ceil_h < other.floor_h + need then
            c.ceil_h = other.floor_h + need
+           return true
         end
 
-        if c.theme.outdoor then
-          if other.theme.outdoor then
-            c.ceil_h = math.max(c.ceil_h, other.ceil_h)
-          else
-            c.ceil_h = math.max(c.ceil_h, other.ceil_h + 24)
-          end
-
-          -- don't make sectors too tall!
-          if (c.ceil_h - c.floor_h) > 960 then
-            c.ceil_h = c.floor_h + 960
-          end
-        end
+---###        if c.theme.outdoor then
+---###          if other.theme.outdoor then
+---###            c.ceil_h = math.max(c.ceil_h, other.ceil_h)
+---###          else
+---###            c.ceil_h = math.max(c.ceil_h, other.ceil_h + 24)
+---###          end
+---###        end
       end
 
---[[
-      for zzz,c in ipairs(p.all_cells) do
-        c.sky_h = c.ceil_h
-      end
-      repeat
-        local changes = 0
-        for dir = 2,8,2 do
-          if merge_sky(c, dir) then changes = true end
-        end
-      until changes = 0
---]]
+      --- raise_the_rooves ---
 
-      for loop=1,16 do
+---###      repeat
+        local changed = false
         for zzz,c in ipairs(p.all_cells) do
           for dir = 2,8,2 do
             if c.link[dir] then
-              merge_neighbour(c, link_other(c.link[dir], c))
-            elseif c.theme.outdoor then
-              local other = neighbour_by_side(p, c, dir)
-              if other and other.theme.outdoor then
-                merge_neighbour(c, other)
-              end
+              merge_link(c, dir)
             end
           end
+        end
+---###      until not changed
+
+      for zzz,c in ipairs(p.all_cells) do
+        c.sky_h = c.ceil_h
+      end
+
+      repeat
+        local changed = false
+        for zzz,c in ipairs(p.all_cells) do
+          for dir = 2,8,2 do
+            if merge_sky(c, dir) then changed = true end
+          end
+        end
+      until not changed
+
+      for zzz,c in ipairs(p.all_cells) do
+        if c.theme.outdoor then
+          c.ceil_h = math.max(c.ceil_h, c.sky_h)
         end
       end
     end

@@ -72,6 +72,7 @@ class Cell
   teleport : array(Cell)
 
   floor_h, ceil_h : floor/ceiling heights
+  sky_h : height of sky (esp. for indoor rooms)
 
   f_min/max : lowest/highest floor including all links
   c_min/max : lowest/highest ceiling including all links

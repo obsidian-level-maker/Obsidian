@@ -3305,13 +3305,14 @@ function build_cell(p, c)
       end
 
       K.sky_light_sec = copy_block(sec)
-      K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.c_max, sec.c_h) + c.sky_light.h
+      K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.sky_h, sec.c_h + c.sky_light.h)
       K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, THEME.SKY_TEX, c.sky_light.light_info.flat)
       K.sky_light_sec.light = 176
       K.sky_light_utex = c.sky_light.light_info.side
 
       -- make sure sky light doesn't come down too low
-      K.sky_light_sec.c_h = math.max(K.sky_light_sec.c_h, c.c_min)
+      K.sky_light_sec.c_h = math.max(K.sky_light_sec.c_h,
+        sel(c.sky_light.is_sky, c.c_max+8, c.c_min))
     end
  
 ---###    K.final_sec = copy_block(sec)
