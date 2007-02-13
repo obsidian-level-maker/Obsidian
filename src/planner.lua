@@ -728,54 +728,76 @@ function plan_sp_level(is_coop)  -- returns Plan
 
   local function select_floor_heights()
 
-    local DIFF_H     = {  0, 16, 32, 64, 128 }
-    local DIFF_PROBS = { 30, 30, 90, 50,  10 }
+    local DIFF_H     = {  0, 16, 32, 64, 96 }
+    local DIFF_PROBS = { 20, 20, 80, 60, 20 }
 
-    local BUMP_PROBS =
-    {
-      {  1,  1, 70,  1,  1 },
-      {  1, 50, 70, 50,  1 },
-      { 50, 20, 70, 20, 50 },
-    }
+    local BUMP_H     = { -64,-32,-16,  0, 16, 32, 64 }
+    local BUMP_PROBS = {  10, 20, 20, 40, 20, 20, 10 }
+
+    local function start_height()
+      return 64 * rand_index_by_probs { 5, 40,80, 90, 70,30, 10 }
+    end
 
     local function quest_heights(Q)
 
-      -- first choose target height
-      local diff = DIFF_H[rand_index_by_probs(DIFF_PROBS)]
+      -- determine overall slope of quest (up/down/level)
+      local slope
+      local sl_min,sl_max = -64,64
 
-      -- FIXME: theme dependent (e.g. cave goes down, tower goes up)
-      if rand_odds(50) then diff = -diff end
+      if Q.path[1].floor_h <= (MIN_FLOOR+128) then
+        sl_min, sl_max = 16,96
+      elseif Q.path[1].floor_h >= (MAX_CEIL-192) then
+        sl_min, sl_max = -96,-16
+      end
 
-      local bumps = BUMP_PROBS[rand_index_by_probs { 50, 70, 10 }]
+      repeat
+        slope = DIFF_H[rand_index_by_probs(DIFF_PROBS)]
+        if rand_odds(50) then slope = -slope end
+      until (sl_min <= slope) and (slope <= sl_max)
+
+con.debugf("QUEST: f_h=%d slope=%d\n", Q.path[1].floor_h, slope)
 
       -- now traverse path and choose floor heights
       for idx = 2,#Q.path do
         local c = Q.path[idx]
         local prev = Q.path[idx-1]
 
-        local change = math.abs(diff)
-
-        local r = rand_irange(1,8)
-        if r <= 2 then change = 0 end
-        if r == 3 and change > 16 then change = change / 2 end
-        if r == 4 then change = change * 2 end
+        local change = math.abs(slope)
 
         if c.hallway and prev.hallway then
           if change > 128 then change = 64
           elseif change > 16 then change = change / 2
           end
-        else
-          change = change + 32 * (rand_index_by_probs(bumps) - 3)
         end
 
-        if diff < 0      then change = -change end
-        if rand_odds(98) then change = -change end
+--[[  WORSE OR BETTER ??
+        local r = con.random() * 100
+            if r < 15 then change = 0
+        elseif r < 20 and change > 16 then change = change / 2
+        elseif r < 25 then change = change * 2
+        elseif r < 30 then change = -change
+        end
+--]]
+        if slope < 0 then change = -change end
 
         c.floor_h = prev.floor_h + change
+
+        -- make our journey 
+        if not (c.hallway and prev.hallway) then
+          local bump = BUMP_H[rand_index_by_probs(BUMP_PROBS)]
+          c.floor_h = c.floor_h + bump
+con.debugf("(bump %d)\n", bump)
+        end
+
+        c.floor_h = math.max(c.floor_h, MIN_FLOOR)
+        c.floor_h = math.min(c.floor_h, MAX_CEIL-128)
+con.debugf(".... floor_h=%d (change=%d)\n", c.floor_h, change)
       end
     end
 
     --- select_floor_heights ---
+
+    p.quests[1].path[1].floor_h = start_height()
 
     for zzz,Q in ipairs(p.quests) do
       quest_heights(Q)
@@ -799,14 +821,18 @@ function plan_sp_level(is_coop)  -- returns Plan
       elseif c.hallway then
         c.ceil_h = c.floor_h + sel(rand_odds(50), 96, 128)
       else
-        c.ceil_h = c.floor_h + 64 * rand_index_by_probs { 0, 40, 20, 90, 5, 3 }
+        c.ceil_h = c.floor_h + 64 * rand_index_by_probs { 0, 25, 70, 70, 12, 3 }
       end
 
-      -- sanity check
+      c.ceil_h = math.min(c.ceil_h, MAX_CEIL)
       c.ceil_h = math.max(c.ceil_h, c.f_max + 80)
     end
 
     local function raise_the_rooves()
+
+      local function merge_sky(c, dir)
+        -- FIXME
+      end
 
       local function merge_neighbour(c, other)
         if not other then return end
@@ -831,6 +857,18 @@ function plan_sp_level(is_coop)  -- returns Plan
           end
         end
       end
+
+--[[
+      for zzz,c in ipairs(p.all_cells) do
+        c.sky_h = c.ceil_h
+      end
+      repeat
+        local changes = 0
+        for dir = 2,8,2 do
+          if merge_sky(c, dir) then changes = true end
+        end
+      until changes = 0
+--]]
 
       for loop=1,16 do
         for zzz,c in ipairs(p.all_cells) do
