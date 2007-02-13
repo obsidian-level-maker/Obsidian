@@ -29,7 +29,7 @@ AMMO_LIMITS =  -- double these for backpack
 ------------------------------------------------------------
 
 TOUGH_FACTOR = { easy=0.75, medium=1.00, hard=1.33 }
-ACCURACIES   = { easy=0.60, medium=0.70, hard=0.77 }
+ACCURACIES   = { easy=0.55, medium=0.66, hard=0.77 }
 
 HITSCAN_RATIOS = { 1.0, 0.8, 0.6, 0.4, 0.2, 0.1 }
 MISSILE_RATIOS = { 1.0, 0.4, 0.1, 0.03 }
@@ -260,9 +260,6 @@ function simulate_battle(p, HM, mon_set, quest)
  
   local shoot_accuracy = ACCURACIES[HM.skill]
 
-  if settings.ammo == "less" then shoot_accuracy = shoot_accuracy + 0.10 end
-  if settings.ammo == "more" then shoot_accuracy = shoot_accuracy - 0.15 end
-
   local active_mon = {}
 
   local cur_weap = "pistol"
@@ -483,23 +480,21 @@ zprint(active_mon, #active_mon, active_mon[1])
     -- 3b. missile: dodged 50%
     -- 3c. melee: dodged 80%
 
-    local mon_fight = 0.45
-    if settings.health == "less" then mon_fight = 0.30 end
-    if settings.health == "more" then mon_fight = 0.60 end
+    local mon_fight = 0.5
 
     for idx,AC in ipairs(active_mon) do
       if AC.health > 0 then
-        local ratio = distance_ratio(idx, AC)
-        local dodge = 1.0 - dodge_ratio(AC)
+        local accuracy = distance_ratio(idx, AC)
+        local dodge    = 1.0 - dodge_ratio(AC)
 
-        if HM.invis then dodge = dodge / 2 end
+        if HM.invis then dodge = dodge / 1.5 end
 
-        hurt_player(AC.info.dm * time * ratio * dodge * mon_fight)
+        hurt_player(AC.info.dm * (time * mon_fight) * accuracy * dodge)
 
         -- simulate infighting
         local infight_prob = 0.75
         if idx >= 2 and mon_hurts_mon(AC.name, active_mon[idx-1].name) then
-          hurt_mon(idx-1, AC.info.dm * time * mon_fight * infight_prob)
+          hurt_mon(idx-1, AC.info.dm * (time * mon_fight) * infight_prob)
         end
       end 
     end
@@ -683,9 +678,29 @@ function distribute_pickups(p, c, HM, backtrack)
     end
   end
 
+  local function adjust_hmodel(HM)
+
+    -- apply the user's health/ammo adjustments here
+
+    local HEALTH_ADJUSTS = { less=0.7, normal=1.0, more=1.4 }
+    local   AMMO_ADJUSTS = { less=0.8, normal=1.1, more=1.6 }
+
+    local health_mul = HEALTH_ADJUSTS[settings.health]
+    local   ammo_mul =   AMMO_ADJUSTS[settings.ammo]
+
+    for zzz,stat in ipairs(THEME.pickup_stats) do
+      if stat == "health" then
+        if HM.health < 70 then
+          HM.health = (HM.health-70) * health_mul + 70
+        end
+      else
+        if HM[stat] < 0 then HM[stat] = HM[stat] * ammo_mul end
+      end
+    end
+  end
 
   local function compute_want(stat)
-    return sel(stat == "health", 75, 0)
+    return sel(stat == "health", 70, 0)
   end
 
   local function select_cluster_pattern(count)
@@ -792,6 +807,7 @@ function distribute_pickups(p, c, HM, backtrack)
     be_nice_to_player()
   end
 
+  adjust_hmodel(HM)
 
   for zzz,stat in ipairs(THEME.pickup_stats) do
 

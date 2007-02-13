@@ -939,7 +939,7 @@ function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
     u_tex = c.theme.wall,
   }
 
-  if cuts >= 3 then
+  if cuts >= 3 then  -- FIXME: better way to decide
     CUTOUT.light = 255
     CUTOUT.kind  = 8  -- GLOW TYPE  (FIXME)
   end
@@ -1606,14 +1606,7 @@ function make_chunks(p)
     return false
   end
 
-  local BIG_CLOSET_ADJUST =
-  {
-    scarce = 5, less = 30, normal = 50, more = 75, heaps = 100
-  }
-  local BIG_CAGE_ADJUST =
-  {
-    scarce = 25, less = 50, normal = 75, more = 90, heaps = 100
-  }
+  local BIG_CAGE_ADJUST = { less=50, normal=75, more=90 }
 
   local function try_flush_side(c)
 
@@ -1645,7 +1638,7 @@ function make_chunks(p)
     if not p.coop then
       -- let user adjustment parameters control whether closets and
       -- cages are made bigger.
-      if common.closet and not rand_odds(BIG_CLOSET_ADJUST[settings.traps]) then
+      if common.closet and not rand_odds(BIG_CAGE_ADJUST[settings.traps]) then
         return
       end
       if common.cage and not rand_odds(BIG_CAGE_ADJUST[settings.mons]) then
@@ -1793,12 +1786,11 @@ function make_chunks(p)
 
     if not c.theme.outdoor then probs[2] = 15 end
 
-    if p.deathmatch then probs[4] = 0 end
-    if c.scenic     then probs[1] = 200 end
+    if settings.mons == "less" then probs[4] = 3.2 end
+    if settings.mons == "more" then probs[4] = 7.5 end
 
-    if settings.mons == "less"   then probs[4] = 3 end
-    if settings.mons == "scarce" then probs[4] = 1.5 end
-    if settings.mons == "heaps"  then probs[4] = 7.5 end
+    if c.scenic or p.deathmatch then probs[4] = 0 end
+    if c.scenic then probs[1] = 200; probs[5] = 200 end
 
     -- special handling for hallways...
     if c.hallway then
@@ -3374,7 +3366,12 @@ function build_cell(p, c)
       c.sky_light.h = - c.sky_light.h
     end
   end
-    
+
+  if false then ---???? c == p.quests[1].path[1] then -- START ROOM
+    B_crate(p,c, { wall="CEMENT2", floor="MFLR8_4", h=128 },
+            c.room_sec, 2,2, 5,5) --!!!!
+  end
+
   -- on first pass, only build sky borders
   for pass = 1,2 do
     for side = 2,8,2 do
