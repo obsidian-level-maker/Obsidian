@@ -13,7 +13,7 @@ all:
 
 clean:
 	rm -f ../TEST.wad ../TEST.bak TEMP.wad
-	rm -f TEMP.txt LOGS.txt SETTINGS.txt
+	rm -f TEMP.txt LOGS.txt CONFIG.cfg
 
 .PHONY: all clean
 
