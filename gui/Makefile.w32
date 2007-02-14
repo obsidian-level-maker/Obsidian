@@ -71,6 +71,8 @@ all: $(PROGRAM)
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
 
+g_image.o: img_data.h
+
 bin: all
 	mingw32-strip --strip-unneeded $(PROGRAM)
 
