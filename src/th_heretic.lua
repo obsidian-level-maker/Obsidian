@@ -245,21 +245,21 @@ HC_PEDESTALS =
 {
   PLAYER =
   {
-    wall  = "CTYSTUCI4", void = "CTYSTUCI4",
+    wall  = "CTYSTCI4", void = "CTYSTCI4",
     floor = "FLOOR11",   ceil = "FLOOR11",
     h = 8,
   },
 
   QUEST = -- FIXME
   {
-    wall  = "CTYSTUCI4", void = "CTYSTUCI4",
+    wall  = "CTYSTCI4", void = "CTYSTCI4",
     floor = "FLOOR11",   ceil = "FLOOR11",
     h = 8,
   },
 
   WEAPON = -- FIXME
   {
-    wall  = "CTYSTUCI4", void = "CTYSTUCI4",
+    wall  = "CTYSTCI4", void = "CTYSTCI4",
     floor = "FLOOR11",   ceil = "FLOOR11",
     h = 8,
   },
@@ -302,7 +302,7 @@ HC_DOORS =
 HC_RAILS =
 {
   r_1 = { tex="WDGAT64", w=128, h=64  },
-  r_2 = { tex="STNGLS1", w=128, h=128 },
+  r_2 = { tex="WDGAT64", w=128, h=128 },  -- FIXME!!
 }
 
 HC_IMAGES =
@@ -320,6 +320,8 @@ HC_LIGHTS =
 
 HC_PICS =
 {
+  { tex="GRSKULL3", w=128, h=128 },
+  { tex="STNGLS1",  w=128, h=128 },
 }
 
 HC_KEY_BITS =
@@ -623,7 +625,7 @@ function create_heretic_theme()
     images    = HC_IMAGES,
     lights    = HC_LIGHTS,
     rails     = HC_RAILS,
-  --pics      = HC_PICS,
+    pics      = HC_PICS,
     key_bits  = HC_KEY_BITS,
   }
 end

@@ -323,13 +323,20 @@ XN_LIGHTS =
 
 XN_PICS =
 {
+  { tex = "CAVE12",   w=128, h=128 },
+  { tex = "FOREST03", w=128, h=128 },
+  { tex = "SPAWN10",  w=128, h=128 },
+  { tex = "SPAWN13",  w=64,  h=64  },
+  { tex = "GLASS01",  w=64,  h=128 },
+  { tex = "GLASS03",  w=64,  h=128 },
+  { tex = "GLASS05",  w=64,  h=128 },
 }
 
 XN_KEY_BITS =
 {
-  k_fire   = { door="d_fire",   kind_rep=13, kind_once=13 },
-  k_castle = { door="d_castle", kind_rep=13, kind_once=13 },
-  k_silver = { door="d_silver", kind_rep=13, kind_once=13 },
+  k_fire   = { wall="d_fire",   kind_rep=13, kind_once=13 },
+  k_castle = { wall="d_cast",   kind_rep=13, kind_once=13 },
+  k_silver = { wall="d_silver", kind_rep=13, kind_once=13 },
 }
 
 
@@ -651,7 +658,7 @@ function create_hexen_theme()
     images    = XN_IMAGES,
     lights    = XN_LIGHTS,
     rails     = XN_RAILS,
-  --pics      = XN_PICS,
+    pics      = XN_PICS,
     key_bits  = XN_KEY_BITS,
   }
 end
