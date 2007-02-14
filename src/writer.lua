@@ -736,7 +736,8 @@ function write_level(p, lev_name)
     for zzz,th in pairs(thing_list) do
 
       wad.add_thing(NORMALIZE(th.x), NORMALIZE(th.y), th.z or 0,
-            th.kind, th.angle or 0, th.flags or 7);
+            th.kind, th.angle or 0, th.flags or 7,
+            th.tid or 0, th.special or 0, th.args)
     end
   end
 
