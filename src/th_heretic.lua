@@ -308,7 +308,7 @@ HC_RAILS =
 HC_IMAGES =
 {
   { wall = "GRSKULL2", w=128, h=128, glow=true },
-  { wall = "GRSKULL1", w=64,  h=64,  floor="F_016" }
+  { wall = "GRSKULL1", w=64,  h=64,  floor="FLOOR27" }
 }
 
 HC_LIGHTS =
