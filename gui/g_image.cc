@@ -324,7 +324,7 @@ const byte *Image_MakePatch(int what, int *length)
   return pat;
 }
 
-void Image_FreePatch(byte *pat)
+void Image_FreePatch(const byte *pat)
 {
   delete[] pat;
 }
