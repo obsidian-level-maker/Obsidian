@@ -141,9 +141,9 @@ void UI_Setup::bump_callback(Fl_Widget *w, void *data)
 
 void UI_Setup::game_callback(Fl_Widget *w, void *data)
 {
+#if 0
   UI_Setup *that = (UI_Setup *)data;
 
-#if 0
   if (that->game->value() == 1)
     that->addon->show();
   else
