@@ -753,7 +753,7 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
   local fx = (x - 1) * FW
   local fy = (y - 1) * FH
 
-  local BASE = copy_block(c.room_sec)
+  local BASE = copy_block(c.rmodel)
 
   BASE.f_h = z
   BASE.l_tex = c.theme.wall
@@ -908,6 +908,12 @@ function B_bars(p,c, x,y, dir,long, size,step, bar_theme, sec,tex, tag)
 
     frag_fill(p,c, fx+1,fy+1, fx+size,fy+size, bar)
   end
+
+  -- give it some sides
+  fill(p,c, x-ax,y-ay, x-ax,y-ay, { solid=tex })
+
+  x,y = x+long*ax, y+long*ay
+  fill(p,c, x,y, x,y, { solid=tex })
 end
 
 
@@ -1035,7 +1041,7 @@ end
 
 function cage_select_height(p,c, kind, theme,rail, floor_h, ceil_h)
 
-  if c[kind] and rand_odds(80) then
+  if c[kind] and c[kind].z >= floor_h and rand_odds(80) then
     return c[kind].z, c[kind].open_top
   end
   
@@ -1085,7 +1091,7 @@ function B_pillar_cage(p,c, theme, kx,ky, bx,by)
     open_top = true
   end
 
-  local CAGE = copy_block(c.room_sec)
+  local CAGE = copy_block(c.rmodel)
 
   CAGE.f_h   = z
   CAGE.f_tex = theme.floor
@@ -1136,7 +1142,7 @@ function B_big_cage(p,c, theme, kx,ky)
 
   local z, open_top = cage_select_height(p,c, "big_cage", theme,rail, c.floor_h,c.ceil_h)
 
-  local CAGE = copy_block(c.room_sec)
+  local CAGE = copy_block(c.rmodel)
 
   CAGE.f_h   = z
   CAGE.f_tex = theme.floor
@@ -1230,8 +1236,8 @@ function B_deathmatch_exit(p,c, kx,ky)
 
   local ROOM =
   {
-    f_h = c.room_sec.f_h,
-    c_h = c.room_sec.f_h + 72,
+    f_h = c.rmodel.f_h,
+    c_h = c.rmodel.f_h + 72,
     f_tex = theme.floor,
     c_tex = theme.ceil,
     light = 176,
@@ -1245,8 +1251,8 @@ function B_deathmatch_exit(p,c, kx,ky)
 
   local STEP =
   {
-    f_h = c.room_sec.f_h + 8,
-    c_h = c.room_sec.f_h + 80,
+    f_h = c.rmodel.f_h + 8,
+    c_h = c.rmodel.f_h + 80,
     f_tex = THEME.mats.DOOR_FRAME.floor,
     c_tex = THEME.mats.DOOR_FRAME.floor,
     light = 255,
@@ -1260,8 +1266,8 @@ function B_deathmatch_exit(p,c, kx,ky)
 
   local DOOR =
   {
-    f_h = c.room_sec.f_h + 8,
-    c_h = c.room_sec.f_h + 8,
+    f_h = c.rmodel.f_h + 8,
+    c_h = c.rmodel.f_h + 8,
     f_tex = door_info.frame_bottom or STEP.f_tex,
     c_tex = door_info.bottom       or STEP.f_tex,
     light = 255,
@@ -1370,6 +1376,22 @@ end
 ----------------------------------------------------------------
 
 
+
+function setup_rmodel(p, c)
+
+  if not c.light then
+    c.light = sel(c.theme.outdoor, 192, 144)
+  end
+
+  c.rmodel =
+  {
+    f_h=c.floor_h,
+    c_h=c.ceil_h,
+    f_tex=c.theme.floor,
+    c_tex=c.theme.ceil,
+    light=c.light,
+  }
+end
 
 function make_chunks(p)
 
@@ -1817,6 +1839,16 @@ function make_chunks(p)
     end
   end
 
+  local function setup_chunk_rmodels(c)
+
+      for kx = 1,KW do for ky = 1,KH do
+        local K = c.chunks[kx][ky]
+        assert(K)
+
+        K.rmodel = copy_table(c.rmodel)
+      end end
+  end
+
   local function connect_chunks(c)
 
     -- connected value:
@@ -2148,6 +2180,9 @@ con.debugf(
       add_essential_chunks(cell)
 
       flesh_out_cell(cell)
+
+      --- setup_chunk_rmodels(cell)
+
       connect_chunks(cell)
 
       if p.deathmatch then
@@ -2260,16 +2295,16 @@ function build_cell(p, c)
         ((c.theme.outdoor and link.arch_rand < 50) or
          (not c.theme.outdoor and link.arch_rand < 10))
       then
-        local sec = copy_block(c.room_sec)
+        local sec = copy_block(c.rmodel)
         sec.l_tex = tex
         sec.u_tex = tex
         fill(p,c, x, y, ex, ey, sec)
         return
       end
 
-      local arch = copy_block(c.room_sec)
+      local arch = copy_block(c.rmodel)
       arch.c_h = math.min(c.ceil_h-32, other.ceil_h-32, c.floor_h+128)
-      arch.f_tex = c.theme.arch_floor or c.room_sec.f_tex
+      arch.f_tex = c.theme.arch_floor or c.rmodel.f_tex
       arch.c_tex = c.theme.arch_ceil  or arch.f_tex
 
       if (arch.c_h - arch.f_h) < 64 then
@@ -2326,7 +2361,7 @@ function build_cell(p, c)
        THEME.switches[link.quest.item].bars
     then
       local info = THEME.switches[link.quest.item]
-      local sec = copy_block(c.room_sec)
+      local sec = copy_block(c.rmodel)
       sec.f_h = c.floor_h
       sec.f_tex = b_theme.floor
       sec.c_tex = b_theme.ceil
@@ -2726,7 +2761,7 @@ function build_cell(p, c)
       c_h = math.min(c.ceil_h, other.ceil_h) - 32,
       f_tex = b_theme.floor,
       c_tex = b_theme.ceil,
-      light = c.room_sec.light,
+      light = c.rmodel.light,
 
       l_tex = b_theme.wall,
       u_tex = b_theme.wall,
@@ -3073,7 +3108,7 @@ function build_cell(p, c)
         con.debugf("BUILDING CLOSET @ (%d,%d)\n", c.x, c.y)
 
         table.insert(K.place.spots,
-          B_monster_closet(p,c, kx,ky, c.room_sec.f_h + 0,
+          B_monster_closet(p,c, kx,ky, c.rmodel.f_h + 0,
             c.quest.closet.door_tag))
 
       elseif K.dm_exit then
@@ -3204,7 +3239,7 @@ function build_cell(p, c)
       elseif c.quest.kind == "exit" then
         local side = wall_switch_dir(kx, ky, c.entry_dir)
         if c.theme.hole_tex then
-          B_exit_hole(p,c, kx,ky, c.room_sec)
+          B_exit_hole(p,c, kx,ky, c.rmodel)
           return
         else
           B_floor_switch(p,c, bx,by, K.floor_h, side, THEME.switches.sw_exit, 11)
@@ -3214,14 +3249,14 @@ function build_cell(p, c)
 
     -- fill in the rest
 
-    local sec = c.room_sec
+    local sec = c.rmodel
     local u_tex = c.theme.wall;
 
     if K.link and K.link.build ~= c then
 
       local other = link_other(K.link, c)
 
-      sec = copy_block(c.room_sec)
+      sec = copy_block(c.rmodel)
 
       sec.f_h = K.floor_h
       sec.c_h = K.ceil_h
@@ -3273,6 +3308,7 @@ function build_cell(p, c)
 
     -- TEST CRUD : crates
     if sec and not c.scenic and not K.stair_dir
+      and THEME.crates
       and dual_odds(c.theme.outdoor, 22, 35)
       and (not c.hallway or rand_odds(25))
       and (not c.exit or rand_odds(50))
@@ -3312,7 +3348,7 @@ function build_cell(p, c)
 
       -- make sure sky light doesn't come down too low
       K.sky_light_sec.c_h = math.max(K.sky_light_sec.c_h,
-        sel(c.sky_light.is_sky, c.c_max+8, c.c_min))
+        sel(c.sky_light.is_sky, c.c_max+16, c.c_min))
     end
  
 ---###    K.final_sec = copy_block(sec)
@@ -3344,15 +3380,6 @@ function build_cell(p, c)
   c.blk_x = BORDER_BLK + (c.x-1) * (BW+1)
   c.blk_y = BORDER_BLK + (c.y-1) * (BH+1)
 
-  if not c.light then
-    c.light = sel(c.theme.outdoor, 192, 144)
-  end
-
-  c.room_sec = { f_h=c.floor_h, c_h=c.ceil_h,
-                 f_tex=c.theme.floor, c_tex=c.theme.ceil,
-                 light=c.light,
-                 }
-
   if not c.theme.outdoor and not c.is_exit and not c.hallway
      and rand_odds(70)
   then
@@ -3370,7 +3397,7 @@ function build_cell(p, c)
 
   if false then ---???? c == p.quests[1].path[1] then -- START ROOM
     B_crate(p,c, { wall="CEMENT2", floor="MFLR8_4", h=128 },
-            c.room_sec, 2,2, 5,5) --!!!!
+            c.rmodel, 2,2, 5,5) --!!!!
   end
 
   -- on first pass, only build sky borders
@@ -3452,6 +3479,10 @@ end
 
 
 function build_level(p)
+
+  for zzz,cell in ipairs(p.all_cells) do
+    setup_rmodel(p, cell)
+  end
 
   make_chunks(p)
 --  show_chunks(p)
