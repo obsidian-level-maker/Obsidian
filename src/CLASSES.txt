@@ -21,7 +21,7 @@ class Plan
   floor_min, floor_max : number
   used_items : table[ITEM_NAME] -> usage count
 
-  models : table[SK] -> HModel, SK = easy|medium|hard
+  hmodels : table[SK] -> HModel, SK = easy|medium|hard
 
   liquid : liquid type
 
@@ -82,6 +82,8 @@ class Cell
 
   toughness : amount of monster toughness in this cell
   
+  rmodel : Block -- model for whole room
+
   cage_spots
   free_spots
 
@@ -114,13 +116,17 @@ end
 
 class Chunk
   link : Link  -- for link chunks
+
   player : true  -- player start location
   quest  : true  -- quest item location
   walk   : true  -- walkable ground
   void   : true  -- void space
+  cage   : true  -- big cage
 
   floor_h, ceil_h -- base heights
   stair_dir  -- present to build a stair to neighbour chunk
+
+[[  rmodel : Block -- model for this chunk  ]]
 end
 
 
