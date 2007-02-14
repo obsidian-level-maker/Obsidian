@@ -20,14 +20,10 @@ require 'defs'
 require 'util'
 require 'a_star'
 
-require 'th_doom1'
-require 'th_doom2'
-require 'th_freedoom'
-require 'th_heretic'
-require 'th_hexen'
-
+require 'theme'
 require 'planner'
 require 'plan_dm'
+
 require 'monster'
 require 'builder'
 require 'writer'
