@@ -350,6 +350,20 @@ D2_EXITS =
 
 D2_HALLWAYS =
 {
+  PANEL =
+  {
+    mat_pri = 0,
+
+    wall = "PANEL2",
+    void = "PANEL3",
+    step = "STEP2",
+    pillar = "PANRED",  -- PANEL5
+
+    floor = "FLOOR0_2",
+    ceil  = "FLAT5_5",
+
+  },
+
   BRICK =
   {
     mat_pri = 0,
@@ -429,7 +443,6 @@ D2_HALLWAYS =
     floor = "FLAT5_4",
     ceil  = "FLAT5_4",
   },
-
 }
 
 D2_MATS =
