@@ -46,6 +46,7 @@ OBJS=	main.o      \
 	g_cookie.o  \
 	g_doom.o    \
 	g_glbsp.o   \
+	g_image.o   \
 	g_lua.o     \
 	twister.o   \
 	ui_adjust.o  \
