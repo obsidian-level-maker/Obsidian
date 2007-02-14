@@ -21,4 +21,8 @@
 
 void Image_Setup(void);
 
+const byte *Image_MakePatch(int what, int *length);
+
+void Image_FreePatch(byte *pat);
+
 #endif /* __OBLIGE_IMAGE_H__ */

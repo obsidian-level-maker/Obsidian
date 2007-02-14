@@ -22,6 +22,7 @@
 #include "g_image.h"
 
 #include "lib_util.h"
+#include "ui_window.h"
 #include "main.h"
 
 
@@ -197,8 +198,11 @@ const byte hexen_palette[256*3] =
 };
 
 
-static byte doom_to_heretic[256];
-static byte doom_to_hexen[256];
+//------------------------------------------------------------------------
+
+static byte pixel_to_doom[256];
+static byte pixel_to_heretic[256];
+static byte pixel_to_hexen[256];
 
 static int FindColor(const byte *palette, const byte *col)
 {
@@ -236,8 +240,9 @@ static void CreateMappingTables(void)
 {
   for (int i = 0; i < 256; i++)
   {
-    doom_to_heretic[i] = FindColor(heretic_palette, doom_palette + i*3);
-    doom_to_hexen  [i] = FindColor(  hexen_palette, doom_palette + i*3);
+    pixel_to_doom   [i] = i; // already in DOOM palette
+    pixel_to_heretic[i] = FindColor(heretic_palette, doom_palette + i*3);
+    pixel_to_hexen  [i] = FindColor(  hexen_palette, doom_palette + i*3);
   }
 }
 
@@ -250,3 +255,76 @@ void Image_Setup(void)
   fprintf(stderr, "%p", foo);
 }
 
+static void FillPost(byte *pat, int x, int w, int pos, const byte *mapper)
+{
+  // determine and set the offset value
+  int offset = 8 + 128*4 + (x % w) * (128+8);
+
+  byte *ofs_var = pat + 8 + x*4;
+
+  ofs_var[0] = offset & 0xFF;
+  ofs_var[1] = (offset >>  8) & 0xFF;
+  ofs_var[2] = (offset >> 16) & 0xFF;
+
+  if (x >= w)
+    return;
+
+  // actually fill in the post
+
+  const byte *src = raw_image_data + pos + (x % w);
+
+  byte *dest = pat + offset;
+
+  *dest++ = 0;   // Y OFFSET
+  *dest++ = 128; // HEIGHT
+
+  for (int y=-1; y < 128+1; y++)
+  {
+    // handling padding (top and bottom)
+    int yy = MAX(0, MIN(127, y));
+
+    *dest++ = mapper[src[(127-yy)*w]];
+  }
+
+  *dest++ = 255; // END OF POST
+}
+
+const byte *Image_MakePatch(int what, int *length)
+{
+  SYS_ASSERT(0 <= what && what <= 1);
+
+  int w   = what ? 64 : 128;
+  int pos = what ? 128*128 : 0;
+
+  *length = 8 + 128*4 + w * (128+8);
+
+  byte *pat = new byte[*length];
+
+  memset(pat, 0, *length);
+
+  // header
+  pat[0] = 128;  // width
+  pat[2] = 128;  // height
+
+  // palette conversion
+  const byte *mapper = pixel_to_doom;
+
+  if (strcmp(main_win->setup_box->get_Game(), "heretic") == 0)
+    mapper = pixel_to_heretic;
+
+  if (strcmp(main_win->setup_box->get_Game(), "hexen") == 0)
+    mapper = pixel_to_hexen;
+
+  // posts
+  for (int x=0; x < 128; x++)
+  {
+    FillPost(pat, x, w, pos, mapper);
+  }
+
+  return pat;
+}
+
+void Image_FreePatch(byte *pat)
+{
+  delete[] pat;
+}
