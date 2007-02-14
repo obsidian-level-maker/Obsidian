@@ -305,6 +305,12 @@ HC_RAILS =
   r_2 = { tex="STNGLS1", w=128, h=128 },
 }
 
+HC_IMAGES =
+{
+  { wall = "GRSKULL2", w=128, h=128, glow=true },
+  { wall = "GRSKULL1", w=64,  h=64,  floor="F_016" }
+}
+
 HC_LIGHTS =
 {
   { tex="REDWALL", w=32 },
@@ -613,6 +619,8 @@ function create_heretic_theme()
     liquids   = HC_LIQUIDS,
     switches  = HC_SWITCHES,
     doors     = HC_DOORS,
+
+    images    = HC_IMAGES,
     lights    = HC_LIGHTS,
     rails     = HC_RAILS,
   --pics      = HC_PICS,

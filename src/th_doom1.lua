@@ -570,6 +570,12 @@ DM_DOORS =
 
 }
 
+DM_IMAGES =
+{
+  { wall = "CEMENT1", w=128, h=128, glow=true },
+  { wall = "CEMENT2", w=64,  h=64,  floor="MFLR8_2" }
+}
+
 DM_LIGHTS =
 {
   { tex="LITE3",    w=32 },
@@ -920,6 +926,8 @@ function common_doom_theme()
     liquids   = DM_LIQUIDS,
     switches  = DM_SWITCHES,
     doors     = DM_DOORS,
+
+    images    = DM_IMAGES,
     lights    = DM_LIGHTS,
     pics      = DM_PICS,
     key_bits  = DM_KEY_BITS,

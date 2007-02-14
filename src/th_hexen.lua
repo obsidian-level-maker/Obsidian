@@ -284,7 +284,7 @@ XN_SWITCHES =
 XN_DOORS =
 {
   d_big    = { tex="DOOR51",   w=128, h=128 },
-  d_brass1 = { tex="BRASS3",   w=128, h=128 },
+  d_brass1 = { tex="BRASS1",   w=128, h=128 },
   d_brass2 = { tex="D_BRASS2", w=64,  h=128 },
 
   d_wood1  = { tex="D_WD07",   w=128, h=128 },
@@ -304,6 +304,12 @@ XN_RAILS =
 {
   r_1 = { tex="GATE03", w=64, h=64  },
   r_2 = { tex="GATE02", w=64, h=128 },
+}
+
+XN_IMAGES =
+{
+  { wall = "BRASS3", w=128, h=128, glow=true },
+  { wall = "BRASS4", w=64,  h=64,  floor="F_016" }
 }
 
 XN_LIGHTS =
@@ -641,6 +647,8 @@ function create_hexen_theme()
     liquids   = XN_LIQUIDS,
     switches  = XN_SWITCHES,
     doors     = XN_DOORS,
+
+    images    = XN_IMAGES,
     lights    = XN_LIGHTS,
     rails     = XN_RAILS,
   --pics      = XN_PICS,
