@@ -65,24 +65,13 @@ end
 
 function create_theme()
 
-  if settings.game == "doom1" then
-    THEME = create_doom1_theme()
+  local factory = THEME_FACTORIES[settings.game]
 
-  elseif settings.game == "doom2" then
-    THEME = create_doom2_theme()
-
-  elseif settings.game == "freedoom" then
-    THEME = create_freedoom_theme()
-
-  elseif settings.game == "heretic" then
-    THEME = create_heretic_theme()
-
-  elseif settings.game == "hexen" then
-    THEME = create_hexen_theme()
-
-  else
+  if not factory then
     error("UNKNOWN GAME '" .. settings.game .. "'")
   end
+
+  THEME = factory()
 
   compute_pow_factors()
 end

@@ -590,7 +590,7 @@ HC_INITIAL_MODEL =
 
 ------------------------------------------------------------
 
-function create_heretic_theme()
+THEME_FACTORIES["heretic"] = function()
 
   return
   {

@@ -891,7 +891,7 @@ D1_RAILS =
 
 ------------------------------------------------------------
 
-function common_doom_theme()
+THEME_FACTORIES["doom_common"] = function()
 
   return
   {
@@ -932,13 +932,12 @@ function common_doom_theme()
     pics      = DM_PICS,
     key_bits  = DM_KEY_BITS,
   }
-
----###  return T
 end
 
-function create_doom1_theme()
 
-  local T = common_doom_theme()
+THEME_FACTORIES["doom1"] = function()
+
+  local T = THEME_FACTORIES.doom_common()
 
   T.themes   = copy_and_merge(T.themes,   D1_THEMES)
   T.exits    = copy_and_merge(T.exits,    D1_EXITS)

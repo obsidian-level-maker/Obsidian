@@ -538,9 +538,9 @@ D2_LIQUIDS =
 
 ------------------------------------------------------------
 
-function create_doom2_theme()
+THEME_FACTORIES["doom2"] = function()
 
-  local T = common_doom_theme()
+  local T = THEME_FACTORIES.doom_common()
 
   T.themes   = copy_and_merge(T.themes,   D2_THEMES)
   T.exits    = copy_and_merge(T.exits,    D2_EXITS)

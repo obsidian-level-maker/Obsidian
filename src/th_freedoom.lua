@@ -41,22 +41,23 @@ FD_MONSTER_LIST =
   -- "spider",  
 }
 
-function create_freedoom_theme()
 
-  local T = common_doom_theme()
+THEME_FACTORIES["freedoom"] = function()
 
   -- the FreeDOOM IWAD contains both Doom 1 and Doom 2 textures
 
-  T.themes   = copy_and_merge(T.themes,   D1_THEMES,   D2_THEMES)
-  T.exits    = copy_and_merge(T.exits,    D1_EXITS,    D2_EXITS)
-  T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS, D2_HALLWAYS)
+  local T = THEME_FACTORIES.doom1()
 
-  T.rails = copy_and_merge(D1_RAILS, D2_RAILS)
+  T.themes   = copy_and_merge(T.themes,   D2_THEMES)
+  T.exits    = copy_and_merge(T.exits,    D2_EXITS)
+  T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
 
-  T.hangs   = copy_and_merge(T.hangs,   D1_OVERHANGS, D2_OVERHANGS)
-  T.mats    = copy_and_merge(T.mats,    D1_MATS,      D2_MATS)
-  T.crates  = copy_and_merge(T.crates,  D1_CRATES,    D2_CRATES)
-  T.liquids = copy_and_merge(T.liquids, D1_LIQUIDS,   D2_LIQUIDS)
+  T.rails = copy_and_merge(T.rails, D2_RAILS)
+
+  T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
+  T.mats    = copy_and_merge(T.mats,    D2_MATS)
+  T.crates  = copy_and_merge(T.crates,  D2_CRATES)
+  T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
   -- FreeDOOM is lacking many monster sprites
 

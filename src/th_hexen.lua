@@ -623,7 +623,7 @@ XN_DEATHMATCH =
 
 ------------------------------------------------------------
 
-function create_hexen_theme()
+THEME_FACTORIES["hexen"] = function()
 
   return
   {
