@@ -144,12 +144,25 @@ void WAD_WritePatches()
 {
   WAD_WriteLump("P_START", NULL, 0);
 
+  static const char *patch_names[3][2] =
+  {
+    { "WALL52_1", "WALL53_1" },  // Doom
+    { "WALL01",   "WALL02"   },  // Heretic
+    { "W_320",    "W_321"    }   // Hexen
+  };
+
+  int game = 0;
+  if (strcmp(main_win->setup_box->get_Game(), "heretic") == 0)
+    game = 1;
+  if (strcmp(main_win->setup_box->get_Game(), "hexen") == 0)
+    game = 2;
+
   for (int what=0; what < 2; what++)
   {
     int length;
     const byte *pat = Image_MakePatch(what, &length);
 
-    WAD_WriteLump(what ? "WALL53_1" : "WALL52_1", pat, length);
+    WAD_WriteLump(patch_names[game][what], pat, length);
 
     Image_FreePatch(pat);
   }
