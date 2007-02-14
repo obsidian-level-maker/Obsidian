@@ -17,14 +17,15 @@
 //------------------------------------------------------------------------
 
 #include "headers.h"
+#include "hdr_fltk.h"
 #include "hdr_lua.h"
 
 #include "g_doom.h"
+#include "g_image.h"
 
-#include "hdr_fltk.h"
+#include "main.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
-#include "main.h"
 
 
 typedef std::vector<u8_t> lump_c;
@@ -137,6 +138,23 @@ void WAD_WriteBehavior()
   behavior.str_num  = 0;
 
   WAD_WriteLump("BEHAVIOR", &behavior, sizeof(behavior));
+}
+
+void WAD_WritePatches()
+{
+  WAD_WriteLump("P_START", NULL, 0);
+
+  for (int what=0; what < 2; what++)
+  {
+    int length;
+    const byte *pat = Image_MakePatch(what, &length);
+
+    WAD_WriteLump(what ? "WALL53_1" : "WALL52_1", pat, length);
+
+    Image_FreePatch(pat);
+  }
+
+  WAD_WriteLump("P_END", NULL, 0);
 }
 
 void WAD_Append(lump_c *lump, const void *data, u32_t len)
@@ -267,6 +285,8 @@ int end_level(lua_State *L)
   if (wad_hexen)
     WAD_WriteBehavior();
 
+  WAD_WritePatches();
+  
   // free data
   delete thing_lump;   thing_lump   = NULL;
   delete sector_lump;  sector_lump  = NULL;
