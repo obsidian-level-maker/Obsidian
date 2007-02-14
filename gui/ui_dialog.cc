@@ -18,6 +18,7 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
+
 #include "ui_dialog.h"
 #include "ui_window.h"
 
@@ -121,10 +122,12 @@ void DLG_ShowError(const char *msg, ...)
   va_list arg_pt;
 
   va_start (arg_pt, msg);
-  vsnprintf (buffer, MSG_BUF_LEN, msg, arg_pt);
+  vsnprintf (buffer, MSG_BUF_LEN-1, msg, arg_pt);
   va_end (arg_pt);
 
-  buffer[MSG_BUF_LEN] = 0;
+  buffer[MSG_BUF_LEN-2] = 0;
+
+  LogPrintf("\n%s\n", buffer);
 
   DialogShowAndRun(buffer, "Oblige - Error Message");
 }

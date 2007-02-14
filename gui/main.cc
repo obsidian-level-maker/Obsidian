@@ -111,8 +111,6 @@ void Main_FatalError(const char *msg, ...)
 
   buffer[MSG_BUF_LEN-2] = 0;
 
-  LogPrintf("%s\n", buffer);
-
   DLG_ShowError(buffer);
 
   Main_Shutdown();
