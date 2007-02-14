@@ -252,10 +252,6 @@ static void CreateMappingTables(void)
 void Image_Setup(void)
 {
   CreateMappingTables();
-
-  const byte *foo = raw_image_data;
-
-  fprintf(stderr, "%p", foo);
 }
 
 static void FillPost(byte *pat, int x, int w, int pos, const byte *mapper)
