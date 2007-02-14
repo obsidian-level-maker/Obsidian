@@ -26,6 +26,7 @@
 #include "g_cookie.h"
 #include "g_doom.h"
 #include "g_glbsp.h"
+#include "g_image.h"
 #include "g_lua.h"
 
 #include "hdr_fltk.h"
@@ -134,7 +135,7 @@ void Build_Cool_Shit()
   main_win->Locked(true);
   that->P_SetButton(true);
 
-  bool is_hexen = !strcmp(main_win->setup_box->get_Game(), "hexen");
+  bool is_hexen = (strcmp(main_win->setup_box->get_Game(), "hexen") == 0);
 
   bool was_ok = Doom_CreateWAD(TEMP_FILENAME, is_hexen);
 
@@ -218,6 +219,7 @@ int main(int argc, char **argv)
   Fl_File_Icon::load_system_icons();
 
   Script_Init();
+  Image_Setup();
 
   Default_Location();
 
