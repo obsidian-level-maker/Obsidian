@@ -573,7 +573,7 @@ DM_DOORS =
 DM_IMAGES =
 {
   { wall = "CEMENT1", w=128, h=128, glow=true },
-  { wall = "CEMENT2", w=64,  h=64,  floor="MFLR8_2" }
+  { wall = "CEMENT2", w=64,  h=64,  floor="MFLR8_3" }
 }
 
 DM_LIGHTS =
@@ -617,8 +617,6 @@ DM_PICS =
 --  { tex="SKSPINE2", w=128, h=128, scroll=48 },
 --  { tex="SPFACE1",  w=128, h=96,  scroll=48 },
 
---FIXME (not in doom 1)  { tex="ZZWOLF6",  w=128, h=128 },
---FIXME (not in doom 1)  { tex="ZZWOLF7",  w=128, h=128 },
 --FIXME  { tex="WOOD10",   w=128, h=128 },
 --FIXME  { tex="TEKBRON1", w=128, h=128 },
 }
