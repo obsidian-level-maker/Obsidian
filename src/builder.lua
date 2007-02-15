@@ -920,7 +920,13 @@ end
 --
 -- fill a chunk with void, with pictures on the wall
 --
-function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
+function B_void_pic(p,c, kx,ky, pic, cuts)
+
+  local z = (c.c_min + c.f_max) / 2
+  local h = pic.h or (c.c_min - c.f_max - 32)
+
+  local z1 = z-h/2
+  local z2 = z+h/2
 
   local x1 = chunk_to_block(kx)
   local y1 = chunk_to_block(ky)
@@ -930,8 +936,11 @@ function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
   local fx = (x1 - 1) * FW
   local fy = (y1 - 1) * FH
 
+  local tex = pic.tex or pic.wall
+  assert(tex)
+
   frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+3*FH, { solid=c.theme.wall })
-  frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, { solid=pic })
+  frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, { solid=tex })
 
   CUTOUT =
   {
@@ -945,7 +954,7 @@ function B_void_pic(p,c, kx,ky, pic,cuts, z1,z2)
     u_tex = c.theme.wall,
   }
 
-  if cuts >= 3 then  -- FIXME: better way to decide
+  if cuts >= 3 or pic.glow then  -- FIXME: better way to decide
     CUTOUT.light = 255
     CUTOUT.kind  = 8  -- GLOW TYPE  (FIXME)
   end
@@ -3029,7 +3038,14 @@ function build_cell(p, c)
       local blocked = p.blocks[c.blk_x+x1+1][c.blk_y+y1+1]
 
       if K.crate and not blocked then
-        B_crate(p,c, c.crate_theme, sec, kx,ky, x1+1,y1+1)
+        local theme = c.crate_theme
+        if not c.quest.image and not c.quest.mini and
+           (c.quest.level == 1 or c.quest.kind == "exit")
+        then
+          theme = THEME.images[2]
+          c.quest.image = "crate"
+        end
+        B_crate(p,c, theme, sec, kx,ky, x1+1,y1+1)
         blocked = true
       end
 
@@ -3052,7 +3068,7 @@ function build_cell(p, c)
       gap_fill(p,c, x1, y1, x2, y2, sec)
 
       if not blocked and c.theme.scenery and not K.stair_dir and
-         dual_odds(c.theme.outdoor, 45, 22)
+         dual_odds(c.theme.outdoor, 37, 22)
       then
         add_thing(p, c, x1+1, y1+1, c.theme.scenery, true)
         p.blocks[c.blk_x+x1+1][c.blk_y+y1+1].has_scenery = true
@@ -3116,9 +3132,15 @@ function build_cell(p, c)
 
       elseif THEME.pics and rand_odds(sel(c.theme.outdoor, 10, sel(c.hallway,20, 50))) then
         if not c.void_pic then decide_void_pic(p, c) end
-        local h = c.void_pic.h or (c.c_min - c.f_max - 32)
-        local z = (c.c_min + c.f_max) / 2
-        B_void_pic(p,c, kx,ky, c.void_pic.tex,c.void_cut, z-h/2, z+h/2)
+        local pic,cut = c.void_pic,c.void_cut
+
+        if not c.quest.image and c.quest.mini and rand_odds(36) then
+          pic = THEME.images[1]
+          cut = 1
+          c.quest.image = "pic"
+        end
+
+        B_void_pic(p,c, kx,ky, pic,cut)
 
       else
         chunk_fill(c, K, kx, ky, nil, c.theme.void, c.theme.void)
@@ -3309,7 +3331,7 @@ function build_cell(p, c)
     -- TEST CRUD : crates
     if sec and not c.scenic and not K.stair_dir
       and THEME.crates
-      and dual_odds(c.theme.outdoor, 22, 35)
+      and dual_odds(c.theme.outdoor, 20, 33)
       and (not c.hallway or rand_odds(25))
       and (not c.exit or rand_odds(50))
     then
@@ -3393,11 +3415,6 @@ function build_cell(p, c)
     if not c.sky_light.is_sky and rand_odds(80) then
       c.sky_light.h = - c.sky_light.h
     end
-  end
-
-  if false then ---???? c == p.quests[1].path[1] then -- START ROOM
-    B_crate(p,c, { wall="CEMENT2", floor="MFLR8_4", h=128 },
-            c.rmodel, 2,2, 5,5) --!!!!
   end
 
   -- on first pass, only build sky borders
