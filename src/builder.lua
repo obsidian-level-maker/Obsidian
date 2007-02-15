@@ -936,13 +936,20 @@ function B_void_pic(p,c, kx,ky, pic, cuts)
   local fx = (x1 - 1) * FW
   local fy = (y1 - 1) * FH
 
-  local tex = pic.tex or pic.wall
-  assert(tex)
-
   frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+3*FH, { solid=c.theme.wall })
-  frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, { solid=tex })
 
-  CUTOUT =
+  local INNER =
+  {
+    solid = pic.tex or pic.wall,
+    
+    x_offset = pic.x_offset,
+    y_offset = pic.y_offset,
+  }
+  assert(INNER.solid)
+
+  frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, INNER)
+
+  local CUTOUT =
   {
     f_h = z1,
     c_h = z2,
@@ -1010,6 +1017,7 @@ function B_crate(p,c, crate_info, base, kx,ky, bx,by)
   CRATE.f_tex = crate_info.floor
   CRATE.l_tex = crate_info.wall
   CRATE.is_cage = true  -- don't put monsters/pickups here
+  CRATE.kind = nil      -- don't damage player (if chunk is lava)
 
   local x_ofs = crate_info.x_offset
   local y_ofs = crate_info.y_offset
