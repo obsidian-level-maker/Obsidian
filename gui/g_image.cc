@@ -254,10 +254,15 @@ void Image_Setup(void)
   CreateMappingTables();
 }
 
-static void FillPost(byte *pat, int x, int w, int pos, const byte *mapper)
+
+//------------------------------------------------------------------------
+
+static void FillPost(byte *pat, int x, const byte *src, int src_w, int src_h,
+                     int dest_w, int dest_h, const byte *mapper)
 {
   // determine and set the offset value
-  int offset = 8 + 128*4 + (x % w) * (128+8);
+
+  int offset = 8 + dest_w*4 + (x % src_w) * (dest_h+8);
 
   byte *ofs_var = pat + 8 + x*4;
 
@@ -265,45 +270,57 @@ static void FillPost(byte *pat, int x, int w, int pos, const byte *mapper)
   ofs_var[1] = (offset >>  8) & 0xFF;
   ofs_var[2] = (offset >> 16) & 0xFF;
 
-  if (x >= w)
+  if (x >= src_w)
     return;
 
   // actually fill in the post
 
-  const byte *src = raw_image_data + pos + (x % w);
+  src += (x % src_w);
 
   byte *dest = pat + offset;
+  int y;
 
-  *dest++ = 0;   // Y OFFSET
-  *dest++ = 128; // HEIGHT
+#undef  PIXEL
+#define PIXEL(yy)  mapper[src[(src_h-1-(yy)) * src_w]]
 
-  for (int y=-1; y < 128+1; y++)
-  {
-    // handling padding (top and bottom)
-    int yy = MAX(0, MIN(127, y));
+  *dest++ = 0;      // Y-OFFSET
+  *dest++ = dest_h; // # PIXELS
 
-    *dest++ = mapper[src[(127-yy)*w]];
-  }
+  *dest++ = PIXEL(0);  // TOP-PADDING
 
-  *dest++ = 255; // END OF POST
+  for (y=0; y < dest_h; y++)
+    *dest++ = PIXEL(y);
+
+  *dest++ = PIXEL(y-1);  // BOTTOM-PADDING
+
+  *dest++ = 255; // END-OF-POST
 }
 
-const byte *Image_MakePatch(int what, int *length)
+const byte *Image_MakePatch(int what, int *length, int dest_w)
 {
   SYS_ASSERT(0 <= what && what <= 1);
 
-  int w   = what ? 64 : 128;
-  int pos = what ? 128*128 : 0;
+  const byte *src = raw_image_data + (what ? 128*128 : 0);
 
-  *length = 8 + 128*4 + w * (128+8);
+  int src_w = what ? 64 : 128;
+  int src_h = 128;
+
+  int dest_h = 128;
+
+  SYS_ASSERT(dest_h <= src_h);
+  SYS_ASSERT(dest_h <= 254);
+
+  *length = 8 + dest_w*4 + src_w * (dest_h+8);
 
   byte *pat = new byte[*length];
 
   memset(pat, 0, *length);
 
-  // header
-  pat[0] = 128;  // width
-  pat[2] = 128;  // height
+  // patch header
+  pat[0] = (dest_w & 0xFF);
+  pat[1] = (dest_w >> 8) & 0xFF;
+
+  pat[2] = dest_h;
 
   // palette conversion
   const byte *mapper = pixel_to_doom;
@@ -314,10 +331,10 @@ const byte *Image_MakePatch(int what, int *length)
   if (strcmp(main_win->setup_box->get_Game(), "hexen") == 0)
     mapper = pixel_to_hexen;
 
-  // posts
-  for (int x=0; x < 128; x++)
+  // patch posts
+  for (int x=0; x < dest_w; x++)
   {
-    FillPost(pat, x, w, pos, mapper);
+    FillPost(pat, x, src,src_w,src_h, dest_w,dest_h, mapper);
   }
 
   return pat;

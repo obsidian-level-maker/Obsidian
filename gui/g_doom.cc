@@ -159,8 +159,11 @@ void WAD_WritePatches()
 
   for (int what=0; what < 2; what++)
   {
+    // Heretic's WALL02 patch is only 64 wide
+    int patch_w = (game == 1 && what == 1) ? 64 : 128;
+
     int length;
-    const byte *pat = Image_MakePatch(what, &length);
+    const byte *pat = Image_MakePatch(what, &length, patch_w);
 
     WAD_WriteLump(patch_names[game][what], pat, length);
 
