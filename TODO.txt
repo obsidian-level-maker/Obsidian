@@ -2,57 +2,54 @@
 TODO
 ----
 
->>>  cage floor heights: more reasonable, random 
+>> PLAY-TEST: Health/Ammo adjustments
 
-   -  pillar cages: base calcs on K.floor .. K.ceil
-   -  big cages:    base calcs on c.floor and c.ceil
+-  add some TNT/Plutonia stuff.
 
-   -  minimum z = floor + 24
-   -  absolute maximum z = ceil - 16 - rail.h
-   -  reasonable max z = floor + 128
++  more exit themes!
+   -  different switch/hole methods
+   -  able to make smaller rooms (void_it_up), esp. with wall switch
+   -  put exit "bumps" on floor outside
+   -  teleport method
 
-   -  if rail.h < 80 then must be "open top"
-   -  if sector is very tall, must be open top
-   -  otherwise random (based on indoor/outdoor and sector space)
-
->>>  more exit themes!
-
--  tweak outside floor/ceil calcs, prevent very tall sectors
-   -  no  floor  lower  than  0 (liquids excepted).
-   -  no ceiling higher than 640.
-
--  x_offset for rotated crates
-
--  rename 'room_sec' to 'model_sec', CHUNK HAS ONE TOO.
-
--  Monst/Trap adjustments: five choices too many ?!?!
-
+-  sky_lights: decide sky based on "ceiling thickness"
+-  replace 'c.floor_h' and 'K.ceil_h' with the 'rmodel' field.
+-  floor heights: for Heretic/Hexen, limit slope to prevent lifts
 -  fix cage railing when cage borders a higher chunk or Fence
+   (raise fence to cage top and omit railing texture but keep IMPASS).
 -  don't put a railing _between_ cages
+-  idea: "scenic_wall" / "scenic_void" for middle of 3x3 chunk
 
 
 GUI TODO
 --------
 
+-  test if output file (if not exists) can be written to.
+
 -  handle the Abort button better, also glbsp-failure.
 
 -  different adjustments for DM levels.
+
+??  separate 'obl_scr' and 'obl_dat' directories.
 
 
 RECENT CHANGES
 --------------
 
 +  Hallways!  Crates!  New exits!
->> improved method of choosing floor/ceiling heights.
++  better algorithm for choosing floor/ceiling heights.
 +  user adjustments in the GUI (health/ammo/monsters).
-+  settings and adjustments are saved when you quit.
++  current settings are remembered when you quit.
 
 -  fixed the (rare) non-working switches and lifts.
+-  delete temporary wad when build has finished.
+-  collect all log messages into a file (LOGS.txt).
+-  support for FreeDoom IWAD (version 0.5).
+
 -  surprise traps: improved placement, fairer monsters.
 -  more interesting health/ammo placement.
 -  tweaked battle simulation to provide more ammo.
--  delete temporary wad when build has finished.
--  collect all log messages into a file (LOGS.txt).
+-  improved cages, now at more reasonable heights.
 
 
 MILESTONE 0  (reached!)
@@ -120,7 +117,7 @@ MILESTONE 3  (heaps left to do!!)
 
 +  allocation system for blocks (can_walk tests).
 
-?  larger rooms (2-8 chunks in each dimension).
+?? larger rooms (2-8 chunks in each dimension).
 
 +  teleporters!
 
@@ -152,14 +149,14 @@ MILESTONE 3  (heaps left to do!!)
 -  closets: 
    (a) fix way closet is put in chunk (remove side field)
 
-++ overall consistency (doors/lights/overhangs/windows)
++  overall consistency (doors/lights/overhangs/windows)
 
 _____________________
 |KEY:                |
-|    #  completed    |
-|    >> in progress  |
 |    -  plain item   |
 |    +  important    |
-|    ?  not sure     |
+|    >> in progress  |
+|    ?? not sure     |
+|    #  completed    |
 |____________________|
 
