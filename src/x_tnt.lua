@@ -16,23 +16,76 @@
 --
 ----------------------------------------------------------------
 
+TN_RAILS =
+{
+  r_3 = { tex="TYIRONSM", w=64,  h=72  },
+  r_4 = { tex="TYIRONLG", w=128, h=128 },
+}
+
+TN_CRATES =
+{
+  WOOD_L6 =
+  {
+    wall = "CRLWDL6", h=64, floor = "FLAT1",  --!!!! FIXME: floor flats
+  },
+  
+  WOOD_L6C =
+  {
+    wall = "CRLWDL6C", h=64, floor = "CRATOP2",
+  },
+  
+  WOOD_H =
+  {
+    wall = "CRWDH64", h=128, floor = "FLAT1"
+  },
+
+  WOOD_LA =
+  {
+    wall = "CRWDL64A", h=128, floor = "FLAT1"
+  },
+
+  WOOD_BH =
+  {
+    wall = "CRBLWDH6", h=128, floor = "FLAT1"
+  },
+
+}
+
+TN_LIGHTS =
+{
+  { tex="LITEGRN1", w=32 },
+  { tex="LITERED1", w=32 },
+  { tex="LITEYEL1", w=32 },
+}
+
+TN_DOORS =
+{
+  d_metal  = { tex="METALDR", w=128, h=112  },
+}
+
+TN_PICS =
+{
+  { tex="TNTDOOR",  w=128, h=128 },
+  { tex="BIGWALL",  w=128, h=128 },
+  { tex="LONGWALL", w=128, h=128 },
+  { tex="MURAL1",   w=128, h=128 },
+  { tex="MURAL2",   w=128, h=128 },
+  { tex="DISASTER", w=128, h=128 },
+  { tex="GRNMEN",   w=128, h=128 },
+  { tex="LITEYEL3", w=128, h=128, glow=true },
+}
+
+----------------------------------------------------------------
 
 THEME_FACTORIES["tnt"] = function()
 
   local T = THEME_FACTORIES.doom2()
 
-  --[[
-  T.themes   = copy_and_merge(T.themes,   TN_THEMES)
-  T.exits    = copy_and_merge(T.exits,    TN_EXITS)
-  T.hallways = copy_and_merge(T.hallways, TN_HALLWAYS)
-
-  T.rails = copy_and_merge(T.rails, TN_RAILS)
-
-  T.hangs   = copy_and_merge(T.hangs,   TN_OVERHANGS)
-  T.mats    = copy_and_merge(T.mats,    TN_MATS)
-  T.crates  = copy_and_merge(T.crates,  TN_CRATES)
-  T.liquids = copy_and_merge(T.liquids, TN_LIQUIDS)
-  --]]
+  T.rails   = copy_and_merge(T.rails,  TN_RAILS)
+  T.crates  = copy_and_merge(T.crates, TN_CRATES)
+  T.lights  = copy_and_merge(T.lights, TN_LIGHTS)
+  T.doors   = copy_and_merge(T.doors,  TN_DOORS)
+  T.pics    = copy_and_merge(T.pics,   TN_PICS)
 
   return T
 end
