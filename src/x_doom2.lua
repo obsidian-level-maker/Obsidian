@@ -531,6 +531,12 @@ D2_RAILS =
   r_2 = { tex="MIDGRATE", w=128, h=128 },
 }
 
+D2_PICS =
+{
+  { tex="ZZWOLF6", w=128, h=128 },
+  { tex="ZZWOLF7", w=128, h=128 },
+}
+
 D2_LIQUIDS =
 {
   { name="slime", floor="SLIME01", sec_kind=7 }  --  5% damage
@@ -550,6 +556,7 @@ THEME_FACTORIES["doom2"] = function()
 
   T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
   T.mats    = copy_and_merge(T.mats,    D2_MATS)
+  T.pics    = copy_and_merge(T.pics,    D2_PICS)
   T.crates  = copy_and_merge(T.crates,  D2_CRATES)
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
