@@ -40,14 +40,18 @@ PL_SPECIAL_PEDESTAL =
 {
   wall   ="COMPSPAN",
   floor  ="CEIL5_1",
-  h      = 20,
+  h      = 16,
   light  = 80,
 
   wall2  ="COMPSPAN",
   floor2 ="TLITE6_1",
-  h2     = 30,
+  h2     = 28,
   light2 = 255,
+
   glow2  = true,
+  rotate2 = true,
+
+  coop_light = 112,
 }
 
 ----------------------------------------------------------------

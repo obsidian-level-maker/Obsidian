@@ -862,36 +862,36 @@ end
 end
 
 
-function B_double_pedestal(p, c, bx, by, z, info, is_exit)
+function B_double_pedestal(p, c, bx, by, z, ped_info, is_exit)
  
   local OUTER =
   {
-    f_h   = info.h + z,
-    f_tex = info.floor,
-    l_tex = info.wall,
-    light = info.light,
+    f_h   = ped_info.h + z,
+    f_tex = ped_info.floor,
+    l_tex = ped_info.wall,
+    light = ped_info.light,
 
-    c_h   = c.ceil_h - info.h,
-    c_tex = info.floor,
-    u_tex = info.wall,
+    c_h   = c.ceil_h - ped_info.h,
+    c_tex = ped_info.floor,
+    u_tex = ped_info.wall,
 
-    kind  = info.glow and 8 -- GLOW TYPE  (FIXME)
+    kind  = ped_info.glow and 8 -- GLOW TYPE  (FIXME)
   }
 
   local INNER =
   {
-    f_h   = info.h2 + z,
-    f_tex = info.floor2,
-    l_tex = info.wall2,
-    light = info.light2,
+    f_h   = ped_info.h2 + z,
+    f_tex = ped_info.floor2,
+    l_tex = ped_info.wall2,
+    light = ped_info.light2,
 
-    c_h   = c.ceil_h - info.h2,
-    c_tex = info.floor2,
-    u_tex = info.wall2,
+    c_h   = c.ceil_h - ped_info.h2,
+    c_tex = ped_info.floor2,
+    u_tex = ped_info.wall2,
 
     walk_kind = is_exit and 52,  -- FIXME "exit_W1"
 
-    kind  = info.glow2 and 8 -- GLOW TYPE  (FIXME)
+    kind = ped_info.glow2 and 8 -- GLOW TYPE  (FIXME)
   }
 
   if c.theme.outdoor then
@@ -914,12 +914,17 @@ end
   local fy = (by - 1) * FH
 
   frag_fill(p,c, fx+1,fy+1, fx+4,fy+4, OUTER)
-  frag_fill(p,c, fx+2,fy+2, fx+2,fy+2, INNER)
 
-  move_frag(p,c, fx+2,fy+2, 1, 16, -6)
-  move_frag(p,c, fx+2,fy+2, 3, 22, 16)
-  move_frag(p,c, fx+2,fy+2, 7, -6,  0)
-  move_frag(p,c, fx+2,fy+2, 9,  0, 22)
+  if ped_info.rotate2 then
+    frag_fill(p,c, fx+2,fy+2, fx+2,fy+2, INNER)
+
+    move_frag(p,c, fx+2,fy+2, 1, 16, -6)
+    move_frag(p,c, fx+2,fy+2, 3, 22, 16)
+    move_frag(p,c, fx+2,fy+2, 7, -6,  0)
+    move_frag(p,c, fx+2,fy+2, 9,  0, 22)
+  else
+    frag_fill(p,c, fx+2,fy+2, fx+3,fy+3, INNER)
+  end
 end
 
 
@@ -3387,8 +3392,7 @@ function build_cell(p, c)
       sec.near_player = true;
 
       if settings.mode == "coop" and settings.game == "plutonia" then
-        sec.light = math.min(255, 48 +
-          math.min(THEME.special_ped.light, THEME.special_ped.light2))
+        sec.light = THEME.special_ped.coop_light
       end
     end
 
