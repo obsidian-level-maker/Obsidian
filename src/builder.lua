@@ -839,7 +839,7 @@ end
 --
 -- Build a pedestal (items, players)
 -- 
-function B_pedestal(p, c, x, y, z, info)
+function B_pedestal(p, c, x, y, z, info, overrides)
  
   local PEDESTAL =
   {
@@ -858,11 +858,11 @@ if (PEDESTAL.c_h - PEDESTAL.f_h) < 64 then
   PEDESTAL.c_h = PEDESTAL.f_h + 64
 end
 
-  fill(p,c, x,y, x,y, PEDESTAL)
+  fill(p,c, x,y, x,y, PEDESTAL, overrides)
 end
 
 
-function B_double_pedestal(p, c, bx, by, z, ped_info, is_exit)
+function B_double_pedestal(p, c, bx, by, z, ped_info, overrides)
  
   local OUTER =
   {
@@ -889,8 +889,6 @@ function B_double_pedestal(p, c, bx, by, z, ped_info, is_exit)
     c_tex = ped_info.floor2,
     u_tex = ped_info.wall2,
 
-    walk_kind = is_exit and 52,  -- FIXME "exit_W1"
-
     kind = ped_info.glow2 and 8 -- GLOW TYPE  (FIXME)
   }
 
@@ -913,7 +911,7 @@ end
   local fx = (bx - 1) * FW
   local fy = (by - 1) * FH
 
-  frag_fill(p,c, fx+1,fy+1, fx+4,fy+4, OUTER)
+  frag_fill(p,c, fx+1,fy+1, fx+4,fy+4, OUTER, overrides)
 
   if ped_info.rotate2 then
     frag_fill(p,c, fx+2,fy+2, fx+2,fy+2, INNER)
@@ -3346,7 +3344,9 @@ function build_cell(p, c)
         local side = wall_switch_dir(kx, ky, c.entry_dir)
 
         if settings.game == "plutonia" then
-          B_double_pedestal(p,c, bx,by, K.floor_h, THEME.special_ped, true)
+          B_double_pedestal(p,c, bx,by, K.floor_h, THEME.special_ped,
+            { walk_kind = 52 }) -- FIXME "exit_W1"
+
         elseif c.theme.hole_tex then
           B_exit_hole(p,c, kx,ky, c.rmodel)
           return
@@ -3390,6 +3390,7 @@ function build_cell(p, c)
     if K.player then
       sec = copy_block(sec) -- FIXME??
       sec.near_player = true;
+      sec.kind = 9  -- FIXME: "secret"
 
       if settings.mode == "coop" and settings.game == "plutonia" then
         sec.light = THEME.special_ped.coop_light
