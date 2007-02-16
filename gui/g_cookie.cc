@@ -42,8 +42,8 @@ static bool Cookie_SetValue(const char *name, const char *value)
 
   if (StrCaseCmp(name, "game") == 0)
     return main_win->setup_box->set_Game(value);
-  if (StrCaseCmp(name, "addon") == 0)
-    return main_win->setup_box->set_Addon(value);
+  if (StrCaseCmp(name, "port") == 0)
+    return main_win->setup_box->set_Port(value);
   if (StrCaseCmp(name, "length") == 0)
     return main_win->setup_box->set_Length(value);
   if (StrCaseCmp(name, "mode") == 0)
@@ -177,7 +177,7 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "-- Settings --\n");
   fprintf(cookie_fp, "seed = %s\n",  main_win->setup_box->get_Seed());
   fprintf(cookie_fp, "game = %s\n",  main_win->setup_box->get_Game());
-  fprintf(cookie_fp, "addon = %s\n", main_win->setup_box->get_Addon());
+  fprintf(cookie_fp, "port = %s\n",  main_win->setup_box->get_Port());
   fprintf(cookie_fp, "mode = %s\n",  main_win->setup_box->get_Mode());
   fprintf(cookie_fp, "length = %s\n",main_win->setup_box->get_Length());
   fprintf(cookie_fp, "\n");

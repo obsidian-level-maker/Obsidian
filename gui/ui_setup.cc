@@ -70,7 +70,6 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
             "FreeDoom 0.5|"
             "Heretic|"
             "Hexen");
-  game->callback(game_callback, this);
   game->value(1);
 
   add(game);
@@ -84,12 +83,12 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   cy += 32;
 
-  addon = new Fl_Choice(x+70, cy, 150, 24, "Add-on: ");
-  addon->align(FL_ALIGN_LEFT);
-  addon->add("None"); //TODO: Eternal 3|Osiris|Gothic DM
-  addon->value(0);
-  
-  add(addon);
+  port = new Fl_Choice(x+70, cy, 150, 24, "Port: ");
+  port->align(FL_ALIGN_LEFT);
+  port->add("Limit Removing"); //TODO: BOOM|EDGE|Legacy|JDoom|ZDoom
+  port->value(0);
+
+  add(port);
 
   mode = new Fl_Choice(x+300, cy, 150, 24, "Mode: ");
   mode->align(FL_ALIGN_LEFT);
@@ -145,18 +144,6 @@ void UI_Setup::bump_callback(Fl_Widget *w, void *data)
   that->BumpSeed();
 }
 
-void UI_Setup::game_callback(Fl_Widget *w, void *data)
-{
-#if 0
-  UI_Setup *that = (UI_Setup *)data;
-
-  if (that->game->value() == 1)
-    that->addon->show();
-  else
-    that->addon->hide();
-#endif
-}
-
 void UI_Setup::Locked(bool value)
 {
   if (value)
@@ -165,7 +152,7 @@ void UI_Setup::Locked(bool value)
     bump->deactivate();
 
     game->deactivate();
-    addon->deactivate();
+    port->deactivate();
     mode->deactivate();
     length->deactivate();
   }
@@ -175,7 +162,7 @@ void UI_Setup::Locked(bool value)
     bump->activate();
 
     game->activate();
-    addon->activate();
+    port->activate();
     mode->activate();
     length->activate();
   }
@@ -189,9 +176,9 @@ const char * UI_Setup::game_syms[] =
   "heretic", "hexen"
 };
 
-const char * UI_Setup::addon_syms[] =
+const char * UI_Setup::port_syms[] =
 {
-  "none" /// , "eternal", "osiris", "gothic"
+  "nolimit" /// , "boom", "edge", "zdoom", etc..
 };
 
 const char * UI_Setup::mode_syms[] =
@@ -215,9 +202,9 @@ const char *UI_Setup::get_Game()
   return game_syms[game->value()];
 }
 
-const char *UI_Setup::get_Addon()
+const char *UI_Setup::get_Port()
 {
-  return addon_syms[addon->value()];
+  return port_syms[port->value()];
 }
 
 const char *UI_Setup::get_Mode()
@@ -252,13 +239,13 @@ bool UI_Setup::set_Game(const char *str)
   return false; // Unknown
 }
 
-bool UI_Setup::set_Addon(const char *str)
+bool UI_Setup::set_Port(const char *str)
 {
-  for (int i=0; addon_syms[i]; i++)
+  for (int i=0; port_syms[i]; i++)
   {
-    if (StrCaseCmp(str, addon_syms[i]) == 0)
+    if (StrCaseCmp(str, port_syms[i]) == 0)
     {
-      addon->value(i);
+      port->value(i);
       return true;
     }
   }
