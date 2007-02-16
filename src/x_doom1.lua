@@ -557,14 +557,6 @@ DM_DOORS =
   d_wood2  = { tex="BIGDOOR6", bottom="CEIL5_2", w=128, h=112 }, -- this is the real height!
   d_wood3  = { tex="BIGDOOR7", bottom="CEIL5_2", w=128, h=112 },
 
-  -- FIXME: doom 2 only
-  --[[
-  d_thin1  = { tex="SPCDOOR1", w=64, h=112 },
-  d_thin2  = { tex="SPCDOOR2", w=64, h=112 },
-  d_thin3  = { tex="SPCDOOR3", w=64, h=112 },
-  d_weird  = { tex="SPCDOOR4", w=64, h=112 },
-  --]]
-
   d_small1 = { tex="DOOR1",    w=64, h=72 },
   d_small2 = { tex="DOOR3",    w=64, h=72 },
 

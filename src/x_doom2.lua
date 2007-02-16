@@ -423,7 +423,7 @@ D2_HALLWAYS =
     wall = "TEKGREN4",
     void = "TEKGREN2",
     step = "STEP2",
-    pillar = "BRONZE2",
+    pillar = "TEKGREN3",  -- was: "BRONZE2"
 
     floor = "FLOOR3_3",
     ceil  = "GRNLITE1",
@@ -496,6 +496,15 @@ D2_OVERHANGS =
 
 }
 
+D2_DOORS =
+{
+  d_thin1  = { tex="SPCDOOR1", w=64, h=112 },
+  d_thin2  = { tex="SPCDOOR2", w=64, h=112 },
+  d_thin3  = { tex="SPCDOOR3", w=64, h=112 },
+
+  d_weird  = { tex="SPCDOOR4", w=64, h=112 },
+}
+
 D2_CRATES =
 {
   MODWALL =
@@ -556,6 +565,7 @@ THEME_FACTORIES["doom2"] = function()
 
   T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
   T.mats    = copy_and_merge(T.mats,    D2_MATS)
+  T.doors   = copy_and_merge(T.doors,   D2_EXITS)
   T.pics    = copy_and_merge(T.pics,    D2_PICS)
   T.crates  = copy_and_merge(T.crates,  D2_CRATES)
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
