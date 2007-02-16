@@ -241,7 +241,7 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
   end
 end
 
-function move_frag(p,c, x,y,side, dx,dy)
+function move_frag(p,c, x,y,corner, dx,dy)
   local bx, fx = div_mod(x, FW)
   local by, fy = div_mod(y, FH)
 
@@ -252,15 +252,15 @@ function move_frag(p,c, x,y,side, dx,dy)
   local F = B.fragments[fx][fy]
   assert(F)
 
-  if not F[side] then
-    F[side] = {}
+  if not F[corner] then
+    F[corner] = {}
   else
-    dx = dx + (F[side].dx or 0)
-    dy = dy + (F[side].dy or 0)
+    dx = dx + (F[corner].dx or 0)
+    dy = dy + (F[corner].dy or 0)
   end
 
-  F[side].dx = dx
-  F[side].dy = dy
+  F[corner].dx = dx
+  F[corner].dy = dy
 end
 
  
@@ -862,6 +862,67 @@ end
 end
 
 
+function B_double_pedestal(p, c, bx, by, z, info, is_exit)
+ 
+  local OUTER =
+  {
+    f_h   = info.h + z,
+    f_tex = info.floor,
+    l_tex = info.wall,
+    light = info.light,
+
+    c_h   = c.ceil_h - info.h,
+    c_tex = info.floor,
+    u_tex = info.wall,
+
+    kind  = info.glow and 8 -- GLOW TYPE  (FIXME)
+  }
+
+  local INNER =
+  {
+    f_h   = info.h2 + z,
+    f_tex = info.floor2,
+    l_tex = info.wall2,
+    light = info.light2,
+
+    c_h   = c.ceil_h - info.h2,
+    c_tex = info.floor2,
+    u_tex = info.wall2,
+
+    walk_kind = is_exit and 52,  -- FIXME "exit_W1"
+
+    kind  = info.glow2 and 8 -- GLOW TYPE  (FIXME)
+  }
+
+  if c.theme.outdoor then
+    OUTER.c_h   = c.ceil_h
+    OUTER.c_tex = c.theme.ceil
+
+    INNER.c_h   = c.ceil_h
+    INNER.c_tex = c.theme.ceil
+  end
+
+--FIXME temp (shouldn't be needed)
+if (OUTER.c_h - OUTER.f_h) < 64 then
+  OUTER.c_h = OUTER.f_h + 64
+end
+if (INNER.c_h - INNER.f_h) < 64 then
+  INNER.c_h = INNER.f_h + 64
+end
+
+  local fx = (bx - 1) * FW
+  local fy = (by - 1) * FH
+
+  frag_fill(p,c, fx+1,fy+1, fx+4,fy+4, OUTER)
+  frag_fill(p,c, fx+2,fy+2, fx+2,fy+2, INNER)
+
+  move_frag(p,c, fx+2,fy+2, 1, 16, -6)
+  move_frag(p,c, fx+2,fy+2, 3, 22, 16)
+  move_frag(p,c, fx+2,fy+2, 7, -6,  0)
+  move_frag(p,c, fx+2,fy+2, 9,  0, 22)
+end
+
+
 --
 -- Build some bars
 --
@@ -1091,7 +1152,7 @@ function B_pillar_cage(p,c, theme, kx,ky, bx,by)
 
   local rail
   if K.ceil_h < K.floor_h+192 then
-    rail = THEME.rails["r_1"]
+    rail = THEME.rails["r_1"]  -- FIXME: want "short" rail
   else
     rail = get_rand_rail()
   end
@@ -2697,6 +2758,7 @@ function build_cell(p, c)
 --"Cell %d,%d Side %d Themes: %s/%s/%s R %d",
 --c.x, c.y, side, c.theme.floor, b_theme.floor, other.theme.floor, rsd))
 
+      -- FIXME: choose fence rail
       overrides = { [rsd] = { rail = THEME.rails["r_1"].tex }}
     end
 
@@ -2820,6 +2882,7 @@ function build_cell(p, c)
 
     -- !!! FIXME: test crud
     if not bar and what ~= "fence" then
+      -- FIXME: choose window rail
       sec[side] = { rail = THEME.rails["r_2"].tex }
     end
 
@@ -3224,19 +3287,27 @@ function build_cell(p, c)
 
     local bx = chunk_to_block(kx) + 1
     local by = chunk_to_block(ky) + 1
-
+    
     if K.player then
       local angle = player_angle(kx, ky)
       local offsets = sel(rand_odds(50), {1,3,7,9}, {2,4,6,8})
       if p.coop then
         for i = 1,4 do
           local dx,dy = dir_to_delta(offsets[i])
-          B_pedestal(p, c, bx+dx, by+dy, K.floor_h, THEME.pedestals.PLAYER)
+          if settings.game == "plutonia" then
+            B_double_pedestal(p,c, bx+dx,by+dy, K.floor_h, THEME.special_ped)
+          else
+            B_pedestal(p, c, bx+dx, by+dy, K.floor_h, THEME.pedestals.PLAYER)
+          end
           add_thing(p, c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
           c.player_pos = {x=bx+dx, y=by+dy}
         end
       else
-        B_pedestal(p, c, bx, by, K.floor_h, THEME.pedestals.PLAYER)
+        if settings.game == "plutonia" then
+          B_double_pedestal(p,c, bx,by, K.floor_h, THEME.special_ped)
+        else
+          B_pedestal(p, c, bx, by, K.floor_h, THEME.pedestals.PLAYER)
+        end
         add_thing(p, c, bx, by, sel(p.deathmatch, "dm_player", "player1"), true, angle)
         c.player_pos = {x=bx, y=by}
       end
@@ -3268,7 +3339,10 @@ function build_cell(p, c)
 
       elseif c.quest.kind == "exit" then
         local side = wall_switch_dir(kx, ky, c.entry_dir)
-        if c.theme.hole_tex then
+
+        if settings.game == "plutonia" then
+          B_double_pedestal(p,c, bx,by, K.floor_h, THEME.special_ped, true)
+        elseif c.theme.hole_tex then
           B_exit_hole(p,c, kx,ky, c.rmodel)
           return
         else
@@ -3311,6 +3385,11 @@ function build_cell(p, c)
     if K.player then
       sec = copy_block(sec) -- FIXME??
       sec.near_player = true;
+
+      if settings.mode == "coop" and settings.game == "plutonia" then
+        sec.light = math.min(255, 48 +
+          math.min(THEME.special_ped.light, THEME.special_ped.light2))
+      end
     end
 
     -- TEST CRUD : overhangs
@@ -3455,9 +3534,16 @@ local function build_depot(p, c)
   local start = p.quests[1].first
   assert(start.player_pos)
 
-  local B = p.blocks[start.blk_x + start.player_pos.x][start.blk_y + start.player_pos.y]
+  local player_B = p.blocks[start.blk_x + start.player_pos.x][start.blk_y + start.player_pos.y]
 
-  local sec = { f_h = B.f_h, c_h = B.f_h + 128,
+  -- check for double pedestals (Plutonia)
+  if player_B.fragments then
+    player_B = player_B.fragments[1][1]
+  end
+  assert(player_B)
+  assert(player_B.f_h)
+
+  local sec = { f_h = player_B.f_h, c_h = player_B.f_h + 128,
                 f_tex = c.theme.floor, c_tex = c.theme.ceil,
                 l_tex = c.theme.void,  u_tex = c.theme.void,
                 light = 0
@@ -3496,7 +3582,7 @@ local function build_depot(p, c)
 
   -- bottom corner block is same sector as player start,
   -- to allow sound to wake up these monsters.
-  fill(p, c, m1,1, m1,1, copy_block(B), { same_sec=B })
+  fill(p, c, m1,1, m1,1, copy_block(player_B), { same_sec=player_B })
 
   -- put a border around the room
   gap_fill(p, c, 0, 0, BW+1, BH+1, { solid=c.theme.wall })
