@@ -34,6 +34,10 @@
 #define MAP_BG       fl_gray_ramp(FL_NUM_GRAY * 2 / 24)
 
 
+/* extern */
+void menu_do_about(Fl_Widget *w, void * data);
+
+
 UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label),
     map(NULL)
@@ -72,11 +76,16 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   status->color(MAIN_BG_COLOR, MAIN_BG_COLOR);
   add(status);
 
-
+  
   quit = new Fl_Button(x+w - 82, cy, 70, 30, "Quit");
   quit->callback(quit_callback, this);
 
   add(quit);
+
+  Fl_Button *about = new Fl_Button(x+w - 82, cy-40, 70, 30, "About");
+  about->callback(menu_do_about, this);
+
+  add(about);
 
   build = new Fl_Button(x+w - 170, cy, 76, 30, "Build...");
   build->labelfont(FL_HELVETICA_BOLD);

@@ -35,8 +35,8 @@
 
 UI_MainWin *main_win;
 
-#define MAIN_WINDOW_W  470
-#define MAIN_WINDOW_H  406
+#define MAIN_WINDOW_W   470
+#define MAIN_WINDOW_H  (406-28)
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
@@ -67,6 +67,8 @@ UI_MainWin::UI_MainWin(const char *title) :
 
   int cy = 0;
 
+#if 0  // EXPERIMENT: Do we NEED the menu bar ?
+
   /* ---- Menu bar ---- */
   {
     menu_bar = MenuCreate(0, 0, w(), 28);
@@ -77,6 +79,7 @@ UI_MainWin::UI_MainWin(const char *title) :
 ///   cy += 8;
 #endif
   }
+#endif
 
   setup_box = new UI_Setup(0, cy, w(), 154);
   add(setup_box);

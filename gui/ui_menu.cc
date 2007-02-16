@@ -62,7 +62,7 @@ static const char *about_Web =
 #define INFO_COLOR  fl_color_cube(0,6,4)
   
 
-static void menu_do_about(Fl_Widget *w, void * data)
+void menu_do_about(Fl_Widget *w, void * data)
 {
   menu_want_to_quit = false;
 

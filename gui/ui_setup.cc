@@ -67,7 +67,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
             "Doom 2|"
             "TNT Evilution|"
             "Plutonia|"
-            "FreeDoom|"
+            "FreeDoom 0.5|"
             "Heretic|"
             "Hexen");
   game->callback(game_callback, this);
