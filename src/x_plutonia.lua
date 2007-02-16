@@ -16,23 +16,51 @@
 --
 ----------------------------------------------------------------
 
+PL_RAILS =
+{
+  r_4 = { tex="MIDSPACE", w=128, h=128 },
+  r_5 = { tex="A-GRATE",  w=128, h=128 },
+  r_6 = { tex="A-RAIL1",  w=64,  h=32  },
+}
+
+PL_DOORS =
+{
+  d_metal  = { tex="A-BROWN4", w=128, h=128 },
+  d_poison = { tex="SLIME3",   w=128, h=128 },
+}
+
+PL_PICS =
+{
+  { tex="A-REDROK", w=128, h=128 },
+  { tex="A-ASKIN3", w=128, h=128 },
+  { tex="A-ASKIN4", w=128, h=128 },
+}
+
+PL_SPECIAL_PEDESTAL =
+{
+  wall   ="COMPSPAN",
+  floor  ="CEIL5_1",
+  h      = 20,
+  light  = 80,
+
+  wall2  ="COMPSPAN",
+  floor2 ="TLITE6_1",
+  h2     = 30,
+  light2 = 255,
+  glow2  = true,
+}
+
+----------------------------------------------------------------
 
 THEME_FACTORIES["plutonia"] = function()
 
   local T = THEME_FACTORIES.doom2()
 
-  --[[
-  T.themes   = copy_and_merge(T.themes,   PL_THEMES)
-  T.exits    = copy_and_merge(T.exits,    PL_EXITS)
-  T.hallways = copy_and_merge(T.hallways, PL_HALLWAYS)
+  T.rails   = copy_and_merge(T.rails,  PL_RAILS)
+  T.doors   = copy_and_merge(T.doors,  PL_DOORS)
+  T.pics    = copy_and_merge(T.pics,   PL_PICS)
 
-  T.rails = copy_and_merge(T.rails, PL_RAILS)
-
-  T.hangs   = copy_and_merge(T.hangs,   PL_OVERHANGS)
-  T.mats    = copy_and_merge(T.mats,    PL_MATS)
-  T.crates  = copy_and_merge(T.crates,  PL_CRATES)
-  T.liquids = copy_and_merge(T.liquids, PL_LIQUIDS)
-  --]]
+  T.special_ped = PL_SPECIAL_PEDESTAL
 
   return T
 end
