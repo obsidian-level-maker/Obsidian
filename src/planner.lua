@@ -791,7 +791,38 @@ function plan_sp_level(is_coop)  -- returns Plan
     end
 
     local function scenic_floor(c)
-      -- FIXME
+
+      -- Method: examine neighbour cells (not including other scenic
+      -- cells) to determine minimum and maximum floor range.  Then
+      -- use start_height() to randomly select a height in that
+      -- range (with some leeway).
+
+      local f_min = MAX_CEIL
+      local f_max = MIN_FLOOR
+
+      for dir = 2,8,2 do
+        local n = neighbour_by_side(p, c, dir)
+        if n and n.theme.outdoor and not n.scenic then
+          f_min = math.min(f_min, n.floor_h)
+          f_max = math.max(f_max, n.floor_h)
+        end
+      end
+
+      if f_min > f_max then
+        con.printf("SCENIC AT (%d,%d) has no outdoor neighbours", c.x, c.y)
+        c.floor_h = 256.0;
+        return
+      end
+
+      f_min = f_min - 96
+      f_max = f_max + 64
+
+      for loop = 1,10 do
+        c.floor_h = start_height()
+        if (f_min <= c.floor_h) and (c.floor_h <= f_max) then
+          return
+        end
+      end
     end
 
     --- select_floor_heights ---
