@@ -60,7 +60,7 @@ TN_LIGHTS =
 
 TN_DOORS =
 {
-  d_metal  = { tex="METALDR", w=128, h=112  },
+  d_metal  = { tex="METALDR", w=128, h=128 },
 }
 
 TN_PICS =
