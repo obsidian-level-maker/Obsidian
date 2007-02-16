@@ -16,6 +16,79 @@
 --
 ----------------------------------------------------------------
 
+PL_THEMES =
+{
+  --- Indoor ---
+
+  D_ROCK =
+  {
+    mat_pri = 7,
+
+    wall = "A-DROCK2",
+    void = "A-DROCK1",
+    step = "STEP5",
+    pillar = "A-MARBLE",
+
+    floor = "RROCK17",
+    ceil  = "FLAT10",
+
+    bad_liquid = "slime",
+  },
+
+  --- Outdoor ---
+
+  B_ROCK =
+  {
+    outdoor = true,
+    mat_pri = 4,
+
+    wall = "A-BROCK2",
+    void = "A-BROCK2",
+    step = "STEP5",
+    pillar = "A-MOSBRI",
+
+    floor = "RROCK14",  -- "FLOOR7_1",
+    ceil = "F_SKY1",
+
+    bad_liquid = "slime",
+  },
+
+  A_ROCK =
+  {
+    outdoor = true,
+    mat_pri = 3,
+
+    wall = "AROCK2",  -- NOTE: animated!
+    void = "A-MOSROK",
+    step = "ROCK2",
+    pillar = "A-MOSRK2",
+
+    floor = "RROCK13",
+    ceil = "F_SKY1",
+
+    good_liquid = "water",
+  },
+
+}
+
+PL_HALLWAYS =
+{
+  BR_BRICK =
+  {
+    mat_pri = 3,
+
+    wall = "A-BRBRK",
+    void = "A-BRBRK2",
+    step = "STEP1",
+    pillar = "A-BROWN5",
+
+    floor = "FLOOR7_1",
+    ceil  = "RROCK03",
+
+    bad_liquid = "slime",
+  },
+}
+
 PL_RAILS =
 {
   r_4 = { tex="MIDSPACE", w=128, h=128 },
@@ -59,6 +132,11 @@ PL_SPECIAL_PEDESTAL =
 THEME_FACTORIES["plutonia"] = function()
 
   local T = THEME_FACTORIES.doom2()
+
+  T.ERROR_TEX = "SLOPPY1"
+  
+  T.themes  = PL_THEMES  --!!!!
+  T.hallways = PL_HALLWAYS --!!!
 
   T.rails   = copy_and_merge(T.rails,  PL_RAILS)
   T.doors   = copy_and_merge(T.doors,  PL_DOORS)
