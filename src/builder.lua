@@ -1426,7 +1426,7 @@ end
 
 function random_light_kind(is_flat)
   local infos = {}
-  for zzz,info in ipairs(THEME.lights) do
+  for name,info in pairs(THEME.lights) do
     if sel(is_flat, info.flat, info.tex) then
       table.insert(infos,info)
     end
@@ -2303,15 +2303,16 @@ function build_cell(p, c)
     if c.theme.pic_wd and rand_odds(60) then
       c.void_pic = { tex=c.theme.pic_wd, w=128, h=c.theme.pic_wd_h or 128 }
       c.void_cut = 1
+      return
+
     elseif not c.theme.outdoor and rand_odds(25) then
-      local pic
-      repeat
-        pic = rand_element(THEME.lights)
-      until pic.tex
-      c.void_pic = pic
+      c.void_pic = random_light_kind(false)
       c.void_cut = rand_irange(3,4)
+      return
+
     else
-      c.void_pic = rand_element(THEME.pics)
+      local name,info = rand_table_pair(THEME.pics)
+      c.void_pic = info
       c.void_cut = 1
     end
   end

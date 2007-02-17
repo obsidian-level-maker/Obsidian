@@ -327,23 +327,16 @@ function get_rand_rail()
 end
 
 function choose_liquid()
-  local probs = {}
-  for zzz,info in ipairs(THEME.liquids) do
-    table.insert(probs, info.prob or 50)
-  end
-
-  local idx = rand_index_by_probs(probs)
-  return THEME.liquids[idx]
+  local name,info = rand_table_pair(THEME.liquids)
+  return info
 end
 
 function find_liquid(name)
-  if not name then return nil end
+  local info = THEME.liquids[name]
 
-  for zzz,info in ipairs(THEME.liquids) do
-    if info.name == name then return info end
+  if not info then
+    error("Unknown liquid: " .. name)
   end
-
-  error("Unknown liquid: " .. name)
 end
 
 
