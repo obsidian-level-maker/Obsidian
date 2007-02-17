@@ -246,8 +246,8 @@ function write_level(p, lev_name)
       local f_over = f[10-norm] or DUMMY_BLOCK
 
       local impassible = f.impassible or b.impassible
-      local lower_unpeg = not (f_over.lower_peg or b_over.lower_peg)
-      local upper_unpeg = not (f_over.upper_peg or b_over.upper_peg)
+      local l_peg = b_over.l_peg or f_over.l_peg
+      local u_peg = b_over.u_peg or f_over.u_peg
 
       if not b.solid then
 
@@ -258,29 +258,35 @@ function write_level(p, lev_name)
           impassible = true
 
         elseif b.lift_kind or
-          -- FIXME: remove special check on texture name! (set 'lower_peg' manually)
+          -- FIXME: remove special check on texture name! (set 'l_peg' manually)
           (is_step(b_side.lower) or is_step(f_side.lower)) then
-          lower_unpeg = false
+          l_peg = "top"
         end
 
         -- FIXME: remove this check (set 'upper_peg' manually)
         if b.door_kind then
-          upper_unpeg = false
+          u_peg = "bottom"
         end
+
+        u_peg = u_peg or "top"
+        l_peg = l_peg or "bottom"
 
       else  -- one sided --
 
         impassible = true
 
-        -- FIXME: remove this check (set 'lower_peg' manually)
-        if not (f.door_kind or b.switch_kind) then
-          lower_unpeg = false
+        -- FIXME: remove this check (set 'l_peg' manually)
+        if f.door_kind then ---### or b.switch_kind
+          l_peg = "bottom"
         end
+
+        l_peg = l_peg or "top"
       end
 
-      if impassible  then flags = flags + ML_IMPASSABLE end
-      if lower_unpeg then flags = flags + ML_LOWER_UNPEG end
-      if upper_unpeg then flags = flags + ML_UPPER_UNPEG end
+      if impassible then flags = flags + ML_IMPASSABLE end
+
+      if l_peg == "bottom" then flags = flags + ML_LOWER_UNPEG end
+      if u_peg == "top"    then flags = flags + ML_UPPER_UNPEG end
 
       -- sound blocking.  Note some subtlety here, when (count == 1)
       -- we only want a single edge to block, for (count == 2) we

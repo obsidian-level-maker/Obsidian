@@ -721,20 +721,22 @@ end
 --
 -- Build a pillar switch
 --
-function B_pillar_switch(p,c, x,y, info, kind, tag)
+function B_pillar_switch(p,c, K,x,y, info, kind, tag)
 
-  fill(p,c, x,y, x,y,
-     { solid=info.switch,
-         switch_kind = kind,
-         switch_tag = tag,
-         y_offset = 128 - (c.ceil_h - c.floor_h)
-     }) 
+  local SWITCH =
+  {
+    solid = info.switch,
 
---##  local B = p.blocks[c.blk_x+x][c.blk_y+y]
---##
---##  B.switch_kind = kind
---##  B.switch_tag  = tag
+    switch_kind = kind,
+    switch_tag = tag,
 
+    [2] = { l_peg="bottom" },
+    [4] = { l_peg="bottom" },
+    [6] = { l_peg="bottom" },
+    [8] = { l_peg="bottom" },
+  }
+
+  fill(p,c, x,y, x,y, SWITCH)
 end
 
 
@@ -755,7 +757,7 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
 
   frag_fill(p,c, fx+1,fy+1, fx+FW,fy+FH, BASE)
 
-  SWITCH =
+  local SWITCH =
   {
     f_h = z + 64,
     c_h = c.ceil_h,
@@ -768,6 +770,11 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
 
     switch_kind = kind,
     switch_tag  = tag,
+
+    [2] = { l_peg="bottom" },
+    [4] = { l_peg="bottom" },
+    [6] = { l_peg="bottom" },
+    [8] = { l_peg="bottom" },
   }
 
   local sx,sy, ex,ey = side_to_corner(side, FW, FH)
@@ -785,7 +792,7 @@ function B_wall_switch(p,c, x,y,z, side, info, kind, tag)
 
   frag_fill(p,c, fx+1,fy+1, fx+(ax+1)*FW,fy+(ay+1)*FH, { solid=c.theme.wall })
 
-  SWITCH =
+  local SWITCH =
   {
     f_h = z,
     c_h = z + 64,
@@ -824,7 +831,7 @@ function B_wall_switch(p,c, x,y,z, side, info, kind, tag)
        { solid=info.switch,
          switch_kind = kind,
          switch_tag = tag,
-         -- y_offset = 
+         [side] = { l_peg="bottom" } 
        }) 
 end
 
@@ -1103,10 +1110,10 @@ function B_crate(p,c, crate_info, base, kx,ky, bx,by)
   if rand_odds(50) then y_ofs,y_ofs2 = y_ofs2,y_ofs end
 
   fill(p,c, bx, by, bx, by, CRATE,
-       { [2] = { lower_peg=true, x_offset=x_ofs,  y_offset=y_ofs  },
-         [4] = { lower_peg=true, x_offset=x_ofs2, y_offset=y_ofs2 },
-         [6] = { lower_peg=true, x_offset=x_ofs2, y_offset=y_ofs2 },
-         [8] = { lower_peg=true, x_offset=x_ofs,  y_offset=y_ofs  } })
+       { [2] = { l_peg="top", x_offset=x_ofs,  y_offset=y_ofs  },
+         [4] = { l_peg="top", x_offset=x_ofs2, y_offset=y_ofs2 },
+         [6] = { l_peg="top", x_offset=x_ofs2, y_offset=y_ofs2 },
+         [8] = { l_peg="top", x_offset=x_ofs,  y_offset=y_ofs  } })
 
   -- sometimes put monsters on top
   if not CRATE.rotated and (CRATE.c_h >= CRATE.f_h + 80) and rand_odds(33) then
@@ -3315,7 +3322,7 @@ function build_cell(p, c)
           local side = wall_switch_dir(kx, ky, c.entry_dir)
           B_wall_switch(p,c, bx,by, K.floor_h, side, info, kind, c.quest.tag + 1)
         else
-          B_pillar_switch(p,c, bx,by, info,kind, c.quest.tag + 1)
+          B_pillar_switch(p,c, K,bx,by, info,kind, c.quest.tag + 1)
         end
 
       elseif c.quest.kind == "exit" then
