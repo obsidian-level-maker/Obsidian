@@ -134,9 +134,9 @@ THEME_FACTORIES["plutonia"] = function()
   local T = THEME_FACTORIES.doom2()
 
   T.ERROR_TEX = "SLOPPY1"
-  
-  T.themes  = PL_THEMES  --!!!!
-  T.hallways = PL_HALLWAYS --!!!
+
+  T.themes   = copy_and_merge(T.themes,   PL_THEMES)
+  T.hallways = copy_and_merge(T.hallways, PL_HALLWAYS)
 
   T.rails   = copy_and_merge(T.rails,  PL_RAILS)
   T.doors   = copy_and_merge(T.doors,  PL_DOORS)
