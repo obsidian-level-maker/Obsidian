@@ -809,8 +809,8 @@ function plan_sp_level(is_coop)  -- returns Plan
       end
 
       if f_min > f_max then
-        con.printf("SCENIC AT (%d,%d) has no outdoor neighbours", c.x, c.y)
-        c.floor_h = 256.0;
+        con.debugf("SCENIC AT (%d,%d) has no outdoor neighbours\n", c.x, c.y)
+        c.floor_h = start_height()
         return
       end
 
@@ -1159,7 +1159,7 @@ function plan_sp_level(is_coop)  -- returns Plan
           link.kind = "door"
           link.build = c
           link.is_exit = true
-          ---?? link.long = sel(c.theme.front_mark, 3, 2)
+          link.long = sel(c.theme.front_mark, 3, 2)
         end
       end
     end
@@ -1196,7 +1196,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 
       if #empties ~= 1 or scenics > 1 or #outies < 1 then return end
 
-      if #outies == 1 and 
+      if #outies == 1 and #innies == 2 and 
          (outies[1].x ~= empties[1].x) and
          (outies[1].y ~= empties[1].y)
       then return end
@@ -1211,9 +1211,11 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     --- add_scenic_cells ---
 
-    for x = 1, p.w-1 do
-      for y = 1, p.h-1 do
-        test_flat_front(x, y)
+    for loop = 1,3 do
+      for x = 1, p.w-1 do
+        for y = 1, p.h-1 do
+          test_flat_front(x, y)
+        end
       end
     end
   end
@@ -1549,11 +1551,9 @@ function plan_sp_level(is_coop)  -- returns Plan
 
   decide_links()
   setup_exit_room()
+  add_scenic_cells()
 
-  for loop = 1,2 do
-    add_scenic_cells()
-    con.ticker();
-  end
+  con.ticker();
 
   shuffle_build_sites(p)
 

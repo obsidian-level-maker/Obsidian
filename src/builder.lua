@@ -450,7 +450,7 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
   local deep = 2
   local high = 72  -- FIXME: pass in "door_info"
 
-  if theme.front_mark then long = long + 1 end -- FIXME: sync with link.long
+---###  if theme.front_mark then long = long + 1 end -- FIXME: sync with link.long
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
@@ -504,7 +504,7 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
 
   local side = (long - door_w) * 2
 
---print(string.format("door_w=%d long=%d side=%d", door_w, long, side))
+--con.debugf("EXIT: door_w=%d long=%d side=%d\n", door_w, long, side)
 
   long = long * 4 - side * 2
   assert(long == 4 or long == 8)
@@ -513,7 +513,7 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
   local ex, ey = ax*(long+side-1), ay*(long+side-1)
   local zx, zy = ax*(long+side*2-1), ay*(long+side*2-1)
 
---print(string.format("long_f=%d  ax=%d sx=%d ex=%d zx=%d", long, ax, sx, ex, zx))
+--con.debugf("long_f=%d  ax=%d sx=%d ex=%d zx=%d\n", long, ax, sx, ex, zx)
 
   frag_fill(p,c, fx, fy, fx+zx+dx*7, fy+zy+dy*7, { solid=wall_tex })
 
@@ -543,24 +543,17 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
     end
 
     frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, STEP)
+--con.debugf("EXIT FILL: (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
     -- EXIT SIGN
     if theme.sign and (ff == 2) then
-      frag_fill (p,c, fx+ax*3,fy+ay*3, fx+ax*3,fy+ay*3, SIGN,
-        { [10-adir] = { x_offset = 32 }} )
-      frag_fill (p,c, fx+ax*4,fy+ay*4, fx+ax*4,fy+ay*4, SIGN,
-        { [adir] = { x_offset = 32 }} )
+--con.debugf("SIGN FILL: (%d,%d) .. (%d,%d)\n", ax*3,ay*3, ax*4,ay*4)
+      frag_fill (p,c, fx+ax*3,fy+ay*3, fx+ax*4,fy+ay*4, SIGN,
+        { [10-adir] = { x_offset = 32 },
+---###      frag_fill (p,c, fx+ax*4,fy+ay*4, fx+ax*4,fy+ay*4, SIGN,
+          [adir] = { x_offset = 32 }} )
     end
 
-    -- FRONT MARK
---[[
-    if theme.front_mark and (ff == 1) then
-      frag_fill (p,c, fx+ax,fy+ay, fx+zx,fy+zy, STEP)
-    elseif theme.front_mark and (ff == 2) then
-      frag_fill (p,c, fx+ax,fy+ay, fx+ax*ax,fy+sy-ay, SIGN)
-      frag_fill (p,c, fx+ex+ax,fy+ey+ay, fx+zx,fy+zy-ay, SIGN)
-    end
---]]
     fx = fx + dx; fy = fy + dy
   end
 
@@ -1892,8 +1885,9 @@ function make_chunks(p)
     if settings.mons == "less" then probs[4] = 3.2 end
     if settings.mons == "more" then probs[4] = 7.5 end
 
-    if c.scenic or p.deathmatch then probs[4] = 0 end
-    if c.scenic then probs[1] = 200; probs[5] = 200 end
+    if p.deathmatch then probs[4] = 0 end
+
+    if c.scenic then probs = { 40, 0, 100, 0, 70 } end
 
     -- special handling for hallways...
     if c.hallway then
