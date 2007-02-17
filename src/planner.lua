@@ -1194,13 +1194,13 @@ function plan_sp_level(is_coop)  -- returns Plan
         end
       end
 
-      if #empties ~= 1 or scenics > 1 or #outies < 2 then return end
---[[
-      if #outies == 2 and #innies == 1 and
-         (outies[1].x ~= outies[2].x) and
-         (outies[1].y ~= outies[2].y)
+      if #empties ~= 1 or scenics > 1 or #outies < 1 then return end
+
+      if #outies == 1 and 
+         (outies[1].x ~= empties[1].x) and
+         (outies[1].y ~= empties[1].y)
       then return end
---]]
+
       local c = create_cell(p, empties[1].x, empties[1].y,
         outies[1].quest, outies[1].along, outies[1].theme)
 
