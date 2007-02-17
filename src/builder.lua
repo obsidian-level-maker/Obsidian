@@ -1366,7 +1366,6 @@ end
 
 ----------------------------------------------------------------
 
-
 SKY_LIGHT_FUNCS =
 {
   all      = function(kx,ky, x,y) return true end,
@@ -1424,31 +1423,8 @@ function random_sky_light()
   return rand_element(names)
 end
 
-function random_light_kind(is_flat)
-  local infos = {}
-  for name,info in pairs(THEME.lights) do
-    if sel(is_flat, info.flat, info.tex) then
-      table.insert(infos,info)
-    end
-  end
-  assert(#infos > 0)
-  return rand_element(infos)
-end
-
-function random_door_kind(w)
-  local names = {}
-  for kind,info in pairs(THEME.doors) do
-    if info.w == w then
-      table.insert(names,kind)
-    end
-  end
-  assert(#names > 0)
-  return rand_element(names)
-end
-
 
 ----------------------------------------------------------------
-
 
 
 function setup_rmodel(p, c)
@@ -1887,7 +1863,7 @@ function make_chunks(p)
 
     if p.deathmatch then probs[4] = 0 end
 
-    if c.scenic then probs = { 40, 0, 100, 0, 70 } end
+    if c.scenic then probs = { 40, 2, 100, 0, 70 } end
 
     -- special handling for hallways...
     if c.hallway then
@@ -3109,7 +3085,7 @@ function build_cell(p, c)
       if K.crate and not blocked then
         local theme = c.crate_theme
         if not c.quest.image and not c.quest.mini and
-           (c.quest.level == 1 or c.quest.kind == "exit")
+           (c.quest.level == 1 or rand_odds(16))
         then
           theme = THEME.images[2]
           c.quest.image = "crate"
@@ -3203,7 +3179,7 @@ function build_cell(p, c)
         if not c.void_pic then decide_void_pic(p, c) end
         local pic,cut = c.void_pic,c.void_cut
 
-        if not c.quest.image and c.quest.mini and rand_odds(36) then
+        if not c.quest.image and c.quest.mini and rand_odds(35) then
           pic = THEME.images[1]
           cut = 1
           c.quest.image = "pic"
