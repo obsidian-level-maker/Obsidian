@@ -522,10 +522,10 @@ DM_CRATES =
 
 DM_LIQUIDS =
 {
-  { name="water",  floor="FWATER1" },
-  { name="blood",  floor="BLOOD1"  }, -- no damage
-  { name="nukage", floor="NUKAGE1", sec_kind=5 },  -- 10% damage
-  { name="lava",   floor="LAVA1",   sec_kind=16, light=64 }, -- 20% damage
+  water = { name="water",  floor="FWATER1" },
+  blood = { name="blood",  floor="BLOOD1"  }, -- no damage
+  nukage= { name="nukage", floor="NUKAGE1", sec_kind=5 },  -- 10% damage
+  lava  = { name="lava",   floor="LAVA1",   sec_kind=16, light=64 }, -- 20% damage
 }
 
 DM_SWITCHES =
@@ -570,41 +570,40 @@ DM_IMAGES =
 
 DM_LIGHTS =
 {
-  { tex="LITE3",    w=32 },
-  { tex="LITE5",    w=16 },
-  { tex="LITEBLU4", w=32 },
+  white2 = { tex="LITE3",    w=32 },
+  white5 = { tex="LITE5",    w=16 },
+  blue4  = { tex="LITEBLU4", w=32 },
 --  { tex="REDWALL",  w=32 },
 
-  { flat="CEIL1_2",  side="METAL" },
-  { flat="CEIL1_3",  side="WOOD1" },
-  { flat="CEIL3_4",  side="STARTAN2" },
-  { flat="FLAT2",    side="GRAY5" },
-  { flat="FLAT17",   side="GRAY5" },
-  { flat="FLOOR1_7", side="SP_HOT1" },
+  metal = { flat="CEIL1_2",  side="METAL" },
+  wood  = { flat="CEIL1_3",  side="WOOD1" },
+  star  = { flat="CEIL3_4",  side="STARTAN2" },
 
---FIXME (not in doom 1)  { flat="GRNLITE1", side="TEKGREN2" },
+  gray1 = { flat="FLAT2",    side="GRAY5" },
+  gray2 = { flat="FLAT17",   side="GRAY5" },
+  hot   = { flat="FLOOR1_7", side="SP_HOT1" },
 
-  { flat="TLITE6_1", side="METAL" },
-  { flat="TLITE6_4", side="METAL" },
-  { flat="TLITE6_5", side="METAL" },
-  { flat="TLITE6_6", side="METAL" },
+  tl61 = { flat="TLITE6_1", side="METAL" },
+  tl64 = { flat="TLITE6_4", side="METAL" },
+  tl65 = { flat="TLITE6_5", side="METAL" },
+  tl66 = { flat="TLITE6_6", side="METAL" },
 }
 
 DM_PICS =
 {
-  { tex="LITE3",    w=128, h=16 },
+  lite3 = { tex="LITE3",    w=128, h=16 },
 
-  { tex="MARBFACE", w=128, h=128 },
-  { tex="MARBFAC2", w=128, h=128 },
-  { tex="MARBFAC3", w=128, h=128 },
+  m1 = { tex="MARBFACE", w=128, h=128 },
+  m2 = { tex="MARBFAC2", w=128, h=128 },
+  m3 = { tex="MARBFAC3", w=128, h=128 },
 
-  { tex="FIRELAVA", w=128, h=128 },
-  { tex="FIREMAG1", w=128, h=128 },
-  { tex="FIREWALL", w=128, h=112 },
+  f1 = { tex="FIRELAVA", w=128, h=128 },
+  f2 = { tex="FIREMAG1", w=128, h=128 },
+  f3 = { tex="FIREWALL", w=128, h=112 },
 
-  { tex="SHAWN1",   w=128, h=96  },
-  { tex="SKINEDGE", w=128, h=128 },
-  { tex="WOOD3",    w=128, h=64  },
+  shawn1 = { tex="SHAWN1",   w=128, h=96  },
+  skin1  = { tex="SKINEDGE", w=128, h=128 },
+  wood1  = { tex="WOOD3",    w=128, h=64  },
 
 --  { tex="SKSPINE2", w=128, h=128, scroll=48 },
 --  { tex="SPFACE1",  w=128, h=96,  scroll=48 },

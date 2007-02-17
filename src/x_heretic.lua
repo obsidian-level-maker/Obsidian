@@ -281,7 +281,7 @@ HC_OVERHANGS =
 
 HC_LIQUIDS =
 {
-  { name="water", floor="FLTFLWW1" },
+  water = { name="water", floor="FLTFLWW1" },
   -- FIXME
 }
 
@@ -313,15 +313,15 @@ HC_IMAGES =
 
 HC_LIGHTS =
 {
-  { tex="REDWALL", w=32 },
+  redwall = { tex="REDWALL", w=32 },
 
-  { flat="FLOOR26",  side="ORNGRAY" },
+  round = { flat="FLOOR26",  side="ORNGRAY" },
 }
 
 HC_PICS =
 {
-  { tex="GRSKULL3", w=128, h=128 },
-  { tex="STNGLS1",  w=128, h=128 },
+  skull3 = { tex="GRSKULL3", w=128, h=128 },
+  glass1 = { tex="STNGLS1",  w=128, h=128 },
 }
 
 HC_KEY_BITS =

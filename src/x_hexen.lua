@@ -269,9 +269,9 @@ XN_OVERHANGS =
 
 XN_LIQUIDS =
 {
-  { name="water", floor="X_005" },
-  { name="lava",  floor="X_001" },
-  { name="slime", floor="X_009" },
+  water = { name="water", floor="X_005" },
+  lava  = { name="lava",  floor="X_001" },
+  slime = { name="slime", floor="X_009" },
 }
 
 XN_SWITCHES =
@@ -314,22 +314,24 @@ XN_IMAGES =
 
 XN_LIGHTS =
 {
-  { tex="X_FIRE01", w=16 },
+  fire = { tex="X_FIRE01", w=16 },
 
-  { flat="F_081", side="FIRE07" },
-  { flat="F_084", side="FIRE07" },
-  { flat="X_012", side="FIRE07" },
+  l1 = { flat="F_081", side="FIRE07" },
+  l2 = { flat="F_084", side="FIRE07" },
+  l3 = { flat="X_012", side="FIRE07" },
 }
 
 XN_PICS =
 {
-  { tex = "CAVE12",   w=128, h=128 },
-  { tex = "FOREST03", w=128, h=128 },
-  { tex = "SPAWN10",  w=128, h=128 },
-  { tex = "SPAWN13",  w=64,  h=64  },
-  { tex = "GLASS01",  w=64,  h=128 },
-  { tex = "GLASS03",  w=64,  h=128 },
-  { tex = "GLASS05",  w=64,  h=128 },
+  cave12 = { tex = "CAVE12",   w=128, h=128 },
+  forest = { tex = "FOREST03", w=128, h=128 },
+
+  mon1 = { tex = "SPAWN10",  w=128, h=128 },
+  mon3 = { tex = "SPAWN13",  w=64,  h=64  },
+
+  glass1 = { tex = "GLASS01",  w=64,  h=128 },
+  glass3 = { tex = "GLASS03",  w=64,  h=128 },
+  glass5 = { tex = "GLASS05",  w=64,  h=128 },
 }
 
 XN_KEY_BITS =

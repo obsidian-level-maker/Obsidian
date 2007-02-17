@@ -540,15 +540,20 @@ D2_RAILS =
   r_2 = { tex="MIDGRATE", w=128, h=128 },
 }
 
+D2_LIGHTS =
+{
+  green1 = { flat="GRNLITE1", side="TEKGREN2" },
+}
+
 D2_PICS =
 {
-  { tex="ZZWOLF6", w=128, h=128 },
-  { tex="ZZWOLF7", w=128, h=128 },
+  wolf6 = { tex="ZZWOLF6", w=128, h=128 },
+  wolf7 = { tex="ZZWOLF7", w=128, h=128 },
 }
 
 D2_LIQUIDS =
 {
-  { name="slime", floor="SLIME01", sec_kind=7 }  --  5% damage
+  slime = { name="slime", floor="SLIME01", sec_kind=7 }  --  5% damage
 }
 
 ------------------------------------------------------------
@@ -564,10 +569,11 @@ THEME_FACTORIES["doom2"] = function()
   T.rails = D2_RAILS
 
   T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
-  T.mats    = copy_and_merge(T.mats,    D2_MATS)
-  T.doors   = copy_and_merge(T.doors,   D2_EXITS)
-  T.pics    = copy_and_merge(T.pics,    D2_PICS)
   T.crates  = copy_and_merge(T.crates,  D2_CRATES)
+  T.mats    = copy_and_merge(T.mats,    D2_MATS)
+  T.doors   = copy_and_merge(T.doors,   D2_DOORS)
+  T.lights  = copy_and_merge(T.lights,  D2_LIQUIDS)
+  T.pics    = copy_and_merge(T.pics,    D2_PICS)
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
   T.monsters = copy_and_merge(T.monsters, D2_MONSTERS)

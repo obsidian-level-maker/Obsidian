@@ -104,9 +104,9 @@ PL_DOORS =
 
 PL_PICS =
 {
-  { tex="A-REDROK", w=128, h=128 },
-  { tex="A-ASKIN3", w=128, h=128 },
-  { tex="A-ASKIN4", w=128, h=128 },
+  redrok = { tex="A-REDROK", w=128, h=128 },
+  askin3 = { tex="A-ASKIN3", w=128, h=128 },
+  askin4 = { tex="A-ASKIN4", w=128, h=128 },
 }
 
 PL_SPECIAL_PEDESTAL =
