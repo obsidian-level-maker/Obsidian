@@ -273,7 +273,7 @@ DM_EXITS =
 
     wall = "STONE2",
     void = "STONE",
-    dm_switch = "SW1COMM",
+    dm_switch = "SW1HOT", -- SW1GSTON
 
     floor = "FLOOR7_2",  -- FLAT5_2
     ceil  = "FLAT1",
