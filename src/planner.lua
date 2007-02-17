@@ -301,45 +301,6 @@ function create_link(p, c, other, dir)
   return LINK
 end
 
-function get_rand_theme()
-  local name,info = rand_table_pair(THEME.themes)
-  return info
-end
-
-function get_rand_exit_theme()
-  local name,info = rand_table_pair(THEME.exits)
-  return info
-end
-
-function get_rand_hallway()
-  local name,info = rand_table_pair(THEME.hallways)
-  return info
-end
-
-function get_rand_crate()
-  local name,info = rand_table_pair(THEME.crates)
-  return info
-end
-
-function get_rand_rail()
-  local name,info = rand_table_pair(THEME.rails)
-  return info
-end
-
-function choose_liquid()
-  local name,info = rand_table_pair(THEME.liquids)
-  return info
-end
-
-function find_liquid(name)
-  local info = THEME.liquids[name]
-
-  if not info then
-    error("Unknown liquid: " .. name)
-  end
-end
-
-
 function shuffle_build_sites(p)
 
   for zzz,link in ipairs(p.all_links) do
@@ -556,7 +517,10 @@ function plan_sp_level(is_coop)  -- returns Plan
     end
 
     if Q.theme.bad_liquid == p.liquid.name then
-      return find_liquid(Q.theme.good_liquid)
+      if Q.theme.good_liquid then
+        return find_liquid(Q.theme.good_liquid)
+      end
+      return choose_liquid()
     end
 
     if Q.theme.good_liquid and dual_odds(Q.mini, 15, 66) then
