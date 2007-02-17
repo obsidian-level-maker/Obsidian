@@ -480,7 +480,7 @@ zprint(active_mon, #active_mon, active_mon[1])
     -- 3b. missile: dodged 50%
     -- 3c. melee: dodged 80%
 
-    local mon_fight = 0.5
+    local mon_fight = 0.44
 
     for idx,AC in ipairs(active_mon) do
       if AC.health > 0 then
@@ -683,7 +683,7 @@ function distribute_pickups(p, c, HM, backtrack)
     -- apply the user's health/ammo adjustments here
 
     local HEALTH_ADJUSTS = { less=0.7, normal=1.0, more=1.4 }
-    local   AMMO_ADJUSTS = { less=0.8, normal=1.1, more=1.6 }
+    local   AMMO_ADJUSTS = { less=0.8, normal=1.2, more=1.6 }
 
     local health_mul = HEALTH_ADJUSTS[settings.health]
     local   ammo_mul =   AMMO_ADJUSTS[settings.ammo]
@@ -1460,14 +1460,16 @@ function battle_in_quest(p, Q)
 end
 
 function dump_battle_stats(stats)
-  con.debugf("\n")
-  con.debugf("BATTLE STATS\n")
+  con.printf("\n")
+  con.printf("BATTLE STATS\n")
 
   for zzz,SK in ipairs(SKILLS) do
-    con.debugf("%7s | h:%4d  ammo:%4d  mon:%4d  pow:%5d\n", SK,
+    con.printf("%7s | h:%4d  ammo:%4d  mon:%4d  pow:%5d\n", SK,
       stats[SK].health, stats[SK].ammo,
       stats[SK].monsters, stats[SK].power)
   end
+
+  con.printf("\n")
 end
 
 function battle_through_level(p)
