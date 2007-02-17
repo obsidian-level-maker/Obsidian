@@ -189,14 +189,6 @@ function write_level(p, lev_name)
       return V
     end
 
-    local function is_step(tex)
-      return tex and string.find(tex, "^STEP")
-    end
-
----###    local function get_override(block, dir)
----###      return block and block.overrides and block.overrides[dir]
----###    end
-
     local function push_line()
       if not cur_line then return end
 
@@ -256,16 +248,6 @@ function write_level(p, lev_name)
         -- railing textures (assume blocking)
         if f_side.mid or b_side.mid then
           impassible = true
-
-        elseif b.lift_kind or
-          -- FIXME: remove special check on texture name! (set 'l_peg' manually)
-          (is_step(b_side.lower) or is_step(f_side.lower)) then
-          l_peg = "top"
-        end
-
-        -- FIXME: remove this check (set 'upper_peg' manually)
-        if b.door_kind then
-          u_peg = "bottom"
         end
 
         u_peg = u_peg or "top"
@@ -274,11 +256,6 @@ function write_level(p, lev_name)
       else  -- one sided --
 
         impassible = true
-
-        -- FIXME: remove this check (set 'l_peg' manually)
-        if f.door_kind then ---### or b.switch_kind
-          l_peg = "bottom"
-        end
 
         l_peg = l_peg or "top"
       end

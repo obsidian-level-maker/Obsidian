@@ -343,6 +343,8 @@ function B_door(p, c, link, b_theme, x,y,z, dir, long,deep, door_info,
                  u_tex = door_tex,
                  door_kind = kind,
                  tag = tag,
+                 [dir]  = { u_peg="bottom" }, [10-dir]  = { u_peg="bottom" },
+                 [adir] = { l_peg="bottom" }, [10-adir] = { l_peg="bottom" }, -- TRACK
                  }
 
   local STEP = { f_h = z+8, c_h = z+8 + door_info.h,
@@ -350,7 +352,10 @@ function B_door(p, c, link, b_theme, x,y,z, dir, long,deep, door_info,
                     c_tex = door_info.frame_top or THEME.mats.DOOR_FRAME.ceil,
                     light=224,
                     l_tex = door_info.step or c.theme.step or THEME.mats.STEP.wall,
-                    u_tex = wall_tex }
+                    u_tex = wall_tex,
+                    [dir] = { l_peg="top" },
+                    [10-dir] = { l_peg="top" },
+                    }
 
   -- block based door (big 'n bulky)
 
@@ -467,7 +472,9 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
                  light = 255,
                  door_kind = 1,
                  l_tex = theme.wall,
-                 u_tex = door_tex
+                 u_tex = door_tex,
+                 [dir]  = { u_peg="bottom" }, [10-dir]  = { u_peg="bottom" },
+                 [adir] = { l_peg="bottom" }, [10-adir] = { l_peg="bottom" }, -- TRACK
                }
 
   local STEP = { f_h = z+8, c_h = z+8+high,
@@ -475,7 +482,10 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
                     c_tex = door_info.frame_top or DOOR.f_tex,
                     light=255,
                     l_tex = door_info.step or theme.step or THEME.mats.STEP.wall,
-                    u_tex = wall_tex }
+                    u_tex = wall_tex,
+                    [dir] = { l_peg="top" },
+                    [10-dir] = { l_peg="top" },
+                }
 
   local SIGN
   
@@ -675,7 +685,7 @@ function B_stair(p, c, bx, by, z, dir, long, deep, step)
                   l_tex = c.theme.wall,
                   u_tex = c.theme.wall,
 
-                  [out_dir]={ l_tex = c.theme.step },
+                  [out_dir]={ l_tex=c.theme.step, l_peg="top" },
                 }
 
     frag_fill(p,c, fx, fy, fx+zx, fy+zy, sec)
@@ -708,13 +718,15 @@ function B_lift(p, c, x, y, z, dir, long, deep)
     tag = allocate_tag(p),
 
     l_tex = c.theme.lift or THEME.mats.LIFT.wall,
-    u_tex = c.theme.wall
+    u_tex = c.theme.wall,
+
+    [2] = { l_peg="top" }, [4] = { l_peg="top" },
+    [6] = { l_peg="top" }, [8] = { l_peg="top" },
   }
 
   fill(p,c, x, y,
-          x + (long-1) * ax + (deep-1) * dx,
-          y + (long-1) * ay + (deep-1) * dy,
-          LIFT)
+       x + (long-1) * ax + (deep-1) * dx,
+       y + (long-1) * ay + (deep-1) * dy, LIFT)
 end
 
 
@@ -1363,6 +1375,9 @@ function B_deathmatch_exit(p,c, kx,ky)
     l_tex = c.theme.wall,
     u_tex = door_info.tex,
     door_kind = 1,
+
+    [2] = { u_peg="bottom" }, [8] = { u_peg="bottom" },
+    [4] = { l_peg="bottom" }, [6] = { l_peg="bottom" }, -- TRACK
   }
 
   frag_fill(p,c, fx+4,fy+2, fx+9,fy+3, { solid=THEME.mats.TRACK.wall })
