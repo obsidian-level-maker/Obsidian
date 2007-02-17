@@ -927,7 +927,8 @@ end
 --
 -- size must be either 1 or 2.
 --
-function B_bars(p,c, x,y, dir,long, size,step, bar_theme, sec,tex, tag)
+function B_bars(p,c, x,y, dir,long, size,step, bar_theme, sec,tex,
+                tag, need_sides)
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
@@ -966,11 +967,12 @@ function B_bars(p,c, x,y, dir,long, size,step, bar_theme, sec,tex, tag)
     frag_fill(p,c, fx+1,fy+1, fx+size,fy+size, bar)
   end
 
-  -- give it some sides
-  fill(p,c, x-ax,y-ay, x-ax,y-ay, { solid=tex })
+  if need_sides then
+    fill(p,c, x-ax,y-ay, x-ax,y-ay, { solid=tex })
 
-  x,y = x+long*ax, y+long*ay
-  fill(p,c, x,y, x,y, { solid=tex })
+    x,y = x+long*ax, y+long*ay
+    fill(p,c, x,y, x,y, { solid=tex })
+  end
 end
 
 
@@ -1321,7 +1323,11 @@ function B_deathmatch_exit(p,c, kx,ky)
   }
 
   frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+3*FH, { solid=theme.void })
-  frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, ROOM)
+  frag_fill(p,c, fx+2,fy+5, fx+3*FW-1,fy+3*FH-1, ROOM)
+
+  if theme.front_mark then
+    frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+1, { solid=theme.front_mark })
+  end
 
   local STEP =
   {
@@ -1335,7 +1341,8 @@ function B_deathmatch_exit(p,c, kx,ky)
     u_tex = theme.void,
   }
 
-  frag_fill(p,c, fx+4,fy+1, fx+9,fy+4, { solid=theme.void})
+---##  frag_fill(p,c, fx+4,fy+1, fx+9,fy+4, { solid=theme.void})
+
   frag_fill(p,c, fx+5,fy+1, fx+8,fy+4, STEP)
 
   local DOOR =
@@ -2429,7 +2436,7 @@ function build_cell(p, c)
       local bar = link.bar_size
       local tag = link.quest.tag + 1
 
-      B_bars(p,c, x-dx,y-dy, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_theme.wall, tag)
+      B_bars(p,c, x-dx,y-dy, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_theme.wall, tag,true)
 
     elseif link.kind == "door" then
 
