@@ -199,7 +199,10 @@ function plan_dm_arena()
     end
 
     if theme.bad_liquid == p.liquid.name then
-      return find_liquid(theme.good_liquid)
+      if theme.good_liquid then
+        return find_liquid(theme.good_liquid)
+      end
+      return choose_liquid()
     end
 
     if theme.good_liquid and rand_odds(40) then
@@ -314,6 +317,8 @@ function plan_dm_arena()
     -- FIXME: TEMP JUNK
     for zzz,c in ipairs(p.all_cells) do
       c.floor_h = rand_index_by_probs{ 1,2,4,2,1 } * 32 - 32
+      c.ceil_h  = 256
+      c.sky_h   = 256
     end
   end
 
