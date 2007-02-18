@@ -346,6 +346,27 @@ D2_THEMES =
 
 D2_EXITS =
 {
+  METAL =
+  {
+    mat_pri = 8,
+
+    wall = "METAL1",
+    void = "METAL5",
+
+    floor = "FLOOR5_1",
+    ceil  = "TLITE6_4",
+
+    hole_tex = "LITE3",
+
+    sign = "EXITSIGN",    -- FIXME !!! make the sign into a MATERIAL
+    sign_bottom="CEIL5_2",
+
+    switch = { switch="SW1BLUE", wall="COMPBLUE", h=64 },
+
+    door = { tex="EXITDOOR", w=64, h=72,
+             frame_top="TLITE6_6", frame_bottom="FLOOR5_1" },
+  },
+
   REDBRICK =
   {
     mat_pri = 8,
@@ -356,8 +377,6 @@ D2_EXITS =
 
     floor = "FLAT5_2",
     ceil  = "FLOOR6_2",
-
----### hole_tex = "WOOD1",
 
     sign = "EXITSIGN",
     sign_bottom="CEIL5_2",
