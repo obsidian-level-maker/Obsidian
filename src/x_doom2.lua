@@ -346,6 +346,28 @@ D2_THEMES =
 
 D2_EXITS =
 {
+  REDBRICK =
+  {
+    mat_pri = 8,
+
+    wall = "BRICK11",
+    void = "BRICK11",
+    step = "WOOD1",
+
+    floor = "FLAT5_2",
+    ceil  = "FLOOR6_2",
+
+---### hole_tex = "WOOD1",
+
+    sign = "EXITSIGN",
+    sign_bottom="CEIL5_2",
+
+    switch = { switch="SW1WOOD", wall="WOOD1", h=64 },
+
+    door = { tex="EXITDOOR", w=64, h=72,
+             frame_top="TLITE6_6", frame_bottom="FLAT5_2" },
+  },
+
   JACKO =
   {
     small_exit = true,
