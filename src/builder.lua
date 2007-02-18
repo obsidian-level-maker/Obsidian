@@ -124,33 +124,31 @@ end
 
 function random_where(link)
 
-  local LINK_WHERES =  -- TODO: theme based?
-  {
-     15, 40, 15, 90, 15, 40, 15
-  }
+  local LINK_WHERES = { 15, 40, 15, 90, 15, 40, 15 }
 
   if link.src.hallway or link.dest.hallway then
-    link.where = 0
-    return
+    return 0
   end
 
----??  if link.is_exit and rand_odds(50) then return 0 end
+  if link.src.small_exit or link.dest.small_exit then
+    return 0
+  end
 
   if (link.kind == "door" and rand_odds(4)) or
-     (link.kind ~= "door" and rand_odds(15)) then
-    link.where = "double";
-    return
+     (link.kind ~= "door" and rand_odds(15))
+  then
+    return "double";
   end
 
   if (link.kind == "arch" and rand_odds(15)) or
-     (link.kind == "falloff" and rand_odds(80)) then
-    link.where = "wide";
-    return
+     (link.kind == "falloff" and rand_odds(80))
+  then
+    return "wide";
   end
 
-  if link.kind == "falloff" then link.where = 0; return end
+  if link.kind == "falloff" then return 0 end
 
-  link.where = rand_index_by_probs(LINK_WHERES) - 4
+  return rand_index_by_probs(LINK_WHERES) - 4
 end
 
 
@@ -553,14 +551,11 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
     end
 
     frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, STEP)
---con.debugf("EXIT FILL: (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
     -- EXIT SIGN
     if theme.sign and (ff == 2) then
---con.debugf("SIGN FILL: (%d,%d) .. (%d,%d)\n", ax*3,ay*3, ax*4,ay*4)
-      frag_fill (p,c, fx+ax*3,fy+ay*3, fx+ax*4,fy+ay*4, SIGN,
+      frag_fill (p,c, fx+sx+ax,fy+sy+ay, fx+sx+ax*2,fy+sy+ay*2, SIGN,
         { [10-adir] = { x_offset = 32 },
----###      frag_fill (p,c, fx+ax*4,fy+ay*4, fx+ax*4,fy+ay*4, SIGN,
           [adir] = { x_offset = 32 }} )
     end
 
@@ -795,14 +790,18 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
 end
 
 
-function B_wall_switch(p,c, x,y,z, side, info, kind, tag)
+function B_wall_switch(p,c, x,y,z, side, long, info, kind, tag)
+
+  assert(long == 2 or long == 3)
 
   local ax, ay = dir_to_across(side)
+
+  if long == 3 then x,y = x-ax, y-ay end
 
   local fx = (x - 1) * FW
   local fy = (y - 1) * FH
 
-  frag_fill(p,c, fx+1,fy+1, fx+(ax+1)*FW,fy+(ay+1)*FH, { solid=c.theme.wall })
+  frag_fill(p,c, fx+1,fy+1, fx+(long-1)*ax*FW+FW,fy+(long-1)*ay*FH+FH, { solid=c.theme.wall })
 
   local SWITCH =
   {
@@ -820,8 +819,10 @@ function B_wall_switch(p,c, x,y,z, side, info, kind, tag)
   local sx,sy, ex,ey = side_to_corner(side, FW, FH)
   local dx,dy = dir_to_delta(10-side)
 
-  sx,sy = sx + 2*ax, sy + 2*ay
-  ex,ey = ex + 2*ax, ey + 2*ay
+  local pos = (long - 1) * 2
+
+  sx,sy = sx + pos*ax, sy + pos*ay
+  ex,ey = ex + pos*ax, ey + pos*ay
 
   frag_fill(p,c, fx+sx,fy+sy, fx+ex,fy+ey, SWITCH)
 
@@ -1282,7 +1283,7 @@ function B_monster_closet(p,c, kx,ky, z, tag)
     f_h = z,
     c_h = c.ceil_h,
     f_tex = c.theme.floor,
-    c_tex = c.theme.ceil, --!!! c.theme.arch_ceil or c.theme.floor,
+    c_tex = c.theme.ceil, --!! c.theme.arch_ceil or c.theme.floor,
     light = c.light,
 
     l_tex = c.theme.void,
@@ -1602,7 +1603,7 @@ function make_chunks(p)
         L.src.chunks  = nil
         L.dest.chunks = nil
 
-        random_where(L)
+        L.where = random_where(L)
 
         return false
       end
@@ -1856,6 +1857,26 @@ function make_chunks(p)
     end
   end
 
+  local function grow_small_exit(c)
+    assert(c.entry_dir)
+    local kx,ky = side_to_chunk(10 - c.entry_dir)
+
+    if c.chunks[kx][ky] then
+      con.printf("WARNING: small_exit stomped a chunk!\n")
+    end
+
+    local r = con.random() * 100
+
+    if r < 2 then
+      c.chunks[kx][ky] = { room=true }
+    elseif r < 12 then
+      c.chunks[kx][ky] = { cage=true }
+      c.smex_cage = true
+    end
+
+    void_it_up(c)
+  end
+
   local function add_dm_exit(c)
     local kx, ky = 1, 3
 
@@ -1892,7 +1913,7 @@ function make_chunks(p)
 
     if p.deathmatch then probs[4] = 0 end
 
-    if c.scenic then probs = { 40, 2, 100, 0, 70 } end
+    if c.scenic then probs[2] = 2; probs[4] = 0 end
 
     -- special handling for hallways...
     if c.hallway then
@@ -1900,6 +1921,10 @@ function make_chunks(p)
         try_add_special(c, "cage")
       end
       void_it_up(c)
+    end
+
+    if c.small_exit then
+      grow_small_exit(c)
     end
 
     while count_empty_chunks(c) > 0 do
@@ -2060,7 +2085,7 @@ function make_chunks(p)
 
 --[[  DEBUG STAIR LOCS
 local dx,dy = dir_to_delta(loc.dir)
-con.debugf(
+  con.debugf(
   "CELL (%d,%d)  STAIR %d,%d facing %d  HT %d -> %d\n",
   c.x, c.y, loc.x, loc.y, loc.dir,
   K.delta_floor, c.chunks[loc.x+dx][loc.y+dy].delta_floor
@@ -2234,7 +2259,7 @@ con.debugf(
   --==-- make_chunks --==--
 
   for zzz,link in ipairs(p.all_links) do
-    random_where(link)
+    link.where = random_where(link)
   end
 
   -- firstly, allocate chunks based on exit locations
@@ -2579,6 +2604,10 @@ function build_cell(p, c)
       return "solid"
     end
 
+    if cell.sc_solid or other.sc_solid then
+      return "solid"
+    end
+
     -- fencing anyone?
     if (cell.theme.outdoor == other.theme.outdoor) and
        (not cell.is_exit and not other.is_exit) and
@@ -2605,6 +2634,20 @@ function build_cell(p, c)
 
     local t1 = c.theme
     local t2 = other.theme
+
+    if c.hallway ~= other.hallway then
+      if c.hallway then
+        t1 = c.quest.theme
+      else
+        t2 = other.quest.theme
+      end
+    end
+
+    -- FIXME: verify this produces better results!!
+    if t1.outdoor ~= t2.outdoor then
+      if t1.outdoor then t1,t2 = t2,t1 end
+      return t1
+    end
 
     if t1.mat_pri < t2.mat_pri then t1,t2 = t2,t1 end
 
@@ -2810,6 +2853,8 @@ function build_cell(p, c)
   local function build_window(link, other, side, what, b_theme)
 
     if what == "empty" then return end
+
+    if c.sc_solid and other.sc_solid then return end
 
     -- don't build 'castley' walls indoors
     if what == "fence" and not c.theme.outdoor then return end
@@ -3067,16 +3112,22 @@ function build_cell(p, c)
       end
     end
 
+    local function chunk_void_fill(c, K, kx, ky, tex)
+      local x1 = chunk_to_block(kx)
+      local y1 = chunk_to_block(ky)
+      local x2 = chunk_to_block(kx + 1) - 1
+      local y2 = chunk_to_block(ky + 1) - 1
+
+      gap_fill(p,c, x1, y1, x2, y2, { solid=tex })
+    end
+
     local function chunk_fill(c, K, kx, ky, sec, l_tex, u_tex)
       local x1 = chunk_to_block(kx)
       local y1 = chunk_to_block(ky)
       local x2 = chunk_to_block(kx + 1) - 1
       local y2 = chunk_to_block(ky + 1) - 1
 
-      if not sec then
-        gap_fill(p,c, x1, y1, x2, y2, { solid=l_tex })
-        return
-      end
+      assert(sec)
 
       if K.overhang then
         add_overhang_pillars(c, K, kx, ky, sec, l_tex, u_tex)
@@ -3142,10 +3193,15 @@ function build_cell(p, c)
       gap_fill(p,c, x1, y1, x2, y2, sec)
 
       if not blocked and c.theme.scenery and not K.stair_dir and
-         dual_odds(c.theme.outdoor, 37, 22)
+         (dual_odds(c.theme.outdoor, 37, 22)
+          or (c.scenic and rand_odds(51)))
       then
-        add_thing(p, c, x1+1, y1+1, c.theme.scenery, true)
         p.blocks[c.blk_x+x1+1][c.blk_y+y1+1].has_scenery = true
+        local th = add_thing(p, c, x1+1, y1+1, c.theme.scenery, true)
+        if c.scenic then
+          th.dx = rand_irange(-64,64)
+          th.dy = rand_irange(-64,64)
+        end
       end
     end
 
@@ -3193,6 +3249,11 @@ function build_cell(p, c)
     local K = c.chunks[kx][ky]
     assert(K)
 
+    if c.sc_solid then
+      chunk_void_fill(c, K, kx, ky, c.theme.void)
+      return
+    end
+
     if K.void then
       if K.closet then
         con.debugf("BUILDING CLOSET @ (%d,%d)\n", c.x, c.y)
@@ -3204,7 +3265,9 @@ function build_cell(p, c)
       elseif K.dm_exit then
         B_deathmatch_exit(p,c, kx,ky,K.dir)
 
-      elseif THEME.pics and rand_odds(sel(c.theme.outdoor, 10, sel(c.hallway,20, 50))) then
+      elseif THEME.pics and not c.small_exit
+          and rand_odds(sel(c.theme.outdoor, 10, sel(c.hallway,20, 50)))
+      then
         if not c.void_pic then decide_void_pic(p, c) end
         local pic,cut = c.void_pic,c.void_cut
 
@@ -3217,7 +3280,7 @@ function build_cell(p, c)
         B_void_pic(p,c, kx,ky, pic,cut)
 
       else
-        chunk_fill(c, K, kx, ky, nil, c.theme.void, c.theme.void)
+        chunk_void_fill(c, K, kx, ky, c.theme.void)
       end
       return
     end
@@ -3333,9 +3396,9 @@ function build_cell(p, c)
         local info = THEME.switches[c.quest.item]
         assert(info.switch)
         local kind = 103; if info.bars then kind = 23 end
-        if rand_odds(50) then
+        if rand_odds(40) then
           local side = wall_switch_dir(kx, ky, c.entry_dir)
-          B_wall_switch(p,c, bx,by, K.floor_h, side, info, kind, c.quest.tag + 1)
+          B_wall_switch(p,c, bx,by, K.floor_h, side, 2, info, kind, c.quest.tag + 1)
         else
           B_pillar_switch(p,c, K,bx,by, info,kind, c.quest.tag + 1)
         end
@@ -3347,7 +3410,24 @@ function build_cell(p, c)
           B_double_pedestal(p,c, bx,by, K.floor_h, THEME.special_ped,
             { walk_kind = 52 }) -- FIXME "exit_W1"
 
-        elseif c.theme.hole_tex then
+        elseif c.small_exit and not c.smex_cage and rand_odds(80) then
+          B_wall_switch(p,c, bx,by, K.floor_h, side, 3, THEME.switches.sw_exit, 11)
+
+          -- make the area behind the switch solid
+          local x1 = chunk_to_block(kx)
+          local y1 = chunk_to_block(ky)
+          local x2 = chunk_to_block(kx + 1) - 1
+          local y2 = chunk_to_block(ky + 1) - 1
+              if side == 4 then x1 = x1+2
+          elseif side == 6 then x2 = x2-2
+          elseif side == 2 then y1 = y1+2
+          elseif side == 8 then y2 = y2-2
+          else   error("Bad side for small_exit switch: " .. side)
+          end
+
+          gap_fill(p,c, x1,y1, x2,y2, { solid=c.theme.wall })
+          
+        elseif c.theme.hole_tex and rand_odds(75) then
           B_exit_hole(p,c, kx,ky, c.rmodel)
           return
         else

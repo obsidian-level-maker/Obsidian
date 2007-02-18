@@ -552,7 +552,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     if #Q.path < 3 then return end
 
-    if Q.theme.outdoor and rand_odds(60) then return end
+    if Q.theme.outdoor and rand_odds(66) then return end
 
     -- longer quests are more likely to add hallways
     local chance = HALL_CHANCE[math.min(7, #Q.path)]
@@ -1107,7 +1107,9 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     c.theme = get_rand_exit_theme()
     c.is_exit = true
-    c.light = 192
+    c.light = 176
+
+    c.small_exit = rand_odds(55)
 
     for dir = 2,8,2 do
       if c.link[dir] then
@@ -1116,7 +1118,7 @@ function plan_sp_level(is_coop)  -- returns Plan
           link.kind = "door"
           link.build = c
           link.is_exit = true
-          link.long = sel(c.theme.front_mark, 3, 2)
+          link.long = sel(c.theme.front_mark or c.small_exit, 3, 2)
         end
       end
     end
@@ -1141,6 +1143,8 @@ function plan_sp_level(is_coop)  -- returns Plan
           local c = p.cells[x+dx][y+dy]
           if not c then
             table.insert(empties, { x=x+dx, y=y+dy })
+          elseif c.sc_solid then
+            table.insert(innies, c)
           elseif c.scenic then
             scenics = scenics + 1
           elseif c.theme.outdoor then
@@ -1163,7 +1167,19 @@ function plan_sp_level(is_coop)  -- returns Plan
 
       c.scenic = true
 
-      con.debugf("CREATED SCENIC AT (%d,%d)\n", c.x, c.y)
+      -- Experimental "SOLID SCENIC" cells
+      if #innies >= 1 and rand_odds(66) and
+         ((empties[1].x == innies[1].x) or
+          (empties[1].y == innies[1].y))
+      then
+        c.sc_solid = true
+        c.theme = innies[1].theme
+        if innies[1].hallway then c.theme = innies[1].quest.theme end
+
+        con.debugf("SOLID-")
+      end
+
+      con.debugf("SCENIC CREATED AT (%d,%d)\n", c.x, c.y)
     end
 
     --- add_scenic_cells ---
