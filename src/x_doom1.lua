@@ -254,13 +254,14 @@ DM_EXITS =
 
     wall = "TEKWALL1",
     void = "TEKWALL4",
-    dm_switch = "SW1COMM",
 
     floor = "CEIL4_3",
-    ceil = "TLITE6_5",
+    ceil  = "TLITE6_5",
 
     sign = "EXITSIGN",
     sign_bottom="CEIL5_2",
+
+    switch = { switch="SW1COMP", wall="COMPSPAN", h=64 },
 
     door = { tex="EXITDOOR", w=64, h=72,
              frame_top="TLITE6_5",
@@ -273,7 +274,6 @@ DM_EXITS =
 
     wall = "STONE2",
     void = "STONE",
-    dm_switch = "SW1HOT", -- SW1GSTON
 
     floor = "FLOOR7_2",  -- FLAT5_2
     ceil  = "FLAT1",
@@ -282,10 +282,34 @@ DM_EXITS =
     
     front_mark = "EXITSTON", 
 
+    switch = { switch="SW1HOT", wall="SP_HOT1", h=64 },
+
     door = { tex="EXITDOOR", w=64, h=72,
              frame_top="TLITE6_6",
              frame_side="LITE5" },
   },
+
+  BLUE =
+  {
+    small_exit = true,
+    mat_pri = 9,
+
+    wall = "TEKWALL1",
+    void = "COMPBLUE",
+
+    floor = "FLAT14",
+    ceil  = "FLAT22",
+
+    sign = "EXITSIGN",
+    sign_bottom="CEIL5_2",
+
+    switch = { switch="SW1COMM", wall="SHAWN2", h=64 },
+
+    door = { tex="EXITDOOR", w=64, h=72,
+             frame_top="TLITE6_5",
+             Xrame_side="BROWN96" },
+  },
+
 }
 
 DM_HALLWAYS =
@@ -537,10 +561,10 @@ DM_SWITCHES =
 
   sw_metl = { wall="SUPPORT3", switch="SW1GARG",  floor="CEIL5_2", bars=true },
   sw_gray = { wall="GRAY7",    switch="SW1GRAY1", floor="FLAT1",   bars=true },
+
 --FIXME: (not in doom1)  sw_rock = { wall="ROCK3",    switch="SW1ROCK",  floor="RROCK13", bars=true },
 --FIXME:  sw_wood = { wall="WOODMET1", switch="SW1WDMET", floor="FLAT5_1", bars=true, stand_h=128 },
 
-  sw_exit = { wall="COMPSPAN", switch="SW1COMP" },
 }
 
 DM_DOORS =
