@@ -465,8 +465,8 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
   local track_tex = door_info.track or THEME.mats.TRACK.wall
 
   local DOOR = { f_h = z+8, c_h = z+8,
-                 f_tex = THEME.mats.DOOR_FRAME.floor,
-                 c_tex = THEME.mats.DOOR_FRAME.floor,
+                 f_tex = door_info.frame_bottom or THEME.mats.DOOR_FRAME.floor,
+                 c_tex = door_info.bottom       or THEME.mats.DOOR_FRAME.floor,
                  light = 255,
                  door_kind = 1,
                  l_tex = theme.wall,
@@ -803,7 +803,7 @@ function B_wall_switch(p,c, x,y,z, side, long, sw_info, kind, tag)
 
   frag_fill(p,c, fx+1,fy+1, fx+(long-1)*ax*FW+FW,fy+(long-1)*ay*FH+FH, { solid=c.theme.void })
 
-  local SWITCH =
+  local GAP =
   {
     f_h = z,
     c_h = z + 64,
@@ -824,7 +824,7 @@ function B_wall_switch(p,c, x,y,z, side, long, sw_info, kind, tag)
   sx,sy = sx + pos*ax, sy + pos*ay
   ex,ey = ex + pos*ax, ey + pos*ay
 
-  frag_fill(p,c, fx+sx,fy+sy, fx+ex,fy+ey, SWITCH)
+  frag_fill(p,c, fx+sx,fy+sy, fx+ex,fy+ey, GAP)
 
   -- lights
   if THEME.mats.SW_FRAME then
@@ -840,7 +840,7 @@ function B_wall_switch(p,c, x,y,z, side, long, sw_info, kind, tag)
   sx,sy = sx+dx, sy+dy
   ex,ey = ex+dx, ey+dy
 
-  local SWITCH_BACK =
+  local SWITCH =
   {
     solid = sw_info.switch,
     switch_kind = kind,
@@ -848,7 +848,37 @@ function B_wall_switch(p,c, x,y,z, side, long, sw_info, kind, tag)
     [side] = { l_peg="bottom" } 
   } 
 
-  frag_fill(p,c, fx+sx,fy+sy, fx+ex,fy+ey, SWITCH_BACK);
+  frag_fill(p,c, fx+sx,fy+sy, fx+ex,fy+ey, SWITCH);
+end
+
+
+function B_flush_switch(p,c, x,y,z, side, sw_info, kind, tag)
+
+  local ax, ay = dir_to_across(side)
+
+  local flu1 = c.theme.flush_left
+  local flu2 = c.theme.flush_right
+
+  if (side == 4) or (side == 8) then
+    flu1, flu2 = flu2, flu1
+  end
+
+  fill(p,c, x-ax,y-ay, x-ax,y-ay,
+       { solid = flu1 or c.theme.void, [side] = {l_peg="bottom"} })
+
+  fill(p,c, x+ax,y+ay, x+ax,y+ay,
+       { solid = flu2 or c.theme.void, [side] = {l_peg="bottom"} })
+
+  local SWITCH =
+  {
+    solid = sw_info.switch,
+    switch_kind = kind,
+    switch_tag = tag,
+
+    [side] = {l_peg="bottom"} 
+  } 
+
+  fill(p,c, x,y, x,y, SWITCH);
 end
 
 
@@ -3416,7 +3446,11 @@ function build_cell(p, c)
             { walk_kind = 52 }) -- FIXME "exit_W1"
 
         elseif c.small_exit and not c.smex_cage and rand_odds(80) then
-          B_wall_switch(p,c, bx,by, K.floor_h, side, 3, c.theme.switch, 11)
+          if c.theme.flush then
+            B_flush_switch(p,c, bx,by, K.floor_h,side, c.theme.switch, 11)
+          else
+            B_wall_switch(p,c, bx,by, K.floor_h,side, 3, c.theme.switch, 11)
+          end
 
           -- make the area behind the switch solid
           local x1 = chunk_to_block(kx)
@@ -3435,8 +3469,10 @@ function build_cell(p, c)
         elseif c.theme.hole_tex and rand_odds(75) then
           B_exit_hole(p,c, kx,ky, c.rmodel)
           return
-        else
+        elseif rand_odds(85) then
           B_floor_switch(p,c, bx,by, K.floor_h, side, c.theme.switch, 11)
+        else
+          B_pillar_switch(p,c, K,bx,by, c.theme.switch, 11)
         end
       end
     end -- if K.player | K.quest etc...
