@@ -1420,7 +1420,10 @@ function B_deathmatch_exit(p,c, kx,ky)
   local SWITCH =
   {
     solid = theme.switch.switch,
-    switch_kind = 11
+    switch_kind = 11,
+
+    [2] = { l_peg="bottom" }, [8] = { l_peg="bottom" },
+    [4] = { l_peg="bottom" }, [6] = { l_peg="bottom" },
   }
 
   frag_fill(p,c, fx+5,fy+11, fx+8,fy+12, SWITCH)
@@ -3229,7 +3232,9 @@ function build_cell(p, c)
         if not c.void_pic then decide_void_pic(p, c) end
         local pic,cut = c.void_pic,c.void_cut
 
-        if not c.quest.image and c.quest.mini and rand_odds(35) then
+        if not c.quest.image and (p.deathmatch or
+             (c.quest.mini and rand_odds(33)))
+        then
           pic = THEME.images[1]
           cut = 1
           c.quest.image = "pic"
@@ -3436,7 +3441,9 @@ function build_cell(p, c)
     if K.player then
       sec = copy_block(sec) -- FIXME??
       sec.near_player = true;
-      sec.kind = 9  -- FIXME: "secret"
+      if not sec.kind then
+        sec.kind = 9  -- FIXME: "secret"
+      end
 
       if settings.mode == "coop" and settings.game == "plutonia" then
         sec.light = THEME.special_ped.coop_light
@@ -3554,7 +3561,7 @@ function build_cell(p, c)
       if K.crate and not blocked then
         local theme = c.crate_theme
         if not c.quest.image and not c.quest.mini and
-           (not p.image or rand_odds(10))
+           (not p.image or rand_odds(11))
         then
           theme = THEME.images[2]
           c.quest.image = "crate"
