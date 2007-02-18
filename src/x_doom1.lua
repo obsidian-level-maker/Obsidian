@@ -350,7 +350,8 @@ DM_EXITS =
 
     door = { tex="EXITDOOR", w=64, h=72,
              frame_top="TLITE6_5",
-             frame_bottom="FLOOR5_2"
+             frame_bottom="FLOOR5_2",
+             frame_side="LITE3"
            },
   },
 
