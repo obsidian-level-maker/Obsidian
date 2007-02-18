@@ -346,6 +346,30 @@ D2_THEMES =
 
 D2_EXITS =
 {
+  JACKO =
+  {
+    small_exit = true,
+    mat_pri = 1,
+
+    wall = "SKINMET2",
+    void = "SLOPPY1",
+    step = "SKINMET2",
+
+    floor = "FWATER1",
+    ceil  = "SFLR6_4",
+
+    sign = "EXITSIGN",
+    sign_bottom="CEIL5_2",
+
+    flush = true,
+    flush_left  = "SK_LEFT",
+    flush_right = "SK_RIGHT",
+
+    switch = { switch="SW1SKULL", wall="SKINCUT", h=128 },
+
+    door = { tex="EXITDOOR", w=64, h=72,
+             frame_top="FLAT5_5", frame_bottom="CEIL5_2" },
+  },
 }
 
 D2_HALLWAYS =
