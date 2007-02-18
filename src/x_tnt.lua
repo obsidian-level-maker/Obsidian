@@ -26,27 +26,27 @@ TN_CRATES =
 {
   WOOD_L6 =
   {
-    wall = "CRLWDL6", h=64, floor = "FLAT1",  --!!!! FIXME: floor flats
+    wall = "CRLWDL6", h=64, floor = "FLOOR4_1",
   },
   
   WOOD_L6C =
   {
-    wall = "CRLWDL6C", h=64, floor = "CRATOP2",
+    wall = "CRLWDL6C", h=64, floor = "FLAT5_5",
   },
   
   WOOD_H =
   {
-    wall = "CRWDH64", h=128, floor = "FLAT1"
+    wall = "CRWDH64", h=128, floor = "FLAT5_2",
   },
 
   WOOD_LA =
   {
-    wall = "CRWDL64A", h=128, floor = "FLAT1"
+    wall = "CRWDL64A", h=128, floor = "FLOOR7_1",
   },
 
   WOOD_BH =
   {
-    wall = "CRBLWDH6", h=128, floor = "FLAT1"
+    wall = "CRBLWDH6", h=128, floor = "FLAT5_5",
   },
 
 }
@@ -71,7 +71,7 @@ TN_PICS =
   egypt4 = { tex="MURAL2",   w=128, h=128 },
 
   tnt1   = { tex="TNTDOOR",  w=128, h=128 },
-  disarea= { tex="DISASTER", w=128, h=128 },
+  disast = { tex="DISASTER", w=128, h=128 },
   gr_men = { tex="GRNMEN",   w=128, h=128 },
   lt_yel = { tex="LITEYEL3", w=128, h=128, glow=true },
 }
