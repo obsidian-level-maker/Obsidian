@@ -275,10 +275,10 @@ DM_EXITS =
     wall = "STONE2",
     void = "STONE",
 
-    floor = "FLOOR7_2",  -- FLAT5_2
+    floor = "FLOOR7_2",
     ceil  = "FLAT1",
 
-    hole_tex = "MARBLE1",  -- WOOD1
+    hole_tex = "MARBLE1",
     
     front_mark = "EXITSTON", 
 
@@ -287,6 +287,30 @@ DM_EXITS =
     door = { tex="EXITDOOR", w=64, h=72,
              frame_top="TLITE6_6", frame_side="LITE5" },
   },
+
+  BROWN =
+  {
+    mat_pri = 6,
+
+    wall = "BROWN96",
+    void = "BROWN1",
+
+    floor = "FLOOR3_3",
+    ceil  = "CEIL5_1",
+
+    sign = "EXITSIGN",
+    sign_bottom="CEIL5_2",
+
+    flush = true,
+    switch = { switch="SW1BRN2", wall="BROWN1", h=64 },
+
+    door = { tex="EXITDOOR", w=64, h=72,
+             frame_top="TLITE6_5",
+             frame_bottom="FLOOR3_3"
+           },
+  },
+
+  --- Small Exits ---
 
   BLUE =
   {
@@ -305,6 +329,56 @@ DM_EXITS =
     switch = { switch="SW1COMM", wall="SHAWN2", h=64 },
 
     door = { tex="EXITDOOR", w=64, h=72, frame_top="TLITE6_5" },
+  },
+
+  STARTAN =
+  {
+    small_exit = true,
+    mat_pri = 6,
+
+    wall = "STARBR2",
+    void = "STARTAN2",
+
+    floor = "FLOOR5_2",
+    ceil  = "TLITE6_4",
+
+    sign = "EXITSIGN",
+    sign_bottom="CEIL5_2",
+
+    flush = true,
+    switch = { switch="SW1STRTN", wall="STARTAN2", h=64 },
+
+    door = { tex="EXITDOOR", w=64, h=72,
+             frame_top="TLITE6_5",
+             frame_bottom="FLOOR5_2"
+           },
+  },
+
+  BLOODY =
+  {
+    small_exit = true,
+    mat_pri = 9,
+
+    exit_h = 128,
+
+    wall = "GSTVINE1",
+    step = "GSTVINE1",
+    void = "GSTONE2",
+
+    floor = "BLOOD1",
+    ceil  = "FLOOR7_2",
+
+    sign = "EXITSIGN",
+    sign_bottom="CEIL5_2",
+
+    flush = true,
+    flush_left  = "GSTFONT1",
+    flush_right = "GSTFONT2",
+
+    switch = { switch="SW1GSTON", wall="GSTONE2", h=64 },
+
+    door = { tex="EXITDOOR", w=64, h=72,
+             frame_top="FLOOR7_2", frame_bottom="FLOOR7_2" },
   },
 
 }
@@ -898,6 +972,11 @@ D1_RAILS =
   r_2 = { tex="MIDGRATE", w=128, h=128 },
 }
 
+D1_LIGHTS =
+{
+  reddy  = { tex="LITERED",  w=16 },
+  stoned = { tex="LITESTON", w=32 },
+}
 
 ------------------------------------------------------------
 
@@ -953,6 +1032,8 @@ THEME_FACTORIES["doom1"] = function()
   T.exits    = copy_and_merge(T.exits,    D1_EXITS)
   T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
   T.crates   = copy_and_merge(T.crates,   D1_CRATES)
+
+  T.lights   = copy_and_merge(T.lights,   D1_LIGHTS)
 
   T.rails = D1_RAILS
 
