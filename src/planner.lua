@@ -811,7 +811,7 @@ function plan_sp_level(is_coop)  -- returns Plan
       -- FIXME: more imagination!
 
       if c.is_exit then
-        c.ceil_h = c.floor_h + 128
+        c.ceil_h = c.floor_h + (c.theme.exit_h or 128)
       elseif c.hallway then
         c.ceil_h = c.floor_h + sel(rand_odds(50), 96, 128)
       else
@@ -1025,6 +1025,14 @@ function plan_sp_level(is_coop)  -- returns Plan
     wp_max = math.min(4, count_entries(THEME.quests.weapon))
     it_max = math.min(2, count_entries(THEME.quests.item))
 
+    local tot_min = 1 + rand_index_by_probs { 5, 70, 5 }
+    local tot_max = 4 + rand_index_by_probs { 1, 5, 15, 60, 15, 5, 1 }
+
+    -- sanity check
+    if tot_min >= tot_max then tot_min = tot_max - 1 end
+
+    assert(k_max + sw_max + wp_max >= tot_min)
+
     repeat
       keys     = rand_irange(1, k_max)
       switches = rand_irange(0, sw_max)
@@ -1033,8 +1041,8 @@ function plan_sp_level(is_coop)  -- returns Plan
 
       total    = keys + switches + weapons + items
       ratio    = (keys + switches) / (weapons + items)
-    until (3 <= total and total <= 8 and
-           0.35 <= ratio and ratio <= 2.0)
+    until (tot_min <= total and total <= tot_max and
+           0.35 <= ratio and ratio <= 2.5)
 
     assert(keys + switches >= 1)
 
