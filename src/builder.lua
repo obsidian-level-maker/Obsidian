@@ -778,10 +778,10 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
     switch_kind = kind,
     switch_tag  = tag,
 
-    [2] = { l_peg="bottom" },
-    [4] = { l_peg="bottom" },
-    [6] = { l_peg="bottom" },
-    [8] = { l_peg="bottom" },
+    [2] = { l_peg="top" },
+    [4] = { l_peg="top" },
+    [6] = { l_peg="top" },
+    [8] = { l_peg="top" },
   }
 
   local sx,sy, ex,ey = side_to_corner(side, FW, FH)
@@ -1499,9 +1499,13 @@ function setup_rmodel(p, c)
   c.rmodel =
   {
     f_h=c.floor_h,
-    c_h=c.ceil_h,
     f_tex=c.theme.floor,
+    l_tex=c.theme.wall,
+
+    c_h=c.ceil_h,
     c_tex=c.theme.ceil,
+    u_tex=c.theme.wall,
+
     light=c.light,
   }
 end
@@ -2670,6 +2674,9 @@ function build_cell(p, c)
     local t1 = c.theme
     local t2 = other.theme
 
+    if c.is_exit then return t1 end
+    if other.is_exit then return t2 end
+
     if c.hallway ~= other.hallway then
       if c.hallway then
         t1 = c.quest.theme
@@ -2678,7 +2685,6 @@ function build_cell(p, c)
       end
     end
 
-    -- FIXME: verify this produces better results!!
     if t1.outdoor ~= t2.outdoor then
       if t1.outdoor then t1,t2 = t2,t1 end
       return t1
@@ -3156,89 +3162,6 @@ function build_cell(p, c)
       gap_fill(p,c, x1, y1, x2, y2, { solid=tex })
     end
 
-    local function chunk_fill(c, K, kx, ky, sec, l_tex, u_tex)
-      local x1 = chunk_to_block(kx)
-      local y1 = chunk_to_block(ky)
-      local x2 = chunk_to_block(kx + 1) - 1
-      local y2 = chunk_to_block(ky + 1) - 1
-
-      assert(sec)
-
-      if K.overhang then
-        add_overhang_pillars(c, K, kx, ky, sec, l_tex, u_tex)
-      end
-
-      if K.sky_light_sec then
-        local x1,y1,x2,y2 = x1,y1,x2,y2
-        if kx==1  then x1=x1+1 end
-        if kx==KW then x2=x2-1 end
-        if ky==1  then y1=y1+1 end
-        if ky==KH then y2=y2-1 end
-
-        ---### local xN = c.sky_light.xN
-        ---### local yN = c.sky_light.yN
-
-        local func = SKY_LIGHT_FUNCS[c.sky_light.pattern]
-        assert(func)
-
-        local BB = copy_block(K.sky_light_sec)
-        BB.l_tex = l_tex
-        BB.u_tex = K.sky_light_utex or u_tex
-
-        for x = x1,x2 do for y = y1,y2 do
-          ---### local xT = (x % xN) == (xN - 1)
-          ---### local yT = (y % yN) == (yN - 1)
-          if func(kx,ky, x,y) then
-            gap_fill(p,c, x,y, x,y, BB)
-          end
-        end end
-      end
-
-      -- get this *after* doing sky lights
-      local blocked = p.blocks[c.blk_x+x1+1][c.blk_y+y1+1]
-
-      if K.crate and not blocked then
-        local theme = c.crate_theme
-        if not c.quest.image and not c.quest.mini and
-           (c.quest.level == 1 or rand_odds(16))
-        then
-          theme = THEME.images[2]
-          c.quest.image = "crate"
-        end
-        B_crate(p,c, theme, sec, kx,ky, x1+1,y1+1)
-        blocked = true
-      end
-
-      if K.pillar and not blocked then
-
-        -- TEST CRUD
-        if rand_odds(22) and THEME.mats.CAGE and not p.deathmatch
-          and K.ceil_h >= K.floor_h + 128
-        then
-          B_pillar_cage(p,c, THEME.mats.CAGE, kx,ky, x1+1,y1+1)
-        else
-          B_pillar(p,c, c.theme, kx,ky, x1+1,y1+1)
-        end
-        blocked = true
-      end
-
-      sec.l_tex = l_tex
-      sec.u_tex = u_tex
-
-      gap_fill(p,c, x1, y1, x2, y2, sec)
-
-      if not blocked and c.theme.scenery and not K.stair_dir and
-         (dual_odds(c.theme.outdoor, 37, 22)
-          or (c.scenic and rand_odds(51)))
-      then
-        p.blocks[c.blk_x+x1+1][c.blk_y+y1+1].has_scenery = true
-        local th = add_thing(p, c, x1+1, y1+1, c.theme.scenery, true)
-        if c.scenic then
-          th.dx = rand_irange(-64,64)
-          th.dy = rand_irange(-64,64)
-        end
-      end
-    end
 
     local function wall_switch_dir(kx, ky, entry_dir)
       if not entry_dir then
@@ -3482,13 +3405,13 @@ function build_cell(p, c)
     -- fill in the rest
 
     local sec = c.rmodel
-    local u_tex = c.theme.wall;
+    local u_tex = c.theme.wall
 
     if K.link and K.link.build ~= c then
 
       local other = link_other(K.link, c)
 
-      sec = copy_block(c.rmodel)
+      sec = copy_block(sec)
 
       sec.f_h = K.floor_h
       sec.c_h = K.ceil_h
@@ -3588,9 +3511,90 @@ function build_cell(p, c)
         sel(c.sky_light.is_sky, c.c_max+16, c.c_min))
     end
  
----###    K.final_sec = copy_block(sec)
+    ---- Chunk Fill ----
 
-    chunk_fill(c, K, kx, ky, sec, c.theme.wall, u_tex)
+    local l_tex = c.theme.wall
+
+    do
+      local x1 = chunk_to_block(kx)
+      local y1 = chunk_to_block(ky)
+      local x2 = chunk_to_block(kx + 1) - 1
+      local y2 = chunk_to_block(ky + 1) - 1
+
+      assert(sec)
+
+      if K.overhang then
+        add_overhang_pillars(c, K, kx, ky, sec, l_tex, u_tex)
+      end
+
+      if K.sky_light_sec then
+        local x1,y1,x2,y2 = x1,y1,x2,y2
+        if kx==1  then x1=x1+1 end
+        if kx==KW then x2=x2-1 end
+        if ky==1  then y1=y1+1 end
+        if ky==KH then y2=y2-1 end
+
+        local func = SKY_LIGHT_FUNCS[c.sky_light.pattern]
+        assert(func)
+
+        local BB = copy_block(K.sky_light_sec)
+        BB.l_tex = l_tex
+        BB.u_tex = K.sky_light_utex or u_tex
+
+        for x = x1,x2 do for y = y1,y2 do
+          if func(kx,ky, x,y) then
+            gap_fill(p,c, x,y, x,y, BB)
+          end
+        end end
+      end
+
+      -- get this *after* doing sky lights
+      local blocked = p.blocks[c.blk_x+x1+1][c.blk_y+y1+1]
+
+      if K.crate and not blocked then
+        local theme = c.crate_theme
+        if not c.quest.image and not c.quest.mini and
+           (not p.image or rand_odds(10))
+        then
+          theme = THEME.images[2]
+          c.quest.image = "crate"
+          p.image = true
+        end
+        B_crate(p,c, theme, sec, kx,ky, x1+1,y1+1)
+        blocked = true
+      end
+
+      if K.pillar and not blocked then
+
+        -- TEST CRUD
+        if rand_odds(22) and THEME.mats.CAGE and not p.deathmatch
+          and K.ceil_h >= K.floor_h + 128
+        then
+          B_pillar_cage(p,c, THEME.mats.CAGE, kx,ky, x1+1,y1+1)
+        else
+          B_pillar(p,c, c.theme, kx,ky, x1+1,y1+1)
+        end
+        blocked = true
+      end
+
+      sec.l_tex = l_tex
+      sec.u_tex = u_tex
+
+      gap_fill(p,c, x1, y1, x2, y2, sec)
+
+      if not blocked and c.theme.scenery and not K.stair_dir and
+         (dual_odds(c.theme.outdoor, 37, 22)
+          or (c.scenic and rand_odds(51)))
+      then
+        p.blocks[c.blk_x+x1+1][c.blk_y+y1+1].has_scenery = true
+        local th = add_thing(p, c, x1+1, y1+1, c.theme.scenery, true)
+        if c.scenic then
+          th.dx = rand_irange(-64,64)
+          th.dy = rand_irange(-64,64)
+        end
+      end
+    end
+
 
     if K.dm_health then
       add_dm_pickup(c, bx,by, K.dm_health)
