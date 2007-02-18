@@ -2,35 +2,31 @@
 TODO
 ----
 
->> PLAY-TEST: Health/Ammo adjustments
+-  rename: 'switch'/'wall' fields of a switch (to 'wall'/'side').
+-  rename: 'tex' fields of PICS and LIGHTS to 'wall'.
+-  idea: 'corner' field for themes.
+-  idea: "scenic_wall" / "scenic_void" for middle of 3x3 chunk
 
--  add some TNT/Plutonia stuff.
-
-+  more exit themes!
-   -  different switch/hole methods
-   -  able to make smaller rooms (void_it_up), esp. with wall switch
-   -  put exit "bumps" on floor outside
-   -  teleport method
-
+-  choose railings for windows/fences (per quest?)
 -  sky_lights: decide sky based on "ceiling thickness"
--  replace 'c.floor_h' and 'K.ceil_h' with the 'rmodel' field.
+-  replace 'K.floor_h' and 'K.ceil_h' with the 'rmodel' field.
 -  floor heights: for Heretic/Hexen, limit slope to prevent lifts
+
 -  fix cage railing when cage borders a higher chunk or Fence
    (raise fence to cage top and omit railing texture but keep IMPASS).
 -  don't put a railing _between_ cages
--  idea: "scenic_wall" / "scenic_void" for middle of 3x3 chunk
+-  exit "bumps" on floor outside -> ENTRY-WAYS
+-  exit teleport method -> B_teleporter
 
 
 GUI TODO
 --------
 
--  test if output file (if not exists) can be written to.
+-  test if output file (unless it exists) can be written to.
 
 -  handle the Abort button better, also glbsp-failure.
 
--  different adjustments for DM levels.
-
-??  separate 'obl_scr' and 'obl_dat' directories.
+-  different adjustments for DeathMatch levels.
 
 
 RECENT CHANGES
@@ -38,18 +34,18 @@ RECENT CHANGES
 
 +  Hallways!  Crates!  New exits!
 +  better algorithm for choosing floor/ceiling heights.
-+  user adjustments in the GUI (health/ammo/monsters).
++  user adjustments for health/ammo/monsters/traps.
 +  current settings are remembered when you quit.
 
+-  support for FreeDoom 0.5, TNT and Plutonia.
 -  fixed the (rare) non-working switches and lifts.
 -  delete temporary wad when build has finished.
 -  collect all log messages into a file (LOGS.txt).
--  support for FreeDoom IWAD (version 0.5).
 
 -  surprise traps: improved placement, fairer monsters.
--  more interesting health/ammo placement.
 -  tweaked battle simulation to provide more ammo.
 -  improved cages, now at more reasonable heights.
+-  neater placement for health and ammo.
 
 
 MILESTONE 0  (reached!)
@@ -132,9 +128,10 @@ MILESTONE 3  (heaps left to do!!)
 
 +  pillar patterns: 1379, 2468, line thru center (based on entry and exit)
 -  chunk-size cages: center of room
--  chunk-size cages: outdoor and top-less
 
-+  floor switches: y_offset
+#  chunk-size cages: outdoor and top-less
+#  floor switches: y_offset
+
 -  wall switches: place in the wall! 
 -  wall switches: "small" mode (32x32)
 
@@ -153,10 +150,10 @@ MILESTONE 3  (heaps left to do!!)
 
 _____________________
 |KEY:                |
+|    #  completed    |
 |    -  plain item   |
 |    +  important    |
 |    >> in progress  |
 |    ?? not sure     |
-|    #  completed    |
 |____________________|
 
