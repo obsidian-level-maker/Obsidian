@@ -205,6 +205,7 @@ void WAD_CreateInfoLump()
 {
   lump_c *L = new lump_c();
 
+  WAD_Printf(L, "\n");
   WAD_Printf(L, "# Levels created by OBLIGE %s\n", OBLIGE_VERSION);
   WAD_Printf(L, "# " OBLIGE_TITLE " (C) 2006,2007 Andrew Apted\n");
   WAD_Printf(L, "# http://oblige.sourceforge.net/\n");
