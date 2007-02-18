@@ -2522,7 +2522,9 @@ function build_cell(p, c)
 
       local kind = link.wide_door
 
-      if link.src.quest == link.dest.quest and (link.door_rand < 25) then
+      if link.src.quest == link.dest.quest
+        and link.door_rand < sel(c.theme.outdoor or other.theme.outdoor, 10, 20)
+      then
         kind = link.narrow_door
       end
 
