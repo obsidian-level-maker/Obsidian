@@ -184,10 +184,11 @@ HC_EXITS =
 
     wall = "METL2",
     void = "SKULLSB1",
-    dm_switch = "SW1OFF",
-    
+
     floor = "FLOOR03",
     ceil = "FLOOR19",
+
+    switch = { switch="SW2OFF", wall="METL2", h=64 },
 
     door = { tex="DOOREXIT", w=64, h=96 },
   },
@@ -288,8 +289,6 @@ HC_LIQUIDS =
 HC_SWITCHES =
 {
   sw_rock = { wall="RCKSNMUD", switch="SW1OFF" },
-
-  sw_exit = { wall="METL2", switch="SW2OFF" },
 }
 
 HC_DOORS =

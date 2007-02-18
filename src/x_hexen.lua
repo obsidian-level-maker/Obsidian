@@ -171,10 +171,11 @@ XN_EXITS =
 
     wall = "STEEL01",
     void = "STEEL02",
-    dm_switch = "SW_1_UP",
-    
+
     floor = "F_022",
     ceil = "F_044",
+
+    switch = { switch="SW_2_UP", wall="STEEL06", h=64 },
 
     door = { tex="FIRE14", w=64,  h=128 },
   },
@@ -277,8 +278,6 @@ XN_LIQUIDS =
 XN_SWITCHES =
 {
   sw_rock = { wall="STEEL06", switch="SW_1_UP" },
-
-  sw_exit = { wall="STEEL06", switch="SW_2_UP" },
 }
 
 XN_DOORS =

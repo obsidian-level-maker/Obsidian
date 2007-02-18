@@ -1109,7 +1109,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     c.is_exit = true
     c.light = 176
 
-    c.small_exit = rand_odds(55)
+    c.small_exit = c.theme.small_exit or rand_odds(25)
 
     for dir = 2,8,2 do
       if c.link[dir] then

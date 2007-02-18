@@ -790,7 +790,7 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
 end
 
 
-function B_wall_switch(p,c, x,y,z, side, long, info, kind, tag)
+function B_wall_switch(p,c, x,y,z, side, long, sw_info, kind, tag)
 
   assert(long == 2 or long == 3)
 
@@ -801,7 +801,7 @@ function B_wall_switch(p,c, x,y,z, side, long, info, kind, tag)
   local fx = (x - 1) * FW
   local fy = (y - 1) * FH
 
-  frag_fill(p,c, fx+1,fy+1, fx+(long-1)*ax*FW+FW,fy+(long-1)*ay*FH+FH, { solid=c.theme.wall })
+  frag_fill(p,c, fx+1,fy+1, fx+(long-1)*ax*FW+FW,fy+(long-1)*ay*FH+FH, { solid=c.theme.void })
 
   local SWITCH =
   {
@@ -811,8 +811,8 @@ function B_wall_switch(p,c, x,y,z, side, long, info, kind, tag)
     c_tex = c.theme.arch_ceil or c.theme.floor, -- SKY is no good
     light = 224,
 
-    l_tex = c.theme.wall,
-    u_tex = c.theme.wall,
+    l_tex = c.theme.void,
+    u_tex = c.theme.void,
     near_switch = true,
   }
 
@@ -832,20 +832,23 @@ function B_wall_switch(p,c, x,y,z, side, long, info, kind, tag)
 
     local lit_dir = sel(side==2 or side==8, 6, 8)
     frag_fill(p,c, fx+sx-ax,fy+sy-ay, fx+sx-ax,fy+sy-ay,
-         { solid=c.theme.wall, [lit_dir]={ l_tex = sw_side }} )
+         { solid=c.theme.void, [lit_dir]={ l_tex = sw_side }} )
     frag_fill(p,c, fx+ex+ax,fy+ey+ay, fx+ex+ax,fy+ey+ay,
-         { solid=c.theme.wall, [10-lit_dir]={ l_tex = sw_side }} )
+         { solid=c.theme.void, [10-lit_dir]={ l_tex = sw_side }} )
   end
 
   sx,sy = sx+dx, sy+dy
   ex,ey = ex+dx, ey+dy
 
-  frag_fill(p,c, fx+sx,fy+sy, fx+ex,fy+ey,
-       { solid=info.switch,
-         switch_kind = kind,
-         switch_tag = tag,
-         [side] = { l_peg="bottom" } 
-       }) 
+  local SWITCH_BACK =
+  {
+    solid = sw_info.switch,
+    switch_kind = kind,
+    switch_tag = tag,
+    [side] = { l_peg="bottom" } 
+  } 
+
+  frag_fill(p,c, fx+sx,fy+sy, fx+ex,fy+ey, SWITCH_BACK);
 end
 
 
@@ -1386,7 +1389,7 @@ function B_deathmatch_exit(p,c, kx,ky)
 
   local SWITCH =
   {
-    solid = theme.dm_switch,
+    solid = theme.switch.switch,
     switch_kind = 11
   }
 
@@ -3404,6 +3407,8 @@ function build_cell(p, c)
         end
 
       elseif c.quest.kind == "exit" then
+        assert(c.theme.switch)
+
         local side = wall_switch_dir(kx, ky, c.entry_dir)
 
         if settings.game == "plutonia" then
@@ -3411,7 +3416,7 @@ function build_cell(p, c)
             { walk_kind = 52 }) -- FIXME "exit_W1"
 
         elseif c.small_exit and not c.smex_cage and rand_odds(80) then
-          B_wall_switch(p,c, bx,by, K.floor_h, side, 3, THEME.switches.sw_exit, 11)
+          B_wall_switch(p,c, bx,by, K.floor_h, side, 3, c.theme.switch, 11)
 
           -- make the area behind the switch solid
           local x1 = chunk_to_block(kx)
@@ -3431,7 +3436,7 @@ function build_cell(p, c)
           B_exit_hole(p,c, kx,ky, c.rmodel)
           return
         else
-          B_floor_switch(p,c, bx,by, K.floor_h, side, THEME.switches.sw_exit, 11)
+          B_floor_switch(p,c, bx,by, K.floor_h, side, c.theme.switch, 11)
         end
       end
     end -- if K.player | K.quest etc...
