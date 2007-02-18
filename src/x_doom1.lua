@@ -264,8 +264,8 @@ DM_EXITS =
     switch = { switch="SW1COMP", wall="COMPSPAN", h=64 },
 
     door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="TLITE6_5",
-             Xrame_side="BROWN96" },
+             frame_top="TLITE6_5", -- frame_side="BROWN96"
+           },
   },
 
   STONE =
@@ -285,8 +285,7 @@ DM_EXITS =
     switch = { switch="SW1HOT", wall="SP_HOT1", h=64 },
 
     door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="TLITE6_6",
-             frame_side="LITE5" },
+             frame_top="TLITE6_6", frame_side="LITE5" },
   },
 
   BLUE =
@@ -305,9 +304,7 @@ DM_EXITS =
 
     switch = { switch="SW1COMM", wall="SHAWN2", h=64 },
 
-    door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="TLITE6_5",
-             Xrame_side="BROWN96" },
+    door = { tex="EXITDOOR", w=64, h=72, frame_top="TLITE6_5" },
   },
 
 }
