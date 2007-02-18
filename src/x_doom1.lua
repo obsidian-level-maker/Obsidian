@@ -296,7 +296,7 @@ DM_EXITS =
     void = "BROWN1",
 
     floor = "FLOOR3_3",
-    ceil  = "CEIL5_1",
+    ceil  = "CEIL5_2",
 
     sign = "EXITSIGN",
     sign_bottom="CEIL5_2",
