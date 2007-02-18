@@ -820,8 +820,6 @@ function plan_sp_level(is_coop)  -- returns Plan
 
       c.ceil_h = math.min(c.ceil_h, MAX_CEIL)
       c.ceil_h = math.max(c.ceil_h, c.f_max + 80)
-
----###      c.sky_h  = c.ceil_h
     end
 
     local function raise_the_rooves()
@@ -851,6 +849,8 @@ function plan_sp_level(is_coop)  -- returns Plan
 
       local function merge_link(c, dir)
 
+        if c.is_exit then return end
+
         local other = neighbour_by_side(p, c, dir)
         if not other then return end
 
@@ -860,28 +860,17 @@ function plan_sp_level(is_coop)  -- returns Plan
            c.ceil_h = other.floor_h + need
            return true
         end
-
----###        if c.theme.outdoor then
----###          if other.theme.outdoor then
----###            c.ceil_h = math.max(c.ceil_h, other.ceil_h)
----###          else
----###            c.ceil_h = math.max(c.ceil_h, other.ceil_h + 24)
----###          end
----###        end
       end
 
       --- raise_the_rooves ---
 
----###      repeat
-        local changed = false
-        for zzz,c in ipairs(p.all_cells) do
-          for dir = 2,8,2 do
-            if c.link[dir] then
-              merge_link(c, dir)
-            end
+      for zzz,c in ipairs(p.all_cells) do
+        for dir = 2,8,2 do
+          if c.link[dir] then
+            merge_link(c, dir)
           end
         end
----###      until not changed
+      end
 
       for zzz,c in ipairs(p.all_cells) do
         c.sky_h = c.ceil_h
