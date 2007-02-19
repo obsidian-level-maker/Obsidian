@@ -516,14 +516,16 @@ function plan_sp_level(is_coop)  -- returns Plan
       return nil
     end
 
-    if Q.theme.bad_liquid == p.liquid.name then
+    local L = p.liquid
+
+    while Q.theme.bad_liquid == L.name do
       if Q.theme.good_liquid then
         return find_liquid(Q.theme.good_liquid)
       end
-      return choose_liquid()
+      L = choose_liquid()
     end
 
-    if Q.theme.good_liquid and dual_odds(Q.mini, 15, 66) then
+    if Q.theme.good_liquid and dual_odds(Q.mini, 33, 66) then
       return find_liquid(Q.theme.good_liquid)
     end
 
@@ -531,7 +533,7 @@ function plan_sp_level(is_coop)  -- returns Plan
       return Q.parent.liquid
     end
 
-    return p.liquid
+    return L
   end
 
   local HALL_CHANCE = { 0, 0, 25, 36, 49, 64, 81 }
