@@ -480,7 +480,7 @@ zprint(active_mon, #active_mon, active_mon[1])
     -- 3b. missile: dodged 50%
     -- 3c. melee: dodged 80%
 
-    local mon_fight = 0.44
+    local mon_fight = 0.4
 
     for idx,AC in ipairs(active_mon) do
       if AC.health > 0 then
