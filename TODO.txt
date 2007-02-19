@@ -13,11 +13,13 @@ TODO
 -  replace 'K.floor_h' and 'K.ceil_h' with the 'rmodel' field.
 -  floor heights: for Heretic/Hexen, limit slope to prevent lifts
 
+-  remove 'sc_solid' field, instead use keywords with 'scenic' field.
 -  fix cage railing when cage borders a higher chunk or Fence
    (raise fence to cage top and omit railing texture but keep IMPASS).
 -  don't put a railing _between_ cages
 -  exit "bumps" on floor outside -> ENTRY-WAYS
 -  exit teleport method -> B_teleporter
+-  ex_tech ?
 
 
 GUI TODO
@@ -25,7 +27,11 @@ GUI TODO
 
 -  test if output file (unless it exists) can be written to.
 
++  make an icon for Win32 executable.
+
 -  handle the Abort button better, also glbsp failure.
+
+-  remember save path in config file.
 
 -  different adjustment controls for DeathMatch levels.
 
