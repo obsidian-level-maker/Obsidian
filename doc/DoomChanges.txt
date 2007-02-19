@@ -4,19 +4,19 @@ Differences between DOOM 1 and DOOM 2
 
 -  Weapons only DOOM 2 has:
 
-     Super-Shotgun.
+     Super-Shotgun
 
 -  Monsters only DOOM 2 has:
 
-     Chaingunner,
-     Revenant,
-     Hell-Knight,
-     Archvile,
+     Chaingunner
+     Revenant
+     Hell-Knight
+     Archvile
 
-     Mancubus,
-     Arachnotron,
-     Pain-Elemental,
-     Wolfenstein-SS.
+     Mancubus
+     Arachnotron
+     Pain-Elemental
+     Wolfenstein-SS
 
 -  Textures only DOOM 1 has:
 
@@ -106,7 +106,7 @@ Differences between DOOM 1 and DOOM 2
 
 -  Textures which are different:
 
-     SW1BRN1
+     SW1BRN1  SW1STONE  SW1STON2
 
 -  Flats only DOOM 2 has:
 
@@ -137,4 +137,17 @@ Differences between DOOM 1 and DOOM 2
      GUTTED_TORSO      : 75 76 77 78
      POOL_OF_BLOOD     : 79 80
      BRAINSTEM         : 81
+
+
+NOTES
+=====
+
+1. Each SW1xxxx texture has a corresponding SW2xxxx texture,
+   but only the SW1 texture name is listed above, the SW2
+   counterpart is implied.
+
+2. The "BURNING BARREL" thing (doomnum 70) can be used in
+   Doom 1 levels, since the sprites exist in the IWAD, but
+   the animation is not smooth (the barrel bounces left
+   and right, probably due to wrong offset values).
 
