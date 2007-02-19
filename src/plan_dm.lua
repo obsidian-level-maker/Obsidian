@@ -89,6 +89,24 @@ function choose_dm_thing(LIST, adjusted)
   return name
 end
 
+function choose_dm_exit_theme()
+
+  -- FIXME: have a 'dm_prob' field in each exit theme
+  local theme
+
+  repeat
+    local r = con.random() * 100
+        if r < 30 then theme = THEME.exits["TECH"]
+    elseif r < 50 then theme = THEME.exits["STONE"]
+    elseif r < 70 then theme = THEME.exits["METAL"]
+    else
+      theme = get_rand_exit_theme()
+    end
+  until theme and theme.void ~= "SLOPPY1"
+
+  return theme
+end
+
 
 function plan_dm_arena()
 
@@ -469,7 +487,7 @@ function plan_dm_arena()
 
   if W < H then W,H = H,W end
 
-  con.debugf("ARENA SIZE %dx%d", W, H)
+  con.debugf("ARENA SIZE %dx%d\n", W, H)
 
   assert(W <= p.w and H <= p.h)
 
@@ -489,7 +507,10 @@ function plan_dm_arena()
   end
 
   p.liquid = choose_liquid()
-  p.exit_theme = get_rand_exit_theme()
+  p.exit_theme = choose_dm_exit_theme()
+
+  con.debugf("DM LIQUID: %s\n", (p.liquid and p.liquid.name) or "NONE")
+  con.debugf("DM EXIT THEME: %s\n", p.exit_theme.wall)
 
   choose_dm_themes()
   create_dm_links()
