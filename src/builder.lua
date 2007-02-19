@@ -777,12 +777,16 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
 
     switch_kind = kind,
     switch_tag  = tag,
-
-    [2] = { l_peg="top" },
-    [4] = { l_peg="top" },
-    [6] = { l_peg="top" },
-    [8] = { l_peg="top" },
   }
+
+  do
+    local tex_h = 128  -- FIXME: assumption !!!
+    local y_ofs = tex_h - (SWITCH.c_h - z)
+
+    for side = 2,8,2 do
+      SWITCH[side] = { l_peg="bottom", y_offset=y_ofs }
+    end
+  end
 
   local sx,sy, ex,ey = side_to_corner(side, FW, FH)
 
