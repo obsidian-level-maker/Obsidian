@@ -5,8 +5,9 @@ TODO
 -  rename: 'switch'/'wall' fields of a switch (to 'wall'/'side').
 -  rename: 'tex' fields of PICS and LIGHTS to 'wall'.
 -  idea: 'corner' field for themes.
--  idea: "scenic_wall" / "scenic_void" for middle of 3x3 chunk
+-  idea: "scenic_void" for middle of 3x3 chunk
 
+-  hallway arches: offset by 32 units, allow materials (wood/metal).
 -  choose railings for windows/fences (per quest?)
 -  sky_lights: decide sky based on "ceiling thickness"
 -  replace 'K.floor_h' and 'K.ceil_h' with the 'rmodel' field.
@@ -24,28 +25,30 @@ GUI TODO
 
 -  test if output file (unless it exists) can be written to.
 
--  handle the Abort button better, also glbsp-failure.
+-  handle the Abort button better, also glbsp failure.
 
--  different adjustments for DeathMatch levels.
+-  different adjustment controls for DeathMatch levels.
 
 
 RECENT CHANGES
 --------------
 
-+  Hallways!  Crates!  New exits!
++  Hallways!  Crates!  Exit themes!
 +  better algorithm for choosing floor/ceiling heights.
 +  user adjustments for health/ammo/monsters/traps.
 +  current settings are remembered when you quit.
 
--  support for FreeDoom 0.5, TNT and Plutonia.
--  fixed the (rare) non-working switches and lifts.
+-  support for FreeDoom, TNT Evilution and Plutonia.
+-  levels are watermarked with some Oblige logos.
 -  delete temporary wad when build has finished.
 -  collect all log messages into a file (LOGS.txt).
+-  removed the unnecessary menu bar.
 
+-  fixed the (rare) non-working switches and lifts.
 -  surprise traps: improved placement, fairer monsters.
 -  tweaked battle simulation to provide more ammo.
 -  improved cages, now at more reasonable heights.
--  neater placement for health and ammo.
+-  neater placement for health and ammo items.
 
 
 MILESTONE 0  (reached!)
@@ -146,7 +149,7 @@ MILESTONE 3  (heaps left to do!!)
 -  closets: 
    (a) fix way closet is put in chunk (remove side field)
 
-+  overall consistency (doors/lights/overhangs/windows)
+++ overall consistency (doors/lights/overhangs/windows)
 
 _____________________
 |KEY:                |
