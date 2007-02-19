@@ -387,7 +387,7 @@ D2_EXITS =
              frame_top="TLITE6_6", frame_bottom="FLAT5_2" },
   },
 
-  JACKO =
+  SLOPPY =
   {
     small_exit = true,
     mat_pri = 1,
