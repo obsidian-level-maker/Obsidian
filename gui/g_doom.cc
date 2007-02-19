@@ -198,7 +198,24 @@ void WAD_Printf(lump_c *lump, const char *str, ...)
 
   buffer[MSG_BUF_LEN-2] = 0;
 
-  WAD_Append(lump, buffer, strlen(buffer));
+  // convert each newline into CR/LF pair
+
+  char *pos = buffer;
+  char *next;
+
+  while (*pos)
+  {
+    next = strchr(pos, '\n');
+
+    WAD_Append(lump, pos, next ? (next - pos) : strlen(pos));
+
+    if (! next)
+      break;
+
+    WAD_Append(lump, "\r\n", 2);
+
+    pos = next+1;
+  }
 }
 
 void WAD_CreateInfoLump()
@@ -206,12 +223,12 @@ void WAD_CreateInfoLump()
   lump_c *L = new lump_c();
 
   WAD_Printf(L, "\n");
-  WAD_Printf(L, "# Levels created by OBLIGE %s\n", OBLIGE_VERSION);
-  WAD_Printf(L, "# " OBLIGE_TITLE " (C) 2006,2007 Andrew Apted\n");
-  WAD_Printf(L, "# http://oblige.sourceforge.net/\n");
+  WAD_Printf(L, "-- Levels created by OBLIGE %s\n", OBLIGE_VERSION);
+  WAD_Printf(L, "-- " OBLIGE_TITLE " (C) 2006,2007 Andrew Apted\n");
+  WAD_Printf(L, "-- http://oblige.sourceforge.net/\n");
   WAD_Printf(L, "\n");
 
-  WAD_Printf(L, "# Settings:\n");
+  WAD_Printf(L, "-- Settings:\n");
   WAD_Printf(L, "seed = %s\n",  main_win->setup_box->get_Seed());
   WAD_Printf(L, "game = %s\n",  main_win->setup_box->get_Game());
   WAD_Printf(L, "port = %s\n",  main_win->setup_box->get_Port());
@@ -219,11 +236,18 @@ void WAD_CreateInfoLump()
   WAD_Printf(L, "length = %s\n",main_win->setup_box->get_Length());
   WAD_Printf(L, "\n");
 
-  WAD_Printf(L, "# Adjustments:\n");
+  WAD_Printf(L, "-- Adjustments:\n");
   WAD_Printf(L, "health = %s\n", main_win->adjust_box->get_Health());
   WAD_Printf(L, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
   WAD_Printf(L, "mons = %s\n",   main_win->adjust_box->get_Monsters());
   WAD_Printf(L, "traps = %s\n",  main_win->adjust_box->get_Traps());
+
+  WAD_Printf(L, "\n\n\n\n\n\n");
+
+  // terminate lump with ^Z and a NUL character
+  static const byte terminator[2] = { 26, 0 };
+
+  WAD_Append(L, terminator, 2);
 
   WAD_WriteLump("OBLIGDAT", L);
 
