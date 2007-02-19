@@ -31,7 +31,7 @@ STATUS
    simple but very usable. The battle simulator produces
    reasonable ammo and health to fight the monsters in the map.
 
-   See below for the status of each game
+   See below for the status of each game...
 
    There is still a lot to do however. There is no support (yet)
    for the special levels, such as the end-of-episode levels of
