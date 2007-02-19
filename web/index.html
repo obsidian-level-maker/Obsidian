@@ -17,13 +17,14 @@
 
 <h1>OBLIGE Level Maker</h1>
 
-by Andrew Apted. &nbsp; January 2007
+by Andrew Apted. &nbsp; February 2007
 
 
 <h2>INTRODUCTION</h2>
 
 OBLIGE is a random level maker for the following games:
-DOOM&nbsp;1, DOOM&nbsp;2, Heretic&nbsp;1 and Hexen&nbsp;1.
+DOOM&nbsp;1, DOOM&nbsp;2, Final&nbsp;DOOM, FreeDOOM,
+Heretic&nbsp;1 and Hexen&nbsp;1.
 These games all share the same basic level structure.
 
 <p>
@@ -35,7 +36,7 @@ from existing programs
   <li>higher quality levels, e.g. outdoor areas!
   <li>easy to use GUI interface (no messing with command lines)
   <li>built-in node builder, so the created levels are ready to play
-  <li>uses the LUA scripting language for easy experimentation
+  <li>uses the LUA scripting language for easy customisation
   <li>can create Deathmatch levels
   <li>Heretic and Hexen support!
 </ul>
@@ -43,23 +44,51 @@ from existing programs
 
 <h2>STATUS</h2>
 
-OBLIGE 0.81 was the very first public release.
-The core level-making algorithm exists and works quite well,
-and the GUI is mostly usable (still missing some bells and
-whistles).  The battle simulator seems to produce reasonable
-ammo/health for the monsters in the map.
+OBLIGE 0.85 is the current version (the previous version was 0.81,
+which was the very first public release).
+The core level-making algorithm exists and works well,
+and the GUI interface is simple but very usable.
+The battle simulator produces reasonable
+ammo and health for the monsters in the map.
 
 <p>
-There is no support yet for the special levels, such as E1M8
-(end of episode) of DOOM 1 and MAP30 (end of game) of DOOM 2.
+<i>See below for the status of each game</i>
+
+<p>
+There is still a lot to do however.
+There is no support (yet) for the special levels, such as the
+episode end levels of DOOM&nbsp;1 and the end-of-game level (MAP30)
+of DOOM&nbsp;2 and Final&nbsp;DOOM.
 
 <p>
 Nearly every decision in OBLIGE, such as what monsters to
 make and what themes to use for rooms, is just roll-of-the-die
-random. There is still so much potential for using much better
+random. There is so much potential for using much better
 algorithms (and hence creating much nicer levels). Send me an
 email if you are interested in helping out, you certainly don't
 need to be a programmer!
+
+
+<h2>CHANGES IN 0.85</h2>
+
+<PRE>
++  Hallways!  Crates!  Exit themes!
++  better algorithm for choosing floor/ceiling heights.
++  user adjustments for health/ammo/monsters/traps.
++  current settings are remembered when you quit.
+
+-  support for FreeDOOM, TNT Evilution and Plutonia.
+-  levels are watermarked with some Oblige logos.
+-  delete temporary wad when build has finished.
+-  collect all log messages into a file (LOGS.txt).
+-  removed the unnecessary menu bar.
+
+-  fixed the (rare) non-working switches and lifts.
+-  surprise traps: improved placement, fairer monsters.
+-  tweaked battle simulation to provide more ammo.
+-  improved cages, now at more reasonable heights.
+-  neater placement for health and ammo items.
+</pre>
 
 
 <h2>SCREENSHOT</h2>
@@ -74,6 +103,12 @@ need to be a programmer!
 <h2>USAGE GUIDE</h2>
 
 The graphical interface that OBLIGE is quite easy to use.
+
+<p>
+At the top is the <b>Settings</b> panel, which contains the most
+important settings.
+
+<p>
 The first control is the "SEED" number.
 Each SEED number produces a unique, distinctive level. 
 Using the same SEED number always produces the exact same level
@@ -82,15 +117,24 @@ Using the same SEED number always produces the exact same level
 <p>
 Other settings include:
 <ul>
-  <li>the "Game" type (DOOM 1, DOOM 2, HERETIC or HEXEN), 
+  <li>the "Game" type (DOOM&nbsp;1, DOOM&nbsp;2, HERETIC or HEXEN), 
   <li>the "Mode" of the game (SINGLE-PLAYER, CO-OP, or DEATHMATCH)
   <li>the "Length" of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
 </ul>
 
+In the <b>Adjustments</b> panel you can control how much health
+and ammunition, and how many monsters and traps are put into the
+created levels.  OBLIGE also implements the different skill levels
+for each map (e.g. Hurt-me-Plenty <i>vs</i> Ultra-Violence).
+
+<p>
 After you've chosen the desired settings, press the "Build..." button,
 which will open a Save-File dialog asking you what the output file
 should be. Enter something appropriate, e.g. TEST, and after that
 OBLIGE will starting building the levels.
+
+<p>
+To exit, press the "Quit" button in the bottom right corner.
 
 <p>
 The levels created by OBLIGE are ready to play.  There is no
@@ -110,10 +154,9 @@ get the dreaded "Visplane Overflow" error, which is fatal.
 and contains the most number of different themes.
 <p>
 
-<b>DOOM 1</b>: has been tested and works pretty well, although it's
-possible that a invalid texture might be used by mistake.  Some
-extra themes would be nice to have (e.g. for hell levels that
-DOOM 1 does so well).
+<b>DOOM 1</b>: has been tested and works pretty well.
+Some extra themes would be nice to have (e.g. for hell levels
+that DOOM 1 does so well).
 <p>
 
 <b>HERETIC</b>: poorly tested and very lacking in different themes,
@@ -124,28 +167,31 @@ and it's possible that some keyed doors might not work properly
 <b>HEXEN</b>: basically borked, can create levels but they won't work
 properly, e.g. none of the linedefs have the correct line-types
 (for doors and lifts etc). Also very lacking in themes. Plus
-none of the HEXEN specialities, such as the hub system, player
-classes, and three-part weapons, are supported yet.
+none of the HEXEN special features, such as the hub system, player
+classes, or the three-part weapons are supported yet.
 
 
 <h2>DOWNLOAD</h2>
 
 <b>Win32 Package</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige_081_win.zip">oblige_081_win.zip</a> (573 KB)
+<a href="http://downloads.sourceforge.net/oblige/oblige_085_win.zip">oblige_085_win.zip</a> (??? KB)
 
 <p>
 <b>Linux Package</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige_081_linux.tar.gz">oblige_081_linux.tar.gz</a> (441 KB)
+<a href="http://downloads.sourceforge.net/oblige/oblige_085_linux.tar.gz">oblige_085_linux.tar.gz</a> (??? KB)
 
 <p>
 <b>Source Code</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige_081_src.zip">oblige_081_src.zip</a> (188 KB)
+<a href="http://downloads.sourceforge.net/oblige/oblige_085_src.zip">oblige_085_src.zip</a> (??? KB)
 
 
 <h2>COPYRIGHT and LICENSE</h2>
 
 <div class="legal">
-OBLIGE Level Maker &nbsp; Copyright (C) 2006-2007 Andrew Apted
+OBLIGE Level Maker
+
+<p>
+Copyright (C) 2006-2007 Andrew Apted
 
 <p>
 OBLIGE is free software; you can redistribute it and/or
