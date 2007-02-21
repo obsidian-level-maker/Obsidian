@@ -68,7 +68,9 @@ class Cell
   entry_dir : previous cell in stage
   
   window : table[DIR] -> Link
-  border : table[DIR] -> type string: "solid" | ...
+  border : table[DIR] -> keyword: "solid" | ...
+  vista  : table[DIR] -> numeric
+  
   teleport : array(Cell)
 
   floor_h, ceil_h : floor/ceiling heights
