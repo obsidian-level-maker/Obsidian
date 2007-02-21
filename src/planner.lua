@@ -117,9 +117,13 @@ function show_chunks(p)
 
       if not K then return " " end
 
-      if K.closet then return "c" end
       if K.void   then return "." end
       if K.room   then return "/" end
+      if K.liquid then return "~" end
+
+      if K.closet then return "c" end
+      if K.cage   then return "#" end
+      if K.vista  then return "v" end
 
       --[[
       if K.weapon then return "w" end
@@ -263,7 +267,7 @@ function create_cell(p, x, y, quest, along, theme, is_depot)
   local CELL =
   {
     x = x, y = y, quest = quest, along = along,
-    link = {}, border = {}, window = {}, closet = {},
+    link = {}, border = {}, window = {}, closet = {}, vista = {},
     theme = theme,
     is_depot = is_depot,
     liquid = quest.liquid,
@@ -582,7 +586,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     end
     assert(theme)
 
-    con.debugf("ADDING HALLWAY: start=%d len=%d QLEN:%d\n", start, length, #Q.path)
+    con.debugf("HALLWAY: start=%d len=%d QLEN:%d\n", start, length, #Q.path)
 
     for idx = start,finish do
       local c = Q.path[idx]
@@ -1142,9 +1146,9 @@ function plan_sp_level(is_coop)  -- returns Plan
           local c = p.cells[x+dx][y+dy]
           if not c then
             table.insert(empties, { x=x+dx, y=y+dy })
-          elseif c.sc_solid then
+          elseif c.scenic == "solid" then
             table.insert(innies, c)
-          elseif c.scenic then
+          elseif c.scenic == "outdoor" then
             scenics = scenics + 1
           elseif c.theme.outdoor then
             table.insert(outies, c)
@@ -1164,14 +1168,14 @@ function plan_sp_level(is_coop)  -- returns Plan
       local c = create_cell(p, empties[1].x, empties[1].y,
         outies[1].quest, outies[1].along, outies[1].theme)
 
-      c.scenic = true
+      c.scenic = "outdoor"
 
       -- Experimental "SOLID SCENIC" cells
       if #innies >= 1 and rand_odds(66) and
          ((empties[1].x == innies[1].x) or
           (empties[1].y == innies[1].y))
       then
-        c.sc_solid = true
+        c.scenic = "solid"
         c.theme = innies[1].theme
         if innies[1].hallway then c.theme = innies[1].quest.theme end
 
@@ -1246,16 +1250,53 @@ function plan_sp_level(is_coop)  -- returns Plan
     end
   end
   
+  local function add_vistas()
+
+    local function can_make_vista(a, b, dir)
+
+      if a.is_depot or b.is_depot then return false end
+      if a.is_exit  or b.is_exit  then return false end
+
+      if a.scenic then return false end
+      if b.scenic ~= "outdoor" then return false end
+
+      if a.link[dir] then return false end
+
+if a.theme.outdoor then return false end  -- FIXME: small chance
+      if b.vista_from then return false end
+
+      if a.f_min < (b.f_max + 16) then return false end
+
+      if b.ceil_h < (a.f_max + 96) then return false end
+
+      return true
+    end
+
+    for zzz,c in ipairs(p.all_cells) do
+      for dir = 2,8,2 do
+        local other = neighbour_by_side(p, c, dir)
+
+        if other and
+           can_make_vista(c, other, dir) and
+           rand_odds(95)
+        then
+          c.vista[dir] = 3 -- depth
+          other.vista_from = 10-dir
+
+          if other.scenic and rand_odds(5) then
+            c.vista[dir] = 6
+          end
+
+          con.printf("VISTA @ (%d,%d) dir: %d\n", c.x, c.y, dir)
+        end
+      end
+    end
+  end
+
   local function add_windows()
     
     local function can_make_window(a, b)
 
----###   local aq = a.quest.parent or a.quest
----###   local bq = b.quest.parent or b.quest
----###
----###   if aq.level <  bq.level then return false end
----###   if aq.level == bq.level and a.along < b.along then return false end
-      
       if b.is_depot or b.is_bridge then return false end
       if (a.is_exit or b.is_exit) and rand_odds(90) then return false end
 
@@ -1276,8 +1317,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     for zzz,c in ipairs(p.all_cells) do
       for dir = 6,8,2 do
-        local dx, dy = dir_to_delta(dir)
-        local other = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
+        local other = neighbour_by_side(p, c, dir)
 
         if other and
            can_make_window(c, other) and
@@ -1346,7 +1386,7 @@ function plan_sp_level(is_coop)  -- returns Plan
             { c = L.c, side = L.side, tag = allocate_tag(p),
               mon_set = { easy={}, medium={}, hard={} }, spots = {} })
           L.c.closet[L.side] = true
-          con.debugf("ADDING CLOSET @ %d,%d\n", L.c.x, L.c.y)
+          con.debugf("CLOSET @ (%d,%d)\n", L.c.x, L.c.y)
         end
       end
 
@@ -1398,7 +1438,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 
       if not pos_x then return end
 
-      con.debugf("CREATING DEPOT @ (%d,%d)\n", pos_x, pos_y)
+      con.debugf("DEPOT @ (%d,%d)\n", pos_x, pos_y)
 
       local spread = rand_key_by_probs { linear=3, random=3, last=5, behind=5, first=1 }
 
@@ -1537,6 +1577,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 -- FIXME add_bridges()
 
   add_falloffs()
+  add_vistas()
   add_surprises()
   add_windows()
 
