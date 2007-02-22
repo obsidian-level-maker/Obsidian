@@ -1258,11 +1258,15 @@ function plan_sp_level(is_coop)  -- returns Plan
       if a.is_exit  or b.is_exit  then return false end
 
       if a.scenic then return false end
-      if b.scenic ~= "outdoor" then return false end
+
+--!!! if b.scenic ~= "outdoor" then return false end
+--!!!      if not b.theme.outdoor then return false end
+      if b.scenic then return false end
 
       if a.link[dir] then return false end
 
-if a.theme.outdoor then return false end  -- FIXME: small chance
+--!!!   if a.theme.outdoor and rand_odds(90) then return false end
+
       if b.vista_from then return false end
 
       if a.f_min < (b.f_max + 16) then return false end
@@ -1276,15 +1280,14 @@ if a.theme.outdoor then return false end  -- FIXME: small chance
       for dir = 2,8,2 do
         local other = neighbour_by_side(p, c, dir)
 
-        if other and
-           can_make_vista(c, other, dir) and
-           rand_odds(95)
+        if other and rand_odds(99) and
+           can_make_vista(c, other, dir)
         then
-          c.vista[dir] = 3 -- depth
+          c.vista[dir] = 1 -- chunk size
           other.vista_from = 10-dir
 
           if other.scenic and rand_odds(5) then
-            c.vista[dir] = 6
+            c.vista[dir] = 2
           end
 
           con.printf("VISTA @ (%d,%d) dir: %d\n", c.x, c.y, dir)
@@ -1319,9 +1322,8 @@ if a.theme.outdoor then return false end  -- FIXME: small chance
       for dir = 6,8,2 do
         local other = neighbour_by_side(p, c, dir)
 
-        if other and
-           can_make_window(c, other) and
-           rand_odds(85)
+        if other and rand_odds(80) and
+           can_make_window(c, other)
         then
           c.window[dir] = "window"
           other.window[10-dir] = "dest"

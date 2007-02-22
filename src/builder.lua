@@ -44,7 +44,9 @@ function copy_sector(sec)
 end
 
 function copy_chunk(K)
-assert(not K.vista)
+
+  assert(not K.vista)
+
   return
   {
     room = K.room,
@@ -54,10 +56,6 @@ assert(not K.vista)
     liquid = K.liquid,
     closet = K.closet,
     place  = K.place,
-
----##    player = K.player,
----##    weapon = K.weapon,
----##    quest  = K.quest,
 
     floor_h = K.floor_h,
     ceil_h  = K.ceil_h,
@@ -126,9 +124,11 @@ function valid_chunk(kx,ky)
 end
 
 function is_roomy(cell, chunk)
-  if not chunk or chunk.void then return false end
-  if chunk.room then return true end
-  return chunk.link.build == cell
+  if not chunk then return false end
+  if chunk.link then
+    return chunk.link.build == cell
+  end
+  return chunk.room
 end
 
 function random_where(link)
@@ -1357,6 +1357,34 @@ function B_monster_closet(p,c, kx,ky, z, tag)
   return { c=c, x=bx, y=by, double=true, dx=32, dy=32 }
 end
 
+
+function B_arch(p,c, bx,by, side,long, theme)
+
+  local dx,dy = dir_to_delta(side)
+  local ax,ay = dir_to_across(side)
+
+  local ARCH = copy_block(c.rmodel)
+
+  if not c.theme.outdoor then
+    ARCH.c_h = ARCH.f_h + 96
+  end
+
+  local WALL = { solid=theme.wall }
+
+  local fx1 = (bx - 1) * FW + 1
+  local fy1 = (bx - 1) * FH + 1
+
+  local fx2 = fx1 + ax * FW * long - 1
+  local fy2 = fy1 + ay * FH * long - 1
+
+  frag_fill(p,c, fx1,fy1, fx2,fy2, WALL)
+
+  local T = 2
+
+  frag_fill(p,c, fx1+ax*T,fy1+ay*T, fx2-ax*T,fy2-ay*T, ARCH)
+end
+
+
 --
 -- Build a scenic vista!
 --
@@ -1380,7 +1408,11 @@ function B_vista(p,c, side,deep, theme,kind)
   ARCH.l_tex = theme.wall
   ARCH.u_tex = theme.wall
 
-  if not c.theme.outdoor then
+  if not other.theme.outdoor then
+    ARCH.c_tex = sel(theme.outdoor, theme.floor, theme.ceil)
+  end
+
+  if ARCH.c_tex ~= THEME.SKY_TEX then
     ARCH.c_h = ARCH.f_h + 96
   end
 
@@ -1394,7 +1426,7 @@ function B_vista(p,c, side,deep, theme,kind)
   local fx2 = x2 * FW
   local fy2 = y2 * FH
 
-  frag_fill(p,c, fx1,fy1, fx2,fy2, { solid=ARCH.l_tex })
+  frag_fill(p,c, fx1,fy1, fx2,fy2, sel(ARCH.c_tex == THEME.SKY_TEX, ARCH, { solid=ARCH.l_tex }))
   frag_fill(p,c, fx1+ax,fy1+ay, fx2-ax,fy2-ay, ARCH)
 
 
@@ -1416,14 +1448,14 @@ function B_vista(p,c, side,deep, theme,kind)
 
   if kind == "open" or kind == "wire" then
     ROOM.c_h   = other.ceil_h
-    ROOM.c_tex = THEME.SKY_TEX
+    ROOM.c_tex = other.theme.ceil
   
     WINDOW.c_h   = other.ceil_h
-    WINDOW.c_tex = THEME.SKY_TEX
+    WINDOW.c_tex = other.theme.ceil
 
   elseif kind == "frame" then
     ROOM.c_h   = other.ceil_h
-    ROOM.c_tex = THEME.SKY_TEX
+    ROOM.c_tex = other.theme.ceil
   
     WINDOW.c_h = ROOM.c_h - 24
     WINDOW.c_tex = sel(theme.outdoor, theme.floor, theme.ceil)
@@ -1434,6 +1466,10 @@ function B_vista(p,c, side,deep, theme,kind)
     ROOM.c_h   = ROOM.f_h + 96 + (h-1)*32
     ROOM.c_tex = sel(theme.outdoor, theme.floor, theme.ceil)
 
+    if ROOM.c_h > other.sky_h then
+       ROOM.c_h = math.max(other.sky_h, ROOM.f_h + 96)
+    end
+
     WINDOW.c_h = ROOM.f_h + 96
     WINDOW.c_tex = ARCH.c_tex
 
@@ -1442,6 +1478,10 @@ function B_vista(p,c, side,deep, theme,kind)
   end
 
   WINDOW.impassible = true  -- FIXME
+
+  -- save ROOM for later
+  other.vista_room = ROOM
+
 
   x1,y1 = x1+dx*1, y1+dy*1
   x2,y2 = x2+dx*deep, y2+dy*deep
@@ -1464,7 +1504,7 @@ function B_vista(p,c, side,deep, theme,kind)
 
     local rail = get_rand_rail()
 
-    local curved = rand_odds(90)
+    local curved = true
     local far_x, far_y, far_corner
 
         if side == 4 then far_x, far_y, far_corner = 0, 0, 7
@@ -1478,10 +1518,10 @@ function B_vista(p,c, side,deep, theme,kind)
 
         local overrides = {}
 
-        if x == 0 then overrides[4] = { rail=rail.tex } end
-        if x == 2 then overrides[6] = { rail=rail.tex } end
-        if y == 0 then overrides[2] = { rail=rail.tex } end
-        if y == 2 then overrides[8] = { rail=rail.tex } end
+        if x == 0       then overrides[4] = { rail=rail.tex } end
+        if x == (x2-x1) then overrides[6] = { rail=rail.tex } end
+        if y == 0       then overrides[2] = { rail=rail.tex } end
+        if y == (y2-y1) then overrides[8] = { rail=rail.tex } end
 
         -- don't block the entryway
         overrides[10-side] = nil
@@ -1491,7 +1531,7 @@ function B_vista(p,c, side,deep, theme,kind)
           if (x == far_x and y == far_y) or
              (x == (far_x+ax) and y == (far_y+ay))
           then
-            -- 48 is the magical distance to keep X alignment
+            -- 48 is the magical distance to align the railing
             overrides[far_corner] = { dx=(dx*48), dy=(dy*48) }
             overrides.mark = allocate_mark(p)
           end  
@@ -1532,6 +1572,17 @@ function B_vista(p,c, side,deep, theme,kind)
       frag_fill(p,c, px2,py2, px2,py2, { solid=support })
     end
   end 
+
+
+  -- rest of chunk in other room
+  while (deep % 3) > 0 do deep = deep+1 end
+
+  x1,y1 = x1+dx*1, y1+dy*1
+  x2,y2 = x2+dx*deep, y2+dy*deep
+
+  gap_fill(p,c, x1, y1, x2, y2, --other.rmodel)
+    { f_h=0,c_h=512,f_tex="FLAT1",c_tex="FLAT1",
+      l_tex="COMPBLUE", u_tex="COMPBLUE", light=255 })
 
 
   -- FIXME !!! add spots to room
@@ -2112,6 +2163,7 @@ function make_chunks(p)
         if K and not (K.room or K.link) then
           con.debugf("BLOCKED VISTA @ (%d,%d) [%d,%d]\n", c.x, c.y, kx,ky)
           c.vista[side] = nil
+          other.vista_from = nil
         
         else
           if not K then
@@ -2413,7 +2465,8 @@ local dx,dy = dir_to_delta(loc.dir)
     for kx = 1,KW do
       for ky = 1,KH do
         if c.chunks[kx][ky] and
-           not (c.chunks[kx][ky].void or c.chunks[kx][ky].cage or c.chunks[kx][ky].quest)
+           not (c.chunks[kx][ky].void or c.chunks[kx][ky].cage or
+                c.chunks[kx][ky].quest or c.chunks[kx][ky].vista)
         then
           local score = k_dist(kx, ky)
           score = score + con.random() * 0.5
@@ -2435,13 +2488,15 @@ local dx,dy = dir_to_delta(loc.dir)
   local function position_sp_stuff(c)
 
     if c == p.quests[1].first then
-      local kx, ky = good_Q_spot(c)
+      local kx, ky = good_Q_spot(c, true)
       if not kx then error("NO FREE SPOT for Player!") end
       c.chunks[kx][ky].player=true
     end
 
     if c == c.quest.last then
-      local kx, ky = good_Q_spot(c)
+      local can_vista = (c.quest.kind == "key") or
+              (c.quest.kind == "weapon") or (c.quest.kind == "item")
+      local kx, ky = good_Q_spot(c, can_vista)
       if not kx then error("NO FREE SPOT for Quest Item!") end
       c.chunks[kx][ky].quest=true
 
@@ -2569,12 +2624,18 @@ local dx,dy = dir_to_delta(loc.dir)
 
       add_vista_chunks(cell)
 
+  end
+
+  for zzz,cell in ipairs(p.all_cells) do
+
       flesh_out_cell(cell)
 
       --- setup_chunk_rmodels(cell)
 
       connect_chunks(cell)
+  end
 
+  for zzz,cell in ipairs(p.all_cells) do
       if p.deathmatch then
         position_dm_stuff(cell)
       else
@@ -3107,7 +3168,7 @@ function build_cell(p, c)
         ex = ex + (sx-ex)/KW
         ey = ey + (sy-ey)/KH
 
-      local K1, K2 = chunk_pair(c, other, side,n)
+      local K1, K2 = chunk_pair(c, other, side, n)
 
       if (K1.void or K1.cage) and (K2.void or K2.cage) then
         gap_fill(p,c, sx,sy, ex,ey, { solid=b_theme.void})
@@ -3243,32 +3304,46 @@ function build_cell(p, c)
     end
   end
 
+  local function who_build_border(c, side, other, link)
+
+    if not other then
+      return c
+    end
+
+    if link then
+      return link.build
+    end
+
+    if c.vista_from == side then
+      return other
+    elseif c.vista[side] then
+      return c
+    end
+
+    if c.theme.outdoor ~= other.theme.outdoor then
+      return sel(c.theme.outdoor, other, c)
+    end
+
+    -- using 'not' because the scenic field has multiple values,
+    -- but the decision must be binary.
+    if (not c.scenic) ~= (not other.scenic) then
+      return sel(c.scenic, other, c)
+    end
+
+---##  elseif (c.scenic == "solid") ~= (other.scenic == "solid") then
+---##    return sel(c.scenic == "solid", 
+
+    return sel(side > 5, other, c)
+  end
+
   local function build_border(side, pass)
 
     local link = c.link[side]
     local other = neighbour_by_side(p, c, side)
 
     -- should *we* build it, or the other side?
-    if link then
-      if link.build ~= c then return end
-
-    elseif other then
-
-      if c.vista_from == side then
-        return
-
-      elseif c.vista[side] then
-        -- do nothing, build vista border here
-
-      elseif c.theme.outdoor ~= other.theme.outdoor then
-        if c.theme.outdoor then return end
-
-      elseif c.scenic ~= other.scenic then
-        if c.scenic then return end
-
-      else
-        if side > 5 then return end
-      end
+    if c ~= who_build_border(c, side, other, link) then
+      return
     end
 
     local what = what_border_type(c, link, other, side)
@@ -3299,7 +3374,7 @@ function build_cell(p, c)
         end
       end
 
-      B_vista(p,c, side, c.vista[side]*3, b_theme, kind)
+      B_vista(p,c, side, c.vista[side]*3-1, b_theme, kind)
     end
 
     if c.window[side] then
@@ -3529,7 +3604,7 @@ function build_cell(p, c)
         chunk_void_fill(c, K, kx, ky, c.theme.void)
       end
       return
-    end
+    end -- K.void
 
     if K.cage then
       B_big_cage(p,c, THEME.mats.CAGE, kx,ky)
@@ -3595,7 +3670,8 @@ function build_cell(p, c)
                math.max(K.floor_h, NB.floor_h), K.stair_dir,
                long, deep, { } )
       end
-    end  -- if K.stair_dir
+    end  -- K.stair_dir
+
 
     local bx = chunk_to_block(kx) + 1
     local by = chunk_to_block(ky) + 1
