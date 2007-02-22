@@ -1580,9 +1580,7 @@ function B_vista(p,c, side,deep, theme,kind)
   x1,y1 = x1+dx*1, y1+dy*1
   x2,y2 = x2+dx*deep, y2+dy*deep
 
-  gap_fill(p,c, x1, y1, x2, y2, --other.rmodel)
-    { f_h=0,c_h=512,f_tex="FLAT1",c_tex="FLAT1",
-      l_tex="COMPBLUE", u_tex="COMPBLUE", light=255 })
+  gap_fill(p,c, x1, y1, x2, y2, other.rmodel)
 
 
   -- FIXME !!! add spots to room
