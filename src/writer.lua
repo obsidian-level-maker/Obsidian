@@ -331,13 +331,11 @@ function write_level(p, lev_name)
 
       if b1 == b2 then return true end
 
----###  if not b1 or not b2 then return false end
-      
       if b1.group and b2.group and (b1.group.id == b2.group.id) then
         return true
       end
 
-      if b1.same_sec and b1.same_sec == b2.same_sec then
+      if b1.same_sec and (b1.same_sec == b2.same_sec) then
         return true
       end
 
@@ -525,8 +523,9 @@ function write_level(p, lev_name)
         x = x + count
       end
 
-      con.ticker()
       push_line()
+
+      con.ticker()
     end
 
     con.printf("TOTAL_GROUPS X = %d\n", total_group)
@@ -559,8 +558,9 @@ function write_level(p, lev_name)
         y = y + count
       end
 
-      con.ticker()
       push_line()
+
+      con.ticker()
     end
 
     con.printf("TOTAL_GROUPS Y = %d\n", total_group)
