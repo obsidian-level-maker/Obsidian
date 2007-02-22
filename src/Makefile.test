@@ -3,10 +3,6 @@
 #----------------------------------------------------------------
 
 all:
-	rm -f ../TEST.wad
-	$(MAKE) ../TEST.wad
-
-../TEST.wad:
 	lua run_test.lua $(SEED)
 	wadlc TEMP.txt TEMP.wad
 	glbsp -pack -warn TEMP.wad -o ../TEST.wad
