@@ -111,7 +111,7 @@ PL_PICS =
 
 PL_LIQUIDS =
 {
-  water = { name="water", floor="FWATER1", wall="FWALL1" },
+  water = { name="water", floor="FWATER1", wall="WFALL1" },
 }
 
 PL_SPECIAL_PEDESTAL =

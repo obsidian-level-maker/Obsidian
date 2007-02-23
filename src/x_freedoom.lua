@@ -43,7 +43,7 @@ FD_MONSTER_LIST =
 
 FD_LIQUIDS =
 {
-  water = { name="water", floor="FWATER1", wall="FWALL1" },
+  water = { name="water", floor="FWATER1", wall="WFALL1" },
 }
 
 ----------------------------------------------------------------
