@@ -356,7 +356,7 @@ function B_door(p, c, link, b_theme, x,y,z, dir, long,deep, door_info,
 
   local wall_tex = c.theme.wall
   local track_tex = door_info.track or THEME.mats.TRACK.wall
-  local door_tex = door_info.tex
+  local door_tex = door_info.wall
   local side_tex
   local ceil_tex = THEME.mats.DOOR_FRAME.floor
 
@@ -373,8 +373,8 @@ function B_door(p, c, link, b_theme, x,y,z, dir, long,deep, door_info,
   end
 
   local DOOR = { f_h = z+8, c_h = z+8,
-                 f_tex = door_info.frame_bottom or THEME.mats.DOOR_FRAME.floor,
-                 c_tex = door_info.bottom       or THEME.mats.DOOR_FRAME.floor,
+                 f_tex = door_info.frame_floor or THEME.mats.DOOR_FRAME.floor,
+                 c_tex = door_info.ceil        or THEME.mats.DOOR_FRAME.floor,
                  light = 255,
                  l_tex = door_tex,
                  u_tex = door_tex,
@@ -386,7 +386,7 @@ function B_door(p, c, link, b_theme, x,y,z, dir, long,deep, door_info,
 
   local STEP = { f_h = z+8, c_h = z+8 + door_info.h,
                     f_tex = DOOR.f_tex,
-                    c_tex = door_info.frame_top or THEME.mats.DOOR_FRAME.ceil,
+                    c_tex = door_info.frame_ceil or THEME.mats.DOOR_FRAME.ceil,
                     light=224,
                     l_tex = door_info.step or c.theme.step or THEME.mats.STEP.wall,
                     u_tex = wall_tex,
@@ -499,13 +499,13 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
   local adir = delta_to_dir(ax, ay)
 
   local wall_tex = theme.wall
-  local door_tex = door_info.tex
-  local key_tex  = door_info.tex
+  local door_tex = door_info.wall
+  local key_tex  = door_info.wall
   local track_tex = door_info.track or THEME.mats.TRACK.wall
 
   local DOOR = { f_h = z+8, c_h = z+8,
-                 f_tex = door_info.frame_bottom or THEME.mats.DOOR_FRAME.floor,
-                 c_tex = door_info.bottom       or THEME.mats.DOOR_FRAME.floor,
+                 f_tex = door_info.frame_floor or THEME.mats.DOOR_FRAME.floor,
+                 c_tex = door_info.ceil        or THEME.mats.DOOR_FRAME.floor,
                  light = 255,
                  door_kind = 1,
                  l_tex = theme.wall,
@@ -516,7 +516,7 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
 
   local STEP = { f_h = z+8, c_h = z+8+high,
                     f_tex = DOOR.f_tex,
-                    c_tex = door_info.frame_top or DOOR.f_tex,
+                    c_tex = door_info.frame_ceil or DOOR.f_tex,
                     light=255,
                     l_tex = door_info.step or theme.step or THEME.mats.STEP.wall,
                     u_tex = wall_tex,
@@ -528,7 +528,7 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
   
   if theme.sign then
     SIGN = { f_h = z+8, c_h = z+8+high-16,
-               f_tex = STEP.f_tex, c_tex = theme.sign_bottom,
+               f_tex = STEP.f_tex, c_tex = theme.sign_ceil,
                light=255,
                l_tex = theme.sign, u_tex = theme.sign }
 
@@ -564,14 +564,14 @@ function B_exit_door(p,c, theme, link, x,y,z, dir)
 
   frag_fill(p,c, fx, fy, fx+zx+dx*7, fy+zy+dy*7, { solid=wall_tex })
 
-  if door_info.frame_side then
+  if door_info.frame_wall then
 
     -- align inner sides y_offset with outside wall
     local y_diff = link_other(link, c).ceil_h - STEP.c_h
     frag_fill(p,c, fx+sx-ax, fy+sy-ay, fx+sx-ax+dx*7, fy+sy-ay+dy*7,
-      { solid=wall_tex, [adir]={ l_tex=door_info.frame_side, y_offset=y_diff }} )
+      { solid=wall_tex, [adir]={ l_tex=door_info.frame_wall, y_offset=y_diff }} )
     frag_fill(p,c, fx+ex+ax, fy+ey+ay, fx+ex+ax+dx*7, fy+ey+ay+dy*7,
-      { solid=wall_tex, [10-adir]={ l_tex=door_info.frame_side, y_offset=y_diff }} )
+      { solid=wall_tex, [10-adir]={ l_tex=door_info.frame_wall, y_offset=y_diff }} )
   end
 
   if theme.front_mark then
@@ -1072,7 +1072,7 @@ function B_void_pic(p,c, K,kx,ky, pic, cuts)
 
   local INNER =
   {
-    solid = pic.tex or pic.wall,
+    solid = pic.wall,
     
     x_offset = pic.x_offset,
     y_offset = pic.y_offset,
@@ -1243,7 +1243,7 @@ function B_pillar_cage(p,c, theme, kx,ky, bx,by)
     f_tex = theme.floor,
     l_tex = theme.wall,
     u_tex = theme.wall,
-    rail  = rail.tex,
+    rail  = rail.wall,
     is_cage = true,
   })
 
@@ -1293,7 +1293,7 @@ function B_big_cage(p,c, theme, K,kx,ky)
     f_tex = theme.floor,
     l_tex = theme.wall,
     u_tex = theme.wall,
-    rail  = rail.tex,
+    rail  = rail.wall,   -- FIXME: why here and down there???
     is_cage = true,
   })
 
@@ -1306,10 +1306,10 @@ function B_big_cage(p,c, theme, K,kx,ky)
   for x = 0,2 do for y = 0,2 do
 
     local overrides = {}
-    if x == 0 then overrides[4] = { rail=rail.tex } end
-    if x == 2 then overrides[6] = { rail=rail.tex } end
-    if y == 0 then overrides[2] = { rail=rail.tex } end
-    if y == 2 then overrides[8] = { rail=rail.tex } end
+    if x == 0 then overrides[4] = { rail=rail.wall } end
+    if x == 2 then overrides[6] = { rail=rail.wall } end
+    if y == 0 then overrides[2] = { rail=rail.wall } end
+    if y == 2 then overrides[8] = { rail=rail.wall } end
 
     fill(p,c, bx+x,by+y, bx+x,by+y, CAGE, overrides)
   end end
@@ -1516,10 +1516,10 @@ function B_vista(p,c, side,deep, theme,kind)
 
         local overrides = {}
 
-        if x == 0       then overrides[4] = { rail=rail.tex } end
-        if x == (x2-x1) then overrides[6] = { rail=rail.tex } end
-        if y == 0       then overrides[2] = { rail=rail.tex } end
-        if y == (y2-y1) then overrides[8] = { rail=rail.tex } end
+        if x == 0       then overrides[4] = { rail=rail.wall } end
+        if x == (x2-x1) then overrides[6] = { rail=rail.wall } end
+        if y == 0       then overrides[2] = { rail=rail.wall } end
+        if y == (y2-y1) then overrides[8] = { rail=rail.wall } end
 
         -- don't block the entryway
         overrides[10-side] = nil
@@ -1644,12 +1644,12 @@ function B_deathmatch_exit(p,c, K,kx,ky)
   {
     f_h = c.rmodel.f_h + 8,
     c_h = c.rmodel.f_h + 8,
-    f_tex = door_info.frame_bottom or STEP.f_tex,
-    c_tex = door_info.bottom       or STEP.f_tex,
+    f_tex = door_info.frame_floor or STEP.f_tex,
+    c_tex = door_info.ceil        or STEP.f_tex,
     light = 255,
 
     l_tex = c.rmodel.l_tex,
-    u_tex = door_info.tex,
+    u_tex = door_info.wall,
     door_kind = 1,
 
     [2] = { u_peg="bottom" }, [8] = { u_peg="bottom" },
@@ -2677,12 +2677,12 @@ function build_cell(p, c)
 
   local function decide_void_pic(p, c)
     if c.theme.pic_wd and rand_odds(60) then
-      c.void_pic = { tex=c.theme.pic_wd, w=128, h=c.theme.pic_wd_h or 128 }
+      c.void_pic = { wall=c.theme.pic_wd, w=128, h=c.theme.pic_wd_h or 128 }
       c.void_cut = 1
       return
 
     elseif not c.theme.outdoor and rand_odds(25) then
-      c.void_pic = random_light_kind(false)
+      c.void_pic = get_rand_light(false)
       c.void_cut = rand_irange(3,4)
       return
 
@@ -3157,7 +3157,7 @@ function build_cell(p, c)
 --c.x, c.y, side, c.rmodel.f_tex, b_theme.floor, other.theme.floor, rsd))
 
       -- FIXME: choose fence rail
-      overrides = { [rsd] = { rail = THEME.rails["r_1"].tex }}
+      overrides = { [rsd] = { rail = THEME.rails["r_1"].wall }}
     end
 
     for n = 1,KW do
@@ -3291,7 +3291,7 @@ function build_cell(p, c)
     -- !!! FIXME: test crud
     if not bar and what ~= "fence" then
       -- FIXME: choose window rail
-      sec[side] = { rail = THEME.rails["r_2"].tex }
+      sec[side] = { rail = THEME.rails["r_2"].wall }
     end
 
     for d_pos = first, BW-long, step do
@@ -3971,7 +3971,7 @@ function build_cell(p, c)
       h  = 8 * rand_irange(2,4),
       pattern = random_sky_light(),
       is_sky = rand_odds(33),
-      light_info = random_light_kind(true)
+      light_info = get_rand_light(true)
     }
     if not c.sky_light.is_sky and rand_odds(80) then
       c.sky_light.h = - c.sky_light.h

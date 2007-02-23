@@ -18,8 +18,8 @@
 
 TN_RAILS =
 {
-  r_3 = { tex="TYIRONSM", w=64,  h=72  },
-  r_4 = { tex="TYIRONLG", w=128, h=128 },
+  r_3 = { wall="TYIRONSM", w=64,  h=72  },
+  r_4 = { wall="TYIRONLG", w=128, h=128 },
 }
 
 TN_CRATES =
@@ -53,27 +53,27 @@ TN_CRATES =
 
 TN_LIGHTS =
 {
-  br_grn = { tex="LITEGRN1", w=32 },
-  br_red = { tex="LITERED1", w=32 },
-  br_yel = { tex="LITEYEL1", w=32 },
+  br_grn = { wall="LITEGRN1", w=32 },
+  br_red = { wall="LITERED1", w=32 },
+  br_yel = { wall="LITEYEL1", w=32 },
 }
 
 TN_DOORS =
 {
-  d_metal = { tex="METALDR", w=128, h=128 },
+  d_metal = { wall="METALDR", w=128, h=128 },
 }
 
 TN_PICS =
 {
-  egypt1 = { tex="BIGWALL",  w=128, h=128 },
-  egypt2 = { tex="LONGWALL", w=128, h=128 },
-  egypt3 = { tex="MURAL1",   w=128, h=128 },
-  egypt4 = { tex="MURAL2",   w=128, h=128 },
+  egypt1 = { wall="BIGWALL",  w=128, h=128 },
+  egypt2 = { wall="LONGWALL", w=128, h=128 },
+  egypt3 = { wall="MURAL1",   w=128, h=128 },
+  egypt4 = { wall="MURAL2",   w=128, h=128 },
 
-  tnt1   = { tex="TNTDOOR",  w=128, h=128 },
-  disast = { tex="DISASTER", w=128, h=128 },
-  gr_men = { tex="GRNMEN",   w=128, h=128 },
-  lt_yel = { tex="LITEYEL3", w=128, h=128, glow=true },
+  tnt1   = { wall="TNTDOOR",  w=128, h=128 },
+  disast = { wall="DISASTER", w=128, h=128 },
+  gr_men = { wall="GRNMEN",   w=128, h=128 },
+  lt_yel = { wall="LITEYEL3", w=128, h=128, glow=true },
 }
 
 ----------------------------------------------------------------

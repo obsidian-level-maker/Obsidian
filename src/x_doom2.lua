@@ -359,12 +359,12 @@ D2_EXITS =
     hole_tex = "LITE3",
 
     sign = "EXITSIGN",    -- FIXME !!! make the sign into a MATERIAL
-    sign_bottom="CEIL5_2",
+    sign_ceil="CEIL5_2",
 
     switch = { switch="SW1BLUE", wall="COMPBLUE", h=64 },
 
-    door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="TLITE6_6", frame_bottom="FLOOR5_1" },
+    door = { wall="EXITDOOR", w=64, h=72,
+             frame_ceil="TLITE6_6", frame_floor="FLOOR5_1" },
   },
 
   REDBRICK =
@@ -379,12 +379,12 @@ D2_EXITS =
     ceil  = "FLOOR6_2",
 
     sign = "EXITSIGN",
-    sign_bottom="CEIL5_2",
+    sign_ceil="CEIL5_2",
 
     switch = { switch="SW1WOOD", wall="WOOD1", h=64 },
 
-    door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="TLITE6_6", frame_bottom="FLAT5_2" },
+    door = { wall="EXITDOOR", w=64, h=72,
+             frame_ceil="TLITE6_6", frame_floor="FLAT5_2" },
   },
 
   SLOPPY =
@@ -400,7 +400,7 @@ D2_EXITS =
     ceil  = "SFLR6_4",
 
     sign = "EXITSIGN",
-    sign_bottom="CEIL5_2",
+    sign_ceil="CEIL5_2",
 
     flush = true,
     flush_left  = "SK_LEFT",
@@ -408,8 +408,8 @@ D2_EXITS =
 
     switch = { switch="SW1SKULL", wall="SKINCUT", h=128 },
 
-    door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="FLAT5_5", frame_bottom="CEIL5_2" },
+    door = { wall="EXITDOOR", w=64, h=72,
+             frame_ceil="FLAT5_5", frame_floor="CEIL5_2" },
   },
 }
 
@@ -563,11 +563,11 @@ D2_OVERHANGS =
 
 D2_DOORS =
 {
-  d_thin1  = { tex="SPCDOOR1", w=64, h=112 },
-  d_thin2  = { tex="SPCDOOR2", w=64, h=112 },
-  d_thin3  = { tex="SPCDOOR3", w=64, h=112 },
+  d_thin1  = { wall="SPCDOOR1", w=64, h=112 },
+  d_thin2  = { wall="SPCDOOR2", w=64, h=112 },
+  d_thin3  = { wall="SPCDOOR3", w=64, h=112 },
 
-  d_weird  = { tex="SPCDOOR4", w=64, h=112 },
+  d_weird  = { wall="SPCDOOR4", w=64, h=112 },
 }
 
 D2_CRATES =
@@ -601,8 +601,8 @@ D2_CRATES =
 
 D2_RAILS =
 {
-  r_1 = { tex="MIDBARS3", w=128, h=72  },
-  r_2 = { tex="MIDGRATE", w=128, h=128 },
+  r_1 = { wall="MIDBARS3", w=128, h=72  },
+  r_2 = { wall="MIDGRATE", w=128, h=128 },
 }
 
 D2_LIGHTS =
@@ -612,8 +612,8 @@ D2_LIGHTS =
 
 D2_PICS =
 {
-  wolf6 = { tex="ZZWOLF6", w=128, h=128 },
-  wolf7 = { tex="ZZWOLF7", w=128, h=128 },
+  wolf6 = { wall="ZZWOLF6", w=128, h=128 },
+  wolf7 = { wall="ZZWOLF7", w=128, h=128 },
 }
 
 D2_LIQUIDS =

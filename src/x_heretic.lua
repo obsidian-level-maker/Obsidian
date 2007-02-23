@@ -190,7 +190,7 @@ HC_EXITS =
 
     switch = { switch="SW2OFF", wall="METL2", h=64 },
 
-    door = { tex="DOOREXIT", w=64, h=96 },
+    door = { wall="DOOREXIT", w=64, h=96 },
   },
 }
 
@@ -293,15 +293,15 @@ HC_SWITCHES =
 
 HC_DOORS =
 {
-  d_wood   = { tex="DOORWOOD", w=64,  h=128, bottom="FLOOR10" },
-  d_demon  = { tex="DMNMSK",   w=128, h=128 },
---  d_stone  = { tex="DOORSTON", w=64,  h=128 },
+  d_wood   = { wall="DOORWOOD", w=64,  h=128, ceil="FLOOR10" },
+  d_demon  = { wall="DMNMSK",   w=128, h=128 },
+--  d_stone  = { wall="DOORSTON", w=64,  h=128 },
 }
 
 HC_RAILS =
 {
-  r_1 = { tex="WDGAT64", w=128, h=64  },
-  r_2 = { tex="WDGAT64", w=128, h=128 },  -- FIXME!!
+  r_1 = { wall="WDGAT64", w=128, h=64  },
+  r_2 = { wall="WDGAT64", w=128, h=128 },  -- FIXME!!
 }
 
 HC_IMAGES =
@@ -312,15 +312,15 @@ HC_IMAGES =
 
 HC_LIGHTS =
 {
-  redwall = { tex="REDWALL", w=32 },
+  redwall = { wall="REDWALL", w=32 },
 
   round = { flat="FLOOR26",  side="ORNGRAY" },
 }
 
 HC_PICS =
 {
-  skull3 = { tex="GRSKULL3", w=128, h=128 },
-  glass1 = { tex="STNGLS1",  w=128, h=128 },
+  skull3 = { wall="GRSKULL3", w=128, h=128 },
+  glass1 = { wall="STNGLS1",  w=128, h=128 },
 }
 
 HC_KEY_BITS =

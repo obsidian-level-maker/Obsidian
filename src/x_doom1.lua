@@ -259,12 +259,12 @@ DM_EXITS =
     ceil  = "TLITE6_5",
 
     sign = "EXITSIGN",
-    sign_bottom="CEIL5_2",
+    sign_ceil="CEIL5_2",
 
     switch = { switch="SW1COMP", wall="COMPSPAN", h=64 },
 
-    door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="TLITE6_5", -- frame_side="BROWN96"
+    door = { wall="EXITDOOR", w=64, h=72,
+             frame_ceil="TLITE6_5", -- frame_wall="BROWN96"
            },
   },
 
@@ -284,8 +284,8 @@ DM_EXITS =
 
     switch = { switch="SW1HOT", wall="SP_HOT1", h=64 },
 
-    door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="TLITE6_6", frame_side="LITE5" },
+    door = { wall="EXITDOOR", w=64, h=72,
+             frame_ceil="TLITE6_6", frame_wall="LITE5" },
   },
 
   BROWN =
@@ -299,14 +299,14 @@ DM_EXITS =
     ceil  = "CEIL5_2",
 
     sign = "EXITSIGN",
-    sign_bottom="CEIL5_2",
+    sign_ceil="CEIL5_2",
 
     flush = true,
     switch = { switch="SW1BRN2", wall="BROWN1", h=64 },
 
-    door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="TLITE6_5",
-             frame_bottom="FLOOR3_3"
+    door = { wall="EXITDOOR", w=64, h=72,
+             frame_ceil="TLITE6_5",
+             frame_floor="FLOOR3_3"
            },
   },
 
@@ -324,11 +324,11 @@ DM_EXITS =
     ceil  = "FLAT22",
 
     sign = "EXITSIGN",
-    sign_bottom="CEIL5_2",
+    sign_ceil="CEIL5_2",
 
     switch = { switch="SW1COMM", wall="SHAWN2", h=64 },
 
-    door = { tex="EXITDOOR", w=64, h=72, frame_top="TLITE6_5" },
+    door = { wall="EXITDOOR", w=64, h=72, frame_ceil="TLITE6_5" },
   },
 
   STARTAN =
@@ -343,15 +343,15 @@ DM_EXITS =
     ceil  = "TLITE6_4",
 
     sign = "EXITSIGN",
-    sign_bottom="CEIL5_2",
+    sign_ceil="CEIL5_2",
 
     flush = true,
     switch = { switch="SW1STRTN", wall="STARTAN2", h=64 },
 
-    door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="TLITE6_5",
-             frame_bottom="FLOOR5_2",
-             frame_side="LITE3"
+    door = { wall="EXITDOOR", w=64, h=72,
+             frame_ceil="TLITE6_5",
+             frame_floor="FLOOR5_2",
+             frame_wall="LITE3"
            },
   },
 
@@ -370,7 +370,7 @@ DM_EXITS =
     ceil  = "FLOOR7_2",
 
     sign = "EXITSIGN",
-    sign_bottom="CEIL5_2",
+    sign_ceil="CEIL5_2",
 
     flush = true,
     flush_left  = "GSTFONT1",
@@ -378,8 +378,9 @@ DM_EXITS =
 
     switch = { switch="SW1GSTON", wall="GSTONE2", h=64 },
 
-    door = { tex="EXITDOOR", w=64, h=72,
-             frame_top="FLOOR7_2", frame_bottom="FLOOR7_2" },
+    door = { wall="EXITDOOR", w=64, h=72,
+             frame_ceil="FLOOR7_2",
+             frame_floor="FLOOR7_2" },
   },
 
 }
@@ -644,17 +645,17 @@ DM_DOORS =
   -- Note: most of these with h=112 are really 128 pixels
   --       tall, but work fine when truncated/
 
-  d_uac    = { tex="BIGDOOR1", w=128, h=72  },  -- actual height is 96
-  d_big1   = { tex="BIGDOOR2", w=128, h=112 },
-  d_big2   = { tex="BIGDOOR3", w=128, h=112 },
-  d_big3   = { tex="BIGDOOR4", w=128, h=112 },
+  d_uac    = { wall="BIGDOOR1", w=128, h=72  },  -- actual height is 96
+  d_big1   = { wall="BIGDOOR2", w=128, h=112 },
+  d_big2   = { wall="BIGDOOR3", w=128, h=112 },
+  d_big3   = { wall="BIGDOOR4", w=128, h=112 },
 
-  d_wood1  = { tex="BIGDOOR5", bottom="CEIL5_2", w=128, h=112 },
-  d_wood2  = { tex="BIGDOOR6", bottom="CEIL5_2", w=128, h=112 }, -- this is the real height!
-  d_wood3  = { tex="BIGDOOR7", bottom="CEIL5_2", w=128, h=112 },
+  d_wood1  = { wall="BIGDOOR5", ceil="CEIL5_2", w=128, h=112 },
+  d_wood2  = { wall="BIGDOOR6", ceil="CEIL5_2", w=128, h=112 }, -- this is the real height!
+  d_wood3  = { wall="BIGDOOR7", ceil="CEIL5_2", w=128, h=112 },
 
-  d_small1 = { tex="DOOR1",    w=64, h=72 },
-  d_small2 = { tex="DOOR3",    w=64, h=72 },
+  d_small1 = { wall="DOOR1",    w=64, h=72 },
+  d_small2 = { wall="DOOR3",    w=64, h=72 },
 
 }
 
@@ -666,10 +667,10 @@ DM_IMAGES =
 
 DM_LIGHTS =
 {
-  white2 = { tex="LITE3",    w=32 },
-  white5 = { tex="LITE5",    w=16 },
-  blue4  = { tex="LITEBLU4", w=32 },
---  { tex="REDWALL",  w=32 },
+  white2 = { wall="LITE3",    w=32 },
+  white5 = { wall="LITE5",    w=16 },
+  blue4  = { wall="LITEBLU4", w=32 },
+--  { wall="REDWALL",  w=32 },
 
   metal = { flat="CEIL1_2",  side="METAL" },
   wood  = { flat="CEIL1_3",  side="WOOD1" },
@@ -687,25 +688,25 @@ DM_LIGHTS =
 
 DM_PICS =
 {
-  lite3 = { tex="LITE3",    w=128, h=16 },
+  lite3 = { wall="LITE3",    w=128, h=16 },
 
-  m1 = { tex="MARBFACE", w=128, h=128 },
-  m2 = { tex="MARBFAC2", w=128, h=128 },
-  m3 = { tex="MARBFAC3", w=128, h=128 },
+  m1 = { wall="MARBFACE", w=128, h=128 },
+  m2 = { wall="MARBFAC2", w=128, h=128 },
+  m3 = { wall="MARBFAC3", w=128, h=128 },
 
-  f1 = { tex="FIRELAVA", w=128, h=128 },
-  f2 = { tex="FIREMAG1", w=128, h=128 },
-  f3 = { tex="FIREWALL", w=128, h=112 },
+  f1 = { wall="FIRELAVA", w=128, h=128 },
+  f2 = { wall="FIREMAG1", w=128, h=128 },
+  f3 = { wall="FIREWALL", w=128, h=112 },
 
-  shawn1 = { tex="SHAWN1",   w=128, h=96  },
-  skin1  = { tex="SKINEDGE", w=128, h=128 },
-  wood1  = { tex="WOOD3",    w=128, h=64  },
+  shawn1 = { wall="SHAWN1",   w=128, h=96  },
+  skin1  = { wall="SKINEDGE", w=128, h=128 },
+  wood1  = { wall="WOOD3",    w=128, h=64  },
 
---  { tex="SKSPINE2", w=128, h=128, scroll=48 },
---  { tex="SPFACE1",  w=128, h=96,  scroll=48 },
+--  { wall="SKSPINE2", w=128, h=128, scroll=48 },
+--  { wall="SPFACE1",  w=128, h=96,  scroll=48 },
 
---FIXME  { tex="WOOD10",   w=128, h=128 },
---FIXME  { tex="TEKBRON1", w=128, h=128 },
+--FIXME  { wall="WOOD10",   w=128, h=128 },
+--FIXME  { wall="TEKBRON1", w=128, h=128 },
 }
 
 DM_KEY_BITS =
@@ -969,14 +970,14 @@ D1_CRATES =
 
 D1_RAILS =
 {
-  r_1 = { tex="BRNSMALC", w=128, h=64  },
-  r_2 = { tex="MIDGRATE", w=128, h=128 },
+  r_1 = { wall="BRNSMALC", w=128, h=64  },
+  r_2 = { wall="MIDGRATE", w=128, h=128 },
 }
 
 D1_LIGHTS =
 {
-  reddy  = { tex="LITERED",  w=16 },
-  stoned = { tex="LITESTON", w=32 },
+  reddy  = { wall="LITERED",  w=16 },
+  stoned = { wall="LITESTON", w=32 },
 }
 
 ------------------------------------------------------------

@@ -177,7 +177,7 @@ XN_EXITS =
 
     switch = { switch="SW_2_UP", wall="STEEL06", h=64 },
 
-    door = { tex="FIRE14", w=64,  h=128 },
+    door = { wall="FIRE14", w=64,  h=128 },
   },
 
 }
@@ -282,27 +282,27 @@ XN_SWITCHES =
 
 XN_DOORS =
 {
-  d_big    = { tex="DOOR51",   w=128, h=128 },
-  d_brass1 = { tex="BRASS1",   w=128, h=128 },
-  d_brass2 = { tex="D_BRASS2", w=64,  h=128 },
+  d_big    = { wall="DOOR51",   w=128, h=128 },
+  d_brass1 = { wall="BRASS1",   w=128, h=128 },
+  d_brass2 = { wall="D_BRASS2", w=64,  h=128 },
 
-  d_wood1  = { tex="D_WD07",   w=128, h=128 },
-  d_wood2  = { tex="D_WD08",   w=64,  h=128 },
-  d_wood3  = { tex="D_WD10",   w=64,  h=128 },
+  d_wood1  = { wall="D_WD07",   w=128, h=128 },
+  d_wood2  = { wall="D_WD08",   w=64,  h=128 },
+  d_wood3  = { wall="D_WD10",   w=64,  h=128 },
 }
 
 XN_LOCKED_DOORS =
 {
   -- lockable doors -- FIXME: the rest??
-  d_silver = { tex="D_SILVER", w=64,  h=128 },
-  d_castle = { tex="D_CAST",   w=64,  h=128 },
-  d_fire   = { tex="D_FIRE",   w=64,  h=128 },
+  d_silver = { wall="D_SILVER", w=64,  h=128 },
+  d_castle = { wall="D_CAST",   w=64,  h=128 },
+  d_fire   = { wall="D_FIRE",   w=64,  h=128 },
 }
 
 XN_RAILS =
 {
-  r_1 = { tex="GATE03", w=64, h=64  },
-  r_2 = { tex="GATE02", w=64, h=128 },
+  r_1 = { wall="GATE03", w=64, h=64  },
+  r_2 = { wall="GATE02", w=64, h=128 },
 }
 
 XN_IMAGES =
@@ -313,7 +313,7 @@ XN_IMAGES =
 
 XN_LIGHTS =
 {
-  fire = { tex="X_FIRE01", w=16 },
+  fire = { wall="X_FIRE01", w=16 },
 
   l1 = { flat="F_081", side="FIRE07" },
   l2 = { flat="F_084", side="FIRE07" },
@@ -322,15 +322,15 @@ XN_LIGHTS =
 
 XN_PICS =
 {
-  cave12 = { tex = "CAVE12",   w=128, h=128 },
-  forest = { tex = "FOREST03", w=128, h=128 },
+  cave12 = { wall = "CAVE12",   w=128, h=128 },
+  forest = { wall = "FOREST03", w=128, h=128 },
 
-  mon1 = { tex = "SPAWN10",  w=128, h=128 },
-  mon3 = { tex = "SPAWN13",  w=64,  h=64  },
+  mon1 = { wall = "SPAWN10",  w=128, h=128 },
+  mon3 = { wall = "SPAWN13",  w=64,  h=64  },
 
-  glass1 = { tex = "GLASS01",  w=64,  h=128 },
-  glass3 = { tex = "GLASS03",  w=64,  h=128 },
-  glass5 = { tex = "GLASS05",  w=64,  h=128 },
+  glass1 = { wall = "GLASS01",  w=64,  h=128 },
+  glass3 = { wall = "GLASS03",  w=64,  h=128 },
+  glass5 = { wall = "GLASS05",  w=64,  h=128 },
 }
 
 XN_KEY_BITS =

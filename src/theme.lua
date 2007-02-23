@@ -76,10 +76,10 @@ function find_liquid(name)
   end
 end
 
-function random_light_kind(is_flat)
+function get_rand_light(is_flat)
   local infos = {}
   for name,info in pairs(THEME.lights) do
-    if sel(is_flat, info.flat, info.tex) then
+    if sel(is_flat, info.flat, info.wall) then
       table.insert(infos,info)
     end
   end

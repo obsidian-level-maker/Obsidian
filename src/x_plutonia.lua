@@ -91,22 +91,22 @@ PL_HALLWAYS =
 
 PL_RAILS =
 {
-  r_4 = { tex="MIDSPACE", w=128, h=128 },
-  r_5 = { tex="A-GRATE",  w=128, h=128 },
-  r_6 = { tex="A-RAIL1",  w=64,  h=32  },
+  r_4 = { wall="MIDSPACE", w=128, h=128 },
+  r_5 = { wall="A-GRATE",  w=128, h=128 },
+  r_6 = { wall="A-RAIL1",  w=64,  h=32  },
 }
 
 PL_DOORS =
 {
-  d_metal  = { tex="A-BROWN4", w=128, h=128 },
-  d_poison = { tex="SLIME3",   w=128, h=128 },
+  d_metal  = { wall="A-BROWN4", w=128, h=128 },
+  d_poison = { wall="SLIME3",   w=128, h=128 },
 }
 
 PL_PICS =
 {
-  redrok = { tex="A-REDROK", w=128, h=128 },
-  askin3 = { tex="A-ASKIN3", w=128, h=128 },
-  askin4 = { tex="A-ASKIN4", w=128, h=128 },
+  redrok = { wall="A-REDROK", w=128, h=128 },
+  askin3 = { wall="A-ASKIN3", w=128, h=128 },
+  askin4 = { wall="A-ASKIN4", w=128, h=128 },
 }
 
 PL_LIQUIDS =
