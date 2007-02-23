@@ -109,6 +109,11 @@ PL_PICS =
   askin4 = { tex="A-ASKIN4", w=128, h=128 },
 }
 
+PL_LIQUIDS =
+{
+  water = { name="water", floor="FWATER1", wall="FWALL1" },
+}
+
 PL_SPECIAL_PEDESTAL =
 {
   wall   ="COMPSPAN",
@@ -138,9 +143,10 @@ THEME_FACTORIES["plutonia"] = function()
   T.themes   = copy_and_merge(T.themes,   PL_THEMES)
   T.hallways = copy_and_merge(T.hallways, PL_HALLWAYS)
 
-  T.rails   = copy_and_merge(T.rails,  PL_RAILS)
-  T.doors   = copy_and_merge(T.doors,  PL_DOORS)
-  T.pics    = copy_and_merge(T.pics,   PL_PICS)
+  T.rails   = copy_and_merge(T.rails,   PL_RAILS)
+  T.doors   = copy_and_merge(T.doors,   PL_DOORS)
+  T.pics    = copy_and_merge(T.pics,    PL_PICS)
+  T.liquids = copy_and_merge(T.liquids, PL_LIQUIDS)
 
   T.special_ped = PL_SPECIAL_PEDESTAL
 

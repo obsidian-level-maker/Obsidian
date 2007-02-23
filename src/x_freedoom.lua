@@ -41,6 +41,12 @@ FD_MONSTER_LIST =
   -- "spider",  
 }
 
+FD_LIQUIDS =
+{
+  water = { name="water", floor="FWATER1", wall="FWALL1" },
+}
+
+----------------------------------------------------------------
 
 THEME_FACTORIES["freedoom"] = function()
 
@@ -57,7 +63,8 @@ THEME_FACTORIES["freedoom"] = function()
   T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
   T.mats    = copy_and_merge(T.mats,    D2_MATS)
   T.crates  = copy_and_merge(T.crates,  D2_CRATES)
-  T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
+
+  T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS, FD_LIQUIDS)
 
   -- FreeDOOM is lacking many monster sprites
 
