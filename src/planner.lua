@@ -598,6 +598,8 @@ function plan_sp_level(is_coop)  -- returns Plan
         c.light = hall_lighting(start,idx,finish)
       end
     end
+
+    Q.has_hallway = true
   end
   
   local function make_quest_path(Q)
@@ -656,6 +658,15 @@ function plan_sp_level(is_coop)  -- returns Plan
     Q.last  = Q.path[#Q.path]
 
     make_hallways(Q)
+
+    -- !!! Experimental: quest area is a building
+    if #Q.path >= 4 and Q.theme.outdoor and not Q.has_hallway
+       and dual_odds(Q.mini, 10, 33)
+    then
+      repeat
+        Q.last.theme = get_rand_theme()
+      until not Q.last.theme.outdoor
+    end
   end
 
 
