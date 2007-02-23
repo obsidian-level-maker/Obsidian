@@ -1575,7 +1575,6 @@ function B_vista(p,c, side,deep, theme,kind)
   end
 
 
-
   --- pillars ---
   if kind == "solid" or kind == "frame" then
 
@@ -1598,13 +1597,17 @@ function B_vista(p,c, side,deep, theme,kind)
 
 
   -- rest of chunk in other room
-  while (deep % 3) > 0 do deep = deep+1 end
+  do
+    local extra = 3 - (deep % 3)
 
-  x1,y1 = x1+dx*1, y1+dy*1
-  x2,y2 = x2+dx*deep, y2+dy*deep
+    if side < 5 then
+      x1,y1 = x1+dx*extra, y1+dy*extra
+    else
+      x2,y2 = x2+dx*extra, y2+dy*extra
+    end
 
-  gap_fill(p,c, x1, y1, x2, y2, other.rmodel)
-
+    gap_fill(p,c, x1, y1, x2, y2, other.rmodel)
+  end
 
   -- FIXME !!! add spots to room
   -- return { c=c, x=x1+dx, y=y1+dy, double=true, dx=32, dy=32 }
@@ -3104,18 +3107,14 @@ function build_cell(p, c)
       u_tex = c.theme.wall,
     }
 
----###    local dx, dy = dir_to_delta(side)
-
     local ax1, ay1, ax2, ay2 = side_to_corner(10-side, FW, FH)
-
----###    local bx1, by1, bx2, by2 = side_to_corner(side, FW, FH)
----###    local mx1, my1, mx2, my2
----###    mx1, my1 = ax1 + dx, ay1 + dy
----###    mx2, my2 = ax2 + dx*2, ay2 + dy*2
 
     for x = x1,x2 do for y = y1,y2 do
 
-      if not p.blocks[c.bx1-1+x][c.by1-1+y] then
+      local B = p.blocks[c.bx1-1+x][c.by1-1+y]
+
+      -- overwrite a 64x64 block, but not a fragmented one
+      if (not B) or (not B.fragments) then
 
         local fx = (x - 1) * FW
         local fy = (y - 1) * FH
@@ -3375,8 +3374,8 @@ function build_cell(p, c)
 
     local what = what_border_type(c, link, other, side)
 
-    if (pass == 1 and what ~= "sky") or
-       (pass == 2 and what == "sky") then return end
+---###    if (pass == 1 and what ~= "sky") or
+---###       (pass == 2 and what == "sky") then return end
 
     local b_theme = border_theme(c, other)
 
@@ -4015,11 +4014,12 @@ function build_cell(p, c)
     end
   end
 
-  -- on first pass, only build sky borders
-  for pass = 1,2 do
-    for side = 2,8,2 do
-      build_border(side, pass)
-    end
+---###  -- on first pass, only build sky borders
+---###  -- (otherwise corner between two sky borders looks bad)
+---###  for pass = 2,1,-1 do
+---###  end
+  for side = 2,8,2 do
+    build_border(side, pass)
   end
 
   for kx = 1,KW do
