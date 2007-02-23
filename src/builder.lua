@@ -261,7 +261,28 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
   end
 end
 
-function move_frag(p,c, x,y,corner, dx,dy)
+
+function move_corner(p,c, x,y,corner, dx,dy)
+
+  local B = p.blocks[c.blk_x+x][c.blk_y+y]
+  assert(B)
+
+  if not B[corner] then
+    B[corner] = {}
+  else
+    dx = dx + (B[corner].dx or 0)
+    dy = dy + (B[corner].dy or 0)
+  end
+
+  B[corner].dx = dx
+  B[corner].dy = dy
+
+  -- ensure that the writer doesn't swallow up this block
+  -- (which would lose the vertex we want to move)
+  B.mark = allocate_mark(p)
+end
+
+function move_frag_corner(p,c, x,y,corner, dx,dy)
   local bx, fx = div_mod(x, FW)
   local by, fy = div_mod(y, FH)
 
@@ -281,6 +302,8 @@ function move_frag(p,c, x,y,corner, dx,dy)
 
   F[corner].dx = dx
   F[corner].dy = dy
+
+  F.mark = allocate_mark(p)
 end
 
  
@@ -628,7 +651,6 @@ function B_exit_hole(p,c, K,kx,ky, sec)
   HOLE.f_tex = THEME.SKY_TEX
 
   HOLE.walk_kind = 52 -- "exit_W1"
-  HOLE.short = true
   HOLE.is_cage = true  -- don't place items/monsters here
 
   frag_fill(p,c, fx+1,fy+1, fx+FW,fy+FH, HOLE)
@@ -660,7 +682,7 @@ function B_exit_hole(p,c, K,kx,ky, sec)
         local want_x = cur_x/len * radius
         local want_y = cur_y/len * radius
 
-        move_frag(p,c, zx,zy,dir, want_x - cur_x, want_y - cur_y)
+        move_frag_corner(p,c, zx,zy,dir, want_x - cur_x, want_y - cur_y)
       end
     end
   end
@@ -988,10 +1010,10 @@ end
   if ped_info.rotate2 then
     frag_fill(p,c, fx+2,fy+2, fx+2,fy+2, INNER)
 
-    move_frag(p,c, fx+2,fy+2, 1, 16, -6)
-    move_frag(p,c, fx+2,fy+2, 3, 22, 16)
-    move_frag(p,c, fx+2,fy+2, 7, -6,  0)
-    move_frag(p,c, fx+2,fy+2, 9,  0, 22)
+    move_frag_corner(p,c, fx+2,fy+2, 1, 16, -6)
+    move_frag_corner(p,c, fx+2,fy+2, 3, 22, 16)
+    move_frag_corner(p,c, fx+2,fy+2, 7, -6,  0)
+    move_frag_corner(p,c, fx+2,fy+2, 9,  0, 22)
   else
     frag_fill(p,c, fx+2,fy+2, fx+3,fy+3, INNER)
   end
