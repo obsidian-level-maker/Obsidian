@@ -17,30 +17,23 @@
 ----------------------------------------------------------------
 
 
-function copy_block(B)
-  local b2 = copy_table(B)
-  
-  b2.things = {}
+function copy_block(B, ...)
+  local result = copy_table(B)
+
+  result.things = {}
   
   -- copy the overrides and corner adjustments
   for i = 1,9 do
-    if B[i] then b2[i] = copy_table(B[i]) end
+    if B[i] then result[i] = copy_table(B[i]) end
   end
 
-  return b2
+  return result
 end
 
-function copy_sector(sec)
-  return
-  {
-    f_h = sec.f_h,
-    c_h = sec.c_h,
-    f_tex = sec.f_tex,
-    c_tex = sec.c_tex,
-    light = sec.light,
-    kind  = sec.kind,
-    tag   = sec.tag
-  }
+function copy_block_with_new(B, newbie)
+  local result = copy_block(B)
+  merge_table(result, newbie)
+  return result
 end
 
 function dir_to_across(dir)
@@ -118,8 +111,9 @@ function copy_chunk(kx, ky, K)
   COPY.closet = K.closet
   COPY.place  = K.place
 
-  COPY.floor_h = K.floor_h
-  COPY.ceil_h  = K.ceil_h
+  if K.rmodel then
+    COPY.rmodel = copy_block(K.rmodel)
+  end
 
   return COPY
 end
@@ -715,17 +709,13 @@ function B_stair(p, c, bx, by, z, dir, long, deep, step)
 
   for i = 1,deep*4 do
 
-    local sec = { f_h = z,
-                  c_h = c.ceil_h,   -- FIXME
-                  f_tex = c.theme.step_flat or c.theme.floor,
-                  c_tex = c.theme.ceil,
-                  light = c.light,
+    local sec = copy_block_with_new(c.rmodel, --FIXME: K.rmodel
+    {
+      f_h = z,
+      f_tex = c.theme.step_flat, -- might be nil (=> rmodel.f_tex)
 
-                  l_tex = c.theme.wall,
-                  u_tex = c.theme.wall,
-
-                  [out_dir]={ l_tex=c.theme.step, l_peg="top" },
-                }
+      [out_dir] = { l_tex=c.theme.step, l_peg="top" },
+    })
 
     frag_fill(p,c, fx, fy, fx+zx, fy+zy, sec)
 
@@ -744,24 +734,20 @@ function B_lift(p, c, x, y, z, dir, long, deep)
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
 
-  local LIFT =
+  local LIFT = copy_block_with_new(c.rmodel,
   {
     f_h = z,
-    c_h = c.ceil_h,
     f_tex = c.theme.lift_flat or THEME.mats.LIFT.floor,
-    c_tex = c.theme.ceil,
-    light = c.light,
+    l_tex = c.theme.lift or THEME.mats.LIFT.wall,
 
     lift_kind = 123,  -- 62 for slower kind
     lift_walk = 120,  -- 88 for slower kind
-    tag = allocate_tag(p),
 
-    l_tex = c.theme.lift or THEME.mats.LIFT.wall,
-    u_tex = c.theme.wall,
+    tag = allocate_tag(p),
 
     [2] = { l_peg="top" }, [4] = { l_peg="top" },
     [6] = { l_peg="top" }, [8] = { l_peg="top" },
-  }
+  })
 
   fill(p,c, x, y,
        x + (long-1) * ax + (deep-1) * dx,
@@ -799,29 +785,23 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
   local fx = (x - 1) * FW
   local fy = (y - 1) * FH
 
-  local BASE = copy_block(c.rmodel)
-
-  BASE.f_h = z
-  BASE.l_tex = c.theme.wall
-  BASE.u_tex = c.theme.wall
-  BASE.near_switch = true
+  local BASE = copy_block_with_new(c.rmodel,
+  {
+    f_h = z, near_switch = true,
+  })
 
   frag_fill(p,c, fx+1,fy+1, fx+FW,fy+FH, BASE)
 
-  local SWITCH =
+  local SWITCH = copy_block_with_new(c.rmodel,
   {
     f_h = z + 64,
-    c_h = c.ceil_h,
-    f_tex = THEME.mats.METAL.floor,
-    c_tex = c.theme.ceil,
-    light = c.light,
 
+    f_tex = THEME.mats.METAL.floor,
     l_tex = info.switch,
-    u_tex = c.theme.wall,
 
     switch_kind = kind,
     switch_tag  = tag,
-  }
+  })
 
   do
     local tex_h = 128  -- FIXME: assumption !!!
@@ -855,8 +835,8 @@ function B_wall_switch(p,c, x,y,z, side, long, sw_info, kind, tag)
   {
     f_h = z,
     c_h = z + 64,
-    f_tex = c.theme.floor,
-    c_tex = c.theme.arch_ceil or c.theme.floor, -- SKY is no good
+    f_tex = c.rmodel.f_tex,
+    c_tex = c.theme.arch_ceil or c.rmodel.f_tex, -- SKY is no good
     light = 224,
 
     l_tex = c.theme.void,
@@ -891,8 +871,10 @@ function B_wall_switch(p,c, x,y,z, side, long, sw_info, kind, tag)
   local SWITCH =
   {
     solid = sw_info.switch,
+
     switch_kind = kind,
     switch_tag = tag,
+
     [side] = { l_peg="bottom" } 
   } 
 
@@ -933,19 +915,14 @@ end
 --
 -- Build a pedestal (items, players)
 -- 
-function B_pedestal(p, c, x, y, z, info, overrides)
+function B_pedestal(p, c, x, y, base, info, overrides)
  
-  local PEDESTAL =
+  local PEDESTAL = copy_block_with_new(c.rmodel, -- FIXME: K.rmodel
   {
-    f_h   = z + info.h,
+    f_h   = base.f_h + info.h,
     f_tex = info.floor,
-    c_h   = c.ceil_h,
-    c_tex = c.theme.ceil,
-    light = c.light,
-
     l_tex = info.wall,
-    u_tex = c.theme.wall
-  }
+  })
 
 --FIXME temp (shouldn't be needed)
 if (PEDESTAL.c_h - PEDESTAL.f_h) < 64 then
@@ -956,16 +933,16 @@ end
 end
 
 
-function B_double_pedestal(p, c, bx, by, z, ped_info, overrides)
+function B_double_pedestal(p, c, bx, by, base, ped_info, overrides)
  
   local OUTER =
   {
-    f_h   = ped_info.h + z,
+    f_h   = ped_info.h + base.f_h,
     f_tex = ped_info.floor,
     l_tex = ped_info.wall,
     light = ped_info.light,
 
-    c_h   = c.ceil_h - ped_info.h,
+    c_h   = c.rmodel.c_h - ped_info.h,
     c_tex = ped_info.floor,
     u_tex = ped_info.wall,
 
@@ -974,12 +951,12 @@ function B_double_pedestal(p, c, bx, by, z, ped_info, overrides)
 
   local INNER =
   {
-    f_h   = ped_info.h2 + z,
+    f_h   = ped_info.h2 + base.f_h,
     f_tex = ped_info.floor2,
     l_tex = ped_info.wall2,
     light = ped_info.light2,
 
-    c_h   = c.ceil_h - ped_info.h2,
+    c_h   = c.rmodel.c_h - ped_info.h2,
     c_tex = ped_info.floor2,
     u_tex = ped_info.wall2,
 
@@ -987,11 +964,11 @@ function B_double_pedestal(p, c, bx, by, z, ped_info, overrides)
   }
 
   if c.theme.outdoor then
-    OUTER.c_h   = c.ceil_h
-    OUTER.c_tex = c.theme.ceil
+    OUTER.c_h   = c.rmodel.c_h
+    OUTER.c_tex = c.rmodel.c_tex
 
-    INNER.c_h   = c.ceil_h
-    INNER.c_tex = c.theme.ceil
+    INNER.c_h   = c.rmodel.c_h
+    INNER.c_tex = c.rmodel.c_tex
   end
 
 --FIXME temp (shouldn't be needed)
@@ -1104,17 +1081,13 @@ function B_void_pic(p,c, K,kx,ky, pic, cuts)
 
   frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, INNER)
 
-  local CUTOUT =
+  local CUTOUT = copy_block_with_new(c.rmodel,
   {
     f_h = z1,
     c_h = z2,
-    f_tex = c.theme.arch_floor or c.theme.floor,
-    c_tex = c.theme.arch_ceil  or c.theme.floor, -- SKY is no good
-    light = c.light,
-
-    l_tex = c.theme.wall,
-    u_tex = c.theme.wall,
-  }
+    f_tex = c.theme.arch_floor, -- may be nil (=> rmodel.f_tex)
+    c_tex = c.theme.arch_ceil  or c.rmodel.f_tex, -- SKY is no good
+  })
 
   if cuts >= 3 or pic.glow then  -- FIXME: better way to decide
     CUTOUT.light = 255
@@ -1123,28 +1096,27 @@ function B_void_pic(p,c, K,kx,ky, pic, cuts)
 
   for side = 2,8,2 do
 
-      local ax,ay = dir_to_across(side)
---  local dx,dy = dir_to_delta(side)
+    local ax,ay = dir_to_across(side)
+    local dx,dy = dir_to_delta(side)
 
-      local sx,sy, ex,ey = side_to_corner(side, FW*3, FH*3)
+    local sx,sy, ex,ey = side_to_corner(side, FW*3, FH*3)
 
-      if cuts == 1 then
-        frag_fill(p,c, fx+sx+2*ax,fy+sy+2*ay, fx+ex-2*ax,fy+ey-2*ay, CUTOUT)
-      elseif cuts == 2 then
-        frag_fill(p,c, fx+sx+ax,fy+sy+ay, fx+sx+4*ax,fy+sy+4*ay, CUTOUT)
-        frag_fill(p,c, fx+ex-4*ax,fy+ey-4*ay, fx+ex-ax,fy+ey-ay, CUTOUT)
-      elseif cuts == 3 then
-        for i = 0,2 do
-          local j = i*FW + 1
-          frag_fill(p,c, fx+sx+j*ax,fy+sy+j*ay, fx+sx+(j+1)*ax,fy+sy+(j+1)*ay, CUTOUT)
-        end
-      elseif cuts == 4 then
-        for i = 0,2,2 do
-          local j = i*FW + sel(i==0, 2, 1)
-          frag_fill(p,c, fx+sx+j*ax,fy+sy+j*ay, fx+sx+j*ax,fy+sy+j*ay, CUTOUT)
-        end
+    if cuts == 1 then
+      frag_fill(p,c, fx+sx+2*ax,fy+sy+2*ay, fx+ex-2*ax,fy+ey-2*ay, CUTOUT)
+    elseif cuts == 2 then
+      frag_fill(p,c, fx+sx+ax,fy+sy+ay, fx+sx+4*ax,fy+sy+4*ay, CUTOUT)
+      frag_fill(p,c, fx+ex-4*ax,fy+ey-4*ay, fx+ex-ax,fy+ey-ay, CUTOUT)
+    elseif cuts == 3 then
+      for i = 0,2 do
+        local j = i*FW + 1
+        frag_fill(p,c, fx+sx+j*ax,fy+sy+j*ay, fx+sx+(j+1)*ax,fy+sy+(j+1)*ay, CUTOUT)
       end
-
+    elseif cuts == 4 then
+      for i = 0,2,2 do
+        local j = i*FW + sel(i==0, 2, 1)
+        frag_fill(p,c, fx+sx+j*ax,fy+sy+j*ay, fx+sx+j*ax,fy+sy+j*ay, CUTOUT)
+      end
+    end
   end
 end
 
@@ -1155,7 +1127,8 @@ function B_pillar(p,c, theme, kx,ky, bx,by)
   local PILLAR =
   {
     solid = theme.pillar or theme.void or theme.wall,
-    y_offset = 128 - (K.ceil_h - K.floor_h)
+
+    y_offset = 128 - (K.rmodel.c_h - K.rmodel.f_h)
   }
 
   fill(p,c, bx, by, bx, by, PILLAR)
@@ -1165,14 +1138,18 @@ function B_crate(p,c, crate_info, base, kx,ky, bx,by)
 
   local K = c.chunks[kx][ky]
 
-  local CRATE = copy_block(base)
+  local CRATE = copy_block_with_new(base,
+  {
+    f_h   = K.rmodel.f_h + crate_info.h,
+    f_tex = crate_info.floor,
+    l_tex = crate_info.wall,
+    is_cage = true,  -- don't put monsters/pickups here
+  })
 
-  CRATE.f_h   = K.floor_h + crate_info.h
-  CRATE.c_h   = math.max(base.c_h, CRATE.f_h)
-  CRATE.f_tex = crate_info.floor
-  CRATE.l_tex = crate_info.wall
-  CRATE.is_cage = true  -- don't put monsters/pickups here
-  CRATE.kind = nil      -- don't damage player (if chunk is lava)
+  CRATE.c_h = math.max(base.c_h, CRATE.f_h)
+
+  -- don't damage player if chunk is lava/nukage/etc
+  CRATE.kind = nil
 
   local x_ofs = crate_info.x_offset
   local y_ofs = crate_info.y_offset
@@ -1245,33 +1222,30 @@ function B_pillar_cage(p,c, theme, kx,ky, bx,by)
   local K = c.chunks[kx][ky]
 
   local rail
-  if K.ceil_h < K.floor_h+192 then
+  if K.rmodel.c_h < K.rmodel.f_h+192 then
     rail = THEME.rails["r_1"]  -- FIXME: want "short" rail
   else
     rail = get_rand_rail()
   end
   assert(rail)
 
----###  local z = (c.f_max + c.ceil_h) / 2
----###  z = math.min(z, K.floor_h + 128)
-
   local kind = sel(kx==2 and ky==2, "middle_cage", "pillar_cage")
 
-  local z, open_top = cage_select_height(p,c, kind, theme,rail, K.floor_h,K.ceil_h)
+  local z, open_top = cage_select_height(p,c, kind, theme,rail, K.rmodel.f_h,K.rmodel.c_h)
 
   if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
     open_top = true
   end
 
-  local CAGE = copy_block(c.rmodel)
-
-  CAGE.f_h   = z
-  CAGE.f_tex = theme.floor
-  CAGE.l_tex = theme.wall
-  CAGE.u_tex = theme.wall
-  CAGE.rail  = rail.tex
-
-  CAGE.is_cage = true
+  local CAGE = copy_block_with_new(K.rmodel,
+  {
+    f_h   = z,
+    f_tex = theme.floor,
+    l_tex = theme.wall,
+    u_tex = theme.wall,
+    rail  = rail.tex,
+    is_cage = true,
+  })
 
   if not open_top then
     CAGE.c_h = CAGE.f_h + rail.h
@@ -1313,14 +1287,15 @@ function B_big_cage(p,c, theme, K,kx,ky)
 
   local z, open_top = cage_select_height(p,c, "big_cage", theme,rail, c.floor_h,c.ceil_h)
 
-  local CAGE = copy_block(c.rmodel)
-
-  CAGE.f_h   = z
-  CAGE.f_tex = theme.floor
-  CAGE.l_tex = theme.wall
-  CAGE.u_tex = theme.wall
-
-  CAGE.is_cage = true
+  local CAGE = copy_block_with_new(K.rmodel,
+  {
+    f_h   = z,
+    f_tex = theme.floor,
+    l_tex = theme.wall,
+    u_tex = theme.wall,
+    rail  = rail.tex,
+    is_cage = true,
+  })
 
   if not open_top then
     CAGE.c_h = CAGE.f_h + rail.h
@@ -1352,24 +1327,24 @@ function B_monster_closet(p,c, K,kx,ky, z, tag)
 
   local bx, by = K.x1, K.y1
 
-  local INNER =
+  local INNER = copy_block_with_new(c.rmodel,
   {
     f_h = z,
-    c_h = c.ceil_h,
-    f_tex = c.theme.floor,
-    c_tex = c.theme.ceil, --!! c.theme.arch_ceil or c.theme.floor,
-    light = c.light,
+
+    --!! c_tex = c.theme.arch_ceil or c.rmodel.f_tex,
 
     l_tex = c.theme.void,
     u_tex = c.theme.void,
-    is_cage = true
-  }
 
-  local OUTER = copy_block(INNER)
+    is_cage = true,
+  })
 
-  OUTER.c_h = OUTER.f_h
-  OUTER.c_tex = c.theme.arch_ceil or OUTER.f_tex
-  OUTER.tag = tag
+  local OUTER = copy_block_with_new(INNER,
+  {
+    c_h   = INNER.f_h,
+    c_tex = c.theme.arch_ceil or INNER.f_tex,
+    tag   = tag,
+  })
 
   local fx = (bx - 1) * FW
   local fy = (by - 1) * FH
@@ -1440,7 +1415,7 @@ function B_vista(p,c, side,deep, theme,kind)
   end
 
   if kind ~= "solid" then
-    ARCH.light = int((c.light+other.light)/2)
+    ARCH.light = int((c.rmodel.light+other.rmodel.light)/2)
   end
 
   local fx1 = (x1 - 1) * FW + 1
@@ -1464,25 +1439,25 @@ function B_vista(p,c, side,deep, theme,kind)
   WINDOW.u_tex = theme.wall
   WINDOW.c_tex = theme.ceil
 
-  ROOM.light   = other.light
-  WINDOW.light = other.light
+  ROOM.light   = other.rmodel.light
+  WINDOW.light = other.rmodel.light
 
   WINDOW.f_h = ROOM.f_h + 32
 
   if kind == "open" or kind == "wire" then
-    ROOM.c_h   = other.ceil_h
+    ROOM.c_h   = other.rmodel.c_h
     ROOM.c_tex = other.theme.ceil
   
-    WINDOW.c_h   = other.ceil_h
+    WINDOW.c_h   = other.rmodel.c_h
     WINDOW.c_tex = other.theme.ceil
 
   elseif kind == "frame" then
-    ROOM.c_h   = other.ceil_h
+    ROOM.c_h   = other.rmodel.c_h
     ROOM.c_tex = other.theme.ceil
   
     WINDOW.c_h = ROOM.c_h - 24
     WINDOW.c_tex = sel(theme.outdoor, theme.floor, theme.ceil)
-    WINDOW.light = other.light - 16
+    WINDOW.light = other.rmodel.light - 16
 
   else -- "solid"
     local h = rand_index_by_probs { 20, 80, 20, 40 }
@@ -1496,8 +1471,8 @@ function B_vista(p,c, side,deep, theme,kind)
     WINDOW.c_h = ROOM.f_h + 96
     WINDOW.c_tex = ARCH.c_tex
 
-    ROOM.light   = other.light - 32
-    WINDOW.light = other.light - 16
+    ROOM.light   = other.rmodel.light - 32
+    WINDOW.light = other.rmodel.light - 16
   end
 
   WINDOW.impassible = true  -- FIXME
@@ -1673,7 +1648,7 @@ function B_deathmatch_exit(p,c, K,kx,ky)
     c_tex = door_info.bottom       or STEP.f_tex,
     light = 255,
 
-    l_tex = c.theme.wall,
+    l_tex = c.rmodel.l_tex,
     u_tex = door_info.tex,
     door_kind = 1,
 
@@ -1762,10 +1737,6 @@ end
 
 function setup_rmodel(p, c)
 
-  if not c.light then
-    c.light = sel(c.theme.outdoor, 192, 144)
-  end
-
   c.rmodel =
   {
     f_h=c.floor_h,
@@ -1778,6 +1749,10 @@ function setup_rmodel(p, c)
 
     light=c.light,
   }
+
+  if not c.rmodel.light then
+    c.rmodel.light = sel(c.theme.outdoor, 192, 144)
+  end
 end
 
 function make_chunks(p)
@@ -2308,12 +2283,27 @@ function make_chunks(p)
 
   local function setup_chunk_rmodels(c)
 
-      for kx = 1,KW do for ky = 1,KH do
-        local K = c.chunks[kx][ky]
-        assert(K)
+    for kx = 1,KW do for ky = 1,KH do
+      local K = c.chunks[kx][ky]
+      assert(K)
 
-        K.rmodel = copy_table(c.rmodel)
-      end end
+      K.rmodel = copy_table(c.rmodel)
+
+      if K.link then
+        local other = link_other(K.link, c)
+
+        if K.link.build == c or K.link.kind == "falloff" then
+          -- no change
+        else
+          K.rmodel.f_h = other.rmodel.f_h
+          K.rmodel.c_h = math.max(c.rmodel.c_h, other.rmodel.c_h) --FIXME (??)
+        end
+
+      elseif K.liquid then
+        K.rmodel.f_h   = K.rmodel.f_h - 12
+        K.rmodel.f_tex = p.liquid.floor
+      end
+    end end
   end
 
   local function connect_chunks(c)
@@ -2324,53 +2314,33 @@ function make_chunks(p)
     --   nil for unconnectable chunks (void space)
 
     local function init_connx()
-      for kx = 1,KW do
-        for ky = 1,KH do
-          local K = c.chunks[kx][ky]
-          assert(K)
 
-          if K.void or K.cage or K.vista then
-            -- skip it
+      for kx = 1,KW do for ky = 1,KH do
+        local K = c.chunks[kx][ky]
+        assert(K)
 
-          elseif K.room then
-            K.connected = 1
+        if K.void or K.cage or K.vista then
+          -- skip it
 
-            K.floor_h = c.floor_h
-            K.ceil_h  = c.ceil_h
+        elseif K.room then
+          K.connected = 1
 
-          elseif K.liquid then
-            K.connected = 0
+        elseif K.liquid or K.link then
 
-            K.floor_h = c.f_min - 12
-            K.ceil_h  = c.ceil_h
-            
-          elseif K.link then
-            local other = link_other(K.link, c)
-
-            K.connected = 0
-
-            if K.link.build == c or K.link.kind == "falloff" then
-              K.floor_h = c.floor_h
-              K.ceil_h  = c.ceil_h
-              -- Note: cannot assume that it connects
-              -- (it might be an isolated corner).
-            else
-              
-              K.floor_h = other.floor_h
-              K.ceil_h  = math.max(c.ceil_h, other.ceil_h) --FIXME
-            end
-          else
-            error("connect_chunks: type is unknown!")
-          end
+          -- Note: cannot assume that it connects
+          -- (it might be an isolated corner).
+          K.connected = 0
+        else
+          error("connect_chunks: type is unknown!")
         end
-      end
+      end end
     end
 
     local function grow_pass()
 
       local function grow_a_pair(K, N)
         if N.connected == 0 then
-          if math.abs(K.floor_h - N.floor_h) <= 16 then
+          if math.abs(K.rmodel.f_h - N.rmodel.f_h) <= 16 then
             N.connected = 1
           end
         end
@@ -2412,7 +2382,7 @@ function make_chunks(p)
                c.chunks[kx+dx][ky+dy].connected == 1
             then
               local N = c.chunks[kx+dx][ky+dy]
-              local diff = math.abs(K.floor_h - N.floor_h)
+              local diff = math.abs(K.rmodel.f_h - N.rmodel.f_h)
 
               if diff < best_diff then
                 -- clear out previous (worse) results
@@ -2437,10 +2407,12 @@ function make_chunks(p)
 
     --- connect_chunks ---
 
-    init_connx() --FIXME !!!!!  initialise heights elsewhere
-    grow_connx()
+    init_connx()
 
     for loop=1,99 do
+      
+      grow_connx()
+      
       local loc = find_stair_pos()
       if not loc then break end
 
@@ -2458,8 +2430,6 @@ local dx,dy = dir_to_delta(loc.dir)
 
       K.stair_dir = loc.dir
       K.connected = 1
-
-      grow_connx()
     end 
 
     --> result: certain chunks have a "stair_dir" field
@@ -2500,7 +2470,7 @@ local dx,dy = dir_to_delta(loc.dir)
         then
           local score = k_dist(kx, ky)
           score = score + con.random() * 0.5
-          if c.chunks[kx][ky].floor_h == c.floor_h then score = score + 1.7 end
+          if c.chunks[kx][ky].rmodel.f_h == c.rmodel.f_h then score = score + 1.7 end
 
           if score > best_score then
             best_score = score
@@ -2660,7 +2630,7 @@ local dx,dy = dir_to_delta(loc.dir)
 
       flesh_out_cell(cell)
 
-      --- setup_chunk_rmodels(cell)
+      setup_chunk_rmodels(cell)
 
       connect_chunks(cell)
   end
@@ -2794,7 +2764,7 @@ function build_cell(p, c)
       end
 
       if c.hallway and other.hallway then
-        arch.light = (c.light + other.light) / 2.0
+        arch.light = (c.rmodel.light + other.rmodel.light) / 2.0
       elseif c.theme.outdoor then
         arch.light = arch.light - 32
       else
@@ -2843,10 +2813,11 @@ function build_cell(p, c)
        THEME.switches[link.quest.item].bars
     then
       local info = THEME.switches[link.quest.item]
-      local sec = copy_block(c.rmodel)
-      sec.f_h = c.floor_h
-      sec.f_tex = b_theme.floor
-      sec.c_tex = b_theme.ceil
+      local sec = copy_block_with_new(c.rmodel,
+      {
+        f_tex = b_theme.floor,
+        c_tex = b_theme.ceil,
+      })
 
       if not link.src.outdoor or not link.dest.outdoor then
         sec.c_h = sec.c_h - 32
@@ -2950,12 +2921,12 @@ function build_cell(p, c)
       local K1, K2 = chunk_pair(c, other, side,n)
  
       if not (K1.void or K1.cage or K1.vista) then
-        f_max = math.max(f_max, K1.floor_h)
-        f_min = math.min(f_min, K1.floor_h)
+        f_max = math.max(f_max, K1.rmodel.f_h)
+        f_min = math.min(f_min, K1.rmodel.f_h)
       end
       if not (K2.void or K2.cage or K2.vista) then
-        f_max = math.max(f_max, K2.floor_h)
-        f_min = math.min(f_min, K2.floor_h)
+        f_max = math.max(f_max, K2.rmodel.f_h)
+        f_min = math.min(f_min, K2.rmodel.f_h)
       end
     end
 
@@ -3091,20 +3062,26 @@ function build_cell(p, c)
 
     local WALL =
     {
-      f_h = c.f_max + 48, c_h = c.ceil_h,
-      f_tex = c.theme.floor, c_tex = c.theme.ceil,
-      light = c.light,
-      l_tex = c.theme.wall,
-      u_tex = c.theme.wall,
+      f_h = c.f_max + 48,
+      f_tex = c.rmodel.f_tex,
+      l_tex = c.rmodel.l_tex,
+
+      c_h = c.rmodel.c_h,
+      c_tex = c.rmodel.c_tex,
+      u_tex = c.rmodel.u_tex,
+
+      light = c.rmodel.light,
     }
 
     local BEHIND =
     {
-      f_h = c.f_min - 512, c_h = c.f_min - 508,
-      f_tex = c.theme.floor, c_tex = c.theme.ceil,
-      light = c.light,
-      l_tex = c.theme.wall,
-      u_tex = c.theme.wall,
+      f_h = c.f_min - 512,
+      c_h = c.f_min - 508,
+      f_tex = c.rmodel.f_tex,
+      c_tex = c.rmodel.c_tex,
+      l_tex = c.rmodel.l_tex,
+      u_tex = c.rmodel.u_tex,
+      light = c.rmodel.light,
     }
 
     local ax1, ay1, ax2, ay2 = side_to_corner(10-side, FW, FH)
@@ -3130,20 +3107,20 @@ function build_cell(p, c)
 
     local WALL =
     {
-      f_h = c.f_max + 48, c_h = c.ceil_h,
-      f_tex = c.theme.floor, c_tex = c.theme.ceil,
-      light = c.light,
-      l_tex = c.theme.wall,
-      u_tex = c.theme.wall,
+      f_h = c.f_max + 48, c_h = c.rmodel.c_h,
+      f_tex = c.rmodel.f_tex, c_tex = c.rmodel.c_tex,
+      light = c.rmodel.light,
+      l_tex = c.rmodel.l_tex,
+      u_tex = c.rmodel.u_tex,
     }
 
     local BEHIND =
     {
       f_h = c.f_min - 512, c_h = c.f_min - 508,
-      f_tex = c.theme.floor, c_tex = c.theme.ceil,
-      light = c.light,
-      l_tex = c.theme.wall,
-      u_tex = c.theme.wall,
+      f_tex = c.rmodel.f_tex, c_tex = c.rmodel.c_tex,
+      light = c.rmodel.light,
+      l_tex = c.rmodel.l_tex,
+      u_tex = c.rmodel.u_tex,
     }
 
     if not p.blocks[c.bx1-1+x][c.by1-1+y] then
@@ -3160,11 +3137,11 @@ function build_cell(p, c)
 
     local EMPTY = 
     {
-      f_h = c.floor_h,
-      c_h = c.ceil_h,
+      f_h = c.rmodel.f_h,
+      c_h = c.rmodel.c_h,
       f_tex = b_theme.floor,
       c_tex = b_theme.ceil,
-      light = c.light
+      light = c.rmodel.light
     }
 
     local overrides
@@ -3177,7 +3154,7 @@ function build_cell(p, c)
 
 --print(string.format(
 --"Cell %d,%d Side %d Themes: %s/%s/%s R %d",
---c.x, c.y, side, c.theme.floor, b_theme.floor, other.theme.floor, rsd))
+--c.x, c.y, side, c.rmodel.f_tex, b_theme.floor, other.theme.floor, rsd))
 
       -- FIXME: choose fence rail
       overrides = { [rsd] = { rail = THEME.rails["r_1"].tex }}
@@ -3205,12 +3182,12 @@ function build_cell(p, c)
           sec = copy_block(EMPTY)
 
           if K1.liquid or K2.liquid then
-            sec.f_h = math.max(K1.floor_h or -65536, K2.floor_h or -65536)
-            if K1.liquid == K2.liquid and K1.floor_h == K2.floor_h then
+            sec.f_h = math.max(K1.rmodel.f_h or -65536, K2.rmodel.f_h or -65536)
+            if K1.liquid == K2.liquid and K1.rmodel.f_h == K2.rmodel.f_h then
               sec.f_h = sec.f_h + 16
             end
           else
-            sec.f_h = math.min(K1.floor_h or  65536, K2.floor_h or  65536)
+            sec.f_h = math.min(K1.rmodel.f_h or  65536, K2.rmodel.f_h or  65536)
           end
 
         else -- wire fence (floor already set)
@@ -3268,7 +3245,7 @@ function build_cell(p, c)
     local sec = 
     {
       f_h = math.max(c.f_max, other.f_max) + 32,
-      c_h = math.min(c.ceil_h, other.ceil_h) - 32,
+      c_h = math.min(c.rmodel.c_h, other.rmodel.c_h) - 32,
       f_tex = b_theme.floor,
       c_tex = b_theme.ceil,
       light = c.rmodel.light,
@@ -3280,7 +3257,7 @@ function build_cell(p, c)
     if other.scenic then sec.impassible = true end
 
     if what == "fence" then
-      sec.c_h = c.ceil_h
+      sec.c_h = c.rmodel.c_h
     else
       sec.light = sec.light - 16
       sec.c_tex = b_theme.arch_ceil or sec.f_tex
@@ -3431,10 +3408,10 @@ function build_cell(p, c)
       local FENCE =
       {
         f_h = math.max(c.f_max, other.f_max) + 64,
-        c_h = c.ceil_h,
+        c_h = c.rmodel.c_h,
         f_tex = b_theme.floor,
         c_tex = b_theme.ceil,
-        light = c.light
+        light = c.rmodel.light
       }
       if rand_odds(95) then FENCE.block_sound = 2 end
       if other.scenic then FENCE.impassible = true end
@@ -3577,7 +3554,7 @@ function build_cell(p, c)
       end
     end
 
-    -- build_chunk --
+    ---=== build_chunk ===---
 
     local K = c.chunks[kx][ky]
     assert(K)
@@ -3595,7 +3572,7 @@ function build_cell(p, c)
         con.debugf("BUILDING CLOSET @ (%d,%d)\n", c.x, c.y)
 
         table.insert(K.place.spots,
-          B_monster_closet(p,c, K,kx,ky, c.rmodel.f_h + 0,
+          B_monster_closet(p,c, K,kx,ky, c.floor_h + 0,
             c.quest.closet.door_tag))
 
       elseif K.dm_exit then
@@ -3633,7 +3610,7 @@ function build_cell(p, c)
       local dx, dy = dir_to_delta(K.stair_dir)
       local NB = c.chunks[kx+dx][ky+dy]
 
-      local diff = math.abs(K.floor_h - NB.floor_h)
+      local diff = math.abs(K.rmodel.f_h - NB.rmodel.f_h)
 
       local long = 2
       local deep = 1
@@ -3676,15 +3653,15 @@ function build_cell(p, c)
         bx = bx + 1; if JW >= 4 then bx = bx + 1 end
       end
 
-      local step = (NB.floor_h - K.floor_h) / deep / 4
+      local step = (NB.rmodel.f_h - K.rmodel.f_h) / deep / 4
 
       if math.abs(step) <= 16 then
-        B_stair(p, c, bx, by, K.floor_h, K.stair_dir,
-                long, deep, (NB.floor_h - K.floor_h) / (deep * 4),
+        B_stair(p, c, bx, by, K.rmodel.f_h, K.stair_dir,
+                long, deep, (NB.rmodel.f_h - K.rmodel.f_h) / (deep * 4),
                 { } )
       else
         B_lift(p, c, bx, by,
-               math.max(K.floor_h, NB.floor_h), K.stair_dir,
+               math.max(K.rmodel.f_h, NB.rmodel.f_h), K.stair_dir,
                long, deep, { } )
       end
     end  -- K.stair_dir
@@ -3700,31 +3677,31 @@ function build_cell(p, c)
         for i = 1,4 do
           local dx,dy = dir_to_delta(offsets[i])
           if settings.game == "plutonia" then
-            B_double_pedestal(p,c, bx+dx,by+dy, K.floor_h, THEME.special_ped)
+            B_double_pedestal(p,c, bx+dx,by+dy, K.rmodel, THEME.special_ped)
           else
-            B_pedestal(p, c, bx+dx, by+dy, K.floor_h, THEME.pedestals.PLAYER)
+            B_pedestal(p, c, bx+dx, by+dy, K.rmodel, THEME.pedestals.PLAYER)
           end
           add_thing(p, c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
           c.player_pos = {x=bx+dx, y=by+dy}
         end
       else
         if settings.game == "plutonia" then
-          B_double_pedestal(p,c, bx,by, K.floor_h, THEME.special_ped)
+          B_double_pedestal(p,c, bx,by, K.rmodel, THEME.special_ped)
         else
-          B_pedestal(p, c, bx, by, K.floor_h, THEME.pedestals.PLAYER)
+          B_pedestal(p, c, bx, by, K.rmodel, THEME.pedestals.PLAYER)
         end
         add_thing(p, c, bx, by, sel(p.deathmatch, "dm_player", "player1"), true, angle)
         c.player_pos = {x=bx, y=by}
       end
 
     elseif K.dm_weapon then
-      B_pedestal(p, c, bx, by, K.floor_h, THEME.pedestals.WEAPON)
+      B_pedestal(p, c, bx, by, K.rmodel, THEME.pedestals.WEAPON)
       add_thing(p, c, bx, by, K.dm_weapon, true)
 
     elseif K.quest then
 
       if c.quest.kind == "key" or c.quest.kind == "weapon" or c.quest.kind == "item" then
-        B_pedestal(p, c, bx, by, K.floor_h, THEME.pedestals.QUEST)
+        B_pedestal(p, c, bx, by, K.rmodel, THEME.pedestals.QUEST)
 
         -- weapon and keys are non-blocking, but we don't want
         -- a monster sitting on top of our quest item (especially
@@ -3737,7 +3714,7 @@ function build_cell(p, c)
         local kind = 103; if info.bars then kind = 23 end
         if rand_odds(40) then
           local side = wall_switch_dir(kx, ky, c.entry_dir)
-          B_wall_switch(p,c, bx,by, K.floor_h, side, 2, info, kind, c.quest.tag + 1)
+          B_wall_switch(p,c, bx,by, K.rmodel.f_h, side, 2, info, kind, c.quest.tag + 1)
         else
           B_pillar_switch(p,c, K,bx,by, info,kind, c.quest.tag + 1)
         end
@@ -3748,14 +3725,14 @@ function build_cell(p, c)
         local side = wall_switch_dir(kx, ky, c.entry_dir)
 
         if settings.game == "plutonia" then
-          B_double_pedestal(p,c, bx,by, K.floor_h, THEME.special_ped,
+          B_double_pedestal(p,c, bx,by, K.rmodel.f_h, THEME.special_ped,
             { walk_kind = 52 }) -- FIXME "exit_W1"
 
         elseif c.small_exit and not c.smex_cage and rand_odds(80) then
           if c.theme.flush then
-            B_flush_switch(p,c, bx,by, K.floor_h,side, c.theme.switch, 11)
+            B_flush_switch(p,c, bx,by, K.rmodel.f_h,side, c.theme.switch, 11)
           else
-            B_wall_switch(p,c, bx,by, K.floor_h,side, 3, c.theme.switch, 11)
+            B_wall_switch(p,c, bx,by, K.rmodel.f_h,side, 3, c.theme.switch, 11)
           end
 
           -- make the area behind the switch solid
@@ -3774,46 +3751,33 @@ function build_cell(p, c)
           B_exit_hole(p,c, K,kx,ky, c.rmodel)
           return
         elseif rand_odds(85) then
-          B_floor_switch(p,c, bx,by, K.floor_h, side, c.theme.switch, 11)
+          B_floor_switch(p,c, bx,by, K.rmodel.f_h, side, c.theme.switch, 11)
         else
           B_pillar_switch(p,c, K,bx,by, c.theme.switch, 11)
         end
       end
     end -- if K.player | K.quest etc...
 
-    -- fill in the rest
 
-    local sec = c.rmodel
-    local u_tex = c.theme.wall
+    ---| fill in the rest |---
 
-    if K.link and K.link.build ~= c then
-
-      local other = link_other(K.link, c)
-
-      sec = copy_block(sec)
-
-      sec.f_h = K.floor_h
-      sec.c_h = K.ceil_h
-    end
+    local sec = copy_block(K.rmodel)
 
     local surprise = c.quest.closet or c.quest.depot
 
     if K.quest and surprise and c == surprise.trigger_cell then
-      sec = copy_block(sec)
+
       sec.mark = allocate_mark(p)
       sec.walk_kind = 2
       sec.walk_tag  = surprise.door_tag
     end
 
-    if K.liquid then
-      sec = copy_block(sec) -- FIXME??
-      sec.f_tex = c.liquid.floor
+    if K.liquid then  -- FIXME: put into setup_chunk_rmodels
       sec.kind = c.liquid.sec_kind
-      sec.f_h = K.floor_h
     end
 
     if K.player then
-      sec = copy_block(sec) -- FIXME??
+
       sec.near_player = true;
       if not sec.kind then
         sec.kind = 9  -- FIXME: "secret"
@@ -3830,7 +3794,7 @@ function build_cell(p, c)
       and not (c.quest.kind == "exit" and c.along == #c.quest.path-1)
       and not K.stair_dir
     then
-      sec = copy_block(sec) -- FIXME??
+
       K.overhang = true
 
       if not c.overhang then
@@ -3839,16 +3803,17 @@ function build_cell(p, c)
       end
       local overhang = c.overhang
 
-      sec.c_tex = overhang.ceil
-      u_tex = overhang.upper
       K.sup_tex = overhang.thin
+
+      sec.c_tex = overhang.ceil
+      sec.u_tex = overhang.upper
 
       sec.c_h = sec.c_h - (overhang.h or 24)
       sec.light = sec.light - 48
     end
 
     -- TEST CRUD : crates
-    if sec and not c.scenic and not K.stair_dir
+    if not c.scenic and not K.stair_dir
       and THEME.crates
       and dual_odds(c.theme.outdoor, 20, 33)
       and (not c.hallway or rand_odds(25))
@@ -3861,7 +3826,7 @@ function build_cell(p, c)
     end
 
     -- TEST CRUD : pillars
-    if not K.crate and sec and not c.scenic and not K.stair_dir
+    if not K.crate and not c.scenic and not K.stair_dir
       and dual_odds(c.theme.outdoor, 12, 25)
       and (not c.hallway or rand_odds(15))
       and (not c.exit or rand_odds(22))
@@ -3894,14 +3859,13 @@ function build_cell(p, c)
  
     ---- Chunk Fill ----
 
-    local l_tex = c.theme.wall
+    local l_tex = c.rmodel.l_tex
 
     do
-
       assert(sec)
 
       if K.overhang then
-        add_overhang_pillars(c, K, kx, ky, sec, l_tex, u_tex)
+        add_overhang_pillars(c, K, kx, ky, sec, sec.l_tex, sec.u_tex)
       end
 
       if K.sky_light_sec then
@@ -3915,8 +3879,8 @@ function build_cell(p, c)
         assert(func)
 
         local BB = copy_block(K.sky_light_sec)
-        BB.l_tex = l_tex
-        BB.u_tex = K.sky_light_utex or u_tex
+        BB.l_tex = sec.l_tex
+        BB.u_tex = K.sky_light_utex or sec.u_tex
 
         for x = x1,x2 do for y = y1,y2 do
           if func(kx,ky, x,y) then
@@ -3945,7 +3909,7 @@ function build_cell(p, c)
 
         -- TEST CRUD
         if rand_odds(22) and THEME.mats.CAGE and not p.deathmatch
-          and K.ceil_h >= K.floor_h + 128
+          and K.rmodel.c_h >= K.rmodel.f_h + 128
         then
           B_pillar_cage(p,c, THEME.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
         else
@@ -3954,8 +3918,8 @@ function build_cell(p, c)
         blocked = true
       end
 
-      sec.l_tex = l_tex
-      sec.u_tex = u_tex
+---###      sec.l_tex = l_tex
+---###      sec.u_tex = u_tex
 
       gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, sec)
 
@@ -4058,7 +4022,7 @@ local function build_depot(p, c)
   assert(player_B.f_h)
 
   local sec = { f_h = player_B.f_h, c_h = player_B.f_h + 128,
-                f_tex = c.theme.floor, c_tex = c.theme.ceil,
+                f_tex = c.rmodel.f_tex, c_tex = c.rmodel.c_tex,
                 l_tex = c.theme.void,  u_tex = c.theme.void,
                 light = 0
               }
@@ -4117,6 +4081,7 @@ function build_level(p)
   end
 
   for zzz,cell in ipairs(p.all_depots) do
+    setup_rmodel(p, cell)
     build_depot(p, cell)
   end
 
