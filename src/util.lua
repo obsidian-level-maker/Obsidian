@@ -90,18 +90,12 @@ end
 
 function merge_table(dest, src1,src2,src3,src4)
   assert(dest)
-  if src1 then
-    for k,v in pairs(src1) do dest[k] = v end
-  end
-  if src2 then
-    for k,v in pairs(src2) do dest[k] = v end
-  end
-  if src3 then
-    for k,v in pairs(src3) do dest[k] = v end
-  end
-  if src4 then
-    for k,v in pairs(src4) do dest[k] = v end
-  end
+  if src1 then for k,v in pairs(src1) do dest[k] = v end end
+  if src2 then for k,v in pairs(src2) do dest[k] = v end end
+  if src3 then for k,v in pairs(src3) do dest[k] = v end end
+  if src4 then for k,v in pairs(src4) do dest[k] = v end end
+  if src5 then for k,v in pairs(src5) do dest[k] = v end end
+  if src6 then for k,v in pairs(src6) do dest[k] = v end end
   return dest
 end
 
