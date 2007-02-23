@@ -1226,9 +1226,12 @@ function plan_sp_level(is_coop)  -- returns Plan
   local function add_falloffs()
     
     local function can_make_falloff(a, b, dir)
-      
-      if b.is_depot or b.is_bridge or b.scenic then return false end
-      if a.is_exit or b.is_exit then return false end
+
+      if b.is_exit or b.hallway or b.scenic or b.is_depot or b.is_bridge then
+        return false
+      end
+
+      if a.is_exit then return false end
 
       local aq = a.quest.parent or a.quest
       local bq = b.quest.parent or b.quest
@@ -1268,22 +1271,18 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     local function can_make_vista(a, b, dir)
 
-      if a.is_depot or b.is_depot then return false end
-      if a.is_exit  or b.is_exit  then return false end
-
-      if a.scenic then return false end
-
---!!! if b.scenic ~= "outdoor" then return false end
---!!!      if not b.theme.outdoor then return false end
-      if b.scenic then return false end
-
-      if a.link[dir] then return false end
-
---!!!   if a.theme.outdoor and rand_odds(90) then return false end
-
+      if b.is_exit or b.hallway or b.is_depot then return false end
+      if b.scenic == "solid" then return false end
       if b.vista_from then return false end
 
-      if a.f_min < (b.f_max + 16) then return false end
+      if not b.theme.outdoor and rand_odds(50) then return false end
+
+      if a.small_exit or a.scenic or a.is_depot  then return false end
+      if a.link[dir] then return false end
+
+      if a.theme.outdoor and rand_odds(50) then return false end
+
+      if a.f_min < (b.f_max + 24) then return false end
 
       if b.ceil_h < (a.f_max + 96) then return false end
 
@@ -1366,7 +1365,9 @@ function plan_sp_level(is_coop)  -- returns Plan
       for idx,c in ipairs(Q.path) do
         rand_shuffle(SIDES)
         for zzz,side in ipairs(SIDES) do
-          if idx >= 2 and not c.link[side] then
+          if idx >= 2 and not c.link[side]
+             and not c.vista[side] and c.vista_from ~= side
+          then
             table.insert(locs, {c=c, side=side})
             break; -- only one location per cell
           end
