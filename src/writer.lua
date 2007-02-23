@@ -397,6 +397,7 @@ function write_level(p, lev_name)
         return push_line()
       end
 
+      -- don't create lines when sector is same on both sides
       if same_sector_w_merge(f, b) then
         return push_line()
       end
@@ -426,7 +427,7 @@ function write_level(p, lev_name)
         local f_same = same_sector_w_merge(cur_line.f_block, f)
         local b_same = same_sector_w_merge(cur_line.b_block, b)
       
-         if f_same and b_same and
+        if f_same and b_same and
             cur_line.norm  == norm and
             cur_line.flags == flags and
             match_sidedefs(cur_line.front, f_side) and
@@ -435,11 +436,9 @@ function write_level(p, lev_name)
             -- overflow in older DOOM engines)
             #line_list > 0
         then
-          if not (f.short or b.short or cur_line.short) then
-            -- simply extend current line
-            cur_line.ex, cur_line.ey = ex, ey
-            return
-          end
+          -- simply extend current line
+          cur_line.ex, cur_line.ey = ex, ey
+          return
         end
       end
 
@@ -455,8 +454,6 @@ function write_level(p, lev_name)
 
         front = f_side,
         back  = b_side,
-
-        short = f.short or b.short,
 
         sx = sx, sy = sy,
         ex = ex, ey = ey,
