@@ -196,7 +196,7 @@ HC_EXITS =
 
 HC_HALLWAYS =
 {
-  -- FIXME !!!! hallway themes
+  -- FIXME !!! hallway themes
 }
 
 

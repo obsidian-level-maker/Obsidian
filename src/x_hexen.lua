@@ -184,7 +184,7 @@ XN_EXITS =
 
 XN_HALLWAYS =
 {
-  -- FIXME !!!! hallway themes
+  -- FIXME !!! hallway themes
 }
 
 
