@@ -659,13 +659,16 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     make_hallways(Q)
 
-    -- !!! Experimental: quest area is a building
-    if #Q.path >= 4 and Q.theme.outdoor and not Q.has_hallway
-       and dual_odds(Q.mini, 10, 33)
-    then
-      repeat
-        Q.last.theme = get_rand_theme()
-      until not Q.last.theme.outdoor
+    if Q.theme.outdoor and not Q.has_hallway then
+      -- !!! Experimental: start cell is a building
+      if #Q.path >= 3 and Q == p.quests[1] and rand_odds(30) then
+        Q.first.theme = get_rand_indoor_theme()
+      end
+
+      -- !!! Experimental: quest cell is a building
+      if #Q.path >= 4 and dual_odds(Q.mini, 12, 30) then
+        Q.last.theme = get_rand_indoor_theme()
+      end
     end
   end
 
