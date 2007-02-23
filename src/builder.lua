@@ -3725,7 +3725,7 @@ function build_cell(p, c)
         local side = wall_switch_dir(kx, ky, c.entry_dir)
 
         if settings.game == "plutonia" then
-          B_double_pedestal(p,c, bx,by, K.rmodel.f_h, THEME.special_ped,
+          B_double_pedestal(p,c, bx,by, K.rmodel, THEME.special_ped,
             { walk_kind = 52 }) -- FIXME "exit_W1"
 
         elseif c.small_exit and not c.smex_cage and rand_odds(80) then
