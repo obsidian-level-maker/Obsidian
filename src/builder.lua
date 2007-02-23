@@ -43,25 +43,6 @@ function copy_sector(sec)
   }
 end
 
-function copy_chunk(K)
-
-  assert(not K.vista)
-
-  return
-  {
-    room = K.room,
-    void = K.void,
-    link = K.link,
-    cage = K.cage,
-    liquid = K.liquid,
-    closet = K.closet,
-    place  = K.place,
-
-    floor_h = K.floor_h,
-    ceil_h  = K.ceil_h,
-  }
-end
-
 function dir_to_across(dir)
   if dir == 2 then return 1, 0 end
   if dir == 8 then return 1, 0 end
@@ -103,12 +84,44 @@ function dir_to_corner(dir, W, H)
   error ("dir_to_corner: bad dir " .. dir)
 end
 
-function block_to_chunk(B)
-  return 1 + int((B-1) * KW / BW)
+function block_to_chunk(bx)
+  return 1 + int((bx-1) * KW / BW)
 end
 
-function chunk_to_block(K)
-  return 1 + int((K-1) * BW / KW)
+function chunk_to_block(kx)
+  return 1 + int((kx-1) * BW / KW)
+end
+
+function new_chunk(kx, ky, kind, value)
+  return
+  {
+    [kind] = value or true,
+
+    x1 = chunk_to_block(kx),
+    y1 = chunk_to_block(ky),
+    x2 = chunk_to_block(kx + 1) - 1,
+    y2 = chunk_to_block(ky + 1) - 1,
+  }
+end
+
+function copy_chunk(kx, ky, K)
+
+  assert(not K.vista)
+
+  local COPY = new_chunk(kx, ky, "is_copy")
+
+  COPY.room = K.room
+  COPY.void = K.void
+  COPY.link = K.link
+  COPY.cage = K.cage
+  COPY.liquid = K.liquid
+  COPY.closet = K.closet
+  COPY.place  = K.place
+
+  COPY.floor_h = K.floor_h
+  COPY.ceil_h  = K.ceil_h
+
+  return COPY
 end
 
 function chunk_touches_side(kx, ky, side)
@@ -593,12 +606,12 @@ end
 --
 -- Build an exit hole
 --
-function B_exit_hole(p,c, kx,ky, sec)
+function B_exit_hole(p,c, K,kx,ky, sec)
 
-  assert(sec)
+  assert(K and sec)
 
-  local bx = chunk_to_block(kx)
-  local by = chunk_to_block(ky)
+  local bx = K.x1
+  local by = K.y1
 
   gap_fill(p,c, bx,by, bx+KW-1, by+KH-1, sec,
            { l_tex = c.theme.hole_tex or c.theme.void })
@@ -1045,7 +1058,7 @@ end
 --
 -- fill a chunk with void, with pictures on the wall
 --
-function B_void_pic(p,c, kx,ky, pic, cuts)
+function B_void_pic(p,c, K,kx,ky, pic, cuts)
 
   local z = (c.c_min + c.f_max) / 2
   local h = pic.h or (c.c_min - c.f_max - 32)
@@ -1053,13 +1066,8 @@ function B_void_pic(p,c, kx,ky, pic, cuts)
   local z1 = z-h/2
   local z2 = z+h/2
 
-  local x1 = chunk_to_block(kx)
-  local y1 = chunk_to_block(ky)
-  local x2 = chunk_to_block(kx + 1) - 1
-  local y2 = chunk_to_block(ky + 1) - 1
-
-  local fx = (x1 - 1) * FW
-  local fy = (y1 - 1) * FH
+  local fx = (K.x1 - 1) * FW
+  local fy = (K.y1 - 1) * FH
 
   frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+3*FH, { solid=c.theme.wall })
 
@@ -1264,10 +1272,9 @@ end
 --
 -- Build a chunk-sized monster cage
 --
-function B_big_cage(p,c, theme, kx,ky)
+function B_big_cage(p,c, theme, K,kx,ky)
 
-  local bx = chunk_to_block(kx)
-  local by = chunk_to_block(ky)
+  local bx, by = K.x1, K.y1
 
   local rail = get_rand_rail()
   assert(rail)
@@ -1319,10 +1326,9 @@ end
 --
 -- Build a hidden monster closet
 --
-function B_monster_closet(p,c, kx,ky, z, tag)
+function B_monster_closet(p,c, K,kx,ky, z, tag)
 
-  local bx = chunk_to_block(kx)
-  local by = chunk_to_block(ky)
+  local bx, by = K.x1, K.y1
 
   local INNER =
   {
@@ -1343,13 +1349,8 @@ function B_monster_closet(p,c, kx,ky, z, tag)
   OUTER.c_tex = c.theme.arch_ceil or OUTER.f_tex
   OUTER.tag = tag
 
-  local x1 = chunk_to_block(kx)
-  local y1 = chunk_to_block(ky)
-  local x2 = chunk_to_block(kx + 1) - 1
-  local y2 = chunk_to_block(ky + 1) - 1
-
-  local fx = (x1 - 1) * FW
-  local fy = (y1 - 1) * FH
+  local fx = (bx - 1) * FW
+  local fy = (by - 1) * FH
 
   frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+3*FH, OUTER);
   frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, INNER)
@@ -1592,14 +1593,12 @@ end
 --
 -- FIXME: it always faces south
 --
-function B_deathmatch_exit(p,c, kx,ky)
+function B_deathmatch_exit(p,c, K,kx,ky)
 
   local theme = p.exit_theme
 
-  local x1 = chunk_to_block(kx)
-  local y1 = chunk_to_block(ky)
-  local x2 = chunk_to_block(kx + 1) - 1
-  local y2 = chunk_to_block(ky + 1) - 1
+  local x1, y1 = K.x1, K.y1
+  local x2, y2 = K.x2, K.y2
 
   local fx = (x1 - 1) * FW
   local fy = (y1 - 1) * FH
@@ -1799,12 +1798,13 @@ function make_chunks(p)
 
       -- what shall we put in-between?
       local r = con.random() * 100
+      local K
       if r < 40 then
-        c.chunks[kx][ky] = { link=link }
+        c.chunks[kx][ky] = new_chunk(kx,ky, "link",link)
       elseif r < 80 or no_void then
-        c.chunks[kx][ky] = { room=true }
+        c.chunks[kx][ky] = new_chunk(kx,ky, "room")
       else
-        c.chunks[kx][ky] = { void=true }
+        c.chunks[kx][ky] = new_chunk(kx,ky, "void")
       end
 
     elseif link.where == "wide" then
@@ -1854,7 +1854,7 @@ function make_chunks(p)
         has_clash = true
         c.chunks.clasher = c.chunks[kx][ky]
       else
-        c.chunks[kx][ky] = { link=link }
+        c.chunks[kx][ky] = new_chunk(kx,ky, "link",link )
       end
     end
     return not has_clash
@@ -1931,7 +1931,7 @@ function make_chunks(p)
         dest_x, dest_y = x2,y2
       end
 
-      c.chunks[dest_x][dest_y] = copy_chunk(c.chunks[src_x][src_y])
+      c.chunks[dest_x][dest_y] = copy_chunk(dest_x, dest_y, c.chunks[src_x][src_y])
     end
 
     local function check_corner(dir)
@@ -1950,8 +1950,8 @@ function make_chunks(p)
         if not (A and is_roomy(c, A)) and
            not (B and is_roomy(c, B)) then
 
-              if not A then c.chunks[kx][2] = { room=true }
-          elseif not B then c.chunks[2][ky] = { room=true }
+              if not A then c.chunks[kx][2] = new_chunk(kx,2, "room")
+          elseif not B then c.chunks[2][ky] = new_chunk(2,ky, "room")
           end
         end
       end
@@ -1964,7 +1964,7 @@ function make_chunks(p)
     end
 
     -- centre chunk always roomy  (FIXME ??)
-    c.chunks[2][2] = { room=true }  
+    c.chunks[2][2] = new_chunk(2,2, "room")
 
     local pair_list =
     {
@@ -2040,10 +2040,10 @@ function make_chunks(p)
       end
     end
 
-    for x = x1,x2 do
-      for y = y1,y2 do
-        if not c.chunks[x][y] then
-          c.chunks[x][y] = copy_chunk(common)
+    for kx = x1,x2 do
+      for ky = y1,y2 do
+        if not c.chunks[kx][ky] then
+          c.chunks[kx][ky] = copy_chunk(kx, ky, common)
         end
       end
     end
@@ -2065,7 +2065,7 @@ function make_chunks(p)
 
       if valid_chunk(nx, ny) then
         if not c.chunks[nx][ny] then
-          c.chunks[nx][ny] = { room=true }
+          c.chunks[nx][ny] = new_chunk(nx, ny, "room")
           return -- SUCCESS --
         end
       end
@@ -2077,21 +2077,21 @@ function make_chunks(p)
     for kx = 1,KW do
       for ky = 1,KH do
         if not c.chunks[kx][ky] then
-          c.chunks[kx][ky] = { [kind]=true }
+          c.chunks[kx][ky] = new_chunk(kx,ky, kind)
         end
       end
     end
   end
 
-  local function try_add_special(c, name)
+  local function try_add_special(c, kind)
     
-    if name == "liquid" then
+    if kind == "liquid" then
       if not c.liquid then return end
       if c.is_exit and rand_odds(98) then return end
     end
 
     -- TODO: more cage themes...
-    if name == "cage" then
+    if kind == "cage" then
       if not THEME.mats.CAGE then return end
       if c.scenic then return end
     end
@@ -2121,7 +2121,7 @@ function make_chunks(p)
 
     local p = rand_element(posits)
 
-    c.chunks[p.x][p.y] = { [name]=true }
+    c.chunks[p.x][p.y] = new_chunk(p.x, p.y, kind)
   end
 
   local function add_closet_chunks(c)
@@ -2145,7 +2145,11 @@ function make_chunks(p)
 
         con.debugf("CLOSET CHUNK @ (%d,%d) [%d,%d]\n", c.x, c.y, kx, ky)
 
-        c.chunks[kx][ky] = {void=true, closet=true, place=place}
+        local K = new_chunk(kx,ky, "void")
+        K.closet = true
+        K.place = place
+
+        c.chunks[kx][ky] = K
       end
     end
   end
@@ -2165,13 +2169,13 @@ function make_chunks(p)
         
         else
           if not K then
-            c.chunks[kx][ky] = { room=true }
+            c.chunks[kx][ky] = new_chunk(kx,ky, "room")
           end
 
-          other.chunks[4-kx][4-ky] = { vista=true }
+          other.chunks[4-kx][4-ky] = new_chunk(4-kx,4-ky, "vista")
 
           if c.vista[side] == 2 then
-            other.chunks[2][2] = { vista=true }
+            other.chunks[2][2] = new_chunk(2,2, "vista")
           end
         end
       end
@@ -2189,9 +2193,9 @@ function make_chunks(p)
     local r = con.random() * 100
 
     if r < 2 then
-      c.chunks[kx][ky] = { room=true }
+      c.chunks[kx][ky] = new_chunk(kx,ky, "room")
     elseif r < 12 then
-      c.chunks[kx][ky] = { cage=true }
+      c.chunks[kx][ky] = new_chunk(kx,ky, "cage")
       c.smex_cage = true
     end
 
@@ -2199,16 +2203,19 @@ function make_chunks(p)
   end
 
   local function add_dm_exit(c)
-    local kx, ky = 1, 3
 
     if c.chunks[1][3] then
       con.printf("WARNING: deathmatch exit stomped a chunk!\n")
     end
 
-    c.chunks[1][3] = { void=true, dm_exit=true, dir=2 }
+    local K = new_chunk(1,3, "void")
+    K.dm_exit = true
+    K.dir = 2
+
+    c.chunks[1][3] = K
 
     if not c.chunks[1][2] then
-      c.chunks[1][2] = { room=true }
+      c.chunks[1][2] = new_chunk(1,2, "room")
     end
   end
 
@@ -3509,15 +3516,6 @@ function build_cell(p, c)
       end
     end
 
-    local function chunk_void_fill(c, K, kx, ky, tex)
-      local x1 = chunk_to_block(kx)
-      local y1 = chunk_to_block(ky)
-      local x2 = chunk_to_block(kx + 1) - 1
-      local y2 = chunk_to_block(ky + 1) - 1
-
-      gap_fill(p,c, x1, y1, x2, y2, { solid=tex })
-    end
-
 
     local function wall_switch_dir(kx, ky, entry_dir)
       if not entry_dir then
@@ -3564,7 +3562,7 @@ function build_cell(p, c)
     assert(K)
 
     if c.scenic == "solid" then
-      chunk_void_fill(c, K, kx, ky, c.theme.void)
+      gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, { solid=c.theme.void })
       return
     end
 
@@ -3576,11 +3574,11 @@ function build_cell(p, c)
         con.debugf("BUILDING CLOSET @ (%d,%d)\n", c.x, c.y)
 
         table.insert(K.place.spots,
-          B_monster_closet(p,c, kx,ky, c.rmodel.f_h + 0,
+          B_monster_closet(p,c, K,kx,ky, c.rmodel.f_h + 0,
             c.quest.closet.door_tag))
 
       elseif K.dm_exit then
-        B_deathmatch_exit(p,c, kx,ky,K.dir)
+        B_deathmatch_exit(p,c, K,kx,ky,K.dir)
 
       elseif THEME.pics and not c.small_exit
           and rand_odds(sel(c.theme.outdoor, 10, sel(c.hallway,20, 50)))
@@ -3596,16 +3594,16 @@ function build_cell(p, c)
           c.quest.image = "pic"
         end
 
-        B_void_pic(p,c, kx,ky, pic,cut)
+        B_void_pic(p,c, K,kx,ky, pic,cut)
 
       else
-        chunk_void_fill(c, K, kx, ky, c.theme.void)
+        gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, { solid=c.theme.void })
       end
       return
     end -- K.void
 
     if K.cage then
-      B_big_cage(p,c, THEME.mats.CAGE, kx,ky)
+      B_big_cage(p,c, THEME.mats.CAGE, K,kx,ky)
       return
     end
 
@@ -3671,8 +3669,8 @@ function build_cell(p, c)
     end  -- K.stair_dir
 
 
-    local bx = chunk_to_block(kx) + 1
-    local by = chunk_to_block(ky) + 1
+    local bx = K.x1 + 1
+    local by = K.y1 + 1
     
     if K.player then
       local angle = player_angle(kx, ky)
@@ -3740,10 +3738,8 @@ function build_cell(p, c)
           end
 
           -- make the area behind the switch solid
-          local x1 = chunk_to_block(kx)
-          local y1 = chunk_to_block(ky)
-          local x2 = chunk_to_block(kx + 1) - 1
-          local y2 = chunk_to_block(ky + 1) - 1
+          local x1, y1 = K.x1, K.y1
+          local x2, y2 = K.x2, K.y2
               if side == 4 then x1 = x1+2
           elseif side == 6 then x2 = x2-2
           elseif side == 2 then y1 = y1+2
@@ -3754,7 +3750,7 @@ function build_cell(p, c)
           gap_fill(p,c, x1,y1, x2,y2, { solid=c.theme.wall })
           
         elseif c.theme.hole_tex and rand_odds(75) then
-          B_exit_hole(p,c, kx,ky, c.rmodel)
+          B_exit_hole(p,c, K,kx,ky, c.rmodel)
           return
         elseif rand_odds(85) then
           B_floor_switch(p,c, bx,by, K.floor_h, side, c.theme.switch, 11)
@@ -3880,10 +3876,6 @@ function build_cell(p, c)
     local l_tex = c.theme.wall
 
     do
-      local x1 = chunk_to_block(kx)
-      local y1 = chunk_to_block(ky)
-      local x2 = chunk_to_block(kx + 1) - 1
-      local y2 = chunk_to_block(ky + 1) - 1
 
       assert(sec)
 
@@ -3892,7 +3884,7 @@ function build_cell(p, c)
       end
 
       if K.sky_light_sec then
-        local x1,y1,x2,y2 = x1,y1,x2,y2
+        local x1,y1,x2,y2 = K.x1,K.y1,K.x2,K.y2
         if kx==1  then x1=x1+1 end
         if kx==KW then x2=x2-1 end
         if ky==1  then y1=y1+1 end
@@ -3913,7 +3905,7 @@ function build_cell(p, c)
       end
 
       -- get this *after* doing sky lights
-      local blocked = p.blocks[c.blk_x+x1+1][c.blk_y+y1+1]
+      local blocked = p.blocks[c.blk_x+K.x1+1][c.blk_y+K.y1+1]
 
       if K.crate and not blocked then
         local theme = c.crate_theme
@@ -3924,7 +3916,7 @@ function build_cell(p, c)
           c.quest.image = "crate"
           p.image = true
         end
-        B_crate(p,c, theme, sec, kx,ky, x1+1,y1+1)
+        B_crate(p,c, theme, sec, kx,ky, K.x1+1,K.y1+1)
         blocked = true
       end
 
@@ -3934,9 +3926,9 @@ function build_cell(p, c)
         if rand_odds(22) and THEME.mats.CAGE and not p.deathmatch
           and K.ceil_h >= K.floor_h + 128
         then
-          B_pillar_cage(p,c, THEME.mats.CAGE, kx,ky, x1+1,y1+1)
+          B_pillar_cage(p,c, THEME.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
         else
-          B_pillar(p,c, c.theme, kx,ky, x1+1,y1+1)
+          B_pillar(p,c, c.theme, kx,ky, K.x1+1,K.y1+1)
         end
         blocked = true
       end
@@ -3944,14 +3936,14 @@ function build_cell(p, c)
       sec.l_tex = l_tex
       sec.u_tex = u_tex
 
-      gap_fill(p,c, x1, y1, x2, y2, sec)
+      gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, sec)
 
       if not blocked and c.theme.scenery and not K.stair_dir and
          (dual_odds(c.theme.outdoor, 37, 22)
           or (c.scenic and rand_odds(51)))
       then
-        p.blocks[c.blk_x+x1+1][c.blk_y+y1+1].has_scenery = true
-        local th = add_thing(p, c, x1+1, y1+1, c.theme.scenery, true)
+        p.blocks[c.blk_x+K.x1+1][c.blk_y+K.y1+1].has_scenery = true
+        local th = add_thing(p, c, K.x1+1, K.y1+1, c.theme.scenery, true)
         if c.scenic then
           th.dx = rand_irange(-64,64)
           th.dy = rand_irange(-64,64)
@@ -4092,7 +4084,7 @@ function build_level(p)
   end
 
   make_chunks(p)
---  show_chunks(p)
+  show_chunks(p)
 
   for zzz,cell in ipairs(p.all_cells) do
     build_cell(p, cell)

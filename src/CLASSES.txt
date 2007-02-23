@@ -117,6 +117,9 @@ end
 
 
 class Chunk
+
+  x1, y1, x2, y2 : block range
+
   link : Link  -- for link chunks
 
   player : true  -- player start location
