@@ -33,6 +33,14 @@ function get_rand_theme()
   return info
 end
 
+function get_rand_indoor_theme()
+  repeat
+    local name,info = rand_table_pair(THEME.themes)
+  until not info.outdoor
+
+  return info
+end
+
 function get_rand_exit_theme()
   local name,info = rand_table_pair(THEME.exits)
   return info
