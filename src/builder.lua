@@ -204,7 +204,7 @@ function fill(p, c, sx, sy, ex, ey, B, B2)
   for x = sx,ex do
     for y = sy,ey do
       local N = copy_block(B)
-      p.blocks[c.blk_x+x][c.blk_y+y] = N
+      p.blocks[c.bx1-1+x][c.by1-1+y] = N
 
       if B2 then
         merge_table(N, B2)
@@ -221,9 +221,9 @@ function gap_fill(p, c, sx, sy, ex, ey, B, B2)
   for x = sx,ex do
     for y = sy,ey do
 
-      if not p.blocks[c.blk_x+x][c.blk_y+y] then
+      if not p.blocks[c.bx1-1+x][c.by1-1+y] then
         fill(p,c, x,y, x,y, B, B2)
---##        p.blocks[c.blk_x+x][c.blk_y+y] =
+--##        p.blocks[c.bx1-1+x][c.by1-1+y] =
 --##        { sector=sec, l_tex=l_tex, u_tex=u_tex, overrides=overrides,
 -- FIXME          block_sound= sec and sec.block_sound }
       end
@@ -240,11 +240,11 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
       local bx, fx = div_mod(x, FW)
       local by, fy = div_mod(y, FH)
       
-      if not p.blocks[c.blk_x+bx][c.blk_y+by] then
-        p.blocks[c.blk_x+bx][c.blk_y+by] = {}
+      if not p.blocks[c.bx1-1+bx][c.by1-1+by] then
+        p.blocks[c.bx1-1+bx][c.by1-1+by] = {}
       end
 
-      local B = p.blocks[c.blk_x+bx][c.blk_y+by]
+      local B = p.blocks[c.bx1-1+bx][c.by1-1+by]
       B.solid = nil
 
       if not B.fragments then
@@ -264,7 +264,7 @@ end
 
 function move_corner(p,c, x,y,corner, dx,dy)
 
-  local B = p.blocks[c.blk_x+x][c.blk_y+y]
+  local B = p.blocks[c.bx1-1+x][c.by1-1+y]
   assert(B)
 
   if not B[corner] then
@@ -286,7 +286,7 @@ function move_frag_corner(p,c, x,y,corner, dx,dy)
   local bx, fx = div_mod(x, FW)
   local by, fy = div_mod(y, FH)
 
-  local B = p.blocks[c.blk_x+bx][c.blk_y+by]
+  local B = p.blocks[c.bx1-1+bx][c.by1-1+by]
   assert(B)
   assert(B.fragments)
 
@@ -3115,7 +3115,7 @@ function build_cell(p, c)
 
     for x = x1,x2 do for y = y1,y2 do
 
-      if not p.blocks[c.blk_x+x][c.blk_y+y] then
+      if not p.blocks[c.bx1-1+x][c.by1-1+y] then
 
         local fx = (x - 1) * FW
         local fy = (y - 1) * FH
@@ -3147,7 +3147,7 @@ function build_cell(p, c)
       u_tex = c.theme.wall,
     }
 
-    if not p.blocks[c.blk_x+x][c.blk_y+y] then
+    if not p.blocks[c.bx1-1+x][c.by1-1+y] then
 
       local fx = (x - 1) * FW
       local fy = (y - 1) * FH
@@ -3927,7 +3927,7 @@ function build_cell(p, c)
       end
 
       -- get this *after* doing sky lights
-      local blocked = p.blocks[c.blk_x+K.x1+1][c.blk_y+K.y1+1]
+      local blocked = p.blocks[c.bx1-1+K.x1+1][c.by1-1+K.y1+1]
 
       if K.crate and not blocked then
         local theme = c.crate_theme
@@ -3964,7 +3964,7 @@ function build_cell(p, c)
          (dual_odds(c.theme.outdoor, 37, 22)
           or (c.scenic and rand_odds(51)))
       then
-        p.blocks[c.blk_x+K.x1+1][c.blk_y+K.y1+1].has_scenery = true
+        p.blocks[c.bx1-1+K.x1+1][c.by1-1+K.y1+1].has_scenery = true
         local th = add_thing(p, c, K.x1+1, K.y1+1, c.theme.scenery, true)
         if c.scenic then
           th.dx = rand_irange(-64,64)
@@ -3990,14 +3990,15 @@ function build_cell(p, c)
 
   ---=== build_cell ===---
 
-  assert(not c.blk_x)
+  assert(not c.mark)
 
   c.mark = allocate_mark(p)
 
-  -- these refer to the bottom/left corner block
-  -- (not actually in the cell, but in the border)
-  c.blk_x = BORDER_BLK + (c.x-1) * (BW+1)
-  c.blk_y = BORDER_BLK + (c.y-1) * (BH+1)
+  c.bx1 = BORDER_BLK + (c.x-1) * (BW+1) + 1
+  c.by1 = BORDER_BLK + (c.y-1) * (BH+1) + 1
+
+  c.bx2 = c.bx1 + BW - 1
+  c.by2 = c.by1 + BW - 1
 
   if not c.theme.outdoor and not c.is_exit and not c.hallway
      and rand_odds(70)
@@ -4031,8 +4032,11 @@ end
 
 local function build_depot(p, c)
 
-  c.blk_x = BORDER_BLK + (c.x-1) * (BW+1)
-  c.blk_y = BORDER_BLK + (c.y-1) * (BH+1)
+  c.bx1 = BORDER_BLK + (c.x-1) * (BW+1) + 1
+  c.by1 = BORDER_BLK + (c.y-1) * (BH+1) + 1
+
+  c.bx2 = c.bx1 + BW - 1
+  c.by2 = c.by1 + BW - 1
 
   local depot = c.quest.depot
   assert(depot)
@@ -4044,7 +4048,7 @@ local function build_depot(p, c)
   local start = p.quests[1].first
   assert(start.player_pos)
 
-  local player_B = p.blocks[start.blk_x + start.player_pos.x][start.blk_y + start.player_pos.y]
+  local player_B = p.blocks[start.bx1-1 + start.player_pos.x][start.by1-1 + start.player_pos.y]
 
   -- check for double pedestals (Plutonia)
   if player_B.fragments then

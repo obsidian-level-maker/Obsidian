@@ -7,7 +7,7 @@ class Plan
   w, h  : size (cells)
   cells : array_2D(PlanCell)
 
-  blk_w, blk_h: total blocks
+  blk_w, blk_h : total blocks
   blocks : array_2D(Block)
 
   quests : array(Quest)
@@ -32,6 +32,7 @@ class Plan
 class Quest
   level : main quest number
   sub_level : index for mini-quest
+  mini : true for mini quests
 
   kind : one of "key" | "switch" | "exit"
          (for mini-quests: "weapon" | "item")
@@ -40,7 +41,6 @@ class Quest
   path : array(Cell), includes start and end
   first, last : Cell  -- convenience
 
-  mini : true for mini quests
   parent : Quest ref -- nil for main quests
   children : array(Quest)
 
@@ -61,7 +61,8 @@ class Cell
   scenic : bool -- if true, cell only for scenery (no walk)
   hallway : bool -- true for hallway cells
 
-  blk_x, blk_y : block ref for lowest left corner
+  bx1, by1 : range of blocks for this cell (interior only)
+  bx2, by2
 
   link : table[DIR] -> Link
   exit_dir  : next cell in stage
@@ -101,9 +102,9 @@ class Link
   src, dest : Cell
 
   build : Cell -- which side we build the wall,door (etc)
-                  must be == either src or dest.
+                  must equal either src or dest.
                   The _other_ side is responsible for
-                  meeting the correct height (stair etc)
+                  meeting the correct height (via stairs etc)
 
   quest : Quest for locked/switched doors.
 

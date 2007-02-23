@@ -69,7 +69,7 @@ function add_thing(p,c, bx,by, name, blocking, angle, options)
   local kind = THEME.thing_nums[name]
   assert(kind)
 
-  local B = p.blocks[c.blk_x+bx][c.blk_y+by]
+  local B = p.blocks[c.bx1-1+bx][c.by1-1+by]
   assert(B)
 
   if not B.things then B.things = {} end
@@ -82,7 +82,7 @@ function add_thing(p,c, bx,by, name, blocking, angle, options)
     options = options
   }
 
-  -- con.debugf("INSERTING %s INTO BLOCK (%d,%d)\n", kind, c.blk_x+bx, c.blk_y+by)
+  -- con.debugf("INSERTING %s INTO BLOCK (%d,%d)\n", kind, c.bx1-1+bx, c.by1-1+by)
 
   table.insert(B.things, THING)
   table.insert(p.all_things, THING)
@@ -1112,7 +1112,7 @@ function battle_in_cell(p, c)
   end
 
   local function free_spot(bx, by)
-    local B = p.blocks[c.blk_x+bx][c.blk_y+by]
+    local B = p.blocks[c.bx1-1+bx][c.by1-1+by]
 
     return (B and not B.solid and (not B.fragments or B.can_thing) and
             not B.has_blocker and not B.is_cage and not B.near_player)
@@ -1125,7 +1125,7 @@ function battle_in_cell(p, c)
     for dx = 0,1 do for dy = 0,1 do
       if not free_spot(bx+dx, by+dy) then return false end
 
-      local B = p.blocks[c.blk_x+bx+dx][c.blk_y+by+dy]
+      local B = p.blocks[c.bx1-1+bx+dx][c.by1-1+by+dy]
       if B.fragments then
         B = B.fragments[1][1]
         assert(B)
@@ -1371,7 +1371,7 @@ function battle_in_cell(p, c)
 
         local x,y = prev.x, prev.y
         add_thing(p, c, x, y, "teleport_spot", true)
-        p.blocks[c.blk_x+x][c.blk_y+y].tag = place.tag
+        p.blocks[c.bx1-1+x][c.by1-1+y].tag = place.tag
       end
     end
   end
