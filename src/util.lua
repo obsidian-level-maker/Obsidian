@@ -225,6 +225,14 @@ function rand_odds(chance)
   return (con.random() * 100) <= chance
 end
 
+function rand_sel(chance, yes_val, no_val)
+  if (con.random() * 100) <= chance then
+    return yes_val
+  else
+    return no_val
+  end
+end
+
 function dual_odds(test,t_chance,f_chance)
   if test then
     return rand_odds(t_chance)
