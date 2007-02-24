@@ -448,7 +448,7 @@ function plan_dm_arena()
     end
   end
 
-  local function add_windows()
+  local function add_windows()  -- FIXME: duplicate code in planner.lua
 
     local function can_make_window(a, b)
       
@@ -469,12 +469,10 @@ function plan_dm_arena()
         local dx, dy = dir_to_delta(dir)
         local other = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
 
-        if other and
-           can_make_window(c, other) and
-           rand_odds(64)
+        if other and rand_odds(64) and
+           can_make_window(c, other)
         then
-          c.window[dir] = "window"
-          other.window[10-dir] = "dest"
+          c.border[dir].window = true
         end
       end
     end
@@ -513,6 +511,8 @@ function plan_dm_arena()
   con.debugf("DM EXIT THEME: %s\n", p.exit_theme.wall)
 
   choose_dm_themes()
+
+  create_borders()
   create_dm_links()
 
   select_heights()
