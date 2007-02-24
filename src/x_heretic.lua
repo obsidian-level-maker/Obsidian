@@ -312,9 +312,12 @@ HC_IMAGES =
 
 HC_LIGHTS =
 {
-  redwall = { wall="REDWALL", w=32 },
+  round = { floor="FLOOR26",  side="ORNGRAY" },
+}
 
-  round = { flat="FLOOR26",  side="ORNGRAY" },
+HC_WALL_LIGHTS =
+{
+  redwall = { wall="REDWALL", w=32 },
 }
 
 HC_PICS =
@@ -616,16 +619,17 @@ THEME_FACTORIES["heretic"] = function()
     hangs     = HC_OVERHANGS,
     pedestals = HC_PEDESTALS,
     mats      = HC_MATS,
+    rails     = HC_RAILS,
 
     liquids   = HC_LIQUIDS,
     switches  = HC_SWITCHES,
     doors     = HC_DOORS,
+    key_bits  = HC_KEY_BITS,
 
+    pics      = HC_PICS,
     images    = HC_IMAGES,
     lights    = HC_LIGHTS,
-    rails     = HC_RAILS,
-    pics      = HC_PICS,
-    key_bits  = HC_KEY_BITS,
+    wall_lights = HC_WALL_LIGHTS,
   }
 end
 

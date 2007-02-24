@@ -76,15 +76,19 @@ function find_liquid(name)
   end
 end
 
-function get_rand_light(is_flat)
-  local infos = {}
-  for name,info in pairs(THEME.lights) do
-    if sel(is_flat, info.flat, info.wall) then
-      table.insert(infos,info)
-    end
-  end
-  assert(#infos > 0)
-  return rand_element(infos)
+function get_rand_pic()
+  local name,info = rand_table_pair(THEME.pics)
+  return info
+end
+
+function get_rand_light()
+  local name,info = rand_table_pair(THEME.lights)
+  return info
+end
+
+function get_rand_wall_light()
+  local name,info = rand_table_pair(THEME.wall_lights)
+  return info
 end
 
 function random_door_kind(w)

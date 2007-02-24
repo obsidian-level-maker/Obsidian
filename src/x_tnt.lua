@@ -51,7 +51,7 @@ TN_CRATES =
 
 }
 
-TN_LIGHTS =
+TN_WALL_LIGHTS =
 {
   br_grn = { wall="LITEGRN1", w=32 },
   br_red = { wall="LITERED1", w=32 },
@@ -84,9 +84,10 @@ THEME_FACTORIES["tnt"] = function()
 
   T.rails   = copy_and_merge(T.rails,  TN_RAILS)
   T.crates  = copy_and_merge(T.crates, TN_CRATES)
-  T.lights  = copy_and_merge(T.lights, TN_LIGHTS)
   T.doors   = copy_and_merge(T.doors,  TN_DOORS)
   T.pics    = copy_and_merge(T.pics,   TN_PICS)
+
+  T.wall_lights = copy_and_merge(T.wall_lights, TN_WALL_LIGHTS)
 
   return T
 end

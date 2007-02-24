@@ -712,7 +712,7 @@ function B_stair(p, c, bx, by, z, dir, long, deep, step)
     local sec = copy_block_with_new(c.rmodel, --FIXME: K.rmodel
     {
       f_h = z,
-      f_tex = c.theme.step_flat, -- might be nil (=> rmodel.f_tex)
+      f_tex = c.theme.step_floor, -- might be nil (=> rmodel.f_tex)
 
       [out_dir] = { l_tex=c.theme.step, l_peg="top" },
     })
@@ -737,7 +737,7 @@ function B_lift(p, c, x, y, z, dir, long, deep)
   local LIFT = copy_block_with_new(c.rmodel,
   {
     f_h = z,
-    f_tex = c.theme.lift_flat or THEME.mats.LIFT.floor,
+    f_tex = c.theme.lift_floor or THEME.mats.LIFT.floor,
     l_tex = c.theme.lift or THEME.mats.LIFT.wall,
 
     lift_kind = 123,  -- 62 for slower kind
@@ -2682,13 +2682,12 @@ function build_cell(p, c)
       return
 
     elseif not c.theme.outdoor and rand_odds(25) then
-      c.void_pic = get_rand_light(false)
+      c.void_pic = get_rand_wall_light()
       c.void_cut = rand_irange(3,4)
       return
 
     else
-      local name,info = rand_table_pair(THEME.pics)
-      c.void_pic = info
+      c.void_pic = get_rand_pic()
       c.void_cut = 1
     end
   end
@@ -3848,7 +3847,7 @@ function build_cell(p, c)
 
       K.sky_light_sec = copy_block(sec)
       K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.sky_h, sec.c_h + c.sky_light.h)
-      K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, THEME.SKY_TEX, c.sky_light.light_info.flat)
+      K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, THEME.SKY_TEX, c.sky_light.light_info.floor)
       K.sky_light_sec.light = 176
       K.sky_light_utex = c.sky_light.light_info.side
 
@@ -3971,7 +3970,7 @@ function build_cell(p, c)
       h  = 8 * rand_irange(2,4),
       pattern = random_sky_light(),
       is_sky = rand_odds(33),
-      light_info = get_rand_light(true)
+      light_info = get_rand_light()
     }
     if not c.sky_light.is_sky and rand_odds(80) then
       c.sky_light.h = - c.sky_light.h

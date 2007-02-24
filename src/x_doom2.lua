@@ -251,7 +251,7 @@ D2_THEMES =
 
     floor = "RROCK04",
     ceil = "F_SKY1",
-  --  lift_flat = "FLOOR4_8",
+  --  lift_floor = "FLOOR4_8",
 
     scenery = "burnt_tree", -- "big_tree",
 
@@ -270,7 +270,7 @@ D2_THEMES =
 
     floor = "RROCK17",
     ceil = "F_SKY1",
-  --  lift_flat = "FLOOR4_8",
+  --  lift_floor = "FLOOR4_8",
 
     scenery = "brown_stub",
 
@@ -607,7 +607,7 @@ D2_RAILS =
 
 D2_LIGHTS =
 {
-  green1 = { flat="GRNLITE1", side="TEKGREN2" },
+  green1 = { floor="GRNLITE1", side="TEKGREN2" },
 }
 
 D2_PICS =

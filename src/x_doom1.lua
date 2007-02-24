@@ -98,7 +98,7 @@ DM_ROOM_THEMES =
 
     floor = "FLOOR4_8",
     ceil = "CEIL3_6",
-    step_flat = "STEP2",
+    step_floor = "STEP2",
 
     scenery = "lamp",
     good_liquid = "blood",
@@ -117,7 +117,7 @@ DM_ROOM_THEMES =
 
     floor = "FLOOR5_1",
     ceil = "FLOOR4_5",
-    step_flat = "STEP1",
+    step_floor = "STEP1",
 
     scenery = "tech_column",
   },
@@ -167,7 +167,7 @@ DM_ROOM_THEMES =
 
     floor = "FLAT9",
     ceil = "CEIL3_5",  -- "SLIME14" not in doom 1
-  --  lift_flat = "FLOOR4_8",
+  --  lift_floor = "FLOOR4_8",
 
   },
 
@@ -201,7 +201,7 @@ DM_ROOM_THEMES =
 
     floor = "FLOOR0_5",
     ceil = "FLAT1",
-  --  lift_flat = "FLOOR4_8",
+  --  lift_floor = "FLOOR4_8",
 
     scenery = "green_column_hrt",
   },
@@ -238,7 +238,7 @@ DM_ROOM_THEMES =
 
     floor = "MFLR8_2",  -- "RROCK16" (not in doom 1)
     ceil = "F_SKY1",
-  --  lift_flat = "FLOOR4_8",
+  --  lift_floor = "FLOOR4_8",
 
     scenery = "skull_pole",
 
@@ -667,28 +667,31 @@ DM_IMAGES =
 
 DM_LIGHTS =
 {
+  metal = { floor="CEIL1_2",  side="METAL" },
+  wood  = { floor="CEIL1_3",  side="WOOD1" },
+  star  = { floor="CEIL3_4",  side="STARTAN2" },
+
+  gray1 = { floor="FLAT2",    side="GRAY5" },
+  gray2 = { floor="FLAT17",   side="GRAY5" },
+  hot   = { floor="FLOOR1_7", side="SP_HOT1" },
+
+  tl61 = { floor="TLITE6_1", side="METAL" },
+  tl64 = { floor="TLITE6_4", side="METAL" },
+  tl65 = { floor="TLITE6_5", side="METAL" },
+  tl66 = { floor="TLITE6_6", side="METAL" },
+}
+
+DM_WALL_LIGHTS =
+{
   white2 = { wall="LITE3",    w=32 },
   white5 = { wall="LITE5",    w=16 },
   blue4  = { wall="LITEBLU4", w=32 },
 --  { wall="REDWALL",  w=32 },
-
-  metal = { flat="CEIL1_2",  side="METAL" },
-  wood  = { flat="CEIL1_3",  side="WOOD1" },
-  star  = { flat="CEIL3_4",  side="STARTAN2" },
-
-  gray1 = { flat="FLAT2",    side="GRAY5" },
-  gray2 = { flat="FLAT17",   side="GRAY5" },
-  hot   = { flat="FLOOR1_7", side="SP_HOT1" },
-
-  tl61 = { flat="TLITE6_1", side="METAL" },
-  tl64 = { flat="TLITE6_4", side="METAL" },
-  tl65 = { flat="TLITE6_5", side="METAL" },
-  tl66 = { flat="TLITE6_6", side="METAL" },
 }
 
 DM_PICS =
 {
-  lite3 = { wall="LITE3",    w=128, h=16 },
+  lite3 = { wall="LITE3", w=128, h=16 },
 
   m1 = { wall="MARBFACE", w=128, h=128 },
   m2 = { wall="MARBFAC2", w=128, h=128 },
@@ -974,7 +977,7 @@ D1_RAILS =
   r_2 = { wall="MIDGRATE", w=128, h=128 },
 }
 
-D1_LIGHTS =
+D1_WALL_LIGHTS =
 {
   reddy  = { wall="LITERED",  w=16 },
   stoned = { wall="LITESTON", w=32 },
@@ -1017,11 +1020,12 @@ THEME_FACTORIES["doom_common"] = function()
     liquids   = DM_LIQUIDS,
     switches  = DM_SWITCHES,
     doors     = DM_DOORS,
+    key_bits  = DM_KEY_BITS,
 
+    pics      = DM_PICS,
     images    = DM_IMAGES,
     lights    = DM_LIGHTS,
-    pics      = DM_PICS,
-    key_bits  = DM_KEY_BITS,
+    wall_lights = DM_WALL_LIGHTS,
   }
 end
 
@@ -1035,7 +1039,7 @@ THEME_FACTORIES["doom1"] = function()
   T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
   T.crates   = copy_and_merge(T.crates,   D1_CRATES)
 
-  T.lights   = copy_and_merge(T.lights,   D1_LIGHTS)
+  T.wall_lights = copy_and_merge(T.wall_lights, D1_WALL_LIGHTS)
 
   T.rails = D1_RAILS
 

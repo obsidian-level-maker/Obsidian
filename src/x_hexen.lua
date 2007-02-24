@@ -313,11 +313,14 @@ XN_IMAGES =
 
 XN_LIGHTS =
 {
-  fire = { wall="X_FIRE01", w=16 },
+  l1 = { floor="F_081", side="FIRE07" },
+  l2 = { floor="F_084", side="FIRE07" },
+  l3 = { floor="X_012", side="FIRE07" },
+}
 
-  l1 = { flat="F_081", side="FIRE07" },
-  l2 = { flat="F_084", side="FIRE07" },
-  l3 = { flat="X_012", side="FIRE07" },
+XN_WALL_LIGHTS =
+{
+  fire = { wall="X_FIRE01", w=16 },
 }
 
 XN_PICS =
@@ -651,16 +654,17 @@ THEME_FACTORIES["hexen"] = function()
     hangs     = XN_OVERHANGS,
     pedestals = XN_PEDESTALS,
     mats      = XN_MATS,
+    rails     = XN_RAILS,
 
     liquids   = XN_LIQUIDS,
     switches  = XN_SWITCHES,
     doors     = XN_DOORS,
+    key_bits  = XN_KEY_BITS,
 
+    pics      = XN_PICS,
     images    = XN_IMAGES,
     lights    = XN_LIGHTS,
-    rails     = XN_RAILS,
-    pics      = XN_PICS,
-    key_bits  = XN_KEY_BITS,
+    wall_lights = XN_WALL_LIGHTS,
   }
 end
 
