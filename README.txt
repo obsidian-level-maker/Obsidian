@@ -49,7 +49,7 @@ STATUS
 
 CHANGES IN 0.85
 
-   +  Hallways!  Crates!  Exit themes!
+   +  Hallways!  Crates!  New Exits!
    +  better algorithm for choosing floor/ceiling heights.
    +  user adjustments for health/ammo/monsters/traps.
    +  current settings are remembered when you quit.
@@ -63,7 +63,6 @@ CHANGES IN 0.85
    -  fixed the (rare) non-working switches and lifts.
    -  surprise traps: improved placement, fairer monsters.
    -  tweaked battle simulation to provide more ammo.
-   -  improved cages, now at more reasonable heights.
    -  neater placement for health and ammo items.
 
 
