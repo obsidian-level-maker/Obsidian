@@ -61,14 +61,6 @@ function side_to_corner(side, W, H)
   error ("side_to_corner: bad side " .. side)
 end
 
-function side_to_edge(side, x1,y1, x2,y2)
-  if side == 2 then return x1,y1, x2,y1 end
-  if side == 8 then return x1,y2, x2,y2 end
-  if side == 4 then return x1,y1, x1,y2 end
-  if side == 6 then return x2,y1, x2,y2 end
-  error ("side_to_corner: bad side " .. side)
-end
-
 function dir_to_corner(dir, W, H)
   if dir == 1 then return 1,1 end
   if dir == 3 then return W,1 end
@@ -924,10 +916,7 @@ function B_pedestal(p, c, x, y, base, info, overrides)
     l_tex = info.wall,
   })
 
---FIXME temp (shouldn't be needed)
-if (PEDESTAL.c_h - PEDESTAL.f_h) < 64 then
-  PEDESTAL.c_h = PEDESTAL.f_h + 64
-end
+  assert((PEDESTAL.c_h - PEDESTAL.f_h) >= 64)
 
   fill(p,c, x,y, x,y, PEDESTAL, overrides)
 end
@@ -971,13 +960,8 @@ function B_double_pedestal(p, c, bx, by, base, ped_info, overrides)
     INNER.c_tex = c.rmodel.c_tex
   end
 
---FIXME temp (shouldn't be needed)
-if (OUTER.c_h - OUTER.f_h) < 64 then
-  OUTER.c_h = OUTER.f_h + 64
-end
-if (INNER.c_h - INNER.f_h) < 64 then
-  INNER.c_h = INNER.f_h + 64
-end
+  assert((OUTER.c_h - OUTER.f_h) >= 64)
+  assert((INNER.c_h - INNER.f_h) >= 64)
 
   local fx = (bx - 1) * FW
   local fy = (by - 1) * FH
@@ -3379,7 +3363,7 @@ function build_cell(p, c)
       B_vista(p,c, side, c.vista[side]*3-1, b_theme, kind)
     end
 
-    if c.window[side] then
+    if c.border[side].window then
       build_window(link, other, side, what, b_theme)
     end
 
@@ -3955,12 +3939,6 @@ function build_cell(p, c)
   assert(not c.mark)
 
   c.mark = allocate_mark(p)
-
-  c.bx1 = BORDER_BLK + (c.x-1) * (BW+1) + 1
-  c.by1 = BORDER_BLK + (c.y-1) * (BH+1) + 1
-
-  c.bx2 = c.bx1 + BW - 1
-  c.by2 = c.by1 + BW - 1
 
   if not c.theme.outdoor and not c.is_exit and not c.hallway
      and rand_odds(70)

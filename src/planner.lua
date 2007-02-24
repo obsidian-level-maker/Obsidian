@@ -212,6 +212,14 @@ function get_bordering_cell(p, c, bx, by)
   if by == BH and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
 end
 
+function side_to_edge(side, x1,y1, x2,y2)
+  if side == 2 then return x1,y1, x2,y1 end
+  if side == 8 then return x1,y2, x2,y2 end
+  if side == 4 then return x1,y1, x1,y2 end
+  if side == 6 then return x2,y1, x2,y2 end
+  error ("side_to_corner: bad side " .. side)
+end
+
 function links_in_cell(c)
   local count = 0
   for dir = 2,8,2 do
@@ -266,14 +274,27 @@ end
 function create_cell(p, x, y, quest, along, theme, is_depot)
   local CELL =
   {
-    x = x, y = y, quest = quest, along = along,
-    link = {}, border = {}, window = {}, closet = {}, vista = {},
+    x=x, y=y,
+    
+    quest = quest,
+    along = along,
     theme = theme,
+
+    floor_h = 128, ceil_h = 256, -- dummy values
+
+    link = {}, border = {}, closet = {}, vista = {},
+
     is_depot = is_depot,
     liquid = quest.liquid,
-    floor_h = 128, ceil_h = 256, -- dummy values
+
     monsters = {}
   }
+
+  CELL.bx1 = BORDER_BLK + (x-1) * (BW+1) + 1
+  CELL.by1 = BORDER_BLK + (y-1) * (BH+1) + 1
+
+  CELL.bx2 = CELL.bx1 + BW - 1
+  CELL.by2 = CELL.by1 + BW - 1
 
   p.cells[x][y] = CELL
 
@@ -366,6 +387,54 @@ function compute_height_minmax(p)
     minmax(c)
   end
 end
+
+
+function create_borders(p)
+
+  local function visit(c)
+    for side = 2,8,2 do
+      if not c.border[side] then
+
+        local other = neighbour_by_side(p,c,side)
+        local BD
+        
+        if other then
+          BD = other.border[10-side]
+        end
+
+        if not BD then
+          local dx,dy = dir_to_delta(side)
+          local ax,ay = dir_to_across(side)
+
+          local x1,y1, x2,y2 = side_to_edge(side, c.bx1,c.by1, c.bx2,c.by2)
+
+          x1,y1 = x1+dx, y1+dy
+          x2,y2 = x2+dx, y2+dy
+
+          -- NOTE: via the logic here, the corners of borders will
+          --       overlap each other.  This is rectified later.
+          x1,y1 = x1-ax,y1-ay
+          x2,y2 = x2+ax,y2+ay
+
+          BD =
+          {
+            x1=x1, y1=y1, x2=x2, y2=y2,
+          }
+        end
+
+        c.border[side] = BD
+
+        if other then other.border[10-side] = BD end
+      end
+    end
+  end
+
+  --- create_borders ---
+
+  for zzz,c in ipairs(p.all_cells)  do visit(c) end
+  for zzz,c in ipairs(p.all_depots) do visit(c) end
+end
+
 
 
 function plan_sp_level(is_coop)  -- returns Plan
@@ -1208,6 +1277,9 @@ function plan_sp_level(is_coop)  -- returns Plan
         end
       end
     end
+
+    -- ensure scenic cells have borders
+    create_borders(p)
   end
 
   local function add_bridges()
@@ -1338,8 +1410,7 @@ function plan_sp_level(is_coop)  -- returns Plan
         if other and rand_odds(80) and
            can_make_window(c, other)
         then
-          c.window[dir] = "window"
-          other.window[10-dir] = "dest"
+          c.border[dir].window = true
         end
       end
     end
@@ -1501,6 +1572,9 @@ function plan_sp_level(is_coop)  -- returns Plan
         try_add_surprise(R)
       end
     end
+
+    -- add_depot will make new cells, so give them borders
+    create_borders(p)
   end
 
 
@@ -1577,6 +1651,8 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     con.ticker();
   end
+
+  create_borders(p)
 
   decide_links()
   setup_exit_room()

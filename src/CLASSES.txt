@@ -120,14 +120,16 @@ end
 
 class Border
 
-  build : Cell
-  
   x1, y1, x2, y2 : block range
+                   (NOTE: the corners can overlap other borders)
 
+---###  low_corner : true when (x1,y1) is a corner block 
+---###  high_corner: true when (x2,y2) is a corner block
+
+  build : Cell
   theme : Theme
 
-  low_corner : true when (x1,y1) is a corner block 
-  high_corner: true when (x2,y2) is a corner block
+  window: true if this border should contain windows
 
   -- type indicators:
   solid : true
