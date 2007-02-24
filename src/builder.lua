@@ -909,7 +909,7 @@ end
 -- 
 function B_pedestal(p, c, x, y, base, info, overrides)
  
-  local PEDESTAL = copy_block_with_new(c.rmodel, -- FIXME: K.rmodel
+  local PEDESTAL = copy_block_with_new(base,
   {
     f_h   = base.f_h + info.h,
     f_tex = info.floor,
@@ -2285,7 +2285,7 @@ function make_chunks(p)
 
       elseif K.liquid then
         K.rmodel.f_h   = K.rmodel.f_h - 12
-        K.rmodel.f_tex = p.liquid.floor
+        K.rmodel.f_tex = c.liquid.floor
       end
     end end
   end
@@ -2629,6 +2629,218 @@ local dx,dy = dir_to_delta(loc.dir)
 end
 
 
+function jiggle_borders(p)
+
+  -- Tasks we do here:
+  --
+  -- (a) adjust the block range for each Border so that the
+  --     corners never overlap with another Border.
+  --
+  -- (b) decide on the type of border, its theme, and which
+  --     cell is responsible for building it.
+
+  local function adjust(c, side, D, c2, side2, E)
+
+    if E.x1 > D.x2 or E.x2 < D.x1 then return end
+    if E.y1 > D.y2 or E.y2 < D.y1 then return end
+
+    local function dump_it()
+      con.printf("Borders @ (%d,%d):%d and (%d,%d):%d\n",
+          c.x, c.y, side, c2.x, c2.y, side2)
+      con.printf("D = (%d,%d)..(%d,%d)   E = (%d,%d)..(%d,%d)\n",
+          D.x1, D.y1, D.x2, D.y2, E.x1, E.y1, E.x2, E.y2)
+      con.printf("OV = (%d,%d)..(%d,%d)  BB = (%d,%d)..(%d,%d)\n",
+          ox, oy, ox2, oy2, bb_x1, bb_y1, bb_x2, bb_y2)
+    end
+    
+    -- determine overlap position
+    
+    local ox  = math.max(D.x1, E.x1)
+    local oy  = math.max(D.y1, E.y1)
+    local ox2 = math.min(D.x2, E.x2)
+    local oy2 = math.min(D.y2, E.y2)
+
+    local bb_x1 = math.min(D.x1, E.x1)  -- bounding box
+    local bb_y1 = math.min(D.y1, E.y1)
+    local bb_x2 = math.max(D.x2, E.x2)
+    local bb_y2 = math.max(D.y2, E.y2)
+
+    -- sanity check
+    if ox2 ~= ox or oy2 ~= oy or
+       (bb_x1 < ox and bb_x2 > ox and bb_y1 < oy and bb_y2 > oy)
+    then
+      dump_it(); error("Bad border overlap")
+    end
+
+    -- check for T-junctions
+    if (bb_x1 < ox and bb_x2 > ox and (bb_y1 < oy or bb_y2 > oy) )
+    or (bb_y1 < oy and bb_y2 > oy and (bb_x1 < ox or bb_x2 > ox) )
+    then
+      dump_it(); error("Border T-junction found")
+    end
+
+    -- OK, both borders only touch at a corner.
+    -- Decide which one to adjust...
+
+    if rand_odds(50) then D,E = E,D end  -- FIXME !!!!
+
+    if D.x1 == D.x2 then
+      -- vertical
+          if D.y1 == oy then D.y1 = D.y1 + 1; D.low_corner  = false
+      elseif D.y2 == oy then D.y2 = D.y2 - 1; D.high_corner = false
+      else
+        dump_it(); error("Bad border L-junction")
+      end
+    else
+      -- horizontal
+      assert(D.y1 == D.y2)
+          if D.x1 == ox then D.x1 = D.x1 + 1; D.low_corner  = false
+      elseif D.x2 == ox then D.x2 = D.x2 - 1; D.high_corner = false  
+      else
+        dump_it(); error("Bad border L-junction")
+      end
+    end
+  end
+
+  local function border_theme(c1, c2)
+
+    if not c2 then return c1.theme end
+
+    local t1 = c1.theme
+    local t2 = c2.theme
+
+    if c1.is_exit then return t1 end
+    if c2.is_exit then return t2 end
+
+    if c1.hallway ~= c2.hallway then
+      if c1.hallway then
+        t1 = c1.quest.theme
+      else
+        t2 = c2.quest.theme
+      end
+    end
+
+    if t1.outdoor ~= t2.outdoor then
+      return sel(t1.outdoor, t2, t1)
+    end
+
+    if t1.mat_pri < t2.mat_pri then t1,t2 = t2,t1 end
+
+    local diff = t1.mat_pri - t2.mat_pri
+    assert(diff >= 0)
+
+    if diff <= 3 then
+      local PROBS = { 50, 10, 3, 1 }
+      if rand_odds(PROBS[1+diff]) then t1,t2 = t2,t1 end
+    end
+
+    return t1
+  end
+
+  local function border_kind(c1, c2, side)
+
+    if not c2 then
+      if c1.theme.outdoor then return "sky" end
+      return "solid"
+    end
+
+    if c1.scenic == "solid" or c2.scenic == "solid" or c2.is_depot then
+      return "solid"
+    end
+
+    local link = c1.link[side]
+
+    if link then assert(c2) end
+
+    if link and (link.kind == "arch") and c1.theme == c2.theme and
+       (c1.quest.parent or c1.quest) == (c2.quest.parent or c2.quest) and
+       dual_odds(c1.theme.outdoor, 50, 33)
+    then
+       return "empty"
+    end
+
+    -- fencing anyone?
+    local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
+
+    if (c1.theme.outdoor == c2.theme.outdoor) and
+       (not c1.is_exit  and not c2.is_exit) and
+       (not c1.is_depot and not c2.is_depot) and diff_h > 64
+    then
+      if c1.scenic or c2.scenic then
+        return rand_sel(30, "wire", "fence")
+      end
+
+      local i_W = sel(link, 3, 20)
+      local i_F = sel(c1.theme == c2.theme, 5, 0)
+
+      if dual_odds(c1.theme.outdoor, 25, i_W) then return "wire" end
+      if dual_odds(c1.theme.outdoor, 60, i_F) then return "fence" end
+    end
+ 
+    return "solid"
+  end
+
+
+  local function jiggle(c, side)
+
+    local D = c.border[side]
+    if D.build then return end -- already done
+
+    -- these will be cleared if the border is adjusted
+    D.low_corner  = true
+    D.high_corner = true
+
+    for dx = -1,1 do for dy = -1,1 do
+      local c2 = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
+      if c2 then
+        for side2 = 2,8,2 do
+          local E = c2.border[side2]
+          if E and E ~= D and not E.build then
+            adjust(c, side, D, c2, side2, E)
+
+            assert(D.x2 >= D.x1 and D.y2 >= D.y1)
+            assert(E.x2 >= E.x1 and E.y2 >= E.y1)
+          end
+        end
+      end
+    end end
+  end
+
+  local function setup(c, side)
+
+    local D = c.border[side]
+    if D.build then return end -- already done
+
+    -- which cell actually builds the border is arbitrary, unless
+    -- there is a link with the other cell
+    if c.link[side] then
+      D.build = c.link[side].build
+    else
+      D.build = c
+    end
+
+    local other = neighbour_by_side(p,c, side)
+
+    D.theme = border_theme(c, other)
+    D.kind  = border_kind (c, other, side)
+  end
+
+
+  --- jiggle_borders ---
+
+  for x = 1,p.w do for y = 1,p.h do
+    local c = p.cells[x][y]
+    if c then
+      for side = 2,8,2 do
+        if c.border[side] then
+          jiggle(c, side)
+          setup(c, side)
+        end
+      end
+    end
+  end end
+end
+
 ----------------------------------------------------------------
 
 
@@ -2681,7 +2893,7 @@ function build_cell(p, c)
     -- DIR here points to center of current cell
     local dir = 10-side  -- FIXME: remove
 
-    if (link.build ~= c) then return end
+    assert (link.build == c)
 
     local other = link_other(link, c)
     assert(other)
@@ -2916,83 +3128,6 @@ function build_cell(p, c)
     if f_min == 65536 then return nil, nil end
 
     return f_min, f_max
-  end
-
-  local function what_border_type(cell, link, other, side)
-
-    if link then assert(other) end
-
-    if link and (link.kind == "arch") and
-       (cell.quest.parent or cell.quest) == (other.quest.parent or other.quest) and
-       cell.theme == other.theme and
-       dual_odds(cell.theme.outdoor, 50, 33)
-    then
-       return "empty"
-    end
-
-    if not other then
-      if cell.theme.outdoor then return "sky" end
-      return "solid"
-    end
-
-    if cell.scenic == "solid" or other.scenic == "solid" then
-      return "solid"
-    end
-
-    -- fencing anyone?
-    if (cell.theme.outdoor == other.theme.outdoor) and
-       (not cell.is_exit and not other.is_exit) and
-       (not cell.is_depot and not other.is_depot) and
-       math.min(cell.ceil_h, other.ceil_h) - math.max(cell.f_max, other.f_max) > 64
-    then
-      if cell.scenic or other.scenic then
-        if rand_odds(30) then return "wire" end
-        return "fence"
-      end
-
-      local i_W = sel(link, 3, 20)
-      local i_F = sel(cell.theme == other.theme, 5, 0)
-
-      if dual_odds(cell.theme.outdoor, 25, i_W) then return "wire" end
-      if dual_odds(cell.theme.outdoor, 50, i_F) then return "fence" end
-    end
- 
-    return "solid"
-  end
-
-  local function border_theme(c, other)
-    if not other then return c.theme end
-
-    local t1 = c.theme
-    local t2 = other.theme
-
-    if c.is_exit then return t1 end
-    if other.is_exit then return t2 end
-
-    if c.hallway ~= other.hallway then
-      if c.hallway then
-        t1 = c.quest.theme
-      else
-        t2 = other.quest.theme
-      end
-    end
-
-    if t1.outdoor ~= t2.outdoor then
-      if t1.outdoor then t1,t2 = t2,t1 end
-      return t1
-    end
-
-    if t1.mat_pri < t2.mat_pri then t1,t2 = t2,t1 end
-
-    local diff = t1.mat_pri - t2.mat_pri
-    assert(diff >= 0)
-
-    if diff <= 3 then
-      local PROBS = { 100, 10, 3, 1 }
-      if rand_odds(PROBS[1+diff]) then t1,t2 = t2,t1 end
-    end
-
-    return t1
   end
 
   local function corner_tex(c, dx, dy)
@@ -3290,6 +3425,7 @@ function build_cell(p, c)
     end
   end
 
+  --[[ OLD STUFF, REMOVE SOON
   local function who_build_border(c, side, other, link)
 
     if not other then
@@ -3321,23 +3457,39 @@ function build_cell(p, c)
 
     return sel(side > 5, other, c)
   end
+  --]]
 
   local function build_border(side, pass)
+
+    local D = c.border[side]
+    if not D then return end
+    if D.build ~= c then return end
+
+--[[ TEST
+--!!!! TEST
+for x = D.x1,D.x2 do for y = D.y1,D.y2 do
+  if p.blocks[x][y] then con.printf("Border overlap @ (%d,%d)\n", x, y) end
+  p.blocks[x][y] = { solid=D.theme.wall }
+end end
+do return end
+--]]
 
     local link = c.link[side]
     local other = neighbour_by_side(p, c, side)
 
-    -- should *we* build it, or the other side?
-    if c ~= who_build_border(c, side, other, link) then
-      return
-    end
+---###    -- should *we* build it, or the other side?
+---###    if c ~= D.build then
+---###      return
+---###    end
 
-    local what = what_border_type(c, link, other, side)
+    local what = D.kind
+    assert(what)
 
 ---###    if (pass == 1 and what ~= "sky") or
 ---###       (pass == 2 and what == "sky") then return end
 
-    local b_theme = border_theme(c, other)
+    local b_theme = D.theme
+    assert(b_theme)
 
     if link then
       build_link(link, other, side, what, b_theme)
@@ -3363,7 +3515,7 @@ function build_cell(p, c)
       B_vista(p,c, side, c.vista[side]*3-1, b_theme, kind)
     end
 
-    if c.border[side].window then
+    if D.window then
       build_window(link, other, side, what, b_theme)
     end
 
@@ -3422,7 +3574,7 @@ function build_cell(p, c)
           local NB_link = NB.link[side]
           local NB_other = neighbour_by_side(p, NB, side)
 
-          if what_border_type(NB, NB_link, NB_other, side) == "sky" then
+          if false then --!!!!! FIXME what_border_type(NB, NB_link, NB_other, side) == "sky" then
             build_sky_border(side, cx, cy, cx, cy)
           end
         else
@@ -3973,6 +4125,8 @@ end
 
 local function build_depot(p, c)
 
+  setup_rmodel(p, c)
+
   c.bx1 = BORDER_BLK + (c.x-1) * (BW+1) + 1
   c.by1 = BORDER_BLK + (c.y-1) * (BH+1) + 1
 
@@ -4051,14 +4205,15 @@ function build_level(p)
   end
 
   make_chunks(p)
-  show_chunks(p)
+--show_chunks(p)
+
+  jiggle_borders(p)
 
   for zzz,cell in ipairs(p.all_cells) do
     build_cell(p, cell)
   end
 
   for zzz,cell in ipairs(p.all_depots) do
-    setup_rmodel(p, cell)
     build_depot(p, cell)
   end
 

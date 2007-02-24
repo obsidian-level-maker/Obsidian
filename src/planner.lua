@@ -396,11 +396,8 @@ function create_borders(p)
       if not c.border[side] then
 
         local other = neighbour_by_side(p,c,side)
-        local BD
-        
-        if other then
-          BD = other.border[10-side]
-        end
+
+        local BD = other and other.border[10-side]
 
         if not BD then
           local dx,dy = dir_to_delta(side)
@@ -424,15 +421,17 @@ function create_borders(p)
 
         c.border[side] = BD
 
-        if other then other.border[10-side] = BD end
+        if other then
+          other.border[10-side] = BD
+        end
       end
-    end
+    end -- for side
   end
 
   --- create_borders ---
 
   for zzz,c in ipairs(p.all_cells)  do visit(c) end
-  for zzz,c in ipairs(p.all_depots) do visit(c) end
+---###  for zzz,c in ipairs(p.all_depots) do visit(c) end
 end
 
 
