@@ -121,10 +121,9 @@ end
 class Border
 
   x1, y1, x2, y2 : block range
-                   (NOTE: the corners can overlap other borders)
 
----###  low_corner : true when (x1,y1) is a corner block 
----###  high_corner: true when (x2,y2) is a corner block
+  low_corner : true when (x1,y1) is a corner block 
+  high_corner: true when (x2,y2) is a corner block
 
   build : Cell
   theme : Theme
