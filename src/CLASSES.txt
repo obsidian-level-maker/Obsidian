@@ -69,9 +69,9 @@ class Cell
   entry_dir : previous cell in stage
   
   window : table[DIR] -> Link
-  border : table[DIR] -> keyword: "solid" | ...
+  border : table[DIR] -> Border
   vista  : table[DIR] -> numeric
-  
+
   teleport : array(Cell)
 
   floor_h, ceil_h : floor/ceiling heights
@@ -99,6 +99,7 @@ end
 
 class Link
   kind  : string: "a" arch | "d" door | "f" fall-off | "b" bridge
+
   src, dest : Cell
 
   build : Cell -- which side we build the wall,door (etc)
@@ -117,22 +118,40 @@ class Link
 end
 
 
+class Border
+
+  build : Cell
+  
+  x1, y1, x2, y2 : block range
+
+  theme : Theme
+
+  low_corner : true when (x1,y1) is a corner block 
+  high_corner: true when (x2,y2) is a corner block
+
+  -- type indicators:
+  solid : true
+  empty : true
+  fence : true
+end
+
+
 class Chunk
 
   x1, y1, x2, y2 : block range
 
+  rmodel : Block -- model for this chunk
+
   link : Link  -- for link chunks
+
+  void   : true  -- void space
+  cage   : true  -- big cage
 
   player : true  -- player start location
   quest  : true  -- quest item location
   walk   : true  -- walkable ground
-  void   : true  -- void space
-  cage   : true  -- big cage
 
-  floor_h, ceil_h -- base heights
   stair_dir  -- present to build a stair to neighbour chunk
-
-[[  rmodel : Block -- model for this chunk  ]]
 end
 
 
