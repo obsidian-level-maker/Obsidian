@@ -69,8 +69,11 @@ function add_thing(p,c, bx,by, name, blocking, angle, options)
   local kind = THEME.thing_nums[name]
   assert(kind)
 
-  local B = p.blocks[c.bx1-1+bx][c.by1-1+by]
-  assert(B)
+  local B = p.blocks[bx][by]
+  
+  if not B then
+    error("Thing placed in the void")
+  end
 
   if not B.things then B.things = {} end
 
@@ -115,6 +118,7 @@ end
 
 
 function add_cage_spot(p,c, spot)
+
   if not c.cage_spots then
     c.cage_spots = {}
   end
@@ -1143,12 +1147,12 @@ function battle_in_cell(p, c)
     local total = 0
     for bx = 1,BW,2 do for by = 1,BH,2 do
       if bx < BW and by < BH and free_double_spot(bx, by) then
-        table.insert(list, { c=c, x=bx, y=by, double=true})
+        table.insert(list, { c=c, x=c.bx1-1+bx, y=c.by1-1+by, double=true})
         total = total + 4
       else
         for dx = 0,1 do for dy = 0,1 do
           if bx+dx <= BW and by+dy <= BH and free_spot(bx+dx, by+dy) then
-            table.insert(list, { c=c, x=bx+dx, y=by+dy })
+            table.insert(list, { c=c, x=c.bx1-1+bx+dx, y=c.by1-1+by+dy })
             total = total + 1
           end
         end end
@@ -1371,7 +1375,7 @@ function battle_in_cell(p, c)
 
         local x,y = prev.x, prev.y
         add_thing(p, c, x, y, "teleport_spot", true)
-        p.blocks[c.bx1-1+x][c.by1-1+y].tag = place.tag
+        p.blocks[x][y].tag = place.tag
       end
     end
   end
