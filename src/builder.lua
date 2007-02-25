@@ -36,14 +36,6 @@ function copy_block_with_new(B, newbie)
   return result
 end
 
-function dir_to_across(dir)
-  if dir == 2 then return 1, 0 end
-  if dir == 8 then return 1, 0 end
-  if dir == 4 then return 0, 1 end
-  if dir == 6 then return 0, 1 end
-  error ("dir_to_across: bad dir " .. dir)
-end
-
 
 function side_to_chunk(side)
   if side == 2 then return 2, 1 end
@@ -77,23 +69,23 @@ function chunk_to_block(kx)
   return 1 + int((kx-1) * BW / KW)
 end
 
-function new_chunk(kx, ky, kind, value)
+function new_chunk(c, kx, ky, kind, value)
   return
   {
     [kind] = value or true,
 
-    x1 = chunk_to_block(kx),
-    y1 = chunk_to_block(ky),
-    x2 = chunk_to_block(kx + 1) - 1,
-    y2 = chunk_to_block(ky + 1) - 1,
+    x1 = c.bx1-1 + chunk_to_block(kx),
+    y1 = c.by1-1 + chunk_to_block(ky),
+    x2 = c.bx1-1 + chunk_to_block(kx + 1) - 1,
+    y2 = c.by1-1 + chunk_to_block(ky + 1) - 1,
   }
 end
 
-function copy_chunk(kx, ky, K)
+function copy_chunk(c, kx, ky, K)
 
   assert(not K.vista)
 
-  local COPY = new_chunk(kx, ky, "is_copy")
+  local COPY = new_chunk(c, kx, ky, "is_copy")
 
   COPY.room = K.room
   COPY.void = K.void
@@ -189,8 +181,10 @@ function fill(p, c, sx, sy, ex, ey, B, B2)
   if sy > ey then sy, ey = ey, sy end
   for x = sx,ex do
     for y = sy,ey do
+      assert(valid_block(p, x, y))
+
       local N = copy_block(B)
-      p.blocks[c.bx1-1+x][c.by1-1+y] = N
+      p.blocks[x][y] = N
 
       if B2 then
         merge_table(N, B2)
@@ -201,17 +195,21 @@ function fill(p, c, sx, sy, ex, ey, B, B2)
   end
 end
 
+function c_fill(p, c, sx, sy, ex, ey, B, B2)
+
+  fill(p,c, c.bx1-1+sx, c.by1-1+sy, c.bx1-1+ex, c.by1-1+ey, B, B2)
+end
+
 function gap_fill(p, c, sx, sy, ex, ey, B, B2)
   if sx > ex then sx, ex = ex, sx end
   if sy > ey then sy, ey = ey, sy end
   for x = sx,ex do
     for y = sy,ey do
 
-      if not p.blocks[c.bx1-1+x][c.by1-1+y] then
+      assert(valid_block(p, x, y))
+
+      if not p.blocks[x][y] then
         fill(p,c, x,y, x,y, B, B2)
---##        p.blocks[c.bx1-1+x][c.by1-1+y] =
---##        { sector=sec, l_tex=l_tex, u_tex=u_tex, overrides=overrides,
--- FIXME          block_sound= sec and sec.block_sound }
       end
     end
   end
@@ -226,11 +224,11 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
       local bx, fx = div_mod(x, FW)
       local by, fy = div_mod(y, FH)
       
-      if not p.blocks[c.bx1-1+bx][c.by1-1+by] then
-        p.blocks[c.bx1-1+bx][c.by1-1+by] = {}
+      if not p.blocks[bx][by] then
+        p.blocks[bx][by] = {}
       end
 
-      local B = p.blocks[c.bx1-1+bx][c.by1-1+by]
+      local B = p.blocks[bx][by]
       B.solid = nil
 
       if not B.fragments then
@@ -250,7 +248,7 @@ end
 
 function move_corner(p,c, x,y,corner, dx,dy)
 
-  local B = p.blocks[c.bx1-1+x][c.by1-1+y]
+  local B = p.blocks[x][y]
   assert(B)
 
   if not B[corner] then
@@ -268,7 +266,9 @@ function move_corner(p,c, x,y,corner, dx,dy)
   B.mark = allocate_mark(p)
 end
 
-function move_frag_corner(p,c, x,y,corner, dx,dy)
+-- the c_ prefix means (x,y) are cell-relative coords
+function c_move_frag_corner(p,c, x,y,corner, dx,dy)
+
   local bx, fx = div_mod(x, FW)
   local by, fy = div_mod(y, FH)
 
@@ -346,7 +346,7 @@ function B_door(p, c, link, b_theme, x,y,z, dir, long,deep, door_info,
 
   assert (link.kind == "door")
 
-  local wall_tex = c.theme.wall
+  local wall_tex = b_theme.wall
   local track_tex = door_info.track or THEME.mats.TRACK.wall
   local door_tex = door_info.wall
   local side_tex
@@ -668,7 +668,7 @@ function B_exit_hole(p,c, K,kx,ky, sec)
         local want_x = cur_x/len * radius
         local want_y = cur_y/len * radius
 
-        move_frag_corner(p,c, zx,zy,dir, want_x - cur_x, want_y - cur_y)
+        c_move_frag_corner(p,c, zx,zy,dir, want_x - cur_x, want_y - cur_y)
       end
     end
   end
@@ -971,10 +971,10 @@ function B_double_pedestal(p, c, bx, by, base, ped_info, overrides)
   if ped_info.rotate2 then
     frag_fill(p,c, fx+2,fy+2, fx+2,fy+2, INNER)
 
-    move_frag_corner(p,c, fx+2,fy+2, 1, 16, -6)
-    move_frag_corner(p,c, fx+2,fy+2, 3, 22, 16)
-    move_frag_corner(p,c, fx+2,fy+2, 7, -6,  0)
-    move_frag_corner(p,c, fx+2,fy+2, 9,  0, 22)
+    c_move_frag_corner(p,c, fx+2,fy+2, 1, 16, -6)
+    c_move_frag_corner(p,c, fx+2,fy+2, 3, 22, 16)
+    c_move_frag_corner(p,c, fx+2,fy+2, 7, -6,  0)
+    c_move_frag_corner(p,c, fx+2,fy+2, 9,  0, 22)
   else
     frag_fill(p,c, fx+2,fy+2, fx+3,fy+3, INNER)
   end
@@ -1354,7 +1354,7 @@ function B_arch(p,c, bx,by, side,long, theme)
   local WALL = { solid=theme.wall }
 
   local fx1 = (bx - 1) * FW + 1
-  local fy1 = (bx - 1) * FH + 1
+  local fy1 = (by - 1) * FH + 1
 
   local fx2 = fx1 + ax * FW * long - 1
   local fy2 = fy1 + ay * FH * long - 1
@@ -1382,8 +1382,8 @@ function B_vista(p,c, side,deep, theme,kind)
   local dx,dy = dir_to_delta(side)
   local ax,ay = dir_to_across(side)
 
-  x1,y1 = (x1+ax*3+dx), (y1+ay*3+dy)
-  x2,y2 = (x2-ax*3+dx), (y2-ay*3+dy)
+  x1,y1 = c.bx1-1 + (x1+ax*3+dx), c.by1-1 + (y1+ay*3+dy)
+  x2,y2 = c.bx1-1 + (x2-ax*3+dx), c.by1-1 + (y2-ay*3+dy)
 
   local ARCH = copy_block(c.rmodel)
 
@@ -1565,7 +1565,7 @@ function B_vista(p,c, side,deep, theme,kind)
       x2,y2 = x2+dx*extra, y2+dy*extra
     end
 
-    gap_fill(p,c, x1, y1, x2, y2, other.rmodel)
+    gap_fill(p,c, x1,y1, x2,y2, other.rmodel)
   end
 
   -- FIXME !!! add spots to room
@@ -1784,11 +1784,11 @@ function make_chunks(p)
       local r = con.random() * 100
       local K
       if r < 40 then
-        c.chunks[kx][ky] = new_chunk(kx,ky, "link",link)
+        c.chunks[kx][ky] = new_chunk(c, kx,ky, "link",link)
       elseif r < 80 or no_void then
-        c.chunks[kx][ky] = new_chunk(kx,ky, "room")
+        c.chunks[kx][ky] = new_chunk(c, kx,ky, "room")
       else
-        c.chunks[kx][ky] = new_chunk(kx,ky, "void")
+        c.chunks[kx][ky] = new_chunk(c, kx,ky, "void")
       end
 
     elseif link.where == "wide" then
@@ -1838,7 +1838,7 @@ function make_chunks(p)
         has_clash = true
         c.chunks.clasher = c.chunks[kx][ky]
       else
-        c.chunks[kx][ky] = new_chunk(kx,ky, "link",link )
+        c.chunks[kx][ky] = new_chunk(c, kx,ky, "link",link )
       end
     end
     return not has_clash
@@ -1915,7 +1915,7 @@ function make_chunks(p)
         dest_x, dest_y = x2,y2
       end
 
-      c.chunks[dest_x][dest_y] = copy_chunk(dest_x, dest_y, c.chunks[src_x][src_y])
+      c.chunks[dest_x][dest_y] = copy_chunk(c, dest_x, dest_y, c.chunks[src_x][src_y])
     end
 
     local function check_corner(dir)
@@ -1934,8 +1934,8 @@ function make_chunks(p)
         if not (A and is_roomy(c, A)) and
            not (B and is_roomy(c, B)) then
 
-              if not A then c.chunks[kx][2] = new_chunk(kx,2, "room")
-          elseif not B then c.chunks[2][ky] = new_chunk(2,ky, "room")
+              if not A then c.chunks[kx][2] = new_chunk(c, kx,2, "room")
+          elseif not B then c.chunks[2][ky] = new_chunk(c, 2,ky, "room")
           end
         end
       end
@@ -1948,7 +1948,7 @@ function make_chunks(p)
     end
 
     -- centre chunk always roomy  (FIXME ??)
-    c.chunks[2][2] = new_chunk(2,2, "room")
+    c.chunks[2][2] = new_chunk(c, 2,2, "room")
 
     local pair_list =
     {
@@ -2027,7 +2027,7 @@ function make_chunks(p)
     for kx = x1,x2 do
       for ky = y1,y2 do
         if not c.chunks[kx][ky] then
-          c.chunks[kx][ky] = copy_chunk(kx, ky, common)
+          c.chunks[kx][ky] = copy_chunk(c, kx, ky, common)
         end
       end
     end
@@ -2049,7 +2049,7 @@ function make_chunks(p)
 
       if valid_chunk(nx, ny) then
         if not c.chunks[nx][ny] then
-          c.chunks[nx][ny] = new_chunk(nx, ny, "room")
+          c.chunks[nx][ny] = new_chunk(c, nx, ny, "room")
           return -- SUCCESS --
         end
       end
@@ -2061,7 +2061,7 @@ function make_chunks(p)
     for kx = 1,KW do
       for ky = 1,KH do
         if not c.chunks[kx][ky] then
-          c.chunks[kx][ky] = new_chunk(kx,ky, kind)
+          c.chunks[kx][ky] = new_chunk(c, kx,ky, kind)
         end
       end
     end
@@ -2105,7 +2105,7 @@ function make_chunks(p)
 
     local p = rand_element(posits)
 
-    c.chunks[p.x][p.y] = new_chunk(p.x, p.y, kind)
+    c.chunks[p.x][p.y] = new_chunk(c, p.x, p.y, kind)
   end
 
   local function add_closet_chunks(c)
@@ -2129,7 +2129,7 @@ function make_chunks(p)
 
         con.debugf("CLOSET CHUNK @ (%d,%d) [%d,%d]\n", c.x, c.y, kx, ky)
 
-        local K = new_chunk(kx,ky, "void")
+        local K = new_chunk(c, kx,ky, "void")
         K.closet = true
         K.place = place
 
@@ -2153,13 +2153,13 @@ function make_chunks(p)
         
         else
           if not K then
-            c.chunks[kx][ky] = new_chunk(kx,ky, "room")
+            c.chunks[kx][ky] = new_chunk(c, kx,ky, "room")
           end
 
-          other.chunks[4-kx][4-ky] = new_chunk(4-kx,4-ky, "vista")
+          other.chunks[4-kx][4-ky] = new_chunk(c, 4-kx,4-ky, "vista")
 
           if c.vista[side] == 2 then
-            other.chunks[2][2] = new_chunk(2,2, "vista")
+            other.chunks[2][2] = new_chunk(c, 2,2, "vista")
           end
         end
       end
@@ -2177,9 +2177,9 @@ function make_chunks(p)
     local r = con.random() * 100
 
     if r < 2 then
-      c.chunks[kx][ky] = new_chunk(kx,ky, "room")
+      c.chunks[kx][ky] = new_chunk(c, kx,ky, "room")
     elseif r < 12 then
-      c.chunks[kx][ky] = new_chunk(kx,ky, "cage")
+      c.chunks[kx][ky] = new_chunk(c, kx,ky, "cage")
       c.smex_cage = true
     end
 
@@ -2192,14 +2192,14 @@ function make_chunks(p)
       con.printf("WARNING: deathmatch exit stomped a chunk!\n")
     end
 
-    local K = new_chunk(1,3, "void")
+    local K = new_chunk(c, 1,3, "void")
     K.dm_exit = true
     K.dir = 2
 
     c.chunks[1][3] = K
 
     if not c.chunks[1][2] then
-      c.chunks[1][2] = new_chunk(1,2, "room")
+      c.chunks[1][2] = new_chunk(c, 1,2, "room")
     end
   end
 
@@ -2633,11 +2633,152 @@ function jiggle_borders(p)
 
   -- Tasks we do here:
   --
-  -- (a) adjust the block range for each Border so that the
-  --     corners never overlap with another Border.
-  --
-  -- (b) decide on the type of border, its theme, and which
+  -- (a) decide on the type of border, its theme, and which
   --     cell is responsible for building it.
+  --
+  -- (b) adjust the block range for each Border so that the
+  --     corners never overlap with another Border.
+
+  local function border_theme(cells)
+    assert(#cells >= 1)
+
+    if #cells == 1 then return cells[1].theme end
+
+    for zzz,c in ipairs(cells) do
+      if c.is_exit then return c.theme end
+    end
+
+--[[    for zzz,c in ipairs(cells) do
+      if c.scenic == "solid" then return c.theme end
+    end
+--]]
+    local themes = {}
+    local hall_num = 0
+
+    for zzz,c in ipairs(cells) do
+      if c.hallway then hall_num = hall_num + 1 end
+      table.insert(themes, c.theme)
+    end
+  
+    -- when some cells are hallways and some are not, we
+    -- upgrade the hallways to their "outer" theme.
+
+    if (hall_num > 0) and (#cells - hall_num > 0) then
+      for idx = 1,#themes do
+        if cells[idx].hallway then
+          themes[idx] = cells[idx].quest.theme
+        end
+      end
+    end
+
+    -- when some cells are outdoor and some are indoor,
+    -- remove the outdoor themes from consideration.
+
+    local out_num = 0
+
+    for zzz,T in ipairs(themes) do
+      if T.outdoor then out_num = out_num + 1 end
+    end
+    
+    if (out_num > 0) and (#themes - out_num > 0) then
+      for idx = #themes,1,-1 do
+        if themes[idx].outdoor then
+          table.remove(themes, idx)
+        end
+      end
+    end
+
+    if #themes >= 2 then
+      table.sort(themes, function(t1, t2) return t1.mat_pri < t2.mat_pri end)
+    end
+
+    return themes[1]
+  end
+
+  local function border_theme_simple(c1, c2)
+
+    if not c2 then return c1.theme end
+
+    local t1 = c1.theme
+    local t2 = c2.theme
+
+    if c1.is_exit then return t1 end
+    if c2.is_exit then return t2 end
+
+    if c1.scenic == "solid" then return t1 end
+    if c2.scenic == "solid" then return t2 end
+
+    if c1.hallway ~= c2.hallway then
+      if c1.hallway then
+        t1 = c1.quest.theme
+      else
+        t2 = c2.quest.theme
+      end
+    end
+
+    if t1.outdoor ~= t2.outdoor then
+      return sel(t1.outdoor, t2, t1)
+    end
+
+    if t1.mat_pri < t2.mat_pri then t1,t2 = t2,t1 end
+
+    local diff = t1.mat_pri - t2.mat_pri
+    assert(diff >= 0)
+
+    if diff <= 3 then
+      local PROBS = { 50, 10, 3, 1 }
+      if rand_odds(PROBS[1+diff]) then t1,t2 = t2,t1 end
+    end
+
+    return t1
+  end
+
+  local function border_kind(c1, c2, side)
+
+    if not c2 or c2.is_depot then
+      if c1.theme.outdoor then return "sky" end
+      return "solid"
+    end
+
+    if c1.scenic == "solid" or c2.scenic == "solid" then
+      return "solid"
+    end
+
+    if c1.is_exit or c2.is_exit then return "solid" end
+    if c1.hallway or c2.hallway then return "solid" end
+
+    local link = c1.link[side]
+
+    if link then assert(c2) end
+
+    if link and (link.kind == "arch") and c1.theme == c2.theme and
+       (c1.quest.parent or c1.quest) == (c2.quest.parent or c2.quest) and
+       dual_odds(c1.theme.outdoor, 50, 33)
+    then
+       return "empty"
+    end
+
+    -- fencing anyone?
+    local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
+
+    if (c1.theme.outdoor == c2.theme.outdoor) and
+       (not c1.is_exit  and not c2.is_exit) and
+       (not c1.is_depot and not c2.is_depot) and diff_h > 64
+    then
+      if c1.scenic or c2.scenic then
+        return rand_sel(30, "wire", "fence")
+      end
+
+      local i_W = sel(link, 3, 20)
+      local i_F = sel(c1.theme == c2.theme, 5, 0)
+
+      if dual_odds(c1.theme.outdoor, 25, i_W) then return "wire" end
+      if dual_odds(c1.theme.outdoor, 60, i_F) then return "fence" end
+    end
+ 
+    return "solid"
+  end
+
 
   local function adjust(c, side, D, c2, side2, E)
 
@@ -2682,7 +2823,19 @@ function jiggle_borders(p)
     -- OK, both borders only touch at a corner.
     -- Decide which one to adjust...
 
-    if rand_odds(50) then D,E = E,D end  -- FIXME !!!!
+    if D.theme ~= E.theme then
+      local cells = { c, c2 }
+
+      local n1 = neighbour_by_side(p, c,  side)
+      local n2 = neighbour_by_side(p, c2, side2)
+
+      if n1 then table.insert(cells, n1) end
+      if n2 then table.insert(cells, n2) end
+
+      local T = border_theme(cells)
+      
+      if D.theme == T then D,E = E,D end
+    end
 
     if D.x1 == D.x2 then
       -- vertical
@@ -2702,89 +2855,10 @@ function jiggle_borders(p)
     end
   end
 
-  local function border_theme(c1, c2)
-
-    if not c2 then return c1.theme end
-
-    local t1 = c1.theme
-    local t2 = c2.theme
-
-    if c1.is_exit then return t1 end
-    if c2.is_exit then return t2 end
-
-    if c1.hallway ~= c2.hallway then
-      if c1.hallway then
-        t1 = c1.quest.theme
-      else
-        t2 = c2.quest.theme
-      end
-    end
-
-    if t1.outdoor ~= t2.outdoor then
-      return sel(t1.outdoor, t2, t1)
-    end
-
-    if t1.mat_pri < t2.mat_pri then t1,t2 = t2,t1 end
-
-    local diff = t1.mat_pri - t2.mat_pri
-    assert(diff >= 0)
-
-    if diff <= 3 then
-      local PROBS = { 50, 10, 3, 1 }
-      if rand_odds(PROBS[1+diff]) then t1,t2 = t2,t1 end
-    end
-
-    return t1
-  end
-
-  local function border_kind(c1, c2, side)
-
-    if not c2 then
-      if c1.theme.outdoor then return "sky" end
-      return "solid"
-    end
-
-    if c1.scenic == "solid" or c2.scenic == "solid" or c2.is_depot then
-      return "solid"
-    end
-
-    local link = c1.link[side]
-
-    if link then assert(c2) end
-
-    if link and (link.kind == "arch") and c1.theme == c2.theme and
-       (c1.quest.parent or c1.quest) == (c2.quest.parent or c2.quest) and
-       dual_odds(c1.theme.outdoor, 50, 33)
-    then
-       return "empty"
-    end
-
-    -- fencing anyone?
-    local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
-
-    if (c1.theme.outdoor == c2.theme.outdoor) and
-       (not c1.is_exit  and not c2.is_exit) and
-       (not c1.is_depot and not c2.is_depot) and diff_h > 64
-    then
-      if c1.scenic or c2.scenic then
-        return rand_sel(30, "wire", "fence")
-      end
-
-      local i_W = sel(link, 3, 20)
-      local i_F = sel(c1.theme == c2.theme, 5, 0)
-
-      if dual_odds(c1.theme.outdoor, 25, i_W) then return "wire" end
-      if dual_odds(c1.theme.outdoor, 60, i_F) then return "fence" end
-    end
- 
-    return "solid"
-  end
-
-
   local function jiggle(c, side)
 
     local D = c.border[side]
-    if D.build then return end -- already done
+    if D.jiggled then return end -- already done
 
     -- these will be cleared if the border is adjusted
     D.low_corner  = true
@@ -2804,6 +2878,8 @@ function jiggle_borders(p)
         end
       end
     end end
+
+    D.jiggled = true
   end
 
   local function setup(c, side)
@@ -2821,10 +2897,19 @@ function jiggle_borders(p)
 
     local other = neighbour_by_side(p,c, side)
 
-    D.theme = border_theme(c, other)
+    D.theme = border_theme(D.cells)
     D.kind  = border_kind (c, other, side)
   end
 
+  local function setup_corner(c, side)
+
+    local E = c.border[side]
+    if E.build then return end -- already done
+
+    E.build = c
+    E.theme = border_theme(E.cells)
+    E.kind  = "solid"
+  end
 
   --- jiggle_borders ---
 
@@ -2832,13 +2917,22 @@ function jiggle_borders(p)
     local c = p.cells[x][y]
     if c then
       for side = 2,8,2 do
-        if c.border[side] then
-          jiggle(c, side)
-          setup(c, side)
-        end
+        if c.border[side] then setup(c, side) end
       end
+      for side = 1,9,2 do if side ~= 5 then
+        if c.border[side] then setup_corner(c, side) end
+      end end
     end
   end end
+
+---###  for x = 1,p.w do for y = 1,p.h do
+---###    local c = p.cells[x][y]
+---###    if c then
+---###      for side = 2,8,2 do
+---###        if c.border[side] then jiggle(c, side) end
+---###      end
+---###    end
+---###  end end
 end
 
 ----------------------------------------------------------------
@@ -2898,6 +2992,9 @@ function build_cell(p, c)
     local other = link_other(link, c)
     assert(other)
 
+    local D = c.border[side]
+    assert(D)
+
     local x, y
     local dx, dy = dir_to_delta(dir)
     local ax, ay = dir_to_across(dir)
@@ -2926,13 +3023,16 @@ function build_cell(p, c)
     elseif side == 6 then x,y = BW, d_pos
     end
 
+    x = x + c.bx1-1
+    y = y + c.by1-1
+
     if (link.kind == "arch" or link.kind == "falloff") then
 
       if what == "empty" then return end  -- no arch needed
 
       x,y = x-dx, y-dy
       local ex, ey = x + ax*(long-1), y + ay*(long-1)
-      local tex = c.theme.wall
+      local tex = b_theme.wall
 
       -- sometimes leave it empty
       if what == "wire" then link.arch_rand = link.arch_rand * 4 end
@@ -3206,7 +3306,7 @@ function build_cell(p, c)
 
     for x = x1,x2 do for y = y1,y2 do
 
-      local B = p.blocks[c.bx1-1+x][c.by1-1+y]
+      local B = p.blocks[x][y]
 
       -- overwrite a 64x64 block, but not a fragmented one
       if (not B) or (not B.fragments) then
@@ -3241,7 +3341,7 @@ function build_cell(p, c)
       u_tex = c.rmodel.u_tex,
     }
 
-    if not p.blocks[c.bx1-1+x][c.by1-1+y] then
+    if not p.blocks[x][y] then
 
       local fx = (x - 1) * FW
       local fy = (y - 1) * FH
@@ -3253,6 +3353,12 @@ function build_cell(p, c)
 
   local function build_empty_border(x1,y1, x2,y2, other, side, what, b_theme)
 
+--!!!! TEMP CRAP
+local overrides = { l_tex = b_theme.wall, u_tex = b_theme.wall }
+if what == "wire" then overrides.rail = THEME.rails["r_1"].wall end
+gap_fill(p,c, x1,y1, x2,y2, c.rmodel, overrides)
+do return end
+
     local EMPTY = 
     {
       f_h = c.rmodel.f_h,
@@ -3261,6 +3367,7 @@ function build_cell(p, c)
       c_tex = b_theme.ceil,
       light = c.rmodel.light
     }
+
 
     local overrides
     if what == "wire" then
@@ -3278,7 +3385,8 @@ function build_cell(p, c)
       overrides = { [rsd] = { rail = THEME.rails["r_1"].wall }}
     end
 
-    for n = 1,KW do
+--[[
+    for n = 1,KW do --!!!!! 1,KW   FIXME: sx,sy (etc) are floats!!!
         -- FIXME: ICK!!! FIXME
         local sx = x1 + (x2-x1+1) * (n-1) / KW
         local sy = y1 + (y2-y1+1) * (n-1) / KH
@@ -3292,7 +3400,7 @@ function build_cell(p, c)
       local K1, K2 = chunk_pair(c, other, side, n)
 
       if (K1.void or K1.cage) and (K2.void or K2.cage) then
-        gap_fill(p,c, sx,sy, ex,ey, { solid=b_theme.void})
+        gap_fill(p,c, c.bx1-1+sx,c.bx1-1+sy, c.by1-1+ex,c.by1-1+ey, { solid=b_theme.void})
       else
         local sec
 
@@ -3315,9 +3423,10 @@ function build_cell(p, c)
         sec.l_tex = b_theme.wall
         sec.u_tex = b_theme.wall
 
-        gap_fill(p,c, sx,sy, ex,ey, sec, overrides)
+        gap_fill(p,c, c.bx1-1+sx,c.by1-1+sy, c.bx1-1+ex,c.by1-1+ey, sec, overrides)
       end
     end
+--]]
   end
 
   local function build_window(link, other, side, what, b_theme)
@@ -3358,7 +3467,9 @@ function build_cell(p, c)
     local ax, ay = dir_to_across(side)
 
     local x, y = side_to_corner(side, BW, BH)
-    x,y = x+dx, y+dy
+
+    x = c.bx1-1 + x+dx
+    y = c.by1-1 + y+dy
 
     local sec = 
     {
@@ -3459,37 +3570,33 @@ function build_cell(p, c)
   end
   --]]
 
-  local function build_border(side, pass)
+  local function build_corner(side)
+
+    local E = c.border[side]
+    if not E then return end
+    if E.build ~= c then return end
+
+    -- FIXME
+    gap_fill(p,c, E.bx, E.by, E.bx, E.by, { solid=E.theme.wall })
+  end
+
+  local function build_border(side)
 
     local D = c.border[side]
     if not D then return end
     if D.build ~= c then return end
 
---[[ TEST
---!!!! TEST
-for x = D.x1,D.x2 do for y = D.y1,D.y2 do
-  if p.blocks[x][y] then con.printf("Border overlap @ (%d,%d)\n", x, y) end
-  p.blocks[x][y] = { solid=D.theme.wall }
-end end
-do return end
---]]
-
     local link = c.link[side]
     local other = neighbour_by_side(p, c, side)
-
----###    -- should *we* build it, or the other side?
----###    if c ~= D.build then
----###      return
----###    end
 
     local what = D.kind
     assert(what)
 
----###    if (pass == 1 and what ~= "sky") or
----###       (pass == 2 and what == "sky") then return end
-
     local b_theme = D.theme
     assert(b_theme)
+
+    local dx, dy = dir_to_delta(side)
+    local ax, ay = dir_to_across(side)
 
     if link then
       build_link(link, other, side, what, b_theme)
@@ -3519,16 +3626,7 @@ do return end
       build_window(link, other, side, what, b_theme)
     end
 
-    local x1, y1, x2, y2 = side_to_corner(side, BW, BH)
-    local dx, dy = dir_to_delta(side)
-
-    x1, y1 = x1 + dx, y1 + dy
-    x2, y2 = x2 + dx, y2 + dy
-
-    local corn_x1 = x1 - math.abs(dy)
-    local corn_y1 = y1 - math.abs(dx)
-    local corn_x2 = x2 + math.abs(dy)
-    local corn_y2 = y2 + math.abs(dx)
+    local x1,y1, x2,y2 = D.x1, D.y1, D.x2, D.y2
 
     if what == "empty" or what == "wire" then
 
@@ -3560,6 +3658,7 @@ do return end
       build_sky_border(side, x1,y1, x2,y2)
 
       -- handle the corner (check adjacent side)
+--[[ FIXME !!!!! "sky"
       for cr = 1,2 do
         local nb_side = 2
         if side == 2 or side == 8 then nb_side = 4 end
@@ -3586,23 +3685,12 @@ do return end
           build_sky_corner(cx, cy, wx, wy)
         end
       end
+--]]
 
     else -- solid
       gap_fill(p,c, x1,y1, x2,y2, { solid=b_theme.wall })
     end
 
-    -- lucky last: corners
-
-    local corn_dx1 = (side == 6) and  1 or -1
-    local corn_dy1 = (side == 8) and  1 or -1
-    local corn_dx2 = (side == 4) and -1 or  1
-    local corn_dy2 = (side == 2) and -1 or  1
-
-    local corn_tex1 = corner_tex(c, corn_dx1, corn_dy1)
-    local corn_tex2 = corner_tex(c, corn_dx2, corn_dy2)
-
-    gap_fill(p,c, corn_x1,corn_y1, corn_x1,corn_y1, { solid=corn_tex1 })
-    gap_fill(p,c, corn_x2,corn_y2, corn_x2,corn_y2, { solid=corn_tex2 })
   end
 
   local function build_chunk(kx, ky)
@@ -3612,8 +3700,8 @@ do return end
     end
 
     local function add_overhang_pillars(c, K, kx, ky, sec, l_tex, u_tex)
-      local basex = (kx - 1) * JW + 1
-      local basey = (ky - 1) * JH + 1
+      local basex = K.x1
+      local basey = K.y1
 
       sec = copy_block(sec)
       sec.l_tex = l_tex
@@ -3703,6 +3791,10 @@ do return end
     if K.vista then return end
 
     if K.void then
+      --!!!!!! TEST CRAP
+      gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, c.rmodel)
+      do return end
+
       if K.closet then
         con.debugf("BUILDING CLOSET @ (%d,%d)\n", c.x, c.y)
 
@@ -3791,11 +3883,11 @@ do return end
       local step = (NB.rmodel.f_h - K.rmodel.f_h) / deep / 4
 
       if math.abs(step) <= 16 then
-        B_stair(p, c, bx, by, K.rmodel.f_h, K.stair_dir,
+        B_stair(p, c, c.bx1-1+bx, c.by1-1+by, K.rmodel.f_h, K.stair_dir,
                 long, deep, (NB.rmodel.f_h - K.rmodel.f_h) / (deep * 4),
                 { } )
       else
-        B_lift(p, c, bx, by,
+        B_lift(p, c, c.bx1-1+bx, c.by1-1+by,
                math.max(K.rmodel.f_h, NB.rmodel.f_h), K.stair_dir,
                long, deep, { } )
       end
@@ -4025,7 +4117,7 @@ do return end
       end
 
       -- get this *after* doing sky lights
-      local blocked = p.blocks[c.bx1-1+K.x1+1][c.by1-1+K.y1+1]
+      local blocked = p.blocks[K.x1+1][K.y1+1] --!!!
 
       if K.crate and not blocked then
         local theme = c.crate_theme
@@ -4062,7 +4154,7 @@ do return end
          (dual_odds(c.theme.outdoor, 37, 22)
           or (c.scenic and rand_odds(51)))
       then
-        p.blocks[c.bx1-1+K.x1+1][c.by1-1+K.y1+1].has_scenery = true
+--!!!!!        p.blocks[K.x1+1][K.y1+1].has_scenery = true
         local th = add_thing(p, c, K.x1+1, K.y1+1, c.theme.scenery, true)
         if c.scenic then
           th.dx = rand_irange(-64,64)
@@ -4107,12 +4199,16 @@ do return end
     end
   end
 
+  for side = 1,9,2 do if side ~= 5 then
+    build_corner(side)
+  end end
+
 ---###  -- on first pass, only build sky borders
 ---###  -- (otherwise corner between two sky borders looks bad)
 ---###  for pass = 2,1,-1 do
 ---###  end
   for side = 2,8,2 do
-    build_border(side, pass)
+    build_border(side)
   end
 
   for kx = 1,KW do
@@ -4177,24 +4273,25 @@ local function build_depot(p, c)
   end
 
   for y = 1,#places do
-    fill(p, c, 1,y*2-1, BW,y*2, mon_sec, { mark=y })
-    places[y].spots = rectangle_to_spots(c, m1,y*2-1, m1+0,y*2) -- FIXME
+    c_fill(p, c, 1,y*2-1, BW,y*2, mon_sec, { mark=y })
+    places[y].spots = rectangle_to_spots(c, c.bx1-1+m1, c.by1-1+y*2-1,
+          c.bx1-1+m1+0, c.by1-1+y*2)
 
     for x = t1,t2 do
       local t = 1 + ((x + y) % #places)
-      fill(p, c, x,y*2-1, x,y*2, tele_sec, { mark=x*10+y, walk_tag=places[t].tag})
+      c_fill(p, c, x,y*2-1, x,y*2, tele_sec, { mark=x*10+y, walk_tag=places[t].tag})
     end
   end
 
   -- door separating monsters from teleporter lines
-  fill(p, c, 5,1, 5,2*#places, door_sec)
+  c_fill(p, c, 5,1, 5,2*#places, door_sec)
 
   -- bottom corner block is same sector as player start,
   -- to allow sound to wake up these monsters.
-  fill(p, c, m1,1, m1,1, copy_block(player_B), { same_sec=player_B })
+  c_fill(p, c, m1,1, m1,1, copy_block(player_B), { same_sec=player_B })
 
   -- put a border around the room
-  gap_fill(p, c, 0, 0, BW+1, BH+1, { solid=c.theme.wall })
+  gap_fill(p, c, c.bx1-1, c.by1-1, c.bx2+1, c.by2+1, { solid=c.theme.wall })
 end
 
 
