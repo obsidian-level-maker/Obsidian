@@ -184,6 +184,10 @@ function valid_cell(p, cx, cy)
   return not (cx < 1 or cy < 1 or cx > p.w or cy > p.h)
 end
 
+function valid_block(p, bx, by)
+  return not (bx < 1 or by < 1 or bx > p.blk_w or by > p.blk_h)
+end
+
 function empty_loc(p)  ---### UNUSED
   for loop = 1,999 do
     local x,y = random_cell(p)
@@ -210,14 +214,6 @@ function get_bordering_cell(p, c, bx, by)
   if bx == BW and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
   if by == 1  and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
   if by == BH and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
-end
-
-function side_to_edge(side, x1,y1, x2,y2)
-  if side == 2 then return x1,y1, x2,y1 end
-  if side == 8 then return x1,y2, x2,y2 end
-  if side == 4 then return x1,y1, x1,y2 end
-  if side == 6 then return x2,y1, x2,y2 end
-  error ("side_to_corner: bad side " .. side)
 end
 
 function links_in_cell(c)
@@ -282,7 +278,8 @@ function create_cell(p, x, y, quest, along, theme, is_depot)
 
     floor_h = 128, ceil_h = 256, -- dummy values
 
-    link = {}, border = {}, closet = {}, vista = {},
+    link = {}, border = {},
+    closet = {}, vista = {},
 
     is_depot = is_depot,
     liquid = quest.liquid,
@@ -389,51 +386,90 @@ function compute_height_minmax(p)
 end
 
 
+function create_corners(p)
+
+  local SUB_TO_DIR = { { 1, 3 }, { 7, 9 } }
+  
+  local function find_corner(x, y)
+
+    local INFO =
+    {
+      bx = BORDER_BLK + (x) * (BW+1),
+      by = BORDER_BLK + (y) * (BH+1),
+
+      cells = {}
+    }
+
+    for sub_x = 0,1 do for sub_y = 0,1 do
+
+      local cx = x + sub_x
+      local cy = y + sub_y
+      local c_dir = SUB_TO_DIR[2-sub_y][2-sub_x]
+
+      local c = valid_cell(p,cx,cy) and p.cells[cx][cy]
+
+      if c then
+        c.border[c_dir] = INFO
+        table.insert(INFO.cells, c)
+      end
+
+    end end
+
+  end
+
+  --- create_corners ---
+
+  for x = 0,p.w do for y = 0,p.h do  -- NOTE: goes outside the plan
+    find_corner(x, y)
+  end end
+
+end
+
 function create_borders(p)
 
-  local function visit(c)
+  local function find_border(c)
+
     for side = 2,8,2 do
       if not c.border[side] then
 
         local other = neighbour_by_side(p,c,side)
 
-        local BD = other and other.border[10-side]
+        local D = other and other.border[10-side]
 
-        if not BD then
+        if not D then
           local dx,dy = dir_to_delta(side)
           local ax,ay = dir_to_across(side)
 
           local x1,y1, x2,y2 = side_to_edge(side, c.bx1,c.by1, c.bx2,c.by2)
 
-          x1,y1 = x1+dx, y1+dy
-          x2,y2 = x2+dx, y2+dy
-
-          -- NOTE: via the logic here, the corners of borders will
-          --       overlap each other.  This is rectified later.
-          x1,y1 = x1-ax,y1-ay
-          x2,y2 = x2+ax,y2+ay
-
-          BD =
+          D =
           {
-            x1=x1, y1=y1, x2=x2, y2=y2,
+            x1=x1+dx, y1=y1+dy,
+            x2=x2+dx, y2=y2+dy,
+
+            cells = { c }
           }
+
+          if other then
+            table.insert(D.cells, other)
+          end
         end
 
-        c.border[side] = BD
+        c.border[side] = D
 
         if other then
-          other.border[10-side] = BD
+          other.border[10-side] = D
         end
       end
-    end -- for side
+    end
   end
 
   --- create_borders ---
 
-  for zzz,c in ipairs(p.all_cells)  do visit(c) end
----###  for zzz,c in ipairs(p.all_depots) do visit(c) end
+  for zzz,c in ipairs(p.all_cells) do
+    find_border(c)
+  end
 end
-
 
 
 function plan_sp_level(is_coop)  -- returns Plan
@@ -1097,10 +1133,10 @@ function plan_sp_level(is_coop)  -- returns Plan
     local keys, switches, weapons, items, total, ratio
     local k_max, sw_max, wp_max, it_max;
 
-    k_max  = math.min(3, count_entries(THEME.quests.key))
-    sw_max = math.min(3, count_entries(THEME.quests.switch))
-    wp_max = math.min(4, count_entries(THEME.quests.weapon))
-    it_max = math.min(2, count_entries(THEME.quests.item))
+    k_max  = math.min(3, table_size(THEME.quests.key))
+    sw_max = math.min(3, table_size(THEME.quests.switch))
+    wp_max = math.min(4, table_size(THEME.quests.weapon))
+    it_max = math.min(2, table_size(THEME.quests.item))
 
     local tot_min = 1 + rand_index_by_probs { 5, 70, 5 }
     local tot_max = 4 + rand_index_by_probs { 1, 5, 15, 60, 15, 5, 1 }
@@ -1277,8 +1313,6 @@ function plan_sp_level(is_coop)  -- returns Plan
       end
     end
 
-    -- ensure scenic cells have borders
-    create_borders(p)
   end
 
   local function add_bridges()
@@ -1572,8 +1606,6 @@ function plan_sp_level(is_coop)  -- returns Plan
       end
     end
 
-    -- add_depot will make new cells, so give them borders
-    create_borders(p)
   end
 
 
@@ -1651,8 +1683,6 @@ function plan_sp_level(is_coop)  -- returns Plan
     con.ticker();
   end
 
-  create_borders(p)
-
   decide_links()
   setup_exit_room()
   add_scenic_cells()
@@ -1671,6 +1701,10 @@ function plan_sp_level(is_coop)  -- returns Plan
   add_falloffs()
   add_vistas()
   add_surprises()
+
+  create_corners(p)
+  create_borders(p)
+
   add_windows()
 
   return p

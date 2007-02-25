@@ -511,8 +511,6 @@ function plan_dm_arena()
   con.debugf("DM EXIT THEME: %s\n", p.exit_theme.wall)
 
   choose_dm_themes()
-
-  create_borders()
   create_dm_links()
 
   select_heights()
@@ -521,6 +519,10 @@ function plan_dm_arena()
 
   add_doors()
   add_falloffs()
+
+  create_corners()
+  create_borders()
+
   add_windows()
 
   con.ticker();
