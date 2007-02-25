@@ -100,7 +100,7 @@ end
 class Link
   kind  : string: "a" arch | "d" door | "f" fall-off | "b" bridge
 
-  src, dest : Cell
+  cells : array(Cell)
 
   build : Cell -- which side we build the wall,door (etc)
                   must equal either src or dest.
@@ -122,8 +122,7 @@ class Border
 
   x1, y1, x2, y2 : block range
 
----##  low_corner : true when (x1,y1) is a corner block 
----##  high_corner: true when (x2,y2) is a corner block
+  cells : array(Cell)
 
   build : Cell
   theme : Theme
