@@ -511,10 +511,11 @@ function plan_dm_arena()
   con.debugf("DM EXIT THEME: %s\n", p.exit_theme.wall)
 
   choose_dm_themes()
+
   create_dm_links()
+  shuffle_build_sites(p)
 
   select_heights()
-  shuffle_build_sites(p)
   compute_height_minmax(p);
 
   add_doors()

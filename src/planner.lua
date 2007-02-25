@@ -325,25 +325,23 @@ end
 function shuffle_build_sites(p)
 
   for zzz,link in ipairs(p.all_links) do
-    if link.kind ~= "falloff" then
 
-      local c1 = link.cells[1]
-      local c2 = link.cells[2]
+    local c1 = link.cells[1]
+    local c2 = link.cells[2]
 
-      local SL = links_in_cell(c1)
-      local DL = links_in_cell(c2)
+    local SL = links_in_cell(c1)
+    local DL = links_in_cell(c2)
 
-      local chance = 50
+    local chance = 50
 
-          if DL > SL then chance = 50 - DL * 10
-      elseif SL > DL then chance = 50 + SL * 10
-      end
-
-      if c1.hallway and not c2.hallway then chance =  5 end
-      if c2.hallway and not c1.hallway then chance = 95 end
-
-      link.build = link.cells[rand_sel(chance, 2, 1)]
+        if DL > SL then chance = 50 - DL * 10
+    elseif SL > DL then chance = 50 + SL * 10
     end
+
+    if c1.hallway and not c2.hallway then chance =  5 end
+    if c2.hallway and not c1.hallway then chance = 95 end
+
+    link.build = link.cells[rand_sel(chance, 2, 1)]
   end
 end
 
@@ -771,6 +769,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 
 
   local function decide_links()
+
     for zzz,link in ipairs(p.all_links) do
       local c1 = link.cells[1]
       local c2 = link.cells[2]
@@ -888,8 +887,8 @@ function plan_sp_level(is_coop)  -- returns Plan
         return
       end
 
-      f_min = f_min - 96
-      f_max = f_max + 64
+      f_min = f_min - 64
+      f_max = f_max + 32 -- may get a fence too
 
       for loop = 1,10 do
         c.floor_h = start_height()
@@ -1398,7 +1397,7 @@ function plan_sp_level(is_coop)  -- returns Plan
             c.vista[dir] = 2
           end
 
-          con.printf("VISTA @ (%d,%d) dir: %d\n", c.x, c.y, dir)
+          con.debugf("VISTA @ (%d,%d) dir: %d\n", c.x, c.y, dir)
         end
       end
     end
@@ -1674,12 +1673,12 @@ function plan_sp_level(is_coop)  -- returns Plan
   end
 
   decide_links()
+  shuffle_build_sites(p)
+
   setup_exit_room()
   add_scenic_cells()
 
   con.ticker();
-
-  shuffle_build_sites(p)
 
   select_floor_heights()
   compute_height_minmax(p)
@@ -1692,7 +1691,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 -- FIXME add_bridges()
 
   add_falloffs()
-  add_vistas()
+--!!!!  add_vistas()
   add_surprises()
 
   create_corners(p)
