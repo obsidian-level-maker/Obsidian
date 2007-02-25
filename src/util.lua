@@ -16,19 +16,10 @@
 --
 ----------------------------------------------------------------
 
+
+----====| GENERAL STUFF |====----
+
 function do_nothing()
-end
-
-INHERIT_META =
-{
-  __index = function(t, k)
-    if t.__parent then return t.__parent[k] end
-  end
-}
-
-function inherit(child, parent)
-  child.__parent = parent
-  return setmetatable(child, INHERIT_META)
 end
 
 function int(val)
@@ -43,7 +34,10 @@ function dist(x1,y1, x2,y2)
   return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
 end
 
-function count_entries(t)
+
+----====| TABLE UTILITIES |====----
+
+function table_size(t)
   local count = 0;
   for k,v in pairs(t) do count = count+1 end
   return count
@@ -120,11 +114,11 @@ function reverse_array(t)
 end
 
 function array_2D(w, h)
-  local t = { w=w, h=h }
+  local array = { w=w, h=h }
   for x = 1,w do
-    t[x] = {}
+    array[x] = {}
   end
-  return t
+  return array
 end
 
 function iterate_2D(arr, func, sx, sy, ex, ey)
@@ -141,73 +135,20 @@ function iterate_2D(arr, func, sx, sy, ex, ey)
   end
 end
 
--- note: assumes Y axis points upwards
-function dir_to_delta(dir)
-  if dir == 1 then return -1, -1 end
-  if dir == 2 then return  0, -1 end
-  if dir == 3 then return  1, -1 end
-
-  if dir == 4 then return -1, 0 end
-  if dir == 5 then return  0, 0 end
-  if dir == 6 then return  1, 0 end
-
-  if dir == 7 then return -1, 1 end
-  if dir == 8 then return  0, 1 end
-  if dir == 9 then return  1, 1 end
-
-  error ("dir_to_delta: bad dir " .. dir)
-end
-
-function delta_to_dir(dx, dy)
-  if math.abs(dx) > math.abs(dy) then
-    if dx > 0 then return 6 else return 4 end
-  else
-    if dy > 0 then return 8 else return 2 end
+INHERIT_META =
+{
+  __index = function(t, k)
+    if t.__parent then return t.__parent[k] end
   end
+}
+
+function inherit(child, parent)
+  child.__parent = parent
+  return setmetatable(child, INHERIT_META)
 end
 
-CW_45_ROTATES  = { 4, 1, 2,  7, 5, 3,  8, 9, 6 }
-CCW_45_ROTATES = { 2, 3, 6,  1, 5, 9,  4, 7, 8 }
 
-CW_90_ROTATES  = { 7, 4, 1,  8, 5, 2,  9, 6, 3 }
-CCW_90_ROTATES = { 3, 6, 9,  2, 5, 8,  1, 4, 7 }
-
-function rotate_cw(dir)
-  return CW_90_ROTATES[dir]
-end
-
-function rotate_ccw(dir)
-  return CCW_90_ROTATES[dir]
-end
-
-DIR_ANGLES = { 225,270,315, 180,0,0, 135,90,45 }
-
-function dir_to_angle(dir)
-  assert(1 <= dir and dir <= 9)
-  return DIR_ANGLES[dir]
-end
-
-function delta_to_angle(dx,dy)
-  if math.abs(dy) < math.abs(dx)/2 then
-    return sel(dx < 0, 180, 0)
-  end
-  if math.abs(dx) < math.abs(dy)/2 then
-    return sel(dy < 0, 270, 90)
-  end
-  if dy > 0 then
-    return sel(dx < 0, 135, 45)
-  else
-    return sel(dx < 0, 225, 315)
-  end
-end
-
--- convert position into block/sub-block pair,
--- where all the index values start at 1
-function div_mod(x, mod)
-  x = x - 1
-  return 1 + int(x / mod), 1 + (x % mod)
-end
-
+----====| RANDOM NUMBERS |====----
 
 function rand_range(L,H)
   return L + con.random() * (H-L)
@@ -317,5 +258,92 @@ function rand_key_by_probs(tab)
   local idx = rand_index_by_probs(prob_list)
 
   return key_list[idx]
+end
+
+
+----====| CELL/BLOCK UTILITIES |====----
+
+-- convert position into block/sub-block pair,
+-- where all the index values start at 1
+function div_mod(x, mod)
+  x = x - 1
+  return 1 + int(x / mod), 1 + (x % mod)
+end
+
+function dir_to_delta(dir)
+  if dir == 1 then return -1, -1 end
+  if dir == 2 then return  0, -1 end
+  if dir == 3 then return  1, -1 end
+
+  if dir == 4 then return -1, 0 end
+  if dir == 5 then return  0, 0 end
+  if dir == 6 then return  1, 0 end
+
+  if dir == 7 then return -1, 1 end
+  if dir == 8 then return  0, 1 end
+  if dir == 9 then return  1, 1 end
+
+  error ("dir_to_delta: bad dir " .. dir)
+end
+
+function delta_to_dir(dx, dy)
+  if math.abs(dx) > math.abs(dy) then
+    if dx > 0 then return 6 else return 4 end
+  else
+    if dy > 0 then return 8 else return 2 end
+  end
+end
+
+function dir_to_across(dir)
+  if dir == 2 then return 1, 0 end
+  if dir == 4 then return 0, 1 end
+  if dir == 6 then return 0, 1 end
+  if dir == 8 then return 1, 0 end
+
+  error ("dir_to_across: bad dir " .. dir)
+end
+
+CW_45_ROTATES  = { 4, 1, 2,  7, 5, 3,  8, 9, 6 }
+CCW_45_ROTATES = { 2, 3, 6,  1, 5, 9,  4, 7, 8 }
+
+CW_90_ROTATES  = { 7, 4, 1,  8, 5, 2,  9, 6, 3 }
+CCW_90_ROTATES = { 3, 6, 9,  2, 5, 8,  1, 4, 7 }
+
+function rotate_cw(dir)
+  return CW_90_ROTATES[dir]
+end
+
+function rotate_ccw(dir)
+  return CCW_90_ROTATES[dir]
+end
+
+DIR_ANGLES = { 225,270,315, 180,0,0, 135,90,45 }
+
+function dir_to_angle(dir)
+  assert(1 <= dir and dir <= 9)
+  return DIR_ANGLES[dir]
+end
+
+function delta_to_angle(dx,dy)
+  if math.abs(dy) < math.abs(dx)/2 then
+    return sel(dx < 0, 180, 0)
+  end
+  if math.abs(dx) < math.abs(dy)/2 then
+    return sel(dy < 0, 270, 90)
+  end
+  if dy > 0 then
+    return sel(dx < 0, 135, 45)
+  else
+    return sel(dx < 0, 225, 315)
+  end
+end
+
+function side_to_edge(side, x1,y1, x2,y2)
+  if side == 2 then return x1,y1, x2,y1 end
+  if side == 4 then return x1,y1, x1,y2 end
+  if side == 6 then return x2,y1, x2,y2 end
+  if side == 8 then return x1,y2, x2,y2 end
+
+  error ("side_to_edge: bad side " .. side)
 end
 
