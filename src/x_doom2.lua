@@ -637,7 +637,7 @@ THEME_FACTORIES["doom2"] = function()
   T.crates  = copy_and_merge(T.crates,  D2_CRATES)
   T.mats    = copy_and_merge(T.mats,    D2_MATS)
   T.doors   = copy_and_merge(T.doors,   D2_DOORS)
-  T.lights  = copy_and_merge(T.lights,  D2_LIQUIDS)
+  T.lights  = copy_and_merge(T.lights,  D2_LIGHTS)
   T.pics    = copy_and_merge(T.pics,    D2_PICS)
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
