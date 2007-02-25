@@ -3537,7 +3537,33 @@ do return end
     if not E then return end
     if E.build ~= c then return end
 
-    -- FIXME
+    -- handle outside corners
+    local out_num = 0
+    local f_max = -99999
+
+    for zzz,c in ipairs(E.cells) do
+      if c.theme.outdoor then out_num = out_num + 1 end
+      f_max = math.max(c.f_max, f_max)
+    end
+
+    if out_num == #E.cells then
+
+      local CORN = copy_block_with_new(E.cells[1].rmodel,
+      {
+        f_h = f_max + 64,
+        f_tex = E.theme.floor,
+        l_tex = E.theme.wall,
+      })
+
+      -- crappy substitute to using a real sky corner
+      if out_num < 4 then CORN.c_h = CORN.f_h + 1 end
+
+      if CORN.f_h < CORN.c_h then
+        gap_fill(p,c, E.bx, E.by, E.bx, E.by, CORN)
+        return
+      end
+    end
+
     gap_fill(p,c, E.bx, E.by, E.bx, E.by, { solid=E.theme.wall })
   end
 
