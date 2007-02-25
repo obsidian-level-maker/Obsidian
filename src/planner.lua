@@ -197,8 +197,8 @@ end
 
 
 function link_other(link, cell)
-  if link.src  == cell then return link.dest end
-  if link.dest == cell then return link.src end
+  if link.cells[1] == cell then return link.cells[2] end
+  if link.cells[2] == cell then return link.cells[1] end
   return nil
 end
 
@@ -307,8 +307,7 @@ end
 function create_link(p, c, other, dir)
   local LINK =
   {
-    src  = c,
-    dest = other,
+    cells = { c, other },
     kind = "arch",  -- updated later
     build = c,    -- updated later
     long = 2,      -- ditto
@@ -326,30 +325,24 @@ end
 function shuffle_build_sites(p)
 
   for zzz,link in ipairs(p.all_links) do
+    if link.kind ~= "falloff" then
 
-    con.ticker();
+      local c1 = link.cells[1]
+      local c2 = link.cells[2]
 
-    local SL = links_in_cell(link.src)
-    local DL = links_in_cell(link.dest)
+      local SL = links_in_cell(c1)
+      local DL = links_in_cell(c2)
 
-    local chance = 50
+      local chance = 50
 
-        if DL > SL then chance = 50 - DL * 10
-    elseif SL > DL then chance = 50 + SL * 10
-    end
+          if DL > SL then chance = 50 - DL * 10
+      elseif SL > DL then chance = 50 + SL * 10
+      end
 
-    if link.src.hallway and not link.dest.hallway then chance =  5 end
-    if link.dest.hallway and not link.src.hallway then chance = 95 end
+      if c1.hallway and not c2.hallway then chance =  5 end
+      if c2.hallway and not c1.hallway then chance = 95 end
 
-    -- this ensures we see a metallic wall outside
-    -- (rather than a rocky wall inside)
-    if link.dest.theme.outdoor and not link.src.theme.outdoor then chance =  1 end
-    if link.src.theme.outdoor and not link.dest.theme.outdoor then chance = 99 end
-
-    if link.kind == "falloff" then chance = 0 end
-
-    if rand_odds(chance) then
-      link.build = link.dest
+      link.build = link.cells[rand_sel(chance, 2, 1)]
     end
   end
 end
@@ -779,23 +772,23 @@ function plan_sp_level(is_coop)  -- returns Plan
 
   local function decide_links()
     for zzz,link in ipairs(p.all_links) do
-      local c = link.src
-      local d = link.dest
+      local c1 = link.cells[1]
+      local c2 = link.cells[2]
 
-      if link.src.quest.level == link.dest.quest.level then
+      if c1.quest.level == c2.quest.level then
 
         local door_chance = 15
-        if c.theme.outdoor ~= d.theme.outdoor then door_chance = 70
-        elseif c.hallway and d.hallway then door_chance = 10
-        elseif c.theme ~= d.theme then door_chance = 40
-        elseif c.theme.outdoor then door_chance = 5
+        if c1.theme.outdoor ~= c2.theme.outdoor then door_chance = 70
+        elseif c1.hallway and c2.hallway then door_chance = 10
+        elseif c1.theme ~= c2.theme then door_chance = 40
+        elseif c1.theme.outdoor then door_chance = 5
         end
 
         if rand_odds(door_chance) then link.kind = "door" end
 
       else -- need a locked door
 
-        local lock_level = math.max(c.quest.level, d.quest.level) - 1
+        local lock_level = math.max(c1.quest.level, c2.quest.level) - 1
         assert(lock_level >= 1 and lock_level < #p.quests)
 
         link.quest = p.quests[lock_level]
@@ -924,8 +917,6 @@ function plan_sp_level(is_coop)  -- returns Plan
         scenic_floor(c);
       end
     end
-
-    compute_height_minmax(p)
   end
 
   local function select_ceiling_heights()
@@ -1024,7 +1015,6 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     raise_the_rooves()
 
-    compute_height_minmax(p)
   end
 
   
@@ -1692,7 +1682,10 @@ function plan_sp_level(is_coop)  -- returns Plan
   shuffle_build_sites(p)
 
   select_floor_heights()
+  compute_height_minmax(p)
+
   select_ceiling_heights()
+  compute_height_minmax(p)
 
   toughen_it_up()
 

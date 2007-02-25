@@ -126,12 +126,9 @@ function random_where(link)
 
   local LINK_WHERES = { 15, 40, 15, 90, 15, 40, 15 }
 
-  if link.src.hallway or link.dest.hallway then
-    return 0
-  end
-
-  if link.src.small_exit or link.dest.small_exit then
-    return 0
+  for zzz,c in ipairs(link.cells) do
+    if c.hallway then return 0 end
+    if c.small_exit then return 0 end
   end
 
   if (link.kind == "door" and rand_odds(4)) or
@@ -1867,8 +1864,8 @@ function make_chunks(p)
 
         -- remove the chunks from the offending cells and
         -- select a different exit position
-        L.src.chunks  = nil
-        L.dest.chunks = nil
+        L.cells[1].chunks = nil
+        L.cells[2].chunks = nil
 
         L.where = random_where(L)
 
@@ -2629,15 +2626,10 @@ local dx,dy = dir_to_delta(loc.dir)
 end
 
 
-function jiggle_borders(p)
+function setup_borders_and_corners(p)
 
-  -- Tasks we do here:
-  --
-  -- (a) decide on the type of border, its theme, and which
-  --     cell is responsible for building it.
-  --
-  -- (b) adjust the block range for each Border so that the
-  --     corners never overlap with another Border.
+  -- for each border and corner: decide on the type, the theme,
+  -- and which cell is ultimately responsible for building it.
 
   local function border_theme(cells)
     assert(#cells >= 1)
@@ -2695,43 +2687,6 @@ function jiggle_borders(p)
     return themes[1]
   end
 
-  local function border_theme_simple(c1, c2)
-
-    if not c2 then return c1.theme end
-
-    local t1 = c1.theme
-    local t2 = c2.theme
-
-    if c1.is_exit then return t1 end
-    if c2.is_exit then return t2 end
-
-    if c1.scenic == "solid" then return t1 end
-    if c2.scenic == "solid" then return t2 end
-
-    if c1.hallway ~= c2.hallway then
-      if c1.hallway then
-        t1 = c1.quest.theme
-      else
-        t2 = c2.quest.theme
-      end
-    end
-
-    if t1.outdoor ~= t2.outdoor then
-      return sel(t1.outdoor, t2, t1)
-    end
-
-    if t1.mat_pri < t2.mat_pri then t1,t2 = t2,t1 end
-
-    local diff = t1.mat_pri - t2.mat_pri
-    assert(diff >= 0)
-
-    if diff <= 3 then
-      local PROBS = { 50, 10, 3, 1 }
-      if rand_odds(PROBS[1+diff]) then t1,t2 = t2,t1 end
-    end
-
-    return t1
-  end
 
   local function border_kind(c1, c2, side)
 
@@ -2780,6 +2735,7 @@ function jiggle_borders(p)
   end
 
 
+  --[[ UNNEEDED
   local function adjust(c, side, D, c2, side2, E)
 
     if E.x1 > D.x2 or E.x2 < D.x1 then return end
@@ -2881,8 +2837,9 @@ function jiggle_borders(p)
 
     D.jiggled = true
   end
+  --]]
 
-  local function setup(c, side)
+  local function init_border(c, side)
 
     local D = c.border[side]
     if D.build then return end -- already done
@@ -2901,7 +2858,7 @@ function jiggle_borders(p)
     D.kind  = border_kind (c, other, side)
   end
 
-  local function setup_corner(c, side)
+  local function init_corner(c, side)
 
     local E = c.border[side]
     if E.build then return end -- already done
@@ -2911,28 +2868,17 @@ function jiggle_borders(p)
     E.kind  = "solid"
   end
 
-  --- jiggle_borders ---
+  --- setup_borders_and_corners ---
 
-  for x = 1,p.w do for y = 1,p.h do
-    local c = p.cells[x][y]
-    if c then
-      for side = 2,8,2 do
-        if c.border[side] then setup(c, side) end
-      end
-      for side = 1,9,2 do if side ~= 5 then
-        if c.border[side] then setup_corner(c, side) end
-      end end
+  for zzz,c in ipairs(p.all_cells) do
+
+    for side = 2,8,2 do
+      if c.border[side] then init_border(c, side) end
     end
-  end end
-
----###  for x = 1,p.w do for y = 1,p.h do
----###    local c = p.cells[x][y]
----###    if c then
----###      for side = 2,8,2 do
----###        if c.border[side] then jiggle(c, side) end
----###      end
----###    end
----###  end end
+    for side = 1,9,2 do
+      if c.border[side] then init_corner(c, side) end
+    end
+  end
 end
 
 ----------------------------------------------------------------
@@ -3114,7 +3060,7 @@ function build_cell(p, c)
         c_tex = b_theme.ceil,
       })
 
-      if not link.src.outdoor or not link.dest.outdoor then
+      if not (c.theme.outdoor and other.theme.outdoor) then
         sec.c_h = sec.c_h - 32
         while sec.c_h > (sec.c_h+sec.f_h+128)/2 do
           sec.c_h = sec.c_h - 32
@@ -3131,7 +3077,7 @@ function build_cell(p, c)
 
       local kind = link.wide_door
 
-      if link.src.quest == link.dest.quest
+      if c.quest == other.quest
         and link.door_rand < sel(c.theme.outdoor or other.theme.outdoor, 10, 20)
       then
         kind = link.narrow_door
@@ -4199,9 +4145,9 @@ do return end
     end
   end
 
-  for side = 1,9,2 do if side ~= 5 then
+  for side = 1,9,2 do
     build_corner(side)
-  end end
+  end
 
 ---###  -- on first pass, only build sky borders
 ---###  -- (otherwise corner between two sky borders looks bad)
@@ -4239,7 +4185,7 @@ local function build_depot(p, c)
   local start = p.quests[1].first
   assert(start.player_pos)
 
-  local player_B = p.blocks[start.bx1-1 + start.player_pos.x][start.by1-1 + start.player_pos.y]
+  local player_B = p.blocks[start.player_pos.x][start.player_pos.y]
 
   -- check for double pedestals (Plutonia)
   if player_B.fragments then
@@ -4304,7 +4250,9 @@ function build_level(p)
   make_chunks(p)
 --show_chunks(p)
 
-  jiggle_borders(p)
+  con.ticker()
+
+  setup_borders_and_corners(p)
 
   for zzz,cell in ipairs(p.all_cells) do
     build_cell(p, cell)
