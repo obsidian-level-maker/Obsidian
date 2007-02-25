@@ -69,7 +69,7 @@ class Cell
   entry_dir : previous cell in stage
   
   window : table[DIR] -> Link
-  border : table[DIR] -> Border
+  border : table[DIR] -> Border  -- NB: diagonals are used for corners
   vista  : table[DIR] -> numeric
 
   teleport : array(Cell)
@@ -122,8 +122,8 @@ class Border
 
   x1, y1, x2, y2 : block range
 
-  low_corner : true when (x1,y1) is a corner block 
-  high_corner: true when (x2,y2) is a corner block
+---##  low_corner : true when (x1,y1) is a corner block 
+---##  high_corner: true when (x2,y2) is a corner block
 
   build : Cell
   theme : Theme
