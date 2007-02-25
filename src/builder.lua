@@ -2928,7 +2928,7 @@ function build_cell(p, c)
     end
   end
 
-  local function build_real_link(link, side, where, what, b_theme)
+  local function build_real_link(link, side, where)
 
     -- DIR here points to center of current cell
     local dir = 10-side  -- FIXME: remove
@@ -2940,6 +2940,8 @@ function build_cell(p, c)
 
     local D = c.border[side]
     assert(D)
+
+    local b_theme = D.theme
 
     local x, y
     local dx, dy = dir_to_delta(dir)
@@ -2974,14 +2976,14 @@ function build_cell(p, c)
 
     if (link.kind == "arch" or link.kind == "falloff") then
 
-      if what == "empty" then return end  -- no arch needed
+      if D.kind == "empty" then return end  -- no arch needed
 
       x,y = x-dx, y-dy
       local ex, ey = x + ax*(long-1), y + ay*(long-1)
       local tex = b_theme.wall
 
       -- sometimes leave it empty
-      if what == "wire" then link.arch_rand = link.arch_rand * 4 end
+      if D.kind == "wire" then link.arch_rand = link.arch_rand * 4 end
 
       if link.kind == "arch" and link.where ~= "wide" and
         c.theme.outdoor == other.theme.outdoor and
@@ -3123,7 +3125,10 @@ function build_cell(p, c)
     end
   end
 
-  local function build_link(link, other, side, what, b_theme)
+  local function build_link(side)
+
+    local link = c.link[side]
+    if not (link and link.build == c) then return end
 
     link.narrow_door = random_door_kind(64)
     link.wide_door   = random_door_kind(128)
@@ -3134,10 +3139,10 @@ function build_cell(p, c)
 
     if link.where == "double" then
       local awh = rand_irange(2,3)
-      build_real_link(link, side, -awh, what, b_theme)
-      build_real_link(link, side,  awh, what, b_theme)
+      build_real_link(link, side, -awh)
+      build_real_link(link, side,  awh)
     else
-      build_real_link(link, side, link.where, what, b_theme)
+      build_real_link(link, side, link.where)
     end
   end
 
@@ -3375,15 +3380,24 @@ do return end
 --]]
   end
 
-  local function build_window(link, other, side, what, b_theme)
+  local function build_window(side)
 
-    if what == "empty" then return end
+    local D = c.border[side]
+
+    if not (D and D.window and D.build == c) then return end
+
+    local link = c.link[side]
+    local other = neighbour_by_side(p,c,side)
+
+    local b_theme = D.theme
+
+    if D.kind == "empty" then return end
 
     if c.scenic == "solid" and other.scenic == "solid" then return end
 
     -- don't build 'castley' walls indoors
-    if what == "fence" and not c.theme.outdoor then return end
-    if what == "wire" then return end
+    if D.kind == "fence" and not c.theme.outdoor then return end
+    if D.kind == "wire" then return end
 
     -- cohabitate nicely with doors
     local min_x, max_x = 1, BW
@@ -3431,7 +3445,7 @@ do return end
 
     if other.scenic then sec.impassible = true end
 
-    if what == "fence" then
+    if D.kind == "fence" then
       sec.c_h = c.rmodel.c_h
     else
       sec.light = sec.light - 16
@@ -3448,7 +3462,8 @@ do return end
 
     local bar, bar_step
     local bar_chance
-    if what == "fence" then
+
+    if D.kind == "fence" then
       bar_chance = 0.1
     else
       bar_chance = 10 + math.min(long,4) * 15
@@ -3464,7 +3479,7 @@ do return end
     end
 
     -- !!! FIXME: test crud
-    if not bar and what ~= "fence" then
+    if not bar and D.kind ~= "fence" then
       -- FIXME: choose window rail
       sec[side] = { rail = THEME.rails["r_2"].wall }
     end
@@ -3544,10 +3559,6 @@ do return end
     local dx, dy = dir_to_delta(side)
     local ax, ay = dir_to_across(side)
 
-    if link then
-      build_link(link, other, side, what, b_theme)
-    end
-
     if c.vista[side] then
       local kind = "open"
       local diff_h = c.floor_h - other.floor_h
@@ -3566,10 +3577,6 @@ do return end
       end
 
       B_vista(p,c, side, c.vista[side]*3-1, b_theme, kind)
-    end
-
-    if D.window then
-      build_window(link, other, side, what, b_theme)
     end
 
     local x1,y1, x2,y2 = D.x1, D.y1, D.x2, D.y2
@@ -4149,11 +4156,9 @@ do return end
     build_corner(side)
   end
 
----###  -- on first pass, only build sky borders
----###  -- (otherwise corner between two sky borders looks bad)
----###  for pass = 2,1,-1 do
----###  end
   for side = 2,8,2 do
+    build_link(side)
+    build_window(side)
     build_border(side)
   end
 
