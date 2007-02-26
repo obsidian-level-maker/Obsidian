@@ -25,7 +25,7 @@ KW =  3; KH = KW  -- chunks in a cell
 JW = BW/KW  -- blocks in a chunk
 JH = BH/KH
 
-BORDER_BLK = 5  -- number of spare blocks around plan
+BORDER_BLK = 8  -- number of spare blocks around plan
 
 MIN_FLOOR = 0
 MAX_CEIL  = 640
