@@ -669,7 +669,7 @@ function write_level(p, lev_name)
     sec.index = total_sec
     total_sec = total_sec + 1
 
-    wad.add_sector(sec.f_h, sec.c_h,
+    wad.add_sector(NORMALIZE(sec.f_h), NORMALIZE(sec.c_h),
       sec.f_tex or THEME.ERROR_FLAT,
       sec.c_tex or THEME.ERROR_FLAT,
       sec.light or 0, sec.kind or 0, sec.tag or 0)
@@ -715,9 +715,10 @@ function write_level(p, lev_name)
     
     for zzz,th in pairs(thing_list) do
 
-      wad.add_thing(NORMALIZE(th.x), NORMALIZE(th.y), th.z or 0,
-            th.kind, th.angle or 0, th.flags or 7,
-            th.tid or 0, th.special or 0, th.args)
+      wad.add_thing(
+          NORMALIZE(th.x), NORMALIZE(th.y), NORMALIZE(th.z or 0),
+          th.kind, th.angle or 0, th.flags or 7,
+          th.tid or 0, th.special or 0, th.args)
     end
   end
 
@@ -747,7 +748,8 @@ function write_level(p, lev_name)
       sec.index = IDX-1
       tx_file:write(
         string.format("S%d : %d %d %s %s %d %d %d\n",
-          sec.T_index, sec.f_h, sec.c_h,
+          sec.T_index,
+          NORMALIZE(sec.f_h), NORMALIZE(sec.c_h),
           sec.f_tex or THEME.ERROR_FLAT,
           sec.c_tex or THEME.ERROR_FLAT,
           sec.light or 0, sec.kind or 0, sec.tag or 0))
