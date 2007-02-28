@@ -69,7 +69,8 @@ class Cell
   entry_dir : previous cell in stage
   
   window : table[DIR] -> Link
-  border : table[DIR] -> Border  -- NB: diagonals are used for corners
+  border : table[DIR] -> Border  -- diagonal are "mini-borders"
+  corner : table[DIR] -> Border
   vista  : table[DIR] -> numeric
 
   teleport : array(Cell)
