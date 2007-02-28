@@ -309,6 +309,14 @@ CCW_45_ROTATES = { 2, 3, 6,  1, 5, 9,  4, 7, 8 }
 CW_90_ROTATES  = { 7, 4, 1,  8, 5, 2,  9, 6, 3 }
 CCW_90_ROTATES = { 3, 6, 9,  2, 5, 8,  1, 4, 7 }
 
+function rotate_cw45(dir)
+  return CW_45_ROTATES[dir]
+end
+
+function rotate_ccw45(dir)
+  return CCW_45_ROTATES[dir]
+end
+
 function rotate_cw(dir)
   return CW_90_ROTATES[dir]
 end
@@ -338,12 +346,28 @@ function delta_to_angle(dx,dy)
   end
 end
 
-function side_to_edge(side, x1,y1, x2,y2)
+function side_coords(side, x1,y1, x2,y2)
   if side == 2 then return x1,y1, x2,y1 end
   if side == 4 then return x1,y1, x1,y2 end
   if side == 6 then return x2,y1, x2,y2 end
   if side == 8 then return x1,y2, x2,y2 end
 
-  error ("side_to_edge: bad side " .. side)
+  error ("side_coords: bad side " .. side)
+end
+
+function corner_coords(side, x1,y1, x2,y2)
+  if side == 1 then return x1,y1 end
+  if side == 3 then return x2,y1 end
+  if side == 7 then return x1,y2 end
+  if side == 9 then return x2,y2 end
+
+  error ("corner_coords: bad side " .. side)
+end
+
+function neighbour_by_side(p, c, dir)
+  local dx, dy = dir_to_delta(dir)
+  if valid_cell(p, c.x + dx, c.y + dy) then
+    return p.cells[c.x + dx][c.y + dy]
+  end
 end
 
