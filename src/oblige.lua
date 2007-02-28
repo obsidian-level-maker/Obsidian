@@ -35,8 +35,12 @@ function get_level_names(settings)
 
   if (settings.game == "doom1") or (settings.game == "heretic") then
 
-    local epi_num = sel(settings.length == "full",   3, 1)
+    local epi_num = 1
     local lev_num = sel(settings.length == "single", 1, 9)
+
+    if settings.length == "full" then
+      epi_num = sel(settings.game == "doom1", 4, 3)
+    end
 
     for e = 1,epi_num do
       for m = 1,lev_num do
