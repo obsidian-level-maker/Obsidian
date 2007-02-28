@@ -45,13 +45,13 @@ function side_to_chunk(side)
   error ("side_to_chunk: bad side " .. side)
 end
 
-function side_to_corner(side, W, H)
-  if side == 2 then return 1,1, W,1 end
-  if side == 8 then return 1,H, W,H end
-  if side == 4 then return 1,1, 1,H end
-  if side == 6 then return W,1, W,H end
-  error ("side_to_corner: bad side " .. side)
-end
+---###  function side_to_corner(side, W, H)
+---###    if side == 2 then return 1,1, W,1 end
+---###    if side == 8 then return 1,H, W,H end
+---###    if side == 4 then return 1,1, 1,H end
+---###    if side == 6 then return W,1, W,H end
+---###    error ("side_to_corner: bad side " .. side)
+---###  end
 
 function dir_to_corner(dir, W, H)
   if dir == 1 then return 1,1 end
@@ -801,7 +801,7 @@ function B_floor_switch(p,c, x,y,z, side, info, kind, tag)
     end
   end
 
-  local sx,sy, ex,ey = side_to_corner(side, FW, FH)
+  local sx,sy, ex,ey = side_coords(side, 1,1, FW,FH)
 
   frag_fill(p,c, fx+sx,fy+sy, fx+ex,fy+ey, SWITCH)
 end
@@ -833,7 +833,7 @@ function B_wall_switch(p,c, x,y,z, side, long, sw_info, kind, tag)
     near_switch = true,
   }
 
-  local sx,sy, ex,ey = side_to_corner(side, FW, FH)
+  local sx,sy, ex,ey = side_coords(side, 1,1, FW,FH)
   local dx,dy = dir_to_delta(10-side)
 
   local pos = (long - 1) * 2
@@ -1080,7 +1080,7 @@ function B_void_pic(p,c, K,kx,ky, pic, cuts)
     local ax,ay = dir_to_across(side)
     local dx,dy = dir_to_delta(side)
 
-    local sx,sy, ex,ey = side_to_corner(side, FW*3, FH*3)
+    local sx,sy, ex,ey = side_coords(side, 1,1, FW*3, FH*3)
 
     if cuts == 1 then
       frag_fill(p,c, fx+sx+2*ax,fy+sy+2*ay, fx+ex-2*ax,fy+ey-2*ay, CUTOUT)
@@ -1374,7 +1374,7 @@ function B_vista(p,c, side,deep, theme,kind)
   local other = neighbour_by_side(p,c,side)
   assert(other)
 
-  local x1,y1, x2,y2 = side_to_corner(side, BW, BH)
+  local x1,y1, x2,y2 = side_coords(side, 1,1, BW,BH)
 
   local dx,dy = dir_to_delta(side)
   local ax,ay = dir_to_across(side)
@@ -1475,8 +1475,8 @@ function B_vista(p,c, side,deep, theme,kind)
   fx2 = x2 * FW
   fy2 = y2 * FH
 
-  local px1,py1, px2,py2 = side_to_edge(side,    fx1,fy1, fx2,fy2)
-  local wx1,wy1, wx2,wy2 = side_to_edge(10-side, fx1,fy1, fx2,fy2)
+  local px1,py1, px2,py2 = side_coords(side,    fx1,fy1, fx2,fy2)
+  local wx1,wy1, wx2,wy2 = side_coords(10-side, fx1,fy1, fx2,fy2)
 
 
   if kind == "wire" then
@@ -1985,7 +1985,7 @@ function make_chunks(p)
 
     -- select a side
     local side = rand_irange(1,4) * 2
-    local x1, y1, x2, y2 = side_to_corner(side, KW, KH)
+    local x1, y1, x2, y2 = side_coords(side, 1,1, KW,KH)
 
     local common
     local possible = true
@@ -2699,6 +2699,8 @@ function setup_borders_and_corners(p)
       return "solid"
     end
 
+if ((side%2)==0) then return "empty" end --!!!!! TEST
+
     if c1.is_exit or c2.is_exit then return "solid" end
     if c1.hallway or c2.hallway then return "solid" end
 
@@ -2860,7 +2862,7 @@ function setup_borders_and_corners(p)
 
   local function init_corner(c, side)
 
-    local E = c.border[side]
+    local E = c.corner[side]
     if E.build then return end -- already done
 
     E.build = c
@@ -2872,11 +2874,11 @@ function setup_borders_and_corners(p)
 
   for zzz,c in ipairs(p.all_cells) do
 
-    for side = 2,8,2 do
+    for side = 1,9 do
       if c.border[side] then init_border(c, side) end
     end
     for side = 1,9,2 do
-      if c.border[side] then init_corner(c, side) end
+      if c.corner[side] then init_corner(c, side) end
     end
   end
 end
@@ -2971,14 +2973,13 @@ function build_cell(p, c)
     elseif side == 6 then x,y = BW, d_pos
     end
 
-    x = x + c.bx1-1
-    y = y + c.by1-1
+    x = D.x1 + ax
+    y = D.y1 + ay
 
     if (link.kind == "arch" or link.kind == "falloff") then
 
       if D.kind == "empty" then return end  -- no arch needed
 
-      x,y = x-dx, y-dy
       local ex, ey = x + ax*(long-1), y + ay*(long-1)
       local tex = b_theme.wall
 
@@ -3050,7 +3051,7 @@ function build_cell(p, c)
 
     elseif link.kind == "door" and link.is_exit and not link.quest then
 
-      B_exit_door(p,c, c.theme, link, x-dx, y-dy, c.floor_h, dir)
+      B_exit_door(p,c, c.theme, link, x, y, c.floor_h, dir)
 
     elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
        THEME.switches[link.quest.item].bars
@@ -3073,7 +3074,7 @@ function build_cell(p, c)
       local bar = link.bar_size
       local tag = link.quest.tag + 1
 
-      B_bars(p,c, x-dx,y-dy, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_theme.wall, tag,true)
+      B_bars(p,c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_theme.wall, tag,true)
 
     elseif link.kind == "door" then
 
@@ -3118,7 +3119,7 @@ function build_cell(p, c)
         assert(key_tex)
       end
 
-      B_door(p, c, link, b_theme, x-dx, y-dy, c.floor_h, dir,
+      B_door(p, c, link, b_theme, x, y, c.floor_h, dir,
              1 + int(info.w / 64), 1, info, door_kind, tag, key_tex)
     else
       error("build_link: bad kind: " .. tostring(link.kind))
@@ -3253,7 +3254,7 @@ function build_cell(p, c)
       light = c.rmodel.light,
     }
 
-    local ax1, ay1, ax2, ay2 = side_to_corner(10-side, FW, FH)
+    local ax1, ay1, ax2, ay2 = side_coords(10-side, 1,1, FW,FH)
 
     for x = x1,x2 do for y = y1,y2 do
 
@@ -3304,8 +3305,9 @@ function build_cell(p, c)
 
   local function build_empty_border(x1,y1, x2,y2, other, side, what, b_theme)
 
---!!!! TEMP CRAP
+--!!!!! TEST CRAP
 local overrides = { l_tex = b_theme.wall, u_tex = b_theme.wall }
+overrides.f_tex = "LAVA1" --!!!!!
 if what == "wire" then overrides.rail = THEME.rails["r_1"].wall end
 gap_fill(p,c, x1,y1, x2,y2, c.rmodel, overrides)
 do return end
@@ -3426,7 +3428,7 @@ do return end
     local dx, dy = dir_to_delta(side)
     local ax, ay = dir_to_across(side)
 
-    local x, y = side_to_corner(side, BW, BH)
+    local x, y = side_coords(side, 1,1, BW,BH)
 
     x = c.bx1-1 + x+dx
     y = c.by1-1 + y+dy
@@ -3533,7 +3535,7 @@ do return end
 
   local function build_corner(side)
 
-    local E = c.border[side]
+    local E = c.corner[side]
     if not E then return end
     if E.build ~= c then return end
 
@@ -3582,8 +3584,8 @@ do return end
     local b_theme = D.theme
     assert(b_theme)
 
-    local dx, dy = dir_to_delta(side)
-    local ax, ay = dir_to_across(side)
+---###    local dx, dy = dir_to_delta(side)
+---###    local ax, ay = dir_to_across(side)
 
     if c.vista[side] then
       local kind = "open"
@@ -3606,6 +3608,11 @@ do return end
     end
 
     local x1,y1, x2,y2 = D.x1, D.y1, D.x2, D.y2
+
+if (side % 2) == 1 then
+gap_fill(p,c, x1,y1, x2,y2, { solid="COMPBLUE" })
+return
+end
 
     if what == "empty" or what == "wire" then
 
@@ -3770,7 +3777,7 @@ do return end
     if K.vista then return end
 
     if K.void then
-      --!!!!!! TEST CRAP
+      --!!!!! TEST CRAP
       gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, c.rmodel)
       do return end
 
@@ -3898,6 +3905,11 @@ do return end
         end
         add_thing(p, c, bx, by, sel(p.deathmatch, "dm_player", "player1"), true, angle)
         c.player_pos = {x=bx, y=by}
+
+        if p.deathmatch and not p.have_sp_player then
+          add_thing(p, c, bx, by, "player1", true, angle)
+          p.have_sp_player = true
+        end
       end
 
     elseif K.dm_weapon then
@@ -4180,13 +4192,22 @@ do return end
 
   for side = 1,9,2 do
     build_corner(side)
+    build_border(side)
   end
 
   for side = 2,8,2 do
-    build_link(side)
-    build_window(side)
+--!!!!    build_link(side)
+--!!!!    build_window(side)
     build_border(side)
   end
+
+if true then --!!!!! TESTING
+gap_fill(p,c, c.bx1, c.by1, c.bx2, c.by2, c.rmodel)
+if c == p.quests[1].first then
+add_thing(p, c, c.bx1+3, c.by1+3, "player1", true, 0)
+end
+do return end
+end
 
   for kx = 1,KW do
     for ky = 1,KH do
@@ -4290,7 +4311,7 @@ function build_level(p)
   end
 
   for zzz,cell in ipairs(p.all_depots) do
-    build_depot(p, cell)
+---!!!    build_depot(p, cell)
   end
 
   con.progress(25); if con.abort() then return end

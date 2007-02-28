@@ -52,6 +52,7 @@ function show_path(p)
 
           if c.dm_player then kind = "P"
       elseif c.dm_weapon then kind = "W"
+      elseif c.dummy     then kind = "!"
       elseif c.scenic    then kind = "C"
       elseif c.is_depot  then kind = "D"
       elseif c.along == 1 then kind = "S"
@@ -202,13 +203,6 @@ function link_other(link, cell)
   return nil
 end
 
-function neighbour_by_side(p, c, dir)
-  if dir == 4 and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
-  if dir == 6 and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
-  if dir == 2 and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
-  if dir == 8 and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
-end
-
 function get_bordering_cell(p, c, bx, by)
   if bx == 1  and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
   if bx == BW and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
@@ -278,8 +272,9 @@ function create_cell(p, x, y, quest, along, theme, is_depot)
 
     floor_h = 128, ceil_h = 256, -- dummy values
 
-    link = {}, border = {},
+    link = {}, border = {}, corner = {},
     closet = {}, vista = {},
+    nudges = {},
 
     is_depot = is_depot,
     liquid = quest.liquid,
@@ -300,6 +295,23 @@ function create_cell(p, x, y, quest, along, theme, is_depot)
   else
     table.insert(p.all_cells, CELL)
   end
+
+  return CELL
+end
+
+function create_dummy_cell(p, x, y)
+  local CELL =
+  {
+    x=x, y=y, nudges = {}, dummy = true
+  }
+
+  CELL.bx1 = BORDER_BLK + (x-1) * (BW+1) + 1
+  CELL.by1 = BORDER_BLK + (y-1) * (BH+1) + 1
+
+  CELL.bx2 = CELL.bx1 + BW - 1
+  CELL.by2 = CELL.by1 + BW - 1
+
+  p.cells[x][y] = CELL
 
   return CELL
 end
@@ -377,22 +389,159 @@ function compute_height_minmax(p)
 end
 
 
+function resize_rooms(p)
+
+  local function cell_size(c)
+    return (c.bx2 - c.bx1 + 1), (c.by2 - c.by1 + 1)
+  end
+
+  local function add_dummies()
+    for x = 1,p.w do for y = 1,p.h do
+      if not p.cells[x][y] then
+        create_dummy_cell(p, x, y)
+      end
+    end end
+  end
+
+  local function remove_dummies()
+    for x = 1,p.w do for y = 1,p.h do
+      if p.cells[x][y].dummy then
+        p.cells[x][y] = nil
+      end
+    end end
+  end
+
+  local function try_nudge_cell(c, side, pass)
+
+    if rand_odds(30) then return end
+
+    local dx,dy = dir_to_delta(side)
+    local other = neighbour_by_side(p, c, side)
+
+    if c.is_exit or c.is_depot then return end
+
+    if other then
+      if other.is_exit or other.is_depot then return end
+    end
+
+    -- already moved this edge?
+    if c.nudges[side] then return end
+
+    -- direction: +1 = outwards, -1 inwards
+    local dir  = rand_sel(50, 1, -1) --!!!! compare wanted room sizes
+    local deep = 3
+
+    local mv_x = math.abs(dx) * deep
+    local mv_y = math.abs(dy) * deep
+
+    if not other then
+      if pass == 1 then return end
+
+      if dir < 0 then
+        -- no problem, we are shrinking
+
+      else
+        -- at edge of plan, OK to move into the "BORDER_BLK" area
+        assert(
+           (side == 4 and c.x == 1) or (side == 6 and c.x == p.w) or
+           (side == 2 and c.y == 1) or (side == 8 and c.y == p.h))
+      end
+    else
+      if pass == 2 then return end
+
+      -- cannot move the border if the cells aren't aligned
+      if (side == 2) or (side == 8) then
+        if not (c.bx1 == other.bx1 and c.bx2 == other.bx2) then return end
+      else 
+        if not (c.by1 == other.by1 and c.by2 == other.by2) then return end
+      end
+    end
+
+    -- don't make the shrinking cell too small
+    local shrinker = sel(dir < 0, c, other)
+    if shrinker then
+      local new_w, new_h = cell_size(shrinker)
+      new_w, new_h = new_w - mv_x, new_h - mv_y
+
+      local min_size = 6
+      if shrinker.dummy or shrinker.scenic then min_size = 3 end
+
+      if new_w < min_size or new_h < min_size then return end
+    end
+
+    c.nudges[side] = true
+    if other then
+      other.nudges[10-side] = true
+    end
+
+    dx = dx * mv_x * dir
+    dy = dy * mv_y * dir
+
+    con.debugf("~~~~~~~ NUDGING (%d,%d) side:%d  by %d/%d\n", c.x,c.y,side,dx,dy) 
+
+    if (side == 2) or (side == 4) then
+      c.bx1 = c.bx1 + dx
+      c.by1 = c.by1 + dy
+    else
+      c.bx2 = c.bx2 + dx
+      c.by2 = c.by2 + dy
+    end
+
+    if other then
+      if (side == 2) or (side == 4) then
+        other.bx2 = other.bx2 + dx
+        other.by2 = other.by2 + dy
+      else
+        other.bx1 = other.bx1 + dx
+        other.by1 = other.by1 + dy
+      end
+    end
+  end
+
+  --- resize_rooms ---
+
+  add_dummies()
+
+  local visit_list = {}
+
+  for zzz,c in ipairs(p.all_cells) do
+    for side = 2,8,2 do
+      table.insert(visit_list, { c=c, side=side })
+    end
+  end
+
+  -- first pass: move borders between two cells
+  rand_shuffle(visit_list)
+
+  for zzz,v in ipairs(visit_list) do
+    try_nudge_cell(v.c, v.side, 1)
+  end
+
+  -- second pass: move borders that touch the edge of the map
+  rand_shuffle(visit_list)
+
+  for zzz,v in ipairs(visit_list) do
+    local x, y = v.c.x, v.c.y
+    if (x == 1 or x == p.w or y == 1 or y == p.h) then
+      try_nudge_cell(v.c, v.side, 2)
+    end
+  end
+
+  remove_dummies()
+end
+
+
 function create_corners(p)
 
   local SUB_TO_DIR = { { 1, 3 }, { 7, 9 } }
   
   local function find_corner(x, y)
 
-    local INFO =
-    {
-      bx = BORDER_BLK + (x) * (BW+1),
-      by = BORDER_BLK + (y) * (BH+1),
-
-      cells = {}
-    }
+    -- this table is indexed by a coordinate string, hence
+    -- we can find the shared corners by looking them up.
+    local shared = {}
 
     for sub_x = 0,1 do for sub_y = 0,1 do
-
       local cx = x + sub_x
       local cy = y + sub_y
       local c_dir = SUB_TO_DIR[2-sub_y][2-sub_x]
@@ -400,12 +549,27 @@ function create_corners(p)
       local c = valid_cell(p,cx,cy) and p.cells[cx][cy]
 
       if c then
-        c.border[c_dir] = INFO
-        table.insert(INFO.cells, c)
+        local bx, by = corner_coords(c_dir, c.bx1, c.by1, c.bx2, c.by2)
+        local dx, dy = dir_to_delta(c_dir)
+
+        bx = bx+dx
+        by = by+dy
+
+        local b_name = string.format("%d:%d", bx, by)
+
+        if not shared[b_name] then
+
+          shared[b_name] =
+          {
+            bx=bx, by=by, cells={}
+          }
+        end
+
+        c.corner[c_dir] = shared[b_name]
+
+        table.insert(shared[b_name].cells, c)
       end
-
     end end
-
   end
 
   --- create_corners ---
@@ -413,52 +577,237 @@ function create_corners(p)
   for x = 0,p.w do for y = 0,p.h do  -- NOTE: goes outside the plan
     find_corner(x, y)
   end end
-
 end
 
 function create_borders(p)
 
-  local function find_border(c)
+  local function get_corner_dirs(side)
+        if side == 2 then return 1,3
+    elseif side == 8 then return 7,9
+    elseif side == 4 then return 1,7
+    elseif side == 6 then return 3,9
+    end
+  end
 
-    for side = 2,8,2 do
-      if not c.border[side] then
+  local function add_border(c, side, D, shared)
 
-        local other = neighbour_by_side(p,c,side)
+    if c.border[side] then return end
 
-        local D = other and other.border[10-side]
+    assert(D.x2 >= D.x1)
+    assert(D.y2 >= D.y1)
 
-        if not D then
-          local dx,dy = dir_to_delta(side)
-          local ax,ay = dir_to_across(side)
+    c.border[side] = D
+    D.cells = { c }
 
-          local x1,y1, x2,y2 = side_to_edge(side, c.bx1,c.by1, c.bx2,c.by2)
+    if shared then
+      local other = (side < 10) and neighbour_by_side(p, c, side)
 
-          D =
-          {
-            x1=x1+dx, y1=y1+dy,
-            x2=x2+dx, y2=y2+dy,
-
-            cells = { c }
-          }
-
-          if other then
-            table.insert(D.cells, other)
-          end
-        end
-
-        c.border[side] = D
-
-        if other then
-          other.border[10-side] = D
-        end
+      if other then
+        other.border[10-side] = D
+        table.insert(D.cells, other)
       end
     end
   end
 
+--[[
+Scenarios:
+
+A.  l_cell: nil, other: OK
+--> BORDER: no change
+--> MINI: none
+
+B.  l_cell: nil, other: OK
+--> BORDER: limited by other's corner
+--> MINI: stuff between my corner and other's corner
+
+C.  l_cell: OK, other: XX
+--> BORDER: limited by l_cell's corner
+--> MINI: stuff between my corner and l_cell's corner
+--]]
+
+  local function find_borders(c)
+
+    assert(c.bx2 >= c.bx1)
+    assert(c.by2 >= c.by1)
+
+    for side = 2,8,2 do
+
+      local other = neighbour_by_side(p,c,side)
+
+      local dx,dy = dir_to_delta(side)
+
+      local cx1,cy1, cx2,cy2 = side_coords(side, c.bx1,c.by1, c.bx2,c.by2)
+
+      cx1, cy1 = cx1+dx, cy1+dy
+      cx2, cy2 = cx2+dx, cy2+dy
+
+      local l_dir, h_dir = get_corner_dirs(side)
+      local l_cell = neighbour_by_side(p, c, l_dir)
+      local h_cell = neighbour_by_side(p, c, h_dir)
+
+      if side == 2 or side == 8 then
+
+        local l_x = cx1-1
+        local h_x = cx2+1
+
+        if other then l_x = other.bx1-1
+        elseif l_cell then l_x = l_cell.bx2+1
+        end
+
+        if other then h_x = other.bx2+1
+        elseif h_cell then h_x = h_cell.bx1-1
+        end
+
+        if l_x-1 >= cx1 then
+          -- FIXME: done twice (each side of the diagonal)
+          add_border(c, l_dir, { x1=cx1, y1=cy1, x2=l_x-1, y2=cy1, })
+        end
+        if l_x+1 > cx1 then
+          cx1 = l_x+1
+        end
+
+        if h_x+1 <= cx2 then
+          -- FIXME: done twice (each side of the diagonal)
+          add_border(c, h_dir, { x1=h_x+1, y1=cy1, x2=cx2, y2=cy1, })
+        end
+        if h_x-1 < cx2 then
+          cx2 = h_x-1
+        end
+
+      else -- side==4 or side==6
+
+        local l_y = cy1-1
+        local h_y = cy2+1
+
+        if other then l_y = other.by1-1
+        elseif l_cell then l_y = l_cell.by2+1
+        end
+
+        if other then h_y = other.by2+1
+        elseif h_cell then h_y = h_cell.by1-1
+        end
+
+        if l_y-1 >= cy1 then
+          -- FIXME: done twice (each side of the diagonal)
+          add_border(c, l_dir, { x1=cx1, y1=cy1, x2=cx1, y2=l_y-1 })
+        end
+        if l_y+1 > cy1 then
+          cy1 = l_y+1
+        end
+
+        if h_y+1 <= cy2 then
+          -- FIXME: done twice (each side of the diagonal)
+          add_border(c, h_dir, { x1=cx1, y1=h_y+1, x2=cx1, y2=cy2, })
+        end
+        if h_y-1 < cy2 then
+          cy2 = h_y-1
+        end
+      end
+
+      add_border(c, side, { x1=cx1, y1=cy1, x2=cx2, y2=cy2, })
+
+    end
+  end
+
+--[[ REMOVE OLD CRUD !!!!
+  local function find_mini_border(c)
+
+    for side = 1,9,2 do if side ~= 5 then
+      if not c.border[side] then
+
+        local other = neighbour_by_side(p,c,side)
+if other then
+        local D = other and other.border[10-side]
+        assert(not D)
+
+        local dx,dy = dir_to_delta(side)
+
+        local cx1,cy1, cx2,cy2 = side_coords(side, c.bx1,c.by1, c.bx2,c.by2)
+
+        cx1, cy1 = cx1+dx, cy1+dy
+        cx2, cy2 = cx2+dx, cy2+dy
+
+
+        if D then
+          assert(D.x2 >= D.x1)
+          assert(D.y2 >= D.y1)
+
+          c.border[side] = D
+          D.cells = { c }
+
+          if other then
+            other.border[10-side] = D
+            table.insert(D.cells, other)
+          end
+        end
+end
+      end -- if not border[]
+    end end -- for + if
+  end
+
+  local function OLD_find_mini_border(c)  -- REMOVE OLD CRUD
+
+    for side = 1,9,2 do if side ~= 5 then
+      if not c.border[side] then
+
+        local other = neighbour_by_side(p,c,side)
+if other then
+        local D = other and other.border[10-side]
+        assert(not D)
+
+        local dx,dy = dir_to_delta(side)
+
+        local x1,y1 = corner_coords(side, c.bx1,c.by1, c.bx2,c.by2)
+        local x2,y2 = corner_coords(10-side, other.bx1,other.by1, other.bx2,other.by2)
+
+        x1,y1 = x1+dx, y1+dy
+        x2,y2 = x2-dx, y2-dy
+
+con.printf("CORNER PAIR @ (%d,%d):%d  1=(%d,%d)  2=(%d,%d)\n",
+c.x, c.y, side, x1,y1, x2,y2)
+        local diff_x = math.abs(x1-x2)
+        local diff_y = math.abs(y1-y2)
+
+        if (diff_x == 0) and (diff_y >= 2) then
+          D =
+          {
+            x1 = x1, x2 = x1,
+
+            y1 = math.min(y1,y2) + 1,
+            y2 = math.max(y1,y2) - 1,
+          }
+        elseif (diff_y == 0) and (diff_x >= 2) then
+          D =
+          {
+            x1 = math.min(x1,x2) + 1,
+            x2 = math.max(x1,x2) - 1,
+
+            y1 = y1, y2 = y1,
+          }
+        end
+
+        if D then
+          assert(D.x2 >= D.x1)
+          assert(D.y2 >= D.y1)
+
+          c.border[side] = D
+          D.cells = { c }
+
+          if other then
+            other.border[10-side] = D
+            table.insert(D.cells, other)
+          end
+        end
+end
+      end -- if not border[]
+    end end -- for + if
+  end
+--]]
+
   --- create_borders ---
 
   for zzz,c in ipairs(p.all_cells) do
-    find_border(c)
+    find_borders(c)
   end
 end
 
@@ -1686,18 +2035,20 @@ function plan_sp_level(is_coop)  -- returns Plan
   select_ceiling_heights()
   compute_height_minmax(p)
 
+  resize_rooms(p)
+
   toughen_it_up()
 
 -- FIXME add_bridges()
 
   add_falloffs()
---!!!!  add_vistas()
+--!!!  add_vistas()
   add_surprises()
 
   create_corners(p)
   create_borders(p)
 
-  add_windows()
+--!!!  add_windows()
 
   return p
 end

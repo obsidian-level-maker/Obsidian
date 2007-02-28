@@ -343,8 +343,8 @@ function plan_dm_arena()
   local function add_doors()
     for zzz,link in ipairs(p.all_links) do
       -- FIXME: theme based (more doors in bases)
-      local c = link.src
-      local d = link.dest
+      local c = link.cells[1]
+      local d = link.cells[2]
       local door_chance = 10
 
       if c.theme.outdoor and d.theme.outdoor then door_chance = 3
@@ -392,8 +392,8 @@ function plan_dm_arena()
     end
 
     local function verify_falloff(L)
-      local low  = L.src
-      local high = L.dest
+      local low  = L.cells[1]
+      local high = L.cells[2]
 
       if low.floor_h > high.floor_h then
         low, high = high, low
@@ -521,8 +521,8 @@ function plan_dm_arena()
   add_doors()
   add_falloffs()
 
-  create_corners()
-  create_borders()
+  create_corners(p)
+  create_borders(p)
 
   add_windows()
 
