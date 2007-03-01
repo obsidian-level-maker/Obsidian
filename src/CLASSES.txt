@@ -123,6 +123,8 @@ class Border
 
   x1, y1, x2, y2 : block range
 
+  side : true side of border (2/4/6/8)
+
   cells : array(Cell)
 
   build : Cell
