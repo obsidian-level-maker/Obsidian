@@ -325,7 +325,7 @@ function rotate_block(B, d)
 end
 
 
-function B_prefab(p, c, fab,param, x,y,z, dir)
+function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
 
   -- (x,y) is always the lowest coordinate
   -- dir == 8 is the natural mode, other values rotate it
@@ -351,6 +351,76 @@ function B_prefab(p, c, fab,param, x,y,z, dir)
     return fx, fy
   end
 
+  local function skin_val(key)
+    local V = skin[key]
+    if not V then V = theme[key] end
+    if not V then
+      error("Bad fab/skin combo: missing data for " .. key)
+    end
+    return V
+  end
+
+  local function parm_val(key)
+    local V = parm[key]
+    if not V then V = c.rmodel[key] end
+    if not V then
+      error("Bad fab/parameters: missing value for " .. key)
+    end
+    return V
+  end
+
+  local function what_h_ref(base, rel, h)
+
+    local result = base
+
+    if rel then
+      if not parm[rel] then
+        error("Missing f/c relative value: " .. rel)
+      end
+      result = parm[rel]
+    end
+
+    if h then result = result + h end
+
+    return result
+  end
+
+  local function what_tex(base, key)
+    if skin[key] then return skin[key] end
+    if skin[base] then return skin[base] end
+    assert(theme[base])
+    return theme[base]
+  end
+
+  local function elem_fill(elem, fx, fy)
+
+    local overrides  -- FIXME
+
+    if elem.solid then
+
+      frag_fill (p,c, fx,fy, fx,fy,
+           { solid=what_tex("wall", elem.solid) })
+    else
+      local sec = copy_block(c.rmodel)
+
+      sec.f_h = what_h_ref(sec.f_h, elem.f_rel, elem.f_h)
+      sec.c_h = what_h_ref(sec.c_h, elem.c_rel, elem.c_h)
+
+      sec.f_tex = what_tex("floor", elem.f_tex)
+      sec.c_tex = what_tex("ceil", elem.c_tex)
+
+      sec.l_tex = what_tex("wall", elem.l_tex)
+      sec.u_tex = what_tex("wall", elem.u_tex)
+
+      if elem.kind then sec[elem.kind] = parm_val(elem.kind) end
+      if elem.tag  then sec.tag = parm_val("tag") end
+
+      if elem.light then sec.light = elem.light end
+
+      frag_fill (p,c, fx,fy, fx,fy, sec)
+    end
+  end
+
   for ey = 1,deep do for ex = 1,long do
     local fx, fy = f_coords(ex,ey)
 
@@ -363,24 +433,11 @@ function B_prefab(p, c, fab,param, x,y,z, dir)
       elem = fab.elements[e]
 
       if not elem then
-        error("Bad element '" .. e .. "' in Prefab")
+        error("Unknown element '" .. e .. "' in Prefab")
       end
     end
 
-    if elem.solid then
-      assert(param[elem.solid]) -- error!
-
-      frag_fill (p,c, fx,fy, fx,fy, { solid=param[elem.solid] })
-    else
-      local sec = copy_block(c.rmodel)
-
-      if elem.f_tex then
-        assert(param[elem.f_tex])
-        sec.f_tex = param[elem.f_tex]
-      end
-
-      frag_fill (p,c, fx,fy, fx,fy, sec)
-    end
+    elem_fill(elem, f_coords(ex, ey))
   end end
 end
 
@@ -4296,15 +4353,39 @@ add_thing(p, c, c.bx1+3, c.by1+3, "player1", true, 0)
 end
 
 if c.x==1 and c.y==3 then
-  param = { wall="COMPBLUE", track="DOORTRAK", lite="LITE3", 
-            frame_floor="FLAT1" }
-  fab = PREFABS["DOOR"]
+
+  fab = PREFABS["TECH_PICKUP_LARGE"]
   assert(fab)
 
-  B_prefab(p,c, fab, param, c.bx1+1, c.by1+1, c.rmodel.f_h, 8)
-  B_prefab(p,c, fab, param, c.bx1+5, c.by1+1, c.rmodel.f_h, 2)
-  B_prefab(p,c, fab, param, c.bx1+1, c.by1+6, c.rmodel.f_h, 4)
-  B_prefab(p,c, fab, param, c.bx1+5, c.by1+6, c.rmodel.f_h, 6)
+  skin = { wall="STONE2", floor="CEIL5_2", ceil="CEIL3_5",
+           light="LITE5", sky="F_SKY1",
+           step="STEP1", carpet="FLOOR1_1",
+           
+         }
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, c.rmodel.f_h, 8)
+
+--[[
+  fab = PREFABS["DOOR"]
+  assert(fab)
+  skin = { xx_wall="COMPBLUE", track="DOORTRAK", light="LITE3", 
+           frame_floor="FLAT1", door="BIGDOOR4", step="STEP1",
+          -- door_ceil="FLAT10",
+         }
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+           door_top = c.rmodel.f_h+112,
+           door_kind = 1, tag = 0
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, c.rmodel.f_h, 8)
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+5, c.by1+1, c.rmodel.f_h, 2)
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+6, c.rmodel.f_h, 4)
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+5, c.by1+6, c.rmodel.f_h, 6)
+--]]
 end
 
 return
