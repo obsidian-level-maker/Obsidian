@@ -60,21 +60,21 @@ DOOR =
 {
   structure =
   {
-    "#LaaaaaaaaM#",
+    "#LssssssssM#",
     "#TddddddddT#",
     "#TddddddddT#",
-    "#LbbbbbbbbM#",
+    "#LssssssssM#",
   },
 
   elements =
   {
     -- steps
-    a = { f_h=8, c_rel="door_top", c_h=-8,
-          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step" },
-    b = { copy="a" },
+    s = { f_h=8, c_rel="door_top", c_h=-8,
+          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step"
+        },
 
     -- door
-    d = { copy="a", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_ceil",
+    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_ceil",
           kind="door_kind", tag="tag",
         },
 
@@ -93,10 +93,10 @@ DOOR_NARROW =
 
   structure =
   {
-    "#LaaaaM#",
+    "#LssssM#",
     "#tddddt#",
     "#tddddt#",
-    "#LbbbbM#",
+    "#LssssM#",
   },
 },
 
@@ -126,7 +126,7 @@ TECH_PICKUP_SMALL =
   elements =
   {
     -- steps
-    a = { l_tex="step", light=128, c_h=-48, },
+    a = { l_tex="step", light=128, c_h=-48, l_peg="top" },
 
     b = { copy="a", f_h= -8, c_h=-56 },
     c = { copy="a", f_h=-16, c_h=-64, light=192 },
@@ -137,6 +137,8 @@ TECH_PICKUP_SMALL =
     -- light
     L = { solid="light" },
   },
+
+  pickup_pos = { x=128, y=128 }
 },
 
 TECH_PICKUP_LARGE =
@@ -166,7 +168,94 @@ TECH_PICKUP_LARGE =
     "####bbbbbbbbbbbb####",
     "####aaaaaaaaaaaa####",
   },
+
+  pickup_pos = { x=192, y=192 }
 },
+
+
+TECH_STATUE_1 =
+{
+  structure =
+  {
+    "....................",
+    "....................",
+    "..aaaaaaaaaaaaaaaa..",
+    "..aaaaaaaaaaaaaaaa..",
+    "..aabbbbccccbbbbaa..",
+    "..aabbbbccccbbbbaa..",
+    "..aabbbbccccbbbbaa..",
+    "..aabbbbccccbbbbaa..",
+    "..aaffffggggffffaa..",
+    "..aaffffggggffffaa..",
+    "..aaffffggggffffaa..",
+    "..aaffffggggffffaa..",
+    "..aabbbbccccbbbbaa..",
+    "..aabbbbccccbbbbaa..",
+    "..aabbbbccccbbbbaa..",
+    "..aabbbbccccbbbbaa..",
+    "..aaaaaaaaaaaaaaaa..",
+    "..aaaaaaaaaaaaaaaa..",
+    "....................",
+    "....................",
+  },
+
+  elements =
+  {
+    a = { f_h=8, c_rel="floor", c_h=256,
+          l_tex="step", l_peg="top"
+        },
+
+    b = { f_h=16, c_rel="floor", c_h=192,
+          l_tex="step",   u_tex="u_span",
+          f_tex="carpet", c_tex="c_lite",
+          light=192
+        },
+
+    c = { f_h=64, c_rel="floor", c_h=256,
+          f_tex="comp_top", l_tex="comp1",
+        },
+
+    f = { copy="c", f_h=128, l_tex="comp2", x_offset=128 },
+
+    g = { copy="c", f_h=192, l_tex="wall" },
+
+  },
+
+  things =
+  {
+    { kind="thing1", x = 96, y = 96 },
+    { kind="thing1", x =224, y = 96 },
+    { kind="thing1", x = 96, y =224 },
+    { kind="thing1", x =224, y =224 },
+  },
+},
+
+GROUND_LIGHT =
+{
+  structure =
+  {
+    "aaaaaaa.",
+    "abbbbba.",
+    "abcccba.",
+    "abcdcba.",
+    "abcccba.",
+    "abbbbba.",
+    "aaaaaaa.",
+    "........",
+  },
+
+  elements =
+  {
+    a = { f_h = 0 },
+
+    b = { f_h = 8, l_tex = "shawn", f_tex="shawn_top", l_peg="top", },
+
+    c = { copy="b", f_h=40, light=192 },
+
+    d = { f_h = 64, l_tex = "light", f_tex = "lite_top" },
+  },
+},
+
 
 
 } -- PREFABS
