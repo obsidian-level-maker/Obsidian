@@ -336,9 +336,6 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
   local bk_deep = int((3+deep) / 4)
   local bk_long = int((3+long) / 4)
 
-  local WALL = { solid="wall" }
-  local ROOM = { }
-
   local function f_coords(ex, ey)
         if dir == 2 then ex,ey = long+1-ex, deep+1-ey
     elseif dir == 4 then ex,ey = deep+1-ey, ex
@@ -355,7 +352,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
     local V = skin[key]
     if not V then V = theme[key] end
     if not V then
-      error("Bad fab/skin combo: missing data for " .. key)
+      error("Bad fab/skin combo: missing entry for " .. key)
     end
     return V
   end
@@ -388,13 +385,15 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
   local function what_tex(base, key)
     if skin[key] then return skin[key] end
     if skin[base] then return skin[base] end
-    assert(theme[base])
+    if not theme[base] then
+      error("Unknown texture ref in prefab: " .. key)
+    end
     return theme[base]
   end
 
   local function elem_fill(elem, fx, fy)
 
-    local overrides  -- FIXME
+    local overrides  -- FIXME !!!!!
 
     if elem.solid then
 
@@ -412,6 +411,12 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
       sec.l_tex = what_tex("wall", elem.l_tex)
       sec.u_tex = what_tex("wall", elem.u_tex)
 
+      if elem.x_offset then sec.x_offset = elem.x_offset end
+      if elem.y_offset then sec.y_offset = elem.y_offset end
+
+      if elem.l_peg then sec.l_peg = elem.l_peg end
+      if elem.u_peg then sec.u_peg = elem.u_peg end
+
       if elem.kind then sec[elem.kind] = parm_val(elem.kind) end
       if elem.tag  then sec.tag = parm_val("tag") end
 
@@ -421,24 +426,43 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
     end
   end
 
+  local ROOM = c.rmodel
+  local WALL = { solid=what_tex("wall", "wall") }
+
   for ey = 1,deep do for ex = 1,long do
     local fx, fy = f_coords(ex,ey)
 
     local e = string.sub(fab.structure[deep+1-ey], ex, ex)
     local elem
 
-        if e == "#" then elem = WALL; assert(elem)
-    elseif e == "." then elem = ROOM; assert(elem)
+    if e == "." or e == "#" then
+      local fx,fy = f_coords(ex, ey)
+      frag_fill(p,c, fx,fy, fx,fy, sel(e == ".", ROOM, WALL))
     else
       elem = fab.elements[e]
 
       if not elem then
         error("Unknown element '" .. e .. "' in Prefab")
       end
-    end
 
-    elem_fill(elem, f_coords(ex, ey))
+      elem_fill(elem, f_coords(ex, ey))
+    end
   end end
+
+  -- add the final touches: things
+
+  if fab.things then
+    for zzz,tdef in ipairs(fab.things) do
+      local name = skin[tdef.kind] or parm[tdef.kind]
+      if name then
+        -- HACK ALERT, not using proper block
+        local th = add_thing(p, c, x,y, name, false)
+        -- FIXME !!!!! handle rotations
+        th.dx = tdef.x - 32
+        th.dy = tdef.y - 32
+      end
+    end
+  end
 end
 
 
@@ -4360,13 +4384,52 @@ if c.x==1 and c.y==3 then
   skin = { wall="STONE2", floor="CEIL5_2", ceil="CEIL3_5",
            light="LITE5", sky="F_SKY1",
            step="STEP1", carpet="FLOOR1_1",
-           
          }
+
   parm = { floor = c.rmodel.f_h,
            ceil  = c.rmodel.c_h,
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, c.rmodel.f_h, 8)
+
+
+  fab = PREFABS["TECH_STATUE_1"]
+  assert(fab)
+
+  skin = { wall="COMPWERD", comp1 = "SPACEW3", comp2 = "COMPTALL",
+           step="STEP1",    u_span="COMPSPAN",
+
+           floor="FLAT14", ceil="FLOOR4_8",
+           carpet="FLOOR1_1", c_lite="TLITE6_5",
+           comp_top="CEIL5_1",
+
+           thing1="lamp"
+         }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+4, c.by1+6, c.rmodel.f_h, 8)
+
+
+
+  fab = PREFABS["GROUND_LIGHT"]
+  assert(fab)
+
+  skin = { 
+           shawn = "SHAWN3",
+           light = "LITE5",         
+
+           shawn_top = "FLAT1",
+           lite_top = "CEIL5_1",
+         }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+2, c.by1+8, c.rmodel.f_h, 8)
 
 --[[
   fab = PREFABS["DOOR"]
