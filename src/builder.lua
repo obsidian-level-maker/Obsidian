@@ -2699,23 +2699,25 @@ function setup_borders_and_corners(p)
       return "solid"
     end
 
-if ((side%2)==0) then return "empty" end --!!!!! TEST
-
-    if c1.is_exit or c2.is_exit then return "solid" end
     if c1.hallway or c2.hallway then return "solid" end
 
-    local link = c1.link[side]
+    -- TODO: sometimes allow it
+    if c1.is_exit or c2.is_exit then return "solid" end
 
-    if link then assert(c2) end
+    if c1.border[side].window then return "window" end
 
-    if link and (link.kind == "arch") and c1.theme == c2.theme and
-       (c1.quest.parent or c1.quest) == (c2.quest.parent or c2.quest) and
-       dual_odds(c1.theme.outdoor, 50, 33)
-    then
-       return "empty"
-    end
+---###    local link = c1.link[side]
+---###
+---###    if link then assert(c2) end
 
-    -- fencing anyone?
+---###    if link and (link.kind == "arch") and c1.theme == c2.theme and
+---###       (c1.quest.parent or c1.quest) == (c2.quest.parent or c2.quest) and
+---###       dual_odds(c1.theme.outdoor, 50, 33)
+---###    then
+---###       return "empty"
+---###    end
+
+    -- fencing anyone?   FIXME: move tests into Planner
     local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
 
     if (c1.theme.outdoor == c2.theme.outdoor) and
@@ -2723,14 +2725,18 @@ if ((side%2)==0) then return "empty" end --!!!!! TEST
        (not c1.is_depot and not c2.is_depot) and diff_h > 64
     then
       if c1.scenic or c2.scenic then
-        return rand_sel(30, "wire", "fence")
+        return "fence"
       end
 
-      local i_W = sel(link, 3, 20)
-      local i_F = sel(c1.theme == c2.theme, 5, 0)
+      if dual_odds(c1.theme.outdoor, 60, 7) then
+        return "fence"
+      end
 
-      if dual_odds(c1.theme.outdoor, 25, i_W) then return "wire" end
-      if dual_odds(c1.theme.outdoor, 60, i_F) then return "fence" end
+---###      local i_W = sel(link, 3, 20)
+---###      local i_F = sel(c1.theme == c2.theme, 5, 0)
+---###
+---###      if dual_odds(c1.theme.outdoor, 25, i_W) then return "wire" end
+---###      if dual_odds(c1.theme.outdoor, 60, i_F) then return "fence" end
     end
  
     return "solid"
@@ -2941,7 +2947,7 @@ function build_cell(p, c)
     assert(other)
 
     local D = c.border[side]
-    assert(D)
+    if not D then return end
 
     local b_theme = D.theme
 
@@ -2973,12 +2979,12 @@ function build_cell(p, c)
     elseif side == 6 then x,y = BW, d_pos
     end
 
-    x = D.x1 + ax
-    y = D.y1 + ay
+    x = D.x1
+    y = D.y1
 
     if (link.kind == "arch" or link.kind == "falloff") then
 
-      if D.kind == "empty" then return end  -- no arch needed
+---###      if D.kind == "empty" then return end  -- no arch needed
 
       local ex, ey = x + ax*(long-1), y + ay*(long-1)
       local tex = b_theme.wall
@@ -2992,6 +2998,7 @@ function build_cell(p, c)
          (not c.theme.outdoor and link.arch_rand < 10))
       then
         local sec = copy_block(c.rmodel)
+sec.f_tex = "FWATER1"
         sec.l_tex = tex
         sec.u_tex = tex
         fill(p,c, x, y, ex, ey, sec)
@@ -3002,6 +3009,7 @@ function build_cell(p, c)
       arch.c_h = math.min(c.ceil_h-32, other.ceil_h-32, c.floor_h+128)
       arch.f_tex = c.theme.arch_floor or c.rmodel.f_tex
       arch.c_tex = c.theme.arch_ceil  or arch.f_tex
+arch.f_tex = "TLITE6_6"
 
       if (arch.c_h - arch.f_h) < 64 then
         arch.c_h = arch.f_h + 64
@@ -3025,14 +3033,14 @@ function build_cell(p, c)
 
         tex = THEME.mats.ARCH.wall
 
-        fill(p,c, x-ax*2, y-ay*2, ex+ax*2, ey+ay*2, { solid=tex })
+        fill(p,c, x, y, ex+ax, ey+ay, { solid=tex })
       end
 
       arch.l_tex = tex
       arch.u_tex = tex
 
-      fill(p,c, x-ax, y-ay, ex+ax, ey+ay, { solid=tex })
-      fill(p,c, x, y, ex, ey, arch)
+      fill(p,c, x, y, ex+ax, ey+ay, { solid=tex })
+      fill(p,c, x+ax, y+ay, ex, ey, arch)
 
       if link.block_sound then
         -- FIXME block_sound(p, c, x,y, ex,ey, 1)
@@ -3303,40 +3311,73 @@ function build_cell(p, c)
     end
   end
 
-  local function build_empty_border(x1,y1, x2,y2, other, side, what, b_theme)
+  local function build_fence(side, x1,y1, x2,y2, other, what, b_theme)
 
---!!!!! TEST CRAP
-local overrides = { l_tex = b_theme.wall, u_tex = b_theme.wall }
-overrides.f_tex = "LAVA1" --!!!!!
-if what == "wire" then overrides.rail = THEME.rails["r_1"].wall end
-gap_fill(p,c, x1,y1, x2,y2, c.rmodel, overrides)
-do return end
+    local D = c.border[side]
 
-    local EMPTY = 
-    {
-      f_h = c.rmodel.f_h,
-      c_h = c.rmodel.c_h,
-      f_tex = b_theme.floor,
-      c_tex = b_theme.ceil,
-      light = c.rmodel.light
-    }
+      local FENCE = copy_block_with_new(c.rmodel,
+      {
+        f_h = math.max(c.f_max, other.f_max),
+        f_tex = b_theme.floor,
+        c_tex = b_theme.ceil,
+        
+        l_tex = b_theme.void,
+        u_tex = b_theme.void,
+      })
 
+--?? local f_min, f_max = border_floor_range(other, side)
 
-    local overrides
-    if what == "wire" then
-      local f_min, f_max = border_floor_range(other, side)
-      EMPTY.f_h = f_max
+    if rand_odds(95) then FENCE.block_sound = 2 end
 
-      local rsd = side
-      if b_theme ~= c.theme then rsd = 10 - side end
+FENCE.f_tex = "LAVA1" --!!! TESTING
 
---print(string.format(
---"Cell %d,%d Side %d Themes: %s/%s/%s R %d",
---c.x, c.y, side, c.rmodel.f_tex, b_theme.floor, other.theme.floor, rsd))
+    -- determine fence kind
 
-      -- FIXME: choose fence rail
-      overrides = { [rsd] = { rail = THEME.rails["r_1"].wall }}
+    local kind = "plain"
+    
+    if rand_odds(30) then kind = "wire" end
+
+    -- FIXME: "castley"
+
+--[[ 
+    if c1.scenic or c2.scenic then
+      return rand_sel(30, "wire", "fence")
     end
+
+    local i_W = sel(link, 3, 20)
+    local i_F = sel(c1.theme == c2.theme, 5, 0)
+
+    if dual_odds(c1.theme.outdoor, 25, i_W) then return "wire" end
+    if dual_odds(c1.theme.outdoor, 60, i_F) then return "fence" end
+--]]
+
+    -- FIXME: choose fence rail
+
+    if kind == "plain" then
+      FENCE.f_h = FENCE.f_h + 48+16*rand_irange(0,2)
+      if other.scenic then FENCE.impassible = true end
+
+    elseif kind == "wire" then
+      local rail_tex =THEME.rails["r_1"].wall
+
+      if x1==x2 and y1==y2 then
+        FENCE.rail = rail_tex
+      else
+        local rsd = side
+
+        if (rsd % 2) == 1 then
+          rsd = sel(x1==x2, 4, 2)
+        end
+
+        if b_theme ~= c.theme then rsd = 10 - side end
+
+        FENCE[rsd] = { rail = rail_tex }
+      end
+    else
+      error("build_fence: unknown kind: " .. kind)
+    end
+
+    gap_fill(p,c, x1,y1, x2,y2, FENCE)
 
 --[[
     for n = 1,KW do --!!!!! 1,KW   FIXME: sx,sy (etc) are floats!!!
@@ -3393,13 +3434,42 @@ do return end
 
     local b_theme = D.theme
 
-    if D.kind == "empty" then return end
+    local WINDOW = 
+    {
+      f_h = math.max(c.f_max, other.f_max) + 32,
+      c_h = math.min(c.rmodel.c_h, other.rmodel.c_h) - 32,
 
-    if c.scenic == "solid" and other.scenic == "solid" then return end
+      f_tex = b_theme.floor,
+      c_tex = b_theme.ceil,
 
-    -- don't build 'castley' walls indoors
-    if D.kind == "fence" and not c.theme.outdoor then return end
-    if D.kind == "wire" then return end
+      l_tex = b_theme.wall,
+      u_tex = b_theme.wall,
+
+      light = c.rmodel.light,
+    }
+
+if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
+
+    if other.scenic then WINDOW.impassible = true end
+
+    WINDOW.light = WINDOW.light - 16
+    WINDOW.c_tex = b_theme.arch_ceil or WINDOW.f_tex
+
+---### YUCK  if (WINDOW.c_h - WINDOW.f_h) > 64 and rand_odds(30) then
+---###         WINDOW.c_h = WINDOW.f_h + 64
+---###       end
+
+    local x = D.x1
+    local y = D.y1
+
+    local ax, ay = dir_to_across(D.side)
+
+    while x <= D.x2 and y <= D.y2 do
+      gap_fill(p,c, x, y, x, y, WINDOW)
+      x, y = x+ax, y+ay
+    end
+
+--[[ GOOD OLD STUFF
 
     -- cohabitate nicely with doors
     local min_x, max_x = 1, BW
@@ -3424,39 +3494,13 @@ do return end
       end
     end
 
-
-    local dx, dy = dir_to_delta(side)
-    local ax, ay = dir_to_across(side)
+    local dx, dy = dir_to_delta(D.side)
 
     local x, y = side_coords(side, 1,1, BW,BH)
 
     x = c.bx1-1 + x+dx
     y = c.by1-1 + y+dy
 
-    local sec = 
-    {
-      f_h = math.max(c.f_max, other.f_max) + 32,
-      c_h = math.min(c.rmodel.c_h, other.rmodel.c_h) - 32,
-      f_tex = b_theme.floor,
-      c_tex = b_theme.ceil,
-      light = c.rmodel.light,
-
-      l_tex = b_theme.wall,
-      u_tex = b_theme.wall,
-    }
-
-    if other.scenic then sec.impassible = true end
-
-    if D.kind == "fence" then
-      sec.c_h = c.rmodel.c_h
-    else
-      sec.light = sec.light - 16
-      sec.c_tex = b_theme.arch_ceil or sec.f_tex
-
-      if (sec.c_h - sec.f_h) > 64 and rand_odds(30) then
-        sec.c_h = sec.f_h + 64
-      end
-    end
 
     local long  = rand_index_by_probs { 30, 90, 10, 3 }
     local step  = long + rand_index_by_probs { 90, 30, 4 }
@@ -3497,6 +3541,7 @@ do return end
         end
       end
     end
+--]]
   end
 
   --[[ OLD STUFF, REMOVE SOON
@@ -3548,7 +3593,8 @@ do return end
       f_max = math.max(c.f_max, f_max)
     end
 
-    if out_num == #E.cells then
+    -- FIXME: determine corner_kind (like border_kind)
+    if false then --!!!! out_num == #E.cells then
 
       local CORN = copy_block_with_new(E.cells[1].rmodel,
       {
@@ -3584,9 +3630,6 @@ do return end
     local b_theme = D.theme
     assert(b_theme)
 
----###    local dx, dy = dir_to_delta(side)
----###    local ax, ay = dir_to_across(side)
-
     if c.vista[side] then
       local kind = "open"
       local diff_h = c.floor_h - other.floor_h
@@ -3609,39 +3652,22 @@ do return end
 
     local x1,y1, x2,y2 = D.x1, D.y1, D.x2, D.y2
 
-if (side % 2) == 1 then
-gap_fill(p,c, x1,y1, x2,y2, { solid="COMPBLUE" })
-return
-end
+---if (side % 2) == 1 then
+---gap_fill(p,c, x1,y1, x2,y2, { solid="COMPBLUE" })
+---return
+---end
 
-    if what == "empty" or what == "wire" then
+    if what == "wire" or what == "fence" then
 
-      build_empty_border(x1,y1, x2,y2, other, side, what, b_theme)
+      build_fence(side, x1,y1, x2,y2, other, what, b_theme)
 
---print("EMPTY", c.x, c.y, side)
---print("  other", other.x, other.y)
+---###      if other.scenic then FENCE.impassible = true end
 
-    elseif what == "fence" then
---print("FENCE", c.x, c.y, side, c.floor_h, c.f_max)
---print("  other", other.x, other.y, other.floor_h, other.f_max)
-      local FENCE =
-      {
-        f_h = math.max(c.f_max, other.f_max) + 64,
-        c_h = c.rmodel.c_h,
-        f_tex = b_theme.floor,
-        c_tex = b_theme.ceil,
-        light = c.rmodel.light
-      }
-      if rand_odds(95) then FENCE.block_sound = 2 end
-      if other.scenic then FENCE.impassible = true end
-
-      FENCE.l_tex = b_theme.void
-      FENCE.u_tex = b_theme.void
-
-      gap_fill(p,c, x1,y1, x2,y2, FENCE)
+    elseif what == "window" then
+      build_window(side)
 
     elseif what == "sky" then
-      build_sky_border(side, x1,y1, x2,y2)
+      build_sky_border(D.side, x1,y1, x2,y2)
 
       -- handle the corner (check adjacent side)
 --[[ FIXME !!!!! "sky"
@@ -4196,13 +4222,14 @@ end
   end
 
   for side = 2,8,2 do
---!!!!    build_link(side)
---!!!!    build_window(side)
+    build_link(side)
     build_border(side)
   end
 
 if true then --!!!!! TESTING
-gap_fill(p,c, c.bx1, c.by1, c.bx2, c.by2, c.rmodel)
+local OV = {}
+local T = get_rand_theme()
+gap_fill(p,c, c.bx1, c.by1, c.bx2, c.by2, c.rmodel, OV)
 if c == p.quests[1].first then
 add_thing(p, c, c.bx1+3, c.by1+3, "player1", true, 0)
 end
@@ -4235,9 +4262,11 @@ local function build_depot(p, c)
   assert(#places <= 4)
 
   local start = p.quests[1].first
+--!!!!
+--[[
   assert(start.player_pos)
-
   local player_B = p.blocks[start.player_pos.x][start.player_pos.y]
+--]] local player_B = start.rmodel
 
   -- check for double pedestals (Plutonia)
   if player_B.fragments then
@@ -4311,7 +4340,7 @@ function build_level(p)
   end
 
   for zzz,cell in ipairs(p.all_depots) do
----!!!    build_depot(p, cell)
+    build_depot(p, cell)
   end
 
   con.progress(25); if con.abort() then return end
