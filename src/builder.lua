@@ -30,9 +30,9 @@ function copy_block(B, ...)
   return result
 end
 
-function copy_block_with_new(B, newbie)
+function copy_block_with_new(B, newbie, ...)
   local result = copy_block(B)
-  merge_table(result, newbie)
+  merge_table(result, newbie, ...)
   return result
 end
 
@@ -323,6 +323,67 @@ function rotate_block(B, d)
   B[9] = { dx=-32, dy=  d }
   B[7] = { dx= -d, dy=-32 }
 end
+
+
+function B_prefab(p, c, fab,param, x,y,z, dir)
+
+  -- (x,y) is always the lowest coordinate
+  -- dir == 8 is the natural mode, other values rotate it
+
+  local deep = #fab.structure
+  local long = #fab.structure[1]
+
+  local bk_deep = int((3+deep) / 4)
+  local bk_long = int((3+long) / 4)
+
+  local WALL = { solid="wall" }
+  local ROOM = { }
+
+  local function f_coords(ex, ey)
+        if dir == 2 then ex,ey = long+1-ex, deep+1-ey
+    elseif dir == 4 then ex,ey = deep+1-ey, ex
+    elseif dir == 6 then ex,ey =        ey, long+1-ex
+    end
+  
+    local fx = 1 + (x-1)*FW + ex - 1
+    local fy = 1 + (y-1)*FH + ey - 1
+
+    return fx, fy
+  end
+
+  for ey = 1,deep do for ex = 1,long do
+    local fx, fy = f_coords(ex,ey)
+
+    local e = string.sub(fab.structure[deep+1-ey], ex, ex)
+    local elem
+
+        if e == "#" then elem = WALL; assert(elem)
+    elseif e == "." then elem = ROOM; assert(elem)
+    else
+      elem = fab.elements[e]
+
+      if not elem then
+        error("Bad element '" .. e .. "' in Prefab")
+      end
+    end
+
+    if elem.solid then
+      assert(param[elem.solid]) -- error!
+
+      frag_fill (p,c, fx,fy, fx,fy, { solid=param[elem.solid] })
+    else
+      local sec = copy_block(c.rmodel)
+
+      if elem.f_tex then
+        assert(param[elem.f_tex])
+        sec.f_tex = param[elem.f_tex]
+      end
+
+      frag_fill (p,c, fx,fy, fx,fy, sec)
+    end
+  end end
+end
+
 
 --
 -- Build a door.
@@ -4233,7 +4294,20 @@ gap_fill(p,c, c.bx1, c.by1, c.bx2, c.by2, c.rmodel, OV)
 if c == p.quests[1].first then
 add_thing(p, c, c.bx1+3, c.by1+3, "player1", true, 0)
 end
-do return end
+
+if c.x==1 and c.y==3 then
+  param = { wall="COMPBLUE", track="DOORTRAK", lite="LITE3", 
+            frame_floor="FLAT1" }
+  fab = PREFABS["DOOR"]
+  assert(fab)
+
+  B_prefab(p,c, fab, param, c.bx1+1, c.by1+1, c.rmodel.f_h, 8)
+  B_prefab(p,c, fab, param, c.bx1+5, c.by1+1, c.rmodel.f_h, 2)
+  B_prefab(p,c, fab, param, c.bx1+1, c.by1+6, c.rmodel.f_h, 4)
+  B_prefab(p,c, fab, param, c.bx1+5, c.by1+6, c.rmodel.f_h, 6)
+end
+
+return
 end
 
   for kx = 1,KW do

@@ -20,7 +20,9 @@ require 'defs'
 require 'util'
 require 'a_star'
 
+require 'prefab'
 require 'theme'
+
 require 'planner'
 require 'plan_dm'
 
@@ -72,6 +74,8 @@ function create_theme()
   end
 
   THEME = factory()
+
+  expand_prefabs(PREFABS)
 
   compute_pow_factors()
 end
