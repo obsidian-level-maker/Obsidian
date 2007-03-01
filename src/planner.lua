@@ -282,11 +282,7 @@ function create_cell(p, x, y, quest, along, theme, is_depot)
     monsters = {}
   }
 
-  CELL.bx1 = BORDER_BLK + (x-1) * (BW+1) + 1
-  CELL.by1 = BORDER_BLK + (y-1) * (BH+1) + 1
-
-  CELL.bx2 = CELL.bx1 + BW - 1
-  CELL.by2 = CELL.by1 + BW - 1
+  CELL.bx1, CELL.by1, CELL.bx2, CELL.by2 = cell_base_coords(x, y)
 
   p.cells[x][y] = CELL
 
@@ -413,10 +409,22 @@ function resize_rooms(p)
 
   local function try_nudge_cell(c, side, pass)
 
-    if rand_odds(30) then return end
+    -- There are three passes:
+    --   1: nudge against empty cells
+    --   2: nudge against another valid cell
+    --   3: nudge against the map's edge
+
+    if rand_odds(25) then return end  -- FIXME: depends on room (want_size ~= cur_size)
 
     local dx,dy = dir_to_delta(side)
+    local ax,ay = dir_to_across(side)
+
+    local ox,oy = c.x + dx, c.y + dy
+
     local other = neighbour_by_side(p, c, side)
+
+assert(not c.dummy)
+if other then assert(not other.dummy) end
 
     if c.is_exit or c.is_depot then return end
 
@@ -428,26 +436,47 @@ function resize_rooms(p)
     if c.nudges[side] then return end
 
     -- direction: +1 = outwards, -1 inwards
-    local dir  = rand_sel(50, 1, -1) --!!!! compare wanted room sizes
-    local deep = 3
-
-    local mv_x = math.abs(dx) * deep
-    local mv_y = math.abs(dy) * deep
+    local dir
 
     if not other then
-      if pass == 1 then return end
+      if valid_cell(p, ox, oy) then
+        if pass ~= 1 then return end
 
-      if dir < 0 then
-        -- no problem, we are shrinking
+        -- empty cells on the map can only be nudged in one direction
+        -- (vertical or horizontal) in a checker-board pattern.  This
+        -- prevents a problem of a corner needing TWO mini-borders.
 
+        if ((ox + oy) % 2) == math.abs(dy) then return end
       else
-        -- at edge of plan, OK to move into the "BORDER_BLK" area
-        assert(
-           (side == 4 and c.x == 1) or (side == 6 and c.x == p.w) or
-           (side == 2 and c.y == 1) or (side == 8 and c.y == p.h))
+        if pass ~= 3 then return end
       end
+
+      -- further requirements:
+      -- (a) current cell is indoor
+      -- (b) neighbours of current are all indoor or empty
+      -- (c) neighbours of other   are all indoor or empty
+
+      if c.theme.outdoor then return end
+
+      for dmul = 0,1 do for amul = -1,1,2 do
+        local nx = c.x + dx*dmul + ax*amul
+        local ny = c.y + dy*dmul + ay*amul
+
+        local n = valid_cell(p, nx, ny) and p.cells[nx][ny]
+
+if c.x==3 and c.y==2 and side==2 then
+con.printf("@@@ (3,2):2  nx/y = (%d,%d)  n = %s\n",
+nx, ny, (not n and "EMPTY") or (n.is_depot and "DEPOT") or
+(n.theme.outdoor and "OUTIE") or "INNIE")
+end
+
+        if n and n.theme.outdoor then return end
+      end end
+
+      if c.hallway and rand_odds(66) then dir = -1 end
+
     else
-      if pass == 2 then return end
+      if pass ~= 2 then return end
 
       -- cannot move the border if the cells aren't aligned
       if (side == 2) or (side == 8) then
@@ -455,7 +484,20 @@ function resize_rooms(p)
       else 
         if not (c.by1 == other.by1 and c.by2 == other.by2) then return end
       end
+
+      if (c.hallway ~= other.hallway) and rand_odds(90) then
+        dir = sel(c.hallway, -1, 1)
+
+---???      elseif (c.scenic ~= other.scenic) and rand_odds(70) then
+---???        dir = sel(c.scenic, -1, 1)
+      end
     end
+
+    dir = dir or rand_sel(50, 1, -1)
+
+    local deep = 3
+    local mv_x = math.abs(dx) * deep
+    local mv_y = math.abs(dy) * deep
 
     -- don't make the shrinking cell too small
     local shrinker = sel(dir < 0, c, other)
@@ -464,7 +506,7 @@ function resize_rooms(p)
       new_w, new_h = new_w - mv_x, new_h - mv_y
 
       local min_size = 6
-      if shrinker.dummy or shrinker.scenic then min_size = 3 end
+---???   if shrinker.dummy or shrinker.scenic then min_size = 3 end
 
       if new_w < min_size or new_h < min_size then return end
     end
@@ -500,7 +542,7 @@ function resize_rooms(p)
 
   --- resize_rooms ---
 
-  add_dummies()
+---  add_dummies()
 
   local visit_list = {}
 
@@ -510,24 +552,26 @@ function resize_rooms(p)
     end
   end
 
-  -- first pass: move borders between two cells
-  rand_shuffle(visit_list)
+  for pass = 1,3 do
 
-  for zzz,v in ipairs(visit_list) do
-    try_nudge_cell(v.c, v.side, 1)
-  end
+    rand_shuffle(visit_list)
 
-  -- second pass: move borders that touch the edge of the map
-  rand_shuffle(visit_list)
-
-  for zzz,v in ipairs(visit_list) do
-    local x, y = v.c.x, v.c.y
-    if (x == 1 or x == p.w or y == 1 or y == p.h) then
-      try_nudge_cell(v.c, v.side, 2)
+    for zzz,v in ipairs(visit_list) do
+      try_nudge_cell(v.c, v.side, pass)
     end
   end
 
-  remove_dummies()
+---####  -- second pass: move borders that touch the edge of the map
+---####  rand_shuffle(visit_list)
+---####
+---####  for zzz,v in ipairs(visit_list) do
+---####    local x, y = v.c.x, v.c.y
+---####    if (x == 1 or x == p.w or y == 1 or y == p.h) then
+---####      try_nudge_cell(v.c, v.side, 2)
+---####    end
+---####  end
+
+---  remove_dummies()
 end
 
 
@@ -535,11 +579,11 @@ function create_corners(p)
 
   local SUB_TO_DIR = { { 1, 3 }, { 7, 9 } }
   
-  local function find_corner(x, y)
+  local function find_corners(x, y)
 
     -- this table is indexed by a coordinate string, hence
     -- we can find the shared corners by looking them up.
-    local shared = {}
+    local shared_corners = {}
 
     for sub_x = 0,1 do for sub_y = 0,1 do
       local cx = x + sub_x
@@ -557,25 +601,40 @@ function create_corners(p)
 
         local b_name = string.format("%d:%d", bx, by)
 
-        if not shared[b_name] then
+        if not shared_corners[b_name] then
 
-          shared[b_name] =
+          shared_corners[b_name] =
           {
             bx=bx, by=by, cells={}
           }
         end
 
-        c.corner[c_dir] = shared[b_name]
-
-        table.insert(shared[b_name].cells, c)
+        c.corner[c_dir] = shared_corners[b_name]
       end
     end end
+
+    -- figure out which cells are touching which corners
+
+    for b_name,CN in pairs(shared_corners) do
+      for sub_x = 0,1 do for sub_y = 0,1 do
+        local cx = x + sub_x
+        local cy = y + sub_y
+        local c = valid_cell(p,cx,cy) and p.cells[cx][cy]
+
+        if c and
+           (CN.bx >= c.bx1-1) and (CN.by >= c.by1-1) and
+           (CN.bx <= c.bx2+1) and (CN.by <= c.by2+1)
+        then 
+          table.insert(CN.cells, c)
+        end
+      end end
+    end
   end
 
   --- create_corners ---
 
   for x = 0,p.w do for y = 0,p.h do  -- NOTE: goes outside the plan
-    find_corner(x, y)
+    find_corners(x, y)
   end end
 end
 
@@ -589,7 +648,7 @@ function create_borders(p)
     end
   end
 
-  local function add_border(c, side, D, shared)
+  local function add_border(c, side, D, other)
 
     if c.border[side] then return end
 
@@ -599,13 +658,9 @@ function create_borders(p)
     c.border[side] = D
     D.cells = { c }
 
-    if shared then
-      local other = (side < 10) and neighbour_by_side(p, c, side)
-
-      if other then
-        other.border[10-side] = D
-        table.insert(D.cells, other)
-      end
+    if other then
+      other.border[10-side] = D
+      table.insert(D.cells, other)
     end
   end
 
@@ -659,16 +714,14 @@ C.  l_cell: OK, other: XX
         end
 
         if l_x-1 >= cx1 then
-          -- FIXME: done twice (each side of the diagonal)
-          add_border(c, l_dir, { x1=cx1, y1=cy1, x2=l_x-1, y2=cy1, })
+          add_border(c, l_dir, { x1=cx1, y1=cy1, x2=l_x-1, y2=cy1, side=side }, l_cell)
         end
         if l_x+1 > cx1 then
           cx1 = l_x+1
         end
 
         if h_x+1 <= cx2 then
-          -- FIXME: done twice (each side of the diagonal)
-          add_border(c, h_dir, { x1=h_x+1, y1=cy1, x2=cx2, y2=cy1, })
+          add_border(c, h_dir, { x1=h_x+1, y1=cy1, x2=cx2, y2=cy1, side=side }, h_cell)
         end
         if h_x-1 < cx2 then
           cx2 = h_x-1
@@ -688,23 +741,21 @@ C.  l_cell: OK, other: XX
         end
 
         if l_y-1 >= cy1 then
-          -- FIXME: done twice (each side of the diagonal)
-          add_border(c, l_dir, { x1=cx1, y1=cy1, x2=cx1, y2=l_y-1 })
+          add_border(c, l_dir, { x1=cx1, y1=cy1, x2=cx1, y2=l_y-1, side=side }, l_cell)
         end
         if l_y+1 > cy1 then
           cy1 = l_y+1
         end
 
         if h_y+1 <= cy2 then
-          -- FIXME: done twice (each side of the diagonal)
-          add_border(c, h_dir, { x1=cx1, y1=h_y+1, x2=cx1, y2=cy2, })
+          add_border(c, h_dir, { x1=cx1, y1=h_y+1, x2=cx1, y2=cy2, side=side }, h_cell)
         end
         if h_y-1 < cy2 then
           cy2 = h_y-1
         end
       end
 
-      add_border(c, side, { x1=cx1, y1=cy1, x2=cx2, y2=cy2, })
+      add_border(c, side, { x1=cx1, y1=cy1, x2=cx2, y2=cy2, side=side }, other)
 
     end
   end
@@ -1657,7 +1708,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     --[[
     for zzz,c in ipairs(p.all_cells) do
       for dir = 2,8,2 do
-        local pdir = rotate_cw(dir)
+        local pdir = rotate_cw90(dir)
         if c.link[dir].switch and
         if c.link[dir] and c.link[10-dir] and
            not c.link[pdir] and not c.link[10-pdir]
@@ -1775,13 +1826,14 @@ function plan_sp_level(is_coop)  -- returns Plan
     end
 
     for zzz,c in ipairs(p.all_cells) do
-      for dir = 6,8,2 do
-        local other = neighbour_by_side(p, c, dir)
+      for side = 6,9 do
+        local other = neighbour_by_side(p, c, side)
 
-        if other and rand_odds(80) and
+        if c.border[side] and other and rand_odds(100) and
            can_make_window(c, other)
         then
-          c.border[dir].window = true
+con.printf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
+          c.border[side].window = true
         end
       end
     end
@@ -1879,6 +1931,30 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     local function add_depot(Q)
 
+      local function valid_depot_spot(x, y)
+        if p.cells[x][y] then return false end
+
+        -- check for overlap
+        local bx1,by1, bx2,by2 = cell_base_coords(x, y)
+
+        for dx = -1,1 do for dy = -1,1 do
+          local c = valid_cell(p, x+dx, y+dy) and p.cells[x+dx][y+dy]
+          if c then
+            local ox1 = math.max(c.bx1-1, bx1)
+            local oy1 = math.max(c.by1-1, by1)
+            local ox2 = math.max(c.bx2+1, bx2)
+            local oy2 = math.max(c.by2+1, by2)
+
+            if ox1 <= ox2 and oy1 <= oy2 then
+              error("DEPOT OVERLAP!")  --!!!!!
+              return false
+            end
+          end
+        end end
+
+        return true
+      end
+
       local pos_x, pos_y
       local best_score = -999
 
@@ -1924,6 +2000,8 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     local function try_add_surprise(Q)
       if Q.kind == "exit" then return end
+
+do add_depot(Q); return end --!!!!! TESTING
 
       if dual_odds(Q.mini, sm_prob, bg_prob) then
         if rand_odds(70) then
@@ -2029,7 +2107,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 
   con.ticker();
 
-  select_floor_heights()
+---!!!  select_floor_heights()
   compute_height_minmax(p)
 
   select_ceiling_heights()
@@ -2048,7 +2126,7 @@ function plan_sp_level(is_coop)  -- returns Plan
   create_corners(p)
   create_borders(p)
 
---!!!  add_windows()
+--  add_windows()
 
   return p
 end
