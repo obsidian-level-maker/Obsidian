@@ -238,8 +238,8 @@ function write_level(p, lev_name)
       local f_over = f[10-norm] or DUMMY_BLOCK
 
       local impassible = f.impassible or b.impassible
-      local l_peg = b_over.l_peg or f_over.l_peg
-      local u_peg = b_over.u_peg or f_over.u_peg
+      local l_peg = b_over.l_peg or f_over.l_peg or b.l_peg or f.l_peg
+      local u_peg = b_over.u_peg or f_over.u_peg or b.u_peg or f.u_peg
 
       if not b.solid then
 
