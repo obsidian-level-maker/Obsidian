@@ -52,7 +52,6 @@ function show_path(p)
 
           if c.dm_player then kind = "P"
       elseif c.dm_weapon then kind = "W"
-      elseif c.dummy     then kind = "!"
       elseif c.scenic    then kind = "C"
       elseif c.is_depot  then kind = "D"
       elseif c.along == 1 then kind = "S"
@@ -295,22 +294,6 @@ function create_cell(p, x, y, quest, along, theme, is_depot)
   return CELL
 end
 
-function create_dummy_cell(p, x, y)
-  local CELL =
-  {
-    x=x, y=y, nudges = {}, dummy = true
-  }
-
-  CELL.bx1 = BORDER_BLK + (x-1) * (BW+1) + 1
-  CELL.by1 = BORDER_BLK + (y-1) * (BH+1) + 1
-
-  CELL.bx2 = CELL.bx1 + BW - 1
-  CELL.by2 = CELL.by1 + BW - 1
-
-  p.cells[x][y] = CELL
-
-  return CELL
-end
 
 function create_link(p, c, other, dir)
   local LINK =
@@ -391,22 +374,6 @@ function resize_rooms(p)
     return (c.bx2 - c.bx1 + 1), (c.by2 - c.by1 + 1)
   end
 
-  local function add_dummies()
-    for x = 1,p.w do for y = 1,p.h do
-      if not p.cells[x][y] then
-        create_dummy_cell(p, x, y)
-      end
-    end end
-  end
-
-  local function remove_dummies()
-    for x = 1,p.w do for y = 1,p.h do
-      if p.cells[x][y].dummy then
-        p.cells[x][y] = nil
-      end
-    end end
-  end
-
   local function try_nudge_cell(c, side, pass)
 
     -- There are three passes:
@@ -422,9 +389,6 @@ function resize_rooms(p)
     local ox,oy = c.x + dx, c.y + dy
 
     local other = neighbour_by_side(p, c, side)
-
-assert(not c.dummy)
-if other then assert(not other.dummy) end
 
     if c.is_exit or c.is_depot then return end
 
@@ -500,7 +464,6 @@ if other then assert(not other.dummy) end
       new_w, new_h = new_w - mv_x, new_h - mv_y
 
       local min_size = 6
----???   if shrinker.dummy or shrinker.scenic then min_size = 3 end
 
       if new_w < min_size or new_h < min_size then return end
     end
