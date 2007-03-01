@@ -317,11 +317,11 @@ function rotate_ccw45(dir)
   return CCW_45_ROTATES[dir]
 end
 
-function rotate_cw(dir)
+function rotate_cw90(dir)
   return CW_90_ROTATES[dir]
 end
 
-function rotate_ccw(dir)
+function rotate_ccw90(dir)
   return CCW_90_ROTATES[dir]
 end
 
@@ -369,5 +369,13 @@ function neighbour_by_side(p, c, dir)
   if valid_cell(p, c.x + dx, c.y + dy) then
     return p.cells[c.x + dx][c.y + dy]
   end
+end
+
+function cell_base_coords(x, y)
+
+  local bx = BORDER_BLK + (x-1) * (BW+1) + 1
+  local by = BORDER_BLK + (y-1) * (BH+1) + 1
+
+  return bx,by, bx+BW-1, by+BW-1
 end
 
