@@ -464,12 +464,6 @@ if other then assert(not other.dummy) end
 
         local n = valid_cell(p, nx, ny) and p.cells[nx][ny]
 
-if c.x==3 and c.y==2 and side==2 then
-con.printf("@@@ (3,2):2  nx/y = (%d,%d)  n = %s\n",
-nx, ny, (not n and "EMPTY") or (n.is_depot and "DEPOT") or
-(n.theme.outdoor and "OUTIE") or "INNIE")
-end
-
         if n and n.theme.outdoor then return end
       end end
 
