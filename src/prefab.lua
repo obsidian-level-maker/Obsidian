@@ -60,29 +60,29 @@ DOOR =
 {
   structure =
   {
-    "WMaaaaaaaaMW", --!!!
-    "WTddddddddTW",
-    "WTddddddddTW",
-    "WLbbbbbbbbMW",
+    "#LaaaaaaaaM#",
+    "#TddddddddT#",
+    "#TddddddddT#",
+    "#LbbbbbbbbM#",
   },
 
   elements =
   {
-    -- wall
-    W = { solid="wall" },
-
     -- steps
-    a = { f_h=8, c_rel="door_top", c_h=8, f_tex="frame_floor", l_tex="step" },
+    a = { f_h=8, c_rel="door_top", c_h=-8,
+          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step" },
     b = { copy="a" },
 
     -- door
-    d = { copy="a", c_rel="f_h", c_h=8, u_tex="door", c_tex = "door_ceil" },
+    d = { copy="a", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_ceil",
+          kind="door_kind", tag="tag",
+        },
 
     -- track
     T = { solid="track" },
 
     -- lights
-    L = { solid="lite", [6]={ l_tex="light" } },
+    L = { solid="wall", [6]={ l_tex="light" } },
     M = { solid="wall", [4]={ l_tex="light" } },
   },
 },
@@ -93,13 +93,80 @@ DOOR_NARROW =
 
   structure =
   {
-    "##aaaa##",
+    "#LaaaaM#",
     "#tddddt#",
     "#tddddt#",
-    "##bbbb##",
+    "#LbbbbM#",
   },
 },
 
+
+TECH_PICKUP_SMALL =
+{
+  structure =
+  {
+    "####aaaaaaaa####",
+    "####bbbbbbbb####",
+    "##LLccccccccLL##",
+    "##L#dddddddd#L##",
+    "abcdeeeeeeeedcba",
+    "abcdeeeeeeeedcba",
+    "abcdeeeeeeeedcba",
+    "abcdeeeeeeeedcba",
+    "abcdeeeeeeeedcba",
+    "abcdeeeeeeeedcba",
+    "abcdeeeeeeeedcba",
+    "abcdeeeeeeeedcba",
+    "##L#dddddddd#L##",
+    "##LLccccccccLL##",
+    "####bbbbbbbb####",
+    "####aaaaaaaa####",
+  },
+
+  elements =
+  {
+    -- steps
+    a = { l_tex="step", light=128, c_h=-48, },
+
+    b = { copy="a", f_h= -8, c_h=-56 },
+    c = { copy="a", f_h=-16, c_h=-64, light=192 },
+    d = { copy="a", f_h=-24, c_h=-64 },
+
+    e = { copy="a", f_h=-32, c_h=0, light=160, f_tex="carpet", c_tex="sky" },
+
+    -- light
+    L = { solid="light" },
+  },
+},
+
+TECH_PICKUP_LARGE =
+{
+  copy="TECH_PICKUP_SMALL",
+
+  structure =
+  {
+    "####aaaaaaaaaaaa####",
+    "####bbbbbbbbbbbb####",
+    "##LLccccccccccccLL##",
+    "##L#dddddddddddd#L##",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "abcdeeeeeeeeeeeedcba",
+    "##L#dddddddddddd#L##",
+    "##LLccccccccccccLL##",
+    "####bbbbbbbbbbbb####",
+    "####aaaaaaaaaaaa####",
+  },
+},
 
 
 } -- PREFABS
