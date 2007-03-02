@@ -1885,7 +1885,7 @@ function make_chunks(p)
   local K_BORD_PROBS = { 0, 60, 90, 12, 3 }
 
   local function create_chunks(c)
-    
+
     local cell_w = c.bx2 - c.bx1 + 1
     local cell_h = c.by2 - c.by1 + 1
 
@@ -2020,8 +2020,6 @@ function make_chunks(p)
   
   local function alloc_door_spot(c, side, link)
 
-    set_link_coords(c, side, link)
-
     local clasher
     local dx,dy = dir_to_delta(side)
 
@@ -2141,7 +2139,7 @@ link.cells[2].x, link.cells[2].y)
     end end
   end
 
-  local function alloc_link_chunks(c)
+  local function alloc_link_chunks(c, loop)
 
     -- last time was successful, nothing to do
     if c.links_OK then return true end
@@ -2152,23 +2150,51 @@ link.cells[2].x, link.cells[2].y)
 
       if clash_L then
 
-        con.debugf("CLASH (%d,%d) -> (%d,%d)\n",
+        con.debugf("CLASH (%d,%d) -> (%d,%d)  L:%s/%s  K:%s/%s\n",
           clash_L.cells[1].x, clash_L.cells[1].y,
-          clash_L.cells[2].x, clash_L.cells[2].y)
+          clash_L.cells[2].x, clash_L.cells[2].y,
+          L.kind, L.where, clash_L.kind, clash_L.where)
 
         -- be fair about which link we will blame
         if rand_odds(50) then
           L = clash_L
+
+          for i = 2,8,2 do
+            if c.link[i] == L then
+              side = i
+              break
+            end
+          end
         end
 
-        -- reset the allocation in the offending cells
-        clear_link_allocs(L.cells[1])
-        clear_link_allocs(L.cells[2])
+        assert(c.link[side] == L)
 
-        assert(c == L.cells[1] or c == L.cells[2])
+        local other = link_other(L, c)
+
+        -- reset the allocation in the offending cells
+        clear_link_allocs(c)
+        clear_link_allocs(other)
 
         -- choose a new place
         L.where = random_where(L, c.border[side])
+        set_link_coords(c, side, L)
+
+        if loop >= 512 then
+
+          -- Emergency!! our options are to:
+          --   1. reorganise chunks
+          --   2. make links narrower
+          --   3. remove falloffs/vistas
+
+          if (loop % 8) < 3 then
+            create_chunks(c)
+          elseif (loop % 8) < 6 then
+            L.long = 2
+          elseif (L.kind == "vista") or (L.kind == "falloff") then
+            c.link[side] = nil
+            other.link[10-side] = nil
+          end
+        end
 
         return false
       end
@@ -2887,6 +2913,7 @@ local dx,dy = dir_to_delta(loc.dir)
       local L = cell.link[side]
       if L and not L.where then
         L.where = random_where(L, cell.border[side])
+        set_link_coords(cell, side, L)
       end
     end
   end
@@ -2894,18 +2921,25 @@ local dx,dy = dir_to_delta(loc.dir)
 
   -- allocate chunks based on exit locations
 
-  for loop=1,999 do
-    local clashes = 0
+  local clashes
+
+  for loop=1,(512+80) do 
+    clashes = 0
 
     for zzz,cell in ipairs(p.all_cells) do
-      if not alloc_link_chunks(cell) then
+      if not alloc_link_chunks(cell, loop) then
         clashes = clashes + 1
       end
     end
 
-    con.debugf("MAKING CHUNKS: %d clashes\n", clashes)
+    con.debugf("MAKING CHUNKS: %d clashes (loop %d)\n", clashes, loop)
 
     if clashes == 0 then break end
+  end
+
+  if clashes > 0 then
+    -- Shit!
+    error("Unable to allocate link chunks!")
   end
 
   -- secondly, determine main walk areas
@@ -3254,10 +3288,33 @@ function build_cell(p, c)
 
   local function build_real_link(link, side, double_who)
 
+    local D = c.border[side]
+    assert(D)
+
+if true then --!!!!! TESTING
+local door_info = THEME.doors[link.wide_door]
+assert(door_info)
+if not door_info.prefab then print(table_to_str(door_info)) end
+assert(door_info.prefab)
+local fab = PREFABS[door_info.prefab]
+assert(fab)
+local parm =
+{ floor = link.build.rmodel.f_h,
+  ceil  = link.build.rmodel.c_h,
+  door_top = link.build.rmodel.f_h + door_info.h,
+  door_kind = 1, tag = 0,
+}
+B_prefab(p,c, fab, door_info, parm, D.theme,
+         link.x1, link.y1, link.build.rmodel.f_h, side)
+return
+end
+
+do
 gap_fill(p, c, link.x1, link.y1, link.x2, link.y2,
 copy_block_with_new(link.build.rmodel,
 { f_tex = "NUKAGE1" }))
-do return end
+return
+end
 
 
     -- DIR here points to center of current cell
@@ -3268,8 +3325,6 @@ do return end
     local other = link_other(link, c)
     assert(other)
 
-    local D = c.border[side]
-    if not D then return end
 
     local b_theme = D.theme
 
