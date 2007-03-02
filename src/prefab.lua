@@ -15,6 +15,11 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
+--
+--  Thanks to Derek "Dittohead" Braun who originally made
+--  many of these Prefabs.
+--
+----------------------------------------------------------------
 
 
 --[[
@@ -257,6 +262,93 @@ GROUND_LIGHT =
 },
 
 
+MEGA_SKYLIGHT_1 =
+{
+  -- frame, frame_ceil
+  -- beam,  beam_ceil
+  -- sky
+
+  structure =
+  {
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+    "ffssBBBBBBBBBBBBssff",
+    "ffssBBBBBBBBBBBBssff",
+    "ffssssCCssssCCssssff",
+    "ffssssCCssssCCssssff",
+    "ffssssCCssssCCssssff",
+    "ffssssCCssssCCssssff",
+    "ffssssCCssssCCssssff",
+    "ffssssCCssssCCssssff",
+    "ffssssCCssssCCssssff",
+    "ffssssCCssssCCssssff",
+    "ffssBBBBBBBBBBBBssff",
+    "ffssBBBBBBBBBBBBssff",
+    "ffffffffffffffffffff",
+    "ffffffffffffffffffff",
+  },
+
+  elements =
+  {
+    s = { c_tex="sky", light=192 },
+
+    f = { c_h=-32, c_tex="frame_ceil", u_tex="frame" },
+
+    B = { c_h=-16, c_tex="beam_ceil", u_tex="beam" },
+
+    C = { copy="B", c_h=-8 },
+  },
+},
+
+MEGA_SKYLIGHT_2 =
+{
+  copy="MEGA_SKYLIGHT_1",
+
+  structure =
+  {
+    "ffffffffffffffff",
+    "ffffffffffffffff",
+    "ffsBssBssBssBsff",
+    "ffsBssBssBssBsff",
+    "ffsBssBssBssBsff",
+    "ffBBBBBBBBBBBBff",
+    "ffsBssBssBssBsff",
+    "ffsBssBssBssBsff",
+    "ffsBssBssBssBsff",
+    "ffsBssBssBssBsff",
+    "ffBBBBBBBBBBBBff",
+    "ffsBssBssBssBsff",
+    "ffsBssBssBssBsff",
+    "ffsBssBssBssBsff",
+    "ffffffffffffffff",
+    "ffffffffffffffff",
+  },
+},
+
+MEGA_SKYLIGHT_3 =
+{
+  copy="MEGA_SKYLIGHT_1",
+
+  structure =
+  {
+    "ffffffffffffffff",
+    "ffffffffffffffff",
+    "ffssBssBBssBssff",
+    "ffssBssBBssBssff",
+    "ffBBBBBBBBBBBBff",
+    "ffssBssBBssBssff",
+    "ffssBssBBssBssff",
+    "ffBBBBBBBBBBBBff",
+    "ffBBBBBBBBBBBBff",
+    "ffssBssBBssBssff",
+    "ffssBssBBssBssff",
+    "ffBBBBBBBBBBBBff",
+    "ffssBssBBssBssff",
+    "ffssBssBBssBssff",
+    "ffffffffffffffff",
+    "ffffffffffffffff",
+  },
+},
 
 } -- PREFABS
 

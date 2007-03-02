@@ -4413,7 +4413,7 @@ if c.x==1 and c.y==3 then
   B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+4, c.by1+6, c.rmodel.f_h, 8)
 
 
-
+if false then
   fab = PREFABS["GROUND_LIGHT"]
   assert(fab)
 
@@ -4430,6 +4430,27 @@ if c.x==1 and c.y==3 then
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+2, c.by1+8, c.rmodel.f_h, 8)
+end
+
+  fab = PREFABS["MEGA_SKYLIGHT_2"]
+  assert(fab)
+
+  skin = { 
+           sky = "F_SKY1",
+           frame = "METAL",
+           frame_ceil = "CEIL5_2",
+
+           --!! beam = "METAL",
+           --!! beam_ceil  = "CEIL5_2",
+           beam = "WOOD12",
+           beam_ceil = "FLAT5_2",
+         }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+6, c.rmodel.f_h, 4)
 
 --[[
   fab = PREFABS["DOOR"]
