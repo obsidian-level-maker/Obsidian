@@ -359,6 +359,14 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
     return fx, fy
   end
 
+  local function dd_coords(dx, dy)
+        if dir == 2 then return -dx, -dy
+    elseif dir == 4 then return -dy,  dx
+    elseif dir == 6 then return  dy, -dx
+    else return dx, dy -- dir == 8
+    end
+  end
+
   local function skin_val(key)
     local V = skin[key]
     if not V then V = theme[key] end
@@ -418,8 +426,8 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
         if OV.f_tex and skin[OV.f_tex] then OV.f_tex = skin[OV.f_tex] end
         if OV.c_tex and skin[OV.c_tex] then OV.c_tex = skin[OV.c_tex] end
 
-        if OV.dx and OV.dy then
-         --!!! FIXME: adjust delta moves
+        if OV.dx or OV.dy then
+          OV.dx, OV.dy = dd_coords(OV.dx or 0, OV.dy or 0)
         end
 
         overrides[FAB_OVERRIDE_MAP[dir][i]] = OV
@@ -2080,7 +2088,8 @@ link.cells[2].x, link.cells[2].y)
 
     return clasher
 
---[[ OLD
+--[[ OLDIES BUT GOODIES...
+
     -- figure out which chunks are needed
 
     local kx, ky = side_to_chunk(side)
@@ -2160,8 +2169,8 @@ link.cells[2].x, link.cells[2].y)
   end
 
   local function clear_link_allocs(c)
-    c.link_OK = nil
-    
+    c.got_links = nil
+
     for kx = 1,3 do for ky = 1,3 do
       c.chunks[kx][ky].link  = nil
       c.chunks[kx][ky].empty = true
@@ -2171,7 +2180,7 @@ link.cells[2].x, link.cells[2].y)
   local function alloc_link_chunks(c, loop)
 
     -- last time was successful, nothing to do
-    if c.links_OK then return true end
+    if c.got_links then return true end
 
     for side,L in pairs(c.link) do
 
@@ -2229,7 +2238,7 @@ link.cells[2].x, link.cells[2].y)
       end
     end
 
-    c.links_OK = true
+    c.got_links = true
 
     return true
   end
@@ -3320,7 +3329,7 @@ function build_cell(p, c)
     local D = c.border[side]
     assert(D)
 
-if true then --!!!!! TESTING
+if not (link.kind == "falloff") then --!!!!! TESTING
 local door_info = THEME.doors[link.wide_door]
 assert(door_info)
 if not door_info.prefab then print(table_to_str(door_info)) end
