@@ -301,7 +301,7 @@ function create_link(p, c, other, dir)
     cells = { c, other },
     kind = "arch",  -- updated later
     build = c,    -- updated later
-    long = 2,      -- ditto
+    long = 3,      -- ditto
     deep = 1,
   }
 
@@ -325,8 +325,8 @@ function shuffle_build_sites(p)
 
     local chance = 50
 
-        if DL > SL then chance = 50 - DL * 10
-    elseif SL > DL then chance = 50 + SL * 10
+        if DL > SL then chance = 33
+    elseif SL > DL then chance = 66
     end
 
     if c1.hallway and not c2.hallway then chance =  5 end
@@ -446,12 +446,17 @@ function resize_rooms(p)
       if (c.hallway ~= other.hallway) and rand_odds(90) then
         dir = sel(c.hallway, -1, 1)
 
----???      elseif (c.scenic ~= other.scenic) and rand_odds(70) then
----???        dir = sel(c.scenic, -1, 1)
+      else
+        local SL = links_in_cell(c)
+        local DL = links_in_cell(other)
+
+        if (SL ~= DL) and rand_odds(90) then
+          dir = sel(SL < DL, -1, 1)
+        end
       end
     end
 
-    dir = dir or rand_sel(50, 1, -1)
+    dir = dir or rand_sel(66, 1, -1)
 
     local deep = 3
     local mv_x = math.abs(dx) * deep
@@ -549,7 +554,7 @@ function create_corners(p)
 
       local c = valid_cell(p,cx,cy) and p.cells[cx][cy]
 
-      if c then
+      if c and not c.is_depot then
         local bx, by = corner_coords(c_dir, c.bx1, c.by1, c.bx2, c.by2)
         local dx, dy = dir_to_delta(c_dir)
 
@@ -578,7 +583,7 @@ function create_corners(p)
         local cy = y + sub_y
         local c = valid_cell(p,cx,cy) and p.cells[cx][cy]
 
-        if c and
+        if c and not c.is_depot and
            (CN.bx >= c.bx1-1) and (CN.by >= c.by1-1) and
            (CN.bx <= c.bx2+1) and (CN.by <= c.by2+1)
         then 
@@ -614,6 +619,12 @@ function create_borders(p)
 
     c.border[side] = D
     D.cells = { c }
+
+    if D.x1 < D.x2 then
+      D.long = D.x2 - D.x1 + 1
+    else
+      D.long = D.y2 - D.y1 + 1
+    end
 
     if other then
       other.border[10-side] = D
@@ -2064,7 +2075,7 @@ do add_depot(Q); return end --!!!!! TESTING
 
   con.ticker();
 
----!!!  select_floor_heights()
+  select_floor_heights()
   compute_height_minmax(p)
 
   select_ceiling_heights()
