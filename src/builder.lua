@@ -327,6 +327,15 @@ function rotate_block(B, d)
 end
 
 
+FAB_OVERRIDE_MAP =
+{
+  [8] = { 1,2,3, 4,5,6, 7,8,9 },
+  [2] = { 9,8,7, 6,5,4, 3,2,1 },
+
+  [4] = { 3,6,9, 2,5,8, 1,4,7 },
+  [6] = { 7,4,1, 8,5,2, 9,6,3 },
+}
+
 function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
 
   -- (x,y) is always the lowest coordinate
@@ -395,12 +404,32 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
 
   local function elem_fill(elem, fx, fy)
 
-    local overrides  -- FIXME !!!!!
+    -- !!!!! FIXME: do this shit _once_ for each thing in FAB.elements[]
+
+    local overrides = {}
+
+    for i = 1,9 do
+      local OV = elem[i]
+      if OV then
+        OV = copy_block(OV)  -- don't modify the prefab!
+
+        if OV.l_tex and skin[OV.l_tex] then OV.l_tex = skin[OV.l_tex] end
+        if OV.u_tex and skin[OV.u_tex] then OV.u_tex = skin[OV.u_tex] end
+        if OV.f_tex and skin[OV.f_tex] then OV.f_tex = skin[OV.f_tex] end
+        if OV.c_tex and skin[OV.c_tex] then OV.c_tex = skin[OV.c_tex] end
+
+        if OV.dx and OV.dy then
+         --!!! FIXME: adjust delta moves
+        end
+
+        overrides[FAB_OVERRIDE_MAP[dir][i]] = OV
+      end
+    end
 
     if elem.solid then
 
       frag_fill (p,c, fx,fy, fx,fy,
-           { solid=what_tex("wall", elem.solid) })
+           { solid=what_tex("wall", elem.solid) }, overrides)
     else
       local sec = copy_block(c.rmodel)
 
@@ -424,7 +453,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
 
       if elem.light then sec.light = elem.light end
 
-      frag_fill (p,c, fx,fy, fx,fy, sec)
+      frag_fill (p,c, fx,fy, fx,fy, sec, overrides)
     end
   end
 
@@ -4615,9 +4644,20 @@ do return end
     build_border(side)
   end
 
-if false then
----  if c.x==1 and c.y==3 then
+  for kx = 1,c.chunks.w do
+    for ky = 1,c.chunks.h do
+      build_chunk(kx, ky)
+    end
+  end
 
+  -- TEMP 
+  if c == p.quests[1].first then
+    add_thing(p, c, c.bx1+3, c.by1+3, "player1", true, 0)
+  end
+
+if c.x==1 and c.y==3 then
+
+if false then
   fab = PREFABS["TECH_PICKUP_LARGE"]
   assert(fab)
 
@@ -4631,8 +4671,9 @@ if false then
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, c.rmodel.f_h, 8)
+end
 
-
+if false then
   fab = PREFABS["TECH_STATUE_1"]
   assert(fab)
 
@@ -4651,7 +4692,7 @@ if false then
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+4, c.by1+6, c.rmodel.f_h, 8)
-
+end
 
 if false then
   fab = PREFABS["GROUND_LIGHT"]
@@ -4672,6 +4713,7 @@ if false then
   B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+2, c.by1+8, c.rmodel.f_h, 8)
 end
 
+if false then
   fab = PREFABS["MEGA_SKYLIGHT_2"]
   assert(fab)
 
@@ -4691,36 +4733,10 @@ end
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+6, c.rmodel.f_h, 4)
-
---[[
-  fab = PREFABS["DOOR"]
-  assert(fab)
-  skin = { xx_wall="COMPBLUE", track="DOORTRAK", light="LITE3", 
-           frame_floor="FLAT1", door="BIGDOOR4", step="STEP1",
-          -- door_ceil="FLAT10",
-         }
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-           door_top = c.rmodel.f_h+112,
-           door_kind = 1, tag = 0
-         }
-
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, c.rmodel.f_h, 8)
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+5, c.by1+1, c.rmodel.f_h, 2)
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+6, c.rmodel.f_h, 4)
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+5, c.by1+6, c.rmodel.f_h, 6)
---]]
 end
 
-  for kx = 1,c.chunks.w do
-    for ky = 1,c.chunks.h do
-      build_chunk(kx, ky)
-    end
-  end
+end -- if c.x==XX
 
-  if c == p.quests[1].first then
-  add_thing(p, c, c.bx1+3, c.by1+3, "player1", true, 0)
-  end
 end
 
 
