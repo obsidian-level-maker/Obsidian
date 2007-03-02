@@ -100,7 +100,6 @@ function expand_prefabs(LIST)
 
   for name,P in pairs(LIST) do
     expand_it(name, P)
-    con.debugf("Prefab %s =\n%s\n", name, table_to_string(LIST[name], 3))
   end
 end
 
