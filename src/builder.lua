@@ -69,7 +69,7 @@ function chunk_to_block(kx)
   return 1 + int((kx-1) * BW / KW)
 end
 
-function new_chunk(c, kx, ky, kind, value)
+function new_foo_chunk(c, kx, ky, kind, value)
   return
   {
     [kind] = value or true,
@@ -122,30 +122,32 @@ function is_roomy(cell, chunk)
   return chunk.room
 end
 
-function random_where(link)
+function random_where(link, border)
 
-  local LINK_WHERES = { 15, 40, 15, 90, 15, 40, 15 }
+  local LINK_WHERES = { 3, 3, 9, 3, 3 }
 
   for zzz,c in ipairs(link.cells) do
-    if c.hallway then return 0 end
     if c.small_exit then return 0 end
   end
 
   if (link.kind == "door" and rand_odds(4)) or
      (link.kind ~= "door" and rand_odds(15))
   then
-    return "double";
+    if border.long >= 7 then
+--!!!!      return "double";
+    end
   end
 
-  if (link.kind == "arch" and rand_odds(15)) or
-     (link.kind == "falloff" and rand_odds(80))
+  if (link.kind == "arch" and rand_odds(33)) or
+     (link.kind == "falloff" and rand_odds(99)) or
+     (link.kind == "vista" and rand_odds(50))
   then
-    return "wide";
+--!!!!    return "wide";
   end
 
-  if link.kind == "falloff" then return 0 end
+---???  if link.kind == "falloff" then return 0 end
 
-  return rand_index_by_probs(LINK_WHERES) - 4
+  return rand_index_by_probs(LINK_WHERES) - 3
 end
 
 
@@ -1880,6 +1882,59 @@ end
 
 function make_chunks(p)
 
+  local K_BORD_PROBS = { 0, 60, 90, 12, 3 }
+
+  local function create_chunks(c)
+    
+    local cell_w = c.bx2 - c.bx1 + 1
+    local cell_h = c.by2 - c.by1 + 1
+
+    assert(cell_w % 3 == 0)
+    assert(cell_h % 3 == 0)
+
+    assert(cell_w >= 6 and cell_h >= 6)
+
+    c.chunks = array_2D(3, 3)
+
+    -- decide depths of each side
+    local L, R, T, B
+    local M, N
+
+    repeat
+      L = rand_index_by_probs(K_BORD_PROBS)
+      R = rand_index_by_probs(K_BORD_PROBS)
+      M = cell_w - L - R
+    until M >= 2
+
+    repeat
+      T = rand_index_by_probs(K_BORD_PROBS)
+      B = rand_index_by_probs(K_BORD_PROBS)
+      N = cell_h - T - B
+    until N >= 2
+
+    -- actually create the chunks
+
+    for kx = 1,3 do for ky = 1,3 do
+       local w  = sel(kx == 1, L, sel(kx == 2, M, R))
+       local h  = sel(ky == 1, B, sel(ky == 2, N, T))
+
+       local dx = sel(kx == 1, 0, sel(kx == 2, L, L+M))
+       local dy = sel(ky == 1, 0, sel(ky == 2, B, B+N))
+
+       c.chunks[kx][ky] =
+       {
+         w=w, h=h,
+
+         x1 = c.bx1 + dx,
+         y1 = c.by1 + dy,
+         x2 = c.bx1 + dx + w-1,
+         y2 = c.by1 + dy + h-1,
+
+         empty=true
+       }
+    end end
+  end
+  
   local function count_empty_chunks(c)
     local count = 0
     for kx = 1,KW do
@@ -1903,15 +1958,108 @@ function make_chunks(p)
   end
 
 
+  local function set_link_coords(c, side, link)
+    
+    local D = c.border[side]
+    assert(D)
+
+    assert(link.long <= D.long)
+
+    if link.where == "double" or link.where == "wide" or
+       link.long == D.long
+    then
+      link.x1, link.y1 = D.x1, D.y1
+      link.x2, link.y2 = D.x2, D.y2
+
+      return
+    end
+
+    local diff = D.long - link.long
+    local pos
+
+        if link.where == -2 then pos = 0
+    elseif link.where == -1 then pos = int((diff+2)/4)
+    elseif link.where ==  0 then pos = int(diff / 2)
+    elseif link.where ==  1 then pos = diff - int((diff+2)/4)
+    elseif link.where ==  2 then pos = diff
+    else
+      error("Bad where value: " .. tostring(link.where))
+    end
+
+    if link.where == 0 and (diff % 2) == 1 and (side < 5) then
+      pos = pos + 1
+    end
+
+    local ax, ay = dir_to_across(side)
+
+    link.x1 = D.x1 + pos * ax
+    link.y1 = D.y1 + pos * ay
+
+--con.printf("link_L:%d border_L:%d  where:%d -> pos:%d..%d\n",
+--link.long, D.long, link.where, pos, pos + link.long - 1)
+
+    pos = pos + link.long - 1
+
+    link.x2 = D.x1 + pos * ax
+    link.y2 = D.y1 + pos * ay
+
+--con.printf("BORDER: (%d,%d) .. (%d,%d)\n", D.x1, D.y1, D.x2, D.y2)
+--con.printf("LINK:   (%d,%d) .. (%d,%d)\n", link.x1, link.y1, link.x2, link.y2)
+
+    assert(link.x1 >= D.x1); assert(link.y1 >= D.y1)
+    assert(link.x2 <= D.x2); assert(link.y2 <= D.y2)
+  end
+
+  local function overlaps_chunk(K, x1,y1, x2,y2)
+
+    if x2 < K.x1 or x1 > K.x2 then return false end
+    if y2 < K.y1 or y1 > K.y2 then return false end
+
+    return true
+  end
+  
   local function alloc_door_spot(c, side, link)
 
+    set_link_coords(c, side, link)
+
+    local clasher
+    local dx,dy = dir_to_delta(side)
+
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+
+      if overlaps_chunk(K, link.x1-dx, link.y1-dy, link.x2-dx, link.y2-dy) then
+--[[
+con.printf("alloc_door_spot: overlap (%d,%d) [%d,%d] on side:%d\n",
+c.x, c.y, kx, ky, side)
+con.printf(">> K=(%d,%d,%d,%d) L=(%d,%d,%d,%d)\n",
+K.x1,K.y1,K.x2,K.y2, link.x1-dx,link.y1-dy, link.x2-dx, link.y2-dy)
+--]]
+        if K.link then
+--[[
+con.printf("___ OLD LINK: (%d,%d)..(%d,%d)\n",
+K.link.cells[1].x, K.link.cells[1].y,
+K.link.cells[2].x, K.link.cells[2].y)
+con.printf("___ NEW LINK: (%d,%d)..(%d,%d)\n",
+link.cells[1].x, link.cells[1].y,
+link.cells[2].x, link.cells[2].y)
+--]]
+          clasher = K.link
+        else
+          K.link = link
+        end
+      end 
+    end end
+
+    return clasher
+
+--[[ OLD
     -- figure out which chunks are needed
-    local coords = {}
 
     local kx, ky = side_to_chunk(side)
     local ax, ay = dir_to_across(side)
 
-    assert(not c.chunks[kx][ky])
+    assert(not c.chunks[kx][ky].link)
 
     if link.where == "double" then
       table.insert(coords, {x=kx+ax, y=ky+ay})
@@ -1981,41 +2129,54 @@ function make_chunks(p)
       end
     end
     return not has_clash
+--]]
   end
 
-  local function put_chunks_in_cell(c)
+  local function clear_link_allocs(c)
+    c.link_OK = nil
+    
+    for kx = 1,3 do for ky = 1,3 do
+      c.chunks[kx][ky].link  = nil
+      c.chunks[kx][ky].empty = true
+    end end
+  end
 
-    if c.chunks then
-      -- last time was successful, nothing to do
-      return true
-    end
+  local function alloc_link_chunks(c)
 
-    c.chunks = array_2D(KW, KH)
+    -- last time was successful, nothing to do
+    if c.links_OK then return true end
 
     for side,L in pairs(c.link) do
 
-      if not alloc_door_spot(c, side, L) then
-        assert(c.chunks.clasher)
+      local clash_L = alloc_door_spot(c, side, L)
 
-        -- con.debugf("  CLASH IN (%d,%d)\n", c.x, c.y)
+      if clash_L then
+
+        con.debugf("CLASH (%d,%d) -> (%d,%d)\n",
+          clash_L.cells[1].x, clash_L.cells[1].y,
+          clash_L.cells[2].x, clash_L.cells[2].y)
 
         -- be fair about which link we will blame
-        if c.chunks.clasher.link and rand_odds(50) then
-          L = c.chunks.clasher.link
+        if rand_odds(50) then
+          L = clash_L
         end
 
-        -- remove the chunks from the offending cells and
-        -- select a different exit position
-        L.cells[1].chunks = nil
-        L.cells[2].chunks = nil
+        -- reset the allocation in the offending cells
+        clear_link_allocs(L.cells[1])
+        clear_link_allocs(L.cells[2])
 
-        L.where = random_where(L)
+        assert(c == L.cells[1] or c == L.cells[2])
+
+        -- choose a new place
+        L.where = random_where(L, c.border[side])
 
         return false
       end
     end
 
-    return true --OK--
+    c.links_OK = true
+
+    return true
   end
 
 
@@ -2261,7 +2422,7 @@ function make_chunks(p)
         if c.chunks[kx][ky] then
           con.printf("WARNING: monster closet stomped a chunk!\n")
           con.printf("CELL (%d,%d)  CHUNK (%d,%d)\n", c.x, c.y, kx, ky)
-          con.printf("%s\n", table_to_string(c.chunks[kx][ky], 2))
+          con.printf("%s\n", table_to_str(c.chunks[kx][ky], 2))
 
           show_chunks(p)
         end
@@ -2717,17 +2878,27 @@ local dx,dy = dir_to_delta(loc.dir)
 
   --==-- make_chunks --==--
 
-  for zzz,link in ipairs(p.all_links) do
-    link.where = random_where(link)
+  for zzz,cell in ipairs(p.all_cells) do
+    create_chunks(cell)
   end
 
-  -- firstly, allocate chunks based on exit locations
+  for zzz,cell in ipairs(p.all_cells) do
+    for side = 2,8,2 do
+      local L = cell.link[side]
+      if L and not L.where then
+        L.where = random_where(L, cell.border[side])
+      end
+    end
+  end
+
+
+  -- allocate chunks based on exit locations
 
   for loop=1,999 do
     local clashes = 0
 
     for zzz,cell in ipairs(p.all_cells) do
-      if not put_chunks_in_cell(cell) then
+      if not alloc_link_chunks(cell) then
         clashes = clashes + 1
       end
     end
@@ -2739,6 +2910,7 @@ local dx,dy = dir_to_delta(loc.dir)
 
   -- secondly, determine main walk areas
 
+--[[ !!!!
   for zzz,cell in ipairs(p.all_cells) do
 
       add_closet_chunks(cell)
@@ -2748,16 +2920,17 @@ local dx,dy = dir_to_delta(loc.dir)
       add_vista_chunks(cell)
 
   end
-
+--]]
   for zzz,cell in ipairs(p.all_cells) do
 
-      flesh_out_cell(cell)
+--!!!!      flesh_out_cell(cell)
 
       setup_chunk_rmodels(cell)
 
-      connect_chunks(cell)
+--!!!!      connect_chunks(cell)
   end
 
+--[[ !!!!
   for zzz,cell in ipairs(p.all_cells) do
       if p.deathmatch then
         position_dm_stuff(cell)
@@ -2765,6 +2938,7 @@ local dx,dy = dir_to_delta(loc.dir)
         position_sp_stuff(cell)
       end
   end
+--]]
 end
 
 
@@ -3078,7 +3252,13 @@ function build_cell(p, c)
     end
   end
 
-  local function build_real_link(link, side, where)
+  local function build_real_link(link, side, double_who)
+
+gap_fill(p, c, link.x1, link.y1, link.x2, link.y2,
+copy_block_with_new(link.build.rmodel,
+{ f_tex = "NUKAGE1" }))
+do return end
+
 
     -- DIR here points to center of current cell
     local dir = 10-side  -- FIXME: remove
@@ -3108,7 +3288,7 @@ function build_cell(p, c)
       d_pos = d_min + 1
       long  = d_max - d_min - 1
     else
-      d_pos = where_to_block(where, long)
+      d_pos = where_to_block(where, long) --!!!!! MOVE
       d_max = d_max - (long-1)
 
       if (d_pos < d_min) then d_pos = d_min end
@@ -3290,10 +3470,10 @@ arch.f_tex = "TLITE6_6"
 
     if link.where == "double" then
       local awh = rand_irange(2,3)
-      build_real_link(link, side, -awh)
-      build_real_link(link, side,  awh)
+      build_real_link(link, side, 1)
+      build_real_link(link, side, 2)
     else
-      build_real_link(link, side, link.where)
+      build_real_link(link, side, 0)
     end
   end
 
@@ -3732,6 +3912,11 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
 
     for zzz,c in ipairs(E.cells) do
       if c.theme.outdoor then out_num = out_num + 1 end
+if not c.f_max then
+con.printf("E = \n%s\ncell = \n%s\n",
+table_to_str(E,2), table_to_str(c,2))
+error("no f_max!")
+end
       f_max = math.max(c.f_max, f_max)
     end
 
@@ -3940,6 +4125,13 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
       gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, { solid=c.theme.void })
       return
     end
+
+--!!!!!! TESTING
+gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, K.rmodel,
+{
+  light = sel( ((kx+ky)%2) == 1, 136, sel(kx==2 or ky==2, 192, 96))
+})
+do return end
 
     -- vista chunks are built by other room
     if K.vista then return end
@@ -4368,15 +4560,8 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
     build_border(side)
   end
 
-if true then --!!!!! TESTING
-local OV = {}
-local T = get_rand_theme()
-gap_fill(p,c, c.bx1, c.by1, c.bx2, c.by2, c.rmodel, OV)
-if c == p.quests[1].first then
-add_thing(p, c, c.bx1+3, c.by1+3, "player1", true, 0)
-end
-
-if c.x==1 and c.y==3 then
+if false then
+---  if c.x==1 and c.y==3 then
 
   fab = PREFABS["TECH_PICKUP_LARGE"]
   assert(fab)
@@ -4472,13 +4657,14 @@ end
 --]]
 end
 
-return
-end
-
-  for kx = 1,KW do
-    for ky = 1,KH do
+  for kx = 1,c.chunks.w do
+    for ky = 1,c.chunks.h do
       build_chunk(kx, ky)
     end
+  end
+
+  if c == p.quests[1].first then
+  add_thing(p, c, c.bx1+3, c.by1+3, "player1", true, 0)
   end
 end
 
