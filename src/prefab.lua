@@ -75,16 +75,17 @@ DOOR =
   {
     -- steps
     s = { f_h=8, c_rel="door_top", c_h=-8,
-          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step"
+          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step",
+          l_peg="top"
         },
 
     -- door
     d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_ceil",
-          kind="door_kind", tag="tag",
+          kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
         },
 
     -- track
-    T = { solid="track" },
+    T = { solid="track", l_peg="bottom" },
 
     -- lights
     L = { solid="wall", [6]={ l_tex="light" } },
