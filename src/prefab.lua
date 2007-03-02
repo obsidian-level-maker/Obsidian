@@ -76,7 +76,7 @@ DOOR =
     -- steps
     s = { f_h=8, c_rel="door_top", c_h=-8,
           f_tex="frame_floor", c_tex="frame_ceil", l_tex="step",
-          l_peg="top"
+          l_peg="top", light=224
         },
 
     -- door
