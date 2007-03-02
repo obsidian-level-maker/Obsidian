@@ -47,22 +47,19 @@ function table_empty(t)
   return not next(t)
 end
 
-function table_to_string(t, depth, prefix, sort_mode)
+function table_to_str(t, depth, prefix)
   if not t then return "NIL" end
   if table_empty(t) then return "{}" end
 
   depth = depth or 1
   prefix = prefix or ""
-  sort_mode = sort_mode or "alpha"
 
   local keys = {}
   for k,v in pairs(t) do
     table.insert(keys, k)
   end
 
-  if sort_mode == "alpha" then
-    table.sort(keys, function (A,B) return tostring(A) < tostring(B) end)
-  end
+  table.sort(keys, function (A,B) return tostring(A) < tostring(B) end)
 
   local result = "{\n"
 
@@ -70,7 +67,7 @@ function table_to_string(t, depth, prefix, sort_mode)
     local v = t[k]
     result = result .. prefix .. "  " .. tostring(k) .. " = "
     if type(v) == "table" and depth > 1 then
-      result = result .. table_to_string(v, depth-1, prefix .. "  ")
+      result = result .. table_to_str(v, depth-1, prefix .. "  ")
     else
       result = result .. tostring(v)
     end

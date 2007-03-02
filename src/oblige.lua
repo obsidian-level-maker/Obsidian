@@ -97,7 +97,7 @@ function build_cool_shit()
   con.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
 
   con.printf("SEED = %d\n\n", settings.seed)
-  con.printf("Settings =\n%s\n", table_to_string(settings))
+  con.printf("Settings =\n%s\n", table_to_str(settings))
 
   create_theme()
 
