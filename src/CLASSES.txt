@@ -99,23 +99,29 @@ end
 
 
 class Link
-  kind  : string: "a" arch | "d" door | "f" fall-off | "b" bridge
+  kind  : keyword: "arch" | "door" | "falloff" | "vista"
 
   cells : array(Cell)
 
   build : Cell -- which side we build the wall,door (etc)
                   must equal either src or dest.
+
                   The _other_ side is responsible for
                   meeting the correct height (via stairs etc)
 
   quest : Quest for locked/switched doors.
 
   where : position of door/arch/etc along side
-               0 = centre of middle chunk,
-            +/-1 = straddling middle/corner chunks
-            +/-2 = near side of corner chunk
-            +/-3 = far side of corner chunk
+               0 = centred
+            +/-1 = partially left/right
+            +/-2 = touching the edge
+
+            "wide"   = using the whole border
             "double" = BOTH corner chunks
+
+  long : total size of door/arch/etc (in blocks)
+
+  x1, y1, x2, y2 : block range
 end
 
 
@@ -125,12 +131,14 @@ class Border
 
   side : true side of border (2/4/6/8)
 
+  long : number of blocks wide/tall
+
   cells : array(Cell)
 
   build : Cell
   theme : Theme
 
-  window: true if this border should contain windows
+  window: true if this border can contain windows
 
   -- type indicators:
   solid : true
