@@ -114,8 +114,9 @@ function show_chunks(p)
       if not c or not c.chunks then return " " end
 
       local K = c.chunks[kx][ky]
+      assert(K)
 
-      if not K then return " " end
+      if K.empty then return " " end
 
       if K.void   then return "." end
       if K.room   then return "/" end
@@ -144,7 +145,7 @@ function show_chunks(p)
       return "?"
     end
 
-    for x = 1,KW do
+    for x = 1,3 do
       con.printf(chk(x))
     end
     con.printf("|")
@@ -152,7 +153,7 @@ function show_chunks(p)
 
   local function divider(len)
     for i = len,1,-1 do
-      for x = 1,KW do
+      for x = 1,3 do
         con.printf("-")
       end
       con.printf("+")
@@ -165,7 +166,7 @@ function show_chunks(p)
   divider(p.w)
 
   for y = p.h,1,-1 do
-    for row = KH,1,-1 do
+    for row = 3,1,-1 do
       for x = 1,p.w do
         show_cell(p.cells[x][y], row)
       end
