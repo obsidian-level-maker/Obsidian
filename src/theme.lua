@@ -28,78 +28,12 @@ require 'x_hexen'
 
 ----------------------------------------------------------------
 
-function expand_prefabs(LIST)
+function expand_prefabs(fabs)
 
-  -- Prefabs are made simpler using the "copy" statement,
-  -- which this code expands to get self-contained tables.
+  expand_copies(fabs)
 
-  local function expand_element(P, name, E)
-    E.expanding = true
-
-    -- firstly handle copies
-    if E.copy then
-      local source = P.elements[E.copy]
-
-      if not source then
-        error("Bad prefab element " .. name .. " : cannot copy " .. tostring(E.copy))
-      end
-      if source.expanding then
-        error("Bad prefab element " .. name .. " : cyclic copy refs!")
-      end
-
-      -- make sure source element has been expanded (RECURSIVE)
-      if source.copy then
-        expand_element(P, E.copy, source)
-      end
-
-      E.copy = nil
-
-      E = copy_and_merge(source, E)
-
-      P.elements[name] = E
-    end
-
-    E.expanding = nil
-  end
-
-  local function expand_it(name, P)
-    P.expanding = true
-
-    -- firstly handle copies
-    if P.copy then
-      local source = LIST[P.copy]
-
-      if not source then
-        error("Bad prefab " .. name .. " : cannot copy " .. tostring(P.copy))
-      end
-      if source.expanding then
-        error("Bad prefab " .. name .. " : cyclic copy refs!")
-      end
-
-      -- make sure source prefab has been expanded (RECURSIVE)
-      if source.copy then
-        expand_it(P.copy, source)
-      end
-      
-      P.copy = nil
-
-      P = copy_and_merge(source, P)
-
-      LIST[name] = P
-    end
-
-    -- now do the element list
-    for elem,E in pairs(P.elements) do
-      expand_element(P, elem, E)
-    end
-
-    P.expanding = nil
-  end
-
-  -- expand_prefabs
-
-  for name,P in pairs(LIST) do
-    expand_it(name, P)
+  for name,P in pairs(fabs) do
+    expand_copies(P.elements)
   end
 end
 
