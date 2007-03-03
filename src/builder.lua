@@ -4717,6 +4717,19 @@ do return end
 
 if c.x==1 and c.y==3 then
 
+if true then
+  fab = PREFABS["DIAGONAL_CORNER"]
+  assert(fab)
+
+  skin = { }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1, c.by2, 8)
+end
+
 if false then
   fab = PREFABS["BILLBOARD"]
   assert(fab)
@@ -4738,7 +4751,7 @@ if false then
   B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+3, c.by1+4, 4)
 end
 
-if true then
+if false then
   fab = PREFABS["BILLBOARD_LIT"]
   assert(fab)
 

@@ -586,6 +586,32 @@ BILLBOARD_LIT =
 },
 
 
+DIAGONAL_CORNER =
+{
+  structure =
+  {
+    "##C.",
+    "#B..",
+    "A...",
+    "....",
+  },
+
+  elements =
+  {
+    A = { solid="wall", [3] = { dx=-8, dy=8 },
+          [2] = { x_offset=0 }, [6] = { x_offset=11 },
+        },
+
+    B = { solid="wall", [3] = { dx=-8, dy=8 },
+          [2] = { x_offset=22 }, [6] = { x_offset=33 },
+        },
+
+    C = { solid="wall", [3] = { dx=-8, dy=8 },
+          [2] = { x_offset=44 }, [6] = { x_offset=55 },
+        },
+  },
+},
+
 
 } -- PREFABS
 
