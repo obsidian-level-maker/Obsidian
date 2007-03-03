@@ -79,26 +79,68 @@ function table_to_str(t, depth, prefix)
   return result
 end
 
-function merge_table(dest, src1,src2,src3,src4)
-  assert(dest)
-  if src1 then for k,v in pairs(src1) do dest[k] = v end end
-  if src2 then for k,v in pairs(src2) do dest[k] = v end end
-  if src3 then for k,v in pairs(src3) do dest[k] = v end end
-  if src4 then for k,v in pairs(src4) do dest[k] = v end end
-  if src5 then for k,v in pairs(src5) do dest[k] = v end end
-  if src6 then for k,v in pairs(src6) do dest[k] = v end end
+function merge_table(dest, src)
+  for k,v in pairs(src) do
+    dest[k] = v
+  end
   return dest
-end
-
-function copy_and_merge(t1, ...)
-  local result = {}
-  merge_table(result, t1, ...)
-  return result
 end
 
 -- Note: shallow copy
 function copy_table(t)
   return t and merge_table({}, t)
+end
+
+function copy_and_merge(orig, t1, t2, t3, t4)
+  local result = {}
+  merge_table(result, orig)
+
+  if t1 then merge_table(result, t1) end
+  if t2 then merge_table(result, t2) end
+  if t3 then merge_table(result, t3) end
+  if t4 then merge_table(result, t4) end
+
+  return result
+end
+
+function merge_missing(dest, src)
+  for k,v in pairs(src) do
+    if not dest[k] then dest[k] = v end
+  end
+  return dest
+end
+
+function expand_copies(LIST)
+
+  local function expand_it(name, sub)
+    if not sub.copy then return end
+
+    if sub._expanding then
+      error("Cyclic copy refs: " .. name)
+    end
+
+    sub._expanding = true
+
+    local orig = LIST[sub.copy]
+
+    if not orig then
+      error("Unknown copy ref: " .. name .. " -> " .. tostring(sub.copy))
+    end
+
+    -- recursively expand the original
+    expand_it(sub.copy, orig)
+
+    merge_missing(sub, orig)
+
+    sub._expanding = nil
+    sub.copy = nil
+  end
+
+  -- expand_copies --
+
+  for name,sub in pairs(LIST) do
+    expand_it(name, sub)
+  end
 end
 
 function reverse_array(t)
