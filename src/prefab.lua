@@ -499,10 +499,10 @@ MEGA_SKYLIGHT_3 =
     "ffssBssBBssBssff",
     "ffBBBBBBBBBBBBff",
     "ffssBssBBssBssff",
-    "ffssBssBBssBssff",
-    "ffBBBBBBBBBBBBff",
-    "ffBBBBBBBBBBBBff",
-    "ffssBssBBssBssff",
+    "ffssBssssssBssff",
+    "ffBBBBssssBBBBff",
+    "ffBBBBssssBBBBff",
+    "ffssBssssssBssff",
     "ffssBssBBssBssff",
     "ffBBBBBBBBBBBBff",
     "ffssBssBBssBssff",
@@ -511,6 +511,55 @@ MEGA_SKYLIGHT_3 =
     "ffffffffffffffff",
   },
 },
+
+
+BILLBOARD =
+{
+  structure =
+  {
+    "................",
+    ".DCCssssssssCCE.",
+    ".CCppppppppppCC.",
+    ".CCCssssssssCCC.",
+  },
+
+  elements =
+  {
+    -- corner
+    C = { f_h=8, f_rel="corn_h",
+          l_tex="corner", f_tex="corn_f", l_peg="top", },
+
+    D = { copy="C", [7] = { dx= 8, dy=-8 } },
+    E = { copy="C", [9] = { dx=-8, dy=-8 } },
+
+    -- pic
+    p = { f_h=8, f_rel="pic_h",
+          l_tex="pic", f_tex="pic_f", l_peg="top",
+          [8] = { l_tex="pic_back" }
+        },
+
+    -- step
+    s = { f_h=8, l_tex="step", f_tex="step_f", l_peg="top" },
+  }
+},
+
+BILLBOARD_LIT =
+{
+  structure =
+  {
+    "................",
+    ".CCC........CCC.",
+    ".CCCssssssssCCC.",
+    ".CLCaaaaaaaaCLC.",
+  },
+
+  elements =
+  {
+    C = { f_h=112 }
+  },
+},
+
+
 
 } -- PREFABS
 

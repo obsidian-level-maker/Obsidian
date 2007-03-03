@@ -334,7 +334,7 @@ FAB_OVERRIDE_MAP =
   [6] = { 7,4,1, 8,5,2, 9,6,3 },
 }
 
-function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
+function B_prefab(p, c, fab, skin, parm, theme, x,y, dir)
 
   -- (x,y) is always the block with the lowest coordinate.
   -- dir == 8 is the natural mode, other values rotate it.
@@ -3359,7 +3359,7 @@ function build_cell(p, c)
     local D = c.border[side]
     assert(D)
 
-if true then --!!!!!
+if link.kind == "arch" then --!!!!!
 local fab = "ARCH" -- rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
 fab = PREFABS[fab]
 assert(fab)
@@ -3381,8 +3381,7 @@ local skin =
   test_t = "lamp"
 }
 
-B_prefab(p,c, fab, skin, parm, D.theme,
-         link.x1, link.y1, link.build.rmodel.f_h, side)
+B_prefab(p,c, fab, skin, parm, D.theme, link.x1, link.y1, side)
 return
 end
 
@@ -3400,8 +3399,7 @@ local parm =
   door_top = link.build.rmodel.f_h + door_info.h,
   door_kind = 1, tag = 0,
 }
-B_prefab(p,c, fab, door_info, parm, D.theme,
-         link.x1, link.y1, link.build.rmodel.f_h, side)
+B_prefab(p,c, fab, door_info, parm, D.theme, link.x1, link.y1, side)
 return
 end
 
@@ -4713,11 +4711,32 @@ do return end
   end
 
   -- TEMP 
-  if c == p.quests[1].first then
-    add_thing(p, c, c.bx1+3, c.by1+3, "player1", true, 0)
+  if c.x==1 and c.y==3 then -- c == p.quests[1].first then
+    add_thing(p, c, c.bx1+2, c.by1+2, "player1", true, 0)
   end
 
 if c.x==1 and c.y==3 then
+
+if true then
+  fab = PREFABS["BILLBOARD"]
+  assert(fab)
+
+  skin = {
+           corner = "WOOD7", corn_f = "FLAT5_1",
+           step   = "STEP5", step_f = "FLAT5_2",
+--           corner = "SHAWN2", corn_f = "FLAT19",
+--           step = "STEP4",    step_f = "FLAT19",
+           pic = "ZZWOLF13", pic_back = "ZZWOLF11", pic_f = "FLAT5_3"
+         }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+           pic_h = c.rmodel.f_h + 128,
+           corn_h = c.rmodel.f_h + 104
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+3, c.by1+4, 4)
+end
 
 if false then
   fab = PREFABS["TECH_PICKUP_LARGE"]
@@ -4732,7 +4751,7 @@ if false then
            ceil  = c.rmodel.c_h,
          }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, c.rmodel.f_h, 8)
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, 8)
 end
 
 if false then
@@ -4753,7 +4772,7 @@ if false then
            ceil  = c.rmodel.c_h,
          }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+4, c.by1+6, c.rmodel.f_h, 8)
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+4, c.by1+6, 8)
 end
 
 if false then
@@ -4772,7 +4791,7 @@ if false then
            ceil  = c.rmodel.c_h,
          }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+2, c.by1+8, c.rmodel.f_h, 8)
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+2, c.by1+8, 8)
 end
 
 if false then
@@ -4794,7 +4813,7 @@ if false then
            ceil  = c.rmodel.c_h,
          }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+6, c.rmodel.f_h, 4)
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+6, 4)
 end
 
 end -- if c.x==XX
@@ -4887,7 +4906,7 @@ function build_level(p)
   end
 
   make_chunks(p)
-show_chunks(p)
+--show_chunks(p)
 
   con.ticker()
 
