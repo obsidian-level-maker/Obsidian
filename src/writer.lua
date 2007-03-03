@@ -106,8 +106,8 @@ function write_level(p, lev_name)
   local DUMMY_BLOCK = { solid=THEME.ERROR_TEX }
 
 
-  local function FRAGMENT_X(x) return (x-1-(BORDER_BLK+0)*FW)*16 end
-  local function FRAGMENT_Y(y) return (y-1-(BORDER_BLK+0)*FH)*16 end
+  local function FRAGMENT_X(x) return (x-1-BORDER_BLK*FW)*16 end
+  local function FRAGMENT_Y(y) return (y-1-BORDER_BLK*FH)*16 end
 
   local function BLOCK_X(x) return FRAGMENT_X((x-1)*FW + 1) end
   local function BLOCK_Y(y) return FRAGMENT_Y((y-1)*FH + 1) end
