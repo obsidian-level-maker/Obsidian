@@ -518,6 +518,8 @@ function plan_dm_arena()
   select_heights()
   compute_height_minmax(p);
 
+  resize_rooms(p)
+
   add_doors()
   add_falloffs()
 
