@@ -365,6 +365,25 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
     end
   end
 
+  local function th_coords(tx, ty)
+    local mid_x = long * 8
+    local mid_y = deep * 8
+
+    tx, ty = dd_coords(tx - mid_x, ty - mid_y)
+
+    if dir == 4 or dir == 6 then mid_x,mid_y = mid_y,mid_x end
+
+    tx, ty = mid_x + tx, mid_y + ty
+
+    local bx = x + int(tx / 64)
+    local by = y + int(ty / 64)
+
+    local dx = (tx % 64) - 32
+    local dy = (ty % 64) - 32
+
+    return bx,by, dx,dy
+  end
+
   local function skin_val(key)
     local V = skin[key]
     if not V then V = theme[key] end
@@ -503,11 +522,12 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
     for zzz,tdef in ipairs(fab.things) do
       local name = skin[tdef.kind] or parm[tdef.kind]
       if name then
-        -- HACK ALERT, not using proper block
-        local th = add_thing(p, c, x,y, name, false)
-        -- FIXME !!!!! handle rotations
-        th.dx = tdef.x - 32
-        th.dy = tdef.y - 32
+        local bx,by, dx,dy = th_coords(tdef.x, tdef.y)
+
+        local th = add_thing(p, c, bx,by, name, false)
+
+        th.dx = dx
+        th.dy = dy
       end
     end
   end
@@ -3340,13 +3360,13 @@ function build_cell(p, c)
     assert(D)
 
 if true then --!!!!!
-local fab = rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
+local fab = "ARCH" -- rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
 fab = PREFABS[fab]
 assert(fab)
 local parm =
 { floor = link.build.rmodel.f_h,
   ceil  = link.build.rmodel.c_h,
-  door_top = math.min(link.cells[1].ceil_h-32, link.cells[2].ceil_h-32, link.build.floor_h+128),
+  door_top = math.min(link.build.rmodel.c_h-32, link.build.floor_h+128),
   door_kind = 1, tag = 0,
 
   frame_c = D.theme.floor
@@ -3358,6 +3378,7 @@ local skin =
 
   beam    = "WOOD1", beam_c = "FLAT5_2",
   support = "WOOD1", supp_u = "WOOD1", supp_c = "FLAT5_2",
+  test_t = "lamp"
 }
 
 B_prefab(p,c, fab, skin, parm, D.theme,
@@ -4042,11 +4063,6 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
 
     for zzz,c in ipairs(E.cells) do
       if c.theme.outdoor then out_num = out_num + 1 end
-if not c.f_max then
-con.printf("E = \n%s\ncell = \n%s\n",
-table_to_str(E,2), table_to_str(c,2))
-error("no f_max!")
-end
       f_max = math.max(c.f_max, f_max)
     end
 
