@@ -30,10 +30,8 @@ function copy_block(B, ...)
   return result
 end
 
-function copy_block_with_new(B, newbie, ...)
-  local result = copy_block(B)
-  merge_table(result, newbie, ...)
-  return result
+function copy_block_with_new(B, newbie)
+  return merge_table(copy_block(B), newbie)
 end
 
 
@@ -338,8 +336,8 @@ FAB_OVERRIDE_MAP =
 
 function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
 
-  -- (x,y) is always the lowest coordinate
-  -- dir == 8 is the natural mode, other values rotate it
+  -- (x,y) is always the block with the lowest coordinate.
+  -- dir == 8 is the natural mode, other values rotate it.
 
   local deep = #fab.structure
   local long = #fab.structure[1]
@@ -411,41 +409,14 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
     return theme[base]
   end
 
-  local function elem_fill(elem, fx, fy)
+  local function compile_element(elem)
 
-    -- !!!!! FIXME: do this shit _once_ for each thing in FAB.elements[]
-
-    local overrides = {}
-
-    for i = 1,9 do
-      local OV = elem[i]
-      if OV then
-        OV = copy_block(OV)  -- don't modify the prefab!
-
-        if OV.l_tex and skin[OV.l_tex] then OV.l_tex = skin[OV.l_tex] end
-        if OV.u_tex and skin[OV.u_tex] then OV.u_tex = skin[OV.u_tex] end
-        if OV.f_tex and skin[OV.f_tex] then OV.f_tex = skin[OV.f_tex] end
-        if OV.c_tex and skin[OV.c_tex] then OV.c_tex = skin[OV.c_tex] end
-
-        if OV.dx or OV.dy then
-          OV.dx, OV.dy = dd_coords(OV.dx or 0, OV.dy or 0)
-          -- ensure that the writer doesn't swallow up the block
-          -- (which would lose the vertex we want to move)
-          if not overrides.mark then
-            overrides.mark = allocate_mark(p)
-          end
-        end
-
-        overrides[FAB_OVERRIDE_MAP[dir][i]] = OV
-      end
-    end
+    local sec
 
     if elem.solid then
-
-      frag_fill (p,c, fx,fy, fx,fy,
-           { solid=what_tex("wall", elem.solid) }, overrides)
+      sec = { solid=what_tex("wall", elem.solid) }
     else
-      local sec = copy_block(c.rmodel)
+      sec = copy_block(c.rmodel)
 
       sec.f_h = what_h_ref(sec.f_h, elem.f_rel, elem.f_h)
       sec.c_h = what_h_ref(sec.c_h, elem.c_rel, elem.c_h)
@@ -466,13 +437,42 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
       if elem.tag  then sec.tag = parm_val("tag") end
 
       if elem.light then sec.light = elem.light end
-
-      frag_fill (p,c, fx,fy, fx,fy, sec, overrides)
     end
+
+    -- handle overrides
+
+    for i = 1,9 do
+      local OV = elem[i]
+      if OV then
+        OV = copy_block(OV)  -- don't modify the prefab!
+
+        if OV.l_tex and skin[OV.l_tex] then OV.l_tex = skin[OV.l_tex] end
+        if OV.u_tex and skin[OV.u_tex] then OV.u_tex = skin[OV.u_tex] end
+        if OV.f_tex and skin[OV.f_tex] then OV.f_tex = skin[OV.f_tex] end
+        if OV.c_tex and skin[OV.c_tex] then OV.c_tex = skin[OV.c_tex] end
+
+        if OV.dx or OV.dy then
+          OV.dx, OV.dy = dd_coords(OV.dx or 0, OV.dy or 0)
+
+          -- ensure that the writer doesn't swallow up the block
+          -- (which would lose the vertex we want to move)
+          if not sec.mark then
+            sec.mark = allocate_mark(p)
+          end
+        end
+
+        sec[FAB_OVERRIDE_MAP[dir][i]] = OV
+      end
+    end
+
+    return sec
   end
 
   local ROOM = c.rmodel
   local WALL = { solid=what_tex("wall", "wall") }
+
+  -- cache for compiled elements
+  local cache = {}
 
   for ey = 1,deep do for ex = 1,long do
     local fx, fy = f_coords(ex,ey)
@@ -481,7 +481,6 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
     local elem
 
     if e == "." or e == "#" then
-      local fx,fy = f_coords(ex, ey)
       frag_fill(p,c, fx,fy, fx,fy, sel(e == ".", ROOM, WALL))
     else
       elem = fab.elements[e]
@@ -490,7 +489,11 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
         error("Unknown element '" .. e .. "' in Prefab")
       end
 
-      elem_fill(elem, f_coords(ex, ey))
+      if not cache[e] then
+        cache[e] = compile_element(elem)
+      end
+
+      frag_fill(p,c, fx,fy, fx,fy, cache[e])
     end
   end end
 
@@ -3337,7 +3340,7 @@ function build_cell(p, c)
     assert(D)
 
 if true then --!!!!!
-local fab = rand_element { "ARCH", "ARCH_ARCHED", "ARCH_W_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
+local fab = rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
 fab = PREFABS[fab]
 assert(fab)
 local parm =
