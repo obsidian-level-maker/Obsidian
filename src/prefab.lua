@@ -526,7 +526,7 @@ BILLBOARD =
   elements =
   {
     -- corner
-    C = { f_h=8, f_rel="corn_h",
+    C = { f_h=0, f_rel="corn_h",
           l_tex="corner", f_tex="corn_f", l_peg="top", },
 
     D = { copy="C", [7] = { dx= 8, dy=-8 } },
@@ -534,8 +534,8 @@ BILLBOARD =
 
     -- pic
     p = { f_h=8, f_rel="pic_h",
-          l_tex="pic", f_tex="pic_f", l_peg="top",
-          [8] = { l_tex="pic_back" }
+          l_tex="pic_back", [2] = { l_tex="pic" },
+          f_tex="pic_f", l_peg="top",
         },
 
     -- step
@@ -548,14 +548,40 @@ BILLBOARD_LIT =
   structure =
   {
     "................",
-    ".CCC........CCC.",
-    ".CCCssssssssCCC.",
-    ".CLCaaaaaaaaCLC.",
+    ".CCC........DDD.",
+    ".CLEppppppppELD.",
+    ".CtEssssssssEtD.",
   },
 
   elements =
   {
-    C = { f_h=112 }
+    -- corner
+    E = { f_h=0, f_rel="corn_h",
+          l_tex="corn2", f_tex="corn_f", l_peg="top", },
+
+    C = { copy="E",
+          [4] = { l_tex="corner" },
+          [8] = { l_tex="corner" },
+        },
+
+    D = { copy="E",
+          [6] = { l_tex="corner" },
+          [8] = { l_tex="corner" },
+        },
+
+    -- light
+    L = { copy="E", [2] = { l_tex="light" }, },
+
+    -- pic
+    p = { f_h=8, f_rel="pic_h",
+          l_tex="pic_back", [2] = { l_tex="pic" },
+          f_tex="pic_f", l_peg="top",
+        },
+
+    -- step
+    s = { f_h=8, l_tex="step", f_tex="step_f", l_peg="top" },
+
+    t = { copy="s", f_h=16, light=208 },
   },
 },
 
