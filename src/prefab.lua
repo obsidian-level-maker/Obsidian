@@ -61,6 +61,141 @@ make_prefab(PREFABS.DOOR, param, coords...)
 PREFABS =
 {
 
+-- Note: texture names (like STARTAN3) are never used here.
+-- Instead the names here (like "frame") are looked-up in a
+-- SKIN table.  This allows the same prefab to be used with
+-- different textures (which are game-dependent).
+
+ARCH =
+{
+  structure =
+  {
+    "##aaaaaaaa##",
+    "##aaaaaaaa##",
+    "##aaaaaaaa##",
+    "##aaaaaaaa##",
+  },
+
+  elements =
+  {
+    a = { f_h=0, c_rel="door_top", c_h=0,
+          l_tex="frame", f_tex="frame_f", c_tex="frame_c",
+        },
+  },
+},
+
+ARCH_NARROW =
+{
+  copy="DOOR",
+
+  structure =
+  {
+    "#aaaaaa#",
+    "#aaaaaa#",
+    "#aaaaaa#",
+    "#aaaaaa#",
+  },
+},
+
+ARCH_ARCHED =
+{
+  structure =
+  {
+    "##cbaaaabc##",
+    "##cbaaaabc##",
+    "##cbaaaabc##",
+    "##cbaaaabc##",
+  },
+
+  elements =
+  {
+    a = { f_h=0, c_rel="door_top", c_h=0,
+          l_tex="frame", f_tex="frame_f", c_tex="frame_c",
+        },
+
+    b = { copy="a", c_h=-16 },
+    c = { copy="a", c_h=-32 },
+  },
+},
+
+ARCH_W_BEAMS =
+{
+  structure =
+  {
+    "##BaaaaaaB##",
+    "##CaaaaaaC##",
+    "##CaaaaaaC##",
+    "##BaaaaaaB##",
+  },
+
+  elements =
+  {
+    a = { f_h=0, c_rel="door_top", c_h=0,
+          l_tex="frame", f_tex="frame_f", c_tex="frame_c",
+        },
+
+    B = { f_rel="door_top", f_h=0, c_rel="door_top", c_h=0,
+          l_tex="beam",  f_tex="beam_c",
+          u_tex="frame", c_tex="frame_c"
+        },
+
+    C = { f_h=0, c_rel="door_top", c_h=-8,
+          l_tex="frame", f_tex="frame_f",
+          u_tex="beam",  c_tex="beam_c", u_peg="top",
+        }
+  },
+},
+
+ARCH_RUSSIAN =
+{
+  structure =
+  {
+    "##aaaaaaaa##",
+    "##BssssssB##",
+    "##BssssssB##",
+    "##aaaaaaaa##",
+  },
+
+  elements =
+  {
+    a = { f_h=0, c_rel="door_top", c_h=16,
+          l_tex="frame", f_tex="frame_f", c_tex="frame_c",
+        },
+
+    s = { f_h=0, c_rel="door_top", c_h=0,
+          l_tex="support", u_tex="support", c_tex="supp_c",
+          f_tex="frame_f", u_peg="top"
+        },
+
+    B = { solid="support" },
+  },
+},
+
+ARCH_CURVY =
+{
+  structure =
+  {
+    "##aaaaaaaa##",
+    "#RaaaaaaaaS#",
+    "#TaaaaaaaaU#",
+    "##aaaaaaaa##",
+  },
+
+  elements =
+  {
+    a = { f_h=0, c_rel="door_top", c_h=0,
+          l_tex="frame", f_tex="frame_f", c_tex="frame_c",
+        },
+
+    R = { solid="wall", [9]={ dx= 16,dy=0 }, [3]={ dx= 20,dy=0 } },
+    S = { solid="wall", [7]={ dx=-16,dy=0 }, [1]={ dx=-20,dy=0 } },
+
+    T = { solid="wall", [3]={ dx= 16,dy=0 } },
+    U = { solid="wall", [1]={ dx=-16,dy=0 } },
+  },
+},
+
+
 DOOR =
 {
   structure =
