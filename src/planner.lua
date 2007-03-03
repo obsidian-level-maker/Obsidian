@@ -1694,7 +1694,7 @@ function plan_sp_level(is_coop)  -- returns Plan
         return false
       end
 
-      if a.is_exit then return false end
+      if a.is_exit or a.scenic then return false end
 
       local aq = a.quest.parent or a.quest
       local bq = b.quest.parent or b.quest
