@@ -118,7 +118,7 @@ ARCH_ARCHED =
   },
 },
 
-ARCH_W_BEAMS =
+ARCH_TRUSS =
 {
   structure =
   {
@@ -168,6 +168,32 @@ ARCH_RUSSIAN =
         },
 
     B = { solid="support" },
+  },
+},
+
+ARCH_BEAMS =
+{
+  copy="ARCH_RUSSIAN",
+
+  structure =
+  {
+    "#aaaaaaaaaa#",
+    "#aaaaaaaaaa#",
+    "#aBaaaaaaBa#",
+    "#aaaaaaaaaa#",
+  },
+},
+
+ARCH_BEAM_WIDE =
+{
+  copy="ARCH_BEAMS",
+
+  structure =
+  {
+    "##aaaaaaaaaaaa##",
+    "##aBBaaaaaaBBa##",
+    "##aBBaaaaaaBBa##",
+    "##aaaaaaaaaaaa##",
   },
 },
 
