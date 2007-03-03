@@ -81,7 +81,7 @@ function new_foo_chunk(c, kx, ky, kind, value)
   }
 end
 
-function copy_chunk(c, kx, ky, K)
+function copy_foo_chunk(c, kx, ky, K)
 
   assert(not K.vista)
 
@@ -127,7 +127,7 @@ function random_where(link, border)
   local LINK_WHERES = { 3, 3, 9, 3, 3 }
 
   for zzz,c in ipairs(link.cells) do
-    if c.small_exit then return 0 end
+--???    if c.small_exit then return 0 end
   end
 
   if (link.kind == "door" and rand_odds(4)) or
@@ -403,6 +403,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
 
   local function what_tex(base, key)
     if skin[key] then return skin[key] end
+    if parm[key] then return parm[key] end --!!!
     if skin[base] then return skin[base] end
     if not theme[base] then
       error("Unknown texture ref in prefab: " .. key)
@@ -428,6 +429,11 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y,z, dir)
 
         if OV.dx or OV.dy then
           OV.dx, OV.dy = dd_coords(OV.dx or 0, OV.dy or 0)
+          -- ensure that the writer doesn't swallow up the block
+          -- (which would lose the vertex we want to move)
+          if not overrides.mark then
+            overrides.mark = allocate_mark(p)
+          end
         end
 
         overrides[FAB_OVERRIDE_MAP[dir][i]] = OV
@@ -2082,6 +2088,7 @@ link.cells[2].x, link.cells[2].y)
           clasher = K.link
         else
           K.link = link
+          K.empty = nil
         end
       end 
     end end
@@ -3328,6 +3335,33 @@ function build_cell(p, c)
 
     local D = c.border[side]
     assert(D)
+
+if true then --!!!!!
+local fab = rand_element { "ARCH", "ARCH_ARCHED", "ARCH_W_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
+fab = PREFABS[fab]
+assert(fab)
+local parm =
+{ floor = link.build.rmodel.f_h,
+  ceil  = link.build.rmodel.c_h,
+  door_top = math.min(link.cells[1].ceil_h-32, link.cells[2].ceil_h-32, link.build.floor_h+128),
+  door_kind = 1, tag = 0,
+
+  frame_c = D.theme.floor
+}
+local skin =
+{
+--  wall="COMPBLUE",
+--  frame="ROCK1", frame_c="RROCK13", -- frame_f="RROCK13",
+
+  beam    = "WOOD1", beam_c = "FLAT5_2",
+  support = "WOOD1", supp_u = "WOOD1", supp_c = "FLAT5_2",
+}
+
+B_prefab(p,c, fab, skin, parm, D.theme,
+         link.x1, link.y1, link.build.rmodel.f_h, side)
+return
+end
+
 
 if not (link.kind == "falloff") then --!!!!! TESTING
 local door_info = THEME.doors[link.wide_door]
@@ -4834,7 +4868,7 @@ function build_level(p)
   end
 
   make_chunks(p)
---show_chunks(p)
+show_chunks(p)
 
   con.ticker()
 
