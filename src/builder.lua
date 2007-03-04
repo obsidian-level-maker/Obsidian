@@ -339,11 +339,8 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir)
   -- (x,y) is always the block with the lowest coordinate.
   -- dir == 8 is the natural mode, other values rotate it.
 
-  local deep = #fab.structure
-  local long = #fab.structure[1]
-
-  local bk_deep = int((3+deep) / 4)
-  local bk_long = int((3+long) / 4)
+  local long = fab.long * 4
+  local deep = fab.deep * 4
 
   local function f_coords(ex, ey)
         if dir == 2 then ex,ey = long+1-ex, deep+1-ey
@@ -2275,6 +2272,124 @@ link.cells[2].x, link.cells[2].y)
 
 
   local function add_travel_chunks(c)
+
+    -- give each chunk a travel ID.  Touching chunks can
+    -- merge the id's (choose lowest value).  After some
+    -- iterations, the existence of multiple IDS means that
+    -- we need to add extra chunks.
+
+    local function init()
+      local chunk_list = {}
+      
+      for kx = 1,3 do for ky = 1,3 do
+        local K = c.chunks[kx][ky]
+        K.travel_id = ky*10 + kx
+        K.grow_dir  = rand_irange(1,4)*2
+        if not K.empty then
+          table.insert(chunk_list, { kx,ky })
+        end
+      end end
+      
+      return chunk_list
+    end
+    
+    local function merge()
+      for kx = 1,3 do for ky = 1,3 do
+        for side = 6,8,2 do
+          local dx, dy = dir_to_delta(side)
+          local nx, ny = kx+dx, ky+dy
+
+          if valid_chunk(nx,ny) then
+            local K1 = c.chunks[kx][ky]
+            local K2 = c.chunks[nx][ny]
+
+            if not K1.empty and not K2.empty then
+--con.printf("   MERGE: [%d,%d] with [%d,%d]\n", kx,ky, nx,ny)
+              K1.travel_id = math.min(K1.travel_id, K2.travel_id)
+              K2.travel_id = K1.travel_id
+            end
+          end
+        end
+      end end
+    end
+
+    local function has_islands()
+      local cur_id
+      for kx = 1,3 do for ky = 1,3 do
+        local K = c.chunks[kx][ky]
+        if not K.empty then
+--con.printf("   CHUNK [%d,%d] travel_id:%d\n", kx,ky,K.travel_id)
+          if not cur_id then
+            cur_id = K.travel_id
+          elseif K.travel_id ~= cur_id then 
+            return true
+          end
+        end
+      end end
+---### if c.x==7 and c.y==3 then return true end
+      return false
+    end
+
+    local function grow(chunk_list)
+
+      for i = 1,#chunk_list do
+
+        local kx,ky = chunk_list[i][1], chunk_list[i][2]
+        local K1 = c.chunks[kx][ky]
+        assert(K1 and not K1.empty)
+
+        local dx,dy = dir_to_delta(K1.grow_dir)
+        if not valid_chunk(kx+dx, ky+dy) then
+          dx,dy = -dx,-dy
+        end
+
+        assert(valid_chunk(kx+dx, ky+dy))
+
+        local K2 = c.chunks[kx+dx][ky+dy]
+        
+        if K2.empty then
+          K2.empty = false
+          K2.link = K1.link
+          K2.room = K1.room
+---!         K2.travel_id = K1.travel_id
+
+          table.insert(chunk_list, { kx+dx, ky+dy })
+          return true
+        else
+          K2.grow_dir = rand_irange(1,4)*2
+
+          -- try next chunk in list
+        end
+      end
+
+      return false
+    end
+    
+    --- add_travel_chunks ---
+
+    if c.scenic then return end
+    
+    if not c.hallway and (c.is_exit or rand_odds(1)) then --???
+      c.chunks[2][2].room = true
+      c.chunks[2][2].empty = false
+    end
+ 
+    chunk_list = init()
+
+    assert(#chunk_list >= 1)
+
+    for loop=1,999 do
+      for pass=1,20 do merge() end 
+--      con.debugf("add_travel_chunks: loop %d @ (%d,%d)\n", loop, c.x,c.y)
+      if not has_islands() then break end
+      repeat
+        rand_shuffle(chunk_list)
+      until grow(chunk_list)
+      if loop == 999 then show_chunks(p); error("WTF?") end
+    end
+  end
+
+  local function OLD_add_travel_chunks(c)
     -- this makes sure that there is always a path
     -- from one chunk to another.  The problem areas
     -- look like this:
@@ -3012,17 +3127,17 @@ local dx,dy = dir_to_delta(loc.dir)
 
   -- secondly, determine main walk areas
 
---[[ !!!!
   for zzz,cell in ipairs(p.all_cells) do
-
-      add_closet_chunks(cell)
 
       add_travel_chunks(cell)
 
-      add_vista_chunks(cell)
+--[[ !!!!
+      add_closet_chunks(cell)
 
-  end
+      add_vista_chunks(cell)
 --]]
+  end
+
   for zzz,cell in ipairs(p.all_cells) do
 
 --!!!!      flesh_out_cell(cell)
@@ -4271,9 +4386,13 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
     end
 
 --!!!!!! TESTING
+if not c.scenic and K.empty and false then
+  gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid="ASHWALL2" })
+  return
+end
 gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, K.rmodel,
 {
-  light = sel( ((kx+ky)%2) == 1, 136, sel(kx==2 or ky==2, 192, 96))
+  light = sel(K.room, 192, sel(K.empty, 96, 144))
 })
 do return end
 
@@ -4711,13 +4830,13 @@ do return end
   end
 
   -- TEMP 
-  if c.x==1 and c.y==3 then -- c == p.quests[1].first then
+  if c == p.quests[1].first then
     add_thing(p, c, c.bx1+2, c.by1+2, "player1", true, 0)
   end
 
 if c.x==1 and c.y==3 then
 
-if true then
+if false then
   fab = PREFABS["PILLAR_LIGHT1"]
   assert(fab)
 
@@ -4942,7 +5061,7 @@ function build_level(p)
   end
 
   make_chunks(p)
---show_chunks(p)
+  show_chunks(p)
 
   con.ticker()
 
