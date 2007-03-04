@@ -4718,10 +4718,11 @@ do return end
 if c.x==1 and c.y==3 then
 
 if true then
-  fab = PREFABS["DIAGONAL_CORNER"]
+  fab = PREFABS["PILLAR_LIGHT1"]
   assert(fab)
 
-  skin = { }
+  skin = { beam = "METAL", beam_f = "CEIL5_2",
+           light="LITE5" }
 
   parm = { floor = c.rmodel.f_h,
            ceil  = c.rmodel.c_h,

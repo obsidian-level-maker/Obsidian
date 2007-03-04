@@ -586,6 +586,44 @@ BILLBOARD_LIT =
 },
 
 
+CORNER_BEAM =
+{
+  structure =
+  {
+    "BB..",
+    "BB..",
+    "....",
+    "....",
+  },
+
+  elements =
+  {
+    B = { solid="beam" }
+  },
+},
+
+CORNER_LIGHT =
+{
+  structure =
+  {
+    "BBB.",
+    "BLs.",
+    "Bss.",
+    "....",
+  },
+
+  elements =
+  {
+    B = { solid="beam"  },
+    L = { solid="light" },
+
+    s = { f_h=16, c_h=-16, l_tex="beam", u_tex="beam",
+          f_tex="beam_f", c_tex="beam_f",
+          light=192
+        }
+  },
+},
+
 CORNER_DIAGONAL =
 {
   structure =
@@ -655,6 +693,32 @@ CORNER_CONCAVE =
   },
 },
 
+CORNER_CONCAVE_BIG =
+{
+  structure =
+  {
+    "####BB..",
+    "####BB..",
+    "####BB..",
+    "####BB..",
+    "AAAA....",
+    "AAAA....",
+    "........",
+    "........",
+  },
+
+  elements =
+  {
+    A = { solid="wall", [3]={ dx=-54, dy=32 }, [9]={ dx=-32, dy=32 },
+          [2] = { x_offset=0 }, [6] = { x_offset=34 },
+        },
+
+    B = { solid="wall", [3] = { dx=-32, dy=54 },
+          [2] = { x_offset=72 }, [6] = { x_offset=110 },
+        },
+  },
+},
+
 CORNER_CONVEX =
 {
   structure =
@@ -674,6 +738,29 @@ CORNER_CONVEX =
     B = { solid="wall", [3] = { dx=-5, dy=16 },
           [2] = { x_offset=36 }, [6] = { x_offset=55 },
         },
+  },
+},
+
+
+PILLAR_LIGHT1 =
+{
+  structure =
+  {
+    "BsB.",
+    "sLs.",
+    "BsB.",
+    "....",
+  },
+
+  elements =
+  {
+    B = { solid="beam"  },
+    L = { solid="light" },
+
+    s = { f_h=16, c_h=-16, l_tex="beam", u_tex="beam",
+          f_tex="beam_f", c_tex="beam_f",
+          light=192
+        }
   },
 },
 
