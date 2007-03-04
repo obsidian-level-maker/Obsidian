@@ -20,10 +20,10 @@
 --[[
 
 private class Vertex
-  index : number in WAD (starts at 0)
   x, y
-  refcount : number
-  index
+  dx, dy
+  lines : array
+  index : number in WAD (starts at 0)
 end
 
 private class Sector
@@ -169,21 +169,21 @@ function write_level(p, lev_name)
 
     local cur_line = nil
 
-    local function create_vertex(x, y)
+    local function create_vertex(L, x, y)
       local str = string.format("%d:%d", x, y)
       local index
 
       if vert_map[str] then
         index = vert_map[str]
         local V = vert_list[index]
-        V.refcount = V.refcount + 1
+        table.insert(V.lines, L)
         return V
       end
 
       index = vert_num
       vert_num = vert_num + 1
 
-      local V = { x=x, y=y, refcount=1 }
+      local V = { x=x, y=y, lines={ L } }
       vert_list[index] = V
       vert_map[str] = index
       return V
@@ -200,8 +200,8 @@ function write_level(p, lev_name)
         cur_line.sy, cur_line.ey = cur_line.ey, cur_line.sy
       end
 
-      cur_line.v1 = create_vertex(cur_line.sx, cur_line.sy)
-      cur_line.v2 = create_vertex(cur_line.ex, cur_line.ey)
+      cur_line.v1 = create_vertex(cur_line, cur_line.sx, cur_line.sy)
+      cur_line.v2 = create_vertex(cur_line, cur_line.ex, cur_line.ey)
 
       table.insert(line_list, cur_line)
 
@@ -571,6 +571,7 @@ function write_level(p, lev_name)
       if V then
         vert_list[V].dx = adj.dx
         vert_list[V].dy = adj.dy
+        vert_list[V].VDEL = adj.VDEL
       end
     end
 
@@ -602,6 +603,65 @@ function write_level(p, lev_name)
         end
       end
     end
+  end
+
+  local function delete_vertex(L, V, V_good)
+    L.deleted = true
+
+    -- find other line
+    local M = V.lines[1]
+    if M == L then
+      M = V.lines[2]
+    else
+      assert(V.lines[2] == L)
+    end
+
+    -- fix the other line
+    if M.v1 == V then
+      M.v1 = V_good
+    else
+      assert(M.v2 == V)
+      M.v2 = V_good
+    end
+
+    -- fix the good vertex
+    if V_good.lines[1] == L then
+      V_good.lines[1] = M
+    else
+      assert(V_good.lines[2] == L)
+      V_good.lines[2] = M
+    end
+
+    -- catch attempt to re-use old vertex/linedef
+    V.lines = nil
+    L.v1, L.v2 = nil
+  end
+
+  local function delete_linedefs()
+    
+    -- Deleting one linedef can mean another (earlier) linedef
+    -- should also be deleted (due to re-assigning vertices).
+    -- Hence we must repeat this loop until all are done.
+    repeat
+      local changes = false
+
+      con.debugf("Deleting linedefs\n")
+
+      for zzz,L in ipairs(line_list) do
+        if not L.deleted then
+          if L.v1.VDEL and #L.v1.lines == 2 then
+            delete_vertex(L, L.v1, L.v2)
+            changes = true
+
+          -- Note: else here (because if v1 is deleted, v2 no longer
+          --       belongs to the current line)
+          elseif L.v2.VDEL and #L.v2.lines == 2 then
+            delete_vertex(L, L.v2, L.v1)
+            changes = true
+          end
+        end
+      end
+    until not changes
   end
 
   local function create_sector(B)
@@ -694,20 +754,22 @@ function write_level(p, lev_name)
     for zzz,L in ipairs(line_list) do
       con.ticker()
 
-      if not L.v1.index then write_vertex(L.v1) end
-      if not L.v2.index then write_vertex(L.v2) end
+      if not L.deleted then
+        if not L.v1.index then write_vertex(L.v1) end
+        if not L.v2.index then write_vertex(L.v2) end
+        
+        if L.front and not L.front.index then
+          write_sidedef(L.front)
+        end
+        if L.back  and not L.back.index  then
+          write_sidedef(L.back)
+        end
       
-      if L.front and not L.front.index then
-        write_sidedef(L.front)
+        wad.add_linedef(L.v1.index, L.v2.index,
+              L.front and L.front.index or -1,
+              L.back  and L.back.index  or -1,
+              L.kind or 0, L.flags or 0, L.tag or 0, L.args);
       end
-      if L.back  and not L.back.index  then
-        write_sidedef(L.back)
-      end
-    
-      wad.add_linedef(L.v1.index, L.v2.index,
-            L.front and L.front.index or -1,
-            L.back  and L.back.index  or -1,
-            L.kind or 0, L.flags or 0, L.tag or 0, L.args);
     end
   end
 
@@ -778,15 +840,17 @@ function write_level(p, lev_name)
     tx_file:write("LINEDEFS_START\n")
 
     for zzz,L in ipairs(line_list) do
-      tx_file:write(
-        string.format("V%d V%d : %d %d %d\n",
-          L.v1.index, L.v2.index,
-          L.flags or 0, L.kind or 0, L.tag or 0))
+      if not L.deleted then
+        tx_file:write(
+          string.format("V%d V%d : %d %d %d\n",
+            L.v1.index, L.v2.index,
+            L.flags or 0, L.kind or 0, L.tag or 0))
 
-      assert(L.front)
+        assert(L.front)
 
-      T_write_sidedef(L.front)
-      T_write_sidedef(L.back)
+        T_write_sidedef(L.front)
+        T_write_sidedef(L.back)
+      end
     end
     
     tx_file:write("LINEDEFS_END\n")
@@ -817,6 +881,7 @@ function write_level(p, lev_name)
   construct_sectors()
 
   adjust_vertices()
+  delete_linedefs()
 
   if not wad then
     tx_file = io.open("TEMP.txt", "w")
