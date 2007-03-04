@@ -66,6 +66,8 @@ PREFABS =
 -- SKIN table.  This allows the same prefab to be used with
 -- different textures (which are game-dependent).
 
+------ Arches ------------------------------------
+
 ARCH =
 {
   structure =
@@ -222,6 +224,93 @@ ARCH_CURVY =
 },
 
 
+------ Windows ------------------------------------
+
+WINDOW_NARROW =
+{
+  structure =
+  {
+    "#ww#",
+    "#ww#",
+    "#ww#",
+    "#ww#",
+  },
+
+  elements =
+  {
+    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+  }
+},
+
+WINDOW_EDGE =
+{
+  structure =
+  {
+    "#www",
+    "#www",
+    "#www",
+    "#www",
+  },
+
+  elements =
+  {
+    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+  }
+},
+
+WINDOW_EDGE_ARCHED =
+{
+  structure =
+  {
+    "#abw",
+    "#abw",
+    "#abw",
+    "#abw",
+  },
+
+  elements =
+  {
+    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+
+    a = { copy="w", f_h=12, c_h=-12 },
+    b = { copy="w", f_h=24, c_h=-24 },
+  }
+},
+
+WINDOW_CROSS =
+{
+  structure =
+  {
+    "#aawwaa#",
+    "#aawwaa#",
+    "#aawwaa#",
+    "#aawwaa#",
+  },
+
+  elements =
+  {
+    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+
+    a = { f_h=-16, f_rel="window_mid", c_h=16, c_rel="window_mid" },
+  }
+},
+
+WINDOW_CROSS_BIG =
+{
+  copy="WINDOW_CROSS",
+
+  structure =
+  {
+    "#aaaawwaaaa#",
+    "#aaaawwaaaa#",
+    "#aaaawwaaaa#",
+    "#aaaawwaaaa#",
+  },
+},
+
+
+------ Doors ------------------------------------
+
 DOOR =
 {
   structure =
@@ -267,6 +356,8 @@ DOOR_NARROW =
   },
 },
 
+
+------ Decorative I ------------------------------------
 
 TECH_PICKUP_SMALL =
 {
@@ -424,6 +515,8 @@ GROUND_LIGHT =
 },
 
 
+------ Skylights ------------------------------------
+
 MEGA_SKYLIGHT_1 =
 {
   -- frame, frame_ceil
@@ -513,6 +606,8 @@ MEGA_SKYLIGHT_3 =
 },
 
 
+------ Decorative II ------------------------------------
+
 BILLBOARD =
 {
   structure =
@@ -585,6 +680,8 @@ BILLBOARD_LIT =
   },
 },
 
+
+------ Corners ------------------------------------
 
 CORNER_BEAM =
 {
@@ -742,6 +839,8 @@ CORNER_CONVEX =
 },
 
 
+------ Pillars ------------------------------------
+
 PILLAR_LIGHT1 =
 {
   structure =
@@ -774,6 +873,24 @@ PILLAR_LIGHT2 =
     "sLLs",
     "sLLs",
     "BssB",
+  },
+},
+
+PILLAR_LIGHT3 =
+{
+  structure =
+  {
+    "pppp",
+    "pLLp",
+    "pLLp",
+    "pppp",
+  },
+
+  elements =
+  {
+    L = { solid="light" },
+
+    p = { f_h=48, c_h=-48, light=192, }
   },
 },
 
