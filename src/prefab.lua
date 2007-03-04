@@ -586,28 +586,93 @@ BILLBOARD_LIT =
 },
 
 
-DIAGONAL_CORNER =
+CORNER_DIAGONAL =
 {
   structure =
   {
-    "##C.",
-    "#B..",
-    "A...",
+    "AAA.",
+    "AAA.",
+    "AAA.",
     "....",
   },
 
   elements =
   {
-    A = { solid="wall", [3] = { dx=-8, dy=8 },
-          [2] = { x_offset=0 }, [6] = { x_offset=11 },
+--# A = { solid="wall", [3] = {VDEL=true}, [9] = {VDEL=true} },
+    A = { solid="wall", [3] = {VDEL=true} },
+  },
+},
+
+CORNER_DIAG_BIG =
+{
+  copy="CORNER_DIAGONAL",
+
+  structure =
+  {
+    "AAAAAAA.",
+    "AAAAAAA.",
+    "AAAAAAA.",
+    "AAAAAAA.",
+    "AAAAAAA.",
+    "AAAAAAA.",
+    "AAAAAAA.",
+    "........",
+  },
+},
+
+CORNER_DIAG_30DEG =
+{
+  copy="CORNER_DIAGONAL",
+
+  structure =
+  {
+    "AAAAAAA.",
+    "AAAAAAA.",
+    "AAAAAAA.",
+    "........",
+  },
+},
+
+CORNER_CONCAVE =
+{
+  structure =
+  {
+    "##B.",
+    "##B.",
+    "AA..",
+    "....",
+  },
+
+  elements =
+  {
+    A = { solid="wall", [3]={ dx=-27, dy=16 }, [9]={ dx=-16, dy=16 },
+          [2] = { x_offset=0 }, [6] = { x_offset=17 },
         },
 
-    B = { solid="wall", [3] = { dx=-8, dy=8 },
-          [2] = { x_offset=22 }, [6] = { x_offset=33 },
+    B = { solid="wall", [3] = { dx=-16, dy=27 },
+          [2] = { x_offset=36 }, [6] = { x_offset=55 },
+        },
+  },
+},
+
+CORNER_CONVEX =
+{
+  structure =
+  {
+    "##B.",
+    "##B.",
+    "AA..",
+    "....",
+  },
+
+  elements =
+  {
+    A = { solid="wall", [3] = { dx=-16, dy=5 },
+          [2] = { x_offset=0 }, [6] = { x_offset=17 },
         },
 
-    C = { solid="wall", [3] = { dx=-8, dy=8 },
-          [2] = { x_offset=44 }, [6] = { x_offset=55 },
+    B = { solid="wall", [3] = { dx=-5, dy=16 },
+          [2] = { x_offset=36 }, [6] = { x_offset=55 },
         },
   },
 },
