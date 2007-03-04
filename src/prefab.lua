@@ -764,6 +764,19 @@ PILLAR_LIGHT1 =
   },
 },
 
+PILLAR_LIGHT2 =
+{
+  copy="PILLAR_LIGHT1",
+
+  structure =
+  {
+    "BssB",
+    "sLLs",
+    "sLLs",
+    "BssB",
+  },
+},
+
 
 } -- PREFABS
 
