@@ -34,6 +34,16 @@ function expand_prefabs(fabs)
 
   for name,P in pairs(fabs) do
     expand_copies(P.elements)
+  
+    -- set size values
+    local f_deep = #P.structure
+    local f_long = #P.structure[1]
+
+    assert(f_long % 4 == 0)
+    assert(f_deep % 4 == 0)
+
+    P.long = int(f_long / 4)
+    P.deep = int(f_deep / 4)
   end
 end
 
