@@ -2,18 +2,177 @@
 TODO
 ----
 
+?  grow_dir: only one per travel_dir,
+             choose good value,
+             propagate when grown, but if invalid then turn 90 degrees.
+
+-  Improve toughness calcs:
+   e.g. decide final quest toughness (e.g. 750-1500),
+        then major quests (somewhat exponential)
+        and minor quests (skew above/below major Q).
+
++  Convert existing code into prefabs:
+
+   + LIFT
+   + LIFT_DEEP
+
+   + STAIRS
+
+   + EXIT_DOOR_NARROW
+   - EXIT_DOOR
+   + EXIT_SIGN_CEIL
+   - EXIT_SIGN_FLOOR
+   - EXIT_DEATHMATCH
+
+   - BARS
+
+>> - WINDOW
+   - WINDOW_RAIL
+   - WINDOW_BARS
+   - WINDOW_NARROW
+   - WINDOW_NARROW_RAIL
+   - WINDOW_WIDE
+   - WINDOW_WIDE_RAIL
+   - WINDOW_CROSS
+
+   - SWITCH_FLUSH
+   - SWITCH_WALL
+   - SWITCH_FLOOR
+   - SWITCH_FLOOR_TINY
+   - SWITCH_FLOOR_BEAM
+   - SWITCH_PILLAR
+
+   - PEDESTAL
+   - PEDESTAL_PLUT
+   - PIC_WALL
+
+   - CRATE
+   - CRATE_ROTATED
+   - CRATE_BIG
+   - CRATE_JUMBLE
+
+   - CAGE_PILLAR
+   - CAGE_BIG
+   - CAGE_NUKAGE
+
+??? Renaming idea:
+
+   Blocks:
+     l_tex --> wall
+     u_tex --> upper
+     f_tex --> floor
+     c_tex --> ceil
+
+   Themes:
+     void  --> extra
+     upper
+
++  Prefabs:
+ 
+   ???  ARCHES: remove "frame" (assume wall/ceil/floor == frame) ?
+
+   -  mirroring
+
+   -  rework way "pickup" spots are done (revert)
+
+   -  support "monster" spots
+
+   ?  sub-fabs (put X inside Y) ?
+      chained-fabs (put X next to Y) ?
+
+   -  prefabs (etc) : capability system, e.g. "slopes", "xfloors"
+      [THEME.caps, controlled by "game" and "port" settings]. 
+
+-  "gappy" sky next to a building, caused by nudging an outdoor
+   cell into another cell, and near an empty cell. Diagram:
+
+      outdr >>|  XXX
+              |
+      ------+-+---------
+            |
+    building| EMPTY
+
+    FIX A: don't allow outdoor cells to be nudged in this situation.
+
+    FIX B: give the mini-border the "solid" type (steal theme from building)
+           (as if the EMPTY cell was a scenic=solid)
+
+>>  Corner and Border stuff:
+
+   -  decide "kind" for corner (a la borders)
+
+   -  archways, windows: have sides
+
+   -  windows: determine area can use first
+
+   -  support sky_corner and T-junction sky_borders
+      (out_num == 2 and out_num == 3 respectively)
+
+>>  Different size rooms
+
+   ??  roughly prioritize cells to enlarge
+     
+   -  allow "megacells" (a group of MxN cells).
+
+   This potentially allows (either X or Y dimension) to be
+   nearly anything from 6 blocks to 30 blocks.
+
+      6, 9, 12  |  15, 18, 21  |  24, 27, 30
+
+
+-  add some missing liquid wall animations:
+
+   (a) water --> FIREMAGx (W74xx)
+   (b) lava  --> BLODRIPx (RP2_x)
+   (c) slime --> ZZWOLF4 (WOLF4)
+
++  VISTAS: prefer if target cell is _ahead_ (higher Q.level)
+
++  hallway->hallway arches: different materials (wood/metal).
+
+>> Vistas
+   +  BUG BUG: some outdoor arches give illegal access
+
+   >>  put them into non-scenic outdoor cells
+      +  make sure chunks on left/right are not voided/pic'd up
+      -  allow multiple "shallow" vistas (deep < 3) per target cell
+      -  allow two deep==3 vistas opposite each other
+   +  great place for player start! or quest item! or teleport!
+   -  lesser depths (2, rare: 1, ditto for double-chunkers)
+   +  WIDE Vistas!!
+   -  FALL-OFF vistas (and tunnels!)
+
+?? one-way routes ??
+   -  for example: at along:3 fall-off -> along:4
+      BUT... how to get back to along:3 ??
+      WITHOUT creating an alternative path?
+      ANSWER: use another one-way connection
+
+   - One way connections:
+     (a) fall-offs
+     (b) doors that only open from one side (esp. via a switch)
+     (c) teleporters
+     (d) an up-lift that goes up into a hole (esp. switch triggered)
+     (e) a down-lift also in a hole, the switch cannot be reached
+         once you get out at the bottom.
+
+-  make scenics more interesting (esp. for vistas)
+   -  choose another theme / liquid
+   ?? perhaps "merge" same type scenics into one big thingy
+
++  monster adjustment: don't just increase toughness, actually
+                       create _more_ monsters.
+
 -  rename: 'switch'/'wall' fields of a switch (to 'wall'/'side').
 -  rename: 'tex' fields of PICS and LIGHTS to 'wall'.
 -  idea: 'corner' field for themes.
--  idea: "scenic_void" for middle of 3x3 chunk
+-  idea: "scenic_void" for middle of 3x3 chunk  [a kind of "flat pic" - ed.]
 
--  hallway arches: offset by 32 units, allow materials (wood/metal).
 -  choose railings for windows/fences (per quest?)
 -  sky_lights: decide sky based on "ceiling thickness"
 -  replace 'K.floor_h' and 'K.ceil_h' with the 'rmodel' field.
 -  floor heights: for Heretic/Hexen, limit slope to prevent lifts
 
--  remove 'sc_solid' field, instead use keywords with 'scenic' field.
 -  fix cage railing when cage borders a higher chunk or Fence
    (raise fence to cage top and omit railing texture but keep IMPASS).
 -  don't put a railing _between_ cages
@@ -25,6 +184,10 @@ TODO
 GUI TODO
 --------
 
++  GUI: look for 'obl_data' using EXE path.
+
++  GUI / themes: build "Game" menu automatically from themes.
+
 -  test if output file (unless it exists) can be written to.
 
 +  make an icon for Win32 executable.
@@ -35,26 +198,19 @@ GUI TODO
 
 -  different adjustment controls for DeathMatch levels.
 
+-  a makefile (+ code) to install 'the unix way'.
 
-RECENT CHANGES
---------------
 
-+  Hallways!  Crates!  Exit themes!
-+  better algorithm for choosing floor/ceiling heights.
-+  user adjustments for health/ammo/monsters/traps.
-+  current settings are remembered when you quit.
+CHANGES SINCE 0.85
+------------------
 
--  support for FreeDoom, TNT Evilution and Plutonia.
--  levels are watermarked with some Oblige logos.
--  delete temporary wad when build has finished.
--  collect all log messages into a file (LOGS.txt).
--  removed the unnecessary menu bar.
+TEST: Ultimate Doom: four episodes.
 
--  fixed the (rare) non-working switches and lifts.
--  surprise traps: improved placement, fairer monsters.
--  tweaked battle simulation to provide more ammo.
--  improved cages, now at more reasonable heights.
--  neater placement for health and ammo items.
+-  add single player start to deathmatch levels [Cliff].
+
+-  prefabs @@@  [Derek]
+
+-  writer: support "delete vertex" operation.
 
 
 MILESTONE 0  (reached!)
@@ -120,9 +276,9 @@ MILESTONE 3  (heaps left to do!!)
 #  heights: (a) each quest, target height (at end)
             (b) approach modes: sharp vs gradual change, bumpy
 
-+  allocation system for blocks (can_walk tests).
+>>  allocation system for blocks (can_walk tests).
 
-?? larger rooms (2-8 chunks in each dimension).
+>> larger rooms (2-8 chunks in each dimension).
 
 +  teleporters!
 
@@ -135,17 +291,16 @@ MILESTONE 3  (heaps left to do!!)
 +  good support for the different games (Doom 1/2, Heretic, Hexen),
    and initial support for add-ons (Eternal, Osiris)
 
-+  pillar patterns: 1379, 2468, line thru center (based on entry and exit)
+?  pillar patterns: 1379, 2468, line thru center (based on entry and exit)
 -  chunk-size cages: center of room
 
 #  chunk-size cages: outdoor and top-less
 #  floor switches: y_offset
 
 -  wall switches: place in the wall! 
--  wall switches: "small" mode (32x32)
+>>  wall switches: "small" mode (32x32)
 
 -  overhangs: thick and central pillars
-   ++ BUG: don't create pillar in front of door
 
 -  more mid-masked textures (esp. on windows)
 -  prefer not to create void chunks next to windows
