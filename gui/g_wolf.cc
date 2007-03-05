@@ -274,9 +274,12 @@ int begin_level(lua_State *L)
 //
 int end_level(lua_State *L)
 {
+  // Write stuff here ???
+
+/* FIXME
   delete solid_plane;  solid_plane = NULL;
   delete thing_plane;  thing_plane = NULL;
-
+*/
   return 0;
 }
 
