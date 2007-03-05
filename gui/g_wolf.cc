@@ -32,8 +32,6 @@
 #define NO_TILE  48
 #define NO_OBJ   0
 
-#define OBJ_PLAYER_START  19  /* + direction */
-
 
 /* private data */
 
@@ -44,14 +42,8 @@ static FILE *head_fp;
 
 static int map_offset;
 
-//------------------------------------------------------------------------
-
-thing_c::thing_c(short _x, short _y, short _type) :
-		x(_x), y(_y), type(_type)
-{ }
-
-thing_c::~thing_c()
-{ }
+static u16_t *map_plane;
+static u16_t *obj_plane;
 
 
 //------------------------------------------------------------------------
@@ -149,43 +141,7 @@ namespace rle_comp
 } // namespace rle_comp
 
 
-char Material_Tile(char mat)
-{
-	return (mat*2);
-
-#if 0 //!!!
-	switch (mat)
-	{
-		// Land
-		case MAT_Grass:  return 18;
-		case MAT_Sand:   return 53;
-		case MAT_Rock:   return 0;
-		case MAT_Stone:  return 7;
-
-		// Water
-		case MAT_Water:  return 4;
-		case MAT_Lava:   return 2;
-		case MAT_Nukage: return 47;
-		case MAT_Slime:  return 47;
-		case MAT_Blood:  return 30;
-
-		// Building
-		case MAT_Lead:   return 51;
-		case MAT_Alum:   return 14;
-		case MAT_Tech:   return 41;
-		case MAT_Light:  return 15;
-		case MAT_Wood:   return 11;
-		case MAT_Brick:  return 16;
-		case MAT_Marble: return 49;
-
-		// Cave
-		case MAT_Ash:    return 50;
-
-		default:
-			return 48;  // ILLEGAL
-	}
-#endif
-}
+//------------------------------------------------------------------------
 
 static void WriteSolidPlane(int *offset, int *length)
 {
@@ -196,25 +152,10 @@ static void WriteSolidPlane(int *offset, int *length)
 
 	rle_comp::Begin();
 
-	for (int y = 63; y >= 0; y--)
-	for (int x = 0;  x < 64; x++)
-	{
-		if (the_world->Outside(x-1, y-1))
-		{
-			rle_comp::Add(NO_TILE);
-			continue;
-		}
-
-		location_c& loc = the_world->Loc(x-1, y-1);
-
-		if (loc.Void() || loc.stru == STRU_Wall)
-		{
-			rle_comp::Add(Material_Tile(loc.mat));
-			continue;
-		}
-
-		rle_comp::Add(107 /* AREATILE */);  //!!! FIXME
-	}
+	for (int i = 0; i < 64*64; i++)
+  {
+    rle_comp::Add(solid_plane[i])
+  }
 
 	rle_comp::Flush();
 
@@ -231,40 +172,10 @@ static void WriteThingPlane(int *offset, int *length)
 
 	rle_comp::Begin();
 
-	for (int y = 63; y >= 0; y--)
-	for (int x = 0;  x < 64; x++)
-	{
-		if (the_world->Outside(x-1, y-1))
-		{
-			rle_comp::Add(NO_OBJ);
-			continue;
-		}
-
-		location_c& loc = the_world->Loc(x-1, y-1);
-
-		if (loc.Void() || loc.stru == STRU_Wall)
-		{
-			rle_comp::Add(NO_OBJ);
-			continue;
-		}
-
-		// FIXME: this is stupidly inefficient
-		int obj_type = NO_OBJ;
-
-		for (int i = 0; i < (int)lev_things.size(); i++)
-		{
-			thing_c *T = lev_things[i];
-			SYS_ASSERT(T);
-
-			if (T->x == x && T->y == y)
-			{
-				obj_type = T->type;
-				break;
-			}
-		}
-
-		rle_comp::Add(obj_type);
-	}
+	for (int i = 0; i < 64*64; i++)
+  {
+    rle_comp::Add(thing_plane[i])
+  }
 
 	rle_comp::Flush();
 
@@ -289,8 +200,8 @@ static void WriteBlankPlane(int *offset, int *length)
 
 static void WriteMap(void)
 {
-	SYS_ASSERT(the_world->w() <= 62);
-	SYS_ASSERT(the_world->h() <= 62);
+	//? SYS_ASSERT(the_world->w() <= 62);
+	//? SYS_ASSERT(the_world->h() <= 62);
 
 	const char *message = OBLIGE_TITLE " " OBLIGE_VERSION;
 
@@ -339,22 +250,80 @@ static void WriteHead(void)
 
 
 //------------------------------------------------------------------------
-//  PUBLIC INTERFACE
-//------------------------------------------------------------------------
 
-void AddThing(short x, short y, short type)
+namespace wolf
 {
-	if (type != 1) return; //!!!!
 
-	type = 19;  // player start
+// LUA: begin_level()
+//
+int begin_level(lua_State *L)
+{
+  // allocate planes and clear them
 
-	lev_things.push_back(new thing_c(x, y, type));
+  solid_plane = new u16_t[64*64];
+  thing_plane = new u16_t[64*64];
+
+  for (int i = 0; i < 64*64; i++)
+  {
+    solid_plane[i] = NO_TILE;
+    thing_plane[i] = NO_OBJ;
+  }
+
+  return 0;
+}
+
+// LUA: end_level()
+//
+int end_level(lua_State *L)
+{
+  delete solid_plane;  solid_plane = NULL;
+  delete thing_plane;  thing_plane = NULL;
+
+  return 0;
 }
 
 
+// LUA: add_block(x, y, tile, obj)
+//
+int add_block(lua_State *L)
+{
+  int x = luaL_checkint(L,1);
+  int y = luaL_checkint(L,2);
+
+  int tile = luaL_checkint(L,3);
+  int obj  = luaL_checkint(L,4);
+
+  // validate coords
+  x = x-1; y = 63-y
+
+  SYS_ASSERT(0 <= x and x <= 63);
+  SYS_ASSERT(0 <= y and y <= 63);
+
+  solid_plane[y*64+x] = tile
+  thing_plane[y*64+x] = obj
+
+  return 0;
+}
+
+} // namespace wolf
+
+
+//------------------------------------------------------------------------
+//  PUBLIC INTERFACE
+//------------------------------------------------------------------------
+
+static const luaL_Reg wolf_funcs[] =
+{
+  { "begin_level", wolf::begin_level },
+  { "add_block",   wolf::add_block   },
+  { "end_level",   wolf::end_level   },
+
+  { NULL, NULL } // the end
+};
+
 void Wolf_InitLua(lua_State *L)
 {
-//  luaL_register(L, "wolf", wad_funcs);
+  luaL_register(L, "wolf", wolf_funcs);
 }
 
 void Wolf_Begin(void)
@@ -380,5 +349,7 @@ bool Wolf_Finish(void)
 	fclose(head_fp);
 
 	map_fp = head_fp = NULL;
+
+  return true;
 }
 
