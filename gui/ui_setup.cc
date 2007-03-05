@@ -63,14 +63,15 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   game = new Fl_Choice(x+70, cy, 150, 24, "Game: ");
   game->align(FL_ALIGN_LEFT);
-  game->add("Doom 1|"
+  game->add("Wolf 3d|"
+            "Doom 1|"
             "Doom 2|"
             "TNT Evilution|"
             "Plutonia|"
             "FreeDoom 0.5|"
             "Heretic|"
             "Hexen");
-  game->value(1);
+  game->value(2);
 
   add(game);
 
@@ -172,6 +173,7 @@ void UI_Setup::Locked(bool value)
 
 const char * UI_Setup::game_syms[] =
 {
+  "wolf3d",
   "doom1", "doom2", "tnt", "plutonia", "freedoom",
   "heretic", "hexen"
 };

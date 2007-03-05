@@ -28,6 +28,7 @@
 #include "g_glbsp.h"
 #include "g_image.h"
 #include "g_lua.h"
+#include "g_wolf.h"
 
 #include "hdr_fltk.h"
 #include "ui_chooser.h"
@@ -133,9 +134,15 @@ void Build_Cool_Shit()
   main_win->Locked(true);
   that->P_SetButton(true);
 
-  bool is_hexen = (strcmp(main_win->setup_box->get_Game(), "hexen") == 0);
+  bool is_wolf  = (strcmp(main_win->setup_box->get_Game(), "wolf3d") == 0);
+  bool is_hexen = (strcmp(main_win->setup_box->get_Game(), "hexen")  == 0);
 
-  bool was_ok = Doom_CreateWAD(TEMP_FILENAME, is_hexen);
+  bool was_ok;
+
+  if (is_wolf)
+    was_ok = Wolf_Begin();
+  else
+    was_ok = Doom_CreateWAD(TEMP_FILENAME, is_hexen);
 
   if (was_ok)
   {
@@ -144,12 +151,15 @@ void Build_Cool_Shit()
 
     was_ok = Script_Run();
 
-    Doom_FinishWAD();
+    if (is_wolf)
+      Wolf_Finish();
+    else
+      Doom_FinishWAD();
 
 ///  that->P_Finish();
   }
 
-  if (was_ok)
+  if (was_ok and !is_wolf)
   {
     DebugPrintf("TARGET FILENAME: [%s]\n", filename);
 

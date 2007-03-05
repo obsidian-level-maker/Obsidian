@@ -22,6 +22,7 @@
 #include "g_lua.h"
 #include "g_doom.h"
 #include "g_glbsp.h"
+#include "g_wolf.h"
 #include "main.h"
 
 #include "hdr_fltk.h"
@@ -260,6 +261,7 @@ void Script_Init()
     Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
 
   Doom_InitLua(LUA_ST);
+  Wolf_InitLua(LUA_ST);
 
   Script_SetLoadPath(LUA_ST);
 
@@ -316,6 +318,7 @@ static void Script_MakeSettings(lua_State *L)
   AddField(L, "ammo",   main_win->adjust_box->get_Ammo());
   AddField(L, "mons",   main_win->adjust_box->get_Monsters());
   AddField(L, "traps",  main_win->adjust_box->get_Traps());
+  AddField(L, "size",   main_win->adjust_box->get_Size());
 
   lua_setglobal(L, "settings");
 }

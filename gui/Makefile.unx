@@ -48,6 +48,7 @@ OBJS=	main.o      \
 	g_glbsp.o   \
 	g_image.o   \
 	g_lua.o     \
+	g_wolf.o    \
 	twister.o   \
 	ui_adjust.o  \
 	ui_build.o  \
