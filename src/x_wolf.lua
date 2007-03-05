@@ -73,7 +73,7 @@ WF_AREA_TILE = 107  -- fixme: more available
 function write_wolf_level(p)
 
   local function handle_block(x, y)
-    if not valid_block(x, y) then return end
+    if not valid_block(p, x, y) then return end
     local B = p.blocks[x][y]
     if not B then return end
 
@@ -86,7 +86,7 @@ function write_wolf_level(p)
       tile = WF_AREA_TILE
     end
 
-    if B.things[1] then
+    if B.things and B.things[1] then
       if B.things[1].kind == 1 then
         obj = WF_PLAYER_START
       end
