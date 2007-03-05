@@ -1568,10 +1568,10 @@ function plan_sp_level(is_coop)  -- returns Plan
   end
 
   local function peak_toughness(Q)
-    local peak = 150 + 5 * #Q.path
+    local peak = 135 + 5 * #Q.path
 
     peak = peak + 20 * (Q.sub_level or 0)
-    peak = peak * (Q.level ^ 0.7) * (1 + rand_skew()/5)
+    peak = peak * (Q.level ^ 1.0) * (1 + rand_skew()/5)
 
     if p.coop then
       peak = peak * p.coop_toughness
@@ -2009,12 +2009,13 @@ do add_depot(Q); return end --!!!!! TESTING
         local cell = Q.path[i]
         if not cell.toughness then
           if skip > 0 or cell.is_exit or cell.along == 1 then
-            cell.toughness = (1 + rand_skew()) * peak / 3.3
+            cell.toughness = (1 + rand_skew()) * peak / 3.5
             skip = skip - 1
           else
             cell.toughness = peak
             peak = peak * 0.75
-            skip = rand_index_by_probs { 50, 70, 10 }
+            skip = rand_index_by_probs({ 10, 70, 70, 20 }) - 1
+            if skip == 0 and Q.level == 1 then skip = 1 end
           end
         end
       end
