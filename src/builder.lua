@@ -2278,15 +2278,20 @@ link.cells[2].x, link.cells[2].y)
     -- iterations, the existence of multiple IDS means that
     -- we need to add extra chunks.
 
+    -- These are shuffled to give better randomness of the
+    -- grow algorithm.  They are re-used for efficiency.
+    local SIDES  = { 2,4,6,8 }
+    local KX_MAP = { 1,2,3 }
+    local KY_MAP = { 1,2,3 }
+
     local function init()
       local chunk_list = {}
       
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
         K.travel_id = ky*10 + kx
-        K.grow_dir  = rand_irange(1,4)*2
         if not K.empty then
-          table.insert(chunk_list, { kx,ky })
+          table.insert(chunk_list, { x=kx,y=ky })
         end
       end end
       
@@ -2294,82 +2299,131 @@ link.cells[2].x, link.cells[2].y)
     end
     
     local function merge()
-      for kx = 1,3 do for ky = 1,3 do
-        for side = 6,8,2 do
-          local dx, dy = dir_to_delta(side)
-          local nx, ny = kx+dx, ky+dy
+      for loop=1,12 do
+        for kx = 1,3 do for ky = 1,3 do
+          for side = 6,8,2 do
+            local dx, dy = dir_to_delta(side)
+            local nx, ny = kx+dx, ky+dy
 
-          if valid_chunk(nx,ny) then
-            local K1 = c.chunks[kx][ky]
-            local K2 = c.chunks[nx][ny]
+            if valid_chunk(nx,ny) then
+              local K1 = c.chunks[kx][ky]
+              local K2 = c.chunks[nx][ny]
 
-            if not K1.empty and not K2.empty then
---con.printf("   MERGE: [%d,%d] with [%d,%d]\n", kx,ky, nx,ny)
-              K1.travel_id = math.min(K1.travel_id, K2.travel_id)
-              K2.travel_id = K1.travel_id
+              if not K1.empty and not K2.empty then
+                K1.travel_id = math.min(K1.travel_id, K2.travel_id)
+                K2.travel_id = K1.travel_id
+              end
             end
           end
-        end
-      end end
+        end end
+      end
     end
 
     local function has_islands()
-      local cur_id
+      local last
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
-        if not K.empty then
---con.printf("   CHUNK [%d,%d] travel_id:%d\n", kx,ky,K.travel_id)
-          if not cur_id then
-            cur_id = K.travel_id
-          elseif K.travel_id ~= cur_id then 
-            return true
-          end
+        if K.empty then
+          -- skip it
+        elseif not last then last = K
+        elseif K.travel_id ~= last.travel_id then 
+          return true
         end
       end end
----### if c.x==7 and c.y==3 then return true end
       return false
     end
 
     local function grow(chunk_list)
+      
+      local function grow_a_pair(K,kx,ky, N,nx,ny)
+
+        assert(N.empty)
+        N.empty = false
+
+        if nx==2 and ny==2 and rand_odds(66) then
+          N.room = true
+        else
+          assert(K.link or K.room)
+          N.link = K.link
+          N.room = K.room
+        end
+
+        table.insert(chunk_list, { x=nx, y=ny })
+      end
+
+      -- look for the optimal solution: a "bridge" between two
+      -- different groups.  Do it by studying the empty chunks.
+
+      rand_shuffle(SIDES)
+      rand_shuffle(KX_MAP)
+      rand_shuffle(KY_MAP)
+
+      for ix=1,3 do for iy=1,3 do
+        local kx,ky = KX_MAP[ix], KY_MAP[iy]
+        local K = c.chunks[kx][ky]
+
+        if K.empty then
+          local last_K, last_x, last_y
+
+          for zzz,side in ipairs(SIDES) do
+            local dx,dy = dir_to_delta(side)
+            local nx,ny = kx+dx, ky+dy
+
+            if valid_chunk(nx, ny) then
+              local N = c.chunks[nx][ny]
+              if not N.empty then
+                if not last_K then
+                  last_K, last_x, last_y = N, nx, ny
+                elseif N.travel_id ~= last_K.travel_id then
+                  -- FOUND ONE !!
+                  con.debugf("Found travel bridge @ (%d,%d) [%d,%d]^%d\n", c.x,c.y, kx,ky,side)
+                  if rand_odds(50) then
+                    grow_a_pair(last_K,last_x,last_y, K,kx,ky)
+                  else
+                    grow_a_pair(N,nx,ny, K,kx,ky)
+                  end
+                  return true
+                end
+              end
+            end
+
+          end
+        end
+      end end
+
+      -- failing that, grow a chunk at random
 
       for i = 1,#chunk_list do
 
-        local kx,ky = chunk_list[i][1], chunk_list[i][2]
+        local kx,ky = chunk_list[i].x, chunk_list[i].y
         local K1 = c.chunks[kx][ky]
         assert(K1 and not K1.empty)
 
-        local dx,dy = dir_to_delta(K1.grow_dir)
-        if not valid_chunk(kx+dx, ky+dy) then
-          dx,dy = -dx,-dy
-        end
-
-        assert(valid_chunk(kx+dx, ky+dy))
-
-        local K2 = c.chunks[kx+dx][ky+dy]
+        for zzz,side in ipairs(SIDES) do
+          local dx,dy = dir_to_delta(side)
+          if valid_chunk(kx+dx, ky+dy) then
+            local K2 = c.chunks[kx+dx][ky+dy]
+            assert(K2)
         
-        if K2.empty then
-          K2.empty = false
-          K2.link = K1.link
-          K2.room = K1.room
----!         K2.travel_id = K1.travel_id
+            if K2.empty then
+              grow_a_pair(K1,kx,ky, K2,kx+dx,ky+dy)
+              return true
+            end
 
-          table.insert(chunk_list, { kx+dx, ky+dy })
-          return true
-        else
-          K2.grow_dir = rand_irange(1,4)*2
-
-          -- try next chunk in list
+          end
         end
+
+        -- try next chunk in list...
       end
 
-      return false
+      error("add_travel_chunks: grow failed!")
     end
-    
+
     --- add_travel_chunks ---
 
     if c.scenic then return end
-    
-    if not c.hallway and (c.is_exit or rand_odds(1)) then --???
+
+    if not c.hallway and (c.is_exit or rand_odds(25)) then --???
       c.chunks[2][2].room = true
       c.chunks[2][2].empty = false
     end
@@ -2378,14 +2432,16 @@ link.cells[2].x, link.cells[2].y)
 
     assert(#chunk_list >= 1)
 
-    for loop=1,999 do
-      for pass=1,20 do merge() end 
---      con.debugf("add_travel_chunks: loop %d @ (%d,%d)\n", loop, c.x,c.y)
+    merge()
+
+    for loop=1,99 do
       if not has_islands() then break end
-      repeat
-        rand_shuffle(chunk_list)
-      until grow(chunk_list)
-      if loop == 999 then show_chunks(p); error("WTF?") end
+      
+      rand_shuffle(chunk_list)
+      rand_shuffle(SIDES)
+      
+      grow(chunk_list)
+      merge()
     end
   end
 
@@ -2776,125 +2832,144 @@ link.cells[2].x, link.cells[2].y)
 
   local function setup_chunk_rmodels(c)
 
-    for kx = 1,KW do for ky = 1,KH do
+    for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       assert(K)
 
-      K.rmodel = copy_table(c.rmodel)
+      if not K.rmodel then
+        K.rmodel = copy_table(c.rmodel)
 
-      if K.link then
-        local other = link_other(K.link, c)
+        if K.link then
+          local other = link_other(K.link, c)
 
-        if K.link.build == c or K.link.kind == "falloff" then
-          -- no change
-        else
-          K.rmodel.f_h = other.rmodel.f_h
-          K.rmodel.c_h = math.max(c.rmodel.c_h, other.rmodel.c_h) --FIXME (??)
+          if K.link.build == c or K.link.kind == "falloff" then
+            -- no change
+          else
+            K.rmodel.f_h = other.rmodel.f_h
+            K.rmodel.c_h = math.max(c.rmodel.c_h, other.rmodel.c_h) --FIXME (??)
+          end
+
+        elseif K.liquid then
+          K.rmodel.f_h   = K.rmodel.f_h - 12
+          K.rmodel.f_tex = c.liquid.floor
         end
-
-      elseif K.liquid then
-        K.rmodel.f_h   = K.rmodel.f_h - 12
-        K.rmodel.f_tex = c.liquid.floor
       end
     end end
   end
 
   local function connect_chunks(c)
 
-    -- connected value:
-    --   1 for connected chunk 
-    --   0 for not-yet connected chunk 
-    --   nil for unconnectable chunks (void space)
+    --> result: certain chunks have a "stair_dir" field
+    -->         Direction to neighbour chunk.  Stair will
+    -->         be built inside this chunk.
 
     local function init_connx()
 
-      for kx = 1,KW do for ky = 1,KH do
+      for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
         assert(K)
 
-        if K.void or K.cage or K.vista then
-          -- skip it
-
-        elseif K.room then
-          K.connected = 1
-
-        elseif K.liquid or K.link then
-
-          -- Note: cannot assume that it connects
-          -- (it might be an isolated corner).
-          K.connected = 0
-        else
-          error("connect_chunks: type is unknown!")
+        if K.room or K.link or K.liquid then
+          K.connect_id = ky*10 + kx
         end
       end end
     end
 
-    local function grow_pass()
-
-      local function grow_a_pair(K, N)
-        if N.connected == 0 then
-          if math.abs(K.rmodel.f_h - N.rmodel.f_h) <= 16 then
-            N.connected = 1
-          end
+    local function is_fully_connected()
+      local last
+      for kx = 1,3 do for ky = 1,3 do
+        local K = c.chunks[kx][ky]
+        if not K.connect_id then
+          -- skip it
+        elseif not last then last = K
+        elseif K.connect_id ~= last.connect_id then 
+          return false
         end
+      end end
+      return true
+    end
+
+    local function merge_connx()
+
+      local function are_connected(K, N, dir)
+        if math.abs(K.rmodel.f_h - N.rmodel.f_h) <= 16 then
+          return true;
+        end
+        if K.stair_dir == dir or N.stair_dir == (10-dir) then
+          return true;
+        end
+        return false;
       end
 
-      for kx = 1,KW do for ky = 1,KH do
-        local K = c.chunks[kx][ky]
-
-        if K.connected == 1 then
-          for dir = 2,8,2 do
+      for loop = 1,12 do
+        for kx = 1,3 do for ky = 1,3 do
+          local K1 = c.chunks[kx][ky]
+          for dir = 6,8,2 do
             local dx,dy = dir_to_delta(dir)
-
             if valid_chunk(kx+dx,ky+dy) then
-              grow_a_pair(K, c.chunks[kx+dx][ky+dy])
+              local K2 = c.chunks[kx+dx][ky+dy]
+              if K1.connect_id and K2.connect_id and are_connected(K1,K2, dir) then
+                K1.connect_id = math.min(K1.connect_id, K2.connect_id)
+                K2.connect_id = K1.connect_id
+              end
             end
           end
-        end
-      end end
-    end
-
-    local function grow_connx()
-      for loop=1,10 do
-        grow_pass()
+        end end
       end
     end
 
-    local function find_stair_pos()
+    local function add_stair()
+
+      -- find the best chunk pair to use
+
       local best_diff = 999999
       local coords = {}
 
-      for kx = 1,KW do for ky = 1,KH do
+      for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
 
-        if K.connected == 0 then
-          for dir = 2,8,2 do
-            local dx,dy = dir_to_delta(dir)
+          for side = 6,8,2 do
+            local dx,dy = dir_to_delta(side)
 
-            if valid_chunk(kx+dx, ky+dy) and
-               c.chunks[kx+dx][ky+dy].connected == 1
-            then
+            if valid_chunk(kx+dx, ky+dy) then
               local N = c.chunks[kx+dx][ky+dy]
-              local diff = math.abs(K.rmodel.f_h - N.rmodel.f_h)
+              if K.connect_id and N.connect_id and K.connect_id ~= N.connect_id then
 
-              if diff < best_diff then
-                -- clear out previous (worse) results
-                coords = {}
-                best_diff = diff
-              end
+                local diff = math.abs(K.rmodel.f_h - N.rmodel.f_h)
+                assert(diff > 16)
 
-              if diff == best_diff then
-                local loc = { x=kx, y=ky, dir=dir }
-                table.insert(coords, loc)
-              end
+                if diff < best_diff then
+                  -- clear out the previous (worse) results
+                  coords = {}
+                  best_diff = diff
+                end
+
+                if diff == best_diff then
+                  table.insert(coords, { x=kx, y=ky, side=side, K=K, N=N })
+                end
             end
           end
         end
       end end
 
-      if #coords == 0 then return nil end
+      if #coords == 0 then
+        error("Cannot find stair position!")
+      end
 
-      return rand_shuffle(coords)
+      rand_shuffle(coords)
+
+      local loc = coords[1]
+      assert(loc.K and loc.N)
+
+      local K1, K2, dir = loc.K, loc.N, loc.side
+      if K1.stair_dir then K1,K2,dir = K2,K1,10-dir end
+
+      if not K2.stair_dir and rand_odds(50) then  -- FIXME: HEURISTICS
+        K1,K2,dir = K2,K1,10-dir
+      end
+
+      assert(not K1.stair_dir)
+      K1.stair_dir = dir
     end
 
 
@@ -2903,31 +2978,11 @@ link.cells[2].x, link.cells[2].y)
     init_connx()
 
     for loop=1,99 do
-      
-      grow_connx()
-      
-      local loc = find_stair_pos()
-      if not loc then break end
-
-      local K = c.chunks[loc.x][loc.y]
-
---[[  DEBUG STAIR LOCS
-local dx,dy = dir_to_delta(loc.dir)
-  con.debugf(
-  "CELL (%d,%d)  STAIR %d,%d facing %d  HT %d -> %d\n",
-  c.x, c.y, loc.x, loc.y, loc.dir,
-  K.delta_floor, c.chunks[loc.x+dx][loc.y+dy].delta_floor
-  )
---]]
-      assert(not K.stair_dir)
-
-      K.stair_dir = loc.dir
-      K.connected = 1
+      merge_connx()
+      if is_fully_connected() then break end
+con.printf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
+      add_stair()
     end 
-
-    --> result: certain chunks have a "stair_dir" field
-    -->         Direction to neighbour chunk.  Stair will
-    -->         be built inside this chunk.
 
     -- FIXME: randomly flip a few stairs.
     --   Requires:
@@ -3131,20 +3186,21 @@ local dx,dy = dir_to_delta(loc.dir)
 
       add_travel_chunks(cell)
 
+      setup_chunk_rmodels(cell)
+
+--!!!!  flesh_out_cell(cell)
+
+      connect_chunks(cell)
+
+  end
+
+  for zzz,cell in ipairs(p.all_cells) do
+
 --[[ !!!!
       add_closet_chunks(cell)
 
       add_vista_chunks(cell)
 --]]
-  end
-
-  for zzz,cell in ipairs(p.all_cells) do
-
---!!!!      flesh_out_cell(cell)
-
-      setup_chunk_rmodels(cell)
-
---!!!!      connect_chunks(cell)
   end
 
 --[[ !!!!
@@ -4386,10 +4442,33 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
     end
 
 --!!!!!! TESTING
-if not c.scenic and K.empty and false then
+if not c.scenic and K.empty then -- and not c.theme.outdoor then
   gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid="ASHWALL2" })
   return
 end
+    if K.stair_dir then
+
+      local x1,y1, x2,y2 = side_coords(K.stair_dir,
+        K.x1, K.y1, K.x2, K.y2)
+
+      local long
+      if (K.stair_dir==2 or K.stair_dir==8) then
+        long = x2-x1+1
+      else
+        long = y2-y1+1
+      end
+
+      local deep = 1
+
+      local dx,dy = dir_to_delta(K.stair_dir)
+      local NB = c.chunks[kx+dx][ky+dy]
+      local diff = math.abs(K.rmodel.f_h - NB.rmodel.f_h)
+
+      local step = (NB.rmodel.f_h - K.rmodel.f_h) / (deep * 4)
+
+      B_stair(p, c, x1, y1, K.rmodel.f_h, K.stair_dir, long, deep, step)
+  end
+
 gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, K.rmodel,
 {
   light = sel(K.room, 192, sel(K.empty, 96, 144))
@@ -4442,7 +4521,7 @@ do return end
     end
 
     if K.stair_dir then
-      
+
       local dx, dy = dir_to_delta(K.stair_dir)
       local NB = c.chunks[kx+dx][ky+dy]
 
