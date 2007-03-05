@@ -26,6 +26,7 @@ private:
   Fl_Choice *ammo;
   Fl_Choice *mons;
   Fl_Choice *traps;
+  Fl_Choice *size;
 
 public:
   UI_Adjust(int x, int y, int w, int h, const char *label = NULL);
@@ -39,14 +40,17 @@ public:
   const char *get_Ammo();
   const char *get_Monsters();
   const char *get_Traps();
+  const char *get_Size();
 
   bool set_Health(const char *str);
-  bool set_Ammo(const char *str);
+  bool set_Ammo  (const char *str);
   bool set_Monsters(const char *str);
   bool set_Traps(const char *str);
+  bool set_Size (const char *str);
 
 private:
   static const char *adjust_syms[3];
+  static const char *size_syms[3];
 
   int FindSym(const char *str);
 };

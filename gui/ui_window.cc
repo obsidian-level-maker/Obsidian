@@ -36,7 +36,7 @@
 UI_MainWin *main_win;
 
 #define MAIN_WINDOW_W   470
-#define MAIN_WINDOW_H  (406-28)
+#define MAIN_WINDOW_H  (406-28+32)
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
@@ -86,7 +86,7 @@ UI_MainWin::UI_MainWin(const char *title) :
 
   cy += setup_box->h();
 
-  adjust_box = new UI_Adjust(0, cy, w(), 106);
+  adjust_box = new UI_Adjust(0, cy, w(), 106+32);
   add(adjust_box);
 
   cy += adjust_box->h();

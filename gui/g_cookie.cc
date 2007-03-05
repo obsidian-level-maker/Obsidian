@@ -59,6 +59,8 @@ static bool Cookie_SetValue(const char *name, const char *value)
     return main_win->adjust_box->set_Monsters(value);
   if (StrCaseCmp(name, "traps") == 0)
     return main_win->adjust_box->set_Traps(value);
+  if (StrCaseCmp(name, "size") == 0)
+    return main_win->adjust_box->set_Size(value);
 
   LogPrintf("CONFIG: Ignoring unknown setting: %s = %s\n", name, value);
   return false;
@@ -187,6 +189,7 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
   fprintf(cookie_fp, "mons = %s\n",   main_win->adjust_box->get_Monsters());
   fprintf(cookie_fp, "traps = %s\n",  main_win->adjust_box->get_Traps());
+  fprintf(cookie_fp, "size = %s\n",  main_win->adjust_box->get_Size());
 
   LogPrintf("DONE.\n\n");
 
