@@ -136,7 +136,11 @@ function build_cool_shit()
 
     if con.abort() then aborted = true; break; end
 
-    write_level(PLAN, lev)
+    if settings.game == "wolf3d" then
+      write_wolf_level(PLAN)
+    else
+      write_level(PLAN, lev)
+    end
 
     if con.abort() then aborted = true; break; end
   end
