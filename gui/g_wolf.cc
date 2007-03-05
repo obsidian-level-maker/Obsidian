@@ -35,28 +35,26 @@
 
 /* private data */
 
-std::vector<thing_c *> lev_things;
-
 static FILE *map_fp;
 static FILE *head_fp;
 
 static int map_offset;
 
-static u16_t *map_plane;
-static u16_t *obj_plane;
+static u16_t *solid_plane;
+static u16_t *thing_plane;
 
 
 //------------------------------------------------------------------------
 //  WOLF OUTPUT
 //------------------------------------------------------------------------
 
-static void WF_PutU16(uint16_g val, FILE *fp)
+static void WF_PutU16(u16_t val, FILE *fp)
 {
 	fputc(val & 0xFF, fp);
 	fputc((val >> 8) & 0xFF, fp);
 }
 
-static void WF_PutU32(uint32_g val, FILE *fp)
+static void WF_PutU32(u32_t val, FILE *fp)
 {
 	fputc(val & 0xFF, fp);
 	fputc((val >> 8) & 0xFF, fp);
@@ -154,7 +152,7 @@ static void WriteSolidPlane(int *offset, int *length)
 
 	for (int i = 0; i < 64*64; i++)
   {
-    rle_comp::Add(solid_plane[i])
+    rle_comp::Add(solid_plane[i]);
   }
 
 	rle_comp::Flush();
@@ -174,7 +172,7 @@ static void WriteThingPlane(int *offset, int *length)
 
 	for (int i = 0; i < 64*64; i++)
   {
-    rle_comp::Add(thing_plane[i])
+    rle_comp::Add(thing_plane[i]);
   }
 
 	rle_comp::Flush();
@@ -293,14 +291,15 @@ int add_block(lua_State *L)
   int tile = luaL_checkint(L,3);
   int obj  = luaL_checkint(L,4);
 
-  // validate coords
-  x = x-1; y = 63-y
+  // adjust and validate coords
+  x = x-1;
+  y = 63-y;
 
-  SYS_ASSERT(0 <= x and x <= 63);
-  SYS_ASSERT(0 <= y and y <= 63);
+  SYS_ASSERT(0 <= x && x <= 63);
+  SYS_ASSERT(0 <= y && y <= 63);
 
-  solid_plane[y*64+x] = tile
-  thing_plane[y*64+x] = obj
+  solid_plane[y*64+x] = tile;
+  thing_plane[y*64+x] = obj;
 
   return 0;
 }
@@ -326,16 +325,26 @@ void Wolf_InitLua(lua_State *L)
   luaL_register(L, "wolf", wolf_funcs);
 }
 
-void Wolf_Begin(void)
+bool Wolf_Begin(void)
 {
 	map_fp = fopen("GAMEMAPS.OUT", "wb");
+
 	if (! map_fp)
-		FatalError("unable to open GAMEMAPS.OUT\n");
+  {
+    DLG_ShowError("Unable to create GAMEMAPS.OUT:\n%s", strerror(errno));
+    return false;
+  }
 
+  // Move to Finisher??
 	head_fp = fopen("MAPHEAD.OUT", "wb");
-	if (! head_fp)
-		FatalError("unable to open MAPHEAD.OUT\n");
 
+	if (! head_fp)
+  {
+    DLG_ShowError("Unable to create MAPHEAD.OUT:\n%s", strerror(errno));
+    return false;
+  }
+
+  return true;
 }
 
 bool Wolf_Finish(void)

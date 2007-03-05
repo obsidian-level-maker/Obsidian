@@ -21,8 +21,8 @@
 
 void Wolf_InitLua(lua_State *L);
 
-void Wolf_Begin(void);
-void Wolf_Finish(void);
+bool Wolf_Begin(void);  // FIXME: pass output dir
+bool Wolf_Finish(void);
 
 /* ----- File structures ---------------------- */
 
