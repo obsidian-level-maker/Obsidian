@@ -50,6 +50,17 @@ function get_level_names(settings)
       end
     end
 
+  elseif (settings.game == "wolf3d" or settings.game == "spear") then
+
+    local epi_num = sel(settings.length == "full", 6, 1)
+    local lev_num = sel(settings.length == "single", 1, 10)
+
+    for e = 1,epi_num do
+      for m = 1,lev_num do
+        table.insert(LEVELS, string.format("L%d", (e-1)*lev_num + m))
+      end
+    end
+
   else  -- doom2 / freedoom / hexen
 
     local TS = { single=1, episode=10, full=32 }
