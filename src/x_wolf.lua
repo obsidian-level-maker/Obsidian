@@ -124,12 +124,13 @@ WF_THING_NUMS =
 
   clip_25 = 72,
 
-  ghost = 106,
-  angel = 107,
   trans_grosse = 125,
   uber_mutant  = 142,
   wilhelm = 143,
   death_knight = 161,
+
+  ghost = 106,
+  angel = 107,
 
   skull_stick = 33,   -- REPLACES: sink
   skull_cage  = 45,   -- REPLACES: bed
@@ -288,7 +289,7 @@ WF_BOSSES =
 
   fat_face      = { hp=1000, dm=50, r=20,h=40, hitscan=true },
   hans_grosse   = { hp=1000, dm=30, r=20,h=40, hitscan=true },
-  gretel_grosse = { hp=1000, dm=50, r=20,h=40. hitscan=true },
+  gretel_grosse = { hp=1000, dm=50, r=20,h=40, hitscan=true },
   giftmacher    = { hp=1000, dm=50, r=20,h=40 },
 
   fake_hitler   = { hp=350,  dm=50, r=20,h=40 },
