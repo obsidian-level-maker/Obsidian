@@ -940,7 +940,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 --con.debugf(Q.mini and "MINI-Q: " or "QUEST: ", Q.level, "\n")
     for x = 1,p.w do for y = 1,p.h do
       local c = p.cells[x][y]
-      if c then
+      if c and not c.is_depot then
         local prob = branch_spot_score(c, Q)
 
         if prob > 0 then
@@ -1093,15 +1093,17 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     Q.theme = theme
     assert(theme)
+con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
 
     -- decide liquid
     if THEME.caps.liquids then
       Q.liquid = liquid_for_quest(Q)
     end
 
-    -- add very first room
+    -- add very first room (in lower-left quarter of map).
     if not Q.mini and Q.level == 1 then
-      local x, y = random_cell(p)
+      local x = rand_irange(1, int(p.w / 2))
+      local y = rand_irange(1, int(p.h / 2))
       create_cell(p, x, y, Q, 1, theme)
     end
 
@@ -1153,6 +1155,8 @@ function plan_sp_level(is_coop)  -- returns Plan
         Q.last.theme = get_rand_indoor_theme()
       end
     end
+
+    -- FIXME: assign depot spot __now__
   end
 
 
@@ -1188,6 +1192,8 @@ function plan_sp_level(is_coop)  -- returns Plan
 
 
   local function select_floor_heights()
+
+    if not THEME.caps.heights then return end
 
     local DIFF_H     = {  0, 16, 32, 64, 96 }
     local DIFF_PROBS = { 20, 20, 80, 60, 20 }
@@ -1307,6 +1313,8 @@ function plan_sp_level(is_coop)  -- returns Plan
   end
 
   local function select_ceiling_heights()
+
+    if not THEME.caps.heights then return end
 
     local function initial_height(c)
 
