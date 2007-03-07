@@ -110,7 +110,7 @@ end
 
 function plan_dm_arena()
 
-  local p = get_base_plan(PL_W, PL_H)
+  local p = get_base_plan(8, 9)
 
   p.deathmatch = true
 
@@ -212,9 +212,9 @@ function plan_dm_arena()
   end
 
   local function liquid_for_seed(theme)
-    if rand_odds(64) then
-      return nil
-    end
+    if not THEME.caps.liquids then return nil end
+
+    if rand_odds(64) then return nil end
 
     if theme.bad_liquid == p.liquid.name then
       if theme.good_liquid then
@@ -504,7 +504,10 @@ function plan_dm_arena()
     end
   end
 
-  p.liquid = choose_liquid()
+  if THEME.caps.liquids then
+    p.liquid = choose_liquid()
+  end
+
   p.exit_theme = choose_dm_exit_theme()
 
   con.debugf("DM LIQUID: %s\n", (p.liquid and p.liquid.name) or "NONE")

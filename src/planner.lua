@@ -203,7 +203,7 @@ function link_other(link, cell)
   return nil
 end
 
-function get_bordering_cell(p, c, bx, by)
+function get_bordering_cell(p, c, bx, by) --!!!! FIXME BROKEN
   if bx == 1  and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
   if bx == BW and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
   if by == 1  and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
@@ -219,14 +219,18 @@ function links_in_cell(c)
 end
 
 
-function get_base_plan(cw, ch)
+function get_base_plan(plan_size, cell_size)
+
+  local cw = plan_size
+  local ch = plan_size
+
   local PLAN =
   {
     w = cw,
     h = ch,
 
-    blk_w = BORDER_BLK*2 + cw * (BW+1) + 1,
-    blk_h = BORDER_BLK*2 + ch * (BH+1) + 1,
+    blk_w = BORDER_BLK*2 + cw * (cell_size+1) + 1,
+    blk_h = BORDER_BLK*2 + ch * (cell_size+1) + 1,
 
     cells = array_2D(cw, ch),
     quests = {},
@@ -244,6 +248,12 @@ function get_base_plan(cw, ch)
 
     free_tag = 10,
     mark = 10,
+
+    cell_base_coords = function (x, y)
+      local bx = BORDER_BLK + 2 + (x-1) * (cell_size+1)
+      local by = BORDER_BLK + 2 + (y-1) * (cell_size+1)
+      return bx,by, bx+cell_size-1, by+cell_size-1
+    end,
   }
 
   PLAN.blocks = array_2D(PLAN.blk_w, PLAN.blk_h)
@@ -282,7 +292,7 @@ function create_cell(p, x, y, quest, along, theme, is_depot)
     monsters = {}
   }
 
-  CELL.bx1, CELL.by1, CELL.bx2, CELL.by2 = cell_base_coords(x, y)
+  CELL.bx1, CELL.by1, CELL.bx2, CELL.by2 = p.cell_base_coords(x, y)
 
   p.cells[x][y] = CELL
 
@@ -459,9 +469,11 @@ function resize_rooms(p)
 
     dir = dir or rand_sel(66, 1, -1)
 
-    local deep = 3
+    local deep = rand_index_by_probs { 10, 30, 90 }
     local mv_x = math.abs(dx) * deep
     local mv_y = math.abs(dy) * deep
+
+    assert(deep <= BORDER_BLK)
 
     -- don't make the shrinking cell too small
     local shrinker = sel(dir < 0, c, other)
@@ -469,7 +481,7 @@ function resize_rooms(p)
       local new_w, new_h = cell_size(shrinker)
       new_w, new_h = new_w - mv_x, new_h - mv_y
 
-      local min_size = 6
+      local min_size = THEME.cell_min_size
 
       if new_w < min_size or new_h < min_size then return end
     end
@@ -523,6 +535,11 @@ function resize_rooms(p)
       try_nudge_cell(v.c, v.side, pass)
     end
   end
+
+for zzz,cell in ipairs(p.all_cells) do
+con.printf("CELL @ (%d,%d) has coords [%d,%d]..[%d,%d]\n",
+cell.x, cell.y, cell.bx1, cell.by1, cell.bx2, cell.by2)
+end
 
 ---####  -- second pass: move borders that touch the edge of the map
 ---####  rand_shuffle(visit_list)
@@ -834,13 +851,13 @@ end
 
 function plan_sp_level(is_coop)  -- returns Plan
 
-  local p = get_base_plan(PL_W, PL_H)
+  local p = get_base_plan(THEME.plan_size, THEME.cell_size)
+
 
   local function travel_cost(cells, cx, cy, nx, ny)
     if cells[nx][ny] then return -1 end -- impassible
     return 5
   end
-
 
   local function valid_and_empty(cx, cy)
     return valid_cell(p, cx, cy) and not p.cells[cx][cy]
@@ -1070,7 +1087,7 @@ function plan_sp_level(is_coop)  -- returns Plan
  
     -- TODO: better system for choosing themes
     local theme
-    if Q.mini and rand_odds(77) then theme = Q.parent.theme
+    if false then --!!!!!! Q.mini and rand_odds(77) then theme = Q.parent.theme
     else theme = get_rand_theme()
     end
 
@@ -1078,7 +1095,9 @@ function plan_sp_level(is_coop)  -- returns Plan
     assert(theme)
 
     -- decide liquid
-    Q.liquid = liquid_for_quest(Q)
+    if THEME.caps.liquids then
+      Q.liquid = liquid_for_quest(Q)
+    end
 
     -- add very first room
     if not Q.mini and Q.level == 1 then
@@ -1124,12 +1143,12 @@ function plan_sp_level(is_coop)  -- returns Plan
     make_hallways(Q)
 
     if Q.theme.outdoor and not Q.has_hallway then
-      -- !!! Experimental: start cell is a building
+      -- Experimental: start cell is a building
       if #Q.path >= 3 and Q == p.quests[1] and rand_odds(30) then
         Q.first.theme = get_rand_indoor_theme()
       end
 
-      -- !!! Experimental: quest cell is a building
+      -- Experimental: quest cell is a building
       if #Q.path >= 4 and dual_odds(Q.mini, 12, 30) then
         Q.last.theme = get_rand_indoor_theme()
       end
@@ -1152,7 +1171,7 @@ function plan_sp_level(is_coop)  -- returns Plan
         elseif c1.theme.outdoor then door_chance = 5
         end
 
-        if rand_odds(door_chance) then link.kind = "door" end
+--!!!!!!        if rand_odds(door_chance) then link.kind = "door" end
 
       else -- need a locked door
 
@@ -1160,7 +1179,7 @@ function plan_sp_level(is_coop)  -- returns Plan
         assert(lock_level >= 1 and lock_level < #p.quests)
 
         link.quest = p.quests[lock_level]
-        link.kind  = "door"
+--!!!!!!        link.kind  = "door"
       end
 
       if link.kind == "door" then link.long = 3 end
@@ -1573,6 +1592,8 @@ function plan_sp_level(is_coop)  -- returns Plan
     peak = peak + 20 * (Q.sub_level or 0)
     peak = peak * (Q.level ^ 1.0) * (1 + rand_skew()/5)
 
+peak = 150 -- !!!!!
+
     if p.coop then
       peak = peak * p.coop_toughness
     end
@@ -1594,7 +1615,7 @@ function plan_sp_level(is_coop)  -- returns Plan
       if c.link[dir] then
         local link = c.link[dir]
         if link.kind == "arch" or link.kind == "door" then
-          link.kind = "door"
+--!!!!!!          link.kind = "door"
           link.build = c
           link.is_exit = true
           link.long = sel(c.theme.front_mark or c.small_exit, 3, 2)
@@ -1822,6 +1843,8 @@ con.printf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     local function add_closet(Q)
 
+      if not THEME.caps.closets then return end
+
       local locs  = {}
       local SIDES = { 2,4,6,8 }
 
@@ -1900,11 +1923,13 @@ con.printf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     local function add_depot(Q)
 
+      if not THEME.caps.depots then return end
+
       local function valid_depot_spot(x, y)
         if p.cells[x][y] then return false end
 
-        -- check for overlap
-        local bx1,by1, bx2,by2 = cell_base_coords(x, y)
+        -- check for overlap (FIXME: pre-allocate)
+        local bx1,by1, bx2,by2 = p.cell_base_coords(x, y)
 
         for dx = -1,1 do for dy = -1,1 do
           local c = valid_cell(p, x+dx, y+dy) and p.cells[x+dx][y+dy]
@@ -1969,8 +1994,6 @@ con.printf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     local function try_add_surprise(Q)
       if Q.kind == "exit" then return end
-
-do add_depot(Q); return end --!!!!! TESTING
 
       if dual_odds(Q.mini, sm_prob, bg_prob) then
         if rand_odds(70) then
@@ -2042,10 +2065,13 @@ do add_depot(Q); return end --!!!!! TESTING
   ---=== plan_sp_level ===---
 
   p.hmodels = initial_hmodels()
-  p.liquid  = choose_liquid()
 
-  if (p.liquid) then
-    con.printf("LIQUID: %s\n", p.liquid.name)
+  if THEME.caps.liquids then
+    p.liquid = choose_liquid()
+
+    if (p.liquid) then
+      con.printf("LIQUID: %s\n", p.liquid.name)
+    end
   end
 
   con.printf("\n")
@@ -2096,7 +2122,7 @@ do add_depot(Q); return end --!!!!! TESTING
   create_corners(p)
   create_borders(p)
 
---  add_windows()
+--!!  add_windows()
 
   return p
 end

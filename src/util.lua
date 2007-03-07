@@ -410,11 +410,4 @@ function neighbour_by_side(p, c, dir)
   end
 end
 
-function cell_base_coords(x, y)
-
-  local bx = BORDER_BLK + (x-1) * (BW+1) + 1
-  local by = BORDER_BLK + (y-1) * (BH+1) + 1
-
-  return bx,by, bx+BW-1, by+BW-1
-end
 

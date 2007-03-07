@@ -203,6 +203,10 @@ function gap_fill(p, c, sx, sy, ex, ey, B, B2)
   for x = sx,ex do
     for y = sy,ey do
 
+if not valid_block(p,x,y) then
+con.printf("gap_fill: invalid block (%d,%d)  max: (%d,%d)\n", x,y, p.blk_w, p.blk_h)
+error("invalid block")
+end
       assert(valid_block(p, x, y))
 
       if not p.blocks[x][y] then
@@ -1952,10 +1956,8 @@ function make_chunks(p)
     local cell_w = c.bx2 - c.bx1 + 1
     local cell_h = c.by2 - c.by1 + 1
 
-    assert(cell_w % 3 == 0)
-    assert(cell_h % 3 == 0)
-
-    assert(cell_w >= 6 and cell_h >= 6)
+    assert(cell_w >= THEME.cell_min_size)
+    assert(cell_h >= THEME.cell_min_size)
 
     c.chunks = array_2D(3, 3)
 
@@ -1963,17 +1965,29 @@ function make_chunks(p)
     local L, R, T, B
     local M, N
 
-    repeat
-      L = rand_index_by_probs(K_BORD_PROBS)
-      R = rand_index_by_probs(K_BORD_PROBS)
+    if cell_w < 6 then
+      L = 1
+      R = 1
       M = cell_w - L - R
-    until M >= 2
+    else
+      repeat
+        L = rand_index_by_probs(K_BORD_PROBS)
+        R = rand_index_by_probs(K_BORD_PROBS)
+        M = cell_w - L - R
+      until M >= 2
+    end
 
-    repeat
-      T = rand_index_by_probs(K_BORD_PROBS)
-      B = rand_index_by_probs(K_BORD_PROBS)
-      N = cell_h - T - B
-    until N >= 2
+    if cell_h < 6 then
+      T = 1
+      B = 1
+      N = cell_w - T - B
+    else
+      repeat
+        T = rand_index_by_probs(K_BORD_PROBS)
+        B = rand_index_by_probs(K_BORD_PROBS)
+        N = cell_h - T - B
+      until N >= 2
+    end
 
     -- actually create the chunks
 
@@ -3280,7 +3294,7 @@ function setup_borders_and_corners(p)
   local function border_kind(c1, c2, side)
 
     if not c2 or c2.is_depot then
-      if c1.theme.outdoor then return "sky" end
+      if c1.theme.outdoor and THEME.caps.sky then return "sky" end
       return "solid"
     end
 
@@ -3292,6 +3306,8 @@ function setup_borders_and_corners(p)
 
     -- TODO: sometimes allow it
     if c1.is_exit or c2.is_exit then return "solid" end
+
+    if not THEME.caps.heights then return "solid" end
 
     if c1.border[side].window then return "window" end
 
@@ -3781,8 +3797,10 @@ arch.f_tex = "TLITE6_6"
     local link = c.link[side]
     if not (link and link.build == c) then return end
 
-    link.narrow_door = random_door_kind(64)
-    link.wide_door   = random_door_kind(128)
+    if THEME.doors then
+      link.narrow_door = random_door_kind(64)
+      link.wide_door   = random_door_kind(128)
+    end
     link.block_sound = rand_odds(90)
     link.bar_size    = rand_index_by_probs { 20,90 }
     link.arch_rand   = con.random() * 100
@@ -3977,7 +3995,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
 
     local kind = "plain"
     
-    if rand_odds(30) then kind = "wire" end
+    if THEME.caps.rails and rand_odds(30) then kind = "wire" end
 
     -- FIXME: "castley"
 
@@ -4442,8 +4460,9 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
     end
 
 --!!!!!! TESTING
-if not c.scenic and K.empty then -- and not c.theme.outdoor then
-  gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid="ASHWALL2" })
+if not c.scenic and K.empty
+  and not (c == p.quests[1].first) then
+  gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.theme.void })
   return
 end
     if K.stair_dir then
@@ -4878,7 +4897,7 @@ do return end
   c.mark = allocate_mark(p)
 
   if not c.theme.outdoor and not c.is_exit and not c.hallway
-     and rand_odds(70)
+     and THEME.lights and rand_odds(70)
   then
     c.sky_light =
     {
