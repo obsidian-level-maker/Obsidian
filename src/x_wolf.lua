@@ -45,8 +45,6 @@ WF_THING_NUMS =
   -- pickups
   key_1 = 43,
   key_2 = 44,
-  stuff_1 = 45,
-  stuff_2 = 46,
 
   first_aid = 48,
   good_food = 47,
@@ -86,6 +84,9 @@ WF_THING_NUMS =
   skeleton_in_cage = 41,
   skeleton_relax = 42,
 
+  bed    = 45,  --???
+  basket = 46,
+
   gibs_1 = 57,
   barrel = 58,
   well = 59,
@@ -93,7 +94,7 @@ WF_THING_NUMS =
   gibs_2 = 61,
   flag = 62,
 
-  call_apogee = 63,
+  aardwolf = 63,
   junk_1 = 64,
   junk_2 = 65,
   junk_3 = 66,
@@ -116,6 +117,28 @@ WF_THING_NUMS =
   turn_SW = 95,
   turn_S  = 96,
   turn_SE = 97,
+
+  --- Spear of Destiny ---
+
+  spear_of_destiny = 74,
+
+  clip_25 = 72,
+
+  ghost = 106,
+  angel = 107,
+  trans_grosse = 125,
+  uber_mutant  = 142,
+  wilhelm = 143,
+  death_knight = 161,
+
+  skull_stick = 33,   -- REPLACES: sink
+  skull_cage  = 45,   -- REPLACES: bed
+  ceil_light2 = 63,   -- REPLACES: aardwolf
+
+  cow_skull    = 67,  -- REPLACES: pots
+  blood_well   = 68,  -- REPLACES: stove
+  angel_statue = 69,  -- REPLACES: spears
+  brown_column = 71,  -- REPLACES: clip_4
 }
 
 WF_TILE_NUMS =
