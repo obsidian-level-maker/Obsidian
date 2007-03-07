@@ -17,26 +17,31 @@
 ----------------------------------------------------------------
 
 
-SP_TILE_NUMS =
-{
-  area_min = 108,
-  area_max = 143,
-
-  deaf_guard = 106,
-  elevator_secret = 107,
-
-  door = { 90, 91 },
-
-  door_silver = { 92, 93 },
-  door_gold   = { 94, 95 },
-
-  door_elevator = { 100, 101 },
-}
-
-----------------------------------------------------------------
-
 SP_THEMES =
 {
+  CONCRETE =
+  {
+    mat_pri=4,
+    wall=57, void=57, floor=0, ceil=0,
+  },
+
+  GRAY_CONCRETE =
+  {
+    mat_pri=4,
+    wall=54, void=54, floor=0, ceil=0,
+  },
+
+  BROWN_CONCRETE =
+  {
+    mat_pri=4,
+    wall=62, void=62, floor=0, ceil=0,
+  },
+
+  PURPLE_BRICK=
+  {
+    mat_pri=1,
+    wall=63, void=63, floor=0, ceil=0,
+  }
 }
  
 
@@ -44,8 +49,20 @@ SP_THEMES =
 
 SP_MONSTERS =
 {
-  -- FIXME !!!
-  mutant  = { prob=20, hp=50,  dm=20, fp=10, r=20,h=40, hitscan=true, },
+  mutant = { prob=20, hp=55, dm=35, fp=10, r=20,h=40, hitscan=true, },
+}
+
+SP_BOSSES =
+{
+  -- FIXME: dm values were pulled straight out of my arse
+
+  trans_grosse = { hp=1000, dm=40, r=20,h=40, hitscan=true },
+  wilhelm      = { hp=1100, dm=70, r=20,h=40, hitscan=true },
+  uber_mutant  = { hp=1200, dm=60, r=20,h=40, hitscan=true },
+  death_knight = { hp=1400, dm=90, r=20,h=40, hitscan=true },
+
+  ghost        = { hp=15,   dm=20, r=20,h=40, melee=true },
+  angel        = { hp=1600, dm=150,r=20,h=40, },
 }
 
 
@@ -61,6 +78,7 @@ THEME_FACTORIES["spear"] = function()
 
   local T = THEME_FACTORIES.wolf3d()
 
+  T.bosses   = SP_BOSSES
   T.monsters = copy_and_merge(T.monsters, SP_MONSTERS)
 
   T.themes   = copy_and_merge(T.themes,   SP_PICKUPS)
