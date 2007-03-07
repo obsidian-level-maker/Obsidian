@@ -595,6 +595,14 @@ XN_PICKUPS =
   combo_mana = { stat="combo_mana", give=20 },
 }
 
+XN_NICENESS =
+{
+  p1 = { pickup="ar_mesh",   prob=2 },
+  p2 = { pickup="ar_shield", prob=2 },
+  p3 = { pickup="ar_helmet", prob=2 },
+  p4 = { pickup="ar_amulet", prob=2 },
+}
+
 XN_DEATHMATCH =
 {
   weapons =
@@ -660,6 +668,8 @@ THEME_FACTORIES["hexen"] = function()
 
     pickups = XN_PICKUPS,
     pickup_stats = { "health", "blue_mana", "green_mana" },
+    niceness = XN_NICENESS,
+
     initial_model = XN_INITIAL_MODEL,
 
     themes    = XN_THEMES,

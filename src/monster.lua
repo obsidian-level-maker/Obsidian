@@ -654,36 +654,54 @@ function distribute_pickups(p, c, HM, backtrack)
 
   local function be_nice_to_player()
 
-    if (settings.game == "heretic") then
-      -- FIXME: Heretic
+    if not THEME.niceness then return end
 
-    elseif (settings.game == "hexen") then
-      -- FIXME: Hexen
+    for zzz,ndef in pairs(THEME.niceness) do
+      local prob = ndef.prob
 
-    elseif (settings.game == "wolf3d") then
-      -- FIXME: Wolf
+      if ndef.always and c.along == (#c.quest.path - 1) then prob=99 end
+      if ndef.weapon and HM[ndef.weapon] then prob=1 end
+      if ndef.quest  and c.quest.level < ndef.quest then prob = 0 end
 
-    else -- Doom
+      if rand_odds(prob) then
+        if ndef.weapon then
+          local info = THEME.weapons[ndef.weapon]
+          assert(info)
 
-      -- let poor ol' player have a shotgun near start
+          add_pickup(c, ndef.weapon, info)
+          hm_give_weapon(HM, ndef.weapon)
 
-      if c.along == #c.quest.path then return end
+        elseif ndef.pickup then
+          local info = THEME.pickups[ndef.pickup]
+          assert(info)
 
-      if not HM.shotty and rand_odds(66) then
-        add_pickup(c, "shotty", THEME.weapons.shotty)
-        hm_give_weapon(HM, "shotty")
-      end
+          add_pickup(c, ndef.pickup, info)
 
-      if not HM.chain and c.quest.level >= 3 and rand_odds(11) then
-        add_pickup(c, "chain", THEME.weapons.chain)
-        hm_give_weapon(HM, "chain")
-      end
+          assert(info.stat == "armor")  -- !!! FIXME
+          hm_give_armor(HM, info.stat.give, info.stat.give)
 
-      if HM.armor <= 0 and rand_odds(2) then
-        add_pickup(c, "green_armor", THEME.pickups.green_armor)
-        hm_give_armor(HM, 100, 100)
+        else
+          error("Bad NICENESS table!")
+        end
       end
     end
+
+---###      if c.along == #c.quest.path then return end
+---###
+---###      if not HM.shotty and rand_odds(66) then
+---###        add_pickup(c, "shotty", THEME.weapons.shotty)
+---###        hm_give_weapon(HM, "shotty")
+---###      end
+---###
+---###      if not HM.chain and c.quest.level >= 3 and rand_odds(11) then
+---###        add_pickup(c, "chain", THEME.weapons.chain)
+---###        hm_give_weapon(HM, "chain")
+---###      end
+---###
+---###      if HM.armor <= 0 and rand_odds(2) then
+---###        add_pickup(c, "green_armor", THEME.pickups.green_armor)
+---###        hm_give_armor(HM, 100, 100)
+---###      end
   end
 
   local function adjust_hmodel(HM)

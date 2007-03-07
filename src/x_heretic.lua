@@ -547,6 +547,15 @@ HC_PICKUPS =
   shield2 = { stat="armor", give=200, prob=10 },
 }
 
+HC_NICENESS =
+{
+  w1 = { weapon="crossbow",  quest=1, odds=70, always=true  },
+  w2 = { weapon="gauntlets", quest=3, odds=20, always=false },
+
+  p1 = { pickup="shield1", prob=2.0 },
+  p2 = { pickup="shield2", prob=0.7 },
+}
+
 HC_DEATHMATCH =
 {
   weapons =
@@ -618,6 +627,8 @@ THEME_FACTORIES["heretic"] = function()
     pickups = HC_PICKUPS,
     pickup_stats = { "health", "crystal", "arrow", "claw_orb",
                        "runes", "flame_orb", "mace_orb" },
+    niceness = HC_NICENESS,
+
     initial_model = HC_INITIAL_MODEL,
 
     quests = HC_QUESTS,

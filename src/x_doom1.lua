@@ -858,6 +858,7 @@ DM_MONSTER_WEAPON_PREFS =
   spider  = { launch=3.0, bfg=9.0 },
 }
 
+
 -- Pickup List
 -- ===========
 
@@ -889,6 +890,17 @@ DM_PICKUPS =
 
   -- Note 2: the BACKPACK is a quest item
 }
+
+DM_NICENESS =
+{
+  w1 = { weapon="shotty", quest=1, prob=70, always=true  },
+  w2 = { weapon="chain",  quest=3, prob=20, always=false },
+  w3 = { weapon="plasma", quest=5, prob=10, always=true  },
+
+  p1 = { pickup="green_armor", prob=2.0 },
+  p2 = { pickup="blue_armor",  prob=0.5 },
+}
+
 
 -- DeathMatch stuff
 -- ================
@@ -1022,6 +1034,7 @@ THEME_FACTORIES["doom_common"] = function()
 
     pickups = DM_PICKUPS,
     pickup_stats = { "health", "bullet", "shell", "rocket", "cell" },
+    niceness = DM_NICENESS,
 
     quests = DM_QUESTS,
     dm = DM_DEATHMATCH,
