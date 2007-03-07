@@ -660,6 +660,9 @@ function distribute_pickups(p, c, HM, backtrack)
     elseif (settings.game == "hexen") then
       -- FIXME: Hexen
 
+    elseif (settings.game == "wolf3d") then
+      -- FIXME: Wolf
+
     else -- Doom
 
       -- let poor ol' player have a shotgun near start
