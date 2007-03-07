@@ -112,7 +112,7 @@ void Main_FatalError(const char *msg, ...)
 
   buffer[MSG_BUF_LEN-2] = 0;
 
-  DLG_ShowError(buffer);
+  DLG_ShowError("%s", buffer);
 
   Main_Shutdown();
 
@@ -122,6 +122,21 @@ void Main_FatalError(const char *msg, ...)
 
 void Build_Cool_Shit()
 {
+  bool is_wolf  = (strcmp(main_win->setup_box->get_Game(), "wolf3d") == 0) ||
+                  (strcmp(main_win->setup_box->get_Game(), "spear")  == 0);
+  bool is_hexen = (strcmp(main_win->setup_box->get_Game(), "hexen")  == 0);
+
+  // multiplayer not supported in Wolf3d / SOD
+  // FIXME: disable the "Mode:" control when these games are selected
+  if (is_wolf)
+  {
+    if (strcmp(main_win->setup_box->get_Mode(), "sp") != 0)
+    {
+      DLG_ShowError("Multiplayer modes not supported in Wolf3D or Spear-of-Destiny.");
+      return;
+    }
+  }
+
   UI_Build *that = main_win->build_box;
 
   char *filename = Select_Output_File();
@@ -133,10 +148,6 @@ void Build_Cool_Shit()
   // lock most widgets of user interface
   main_win->Locked(true);
   that->P_SetButton(true);
-
-  bool is_wolf  = (strcmp(main_win->setup_box->get_Game(), "wolf3d") == 0) ||
-                  (strcmp(main_win->setup_box->get_Game(), "spear")  == 0);
-  bool is_hexen = (strcmp(main_win->setup_box->get_Game(), "hexen")  == 0);
 
   bool was_ok;
 
@@ -157,6 +168,8 @@ void Build_Cool_Shit()
     else
       Doom_FinishWAD();
   }
+
+  // FIXME: backup wolf output files on failure
 
   if (was_ok and !is_wolf)
   {
@@ -181,6 +194,8 @@ void Build_Cool_Shit()
   }
 
   that->P_Finish();
+
+  // FIXME: delete wolf output files on failure
 
   if (!is_wolf)
   {
