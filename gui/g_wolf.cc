@@ -333,8 +333,6 @@ int add_block(lua_State *L)
   int tile = luaL_checkint(L,3);
   int obj  = luaL_checkint(L,4);
 
-x=x-3; if (x < 1) return 0; //!!!!! TESTING
-
   // adjust and validate coords
   x = x-1;
   y = 64-y;
