@@ -895,7 +895,7 @@ DM_NICENESS =
 {
   w1 = { weapon="shotty", quest=1, prob=70, always=true  },
   w2 = { weapon="chain",  quest=3, prob=20, always=false },
-  w3 = { weapon="plasma", quest=5, prob=10, always=true  },
+  w3 = { weapon="plasma", quest=5, prob=35, always=true  },
 
   p1 = { pickup="green_armor", prob=2.0 },
   p2 = { pickup="blue_armor",  prob=0.5 },
