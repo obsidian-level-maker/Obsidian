@@ -26,6 +26,7 @@ WF_THING_NUMS =
   officer = { easy=116, medium=152, hard=188, dirs=true, patrol=4 },
   ss_dude = { easy=126, medium=162, hard=198, dirs=true, patrol=4 },
   dog     = { easy=134, medium=170, hard=206, dirs=true, patrol=4 },
+  mutant  = { easy=216, medium=234, hard=252, dirs=true, patrol=4 }, --(SOD)
 
   -- bosses
   fake_hitler = 160,
