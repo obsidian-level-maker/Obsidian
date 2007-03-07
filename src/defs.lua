@@ -16,8 +16,6 @@
 --
 ----------------------------------------------------------------
 
-PL_W = 10; PL_H = 8  -- cells in the plan
-
 BW =  9; BH = BW  -- blocks in a cell
 FW =  4; FH = FW  -- fragments in a block
 KW =  3; KH = KW  -- chunks in a cell
