@@ -26,6 +26,7 @@ require 'x_heretic'
 require 'x_hexen'
 
 require 'x_wolf'
+require 'x_spear'
 
 
 ----------------------------------------------------------------
@@ -88,6 +89,7 @@ function get_rand_rail()
 end
 
 function choose_liquid()
+  assert(THEME.liquids)
   local name,info = rand_table_pair(THEME.liquids)
   return info
 end
