@@ -155,8 +155,6 @@ void Build_Cool_Shit()
       Wolf_Finish();
     else
       Doom_FinishWAD();
-
-///  that->P_Finish();
   }
 
   if (was_ok and !is_wolf)
@@ -180,6 +178,8 @@ void Build_Cool_Shit()
 
     was_ok = GB_BuildNodes(TEMP_FILENAME, filename);
   }
+
+  that->P_Finish();
 
   if (! FileDelete(TEMP_FILENAME))
     LogPrintf("WARNING: unable to delete temp file: %s\n", TEMP_FILENAME);

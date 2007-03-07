@@ -122,7 +122,7 @@ void GB_DisplaySetBar(int barnum, int count)
 
 void GB_DisplayClose(void)
 {
-  main_win->build_box->P_Finish();
+  /* does nothing */
 }
 
 const nodebuildfuncs_t edge_build_funcs =
