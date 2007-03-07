@@ -1,0 +1,89 @@
+
+Same:
+
+ ID    Wolfenstein 3D       |  Spear of Destiny
+----------------------------+-----------------------------
+0001 Gray stone 1 (GS)      | Gray stone 1
+0002 Gray stone 2           | Gray stone 2
+0003 GS-Nazi flag           | Gray w/banner
+0004 GS-Hitler              | Gray w/hitler
+0005 BS-cell                | Cell
+0006 GS-gold eagle          | Gray w/eagle
+0007 BS-cell-skeleton       | Cell w/skeleton
+0008 Blue stone 1 (BS)      | Blue stone 1
+0009 Blue stone 2           | Blue stone 2
+000a WP-white eagle         | Wood w/eagle
+000b WP-Hitler              | Wood w/hitler
+000c Wood panelling (WP)    | Wood panelling
+000d Entry elevator door    | Entrance to level
+000e SP-sign                | Steel w/signs
+000f Steel panel (SP)       | Steel plate
+0010 Outside: NS=Dy/EW=Nt   | Landscape
+0011 Red brick (RB)         | Red brick
+0012 RB-gold swastika       | Red w/wreath
+0013 Purple stone (PS)      | Purple w/slime
+0014 RB-purple eagle        | Red w/shield
+0015 Elevator               | Elevator
+0016 Dead elevator control  | Dead Elevator
+0017 WP-Iron Cross          | Wood w/Iron Cross
+0018 GS-moss 1              | Gray w/slime
+0019 PS-blood               | Purple w/blood
+001a GS-moss 2              | Gray w/slime
+001b Gray stone 3           | Gray stone 3
+001c GS-sign                | Gray w/signs
+001d Brown cave (BC)        | Brown Weave
+001e BC-blood 1             | Brn weave/blood1
+001f BC-blood 2             | Brn weave/blood2
+0020 BC-blood 3             | Brn weave/blood3
+0021 Gray-stnd glass Htlr   | Stained glass
+0022 BB-skull               | Blue skull
+0023 Gray brick 1 (GB)      | Gray brick 1
+0024 BB-swastika            | Blue swastika
+0025 GB-drain               | Gray w/vent
+0026 RB-multicolor          | Multicolor brick
+0027 Gray brick 2, cracked  | Gray brick 2
+0028 Blue brick (BB)        | Blue Wall
+0029 BS-sign                | Blue w/sign
+002a Brown brick 1 (BrB)    | Brown marble 1
+002b GB-map                 | Gray w/map
+002c Brown stone 1          | Brown stone 1
+002d Brown stone 2          | Brown stone 2
+002e Brown brick 2          | Brown marble 2
+002f BrB-Nazi flag          | Brown marble w/flag
+0030 Beige panel-wood trim  | Wood panel
+0031 GS-Hitler              | Gray w/hitler
+0055 Dead elevator rails    | Elevator
+005a Unlocked door-E/W      | Unlocked door-E/W
+005b Unlocked door-N/S      | Unlocked door-N/S
+005c Locked door-E/W        | Locked door-E/W
+005d Locked door-N/S        | Locked door-N/S
+005e Locked door-E/W        | Locked door-E/W
+005f Locked door-N/S        | Locked door-N/S
+0060 Stuck door-N/S holo    | Stuck door-N/S holo
+0061 Stuck door-E/W holo    | Stuck door-E/W holo
+0064 Elevator door-E/W      | Elevator door-E/W
+0065 Elevator door-N/S      | Elev dr-E/W (SOD)
+0068 Blue Stone 1           | Blue Wall
+006a Deaf guard             | Floor (deaf guard)
+006b Secret elevator        | Elev Flr to secret
+00ca Blank                  | Blank
+00cb Highlight-yellow       | Highlight-yellow
+
+Different:
+
+0032 Jammed door            | Stone Wall #1 (SOD)
+0033 Side of doorway        | Stone Wall #2 (SOD)
+0034 NOT USED               | Stone W/Flag (SOD)
+0035 Jammed locked door     | Stone W/Wreath (SOD)
+0036 Garbled image 1        | Gray Concrete(light)
+0037 Garbled image 2        | Gray Concrete(dark)
+0038 Garbled image 3        | Blood Wall (SOD)
+0039 Garbled image 4        | Concrete (SOD)
+003a Garbled image 5        | BR Stone 1 (SOD)
+003b Garbled image 6        | BR Stone 2 (SOD)
+003c Garbled image 7        | Elevator Wall (SOD)
+003d Garbled image 8        | White panel (SOD)
+003e Garbled image 9        | Brn Concrete (SOD)
+003f Garbled image 10       | Purple Brick (SOD)
+
+Information obtained from: MapEdit 8.5
