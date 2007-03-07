@@ -633,6 +633,7 @@ THEME_FACTORIES["hexen"] = function()
   {
     plan_size = 9,
     cell_size = 9,
+    cell_min_size = 6,
 
     caps = { heights=true,   sky=true, 
              fragments=true, move_frag=true, rails=true,

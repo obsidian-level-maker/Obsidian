@@ -312,8 +312,9 @@ THEME_FACTORIES["wolf3d"] = function()
   {
     plan_size = 7,
     cell_size = 7,
+    cell_min_size = 3,
 
-    caps = { },
+    caps = { narrow_doors=true, },
 
     ERROR_TEX  = WF_NO_TILE,
     ERROR_FLAT = 99, -- dummy
