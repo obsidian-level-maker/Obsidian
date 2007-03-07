@@ -110,6 +110,12 @@ function merge_missing(dest, src)
   return dest
 end
 
+function name_it_up(LIST)
+  for name,info in pairs(LIST) do
+    info.name = name
+  end
+end
+
 function expand_copies(LIST)
 
   local function expand_it(name, sub)
