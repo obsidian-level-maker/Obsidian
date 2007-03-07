@@ -280,6 +280,24 @@ WF_MONSTERS =
   ss_dude = { prob=10, hp=100, dm=30, fp=10, r=20,h=40, hitscan=true, },
 }
 
+WF_BOSSES =
+{
+  -- FIXME: hit-points are just averages of skill 2 and 3
+ 
+  -- FIXME: dm values are crap!
+
+  fat_face      = { hp=1000, dm=50, r=20,h=40, hitscan=true },
+  hans_grosse   = { hp=1000, dm=30, r=20,h=40, hitscan=true },
+  gretel_grosse = { hp=1000, dm=50, r=20,h=40. hitscan=true },
+  giftmacher    = { hp=1000, dm=50, r=20,h=40 },
+
+  fake_hitler   = { hp=350,  dm=50, r=20,h=40 },
+  schabbs       = { hp=1250, dm=70, r=20,h=40 },
+
+  -- this includes both Hitlers (in and out of the armor suit)
+  hitler        = { hp=1100, dm=90, r=20,h=40, hitscan=true },
+}
+
 WF_MONSTER_GIVE =
 {
   guard   = { { ammo="bullet", give=4 } },
@@ -345,6 +363,7 @@ THEME_FACTORIES["wolf3d"] = function()
 
     thing_nums = WF_THING_NUMS,
     monsters   = WF_MONSTERS,
+    bosses     = WF_BOSSES,
     mon_give   = WF_MONSTER_GIVE,
     weapons    = WF_WEAPONS,
 
