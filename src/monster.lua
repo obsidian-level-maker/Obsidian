@@ -678,7 +678,7 @@ function distribute_pickups(p, c, HM, backtrack)
           add_pickup(c, ndef.pickup, info)
 
           assert(info.stat == "armor")  -- !!! FIXME
-          hm_give_armor(HM, info.stat.give, info.stat.give)
+          hm_give_armor(HM, info.give, info.limit or info.give)
 
         else
           error("Bad NICENESS table!")
