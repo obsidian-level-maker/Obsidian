@@ -134,7 +134,8 @@ void Build_Cool_Shit()
   main_win->Locked(true);
   that->P_SetButton(true);
 
-  bool is_wolf  = (strcmp(main_win->setup_box->get_Game(), "wolf3d") == 0);
+  bool is_wolf  = (strcmp(main_win->setup_box->get_Game(), "wolf3d") == 0) ||
+                  (strcmp(main_win->setup_box->get_Game(), "spear")  == 0);
   bool is_hexen = (strcmp(main_win->setup_box->get_Game(), "hexen")  == 0);
 
   bool was_ok;
