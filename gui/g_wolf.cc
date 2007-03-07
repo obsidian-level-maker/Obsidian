@@ -367,22 +367,34 @@ void Wolf_InitLua(lua_State *L)
   luaL_register(L, "wolf", wolf_funcs);
 }
 
-bool Wolf_Begin(void)
+bool Wolf_Begin(void) // FIXME: pass output directory
 {
-  map_fp = fopen("GAMEMAPS.OUT", "wb");
+  const char *ext = "WL6"; // FIXME: pass as parameter
+
+  if (strcmp(main_win->setup_box->get_Game(), "spear")  == 0)
+    ext = "SOD";
+
+  char gamemaps_base[40];
+  char maphead_base[40];
+
+  sprintf(gamemaps_base, "GAMEMAPS.%s", ext);
+  sprintf(maphead_base,  "MAPHEAD.%s",  ext);
+
+  // FIXME: use proper path!
+ 
+  map_fp = fopen(gamemaps_base, "wb");
 
   if (! map_fp)
   {
-    DLG_ShowError("Unable to create GAMEMAPS.OUT:\n%s", strerror(errno));
+    DLG_ShowError("Unable to create %s:\n%s", gamemaps_base, strerror(errno));
     return false;
   }
 
-  // Move to Finisher??
-  head_fp = fopen("MAPHEAD.OUT", "wb");
+  head_fp = fopen(maphead_base, "wb");
 
   if (! head_fp)
   {
-    DLG_ShowError("Unable to create MAPHEAD.OUT:\n%s", strerror(errno));
+    DLG_ShowError("Unable to create %s:\n%s", maphead_base, strerror(errno));
     return false;
   }
 
