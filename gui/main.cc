@@ -181,8 +181,11 @@ void Build_Cool_Shit()
 
   that->P_Finish();
 
-  if (! FileDelete(TEMP_FILENAME))
-    LogPrintf("WARNING: unable to delete temp file: %s\n", TEMP_FILENAME);
+  if (!is_wolf)
+  {
+    if (! FileDelete(TEMP_FILENAME))
+      LogPrintf("WARNING: unable to delete temp file: %s\n", TEMP_FILENAME);
+  }
 
   StringFree(filename);
 
