@@ -631,6 +631,20 @@ THEME_FACTORIES["hexen"] = function()
 
   return
   {
+    plan_size = 9,
+    cell_size = 9,
+
+    caps = { heights=true,   sky=true, 
+             fragments=true, move_frag=true, rails=true,
+             closets=true,   depots=true,
+             switches=true,  liquids=true,
+             teleporters=true,
+             
+             -- Hexen unique stuff
+             polyobjs=true,  three_part_weapons=true,
+             hubs=true,      acs=true,
+           },
+
     ERROR_TEX  = "ABADONE",
     ERROR_FLAT = "F_033",
     SKY_TEX    = "F_SKY",

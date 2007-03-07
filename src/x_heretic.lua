@@ -596,6 +596,16 @@ THEME_FACTORIES["heretic"] = function()
 
   return
   {
+    plan_size = 9,
+    cell_size = 9,
+
+    caps = { heights=true, sky=true, 
+             fragments=true, move_frag=true, rails=true,
+             closets=true,   depots=true,
+             switches=true,  liquids=true,
+             teleporters=true,
+           },
+
     ERROR_TEX  = "DRIPWALL",
     ERROR_FLAT = "FLOOR09",
     SKY_TEX    = "F_SKY1",

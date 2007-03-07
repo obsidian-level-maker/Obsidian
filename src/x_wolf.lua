@@ -310,6 +310,11 @@ THEME_FACTORIES["wolf3d"] = function()
 
   return
   {
+    plan_size = 7,
+    cell_size = 7,
+
+    caps = { },
+
     ERROR_TEX  = WF_NO_TILE,
     ERROR_FLAT = 99, -- dummy
     SKY_TEX    = 77, -- dummy
@@ -374,7 +379,7 @@ function write_wolf_level(p)
 
   wolf.begin_level(lev_name);
 
-  for y = 2,63 do for x = 2,63 do
+  for y = 1,64 do for x = 1,64 do
     handle_block(x, y)
   end end
 

@@ -643,8 +643,15 @@ DM_SWITCHES =
 DM_DOORS =
 {
   -- Note: most of these with h=112 are really 128 pixels
-  --       tall, but work fine when truncated/
+  --       tall, but work fine when truncated.
 
+  d_big2   = { prefab="DOOR", w=128, h=112,
+               door="BIGDOOR2", track="DOORTRAK",
+               light="LITE5", step="STEP1",
+               frame_floor="FLAT1", frame_ceil="TLITE6_6",
+             },
+
+--[[ !!!!! DM_DOORS
   d_uac    = { wall="BIGDOOR1", w=128, h=72  },  -- actual height is 96
   d_big1   = { wall="BIGDOOR2", w=128, h=112 },
   d_big2   = { wall="BIGDOOR3", w=128, h=112 },
@@ -653,10 +660,10 @@ DM_DOORS =
   d_wood1  = { wall="BIGDOOR5", ceil="CEIL5_2", w=128, h=112 },
   d_wood2  = { wall="BIGDOOR6", ceil="CEIL5_2", w=128, h=112 }, -- this is the real height!
   d_wood3  = { wall="BIGDOOR7", ceil="CEIL5_2", w=128, h=112 },
+--]]
 
   d_small1 = { wall="DOOR1",    w=64, h=72 },
   d_small2 = { wall="DOOR3",    w=64, h=72 },
-
 }
 
 DM_IMAGES =
@@ -989,6 +996,16 @@ THEME_FACTORIES["doom_common"] = function()
 
   return
   {
+    plan_size = 9,
+    cell_size = 9,
+
+    caps = { heights=true, sky=true, 
+             fragments=true, move_frag=true, rails=true,
+             closets=true,   depots=true,
+             switches=true,  liquids=true,
+             teleporters=true,
+           },
+
     ERROR_TEX  = "FIREBLU1",
     ERROR_FLAT = "SFLR6_4",
     SKY_TEX    = "F_SKY1",
