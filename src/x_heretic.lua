@@ -501,10 +501,13 @@ HC_MONSTERS =
   sabreclaw   = { prob=25, r=20,h=64, hp=150, dm=30, fp=90, melee=true },
   weredragon  = { prob=20, r=34,h=80, hp=220, dm=50, fp=90, },
   ophidian    = { prob=20, r=22,h=72, hp=280, dm=50, fp=90, },
+}
 
+HC_BOSSES =
+{
   ironlich    = { prob= 4, r=40,h=72, hp=700, dm=99, fp=200, float=true },
-  maulotaur   = { prob= 0, r=28,h=104,hp=3000,dm=99, fp=200, },
-  d_sparil    = { prob= 0, r=28,h=104,hp=2000,dm=99, fp=200, },
+  maulotaur   = { prob= 1, r=28,h=104,hp=3000,dm=99, fp=200, },
+  d_sparil    = { prob= 1, r=28,h=104,hp=2000,dm=99, fp=200, },
 }
 
 HC_WEAPONS =
@@ -622,6 +625,7 @@ THEME_FACTORIES["heretic"] = function()
 
     thing_nums = HC_THING_NUMS,
     monsters   = HC_MONSTERS,
+    bosses     = HC_BOSSES,
     weapons    = HC_WEAPONS,
 
     pickups = HC_PICKUPS,

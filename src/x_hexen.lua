@@ -554,9 +554,14 @@ XN_MONSTERS =
   bishop     = { prob=10, r=24,h=64, hp=130, dm=40, fp=70, float=true },
   reiver     = { prob= 5, r=24,h=64, hp=150, dm=50, fp=70, float=true },
   wyvern     = { prob= 5, r=20,h=64, hp=640, dm=60, fp=70, float=true },
+}
 
-  heresiarch = { prob= 0, r=40,h=120,hp=5000,dm=70, fp=70 },
-  korax      = { prob= 0, r=66,h=120,hp=5000,dm=90, fp=70 },
+XN_BOSSES =
+{
+  -- wyvern???
+
+  heresiarch = { r=40,h=120,hp=5000,dm=70, fp=70 },
+  korax      = { r=66,h=120,hp=5000,dm=90, fp=70 },
 }
 
 XN_WEAPONS =
@@ -659,6 +664,7 @@ THEME_FACTORIES["hexen"] = function()
     SKY_TEX    = "F_SKY",
 
     monsters = XN_MONSTERS,
+    bosses   = XN_BOSSES,
     weapons  = XN_WEAPONS,
 
     thing_nums = XN_THING_NUMS,

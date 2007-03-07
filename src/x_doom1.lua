@@ -785,9 +785,13 @@ DM_MONSTERS =
   spectre   = { prob=20, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=40,melee=true },
   skull     = { prob=16, r=16,h=56, hp=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
 
+}
+
+DM_BOSSES =
+{
   -- special monsters (only for boss levels)
-  cyber     = { prob=1, r=40, h=110,hp=4000,dm=150, fp=150 },
-  spider    = { prob=0, r=128,h=100,hp=3000,dm=200, fp=240, hitscan=true },
+  cyber     = { r=40, h=110,hp=4000,dm=150, fp=150 },
+  spider    = { r=128,h=100,hp=3000,dm=200, fp=240, hitscan=true },
 }
 
 D2_MONSTERS =
@@ -1024,6 +1028,7 @@ THEME_FACTORIES["doom_common"] = function()
     SKY_TEX    = "F_SKY1",
 
     monsters = DM_MONSTERS,
+    bosses   = DM_BOSSES,
     weapons  = DM_WEAPONS,
 
     thing_nums = DM_THING_NUMS,
