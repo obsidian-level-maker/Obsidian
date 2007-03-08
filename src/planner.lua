@@ -1054,6 +1054,10 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     local theme
     if start == 2 and Q.first.hallway and rand_odds(96) then
+      -- extend the hallway in the previous quest
+      theme = Q.first.theme
+    elseif not THEME.caps.heights then
+      -- for Wolf3d/SOD, too many theme changes look bad
       theme = Q.first.theme
     else
       theme = get_rand_hallway()
