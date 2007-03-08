@@ -115,25 +115,6 @@ function write_level(p, lev_name)
   local function NORMALIZE(n) return math.floor(n * 1.0) end
 
 
-  local function make_mini_map()
-
-    con.map_begin(p.blk_w, p.blk_h)
-
-    for by = p.blk_h,1,-1 do
-      for bx = 1,p.blk_w do
-        local B = p.blocks[bx][by]
-        if not B then con.map_pixel(0)
-        elseif B.solid then con.map_pixel(1)
-        elseif B.kind  then con.map_pixel(4)
-        elseif B.c_tex == THEME.SKY_TEX then con.map_pixel(3)
-        else con.map_pixel(2)
-        end
-      end
-    end
-
-    con.map_end()
-  end
-
   local function construct_things()
 
     local function do_thing(bx, by, th)
@@ -900,8 +881,6 @@ function write_level(p, lev_name)
   else
     con.progress(90); if con.abort() then return end
 
-    if con.map_begin then make_mini_map() end
-
     wad.begin_level(lev_name);
 
     write_things()
@@ -911,5 +890,27 @@ function write_level(p, lev_name)
 
     con.progress(100)
   end
+end
+
+
+function make_mini_map(p)
+
+  if not con.map_begin then return end
+
+  con.map_begin(p.blk_w, p.blk_h)
+
+  for by = p.blk_h,1,-1 do
+    for bx = 1,p.blk_w do
+      local B = p.blocks[bx][by]
+      if not B then con.map_pixel(0)
+      elseif B.solid then con.map_pixel(1)
+      elseif B.kind  then con.map_pixel(4)
+      elseif B.c_tex == THEME.SKY_TEX then con.map_pixel(3)
+      else con.map_pixel(2)
+      end
+    end
+  end
+
+  con.map_end()
 end
 
