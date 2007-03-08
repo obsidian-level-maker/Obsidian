@@ -13,7 +13,8 @@ Most popular:
       (examples: "False Spear", "End of Destiny", "Operation Todpfad",
        "Castle Hasselhoff" and many many others.......)
 3. Textured/multitextured floors/ceilings
-      (examples: "Orb of Dilaaria", "False Spear", "Wolfenstein Reloaded".......)
+      (examples: "Orb of Dilaaria", "False Spear", "Wolfenstein Reloaded",
+       "Lost World".......)
 4. Parallaxed skies (examples: "End of Destiny", "False Spear", "Wolfenstein Reloaded" and too many others to mention)
 5. Weapon bobbing (examples: "False Spear", "Operation Todpfad", and too many others to mention)
 6. Interactive textures (example: "False Spear")
