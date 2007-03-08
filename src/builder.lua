@@ -1980,7 +1980,7 @@ function make_chunks(p)
     if cell_h < 6 then
       T = 1
       B = 1
-      N = cell_w - T - B
+      N = cell_h - T - B
     else
       repeat
         T = rand_index_by_probs(K_BORD_PROBS)
@@ -4254,7 +4254,7 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
     end
 
     -- FIXME: determine corner_kind (like border_kind)
-    if false then --!!!! out_num == #E.cells then
+    if E.kind == "sky" then
 
       local CORN = copy_block_with_new(E.cells[1].rmodel,
       {
@@ -4460,7 +4460,7 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
     end
 
 --!!!!!! TESTING
-if not c.scenic and K.empty
+if not c.scenic and K.empty and false
   and not (c == p.quests[1].first) then
   gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.theme.void })
   return
