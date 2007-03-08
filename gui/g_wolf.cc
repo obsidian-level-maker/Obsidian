@@ -136,6 +136,7 @@ int rle_compress_plane(u16_t *plane, int src_len)
 static void DumpMap(void)
 {
   int x, y;
+  char line_buf[80];
 
   for (y = 0; y < 64; y++)
   {
@@ -165,10 +166,12 @@ static void DumpMap(void)
       else
         ch = '?';
 
-      LogPrintf("%c", ch);
+      line_buf[x] = ch;
     }
 
-    LogPrintf("\n");
+    line_buf[64] = 0;
+
+    DebugPrintf("%s\n", line_buf);
   }
 }
 
