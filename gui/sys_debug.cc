@@ -25,7 +25,7 @@
 static FILE *log_file = NULL;
 
 static bool debugging = false;
-static bool terminal  = true;
+static bool terminal  = false;
 
 
 //
@@ -38,6 +38,7 @@ void LogInit(bool debug_enable)
   LogPrintf("========= START OF OBLIGE LOGS =========\n\n");
 
   debugging = debug_enable;
+  terminal  = debug_enable;
 
   if (debugging)
     LogPrintf("DEBUGGING ENABLED.\n\n");
