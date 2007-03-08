@@ -52,12 +52,12 @@ function get_level_names(settings)
 
   elseif (settings.game == "wolf3d" or settings.game == "spear") then
 
-    local epi_num = sel(settings.length == "full", 6, 1)
+    local epi_num = sel(settings.length == "full",   6, 1)
     local lev_num = sel(settings.length == "single", 1, 10)
 
     for e = 1,epi_num do
       for m = 1,lev_num do
-        table.insert(LEVELS, string.format("L%d", (e-1)*lev_num + m))
+        table.insert(LEVELS, string.format("E%dM%d", e, m))
       end
     end
 
@@ -147,13 +147,15 @@ function build_cool_shit()
 
     if con.abort() then aborted = true; break; end
 
-    if settings.game == "wolf3d" then
+    if settings.game == "wolf3d" or settings.game == "spear" then
       write_wolf_level(PLAN)
     else
       write_level(PLAN, lev)
     end
 
     if con.abort() then aborted = true; break; end
+
+    make_mini_map(PLAN)
   end
 
   if aborted then
