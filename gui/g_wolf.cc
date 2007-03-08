@@ -38,10 +38,15 @@
 static FILE *map_fp;
 static FILE *head_fp;
 
-static int map_offset;
+static int write_errors_seen;
+
+static int current_map; // 1 to 60
+static int current_offset;
 
 static u16_t *solid_plane;
 static u16_t *thing_plane;
+
+#define PL_START  2
 
 
 //------------------------------------------------------------------------
@@ -78,65 +83,52 @@ static void WF_PutNString(const char *str, int max_len, FILE *fp)
   }
 }
 
-namespace rle_comp
+int rle_compress_plane(u16_t *plane, int src_len)
 {
-/* private */
-  unsigned short value;
-  unsigned short repeat;
+        u16_t *dest = plane + PL_START;
+  const u16_t *src  = plane + PL_START;
+  const u16_t *endp = plane + PL_START + (src_len/2);
 
-  void Begin()
-  {
-    repeat = 0;
-  }
-
-  void Flush()
-  {
-    while (repeat > 3)
-    {
-      int actual = MIN(128, repeat);
-
-      WF_PutU16(RLEW_TAG, map_fp);  // tag
-      WF_PutU16(actual, map_fp);    // count
-      WF_PutU16(value, map_fp);     // value
-
-      repeat -= actual;
-    }
-
-    for (; repeat > 0; repeat--)
-    {
-      WF_PutU16(value, map_fp);
-    }
-  }
-
-  void Add(unsigned short datum)
+  while (src < endp)
   {
     // don't want no Carmackization...
-    SYS_ASSERT((datum & 0xFF00) != 0xA700);
-    SYS_ASSERT((datum & 0xFF00) != 0xA800);
+    SYS_ASSERT((*src & 0xFF00) != 0xA700);
+    SYS_ASSERT((*src & 0xFF00) != 0xA800);
 
     // it shouldn't match the RLEW tag either...
-    SYS_ASSERT(datum != RLEW_TAG);
+    SYS_ASSERT(*src != RLEW_TAG);
 
-#if 1
-    WF_PutU16(datum, map_fp);
-#else
-    if (repeat > 0)
+    // determine longest run
+    int run = 1;
+
+    while (src+run < endp && run < 100 && src[run-1] == src[run])
+      run++;
+
+    if (run > 3)
     {
-      if (datum == value)
-      {
-        repeat++;
-        return;
-      }
+      // Note: use src[2] since src may == dest, hence src[0] and src[1]
+      //       would get overwritten by the tag and count.
 
-      Flush();
+      *dest++ = RLEW_TAG;    // tag
+      *dest++ = run;         // count
+      *dest++ = src[2];      // value
+
+      src += run;
     }
-
-    value = datum;
-    repeat = 1;
-#endif
+    else
+    {
+      for (; run > 0; run--)
+        *dest++ = *src++;
+    }
   }
 
-} // namespace rle_comp
+  int dest_len = 2 * (dest - plane);
+
+  plane[0] = dest_len + 2; // compressed size (bytes)
+  plane[1] = src_len;      // expanded size (bytes)
+
+  return dest_len + 4; // total size
+}
 
 
 //------------------------------------------------------------------------
@@ -149,8 +141,8 @@ static void DumpMap(void)
   {
     for (x = 0; x < 64; x++)
     {
-      int tile = solid_plane[y*64+x];
-      int obj  = thing_plane[y*64+x];
+      int tile = solid_plane[PL_START+y*64+x];
+      int obj  = thing_plane[PL_START+y*64+x];
 
       int ch;
 
@@ -180,44 +172,23 @@ static void DumpMap(void)
   }
 }
 
-static void WriteSolidPlane(int *offset, int *length)
+static void WritePlane(u16_t *plane, int *offset, int *length)
 {
   *offset = (int)ftell(map_fp);
 
-  WF_PutU16(64*64*2 + 2, map_fp);  // compressed size (FIXME: could go wrong!)
-  WF_PutU16(64*64*2, map_fp);      // expanded size
+  *length = rle_compress_plane(plane, 64*64*2);
 
-  rle_comp::Begin();
-
-  for (int i = 0; i < 64*64; i++)
+  if (1 != fwrite(plane, *length, 1, map_fp))
   {
-    rle_comp::Add(solid_plane[i]);
+    if (write_errors_seen < 10)
+    {
+      write_errors_seen += 1;
+      LogPrintf("Failure writing to map file! (%d bytes)\n", *length);
+    }
   }
 
-  rle_comp::Flush();
-
-  *length = (int)ftell(map_fp);
-  *length -= *offset;
-}
-
-static void WriteThingPlane(int *offset, int *length)
-{
-  *offset = (int)ftell(map_fp);
-
-  WF_PutU16(64*64*2 + 2, map_fp);  // compressed size (FIXME: could be wrong)
-  WF_PutU16(64*64*2, map_fp);      // expanded size
-
-  rle_comp::Begin();
-
-  for (int i = 0; i < 64*64; i++)
-  {
-    rle_comp::Add(thing_plane[i]);
-  }
-
-  rle_comp::Flush();
-
-  *length = (int)ftell(map_fp);
-  *length -= *offset;
+// FIXME: validate length
+//  int wrote_length = (int)ftell(map_fp) - *offset;
 }
 
 static void WriteBlankPlane(int *offset, int *length)
@@ -237,9 +208,6 @@ static void WriteBlankPlane(int *offset, int *length)
 
 static void WriteMap(void)
 {
-  //? SYS_ASSERT(the_world->w() <= 62);
-  //? SYS_ASSERT(the_world->h() <= 62);
-
   const char *message = OBLIGE_TITLE " " OBLIGE_VERSION;
 
   WF_PutNString(message, 64, map_fp);
@@ -247,12 +215,12 @@ static void WriteMap(void)
   int plane_offsets[3];
   int plane_lengths[3];
 
-  WriteSolidPlane(plane_offsets+0, plane_lengths+0);
-  WriteThingPlane(plane_offsets+1, plane_lengths+1);
-  WriteBlankPlane(plane_offsets+2, plane_lengths+2);
+  WritePlane(solid_plane, plane_offsets+0, plane_lengths+0);
+  WritePlane(thing_plane, plane_offsets+1, plane_lengths+1);
+  WriteBlankPlane(        plane_offsets+2, plane_lengths+2);
 
-  map_offset = (int)ftell(map_fp);
-  // FIXME: validate (error check)
+  current_offset = (int)ftell(map_fp);
+  // TODO: validate (error check)
 
   WF_PutU32(plane_offsets[0], map_fp);
   WF_PutU32(plane_offsets[1], map_fp);
@@ -266,23 +234,15 @@ static void WriteMap(void)
   WF_PutU16(64, map_fp);
   WF_PutU16(64, map_fp);
 
-  WF_PutNString("Custom Map", 16, map_fp);  // name
+  WF_PutNString("Custom Map", 16, map_fp);  // name (TODO: make one up)
 
-  WF_PutNString("!ID!", 4, map_fp);  // sanity check ??
+  WF_PutNString("!ID!", 4, map_fp);
 }
 
 static void WriteHead(void)
 {
-  WF_PutU16(RLEW_TAG, head_fp);
-
-  // offset to first map (info struct)
-  WF_PutU32(map_offset, head_fp);
-
-  // set remaining offsets to zero (=> no map)
-  for (int lev = 1; lev < 60; lev++)
-  {
-    WF_PutU32(0, head_fp);
-  }
+  // offset to map data (info struct)
+  WF_PutU32(current_offset, head_fp);
 }
 
 
@@ -295,15 +255,12 @@ namespace wolf
 //
 int begin_level(lua_State *L)
 {
-  // allocate planes and clear them
-
-  solid_plane = new u16_t[64*64];
-  thing_plane = new u16_t[64*64];
+  // clear the planes before use
 
   for (int i = 0; i < 64*64; i++)
   {
-    solid_plane[i] = NO_TILE;
-    thing_plane[i] = NO_OBJ;
+    solid_plane[PL_START+i] = NO_TILE;
+    thing_plane[PL_START+i] = NO_OBJ;
   }
 
   return 0;
@@ -313,12 +270,13 @@ int begin_level(lua_State *L)
 //
 int end_level(lua_State *L)
 {
-  // Write stuff here ???
+  DumpMap();
 
-/* FIXME
-  delete solid_plane;  solid_plane = NULL;
-  delete thing_plane;  thing_plane = NULL;
-*/
+  WriteMap();
+  WriteHead();
+
+  current_map += 1;
+
   return 0;
 }
 
@@ -340,8 +298,8 @@ int add_block(lua_State *L)
   SYS_ASSERT(0 <= x && x <= 63);
   SYS_ASSERT(0 <= y && y <= 63);
 
-  solid_plane[y*64+x] = tile;
-  thing_plane[y*64+x] = obj;
+  solid_plane[PL_START+y*64+x] = tile;
+  thing_plane[PL_START+y*64+x] = obj;
 
   return 0;
 }
@@ -377,12 +335,13 @@ bool Wolf_Begin(void) // FIXME: pass output directory
   char gamemaps_base[40];
   char maphead_base[40];
 
+  // FIXME: use these (rename XX.TMP -> XX.ext)
   sprintf(gamemaps_base, "GAMEMAPS.%s", ext);
   sprintf(maphead_base,  "MAPHEAD.%s",  ext);
 
   // FIXME: use proper path!
  
-  map_fp = fopen(gamemaps_base, "wb");
+  map_fp = fopen("GAMEMAPS.TMP", "wb");
 
   if (! map_fp)
   {
@@ -390,7 +349,7 @@ bool Wolf_Begin(void) // FIXME: pass output directory
     return false;
   }
 
-  head_fp = fopen(maphead_base, "wb");
+  head_fp = fopen("MAPHEAD.TMP", "wb");
 
   if (! head_fp)
   {
@@ -398,23 +357,37 @@ bool Wolf_Begin(void) // FIXME: pass output directory
     return false;
   }
 
+  // the maphead file always begins with the RLE tag
+  WF_PutU16(RLEW_TAG, head_fp);
+
+  // setup local variables
+  current_map    = 1;
+  current_offset = 0;
+ 
+  solid_plane = new u16_t[64*64 + 8]; // extra space for compressor
+  thing_plane = new u16_t[64*64 + 8];
+
+  write_errors_seen = 0;
+
   return true;
 }
 
 bool Wolf_Finish(void)
 {
-  // FIXME
-
-  DumpMap();
-
-  WriteMap();
-  WriteHead();
+  // set remaining offsets to zero (=> no map)
+  for (; current_map <= 100; current_map++)
+  {
+    WF_PutU32(0, head_fp);
+  }
 
   fclose(map_fp);
   fclose(head_fp);
 
   map_fp = head_fp = NULL;
 
-  return true;
+  delete solid_plane;  solid_plane = NULL;
+  delete thing_plane;  thing_plane = NULL;
+
+  return (write_errors_seen == 0);
 }
 
