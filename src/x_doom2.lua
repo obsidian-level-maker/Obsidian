@@ -618,7 +618,7 @@ D2_PICS =
 
 D2_LIQUIDS =
 {
-  slime = { name="slime", floor="SLIME01", sec_kind=7 }  --  5% damage
+  slime = { floor="SLIME01", sec_kind=7 }  --  5% damage
 }
 
 ------------------------------------------------------------

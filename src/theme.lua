@@ -31,6 +31,37 @@ require 'x_spear'
 
 ----------------------------------------------------------------
 
+
+function name_up_theme()
+
+  local SUB_LISTS =
+  {
+    "monsters", "bosses", "weapons", "pickups",
+    "themes",   "exits",  "hallways",
+    "hangs",    "crates", "doors",    "mats",
+    "lights",   "pics",   "liquids",  "rails",
+  }
+
+  for zzz,sub in ipairs(SUB_LISTS) do
+    if THEME[sub] then
+      name_it_up(THEME[sub])
+    end
+  end
+end
+
+function compute_pow_factors()
+
+  local function pow_factor(info)
+    return 5 + 19 * info.hp ^ 0.5 * (info.dm / 50) ^ 1.2
+  end
+
+  for name,info in pairs(THEME.monsters) do
+    info.pow = pow_factor(info)
+
+    con.debugf("Monster %s : power %d\n", name, info.pow)
+  end
+end
+
 function expand_prefabs(fabs)
 
   expand_copies(fabs)

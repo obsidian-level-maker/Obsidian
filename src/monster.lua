@@ -50,20 +50,6 @@ zprint = do_nothing
 zdump_table = do_nothing
 
 
-function compute_pow_factors()
-
-  local function pow_factor(info)
-    return 5 + 19 * info.hp ^ 0.5 * (info.dm / 50) ^ 1.2
-  end
-
-  for name,info in pairs(THEME.monsters) do
-    info.pow = pow_factor(info)
-
-    con.debugf("Monster %s : power %d\n", name, info.pow)
-  end
-end
-
-
 function add_thing(p,c, bx,by, name, blocking, angle, options)
 
   local kind = THEME.thing_nums[name]

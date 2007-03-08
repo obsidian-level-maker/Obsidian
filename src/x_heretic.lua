@@ -282,7 +282,7 @@ HC_OVERHANGS =
 
 HC_LIQUIDS =
 {
-  water = { name="water", floor="FLTFLWW1" },
+  water = { floor="FLTFLWW1" },
   -- FIXME
 }
 

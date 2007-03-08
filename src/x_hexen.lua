@@ -270,9 +270,9 @@ XN_OVERHANGS =
 
 XN_LIQUIDS =
 {
-  water = { name="water", floor="X_005" },
-  lava  = { name="lava",  floor="X_001" },
-  slime = { name="slime", floor="X_009" },
+  water = { floor="X_005" },
+  lava  = { floor="X_001" },
+  slime = { floor="X_009" },
 }
 
 XN_SWITCHES =

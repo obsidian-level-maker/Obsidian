@@ -619,10 +619,10 @@ DM_CRATES =
 
 DM_LIQUIDS =
 {
-  water = { name="water",  floor="FWATER1" },
-  blood = { name="blood",  floor="BLOOD1",  wall="BFALL1" }, -- no damage
-  nukage= { name="nukage", floor="NUKAGE1", wall="SFALL1", sec_kind=5 },  -- 10% damage
-  lava  = { name="lava",   floor="LAVA1", sec_kind=16, light=64 }, -- 20% damage
+  water = { floor="FWATER1" },
+  blood = { floor="BLOOD1",  wall="BFALL1" }, -- no damage
+  nukage= { floor="NUKAGE1", wall="SFALL1", sec_kind=5 },  -- 10% damage
+  lava  = { floor="LAVA1", sec_kind=16, light=64 }, -- 20% damage
 }
 
 DM_SWITCHES =

@@ -86,6 +86,8 @@ function create_theme()
 
   THEME = factory()
 
+  name_up_theme()
+
   expand_prefabs(PREFABS)
 
   compute_pow_factors()
