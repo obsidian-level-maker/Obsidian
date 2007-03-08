@@ -26,7 +26,7 @@ WF_THING_NUMS =
   officer = { easy=116, medium=152, hard=188, dirs=true, patrol=4 },
   ss_dude = { easy=126, medium=162, hard=198, dirs=true, patrol=4 },
   dog     = { easy=134, medium=170, hard=206, dirs=true, patrol=4 },
-  mutant  = { easy=216, medium=234, hard=252, dirs=true, patrol=4 }, --(SOD)
+  mutant  = { easy=216, medium=234, hard=252, dirs=true, patrol=4 },
 
   -- bosses
   fake_hitler   = 160,
@@ -153,7 +153,7 @@ WF_TILE_NUMS =
   deaf_guard = 106,
   elevator_secret = 107,
 
-  door = { 90, 91 },
+  door = { 90, 91 },  -- E/W then N/S
 
   door_silver = { 92, 93 },
   door_gold   = { 94, 95 },
@@ -238,8 +238,8 @@ WF_EXITS =
 
 WF_KEY_BITS =
 {
-  k_silver = { },
-  k_gold   = { },
+  k_silver = { kind_rep="door_silver" },
+  k_gold   = { kind_rep="door_gold"   },
 }
 
 ---- QUEST STUFF ----------------
@@ -281,6 +281,7 @@ WF_MONSTERS =
   dog     = { prob=50, hp=1,   dm=5,  fp=10, r=20,h=40, melee=true, },
   guard   = { prob=80, hp=25,  dm=10, fp=10, r=20,h=40, hitscan=true, cage_fallback=10 },
   officer = { prob=20, hp=50,  dm=20, fp=10, r=20,h=40, hitscan=true, },
+  mutant  = { prob=20, hp=55,  dm=35, fp=10, r=20,h=40, hitscan=true, },
   ss_dude = { prob=10, hp=100, dm=30, fp=10, r=20,h=40, hitscan=true, },
 }
 
@@ -380,7 +381,7 @@ THEME_FACTORIES["wolf3d"] = function()
 
     themes    = WF_THEMES,
     exits     = WF_EXITS,
-    hallways  = WF_THEMES, -- ???
+    hallways  = WF_THEMES, -- not used
 
     doors     = WF_DOORS,
     key_bits  = WF_KEY_BITS,
@@ -405,6 +406,15 @@ function write_wolf_level(p)
     if B.solid then
       assert(type(B.solid) == "number")
       tile = B.solid
+    elseif B.door_kind then
+      tile = WF_TILE_NUMS[B.door_kind]
+      if not tile then
+        error("Unknown door_kind: " .. tostring(B.door_kind))
+      end
+      if type(tile) == "table" then
+        tile = tile[sel(B.door_dir==4 or B.door_dir==6, 1, 2)]
+        assert(tile)
+      end
     else
       tile = WF_TILE_NUMS.area_min -- FIXME: + quest number
     end

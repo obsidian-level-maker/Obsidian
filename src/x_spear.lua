@@ -47,11 +47,6 @@ SP_THEMES =
 
 ----------------------------------------------------------------
 
-SP_MONSTERS =
-{
-  mutant = { prob=20, hp=55, dm=35, fp=10, r=20,h=40, hitscan=true, },
-}
-
 SP_BOSSES =
 {
   -- FIXME: dm values were pulled straight out of my arse
@@ -79,9 +74,8 @@ THEME_FACTORIES["spear"] = function()
   local T = THEME_FACTORIES.wolf3d()
 
   T.bosses   = SP_BOSSES
-  T.monsters = copy_and_merge(T.monsters, SP_MONSTERS)
 
-  T.themes   = copy_and_merge(T.themes,   SP_PICKUPS)
+  T.themes   = copy_and_merge(T.themes,   SP_THEMES)
   T.pickups  = copy_and_merge(T.pickups,  SP_PICKUPS)
 
   return T
