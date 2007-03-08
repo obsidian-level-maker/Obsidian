@@ -29,13 +29,14 @@ WF_THING_NUMS =
   mutant  = { easy=216, medium=234, hard=252, dirs=true, patrol=4 }, --(SOD)
 
   -- bosses
-  fake_hitler = 160,
-  hitler = 178,
-  fat_face = 179,
-  schabbs = 196,
+  fake_hitler   = 160,
+  fat_face      = 179,
   gretel_grosse = 197,
-  hans_grosse = 214,
-  giftmacher = 215,
+  hans_grosse   = 214,
+
+  schabbs       = 196,
+  giftmacher    = 215,
+  hitler        = 178,
 
   -- ghosts
   blinky = 224, -- red
@@ -49,18 +50,17 @@ WF_THING_NUMS =
 
   first_aid = 48,
   good_food = 47,
-  bad_food = 29,
+  dog_food  = 29,
 
-  clip_4 = 71,
   clip_8 = 49,
   machine_gun = 50,
   gatling_gun = 51,
 
-  cross = 52,
+  cross   = 52,
   chalice = 53,
-  bible = 54,
-  crown = 55,
-  one_up = 56,
+  bible   = 54,
+  crown   = 55,
+  one_up  = 56,
 
   -- scenery
   puddle = 23,
@@ -74,7 +74,7 @@ WF_THING_NUMS =
   tree = 31,
   skeleton_flat = 32,
   sink = 33,
-  potted_plant = 34,
+  plant = 34,
   urn = 35,
   bare_table = 36,
   ceiling_light = 37,
@@ -103,6 +103,8 @@ WF_THING_NUMS =
   stove = 68,
   spears = 69,
   vines = 70,
+
+  dud_clip = 71,
 
   dead_guard = 124,
 
@@ -140,7 +142,7 @@ WF_THING_NUMS =
   cow_skull    = 67,  -- REPLACES: pots
   blood_well   = 68,  -- REPLACES: stove
   angel_statue = 69,  -- REPLACES: spears
-  brown_column = 71,  -- REPLACES: clip_4
+  marble_column = 71, -- REPLACES: dud_clip
 }
 
 WF_TILE_NUMS =
@@ -265,8 +267,8 @@ WF_QUESTS =
 WF_DEATHMATCH =
 {
   weapons = { machine_gun=50, gatling_gun=20, },
-  health = { first_aid=70, good_food=25, bad_food=5 },
-  ammo = { clip_8=70, clip_4=20 },
+  health = { first_aid=70, good_food=25, dog_food=5 },
+  ammo = { clip_8=70 },
   items = { cross=50 },
   cluster = {}
 }
@@ -327,12 +329,11 @@ WF_PICKUPS =
 {
   first_aid = { stat="health", give=25 },
   good_food = { stat="health", give=10 },
-  bad_food  = { stat="health", give=4  },
+  dog_food  = { stat="health", give=4  },
 
   -- NOTE: no "gibs" here, they are fairly insignificant
 
   clip_8  =   { stat="bullet", give=8 },
-  clip_4  =   { stat="bullet", give=4 },
 }
 
 WF_INITIAL_MODEL =
