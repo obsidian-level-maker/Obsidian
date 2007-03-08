@@ -358,7 +358,7 @@ THEME_FACTORIES["wolf3d"] = function()
     cell_size = 7,
     cell_min_size = 3,
 
-    caps = { narrow_doors=true, one_item_per_block=true, },
+    caps = { blocky_items=true, blocky_doors=true, },
 
     ERROR_TEX  = WF_NO_TILE,
     ERROR_FLAT = 99, -- dummy

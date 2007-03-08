@@ -203,13 +203,6 @@ function link_other(link, cell)
   return nil
 end
 
-function get_bordering_cell(p, c, bx, by) --!!!! FIXME BROKEN
-  if bx == 1  and c.x > 1   then return p.cells[c.x-1][c.y], c.link[4] end
-  if bx == BW and c.x < p.w then return p.cells[c.x+1][c.y], c.link[6] end
-  if by == 1  and c.y > 1   then return p.cells[c.x][c.y-1], c.link[2] end
-  if by == BH and c.y < p.h then return p.cells[c.x][c.y+1], c.link[8] end
-end
-
 function links_in_cell(c)
   local count = 0
   for dir = 2,8,2 do
@@ -312,7 +305,7 @@ function create_link(p, c, other, dir)
     cells = { c, other },
     kind = "arch",  -- updated later
     build = c,    -- updated later
-    long = 3,      -- ditto
+    long = sel(THEME.caps.blocky_doors, 1, 3),
     deep = 1,
   }
 
@@ -1171,11 +1164,11 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
         local door_chance = 15
         if c1.theme.outdoor ~= c2.theme.outdoor then door_chance = 70
         elseif c1.hallway and c2.hallway then door_chance = 10
-        elseif c1.theme ~= c2.theme then door_chance = 40
+        elseif c1.theme ~= c2.theme then door_chance = sel(THEME.caps.blocky_doors, 80, 40)
         elseif c1.theme.outdoor then door_chance = 5
         end
 
---!!!!!!        if rand_odds(door_chance) then link.kind = "door" end
+        if rand_odds(door_chance) then link.kind = "door" end
 
       else -- need a locked door
 
@@ -1183,10 +1176,10 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
         assert(lock_level >= 1 and lock_level < #p.quests)
 
         link.quest = p.quests[lock_level]
---!!!!!!        link.kind  = "door"
+        link.kind  = "door"
       end
 
-      if link.kind == "door" then link.long = 3 end
+--    if link.kind == "door" then link.long = 3 end
     end
   end
 
@@ -1623,10 +1616,11 @@ peak = 150 -- !!!!!
       if c.link[dir] then
         local link = c.link[dir]
         if link.kind == "arch" or link.kind == "door" then
---!!!!!!          link.kind = "door"
+          link.kind = "door"
           link.build = c
           link.is_exit = true
-          link.long = sel(c.theme.front_mark or c.small_exit, 3, 2)
+          link.long = sel(THEME.caps.blocky_doors, 1,
+               sel(c.theme.front_mark or c.small_exit, 3, 2))
         end
       end
     end
