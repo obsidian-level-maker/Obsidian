@@ -147,7 +147,7 @@ void Build_Cool_Shit()
 
   // lock most widgets of user interface
   main_win->Locked(true);
-  that->P_SetButton(true);
+  that->ProgSetButton(true);
 
   bool was_ok;
 
@@ -156,10 +156,12 @@ void Build_Cool_Shit()
   else
     was_ok = Doom_CreateWAD(TEMP_FILENAME, is_hexen);
 
+  that->ProgInit(is_wolf ? 1 : 2);
+
   if (was_ok)
   {
-    that->P_Status("Making levels");
-    that->P_Begin(100, 1);
+    that->ProgStatus("Making levels");
+    that->ProgBegin(1, 100);
 
     was_ok = Script_Run();
 
@@ -188,12 +190,12 @@ void Build_Cool_Shit()
       StringFree(backup_name);
     }
 
-    that->P_Status("Building nodes");
+    that->ProgStatus("Building nodes");
 
     was_ok = GB_BuildNodes(TEMP_FILENAME, filename);
   }
 
-  that->P_Finish();
+  that->ProgFinish();
 
   // FIXME: delete wolf output files on failure
 
@@ -207,11 +209,11 @@ void Build_Cool_Shit()
 
   // FIXME !!! distinguish between Failure and Aborted
   if (was_ok)
-    that->P_Status("Success");
+    that->ProgStatus("Success");
   else
-    that->P_Status("Aborted");
+    that->ProgStatus("Aborted");
 
-  that->P_SetButton(false);
+  that->ProgSetButton(false);
   main_win->Locked(false);
 
   if (main_win->action == UI_MainWin::ABORT)

@@ -106,29 +106,40 @@ UI_Build::~UI_Build()
 {
 }
 
-void UI_Build::P_Begin(float limit, int pass)
+void UI_Build::ProgInit(int num_pass)
 {
-  prog_pass  = pass;
-  prog_limit = limit;
+  prog_num_pass = num_pass;
 
   progress->minimum(0.0);
   progress->maximum(100.0);
 
-  progress->value((pass == 1) ? 0.0 : 75.0);
+  progress->value(0.0);
+}
+
+void UI_Build::ProgBegin(int pass, float limit)
+{
+  prog_pass  = pass;
+  prog_limit = limit;
+
+///---  progress->value((pass == 1) ? 0.0 : 75.0);
 
   progress->color(PROGRESS_BG, (pass==1) ? PROGRESS_FG : GLBSP_FG);
   progress->show();
 }
 
-void UI_Build::P_Update(float val)
+void UI_Build::ProgUpdate(float val)
 {
-  if (val < 0) val = 0;
-  if (val > prog_limit) val = prog_limit;
+  val = val / prog_limit;
 
-  if (prog_pass == 1)
-    val = val * 75.0 / prog_limit;
+  if (val < 0) val = 0;
+  if (val > 1) val = 1;
+
+  if (prog_num_pass == 1)
+    val = val * 100.0;
+  else if (prog_pass == 1)
+    val = val * 75.0;
   else
-    val = 75.0 + (val * 25.0 / prog_limit);
+    val = 75.0 + (val * 25.0);
 
   sprintf(prog_msg, "%d%%", int(val));
 
@@ -138,17 +149,17 @@ void UI_Build::P_Update(float val)
   Main_Ticker();
 }
 
-void UI_Build::P_Finish()
+void UI_Build::ProgFinish()
 {
   progress->hide();
 }
 
-void UI_Build::P_Status(const char *msg)
+void UI_Build::ProgStatus(const char *msg)
 {
   status->label(msg);
 }
 
-void UI_Build::P_SetButton(bool abort)
+void UI_Build::ProgSetButton(bool abort)
 {
   if (abort)
   {

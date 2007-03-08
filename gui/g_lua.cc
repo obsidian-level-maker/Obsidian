@@ -100,7 +100,7 @@ int progress(lua_State *L)
 
   perc = ((lev_IDX-1) * 100 + perc) / lev_TOTAL;
 
-  main_win->build_box->P_Update(perc);
+  main_win->build_box->ProgUpdate(perc);
 
   return 0;
 }

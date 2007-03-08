@@ -108,7 +108,7 @@ void GB_DisplaySetBarLimit(int barnum, int limit)
 {
   if (display_mode == DIS_BUILDPROGRESS && barnum == 2)
   {
-    main_win->build_box->P_Begin(limit, 2);
+    main_win->build_box->ProgBegin(2, limit);
   }
 }
 
@@ -116,7 +116,7 @@ void GB_DisplaySetBar(int barnum, int count)
 {
   if (display_mode == DIS_BUILDPROGRESS && barnum == 2)
   {
-    main_win->build_box->P_Update(count);
+    main_win->build_box->ProgUpdate(count);
   }
 }
 

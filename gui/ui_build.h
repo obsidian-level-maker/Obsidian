@@ -25,8 +25,9 @@ private:
   Fl_Box *status;
   Fl_Progress *progress;
 
-  char prog_msg[20];
-  int  prog_pass;    // 1 or 2
+  char  prog_msg[20];
+  int   prog_pass;
+  int   prog_num_pass;
   float prog_limit;
 
   Fl_Button *build;
@@ -47,11 +48,12 @@ public:
   virtual ~UI_Build();
 
 public:
-  void P_Begin(float limit, int pass);
-  void P_Update(float val);
-  void P_Finish();
-  void P_Status(const char *msg);
-  void P_SetButton(bool abort);
+  void ProgInit(int num_pass);
+  void ProgBegin(int pass, float limit);
+  void ProgUpdate(float val);
+  void ProgFinish();
+  void ProgStatus(const char *msg);
+  void ProgSetButton(bool abort);
 
   void Locked(bool value);
 
