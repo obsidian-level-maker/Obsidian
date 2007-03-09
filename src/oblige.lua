@@ -50,10 +50,22 @@ function get_level_names(settings)
       end
     end
 
-  elseif (settings.game == "wolf3d" or settings.game == "spear") then
+  elseif (settings.game == "wolf3d") then
 
     local epi_num = sel(settings.length == "full",   6, 1)
     local lev_num = sel(settings.length == "single", 1, 10)
+
+    for e = 1,epi_num do
+      for m = 1,lev_num do
+        table.insert(LEVELS, string.format("E%dM%d", e, m))
+      end
+    end
+
+  elseif (settings.game == "spear") then
+
+    -- Spear of Destiny only has a single episode
+    local epi_num = 1
+    local lev_num = sel(settings.length == "single", 1, 21)
 
     for e = 1,epi_num do
       for m = 1,lev_num do
