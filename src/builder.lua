@@ -124,6 +124,13 @@ function random_where(link, border)
 
   local LINK_WHERES = { 3, 3, 9, 3, 3 }
 
+  if THEME.caps.blocky_doors or
+     (link.quest and link.quest.kind == "key") or
+     link.cells[1].is_exit or link.cells[2].is_exit
+  then
+    LINK_WHERES = { 1, 3, 9, 3, 1 }
+  end
+
   for zzz,c in ipairs(link.cells) do
 --???    if c.small_exit then return 0 end
   end
@@ -3588,6 +3595,32 @@ function build_cell(p, c)
     local D = c.border[side]
     assert(D)
 
+if THEME.caps.elevator_exits and link.is_exit then
+fab = PREFABS["WOLF_ELEVATOR"]
+assert(fab)
+local parm =
+{
+  door_kind = "door_elevator",
+}
+local skin =
+{
+  elevator = 21, front = 14,
+}
+
+print("FAB SIZE:", fab.long, fab.deep)
+local dir = 10-side
+-- FIXME: generalise this
+local x,y = link.x1, link.y1
+if side == 2 then x=x-1
+elseif side == 8 then x=x-1; y=y-fab.deep+1
+elseif side == 4 then y=y-1
+elseif side == 6 then x=x-fab.deep+1; y=y-1
+end
+
+B_prefab(p,c, fab, skin, parm, D.theme, x, y, dir)
+return
+end
+
 if link.kind == "door" and THEME.caps.blocky_doors then
   local bit
   if link.quest and link.quest.kind == "key" then
@@ -4525,6 +4558,9 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
       gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, { solid=c.theme.void })
       return
     end
+
+    -- elevator exits are done in build_link
+    if THEME.caps.elevator_exits and c.is_exit then return end
 
 --!!!!!! TESTING
 if not c.scenic and K.empty and true
