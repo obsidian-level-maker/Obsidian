@@ -1940,6 +1940,8 @@ function setup_rmodel(p, c)
     u_tex=c.theme.wall,
 
     light=c.light,
+
+    floor_code=c.floor_code,
   }
 
   if not c.rmodel.light then
@@ -2459,6 +2461,7 @@ link.cells[2].x, link.cells[2].y)
     end
   end
 
+  --[[ REMOVE OLD CRUD!
   local function OLD_add_travel_chunks(c)
     -- this makes sure that there is always a path
     -- from one chunk to another.  The problem areas
@@ -2550,6 +2553,7 @@ link.cells[2].x, link.cells[2].y)
     check_corner(7)
     check_corner(9)
   end
+  --]]
 
   local function chunk_similar(k1, k2)
     assert(k1 and k2)
@@ -3546,6 +3550,31 @@ function build_cell(p, c)
     local D = c.border[side]
     assert(D)
 
+if link.kind == "door" and THEME.caps.blocky_doors then
+  local bit
+  if link.quest and link.quest.kind == "key" then
+    bit = THEME.key_bits[link.quest.item]
+    assert(bit)
+    assert(bit.kind_rep)
+  end
+  p.blocks[link.x1][link.y1] =
+  {
+    door_kind = (bit and bit.kind_rep) or "door",
+    door_dir  = side,
+    blocked = true,
+  }
+  return
+end
+if link.kind == "arch" and THEME.caps.blocky_doors then
+  gap_fill(p,c, link.x1,link.y1, link.x2,link.y2,
+    D.build.rmodel)
+  return
+end
+if THEME.caps.blocky_doors then
+  error("Cannot build " .. link.kind)
+end
+
+
 if link.kind == "arch" then --!!!!!
 local fab = "ARCH" -- rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
 fab = PREFABS[fab]
@@ -3573,7 +3602,7 @@ return
 end
 
 
-if not (link.kind == "falloff") then --!!!!! TESTING
+if false then --!!! not (link.kind == "falloff") then --!!!!! TESTING
 local door_info = THEME.doors[link.wide_door]
 assert(door_info)
 if not door_info.prefab then print(table_to_str(door_info)) end
@@ -4460,7 +4489,7 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
     end
 
 --!!!!!! TESTING
-if not c.scenic and K.empty and false
+if not c.scenic and K.empty and true
   and not (c == p.quests[1].first) then
   gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.theme.void })
   return
