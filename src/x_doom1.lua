@@ -151,8 +151,8 @@ DM_ROOM_THEMES =
     pillar = "WOODGARG", -- "WOODMET4" not in doom 1
     pic_wd = "MARBFACE",
 
-    floor = "CEIL1_1",
-    ceil = "FLAT5_1",
+    ceil = "CEIL1_1",
+    floor = "FLAT5_1",
   },
 
   CEMENT =
