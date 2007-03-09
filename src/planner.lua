@@ -241,6 +241,7 @@ function get_base_plan(plan_size, cell_size)
 
     free_tag = 10,
     mark = 10,
+    floor_code = 0,
 
     cell_base_coords = function (x, y)
       local bx = BORDER_BLK + 2 + (x-1) * (cell_size+1)
@@ -262,6 +263,11 @@ end
 function allocate_mark(p)
   p.mark = p.mark + 1
   return p.mark
+end
+
+function allocate_floor_code(p)
+  p.floor_code = p.floor_code + 1
+  return p.floor_code
 end
 
 function create_cell(p, x, y, quest, along, theme, is_depot)
@@ -1409,6 +1415,63 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
 
   end
 
+  local function assign_floor_codes()
+    if THEME.caps.heights then return end -- not needed (yet??)
+
+    local function should_connect(c, other, link)
+      if link.kind == "arch" then return true end
+
+      if link.kind ~= "door" then return false end
+
+      if c.quest.level ~= other.quest.level then return false end
+
+      if not link.floor_connx then
+        link.floor_connx = dual_odds(c.theme == other.theme, 33, 11)
+      end
+
+      return link.floor_connx
+    end
+
+    local function grow(seeds)
+      local new_seeds = { }
+
+      for zzz,c in ipairs(seeds) do
+        assert(c.floor_code)
+        for yyy,L in pairs(c.link) do
+          local other = link_other(L,c)
+
+          if not other.floor_code and should_connect(c, other, L) then
+            other.floor_code = c.floor_code
+            table.insert(new_seeds, other)
+          end
+        end
+      end
+
+      return new_seeds
+    end
+
+    -- standard flood-fill
+    
+    local seeds = { p.quests[1].first }
+
+    seeds[1].floor_code = allocate_floor_code(p)
+
+    repeat
+      seeds = grow(seeds)
+
+      if #seeds == 0 then
+        -- grown as far as possible, so find new seeding spot
+        for zzz,c in ipairs(p.all_cells) do
+          if not c.floor_code then
+            c.floor_code = allocate_floor_code(p)
+            table.insert(seeds, c)
+            break
+          end
+        end
+      end
+    until #seeds == 0
+  end
+
   
   local function decide_quests()
     
@@ -2114,6 +2177,8 @@ con.printf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
   select_ceiling_heights()
   compute_height_minmax(p)
+
+  assign_floor_codes()
 
   resize_rooms(p)
 
