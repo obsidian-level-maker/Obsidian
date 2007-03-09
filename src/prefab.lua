@@ -88,7 +88,7 @@ ARCH =
 
 ARCH_NARROW =
 {
-  copy="DOOR",
+  copy="ARCH",
 
   structure =
   {
