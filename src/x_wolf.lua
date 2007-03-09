@@ -170,54 +170,63 @@ WF_THEMES =
   {
     mat_pri = 5,
     wall = 12, void = 12, floor=0, ceil=0,
+    decorate = 10, door_side = 17,
   },
 
   GRAY_STONE =
   {
     mat_pri = 7,
     wall = 1, void = 1, floor=0, ceil=0,
+    decorate = { 4,6 }, door_side = 28,
   },
 
   GRAY_BRICK =
   {
     mat_pri = 7,
     wall = 35, void = 35, floor=0, ceil=0,
+    decorate = { 37,43 }, door_side = 49,
   },
 
   BLUE_STONE =
   {
     mat_pri = 6,
     wall = 8, void = 8, floor=0, ceil=0,
+    decorate = { 5,7 }, door_side = 41,
   },
 
   BLUE_BRICK =
   {
     mat_pri = 6,
     wall = 40, void = 40, floor=0, ceil=0,
+    decorate = { 34,36 },
   },
 
   RED_BRICK =
   {
     mat_pri = 5,
     wall = 17, void = 17, floor=0, ceil=0,
+    decorate = { 18,38 }, door_side = 20,
   },
   
   PURPLE_STONE =
   {
     mat_pri = 1,
     wall = 19, void = 19, floor=0, ceil=0,
+    decorate = 25,
   },
   
   BROWN_CAVE =
   {
     mat_pri = 3,
     wall = 29, void = 29, floor=0, ceil=0,
+    decorate = { 30,31,32 },
   },
   
   BROWN_BRICK =
   {
     mat_pri = 5,
     wall = 42, void = 42, floor=0, ceil=0,
+    door_side = 47,
   },
 
   BROWN_STONE =
@@ -229,7 +238,7 @@ WF_THEMES =
  
 WF_EXITS =
 {
-  ELEVATOR =
+  ELEVATOR =  -- FIXME: not needed, remove
   {
     mat_pri = 0,
     wall = 21, void = 21, floor=0, ceil=0,
@@ -239,8 +248,8 @@ WF_EXITS =
 
 WF_KEY_BITS =
 {
-  k_silver = { kind_rep="door_silver" },
-  k_gold   = { kind_rep="door_gold"   },
+  k_silver = { kind_rep="door_silver", door_side=14 },
+  k_gold   = { kind_rep="door_gold",   door_side=14 },
 }
 
 ---- QUEST STUFF ----------------
