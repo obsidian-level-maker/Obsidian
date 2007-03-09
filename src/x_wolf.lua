@@ -360,7 +360,9 @@ THEME_FACTORIES["wolf3d"] = function()
     cell_size = 7,
     cell_min_size = 3,
 
-    caps = { blocky_items=true, blocky_doors=true, },
+    caps = { blocky_items=true, blocky_doors=true,
+             tiered_skills=true, elevator_exits=true,
+           },
 
     ERROR_TEX  = WF_NO_TILE,
     ERROR_FLAT = 99, -- dummy
@@ -427,16 +429,30 @@ function write_wolf_level(p)
     if B.things and B.things[1] then
       local th   = B.things[1]
       local kind = th.kind
+
       if type(kind) == "table" then
-        obj = kind["easy"]  -- FIXME
+
+        -- convert skill settings
+        if not th.options or th.options.easy then
+          obj = kind.easy
+        elseif th.options.medium then
+          obj = kind.medium
+        else
+          obj = kind.hard
+        end
+        assert(obj)
+
+        -- convert angle
+        if kind.dirs then
+          local offset = int((360 - th.angle + 135) / 90) % 4
+          assert(0 <= offset and offset <= 3)
+          obj = obj + offset
+        end
+
         -- sometimes patrol (FIXME: put logic in monster.lua)
         if kind.patrol and rand_odds(10) then
           obj = obj + kind.patrol
         end
-        -- convert angle
-        local offset = int((360 - th.angle + 135) / 90) % 4
-        assert(0 <= offset and offset <= 3)
-        obj = obj + offset
       else
         obj = kind
       end
