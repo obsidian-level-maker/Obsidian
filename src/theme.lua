@@ -73,11 +73,22 @@ function expand_prefabs(fabs)
     local f_deep = #P.structure
     local f_long = #P.structure[1]
 
-    assert(f_long % 4 == 0)
-    assert(f_deep % 4 == 0)
+    if not P.scale then
+      P.scale = 16
+    end
 
-    P.long = int(f_long / 4)
-    P.deep = int(f_deep / 4)
+    if P.scale == 64 then
+      P.long, P.deep = f_long, f_deep
+
+    elseif P.scale == 16 then
+      assert(f_long % 4 == 0)
+      assert(f_deep % 4 == 0)
+
+      P.long = int(f_long / 4)
+      P.deep = int(f_deep / 4)
+    else
+      error("Unsupported scale in Prefab: " .. tostring(P.scale))
+    end
   end
 end
 

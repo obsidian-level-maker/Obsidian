@@ -329,27 +329,45 @@ function rotate_block(B, d)
 end
 
 
-FAB_OVERRIDE_MAP =
+FAB_DIRECTION_MAP =
 {
   [8] = { 1,2,3, 4,5,6, 7,8,9 },
   [2] = { 9,8,7, 6,5,4, 3,2,1 },
 
   [4] = { 3,6,9, 2,5,8, 1,4,7 },
   [6] = { 7,4,1, 8,5,2, 9,6,3 },
+
+  -- mirror --
+
+  [18] = { 3,2,1, 6,5,4, 9,8,7 },
+  [12] = { 7,8,9, 4,5,6, 1,2,3 },
+
+  [14] = { 9,6,3, 8,5,2, 7,4,1 },
+  [16] = { 1,4,7, 2,5,8, 3,6,9 },
 }
 
-function B_prefab(p, c, fab, skin, parm, theme, x,y, dir)
+function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror)
 
   -- (x,y) is always the block with the lowest coordinate.
   -- dir == 8 is the natural mode, other values rotate it.
 
-  local long = fab.long * 4
-  local deep = fab.deep * 4
+  local long = fab.long
+  local deep = fab.deep
+  
+  if fab.scale ~= 64 then
+    long, deep = long*4, deep*4
+  end
 
   local function f_coords(ex, ey)
+    if mirror then ex = long+1-ex end
+
         if dir == 2 then ex,ey = long+1-ex, deep+1-ey
     elseif dir == 4 then ex,ey = deep+1-ey, ex
     elseif dir == 6 then ex,ey =        ey, long+1-ex
+    end
+
+    if fab.scale == 64 then
+      return x + ex - 1, y + ey - 1
     end
   
     local fx = 1 + (x-1)*FW + ex - 1
@@ -359,6 +377,8 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir)
   end
 
   local function dd_coords(dx, dy)
+    if mirror then dx = -dx end
+
         if dir == 2 then return -dx, -dy
     elseif dir == 4 then return -dy,  dx
     elseif dir == 6 then return  dy, -dx
@@ -456,7 +476,9 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir)
       if elem.kind then sec[elem.kind] = parm_val(elem.kind) end
       if elem.tag  then sec.tag = parm_val("tag") end
 
-      if elem.light then sec.light = elem.light end
+      if elem.light then sec.light = elem.light
+      elseif elem.light_add then sec.light = sec.light + elem.light_add
+      end
     end
 
     -- handle overrides
@@ -481,7 +503,10 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir)
           end
         end
 
-        sec[FAB_OVERRIDE_MAP[dir][i]] = OV
+        local s_dir = FAB_DIRECTION_MAP[dir + sel(mirror,10,0)][i]
+        assert(s_dir)
+
+        sec[s_dir] = OV
       end
     end
 
@@ -498,22 +523,35 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir)
     local fx, fy = f_coords(ex,ey)
 
     local e = string.sub(fab.structure[deep+1-ey], ex, ex)
-    local elem
 
-    if e == "." or e == "#" then
-      frag_fill(p,c, fx,fy, fx,fy, sel(e == ".", ROOM, WALL))
+    if e == " " then
+      -- do nothing
     else
-      elem = fab.elements[e]
+      local sec
 
-      if not elem then
-        error("Unknown element '" .. e .. "' in Prefab")
+      if e == "#" then
+        sec = WALL
+      elseif e == "." then
+        sec = ROOM
+      else
+        local elem = fab.elements[e]
+
+        if not elem then
+          error("Unknown element '" .. e .. "' in Prefab")
+        end
+
+        if not cache[e] then
+          cache[e] = compile_element(elem)
+        end
+
+        sec = cache[e]
       end
 
-      if not cache[e] then
-        cache[e] = compile_element(elem)
+      if fab.scale == 64 then
+        fill(p,c, fx,fy, fx,fy, sec)
+      else
+        frag_fill(p,c, fx,fy, fx,fy, sec)
       end
-
-      frag_fill(p,c, fx,fy, fx,fy, cache[e])
     end
   end end
 
@@ -3602,7 +3640,7 @@ return
 end
 
 
-if false then --!!! not (link.kind == "falloff") then --!!!!! TESTING
+if not (link.kind == "falloff") then --!!!!! TESTING
 local door_info = THEME.doors[link.wide_door]
 assert(door_info)
 if not door_info.prefab then print(table_to_str(door_info)) end
