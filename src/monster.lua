@@ -767,6 +767,7 @@ function distribute_pickups(p, c, HM, backtrack)
     local th_info = infos[idx]
 
     local max_cluster = 1 + int(R / th_info.give)
+    if THEME.caps.blocky_items then max_cluster = 1 end
     if th_info.clu_max then max_cluster = math.min(max_cluster, th_info.clu_max) end
 
     local cluster = select_cluster_pattern(max_cluster)
@@ -1123,7 +1124,9 @@ function battle_in_cell(p, c)
   end
 
   local function free_spot(bx, by)
-    local B = p.blocks[c.bx1-1+bx][c.by1-1+by]
+--  if not valid_block(p, bx, by) then return false end
+
+    local B = p.blocks[bx][by]
 
     return (B and not B.solid and (not B.fragments or B.can_thing) and
             not B.has_blocker and not B.is_cage and not B.near_player)
@@ -1136,7 +1139,7 @@ function battle_in_cell(p, c)
     for dx = 0,1 do for dy = 0,1 do
       if not free_spot(bx+dx, by+dy) then return false end
 
-      local B = p.blocks[c.bx1-1+bx+dx][c.by1-1+by+dy]
+      local B = p.blocks[bx+dx][by+dy]
       if B.fragments then
         B = B.fragments[1][1]
         assert(B)
@@ -1152,14 +1155,14 @@ function battle_in_cell(p, c)
   local function find_free_spots()
     local list = {}
     local total = 0
-    for bx = 1,BW,2 do for by = 1,BH,2 do
-      if bx < BW and by < BH and free_double_spot(bx, by) then
-        table.insert(list, { c=c, x=c.bx1-1+bx, y=c.by1-1+by, double=true})
+    for bx = c.bx1,c.bx2 do for by = c.by1,c.by2 do
+      if bx < c.bx2 and by < c.by2 and free_double_spot(bx, by) then
+        table.insert(list, { c=c, x=bx, y=by, double=true})
         total = total + 4
       else
         for dx = 0,1 do for dy = 0,1 do
-          if bx+dx <= BW and by+dy <= BH and free_spot(bx+dx, by+dy) then
-            table.insert(list, { c=c, x=c.bx1-1+bx+dx, y=c.by1-1+by+dy })
+          if bx+dx <= c.bx2 and by+dy <= c.by2 and free_spot(bx+dx, by+dy) then
+            table.insert(list, { c=c, x=bx+dx, y=by+dy })
             total = total + 1
           end
         end end
