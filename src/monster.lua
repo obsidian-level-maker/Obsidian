@@ -1055,6 +1055,8 @@ function place_battle_stuff(p, c, stats)
 
   --- place_battle_stuff ---
 
+  if THEME.caps.elevator_exits and c.is_exit then return end
+
   for zzz,skill in ipairs(SKILLS) do
 
     SK = skill
@@ -1392,6 +1394,8 @@ function battle_in_cell(p, c)
 
   ---=== battle_in_cell ===---
 
+  if THEME.caps.elevator_exits and c.is_exit then return end
+
 zprint("BATTLE IN", c.x, c.y)
 
   local spots, free_space = find_free_spots() --FIXME: move out of here
@@ -1407,6 +1411,8 @@ zprint("BATTLE IN", c.x, c.y)
 
   c.mon_set = { easy={}, medium={}, hard={} }
 
+  local last_T = 0
+
   for zzz,skill in ipairs(SKILLS) do
   
     SK = skill
@@ -1414,6 +1420,10 @@ zprint("BATTLE IN", c.x, c.y)
     T = c.toughness * (free_space ^ 0.7) * TOUGH_FACTOR[SK]
     T = T + p.hmodels[SK].toughness
     U = 0
+
+    if THEME.caps.tiered_skills then
+      T, last_T = T - last_T, T
+    end
 
     fill_closets()
     fill_cages()
@@ -1447,6 +1457,8 @@ function backtrack_to_cell(p, c)
       end
     end
   end
+
+  if THEME.caps.elevator_exits and c.is_exit then return end
 
   if c.quest.closet then
     surprise_me(c.quest.closet)
