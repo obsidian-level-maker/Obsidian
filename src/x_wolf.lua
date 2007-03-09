@@ -417,15 +417,28 @@ function write_wolf_level(p)
         assert(tile)
       end
     else
-      tile = WF_TILE_NUMS.area_min -- FIXME: + quest number
+      -- when we run out of floor codes (unlikely!) then reuse them
+      local avail = WF_TILE_NUMS.area_max - WF_TILE_NUMS.area_min + 1
+      local floor = B.floor_code or 0
+
+      tile = WF_TILE_NUMS.area_min + (floor % avail)
     end
 
     if B.things and B.things[1] then
-      local info = B.things[1]
-      if type(info.kind) == "table" then
-        obj = info.kind["easy"]  -- FIXME
+      local th   = B.things[1]
+      local kind = th.kind
+      if type(kind) == "table" then
+        obj = kind["easy"]  -- FIXME
+        -- sometimes patrol (FIXME: put logic in monster.lua)
+        if kind.patrol and rand_odds(10) then
+          obj = obj + kind.patrol
+        end
+        -- convert angle
+        local offset = int((360 - th.angle + 135) / 90) % 4
+        assert(0 <= offset and offset <= 3)
+        obj = obj + offset
       else
-        obj = info.kind
+        obj = kind
       end
     end
 
