@@ -1660,7 +1660,10 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
     peak = peak + 20 * (Q.sub_level or 0)
     peak = peak * (Q.level ^ 1.0) * (1 + rand_skew()/5)
 
-peak = 150 -- !!!!!
+    -- adjustment for Wolf3d/SOD  | FIXME: rework this func, use THEME values
+    if not THEME.caps.heights then
+      peak = peak / 2.2;
+    end
 
     if p.coop then
       peak = peak * p.coop_toughness
@@ -1673,7 +1676,9 @@ peak = 150 -- !!!!!
     -- FIXME: handle secret exits too
     local c = p.quests[#p.quests].last
 
-    c.theme = get_rand_exit_theme()
+    if not THEME.caps.elevator_exits then
+      c.theme = get_rand_exit_theme()
+    end
     c.is_exit = true
     c.light = 176
 
