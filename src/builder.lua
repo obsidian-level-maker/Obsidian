@@ -483,6 +483,8 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror)
       if elem.kind then sec[elem.kind] = parm_val(elem.kind) end
       if elem.tag  then sec.tag = parm_val("tag") end
 
+      if elem.kind == "door_kind" then sec.door_dir = parm.door_dir end
+
       if elem.light then sec.light = elem.light
       elseif elem.light_add then sec.light = sec.light + elem.light_add
       end
@@ -3596,18 +3598,19 @@ function build_cell(p, c)
     assert(D)
 
 if THEME.caps.elevator_exits and link.is_exit then
+local other = link_other(link, c)
 fab = PREFABS["WOLF_ELEVATOR"]
 assert(fab)
 local parm =
 {
   door_kind = "door_elevator",
+  door_dir  = side,
 }
 local skin =
 {
   elevator = 21, front = 14,
 }
 
-print("FAB SIZE:", fab.long, fab.deep)
 local dir = 10-side
 -- FIXME: generalise this
 local x,y = link.x1, link.y1
@@ -3617,7 +3620,7 @@ elseif side == 4 then y=y-1
 elseif side == 6 then x=x-fab.deep+1; y=y-1
 end
 
-B_prefab(p,c, fab, skin, parm, D.theme, x, y, dir)
+B_prefab(p, other, fab, skin, parm, D.theme, x, y, dir)
 return
 end
 
@@ -3628,6 +3631,22 @@ if link.kind == "door" and THEME.caps.blocky_doors then
     assert(bit)
     assert(bit.kind_rep)
   end
+
+  -- door sides
+  local side_tex
+  local ax,ay = dir_to_across(side)
+  
+  if bit and bit.lock_side then
+    side_tex = bit.lock_side
+  elseif not bit and D.theme.door_side then
+    side_tex = D.theme.door_side
+  end
+
+  if side_tex then
+    gap_fill(p, c, link.x1-ax, link.y1-ay, link.x1+ax, link.y1+ay,
+      { solid=side_tex })
+  end
+  
   p.blocks[link.x1][link.y1] =
   {
     door_kind = (bit and bit.kind_rep) or "door",
@@ -4564,7 +4583,16 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
 
 --!!!!!! TESTING
 if not c.scenic and K.empty and true
-  and not (c == p.quests[1].first) then
+  and not (c == p.quests[1].first)
+then
+  if c.theme.decorate then
+    local dec_tex = c.theme.decorate
+    if type(dec_tex) == "table" then
+      dec_tex = rand_element(dec_tex)
+    end
+    gap_fill(p, c, K.x1,K.y1, K.x1,K.y1, { solid=dec_tex })
+    gap_fill(p, c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
+  end
   gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.theme.void })
   return
 end
