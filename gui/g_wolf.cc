@@ -135,6 +135,10 @@ int rle_compress_plane(u16_t *plane, int src_len)
 
 static void DumpMap(void)
 {
+  static char *turning_points = ">/^\\</v\\";
+
+  bool show_floors = false;
+
   int x, y;
   char line_buf[80];
 
@@ -149,20 +153,26 @@ static void DumpMap(void)
 
       if (tile == NO_TILE)
         ch = '#';
+      else if (obj >= 19 && obj <= 22)
+        ch = 'p'; // player
       else if (tile < 52)
         ch = 'A' + (tile / 2);
       else if (tile < 64)
-        ch = '1' + ((tile - 52) / 2);
+        ch = (show_floors ? 'A' : '1') + ((tile - 52) / 2);
+      else if (90 <= tile && tile <= 101)
+        ch = '+';
+      else if (show_floors && 108 <= tile && tile <= 143)
+        ch = '0' + ((tile - 108) % 10);
       else if (obj == NO_OBJ)
         ch = '.';
-      else if (obj >= 19 && obj <= 22)
-        ch = 'p'; // player
-      else if ((obj >= 43 && obj <= 56) || obj == 71)
-        ch = '+'; // pickup
+      else if ((obj >= 43 && obj <= 56) || obj == 29)
+        ch = '$'; // pickup
       else if (obj >= 23 && obj <= 71)
         ch = '%'; // scenery
       else if (obj >= 108)
         ch = 'm'; // monster
+      else if (90 <= obj && obj <= 97)
+        ch = turning_points[obj - 90];
       else
         ch = '?';
 
