@@ -895,5 +895,28 @@ PILLAR_LIGHT3 =
 },
 
 
+------ Wolfenstein ------------------------------------
+
+WOLF_ELEVATOR =
+{
+  scale=64,
+
+  structure =
+  {
+    "#E#",
+    "E.E",
+    "FdF",
+  },
+
+  elements =
+  {
+    E = { solid="elevator" },
+    F = { solid="front"    },
+
+    d = { kind="door_kind" },
+  },
+},
+
+
 } -- PREFABS
 
