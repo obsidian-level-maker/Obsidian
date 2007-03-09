@@ -894,6 +894,141 @@ PILLAR_LIGHT3 =
   },
 },
 
+------ Pedestals ------------------------------------
+
+PEDESTAL =
+{
+  scale=64,
+
+  structure =
+  {
+    "p",
+  },
+
+  elements =
+  {
+    p = { f_h=0, f_rel="ped_h",
+          f_tex = "ped_f", l_tex = "ped_side",
+          l_peg = "top",
+        }
+  },
+},
+
+PED_PLUTONIA =
+{
+  structure =
+  {
+    "pppp",
+    "pppp",
+    "pTpp",
+    "pppp",
+  },
+
+  elements =
+  {
+    p = { f_h=16, f_tex="ped_f",
+          l_tex="ped_w", l_peg="top",
+          light=80,
+        },
+
+    T = { f_h=28, f_tex="ped_f2",
+          l_tex="ped_w2", l_peg="top",
+          light=255, glow=true, -- FIXME: proper glow (parm option)
+
+          [1] = { dx=16, dy=-6 },
+          [3] = { dx=22, dy=16 },
+          [7] = { dx=-6, dy= 0 },
+          [9] = { dx= 0, dy=22 },
+        },
+  }
+},
+
+PED_PLUT_DOUBLE =
+{
+  copy="PED_PLUTONIA",
+
+  -- FIXME: elements =
+},
+
+
+------ Overhangs ------------------------------------
+
+OVERHANG =
+{
+  structure =
+  {
+    "PooooooooooP",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "PooooooooooP",
+  },
+
+  elements =
+  {
+    P = { solid = "hang_w" }, 
+
+    o = { c_h = -24, c_tex = "hang_c", u_tex = "hang_u",
+            light_add = -32,
+          },
+  },
+
+  -- FIXME: double spot for monsters / objects
+},
+
+OVERHANG_32 =
+{
+  copy="OVERHANG",
+
+  structure =
+  {
+    "PPooooooooPP",
+    "PPooooooooPP",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "PPooooooooPP",
+    "PPooooooooPP",
+  },
+
+  -- FIXME: double spot for monsters / objects
+},
+
+OVERHANG_32B =
+{
+  copy="OVERHANG",
+
+  structure =
+  {
+    "oooooooooooo",
+    "oPPooooooPPo",
+    "oPPooooooPPo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oooooooooooo",
+    "oPPooooooPPo",
+    "oPPooooooPPo",
+    "oooooooooooo",
+  },
+
+  -- FIXME: double spot for monsters / objects
+},
+
 
 ------ Wolfenstein ------------------------------------
 
