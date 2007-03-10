@@ -90,6 +90,8 @@ function expand_prefabs(fabs)
       error("Unsupported scale in Prefab: " .. tostring(P.scale))
     end
   end
+
+  name_it_up(fabs)
 end
 
 
