@@ -1060,7 +1060,17 @@ WOLF_PACMAN_BASE =
 
   elements =
   {
-    -- FIXME
+    G = { solid="ghost_w" },
+
+    B = { thing="blinky", angle=90  },
+    C = { thing="clyde",  angle=90  },
+    I = { thing="inky",   angle=270 },
+    P = { thing="pinky",  angle=270 },
+
+    d = { thing="dot_t" },
+    t = { thing="treasure1" },
+    u = { thing="treasure2" },
+    m = { thing="first_aid" },
   },
 },
 
@@ -1070,27 +1080,22 @@ WOLF_PACMAN_MID_1 =
 
   structure =
   {
-    "#hh####h######h####hh#",
-    "#hh####h######h####hh#",
-    "#hh##hhhhhhhhhhhh##hh#",
-    "#hh##hhhhhhhhhhhh##hh#",
-    "#hh##hh###hh###hh##hh#",
-    "#hh##hh###hh###hh##hh#",
-    "#hh##hh#GGGGGG#hh##hh#",
-    "#hhhhhh#GGGGGG#hhhhhh#",
-    "#hhhhhh#GGGGGG#hhhhhh#",
-    "#hh##hh#GGGGGG#hh##hh#",
-    "#hh##hh###hh###hh##hh#",
-    "#hh##hh###hh###hh##hh#",
-    "#hh##hhhhhhhhhhhh##hh#",
-    "#hh##hhhhhhhhhhhh##hh#",
-    "#hh####h######h####hh#",
-    "#hh####h######h####hh#",
-  },
-
-  things =
-  {
-    -- FIXME
+    "##B.####.######.####C.##",
+    "##d.####.######.####d.##",
+    "##..##..d.d.d.d.d.##..##",
+    "##d.##............##d.##",
+    "##..##.dGGG..GGGd.##..##",
+    "##d.##.dGGG..GGGd.##d.##",
+    "#...##.dGG.tt.GGd.##...#",
+    "d.G....dG.tttt.Gd....G.d",
+    "..G.d..dGttttttGd..d.G..",
+    "#...##.dGGttttGGd.##...#",
+    "##d.##.dGGGuuGGGd.##d.##",
+    "##..##.dGGGGGGGGd.##..##",
+    "##d.##............##d.##",
+    "##..##.d.d.d.d.d..##..##",
+    "##d.####.######.####d.##",
+    "##I.####.######.####P.##",
   },
 },
 
@@ -1100,27 +1105,47 @@ WOLF_PACMAN_MID_2 =
 
   structure =
   {
-    "#hh#######hh#######hh#",
-    "#hh#######hh#######hh#",
-    "#hh##hhhhhhhhhhhh##hh#",
-    "#hh##hhhhhhhhhhhh##hh#",
-    "#hh##hh########hh##hh#",
-    "#hhhhhh##GGGG##hhhhhh#",
-    "#hh##hh##GGGG##hh##hh#",
-    "#hh##hhhhGGGGhhhh##hh#",
-    "#hh##hhhhGGGGhhhh##hh#",
-    "#hh##hh##GGGG##hh##hh#",
-    "#hhhhhh##GGGG##hhhhhh#",
-    "#hh##hh########hh##hh#",
-    "#hh##hhhhhhhhhhhh##hh#",
-    "#hh##hhhhhhhhhhhh##hh#",
-    "#hh#######hh#######hh#",
-    "#hh#######hh#######hh#",
+    "##B.#######..#######.C##",
+    "##d.#######.d#######.d##",
+    "##d.###..........###.d##",
+    "##d.##...d..d..d..##.d##",
+    "##d.##d.GGGGGGGG.d##.d##",
+    "###d....GGtt.GGG....d###",
+    "######d.GGttt.GG.d######",
+    "######..GGtutt....######",
+    "######d.GGtutt...d######",
+    "######..GGttt.GG..######",
+    "###d..d.GGtt.GGG.d..d###",
+    "##d.##..GGGGGGGG..##.d##",
+    "##d.##.d..d..d..d.##.d##",
+    "##d.###..........###.d##",
+    "##d.#######d.#######.d##",
+    "##I.#######..#######.P##",
   },
+},
 
-  things =
+WOLF_PACMAN_MID_3 =
+{
+  copy="WOLF_PACMAN_BASE",
+
+  structure =
   {
-    -- FIXME
+    "##B.####.######.####C.##",
+    "##d.####d######.####d.##",
+    "##..d.d.........d.d...##",
+    "######..d.d.d.d...######",
+    "dddddd..GGGGGGGGd.dddddd",
+    "d#####.dGGtuutGG..#####d",
+    "d#####..GttttttGd.#####d",
+    "d#####.dG.tttt.G..#####d",
+    "dddddd..GGGttGGGd.dddddd",
+    "######.dGGGttGGG..######",
+    "##...d..G......Gd.d.d.##",
+    "##.d##.dG.GGGG.G..##..##",
+    "##..##...d.d.d.d..##.d##",
+    "##.d##............##..##",
+    "##..#######d.#######.d##",
+    "##Id#######..#######P.##",
   },
 },
 
@@ -1130,27 +1155,22 @@ WOLF_PACMAN_CORN_1 =
 
   structure =
   {
-    "hhhhhhh###,hhhhhhhhhhh",
-    "h#####h####hhhhhhhhhhh",
-    "h##hhhhhhhhhh####hh###",
-    "h##hhhhhhhhhh####hh###",
-    "h##hh####hh###hhhhhhhh",
-    "hhhhh####hhhhhhh######",
-    "###hh####hhhhhhh##hhhh",
-    "###hh####hh###hh##hhhh",
-    "hhhhhhhh#hh###hhhhhh##",
-    "hhhhhhhh#hh#######hhhh",
-    "hh####hh#hh#######hhhh",
-    "hh###hhhhhhhhh########",
-    "hh###hhhhhhhhh##hhhhhh",
-    "hh###hh####hhh##hh####",
-    "hhhhhhh####hhhhhhhhhhh",
-    "hhhhhhh####hhhhhhhhhhh",
-  },
-
-  things =
-  {
-    -- FIXME
+    "tttttt.####...........",
+    "t#####d####.d.d.d.d.d.",
+    "t##........d.####..###",
+    "t##.d.d.d.d..####.d###",
+    "t##..####..###..d...d.",
+    "t.d.d####.d...d.######",
+    "###..####...d...##..d.",
+    "###.d####.d###d.##....",
+    "........#..###..d.d.##",
+    "d.d.d.d.#.d#######....",
+    "..####.d#..#######..d.",
+    "d.###.........########",
+    "..###.d.d.d.d.##...d..",
+    "d.###..####...##.d####",
+    ".....d.####.d.........",
+    ".d.m...####...d.d.d.d.",
   },
 },
 
@@ -1160,27 +1180,22 @@ WOLF_PACMAN_CORN_2 =
 
   structure =
   {
-    "###hhhhhhhhhhhh##hhhhh",
-    "###hh#######hhh##hhhhh",
-    "###hhhhhhhhhhhh##hh###",
-    "###hh###hh#######hh#hh",
-    "hhhhh##hhhhh#####hh#h#",
-    "hhhhh##hhhhh#hhhhhhhh#",
-    "hh#####h##hh#hhhhhhhh#",
-    "hhhhhhhhhhhhhhh#####h#",
-    "hhhhhhhhhhhhhhh#####h#",
-    "###hh##h##hh#hhhhhhhh#",
-    "###hh##hhhhh#hhhhhhhh#",
-    "###hh##hhhhh#####hh#h#",
-    "hhhhh###hh#######hh#hh",
-    "hhhhhhhhhhhhhhh##hh###",
-    "hh##########hhh##hhhhh",
-    "hhhhhhhhhhhhhhh##hhhhh",
-  },
-
-  things =
-  {
-    -- FIXME
+    "###..tttttttt..##.....",
+    "###d.#######.d.##.d.d.",
+    "###..d.d.d.d...##..###",
+    "###d.###..#######.d#d.",
+    "..d..##..d..#####..#.#",
+    "d....##d...d#.d.d.d.d#",
+    "..#####.##..#........#",
+    "d.d.d.d.d.d.d.d#####d#",
+    "...............#####.#",
+    "###.d##d##d.#.d.d.d.d#",
+    "###..##.....#........#",
+    "###.d##d.d..#####.d#d#",
+    ".....###..#######..#..",
+    "m.d.d.d.d.d.d..##.d###",
+    "..##########.d.##.....",
+    ".d.ttttttt.d...##.d.d.",
   },
 },
 
@@ -1190,27 +1205,22 @@ WOLF_PACMAN_CORN_3 =
 
   structure =
   {
-    "###hhhhhh###hhhhhhh##h",
-    "###hhhhhhhhhhhhhhhh##h",
-    "###hh#hh####hh#######h",
-    "hhhhh#hhhhh#hhhhhhhh#h",
-    "hhhhh#hh#hh#hhhhhhhh#h",
-    "hh####hh#hh#######hh#h",
-    "hhhhhhhhhhh#hhhhhhhh#h",
-    "##hh######h#h###hhhh#h",
-    "##hhhhhh##h#hhhhhh###h",
-    "##hhhhhh##h#h###hhhhhh",
-    "######hhhhhhh###hhhhhh",
-    "hhhhhhhhhhhhh#####hh##",
-    "hhhhhhhh##hhh##hhhhhhh",
-    "h######h##hhh##hh####h",
-    "hhhhhhhhhhhhhhhhhhh##h",
-    "hhhhhhhhhhhhhhhhhhh##h",
-  },
-
-  things =
-  {
-    -- FIXME
+    "###......###.......##.",
+    "###d.d.d.d.d.d.d.d.##.",
+    "###..#..####..#######.",
+    ".d.d.#.d.d.#.d.d.d.d#.",
+    ".....#..#..#........#.",
+    "t.####.d#d.#######.d#.",
+    ".d.d.d.....#tttt....#.",
+    "##..######d#t###.d.d#.",
+    "##.d.d.d##.#tttt..###.",
+    "##m.....##d#.###.d.d..",
+    "######.d.....###......",
+    ".d.d.d...d.d.#####.d##",
+    "........##...##..d....",
+    "t######d##.d.##d.####d",
+    "...................##d",
+    ".d.d.d.d.d.d.d.d.d.##d",
   },
 },
 

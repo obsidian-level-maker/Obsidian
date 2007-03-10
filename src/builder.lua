@@ -358,6 +358,8 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
   -- (x,y) is always the block with the lowest coordinate.
   -- dir == 8 is the natural mode, other values rotate it.
 
+  assert(fab and skin and parm and theme)
+
   -- simulate Y mirroring using X mirroring instead
   if mirror_y then
     mirror_x = not mirror_x
@@ -474,7 +476,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
       sec.f_h = what_h_ref(sec.f_h, elem.f_rel, elem.f_h)
       sec.c_h = what_h_ref(sec.c_h, elem.c_rel, elem.c_h)
 
-      sec.f_tex = what_tex("floor", elem.f_tex)
+      sec.f_tex = what_tex("floor",elem.f_tex)
       sec.c_tex = what_tex("ceil", elem.c_tex)
 
       sec.l_tex = what_tex("wall", elem.l_tex)
@@ -542,14 +544,14 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
     if e == " " then
       -- do nothing
     else
-      local sec
+      local sec, elem
 
       if e == "#" then
         sec = WALL
       elseif e == "." then
         sec = ROOM
       else
-        local elem = fab.elements[e]
+        elem = fab.elements[e]
 
         if not elem then
           error("Unknown element '" .. e .. "' in Prefab")
@@ -567,6 +569,18 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
       else
         frag_fill(p,c, fx,fy, fx,fy, sec)
       end
+
+      if elem and elem.thing then
+        local bx, by
+        if fab.scale == 64 then
+          bx,by = fx,fy
+        else
+          bx = div_mod(fx, FW)
+          by = div_mod(fy, FH)
+        end
+
+        add_thing(p, c, bx,by, skin[elem.thing] or elem.thing, true, elem.angle)
+      end
     end
   end end
 
@@ -578,7 +592,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
       if name then
         local bx,by, dx,dy = th_coords(tdef.x, tdef.y)
 
-        local th = add_thing(p, c, bx,by, name, false)
+        local th = add_thing(p, c, bx,by, name, true)
 
         th.dx = dx
         th.dy = dy
@@ -1914,6 +1928,30 @@ function B_deathmatch_exit(p,c, K,kx,ky)
   }
 
   frag_fill(p,c, fx+5,fy+11, fx+8,fy+12, SWITCH)
+end
+
+function B_exit_elevator(p, c, x, y, side)
+
+  fab = PREFABS["WOLF_ELEVATOR"]
+  assert(fab)
+  local parm =
+  {
+    door_kind = "door_elevator", door_dir = side,
+  }
+  local skin =
+  {
+    elevator = 21, front = 14,
+  }
+
+  local dir = 10-side
+  -- FIXME: generalise this
+  if side == 2 then x=x-1
+  elseif side == 8 then x=x-1; y=y-fab.deep+1
+  elseif side == 4 then y=y-1
+  elseif side == 6 then x=x-fab.deep+1; y=y-1
+  end
+
+  B_prefab(p, c, fab, skin, parm, c.theme, x, y, dir)
 end
 
 
@@ -3577,36 +3615,52 @@ end
 
 function build_pacman_level(p, c)
 
-  local PACMAN_MID_FABS  = { "WOLF_PACMAN_MID_1", "WOLF_PACMAN_MID_2" }
-  local PACMAN_CORN_FABS = { "WOLF_PACMAN_CORN_1", "WOLF_PACMAN_CORN_2",
-          "WOLF_PACMAN_CORN_3" }
-  
-  local mid_b = 32
-  local mid_b = 20
+  local function free_spot(bx, by)
+    local B = p.blocks[bx][by]
+    return B and not B.solid and not B.has_blocker
+  end
 
-  local mid_fab = rand_element(PACMAN_MID_FABS)
+  local function solid_spot(bx, by)
+    local B = p.blocks[bx][by]
+    return B and B.solid
+  end
+
+  local PACMAN_MID_FABS  = { "WOLF_PACMAN_MID_1", "WOLF_PACMAN_MID_2", "WOLF_PACMAN_MID_3" }
+  local PACMAN_CORN_FABS = { "WOLF_PACMAN_CORN_1", "WOLF_PACMAN_CORN_2", "WOLF_PACMAN_CORN_3" }
+ 
+  local mid_fab = PREFABS[rand_element(PACMAN_MID_FABS)]
   assert(mid_fab)
 
-  local top_fab  = rand_element(PACMAN_CORN_FABS)
-  local top_flip = rand_odds(50)
+  local mid_x = 32 - int(mid_fab.long/2)
+  local mid_y = 30 - int(mid_fab.deep/2)
 
-  local bot_fab = rand_element(PACMAN_CORN_FABS)
+  local top_fab  = PREFABS[rand_element(PACMAN_CORN_FABS)]
+  local top_flip = rand_odds(50)
+  assert(top_fab)
+
+  local bot_fab = PREFABS[rand_element(PACMAN_CORN_FABS)]
   local bot_flip = rand_odds(50)
+  assert(bot_fab)
 
   -- when top is same as bottom, mirror them vertically
   if top_fab == bot_fab then bot_flip = not top_flip end
 
-  local theme = THEME.themes["BLUE_STONE"]
+  local theme = THEME.themes[rand_sel(50,"BLUE_STONE", "BLUE_BRICK")]
   assert(theme)
 
   local skin =
   {
+    ghost_w = THEME.themes[rand_sel(50,"RED_BRICK","GRAY_STONE")].wall,
+
+    dot_t = rand_sel(66,"chalice","cross"),
+
+    treasure1 = "bible", treasure2 = "crown",
   }
   local parm =
   {
   }
 
-  B_prefab(p,c, mid_fab,skin,parm,theme, mid_x, mid_y, 8, false)
+  B_prefab(p,c, mid_fab,skin,parm,theme, mid_x-1, mid_y, 8, false)
 
   B_prefab(p,c, top_fab,skin,parm,theme, mid_x-11, mid_y+16, 8,false,top_flip)
   B_prefab(p,c, top_fab,skin,parm,theme, mid_x+11, mid_y+16, 8,true, top_flip)
@@ -3614,7 +3668,29 @@ function build_pacman_level(p, c)
   B_prefab(p,c, bot_fab,skin,parm,theme, mid_x-11, mid_y-16, 8,false,bot_flip)
   B_prefab(p,c, bot_fab,skin,parm,theme, mid_x+11, mid_y-16, 8,true, bot_flip)
 
-  -- FIXME: EXIT ELEVATOR !!!
+  B_exit_elevator(p,c, mid_x+19, mid_y+32, 2)
+
+  gap_fill(p,c, 2,2, 63,63, { solid=theme.wall })
+  
+  -- player spot
+  local px
+  local py = rand_irange(mid_y-15, mid_y-3)
+  local p_ang = 0
+
+  for x = mid_x-9,mid_x+9 do
+    if free_spot(x, py) then
+      px = x
+      if solid_spot(x+1, py) or solid_spot(x+2,py) then
+        p_ang = 90
+        if solid_spot(x,py+1) or solid_spot(x,py+2) then p_ang = 270 end
+      end
+      break;
+    end 
+  end
+
+  if not px then error("Could not find spot for pacman!") end
+
+  add_thing(p, c, px, py, "player1", true, p_ang)
 end
 
 ----------------------------------------------------------------
@@ -3671,28 +3747,7 @@ function build_cell(p, c)
 
 if THEME.caps.elevator_exits and link.is_exit then
 local other = link_other(link, c)
-fab = PREFABS["WOLF_ELEVATOR"]
-assert(fab)
-local parm =
-{
-  door_kind = "door_elevator",
-  door_dir  = side,
-}
-local skin =
-{
-  elevator = 21, front = 14,
-}
-
-local dir = 10-side
--- FIXME: generalise this
-local x,y = link.x1, link.y1
-if side == 2 then x=x-1
-elseif side == 8 then x=x-1; y=y-fab.deep+1
-elseif side == 4 then y=y-1
-elseif side == 6 then x=x-fab.deep+1; y=y-1
-end
-
-B_prefab(p, other, fab, skin, parm, D.theme, x, y, dir)
+B_exit_elevator(p, other, link.x1, link.y1, side)
 return
 end
 
