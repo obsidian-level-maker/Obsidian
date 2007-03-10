@@ -1052,6 +1052,168 @@ WOLF_ELEVATOR =
   },
 },
 
+WOLF_PACMAN_BASE =
+{
+  scale=64,
+
+  structure = { "#" }, -- dummy
+
+  elements =
+  {
+    -- FIXME
+  },
+},
+
+WOLF_PACMAN_MID_1 =
+{
+  copy="WOLF_PACMAN_BASE",
+
+  structure =
+  {
+    "#hh####h######h####hh#",
+    "#hh####h######h####hh#",
+    "#hh##hhhhhhhhhhhh##hh#",
+    "#hh##hhhhhhhhhhhh##hh#",
+    "#hh##hh###hh###hh##hh#",
+    "#hh##hh###hh###hh##hh#",
+    "#hh##hh#GGGGGG#hh##hh#",
+    "#hhhhhh#GGGGGG#hhhhhh#",
+    "#hhhhhh#GGGGGG#hhhhhh#",
+    "#hh##hh#GGGGGG#hh##hh#",
+    "#hh##hh###hh###hh##hh#",
+    "#hh##hh###hh###hh##hh#",
+    "#hh##hhhhhhhhhhhh##hh#",
+    "#hh##hhhhhhhhhhhh##hh#",
+    "#hh####h######h####hh#",
+    "#hh####h######h####hh#",
+  },
+
+  things =
+  {
+    -- FIXME
+  },
+},
+
+WOLF_PACMAN_MID_2 =
+{
+  copy="WOLF_PACMAN_BASE",
+
+  structure =
+  {
+    "#hh#######hh#######hh#",
+    "#hh#######hh#######hh#",
+    "#hh##hhhhhhhhhhhh##hh#",
+    "#hh##hhhhhhhhhhhh##hh#",
+    "#hh##hh########hh##hh#",
+    "#hhhhhh##GGGG##hhhhhh#",
+    "#hh##hh##GGGG##hh##hh#",
+    "#hh##hhhhGGGGhhhh##hh#",
+    "#hh##hhhhGGGGhhhh##hh#",
+    "#hh##hh##GGGG##hh##hh#",
+    "#hhhhhh##GGGG##hhhhhh#",
+    "#hh##hh########hh##hh#",
+    "#hh##hhhhhhhhhhhh##hh#",
+    "#hh##hhhhhhhhhhhh##hh#",
+    "#hh#######hh#######hh#",
+    "#hh#######hh#######hh#",
+  },
+
+  things =
+  {
+    -- FIXME
+  },
+},
+
+WOLF_PACMAN_CORN_1 =
+{
+  copy="WOLF_PACMAN_BASE",
+
+  structure =
+  {
+    "hhhhhhh###,hhhhhhhhhhh",
+    "h#####h####hhhhhhhhhhh",
+    "h##hhhhhhhhhh####hh###",
+    "h##hhhhhhhhhh####hh###",
+    "h##hh####hh###hhhhhhhh",
+    "hhhhh####hhhhhhh######",
+    "###hh####hhhhhhh##hhhh",
+    "###hh####hh###hh##hhhh",
+    "hhhhhhhh#hh###hhhhhh##",
+    "hhhhhhhh#hh#######hhhh",
+    "hh####hh#hh#######hhhh",
+    "hh###hhhhhhhhh########",
+    "hh###hhhhhhhhh##hhhhhh",
+    "hh###hh####hhh##hh####",
+    "hhhhhhh####hhhhhhhhhhh",
+    "hhhhhhh####hhhhhhhhhhh",
+  },
+
+  things =
+  {
+    -- FIXME
+  },
+},
+
+WOLF_PACMAN_CORN_2 =
+{
+  copy="WOLF_PACMAN_BASE",
+
+  structure =
+  {
+    "###hhhhhhhhhhhh##hhhhh",
+    "###hh#######hhh##hhhhh",
+    "###hhhhhhhhhhhh##hh###",
+    "###hh###hh#######hh#hh",
+    "hhhhh##hhhhh#####hh#h#",
+    "hhhhh##hhhhh#hhhhhhhh#",
+    "hh#####h##hh#hhhhhhhh#",
+    "hhhhhhhhhhhhhhh#####h#",
+    "hhhhhhhhhhhhhhh#####h#",
+    "###hh##h##hh#hhhhhhhh#",
+    "###hh##hhhhh#hhhhhhhh#",
+    "###hh##hhhhh#####hh#h#",
+    "hhhhh###hh#######hh#hh",
+    "hhhhhhhhhhhhhhh##hh###",
+    "hh##########hhh##hhhhh",
+    "hhhhhhhhhhhhhhh##hhhhh",
+  },
+
+  things =
+  {
+    -- FIXME
+  },
+},
+
+WOLF_PACMAN_CORN_3 =
+{
+  copy="WOLF_PACMAN_BASE",
+
+  structure =
+  {
+    "###hhhhhh###hhhhhhh##h",
+    "###hhhhhhhhhhhhhhhh##h",
+    "###hh#hh####hh#######h",
+    "hhhhh#hhhhh#hhhhhhhh#h",
+    "hhhhh#hh#hh#hhhhhhhh#h",
+    "hh####hh#hh#######hh#h",
+    "hhhhhhhhhhh#hhhhhhhh#h",
+    "##hh######h#h###hhhh#h",
+    "##hhhhhh##h#hhhhhh###h",
+    "##hhhhhh##h#h###hhhhhh",
+    "######hhhhhhh###hhhhhh",
+    "hhhhhhhhhhhhh#####hh##",
+    "hhhhhhhh##hhh##hhhhhhh",
+    "h######h##hhh##hh####h",
+    "hhhhhhhhhhhhhhhhhhh##h",
+    "hhhhhhhhhhhhhhhhhhh##h",
+  },
+
+  things =
+  {
+    -- FIXME
+  },
+},
+
 
 } -- PREFABS
 
