@@ -3547,6 +3547,30 @@ end
 
 ----------------------------------------------------------------
 
+function build_maze(p, c, x1,y1, x2,y2)
+  -- FIXME
+end
+
+function build_grotto(p, c, x1,y1, x2,y2)
+  
+  local ROOM = c.rmodel
+  local WALL = { solid=c.theme.wall }
+
+  for y = y1+1, y2-1, 2 do
+    for x = x1+1+(int(y/2)%2)*2, x2-3, 4 do
+      gap_fill(p,c, x-2,y, x-2,y, WALL)
+      gap_fill(p,c, x+2,y, x+2,y, WALL)
+
+      local ax, ay = dir_to_across(rand_sel(50, 2, 4))
+      gap_fill(p,c, x-ax,y-ay, x+ax,y+ay, WALL)
+    end
+  end
+
+  gap_fill(p,c, x1,y1, x2-3,y2-1, ROOM)
+end
+
+----------------------------------------------------------------
+
 
 function build_cell(p, c)
  
@@ -4583,7 +4607,10 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
 
 --!!!!!! TESTING
 if not c.scenic and K.empty and true
-  and not (c == p.quests[1].first)
+  and not (c == p.quests[1].first) and
+  (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
+  (K.y2 > K.y1 or rand_odds(50)) and
+  rand_odds(65)
 then
   if c.theme.decorate then
     local dec_tex = c.theme.decorate
@@ -5205,7 +5232,7 @@ end -- if c.x==XX
 end
 
 
-local function build_depot(p, c)
+function build_depot(p, c)
 
   setup_rmodel(p, c)
 
