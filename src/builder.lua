@@ -353,10 +353,16 @@ FAB_DIRECTION_MAP =
   [16] = { 1,4,7, 2,5,8, 3,6,9 },
 }
 
-function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror)
+function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
 
   -- (x,y) is always the block with the lowest coordinate.
   -- dir == 8 is the natural mode, other values rotate it.
+
+  -- simulate Y mirroring using X mirroring instead
+  if mirror_y then
+    mirror_x = not mirror_x
+    dir = 10-dir
+  end
 
   local long = fab.long
   local deep = fab.deep
@@ -366,7 +372,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror)
   end
 
   local function f_coords(ex, ey)
-    if mirror then ex = long+1-ex end
+    if mirror_x then ex = long+1-ex end
 
         if dir == 2 then ex,ey = long+1-ex, deep+1-ey
     elseif dir == 4 then ex,ey = deep+1-ey, ex
@@ -384,7 +390,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror)
   end
 
   local function dd_coords(dx, dy)
-    if mirror then dx = -dx end
+    if mirror_x then dx = -dx end
 
         if dir == 2 then return -dx, -dy
     elseif dir == 4 then return -dy,  dx
@@ -512,7 +518,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror)
           end
         end
 
-        local s_dir = FAB_DIRECTION_MAP[dir + sel(mirror,10,0)][i]
+        local s_dir = FAB_DIRECTION_MAP[dir + sel(mirror_x,10,0)][i]
         assert(s_dir)
 
         sec[s_dir] = OV
@@ -3567,6 +3573,48 @@ function build_grotto(p, c, x1,y1, x2,y2)
   end
 
   gap_fill(p,c, x1,y1, x2-3,y2-1, ROOM)
+end
+
+function build_pacman_level(p, c)
+
+  local PACMAN_MID_FABS  = { "WOLF_PACMAN_MID_1", "WOLF_PACMAN_MID_2" }
+  local PACMAN_CORN_FABS = { "WOLF_PACMAN_CORN_1", "WOLF_PACMAN_CORN_2",
+          "WOLF_PACMAN_CORN_3" }
+  
+  local mid_b = 32
+  local mid_b = 20
+
+  local mid_fab = rand_element(PACMAN_MID_FABS)
+  assert(mid_fab)
+
+  local top_fab  = rand_element(PACMAN_CORN_FABS)
+  local top_flip = rand_odds(50)
+
+  local bot_fab = rand_element(PACMAN_CORN_FABS)
+  local bot_flip = rand_odds(50)
+
+  -- when top is same as bottom, mirror them vertically
+  if top_fab == bot_fab then bot_flip = not top_flip end
+
+  local theme = THEME.themes["BLUE_STONE"]
+  assert(theme)
+
+  local skin =
+  {
+  }
+  local parm =
+  {
+  }
+
+  B_prefab(p,c, mid_fab,skin,parm,theme, mid_x, mid_y, 8, false)
+
+  B_prefab(p,c, top_fab,skin,parm,theme, mid_x-11, mid_y+16, 8,false,top_flip)
+  B_prefab(p,c, top_fab,skin,parm,theme, mid_x+11, mid_y+16, 8,true, top_flip)
+
+  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x-11, mid_y-16, 8,false,bot_flip)
+  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x+11, mid_y-16, 8,true, bot_flip)
+
+  -- FIXME: EXIT ELEVATOR !!!
 end
 
 ----------------------------------------------------------------
