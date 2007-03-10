@@ -274,15 +274,6 @@ WF_QUESTS =
   }
 }
 
-WF_DEATHMATCH =
-{
-  weapons = { machine_gun=50, gatling_gun=20, },
-  health = { first_aid=70, good_food=25, dog_food=5 },
-  ammo = { clip_8=70 },
-  items = { cross=50 },
-  cluster = {}
-}
-
 
 ----------------------------------------------------------------
 
@@ -389,7 +380,7 @@ THEME_FACTORIES["wolf3d"] = function()
     initial_model = WF_INITIAL_MODEL,
 
     quests = WF_QUESTS,
-    dm = WF_DEATHMATCH,
+    dm = {},
 
     themes    = WF_THEMES,
     exits     = WF_EXITS,
