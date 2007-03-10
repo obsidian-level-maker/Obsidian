@@ -21,8 +21,8 @@
 
 #define OBLIGE_TITLE  "Oblige Level Maker"
 
-#define OBLIGE_VERSION  "0.87"
-#define OBLIGE_HEX_VER  0x087
+#define OBLIGE_VERSION  "0.88"
+#define OBLIGE_HEX_VER  0x088
 
 #define DATA_DIR  "./obl_data"
 
