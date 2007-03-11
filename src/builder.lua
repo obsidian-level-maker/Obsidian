@@ -3660,24 +3660,24 @@ function build_pacman_level(p, c)
   {
   }
 
-  B_prefab(p,c, mid_fab,skin,parm,theme, mid_x-1, mid_y, 8, false)
+  B_prefab(p,c, mid_fab,skin,parm,theme, mid_x-2, mid_y, 8, false)
 
-  B_prefab(p,c, top_fab,skin,parm,theme, mid_x-11, mid_y+16, 8,false,top_flip)
-  B_prefab(p,c, top_fab,skin,parm,theme, mid_x+11, mid_y+16, 8,true, top_flip)
+  B_prefab(p,c, top_fab,skin,parm,theme, mid_x-10, mid_y+16, 8,false,top_flip)
+  B_prefab(p,c, top_fab,skin,parm,theme, mid_x+10, mid_y+16, 8,true, top_flip)
 
-  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x-11, mid_y-16, 8,false,bot_flip)
-  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x+11, mid_y-16, 8,true, bot_flip)
+  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x-10, mid_y-12, 8,false,bot_flip)
+  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x+10, mid_y-12, 8,true, bot_flip)
 
-  B_exit_elevator(p,c, mid_x+19, mid_y+32, 2)
+  B_exit_elevator(p,c, mid_x+19, mid_y+28, 2)
 
   gap_fill(p,c, 2,2, 63,63, { solid=theme.wall })
   
   -- player spot
   local px
-  local py = rand_irange(mid_y-15, mid_y-3)
+  local py = rand_irange(mid_y-11, mid_y-3)
   local p_ang = 0
 
-  for x = mid_x-9,mid_x+9 do
+  for x = mid_x-7,mid_x+12 do
     if free_spot(x, py) then
       px = x
       if solid_spot(x+1, py) or solid_spot(x+2,py) then
@@ -5418,6 +5418,8 @@ function build_level(p)
   for zzz,cell in ipairs(p.all_cells) do
     setup_rmodel(p, cell)
   end
+
+-- do build_pacman_level(p, p.quests[1].first); return end
 
   make_chunks(p)
   show_chunks(p)
