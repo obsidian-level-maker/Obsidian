@@ -3634,27 +3634,24 @@ function build_pacman_level(p, c)
   local mid_x = 32 - int(mid_fab.long/2)
   local mid_y = 30 - int(mid_fab.deep/2)
 
-  local top_fab  = PREFABS[rand_element(PACMAN_CORN_FABS)]
-  local top_flip = rand_odds(50)
-  assert(top_fab)
-
+  local top_fab = PREFABS[rand_element(PACMAN_CORN_FABS)]
   local bot_fab = PREFABS[rand_element(PACMAN_CORN_FABS)]
-  local bot_flip = rand_odds(50)
-  assert(bot_fab)
+  assert(top_fab and bot_fab)
 
-  -- when top is same as bottom, mirror them vertically
-  if top_fab == bot_fab then bot_flip = not top_flip end
+  local top_flip = rand_odds(50)
+  local bot_flip = not top_flip
 
-  local theme = THEME.themes[rand_sel(50,"BLUE_STONE", "BLUE_BRICK")]
+  local theme = THEME.themes[rand_sel(50,"BLUE_STONE","BLUE_BRICK")]
   assert(theme)
 
   local skin =
   {
-    ghost_w = THEME.themes[rand_sel(50,"RED_BRICK","GRAY_STONE")].wall,
+    ghost_w = THEME.themes[rand_sel(50,"RED_BRICK","PURPLE_STONE")].wall,
 
-    dot_t = rand_sel(66,"chalice","cross"),
+    dot_t = rand_sel(50,"chalice","cross"),
 
-    treasure1 = "bible", treasure2 = "crown",
+    treasure1 = "bible",
+    treasure2 = "crown",
   }
   local parm =
   {
