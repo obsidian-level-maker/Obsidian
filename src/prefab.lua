@@ -519,7 +519,7 @@ TECH_PICKUP_LARGE =
 },
 
 
-TECH_STATUE_1 =
+STATUE_TECH_1 =
 {
   structure =
   {
@@ -573,6 +573,67 @@ TECH_STATUE_1 =
     { kind="thing1", x =224, y = 96 },
     { kind="thing1", x = 96, y =224 },
     { kind="thing1", x =224, y =224 },
+  },
+},
+
+STATUE_CHAIR_DUDE =
+{
+  structure =
+  {
+    "........",
+    ".b....b.",
+    ".bbbbbb.",
+    "SSSHHSSS",
+    ".aBBBBa.",
+    ".aLccLa.",
+    "..L..L..",
+    "..F..F..",
+  },
+
+  elements =
+  {
+    -- chair seat, back, armrest
+    c = { f_h=24, f_tex="chair_f", l_tex="chair_w" },
+    b = { copy="c", f_h=96 },
+    a = { copy="c", f_h=48 },
+
+    -- body, head, shoulders
+    B = { f_h=56, f_tex="body_f", l_tex="body_w" },
+    H = { copy="B", f_h=108 },
+    S = { copy="B", f_h=72 },
+
+    -- legs, feet
+    L = { copy="B", f_h=32 },
+    F = { copy="B", f_h=12 },
+  },
+},
+
+DRINKS_BAR =
+{
+  structure =
+  {
+    "............",
+    "bbbbbbbbbbbb",
+    "bbbbbbbbbbbb",
+    "............",
+  },
+
+  elements =
+  {
+    b = { f_h=32, f_tex="bar_f", l_tex="bar_w", l_peg="top" },
+  },
+
+  things =
+  {
+    { kind="drink", x= 16, y=32 },
+    { kind="drink", x= 36, y=32 },
+    { kind="drink", x= 56, y=32 },
+    { kind="drink", x= 76, y=32 },
+    { kind="drink", x= 96, y=32 },
+    { kind="drink", x=116, y=32 },
+    { kind="drink", x=136, y=32 },
+    { kind="drink", x=156, y=32 },
+    { kind="drink", x=176, y=32 },
   },
 },
 
