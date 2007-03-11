@@ -308,6 +308,25 @@ WINDOW_CROSS_BIG =
   },
 },
 
+WINDOW_BARRED =
+{
+  structure =
+  {
+    "#wwwwwwwww##",
+    "#wBwwwBwww##",
+    "#wwwBwwwBw##",
+    "#wwwwwwwww##",
+  },
+
+  elements =
+  {
+    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+
+    B = { solid="bar_w" },
+  }
+},
+
+
 
 ------ Doors ------------------------------------
 
@@ -353,6 +372,57 @@ DOOR_NARROW =
     "#tddddt#",
     "#tddddt#",
     "#LssssM#",
+  },
+},
+
+BARS_1 =
+{
+  structure =
+  {
+    "##ssssssss##",
+    "##sBBssBBs##",
+    "##sBBssBBs##",
+    "##ssssssss##",
+  },
+
+  elements =
+  {
+    -- step
+    s = { c_rel="door_top", c_h=0, },
+
+    -- bars
+    B = { f_rel="door_top", f_h=0,
+          c_rel="door_top", c_h=0,
+          u_tex="bar_w", u_peg="bottom",
+          l_tex="bar_w", l_peg="bottom",
+          kind="door_kind", tag="tag",
+        },
+  },
+},
+
+BARS_2 =
+{
+  copy="BARS_1",
+
+  structure =
+  {
+    "##sssssssss#",
+    "##sssssssss#",
+    "##sBsBsBsBs#",
+    "##sssssssss#",
+  },
+},
+
+BARS_NARROW =
+{
+  copy="BARS_1",
+
+  structure =
+  {
+    "#ssssss#",
+    "#ssBBss#",
+    "#ssBBss#",
+    "#ssssss#",
   },
 },
 
