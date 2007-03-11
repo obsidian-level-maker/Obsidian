@@ -983,12 +983,17 @@ end
 --
 -- Build a stair
 --
+-- (bx,by) is the lowest left corner (cf. B_prefab)
 -- Z is the starting height
 --
 function B_stair(p, c, bx, by, z, dir, long, deep, step)
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
+
+  if true then --??? (dir == 2 or dir == 4) then
+    bx,by = bx-(deep-1)*dx, by-(deep-1)*dy
+  end
 
   local fx = (bx - 1) * FW + 1
   local fy = (by - 1) * FH + 1
@@ -1006,7 +1011,7 @@ function B_stair(p, c, bx, by, z, dir, long, deep, step)
 
   for i = 1,deep*4 do
 
-    local sec = copy_block_with_new(c.rmodel, --FIXME: K.rmodel
+    local sec = copy_block_with_new(c.rmodel, -- !!!! FIXME: K.rmodel
     {
       f_h = z,
       f_tex = c.theme.step_floor, -- might be nil (=> rmodel.f_tex)
@@ -2886,6 +2891,10 @@ link.cells[2].x, link.cells[2].y)
       if not K.rmodel then
         K.rmodel = copy_table(c.rmodel)
 
+K.rmodel.light =
+sel(kx==2 and ky==2, 176,
+  sel(kx==2 or ky==2, 144, 112))
+  
         if K.link then
           local other = link_other(K.link, c)
 
@@ -3853,7 +3862,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
       light = c.rmodel.light,
     }
 
-if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
+--if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
 
     if other.scenic then WINDOW.impassible = true end
 
@@ -4999,7 +5008,7 @@ do return end
         local K = B.chunk
         assert(K)
 
-        if K.void then
+        if K.void or K.empty then
           fill(p,c, x,y, x,y, { solid=c.theme.void })
         else
           fill(p,c, x,y, x,y, K.rmodel)
@@ -5057,8 +5066,8 @@ do return end
     return low,high
   end
 
-  local function find_stair_loc(K, min_deep,want_deep)
-    
+  local function find_stair_loc(K, behind_K, min_deep,want_deep)
+
     -- Requirements:
     --   (a) blocks where stair will be are empty
     --   (b) blocks vor und hinter the stair are walkable
@@ -5068,9 +5077,9 @@ do return end
     --   (d) width at least 2 blocks
     --   (e) prefer away from side edges
 
-    local dir = K.stair_dir
-    local dx,dy = dir_to_delta(dir)
-    local ax,ay = dir_to_across(dir)
+    local in_dir = 10-K.stair_dir
+    local dx,dy = dir_to_delta(in_dir)
+    local ax,ay = dir_to_across(in_dir)
 
     local x1,y1, x2,y2 = side_coords(K.stair_dir, K.x1,K.y1, K.x2,K.y2)
 
@@ -5078,20 +5087,83 @@ do return end
 
     local function check_stair_pos(pos, w)
 
+      local x, y = x1 + ax*pos, y1 + ay*pos
+      assert(K.x1 <= x and x <= K.x2)
+      assert(K.y1 <= y and y <= K.y2)
+
       for h = want_deep,1,-1 do
-        local able = false
+        local able = true
 
-        -- FIXME
-        
-        if able then
-          local info = { pos=pos, long=w, deep=h, score=0 }
+        local sx, sy = x1 + ax*pos, y1 + ay*pos
+        local ex, ey = sx + (h-1)*dx + (w-1)*ax, sy + (h-1)*dy + (w-1)*ay
 
-          if h == want_deep then info.score = 200
-          elseif h >= min_deep then info.score = 100
+        local st_x1 = math.min(sx,ex)
+        local st_y1 = math.min(sy,ey)
+        local st_x2 = math.max(sx,ex)
+        local st_y2 = math.max(sy,ey)
+
+        if (ex < K.x1 or ex > K.x2) or
+           (ey < K.y1 or ey > K.y2)
+        then
+          able = false
+        else
+
+          assert(K.x1 <= st_x1 and st_x2 <= K.x2)
+          assert(K.y1 <= st_y1 and st_y2 <= K.y2)
+
+          -- first: check stair itself
+          for qx = st_x1,st_x2 do for qy = st_y1,st_y2 do
+            local B = p.blocks[qx][qy]
+            assert(B)
+            if not B.empty or B.walk then able = false end
+          end end
+
+          -- second: check walkable ends
+          for i = 0,w-1 do
+            local qx, qy = sx + i*ax -   dx, sy + i*ay -   dy
+            local rx, ry = sx + i*ax + h*dx, sy + i*ay + h*dy
+
+            assert(c.bx1 <= qx and qx <= c.bx2)
+            assert(c.by1 <= qy and qy <= c.by2)
+
+            if not (c.bx1 <= rx and rx <= c.bx2 and
+                    c.by1 <= ry and ry <= c.by2)
+            then
+              able = false
+
+            elseif behind_K and behind_K.stair_dir and
+               (behind_K.x1 <= rx and rx <= behind_K.x2) and
+               (behind_K.y1 <= ry and ry <= behind_K.y2)
+            then
+              able = false
+
+            else
+              local B1 = p.blocks[qx][qy]
+              local B2 = p.blocks[rx][ry]
+              assert(B1)
+              assert(B2)
+
+              if not (B1.empty or B1.walk) or
+                 not (B2.empty or B2.walk)
+              then
+                able = false
+              end
+            end
           end
 
-          if w >= 2 then info.score = info.score + 50 end
+        end
 
+        if able then
+          local info = { x=x, y=y, sx=st_x1,sy=st_y1,ex=st_x2,ey=st_y2, pos=pos, long=w, deep=h, score=0 }
+
+          if h == want_deep then info.score = 400
+          elseif h >= min_deep then info.score = 200
+          end
+
+          info.score = info.score + (w-1) * 40
+
+          -- FIXME (a) side1_K and side2_K
+          --       (b) bigger score (trump width)
           if pos >= 1 and pos+w <= long-1 then
             info.score = info.score + 20
           end
@@ -5127,6 +5199,7 @@ do return end
   end
   
   local function build_stairs(c)
+
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       if K.stair_dir then
@@ -5136,12 +5209,39 @@ do return end
         local J = c.chunks[kx+dx][ky+dy]
         local diff_h = K.rmodel.f_h - J.rmodel.f_h
 
-        local info = find_stair_loc(K, stair_depths(diff_h))
+        local behind_K
+        if (1<=kx-dx and kx-dx<=3) and
+           (1<=ky-dy and ky-dy<=3)
+        then
+          behind_K = c.chunks[kx-dx][ky-dy]
+        end
 
-        local step = diff_h / (info.deep * 4)
+con.printf("Building stair @ (%d,%d) chunk [%d,%d] dir:%d\n", c.x, c.y, kx,ky, K.stair_dir)
+con.printf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 
+        local info = find_stair_loc(K, behind_K, stair_depths(diff_h))
+
+if not info then return end --!!!!!!
+
+        local step = -diff_h / (info.deep * 4)
+
+if true then
+  con.printf("  Stair coords: (%d,%d)..(%d,%d) size:%dx%d\n", info.sx,info.sy, info.ex,info.ey, info.long, info.deep)
+  gap_fill(p,c, info.sx,info.sy, info.ex,info.ey, K.rmodel, { light=255, kind=8 })
+else
         B_stair(p,c, info.x,info.y, K.rmodel.f_h, K.stair_dir,
-                info.long, info.deep,
+                info.long, info.deep, step)
+end
+        -- reserve space vor und hinter the staircase
+        do
+        local dx,dy = dir_to_delta(K.stair_dir)
+
+        local x1,y1,x2,y2 = side_coords(K.stair_dir, info.sx,info.sy,info.ex,info.ey)
+        mark_walkable_area(c, x1+dx,y1+dy, x2+dx,y2+dy)
+
+        local x3,y3,x4,y4 = side_coords(10-K.stair_dir, info.sx,info.sy,info.ex,info.ey)
+        mark_walkable_area(c, x3-dx,y3-dy, x4-dx,y4-dy)
+        end
       end
     end end
   end
