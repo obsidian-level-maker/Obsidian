@@ -4975,47 +4975,193 @@ do return end
     end
   end
 
-
-  ---=== build_cell ===---
-
-  create_blocks(c)
-
-  if not c.theme.outdoor and not c.is_exit and not c.hallway
-     and THEME.lights and rand_odds(70)
-  then
-    c.sky_light =
-    {
-      h  = 8 * rand_irange(2,4),
-      pattern = random_sky_light(),
-      is_sky = rand_odds(33),
-      light_info = get_rand_light()
-    }
-    if not c.sky_light.is_sky and rand_odds(80) then
-      c.sky_light.h = - c.sky_light.h
+  local function decide_sky_lights(c)
+    if not c.theme.outdoor and not c.is_exit and not c.hallway
+       and THEME.lights and rand_odds(70)
+    then
+      c.sky_light =
+      {
+        h  = 8 * rand_irange(2,4),
+        pattern = random_sky_light(),
+        is_sky = rand_odds(33),
+        light_info = get_rand_light()
+      }
+      if not c.sky_light.is_sky and rand_odds(80) then
+        c.sky_light.h = - c.sky_light.h
+      end
     end
   end
 
-  c.build_list = {}
+  local function GAP_FILL_ROOM(c)
+    for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
+      local B = p.blocks[x][y]
+      if B.empty then
+        local K = B.chunk
+        assert(K)
 
-  --!!! tizzy_up_room()
+        if K.void then
+          fill(p,c, x,y, x,y, { solid=c.theme.void })
+        else
+          fill(p,c, x,y, x,y, K.rmodel)
+          if B.walk then
+            add_thing(p,c, x,y, "candle", false)
+          end
+        end
+      end
+    end end
+  end
 
-  --!!!!  position_sp_stuff(cell)
+  local function mark_walkable_area(c, x1,y1, x2,y2)
+    assert(x2 >= x1 and y2 >= y1)
+    assert(c.bx1 <= x1 and x2 <= c.bx2)
+    assert(c.by1 <= y1 and y2 <= c.by2)
 
-  -- GAP_FILL
+    for x = x1,x2 do for y = y1,y2 do
+      local B = p.blocks[x][y]
+      assert(B)
+      assert(B.empty)
+      B.walk = true
+    end end
+  end
 
-  for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
-    local B = p.blocks[x][y]
-    if B.empty then
-      local K = B.chunk
-      assert(K)
+  local function mark_links(c)
+    
+    for side = 2,8,2 do
+      local dx,dy = dir_to_delta(10-side) -- inwards
 
-      if K.void then
-        fill(p,c, x,y, x,y, { solid=c.theme.void })
-      else
-        fill(p,c, x,y, x,y, K.rmodel)
+      local L = c.link[side]
+      if L then
+        mark_walkable_area(c, L.x1+dx, L.y1+dy, L.x2+dx, L.y2+dy)
+      end
+
+      local D = c.border[side]
+      if D and D.kind == "window" then
+        mark_walkable_area(c, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy)
       end
     end
-  end end
+  end
+
+  local function stair_depths(diff_h)
+    diff_h = math.abs(diff_h)
+
+    local low = 1
+    if diff_h >= 72  then low = 2 end
+    if diff_h >= 168 then low = 3 end
+    if diff_h >= 264 then low = 4 end
+    
+    local high = 1
+    if diff_h >= 48  then high = 2 end
+    if diff_h >= 96  then high = 3 end
+    if diff_h >= 144 then high = 4 end
+
+    return low,high
+  end
+
+  local function find_stair_loc(K, min_deep,want_deep)
+    
+    -- Requirements:
+    --   (a) blocks where stair will be are empty
+    --   (b) blocks vor und hinter the stair are walkable
+    --
+    -- Preferences:
+    --   (c) depth >= min_deep
+    --   (d) width at least 2 blocks
+    --   (e) prefer away from side edges
+
+    local dir = K.stair_dir
+    local dx,dy = dir_to_delta(dir)
+    local ax,ay = dir_to_across(dir)
+
+    local x1,y1, x2,y2 = side_coords(K.stair_dir, K.x1,K.y1, K.x2,K.y2)
+
+    local long = sel(x1 < x2, x2-x1+1, y2-y1+1)
+
+    local function check_stair_pos(pos, w)
+
+      for h = want_deep,1,-1 do
+        local able = false
+
+        -- FIXME
+        
+        if able then
+          local info = { pos=pos, long=w, deep=h, score=0 }
+
+          if h == want_deep then info.score = 200
+          elseif h >= min_deep then info.score = 100
+          end
+
+          if w >= 2 then info.score = info.score + 50 end
+
+          if pos >= 1 and pos+w <= long-1 then
+            info.score = info.score + 20
+          end
+
+          -- deadlock breaker
+          info.score = info.score + rand_irange(0,15)
+
+          return info
+        end          
+      end
+
+      return nil
+    end
+
+    -- find_stair_loc --
+
+    local best
+
+    for pos = 0,long-1 do
+      for w = 1,long-pos do
+        info = check_stair_pos(pos, w)
+        if info and (not best or info.score > best.score) then
+          best = info
+        end
+      end
+    end
+
+    if not best then
+      error("Unable to find stair position!")
+    end
+
+    return best
+  end
+  
+  local function build_stairs(c)
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.stair_dir then
+        local dx,dy = dir_to_delta(K.stair_dir)
+        assert(1<=kx+dx and kx+dx<=3)
+        assert(1<=ky+dy and ky+dy<=3)
+        local J = c.chunks[kx+dx][ky+dy]
+        local diff_h = K.rmodel.f_h - J.rmodel.f_h
+
+        local info = find_stair_loc(K, stair_depths(diff_h))
+
+        local step = diff_h / (info.deep * 4)
+
+        B_stair(p,c, info.x,info.y, K.rmodel.f_h, K.stair_dir,
+                info.long, info.deep,
+      end
+    end end
+  end
+
+  ---=== build_cell ===---
+
+  decide_sky_lights(c)
+
+  create_blocks(c)
+
+  mark_links(c)
+
+  build_stairs(c)
+
+--[[
+  local list = tizzy_up_room(c)
+
+  build_tizz(c, list)
+--]]
+  GAP_FILL_ROOM(c)
 
   -- TEMP 
   if c == p.quests[1].first then
