@@ -133,12 +133,8 @@ function valid_chunk(kx,ky)
          1 <= ky and ky <= KH
 end
 
-function is_roomy(cell, chunk)
-  if not chunk then return false end
-  if chunk.link then
-    return chunk.link.build == cell
-  end
-  return chunk.room
+function is_roomy(chunk)
+  return chunk.room or chunk.link
 end
 
 function random_where(link, border)
@@ -986,12 +982,12 @@ end
 -- (bx,by) is the lowest left corner (cf. B_prefab)
 -- Z is the starting height
 --
-function B_stair(p, c, bx, by, z, dir, long, deep, step)
+function B_stair(p, c, bx,by, z, dir, long, deep, step)
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
 
-  if true then --??? (dir == 2 or dir == 4) then
+  if (dir == 2 or dir == 4) then
     bx,by = bx-(deep-1)*dx, by-(deep-1)*dy
   end
 
@@ -2675,10 +2671,12 @@ link.cells[2].x, link.cells[2].y)
 
   local function void_it_up(c, kind)
     if not kind then kind = "void" end
-    for kx = 1,KW do
-      for ky = 1,KH do
-        if not c.chunks[kx][ky] then
-          c.chunks[kx][ky] = new_chunk(c, kx,ky, kind)
+    for kx = 1,3 do
+      for ky = 1,3 do
+        local K = c.chunks[kx][ky]
+        if K.empty then
+          K[kind] = true
+          K.empty = nil
         end
       end
     end
@@ -3131,6 +3129,7 @@ con.printf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
     setup_chunk_rmodels(cell)
 
 --!!!!  flesh_out_cell(cell)
+        void_it_up(cell)
 
     connect_chunks(cell)
   end
@@ -5008,7 +5007,7 @@ do return end
         local K = B.chunk
         assert(K)
 
-        if K.void or K.empty then
+        if K.void then
           fill(p,c, x,y, x,y, { solid=c.theme.void })
         else
           fill(p,c, x,y, x,y, K.rmodel)
@@ -5066,7 +5065,7 @@ do return end
     return low,high
   end
 
-  local function find_stair_loc(K, behind_K, min_deep,want_deep)
+  local function find_stair_loc(K, behind_K,side1_K,side2_K, min_deep,want_deep)
 
     -- Requirements:
     --   (a) blocks where stair will be are empty
@@ -5143,8 +5142,9 @@ do return end
               assert(B1)
               assert(B2)
 
-              if not (B1.empty or B1.walk) or
-                 not (B2.empty or B2.walk)
+              -- ????  FIXME: check Bx.empty ??  Bx.walk ??
+              if not B1.chunk or not is_roomy(B1.chunk) or
+                 not B2.chunk or not is_roomy(B2.chunk)
               then
                 able = false
               end
@@ -5160,16 +5160,16 @@ do return end
           elseif h >= min_deep then info.score = 200
           end
 
-          info.score = info.score + (w-1) * 40
-
-          -- FIXME (a) side1_K and side2_K
-          --       (b) bigger score (trump width)
-          if pos >= 1 and pos+w <= long-1 then
-            info.score = info.score + 20
+          if not (pos == 0 and side1_K and side1_K.stair_dir) and
+             not (pos+w == long and side2_K and side2_K.stair_dir)
+          then
+            info.score = info.score + 100
           end
 
+          info.score = info.score + math.min(w-1,4) * 10
+
           -- deadlock breaker
-          info.score = info.score + rand_irange(0,15)
+          info.score = info.score + con.random()
 
           return info
         end          
@@ -5204,8 +5204,11 @@ do return end
       local K = c.chunks[kx][ky]
       if K.stair_dir then
         local dx,dy = dir_to_delta(K.stair_dir)
+        local ax,ay = dir_to_across(K.stair_dir)
+
         assert(1<=kx+dx and kx+dx<=3)
         assert(1<=ky+dy and ky+dy<=3)
+
         local J = c.chunks[kx+dx][ky+dy]
         local diff_h = K.rmodel.f_h - J.rmodel.f_h
 
@@ -5216,10 +5219,44 @@ do return end
           behind_K = c.chunks[kx-dx][ky-dy]
         end
 
+        local function side_is_bad(dir)
+          local kdx,kdy = dir_to_delta(dir)
+          local nx,ny   = kx+kdx, ky+kdy
+          if nx<1 or nx>3 or ny<1 or ny>3 then return nil end
+          local N = c.chunks[nx][ny]
+          if not N.stair_dir then return nil end
+          if N.stair_dir ~= (10-dir) then return nil end
+          return N
+        end
+        
+        local side1_K, side2_K
+
+        if K.stair_dir==2 or K.stair_dir==8 then
+          side1_K = side_is_bad(4)
+          side2_K = side_is_bad(6)
+        else
+          side1_K = side_is_bad(2)
+          side2_K = side_is_bad(8)
+        end
+
+---###  local side1_K, side2_K
+---###  if (1<=kx-ax and kx-ax<=3) and
+---###     (1<=ky-ay and ky-ay<=3)
+---###  then
+---###    side1_K = c.chunks[kx-ax][ky-ay]
+---###  end
+---###  if (1<=kx+ax and kx+ax<=3) and
+---###     (1<=ky+ay and ky+ay<=3)
+---###  then
+---###    side2_K = c.chunks[kx+ax][ky+ay]
+---###  end
+
 con.printf("Building stair @ (%d,%d) chunk [%d,%d] dir:%d\n", c.x, c.y, kx,ky, K.stair_dir)
 con.printf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
+if side1_K and side1_K.stair_dir then con.printf("SIDE1 STAIRS\n") end
+if side2_K and side2_K.stair_dir then con.printf("SIDE2 STAIRS\n") end
 
-        local info = find_stair_loc(K, behind_K, stair_depths(diff_h))
+        local info = find_stair_loc(K, behind_K,side1_K,side2_K, stair_depths(diff_h))
 
 if not info then return end --!!!!!!
 
@@ -5228,8 +5265,8 @@ if not info then return end --!!!!!!
 if true then
   con.printf("  Stair coords: (%d,%d)..(%d,%d) size:%dx%d\n", info.sx,info.sy, info.ex,info.ey, info.long, info.deep)
   gap_fill(p,c, info.sx,info.sy, info.ex,info.ey, K.rmodel, { light=255, kind=8 })
-else
-        B_stair(p,c, info.x,info.y, K.rmodel.f_h, K.stair_dir,
+--else
+        B_stair(p,c, info.sx,info.sy, K.rmodel.f_h, K.stair_dir,
                 info.long, info.deep, step)
 end
         -- reserve space vor und hinter the staircase
