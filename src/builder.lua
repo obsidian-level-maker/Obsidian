@@ -16,6 +16,27 @@
 --
 ----------------------------------------------------------------
 
+--[[
+
+class BuildItem
+{
+   x1,y1,x2,y2 : used area (not including the "walk zone")
+
+   prefab : name    -- for prefabs
+   skin
+   parm
+   dir
+OR
+   connx  : name  e.g. "stairs"
+   dir
+OR
+   thing  : name
+   angle
+   options
+}
+
+--]]
+
 
 function copy_block(B, ...)
   local result = copy_table(B)
@@ -216,7 +237,7 @@ error("invalid block")
 end
       assert(valid_block(p, x, y))
 
-      if not p.blocks[x][y] then
+      if not p.blocks[x][y] or p.blocks[x][y].empty then
         fill(p,c, x,y, x,y, B, B2)
       end
     end
@@ -238,6 +259,7 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
 
       local B = p.blocks[bx][by]
       B.solid = nil
+      B.empty = nil
 
       if not B.fragments then
         B.fragments = array_2D(FW, FH)
@@ -456,12 +478,20 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
 
   local function what_tex(base, key)
     if skin[key] then return skin[key] end
-    if parm[key] then return parm[key] end --!!!
+    if parm[key] then return parm[key] end
+
     if skin[base] then return skin[base] end
     if not theme[base] then
       error("Unknown texture ref in prefab: " .. key)
     end
     return theme[base]
+  end
+
+  local function what_thing(name)
+    if skin[name] then return skin[name] end
+    if parm[name] then return parm[name] end
+
+    error("Unknown thing ref in prefab: " .. name)
   end
 
   local function compile_element(elem)
@@ -575,11 +605,12 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
         if fab.scale == 64 then
           bx,by = fx,fy
         else
+          -- FIXME: offsets
           bx = div_mod(fx, FW)
           by = div_mod(fy, FH)
         end
 
-        add_thing(p, c, bx,by, skin[elem.thing] or elem.thing, true, elem.angle)
+        add_thing(p, c, bx,by, what_thing(elem.thing), false, elem.angle)
       end
     end
   end end
@@ -588,15 +619,14 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
 
   if fab.things then
     for zzz,tdef in ipairs(fab.things) do
-      local name = skin[tdef.kind] or parm[tdef.kind]
-      if name then
-        local bx,by, dx,dy = th_coords(tdef.x, tdef.y)
 
-        local th = add_thing(p, c, bx,by, name, true)
+      local bx,by, dx,dy = th_coords(tdef.x, tdef.y)
 
-        th.dx = dx
-        th.dy = dy
-      end
+      -- FIXME: blocking
+      local th = add_thing(p, c, bx,by, what_thing(tdef.kind), false)
+
+      th.dx = dx
+      th.dy = dy
     end
   end
 end
@@ -2038,6 +2068,8 @@ function setup_rmodel(p, c)
   if not c.rmodel.light then
     c.rmodel.light = sel(c.theme.outdoor, 192, 144)
   end
+
+  c.mark = allocate_mark(p)
 end
 
 function make_chunks(p)
@@ -2552,100 +2584,6 @@ link.cells[2].x, link.cells[2].y)
     end
   end
 
-  --[[ REMOVE OLD CRUD!
-  local function OLD_add_travel_chunks(c)
-    -- this makes sure that there is always a path
-    -- from one chunk to another.  The problem areas
-    -- look like this:
-    -- 
-    --    X |##   We need to make X and Y touch, so
-    --    --+--   copy X or Y into an empty corner.
-    --    ##| Y
-
-    local function check_pair(x1,y1, x2,y2)
-
-      -- are X or Y empty?
-      if not (c.chunks[x1][y2] and c.chunks[x2][y1]) then
-        return
-      end
-
-      local k1 = c.chunks[x1][y1]
-      local k2 = c.chunks[x2][y2]
-
-      if k1 and not k1.void then return end
-      if k2 and not k2.void then return end
-
-      -- from here on, k1 and k2 being non-nil implies
-      -- they are void-space
-      assert(not (k1 and k2))
-
-      local src_x, src_y = x1,y2
-      if rand_odds(50) then src_x, src_y = x2,y1 end
-
-      local dest_x, dest_y = x1,y1
-
-      if k1 or (not k2 and rand_odds(50)) then
-        dest_x, dest_y = x2,y2
-      end
-
-      c.chunks[dest_x][dest_y] = copy_chunk(c, dest_x, dest_y, c.chunks[src_x][src_y])
-    end
-
-    local function check_corner(dir)
-      local dx, dy = dir_to_delta(dir)
-
-      local kx,ky = 2+dx, 2+dy
-      
-      local K = c.chunks[kx][ky]
-      if K and K.link and K.link.build == c then
-        local A = c.chunks[kx][2]
-        local B = c.chunks[2][ky]
-
-        --if A and not is_roomy(A) then A = nil end
-        --if B and not is_roomy(B) then B = nil end
-
-        if not (A and is_roomy(c, A)) and
-           not (B and is_roomy(c, B)) then
-
-              if not A then c.chunks[kx][2] = new_chunk(c, kx,2, "room")
-          elseif not B then c.chunks[2][ky] = new_chunk(c, 2,ky, "room")
-          end
-        end
-      end
-    end
-
-    --== add_travel_chunks ==--
-
-    if c.chunks[2][2] and c.chunks[2][2].vista then
-      return
-    end
-
-    -- centre chunk always roomy  (FIXME ??)
-    c.chunks[2][2] = new_chunk(c, 2,2, "room")
-
-    local pair_list =
-    {
-      { 2,1, 1,2 }, { 2,1, 3,2 },
-      { 2,3, 1,2 }, { 2,3, 3,2 }
-    }
-
-    rand_shuffle(pair_list)
-
-    for zzz, pair in ipairs(pair_list) do
-      check_pair(unpack(pair))
-    end
-
-    -- finally, handle the case where a build-link
-    -- (which are at room level) is isolated in a corner.
-    -- [Not strictly essential, but prevents unneeded stairs]
-
-    check_corner(1)
-    check_corner(3)
-    check_corner(7)
-    check_corner(9)
-  end
-  --]]
-
   local function chunk_similar(k1, k2)
     assert(k1 and k2)
     if k1.void and k2.void then return true end
@@ -2968,9 +2906,9 @@ link.cells[2].x, link.cells[2].y)
 
   local function connect_chunks(c)
 
-    --> result: certain chunks have a "stair_dir" field
-    -->         Direction to neighbour chunk.  Stair will
-    -->         be built inside this chunk.
+    --> result: certain chunks have a "stair_dir" field.
+    -->         Direction to neighbour chunk.  Stair/Lift will
+    -->         be built inside that chunk.
 
     local function init_connx()
 
@@ -3092,13 +3030,6 @@ link.cells[2].x, link.cells[2].y)
 con.printf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
       add_stair()
     end 
-
-    -- FIXME: randomly flip a few stairs.
-    --   Requires:
-    --     no stair_dir in neighbour
-    --     neighbour "has space" (not building door, etc)
-    --     ???
-    --   Especially good: center -> ledge with centered door
   end
 
   local function good_Q_spot(c) -- REMOVE (use block-based alloc)
@@ -3140,113 +3071,6 @@ con.printf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
 ---##  if not best_x then error("NO FREE SPOT!") end
 
     return best_x, best_y
-  end
-
-  local function position_sp_stuff(c)
-
-    if c == p.quests[1].first then
-      local kx, ky = good_Q_spot(c, true)
-      if not kx then error("NO FREE SPOT for Player!") end
-      c.chunks[kx][ky].player=true
-    end
-
-    if c == c.quest.last then
-      local can_vista = (c.quest.kind == "key") or
-              (c.quest.kind == "weapon") or (c.quest.kind == "item")
-      local kx, ky = good_Q_spot(c, can_vista)
-      if not kx then error("NO FREE SPOT for Quest Item!") end
-      c.chunks[kx][ky].quest=true
-
-      --[[ NOT NEEDED?
-      if p.coop and (c.quest.kind == "weapon") then
-        local total = rand_index_by_probs { 10, 50, 90, 50 }
-        for i = 2,total do
-          local kx, ky = good_Q_spot(c)
-          if kx then c.chunks[kx][ky].quest=true end
-        end
-      end
-      --]]
-    end
-  end
-
-  local function position_dm_stuff(c)
-
-    local spots = {}
-
-    local function get_spot()
-      if #spots == 0 then return nil end
-      return table.remove(spots, 1)
-    end
-
-    local function reusable_spot()
-      if #spots == 0 then return nil end
-      local S = table.remove(spots,1)
-      table.insert(spots, S)
-      return S
-    end
-    
-    --- position_dm_stuff ---
-
-    for kx = 1,KW do for ky = 1,KH do
-      local K = c.chunks[kx][ky]
-      if K and (K.room or K.liquid or K.link) and not K.stair_dir then
-        table.insert(spots, {x=kx, y=ky, K=K})
-      end
-    end end
-
-    rand_shuffle(spots)
-
-    -- guarantee at least 4 players (each corner)
-    if (c.x==1) or (c.x==p.w) or (c.y==1) or (c.y==p.h) or rand_odds(66) then
-      local spot = get_spot()
-      if spot then spot.K.player = true end
-    end
-
-    -- guarantee at least one weapon (central cell)
-    if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(70) then
-      local spot = get_spot()
-      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
-    end
-
-    -- secondary players and weapons
-    if rand_odds(33) then
-      local spot = get_spot()
-      if spot then spot.K.player = true end
-    end
-    if rand_odds(15) then
-      local spot = get_spot()
-      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
-    end
-
-    -- from here on we REUSE the spots --
-
-    if #spots == 0 then return end
-
-    -- health, ammo and items
-    if rand_odds(70) then
-      local spot = reusable_spot()
-      spot.K.dm_health = choose_dm_thing(THEME.dm.health, false)
-    end
-
-    if rand_odds(90) then
-      local spot = reusable_spot()
-      spot.K.dm_ammo = choose_dm_thing(THEME.dm.ammo, true)
-    end
- 
-    if rand_odds(10) then
-      local spot = reusable_spot()
-      spot.K.dm_item = choose_dm_thing(THEME.dm.items, true)
-    end
-
-    -- secondary health and ammo
-    if rand_odds(10) then
-      local spot = reusable_spot()
-      spot.K.dm_health = choose_dm_thing(THEME.dm.health, false)
-    end
-    if rand_odds(30) then
-      local spot = reusable_spot()
-      spot.K.dm_ammo = choose_dm_thing(THEME.dm.ammo, true)
-    end
   end
 
   --==-- make_chunks --==--
@@ -3293,447 +3117,171 @@ con.printf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
 
   for zzz,cell in ipairs(p.all_cells) do
 
-      add_travel_chunks(cell)
+    add_travel_chunks(cell)
 
-      setup_chunk_rmodels(cell)
+    setup_chunk_rmodels(cell)
 
 --!!!!  flesh_out_cell(cell)
 
-      connect_chunks(cell)
-
+    connect_chunks(cell)
   end
 
-  for zzz,cell in ipairs(p.all_cells) do
-
---[[ !!!!
-      add_closet_chunks(cell)
-
-      add_vista_chunks(cell)
---]]
-  end
-
---[[ !!!!
-  for zzz,cell in ipairs(p.all_cells) do
-      if p.deathmatch then
-        position_dm_stuff(cell)
-      else
-        position_sp_stuff(cell)
-      end
-  end
---]]
+-- !!!!  add_closet_chunks(cell)
+-- !!!!  add_vista_chunks(cell)
 end
 
 
-function setup_borders_and_corners(p)
+function build_borders(p)
 
-  -- for each border and corner: decide on the type, the theme,
-  -- and which cell is ultimately responsible for building it.
+  local c
 
-  local function border_theme(cells)
-    assert(#cells >= 1)
+  local function setup_borders_and_corners(p)
 
-    if #cells == 1 then return cells[1].theme end
+    -- for each border and corner: decide on the type, the theme,
+    -- and which cell is ultimately responsible for building it.
 
-    for zzz,c in ipairs(cells) do
-      if c.is_exit then return c.theme end
-    end
+    local function border_theme(cells)
+      assert(#cells >= 1)
 
---[[    for zzz,c in ipairs(cells) do
-      if c.scenic == "solid" then return c.theme end
-    end
---]]
-    local themes = {}
-    local hall_num = 0
+      if #cells == 1 then return cells[1].theme end
 
-    for zzz,c in ipairs(cells) do
-      if c.hallway then hall_num = hall_num + 1 end
-      table.insert(themes, c.theme)
-    end
-  
-    -- when some cells are hallways and some are not, we
-    -- upgrade the hallways to their "outer" theme.
-
-    if (hall_num > 0) and (#cells - hall_num > 0) then
-      for idx = 1,#themes do
-        if cells[idx].hallway then
-          themes[idx] = cells[idx].quest.theme
-        end
+      for zzz,c in ipairs(cells) do
+        if c.is_exit then return c.theme end
       end
-    end
 
-    -- when some cells are outdoor and some are indoor,
-    -- remove the outdoor themes from consideration.
+  --[[    for zzz,c in ipairs(cells) do
+        if c.scenic == "solid" then return c.theme end
+      end
+  --]]
+      local themes = {}
+      local hall_num = 0
 
-    local out_num = 0
-
-    for zzz,T in ipairs(themes) do
-      if T.outdoor then out_num = out_num + 1 end
-    end
+      for zzz,c in ipairs(cells) do
+        if c.hallway then hall_num = hall_num + 1 end
+        table.insert(themes, c.theme)
+      end
     
-    if (out_num > 0) and (#themes - out_num > 0) then
-      for idx = #themes,1,-1 do
-        if themes[idx].outdoor then
-          table.remove(themes, idx)
-        end
-      end
-    end
+      -- when some cells are hallways and some are not, we
+      -- upgrade the hallways to their "outer" theme.
 
-    if #themes >= 2 then
-      table.sort(themes, function(t1, t2) return t1.mat_pri < t2.mat_pri end)
-    end
-
-    return themes[1]
-  end
-
-
-  local function border_kind(c1, c2, side)
-
-    if not c2 or c2.is_depot then
-      if c1.theme.outdoor and THEME.caps.sky then return "sky" end
-      return "solid"
-    end
-
-    if c1.scenic == "solid" or c2.scenic == "solid" then
-      return "solid"
-    end
-
-    if c1.hallway or c2.hallway then return "solid" end
-
-    -- TODO: sometimes allow it
-    if c1.is_exit or c2.is_exit then return "solid" end
-
-    if not THEME.caps.heights then return "solid" end
-
-    if c1.border[side].window then return "window" end
-
----###    local link = c1.link[side]
----###
----###    if link then assert(c2) end
-
----###    if link and (link.kind == "arch") and c1.theme == c2.theme and
----###       (c1.quest.parent or c1.quest) == (c2.quest.parent or c2.quest) and
----###       dual_odds(c1.theme.outdoor, 50, 33)
----###    then
----###       return "empty"
----###    end
-
-    -- fencing anyone?   FIXME: move tests into Planner
-    local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
-
-    if (c1.theme.outdoor == c2.theme.outdoor) and
-       (not c1.is_exit  and not c2.is_exit) and
-       (not c1.is_depot and not c2.is_depot) and diff_h > 64
-    then
-      if c1.scenic or c2.scenic then
-        return "fence"
-      end
-
-      if dual_odds(c1.theme.outdoor, 60, 7) then
-        return "fence"
-      end
-
----###      local i_W = sel(link, 3, 20)
----###      local i_F = sel(c1.theme == c2.theme, 5, 0)
----###
----###      if dual_odds(c1.theme.outdoor, 25, i_W) then return "wire" end
----###      if dual_odds(c1.theme.outdoor, 60, i_F) then return "fence" end
-    end
- 
-    return "solid"
-  end
-
-
-  --[[ UNNEEDED
-  local function adjust(c, side, D, c2, side2, E)
-
-    if E.x1 > D.x2 or E.x2 < D.x1 then return end
-    if E.y1 > D.y2 or E.y2 < D.y1 then return end
-
-    local function dump_it()
-      con.printf("Borders @ (%d,%d):%d and (%d,%d):%d\n",
-          c.x, c.y, side, c2.x, c2.y, side2)
-      con.printf("D = (%d,%d)..(%d,%d)   E = (%d,%d)..(%d,%d)\n",
-          D.x1, D.y1, D.x2, D.y2, E.x1, E.y1, E.x2, E.y2)
-      con.printf("OV = (%d,%d)..(%d,%d)  BB = (%d,%d)..(%d,%d)\n",
-          ox, oy, ox2, oy2, bb_x1, bb_y1, bb_x2, bb_y2)
-    end
-    
-    -- determine overlap position
-    
-    local ox  = math.max(D.x1, E.x1)
-    local oy  = math.max(D.y1, E.y1)
-    local ox2 = math.min(D.x2, E.x2)
-    local oy2 = math.min(D.y2, E.y2)
-
-    local bb_x1 = math.min(D.x1, E.x1)  -- bounding box
-    local bb_y1 = math.min(D.y1, E.y1)
-    local bb_x2 = math.max(D.x2, E.x2)
-    local bb_y2 = math.max(D.y2, E.y2)
-
-    -- sanity check
-    if ox2 ~= ox or oy2 ~= oy or
-       (bb_x1 < ox and bb_x2 > ox and bb_y1 < oy and bb_y2 > oy)
-    then
-      dump_it(); error("Bad border overlap")
-    end
-
-    -- check for T-junctions
-    if (bb_x1 < ox and bb_x2 > ox and (bb_y1 < oy or bb_y2 > oy) )
-    or (bb_y1 < oy and bb_y2 > oy and (bb_x1 < ox or bb_x2 > ox) )
-    then
-      dump_it(); error("Border T-junction found")
-    end
-
-    -- OK, both borders only touch at a corner.
-    -- Decide which one to adjust...
-
-    if D.theme ~= E.theme then
-      local cells = { c, c2 }
-
-      local n1 = neighbour_by_side(p, c,  side)
-      local n2 = neighbour_by_side(p, c2, side2)
-
-      if n1 then table.insert(cells, n1) end
-      if n2 then table.insert(cells, n2) end
-
-      local T = border_theme(cells)
-      
-      if D.theme == T then D,E = E,D end
-    end
-
-    if D.x1 == D.x2 then
-      -- vertical
-          if D.y1 == oy then D.y1 = D.y1 + 1; D.low_corner  = false
-      elseif D.y2 == oy then D.y2 = D.y2 - 1; D.high_corner = false
-      else
-        dump_it(); error("Bad border L-junction")
-      end
-    else
-      -- horizontal
-      assert(D.y1 == D.y2)
-          if D.x1 == ox then D.x1 = D.x1 + 1; D.low_corner  = false
-      elseif D.x2 == ox then D.x2 = D.x2 - 1; D.high_corner = false  
-      else
-        dump_it(); error("Bad border L-junction")
-      end
-    end
-  end
-
-  local function jiggle(c, side)
-
-    local D = c.border[side]
-    if D.jiggled then return end -- already done
-
-    -- these will be cleared if the border is adjusted
-    D.low_corner  = true
-    D.high_corner = true
-
-    for dx = -1,1 do for dy = -1,1 do
-      local c2 = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
-      if c2 then
-        for side2 = 2,8,2 do
-          local E = c2.border[side2]
-          if E and E ~= D and not E.build then
-            adjust(c, side, D, c2, side2, E)
-
-            assert(D.x2 >= D.x1 and D.y2 >= D.y1)
-            assert(E.x2 >= E.x1 and E.y2 >= E.y1)
+      if (hall_num > 0) and (#cells - hall_num > 0) then
+        for idx = 1,#themes do
+          if cells[idx].hallway then
+            themes[idx] = cells[idx].quest.theme
           end
         end
       end
-    end end
 
-    D.jiggled = true
-  end
-  --]]
+      -- when some cells are outdoor and some are indoor,
+      -- remove the outdoor themes from consideration.
 
-  local function init_border(c, side)
+      local out_num = 0
 
-    local D = c.border[side]
-    if D.build then return end -- already done
-
-    -- which cell actually builds the border is arbitrary, unless
-    -- there is a link with the other cell
-    if c.link[side] then
-      D.build = c.link[side].build
-    else
-      D.build = c
-    end
-
-    local other = neighbour_by_side(p,c, side)
-
-    D.theme = border_theme(D.cells)
-    D.kind  = border_kind (c, other, side)
-  end
-
-  local function init_corner(c, side)
-
-    local E = c.corner[side]
-    if E.build then return end -- already done
-
-    E.build = c
-    E.theme = border_theme(E.cells)
-    E.kind  = "solid"
-  end
-
-  --- setup_borders_and_corners ---
-
-  for zzz,c in ipairs(p.all_cells) do
-
-    for side = 1,9 do
-      if c.border[side] then init_border(c, side) end
-    end
-    for side = 1,9,2 do
-      if c.corner[side] then init_corner(c, side) end
-    end
-  end
-end
-
-----------------------------------------------------------------
-
-function build_maze(p, c, x1,y1, x2,y2)
-  -- FIXME
-end
-
-function build_grotto(p, c, x1,y1, x2,y2)
-  
-  local ROOM = c.rmodel
-  local WALL = { solid=c.theme.wall }
-
-  for y = y1+1, y2-1, 2 do
-    for x = x1+1+(int(y/2)%2)*2, x2-3, 4 do
-      gap_fill(p,c, x-2,y, x-2,y, WALL)
-      gap_fill(p,c, x+2,y, x+2,y, WALL)
-
-      local ax, ay = dir_to_across(rand_sel(50, 2, 4))
-      gap_fill(p,c, x-ax,y-ay, x+ax,y+ay, WALL)
-    end
-  end
-
-  gap_fill(p,c, x1,y1, x2-3,y2-1, ROOM)
-end
-
-function build_pacman_level(p, c)
-
-  local function free_spot(bx, by)
-    local B = p.blocks[bx][by]
-    return B and not B.solid and not B.has_blocker
-  end
-
-  local function solid_spot(bx, by)
-    local B = p.blocks[bx][by]
-    return B and B.solid
-  end
-
-  local PACMAN_MID_FABS  = { "WOLF_PACMAN_MID_1", "WOLF_PACMAN_MID_2", "WOLF_PACMAN_MID_3" }
-  local PACMAN_CORN_FABS = { "WOLF_PACMAN_CORN_1", "WOLF_PACMAN_CORN_2", "WOLF_PACMAN_CORN_3" }
- 
-  local mid_fab = PREFABS[rand_element(PACMAN_MID_FABS)]
-  assert(mid_fab)
-
-  local mid_x = 32 - int(mid_fab.long/2)
-  local mid_y = 30 - int(mid_fab.deep/2)
-
-  local top_fab = PREFABS[rand_element(PACMAN_CORN_FABS)]
-  local bot_fab = PREFABS[rand_element(PACMAN_CORN_FABS)]
-  assert(top_fab and bot_fab)
-
-  local top_flip = rand_odds(50)
-  local bot_flip = not top_flip
-
-  local theme = THEME.themes[rand_sel(50,"BLUE_STONE","BLUE_BRICK")]
-  assert(theme)
-
-  local skin =
-  {
-    ghost_w = THEME.themes[rand_sel(50,"RED_BRICK","PURPLE_STONE")].wall,
-
-    dot_t = rand_sel(50,"chalice","cross"),
-
-    treasure1 = "bible",
-    treasure2 = "crown",
-  }
-  local parm =
-  {
-  }
-
-  B_prefab(p,c, mid_fab,skin,parm,theme, mid_x-2, mid_y, 8, false)
-
-  B_prefab(p,c, top_fab,skin,parm,theme, mid_x-10, mid_y+16, 8,false,top_flip)
-  B_prefab(p,c, top_fab,skin,parm,theme, mid_x+10, mid_y+16, 8,true, top_flip)
-
-  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x-10, mid_y-12, 8,false,bot_flip)
-  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x+10, mid_y-12, 8,true, bot_flip)
-
-  B_exit_elevator(p,c, mid_x+19, mid_y+28, 2)
-
-  gap_fill(p,c, 2,2, 63,63, { solid=theme.wall })
-  
-  -- player spot
-  local px
-  local py = rand_irange(mid_y-11, mid_y-3)
-  local p_ang = 0
-
-  for x = mid_x-7,mid_x+12 do
-    if free_spot(x, py) then
-      px = x
-      if solid_spot(x+1, py) or solid_spot(x+2,py) then
-        p_ang = 90
-        if solid_spot(x,py+1) or solid_spot(x,py+2) then p_ang = 270 end
+      for zzz,T in ipairs(themes) do
+        if T.outdoor then out_num = out_num + 1 end
       end
-      break;
-    end 
-  end
-
-  if not px then error("Could not find spot for pacman!") end
-
-  add_thing(p, c, px, py, "player1", true, p_ang)
-end
-
-----------------------------------------------------------------
-
-
-function build_cell(p, c)
- 
-  local function valid_and_empty(cx, cy)
-    return valid_cell(p, cx, cy) and not p.cells[cx][cy]
-  end
-
-  local function player_angle(kx, ky)
-
-    if c.exit_dir then
-      return dir_to_angle(c.exit_dir)
-    end
-
-    -- when in middle of room, find an exit to look at
-    if (kx==2 and ky==2) then
-      for i = 1,20 do
-        local dir = rand_irange(1,4)*2
-        if c.link[dir] then
-          return dir_to_angle(dir)
+      
+      if (out_num > 0) and (#themes - out_num > 0) then
+        for idx = #themes,1,-1 do
+          if themes[idx].outdoor then
+            table.remove(themes, idx)
+          end
         end
       end
 
-      return rand_irange(1,4)*2
+      if #themes >= 2 then
+        table.sort(themes, function(t1, t2) return t1.mat_pri < t2.mat_pri end)
+      end
+
+      return themes[1]
     end
 
-    return delta_to_angle(2-kx, 2-ky)
-  end
 
-  local function decide_void_pic(p, c)
-    if c.theme.pic_wd and rand_odds(60) then
-      c.void_pic = { wall=c.theme.pic_wd, w=128, h=c.theme.pic_wd_h or 128 }
-      c.void_cut = 1
-      return
+    local function border_kind(c1, c2, side)
 
-    elseif not c.theme.outdoor and rand_odds(25) then
-      c.void_pic = get_rand_wall_light()
-      c.void_cut = rand_irange(3,4)
-      return
+      if not c2 or c2.is_depot then
+        if c1.theme.outdoor and THEME.caps.sky then return "sky" end
+        return "solid"
+      end
 
-    else
-      c.void_pic = get_rand_pic()
-      c.void_cut = 1
+      if c1.scenic == "solid" or c2.scenic == "solid" then
+        return "solid"
+      end
+
+      if c1.hallway or c2.hallway then return "solid" end
+
+      -- TODO: sometimes allow it
+      if c1.is_exit or c2.is_exit then return "solid" end
+
+      if not THEME.caps.heights then return "solid" end
+
+      if c1.border[side].window then return "window" end
+
+  ---###    if link and (link.kind == "arch") and c1.theme == c2.theme and
+  ---###       (c1.quest.parent or c1.quest) == (c2.quest.parent or c2.quest) and
+  ---###       dual_odds(c1.theme.outdoor, 50, 33)
+  ---###    then
+  ---###       return "empty"
+  ---###    end
+
+      -- fencing anyone?   FIXME: move tests into Planner
+      local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
+
+      if (c1.theme.outdoor == c2.theme.outdoor) and
+         (not c1.is_exit  and not c2.is_exit) and
+         (not c1.is_depot and not c2.is_depot) and diff_h > 64
+      then
+        if c1.scenic or c2.scenic then
+          return "fence"
+        end
+
+        if dual_odds(c1.theme.outdoor, 60, 7) then
+          return "fence"
+        end
+      end
+   
+      return "solid"
+    end
+
+    local function init_border(c, side)
+
+      local D = c.border[side]
+      if D.build then return end -- already done
+
+      -- which cell actually builds the border is arbitrary, unless
+      -- there is a link with the other cell
+      if c.link[side] then
+        D.build = c.link[side].build
+      else
+        D.build = c
+      end
+
+      local other = neighbour_by_side(p,c, side)
+
+      D.theme = border_theme(D.cells)
+      D.kind  = border_kind (c, other, side)
+    end
+
+    local function init_corner(c, side)
+
+      local E = c.corner[side]
+      if E.build then return end -- already done
+
+      E.build = c
+      E.theme = border_theme(E.cells)
+      E.kind  = "solid"
+    end
+
+    --- setup_borders_and_corners ---
+
+    for zzz,c in ipairs(p.all_cells) do
+
+      for side = 1,9 do
+        if c.border[side] then init_border(c, side) end
+      end
+      for side = 1,9,2 do
+        if c.corner[side] then init_corner(c, side) end
+      end
     end
   end
 
@@ -3815,7 +3363,6 @@ B_prefab(p,c, fab, skin, parm, D.theme, link.x1, link.y1, side)
 return
 end
 
-
 if not (link.kind == "falloff") then --!!!!! TESTING
 local door_info = THEME.doors[link.wide_door]
 assert(door_info)
@@ -3839,7 +3386,6 @@ copy_block_with_new(link.build.rmodel,
 { f_tex = "NUKAGE1" }))
 return
 end
-
 
     -- DIR here points to center of current cell
     local dir = 10-side  -- FIXME: remove
@@ -4058,85 +3604,41 @@ arch.f_tex = "TLITE6_6"
     end
   end
 
-  local function chunk_pair(cell, other, side,n)
-    local cx,cy, ox,oy
-    
-        if side == 2 then cx,cy,ox,oy = n,1,n,KH
-    elseif side == 8 then cx,cy,ox,oy = n,KH,n,1
-    elseif side == 4 then cx,cy,ox,oy = 1,n,KW,n
-    elseif side == 6 then cx,cy,ox,oy = KW,n,1,n
+  local function build_corner(side)
+
+    local E = c.corner[side]
+    if not E then return end
+    if E.build ~= c then return end
+
+    -- handle outside corners
+    local out_num = 0
+    local f_max = -99999
+
+    for zzz,c in ipairs(E.cells) do
+      if c.theme.outdoor then out_num = out_num + 1 end
+      f_max = math.max(c.f_max, f_max)
     end
 
-    return cell.chunks[cx][cy], other.chunks[ox][oy]
-  end
+    -- FIXME: determine corner_kind (like border_kind)
+    if E.kind == "sky" then
 
-  local function border_floor_range(other, side)
-    assert(other)
+      local CORN = copy_block_with_new(E.cells[1].rmodel,
+      {
+        f_h = f_max + 64,
+        f_tex = E.theme.floor,
+        l_tex = E.theme.wall,
+      })
 
-    local f_min, f_max = 65536, -65536
+      -- crappy substitute to using a real sky corner
+      if out_num < 4 then CORN.c_h = CORN.f_h + 1 end
 
-    for n = 1,KW do
-      local K1, K2 = chunk_pair(c, other, side,n)
- 
-      if not (K1.void or K1.cage or K1.vista) then
-        f_max = math.max(f_max, K1.rmodel.f_h)
-        f_min = math.min(f_min, K1.rmodel.f_h)
-      end
-      if not (K2.void or K2.cage or K2.vista) then
-        f_max = math.max(f_max, K2.rmodel.f_h)
-        f_min = math.min(f_min, K2.rmodel.f_h)
+      if CORN.f_h < CORN.c_h then
+        gap_fill(p,c, E.bx, E.by, E.bx, E.by, CORN)
+        return
       end
     end
 
-    if f_min == 65536 then return nil, nil end
-
-    return f_min, f_max
-  end
-
-  local function corner_tex(c, dx, dy)
-    -- FIXME: use *border* themes, not cell themes
-
-    local themes = { }
-
-    local function try_add_one(x, y)
-      if not valid_cell(p, x, y) then return end
-      local cell = p.cells[x][y]
-      if not cell then return end
-      assert(cell.theme)
-      table.insert(themes, cell.theme)
-    end
-
-    try_add_one(c.x+dx, c.y)
-    try_add_one(c.x,    c.y+dy)
-    try_add_one(c.x+dx, c.y+dy)
-
-    local best = c.theme
-
-    for zzz,T in ipairs(themes) do
-      if not T.outdoor and best.outdoor then
-        best = T
-      elseif T.outdoor == best.outdoor then
-        if T.mat_pri > best.mat_pri then
-          best = T
-        elseif T.mat_pri == best.mat_pri and rand_odds(50) then
-          best = T
-        end
-      end
-    end
-    --[[ ORIG
-    for zzz,T in ipairs(themes) do
-      if T.mat_pri > best.mat_pri then
-        best = T
-      elseif T.mat_pri == best.mat_pri then
-        if not T.outdoor and best.outdoor then
-          best = T
-        elseif not (T.outdoor or best.outdoor) and rand_odds(50) then
-          best = T
-        end
-      end
-    end --]]
-
-    return best.void
+    gap_fill(p,c, E.bx, E.by, E.bx, E.by, { solid=E.theme.wall })
   end
 
   local function build_sky_border(side, x1,y1, x2,y2)
@@ -4447,78 +3949,7 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
 --]]
   end
 
-  --[[ OLD STUFF, REMOVE SOON
-  local function who_build_border(c, side, other, link)
-
-    if not other then
-      return c
-    end
-
-    if link then
-      return link.build
-    end
-
-    if c.vista_from == side then
-      return other
-    elseif c.vista[side] then
-      return c
-    end
-
-    if c.theme.outdoor ~= other.theme.outdoor then
-      return sel(c.theme.outdoor, other, c)
-    end
-
-    -- using 'not' because the scenic field has multiple values,
-    -- but the decision must be binary.
-    if (not c.scenic) ~= (not other.scenic) then
-      return sel(c.scenic, other, c)
-    end
-
----##  elseif (c.scenic == "solid") ~= (other.scenic == "solid") then
----##    return sel(c.scenic == "solid", 
-
-    return sel(side > 5, other, c)
-  end
-  --]]
-
-  local function build_corner(side)
-
-    local E = c.corner[side]
-    if not E then return end
-    if E.build ~= c then return end
-
-    -- handle outside corners
-    local out_num = 0
-    local f_max = -99999
-
-    for zzz,c in ipairs(E.cells) do
-      if c.theme.outdoor then out_num = out_num + 1 end
-      f_max = math.max(c.f_max, f_max)
-    end
-
-    -- FIXME: determine corner_kind (like border_kind)
-    if E.kind == "sky" then
-
-      local CORN = copy_block_with_new(E.cells[1].rmodel,
-      {
-        f_h = f_max + 64,
-        f_tex = E.theme.floor,
-        l_tex = E.theme.wall,
-      })
-
-      -- crappy substitute to using a real sky corner
-      if out_num < 4 then CORN.c_h = CORN.f_h + 1 end
-
-      if CORN.f_h < CORN.c_h then
-        gap_fill(p,c, E.bx, E.by, E.bx, E.by, CORN)
-        return
-      end
-    end
-
-    gap_fill(p,c, E.bx, E.by, E.bx, E.by, { solid=E.theme.wall })
-  end
-
-  local function build_border(side)
+  local function build_one_border(side)
 
     local D = c.border[side]
     if not D then return end
@@ -4606,6 +4037,403 @@ if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
       gap_fill(p,c, x1,y1, x2,y2, { solid=b_theme.wall })
     end
 
+  end
+
+
+  --== build_borders ==--
+
+  setup_borders_and_corners(p)
+
+  for zzz,cell in ipairs(p.all_cells) do
+
+    c = cell
+
+    for side = 1,9,2 do
+      build_corner(side)
+      build_one_border(side)
+    end
+
+    for side = 2,8,2 do
+      build_link(side)
+      build_one_border(side)
+    end
+  end
+end
+
+
+----------------------------------------------------------------
+
+function build_maze(p, c, x1,y1, x2,y2)
+  -- FIXME
+end
+
+function build_grotto(p, c, x1,y1, x2,y2)
+  
+  local ROOM = c.rmodel
+  local WALL = { solid=c.theme.wall }
+
+  for y = y1+1, y2-1, 2 do
+    for x = x1+1+(int(y/2)%2)*2, x2-3, 4 do
+      gap_fill(p,c, x-2,y, x-2,y, WALL)
+      gap_fill(p,c, x+2,y, x+2,y, WALL)
+
+      local ax, ay = dir_to_across(rand_sel(50, 2, 4))
+      gap_fill(p,c, x-ax,y-ay, x+ax,y+ay, WALL)
+    end
+  end
+
+  gap_fill(p,c, x1,y1, x2-3,y2-1, ROOM)
+end
+
+function build_pacman_level(p, c)
+
+  local function free_spot(bx, by)
+    local B = p.blocks[bx][by]
+    return B and not B.solid and not B.has_blocker
+  end
+
+  local function solid_spot(bx, by)
+    local B = p.blocks[bx][by]
+    return B and B.solid
+  end
+
+  local PACMAN_MID_FABS  = { "WOLF_PACMAN_MID_1", "WOLF_PACMAN_MID_2", "WOLF_PACMAN_MID_3" }
+  local PACMAN_CORN_FABS = { "WOLF_PACMAN_CORN_1", "WOLF_PACMAN_CORN_2", "WOLF_PACMAN_CORN_3" }
+ 
+  local mid_fab = PREFABS[rand_element(PACMAN_MID_FABS)]
+  assert(mid_fab)
+
+  local mid_x = 32 - int(mid_fab.long/2)
+  local mid_y = 30 - int(mid_fab.deep/2)
+
+  local top_fab = PREFABS[rand_element(PACMAN_CORN_FABS)]
+  local bot_fab = PREFABS[rand_element(PACMAN_CORN_FABS)]
+  assert(top_fab and bot_fab)
+
+  local top_flip = rand_odds(50)
+  local bot_flip = not top_flip
+
+  local theme = THEME.themes[rand_sel(50,"BLUE_STONE","BLUE_BRICK")]
+  assert(theme)
+
+  local skin =
+  {
+    ghost_w = THEME.themes[rand_sel(50,"RED_BRICK","PURPLE_STONE")].wall,
+
+    dot_t = rand_sel(50,"chalice","cross"),
+
+    treasure1 = "bible",
+    treasure2 = "crown",
+  }
+  local parm =
+  {
+  }
+
+  B_prefab(p,c, mid_fab,skin,parm,theme, mid_x-2, mid_y, 8, false)
+
+  B_prefab(p,c, top_fab,skin,parm,theme, mid_x-10, mid_y+16, 8,false,top_flip)
+  B_prefab(p,c, top_fab,skin,parm,theme, mid_x+10, mid_y+16, 8,true, top_flip)
+
+  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x-10, mid_y-12, 8,false,bot_flip)
+  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x+10, mid_y-12, 8,true, bot_flip)
+
+  B_exit_elevator(p,c, mid_x+19, mid_y+28, 2)
+
+  gap_fill(p,c, 2,2, 63,63, { solid=theme.wall })
+  
+  -- player spot
+  local px
+  local py = rand_irange(mid_y-11, mid_y-3)
+  local p_ang = 0
+
+  for x = mid_x-7,mid_x+12 do
+    if free_spot(x, py) then
+      px = x
+      if solid_spot(x+1, py) or solid_spot(x+2,py) then
+        p_ang = 90
+        if solid_spot(x,py+1) or solid_spot(x,py+2) then p_ang = 270 end
+      end
+      break;
+    end 
+  end
+
+  if not px then error("Could not find spot for pacman!") end
+
+  add_thing(p, c, px, py, "player1", true, p_ang)
+end
+
+----------------------------------------------------------------
+
+
+function build_cell(p, c)
+ 
+  local function create_blocks(c)
+    
+    for kx=1,3 do for ky=1,3 do
+      local K = c.chunks[kx][ky]
+      for x = K.x1,K.x2 do for y = K.y1,K.y2 do
+        p.blocks[x][y] =
+        {
+          empty = "both",
+          chunk = K,
+        }
+      end end
+    end end
+  end
+
+  local function player_angle(kx, ky)
+
+    if c.exit_dir then
+      return dir_to_angle(c.exit_dir)
+    end
+
+    -- when in middle of room, find an exit to look at
+    if (kx==2 and ky==2) then
+      for i = 1,20 do
+        local dir = rand_irange(1,4)*2
+        if c.link[dir] then
+          return dir_to_angle(dir)
+        end
+      end
+
+      return rand_irange(1,4)*2
+    end
+
+    return delta_to_angle(2-kx, 2-ky)
+  end
+
+  local function decide_void_pic(p, c)
+    if c.theme.pic_wd and rand_odds(60) then
+      c.void_pic = { wall=c.theme.pic_wd, w=128, h=c.theme.pic_wd_h or 128 }
+      c.void_cut = 1
+      return
+
+    elseif not c.theme.outdoor and rand_odds(25) then
+      c.void_pic = get_rand_wall_light()
+      c.void_cut = rand_irange(3,4)
+      return
+
+    else
+      c.void_pic = get_rand_pic()
+      c.void_cut = 1
+    end
+  end
+
+
+  local function chunk_pair(cell, other, side,n)
+    local cx,cy, ox,oy
+    
+        if side == 2 then cx,cy,ox,oy = n,1,n,KH
+    elseif side == 8 then cx,cy,ox,oy = n,KH,n,1
+    elseif side == 4 then cx,cy,ox,oy = 1,n,KW,n
+    elseif side == 6 then cx,cy,ox,oy = KW,n,1,n
+    end
+
+    return cell.chunks[cx][cy], other.chunks[ox][oy]
+  end
+
+--[[ OLD CRUD
+  local function border_floor_range(other, side)
+    assert(other)
+
+    local f_min, f_max = 65536, -65536
+
+    for n = 1,KW do
+      local K1, K2 = chunk_pair(c, other, side,n)
+ 
+      if not (K1.void or K1.cage or K1.vista) then
+        f_max = math.max(f_max, K1.rmodel.f_h)
+        f_min = math.min(f_min, K1.rmodel.f_h)
+      end
+      if not (K2.void or K2.cage or K2.vista) then
+        f_max = math.max(f_max, K2.rmodel.f_h)
+        f_min = math.min(f_min, K2.rmodel.f_h)
+      end
+    end
+
+    if f_min == 65536 then return nil, nil end
+
+    return f_min, f_max
+  end
+--]]
+
+  local dummy_pos_filler_crud_grunk
+
+--[[ OLD CRUD
+  local function corner_tex(c, dx, dy)
+    -- FIXME: use *border* themes, not cell themes
+
+    local themes = { }
+
+    local function try_add_one(x, y)
+      if not valid_cell(p, x, y) then return end
+      local cell = p.cells[x][y]
+      if not cell then return end
+      assert(cell.theme)
+      table.insert(themes, cell.theme)
+    end
+
+    try_add_one(c.x+dx, c.y)
+    try_add_one(c.x,    c.y+dy)
+    try_add_one(c.x+dx, c.y+dy)
+
+    local best = c.theme
+
+    for zzz,T in ipairs(themes) do
+      if not T.outdoor and best.outdoor then
+        best = T
+      elseif T.outdoor == best.outdoor then
+        if T.mat_pri > best.mat_pri then
+          best = T
+        elseif T.mat_pri == best.mat_pri and rand_odds(50) then
+          best = T
+        end
+      end
+    end
+
+    return best.void
+  end
+--]]
+
+  --[[ OLD STUFF, REMOVE SOON
+  local function who_build_border(c, side, other, link)
+
+    if not other then
+      return c
+    end
+
+    if link then
+      return link.build
+    end
+
+    if c.vista_from == side then
+      return other
+    elseif c.vista[side] then
+      return c
+    end
+
+    if c.theme.outdoor ~= other.theme.outdoor then
+      return sel(c.theme.outdoor, other, c)
+    end
+
+    -- using 'not' because the scenic field has multiple values,
+    -- but the decision must be binary.
+    if (not c.scenic) ~= (not other.scenic) then
+      return sel(c.scenic, other, c)
+    end
+
+---##  elseif (c.scenic == "solid") ~= (other.scenic == "solid") then
+---##    return sel(c.scenic == "solid", 
+
+    return sel(side > 5, other, c)
+  end
+  --]]
+
+  local function position_sp_stuff(c)
+
+    if c == p.quests[1].first then
+      local kx, ky = good_Q_spot(c, true)
+      if not kx then error("NO FREE SPOT for Player!") end
+      c.chunks[kx][ky].player=true
+    end
+
+    if c == c.quest.last then
+      local can_vista = (c.quest.kind == "key") or
+              (c.quest.kind == "weapon") or (c.quest.kind == "item")
+      local kx, ky = good_Q_spot(c, can_vista)
+      if not kx then error("NO FREE SPOT for Quest Item!") end
+      c.chunks[kx][ky].quest=true
+
+      --[[ NOT NEEDED?
+      if p.coop and (c.quest.kind == "weapon") then
+        local total = rand_index_by_probs { 10, 50, 90, 50 }
+        for i = 2,total do
+          local kx, ky = good_Q_spot(c)
+          if kx then c.chunks[kx][ky].quest=true end
+        end
+      end
+      --]]
+    end
+  end
+
+  local function position_dm_stuff(c)
+
+    local spots = {}
+
+    local function get_spot()
+      if #spots == 0 then return nil end
+      return table.remove(spots, 1)
+    end
+
+    local function reusable_spot()
+      if #spots == 0 then return nil end
+      local S = table.remove(spots,1)
+      table.insert(spots, S)
+      return S
+    end
+    
+    --- position_dm_stuff ---
+
+    for kx = 1,KW do for ky = 1,KH do
+      local K = c.chunks[kx][ky]
+      if K and (K.room or K.liquid or K.link) and not K.stair_dir then
+        table.insert(spots, {x=kx, y=ky, K=K})
+      end
+    end end
+
+    rand_shuffle(spots)
+
+    -- guarantee at least 4 players (each corner)
+    if (c.x==1) or (c.x==p.w) or (c.y==1) or (c.y==p.h) or rand_odds(66) then
+      local spot = get_spot()
+      if spot then spot.K.player = true end
+    end
+
+    -- guarantee at least one weapon (central cell)
+    if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(70) then
+      local spot = get_spot()
+      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
+    end
+
+    -- secondary players and weapons
+    if rand_odds(33) then
+      local spot = get_spot()
+      if spot then spot.K.player = true end
+    end
+    if rand_odds(15) then
+      local spot = get_spot()
+      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
+    end
+
+    -- from here on we REUSE the spots --
+
+    if #spots == 0 then return end
+
+    -- health, ammo and items
+    if rand_odds(70) then
+      local spot = reusable_spot()
+      spot.K.dm_health = choose_dm_thing(THEME.dm.health, false)
+    end
+
+    if rand_odds(90) then
+      local spot = reusable_spot()
+      spot.K.dm_ammo = choose_dm_thing(THEME.dm.ammo, true)
+    end
+ 
+    if rand_odds(10) then
+      local spot = reusable_spot()
+      spot.K.dm_item = choose_dm_thing(THEME.dm.items, true)
+    end
+
+    -- secondary health and ammo
+    if rand_odds(10) then
+      local spot = reusable_spot()
+      spot.K.dm_health = choose_dm_thing(THEME.dm.health, false)
+    end
+    if rand_odds(30) then
+      local spot = reusable_spot()
+      spot.K.dm_ammo = choose_dm_thing(THEME.dm.ammo, true)
+    end
   end
 
   local function build_chunk(kx, ky)
@@ -5150,9 +4978,7 @@ do return end
 
   ---=== build_cell ===---
 
-  assert(not c.mark)
-
-  c.mark = allocate_mark(p)
+  create_blocks(c)
 
   if not c.theme.outdoor and not c.is_exit and not c.hallway
      and THEME.lights and rand_odds(70)
@@ -5169,28 +4995,51 @@ do return end
     end
   end
 
-  for side = 1,9,2 do
-    build_corner(side)
-    build_border(side)
-  end
+  c.build_list = {}
 
-  for side = 2,8,2 do
-    build_link(side)
-    build_border(side)
-  end
+  --!!! tizzy_up_room()
 
-  for kx = 1,c.chunks.w do
-    for ky = 1,c.chunks.h do
-      build_chunk(kx, ky)
+  --!!!!  position_sp_stuff(cell)
+
+  -- GAP_FILL
+
+  for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
+    local B = p.blocks[x][y]
+    if B.empty then
+      local K = B.chunk
+      assert(K)
+
+      if K.void then
+        fill(p,c, x,y, x,y, { solid=c.theme.void })
+      else
+        fill(p,c, x,y, x,y, K.rmodel)
+      end
     end
-  end
+  end end
 
   -- TEMP 
   if c == p.quests[1].first then
     add_thing(p, c, c.bx1+2, c.by1+2, "player1", true, 0)
   end
 
-if c.x==1 and c.y==3 then
+-- !!!!  position_dm_stuff(cell)
+
+if c == p.quests[1].first then
+
+if false then
+  fab = PREFABS["DRINKS_BAR"]
+  assert(fab)
+
+  skin = { bar_w   = "PANBORD1", bar_f = "FLAT5_2",
+           drink   = "potion",
+         }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, 2)
+end
 
 if false then
   fab = PREFABS["PILLAR_LIGHT1"]
@@ -5331,82 +5180,96 @@ end -- if c.x==XX
 
 end
 
-
-function build_depot(p, c)
-
-  setup_rmodel(p, c)
-
-  c.bx1 = BORDER_BLK + (c.x-1) * (BW+1) + 1
-  c.by1 = BORDER_BLK + (c.y-1) * (BH+1) + 1
-
-  c.bx2 = c.bx1 + BW - 1
-  c.by2 = c.by1 + BW - 1
-
-  local depot = c.quest.depot
-  assert(depot)
-
-  local places = depot.places
-  assert(#places >= 2)
-  assert(#places <= 4)
-
-  local start = p.quests[1].first
---!!!!
---[[
-  assert(start.player_pos)
-  local player_B = p.blocks[start.player_pos.x][start.player_pos.y]
---]] local player_B = start.rmodel
-
-  -- check for double pedestals (Plutonia)
-  if player_B.fragments then
-    player_B = player_B.fragments[1][1]
+function build_rooms(p)
+  for zzz,cell in ipairs(p.all_cells) do
+    build_cell(p, cell)
   end
-  assert(player_B)
-  assert(player_B.f_h)
+end
 
-  local sec = { f_h = player_B.f_h, c_h = player_B.f_h + 128,
-                f_tex = c.rmodel.f_tex, c_tex = c.rmodel.c_tex,
-                l_tex = c.theme.void,  u_tex = c.theme.void,
-                light = 0
-              }
+function build_depots(p)
 
-  mon_sec = copy_block(sec)
-  mon_sec[8] = { block_mon=true }
+  local function build_one_depot(p, c)
 
-  door_sec = copy_block(sec)
-  door_sec.c_h = door_sec.f_h
-  door_sec.tag = depot.door_tag
+    setup_rmodel(p, c)
 
-  tele_sec = copy_block(sec)
-  tele_sec.walk_kind = 126
+    c.bx1 = BORDER_BLK + (c.x-1) * (BW+1) + 1
+    c.by1 = BORDER_BLK + (c.y-1) * (BH+1) + 1
 
-  local m1,m2 = 1,4
-  local t1,t2 = 6,BW
+    c.bx2 = c.bx1 + BW - 1
+    c.by2 = c.by1 + BW - 1
 
-  -- mirror the room horizontally
-  if c.x > start.x then
-    m1,m2, t1,t2 = t1,t2, m1,m2
-  end
+    local depot = c.quest.depot
+    assert(depot)
 
-  for y = 1,#places do
-    c_fill(p, c, 1,y*2-1, BW,y*2, mon_sec, { mark=y })
-    places[y].spots = rectangle_to_spots(c, c.bx1-1+m1, c.by1-1+y*2-1,
-          c.bx1-1+m1+0, c.by1-1+y*2)
+    local places = depot.places
+    assert(#places >= 2)
+    assert(#places <= 4)
 
-    for x = t1,t2 do
-      local t = 1 + ((x + y) % #places)
-      c_fill(p, c, x,y*2-1, x,y*2, tele_sec, { mark=x*10+y, walk_tag=places[t].tag})
+    local start = p.quests[1].first
+  --!!!!
+  --[[
+    assert(start.player_pos)
+    local player_B = p.blocks[start.player_pos.x][start.player_pos.y]
+  --]] local player_B = start.rmodel
+
+    -- check for double pedestals (Plutonia)
+    if player_B.fragments then
+      player_B = player_B.fragments[1][1]
     end
+    assert(player_B)
+    assert(player_B.f_h)
+
+    local sec = { f_h = player_B.f_h, c_h = player_B.f_h + 128,
+                  f_tex = c.rmodel.f_tex, c_tex = c.rmodel.c_tex,
+                  l_tex = c.theme.void,  u_tex = c.theme.void,
+                  light = 0
+                }
+
+    mon_sec = copy_block(sec)
+    mon_sec[8] = { block_mon=true }
+
+    door_sec = copy_block(sec)
+    door_sec.c_h = door_sec.f_h
+    door_sec.tag = depot.door_tag
+
+    tele_sec = copy_block(sec)
+    tele_sec.walk_kind = 126
+
+    local m1,m2 = 1,4
+    local t1,t2 = 6,BW
+
+    -- mirror the room horizontally
+    if c.x > start.x then
+      m1,m2, t1,t2 = t1,t2, m1,m2
+    end
+
+    for y = 1,#places do
+      c_fill(p, c, 1,y*2-1, BW,y*2, mon_sec, { mark=y })
+      places[y].spots = rectangle_to_spots(c, c.bx1-1+m1, c.by1-1+y*2-1,
+            c.bx1-1+m1+0, c.by1-1+y*2)
+
+      for x = t1,t2 do
+        local t = 1 + ((x + y) % #places)
+        c_fill(p, c, x,y*2-1, x,y*2, tele_sec, { mark=x*10+y, walk_tag=places[t].tag})
+      end
+    end
+
+    -- door separating monsters from teleporter lines
+    c_fill(p, c, 5,1, 5,2*#places, door_sec)
+
+    -- bottom corner block is same sector as player start,
+    -- to allow sound to wake up these monsters.
+    c_fill(p, c, m1,1, m1,1, copy_block(player_B), { same_sec=player_B })
+
+    -- put a border around the room
+    gap_fill(p, c, c.bx1-1, c.by1-1, c.bx2+1, c.by2+1, { solid=c.theme.wall })
   end
 
-  -- door separating monsters from teleporter lines
-  c_fill(p, c, 5,1, 5,2*#places, door_sec)
+  --- build_depots ---
 
-  -- bottom corner block is same sector as player start,
-  -- to allow sound to wake up these monsters.
-  c_fill(p, c, m1,1, m1,1, copy_block(player_B), { same_sec=player_B })
-
-  -- put a border around the room
-  gap_fill(p, c, c.bx1-1, c.by1-1, c.bx2+1, c.by2+1, { solid=c.theme.wall })
+  for zzz,cell in ipairs(p.all_depots) do
+    build_one_depot(p, cell)
+  end
 end
 
 
@@ -5419,19 +5282,18 @@ function build_level(p)
 -- do build_pacman_level(p, p.quests[1].first); return end
 
   make_chunks(p)
-  show_chunks(p)
-
   con.ticker()
 
-  setup_borders_and_corners(p)
+  show_chunks(p)
 
-  for zzz,cell in ipairs(p.all_cells) do
-    build_cell(p, cell)
-  end
+  build_borders(p)
+  con.ticker()
 
-  for zzz,cell in ipairs(p.all_depots) do
-    build_depot(p, cell)
-  end
+  build_rooms(p)
+  con.ticker()
+
+  build_depots(p)
+  con.ticker()
 
   con.progress(25); if con.abort() then return end
  
