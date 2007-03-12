@@ -118,12 +118,12 @@ function show_chunks(p)
 
       if K.empty then return " " end
 
-      if K.void   then return "." end
-      if K.room   then return "/" end
+      if K.void   then return "/" end
+      if K.room   then return "5" end
       if K.liquid then return "~" end
 
       if K.closet then return "c" end
-      if K.cage   then return "#" end
+      if K.cage   then return "G" end
       if K.vista  then return "v" end
 
       --[[
@@ -1178,7 +1178,7 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
         elseif c1.theme.outdoor then door_chance = 5
         end
 
-        if rand_odds(door_chance) then link.kind = "door" end
+--!!!!!        if rand_odds(door_chance) then link.kind = "door" end
 
       else -- need a locked door
 
@@ -1188,8 +1188,6 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
         link.quest = p.quests[lock_level]
         link.kind  = "door"
       end
-
---    if link.kind == "door" then link.long = 3 end
     end
   end
 
@@ -1255,6 +1253,7 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
         c.floor_h = math.max(c.floor_h, MIN_FLOOR)
         c.floor_h = math.min(c.floor_h, MAX_CEIL-128)
 
+--c.floor_h = rand_irange(MIN_FLOOR, MAX_CEIL-128)
         con.debugf(".. floor:%d  bump:%d\n",
             c.floor_h, bump or 0)
       end
@@ -2198,7 +2197,7 @@ con.printf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   create_corners(p)
   create_borders(p)
 
---!!  add_windows()
+  add_windows()
 
   return p
 end
