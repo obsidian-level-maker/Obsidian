@@ -176,6 +176,24 @@ function show_chunks(p)
   end
 end
 
+function show_cell_blocks(p, c)
+
+  local function chk(B)
+    if not B or not B.chunk then return "!" end
+    if not B.empty then return "U" end
+    if B.walk then return "w" end
+    if B.chunk.room or B.chunk.link then return "." end
+    return "#" -- void
+  end
+
+  for y = c.by2,c.by1,-1 do
+    for x = c.bx1,c.bx2 do
+      con.printf(chk(p.blocks[x][y]))
+    end
+    con.printf("\n")
+  end
+end
+
 
 function random_cell(p)
   return rand_irange(1, p.w), rand_irange(1, p.h)
@@ -536,7 +554,7 @@ function resize_rooms(p)
   end
 
 for zzz,cell in ipairs(p.all_cells) do
-con.printf("CELL @ (%d,%d) has coords [%d,%d]..[%d,%d]\n",
+con.debugf("CELL @ (%d,%d) has coords [%d,%d]..[%d,%d]\n",
 cell.x, cell.y, cell.bx1, cell.by1, cell.bx2, cell.by2)
 end
 
@@ -1895,7 +1913,7 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
         if c.border[side] and other and rand_odds(100) and
            can_make_window(c, other)
         then
-con.printf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
+con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
           c.border[side].window = true
         end
       end
@@ -2149,13 +2167,6 @@ con.printf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
   con.printf("\n")
 
-  if is_coop then
-    p.coop = true
-    p.coop_toughness = rand_range(1.66, 3.0)
-
-    con.debugf("coop_toughness = %d\n", p.coop_toughness);
-  end
-
   decide_quests()
 
   for zzz,Q in ipairs(p.quests) do
@@ -2185,6 +2196,12 @@ con.printf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   assign_floor_codes()
 
   resize_rooms(p)
+
+  if is_coop then
+    p.coop = true
+    p.coop_toughness = rand_range(1.66, 3.0)
+    con.debugf("coop_toughness = %d\n", p.coop_toughness);
+  end
 
   toughen_it_up()
 
