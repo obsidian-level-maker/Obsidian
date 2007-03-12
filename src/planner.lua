@@ -118,7 +118,7 @@ function show_chunks(p)
 
       if K.empty then return " " end
 
-      if K.void   then return "/" end
+      if K.void   then return "x" end
       if K.room   then return "5" end
       if K.liquid then return "~" end
 
