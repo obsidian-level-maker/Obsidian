@@ -2564,7 +2564,7 @@ link.cells[2].x, link.cells[2].y)
     if c.scenic then return end
 
     if not c.hallway and
-       (c == p.quest[1].first or c == c.quest.last or rand_odds(25)) then --???
+       (c == p.quests[1].first or c == c.quest.last or rand_odds(25)) then --???
       c.chunks[2][2].room = true
       c.chunks[2][2].empty = false
     end
@@ -3035,7 +3035,7 @@ sel(kx==2 and ky==2, 176,
     for loop=1,99 do
       merge_connx()
       if is_fully_connected() then break end
-con.printf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
+con.debugf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
       add_stair()
     end 
   end
@@ -5028,6 +5028,7 @@ do return end
     for x = x1,x2 do for y = y1,y2 do
       local B = p.blocks[x][y]
       assert(B)
+if not B.empty then con.printf("B =\n%s\n", table_to_str(B,2)) end
       assert(B.empty)
       B.walk = true
     end end
@@ -5052,8 +5053,12 @@ do return end
 
   local function check_fab_position(c, x1,y1, x2,y2)
     assert(x1 <= x2 and y1 <= y2)
-    assert(c.bx1 <= x1 and x2 <= c.bx2)
-    assert(c.by1 <= y1 and y2 <= c.by2)
+
+    if not (c.bx1 <= x1 and x2 <= c.bx2) or
+       not (c.by1 <= y1 and y2 <= c.by2)
+    then
+      return false
+    end
     
     for x = x1-1,x2+1 do for y = y1-1,y2+1 do
       if x < x1 or x > x2 or y < y1 or y > y2 then
@@ -5063,18 +5068,20 @@ do return end
         end
         local B = p.blocks[x][y]
         assert(B)
-        if not is_roomy(B.chunk) then
+        if not B.empty then --!!!!! or not is_roomy(B.chunk) then
           return false
         end
       else
         -- check middle area
         local B = p.blocks[x][y]
-        assert(B and B.chunk)
+        assert(B and (not B.empty or B.chunk))
         if not B.empty or B.walk or not is_roomy(B.chunk) then
           return false
         end
       end
     end end
+
+    return true --OK--
   end
 
   local function mark_fab_walk(c, x1,y1, x2,y2)
@@ -5087,6 +5094,7 @@ do return end
          (c.bx1 <= x and x <= c.bx2) and
          (c.by1 <= y and y <= c.by2)
       then
+con.printf("mark_fab_walk @ (%d,%d)...\n", x, y)
         mark_walkable_area(c, x,y, x,y)
       end
     end end
@@ -5233,13 +5241,13 @@ do return end
               assert(B1)
               assert(B2)
 
-              if not is_roomy(B1.chunk) or not is_roomy(B2.chunk)
+              if not B1.empty or not is_roomy(B1.chunk) or
+                 not B2.empty or not is_roomy(B2.chunk)
               then
                 able = false
               end
             end
           end
-
         end
 
         if able then
@@ -5341,9 +5349,6 @@ do return end
 con.debugf("Building stair @ (%d,%d) chunk [%d,%d] dir:%d\n", c.x, c.y, kx,ky, K.stair_dir)
 con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 
-if side1_K and side1_K.stair_dir then con.printf("SIDE1 STAIRS\n") end
-if side2_K and side2_K.stair_dir then con.printf("SIDE2 STAIRS\n") end
-
     local info = find_stair_loc(K, behind_K,side1_K,side2_K, stair_depths(diff_h))
 
     -- failsafe
@@ -5382,33 +5387,90 @@ end
     end
   end
 
+
+  local function find_fab_loc(c, long, deep)
+
+    -- FIXME: TEMP CRUD
+
+    for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
+      if check_fab_position(c, x,y, x+long-1, y+deep-1) then
+        return x,y,8
+      end
+    end end
+  end
+  
+  local function add_object(c, name)
+    local x,y,dir = find_fab_loc(c, 1, 1)
+    if not x then
+      show_cell_blocks(p,c)
+      error("Could not find place for: " .. name)
+    end
+con.printf("add_object @ (%d,%d)\n", x, y)
+    gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
+    add_thing(p, c, x, y, name, true)
+    mark_fab_walk(c, x,y, x,y)
+  end
+
+  local function add_dm_weapon(c)
+    -- FIXME
+  end
+
+  local function add_switch(c)
+    -- FIXME
+  end
+
+  local function add_scenery(c)
+    -- FIXME !!!! prefabs | scenery items
+  end
+
   local function tizzy_up_room(c)
 
     -- the order here is important, earlier items may cause
     -- later items to no longer fit.
 
-    if not p.deathmatch and c == p.quest[1].first then
-      SP PLAYER START(s)
-    else if p.deathmatch and c.require_player then
-      DM PLAYER START
+    -- PLAYERS
+    if not p.deathmatch and c == p.quests[1].first then
+      for i = 1,sel(settings.mode == "coop",4,1) do
+        add_object(c, "player" .. tostring(i))
+      end
+
+    elseif p.deathmatch and (c.require_player or rand_odds(50)) then
+      add_object(c, "dm_player")
     end
 
-    if not p.deathmatch and c == p.quest.last then
-      QUEST ITEM
-    else if p.deathmatch and c.require_weapon then
-      DM WEAPON
+    -- QUEST ITEM
+    if not p.deathmatch and c == c.quest.last then
+      if (c.quest.kind == "key") or
+         (c.quest.kind == "weapon") or
+         (c.quest.kind == "item")
+      then
+        add_object(c, c.quest.item)
+      else
+        add_switch(c)
+      end
+    elseif p.deathmatch and (c.require_weapon or rand_odds(75)) then
+      add_dm_weapon(c)
     end
-    
+
     -- TODO: 'room switch'
 
     if p.deathmatch then
-      secondary DM PLAYER
-      secondary DM WEAPON
+      -- secondary DM PLAYER
+      if rand_odds(30) then
+        add_object(c, "dm_player")
+      end
+      -- secondary DM WEAPON
+      if rand_odds(15) then
+        add_dm_weapon(c)
+      end
     end
 
-    prefabs | scenery items
+    -- SCENERY
+    for loop = 1,20 do
+      add_scenery(c)
+    end
 
-    DM PICKUPS ==> monster.lua  [free spots]
+    -- FIXME DM PICKUPS move to: monster.lua  [free spots]
   end
 
   ---=== build_cell ===---
@@ -5424,11 +5486,6 @@ end
   tizzy_up_room(c)
 
   GAP_FILL_ROOM(c)
-
-  -- TEMP 
-  if c == p.quests[1].first then
-    add_thing(p, c, c.bx1+2, c.by1+2, "player1", true, 0)
-  end
 
 -- !!!!  position_dm_stuff(cell)
 
