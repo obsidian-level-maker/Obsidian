@@ -5238,54 +5238,49 @@ do return end
     end
 
     if not best then
-      con.printf(" ****** Unable to find stair position!  *****\n")
+      error("Unable to find stair position!")
     end
 
     return best
   end
   
-  local function build_stairs(c)
+  local function build_stair_chunk(c, K)
+    local kx,ky = K.kx, K.ky
+    local dx,dy = dir_to_delta(K.stair_dir)
+    local ax,ay = dir_to_across(K.stair_dir)
 
-    local chunk_list = sort_stair_chunks(c)
+    assert(1<=kx+dx and kx+dx<=3)
+    assert(1<=ky+dy and ky+dy<=3)
+
+    local J = c.chunks[kx+dx][ky+dy]
+    local diff_h = K.rmodel.f_h - J.rmodel.f_h
+
+    local behind_K
+    if (1<=kx-dx and kx-dx<=3) and
+       (1<=ky-dy and ky-dy<=3)
+    then
+      behind_K = c.chunks[kx-dx][ky-dy]
+    end
+
+    local function side_is_bad(dir)
+      local kdx,kdy = dir_to_delta(dir)
+      local nx,ny   = kx+kdx, ky+kdy
+      if nx<1 or nx>3 or ny<1 or ny>3 then return nil end
+      local N = c.chunks[nx][ny]
+      if not N.stair_dir then return nil end
+      if N.stair_dir ~= (10-dir) then return nil end
+      return N
+    end
     
-    for kx = 1,3 do for ky = 1,3 do
-      local K = c.chunks[kx][ky]
-      if K.stair_dir then
-        local dx,dy = dir_to_delta(K.stair_dir)
-        local ax,ay = dir_to_across(K.stair_dir)
+    local side1_K, side2_K
 
-        assert(1<=kx+dx and kx+dx<=3)
-        assert(1<=ky+dy and ky+dy<=3)
-
-        local J = c.chunks[kx+dx][ky+dy]
-        local diff_h = K.rmodel.f_h - J.rmodel.f_h
-
-        local behind_K
-        if (1<=kx-dx and kx-dx<=3) and
-           (1<=ky-dy and ky-dy<=3)
-        then
-          behind_K = c.chunks[kx-dx][ky-dy]
-        end
-
-        local function side_is_bad(dir)
-          local kdx,kdy = dir_to_delta(dir)
-          local nx,ny   = kx+kdx, ky+kdy
-          if nx<1 or nx>3 or ny<1 or ny>3 then return nil end
-          local N = c.chunks[nx][ny]
-          if not N.stair_dir then return nil end
-          if N.stair_dir ~= (10-dir) then return nil end
-          return N
-        end
-        
-        local side1_K, side2_K
-
-        if K.stair_dir==2 or K.stair_dir==8 then
-          side1_K = side_is_bad(4)
-          side2_K = side_is_bad(6)
-        else
-          side1_K = side_is_bad(2)
-          side2_K = side_is_bad(8)
-        end
+    if K.stair_dir==2 or K.stair_dir==8 then
+      side1_K = side_is_bad(4)
+      side2_K = side_is_bad(6)
+    else
+      side1_K = side_is_bad(2)
+      side2_K = side_is_bad(8)
+    end
 
 ---###  local side1_K, side2_K
 ---###  if (1<=kx-ax and kx-ax<=3) and
@@ -5299,36 +5294,48 @@ do return end
 ---###    side2_K = c.chunks[kx+ax][ky+ay]
 ---###  end
 
-con.printf("Building stair @ (%d,%d) chunk [%d,%d] dir:%d\n", c.x, c.y, kx,ky, K.stair_dir)
-con.printf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
+con.debugf("Building stair @ (%d,%d) chunk [%d,%d] dir:%d\n", c.x, c.y, kx,ky, K.stair_dir)
+con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
+
 if side1_K and side1_K.stair_dir then con.printf("SIDE1 STAIRS\n") end
 if side2_K and side2_K.stair_dir then con.printf("SIDE2 STAIRS\n") end
 
-        local info = find_stair_loc(K, behind_K,side1_K,side2_K, stair_depths(diff_h))
+    local info = find_stair_loc(K, behind_K,side1_K,side2_K, stair_depths(diff_h))
 
-if not info then return end --!!!!!!
+    -- failsafe
+    if not info then return end
 
-        local step = -diff_h / (info.deep * 4)
+    local step = -diff_h / (info.deep * 4)
 
 if true then
-  con.printf("  Stair coords: (%d,%d)..(%d,%d) size:%dx%d\n", info.sx,info.sy, info.ex,info.ey, info.long, info.deep)
-  gap_fill(p,c, info.sx,info.sy, info.ex,info.ey, K.rmodel, { light=255, kind=8 })
+con.debugf("  Stair coords: (%d,%d)..(%d,%d) size:%dx%d\n", info.sx,info.sy, info.ex,info.ey, info.long, info.deep)
+--gap_fill(p,c, info.sx,info.sy, info.ex,info.ey, K.rmodel, { light=255, kind=8 })
 --else
-        B_stair(p,c, info.sx,info.sy, K.rmodel.f_h, K.stair_dir,
-                info.long, info.deep, step)
+    B_stair(p,c, info.sx,info.sy, K.rmodel.f_h, K.stair_dir,
+            info.long, info.deep, step)
 end
-        -- reserve space vor und hinter the staircase
-        do
-        local dx,dy = dir_to_delta(K.stair_dir)
+    -- reserve space vor und hinter the staircase
+    do
+    local dx,dy = dir_to_delta(K.stair_dir)
 
-        local x1,y1,x2,y2 = side_coords(K.stair_dir, info.sx,info.sy,info.ex,info.ey)
-        mark_walkable_area(c, x1+dx,y1+dy, x2+dx,y2+dy)
+    local x1,y1,x2,y2 = side_coords(K.stair_dir, info.sx,info.sy,info.ex,info.ey)
+    mark_walkable_area(c, x1+dx,y1+dy, x2+dx,y2+dy)
 
-        local x3,y3,x4,y4 = side_coords(10-K.stair_dir, info.sx,info.sy,info.ex,info.ey)
-        mark_walkable_area(c, x3-dx,y3-dy, x4-dx,y4-dy)
-        end
+    local x3,y3,x4,y4 = side_coords(10-K.stair_dir, info.sx,info.sy,info.ex,info.ey)
+    mark_walkable_area(c, x3-dx,y3-dy, x4-dx,y4-dy)
+    end
+  end
+
+  local function build_stairs(c)
+
+    local chunk_list = sort_stair_chunks(c)
+    
+    for i = 1,#chunk_list do
+      local K = chunk_list[i]
+      if K.stair_dir then
+        build_stair_chunk(c, K)
       end
-    end end
+    end
   end
 
   ---=== build_cell ===---
