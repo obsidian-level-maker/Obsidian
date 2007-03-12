@@ -3097,7 +3097,7 @@ con.printf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
   end
 
 
-  -- allocate chunks based on exit locations
+  -- allocate chunks based on entry/exit locations
 
   local clashes
 
@@ -5049,6 +5049,48 @@ do return end
     end
   end
 
+  local function check_fab_position(c, x1,y1, x2,y2)
+    assert(x1 <= x2 and y1 <= y2)
+    assert(c.bx1 <= x1 and x2 <= c.bx2)
+    assert(c.by1 <= y1 and y2 <= c.by2)
+    
+    for x = x1-1,x2+1 do for y = y1-1,y2+1 do
+      if x < x1 or x > x2 or y < y1 or y > y2 then
+        -- check sides
+        if x < c.bx1 or x > c.bx2 or y < c.by1 or y > c.by2 then
+          return false
+        end
+        local B = p.blocks[x][y]
+        assert(B)
+        if not is_roomy(B.chunk) then
+          return false
+        end
+      else
+        -- check middle area
+        local B = p.blocks[x][y]
+        assert(B and B.chunk)
+        if not B.empty or B.walk or not is_roomy(B.chunk) then
+          return false
+        end
+      end
+    end end
+  end
+
+  local function mark_fab_walk(c, x1,y1, x2,y2)
+    assert(x1 <= x2 and y1 <= y2)
+    assert(c.bx1 <= x1 and x2 <= c.bx2)
+    assert(c.by1 <= y1 and y2 <= c.by2)
+    
+    for x = x1-1,x2+1 do for y = y1-1,y2+1 do
+      if (x < x1 or x > x2 or y < y1 or y > y2) and
+         (c.bx1 <= x and x <= c.bx2) and
+         (c.by1 <= y and y <= c.by2)
+      then
+        mark_walkable_area(c, x,y, x,y)
+      end
+    end end
+  end
+
   local function stair_depths(diff_h)
     diff_h = math.abs(diff_h)
 
@@ -5238,6 +5280,7 @@ do return end
     end
 
     if not best then
+      -- Fuck!
       error("Unable to find stair position!")
     end
 
@@ -5624,10 +5667,10 @@ function build_level(p)
 
   show_chunks(p)
 
-  build_borders(p)
+  build_rooms(p)
   con.ticker()
 
-  build_rooms(p)
+  build_borders(p)
   con.ticker()
 
   build_depots(p)
