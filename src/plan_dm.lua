@@ -533,6 +533,15 @@ function plan_dm_arena()
 
   con.ticker();
 
+  -- guarantee at least 4 players (each corner)
+  p.cells[ 1 ][ 1 ].require_player = true
+  p.cells[p.w][ 1 ].require_player = true
+  p.cells[ 1 ][p.h].require_player = true
+  p.cells[p.w][p.h].require_player = true
+
+  -- guarantee at least one weapon (central cell)
+  p.cells[int((p.w+1)/2)][int((p.h+1)/2)].require_weapon = true
+
   return p
 end
 
