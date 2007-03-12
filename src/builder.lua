@@ -134,7 +134,7 @@ function valid_chunk(kx,ky)
 end
 
 function is_roomy(chunk)
-  return chunk.room or chunk.link
+  return chunk and (chunk.room or chunk.link)
 end
 
 function random_where(link, border)
@@ -2126,7 +2126,7 @@ function make_chunks(p)
 
        c.chunks[kx][ky] =
        {
-         w=w, h=h,
+         kx=kx, ky=ky, w=w, h=h,
 
          x1 = c.bx1 + dx,
          y1 = c.by1 + dy,
@@ -3129,7 +3129,7 @@ con.printf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
     setup_chunk_rmodels(cell)
 
 --!!!!  flesh_out_cell(cell)
-        void_it_up(cell)
+        void_it_up(cell, "room")
 
     connect_chunks(cell)
   end
@@ -5065,6 +5065,51 @@ do return end
     return low,high
   end
 
+  local function sort_stair_chunks(c)
+
+    -- Requirements:
+    --   That chunks with 'stair_dir' field are placed _after_ the
+    --   chunk pointed to.
+
+    -- Algorithm:
+    --   (a) give each chunk a unique ID
+    --   (b) let low IDs "flow down" stair directions
+    --   (c) repeat step (b) many times until stable
+    --   (d) sort chunks into ascending ID numbers
+    --
+    -- NOTE: cyclic references prevent it from becoming truly
+    --       stable. We ignore this problem (should be rare).
+
+    local ids = {}
+    rand_shuffle(ids, 3*3)
+
+    local result = {}
+
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      K.sort_id = table.remove(ids, 1)
+      table.insert(result, K)
+    end end
+
+    for loop = 1,10 do
+      for kx = 1,3 do for ky = 1,3 do
+        local K = c.chunks[kx][ky]
+        if K.stair_dir then
+          local dx,dy = dir_to_delta(K.stair_dir)
+          local J = c.chunks[kx+dx][ky+dy]
+          if K.sort_id < J.sort_id then
+            K.sort_id, J.sort_id = J.sort_id, K.sort_id
+          end
+        end
+       end end 
+    end
+
+    table.sort(result, function(k1,k2) return k1.sort_id < k2.sort_id end)
+
+-- con.printf("RESULT = \n%s\n", table_to_str(result,2))
+    return result
+  end
+
   local function find_stair_loc(K, behind_K,side1_K,side2_K, min_deep,want_deep)
 
     -- Requirements:
@@ -5114,7 +5159,10 @@ do return end
           for qx = st_x1,st_x2 do for qy = st_y1,st_y2 do
             local B = p.blocks[qx][qy]
             assert(B)
-            if not B.empty or B.walk then able = false end
+            if not B.empty or B.walk or not is_roomy(B.chunk)
+            then
+              able = false
+            end
           end end
 
           -- second: check walkable ends
@@ -5142,9 +5190,7 @@ do return end
               assert(B1)
               assert(B2)
 
-              -- ????  FIXME: check Bx.empty ??  Bx.walk ??
-              if not B1.chunk or not is_roomy(B1.chunk) or
-                 not B2.chunk or not is_roomy(B2.chunk)
+              if not is_roomy(B1.chunk) or not is_roomy(B2.chunk)
               then
                 able = false
               end
@@ -5192,7 +5238,7 @@ do return end
     end
 
     if not best then
-      error("Unable to find stair position!")
+      con.printf(" ****** Unable to find stair position!  *****\n")
     end
 
     return best
@@ -5200,6 +5246,8 @@ do return end
   
   local function build_stairs(c)
 
+    local chunk_list = sort_stair_chunks(c)
+    
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       if K.stair_dir then
