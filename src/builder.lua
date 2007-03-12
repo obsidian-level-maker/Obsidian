@@ -2563,7 +2563,8 @@ link.cells[2].x, link.cells[2].y)
 
     if c.scenic then return end
 
-    if not c.hallway and (c.is_exit or rand_odds(25)) then --???
+    if not c.hallway and
+       (c == p.quest[1].first or c == c.quest.last or rand_odds(25)) then --???
       c.chunks[2][2].room = true
       c.chunks[2][2].empty = false
     end
@@ -5381,6 +5382,35 @@ end
     end
   end
 
+  local function tizzy_up_room(c)
+
+    -- the order here is important, earlier items may cause
+    -- later items to no longer fit.
+
+    if not p.deathmatch and c == p.quest[1].first then
+      SP PLAYER START(s)
+    else if p.deathmatch and c.require_player then
+      DM PLAYER START
+    end
+
+    if not p.deathmatch and c == p.quest.last then
+      QUEST ITEM
+    else if p.deathmatch and c.require_weapon then
+      DM WEAPON
+    end
+    
+    -- TODO: 'room switch'
+
+    if p.deathmatch then
+      secondary DM PLAYER
+      secondary DM WEAPON
+    end
+
+    prefabs | scenery items
+
+    DM PICKUPS ==> monster.lua  [free spots]
+  end
+
   ---=== build_cell ===---
 
   decide_sky_lights(c)
@@ -5391,11 +5421,8 @@ end
 
   build_stairs(c)
 
---[[
-  local list = tizzy_up_room(c)
+  tizzy_up_room(c)
 
-  build_tizz(c, list)
---]]
   GAP_FILL_ROOM(c)
 
   -- TEMP 
