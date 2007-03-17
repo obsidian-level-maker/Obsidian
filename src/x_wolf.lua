@@ -46,8 +46,8 @@ WF_THING_NUMS =
   inky   = 227, -- blue
 
   -- pickups
-  key_1 = 43,
-  key_2 = 44,
+  k_silver = 43,
+  k_gold = 44,
 
   first_aid = 48,
   good_food = 47,
@@ -443,7 +443,7 @@ function write_wolf_level(p)
         assert(obj)
 
         -- convert angle
-        if kind.dirs then
+        if kind.dirs and th.angle then
           local offset = int((360 - th.angle + 135) / 90) % 4
           assert(0 <= offset and offset <= 3)
           obj = obj + offset
