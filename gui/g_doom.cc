@@ -142,7 +142,7 @@ void WAD_WriteBehavior()
 
 void WAD_WritePatches()
 {
-  WAD_WriteLump("P_START", NULL, 0);
+  WAD_WriteLump("PP_START", NULL, 0);
 
   static const char *patch_names[3][2] =
   {
@@ -170,7 +170,7 @@ void WAD_WritePatches()
     Image_FreePatch(pat);
   }
 
-  WAD_WriteLump("P_END", NULL, 0);
+  WAD_WriteLump("PP_END", NULL, 0);
 }
 
 void WAD_Append(lump_c *lump, const void *data, u32_t len)
