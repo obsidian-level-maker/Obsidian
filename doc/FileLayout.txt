@@ -1,0 +1,50 @@
+
+Win32 File Layout
+=================
+
+Oblige-0.88/
+
+  Oblige.exe
+
+  README.txt
+  GPL.txt
+
+  CONFIG.cfg
+  LOGS.txt
+
+  scripts/
+    oblige.lua
+    planner.lua
+    builder.lua
+    ...etc...
+ 
+  data/
+    w74a_1.raw
+    w74a_2.raw
+    w74b_2.raw
+    ...etc...
+ 
+
+
+UNIX Installation Layout
+========================
+
+PREFIX = /usr  |  /usr/local  |  /opt
+
+$PREFIX/bin/oblige
+
+$PREFIX/share/oblige-0.88/
+   scripts/
+     oblige.lua
+   data/
+     w74a_1.raw
+     ...
+   README.txt
+
+$HOME/.oblige/
+   CONFIG.cfg
+   LOGS.txt
+
+   TEMP.wad
+   MAPHEAD.tmp
+
