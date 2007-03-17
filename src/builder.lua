@@ -3130,8 +3130,12 @@ con.debugf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
     setup_chunk_rmodels(cell)
 
 --!!!!  flesh_out_cell(cell)
-        void_it_up(cell, "room")
 
+if (cell == p.quests[1].first or cell == cell.quest.last) then
+        void_it_up(cell, "room")
+else
+        void_it_up(cell, "void")
+end
     connect_chunks(cell)
   end
 
@@ -4133,6 +4137,12 @@ function build_pacman_level(p, c)
 
     treasure1 = "bible",
     treasure2 = "crown",
+
+    blinky = "blinky",
+    clyde = "clyde",
+    inky = "inky",
+    pinky = "pinky",
+    first_aid = "first_aid",
   }
   local parm =
   {
@@ -5013,7 +5023,7 @@ do return end
         else
           fill(p,c, x,y, x,y, K.rmodel)
           if B.walk then
-            add_thing(p,c, x,y, "candle", false)
+--            add_thing(p,c, x,y, "candle", false)
           end
         end
       end
@@ -5094,7 +5104,7 @@ if not B.empty then con.printf("B =\n%s\n", table_to_str(B,2)) end
          (c.bx1 <= x and x <= c.bx2) and
          (c.by1 <= y and y <= c.by2)
       then
-con.printf("mark_fab_walk @ (%d,%d)...\n", x, y)
+--con.printf("mark_fab_walk @ (%d,%d)...\n", x, y)
         mark_walkable_area(c, x,y, x,y)
       end
     end end
@@ -5390,11 +5400,15 @@ end
 
   local function find_fab_loc(c, long, deep)
 
+    local dir = 8
+    if rand_odds(50) then long,deep,dir = deep,long,4 end
+    if rand_odds(50) then dir = 10-dir end
+
     -- FIXME: TEMP CRUD
 
     for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
       if check_fab_position(c, x,y, x+long-1, y+deep-1) then
-        return x,y,8
+        return x,y,dir
       end
     end end
   end
@@ -5421,6 +5435,140 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
   local function add_scenery(c)
     -- FIXME !!!! prefabs | scenery items
+
+fab = PREFABS["PILLAR_LIGHT1"]
+assert(fab)
+local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+if x and rand_odds(30) then
+  skin = { beam = "METAL", beam_f = "CEIL5_2",
+           light="LITE5" }
+
+  parm = { floor = c.rmodel.f_h, --!!! wrong
+           ceil  = c.rmodel.c_h,
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+end
+
+fab = PREFABS["BILLBOARD"]
+assert(fab)
+local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+if x and rand_odds(30) then
+
+  skin = {
+           corner = "WOOD7", corn_f = "FLAT5_1",
+           step   = "STEP5", step_f = "FLAT5_2",
+--           corner = "SHAWN2", corn_f = "FLAT19",
+--           step = "STEP4",    step_f = "FLAT19",
+           pic = "ZZWOLF13", pic_back = "ZZWOLF11", pic_f = "FLAT5_3"
+         }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+           pic_h = c.rmodel.f_h + 128,
+           corn_h = c.rmodel.f_h + 104
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+end
+
+fab = PREFABS["TECH_PICKUP_LARGE"]
+assert(fab)
+local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+if x and rand_odds(30) then
+
+  skin = { wall="STONE2", floor="CEIL5_2", ceil="CEIL3_5",
+           light="LITE5", sky="F_SKY1",
+           step="STEP1", carpet="FLOOR1_1",
+         }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+end
+
+fab = PREFABS["BILLBOARD_LIT"]
+assert(fab)
+local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+if x and rand_odds(30) then
+  skin = {
+--           corner = "WOOD7", corn_f = "FLAT5_1",
+--           step   = "STEP5", step_f = "FLAT5_2",
+           corner = "SHAWN2", corn_f = "FLAT19", corn2="DOORSTOP",
+           step = "STEP4",    step_f = "CEIL3_5",
+           pic = "SHAWN1", pic_back = "SHAWN2", pic_f = "CEIL3_5",
+           light = "LITE5"
+         }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+           pic_h = c.rmodel.f_h + 88,
+           corn_h = c.rmodel.f_h + 112
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+return
+end
+
+fab = PREFABS["STATUE_TECH_1"]
+assert(fab)
+local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+
+if x and rand_odds(30) then
+
+  skin = { wall="COMPWERD", comp1 = "SPACEW3", comp2 = "COMPTALL",
+           step="STEP1",    u_span="COMPSPAN",
+
+           floor="FLAT14", ceil="FLOOR4_8",
+           carpet="FLOOR1_1", c_lite="TLITE6_5",
+           comp_top="CEIL5_1",
+
+           thing1="lamp"
+         }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+end
+
+fab = PREFABS["GROUND_LIGHT"]
+assert(fab)
+if x and rand_odds(30) then
+
+  skin = { 
+           shawn = "SHAWN3",
+           light = "LITE5",         
+
+           shawn_top = "FLAT1",
+           lite_top = "CEIL5_1",
+         }
+
+  parm = { floor = c.rmodel.f_h,
+           ceil  = c.rmodel.c_h,
+         }
+
+  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+end
+
+    
+    if c.theme.scenery then
+      local item = c.theme.scenery
+      if type(item) == "table" then
+        item = rand_element(item)
+      end
+      assert(item)
+
+      local x,y,dir = find_fab_loc(c, 1, 1)
+      if not x then return end
+
+      gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel)
+      add_thing(p, c, x, y, item, true)
+      mark_fab_walk(c, x,y, x,y)
+    end
   end
 
   local function tizzy_up_room(c)
@@ -5504,119 +5652,6 @@ if false then
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, 2)
-end
-
-if false then
-  fab = PREFABS["PILLAR_LIGHT1"]
-  assert(fab)
-
-  skin = { beam = "METAL", beam_f = "CEIL5_2",
-           light="LITE5" }
-
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-         }
-
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1, c.by2, 8)
-end
-
-if false then
-  fab = PREFABS["BILLBOARD"]
-  assert(fab)
-
-  skin = {
-           corner = "WOOD7", corn_f = "FLAT5_1",
-           step   = "STEP5", step_f = "FLAT5_2",
---           corner = "SHAWN2", corn_f = "FLAT19",
---           step = "STEP4",    step_f = "FLAT19",
-           pic = "ZZWOLF13", pic_back = "ZZWOLF11", pic_f = "FLAT5_3"
-         }
-
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-           pic_h = c.rmodel.f_h + 128,
-           corn_h = c.rmodel.f_h + 104
-         }
-
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+3, c.by1+4, 4)
-end
-
-if false then
-  fab = PREFABS["BILLBOARD_LIT"]
-  assert(fab)
-
-  skin = {
---           corner = "WOOD7", corn_f = "FLAT5_1",
---           step   = "STEP5", step_f = "FLAT5_2",
-           corner = "SHAWN2", corn_f = "FLAT19", corn2="DOORSTOP",
-           step = "STEP4",    step_f = "CEIL3_5",
-           pic = "SHAWN1", pic_back = "SHAWN2", pic_f = "CEIL3_5",
-           light = "LITE5"
-         }
-
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-           pic_h = c.rmodel.f_h + 88,
-           corn_h = c.rmodel.f_h + 112
-         }
-
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+4, 8)
-end
-
-if false then
-  fab = PREFABS["TECH_PICKUP_LARGE"]
-  assert(fab)
-
-  skin = { wall="STONE2", floor="CEIL5_2", ceil="CEIL3_5",
-           light="LITE5", sky="F_SKY1",
-           step="STEP1", carpet="FLOOR1_1",
-         }
-
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-         }
-
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, 8)
-end
-
-if false then
-  fab = PREFABS["TECH_STATUE_1"]
-  assert(fab)
-
-  skin = { wall="COMPWERD", comp1 = "SPACEW3", comp2 = "COMPTALL",
-           step="STEP1",    u_span="COMPSPAN",
-
-           floor="FLAT14", ceil="FLOOR4_8",
-           carpet="FLOOR1_1", c_lite="TLITE6_5",
-           comp_top="CEIL5_1",
-
-           thing1="lamp"
-         }
-
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-         }
-
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+4, c.by1+6, 8)
-end
-
-if false then
-  fab = PREFABS["GROUND_LIGHT"]
-  assert(fab)
-
-  skin = { 
-           shawn = "SHAWN3",
-           light = "LITE5",         
-
-           shawn_top = "FLAT1",
-           lite_top = "CEIL5_1",
-         }
-
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-         }
-
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+2, c.by1+8, 8)
 end
 
 if false then
@@ -5744,7 +5779,10 @@ function build_level(p)
     setup_rmodel(p, cell)
   end
 
--- do build_pacman_level(p, p.quests[1].first); return end
+if string.find(p.lev_name, "L10") then
+build_pacman_level(p, p.quests[1].first);
+return
+end
 
   make_chunks(p)
   con.ticker()
