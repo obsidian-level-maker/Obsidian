@@ -53,4 +53,7 @@ u32_t StringHash(const char *str);
 u32_t TimeGetMillies();
 void TimeDelay(u32_t millies);
 
+// miscellanous
+const char *GetExecutablePath(const char *argv0);
+
 #endif /* __LIB_UTIL_H__ */

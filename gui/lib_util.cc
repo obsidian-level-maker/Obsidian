@@ -25,6 +25,19 @@
 #include <time.h>
 #endif
 
+#ifdef LINUX
+#include <unistd.h>
+#endif
+
+#ifdef MACOSX
+#include <sys/param.h>
+#include <mach-o/dyld.h> // _NSGetExecutablePath
+#endif
+
+#ifndef PATH_MAX
+#define PATH_MAX  2048
+#endif
+
 
 //
 // FileExists
@@ -167,6 +180,33 @@ const char *FileBaseName(const char *filename)
   }
 
   return filename;
+}
+
+void FilenameStripBase(char *buffer)
+{
+  char *pos = buffer + strlen(buffer) - 1;
+
+  for (; pos > buffer; pos--)
+  {
+    if (*pos == '/')
+      break;
+
+#ifdef WIN32
+    if (*pos == '\\')
+      break;
+
+    if (*pos == ':')
+    {
+      pos[1] = 0;
+      return;
+    }
+#endif
+  }
+
+  if (pos > buffer)
+     *pos = 0;
+  else
+    strcpy(buffer, ".");
 }
 
 bool FileCopy(const char *src_name, const char *dest_name)
@@ -374,3 +414,87 @@ void TimeDelay(u32_t millies)
   usleep(millies * 1000);
 #endif
 }
+
+
+//------------------------------------------------------------------------
+
+const char *GetExecutablePath(const char *argv0)
+{
+  char *path;
+
+#ifdef WIN32
+  path = StringNew(PATH_MAX+2);
+
+  int length = GetModuleFileName(GetModuleHandle(NULL), path, PATH_MAX);
+
+  if (length > 0 && length < PATH_MAX)
+  {
+    if (access(path, 0) == 0)  // sanity check
+    {
+      FilenameStripBase(path);
+      return path;
+    }
+  }
+
+  // didn't work, free the memory
+  StringFree(path);
+#endif
+
+#ifdef LINUX
+  path = StringNew(PATH_MAX+2);
+
+  int length = readlink("/proc/self/exe", path, PATH_MAX);
+
+  if (length > 0)
+  {
+    path[length] = 0; // add the missing NUL
+
+    if (access(path, 0) == 0)  // sanity check
+    {
+      FilenameStripBase(path);
+      return path;
+    }
+  }
+
+  // didn't work, free the memory
+  StringFree(path);
+#endif
+
+#ifdef MACOSX
+/*
+  from http://www.hmug.org/man/3/NSModule.html
+
+  extern int _NSGetExecutablePath(char *buf, unsigned long *bufsize);
+
+  _NSGetExecutablePath copies the path of the executable
+  into the buffer and returns 0 if the path was successfully
+  copied in the provided buffer. If the buffer is not large
+  enough, -1 is returned and the expected buffer size is
+  copied in *bufsize.
+*/
+  int pathlen = PATH_MAX * 2;
+
+  path = StringNew(pathlen+2);
+
+  if (0 == _NSGetExecutablePath(path, &pathlen))
+  {
+    // FIXME: will this be _inside_ the .app folder???
+    FilenameStripBase(path);
+    return path;
+  }
+  
+  // didn't work, free the memory
+  StringFree(path);
+#endif
+
+  // fallback method: use argv[0]
+  path = StringDup(argv0);
+
+#ifdef MACOSX
+  // FIXME: check if _inside_ the .app folder
+#endif
+  
+  FilenameStripBase(path);
+  return path;
+}
+
