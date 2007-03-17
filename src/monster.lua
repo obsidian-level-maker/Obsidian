@@ -53,7 +53,9 @@ zdump_table = do_nothing
 function add_thing(p,c, bx,by, name, blocking, angle, options)
 
   local kind = THEME.thing_nums[name]
-  assert(kind)
+  if not kind then
+    error("Unknown thing kind: " .. name)
+  end
 
   local B = p.blocks[bx][by]
   
