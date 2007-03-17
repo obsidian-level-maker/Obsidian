@@ -57,7 +57,7 @@ function get_level_names(settings)
 
     for e = 1,epi_num do
       for m = 1,lev_num do
-        table.insert(LEVELS, string.format("E%dM%d", e, m))
+        table.insert(LEVELS, string.format("E%dL%d", e, m))
       end
     end
 
@@ -69,7 +69,7 @@ function get_level_names(settings)
 
     for e = 1,epi_num do
       for m = 1,lev_num do
-        table.insert(LEVELS, string.format("E%dM%d", e, m))
+        table.insert(LEVELS, string.format("L%d", e, m))
       end
     end
 
@@ -144,6 +144,8 @@ function build_cool_shit()
     else
       PLAN = plan_sp_level(false)
     end
+
+PLAN.lev_name = lev
 
     if con.abort() then aborted = true; break; end
 
