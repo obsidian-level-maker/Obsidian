@@ -1450,70 +1450,6 @@ zprint("SIMULATE in CELL", c.x, c.y, SK)
 end
 
 
-function deathmatch_battle(p, c)
-
-  local function add_dm_pickup(name)
-
-    -- FIXME: proper clusters!!!
-
-    local cluster = 1
-    if THEME.dm.cluster then cluster = THEME.dm.cluster[name] or 1 end
-    assert(cluster >= 1 and cluster <= 8)
-
----###    local offsets = { 1,2,3,4, 6,7,8,9 }
----###    rand_shuffle(offsets)
----###
----###    for i = 1,cluster do
----###      local dx, dy = dir_to_delta(offsets[i])
----###      add_thing(p, c, bx+dx, by+dy, name, false)
----###    end
-
-    table.insert(c.pickup_set[SK], { name=name, info=info, cluster={ 0,0 } })
-  end
-
-  --== deathmatch_battle ==--
-
-  c.pickup_set = { easy={}, medium={}, hard={} }
-  c.mon_set    = { easy={}, medium={}, hard={} }
-
-  c.free_spots = find_free_spots(p, c)
-
-  rand_shuffle(c.free_spots)
-
-  if #c.free_spots == 0 then return end
-
-  for zzz,SK in ipairs(SKILLS) do   -- FIXME: add more stuff in lower skills
-
-    -- health, ammo and items
-    if rand_odds(70) then
-      local what = choose_dm_thing(THEME.dm.health, false)
-      add_dm_pickup( what )
-    end
-
-    if rand_odds(90) then
-      local what = choose_dm_thing(THEME.dm.ammo, true)
-      add_dm_pickup( what )
-    end
-
-    if rand_odds(10) then
-      local what = choose_dm_thing(THEME.dm.items, true)
-      add_dm_pickup( what )
-    end
-
-    -- secondary health and ammo
-    if rand_odds(10) then
-      local what = choose_dm_thing(THEME.dm.health, false)
-      add_dm_pickup( what )
-    end
-    if rand_odds(30) then
-      local what = choose_dm_thing(THEME.dm.ammo, true)
-      add_dm_pickup( what )
-    end
-
-  end
-end
-
-
 function backtrack_to_cell(p, c)
 
   local function surprise_me(surprise)
@@ -1543,14 +1479,10 @@ end
 
 function battle_in_quest(p, Q)
   for zzz,c in ipairs(Q.path) do
-    if p.deathmatch then
-      deathmatch_battle(p, c)
-    elseif c.toughness then
+    if c.toughness then
       battle_in_cell(p, c)
     end
   end
-
-  if p.deathmatch then return end
 
   for idx = #Q.path,1,-1 do
     local c = Q.path[idx]
@@ -1600,6 +1532,99 @@ function battle_through_level(p)
       place_quest_stuff(p, R, stats)
     end
   end
+
+  dump_battle_stats(stats)
+end
+
+----------------------------------------------------------------
+
+function deathmatch_in_cell(p, c)
+
+  local SK
+
+  local function add_dm_pickup(name)
+
+    -- FIXME: proper clusters!!!
+
+    local cluster = 1
+    if THEME.dm.cluster then cluster = THEME.dm.cluster[name] or 1 end
+    assert(cluster >= 1 and cluster <= 8)
+
+---###    local offsets = { 1,2,3,4, 6,7,8,9 }
+---###    rand_shuffle(offsets)
+---###
+---###    for i = 1,cluster do
+---###      local dx, dy = dir_to_delta(offsets[i])
+---###      add_thing(p, c, bx+dx, by+dy, name, false)
+---###    end
+
+con.printf("PICKUP '%s' @ (%d,%d) skill:%s\n",
+name, c.x, c.y, SK)
+    table.insert(c.pickup_set[SK], { name=name, info=info, cluster={ 0,0 } })
+  end
+
+  --== deathmatch_in_cell ==--
+
+  c.pickup_set = { easy={}, medium={}, hard={} }
+  c.mon_set    = { easy={}, medium={}, hard={} }
+
+  c.free_spots = find_free_spots(p, c)
+
+  rand_shuffle(c.free_spots)
+
+con.printf("== deathmatch_in_cell: spots = %d\n", #c.free_spots)
+  if #c.free_spots == 0 then return end
+
+  for zzz,skill in ipairs(SKILLS) do   -- FIXME: add more stuff in lower skills
+
+    SK = skill
+
+    -- health, ammo and items
+    if rand_odds(70) then
+      local what = choose_dm_thing(THEME.dm.health, false)
+      add_dm_pickup( what )
+    end
+
+    if rand_odds(90) then
+      local what = choose_dm_thing(THEME.dm.ammo, true)
+      add_dm_pickup( what )
+    end
+
+    if rand_odds(10) then
+      local what = choose_dm_thing(THEME.dm.items, true)
+      add_dm_pickup( what )
+    end
+
+    -- secondary health and ammo
+    if rand_odds(10) then
+      local what = choose_dm_thing(THEME.dm.health, false)
+      add_dm_pickup( what )
+    end
+    if rand_odds(30) then
+      local what = choose_dm_thing(THEME.dm.ammo, true)
+      add_dm_pickup( what )
+    end
+
+  end
+end
+
+
+function deathmatch_through_level(p)
+
+  local stats =
+  {
+    easy   = { health = 0, ammo = 0, monsters = 0, power = 0 },
+    medium = { health = 0, ammo = 0, monsters = 0, power = 0 },
+    hard   = { health = 0, ammo = 0, monsters = 0, power = 0 },
+  }
+
+  for x = 1,p.w do for y = 1,p.h do
+    local c = p.cells[x][y]
+    if c then
+      deathmatch_in_cell(p, c)
+      place_battle_stuff(p, c, stats)
+    end
+  end end
 
   dump_battle_stats(stats)
 end

@@ -5871,7 +5871,11 @@ end
 
   con.progress(25); if con.abort() then return end
  
-  battle_through_level(p)
+  if p.deathmatch then
+    deathmatch_through_level(p)
+  else
+    battle_through_level(p)
+  end
 
   con.progress(40); if con.abort() then return end
 end
