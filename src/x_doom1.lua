@@ -784,7 +784,8 @@ DM_MONSTERS =
   demon     = { prob=80, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=66,melee=true },
   spectre   = { prob=20, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=40,melee=true },
   skull     = { prob=16, r=16,h=56, hp=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
-
+ 
+  barrel    = { prob=50, r=10,h=42, hp=15,  dm=2,  fp=5, melee=true, scenery=true },
 }
 
 DM_BOSSES =
