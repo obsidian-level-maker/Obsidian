@@ -1027,10 +1027,14 @@ end
 --
 -- Z is the starting height
 --
-function B_lift(p, c, x, y, z, dir, long, deep)
+function B_lift(p, c, bx,by, z, dir, long, deep)
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
+
+  if (dir == 2 or dir == 4) then
+    bx,by = bx-(deep-1)*dx, by-(deep-1)*dy
+  end
 
   local LIFT = copy_block_with_new(c.rmodel,
   {
@@ -1047,9 +1051,9 @@ function B_lift(p, c, x, y, z, dir, long, deep)
     [6] = { l_peg="top" }, [8] = { l_peg="top" },
   })
 
-  fill(p,c, x, y,
-       x + (long-1) * ax + (deep-1) * dx,
-       y + (long-1) * ay + (deep-1) * dy, LIFT)
+  fill(p,c, bx, by,
+       bx + (long-1) * ax + (deep-1) * dx,
+       by + (long-1) * ay + (deep-1) * dy, LIFT)
 end
 
 
@@ -5262,7 +5266,7 @@ if not B.empty then con.printf("B =\n%s\n", table_to_str(B,2)) end
   local function find_stair_loc(K, behind_K,side1_K,side2_K, min_deep,want_deep)
 
     -- Requirements:
-    --   (a) blocks where stair will be are empty
+    --   (a) blocks which stair will occupy are empty
     --   (b) blocks vor und hinter the stair are walkable
     --
     -- Preferences:
@@ -5404,6 +5408,7 @@ if not B.empty then con.printf("B =\n%s\n", table_to_str(B,2)) end
 
     local J = c.chunks[kx+dx][ky+dy]
     local diff_h = K.rmodel.f_h - J.rmodel.f_h
+    local max_fh = math.max(K.rmodel.f_h, J.rmodel.f_h)
 
     local behind_K
     if (1<=kx-dx and kx-dx<=3) and
@@ -5458,8 +5463,14 @@ if true then
 con.debugf("  Stair coords: (%d,%d)..(%d,%d) size:%dx%d\n", info.sx,info.sy, info.ex,info.ey, info.long, info.deep)
 --gap_fill(p,c, info.sx,info.sy, info.ex,info.ey, K.rmodel, { light=255, kind=8 })
 --else
-    B_stair(p,c, info.sx,info.sy, K.rmodel.f_h, K.stair_dir,
-            info.long, info.deep, step)
+    if math.abs(step) <= 16 then
+    
+      B_stair(p,c, info.sx,info.sy, K.rmodel.f_h, K.stair_dir,
+              info.long, info.deep, step)
+    else
+      B_lift(p,c, info.sx,info.sy, max_fh, K.stair_dir,
+             info.long, info.deep)
+    end
 end
     -- reserve space vor und hinter the staircase
     do
