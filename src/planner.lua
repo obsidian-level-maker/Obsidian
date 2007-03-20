@@ -305,7 +305,7 @@ function create_cell(p, x, y, quest, along, theme, is_depot)
     floor_h = 128, ceil_h = 256, -- dummy values
 
     link = {}, border = {}, corner = {},
-    closet = {}, nudges = {},
+    closet = {}, nudges = {}, vistas = {},
 
     is_depot = is_depot,
     liquid = quest.liquid,
@@ -1866,6 +1866,12 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
 
       if b.ceil_h < (a.f_max + 96) then return false end
 
+      -- do not allow two vistas in a room unless they are
+      -- opposite each other
+      if b.vistas[rotate_cw90(dir)] or b.vistas[rotate_ccw90(dir)] then
+        return false
+      end
+
       return true
     end
 
@@ -1880,6 +1886,8 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
 
           local L = create_link(p, c, other, dir)
           L.kind = "vista"
+
+          other.vistas[10-dir] = true
         end
       end
     end
