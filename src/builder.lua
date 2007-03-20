@@ -2569,10 +2569,15 @@ link.cells[2].x, link.cells[2].y)
 
     if c.scenic then return end
 
-    if not c.hallway and
-       (c == p.quests[1].first or c == c.quest.last or rand_odds(25)) then --???
-      c.chunks[2][2].room = true
-      c.chunks[2][2].empty = false
+    do
+      local MID = c.chunks[2][2]
+
+      if MID.empty and not c.hallway and
+         (c == p.quests[1].first or c == c.quest.last or rand_odds(25))
+      then
+        MID.room = true
+        MID.empty = nil
+      end
     end
  
     chunk_list = init()
@@ -2760,34 +2765,6 @@ link.cells[2].x, link.cells[2].y)
     end
   end
 
-  local function OLD_OLD_add_vista_chunks(c)
-    for side = 2,8,2 do
-      if c.vista[side] then
-        local other = neighbour_by_side(p, c, side)
-
-        local kx,ky = side_to_chunk(side)
-        local K = c.chunks[kx][ky]
-
-        if K and not (K.room or K.link) then
-          con.debugf("BLOCKED VISTA @ (%d,%d) [%d,%d]\n", c.x, c.y, kx,ky)
-          c.vista[side] = nil
-          other.vista_from = nil
-        
-        else
-          if not K then
-            c.chunks[kx][ky] = new_chunk(c, kx,ky, "room")
-          end
-
-          other.chunks[4-kx][4-ky] = new_chunk(c, 4-kx,4-ky, "vista")
-
-          if c.vista[side] == 2 then
-            other.chunks[2][2] = new_chunk(c, 2,2, "vista")
-          end
-        end
-      end
-    end
-  end
-
   local function grow_small_exit(c)
     assert(c.entry_dir)
     local kx,ky = side_to_chunk(10 - c.entry_dir)
@@ -2905,6 +2882,8 @@ sel(kx==2 and ky==2, 176,
 
           if K.link.build == c or K.link.kind == "falloff" then
             -- no change
+          elseif K.link.kind == "vista" then
+            K.rmodel = copy_table(other.rmodel)
           else
             K.rmodel.f_h = other.rmodel.f_h
             K.rmodel.c_h = math.max(c.rmodel.c_h, other.rmodel.c_h) --FIXME (??)
@@ -2923,10 +2902,48 @@ sel(kx==2 and ky==2, 176,
     -- mark the chunks containing the intruder
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
-        if K.link and K.link.kind == "vista" and c ~= K.link.build then
-          K.vista = true
-        end
+      if K.link and K.link.kind == "vista" and c ~= K.link.build then
+        K.vista = true
+      end
     end end
+  end
+
+  local function create_huge_vista(c)
+
+    if not c.chunks[2][2].empty then return end
+
+    local vista_x, vista_y
+
+    local side_vistas   = 0
+    local corner_vistas = 0
+    
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.vista then
+        vista_x, vista_y = kx, ky
+        if kx==2 or ky==2 then
+          side_vistas = side_vistas + 1
+        else
+          corner_vistas = corner_vistas + 1
+        end
+      end
+    end end
+
+    if side_vistas ~= 1 or corner_vistas > 0 then return end
+
+    con.debugf("Making HUGE VISTA @ (%d,%d)\n", c.x, c.y);
+
+    local K = c.chunks[vista_x][vista_y]
+    assert(K and K.vista)
+
+    local N = c.chunks[2][2]
+
+    N.link  = K.link
+    N.vista = K.vista
+    N.empty = nil
+
+    K.link.shallow = nil
+    K.link.huge = true
   end
 
   local function add_vista_environs(c)
@@ -2965,10 +2982,10 @@ sel(kx==2 and ky==2, 176,
           if near_vista then
             if room_neighbour then
               K.room = true
-              K.empty = false
+              K.empty = nil
             elseif link_neighbour then
               K.link = link_neighbour
-              K.empty = false
+              K.empty = nil
             end
           end
         end -- K.empty
@@ -3228,6 +3245,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
   for zzz,cell in ipairs(p.all_cells) do
 
     mark_vista_chunks(cell)
+    create_huge_vista(cell)
 
     add_travel_chunks(cell)
 
@@ -5084,8 +5102,8 @@ do return end
           fill(p,c, x,y, x,y, { solid=c.theme.void })
         else
           fill(p,c, x,y, x,y, K.rmodel)
-          if B.walk then
---            add_thing(p,c, x,y, "candle", false)
+          if K.vista and not K.link.fall_over then
+            add_thing(p,c, x,y, "candle", false)
           end
         end
       end
