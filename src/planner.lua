@@ -1804,90 +1804,120 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
     --]]
   end
 
-  local function add_falloffs()
-    
-    local function can_make_falloff(a, b, dir)
+---###  local function add_falloffs()
+---###    
+---###    for zzz,c in ipairs(p.all_cells) do
+---###      for dir = 2,8,2 do
+---###        local dx, dy = dir_to_delta(dir)
+---###        local other = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
+---###
+---###        if other and not c.link[dir] and rand_odds(90)
+---###           and can_make_falloff(c, other, dir)
+---###        then
+---### 
+---###          con.debugf("FALL-OFF @ (%d,%d) dir:%d\n", c.x, c.y, dir)
+---###
+---###          local L = create_link(p, c, other, dir)
+---###          L.kind = "falloff"
+---###        end
+---###      end
+---###    end
+---###  end
+  
+  local function add_vistas()
 
-      if b.is_exit or b.hallway or b.scenic or b.is_depot or b.is_bridge then
-        return false
-      end
+    local function prelim_check(a, b, dir)
 
-      if a.is_exit or a.scenic then return false end
+      if b.is_exit or b.hallway or b.is_depot then return false end
 
-      local aq = a.quest.parent or a.quest
-      local bq = b.quest.parent or b.quest
+      if b.scenic == "solid" then return false end
 
-      if aq.level <  bq.level then return false end
-      if aq.level == bq.level and a.along < b.along then return false end
+      if a.small_exit or a.scenic or a.is_depot then return false end
 
-      if a.f_min < (b.f_max + 64) then return false end
-      if (b.ceil_h - a.floor_h) < 64 then return false end
-      
+      if a.f_min  < (b.f_max + 24) then return false end
+      if b.ceil_h < (a.f_max + 96) then return false end
+
       if a.theme.outdoor and b.theme.outdoor and a.ceil_h ~= b.ceil_h then return false end
       if a.theme.outdoor and not b.theme.outdoor and a.ceil_h <= b.ceil_h then return false end
       if b.theme.outdoor and not a.theme.outdoor and b.ceil_h <= a.ceil_h then return false end
 
+      -- do not allow two large vistas in a room unless they
+      -- are opposite each other
+      if b.vistas[rotate_cw90(dir)]  == 2 or
+         b.vistas[rotate_ccw90(dir)] == 2
+      then return false end
+
       return true
     end
 
-    for zzz,c in ipairs(p.all_cells) do
-      for dir = 2,8,2 do
-        local dx, dy = dir_to_delta(dir)
-        local other = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
+    local function quest_compare(a, b)
 
-        if other and not c.link[dir] and rand_odds(90)
-           and can_make_falloff(c, other, dir)
-        then
- 
-          con.debugf("FALL-OFF @ (%d,%d) dir:%d\n", c.x, c.y, dir)
+      local aq = a.quest.parent or a.quest
+      local bq = b.quest.parent or b.quest
 
-          local L = create_link(p, c, other, dir)
-          L.kind = "falloff"
-        end
-      end
+      if aq.level < bq.level then return -1 end
+      if aq.level > bq.level then return  1 end
+
+      return 0
     end
-  end
-  
-  local function add_vistas()
+    
+    local function can_make_falloff(a, b, dir)
+
+      if b.scenic then return false end
+
+      if a.f_min < (b.f_max + 64) then return false end
+
+      return true
+    end
 
     local function can_make_vista(a, b, dir)
 
-      if b.is_exit or b.hallway or b.is_depot then return false end
-      if b.scenic == "solid" then return false end
-      if b.vista_from then return false end
-
-      if not b.theme.outdoor and rand_odds(50) then return false end
-
-      if a.small_exit or a.scenic or a.is_depot  then return false end
-
       if a.theme.outdoor and rand_odds(50) then return false end
 
-      if a.f_min < (b.f_max + 24) then return false end
-
-      if b.ceil_h < (a.f_max + 96) then return false end
-
-      -- do not allow two vistas in a room unless they are
-      -- opposite each other
-      if b.vistas[rotate_cw90(dir)] or b.vistas[rotate_ccw90(dir)] then
-        return false
-      end
+      if not b.theme.outdoor and rand_odds(50) then return false end
 
       return true
     end
 
+    -- add_vistas --
+
     for zzz,c in ipairs(p.all_cells) do
       for dir = 2,8,2 do
-        local other = neighbour_by_side(p, c, dir)
+        local nb = neighbour_by_side(p, c, dir)
 
-        if other and not c.link[dir] and rand_odds(99) and
-           can_make_vista(c, other, dir)
+        if nb and not c.link[dir] and rand_odds(100) and --FIXME
+           prelim_check(c, nb, dir)
         then
-          con.debugf("VISTA @ (%d,%d) dir: %d\n", c.x, c.y, dir)
+          local V = can_make_vista(c, nb, dir)
+          local F = can_make_falloff(c, nb, dir)
+          local q_cmp = quest_compare(c, nb)
 
-          local L = create_link(p, c, other, dir)
-          L.kind = "vista"
+          if q_cmp < 0 then F = false end
 
-          other.vistas[10-dir] = true
+          -- without this check, falloffs will be rarely made
+          if F and V and rand_odds(30) then V = false end
+
+          if F or V then
+            local L = create_link(p, c, nb, dir)
+            L.kind = sel(V, "vista", "falloff")
+
+            if V and F and rand_odds(60) then
+              L.fall_over = true
+            end
+
+            if V and rand_odds(25) then
+              L.shallow = true
+            end
+
+            local size = sel(L.kind == "falloff" or L.shallow, 1, 2)
+            
+            -- record the vista in the other cell
+            nb.vistas[10-dir] = size
+
+            con.debugf("VISTA/FALLOFF @ (%d,%d) dir:%d size:%d %s %s\n",
+                       c.x, c.y, dir, size, sel(L.shallow, "SHALLOW", "full"),
+                       sel(L.fall_over, "FALL-OVER", "-"))
+          end
         end
       end
     end
@@ -1898,10 +1928,11 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
     local function can_make_window(a, b)
 
       if b.is_depot or b.is_bridge then return false end
+
       if (a.is_exit or b.is_exit) and rand_odds(90) then return false end
 
       local cc = math.min(a.ceil_h, b.ceil_h) - 32
-      local ff = math.max(a.f_max, b.f_max) + 32
+      local ff = math.max(a.f_max,  b.f_max)  + 32
 
       if (cc - ff) < 32 then return false end
 
@@ -2216,7 +2247,6 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
 -- FIXME add_bridges()
 
---  add_falloffs()   FIXME: merge falloffs/vista deciding
   add_vistas()
   add_surprises()
 
