@@ -2475,15 +2475,19 @@ link.cells[2].x, link.cells[2].y)
 
     local function grow(chunk_list)
       
-      local function grow_a_pair(K,kx,ky, N,nx,ny)
+      local function grow_a_pair(K,kx,ky, N,nx,ny, bridge)
 
         assert(N.empty)
         N.empty = false
 
-        if nx==2 and ny==2 and rand_odds(66) then
+        if nx==2 and ny==2 and rand_odds(50) then
           N.room = true
         elseif K.vista then
-          N.room = true
+          if bridge and bridge.link and not bridge.vista then
+            N.link = bridge.link
+          else
+            N.room = true
+          end
         else
           assert(K.link or K.room)
           N.link = K.link
@@ -2520,9 +2524,9 @@ link.cells[2].x, link.cells[2].y)
                   -- FOUND ONE !!
                   con.debugf("Found travel bridge @ (%d,%d) [%d,%d]^%d\n", c.x,c.y, kx,ky,side)
                   if rand_odds(50) then
-                    grow_a_pair(last_K,last_x,last_y, K,kx,ky)
+                    grow_a_pair(last_K,last_x,last_y, K,kx,ky, N)
                   else
-                    grow_a_pair(N,nx,ny, K,kx,ky)
+                    grow_a_pair(N,nx,ny, K,kx,ky, last_K)
                   end
                   return true
                 end
@@ -2928,11 +2932,13 @@ sel(kx==2 and ky==2, 176,
   local function add_vista_environs(c)
 
     -- make sure the vista(s) have something to see
+
     for loop = 1,10 do
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
-        local vista_neighbour = false
+        local near_vista = false
         local link_neighbour
+        local room_neighbour
 
         if K.empty then
           for side = 1,9 do if side ~= 5 then
@@ -2941,22 +2947,29 @@ sel(kx==2 and ky==2, 176,
             if valid_chunk(nx,ny) then
               local N = c.chunks[nx][ny]
               if N.vista then
-                vista_neighbour = N.vista
-              elseif N.link then
-                link_neighbour  = N.link
+                near_vista = true
+              end
+
+              if (side % 2) == 0 and not N.vista then
+                if (kx==2 and ky==2) and rand_odds(50) then
+                  room_neighbour = true
+                elseif N.link then
+                  link_neighbour  = N.link
+                elseif N.room then
+                  room_neighbour  = N.room
+                end
               end
             end
           end end
 
-          if vista_neighbour then
-            if kx==2 and ky==2 then
+          if near_vista then
+            if room_neighbour then
               K.room = true
+              K.empty = false
             elseif link_neighbour then
               K.link = link_neighbour
-            else
-              K.room = true
+              K.empty = false
             end
-            K.empty = false
           end
         end -- K.empty
 
@@ -2964,7 +2977,7 @@ sel(kx==2 and ky==2, 176,
     end
   end
 
-  local function connect_chunks(c)
+  local function add_stairs(c)
 
     --> result: certain chunks have a "stair_dir" field.
     -->         Direction to neighbour chunk.  Stair/Lift will
@@ -2975,6 +2988,8 @@ sel(kx==2 and ky==2, 176,
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
         assert(K)
+
+        K.stair = {}
 
         if K.room or (K.link and not K.vista) or K.liquid then
           K.connect_id = ky*10 + kx
@@ -3000,12 +3015,10 @@ sel(kx==2 and ky==2, 176,
 
       local function are_connected(K, N, dir)
         if math.abs(K.rmodel.f_h - N.rmodel.f_h) <= 16 then
-          return true;
+          return true
         end
-        if K.stair_dir == dir or N.stair_dir == (10-dir) then
-          return true;
-        end
-        return false;
+        if K.stair[dir] then return true end
+        return false
       end
 
       for loop = 1,12 do
@@ -3025,7 +3038,7 @@ sel(kx==2 and ky==2, 176,
       end
     end
 
-    local function add_stair()
+    local function add_one_stair()
 
       -- find the best chunk pair to use
 
@@ -3066,22 +3079,52 @@ sel(kx==2 and ky==2, 176,
       rand_shuffle(coords)
 
       local loc = coords[1]
-      assert(loc.K and loc.N)
 
       local K1, K2, dir = loc.K, loc.N, loc.side
-      if K1.stair_dir then K1,K2,dir = K2,K1,10-dir end
 
-      if not K2.stair_dir and rand_odds(50) then  -- FIXME: HEURISTICS
-        K1,K2,dir = K2,K1,10-dir
-      end
+      assert(K1 and not K1.stair[dir])
+      assert(K2 and not K2.stair[10-dir])
 
-if K1.stair_dir then show_chunks(p) end
-      assert(not K1.stair_dir)
-      K1.stair_dir = dir
+      local STAIR =
+      {
+        k1 = K1, k2 = K2, dir = dir, build = k1
+      }
+
+      K1.stair[dir] = STAIR
+      K2.stair[10-dir] = STAIR
+    end
+
+    local function select_stair_spots()
+      for kx=1,3 do for ky=1,3 do
+        local K = c.chunks[kx][ky]
+        K.stair_dir = nil  
+
+        for side=2,8,2 do
+          local stair = K.stair[side]
+          if stair and stair.build == K then
+            if K.stair_dir then return false end  --FAIL--
+            K.stair_dir = side
+          end
+        end
+      end end
+
+      return true --OK--
+    end
+
+    local function shuffle_stair_builds()
+      for kx=1,3 do for ky=1,3 do
+        local K = c.chunks[kx][ky]
+        for side=6,8,2 do
+          local stair = K.stair[side]
+          if stair then
+            stair.build = rand_sel(50, stair.k1, stair.k2)
+          end
+        end
+      end end
     end
 
 
-    --- connect_chunks ---
+    --- add_stairs ---
 
     init_connx()
 
@@ -3089,8 +3132,14 @@ if K1.stair_dir then show_chunks(p) end
       merge_connx()
       if is_fully_connected() then break end
 con.debugf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
-      add_stair()
+      add_one_stair()
     end 
+
+    for loop=1,99 do
+      shuffle_stair_builds()
+      if select_stair_spots() then break end
+con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
+    end
   end
 
   local function good_Q_spot(c) -- REMOVE (use block-based alloc)
@@ -3194,11 +3243,10 @@ else
         void_it_up(cell, "void")
 end
 
-    connect_chunks(cell)
+    add_stairs(cell)
   end
 
 -- !!!!  add_closet_chunks(cell)
--- !!!!  add_vista_chunks(cell)
 end
 
 
@@ -4433,7 +4481,7 @@ function build_cell(p, c)
     end
   end
 
-  local function position_dm_stuff(c)
+  local function position_dm_stuff(c) -- FIXME: MOVE_TO monster.lua
 
     local spots = {}
 
@@ -4460,27 +4508,27 @@ function build_cell(p, c)
 
     rand_shuffle(spots)
 
-    -- guarantee at least 4 players (each corner)
-    if (c.x==1) or (c.x==p.w) or (c.y==1) or (c.y==p.h) or rand_odds(66) then
-      local spot = get_spot()
-      if spot then spot.K.player = true end
-    end
-
-    -- guarantee at least one weapon (central cell)
-    if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(70) then
-      local spot = get_spot()
-      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
-    end
-
-    -- secondary players and weapons
-    if rand_odds(33) then
-      local spot = get_spot()
-      if spot then spot.K.player = true end
-    end
-    if rand_odds(15) then
-      local spot = get_spot()
-      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
-    end
+---###    -- guarantee at least 4 players (each corner)
+---###    if (c.x==1) or (c.x==p.w) or (c.y==1) or (c.y==p.h) or rand_odds(66) then
+---###      local spot = get_spot()
+---###      if spot then spot.K.player = true end
+---###    end
+---###
+---###    -- guarantee at least one weapon (central cell)
+---###    if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(70) then
+---###      local spot = get_spot()
+---###      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
+---###    end
+---###
+---###    -- secondary players and weapons
+---###    if rand_odds(33) then
+---###      local spot = get_spot()
+---###      if spot then spot.K.player = true end
+---###    end
+---###    if rand_odds(15) then
+---###      local spot = get_spot()
+---###      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
+---###    end
 
     -- from here on we REUSE the spots --
 
@@ -4513,7 +4561,7 @@ function build_cell(p, c)
     end
   end
 
-  local function build_chunk(kx, ky)
+  local function OLD_build_chunk(kx, ky)
 
     local function link_is_door(c, side)
       return c.link[side] and c.link[side].kind == "door"
@@ -4597,7 +4645,7 @@ function build_cell(p, c)
       end
     end
 
-    ---=== build_chunk ===---
+    ---=== OLD_build_chunk ===---
 
     local K = c.chunks[kx][ky]
     assert(K)
@@ -4628,28 +4676,28 @@ then
   gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.theme.void })
   return
 end
-    if K.stair_dir then
-
-      local x1,y1, x2,y2 = side_coords(K.stair_dir,
-        K.x1, K.y1, K.x2, K.y2)
-
-      local long
-      if (K.stair_dir==2 or K.stair_dir==8) then
-        long = x2-x1+1
-      else
-        long = y2-y1+1
-      end
-
-      local deep = 1
-
-      local dx,dy = dir_to_delta(K.stair_dir)
-      local NB = c.chunks[kx+dx][ky+dy]
-      local diff = math.abs(K.rmodel.f_h - NB.rmodel.f_h)
-
-      local step = (NB.rmodel.f_h - K.rmodel.f_h) / (deep * 4)
-
-      B_stair(p, c, x1, y1, K.rmodel.f_h, K.stair_dir, long, deep, step)
-  end
+---###    if K.stair_dir then
+---###
+---###      local x1,y1, x2,y2 = side_coords(K.stair_dir,
+---###        K.x1, K.y1, K.x2, K.y2)
+---###
+---###      local long
+---###      if (K.stair_dir==2 or K.stair_dir==8) then
+---###        long = x2-x1+1
+---###      else
+---###        long = y2-y1+1
+---###      end
+---###
+---###      local deep = 1
+---###
+---###      local dx,dy = dir_to_delta(K.stair_dir)
+---###      local NB = c.chunks[kx+dx][ky+dy]
+---###      local diff = math.abs(K.rmodel.f_h - NB.rmodel.f_h)
+---###
+---###      local step = (NB.rmodel.f_h - K.rmodel.f_h) / (deep * 4)
+---###
+---###      B_stair(p, c, x1, y1, K.rmodel.f_h, K.stair_dir, long, deep, step)
+---###  end
 
 gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, K.rmodel,
 {
@@ -4702,66 +4750,66 @@ do return end
       return
     end
 
-    if K.stair_dir then
-
-      local dx, dy = dir_to_delta(K.stair_dir)
-      local NB = c.chunks[kx+dx][ky+dy]
-
-      local diff = math.abs(K.rmodel.f_h - NB.rmodel.f_h)
-
-      local long = 2
-      local deep = 1
-
-      -- prefer no lifts in deathmatch
-      if p.deathmatch and diff > 64 and rand_odds(88) then deep = 2 end
-
-      -- FIXME: replace with proper "can walk" test !!!
-      if (K.stair_dir == 6 and kx == 1 and c.border[4]) or
-         (K.stair_dir == 4 and kx == 3 and c.border[6]) or
-         (K.stair_dir == 8 and ky == 1 and c.border[2]) or
-         (K.stair_dir == 2 and ky == 3 and c.border[8]) then
-        deep = 1
-      end
-
-      local bx = (kx-1) * JW
-      local by = (ky-1) * JH 
-
-      if K.stair_dir == 8 then
-        by = by + JH + 1 - deep
-      elseif K.stair_dir == 2 then
-        by = by + deep
-      elseif ky == 1 then
-        by = by + JH - 1
-      elseif ky == 3 then
-        by = by + 1
-      else
-        by = by + 1; if JH >= 4 then by = by + 1 end
-      end
-
-      if K.stair_dir == 6 then
-        bx = bx + JW + 1 - deep
-      elseif K.stair_dir == 4 then
-        bx = bx + deep
-      elseif kx == 1 then
-        bx = bx + JW - 1
-      elseif kx == 3 then
-        bx = bx + 1
-      else
-        bx = bx + 1; if JW >= 4 then bx = bx + 1 end
-      end
-
-      local step = (NB.rmodel.f_h - K.rmodel.f_h) / deep / 4
-
-      if math.abs(step) <= 16 then
-        B_stair(p, c, c.bx1-1+bx, c.by1-1+by, K.rmodel.f_h, K.stair_dir,
-                long, deep, (NB.rmodel.f_h - K.rmodel.f_h) / (deep * 4),
-                { } )
-      else
-        B_lift(p, c, c.bx1-1+bx, c.by1-1+by,
-               math.max(K.rmodel.f_h, NB.rmodel.f_h), K.stair_dir,
-               long, deep, { } )
-      end
-    end  -- K.stair_dir
+---###    if K.stair_dir then
+---###
+---###      local dx, dy = dir_to_delta(K.stair_dir)
+---###      local NB = c.chunks[kx+dx][ky+dy]
+---###
+---###      local diff = math.abs(K.rmodel.f_h - NB.rmodel.f_h)
+---###
+---###      local long = 2
+---###      local deep = 1
+---###
+---###      -- prefer no lifts in deathmatch
+---###      if p.deathmatch and diff > 64 and rand_odds(88) then deep = 2 end
+---###
+---###      -- FIXME: replace with proper "can walk" test !!!
+---###      if (K.stair_dir == 6 and kx == 1 and c.border[4]) or
+---###         (K.stair_dir == 4 and kx == 3 and c.border[6]) or
+---###         (K.stair_dir == 8 and ky == 1 and c.border[2]) or
+---###         (K.stair_dir == 2 and ky == 3 and c.border[8]) then
+---###        deep = 1
+---###      end
+---###
+---###      local bx = (kx-1) * JW
+---###      local by = (ky-1) * JH 
+---###
+---###      if K.stair_dir == 8 then
+---###        by = by + JH + 1 - deep
+---###      elseif K.stair_dir == 2 then
+---###        by = by + deep
+---###      elseif ky == 1 then
+---###        by = by + JH - 1
+---###      elseif ky == 3 then
+---###        by = by + 1
+---###      else
+---###        by = by + 1; if JH >= 4 then by = by + 1 end
+---###      end
+---###
+---###      if K.stair_dir == 6 then
+---###        bx = bx + JW + 1 - deep
+---###      elseif K.stair_dir == 4 then
+---###        bx = bx + deep
+---###      elseif kx == 1 then
+---###        bx = bx + JW - 1
+---###      elseif kx == 3 then
+---###        bx = bx + 1
+---###      else
+---###        bx = bx + 1; if JW >= 4 then bx = bx + 1 end
+---###      end
+---###
+---###      local step = (NB.rmodel.f_h - K.rmodel.f_h) / deep / 4
+---###
+---###      if math.abs(step) <= 16 then
+---###        B_stair(p, c, c.bx1-1+bx, c.by1-1+by, K.rmodel.f_h, K.stair_dir,
+---###                long, deep, (NB.rmodel.f_h - K.rmodel.f_h) / (deep * 4),
+---###                { } )
+---###      else
+---###        B_lift(p, c, c.bx1-1+bx, c.by1-1+by,
+---###               math.max(K.rmodel.f_h, NB.rmodel.f_h), K.stair_dir,
+---###               long, deep, { } )
+---###      end
+---###    end  -- K.stair_dir
 
 
     local bx = K.x1 + 1
@@ -5693,7 +5741,7 @@ end
 
   GAP_FILL_ROOM(c)
 
--- !!!!  position_dm_stuff(cell)
+-- !!!!  position_dm_stuff(cell)  MOVE_TO: monster.lua
 
 if c == p.quests[1].first then
 
