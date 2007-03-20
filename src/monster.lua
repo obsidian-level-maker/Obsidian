@@ -149,11 +149,63 @@ function rectangle_to_spots(c, x,y, x2,y2)
 end
 
 
+function find_free_spots(p, c)
+
+  local function free_spot(bx, by)
+--  if not valid_block(p, bx, by) then return false end
+
+    local B = p.blocks[bx][by]
+
+    return (B and not B.solid and (not B.fragments or B.can_thing) and
+            not B.has_blocker and not B.is_cage and not B.near_player)
+  end
+
+  local function free_double_spot(bx, by)
+    local f_min =  99999
+    local f_max = -99999
+
+    for dx = 0,1 do for dy = 0,1 do
+      if not free_spot(bx+dx, by+dy) then return false end
+
+      local B = p.blocks[bx+dx][by+dy]
+      if B.fragments then
+        B = B.fragments[1][1]
+        assert(B)
+      end
+
+      f_min = math.min(f_min, B.f_h)
+      f_max = math.max(f_max, B.f_h)
+    end end
+
+    return f_max <= (f_min + 10)
+  end
+
+  local list = {}
+  local total = 0
+  for bx = c.bx1,c.bx2,2 do for by = c.by1,c.by2,2 do
+    if bx < c.bx2 and by < c.by2 and free_double_spot(bx, by) then
+      table.insert(list, { c=c, x=bx, y=by, double=true})
+      total = total + 4
+    else
+      for dx = 0,1 do for dy = 0,1 do
+        if bx+dx <= c.bx2 and by+dy <= c.by2 and free_spot(bx+dx, by+dy) then
+          table.insert(list, { c=c, x=bx+dx, y=by+dy })
+          total = total + 1
+        end
+      end end
+    end
+  end end
+
+  return list, total
+end
+
+
 function hm_give_health(HM, value, limit)
   if HM.health < limit then
     HM.health = math.min(HM.health + value, limit)
   end
 end
+
 
 function hm_give_armor(HM, value, limit)
   if HM.armor < limit then
@@ -1127,54 +1179,6 @@ function battle_in_cell(p, c)
     return best_info, best_name
   end
 
-  local function free_spot(bx, by)
---  if not valid_block(p, bx, by) then return false end
-
-    local B = p.blocks[bx][by]
-
-    return (B and not B.solid and (not B.fragments or B.can_thing) and
-            not B.has_blocker and not B.is_cage and not B.near_player)
-  end
-
-  local function free_double_spot(bx, by)
-    local f_min =  99999
-    local f_max = -99999
-
-    for dx = 0,1 do for dy = 0,1 do
-      if not free_spot(bx+dx, by+dy) then return false end
-
-      local B = p.blocks[bx+dx][by+dy]
-      if B.fragments then
-        B = B.fragments[1][1]
-        assert(B)
-      end
-
-      f_min = math.min(f_min, B.f_h)
-      f_max = math.max(f_max, B.f_h)
-    end end
-
-    return f_max <= (f_min + 10)
-  end
-
-  local function find_free_spots()
-    local list = {}
-    local total = 0
-    for bx = c.bx1,c.bx2 do for by = c.by1,c.by2 do
-      if bx < c.bx2 and by < c.by2 and free_double_spot(bx, by) then
-        table.insert(list, { c=c, x=bx, y=by, double=true})
-        total = total + 4
-      else
-        for dx = 0,1 do for dy = 0,1 do
-          if bx+dx <= c.bx2 and by+dy <= c.by2 and free_spot(bx+dx, by+dy) then
-            table.insert(list, { c=c, x=bx+dx, y=by+dy })
-            total = total + 1
-          end
-        end end
-      end
-    end end
-
-    return list, total
-  end
 
 
   local function decide_monster(firepower)
@@ -1400,7 +1404,7 @@ function battle_in_cell(p, c)
 
 zprint("BATTLE IN", c.x, c.y)
 
-  local spots, free_space = find_free_spots() --FIXME: move out of here
+  local spots, free_space = find_free_spots(p, c) --FIXME: move out of here
   rand_shuffle(spots)
   c.free_spots = spots
 
@@ -1445,6 +1449,71 @@ zprint("SIMULATE in CELL", c.x, c.y, SK)
   end
 end
 
+
+function deathmatch_battle(p, c)
+
+  local function add_dm_pickup(name)
+
+    -- FIXME: proper clusters!!!
+
+    local cluster = 1
+    if THEME.dm.cluster then cluster = THEME.dm.cluster[name] or 1 end
+    assert(cluster >= 1 and cluster <= 8)
+
+---###    local offsets = { 1,2,3,4, 6,7,8,9 }
+---###    rand_shuffle(offsets)
+---###
+---###    for i = 1,cluster do
+---###      local dx, dy = dir_to_delta(offsets[i])
+---###      add_thing(p, c, bx+dx, by+dy, name, false)
+---###    end
+
+    table.insert(c.pickup_set[SK], { name=name, info=info, cluster={ 0,0 } })
+  end
+
+  --== deathmatch_battle ==--
+
+  c.pickup_set = { easy={}, medium={}, hard={} }
+  c.mon_set    = { easy={}, medium={}, hard={} }
+
+  c.free_spots = find_free_spots(p, c)
+
+  rand_shuffle(c.free_spots)
+
+  if #c.free_spots == 0 then return end
+
+  for zzz,SK in ipairs(SKILLS) do   -- FIXME: add more stuff in lower skills
+
+    -- health, ammo and items
+    if rand_odds(70) then
+      local what = choose_dm_thing(THEME.dm.health, false)
+      add_dm_pickup( what )
+    end
+
+    if rand_odds(90) then
+      local what = choose_dm_thing(THEME.dm.ammo, true)
+      add_dm_pickup( what )
+    end
+
+    if rand_odds(10) then
+      local what = choose_dm_thing(THEME.dm.items, true)
+      add_dm_pickup( what )
+    end
+
+    -- secondary health and ammo
+    if rand_odds(10) then
+      local what = choose_dm_thing(THEME.dm.health, false)
+      add_dm_pickup( what )
+    end
+    if rand_odds(30) then
+      local what = choose_dm_thing(THEME.dm.ammo, true)
+      add_dm_pickup( what )
+    end
+
+  end
+end
+
+
 function backtrack_to_cell(p, c)
 
   local function surprise_me(surprise)
@@ -1474,10 +1543,14 @@ end
 
 function battle_in_quest(p, Q)
   for zzz,c in ipairs(Q.path) do
-    if c.toughness then
+    if p.deathmatch then
+      deathmatch_battle(p, c)
+    elseif c.toughness then
       battle_in_cell(p, c)
     end
   end
+
+  if p.deathmatch then return end
 
   for idx = #Q.path,1,-1 do
     local c = Q.path[idx]

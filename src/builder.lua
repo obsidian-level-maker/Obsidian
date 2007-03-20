@@ -4534,31 +4534,6 @@ function build_cell(p, c)
 
     if #spots == 0 then return end
 
-    -- health, ammo and items
-    if rand_odds(70) then
-      local spot = reusable_spot()
-      spot.K.dm_health = choose_dm_thing(THEME.dm.health, false)
-    end
-
-    if rand_odds(90) then
-      local spot = reusable_spot()
-      spot.K.dm_ammo = choose_dm_thing(THEME.dm.ammo, true)
-    end
- 
-    if rand_odds(10) then
-      local spot = reusable_spot()
-      spot.K.dm_item = choose_dm_thing(THEME.dm.items, true)
-    end
-
-    -- secondary health and ammo
-    if rand_odds(10) then
-      local spot = reusable_spot()
-      spot.K.dm_health = choose_dm_thing(THEME.dm.health, false)
-    end
-    if rand_odds(30) then
-      local spot = reusable_spot()
-      spot.K.dm_ammo = choose_dm_thing(THEME.dm.ammo, true)
-    end
   end
 
   local function OLD_build_chunk(kx, ky)
@@ -4621,29 +4596,14 @@ function build_cell(p, c)
       return entry_dir
     end
 
-    local function chunk_dm_offset()
-      while true do
-        local dx = rand_irange(1,3) - 2
-        local dy = rand_irange(1,3) - 2
-        if not (dx==0 and dy==0) then return dx,dy end
-      end
-    end
+---###    local function chunk_dm_offset()
+---###      while true do
+---###        local dx = rand_irange(1,3) - 2
+---###        local dy = rand_irange(1,3) - 2
+---###        if not (dx==0 and dy==0) then return dx,dy end
+---###      end
+---###    end
 
-    local function add_dm_pickup(c, bx,by, name)
-      -- FIXME: (a) check if middle blocked, (b) good patterns
-
-      local cluster = 1
-      if THEME.dm.cluster then cluster = THEME.dm.cluster[name] or 1 end
-      assert(cluster >= 1 and cluster <= 8)
-
-      local offsets = { 1,2,3,4, 6,7,8,9 }
-      rand_shuffle(offsets)
-
-      for i = 1,cluster do
-        local dx, dy = dir_to_delta(offsets[i])
-        add_thing(p, c, bx+dx, by+dy, name, false)
-      end
-    end
 
     ---=== OLD_build_chunk ===---
 
@@ -4838,10 +4798,6 @@ do return end
         add_thing(p, c, bx, by, sel(p.deathmatch, "dm_player", "player1"), true, angle)
         c.player_pos = {x=bx, y=by}
 
-        if p.deathmatch and not p.have_sp_player then
-          add_thing(p, c, bx, by, "player1", true, angle)
-          p.have_sp_player = true
-        end
       end
 
     elseif K.dm_weapon then
@@ -5087,17 +5043,17 @@ do return end
     end
 
 
-    if K.dm_health then
-      add_dm_pickup(c, bx,by, K.dm_health)
-    end
-    
-    if K.dm_ammo then
-      add_dm_pickup(c, bx,by, K.dm_ammo)
-    end
-    
-    if K.dm_item then
-      add_dm_pickup(c, bx,by, K.dm_item)
-    end
+---###    if K.dm_health then
+---###      add_dm_pickup(c, bx,by, K.dm_health)
+---###    end
+---###    
+---###    if K.dm_ammo then
+---###      add_dm_pickup(c, bx,by, K.dm_ammo)
+---###    end
+---###    
+---###    if K.dm_item then
+---###      add_dm_pickup(c, bx,by, K.dm_item)
+---###    end
   end
 
   local function decide_sky_lights(c)
@@ -5531,8 +5487,12 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     mark_fab_walk(c, x,y, x,y)
   end
 
+  local function add_player(c, name)
+    add_object(c, name);
+  end
+
   local function add_dm_weapon(c)
-    -- FIXME
+    add_object(c, choose_dm_thing(THEME.dm.weapons, true))
   end
 
   local function add_switch(c)
@@ -5685,11 +5645,16 @@ end
     -- PLAYERS
     if not p.deathmatch and c == p.quests[1].first then
       for i = 1,sel(settings.mode == "coop",4,1) do
-        add_object(c, "player" .. tostring(i))
+        add_player(c, "player" .. tostring(i))
       end
 
     elseif p.deathmatch and (c.require_player or rand_odds(50)) then
-      add_object(c, "dm_player")
+      add_player(c, "dm_player")
+    end
+
+    if p.deathmatch and c.x==2 and not p.have_sp_player then
+      add_player(c, "player1")
+      p.have_sp_player = true
     end
 
     -- QUEST ITEM
@@ -5906,9 +5871,7 @@ end
 
   con.progress(25); if con.abort() then return end
  
-  if not p.deathmatch then
-    battle_through_level(p)
-  end
+  battle_through_level(p)
 
   con.progress(40); if con.abort() then return end
 end

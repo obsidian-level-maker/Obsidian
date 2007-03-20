@@ -494,7 +494,7 @@ function plan_dm_arena()
   -- dummy quest
   p.quests[1] =
   {
-    level = 1, kind = "frag_fest", path = {}
+    level = 1, kind = "frag_fest", path = {}, children = {}
   }
 
   for y = 1,H do
