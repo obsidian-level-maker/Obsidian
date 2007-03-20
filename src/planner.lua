@@ -117,14 +117,19 @@ function show_chunks(p)
       assert(K)
 
       if K.empty then return " " end
-
+--[[
+      if K.stair_dir == 2 then return "v" end
+      if K.stair_dir == 8 then return "^" end
+      if K.stair_dir == 4 then return "<" end
+      if K.stair_dir == 6 then return ">" end
+--]]
       if K.void   then return "x" end
       if K.room   then return "5" end
       if K.liquid then return "~" end
 
-      if K.closet then return "c" end
+      if K.closet then return "C" end
       if K.cage   then return "G" end
-      if K.vista  then return "v" end
+      if K.vista  then return "V" end
 
       --[[
       if K.weapon then return "w" end
@@ -300,8 +305,7 @@ function create_cell(p, x, y, quest, along, theme, is_depot)
     floor_h = 128, ceil_h = 256, -- dummy values
 
     link = {}, border = {}, corner = {},
-    closet = {}, vista = {},
-    nudges = {},
+    closet = {}, nudges = {},
 
     is_depot = is_depot,
     liquid = quest.liquid,
@@ -359,6 +363,8 @@ function shuffle_build_sites(p)
 
     if c1.hallway and not c2.hallway then chance =  5 end
     if c2.hallway and not c1.hallway then chance = 95 end
+
+    if link.kind == "vista" then chance = 0 end
 
     link.build = link.cells[rand_sel(chance, 2, 1)]
   end
@@ -1672,10 +1678,10 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
   end
 
   local function peak_toughness(Q)
-    local peak = 135 + 5 * #Q.path
+    local peak = 140 + 5 * #Q.path
 
     peak = peak + 20 * (Q.sub_level or 0)
-    peak = peak * (Q.level ^ 1.0) * (1 + rand_skew()/5)
+    peak = peak * (Q.level ^ 0.7) * (1 + rand_skew()/5)
 
     -- adjustment for Wolf3d/SOD  | FIXME: rework this func, use THEME values
     if not THEME.caps.heights then
@@ -1853,7 +1859,6 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
       if not b.theme.outdoor and rand_odds(50) then return false end
 
       if a.small_exit or a.scenic or a.is_depot  then return false end
-      if a.link[dir] then return false end
 
       if a.theme.outdoor and rand_odds(50) then return false end
 
@@ -1868,17 +1873,13 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
       for dir = 2,8,2 do
         local other = neighbour_by_side(p, c, dir)
 
-        if other and rand_odds(99) and
+        if other and not c.link[dir] and rand_odds(99) and
            can_make_vista(c, other, dir)
         then
-          c.vista[dir] = 1 -- chunk size
-          other.vista_from = 10-dir
-
-          if other.scenic and rand_odds(5) then
-            c.vista[dir] = 2
-          end
-
           con.debugf("VISTA @ (%d,%d) dir: %d\n", c.x, c.y, dir)
+
+          local L = create_link(p, c, other, dir)
+          L.kind = "vista"
         end
       end
     end
@@ -1943,7 +1944,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
         rand_shuffle(SIDES)
         for zzz,side in ipairs(SIDES) do
           if idx >= 2 and not c.link[side]
-             and not c.vista[side] and c.vista_from ~= side
+--!!! FIXME    and not c.vista[side] and c.vista_from ~= side
           then
             table.insert(locs, {c=c, side=side})
             break; -- only one location per cell
@@ -2207,8 +2208,8 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
 -- FIXME add_bridges()
 
-  add_falloffs()
---!!!  add_vistas()
+--  add_falloffs()   FIXME: merge falloffs/vista deciding
+  add_vistas()
   add_surprises()
 
   create_corners(p)

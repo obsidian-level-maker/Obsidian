@@ -2482,6 +2482,8 @@ link.cells[2].x, link.cells[2].y)
 
         if nx==2 and ny==2 and rand_odds(66) then
           N.room = true
+        elseif K.vista then
+          N.room = true
         else
           assert(K.link or K.room)
           N.link = K.link
@@ -2754,7 +2756,7 @@ link.cells[2].x, link.cells[2].y)
     end
   end
 
-  local function add_vista_chunks(c)
+  local function OLD_OLD_add_vista_chunks(c)
     for side = 2,8,2 do
       if c.vista[side] then
         local other = neighbour_by_side(p, c, side)
@@ -2912,6 +2914,56 @@ sel(kx==2 and ky==2, 176,
     end end
   end
 
+  local function mark_vista_chunks(c)
+
+    -- mark the chunks containing the intruder
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+        if K.link and K.link.kind == "vista" and c ~= K.link.build then
+          K.vista = true
+        end
+    end end
+  end
+
+  local function add_vista_environs(c)
+
+    -- make sure the vista(s) have something to see
+    for loop = 1,10 do
+      for kx = 1,3 do for ky = 1,3 do
+        local K = c.chunks[kx][ky]
+        local vista_neighbour = false
+        local link_neighbour
+
+        if K.empty then
+          for side = 1,9 do if side ~= 5 then
+            local dx,dy = dir_to_delta(side)
+            local nx,ny = kx+dx, ky+dy
+            if valid_chunk(nx,ny) then
+              local N = c.chunks[nx][ny]
+              if N.vista then
+                vista_neighbour = N.vista
+              elseif N.link then
+                link_neighbour  = N.link
+              end
+            end
+          end end
+
+          if vista_neighbour then
+            if kx==2 and ky==2 then
+              K.room = true
+            elseif link_neighbour then
+              K.link = link_neighbour
+            else
+              K.room = true
+            end
+            K.empty = false
+          end
+        end -- K.empty
+
+      end end
+    end
+  end
+
   local function connect_chunks(c)
 
     --> result: certain chunks have a "stair_dir" field.
@@ -2924,7 +2976,7 @@ sel(kx==2 and ky==2, 176,
         local K = c.chunks[kx][ky]
         assert(K)
 
-        if K.room or K.link or K.liquid then
+        if K.room or (K.link and not K.vista) or K.liquid then
           K.connect_id = ky*10 + kx
         end
       end end
@@ -3023,6 +3075,7 @@ sel(kx==2 and ky==2, 176,
         K1,K2,dir = K2,K1,10-dir
       end
 
+if K1.stair_dir then show_chunks(p) end
       assert(not K1.stair_dir)
       K1.stair_dir = dir
     end
@@ -3125,17 +3178,22 @@ con.debugf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
 
   for zzz,cell in ipairs(p.all_cells) do
 
+    mark_vista_chunks(cell)
+
     add_travel_chunks(cell)
 
-    setup_chunk_rmodels(cell)
+    add_vista_environs(cell)
 
 --!!!!  flesh_out_cell(cell)
+
+    setup_chunk_rmodels(cell)
 
 if (cell == p.quests[1].first or cell == cell.quest.last) then
         void_it_up(cell, "room")
 else
         void_it_up(cell, "void")
 end
+
     connect_chunks(cell)
   end
 
@@ -3376,7 +3434,7 @@ B_prefab(p,c, fab, skin, parm, D.theme, link.x1, link.y1, side)
 return
 end
 
-if not (link.kind == "falloff") then --!!!!! TESTING
+if not (link.kind == "falloff" or link.kind == "vista") then --!!!!! TESTING
 local door_info = THEME.doors[link.wide_door]
 assert(door_info)
 if not door_info.prefab then print(table_to_str(door_info)) end
@@ -3977,7 +4035,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
     local b_theme = D.theme
     assert(b_theme)
 
-    if c.vista[side] then
+    if false then --!!!!! c.vista[side] then
       local kind = "open"
       local diff_h = c.floor_h - other.floor_h
 
@@ -5615,7 +5673,7 @@ end
 
     -- SCENERY
     for loop = 1,20 do
-      add_scenery(c)
+--!!!!     add_scenery(c)
     end
 
     -- FIXME DM PICKUPS move to: monster.lua  [free spots]
