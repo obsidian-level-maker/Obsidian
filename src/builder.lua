@@ -3134,7 +3134,15 @@ sel(kx==2 and ky==2, 176,
         for side=6,8,2 do
           local stair = K.stair[side]
           if stair then
-            stair.build = rand_sel(50, stair.k1, stair.k2)
+            local chance = 50
+
+            local deep1 = sel(side==6, stair.k1.w, stair.k1.h)
+            local deep2 = sel(side==6, stair.k2.w, stair.k2.h)
+
+            if deep1 > deep2 then chance = 90 end
+            if deep1 < deep2 then chance = 10 end
+
+            stair.build = rand_sel(chance, stair.k1, stair.k2)
           end
         end
       end end
