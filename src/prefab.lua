@@ -640,6 +640,63 @@ SWITCH_FLOOR_TINY =
   },
 },
 
+SWITCH_NICHE =
+{
+  structure =
+  {
+    "########",
+    "########",
+    "##ssss##",
+    "#LnnnnL#",
+  },
+
+  elements =
+  {
+    -- niche
+    n = { f_h=0, c_rel="switch_h", c_h=0, c_tex="frame_c",
+          light=192 },
+
+    -- switch
+    s = { solid="switch", l_peg="top",
+          [2] = { kind="kind", tag="tag", y_offset="y_offset" }
+        },
+
+    -- light
+    L = { solid="wall", light=192,
+          [4] = { l_tex="light_w" },
+          [6] = { l_tex="light_w" },
+        },
+  },
+},
+
+SWITCH_NICHE_TINY =
+{
+  structure =
+  {
+    "####",
+    "#ss#",
+    "LnnM",
+    "LnnM",
+  },
+
+  elements =
+  {
+    -- niche
+    n = { f_h=32, c_rel="switch_h", c_h=32,
+          f_tex="frame_f", c_tex="frame_c", },
+
+    -- switch
+    s = { solid="switch", l_peg="top",
+          [2] = { kind="kind", tag="tag",
+                  x_offset="x_offset", y_offset="y_offset" }
+        },
+
+    -- sides
+    L = { solid="wall", [6] = { l_tex="side_w" } },
+    M = { solid="wall", [4] = { l_tex="side_w" } },
+  },
+},
+
 
 ------ Decorative I ------------------------------------
 
