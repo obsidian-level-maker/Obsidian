@@ -189,13 +189,10 @@ function write_level(p, lev_name)
       cur_line = nil
     end
 
-    local function create_sidedef(f, b, norm, sx, sy) 
+    local function create_sidedef(f,b, f_over,b_over, sx, sy) 
       if f.solid then return nil end
 
       local SIDE = { block=f }
-
-      local b_over = b[norm]    or DUMMY_BLOCK
-      local f_over = f[10-norm] or DUMMY_BLOCK
 
       -- set textures
       if b.solid then
@@ -212,11 +209,8 @@ function write_level(p, lev_name)
       return SIDE
     end
 
-    local function compute_line_flags(f,b, f_side,b_side, norm)
+    local function compute_line_flags(f,b, f_over,b_over, f_side,b_side, norm)
       local flags = 0
-
-      local b_over = b[norm]    or DUMMY_BLOCK
-      local f_over = f[10-norm] or DUMMY_BLOCK
 
       local impassible = f.impassible or b.impassible
       local l_peg = b_over.l_peg or f_over.l_peg or b.l_peg or f.l_peg
@@ -383,21 +377,25 @@ function write_level(p, lev_name)
         return push_line()
       end
 
+      local f_over = f[10-norm] or DUMMY_BLOCK
+      local b_over = b[norm]    or DUMMY_BLOCK
+
       -- linedefs must have a front, flip if needed.
       -- Also some lines need to face out (doors)
       if f.solid or
-        (not b.solid and (f.door_kind or f.lift_kind or f.switch_kind))
+        (not b.solid and (f.door_kind or f.lift_kind or f_over.kind))
       then
         norm = 10 - norm
         f, b = b, f
+        f_over, b_over = b_over, f_over
       end
 
       assert(not f.solid)
 
-      local f_side = create_sidedef(f, b, norm)
-      local b_side = create_sidedef(b, f, 10-norm)
+      local f_side = create_sidedef(f,b, f_over,b_over)
+      local b_side = create_sidedef(b,f, b_over,f_over)
 
-      local flags = compute_line_flags(f,b, f_side,b_side, norm)
+      local flags = compute_line_flags(f,b, f_over,b_over, f_side,b_side, norm)
 
       local sx = FRAGMENT_X(x)
       local sy = FRAGMENT_Y(y)
@@ -450,9 +448,9 @@ function write_level(p, lev_name)
         end
       end
 
-      if b.switch_kind then
-        cur_line.kind = b.switch_kind
-        cur_line.tag  = b.switch_tag
+      if b_over.kind then
+        cur_line.kind = b_over.kind
+        cur_line.tag  = b_over.tag
 
       elseif ((f.walk_kind ~= b.walk_kind) or (f.walk_tag ~= b.walk_tag))
              and not b.solid and not cur_line.kind
