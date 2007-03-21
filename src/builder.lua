@@ -233,7 +233,9 @@ error("invalid block")
 end
       assert(valid_block(p, x, y))
 
-      if not p.blocks[x][y] or p.blocks[x][y].empty then
+      local X = p.blocks[x][y]
+
+      if not X or not (X.solid or X.f_tex or X.fragments) then
         fill(p,c, x,y, x,y, B, B2)
       end
     end
@@ -255,7 +257,6 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
 
       local B = p.blocks[bx][by]
       B.solid = nil
-      B.empty = nil
 
       if not B.fragments then
         B.fragments = array_2D(FW, FH)
@@ -1682,19 +1683,33 @@ end
 --
 -- The 'kind' value can be: "solid", "frame", "open", "wire"
 --
-function B_vista(p,c, side,deep, theme,kind)
+function B_vista(p,c, x1,y1, x2,y2, long,deep, side, theme,kind)
+
+if false then
+gap_fill(p,c, x1,y1, x2,y2, c.rmodel,
+{ f_tex="LAVA1", kind=8 })
+
+if (c.x==2 or c.x==3) and c.y==4 then
+  add_thing(p, c, x1, y1, "red_torch", false)
+con.printf("B_vista: blocks (%d,%d) to (%d,%d)\n",
+x1,y1, x2,y2)
+end
+
+return
+end
 
   local other = neighbour_by_side(p,c,side)
   assert(other)
 
-  local x1,y1, x2,y2 = side_coords(side, 1,1, BW,BH)
+---###  local x1,y1, x2,y2 = side_coords(side, 1,1, BW,BH)
 
   local dx,dy = dir_to_delta(side)
   local ax,ay = dir_to_across(side)
 
-  x1,y1 = c.bx1-1 + (x1+ax*3+dx), c.by1-1 + (y1+ay*3+dy)
-  x2,y2 = c.bx1-1 + (x2-ax*3+dx), c.by1-1 + (y2-ay*3+dy)
+---###  x1,y1 = c.bx1-1 + (x1+ax*3+dx), c.by1-1 + (y1+ay*3+dy)
+---###  x2,y2 = c.bx1-1 + (x2-ax*3+dx), c.by1-1 + (y2-ay*3+dy)
 
+--[[
   local ARCH = copy_block(c.rmodel)
 
   ARCH.l_tex = theme.wall
@@ -1720,6 +1735,7 @@ function B_vista(p,c, side,deep, theme,kind)
 
   frag_fill(p,c, fx1,fy1, fx2,fy2, sel(ARCH.c_tex == THEME.SKY_TEX, ARCH, { solid=ARCH.l_tex }))
   frag_fill(p,c, fx1+ax,fy1+ay, fx2-ax,fy2-ay, ARCH)
+--]]
 
 
   local ROOM   = copy_block(c.rmodel)
@@ -1763,7 +1779,7 @@ function B_vista(p,c, side,deep, theme,kind)
     end
 
     WINDOW.c_h = ROOM.f_h + 96
-    WINDOW.c_tex = ARCH.c_tex
+    WINDOW.c_tex = sel(theme.outdoor, theme.floor, theme.ceil)
 
     ROOM.light   = other.rmodel.light - 32
     WINDOW.light = other.rmodel.light - 16
@@ -1774,13 +1790,13 @@ function B_vista(p,c, side,deep, theme,kind)
   -- save ROOM for later
   other.vista_room = ROOM
 
-
+--[[
   x1,y1 = x1+dx*1, y1+dy*1
   x2,y2 = x2+dx*deep, y2+dy*deep
 
   if x1 > x2 then x1,x2 = x2,x1 end
   if y1 > y2 then y1,y2 = y2,y1 end
-
+--]]
 
   fx1 = (x1 - 1) * FW + 1
   fy1 = (y1 - 1) * FH + 1
@@ -1866,7 +1882,7 @@ function B_vista(p,c, side,deep, theme,kind)
 
 
   -- rest of chunk in other room
-  do
+  if false then
     local extra = 3 - (deep % 3)
 
     if side < 5 then
@@ -4114,23 +4130,6 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
     assert(b_theme)
 
     if false then --!!!!! c.vista[side] then
-      local kind = "open"
-      local diff_h = c.floor_h - other.floor_h
-
-      if diff_h >= 48 and rand_odds(35) then kind = "wire" end
-
-      if not c.theme.outdoor then
-        local space_h = other.ceil_h - c.floor_h
-        local r = con.random() * 100
-
-        if space_h >= 96 and space_h <= 256 and r < 15 then
-          kind = "frame"
-        elseif r < 60 then
-          kind = "solid"
-        end
-      end
-
-      B_vista(p,c, side, c.vista[side]*3-1, b_theme, kind)
     end
 
     local x1,y1, x2,y2 = D.x1, D.y1, D.x2, D.y2
@@ -4322,20 +4321,6 @@ end
 
 function build_cell(p, c)
  
-  local function create_blocks(c)
-    
-    for kx=1,3 do for ky=1,3 do
-      local K = c.chunks[kx][ky]
-      for x = K.x1,K.x2 do for y = K.y1,K.y2 do
-        p.blocks[x][y] =
-        {
-          empty = "both",
-          chunk = K,
-        }
-      end end
-    end end
-  end
-
   local function player_angle(kx, ky)
 
     if c.exit_dir then
@@ -4640,32 +4625,14 @@ function build_cell(p, c)
     local K = c.chunks[kx][ky]
     assert(K)
 
-    if c.scenic == "solid" then
-      gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, { solid=c.theme.void })
-      return
-    end
+---###    if c.scenic == "solid" then
+---###      gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, { solid=c.theme.void })
+---###      return
+---###    end
 
     -- elevator exits are done in build_link
     if THEME.caps.elevator_exits and c.is_exit then return end
 
---!!!!!! TESTING
-if not c.scenic and K.empty and true
-  and not (c == p.quests[1].first) and
-  (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
-  (K.y2 > K.y1 or rand_odds(50)) and
-  rand_odds(65)
-then
-  if c.theme.decorate then
-    local dec_tex = c.theme.decorate
-    if type(dec_tex) == "table" then
-      dec_tex = rand_element(dec_tex)
-    end
-    gap_fill(p, c, K.x1,K.y1, K.x1,K.y1, { solid=dec_tex })
-    gap_fill(p, c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
-  end
-  gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.theme.void })
-  return
-end
 ---###    if K.stair_dir then
 ---###
 ---###      local x1,y1, x2,y2 = side_coords(K.stair_dir,
@@ -5103,24 +5070,100 @@ do return end
     end
   end
 
-  local function GAP_FILL_ROOM(c)
-    for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
-      local B = p.blocks[x][y]
-      if B.empty then
-        local K = B.chunk
-        assert(K)
+  local function void_up_chunk(c, K)
 
-        if K.void then
-          fill(p,c, x,y, x,y, { solid=c.theme.void })
-        else
-          fill(p,c, x,y, x,y, K.rmodel)
-          if K.vista and not K.link.fall_over then
-            add_thing(p,c, x,y, "candle", false)
-          end
-        end
+    --!!!!!! TESTING
+    if c.theme.decorate and not c.scenic and K.void and
+      (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
+      (K.y2 > K.y1 or rand_odds(50)) and
+      rand_odds(65)
+    then
+      local dec_tex = c.theme.decorate
+      if type(dec_tex) == "table" then
+        dec_tex = rand_element(dec_tex)
+      end
+      gap_fill(p, c, K.x1,K.y1, K.x1,K.y1, { solid=dec_tex })
+      gap_fill(p, c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
+    end
+
+    gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.theme.void })
+  end
+
+  local function build_void_space(c)
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.void then
+        void_up_chunk(c, K)
       end
     end end
   end
+
+  local function get_vista_coords(c, side, link, other)
+
+    local x1, y1, x2, y2
+
+    for kx = 1,3 do for ky = 1,3 do
+      local K = other.chunks[kx][ky]
+      if K.vista and K.link == link then
+        if not x1 then
+          x1,y1, x2,y2 = K.x1,K.y1, K.x2,K.y2
+        else
+          x1 = math.min(x1, K.x1)
+          y1 = math.min(y1, K.y1)
+          x2 = math.max(x2, K.x2)
+          y2 = math.max(y2, K.y2)
+        end
+      end
+    end end
+
+con.printf("get_vista_coords @ (%d,%d) --> (%d,%d)\n",
+c.x, c.y, other.x, other.y)
+    if not x1 then error("missing vista chunks!?!?") end
+
+    local long = x2 - x1 + 1
+    local deep = y2 - y1 + 1
+
+    if (side == 4) or (side == 6) then
+      long,deep = deep,long
+    end
+
+    return x1,y1, x2,y2, long,deep
+  end
+  
+  local function build_one_vista(c, side, link)
+
+    local other = neighbour_by_side(p, c, side)
+
+    local kind = "open"
+    local diff_h = c.floor_h - other.floor_h
+
+    if diff_h >= 48 and rand_odds(35) then kind = "wire" end
+
+    if not c.theme.outdoor then
+      local space_h = other.ceil_h - c.floor_h
+      local r = con.random() * 100
+
+      if space_h >= 96 and space_h <= 256 and r < 15 then
+        kind = "frame"
+      elseif r < 60 then
+        kind = "solid"
+      end
+    end
+
+    local x1,y1, x2,y2, long,deep = get_vista_coords(c, side, link, other)
+
+    B_vista(p,c, x1,y1, x2,y2, long,deep, side, c.border[side].theme or c.theme, kind)
+  end
+
+  local function build_vistas(c)
+    for side = 2,8,2 do
+      local L = c.link[side]
+      if L and L.kind == "vista" and L.build == c then
+        build_one_vista(c, side, L)
+      end
+    end
+  end
+
 
   local function mark_walkable_area(c, x1,y1, x2,y2)
     assert(x2 >= x1 and y2 >= y1)
@@ -5130,8 +5173,7 @@ do return end
     for x = x1,x2 do for y = y1,y2 do
       local B = p.blocks[x][y]
       assert(B)
-if not B.empty then con.printf("B =\n%s\n", table_to_str(B,2)) end
-      assert(B.empty)
+--!!!      assert(not (B.solid or B.f_tex))
       B.walk = true
     end end
   end
@@ -5170,14 +5212,15 @@ if not B.empty then con.printf("B =\n%s\n", table_to_str(B,2)) end
         end
         local B = p.blocks[x][y]
         assert(B)
-        if not B.empty then --!!!!! or not is_roomy(B.chunk) then
+        if (B.solid or B.f_tex) then --!!!!! or not is_roomy(B.chunk) then
           return false
         end
       else
         -- check middle area
         local B = p.blocks[x][y]
-        assert(B and (not B.empty or B.chunk))
-        if not B.empty or B.walk or not is_roomy(B.chunk) then
+        assert(B and B.chunk)
+---???  if not B.empty or B.walk or not is_roomy(B.chunk) then
+        if B.walk or not is_roomy(B.chunk) then
           return false
         end
       end
@@ -5312,7 +5355,8 @@ if not B.empty then con.printf("B =\n%s\n", table_to_str(B,2)) end
           for qx = st_x1,st_x2 do for qy = st_y1,st_y2 do
             local B = p.blocks[qx][qy]
             assert(B)
-            if not B.empty or B.walk or not is_roomy(B.chunk)
+---???      if not B.empty or B.walk or not is_roomy(B.chunk)
+            if B.walk or not is_roomy(B.chunk)
             then
               able = false
             end
@@ -5343,8 +5387,8 @@ if not B.empty then con.printf("B =\n%s\n", table_to_str(B,2)) end
               assert(B1)
               assert(B2)
 
-              if not B1.empty or not is_roomy(B1.chunk) or
-                 not B2.empty or not is_roomy(B2.chunk)
+              if (B1.solid or B1.f_tex) or not is_roomy(B1.chunk) or
+                 (B2.solid or B2.f_tex) or not is_roomy(B2.chunk)
               then
                 able = false
               end
@@ -5726,22 +5770,25 @@ end
 --!!!!     add_scenery(c)
     end
 
-    -- FIXME DM PICKUPS move to: monster.lua  [free spots]
   end
 
   ---=== build_cell ===---
 
+  if c.scenic == "solid" then
+    fill(p,c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.theme.void })
+    return
+  end
+
   decide_sky_lights(c)
 
-  create_blocks(c)
+  build_void_space(c)
+  build_vistas(c)
 
   mark_links(c)
 
   build_stairs(c)
 
   tizzy_up_room(c)
-
-  GAP_FILL_ROOM(c)
 
 -- !!!!  position_dm_stuff(cell)  MOVE_TO: monster.lua
 
@@ -5789,8 +5836,65 @@ end -- if c.x==XX
 end
 
 function build_rooms(p)
+
+  local function create_blocks(p, c)
+    
+    for kx=1,3 do for ky=1,3 do
+      local K = c.chunks[kx][ky]
+      for x = K.x1,K.x2 do for y = K.y1,K.y2 do
+        p.blocks[x][y] = { chunk = K }
+      end end
+    end end
+  end
+
+  local function GAP_FILL_ROOM(p, c)
+    for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
+      local B = p.blocks[x][y]
+
+      if not (B.solid or B.fragments) then
+        
+        if not B.f_tex then
+
+          local K = B.chunk
+--con.printf("cell (%d,%d) block (%d,%d)\n",
+--c.x, c.y, x+1-c.bx1, y+1-c.by1)
+--if not K then con.printf("B =\n%s\n", table_to_str(B,2)) end
+          assert(K)
+
+          fill(p,c, x,y, x,y, K.rmodel)
+
+          if K.vista and not K.link.fall_over then
+            add_thing(p,c, x,y, "candle", false)
+          end
+        end
+
+        --!!!! FIXME  if not B.c_tex then
+      end
+
+---###      if B.empty then
+---###        local K = B.chunk
+---###        assert(K)
+---###
+---###        if K.void then
+---###          fill(p,c, x,y, x,y, { solid=c.theme.void })
+---###        else
+---###        end
+---###      end
+    end end
+  end
+
+  -- build_rooms --
+
+  for zzz,cell in ipairs(p.all_cells) do
+    create_blocks(p, cell)
+  end
+
   for zzz,cell in ipairs(p.all_cells) do
     build_cell(p, cell)
+  end
+
+  for zzz,cell in ipairs(p.all_cells) do
+    GAP_FILL_ROOM(p, cell)
   end
 end
 
