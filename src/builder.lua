@@ -2872,9 +2872,9 @@ link.cells[2].x, link.cells[2].y)
       if not K.rmodel then
         K.rmodel = copy_table(c.rmodel)
 
-K.rmodel.light =
-sel(kx==2 and ky==2, 176,
-  sel(kx==2 or ky==2, 144, 112))
+-- K.rmodel.light =
+-- sel(kx==2 and ky==2, 176,
+--  sel(kx==2 or ky==2, 144, 112))
   
         if K.link then
           local other = link_other(K.link, c)
@@ -4651,9 +4651,6 @@ function build_cell(p, c)
 ---###      return
 ---###    end
 
-    -- elevator exits are done in build_link
-    if THEME.caps.elevator_exits and c.is_exit then return end
-
 ---###    if K.stair_dir then
 ---###
 ---###      local x1,y1, x2,y2 = side_coords(K.stair_dir,
@@ -4677,11 +4674,6 @@ function build_cell(p, c)
 ---###      B_stair(p, c, x1, y1, K.rmodel.f_h, K.stair_dir, long, deep, step)
 ---###  end
 
-gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, K.rmodel,
-{
-  light = sel(K.room, 192, sel(K.empty, 96, 144))
-})
-do return end
 
     -- vista chunks are built by other room
     if K.vista then return end
@@ -5601,7 +5593,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
   local function add_switch(c)
 
-    local fab = PREFABS["SWITCH_FLOOR_BEAM"]
+    local fab = PREFABS["SWITCH_PILLAR"]
     assert(fab)
 
     local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
@@ -5627,9 +5619,10 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     end
     skin = { switch=info.switch, side_w=info.wall,
              beam_w="WOOD1", beam_f="FLAT5_2",
+             light_w="LITE5", frame_c=c.theme.floor,
            }
 
-    if true then -- floor switch
+    if false then -- floor switch / niche switch
       local tex_h = 128  -- FIXME: assumption !!!
       parm.switch_h = c.rmodel.f_h + 72  -- TINY = 40
       parm.x_offset = 0
@@ -5806,7 +5799,10 @@ end
          (c.quest.kind == "item")
       then
         add_object(c, c.quest.item)
-      else
+
+      elseif (c.quest.kind == "switch") or
+             (c.quest.kind == "exit")
+      then
         add_switch(c)
       end
     elseif p.deathmatch and (c.require_weapon or rand_odds(75)) then
@@ -5839,6 +5835,9 @@ end
     fill(p,c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.theme.void })
     return
   end
+
+  -- elevator exits are done in build_link
+  if THEME.caps.elevator_exits and c.is_exit then return end
 
   decide_sky_lights(c)
 
