@@ -538,6 +538,9 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
         if OV.f_tex and skin[OV.f_tex] then OV.f_tex = skin[OV.f_tex] end
         if OV.c_tex and skin[OV.c_tex] then OV.c_tex = skin[OV.c_tex] end
 
+        if OV.x_offset and parm[OV.x_offset] then OV.x_offset = parm[OV.x_offset] end
+        if OV.y_offset and parm[OV.y_offset] then OV.y_offset = parm[OV.y_offset] end
+
         if OV.kind then OV.kind = parm_val(OV.kind) end
         if OV.tag  then OV.tag  = parm_val(OV.tag) end
 
@@ -5598,9 +5601,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
   local function add_switch(c)
 
-    if c.is_exit then return end --!!!!!!! FIXME FIXME
-
-    local fab = PREFABS["SWITCH_PILLAR"]
+    local fab = PREFABS["SWITCH_FLOOR"]
     assert(fab)
 
     local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
@@ -5609,16 +5610,30 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       error("Could not find place for switch!");
     end
 
-    local info = THEME.switches[c.quest.item]
-    if not info then
-      error("Missing switch: " .. tostring(c.quest.item))
-    end
-    assert(info.switch)
+    local skin
+    local parm = { kind=103, tag = c.quest.tag + 1 }
+    local info
 
+    if c.is_exit then
+      info = c.theme.switch
+      parm.kind = 11
+      parm.tag  = 0
+    else
+      info = THEME.switches[c.quest.item]
+      if not info then
+        error("Missing switch: " .. tostring(c.quest.item))
+      end
+      assert(info.switch)
+    end
     skin = { switch=info.switch, side_w=info.wall }
 
-    parm = { kind=103, tag = c.quest.tag + 1 }
-    
+    if false then -- floor switch
+      local tex_h = 128  -- FIXME: assumption !!!
+      parm.switch_h = c.rmodel.f_h + 72  -- TINY = 40
+      parm.x_offset = 0
+      parm.y_offset = tex_h - 72  -- TINY = 64
+    end
+
     if info.bars then parm.kind = 23 end
 
     B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
