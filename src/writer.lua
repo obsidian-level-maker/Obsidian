@@ -371,8 +371,8 @@ function write_level(p, lev_name)
         return push_line()
       end
 
-      if not f then f = DUMMY_BLOCK end
-      if not b then b = DUMMY_BLOCK end
+      if not f or not (f.solid or f.f_tex) then f = DUMMY_BLOCK end
+      if not b or not (b.solid or b.f_tex) then b = DUMMY_BLOCK end
 
       if f.solid and b.solid then
         return push_line()
