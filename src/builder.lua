@@ -2970,6 +2970,8 @@ sel(kx==2 and ky==2, 176,
 
     -- make sure the vista(s) have something to see
 
+    -- FIXME: when every chunks touching a vista is empty
+
     for loop = 1,10 do
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
@@ -3283,7 +3285,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
     setup_chunk_rmodels(cell)
 
-if (cell == p.quests[1].first or cell == cell.quest.last) then
+if (cell == p.quests[1].first or cell == cell.quest.last or cell.scenic=="outdoor") then
         void_it_up(cell, "room")
 else
         void_it_up(cell, "void")
@@ -3450,6 +3452,58 @@ function build_borders(p)
     end
   end
 
+  local function build_door( link, side  )
+    local D = c.border[side]
+
+    local door_info = THEME.doors[link.wide_door]
+    assert(door_info)
+    door_info = copy_table(door_info)
+
+    local parm =
+    { floor = link.build.rmodel.f_h,
+      ceil  = link.build.rmodel.c_h,
+      door_top = link.build.rmodel.f_h + door_info.h,
+      door_kind = 1, tag = 0,
+    }
+
+      if dual_odds(p.deathmatch, 75, 15) then
+        parm.door_kind = 117 -- Blaze
+      end
+
+      if link.quest and link.quest.kind == "key" then
+        local bit = THEME.key_bits[link.quest.item]
+        assert(bit)
+        door_info.prefab = "DOOR_LOCKED" --FIXME: wrong wrong wrong
+        parm.door_kind = sel(p.coop, bit.kind_once, bit.kind_rep)
+        parm.key_w = bit.wall -- can be nil
+        if bit.thing then
+          -- FIXME: heretic statues !!!
+        end
+--???        if bit.door then
+--???          kind = bit.door
+--???          info = THEME.doors[kind]
+--???          assert(info)
+--???        end
+      end
+
+      if link.quest and link.quest.kind == "switch" then
+        door_info.prefab = "DOOR_LOCKED" --FIXME: wrong wrong wrong
+
+        parm.door_kind = 0
+        parm.tag = link.quest.tag + 1
+        parm.key_w = THEME.switches[link.quest.item].wall
+        assert(parm.key_w)
+      end
+
+    if not door_info.prefab then print(table_to_str(door_info)) end
+    assert(door_info.prefab)
+
+    local fab = PREFABS[door_info.prefab]
+    assert(fab)
+
+    B_prefab(p,c, fab, door_info, parm, D.theme, link.x1, link.y1, side)
+  end
+
   local function build_real_link(link, side, double_who)
 
     local D = c.border[side]
@@ -3528,20 +3582,10 @@ B_prefab(p,c, fab, skin, parm, D.theme, link.x1, link.y1, side)
 return
 end
 
-if not (link.kind == "falloff" or link.kind == "vista") then --!!!!! TESTING
-local door_info = THEME.doors[link.wide_door]
-assert(door_info)
-if not door_info.prefab then print(table_to_str(door_info)) end
-assert(door_info.prefab)
-local fab = PREFABS[door_info.prefab]
-assert(fab)
-local parm =
-{ floor = link.build.rmodel.f_h,
-  ceil  = link.build.rmodel.c_h,
-  door_top = link.build.rmodel.f_h + door_info.h,
-  door_kind = 1, tag = 0,
-}
-B_prefab(p,c, fab, door_info, parm, D.theme, link.x1, link.y1, side)
+if link.kind == "door" then
+
+build_door( link, side )
+
 return
 end
 
@@ -3713,31 +3757,6 @@ arch.f_tex = "TLITE6_6"
       local tag = nil
       local key_tex = nil
 
-      if dual_odds(p.deathmatch, 75, 15) then
-        door_kind = 117 -- Blaze
-      end
-
-      if link.quest and link.quest.kind == "key" then
-        local bit = THEME.key_bits[link.quest.item]
-        assert(bit)
-        door_kind = sel(p.coop, bit.kind_once, bit.kind_rep)
-        key_tex = bit.wall -- can be nil
-        if bit.thing then
-          -- FIXME: heretic statues !!!
-        end
-        if bit.door then
-          kind = bit.door
-          info = THEME.doors[kind]
-          assert(info)
-        end
-      end
-
-      if link.quest and link.quest.kind == "switch" then
-        door_kind = nil
-        tag = link.quest.tag + 1
-        key_tex = THEME.switches[link.quest.item].wall
-        assert(key_tex)
-      end
 
       B_door(p, c, link, b_theme, x, y, c.floor_h, dir,
              1 + int(info.w / 64), 1, info, door_kind, tag, key_tex)
