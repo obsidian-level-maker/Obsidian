@@ -516,7 +516,8 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
       if elem.u_peg then sec.u_peg = elem.u_peg end
 
       if elem.kind then sec[elem.kind] = parm_val(elem.kind) end
-      if elem.tag  then sec.tag = parm_val("tag") end
+      if elem.tag  then sec[elem.tag]  = parm_val(elem.tag) end
+--##  if elem.tag  then sec.tag = parm_val("tag") end
 
       if elem.kind == "door_kind" then sec.door_dir = parm.door_dir end
 
@@ -536,6 +537,9 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
         if OV.u_tex and skin[OV.u_tex] then OV.u_tex = skin[OV.u_tex] end
         if OV.f_tex and skin[OV.f_tex] then OV.f_tex = skin[OV.f_tex] end
         if OV.c_tex and skin[OV.c_tex] then OV.c_tex = skin[OV.c_tex] end
+
+        if OV.kind then OV.kind = parm_val(OV.kind) end
+        if OV.tag  then OV.tag  = parm_val(OV.tag) end
 
         if OV.dx or OV.dy then
           OV.dx, OV.dy = dd_coords(OV.dx or 0, OV.dy or 0)
@@ -3457,13 +3461,27 @@ function build_borders(p)
 --???          assert(info)
 --???        end
 
+      elseif link.quest and link.quest.kind == "switch" and
+         THEME.switches[link.quest.item].bars
+      then
+        door_info.prefab = "BARS_1" --FIXME: wrong wrong wrong
+
+        door_info.bar_w = THEME.switches[link.quest.item].wall
+        assert(door_info.bar_w)
+
+        parm.tag = link.quest.tag + 1
+        parm.door_kind = 0
+
+        door_info.frame_ceil = D.theme.floor
+
       elseif link.quest and link.quest.kind == "switch" then
         door_info.prefab = "DOOR_LOCKED" --FIXME: wrong wrong wrong
 
-        parm.door_kind = 0
+        door_info.key_w = THEME.switches[link.quest.item].wall
+        assert(door_info.key_w)
+
         parm.tag = link.quest.tag + 1
-        parm.key_w = THEME.switches[link.quest.item].wall
-        assert(parm.key_w)
+        parm.door_kind = 0
 
       elseif link.is_exit then
         door_info.prefab = "DOOR_EXIT" --FIXME: wrong way
@@ -3561,6 +3579,7 @@ local skin =
 B_prefab(p,c, fab, skin, parm, D.theme, link.x1, link.y1, side)
 return
 end
+
 
 if link.kind == "door" then
 
@@ -5578,7 +5597,31 @@ con.printf("add_object @ (%d,%d)\n", x, y)
   end
 
   local function add_switch(c)
-    -- FIXME
+
+    if c.is_exit then return end --!!!!!!! FIXME FIXME
+
+    local fab = PREFABS["SWITCH_PILLAR"]
+    assert(fab)
+
+    local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+    if not x then
+      show_cell_blocks(p,c)
+      error("Could not find place for switch!");
+    end
+
+    local info = THEME.switches[c.quest.item]
+    if not info then
+      error("Missing switch: " .. tostring(c.quest.item))
+    end
+    assert(info.switch)
+
+    skin = { switch=info.switch, side_w=info.wall }
+
+    parm = { kind=103, tag = c.quest.tag + 1 }
+    
+    if info.bars then parm.kind = 23 end
+
+    B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
   end
 
   local function add_scenery(c)

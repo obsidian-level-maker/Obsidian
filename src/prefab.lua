@@ -522,7 +522,7 @@ BARS_1 =
   elements =
   {
     -- step
-    s = { c_rel="door_top", c_h=0, },
+    s = { c_rel="door_top", c_h=0, c_tex="frame_ceil" },
 
     -- bars
     B = { f_rel="door_top", f_h=0,
