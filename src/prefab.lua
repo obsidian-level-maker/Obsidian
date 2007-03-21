@@ -1100,6 +1100,8 @@ BILLBOARD_LIT =
 },
 
 
+------ Crates ------------------------------------
+
 CRATE =
 {
   scale=64,
@@ -1113,6 +1115,16 @@ CRATE =
   {
     c = { f_rel="crate_h", f_h=0,
           f_tex="crate_f", l_tex="crate_w", l_peg="top" },
+  },
+},
+
+CRATE_LONG =
+{
+  copy="CRATE",
+
+  structure =
+  {
+    "cc",
   },
 },
 
@@ -1196,6 +1208,56 @@ CRATE_ROTATE =
           [7] = { dx= 16, dy= 45 },
           [9] = { dx= 45, dy= 0 },
         },
+  },
+},
+
+CRATE_TRIPLE =
+{
+  structure =
+  {
+    "aaaacccc",
+    "aaaacccc",
+    "aaaacccc",
+    "aaaacccc",
+    "bbbbee..",
+    "bbbbee..",
+    "bbbb....",
+    "bbbb....",
+  },
+
+  elements =
+  {
+    a = { f_h=128, f_tex="crate_f1", l_tex="crate_w1", l_peg="top" },
+    b = { f_h=64,  f_tex="crate_f2", l_tex="crate_w2", l_peg="top" },
+    c = { f_h=64,  f_tex="crate_f3", l_tex="crate_w3", l_peg="top" },
+
+    e = { f_h=32,  f_tex="small_f",  l_tex="small_w",  l_peg="top" },
+  },
+},
+
+CRATE_JUMBLE =
+{
+  scale=64,
+
+  structure =
+  {
+    ".Cd..",
+    "BCTWW",
+    "BTB.e",
+    "eWd..",
+    ".W...",
+  },
+
+  elements =
+  {
+    T = { f_h=192, f_tex="tall_f", l_tex="tall_w", l_peg="top" },
+    W = { f_h=128, f_tex="wide_f", l_tex="wide_w", l_peg="top" },
+
+    B = { f_h=128, f_tex="crate_f1", l_tex="crate_w1", l_peg="top" },
+    C = { f_h=128, f_tex="crate_f2", l_tex="crate_w2", l_peg="top" },
+
+    d = { f_h=64,  f_tex="crate_f1", l_tex="crate_w1", l_peg="top" },
+    e = { f_h=64,  f_tex="crate_f2", l_tex="crate_w2", l_peg="top" },
   },
 },
 
