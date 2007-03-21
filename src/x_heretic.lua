@@ -365,6 +365,13 @@ HC_QUESTS =
   }
 }
 
+HC_SECRET_LEVELS =
+{
+  { leave="E1M6", enter="E1M9", kind="normal" },
+  { leave="E2M4", enter="E2M9", kind="normal" },
+  { leave="E3M4", enter="E3M9", kind="normal" },
+}
+
 
 ------------------------------------------------------------
 
@@ -635,7 +642,9 @@ THEME_FACTORIES["heretic"] = function()
 
     initial_model = HC_INITIAL_MODEL,
 
-    quests = HC_QUESTS,
+    quests  = HC_QUESTS,
+    secrets = HC_SECRET_LEVELS,
+
     dm = HC_DEATHMATCH,
 
     themes    = HC_THEMES,

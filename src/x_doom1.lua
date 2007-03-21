@@ -1007,6 +1007,14 @@ D1_WALL_LIGHTS =
   stoned = { wall="LITESTON", w=32 },
 }
 
+D1_SECRET_LEVELS =
+{
+  { leave="E1M3", enter="E1M9", kind="normal" },
+  { leave="E2M5", enter="E2M9", kind="normal" },
+  { leave="E3M6", enter="E3M9", kind="normal" },
+  { leave="E4M2", enter="E4M9", kind="normal" },
+}
+
 ------------------------------------------------------------
 
 THEME_FACTORIES["doom_common"] = function()
@@ -1042,7 +1050,7 @@ THEME_FACTORIES["doom_common"] = function()
     pickup_stats = { "health", "bullet", "shell", "rocket", "cell" },
     niceness = DM_NICENESS,
 
-    quests = DM_QUESTS,
+    quests  = DM_QUESTS,
     dm = DM_DEATHMATCH,
 
     themes    = DM_ROOM_THEMES,
@@ -1079,6 +1087,8 @@ THEME_FACTORIES["doom1"] = function()
   T.wall_lights = copy_and_merge(T.wall_lights, D1_WALL_LIGHTS)
 
   T.rails = D1_RAILS
+
+  T.secrets = D1_SECRET_LEVELS
 
   -- remove DOOM2-only weapons and items --
 

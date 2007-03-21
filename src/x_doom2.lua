@@ -621,6 +621,12 @@ D2_LIQUIDS =
   slime = { floor="SLIME01", sec_kind=7 }  --  5% damage
 }
 
+D2_SECRET_LEVELS =
+{
+  { leave="MAP15", enter="MAP31", kind="wolfy" },
+  { leave="MAP31", enter="MAP32", kind="wolfy" },
+}
+
 ------------------------------------------------------------
 
 THEME_FACTORIES["doom2"] = function()
@@ -632,6 +638,8 @@ THEME_FACTORIES["doom2"] = function()
   T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
 
   T.rails = D2_RAILS
+
+  T.secrets = D2_SECRET_LEVELS
 
   T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
   T.crates  = copy_and_merge(T.crates,  D2_CRATES)

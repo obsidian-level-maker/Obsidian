@@ -274,6 +274,15 @@ WF_QUESTS =
   }
 }
 
+WF_SECRET_LEVELS =
+{
+  { leave="E1L1", enter="E1L10", kind="pacman" },
+  { leave="E2L1", enter="E2L10", kind="pacman" },
+  { leave="E3L7", enter="E3L10", kind="pacman" },
+  { leave="E4L3", enter="E4L10", kind="pacman" },
+  { leave="E5L5", enter="E5L10", kind="pacman" },
+  { leave="E6L3", enter="E6L10", kind="pacman" },
+}
 
 ----------------------------------------------------------------
 
@@ -379,7 +388,9 @@ THEME_FACTORIES["wolf3d"] = function()
 
     initial_model = WF_INITIAL_MODEL,
 
-    quests = WF_QUESTS,
+    quests  = WF_QUESTS,
+    secrets = WF_SECRET_LEVELS,
+
     dm = {},
 
     themes    = WF_THEMES,
@@ -456,6 +467,10 @@ function write_wolf_level(p)
       else
         obj = kind
       end
+    end
+
+    if (tile <= 63) and (obj > 0) then
+      con.printf("HOLO BLOCK @ (%d,%d) -- tile:%d obj:%d\n", x, y, tile,obj)
     end
 
     wolf.add_block(x, y, tile, obj)
