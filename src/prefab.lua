@@ -580,6 +580,48 @@ SWITCH_PILLAR =
   },
 },
 
+SWITCH_FLOOR =
+{
+  structure =
+  {
+    "....",
+    "ssss",
+    "....",
+    "....",
+  },
+
+  elements =
+  {
+    s = { f_rel="switch_h", f_h=0,
+          l_tex="side_w", f_tex="switch_f", l_peg="top",
+
+          [2] = { l_tex="switch", l_peg="top", kind="kind", tag="tag",
+                  y_offset="y_offset" }
+        },
+  },
+},
+
+SWITCH_FLOOR_TINY =
+{
+  structure =
+  {
+    "....",
+    ".ss.",
+    "....",
+    "....",
+  },
+
+  elements =
+  {
+    s = { f_rel="switch_h", f_h=0,
+          l_tex="side_w", f_tex="switch_f", l_peg="top",
+
+          [2] = { l_tex="switch", l_peg="top", kind="kind", tag="tag",
+                  x_offset="x_offset", y_offset="y_offset" }
+        },
+  },
+},
+
 
 ------ Decorative I ------------------------------------
 
