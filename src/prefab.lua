@@ -361,7 +361,7 @@ DOOR =
   elements =
   {
     -- steps
-    s = { f_h=8, c_rel="door_top", c_h=-8,
+    s = { f_h=8, c_rel="door_top", c_h=8,
           f_tex="frame_floor", c_tex="frame_ceil", l_tex="step",
           l_peg="top", light=224
         },
@@ -406,7 +406,7 @@ DOOR_LOCKED =
   elements =
   {
     -- steps
-    s = { f_h=8, c_rel="door_top", c_h=-8,
+    s = { f_h=8, c_rel="door_top", c_h=8,
           f_tex="frame_floor", c_tex="frame_ceil", l_tex="step",
           l_peg="top", light=224
         },
@@ -421,6 +421,90 @@ DOOR_LOCKED =
 
     -- key
     K = { solid="key_w" },
+  },
+},
+
+DOOR_EXIT =
+{
+  structure =
+  {
+    "##ssss##",
+    "##sXXs##",
+    "#MssssL#",
+    "#TddddT#",
+    "#LssssM#",
+    "##ssss##",
+    "##sXXs##",
+    "##ssss##",
+  },
+
+  elements =
+  {
+    -- steps
+    s = { f_h=8, c_rel="door_top", c_h=8,
+          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step",
+          l_peg="top", light=224
+        },
+
+    -- door
+    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_ceil",
+          kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
+        },
+
+    -- sign
+    X = { copy="s", u_tex="exit_w", c_rel="door_top", c_h=-8,
+          c_tex="exit_c", u_peg="top",
+          [4] = { x_offset=32 }, [6] = { x_offset=32 },
+        },
+
+    -- track
+    T = { solid="track", l_peg="bottom" },
+
+    -- light
+    L = { solid="door", l_peg="bottom",
+          [4] = { x_offset=72 }, [6] = { x_offset=72 } },
+
+    M = { solid="door", l_peg="bottom",
+          [4] = { x_offset=88 }, [6] = { x_offset=88 } },
+
+  },
+},
+
+EXIT_SIGN_CEIL =
+{
+  structure =
+  {
+    "....",
+    "....",
+    ".XX.",
+    "....",
+  },
+
+  elements =
+  {
+    -- sign
+    X = { c_h=-16, u_tex="exit_w", c_tex="exit_c", u_peg="top",
+          [4] = { x_offset=32 }, [6] = { x_offset=32 },
+        },
+  },
+},
+
+EXIT_SIGN_FLOOR =
+{
+  structure =
+  {
+    "....",
+    "....",
+    ".XX.",
+    "....",
+  },
+
+  elements =
+  {
+    -- sign
+    X = { f_h=16, l_tex="exit_w", f_tex="exit_c", l_peg="top",
+          [4] = { x_offset=32 }, [6] = { x_offset=32 },
+        },
   },
 },
 
