@@ -1116,6 +1116,17 @@ CRATE =
   },
 },
 
+CRATE_BIG =
+{
+  copy="CRATE",
+
+  structure =
+  {
+    "cc",
+    "cc",
+  },
+},
+
 CRATE_TWO_SIDED =
 {
   scale=64,
