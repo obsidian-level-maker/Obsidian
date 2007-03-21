@@ -156,7 +156,8 @@ function find_free_spots(p, c)
 
     local B = p.blocks[bx][by]
 
-    return (B and not B.solid and (not B.fragments or B.can_thing) and
+    return (B and not B.solid and B.f_h and
+            (not B.fragments or B.can_thing) and
             not B.has_blocker and not B.is_cage and not B.near_player)
   end
 
