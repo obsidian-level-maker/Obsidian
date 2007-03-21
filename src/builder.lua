@@ -1685,19 +1685,6 @@ end
 --
 function B_vista(p,c, x1,y1, x2,y2, long,deep, side, theme,kind)
 
-if false then
-gap_fill(p,c, x1,y1, x2,y2, c.rmodel,
-{ f_tex="LAVA1", kind=8 })
-
-if (c.x==2 or c.x==3) and c.y==4 then
-  add_thing(p, c, x1, y1, "red_torch", false)
-con.printf("B_vista: blocks (%d,%d) to (%d,%d)\n",
-x1,y1, x2,y2)
-end
-
-return
-end
-
   local other = neighbour_by_side(p,c,side)
   assert(other)
 
@@ -1752,9 +1739,12 @@ end
   ROOM.light   = other.rmodel.light
   WINDOW.light = other.rmodel.light
 
-  WINDOW.f_h = ROOM.f_h + 32
+  if kind ~= "fall_over" then
+    WINDOW.f_h = ROOM.f_h + 32
+    WINDOW.impassible = true  -- FIXME
+  end
 
-  if kind == "open" or kind == "wire" then
+  if kind == "open" or kind == "wire" or kind == "fall_over" then
     ROOM.c_h   = other.rmodel.c_h
     ROOM.c_tex = other.theme.ceil
   
@@ -1784,11 +1774,6 @@ end
     ROOM.light   = other.rmodel.light - 32
     WINDOW.light = other.rmodel.light - 16
   end
-
-  WINDOW.impassible = true  -- FIXME
-
-  -- save ROOM for later
-  other.vista_room = ROOM
 
 --[[
   x1,y1 = x1+dx*1, y1+dy*1
@@ -1849,7 +1834,7 @@ end
       end
     end
 
-  else -- solid, frame or open
+  else -- solid, frame, open or fall_over
   
     frag_fill(p,c, fx1,fy1, fx2,fy2, WINDOW)
     frag_fill(p,c, fx1+1,fy1+1, fx2-1,fy2-1, ROOM)
@@ -1880,19 +1865,6 @@ end
     end
   end 
 
-
-  -- rest of chunk in other room
-  if false then
-    local extra = 3 - (deep % 3)
-
-    if side < 5 then
-      x1,y1 = x1+dx*extra, y1+dy*extra
-    else
-      x2,y2 = x2+dx*extra, y2+dy*extra
-    end
-
-    gap_fill(p,c, x1,y1, x2,y2, other.rmodel)
-  end
 
   -- FIXME !!! add spots to room
   -- return { c=c, x=x1+dx, y=y1+dy, double=true, dx=32, dy=32 }
@@ -5168,6 +5140,8 @@ c.x, c.y, other.x, other.y)
         kind = "solid"
       end
     end
+
+    if link.fall_over then kind = "fall_over" end
 
     local x1,y1, x2,y2, long,deep = get_vista_coords(c, side, link, other)
 
