@@ -1100,6 +1100,95 @@ BILLBOARD_LIT =
 },
 
 
+CRATE =
+{
+  scale=64,
+
+  structure =
+  {
+    "c"
+  },
+
+  elements =
+  {
+    c = { f_rel="crate_h", f_h=0,
+          f_tex="crate_f", l_tex="crate_w", l_peg="top" },
+  },
+},
+
+CRATE_TWO_SIDED =
+{
+  scale=64,
+
+  structure =
+  {
+    "c"
+  },
+
+  elements =
+  {
+    c = { f_rel="crate_h", f_h=0,
+          f_tex="crate_f", l_tex="crate_w", l_peg="top",
+          [4] = { l_tex="crate2" },
+          [6] = { l_tex="crate2" },
+        },
+  },
+},
+
+CRATE_ROTATE_NARROW =
+{
+  structure =
+  {
+    "....",
+    "....",
+    ".c..",
+    "....",
+  },
+
+  elements =
+  {
+    c = { f_rel="crate_h", f_h=0,
+          f_tex="crate_f", l_tex="crate_w", l_peg="top",
+
+          [1] = { dx=-14, dy= 16 },
+          [3] = { dx= 0,  dy=-14 },
+          [7] = { dx= 16, dy= 30 },
+          [9] = { dx= 30, dy= 0 },
+
+          [2] = { x_offset=8 }, [4] = { x_offset=8 },
+          [6] = { x_offset=8 }, [8] = { x_offset=8 },
+        },
+  },
+},
+
+CRATE_ROTATE =
+{
+  structure =
+  {
+    "........",
+    "........",
+    "........",
+    "........",
+    "...c....",
+    "........",
+    "........",
+    "........",
+  },
+
+  elements =
+  {
+    c = { f_rel="crate_h", f_h=0,
+          f_tex="crate_f", l_tex="crate_w", l_peg="top",
+
+          [1] = { dx=-29, dy= 16 },
+          [3] = { dx= 0,  dy=-29 },
+          [7] = { dx= 16, dy= 45 },
+          [9] = { dx= 45, dy= 0 },
+        },
+  },
+},
+
+
 ------ Corners ------------------------------------
 
 CORNER_BEAM =
