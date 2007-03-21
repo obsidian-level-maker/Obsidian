@@ -429,13 +429,9 @@ DOOR_EXIT =
   structure =
   {
     "##ssss##",
-    "##sXXs##",
     "#MssssL#",
     "#TddddT#",
     "#LssssM#",
-    "##ssss##",
-    "##sXXs##",
-    "##ssss##",
   },
 
   elements =
@@ -461,14 +457,35 @@ DOOR_EXIT =
     T = { solid="track", l_peg="bottom" },
 
     -- light
-    L = { solid="door", l_peg="bottom",
-          [4] = { x_offset=72 }, [6] = { x_offset=72 } },
+    L = { solid="wall", l_peg="bottom",
+          [4] = { l_tex="door", x_offset=72 },
+          [6] = { l_tex="door", x_offset=72 }
+        },
 
-    M = { solid="door", l_peg="bottom",
-          [4] = { x_offset=88 }, [6] = { x_offset=88 } },
-
+    M = { solid="wall", l_peg="bottom",
+          [4] = { l_tex="door", x_offset=88 },
+          [6] = { l_tex="door", x_offset=88 }
+        },
   },
 },
+
+DOOR_EXIT_W_SIGN =
+{
+  copy="DOOR_EXIT",
+
+  structure =
+  {
+    "##ssss##",
+    "##sXXs##",
+    "##ssss##",
+    "#MssssL#",
+    "#TddddT#",
+    "#LssssM#",
+    "##sXXs##",
+    "##ssss##",
+  },
+},
+
 
 EXIT_SIGN_CEIL =
 {
