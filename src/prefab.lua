@@ -574,7 +574,7 @@ SWITCH_PILLAR =
 
   elements =
   {
-    P = { solid="side_w",
+    P = { solid="wall",
           [2] = { l_tex="switch", l_peg="bottom", kind="kind", tag="tag" }
         },
   },
