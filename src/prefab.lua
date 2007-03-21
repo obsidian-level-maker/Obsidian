@@ -561,6 +561,26 @@ BARS_NARROW =
 },
 
 
+------ Switches ------------------------------------
+
+SWITCH_PILLAR =
+{
+  scale=64,
+
+  structure =
+  {
+    "P"
+  },
+
+  elements =
+  {
+    P = { solid="side_w",
+          [2] = { l_tex="switch", l_peg="bottom", kind="kind", tag="tag" }
+        },
+  },
+},
+
+
 ------ Decorative I ------------------------------------
 
 TECH_PICKUP_SMALL =
