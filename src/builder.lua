@@ -538,6 +538,8 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
         if OV.f_tex and skin[OV.f_tex] then OV.f_tex = skin[OV.f_tex] end
         if OV.c_tex and skin[OV.c_tex] then OV.c_tex = skin[OV.c_tex] end
 
+        if OV.rail and skin[OV.rail] then OV.rail = skin[OV.rail] end
+
         if OV.x_offset and parm[OV.x_offset] then OV.x_offset = parm[OV.x_offset] end
         if OV.y_offset and parm[OV.y_offset] then OV.y_offset = parm[OV.y_offset] end
 
