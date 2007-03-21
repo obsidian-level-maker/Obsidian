@@ -3456,15 +3456,23 @@ function build_borders(p)
 --???          info = THEME.doors[kind]
 --???          assert(info)
 --???        end
-      end
 
-      if link.quest and link.quest.kind == "switch" then
+      elseif link.quest and link.quest.kind == "switch" then
         door_info.prefab = "DOOR_LOCKED" --FIXME: wrong wrong wrong
 
         parm.door_kind = 0
         parm.tag = link.quest.tag + 1
         parm.key_w = THEME.switches[link.quest.item].wall
         assert(parm.key_w)
+
+      elseif link.is_exit then
+        door_info.prefab = "DOOR_EXIT" --FIXME: wrong way
+
+        door_info.exit_w = "EXITSIGN" -- FIXME !!!!
+        door_info.exit_c = "CEIL5_2"  --!!!!
+        door_info.door = "EXITDOOR"
+
+        parm.door_top = link.build.rmodel.f_h + 72
       end
 
     if not door_info.prefab then print(table_to_str(door_info)) end
