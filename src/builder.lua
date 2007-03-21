@@ -5847,39 +5847,48 @@ function build_rooms(p)
     end end
   end
 
+  
   local function GAP_FILL_ROOM(p, c)
+    
+    local function gap_fill_block(B)
+      if B.solid then return end
+
+      local model = c.rmodel
+      if B.chunk then model = B.chunk.rmodel end
+
+      -- floor
+      if not B.f_tex then
+        B.f_tex = model.f_tex
+        B.f_h   = model.f_h
+        B.l_tex = model.l_tex
+      end
+
+      -- ceiling
+      if not B.c_tex then
+        B.c_tex = model.c_tex
+        B.c_h   = model.c_h
+        B.u_tex = model.u_tex
+      end
+
+      -- lighting
+      if not B.light then
+        B.light = model.light
+      end
+    end
+
+    -- GAP_FILL_ROOM --
+
     for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
       local B = p.blocks[x][y]
 
-      if not (B.solid or B.fragments) then
-        
-        if not B.f_tex then
-
-          local K = B.chunk
---con.printf("cell (%d,%d) block (%d,%d)\n",
---c.x, c.y, x+1-c.bx1, y+1-c.by1)
---if not K then con.printf("B =\n%s\n", table_to_str(B,2)) end
-          assert(K)
-
-          fill(p,c, x,y, x,y, K.rmodel)
-
-          if K.vista and not K.link.fall_over then
-            add_thing(p,c, x,y, "candle", false)
-          end
-        end
-
-        --!!!! FIXME  if not B.c_tex then
+      if B.fragments then
+        for fx = 1,FW do for fy = 1,FH do
+          local F = B.fragments[fx][fy]
+          gap_fill_block(B.fragments[fx][fy])
+        end end
+      else
+        gap_fill_block(B)
       end
-
----###      if B.empty then
----###        local K = B.chunk
----###        assert(K)
----###
----###        if K.void then
----###          fill(p,c, x,y, x,y, { solid=c.theme.void })
----###        else
----###        end
----###      end
     end end
   end
 
