@@ -1099,6 +1099,33 @@ BILLBOARD_LIT =
   },
 },
 
+BILLBOARD_ON_STILTS =
+{
+  structure =
+  {
+    "............",
+    ".C........C.",
+    ".BppppppppB.",
+    "............",
+  },
+
+  elements =
+  {
+    p = { [8] = { rail="pic", l_peg="bottom",
+                  x_offset=4, y_offset="y_offset" } },
+
+    -- beams
+    B = { f_rel="pic_base", f_h=140,
+          l_tex="beam_w", f_tex="beam_f", l_peg="top",
+        },
+
+    C = { copy="B",
+          [1] = { dx=-8, dy=0 },
+          [3] = { dx= 8, dy=0 },
+        },
+  },
+},
+
 
 ------ Crates ------------------------------------
 
