@@ -598,6 +598,24 @@ SWITCH_FLOOR =
           [2] = { l_tex="switch", l_peg="top", kind="kind", tag="tag",
                   y_offset="y_offset" }
         },
+
+    -- beam
+    B = { f_rel="switch_h", f_h=12,
+          l_tex="beam_w", f_tex="beam_f", l_peg="top"
+        },
+  },
+},
+
+SWITCH_FLOOR_BEAM =
+{
+  copy="SWITCH_FLOOR",
+
+  structure =
+  {
+    "........",
+    ".BssssB.",
+    "........",
+    "........",
   },
 },
 

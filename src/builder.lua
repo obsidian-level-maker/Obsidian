@@ -5601,7 +5601,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
   local function add_switch(c)
 
-    local fab = PREFABS["SWITCH_FLOOR"]
+    local fab = PREFABS["SWITCH_FLOOR_BEAM"]
     assert(fab)
 
     local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
@@ -5625,9 +5625,11 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       end
       assert(info.switch)
     end
-    skin = { switch=info.switch, side_w=info.wall }
+    skin = { switch=info.switch, side_w=info.wall,
+             beam_w="WOOD1", beam_f="FLAT5_2",
+           }
 
-    if false then -- floor switch
+    if true then -- floor switch
       local tex_h = 128  -- FIXME: assumption !!!
       parm.switch_h = c.rmodel.f_h + 72  -- TINY = 40
       parm.x_offset = 0
