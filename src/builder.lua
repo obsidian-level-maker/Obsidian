@@ -509,21 +509,23 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
       sec.l_tex = what_tex("wall", elem.l_tex)
       sec.u_tex = what_tex("wall", elem.u_tex)
 
-      if elem.x_offset then sec.x_offset = elem.x_offset end
-      if elem.y_offset then sec.y_offset = elem.y_offset end
+      sec.l_peg = elem.l_peg
+      sec.u_peg = elem.u_peg
 
-      if elem.l_peg then sec.l_peg = elem.l_peg end
-      if elem.u_peg then sec.u_peg = elem.u_peg end
+      sec.x_offset = elem.x_offset  -- FIXME: allow parm lookup
+      sec.y_offset = elem.y_offset
+
+      if elem.mark then sec.mark = elem.mark end
 
       if elem.kind then sec[elem.kind] = parm_val(elem.kind) end
       if elem.tag  then sec[elem.tag]  = parm_val(elem.tag) end
---##  if elem.tag  then sec.tag = parm_val("tag") end
 
       if elem.kind == "door_kind" then sec.door_dir = parm.door_dir end
 
       if elem.light then sec.light = elem.light
       elseif elem.light_add then sec.light = sec.light + elem.light_add
       end
+
     end
 
     -- handle overrides
@@ -5235,6 +5237,7 @@ c.x, c.y, other.x, other.y)
       else
         -- check middle area
         local B = p.blocks[x][y]
+        if not B or not B.chunk or B.walk or not is_roomy(B.chunk) then return false end
         assert(B and B.chunk)
 ---???  if not B.empty or B.walk or not is_roomy(B.chunk) then
         if B.walk or not is_roomy(B.chunk) then
@@ -5653,7 +5656,7 @@ if x and rand_odds(30) then
   B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
 end
 
-fab = PREFABS["BILLBOARD"]
+fab = PREFABS["BILLBOARD_STILTS_HUGE"]
 assert(fab)
 local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
 if x and rand_odds(30) then
@@ -5663,13 +5666,17 @@ if x and rand_odds(30) then
            step   = "STEP5", step_f = "FLAT5_2",
 --           corner = "SHAWN2", corn_f = "FLAT19",
 --           step = "STEP4",    step_f = "FLAT19",
-           pic = "ZZWOLF13", pic_back = "ZZWOLF11", pic_f = "FLAT5_3"
+           pic = "ZZWOLF13", pic_back = "ZZWOLF11", pic_f = "FLAT5_3",
+           beam_w = "WOOD1", beam_f = "FLAT5_2",
          }
 
   parm = { floor = c.rmodel.f_h,
            ceil  = c.rmodel.c_h,
-           pic_h = c.rmodel.f_h + 128,
-           corn_h = c.rmodel.f_h + 104
+           pic_h = c.rmodel.f_h + 64,
+           corn_h = c.rmodel.f_h + 104,
+
+           pic_bottom = c.rmodel.f_h + 64,
+           y_offset = 64,
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
@@ -5825,8 +5832,8 @@ end
     end
 
     -- SCENERY
-    for loop = 1,20 do
---!!!!     add_scenery(c)
+    for loop = 1,10 do
+      add_scenery(c)
     end
 
   end
