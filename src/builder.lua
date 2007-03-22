@@ -5184,85 +5184,42 @@ c.x, c.y, other.x, other.y)
   end
 
 
-  local function mark_walkable_area(c, x1,y1, x2,y2)
+  local function mark_walkable(c, x1,y1, x2,y2, walk)
     assert(x2 >= x1 and y2 >= y1)
     assert(c.bx1 <= x1 and x2 <= c.bx2)
     assert(c.by1 <= y1 and y2 <= c.by2)
 
+con.printf("mark_walkable @ (%d,%d)\n", c.x,c.y)
     for x = x1,x2 do for y = y1,y2 do
       local B = p.blocks[x][y]
       assert(B)
---!!!      assert(not (B.solid or B.f_tex))
-      B.walk = true
+      assert(not (B.solid or B.f_tex))
+      if not B.walk or walk > B.walk then
+        B.walk = walk
+      end
     end end
   end
 
   local function mark_links(c)
     
+    -- FIXME: many improvements here!
+    --   (a) fence borders: walk 3
+    --   (b) doors: second square away = walk 2
+    --   (c) next to walls and dropoffs: walk 1
+ 
     for side = 2,8,2 do
       local dx,dy = dir_to_delta(10-side) -- inwards
 
       local L = c.link[side]
-      if L then
-        mark_walkable_area(c, L.x1+dx, L.y1+dy, L.x2+dx, L.y2+dy)
+      if L and not (L.kind=="vista") then -- FIXME
+        mark_walkable(c, L.x1+dx, L.y1+dy, L.x2+dx, L.y2+dy, 4)
       end
 
       local D = c.border[side]
       if D and D.kind == "window" then
-        mark_walkable_area(c, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy)
+        mark_walkable(c, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy, 2)
       end
     end
-  end
-
-  local function check_fab_position(c, x1,y1, x2,y2)
-    assert(x1 <= x2 and y1 <= y2)
-
-    if not (c.bx1 <= x1 and x2 <= c.bx2) or
-       not (c.by1 <= y1 and y2 <= c.by2)
-    then
-      return false
-    end
-    
-    for x = x1-1,x2+1 do for y = y1-1,y2+1 do
-      if x < x1 or x > x2 or y < y1 or y > y2 then
-        -- check sides
-        if x < c.bx1 or x > c.bx2 or y < c.by1 or y > c.by2 then
-          return false
-        end
-        local B = p.blocks[x][y]
-        assert(B)
-        if (B.solid or B.f_tex) then --!!!!! or not is_roomy(B.chunk) then
-          return false
-        end
-      else
-        -- check middle area
-        local B = p.blocks[x][y]
-        if not B or not B.chunk or B.walk or not is_roomy(B.chunk) then return false end
-        assert(B and B.chunk)
----???  if not B.empty or B.walk or not is_roomy(B.chunk) then
-        if B.walk or not is_roomy(B.chunk) then
-          return false
-        end
-      end
-    end end
-
-    return true --OK--
-  end
-
-  local function mark_fab_walk(c, x1,y1, x2,y2)
-    assert(x1 <= x2 and y1 <= y2)
-    assert(c.bx1 <= x1 and x2 <= c.bx2)
-    assert(c.by1 <= y1 and y2 <= c.by2)
-    
-    for x = x1-1,x2+1 do for y = y1-1,y2+1 do
-      if (x < x1 or x > x2 or y < y1 or y > y2) and
-         (c.bx1 <= x and x <= c.bx2) and
-         (c.by1 <= y and y <= c.by2)
-      then
---con.printf("mark_fab_walk @ (%d,%d)...\n", x, y)
-        mark_walkable_area(c, x,y, x,y)
-      end
-    end end
   end
 
   local function stair_depths(diff_h)
@@ -5541,10 +5498,10 @@ end
     local dx,dy = dir_to_delta(K.stair_dir)
 
     local x1,y1,x2,y2 = side_coords(K.stair_dir, info.sx,info.sy,info.ex,info.ey)
-    mark_walkable_area(c, x1+dx,y1+dy, x2+dx,y2+dy)
+    mark_walkable(c, x1+dx,y1+dy, x2+dx,y2+dy, 4)
 
     local x3,y3,x4,y4 = side_coords(10-K.stair_dir, info.sx,info.sy,info.ex,info.ey)
-    mark_walkable_area(c, x3-dx,y3-dy, x4-dx,y4-dy)
+    mark_walkable(c, x3-dx,y3-dy, x4-dx,y4-dy, 4)
     end
   end
 
@@ -5561,23 +5518,215 @@ end
   end
 
 
-  local function find_fab_loc(c, long, deep)
+  local function block_is_free(B)
+    if not B.chunk then return false end
+    if B.solid or B.f_tex then return false end
+    return true
+  end
 
-    local dir = 8
-    if rand_odds(50) then long,deep,dir = deep,long,4 end
-    if rand_odds(50) then dir = 10-dir end
+  local function valid_cell_block(c, x, y)
+    return
+      (c.bx1 <= x and x <= c.bx2) and
+      (c.by1 <= y and y <= c.by2)
+  end
 
-    -- FIXME: TEMP CRUD
+  local function verify_inner(c, x1,y1, x2,y2)
+    assert(valid_cell_block(c,x1,y1))
+    assert(valid_cell_block(c,x2,y2))
+    
+    local f_h
+    local max_walk = 0
 
-    for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
-      if check_fab_position(c, x,y, x+long-1, y+deep-1) then
-        return x,y,dir
+    for x = x1,x2 do for y = y1,y2 do
+      local B = p.blocks[x][y]
+      if not block_is_free(B) then return false end
+      if not f_h then
+        f_h = B.chunk.rmodel.f_h
+      elseif B.chunk.rmodel.f_h ~= f_h then
+        return false
+      end
+      if B.walk then
+        if B.walk >= 4 then return false end
+        max_walk = math.max(B.walk, max_walk)
+      end
+    end end
+
+    return true, f_h, max_walk
+  end
+
+  local function verify_outer(c, f_h, x1,y1, x2,y2)
+    if not valid_cell_block(c,x1,y1) then return false end
+    if not valid_cell_block(c,x2,y2) then return false end
+    
+    for x = x1,x2 do for y = y1,y2 do
+      local B = p.blocks[x][y]
+      if not (B.walk or block_is_free(B)) then return false end
+      if B.chunk.rmodel.f_h ~= f_h then return false end
+    end end
+
+    return true --OK--
+  end
+
+  local function verify_wall(c, f_h, x1,y1, x2,y2)
+    for x = x1,x2 do for y = y1,y2 do
+      if valid_cell_block(c, x, y) then
+        local B = p.blocks[x][y]
+        if block_is_free(B) then
+          return (B.chunk.rmodel.f_h >= f_h + 80)
+        end
+      else
+        -- "border" block is fine
+      end
+    end end
+
+    return true --OK--
+  end
+  
+  local function verify_island_spot(c, f_h, dir, x1,y1, x2,y2)
+   
+    -- oooo
+    -- oIIo
+    -- oIIo
+    -- oooo
+
+    if not verify_outer(c, f_h, side_coords(2, x1-1,y1-1, x2+1,y2+1)) or
+       not verify_outer(c, f_h, side_coords(4, x1-1,y1-1, x2+1,y2+1)) or
+       not verify_outer(c, f_h, side_coords(6, x1-1,y1-1, x2+1,y2+1)) or
+       not verify_outer(c, f_h, side_coords(8, x1-1,y1-1, x2+1,y2+1))
+    then
+      return false
+    end
+
+    return true, max_walk  --OK--
+  end
+
+  local function verify_wall_extend(c, f_h, dir, x1,y1, x2,y2)
+
+    -- oooo
+    -- oIIo
+    -- oIIo
+    -- WWWW
+
+    local able, f_h, max_walk = verify_inner(c, x1,y1, x2,y2)
+    if not able then return false end
+
+    if not verify_wall(c, f_h, side_coords(10-dir, x1-1,y1-1, x2+1,y2+1)) then
+      return false
+    end
+
+    if not verify_outer(c, f_h, side_coords(dir, x1-1,y1-1, x2+1,y2+1)) then
+      return false
+    end
+
+    local ex1,ey1, ex2,ey2 = x1,y1, x2,y2
+    local edir
+
+    if dir == 2 or dir == 8 then
+      edir,ex1,ex2 = 4,ex1-1,ex2+1
+    else
+      edir,ey1,ey2 = 2,ey1-1,ey2+1
+    end
+
+    if not verify_outer(c, f_h, side_coords(edir,    ex1,ey1, ex2,ey2)) or
+       not verify_outer(c, f_h, side_coords(10-edir, ex1,ey1, ex2,ey2))
+    then
+      return false
+    end
+
+    return true, max_walk  --OK--
+  end
+
+  local function verify_corner_extend(c, f_h, dir, x1,y1, x2,y2)
+
+    -- Wooo     oooW
+    -- WIIo  /  oIIW
+    -- WIIo     oIIW
+    -- WWWW     WWWW
+
+    local able, f_h, max_walk = verify_inner(c, x1,y1, x2,y2)
+    if not able then return false end
+
+    -- FIXME !!!
+
+    return false --FAIL--
+  end
+
+  local function fab_check_position(c, dir, x1,y1, x2,y2)
+assert(type(c)=="table")
+
+    assert(x1 <= x2 and y1 <= y2)
+    assert(valid_cell_block(c,x1,y1))
+    assert(valid_cell_block(c,x2,y2))
+
+    local able, f_h, max_walk = verify_inner(c, x1,y1, x2,y2)
+
+    if not able then return false end
+
+    if verify_island_spot(c, f_h, dir, x1,y1, x2,y2) then
+      return true, "island", max_walk
+    end
+
+    if verify_wall_extend(c, f_h, dir, x1,y1, x2,y2) then
+      return true, "extend", max_walk
+    end
+
+    if verify_corner_extend(c, f_h, dir, x1,y1, x2,y2) then
+      return true, "corner", max_walk
+    end
+
+    return false --FAIL--
+  end
+
+  local function fab_mark_walkable(c, x, y, dir, long,deep, walk)
+
+    if dir==4 or dir==6 then deep,long = long,deep end
+
+    local x1,y1 = x, y
+    local x2 = x1 + long-1
+    local y2 = y1 + deep-1
+
+    assert(x1 <= x2 and y1 <= y2)
+    assert(c.bx1 <= x1 and x2 <= c.bx2)
+    assert(c.by1 <= y1 and y2 <= c.by2)
+    
+    for x = x1-1,x2+1 do for y = y1-1,y2+1 do
+      if (x == x1 or x == x2 or y == y1 or y == y2) and
+         valid_cell_block(c, x, y)
+      then
+        local B = p.blocks[x][y]
+        
+        if (B.walk and walk > B.walk) or block_is_free(B) then
+          B.walk = walk
+        end
       end
     end end
   end
-  
+
+  local function fab_find_loc(c, long, deep, dir, flags)
+assert(type(c)=="table")
+
+    if not dir then dir = rand_irange(1,4)*2 end
+    if not flags then flags = {} end
+
+    if dir==4 or dir==6 then deep,long = long,deep end
+
+    -- FIXME: TEMP CRUD
+
+    for x = c.bx1,c.bx2-long+1 do
+      for y = c.by1,c.by2-deep+1 do
+        local able, mode, max_walk =
+            fab_check_position(c, dir, x,y, x+long-1, y+deep-1)
+
+        if able and mode=="island" and max_walk == 0 then
+          return x, y, dir
+        end
+      end
+    end
+  end
+
   local function add_object(c, name)
-    local x,y,dir = find_fab_loc(c, 1, 1)
+assert(type(c)=="table")
+    local x,y,dir = fab_find_loc(c, 1, 1)
     if not x then
       show_cell_blocks(p,c)
       error("Could not find place for: " .. name)
@@ -5585,7 +5734,7 @@ end
 con.printf("add_object @ (%d,%d)\n", x, y)
     gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
     add_thing(p, c, x, y, name, true)
-    mark_fab_walk(c, x,y, x,y)
+    fab_mark_walkable(c, x, y, 8, 1,1, 4)
   end
 
   local function add_player(c, name)
@@ -5601,7 +5750,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     local fab = PREFABS["SWITCH_PILLAR"]
     assert(fab)
 
-    local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+    local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
     if not x then
       show_cell_blocks(p,c)
       error("Could not find place for switch!");
@@ -5622,7 +5771,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       end
       assert(info.switch)
     end
-    skin = { switch=info.switch, side_w=info.wall,
+    skin = { switch=info.switch, wall=info.wall,
              beam_w="WOOD1", beam_f="FLAT5_2",
              light_w="LITE5", frame_c=c.theme.floor,
            }
@@ -5639,12 +5788,28 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
   end
 
+  local function add_ceiling_beams(c) -- TEST JUNK
+    local dir = 8
+
+    for y = c.by1+1, c.by2-1, 2 do
+      for x = c.bx1, c.bx2 do
+        local B = p.blocks[x][y]
+        if not B.c_tex and B.chunk then
+          B.c_tex = "CEIL5_2"
+          B.u_tex = "METAL"
+          B.c_h   = B.chunk.rmodel.c_h - 20
+        end
+      end
+    end
+  end
+
   local function add_scenery(c)
     -- FIXME !!!! prefabs | scenery items
 
 fab = PREFABS["PILLAR_LIGHT1"]
 assert(fab)
-local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+
+local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
 if x and rand_odds(30) then
   skin = { beam = "METAL", beam_f = "CEIL5_2",
            light="LITE5" }
@@ -5654,11 +5819,13 @@ if x and rand_odds(30) then
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
 fab = PREFABS["BILLBOARD_STILTS_HUGE"]
 assert(fab)
-local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+
+local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
 if x and rand_odds(30) then
 
   skin = {
@@ -5680,11 +5847,13 @@ if x and rand_odds(30) then
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
 fab = PREFABS["TECH_PICKUP_LARGE"]
 assert(fab)
-local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+
+local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
 if x and rand_odds(30) then
 
   skin = { wall="STONE2", floor="CEIL5_2", ceil="CEIL3_5",
@@ -5697,11 +5866,13 @@ if x and rand_odds(30) then
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
 fab = PREFABS["BILLBOARD_LIT"]
 assert(fab)
-local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
+
+local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
 if x and rand_odds(30) then
   skin = {
 --           corner = "WOOD7", corn_f = "FLAT5_1",
@@ -5719,13 +5890,14 @@ if x and rand_odds(30) then
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 return
 end
 
 fab = PREFABS["STATUE_TECH_1"]
 assert(fab)
-local x,y,dir = find_fab_loc(c, fab.long, fab.deep)
 
+local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
 if x and rand_odds(30) then
 
   skin = { wall="COMPWERD", comp1 = "SPACEW3", comp2 = "COMPTALL",
@@ -5743,10 +5915,13 @@ if x and rand_odds(30) then
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
 fab = PREFABS["GROUND_LIGHT"]
 assert(fab)
+
+local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
 if x and rand_odds(30) then
 
   skin = { 
@@ -5762,9 +5937,10 @@ if x and rand_odds(30) then
          }
 
   B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
-    
+
     if c.theme.scenery then
       local item = c.theme.scenery
       if type(item) == "table" then
@@ -5772,12 +5948,12 @@ end
       end
       assert(item)
 
-      local x,y,dir = find_fab_loc(c, 1, 1)
+      local x,y,dir = fab_find_loc(c, 1, 1)
       if not x then return end
 
       gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel)
       add_thing(p, c, x, y, item, true)
-      mark_fab_walk(c, x,y, x,y)
+      fab_mark_walkable(c, x, y, 8, 1,1, 4)
     end
   end
 
@@ -5832,10 +6008,9 @@ end
     end
 
     -- SCENERY
-    for loop = 1,10 do
+    for loop = 1,20 do
       add_scenery(c)
     end
-
   end
 
   ---=== build_cell ===---
