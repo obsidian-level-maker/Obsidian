@@ -5520,8 +5520,13 @@ end
 
   local function block_is_free(B)
     if not B.chunk then return false end
-    if B.solid or B.f_tex then return false end
+    if B.solid or B.f_tex or B.fragments then return false end
     return true
+  end
+
+  local function block_is_used(B)
+    if B.solid or B.f_tex or B.fragments then return true end
+    return false
   end
 
   local function valid_cell_block(c, x, y)
@@ -5597,7 +5602,7 @@ end
       return false
     end
 
-    return true, max_walk  --OK--
+    return true --OK--
   end
 
   local function verify_wall_extend(c, f_h, dir, x1,y1, x2,y2)
@@ -5607,14 +5612,11 @@ end
     -- oIIo
     -- WWWW
 
-    local able, f_h, max_walk = verify_inner(c, x1,y1, x2,y2)
-    if not able then return false end
-
-    if not verify_wall(c, f_h, side_coords(10-dir, x1-1,y1-1, x2+1,y2+1)) then
+    if not verify_wall(c, f_h, side_coords(dir, x1-1,y1-1, x2+1,y2+1)) then
       return false
     end
 
-    if not verify_outer(c, f_h, side_coords(dir, x1-1,y1-1, x2+1,y2+1)) then
+    if not verify_outer(c, f_h, side_coords(10-dir, x1-1,y1-1, x2+1,y2+1)) then
       return false
     end
 
@@ -5633,7 +5635,7 @@ end
       return false
     end
 
-    return true, max_walk  --OK--
+    return true --OK--
   end
 
   local function verify_corner_extend(c, f_h, dir, x1,y1, x2,y2)
@@ -5642,9 +5644,6 @@ end
     -- WIIo  /  oIIW
     -- WIIo     oIIW
     -- WWWW     WWWW
-
-    local able, f_h, max_walk = verify_inner(c, x1,y1, x2,y2)
-    if not able then return false end
 
     -- FIXME !!!
 
@@ -5663,7 +5662,7 @@ assert(type(c)=="table")
     if not able then return false end
 
     if verify_island_spot(c, f_h, dir, x1,y1, x2,y2) then
-      return true, "island", max_walk
+--!!!!      return true, "island", max_walk
     end
 
     if verify_wall_extend(c, f_h, dir, x1,y1, x2,y2) then
@@ -5710,14 +5709,12 @@ assert(type(c)=="table")
 
     if dir==4 or dir==6 then deep,long = long,deep end
 
-    -- FIXME: TEMP CRUD
-
     for x = c.bx1,c.bx2-long+1 do
       for y = c.by1,c.by2-deep+1 do
         local able, mode, max_walk =
             fab_check_position(c, dir, x,y, x+long-1, y+deep-1)
 
-        if able and mode=="island" and max_walk == 0 then
+        if able then --!!! and mode=="island" and max_walk == 0 then
           return x, y, dir
         end
       end
