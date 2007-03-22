@@ -372,12 +372,15 @@ FAB_DIRECTION_MAP =
   [16] = { 1,4,7, 2,5,8, 3,6,9 },
 }
 
-function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
+function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y)
 
   -- (x,y) is always the block with the lowest coordinate.
   -- dir == 8 is the natural mode, other values rotate it.
 
   assert(fab and skin and parm and theme)
+
+  parm.floor = parm.floor or model.f_h
+  parm.ceil  = parm.ceil  or model.c_h
 
   -- simulate Y mirroring using X mirroring instead
   if mirror_y then
@@ -450,7 +453,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
 
   local function parm_val(key)
     local V = parm[key]
-    if not V then V = c.rmodel[key] end
+    if not V then V = model[key] end
     if not V then
       error("Bad fab/parameters: missing value for " .. key)
     end
@@ -498,7 +501,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
     if elem.solid then
       sec = { solid=what_tex("wall", elem.solid) }
     else
-      sec = copy_block(c.rmodel)
+      sec = copy_block(model)
 
       sec.f_h = what_h_ref(sec.f_h, elem.f_rel, elem.f_h)
       sec.c_h = what_h_ref(sec.c_h, elem.c_rel, elem.c_h)
@@ -568,7 +571,7 @@ function B_prefab(p, c, fab, skin, parm, theme, x,y, dir,mirror_x,mirror_y)
     return sec
   end
 
-  local ROOM = c.rmodel
+  local ROOM = model
   local WALL = { solid=what_tex("wall", "wall") }
 
   -- cache for compiled elements
@@ -1985,7 +1988,7 @@ function B_exit_elevator(p, c, x, y, side)
   elseif side == 6 then x=x-fab.deep+1; y=y-1
   end
 
-  B_prefab(p, c, fab, skin, parm, c.theme, x, y, dir)
+  B_prefab(p, c, fab, skin, parm, c.rmodel,c.theme, x, y, dir)
 end
 
 
@@ -3443,8 +3446,7 @@ function build_borders(p)
     door_info = copy_table(door_info)
 
     local parm =
-    { floor = link.build.rmodel.f_h,
-      ceil  = link.build.rmodel.c_h,
+    {
       door_top = link.build.rmodel.f_h + door_info.h,
       door_kind = 1, tag = 0,
     }
@@ -3506,7 +3508,7 @@ function build_borders(p)
     local fab = PREFABS[door_info.prefab]
     assert(fab)
 
-    B_prefab(p,c, fab, door_info, parm, D.theme, link.x1, link.y1, side)
+    B_prefab(p,c, fab, door_info, parm, link.build.rmodel,D.theme, link.x1, link.y1, side)
   end
 
   local function build_real_link(link, side, double_who)
@@ -3566,8 +3568,7 @@ local fab = "ARCH" -- rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_
 fab = PREFABS[fab]
 assert(fab)
 local parm =
-{ floor = link.build.rmodel.f_h,
-  ceil  = link.build.rmodel.c_h,
+{
   door_top = math.min(link.build.rmodel.c_h-32, link.build.floor_h+128),
   door_kind = 1, tag = 0,
 
@@ -3583,7 +3584,7 @@ local skin =
   test_t = "lamp"
 }
 
-B_prefab(p,c, fab, skin, parm, D.theme, link.x1, link.y1, side)
+B_prefab(p,c, fab, skin, parm, link.build.rmodel,D.theme, link.x1, link.y1, side)
 return
 end
 
@@ -4308,13 +4309,13 @@ function build_pacman_level(p, c)
   {
   }
 
-  B_prefab(p,c, mid_fab,skin,parm,theme, mid_x-2, mid_y, 8, false)
+  B_prefab(p,c, mid_fab,skin,parm, c.rmodel,theme, mid_x-2, mid_y, 8, false)
 
-  B_prefab(p,c, top_fab,skin,parm,theme, mid_x-10, mid_y+16, 8,false,top_flip)
-  B_prefab(p,c, top_fab,skin,parm,theme, mid_x+10, mid_y+16, 8,true, top_flip)
+  B_prefab(p,c, top_fab,skin,parm, c.rmodel,theme, mid_x-10, mid_y+16, 8,false,top_flip)
+  B_prefab(p,c, top_fab,skin,parm, c.rmodel,theme, mid_x+10, mid_y+16, 8,true, top_flip)
 
-  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x-10, mid_y-12, 8,false,bot_flip)
-  B_prefab(p,c, bot_fab,skin,parm,theme, mid_x+10, mid_y-12, 8,true, bot_flip)
+  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,theme, mid_x-10, mid_y-12, 8,false,bot_flip)
+  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,theme, mid_x+10, mid_y-12, 8,true, bot_flip)
 
   B_exit_elevator(p,c, mid_x+19, mid_y+28, 2)
 
@@ -5678,7 +5679,7 @@ assert(type(c)=="table")
 
   local function fab_mark_walkable(c, x, y, dir, long,deep, walk)
 
-    if dir==4 or dir==6 then deep,long = long,deep end
+    if dir==4 or dir==6 then long,deep = deep,long end
 
     local x1,y1 = x, y
     local x2 = x1 + long-1
@@ -5687,9 +5688,9 @@ assert(type(c)=="table")
     assert(x1 <= x2 and y1 <= y2)
     assert(c.bx1 <= x1 and x2 <= c.bx2)
     assert(c.by1 <= y1 and y2 <= c.by2)
-    
+
     for x = x1-1,x2+1 do for y = y1-1,y2+1 do
-      if (x == x1 or x == x2 or y == y1 or y == y2) and
+      if (x == x1-1 or x == x2+1 or y == y1-1 or y == y2+1) and
          valid_cell_block(c, x, y)
       then
         local B = p.blocks[x][y]
@@ -5782,7 +5783,8 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
     if info.bars then parm.kind = 23 end
 
-    B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+    B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
+    fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
   end
 
   local function add_ceiling_beams(c) -- TEST JUNK
@@ -5811,11 +5813,9 @@ if x and rand_odds(30) then
   skin = { beam = "METAL", beam_f = "CEIL5_2",
            light="LITE5" }
 
-  parm = { floor = c.rmodel.f_h, --!!! wrong
-           ceil  = c.rmodel.c_h,
-         }
+  parm = { }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
   fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
@@ -5834,8 +5834,7 @@ if x and rand_odds(30) then
            beam_w = "WOOD1", beam_f = "FLAT5_2",
          }
 
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
+  parm = {
            pic_h = c.rmodel.f_h + 64,
            corn_h = c.rmodel.f_h + 104,
 
@@ -5843,7 +5842,7 @@ if x and rand_odds(30) then
            y_offset = 64,
          }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
   fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
@@ -5858,11 +5857,9 @@ if x and rand_odds(30) then
            step="STEP1", carpet="FLOOR1_1",
          }
 
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-         }
+  parm = { }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
   fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
@@ -5880,13 +5877,12 @@ if x and rand_odds(30) then
            light = "LITE5"
          }
 
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
+  parm = {
            pic_h = c.rmodel.f_h + 88,
            corn_h = c.rmodel.f_h + 112
          }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
   fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 return
 end
@@ -5907,11 +5903,9 @@ if x and rand_odds(30) then
            thing1="lamp"
          }
 
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-         }
+  parm = { }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
   fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
@@ -5929,11 +5923,9 @@ if x and rand_odds(30) then
            lite_top = "CEIL5_1",
          }
 
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-         }
+  parm = { }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, x, y, dir)
+  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
   fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
@@ -6043,11 +6035,9 @@ if false then
            drink   = "potion",
          }
 
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-         }
+  parm = { }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, 2)
+--  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, 2)
 end
 
 if false then
@@ -6065,11 +6055,9 @@ if false then
            beam_ceil = "FLAT5_2",
          }
 
-  parm = { floor = c.rmodel.f_h,
-           ceil  = c.rmodel.c_h,
-         }
+  parm = { }
 
-  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+6, 4)
+--  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+6, 4)
 end
 
 end -- if c.x==XX
@@ -6129,6 +6117,10 @@ function build_rooms(p)
         end end
       else
         gap_fill_block(B)
+
+        if B.walk then
+          add_thing(p, c, x, y, "candle", false)
+        end
       end
     end end
   end
