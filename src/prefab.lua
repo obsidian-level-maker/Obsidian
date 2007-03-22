@@ -1111,17 +1111,73 @@ BILLBOARD_ON_STILTS =
 
   elements =
   {
-    p = { [8] = { rail="pic", l_peg="bottom",
-                  x_offset=4, y_offset="y_offset" } },
+    -- picture
+    p = { mark = 1,
+          [8] = { rail="pic", l_peg="bottom",
+                  x_offset=8, y_offset="y_offset" },
+        },
 
     -- beams
-    B = { f_rel="pic_base", f_h=140,
+    B = { f_rel="pic_bottom", f_h=140,
           l_tex="beam_w", f_tex="beam_f", l_peg="top",
         },
 
     C = { copy="B",
           [1] = { dx=-8, dy=0 },
           [3] = { dx= 8, dy=0 },
+        },
+  },
+},
+
+BILLBOARD_STILTS_HUGE =
+{
+  structure =
+  {
+    ".C........C.",
+    ".BppppppppB.",
+    ".s.......s..",
+    ".s.......s..",
+    ".s.......s..",
+    ".s.......s..",
+    ".s.......s..",
+    ".s.......s..",
+    ".s.......s..",
+    ".s.......s..",
+    ".BqqqqqqqqB.",
+    ".D........D.",
+  },
+
+  elements =
+  {
+    -- picture
+    p = { mark = 1,
+          [8] = { rail="pic", l_peg="bottom",
+                  x_offset=8, y_offset="y_offset" },
+        },
+
+    q = { mark = 2,
+          [2] = { rail="pic", l_peg="bottom",
+                  x_offset=8, y_offset="y_offset" },
+        },
+
+    s = { mark = 3,
+          [6] = { rail="pic", l_peg="bottom",
+                  x_offset=0, y_offset="y_offset" },
+        },
+
+    -- beams
+    B = { f_rel="pic_bottom", f_h=140,
+          l_tex="beam_w", f_tex="beam_f", l_peg="top",
+        },
+
+    C = { copy="B",
+          [1] = { dx=-8, dy=0 },
+          [3] = { dx= 8, dy=0 },
+        },
+
+    D = { copy="B",
+          [7] = { dx=-8, dy=0 },
+          [9] = { dx= 8, dy=0 },
         },
   },
 },
