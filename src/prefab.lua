@@ -746,7 +746,7 @@ TECH_PICKUP_SMALL =
 
     b = { copy="a", f_h= -8, c_h=-56 },
     c = { copy="a", f_h=-16, c_h=-64, light=192 },
-    d = { copy="a", f_h=-24, c_h=-64 },
+    d = { copy="a", f_h=-24, c_h=-56 },
 
     e = { copy="a", f_h=-32, c_h=0, light=160, f_tex="carpet", c_tex="sky" },
 
@@ -929,7 +929,7 @@ GROUND_LIGHT =
 
     c = { copy="b", f_h=40, light=192 },
 
-    d = { f_h = 64, l_tex = "light", f_tex = "lite_top" },
+    d = { f_h = 64, l_tex = "light", f_tex = "lite_top", light=200 },
   },
 },
 
