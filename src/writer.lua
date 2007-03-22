@@ -194,17 +194,24 @@ function write_level(p, lev_name)
 
       local SIDE = { block=f }
 
+      SIDE.x_offset = b_over.x_offset or b.x_offset
+      SIDE.y_offset = b_over.y_offset or b.y_offset
+
       -- set textures
       if b.solid then
         SIDE.mid = b_over.l_tex or b.solid
       else
         SIDE.upper = b_over.u_tex or b.u_tex or THEME.ERROR_TEX
         SIDE.lower = b_over.l_tex or b.l_tex or THEME.ERROR_TEX
-        SIDE.mid   = b_over.rail  or f_over.rail or b.rail or f.rail
-      end
 
-      SIDE.x_offset = b_over.x_offset or b.x_offset
-      SIDE.y_offset = b_over.y_offset or b.y_offset
+        if f_over.rail and not b_over.rail then
+          SIDE.mid = f_over.rail
+          if f_over.x_offset then SIDE.x_offset = f_over.x_offset end
+          if f_over.y_offset then SIDE.y_offset = f_over.y_offset end
+        else
+          SIDE.mid = b_over.rail or f_over.rail or b.rail or f.rail
+        end
+      end
 
       return SIDE
     end
@@ -212,7 +219,9 @@ function write_level(p, lev_name)
     local function compute_line_flags(f,b, f_over,b_over, f_side,b_side, norm)
       local flags = 0
 
-      local impassible = f.impassible or b.impassible
+      local impassible = f.impassible or f_over.impassible or
+                         b.impassible or b_over.impassible
+
       local l_peg = b_over.l_peg or f_over.l_peg or b.l_peg or f.l_peg
       local u_peg = b_over.u_peg or f_over.u_peg or b.u_peg or f.u_peg
 
@@ -220,10 +229,12 @@ function write_level(p, lev_name)
 
         flags = flags + ML_TWO_SIDED
 
-        -- railing textures (assume blocking)
-        if f_side.mid or b_side.mid then
-          impassible = true
-        end
+---##        -- railing textures (assume blocking)
+---##        if (f_side.mid or b_side.mid) and
+---##           not (f_over.passable or b_over.passable)
+---##        then
+---##          impassible = true
+---##        end
 
         u_peg = u_peg or "top"
         l_peg = l_peg or "bottom"
