@@ -3547,10 +3547,12 @@ if link.kind == "door" and THEME.caps.blocky_doors then
   
   p.blocks[link.x1][link.y1] =
   {
+    f_tex = 0,
     door_kind = (bit and bit.kind_rep) or "door",
     door_dir  = side,
     blocked = true,
   }
+con.printf("BUILT BLOCK DOOR @ (%d,%d)\n", link.x1, link.y1)
   return
 end
 if link.kind == "arch" and THEME.caps.blocky_doors then
