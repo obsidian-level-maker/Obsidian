@@ -178,7 +178,7 @@ D2_THEMES =
     floor = "FLOOR5_4",
     ceil = "CEIL1_2",
 
-    scenery = "candelabra",
+    scenery = { "candelabra", "evil_eye" },
   },
 
   GRNTECH =
@@ -195,8 +195,7 @@ D2_THEMES =
     floor = "FLOOR1_1",
     ceil = "FLAT4",
 
-    scenery = "mercury_lamp",
-
+    scenery = { "mercury_lamp", "short_lamp" },
     bad_liquid = "water",
   },
 
@@ -213,7 +212,7 @@ D2_THEMES =
     floor = "GRNROCK",
     ceil = "RROCK04",
 
-    scenery = "red_column_skl",
+    scenery = { "red_pillar", "red_column", "red_column_skl" },
 
     bad_liquid = "nukage",
     good_liquid = "blood",
@@ -253,8 +252,7 @@ D2_THEMES =
     ceil = "F_SKY1",
   --  lift_floor = "FLOOR4_8",
 
-    scenery = "burnt_tree", -- "big_tree",
-
+    scenery = { "burnt_tree", "big_tree" },
     bad_liquid = "slime",
   },
 
@@ -273,7 +271,6 @@ D2_THEMES =
   --  lift_floor = "FLOOR4_8",
 
     scenery = "brown_stub",
-
     bad_liquid = "slime",
   },
 
@@ -291,7 +288,7 @@ D2_THEMES =
     floor = "MFLR8_4",
     ceil = "F_SKY1",
 
-    scenery = "skull_rock",
+    scenery = { "skull_rock", "brown_stub", "evil_eye" },
   },
 
   MUDDY =
@@ -324,7 +321,7 @@ D2_THEMES =
     floor = "FLOOR0_7",
     ceil = "CEIL5_2",
 
-    scenery = "red_torch",
+    scenery = { "red_torch", "red_torch_sm" },
     bad_liquid = "slime",
   },
 
@@ -340,7 +337,7 @@ D2_THEMES =
     floor = "RROCK12",
     ceil = "FLAT1",
 
-    scenery = "green_torch",
+    scenery = { "green_torch", "green_torch_sm" },
   },
 }
 

@@ -135,7 +135,7 @@ DM_ROOM_THEMES =
     floor = "FLOOR7_2",
     ceil = "FLOOR7_1",
 
-    scenery = "red_column_skl",
+    scenery = { "red_pillar", "red_column", "red_column_skl" },
 
     bad_liquid = "nukage",
     good_liquid = "blood",
@@ -153,6 +153,8 @@ DM_ROOM_THEMES =
 
     ceil = "CEIL1_1",
     floor = "FLAT5_1",
+
+    scenery = { "impaled_human", "hang_twitching" },
   },
 
   CEMENT =
@@ -185,7 +187,6 @@ DM_ROOM_THEMES =
     ceil = "CEIL5_1",
 
     scenery = "burning_barrel",
-
     good_liquid = "nukage",
   },
 
@@ -203,7 +204,7 @@ DM_ROOM_THEMES =
     ceil = "FLAT1",
   --  lift_floor = "FLOOR4_8",
 
-    scenery = "green_column_hrt",
+    scenery = { "green_pillar", "green_column", "green_column_hrt" },
   },
 
 
@@ -222,7 +223,7 @@ DM_ROOM_THEMES =
     floor = "MFLR8_1",
     ceil = "F_SKY1",
 
-    scenery = "blue_torch",
+    scenery = { "blue_torch", "blue_torch_sm" },
   },
 
   BROWN =
@@ -240,8 +241,7 @@ DM_ROOM_THEMES =
     ceil = "F_SKY1",
   --  lift_floor = "FLOOR4_8",
 
-    scenery = "skull_pole",
-
+    scenery = { "skull_pole", "skull_kebab" },
     good_liquid = "blood",
   },
 }
