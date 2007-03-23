@@ -356,32 +356,111 @@ WF_LEVEL_STYLES =
   -- 2. BUNKER --> brick/wood, humans, quarters, plants/urns
   -- 3. CAVE   --> cave/rock tex, vines, mutants
 
-  -- FIXME: CELLS = ...
-
-  -- FIXME: CAVE = ...
-
-  BUNKER =
+  CELLS =
   {
+    prob = 30,
+
     room_probs =
     {
-      PLAIN = 90,    STORAGE = 30,
-      TREASURE = 8,  SUPPLIES = 8,
-      QUARTERS = 50, BATHROOM = 15,
-      KITCHEN = 15,  TORTURE = 75,
+      PLAIN = 90,    STORAGE = 40,
+      TREASURE = 5,  SUPPLIES = 10,
+      QUARTERS = 20, BATHROOM = 10,
+      KITCHEN = 10,  TORTURE = 60,
     },
 
     theme_probs =
     {
-      WOOD = 90,
-      GRAY_STONE = 40,
-      GRAY_BRICK = 40,
-      BLUE_STONE = 70,
-      BLUE_BRICK = 40,
-      RED_BRICK = 50,
-      PURPLE_STONE = 10,
-      BROWN_CAVE = 20,
-      BROWN_BRICK = 20,
+      WOOD = 25,
+      GRAY_STONE = 60,
+      GRAY_BRICK = 60,
+      BLUE_STONE = 90,
+      BLUE_BRICK = 50,
+      RED_BRICK = 20,
+      PURPLE_STONE = 1,
+      BROWN_CAVE = 10,
+      BROWN_BRICK = 10,
       BROWN_STONE = 20,
+    },
+  },
+
+  BUNKER =
+  {
+    prob = 40,
+
+    room_probs =
+    {
+      PLAIN = 90,    STORAGE = 50,
+      TREASURE = 10, SUPPLIES = 10,
+      QUARTERS = 50, BATHROOM = 15,
+      KITCHEN = 25,  TORTURE = 20,
+    },
+
+    theme_probs =
+    {
+      WOOD = 120,
+      GRAY_STONE = 60,
+      GRAY_BRICK = 40,
+      BLUE_STONE = 5,
+      BLUE_BRICK = 10,
+      RED_BRICK = 80,
+      PURPLE_STONE = 1,
+      BROWN_CAVE = 5,
+      BROWN_BRICK = 10,
+      BROWN_STONE = 5,
+    },
+  },
+
+  CAVE =
+  {
+    prob=20,
+
+    room_probs =
+    {
+      PLAIN = 120,   STORAGE = 30,
+      TREASURE = 15, SUPPLIES = 5,
+      QUARTERS = 15, BATHROOM = 30,
+      KITCHEN = 5,   TORTURE = 30,
+    },
+
+    theme_probs =
+    {
+      WOOD = 2,
+      GRAY_STONE = 30,
+      GRAY_BRICK = 10,
+      BLUE_STONE = 5,
+      BLUE_BRICK = 5,
+      RED_BRICK = 10,
+      PURPLE_STONE = 30,
+      BROWN_CAVE = 80,
+      BROWN_BRICK = 20,
+      BROWN_STONE = 50,
+    },
+  },
+
+  SECRET =
+  {
+    prob=0, -- special style, never chosen randomly
+
+    room_probs =
+    {
+      PLAIN = 30,    STORAGE = 10,
+      TREASURE = 90, SUPPLIES = 70,
+      QUARTERS = 2,  BATHROOM = 2,
+      KITCHEN = 20,  TORTURE = 2,
+    },
+
+    theme_probs =
+    {
+      WOOD = 77,
+      GRAY_STONE = 77,
+      GRAY_BRICK = 77,
+      BLUE_STONE = 77,
+      BLUE_BRICK = 77,
+      RED_BRICK = 77,
+      PURPLE_STONE = 77,
+      BROWN_CAVE = 77,
+      BROWN_BRICK = 77,
+      BROWN_STONE = 77,
     },
   },
 }
@@ -433,10 +512,10 @@ WF_WEAPONS =
   machine_gun = { ammo="bullet", give=4, per=1, rate=8.0,  dm=17, freq=30, },
   gatling_gun = { ammo="bullet", give=6, per=1, rate=16.0, dm=17, freq=90, },
 
-  -- Note: machine_gun should give _6_ bullets.
-  -- However, we don't model the fact that the SS_DUDE only
-  -- drops a 4-bullet clip when you already have the machine
-  -- gun.  The hack here should maintain ammo balance.
+  -- Note: machine_gun actually gives _6_ bullets.
+  -- However: we don't model the fact that the SS_DUDE only
+  -- drops a 4-bullet clip if you already have the machine gun.
+  -- Therefore: this hack should maintain ammo balance.
 }
 
 WF_PICKUPS =
