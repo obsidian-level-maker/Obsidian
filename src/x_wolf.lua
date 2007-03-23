@@ -284,6 +284,109 @@ WF_SECRET_LEVELS =
   { leave="E6L3", enter="E6L10", kind="pacman" },
 }
 
+WF_ROOM_TYPES =
+{
+  PLAIN =
+  {
+  },
+
+  HALLWAY =
+  {
+    scenery = "ceil_light",
+  },
+
+  STORAGE =
+  {
+    scenery = { barrel=50, green_barrel=80, }
+  },
+
+  TREASURE =
+  {
+    pickups = { cross=90, chalice=90, bible=20, crown=5 },
+    pickup_rate = 90,
+  },
+
+  SUPPLIES =
+  {
+    scenery = { barrel=70, bed=40, },
+
+    pickups = { first_aid=50, good_food=90, clip_8=70 },
+    pickup_rate = 66,
+  },
+
+  QUARTERS =
+  {
+    scenery = { table_chairs=70, bed=70, chandelier=70,
+                bare_table=20, puddle=20,
+                floor_lamp=10, urn=10, plant=10
+              },
+  },
+
+  BATHROOM =
+  {
+    scenery = { sink=50, puddle=90, well=30, empty_well=30 },
+  },
+
+  KITCHEN =
+  {
+    scenery = { kitchen_stuff=50, stove=50, pots=50,
+                puddle=20, bare_table=20, table_chairs=5,
+                sink=10, barrel=10, green_barrel=5, plant=2
+              },
+
+    pickups = { good_food=15, dog_food=5 },
+    pickup_rate = 20,
+  },
+
+  TORTURE =
+  {
+    scenery = { hanging_cage=80, skeleton_in_cage=80,
+                skeleton_relax=30, skeleton_flat=40,
+                hanged_man=60, spears=10, bare_table=10,
+                gibs_1=10, gibs_2=10,
+                junk_1=10, junk_2=10,junk_3=10
+              },
+  },
+}
+
+WF_LEVEL_STYLES =
+{
+  -- main styles:
+  -- 1. CELLS  --> blue_stone, skeletons, dogs, 
+  -- 2. BUNKER --> brick/wood, humans, quarters, plants/urns
+  -- 3. CAVE   --> cave/rock tex, vines, mutants
+
+  -- FIXME: CELLS = ...
+
+  -- FIXME: CAVE = ...
+
+  BUNKER =
+  {
+    room_probs =
+    {
+      PLAIN = 90,    STORAGE = 30,
+      TREASURE = 8,  SUPPLIES = 8,
+      QUARTERS = 50, BATHROOM = 15,
+      KITCHEN = 15,  TORTURE = 75,
+    },
+
+    theme_probs =
+    {
+      WOOD = 90,
+      GRAY_STONE = 40,
+      GRAY_BRICK = 40,
+      BLUE_STONE = 70,
+      BLUE_BRICK = 40,
+      RED_BRICK = 50,
+      PURPLE_STONE = 10,
+      BROWN_CAVE = 20,
+      BROWN_BRICK = 20,
+      BROWN_STONE = 20,
+    },
+  },
+}
+
+
 ----------------------------------------------------------------
 
 WF_MONSTERS =
@@ -399,6 +502,9 @@ THEME_FACTORIES["wolf3d"] = function()
 
     doors     = WF_DOORS,
     key_bits  = WF_KEY_BITS,
+
+    rooms     = WF_ROOM_TYPES,
+    styles    = WF_LEVEL_STYLES,
   }
 end
 
