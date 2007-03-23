@@ -624,6 +624,7 @@ D2_SECRET_LEVELS =
   { leave="MAP31", enter="MAP32", kind="wolfy" },
 }
 
+
 ------------------------------------------------------------
 
 THEME_FACTORIES["doom2"] = function()

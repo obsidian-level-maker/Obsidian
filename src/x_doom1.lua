@@ -758,6 +758,64 @@ DM_QUESTS =
   }
 }
 
+DM_ROOM_TYPES =
+{
+  PLAIN =
+  {
+  },
+
+  HALLWAY =
+  {
+  },
+  
+  COMPUTER =
+  {
+  },
+}
+
+DM_LEVEL_STYLES =
+{
+  --[[  
+   (a) nature  (outdoor, grassy/rocky/muddy, water)
+   (b) urban   (outdoor, bricks/concrete,  slime)
+
+   (c) gothic     (indoor, gstone, blood, castles) 
+   (d) tech       (indoor, computers, lights, lifts) 
+   (e) cave       (indoor, rocky/ashy, darkness, lava)
+   (f) industrial (indoor, machines, lifts, crates, nukage)
+
+   (h) hell    (indoor+outdoor, fire/lava, bodies, blood)
+  --]]
+
+  URBAN =
+  {
+  },
+
+  INDUSTRIAL =
+  {
+  },
+
+  TECH =
+  {
+  },
+
+  NATURE =
+  {
+  },
+
+  CAVE =
+  {
+  },
+
+  GOTHIC =
+  {
+  },
+
+  HELL =
+  {
+  },
+}
+
 
 ------------------------------------------------------------
 
@@ -1071,6 +1129,9 @@ THEME_FACTORIES["doom_common"] = function()
     images    = DM_IMAGES,
     lights    = DM_LIGHTS,
     wall_lights = DM_WALL_LIGHTS,
+
+    rooms     = DM_ROOM_THEMES,
+    styles    = DM_LEVEL_STYLES,
   }
 end
 
