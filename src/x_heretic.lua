@@ -357,7 +357,7 @@ HC_QUESTS =
     bag=10, torch=10,
     wings=50, ovum=50,
     bomb=30, chaos=30,
-    shadow=50, -- tome=30,
+    shadow=50, tome=10,
   },
   exit =
   {
@@ -551,7 +551,7 @@ HC_PICKUPS =
 
   h_vial  = { stat="health", give=10,  prob=70 },
   h_flask = { stat="health", give=25,  prob=25 },
-  h_urn   = { stat="health", give=100, prob=5  },
+  h_urn   = { stat="health", give=100, prob=5, clu_max=1 },
 
   shield1 = { stat="armor", give=100, prob=70 },
   shield2 = { stat="armor", give=200, prob=10 },
