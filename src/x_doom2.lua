@@ -718,6 +718,94 @@ D2_PREFAB_SCENERY =
            }
   },
 
+  crate_CRATE1 =
+  {
+    prefab = "CRATE",
+
+    skin =
+    {
+      crate_w = "CRATE1",
+      crate_f = "CRATOP2",
+    }
+  },
+
+  crate_CRATE2 =
+  {
+    prefab = "CRATE",
+
+    skin =
+    {
+      crate_w = "CRATE2",
+      crate_f = "CRATOP1",
+    }
+  },
+
+  crate_WIDE =
+  {
+    prefab = "CRATE_BIG",
+
+    skin =
+    {
+      crate_w = "CRATWIDE",
+      crate_f = "CRATOP1",
+    }
+  },
+
+  crate_WOODSKUL =
+  {
+    prefab = "CRATE",
+
+    skin =
+    {
+      crate_w = "WOOD4",
+      crate_f = "CEIL1_1",
+    }
+  },
+
+  crate_TV =
+  {
+    prefab = "CRATE",
+
+    skin =
+    {
+      crate_w = "SPACEW3",
+      crate_f = "CEIL5_1"
+    }
+  },
+
+  crate_rotate_CRATE1 =
+  {
+    prefab = "CRATE_ROTATE",
+
+    skin =
+    {
+      crate_w = "CRATE1",
+      crate_f = "CRATOP2",
+    }
+  },
+
+  crate_rotate_CRATE2 =
+  {
+    prefab = "CRATE_ROTATE",
+
+    skin =
+    {
+      crate_w = "CRATE2",
+      crate_f = "CRATOP1",
+    }
+  },
+
+  crate_rotnar_SILVER =
+  {
+    prefab = "CRATE_ROTATE_NARROW",
+
+    skin =
+    {
+      crate_w = "SILVER2",
+      crate_f = "FLAT23"
+    }
+  },
+
   crate_triple_A =
   {
     prefab = "CRATE_TRIPLE",
@@ -744,7 +832,7 @@ D2_PREFAB_SCENERY =
     },
   },
 
-  crate_jumble_A =
+  crate_jumble =
   {
     prefab = "CRATE_JUMBLE",
 
