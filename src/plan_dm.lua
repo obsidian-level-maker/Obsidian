@@ -268,27 +268,6 @@ function plan_dm_arena()
   end
 
   local function choose_dm_themes()
-    --[[ OLD METHOD (maybe use it sometimes??)
-    -- how many themes?
-    local min_t = 1
-    if p.h >= 4 then min_t = 2 end
-    if p.w >= 6 then min_t = 3 end
-
-    local num_themes = rand_irange(min_t, p.h)
-    assert(num_themes <= #THEME.themes)
-
-    local theme_list = {}
-    rand_shuffle(theme_list, #THEME.themes)
-
-    for i =1,num_themes do
-      local cx, cy = unused_theme_pos()
-      if cx then
-        local c = p.cells[cx][cy]
-        c.theme = THEME.themes[theme_list[i] ]
-        c.liquid = liquid_for_seed(c.theme)
-      end
-    end
-    --]]
 
     -- place themes at random spots on the plan,
     -- then "grow" them until all cells are themed.
