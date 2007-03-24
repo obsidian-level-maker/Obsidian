@@ -589,6 +589,7 @@ BARS_NARROW =
 SWITCH_PILLAR =
 {
   scale=64,
+  add_mode="island",
   height_range={ 128,384 },
 
   structure =
@@ -701,6 +702,8 @@ SWITCH_CEIL =
 
 SWITCH_NICHE =
 {
+  add_mode="wall",
+
   structure =
   {
     "########",
@@ -730,6 +733,8 @@ SWITCH_NICHE =
 
 SWITCH_NICHE_TINY =
 {
+  add_mode="wall",
+
   structure =
   {
     "####",
@@ -761,6 +766,7 @@ SWITCH_NICHE_TINY =
 
 TECH_PICKUP_SMALL =
 {
+  add_mode="island",
   environment="indoor",
   height_range={ 160,256 },
 
@@ -805,6 +811,7 @@ TECH_PICKUP_SMALL =
 TECH_PICKUP_LARGE =
 {
   copy="TECH_PICKUP_SMALL",
+
   height_range={ 192,320 },
 
   structure =
@@ -1002,6 +1009,7 @@ MEGA_SKYLIGHT_1 =
   -- sky
 
   region="ceil",
+  add_mode="island",
   environment="indoor",
   height_range={ 96,304 },
 
@@ -1093,6 +1101,7 @@ MEGA_SKYLIGHT_3 =
 BILLBOARD =
 {
   region="floor",
+  add_mode="wall",
   environment="outdoor",
   height_range={ 160,1024 },
 
@@ -1127,6 +1136,7 @@ BILLBOARD =
 BILLBOARD_LIT =
 {
   region="floor",
+  add_mode="wall",
   environment="outdoor",
   height_range={ 160,1024 },
 
@@ -1205,6 +1215,7 @@ BILLBOARD_ON_STILTS =
 
 BILLBOARD_STILTS_HUGE =
 {
+  add_mode="island",
   environment="outdoor",
   height_range={ 144,1024 },
 
@@ -1369,6 +1380,7 @@ CRATE_ROTATE =
 
 CRATE_TRIPLE =
 {
+  add_mode="island",
   height_range={ 144,1024 },
 
   structure =
@@ -1396,6 +1408,7 @@ CRATE_TRIPLE =
 CRATE_JUMBLE =
 {
   scale=64,
+  add_mode="island",
   height_range={ 224,1024 },
 
   structure =
@@ -1425,6 +1438,8 @@ CRATE_JUMBLE =
 
 CORNER_BEAM =
 {
+  add_mode="corner",
+
   structure =
   {
     "BB..",
@@ -1441,6 +1456,7 @@ CORNER_BEAM =
 
 CORNER_LIGHT =
 {
+  add_mode="corner",
   environment="indoor",
 
   structure =
@@ -1465,6 +1481,8 @@ CORNER_LIGHT =
 
 CORNER_DIAGONAL =
 {
+  add_mode="corner",
+
   structure =
   {
     "AAA.",
@@ -1512,6 +1530,8 @@ CORNER_DIAG_30DEG =
 
 CORNER_CONCAVE =
 {
+  add_mode="corner",
+
   structure =
   {
     "##B.",
@@ -1534,6 +1554,8 @@ CORNER_CONCAVE =
 
 CORNER_CONCAVE_BIG =
 {
+  add_mode="corner",
+
   structure =
   {
     "####BB..",
@@ -1560,6 +1582,8 @@ CORNER_CONCAVE_BIG =
 
 CORNER_CONVEX =
 {
+  add_mode="corner",
+
   structure =
   {
     "##B.",
@@ -1585,6 +1609,7 @@ CORNER_CONVEX =
 
 PILLAR_LIGHT1 =
 {
+  add_mode="island",
   environment="indoor",
 
   structure =
@@ -1622,6 +1647,7 @@ PILLAR_LIGHT2 =
 
 PILLAR_LIGHT3 =
 {
+  add_mode="island",
   environment="indoor",
 
   structure =
