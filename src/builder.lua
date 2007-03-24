@@ -5808,6 +5808,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     -- FIXME !!!! prefabs | scenery items
 
 local name = rand_element {
+--[[
   "pillar_light1_METAL",
   "bb_stilts_huge_WREATH",
   "statue_tech1_A",
@@ -5815,6 +5816,19 @@ local name = rand_element {
   "mega_skylight_METAL",
   "mega_skylight_METALWOOD",
   "drinks_bar_WOOD_POTION",
+--]]
+  "crate_CRATE1",
+  "crate_CRATE2",
+--  "crate_WIDE",
+  "crate_WOODSKUL",
+  "crate_TV",
+  "crate_rotnar_SILVER",
+  "crate_rotate_CRATE1",
+  "crate_rotate_CRATE2",
+
+  "crate_triple_A",
+  "crate_triple_B",
+  "crate_jumble",
   }
 local def = THEME.sc_fabs[name]
 assert(def)
@@ -5838,12 +5852,14 @@ if x then
   local parm = {
            pic_h = c.rmodel.f_h + 64,
            corn_h = c.rmodel.f_h + 104,
-
+           crate_h = c.rmodel.f_h + 64,
            pic_bottom = c.rmodel.f_h + 64,
            y_offset = 64,
          }
 
-  B_prefab(p,c, fab, def.skin, parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
+  local mirror = rand_odds(50)
+
+  B_prefab(p,c, fab, def.skin, parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir, mirror)
   fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
 
