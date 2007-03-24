@@ -16,8 +16,7 @@
 --
 ----------------------------------------------------------------
 
-
-SP_THEMES =
+SP_COMBOS =
 {
   CONCRETE =
   {
@@ -242,7 +241,7 @@ THEME_FACTORIES["spear"] = function()
 
   T.bosses   = SP_BOSSES
 
-  T.themes   = copy_and_merge(T.themes,   SP_THEMES)
+  T.combos   = copy_and_merge(T.combos,   SP_COMBOS)
   T.pickups  = copy_and_merge(T.pickups,  SP_PICKUPS)
 
   T.scenery  = copy_and_merge(T.scenery,  SP_SCENERY)

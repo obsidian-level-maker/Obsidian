@@ -37,9 +37,10 @@ function name_up_theme()
   local SUB_LISTS =
   {
     "monsters", "bosses", "weapons", "pickups",
-    "themes",   "exits",  "hallways",
+    "combos",   "exits",  "hallways",
     "hangs",    "crates", "doors",    "mats",
     "lights",   "pics",   "liquids",  "rails",
+    "scenery",  "sc_fabs", "rooms",   "styles"
   }
 
   for zzz,sub in ipairs(SUB_LISTS) do
@@ -98,7 +99,7 @@ end
 ----------------------------------------------------------------
 
 function get_rand_theme()
-  local name,info = rand_table_pair(THEME.themes)
+  local name,info = rand_table_pair(THEME.combos)
   return info
 end
 
@@ -106,7 +107,7 @@ function get_rand_indoor_theme()
   local name,info
 
   repeat
-    name,info = rand_table_pair(THEME.themes)
+    name,info = rand_table_pair(THEME.combos)
   until not info.outdoor
 
   return info

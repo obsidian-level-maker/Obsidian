@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-PL_THEMES =
+PL_COMBOS =
 {
   --- Indoor ---
 
@@ -140,7 +140,7 @@ THEME_FACTORIES["plutonia"] = function()
 
   T.ERROR_TEX = "SLOPPY1"
 
-  T.themes   = copy_and_merge(T.themes,   PL_THEMES)
+  T.combos   = copy_and_merge(T.combos,   PL_COMBOS)
   T.hallways = copy_and_merge(T.hallways, PL_HALLWAYS)
 
   T.rails   = copy_and_merge(T.rails,   PL_RAILS)

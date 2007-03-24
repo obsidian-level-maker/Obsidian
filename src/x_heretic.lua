@@ -43,7 +43,7 @@ HC_SECTOR_TYPES =
 
 ----------------------------------------------------------------
 
-HC_THEMES =
+HC_COMBOS =
 {
   ---- INDOOR ------------
 
@@ -647,7 +647,7 @@ THEME_FACTORIES["heretic"] = function()
 
     dm = HC_DEATHMATCH,
 
-    themes    = HC_THEMES,
+    combos    = HC_COMBOS,
     exits     = HC_EXITS,
     hallways  = HC_HALLWAYS,
 

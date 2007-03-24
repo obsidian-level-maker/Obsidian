@@ -79,7 +79,7 @@ DM_SECTOR_TYPES =
 
 ----------------------------------------------------------------
 
-DM_ROOM_THEMES =
+DM_COMBOS =
 {
 ---- INDOOR ------------
 
@@ -776,6 +776,11 @@ DM_ROOM_TYPES =
   {
   },
   
+  WAREHOUSE =
+  {
+    -- crate it up baby!
+  },
+  
   COMPUTER =
   {
   },
@@ -1023,7 +1028,7 @@ DM_INITIAL_MODEL =
 
 ------------------------------------------------------------
 
-D1_THEMES =
+D1_COMBOS =
 {
 }
 
@@ -1119,7 +1124,7 @@ THEME_FACTORIES["doom_common"] = function()
     quests  = DM_QUESTS,
     dm = DM_DEATHMATCH,
 
-    themes    = DM_ROOM_THEMES,
+    combos    = DM_COMBOS,
     exits     = DM_EXITS,
     hallways  = DM_HALLWAYS,
 
@@ -1140,7 +1145,7 @@ THEME_FACTORIES["doom_common"] = function()
 
     scenery   = DM_SCENERY,
     sc_fabs   = DM_PREFAB_SCENERY,
-    rooms     = DM_ROOM_THEMES,
+    rooms     = DM_ROOM_TYPES,
     styles    = DM_LEVEL_STYLES,
   }
 end
@@ -1150,7 +1155,7 @@ THEME_FACTORIES["doom1"] = function()
 
   local T = THEME_FACTORIES.doom_common()
 
-  T.themes   = copy_and_merge(T.themes,   D1_THEMES)
+  T.combos   = copy_and_merge(T.combos,   D1_COMBOS)
   T.exits    = copy_and_merge(T.exits,    D1_EXITS)
   T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
   T.crates   = copy_and_merge(T.crates,   D1_CRATES)

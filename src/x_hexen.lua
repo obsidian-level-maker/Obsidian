@@ -73,7 +73,7 @@ XN_SECTOR_TYPES =
 
 ----------------------------------------------------------------
 
-XN_THEMES =
+XN_COMBOS =
 {
   ---- INDOOR ------------
 
@@ -678,7 +678,7 @@ THEME_FACTORIES["hexen"] = function()
 
     initial_model = XN_INITIAL_MODEL,
 
-    themes    = XN_THEMES,
+    combos    = XN_COMBOS,
     exits     = XN_EXITS,
     hallways  = XN_HALLWAYS,
 

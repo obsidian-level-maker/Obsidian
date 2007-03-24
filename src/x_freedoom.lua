@@ -54,7 +54,7 @@ THEME_FACTORIES["freedoom"] = function()
 
   local T = THEME_FACTORIES.doom1()
 
-  T.themes   = copy_and_merge(T.themes,   D2_THEMES)
+  T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
   T.exits    = copy_and_merge(T.exits,    D2_EXITS)
   T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
 

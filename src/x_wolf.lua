@@ -164,7 +164,7 @@ WF_TILE_NUMS =
 
 ----------------------------------------------------------------
 
-WF_THEMES =
+WF_COMBOS =
 {
   WOOD =
   {
@@ -633,7 +633,7 @@ THEME_FACTORIES["wolf3d"] = function()
 
     dm = {},
 
-    themes    = WF_THEMES,
+    combos    = WF_COMBOS,
     exits     = WF_EXITS,
     hallways  = WF_THEMES, -- not used
 

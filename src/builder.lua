@@ -4289,12 +4289,13 @@ function build_pacman_level(p, c)
   local top_flip = rand_odds(50)
   local bot_flip = not top_flip
 
-  local theme = THEME.themes[rand_sel(50,"BLUE_STONE","BLUE_BRICK")]
+  -- !!!! FIXME: move skin into x_wolf.lua
+  local theme = THEME.combos[rand_sel(50,"BLUE_STONE","BLUE_BRICK")]
   assert(theme)
 
   local skin =
   {
-    ghost_w = THEME.themes[rand_sel(50,"RED_BRICK","PURPLE_STONE")].wall,
+    ghost_w = THEME.combos[rand_sel(50,"RED_BRICK","GRAY_STONE")].wall,
 
     dot_t = rand_sel(50,"chalice","cross"),
 
@@ -5654,7 +5655,6 @@ end
   end
 
   local function fab_check_position(c, dir, x1,y1, x2,y2)
-assert(type(c)=="table")
 
     assert(x1 <= x2 and y1 <= y2)
     assert(valid_cell_block(c,x1,y1))
@@ -5705,7 +5705,6 @@ assert(type(c)=="table")
   end
 
   local function fab_find_loc(c, long, deep, dir, flags)
-assert(type(c)=="table")
 
     if not dir then dir = rand_irange(1,4)*2 end
     if not flags then flags = {} end
@@ -5725,7 +5724,7 @@ assert(type(c)=="table")
   end
 
   local function add_object(c, name)
-assert(type(c)=="table")
+
     local x,y,dir = fab_find_loc(c, 1, 1)
     if not x then
       show_cell_blocks(p,c)
