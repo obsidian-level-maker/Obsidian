@@ -423,7 +423,7 @@ WF_THEMES =
       KITCHEN = 10,  TORTURE = 60,
     },
 
-    theme_probs =
+    combo_probs =
     {
       WOOD = 25,
       GRAY_STONE = 60,
@@ -455,7 +455,7 @@ WF_THEMES =
       KITCHEN = 25,  TORTURE = 20,
     },
 
-    theme_probs =
+    combo_probs =
     {
       WOOD = 120,
       GRAY_STONE = 60,
@@ -487,7 +487,7 @@ WF_THEMES =
       KITCHEN = 5,   TORTURE = 30,
     },
 
-    theme_probs =
+    combo_probs =
     {
       WOOD = 2,
       GRAY_STONE = 30,
@@ -519,7 +519,7 @@ WF_THEMES =
       KITCHEN = 20,  TORTURE = 2,
     },
 
-    -- theme_probs : when missing, all have same prob
+    -- combo_probs : when missing, all have same prob
   },
 }
 
