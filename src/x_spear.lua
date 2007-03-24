@@ -103,7 +103,7 @@ SP_ROOM_TYPES =
 
 }
 
-SP_LEVEL_STYLES =
+SP_THEMES =
 {
   CELLS =
   {
@@ -247,7 +247,7 @@ THEME_FACTORIES["spear"] = function()
   T.scenery  = copy_and_merge(T.scenery,  SP_SCENERY)
   T.rooms    = copy_and_merge(T.rooms,    SP_ROOMS)
 
-  T.styles   = SP_LEVEL_STYLES
+  T.themes   = SP_THEMES
 
   -- remove Wolf3d only stuff
 

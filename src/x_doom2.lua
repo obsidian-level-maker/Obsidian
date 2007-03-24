@@ -847,11 +847,11 @@ D2_PREFAB_SCENERY =
   },
 }
 
-D2_ROOM_TYPES =
+D2_ROOMS =
 {
 }
 
-D2_LEVEL_STYLES =
+D2_THEMES =
 {
 }
 
@@ -881,8 +881,8 @@ THEME_FACTORIES["doom2"] = function()
 
   T.scenery = copy_and_merge(T.rooms,   D2_SCENERY)
   T.sc_fabs = copy_and_merge(T.sc_fabs, D2_PREFAB_SCENERY)
-  T.rooms   = copy_and_merge(T.rooms,   D2_ROOM_TYPES)
-  T.styles  = copy_and_merge(T.styles,  D2_LEVEL_STYLES)
+  T.rooms   = copy_and_merge(T.rooms,   D2_ROOMS)
+  T.themes  = copy_and_merge(T.themes,  D2_THEMES)
 
   return T
 end

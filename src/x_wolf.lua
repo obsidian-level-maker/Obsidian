@@ -339,7 +339,7 @@ WF_SCENERY =
   gibs_2 = { r=24,h=4, pass=true },
 }
 
-WF_ROOM_TYPES =
+WF_ROOMS =
 {
   PLAIN =
   {
@@ -404,7 +404,7 @@ WF_ROOM_TYPES =
   },
 }
 
-WF_LEVEL_STYLES =
+WF_THEMES =
 {
   -- main styles:
   -- 1. CELLS  --> blue_stone, skeletons, dogs, 
@@ -640,9 +640,9 @@ THEME_FACTORIES["wolf3d"] = function()
     doors     = WF_DOORS,
     key_bits  = WF_KEY_BITS,
 
-    rooms     = WF_ROOM_TYPES,
-    styles    = WF_LEVEL_STYLES,
     scenery   = WF_SCENERY,
+    rooms     = WF_ROOMS,
+    themes    = WF_THEMES,
   }
 end
 
