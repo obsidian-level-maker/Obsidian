@@ -5812,12 +5812,25 @@ local name = rand_element {
   "bb_stilts_huge_WREATH",
   "statue_tech1_A",
   "ground_light_SILVER",
+  "mega_skylight_METAL",
+  "mega_skylight_METALWOOD",
+  "drinks_bar_WOOD_POTION",
   }
 local def = THEME.sc_fabs[name]
 assert(def)
 local fab = PREFABS[def.prefab]
 assert(fab)
 assert(def.skin)
+
+if fab.environment then
+  if fab.environment == "indoor" and c.theme.outdoor then return end
+  if fab.environment == "outdoor" and not c.theme.outdoor then return end
+end
+-- FIXME: this is wrong -- make it part of fab_find_loc??
+if fab.height_range then
+  local h = c.ceil_h - c.floor_h
+  if h < fab.height_range[1] or h > fab.height_range[2] then return end
+end
 
 local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
 if x then
@@ -5897,29 +5910,6 @@ if x and rand_odds(30) then
 return
 end
 
-fab = PREFABS["STATUE_TECH_1"]
-assert(fab)
-
-local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
-if x and rand_odds(30) then
-
-  parm = { }
-
-  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
-  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
-end
-
-fab = PREFABS["GROUND_LIGHT"]
-assert(fab)
-
-local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
-if x and rand_odds(30) then
-
-  parm = { }
-
-  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
-  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
-end
 
 
     if c.theme.scenery then
@@ -6016,43 +6006,6 @@ end
   tizzy_up_room(c)
 
 -- !!!!  position_dm_stuff(cell)  MOVE_TO: monster.lua
-
-if c == p.quests[1].first then
-
-if false then
-  fab = PREFABS["DRINKS_BAR"]
-  assert(fab)
-
-  skin = { bar_w   = "PANBORD1", bar_f = "FLAT5_2",
-           drink   = "potion",
-         }
-
-  parm = { }
-
---  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+1, 2)
-end
-
-if false then
-  fab = PREFABS["MEGA_SKYLIGHT_2"]
-  assert(fab)
-
-  skin = { 
-           sky = "F_SKY1",
-           frame = "METAL",
-           frame_ceil = "CEIL5_2",
-
-           --!! beam = "METAL",
-           --!! beam_ceil  = "CEIL5_2",
-           beam = "WOOD12",
-           beam_ceil = "FLAT5_2",
-         }
-
-  parm = { }
-
---  B_prefab(p,c, fab,skin,parm, c.theme, c.bx1+1, c.by1+6, 4)
-end
-
-end -- if c.x==XX
 
 end
 
