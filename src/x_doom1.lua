@@ -784,11 +784,15 @@ DM_ROOMS =
   COMPUTER =
   {
   },
+
+  TORTURE =
+  {
+  },
 }
 
 DM_THEMES =
 {
-  --[[  
+--[[  
    (a) nature  (outdoor, grassy/rocky/muddy, water)
    (b) urban   (outdoor, bricks/concrete,  slime)
 
@@ -798,34 +802,189 @@ DM_THEMES =
    (f) industrial (indoor, machines, lifts, crates, nukage)
 
    (h) hell    (indoor+outdoor, fire/lava, bodies, blood)
-  --]]
+--]]
 
   URBAN =
   {
+    prob = 50,
+
+    room_probs=
+    {
+      PLAIN=50, WAREHOUSE=1, COMPUTER=1,
+    },
+
+    combo_probs=
+    {
+      STONY=70, BROWN=50, CEMENT=50, WOOD=30, GRAY=10,
+    },
+
+    exit_probs=
+    {
+      STONE=70, BROWN=50,
+    },
+
+    hallway_probs=
+    {
+      BROWN1=50, SP_ROCK=5,
+    },
   },
+
 
   INDUSTRIAL =
   {
+    prob = 60,
+
+    room_probs=
+    {
+      WAREHOUSE=50, COMPUTER=10,
+    },
+
+    combo_probs=
+    {
+      GRAY=50, SLAD=50,
+      CEMENT=5, BASE2=5,
+      STONY=5, BROWN=5,
+    },
+
+    exit_probs=
+    {
+      BROWN=50, TECH=20, STONE=10, BLUE=5,
+    },
+
+    hallway_probs=
+    {
+      BROWN1=50, BLUECARPET=10
+    },
   },
+
 
   TECH =
   {
+    prob = 90,
+
+    room_probs=
+    {
+      COMPUTER=50, WAREHOUSE=5,
+    },
+
+    combo_probs=
+    {
+      BASE=80, BASE2=65, SLAD=15,
+    },
+
+    exit_probs=
+    {
+      TECH=50, BLUE=50, STARTAN=50, BROWN=5,
+    },
+
+    hallway_probs=
+    {
+      BLUECARPET=60, BROWN1=15,
+    },
   },
+
 
   NATURE =
   {
+    prob = 0,
+
+    room_probs=
+    {
+      PLAIN=50,
+    },
+
+    combo_probs=
+    {
+      GRASSY = 50, ASHY=50, MUDDY=50  -- FIXME: Doom2 combos
+    },
+
+    exit_probs=
+    {
+      STONE=40, BROWN=20,
+    },
+
+    hallway_probs=
+    {
+      SP_ROCK=40, BROWN1=20
+    },
   },
+
 
   CAVE =
   {
+    prob = 0,
+
+    room_probs=
+    {
+      PLAIN=50, WAREHOUSE=3, COMPUTER=1,
+    },
+
+    combo_probs=
+    {
+      CAVEY=50 -- FIXME: no such combo
+    },
+
+    exit_probs=
+    {
+      BROWN=50, STONE=10,
+    },
+
+    hallway_probs=
+    {
+      SP_ROCK=50, BROWN1=30,
+    },
   },
+
 
   GOTHIC =
   {
+    prob = 20,
+
+    room_probs=
+    {
+      PLAIN=50, TORTURE=5,
+    },
+    combo_probs=
+    {
+      MARBLE=70,
+    },
+
+    exit_probs=
+    {
+      BLOODY=70,
+    },
+
+    hallway_probs=
+    {
+      SP_ROCK=50,
+    },
   },
+
 
   HELL =
   {
+    prob = 30,
+
+    room_probs=
+    {
+      TORTURE=50,
+    },
+    combo_probs=
+    {
+      HELLISH=50, -- FIXME: no such combo
+    },
+
+    exit_probs=
+    {
+      STONE=10,
+      BROWN=10,
+      BLOODY=30,
+    },
+
+    hallway_probs=
+    {
+      BROWN1=30, SP_ROCK=10,
+    },
   },
 }
 
