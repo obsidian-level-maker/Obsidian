@@ -624,6 +624,71 @@ D2_SECRET_LEVELS =
   { leave="MAP31", enter="MAP32", kind="wolfy" },
 }
 
+D2_SCENERY =
+{
+}
+
+D2_PREFAB_SCENERY =
+{
+  pillar_light1_METAL =
+  {
+    prefab = "PILLAR_LIGHT1",
+
+    skin = { beam = "METAL", beam_f = "CEIL5_2",
+             light="LITE5" },
+  },
+
+  bb_stilts_huge_WREATH =
+  {
+    prefab = "BILLBOARD_STILTS_HUGE",
+
+    skin = {
+             corner = "WOOD7", corn_f = "FLAT5_1",
+             step   = "STEP5", step_f = "FLAT5_2",
+  --           corner = "SHAWN2", corn_f = "FLAT19",
+  --           step = "STEP4",    step_f = "FLAT19",
+             pic = "ZZWOLF13", pic_back = "ZZWOLF11", pic_f = "FLAT5_3",
+             beam_w = "WOOD1", beam_f = "FLAT5_2",
+           },
+  },
+
+  statue_tech1_A =
+  {
+    prefab = "STATUE_TECH_1",
+
+    skin = { wall="COMPWERD", comp1 = "SPACEW3", comp2 = "COMPTALL",
+             step="STEP1",    u_span="COMPSPAN",
+
+             floor="FLAT14", ceil="FLOOR4_8",
+             carpet="FLOOR1_1", c_lite="TLITE6_5",
+             comp_top="CEIL5_1",
+
+             thing1="lamp"
+           }
+  },
+
+  ground_light_SILVER =
+  {
+    prefab = "GROUND_LIGHT",
+
+    skin = { 
+             shawn = "SHAWN3",
+             light = "LITE5",         
+
+             shawn_top = "FLAT1",
+             lite_top = "CEIL5_1",
+           }
+
+  },
+}
+
+D2_ROOM_TYPES =
+{
+}
+
+D2_LEVEL_STYLES =
+{
+}
 
 ------------------------------------------------------------
 
@@ -648,6 +713,11 @@ THEME_FACTORIES["doom2"] = function()
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
   T.monsters = copy_and_merge(T.monsters, D2_MONSTERS)
+
+  T.scenery = copy_and_merge(T.rooms,   D2_SCENERY)
+  T.sc_fabs = copy_and_merge(T.sc_fabs, D2_PREFAB_SCENERY)
+  T.rooms   = copy_and_merge(T.rooms,   D2_ROOM_TYPES)
+  T.styles  = copy_and_merge(T.styles,  D2_LEVEL_STYLES)
 
   return T
 end

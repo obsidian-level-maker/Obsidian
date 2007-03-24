@@ -758,6 +758,14 @@ DM_QUESTS =
   }
 }
 
+DM_SCENERY =
+{
+}
+
+DM_PREFAB_SCENERY =
+{
+}
+
 DM_ROOM_TYPES =
 {
   PLAIN =
@@ -1130,6 +1138,8 @@ THEME_FACTORIES["doom_common"] = function()
     lights    = DM_LIGHTS,
     wall_lights = DM_WALL_LIGHTS,
 
+    scenery   = DM_SCENERY,
+    sc_fabs   = DM_PREFAB_SCENERY,
     rooms     = DM_ROOM_THEMES,
     styles    = DM_LEVEL_STYLES,
   }

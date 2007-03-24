@@ -5807,19 +5807,35 @@ con.printf("add_object @ (%d,%d)\n", x, y)
   local function add_scenery(c)
     -- FIXME !!!! prefabs | scenery items
 
-fab = PREFABS["PILLAR_LIGHT1"]
+local name = rand_element {
+  "pillar_light1_METAL",
+  "bb_stilts_huge_WREATH",
+  "statue_tech1_A",
+  "ground_light_SILVER",
+  }
+local def = THEME.sc_fabs[name]
+assert(def)
+local fab = PREFABS[def.prefab]
 assert(fab)
+assert(def.skin)
 
 local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
-if x and rand_odds(30) then
-  skin = { beam = "METAL", beam_f = "CEIL5_2",
-           light="LITE5" }
+if x then
 
-  parm = { }
+  local parm = {
+           pic_h = c.rmodel.f_h + 64,
+           corn_h = c.rmodel.f_h + 104,
 
-  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
+           pic_bottom = c.rmodel.f_h + 64,
+           y_offset = 64,
+         }
+
+  B_prefab(p,c, fab, def.skin, parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
   fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
 end
+
+do return end --!!!!
+
 
 fab = PREFABS["BILLBOARD_STILTS_HUGE"]
 assert(fab)
@@ -5834,14 +5850,6 @@ if x and rand_odds(30) then
 --           step = "STEP4",    step_f = "FLAT19",
            pic = "ZZWOLF13", pic_back = "ZZWOLF11", pic_f = "FLAT5_3",
            beam_w = "WOOD1", beam_f = "FLAT5_2",
-         }
-
-  parm = {
-           pic_h = c.rmodel.f_h + 64,
-           corn_h = c.rmodel.f_h + 104,
-
-           pic_bottom = c.rmodel.f_h + 64,
-           y_offset = 64,
          }
 
   B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
@@ -5895,16 +5903,6 @@ assert(fab)
 local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
 if x and rand_odds(30) then
 
-  skin = { wall="COMPWERD", comp1 = "SPACEW3", comp2 = "COMPTALL",
-           step="STEP1",    u_span="COMPSPAN",
-
-           floor="FLAT14", ceil="FLOOR4_8",
-           carpet="FLOOR1_1", c_lite="TLITE6_5",
-           comp_top="CEIL5_1",
-
-           thing1="lamp"
-         }
-
   parm = { }
 
   B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
@@ -5916,14 +5914,6 @@ assert(fab)
 
 local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
 if x and rand_odds(30) then
-
-  skin = { 
-           shawn = "SHAWN3",
-           light = "LITE5",         
-
-           shawn_top = "FLAT1",
-           lite_top = "CEIL5_1",
-         }
 
   parm = { }
 
