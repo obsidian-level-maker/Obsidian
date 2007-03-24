@@ -489,6 +489,10 @@ DOOR_EXIT_W_SIGN =
 
 EXIT_SIGN_CEIL =
 {
+  region="ceil",
+  environment="indoor",
+  height_range={ 80,160 },
+
   structure =
   {
     "....",
@@ -508,6 +512,8 @@ EXIT_SIGN_CEIL =
 
 EXIT_SIGN_FLOOR =
 {
+  region="floor",
+
   structure =
   {
     "....",
@@ -583,6 +589,7 @@ BARS_NARROW =
 SWITCH_PILLAR =
 {
   scale=64,
+  height_range={ 128,384 },
 
   structure =
   {
@@ -599,6 +606,9 @@ SWITCH_PILLAR =
 
 SWITCH_FLOOR =
 {
+  region="floor",
+  height_range={ 96,1024 },
+
   structure =
   {
     "....",
@@ -638,6 +648,10 @@ SWITCH_FLOOR_BEAM =
 
 SWITCH_FLOOR_TINY =
 {
+  region="floor",
+
+  height_range={ 64,512 },
+
   structure =
   {
     "....",
@@ -654,6 +668,34 @@ SWITCH_FLOOR_TINY =
           [2] = { l_tex="switch", l_peg="top", kind="kind", tag="tag",
                   x_offset="x_offset", y_offset="y_offset" }
         },
+  },
+},
+
+SWITCH_CEIL =
+{
+  height_range={ 80,160 },
+  
+  structure =
+  {
+    "bbbb",
+    "ssss",
+    "bbbb",
+    "....",
+  },
+
+  elements =
+  {
+    s = { c_rel="floor", c_h=40,
+          c_tex="side_w", c_tex="switch_f", l_peg="top",
+
+          [2] = { u_tex="switch", u_peg="top", kind="kind", tag="tag",
+                  y_offset="y_offset" }
+        },
+
+    -- beam coming down from ceiling
+    b = { c_rel="switch_h", c_h=40, c_tex="beam_c",
+          u_tex="beam_w", u_peg="bottom",
+        }
   },
 },
 
@@ -719,6 +761,9 @@ SWITCH_NICHE_TINY =
 
 TECH_PICKUP_SMALL =
 {
+  environment="indoor",
+  height_range={ 160,256 },
+
   structure =
   {
     "####aaaaaaaa####",
@@ -760,6 +805,7 @@ TECH_PICKUP_SMALL =
 TECH_PICKUP_LARGE =
 {
   copy="TECH_PICKUP_SMALL",
+  height_range={ 192,320 },
 
   structure =
   {
@@ -791,6 +837,9 @@ TECH_PICKUP_LARGE =
 
 STATUE_TECH_1 =
 {
+  environment="indoor",
+  height_range={ 176,248 },
+
   structure =
   {
     "....................",
@@ -848,6 +897,9 @@ STATUE_TECH_1 =
 
 STATUE_CHAIR_DUDE =
 {
+  region="floor",
+  height_range={ 136,1024 },
+
   structure =
   {
     "........",
@@ -880,6 +932,9 @@ STATUE_CHAIR_DUDE =
 
 DRINKS_BAR =
 {
+  region="floor",
+  height_range={ 64,512 },
+
   structure =
   {
     "............",
@@ -909,6 +964,10 @@ DRINKS_BAR =
 
 GROUND_LIGHT =
 {
+  region="floor",
+  environment="outdoor",
+  height_range={ 96,1024 },
+
   structure =
   {
     "aaaaaaa.",
@@ -923,13 +982,13 @@ GROUND_LIGHT =
 
   elements =
   {
-    a = { f_h = 0 },
+    a = { f_h=0 },
 
-    b = { f_h = 8, l_tex = "shawn", f_tex="shawn_top", l_peg="top", },
+    b = { f_h=8, l_tex="shawn", f_tex="shawn_top", l_peg="top", },
 
     c = { copy="b", f_h=40, light=192 },
 
-    d = { f_h = 64, l_tex = "light", f_tex = "lite_top", light=200 },
+    d = { f_h=64, l_tex="light", f_tex="lite_top", light=200 },
   },
 },
 
@@ -941,6 +1000,10 @@ MEGA_SKYLIGHT_1 =
   -- frame, frame_ceil
   -- beam,  beam_ceil
   -- sky
+
+  region="ceil",
+  environment="indoor",
+  height_range={ 96,304 },
 
   structure =
   {
@@ -1029,6 +1092,10 @@ MEGA_SKYLIGHT_3 =
 
 BILLBOARD =
 {
+  region="floor",
+  environment="outdoor",
+  height_range={ 160,1024 },
+
   structure =
   {
     "................",
@@ -1059,6 +1126,10 @@ BILLBOARD =
 
 BILLBOARD_LIT =
 {
+  region="floor",
+  environment="outdoor",
+  height_range={ 160,1024 },
+
   structure =
   {
     "................",
@@ -1101,6 +1172,9 @@ BILLBOARD_LIT =
 
 BILLBOARD_ON_STILTS =
 {
+  environment="outdoor",
+  height_range={ 144,1024 },
+
   structure =
   {
     "............",
@@ -1131,6 +1205,9 @@ BILLBOARD_ON_STILTS =
 
 BILLBOARD_STILTS_HUGE =
 {
+  environment="outdoor",
+  height_range={ 144,1024 },
+
   structure =
   {
     ".C........C.",
@@ -1188,6 +1265,7 @@ BILLBOARD_STILTS_HUGE =
 CRATE =
 {
   scale=64,
+  region="floor",
 
   structure =
   {
@@ -1224,12 +1302,7 @@ CRATE_BIG =
 
 CRATE_TWO_SIDED =
 {
-  scale=64,
-
-  structure =
-  {
-    "c"
-  },
+  copy="CRATE",
 
   elements =
   {
@@ -1296,6 +1369,8 @@ CRATE_ROTATE =
 
 CRATE_TRIPLE =
 {
+  height_range={ 144,1024 },
+
   structure =
   {
     "aaaacccc",
@@ -1321,6 +1396,7 @@ CRATE_TRIPLE =
 CRATE_JUMBLE =
 {
   scale=64,
+  height_range={ 224,1024 },
 
   structure =
   {
@@ -1365,6 +1441,8 @@ CORNER_BEAM =
 
 CORNER_LIGHT =
 {
+  environment="indoor",
+
   structure =
   {
     "BBB.",
@@ -1507,6 +1585,8 @@ CORNER_CONVEX =
 
 PILLAR_LIGHT1 =
 {
+  environment="indoor",
+
   structure =
   {
     "BsB.",
@@ -1542,6 +1622,8 @@ PILLAR_LIGHT2 =
 
 PILLAR_LIGHT3 =
 {
+  environment="indoor",
+
   structure =
   {
     "pppp",
@@ -1564,6 +1646,8 @@ PEDESTAL =
 {
   scale=64,
 
+  region="floor",
+
   structure =
   {
     "p",
@@ -1580,6 +1664,8 @@ PEDESTAL =
 
 PEDESTAL_PLUT =
 {
+  environment="outdoor",
+
   structure =
   {
     "pppp",
@@ -1610,6 +1696,9 @@ PEDESTAL_PLUT =
 PEDESTAL_PLUT_DOUBLE =
 {
   copy="PEDESTAL_PLUT",
+
+  environment="indoor",
+  height_range={ 112,1024 },
 
   -- FIXME: elements =
 },
