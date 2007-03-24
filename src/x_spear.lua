@@ -84,6 +84,156 @@ SP_SCENERY =
   marble_column = { r=24,h=48 },
 }
 
+SP_ROOM_TYPES =
+{
+  HALLWAY =
+  {
+    scenery = { ceil_light2=90 },
+  },
+
+  KITCHEN =
+  {
+    scenery = { kitchen_stuff=50,
+                puddle=20, bare_table=20, table_chairs=5,
+                barrel=10, green_barrel=5, plant=2
+              },
+
+    pickups = { good_food=15, dog_food=5 },
+    pickup_rate = 20,
+  },
+
+}
+
+SP_LEVEL_STYLES =
+{
+  CELLS =
+  {
+    prob = 20,
+
+    room_probs =
+    {
+      PLAIN = 90,    STORAGE = 40,
+      TREASURE = 5,  SUPPLIES = 10,
+      QUARTERS = 20, BATHROOM = 10,
+      KITCHEN = 10,  TORTURE = 60,
+    },
+
+    theme_probs =
+    {
+      WOOD = 25,
+      GRAY_STONE = 60,
+      GRAY_BRICK = 60,
+      BLUE_STONE = 90,
+      BLUE_BRICK = 50,
+      RED_BRICK = 20,
+      PURPLE_STONE = 1,
+      BROWN_CAVE = 10,
+      BROWN_BRICK = 10,
+      BROWN_STONE = 20,
+
+      CONCRETE = 5,
+      GRAY_CONCRETE = 5,
+      BROWN_CONCRETE = 20,
+      PURPLE_BRICK = 20,
+    },
+
+    general_scenery =
+    {
+      dead_guard=50, blood_well=40, puddle=10,
+    },
+  },
+
+  BUNKER =
+  {
+    prob = 50,
+
+    room_probs =
+    {
+      PLAIN = 90,    STORAGE = 50,
+      TREASURE = 10, SUPPLIES = 10,
+      QUARTERS = 50, BATHROOM = 15,
+      KITCHEN = 25,  TORTURE = 20,
+    },
+
+    theme_probs =
+    {
+      WOOD = 120,
+      GRAY_STONE = 60,
+      GRAY_BRICK = 40,
+      BLUE_STONE = 5,
+      BLUE_BRICK = 10,
+      RED_BRICK = 80,
+      PURPLE_STONE = 1,
+      BROWN_CAVE = 5,
+      BROWN_BRICK = 10,
+      BROWN_STONE = 5,
+
+      CONCRETE = 50,
+      GRAY_CONCRETE = 50,
+      BROWN_CONCRETE = 30,
+      PURPLE_BRICK= 10,
+    },
+
+    general_scenery =
+    {
+      marble_column=90, angel_statue=30,
+      suit_of_armor=10, flag=10,
+    },
+  },
+
+  CAVE =
+  {
+    prob=30,
+
+    room_probs =
+    {
+      PLAIN = 120,   STORAGE = 30,
+      TREASURE = 15, SUPPLIES = 5,
+      QUARTERS = 15, BATHROOM = 30,
+      KITCHEN = 5,   TORTURE = 30,
+    },
+
+    theme_probs =
+    {
+      WOOD = 2,
+      GRAY_STONE = 30,
+      GRAY_BRICK = 10,
+      BLUE_STONE = 5,
+      BLUE_BRICK = 5,
+      RED_BRICK = 10,
+      PURPLE_STONE = 30,
+      BROWN_CAVE = 80,
+      BROWN_BRICK = 20,
+      BROWN_STONE = 50,
+
+      CONCRETE = 10,
+      GRAY_CONCRETE = 5,
+      BROWN_CONCRETE = 5,
+      PURPLE_BRICK = 5,
+    },
+
+    general_scenery =
+    {
+      vines=70, cow_skull=30, skull_stick=20
+    },
+  },
+
+  SECRET =
+  {
+    prob=0, -- special style, never chosen randomly
+
+    room_probs =
+    {
+      PLAIN = 30,    STORAGE = 10,
+      TREASURE = 90, SUPPLIES = 70,
+      QUARTERS = 2,  BATHROOM = 2,
+      KITCHEN = 20,  TORTURE = 2,
+    },
+
+    -- theme_probs : when missing, all have same prob
+  },
+}
+
 ----------------------------------------------------------------
 
 THEME_FACTORIES["spear"] = function()
@@ -96,16 +246,20 @@ THEME_FACTORIES["spear"] = function()
   T.pickups  = copy_and_merge(T.pickups,  SP_PICKUPS)
 
   T.scenery  = copy_and_merge(T.scenery,  SP_SCENERY)
+  T.rooms    = copy_and_merge(T.rooms,    SP_ROOMS)
 
-  -- remove Wolf3d only scenery
+  T.styles   = SP_LEVEL_STYLES
+
+  -- remove Wolf3d only stuff
 
   T.scenery["sink"] = nil
   T.scenery["bed"]  = nil
-  T.scenery["aardwolf"] = nil
 
   T.scenery["pots"]   = nil
   T.scenery["stove"]  = nil
   T.scenery["spears"] = nil
+
+  T.scenery["aardwolf"] = nil
   T.scenery["dud_clip"] = nil
 
   return T

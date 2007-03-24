@@ -347,7 +347,7 @@ WF_ROOM_TYPES =
 
   HALLWAY =
   {
-    scenery = "ceil_light",
+    scenery = { ceil_light=90 },
   },
 
   STORAGE =
@@ -519,19 +519,7 @@ WF_LEVEL_STYLES =
       KITCHEN = 20,  TORTURE = 2,
     },
 
-    theme_probs =
-    {
-      WOOD = 77,
-      GRAY_STONE = 77,
-      GRAY_BRICK = 77,
-      BLUE_STONE = 77,
-      BLUE_BRICK = 77,
-      RED_BRICK = 77,
-      PURPLE_STONE = 77,
-      BROWN_CAVE = 77,
-      BROWN_BRICK = 77,
-      BROWN_STONE = 77,
-    },
+    -- theme_probs : when missing, all have same prob
   },
 }
 
