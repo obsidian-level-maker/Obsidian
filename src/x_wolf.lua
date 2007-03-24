@@ -417,7 +417,7 @@ WF_THEMES =
 
     room_probs =
     {
-      PLAIN = 90,    STORAGE = 40,
+      STORAGE = 40,
       TREASURE = 5,  SUPPLIES = 10,
       QUARTERS = 20, BATHROOM = 10,
       KITCHEN = 10,  TORTURE = 60,
@@ -449,7 +449,7 @@ WF_THEMES =
 
     room_probs =
     {
-      PLAIN = 90,    STORAGE = 50,
+      STORAGE = 50,
       TREASURE = 10, SUPPLIES = 10,
       QUARTERS = 50, BATHROOM = 15,
       KITCHEN = 25,  TORTURE = 20,
@@ -481,7 +481,7 @@ WF_THEMES =
 
     room_probs =
     {
-      PLAIN = 120,   STORAGE = 30,
+      STORAGE = 30,
       TREASURE = 15, SUPPLIES = 5,
       QUARTERS = 15, BATHROOM = 30,
       KITCHEN = 5,   TORTURE = 30,
@@ -513,7 +513,7 @@ WF_THEMES =
 
     room_probs =
     {
-      PLAIN = 30,    STORAGE = 10,
+      STORAGE = 10,
       TREASURE = 90, SUPPLIES = 70,
       QUARTERS = 2,  BATHROOM = 2,
       KITCHEN = 20,  TORTURE = 2,
