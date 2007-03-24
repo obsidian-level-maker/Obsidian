@@ -222,7 +222,7 @@ function hm_give_weapon(HM, weapon, ammo_mul)
   assert(info)
 
   if info.ammo and info.give then
-    if info.ammo == "combo_mana" then
+    if info.ammo == "dual_mana" then
       HM.blue_mana  = HM.blue_mana  + info.give * (ammo_mul or 1)
       HM.green_mana = HM.green_mana + info.give * (ammo_mul or 1)
       return
@@ -330,7 +330,7 @@ function simulate_battle(p, HM, mon_set, quest)
       if item.weapon then
         hm_give_weapon(HM, item.weapon, 0.5) -- dropped
       elseif item.ammo then
-        assert(item.ammo ~= "combo_mana")
+        assert(item.ammo ~= "dual_mana")
         HM[item.ammo] = HM[item.ammo] + item.give * 0.5
       else
         error("UKNOWN ITEM GIVEN BY " .. AC.name)
@@ -450,7 +450,7 @@ zprint(active_mon, #active_mon, active_mon[1])
       if name == "launch" then blast_monsters(3, 64) end
 
       if info.ammo then
-        if info.ammo == "combo_mana" then
+        if info.ammo == "dual_mana" then
           HM[blue_mana]  = HM[blue_mana]  - info.per
           HM[green_mana] = HM[green_mana] - info.per
         else

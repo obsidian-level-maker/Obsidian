@@ -447,7 +447,7 @@ XN_THING_NUMS =
 
   blue_mana  = 122,
   green_mana = 124,
-  combo_mana = 8004,
+  dual_mana  = 8004,
 
   ar_mesh   = 8005,
   ar_shield = 8006,
@@ -570,24 +570,24 @@ XN_WEAPONS =
   c_mace    = { melee=true,                rate=1.1, dm=12, freq=10, held=true, },
   c_staff   = { ammo="blue_mana",  per=1,  rate=1.1, dm= 6, freq=62, },
   c_fire    = { ammo="green_mana", per=4,  rate=1.1, dm=27, freq=62, },
-  c_wraith  = { ammo="combo_mana", per=18, rate=2.2, dm=85, freq=30, pieces={c1_shaft, c2_cross, c3_arc} },
+  c_wraith  = { ammo="dual_mana",  per=18, rate=2.2, dm=85, freq=30, pieces={c1_shaft, c2_cross, c3_arc} },
 
   f_gaunt   = { melee=true,                rate=1.1, dm=20, freq=10, held=true, },
   f_axe     = { ammo="blue_mana",  per=2,  rate=1.1, dm=60, freq=62, melee=true },
   f_hammer  = { ammo="green_mana", per=3,  rate=1.1, dm=27, freq=62, },
-  f_quietus = { ammo="combo_mana", per=14, rate=2.2, dm=50, freq=30, pieces={f1_hilt, f2_cross, f3_blade} },
+  f_quietus = { ammo="dual_mana",  per=14, rate=2.2, dm=50, freq=30, pieces={f1_hilt, f2_cross, f3_blade} },
 
   m_wand    = { held=true,                 rate=1.1, dm= 8, freq=10, continues=true },
   m_cone    = { ammo="blue_mana",  per=3,  rate=1.1, dm=27, freq=62, },
   m_blitz   = { ammo="green_mana", per=5,  rate=1.1, dm=60, freq=62, },
-  m_scourge = { ammo="combo_mana", per=15, rate=2.2, dm=50, freq=30, pieces={m1_stick, m2_stub, m3_skull} },
+  m_scourge = { ammo="dual_mana",  per=15, rate=2.2, dm=50, freq=30, pieces={m1_stick, m2_stub, m3_skull} },
 }
 
 XN_PICKUPS =
 {
   h_vial  = { stat="health", give=10,  prob=70 },
   h_flask = { stat="health", give=25,  prob=25 },
-  h_urn   = { stat="health", give=100, prob=5  },
+  h_urn   = { stat="health", give=100, prob=5, max_clu=1 },
 
   -- FIXME: these give values are CRAP!
   ar_mesh   = { stat="armor", give=100, prob=50 },
@@ -597,7 +597,7 @@ XN_PICKUPS =
 
   blue_mana  = { stat="blue_mana",  give=10 },
   green_mana = { stat="green_mana", give=10 },
-  combo_mana = { stat="combo_mana", give=20 },
+  dual_mana  = { stat="dual_mana",  give=20 },
 }
 
 XN_NICENESS =
@@ -624,7 +624,7 @@ XN_DEATHMATCH =
 
   ammo =
   { 
-    blue_mana=40, green_mana=40, combo_mana=15
+    blue_mana=40, green_mana=40, dual_mana=15
   },
 
   items =
