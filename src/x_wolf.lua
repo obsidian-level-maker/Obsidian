@@ -91,7 +91,7 @@ WF_THING_NUMS =
 
   gibs_1 = 57,
   barrel = 58,
-  well = 59,
+  water_well = 59,
   empty_well = 60,
   gibs_2 = 61,
   flag = 62,
@@ -284,6 +284,61 @@ WF_SECRET_LEVELS =
   { leave="E6L3", enter="E6L10", kind="pacman" },
 }
 
+WF_SCENERY =
+{
+  -- LIGHTS --
+
+  floor_lamp    = { r=24,h=48, light=true },
+  ceiling_light = { r=24,h=48, pass=true, ceil=true, light=true },
+  chandelier    = { r=24,h=48, pass=true, ceil=true, light=true },
+
+  -- URBANE --
+  
+  puddle = { r=24,h= 4, pass=true },
+  sink   = { r=24,h=48 },
+
+  tree   = { r=24,h=48 },
+  plant  = { r=24,h=48 },
+  urn    = { r=24,h=48 },
+  pots   = { r=24,h=48, pass=true },
+  stove  = { r=24,h=48 },
+  bed    = { r=24,h=48 },
+  basket = { r=24,h=48 },
+
+  bare_table    = { r=24,h=48 },
+  table_chairs  = { r=24,h=48 },
+  kitchen_stuff = { r=24,h=48 },
+
+  -- CASTLEY --
+
+  suit_of_armor = { r=24,h=48 },
+  red_pillar    = { r=24,h=48 },
+  barrel        = { r=24,h=48 },
+  green_barrel  = { r=24,h=48 },
+  water_well    = { r=24,h=48 },
+  empty_well    = { r=24,h=48 },
+
+  flag   = { r=24,h=48 },
+  junk_1 = { r=24,h=48, pass=true },  -- FIXME: verify passable
+  junk_2 = { r=24,h=48, pass=true },
+  junk_3 = { r=24,h=48, pass=true },
+  spears = { r=24,h=48 },
+  vines  = { r=24,h=48, pass=true },
+
+  -- GORY --
+
+  hanged_man       = { r=24,h=48 },
+  hanging_cage     = { r=24,h=48 },
+  skeleton_in_cage = { r=24,h=48 },
+  skeleton_flat    = { r=24,h= 8, pass=true },
+  skeleton_relax   = { r=24,h= 8, pass=true },
+
+  dead_guard = { r=24,h=8, pass=true },
+
+  gibs_1 = { r=24,h=4, pass=true },
+  gibs_2 = { r=24,h=4, pass=true },
+}
+
 WF_ROOM_TYPES =
 {
   PLAIN =
@@ -324,7 +379,7 @@ WF_ROOM_TYPES =
 
   BATHROOM =
   {
-    scenery = { sink=50, puddle=90, well=30, empty_well=30 },
+    scenery = { sink=50, puddle=90, water_well=30, empty_well=30 },
   },
 
   KITCHEN =
@@ -381,6 +436,11 @@ WF_LEVEL_STYLES =
       BROWN_BRICK = 10,
       BROWN_STONE = 20,
     },
+
+    general_scenery =
+    {
+      dead_guard=50, puddle=10,
+    },
   },
 
   BUNKER =
@@ -408,6 +468,11 @@ WF_LEVEL_STYLES =
       BROWN_BRICK = 10,
       BROWN_STONE = 5,
     },
+
+    general_scenery =
+    {
+      suit_of_armor=50, flag=20,
+    },
   },
 
   CAVE =
@@ -434,6 +499,11 @@ WF_LEVEL_STYLES =
       BROWN_CAVE = 80,
       BROWN_BRICK = 20,
       BROWN_STONE = 50,
+    },
+
+    general_scenery =
+    {
+      vines=90, spears=30,
     },
   },
 
@@ -584,6 +654,7 @@ THEME_FACTORIES["wolf3d"] = function()
 
     rooms     = WF_ROOM_TYPES,
     styles    = WF_LEVEL_STYLES,
+    scenery   = WF_SCENERY,
   }
 end
 

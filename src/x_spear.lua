@@ -66,6 +66,23 @@ SP_PICKUPS =
   clip_25 = { stat="bullet", give=25 },
 }
 
+----------------------------------------------------------------
+
+SP_SCENERY =
+{
+  -- only differences to WF_SCENERY here
+
+  ceil_light2 = { r=24,h=48, pass=true, ceil=true, light=true },
+
+  skull_stick = { r=24,h=48 },
+  skull_cage  = { r=24,h=48 },
+
+  cow_skull    = { r=24,h=48 },
+  blood_well   = { r=24,h=48 },
+  angel_statue = { r=24,h=48 },
+
+  marble_column = { r=24,h=48 },
+}
 
 ----------------------------------------------------------------
 
@@ -77,6 +94,19 @@ THEME_FACTORIES["spear"] = function()
 
   T.themes   = copy_and_merge(T.themes,   SP_THEMES)
   T.pickups  = copy_and_merge(T.pickups,  SP_PICKUPS)
+
+  T.scenery  = copy_and_merge(T.scenery,  SP_SCENERY)
+
+  -- remove Wolf3d only scenery
+
+  T.scenery["sink"] = nil
+  T.scenery["bed"]  = nil
+  T.scenery["aardwolf"] = nil
+
+  T.scenery["pots"]   = nil
+  T.scenery["stove"]  = nil
+  T.scenery["spears"] = nil
+  T.scenery["dud_clip"] = nil
 
   return T
 end
