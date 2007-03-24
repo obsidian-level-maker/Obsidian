@@ -680,6 +680,83 @@ D2_PREFAB_SCENERY =
            }
 
   },
+
+  mega_skylight_METAL =
+  {
+    prefab = "MEGA_SKYLIGHT_1",
+
+    skin = { 
+             sky = "F_SKY1",
+             frame = "METAL",
+             frame_ceil = "CEIL5_2",
+
+             beam = "METAL",
+             beam_ceil  = "CEIL5_2",
+           }
+  },
+
+  mega_skylight_METALWOOD =
+  {
+    prefab = "MEGA_SKYLIGHT_2",
+
+    skin = { 
+             sky = "F_SKY1",
+             frame = "METAL",
+             frame_ceil = "CEIL5_2",
+
+             beam = "WOOD12",
+             beam_ceil = "FLAT5_2",
+           }
+  },
+
+  drinks_bar_WOOD_POTION =
+  {
+    prefab = "DRINKS_BAR",
+
+    skin = { bar_w = "PANBORD1", bar_f = "FLAT5_2",
+             drink = "potion",
+           }
+  },
+
+  crate_triple_A =
+  {
+    prefab = "CRATE_TRIPLE",
+
+    skin =
+    {
+      crate_w1 = "CRATE1", crate_f1 = "CRATOP2",
+      crate_w2 = "CRATE1", crate_f2 = "CRATOP2",
+      crate_w3 = "CRATE2", crate_f3 = "CRATOP1",
+      small_w  = "CRATELIT", small_f = "CRATOP1",
+    },
+  },
+
+  crate_triple_B =
+  {
+    prefab = "CRATE_TRIPLE",
+
+    skin =
+    {
+      crate_w1 = "CRATE2", crate_f1 = "CRATOP1",
+      crate_w2 = "CRATE1", crate_f2 = "CRATOP2",
+      crate_w3 = "CRATE1", crate_f3 = "CRATOP2",
+      small_w  = "CRATELIT", small_f = "CRATOP1",
+    },
+  },
+
+  crate_jumble_A =
+  {
+    prefab = "CRATE_JUMBLE",
+
+    skin =
+    {
+      tall_w   = "CRATE1",   tall_f = "CRATOP2",
+      wide_w   = "CRATWIDE", wide_f = "CRATOP1",
+
+      crate_w1 = "CRATE1", crate_f1 = "CRATOP2",
+      crate_w2 = "CRATE2", crate_f2 = "CRATOP1",
+    },
+  },
 }
 
 D2_ROOM_TYPES =
