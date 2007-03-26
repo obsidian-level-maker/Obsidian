@@ -289,47 +289,47 @@ WF_SCENERY =
   -- LIGHTS --
 
   floor_lamp    = { r=24,h=48, light=true },
-  ceiling_light = { r=24,h=48, pass=true, ceil=true, light=true },
-  chandelier    = { r=24,h=48, pass=true, ceil=true, light=true },
+  ceiling_light = { r=24,h=48, pass=true, ceil=true, light=true, add_mode="island" },
+  chandelier    = { r=24,h=48, pass=true, ceil=true, light=true, add_mode="island" },
 
   -- URBANE --
   
   puddle = { r=24,h= 4, pass=true },
-  sink   = { r=24,h=48 },
+  sink   = { r=24,h=48, add_mode="wall" },
 
   tree   = { r=24,h=48 },
   plant  = { r=24,h=48 },
   urn    = { r=24,h=48 },
-  pots   = { r=24,h=48, pass=true },
-  stove  = { r=24,h=48 },
-  bed    = { r=24,h=48 },
+  pots   = { r=24,h=48, add_mode="wall", pass=true },
+  stove  = { r=24,h=48, add_mode="wall" },
+  bed    = { r=24,h=48, add_mode="wall" },
   basket = { r=24,h=48 },
 
-  bare_table    = { r=24,h=48 },
-  table_chairs  = { r=24,h=48 },
+  bare_table    = { r=24,h=48, add_mode="island" },
+  table_chairs  = { r=24,h=48, add_mode="island" },
   kitchen_stuff = { r=24,h=48 },
 
   -- CASTLEY --
 
-  suit_of_armor = { r=24,h=48 },
-  red_pillar    = { r=24,h=48 },
+  suit_of_armor = { r=24,h=48, add_mode="wall" },
+  red_pillar    = { r=24,h=48, add_mode="island" },
   barrel        = { r=24,h=48 },
   green_barrel  = { r=24,h=48 },
   water_well    = { r=24,h=48 },
   empty_well    = { r=24,h=48 },
 
   flag   = { r=24,h=48 },
-  junk_1 = { r=24,h=48, pass=true },  -- FIXME: verify passable
+  junk_1 = { r=24,h=48, pass=true },
   junk_2 = { r=24,h=48, pass=true },
   junk_3 = { r=24,h=48, pass=true },
-  spears = { r=24,h=48 },
   vines  = { r=24,h=48, pass=true },
+  spears = { r=24,h=48, add_mode="wall" },
 
   -- GORY --
 
-  hanged_man       = { r=24,h=48 },
-  hanging_cage     = { r=24,h=48 },
-  skeleton_in_cage = { r=24,h=48 },
+  hanged_man       = { r=24,h=48, add_mode="island" },
+  hanging_cage     = { r=24,h=48, add_mode="island" },
+  skeleton_in_cage = { r=24,h=48, add_mode="island" },
   skeleton_flat    = { r=24,h= 8, pass=true },
   skeleton_relax   = { r=24,h= 8, pass=true },
 
