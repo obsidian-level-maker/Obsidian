@@ -78,7 +78,7 @@ WF_THING_NUMS =
   plant = 34,
   urn = 35,
   bare_table = 36,
-  ceiling_light = 37,
+  ceil_light = 37,
   kitchen_stuff = 38,
 
   suit_of_armor = 39,
@@ -288,9 +288,9 @@ WF_SCENERY =
 {
   -- LIGHTS --
 
-  floor_lamp    = { r=24,h=48, light=true },
-  ceiling_light = { r=24,h=48, pass=true, ceil=true, light=true, add_mode="island" },
-  chandelier    = { r=24,h=48, pass=true, ceil=true, light=true, add_mode="island" },
+  floor_lamp = { r=24,h=48, light=true },
+  ceil_light = { r=24,h=48, pass=true, ceil=true, light=true, add_mode="island" },
+  chandelier = { r=24,h=48, pass=true, ceil=true, light=true, add_mode="island" },
 
   -- URBANE --
   
