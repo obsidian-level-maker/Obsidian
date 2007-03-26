@@ -19,7 +19,7 @@
 WF_THING_NUMS =
 {
   -- players
-  player1 = { easy=19, medium=19, hard=19, dirs=true },
+  player1 = { easy=19, medium=19, hard=19, dirs="player" },
 
   -- enemies
   dog     = { easy=138, medium=174, hard=210, dirs=true },
@@ -682,16 +682,29 @@ function write_wolf_level(p)
         assert(obj)
 
         -- convert angle
+        --
+        -- Note that the player is different from the enemies:
+        --   PLAYER : 19=N, 20=E, 21=S, 22=W
+        --   ENEMY  : +0=E, +1=N, +2=W, +3=S
+
         if kind.dirs and th.angle then
-          local offset = int((360 - th.angle + 135) / 90) % 4
-          assert(0 <= offset and offset <= 3)
-          obj = obj + offset
+          if kind.dirs == "player" then
+            local offset = int((360 - th.angle + 135) / 90) % 4
+            assert(0 <= offset and offset <= 3)
+            obj = obj + offset
+          else
+            local offset = int((th.angle + 45) / 90) % 4
+            assert(0 <= offset and offset <= 3)
+            obj = obj + offset
+          end
         end
 
-        -- sometimes patrol (FIXME: put logic in monster.lua)
-        if kind.patrol and rand_odds(10) then
-          obj = obj + kind.patrol
-        end
+        -- FIXME sometimes patrol (put choice in monster.lua)
+        -- Disabled due to problems (T_Path error)
+
+--      if kind.patrol and rand_odds(10) then
+--        obj = obj + kind.patrol
+--      end
       else
         obj = kind
       end
