@@ -99,8 +99,42 @@ end
 ----------------------------------------------------------------
 
 function get_rand_theme()
-  local name,info = rand_table_pair(THEME.combos)
-  return info
+
+  local infos = {}
+  local probs = {}
+  for name,info in pairs(THEME.themes) do
+    if info.prob > 0 then
+      table.insert(infos, info)
+      table.insert(probs, info.prob)
+    end
+  end
+  assert(#infos > 0)
+  assert(#infos == #probs)
+  return infos[rand_index_by_probs(probs)]
+end
+
+function get_rand_combo(theme)
+  if theme and theme.combo_probs then
+    local name = rand_key_by_probs(theme.combo_probs)
+    local info = THEME.combos[name]
+    if not info then error("No such combo: " .. name); end
+    return info
+  else
+    local name,info = rand_table_pair(THEME.combos)
+    return info
+  end
+end
+
+function get_rand_roomtype(theme)
+  if theme and theme.room_probs then
+    local name = rand_key_by_probs(theme.room_probs)
+    local info = THEME.rooms[name]
+    if not info then error("No such room: " .. name); end
+    return info
+  else
+    local name,info = rand_table_pair(THEME.rooms)
+    return info
+  end
 end
 
 function get_rand_indoor_theme()

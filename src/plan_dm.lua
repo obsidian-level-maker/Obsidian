@@ -275,7 +275,7 @@ function plan_dm_arena()
     for cy = 1,p.h do
       cx = rand_irange(1,p.w)
       local c = p.cells[cx][cy]
-      c.theme = get_rand_theme()
+      c.theme = get_rand_combo()
       c.liquid = liquid_for_seed(c.theme)
     end
 

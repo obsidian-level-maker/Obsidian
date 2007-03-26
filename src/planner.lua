@@ -1110,24 +1110,59 @@ function plan_sp_level(is_coop)  -- returns Plan
     Q.has_hallway = true
   end
   
-  local function make_quest_path(Q)
- 
-    -- TODO: better system for choosing themes
-    local theme
-    if false then --!!!!!! Q.mini and rand_odds(77) then theme = Q.parent.theme
-    else theme = get_rand_theme()
+  local function specialize_rooms(Q)
+
+    local cells = {}
+    local probs = {}
+
+    for i = 2,#Q.path do
+      local c      = Q.path[i]
+      local c_prev = Q.path[i+1]
+      local c_next = Q.path[i-1]
+
+      if not c.hallway then
+        local prob = 10
+
+        if not c_prev then prob = 40 end
+        if not c_next then prob = 70 end
+        if c_prev and c_prev.hallway then prob = prob+50 end
+        if c_next and c_next.hallway then prob = prob+20 end
+
+        table.insert(cells, c)
+        table.insert(probs, prob)
+      end
     end
 
-    Q.theme = theme
+    while #cells > 0 do
+
+      local idx = rand_index_by_probs(probs)
+      local c   = cells[idx]
+
+      c.room_type = get_rand_roomtype(Q.level_theme)
+
+con.debugf("ROOM %d QUEST %d.%d ---> %s\n",
+c.along, Q.level, Q.sub_level or 0, c.room_type.name)
+
+      if rand_odds(70) then return end
+
+      table.remove(cells, idx)
+      table.remove(probs, idx)
+    end
+  end
+
+  local function make_quest_path(Q)
+ 
+    local theme = Q.combo
+
+    Q.theme = theme --!!!! FIXME: remove
     assert(theme)
-con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
 
     -- decide liquid
     if THEME.caps.liquids then
       Q.liquid = liquid_for_quest(Q)
     end
 
-    -- add very first room (in lower-left quarter of map).
+    -- add very first room somewhere in lower-left quarter of map
     if not Q.mini and Q.level == 1 then
       local x = rand_irange(1, int(p.w / 2))
       local y = rand_irange(1, int(p.h / 2))
@@ -1171,6 +1206,7 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
 
     make_hallways(Q)
 
+if false then --!!!!
     if Q.theme.outdoor and not Q.has_hallway then
       -- Experimental: start cell is a building
       if #Q.path >= 3 and Q == p.quests[1] and rand_odds(30) then
@@ -1182,6 +1218,9 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
         Q.last.theme = get_rand_indoor_theme()
       end
     end
+end
+
+    specialize_rooms(Q)
 
     -- FIXME: assign depot spot __now__
   end
@@ -1196,13 +1235,14 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
       if c1.quest.level == c2.quest.level then
 
         local door_chance = 15
-        if c1.theme.outdoor ~= c2.theme.outdoor then door_chance = 70
-        elseif c1.hallway and c2.hallway then door_chance = 10
-        elseif c1.theme ~= c2.theme then door_chance = sel(THEME.caps.blocky_doors, 80, 40)
+
+            if c1.theme.outdoor ~= c2.theme.outdoor then door_chance = 70
+        elseif c1.hallway and c2.hallway then door_chance = 5
         elseif c1.theme.outdoor then door_chance = 5
+        elseif c1.theme ~= c2.theme then door_chance = sel(THEME.caps.blocky_doors, 85, 40)
         end
 
---!!!!!        if rand_odds(door_chance) then link.kind = "door" end
+        if rand_odds(door_chance) then link.kind = "door" end
 
       else -- need a locked door
 
@@ -1675,6 +1715,77 @@ con.debugf("QUEST %d.%d THEME %s\n", Q.level, Q.sub_level or 0, Q.theme.name)
     end
 
     con.ticker();
+  end
+
+  local function plot_quests()
+    for zzz,Q in ipairs(p.quests) do
+      make_quest_path(Q)
+
+      for yyy,R in ipairs(Q.children) do
+        make_quest_path(R)
+      end
+
+      con.ticker();
+    end
+  end
+
+  local function decide_themes()
+
+    local T1 = get_rand_theme()
+    local T2 = get_rand_theme()
+
+    if T1 == T2 then T2 = get_rand_theme() end
+
+    -- choose change-over point
+    assert(#p.quests >= 2)
+
+    local h_probs = {}
+    for j = 1,#p.quests do
+      local prob
+      if j == 1 or j == #p.quests then
+        table.insert(h_probs, 5)
+      elseif j == 2 or j == #p.quests-1 then
+        table.insert(h_probs, 60)
+      else
+        table.insert(h_probs, 90)
+      end
+    end
+
+    local change_over = rand_index_by_probs(h_probs)
+con.debugf("CHANGE_OVER = %d\n", change_over)
+
+    for idx,Q in ipairs(p.quests) do
+      
+      local diff = Q.level - change_over
+
+      Q.level_theme = sel(diff >= 0, T2, T1)
+
+      Q.combo = get_rand_combo(Q.level_theme)
+con.debugf("QUEST %d.%d theme:%s combo:%s\n", Q.level, Q.sub_level or 0,
+Q.level_theme.name, Q.combo.name)
+
+      for yyy,R in ipairs(Q.children) do
+        
+        if rand_odds(50) then
+          R.level_theme = Q.level_theme
+          R.combo = Q.combo
+        else
+          local T_prob
+              if diff <= -2 then T_prob = 99
+          elseif diff == -1 then T_prob = 90
+          elseif diff ==  0 then T_prob = 40
+          elseif diff ==  1 then T_prob = 10
+          elseif diff >=  2 then T_prob = 1 
+          end
+
+          R.level_theme = rand_sel(T_prob, T1, T2)
+
+          R.combo = get_rand_combo(R.level_theme)
+        end
+con.debugf("SUB_QUEST %d.%d theme:%s combo:%s\n", R.level, R.sub_level or 0,
+R.level_theme.name, R.combo.name)
+      end
+    end
   end
 
   local function peak_toughness(Q)
@@ -2208,16 +2319,9 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   con.printf("\n")
 
   decide_quests()
+  decide_themes()
 
-  for zzz,Q in ipairs(p.quests) do
-    make_quest_path(Q)
-
-    for yyy,R in ipairs(Q.children) do
-      make_quest_path(R)
-    end
-
-    con.ticker();
-  end
+  plot_quests()
 
   decide_links()
   shuffle_build_sites(p)
