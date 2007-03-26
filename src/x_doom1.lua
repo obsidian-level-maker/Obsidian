@@ -760,6 +760,75 @@ DM_QUESTS =
 
 DM_SCENERY =
 {
+  -- LIGHTS --
+
+  lamp         = { r=16,h=16, light=true, },
+  mercury_lamp = { r=16,h=16, light=true, },
+  short_lamp   = { r=16,h=16, light=true, },
+  tech_column  = { r=16,h=16, light=true, },
+
+  candle         = { r=16,h=16, light=true, pass=true },
+  candelabra     = { r=16,h=16, light=true, },
+  burning_barrel = { r=16,h=16, light=true, },
+
+  blue_torch     = { r=16,h=16, light=true, },
+  blue_torch_sm  = { r=16,h=16, light=true, },
+  green_torch    = { r=16,h=16, light=true, },
+  green_torch_sm = { r=16,h=16, light=true, },
+  red_torch      = { r=16,h=16, light=true, },
+  red_torch_sm   = { r=16,h=16, light=true, },
+
+  -- DECORATION --
+
+  green_pillar = { r=16,h=16, },
+  green_column = { r=16,h=16, },
+  red_pillar   = { r=16,h=16, },
+  red_column   = { r=16,h=16, },
+
+  green_column_hrt = { r=16,h=16, add_mode="island" },
+  red_column_skl   = { r=16,h=16, add_mode="island" },
+
+  brown_stub = { r=16,h=16, add_mode="island" },
+  burnt_tree = { r=16,h=16, add_mode="island" },
+  big_tree   = { r=16,h=16, add_mode="island" },
+
+  evil_eye    = { r=16,h=16, add_mode="island" },
+  skull_rock  = { r=16,h=16, },
+
+  -- GORY --
+
+  skull_pole  = { r=16,h=16, },
+  skull_kebab = { r=16,h=16, },
+  skull_cairn = { r=16,h=16, add_mode="island" },
+
+  impaled_human  = { r=16,h=16, },
+  impaled_twitch = { r=16,h=16, },
+
+  gutted_victim1 = { r=16,h=16, ceil=true },
+  gutted_victim2 = { r=16,h=16, ceil=true },
+  gutted_torso1  = { r=16,h=16, ceil=true },
+  gutted_torso2  = { r=16,h=16, ceil=true },
+  gutted_torso3  = { r=16,h=16, ceil=true },
+  gutted_torso4  = { r=16,h=16, ceil=true },
+
+  hang_twitching = { r=16,h=16, ceil=true, pass=true },
+  hang_arm_pair  = { r=16,h=16, ceil=true, pass=true },
+  hang_leg_pair  = { r=16,h=16, ceil=true, pass=true },
+  hang_leg_gone  = { r=16,h=16, ceil=true, pass=true },
+  hang_leg       = { r=16,h=16, ceil=true, pass=true },
+
+  gibs          = { r=16,h=16, pass=true },
+  gibbed_player = { r=16,h=16, pass=true },
+  pool_blood_1  = { r=16,h=16, pass=true },
+  pool_blood_2  = { r=16,h=16, pass=true },
+  pool_brains   = { r=16,h=16, pass=true },
+
+  dead_player  = { r=16,h=16, pass=true },
+  dead_zombie  = { r=16,h=16, pass=true },
+  dead_shooter = { r=16,h=16, pass=true },
+  dead_imp     = { r=16,h=16, pass=true },
+  dead_demon   = { r=16,h=16, pass=true },
+  dead_caco    = { r=16,h=16, pass=true },
 }
 
 DM_PREFAB_SCENERY =
@@ -780,7 +849,11 @@ DM_ROOMS =
   {
     -- crate it up baby!
   },
-  
+
+  PLANT =
+  {
+  },
+
   COMPUTER =
   {
   },
@@ -788,6 +861,8 @@ DM_ROOMS =
   TORTURE =
   {
   },
+
+  -- TODO: check in-game level names for ideas
 }
 
 DM_THEMES =

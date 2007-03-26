@@ -879,7 +879,7 @@ THEME_FACTORIES["doom2"] = function()
 
   T.monsters = copy_and_merge(T.monsters, D2_MONSTERS)
 
-  T.scenery = copy_and_merge(T.rooms,   D2_SCENERY)
+  T.scenery = copy_and_merge(T.scenery, D2_SCENERY)
   T.sc_fabs = copy_and_merge(T.sc_fabs, D2_PREFAB_SCENERY)
   T.rooms   = copy_and_merge(T.rooms,   D2_ROOMS)
   T.themes  = copy_and_merge(T.themes,  D2_THEMES)
