@@ -595,6 +595,7 @@ THEME_FACTORIES["wolf3d"] = function()
 
     caps = { blocky_items=true, blocky_doors=true,
              tiered_skills=true, elevator_exits=true,
+             four_dirs=true,
            },
 
     ERROR_TEX  = WF_NO_TILE,
