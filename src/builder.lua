@@ -3511,6 +3511,42 @@ function build_borders(p)
     B_prefab(p,c, fab, door_info, parm, link.build.rmodel,D.theme, link.x1, link.y1, side)
   end
 
+  local function blocky_door( link, side, double_who )
+    local D = c.border[side]
+
+    local bit
+    if link.quest and link.quest.kind == "key" then
+      bit = THEME.key_bits[link.quest.item]
+      assert(bit)
+      assert(bit.kind_rep)
+    end
+
+    -- door sides
+    local side_tex
+    local ax,ay = dir_to_across(side)
+    
+    if bit and bit.lock_side then
+      side_tex = bit.lock_side
+    elseif not bit and D.theme.door_side then
+      side_tex = D.theme.door_side
+    end
+
+    if side_tex then
+      gap_fill(p, c, link.x1-ax, link.y1-ay, link.x1+ax, link.y1+ay,
+        { solid=side_tex })
+    end
+    
+    p.blocks[link.x1][link.y1] =
+    {
+      f_tex = 0,
+      door_kind = (bit and bit.kind_rep) or "door",
+      door_dir  = side,
+      blocked = true,
+    }
+
+    con.debugf("BUILT BLOCK DOOR @ (%d,%d)\n", link.x1, link.y1)
+  end
+
   local function build_real_link(link, side, double_who)
 
     local D = c.border[side]
@@ -3522,48 +3558,19 @@ B_exit_elevator(p, other, link.x1, link.y1, side)
 return
 end
 
-if link.kind == "door" and THEME.caps.blocky_doors then
-  local bit
-  if link.quest and link.quest.kind == "key" then
-    bit = THEME.key_bits[link.quest.item]
-    assert(bit)
-    assert(bit.kind_rep)
-  end
+    if link.kind == "door" and THEME.caps.blocky_doors then
+      blocky_door( link, side, double_who )
+      return
+    end
 
-  -- door sides
-  local side_tex
-  local ax,ay = dir_to_across(side)
-  
-  if bit and bit.lock_side then
-    side_tex = bit.lock_side
-  elseif not bit and D.theme.door_side then
-    side_tex = D.theme.door_side
-  end
+    if link.kind == "arch" and THEME.caps.blocky_doors then
+      gap_fill(p,c, link.x1,link.y1, link.x2,link.y2, D.build.rmodel)
+      return
+    end
 
-  if side_tex then
-    gap_fill(p, c, link.x1-ax, link.y1-ay, link.x1+ax, link.y1+ay,
-      { solid=side_tex })
-  end
-  
-  p.blocks[link.x1][link.y1] =
-  {
-    f_tex = 0,
-    door_kind = (bit and bit.kind_rep) or "door",
-    door_dir  = side,
-    blocked = true,
-  }
-con.printf("BUILT BLOCK DOOR @ (%d,%d)\n", link.x1, link.y1)
-  return
-end
-if link.kind == "arch" and THEME.caps.blocky_doors then
-  gap_fill(p,c, link.x1,link.y1, link.x2,link.y2,
-    D.build.rmodel)
-  return
-end
-if THEME.caps.blocky_doors then
-  error("Cannot build " .. link.kind)
-end
-
+    if THEME.caps.blocky_doors then
+      error("Cannot build: " .. link.kind)
+    end
 
 if link.kind == "arch" then --!!!!!
 local fab = "ARCH" -- rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
@@ -3591,12 +3598,10 @@ return
 end
 
 
-if link.kind == "door" then
-
-build_door( link, side )
-
-return
-end
+    if link.kind == "door" then
+      build_door( link, side )
+      return
+    end
 
 do
 gap_fill(p, c, link.x1, link.y1, link.x2, link.y2,
@@ -5803,67 +5808,110 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     end
   end
 
+  local function add_prefab(c)
+
+    local name = rand_element {
+      "pillar_light1_METAL",
+      "bb_stilts_huge_WREATH",
+      "statue_tech1_A",
+      "ground_light_SILVER",
+      "mega_skylight_METAL",
+      "mega_skylight_METALWOOD",
+      "drinks_bar_WOOD_POTION",
+      "crate_CRATE1",
+      "crate_CRATE2",
+      "crate_WOODSKUL",
+      "crate_TV",
+      "crate_rotnar_SILVER",
+      "crate_rotate_CRATE1",
+      "crate_rotate_CRATE2",
+      "crate_triple_A",
+      "crate_triple_B",
+      "crate_jumble",
+      }
+    local def = THEME.sc_fabs[name]
+    assert(def)
+    local fab = PREFABS[def.prefab]
+    assert(fab)
+    assert(def.skin)
+
+    if fab.environment then
+      if fab.environment == "indoor" and c.theme.outdoor then return end
+      if fab.environment == "outdoor" and not c.theme.outdoor then return end
+    end
+
+    -- FIXME: this is wrong -- make it part of fab_find_loc??
+    if fab.height_range then
+      local h = c.ceil_h - c.floor_h
+      if h < fab.height_range[1] or h > fab.height_range[2] then return end
+    end
+
+    local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
+    if not x then return end
+
+    local parm = {
+             pic_h = c.rmodel.f_h + 64,
+             corn_h = c.rmodel.f_h + 104,
+             crate_h = c.rmodel.f_h + 64,
+             pic_bottom = c.rmodel.f_h + 64,
+             y_offset = 64,
+           }
+
+    local mirror = rand_odds(50)
+
+    B_prefab(p,c, fab, def.skin, parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir, mirror)
+
+    fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
+  end
+
   local function add_scenery(c)
-    -- FIXME !!!! prefabs | scenery items
 
-local name = rand_element {
---[[
-  "pillar_light1_METAL",
-  "bb_stilts_huge_WREATH",
-  "statue_tech1_A",
-  "ground_light_SILVER",
-  "mega_skylight_METAL",
-  "mega_skylight_METALWOOD",
-  "drinks_bar_WOOD_POTION",
---]]
-  "crate_CRATE1",
-  "crate_CRATE2",
---  "crate_WIDE",
-  "crate_WOODSKUL",
-  "crate_TV",
-  "crate_rotnar_SILVER",
-  "crate_rotate_CRATE1",
-  "crate_rotate_CRATE2",
+    -- choose kind: prefabs | scenery items
 
-  "crate_triple_A",
-  "crate_triple_B",
-  "crate_jumble",
-  }
-local def = THEME.sc_fabs[name]
-assert(def)
-local fab = PREFABS[def.prefab]
-assert(fab)
-assert(def.skin)
+    if THEME.sc_fabs and rand_odds(33) then
+      add_prefab(c)
+      return
+    end
 
-if fab.environment then
-  if fab.environment == "indoor" and c.theme.outdoor then return end
-  if fab.environment == "outdoor" and not c.theme.outdoor then return end
-end
--- FIXME: this is wrong -- make it part of fab_find_loc??
-if fab.height_range then
-  local h = c.ceil_h - c.floor_h
-  if h < fab.height_range[1] or h > fab.height_range[2] then return end
-end
+    -- select type of item
+    -- FIXME: use multiple times
 
-local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
-if x then
+    local item
+    if c.theme.scenery and rand_odds(33) then
+      item = c.theme.scenery
+      if type(item) == "table" then
+        item = rand_element(item)
+      end
+      assert(item)
+    end
 
-  local parm = {
-           pic_h = c.rmodel.f_h + 64,
-           corn_h = c.rmodel.f_h + 104,
-           crate_h = c.rmodel.f_h + 64,
-           pic_bottom = c.rmodel.f_h + 64,
-           y_offset = 64,
-         }
+    if not item and c.room_type and c.room_type.scenery and rand_odds(60) then
+      item = rand_key_by_probs(c.room_type.scenery)
+      assert(item)
+    end
 
-  local mirror = rand_odds(50)
+    if not item and c.quest.level_theme and c.quest.level_theme.general_scenery and rand_odds(50) then
+      item = rand_key_by_probs(c.quest.level_theme.general_scenery)
+      assert(item)
+    end
 
-  B_prefab(p,c, fab, def.skin, parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir, mirror)
-  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
-end
+    if not item and THEME.scenery and rand_odds(5) then
+      item = rand_table_pair(THEME.scenery)
+    end
 
-do return end --!!!!
+    if item then
+      local x,y,dir = fab_find_loc(c, 1, 1)
+      if not x then return end
 
+con.debugf("add_scenery : %s\n", item)
+      gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel)
+      add_thing(p, c, x, y, item, true)
+
+      fab_mark_walkable(c, x, y, 8, 1,1, 4)
+    end
+  end
+
+local function foo_the_kaz_bar()
 
 fab = PREFABS["BILLBOARD_STILTS_HUGE"]
 assert(fab)
@@ -5925,23 +5973,7 @@ if x and rand_odds(30) then
 return
 end
 
-
-
-    if c.theme.scenery then
-      local item = c.theme.scenery
-      if type(item) == "table" then
-        item = rand_element(item)
-      end
-      assert(item)
-
-      local x,y,dir = fab_find_loc(c, 1, 1)
-      if not x then return end
-
-      gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel)
-      add_thing(p, c, x, y, item, true)
-      fab_mark_walkable(c, x, y, 8, 1,1, 4)
-    end
-  end
+end
 
   local function tizzy_up_room(c)
 
@@ -6079,7 +6111,7 @@ function build_rooms(p)
         gap_fill_block(B)
 
         if B.walk then
-          add_thing(p, c, x, y, "candle", false)
+--        add_thing(p, c, x, y, "candle", false)
         end
       end
     end end
