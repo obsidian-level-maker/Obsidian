@@ -1257,10 +1257,13 @@ end
     -- for Wolfenstein3D, first room should have a door
     if THEME.caps.sealed_start then
       local c = p.quests[1].first
-      local link = c.link[c.exit_dir]
-      assert(link)
 
-      link.kind = "door"
+      for side=2,8,2 do
+        local link = c.link[side]
+        if link and link.kind == "arch" then
+          link.kind = "door"
+        end
+      end
     end
   end
 
