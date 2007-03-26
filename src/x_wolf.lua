@@ -426,14 +426,9 @@ WF_THEMES =
     combo_probs =
     {
       WOOD = 25,
-      GRAY_STONE = 60,
       GRAY_BRICK = 60,
-      BLUE_STONE = 90,
-      BLUE_BRICK = 50,
-      RED_BRICK = 20,
-      PURPLE_STONE = 1,
-      BROWN_CAVE = 10,
-      BROWN_BRICK = 10,
+      BLUE_STONE = 140,
+      BLUE_BRICK = 80,
       BROWN_STONE = 20,
     },
 
@@ -450,9 +445,9 @@ WF_THEMES =
     room_probs =
     {
       STORAGE = 50,
-      TREASURE = 10, SUPPLIES = 10,
+      TREASURE = 10, SUPPLIES = 15,
       QUARTERS = 50, BATHROOM = 15,
-      KITCHEN = 25,  TORTURE = 20,
+      KITCHEN = 30,  TORTURE = 20,
     },
 
     combo_probs =
@@ -460,13 +455,7 @@ WF_THEMES =
       WOOD = 120,
       GRAY_STONE = 60,
       GRAY_BRICK = 40,
-      BLUE_STONE = 5,
-      BLUE_BRICK = 10,
       RED_BRICK = 80,
-      PURPLE_STONE = 1,
-      BROWN_CAVE = 5,
-      BROWN_BRICK = 10,
-      BROWN_STONE = 5,
     },
 
     general_scenery =
@@ -489,12 +478,7 @@ WF_THEMES =
 
     combo_probs =
     {
-      WOOD = 2,
       GRAY_STONE = 30,
-      GRAY_BRICK = 10,
-      BLUE_STONE = 5,
-      BLUE_BRICK = 5,
-      RED_BRICK = 10,
       PURPLE_STONE = 30,
       BROWN_CAVE = 80,
       BROWN_BRICK = 20,
