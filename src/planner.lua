@@ -1100,6 +1100,7 @@ function plan_sp_level(is_coop)  -- returns Plan
       local c = Q.path[idx]
       c.hallway = true
       c.theme = theme
+      c.room_type = THEME.rooms["HALLWAY"]
       if theme.well_lit then
         c.light = 176
       else
