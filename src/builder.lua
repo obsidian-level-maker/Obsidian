@@ -5670,11 +5670,11 @@ end
     if not able then return false end
 
     if verify_island_spot(c, f_h, dir, x1,y1, x2,y2) then
---!!!!      return true, "island", max_walk
+      return true, "island", max_walk
     end
 
     if verify_wall_extend(c, f_h, dir, x1,y1, x2,y2) then
-      return true, "extend", max_walk
+      return true, "wall", max_walk
     end
 
     if verify_corner_extend(c, f_h, dir, x1,y1, x2,y2) then
@@ -5709,19 +5709,32 @@ end
     end end
   end
 
-  local function fab_find_loc(c, long, deep, dir, flags)
+  local function fab_find_loc(c, long, deep, mode, dir, flags)
 
+---##  if not mode then mode = rand_key_by_probs { island=50, wall=40, corner=10 } end
     if not dir then dir = rand_irange(1,4)*2 end
     if not flags then flags = {} end
 
     if dir==4 or dir==6 then deep,long = long,deep end
 
-    for x = c.bx1,c.bx2-long+1 do
-      for y = c.by1,c.by2-deep+1 do
-        local able, mode, max_walk =
+    if not c.fab_spots then
+      c.fab_spots = {}
+      for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
+        table.insert(c.fab_spots, {x=x, y=y})
+      end end
+    end
+
+    rand_shuffle(c.fab_spots)
+
+    for zzz,spot in ipairs(c.fab_spots) do
+      local x = spot.x
+      local y = spot.y
+
+      if x <= c.bx2-long+1 and y <= c.by2-deep+1 then
+        local able, g_mode, max_walk =
             fab_check_position(c, dir, x,y, x+long-1, y+deep-1)
 
-        if able then --!!! and mode=="island" and max_walk == 0 then
+        if able and (not mode or g_mode==mode) then -- and max_walk == 0 then
           return x, y, dir
         end
       end
@@ -5846,7 +5859,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       if h < fab.height_range[1] or h > fab.height_range[2] then return end
     end
 
-    local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
+    local x,y,dir = fab_find_loc(c, fab.long, fab.deep, fab.add_mode)
     if not x then return end
 
     local parm = {
@@ -5877,7 +5890,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     -- FIXME: use multiple times
 
     local item
-    if c.theme.scenery and rand_odds(33) then
+    if c.theme.scenery and rand_odds(30) then
       item = c.theme.scenery
       if type(item) == "table" then
         item = rand_element(item)
@@ -5885,30 +5898,41 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       assert(item)
     end
 
-    if not item and c.room_type and c.room_type.scenery and rand_odds(60) then
+    if not item and c.room_type and c.room_type.scenery and rand_odds(80) then
       item = rand_key_by_probs(c.room_type.scenery)
       assert(item)
     end
 
-    if not item and c.quest.level_theme and c.quest.level_theme.general_scenery and rand_odds(50) then
+    if not item and c.quest.level_theme and c.quest.level_theme.general_scenery and rand_odds(30) then
       item = rand_key_by_probs(c.quest.level_theme.general_scenery)
       assert(item)
     end
 
-    if not item and THEME.scenery and rand_odds(5) then
+    if not item and THEME.scenery and rand_odds(1) then
       item = rand_table_pair(THEME.scenery)
     end
 
-    if item then
-      local x,y,dir = fab_find_loc(c, 1, 1)
-      if not x then return end
+    if not item then return end
+
+    local info = THEME.scenery[item]
+    if not info then error("Missing info for item: " .. item) end
+
+    local x,y,dir = fab_find_loc(c, 1, 1, info.add_mode)
+    if not x then return end
 
 con.debugf("add_scenery : %s\n", item)
-      gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel)
-      add_thing(p, c, x, y, item, true)
+    gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel)
+    local th = add_thing(p, c, x, y, item, true)
 
-      fab_mark_walkable(c, x, y, 8, 1,1, 4)
+    -- when there is wriggle room, use it!
+    if info.r < 30 then
+      local gap = 30 - info.r
+      
+      th.dx = rand_irange(-gap,gap)
+      th.dy = rand_irange(-gap,gap)
     end
+
+    fab_mark_walkable(c, x, y, 8, 1,1, 4)
   end
 
 local function foo_the_kaz_bar()
@@ -6026,7 +6050,7 @@ end
     end
 
     -- SCENERY
-    for loop = 1,20 do
+    for loop = 1,18 do
       add_scenery(c)
     end
   end
