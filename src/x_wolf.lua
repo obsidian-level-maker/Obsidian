@@ -170,7 +170,7 @@ WF_COMBOS =
   {
     mat_pri = 5,
     wall = 12, void = 12, floor=0, ceil=0,
-    decorate = 10, door_side = 17,
+    decorate = 10, door_side = 23,
   },
 
   GRAY_STONE =
