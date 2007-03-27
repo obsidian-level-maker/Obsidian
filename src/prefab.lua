@@ -1035,13 +1035,13 @@ MEGA_SKYLIGHT_1 =
 
   elements =
   {
-    s = { c_tex="sky", light=192 },
+    s = { c_h=12, c_tex="sky", light=192 },
 
-    f = { c_h=-32, c_tex="frame_ceil", u_tex="frame" },
+    f = { c_h=-20, c_tex="frame_ceil", u_tex="frame" },
 
-    B = { c_h=-16, c_tex="beam_ceil", u_tex="beam" },
+    B = { c_h=-4, c_tex="beam_ceil", u_tex="beam" },
 
-    C = { copy="B", c_h=-8 },
+    C = { copy="B", c_h=4 },
   },
 },
 
