@@ -1028,6 +1028,9 @@ function B_stair(p, c, bx,by, z, dir, long, deep, step)
       f_tex = c.theme.step_floor, -- might be nil (=> rmodel.f_tex)
 
       [out_dir] = { l_tex=c.theme.step, l_peg="top" },
+
+      [rotate_ccw90(out_dir)] = { x_offset=i* 16 },
+      [rotate_cw90 (out_dir)] = { x_offset=i*-16 },
     })
 
     frag_fill(p,c, fx, fy, fx+zx, fy+zy, sec)

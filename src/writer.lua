@@ -197,6 +197,10 @@ function write_level(p, lev_name)
       SIDE.x_offset = b_over.x_offset or b.x_offset
       SIDE.y_offset = b_over.y_offset or b.y_offset
 
+      if not SIDE.x_offset and f_over.x_offset then
+        SIDE.x_offset = -f_over.x_offset
+      end
+
       -- set textures
       if b.solid then
         SIDE.mid = b_over.l_tex or b.solid
@@ -206,8 +210,8 @@ function write_level(p, lev_name)
 
         if f_over.rail and not b_over.rail then
           SIDE.mid = f_over.rail
-          if f_over.x_offset then SIDE.x_offset = f_over.x_offset end
-          if f_over.y_offset then SIDE.y_offset = f_over.y_offset end
+          if f_over.x_offset then SIDE.x_offset = -f_over.x_offset end
+          if f_over.y_offset then SIDE.y_offset =  f_over.y_offset end
         else
           SIDE.mid = b_over.rail or f_over.rail or b.rail or f.rail
         end
