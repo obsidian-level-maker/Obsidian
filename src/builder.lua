@@ -1020,6 +1020,9 @@ function B_stair(p, c, bx,by, z, dir, long, deep, step)
   -- first step is always raised off the ground
   if step > 0 then z = z + step end
 
+  local xo_dir1 = rotate_cw90(dir)
+  local xo_dir2 = rotate_ccw90(dir)
+
   for i = 1,deep*4 do
 
     local sec = copy_block_with_new(c.rmodel, -- !!!! FIXME: K.rmodel
@@ -1029,8 +1032,8 @@ function B_stair(p, c, bx,by, z, dir, long, deep, step)
 
       [out_dir] = { l_tex=c.theme.step, l_peg="top" },
 
-      [rotate_ccw90(out_dir)] = { x_offset=i* 16 },
-      [rotate_cw90 (out_dir)] = { x_offset=i*-16 },
+      [xo_dir1] = { x_offset= i*16 },
+      [xo_dir2] = { x_offset=-i*16 },
     })
 
     frag_fill(p,c, fx, fy, fx+zx, fy+zy, sec)
