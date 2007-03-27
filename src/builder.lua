@@ -4270,7 +4270,8 @@ function build_pacman_level(p, c)
 
   local function free_spot(bx, by)
     local B = p.blocks[bx][by]
-    return B and not B.solid and not B.has_blocker
+    return B and not B.solid and not B.has_blocker and
+           (not B.things or table_empty(B.things))
   end
 
   local function solid_spot(bx, by)
@@ -6106,6 +6107,7 @@ function build_rooms(p)
         B.f_tex = model.f_tex
         B.f_h   = model.f_h
         B.l_tex = model.l_tex
+        B.floor_code = model.floor_code
       end
 
       -- ceiling
