@@ -24,6 +24,10 @@ Oblige-0.88/
     w74b_2.raw
     ...etc...
  
+  temp/
+    TEMP.wad
+    GAMEMAPS.tmp
+
 
 
 UNIX Installation Layout
@@ -36,6 +40,7 @@ $PREFIX/bin/oblige
 $PREFIX/share/oblige-0.88/
    scripts/
      oblige.lua
+     ...
    data/
      w74a_1.raw
      ...
@@ -45,6 +50,7 @@ $HOME/.oblige/
    CONFIG.cfg
    LOGS.txt
 
-   TEMP.wad
-   MAPHEAD.tmp
+   temp/
+     TEMP.wad
+     MAPHEAD.tmp
 
