@@ -5831,6 +5831,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
   local function add_prefab(c)
 
     local name = rand_element {
+
       "pillar_light1_METAL",
       "bb_stilts_huge_WREATH",
       "statue_tech1_A",
@@ -5838,6 +5839,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       "mega_skylight_METAL",
       "mega_skylight_METALWOOD",
       "drinks_bar_WOOD_POTION",
+
       "crate_CRATE1",
       "crate_CRATE2",
       "crate_WOODSKUL",
@@ -5848,6 +5850,15 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       "crate_triple_A",
       "crate_triple_B",
       "crate_jumble",
+
+      "cage_pillar_METAL",
+      "cage_small_METAL",
+      "cage_large_METAL",
+      "cage_medium_METAL",
+
+      "cage_large_liq_NUKAGE",
+      "cage_medium_liq_BLOOD",
+      "cage_medium_liq_LAVA",
       }
     local def = THEME.sc_fabs[name]
     assert(def)
@@ -5875,6 +5886,9 @@ con.printf("add_object @ (%d,%d)\n", x, y)
              crate_h = c.rmodel.f_h + 64,
              pic_bottom = c.rmodel.f_h + 64,
              y_offset = 64,
+
+             cage_base_h = c.rmodel.f_h + 64,
+             cage_top_h  = c.rmodel.f_h + 128,
            }
 
     local mirror = rand_odds(50)
@@ -5888,7 +5902,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
     -- choose kind: prefabs | scenery items
 
-    if THEME.sc_fabs and rand_odds(33) then
+    if THEME.sc_fabs and rand_odds(40) then
       add_prefab(c)
       return
     end
