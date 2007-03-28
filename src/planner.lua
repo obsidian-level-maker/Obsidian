@@ -1965,10 +1965,10 @@ R.level_theme.name, R.combo.name)
       if a.theme.outdoor and not b.theme.outdoor and a.ceil_h <= b.ceil_h then return false end
       if b.theme.outdoor and not a.theme.outdoor and b.ceil_h <= a.ceil_h then return false end
 
-      -- do not allow two large vistas in a room unless they
+      -- do not allow two vistas/falloffs in a room unless they
       -- are opposite each other
-      if b.vistas[rotate_cw90(dir)]  == 2 or
-         b.vistas[rotate_ccw90(dir)] == 2
+      if b.vistas[rotate_cw90(dir)] or
+         b.vistas[rotate_ccw90(dir)]
       then return false end
 
       return true
