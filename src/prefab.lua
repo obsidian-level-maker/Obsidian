@@ -1434,6 +1434,159 @@ CRATE_JUMBLE =
 },
 
 
+------ Cages ------------------------------------
+
+CAGE_PILLAR =
+{
+  scale=64,
+  add_mode="island",
+
+  structure = { "c" },
+
+  elements =
+  {
+    c = { f_rel="cage_base_h", f_h=0, f_tex="cage_f", l_tex="cage_w",
+          c_rel="cage_top_h",  c_h=0, c_tex="cage_c", u_tex="cage_w",
+          u_peg="bottom", l_peg="bottom",
+          rail="rail_w", impassible=true,
+          -- light
+        },
+  },
+},
+
+CAGE_SMALL =
+{
+  scale=64,
+  add_mode="island",
+
+  structure = { "c" },
+
+  elements =
+  {
+    c = { f_rel="cage_base_h", f_h=0,
+          f_tex="cage_f", l_tex="cage_w", l_peg="top",
+          rail="rail", impassible=true,
+        },
+  },
+},
+
+CAGE_MEDIUM =
+{
+  copy="CAGE_SMALL",
+
+  structure =
+  {
+    "cc",
+    "cc",
+  },
+},
+
+CAGE_LARGE =
+{
+  copy="CAGE_SMALL",
+
+  structure =
+  {
+    "ccc",
+    "ccc",
+    "ccc",
+  },
+},
+
+CAGE_LARGE_W_LIQUID =
+{
+  scale=64,
+  add_mode="island",
+  height_range={ 256,1024 },
+
+  structure =
+  {
+    "MNNNO",
+    "PLaLQ",
+    "PcedQ",
+    "PLbLQ",
+    "STTTU",
+  },
+
+  elements =
+  {
+    -- liquid
+    L = { f_h=-56, f_tex="liquid_f" },
+
+    N = { copy="L", [8] = { rail="rail_w", impassible=true } },
+    P = { copy="L", [4] = { rail="rail_w", impassible=true } },
+    Q = { copy="L", [6] = { rail="rail_w", impassible=true } },
+    T = { copy="L", [2] = { rail="rail_w", impassible=true } },
+
+    M = { [2] = { rail="rail_w", impassible=true },
+          [6] = { rail="rail_w", impassible=true },
+          [3] = { VDEL=true }
+        },
+    O = { [2] = { rail="rail_w", impassible=true },
+          [4] = { rail="rail_w", impassible=true },
+          [1] = { VDEL=true }
+        },
+    S = { [8] = { rail="rail_w", impassible=true },
+          [6] = { rail="rail_w", impassible=true },
+          [9] = { VDEL=true }
+        },
+    U = { [8] = { rail="rail_w", impassible=true },
+          [4] = { rail="rail_w", impassible=true },
+          [7] = { VDEL=true }
+        },
+
+    -- pillar
+    e = { f_h=168, f_tex="cage_f", l_tex="cage_w", l_peg="top" },
+
+    a = { copy="e", f_h=104, [8] = { l_tex="cage_sign_w" },
+          [7] = { dx=0,dy=-32 }, [9] = { dx=0,dy=-32 } },
+
+    b = { copy="e", f_h=104, [2] = { l_tex="cage_sign_w" },
+          [1] = { dx=0,dy= 32 }, [3] = { dx=0,dy= 32 } },
+
+    c = { copy="e", f_h=104, [4] = { l_tex="cage_sign_w" },
+          [1] = { dx= 32,dy=0 }, [7] = { dx= 32,dy=0 } },
+
+    d = { copy="e", f_h=104, [6] = { l_tex="cage_sign_w" },
+          [3] = { dx=-32,dy=0 }, [9] = { dx=-32,dy=0 } },
+  },
+},
+
+CAGE_MEDIUM_W_LIQUID =
+{
+  scale=64,
+  add_mode="island",
+  height_range={ 160,1024 },
+
+  structure =
+  {
+    "MNNO",
+    "PeeQ",
+    "PeeQ",
+    "STTU",
+  },
+
+  elements =
+  {
+    -- liquid
+    L = { f_h=-32, f_tex="liquid_f" },
+
+    N = { copy="L", [8] = { rail="rail_w", impassible=true } },
+    P = { copy="L", [4] = { rail="rail_w", impassible=true } },
+    Q = { copy="L", [6] = { rail="rail_w", impassible=true } },
+    T = { copy="L", [2] = { rail="rail_w", impassible=true } },
+
+    M = { copy="P", [8] = { rail="rail_w", impassible=true } },
+    O = { copy="Q", [8] = { rail="rail_w", impassible=true } },
+    S = { copy="P", [2] = { rail="rail_w", impassible=true } },
+    U = { copy="Q", [2] = { rail="rail_w", impassible=true } },
+
+    -- central pillar
+    e = { f_h=96, f_tex="cage_f", l_tex="cage_w", l_peg="top" },
+  },
+},
+
+
 ------ Corners ------------------------------------
 
 CORNER_BEAM =

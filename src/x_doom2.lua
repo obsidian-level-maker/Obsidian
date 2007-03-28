@@ -845,6 +845,106 @@ D2_PREFAB_SCENERY =
       crate_w2 = "CRATE2", crate_f2 = "CRATOP1",
     },
   },
+
+
+  cage_pillar_METAL =
+  {
+    prefab = "CAGE_SMALL",
+
+    skin =
+    {
+      cage_w = "METAL",
+      cage_f = "CEIL5_2",
+      cage_c = "TLITE6_4",
+
+      rail_w = "MIDGRATE",
+    }
+  },
+
+  cage_small_METAL =
+  {
+    prefab = "CAGE_SMALL",
+
+    skin =
+    {
+      cage_w = "METAL",
+      cage_f = "CEIL5_2",
+
+      rail_w = "MIDBARS3",
+    }
+  },
+
+  cage_medium_METAL =
+  {
+    prefab = "CAGE_MEDIUM",
+
+    skin =
+    {
+      cage_w = "METAL",
+      cage_f = "CEIL5_2",
+
+      rail_w = "MIDBARS3",
+    }
+  },
+
+  cage_large_METAL =
+  {
+    prefab = "CAGE_LARGE",
+
+    skin =
+    {
+      cage_w = "METAL",
+      cage_f = "CEIL5_2",
+
+      rail_w = "MIDBARS3",
+    }
+  },
+
+  cage_large_liq_NUKAGE =
+  {
+    prefab = "CAGE_LARGE_W_LIQUID",
+
+    skin =
+    {
+      liquid_f = "NUKAGE1",
+
+      cage_w = "SLADWALL",
+      cage_f = "CEIL5_2",
+      cage_sign_w = "SLADPOIS",
+
+      rail_w = "MIDBARS3",
+    }
+  },
+
+  cage_medium_liq_BLOOD =
+  {
+    prefab = "CAGE_MEDIUM_W_LIQUID",
+
+    skin =
+    {
+      liquid_f = "BLOOD1",
+
+      cage_w = "GSTFONT1",
+      cage_f = "FLOOR7_2",
+
+      rail_w = "MIDBARS3",
+    }
+  },
+
+  cage_medium_liq_LAVA =
+  {
+    prefab = "CAGE_MEDIUM_W_LIQUID",
+
+    skin =
+    {
+      liquid_f = "LAVA1",
+
+      cage_w = "BRNPOIS",
+      cage_f = "CEIL5_2",
+
+      rail_w = "MIDBARS3",
+    }
+  },
 }
 
 D2_ROOMS =
