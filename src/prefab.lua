@@ -453,6 +453,9 @@ DOOR_EXIT =
           [4] = { x_offset=32 }, [6] = { x_offset=32 },
         },
 
+    -- front sign
+    F = { solid="front_w", l_peg="bottom" },
+
     -- track
     T = { solid="track", l_peg="bottom" },
 
@@ -466,6 +469,19 @@ DOOR_EXIT =
           [4] = { l_tex="door", x_offset=88 },
           [6] = { l_tex="door", x_offset=88 }
         },
+  },
+},
+
+DOOR_EXIT_WIDE =
+{
+  copy="DOOR_EXIT",
+
+  structure =
+  {
+    "FFFFssssFFFF",
+    "###MssssL###",
+    "###TddddT###",
+    "###LssssM###",
   },
 },
 
