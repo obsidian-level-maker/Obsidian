@@ -1448,8 +1448,11 @@ CAGE_PILLAR =
     c = { f_rel="cage_base_h", f_h=0, f_tex="cage_f", l_tex="cage_w",
           c_rel="cage_top_h",  c_h=0, c_tex="cage_c", u_tex="cage_w",
           u_peg="bottom", l_peg="bottom",
-          rail="rail_w", impassible=true,
-          -- light
+
+          [2] = { rail="rail_w", impassible=true },
+          [4] = { rail="rail_w", impassible=true },
+          [6] = { rail="rail_w", impassible=true },
+          [8] = { rail="rail_w", impassible=true },
         },
   },
 },
@@ -1464,8 +1467,12 @@ CAGE_SMALL =
   elements =
   {
     c = { f_rel="cage_base_h", f_h=0,
-          f_tex="cage_f", l_tex="cage_w", l_peg="top",
-          rail="rail", impassible=true,
+          f_tex="cage_f", l_tex="cage_w", l_peg="bottom",
+
+          [2] = { rail="rail_w", impassible=true },
+          [4] = { rail="rail_w", impassible=true },
+          [6] = { rail="rail_w", impassible=true },
+          [8] = { rail="rail_w", impassible=true },
         },
   },
 },
