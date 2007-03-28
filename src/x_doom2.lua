@@ -849,7 +849,7 @@ D2_PREFAB_SCENERY =
 
   cage_pillar_METAL =
   {
-    prefab = "CAGE_SMALL",
+    prefab = "CAGE_PILLAR",
 
     skin =
     {
