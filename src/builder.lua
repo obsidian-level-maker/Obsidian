@@ -3499,8 +3499,9 @@ function build_borders(p)
         parm.door_kind = 0
 
       elseif link.is_exit then
-        door_info.prefab = "DOOR_EXIT" --FIXME: wrong way
+        door_info.prefab = "DOOR_EXIT_WIDE" --FIXME: wrong way
 
+        door_info.front_w = "EXITSTON" --!!!!
         door_info.exit_w = "EXITSIGN" -- FIXME !!!!
         door_info.exit_c = "CEIL5_2"  --!!!!
         door_info.door = "EXITDOOR"
@@ -5316,7 +5317,16 @@ con.printf("mark_walkable @ (%d,%d)\n", c.x,c.y)
 
     local x1,y1, x2,y2 = side_coords(K.stair_dir, K.x1,K.y1, K.x2,K.y2)
 
-    local long = sel(x1 < x2, x2-x1+1, y2-y1+1)
+    local long ---### long = sel(x1 < x2, x2-x1+1, y2-y1+1)
+    local deep
+
+    if (K.stair_dir==2 or K.stair_dir==8) then
+      long = K.x2-K.x1+1
+      deep = K.y2-K.y1+1
+    else
+      long = K.y2-K.y1+1
+      deep = K.x2-K.x1+1
+    end
 
     local function check_stair_pos(pos, w)
 
@@ -5335,7 +5345,8 @@ con.printf("mark_walkable @ (%d,%d)\n", c.x,c.y)
         local st_x2 = math.max(sx,ex)
         local st_y2 = math.max(sy,ey)
 
-        if (ex < K.x1 or ex > K.x2) or
+        if h >= deep or
+           (ex < K.x1 or ex > K.x2) or
            (ey < K.y1 or ey > K.y2)
         then
           able = false
