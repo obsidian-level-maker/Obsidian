@@ -244,6 +244,8 @@ WINDOW_NARROW =
 
 WINDOW_EDGE =
 {
+  mirror=true,
+
   structure =
   {
     "#www",
@@ -260,6 +262,8 @@ WINDOW_EDGE =
 
 WINDOW_EDGE_ARCHED =
 {
+  mirror=true,
+
   structure =
   {
     "#abw",
@@ -340,7 +344,7 @@ WINDOW_RAIL =
   {
     w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
 
-    R = { copy="w", [8] = { rail="rail" } },
+    R = { copy="w", [8] = { rail="rail_w", impassible=true } },
   }
 },
 
@@ -1430,16 +1434,17 @@ CRATE_JUMBLE =
   structure =
   {
     ".Cd..",
-    "BCTWW",
-    "BTB.e",
-    "eWd..",
-    ".W...",
+    "BCTWX",
+    "BTB.d",
+    "eWe..",
+    ".X...",
   },
 
   elements =
   {
     T = { f_h=192, f_tex="tall_f", l_tex="tall_w", l_peg="top" },
-    W = { f_h=128, f_tex="wide_f", l_tex="wide_w", l_peg="top" },
+    W = { f_h=128, f_tex="wide_f", l_tex="wide_w", l_peg="top", [6] = { x_offset=64 } },
+    X = { copy="W", [2] = { x_offset=64 }, [4] = { x_offset=64 }, [6] = {} },
 
     B = { f_h=128, f_tex="crate_f1", l_tex="crate_w1", l_peg="top" },
     C = { f_h=128, f_tex="crate_f2", l_tex="crate_w2", l_peg="top" },
@@ -1456,6 +1461,7 @@ CAGE_PILLAR =
 {
   scale=64,
   add_mode="island",
+  height_range={ 160,1024 },
 
   structure = { "c" },
 
@@ -1477,6 +1483,7 @@ CAGE_SMALL =
 {
   scale=64,
   add_mode="island",
+  height_range={ 144,1024 },
 
   structure = { "c" },
 
