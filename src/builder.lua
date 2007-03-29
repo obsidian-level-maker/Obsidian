@@ -515,7 +515,7 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
       sec.l_peg = elem.l_peg
       sec.u_peg = elem.u_peg
 
-      sec.x_offset = elem.x_offset  -- FIXME: allow parm lookup
+      sec.x_offset = elem.x_offset
       sec.y_offset = elem.y_offset
 
       if elem.mark then sec.mark = elem.mark end
@@ -2924,7 +2924,7 @@ link.cells[2].x, link.cells[2].y)
 
     if not c.chunks[2][2].empty then return end
 
-    if rand_odds(96) then return end
+    if rand_odds(75) then return end
 
     local vista_x, vista_y
 
@@ -3269,7 +3269,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
   for zzz,cell in ipairs(p.all_cells) do
 
     mark_vista_chunks(cell)
-    create_huge_vista(cell)
+--  create_huge_vista(cell)
 
     add_travel_chunks(cell)
 
@@ -5904,7 +5904,8 @@ con.printf("add_object @ (%d,%d)\n", x, y)
              cage_top_h  = c.rmodel.f_h + 128,
            }
 
-    local mirror = rand_odds(50)
+    local mirror
+    if fab.mirror then mirror = rand_odds(50) end
 
     B_prefab(p,c, fab, def.skin, parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir, mirror)
 
