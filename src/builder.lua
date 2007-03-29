@@ -3292,159 +3292,160 @@ end
 end
 
 
-function build_borders(p)
 
-  local c
+function setup_borders_and_corners(p)
 
-  local function setup_borders_and_corners(p)
+  -- for each border and corner: decide on the type, the theme,
+  -- and which cell is ultimately responsible for building it.
 
-    -- for each border and corner: decide on the type, the theme,
-    -- and which cell is ultimately responsible for building it.
+  local function border_theme(cells)
+    assert(#cells >= 1)
 
-    local function border_theme(cells)
-      assert(#cells >= 1)
+    if #cells == 1 then return cells[1].theme end
 
-      if #cells == 1 then return cells[1].theme end
-
-      for zzz,c in ipairs(cells) do
-        if c.is_exit then return c.theme end
-      end
-
-  --[[    for zzz,c in ipairs(cells) do
-        if c.scenic == "solid" then return c.theme end
-      end
-  --]]
-      local themes = {}
-      local hall_num = 0
-
-      for zzz,c in ipairs(cells) do
-        if c.hallway then hall_num = hall_num + 1 end
-        table.insert(themes, c.theme)
-      end
-    
-      -- when some cells are hallways and some are not, we
-      -- upgrade the hallways to their "outer" theme.
-
-      if (hall_num > 0) and (#cells - hall_num > 0) then
-        for idx = 1,#themes do
-          if cells[idx].hallway then
-            themes[idx] = cells[idx].quest.theme
-          end
-        end
-      end
-
-      -- when some cells are outdoor and some are indoor,
-      -- remove the outdoor themes from consideration.
-
-      local out_num = 0
-
-      for zzz,T in ipairs(themes) do
-        if T.outdoor then out_num = out_num + 1 end
-      end
-      
-      if (out_num > 0) and (#themes - out_num > 0) then
-        for idx = #themes,1,-1 do
-          if themes[idx].outdoor then
-            table.remove(themes, idx)
-          end
-        end
-      end
-
-      if #themes >= 2 then
-        table.sort(themes, function(t1, t2) return t1.mat_pri < t2.mat_pri end)
-      end
-
-      return themes[1]
+    for zzz,c in ipairs(cells) do
+      if c.is_exit then return c.theme end
     end
 
+--[[    for zzz,c in ipairs(cells) do
+      if c.scenic == "solid" then return c.theme end
+    end
+--]]
+    local themes = {}
+    local hall_num = 0
 
-    local function border_kind(c1, c2, side)
+    for zzz,c in ipairs(cells) do
+      if c.hallway then hall_num = hall_num + 1 end
+      table.insert(themes, c.theme)
+    end
+  
+    -- when some cells are hallways and some are not, we
+    -- upgrade the hallways to their "outer" theme.
 
-      if not c2 or c2.is_depot then
-        if c1.theme.outdoor and THEME.caps.sky then return "sky" end
-        return "solid"
-      end
-
-      if c1.scenic == "solid" or c2.scenic == "solid" then
-        return "solid"
-      end
-
-      if c1.hallway or c2.hallway then return "solid" end
-
-      -- TODO: sometimes allow it
-      if c1.is_exit or c2.is_exit then return "solid" end
-
-      if not THEME.caps.heights then return "solid" end
-
-      if c1.border[side].window then return "window" end
-
-  ---###    if link and (link.kind == "arch") and c1.theme == c2.theme and
-  ---###       (c1.quest.parent or c1.quest) == (c2.quest.parent or c2.quest) and
-  ---###       dual_odds(c1.theme.outdoor, 50, 33)
-  ---###    then
-  ---###       return "empty"
-  ---###    end
-
-      -- fencing anyone?   FIXME: move tests into Planner
-      local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
-
-      if (c1.theme.outdoor == c2.theme.outdoor) and
-         (not c1.is_exit  and not c2.is_exit) and
-         (not c1.is_depot and not c2.is_depot) and diff_h > 64
-      then
-        if c1.scenic or c2.scenic then
-          return "fence"
-        end
-
-        if dual_odds(c1.theme.outdoor, 60, 7) then
-          return "fence"
+    if (hall_num > 0) and (#cells - hall_num > 0) then
+      for idx = 1,#themes do
+        if cells[idx].hallway then
+          themes[idx] = cells[idx].quest.theme
         end
       end
-   
+    end
+
+    -- when some cells are outdoor and some are indoor,
+    -- remove the outdoor themes from consideration.
+
+    local out_num = 0
+
+    for zzz,T in ipairs(themes) do
+      if T.outdoor then out_num = out_num + 1 end
+    end
+    
+    if (out_num > 0) and (#themes - out_num > 0) then
+      for idx = #themes,1,-1 do
+        if themes[idx].outdoor then
+          table.remove(themes, idx)
+        end
+      end
+    end
+
+    if #themes >= 2 then
+      table.sort(themes, function(t1, t2) return t1.mat_pri < t2.mat_pri end)
+    end
+
+    return themes[1]
+  end
+
+
+  local function border_kind(c1, c2, side)
+
+    if not c2 or c2.is_depot then
+      if c1.theme.outdoor and THEME.caps.sky then return "sky" end
       return "solid"
     end
 
-    local function init_border(c, side)
-
-      local D = c.border[side]
-      if D.build then return end -- already done
-
-      -- which cell actually builds the border is arbitrary, unless
-      -- there is a link with the other cell
-      if c.link[side] then
-        D.build = c.link[side].build
-      else
-        D.build = c
-      end
-
-      local other = neighbour_by_side(p,c, side)
-
-      D.theme = border_theme(D.cells)
-      D.kind  = border_kind (c, other, side)
+    if c1.scenic == "solid" or c2.scenic == "solid" then
+      return "solid"
     end
 
-    local function init_corner(c, side)
+    if c1.hallway or c2.hallway then return "solid" end
 
-      local E = c.corner[side]
-      if E.build then return end -- already done
+    -- TODO: sometimes allow it
+    if c1.is_exit or c2.is_exit then return "solid" end
 
-      E.build = c
-      E.theme = border_theme(E.cells)
-      E.kind  = "solid"
+    if not THEME.caps.heights then return "solid" end
+
+    if c1.border[side].window then return "window" end
+
+---###    if link and (link.kind == "arch") and c1.theme == c2.theme and
+---###       (c1.quest.parent or c1.quest) == (c2.quest.parent or c2.quest) and
+---###       dual_odds(c1.theme.outdoor, 50, 33)
+---###    then
+---###       return "empty"
+---###    end
+
+    -- fencing anyone?   FIXME: move tests into Planner
+    local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
+
+    if (c1.theme.outdoor == c2.theme.outdoor) and
+       (not c1.is_exit  and not c2.is_exit) and
+       (not c1.is_depot and not c2.is_depot) and diff_h > 64
+    then
+      if c1.scenic or c2.scenic then
+        return "fence"
+      end
+
+      if dual_odds(c1.theme.outdoor, 60, 7) then
+        return "fence"
+      end
+    end
+ 
+    return "solid"
+  end
+
+  local function init_border(c, side)
+
+    local D = c.border[side]
+    if D.build then return end -- already done
+
+    -- which cell actually builds the border is arbitrary, unless
+    -- there is a link with the other cell
+    if c.link[side] then
+      D.build = c.link[side].build
+    else
+      D.build = c
     end
 
-    --- setup_borders_and_corners ---
+    local other = neighbour_by_side(p,c, side)
 
-    for zzz,c in ipairs(p.all_cells) do
+    D.theme = border_theme(D.cells)
+    D.kind  = border_kind (c, other, side)
+  end
 
-      for side = 1,9 do
-        if c.border[side] then init_border(c, side) end
-      end
-      for side = 1,9,2 do
-        if c.corner[side] then init_corner(c, side) end
-      end
+  local function init_corner(c, side)
+
+    local E = c.corner[side]
+    if E.build then return end -- already done
+
+    E.build = c
+    E.theme = border_theme(E.cells)
+    E.kind  = "solid"
+  end
+
+  --- setup_borders_and_corners ---
+
+  for zzz,c in ipairs(p.all_cells) do
+
+    for side = 1,9 do
+      if c.border[side] then init_border(c, side) end
+    end
+    for side = 1,9,2 do
+      if c.corner[side] then init_corner(c, side) end
     end
   end
+end
+
+function build_borders(p)
+
+  local c
 
   local function build_door( link, side  )
     local D = c.border[side]
@@ -4231,8 +4232,6 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
 
 
   --== build_borders ==--
-
-  setup_borders_and_corners(p)
 
   for zzz,cell in ipairs(p.all_cells) do
 
@@ -5208,7 +5207,6 @@ c.x, c.y, other.x, other.y)
     assert(c.bx1 <= x1 and x2 <= c.bx2)
     assert(c.by1 <= y1 and y2 <= c.by2)
 
-con.printf("mark_walkable @ (%d,%d)\n", c.x,c.y)
     for x = x1,x2 do for y = y1,y2 do
       local B = p.blocks[x][y]
       assert(B)
@@ -5236,7 +5234,7 @@ con.printf("mark_walkable @ (%d,%d)\n", c.x,c.y)
 
       local D = c.border[side]
       if D and D.kind == "window" then
-        mark_walkable(c, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy, 2)
+--!!!!!!        mark_walkable(c, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy, 2)
       end
     end
   end
@@ -6294,6 +6292,8 @@ end
   con.ticker()
 
   show_chunks(p)
+
+  setup_borders_and_corners(p)
 
   build_rooms(p)
   con.ticker()
