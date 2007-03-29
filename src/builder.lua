@@ -2924,6 +2924,8 @@ link.cells[2].x, link.cells[2].y)
 
     if not c.chunks[2][2].empty then return end
 
+    if rand_odds(96) then return end
+
     local vista_x, vista_y
 
     local side_vistas   = 0
