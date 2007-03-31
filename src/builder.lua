@@ -128,11 +128,6 @@ function chunk_touches_side(kx, ky, side)
   if side == 8 then return ky == 3 end
 end
 
-function valid_chunk(kx,ky)
-  return 1 <= kx and kx <= KW and
-         1 <= ky and ky <= KH
-end
-
 function is_roomy(chunk)
   return chunk and (chunk.room or chunk.link)
 end
@@ -2087,7 +2082,24 @@ end
 
 function make_chunks(p)
 
-  local K_BORD_PROBS = { 0, 60, 90, 12, 3 }
+  local K_BORD_PROBS = { 0, 60, 90, 15, 5, 1 }
+
+  local function decide_chunk_sizes(total)
+    assert(total >= 3)
+
+    if total <  6 then return 1, total-2, 1 end
+    if total == 6 then return 2, 2, 2 end
+
+    local L, M, R
+
+    repeat
+        L = rand_index_by_probs(K_BORD_PROBS)
+        R = rand_index_by_probs(K_BORD_PROBS)
+        M = total - L - R
+    until M >= 2 and M <= 6
+
+    return L, M, R
+  end
 
   local function create_chunks(c)
 
@@ -2100,32 +2112,8 @@ function make_chunks(p)
     c.chunks = array_2D(3, 3)
 
     -- decide depths of each side
-    local L, R, T, B
-    local M, N
-
-    if cell_w < 6 then
-      L = 1
-      R = 1
-      M = cell_w - L - R
-    else
-      repeat
-        L = rand_index_by_probs(K_BORD_PROBS)
-        R = rand_index_by_probs(K_BORD_PROBS)
-        M = cell_w - L - R
-      until M >= 2
-    end
-
-    if cell_h < 6 then
-      T = 1
-      B = 1
-      N = cell_h - T - B
-    else
-      repeat
-        T = rand_index_by_probs(K_BORD_PROBS)
-        B = rand_index_by_probs(K_BORD_PROBS)
-        N = cell_h - T - B
-      until N >= 2
-    end
+    local L, M, R = decide_chunk_sizes(cell_w)
+    local B, N, T = decide_chunk_sizes(cell_h)
 
     -- actually create the chunks
 
@@ -2585,7 +2573,7 @@ link.cells[2].x, link.cells[2].y)
       local MID = c.chunks[2][2]
 
       if MID.empty and not c.hallway and
-         (c == p.quests[1].first or c == c.quest.last or rand_odds(25))
+         (c == p.quests[1].first or c == c.quest.last or rand_odds(25*0)) --!!!!!!!
       then
         MID.room = true
         MID.empty = nil
@@ -2606,6 +2594,63 @@ link.cells[2].x, link.cells[2].y)
       
       grow(chunk_list)
       merge()
+    end
+  end
+
+  local function void_it_up(c, kind)
+    if not kind then kind = "void" end
+    for kx = 1,3 do
+      for ky = 1,3 do
+        local K = c.chunks[kx][ky]
+        if K.empty then
+          K[kind] = true
+          K.empty = nil
+        end
+      end
+    end
+  end
+
+  local function gunk_it_up(c)
+
+    local empties = {}
+    local SIDES   = { 2,4,6,8 }
+
+    local function gunk_pass(K)
+      for zzz,side in ipairs(SIDES) do
+
+        local N = chunk_neighbour(c, K, side)
+        if N and not N.empty and not N.vista and not N.void then
+          assert(N.room or N.link)
+          K.room = N.room
+          K.link = N.link
+          K.empty = nil
+          return
+        end
+      end
+    end
+
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.empty then table.insert(empties, K) end
+    end end
+
+    if #empties == 9 then
+      void_it_up(c, "room")
+      return
+    end
+
+    while #empties > 0 do
+      rand_shuffle(empties)
+      rand_shuffle(SIDES)
+
+      local K = table.remove(empties, 1)
+
+      gunk_pass(K)
+
+      if K.empty then
+        assert(#empties > 0)
+        table.insert(empties, K)
+      end
     end
   end
 
@@ -2688,19 +2733,6 @@ link.cells[2].x, link.cells[2].y)
         if not c.chunks[nx][ny] then
           c.chunks[nx][ny] = new_chunk(c, nx, ny, "room")
           return -- SUCCESS --
-        end
-      end
-    end
-  end
-
-  local function void_it_up(c, kind)
-    if not kind then kind = "void" end
-    for kx = 1,3 do
-      for ky = 1,3 do
-        local K = c.chunks[kx][ky]
-        if K.empty then
-          K[kind] = true
-          K.empty = nil
         end
       end
     end
@@ -2885,9 +2917,9 @@ link.cells[2].x, link.cells[2].y)
       if not K.rmodel then
         K.rmodel = copy_table(c.rmodel)
 
--- K.rmodel.light =
--- sel(kx==2 and ky==2, 176,
---  sel(kx==2 or ky==2, 144, 112))
+K.rmodel.light =
+ sel(kx==2 and ky==2, 176,
+  sel(kx==2 or ky==2, 144, 112))
   
         if K.link then
           local other = link_other(K.link, c)
@@ -2898,7 +2930,7 @@ link.cells[2].x, link.cells[2].y)
             K.rmodel = copy_table(other.rmodel)
           else
             K.rmodel.f_h = other.rmodel.f_h
-            K.rmodel.c_h = math.max(c.rmodel.c_h, other.rmodel.c_h) --FIXME (??)
+            K.rmodel.c_h = math.max(c.rmodel.c_h, other.rmodel.c_h)
           end
 
         elseif K.liquid then
@@ -2907,6 +2939,34 @@ link.cells[2].x, link.cells[2].y)
         end
       end
     end end
+
+    -- fix c_min and c_max values
+    c.c_min =  99999
+    c.c_max = -99999
+
+    local M_min =  99999
+    local M_max = -99999
+
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+
+      c.c_min = math.min(c.c_min, K.rmodel.c_h)
+      c.c_max = math.max(c.c_max, K.rmodel.c_h)
+
+      if (kx==2) or (ky==2) then
+        M_min = math.min(M_min, K.rmodel.c_h)
+        M_max = math.max(M_max, K.rmodel.c_h)
+      end
+    end end
+
+    -- raise middle ceiling to match highest neighbour
+    local mid_K = c.chunks[2][2]
+
+    if M_max - M_min >= 48 then
+      mid_K.rmodel.c_h = (M_min + M_max) / 2
+    else
+      mid_K.rmodel.c_h = M_max
+    end
   end
 
   local function mark_vista_chunks(c)
@@ -3277,14 +3337,17 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
 --!!!!  flesh_out_cell(cell)
 
-    setup_chunk_rmodels(cell)
+-- void_it_up(cell, "void")
+-- gunk_it_up(cell)
 
+    setup_chunk_rmodels(cell)
+--[[
 if (cell == p.quests[1].first or cell == cell.quest.last or cell.scenic=="outdoor") then
         void_it_up(cell, "room")
 else
         void_it_up(cell, "void")
 end
-
+--]]
     add_stairs(cell)
   end
 
@@ -3568,22 +3631,29 @@ B_exit_elevator(p, other, link.x1, link.y1, side)
 return
 end
 
-    if link.kind == "door" and THEME.caps.blocky_doors then
-      blocky_door( link, side, double_who )
-      return
-    end
-
-    if link.kind == "arch" and THEME.caps.blocky_doors then
-      gap_fill(p,c, link.x1,link.y1, link.x2,link.y2, D.build.rmodel)
-      return
-    end
-
     if THEME.caps.blocky_doors then
+
+      if link.kind == "door" then
+        blocky_door( link, side, double_who )
+        return
+      end
+
+      if link.kind == "arch" then
+        gap_fill(p,c, link.x1,link.y1, link.x2,link.y2, D.build.rmodel)
+        return
+      end
+
       error("Cannot build: " .. link.kind)
     end
 
-if link.kind == "arch" then --!!!!!
+    if link.kind == "door" then
+      build_door( link, side )
+      return
+    end
+
+if true then
 local fab = "ARCH" -- rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
+if link.long <= 2 then fab = "ARCH_NARROW" end
 fab = PREFABS[fab]
 assert(fab)
 local parm =
@@ -3593,6 +3663,9 @@ local parm =
 
   frame_c = D.theme.floor
 }
+if link.kind == "vista" then
+  parm.frame_f = link.build.rmodel.f_tex
+end
 local skin =
 {
 --  wall="COMPBLUE",
@@ -3607,11 +3680,6 @@ B_prefab(p,c, fab, skin, parm, link.build.rmodel,D.theme, link.x1, link.y1, side
 return
 end
 
-
-    if link.kind == "door" then
-      build_door( link, side )
-      return
-    end
 
 do
 gap_fill(p, c, link.x1, link.y1, link.x2, link.y2,
@@ -4701,7 +4769,7 @@ function build_cell(p, c)
     if K.vista then return end
 
     if K.void then
-      --!!!!! TEST CRAP
+      --!!! TEST CRAP
       gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, c.rmodel)
       do return end
 
@@ -5124,11 +5192,260 @@ function build_cell(p, c)
     gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.theme.void })
   end
 
+  local function reclaim_areas(c)
+
+    local function try_reclaim_side(K, dir)
+
+      -- Requirements
+      --  (a) start side must be against solid wall (empty chunk)
+      --  (b) don't move if side neighbours have stairs
+      --  (c) never fill chunk completely (leave 1 block free)
+      --  (d) never fill over a "walk=4" block
+      --  (e) choose side that gives greatest depth
+
+      local N = chunk_neighbour(c, K, 10-dir)
+
+      if N and not N.empty then return end
+
+      local S1 = chunk_neighbour(c, K, rotate_cw90(dir))
+      if S1 and S1.stair_dir and
+         math.min(S1.stair_dir, 10-S1.stair_dir) == math.min(dir,10-dir)
+      then return end
+
+      local S2 = chunk_neighbour(c, K, rotate_ccw90(dir))
+      if S2 and S2.stair_dir and
+         math.min(S2.stair_dir, 10-S2.stair_dir) == math.min(dir,10-dir)
+      then return end
+
+if c.x==2 and c.y==3 then
+con.printf("\nRECLAIM SIDE @ (%d,%d) [%d,%d] dir:%d\n", c.x, c.y, K.kx, K.ky, dir)
+end
+
+      local dx,dy = dir_to_delta(dir)
+      local ax,ay = dir_to_across(dir)
+
+      local long = K.x2 - K.x1 + 1
+      local deep = K.y2 - K.y1 + 1
+
+      if (dir == 4) or (dir == 6) then
+        long,deep = deep,long
+      end
+
+      local sx1,sy1, sx2,sy2 = side_coords(10-dir, K.x1,K.y1, K.x2,K.y2)
+
+      local function test_line(h)
+        for w = 0,long-1 do
+          local x = sx1 + h*dx + w*ax
+          local y = sy1 + h*dy + w*ay
+
+          assert(valid_cell_block(c, x, y))
+          local B = p.blocks[x][y]
+
+          if B.walk or B.chunk ~= K then
+            return false
+          end
+        end
+
+        return true --OK--
+      end
+
+      local h = 0
+
+      while (h < deep-1) and test_line(h) do
+        h = h + 1
+      end
+
+      if h == 0 then return end --FAIL--
+
+      if K.r_deep and h < K.r_deep or (h == K.r_deep and rand_odds(50)) then
+        return --FAIL--
+      end
+
+      K.r_deep = h
+      K.r_long = long
+      K.r_dir  = dir
+
+      K.rx1 = sx1
+      K.ry1 = sy1
+      K.rx2 = sx1 + (K.r_deep-1)*dx + (K.r_long-1)*ax
+      K.ry2 = sy1 + (K.r_deep-1)*dy + (K.r_long-1)*ay
+    end
+    
+    local function try_reclaim_corner(K, x_dir, y_dir)
+
+      -- reclaiming a side trumps a corner
+      if K.r_dir then return end
+
+      local corn
+      if x_dir == 4 then
+        corn = sel(y_dir == 2, 9, 3)
+      else
+        corn = sel(y_dir == 2, 7, 1)
+      end
+
+      local long = K.x2 - K.x1 + 1
+      local deep = K.y2 - K.y1 + 1
+
+      do
+        --[[ NOT NEEDED (???)
+        local C = chunk_neighbour(c, K, corn)
+        if C and not C.empty then return end
+        --]]
+
+        -- allow neighbour chunks to have an reclaim area,
+        -- limiting long/deep accordingly.
+
+        local function try_side(side, perp_dir)
+          local N = chunk_neighbour(c, K, side)
+
+          if not N then return true end
+          if N.empty then return true end
+
+          if not N.r_dir then return false end
+          if N.r_dir ~= perp_dir then return false end
+          
+          if side==4 or side==6 then
+            deep = math.min(deep, N.r_deep)
+          else
+            long = math.min(long, N.r_long)
+          end
+
+          return true --OK--
+        end
+
+        if not try_side(10-x_dir, y_dir) then return end
+        if not try_side(10-y_dir, x_dir) then return end
+      end
+
+      local cx,cy = corner_coords(corn, K.x1,K.y1,K.x2,K.y2)
+
+      local dx = sel(x_dir==4, -1, 1)
+      local dy = sel(y_dir==2, -1, 1)
+
+      local function test_block(x1,y1, x2,y2)
+
+        -- input coordinates are relative to corner block,
+        -- convert them to absolute coordinates.
+        x1,y1 = cx + x1*dx, cy + y1*dy
+        x2,y2 = cx + x2*dx, cy + y2*dy
+
+        if x1 > x2 then x1,x2 = x2,x1 end
+        if y1 > y2 then y1,y2 = y2,y1 end
+
+if c.x==2 and c.y==3 and K.ky==3 then
+con.printf("K @ [%d,%d]\n", K.kx, K.ky)
+--con.printf("TESTING w=%d..%d h=%d..%d --> (%d,%d)..(%d,%d)\n", w1,w2, h1,h2, x1,y1, x2,y2)
+end
+        for x = x1,x2 do for y = y1,y2 do
+if not valid_cell_block(c,x,y) then
+con.printf("CELL (%d,%d) .. (%d,%d)\n", c.bx1,c.by1,c.bx2,c.by2)
+con.printf("CHUNK (%d,%d) .. (%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
+con.printf("BLOCK RANGE w:%d-%d h:%d-%d (%d,%d)..(%d,%d)\n", x1,x2, y1,y2, x1,y1, x2,y2)
+con.printf("cx:%d cy:%d dx:%d dy:%d\n", cx,cy, dx,dy)
+end
+          assert(valid_cell_block(c, x, y))
+          local B = p.blocks[x][y]
+
+          if B.walk or B.chunk ~= K then
+            return false
+          end
+        end end
+
+        return true --OK--
+      end
+
+
+      if not test_block(0,0, 0,0) then
+        return --FAIL--
+      end
+
+      -- find largest rectangle
+      local w, h = 1, 1
+      local grow_w, grow_h = true,true
+
+      while grow_w or grow_h do
+        if grow_w and (not grow_h or rand_odds(50)) then
+
+          if w+1 < long and test_block(w,0, w,h-1) then
+            w = w + 1
+          else
+            grow_w = false
+          end
+        else
+          assert(grow_h)
+
+          if h+1 < deep and test_block(0,h, w-1,h) then
+            h = h + 1
+          else
+            grow_h = false
+          end
+        end
+      end
+
+      K.r_long = w
+      K.r_deep = h
+      K.r_dir  = 10-corn
+
+      K.rx1 = cx
+      K.ry1 = cy
+      K.rx2 = cx + (K.r_long-1)*dx
+      K.ry2 = cy + (K.r_deep-1)*dy
+
+      if K.rx1 > K.rx2 then K.rx1, K.rx2 = K.rx2, K.rx1 end
+      if K.ry1 > K.ry2 then K.ry1, K.ry2 = K.ry2, K.ry1 end
+    end
+    
+    -- choose reclaim direction for central chunks.
+    -- By limiting them to a single direction, we prevent the
+    -- chance of two neighbouring chunks cutting off the path
+    -- (because the opposite sides were reclaimed).
+    --
+    -- FIXME: should allow e.g. x_dir=6 @ kx==3 when no other
+    --        claims were made (or ADD TEST FOR CUT-OFF).
+
+    local mid_x_dir = rand_sel(50, 4, 6)
+    local mid_y_dir = rand_sel(50, 2, 8)
+
+    if c.link[4] and not c.link[6] then mid_x_dir = 4 end
+    if c.link[6] and not c.link[4] then mid_x_dir = 6 end
+
+    if c.link[2] and not c.link[8] then mid_y_dir = 2 end
+    if c.link[8] and not c.link[2] then mid_y_dir = 8 end
+
+    for pass = 1,2 do
+      for kx = 1,3 do for ky = 1,3 do
+        local K = c.chunks[kx][ky]
+        if is_roomy(K) then
+          local x_dir = sel(kx==1, 6, sel(kx==3, 4, mid_x_dir))
+          local y_dir = sel(ky==1, 8, sel(ky==3, 2, mid_y_dir))
+
+          if pass == 1 then
+            try_reclaim_side(K, x_dir)
+            try_reclaim_side(K, y_dir)
+          else
+            try_reclaim_corner(K, 4, 2)
+            try_reclaim_corner(K, 4, 8)
+            try_reclaim_corner(K, 6, 2)
+            try_reclaim_corner(K, 6, 8)
+          end
+        end
+      end end  -- for kx for ky
+    end -- for pass
+  end
+
   local function build_void_space(c)
+
+    reclaim_areas(c)
+    
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
-      if K.void then
+      if K.empty then
         void_up_chunk(c, K)
+      elseif K.r_deep then
+        gap_fill(p, c, K.rx1,K.ry1, K.rx2,K.ry2,
+        { solid=c.theme.void })
+---     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
+---        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
       end
     end end
   end
@@ -5317,15 +5634,11 @@ c.x, c.y, other.x, other.y)
 
     local x1,y1, x2,y2 = side_coords(K.stair_dir, K.x1,K.y1, K.x2,K.y2)
 
-    local long ---### long = sel(x1 < x2, x2-x1+1, y2-y1+1)
-    local deep
+    local long = K.x2 - K.x1 + 1
+    local deep = K.y2 - K.y1 + 1 
 
-    if (K.stair_dir==2 or K.stair_dir==8) then
-      long = K.x2-K.x1+1
-      deep = K.y2-K.y1+1
-    else
-      long = K.y2-K.y1+1
-      deep = K.x2-K.x1+1
+    if (K.stair_dir==4 or K.stair_dir==6) then
+      long,deep = deep,long
     end
 
     local function check_stair_pos(pos, w)
@@ -5360,8 +5673,7 @@ c.x, c.y, other.x, other.y)
             local B = p.blocks[qx][qy]
             assert(B)
 ---???      if not B.empty or B.walk or not is_roomy(B.chunk)
-            if B.walk or not is_roomy(B.chunk)
-            then
+            if B.walk or not is_roomy(B.chunk) then
               able = false
             end
           end end
@@ -5554,12 +5866,6 @@ end
   local function block_is_used(B)
     if B.solid or B.f_tex or B.fragments then return true end
     return false
-  end
-
-  local function valid_cell_block(c, x, y)
-    return
-      (c.bx1 <= x and x <= c.bx2) and
-      (c.by1 <= y and y <= c.by2)
   end
 
   local function verify_inner(c, x1,y1, x2,y2)
@@ -5759,12 +6065,31 @@ end
     end
   end
 
-  local function add_object(c, name)
+  local function find_emergency_loc(c, dir)
+    if not dir then dir = rand_irange(1,4)*2 end
+
+    rand_shuffle(c.fab_spots)
+
+    for zzz,spot in ipairs(c.fab_spots) do
+      local x = spot.x
+      local y = spot.y
+      local B = p.blocks[x][y]
+      if B and block_is_free(B) and is_roomy(B.chunk) and not B.has_blocker then
+        return x,y,dir
+      end
+    end
+  end
+
+  local function add_object(c, name, must_put)
 
     local x,y,dir = fab_find_loc(c, 1, 1)
+    if not x and must_put then
+      x,y,dir = find_emergency_loc(c)
+    end
     if not x then
       show_cell_blocks(p,c)
-      error("Could not find place for: " .. name)
+--!!!!!!      error("Could not find place for: " .. name)
+      return
     end
 con.printf("add_object @ (%d,%d)\n", x, y)
     gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
@@ -5773,7 +6098,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
   end
 
   local function add_player(c, name)
-    add_object(c, name);
+    add_object(c, name, "must")
   end
 
   local function add_dm_weapon(c)
@@ -5788,7 +6113,8 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
     if not x then
       show_cell_blocks(p,c)
-      error("Could not find place for switch!");
+--!!!!!!      error("Could not find place for switch!");
+      return
     end
 
     local skin
@@ -6058,7 +6384,7 @@ end
          (c.quest.kind == "weapon") or
          (c.quest.kind == "item")
       then
-        add_object(c, c.quest.item)
+        add_object(c, c.quest.item, "must")
 
       elseif (c.quest.kind == "switch") or
              (c.quest.kind == "exit")
@@ -6100,16 +6426,15 @@ end
 
   decide_sky_lights(c)
 
-  build_void_space(c)
   build_vistas(c)
 
   mark_links(c)
 
   build_stairs(c)
 
-  tizzy_up_room(c)
+  build_void_space(c)
 
--- !!!!  position_dm_stuff(cell)  MOVE_TO: monster.lua
+  tizzy_up_room(c)
 
 end
 
