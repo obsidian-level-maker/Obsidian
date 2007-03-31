@@ -339,6 +339,23 @@ end
 
 function shuffle_build_sites(p)
 
+  local function count_builds(c, external)
+    local count = 0
+    
+    for side = 2,8,2 do
+      local L = c.link[side]
+      if L then
+        if (L.build == c) == (not external) then
+          count = count + 1
+        end
+      end
+    end
+    
+    return count
+  end
+
+  -- shuffle_build_sites --
+  
   for zzz,link in ipairs(p.all_links) do
 
     local c1 = link.cells[1]
@@ -359,6 +376,36 @@ function shuffle_build_sites(p)
     if link.kind == "vista" then chance = 0 end
 
     link.build = link.cells[rand_sel(chance, 2, 1)]
+  end
+
+  -- make sure cells are never devoid of build sites.
+  -- Although this happens quite rarely, it can make the
+  -- stair building algorithm fail.
+  for loop = 1,4 do
+    local modified = false
+
+    for zzz,c in ipairs(p.all_cells) do
+      if count_builds(c, true) == 4 then
+con.debugf("EXTERNALS @ cell (%d,%d) total=4\n", c.x,c.y)
+        for tries = 1,4 do
+          local dir = math.random(1,4) * 2
+          local L = c.link[dir]
+
+          if L.is_exit or L.kind == "falloff" or L.kind == "vista" then
+            -- do not change this link
+          else
+con.debugf("  CHANGING SIDE %d\n", dir)
+            L.build = c
+            modified = true
+            break -- out of 'try' loop
+          end
+        end
+      end
+    end
+
+    if not modified then break end
+
+    con.ticker()
   end
 end
 
@@ -2326,11 +2373,11 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   decide_themes()
 
   plot_quests()
-
   decide_links()
-  shuffle_build_sites(p)
-
+  
   setup_exit_room()
+  
+  shuffle_build_sites(p)
   add_scenic_cells()
 
   con.ticker();
