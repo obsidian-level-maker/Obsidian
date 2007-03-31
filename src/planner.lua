@@ -204,14 +204,6 @@ function random_cell(p)
   return rand_irange(1, p.w), rand_irange(1, p.h)
 end
 
-function valid_cell(p, cx, cy)
-  return not (cx < 1 or cy < 1 or cx > p.w or cy > p.h)
-end
-
-function valid_block(p, bx, by)
-  return not (bx < 1 or by < 1 or bx > p.blk_w or by > p.blk_h)
-end
-
 function empty_loc(p)  ---### UNUSED
   for loop = 1,999 do
     local x,y = random_cell(p)
@@ -404,10 +396,6 @@ end
 
 function resize_rooms(p)
 
-  local function cell_size(c)
-    return (c.bx2 - c.bx1 + 1), (c.by2 - c.by1 + 1)
-  end
-
   local function try_nudge_cell(c, side, pass)
 
     -- There are three passes:
@@ -501,7 +489,7 @@ function resize_rooms(p)
     -- don't make the shrinking cell too small
     local shrinker = sel(dir < 0, c, other)
     if shrinker then
-      local new_w, new_h = cell_size(shrinker)
+      local new_w, new_h = get_cell_size(shrinker)
       new_w, new_h = new_w - mv_x, new_h - mv_y
 
       local min_size = THEME.cell_min_size
@@ -1205,7 +1193,7 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
     Q.first = Q.path[1]
     Q.last  = Q.path[#Q.path]
 
-    make_hallways(Q)
+--!!!!!!    make_hallways(Q)
 
 if false then --!!!!
     if Q.theme.outdoor and not Q.has_hallway then
@@ -1748,6 +1736,9 @@ end
     local T2 = get_rand_theme()
 
     if T1 == T2 then T2 = get_rand_theme() end
+
+--T1 = THEME.themes["CAVE"]
+--T2 = THEME.themes["CAVE"]
 
     -- choose change-over point
     assert(#p.quests >= 2)
@@ -2364,13 +2355,13 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
 -- FIXME add_bridges()
 
-  add_vistas()
-  add_surprises()
+--  add_vistas()
+--  add_surprises()
 
   create_corners(p)
   create_borders(p)
 
-  add_windows()
+--  add_windows()
 
   return p
 end

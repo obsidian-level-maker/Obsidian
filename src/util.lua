@@ -308,6 +308,14 @@ end
 
 ----====| CELL/BLOCK UTILITIES |====----
 
+function valid_cell(p, cx, cy)
+  return not (cx < 1 or cy < 1 or cx > p.w or cy > p.h)
+end
+
+function valid_block(p, bx, by)
+  return not (bx < 1 or by < 1 or bx > p.blk_w or by > p.blk_h)
+end
+
 -- convert position into block/sub-block pair,
 -- where all the index values start at 1
 function div_mod(x, mod)
@@ -391,6 +399,10 @@ function delta_to_angle(dx,dy)
   end
 end
 
+function get_cell_size(c)
+  return (c.bx2 - c.bx1 + 1), (c.by2 - c.by1 + 1)
+end
+
 function side_coords(side, x1,y1, x2,y2)
   if side == 2 then return x1,y1, x2,y1 end
   if side == 4 then return x1,y1, x1,y2 end
@@ -416,4 +428,21 @@ function neighbour_by_side(p, c, dir)
   end
 end
 
+function valid_cell_block(c, x, y)
+  return
+    (c.bx1 <= x and x <= c.bx2) and
+    (c.by1 <= y and y <= c.by2)
+end
+
+function valid_chunk(kx,ky)
+  return 1 <= kx and kx <= KW and
+         1 <= ky and ky <= KH
+end
+
+function chunk_neighbour(c, K, dir)
+  local dx, dy = dir_to_delta(dir)
+  if valid_chunk(K.kx + dx, K.ky + dy) then
+    return c.chunks[K.kx+dx][K.ky+dy]
+  end
+end
 
