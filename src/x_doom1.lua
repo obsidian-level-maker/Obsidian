@@ -207,6 +207,16 @@ DM_COMBOS =
     scenery = { "green_pillar", "green_column", "green_column_hrt" },
   },
 
+  CAVEY =
+  {
+    mat_pri = 3,
+
+    wall = "BROWNHUG",
+    void = "BROWNHUG",
+    floor = "FLAT10",
+    ceil  = "FLAT10",
+  },
+
 
   ---- OUTDOOR ------------
 
