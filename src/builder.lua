@@ -64,14 +64,6 @@ function side_to_chunk(side)
   error ("side_to_chunk: bad side " .. side)
 end
 
----###  function side_to_corner(side, W, H)
----###    if side == 2 then return 1,1, W,1 end
----###    if side == 8 then return 1,H, W,H end
----###    if side == 4 then return 1,1, 1,H end
----###    if side == 6 then return W,1, W,H end
----###    error ("side_to_corner: bad side " .. side)
----###  end
-
 function dir_to_corner(dir, W, H)
   if dir == 1 then return 1,1 end
   if dir == 3 then return W,1 end
@@ -2150,16 +2142,6 @@ function make_chunks(p)
     return count
   end
 
-  local function empty_chunk(c)
-    -- OPTIMISE with rand_shuffle
-    for loop = 1,999 do
-      local kx = rand_irange(1,KW)
-      local ky = rand_irange(1,KH)
-
-      if not c.chunks[kx][ky] then return kx, ky end
-    end
-  end
-
 
   local function set_link_coords(c, side, link)
     
@@ -3240,6 +3222,9 @@ con.debugf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
       shuffle_stair_builds()
       if select_stair_spots() then break end
 con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
+      if loop==99 then
+        error("Failed to select stair spots")
+      end
     end
   end
 
@@ -3523,7 +3508,7 @@ function build_borders(p)
       door_kind = 1, tag = 0,
     }
 
-      if dual_odds(p.deathmatch, 75, 15) then
+      if dual_odds(p.deathmatch, 75, 15) and not link.is_exit then
         parm.door_kind = 117 -- Blaze
       end
 
@@ -5142,18 +5127,6 @@ function build_cell(p, c)
       end
     end
 
-
----###    if K.dm_health then
----###      add_dm_pickup(c, bx,by, K.dm_health)
----###    end
----###    
----###    if K.dm_ammo then
----###      add_dm_pickup(c, bx,by, K.dm_ammo)
----###    end
----###    
----###    if K.dm_item then
----###      add_dm_pickup(c, bx,by, K.dm_item)
----###    end
   end
 
   local function decide_sky_lights(c)
@@ -5217,10 +5190,6 @@ function build_cell(p, c)
          math.min(S2.stair_dir, 10-S2.stair_dir) == math.min(dir,10-dir)
       then return end
 
-if c.x==2 and c.y==3 then
-con.printf("\nRECLAIM SIDE @ (%d,%d) [%d,%d] dir:%d\n", c.x, c.y, K.kx, K.ky, dir)
-end
-
       local dx,dy = dir_to_delta(dir)
       local ax,ay = dir_to_across(dir)
 
@@ -5249,6 +5218,8 @@ end
         return true --OK--
       end
 
+      --> try_reclaim_side -->
+
       local h = 0
 
       while (h < deep-1) and test_line(h) do
@@ -5257,7 +5228,7 @@ end
 
       if h == 0 then return end --FAIL--
 
-      if K.r_deep and h < K.r_deep or (h == K.r_deep and rand_odds(50)) then
+      if K.r_deep and (h < K.r_deep or (h == K.r_deep and rand_odds(50))) then
         return --FAIL--
       end
 
@@ -5269,12 +5240,14 @@ end
       K.ry1 = sy1
       K.rx2 = sx1 + (K.r_deep-1)*dx + (K.r_long-1)*ax
       K.ry2 = sy1 + (K.r_deep-1)*dy + (K.r_long-1)*ay
+
+      return true --SUCCESS--
     end
     
     local function try_reclaim_corner(K, x_dir, y_dir)
 
-      -- reclaiming a side trumps a corner
-      if K.r_dir then return end
+      -- a reclaimed side trumps a corner
+      if K.r_dir and (K.r_dir % 2) == 0 then return end
 
       local corn
       if x_dir == 4 then
@@ -5287,11 +5260,6 @@ end
       local deep = K.y2 - K.y1 + 1
 
       do
-        --[[ NOT NEEDED (???)
-        local C = chunk_neighbour(c, K, corn)
-        if C and not C.empty then return end
-        --]]
-
         -- allow neighbour chunks to have an reclaim area,
         -- limiting long/deep accordingly.
 
@@ -5322,20 +5290,30 @@ end
       local dx = sel(x_dir==4, -1, 1)
       local dy = sel(y_dir==2, -1, 1)
 
-      local function test_block(x1,y1, x2,y2)
+      local function overlaps_stair(x1,y1, x2,y2)
+        if not K.stair_x1 then return false end
+
+        if x2 < K.stair_x1 or x1 > K.stair_x2 then return false end
+        if y2 < K.stair_y1 or y1 > K.stair_y2 then return false end
+
+        return true
+      end
+      
+      local function test_block(rx1,ry1, rx2,ry2)
 
         -- input coordinates are relative to corner block,
         -- convert them to absolute coordinates.
-        x1,y1 = cx + x1*dx, cy + y1*dy
-        x2,y2 = cx + x2*dx, cy + y2*dy
+        x1,y1 = cx + rx1*dx, cy + ry1*dy
+        x2,y2 = cx + rx2*dx, cy + ry2*dy
 
         if x1 > x2 then x1,x2 = x2,x1 end
         if y1 > y2 then y1,y2 = y2,y1 end
 
-if c.x==2 and c.y==3 and K.ky==3 then
-con.printf("K @ [%d,%d]\n", K.kx, K.ky)
---con.printf("TESTING w=%d..%d h=%d..%d --> (%d,%d)..(%d,%d)\n", w1,w2, h1,h2, x1,y1, x2,y2)
-end
+        -- make sure it doesn't touch the chunk's stair
+        if overlaps_stair(x1-1, y1-1, x2+1, y2+1) then
+          return false --FAIL--
+        end
+
         for x = x1,x2 do for y = y1,y2 do
 if not valid_cell_block(c,x,y) then
 con.printf("CELL (%d,%d) .. (%d,%d)\n", c.bx1,c.by1,c.bx2,c.by2)
@@ -5347,13 +5325,14 @@ end
           local B = p.blocks[x][y]
 
           if B.walk or B.chunk ~= K then
-            return false
+            return false --FAIL--
           end
         end end
 
         return true --OK--
       end
 
+      --> try_reclaim_corner -->
 
       if not test_block(0,0, 0,0) then
         return --FAIL--
@@ -5382,6 +5361,17 @@ end
         end
       end
 
+      -- if a corner was already reclaimed, choose greatest area
+      -- TODO: keep both if they don't overlap
+
+      if K.r_dir then
+        local area = w * h
+        local r_area = K.r_long * K.r_deep
+        if (area < r_area) or (area == r_area and rand_odds(50)) then
+          return --FAIL--
+        end
+      end
+
       K.r_long = w
       K.r_deep = h
       K.r_dir  = 10-corn
@@ -5393,15 +5383,19 @@ end
 
       if K.rx1 > K.rx2 then K.rx1, K.rx2 = K.rx2, K.rx1 end
       if K.ry1 > K.ry2 then K.ry1, K.ry2 = K.ry2, K.ry1 end
+
+      return true --SUCCESS--
     end
     
+    ---== reclaim_areas ==---
+
     -- choose reclaim direction for central chunks.
     -- By limiting them to a single direction, we prevent the
     -- chance of two neighbouring chunks cutting off the path
     -- (because the opposite sides were reclaimed).
     --
-    -- FIXME: should allow e.g. x_dir=6 @ kx==3 when no other
-    --        claims were made (or ADD TEST FOR CUT-OFF).
+    -- pass #2 is special, if no claims occurred for X or Y
+    -- direction in pass #1, then try the opposite way.
 
     local mid_x_dir = rand_sel(50, 4, 6)
     local mid_y_dir = rand_sel(50, 2, 8)
@@ -5412,7 +5406,10 @@ end
     if c.link[2] and not c.link[8] then mid_y_dir = 2 end
     if c.link[8] and not c.link[2] then mid_y_dir = 8 end
 
-    for pass = 1,2 do
+    local got_x = false
+    local got_y = false
+
+    for pass = 1,3 do
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
         if is_roomy(K) then
@@ -5420,8 +5417,13 @@ end
           local y_dir = sel(ky==1, 8, sel(ky==3, 2, mid_y_dir))
 
           if pass == 1 then
-            try_reclaim_side(K, x_dir)
-            try_reclaim_side(K, y_dir)
+            if try_reclaim_side(K, x_dir) then got_x = true end
+            if try_reclaim_side(K, y_dir) then got_y = true end
+
+          elseif pass == 2 then
+            if not got_x then try_reclaim_side(K, 10-x_dir) end
+            if not got_y then try_reclaim_side(K, 10-y_dir) end
+
           else
             try_reclaim_corner(K, 4, 2)
             try_reclaim_corner(K, 4, 8)
@@ -5443,9 +5445,9 @@ end
         void_up_chunk(c, K)
       elseif K.r_deep then
         gap_fill(p, c, K.rx1,K.ry1, K.rx2,K.ry2,
-        { solid=c.theme.void })
----     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
----        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
+---!!!        { solid=c.theme.void })
+     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
+        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
       end
     end end
   end
@@ -5527,10 +5529,11 @@ c.x, c.y, other.x, other.y)
     for x = x1,x2 do for y = y1,y2 do
       local B = p.blocks[x][y]
       assert(B)
-      assert(not (B.solid or B.f_tex))
+
       if not B.walk or walk > B.walk then
         B.walk = walk
       end
+
     end end
   end
 
@@ -5819,29 +5822,41 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 
     local step = -diff_h / (info.deep * 4)
 
-if true then
-con.debugf("  Stair coords: (%d,%d)..(%d,%d) size:%dx%d\n", info.sx,info.sy, info.ex,info.ey, info.long, info.deep)
---gap_fill(p,c, info.sx,info.sy, info.ex,info.ey, K.rmodel, { light=255, kind=8 })
---else
-    if math.abs(step) <= 16 then
-    
-      B_stair(p,c, info.sx,info.sy, K.rmodel.f_h, K.stair_dir,
-              info.long, info.deep, step)
-    else
-      B_lift(p,c, info.sx,info.sy, max_fh, K.stair_dir,
-             info.long, info.deep)
-    end
-end
-    -- reserve space vor und hinter the staircase
-    do
-    local dx,dy = dir_to_delta(K.stair_dir)
+    local x, y = info.sx, info.sy
+    local long, deep = info.long, info.deep
 
-    local x1,y1,x2,y2 = side_coords(K.stair_dir, info.sx,info.sy,info.ex,info.ey)
+    if long > 2 then
+      x = x + int(long / 2) * ax
+      y = y + int(long / 2) * ay
+      long = 1
+    end
+
+    local ex = x + ax*(long-1) + ay*(deep-1)
+    local ey = y + ax*(deep-1) + ay*(long-1)
+
+    K.stair_x1 = x
+    K.stair_y1 = y
+    K.stair_x2 = ex
+    K.stair_y2 = ey
+
+con.debugf("  Stair coords: (%d,%d)..(%d,%d) size:%dx%d\n", x,y, ex,ey, long, deep)
+
+    if math.abs(step) <= 16 then --FIXME: allow 24 sometimes (esp. Hexen)
+
+      B_stair(p,c, x,y, K.rmodel.f_h, K.stair_dir, long, deep, step)
+    else
+      B_lift(p,c, x,y, max_fh, K.stair_dir, long, deep)
+    end
+
+    -- reserve space vor und hinter the staircase
+
+    local x1,y1,x2,y2 = side_coords(K.stair_dir, x,y, ex,ey)
+con.debugf("  MARK WALK (%d,%d)..(%d,%d)\n", x1+dx,y1+dy, x2+dx,y2+dy);
     mark_walkable(c, x1+dx,y1+dy, x2+dx,y2+dy, 4)
 
-    local x3,y3,x4,y4 = side_coords(10-K.stair_dir, info.sx,info.sy,info.ex,info.ey)
+    local x3,y3,x4,y4 = side_coords(10-K.stair_dir, x,y, ex,ey)
+con.debugf("  MARK WALK (%d,%d)..(%d,%d)\n", x3-dx,y3-dy, x4-dx,y4-dy);
     mark_walkable(c, x3-dx,y3-dy, x4-dx,y4-dy, 4)
-    end
   end
 
   local function build_stairs(c)
@@ -6409,7 +6424,7 @@ end
     end
 
     -- SCENERY
-    for loop = 1,18 do
+    for loop = 1,0 do
       add_scenery(c)
     end
   end
@@ -6494,7 +6509,7 @@ function build_rooms(p)
         gap_fill_block(B)
 
         if B.walk then
---        add_thing(p, c, x, y, "candle", false)
+          add_thing(p, c, x, y, "candle", false)
         end
       end
     end end
@@ -6634,7 +6649,7 @@ end
   if p.deathmatch then
     deathmatch_through_level(p)
   else
-    battle_through_level(p)
+--!!!!!!    battle_through_level(p)
   end
 
   con.progress(40); if con.abort() then return end
