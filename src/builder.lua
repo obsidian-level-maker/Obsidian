@@ -631,291 +631,6 @@ end
 
 
 --
--- Build a door.
--- 
--- Valid sizes (long x deep) are:
---    4x3  4x2  4x1
---    3x3  3x2  3x1
---    2x3  2x2  2x1
---
-function B_door(p, c, link, b_theme, x,y,z, dir, long,deep, door_info,
-                kind,tag, key_tex)
- 
-  local high = door_info.h
-  
-  local dx, dy = dir_to_delta(dir)
-  local ax, ay = dir_to_across(dir)
-  local adir = delta_to_dir(ax, ay)
-
-  assert (link.kind == "door")
-
-  local wall_tex = b_theme.wall
-  local track_tex = door_info.track or THEME.mats.TRACK.wall
-  local door_tex = door_info.wall
-  local side_tex
-  local ceil_tex = THEME.mats.DOOR_FRAME.floor
-
-  if key_tex then
-    side_tex = nil
-  else
-    key_tex  = wall_tex
-    side_tex = THEME.mats.DOOR_FRAME.wall -- can be nil
-  end
-
-  if deep >= 2 then
---    side_tex = key_tex
---    ceil_tex = door_info.ceil_tex or THEME.mats.DOOR_FRAME.ceil
-  end
-
-  local DOOR = { f_h = z+8, c_h = z+8,
-                 f_tex = door_info.frame_floor or THEME.mats.DOOR_FRAME.floor,
-                 c_tex = door_info.ceil        or THEME.mats.DOOR_FRAME.floor,
-                 light = 255,
-                 l_tex = door_tex,
-                 u_tex = door_tex,
-                 door_kind = kind,
-                 tag = tag,
-                 [dir]  = { u_peg="bottom" }, [10-dir]  = { u_peg="bottom" },
-                 [adir] = { l_peg="bottom" }, [10-adir] = { l_peg="bottom" }, -- TRACK
-                 }
-
-  local STEP = { f_h = z+8, c_h = z+8 + door_info.h,
-                    f_tex = DOOR.f_tex,
-                    c_tex = door_info.frame_ceil or THEME.mats.DOOR_FRAME.ceil,
-                    light=224,
-                    l_tex = door_info.step or c.theme.step or THEME.mats.STEP.wall,
-                    u_tex = wall_tex,
-                    [dir] = { l_peg="top" },
-                    [10-dir] = { l_peg="top" },
-                    }
-
-  -- block based door (big 'n bulky)
-
-  if long >= 3 and deep == 3 then
-
-    local zx, zy = (long-1)*ax, (long-1)*ay
-    local ex, ey = (long-2)*ax, (long-2)*ay
-
-    fill (p,c, x,   y,    x+zx,y+zy, { solid=key_tex })
-    fill (p,c, x+ax,y+ay, x+ex,y+ey, STEP )
-    x = x + dx; y = y + dy
-
-    fill (p,c, x,   y,    x+zx,y+zy, { solid=wall_tex })
-    fill (p,c, x+ax,y+ay, x+ex,y+ey, DOOR)
-    x = x + dx; y = y + dy
-
-    fill (p,c, x,   y,    x+zx,y+zy, { solid=key_tex })
-    fill (p,c, x+ax,y+ay, x+ex,y+ey, STEP )
-
-    return
-  end
-
-  -- fragment based doors --
-
-  local fx = 1 + (x-1)*FW
-  local fy = 1 + (y-1)*FH
-
-  if (dir == 4) then fx = fx + FW - 1 end
-  if (dir == 2) then fy = fy + FH - 1 end
-
-  if long >= 2 and deep <= 2 then
-
-    local step = 1 + (deep - 1) * 2
-    assert(step * 2 + 2 == deep * FW)
-
-    local side = (long == 4) and 4 or 2
-    long = long * 4 - side * 2
-    assert(long == 4 or long == 8)
-
-    local ex, ey = ax*(long+1), ay*(long+1)
-    local zx, zy = ax*(long+side+1), ay*(long+side+1)
-
-    local sx, sy = ax*side, ay*side
-
-    -- align inner sides with outside wall
-    local y_diff = link_other(link, c).ceil_h - STEP.c_h
-    local far = deep * FW - 1
-
-    local override
-
-    if side_tex then
-      override =
-      {
-        l_tex = side_tex,
-        y_offset = y_diff
-      }
-    end
-
-    frag_fill (p,c, fx,fy, fx+sx+dx*far,fy+zy-sy+dy*far,
-      { solid=key_tex, [adir] = override })
-    frag_fill (p,c, fx+zx-sx,fy+zy-sy, fx+zx+dx*far,fy+zy+dy*far, 
-      { solid=key_tex, [10-adir] = override })
-
-    for ff = 1,step do
-      frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, STEP)
-      fx = fx + dx; fy = fy + dy
-    end
-
-    for mm = 1,2 do
-      frag_fill (p,c, fx+ax,fy+ay, fx+zx-ax,fy+zy-ay, { solid=track_tex })
-      frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, DOOR)
-      fx = fx + dx; fy = fy + dy
-    end
-
-    for bb = 1,step do
-      frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, STEP)
-      fx = fx + dx; fy = fy + dy
-    end
-
-    return
-  end
-
-  error("UNIMPLEMENTED DOOR " .. long .. "x" .. deep)
-end
-
-
-function B_exit_door(p,c, theme, link, x,y,z, dir)
- 
-  assert (link.kind == "door")
-
-  local door_info = theme.door
-  assert(door_info)
-
-  local door_w = int(door_info.w / 64)
-
-  local long = link.long or (1 + door_w)
-  local deep = 2
-  local high = 72  -- FIXME: pass in "door_info"
-
----###  if theme.front_mark then long = long + 1 end -- FIXME: sync with link.long
-
-  local dx, dy = dir_to_delta(dir)
-  local ax, ay = dir_to_across(dir)
-  local adir = delta_to_dir(ax, ay)
-
-  local wall_tex = theme.wall
-  local door_tex = door_info.wall
-  local key_tex  = door_info.wall
-  local track_tex = door_info.track or THEME.mats.TRACK.wall
-
-  local DOOR = { f_h = z+8, c_h = z+8,
-                 f_tex = door_info.frame_floor or THEME.mats.DOOR_FRAME.floor,
-                 c_tex = door_info.ceil        or THEME.mats.DOOR_FRAME.floor,
-                 light = 255,
-                 door_kind = 1,
-                 l_tex = theme.wall,
-                 u_tex = door_tex,
-                 [dir]  = { u_peg="bottom" }, [10-dir]  = { u_peg="bottom" },
-                 [adir] = { l_peg="bottom" }, [10-adir] = { l_peg="bottom" }, -- TRACK
-               }
-
-  local STEP = { f_h = z+8, c_h = z+8+high,
-                    f_tex = DOOR.f_tex,
-                    c_tex = door_info.frame_ceil or DOOR.f_tex,
-                    light=255,
-                    l_tex = door_info.step or theme.step or THEME.mats.STEP.wall,
-                    u_tex = wall_tex,
-                    [dir] = { l_peg="top" },
-                    [10-dir] = { l_peg="top" },
-                }
-
-  local SIGN
-  
-  if theme.sign then
-    SIGN = { f_h = z+8, c_h = z+8+high-16,
-               f_tex = STEP.f_tex, c_tex = theme.sign_ceil,
-               light=255,
-               l_tex = theme.sign, u_tex = theme.sign }
-
-  elseif theme.front_mark then
-    SIGN = { solid = wall_tex, 
-             [dir]    = { l_tex = theme.front_mark},
-             [10-dir] = { l_tex = theme.front_mark} }
-  end
-
-  local fx = 1 + (x-1)*FW
-  local fy = 1 + (y-1)*FH
-
-  if (dir == 4) then fx = fx + FW - 1 end
-  if (dir == 2) then fy = fy + FH - 1 end
-
-  assert (long >= 2 and deep <= 2)
-
-  local step = 1 + (deep - 1) * 2
-  assert(step * 2 + 2 == deep * FW)
-
-  local side = (long - door_w) * 2
-
---con.debugf("EXIT: door_w=%d long=%d side=%d\n", door_w, long, side)
-
-  long = long * 4 - side * 2
-  assert(long == 4 or long == 8)
-
-  local sx, sy = ax*side, ay*side
-  local ex, ey = ax*(long+side-1), ay*(long+side-1)
-  local zx, zy = ax*(long+side*2-1), ay*(long+side*2-1)
-
---con.debugf("long_f=%d  ax=%d sx=%d ex=%d zx=%d\n", long, ax, sx, ex, zx)
-
-  frag_fill(p,c, fx, fy, fx+zx+dx*7, fy+zy+dy*7, { solid=wall_tex })
-
-  if door_info.frame_wall then
-
-    -- align inner sides y_offset with outside wall
-    local y_diff = link_other(link, c).ceil_h - STEP.c_h
-    frag_fill(p,c, fx+sx-ax, fy+sy-ay, fx+sx-ax+dx*7, fy+sy-ay+dy*7,
-      { solid=wall_tex, [adir]={ l_tex=door_info.frame_wall, y_offset=y_diff }} )
-    frag_fill(p,c, fx+ex+ax, fy+ey+ay, fx+ex+ax+dx*7, fy+ey+ay+dy*7,
-      { solid=wall_tex, [10-adir]={ l_tex=door_info.frame_wall, y_offset=y_diff }} )
-  end
-
-  if theme.front_mark then
-    frag_fill(p,c, fx, fy, fx+zx+dx, fy+zy+dy, STEP)
-
-    frag_fill(p,c, fx+dx*2, fy+dy*2, fx+ax*3+dx*2, fy+ay*3+dy*2, SIGN)
-    frag_fill(p,c, fx+zx-ax*3+dx*2, fy+zy-ay*3+dy*2, fx+zx+dx*2, fy+zy+dy*2, SIGN)
-  end
-
-  for ff = 1,4 do
-    if ff == 4 then
-      frag_fill (p,c, fx+ax,fy+ay, fx+ax,fy+ay,
-        { solid=key_tex, [adir] = { x_offset = 112 }} )
-      frag_fill (p,c, fx+zx-ax,fy+zy-ay, fx+zx-ax,fy+zy-ay,
-        { solid=key_tex, [10-adir] = { x_offset = 112 }} )
-    end
-
-    frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, STEP)
-
-    -- EXIT SIGN
-    if theme.sign and (ff == 2) then
-      frag_fill (p,c, fx+sx+ax,fy+sy+ay, fx+sx+ax*2,fy+sy+ay*2, SIGN,
-        { [10-adir] = { x_offset = 32 },
-          [adir] = { x_offset = 32 }} )
-    end
-
-    fx = fx + dx; fy = fy + dy
-  end
-
-  for mm = 1,1 do
-    frag_fill (p,c, fx+ax,fy+ay, fx+zx-ax,fy+zy-ay, { solid=track_tex })
-    frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, DOOR)
-    fx = fx + dx; fy = fy + dy
-  end
-
-  for bb = 1,3 do
-    if bb == 1 then
-      frag_fill (p,c, fx+ax,fy+ay, fx+ax,fy+ay,
-        { solid=key_tex, [adir] = { x_offset = 112 }} )
-      frag_fill (p,c, fx+zx-ax,fy+zy-ay, fx+zx-ax,fy+zy-ay,
-        { solid=key_tex, [10-adir] = { x_offset = 112 }} )
-    end
-    frag_fill (p,c, fx+sx,fy+sy, fx+ex,fy+ey, STEP)
-    fx = fx + dx; fy = fy + dy
-  end
-end
-
-
---
 -- Build an exit hole
 --
 function B_exit_hole(p,c, K,kx,ky, sec)
@@ -1705,42 +1420,8 @@ function B_vista(p,c, x1,y1, x2,y2, long,deep, side, theme,kind)
   local other = neighbour_by_side(p,c,side)
   assert(other)
 
----###  local x1,y1, x2,y2 = side_coords(side, 1,1, BW,BH)
-
   local dx,dy = dir_to_delta(side)
   local ax,ay = dir_to_across(side)
-
----###  x1,y1 = c.bx1-1 + (x1+ax*3+dx), c.by1-1 + (y1+ay*3+dy)
----###  x2,y2 = c.bx1-1 + (x2-ax*3+dx), c.by1-1 + (y2-ay*3+dy)
-
---[[
-  local ARCH = copy_block(c.rmodel)
-
-  ARCH.l_tex = theme.wall
-  ARCH.u_tex = theme.wall
-
-  if not other.theme.outdoor then
-    ARCH.c_tex = sel(theme.outdoor, theme.floor, theme.ceil)
-  end
-
-  if ARCH.c_tex ~= THEME.SKY_TEX then
-    ARCH.c_h = ARCH.f_h + 96
-  end
-
-  if kind ~= "solid" then
-    ARCH.light = int((c.rmodel.light+other.rmodel.light)/2)
-  end
-
-  local fx1 = (x1 - 1) * FW + 1
-  local fy1 = (y1 - 1) * FH + 1
-
-  local fx2 = x2 * FW
-  local fy2 = y2 * FH
-
-  frag_fill(p,c, fx1,fy1, fx2,fy2, sel(ARCH.c_tex == THEME.SKY_TEX, ARCH, { solid=ARCH.l_tex }))
-  frag_fill(p,c, fx1+ax,fy1+ay, fx2-ax,fy2-ay, ARCH)
---]]
-
 
   local ROOM   = copy_block(c.rmodel)
   local WINDOW = copy_block(c.rmodel)
@@ -1791,14 +1472,6 @@ function B_vista(p,c, x1,y1, x2,y2, long,deep, side, theme,kind)
     ROOM.light   = other.rmodel.light - 32
     WINDOW.light = other.rmodel.light - 16
   end
-
---[[
-  x1,y1 = x1+dx*1, y1+dy*1
-  x2,y2 = x2+dx*deep, y2+dy*deep
-
-  if x1 > x2 then x1,x2 = x2,x1 end
-  if y1 > y2 then y1,y2 = y2,y1 end
---]]
 
   fx1 = (x1 - 1) * FW + 1
   fy1 = (y1 - 1) * FH + 1
@@ -2294,16 +1967,6 @@ link.cells[2].x, link.cells[2].y)
           { x = kx-ax + ax * j, y = ky-ay + ay * j })
       end
 
----###      if wh < 0 then wh, ax, ay = -wh, -ax, -ay end
----###      if wh > 2 then wh = 2 end
----###
----###      table.insert(coords,
----###        { x = kx+ax * int(wh/2),
----###          y = ky+ay * int(wh/2) })
----###
----###      if wh == 1 then -- straddles two chunks
----###        table.insert(coords, { x=kx+ax, y=ky+ay })
----###      end
     end
 
     -- now check for clashes
@@ -3433,13 +3096,6 @@ function setup_borders_and_corners(p)
 
     if c1.border[side].window then return "window" end
 
----###    if link and (link.kind == "arch") and c1.theme == c2.theme and
----###       (c1.quest.parent or c1.quest) == (c2.quest.parent or c2.quest) and
----###       dual_odds(c1.theme.outdoor, 50, 33)
----###    then
----###       return "empty"
----###    end
-
     -- fencing anyone?   FIXME: move tests into Planner
     local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
 
@@ -3726,8 +3382,6 @@ end
     y = D.y1
 
     if (link.kind == "arch" or link.kind == "falloff") then
-
----###      if D.kind == "empty" then return end  -- no arch needed
 
       local ex, ey = x + ax*(long-1), y + ay*(long-1)
       local tex = b_theme.wall
@@ -4131,10 +3785,6 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
     WINDOW.light = WINDOW.light - 16
     WINDOW.c_tex = b_theme.arch_ceil or WINDOW.f_tex
 
----### YUCK  if (WINDOW.c_h - WINDOW.f_h) > 64 and rand_odds(30) then
----###         WINDOW.c_h = WINDOW.f_h + 64
----###       end
-
     local x = D.x1
     local y = D.y1
 
@@ -4240,16 +3890,8 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
 
     local x1,y1, x2,y2 = D.x1, D.y1, D.x2, D.y2
 
----if (side % 2) == 1 then
----gap_fill(p,c, x1,y1, x2,y2, { solid="COMPBLUE" })
----return
----end
-
     if what == "wire" or what == "fence" then
-
       build_fence(side, x1,y1, x2,y2, other, what, b_theme)
-
----###      if other.scenic then FENCE.impassible = true end
 
     elseif what == "window" then
       build_window(side)
@@ -4478,102 +4120,6 @@ function build_cell(p, c)
     return cell.chunks[cx][cy], other.chunks[ox][oy]
   end
 
---[[ OLD CRUD
-  local function border_floor_range(other, side)
-    assert(other)
-
-    local f_min, f_max = 65536, -65536
-
-    for n = 1,KW do
-      local K1, K2 = chunk_pair(c, other, side,n)
- 
-      if not (K1.void or K1.cage or K1.vista) then
-        f_max = math.max(f_max, K1.rmodel.f_h)
-        f_min = math.min(f_min, K1.rmodel.f_h)
-      end
-      if not (K2.void or K2.cage or K2.vista) then
-        f_max = math.max(f_max, K2.rmodel.f_h)
-        f_min = math.min(f_min, K2.rmodel.f_h)
-      end
-    end
-
-    if f_min == 65536 then return nil, nil end
-
-    return f_min, f_max
-  end
---]]
-
-  local dummy_pos_filler_crud_grunk
-
---[[ OLD CRUD
-  local function corner_tex(c, dx, dy)
-    -- FIXME: use *border* themes, not cell themes
-
-    local themes = { }
-
-    local function try_add_one(x, y)
-      if not valid_cell(p, x, y) then return end
-      local cell = p.cells[x][y]
-      if not cell then return end
-      assert(cell.theme)
-      table.insert(themes, cell.theme)
-    end
-
-    try_add_one(c.x+dx, c.y)
-    try_add_one(c.x,    c.y+dy)
-    try_add_one(c.x+dx, c.y+dy)
-
-    local best = c.theme
-
-    for zzz,T in ipairs(themes) do
-      if not T.outdoor and best.outdoor then
-        best = T
-      elseif T.outdoor == best.outdoor then
-        if T.mat_pri > best.mat_pri then
-          best = T
-        elseif T.mat_pri == best.mat_pri and rand_odds(50) then
-          best = T
-        end
-      end
-    end
-
-    return best.void
-  end
---]]
-
-  --[[ OLD STUFF, REMOVE SOON
-  local function who_build_border(c, side, other, link)
-
-    if not other then
-      return c
-    end
-
-    if link then
-      return link.build
-    end
-
-    if c.vista_from == side then
-      return other
-    elseif c.vista[side] then
-      return c
-    end
-
-    if c.theme.outdoor ~= other.theme.outdoor then
-      return sel(c.theme.outdoor, other, c)
-    end
-
-    -- using 'not' because the scenic field has multiple values,
-    -- but the decision must be binary.
-    if (not c.scenic) ~= (not other.scenic) then
-      return sel(c.scenic, other, c)
-    end
-
----##  elseif (c.scenic == "solid") ~= (other.scenic == "solid") then
----##    return sel(c.scenic == "solid", 
-
-    return sel(side > 5, other, c)
-  end
-  --]]
 
   local function position_sp_stuff(c)
 
@@ -4602,60 +4148,6 @@ function build_cell(p, c)
     end
   end
 
-  local function position_dm_stuff(c) -- FIXME: MOVE_TO monster.lua
-
-    local spots = {}
-
-    local function get_spot()
-      if #spots == 0 then return nil end
-      return table.remove(spots, 1)
-    end
-
-    local function reusable_spot()
-      if #spots == 0 then return nil end
-      local S = table.remove(spots,1)
-      table.insert(spots, S)
-      return S
-    end
-    
-    --- position_dm_stuff ---
-
-    for kx = 1,KW do for ky = 1,KH do
-      local K = c.chunks[kx][ky]
-      if K and (K.room or K.liquid or K.link) and not K.stair_dir then
-        table.insert(spots, {x=kx, y=ky, K=K})
-      end
-    end end
-
-    rand_shuffle(spots)
-
----###    -- guarantee at least 4 players (each corner)
----###    if (c.x==1) or (c.x==p.w) or (c.y==1) or (c.y==p.h) or rand_odds(66) then
----###      local spot = get_spot()
----###      if spot then spot.K.player = true end
----###    end
----###
----###    -- guarantee at least one weapon (central cell)
----###    if (c.x==int((p.w+1)/2)) or (c.y==int((p.h+1)/2)) or rand_odds(70) then
----###      local spot = get_spot()
----###      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
----###    end
----###
----###    -- secondary players and weapons
----###    if rand_odds(33) then
----###      local spot = get_spot()
----###      if spot then spot.K.player = true end
----###    end
----###    if rand_odds(15) then
----###      local spot = get_spot()
----###      if spot then spot.K.dm_weapon = choose_dm_thing(THEME.dm.weapons, true) end
----###    end
-
-    -- from here on we REUSE the spots --
-
-    if #spots == 0 then return end
-
-  end
 
   local function OLD_build_chunk(kx, ky)
 
@@ -4716,14 +4208,6 @@ function build_cell(p, c)
 
       return entry_dir
     end
-
----###    local function chunk_dm_offset()
----###      while true do
----###        local dx = rand_irange(1,3) - 2
----###        local dy = rand_irange(1,3) - 2
----###        if not (dx==0 and dy==0) then return dx,dy end
----###      end
----###    end
 
 
     ---=== OLD_build_chunk ===---
