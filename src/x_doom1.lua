@@ -656,7 +656,8 @@ DM_DOORS =
   --       tall, but work fine when truncated.
 
   d_big2   = { prefab="DOOR", w=128, h=112,
-               door="BIGDOOR2", track="DOORTRAK",
+               door="BIGDOOR2", door_c="FLAT1",
+               track="DOORTRAK",
                light="LITE5", step="STEP1",
                frame_floor="FLAT1", frame_ceil="TLITE6_6",
              },

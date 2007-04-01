@@ -371,7 +371,7 @@ DOOR =
         },
 
     -- door
-    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_ceil",
+    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_c",
           kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
         },
 
@@ -416,7 +416,7 @@ DOOR_LOCKED =
         },
 
     -- door
-    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_ceil",
+    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_c",
           kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
         },
 
@@ -447,7 +447,7 @@ DOOR_EXIT =
         },
 
     -- door
-    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_ceil",
+    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_c",
           kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
         },
 
