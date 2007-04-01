@@ -4845,15 +4845,18 @@ end
 
   local function build_void_space(c)
 
-    reclaim_areas(c)
+--!!!!!!    reclaim_areas(c)
     
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       if K.empty then
-        void_up_chunk(c, K)
+--!!!        void_up_chunk(c, K)
+        gap_fill(p, c, K.x1,K.y1, K.x2,K.y2,
+          c.rmodel, { f_h=c.f_max+32 })
       elseif K.r_deep then
         gap_fill(p, c, K.rx1,K.ry1, K.rx2,K.ry2,
-        { solid=c.theme.void })
+          c.rmodel, { f_h=c.f_max+32 })
+--!!!        { solid=c.theme.void })
 ---     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
 ---        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
       end
@@ -5189,6 +5192,13 @@ con.debugf("Putting in Stair: (%d,%d)..(%d,%d) dir:%d size:%dx%d\n", x,y, ex,ey,
     if math.abs(step) <= max_step then
       B_stair(p,c, K.rmodel, x,y, dir, long,deep, step)
     else
+          if long == 3 then long = 2
+      elseif long >= 5 and rand_odds(90) then
+        local pos = int( (long - 4 + rand_irange(0,1)) / 2)
+        x, y = x + pos*ax, y + pos*ay
+        long = 4
+      end
+
       B_lift(p,c, K.rmodel, x,y, max_fh, dir, long, deep)
     end
 
@@ -5263,13 +5273,32 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
     local x, y = info.sx, info.sy
     local long, deep = info.long, info.deep
 
---[[
-    if long > 2 then
-      x = x + int(long / 2) * ax
-      y = y + int(long / 2) * ay
-      long = 1
+    -- sometimes make stairs narrow, or even split into two pieces
+
+    local NARROW_PROBS = { 0, 0, 2, 40, 60, 75, 85, 90 }
+    local SPLIT_PROBS  = { 0, 0, 5, 40, 60, 75, 85, 90 }
+
+    while rand_odds(NARROW_PROBS[math.min(long,8)]) do
+      x, y = x + ax, y + ay
+      long = long - 2
+con.printf("MAKING STAIR NARROWER @ (%d,%d) : new size %dx%d\n", c.x,c.y, long,deep)
     end
---]]
+
+    if rand_odds(SPLIT_PROBS[math.min(long,8)]) then
+      local split_w, gap_w
+
+      repeat
+        split_w = rand_index_by_probs { 10, 50, 90 }
+        gap_w   = long - split_w*2
+      until gap_w >= 1
+
+      long = split_w
+con.printf("SPLITTING STAIR @ (%d,%d) : new size %dx%d\n", c.x,c.y, long,deep)
+
+      put_in_stair(c, K,J, x,y, dir, long,deep)
+      x,y = x + (long+gap_w)*ax, y + (long+gap_w)*ay
+    end
+
     put_in_stair(c, K,J, x,y, dir, long,deep)
   end
 
