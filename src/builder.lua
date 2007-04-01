@@ -982,9 +982,10 @@ end
 -- Build a stair
 --
 -- (bx,by) is the lowest left corner (cf. B_prefab)
+--
 -- Z is the starting height
 --
-function B_stair(p, c, bx,by, z, dir, long, deep, step)
+function B_stair(p,c, rmodel, bx,by, dir, long, deep, step)
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
@@ -1002,30 +1003,37 @@ function B_stair(p, c, bx,by, z, dir, long, deep, step)
   local zx = ax * (long*4-1)
   local zy = ay * (long*4-1)
 
-  local out_dir = sel(step < 0, dir, 10-dir)
+  local z = rmodel.f_h
 
   -- first step is always raised off the ground
   if step > 0 then z = z + step end
+
+  local out_dir = sel(step < 0, dir, 10-dir)
 
   local xo_dir1 = rotate_cw90(dir)
   local xo_dir2 = rotate_ccw90(dir)
 
   for i = 1,deep*4 do
 
-    local sec = copy_block_with_new(c.rmodel, -- !!!! FIXME: K.rmodel
+    local sec = ---??? copy_block_with_new(c.rmodel, -- !!!!
     {
-      f_h = z,
-      f_tex = c.theme.step_floor, -- might be nil (=> rmodel.f_tex)
+      rmodel = rmodel,
+
+      f_h   = z,
+      f_tex = c.theme.step_floor or rmodel.f_tex,
+      l_tex = rmodel.l_tex,
 
       [out_dir] = { l_tex=c.theme.step, l_peg="top" },
 
       [xo_dir1] = { x_offset= i*16 },
       [xo_dir2] = { x_offset=-i*16 },
-    })
+    }
 
     frag_fill(p,c, fx, fy, fx+zx, fy+zy, sec)
 
-    fx = fx + dx; fy = fy + dy; z = z + step
+    fx = fx + dx
+    fy = fy + dy
+    z  = z  + step
   end
 end
 
@@ -1035,7 +1043,7 @@ end
 --
 -- Z is the starting height
 --
-function B_lift(p, c, bx,by, z, dir, long, deep)
+function B_lift(p,c, rmodel, bx,by, z, dir, long, deep)
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
@@ -1044,8 +1052,10 @@ function B_lift(p, c, bx,by, z, dir, long, deep)
     bx,by = bx-(deep-1)*dx, by-(deep-1)*dy
   end
 
-  local LIFT = copy_block_with_new(c.rmodel,
+  local LIFT = ---??? copy_block_with_new(c.rmodel,
   {
+    rmodel = rmodel,
+
     f_h = z,
     f_tex = c.theme.lift_floor or THEME.mats.LIFT.floor,
     l_tex = c.theme.lift or THEME.mats.LIFT.wall,
@@ -1057,7 +1067,7 @@ function B_lift(p, c, bx,by, z, dir, long, deep)
 
     [2] = { l_peg="top" }, [4] = { l_peg="top" },
     [6] = { l_peg="top" }, [8] = { l_peg="top" },
-  })
+  }
 
   fill(p,c, bx, by,
        bx + (long-1) * ax + (deep-1) * dx,
@@ -4721,33 +4731,6 @@ function build_cell(p, c)
     local K = c.chunks[kx][ky]
     assert(K)
 
----###    if c.scenic == "solid" then
----###      gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, { solid=c.theme.void })
----###      return
----###    end
-
----###    if K.stair_dir then
----###
----###      local x1,y1, x2,y2 = side_coords(K.stair_dir,
----###        K.x1, K.y1, K.x2, K.y2)
----###
----###      local long
----###      if (K.stair_dir==2 or K.stair_dir==8) then
----###        long = x2-x1+1
----###      else
----###        long = y2-y1+1
----###      end
----###
----###      local deep = 1
----###
----###      local dx,dy = dir_to_delta(K.stair_dir)
----###      local NB = c.chunks[kx+dx][ky+dy]
----###      local diff = math.abs(K.rmodel.f_h - NB.rmodel.f_h)
----###
----###      local step = (NB.rmodel.f_h - K.rmodel.f_h) / (deep * 4)
----###
----###      B_stair(p, c, x1, y1, K.rmodel.f_h, K.stair_dir, long, deep, step)
----###  end
 
 
     -- vista chunks are built by other room
@@ -4795,66 +4778,6 @@ function build_cell(p, c)
       return
     end
 
----###    if K.stair_dir then
----###
----###      local dx, dy = dir_to_delta(K.stair_dir)
----###      local NB = c.chunks[kx+dx][ky+dy]
----###
----###      local diff = math.abs(K.rmodel.f_h - NB.rmodel.f_h)
----###
----###      local long = 2
----###      local deep = 1
----###
----###      -- prefer no lifts in deathmatch
----###      if p.deathmatch and diff > 64 and rand_odds(88) then deep = 2 end
----###
----###      -- FIXME: replace with proper "can walk" test !!!
----###      if (K.stair_dir == 6 and kx == 1 and c.border[4]) or
----###         (K.stair_dir == 4 and kx == 3 and c.border[6]) or
----###         (K.stair_dir == 8 and ky == 1 and c.border[2]) or
----###         (K.stair_dir == 2 and ky == 3 and c.border[8]) then
----###        deep = 1
----###      end
----###
----###      local bx = (kx-1) * JW
----###      local by = (ky-1) * JH 
----###
----###      if K.stair_dir == 8 then
----###        by = by + JH + 1 - deep
----###      elseif K.stair_dir == 2 then
----###        by = by + deep
----###      elseif ky == 1 then
----###        by = by + JH - 1
----###      elseif ky == 3 then
----###        by = by + 1
----###      else
----###        by = by + 1; if JH >= 4 then by = by + 1 end
----###      end
----###
----###      if K.stair_dir == 6 then
----###        bx = bx + JW + 1 - deep
----###      elseif K.stair_dir == 4 then
----###        bx = bx + deep
----###      elseif kx == 1 then
----###        bx = bx + JW - 1
----###      elseif kx == 3 then
----###        bx = bx + 1
----###      else
----###        bx = bx + 1; if JW >= 4 then bx = bx + 1 end
----###      end
----###
----###      local step = (NB.rmodel.f_h - K.rmodel.f_h) / deep / 4
----###
----###      if math.abs(step) <= 16 then
----###        B_stair(p, c, c.bx1-1+bx, c.by1-1+by, K.rmodel.f_h, K.stair_dir,
----###                long, deep, (NB.rmodel.f_h - K.rmodel.f_h) / (deep * 4),
----###                { } )
----###      else
----###        B_lift(p, c, c.bx1-1+bx, c.by1-1+by,
----###               math.max(K.rmodel.f_h, NB.rmodel.f_h), K.stair_dir,
----###               long, deep, { } )
----###      end
----###    end  -- K.stair_dir
 
 
     local bx = K.x1 + 1
@@ -5210,7 +5133,7 @@ function build_cell(p, c)
           assert(valid_cell_block(c, x, y))
           local B = p.blocks[x][y]
 
-          if B.walk or B.chunk ~= K then
+          if B.walk or B.solid or B.fragments then
             return false
           end
         end
@@ -5244,6 +5167,7 @@ function build_cell(p, c)
       return true --SUCCESS--
     end
     
+
     local function try_reclaim_corner(K, x_dir, y_dir)
 
       -- a reclaimed side trumps a corner
@@ -5256,8 +5180,8 @@ function build_cell(p, c)
         corn = sel(y_dir == 2, 7, 1)
       end
 
-      local long = K.x2 - K.x1 + 1
-      local deep = K.y2 - K.y1 + 1
+      local max_w = K.x2 - K.x1 + 1
+      local max_h = K.y2 - K.y1 + 1
 
       do
         -- allow neighbour chunks to have an reclaim area,
@@ -5273,9 +5197,9 @@ function build_cell(p, c)
           if N.r_dir ~= perp_dir then return false end
           
           if side==4 or side==6 then
-            deep = math.min(deep, N.r_deep)
+            max_h = math.min(max_h, N.ry2 - N.ry1 + 1)
           else
-            long = math.min(long, N.r_long)
+            max_w = math.min(max_w, N.rx2 - N.rx1 + 1)
           end
 
           return true --OK--
@@ -5324,7 +5248,7 @@ end
           assert(valid_cell_block(c, x, y))
           local B = p.blocks[x][y]
 
-          if B.walk or B.chunk ~= K then
+          if B.walk or B.solid or B.fragments then
             return false --FAIL--
           end
         end end
@@ -5345,7 +5269,7 @@ end
       while grow_w or grow_h do
         if grow_w and (not grow_h or rand_odds(50)) then
 
-          if w+1 < long and test_block(w,0, w,h-1) then
+          if w+1 < max_w and test_block(w,0, w,h-1) then
             w = w + 1
           else
             grow_w = false
@@ -5353,7 +5277,7 @@ end
         else
           assert(grow_h)
 
-          if h+1 < deep and test_block(0,h, w-1,h) then
+          if h+1 < max_h and test_block(0,h, w-1,h) then
             h = h + 1
           else
             grow_h = false
@@ -5424,7 +5348,7 @@ end
             if not got_x then try_reclaim_side(K, 10-x_dir) end
             if not got_y then try_reclaim_side(K, 10-y_dir) end
 
-          else
+          elseif pass == 3 then
             try_reclaim_corner(K, 4, 2)
             try_reclaim_corner(K, 4, 8)
             try_reclaim_corner(K, 6, 2)
@@ -5445,9 +5369,9 @@ end
         void_up_chunk(c, K)
       elseif K.r_deep then
         gap_fill(p, c, K.rx1,K.ry1, K.rx2,K.ry2,
----!!!        { solid=c.theme.void })
-     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
-        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
+        { solid=c.theme.void })
+---     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
+---        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
       end
     end end
   end
@@ -5521,7 +5445,7 @@ c.x, c.y, other.x, other.y)
   end
 
 
-  local function mark_walkable(c, x1,y1, x2,y2, walk)
+  local function mark_walkable(c, walk, x1,y1, x2,y2)
     assert(x2 >= x1 and y2 >= y1)
     assert(c.bx1 <= x1 and x2 <= c.bx2)
     assert(c.by1 <= y1 and y2 <= c.by2)
@@ -5549,12 +5473,12 @@ c.x, c.y, other.x, other.y)
 
       local L = c.link[side]
       if L and not (L.kind=="vista") then -- FIXME
-        mark_walkable(c, L.x1+dx, L.y1+dy, L.x2+dx, L.y2+dy, 4)
+        mark_walkable(c, 4, L.x1+dx, L.y1+dy, L.x2+dx, L.y2+dy)
       end
 
       local D = c.border[side]
       if D and D.kind == "window" then
---!!!!!!        mark_walkable(c, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy, 2)
+--!!!!!!        mark_walkable(c, 1, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy)
       end
     end
   end
@@ -5761,7 +5685,52 @@ c.x, c.y, other.x, other.y)
     return best
   end
   
+  local function put_in_stair(c, K,J, x,y, dir, long,deep)
+
+    local dir = K.stair_dir
+    local dx,dy = dir_to_delta (K.stair_dir)
+    local ax,ay = dir_to_across(K.stair_dir)
+
+    local ex = x + ax*(long-1) + ay*(deep-1)
+    local ey = y + ax*(deep-1) + ay*(long-1)
+
+    local diff_h = K.rmodel.f_h - J.rmodel.f_h
+    local max_fh = math.max(K.rmodel.f_h, J.rmodel.f_h)
+
+    local step = -diff_h / (deep * 4)
+    local max_step = sel(THEME.caps.prefer_stairs, 24, 16)
+    
+con.debugf("Putting in Stair: (%d,%d)..(%d,%d) dir:%d size:%dx%d\n", x,y, ex,ey, dir, long, deep)
+
+    if math.abs(step) <= max_step then
+      B_stair(p,c, K.rmodel, x,y, dir, long,deep, step)
+    else
+      B_lift(p,c, K.rmodel, x,y, max_fh, dir, long, deep)
+    end
+
+    -- reserve space vor und hinter the staircase
+
+    mark_walkable(c, 4, side_coords(   dir, x-ay,y-ax, ex+ay,ey+ax))
+    mark_walkable(c, 4, side_coords(10-dir, x-ay,y-ax, ex+ay,ey+ax))
+
+    -- mark stair for reclaim_areas() to avoid
+
+    if not K.stair_x1 then
+      K.stair_x1 = x
+      K.stair_y1 = y
+      K.stair_x2 = ex
+      K.stair_y2 = ey
+    else
+      -- compute union of areas
+      K.stair_x1 = math.min(K.stair_x1, x)
+      K.stair_y1 = math.min(K.stair_y1, y)
+      K.stair_x2 = math.max(K.stair_x2, ex)
+      K.stair_y2 = math.max(K.stair_y2, ey)
+    end
+  end
+
   local function build_stair_chunk(c, K)
+
     local kx,ky = K.kx, K.ky
     local dx,dy = dir_to_delta(K.stair_dir)
     local ax,ay = dir_to_across(K.stair_dir)
@@ -5771,7 +5740,6 @@ c.x, c.y, other.x, other.y)
 
     local J = c.chunks[kx+dx][ky+dy]
     local diff_h = K.rmodel.f_h - J.rmodel.f_h
-    local max_fh = math.max(K.rmodel.f_h, J.rmodel.f_h)
 
     local behind_K
     if (1<=kx-dx and kx-dx<=3) and
@@ -5800,64 +5768,27 @@ c.x, c.y, other.x, other.y)
       side2_K = side_is_bad(8)
     end
 
----###  local side1_K, side2_K
----###  if (1<=kx-ax and kx-ax<=3) and
----###     (1<=ky-ay and ky-ay<=3)
----###  then
----###    side1_K = c.chunks[kx-ax][ky-ay]
----###  end
----###  if (1<=kx+ax and kx+ax<=3) and
----###     (1<=ky+ay and ky+ay<=3)
----###  then
----###    side2_K = c.chunks[kx+ax][ky+ay]
----###  end
-
 con.debugf("Building stair @ (%d,%d) chunk [%d,%d] dir:%d\n", c.x, c.y, kx,ky, K.stair_dir)
 con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 
     local info = find_stair_loc(K, behind_K,side1_K,side2_K, stair_depths(diff_h))
 
-    -- failsafe
-    if not info then return end
-
-    local step = -diff_h / (info.deep * 4)
+    ----- failsafe
+    -- if not info then return end
 
     local x, y = info.sx, info.sy
     local long, deep = info.long, info.deep
 
+--[[
     if long > 2 then
       x = x + int(long / 2) * ax
       y = y + int(long / 2) * ay
       long = 1
     end
-
-    local ex = x + ax*(long-1) + ay*(deep-1)
-    local ey = y + ax*(deep-1) + ay*(long-1)
-
-    K.stair_x1 = x
-    K.stair_y1 = y
-    K.stair_x2 = ex
-    K.stair_y2 = ey
-
-con.debugf("  Stair coords: (%d,%d)..(%d,%d) size:%dx%d\n", x,y, ex,ey, long, deep)
-
-    if math.abs(step) <= 16 then --FIXME: allow 24 sometimes (esp. Hexen)
-
-      B_stair(p,c, x,y, K.rmodel.f_h, K.stair_dir, long, deep, step)
-    else
-      B_lift(p,c, x,y, max_fh, K.stair_dir, long, deep)
-    end
-
-    -- reserve space vor und hinter the staircase
-
-    local x1,y1,x2,y2 = side_coords(K.stair_dir, x,y, ex,ey)
-con.debugf("  MARK WALK (%d,%d)..(%d,%d)\n", x1+dx,y1+dy, x2+dx,y2+dy);
-    mark_walkable(c, x1+dx,y1+dy, x2+dx,y2+dy, 4)
-
-    local x3,y3,x4,y4 = side_coords(10-K.stair_dir, x,y, ex,ey)
-con.debugf("  MARK WALK (%d,%d)..(%d,%d)\n", x3-dx,y3-dy, x4-dx,y4-dy);
-    mark_walkable(c, x3-dx,y3-dy, x4-dx,y4-dy, 4)
+--]]
+    put_in_stair(c, K,J, x,y, dir, long,deep)
   end
+
 
   local function build_stairs(c)
 
@@ -6471,8 +6402,7 @@ function build_rooms(p)
     local function gap_fill_block(B)
       if B.solid then return end
 
-      local model = c.rmodel
-      if B.chunk then model = B.chunk.rmodel end
+      local model = B.rmodel or (B.chunk and B.chunk.rmodel) or c.rmodel
 
       -- floor
       if not B.f_tex then
@@ -6497,6 +6427,7 @@ function build_rooms(p)
 
     -- GAP_FILL_ROOM --
 
+c.rmodel.c_tex = THEME.ERROR_FLAT
     for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
       local B = p.blocks[x][y]
 
