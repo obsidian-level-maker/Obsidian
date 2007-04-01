@@ -624,6 +624,7 @@ THEME_FACTORIES["heretic"] = function()
              closets=true,   depots=true,
              switches=true,  liquids=true,
              teleporters=true,
+             prefer_stairs=true,
            },
 
     ERROR_TEX  = "DRIPWALL",

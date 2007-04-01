@@ -656,7 +656,8 @@ THEME_FACTORIES["hexen"] = function()
              
              -- Hexen unique stuff
              polyobjs=true,  three_part_weapons=true,
-             hubs=true,      acs=true,
+             hubs=true,      action_script=true,
+                             prefer_stairs=true,
            },
 
     ERROR_TEX  = "ABADONE",
