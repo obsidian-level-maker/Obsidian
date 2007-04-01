@@ -5839,7 +5839,7 @@ end
     end
 
     -- SCENERY
-    for loop = 1,0 do
+    for loop = 1,4 do
       add_scenery(c)
     end
   end
@@ -5911,7 +5911,6 @@ function build_rooms(p)
 
     -- GAP_FILL_ROOM --
 
-c.rmodel.c_tex = THEME.ERROR_FLAT
     for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
       local B = p.blocks[x][y]
 
@@ -5924,7 +5923,7 @@ c.rmodel.c_tex = THEME.ERROR_FLAT
         gap_fill_block(B)
 
         if B.walk then
-          add_thing(p, c, x, y, "candle", false)
+--        add_thing(p, c, x, y, "candle", false)
         end
       end
     end end
@@ -6064,7 +6063,7 @@ end
   if p.deathmatch then
     deathmatch_through_level(p)
   else
---!!!!!!    battle_through_level(p)
+    battle_through_level(p)
   end
 
   con.progress(40); if con.abort() then return end
