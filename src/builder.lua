@@ -2202,18 +2202,6 @@ function make_chunks(p)
     end
   end
 
-  local function void_it_up(c, kind)
-    if not kind then kind = "void" end
-    for kx = 1,3 do
-      for ky = 1,3 do
-        local K = c.chunks[kx][ky]
-        if K.empty then
-          K[kind] = true
-          K.empty = nil
-        end
-      end
-    end
-  end
 
   local function chunk_similar(k1, k2)
     assert(k1 and k2)
@@ -2491,6 +2479,8 @@ function make_chunks(p)
 
     --- STEP 1: setup known chunks
  
+    local goodies = 0
+ 
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       assert(K)
@@ -2504,6 +2494,8 @@ function make_chunks(p)
 
       else -- "room", "link" etc..
         K.rmodel = copy_table(c.rmodel)
+
+        goodies = goodies + 1
 
         if K.link then
           local other = link_other(K.link, c)
@@ -2525,7 +2517,7 @@ function make_chunks(p)
 
     --- STEP 2: setup empty chunks
 
-    if #empties == 9 then
+    if goodies == 0 then
       local K = table.remove(empties, 1)
       K.kind = "room"
       K.rmodel = copy_table(c.rmodel)
@@ -2637,49 +2629,17 @@ function make_chunks(p)
 
     -- make sure the vista(s) have something to see
 
-    -- FIXME: when every chunks touching a vista is empty
-
-    for loop = 1,10 do
-      for kx = 1,3 do for ky = 1,3 do
-        local K = c.chunks[kx][ky]
-        local near_vista = false
-        local link_neighbour
-        local room_neighbour
-
-        if K.kind == "empty" then
-          for side = 1,9 do if side ~= 5 then
-            local dx,dy = dir_to_delta(side)
-            local nx,ny = kx+dx, ky+dy
-            if valid_chunk(nx,ny) then
-              local N = c.chunks[nx][ny]
-              if N.kind == "vista" then
-                near_vista = true
-              end
-
-              if (side % 2) == 0 and N.kind ~= "vista" then
-                if (kx==2 and ky==2) and rand_odds(50) then
-                  room_neighbour = true
-                elseif N.kind == "link" then
-                  link_neighbour = N.link
-                elseif N.kind == "room" then
-                  room_neighbour = true
-                end
-              end
-            end
-          end end
-
-          if near_vista then
-            if room_neighbour then
-              K.kind = "room"
-            elseif link_neighbour then
-              K.kind = "link"
-              K.link = link_neighbour
-            end
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.kind == "vista" then
+        for nx = kx-1,kx+1 do for ny = ky-1,ky+1 do
+          local N = valid_chunk(nx, ny) and c.chunks[nx][ny]
+          if N and N.kind == "empty" then
+            N.kind = "room"
           end
-        end -- K.empty
-
-      end end
-    end
+        end end
+      end
+    end end
   end
 
   local function add_stairs(c)
@@ -2948,27 +2908,17 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
     add_travel_chunks(cell)
 
-      setup_chunk_rmodels(cell)
+    setup_chunk_rmodels(cell)
     
+    add_vista_environs(cell)
+
 --!!!!    add_important_chunks(cell)
 
-    add_vista_environs(cell) --????
+--????  flesh_out_cell(cell)  
 
---!!!!  flesh_out_cell(cell)  
-
---[[
-if (cell == p.quests[1].first or cell == cell.quest.last or cell.scenic=="outdoor") then
-        void_it_up(cell, "room")
-else
-        void_it_up(cell, "void")
-end
---]]
     add_stairs(cell)
   end
-
--- !!!!  add_closet_chunks(cell)
 end
-
 
 
 function setup_borders_and_corners(p)

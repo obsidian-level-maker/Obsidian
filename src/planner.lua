@@ -1979,26 +1979,6 @@ R.level_theme.name, R.combo.name)
     --]]
   end
 
----###  local function add_falloffs()
----###    
----###    for zzz,c in ipairs(p.all_cells) do
----###      for dir = 2,8,2 do
----###        local dx, dy = dir_to_delta(dir)
----###        local other = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
----###
----###        if other and not c.link[dir] and rand_odds(90)
----###           and can_make_falloff(c, other, dir)
----###        then
----### 
----###          con.debugf("FALL-OFF @ (%d,%d) dir:%d\n", c.x, c.y, dir)
----###
----###          local L = create_link(p, c, other, dir)
----###          L.kind = "falloff"
----###        end
----###      end
----###    end
----###  end
-  
   local function add_vistas()
 
     local function prelim_check(a, b, dir)
@@ -2415,7 +2395,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
 -- FIXME add_bridges()
 
---  add_vistas()
+    add_vistas()
 --  add_surprises()
 
   create_corners(p)
