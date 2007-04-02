@@ -358,24 +358,25 @@ function shuffle_build_sites(p)
   
   for zzz,link in ipairs(p.all_links) do
 
-    local c1 = link.cells[1]
-    local c2 = link.cells[2]
+    if not link.is_exit and link.kind ~= "vista" then
 
-    local SL = links_in_cell(c1)
-    local DL = links_in_cell(c2)
+      local c1 = link.cells[1]
+      local c2 = link.cells[2]
 
-    local chance = 50
+      local SL = links_in_cell(c1)
+      local DL = links_in_cell(c2)
 
-        if DL > SL then chance = 33
-    elseif SL > DL then chance = 66
+      local chance = 50
+
+          if DL > SL then chance = 33
+      elseif SL > DL then chance = 66
+      end
+
+      if c1.hallway and not c2.hallway then chance =  5 end
+      if c2.hallway and not c1.hallway then chance = 95 end
+
+      link.build = rand_sel(chance, c2, c1)
     end
-
-    if c1.hallway and not c2.hallway then chance =  5 end
-    if c2.hallway and not c1.hallway then chance = 95 end
-
-    if link.kind == "vista" then chance = 0 end
-
-    link.build = link.cells[rand_sel(chance, 2, 1)]
   end
 
   -- make sure cells are never devoid of build sites.
@@ -391,7 +392,7 @@ con.debugf("EXTERNALS @ cell (%d,%d) total=4\n", c.x,c.y)
           local dir = math.random(1,4) * 2
           local L = c.link[dir]
 
-          if L.is_exit or L.kind == "falloff" or L.kind == "vista" then
+          if L.is_exit or L.kind == "vista" then
             -- do not change this link
           else
 con.debugf("  CHANGING SIDE %d\n", dir)
@@ -1365,7 +1366,7 @@ end
         c.floor_h = math.max(c.floor_h, MIN_FLOOR)
         c.floor_h = math.min(c.floor_h, MAX_CEIL-128)
 
---c.floor_h = rand_irange(MIN_FLOOR, MAX_CEIL-128)
+--c.floor_h = rand_irange(MIN_FLOOR, MAX_CEIL-384)
         con.debugf(".. floor:%d  bump:%d\n",
             c.floor_h, bump or 0)
       end
