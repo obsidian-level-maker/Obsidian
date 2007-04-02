@@ -2572,10 +2572,11 @@ link.cells[2].x, link.cells[2].y)
       if not K.rmodel then
         K.rmodel = copy_table(c.rmodel)
 
+--[[
 K.rmodel.light =
  sel(kx==2 and ky==2, 176,
   sel(kx==2 or ky==2, 144, 112))
-  
+--]]
         if K.link then
           local other = link_other(K.link, c)
 
