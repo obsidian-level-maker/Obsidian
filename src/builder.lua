@@ -1382,7 +1382,7 @@ end
 --
 -- The 'kind' value can be: "solid", "frame", "open", "wire"
 --
-function B_vista(p,c, x1,y1, x2,y2, long,deep, side, theme,kind)
+function B_vista(p,c, x1,y1, x2,y2, side, theme,kind)
 
   local other = neighbour_by_side(p,c,side)
   assert(other)
@@ -1492,8 +1492,8 @@ function B_vista(p,c, x1,y1, x2,y2, long,deep, side, theme,kind)
     end
 
   else -- solid, frame, open or fall_over
-  
-    frag_fill(p,c, fx1,fy1, fx2,fy2, WINDOW)
+
+    frag_fill(p,c, fx1,fy1, fx2,fy2, WINDOW, { f_tex="FWATER1" })
     frag_fill(p,c, fx1+1,fy1+1, fx2-1,fy2-1, ROOM)
 
     --- walkway ---
@@ -2469,9 +2469,11 @@ function make_chunks(p)
         local N = chunk_neighbour(c, K, side)
         if N and (N.kind == "room" or N.kind == "link") then
           assert(N.rmodel)
-          K.kind = N.kind
-          K.link = N.link
           K.rmodel = copy_table(N.rmodel)
+          if K.kind == "empty" then
+            K.kind = N.kind
+            K.link = N.link
+          end
           return
         end
       end
@@ -2485,12 +2487,8 @@ function make_chunks(p)
       local K = c.chunks[kx][ky]
       assert(K)
 
-      if K.kind == "empty" then
+      if K.kind == "empty" or K.kind == "vista" then
         table.insert(empties, K)
-
-      elseif K.kind == "vista" then
-        local other = link_other(K.link, c)
-        K.rmodel = copy_table(other.rmodel)
 
       else -- "room", "link" etc..
         K.rmodel = copy_table(c.rmodel)
@@ -2517,8 +2515,17 @@ function make_chunks(p)
 
     --- STEP 2: setup empty chunks
 
+    -- vistas have special treatment here.  We need to assign
+    -- them an 'rmodel' as if they were empty cells, because
+    -- this rmodel is needed when building the vista.
+
     if goodies == 0 then
-      local K = table.remove(empties, 1)
+
+      local K
+      repeat
+        K = table.remove(empties, 1)
+      until K.kind == "empty"
+
       K.kind = "room"
       K.rmodel = copy_table(c.rmodel)
     end
@@ -2531,11 +2538,25 @@ function make_chunks(p)
 
       gunk_pass(K)
 
-      if K.kind == "empty" then
+      if not K.rmodel then
         assert(#empties > 0)
         table.insert(empties, K)
       end
     end
+
+    -- STEP 3: setup vistas, remembering the "empty" rmodel
+
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      assert(K)
+
+      if K.kind == "vista" then
+        K.orig_model = K.rmodel
+
+        local other = link_other(K.link, c)
+        K.rmodel = copy_table(other.rmodel)
+      end
+    end end
 
 --[[
     for kx = 1,3 do for ky = 1,3 do
@@ -4789,16 +4810,19 @@ con.printf("get_vista_coords @ (%d,%d) --> (%d,%d)\n",
 c.x, c.y, other.x, other.y)
     if not x1 then error("missing vista chunks!?!?") end
 
-    local long = x2 - x1 + 1
-    local deep = y2 - y1 + 1
-
-    if (side == 4) or (side == 6) then
-      long,deep = deep,long
-    end
-
-    return x1,y1, x2,y2, long,deep
+    return x1,y1, x2,y2
   end
   
+  local function vista_gap_fill(c, side, link, other)
+    
+    for kx = 1,3 do for ky = 1,3 do
+      local K = other.chunks[kx][ky]
+      if K.kind == "vista" and K.link == link then
+        gap_fill(p,c, K.x1,K.y1, K.x2,K.y2, K.orig_model)
+      end
+    end end
+  end
+
   local function build_one_vista(c, side, link)
 
     local other = neighbour_by_side(p, c, side)
@@ -4821,9 +4845,44 @@ c.x, c.y, other.x, other.y)
 
     if link.fall_over then kind = "fall_over" end
 
-    local x1,y1, x2,y2, long,deep = get_vista_coords(c, side, link, other)
+    local x1,y1, x2,y2 = get_vista_coords(c, side, link, other)
+    local sx,sy, ex,ey = x1,y1, x2,y2
 
-    B_vista(p,c, x1,y1, x2,y2, long,deep, side, c.border[side].theme or c.theme, kind)
+    if link.shallow then
+          if side == 2 then y1 = y1+1
+      elseif side == 8 then y2 = y2-1
+      elseif side == 4 then x1 = x1+1
+      elseif side == 6 then x2 = x2-1
+      end
+    end
+
+    -- don't touch the sides of the cell
+    if (side == 2) or (side == 8) then
+      if x1 == other.bx1 then x1 = x1+1 end
+      if x2 == other.bx2 then x2 = x2-1 end
+    else
+      if y1 == other.by1 then y1 = y1+1 end
+      if y2 == other.by2 then y2 = y2-1 end
+    end
+
+    if sx ~= x1 or sy ~= y1 or ex ~= x2 or ey ~= y2 then
+      vista_gap_fill(c, side, link, other)
+    end
+
+    local long = x2 - x1 + 1
+    local deep = y2 - y1 + 1
+
+    assert(long >= 1)
+    assert(deep >= 1)
+
+    if (side == 4) or (side == 6) then
+      long,deep = deep,long
+    end
+
+con.debugf("  COORDS: (%d,%d) .. (%d,%d)  size:%dx%d\n", x1,y1, x2,y2, long,deep)
+con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
+
+    B_vista(p,c, x1,y1, x2,y2, side, c.border[side].theme or c.theme, kind)
   end
 
   local function build_vistas(c)
