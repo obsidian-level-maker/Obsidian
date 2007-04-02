@@ -116,20 +116,22 @@ function show_chunks(p)
       local K = c.chunks[kx][ky]
       assert(K)
 
-      if K.empty then return " " end
+      if not K.kind then return "!" end
+
+      if K.kind == "empty" then return " " end
 --[[
       if K.stair_dir == 2 then return "v" end
       if K.stair_dir == 8 then return "^" end
       if K.stair_dir == 4 then return "<" end
       if K.stair_dir == 6 then return ">" end
 --]]
-      if K.void   then return "x" end
-      if K.room   then return "5" end
-      if K.liquid then return "~" end
+      if K.kind == "void"   then return "x" end
+      if K.kind == "room"   then return "5" end
+      if K.kind == "liquid" then return "~" end
 
-      if K.closet then return "C" end
-      if K.cage   then return "G" end
-      if K.vista  then return "V" end
+      if K.kind == "closet" then return "C" end
+      if K.kind == "cage"   then return "G" end
+      if K.kind == "vista"  then return "V" end
 
       --[[
       if K.weapon then return "w" end
@@ -184,11 +186,15 @@ end
 function show_cell_blocks(p, c)
 
   local function chk(B)
-    if not B or not B.chunk then return "!" end
-    if not B.empty then return "U" end
-    if B.walk then return "w" end
-    if B.chunk.room or B.chunk.link then return "." end
-    return "#" -- void
+    if not B then return "!" end
+    if B.walk then return tostring(B.walk) end
+    if B.solid then return "#" end
+    if B.fragments or B.f_tex then return "%" end
+
+    if not B.chunk then return "?" end
+    if B.chunk.kind == "vista" then return "V" end
+
+    return "." -- unused
   end
 
   for y = c.by2,c.by1,-1 do

@@ -80,39 +80,6 @@ function chunk_to_block(kx)
   return 1 + int((kx-1) * BW / KW)
 end
 
-function new_foo_chunk(c, kx, ky, kind, value)
-  return
-  {
-    [kind] = value or true,
-
-    x1 = c.bx1-1 + chunk_to_block(kx),
-    y1 = c.by1-1 + chunk_to_block(ky),
-    x2 = c.bx1-1 + chunk_to_block(kx + 1) - 1,
-    y2 = c.by1-1 + chunk_to_block(ky + 1) - 1,
-  }
-end
-
-function copy_foo_chunk(c, kx, ky, K)
-
-  assert(not K.vista)
-
-  local COPY = new_chunk(c, kx, ky, "is_copy")
-
-  COPY.room = K.room
-  COPY.void = K.void
-  COPY.link = K.link
-  COPY.cage = K.cage
-  COPY.liquid = K.liquid
-  COPY.closet = K.closet
-  COPY.place  = K.place
-
-  if K.rmodel then
-    COPY.rmodel = copy_block(K.rmodel)
-  end
-
-  return COPY
-end
-
 function chunk_touches_side(kx, ky, side)
   if side == 4 then return kx == 1 end
   if side == 6 then return kx == 3 end
@@ -121,7 +88,7 @@ function chunk_touches_side(kx, ky, side)
 end
 
 function is_roomy(chunk)
-  return chunk and (chunk.room or chunk.link)
+  return chunk and (chunk.kind == "room" or chunk.kind == "link")
 end
 
 function random_where(link, border)
@@ -1808,7 +1775,7 @@ function make_chunks(p)
          x2 = c.bx1 + dx + w-1,
          y2 = c.by1 + dy + h-1,
 
-         empty=true
+         kind="empty"
        }
     end end
   end
@@ -1895,25 +1862,13 @@ function make_chunks(p)
       local K = c.chunks[kx][ky]
 
       if overlaps_chunk(K, link.x1-dx, link.y1-dy, link.x2-dx, link.y2-dy) then
---[[
-con.printf("alloc_door_spot: overlap (%d,%d) [%d,%d] on side:%d\n",
-c.x, c.y, kx, ky, side)
-con.printf(">> K=(%d,%d,%d,%d) L=(%d,%d,%d,%d)\n",
-K.x1,K.y1,K.x2,K.y2, link.x1-dx,link.y1-dy, link.x2-dx, link.y2-dy)
---]]
-        if K.link then
---[[
-con.printf("___ OLD LINK: (%d,%d)..(%d,%d)\n",
-K.link.cells[1].x, K.link.cells[1].y,
-K.link.cells[2].x, K.link.cells[2].y)
-con.printf("___ NEW LINK: (%d,%d)..(%d,%d)\n",
-link.cells[1].x, link.cells[1].y,
-link.cells[2].x, link.cells[2].y)
---]]
+
+        if K.kind == "link" then
           clasher = K.link
+
         else
+          K.kind = "link"
           K.link = link
-          K.empty = nil
         end
       end 
     end end
@@ -1994,8 +1949,7 @@ link.cells[2].x, link.cells[2].y)
     c.got_links = nil
 
     for kx = 1,3 do for ky = 1,3 do
-      c.chunks[kx][ky].link  = nil
-      c.chunks[kx][ky].empty = true
+      c.chunks[kx][ky].kind  = "empty"
     end end
   end
 
@@ -2085,7 +2039,7 @@ link.cells[2].x, link.cells[2].y)
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
         K.travel_id = ky*10 + kx
-        if not K.empty then
+        if K.kind ~= "empty" then
           table.insert(chunk_list, { x=kx,y=ky })
         end
       end end
@@ -2104,7 +2058,7 @@ link.cells[2].x, link.cells[2].y)
               local K1 = c.chunks[kx][ky]
               local K2 = c.chunks[nx][ny]
 
-              if not K1.empty and not K2.empty then
+              if K1.kind ~= "empty" and K2.kind ~= "empty" then
                 K1.travel_id = math.min(K1.travel_id, K2.travel_id)
                 K2.travel_id = K1.travel_id
               end
@@ -2118,7 +2072,7 @@ link.cells[2].x, link.cells[2].y)
       local last
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
-        if K.empty then
+        if K.kind == "empty" then
           -- skip it
         elseif not last then last = K
         elseif K.travel_id ~= last.travel_id then 
@@ -2130,26 +2084,26 @@ link.cells[2].x, link.cells[2].y)
 
     local function grow(chunk_list)
       
-      local function grow_a_pair(K,kx,ky, N,nx,ny, bridge)
+      local function grow_a_pair(K, N, bridge)
 
-        assert(N.empty)
-        N.empty = false
+        assert(N.kind == "empty")
 
-        if nx==2 and ny==2 and rand_odds(50) then
-          N.room = true
-        elseif K.vista then
-          if bridge and bridge.link and not bridge.vista then
+        if N.kx==2 and N.ky==2 and rand_odds(50) then
+          N.kind = "room"
+        elseif K.kind == "vista" then
+          if bridge and bridge.link and bridge.kind ~= "vista" then
+            N.kind = "link"
             N.link = bridge.link
           else
-            N.room = true
+            N.kind = "room"
           end
         else
-          assert(K.link or K.room)
+          assert(K.kind == "link" or K.kind == "room")
+          N.kind = K.kind
           N.link = K.link
-          N.room = K.room
         end
 
-        table.insert(chunk_list, { x=nx, y=ny })
+        table.insert(chunk_list, { x=N.kx, y=N.ky })
       end
 
       -- look for the optimal solution: a "bridge" between two
@@ -2163,28 +2117,25 @@ link.cells[2].x, link.cells[2].y)
         local kx,ky = KX_MAP[ix], KY_MAP[iy]
         local K = c.chunks[kx][ky]
 
-        if K.empty then
-          local last_K, last_x, last_y
+        if K.kind == "empty" then
+          local last_K
 
           for zzz,side in ipairs(SIDES) do
+            local N = chunk_neighbour(c, K, side)
             local dx,dy = dir_to_delta(side)
-            local nx,ny = kx+dx, ky+dy
 
-            if valid_chunk(nx, ny) then
-              local N = c.chunks[nx][ny]
-              if not N.empty then
-                if not last_K then
-                  last_K, last_x, last_y = N, nx, ny
-                elseif N.travel_id ~= last_K.travel_id then
-                  -- FOUND ONE !!
-                  con.debugf("Found travel bridge @ (%d,%d) [%d,%d]^%d\n", c.x,c.y, kx,ky,side)
-                  if rand_odds(50) then
-                    grow_a_pair(last_K,last_x,last_y, K,kx,ky, N)
-                  else
-                    grow_a_pair(N,nx,ny, K,kx,ky, last_K)
-                  end
-                  return true
+            if N and N.kind ~= "empty" then
+              if not last_K then
+                last_K = N
+              elseif N.travel_id ~= last_K.travel_id then
+                -- FOUND ONE !!
+                con.debugf("Found travel bridge @ (%d,%d) [%d,%d]^%d\n", c.x,c.y, kx,ky,side)
+                if rand_odds(50) then
+                  grow_a_pair(last_K, K, N)
+                else
+                  grow_a_pair(N, K, last_K)
                 end
+                return true
               end
             end
 
@@ -2198,7 +2149,7 @@ link.cells[2].x, link.cells[2].y)
 
         local kx,ky = chunk_list[i].x, chunk_list[i].y
         local K1 = c.chunks[kx][ky]
-        assert(K1 and not K1.empty)
+        assert(K1 and K1.kind ~= "empty")
 
         for zzz,side in ipairs(SIDES) do
           local dx,dy = dir_to_delta(side)
@@ -2206,8 +2157,8 @@ link.cells[2].x, link.cells[2].y)
             local K2 = c.chunks[kx+dx][ky+dy]
             assert(K2)
         
-            if K2.empty then
-              grow_a_pair(K1,kx,ky, K2,kx+dx,ky+dy)
+            if K2.kind == "empty" then
+              grow_a_pair(K1, K2)
               return true
             end
 
@@ -2227,11 +2178,10 @@ link.cells[2].x, link.cells[2].y)
     do
       local MID = c.chunks[2][2]
 
-      if MID.empty and not c.hallway and
+      if MID.kind == "empty" and not c.hallway and
          (c == p.quests[1].first or c == c.quest.last or rand_odds(25*0)) --!!!!!!!
       then
-        MID.room = true
-        MID.empty = nil
+        MID.kind = "room"
       end
     end
  
@@ -2261,50 +2211,6 @@ link.cells[2].x, link.cells[2].y)
           K[kind] = true
           K.empty = nil
         end
-      end
-    end
-  end
-
-  local function gunk_it_up(c)
-
-    local empties = {}
-    local SIDES   = { 2,4,6,8 }
-
-    local function gunk_pass(K)
-      for zzz,side in ipairs(SIDES) do
-
-        local N = chunk_neighbour(c, K, side)
-        if N and not N.empty and not N.vista and not N.void then
-          assert(N.room or N.link)
-          K.room = N.room
-          K.link = N.link
-          K.empty = nil
-          return
-        end
-      end
-    end
-
-    for kx = 1,3 do for ky = 1,3 do
-      local K = c.chunks[kx][ky]
-      if K.empty then table.insert(empties, K) end
-    end end
-
-    if #empties == 9 then
-      void_it_up(c, "room")
-      return
-    end
-
-    while #empties > 0 do
-      rand_shuffle(empties)
-      rand_shuffle(SIDES)
-
-      local K = table.remove(empties, 1)
-
-      gunk_pass(K)
-
-      if K.empty then
-        assert(#empties > 0)
-        table.insert(empties, K)
       end
     end
   end
@@ -2563,38 +2469,90 @@ link.cells[2].x, link.cells[2].y)
     end
   end
 
+
   local function setup_chunk_rmodels(c)
 
+    local empties = {}
+    local SIDES   = { 2,4,6,8 }
+
+    local function gunk_pass(K)
+      for zzz,side in ipairs(SIDES) do
+
+        local N = chunk_neighbour(c, K, side)
+        if N and (N.kind == "room" or N.kind == "link") then
+          assert(N.rmodel)
+          K.kind = N.kind
+          K.link = N.link
+          K.rmodel = copy_table(N.rmodel)
+          return
+        end
+      end
+    end
+
+    --- STEP 1: setup known chunks
+ 
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       assert(K)
 
-      if not K.rmodel then
+      if K.kind == "empty" then
+        table.insert(empties, K)
+
+      elseif K.kind == "vista" then
+        local other = link_other(K.link, c)
+        K.rmodel = copy_table(other.rmodel)
+
+      else -- "room", "link" etc..
         K.rmodel = copy_table(c.rmodel)
 
---[[
-K.rmodel.light =
- sel(kx==2 and ky==2, 176,
-  sel(kx==2 or ky==2, 144, 112))
---]]
         if K.link then
           local other = link_other(K.link, c)
 
           if K.link.build == c or K.link.kind == "falloff" then
             -- no change
-          elseif K.link.kind == "vista" then
-            K.rmodel = copy_table(other.rmodel)
           else
             K.rmodel.f_h = other.rmodel.f_h
             K.rmodel.c_h = math.max(c.rmodel.c_h, other.rmodel.c_h)
           end
+        end
 
-        elseif K.liquid then
+        if K.kind == "liquid" then -- FIXME
           K.rmodel.f_h   = K.rmodel.f_h - 12
           K.rmodel.f_tex = c.liquid.floor
         end
       end
     end end
+
+    --- STEP 2: setup empty chunks
+
+    if #empties == 9 then
+      local K = table.remove(empties, 1)
+      K.kind = "room"
+      K.rmodel = copy_table(c.rmodel)
+    end
+
+    while #empties > 0 do
+      rand_shuffle(empties)
+      rand_shuffle(SIDES)
+
+      local K = table.remove(empties, 1)
+
+      gunk_pass(K)
+
+      if K.kind == "empty" then
+        assert(#empties > 0)
+        table.insert(empties, K)
+      end
+    end
+
+--[[
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      K.rmodel.light =
+       sel(kx==2 and ky==2, 176,
+        sel(kx==2 or ky==2, 144, 112))
+    end end
+--]]
 
     -- fix c_min and c_max values
     c.c_min =  99999
@@ -2631,14 +2589,14 @@ K.rmodel.light =
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       if K.link and K.link.kind == "vista" and c ~= K.link.build then
-        K.vista = true
+        K.kind = "vista"
       end
     end end
   end
 
   local function create_huge_vista(c)
 
-    if not c.chunks[2][2].empty then return end
+    if c.chunks[2][2].kind ~= "empty" then return end
 
     if rand_odds(75) then return end
 
@@ -2649,7 +2607,7 @@ K.rmodel.light =
     
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
-      if K.vista then
+      if K.kind == "vista" then
         vista_x, vista_y = kx, ky
         if kx==2 or ky==2 then
           side_vistas = side_vistas + 1
@@ -2664,13 +2622,12 @@ K.rmodel.light =
     con.debugf("Making HUGE VISTA @ (%d,%d)\n", c.x, c.y);
 
     local K = c.chunks[vista_x][vista_y]
-    assert(K and K.vista)
+    assert(K and K.kind == "vista")
 
     local N = c.chunks[2][2]
 
+    N.kind  = "vista"
     N.link  = K.link
-    N.vista = K.vista
-    N.empty = nil
 
     K.link.shallow = nil
     K.link.huge = true
@@ -2689,23 +2646,23 @@ K.rmodel.light =
         local link_neighbour
         local room_neighbour
 
-        if K.empty then
+        if K.kind == "empty" then
           for side = 1,9 do if side ~= 5 then
             local dx,dy = dir_to_delta(side)
             local nx,ny = kx+dx, ky+dy
             if valid_chunk(nx,ny) then
               local N = c.chunks[nx][ny]
-              if N.vista then
+              if N.kind == "vista" then
                 near_vista = true
               end
 
-              if (side % 2) == 0 and not N.vista then
+              if (side % 2) == 0 and N.kind ~= "vista" then
                 if (kx==2 and ky==2) and rand_odds(50) then
                   room_neighbour = true
-                elseif N.link then
-                  link_neighbour  = N.link
-                elseif N.room then
-                  room_neighbour  = N.room
+                elseif N.kind == "link" then
+                  link_neighbour = N.link
+                elseif N.kind == "room" then
+                  room_neighbour = true
                 end
               end
             end
@@ -2713,11 +2670,10 @@ K.rmodel.light =
 
           if near_vista then
             if room_neighbour then
-              K.room = true
-              K.empty = nil
+              K.kind = "room"
             elseif link_neighbour then
+              K.kind = "link"
               K.link = link_neighbour
-              K.empty = nil
             end
           end
         end -- K.empty
@@ -2740,7 +2696,7 @@ K.rmodel.light =
 
         K.stair = {}
 
-        if K.room or (K.link and not K.vista) or K.liquid then
+        if K.kind == "room" or K.kind == "link" or K.kind == "liquid" then
           K.connect_id = ky*10 + kx
         end
       end end
@@ -2992,14 +2948,14 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
     add_travel_chunks(cell)
 
-    add_vista_environs(cell)
+      setup_chunk_rmodels(cell)
+    
+--!!!!    add_important_chunks(cell)
 
---!!!!  flesh_out_cell(cell)
+    add_vista_environs(cell) --????
 
-   void_it_up(cell, "room")
--- gunk_it_up(cell)
+--!!!!  flesh_out_cell(cell)  
 
-    setup_chunk_rmodels(cell)
 --[[
 if (cell == p.quests[1].first or cell == cell.quest.last or cell.scenic=="outdoor") then
         void_it_up(cell, "room")
@@ -4218,9 +4174,6 @@ function build_cell(p, c)
 
 
 
-    -- vista chunks are built by other room
-    if K.vista then return end
-
     if K.void then
       --!!! TEST CRAP
       gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, c.rmodel)
@@ -4557,7 +4510,7 @@ function build_cell(p, c)
   local function void_up_chunk(c, K)
 
     --!!!!!! TESTING
-    if c.theme.decorate and not c.scenic and K.void and
+    if c.theme.decorate and not c.scenic and K.kind == "void" and
       (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
       (K.y2 > K.y1 or rand_odds(50)) and
       rand_odds(65)
@@ -4586,7 +4539,7 @@ function build_cell(p, c)
 
       local N = chunk_neighbour(c, K, 10-dir)
 
-      if N and not N.empty then return end
+      if N and N.kind ~= "empty" then return end
 
       local S1 = chunk_neighbour(c, K, rotate_cw90(dir))
       if S1 and S1.stair_dir and
@@ -4676,7 +4629,7 @@ function build_cell(p, c)
           local N = chunk_neighbour(c, K, side)
 
           if not N then return true end
-          if N.empty then return true end
+          if N.kind == "empty" then return true end
 
           if not N.r_dir then return false end
           if N.r_dir ~= perp_dir then return false end
@@ -4850,7 +4803,7 @@ end
     
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
-      if K.empty then
+      if K.kind == "empty" then
 --!!!        void_up_chunk(c, K)
         gap_fill(p, c, K.x1,K.y1, K.x2,K.y2,
           c.rmodel, { f_h=c.f_max+32 })
@@ -4870,7 +4823,7 @@ end
 
     for kx = 1,3 do for ky = 1,3 do
       local K = other.chunks[kx][ky]
-      if K.vista and K.link == link then
+      if K.kind == "vista" and K.link == link then
         if not x1 then
           x1,y1, x2,y2 = K.x1,K.y1, K.x2,K.y2
         else

@@ -149,18 +149,13 @@ end
 
 class Chunk
 
-  x1, y1, x2, y2 : block range
+  kind : keyword, one of: "empty", "room", "link", "void"...
+  
+  link : Link -- for link chunks
 
   rmodel : Block -- model for this chunk
 
-  link : Link  -- for link chunks
-
-  void   : true  -- void space
-  cage   : true  -- big cage
-
-  player : true  -- player start location
-  quest  : true  -- quest item location
-  walk   : true  -- walkable ground
+  x1, y1, x2, y2 : block range
 
   stair_dir  -- present to build a stair to neighbour chunk
 end
