@@ -2,86 +2,174 @@
 TODO
 ----
 
-?  grow_dir: only one per travel_dir,
-             choose good value,
-             propagate when grown, but if invalid then turn 90 degrees.
+>>> ROOM SHAPES >>>
+
+  -  must decide certain chunks (e.g. place for quest item)
+     BEFORE reclaiming sides
+
+!!!  give empty chunks (+ reclaimed area) an rmodel (cf. gunk_it_up)
+
+  #  stairs must be decided/built BEFORE reclaiming pass
+  #  reclaim a "side" of each roomy chunk as far as possible
+
+
+>>> Stairs
+
+  !!!  decide for lift/stair: take diff_h into account
+       (@ 64: 5%, @ 96: 25%, @ 128: 50%, @ 192: 95% LIFT)
+
+  !!!  NARROW STAIRS: don't always center: {10,90,10}
+
+  !!!  saner sizes for lifts (> 2 deep == teh silly),
+       and don't split them
+
+-  player angles: FIX!!
+
++  monster angles: honor 'caps.four_dirs' and make damn sure
+   that the face direction isn't into a solid wall.
+
+
+>>>  Prefabs:
+ 
+   +  have five "standard" heights:
+        floor_h <= low_h < mid_h < high_h <= ceil_h
+
+   ???  ARCHES: remove "frame" from skin names
+       (assume wall/ceil/floor == frame) ?
+   
+   -  rework way "pickup" spots are done (revert)
+
+   -  support "monster" spots
+
+   -  prefabs (etc) : capability system, e.g. "slopes", "xfloors"
+      [THEME.caps, controlled by "game" and "port" settings]. 
+
++  Convert existing code into prefabs:
+
+   - EXIT_DEATHMATCH
+
+   ? PIC_WALL
+
+   - fix: crate_h value (etc) -- use f_h from fab_find_loc()
+
+
+>>> Theme system
+
+  ?? move 'combo_probs' into combos themselves
+   
+   + rename 'theme' to 'combo' in Cell and Quest classes
+
+-  Theme categories:
+
+   (a) nature  (outdoor, grassy/rocky/muddy, water)
+   (b) urban   (outdoor, bricks/concrete,  slime)
+
+   (c) tech       (indoor, computers, lights, lifts) 
+   (d) cave       (indoor, rocky/ashy, darkness, lava)
+   (e) industrial (indoor, machines, lifts, crates, nukage)
+
+   (h) hell    (indoor+outdoor, gstone, fire/lava, bodies, blood)
+
+-  Room types:
+
+   (a) storage   (crates, barrels)
+   (b) quarters  (tables, chairs, beds)
+   (c) bathroom
+   (d) computer
+   (e) library
+
+   (f) armoury | supplies
+   (g) processing plant (machines)
+   (h) torture  (wolf3d/SOD)
+
+   ...?
+
+
+>> Vistas
+   +  fix "curved wire" vistas for new sizes
+   +  make window edge 16 units thick
+   +  great place for player start! or quest item! or teleport!
+   -  theme should match "building" (border.theme)
+   -  shallow mode
+   -  narrow mode (esp. when one touches a corner)
+
+
+>>>>>  create blocks for rooms, { empty=true },
+       -  a "walk" field,
+       -  a "model" field (K.rmodel)
+       -  eventually: empty="floor", "ceil", "both"
+
+       -  "soft" field, prefer to keep walkable, but use if have to
+          (use in front of windows, and as second layer in front of doors)
+
+       +BETTER: "walk" field takes number:
+                 4 = must walk (never use) -- links, stairs
+                 3 = should walk, use only in emergency (part of long link/stair)
+                 2 = prefer walk -- windows, tall_wall
+                 1 = hint at walk -- drop_offs
+
+  -  find_fab_loc:
+       -  ideally want empty/walkable around it
+       -  but allow _either_ top or bottom to abut a wall (not both)
+       -  (same goes for left or right side).
+ 
 
 -  Improve toughness calcs:
    e.g. decide final quest toughness (e.g. 750-1500),
         then major quests (somewhat exponential)
         and minor quests (skew above/below major Q).
 
-+  Convert existing code into prefabs:
 
-   + LIFT
-   + LIFT_DEEP
-
-   + STAIRS
-
-   + EXIT_DOOR_NARROW
-   - EXIT_DOOR
-   + EXIT_SIGN_CEIL
-   - EXIT_SIGN_FLOOR
-   - EXIT_DEATHMATCH
-
-   - BARS
-
->> - WINDOW
-   - WINDOW_RAIL
-   - WINDOW_BARS
-   - WINDOW_NARROW
-   - WINDOW_NARROW_RAIL
-   - WINDOW_WIDE
-   - WINDOW_WIDE_RAIL
-   - WINDOW_CROSS
-
-   - SWITCH_FLUSH
-   - SWITCH_WALL
-   - SWITCH_FLOOR
-   - SWITCH_FLOOR_TINY
-   - SWITCH_FLOOR_BEAM
-   - SWITCH_PILLAR
-
-   - PEDESTAL
-   - PEDESTAL_PLUT
-   - PIC_WALL
-
-   - CRATE
-   - CRATE_ROTATED
-   - CRATE_BIG
-   - CRATE_JUMBLE
-
-   - CAGE_PILLAR
-   - CAGE_BIG
-   - CAGE_NUKAGE
-
-??? Renaming idea:
-
-   Blocks:
-     l_tex --> wall
-     u_tex --> upper
-     f_tex --> floor
-     c_tex --> ceil
-
-   Themes:
-     void  --> extra
-     upper
-
-+  Prefabs:
+-  Wolf3d mode:
  
-   ???  ARCHES: remove "frame" (assume wall/ceil/floor == frame) ?
+   + secret elevators
 
-   -  mirroring
+   >> scenery! (room types: storage, dining)
 
-   -  rework way "pickup" spots are done (revert)
+   + ensure limits are enforced:
+     - MAXACTORS = 150  (remove actors at random)
+     - MAXSTATS  = 400  (remove statics at random)
+     - MAXDOORS  = 64   (remove unneeded doors at random)
 
-   -  support "monster" spots
+   TEST !!! : Elevator exit
+   TEST !!! : decide_monster : skills are "tiered"
 
-   ?  sub-fabs (put X inside Y) ?
-      chained-fabs (put X next to Y) ?
+   - health/ammo : no skills! -- use medium one
+   - place_items : never where monsters are!
+   - don't place monsters near player start
+   - patrolling monsters (need 2x1 space AND path with arrows).
 
-   -  prefabs (etc) : capability system, e.g. "slopes", "xfloors"
-      [THEME.caps, controlled by "game" and "port" settings]. 
+   (later) bosses!
+   (later) secret levels (full of treasure)
+   (later) something interesting in middle of big rooms.
+   (later) elevator "entry" in first room.
+   (later) make sure elevators face east/west.
+   (later) widen some arches.
+   (later) pacman levels: decorate walls
+
+   TEST: Keyed doors
+   TEST: adjust toughness calcs
+
+   DONE: limit level size (PLAN size: 7x7 of 7x7 rooms)
+   DONE: disallow Multiplayer/Coop modes [GUI]
+   DONE: multiple levels!
+   DONE: assign floor codes.
+   DONE: patrolling guards.
+   DONE: void_pics, door_sides, lock_sides.
+   DONE: pacman levels
+
+
+>>  Corner and Border stuff:
+
+   -  decide "kind" for corner (a la borders)
+
+   +  hallway->hallway arches: different materials (wood/metal).
+
+   -  archways, windows: have sides
+
+   -  windows: determine area can use first
+
+   -  support sky_corner and T-junction sky_borders
 
 -  "gappy" sky next to a building, caused by nudging an outdoor
    cell into another cell, and near an empty cell. Diagram:
@@ -92,75 +180,42 @@ TODO
             |
     building| EMPTY
 
-    FIX A: don't allow outdoor cells to be nudged in this situation.
-
-    FIX B: give the mini-border the "solid" type (steal theme from building)
+    FIX A: give the mini-border the "solid" type (steal theme from building)
            (as if the EMPTY cell was a scenic=solid)
 
->>  Corner and Border stuff:
+    FIX B: don't allow outdoor cells to be nudged in this situation.
 
-   -  decide "kind" for corner (a la borders)
-
-   -  archways, windows: have sides
-
-   -  windows: determine area can use first
-
-   -  support sky_corner and T-junction sky_borders
-      (out_num == 2 and out_num == 3 respectively)
 
 >>  Different size rooms
 
    ??  roughly prioritize cells to enlarge
      
-   -  allow "megacells" (a group of MxN cells).
-
    This potentially allows (either X or Y dimension) to be
    nearly anything from 6 blocks to 30 blocks.
 
       6, 9, 12  |  15, 18, 21  |  24, 27, 30
 
 
--  add some missing liquid wall animations:
+-  support these liquid wall animations:
 
-   (a) water --> FIREMAGx (W74xx)
-   (b) lava  --> BLODRIPx (RP2_x)
-   (c) slime --> ZZWOLF4 (WOLF4)
+   (a) water --> FIREMAGx (W74A_1, W74A_2, W74B_1)
+   (b) lava  --> ROCKREDx (WALL64_2, W64B_1, W64B_2)
+   (c) slime --> BLODRIPx (RP2_1, RP2_2, RP2_3, RP2_4)
 
-+  VISTAS: prefer if target cell is _ahead_ (higher Q.level)
 
-+  hallway->hallway arches: different materials (wood/metal).
+-  Heretic: not enough weapons (too many golems) near start.
 
->> Vistas
-   +  BUG BUG: some outdoor arches give illegal access
+??? Renaming idea:
 
-   >>  put them into non-scenic outdoor cells
-      +  make sure chunks on left/right are not voided/pic'd up
-      -  allow multiple "shallow" vistas (deep < 3) per target cell
-      -  allow two deep==3 vistas opposite each other
-   +  great place for player start! or quest item! or teleport!
-   -  lesser depths (2, rare: 1, ditto for double-chunkers)
-   +  WIDE Vistas!!
-   -  FALL-OFF vistas (and tunnels!)
-
-?? one-way routes ??
-   -  for example: at along:3 fall-off -> along:4
-      BUT... how to get back to along:3 ??
-      WITHOUT creating an alternative path?
-      ANSWER: use another one-way connection
-
-   - One way connections:
-     (a) fall-offs
-     (b) doors that only open from one side (esp. via a switch)
-     (c) teleporters
-     (d) an up-lift that goes up into a hole (esp. switch triggered)
-     (e) a down-lift also in a hole, the switch cannot be reached
-         once you get out at the bottom.
+   Themes:
+     void  --> extra
+     add 'upper'
 
 -  make scenics more interesting (esp. for vistas)
    -  choose another theme / liquid
    ?? perhaps "merge" same type scenics into one big thingy
 
-+  monster adjustment: don't just increase toughness, actually
+?? monster adjustment: don't just increase toughness, actually
                        create _more_ monsters.
 
 -  rename: 'switch'/'wall' fields of a switch (to 'wall'/'side').
@@ -188,29 +243,39 @@ GUI TODO
 
 +  GUI / themes: build "Game" menu automatically from themes.
 
--  test if output file (unless it exists) can be written to.
++  remember save path in config file.
 
 +  make an icon for Win32 executable.
 
--  handle the Abort button better, also glbsp failure.
+-  test if output file (unless it exists) can be written to.
 
--  remember save path in config file.
+-  don't crash if wad[.]func is called but wrong game.
+   --> BEST WAY: create "wad" object (etc) only when needed.
+
+-  handle the Abort button better, also glbsp failure.
 
 -  different adjustment controls for DeathMatch levels.
 
 -  a makefile (+ code) to install 'the unix way'.
 
 
-CHANGES SINCE 0.85
-------------------
+Recent Changes (since 0.85)
+---------------------------
 
-TEST: Ultimate Doom: four episodes.
++  different sized rooms
+
++  new prefab system, @@@  [Derek]
+
++  Wolf3D and Spear-of-Destiny support  [DoomJedi]
+
++  theme/room_type system  @@@
+
++  vistas
+
+-  Ultimate Doom: four episodes.
 
 -  add single player start to deathmatch levels [Cliff].
 
--  prefabs @@@  [Derek]
-
--  writer: support "delete vertex" operation.
 
 
 MILESTONE 0  (reached!)
@@ -284,12 +349,16 @@ MILESTONE 3  (heaps left to do!!)
 
 +  secrets
 
+-  cage monsters: don't put hitscan snipers up really high.
+
 -  bridge switches
 
 -  liquid pools and traps
 
 +  good support for the different games (Doom 1/2, Heretic, Hexen),
    and initial support for add-ons (Eternal, Osiris)
+
+-  Advanced button.
 
 ?  pillar patterns: 1379, 2468, line thru center (based on entry and exit)
 -  chunk-size cages: center of room
@@ -312,7 +381,27 @@ MILESTONE 3  (heaps left to do!!)
 
 ++ overall consistency (doors/lights/overhangs/windows)
 
-_____________________
+
+MILESTONE 4  (pipe dreams...)
+===========
+
+-  allow "megacells" (a group of MxN cells).
+
+?? one-way routes ??
+   -  for example: at along:3 fall-off -> along:4
+      BUT... how to get back to along:3 ??
+      WITHOUT creating an alternative path?
+      ANSWER: use another one-way connection
+
+   - One way connections:
+     (a) fall-offs
+     (b) doors that only open from one side (esp. via a switch)
+     (c) teleporters
+     (d) an up-lift that goes up into a hole (esp. switch triggered)
+     (e) a down-lift also in a hole, the switch cannot be reached
+         once you get out at the bottom.
+
+ ____________________
 |KEY:                |
 |    #  completed    |
 |    -  plain item   |
