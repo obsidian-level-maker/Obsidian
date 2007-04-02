@@ -2995,7 +2995,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
 --!!!!  flesh_out_cell(cell)
 
--- void_it_up(cell, "void")
+   void_it_up(cell, "room")
 -- gunk_it_up(cell)
 
     setup_chunk_rmodels(cell)
@@ -5172,7 +5172,7 @@ c.x, c.y, other.x, other.y)
     return best
   end
   
-  local function put_in_stair(c, K,J, x,y, dir, long,deep)
+  local function put_in_stair(c, mode, K,J, x,y, long,deep)
 
     local dir = K.stair_dir
     local dx,dy = dir_to_delta (K.stair_dir)
@@ -5185,21 +5185,17 @@ c.x, c.y, other.x, other.y)
     local max_fh = math.max(K.rmodel.f_h, J.rmodel.f_h)
 
     local step = -diff_h / (deep * 4)
-    local max_step = sel(THEME.caps.prefer_stairs, 24, 16)
     
 con.debugf("Putting in Stair: (%d,%d)..(%d,%d) dir:%d size:%dx%d\n", x,y, ex,ey, dir, long, deep)
 
-    if math.abs(step) <= max_step then
+    if mode == "stair" then
       B_stair(p,c, K.rmodel, x,y, dir, long,deep, step)
-    else
-          if long == 3 then long = 2
-      elseif long >= 5 and rand_odds(90) then
-        local pos = int( (long - 4 + rand_irange(0,1)) / 2)
-        x, y = x + pos*ax, y + pos*ay
-        long = 4
-      end
 
+    elseif mode == "lift" then
       B_lift(p,c, K.rmodel, x,y, max_fh, dir, long, deep)
+
+    else
+      error("put_in_stair: unknown mode: " .. tostring(mode))
     end
 
     -- reserve space vor und hinter the staircase
@@ -5273,33 +5269,86 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
     local x, y = info.sx, info.sy
     local long, deep = info.long, info.deep
 
-    -- sometimes make stairs narrow, or even split into two pieces
+    local diff_h = K.rmodel.f_h - J.rmodel.f_h
+    local step   = -diff_h / (deep * 4)
 
-    local NARROW_PROBS = { 0, 0, 2, 40, 60, 75, 85, 90 }
-    local SPLIT_PROBS  = { 0, 0, 5, 40, 60, 75, 85, 90 }
+    local max_step = sel(THEME.caps.prefer_stairs, 24, 16)
 
-    while rand_odds(NARROW_PROBS[math.min(long,8)]) do
-      x, y = x + ax, y + ay
-      long = long - 2
-con.printf("MAKING STAIR NARROWER @ (%d,%d) : new size %dx%d\n", c.x,c.y, long,deep)
+    -- decide whether to make a staircase or a lowering platform
+    local mode = "lift"
+
+    if math.abs(step) <= max_step then
+      if THEME.caps.prefer_stairs then
+        mode = "stair"
+      elseif math.abs(diff_h) <= 32 then
+        mode = "stair"
+      elseif math.abs(diff_h) >= 224 then
+        mode = "lift"
+      else
+        prob = (math.abs(diff_h) - 28) / 2
+        mode = rand_sel(prob, "lift", "stair")
+      end
     end
 
-    if rand_odds(SPLIT_PROBS[math.min(long,8)]) then
-      local split_w, gap_w
+    if mode == "lift" then
+      
+      -- limit width to reasonable values (128 or 256 units)
+          if long == 3 then long = 2
+      elseif long >= 5 and rand_odds(95) then
+        local pos = int( (long - 4 + rand_irange(0,1)) / 2)
+        x, y = x + pos*ax, y + pos*ay
+        long = 4
+      end
 
-      repeat
-        split_w = rand_index_by_probs { 10, 50, 90 }
-        gap_w   = long - split_w*2
-      until gap_w >= 1
+      -- limit depth to reasonable values
+      local lift_h = deep
 
-      long = split_w
-con.printf("SPLITTING STAIR @ (%d,%d) : new size %dx%d\n", c.x,c.y, long,deep)
+      if long == 1 then
+        lift_h = 1
+      elseif lift_h >= 2 and rand_odds(95) then
+        lift_h = rand_sel(66, 2, 1)
+      end
 
-      put_in_stair(c, K,J, x,y, dir, long,deep)
-      x,y = x + (long+gap_w)*ax, y + (long+gap_w)*ay
+      if lift_h ~= deep then
+        if K.stair_dir == 8 or K.stair_dir == 6 then
+          x,y = x + (deep-lift_h)*dx, y + (deep-lift_h)*dy
+        end
+        deep = lift_h
+      end
+
+    else
+      assert(mode == "stair")
+
+      -- sometimes make stairs narrow, or even split into two pieces
+
+      local NARROW_PROBS = { 0, 0, 0, 40, 70, 70, 70, 70 }
+      local SPLIT_PROBS  = { 0, 0, 2, 20, 75, 90, 95, 99 }
+
+      while rand_odds(NARROW_PROBS[math.min(long,8)]) do
+        -- don't always centre the new stair
+        local centre = rand_index_by_probs({ 10,90,10 }) - 1
+        x, y = x + ax*centre, y + ay*centre
+        long = long - 2
+  con.printf("MAKING STAIR NARROWER @ (%d,%d) : new size %dx%d\n", c.x,c.y, long,deep)
+      end
+
+      if rand_odds(SPLIT_PROBS[math.min(long,8)]) then
+        local split_w, gap_w
+
+        repeat
+          split_w = rand_index_by_probs { 10, 60, 90 }
+          gap_w   = long - split_w*2
+        until gap_w >= 1
+
+        long = split_w
+  con.printf("SPLITTING STAIR @ (%d,%d) : new size %dx%d\n", c.x,c.y, long,deep)
+
+        put_in_stair(c, mode, K,J, x,y, long,deep)
+        x,y = x + (long+gap_w)*ax, y + (long+gap_w)*ay
+      end
     end
 
-    put_in_stair(c, K,J, x,y, dir, long,deep)
+    put_in_stair(c, mode, K,J, x,y, long,deep)
   end
 
 
