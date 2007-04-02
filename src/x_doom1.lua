@@ -998,7 +998,7 @@ DM_THEMES =
 
   CAVE =
   {
-    prob = 0,
+    prob = 20,
 
     room_probs=
     {
@@ -1007,7 +1007,7 @@ DM_THEMES =
 
     combo_probs=
     {
-      CAVEY=50 -- FIXME: no such combo
+      CAVEY=50
     },
 
     exit_probs=
@@ -1021,14 +1021,13 @@ DM_THEMES =
     },
   },
 
-
-  GOTHIC =
+  HELL =
   {
-    prob = 20,
+    prob = 30,
 
     room_probs=
     {
-      PLAIN=50, TORTURE=5,
+      TORTURE=20,
     },
     combo_probs=
     {
@@ -1037,39 +1036,14 @@ DM_THEMES =
 
     exit_probs=
     {
-      BLOODY=70,
-    },
-
-    hallway_probs=
-    {
-      SP_ROCK=50,
-    },
-  },
-
-
-  HELL =
-  {
-    prob = 30,
-
-    room_probs=
-    {
-      TORTURE=50,
-    },
-    combo_probs=
-    {
-      HELLISH=50, -- FIXME: no such combo
-    },
-
-    exit_probs=
-    {
       STONE=10,
       BROWN=10,
-      BLOODY=30,
+      BLOODY=50,
     },
 
     hallway_probs=
     {
-      BROWN1=30, SP_ROCK=10,
+      BROWN1=20, SP_ROCK=40,
     },
   },
 }
