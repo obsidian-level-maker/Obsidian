@@ -1431,16 +1431,22 @@ end
 
     if not THEME.caps.heights then return end
 
-    local function initial_height(c)
+    local ROOM_HEIGHTS = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 }
+    local HALL_HEIGHTS = { [96]=50, [128]=50 }
 
-      -- FIXME: more imagination!
+    local function initial_height(c)
 
       if c.is_exit then
         c.ceil_h = c.floor_h + (c.theme.exit_h or 128)
-      elseif c.hallway then
-        c.ceil_h = c.floor_h + sel(rand_odds(50), 96, 128)
       else
-        c.ceil_h = c.floor_h + 64 * rand_index_by_probs { 0, 25, 70, 70, 12, 3 }
+        local height_list =
+          (c.room_type and c.room_type.room_heights) or
+          c.theme.room_heights or
+          (c.hallway and HALL_HEIGHTS) or
+          c.quest.level_theme.room_heights or
+          ROOM_HEIGHTS
+
+        c.ceil_h = c.floor_h + rand_key_by_probs(height_list)
       end
 
       c.ceil_h = math.min(c.ceil_h, MAX_CEIL)
