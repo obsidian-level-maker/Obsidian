@@ -1365,8 +1365,8 @@ CRATE_ROTATE_NARROW =
           [7] = { dx= 16, dy= 30 },
           [9] = { dx= 30, dy= 0 },
 
-          [2] = { x_offset=8 }, [4] = { x_offset=8 },
-          [6] = { x_offset=8 }, [8] = { x_offset=8 },
+          [2] = { x_offset=10 }, [4] = { x_offset=10 },
+          [6] = { x_offset=10 }, [8] = { x_offset=10 },
         },
   },
 },
