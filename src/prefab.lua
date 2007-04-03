@@ -1408,9 +1408,9 @@ CRATE_TRIPLE =
     "aaaacccc",
     "aaaacccc",
     "aaaacccc",
-    "aaaacccc",
-    "bbbbee..",
-    "bbbbee..",
+    "aaaaccdd",
+    "bbbfee..",
+    "bbbfee..",
     "bbbb....",
     "bbbb....",
   },
@@ -1422,6 +1422,9 @@ CRATE_TRIPLE =
     c = { f_h=64,  f_tex="crate_f3", l_tex="crate_w3", l_peg="top" },
 
     e = { f_h=32,  f_tex="small_f",  l_tex="small_w",  l_peg="top" },
+
+    d = { copy="c", [2] = { x_offset=32 }},
+    f = { copy="b", [6] = { x_offset=32 }},
   },
 },
 
@@ -1848,6 +1851,178 @@ PILLAR_LIGHT3 =
     p = { f_h=48, c_h=-48, light=192, }
   },
 },
+
+PILLAR_ROUND_SMALL =
+{
+  structure =
+  {
+    "....",
+    ".ab.",
+    ".cd.",
+    "....",
+  },
+
+  elements =
+  {
+    a = { solid="wall", [7] = { dx=-6, dy= 6 }, [9] = { dx= 0, dy=14 },
+          [8] = { x_offset= 96 }, [4] = { x_offset=120 },
+        },
+    b = { solid="wall", [9] = { dx= 6, dy= 6 }, [3] = { dx=14, dy= 0 },
+          [6] = { x_offset= 48 }, [8] = { x_offset= 72 },
+        },
+    c = { solid="wall", [7] = { dx=-14,dy= 0 }, [1] = { dx=-6, dy=-6 },
+          [4] = { x_offset=144 }, [2] = { x_offset=168 },
+        },
+    d = { solid="wall", [1] = { dx= 0, dy=-14}, [3] = { dx= 6, dy=-6 },
+          [2] = { x_offset=  0 }, [6] = { x_offset= 24 },
+        },
+  },
+},
+
+PILLAR_ROUND_MEDIUM =
+{
+  structure =
+  {
+    "........",
+    "........",
+    "..jihg..",
+    "..k##f..",
+    "..m##e..",
+    "..abcd..",
+    "........",
+    "........",
+  },
+
+  elements =
+  {
+    a = { solid="wall",
+          [1] = { dx=-12, dy=-12 }, [7] = { dx=-24, dy=-8 },
+          [2] = { x_offset=336 }, [4] = { x_offset=313 },
+        },
+    b = { solid="wall",
+          [1] = { dx=-8, dy=-24 },
+          [2] = { x_offset=359 },
+        },
+    c = { solid="wall",
+          [1] = { dx=  0, dy=-29 },
+          [2] = { x_offset=  0 },
+        },
+
+    d = { solid="wall",
+          [3] = { dx=12, dy=-12 }, [1] = { dx=8, dy=-24 },
+          [6] = { x_offset= 48 }, [2] = { x_offset= 25 },
+        },
+    e = { solid="wall",
+          [3] = { dx=24, dy=-8 },
+          [6] = { x_offset= 71 },
+        },
+    f = { solid="wall",
+          [3] = { dx=29, dy= 0 },
+          [6] = { x_offset= 96 },
+        },
+
+    g = { solid="wall",
+          [9] = { dx=12, dy=12 }, [3] = { dx=24, dy=8 },
+          [8] = { x_offset=144 }, [6] = { x_offset=121 },
+        },
+    h = { solid="wall",
+          [9] = { dx=8, dy=24 },
+          [8] = { x_offset=167 },
+        },
+    i = { solid="wall",
+          [9] = { dx= 0, dy=29 },
+          [8] = { x_offset=192 },
+        },
+
+    j = { solid="wall",
+          [7] = { dx=-12, dy=12 }, [9] = { dx=-8, dy=24 },
+          [4] = { x_offset=240 }, [8] = { x_offset=217 },
+        },
+    k = { solid="wall",
+          [7] = { dx=-24, dy=8 },
+          [4] = { x_offset=263 },
+        },
+    m = { solid="wall",
+          [7] = { dx=-29, dy= 0 },
+          [4] = { x_offset=288 },
+        },
+  },
+},
+
+PILLAR_ROUND_LARGE =
+{
+  structure =
+  {
+    "............",
+    "............",
+    "............",
+    "............",
+    "....jihg....",
+    "....k##f....",
+    "....m##e....",
+    "....abcd....",
+    "............",
+    "............",
+    "............",
+    "............",
+  },
+
+  elements =
+  {
+    a = { solid="wall",
+          [1] = { dx=-26, dy=-26 }, [7] = { dx=-42, dy=-16 },
+          [2] = { x_offset=448 }, [4] = { x_offset=417 },
+        },
+    b = { solid="wall",
+          [1] = { dx=-16, dy=-42 },
+          [2] = { x_offset=479 },
+        },
+    c = { solid="wall",
+          [1] = { dx=  0, dy=-49 },
+          [2] = { x_offset=  0 },
+        },
+
+    d = { solid="wall",
+          [3] = { dx=26, dy=-26 }, [1] = { dx=16, dy=-42 },
+          [6] = { x_offset= 64 }, [2] = { x_offset= 33 },
+        },
+    e = { solid="wall",
+          [3] = { dx=42, dy=-16 },
+          [6] = { x_offset= 95 },
+        },
+    f = { solid="wall",
+          [3] = { dx=49, dy= 0 },
+          [6] = { x_offset=128 },
+        },
+
+    g = { solid="wall",
+          [9] = { dx=26, dy=26 }, [3] = { dx=42, dy=16 },
+          [8] = { x_offset=192 }, [6] = { x_offset=161 },
+        },
+    h = { solid="wall",
+          [9] = { dx=16, dy=42 },
+          [8] = { x_offset=223 },
+        },
+    i = { solid="wall",
+          [9] = { dx= 0, dy=49 },
+          [8] = { x_offset=256 },
+        },
+
+    j = { solid="wall",
+          [7] = { dx=-26, dy=26 }, [9] = { dx=-16, dy=42 },
+          [4] = { x_offset=320 }, [8] = { x_offset=289 },
+        },
+    k = { solid="wall",
+          [7] = { dx=-42, dy=16 },
+          [4] = { x_offset=351 },
+        },
+    m = { solid="wall",
+          [7] = { dx=-49, dy= 0 },
+          [4] = { x_offset=384 },
+        },
+  },
+},
+
 
 ------ Pedestals ------------------------------------
 

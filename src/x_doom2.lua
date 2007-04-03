@@ -638,6 +638,27 @@ D2_PREFAB_SCENERY =
              light="LITE5" },
   },
 
+  pillar_rnd_sm_POIS =
+  {
+    prefab = "PILLAR_ROUND_SMALL",
+
+    skin = { wall = "BRNPOIS" },
+  },
+
+  pillar_rnd_med_COMPSTA =
+  {
+    prefab = "PILLAR_ROUND_MEDIUM",
+
+    skin = { wall = "COMPSTA1" },
+  },
+
+  pillar_rnd_bg_COMPSTA =
+  {
+    prefab = "PILLAR_ROUND_LARGE",
+
+    skin = { wall = "COMPSTA2" },
+  },
+
   bb_stilts_huge_WREATH =
   {
     prefab = "BILLBOARD_STILTS_HUGE",
