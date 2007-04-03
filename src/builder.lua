@@ -2544,19 +2544,19 @@ function build_borders(p)
       then
         door_info.prefab = "BARS_1" --FIXME: wrong wrong wrong
 
-        door_info.bar_w = THEME.switches[link.quest.item].wall
-        assert(door_info.bar_w)
+        door_info.skin.bar_w = THEME.switches[link.quest.item].wall
+        assert(door_info.skin.bar_w)
 
         parm.tag = link.quest.tag + 1
         parm.door_kind = 0
 
-        door_info.frame_ceil = D.theme.floor
+        door_info.skin.frame_ceil = D.theme.floor
 
       elseif link.quest and link.quest.kind == "switch" then
         door_info.prefab = "DOOR_LOCKED" --FIXME: wrong wrong wrong
 
-        door_info.key_w = THEME.switches[link.quest.item].wall
-        assert(door_info.key_w)
+        door_info.skin.key_w = THEME.switches[link.quest.item].wall
+        assert(door_info.skin.key_w)
 
         parm.tag = link.quest.tag + 1
         parm.door_kind = 0
@@ -2564,10 +2564,10 @@ function build_borders(p)
       elseif link.is_exit then
         door_info.prefab = "EXIT_DOOR_WIDE" --FIXME: wrong way
 
-        door_info.front_w = "EXITSTON" --!!!!
-        door_info.exit_w = "EXITSIGN" -- FIXME !!!!
-        door_info.exit_c = "CEIL5_2"  --!!!!
-        door_info.door = "EXITDOOR"
+        door_info.skin.front_w = "EXITSTON" --!!!!
+        door_info.skin.exit_w = "EXITSIGN" -- FIXME !!!!
+        door_info.skin.exit_c = "CEIL5_2"  --!!!!
+        door_info.skin.door_w = "EXITDOOR"
 
         parm.door_top = link.build.rmodel.f_h + 72
       end
@@ -2578,7 +2578,7 @@ function build_borders(p)
     local fab = PREFABS[door_info.prefab]
     assert(fab)
 
-    B_prefab(p,c, fab, door_info, parm, link.build.rmodel,D.theme, link.x1, link.y1, side)
+    B_prefab(p,c, fab, door_info.skin, parm, link.build.rmodel,D.theme, link.x1, link.y1, side)
   end
 
   local function blocky_door( link, side, double_who )
@@ -2668,8 +2668,8 @@ local skin =
 --  wall="COMPBLUE",
 --  frame="ROCK1", frame_c="RROCK13", -- frame_f="RROCK13",
 
-  beam    = "WOOD1", beam_c = "FLAT5_2",
-  support = "WOOD1", supp_u = "WOOD1", supp_c = "FLAT5_2",
+  beam_w  = "WOOD1", beam_c = "FLAT5_2",
+  support_w = "WOOD1", support_c = "FLAT5_2",
   test_t = "lamp"
 }
 
@@ -5021,9 +5021,9 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       end
       assert(info.switch)
     end
-    skin = { switch=info.switch, wall=info.wall,
+    skin = { switch_w=info.switch, wall=info.wall, side_w=info.wall,
              beam_w="WOOD1", beam_f="FLAT5_2",
-             light_w="LITE5", frame_c=c.theme.floor,
+             lite_w="LITE5", frame_c=c.theme.floor,
            }
 
     if false then -- floor switch / niche switch
@@ -5061,17 +5061,18 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       "wall_lamp_RED_TORCH",
       "wall_lamp_GREEN_TORCH",
       "wall_lamp_BLUE_TORCH",
-      "wall_pic_1s_TV",
-      "wall_pic_2s_EAGLE",
-      "wall_pic_4s_ADOLF",
+      "wall_pic_TV",
+      "wall_pic_2S_EAGLE",
+      "wall_pic_4S_ADOLF",
 
       "pillar_light1_METAL",
       "pillar_rnd_sm_POIS",
       "pillar_rnd_med_COMPSTA",
       "pillar_rnd_bg_COMPSTA",
 
-      "bb_stilts_huge_WREATH",
-      "statue_tech1_A",
+      "billboard_lit_SHAWN",
+      "billboard_stilts4_WREATH",
+      "statue_tech1",
       "ground_light_SILVER",
       "mega_skylight_METAL",
       "mega_skylight_METALWOOD",
@@ -5099,6 +5100,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       "cage_medium_liq_LAVA",
 
       }
+con.printf("@ add_prefab: %s\n", name)
     local def = THEME.sc_fabs[name]
     assert(def)
     local fab = PREFABS[def.prefab]
@@ -5120,8 +5122,8 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     if not x then return end
 
     local parm = {
-             pic_h = c.rmodel.f_h + 64,
-             corn_h = c.rmodel.f_h + 104,
+             pic_h = c.rmodel.f_h + 64,   -- 88 for BILLBOARD_LIT
+             corn_h = c.rmodel.f_h + 104, -- 112 for BILLBOARD_LIT
              crate_h = c.rmodel.f_h + 64,
              pic_bottom = c.rmodel.f_h + 64,
              y_offset = 64,
@@ -5197,70 +5199,6 @@ con.debugf("add_scenery : %s\n", item)
 
     fab_mark_walkable(c, x, y, 8, 1,1, 4)
   end
-
-local function foo_the_kaz_bar()
-
-fab = PREFABS["BILLBOARD_STILTS_HUGE"]
-assert(fab)
-
-local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
-if x and rand_odds(30) then
-
-  skin = {
-           corner = "WOOD7", corn_f = "FLAT5_1",
-           step   = "STEP5", step_f = "FLAT5_2",
---           corner = "SHAWN2", corn_f = "FLAT19",
---           step = "STEP4",    step_f = "FLAT19",
-           pic = "ZZWOLF13", pic_back = "ZZWOLF11", pic_f = "FLAT5_3",
-           beam_w = "WOOD1", beam_f = "FLAT5_2",
-         }
-
-  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
-  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
-end
-
-fab = PREFABS["TECH_PICKUP_LARGE"]
-assert(fab)
-
-local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
-if x and rand_odds(30) then
-
-  skin = { wall="STONE2", floor="CEIL5_2", ceil="CEIL3_5",
-           light="LITE5", sky="F_SKY1",
-           step="STEP1", carpet="FLOOR1_1",
-         }
-
-  parm = { }
-
-  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
-  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
-end
-
-fab = PREFABS["BILLBOARD_LIT"]
-assert(fab)
-
-local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
-if x and rand_odds(30) then
-  skin = {
---           corner = "WOOD7", corn_f = "FLAT5_1",
---           step   = "STEP5", step_f = "FLAT5_2",
-           corner = "SHAWN2", corn_f = "FLAT19", corn2="DOORSTOP",
-           step = "STEP4",    step_f = "CEIL3_5",
-           pic = "SHAWN1", pic_back = "SHAWN2", pic_f = "CEIL3_5",
-           light = "LITE5"
-         }
-
-  parm = {
-           pic_h = c.rmodel.f_h + 88,
-           corn_h = c.rmodel.f_h + 112
-         }
-
-  B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
-  fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
-return
-end
-
-end
 
   local function tizzy_up_room(c)
 

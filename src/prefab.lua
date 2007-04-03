@@ -22,42 +22,6 @@
 ----------------------------------------------------------------
 
 
---[[
-
-ELEMENTS:
-
-Applied using a param[] table.
-
-if field doesn't exist, look in param[] table.
-
-Certain fields (textures/flats/c_rel) lookup their value in param[].
-
-
-E.g.
-
-param = copy_block_with_new(c.rmodel,
-{
-  f_tex = "FLAT1",
-  c_tex = "FLAT1",
-
-  wall = theme.wall,
-
-  door = "BIGDOOR1",
-  track = "DOORTRAK",
-  step = "STEP1",
-  bottom = door_info.ceil,
-
-  door_top = c.rmodel.f_h + door_info.h,
- 
-
-})
-
-make_prefab(PREFABS.DOOR, param, coords...)
-
---]]
-
-----------------------------------------------------------------
-
 PREFABS =
 {
 
@@ -81,7 +45,7 @@ ARCH =
   elements =
   {
     a = { f_h=0, c_rel="door_top", c_h=0,
-          l_tex="frame", f_tex="frame_f", c_tex="frame_c",
+          l_tex="frame_w", f_tex="frame_f", c_tex="frame_c",
         },
   },
 },
@@ -127,7 +91,7 @@ ARCH_ARCHED =
   elements =
   {
     a = { f_h=0, c_rel="door_top", c_h=0,
-          l_tex="frame", f_tex="frame_f", c_tex="frame_c",
+          l_tex="frame_w", f_tex="frame_f", c_tex="frame_c",
         },
 
     b = { copy="a", c_h=-16 },
@@ -148,17 +112,17 @@ ARCH_TRUSS =
   elements =
   {
     a = { f_h=0, c_rel="door_top", c_h=0,
-          l_tex="frame", f_tex="frame_f", c_tex="frame_c",
+          l_tex="frame_w", f_tex="frame_f", c_tex="frame_c",
         },
 
     B = { f_rel="door_top", f_h=0, c_rel="door_top", c_h=0,
-          l_tex="beam",  f_tex="beam_c",
-          u_tex="frame", c_tex="frame_c"
+          l_tex="beam_w",  f_tex="beam_c",
+          u_tex="frame_w", c_tex="frame_c"
         },
 
     C = { f_h=0, c_rel="door_top", c_h=-8,
-          l_tex="frame", f_tex="frame_f",
-          u_tex="beam",  c_tex="beam_c", u_peg="top",
+          l_tex="frame_w", f_tex="frame_f",
+          u_tex="beam_w",  c_tex="beam_c", u_peg="top",
         }
   },
 },
@@ -176,15 +140,15 @@ ARCH_RUSSIAN =
   elements =
   {
     a = { f_h=0, c_rel="door_top", c_h=16,
-          l_tex="frame", f_tex="frame_f", c_tex="frame_c",
+          l_tex="frame_w", f_tex="frame_f", c_tex="frame_c",
         },
 
     s = { f_h=0, c_rel="door_top", c_h=0,
-          l_tex="support", u_tex="support", c_tex="supp_c",
+          l_tex="support_w", u_tex="support_w", c_tex="support_c",
           f_tex="frame_f", u_peg="top"
         },
 
-    B = { solid="support" },
+    B = { solid="support_w" },
   },
 },
 
@@ -227,7 +191,7 @@ ARCH_CURVY =
   elements =
   {
     a = { f_h=0, c_rel="door_top", c_h=0,
-          l_tex="frame", f_tex="frame_f", c_tex="frame_c",
+          l_tex="frame_w", f_tex="frame_f", c_tex="frame_c",
         },
 
     R = { solid="wall", [9]={ dx= 16,dy=0 }, [3]={ dx= 20,dy=0 } },
@@ -253,7 +217,7 @@ WINDOW_NARROW =
 
   elements =
   {
-    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+    w = { f_h=0, f_rel="low_h", c_h=0, c_rel="high_h" },
   }
 },
 
@@ -271,7 +235,7 @@ WINDOW_EDGE =
 
   elements =
   {
-    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+    w = { f_h=0, f_rel="low_h", c_h=0, c_rel="high_h" },
   }
 },
 
@@ -289,7 +253,7 @@ WINDOW_EDGE_ARCHED =
 
   elements =
   {
-    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+    w = { f_h=0, f_rel="low_h", c_h=0, c_rel="high_h" },
 
     a = { copy="w", f_h=12, c_h=-12 },
     b = { copy="w", f_h=24, c_h=-24 },
@@ -308,9 +272,9 @@ WINDOW_CROSS =
 
   elements =
   {
-    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+    w = { f_h=0, f_rel="low_h", c_h=0, c_rel="high_h" },
 
-    a = { f_h=-16, f_rel="window_mid", c_h=16, c_rel="window_mid" },
+    a = { f_h=-16, f_rel="mid_h", c_h=16, c_rel="mid_h" },
   }
 },
 
@@ -339,7 +303,7 @@ WINDOW_BARRED =
 
   elements =
   {
-    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+    w = { f_h=0, f_rel="low_h", c_h=0, c_rel="high_h" },
 
     B = { solid="bar_w" },
   }
@@ -357,7 +321,7 @@ WINDOW_RAIL =
 
   elements =
   {
-    w = { f_h=0, f_rel="window_floor", c_h=0, c_rel="window_ceil" },
+    w = { f_h=0, f_rel="low_h", c_h=0, c_rel="high_h" },
 
     R = { copy="w", [8] = { rail="rail_w", impassible=true } },
   }
@@ -381,21 +345,21 @@ DOOR =
   {
     -- steps
     s = { f_h=8, c_rel="door_top", c_h=8,
-          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step",
+          f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
           l_peg="top", light=224
         },
 
     -- door
-    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door", c_tex = "door_c",
+    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door_w", c_tex = "door_c",
           kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
         },
 
     -- track
-    T = { solid="track", l_peg="bottom" },
+    T = { solid="track_w", l_peg="bottom" },
 
     -- lights
-    L = { solid="wall", [6]={ l_tex="light" } },
-    M = { solid="wall", [4]={ l_tex="light" } },
+    L = { solid="wall", [6]={ l_tex="lite_w", l_peg="bottom" }},
+    M = { solid="wall", [4]={ l_tex="lite_w", l_peg="bottom" }},
   },
 },
 
@@ -426,17 +390,17 @@ DOOR_LOCKED =
   {
     -- steps
     s = { f_h=8, c_rel="door_top", c_h=8,
-          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step",
+          f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
           l_peg="top", light=224
         },
 
     -- door
-    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door", c_tex = "door_c",
+    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door_w", c_tex = "door_c",
           kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
         },
 
     -- track
-    T = { solid="track", l_peg="bottom" },
+    T = { solid="track_w", l_peg="bottom" },
 
     -- key
     K = { solid="key_w" },
@@ -456,7 +420,7 @@ BARS_1 =
   elements =
   {
     -- step
-    s = { c_rel="door_top", c_h=0, c_tex="frame_ceil" },
+    s = { c_rel="door_top", c_h=0, c_tex="frame_c" },
 
     -- bars
     B = { f_rel="door_top", f_h=0,
@@ -511,12 +475,12 @@ EXIT_DOOR =
   {
     -- steps
     s = { f_h=8, c_rel="door_top", c_h=8,
-          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step",
+          f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
           l_peg="top", light=224
         },
 
     -- door
-    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door", c_tex = "door_c",
+    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door_w", c_tex = "door_c",
           kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
         },
 
@@ -530,17 +494,17 @@ EXIT_DOOR =
     F = { solid="front_w", l_peg="bottom" },
 
     -- track
-    T = { solid="track", l_peg="bottom" },
+    T = { solid="track_w", l_peg="bottom" },
 
     -- light
     L = { solid="wall", l_peg="bottom",
-          [4] = { l_tex="door", x_offset=72 },
-          [6] = { l_tex="door", x_offset=72 }
+          [4] = { l_tex="door_w", x_offset=72 },
+          [6] = { l_tex="door_w", x_offset=72 }
         },
 
     M = { solid="wall", l_peg="bottom",
-          [4] = { l_tex="door", x_offset=88 },
-          [6] = { l_tex="door", x_offset=88 }
+          [4] = { l_tex="door_w", x_offset=88 },
+          [6] = { l_tex="door_w", x_offset=88 }
         },
   },
 },
@@ -766,7 +730,8 @@ SWITCH_PILLAR =
   elements =
   {
     P = { solid="wall",
-          [2] = { l_tex="switch", l_peg="bottom", kind="kind", tag="tag" }
+
+          [2] = { l_tex="switch_w", l_peg="bottom", kind="kind", tag="tag" }
         },
   },
 },
@@ -789,7 +754,7 @@ SWITCH_FLOOR =
     s = { f_rel="switch_h", f_h=0,
           l_tex="side_w", f_tex="switch_f", l_peg="top",
 
-          [2] = { l_tex="switch", l_peg="top", kind="kind", tag="tag",
+          [2] = { l_tex="switch_w", l_peg="top", kind="kind", tag="tag",
                   y_offset="y_offset" }
         },
 
@@ -831,7 +796,7 @@ SWITCH_FLOOR_TINY =
     s = { f_rel="switch_h", f_h=0,
           l_tex="side_w", f_tex="switch_f", l_peg="top",
 
-          [2] = { l_tex="switch", l_peg="top", kind="kind", tag="tag",
+          [2] = { l_tex="switch_w", l_peg="top", kind="kind", tag="tag",
                   x_offset="x_offset", y_offset="y_offset" }
         },
   },
@@ -854,7 +819,7 @@ SWITCH_CEIL =
     s = { c_rel="floor_h", c_h=40,
           c_tex="side_w", c_tex="switch_f", l_peg="top",
 
-          [2] = { u_tex="switch", u_peg="top", kind="kind", tag="tag",
+          [2] = { u_tex="switch_w", u_peg="top", kind="kind", tag="tag",
                   y_offset="y_offset" }
         },
 
@@ -884,7 +849,7 @@ SWITCH_NICHE =
           light=192 },
 
     -- switch
-    s = { solid="switch", l_peg="top",
+    s = { solid="switch_w", l_peg="top",
           [2] = { kind="kind", tag="tag", y_offset="y_offset" }
         },
 
@@ -915,7 +880,7 @@ SWITCH_NICHE_TINY =
           f_tex="frame_f", c_tex="frame_c", },
 
     -- switch
-    s = { solid="switch", l_peg="top",
+    s = { solid="switch_w", l_peg="top",
           [2] = { kind="kind", tag="tag",
                   x_offset="x_offset", y_offset="y_offset" }
         },
@@ -1058,16 +1023,16 @@ TECH_PICKUP_SMALL =
   elements =
   {
     -- steps
-    a = { l_tex="step", light=128, c_h=-48, l_peg="top" },
+    a = { l_tex="step_w", light=128, c_h=-48, l_peg="top" },
 
     b = { copy="a", f_h= -8, c_h=-56 },
     c = { copy="a", f_h=-16, c_h=-64, light=192 },
     d = { copy="a", f_h=-24, c_h=-56 },
 
-    e = { copy="a", f_h=-32, c_h=0, light=160, f_tex="carpet", c_tex="sky_c" },
+    e = { copy="a", f_h=-32, c_h=0, light=160, f_tex="carpet_f", c_tex="sky_c" },
 
     -- light
-    L = { solid="light" },
+    L = { solid="lite_w" },
   },
 
   pickup_pos = { x=128, y=128 }
@@ -1139,23 +1104,22 @@ STATUE_TECH_1 =
   elements =
   {
     a = { f_h=8, c_rel="floor_h", c_h=256,
-          l_tex="step", l_peg="top"
+          l_tex="step_w", l_peg="top"
         },
 
     b = { f_h=16, c_rel="floor_h", c_h=192,
-          l_tex="step",   u_tex="u_span",
-          f_tex="carpet", c_tex="c_lite",
+          l_tex="step_w", f_tex="carpet_f",
+          u_tex="span_w", c_tex="lite_c",
           light=192
         },
 
     c = { f_h=64, c_rel="floor_h", c_h=256,
-          f_tex="comp_top", l_tex="comp1",
+          f_tex="comp_f", l_tex="comp_w",
         },
 
-    f = { copy="c", f_h=128, l_tex="comp2", x_offset=128 },
+    f = { copy="c", f_h=128, l_tex="comp2_w", x_offset=128 },
 
     g = { copy="c", f_h=192, l_tex="wall" },
-
   },
 
   things =
@@ -1222,15 +1186,15 @@ DRINKS_BAR =
 
   things =
   {
-    { kind="drink", x= 16, y=32 },
-    { kind="drink", x= 36, y=32 },
-    { kind="drink", x= 56, y=32 },
-    { kind="drink", x= 76, y=32 },
-    { kind="drink", x= 96, y=32 },
-    { kind="drink", x=116, y=32 },
-    { kind="drink", x=136, y=32 },
-    { kind="drink", x=156, y=32 },
-    { kind="drink", x=176, y=32 },
+    { kind="drink_t", x= 16, y=32 },
+    { kind="drink_t", x= 36, y=32 },
+    { kind="drink_t", x= 56, y=32 },
+    { kind="drink_t", x= 76, y=32 },
+    { kind="drink_t", x= 96, y=32 },
+    { kind="drink_t", x=116, y=32 },
+    { kind="drink_t", x=136, y=32 },
+    { kind="drink_t", x=156, y=32 },
+    { kind="drink_t", x=176, y=32 },
   },
 },
 
@@ -1256,11 +1220,11 @@ GROUND_LIGHT =
   {
     a = { f_h=0 },
 
-    b = { f_h=8, l_tex="shawn", f_tex="shawn_top", l_peg="top", },
+    b = { f_h=8, l_tex="shawn_w", f_tex="shawn_f", l_peg="top", },
 
     c = { copy="b", f_h=40, light=192 },
 
-    d = { f_h=64, l_tex="light", f_tex="lite_top", light=200 },
+    d = { f_h=64, l_tex="lite_w", f_tex="lite_f", light=200 },
   },
 },
 
@@ -1269,10 +1233,6 @@ GROUND_LIGHT =
 
 MEGA_SKYLIGHT_1 =
 {
-  -- frame, frame_ceil
-  -- beam,  beam_ceil
-  -- sky
-
   region="ceil",
   add_mode="island",
   environment="indoor",
@@ -1302,9 +1262,9 @@ MEGA_SKYLIGHT_1 =
   {
     s = { c_h=12, c_tex="sky_c", light=192 },
 
-    f = { c_h=-20, c_tex="frame_ceil", u_tex="frame" },
+    f = { c_h=-20, c_tex="frame_c", u_tex="frame_w" },
 
-    B = { c_h=-4, c_tex="beam_ceil", u_tex="beam" },
+    B = { c_h=-4, c_tex="beam_c", u_tex="beam_w" },
 
     C = { copy="B", c_h=4 },
   },
@@ -1394,7 +1354,7 @@ BILLBOARD =
         },
 
     -- step
-    s = { f_h=8, l_tex="step", f_tex="step_f", l_peg="top" },
+    s = { f_h=8, l_tex="step_w", f_tex="step_f", l_peg="top" },
   }
 },
 
@@ -1430,7 +1390,7 @@ BILLBOARD_LIT =
         },
 
     -- light
-    L = { copy="E", [2] = { l_tex="light" }, },
+    L = { copy="E", [2] = { l_tex="lite_w" }, },
 
     -- pic
     p = { f_h=8, f_rel="pic_h",
@@ -1439,7 +1399,7 @@ BILLBOARD_LIT =
         },
 
     -- step
-    s = { f_h=8, l_tex="step", f_tex="step_f", l_peg="top" },
+    s = { f_h=8, l_tex="step_w", f_tex="step_f", l_peg="top" },
 
     t = { copy="s", f_h=16, light=208 },
   },
@@ -1462,7 +1422,7 @@ BILLBOARD_ON_STILTS =
   {
     -- picture
     p = { mark = 1,
-          [8] = { rail="pic", l_peg="bottom",
+          [8] = { rail="pic_w", l_peg="bottom",
                   x_offset=8, y_offset="y_offset" },
         },
 
@@ -1881,7 +1841,7 @@ CORNER_BEAM =
 
   elements =
   {
-    B = { solid="beam" }
+    B = { solid="beam_w" }
   },
 },
 
@@ -1900,10 +1860,10 @@ CORNER_LIGHT =
 
   elements =
   {
-    B = { solid="beam"  },
-    L = { solid="light" },
+    B = { solid="beam_w"  },
+    L = { solid="lite_w" },
 
-    s = { f_h=16, c_h=-16, l_tex="beam", u_tex="beam",
+    s = { f_h=16, c_h=-16, l_tex="beam_w", u_tex="beam_w",
           f_tex="beam_f", c_tex="beam_f",
           light=192
         }
@@ -2053,10 +2013,10 @@ PILLAR_LIGHT1 =
 
   elements =
   {
-    B = { solid="beam"  },
-    L = { solid="light" },
+    B = { solid="beam_w"  },
+    L = { solid="lite_w" },
 
-    s = { f_h=16, c_h=-16, l_tex="beam", u_tex="beam",
+    s = { f_h=16, c_h=-16, l_tex="beam_w", u_tex="beam_w",
           f_tex="beam_f", c_tex="beam_f",
           light=192
         }
@@ -2091,7 +2051,7 @@ PILLAR_LIGHT3 =
 
   elements =
   {
-    L = { solid="light" },
+    L = { solid="lite_w" },
 
     p = { f_h=48, c_h=-48, light=192, }
   },

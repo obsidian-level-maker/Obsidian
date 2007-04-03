@@ -648,19 +648,19 @@ D2_PREFAB_SCENERY =
     skin = { lamp_t="blue_torch_sm" },
   },
 
-  wall_pic_1s_TV =
+  wall_pic_TV =
   {
     prefab = "WALL_PIC",
     skin = { pic_w="SPACEW3", lite_w="SUPPORT2" },
   },
 
-  wall_pic_2s_EAGLE =
+  wall_pic_2S_EAGLE =
   {
     prefab = "WALL_PIC_TWO_SIDED",
     skin = { pic_w="ZZWOLF6", lite_w="LITE5" },
   },
 
-  wall_pic_4s_ADOLF =
+  wall_pic_4S_ADOLF =
   {
     prefab = "WALL_PIC_FOUR_SIDED",
     skin = { pic_w="ZZWOLF7" },
@@ -670,100 +670,114 @@ D2_PREFAB_SCENERY =
   {
     prefab = "PILLAR_LIGHT1",
 
-    skin = { beam = "METAL", beam_f = "CEIL5_2",
-             light="LITE5" },
+    skin = { beam_w="METAL", beam_f="CEIL5_2",
+             lite_w="LITE5" },
   },
 
   pillar_rnd_sm_POIS =
   {
     prefab = "PILLAR_ROUND_SMALL",
 
-    skin = { wall = "BRNPOIS" },
+    skin = { wall="BRNPOIS" },
   },
 
   pillar_rnd_med_COMPSTA =
   {
     prefab = "PILLAR_ROUND_MEDIUM",
 
-    skin = { wall = "COMPSTA1" },
+    skin = { wall="COMPSTA1" },
   },
 
   pillar_rnd_bg_COMPSTA =
   {
     prefab = "PILLAR_ROUND_LARGE",
 
-    skin = { wall = "COMPSTA2" },
+    skin = { wall="COMPSTA2" },
   },
 
-  bb_stilts_huge_WREATH =
+  billboard_lit_SHAWN =
+  {
+    prefab = "BILLBOARD_LIT",
+
+    skin =
+    {
+      corner = "SHAWN2", corn_f = "FLAT19", corn2="DOORSTOP",
+      step_w = "STEP4",  step_f = "CEIL3_5",
+      pic_w  = "SHAWN1", pic_back = "SHAWN2",
+      pic_f = "CEIL3_5",
+      lite_w = "LITE5"
+    },
+  },
+
+  billboard_stilts4_WREATH =
   {
     prefab = "BILLBOARD_STILTS_HUGE",
 
-    skin = {
-             corner = "WOOD7", corn_f = "FLAT5_1",
-             step   = "STEP5", step_f = "FLAT5_2",
-  --           corner = "SHAWN2", corn_f = "FLAT19",
-  --           step = "STEP4",    step_f = "FLAT19",
-             pic = "ZZWOLF13", pic_back = "ZZWOLF11", pic_f = "FLAT5_3",
-             beam_w = "WOOD1", beam_f = "FLAT5_2",
-           },
+    skin =
+    {
+      corner = "WOOD7", corn_f = "FLAT5_1",
+      step_w = "STEP5", step_f = "FLAT5_2",
+      beam_w = "WOOD1", beam_f = "FLAT5_2",
+      pic_w  = "ZZWOLF13", pic_back = "ZZWOLF11",
+      pic_f  = "FLAT5_3",
+    },
   },
 
-  statue_tech1_A =
+  statue_tech1 =
   {
     prefab = "STATUE_TECH_1",
 
-    skin = { wall="COMPWERD", comp1 = "SPACEW3", comp2 = "COMPTALL",
-             step="STEP1",    u_span="COMPSPAN",
+    skin =
+    {
+      wall="COMPWERD", floor="FLAT14", ceil="FLOOR4_8",
+      step_w="STEP1", carpet_f="FLOOR1_1",
+      
+      comp_w="SPACEW3", comp2_w="COMPTALL", span_w="COMPSPAN",
+      comp_f="CEIL5_1", lite_c="TLITE6_5",
 
-             floor="FLAT14", ceil="FLOOR4_8",
-             carpet="FLOOR1_1", c_lite="TLITE6_5",
-             comp_top="CEIL5_1",
-
-             lamp_t="lamp"
-           }
+      lamp_t="lamp"
+    }
   },
 
   ground_light_SILVER =
   {
     prefab = "GROUND_LIGHT",
 
-    skin = { 
-             shawn = "SHAWN3",
-             light = "LITE5",         
-
-             shawn_top = "FLAT1",
-             lite_top = "CEIL5_1",
-           }
-
+    skin =
+    { 
+      shawn_w = "SHAWN3", shawn_f = "FLAT1",
+      lite_w  = "LITE5",  lite_f  = "CEIL5_1",
+    }
   },
 
   mega_skylight_METAL =
   {
     prefab = "MEGA_SKYLIGHT_1",
 
-    skin = { 
-             sky_c = "F_SKY1",
-             frame = "METAL",
-             frame_ceil = "CEIL5_2",
+    skin =
+    { 
+      sky_c = "F_SKY1",
+      frame_w = "METAL",
+      frame_c = "CEIL5_2",
 
-             beam = "METAL",
-             beam_ceil  = "CEIL5_2",
-           }
+      beam_w = "METAL",
+      beam_c = "CEIL5_2",
+    }
   },
 
   mega_skylight_METALWOOD =
   {
     prefab = "MEGA_SKYLIGHT_2",
 
-    skin = { 
-             sky_c = "F_SKY1",
-             frame = "METAL",
-             frame_ceil = "CEIL5_2",
+    skin =
+    { 
+      sky_c = "F_SKY1",
+      frame_w = "METAL",
+      frame_c = "CEIL5_2",
 
-             beam = "WOOD12",
-             beam_ceil = "FLAT5_2",
-           }
+      beam_w = "WOOD12",
+      beam_c = "FLAT5_2",
+    }
   },
 
   drinks_bar_WOOD_POTION =
@@ -771,7 +785,7 @@ D2_PREFAB_SCENERY =
     prefab = "DRINKS_BAR",
 
     skin = { bar_w = "PANBORD1", bar_f = "FLAT5_2",
-             drink = "potion",
+             drink_t = "potion",
            }
   },
 
@@ -1001,6 +1015,18 @@ D2_PREFAB_SCENERY =
 
       rail_w = "MIDBARS3",
     }
+  },
+
+  tech_pickup_STONE =
+  {
+    prefab = "TECH_PICKUP_LARGE",
+
+    skin =
+    {
+      wall="STONE2", floor="CEIL5_2", ceil="CEIL3_5",
+      lite_w="LITE5", sky_c="F_SKY1",
+      step_w="STEP1", carpet_f="FLOOR1_1",
+    },
   },
 
   exit_hole_SKY =

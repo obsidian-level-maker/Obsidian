@@ -656,10 +656,14 @@ DM_DOORS =
   --       tall, but work fine when truncated.
 
   d_big2   = { prefab="DOOR", w=128, h=112,
-               door="BIGDOOR2", door_c="FLAT1",
-               track="DOORTRAK",
-               light="LITE5", step="STEP1",
-               frame_floor="FLAT1", frame_ceil="TLITE6_6",
+
+               skin =
+               {
+                 door_w="BIGDOOR2", door_c="FLAT1",
+                 lite_w="LITE5", step_w="STEP1",
+                 frame_f="FLAT1", frame_c="TLITE6_6",
+                 track_w="DOORTRAK",
+               }
              },
 
 --[[ !!!!! DM_DOORS
