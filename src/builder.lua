@@ -333,14 +333,21 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
 
   assert(fab and skin and parm and theme)
 
-  parm.floor_h = parm.floor_h or model.f_h
-  parm.ceil_h  = parm.ceil_h  or model.c_h
+  local focus = p.blocks[x][y]
+  if focus and focus.rmodel then
+    focus = focus.rmodel
+  else
+    focus = model
+  end
+
+  parm.floor_h = parm.floor_h or focus.f_h
+  parm.ceil_h  = parm.ceil_h  or focus.c_h
 
   local diff_h = parm.ceil_h - parm.floor_h
 
-  parm.low_h  = parm.low_h  or (parm.floor_h + diff_h * 0.25)
+  parm.low_h  = parm.low_h  or (parm.floor_h + math.min(64, diff_h * 0.25))
+  parm.high_h = parm.high_h or (parm. ceil_h - math.min(64, diff_h * 0.25))
   parm.mid_h  = parm.mid_h  or (parm.floor_h + diff_h * 0.50)
-  parm.high_h = parm.high_h or (parm.floor_h + diff_h * 0.75)
 
   -- simulate Y mirroring using X mirroring instead
   if mirror_y then
@@ -451,18 +458,21 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
     if elem.solid then
       sec = { solid=what_tex("wall", elem.solid) }
     else
-      sec = copy_block(model)
+      sec = copy_block(focus)
 
-      sec.f_h = what_h_ref(sec.f_h, elem.f_rel, elem.f_h)
-      sec.c_h = what_h_ref(sec.c_h, elem.c_rel, elem.c_h)
+      if elem.f_h or elem.f_tex or elem.l_tex then
+        sec.f_h   = what_h_ref(sec.f_h, elem.f_rel, elem.f_h)
+        sec.f_tex = what_tex("floor",elem.f_tex)
+        sec.l_tex = what_tex("wall", elem.l_tex)
+        sec.l_peg = elem.l_peg
+      end
 
-      sec.f_tex = what_tex("floor",elem.f_tex)
-      sec.c_tex = what_tex("ceil", elem.c_tex)
-      sec.l_tex = what_tex("wall", elem.l_tex)
-      sec.u_tex = what_tex("wall", elem.u_tex)
-
-      sec.l_peg = elem.l_peg
-      sec.u_peg = elem.u_peg
+      if elem.c_h or elem.c_tex or elem.u_tex then
+        sec.c_h   = what_h_ref(sec.c_h, elem.c_rel, elem.c_h)
+        sec.c_tex = what_tex("ceil", elem.c_tex)
+        sec.u_tex = what_tex("wall", elem.u_tex)
+        sec.u_peg = elem.u_peg
+      end
 
       sec.x_offset = elem.x_offset
       sec.y_offset = elem.y_offset
@@ -518,7 +528,7 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
     return sec
   end
 
-  local ROOM = model
+  local ROOM = focus
   local WALL = { solid=what_tex("wall", "wall") }
 
   -- cache for compiled elements
