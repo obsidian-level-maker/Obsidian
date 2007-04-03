@@ -396,22 +396,13 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
     return bx,by, dx,dy
   end
 
-  local function skin_val(key)
-    local V = skin[key]
-    if not V then V = theme[key] end
-    if not V then
-      error("Bad fab/skin combo: missing entry for " .. key)
-    end
-    return V
-  end
 
   local function parm_val(key)
-    local V = parm[key]
-    if not V then V = model[key] end
-    if not V then
-      error("Bad fab/parameters: missing value for " .. key)
-    end
-    return V
+    if parm[key] then return parm[key] end
+    if skin[key] then return skin[key] end
+    if model[key] then return model[key] end
+
+    error("Bad fab/parameters: missing value for " .. key)
   end
 
   local function what_h_ref(base, rel, h)
@@ -434,11 +425,10 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
     if skin[key] then return skin[key] end
     if parm[key] then return parm[key] end
 
-    if skin[base] then return skin[base] end
-    if not theme[base] then
-      error("Unknown texture ref in prefab: " .. key)
-    end
-    return theme[base]
+    if skin[base]  then return skin[base] end
+    if theme[base] then return theme[base] end
+
+    error("Unknown texture ref in prefab: " .. key)
   end
 
   local function what_thing(name)
@@ -462,7 +452,6 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
 
       sec.f_tex = what_tex("floor",elem.f_tex)
       sec.c_tex = what_tex("ceil", elem.c_tex)
-
       sec.l_tex = what_tex("wall", elem.l_tex)
       sec.u_tex = what_tex("wall", elem.u_tex)
 
@@ -482,7 +471,6 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
       if elem.light then sec.light = elem.light
       elseif elem.light_add then sec.light = sec.light + elem.light_add
       end
-
     end
 
     -- handle overrides
@@ -492,15 +480,14 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
       if OV then
         OV = copy_block(OV)  -- don't modify the prefab!
 
-        if OV.l_tex and skin[OV.l_tex] then OV.l_tex = skin[OV.l_tex] end
-        if OV.u_tex and skin[OV.u_tex] then OV.u_tex = skin[OV.u_tex] end
-        if OV.f_tex and skin[OV.f_tex] then OV.f_tex = skin[OV.f_tex] end
-        if OV.c_tex and skin[OV.c_tex] then OV.c_tex = skin[OV.c_tex] end
+        if OV.l_tex then OV.l_tex = what_tex("wall", OV.l_tex) end
+        if OV.u_tex then OV.u_tex = what_tex("wall", OV.u_tex) end
+        if OV.f_tex then OV.f_tex = what_tex("floor", OV.f_tex) end
+        if OV.c_tex then OV.c_tex = what_tex("ceil", OV.c_tex) end
+        if OV.rail  then OV.rail  = what_tex("rail", OV.rail) end
 
-        if OV.rail and skin[OV.rail] then OV.rail = skin[OV.rail] end
-
-        if OV.x_offset and parm[OV.x_offset] then OV.x_offset = parm[OV.x_offset] end
-        if OV.y_offset and parm[OV.y_offset] then OV.y_offset = parm[OV.y_offset] end
+        if OV.x_offset and type(OV.x_offset) == "string" then OV.x_offset = parm_val(OV.x_offset) end
+        if OV.y_offset and type(OV.y_offset) == "string" then OV.y_offset = parm_val(OV.y_offset) end
 
         if OV.kind then OV.kind = parm_val(OV.kind) end
         if OV.tag  then OV.tag  = parm_val(OV.tag) end
@@ -624,7 +611,7 @@ function B_exit_hole(p,c, K,kx,ky, sec)
   HOLE.walk_kind = 52 -- "exit_W1"
   HOLE.is_cage = true  -- don't place items/monsters here
 
-  frag_fill(p,c, fx+1,fy+1, fx+FW,fy+FH, HOLE)
+---  frag_fill(p,c, fx+1,fy+1, fx+FW,fy+FH, HOLE)
 
   local radius = 60
 
@@ -3144,7 +3131,7 @@ function build_borders(p)
         parm.door_kind = 0
 
       elseif link.is_exit then
-        door_info.prefab = "DOOR_EXIT_WIDE" --FIXME: wrong way
+        door_info.prefab = "EXIT_DOOR_WIDE" --FIXME: wrong way
 
         door_info.front_w = "EXITSTON" --!!!!
         door_info.exit_w = "EXITSIGN" -- FIXME !!!!
@@ -5639,8 +5626,11 @@ con.printf("add_object @ (%d,%d)\n", x, y)
   local function add_prefab(c)
 
     local name = rand_element {
-
       "pillar_light1_METAL",
+      "pillar_rnd_sm_POIS",
+      "pillar_rnd_med_COMPSTA",
+      "pillar_rnd_bg_COMPSTA",
+
       "bb_stilts_huge_WREATH",
       "statue_tech1_A",
       "ground_light_SILVER",
@@ -5655,6 +5645,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       "crate_rotnar_SILVER",
       "crate_rotate_CRATE1",
       "crate_rotate_CRATE2",
+
       "crate_triple_A",
       "crate_triple_B",
       "crate_jumble",
@@ -5667,6 +5658,8 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       "cage_large_liq_NUKAGE",
       "cage_medium_liq_BLOOD",
       "cage_medium_liq_LAVA",
+
+      "exit_hole_SKY",
       }
     local def = THEME.sc_fabs[name]
     assert(def)
@@ -5697,6 +5690,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
              cage_base_h = c.rmodel.f_h + 64,
              cage_top_h  = c.rmodel.f_h + 128,
+             door_top_h  = c.rmodel.f_h + 72,
            }
 
     local mirror
