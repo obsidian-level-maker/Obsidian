@@ -659,6 +659,13 @@ D2_PREFAB_SCENERY =
     skin = { wall = "COMPSTA2" },
   },
 
+  exit_hole_SKY =
+  {
+    prefab = "EXIT_HOLE_ROUND",
+
+    skin = { hole_f="F_SKY1" },
+  },
+
   bb_stilts_huge_WREATH =
   {
     prefab = "BILLBOARD_STILTS_HUGE",
