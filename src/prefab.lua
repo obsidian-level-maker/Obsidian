@@ -386,7 +386,7 @@ DOOR =
         },
 
     -- door
-    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_c",
+    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door", c_tex = "door_c",
           kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
         },
 
@@ -431,7 +431,7 @@ DOOR_LOCKED =
         },
 
     -- door
-    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_c",
+    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door", c_tex = "door_c",
           kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
         },
 
@@ -516,7 +516,7 @@ EXIT_DOOR =
         },
 
     -- door
-    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_c",
+    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door", c_tex = "door_c",
           kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
         },
 
@@ -718,7 +718,7 @@ EXIT_DEATHMATCH =
   elements =
   {
     -- inside area
-    i = { f_h=0, c_rel="floor", c_h=80, },
+    i = { f_h=0, c_rel="floor_h", c_h=80, },
 
     -- step
     s = { f_h=8, c_rel="door_top_h", c_h=8,
@@ -727,7 +727,7 @@ EXIT_DEATHMATCH =
         },
 
     -- door
-    d = { copy="s", c_rel="floor", c_h=8,
+    d = { copy="s", c_rel="floor_h", c_h=8,
           u_tex="door_w", c_tex="door_c",
           u_peg="bottom", l_peg="bottom",
           kind="door_kind", tag="tag",
@@ -813,7 +813,6 @@ SWITCH_FLOOR_BEAM =
 SWITCH_FLOOR_TINY =
 {
   region="floor",
-
   height_range={ 64,512 },
 
   structure =
@@ -849,7 +848,7 @@ SWITCH_CEIL =
 
   elements =
   {
-    s = { c_rel="floor", c_h=40,
+    s = { c_rel="floor_h", c_h=40,
           c_tex="side_w", c_tex="switch_f", l_peg="top",
 
           [2] = { u_tex="switch", u_peg="top", kind="kind", tag="tag",
@@ -1136,17 +1135,17 @@ STATUE_TECH_1 =
 
   elements =
   {
-    a = { f_h=8, c_rel="floor", c_h=256,
+    a = { f_h=8, c_rel="floor_h", c_h=256,
           l_tex="step", l_peg="top"
         },
 
-    b = { f_h=16, c_rel="floor", c_h=192,
+    b = { f_h=16, c_rel="floor_h", c_h=192,
           l_tex="step",   u_tex="u_span",
           f_tex="carpet", c_tex="c_lite",
           light=192
         },
 
-    c = { f_h=64, c_rel="floor", c_h=256,
+    c = { f_h=64, c_rel="floor_h", c_h=256,
           f_tex="comp_top", l_tex="comp1",
         },
 
@@ -2278,7 +2277,6 @@ PILLAR_ROUND_LARGE =
 PEDESTAL =
 {
   scale=64,
-
   region="floor",
 
   structure =

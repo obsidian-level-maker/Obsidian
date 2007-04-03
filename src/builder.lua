@@ -333,8 +333,14 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
 
   assert(fab and skin and parm and theme)
 
-  parm.floor = parm.floor or model.f_h
-  parm.ceil  = parm.ceil  or model.c_h
+  parm.floor_h = parm.floor_h or model.f_h
+  parm.ceil_h  = parm.ceil_h  or model.c_h
+
+  local diff_h = parm.ceil_h - parm.floor_h
+
+  parm.low_h  = parm.low_h  or (parm.floor_h + diff_h * 0.25)
+  parm.mid_h  = parm.mid_h  or (parm.floor_h + diff_h * 0.50)
+  parm.high_h = parm.high_h or (parm.floor_h + diff_h * 0.75)
 
   -- simulate Y mirroring using X mirroring instead
   if mirror_y then
@@ -1701,6 +1707,10 @@ function setup_rmodel(p, c)
 
     floor_code=c.floor_code,
   }
+
+  if c.theme.outdoor then
+    c.rmodel.c_tex = THEME.SKY_TEX
+  end
 
   if not c.rmodel.light then
     c.rmodel.light = sel(c.theme.outdoor, 192, 144)
@@ -5626,6 +5636,13 @@ con.printf("add_object @ (%d,%d)\n", x, y)
   local function add_prefab(c)
 
     local name = rand_element {
+      "wall_lamp_RED_TORCH",
+      "wall_lamp_GREEN_TORCH",
+      "wall_lamp_BLUE_TORCH",
+      "wall_pic_1s_TV",
+      "wall_pic_2s_EAGLE",
+      "wall_pic_4s_ADOLF",
+
       "pillar_light1_METAL",
       "pillar_rnd_sm_POIS",
       "pillar_rnd_med_COMPSTA",
@@ -5691,6 +5708,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
              cage_base_h = c.rmodel.f_h + 64,
              cage_top_h  = c.rmodel.f_h + 128,
              door_top_h  = c.rmodel.f_h + 72,
+
            }
 
     local mirror
