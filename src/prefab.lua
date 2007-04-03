@@ -17,7 +17,7 @@
 ----------------------------------------------------------------
 --
 --  Thanks to Derek "Dittohead" Braun who originally made
---  many of these Prefabs.
+--  some of these Prefabs.
 --
 ----------------------------------------------------------------
 
@@ -712,7 +712,7 @@ EXIT_DEATHMATCH =
     "##iiiiiiii##",
     "####ssss####",
     "###TddddT###",
-    "####ssss####",
+    "FFFFssssFFFF",
   },
 
   elements =
@@ -725,6 +725,9 @@ EXIT_DEATHMATCH =
           f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
           l_peg="top", light=224
         },
+
+    -- front sign
+    F = { solid="front_w", l_peg="bottom" },
 
     -- door
     d = { copy="s", c_rel="floor_h", c_h=8,
@@ -740,7 +743,7 @@ EXIT_DEATHMATCH =
     W = { copy="i", f_h=72, f_tex="switch_f",
           l_tex="side_w", l_peg="top",
 
-          [2] = { l_tex="switch_w", l_peg="top", y_offset="switch_yy",
+          [2] = { l_tex="switch_w", l_peg="top", y_offset="switch_yo",
                   kind="switch_kind", tag="tag" },
         },
   },
