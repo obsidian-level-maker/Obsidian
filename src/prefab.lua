@@ -641,7 +641,7 @@ EXIT_HOLE_ROUND =
 
   elements =
   {
-    z = {  f_tex="hole_f", f_h=-16, },
+    z = { f_tex="hole_f", f_h=-16, },
 
     a = { copy="z",
           [1] = { dx=-12, dy=-12 }, [7] = { dx=-24, dy=-8 },
@@ -1061,7 +1061,7 @@ TECH_PICKUP_SMALL =
     c = { copy="a", f_h=-16, c_h=-64, light=192 },
     d = { copy="a", f_h=-24, c_h=-56 },
 
-    e = { copy="a", f_h=-32, c_h=0, light=160, f_tex="carpet", c_tex="sky" },
+    e = { copy="a", f_h=-32, c_h=0, light=160, f_tex="carpet", c_tex="sky_c" },
 
     -- light
     L = { solid="light" },
@@ -1297,7 +1297,7 @@ MEGA_SKYLIGHT_1 =
 
   elements =
   {
-    s = { c_h=12, c_tex="sky", light=192 },
+    s = { c_h=12, c_tex="sky_c", light=192 },
 
     f = { c_h=-20, c_tex="frame_ceil", u_tex="frame" },
 

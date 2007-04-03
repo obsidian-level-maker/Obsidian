@@ -438,6 +438,8 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
     if skin[key] then return skin[key] end
     if parm[key] then return parm[key] end
 
+    if key == "sky" and theme.outdoor then return THEME.SKY_TEX end
+
     if skin[base]  then return skin[base] end
     if theme[base] then return theme[base] end
 

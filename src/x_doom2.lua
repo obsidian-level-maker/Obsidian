@@ -743,7 +743,7 @@ D2_PREFAB_SCENERY =
     prefab = "MEGA_SKYLIGHT_1",
 
     skin = { 
-             sky = "F_SKY1",
+             sky_c = "F_SKY1",
              frame = "METAL",
              frame_ceil = "CEIL5_2",
 
@@ -757,7 +757,7 @@ D2_PREFAB_SCENERY =
     prefab = "MEGA_SKYLIGHT_2",
 
     skin = { 
-             sky = "F_SKY1",
+             sky_c = "F_SKY1",
              frame = "METAL",
              frame_ceil = "CEIL5_2",
 
