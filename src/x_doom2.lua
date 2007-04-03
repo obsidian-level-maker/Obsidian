@@ -630,6 +630,42 @@ D2_SCENERY =
 
 D2_PREFAB_SCENERY =
 {
+  wall_lamp_RED_TORCH =
+  {
+    prefab = "WALL_LAMP",
+    skin = { lamp_t="red_torch_sm" },
+  },
+
+  wall_lamp_GREEN_TORCH =
+  {
+    prefab = "WALL_LAMP",
+    skin = { lamp_t="green_torch_sm" },
+  },
+
+  wall_lamp_BLUE_TORCH =
+  {
+    prefab = "WALL_LAMP",
+    skin = { lamp_t="blue_torch_sm" },
+  },
+
+  wall_pic_1s_TV =
+  {
+    prefab = "WALL_PIC",
+    skin = { pic_w="SPACEW3", lite_w="SUPPORT2" },
+  },
+
+  wall_pic_2s_EAGLE =
+  {
+    prefab = "WALL_PIC_TWO_SIDED",
+    skin = { pic_w="ZZWOLF6", lite_w="LITE5" },
+  },
+
+  wall_pic_4s_ADOLF =
+  {
+    prefab = "WALL_PIC_FOUR_SIDED",
+    skin = { pic_w="ZZWOLF7" },
+  },
+
   pillar_light1_METAL =
   {
     prefab = "PILLAR_LIGHT1",
@@ -684,7 +720,7 @@ D2_PREFAB_SCENERY =
              carpet="FLOOR1_1", c_lite="TLITE6_5",
              comp_top="CEIL5_1",
 
-             thing1="lamp"
+             lamp_t="lamp"
            }
   },
 

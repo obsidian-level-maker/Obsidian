@@ -771,7 +771,7 @@ SWITCH_PILLAR =
 SWITCH_FLOOR =
 {
   region="floor",
-  height_range={ 96,1024 },
+  height_range={ 96,999 },
 
   structure =
   {
@@ -927,14 +927,102 @@ SWITCH_NICHE_TINY =
 
 ------ Wall Stuff ------------------------------------
 
---[[ TODO
 WALL_LAMP =
 {
+  structure =
+  {
+    "########",
+    "##iiii##",
+    "##iiii##",
+    "##iiii##",
+  },
+
+  elements =
+  {
+    i = { f_rel="low_h", f_h=0, c_rel="high_h", c_h=0,
+          light=224
+        },
+  },
+
+  things =
+  {
+    { kind="lamp_t", x = 64, y = 24 },
+  },
 },
---]]
 
--- TODO: WALL_PIC
+WALL_PIC =
+{
+  height_range={ 160,999 },
 
+  structure =
+  {
+    "############",
+    "##pppppppp##",
+    "#LiiiiiiiiL#",
+    "#LiiiiiiiiL#",
+  },
+
+  elements =
+  {
+    i = { f_rel="low_h", f_h=0, c_rel="low_h", c_h=128,
+          light=192,
+        },
+
+    p = { solid="pic_w" },
+
+    L = { solid="wall",
+          [4] = { l_tex="lite_w" }, 
+          [6] = { l_tex="lite_w" }, 
+        },
+  },
+},
+
+WALL_PIC_TWO_SIDED =
+{
+  copy="WALL_PIC",
+
+  structure =
+  {
+    "#LiiiiiiiiL#",
+    "##pppppppp##",
+    "##pppppppp##",
+    "#LiiiiiiiiL#",
+  },
+},
+
+WALL_PIC_FOUR_SIDED =
+{
+  add_mode="island",
+  height_range={ 192,999 },
+
+  structure =
+  {
+    "#LiiiiiiiiL#",
+    "MppppppppppM",
+    "ippppppppppi",
+    "ippppppppppi",
+    "ippppppppppi",
+    "ippppppppppi",
+    "ippppppppppi",
+    "ippppppppppi",
+    "ippppppppppi",
+    "ippppppppppi",
+    "MppppppppppM",
+    "#LiiiiiiiiL#",
+  },
+
+  elements =
+  {
+    i = { f_rel="high_h", f_h=-128, c_rel="high_h", c_h=0,
+          light=192,
+        },
+
+    p = { solid="pic_w" },
+
+    L = { solid="wall", [4] = { l_tex="lite_w" }, [6] = { l_tex="lite_w" }}, 
+    M = { solid="wall", [2] = { l_tex="lite_w" }, [8] = { l_tex="lite_w" }}, 
+  },
+},
 
 
 ------ Decorative I ------------------------------------
@@ -1070,17 +1158,17 @@ STATUE_TECH_1 =
 
   things =
   {
-    { kind="thing1", x = 96, y = 96 },
-    { kind="thing1", x =224, y = 96 },
-    { kind="thing1", x = 96, y =224 },
-    { kind="thing1", x =224, y =224 },
+    { kind="lamp_t", x = 96, y = 96 },
+    { kind="lamp_t", x =224, y = 96 },
+    { kind="lamp_t", x = 96, y =224 },
+    { kind="lamp_t", x =224, y =224 },
   },
 },
 
 STATUE_CHAIR_DUDE =
 {
   region="floor",
-  height_range={ 136,1024 },
+  height_range={ 136,999 },
 
   structure =
   {
@@ -1148,7 +1236,7 @@ GROUND_LIGHT =
 {
   region="floor",
   environment="outdoor",
-  height_range={ 96,1024 },
+  height_range={ 96,999 },
 
   structure =
   {
@@ -1278,7 +1366,7 @@ BILLBOARD =
   region="floor",
   add_mode="wall",
   environment="outdoor",
-  height_range={ 160,1024 },
+  height_range={ 160,999 },
 
   structure =
   {
@@ -1313,7 +1401,7 @@ BILLBOARD_LIT =
   region="floor",
   add_mode="wall",
   environment="outdoor",
-  height_range={ 160,1024 },
+  height_range={ 160,999 },
 
   structure =
   {
@@ -1358,7 +1446,7 @@ BILLBOARD_LIT =
 BILLBOARD_ON_STILTS =
 {
   environment="outdoor",
-  height_range={ 144,1024 },
+  height_range={ 144,999 },
 
   structure =
   {
@@ -1392,7 +1480,7 @@ BILLBOARD_STILTS_HUGE =
 {
   add_mode="island",
   environment="outdoor",
-  height_range={ 144,1024 },
+  height_range={ 144,999 },
 
   structure =
   {
@@ -1556,7 +1644,7 @@ CRATE_ROTATE =
 CRATE_TRIPLE =
 {
   add_mode="island",
-  height_range={ 144,1024 },
+  height_range={ 144,999 },
 
   structure =
   {
@@ -1587,7 +1675,7 @@ CRATE_JUMBLE =
 {
   scale=64,
   add_mode="island",
-  height_range={ 224,1024 },
+  height_range={ 224,999 },
 
   structure =
   {
@@ -1619,7 +1707,7 @@ CAGE_PILLAR =
 {
   scale=64,
   add_mode="island",
-  height_range={ 160,1024 },
+  height_range={ 160,999 },
 
   structure = { "c" },
 
@@ -1641,7 +1729,7 @@ CAGE_SMALL =
 {
   scale=64,
   add_mode="island",
-  height_range={ 144,1024 },
+  height_range={ 144,999 },
 
   structure = { "c" },
 
@@ -1685,7 +1773,7 @@ CAGE_LARGE_W_LIQUID =
 {
   scale=64,
   add_mode="island",
-  height_range={ 256,1024 },
+  height_range={ 256,999 },
 
   structure =
   {
@@ -1744,7 +1832,7 @@ CAGE_MEDIUM_W_LIQUID =
 {
   scale=64,
   add_mode="island",
-  height_range={ 160,1024 },
+  height_range={ 160,999 },
 
   structure =
   {
@@ -2243,7 +2331,7 @@ PEDESTAL_PLUT_DOUBLE =
   copy="PEDESTAL_PLUT",
 
   environment="indoor",
-  height_range={ 112,1024 },
+  height_range={ 112,999 },
 
   -- FIXME: elements =
 },
