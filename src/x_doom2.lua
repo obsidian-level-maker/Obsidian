@@ -659,13 +659,6 @@ D2_PREFAB_SCENERY =
     skin = { wall = "COMPSTA2" },
   },
 
-  exit_hole_SKY =
-  {
-    prefab = "EXIT_HOLE_ROUND",
-
-    skin = { hole_f="F_SKY1" },
-  },
-
   bb_stilts_huge_WREATH =
   {
     prefab = "BILLBOARD_STILTS_HUGE",
@@ -973,6 +966,27 @@ D2_PREFAB_SCENERY =
       rail_w = "MIDBARS3",
     }
   },
+
+  exit_hole_SKY =
+  {
+    prefab = "EXIT_HOLE_ROUND",
+
+    skin = { hole_f="F_SKY1" },
+  },
+
+  exit_deathmatch_TECH =
+  {
+    prefab = "EXIT_DEATHMATCH",
+
+    skin = { wall="TEKWALL4", floor="CEIL4_3", ceil="TLITE6_5",
+             switch_w="SW1COMM", side_w="SHAWN2", switch_f="FLAT23",
+             frame_f="FLAT1", frame_c="FLAT1", step_w="STEP1",
+             door_w="EXITDOOR", door_c="FLAT1", track_w="DOORTRAK",
+             switch_yy=0,
+             door_kind=1, tag=0, switch_kind=11
+           },
+  },
+
 }
 
 D2_ROOMS =

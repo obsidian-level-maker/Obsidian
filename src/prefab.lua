@@ -86,6 +86,21 @@ ARCH =
   },
 },
 
+ARCH_EDGE =
+{
+  copy="ARCH",
+
+  mirror=true,
+
+  structure =
+  {
+    "#aaa",
+    "#aaa",
+    "#aaa",
+    "#aaa",
+  },
+},
+
 ARCH_NARROW =
 {
   copy="ARCH",
@@ -428,130 +443,6 @@ DOOR_LOCKED =
   },
 },
 
-DOOR_EXIT =
-{
-  structure =
-  {
-    "##ssss##",
-    "#MssssL#",
-    "#TddddT#",
-    "#LssssM#",
-  },
-
-  elements =
-  {
-    -- steps
-    s = { f_h=8, c_rel="door_top", c_h=8,
-          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step",
-          l_peg="top", light=224
-        },
-
-    -- door
-    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_c",
-          kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
-        },
-
-    -- sign
-    X = { copy="s", u_tex="exit_w", c_rel="door_top", c_h=-8,
-          c_tex="exit_c", u_peg="top",
-          [4] = { x_offset=32 }, [6] = { x_offset=32 },
-        },
-
-    -- front sign
-    F = { solid="front_w", l_peg="bottom" },
-
-    -- track
-    T = { solid="track", l_peg="bottom" },
-
-    -- light
-    L = { solid="wall", l_peg="bottom",
-          [4] = { l_tex="door", x_offset=72 },
-          [6] = { l_tex="door", x_offset=72 }
-        },
-
-    M = { solid="wall", l_peg="bottom",
-          [4] = { l_tex="door", x_offset=88 },
-          [6] = { l_tex="door", x_offset=88 }
-        },
-  },
-},
-
-DOOR_EXIT_WIDE =
-{
-  copy="DOOR_EXIT",
-
-  structure =
-  {
-    "FFFFssssFFFF",
-    "###MssssL###",
-    "###TddddT###",
-    "###LssssM###",
-  },
-},
-
-DOOR_EXIT_W_SIGN =
-{
-  copy="DOOR_EXIT",
-
-  structure =
-  {
-    "##ssss##",
-    "##sXXs##",
-    "##ssss##",
-    "#MssssL#",
-    "#TddddT#",
-    "#LssssM#",
-    "##sXXs##",
-    "##ssss##",
-  },
-},
-
-
-EXIT_SIGN_CEIL =
-{
-  region="ceil",
-  environment="indoor",
-  height_range={ 80,160 },
-
-  structure =
-  {
-    "....",
-    "....",
-    ".XX.",
-    "....",
-  },
-
-  elements =
-  {
-    -- sign
-    X = { c_h=-16, u_tex="exit_w", c_tex="exit_c", u_peg="top",
-          [4] = { x_offset=32 }, [6] = { x_offset=32 },
-        },
-  },
-},
-
-EXIT_SIGN_FLOOR =
-{
-  region="floor",
-
-  structure =
-  {
-    "....",
-    "....",
-    ".XX.",
-    "....",
-  },
-
-  elements =
-  {
-    -- sign
-    X = { f_h=16, l_tex="exit_w", f_tex="exit_c", l_peg="top",
-          [4] = { x_offset=32 }, [6] = { x_offset=32 },
-        },
-  },
-},
-
-
 BARS_1 =
 {
   structure =
@@ -600,6 +491,258 @@ BARS_NARROW =
     "#ssBBss#",
     "#ssBBss#",
     "#ssssss#",
+  },
+},
+
+
+------ Exit Stuff ------------------------------------
+
+EXIT_DOOR =
+{
+  structure =
+  {
+    "##ssss##",
+    "#MssssL#",
+    "#TddddT#",
+    "#LssssM#",
+  },
+
+  elements =
+  {
+    -- steps
+    s = { f_h=8, c_rel="door_top", c_h=8,
+          f_tex="frame_floor", c_tex="frame_ceil", l_tex="step",
+          l_peg="top", light=224
+        },
+
+    -- door
+    d = { copy="s", c_rel="floor", c_h=8, u_tex="door", c_tex = "door_c",
+          kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
+        },
+
+    -- sign
+    X = { copy="s", u_tex="exit_w", c_rel="door_top", c_h=-8,
+          c_tex="exit_c", u_peg="top",
+          [4] = { x_offset=32 }, [6] = { x_offset=32 },
+        },
+
+    -- front sign
+    F = { solid="front_w", l_peg="bottom" },
+
+    -- track
+    T = { solid="track", l_peg="bottom" },
+
+    -- light
+    L = { solid="wall", l_peg="bottom",
+          [4] = { l_tex="door", x_offset=72 },
+          [6] = { l_tex="door", x_offset=72 }
+        },
+
+    M = { solid="wall", l_peg="bottom",
+          [4] = { l_tex="door", x_offset=88 },
+          [6] = { l_tex="door", x_offset=88 }
+        },
+  },
+},
+
+EXIT_DOOR_WIDE =
+{
+  copy="EXIT_DOOR",
+
+  structure =
+  {
+    "FFFFssssFFFF",
+    "###MssssL###",
+    "###TddddT###",
+    "###LssssM###",
+  },
+},
+
+EXIT_DOOR_W_SIGN =
+{
+  copy="EXIT_DOOR",
+
+  structure =
+  {
+    "##ssss##",
+    "##sXXs##",
+    "##ssss##",
+    "#MssssL#",
+    "#TddddT#",
+    "#LssssM#",
+    "##sXXs##",
+    "##ssss##",
+  },
+},
+
+EXIT_SIGN_CEIL =
+{
+  region="ceil",
+  environment="indoor",
+  height_range={ 80,160 },
+
+  structure =
+  {
+    "....",
+    "....",
+    ".XX.",
+    "....",
+  },
+
+  elements =
+  {
+    -- sign
+    X = { c_h=-16, u_tex="exit_w", c_tex="exit_c", u_peg="top",
+          [4] = { x_offset=32 }, [6] = { x_offset=32 },
+        },
+  },
+},
+
+EXIT_SIGN_FLOOR =
+{
+  region="floor",
+
+  structure =
+  {
+    "....",
+    "....",
+    ".XX.",
+    "....",
+  },
+
+  elements =
+  {
+    -- sign
+    X = { f_h=16, l_tex="exit_w", f_tex="exit_c", l_peg="top",
+          [4] = { x_offset=32 }, [6] = { x_offset=32 },
+        },
+  },
+},
+
+EXIT_HOLE_ROUND =
+{
+  add_mode="island",
+
+  structure =
+  {
+    "............",
+    "............",
+    "............",
+    "............",
+    "....jihg....",
+    "....kzzf....",
+    "....mzze....",
+    "....abcd....",
+    "............",
+    "............",
+    "............",
+    "............",
+  },
+
+  elements =
+  {
+    z = {  f_tex="hole_f", f_h=-16, },
+
+    a = { copy="z",
+          [1] = { dx=-12, dy=-12 }, [7] = { dx=-24, dy=-8 },
+          [2] = { x_offset=336 }, [4] = { x_offset=313 },
+        },
+    b = { copy="z",
+          [1] = { dx=-8, dy=-24 },
+          [2] = { x_offset=359 },
+        },
+    c = { copy="z",
+          [1] = { dx=  0, dy=-29 },
+          [2] = { x_offset=  0 },
+        },
+
+    d = { copy="z",
+          [3] = { dx=12, dy=-12 }, [1] = { dx=8, dy=-24 },
+          [6] = { x_offset= 48 }, [2] = { x_offset= 25 },
+        },
+    e = { copy="z",
+          [3] = { dx=24, dy=-8 },
+          [6] = { x_offset= 71 },
+        },
+    f = { copy="z",
+          [3] = { dx=29, dy= 0 },
+          [6] = { x_offset= 96 },
+        },
+
+    g = { copy="z",
+          [9] = { dx=12, dy=12 }, [3] = { dx=24, dy=8 },
+          [8] = { x_offset=144 }, [6] = { x_offset=121 },
+        },
+    h = { copy="z",
+          [9] = { dx=8, dy=24 },
+          [8] = { x_offset=167 },
+        },
+    i = { copy="z",
+          [9] = { dx= 0, dy=29 },
+          [8] = { x_offset=192 },
+        },
+
+    j = { copy="z",
+          [7] = { dx=-12, dy=12 }, [9] = { dx=-8, dy=24 },
+          [4] = { x_offset=240 }, [8] = { x_offset=217 },
+        },
+    k = { copy="z",
+          [7] = { dx=-24, dy=8 },
+          [4] = { x_offset=263 },
+        },
+    m = { copy="z",
+          [7] = { dx=-29, dy= 0 },
+          [4] = { x_offset=288 },
+        },
+  },
+},
+
+EXIT_DEATHMATCH =
+{
+  structure =
+  {
+    "############",
+    "##iiWWWWii##",
+    "##iiiiiiii##",
+    "##iiiiiiii##",
+    "##iiiiiiii##",
+    "##iiiiiiii##",
+    "##iiiiiiii##",
+    "##iiiiiiii##",
+    "##iiiiiiii##",
+    "####ssss####",
+    "###TddddT###",
+    "####ssss####",
+  },
+
+  elements =
+  {
+    -- inside area
+    i = { f_h=0, c_rel="floor", c_h=80, },
+
+    -- step
+    s = { f_h=8, c_rel="door_top_h", c_h=8,
+          f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
+          l_peg="top", light=224
+        },
+
+    -- door
+    d = { copy="s", c_rel="floor", c_h=8,
+          u_tex="door_w", c_tex="door_c",
+          u_peg="bottom", l_peg="bottom",
+          kind="door_kind", tag="tag",
+        },
+
+    -- track
+    T = { solid="track_w", l_peg="bottom" },
+
+    -- switch
+    W = { copy="i", f_h=72, f_tex="switch_f",
+          l_tex="side_w", l_peg="top",
+
+          [2] = { l_tex="switch_w", l_peg="top", y_offset="switch_yy",
+                  kind="switch_kind", tag="tag" },
+        },
   },
 },
 
@@ -780,6 +923,18 @@ SWITCH_NICHE_TINY =
     M = { solid="wall", [4] = { l_tex="side_w" } },
   },
 },
+
+
+------ Wall Stuff ------------------------------------
+
+--[[ TODO
+WALL_LAMP =
+{
+},
+--]]
+
+-- TODO: WALL_PIC
+
 
 
 ------ Decorative I ------------------------------------
@@ -1854,6 +2009,8 @@ PILLAR_LIGHT3 =
 
 PILLAR_ROUND_SMALL =
 {
+  add_mode="island",
+
   structure =
   {
     "....",
@@ -1881,6 +2038,8 @@ PILLAR_ROUND_SMALL =
 
 PILLAR_ROUND_MEDIUM =
 {
+  add_mode="island",
+
   structure =
   {
     "........",
@@ -1951,6 +2110,8 @@ PILLAR_ROUND_MEDIUM =
 
 PILLAR_ROUND_LARGE =
 {
+  add_mode="island",
+
   structure =
   {
     "............",
@@ -2019,82 +2180,6 @@ PILLAR_ROUND_LARGE =
     m = { solid="wall",
           [7] = { dx=-49, dy= 0 },
           [4] = { x_offset=384 },
-        },
-  },
-},
-
-EXIT_HOLE_ROUND =
-{
-  structure =
-  {
-    "............",
-    "............",
-    "............",
-    "............",
-    "....jihg....",
-    "....kzzf....",
-    "....mzze....",
-    "....abcd....",
-    "............",
-    "............",
-    "............",
-    "............",
-  },
-
-  elements =
-  {
-    z = {  f_tex="hole_f", f_h=-16, },
-
-    a = { copy="z",
-          [1] = { dx=-12, dy=-12 }, [7] = { dx=-24, dy=-8 },
-          [2] = { x_offset=336 }, [4] = { x_offset=313 },
-        },
-    b = { copy="z",
-          [1] = { dx=-8, dy=-24 },
-          [2] = { x_offset=359 },
-        },
-    c = { copy="z",
-          [1] = { dx=  0, dy=-29 },
-          [2] = { x_offset=  0 },
-        },
-
-    d = { copy="z",
-          [3] = { dx=12, dy=-12 }, [1] = { dx=8, dy=-24 },
-          [6] = { x_offset= 48 }, [2] = { x_offset= 25 },
-        },
-    e = { copy="z",
-          [3] = { dx=24, dy=-8 },
-          [6] = { x_offset= 71 },
-        },
-    f = { copy="z",
-          [3] = { dx=29, dy= 0 },
-          [6] = { x_offset= 96 },
-        },
-
-    g = { copy="z",
-          [9] = { dx=12, dy=12 }, [3] = { dx=24, dy=8 },
-          [8] = { x_offset=144 }, [6] = { x_offset=121 },
-        },
-    h = { copy="z",
-          [9] = { dx=8, dy=24 },
-          [8] = { x_offset=167 },
-        },
-    i = { copy="z",
-          [9] = { dx= 0, dy=29 },
-          [8] = { x_offset=192 },
-        },
-
-    j = { copy="z",
-          [7] = { dx=-12, dy=12 }, [9] = { dx=-8, dy=24 },
-          [4] = { x_offset=240 }, [8] = { x_offset=217 },
-        },
-    k = { copy="z",
-          [7] = { dx=-24, dy=8 },
-          [4] = { x_offset=263 },
-        },
-    m = { copy="z",
-          [7] = { dx=-29, dy= 0 },
-          [4] = { x_offset=288 },
         },
   },
 },
