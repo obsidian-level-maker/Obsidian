@@ -930,6 +930,12 @@ DM_THEMES =
     {
       BROWN1=50, SP_ROCK=5,
     },
+
+    monster_prefs =
+    {
+      zombie=2.0, shooter=2.0, gunner=2.0,
+      barrel=2.0,
+    },
   },
 
 
@@ -950,6 +956,11 @@ DM_THEMES =
     hallway_probs=
     {
       BROWN1=50, BLUECARPET=10
+    },
+
+    monster_prefs =
+    {
+      caco=2.0, barrel=5.0,
     },
   },
 
@@ -972,6 +983,12 @@ DM_THEMES =
     {
       BLUECARPET=60, BROWN1=15,
     },
+
+    monster_prefs =
+    {
+      zombie=2.0, shooter=2.0, gunner=2.0,
+      barrel=3.7,
+    },
   },
 
 
@@ -992,6 +1009,11 @@ DM_THEMES =
     hallway_probs=
     {
       SP_ROCK=40, BROWN1=20
+    },
+
+    monster_prefs =
+    {
+      demon=2.5, knight=2.0, baron=2.0, pain=2.0,
     },
   },
 
@@ -1016,6 +1038,12 @@ DM_THEMES =
     },
 
     room_heights = { [96]=50, [128]=50 }
+
+    monster_prefs =
+    {
+      imp=3.0, skull=2.0, revenant=2.0,
+      barrel=0.1,
+    },
   },
 
   HELL =
@@ -1036,6 +1064,12 @@ DM_THEMES =
     {
       BROWN1=20, SP_ROCK=40,
     },
+
+    monster_prefs =
+    {
+      zombie=0.2, shooter=0.5, gunner=0.5,
+      spectre=2.0, vile=2.0, arach=2.0,
+    },
   },
 }
 
@@ -1054,19 +1088,19 @@ DM_THEMES =
 DM_MONSTERS =
 {
   -- FIXME: probs for CLOSET/DEPOT
-  zombie    = { prob=81, r=20,h=56, hp=20,  dm=4,  fp=10, cage_fallback=14, hitscan=true, },
-  shooter   = { prob=41, r=20,h=56, hp=30,  dm=10, fp=10, cage_prob= 8, hitscan=true, },
+  zombie    = { prob=60, r=20,h=56, hp=20,  dm=4,  fp=10, cage_fallback=14, hitscan=true, },
+  shooter   = { prob=40, r=20,h=56, hp=30,  dm=10, fp=10, cage_prob= 8, hitscan=true, },
 
-  imp       = { prob=90, r=20,h=56, hp=60,  dm=20, fp=20, cage_prob=50, },
-  caco      = { prob=90, r=31,h=56, hp=400, dm=45, fp=30, cage_prob=14, float=true },
+  imp       = { prob=80, r=20,h=56, hp=60,  dm=20, fp=20, cage_prob=50, },
+  caco      = { prob=80, r=31,h=56, hp=400, dm=45, fp=30, cage_prob=14, float=true },
   baron     = { prob=50, r=24,h=64, hp=1000,dm=45, fp=110,cage_prob= 3, },
 
   -- MELEE only monsters
-  demon     = { prob=80, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=66,melee=true },
+  demon     = { prob=60, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=66,melee=true },
   spectre   = { prob=20, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=40,melee=true },
   skull     = { prob=16, r=16,h=56, hp=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
  
-  barrel    = { prob=50, r=10,h=42, hp=15,  dm=2,  fp=5, melee=true, scenery=true },
+  barrel    = { prob=20, r=10,h=42, hp=10,  dm=2,  fp=5, melee=true, passive=true },
 }
 
 DM_BOSSES =
