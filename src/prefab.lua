@@ -881,6 +881,29 @@ SWITCH_NICHE_TINY =
 
 ------ Wall Stuff ------------------------------------
 
+WALL_LAMP_NARROW =
+{
+  structure =
+  {
+    "####",
+    "#ii#",
+    "#ii#",
+    "#ii#",
+  },
+
+  elements =
+  {
+    i = { f_rel="low_h", f_h=0, c_rel="high_h", c_h=0,
+          light=224
+        },
+  },
+
+  things =
+  {
+    { kind="lamp_t", x = 32, y = 24 },
+  },
+},
+
 WALL_LAMP =
 {
   structure =
