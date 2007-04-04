@@ -44,9 +44,7 @@ ARCH =
 
   elements =
   {
-    a = { f_h=0, c_rel="door_top", c_h=0,
-          l_tex="frame_w", f_tex="frame_f", c_tex="frame_c",
-        },
+    a = { f_h=0, c_rel="door_top", c_h=0, },
   },
 },
 
@@ -90,9 +88,7 @@ ARCH_ARCHED =
 
   elements =
   {
-    a = { f_h=0, c_rel="door_top", c_h=0,
-          l_tex="frame_w", f_tex="frame_f", c_tex="frame_c",
-        },
+    a = { f_h=0, c_rel="door_top", c_h=0, },
 
     b = { copy="a", c_h=-16 },
     c = { copy="a", c_h=-32 },
@@ -111,17 +107,13 @@ ARCH_TRUSS =
 
   elements =
   {
-    a = { f_h=0, c_rel="door_top", c_h=0,
-          l_tex="frame_w", f_tex="frame_f", c_tex="frame_c",
-        },
+    a = { f_h=0, c_rel="door_top", c_h=0, },
 
     B = { f_rel="door_top", f_h=0, c_rel="door_top", c_h=0,
           l_tex="beam_w",  f_tex="beam_c",
-          u_tex="frame_w", c_tex="frame_c"
         },
 
     C = { f_h=0, c_rel="door_top", c_h=-8,
-          l_tex="frame_w", f_tex="frame_f",
           u_tex="beam_w",  c_tex="beam_c", u_peg="top",
         }
   },
@@ -139,16 +131,13 @@ ARCH_RUSSIAN =
 
   elements =
   {
-    a = { f_h=0, c_rel="door_top", c_h=16,
-          l_tex="frame_w", f_tex="frame_f", c_tex="frame_c",
-        },
+    a = { f_h=0, c_rel="door_top", c_h=16, },
 
     s = { f_h=0, c_rel="door_top", c_h=0,
-          l_tex="support_w", u_tex="support_w", c_tex="support_c",
-          f_tex="frame_f", u_peg="top"
+          u_tex="beam_w", c_tex="beam_c", u_peg="top"
         },
 
-    B = { solid="support_w" },
+    B = { solid="beam_w" },
   },
 },
 
@@ -190,9 +179,7 @@ ARCH_CURVY =
 
   elements =
   {
-    a = { f_h=0, c_rel="door_top", c_h=0,
-          l_tex="frame_w", f_tex="frame_f", c_tex="frame_c",
-        },
+    a = { f_h=0, c_rel="door_top", c_h=0, },
 
     R = { solid="wall", [9]={ dx= 16,dy=0 }, [3]={ dx= 20,dy=0 } },
     S = { solid="wall", [7]={ dx=-16,dy=0 }, [1]={ dx=-20,dy=0 } },

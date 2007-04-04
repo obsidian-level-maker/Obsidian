@@ -2665,12 +2665,8 @@ if link.kind == "vista" then
 end
 local skin =
 {
---  wall="COMPBLUE",
---  frame="ROCK1", frame_c="RROCK13", -- frame_f="RROCK13",
-
+--  wall="ROCK1", ceil="RROCK13", -- floor="RROCK13",
   beam_w  = "WOOD1", beam_c = "FLAT5_2",
-  support_w = "WOOD1", support_c = "FLAT5_2",
-  test_t = "lamp"
 }
 
 B_prefab(p,c, fab, skin, parm, link.build.rmodel,D.theme, link.x1, link.y1, side)
