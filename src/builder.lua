@@ -4185,26 +4185,6 @@ end
     end -- for pass
   end
 
-  local function build_void_space(c)
-
---!!!!!!    reclaim_areas(c)
-    
-    for kx = 1,3 do for ky = 1,3 do
-      local K = c.chunks[kx][ky]
-      if K.kind == "empty" then
---!!!        void_up_chunk(c, K)
-        gap_fill(p, c, K.x1,K.y1, K.x2,K.y2,
-          c.rmodel, { f_h=c.f_max+32 })
-      elseif K.r_deep then
-        gap_fill(p, c, K.rx1,K.ry1, K.rx2,K.ry2,
-          c.rmodel, { f_h=c.f_max+32 })
---!!!        { solid=c.combo.void })
----     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
----        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
-      end
-    end end
-  end
-
   local function get_vista_coords(c, side, link, other)
 
     local x1, y1, x2, y2
@@ -4745,6 +4725,30 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
   end
 
 
+  ---=== build_cell ===---
+
+  if c.scenic == "solid" then
+    fill(p,c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.combo.void })
+    return
+  end
+
+  -- elevator exits are done in build_link   FIXME: CHANGE
+  if THEME.caps.elevator_exits and c.is_exit then return end
+
+  decide_sky_lights(c)
+
+  build_vistas(c)
+
+  mark_links(c)
+
+  build_stairs(c)
+
+  reclaim_areas(c)
+end
+
+
+function tizzy_up_room(p, c)
+
   local function block_is_free(B)
     if not B.chunk then return false end
     if B.solid or B.f_tex or B.fragments then return false end
@@ -5199,85 +5203,64 @@ con.debugf("add_scenery : %s\n", item)
     fab_mark_walkable(c, x, y, 8, 1,1, 4)
   end
 
-  local function tizzy_up_room(c)
 
-    -- the order here is important, earlier items may cause
-    -- later items to no longer fit.
+  --====| tizzy_up_room |====--
 
-    -- PLAYERS
-    if not p.deathmatch and c == p.quests[1].first then
-      for i = 1,sel(settings.mode == "coop",4,1) do
-        add_player(c, "player" .. tostring(i))
-      end
 
-    elseif p.deathmatch and (c.require_player or rand_odds(50)) then
-      add_player(c, "dm_player")
+  -- the order here is important, earlier items may cause
+  -- later items to no longer fit.
+
+  -- PLAYERS
+  if not p.deathmatch and c == p.quests[1].first then
+    for i = 1,sel(settings.mode == "coop",4,1) do
+      add_player(c, "player" .. tostring(i))
     end
 
-    if p.deathmatch and c.x==2 and not p.have_sp_player then
-      add_player(c, "player1")
-      p.have_sp_player = true
+  elseif p.deathmatch and (c.require_player or rand_odds(50)) then
+    add_player(c, "dm_player")
+  end
+
+  if p.deathmatch and c.x==2 and not p.have_sp_player then
+    add_player(c, "player1")
+    p.have_sp_player = true
+  end
+
+  -- QUEST ITEM
+  if not p.deathmatch and c == c.quest.last then
+    if (c.quest.kind == "key") or
+       (c.quest.kind == "weapon") or
+       (c.quest.kind == "item")
+    then
+      add_object(c, c.quest.item, "must")
+
+    elseif (c.quest.kind == "switch") or
+           (c.quest.kind == "exit")
+    then
+      add_switch(c)
     end
+  elseif p.deathmatch and (c.require_weapon or rand_odds(75)) then
+    add_dm_weapon(c)
+  end
 
-    -- QUEST ITEM
-    if not p.deathmatch and c == c.quest.last then
-      if (c.quest.kind == "key") or
-         (c.quest.kind == "weapon") or
-         (c.quest.kind == "item")
-      then
-        add_object(c, c.quest.item, "must")
+  -- TODO: 'room switch'
 
-      elseif (c.quest.kind == "switch") or
-             (c.quest.kind == "exit")
-      then
-        add_switch(c)
-      end
-    elseif p.deathmatch and (c.require_weapon or rand_odds(75)) then
+  if p.deathmatch then
+    -- secondary DM PLAYER
+    if rand_odds(30) then
+      add_object(c, "dm_player")
+    end
+    -- secondary DM WEAPON
+    if rand_odds(15) then
       add_dm_weapon(c)
     end
-
-    -- TODO: 'room switch'
-
-    if p.deathmatch then
-      -- secondary DM PLAYER
-      if rand_odds(30) then
-        add_object(c, "dm_player")
-      end
-      -- secondary DM WEAPON
-      if rand_odds(15) then
-        add_dm_weapon(c)
-      end
-    end
-
-    -- SCENERY
-    for loop = 1,4 do
-      add_scenery(c)
-    end
   end
 
-  ---=== build_cell ===---
-
-  if c.scenic == "solid" then
-    fill(p,c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.combo.void })
-    return
+  -- SCENERY
+  for loop = 1,4 do
+    add_scenery(c)
   end
-
-  -- elevator exits are done in build_link
-  if THEME.caps.elevator_exits and c.is_exit then return end
-
-  decide_sky_lights(c)
-
-  build_vistas(c)
-
-  mark_links(c)
-
-  build_stairs(c)
-
-  build_void_space(c)
-
-  tizzy_up_room(c)
-
 end
+
 
 function build_rooms(p)
 
@@ -5290,7 +5273,6 @@ function build_rooms(p)
       end end
     end end
   end
-
   
   local function GAP_FILL_ROOM(p, c)
     
@@ -5340,6 +5322,24 @@ function build_rooms(p)
     end end
   end
 
+  local function build_void_space(c)
+
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.kind == "empty" then
+--!!!        void_up_chunk(c, K)
+        gap_fill(p, c, K.x1,K.y1, K.x2,K.y2,
+          c.rmodel, { f_h=c.f_max+32 })
+      elseif K.r_deep then
+        gap_fill(p, c, K.rx1,K.ry1, K.rx2,K.ry2,
+          c.rmodel, { f_h=c.f_max+32 })
+--!!!        { solid=c.combo.void })
+---     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
+---        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
+      end
+    end end
+  end
+
   -- build_rooms --
 
   for zzz,cell in ipairs(p.all_cells) do
@@ -5348,6 +5348,14 @@ function build_rooms(p)
 
   for zzz,cell in ipairs(p.all_cells) do
     build_cell(p, cell)
+  end
+
+  for zzz,cell in ipairs(p.all_cells) do
+    build_void_space(cell)
+  end
+
+  for zzz,cell in ipairs(p.all_cells) do
+    tizzy_up_room(p, cell)
   end
 
   for zzz,cell in ipairs(p.all_cells) do
