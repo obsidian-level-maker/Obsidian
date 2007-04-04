@@ -326,12 +326,12 @@ FAB_DIRECTION_MAP =
   [16] = { 1,4,7, 2,5,8, 3,6,9 },
 }
 
-function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y)
+function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
   -- (x,y) is always the block with the lowest coordinate.
   -- dir == 8 is the natural mode, other values rotate it.
 
-  assert(fab and skin and parm and theme)
+  assert(fab and skin and parm and combo)
 
   local focus = p.blocks[x][y]
   if focus and focus.rmodel then
@@ -438,10 +438,10 @@ function B_prefab(p, c, fab, skin, parm, model,theme, x,y, dir,mirror_x,mirror_y
     if skin[key] then return skin[key] end
     if parm[key] then return parm[key] end
 
-    if key == "sky" and theme.outdoor then return THEME.SKY_TEX end
+    if key == "sky" and combo.outdoor then return THEME.SKY_TEX end
 
     if skin[base]  then return skin[base] end
-    if theme[base] then return theme[base] end
+    if combo[base] then return combo[base] end
 
     error("Unknown texture ref in prefab: " .. key)
   end
@@ -644,10 +644,10 @@ function B_stair(p,c, rmodel, bx,by, dir, long, deep, step)
       rmodel = rmodel,
 
       f_h   = z,
-      f_tex = c.theme.step_floor or rmodel.f_tex,
+      f_tex = c.combo.step_floor or rmodel.f_tex,
       l_tex = rmodel.l_tex,
 
-      [out_dir] = { l_tex=c.theme.step, l_peg="top" },
+      [out_dir] = { l_tex=c.combo.step, l_peg="top" },
 
       [xo_dir1] = { x_offset= i*16 },
       [xo_dir2] = { x_offset=-i*16 },
@@ -681,8 +681,8 @@ function B_lift(p,c, rmodel, bx,by, z, dir, long, deep)
     rmodel = rmodel,
 
     f_h = z,
-    f_tex = c.theme.lift_floor or THEME.mats.LIFT.floor,
-    l_tex = c.theme.lift or THEME.mats.LIFT.wall,
+    f_tex = c.combo.lift_floor or THEME.mats.LIFT.floor,
+    l_tex = c.combo.lift or THEME.mats.LIFT.wall,
 
     lift_kind = 123,  -- 62 for slower kind
     lift_walk = 120,  -- 88 for slower kind
@@ -730,7 +730,7 @@ function B_double_pedestal(p, c, bx, by, base, ped_info, overrides)
     kind = ped_info.glow2 and 8 -- GLOW TYPE  (FIXME)
   }
 
-  if c.theme.outdoor then
+  if c.combo.outdoor then
     OUTER.c_h   = c.rmodel.c_h
     OUTER.c_tex = c.rmodel.c_tex
 
@@ -759,7 +759,7 @@ function B_double_pedestal(p, c, bx, by, base, ped_info, overrides)
 end
 
 
-function cage_select_height(p,c, kind, theme,rail, floor_h, ceil_h)
+function cage_select_height(p,c, kind, rail, floor_h, ceil_h)
 
   if c[kind] and c[kind].z >= floor_h and rand_odds(80) then
     return c[kind].z, c[kind].open_top
@@ -802,7 +802,7 @@ function B_pillar_cage(p,c, theme, kx,ky, bx,by)
 
   local kind = sel(kx==2 and ky==2, "middle_cage", "pillar_cage")
 
-  local z, open_top = cage_select_height(p,c, kind, theme,rail, K.rmodel.f_h,K.rmodel.c_h)
+  local z, open_top = cage_select_height(p,c, kind, rail, K.rmodel.f_h,K.rmodel.c_h)
 
   if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
     open_top = true
@@ -848,10 +848,10 @@ function B_monster_closet(p,c, K,kx,ky, z, tag)
   {
     f_h = z,
 
-    --!! c_tex = c.theme.arch_ceil or c.rmodel.f_tex,
+    --!! c_tex = c.combo.arch_ceil or c.rmodel.f_tex,
 
-    l_tex = c.theme.void,
-    u_tex = c.theme.void,
+    l_tex = c.combo.void,
+    u_tex = c.combo.void,
 
     is_cage = true,
   })
@@ -859,7 +859,7 @@ function B_monster_closet(p,c, K,kx,ky, z, tag)
   local OUTER = copy_block_with_new(INNER,
   {
     c_h   = INNER.f_h,
-    c_tex = c.theme.arch_ceil or INNER.f_tex,
+    c_tex = c.combo.arch_ceil or INNER.f_tex,
     tag   = tag,
   })
 
@@ -878,7 +878,7 @@ end
 --
 -- The 'kind' value can be: "solid", "frame", "open", "wire"
 --
-function B_vista(p,c, x1,y1, x2,y2, side, theme,kind)
+function B_vista(p,c, x1,y1, x2,y2, side, combo,kind)
 
   local other = neighbour_by_side(p,c,side)
   assert(other)
@@ -889,13 +889,13 @@ function B_vista(p,c, x1,y1, x2,y2, side, theme,kind)
   local ROOM   = copy_block(c.rmodel)
   local WINDOW = copy_block(c.rmodel)
 
-  ROOM.l_tex = theme.wall
-  ROOM.u_tex = theme.wall
-  ROOM.c_tex = theme.ceil
+  ROOM.l_tex = combo.wall
+  ROOM.u_tex = combo.wall
+  ROOM.c_tex = combo.ceil
 
-  WINDOW.l_tex = theme.wall
-  WINDOW.u_tex = theme.wall
-  WINDOW.c_tex = theme.ceil
+  WINDOW.l_tex = combo.wall
+  WINDOW.u_tex = combo.wall
+  WINDOW.c_tex = combo.ceil
 
   ROOM.light   = other.rmodel.light
   WINDOW.light = other.rmodel.light
@@ -907,30 +907,30 @@ function B_vista(p,c, x1,y1, x2,y2, side, theme,kind)
 
   if kind == "open" or kind == "wire" or kind == "fall_over" then
     ROOM.c_h   = other.rmodel.c_h
-    ROOM.c_tex = other.theme.ceil
+    ROOM.c_tex = other.combo.ceil
   
     WINDOW.c_h   = other.rmodel.c_h
-    WINDOW.c_tex = other.theme.ceil
+    WINDOW.c_tex = other.combo.ceil
 
   elseif kind == "frame" then
     ROOM.c_h   = other.rmodel.c_h
-    ROOM.c_tex = other.theme.ceil
+    ROOM.c_tex = other.combo.ceil
   
     WINDOW.c_h = ROOM.c_h - 24
-    WINDOW.c_tex = sel(theme.outdoor, theme.floor, theme.ceil)
+    WINDOW.c_tex = sel(combo.outdoor, combo.floor, combo.ceil)
     WINDOW.light = other.rmodel.light - 16
 
   else -- "solid"
     local h = rand_index_by_probs { 20, 80, 20, 40 }
     ROOM.c_h   = ROOM.f_h + 96 + (h-1)*32
-    ROOM.c_tex = sel(theme.outdoor, theme.floor, theme.ceil)
+    ROOM.c_tex = sel(combo.outdoor, combo.floor, combo.ceil)
 
     if ROOM.c_h > other.sky_h then
        ROOM.c_h = math.max(other.sky_h, ROOM.f_h + 96)
     end
 
     WINDOW.c_h = ROOM.f_h + 96
-    WINDOW.c_tex = sel(theme.outdoor, theme.floor, theme.ceil)
+    WINDOW.c_tex = sel(combo.outdoor, combo.floor, combo.ceil)
 
     ROOM.light   = other.rmodel.light - 32
     WINDOW.light = other.rmodel.light - 16
@@ -1001,7 +1001,7 @@ function B_vista(p,c, x1,y1, x2,y2, side, theme,kind)
   --- pillars ---
   if kind == "solid" or kind == "frame" then
 
-    local support = theme.wall  -- FIXME: "SUPPORT2"
+    local support = combo.wall  -- FIXME: "SUPPORT2"
     
     frag_fill(p,c, px1,py1, px1,py1, { solid=support })
     frag_fill(p,c, px2,py2, px2,py2, { solid=support })
@@ -1045,7 +1045,7 @@ function B_exit_elevator(p, c, x, y, side)
   elseif side == 6 then x=x-fab.deep+1; y=y-1
   end
 
-  B_prefab(p, c, fab, skin, parm, c.rmodel,c.theme, x, y, dir)
+  B_prefab(p, c, fab, skin, parm, c.rmodel,c.combo, x, y, dir)
 end
 
 
@@ -1117,24 +1117,24 @@ function setup_rmodel(p, c)
   c.rmodel =
   {
     f_h=c.floor_h,
-    f_tex=c.theme.floor,
-    l_tex=c.theme.wall,
+    f_tex=c.combo.floor,
+    l_tex=c.combo.wall,
 
     c_h=c.ceil_h,
-    c_tex=c.theme.ceil,
-    u_tex=c.theme.wall,
+    c_tex=c.combo.ceil,
+    u_tex=c.combo.wall,
 
     light=c.light,
 
     floor_code=c.floor_code,
   }
 
-  if c.theme.outdoor then
+  if c.combo.outdoor then
     c.rmodel.c_tex = THEME.SKY_TEX
   end
 
   if not c.rmodel.light then
-    c.rmodel.light = sel(c.theme.outdoor, 192, 144)
+    c.rmodel.light = sel(c.combo.outdoor, 192, 144)
   end
 
   c.mark = allocate_mark(p)
@@ -1828,7 +1828,7 @@ function make_chunks(p)
     local kinds = { "room", "void", "flush", "cage", "liquid" }
     local probs = { 60, 10, 97, 5, 70 }
 
-    if not c.theme.outdoor then probs[2] = 15 end
+    if not c.combo.outdoor then probs[2] = 15 end
 
     if settings.mons == "less" then probs[4] = 3.2 end
     if settings.mons == "more" then probs[4] = 7.5 end
@@ -2362,70 +2362,70 @@ end
 
 function setup_borders_and_corners(p)
 
-  -- for each border and corner: decide on the type, the theme,
+  -- for each border and corner: decide on the type, the combo,
   -- and which cell is ultimately responsible for building it.
 
-  local function border_theme(cells)
+  local function border_combo(cells)
     assert(#cells >= 1)
 
-    if #cells == 1 then return cells[1].theme end
+    if #cells == 1 then return cells[1].combo end
 
     for zzz,c in ipairs(cells) do
-      if c.is_exit then return c.theme end
+      if c.is_exit then return c.combo end
     end
 
 --[[    for zzz,c in ipairs(cells) do
-      if c.scenic == "solid" then return c.theme end
+      if c.scenic == "solid" then return c.combo end
     end
 --]]
-    local themes = {}
+    local combos = {}
     local hall_num = 0
 
     for zzz,c in ipairs(cells) do
       if c.hallway then hall_num = hall_num + 1 end
-      table.insert(themes, c.theme)
+      table.insert(combos, c.combo)
     end
   
     -- when some cells are hallways and some are not, we
-    -- upgrade the hallways to their "outer" theme.
+    -- upgrade the hallways to their "outer" combo.
 
     if (hall_num > 0) and (#cells - hall_num > 0) then
-      for idx = 1,#themes do
+      for idx = 1,#combos do
         if cells[idx].hallway then
-          themes[idx] = cells[idx].quest.theme
+          combos[idx] = cells[idx].quest.combo
         end
       end
     end
 
     -- when some cells are outdoor and some are indoor,
-    -- remove the outdoor themes from consideration.
+    -- remove the outdoor combos from consideration.
 
     local out_num = 0
 
-    for zzz,T in ipairs(themes) do
+    for zzz,T in ipairs(combos) do
       if T.outdoor then out_num = out_num + 1 end
     end
     
-    if (out_num > 0) and (#themes - out_num > 0) then
-      for idx = #themes,1,-1 do
-        if themes[idx].outdoor then
-          table.remove(themes, idx)
+    if (out_num > 0) and (#combos - out_num > 0) then
+      for idx = #combos,1,-1 do
+        if combos[idx].outdoor then
+          table.remove(combos, idx)
         end
       end
     end
 
-    if #themes >= 2 then
-      table.sort(themes, function(t1, t2) return t1.mat_pri < t2.mat_pri end)
+    if #combos >= 2 then
+      table.sort(combos, function(t1, t2) return t1.mat_pri < t2.mat_pri end)
     end
 
-    return themes[1]
+    return combos[1]
   end
 
 
   local function border_kind(c1, c2, side)
 
     if not c2 or c2.is_depot then
-      if c1.theme.outdoor and THEME.caps.sky then return "sky" end
+      if c1.combo.outdoor and THEME.caps.sky then return "sky" end
       return "solid"
     end
 
@@ -2445,7 +2445,7 @@ function setup_borders_and_corners(p)
     -- fencing anyone?   FIXME: move tests into Planner
     local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
 
-    if (c1.theme.outdoor == c2.theme.outdoor) and
+    if (c1.combo.outdoor == c2.combo.outdoor) and
        (not c1.is_exit  and not c2.is_exit) and
        (not c1.is_depot and not c2.is_depot) and diff_h > 64
     then
@@ -2453,7 +2453,7 @@ function setup_borders_and_corners(p)
         return "fence"
       end
 
-      if dual_odds(c1.theme.outdoor, 60, 7) then
+      if dual_odds(c1.combo.outdoor, 60, 7) then
         return "fence"
       end
     end
@@ -2476,7 +2476,7 @@ function setup_borders_and_corners(p)
 
     local other = neighbour_by_side(p,c, side)
 
-    D.theme = border_theme(D.cells)
+    D.combo = border_combo(D.cells)
     D.kind  = border_kind (c, other, side)
   end
 
@@ -2486,7 +2486,7 @@ function setup_borders_and_corners(p)
     if E.build then return end -- already done
 
     E.build = c
-    E.theme = border_theme(E.cells)
+    E.combo = border_combo(E.cells)
     E.kind  = "solid"
   end
 
@@ -2550,7 +2550,7 @@ function build_borders(p)
         parm.tag = link.quest.tag + 1
         parm.door_kind = 0
 
-        door_info.skin.frame_ceil = D.theme.floor
+        door_info.skin.frame_ceil = D.combo.floor
 
       elseif link.quest and link.quest.kind == "switch" then
         door_info.prefab = "DOOR_LOCKED" --FIXME: wrong wrong wrong
@@ -2578,7 +2578,7 @@ function build_borders(p)
     local fab = PREFABS[door_info.prefab]
     assert(fab)
 
-    B_prefab(p,c, fab, door_info.skin, parm, link.build.rmodel,D.theme, link.x1, link.y1, side)
+    B_prefab(p,c, fab, door_info.skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
   end
 
   local function blocky_door( link, side, double_who )
@@ -2597,8 +2597,8 @@ function build_borders(p)
     
     if bit and bit.lock_side then
       side_tex = bit.lock_side
-    elseif not bit and D.theme.door_side then
-      side_tex = D.theme.door_side
+    elseif not bit and D.combo.door_side then
+      side_tex = D.combo.door_side
     end
 
     if side_tex then
@@ -2658,7 +2658,7 @@ local parm =
   door_top = math.min(link.build.rmodel.c_h-32, link.build.floor_h+128),
   door_kind = 1, tag = 0,
 
-  frame_c = D.theme.floor
+  frame_c = D.combo.floor
 }
 if link.kind == "vista" then
   parm.frame_f = link.build.rmodel.f_tex
@@ -2669,7 +2669,7 @@ local skin =
   beam_w  = "WOOD1", beam_c = "FLAT5_2",
 }
 
-B_prefab(p,c, fab, skin, parm, link.build.rmodel,D.theme, link.x1, link.y1, side)
+B_prefab(p,c, fab, skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
 return
 end
 
@@ -2681,6 +2681,8 @@ copy_block_with_new(link.build.rmodel,
 return
 end
 
+---- OLD STUFF FROM HERE (Need to MERGE IT) --------
+
     -- DIR here points to center of current cell
     local dir = 10-side  -- FIXME: remove
 
@@ -2690,7 +2692,7 @@ end
     assert(other)
 
 
-    local b_theme = D.theme
+    local b_combo = D.combo
 
     local x, y
     local dx, dy = dir_to_delta(dir)
@@ -2726,15 +2728,15 @@ end
     if (link.kind == "arch" or link.kind == "falloff") then
 
       local ex, ey = x + ax*(long-1), y + ay*(long-1)
-      local tex = b_theme.wall
+      local tex = b_combo.wall
 
       -- sometimes leave it empty
       if D.kind == "wire" then link.arch_rand = link.arch_rand * 4 end
 
       if link.kind == "arch" and link.where ~= "wide" and
-        c.theme.outdoor == other.theme.outdoor and
-        ((c.theme.outdoor and link.arch_rand < 50) or
-         (not c.theme.outdoor and link.arch_rand < 10))
+        c.combo.outdoor == other.combo.outdoor and
+        ((c.combo.outdoor and link.arch_rand < 50) or
+         (not c.combo.outdoor and link.arch_rand < 10))
       then
         local sec = copy_block(c.rmodel)
 sec.f_tex = "FWATER1"
@@ -2746,8 +2748,8 @@ sec.f_tex = "FWATER1"
 
       local arch = copy_block(c.rmodel)
       arch.c_h = math.min(c.ceil_h-32, other.ceil_h-32, c.floor_h+128)
-      arch.f_tex = c.theme.arch_floor or c.rmodel.f_tex
-      arch.c_tex = c.theme.arch_ceil  or arch.f_tex
+      arch.f_tex = c.combo.arch_floor or c.rmodel.f_tex
+      arch.c_tex = c.combo.arch_ceil  or arch.f_tex
 arch.f_tex = "TLITE6_6"
 
       if (arch.c_h - arch.f_h) < 64 then
@@ -2756,7 +2758,7 @@ arch.f_tex = "TLITE6_6"
 
       if c.hallway and other.hallway then
         arch.light = (c.rmodel.light + other.rmodel.light) / 2.0
-      elseif c.theme.outdoor then
+      elseif c.combo.outdoor then
         arch.light = arch.light - 32
       else
         arch.light = arch.light - 16
@@ -2798,7 +2800,7 @@ arch.f_tex = "TLITE6_6"
 
     elseif link.kind == "door" and link.is_exit and not link.quest then
 
-      B_exit_door(p,c, c.theme, link, x, y, c.floor_h, dir)
+      B_exit_door(p,c, c.combo, link, x, y, c.floor_h, dir)
 
     elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
        THEME.switches[link.quest.item].bars
@@ -2806,29 +2808,29 @@ arch.f_tex = "TLITE6_6"
       local info = THEME.switches[link.quest.item]
       local sec = copy_block_with_new(c.rmodel,
       {
-        f_tex = b_theme.floor,
-        c_tex = b_theme.ceil,
+        f_tex = b_combo.floor,
+        c_tex = b_combo.ceil,
       })
 
-      if not (c.theme.outdoor and other.theme.outdoor) then
+      if not (c.combo.outdoor and other.combo.outdoor) then
         sec.c_h = sec.c_h - 32
         while sec.c_h > (sec.c_h+sec.f_h+128)/2 do
           sec.c_h = sec.c_h - 32
         end
-        if b_theme.outdoor then sec.c_tex = b_theme.arch_ceil or sec.f_tex end
+        if b_combo.outdoor then sec.c_tex = b_combo.arch_ceil or sec.f_tex end
       end
 
       local bar = link.bar_size
       local tag = link.quest.tag + 1
 
-      B_bars(p,c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_theme.wall, tag,true)
+      B_bars(p,c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_combo.wall, tag,true)
 
     elseif link.kind == "door" then
 
       local kind = link.wide_door
 
       if c.quest == other.quest
-        and link.door_rand < sel(c.theme.outdoor or other.theme.outdoor, 10, 20)
+        and link.door_rand < sel(c.combo.outdoor or other.combo.outdoor, 10, 20)
       then
         kind = link.narrow_door
       end
@@ -2841,11 +2843,12 @@ arch.f_tex = "TLITE6_6"
       local key_tex = nil
 
 
-      B_door(p, c, link, b_theme, x, y, c.floor_h, dir,
+      B_door(p, c, link, b_combo, x, y, c.floor_h, dir,
              1 + int(info.w / 64), 1, info, door_kind, tag, key_tex)
     else
       error("build_link: bad kind: " .. tostring(link.kind))
     end
+
   end
 
   local function build_link(side)
@@ -2882,7 +2885,7 @@ arch.f_tex = "TLITE6_6"
     local f_max = -99999
 
     for zzz,c in ipairs(E.cells) do
-      if c.theme.outdoor then out_num = out_num + 1 end
+      if c.combo.outdoor then out_num = out_num + 1 end
       f_max = math.max(c.f_max, f_max)
     end
 
@@ -2892,8 +2895,8 @@ arch.f_tex = "TLITE6_6"
       local CORN = copy_block_with_new(E.cells[1].rmodel,
       {
         f_h = f_max + 64,
-        f_tex = E.theme.floor,
-        l_tex = E.theme.wall,
+        f_tex = E.combo.floor,
+        l_tex = E.combo.wall,
       })
 
       -- crappy substitute to using a real sky corner
@@ -2905,7 +2908,7 @@ arch.f_tex = "TLITE6_6"
       end
     end
 
-    gap_fill(p,c, E.bx, E.by, E.bx, E.by, { solid=E.theme.wall })
+    gap_fill(p,c, E.bx, E.by, E.bx, E.by, { solid=E.combo.wall })
   end
 
   local function build_sky_border(side, x1,y1, x2,y2)
@@ -2983,18 +2986,18 @@ arch.f_tex = "TLITE6_6"
     end
   end
 
-  local function build_fence(side, x1,y1, x2,y2, other, what, b_theme)
+  local function build_fence(side, x1,y1, x2,y2, other, what, b_combo)
 
     local D = c.border[side]
 
       local FENCE = copy_block_with_new(c.rmodel,
       {
         f_h = math.max(c.f_max, other.f_max),
-        f_tex = b_theme.floor,
-        c_tex = b_theme.ceil,
+        f_tex = b_combo.floor,
+        c_tex = b_combo.ceil,
         
-        l_tex = b_theme.void,
-        u_tex = b_theme.void,
+        l_tex = b_combo.void,
+        u_tex = b_combo.void,
       })
 
 --?? local f_min, f_max = border_floor_range(other, side)
@@ -3017,10 +3020,10 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
     end
 
     local i_W = sel(link, 3, 20)
-    local i_F = sel(c1.theme == c2.theme, 5, 0)
+    local i_F = sel(c1.combo == c2.combo, 5, 0)
 
-    if dual_odds(c1.theme.outdoor, 25, i_W) then return "wire" end
-    if dual_odds(c1.theme.outdoor, 60, i_F) then return "fence" end
+    if dual_odds(c1.combo.outdoor, 25, i_W) then return "wire" end
+    if dual_odds(c1.combo.outdoor, 60, i_F) then return "fence" end
 --]]
 
     -- FIXME: choose fence rail
@@ -3041,7 +3044,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
           rsd = sel(x1==x2, 4, 2)
         end
 
-        if b_theme ~= c.theme then rsd = 10 - side end
+        if b_combo ~= c.combo then rsd = 10 - side end
 
         FENCE[rsd] = { rail = rail_tex }
       end
@@ -3104,18 +3107,18 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
     local link = c.link[side]
     local other = neighbour_by_side(p,c,side)
 
-    local b_theme = D.theme
+    local b_combo = D.combo
 
     local WINDOW = 
     {
       f_h = math.max(c.f_max, other.f_max) + 32,
       c_h = math.min(c.rmodel.c_h, other.rmodel.c_h) - 32,
 
-      f_tex = b_theme.floor,
-      c_tex = b_theme.ceil,
+      f_tex = b_combo.floor,
+      c_tex = b_combo.ceil,
 
-      l_tex = b_theme.wall,
-      u_tex = b_theme.wall,
+      l_tex = b_combo.wall,
+      u_tex = b_combo.wall,
 
       light = c.rmodel.light,
     }
@@ -3125,7 +3128,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
     if other.scenic then WINDOW.impassible = true end
 
     WINDOW.light = WINDOW.light - 16
-    WINDOW.c_tex = b_theme.arch_ceil or WINDOW.f_tex
+    WINDOW.c_tex = b_combo.arch_ceil or WINDOW.f_tex
 
     local x = D.x1
     local y = D.y1
@@ -3203,7 +3206,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
 
       if (d_pos+1) >= min_x and (d_pos+long) <= max_x then
         if bar then
-          B_bars(p,c, wx,wy, math.min(side,10-side),long, bar,bar_step, THEME.mats.METAL, sec,b_theme.wall)
+          B_bars(p,c, wx,wy, math.min(side,10-side),long, bar,bar_step, THEME.mats.METAL, sec,b_combo.wall)
         else
           gap_fill(p,c, wx,wy, wx+ax*(long-1),wy+ay*(long-1), sec)
         end
@@ -3224,8 +3227,8 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
     local what = D.kind
     assert(what)
 
-    local b_theme = D.theme
-    assert(b_theme)
+    local b_combo = D.combo
+    assert(b_combo)
 
     if false then --!!!!! c.vista[side] then
     end
@@ -3233,7 +3236,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
     local x1,y1, x2,y2 = D.x1, D.y1, D.x2, D.y2
 
     if what == "wire" or what == "fence" then
-      build_fence(side, x1,y1, x2,y2, other, what, b_theme)
+      build_fence(side, x1,y1, x2,y2, other, what, b_combo)
 
     elseif what == "window" then
       build_window(side)
@@ -3272,7 +3275,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
 --]]
 
     else -- solid
-      gap_fill(p,c, x1,y1, x2,y2, { solid=b_theme.wall })
+      gap_fill(p,c, x1,y1, x2,y2, { solid=b_combo.wall })
     end
 
   end
@@ -3306,7 +3309,7 @@ end
 function build_grotto(p, c, x1,y1, x2,y2)
   
   local ROOM = c.rmodel
-  local WALL = { solid=c.theme.wall }
+  local WALL = { solid=c.combo.wall }
 
   for y = y1+1, y2-1, 2 do
     for x = x1+1+(int(y/2)%2)*2, x2-3, 4 do
@@ -3351,8 +3354,8 @@ function build_pacman_level(p, c)
   local bot_flip = not top_flip
 
   -- !!!! FIXME: move skin into x_wolf.lua
-  local theme = THEME.combos[rand_sel(50,"BLUE_STONE","BLUE_BRICK")]
-  assert(theme)
+  local combo = THEME.combos[rand_sel(50,"BLUE_STONE","BLUE_BRICK")]
+  assert(combo)
 
   local skin =
   {
@@ -3373,17 +3376,17 @@ function build_pacman_level(p, c)
   {
   }
 
-  B_prefab(p,c, mid_fab,skin,parm, c.rmodel,theme, mid_x-2, mid_y, 8, false)
+  B_prefab(p,c, mid_fab,skin,parm, c.rmodel,combo, mid_x-2, mid_y, 8, false)
 
-  B_prefab(p,c, top_fab,skin,parm, c.rmodel,theme, mid_x-10, mid_y+16, 8,false,top_flip)
-  B_prefab(p,c, top_fab,skin,parm, c.rmodel,theme, mid_x+10, mid_y+16, 8,true, top_flip)
+  B_prefab(p,c, top_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y+16, 8,false,top_flip)
+  B_prefab(p,c, top_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y+16, 8,true, top_flip)
 
-  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,theme, mid_x-10, mid_y-12, 8,false,bot_flip)
-  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,theme, mid_x+10, mid_y-12, 8,true, bot_flip)
+  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y-12, 8,false,bot_flip)
+  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y-12, 8,true, bot_flip)
 
   B_exit_elevator(p,c, mid_x+19, mid_y+28, 2)
 
-  gap_fill(p,c, 2,2, 63,63, { solid=theme.wall })
+  gap_fill(p,c, 2,2, 63,63, { solid=combo.wall })
   
   -- player spot
   local px
@@ -3433,12 +3436,12 @@ function build_cell(p, c)
   end
 
   local function decide_void_pic(p, c)
-    if c.theme.pic_wd and rand_odds(60) then
-      c.void_pic = { wall=c.theme.pic_wd, w=128, h=c.theme.pic_wd_h or 128 }
+    if c.combo.pic_wd and rand_odds(60) then
+      c.void_pic = { wall=c.combo.pic_wd, w=128, h=c.combo.pic_wd_h or 128 }
       c.void_cut = 1
       return
 
-    elseif not c.theme.outdoor and rand_odds(25) then
+    elseif not c.combo.outdoor and rand_odds(25) then
       c.void_pic = get_rand_wall_light()
       c.void_cut = rand_irange(3,4)
       return
@@ -3575,7 +3578,7 @@ function build_cell(p, c)
         B_deathmatch_exit(p,c, K,kx,ky,K.dir)
 
       elseif THEME.pics and not c.small_exit
-          and rand_odds(sel(c.theme.outdoor, 10, sel(c.hallway,20, 50)))
+          and rand_odds(sel(c.combo.outdoor, 10, sel(c.hallway,20, 50)))
       then
         if not c.void_pic then decide_void_pic(p, c) end
         local pic,cut = c.void_pic,c.void_cut
@@ -3591,7 +3594,7 @@ function build_cell(p, c)
         B_void_pic(p,c, K,kx,ky, pic,cut)
 
       else
-        gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, { solid=c.theme.void })
+        gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, { solid=c.combo.void })
       end
       return
     end -- K.void
@@ -3657,7 +3660,7 @@ function build_cell(p, c)
         end
 
       elseif c.quest.kind == "exit" then
-        assert(c.theme.switch)
+        assert(c.combo.switch)
 
         local side = wall_switch_dir(kx, ky, c.entry_dir)
 
@@ -3666,10 +3669,10 @@ function build_cell(p, c)
             { walk_kind = 52 }) -- FIXME "exit_W1"
 
         elseif c.small_exit and not c.smex_cage and rand_odds(80) then
-          if c.theme.flush then
-            B_flush_switch(p,c, bx,by, K.rmodel.f_h,side, c.theme.switch, 11)
+          if c.combo.flush then
+            B_flush_switch(p,c, bx,by, K.rmodel.f_h,side, c.combo.switch, 11)
           else
-            B_wall_switch(p,c, bx,by, K.rmodel.f_h,side, 3, c.theme.switch, 11)
+            B_wall_switch(p,c, bx,by, K.rmodel.f_h,side, 3, c.combo.switch, 11)
           end
 
           -- make the area behind the switch solid
@@ -3682,15 +3685,15 @@ function build_cell(p, c)
           else   error("Bad side for small_exit switch: " .. side)
           end
 
-          gap_fill(p,c, x1,y1, x2,y2, { solid=c.theme.wall })
+          gap_fill(p,c, x1,y1, x2,y2, { solid=c.combo.wall })
           
-        elseif c.theme.hole_tex and rand_odds(75) then
+        elseif c.combo.hole_tex and rand_odds(75) then
           B_exit_hole(p,c, K,kx,ky, c.rmodel)
           return
         elseif rand_odds(85) then
-          B_floor_switch(p,c, bx,by, K.rmodel.f_h, side, c.theme.switch, 11)
+          B_floor_switch(p,c, bx,by, K.rmodel.f_h, side, c.combo.switch, 11)
         else
-          B_pillar_switch(p,c, K,bx,by, c.theme.switch, 11)
+          B_pillar_switch(p,c, K,bx,by, c.combo.switch, 11)
         end
       end
     end -- if K.player | K.quest etc...
@@ -3726,7 +3729,7 @@ function build_cell(p, c)
     end
 
     -- TEST CRUD : overhangs
-    if rand_odds(9) and c.theme.outdoor
+    if rand_odds(9) and c.combo.outdoor
       and (sec.c_h - sec.f_h <= 256)
       and not (c.quest.kind == "exit" and c.along == #c.quest.path-1)
       and not K.stair_dir
@@ -3752,19 +3755,19 @@ function build_cell(p, c)
     -- TEST CRUD : crates
     if not c.scenic and not K.stair_dir
       and THEME.crates
-      and dual_odds(c.theme.outdoor, 20, 33)
+      and dual_odds(c.combo.outdoor, 20, 33)
       and (not c.hallway or rand_odds(25))
       and (not c.exit or rand_odds(50))
     then
       K.crate = true
-      if not c.crate_theme then
-        c.crate_theme = get_rand_crate()
+      if not c.crate_combo then
+        c.crate_combo = get_rand_crate()
       end
     end
 
     -- TEST CRUD : pillars
     if not K.crate and not c.scenic and not K.stair_dir
-      and dual_odds(c.theme.outdoor, 12, 25)
+      and dual_odds(c.combo.outdoor, 12, 25)
       and (not c.hallway or rand_odds(15))
       and (not c.exit or rand_odds(22))
     then
@@ -3830,15 +3833,15 @@ function build_cell(p, c)
       local blocked = p.blocks[K.x1+1][K.y1+1] --!!!
 
       if K.crate and not blocked then
-        local theme = c.crate_theme
+        local combo = c.crate_combo
         if not c.quest.image and not c.quest.mini and
            (not p.image or rand_odds(11))
         then
-          theme = THEME.images[2]
+          combo = THEME.images[2]
           c.quest.image = "crate"
           p.image = true
         end
-        B_crate(p,c, theme, sec, kx,ky, K.x1+1,K.y1+1)
+        B_crate(p,c, combo, sec, kx,ky, K.x1+1,K.y1+1)
         blocked = true
       end
 
@@ -3850,7 +3853,7 @@ function build_cell(p, c)
         then
           B_pillar_cage(p,c, THEME.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
         else
-          B_pillar(p,c, c.theme, kx,ky, K.x1+1,K.y1+1)
+          B_pillar(p,c, c.combo, kx,ky, K.x1+1,K.y1+1)
         end
         blocked = true
       end
@@ -3860,12 +3863,12 @@ function build_cell(p, c)
 
       gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, sec)
 
-      if not blocked and c.theme.scenery and not K.stair_dir and
-         (dual_odds(c.theme.outdoor, 37, 22)
+      if not blocked and c.combo.scenery and not K.stair_dir and
+         (dual_odds(c.combo.outdoor, 37, 22)
           or (c.scenic and rand_odds(51)))
       then
 --!!!!!        p.blocks[K.x1+1][K.y1+1].has_scenery = true
-        local th = add_thing(p, c, K.x1+1, K.y1+1, c.theme.scenery, true)
+        local th = add_thing(p, c, K.x1+1, K.y1+1, c.combo.scenery, true)
         if c.scenic then
           th.dx = rand_irange(-64,64)
           th.dy = rand_irange(-64,64)
@@ -3876,7 +3879,7 @@ function build_cell(p, c)
   end
 
   local function decide_sky_lights(c)
-    if not c.theme.outdoor and not c.is_exit and not c.hallway
+    if not c.combo.outdoor and not c.is_exit and not c.hallway
        and THEME.lights and rand_odds(70)
     then
       c.sky_light =
@@ -3895,12 +3898,12 @@ function build_cell(p, c)
   local function void_up_chunk(c, K)
 
     --!!!!!! TESTING
-    if c.theme.decorate and not c.scenic and K.kind == "void" and
+    if c.combo.decorate and not c.scenic and K.kind == "void" and
       (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
       (K.y2 > K.y1 or rand_odds(50)) and
       rand_odds(65)
     then
-      local dec_tex = c.theme.decorate
+      local dec_tex = c.combo.decorate
       if type(dec_tex) == "table" then
         dec_tex = rand_element(dec_tex)
       end
@@ -3908,7 +3911,7 @@ function build_cell(p, c)
       gap_fill(p, c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
     end
 
-    gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.theme.void })
+    gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.combo.void })
   end
 
   local function reclaim_areas(c)
@@ -4195,7 +4198,7 @@ end
       elseif K.r_deep then
         gap_fill(p, c, K.rx1,K.ry1, K.rx2,K.ry2,
           c.rmodel, { f_h=c.f_max+32 })
---!!!        { solid=c.theme.void })
+--!!!        { solid=c.combo.void })
 ---     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
 ---        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
       end
@@ -4246,7 +4249,7 @@ c.x, c.y, other.x, other.y)
 
     if diff_h >= 48 and rand_odds(35) then kind = "wire" end
 
-    if not c.theme.outdoor then
+    if not c.combo.outdoor then
       local space_h = other.ceil_h - c.floor_h
       local r = con.random() * 100
 
@@ -4296,7 +4299,7 @@ c.x, c.y, other.x, other.y)
 con.debugf("  COORDS: (%d,%d) .. (%d,%d)  size:%dx%d\n", x1,y1, x2,y2, long,deep)
 con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
 
-    B_vista(p,c, x1,y1, x2,y2, side, c.border[side].theme or c.theme, kind)
+    B_vista(p,c, x1,y1, x2,y2, side, c.border[side].combo or c.combo, kind)
   end
 
   local function build_vistas(c)
@@ -5007,7 +5010,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     local info
 
     if c.is_exit then
-      info = c.theme.switch
+      info = c.combo.switch
       parm.kind = 11
       parm.tag  = 0
     else
@@ -5019,7 +5022,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     end
     skin = { switch_w=info.switch, wall=info.wall, side_w=info.wall,
              beam_w="WOOD1", beam_f="FLAT5_2",
-             lite_w="LITE5", frame_c=c.theme.floor,
+             lite_w="LITE5", frame_c=c.combo.floor,
            }
 
     if false then -- floor switch / niche switch
@@ -5031,7 +5034,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
     if info.bars then parm.kind = 23 end
 
-    B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir)
+    B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.combo, x, y, dir)
     fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
   end
 
@@ -5104,8 +5107,8 @@ con.printf("@ add_prefab: %s\n", name)
     assert(def.skin)
 
     if fab.environment then
-      if fab.environment == "indoor" and c.theme.outdoor then return end
-      if fab.environment == "outdoor" and not c.theme.outdoor then return end
+      if fab.environment == "indoor" and c.combo.outdoor then return end
+      if fab.environment == "outdoor" and not c.combo.outdoor then return end
     end
 
     -- FIXME: this is wrong -- make it part of fab_find_loc??
@@ -5133,7 +5136,7 @@ con.printf("@ add_prefab: %s\n", name)
     local mirror
     if fab.mirror then mirror = rand_odds(50) end
 
-    B_prefab(p,c, fab, def.skin, parm, p.blocks[x][y].chunk.rmodel,c.theme, x, y, dir, mirror)
+    B_prefab(p,c, fab, def.skin, parm, p.blocks[x][y].chunk.rmodel,c.combo, x, y, dir, mirror)
 
     fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
   end
@@ -5151,8 +5154,8 @@ con.printf("@ add_prefab: %s\n", name)
     -- FIXME: use multiple times
 
     local item
-    if c.theme.scenery and rand_odds(30) then
-      item = c.theme.scenery
+    if c.combo.scenery and rand_odds(30) then
+      item = c.combo.scenery
       if type(item) == "table" then
         item = rand_element(item)
       end
@@ -5255,7 +5258,7 @@ con.debugf("add_scenery : %s\n", item)
   ---=== build_cell ===---
 
   if c.scenic == "solid" then
-    fill(p,c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.theme.void })
+    fill(p,c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.combo.void })
     return
   end
 
@@ -5387,7 +5390,7 @@ function build_depots(p)
 
     local sec = { f_h = player_B.f_h, c_h = player_B.f_h + 128,
                   f_tex = c.rmodel.f_tex, c_tex = c.rmodel.c_tex,
-                  l_tex = c.theme.void,  u_tex = c.theme.void,
+                  l_tex = c.combo.void,  u_tex = c.combo.void,
                   light = 0
                 }
 
@@ -5428,7 +5431,7 @@ function build_depots(p)
     c_fill(p, c, m1,1, m1,1, copy_block(player_B), { same_sec=player_B })
 
     -- put a border around the room
-    gap_fill(p, c, c.bx1-1, c.by1-1, c.bx2+1, c.by2+1, { solid=c.theme.wall })
+    gap_fill(p, c, c.bx1-1, c.by1-1, c.bx2+1, c.by2+1, { solid=c.combo.wall })
   end
 
   --- build_depots ---

@@ -12,7 +12,7 @@ class Plan
 
   quests : array(Quest)
   deathmatch  -- true for deathmatch levels
-  exit_theme : Theme
+  exit_combo : Combo
   
   all_cells  : array(Cell)  -- all used cells
   all_links  : array(Link)
@@ -56,7 +56,7 @@ class Cell
   quest : Quest reference
   along : how far along current quest (1 to #path)
 
-  theme : Theme
+  combo : Combo
   liquid : liquid type (nil for none)
   scenic : bool -- if true, cell only for scenery (no walk)
   hallway : bool -- true for hallway cells
@@ -136,7 +136,7 @@ class Border
   cells : array(Cell)
 
   build : Cell
-  theme : Theme
+  combo : Combo
 
   window: true if this border can contain windows
 
@@ -162,6 +162,7 @@ end
 
 
 class Block
+  
   fragments : array_2D(Block)  -- optional
   
   solid  -- texture name for solid areas (void space)
@@ -195,10 +196,11 @@ class Block
 end
 
 
-class Theme
+class Combo
+  outdoor : boolean
+  mat_pri : integer
   wall, void  : texture name
   floor, ceil : flat name
-  outdoor : boolean
 end
 
 

@@ -89,22 +89,22 @@ function choose_dm_thing(LIST, adjusted)
   return name
 end
 
-function choose_dm_exit_theme()
+function choose_dm_exit_combo()
 
-  -- FIXME: have a 'dm_prob' field in each exit theme
-  local theme
+  -- FIXME: have a 'dm_prob' field in each exit combo
+  local combo
 
   repeat
     local r = con.random() * 100
-        if r < 30 then theme = THEME.exits["TECH"]
-    elseif r < 50 then theme = THEME.exits["STONE"]
-    elseif r < 70 then theme = THEME.exits["METAL"]
+        if r < 30 then combo = THEME.exits["TECH"]
+    elseif r < 50 then combo = THEME.exits["STONE"]
+    elseif r < 70 then combo = THEME.exits["METAL"]
     else
-      theme = get_rand_exit_theme()
+      combo = get_rand_exit_combo()
     end
-  until theme and theme.void ~= "SLOPPY1"
+  until combo and combo.void ~= "SLOPPY1"
 
-  return theme
+  return combo
 end
 
 
@@ -211,33 +211,33 @@ function plan_dm_arena()
     end
   end
 
-  local function liquid_for_seed(theme)
+  local function liquid_for_seed(combo)
     if not THEME.caps.liquids then return nil end
 
     if rand_odds(64) then return nil end
 
-    if theme.bad_liquid == p.liquid.name then
-      if theme.good_liquid then
-        return find_liquid(theme.good_liquid)
+    if combo.bad_liquid == p.liquid.name then
+      if combo.good_liquid then
+        return find_liquid(combo.good_liquid)
       end
       return choose_liquid()
     end
 
-    if theme.good_liquid and rand_odds(40) then
-      return find_liquid(theme.good_liquid)
+    if combo.good_liquid and rand_odds(40) then
+      return find_liquid(combo.good_liquid)
     end
 
     return p.liquid
   end
 
-  local function unused_theme_pos()
+  local function unused_combo_pos()
     for loop = 1,999 do
       local x,y = random_cell(p)
-      if not p.cells[x][y].theme then return x, y end
+      if not p.cells[x][y].combo then return x, y end
     end
   end
 
-  local function grow_dm_themes()
+  local function grow_dm_combos()
     local x_order = {}
     local y_order = {}
     local dir_order = { 2,4,6,8 }
@@ -253,10 +253,10 @@ function plan_dm_arena()
           local c = p.cells[cx][cy]
           assert(c)
 
-          if c.theme and valid_cell(p, cx+dx,cy+dy) then
+          if c.combo and valid_cell(p, cx+dx,cy+dy) then
             local other = p.cells[cx+dx][cy+dy]
-            if not other.theme then
-              other.theme = c.theme
+            if not other.combo then
+              other.combo = c.combo
               other.liquid = c.liquid
             end
           end
@@ -267,20 +267,20 @@ function plan_dm_arena()
     end
   end
 
-  local function choose_dm_themes()
+  local function choose_dm_combos()
 
-    -- place themes at random spots on the plan,
-    -- then "grow" them until all cells are themed.
+    -- place combos at random spots on the plan,
+    -- then "grow" them until all cells are combod.
 
     for cy = 1,p.h do
       cx = rand_irange(1,p.w)
       local c = p.cells[cx][cy]
-      c.theme = get_rand_combo()
-      c.liquid = liquid_for_seed(c.theme)
+      c.combo = get_rand_combo()
+      c.liquid = liquid_for_seed(c.combo)
     end
 
     for pass = 1,(p.w+p.h+10) do  -- FIXME: exit when no empty spots
-      grow_dm_themes()
+      grow_dm_combos()
       con.ticker();
     end
   end
@@ -326,8 +326,8 @@ function plan_dm_arena()
       local d = link.cells[2]
       local door_chance = 10
 
-      if c.theme.outdoor and d.theme.outdoor then door_chance = 3
-      elseif c.theme ~= d.theme then door_chance = 30
+      if c.combo.outdoor and d.combo.outdoor then door_chance = 3
+      elseif c.combo ~= d.combo then door_chance = 30
       end
 
       if rand_odds(door_chance) then link.kind = "door" end
@@ -436,9 +436,9 @@ function plan_dm_arena()
 
       if (cc - ff) < 32 then return false end
 
-      if a.theme.outdoor and b.theme.outdoor and a.ceil_h ~= b.ceil_h then return false end
---!!      if a.theme.outdoor and not b.theme.outdoor and b.ceil_h > b.ceil_h + 32 then return false end
---!!      if b.theme.outdoor and not a.theme.outdoor and a.ceil_h > a.ceil_h + 32 then return false end
+      if a.combo.outdoor and b.combo.outdoor and a.ceil_h ~= b.ceil_h then return false end
+--!!      if a.combo.outdoor and not b.combo.outdoor and b.ceil_h > b.ceil_h + 32 then return false end
+--!!      if b.combo.outdoor and not a.combo.outdoor and a.ceil_h > a.ceil_h + 32 then return false end
 
       return true
     end
@@ -478,7 +478,7 @@ function plan_dm_arena()
 
   for y = 1,H do
     for x = 1,W do
-      -- note: dummy along and theme values
+      -- note: dummy along and combo values
       create_cell(p, x, y, p.quests[1], 1, nil)
     end
   end
@@ -487,12 +487,12 @@ function plan_dm_arena()
     p.liquid = choose_liquid()
   end
 
-  p.exit_theme = choose_dm_exit_theme()
+  p.exit_combo = choose_dm_exit_combo()
 
   con.debugf("DM LIQUID: %s\n", (p.liquid and p.liquid.name) or "NONE")
-  con.debugf("DM EXIT THEME: %s\n", p.exit_theme.wall)
+  con.debugf("DM EXIT THEME: %s\n", p.exit_combo.wall)
 
-  choose_dm_themes()
+  choose_dm_combos()
 
   create_dm_links()
   shuffle_build_sites(p)

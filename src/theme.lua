@@ -147,7 +147,7 @@ function get_rand_indoor_theme()
   return info
 end
 
-function get_rand_exit_theme()
+function get_rand_exit_combo()
   local name,info = rand_table_pair(THEME.exits)
   return info
 end
@@ -206,5 +206,4 @@ function random_door_kind(w)
   assert(#names > 0)
   return rand_element(names)
 end
-
 

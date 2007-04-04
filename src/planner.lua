@@ -291,14 +291,14 @@ function allocate_floor_code(p)
   return p.floor_code
 end
 
-function create_cell(p, x, y, quest, along, theme, is_depot)
+function create_cell(p, x, y, quest, along, combo, is_depot)
   local CELL =
   {
     x=x, y=y,
     
     quest = quest,
     along = along,
-    theme = theme,
+    combo = combo,
 
     floor_h = 128, ceil_h = 256, -- dummy values
 
@@ -496,7 +496,7 @@ function resize_rooms(p)
       -- (b) neighbours of current are all indoor or empty
       -- (c) neighbours of other   are all indoor or empty
 
-      if c.theme.outdoor then return end
+      if c.combo.outdoor then return end
 
       for dmul = 0,1 do for amul = -1,1,2 do
         local nx = c.x + dx*dmul + ax*amul
@@ -504,7 +504,7 @@ function resize_rooms(p)
 
         local n = valid_cell(p, nx, ny) and p.cells[nx][ny]
 
-        if n and n.theme.outdoor then return end
+        if n and n.combo.outdoor then return end
       end end
 
       if c.hallway and rand_odds(66) then dir = -1 end
@@ -1068,15 +1068,15 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     local L = p.liquid
 
-    while Q.theme.bad_liquid == L.name do
-      if Q.theme.good_liquid then
-        return find_liquid(Q.theme.good_liquid)
+    while Q.combo.bad_liquid == L.name do
+      if Q.combo.good_liquid then
+        return find_liquid(Q.combo.good_liquid)
       end
       L = choose_liquid()
     end
 
-    if Q.theme.good_liquid and dual_odds(Q.mini, 33, 66) then
-      return find_liquid(Q.theme.good_liquid)
+    if Q.combo.good_liquid and dual_odds(Q.mini, 33, 66) then
+      return find_liquid(Q.combo.good_liquid)
     end
 
     if Q.mini then
@@ -1104,7 +1104,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     if #Q.path < 3 then return end
 
-    if Q.theme.outdoor and rand_odds(66) then return end
+    if Q.combo.outdoor and rand_odds(66) then return end
 
     -- longer quests are more likely to add hallways
     local chance = HALL_CHANCE[math.min(7, #Q.path)]
@@ -1124,26 +1124,26 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     local finish = start + length - 1
 
-    local theme
+    local combo
     if start == 2 and Q.first.hallway and rand_odds(96) then
       -- extend the hallway in the previous quest
-      theme = Q.first.theme
+      combo = Q.first.combo
     elseif not THEME.caps.heights then
-      -- for Wolf3d/SOD, too many theme changes look bad
-      theme = Q.first.theme
+      -- for Wolf3d/SOD, too many combo changes look bad
+      combo = Q.first.combo
     else
-      theme = get_rand_hallway()
+      combo = get_rand_hallway()
     end
-    assert(theme)
+    assert(combo)
 
     con.debugf("HALLWAY: start=%d len=%d QLEN:%d\n", start, length, #Q.path)
 
     for idx = start,finish do
       local c = Q.path[idx]
       c.hallway = true
-      c.theme = theme
+      c.combo = combo
       c.room_type = THEME.rooms["HALLWAY"]
-      if theme.well_lit then
+      if combo.well_lit then
         c.light = 176
       else
         c.light = hall_lighting(start,idx,finish)
@@ -1195,10 +1195,8 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
 
   local function make_quest_path(Q)
  
-    local theme = Q.combo
-
-    Q.theme = theme --!!!! FIXME: remove
-    assert(theme)
+    local combo = Q.combo
+    assert(combo)
 
     -- decide liquid
     if THEME.caps.liquids then
@@ -1209,7 +1207,7 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
     if not Q.mini and Q.level == 1 then
       local x = rand_irange(1, int(p.w / 2))
       local y = rand_irange(1, int(p.h / 2))
-      create_cell(p, x, y, Q, 1, theme)
+      create_cell(p, x, y, Q, 1, combo)
     end
 
 
@@ -1230,7 +1228,7 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
       if not nx then break end
 
 
-      local nextc = create_cell(p, nx, ny, Q, along, theme)
+      local nextc = create_cell(p, nx, ny, Q, along, combo)
 
       nextc.entry_dir = 10 - dir
       if not cur.exit_dir then cur.exit_dir = dir end
@@ -1250,15 +1248,15 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
 --!!!!!!    make_hallways(Q)
 
 if false then --!!!!
-    if Q.theme.outdoor and not Q.has_hallway then
+    if Q.combo.outdoor and not Q.has_hallway then
       -- Experimental: start cell is a building
       if #Q.path >= 3 and Q == p.quests[1] and rand_odds(30) then
-        Q.first.theme = get_rand_indoor_theme()
+        Q.first.combo = get_rand_indoor_combo()
       end
 
       -- Experimental: quest cell is a building
       if #Q.path >= 4 and dual_odds(Q.mini, 12, 30) then
-        Q.last.theme = get_rand_indoor_theme()
+        Q.last.combo = get_rand_indoor_combo()
       end
     end
 end
@@ -1279,10 +1277,10 @@ end
 
         local door_chance = 15
 
-            if c1.theme.outdoor ~= c2.theme.outdoor then door_chance = 70
+            if c1.combo.outdoor ~= c2.combo.outdoor then door_chance = 70
         elseif c1.hallway and c2.hallway then door_chance = 5
-        elseif c1.theme.outdoor then door_chance = 5
-        elseif c1.theme ~= c2.theme then door_chance = sel(THEME.caps.blocky_doors, 85, 40)
+        elseif c1.combo.outdoor then door_chance = 5
+        elseif c1.combo ~= c2.combo then door_chance = sel(THEME.caps.blocky_doors, 85, 40)
         end
 
         if rand_odds(door_chance) then link.kind = "door" end
@@ -1390,7 +1388,7 @@ end
 
       for dir = 2,8,2 do
         local n = neighbour_by_side(p, c, dir)
-        if n and n.theme.outdoor and not n.scenic then
+        if n and n.combo.outdoor and not n.scenic then
           f_min = math.min(f_min, n.floor_h)
           f_max = math.max(f_max, n.floor_h)
         end
@@ -1443,11 +1441,11 @@ end
     local function initial_height(c)
 
       if c.is_exit then
-        c.ceil_h = c.floor_h + (c.theme.exit_h or 128)
+        c.ceil_h = c.floor_h + (c.combo.exit_h or 128)
       else
         local height_list =
           (c.room_type and c.room_type.room_heights) or
-          c.theme.room_heights or
+          c.combo.room_heights or
           (c.hallway and HALL_HEIGHTS) or
           c.quest.level_theme.room_heights or
           ROOM_HEIGHTS
@@ -1467,7 +1465,7 @@ end
           -- FIXME: when border is 100% solid (no windows/doors/fences)
           --        then we don't need to merge sky heights.
 
-          if c.theme.outdoor then
+          if c.combo.outdoor then
             if c.sky_h < other.sky_h then
                c.sky_h = other.sky_h
                return true;
@@ -1491,7 +1489,7 @@ end
         local other = neighbour_by_side(p, c, dir)
         if not other then return end
 
-        local need = sel(c.theme.outdoor, 96, 64)
+        local need = sel(c.combo.outdoor, 96, 64)
 
         if c.ceil_h < other.floor_h + need then
            c.ceil_h = other.floor_h + need
@@ -1523,7 +1521,7 @@ end
       until not changed
 
       for zzz,c in ipairs(p.all_cells) do
-        if c.theme.outdoor then
+        if c.combo.outdoor then
           c.ceil_h = math.max(c.ceil_h, c.sky_h)
         end
       end
@@ -1550,7 +1548,7 @@ end
       if c.quest.level ~= other.quest.level then return false end
 
       if not link.floor_connx then
-        link.floor_connx = dual_odds(c.theme == other.theme, 33, 11)
+        link.floor_connx = dual_odds(c.combo == other.combo, 33, 11)
       end
 
       return link.floor_connx
@@ -1875,12 +1873,12 @@ R.level_theme.name, R.combo.name)
     local c = p.quests[#p.quests].last
 
     if not THEME.caps.elevator_exits then
-      c.theme = get_rand_exit_theme()
+      c.combo = get_rand_exit_combo()
     end
     c.is_exit = true
     c.light = 176
 
-    c.small_exit = c.theme.small_exit or rand_odds(25)
+    c.small_exit = c.combo.small_exit or rand_odds(25)
 
     for dir = 2,8,2 do
       if c.link[dir] then
@@ -1890,7 +1888,7 @@ R.level_theme.name, R.combo.name)
           link.build = c
           link.is_exit = true
           link.long = sel(THEME.caps.blocky_doors, 1,
-               sel(c.theme.front_mark or c.small_exit, 3, 2))
+               sel(c.combo.front_mark or c.small_exit, 3, 2))
         end
       end
     end
@@ -1919,7 +1917,7 @@ R.level_theme.name, R.combo.name)
             table.insert(innies, c)
           elseif c.scenic == "outdoor" then
             scenics = scenics + 1
-          elseif c.theme.outdoor then
+          elseif c.combo.outdoor then
             table.insert(outies, c)
           else
             table.insert(innies, c)
@@ -1935,7 +1933,7 @@ R.level_theme.name, R.combo.name)
       then return end
 
       local c = create_cell(p, empties[1].x, empties[1].y,
-        outies[1].quest, outies[1].along, outies[1].theme)
+        outies[1].quest, outies[1].along, outies[1].combo)
 
       c.scenic = "outdoor"
 
@@ -1945,8 +1943,8 @@ R.level_theme.name, R.combo.name)
           (empties[1].y == innies[1].y))
       then
         c.scenic = "solid"
-        c.theme = innies[1].theme
-        if innies[1].hallway then c.theme = innies[1].quest.theme end
+        c.combo = innies[1].combo
+        if innies[1].hallway then c.combo = innies[1].quest.combo end
 
         con.debugf("SOLID-")
       end
@@ -1992,9 +1990,9 @@ R.level_theme.name, R.combo.name)
       if a.f_min  < (b.f_max + 24) then return false end
       if b.ceil_h < (a.f_max + 96) then return false end
 
-      if a.theme.outdoor and b.theme.outdoor and a.ceil_h ~= b.ceil_h then return false end
-      if a.theme.outdoor and not b.theme.outdoor and a.ceil_h <= b.ceil_h then return false end
-      if b.theme.outdoor and not a.theme.outdoor and b.ceil_h <= a.ceil_h then return false end
+      if a.combo.outdoor and b.combo.outdoor and a.ceil_h ~= b.ceil_h then return false end
+      if a.combo.outdoor and not b.combo.outdoor and a.ceil_h <= b.ceil_h then return false end
+      if b.combo.outdoor and not a.combo.outdoor and b.ceil_h <= a.ceil_h then return false end
 
       -- do not allow two vistas/falloffs in a room unless they
       -- are opposite each other
@@ -2027,9 +2025,9 @@ R.level_theme.name, R.combo.name)
 
     local function can_make_vista(a, b, dir)
 
-      if a.theme.outdoor and rand_odds(50) then return false end
+      if a.combo.outdoor and rand_odds(50) then return false end
 
-      if not b.theme.outdoor and rand_odds(50) then return false end
+      if not b.combo.outdoor and rand_odds(50) then return false end
 
       return true
     end
@@ -2094,9 +2092,9 @@ R.level_theme.name, R.combo.name)
 ---###   if a.f_min < (b.f_max + 64) then return false end
 ---###   if (b.ceil_h - a.floor_h) < 64 then return false end
       
-      if a.theme.outdoor and b.theme.outdoor and a.ceil_h ~= b.ceil_h then return false end
---!!      if a.theme.outdoor and not b.theme.outdoor and b.ceil_h > b.ceil_h + 32 then return false end
---!!      if b.theme.outdoor and not a.theme.outdoor and a.ceil_h > a.ceil_h + 32 then return false end
+      if a.combo.outdoor and b.combo.outdoor and a.ceil_h ~= b.ceil_h then return false end
+--!!      if a.combo.outdoor and not b.combo.outdoor and b.ceil_h > b.ceil_h + 32 then return false end
+--!!      if b.combo.outdoor and not a.combo.outdoor and a.ceil_h > a.ceil_h + 32 then return false end
 
       return true
     end
@@ -2257,7 +2255,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
       local spread = rand_key_by_probs { linear=3, random=3, last=5, behind=5, first=1 }
 
-      local CELL = create_cell(p, pos_x, pos_y, Q, 1, Q.first.theme, "depot")
+      local CELL = create_cell(p, pos_x, pos_y, Q, 1, Q.first.combo, "depot")
 
       local SURPRISE =
       {
