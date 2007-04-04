@@ -48,7 +48,7 @@ PL_COMBOS =
     pillar = "A-MOSBRI",
 
     floor = "RROCK14",  -- "FLOOR7_1",
-    ceil = "F_SKY1",
+    ceil  = "RROCK14",
 
     bad_liquid = "slime",
   },
@@ -64,7 +64,7 @@ PL_COMBOS =
     pillar = "A-MOSRK2",
 
     floor = "RROCK13",
-    ceil = "F_SKY1",
+    ceil  = "RROCK13",
 
     good_liquid = "water",
   },

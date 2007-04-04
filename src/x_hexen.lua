@@ -143,7 +143,7 @@ XN_COMBOS =
     void = "PRTL03",
 
     floor = "F_019",
-    ceil  = "F_SKY",
+    ceil  = "F_019",
 
     scenery = "short_statue",
   },
@@ -157,7 +157,7 @@ XN_COMBOS =
     void = "CAVE02",
 
     floor = "F_007",
-    ceil = "F_SKY",
+    ceil  = "F_007",
 
     scenery = "lean_tree_L",
   },
@@ -173,7 +173,7 @@ XN_EXITS =
     void = "STEEL02",
 
     floor = "F_022",
-    ceil = "F_044",
+    ceil  = "F_044",
 
     switch = { switch="SW_2_UP", wall="STEEL06", h=64 },
 
@@ -660,9 +660,9 @@ THEME_FACTORIES["hexen"] = function()
                              prefer_stairs=true,
            },
 
+    SKY_TEX    = "F_SKY",
     ERROR_TEX  = "ABADONE",
     ERROR_FLAT = "F_033",
-    SKY_TEX    = "F_SKY",
 
     monsters = XN_MONSTERS,
     bosses   = XN_BOSSES,

@@ -231,7 +231,7 @@ DM_COMBOS =
     piller = "STONE5",
 
     floor = "MFLR8_1",
-    ceil = "F_SKY1",
+    ceil = "MFLR8_1",
 
     scenery = { "blue_torch", "blue_torch_sm" },
   },
@@ -248,7 +248,7 @@ DM_COMBOS =
     pillar = "BROWN96",  -- was "BRONZE2" (not in doom 1)
 
     floor = "MFLR8_2",  -- "RROCK16" (not in doom 1)
-    ceil = "F_SKY1",
+    ceil = "MFLR8_2",
   --  lift_floor = "FLOOR4_8",
 
     scenery = { "skull_pole", "skull_kebab" },
@@ -1328,9 +1328,9 @@ THEME_FACTORIES["doom_common"] = function()
              teleporters=true,
            },
 
+    SKY_TEX    = "F_SKY1",
     ERROR_TEX  = "FIREBLU1",
     ERROR_FLAT = "SFLR6_4",
-    SKY_TEX    = "F_SKY1",
 
     monsters = DM_MONSTERS,
     bosses   = DM_BOSSES,

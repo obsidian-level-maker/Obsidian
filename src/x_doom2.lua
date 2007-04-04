@@ -230,7 +230,7 @@ D2_COMBOS =
     step = "STEP5",
 
     floor = "RROCK19",
-    ceil = "F_SKY1",
+    ceil  = "RROCK19",
 
     scenery = "brown_stub",
 
@@ -249,7 +249,7 @@ D2_COMBOS =
     piller = "ASHWALL7",
 
     floor = "RROCK04",
-    ceil = "F_SKY1",
+    ceil  = "RROCK04",
   --  lift_floor = "FLOOR4_8",
 
     scenery = { "burnt_tree", "big_tree" },
@@ -267,7 +267,7 @@ D2_COMBOS =
     lift = "SUPPORT3",
 
     floor = "RROCK17",
-    ceil = "F_SKY1",
+    ceil  = "RROCK17",
   --  lift_floor = "FLOOR4_8",
 
     scenery = "brown_stub",
@@ -286,7 +286,7 @@ D2_COMBOS =
     pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
 
     floor = "MFLR8_4",
-    ceil = "F_SKY1",
+    ceil  = "MFLR8_4",
 
     scenery = { "skull_rock", "brown_stub", "evil_eye" },
   },
@@ -301,7 +301,7 @@ D2_COMBOS =
     step = "STEP5",
 
     floor = "FLAT10",
-    ceil = "F_SKY1",
+    ceil  = "FLAT10",
 
     scenery = "burnt_tree",
 

@@ -127,7 +127,7 @@ HC_COMBOS =
     void = "GRSTNPBV",
 
     floor = "FLOOR00",
-    ceil = "F_SKY1",
+    ceil =  "FLOOR00",
 
     scenery = "serpent_torch",
   },
@@ -142,7 +142,7 @@ HC_COMBOS =
     pillar = "SPINE1",
 
     floor = "FLOOR17",
-    ceil  = "F_SKY1",
+    ceil  = "FLOOR17",
 
     scenery = "fire_brazier",
   },
@@ -156,7 +156,7 @@ HC_COMBOS =
     void = "CTYSTCI4",
 
     floor = "FLTWAWA1",
-    ceil  = "F_SKY1",
+    ceil  = "FLOOR27",
   },
 
   SANDY =
@@ -169,7 +169,7 @@ HC_COMBOS =
     pillar = "SPINE2",
 
     floor = "FLOOR27",
-    ceil  = "F_SKY1",
+    ceil  = "FLOOR27",
 
     scenery = "small_pillar",
   },
@@ -186,7 +186,7 @@ HC_EXITS =
     void = "SKULLSB1",
 
     floor = "FLOOR03",
-    ceil = "FLOOR19",
+    ceil  = "FLOOR19",
 
     switch = { switch="SW2OFF", wall="METL2", h=64 },
 
@@ -261,7 +261,7 @@ HC_PEDESTALS =
   WEAPON = -- FIXME
   {
     wall  = "CTYSTCI4", void = "CTYSTCI4",
-    floor = "FLOOR11",   ceil = "FLOOR11",
+    floor = "FLOOR11",  ceil = "FLOOR11",
     h = 8,
   },
 }
@@ -627,9 +627,9 @@ THEME_FACTORIES["heretic"] = function()
              prefer_stairs=true,
            },
 
+    SKY_TEX    = "F_SKY1",
     ERROR_TEX  = "DRIPWALL",
     ERROR_FLAT = "FLOOR09",
-    SKY_TEX    = "F_SKY1",
 
     thing_nums = HC_THING_NUMS,
     monsters   = HC_MONSTERS,
