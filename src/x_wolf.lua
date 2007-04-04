@@ -171,6 +171,8 @@ WF_COMBOS =
     mat_pri = 5,
     wall = 12, void = 12, floor=0, ceil=0,
     decorate = 10, door_side = 23,
+
+    theme_probs = { BUNKER=120, CELLS=25  },
   },
 
   GRAY_STONE =
@@ -178,6 +180,8 @@ WF_COMBOS =
     mat_pri = 7,
     wall = 1, void = 1, floor=0, ceil=0,
     decorate = { 4,6 }, door_side = 28,
+
+    theme_probs = { BUNKER=60, CAVE=30 },
   },
 
   GRAY_BRICK =
@@ -185,6 +189,8 @@ WF_COMBOS =
     mat_pri = 7,
     wall = 35, void = 35, floor=0, ceil=0,
     decorate = { 37,43 }, door_side = 49,
+
+    theme_probs = { CELLS=60, BUNKER=40 },
   },
 
   BLUE_STONE =
@@ -192,6 +198,8 @@ WF_COMBOS =
     mat_pri = 6,
     wall = 8, void = 8, floor=0, ceil=0,
     decorate = { 5,7 }, door_side = 41,
+
+    theme_probs = { CELLS=140 },
   },
 
   BLUE_BRICK =
@@ -199,6 +207,8 @@ WF_COMBOS =
     mat_pri = 6,
     wall = 40, void = 40, floor=0, ceil=0,
     decorate = { 34,36 },
+
+    theme_probs = { CELLS=80 },
   },
 
   RED_BRICK =
@@ -206,36 +216,46 @@ WF_COMBOS =
     mat_pri = 5,
     wall = 17, void = 17, floor=0, ceil=0,
     decorate = { 18,38 }, door_side = 20,
+
+    theme_probs = { BUNKER=80 },
   },
-  
+ 
   PURPLE_STONE =
   {
     mat_pri = 1,
     wall = 19, void = 19, floor=0, ceil=0,
     decorate = 25,
+
+    theme_probs = { CAVE=30 },
   },
-  
+
   BROWN_CAVE =
   {
     mat_pri = 3,
     wall = 29, void = 29, floor=0, ceil=0,
     decorate = { 30,31,32 },
+
+    theme_probs = { CAVE=90 },
   },
-  
+ 
   BROWN_BRICK =
   {
     mat_pri = 5,
     wall = 42, void = 42, floor=0, ceil=0,
     door_side = 47,
+
+    theme_probs = { CAVE=20 },
   },
 
   BROWN_STONE =
   {
     mat_pri = 5,
     wall = 44, void = 44, floor=0, ceil=0,
+
+    theme_probs = { CAVE=50, CELLS=20 },
   },
 }
- 
+
 WF_EXITS =
 {
   ELEVATOR =  -- FIXME: not needed, remove
@@ -406,37 +426,11 @@ WF_ROOMS =
 
 WF_THEMES =
 {
-  -- main styles:
-  -- 1. CELLS  --> blue_stone, skeletons, dogs, 
-  -- 2. BUNKER --> brick/wood, humans, quarters, plants/urns
+  -- Main Themes:
+  --
+  -- 1. BUNKER --> brick/wood, humans, quarters, plants/urns
+  -- 2. CELLS  --> blue_stone, dogs, skeletons 
   -- 3. CAVE   --> cave/rock tex, vines, mutants
-
-  CELLS =
-  {
-    prob = 30,
-
-    room_probs =
-    {
-      STORAGE = 40,
-      TREASURE = 5,  SUPPLIES = 10,
-      QUARTERS = 20, BATHROOM = 10,
-      KITCHEN = 10,  TORTURE = 60,
-    },
-
-    combo_probs =
-    {
-      WOOD = 25,
-      GRAY_BRICK = 60,
-      BLUE_STONE = 140,
-      BLUE_BRICK = 80,
-      BROWN_STONE = 20,
-    },
-
-    general_scenery =
-    {
-      dead_guard=50, puddle=10,
-    },
-  },
 
   BUNKER =
   {
@@ -450,23 +444,38 @@ WF_THEMES =
       KITCHEN = 30,  TORTURE = 20,
     },
 
-    combo_probs =
-    {
-      WOOD = 120,
-      GRAY_STONE = 60,
-      GRAY_BRICK = 40,
-      RED_BRICK = 80,
-    },
-
     general_scenery =
     {
       suit_of_armor=50, flag=20,
     },
   },
 
+  CELLS =
+  {
+    prob = 30,
+
+    room_probs =
+    {
+      STORAGE = 40,
+      TREASURE = 5,  SUPPLIES = 10,
+      QUARTERS = 20, BATHROOM = 10,
+      KITCHEN = 10,  TORTURE = 60,
+    },
+
+    general_scenery =
+    {
+      dead_guard=50, puddle=10,
+    },
+
+    monster_prefs =
+    {
+      dog=2.0, guard=2.0,
+    },
+  },
+
   CAVE =
   {
-    prob=20,
+    prob = 20,
 
     room_probs =
     {
@@ -476,21 +485,18 @@ WF_THEMES =
       KITCHEN = 5,   TORTURE = 30,
     },
 
-    combo_probs =
-    {
-      GRAY_STONE = 30,
-      PURPLE_STONE = 30,
-      BROWN_CAVE = 80,
-      BROWN_BRICK = 20,
-      BROWN_STONE = 50,
-    },
-
     general_scenery =
     {
       vines=90, spears=30,
     },
+
+    monster_prefs =
+    {
+      mutant=6.0, officer=2.0,
+    },
   },
 
+--[[
   SECRET =
   {
     prob=0, -- special style, never chosen randomly
@@ -505,6 +511,7 @@ WF_THEMES =
 
     -- combo_probs : when missing, all have same prob
   },
+--]]
 }
 
 
@@ -512,11 +519,11 @@ WF_THEMES =
 
 WF_MONSTERS =
 {
-  dog     = { prob=50, hp=1,   dm=5,  fp=10, r=20,h=40, melee=true, },
-  guard   = { prob=80, hp=25,  dm=10, fp=10, r=20,h=40, hitscan=true, cage_fallback=10 },
-  officer = { prob=20, hp=50,  dm=20, fp=10, r=20,h=40, hitscan=true, },
-  mutant  = { prob=20, hp=55,  dm=35, fp=10, r=20,h=40, hitscan=true, },
-  ss_dude = { prob=10, hp=100, dm=30, fp=10, r=20,h=40, hitscan=true, },
+  dog     = { prob=20, hp=1,   dm=5,  fp=10, r=20,h=40, melee=true, },
+  guard   = { prob=60, hp=25,  dm=10, fp=10, r=20,h=40, hitscan=true, cage_fallback=10 },
+  officer = { prob=30, hp=50,  dm=20, fp=10, r=20,h=40, hitscan=true, },
+  mutant  = { prob=10, hp=55,  dm=35, fp=10, r=20,h=40, hitscan=true, },
+  ss_dude = { prob=50, hp=100, dm=30, fp=10, r=20,h=40, hitscan=true, },
 }
 
 WF_BOSSES =
