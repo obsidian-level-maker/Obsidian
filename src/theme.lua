@@ -114,15 +114,25 @@ function get_rand_theme()
 end
 
 function get_rand_combo(theme)
-  if theme and theme.combo_probs then
-    local name = rand_key_by_probs(theme.combo_probs)
-    local info = THEME.combos[name]
-    if not info then error("No such combo: " .. name); end
-    return info
-  else
-    local name,info = rand_table_pair(THEME.combos)
-    return info
+  local probs = {}
+
+  for name,combo in pairs(THEME.combos) do
+    if combo.theme_probs and combo.theme_probs[theme.name] then
+      probs[name] = combo.theme_probs[theme.name]
+    end
   end
+
+  if table_empty(probs) then
+    error("No matching combos for theme: " .. theme.name)
+  end
+
+  local name = rand_key_by_probs(probs)
+  local result = THEME.combos[name]
+
+  assert(name)
+  assert(result)
+
+  return result
 end
 
 function get_rand_roomtype(theme)

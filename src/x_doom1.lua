@@ -102,6 +102,8 @@ DM_COMBOS =
 
     scenery = "lamp",
     good_liquid = "blood",
+
+    theme_probs = { TECH=80 },
   },
 
   BASE2 =
@@ -120,6 +122,8 @@ DM_COMBOS =
     step_floor = "STEP1",
 
     scenery = "tech_column",
+
+    theme_probs = { TECH=65, INDUSTRIAL=5 }, 
   },
 
   MARBLE =
@@ -139,6 +143,8 @@ DM_COMBOS =
 
     bad_liquid = "nukage",
     good_liquid = "blood",
+
+    theme_probs = { HELL=70 },
   },
 
   WOOD =
@@ -155,6 +161,8 @@ DM_COMBOS =
     floor = "FLAT5_1",
 
     scenery = { "impaled_human", "hang_twitching" },
+
+    theme_probs = { URBAN=30 },
   },
 
   CEMENT =
@@ -171,6 +179,7 @@ DM_COMBOS =
     ceil = "CEIL3_5",  -- "SLIME14" not in doom 1
   --  lift_floor = "FLOOR4_8",
 
+    theme_probs = { URBAN=50, INDUSTRIAL=10 },
   },
 
   SLAD =
@@ -188,6 +197,8 @@ DM_COMBOS =
 
     scenery = "burning_barrel",
     good_liquid = "nukage",
+
+    theme_probs = { INDUSTRIAL=50, TECH=15 },
   },
 
   GRAY =
@@ -205,6 +216,8 @@ DM_COMBOS =
   --  lift_floor = "FLOOR4_8",
 
     scenery = { "green_pillar", "green_column", "green_column_hrt" },
+
+    theme_probs = { INDUSTRIAL=66, URBAN=10 },
   },
 
   CAVEY =
@@ -215,6 +228,8 @@ DM_COMBOS =
     void = "BROWNHUG",
     floor = "FLAT10",
     ceil  = "FLAT10",
+
+    theme_probs = { CAVE=50 },
   },
 
 
@@ -234,6 +249,8 @@ DM_COMBOS =
     ceil = "MFLR8_1",
 
     scenery = { "blue_torch", "blue_torch_sm" },
+
+    theme_probs = { URBAN=70, INDUSTRIAL=5 },
   },
 
   BROWN =
@@ -253,6 +270,7 @@ DM_COMBOS =
 
     scenery = { "skull_pole", "skull_kebab" },
     good_liquid = "blood",
+    theme_probs = { URBAN=50 },
   },
 }
 
@@ -903,11 +921,6 @@ DM_THEMES =
       PLAIN=50, WAREHOUSE=1, COMPUTER=1,
     },
 
-    combo_probs=
-    {
-      STONY=70, BROWN=50, CEMENT=50, WOOD=30, GRAY=10,
-    },
-
     exit_probs=
     {
       STONE=70, BROWN=50,
@@ -927,13 +940,6 @@ DM_THEMES =
     room_probs=
     {
       WAREHOUSE=50, COMPUTER=10,
-    },
-
-    combo_probs=
-    {
-      GRAY=50, SLAD=50,
-      CEMENT=5, BASE2=5,
-      STONY=5, BROWN=5,
     },
 
     exit_probs=
@@ -957,11 +963,6 @@ DM_THEMES =
       COMPUTER=50, WAREHOUSE=5,
     },
 
-    combo_probs=
-    {
-      BASE=80, BASE2=65, SLAD=15,
-    },
-
     exit_probs=
     {
       TECH=50, BLUE=50, STARTAN=50, BROWN=5,
@@ -976,16 +977,11 @@ DM_THEMES =
 
   NATURE =
   {
-    prob = 0,
+    prob = 50, --FIXME: Doom2 only
 
     room_probs=
     {
       PLAIN=50,
-    },
-
-    combo_probs=
-    {
-      GRASSY = 50, ASHY=50, MUDDY=50  -- FIXME: Doom2 combos
     },
 
     exit_probs=
@@ -1009,11 +1005,6 @@ DM_THEMES =
       PLAIN=50, WAREHOUSE=3, COMPUTER=1,
     },
 
-    combo_probs=
-    {
-      CAVEY=50
-    },
-
     exit_probs=
     {
       BROWN=50, STONE=10,
@@ -1035,16 +1026,10 @@ DM_THEMES =
     {
       TORTURE=20,
     },
-    combo_probs=
-    {
-      MARBLE=70,
-    },
 
     exit_probs=
     {
-      STONE=10,
-      BROWN=10,
-      BLOODY=50,
+      STONE=10, BROWN=10, BLOODY=50,
     },
 
     hallway_probs=

@@ -179,6 +179,8 @@ D2_COMBOS =
     ceil = "CEIL1_2",
 
     scenery = { "candelabra", "evil_eye" },
+
+    theme_probs = { URBAN=50 },
   },
 
   GRNTECH =
@@ -197,6 +199,8 @@ D2_COMBOS =
 
     scenery = { "mercury_lamp", "short_lamp" },
     bad_liquid = "water",
+
+    theme_probs = { TECH=20 },
   },
 
   MARBLE =
@@ -216,6 +220,8 @@ D2_COMBOS =
 
     bad_liquid = "nukage",
     good_liquid = "blood",
+
+    theme_probs = { HELL=70 },
   },
 
   -------->
@@ -235,6 +241,8 @@ D2_COMBOS =
     scenery = "brown_stub",
 
     bad_liquid = "nukage",
+
+    theme_probs = { NATURE=50 },
   },
 
   ROCKY =
@@ -254,6 +262,8 @@ D2_COMBOS =
 
     scenery = { "burnt_tree", "big_tree" },
     bad_liquid = "slime",
+
+    theme_probs = { NATURE=50 },
   },
 
   ROCKY2 =
@@ -272,6 +282,8 @@ D2_COMBOS =
 
     scenery = "brown_stub",
     bad_liquid = "slime",
+
+    theme_probs = { NATURE=50 },
   },
 
   ASHY =
@@ -289,6 +301,8 @@ D2_COMBOS =
     ceil  = "MFLR8_4",
 
     scenery = { "skull_rock", "brown_stub", "evil_eye" },
+
+    theme_probs = { NATURE=50 },
   },
 
   MUDDY =
@@ -306,6 +320,8 @@ D2_COMBOS =
     scenery = "burnt_tree",
 
     bad_liquid = "slime",
+
+    theme_probs = { NATURE=50 },
   },
 
   BRICK =
@@ -323,6 +339,8 @@ D2_COMBOS =
 
     scenery = { "red_torch", "red_torch_sm" },
     bad_liquid = "slime",
+
+    theme_probs = { URBAN=30 },
   },
 
   BRICK2 =
@@ -338,6 +356,8 @@ D2_COMBOS =
     ceil = "FLAT1",
 
     scenery = { "green_torch", "green_torch_sm" },
+
+    theme_probs = { URBAN=20 },
   },
 }
 

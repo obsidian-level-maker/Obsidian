@@ -33,6 +33,8 @@ PL_COMBOS =
     ceil  = "FLAT10",
 
     bad_liquid = "slime",
+
+    theme_probs = { CAVE=100 },
   },
 
   --- Outdoor ---
@@ -51,6 +53,8 @@ PL_COMBOS =
     ceil  = "RROCK14",
 
     bad_liquid = "slime",
+
+    theme_probs = { URBAN=120 },
   },
 
   A_ROCK =
@@ -67,6 +71,8 @@ PL_COMBOS =
     ceil  = "RROCK13",
 
     good_liquid = "water",
+
+    theme_probs = { URBAN=50 },
   },
 
 }
