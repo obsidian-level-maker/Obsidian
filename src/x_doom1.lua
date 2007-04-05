@@ -882,7 +882,11 @@ DM_ROOMS =
     room_heights = { [96]=50, [128]=50 },
     door_probs = { nominal=5, out_diff=75, combo_diff=50 },
   },
-  
+ 
+  SCENIC =
+  {
+  },
+
   WAREHOUSE =
   {
     -- crate it up baby!
@@ -1021,7 +1025,9 @@ DM_THEMES =
       demon=2.5, knight=2.0, baron=2.0, pain=2.0,
     },
 
-    door_probs = { nominal=5, out_diff=75, combo_diff=10 }
+    door_probs = { nominal=5, out_diff=75, combo_diff=10 },
+
+    prefer_stairs = true,
   },
 
 
@@ -1052,7 +1058,10 @@ DM_THEMES =
       barrel=0.1,
     },
 
-    door_probs = { nominal=1, out_diff=10, combo_diff=3 }
+    diff_probs = { [0]=10, [16]=40, [32]=80, [64]=60, [96]=20 },
+    bump_probs = { [0]=5, [16]=30, [32]=30, [64]=20 },
+    door_probs = { nominal=1, out_diff=10, combo_diff=3 },
+    prefer_stairs = true,
   },
 
   HELL =
@@ -1401,6 +1410,8 @@ GAME_FACTORIES["doom_common"] = function()
     rooms     = DM_ROOMS,
     themes    = DM_THEMES,
 
+    diff_probs = { [0]=20, [16]=20, [32]=80, [64]=60, [96]=20 },
+    bump_probs = { [0]=40, [16]=20, [32]=20, [64]=10 },
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     door_probs = { nominal=15, out_diff=75, combo_diff=50 },
   }

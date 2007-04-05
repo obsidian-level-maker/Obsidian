@@ -1860,13 +1860,15 @@ function make_chunks(p)
       for zzz,side in ipairs(SIDES) do
 
         local N = chunk_neighbour(c, K, side)
-        if N and (N.kind == "room" or N.kind == "link") then
-          assert(N.rmodel)
+        if N and N.rmodel and N.kind ~= "vista" then
+
           K.rmodel = copy_table(N.rmodel)
+--[[
           if K.kind == "empty" then
             K.kind = N.kind
             K.link = N.link
           end
+--]]
           return
         end
       end
@@ -4606,13 +4608,16 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
     local diff_h = K.rmodel.f_h - J.rmodel.f_h
     local step   = -diff_h / (deep * 4)
 
-    local max_step = sel(GAME.caps.prefer_stairs, 24, 16)
+    local prefer_stairs = c.room_type.prefer_stairs or
+       c.quest.level_theme.prefer_stairs or GAME.caps.prefer_stairs
+    
+    local max_step = sel(GAME.caps.prefer_stairs, 24, 16) --????
 
     -- decide whether to make a staircase or a lowering platform
     local mode = "lift"
 
     if math.abs(step) <= max_step then
-      if GAME.caps.prefer_stairs then
+      if prefer_stairs then
         mode = "stair"
       elseif math.abs(diff_h) <= 32 then
         mode = "stair"

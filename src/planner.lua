@@ -81,7 +81,7 @@ function show_path(p)
       end
       if R == "<" or L == ">" then L,R = R,L end
 
-      con.printf(L .. kind .. c.quest.level .. R .. "|")
+      con.printf("%s", L .. kind .. c.quest.level .. R .. "|")
     end
   end
 
@@ -153,7 +153,7 @@ function show_chunks(p)
     end
 
     for x = 1,3 do
-      con.printf(chk(x))
+      con.printf("%s", chk(x))
     end
     con.printf("|")
   end
@@ -189,7 +189,8 @@ function show_cell_blocks(p, c)
     if not B then return "!" end
     if B.walk then return tostring(B.walk) end
     if B.solid then return "#" end
-    if B.fragments or B.f_tex then return "%" end
+    if B.fragments then return "%" end
+    if B.f_tex then return "/" end
 
     if not B.chunk then return "?" end
     if B.chunk.kind == "vista" then return "V" end
@@ -199,7 +200,7 @@ function show_cell_blocks(p, c)
 
   for y = c.by2,c.by1,-1 do
     for x = c.bx1,c.bx2 do
-      con.printf(chk(p.blocks[x][y]))
+      con.printf("%s", chk(p.blocks[x][y]))
     end
     con.printf("\n")
   end
@@ -1329,19 +1330,20 @@ end
 
   local function select_floor_heights()
 
-    if not GAME.caps.heights then return end
-
-    local DIFF_H     = {  0, 16, 32, 64, 96 }
-    local DIFF_PROBS = { 20, 20, 80, 60, 20 }
-
-    local BUMP_H     = { -64,-32,-16,  0, 16, 32, 64 }
-    local BUMP_PROBS = {  10, 20, 20, 40, 20, 20, 10 }
-
     local function start_height()
       return 64 * rand_index_by_probs { 5, 40,80, 90, 70,30, 10 }
     end
 
     local function quest_heights(Q)
+
+      local diff_probs = Q.combo.diff_probs or
+          Q.level_theme.diff_probs or GAME.diff_probs
+
+      local bump_probs = Q.combo.bump_probs or
+          Q.level_theme.bump_probs or GAME.bump_probs
+
+      assert(diff_probs)
+      assert(bump_probs)
 
       -- determine overall slope of quest (up/down/level)
       local slope
@@ -1354,7 +1356,7 @@ end
       end
 
       repeat
-        slope = DIFF_H[rand_index_by_probs(DIFF_PROBS)]
+        slope = rand_key_by_probs(diff_probs)
         if rand_odds(50) then slope = -slope end
       until (sl_min <= slope) and (slope <= sl_max)
 
@@ -1381,7 +1383,8 @@ end
         local bump
 
         if not (c.hallway and prev.hallway) then
-          bump = BUMP_H[rand_index_by_probs(BUMP_PROBS)]
+          bump = rand_key_by_probs(bump_probs)
+          if rand_odds(50) then bump = -bump end
           c.floor_h = c.floor_h + bump
         end
 
@@ -1429,7 +1432,9 @@ end
       end
     end
 
-    --- select_floor_heights ---
+    ---| select_floor_heights |---
+
+    if not GAME.caps.heights then return end
 
     p.quests[1].path[1].floor_h = start_height()
 
@@ -1463,6 +1468,8 @@ end
           c.combo.room_heights or
           c.quest.level_theme.room_heights or
           GAME.room_heights
+
+        assert(height_list)
 
         c.ceil_h = c.floor_h + rand_key_by_probs(height_list)
       end
@@ -1950,6 +1957,7 @@ R.level_theme.name, R.combo.name)
         outies[1].quest, outies[1].along, outies[1].combo)
 
       c.scenic = "outdoor"
+      c.room_type = non_nil(GAME.rooms["SCENIC"])
 
       -- Experimental "SOLID SCENIC" cells
       if #innies >= 1 and rand_odds(66) and
