@@ -407,13 +407,14 @@ BARS_1 =
   elements =
   {
     -- step
-    s = { c_rel="door_top", c_h=0, c_tex="frame_c" },
+    s = { c_rel="door_top", c_h=0 },
 
     -- bars
-    B = { f_rel="door_top", f_h=0,
-          c_rel="door_top", c_h=0,
+    B = { f_rel="door_top", f_h=0, f_tex="bar_f",
+          c_rel="door_top", c_h=0, c_tex="bar_f",
           u_tex="bar_w", u_peg="bottom",
           l_tex="bar_w", l_peg="bottom",
+
           kind="door_kind", tag="tag",
         },
   },
