@@ -1404,7 +1404,7 @@ BILLBOARD_LIT =
 
     -- pic
     p = { f_h=8, f_rel="pic_h",
-          l_tex="pic_back", [2] = { l_tex="pic" },
+          l_tex="pic_back", [2] = { l_tex="pic_w" },
           f_tex="pic_f", l_peg="top",
         },
 
