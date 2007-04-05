@@ -331,7 +331,7 @@ function create_link(p, c, other, dir)
     cells = { c, other },
     kind = "arch",  -- updated later
     build = c,    -- updated later
-    long = sel(THEME.caps.blocky_doors, 1, 3),
+    long = sel(GAME.caps.blocky_doors, 1, 3),
     deep = 1,
   }
 
@@ -546,7 +546,7 @@ function resize_rooms(p)
       local new_w, new_h = get_cell_size(shrinker)
       new_w, new_h = new_w - mv_x, new_h - mv_y
 
-      local min_size = THEME.cell_min_size
+      local min_size = GAME.cell_min_size
 
       if new_w < min_size or new_h < min_size then return end
     end
@@ -916,7 +916,7 @@ end
 
 function plan_sp_level(is_coop)  -- returns Plan
 
-  local p = get_base_plan(THEME.plan_size, THEME.cell_size)
+  local p = get_base_plan(GAME.plan_size, GAME.cell_size)
 
 
   local function travel_cost(cells, cx, cy, nx, ny)
@@ -929,7 +929,7 @@ function plan_sp_level(is_coop)  -- returns Plan
   end
 
   local function get_quest_item(quest)
-    local tab = THEME.quests[quest]
+    local tab = GAME.quests[quest]
     assert(tab)
 
     local t_items = {}
@@ -1090,7 +1090,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 
   local function make_hallways(Q)
 
-    if table_empty(THEME.hallways) then return end
+    if table_empty(GAME.hallways) then return end
 
     local function hall_lighting(start,idx,finish)
       local level = 128
@@ -1128,7 +1128,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     if start == 2 and Q.first.hallway and rand_odds(96) then
       -- extend the hallway in the previous quest
       combo = Q.first.combo
-    elseif not THEME.caps.heights then
+    elseif not GAME.caps.heights then
       -- for Wolf3d/SOD, too many combo changes look bad
       combo = Q.first.combo
     else
@@ -1142,7 +1142,7 @@ function plan_sp_level(is_coop)  -- returns Plan
       local c = Q.path[idx]
       c.hallway = true
       c.combo = combo
-      c.room_type = THEME.rooms["HALLWAY"]
+      c.room_type = GAME.rooms["HALLWAY"]
       if combo.well_lit then
         c.light = 176
       else
@@ -1199,7 +1199,7 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
     assert(combo)
 
     -- decide liquid
-    if THEME.caps.liquids then
+    if GAME.caps.liquids then
       Q.liquid = liquid_for_quest(Q)
     end
 
@@ -1280,7 +1280,7 @@ end
             if c1.combo.outdoor ~= c2.combo.outdoor then door_chance = 70
         elseif c1.hallway and c2.hallway then door_chance = 5
         elseif c1.combo.outdoor then door_chance = 5
-        elseif c1.combo ~= c2.combo then door_chance = sel(THEME.caps.blocky_doors, 85, 40)
+        elseif c1.combo ~= c2.combo then door_chance = sel(GAME.caps.blocky_doors, 85, 40)
         end
 
         if rand_odds(door_chance) then link.kind = "door" end
@@ -1296,7 +1296,7 @@ end
     end
 
     -- for Wolfenstein3D, first room should have a door
-    if THEME.caps.sealed_start then
+    if GAME.caps.sealed_start then
       local c = p.quests[1].first
 
       for side=2,8,2 do
@@ -1311,7 +1311,7 @@ end
 
   local function select_floor_heights()
 
-    if not THEME.caps.heights then return end
+    if not GAME.caps.heights then return end
 
     local DIFF_H     = {  0, 16, 32, 64, 96 }
     local DIFF_PROBS = { 20, 20, 80, 60, 20 }
@@ -1433,7 +1433,7 @@ end
 
   local function select_ceiling_heights()
 
-    if not THEME.caps.heights then return end
+    if not GAME.caps.heights then return end
 
     local ROOM_HEIGHTS = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 }
     local HALL_HEIGHTS = { [96]=50, [128]=50 }
@@ -1538,7 +1538,7 @@ end
   end
 
   local function assign_floor_codes()
-    if THEME.caps.heights then return end -- not needed (yet??)
+    if GAME.caps.heights then return end -- not needed (yet??)
 
     local function should_connect(c, other, link)
       if link.kind == "arch" then return true end
@@ -1700,10 +1700,10 @@ end
     local keys, switches, weapons, items, total, ratio
     local k_max, sw_max, wp_max, it_max;
 
-    k_max  = math.min(3, table_size(THEME.quests.key))
-    sw_max = math.min(3, table_size(THEME.quests.switch))
-    wp_max = math.min(4, table_size(THEME.quests.weapon))
-    it_max = math.min(2, table_size(THEME.quests.item))
+    k_max  = math.min(3, table_size(GAME.quests.key))
+    sw_max = math.min(3, table_size(GAME.quests.switch))
+    wp_max = math.min(4, table_size(GAME.quests.weapon))
+    it_max = math.min(2, table_size(GAME.quests.item))
 
     local tot_min = 1 + rand_index_by_probs { 5, 70, 5 }
     local tot_max = 4 + rand_index_by_probs { 1, 5, 15, 60, 15, 5, 1 }
@@ -1795,8 +1795,8 @@ end
 
     if T1 == T2 then T2 = get_rand_theme() end
 
---T1 = THEME.themes["CAVE"]
---T2 = THEME.themes["CAVE"]
+--T1 = GAME.themes["CAVE"]
+--T2 = GAME.themes["CAVE"]
 
     -- choose change-over point
     assert(#p.quests >= 2)
@@ -1856,8 +1856,8 @@ R.level_theme.name, R.combo.name)
     peak = peak + 20 * (Q.sub_level or 0)
     peak = peak * (Q.level ^ 0.7) * (1 + rand_skew()/5)
 
-    -- adjustment for Wolf3d/SOD  | FIXME: rework this func, use THEME values
-    if not THEME.caps.heights then
+    -- adjustment for Wolf3d/SOD  | FIXME: rework this func, use GAME values
+    if not GAME.caps.heights then
       peak = peak / 2.2;
     end
 
@@ -1872,7 +1872,7 @@ R.level_theme.name, R.combo.name)
     -- FIXME: handle secret exits too
     local c = p.quests[#p.quests].last
 
-    if not THEME.caps.elevator_exits then
+    if not GAME.caps.elevator_exits then
       c.combo = get_rand_exit_combo()
     end
     c.is_exit = true
@@ -1887,7 +1887,7 @@ R.level_theme.name, R.combo.name)
           link.kind = "door"
           link.build = c
           link.is_exit = true
-          link.long = sel(THEME.caps.blocky_doors, 1,
+          link.long = sel(GAME.caps.blocky_doors, 1,
                sel(c.combo.front_mark or c.small_exit, 3, 2))
         end
       end
@@ -2127,7 +2127,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     local function add_closet(Q)
 
-      if not THEME.caps.closets then return end
+      if not GAME.caps.closets then return end
 
       local locs  = {}
       local SIDES = { 2,4,6,8 }
@@ -2207,7 +2207,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     local function add_depot(Q)
 
-      if not THEME.caps.depots then return end
+      if not GAME.caps.depots then return end
 
       local function valid_depot_spot(x, y)
         if p.cells[x][y] then return false end
@@ -2350,7 +2350,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
   p.hmodels = initial_hmodels()
 
-  if THEME.caps.liquids then
+  if GAME.caps.liquids then
     p.liquid = choose_liquid()
 
     if (p.liquid) then

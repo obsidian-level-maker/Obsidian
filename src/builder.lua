@@ -87,7 +87,7 @@ function random_where(link, border)
 
   local LINK_WHERES = { 3, 3, 9, 3, 3 }
 
-  if THEME.caps.blocky_doors or
+  if GAME.caps.blocky_doors or
      (link.quest and link.quest.kind == "key") or
      link.cells[1].is_exit or link.cells[2].is_exit
   then
@@ -413,7 +413,7 @@ function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y
     if skin[key] then return skin[key] end
     if parm[key] then return parm[key] end
 
-    if key == "sky" and combo.outdoor then return THEME.SKY_TEX end
+    if key == "sky" and combo.outdoor then return GAME.SKY_TEX end
 
     if skin[base]  then return skin[base] end
     if combo[base] then return combo[base] end
@@ -656,8 +656,8 @@ function B_lift(p,c, rmodel, bx,by, z, dir, long, deep)
     rmodel = rmodel,
 
     f_h = z,
-    f_tex = c.combo.lift_floor or THEME.mats.LIFT.floor,
-    l_tex = c.combo.lift or THEME.mats.LIFT.wall,
+    f_tex = c.combo.lift_floor or GAME.mats.LIFT.floor,
+    l_tex = c.combo.lift or GAME.mats.LIFT.wall,
 
     lift_kind = 123,  -- 62 for slower kind
     lift_walk = 120,  -- 88 for slower kind
@@ -769,7 +769,7 @@ function B_pillar_cage(p,c, theme, kx,ky, bx,by)
 
   local rail
   if K.rmodel.c_h < K.rmodel.f_h+192 then
-    rail = THEME.rails["r_1"]  -- FIXME: want "short" rail
+    rail = GAME.rails["r_1"]  -- FIXME: want "short" rail
   else
     rail = get_rand_rail()
   end
@@ -1105,7 +1105,7 @@ function setup_rmodel(p, c)
   }
 
   if c.combo.outdoor then
-    c.rmodel.c_tex = THEME.SKY_TEX
+    c.rmodel.c_tex = GAME.SKY_TEX
   end
 
   if not c.rmodel.light then
@@ -1141,8 +1141,8 @@ function make_chunks(p)
     local cell_w = c.bx2 - c.bx1 + 1
     local cell_h = c.by2 - c.by1 + 1
 
-    assert(cell_w >= THEME.cell_min_size)
-    assert(cell_h >= THEME.cell_min_size)
+    assert(cell_w >= GAME.cell_min_size)
+    assert(cell_h >= GAME.cell_min_size)
 
     c.chunks = array_2D(3, 3)
 
@@ -1689,7 +1689,7 @@ function make_chunks(p)
 
     -- TODO: more cage themes...
     if kind == "cage" then
-      if not THEME.mats.CAGE then return end
+      if not GAME.mats.CAGE then return end
       if c.scenic then return end
     end
 
@@ -2400,7 +2400,7 @@ function setup_borders_and_corners(p)
   local function border_kind(c1, c2, side)
 
     if not c2 or c2.is_depot then
-      if c1.combo.outdoor and THEME.caps.sky then return "sky" end
+      if c1.combo.outdoor and GAME.caps.sky then return "sky" end
       return "solid"
     end
 
@@ -2413,7 +2413,7 @@ function setup_borders_and_corners(p)
     -- TODO: sometimes allow it
     if c1.is_exit or c2.is_exit then return "solid" end
 
-    if not THEME.caps.heights then return "solid" end
+    if not GAME.caps.heights then return "solid" end
 
     if c1.border[side].window then return "window" end
 
@@ -2485,7 +2485,7 @@ function build_borders(p)
   local function build_door( link, side  )
     local D = c.border[side]
 
-    local door_info = THEME.doors[link.wide_door]
+    local door_info = GAME.doors[link.wide_door]
     assert(door_info)
     door_info = copy_table(door_info)
 
@@ -2500,7 +2500,7 @@ function build_borders(p)
       end
 
       if link.quest and link.quest.kind == "key" then
-        local bit = THEME.key_bits[link.quest.item]
+        local bit = GAME.key_bits[link.quest.item]
         assert(bit)
         door_info.prefab = "DOOR_LOCKED" --FIXME: wrong wrong wrong
         parm.door_kind = sel(p.coop, bit.kind_once, bit.kind_rep)
@@ -2510,16 +2510,16 @@ function build_borders(p)
         end
 --???        if bit.door then
 --???          kind = bit.door
---???          info = THEME.doors[kind]
+--???          info = GAME.doors[kind]
 --???          assert(info)
 --???        end
 
       elseif link.quest and link.quest.kind == "switch" and
-         THEME.switches[link.quest.item].bars
+         GAME.switches[link.quest.item].bars
       then
         door_info.prefab = "BARS_1" --FIXME: wrong wrong wrong
 
-        door_info.skin.bar_w = THEME.switches[link.quest.item].wall
+        door_info.skin.bar_w = GAME.switches[link.quest.item].wall
         assert(door_info.skin.bar_w)
 
         parm.tag = link.quest.tag + 1
@@ -2530,7 +2530,7 @@ function build_borders(p)
       elseif link.quest and link.quest.kind == "switch" then
         door_info.prefab = "DOOR_LOCKED" --FIXME: wrong wrong wrong
 
-        door_info.skin.key_w = THEME.switches[link.quest.item].wall
+        door_info.skin.key_w = GAME.switches[link.quest.item].wall
         assert(door_info.skin.key_w)
 
         parm.tag = link.quest.tag + 1
@@ -2561,7 +2561,7 @@ function build_borders(p)
 
     local bit
     if link.quest and link.quest.kind == "key" then
-      bit = THEME.key_bits[link.quest.item]
+      bit = GAME.key_bits[link.quest.item]
       assert(bit)
       assert(bit.kind_rep)
     end
@@ -2597,13 +2597,13 @@ function build_borders(p)
     local D = c.border[side]
     assert(D)
 
-if THEME.caps.elevator_exits and link.is_exit then
+if GAME.caps.elevator_exits and link.is_exit then
 local other = link_other(link, c)
 B_exit_elevator(p, other, link.x1, link.y1, side)
 return
 end
 
-    if THEME.caps.blocky_doors then
+    if GAME.caps.blocky_doors then
 
       if link.kind == "door" then
         blocky_door( link, side, double_who )
@@ -2741,13 +2741,13 @@ arch.f_tex = "TLITE6_6"
 
       local special_arch
 
-      if link.where == "wide" and THEME.mats.ARCH and rand_odds(70) then
+      if link.where == "wide" and GAME.mats.ARCH and rand_odds(70) then
         special_arch = true
 
         arch.c_h = math.max(arch.c_h, c.ceil_h - 48)
-        arch.c_tex = THEME.mats.ARCH.ceil
+        arch.c_tex = GAME.mats.ARCH.ceil
 
-        tex = THEME.mats.ARCH.wall
+        tex = GAME.mats.ARCH.wall
 
         fill(p,c, x, y, ex+ax, ey+ay, { solid=tex })
       end
@@ -2778,9 +2778,9 @@ arch.f_tex = "TLITE6_6"
       B_exit_door(p,c, c.combo, link, x, y, c.floor_h, dir)
 
     elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
-       THEME.switches[link.quest.item].bars
+       GAME.switches[link.quest.item].bars
     then
-      local info = THEME.switches[link.quest.item]
+      local info = GAME.switches[link.quest.item]
       local sec = copy_block_with_new(c.rmodel,
       {
         f_tex = b_combo.floor,
@@ -2810,7 +2810,7 @@ arch.f_tex = "TLITE6_6"
         kind = link.narrow_door
       end
 
-      local info = THEME.doors[kind]
+      local info = GAME.doors[kind]
       assert(info)
 
       local door_kind = 1
@@ -2831,7 +2831,7 @@ arch.f_tex = "TLITE6_6"
     local link = c.link[side]
     if not (link and link.build == c) then return end
 
-    if THEME.doors then
+    if GAME.doors then
       link.narrow_door = random_door_kind(64)
       link.wide_door   = random_door_kind(128)
     end
@@ -2985,7 +2985,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
 
     local kind = "plain"
     
-    if THEME.caps.rails and rand_odds(30) then kind = "wire" end
+    if GAME.caps.rails and rand_odds(30) then kind = "wire" end
 
     -- FIXME: "castley"
 
@@ -3008,7 +3008,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
       if other.scenic then FENCE.impassible = true end
 
     elseif kind == "wire" then
-      local rail_tex =THEME.rails["r_1"].wall
+      local rail_tex =GAME.rails["r_1"].wall
 
       if x1==x2 and y1==y2 then
         FENCE.rail = rail_tex
@@ -3173,7 +3173,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
     -- !!! FIXME: test crud
     if not bar and D.kind ~= "fence" then
       -- FIXME: choose window rail
-      sec[side] = { rail = THEME.rails["r_2"].wall }
+      sec[side] = { rail = GAME.rails["r_2"].wall }
     end
 
     for d_pos = first, BW-long, step do
@@ -3181,7 +3181,7 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
 
       if (d_pos+1) >= min_x and (d_pos+long) <= max_x then
         if bar then
-          B_bars(p,c, wx,wy, math.min(side,10-side),long, bar,bar_step, THEME.mats.METAL, sec,b_combo.wall)
+          B_bars(p,c, wx,wy, math.min(side,10-side),long, bar,bar_step, GAME.mats.METAL, sec,b_combo.wall)
         else
           gap_fill(p,c, wx,wy, wx+ax*(long-1),wy+ay*(long-1), sec)
         end
@@ -3329,12 +3329,12 @@ function build_pacman_level(p, c)
   local bot_flip = not top_flip
 
   -- !!!! FIXME: move skin into x_wolf.lua
-  local combo = THEME.combos[rand_sel(50,"BLUE_STONE","BLUE_BRICK")]
+  local combo = GAME.combos[rand_sel(50,"BLUE_STONE","BLUE_BRICK")]
   assert(combo)
 
   local skin =
   {
-    ghost_w = THEME.combos[rand_sel(50,"RED_BRICK","GRAY_STONE")].wall,
+    ghost_w = GAME.combos[rand_sel(50,"RED_BRICK","GRAY_STONE")].wall,
 
     dot_t = rand_sel(50,"chalice","cross"),
 
@@ -3552,7 +3552,7 @@ function build_cell(p, c)
       elseif K.dm_exit then
         B_deathmatch_exit(p,c, K,kx,ky,K.dir)
 
-      elseif THEME.pics and not c.small_exit
+      elseif GAME.pics and not c.small_exit
           and rand_odds(sel(c.combo.outdoor, 10, sel(c.hallway,20, 50)))
       then
         if not c.void_pic then decide_void_pic(p, c) end
@@ -3561,7 +3561,7 @@ function build_cell(p, c)
         if not c.quest.image and (p.deathmatch or
              (c.quest.mini and rand_odds(33)))
         then
-          pic = THEME.images[1]
+          pic = GAME.images[1]
           cut = 1
           c.quest.image = "pic"
         end
@@ -3575,7 +3575,7 @@ function build_cell(p, c)
     end -- K.void
 
     if K.cage then
-      B_big_cage(p,c, THEME.mats.CAGE, K,kx,ky)
+      B_big_cage(p,c, GAME.mats.CAGE, K,kx,ky)
       return
     end
 
@@ -3591,18 +3591,18 @@ function build_cell(p, c)
         for i = 1,4 do
           local dx,dy = dir_to_delta(offsets[i])
           if settings.game == "plutonia" then
-            B_double_pedestal(p,c, bx+dx,by+dy, K.rmodel, THEME.special_ped)
+            B_double_pedestal(p,c, bx+dx,by+dy, K.rmodel, GAME.special_ped)
           else
-            B_pedestal(p, c, bx+dx, by+dy, K.rmodel, THEME.pedestals.PLAYER)
+            B_pedestal(p, c, bx+dx, by+dy, K.rmodel, GAME.pedestals.PLAYER)
           end
           add_thing(p, c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
           c.player_pos = {x=bx+dx, y=by+dy}
         end
       else
         if settings.game == "plutonia" then
-          B_double_pedestal(p,c, bx,by, K.rmodel, THEME.special_ped)
+          B_double_pedestal(p,c, bx,by, K.rmodel, GAME.special_ped)
         else
-          B_pedestal(p, c, bx, by, K.rmodel, THEME.pedestals.PLAYER)
+          B_pedestal(p, c, bx, by, K.rmodel, GAME.pedestals.PLAYER)
         end
         add_thing(p, c, bx, by, sel(p.deathmatch, "dm_player", "player1"), true, angle)
         c.player_pos = {x=bx, y=by}
@@ -3610,13 +3610,13 @@ function build_cell(p, c)
       end
 
     elseif K.dm_weapon then
-      B_pedestal(p, c, bx, by, K.rmodel, THEME.pedestals.WEAPON)
+      B_pedestal(p, c, bx, by, K.rmodel, GAME.pedestals.WEAPON)
       add_thing(p, c, bx, by, K.dm_weapon, true)
 
     elseif K.quest then
 
       if c.quest.kind == "key" or c.quest.kind == "weapon" or c.quest.kind == "item" then
-        B_pedestal(p, c, bx, by, K.rmodel, THEME.pedestals.QUEST)
+        B_pedestal(p, c, bx, by, K.rmodel, GAME.pedestals.QUEST)
 
         -- weapon and keys are non-blocking, but we don't want
         -- a monster sitting on top of our quest item (especially
@@ -3624,7 +3624,7 @@ function build_cell(p, c)
         add_thing(p, c, bx, by, c.quest.item, true)
 
       elseif c.quest.kind == "switch" then
-        local info = THEME.switches[c.quest.item]
+        local info = GAME.switches[c.quest.item]
         assert(info.switch)
         local kind = 103; if info.bars then kind = 23 end
         if rand_odds(40) then
@@ -3640,7 +3640,7 @@ function build_cell(p, c)
         local side = wall_switch_dir(kx, ky, c.entry_dir)
 
         if settings.game == "plutonia" then
-          B_double_pedestal(p,c, bx,by, K.rmodel, THEME.special_ped,
+          B_double_pedestal(p,c, bx,by, K.rmodel, GAME.special_ped,
             { walk_kind = 52 }) -- FIXME "exit_W1"
 
         elseif c.small_exit and not c.smex_cage and rand_odds(80) then
@@ -3699,7 +3699,7 @@ function build_cell(p, c)
       end
 
       if settings.mode == "coop" and settings.game == "plutonia" then
-        sec.light = THEME.special_ped.coop_light
+        sec.light = GAME.special_ped.coop_light
       end
     end
 
@@ -3714,7 +3714,7 @@ function build_cell(p, c)
 
       if not c.overhang then
         local name
-        name, c.overhang = rand_table_pair(THEME.hangs)
+        name, c.overhang = rand_table_pair(GAME.hangs)
       end
       local overhang = c.overhang
 
@@ -3729,7 +3729,7 @@ function build_cell(p, c)
 
     -- TEST CRUD : crates
     if not c.scenic and not K.stair_dir
-      and THEME.crates
+      and GAME.crates
       and dual_odds(c.combo.outdoor, 20, 33)
       and (not c.hallway or rand_odds(25))
       and (not c.exit or rand_odds(50))
@@ -3763,7 +3763,7 @@ function build_cell(p, c)
 
       K.sky_light_sec = copy_block(sec)
       K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.sky_h, sec.c_h + c.sky_light.h)
-      K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, THEME.SKY_TEX, c.sky_light.light_info.floor)
+      K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, GAME.SKY_TEX, c.sky_light.light_info.floor)
       K.sky_light_sec.light = 176
       K.sky_light_utex = c.sky_light.light_info.side
 
@@ -3812,7 +3812,7 @@ function build_cell(p, c)
         if not c.quest.image and not c.quest.mini and
            (not p.image or rand_odds(11))
         then
-          combo = THEME.images[2]
+          combo = GAME.images[2]
           c.quest.image = "crate"
           p.image = true
         end
@@ -3823,10 +3823,10 @@ function build_cell(p, c)
       if K.pillar and not blocked then
 
         -- TEST CRUD
-        if rand_odds(22) and THEME.mats.CAGE and not p.deathmatch
+        if rand_odds(22) and GAME.mats.CAGE and not p.deathmatch
           and K.rmodel.c_h >= K.rmodel.f_h + 128
         then
-          B_pillar_cage(p,c, THEME.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
+          B_pillar_cage(p,c, GAME.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
         else
           B_pillar(p,c, c.combo, kx,ky, K.x1+1,K.y1+1)
         end
@@ -3855,7 +3855,7 @@ function build_cell(p, c)
 
   local function decide_sky_lights(c)
     if not c.combo.outdoor and not c.is_exit and not c.hallway
-       and THEME.lights and rand_odds(70)
+       and GAME.lights and rand_odds(70)
     then
       c.sky_light =
       {
@@ -4608,13 +4608,13 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
     local diff_h = K.rmodel.f_h - J.rmodel.f_h
     local step   = -diff_h / (deep * 4)
 
-    local max_step = sel(THEME.caps.prefer_stairs, 24, 16)
+    local max_step = sel(GAME.caps.prefer_stairs, 24, 16)
 
     -- decide whether to make a staircase or a lowering platform
     local mode = "lift"
 
     if math.abs(step) <= max_step then
-      if THEME.caps.prefer_stairs then
+      if GAME.caps.prefer_stairs then
         mode = "stair"
       elseif math.abs(diff_h) <= 32 then
         mode = "stair"
@@ -4709,7 +4709,7 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
   end
 
   -- elevator exits are done in build_link   FIXME: CHANGE
-  if THEME.caps.elevator_exits and c.is_exit then return end
+  if GAME.caps.elevator_exits and c.is_exit then return end
 
   decide_sky_lights(c)
 
@@ -4970,7 +4970,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
   end
 
   local function add_dm_weapon(c)
-    add_object(c, choose_dm_thing(THEME.dm.weapons, true))
+    add_object(c, choose_dm_thing(GAME.dm.weapons, true))
   end
 
   local function add_switch(c)
@@ -4994,7 +4994,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       parm.kind = 11
       parm.tag  = 0
     else
-      info = THEME.switches[c.quest.item]
+      info = GAME.switches[c.quest.item]
       if not info then
         error("Missing switch: " .. tostring(c.quest.item))
       end
@@ -5080,7 +5080,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
       }
 con.printf("@ add_prefab: %s\n", name)
-    local def = THEME.sc_fabs[name]
+    local def = GAME.sc_fabs[name]
     assert(def)
     local fab = PREFABS[def.prefab]
     assert(fab)
@@ -5125,7 +5125,7 @@ con.printf("@ add_prefab: %s\n", name)
 
     -- choose kind: prefabs | scenery items
 
-    if THEME.sc_fabs and rand_odds(40) then
+    if GAME.sc_fabs and rand_odds(40) then
       add_prefab(c)
       return
     end
@@ -5152,13 +5152,13 @@ con.printf("@ add_prefab: %s\n", name)
       assert(item)
     end
 
-    if not item and THEME.scenery and rand_odds(1) then
-      item = rand_table_pair(THEME.scenery)
+    if not item and GAME.scenery and rand_odds(1) then
+      item = rand_table_pair(GAME.scenery)
     end
 
     if not item then return end
 
-    local info = THEME.scenery[item]
+    local info = GAME.scenery[item]
     if not info then error("Missing info for item: " .. item) end
 
     local x,y,dir = fab_find_loc(c, 1, 1, info.add_mode)

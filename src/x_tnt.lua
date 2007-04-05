@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- THEMES : TNT Evilution (Final DOOM)
+-- GAME DEF : TNT Evilution (Final DOOM)
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -78,9 +78,9 @@ TN_PICS =
 
 ----------------------------------------------------------------
 
-THEME_FACTORIES["tnt"] = function()
+GAME_FACTORIES["tnt"] = function()
 
-  local T = THEME_FACTORIES.doom2()
+  local T = GAME_FACTORIES.doom2()
 
   T.rails   = copy_and_merge(T.rails,  TN_RAILS)
   T.crates  = copy_and_merge(T.crates, TN_CRATES)

@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- THEMES : Plutonia Experiment (Final DOOM)
+-- GAME DEF : Plutonia Experiment (Final DOOM)
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -140,9 +140,9 @@ PL_SPECIAL_PEDESTAL =
 
 ----------------------------------------------------------------
 
-THEME_FACTORIES["plutonia"] = function()
+GAME_FACTORIES["plutonia"] = function()
 
-  local T = THEME_FACTORIES.doom2()
+  local T = GAME_FACTORIES.doom2()
 
   T.ERROR_TEX = "SLOPPY1"
 

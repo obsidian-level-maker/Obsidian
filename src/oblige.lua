@@ -90,13 +90,13 @@ end
 
 function create_theme()
 
-  local factory = THEME_FACTORIES[settings.game]
+  local factory = GAME_FACTORIES[settings.game]
 
   if not factory then
     error("UNKNOWN GAME '" .. settings.game .. "'")
   end
 
-  THEME = factory()
+  GAME = factory()
 
   name_up_theme()
 

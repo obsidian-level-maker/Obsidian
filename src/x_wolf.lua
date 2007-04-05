@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- THEMES : Wolfenstein 3D
+-- GAME DEF : Wolfenstein 3D
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -592,7 +592,7 @@ WF_NO_TILE = 48
 WF_NO_OBJ  = 0
 
 
-THEME_FACTORIES["wolf3d"] = function()
+GAME_FACTORIES["wolf3d"] = function()
 
   return
   {

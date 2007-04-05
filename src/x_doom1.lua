@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- THEMES : Doom 2
+-- GAME DEF : Doom 2
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -1332,7 +1332,7 @@ D1_SECRET_LEVELS =
 
 ------------------------------------------------------------
 
-THEME_FACTORIES["doom_common"] = function()
+GAME_FACTORIES["doom_common"] = function()
 
   return
   {
@@ -1395,9 +1395,9 @@ THEME_FACTORIES["doom_common"] = function()
 end
 
 
-THEME_FACTORIES["doom1"] = function()
+GAME_FACTORIES["doom1"] = function()
 
-  local T = THEME_FACTORIES.doom_common()
+  local T = GAME_FACTORIES.doom_common()
 
   T.combos   = copy_and_merge(T.combos,   D1_COMBOS)
   T.exits    = copy_and_merge(T.exits,    D1_EXITS)

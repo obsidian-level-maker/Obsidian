@@ -96,9 +96,9 @@ function choose_dm_exit_combo()
 
   repeat
     local r = con.random() * 100
-        if r < 30 then combo = THEME.exits["TECH"]
-    elseif r < 50 then combo = THEME.exits["STONE"]
-    elseif r < 70 then combo = THEME.exits["METAL"]
+        if r < 30 then combo = GAME.exits["TECH"]
+    elseif r < 50 then combo = GAME.exits["STONE"]
+    elseif r < 70 then combo = GAME.exits["METAL"]
     else
       combo = get_rand_exit_combo()
     end
@@ -212,7 +212,7 @@ function plan_dm_arena()
   end
 
   local function liquid_for_seed(combo)
-    if not THEME.caps.liquids then return nil end
+    if not GAME.caps.liquids then return nil end
 
     if rand_odds(64) then return nil end
 
@@ -483,14 +483,14 @@ function plan_dm_arena()
     end
   end
 
-  if THEME.caps.liquids then
+  if GAME.caps.liquids then
     p.liquid = choose_liquid()
   end
 
   p.exit_combo = choose_dm_exit_combo()
 
   con.debugf("DM LIQUID: %s\n", (p.liquid and p.liquid.name) or "NONE")
-  con.debugf("DM EXIT THEME: %s\n", p.exit_combo.wall)
+  con.debugf("DM EXIT COMBO: %s\n", p.exit_combo.wall)
 
   choose_dm_combos()
 

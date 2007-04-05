@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- THEMES : Hexen
+-- GAME DEF : Hexen
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -640,7 +640,7 @@ XN_DEATHMATCH =
 
 ------------------------------------------------------------
 
-THEME_FACTORIES["hexen"] = function()
+GAME_FACTORIES["hexen"] = function()
 
   return
   {

@@ -44,8 +44,8 @@ function name_up_theme()
   }
 
   for zzz,sub in ipairs(SUB_LISTS) do
-    if THEME[sub] then
-      name_it_up(THEME[sub])
+    if GAME[sub] then
+      name_it_up(GAME[sub])
     end
   end
 end
@@ -56,7 +56,7 @@ function compute_pow_factors()
     return 5 + 19 * info.hp ^ 0.5 * (info.dm / 50) ^ 1.2
   end
 
-  for name,info in pairs(THEME.monsters) do
+  for name,info in pairs(GAME.monsters) do
     info.pow = pow_factor(info)
 
     con.debugf("Monster %s : power %d\n", name, info.pow)
@@ -102,7 +102,7 @@ function get_rand_theme()
 
   local infos = {}
   local probs = {}
-  for name,info in pairs(THEME.themes) do
+  for name,info in pairs(GAME.themes) do
     if info.prob > 0 then
       table.insert(infos, info)
       table.insert(probs, info.prob)
@@ -116,7 +116,7 @@ end
 function get_rand_combo(theme)
   local probs = {}
 
-  for name,combo in pairs(THEME.combos) do
+  for name,combo in pairs(GAME.combos) do
     if combo.theme_probs and combo.theme_probs[theme.name] then
       probs[name] = combo.theme_probs[theme.name]
     end
@@ -127,7 +127,7 @@ function get_rand_combo(theme)
   end
 
   local name = rand_key_by_probs(probs)
-  local result = THEME.combos[name]
+  local result = GAME.combos[name]
 
   assert(name)
   assert(result)
@@ -138,11 +138,11 @@ end
 function get_rand_roomtype(theme)
   if theme and theme.room_probs then
     local name = rand_key_by_probs(theme.room_probs)
-    local info = THEME.rooms[name]
+    local info = GAME.rooms[name]
     if not info then error("No such room: " .. name); end
     return info
   else
-    local name,info = rand_table_pair(THEME.rooms)
+    local name,info = rand_table_pair(GAME.rooms)
     return info
   end
 end
@@ -151,40 +151,40 @@ function get_rand_indoor_theme()
   local name,info
 
   repeat
-    name,info = rand_table_pair(THEME.combos)
+    name,info = rand_table_pair(GAME.combos)
   until not info.outdoor
 
   return info
 end
 
 function get_rand_exit_combo()
-  local name,info = rand_table_pair(THEME.exits)
+  local name,info = rand_table_pair(GAME.exits)
   return info
 end
 
 function get_rand_hallway()
-  local name,info = rand_table_pair(THEME.hallways)
+  local name,info = rand_table_pair(GAME.hallways)
   return info
 end
 
 function get_rand_crate()
-  local name,info = rand_table_pair(THEME.crates)
+  local name,info = rand_table_pair(GAME.crates)
   return info
 end
 
 function get_rand_rail()
-  local name,info = rand_table_pair(THEME.rails)
+  local name,info = rand_table_pair(GAME.rails)
   return info
 end
 
 function choose_liquid()
-  assert(THEME.liquids)
-  local name,info = rand_table_pair(THEME.liquids)
+  assert(GAME.liquids)
+  local name,info = rand_table_pair(GAME.liquids)
   return info
 end
 
 function find_liquid(name)
-  local info = THEME.liquids[name]
+  local info = GAME.liquids[name]
 
   if not info then
     error("Unknown liquid: " .. name)
@@ -192,23 +192,23 @@ function find_liquid(name)
 end
 
 function get_rand_pic()
-  local name,info = rand_table_pair(THEME.pics)
+  local name,info = rand_table_pair(GAME.pics)
   return info
 end
 
 function get_rand_light()
-  local name,info = rand_table_pair(THEME.lights)
+  local name,info = rand_table_pair(GAME.lights)
   return info
 end
 
 function get_rand_wall_light()
-  local name,info = rand_table_pair(THEME.wall_lights)
+  local name,info = rand_table_pair(GAME.wall_lights)
   return info
 end
 
 function random_door_kind(w)
   local names = {}
-  for kind,info in pairs(THEME.doors) do
+  for kind,info in pairs(GAME.doors) do
     if info.w == w then
       table.insert(names,kind)
     end

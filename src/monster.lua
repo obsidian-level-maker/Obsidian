@@ -52,7 +52,7 @@ zdump_table = do_nothing
 
 function add_thing(p,c, bx,by, name, blocking, angle, options)
 
-  local kind = THEME.thing_nums[name]
+  local kind = GAME.thing_nums[name]
   if not kind then
     error("Unknown thing kind: " .. name)
   end
@@ -218,7 +218,7 @@ function hm_give_weapon(HM, weapon, ammo_mul)
 
   HM[weapon] = true
 
-  local info = THEME.weapons[weapon]
+  local info = GAME.weapons[weapon]
   assert(info)
 
   if info.ammo and info.give then
@@ -263,7 +263,7 @@ function initial_hmodels()
   local MODELS = {}
 
   for zzz,SK in ipairs(SKILLS) do
-    MODELS[SK] = copy_table(THEME.initial_model)
+    MODELS[SK] = copy_table(GAME.initial_model)
     MODELS[SK].skill = SK
     MODELS[SK].toughness = 0
   end
@@ -320,10 +320,10 @@ function simulate_battle(p, HM, mon_set, quest)
   end
 
   local function give_monster_stuff(AC)
-    if not THEME.mon_give then return end
+    if not GAME.mon_give then return end
     if AC.caged then return end
 
-    local stuff = THEME.mon_give[AC.name]
+    local stuff = GAME.mon_give[AC.name]
     if not stuff then return end
 
     for zzz,item in ipairs(stuff) do
@@ -394,12 +394,12 @@ function simulate_battle(p, HM, mon_set, quest)
 
       -- preferred weapon based on monster
       local MW_prefs
-      if THEME.mon_weap_prefs then MW_prefs = THEME.mon_weap_prefs[first_mon] end
+      if GAME.mon_weap_prefs then MW_prefs = GAME.mon_weap_prefs[first_mon] end
 
       local names = {}
       local probs = {}
       
-      for name,info in pairs(THEME.weapons) do
+      for name,info in pairs(GAME.weapons) do
         if HM[name] then
           local freq = info.freq
           freq = freq * (MW_prefs and MW_prefs[name] or 1.0)
@@ -415,7 +415,7 @@ function simulate_battle(p, HM, mon_set, quest)
       local idx = rand_index_by_probs(probs)
 
       local wp = names[idx]
-      local info = THEME.weapons[wp]
+      local info = GAME.weapons[wp]
       assert(info)
 
       remain_shots = 1 + con.random() + con.random()
@@ -473,7 +473,7 @@ zprint(active_mon, #active_mon, active_mon[1])
 
     cur_weap = select_weapon()
 
-    local info = THEME.weapons[cur_weap]
+    local info = GAME.weapons[cur_weap]
     assert(info)
 
     shoot_weapon(cur_weap, info)
@@ -486,7 +486,7 @@ zprint(active_mon, #active_mon, active_mon[1])
 
     local function mon_hurts_mon(m1, m2)
       if m1 == m2 then
-        return THEME.monsters[m1].hitscan and (m1 ~= "vile")
+        return GAME.monsters[m1].hitscan and (m1 ~= "vile")
       end
 
       if (m1 == "knight" and m2 == "baron") or
@@ -695,9 +695,9 @@ function distribute_pickups(p, c, HM, backtrack)
 
   local function be_nice_to_player()
 
-    if not THEME.niceness then return end
+    if not GAME.niceness then return end
 
-    for zzz,ndef in pairs(THEME.niceness) do
+    for zzz,ndef in pairs(GAME.niceness) do
       local prob = ndef.prob
 
       if ndef.always and c.along == (#c.quest.path - 1) then prob=99 end
@@ -706,14 +706,14 @@ function distribute_pickups(p, c, HM, backtrack)
 
       if rand_odds(prob) then
         if ndef.weapon then
-          local info = THEME.weapons[ndef.weapon]
+          local info = GAME.weapons[ndef.weapon]
           assert(info)
 
           add_pickup(c, ndef.weapon, info)
           hm_give_weapon(HM, ndef.weapon)
 
         elseif ndef.pickup then
-          local info = THEME.pickups[ndef.pickup]
+          local info = GAME.pickups[ndef.pickup]
           assert(info)
 
           add_pickup(c, ndef.pickup, info)
@@ -730,17 +730,17 @@ function distribute_pickups(p, c, HM, backtrack)
 ---###      if c.along == #c.quest.path then return end
 ---###
 ---###      if not HM.shotty and rand_odds(66) then
----###        add_pickup(c, "shotty", THEME.weapons.shotty)
+---###        add_pickup(c, "shotty", GAME.weapons.shotty)
 ---###        hm_give_weapon(HM, "shotty")
 ---###      end
 ---###
 ---###      if not HM.chain and c.quest.level >= 3 and rand_odds(11) then
----###        add_pickup(c, "chain", THEME.weapons.chain)
+---###        add_pickup(c, "chain", GAME.weapons.chain)
 ---###        hm_give_weapon(HM, "chain")
 ---###      end
 ---###
 ---###      if HM.armor <= 0 and rand_odds(2) then
----###        add_pickup(c, "green_armor", THEME.pickups.green_armor)
+---###        add_pickup(c, "green_armor", GAME.pickups.green_armor)
 ---###        hm_give_armor(HM, 100, 100)
 ---###      end
   end
@@ -755,7 +755,7 @@ function distribute_pickups(p, c, HM, backtrack)
     local health_mul = HEALTH_ADJUSTS[settings.health]
     local   ammo_mul =   AMMO_ADJUSTS[settings.ammo]
 
-    for zzz,stat in ipairs(THEME.pickup_stats) do
+    for zzz,stat in ipairs(GAME.pickup_stats) do
       if stat == "health" then
         if HM.health < 70 then
           HM.health = (HM.health-70) * health_mul + 70
@@ -802,7 +802,7 @@ function distribute_pickups(p, c, HM, backtrack)
     local probs = {}
     local names = {}
 
-    for name,info in pairs(THEME.pickups) do
+    for name,info in pairs(GAME.pickups) do
       if info.stat == stat then
         if info.give <= R * 2 then
           local prob = info.prob or 50
@@ -822,7 +822,7 @@ function distribute_pickups(p, c, HM, backtrack)
     local th_info = infos[idx]
 
     local max_cluster = 1 + int(R / th_info.give)
-    if THEME.caps.blocky_items then max_cluster = 1 end
+    if GAME.caps.blocky_items then max_cluster = 1 end
     if th_info.clu_max then max_cluster = math.min(max_cluster, th_info.clu_max) end
 
     local cluster = select_cluster_pattern(max_cluster)
@@ -877,7 +877,7 @@ function distribute_pickups(p, c, HM, backtrack)
 
   adjust_hmodel(HM)
 
-  for zzz,stat in ipairs(THEME.pickup_stats) do
+  for zzz,stat in ipairs(GAME.pickup_stats) do
 
     local want = compute_want(stat, HM)
 
@@ -1097,7 +1097,7 @@ function place_battle_stuff(p, c, stats)
     -- perform two passes, place big monsters first
     for pass = 1,2 do
       for zzz, dat in ipairs(mons) do
-        local info = THEME.monsters[dat.name]
+        local info = GAME.monsters[dat.name]
         if (pass==1) == (info.r >= 32) then
           place_monster(spots, dat)
         end
@@ -1110,7 +1110,7 @@ function place_battle_stuff(p, c, stats)
 
   --- place_battle_stuff ---
 
-  if THEME.caps.elevator_exits and c.is_exit then return end
+  if GAME.caps.elevator_exits and c.is_exit then return end
 
   for zzz,skill in ipairs(SKILLS) do
 
@@ -1159,7 +1159,7 @@ function battle_in_cell(p, c)
     local best_info
 
     -- most basic weapon
-    for name,info in pairs(THEME.weapons) do
+    for name,info in pairs(GAME.weapons) do
       if info.melee and info.held then
         best_name = name
         best_info = info
@@ -1169,7 +1169,7 @@ function battle_in_cell(p, c)
 
     assert(best_name)
 
-    for name,info in pairs(THEME.weapons) do
+    for name,info in pairs(GAME.weapons) do
       if p.hmodels[skill][name] and not info.melee then
         if fire_power(info) > fire_power(best_info) then
           best_name, best_info = name, info
@@ -1187,7 +1187,7 @@ function battle_in_cell(p, c)
     local names = { "none" }
     local probs = { 30     }
 
-    for name,info in pairs(THEME.monsters) do
+    for name,info in pairs(GAME.monsters) do
       if (info.pow < T*2) and (info.fp < firepower*2) then
 
         local prob = info.prob
@@ -1210,7 +1210,7 @@ function battle_in_cell(p, c)
 
     if name == "none" then return name, 0 end
 
-    local info = THEME.monsters[name]
+    local info = GAME.monsters[name]
     assert(info)
 
     return name, info
@@ -1251,7 +1251,7 @@ function battle_in_cell(p, c)
     local names = {}
     local probs = {}
 
-    for name,info in pairs(THEME.monsters) do
+    for name,info in pairs(GAME.monsters) do
       if (info.cage_fallback) or 
          ((info.pow < T*2/x_horde) and (info.fp < firepower*2))
       then
@@ -1274,7 +1274,7 @@ function battle_in_cell(p, c)
     assert(#probs > 0)
 
     local idx = rand_index_by_probs(probs)
-    local info = THEME.monsters[names[idx]]
+    local info = GAME.monsters[names[idx]]
     assert(info)
 
     return names[idx], info
@@ -1311,7 +1311,7 @@ function battle_in_cell(p, c)
         name = sel(spot.double, big, small)
       end
 
-      local info = THEME.monsters[name]
+      local info = GAME.monsters[name]
       assert(info)
 
       local horde = decide_cage_horde(spot, info)
@@ -1401,7 +1401,7 @@ function battle_in_cell(p, c)
 
   ---=== battle_in_cell ===---
 
-  if THEME.caps.elevator_exits and c.is_exit then return end
+  if GAME.caps.elevator_exits and c.is_exit then return end
 
 zprint("BATTLE IN", c.x, c.y)
 
@@ -1414,7 +1414,7 @@ zprint("BATTLE IN", c.x, c.y)
   end
 
   if free_space < 2 then return end
-  free_space = free_space * 1.5 / (BW * BH)
+  free_space = free_space * 1.5 / (BW * BH)  -- FIXME: remove BW
 
   c.mon_set = { easy={}, medium={}, hard={} }
 
@@ -1428,7 +1428,7 @@ zprint("BATTLE IN", c.x, c.y)
     T = T + p.hmodels[SK].toughness
     U = 0
 
-    if THEME.caps.tiered_skills then
+    if GAME.caps.tiered_skills then
       T, last_T = T - last_T, T
     end
 
@@ -1466,7 +1466,7 @@ function backtrack_to_cell(p, c)
     end
   end
 
-  if THEME.caps.elevator_exits and c.is_exit then return end
+  if GAME.caps.elevator_exits and c.is_exit then return end
 
   if c.quest.closet then
     surprise_me(c.quest.closet)
@@ -1548,7 +1548,7 @@ function deathmatch_in_cell(p, c)
     -- FIXME: proper clusters!!!
 
     local cluster = 1
-    if THEME.dm.cluster then cluster = THEME.dm.cluster[name] or 1 end
+    if GAME.dm.cluster then cluster = GAME.dm.cluster[name] or 1 end
     assert(cluster >= 1 and cluster <= 8)
 
 ---###    local offsets = { 1,2,3,4, 6,7,8,9 }
@@ -1582,27 +1582,27 @@ con.printf("== deathmatch_in_cell: spots = %d\n", #c.free_spots)
 
     -- health, ammo and items
     if rand_odds(70) then
-      local what = choose_dm_thing(THEME.dm.health, false)
+      local what = choose_dm_thing(GAME.dm.health, false)
       add_dm_pickup( what )
     end
 
     if rand_odds(90) then
-      local what = choose_dm_thing(THEME.dm.ammo, true)
+      local what = choose_dm_thing(GAME.dm.ammo, true)
       add_dm_pickup( what )
     end
 
     if rand_odds(10) then
-      local what = choose_dm_thing(THEME.dm.items, true)
+      local what = choose_dm_thing(GAME.dm.items, true)
       add_dm_pickup( what )
     end
 
     -- secondary health and ammo
     if rand_odds(10) then
-      local what = choose_dm_thing(THEME.dm.health, false)
+      local what = choose_dm_thing(GAME.dm.health, false)
       add_dm_pickup( what )
     end
     if rand_odds(30) then
-      local what = choose_dm_thing(THEME.dm.ammo, true)
+      local what = choose_dm_thing(GAME.dm.ammo, true)
       add_dm_pickup( what )
     end
 

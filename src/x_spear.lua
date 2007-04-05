@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- THEMES : Spear of Destiny
+-- GAME DEF : Spear of Destiny
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -235,9 +235,9 @@ SP_THEMES =
 
 ----------------------------------------------------------------
 
-THEME_FACTORIES["spear"] = function()
+GAME_FACTORIES["spear"] = function()
 
-  local T = THEME_FACTORIES.wolf3d()
+  local T = GAME_FACTORIES.wolf3d()
 
   T.bosses   = SP_BOSSES
 

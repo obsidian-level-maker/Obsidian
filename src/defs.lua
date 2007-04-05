@@ -26,8 +26,8 @@ MAX_CEIL  = 640
 
 SKILLS = { "easy", "medium", "hard" }
 
-THEME_FACTORIES = {}
+GAME_FACTORIES = {}
 
-PLAN  = {}
-THEME = {}
+PLAN = {}
+GAME = {}
 

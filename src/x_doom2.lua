@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- THEMES : Doom 2
+-- GAME DEF : Doom 2
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -1111,9 +1111,9 @@ D2_THEMES =
 
 ------------------------------------------------------------
 
-THEME_FACTORIES["doom2"] = function()
+GAME_FACTORIES["doom2"] = function()
 
-  local T = THEME_FACTORIES.doom_common()
+  local T = GAME_FACTORIES.doom_common()
 
   T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
   T.exits    = copy_and_merge(T.exits,    D2_EXITS)

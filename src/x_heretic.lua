@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- THEMES : Heretic
+-- GAME DEF : Heretic
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -611,7 +611,7 @@ HC_INITIAL_MODEL =
 
 ------------------------------------------------------------
 
-THEME_FACTORIES["heretic"] = function()
+GAME_FACTORIES["heretic"] = function()
 
   return
   {

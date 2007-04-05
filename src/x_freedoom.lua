@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- THEMES : FreeDOOM 0.5
+-- GAME DEF : FreeDOOM 0.5
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -48,11 +48,11 @@ FD_LIQUIDS =
 
 ----------------------------------------------------------------
 
-THEME_FACTORIES["freedoom"] = function()
+GAME_FACTORIES["freedoom"] = function()
 
   -- the FreeDOOM IWAD contains both Doom 1 and Doom 2 textures
 
-  local T = THEME_FACTORIES.doom1()
+  local T = GAME_FACTORIES.doom1()
 
   T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
   T.exits    = copy_and_merge(T.exits,    D2_EXITS)
