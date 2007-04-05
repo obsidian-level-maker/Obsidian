@@ -1190,7 +1190,8 @@ function battle_in_cell(p, c)
     for name,info in pairs(GAME.monsters) do
       if (info.pow < T*2) and (info.fp < firepower*2) then
 
-        local prob = info.prob
+        local prob = info.prob * (c.mon_prefs[name] or 1)
+
         if info.pow > T then
           prob = prob * (2 - info.pow / T) ^ 1.7
         end
@@ -1224,6 +1225,25 @@ function battle_in_cell(p, c)
     if info.hp <= 100 then horde = horde + rand_index_by_probs { 90, 40, 10, 3, 0.5 } end
 
     return math.min(horde, max_horde)
+  end
+
+  local function determine_mon_prefs(c)
+    if c.mon_prefs then return end
+
+    c.mon_prefs = copy_table(GAME.monster_prefs or {})
+
+    local function merge_prefs(tab)
+      if tab then
+        for name,mul in pairs(tab) do
+          c.mon_prefs[name] = (c.mon_prefs[name] or 1) * mul
+        end
+      end
+    end
+
+    merge_prefs(c.quest.level_theme.monster_prefs)
+    merge_prefs(c.room_type.monster_prefs)
+    merge_prefs(c.combo.monster_prefs)
+
   end
 
   local function create_monsters()
@@ -1417,6 +1437,8 @@ zprint("BATTLE IN", c.x, c.y)
   free_space = free_space * 1.5 / (BW * BH)  -- FIXME: remove BW
 
   c.mon_set = { easy={}, medium={}, hard={} }
+
+  determine_mon_prefs(c)
 
   local last_T = 0
 
