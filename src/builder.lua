@@ -2553,7 +2553,7 @@ function build_borders(p)
 
     local bit
     if link.quest and link.quest.kind == "key" then
-      bit = GAME.key_bits[link.quest.item]
+      bit = GAME.key_doors[link.quest.item]
       assert(bit)
       assert(bit.kind_rep)
     end
