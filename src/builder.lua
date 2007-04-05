@@ -2173,23 +2173,6 @@ function make_chunks(p)
       K2.stair[10-dir] = STAIR
     end
 
-    local function select_stair_spots()
-      for kx=1,3 do for ky=1,3 do
-        local K = c.chunks[kx][ky]
-        K.stair_dir = nil  
-
-        for side=2,8,2 do
-          local stair = K.stair[side]
-          if stair and stair.build == K then
-            if K.stair_dir then return false end  --FAIL--
-            K.stair_dir = side
-          end
-        end
-      end end
-
-      return true --OK--
-    end
-
     local function shuffle_stair_builds()
       for kx=1,3 do for ky=1,3 do
         local K = c.chunks[kx][ky]
@@ -2210,6 +2193,48 @@ function make_chunks(p)
       end end
     end
 
+    local function select_stair_spots()
+      for kx=1,3 do for ky=1,3 do
+        local K = c.chunks[kx][ky]
+        K.stair_dir = nil  
+
+        for side=2,8,2 do
+          local stair = K.stair[side]
+          if stair and stair.build == K then
+            if K.stair_dir then
+              return false, K --FAIL--
+            end
+            K.stair_dir = side
+          end
+        end
+      end end
+
+      return true --OK--
+    end
+
+    local function modify_clasher(clasher)
+      assert(clasher)
+
+      local bad_stairs = {}
+
+      for kx=1,3 do for ky=1,3 do
+        local K = c.chunks[kx][ky]
+        for side=6,8,2 do
+          local stair = K.stair[side]
+          if stair and (stair.k1 == clasher or stair.k2 == clasher) then
+            table.insert(bad_stairs, stair)
+          end
+        end
+      end end
+
+      assert(#bad_stairs >= 2)
+
+      -- be fair and pick one at random
+      local stair = rand_element(bad_stairs)
+      
+      stair.build = sel(stair.build == stair.k1, stair.k2, stair.k1)
+    end
+
 
     --- add_stairs ---
 
@@ -2222,13 +2247,16 @@ con.debugf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
       add_one_stair()
     end 
 
+    shuffle_stair_builds()
+
     for loop=1,99 do
-      shuffle_stair_builds()
-      if select_stair_spots() then break end
+      local able,clasher = select_stair_spots()
+      if able then break end
 con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
       if loop==99 then
         error("Failed to select stair spots")
       end
+      modify_clasher(clasher)
     end
   end
 
@@ -5000,6 +5028,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
            }
     parm.kind = info.kind_once
 
+if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
     assert(parm.kind)
 
     if false then -- floor switch / niche switch
