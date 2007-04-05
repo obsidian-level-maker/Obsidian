@@ -4315,7 +4315,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
       local dx,dy = dir_to_delta(10-side) -- inwards
 
       local L = c.link[side]
-      if L and not (L.kind=="vista") then -- FIXME
+      if L and (L.kind ~= "vista" or L.build == c) then
         mark_walkable(c, 4, L.x1+dx, L.y1+dy, L.x2+dx, L.y2+dy)
       end
 
