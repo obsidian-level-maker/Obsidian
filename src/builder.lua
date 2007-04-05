@@ -4216,6 +4216,62 @@ c.x, c.y, other.x, other.y)
     end end
   end
 
+  local function vista_jiggle_link(c, side, L, other, x1,y1, x2,y2)
+    local D = c.border[side]
+
+con.printf("\n vista_jiggle_link:\n")
+con.printf("  new size: (%d,%d) .. (%d,%d)\n", x1,y1, x2,y2)
+con.printf("  link coords: (%d,%d) .. (%d,%d)\n", L.x1,L.y1, L.x2,L.y2)
+con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
+
+    local dir
+
+    if side == 4 or side == 6 then
+
+          if L.y1 < y1 then dir = 8
+      elseif L.y2 > y2 then dir = 2
+      else return -- no problem --
+      end
+
+      if dir == 8 and L.y2 < D.y2 then
+        L.y1, L.y2 = L.y1+1, L.y2+1
+        return
+      end
+
+      if dir == 2 and L.y1 > D.y1 then
+        L.y1, L.y2 = L.y1-1, L.y2-1
+        return
+      end
+
+      -- unable to move link, backup plan: shorten it
+      L.long = math.max(L.long-1, 2)
+
+      if dir == 8 then L.y1 = L.y1+1 end
+
+    else  -- side == 2 or side == 8
+
+          if L.x1 < x1 then dir = 6
+      elseif L.x2 > x2 then dir = 4
+      else return -- no problem --
+      end
+
+      if dir == 6 and L.x2 < D.x2 then
+        L.x1, L.x2 = L.x1+1, L.x2+1
+        return
+      end
+
+      if dir == 4 and L.x1 > D.x1 then
+        L.x1, L.x2 = L.x1-1, L.x2-1
+        return
+      end
+
+      -- unable to move link, backup plan: shorten it
+      L.long = math.max(L.long-1, 2)
+
+      if dir == 6 then L.x1 = L.x1+1 end
+    end
+  end
+ 
   local function build_one_vista(c, side, link)
 
     local other = neighbour_by_side(p, c, side)
@@ -4260,6 +4316,8 @@ c.x, c.y, other.x, other.y)
 
     if sx ~= x1 or sy ~= y1 or ex ~= x2 or ey ~= y2 then
       vista_gap_fill(c, side, link, other)
+      vista_jiggle_link(c, side, link, other, x1,y1, x2,y2)
+con.printf("  link coords now: (%d,%d) .. (%d,%d)\n", link.x1,link.y1, link.x2,link.y2)
     end
 
     local long = x2 - x1 + 1
