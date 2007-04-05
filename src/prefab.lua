@@ -1360,7 +1360,7 @@ BILLBOARD =
 
     -- pic
     p = { f_h=8, f_rel="pic_h",
-          l_tex="pic_back", [2] = { l_tex="pic" },
+          l_tex="pic_back", [2] = { l_tex="pic_w" },
           f_tex="pic_f", l_peg="top",
         },
 
@@ -1475,17 +1475,17 @@ BILLBOARD_STILTS_HUGE =
   {
     -- picture
     p = { mark = 1,
-          [8] = { rail="pic", l_peg="bottom",
+          [8] = { rail="pic_w", l_peg="bottom",
                   x_offset=8, y_offset="y_offset" },
         },
 
     q = { mark = 2,
-          [2] = { rail="pic", l_peg="bottom",
+          [2] = { rail="pic_w", l_peg="bottom",
                   x_offset=8, y_offset="y_offset" },
         },
 
     s = { mark = 3,
-          [6] = { rail="pic", l_peg="bottom",
+          [6] = { rail="pic_w", l_peg="bottom",
                   x_offset=0, y_offset="y_offset" },
         },
 
