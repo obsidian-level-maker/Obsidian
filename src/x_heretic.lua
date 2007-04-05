@@ -298,6 +298,57 @@ HC_DOORS =
 --  d_stone  = { wall="DOORSTON", w=64,  h=128 },
 }
 
+HC_KEY_DOORS =
+{
+  k_blue   =
+  {
+    w=128, h=128, kind_rep=26, kind_once=32,
+
+    prefab = "DOOR_LOCKED", 
+
+    skin =
+    {
+      door_w="DOORSTON", door_c="FLOOR04",
+      track_w="METL2",
+      frame_f="FLOOR04",
+    },
+
+    thing="blue_statue",
+  },
+
+  k_green  =
+  {
+    w=128, h=128, kind_rep=28, kind_once=33,
+
+    prefab = "DOOR_LOCKED", 
+
+    skin =
+    {
+      door_w="DOORSTON", door_c="FLOOR04",
+      track_w="METL2",
+      frame_f="FLOOR04",
+    },
+
+    thing="green_statue",
+  },
+
+  k_yellow =
+  {
+    w=128, h=128, kind_rep=27, kind_once=34,
+
+    prefab = "DOOR_LOCKED", 
+
+    skin =
+    {
+      door_w="DOORSTON", door_c="FLOOR04",
+      track_w="METL2",
+      frame_f="FLOOR04",
+    },
+
+    thing="yellow_statue",
+  },
+}
+
 HC_RAILS =
 {
   r_1 = { wall="WDGAT64", w=128, h=64  },
@@ -324,13 +375,6 @@ HC_PICS =
 {
   skull3 = { wall="GRSKULL3", w=128, h=128 },
   glass1 = { wall="STNGLS1",  w=128, h=128 },
-}
-
-HC_KEY_BITS =
-{
-  k_blue   = { thing="blue_statue",   kind_rep=26, kind_once=32, },
-  k_green  = { thing="green_statue",  kind_rep=28, kind_once=33, },
-  k_yellow = { thing="yellow_statue", kind_rep=27, kind_once=34, },
 }
 
 ---- QUEST STUFF ----------------
@@ -660,7 +704,7 @@ GAME_FACTORIES["heretic"] = function()
     liquids   = HC_LIQUIDS,
     switches  = HC_SWITCHES,
     doors     = HC_DOORS,
-    key_bits  = HC_KEY_BITS,
+    key_doors = HC_KEY_DOORS,
 
     pics      = HC_PICS,
     images    = HC_IMAGES,

@@ -266,7 +266,7 @@ WF_EXITS =
 }
 
 
-WF_KEY_BITS =
+WF_KEY_DOORS =
 {
   k_silver = { kind_rep="door_silver", door_side=14 },
   k_gold   = { kind_rep="door_gold",   door_side=14 },
@@ -630,7 +630,7 @@ GAME_FACTORIES["wolf3d"] = function()
     hallways  = WF_THEMES, -- not used
 
     doors     = WF_DOORS,
-    key_bits  = WF_KEY_BITS,
+    key_doors = WF_KEY_DOORS,
 
     scenery   = WF_SCENERY,
     rooms     = WF_ROOMS,

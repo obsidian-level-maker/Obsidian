@@ -291,12 +291,50 @@ XN_DOORS =
   d_wood3  = { wall="D_WD10",   w=64,  h=128 },
 }
 
-XN_LOCKED_DOORS =
+XN_KEY_DOORS =
 {
   -- lockable doors -- FIXME: the rest??
-  d_silver = { wall="D_SILVER", w=64,  h=128 },
-  d_castle = { wall="D_CAST",   w=64,  h=128 },
-  d_fire   = { wall="D_FIRE",   w=64,  h=128 },
+  k_fire   =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+
+    prefab = "DOOR_LOCKED", 
+
+    skin =
+    {
+      door_w="D_FIRE", door_c="F_009",
+      track_w="STEEL08",
+      frame_f="F_009",
+    }
+  },
+
+  k_castle =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+
+    prefab = "DOOR_LOCKED", 
+
+    skin =
+    {
+      door_w="D_CAST", door_c="F_009",
+      track_w="STEEL08",
+      frame_f="F_009",
+    }
+  },
+
+  k_silver =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+
+    prefab = "DOOR_LOCKED", 
+
+    skin =
+    {
+      door_w="D_SILVER", door_c="F_009",
+      track_w="STEEL08",
+      frame_f="F_009",
+    }
+  },
 }
 
 XN_RAILS =
@@ -334,13 +372,6 @@ XN_PICS =
   glass1 = { wall = "GLASS01",  w=64,  h=128 },
   glass3 = { wall = "GLASS03",  w=64,  h=128 },
   glass5 = { wall = "GLASS05",  w=64,  h=128 },
-}
-
-XN_KEY_BITS =
-{
-  k_fire   = { wall="d_fire",   kind_rep=13, kind_once=13 },
-  k_castle = { wall="d_cast",   kind_rep=13, kind_once=13 },
-  k_silver = { wall="d_silver", kind_rep=13, kind_once=13 },
 }
 
 
@@ -691,7 +722,7 @@ GAME_FACTORIES["hexen"] = function()
     liquids   = XN_LIQUIDS,
     switches  = XN_SWITCHES,
     doors     = XN_DOORS,
-    key_bits  = XN_KEY_BITS,
+    key_doors = XN_KEY_DOORS,
 
     pics      = XN_PICS,
     images    = XN_IMAGES,
