@@ -156,6 +156,8 @@ GAME_FACTORIES["plutonia"] = function()
 
   T.special_ped = PL_SPECIAL_PEDESTAL
 
+  T.monster_prefs = { gunner=2.0 }
+
   return T
 end
 
