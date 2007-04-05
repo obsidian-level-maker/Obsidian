@@ -1142,7 +1142,7 @@ function plan_sp_level(is_coop)  -- returns Plan
       local c = Q.path[idx]
       c.hallway = true
       c.combo = combo
-      c.room_type = GAME.rooms["HALLWAY"]
+      c.room_type = non_nil(GAME.rooms["HALLWAY"])
       if combo.well_lit then
         c.light = 176
       else
@@ -1186,10 +1186,17 @@ function plan_sp_level(is_coop)  -- returns Plan
 con.debugf("ROOM %d QUEST %d.%d ---> %s\n",
 c.along, Q.level, Q.sub_level or 0, c.room_type.name)
 
-      if rand_odds(70) then return end
+      if rand_odds(70) then break end
 
       table.remove(cells, idx)
       table.remove(probs, idx)
+    end
+
+    -- use PLAIN type of every other cell
+    for zzz, c in ipairs(Q.path) do
+      if not c.room_type then
+        c.room_type = non_nil(GAME.rooms["PLAIN"])
+      end
     end
   end
 
@@ -1275,13 +1282,24 @@ end
 
       if c1.quest.level == c2.quest.level then
 
-        local door_chance = 15
+        local c = link.build
 
-            if c1.combo.outdoor ~= c2.combo.outdoor then door_chance = 70
-        elseif c1.hallway and c2.hallway then door_chance = 5
-        elseif c1.combo.outdoor then door_chance = 5
-        elseif c1.combo ~= c2.combo then door_chance = sel(GAME.caps.blocky_doors, 85, 40)
+        local probs =
+          c.room_type.door_probs or
+          c.combo.door_probs or
+          c.quest.level_theme.door_probs or
+          GAME.door_probs
+
+        assert(probs)
+
+        local door_chance
+
+            if c1.combo.outdoor ~= c2.combo.outdoor then door_chance = probs.out_diff
+        elseif c1.combo ~= c2.combo then door_chance = probs.combo_diff
+        else door_chance = probs.nominal
         end
+
+        assert(door_chance)
 
         if rand_odds(door_chance) then link.kind = "door" end
 
@@ -1435,20 +1453,16 @@ end
 
     if not GAME.caps.heights then return end
 
-    local ROOM_HEIGHTS = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 }
-    local HALL_HEIGHTS = { [96]=50, [128]=50 }
-
     local function initial_height(c)
 
       if c.is_exit then
         c.ceil_h = c.floor_h + (c.combo.exit_h or 128)
       else
         local height_list =
-          (c.room_type and c.room_type.room_heights) or
+          c.room_type.room_heights or
           c.combo.room_heights or
-          (c.hallway and HALL_HEIGHTS) or
           c.quest.level_theme.room_heights or
-          ROOM_HEIGHTS
+          GAME.room_heights
 
         c.ceil_h = c.floor_h + rand_key_by_probs(height_list)
       end

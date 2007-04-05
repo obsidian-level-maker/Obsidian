@@ -635,6 +635,9 @@ GAME_FACTORIES["wolf3d"] = function()
     scenery   = WF_SCENERY,
     rooms     = WF_ROOMS,
     themes    = WF_THEMES,
+
+    room_heights = { [128]=50 },
+    door_probs = { nominal=15, combo_diff=90, out_diff=75,  },
   }
 end
 

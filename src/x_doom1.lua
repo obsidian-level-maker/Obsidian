@@ -251,6 +251,7 @@ DM_COMBOS =
     scenery = { "blue_torch", "blue_torch_sm" },
 
     theme_probs = { URBAN=70, INDUSTRIAL=5 },
+    door_probs = { nominal=5, out_diff=75, combo_diff=10 }
   },
 
   BROWN =
@@ -270,7 +271,9 @@ DM_COMBOS =
 
     scenery = { "skull_pole", "skull_kebab" },
     good_liquid = "blood",
+
     theme_probs = { URBAN=50 },
+    door_probs = { nominal=5, out_diff=75, combo_diff=10 }
   },
 }
 
@@ -876,6 +879,8 @@ DM_ROOMS =
 
   HALLWAY =
   {
+    room_heights = { [96]=50, [128]=50 },
+    door_probs = { nominal=5, out_diff=75, combo_diff=50 },
   },
   
   WAREHOUSE =
@@ -1015,6 +1020,8 @@ DM_THEMES =
     {
       demon=2.5, knight=2.0, baron=2.0, pain=2.0,
     },
+
+    door_probs = { nominal=5, out_diff=75, combo_diff=10 }
   },
 
 
@@ -1044,6 +1051,8 @@ DM_THEMES =
       imp=3.0, skull=2.0, revenant=2.0,
       barrel=0.1,
     },
+
+    door_probs = { nominal=1, out_diff=10, combo_diff=3 }
   },
 
   HELL =
@@ -1391,6 +1400,9 @@ GAME_FACTORIES["doom_common"] = function()
     sc_fabs   = DM_PREFAB_SCENERY,
     rooms     = DM_ROOMS,
     themes    = DM_THEMES,
+
+    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
+    door_probs = { nominal=15, out_diff=75, combo_diff=50 },
   }
 end
 

@@ -666,6 +666,9 @@ GAME_FACTORIES["heretic"] = function()
     images    = HC_IMAGES,
     lights    = HC_LIGHTS,
     wall_lights = HC_WALL_LIGHTS,
+
+    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
+    door_probs = { nominal=15, out_diff=75, combo_diff=50 },
   }
 end
 

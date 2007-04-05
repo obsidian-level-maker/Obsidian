@@ -697,6 +697,9 @@ GAME_FACTORIES["hexen"] = function()
     images    = XN_IMAGES,
     lights    = XN_LIGHTS,
     wall_lights = XN_WALL_LIGHTS,
+
+    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
+    door_probs = { nominal=15, out_diff=75, combo_diff=50 },
   }
 end
 
