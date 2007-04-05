@@ -123,7 +123,7 @@ DM_COMBOS =
 
     scenery = "tech_column",
 
-    theme_probs = { TECH=65, INDUSTRIAL=5 }, 
+    theme_probs = { TECH=40, INDUSTRIAL=5 }, 
   },
 
   MARBLE =
