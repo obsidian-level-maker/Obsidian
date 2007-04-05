@@ -378,7 +378,7 @@ D2_EXITS =
     sign = "EXITSIGN",    -- FIXME !!! make the sign into a MATERIAL
     sign_ceil="CEIL5_2",
 
-    switch = { switch="SW1BLUE", wall="COMPBLUE", h=64 },
+    switch = { switch="SW1BLUE", wall="COMPBLUE", h=64, kind_once=11 },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_6", frame_floor="FLOOR5_1" },
@@ -398,7 +398,7 @@ D2_EXITS =
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
-    switch = { switch="SW1WOOD", wall="WOOD1", h=64 },
+    switch = { switch="SW1WOOD", wall="WOOD1", h=64, kind_once=11 },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_6", frame_floor="FLAT5_2" },
@@ -423,7 +423,7 @@ D2_EXITS =
     flush_left  = "SK_LEFT",
     flush_right = "SK_RIGHT",
 
-    switch = { switch="SW1SKULL", wall="SKINCUT", h=128 },
+    switch = { switch="SW1SKULL", wall="SKINCUT", h=128, kind_once=11 },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="FLAT5_5", frame_floor="CEIL5_2" },
