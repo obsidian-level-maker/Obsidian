@@ -16,12 +16,8 @@
 --
 ----------------------------------------------------------------
 
-BW =  9; BH = BW  -- blocks in a cell
-FW =  4; FH = FW  -- fragments in a block
-KW =  3; KH = KW  -- chunks in a cell
-
-JW = BW/KW  -- blocks in a chunk
-JH = BH/KH
+BW = 9; BH = BW  -- blocks in a cell
+FW = 4; FH = FW  -- fragments in a block
 
 BORDER_BLK = 3  -- number of spare blocks around plan
 

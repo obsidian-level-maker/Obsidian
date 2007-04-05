@@ -435,8 +435,8 @@ function valid_cell_block(c, x, y)
 end
 
 function valid_chunk(kx,ky)
-  return 1 <= kx and kx <= KW and
-         1 <= ky and ky <= KH
+  return 1 <= kx and kx <= 3 and
+         1 <= ky and ky <= 3
 end
 
 function chunk_neighbour(c, K, dir)

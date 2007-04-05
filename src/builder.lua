@@ -72,14 +72,6 @@ function dir_to_corner(dir, W, H)
   error ("dir_to_corner: bad dir " .. dir)
 end
 
-function block_to_chunk(bx)
-  return 1 + int((bx-1) * KW / BW)
-end
-
-function chunk_to_block(kx)
-  return 1 + int((kx-1) * BW / KW)
-end
-
 function chunk_touches_side(kx, ky, side)
   if side == 4 then return kx == 1 end
   if side == 6 then return kx == 3 end
@@ -274,23 +266,6 @@ function c_move_frag_corner(p,c, x,y,corner, dx,dy)
 end
 
  
--- convert 'where' value into block position
-function where_to_block(wh, long)
-
-  if wh == 0 then return JW+1 end
-
-  if wh == -1 then return 3 end -- FIXME: not best place
-  if wh == -2 then return 2 end -- FIXME
-  if wh == -3 then return 1 end
-  
-  if wh == 1 then return BW-1 - long end -- FIXME
-  if wh == 2 then return BW   - long end -- FIXME
-  if wh == 3 then return BW+1 - long end
-
-  error("bad where value: " .. tostring(wh))
-end
-
-
 function scale_block(B, scale)
   -- Note: doesn't set x_offsets
   scale = (scale - 1) * 32
@@ -1200,8 +1175,8 @@ function make_chunks(p)
   
   local function count_empty_chunks(c)
     local count = 0
-    for kx = 1,KW do
-      for ky = 1,KH do
+    for kx = 1,3 do
+      for ky = 1,3 do
         if not c.chunks[kx][ky] then
           count = count + 1
         end
@@ -1637,7 +1612,7 @@ function make_chunks(p)
 
     -- select a side
     local side = rand_irange(1,4) * 2
-    local x1, y1, x2, y2 = side_coords(side, 1,1, KW,KH)
+    local x1, y1, x2, y2 = side_coords(side, 1,1, 3,3)
 
     local common
     local possible = true
@@ -1686,7 +1661,7 @@ function make_chunks(p)
     local kx, ky
 
     repeat
-      kx, ky = rand_irange(1,KW), rand_irange(1,KH)
+      kx, ky = rand_irange(1,3), rand_irange(1,3)
     until c.chunks[kx][ky] and c.chunks[kx][ky].room
 
     local dir_order = { 2,4,6,8 }
@@ -1720,8 +1695,8 @@ function make_chunks(p)
 
     local posits = {}
 
-    for kx = 1,KW do
-      for ky = 1,KH do
+    for kx = 1,3 do
+      for ky = 1,3 do
         if not c.chunks[kx][ky] then
           -- make sure cage has a walkable neighbour
           for dir = 2,8,2 do
@@ -2265,9 +2240,9 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
       local side = c.entry_dir or c.exit_dir or 2
 
       if side==4 then return kx-1  end
-      if side==6 then return KW-kx end
+      if side==6 then return 3-kx end
       if side==2 then return ky-1  end
-      if side==8 then return KH-ky end
+      if side==8 then return 3-ky end
     end
 
 ---##  local in_x, in_y = side_to_chunk(c.entry_dir or c.exit_dir)
@@ -2275,8 +2250,8 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     local best_x, best_y
     local best_score = -10
 
-    for kx = 1,KW do
-      for ky = 1,KH do
+    for kx = 1,3 do
+      for ky = 1,3 do
         if c.chunks[kx][ky] and
            not (c.chunks[kx][ky].void or c.chunks[kx][ky].cage or
                 c.chunks[kx][ky].quest or c.chunks[kx][ky].vista)
@@ -3456,10 +3431,10 @@ function build_cell(p, c)
   local function chunk_pair(cell, other, side,n)
     local cx,cy, ox,oy
     
-        if side == 2 then cx,cy,ox,oy = n,1,n,KH
-    elseif side == 8 then cx,cy,ox,oy = n,KH,n,1
-    elseif side == 4 then cx,cy,ox,oy = 1,n,KW,n
-    elseif side == 6 then cx,cy,ox,oy = KW,n,1,n
+        if side == 2 then cx,cy,ox,oy = n,1,n,3
+    elseif side == 8 then cx,cy,ox,oy = n,3,n,1
+    elseif side == 4 then cx,cy,ox,oy = 1,n,3,n
+    elseif side == 6 then cx,cy,ox,oy = 3,n,1,n
     end
 
     return cell.chunks[cx][cy], other.chunks[ox][oy]
@@ -3810,10 +3785,10 @@ function build_cell(p, c)
 
       if K.sky_light_sec then
         local x1,y1,x2,y2 = K.x1,K.y1,K.x2,K.y2
-        if kx==1  then x1=x1+1 end
-        if kx==KW then x2=x2-1 end
-        if ky==1  then y1=y1+1 end
-        if ky==KH then y2=y2-1 end
+        if kx==1 then x1=x1+1 end
+        if kx==3 then x2=x2-1 end
+        if ky==1 then y1=y1+1 end
+        if ky==3 then y2=y2-1 end
 
         local func = SKY_LIGHT_FUNCS[c.sky_light.pattern]
         assert(func)
@@ -4215,6 +4190,7 @@ c.x, c.y, other.x, other.y)
     for kx = 1,3 do for ky = 1,3 do
       local K = other.chunks[kx][ky]
       if K.kind == "vista" and K.link == link then
+        assert(K.orig_model)
         gap_fill(p,c, K.x1,K.y1, K.x2,K.y2, K.orig_model)
       end
     end end
