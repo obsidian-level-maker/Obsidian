@@ -22,6 +22,13 @@
 function do_nothing()
 end
 
+function non_nil(val)
+  if val == nil then
+    error("Illegal NIL value found.")
+  end
+  return val
+end
+
 function int(val)
   return math.floor(val)
 end
