@@ -2047,6 +2047,8 @@ R.level_theme.name, R.combo.name)
 
     local function can_make_vista(a, b, dir)
 
+      if a.combo == b.combo then return false end
+
       if a.combo.outdoor and rand_odds(50) then return false end
 
       if not b.combo.outdoor and rand_odds(50) then return false end
