@@ -1913,14 +1913,11 @@ function make_chunks(p)
     -- this rmodel is needed when building the vista.
 
     if goodies == 0 then
-
-      local K
-      repeat
-        K = table.remove(empties, 1)
-      until K.kind == "empty"
-
-      K.kind = "room"
-      K.rmodel = copy_table(c.rmodel)
+      while #empties > 0 do
+        local K = table.remove(empties)
+        K.rmodel = copy_table(c.rmodel)
+        if K.kind == "empty" then K.kind = "room" end
+      end
     end
 
     while #empties > 0 do
@@ -1944,6 +1941,7 @@ function make_chunks(p)
       assert(K)
 
       if K.kind == "vista" then
+        assert(K.rmodel)
         K.orig_model = K.rmodel
 
         local other = link_other(K.link, c)
