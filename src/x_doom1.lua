@@ -292,7 +292,7 @@ DM_EXITS =
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
-    switch = { switch="SW1COMP", wall="COMPSPAN", h=64 },
+    switch = { switch="SW1COMP", wall="COMPSPAN", h=64, kind_once=11 },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_5", -- frame_wall="BROWN96"
@@ -313,7 +313,7 @@ DM_EXITS =
     
     front_mark = "EXITSTON", 
 
-    switch = { switch="SW1HOT", wall="SP_HOT1", h=64 },
+    switch = { switch="SW1HOT", wall="SP_HOT1", h=64, kind_once=11 },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_6", frame_wall="LITE5" },
@@ -333,7 +333,7 @@ DM_EXITS =
     sign_ceil="CEIL5_2",
 
     flush = true,
-    switch = { switch="SW1BRN2", wall="BROWN1", h=64 },
+    switch = { switch="SW1BRN2", wall="BROWN1", h=64, kind_once=11 },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_5",
@@ -357,7 +357,7 @@ DM_EXITS =
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
-    switch = { switch="SW1COMM", wall="SHAWN2", h=64 },
+    switch = { switch="SW1COMM", wall="SHAWN2", h=64, kind_once=11 },
 
     door = { wall="EXITDOOR", w=64, h=72, frame_ceil="TLITE6_5" },
   },
@@ -377,7 +377,7 @@ DM_EXITS =
     sign_ceil="CEIL5_2",
 
     flush = true,
-    switch = { switch="SW1STRTN", wall="STARTAN2", h=64 },
+    switch = { switch="SW1STRTN", wall="STARTAN2", h=64, kind_once=11 },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_5",
@@ -407,7 +407,7 @@ DM_EXITS =
     flush_left  = "GSTFONT1",
     flush_right = "GSTFONT2",
 
-    switch = { switch="SW1GSTON", wall="GSTONE2", h=64 },
+    switch = { switch="SW1GSTON", wall="GSTONE2", h=64, kind_once=11 },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="FLOOR7_2",
@@ -658,13 +658,102 @@ DM_LIQUIDS =
 
 DM_SWITCHES =
 {
-  sw_blue = { wall="COMPBLUE", switch="SW1BLUE" },
-  sw_hot  = { wall="SP_HOT1",  switch="SW1HOT" },
-  sw_vine = { wall="SKINFACE", switch="SW1SKIN" },
-  sw_skin = { wall="GRAYVINE", switch="SW1VINE" },
+  sw_blue =
+  {
+    switch="SW1BLUE", wall="COMPBLUE", kind_once=103,
 
-  sw_metl = { wall="SUPPORT3", switch="SW1GARG",  floor="CEIL5_2", bars=true },
-  sw_gray = { wall="GRAY7",    switch="SW1GRAY1", floor="FLAT1",   bars=true },
+    door =
+    {
+      w=128, h=112,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        key_w="COMPBLUE",
+        door_w="BIGDOOR3", door_c="FLAT1",
+        step_w="STEP1",  track_w="DOORTRAK",
+        frame_f="FLAT1", frame_c="FLAT1",
+      }
+    },
+  },
+
+  sw_hot =
+  {
+    switch="SW1HOT", wall="SP_HOT1", kind_once=103,
+
+    door =
+    {
+      w=128, h=112,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        key_w="SP_HOT1",
+        door_w="BIGDOOR3", door_c="FLAT1",
+        step_w="STEP1",  track_w="DOORTRAK",
+        frame_f="FLAT1", frame_c="FLAT1",
+      }
+    },
+  },
+
+  sw_skin =
+  {
+    switch="SW1SKIN", wall="SKINFACE", kind_once=103,
+
+    door =
+    {
+      w=128, h=112,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        key_w="SKINFACE",
+        door_w="BIGDOOR3", door_c="FLAT1",
+        step_w="STEP1",  track_w="DOORTRAK",
+        frame_f="FLAT1", frame_c="FLAT1",
+      }
+    },
+  },
+
+  sw_vine =
+  {
+    switch="SW1VINE", wall="GRAYVINE", kind_once=103,
+
+    door =
+    {
+      w=128, h=112,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        key_w="GRAYVINE",
+        door_w="BIGDOOR3", door_c="FLAT1",
+        step_w="STEP1",  track_w="DOORTRAK",
+        frame_f="FLAT1", frame_c="FLAT1",
+      }
+    },
+  },
+
+  sw_metl =
+  {
+    switch="SW1GARG", wall="METAL", kind_once=23,
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "BARS_1",
+      skin = { bar_w="SUPPORT3", bar_f="CEIL5_2" },
+    },
+  },
+
+  sw_gray =
+  {
+    switch="SW1GRAY1", wall="GRAY1", kind_once=23,
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "BARS_2",
+      skin = { bar_w="GRAY7", bar_f="FLAT19" },
+    },
+
+  },
 
 --FIXME: (not in doom1)  sw_rock = { wall="ROCK3",    switch="SW1ROCK",  floor="RROCK13", bars=true },
 --FIXME:  sw_wood = { wall="WOODMET1", switch="SW1WDMET", floor="FLAT5_1", bars=true, stand_h=128 },
@@ -700,6 +789,87 @@ DM_DOORS =
 
   d_small1 = { wall="DOOR1",    w=64, h=72 },
   d_small2 = { wall="DOOR3",    w=64, h=72 },
+}
+
+DM_KEY_DOORS =
+{
+  k_blue =
+  {
+    w=128, h=112, kind_rep=26, kind_once=32,
+
+    prefab = "DOOR_LOCKED",
+    
+    skin =
+    {
+      key_w="DOORBLU2",
+      door_w="BIGDOOR4", door_c="FLAT1",
+      step_w="STEP1",  track_w="DOORTRAK",
+      frame_f="FLAT1", frame_c="FLAT1",
+    }
+  },
+
+  k_yellow =
+  {
+    w=128, h=112, kind_rep=27, kind_once=34,
+
+    prefab = "DOOR_LOCKED",
+
+    skin =
+    {
+      key_w="DOORYEL2",
+      door_w="BIGDOOR4", door_c="FLAT1",
+      step_w="STEP1",  track_w="DOORTRAK",
+      frame_f="FLAT1", frame_c="FLAT1",
+    }
+  },
+
+  k_red =
+  {
+    w=128, h=112, kind_rep=28, kind_once=33,
+
+    prefab = "DOOR_LOCKED",
+
+    skin =
+    {
+      key_w="DOORRED2",
+      door_w="BIGDOOR4", door_c="FLAT1",
+      step_w="STEP1",  track_w="DOORTRAK",
+      frame_f="FLAT1", frame_c="FLAT1",
+    }
+  },
+
+  ex_tech =
+  {
+    w=64, h=72,
+
+    prefab = "EXIT_DOOR",
+
+    skin =
+    {
+      door_w = "EXITDOOR", door_c = "CEIL5_2",
+      exit_w = "EXITSIGN", exit_c = "CEIL5_2",
+
+      step_w="STEP1",  track_w="DOORTRAK",
+      frame_f="FLAT1", frame_c="TLITE6_5",
+    }
+  },
+
+  ex_stone =
+  {
+    w=64, h=72,
+
+    prefab = "EXIT_DOOR_WIDE",
+
+    skin =
+    {
+      front_w = "EXITSTON",
+      door_w = "EXITDOOR", door_c = "CEIL5_2",
+      exit_w = "EXITSIGN", exit_c = "CEIL5_2",
+
+      step_w="STEP1",  track_w="DOORTRAK",
+      frame_f="FLAT1", frame_c="TLITE6_5",
+    }
+  },
 }
 
 DM_IMAGES =
@@ -753,13 +923,6 @@ DM_PICS =
 
 --FIXME  { wall="WOOD10",   w=128, h=128 },
 --FIXME  { wall="TEKBRON1", w=128, h=128 },
-}
-
-DM_KEY_BITS =
-{
-  k_blue   = { wall="DOORBLU2", kind_rep=26, kind_once=32, },
-  k_yellow = { wall="DOORYEL2", kind_rep=27, kind_once=34, },
-  k_red    = { wall="DOORRED2", kind_rep=28, kind_once=33, },
 }
 
 
@@ -1398,7 +1561,7 @@ GAME_FACTORIES["doom_common"] = function()
     liquids   = DM_LIQUIDS,
     switches  = DM_SWITCHES,
     doors     = DM_DOORS,
-    key_bits  = DM_KEY_BITS,
+    key_doors = DM_KEY_DOORS,
 
     pics      = DM_PICS,
     images    = DM_IMAGES,

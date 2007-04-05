@@ -2483,6 +2483,7 @@ function build_borders(p)
   local c
 
   local function build_door( link, side  )
+
     local D = c.border[side]
 
     local door_info = GAME.doors[link.wide_door]
@@ -2495,57 +2496,48 @@ function build_borders(p)
       door_kind = 1, tag = 0,
     }
 
-      if dual_odds(p.deathmatch, 75, 15) and not link.is_exit then
-        parm.door_kind = 117 -- Blaze
-      end
+    if dual_odds(p.deathmatch, 80, 15) and not link.is_exit then
+      parm.door_kind = 117 -- Blaze
+    end
 
-      if link.quest and link.quest.kind == "key" then
-        local bit = GAME.key_bits[link.quest.item]
-        assert(bit)
-        door_info.prefab = "DOOR_LOCKED" --FIXME: wrong wrong wrong
-        parm.door_kind = sel(p.coop, bit.kind_once, bit.kind_rep)
-        parm.key_w = bit.wall -- can be nil
-        if bit.thing then
-          -- FIXME: heretic statues !!!
-        end
---???        if bit.door then
---???          kind = bit.door
---???          info = GAME.doors[kind]
---???          assert(info)
---???        end
+    if link.quest and link.quest.kind == "key" then
 
-      elseif link.quest and link.quest.kind == "switch" and
-         GAME.switches[link.quest.item].bars
-      then
-        door_info.prefab = "BARS_1" --FIXME: wrong wrong wrong
+      door_info = GAME.key_doors[link.quest.item]
+      assert(door_info)
 
-        door_info.skin.bar_w = GAME.switches[link.quest.item].wall
-        assert(door_info.skin.bar_w)
+      parm =
+      {
+        door_top = link.build.rmodel.f_h + door_info.h,
+        door_kind = 1,
+        tag = 0,
+      }
 
-        parm.tag = link.quest.tag + 1
-        parm.door_kind = 0
+      parm.door_kind = sel(p.coop, door_info.kind_once, door_info.kind_rep)
 
-        door_info.skin.frame_ceil = D.combo.floor
+      -- FIXME: heretic statues !!!
 
-      elseif link.quest and link.quest.kind == "switch" then
-        door_info.prefab = "DOOR_LOCKED" --FIXME: wrong wrong wrong
+    elseif link.quest and link.quest.kind == "switch" then
 
-        door_info.skin.key_w = GAME.switches[link.quest.item].wall
-        assert(door_info.skin.key_w)
+      door_info = GAME.switches[link.quest.item].door
+      assert(door_info)
 
-        parm.tag = link.quest.tag + 1
-        parm.door_kind = 0
+      parm =
+      {
+        door_top = link.build.rmodel.f_h + door_info.h,
+        door_kind = 0,
+        tag = link.quest.tag + 1,
+      }
 
-      elseif link.is_exit then
-        door_info.prefab = "EXIT_DOOR_WIDE" --FIXME: wrong way
+    elseif link.is_exit then
+      door_info = GAME.key_doors["ex_tech"]
 
-        door_info.skin.front_w = "EXITSTON" --!!!!
-        door_info.skin.exit_w = "EXITSIGN" -- FIXME !!!!
-        door_info.skin.exit_c = "CEIL5_2"  --!!!!
-        door_info.skin.door_w = "EXITDOOR"
-
-        parm.door_top = link.build.rmodel.f_h + 72
-      end
+      parm =
+      {
+        door_top = link.build.rmodel.f_h + door_info.h,
+        door_kind = 1,
+        tag = 0,
+      }
+    end
 
     if not door_info.prefab then print(table_to_str(door_info)) end
     assert(door_info.prefab)
@@ -4994,7 +4986,6 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
     if c.is_exit then
       info = c.combo.switch
-      parm.kind = 11
       parm.tag  = 0
     else
       info = GAME.switches[c.quest.item]
@@ -5007,6 +4998,9 @@ con.printf("add_object @ (%d,%d)\n", x, y)
              beam_w="WOOD1", beam_f="FLAT5_2",
              lite_w="LITE5", frame_c=c.combo.floor,
            }
+    parm.kind = info.kind_once
+
+    assert(parm.kind)
 
     if false then -- floor switch / niche switch
       local tex_h = 128  -- FIXME: assumption !!!
@@ -5014,8 +5008,6 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       parm.x_offset = 0
       parm.y_offset = tex_h - 72  -- TINY = 64
     end
-
-    if info.bars then parm.kind = 23 end
 
     B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.combo, x, y, dir)
     fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
@@ -5082,7 +5074,6 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       "cage_medium_liq_LAVA",
 
       }
-con.printf("@ add_prefab: %s\n", name)
     local def = GAME.sc_fabs[name]
     assert(def)
     local fab = PREFABS[def.prefab]
@@ -5102,6 +5093,8 @@ con.printf("@ add_prefab: %s\n", name)
 
     local x,y,dir = fab_find_loc(c, fab.long, fab.deep, fab.add_mode)
     if not x then return end
+
+con.printf("@ add_prefab: %s\n", name)
 
     local parm = {
              pic_h = c.rmodel.f_h + 64,   -- 88 for BILLBOARD_LIT
