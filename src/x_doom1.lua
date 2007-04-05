@@ -1037,7 +1037,7 @@ DM_THEMES =
       SP_ROCK=50, BROWN1=30,
     },
 
-    room_heights = { [96]=50, [128]=50 }
+    room_heights = { [96]=50, [128]=50 },
 
     monster_prefs =
     {
