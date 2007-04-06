@@ -1177,6 +1177,48 @@ STATUE_CHAIR_DUDE =
   },
 },
 
+MACHINE_PUMP =
+{
+  add_mode="island",
+  height_range={ 192,256 },
+
+  structure =
+  {
+    "......ccccccdddd",
+    "bbbbbbccccccdSdd",
+    "baaaabccccccdddd",
+    "baPPabccccccdddd",
+    "baPPabccccccdddd",
+    "baaaabccccccdddd",
+    "bbbbbbccccccdSdd",
+    "......ccccccdddd",
+  },
+
+  elements =
+  {
+    c = { f_h=128, c_h=-40,
+          f_tex="metal_f", l_tex="metal4_w", l_peg="top",
+          c_tex="metal_c", u_tex="metal5_w", u_peg="bottom",
+        },
+
+    d = { copy="c", l_tex="metal3_w" },
+
+    b = { copy="c", f_h=64, l_tex="metal5_w" },
+    a = { copy="b", f_h=80, c_h=-56 },
+
+    -- pump
+    P = { f_h=56, c_h=-64,
+          f_tex="metal_f", l_tex="metal5_w", l_peg="top",
+          c_tex="pump_c",  u_tex="pump_w",   u_peg="bottom",
+          tag="tag",
+        },
+
+    -- supports
+    S = { solid="beam_w" },
+  },
+},
+
+
 DRINKS_BAR =
 {
   region="floor",

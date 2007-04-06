@@ -759,6 +759,23 @@ D2_PREFAB_SCENERY =
     }
   },
 
+  machine_pump1 =
+  {
+    prefab = "MACHINE_PUMP",
+
+    skin =
+    {
+      metal3_w="METAL3", metal_f="CEIL5_1",
+      metal4_w="METAL4", metal_c="CEIL5_1",
+      metal5_w="METAL5",
+
+      pump_w="SPACEW4", pump_c="FLOOR3_3",
+      beam_w="DOORSTOP",
+
+      tag=9
+    },
+  },
+  
   ground_light_SILVER =
   {
     prefab = "GROUND_LIGHT",
