@@ -1142,6 +1142,8 @@ STATUE_TECH_1 =
   },
 },
 
+-- STATUE_TECH_2
+
 STATUE_CHAIR_DUDE =
 {
   region="floor",
@@ -1284,7 +1286,7 @@ GROUND_LIGHT =
 
 ------ Skylights ------------------------------------
 
-MEGA_SKYLIGHT_1 =
+SKYLIGHT_MEGA_1 =
 {
   region="ceil",
   add_mode="island",
@@ -1323,9 +1325,9 @@ MEGA_SKYLIGHT_1 =
   },
 },
 
-MEGA_SKYLIGHT_2 =
+SKYLIGHT_MEGA_2 =
 {
-  copy="MEGA_SKYLIGHT_1",
+  copy="SKYLIGHT_MEGA_1",
 
   structure =
   {
@@ -1348,9 +1350,9 @@ MEGA_SKYLIGHT_2 =
   },
 },
 
-MEGA_SKYLIGHT_3 =
+SKYLIGHT_MEGA_3 =
 {
-  copy="MEGA_SKYLIGHT_1",
+  copy="SKYLIGHT_MEGA_1",
 
   structure =
   {
@@ -1370,6 +1372,54 @@ MEGA_SKYLIGHT_3 =
     "ffssBssBBssBssff",
     "ffffffffffffffff",
     "ffffffffffffffff",
+  },
+},
+
+SKYLIGHT_CROSS_SMALL =
+{
+  region="ceil",
+  add_mode="island",
+  environment="indoor",
+  height_range={ 80,224 },
+
+  structure =
+  {
+    "fffffff.",
+    "fffSfff.",
+    "fffffff.",
+    "fTfffUf.",
+    "fffffff.",
+    "fffXfff.",
+    "fffffff.",
+    "........",
+  },
+
+  elements =
+  {
+    f = { c_h=-8, c_tex="frame_c", u_tex="frame_w" },
+
+--  B = { c_h=-4, c_tex="beam_c", u_tex="beam_w" },
+
+    S = { c_h=8, c_tex="sky_c", light=208,
+          [1] = { dx= 8, dy=-16 },
+          [3] = { dx=24, dy=16 },
+          [7] = { dx=-24,dy= 0 },
+        },
+    T = { c_h=8, c_tex="sky_c", light=208,
+          [9] = { dx=16, dy=-8 },
+          [3] = { dx=-16,dy=-24 },
+          [7] = { dx= 0, dy=24 },
+        },
+    U = { c_h=8, c_tex="sky_c", light=208,
+          [1] = { dx=-16,dy= 8 },
+          [7] = { dx=16, dy=24 },
+          [3] = { dx= 0, dy=-24 },
+        },
+    X = { c_h=8, c_tex="sky_c", light=208,
+          [9] = { dx=-8, dy=16 },
+          [7] = { dx=-24,dy=-16 },
+          [3] = { dx=24, dy= 0 },
+        },
   },
 },
 

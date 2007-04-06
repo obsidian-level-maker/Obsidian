@@ -787,33 +787,38 @@ D2_PREFAB_SCENERY =
     }
   },
 
-  mega_skylight_METAL =
+  skylight_mega_METAL =
   {
-    prefab = "MEGA_SKYLIGHT_1",
+    prefab = "SKYLIGHT_MEGA_1",
 
     skin =
     { 
       sky_c = "F_SKY1",
-      frame_w = "METAL",
-      frame_c = "CEIL5_2",
-
-      beam_w = "METAL",
-      beam_c = "CEIL5_2",
+      frame_w = "METAL", frame_c = "CEIL5_2",
+      beam_w = "METAL", beam_c = "CEIL5_2",
     }
   },
 
-  mega_skylight_METALWOOD =
+  skylight_mega_METALWOOD =
   {
-    prefab = "MEGA_SKYLIGHT_2",
+    prefab = "SKYLIGHT_MEGA_2",
 
     skin =
     { 
       sky_c = "F_SKY1",
-      frame_w = "METAL",
-      frame_c = "CEIL5_2",
+      frame_w = "METAL", frame_c = "CEIL5_2",
+      beam_w = "WOOD12", beam_c = "FLAT5_2",
+    }
+  },
 
-      beam_w = "WOOD12",
-      beam_c = "FLAT5_2",
+  skylight_cross_sm_METAL =
+  {
+    prefab = "SKYLIGHT_CROSS_SMALL",
+
+    skin =
+    { 
+      sky_c = "F_SKY1",
+      frame_w = "METAL", frame_c = "CEIL5_2",
     }
   },
 
