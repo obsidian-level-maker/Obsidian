@@ -1377,41 +1377,69 @@ STATUE_CHAIR_DUDE =
 MACHINE_PUMP =
 {
   add_mode="island",
-  height_range={ 192,256 },
+  environment="indoor",
+  height_range={ 192,240 },
 
   structure =
   {
-    "......ccccccdddd",
-    "bbbbbbccccccdSdd",
-    "baaaabccccccdddd",
-    "baPPabccccccdddd",
-    "baPPabccccccdddd",
-    "baaaabccccccdddd",
-    "bbbbbbccccccdSdd",
-    "......ccccccdddd",
+    "ZZZZZZZZZZZZZZZZ",
+    "ZZZZZZZZZZZZZZZZ",
+    "ZZZZZZZZZZZZZZZZ",
+    "ZbbbbbbccccddddZ",
+    "ZbaaaabccccdLddZ",
+    "ZbaPQabccccddddZ",
+    "ZbaRSabccccddddZ",
+    "ZbaaaabccccdLddZ",
+    "ZbbbbbbccccddddZ",
+    "ZZZZZZZZZZZZZZZZ",
+    "ZZZZZZZZZZZZZZZZ",
+    "ZZZZZZZZZZZZZZZZ",
   },
 
   elements =
   {
-    c = { f_h=128, c_h=-40,
+    -- outside
+    Z = { f_h=0, c_rel="floor_h", c_h=216 },
+    
+    c = { f_h=112, c_rel="floor_h", c_h=176,
           f_tex="metal_f", l_tex="metal4_w", l_peg="top",
           c_tex="metal_c", u_tex="metal5_w", u_peg="bottom",
         },
 
     d = { copy="c", l_tex="metal3_w" },
 
-    b = { copy="c", f_h=64, l_tex="metal5_w" },
-    a = { copy="b", f_h=80, c_h=-56 },
+    b = { copy="c", f_h=48, l_tex="metal4_w" },
 
-    -- pump
-    P = { f_h=56, c_h=-64,
-          f_tex="metal_f", l_tex="metal5_w", l_peg="top",
-          c_tex="pump_c",  u_tex="pump_w",   u_peg="bottom",
-          tag="tag",
+    a = { copy="b", f_h=80, l_tex="metal5_w",
+          c_rel="floor_h", c_h=144
         },
 
     -- supports
-    S = { solid="beam_w" },
+    L = { solid="beam_w" },
+
+    -- pump
+--- P = { f_h=56, c_h=-64,
+---       f_tex="metal_f", l_tex="metal5_w", l_peg="top",
+---       c_tex="pump_c",  u_tex="pump_w",   u_peg="bottom",
+---       kind="tag",
+---     },
+
+    P = { solid="pump_w", [7] = { dx= 2, dy=-2 }, [9] = { dx= 0, dy= 4 },
+          [8] = { x_offset= 64, kind="kind" },
+          [4] = { x_offset= 80, kind="kind" },
+        },
+    Q = { solid="pump_w", [9] = { dx=-2, dy=-2 }, [3] = { dx= 4, dy= 0 },
+          [6] = { x_offset= 32, kind="kind" },
+          [8] = { x_offset= 48, kind="kind" },
+        },
+    R = { solid="pump_w", [7] = { dx=-4, dy= 0 }, [1] = { dx= 2, dy= 2 },
+          [4] = { x_offset= 96, kind="kind" },
+          [2] = { x_offset=112, kind="kind" },
+        },
+    S = { solid="pump_w", [1] = { dx= 0, dy=-4 }, [3] = { dx=-2, dy= 2 },
+          [2] = { x_offset=  0, kind="kind" },
+          [6] = { x_offset= 16, kind="kind" },
+        },
   },
 },
 

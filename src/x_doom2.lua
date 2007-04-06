@@ -781,6 +781,8 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
+      ceil="FLAT1",
+
       metal3_w="METAL3", metal_f="CEIL5_1",
       metal4_w="METAL4", metal_c="CEIL5_1",
       metal5_w="METAL5",
@@ -788,7 +790,7 @@ D2_PREFAB_SCENERY =
       pump_w="SPACEW4", pump_c="FLOOR3_3",
       beam_w="DOORSTOP",
 
-      tag=9
+      kind=48 -- scroll left
     },
   },
   
