@@ -1865,7 +1865,7 @@ function make_chunks(p)
         if N and N.rmodel and N.kind ~= "vista" then
 
           K.rmodel = copy_table(N.rmodel)
---[[
+-- [[ !!!!
           if K.kind == "empty" then
             K.kind = N.kind
             K.link = N.link
@@ -5160,8 +5160,6 @@ if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
       "billboard_stilts4_WREATH",
       "statue_tech1",
       "ground_light_SILVER",
-      "mega_skylight_METAL",
-      "mega_skylight_METALWOOD",
       "drinks_bar_WOOD_POTION",
 
       "crate_CRATE1",
@@ -5185,6 +5183,25 @@ if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
       "cage_medium_liq_BLOOD",
       "cage_medium_liq_LAVA",
 
+      "skylight_mega_METAL",
+      "skylight_mega_METALWOOD",
+      "skylight_cross_sm_METAL",
+      "statue_tech2",
+      "launch_pad_sml_S",
+      "launch_pad_big_H",
+      "launch_pad_med_F",
+      "liquid_pickup_NUKAGE",
+
+      "machine_pump1",
+      "comp_tall_STATION1",
+      "comp_tall_STATION2",
+      "comp_thin_STATION1",
+      "comp_thin_STATION2",
+      "comp_desk_EW8",
+      "comp_desk_EW2",
+      "comp_desk_NS6",
+      "comp_desk_USHAPE1",
+      "comp_desk_USHAPE2",
       }
     local def = GAME.sc_fabs[name]
     assert(def)
@@ -5203,10 +5220,10 @@ if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
       if h < fab.height_range[1] or h > fab.height_range[2] then return end
     end
 
-    local x,y,dir = fab_find_loc(c, fab.long, fab.deep, fab.add_mode)
+    local x,y,dir = fab_find_loc(c, fab.long, fab.deep, fab.add_mode, def.force_dir)
     if not x then return end
 
-con.printf("@ add_prefab: %s\n", name)
+con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
 
     local parm = {
              pic_h = c.rmodel.f_h + 64,   -- 88 for BILLBOARD_LIT
@@ -5233,7 +5250,7 @@ con.printf("@ add_prefab: %s\n", name)
 
     -- choose kind: prefabs | scenery items
 
-    if GAME.sc_fabs and rand_odds(40) then
+    if GAME.sc_fabs then --!!!!! and rand_odds(40) then
       add_prefab(c)
       return
     end
@@ -5340,7 +5357,7 @@ con.debugf("add_scenery : %s\n", item)
   end
 
   -- SCENERY
-  for loop = 1,4 do
+  for loop = 1,20 do
     add_scenery(c)
   end
 end
