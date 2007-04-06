@@ -2085,7 +2085,7 @@ R.level_theme.name, R.combo.name)
             -- record the vista in the other cell
             nb.vistas[10-dir] = true
 
-            con.debugf("VISTA/FALLOFF @ (%d,%d) dir:%d %s\n",
+            con.debugf("%s @ (%d,%d) dir:%d %s\n", string.upper(L.kind),
                        c.x, c.y, dir, sel(L.fall_over, "FALL-OVER", "-"))
           end
         end
