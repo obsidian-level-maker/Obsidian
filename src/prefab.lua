@@ -1082,6 +1082,111 @@ TECH_PICKUP_LARGE =
   pickup_pos = { x=192, y=192 }
 },
 
+LAUNCH_PAD_LARGE =
+{
+  region="floor",
+
+  structure =
+  {
+    "........................",
+    "........dddddddd........",
+    "........bbbbbbbb........",
+    "...OOOOOOOOOOOOOOOOOO...",
+    "...OssssssssssssssssO...",
+    "...OssssssssssssssssO...",
+    "...OssssssssssssssssO...",
+    "...OssssTssssssTssssO...",
+    ".caOssssTssssssTssssOac.",
+    ".caOssssTssssssTssssOac.",
+    ".caOssssTssssssTssssOac.",
+    ".caOssssTTTTTTTTssssOac.",
+    ".caOssssTssssssTssssOac.",
+    ".caOssssTssssssTssssOac.",
+    ".caOssssTssssssTssssOac.",
+    ".caOssssTssssssTssssOac.",
+    "...OssssssssssssssssO...",
+    "...OssssssssssssssssO...",
+    "...OssssssssssssssssO...",
+    "...OssssssssssssssssO...",
+    "...OOOOOOOOOOOOOOOOOO...",
+    "........bbbbbbbb........",
+    "........dddddddd........",
+    "........................",
+  },
+
+  elements =
+  {
+    s = { f_h=16, f_tex="pad_f" },
+    T = { f_h=16, f_tex="letter_f" },
+
+    O = { f_h=24, f_tex="outer_f", l_tex="outer_w", l_peg="top" },
+
+    a = { f_h=16, f_tex="step_f", l_tex="side_w", l_peg="top",
+          [4] = { l_tex="step_w" }, [6] = { l_tex="step_w" },
+        },
+
+    b = { f_h=16, f_tex="step_f", l_tex="side_w", l_peg="top",
+          [2] = { l_tex="step_w" }, [8] = { l_tex="step_w" },
+        },
+
+    c = { copy="a", f_h=8 },
+    d = { copy="b", f_h=8 },
+  },
+},
+
+LAUNCH_PAD_MEDIUM =
+{
+  copy="LAUNCH_PAD_LARGE",
+
+  structure =
+  {
+    "....................",
+    ".......dddddd.......",
+    ".......bbbbbb.......",
+    "...OOOOOOOOOOOOOO...",
+    "...OssssssssssssO...",
+    "...OssssssssssssO...",
+    ".caOssTTTTTTTTssOac.",
+    ".caOssTsssssssssOac.",
+    ".caOssTsssssssssOac.",
+    ".caOssTsssssssssOac.",
+    ".caOssTTTTTTTTssOac.",
+    ".caOssTsssssssssOac.",
+    ".caOssTsssssssssOac.",
+    ".caOssTsssssssssOac.",
+    "...OssssssssssssO...",
+    "...OssssssssssssO...",
+    "...OOOOOOOOOOOOOO...",
+    ".......bbbbbb.......",
+    ".......dddddd.......",
+    "....................",
+  },
+},
+
+LAUNCH_PAD_SMALL =
+{
+  copy="LAUNCH_PAD_LARGE",
+
+  structure =
+  {
+    ".....dddddd.....",
+    ".....bbbbbb.....",
+    "..OOOOOOOOOOOO..",
+    "..OssssssssssO..",
+    "..OssTTTTTTssO..",
+    "caOssTsssssssOac",
+    "caOssTsssssssOac",
+    "caOssTTTTTTssOac",
+    "caOsssssssTssOac",
+    "caOsssssssTssOac",
+    "caOssTTTTTTssOac",
+    "..OssssssssssO..",
+    "..OssssssssssO..",
+    "..OOOOOOOOOOOO..",
+    ".....bbbbbb.....",
+    ".....dddddd.....",
+  },
+},
 
 STATUE_TECH_1 =
 {

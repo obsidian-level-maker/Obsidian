@@ -803,6 +803,54 @@ D2_PREFAB_SCENERY =
     }
   },
 
+  launch_pad_big_H =
+  {
+    prefab = "LAUNCH_PAD_LARGE",
+
+    skin =
+    {
+      pad_f="FLAT1", letter_f="CRATOP1",
+      outer_w="METAL1", outer_f="FLOOR4_8",
+      step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
+    },
+  },
+  
+  launch_pad_med_F =
+  {
+    prefab = "LAUNCH_PAD_MEDIUM",
+
+    skin =
+    {
+      pad_f="FLAT1", letter_f="CRATOP1",
+      outer_w="METAL1", outer_f="FLOOR4_8",
+      step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
+    },
+  },
+  
+  launch_pad_sml_S =
+  {
+    prefab = "LAUNCH_PAD_SMALL",
+
+    skin =
+    {
+      pad_f="FLAT1", letter_f="CRATOP1",
+      outer_w="METAL1", outer_f="FLOOR4_8",
+      step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
+    },
+  },
+ 
+  tech_pickup_STONE =
+  {
+    prefab = "TECH_PICKUP_LARGE",
+
+    skin =
+    {
+      wall="STONE2", floor="CEIL5_2", ceil="CEIL3_5",
+      lite_w="LITE5", sky_c="F_SKY1",
+      step_w="STEP1", carpet_f="FLOOR1_1",
+    },
+  },
+
   skylight_mega_METAL =
   {
     prefab = "SKYLIGHT_MEGA_1",
@@ -975,7 +1023,6 @@ D2_PREFAB_SCENERY =
     },
   },
 
-
   cage_pillar_METAL =
   {
     prefab = "CAGE_PILLAR",
@@ -1073,18 +1120,6 @@ D2_PREFAB_SCENERY =
 
       rail_w = "MIDBARS3",
     }
-  },
-
-  tech_pickup_STONE =
-  {
-    prefab = "TECH_PICKUP_LARGE",
-
-    skin =
-    {
-      wall="STONE2", floor="CEIL5_2", ceil="CEIL3_5",
-      lite_w="LITE5", sky_c="F_SKY1",
-      step_w="STEP1", carpet_f="FLOOR1_1",
-    },
   },
 
   exit_hole_SKY =
