@@ -65,6 +65,8 @@ end
 
 function expand_prefabs(fabs)
 
+  name_it_up(fabs)
+
   expand_copies(fabs)
 
   for name,P in pairs(fabs) do
@@ -82,13 +84,14 @@ function expand_prefabs(fabs)
       P.long, P.deep = f_long, f_deep
 
     elseif P.scale == 16 then
-      assert(f_long % 4 == 0)
-      assert(f_deep % 4 == 0)
+      if (f_long % 4) ~= 0 or (f_deep % 4) ~= 0 then
+        error("Prefab not a multiple of four: " .. tostring(P.name))
+      end
 
       P.long = int(f_long / 4)
       P.deep = int(f_deep / 4)
     else
-      error("Unsupported scale in Prefab: " .. tostring(P.scale))
+      error("Unsupported scale " .. tostring(P.scale) .. " in prefab: " .. tostring(P.name))
     end
   end
 
