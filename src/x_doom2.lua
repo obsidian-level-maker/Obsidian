@@ -851,6 +851,18 @@ D2_PREFAB_SCENERY =
     },
   },
 
+  liquid_pickup_NUKAGE =
+  {
+    prefab = "LIQUID_PICKUP",
+    
+    skin =
+    {
+      wall="METAL", floor="CEIL5_2", ceil="CEIL5_2",
+
+      liquid_f="NUKAGE1", sky_c="F_SKY1",
+    },
+  },
+
   skylight_mega_METAL =
   {
     prefab = "SKYLIGHT_MEGA_1",

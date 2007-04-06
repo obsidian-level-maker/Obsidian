@@ -1188,6 +1188,46 @@ LAUNCH_PAD_SMALL =
   },
 },
 
+LIQUID_PICKUP =
+{
+  height_range={ 128,384 },
+
+  structure =
+  {
+    "##ssssssssssss##",
+    "##ssssssssssss##",
+    "ssbLLLLccLLLLbss",
+    "ssbbbbbccbbbbbss",
+    "ssbLLLLccLLLLbss",
+    "ssbbbbbccbbbbbss",
+    "ssbLLLccccLLLbss",
+    "ssccccccccccccss",
+    "ssccccccccccccss",
+    "ssbLLLccccLLLbss",
+    "ssbbbbbccbbbbbss",
+    "ssbLLLLccLLLLbss",
+    "ssbbbbbccbbbbbss",
+    "ssbLLLLccLLLLbss",
+    "##ssssssssssss##",
+    "##ssssssssssss##",
+  },
+
+  elements =
+  {
+    s = { f_h=16, c_h=-16, },
+
+    c = { copy="s", },
+    b = { copy="s", f_h=8, },
+
+    L = { f_h= 0, f_tex="liquid_f", 
+          c_h= 8, c_tex="sky_c",
+          light=208,
+          [1] = { dx=-4,dy=-4 }, [3] = { dx= 4,dy=-4 },
+          [7] = { dx=-4,dy= 4 }, [9] = { dx= 4,dy= 4 },
+        },
+  },
+},
+
 STATUE_TECH_1 =
 {
   environment="indoor",
