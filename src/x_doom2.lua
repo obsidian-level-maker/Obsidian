@@ -759,6 +759,22 @@ D2_PREFAB_SCENERY =
     }
   },
 
+  statue_tech2 =
+  {
+    prefab = "STATUE_TECH_2",
+
+    skin =
+    {
+      wall="METAL", floor="FLAT23", ceil="FLAT23",
+      outer_w="STEP4",
+
+      carpet_f="FLAT14", lite_c="TLITE6_5",
+
+      tv_w="SPACEW3", tv_f="CEIL5_1",
+      span_w="COMPSPAN", span_f="FLAT4",
+    },
+  },
+
   machine_pump1 =
   {
     prefab = "MACHINE_PUMP",

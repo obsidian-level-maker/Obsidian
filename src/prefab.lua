@@ -1142,7 +1142,57 @@ STATUE_TECH_1 =
   },
 },
 
--- STATUE_TECH_2
+STATUE_TECH_2 =
+{
+  environment="indoor",
+  height_range={ 160,256 },
+
+  structure =
+  {
+    "................",
+    ".OOOOOOOOOOOOOO.",
+    ".OccccccccccccO.",
+    ".OcccsssssscccO.",
+    ".OcccsddddscccO.",
+    ".OcsscaaaacsscO.",
+    ".OcsdbMMMMbdscO.",
+    ".OcsdbMMMMbdscO.",
+    ".OcsdbMMMMbdscO.",
+    ".OcsdbMMMMbdscO.",
+    ".OcsscaaaacsscO.",
+    ".OcccsddddscccO.",
+    ".OcccsssssscccO.",
+    ".OccccccccccccO.",
+    ".OOOOOOOOOOOOOO.",
+    "................",
+  },
+
+  elements =
+  {
+    O = { l_tex="outer_w", l_peg="top",
+          u_tex="outer_w", u_peg="bottom",
+        },
+
+    c = { f_h=-8, c_h=8, f_tex="carpet_f", c_tex="lite_c",
+          l_peg="top", light=208,
+        },
+
+    M = { copy="c", f_h=112, f_tex="tv_f", l_tex="tv_w",    
+        },
+
+    a = { copy="M", f_h=64, l_tex="span_w",
+          [2]={ l_tex="tv_w", y_offset=23 },
+          [8]={ l_tex="tv_w", y_offset=23 }
+        },
+    b = { copy="M", f_h=64, l_tex="span_w",
+          [4]={ l_tex="tv_w", y_offset=23 },
+          [6]={ l_tex="tv_w", y_offset=23 }
+        },
+
+    d = { copy="M", f_h=16, l_tex="span_w", f_tex="span_f" },
+    s = { copy="M", f_h=8,  l_tex="span_w" },
+  },
+},
 
 STATUE_CHAIR_DUDE =
 {
