@@ -4317,8 +4317,7 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
       long,deep = deep,long
     end
 
-    assert(long >= 1)
-    assert(deep >= 1)
+    assert(long >= 1 and deep >= 1)
 
     -- make some vistas more shallow
     if deep > 5 or rand_odds(SHALLOW_PROBS[deep]) then
@@ -4333,13 +4332,22 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
     end
 
     -- don't touch the sides of the cell
+    -- ALSO: don't go past the corner of the source cell
     if (side == 2) or (side == 8) then
       if x1 == other.bx1 then x1 = x1+1 end
       if x2 == other.bx2 then x2 = x2-1 end
+
+      x1 = math.max(x1, c.bx1-1)
+      x2 = math.min(x2, c.bx2+1)
     else
       if y1 == other.by1 then y1 = y1+1 end
       if y2 == other.by2 then y2 = y2-1 end
+
+      y1 = math.max(y1, c.by1-1)
+      y2 = math.min(y2, c.by2+1)
     end
+
+    assert(x2 >= x1 and y2 >= y1)
 
     if sx ~= x1 or sy ~= y1 or ex ~= x2 or ey ~= y2 then
       vista_gap_fill(c, side, link, other)
