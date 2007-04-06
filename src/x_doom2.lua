@@ -865,6 +865,75 @@ D2_PREFAB_SCENERY =
     },
   },
 
+  comp_tall_STATION1 =
+  {
+    prefab = "COMPUTER_TALL",
+    skin   = { comp_w="COMPSTA1", comp_f="FLAT23", side_w="SILVER1" },
+  },
+ 
+  comp_tall_STATION2 =
+  {
+    prefab = "COMPUTER_TALL",
+    skin   = { comp_w="COMPSTA2", comp_f="FLAT23", side_w="SILVER1" },
+  },
+ 
+  comp_thin_STATION1 =
+  {
+    prefab = "COMPUTER_TALL_THIN",
+    skin   = { comp_w="COMPSTA1", comp_f="FLAT23", side_w="SILVER1" },
+  },
+ 
+  comp_thin_STATION2 =
+  {
+    prefab = "COMPUTER_TALL_THIN",
+    skin   = { comp_w="COMPSTA2", comp_f="FLAT23", side_w="SILVER1" },
+  },
+ 
+  comp_desk_EW8 =
+  {
+    prefab = "COMPUTER_DESK",
+    skin   = { comp_f="CONS1_5", side_w="SILVER1" },
+    force_dir = 8,
+  },
+
+  comp_desk_EW2 =
+  {
+    prefab = "COMPUTER_DESK",
+    skin   = { comp_f="CONS1_1", side_w="SILVER1" },
+    force_dir = 2,
+  },
+
+  comp_desk_NS6 =
+  {
+    prefab = "COMPUTER_DESK",
+    skin   = { comp_f="CONS1_7", side_w="SILVER1" },
+    force_dir = 6,
+  },
+
+  comp_desk_USHAPE1 =
+  {
+    prefab = "COMPUTER_DESK_U_SHAPE",
+    skin   =
+    {
+      comp_Nf="CONS1_1", comp_Wf="CONS1_7",
+      comp_Sf="CONS1_5",
+      comp_cf="COMP01", side_w ="SILVER1"
+    },
+    force_dir = 8,
+  },
+
+  comp_desk_USHAPE2 =
+  {
+    prefab = "COMPUTER_DESK_HUGE",
+    skin   =
+    {
+      comp_Nf="CONS1_1", comp_Wf="CONS1_7",
+      comp_Sf="CONS1_5",
+      comp_cf="COMP01", side_w ="SILVER1"
+    },
+    force_dir = 8,
+  },
+
   skylight_mega_METAL =
   {
     prefab = "SKYLIGHT_MEGA_1",

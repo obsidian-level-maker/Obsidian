@@ -1821,6 +1821,93 @@ BILLBOARD_STILTS_HUGE =
   },
 },
 
+COMPUTER_TALL =
+{
+  region="floor",
+  scale=64,
+
+  structure =
+  {
+    "cc",
+  },
+
+  elements =
+  {
+    c = { f_h=80, f_tex="comp_f", l_tex="side_w", l_peg="top",
+          [2] = { l_tex="comp_w" },
+          [8] = { l_tex="comp_w" },
+        }
+  },
+},
+
+COMPUTER_TALL_THIN =
+{
+  copy="COMPUTER_TALL",
+
+  scale=16,
+
+  structure =
+  {
+    "cccccccc",
+    "cccccccc",
+    "........",
+    "........",
+  },
+},
+
+COMPUTER_DESK =
+{
+  add_mode="wall",
+  region="floor",
+  scale=64,
+
+  structure =
+  {
+    "cc",
+  },
+
+  elements =
+  {
+    c = { f_h=28, f_tex="comp_f", l_tex="side_w", l_peg="top", }
+  },
+},
+
+COMPUTER_DESK_U_SHAPE =
+{
+  region="floor",
+  scale=64,
+
+  structure =
+  {
+    "aa",
+    ".b",
+    "dd",
+  },
+
+  elements =
+  {
+    a = { f_h=28, f_tex="comp_Sf", l_tex="side_w", l_peg="top", },
+    b = { f_h=28, f_tex="comp_Wf", l_tex="side_w", l_peg="top", },
+    d = { f_h=28, f_tex="comp_Nf", l_tex="side_w", l_peg="top", },
+
+    -- corner
+    c = { f_h=28, f_tex="comp_cf", l_tex="side_w", l_peg="top", },
+  },
+},
+
+COMPUTER_DESK_HUGE =
+{
+  copy="COMPUTER_DESK_U_SHAPE",
+
+  structure =
+  {
+    "aac",
+    "..b",
+    "..b",
+    "ddc",
+  },
+},
+
 
 ------ Crates ------------------------------------
 
