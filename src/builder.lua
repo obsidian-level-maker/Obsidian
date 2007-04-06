@@ -904,38 +904,6 @@ function B_vista(p,src, x1,y1, x2,y2, side, b_combo,kind)
   end
 
 
----###  if kind == "open" or kind == "wire" or kind == "fall_over" then
----###    ROOM.c_h   = dest.rmodel.c_h
----###    ROOM.c_tex = dest.combo.ceil
----###  
----###    WINDOW.c_h   = dest.rmodel.c_h
----###    WINDOW.c_tex = dest.combo.ceil
----###
----###  elseif kind == "frame" then
----###    ROOM.c_h   = dest.rmodel.c_h
----###    ROOM.c_tex = dest.combo.ceil
----###  
----###    WINDOW.c_h = ROOM.c_h - 24
----###    WINDOW.c_tex = sel(b_combo.outdoor, combo.floor, combo.ceil)
----###    WINDOW.light = dest.rmodel.light - 16
----###
----###  else -- "solid"
----###    local h = rand_index_by_probs { 20, 80, 20, 40 }
----###    ROOM.c_h   = ROOM.f_h + 96 + (h-1)*32
----###    ROOM.c_tex = sel(combo.outdoor, combo.floor, combo.ceil)
----###
----###    if ROOM.c_h > dest.sky_h then
----###       ROOM.c_h = math.max(dest.sky_h, ROOM.f_h + 96)
----###    end
----###
----###    WINDOW.c_h = ROOM.f_h + 96
----###    WINDOW.c_tex = sel(b_combo.outdoor, combo.floor, combo.ceil)
----###
----###    ROOM.light   = dest.rmodel.light - 32
----###    WINDOW.light = dest.rmodel.light - 16
----###  end
-
-
   local ax,ay = dir_to_across(side)
 
   local fx1 = (x1 - 1) * FW + 1
@@ -998,7 +966,7 @@ function B_vista(p,src, x1,y1, x2,y2, side, b_combo,kind)
 
   else -- solid, frame, open or fall_over
 
-    frag_fill(p,src, fx1,fy1, fx2,fy2, LEDGE, { f_tex="FWATER1" }) --!!!!!
+    frag_fill(p,src, fx1,fy1, fx2,fy2, LEDGE)
     frag_fill(p,src, fx1+1,fy1+1, fx2-1,fy2-1, ROOM)
 
     --- walkway ---
@@ -2014,12 +1982,14 @@ function make_chunks(p)
     end end
 
     -- raise middle ceiling to match highest neighbour
-    local mid_K = c.chunks[2][2]
+    if not c.combo.outdoor then
+      local mid_K = c.chunks[2][2]
 
-    if M_max - M_min >= 48 then
-      mid_K.rmodel.c_h = (M_min + M_max) / 2
-    else
-      mid_K.rmodel.c_h = M_max
+      if M_max - M_min >= 48 then
+        mid_K.rmodel.c_h = (M_min + M_max) / 2
+      else
+        mid_K.rmodel.c_h = M_max
+      end
     end
   end
 
@@ -4244,7 +4214,7 @@ c.x, c.y, other.x, other.y)
   end
   
   local function vista_gap_fill(c, side, link, other)
-    
+
     for kx = 1,3 do for ky = 1,3 do
       local K = other.chunks[kx][ky]
       if K.kind == "vista" and K.link == link then
