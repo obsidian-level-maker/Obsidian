@@ -243,13 +243,23 @@ bool FileCopy(const char *src_name, const char *dest_name)
   return was_OK;
 }
 
+bool FileRename(const char *old_name, const char *new_name)
+{
+#ifdef WIN32
+	return (::MoveFile(old_name, new_name) != 0);
+
+#else // LINUX or MACOSX
+
+	return (rename(old_name, new_name) == 0);
+#endif
+}
+
 //
 // FileDelete
 //
 bool FileDelete(const char *filename)
 {
 #ifdef WIN32
-
   return (::DeleteFile(filename) != 0);
 
 #else // LINUX or MACOSX

@@ -34,6 +34,7 @@ bool CheckExtension(const char *filename, const char *ext);
 char *ReplaceExtension(const char *filename, const char *ext);
 const char *FileBaseName(const char *filename);
 bool FileCopy(const char *src_name, const char *dest_name);
+bool FileRename(const char *old_name, const char *new_name);
 bool FileDelete(const char *filename);
 
 // string utilities
