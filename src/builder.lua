@@ -851,135 +851,169 @@ end
 --
 -- Build a scenic vista!
 --
--- The 'kind' value can be: "solid", "frame", "open", "wire"
+-- c is the cell the walks out into the vista.
+-- The other cell actually contains the vista.
+-- 
+-- The 'kind' can be: "solid", "frame", "open", "wire" OR "fall_over".
 --
-function B_vista(p,c, x1,y1, x2,y2, side, combo,kind)
+function B_vista(p,src, x1,y1, x2,y2, side, b_combo,kind)
 
-  local other = neighbour_by_side(p,c,side)
-  assert(other)
+  local dest = neighbour_by_side(p,src,side)
+  assert(dest)
 
-  local dx,dy = dir_to_delta(side)
-  local ax,ay = dir_to_across(side)
+  local ROOM
+  local LEDGE
+  
+  if kind == "solid" then
+    ROOM = copy_block(src.rmodel)
+  else
+    ROOM = copy_block(dest.rmodel)
+  end
 
-  local ROOM   = copy_block(c.rmodel)
-  local WINDOW = copy_block(c.rmodel)
+  ROOM.f_h   = src.rmodel.f_h
+  ROOM.f_tex = src.rmodel.f_tex
+  ROOM.l_tex = b_combo.wall
+  ROOM.u_tex = b_combo.wall
 
-  ROOM.l_tex = combo.wall
-  ROOM.u_tex = combo.wall
-  ROOM.c_tex = combo.ceil
+  ROOM.light = (src.rmodel.light + dest.rmodel.light) / 2
 
-  WINDOW.l_tex = combo.wall
-  WINDOW.u_tex = combo.wall
-  WINDOW.c_tex = combo.ceil
+  if kind == "solid" then
+    local h = rand_index_by_probs { 20, 80, 20, 40 }
 
-  ROOM.light   = other.rmodel.light
-  WINDOW.light = other.rmodel.light
+    ROOM.c_h = ROOM.f_h + 96 + (h-1)*32
+
+    if ROOM.c_h > dest.sky_h then
+       ROOM.c_h = math.max(dest.sky_h, ROOM.f_h + 96)
+    end
+  end
+
+  LEDGE = copy_block(ROOM)
 
   if kind ~= "fall_over" then
-    WINDOW.f_h = ROOM.f_h + 32
-    WINDOW.impassible = true  -- FIXME
+    LEDGE.f_h = ROOM.f_h + 32
+    LEDGE.impassible = true
   end
 
-  if kind == "open" or kind == "wire" or kind == "fall_over" then
-    ROOM.c_h   = other.rmodel.c_h
-    ROOM.c_tex = other.combo.ceil
-  
-    WINDOW.c_h   = other.rmodel.c_h
-    WINDOW.c_tex = other.combo.ceil
 
+  if kind == "solid" then
+    LEDGE.c_h = math.min(ROOM.c_h - 24, ROOM.f_h + 96)
+  
   elseif kind == "frame" then
-    ROOM.c_h   = other.rmodel.c_h
-    ROOM.c_tex = other.combo.ceil
-  
-    WINDOW.c_h = ROOM.c_h - 24
-    WINDOW.c_tex = sel(combo.outdoor, combo.floor, combo.ceil)
-    WINDOW.light = other.rmodel.light - 16
-
-  else -- "solid"
-    local h = rand_index_by_probs { 20, 80, 20, 40 }
-    ROOM.c_h   = ROOM.f_h + 96 + (h-1)*32
-    ROOM.c_tex = sel(combo.outdoor, combo.floor, combo.ceil)
-
-    if ROOM.c_h > other.sky_h then
-       ROOM.c_h = math.max(other.sky_h, ROOM.f_h + 96)
-    end
-
-    WINDOW.c_h = ROOM.f_h + 96
-    WINDOW.c_tex = sel(combo.outdoor, combo.floor, combo.ceil)
-
-    ROOM.light   = other.rmodel.light - 32
-    WINDOW.light = other.rmodel.light - 16
+    LEDGE.c_h = ROOM.c_h - 24
+    LEDGE.c_tex = b_combo.ceil
   end
 
-  fx1 = (x1 - 1) * FW + 1
-  fy1 = (y1 - 1) * FH + 1
 
-  fx2 = x2 * FW
-  fy2 = y2 * FH
+---###  if kind == "open" or kind == "wire" or kind == "fall_over" then
+---###    ROOM.c_h   = dest.rmodel.c_h
+---###    ROOM.c_tex = dest.combo.ceil
+---###  
+---###    WINDOW.c_h   = dest.rmodel.c_h
+---###    WINDOW.c_tex = dest.combo.ceil
+---###
+---###  elseif kind == "frame" then
+---###    ROOM.c_h   = dest.rmodel.c_h
+---###    ROOM.c_tex = dest.combo.ceil
+---###  
+---###    WINDOW.c_h = ROOM.c_h - 24
+---###    WINDOW.c_tex = sel(b_combo.outdoor, combo.floor, combo.ceil)
+---###    WINDOW.light = dest.rmodel.light - 16
+---###
+---###  else -- "solid"
+---###    local h = rand_index_by_probs { 20, 80, 20, 40 }
+---###    ROOM.c_h   = ROOM.f_h + 96 + (h-1)*32
+---###    ROOM.c_tex = sel(combo.outdoor, combo.floor, combo.ceil)
+---###
+---###    if ROOM.c_h > dest.sky_h then
+---###       ROOM.c_h = math.max(dest.sky_h, ROOM.f_h + 96)
+---###    end
+---###
+---###    WINDOW.c_h = ROOM.f_h + 96
+---###    WINDOW.c_tex = sel(b_combo.outdoor, combo.floor, combo.ceil)
+---###
+---###    ROOM.light   = dest.rmodel.light - 32
+---###    WINDOW.light = dest.rmodel.light - 16
+---###  end
+
+
+  local ax,ay = dir_to_across(side)
+
+  local fx1 = (x1 - 1) * FW + 1
+  local fy1 = (y1 - 1) * FH + 1
+
+  local fx2 = x2 * FW
+  local fy2 = y2 * FH
 
   local px1,py1, px2,py2 = side_coords(side,    fx1,fy1, fx2,fy2)
   local wx1,wy1, wx2,wy2 = side_coords(10-side, fx1,fy1, fx2,fy2)
 
 
-  if kind == "wire" then
+  if kind == "wire" or kind == "fall_over" then
 
     local rail = get_rand_rail()
 
-    local curved = true
-    local far_x, far_y, far_corner
+    local curved = rand_odds(90)
 
-        if side == 4 then far_x, far_y, far_corner = 0, 0, 7
-    elseif side == 2 then far_x, far_y, far_corner = 0, 0, 3
-    elseif side == 8 then far_x, far_y, far_corner = 0, (y2-y1), 9
-    elseif side == 6 then far_x, far_y, far_corner = (x2-x1), 0, 9
+    local cv_x1,cv_y1, cv_x2,cv_y2 = side_coords(side, x1,y1, x2,y2)
+    local cv_dir1,cv_dir2
+
+        if side == 2 then cv_dir1,cv_dir2 = 1,3
+    elseif side == 4 then cv_dir1,cv_dir2 = 1,7
+    elseif side == 6 then cv_dir1,cv_dir2 = 3,9
+    elseif side == 8 then cv_dir1,cv_dir2 = 7,9
     end
 
-    for x = 0,(x2-x1) do
-      for y = 0,(y2-y1) do
+    for x = x1,x2 do
+      for y = y1,y2 do
 
         local overrides = {}
 
-        if x == 0       then overrides[4] = { rail=rail.wall } end
-        if x == (x2-x1) then overrides[6] = { rail=rail.wall } end
-        if y == 0       then overrides[2] = { rail=rail.wall } end
-        if y == (y2-y1) then overrides[8] = { rail=rail.wall } end
+        if kind == "wire" then
+          if x == x1 then overrides[4] = { rail=rail.wall, impassible=true } end
+          if x == x2 then overrides[6] = { rail=rail.wall, impassible=true } end
+          if y == y1 then overrides[2] = { rail=rail.wall, impassible=true } end
+          if y == y2 then overrides[8] = { rail=rail.wall, impassible=true } end
 
-        -- don't block the entryway
-        overrides[10-side] = nil
+          -- don't block the entryway
+          overrides[10-side] = nil
+        end
 
         -- curve ball!
         if curved then
-          if (x == far_x and y == far_y) or
-             (x == (far_x+ax) and y == (far_y+ay))
-          then
+          local dx,dy = dir_to_delta(10-side)
+          if (x == cv_x1 and y == cv_y1) then
             -- 48 is the magical distance to align the railing
-            overrides[far_corner] = { dx=(dx*48), dy=(dy*48) }
+            overrides[cv_dir1] = { dx=(dx*48), dy=(dy*48) }
             overrides.mark = allocate_mark(p)
-          end  
+          end
+          if (x == cv_x2 and y == cv_y2) then
+            overrides[cv_dir2] = { dx=(dx*48), dy=(dy*48) }
+            overrides.mark = allocate_mark(p)
+          end
         end
 
-        fill(p,c, x1+x,y1+y, x1+x,y1+y, ROOM, overrides)
+        fill(p,src, x,y, x,y, ROOM, overrides)
       end
     end
 
   else -- solid, frame, open or fall_over
 
-    frag_fill(p,c, fx1,fy1, fx2,fy2, WINDOW, { f_tex="FWATER1" })
-    frag_fill(p,c, fx1+1,fy1+1, fx2-1,fy2-1, ROOM)
+    frag_fill(p,src, fx1,fy1, fx2,fy2, LEDGE, { f_tex="FWATER1" }) --!!!!!
+    frag_fill(p,src, fx1+1,fy1+1, fx2-1,fy2-1, ROOM)
 
     --- walkway ---
 
-    frag_fill(p,c, wx1+ax,wy1+ay, wx2-ax,wy2-ay, ROOM)
+    frag_fill(p,src, wx1+ax,wy1+ay, wx2-ax,wy2-ay, ROOM)
   end
 
 
   --- pillars ---
   if kind == "solid" or kind == "frame" then
 
-    local support = combo.wall  -- FIXME: "SUPPORT2"
+    local support = b_combo.wall  -- FIXME: "SUPPORT2"
     
-    frag_fill(p,c, px1,py1, px1,py1, { solid=support })
-    frag_fill(p,c, px2,py2, px2,py2, { solid=support })
+    frag_fill(p,src, px1,py1, px1,py1, { solid=support })
+    frag_fill(p,src, px2,py2, px2,py2, { solid=support })
 
 
     if false then  -- FIXME
@@ -988,14 +1022,14 @@ function B_vista(p,c, x1,y1, x2,y2, side, combo,kind)
       px2 = int((px2+wx2)/2)
       py2 = int((py2+wy2)/2)
 
-      frag_fill(p,c, px1,py1, px1,py1, { solid=support })
-      frag_fill(p,c, px2,py2, px2,py2, { solid=support })
+      frag_fill(p,src, px1,py1, px1,py1, { solid=support })
+      frag_fill(p,src, px2,py2, px2,py2, { solid=support })
     end
   end 
 
 
   -- FIXME !!! add spots to room
-  -- return { c=c, x=x1+dx, y=y1+dy, double=true, dx=32, dy=32 }
+  -- return { c=src, x=x1+dx, y=y1+dy, double=true, dx=32, dy=32 }
 end
 
 
@@ -2425,7 +2459,7 @@ function setup_borders_and_corners(p)
   end
 
 
-  local function border_kind(c1, c2, side)
+  local function border_kind(c1, c2, side, link)
 
     if not c2 or c2.is_depot then
       if c1.combo.outdoor and GAME.caps.sky then return "sky" end
@@ -2445,12 +2479,13 @@ function setup_borders_and_corners(p)
 
     if c1.border[side].window then return "window" end
 
-    -- fencing anyone?   FIXME: move tests into Planner
+    -- fencing anyone?   (move tests into Planner???)
     local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
 
-    if (c1.combo.outdoor == c2.combo.outdoor) and
+    if (c1.combo.outdoor == c2.combo.outdoor) and diff_h > 64 and
        (not c1.is_exit  and not c2.is_exit) and
-       (not c1.is_depot and not c2.is_depot) and diff_h > 64
+       (not c1.is_depot and not c2.is_depot) and
+       not (link and link.kind == "vista")
     then
       if c1.scenic or c2.scenic then
         return "fence"
@@ -2471,16 +2506,19 @@ function setup_borders_and_corners(p)
 
     -- which cell actually builds the border is arbitrary, unless
     -- there is a link with the other cell
-    if c.link[side] then
-      D.build = c.link[side].build
-    else
-      D.build = c
-    end
+    local link = c.link[side]
+    D.build = (link and link.build) or c
 
     local other = neighbour_by_side(p,c, side)
 
-    D.combo = border_combo(D.cells)
-    D.kind  = border_kind (c, other, side)
+    -- vistas are an extension to the original room
+    if link and link.kind == "vista" then
+      D.combo = sel(D.build.hallway, D.build.quest.combo, D.build.combo)
+    else
+      D.combo = border_combo(D.cells)
+    end
+
+    D.kind = border_kind (c, other, side, link)
   end
 
   local function init_corner(c, side)
@@ -2655,14 +2693,14 @@ local parm =
 
   frame_c = D.combo.floor
 }
-if link.kind == "vista" then
-  parm.frame_f = link.build.rmodel.f_tex
-end
 local skin =
 {
 --  wall="ROCK1", ceil="RROCK13", -- floor="RROCK13",
   beam_w  = "WOOD1", beam_c = "FLAT5_2",
 }
+if link.kind == "vista" then
+  skin.floor = link.build.rmodel.f_tex
+end
 
 B_prefab(p,c, fab, skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
 return
@@ -4279,7 +4317,7 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
     local kind = "open"
     local diff_h = c.floor_h - other.floor_h
 
-    if diff_h >= 48 and rand_odds(35) then kind = "wire" end
+    if diff_h >= 48 and rand_odds(50) then kind = "wire" end
 
     if not c.combo.outdoor then
       local space_h = other.ceil_h - c.floor_h
