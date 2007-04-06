@@ -2072,7 +2072,7 @@ R.level_theme.name, R.combo.name)
           if q_cmp < 0 then F = false end
 
           -- without this check, falloffs will be rarely made
-          if F and V and rand_odds(30) then V = false end
+          if F and V and rand_odds(25) then V = false end
 
           if F or V then
             local L = create_link(p, c, nb, dir)
@@ -2082,18 +2082,11 @@ R.level_theme.name, R.combo.name)
               L.fall_over = true
             end
 
-            if V and rand_odds(25) then
-              L.shallow = true
-            end
-
-            local size = sel(L.kind == "falloff" or L.shallow, 1, 2)
-            
             -- record the vista in the other cell
-            nb.vistas[10-dir] = size
+            nb.vistas[10-dir] = true
 
-            con.debugf("VISTA/FALLOFF @ (%d,%d) dir:%d size:%d %s %s\n",
-                       c.x, c.y, dir, size, sel(L.shallow, "SHALLOW", "full"),
-                       sel(L.fall_over, "FALL-OVER", "-"))
+            con.debugf("VISTA/FALLOFF @ (%d,%d) dir:%d %s\n",
+                       c.x, c.y, dir, sel(L.fall_over, "FALL-OVER", "-"))
           end
         end
       end

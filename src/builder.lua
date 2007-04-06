@@ -2008,7 +2008,7 @@ function make_chunks(p)
 
     if c.chunks[2][2].kind ~= "empty" then return end
 
-    if rand_odds(75) then return end
+--    if rand_odds(75) then return end
 
     local vista_x, vista_y
 
@@ -2039,7 +2039,6 @@ function make_chunks(p)
     N.kind  = "vista"
     N.link  = K.link
 
-    K.link.shallow = nil
     K.link.huge = true
   end
 
@@ -2350,7 +2349,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
   for zzz,cell in ipairs(p.all_cells) do
 
     mark_vista_chunks(cell)
---  create_huge_vista(cell)
+    create_huge_vista(cell)
 
     add_travel_chunks(cell)
 
@@ -4219,7 +4218,10 @@ c.x, c.y, other.x, other.y)
       local K = other.chunks[kx][ky]
       if K.kind == "vista" and K.link == link then
         assert(K.orig_model)
-        gap_fill(p,c, K.x1,K.y1, K.x2,K.y2, K.orig_model)
+---###  gap_fill(p,c, K.x1,K.y1, K.x2,K.y2, K.orig_model)
+        for x = K.x1,K.x2 do for y = K.y1,K.y2 do
+          p.blocks[x][y].rmodel = K.orig_model
+        end end
       end
     end end
   end
@@ -4280,6 +4282,9 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
     end
   end
  
+  local SHALLOW_PROBS = { 0, 1, 20, 50, 90 }
+  local SHALLOW_DBLS  = { 0, 0,  1, 15, 30 }
+
   local function build_one_vista(c, side, link)
 
     local other = neighbour_by_side(p, c, side)
@@ -4305,11 +4310,25 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
     local x1,y1, x2,y2 = get_vista_coords(c, side, link, other)
     local sx,sy, ex,ey = x1,y1, x2,y2
 
-    if link.shallow then
-          if side == 2 then y1 = y1+1
-      elseif side == 8 then y2 = y2-1
-      elseif side == 4 then x1 = x1+1
-      elseif side == 6 then x2 = x2-1
+    local long = x2 - x1 + 1
+    local deep = y2 - y1 + 1
+
+    if (side == 4) or (side == 6) then
+      long,deep = deep,long
+    end
+
+    assert(long >= 1)
+    assert(deep >= 1)
+
+    -- make some vistas more shallow
+    if deep > 5 or rand_odds(SHALLOW_PROBS[deep]) then
+      local qty = 1
+      if deep > 5 or rand_odds(SHALLOW_DBLS[deep]) then qty = 2 end
+
+          if side == 2 then y1 = y1+qty
+      elseif side == 8 then y2 = y2-qty
+      elseif side == 4 then x1 = x1+qty
+      elseif side == 6 then x2 = x2-qty
       end
     end
 
@@ -4326,16 +4345,6 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
       vista_gap_fill(c, side, link, other)
       vista_jiggle_link(c, side, link, other, x1,y1, x2,y2)
 con.printf("  link coords now: (%d,%d) .. (%d,%d)\n", link.x1,link.y1, link.x2,link.y2)
-    end
-
-    local long = x2 - x1 + 1
-    local deep = y2 - y1 + 1
-
-    assert(long >= 1)
-    assert(deep >= 1)
-
-    if (side == 4) or (side == 6) then
-      long,deep = deep,long
     end
 
 con.debugf("  COORDS: (%d,%d) .. (%d,%d)  size:%dx%d\n", x1,y1, x2,y2, long,deep)
