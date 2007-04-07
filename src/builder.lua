@@ -5105,7 +5105,27 @@ if not B.chunk then show_cell_blocks(p,c) end --!!!!
 
   local function add_object(c, name, must_put)
 
-    local x,y,dir = fab_find_loc(c, 1, 1)
+    local x,y,dir
+    
+    -- try a vista (FIXME: not good way to do this)
+    for side = 2,8,2 do
+      local L = c.link[side]
+      if L and L.kind == "vista" and not L.vista_got_obj then
+        assert(L.vista_x1)
+
+        x = int((L.vista_x1 + L.vista_x2)/2)
+        y = int((L.vista_y1 + L.vista_y2)/2)
+        dir = side
+
+        L.vista_got_obj = true
+
+        add_thing(p, c, x, y, name, true)
+        return
+      end
+    end
+
+    if not x then x,y,dir = fab_find_loc(c, 1, 1) end
+    
     if not x and must_put then
       x,y,dir = find_emergency_loc(c)
     end
@@ -5171,6 +5191,7 @@ if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
     end
 
     B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.combo, x, y, dir)
+
     fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
   end
 
