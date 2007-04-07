@@ -856,13 +856,9 @@ end
 -- 
 -- The 'kind' can be: "solid", "frame", "open", "wire" OR "fall_over".
 --
-function B_vista(p,src, x1,y1, x2,y2, side, b_combo,kind)
-
-  local dest = neighbour_by_side(p,src,side)
-  assert(dest)
+function B_vista(p, src,dest, x1,y1, x2,y2, side, b_combo,kind)
 
   local ROOM
-  local LEDGE
   
   if kind == "solid" then
     ROOM = copy_block(src.rmodel)
@@ -887,13 +883,13 @@ function B_vista(p,src, x1,y1, x2,y2, side, b_combo,kind)
     end
   end
 
-  LEDGE = copy_block(ROOM)
+
+  local LEDGE = copy_block(ROOM)
 
   if kind ~= "fall_over" then
     LEDGE.f_h = ROOM.f_h + 32
     LEDGE.impassible = true
   end
-
 
   if kind == "solid" then
     LEDGE.c_h = math.min(ROOM.c_h - 24, ROOM.f_h + 96)
@@ -1878,19 +1874,20 @@ function make_chunks(p)
 
     --- STEP 1: setup known chunks
  
-    local goodies = 0
+    local highest
  
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       assert(K)
 
-      if K.kind == "empty" or K.kind == "vista" then
+      if K.kind == "empty" then
         table.insert(empties, K)
+
+      elseif K.kind == "vista" then
+        -- fixed up later
 
       else -- "room", "link" etc..
         K.rmodel = copy_table(c.rmodel)
-
-        goodies = goodies + 1
 
         if K.link then
           local other = link_other(K.link, c)
@@ -1903,6 +1900,10 @@ function make_chunks(p)
           end
         end
 
+        if not highest or highest.f_h < K.rmodel.f_h then
+          highest = K.rmodel
+        end
+
         if K.kind == "liquid" then -- FIXME
           K.rmodel.f_h   = K.rmodel.f_h - 12
           K.rmodel.f_tex = c.liquid.floor
@@ -1912,15 +1913,13 @@ function make_chunks(p)
 
     --- STEP 2: setup empty chunks
 
-    -- vistas have special treatment here.  We need to assign
-    -- them an 'rmodel' as if they were empty cells, because
-    -- this rmodel is needed when building the vista.
-
-    if goodies == 0 then
+    -- none at all ? (Scenic cells)
+    if not highest then
+      highest = c.rmodel
       while #empties > 0 do
         local K = table.remove(empties)
-        K.rmodel = copy_table(c.rmodel)
-        if K.kind == "empty" then K.kind = "room" end
+        K.rmodel = copy_table(highest)
+        K.kind = "room"
       end
     end
 
@@ -1932,7 +1931,7 @@ function make_chunks(p)
 
       gunk_pass(K)
 
-      if not K.rmodel then
+      if not K.rmodel then  -- try again later
         assert(#empties > 0)
         table.insert(empties, K)
       end
@@ -1945,10 +1944,9 @@ function make_chunks(p)
       assert(K)
 
       if K.kind == "vista" then
-        assert(K.rmodel)
-        K.orig_model = K.rmodel
-
         local other = link_other(K.link, c)
+
+        K.ground_model = copy_table(highest)
         K.rmodel = copy_table(other.rmodel)
       end
     end end
@@ -1998,7 +1996,7 @@ function make_chunks(p)
     -- mark the chunks containing the intruder
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
-      if K.link and K.link.kind == "vista" and c ~= K.link.build then
+      if K.link and K.link.kind == "vista" and c == K.link.vista_dest then
         K.kind = "vista"
       end
     end end
@@ -2014,7 +2012,7 @@ function make_chunks(p)
 
     local side_vistas   = 0
     local corner_vistas = 0
-    
+
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       if K.kind == "vista" then
@@ -2668,7 +2666,7 @@ local skin =
   beam_w  = "WOOD1", beam_c = "FLAT5_2",
 }
 if link.kind == "vista" then
-  skin.floor = link.build.rmodel.f_tex
+  skin.floor = link.vista_src.rmodel.f_tex
 end
 
 B_prefab(p,c, fab, skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
@@ -4217,10 +4215,10 @@ c.x, c.y, other.x, other.y)
     for kx = 1,3 do for ky = 1,3 do
       local K = other.chunks[kx][ky]
       if K.kind == "vista" and K.link == link then
-        assert(K.orig_model)
----###  gap_fill(p,c, K.x1,K.y1, K.x2,K.y2, K.orig_model)
+        assert(K.ground_model)
+---###  gap_fill(p,c, K.x1,K.y1, K.x2,K.y2, K.ground_model)
         for x = K.x1,K.x2 do for y = K.y1,K.y2 do
-          p.blocks[x][y].rmodel = K.orig_model
+          p.blocks[x][y].rmodel = K.ground_model
         end end
       end
     end end
@@ -4288,6 +4286,10 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
   local function build_one_vista(c, side, link)
 
     local other = neighbour_by_side(p, c, side)
+
+    -- fixme: this code designed for opposite build site
+    c,other,side = other,c,10-side
+
 
     local kind = "open"
     local diff_h = c.floor_h - other.floor_h
@@ -4358,13 +4360,13 @@ con.printf("  link coords now: (%d,%d) .. (%d,%d)\n", link.x1,link.y1, link.x2,l
 con.debugf("  COORDS: (%d,%d) .. (%d,%d)  size:%dx%d\n", x1,y1, x2,y2, long,deep)
 con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
 
-    B_vista(p,c, x1,y1, x2,y2, side, c.border[side].combo or c.combo, kind)
+    B_vista(p, link.vista_src, link.vista_dest, x1,y1, x2,y2, side, c.border[side].combo or c.combo, kind)
   end
 
   local function build_vistas(c)
     for side = 2,8,2 do
       local L = c.link[side]
-      if L and L.kind == "vista" and L.build == c then
+      if L and L.kind == "vista" and L.vista_dest == c then
         build_one_vista(c, side, L)
       end
     end
@@ -4398,13 +4400,24 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
       local dx,dy = dir_to_delta(10-side) -- inwards
 
       local L = c.link[side]
-      if L and (L.kind ~= "vista" or L.build == c) then
+      if L and not (L.kind == "vista" and L.vista_dest == c) then
         mark_walkable(c, 4, L.x1+dx, L.y1+dy, L.x2+dx, L.y2+dy)
       end
 
       local D = c.border[side]
       if D and D.kind == "window" then
 --!!!!!!        mark_walkable(c, 1, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy)
+      end
+    end
+  end
+
+  local function mark_vistas(c)
+
+    for side = 2,8,2 do
+      local L = c.link[side]
+      if L and L.kind == "vista" and L.vista_dest == c then
+        
+        -- MAGIC !!!!
       end
     end
   end
@@ -4822,6 +4835,9 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
   build_vistas(c)
 
   mark_links(c)
+
+  -- must mark vistas after adding stairs (REALLY ???)
+  mark_vistas(c)
 
   build_stairs(c)
 
@@ -5430,16 +5446,18 @@ function build_rooms(p)
       if K.kind == "empty" then
 --!!!        void_up_chunk(c, K)
         gap_fill(p, c, K.x1,K.y1, K.x2,K.y2,
-          c.rmodel, { f_h=c.f_max+32 })
+          c.rmodel, { f_h=c.f_max+32, f_tex="NUKAGE" })
       elseif K.r_deep then
         gap_fill(p, c, K.rx1,K.ry1, K.rx2,K.ry2,
-          c.rmodel, { f_h=c.f_max+32 })
+          c.rmodel, { f_h=c.f_max+32, f_tex="FWATER1" })
 --!!!        { solid=c.combo.void })
 ---     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
 ---        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
       end
     end end
   end
+
+
 
   -- build_rooms --
 

@@ -365,8 +365,9 @@ function shuffle_build_sites(p)
   
   for zzz,link in ipairs(p.all_links) do
 
-    if not link.is_exit and link.kind ~= "vista" then
-
+    if link.is_exit or link.kind == "vista" then
+      -- do not change this link
+    else
       local c1 = link.cells[1]
       local c2 = link.cells[2]
 
@@ -2078,8 +2079,14 @@ R.level_theme.name, R.combo.name)
             local L = create_link(p, c, nb, dir)
             L.kind = sel(V, "vista", "falloff")
 
-            if V and F and rand_odds(60) then
+            if V and F and rand_odds(50) then
               L.fall_over = true
+            end
+
+            if V then
+              L.build = c
+              L.vista_src  = c
+              L.vista_dest = nb
             end
 
             -- record the vista in the other cell

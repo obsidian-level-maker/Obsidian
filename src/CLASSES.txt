@@ -71,7 +71,7 @@ class Cell
   window : table[DIR] -> Link
   border : table[DIR] -> Border  -- diagonal are "mini-borders"
   corner : table[DIR] -> Border
-  vista  : table[DIR] -> numeric
+  vista  : table[DIR] -> boolean
 
   teleport : array(Cell)
 
@@ -108,6 +108,8 @@ class Link
 
                   The _other_ side is responsible for
                   meeting the correct height (via stairs etc)
+
+                  For Vistas: the cell that leads outward.
 
   quest : Quest for locked/switched doors.
 
