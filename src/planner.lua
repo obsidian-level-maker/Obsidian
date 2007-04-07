@@ -198,6 +198,8 @@ function show_cell_blocks(p, c)
     return "." -- unused
   end
 
+  con.printf("CELL BLOCKS @ (%d,%d)\n", c.x, c.y)
+
   for y = c.by2,c.by1,-1 do
     for x = c.bx1,c.bx2 do
       con.printf("%s", chk(p.blocks[x][y]))
