@@ -1767,7 +1767,6 @@ SKYLIGHT_CROSS_SMALL =
 
 BILLBOARD =
 {
-  region="floor",
   add_mode="wall",
   environment="outdoor",
   height_range={ 160,999 },
@@ -1776,24 +1775,25 @@ BILLBOARD =
   {
     "................",
     ".DCCssssssssCCE.",
-    ".CCppppppppppCC.",
+    ".CCrpppppppprCC.",
     ".CCCssssssssCCC.",
   },
 
   elements =
   {
     -- corner
-    C = { f_h=0, f_rel="corn_h",
-          l_tex="corner", f_tex="corn_f", l_peg="top", },
+    C = { f_h=0, f_add="corn_h",
+          l_tex="corn_w", f_tex="corn_f", l_peg="top", },
 
-    D = { copy="C", [7] = { dx= 8, dy=-8 } },
-    E = { copy="C", [9] = { dx=-8, dy=-8 } },
+    D = { copy="C", mark=1, [7] = { VDEL=true }},
+    E = { copy="C", mark=2, [9] = { VDEL=true }},
 
     -- pic
-    p = { f_h=8, f_rel="pic_h",
-          l_tex="pic_back", [2] = { l_tex="pic_w" },
-          f_tex="pic_f", l_peg="top",
+    r = { f_h=8, f_add="pic_h",
+          l_tex="pic_back", f_tex="pic_f", l_peg="top",
         },
+
+    p = { copy="r", [2] = { l_tex="pic_w" }},
 
     -- step
     s = { f_h=8, l_tex="step_w", f_tex="step_f", l_peg="top" },
@@ -1818,24 +1818,24 @@ BILLBOARD_LIT =
   elements =
   {
     -- corner
-    E = { f_h=0, f_rel="corn_h",
-          l_tex="corn2", f_tex="corn_f", l_peg="top", },
+    E = { f_h=0, f_add="corn_h",
+          l_tex="corn2_w", f_tex="corn_f", l_peg="top", },
 
     C = { copy="E",
-          [4] = { l_tex="corner" },
-          [8] = { l_tex="corner" },
+          [4] = { l_tex="corn_w" },
+          [8] = { l_tex="corn_w" },
         },
 
     D = { copy="E",
-          [6] = { l_tex="corner" },
-          [8] = { l_tex="corner" },
+          [6] = { l_tex="corn_w" },
+          [8] = { l_tex="corn_w" },
         },
 
     -- light
     L = { copy="E", [2] = { l_tex="lite_w" }, },
 
     -- pic
-    p = { f_h=8, f_rel="pic_h",
+    p = { f_h=8, f_add="pic_h",
           l_tex="pic_back", [2] = { l_tex="pic_w" },
           f_tex="pic_f", l_peg="top",
         },
@@ -1855,7 +1855,7 @@ BILLBOARD_ON_STILTS =
   structure =
   {
     "............",
-    ".C........C.",
+    ".CrrrrrrrrC.",
     ".BppppppppB.",
     "............",
   },
@@ -1865,11 +1865,13 @@ BILLBOARD_ON_STILTS =
     -- picture
     p = { mark = 1,
           [8] = { rail="pic_w", l_peg="bottom",
-                  x_offset=8, y_offset="y_offset" },
+                  x_offset=8, y_offset="pic_offset_h" },
         },
 
+    r = { mark = 2, [2] = { x_offset=8 }},
+
     -- beams
-    B = { f_rel="pic_bottom", f_h=140,
+    B = { f_add="pic_offset_h", f_h=140,
           l_tex="beam_w", f_tex="beam_f", l_peg="top",
         },
 
@@ -1888,7 +1890,7 @@ BILLBOARD_STILTS_HUGE =
 
   structure =
   {
-    ".C........C.",
+    ".CrrrrrrrrC.",
     ".BppppppppB.",
     ".s.......s..",
     ".s.......s..",
@@ -1899,7 +1901,7 @@ BILLBOARD_STILTS_HUGE =
     ".s.......s..",
     ".s.......s..",
     ".BqqqqqqqqB.",
-    ".D........D.",
+    ".DrrrrrrrrD.",
   },
 
   elements =
@@ -1907,21 +1909,24 @@ BILLBOARD_STILTS_HUGE =
     -- picture
     p = { mark = 1,
           [8] = { rail="pic_w", l_peg="bottom",
-                  x_offset=8, y_offset="y_offset" },
+                  x_offset=8, y_offset="pic_offset_h" },
         },
 
-    q = { mark = 2,
+    q = { mark = 1,
           [2] = { rail="pic_w", l_peg="bottom",
-                  x_offset=8, y_offset="y_offset" },
+                  x_offset=8, y_offset="pic_offset_h" },
         },
+
+    r = { mark = 2,
+          [2] = { x_offset=8 }, [8] = { x_offset=8 } },
 
     s = { mark = 3,
           [6] = { rail="pic_w", l_peg="bottom",
-                  x_offset=0, y_offset="y_offset" },
+                  y_offset="pic_offset_h" },
         },
 
     -- beams
-    B = { f_rel="pic_bottom", f_h=140,
+    B = { f_add="pic_offset_h", f_h=140,
           l_tex="beam_w", f_tex="beam_f", l_peg="top",
         },
 

@@ -745,17 +745,47 @@ D2_PREFAB_SCENERY =
     skin = { wall="COMPSTA2" },
   },
 
+  billboard_NAZI =
+  {
+    prefab = "BILLBOARD",
+
+    skin =
+    {
+      pic_w = "ZZWOLF2", pic_back = "ZZWOLF1",
+      pic_f = "FLAT5_4",  pic_h = 128,
+
+      corn_w = "ZZWOLF5", corn_f = "FLAT5_1",
+      corn_h = 112,
+
+      step_w = "ZZWOLF5", step_f = "FLAT5_1",
+    },
+  },
+
   billboard_lit_SHAWN =
   {
     prefab = "BILLBOARD_LIT",
 
     skin =
     {
-      corner = "SHAWN2", corn_f = "FLAT19", corn2="DOORSTOP",
-      step_w = "STEP4",  step_f = "CEIL3_5",
       pic_w  = "SHAWN1", pic_back = "SHAWN2",
-      pic_f = "CEIL3_5",
-      lite_w = "LITE5"
+      pic_f = "CEIL3_5", pic_h = 88,
+
+      corn_w = "SHAWN2", corn2_w = "DOORSTOP",
+      corn_f = "FLAT19", corn_h  = 112,
+
+      step_w = "STEP4", step_f = "CEIL3_5",
+      lite_w = "LITE5",
+    },
+  },
+
+  billboard_stilts_FLAGGY =
+  {
+    prefab = "BILLBOARD_ON_STILTS",
+
+    skin =
+    {
+      pic_w  = "ZZWOLF12", pic_offset_h = 64,
+      beam_w = "WOOD1", beam_f = "FLAT5_2",
     },
   },
 
@@ -765,11 +795,8 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
-      corner = "WOOD7", corn_f = "FLAT5_1",
-      step_w = "STEP5", step_f = "FLAT5_2",
+      pic_w  = "ZZWOLF13", pic_offset_h = 128,
       beam_w = "WOOD1", beam_f = "FLAT5_2",
-      pic_w  = "ZZWOLF13", pic_back = "ZZWOLF11",
-      pic_f  = "FLAT5_3",
     },
   },
 
