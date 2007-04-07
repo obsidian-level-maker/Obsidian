@@ -5212,7 +5212,12 @@ if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
 
   local function add_prefab(c)
 
-    local name = rand_element {
+    local name = rand_element
+    {
+      "billboard_NAZI",
+      "billboard_lit_SHAWN",
+      "billboard_stilts4_WREATH",
+      "billboard_stilts_FLAGGY",
 
       "wall_lamp_RED_TORCH",
       "wall_lamp_GREEN_TORCH",
@@ -5226,8 +5231,6 @@ if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
       "pillar_rnd_med_COMPSTA",
       "pillar_rnd_bg_COMPSTA",
 
-      "billboard_lit_SHAWN",
-      "billboard_stilts4_WREATH",
       "statue_tech1",
       "ground_light_SILVER",
       "drinks_bar_WOOD_POTION",
@@ -5276,7 +5279,8 @@ if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
       "pedestal_PLAYER",
       "pedestal_KEY",
       "pedestal_WEAPON",
-      }
+
+    }
     local def = GAME.sc_fabs[name]
     assert(def)
     local fab = PREFABS[def.prefab]
@@ -5301,10 +5305,8 @@ con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
 
     local parm = {
              pic_h = c.rmodel.f_h + 64,   -- 88 for BILLBOARD_LIT
-             corn_h = c.rmodel.f_h + 104, -- 112 for BILLBOARD_LIT
-             crate_h = c.rmodel.f_h + 64,
-             pic_bottom = c.rmodel.f_h + 64,
-             y_offset = 64,
+
+             y_offset = 0,
 
              cage_base_h = c.rmodel.f_h + 64,
              cage_top_h  = c.rmodel.f_h + 128,
