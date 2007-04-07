@@ -4351,6 +4351,9 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
 
     assert(x2 >= x1 and y2 >= y1)
 
+    link.vista_x1 = x1; link.vista_y1 = y1
+    link.vista_x2 = x2; link.vista_y2 = y2
+
     if sx ~= x1 or sy ~= y1 or ex ~= x2 or ey ~= y2 then
       vista_gap_fill(c, side, link, other)
       vista_jiggle_link(c, side, link, other, x1,y1, x2,y2)
@@ -4385,11 +4388,10 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
       if not B.walk or walk > B.walk then
         B.walk = walk
       end
-
     end end
   end
 
-  local function mark_links(c)
+  local function mark_link_walks(c)
     
     -- FIXME: many improvements here!
     --   (a) fence borders: walk 3
@@ -4411,13 +4413,35 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     end
   end
 
-  local function mark_vistas(c)
+  local function mark_vista_walks(c)
 
     for side = 2,8,2 do
       local L = c.link[side]
       if L and L.kind == "vista" and L.vista_dest == c then
         
-        -- MAGIC !!!!
+        assert(L.vista_x1)
+
+        -- surrounding coordinates
+        local x1,y1 = L.vista_x1, L.vista_y1
+        local x2,y2 = L.vista_x2, L.vista_y2
+
+        if side == 2 or side == 8 then
+          x1,x2 = x1-1, x2+1
+        else
+          y1,y2 = y1-1, y2+1
+        end
+
+            if side == 2 then y2=y2+1
+        elseif side == 8 then y1=y1-1
+        elseif side == 4 then x2=x2+1
+        elseif side == 6 then x1=x1-1
+        end
+
+        for dir = 2,8,2 do
+          if dir ~= side then
+            mark_walkable(c, 3, side_coords(dir, x1,y1, x2,y2))
+          end
+        end
       end
     end
   end
@@ -4834,10 +4858,8 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 
   build_vistas(c)
 
-  mark_links(c)
-
-  -- must mark vistas after adding stairs (REALLY ???)
-  mark_vistas(c)
+  mark_link_walks(c)
+  mark_vista_walks(c)
 
   build_stairs(c)
 
@@ -4889,6 +4911,7 @@ function tizzy_up_room(p, c)
     for x = x1,x2 do for y = y1,y2 do
       local B = p.blocks[x][y]
       if not (B.walk or block_is_free(B)) then return false end
+if not B.chunk then show_cell_blocks(p,c) end --!!!!
       if B.chunk.rmodel.f_h ~= f_h then return false end
     end end
 
