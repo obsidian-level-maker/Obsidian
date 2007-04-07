@@ -2210,7 +2210,8 @@ CAGE_PILLAR =
   elements =
   {
     c = { f_rel="cage_base_h", f_h=0, f_tex="cage_f", l_tex="cage_w",
-          c_rel="cage_top_h",  c_h=0, c_tex="cage_c", u_tex="cage_w",
+          c_rel="cage_base_h", c_h=0, c_add="rail_h",
+          c_tex="cage_c", u_tex="cage_w",
           u_peg="bottom", l_peg="bottom",
 
           [2] = { rail="rail_w", impassible=true },

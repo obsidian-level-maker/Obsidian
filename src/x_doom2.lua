@@ -1178,10 +1178,8 @@ D2_PREFAB_SCENERY =
     skin =
     {
       cage_w = "METAL",
-      cage_f = "CEIL5_2",
-      cage_c = "TLITE6_4",
-
-      rail_w = "MIDGRATE",
+      cage_f = "CEIL5_2", cage_c = "TLITE6_4",
+      rail_w = "MIDGRATE", rail_h = 72,
     }
   },
 
