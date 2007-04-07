@@ -1003,7 +1003,7 @@ WALL_PIC_FOUR_SIDED =
 },
 
 
------- Decorative I ------------------------------------
+------ Pickup & Players ------------------------------------
 
 TECH_PICKUP_SMALL =
 {
@@ -1046,7 +1046,10 @@ TECH_PICKUP_SMALL =
     L = { solid="lite_w" },
   },
 
-  pickup_pos = { x=128, y=128 }
+  things =
+  {
+    { kind="pickup_t", x=128, y=128 },
+  },
 },
 
 TECH_PICKUP_LARGE =
@@ -1079,7 +1082,10 @@ TECH_PICKUP_LARGE =
     "####aaaaaaaaaaaa####",
   },
 
-  pickup_pos = { x=192, y=192 }
+  things =
+  {
+    { kind="pickup_t", x=160, y=160 },
+  },
 },
 
 LAUNCH_PAD_LARGE =
@@ -1132,6 +1138,11 @@ LAUNCH_PAD_LARGE =
     c = { copy="a", f_h=8 },
     d = { copy="b", f_h=8 },
   },
+
+  things =
+  {
+    { kind="pickup_t", x=192, y=192 },
+  },
 },
 
 LAUNCH_PAD_MEDIUM =
@@ -1161,6 +1172,11 @@ LAUNCH_PAD_MEDIUM =
     ".......dddddd.......",
     "....................",
   },
+
+  things =
+  {
+    { kind="pickup_t", x=160, y=160 },
+  },
 },
 
 LAUNCH_PAD_SMALL =
@@ -1185,6 +1201,11 @@ LAUNCH_PAD_SMALL =
     "..OOOOOOOOOOOO..",
     ".....bbbbbb.....",
     ".....dddddd.....",
+  },
+
+  things =
+  {
+    { kind="pickup_t", x=128, y=128 },
   },
 },
 
@@ -1226,7 +1247,102 @@ LIQUID_PICKUP =
           [7] = { dx=-4,dy= 4 }, [9] = { dx= 4,dy= 4 },
         },
   },
+
+  things =
+  {
+    { kind="pickup_t", x=128, y=128 },
+  },
 },
+
+PEDESTAL =
+{
+  scale=64,
+  region="floor",
+
+  structure =
+  {
+    "p",
+  },
+
+  elements =
+  {
+    p = { f_h=0, f_add="ped_h",
+          f_tex = "ped_f", l_tex = "ped_side",
+          l_peg = "top",
+        }
+  },
+
+  things =
+  {
+    { kind="pickup_t", x=32, y=32 },
+  },
+},
+
+PEDESTAL_PLUT =
+{
+  environment="outdoor",
+
+  structure =
+  {
+    "pppp",
+    "pppp",
+    "pTpp",
+    "pppp",
+  },
+
+  elements =
+  {
+    p = { f_h=16, f_tex="ped_f", l_tex="ped_w", l_peg="top",
+          light=80,
+        },
+
+    T = { f_h=28, f_tex="ped_f2", l_tex="ped_w2", l_peg="top",
+
+          light=255, glow=true, -- FIXME: proper glow (parm option)
+
+          [1] = { dx=16, dy=-6 },
+          [3] = { dx=22, dy=16 },
+          [7] = { dx=-6, dy= 0 },
+          [9] = { dx= 0, dy=22 },
+        },
+  },
+
+  things =
+  {
+    { kind="pickup_t", x=32, y=32 },
+  },
+},
+
+PEDESTAL_PLUT_DOUBLE =
+{
+  copy="PEDESTAL_PLUT",
+
+  environment="indoor",
+  height_range={ 112,999 },
+
+  elements =
+  {
+    p = { f_h= 16, f_tex="ped_f", l_tex="ped_w", l_peg="top",
+          c_h=-16, c_tex="ped_f", u_tex="ped_w", u_peg="bottom",
+          light=80,
+        },
+
+    T = { f_h= 28, f_tex="ped_f2", l_tex="ped_w2", l_peg="top",
+          c_h=-28, c_tex="ped_f2", u_tex="ped_w2", u_peg="bottom",
+
+          light=255, glow=true, -- FIXME: proper glow (parm option)
+
+          [1] = { dx=16, dy=-6 },
+          [3] = { dx=22, dy=16 },
+          [7] = { dx=-6, dy= 0 },
+          [9] = { dx= 0, dy=22 },
+        },
+  },
+
+},
+
+
+------ Decorative I ------------------------------------
 
 STATUE_TECH_1 =
 {
@@ -2648,69 +2764,6 @@ PILLAR_ROUND_LARGE =
 },
 
 
------- Pedestals ------------------------------------
-
-PEDESTAL =
-{
-  scale=64,
-  region="floor",
-
-  structure =
-  {
-    "p",
-  },
-
-  elements =
-  {
-    p = { f_h=0, f_rel="ped_h",
-          f_tex = "ped_f", l_tex = "ped_side",
-          l_peg = "top",
-        }
-  },
-},
-
-PEDESTAL_PLUT =
-{
-  environment="outdoor",
-
-  structure =
-  {
-    "pppp",
-    "pppp",
-    "pTpp",
-    "pppp",
-  },
-
-  elements =
-  {
-    p = { f_h=16, f_tex="ped_f",
-          l_tex="ped_w", l_peg="top",
-          light=80,
-        },
-
-    T = { f_h=28, f_tex="ped_f2",
-          l_tex="ped_w2", l_peg="top",
-          light=255, glow=true, -- FIXME: proper glow (parm option)
-
-          [1] = { dx=16, dy=-6 },
-          [3] = { dx=22, dy=16 },
-          [7] = { dx=-6, dy= 0 },
-          [9] = { dx= 0, dy=22 },
-        },
-  }
-},
-
-PEDESTAL_PLUT_DOUBLE =
-{
-  copy="PEDESTAL_PLUT",
-
-  environment="indoor",
-  height_range={ 112,999 },
-
-  -- FIXME: elements =
-},
-
-
 ------ Overhangs ------------------------------------
 
 OVERHANG_1 =
@@ -2870,12 +2923,12 @@ WOLF_PACMAN_MID_2 =
     "##d.###..........###.d##",
     "##d.##...d..d..d..##.d##",
     "##d.##d.GGGGGGGG.d##.d##",
-    "###d....GGtt.GGG....d###",
+    "###ddd..GGtt.GGG..ddd###",
     "######d.GGttt.GG.d######",
     "######..GGtutt....######",
     "######d.GGtutt...d######",
     "######..GGttt.GG..######",
-    "###d..d.GGtt.GGG.d..d###",
+    "###dddd.GGtt.GGG.dddd###",
     "##d.##..GGGGGGGG..##.d##",
     "##d.##.d..d..d..d.##.d##",
     "##d.###..........###.d##",
@@ -2919,12 +2972,12 @@ WOLF_PACMAN_CORN_1 =
     "#########d.d.d.d.d..",
     "#########.########.#",
     "####.d...d########d#",
-    "####...m....##......",
+    "####...d....##m.....",
     ".d.d.d####d.##..d.d.",
     ".........#..d.d.####",
     "d.#####..#####..d.d.",
-    "..###tttuttt##......",
-    "d.###t.###.t###d####",
+    "..###..d..d.##......",
+    "m.###d.###..###d####",
     ".......###..###.####",
     ".d.d.d.###d.d.d.d.d.",
   },
@@ -2937,17 +2990,17 @@ WOLF_PACMAN_CORN_2 =
   structure =
   {
     "##########..####....",
-    "t.d.d...d.d.####.d..",
-    "t.###.d#########..##",
-    "..###..#####.d.d.d##",
-    "u.###d.d.d.d..######",
-    "u.######..#####.d.d.",
-    "..######m.d.###d####",
-    "t.#########.###.####",
-    "t.d.d.d.###d.d.d..##",
-    "######..###.####d.##",
+    "..d.d...d.d.####.d..",
+    "..###.d#########..##",
+    "d.###..#####.d.d.d##",
+    "..###d.d.d.d..######",
+    "m.######..#####md.d.",
+    "..######..d.###d####",
+    "d.#########.###.####",
+    "..d.d.d.###d.d.d..##",
+    "######..###.####..##",
     "######d.d.d.####.d..",
-    "##########..####..d.",
+    "##########..####....",
   },
 },
 
@@ -2958,16 +3011,16 @@ WOLF_PACMAN_CORN_3 =
   structure =
   {
     "##########..####.##.",
-    "u.d##d.d.d.d.d..d##d",
-    "...##.........d#.##.",
-    "d.d##d.######..#.d.d",
-    "##.##..#tttt#.d##.##",
-    "##.d.d.d.##t#..d.m##",
-    "##.......##t#.d#####",
-    "##d##d.#tttt#...d.d.",
-    "d..##..######.d####d",
-    "..d##d...........##.",
-    "u..##..d.d.d.d.d.##d",
+    "#####..d.d.d.d..d##d",
+    "#####.........d#.##.",
+    "#####.d######..#.d.d",
+    "#d.##....d.m#.d#..##",
+    "...d...####.#....d##",
+    ".....d.####.#.d#####",
+    "#d.##....d.m#...d.d.",
+    "#####.d######.d####d",
+    "#####............##.",
+    "#####..d.d.d.d.d.##d",
     "##########..####....",
   },
 },
