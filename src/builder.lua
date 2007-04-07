@@ -390,18 +390,25 @@ function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y
     if skin[key] then return skin[key] end
     if model[key] then return model[key] end
 
-    error("Bad fab/parameters: missing value for " .. key)
+    error("Bad fab/parameters: missing value for " .. key .. " in prefab: " .. fab.name)
   end
 
-  local function what_h_ref(base, rel, h)
+  local function what_h_ref(base, rel, h, add)
 
     local result = base
 
     if rel then
       if not parm[rel] then
-        error("Missing f/c relative value: " .. rel)
+        error("Missing f/c rel value: " .. rel .. " in prefab: " .. fab.name)
       end
       result = parm[rel]
+    end
+
+    if add then
+      if not skin[add] then
+        error("Missing f/c add value: " .. add .. " in prefab: " .. fab.name)
+      end
+      result = result + skin[add]
     end
 
     if h then result = result + h end
@@ -418,14 +425,14 @@ function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y
     if skin[base]  then return skin[base] end
     if combo[base] then return combo[base] end
 
-    error("Unknown texture ref in prefab: " .. key)
+    error("Unknown texture ref: " .. key .. " in prefab: " .. fab.name)
   end
 
   local function what_thing(name)
     if skin[name] then return skin[name] end
     if parm[name] then return parm[name] end
 
-    error("Unknown thing ref in prefab: " .. name)
+    error("Unknown thing ref: " .. name .. " in prefab: " .. fab.name)
   end
 
   local function compile_element(elem)
@@ -438,14 +445,14 @@ function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y
       sec = copy_block(focus)
 
       if elem.f_h or elem.f_tex or elem.l_tex then
-        sec.f_h   = what_h_ref(sec.f_h, elem.f_rel, elem.f_h)
+        sec.f_h   = what_h_ref(sec.f_h, elem.f_rel, elem.f_h, elem.f_add)
         sec.f_tex = what_tex("floor",elem.f_tex)
         sec.l_tex = what_tex("wall", elem.l_tex)
         sec.l_peg = elem.l_peg
       end
 
       if elem.c_h or elem.c_tex or elem.u_tex then
-        sec.c_h   = what_h_ref(sec.c_h, elem.c_rel, elem.c_h)
+        sec.c_h   = what_h_ref(sec.c_h, elem.c_rel, elem.c_h, elem.c_add)
         sec.c_tex = what_tex("ceil", elem.c_tex)
         sec.u_tex = what_tex("wall", elem.u_tex)
         sec.u_peg = elem.u_peg
@@ -529,7 +536,7 @@ function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y
         elem = fab.elements[e]
 
         if not elem then
-          error("Unknown element '" .. e .. "' in Prefab")
+          error("Unknown element '" .. e .. "' in prefab:" .. fab.name)
         end
 
         if not cache[e] then
@@ -567,11 +574,14 @@ function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y
 
       local bx,by, dx,dy = th_coords(tdef.x, tdef.y)
 
-      -- FIXME: blocking
-      local th = add_thing(p, c, bx,by, what_thing(tdef.kind), false)
+      if tdef.kind ~= "pickup_t" then -- ????
+        -- FIXME: blocking
+        local th = add_thing(p, c, bx,by, what_thing(tdef.kind), false)
 
-      th.dx = dx
-      th.dy = dy
+        th.dx = dx
+        th.dy = dy
+      end
+
     end
   end
 end
@@ -4896,7 +4906,7 @@ function tizzy_up_room(p, c)
         return false
       end
       if B.walk then
-        if B.walk >= 4 then return false end
+        if B.walk >= 3 then return false end
         max_walk = math.max(B.walk, max_walk)
       end
     end end
@@ -5241,6 +5251,10 @@ if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
       "comp_desk_NS6",
       "comp_desk_USHAPE1",
       "comp_desk_USHAPE2",
+
+      "pedestal_PLAYER",
+      "pedestal_KEY",
+      "pedestal_WEAPON",
       }
     local def = GAME.sc_fabs[name]
     assert(def)
