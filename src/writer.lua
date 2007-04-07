@@ -210,10 +210,10 @@ function write_level(p, lev_name)
 
         if f_over.rail and not b_over.rail then
           SIDE.mid = f_over.rail
-          if f_over.x_offset then SIDE.x_offset = -f_over.x_offset end
-          if f_over.y_offset then SIDE.y_offset =  f_over.y_offset end
+          if f_over.y_offset then SIDE.y_offset = f_over.y_offset end
+          -- x_offset already handled above
         else
-          SIDE.mid = b_over.rail or f_over.rail or b.rail or f.rail
+          SIDE.mid = b_over.rail or b.rail or f.rail
         end
       end
 
