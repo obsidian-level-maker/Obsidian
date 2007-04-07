@@ -2039,7 +2039,7 @@ CRATE =
 
   elements =
   {
-    c = { f_rel="crate_h", f_h=0,
+    c = { f_add="crate_h", f_h=0,
           f_tex="crate_f", l_tex="crate_w", l_peg="top" },
   },
 },
@@ -2071,7 +2071,7 @@ CRATE_TWO_SIDED =
 
   elements =
   {
-    c = { f_rel="crate_h", f_h=0,
+    c = { f_add="crate_h", f_h=0,
           f_tex="crate_f", l_tex="crate_w", l_peg="top",
           [4] = { l_tex="crate2", x_offset=64 },
           [6] = { l_tex="crate2", x_offset=64 },
@@ -2091,7 +2091,7 @@ CRATE_ROTATE_NARROW =
 
   elements =
   {
-    c = { f_rel="crate_h", f_h=0,
+    c = { f_add="crate_h", f_h=0,
           f_tex="crate_f", l_tex="crate_w", l_peg="top",
 
           [1] = { dx=-14, dy= 16 },
@@ -2121,7 +2121,7 @@ CRATE_ROTATE =
 
   elements =
   {
-    c = { f_rel="crate_h", f_h=0,
+    c = { f_add="crate_h", f_h=0,
           f_tex="crate_f", l_tex="crate_w", l_peg="top",
 
           [1] = { dx=-29, dy= 16 },

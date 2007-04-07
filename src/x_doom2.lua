@@ -1014,6 +1014,7 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
+      crate_h = 64,
       crate_w = "CRATE1",
       crate_f = "CRATOP2",
     }
@@ -1025,6 +1026,7 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
+      crate_h = 64,
       crate_w = "CRATE2",
       crate_f = "CRATOP1",
     }
@@ -1036,6 +1038,7 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
+      crate_h = 128,
       crate_w = "CRATWIDE",
       crate_f = "CRATOP1",
     }
@@ -1047,6 +1050,7 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
+      crate_h = 64,
       crate_w = "WOOD4",
       crate_f = "CEIL1_1",
     }
@@ -1058,6 +1062,7 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
+      crate_h = 64,
       crate_w = "SPACEW3",
       crate_f = "CEIL5_1"
     }
@@ -1069,6 +1074,7 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
+      crate_h = 64,
       crate_w = "CRATE1",
       crate_f = "CRATOP2",
     }
@@ -1080,6 +1086,7 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
+      crate_h = 128,
       crate_w = "CRATE2",
       crate_f = "CRATOP1",
     }
@@ -1091,6 +1098,7 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
+      crate_h = 64,
       crate_w = "SILVER2",
       crate_f = "FLAT23"
     }
