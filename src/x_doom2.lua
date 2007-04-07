@@ -650,6 +650,36 @@ D2_SCENERY =
 
 D2_PREFAB_SCENERY =
 {
+  pedestal_PLAYER =
+  {
+    prefab = "PEDESTAL",
+
+    skin =
+    {
+      wall="SHAWN2", floor="FLAT22", ped_h=8,
+    },
+  },
+
+  pedestal_KEY =
+  {
+    prefab = "PEDESTAL",
+
+    skin =
+    {
+      wall="METAL", floor="GATE4", ped_h=24,
+    },
+  },
+
+  pedestal_WEAPON =
+  {
+    prefab = "PEDESTAL",
+
+    skin =
+    {
+      wall="METAL", floor="CEIL1_2", ped_h=12,
+    },
+  },
+
   wall_lamp_RED_TORCH =
   {
     prefab = "WALL_LAMP",
