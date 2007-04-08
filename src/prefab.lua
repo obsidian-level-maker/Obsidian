@@ -838,8 +838,9 @@ SWITCH_FLOOR_TINY =
 SWITCH_CEILING =
 {
   add_mode="island",
---FIXME  height_range={ 80,160 },
-  
+--FIXME  height_range={ 96,256 },
+--FIXME  environment="indoor",
+
   structure =
   {
     "bbbb",
