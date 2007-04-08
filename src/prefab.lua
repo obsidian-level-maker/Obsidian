@@ -30,6 +30,28 @@ PREFABS =
 -- SKIN table.  This allows the same prefab to be used with
 -- different textures (which are game-dependent).
 
+PLAIN =
+{
+  scale=64,
+
+  structure = { "." },
+
+  elements = { },
+},
+
+PLAIN_BIG =
+{
+  scale=64,
+
+  structure =
+  {
+    "..",
+    "..",
+  },
+  
+  elements = { },
+},
+
 ------ Arches ------------------------------------
 
 ARCH =
