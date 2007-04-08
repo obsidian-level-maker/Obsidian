@@ -730,7 +730,7 @@ SWITCH_PILLAR =
 {
   scale=64,
   add_mode="island",
-  height_range={ 128,384 },
+--FIXME  height_range={ 128,384 },
 
   structure =
   {
@@ -770,7 +770,7 @@ SWITCH_FLUSH =
 SWITCH_FLOOR =
 {
   region="floor",
-  height_range={ 96,999 },
+--FIXME  height_range={ 96,999 },
 
   structure =
   {
@@ -813,7 +813,7 @@ SWITCH_FLOOR_BEAM =
 SWITCH_FLOOR_TINY =
 {
   region="floor",
-  height_range={ 64,512 },
+--FIXME  height_range={ 64,512 },
 
   structure =
   {
@@ -838,7 +838,7 @@ SWITCH_FLOOR_TINY =
 SWITCH_CEILING =
 {
   add_mode="island",
-  height_range={ 80,160 },
+--FIXME  height_range={ 80,160 },
   
   structure =
   {
