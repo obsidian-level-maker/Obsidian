@@ -1142,8 +1142,9 @@ TECH_PICKUP_LARGE =
 
 LAUNCH_PAD_LARGE =
 {
-  region="floor",
   add_mode="island",
+  region="floor",
+  environment="outdoor",
 
   structure =
   {
@@ -1274,10 +1275,10 @@ LIQUID_PICKUP =
     "ssbbbbbccbbbbbss",
     "ssbLLLLccLLLLbss",
     "ssbbbbbccbbbbbss",
-    "ssbLLLccccLLLbss",
+    "ssbLLLLccLLLLbss",
     "ssccccccccccccss",
     "ssccccccccccccss",
-    "ssbLLLccccLLLbss",
+    "ssbLLLLccLLLLbss",
     "ssbbbbbccbbbbbss",
     "ssbLLLLccLLLLbss",
     "ssbbbbbccbbbbbss",
@@ -1288,14 +1289,15 @@ LIQUID_PICKUP =
 
   elements =
   {
-    s = { f_h=16, c_h=-16, },
+    s = { f_h=16, c_h=-12 },
 
-    c = { copy="s", },
-    b = { copy="s", f_h=8, },
+    c = { copy="s" },
 
-    L = { f_h= 0, f_tex="liquid_f", 
-          c_h= 8, c_tex="sky_c",
+    b = { copy="s", f_h=8 },
+
+    L = { f_h= 0, f_tex="liquid_f", c_h=12, c_tex="sky_c",
           light=208,
+
           [1] = { dx=-4,dy=-4 }, [3] = { dx= 4,dy=-4 },
           [7] = { dx=-4,dy= 4 }, [9] = { dx= 4,dy= 4 },
         },
