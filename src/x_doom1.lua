@@ -660,7 +660,19 @@ DM_SWITCHES =
 {
   sw_blue =
   {
-    switch="SW1BLUE", wall="COMPBLUE", kind_once=103,
+    switch =
+    {
+      prefab = "SWITCH_FLOOR_BEAM",
+      skin =
+      {
+        switch_w="SW1BLUE", side_w="COMPBLUE",
+        switch_f="FLAT14", switch_h=64,
+
+        beam_w="WOOD1", beam_f="FLAT5_2",
+
+        x_offset=0, y_offset=56, kind=103,
+      }
+    },
 
     door =
     {
@@ -678,7 +690,14 @@ DM_SWITCHES =
 
   sw_hot =
   {
-    switch="SW1HOT", wall="SP_HOT1", kind_once=103,
+    switch =
+    {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1HOT", wall="SP_HOT1", kind=103,
+      }
+    },
 
     door =
     {
@@ -696,7 +715,15 @@ DM_SWITCHES =
 
   sw_skin =
   {
-    switch="SW1SKIN", wall="SKINFACE", kind_once=103,
+    --FIXME: SKINBORD is doom1 only
+    switch =
+    {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1SKIN", wall="SKINBORD", kind=103,
+      }
+    },
 
     door =
     {
@@ -714,7 +741,14 @@ DM_SWITCHES =
 
   sw_vine =
   {
-    switch="SW1VINE", wall="GRAYVINE", kind_once=103,
+    switch =
+    {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1VINE", wall="GRAYVINE", kind=103,
+      }
+    },
 
     door =
     {
@@ -732,7 +766,19 @@ DM_SWITCHES =
 
   sw_metl =
   {
-    switch="SW1GARG", wall="METAL", kind_once=23,
+    switch =
+    {
+      prefab = "SWITCH_CEILING",
+      skin =
+      {
+        switch_w="SW1GARG", side_w="METAL",
+        switch_c="CEIL5_2", switch_h=56,
+
+        beam_w="SUPPORT3", beam_c="CEIL5_2",
+
+        x_offset=0, y_offset=64, kind=23,
+      }
+    },
 
     door =
     {
@@ -744,7 +790,14 @@ DM_SWITCHES =
 
   sw_gray =
   {
-    switch="SW1GRAY1", wall="GRAY1", kind_once=23,
+    switch =
+    {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1GRAY1", wall="GRAY1", kind=23,
+      }
+    },
 
     door =
     {

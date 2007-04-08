@@ -411,9 +411,7 @@ function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y
       result = result + skin[add]
     end
 
-    if h then result = result + h end
-
-    return result
+    return result + (h or 0)
   end
 
   local function what_tex(base, key)
@@ -5150,7 +5148,20 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
   local function add_switch(c)
 
-    local fab = PREFABS["SWITCH_PILLAR"]
+    local info
+
+    if c.is_exit then
+      info = c.combo.switch
+      return -- FIXME !!!!
+    else
+      info = GAME.switches[c.quest.item]
+      if not info then
+        error("Missing switch: " .. tostring(c.quest.item))
+      end
+    end
+    assert(info.switch)
+
+    local fab = PREFABS[info.switch.prefab]
     assert(fab)
 
     local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
@@ -5160,35 +5171,28 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       return
     end
 
-    local skin
-    local parm = { kind=103, tag = c.quest.tag + 1 }
-    local info
-
-    if c.is_exit then
-      info = c.combo.switch
-      parm.tag  = 0
-    else
-      info = GAME.switches[c.quest.item]
-      if not info then
-        error("Missing switch: " .. tostring(c.quest.item))
-      end
-      assert(info.switch)
+    local skin = info.switch.skin
+    local parm = { }
+    
+    if not c.is_exit then 
+      parm.tag = c.quest.tag + 1
     end
-    skin = { switch_w=info.switch, wall=info.wall, side_w=info.wall,
-             beam_w="WOOD1", beam_f="FLAT5_2",
-             lite_w="LITE5", frame_c=c.combo.floor,
-           }
-    parm.kind = info.kind_once
 
-if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
-    assert(parm.kind)
+---###    skin = { switch_w=info.switch, wall=info.wall, side_w=info.wall,
+---###             beam_w="WOOD1", beam_f="FLAT5_2",
+---###             lite_w="LITE5", frame_c=c.combo.floor,
+---###           }
+---###    parm.kind = info.kind_once
 
-    if false then -- floor switch / niche switch
-      local tex_h = 128  -- FIXME: assumption !!!
-      parm.switch_h = c.rmodel.f_h + 72  -- TINY = 40
-      parm.x_offset = 0
-      parm.y_offset = tex_h - 72  -- TINY = 64
-    end
+---### if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
+---###    assert(parm.kind)
+
+---###    if false then -- floor switch / niche switch
+---###      local tex_h = 128  -- FIXME: assumption !!!
+---###      parm.switch_h = c.rmodel.f_h + 72  -- TINY = 40
+---###      parm.x_offset = 0
+---###      parm.y_offset = tex_h - 72  -- TINY = 64
+---###    end
 
     B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.combo, x, y, dir)
 
@@ -5304,12 +5308,11 @@ if not parm.kind then con.printf("INFO = %s\n", table_to_str(info)) end
 con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
 
     local parm = {
-             pic_h = c.rmodel.f_h + 64,   -- 88 for BILLBOARD_LIT
 
              y_offset = 0,
 
              cage_base_h = c.rmodel.f_h + 64,
-             cage_top_h  = c.rmodel.f_h + 128,
+
              door_top_h  = c.rmodel.f_h + 72,
 
            }

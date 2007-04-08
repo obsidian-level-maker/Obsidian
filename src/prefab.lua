@@ -717,7 +717,7 @@ SWITCH_PILLAR =
 
   elements =
   {
-    P = { solid="wall",
+    P = { solid="side_w",
 
           [2] = { l_tex="switch_w", l_peg="bottom", kind="kind", tag="tag" }
         },
@@ -739,15 +739,16 @@ SWITCH_FLOOR =
 
   elements =
   {
-    s = { f_rel="switch_h", f_h=0,
+    s = { f_add="switch_h", f_h=0,
           l_tex="side_w", f_tex="switch_f", l_peg="top",
 
           [2] = { l_tex="switch_w", l_peg="top", kind="kind", tag="tag",
-                  y_offset="y_offset" }
+                  x_offset="x_offset", y_offset="y_offset"
+                }
         },
 
     -- beam
-    B = { f_rel="switch_h", f_h=12,
+    B = { f_add="switch_h", f_h=12,
           l_tex="beam_w", f_tex="beam_f", l_peg="top"
         },
   },
@@ -781,16 +782,17 @@ SWITCH_FLOOR_TINY =
 
   elements =
   {
-    s = { f_rel="switch_h", f_h=0,
+    s = { f_add="switch_h", f_h=0,
           l_tex="side_w", f_tex="switch_f", l_peg="top",
 
           [2] = { l_tex="switch_w", l_peg="top", kind="kind", tag="tag",
-                  x_offset="x_offset", y_offset="y_offset" }
+                  x_offset="x_offset", y_offset="y_offset"
+                }
         },
   },
 },
 
-SWITCH_CEIL =
+SWITCH_CEILING =
 {
   height_range={ 80,160 },
   
@@ -804,16 +806,17 @@ SWITCH_CEIL =
 
   elements =
   {
-    s = { c_rel="floor_h", c_h=40,
-          c_tex="side_w", c_tex="switch_f", l_peg="top",
+    s = { c_rel="floor_h", c_h=24, f_h=0,
+          u_tex="side_w", c_tex="switch_c", u_peg="top",
 
           [2] = { u_tex="switch_w", u_peg="top", kind="kind", tag="tag",
-                  y_offset="y_offset" }
+                  x_offset="x_offset", y_offset="y_offset"
+                }
         },
 
     -- beam coming down from ceiling
-    b = { c_rel="switch_h", c_h=40, c_tex="beam_c",
-          u_tex="beam_w", u_peg="bottom",
+    b = { c_rel="floor_h", c_add="switch_h", c_h=24, f_h=0,
+          c_tex="beam_c", u_tex="beam_w", u_peg="bottom",
         }
   },
 },
@@ -833,12 +836,16 @@ SWITCH_NICHE =
   elements =
   {
     -- niche
-    n = { f_h=0, c_rel="switch_h", c_h=0, c_tex="frame_c",
-          light=192 },
+    n = { f_h=0, c_rel="floor_h", c_add="switch_h", c_h=0,
+          f_tex="frame_f", c_tex="frame_c",
+          light=192
+        },
 
     -- switch
     s = { solid="switch_w", l_peg="top",
-          [2] = { kind="kind", tag="tag", y_offset="y_offset" }
+          [2] = { kind="kind", tag="tag",
+                  x_offset="x_offset", y_offset="y_offset"
+                }
         },
 
     -- light
@@ -864,8 +871,9 @@ SWITCH_NICHE_TINY =
   elements =
   {
     -- niche
-    n = { f_h=32, c_rel="switch_h", c_h=32,
-          f_tex="frame_f", c_tex="frame_c", },
+    n = { f_h=32, c_rel="floor_h", c_add="switch_h", c_h=32,
+          f_tex="frame_f", c_tex="frame_c",
+        },
 
     -- switch
     s = { solid="switch_w", l_peg="top",
