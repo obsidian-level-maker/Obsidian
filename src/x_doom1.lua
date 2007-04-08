@@ -292,7 +292,18 @@ DM_EXITS =
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
-    switch = { switch="SW1COMP", wall="COMPSPAN", h=64, kind_once=11 },
+    switch =
+    {
+      prefab="SWITCH_NICHE",
+      skin =
+      {
+        switch_w="SW1COMP", switch_h=64,
+        lite_w="LITE5",
+--      frame_f="FLAT14", frame_c="FLAT14",
+
+        x_offset=0, y_offset=64, kind=11, tag=0,
+      }
+    },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_5", -- frame_wall="BROWN96"
@@ -313,7 +324,17 @@ DM_EXITS =
     
     front_mark = "EXITSTON", 
 
-    switch = { switch="SW1HOT", wall="SP_HOT1", h=64, kind_once=11 },
+    switch =
+    {
+      prefab="SWITCH_FLOOR",
+      skin =
+      {
+        switch_w="SW1HOT", side_w="SP_HOT1",
+        switch_f="FLAT5_3", switch_h=64,
+
+        x_offset=0, y_offset=56, kind=11, tag=0,
+      }
+    },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_6", frame_wall="LITE5" },
@@ -332,8 +353,15 @@ DM_EXITS =
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
-    flush = true,
-    switch = { switch="SW1BRN2", wall="BROWN1", h=64, kind_once=11 },
+    switch =
+    {
+      prefab="SWITCH_FLUSH",
+      skin =
+      {
+        switch_w="SW1BRN2", wall="BROWN1",
+        kind=11, tag=0,
+      }
+    },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_5",
@@ -357,7 +385,18 @@ DM_EXITS =
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
-    switch = { switch="SW1COMM", wall="SHAWN2", h=64, kind_once=11 },
+    switch =
+    {
+      prefab="SWITCH_FLOOR",
+      skin =
+      {
+        switch_w="SW1COMM", side_w="SHAWN2",
+        switch_f="FLAT23", switch_h=64,
+
+        x_offset=0, y_offset=0, kind=11, tag=0,
+      }
+    },
+
 
     door = { wall="EXITDOOR", w=64, h=72, frame_ceil="TLITE6_5" },
   },
@@ -376,8 +415,15 @@ DM_EXITS =
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
-    flush = true,
-    switch = { switch="SW1STRTN", wall="STARTAN2", h=64, kind_once=11 },
+    switch =
+    {
+      prefab="SWITCH_FLUSH",
+      skin =
+      {
+        switch_w="SW1STRTN", wall="STARTAN2",
+        kind=11, tag=0,
+      }
+    },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_5",
@@ -407,7 +453,16 @@ DM_EXITS =
     flush_left  = "GSTFONT1",
     flush_right = "GSTFONT2",
 
-    switch = { switch="SW1GSTON", wall="GSTONE2", h=64, kind_once=11 },
+    switch =
+    {
+      prefab="SWITCH_FLUSH",
+      skin =
+      {
+        switch_w="SW1GSTON", wall="GSTONE2",
+        left_w="GSTFONT1", right_w="GSTFONT2",
+        kind=11, tag=0,
+      }
+    },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="FLOOR7_2",

@@ -5151,14 +5151,14 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     local info
 
     if c.is_exit then
-      info = c.combo.switch
-      return -- FIXME !!!!
+      info = c.combo
     else
       info = GAME.switches[c.quest.item]
       if not info then
         error("Missing switch: " .. tostring(c.quest.item))
       end
     end
+    assert(info)
     assert(info.switch)
 
     local fab = PREFABS[info.switch.prefab]

@@ -378,7 +378,17 @@ D2_EXITS =
     sign = "EXITSIGN",    -- FIXME !!! make the sign into a MATERIAL
     sign_ceil="CEIL5_2",
 
-    switch = { switch="SW1BLUE", wall="COMPBLUE", h=64, kind_once=11 },
+    switch =
+    {
+      prefab="SWITCH_NICHE_TINY",
+      skin =
+      {
+        switch_w="SW1COMP", switch_h=32,
+        frame_w="LITEBLU4", frame_f="FLAT14", frame_c="FLAT14",
+
+        x_offset=16, y_offset=72, kind=11, tag=0,
+      }
+    },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_6", frame_floor="FLOOR5_1" },
@@ -398,7 +408,15 @@ D2_EXITS =
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
-    switch = { switch="SW1WOOD", wall="WOOD1", h=64, kind_once=11 },
+    switch =
+    {
+      prefab="SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1WOOD", side_w="WOOD1",
+        kind=11, tag=0,
+      }
+    },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="TLITE6_6", frame_floor="FLAT5_2" },
@@ -419,11 +437,20 @@ D2_EXITS =
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
-    flush = true,
-    flush_left  = "SK_LEFT",
-    flush_right = "SK_RIGHT",
+---###    flush = true,
+---###    flush_left  = "SK_LEFT",
+---###    flush_right = "SK_RIGHT",
 
-    switch = { switch="SW1SKULL", wall="SKINCUT", h=128, kind_once=11 },
+    switch =
+    {
+      prefab="SWITCH_FLUSH",
+      skin =
+      {
+        switch_w="SW1SKULL", wall="SLOPPY1",
+        left_w="SK_LEFT", right_w="SK_RIGHT",
+        kind=11, tag=0,
+      }
+    },
 
     door = { wall="EXITDOOR", w=64, h=72,
              frame_ceil="FLAT5_5", frame_floor="CEIL5_2" },
@@ -1335,8 +1362,8 @@ GAME_FACTORIES["doom2"] = function()
   local T = GAME_FACTORIES.doom_common()
 
   T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
-  T.exits    = copy_and_merge(T.exits,    D2_EXITS)
   T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
+  T.exits    = copy_and_merge(T.exits,    D2_EXITS)
 
   T.rails = D2_RAILS
 
