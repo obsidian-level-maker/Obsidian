@@ -724,6 +724,27 @@ SWITCH_PILLAR =
   },
 },
 
+SWITCH_FLUSH =
+{
+  add_mode="wall",  -- IN THE WALL
+  scale=64,
+
+  structure =
+  {
+    "LsR"
+  },
+
+  elements =
+  {
+    s = { solid="wall",
+          [2] = { l_tex="switch_w", l_peg="bottom", kind="kind", tag="tag" }
+        },
+
+    L = { solid="wall", [2] = { l_tex="left_w",  l_peg="bottom" }},
+    R = { solid="wall", [2] = { l_tex="right_w", l_peg="bottom" }},
+  },
+},
+
 SWITCH_FLOOR =
 {
   region="floor",
@@ -794,6 +815,7 @@ SWITCH_FLOOR_TINY =
 
 SWITCH_CEILING =
 {
+  add_mode="island",
   height_range={ 80,160 },
   
   structure =
@@ -850,8 +872,8 @@ SWITCH_NICHE =
 
     -- light
     L = { solid="wall", light=192,
-          [4] = { l_tex="light_w" },
-          [6] = { l_tex="light_w" },
+          [4] = { l_tex="lite_w" },
+          [6] = { l_tex="lite_w" },
         },
   },
 },
@@ -882,8 +904,8 @@ SWITCH_NICHE_TINY =
         },
 
     -- sides
-    L = { solid="wall", [6] = { l_tex="side_w" } },
-    M = { solid="wall", [4] = { l_tex="side_w" } },
+    L = { solid="wall", [6] = { l_tex="frame_w" } },
+    M = { solid="wall", [4] = { l_tex="frame_w" } },
   },
 },
 
@@ -2004,6 +2026,7 @@ COMPUTER_DESK =
 COMPUTER_DESK_U_SHAPE =
 {
   region="floor",
+  add_mode="island",
   scale=64,
 
   structure =
