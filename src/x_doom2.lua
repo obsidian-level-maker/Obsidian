@@ -693,7 +693,7 @@ D2_PREFAB_SCENERY =
 
     skin =
     {
-      wall="METAL", floor="GATE4", ped_h=24,
+      wall="METAL", floor="GATE4", ped_h=16,
     },
   },
 
@@ -741,6 +741,7 @@ D2_PREFAB_SCENERY =
   {
     prefab = "WALL_PIC_FOUR_SIDED",
     skin = { pic_w="ZZWOLF7" },
+    force_dir = 2, -- optimisation
   },
 
   pillar_light1_METAL =
@@ -825,6 +826,8 @@ D2_PREFAB_SCENERY =
       pic_w  = "ZZWOLF13", pic_offset_h = 128,
       beam_w = "WOOD1", beam_f = "FLAT5_2",
     },
+
+    force_dir = 2, -- optimisation
   },
 
   statue_tech1 =
@@ -840,7 +843,9 @@ D2_PREFAB_SCENERY =
       comp_f="CEIL5_1", lite_c="TLITE6_5",
 
       lamp_t="lamp"
-    }
+    },
+    
+    force_dir = 2, -- optimisation
   },
 
   statue_tech2 =
@@ -857,6 +862,8 @@ D2_PREFAB_SCENERY =
       tv_w="SPACEW3", tv_f="CEIL5_1",
       span_w="COMPSPAN", span_f="FLAT4",
     },
+
+    force_dir = 2, -- optimisation
   },
 
   machine_pump1 =
@@ -886,7 +893,9 @@ D2_PREFAB_SCENERY =
     { 
       shawn_w = "SHAWN3", shawn_f = "FLAT1",
       lite_w  = "LITE5",  lite_f  = "CEIL5_1",
-    }
+    },
+
+    force_dir = 2, -- optimisation
   },
 
   launch_pad_big_H =
@@ -899,6 +908,8 @@ D2_PREFAB_SCENERY =
       outer_w="METAL1", outer_f="FLOOR4_8",
       step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
     },
+
+    force_dir = 2, -- optimisation
   },
   
   launch_pad_med_F =
@@ -911,6 +922,8 @@ D2_PREFAB_SCENERY =
       outer_w="METAL1", outer_f="FLOOR4_8",
       step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
     },
+
+    force_dir = 4, -- optimisation
   },
   
   launch_pad_sml_S =
@@ -923,6 +936,8 @@ D2_PREFAB_SCENERY =
       outer_w="METAL1", outer_f="FLOOR4_8",
       step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
     },
+
+    force_dir = 2, -- optimisation
   },
  
   tech_pickup_STONE =
@@ -935,6 +950,8 @@ D2_PREFAB_SCENERY =
       lite_w="LITE5", sky_c="F_SKY1",
       step_w="STEP1", carpet_f="FLOOR1_1",
     },
+
+    force_dir = 2, -- optimisation
   },
 
   liquid_pickup_NUKAGE =
@@ -977,21 +994,21 @@ D2_PREFAB_SCENERY =
   {
     prefab = "COMPUTER_DESK",
     skin   = { comp_f="CONS1_5", side_w="SILVER1" },
-    force_dir = 8,
+    force_dir = 2,
   },
 
   comp_desk_EW2 =
   {
     prefab = "COMPUTER_DESK",
     skin   = { comp_f="CONS1_1", side_w="SILVER1" },
-    force_dir = 2,
+    force_dir = 8,
   },
 
   comp_desk_NS6 =
   {
     prefab = "COMPUTER_DESK",
     skin   = { comp_f="CONS1_7", side_w="SILVER1" },
-    force_dir = 6,
+    force_dir = 4,
   },
 
   comp_desk_USHAPE1 =
@@ -1003,7 +1020,7 @@ D2_PREFAB_SCENERY =
       comp_Sf="CONS1_5",
       comp_cf="COMP01", side_w ="SILVER1"
     },
-    force_dir = 8,
+    force_dir = 2,
   },
 
   comp_desk_USHAPE2 =
@@ -1015,7 +1032,7 @@ D2_PREFAB_SCENERY =
       comp_Sf="CONS1_5",
       comp_cf="COMP01", side_w ="SILVER1"
     },
-    force_dir = 8,
+    force_dir = 2,
   },
 
   skylight_mega_METAL =
@@ -1095,7 +1112,9 @@ D2_PREFAB_SCENERY =
       crate_h = 128,
       crate_w = "CRATWIDE",
       crate_f = "CRATOP1",
-    }
+    },
+
+    force_dir = 2, -- optimisation
   },
 
   crate_WOODSKUL =
@@ -1233,7 +1252,9 @@ D2_PREFAB_SCENERY =
       cage_f = "CEIL5_2",
 
       rail_w = "MIDBARS3",
-    }
+    },
+
+    force_dir = 2, -- optimisation
   },
 
   cage_large_METAL =
@@ -1246,7 +1267,9 @@ D2_PREFAB_SCENERY =
       cage_f = "CEIL5_2",
 
       rail_w = "MIDBARS3",
-    }
+    },
+
+    force_dir = 2, -- optimisation
   },
 
   cage_large_liq_NUKAGE =
@@ -1262,7 +1285,9 @@ D2_PREFAB_SCENERY =
       cage_sign_w = "SLADPOIS",
 
       rail_w = "MIDBARS3",
-    }
+    },
+
+    force_dir = 2, -- optimisation
   },
 
   cage_medium_liq_BLOOD =
@@ -1277,7 +1302,9 @@ D2_PREFAB_SCENERY =
       cage_f = "FLOOR7_2",
 
       rail_w = "MIDBARS3",
-    }
+    },
+
+    force_dir = 2, -- optimisation
   },
 
   cage_medium_liq_LAVA =
@@ -1292,7 +1319,9 @@ D2_PREFAB_SCENERY =
       cage_f = "CEIL5_2",
 
       rail_w = "MIDBARS3",
-    }
+    },
+
+    force_dir = 2, -- optimisation
   },
 
   exit_hole_SKY =

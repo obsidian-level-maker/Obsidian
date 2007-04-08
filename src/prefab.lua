@@ -475,10 +475,10 @@ EXIT_DOOR =
 {
   structure =
   {
-    "##ssss##",
     "#MssssL#",
     "#TddddT#",
     "#LssssM#",
+    "##ssss##",
   },
 
   elements =
@@ -525,10 +525,10 @@ EXIT_DOOR_WIDE =
 
   structure =
   {
-    "FFFFssssFFFF",
     "###MssssL###",
     "###TddddT###",
     "###LssssM###",
+    "FFFFssssFFFF",
   },
 },
 
@@ -540,10 +540,10 @@ EXIT_DOOR_W_SIGN =
   {
     "##ssss##",
     "##sXXs##",
-    "##ssss##",
     "#MssssL#",
     "#TddddT#",
     "#LssssM#",
+    "##ssss##",
     "##sXXs##",
     "##ssss##",
   },
@@ -1143,6 +1143,7 @@ TECH_PICKUP_LARGE =
 LAUNCH_PAD_LARGE =
 {
   region="floor",
+  add_mode="island",
 
   structure =
   {
@@ -2139,6 +2140,8 @@ CRATE_TWO_SIDED =
 
 CRATE_ROTATE_NARROW =
 {
+  add_mode="island",
+
   structure =
   {
     "....",

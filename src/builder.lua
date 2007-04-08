@@ -286,25 +286,25 @@ end
 
 FAB_DIRECTION_MAP =
 {
-  [8] = { 1,2,3, 4,5,6, 7,8,9 },
-  [2] = { 9,8,7, 6,5,4, 3,2,1 },
+  [2] = { 1,2,3, 4,5,6, 7,8,9 },
+  [8] = { 9,8,7, 6,5,4, 3,2,1 },
 
-  [4] = { 3,6,9, 2,5,8, 1,4,7 },
-  [6] = { 7,4,1, 8,5,2, 9,6,3 },
+  [6] = { 3,6,9, 2,5,8, 1,4,7 },
+  [4] = { 7,4,1, 8,5,2, 9,6,3 },
 
   -- mirror --
 
-  [18] = { 3,2,1, 6,5,4, 9,8,7 },
-  [12] = { 7,8,9, 4,5,6, 1,2,3 },
+  [12] = { 3,2,1, 6,5,4, 9,8,7 },
+  [18] = { 7,8,9, 4,5,6, 1,2,3 },
 
-  [14] = { 9,6,3, 8,5,2, 7,4,1 },
-  [16] = { 1,4,7, 2,5,8, 3,6,9 },
+  [16] = { 9,6,3, 8,5,2, 7,4,1 },
+  [14] = { 1,4,7, 2,5,8, 3,6,9 },
 }
 
 function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
   -- (x,y) is always the block with the lowest coordinate.
-  -- dir == 8 is the natural mode, other values rotate it.
+  -- dir == 2 is the natural mode, other values rotate it.
 
   assert(fab and skin and parm and combo)
 
@@ -340,9 +340,9 @@ function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y
   local function f_coords(ex, ey)
     if mirror_x then ex = long+1-ex end
 
-        if dir == 2 then ex,ey = long+1-ex, deep+1-ey
-    elseif dir == 4 then ex,ey = deep+1-ey, ex
-    elseif dir == 6 then ex,ey =        ey, long+1-ex
+        if dir == 8 then ex,ey = long+1-ex, deep+1-ey
+    elseif dir == 6 then ex,ey = deep+1-ey, ex
+    elseif dir == 4 then ex,ey =        ey, long+1-ex
     end
 
     if fab.scale == 64 then
@@ -358,10 +358,10 @@ function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y
   local function dd_coords(dx, dy)
     if mirror_x then dx = -dx end
 
-        if dir == 2 then return -dx, -dy
-    elseif dir == 4 then return -dy,  dx
-    elseif dir == 6 then return  dy, -dx
-    else return dx, dy -- dir == 8
+        if dir == 8 then return -dx, -dy
+    elseif dir == 6 then return -dy,  dx
+    elseif dir == 4 then return  dy, -dx
+    else return dx, dy -- dir == 2
     end
   end
 
@@ -3384,13 +3384,13 @@ function build_pacman_level(p, c)
   {
   }
 
-  B_prefab(p,c, mid_fab,skin,parm, c.rmodel,combo, mid_x-2, mid_y, 8, false)
+  B_prefab(p,c, mid_fab,skin,parm, c.rmodel,combo, mid_x-2, mid_y, 2, false)
 
-  B_prefab(p,c, top_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y+16, 8,false,top_flip)
-  B_prefab(p,c, top_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y+16, 8,true, top_flip)
+  B_prefab(p,c, top_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y+16, 2,false,top_flip)
+  B_prefab(p,c, top_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y+16, 2,true, top_flip)
 
-  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y-12, 8,false,bot_flip)
-  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y-12, 8,true, bot_flip)
+  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y-12, 2,false,bot_flip)
+  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y-12, 2,true, bot_flip)
 
   B_exit_elevator(p,c, mid_x+19, mid_y+28, 2)
 
@@ -4515,7 +4515,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     return result
   end
 
-  local function find_stair_loc(K, behind_K,side1_K,side2_K, min_deep,want_deep)
+  local function find_stair_loc(K, behind_K,side1_K,side2_K, max_walk, min_deep,want_deep)
 
     -- Requirements:
     --   (a) blocks which stair will occupy are empty
@@ -4570,8 +4570,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
           for qx = st_x1,st_x2 do for qy = st_y1,st_y2 do
             local B = p.blocks[qx][qy]
             assert(B)
----???      if not B.empty or B.walk or not is_roomy(B.chunk)
-            if B.walk or not is_roomy(B.chunk) then
+            if (B.walk and B.walk > max_walk) or not is_roomy(B.chunk) then
               able = false
             end
           end end
@@ -4646,11 +4645,6 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
           best = info
         end
       end
-    end
-
-    if not best then
-      -- Fuck!
-      error("Unable to find stair position!")
     end
 
     return best
@@ -4745,10 +4739,20 @@ con.debugf("Putting in Stair: (%d,%d)..(%d,%d) dir:%d size:%dx%d\n", x,y, ex,ey,
 con.debugf("Building stair @ (%d,%d) chunk [%d,%d] dir:%d\n", c.x, c.y, kx,ky, K.stair_dir)
 con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 
-    local info = find_stair_loc(K, behind_K,side1_K,side2_K, stair_depths(diff_h))
+    local info
+    for max_walk = 1,3 do
+      info = find_stair_loc(K, behind_K,side1_K,side2_K, max_walk,
+                            stair_depths(diff_h))
+      if info then break; end
+    end
 
-    ----- failsafe
-    -- if not info then return end
+    if not info then
+      -- Fuck!
+      show_cell_blocks(p,c)
+      con.printf("Error in Cell (%d,%d) Chunk [%d,%d] dir:%d\n",
+          c.x, c.y, K.kx, K.ky, K.stair_dir)
+      error("Unable to find stair position!")
+    end
 
     local x, y = info.sx, info.sy
     local long, deep = info.long, info.deep
@@ -4871,7 +4875,7 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 
   build_stairs(c)
 
-  reclaim_areas(c)
+--!!!!!  reclaim_areas(c)
 end
 
 
@@ -4888,28 +4892,42 @@ function tizzy_up_room(p, c)
     return false
   end
 
-  local function verify_inner(c, x1,y1, x2,y2)
+  local function verify_inner(c, fab, max_walk, x1,y1, x2,y2)
     assert(valid_cell_block(c,x1,y1))
     assert(valid_cell_block(c,x2,y2))
-    
-    local f_h
-    local max_walk = 0
+
+    local f_h, c_h
 
     for x = x1,x2 do for y = y1,y2 do
       local B = p.blocks[x][y]
+      assert(B)
+
       if not block_is_free(B) then return false end
+
       if not f_h then
         f_h = B.chunk.rmodel.f_h
-      elseif B.chunk.rmodel.f_h ~= f_h then
-        return false
+        c_h = B.chunk.rmodel.c_h
+
+        local h = c_h - f_h
+        if fab.height_range then
+          if h < fab.height_range[1] or h > fab.height_range[2] then
+            return false
+          end
+        end
+      else
+        if B.chunk.rmodel.f_h ~= f_h and fab.region ~= "ceiling" then
+          return false
+        end
+
+        if B.chunk.rmodel.c_h ~= c_h and fab.region ~= "floor" then
+          return false
+        end
       end
-      if B.walk then
-        if B.walk >= 3 then return false end
-        max_walk = math.max(B.walk, max_walk)
-      end
+
+      if B.walk and B.walk >= max_walk then return false end
     end end
 
-    return true, f_h, max_walk
+    return true, f_h
   end
 
   local function verify_outer(c, f_h, x1,y1, x2,y2)
@@ -4919,7 +4937,6 @@ function tizzy_up_room(p, c)
     for x = x1,x2 do for y = y1,y2 do
       local B = p.blocks[x][y]
       if not (B.walk or block_is_free(B)) then return false end
-if not B.chunk then show_cell_blocks(p,c) end --!!!!
       if B.chunk.rmodel.f_h ~= f_h then return false end
     end end
 
@@ -4941,7 +4958,7 @@ if not B.chunk then show_cell_blocks(p,c) end --!!!!
     return true --OK--
   end
   
-  local function verify_island_spot(c, f_h, dir, x1,y1, x2,y2)
+  local function verify_island_spot(c, f_h, x1,y1, x2,y2)
    
     -- oooo
     -- oIIo
@@ -4961,16 +4978,16 @@ if not B.chunk then show_cell_blocks(p,c) end --!!!!
 
   local function verify_wall_extend(c, f_h, dir, x1,y1, x2,y2)
 
-    -- oooo
-    -- oIIo
-    -- oIIo
     -- WWWW
+    -- oIIo
+    -- oIIo
+    -- oooo
 
-    if not verify_wall(c, f_h, side_coords(dir, x1-1,y1-1, x2+1,y2+1)) then
+    if not verify_wall(c, f_h, side_coords(10-dir, x1-1,y1-1, x2+1,y2+1)) then
       return false
     end
 
-    if not verify_outer(c, f_h, side_coords(10-dir, x1-1,y1-1, x2+1,y2+1)) then
+    if not verify_outer(c, f_h, side_coords(dir, x1-1,y1-1, x2+1,y2+1)) then
       return false
     end
 
@@ -4992,41 +5009,124 @@ if not B.chunk then show_cell_blocks(p,c) end --!!!!
     return true --OK--
   end
 
-  local function verify_corner_extend(c, f_h, dir, x1,y1, x2,y2)
+---  local function verify_corner_extend(c, f_h, dir, x1,y1, x2,y2)
+---
+---    local nb_dir = rotate_cw90(dir)
+---
+---    -- Xooo
+---    -- WIIo
+---    -- WIIo
+---    -- WWWX
+---
+---    -- FIXME !!!
+---
+---    return false --FAIL--
+---  end
 
-    -- Wooo     oooW
-    -- WIIo  /  oIIW
-    -- WIIo     oIIW
-    -- WWWW     WWWW
+  local function fab_check_position(c, fab, max_walk, dir1, dir2, x1,y1, x2,y2)
 
-    -- FIXME !!!
+    assert(x1 <= x2 and y1 <= y2)
+
+    if not valid_cell_block(c,x1,y1) then return false end
+    if not valid_cell_block(c,x2,y2) then return false end
+
+    local able, f_h = verify_inner(c, fab, max_walk, x1,y1, x2,y2)
+
+    if not able then return false end
+
+    if (not fab.add_mode or fab.add_mode == "island") then
+      if verify_island_spot(c, f_h, x1,y1, x2,y2) then
+        return true, "island", rand_sel(50, dir1, dir2)
+      end
+    end
+
+    if (not fab.add_mode or fab.add_mode == "wall") then
+
+      if verify_wall_extend(c, f_h, dir1, x1,y1, x2,y2) then
+        return true, "wall", dir1
+      
+      elseif dir1 ~= dir2 and
+        verify_wall_extend(c, f_h, dir2, x1,y1, x2,y2)
+      then
+        return true, "wall", dir2
+      end
+--[[
+        for g_dir = 2,8,2 do
+          local sx,sy, ex,ey = side_coords(10-g_dir, x1-1,y1-1, x2+1,y2+1)
+
+          if verify_wall(c, f_h, sx,sy, ex,ey) then
+            if verify_wall_extend(c, f_h, g_dir, x1,y1, x2,y2) then
+              return true, "wall", g_dir
+            end
+
+            break; -- can never have more than one wall
+          end
+        end
+--]]
+    end
 
     return false --FAIL--
   end
 
-  local function fab_check_position(c, dir, x1,y1, x2,y2)
+  local function try_one_fab_loc(c, fab, max_walk, dir, x, y)
+    local long = fab.long
+    local deep = fab.deep
 
-    assert(x1 <= x2 and y1 <= y2)
-    assert(valid_cell_block(c,x1,y1))
-    assert(valid_cell_block(c,x2,y2))
+    if dir==4 or dir==6 then deep,long = long,deep end
 
-    local able, f_h, max_walk = verify_inner(c, x1,y1, x2,y2)
+    local able, g_mode, g_dir =
+        fab_check_position(c, fab, max_walk, dir or 2, dir or 8, x,y, x+long-1, y+deep-1)
 
-    if not able then return false end
+    if able then return true, g_dir end
 
-    if verify_island_spot(c, f_h, dir, x1,y1, x2,y2) then
-      return true, "island", max_walk
+    if not dir then
+      long,deep = deep,long
+      local able, g_mode, g_dir =
+          fab_check_position(c, fab, max_walk, 4, 6, x,y, x+long-1, y+deep-1)
+
+      if able then return true, g_dir end
+    end
+  end
+
+  local function find_fab_loc(c, fab, walk1,walk2, dir)
+
+    if not c.fab_spots then
+      c.fab_spots = {}
+      for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
+        table.insert(c.fab_spots, {x=x, y=y})
+      end end
     end
 
-    if verify_wall_extend(c, f_h, dir, x1,y1, x2,y2) then
-      return true, "wall", max_walk
+    for max_walk = walk1,walk2 do
+
+      rand_shuffle(c.fab_spots)
+
+      for zzz,spot in ipairs(c.fab_spots) do
+        local x = spot.x
+        local y = spot.y
+
+        local able, g_dir = try_one_fab_loc(c, fab, max_walk, dir, x, y)
+
+        if able then return x, y, g_dir end
+      end
     end
 
-    if verify_corner_extend(c, f_h, dir, x1,y1, x2,y2) then
-      return true, "corner", max_walk
-    end
+    return nil, nil --FAIL--
+  end
 
-    return false --FAIL--
+  local function find_emergency_loc(c, dir)
+
+    rand_shuffle(c.fab_spots)
+
+    for zzz,spot in ipairs(c.fab_spots) do
+      local x = spot.x
+      local y = spot.y
+      local B = p.blocks[x][y]
+
+      if B and block_is_free(B) and is_roomy(B.chunk) and not B.has_blocker then
+        return x,y, dir or (rand_irange(1,4)*2)
+      end
+    end
   end
 
   local function fab_mark_walkable(c, x, y, dir, long,deep, walk)
@@ -5054,52 +5154,6 @@ if not B.chunk then show_cell_blocks(p,c) end --!!!!
     end end
   end
 
-  local function fab_find_loc(c, long, deep, mode, dir, flags)
-
----##  if not mode then mode = rand_key_by_probs { island=50, wall=40, corner=10 } end
-    if not dir then dir = rand_irange(1,4)*2 end
-    if not flags then flags = {} end
-
-    if dir==4 or dir==6 then deep,long = long,deep end
-
-    if not c.fab_spots then
-      c.fab_spots = {}
-      for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
-        table.insert(c.fab_spots, {x=x, y=y})
-      end end
-    end
-
-    rand_shuffle(c.fab_spots)
-
-    for zzz,spot in ipairs(c.fab_spots) do
-      local x = spot.x
-      local y = spot.y
-
-      if x <= c.bx2-long+1 and y <= c.by2-deep+1 then
-        local able, g_mode, max_walk =
-            fab_check_position(c, dir, x,y, x+long-1, y+deep-1)
-
-        if able and (not mode or g_mode==mode) then -- and max_walk == 0 then
-          return x, y, dir
-        end
-      end
-    end
-  end
-
-  local function find_emergency_loc(c, dir)
-    if not dir then dir = rand_irange(1,4)*2 end
-
-    rand_shuffle(c.fab_spots)
-
-    for zzz,spot in ipairs(c.fab_spots) do
-      local x = spot.x
-      local y = spot.y
-      local B = p.blocks[x][y]
-      if B and block_is_free(B) and is_roomy(B.chunk) and not B.has_blocker then
-        return x,y,dir
-      end
-    end
-  end
 
   local function add_object(c, name, must_put)
 
@@ -5122,13 +5176,17 @@ if not B.chunk then show_cell_blocks(p,c) end --!!!!
       end
     end
 
-    if not x then x,y,dir = fab_find_loc(c, 1, 1) end
-    
+    local fab = PREFABS["PLAIN"]
+    assert(fab)
+
+    if not x then x,y,dir = find_fab_loc(c, fab, 0, sel(must_put,3,2)) end
+
     if not x and must_put then
       x,y,dir = find_emergency_loc(c)
     end
     if not x then
       show_cell_blocks(p,c)
+      con.printf("Could not find place for: %s\n", name)
 --!!!!!!      error("Could not find place for: " .. name)
       return
     end
@@ -5164,9 +5222,10 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     local fab = PREFABS[info.switch.prefab]
     assert(fab)
 
-    local x,y,dir = fab_find_loc(c, fab.long, fab.deep)
+    local x,y,dir = find_fab_loc(c, fab, 0,3)
     if not x then
       show_cell_blocks(p,c)
+      con.printf("Could not find place for SWITCH %dx%d\n", fab.long, fab.deep)
 --!!!!!!      error("Could not find place for switch!");
       return
     end
@@ -5296,13 +5355,12 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       if fab.environment == "outdoor" and not c.combo.outdoor then return end
     end
 
-    -- FIXME: this is wrong -- make it part of fab_find_loc??
-    if fab.height_range then
-      local h = c.ceil_h - c.floor_h
-      if h < fab.height_range[1] or h > fab.height_range[2] then return end
-    end
+---###    if fab.height_range then
+---###      local h = c.ceil_h - c.floor_h
+---###      if h < fab.height_range[1] or h > fab.height_range[2] then return end
+---###    end
 
-    local x,y,dir = fab_find_loc(c, fab.long, fab.deep, fab.add_mode, def.force_dir)
+    local x,y,dir = find_fab_loc(c, fab, 0,2, def.force_dir)
     if not x then return end
 
 con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
@@ -5329,7 +5387,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
 
     -- choose kind: prefabs | scenery items
 
-    if GAME.sc_fabs then --!!!!! and rand_odds(40) then
+    if GAME.sc_fabs and rand_odds(60) then
       add_prefab(c)
       return
     end
@@ -5365,7 +5423,10 @@ con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
     local info = GAME.scenery[item]
     if not info then error("Missing info for item: " .. item) end
 
-    local x,y,dir = fab_find_loc(c, 1, 1, info.add_mode)
+    local fab = PREFABS[info.prefab or "PLAIN"]
+    assert(fab)
+
+    local x,y,dir = find_fab_loc(c, fab, 0,2)
     if not x then return end
 
 con.debugf("add_scenery : %s\n", item)
