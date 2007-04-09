@@ -21,8 +21,11 @@
 
 void Doom_Init(void);
 
-bool Doom_CreateWAD(const char *filename, bool is_hexen);
-bool Doom_FinishWAD();
+bool Doom_Start(bool is_hexen);
+bool Doom_Finish(void);
+
+bool Doom_Nodes(const char *target_file);
+void Doom_Tidy(void);
 
 
 /* ----- WAD structures ---------------------- */
@@ -149,3 +152,6 @@ raw_behavior_header_t;
 
 
 #endif /* __OBLIGE_LDOOM_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

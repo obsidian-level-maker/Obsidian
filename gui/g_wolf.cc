@@ -24,8 +24,13 @@
 #include "g_lua.h"
 
 #include "main.h"
+#include "lib_util.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
+
+
+#define TEMP_GAMEFILE  "GAMEMAPS.tmp"
+#define TEMP_HEADFILE  "MAPHEAD.tmp"
 
 
 #define RLEW_TAG  0xABCD
@@ -341,35 +346,21 @@ void Wolf_Init(void)
   Script_RegisterLib("wolf", wolf_funcs);
 }
 
-bool Wolf_Begin(void) // FIXME: pass output directory
+bool Wolf_Start(void)
 {
-  const char *ext = "WL6"; // FIXME: pass as parameter
-
-  if (strcmp(main_win->setup_box->get_Game(), "spear")  == 0)
-    ext = "SOD";
-
-  char gamemaps_base[40];
-  char maphead_base[40];
-
-  // FIXME: use these (rename XX.TMP -> XX.ext)
-  sprintf(gamemaps_base, "GAMEMAPS.%s", ext);
-  sprintf(maphead_base,  "MAPHEAD.%s",  ext);
-
-  // FIXME: use proper path!
- 
-  map_fp = fopen("GAMEMAPS.TMP", "wb");
+  map_fp = fopen(TEMP_GAMEFILE, "wb");
 
   if (! map_fp)
   {
-    DLG_ShowError("Unable to create %s:\n%s", gamemaps_base, strerror(errno));
+    DLG_ShowError("Unable to create %s:\n%s", TEMP_GAMEFILE, strerror(errno));
     return false;
   }
 
-  head_fp = fopen("MAPHEAD.TMP", "wb");
+  head_fp = fopen(TEMP_HEADFILE, "wb");
 
   if (! head_fp)
   {
-    DLG_ShowError("Unable to create %s:\n%s", maphead_base, strerror(errno));
+    DLG_ShowError("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
     return false;
   }
 
@@ -407,3 +398,54 @@ bool Wolf_Finish(void)
   return (write_errors_seen == 0);
 }
 
+/* ???
+static void Wolf_Backup(const char *filename)
+{
+  if (FileExists(filename))
+  {
+    LogPrintf("Backing up existing file: %s\n", filename);
+
+    char *backup_name = ReplaceExtension(filename, "bak");
+
+    if (FileCopy(filename, backup_name))
+      LogPrintf("WARNING: unable to create backup: %s\n", backup_name);
+
+    StringFree(backup_name);
+  }
+}
+*/
+
+bool Wolf_Rename(void)
+{
+  const char *ext = "WL6";
+
+  if (strcmp(main_win->setup_box->get_Game(), "spear")  == 0)
+    ext = "SOD";
+
+  char gamemaps[40];
+  char maphead[40];
+
+  sprintf(gamemaps, "GAMEMAPS.%s", ext);
+  sprintf(maphead,  "MAPHEAD.%s",  ext);
+
+  //???  Wolf_Backup(gamemaps);
+  //???  Wolf_Backup(maphead);
+
+  FileDelete(gamemaps);
+  FileDelete(maphead);
+
+  // FIXME !!!! check for errors
+  FileRename(TEMP_GAMEFILE, gamemaps);
+  FileRename(TEMP_HEADFILE, maphead);
+
+  return true;
+}
+
+void Wolf_Tidy(void)
+{
+  FileDelete(TEMP_GAMEFILE);
+  FileDelete(TEMP_HEADFILE);
+}
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

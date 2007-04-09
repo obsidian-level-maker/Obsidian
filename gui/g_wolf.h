@@ -21,9 +21,14 @@
 
 void Wolf_Init(void);
 
-bool Wolf_Begin(void);  // FIXME: pass output dir
+bool Wolf_Start(void);
 bool Wolf_Finish(void);
+bool Wolf_Rename(void);
+void Wolf_Tidy(void);
 
 /* ----- File structures ---------------------- */
 
 #endif /* __OBLIGE_LWOLF_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

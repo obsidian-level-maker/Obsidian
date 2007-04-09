@@ -25,7 +25,7 @@
 #include "main.h"
 #include "g_cookie.h"
 #include "g_doom.h"
-#include "g_glbsp.h"
+///--- #include "g_glbsp.h"
 ///--- #include "g_image.h"
 #include "g_lua.h"
 #include "g_wolf.h"
@@ -40,8 +40,6 @@
 
 #define CONFIG_FILENAME  "CONFIG.cfg"
 #define LOG_FILENAME     "LOGS.txt"
-
-#define TEMP_FILENAME    "TEMP.wad"  // FIXME: move to g_doom
 
 
 const char *working_path = NULL;
@@ -215,9 +213,15 @@ void Build_Cool_Shit()
 
   UI_Build *bb_area = main_win->build_box;
 
-  char *filename = Select_Output_File();
-  if (! filename)
-    return;
+  char *filename = NULL;
+
+  if (!is_wolf)
+  {
+    filename = Select_Output_File();
+
+    if (! filename)  // cancelled
+      return;
+  }
 
   Fl::check();
 
@@ -225,81 +229,64 @@ void Build_Cool_Shit()
   main_win->Locked(true);
   bb_area->ProgSetButton(true);
 
+  bb_area->ProgInit(is_wolf ? 1 : 2);
+
   bool was_ok;
 
   if (is_wolf)
-    was_ok = Wolf_Begin();
+    was_ok = Wolf_Start();
   else
-    was_ok = Doom_CreateWAD(TEMP_FILENAME, is_hexen);
-
-  bb_area->ProgInit(is_wolf ? 1 : 2);
+    was_ok = Doom_Start(is_hexen);
 
   if (was_ok)
   {
     bb_area->ProgStatus("Making levels");
     bb_area->ProgBegin(1, 100);
 
-    if (! Script_Run())
+    was_ok = Script_Run();
+
+    if (! was_ok)
     {
       if (main_win->action >= UI_MainWin::ABORT)
         bb_area->ProgStatus("Aborted");
       else
         bb_area->ProgStatus("Script Error");
-
-      was_ok = false;
     }
 
+    // FIXME: test the result here???
     if (is_wolf)
       Wolf_Finish();
     else
-      Doom_FinishWAD();
+      Doom_Finish();
   }
 
-  // FIXME: backup wolf output files on failure
-
-  if (was_ok and !is_wolf)
+  if (was_ok)
   {
-    DebugPrintf("TARGET FILENAME: [%s]\n", filename);
-
-    if (FileExists(filename))
-    {
-      LogPrintf("Backing up existing file: %s\n", filename);
-
-      // make a backup
-      char *backup_name = ReplaceExtension(filename, "bak");
-
-      if (! FileCopy(filename, backup_name))
-        LogPrintf("WARNING: unable to create backup: %s\n", backup_name);
-
-      StringFree(backup_name);
-    }
-
     bb_area->ProgStatus("Building nodes");
 
-    if (! GB_BuildNodes(TEMP_FILENAME, filename))
+    if (is_wolf)
+      was_ok = Wolf_Rename();
+    else
+      was_ok = Doom_Nodes(filename);
+
+    if (! was_ok)
     {
       if (main_win->action >= UI_MainWin::ABORT)
         bb_area->ProgStatus("Aborted");
       else
-        bb_area->ProgStatus("glBSP Error");
-
-      was_ok = false;
+        bb_area->ProgStatus(is_wolf ? "Rename Error" : "glBSP Error");
     }
   }
 
   bb_area->ProgFinish();
 
-  // FIXME: delete wolf output files on failure
+  if (is_wolf)
+    Wolf_Tidy();
+  else
+    Doom_Tidy();
 
-  if (!is_wolf)
-  {
-/* !!!!!
-    if (! FileDelete(TEMP_FILENAME))
-      LogPrintf("WARNING: unable to delete temp file: %s\n", TEMP_FILENAME);
-*/
-  }
-
-  StringFree(filename);
+  if (filename)
+    StringFree(filename);
 
   if (was_ok)
     bb_area->ProgStatus("Success");
@@ -308,7 +295,7 @@ void Build_Cool_Shit()
   main_win->Locked(false);
 
   if (main_win->action == UI_MainWin::ABORT)
-    main_win->action =  UI_MainWin::NONE;
+    main_win->action = UI_MainWin::NONE;
 }
 
 

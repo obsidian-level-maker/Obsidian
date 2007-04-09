@@ -21,12 +21,17 @@
 #include "hdr_lua.h"
 
 #include "g_doom.h"
+#include "g_glbsp.h"
 #include "g_image.h"
 #include "g_lua.h"
 
 #include "main.h"
+#include "lib_util.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
+
+
+#define TEMP_FILENAME    "TEMP.wad"
 
 
 typedef std::vector<u8_t> lump_c;
@@ -49,7 +54,6 @@ static lump_c *linedef_lump;
 
 static int write_errors_seen;
 static int seek_errors_seen;
-
 
 
 //------------------------------------------------------------------------
@@ -520,9 +524,9 @@ void Doom_Init(void)
   Image_Setup();
 }
 
-bool Doom_CreateWAD(const char *filename, bool is_hexen)
+bool Doom_Start(bool is_hexen)
 {
-  wad_fp = fopen(filename, "wb");
+  wad_fp = fopen(TEMP_FILENAME, "wb");
 
   if (! wad_fp)
   {
@@ -551,7 +555,7 @@ bool Doom_CreateWAD(const char *filename, bool is_hexen)
   return true; //OK
 }
 
-bool Doom_FinishWAD()
+bool Doom_Finish(void)
 {
   // compute *real* header 
   raw_wad_header_t header;
@@ -581,3 +585,35 @@ bool Doom_FinishWAD()
   return (write_errors_seen == 0) && (seek_errors_seen == 0);
 }
 
+
+static void Doom_Backup(const char *filename)
+{
+  if (FileExists(filename))
+  {
+    LogPrintf("Backing up existing file: %s\n", filename);
+
+    char *backup_name = ReplaceExtension(filename, "bak");
+
+    if (! FileCopy(filename, backup_name))
+      LogPrintf("WARNING: unable to create backup: %s\n", backup_name);
+
+    StringFree(backup_name);
+  }
+}
+
+bool Doom_Nodes(const char *target_file)
+{
+  DebugPrintf("TARGET FILENAME: [%s]\n", target_file);
+
+  Doom_Backup(target_file);
+
+  return GB_BuildNodes(TEMP_FILENAME, target_file);
+}
+
+void Doom_Tidy(void)
+{
+  FileDelete(TEMP_FILENAME);
+}
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab
