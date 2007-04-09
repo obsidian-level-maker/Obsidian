@@ -19,8 +19,8 @@
 #ifndef __UI_CHOOSER_H__
 #define __UI_CHOOSER_H__
 
-void Default_Location();
+void Default_Location(void);
 
-char *Select_Output_File();
+char *Select_Output_File(void);
 
 #endif /* __UI_CHOOSER_H__ */

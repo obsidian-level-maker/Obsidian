@@ -30,7 +30,7 @@
 
 static char *last_file;
 
-void Default_Location()
+void Default_Location(void)
 {
   last_file = StringNew(FL_PATH_MAX + 4);
 
@@ -56,7 +56,7 @@ void Default_Location()
   DebugPrintf("Default_Location: [%s]\n", last_file);
 }
 
-char *Select_Output_File()
+char *Select_Output_File(void)
 {
   SYS_ASSERT(last_file);
 
