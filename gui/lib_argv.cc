@@ -76,10 +76,8 @@ void ArgvInit(int argc, const char **argv)
   arg_count = dest;
 }
 
-//
-// ArgvTerm(void)
-//
-void ArgvTerm(void)
+
+void ArgvClose(void)
 {
   while (arg_count-- > 0)
     free((void *) arg_list[arg_count]);

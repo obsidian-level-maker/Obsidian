@@ -170,7 +170,7 @@ void Main_Shutdown()
 
   LogClose();
 
-  ArgvTerm();
+  ArgvClose();
 }
 
 void Main_FatalError(const char *msg, ...)

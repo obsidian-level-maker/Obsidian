@@ -23,7 +23,7 @@ extern const char **arg_list;
 extern int arg_count;
 
 void ArgvInit(int argc, const char **argv);
-void ArgvTerm(void);
+void ArgvClose(void);
 
 int ArgvFind(char short_name, const char *long_name, int *num_params = NULL);
 bool ArgvIsOption(int index);
