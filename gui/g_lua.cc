@@ -277,6 +277,9 @@ void Script_Load()
 {
   int status = luaL_loadstring(LUA_ST, "require 'oblige'");
 
+  if (status == 0)
+    status = lua_pcall(LUA_ST, 0, 0, 0);
+
   if (status != 0)
   {
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
@@ -284,13 +287,12 @@ void Script_Load()
     Main_FatalError("Unable to load script 'oblige.lua' (%d)\n%s", status, msg);
   }
 
-  status = lua_pcall(LUA_ST, 0, 0, 0);
-  if (status != 0)
-  {
-    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-
-    Main_FatalError("Error with script (%d)\n%s", status, msg);
-  }
+///---  if (status != 0)
+///---  {
+///---    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+///---
+///---    Main_FatalError("Error with script (%d)\n%s", status, msg);
+///---  }
 }
 
 
