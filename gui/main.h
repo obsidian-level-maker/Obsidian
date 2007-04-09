@@ -26,6 +26,8 @@
 
 #define DATA_DIR  "./obl_data"
 
+extern const char *install_path;
+
 void Main_FatalError(const char *msg, ...);
 
 void Main_Ticker();

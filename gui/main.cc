@@ -41,6 +41,9 @@
 #define TEMP_FILENAME    DATA_DIR "/TEMP.wad"
 #define CONFIG_FILENAME  DATA_DIR "/CONFIG.cfg"
 
+const char *working_path = NULL;
+const char *install_path = NULL;
+
 
 /* ----- user information ----------------------------- */
 
@@ -56,8 +59,8 @@ static void ShowInfo(void)
     "Usage: Oblige [options...]\n"
     "\n"
     "Available options:\n"
-    "  -d  -debug             Enable debugging\n"
-    "  -h  -help              Show this help message\n"
+    "  -d  -debug         Enable debugging\n"
+    "  -h  -help          Show this help message\n"
     "\n"
   );
 
@@ -68,6 +71,63 @@ static void ShowInfo(void)
     "http://www.gnu.org/licenses/licenses.html\n"
     "\n"
   );
+}
+
+void Determine_WorkingPath(const char *argv0)
+{
+  // firstly find the "Working directory", and set it as the
+  // current directory.  That's the place where the CONFIG.cfg
+  // and LOGS.txt files are, as well the temp files.
+
+#ifndef FHS_INSTALL
+  // FIXME !!!!!
+#else
+  // FIXME !!!!!
+#endif
+
+  if (! working_path)
+    working_path = StringDup(".");
+}
+
+void Determine_InstallPath(const char *argv0)
+{
+  // secondly find the "Install directory", and store the
+  // result in the global variable 'install_path'.  This is
+  // where all the LUA scripts and other data files are.
+
+#ifndef FHS_INSTALL
+  install_path = StringDup(working_path);
+
+#else
+  static const char *prefixes[] =
+  {
+    "/usr/local", "/usr", "/opt", NULL
+  };
+
+  for (int i = 0; prefixes[i]; i++)
+  {
+    install_path = StringPrintf("%s/share/oblige-%s",
+        prefixes[i], OBLIGE_VERSION);
+
+    const char *filename = StringPrintf("%s/scripts/oblige.lua", install_path);
+
+fprintf(stderr, "Trying install path: [%s]\n  with file: [%s]\n\n",
+install_path, filename)
+
+    bool exists = FileExists(filename);
+
+    StringFree(filename);
+
+    if (exists)
+      break;
+
+    StringFree(install_path);
+    install_path = NULL;
+  }
+#endif
+
+  if (! install_path)
+    Main_FatalError("Unable to find LUA script folder!\n");
 }
 
 void Main_Ticker()
@@ -120,14 +180,17 @@ void Main_FatalError(const char *msg, ...)
 }
 
 
+//------------------------------------------------------------------------
+
 void Build_Cool_Shit()
 {
   bool is_wolf  = (strcmp(main_win->setup_box->get_Game(), "wolf3d") == 0) ||
                   (strcmp(main_win->setup_box->get_Game(), "spear")  == 0);
+
   bool is_hexen = (strcmp(main_win->setup_box->get_Game(), "hexen")  == 0);
 
   // multiplayer not supported in Wolf3d / SOD
-  // FIXME: disable the "Mode:" control when these games are selected
+  // FIXME: disable the "Mode:" control when wolf/spear are selected
   if (is_wolf)
   {
     if (strcmp(main_win->setup_box->get_Mode(), "sp") != 0)
@@ -225,10 +288,8 @@ void Build_Cool_Shit()
 
 int main(int argc, char **argv)
 {
-  // skip program name
-  argv++, argc--;
-
-  ArgvInit(argc, (const char **)argv);
+  // initialise argument parser (skipping program name)
+  ArgvInit(argc-1, (const char **)(argv+1));
 
   if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0)
   {
@@ -236,13 +297,21 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+  Fl::scheme("plastic");
+
+  fl_message_font(FL_HELVETICA /* _BOLD */, 18);
+
+  Determine_WorkingPath(argv[0]);
+  Determine_InstallPath(argv[0]);
+
+  FileChangeDir(working_path);
+  
   LogInit(ArgvFind('d', "debug") >= 0);
 
   LogPrintf(OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006,2007 Andrew Apted\n\n");
 
-  Fl::scheme("plastic");
-
-  fl_message_font(FL_HELVETICA /* _BOLD */, 18);
+  LogPrintf("working_path: [%s]\n",   working_path);
+  LogPrintf("install_path: [%s]\n\n", install_path);
 
   // load icons for file chooser
   Fl_File_Icon::load_system_icons();
@@ -288,3 +357,5 @@ int main(int argc, char **argv)
   return 0;
 }
 
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab
