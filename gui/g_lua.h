@@ -26,14 +26,8 @@ void Script_Close(void);
 
 void Script_Load(void);
 
-typedef enum
-{
-  RUN_Good  = 1,
-  RUN_Error = 2,
-  RUN_Abort = 3,
-}
-run_result_e;
+int Script_RegisterLib(const char *name, const luaL_Reg *reg);
 
-int Script_Run(void);
+bool Script_Run(void);
 
 #endif // __SCRIPTING_HEADER__

@@ -22,6 +22,7 @@
 
 #include "g_doom.h"
 #include "g_image.h"
+#include "g_lua.h"
 
 #include "main.h"
 #include "ui_dialog.h"
@@ -512,9 +513,11 @@ static const luaL_Reg wad_funcs[] =
 };
 
 
-void Doom_InitLua(lua_State *L)
+void Doom_Init(void)
 {
-  luaL_register(L, "wad", wad_funcs);
+  Script_RegisterLib("wad", wad_funcs);
+
+  Image_Setup();
 }
 
 bool Doom_CreateWAD(const char *filename, bool is_hexen)

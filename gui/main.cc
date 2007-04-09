@@ -26,7 +26,7 @@
 #include "g_cookie.h"
 #include "g_doom.h"
 #include "g_glbsp.h"
-#include "g_image.h"
+///--- #include "g_image.h"
 #include "g_lua.h"
 #include "g_wolf.h"
 
@@ -213,7 +213,7 @@ void Build_Cool_Shit()
     }
   }
 
-  UI_Build *that = main_win->build_box;
+  UI_Build *bb_area = main_win->build_box;
 
   char *filename = Select_Output_File();
   if (! filename)
@@ -223,7 +223,7 @@ void Build_Cool_Shit()
 
   // lock most widgets of user interface
   main_win->Locked(true);
-  that->ProgSetButton(true);
+  bb_area->ProgSetButton(true);
 
   bool was_ok;
 
@@ -232,15 +232,22 @@ void Build_Cool_Shit()
   else
     was_ok = Doom_CreateWAD(TEMP_FILENAME, is_hexen);
 
-  that->ProgInit(is_wolf ? 1 : 2);
+  bb_area->ProgInit(is_wolf ? 1 : 2);
 
   if (was_ok)
   {
-    that->ProgStatus("Making levels");
-    that->ProgBegin(1, 100);
+    bb_area->ProgStatus("Making levels");
+    bb_area->ProgBegin(1, 100);
 
-    if (Script_Run() != RUN_Good)
+    if (! Script_Run())
+    {
+      if (main_win->action >= UI_MainWin::ABORT)
+        bb_area->ProgStatus("Aborted");
+      else
+        bb_area->ProgStatus("Script Error");
+
       was_ok = false;
+    }
 
     if (is_wolf)
       Wolf_Finish();
@@ -267,30 +274,37 @@ void Build_Cool_Shit()
       StringFree(backup_name);
     }
 
-    that->ProgStatus("Building nodes");
+    bb_area->ProgStatus("Building nodes");
 
-    was_ok = GB_BuildNodes(TEMP_FILENAME, filename);
+    if (! GB_BuildNodes(TEMP_FILENAME, filename))
+    {
+      if (main_win->action >= UI_MainWin::ABORT)
+        bb_area->ProgStatus("Aborted");
+      else
+        bb_area->ProgStatus("glBSP Error");
+
+      was_ok = false;
+    }
   }
 
-  that->ProgFinish();
+  bb_area->ProgFinish();
 
   // FIXME: delete wolf output files on failure
 
   if (!is_wolf)
   {
+/* !!!!!
     if (! FileDelete(TEMP_FILENAME))
       LogPrintf("WARNING: unable to delete temp file: %s\n", TEMP_FILENAME);
+*/
   }
 
   StringFree(filename);
 
-  // FIXME !!! distinguish between Failure and Aborted
   if (was_ok)
-    that->ProgStatus("Success");
-  else
-    that->ProgStatus("Aborted");
+    bb_area->ProgStatus("Success");
 
-  that->ProgSetButton(false);
+  bb_area->ProgSetButton(false);
   main_win->Locked(false);
 
   if (main_win->action == UI_MainWin::ABORT)
@@ -337,8 +351,8 @@ int main(int argc, char **argv)
   Fl_File_Icon::load_system_icons();
 
   Script_Init();
-  // FIXME: Doom_Setup, Wolf_Setup
-  Image_Setup();
+  Doom_Init();
+  Wolf_Init();
 
   Default_Location();
 

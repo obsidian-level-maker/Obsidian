@@ -19,7 +19,7 @@
 #ifndef __OBLIGE_LWOLF_H__
 #define __OBLIGE_LWOLF_H__
 
-void Wolf_InitLua(lua_State *L);
+void Wolf_Init(void);
 
 bool Wolf_Begin(void);  // FIXME: pass output dir
 bool Wolf_Finish(void);

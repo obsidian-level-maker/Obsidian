@@ -19,7 +19,7 @@
 #ifndef __OBLIGE_LDOOM_H__
 #define __OBLIGE_LDOOM_H__
 
-void Doom_InitLua(lua_State *L);
+void Doom_Init(void);
 
 bool Doom_CreateWAD(const char *filename, bool is_hexen);
 bool Doom_FinishWAD();

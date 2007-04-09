@@ -20,9 +20,9 @@
 #include "hdr_lua.h"
 
 #include "g_lua.h"
-#include "g_doom.h"
-#include "g_glbsp.h"
-#include "g_wolf.h"
+///--- #include "g_glbsp.h"
+///--- #include "g_doom.h"
+///--- #include "g_wolf.h"
 #include "main.h"
 
 #include "hdr_fltk.h"
@@ -87,6 +87,8 @@ int raw_debug_print(lua_State *L)
 //
 int at_level(lua_State *L)
 {
+  // TODO: get name, show it
+ 
   lev_IDX = luaL_checkint(L, 2);
   lev_TOTAL = luaL_checkint(L, 3);
 
@@ -214,16 +216,20 @@ static const luaL_Reg console_lib[] =
   { NULL, NULL } // the end
 };
 
-int Script_CreateConLib(lua_State *L)
-{
-  luaL_register(L, "con", console_lib);
-
-  return 0;
-}
-
 
 //------------------------------------------------------------------------
 
+int Script_RegisterLib(const char *name, const luaL_Reg *reg)
+{
+  SYS_NULL_CHECK(LUA_ST);
+
+  luaL_register(LUA_ST, name, reg);
+
+  // remove the table which luaL_register created
+  lua_pop(LUA_ST, 1);
+
+  return 0;
+}
 
 static int p_init_lua(lua_State *L)
 {
@@ -232,7 +238,7 @@ static int p_init_lua(lua_State *L)
   {
     luaL_openlibs(L);  /* open libraries */
 
-    Script_CreateConLib(L);
+    Script_RegisterLib("con", console_lib);
   }
   lua_gc(L, LUA_GCRESTART, 0);
 
@@ -269,8 +275,8 @@ void Script_Init(void)
 
   Script_SetLoadPath(LUA_ST);
 
-  Doom_InitLua(LUA_ST);
-  Wolf_InitLua(LUA_ST);
+///---  Doom_InitLua(LUA_ST);
+///---  Wolf_InitLua(LUA_ST);
 }
 
 void Script_Close(void)
@@ -335,7 +341,7 @@ static void Script_MakeSettings(lua_State *L)
   lua_setglobal(L, "settings");
 }
 
-int Script_Run(void)
+bool Script_Run(void)
 {
   Script_MakeSettings(LUA_ST);
 
@@ -353,17 +359,14 @@ int Script_Run(void)
 
     DLG_ShowError("Problem occurred while making level:\n%s", msg);
 
-    return RUN_Error;
+    return false;
   }
 
   const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
   if (res && strcmp(res, "ok") == 0)
-    return RUN_Good;
+    return true;
 
-  if (res && strcmp(res, "abort") == 0)
-    return RUN_Abort;
-
-  return RUN_Error;
+  return false;
 }
 

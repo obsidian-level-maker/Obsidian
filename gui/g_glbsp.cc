@@ -38,6 +38,32 @@ static int display_mode = DIS_INVALID;
 static char message_buf[MSG_BUF_LEN];
 
 
+static const char *GetErrorString(glbsp_ret_e ret)
+{
+  switch (ret)
+  {
+    case GLBSP_E_OK: return "OK";
+
+    // the arguments were bad/inconsistent.
+    case GLBSP_E_BadArgs: return "Bad Arguments";
+
+    // the info was bad/inconsistent, but has been fixed
+    case GLBSP_E_BadInfoFixed: return "Bad Args (fixed)";
+
+    // file errors
+    case GLBSP_E_ReadError:  return "Read Error";
+    case GLBSP_E_WriteError: return "Write Error";
+
+    // building was cancelled
+    case GLBSP_E_Cancelled: return "Cancelled by User";
+
+    // an unknown error occurred (this is the catch-all value)
+    case GLBSP_E_Unknown:
+    default:
+      return "Unknown Error";
+  }
+}
+
 void GB_PrintMsg(const char *str, ...)
 {
   va_list args;
@@ -159,9 +185,9 @@ bool GB_BuildNodes(const char *filename, const char *out_name)
 
   if (ret != GLBSP_E_OK)
   {
-    // FIXME: check info failed - do what??
-    GB_PrintMsg("Param Check FAILED: %d\n", ret);
-    GB_PrintMsg("- %s\n", nb_comms.message);
+    // check info failed (unlikely to happen)
+    GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
+    GB_PrintMsg("Reason: %s\n", nb_comms.message);
 
     return false;
   }
@@ -170,9 +196,9 @@ bool GB_BuildNodes(const char *filename, const char *out_name)
 
   if (ret != GLBSP_E_OK)
   {
-    // FIXME: build nodes failed - do what??
-    GB_PrintMsg("Building FAILED: %d\n", ret);
-    GB_PrintMsg("- %s\n\n", nb_comms.message);
+    // build nodes failed
+    GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
+    GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
 
     return false;
   }
@@ -180,3 +206,5 @@ bool GB_BuildNodes(const char *filename, const char *out_name)
   return true;
 }
 
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

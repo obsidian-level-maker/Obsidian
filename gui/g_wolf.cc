@@ -21,6 +21,7 @@
 #include "hdr_lua.h"
 
 #include "g_wolf.h"
+#include "g_lua.h"
 
 #include "main.h"
 #include "ui_dialog.h"
@@ -334,9 +335,10 @@ static const luaL_Reg wolf_funcs[] =
   { NULL, NULL } // the end
 };
 
-void Wolf_InitLua(lua_State *L)
+
+void Wolf_Init(void)
 {
-  luaL_register(L, "wolf", wolf_funcs);
+  Script_RegisterLib("wolf", wolf_funcs);
 }
 
 bool Wolf_Begin(void) // FIXME: pass output directory
