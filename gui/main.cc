@@ -160,10 +160,13 @@ void Main_Ticker()
 
 void Main_Shutdown()
 {
-  Cookie_Save(CONFIG_FILENAME);
+  if (main_win)
+  {
+    Cookie_Save(CONFIG_FILENAME);
 
-  delete main_win;
-  main_win = NULL;
+    delete main_win;
+    main_win = NULL;
+  }
 
   LogClose();
 
