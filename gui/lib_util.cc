@@ -25,8 +25,9 @@
 #include <time.h>
 #endif
 
-#ifdef LINUX
+#ifdef UNIX
 #include <unistd.h>
+#include <sys/stat.h>  // mkdir
 #endif
 
 #ifdef MACOSX
@@ -240,11 +241,11 @@ bool FileCopy(const char *src_name, const char *dest_name)
 bool FileRename(const char *old_name, const char *new_name)
 {
 #ifdef WIN32
-	return (::MoveFile(old_name, new_name) != 0);
+  return (::MoveFile(old_name, new_name) != 0);
 
 #else // LINUX or MACOSX
 
-	return (rename(old_name, new_name) == 0);
+  return (rename(old_name, new_name) == 0);
 #endif
 }
 
@@ -259,6 +260,27 @@ bool FileDelete(const char *filename)
 #endif
 }
 
+bool FileChangeDir(const char *dir_name)
+{ 
+#ifdef WIN32
+  return (::SetCurrentDirectory(dir_name) != 0);
+
+#else // LINUX or MACOSX
+
+  return (chdir(dir_name) == 0);
+#endif
+}
+  
+bool FileMakeDir(const char *dir_name)
+{
+#ifdef WIN32
+  return (::CreateDirectory(dir_name, NULL) != 0);
+
+#else // LINUX or MACOSX
+
+  return (mkdir(dir_name, 0775) == 0);
+#endif
+}
 
 //------------------------------------------------------------------------
 
@@ -458,7 +480,7 @@ const char *GetExecutablePath(const char *argv0)
   StringFree(path);
 #endif
 
-#ifdef LINUX
+#ifdef UNIX
   path = StringNew(PATH_MAX+2);
 
   int length = readlink("/proc/self/exe", path, PATH_MAX);
@@ -516,3 +538,5 @@ const char *GetExecutablePath(const char *argv0)
   return path;
 }
 
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

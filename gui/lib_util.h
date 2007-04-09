@@ -36,6 +36,8 @@ const char *FileBaseName(const char *filename);
 bool FileCopy(const char *src_name, const char *dest_name);
 bool FileRename(const char *old_name, const char *new_name);
 bool FileDelete(const char *filename);
+bool FileChangeDir(const char *dir_name);
+bool FileMakeDir(const char *dir_name);
 
 // string utilities
 int StrCaseCmp(const char *A, const char *B);
@@ -59,3 +61,6 @@ void TimeDelay(u32_t millies);
 const char *GetExecutablePath(const char *argv0);
 
 #endif /* __LIB_UTIL_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab
