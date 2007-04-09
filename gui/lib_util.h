@@ -45,6 +45,7 @@ char *StrUpper(const char *name);
 char *StringNew(int length);
 char *StringDup(const char *orig);
 void StringFree(const char *str);
+char *StringPrintf(const char *str, ...); // GCCATTR((format (printf, 1, 2)));
 
 // math utilities
 u32_t IntHash(u32_t key);

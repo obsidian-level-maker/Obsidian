@@ -39,9 +39,6 @@
 #endif
 
 
-//
-// FileExists
-//
 bool FileExists(const char *filename)
 {
   FILE *fp = fopen(filename, "rb");
@@ -55,9 +52,6 @@ bool FileExists(const char *filename)
   return false;
 }
 
-//
-// HasExtension
-//
 bool HasExtension(const char *filename)
 {
   int A = (int)strlen(filename) - 1;
@@ -254,9 +248,6 @@ bool FileRename(const char *old_name, const char *new_name)
 #endif
 }
 
-//
-// FileDelete
-//
 bool FileDelete(const char *filename)
 {
 #ifdef WIN32
@@ -271,9 +262,6 @@ bool FileDelete(const char *filename)
 
 //------------------------------------------------------------------------
 
-//
-// StrCaseCmp
-//
 int StrCaseCmp(const char *A, const char *B)
 {
   for (; *A || *B; A++, B++)
@@ -305,9 +293,6 @@ int StrCaseCmpPartial(const char *A, const char *B)
   return 0;
 }
 
-//
-// StrMaxCopy
-//
 void StrMaxCopy(char *dest, const char *src, int max)
 {
   for (; *src && max > 0; max--)
@@ -318,9 +303,6 @@ void StrMaxCopy(char *dest, const char *src, int max)
   *dest = 0;
 }
 
-//
-// StrUpper
-//
 char *StrUpper(const char *name)
 {
   char *copy = StringDup(name);
@@ -346,9 +328,6 @@ char *StringNew(int length)
   return s;
 }
 
-//
-// StringDup
-//
 char *StringDup(const char *orig)
 {
   char *s = strdup(orig);
@@ -359,12 +338,41 @@ char *StringDup(const char *orig)
   return s;
 }
 
-//
-// StringFree
-//
 void StringFree(const char *str)
 {
   free((void*) str);
+}
+
+char *StringPrintf(const char *str, ...)
+{
+  /* Algorithm: keep doubling the allocated buffer size
+   * until the output fits. Based on code by Darren Salt.
+   */
+  char *buf = NULL;
+  int buf_size = 128;
+  
+  for (;;)
+  {
+    va_list args;
+    int out_len;
+
+    buf_size *= 2;
+
+    buf = (char*)realloc(buf, buf_size);
+    if (!buf)
+      AssertFail("Out of memory (formatting string)");
+
+    va_start(args, str);
+    out_len = vsnprintf(buf, buf_size, str, args);
+    va_end(args);
+
+    // old versions of vsnprintf() simply return -1 when
+    // the output doesn't fit.
+    if (out_len < 0 || out_len >= buf_size)
+      continue;
+
+    return buf;
+  }
 }
 
 
