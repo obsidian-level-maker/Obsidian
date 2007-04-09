@@ -2498,6 +2498,18 @@ function setup_borders_and_corners(p)
     end
 
     D.kind = border_kind (c, other, side, link)
+
+    if D.kind == "fence" then
+      D.fence_h = math.max(c.f_max, other.f_max)
+
+      -- Wire fences
+      if GAME.caps.rails and rand_odds(33) and (side%2)==0 then
+        D.kind = "wire"
+        if rand_odds(33) then D.fence_h = D.fence_h + 48 end
+      else
+        D.fence_h = D.fence_h + 48 + 16*rand_irange(0,2)
+      end
+    end
   end
 
   local function init_corner(c, side)
@@ -2998,49 +3010,43 @@ arch.f_tex = "TLITE6_6"
     end
   end
 
-  local function build_fence(side, x1,y1, x2,y2, other, what, b_combo)
+  local function build_wire_fence(side, x1,y1, x2,y2, other, b_combo)
 
     local D = c.border[side]
 
---?? local f_min, f_max = border_floor_range(other, side)
-    local fence_h = math.max(c.f_max, other.f_max)
+    local def = GAME.sc_fabs["fence_MIDBARS3"] -- FIXME: not hard-code
+    assert(def)
 
-    -- Wire fences
-    if GAME.caps.rails and rand_odds(30) and (x1~=x2 or y1~=y2) then
-      local def = GAME.sc_fabs["fence_MIDBARS3"] -- FIXME: not hard-code
-      assert(def)
+    local fab = non_nil(PREFABS[def.prefab])
+    local parm = { low_h = D.fence_h }
 
-      local fab = non_nil(PREFABS[def.prefab])
-      local parm = { low_h = fence_h }
+---###      local dir = 10-side
+---###      if ((dir % 2) == 1) then
+---###        dir = sel(x1 == x2, 4, 2)  -- not quite right...
+---###      end
 
-      if rand_odds(33) then parm.low_h = parm.low_h + 48 end
-
-      local dir = 10-side
-      if ((dir % 2) == 1) then
-        dir = sel(x1 == x2, 4, 2)  -- not quite right...
+    for x = x1,x2 do for y = y1,y2 do
+      local B = p.blocks[x][y]
+      if not B then
+        B_prefab(p,c, fab,def.skin,parm, c.rmodel,D.combo, x,y,10-side)
       end
+    end end
 
-      for x = x1,x2 do for y = y1,y2 do
-        local B = p.blocks[x][y]
-        if not B then
-          B_prefab(p,c, fab,def.skin,parm, c.rmodel,D.combo, x,y,dir)
-        end
-      end end
+    -- FIXME: sound blocking
+  end
 
-      -- FIXME: sound blocking
-      return
-    end
+  local function build_fence(side, x1,y1, x2,y2, other, b_combo)
+
+    local D = c.border[side]
 
     -- FIXME: "castley" fences
 
     local FENCE = copy_block_with_new(c.rmodel,
     {
-      f_h = fence_h,
+      f_h = D.fence_h,
       f_tex = b_combo.floor,
       l_tex = b_combo.void,
     })
-
-    FENCE.f_h = FENCE.f_h + 48+16*rand_irange(0,2)
 
     if c.scenic or other.scenic then FENCE.impassible = true end
 
@@ -3175,21 +3181,21 @@ arch.f_tex = "TLITE6_6"
     local link = c.link[side]
     local other = neighbour_by_side(p, c, side)
 
-    local what = D.kind
-    assert(what)
-
     local b_combo = D.combo
     assert(b_combo)
 
     local x1,y1, x2,y2 = D.x1, D.y1, D.x2, D.y2
 
-    if what == "fence" then
-      build_fence(side, x1,y1, x2,y2, other, what, b_combo)
+    if D.kind == "fence" then
+      build_fence(side, x1,y1, x2,y2, other, b_combo)
 
-    elseif what == "window" then
+    elseif D.kind == "wire" then
+      build_wire_fence(side, x1,y1, x2,y2, other, b_combo)
+
+    elseif D.kind == "window" then
       build_window(side)
 
-    elseif what == "sky" then
+    elseif D.kind == "sky" then
       build_sky_border(D.side, x1,y1, x2,y2)
 
     else -- solid
@@ -3863,6 +3869,14 @@ function build_cell(p, c)
 
   local function reclaim_areas(c)
 
+    local function get_reclaim_border(K, side)
+      return
+         (K.kx == 1 and (side==4 or side==1 or side==7) and c.border[4])
+      or (K.kx == 3 and (side==6 or side==3 or side==9) and c.border[6])
+      or (K.ky == 1 and (side==2 or side==1 or side==3) and c.border[2])
+      or (K.ky == 3 and (side==8 or side==7 or side==9) and c.border[8])
+    end
+    
     local function try_reclaim_side(K, dir)
 
       -- Requirements
@@ -3924,18 +3938,22 @@ function build_cell(p, c)
 
       if h == 0 then return end --FAIL--
 
-      if K.r_deep and (h < K.r_deep or (h == K.r_deep and rand_odds(50))) then
+      if K.rec and (h < K.rec.deep or (h == K.rec.deep and rand_odds(50))) then
         return --FAIL--
       end
 
-      K.r_deep = h
-      K.r_long = long
-      K.r_dir  = dir
+      K.rec =
+      {
+        deep = h, long = long, dir = dir,
 
-      K.rx1 = sx1
-      K.ry1 = sy1
-      K.rx2 = sx1 + (K.r_deep-1)*dx + (K.r_long-1)*ax
-      K.ry2 = sy1 + (K.r_deep-1)*dy + (K.r_long-1)*ay
+        x1 = sx1, x2 = sx1 + (h-1)*dx + (long-1)*ax,
+        y1 = sy1, y2 = sy1 + (h-1)*dy + (long-1)*ay,
+
+        border = get_reclaim_border(K, 10-dir)
+      }
+
+      if K.rec.x1 > K.rec.x2 then K.rec.x1,K.rec.x2 = K.rec.x2,K.rec.x1 end
+      if K.rec.y1 > K.rec.y2 then K.rec.y1,K.rec.y2 = K.rec.y2,K.rec.y1 end
 
       return true --SUCCESS--
     end
@@ -3944,7 +3962,7 @@ function build_cell(p, c)
     local function try_reclaim_corner(K, x_dir, y_dir)
 
       -- a reclaimed side trumps a corner
-      if K.r_dir and (K.r_dir % 2) == 0 then return end
+      if K.rec and (K.rec.dir % 2) == 0 then return end
 
       local corn
       if x_dir == 4 then
@@ -3966,13 +3984,13 @@ function build_cell(p, c)
           if not N then return true end
           if N.kind == "empty" then return true end
 
-          if not N.r_dir then return false end
-          if N.r_dir ~= perp_dir then return false end
-          
+          if not N.rec then return false end
+          if N.rec.dir ~= perp_dir then return false end
+
           if side==4 or side==6 then
-            max_h = math.min(max_h, N.ry2 - N.ry1 + 1)
+            max_h = math.min(max_h, N.rec.y2 - N.rec.y1 + 1)
           else
-            max_w = math.min(max_w, N.rx2 - N.rx1 + 1)
+            max_w = math.min(max_w, N.rec.x2 - N.rec.x1 + 1)
           end
 
           return true --OK--
@@ -4061,25 +4079,26 @@ end
       -- if a corner was already reclaimed, choose greatest area
       -- TODO: keep both if they don't overlap
 
-      if K.r_dir then
+      if K.rec then
         local area = w * h
-        local r_area = K.r_long * K.r_deep
+        local r_area = K.rec.long * K.rec.deep
         if (area < r_area) or (area == r_area and rand_odds(50)) then
           return --FAIL--
         end
       end
 
-      K.r_long = w
-      K.r_deep = h
-      K.r_dir  = 10-corn
+      K.rec =
+      {
+        long = w, deep = h, dir = 10-corn,
 
-      K.rx1 = cx
-      K.ry1 = cy
-      K.rx2 = cx + (K.r_long-1)*dx
-      K.ry2 = cy + (K.r_deep-1)*dy
+        x1 = cx, x2 = cx + (w-1)*dx,
+        y1 = cy, y2 = cy + (h-1)*dy,
 
-      if K.rx1 > K.rx2 then K.rx1, K.rx2 = K.rx2, K.rx1 end
-      if K.ry1 > K.ry2 then K.ry1, K.ry2 = K.ry2, K.ry1 end
+        border = get_reclaim_border(K, 10-corn)
+      }
+
+      if K.rec.x1 > K.rec.x2 then K.rec.x1,K.rec.x2 = K.rec.x2,K.rec.x1 end
+      if K.rec.y1 > K.rec.y2 then K.rec.y1,K.rec.y2 = K.rec.y2,K.rec.y1 end
 
       return true --SUCCESS--
     end
@@ -4188,20 +4207,27 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
       else return -- no problem --
       end
 
-      if dir == 8 and L.y2 < D.y2 then
+      if dir == 8 and L.y2 < math.min(y2, D.y2) then
         L.y1, L.y2 = L.y1+1, L.y2+1
+con.printf("  SHIFT UP\n")
         return
       end
 
-      if dir == 2 and L.y1 > D.y1 then
+      if dir == 2 and L.y1 > math.max(y1, D.y1) then
         L.y1, L.y2 = L.y1-1, L.y2-1
+con.printf("  SHIFT DOWN\n")
         return
       end
 
       -- unable to move link, backup plan: shorten it
       L.long = math.max(L.long-1, 2)
 
-      if dir == 8 then L.y1 = L.y1+1 end
+con.printf("  SHORTENED\n")
+      if dir == 2 then
+        L.y2 = L.y1 + L.long - 1
+      else
+        L.y1 = L.y2 - L.long + 1
+      end
 
     else  -- side == 2 or side == 8
 
@@ -4210,12 +4236,12 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
       else return -- no problem --
       end
 
-      if dir == 6 and L.x2 < D.x2 then
+      if dir == 6 and L.x2 < math.min(x2, D.x2) then
         L.x1, L.x2 = L.x1+1, L.x2+1
         return
       end
 
-      if dir == 4 and L.x1 > D.x1 then
+      if dir == 4 and L.x1 > math.max(x1, D.x1) then
         L.x1, L.x2 = L.x1-1, L.x2-1
         return
       end
@@ -4223,7 +4249,11 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
       -- unable to move link, backup plan: shorten it
       L.long = math.max(L.long-1, 2)
 
-      if dir == 6 then L.x1 = L.x1+1 end
+      if dir == 4 then
+        L.x2 = L.x1 + L.long - 1
+      else
+        L.x1 = L.x2 - L.long + 1
+      end
     end
   end
  
@@ -4303,9 +4333,10 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
 
     if sx ~= x1 or sy ~= y1 or ex ~= x2 or ey ~= y2 then
       vista_gap_fill(c, side, link, other)
-      vista_jiggle_link(c, side, link, other, x1,y1, x2,y2)
-con.printf("  link coords now: (%d,%d) .. (%d,%d)\n", link.x1,link.y1, link.x2,link.y2)
     end
+
+    vista_jiggle_link(c, side, link, other, x1,y1, x2,y2)
+con.printf("  link coords now: (%d,%d) .. (%d,%d)\n", link.x1,link.y1, link.x2,link.y2)
 
 con.debugf("  COORDS: (%d,%d) .. (%d,%d)  size:%dx%d\n", x1,y1, x2,y2, long,deep)
 con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
@@ -4814,7 +4845,7 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 
   build_stairs(c)
 
---!!!!!  reclaim_areas(c)
+  reclaim_areas(c)
 end
 
 
@@ -5510,8 +5541,12 @@ function build_rooms(p)
 --!!!        void_up_chunk(c, K)
         gap_fill(p, c, K.x1,K.y1, K.x2,K.y2,
           c.rmodel, { f_h=c.f_max+32, f_tex="NUKAGE" })
-      elseif K.r_deep then
-        gap_fill(p, c, K.rx1,K.ry1, K.rx2,K.ry2,
+      elseif K.rec and K.rec.border and (K.rec.border.kind == "fence" or
+           (K.rec.border.kind=="wire")) then
+        gap_fill(p, c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
+          c.rmodel, { f_h=K.rec.border.fence_h, f_tex="LAVA1" })
+      elseif K.rec then
+        gap_fill(p, c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
           c.rmodel, { f_h=c.f_max+32, f_tex="FWATER1" })
 --!!!        { solid=c.combo.void })
 ---     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
@@ -5519,7 +5554,6 @@ function build_rooms(p)
       end
     end end
   end
-
 
 
   -- build_rooms --
