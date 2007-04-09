@@ -5540,14 +5540,15 @@ function build_rooms(p)
       if K.kind == "empty" then
 --!!!        void_up_chunk(c, K)
         gap_fill(p, c, K.x1,K.y1, K.x2,K.y2,
-          c.rmodel, { f_h=c.f_max+32, f_tex="NUKAGE" })
+          c.rmodel, { f_h=c.f_max+32, f_tex="NUKAGE", has_blocker=true })
       elseif K.rec and K.rec.border and (K.rec.border.kind == "fence" or
            (K.rec.border.kind=="wire")) then
         gap_fill(p, c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
-          c.rmodel, { f_h=K.rec.border.fence_h, f_tex="LAVA1" })
+          c.rmodel, { f_h=K.rec.border.fence_h, f_tex=K.rec.border.combo.floor,
+                      l_tex=K.rec.border.combo.wall, has_blocker=true })
       elseif K.rec then
         gap_fill(p, c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
-          c.rmodel, { f_h=c.f_max+32, f_tex="FWATER1" })
+          c.rmodel, { f_h=c.f_max+32, f_tex="FWATER1", has_blocker=true })
 --!!!        { solid=c.combo.void })
 ---     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
 ---        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
