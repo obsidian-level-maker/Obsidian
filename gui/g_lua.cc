@@ -26,12 +26,15 @@
 #include "main.h"
 
 #include "hdr_fltk.h"
+#include "lib_util.h"
 #include "twister.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
 
 
 static lua_State *LUA_ST;
+
+static const char *script_path;
 
 
 namespace con
@@ -238,19 +241,23 @@ static int p_init_lua(lua_State *L)
 
 static void Script_SetLoadPath(lua_State *L)
 {
+  script_path = StringPrintf("%s/scripts/?.lua", install_path);
+
+  LogPrintf("script_path: [%s]\n\n", script_path);
+
   lua_getglobal(L, "package");
 
   if (lua_type(L, -1) == LUA_TNIL)
     Main_FatalError("LUA SetPath failed: no 'package' module!");
 
-  lua_pushstring(L, DATA_DIR "/?.lua");
+  lua_pushstring(L, script_path);
 
   lua_setfield(L, -2, "path");
 
   lua_pop(L, 1);
 }
 
-void Script_Init()
+void Script_Init(void)
 {
   LUA_ST = lua_open();
   if (! LUA_ST)
@@ -260,20 +267,23 @@ void Script_Init()
   if (status != 0)
     Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
 
-  Doom_InitLua(LUA_ST);
-  Wolf_InitLua(LUA_ST);
-
   Script_SetLoadPath(LUA_ST);
 
-  Script_Load();
+  Doom_InitLua(LUA_ST);
+  Wolf_InitLua(LUA_ST);
 }
 
-void Script_Done()
+void Script_Close(void)
 {
-  lua_close(LUA_ST);
+  if (LUA_ST)
+  {
+    lua_close(LUA_ST);
+
+    LUA_ST = NULL;
+  }
 }
 
-void Script_Load()
+void Script_Load(void)
 {
   int status = luaL_loadstring(LUA_ST, "require 'oblige'");
 
@@ -325,7 +335,7 @@ static void Script_MakeSettings(lua_State *L)
   lua_setglobal(L, "settings");
 }
 
-bool Script_Run()
+int Script_Run(void)
 {
   Script_MakeSettings(LUA_ST);
 
@@ -342,17 +352,18 @@ bool Script_Run()
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
     DLG_ShowError("Problem occurred while making level:\n%s", msg);
-        
-    return false;
+
+    return RUN_Error;
   }
 
   const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
   if (res && strcmp(res, "ok") == 0)
-    return true;
+    return RUN_Good;
 
-  // FIXME: strcmp(res, "abort")
+  if (res && strcmp(res, "abort") == 0)
+    return RUN_Abort;
 
-  return false;
+  return RUN_Error;
 }
 

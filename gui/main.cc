@@ -168,8 +168,8 @@ void Main_Shutdown()
     main_win = NULL;
   }
 
+  Script_Close();
   LogClose();
-
   ArgvClose();
 }
 
@@ -239,7 +239,8 @@ void Build_Cool_Shit()
     that->ProgStatus("Making levels");
     that->ProgBegin(1, 100);
 
-    was_ok = Script_Run();
+    if (Script_Run() != RUN_Good)
+      was_ok = false;
 
     if (is_wolf)
       Wolf_Finish();
@@ -336,6 +337,7 @@ int main(int argc, char **argv)
   Fl_File_Icon::load_system_icons();
 
   Script_Init();
+  // FIXME: Doom_Setup, Wolf_Setup
   Image_Setup();
 
   Default_Location();
@@ -345,6 +347,8 @@ int main(int argc, char **argv)
   // load config after creating window (set widget values)
   Cookie_Load(CONFIG_FILENAME);
 
+  Script_Load();
+  
   try
   {
     // run the GUI until the user quits

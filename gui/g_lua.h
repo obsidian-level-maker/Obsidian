@@ -15,15 +15,25 @@
 //  GNU General Public License for more details.
 //
 //------------------------------------------------------------------------
+
 #ifndef __SCRIPTING_HEADER__
 #define __SCRIPTING_HEADER__
 
 typedef struct lua_State lua_State;
 
-void Script_Init();
-void Script_Done();
+void Script_Init(void);
+void Script_Close(void);
 
-void Script_Load();
-bool Script_Run();
+void Script_Load(void);
+
+typedef enum
+{
+  RUN_Good  = 1,
+  RUN_Error = 2,
+  RUN_Abort = 3,
+}
+run_result_e;
+
+int Script_Run(void);
 
 #endif // __SCRIPTING_HEADER__
