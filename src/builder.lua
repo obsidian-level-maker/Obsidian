@@ -301,7 +301,7 @@ FAB_DIRECTION_MAP =
   [14] = { 1,4,7, 2,5,8, 3,6,9 },
 }
 
-function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y)
+function B_prefab(p,c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
   -- (x,y) is always the block with the lowest coordinate.
   -- dir == 2 is the natural mode, other values rotate it.
@@ -466,8 +466,12 @@ function B_prefab(p, c, fab, skin, parm, model,combo, x,y, dir,mirror_x,mirror_y
 
       if elem.kind == "door_kind" then sec.door_dir = parm.door_dir end
 
-      if elem.light then sec.light = elem.light
-      elseif elem.light_add then sec.light = sec.light + elem.light_add
+      if elem.light then
+        sec.light = elem.light
+        if type(sec.light) == "string" then sec.light = parm_val(sec.light) end
+      end
+      if elem.light_add then
+        sec.light = sec.light + elem.light_add
       end
     end
 
@@ -2998,112 +3002,51 @@ arch.f_tex = "TLITE6_6"
 
     local D = c.border[side]
 
-      local FENCE = copy_block_with_new(c.rmodel,
-      {
-        f_h = math.max(c.f_max, other.f_max),
-        f_tex = b_combo.floor,
-        c_tex = b_combo.ceil,
-        
-        l_tex = b_combo.void,
-        u_tex = b_combo.void,
-      })
-
 --?? local f_min, f_max = border_floor_range(other, side)
+    local fence_h = math.max(c.f_max, other.f_max)
+
+    -- Wire fences
+    if GAME.caps.rails and rand_odds(30) and (x1~=x2 or y1~=y2) then
+      local def = GAME.sc_fabs["fence_MIDBARS3"] -- FIXME: not hard-code
+      assert(def)
+
+      local fab = non_nil(PREFABS[def.prefab])
+      local parm = { low_h = fence_h }
+
+      if rand_odds(33) then parm.low_h = parm.low_h + 48 end
+
+      local dir = 10-side
+      if ((dir % 2) == 1) then
+        dir = sel(x1 == x2, 4, 2)  -- not quite right...
+      end
+
+      for x = x1,x2 do for y = y1,y2 do
+        local B = p.blocks[x][y]
+        if not B then
+          B_prefab(p,c, fab,def.skin,parm, c.rmodel,D.combo, x,y,dir)
+        end
+      end end
+
+      -- FIXME: sound blocking
+      return
+    end
+
+    -- FIXME: "castley" fences
+
+    local FENCE = copy_block_with_new(c.rmodel,
+    {
+      f_h = fence_h,
+      f_tex = b_combo.floor,
+      l_tex = b_combo.void,
+    })
+
+    FENCE.f_h = FENCE.f_h + 48+16*rand_irange(0,2)
+
+    if c.scenic or other.scenic then FENCE.impassible = true end
 
     if rand_odds(95) then FENCE.block_sound = 2 end
 
-FENCE.f_tex = "LAVA1" --!!! TESTING
-
-    -- determine fence kind
-
-    local kind = "plain"
-    
-    if GAME.caps.rails and rand_odds(30) then kind = "wire" end
-
-    -- FIXME: "castley"
-
---[[ 
-    if c1.scenic or c2.scenic then
-      return rand_sel(30, "wire", "fence")
-    end
-
-    local i_W = sel(link, 3, 20)
-    local i_F = sel(c1.combo == c2.combo, 5, 0)
-
-    if dual_odds(c1.combo.outdoor, 25, i_W) then return "wire" end
-    if dual_odds(c1.combo.outdoor, 60, i_F) then return "fence" end
---]]
-
-    -- FIXME: choose fence rail
-
-    if kind == "plain" then
-      FENCE.f_h = FENCE.f_h + 48+16*rand_irange(0,2)
-      if other.scenic then FENCE.impassible = true end
-
-    elseif kind == "wire" then
-      local rail_tex =GAME.rails["r_1"].wall
-
-      if x1==x2 and y1==y2 then
-        FENCE.rail = rail_tex
-      else
-        local rsd = side
-
-        if (rsd % 2) == 1 then
-          rsd = sel(x1==x2, 4, 2)
-        end
-
-        if b_combo ~= c.combo then rsd = 10 - side end
-
-        FENCE[rsd] = { rail = rail_tex }
-      end
-    else
-      error("build_fence: unknown kind: " .. kind)
-    end
-
     gap_fill(p,c, x1,y1, x2,y2, FENCE)
-
---[[
-    for n = 1,KW do --!!!!! 1,KW   FIXME: sx,sy (etc) are floats!!!
-        -- FIXME: ICK!!! FIXME
-        local sx = x1 + (x2-x1+1) * (n-1) / KW
-        local sy = y1 + (y2-y1+1) * (n-1) / KH
-        local ex = x1 + (x2-x1+1) * (n  ) / KW
-        local ey = y1 + (y2-y1+1) * (n  ) / KH
-        if x1 == x2 then sx,ex = x1,x1 end
-        if y1 == y2 then sy,ey = y1,y1 end
-        ex = ex + (sx-ex)/KW
-        ey = ey + (sy-ey)/KH
-
-      local K1, K2 = chunk_pair(c, other, side, n)
-
-      if (K1.void or K1.cage) and (K2.void or K2.cage) then
-        gap_fill(p,c, c.bx1-1+sx,c.bx1-1+sy, c.by1-1+ex,c.by1-1+ey, { solid=b_theme.void})
-      else
-        local sec
-
-        if what == "empty" then
-          sec = copy_block(EMPTY)
-
-          if K1.liquid or K2.liquid then
-            sec.f_h = math.max(K1.rmodel.f_h or -65536, K2.rmodel.f_h or -65536)
-            if K1.liquid == K2.liquid and K1.rmodel.f_h == K2.rmodel.f_h then
-              sec.f_h = sec.f_h + 16
-            end
-          else
-            sec.f_h = math.min(K1.rmodel.f_h or  65536, K2.rmodel.f_h or  65536)
-          end
-
-        else -- wire fence (floor already set)
-          sec = EMPTY
-        end
-
-        sec.l_tex = b_theme.wall
-        sec.u_tex = b_theme.wall
-
-        gap_fill(p,c, c.bx1-1+sx,c.by1-1+sy, c.bx1-1+ex,c.by1-1+ey, sec, overrides)
-      end
-    end
---]]
   end
 
   local function build_window(side)
@@ -3238,12 +3181,9 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
     local b_combo = D.combo
     assert(b_combo)
 
-    if false then --!!!!! c.vista[side] then
-    end
-
     local x1,y1, x2,y2 = D.x1, D.y1, D.x2, D.y2
 
-    if what == "wire" or what == "fence" then
+    if what == "fence" then
       build_fence(side, x1,y1, x2,y2, other, what, b_combo)
 
     elseif what == "window" then
@@ -3251,6 +3191,10 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
 
     elseif what == "sky" then
       build_sky_border(D.side, x1,y1, x2,y2)
+
+    else -- solid
+      gap_fill(p,c, x1,y1, x2,y2, { solid=b_combo.wall })
+    end
 
       -- handle the corner (check adjacent side)
 --[[ FIXME !!!!! "sky"
@@ -3281,11 +3225,6 @@ FENCE.f_tex = "LAVA1" --!!! TESTING
         end
       end
 --]]
-
-    else -- solid
-      gap_fill(p,c, x1,y1, x2,y2, { solid=b_combo.wall })
-    end
-
   end
 
 
@@ -5225,7 +5164,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     local x,y,dir = find_fab_loc(c, fab, 0,3)
     if not x then
       show_cell_blocks(p,c)
-      con.printf("Could not find place for SWITCH %dx%d\n", fab.long, fab.deep)
+      con.printf("Could not find place for SWITCH: %s %dx%d\n", fab.name, fab.long, fab.deep)
 --!!!!!!      error("Could not find place for switch!");
       return
     end
@@ -5497,7 +5436,7 @@ con.debugf("add_scenery : %s\n", item)
   end
 
   -- SCENERY
-  for loop = 1,20 do
+  for loop = 1,1 do
     add_scenery(c)
   end
 end
