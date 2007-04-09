@@ -24,8 +24,6 @@
 #define OBLIGE_VERSION  "0.89"
 #define OBLIGE_HEX_VER  0x089
 
-#define DATA_DIR  "./obl_data"
-
 extern const char *install_path;
 
 void Main_FatalError(const char *msg, ...);
