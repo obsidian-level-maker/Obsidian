@@ -2,29 +2,29 @@
 # Oblige
 #----------------------------------------------------------------
 #
-# GNU Makefile for WIN32
+# GNU Makefile for Unix/Linux "fun in the sun" version
 #
 
-PROGRAM=../Oblige.exe
+PROGRAM=../Oblige
 
-CXX=mingw32-g++
+CXX=g++
 
-LIB_LOC=../..
+LIB_LOC=/home/aapted/other
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.1.7
+FLTK_DIR=$(LIB_LOC)/fltk-1.1.x-r5479
 LUA_DIR=$(LIB_LOC)/lua-5.1
-ZLIB_DIR=$(LIB_LOC)/zlib-1.2.3
 GLBSP_DIR=$(LIB_LOC)/glbsp-2.20
 
 # operating system choices: UNIX WIN32
-OS=WIN32
+OS=UNIX
 
 
 #--- Internal stuff from here -----------------------------------
 
 FLTK_FLAGS=-I$(FLTK_DIR)
 FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
-          $(FLTK_DIR)/lib/libfltk.a
+          $(FLTK_DIR)/lib/libfltk.a \
+          -lX11 -lXext -lpng -ljpeg
 
 LUA_FLAGS=-I$(LUA_DIR)/src
 LUA_LIBS=$(LUA_DIR)/src/liblua.a
@@ -32,15 +32,10 @@ LUA_LIBS=$(LUA_DIR)/src/liblua.a
 GLBSP_FLAGS=-I$(GLBSP_DIR)
 GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
-ZLIB_FLAGS=-I$(ZLIB_DIR)
-ZLIB_LIBS=$(ZLIB_DIR)/libz.a
-
 CXXFLAGS=-O -g -Wall -D$(OS) \
          $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
-LDFLAGS=
-LIBS=-lm $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS) $(ZLIB_LIBS) \
-     -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
-     -lcomctl32 -lwsock32 -lsupc++
+LDFLAGS=-L/usr/X11R6/lib 
+LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
 
 OBJS=	main.o      \
 	lib_argv.o  \
@@ -52,6 +47,7 @@ OBJS=	main.o      \
 	g_glbsp.o   \
 	g_image.o   \
 	g_lua.o     \
+	g_wolf.o    \
 	twister.o   \
 	ui_adjust.o  \
 	ui_build.o  \
@@ -66,13 +62,17 @@ OBJS=	main.o      \
 
 all: $(PROGRAM)
 
+clean:
+	rm -f $(PROGRAM) *.o core core.*
+	rm -f ob_debug.txt ERRS update.log
+
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
 
 g_image.o: img_data.h
 
 bin: all
-	mingw32-strip --strip-unneeded $(PROGRAM)
+	strip --strip-unneeded $(PROGRAM)
 
 .PHONY: all clean bin
 

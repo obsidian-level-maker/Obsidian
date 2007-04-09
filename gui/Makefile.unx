@@ -9,12 +9,11 @@ PROGRAM=../Oblige
 
 CXX=g++
 
-### FIXME
-FLTK_DIR=/home/aapted/other/fltk-1.1.x-r5479
+LIB_LOC=/home/aapted/other
 
-LUA_DIR=/home/aapted/other/lua-5.1
-
-GLBSP_DIR=/home/aapted/stuff/glbsp-2.20
+FLTK_DIR=$(LIB_LOC)/fltk-1.1.x-r5479
+LUA_DIR=$(LIB_LOC)/lua-5.1
+GLBSP_DIR=$(LIB_LOC)/glbsp-2.20
 
 # operating system choices: UNIX WIN32
 OS=UNIX
@@ -33,7 +32,7 @@ LUA_LIBS=$(LUA_DIR)/src/liblua.a
 GLBSP_FLAGS=-I$(GLBSP_DIR)
 GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
-CXXFLAGS=-O -g -Wall -D$(OS) \
+CXXFLAGS=-O -g -Wall -D$(OS) -DFHS_INSTALL \
          $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib 
 LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)

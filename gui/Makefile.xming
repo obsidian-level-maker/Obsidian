@@ -9,14 +9,12 @@ PROGRAM=../Oblige.exe
 
 CXX=i586-mingw32msvc-g++
 
-### FIXME
-FLTK_DIR=/home/aapted/ebuild/fltk-1.1.7
+LIB_LOC=/home/aapted/ebuild
 
-LUA_DIR=/home/aapted/ebuild/lua-5.1
-
-GLBSP_DIR=/home/aapted/ebuild/glbsp-2.20
-
-ZLIB_DIR=/home/aapted/ebuild/zlib-1.2.3
+FLTK_DIR=$(LIB_LOC)/fltk-1.1.7
+LUA_DIR=$(LIB_LOC)/lua-5.1
+ZLIB_DIR=$(LIB_LOC)/zlib-1.2.3
+GLBSP_DIR=$(LIB_LOC)/glbsp-2.20
 
 # operating system choices: UNIX WIN32
 OS=WIN32
@@ -37,7 +35,7 @@ GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/libz.a
 
-CXXFLAGS=-O -g -Wall -D$(OS) \
+CXXFLAGS=-O  -Wall -D$(OS) \
          $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=
 LIBS=-lm $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS) $(ZLIB_LIBS) \
