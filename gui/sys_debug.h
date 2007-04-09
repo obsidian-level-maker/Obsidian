@@ -19,11 +19,17 @@
 #ifndef __SYS_DEBUG_H__
 #define __SYS_DEBUG_H__
 
-void LogInit(bool debug_enable);
+void LogInit(const char *filename);  // NULL for none
 void LogClose(void);
+
+void LogEnableDebug(void);
+void LogEnableTerminal(void);
 
 void LogPrintf(const char *str, ...);
 
 void DebugPrintf(const char *str, ...);
 
 #endif /* __SYS_DEBUG_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

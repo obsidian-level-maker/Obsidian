@@ -38,8 +38,11 @@
 
 #define TICKER_TIME  20 /* ms */
 
-#define TEMP_FILENAME    DATA_DIR "/TEMP.wad"
-#define CONFIG_FILENAME  DATA_DIR "/CONFIG.cfg"
+#define CONFIG_FILENAME  "CONFIG.cfg"
+#define LOG_FILENAME     "LOGS.txt"
+
+#define TEMP_FILENAME    "TEMP.wad"  // FIXME: move to g_doom
+
 
 const char *working_path = NULL;
 const char *install_path = NULL;
@@ -59,8 +62,9 @@ static void ShowInfo(void)
     "Usage: Oblige [options...]\n"
     "\n"
     "Available options:\n"
-    "  -d  -debug         Enable debugging\n"
-    "  -h  -help          Show this help message\n"
+    "  -d  -debug        Enable debugging\n"
+    "  -t  -terminal     Print log messages to stdout\n"
+    "  -h  -help         Show this help message\n"
     "\n"
   );
 
@@ -68,7 +72,7 @@ static void ShowInfo(void)
     "This program is free software, under the terms of the GNU General\n"
     "Public License, and comes with ABSOLUTELY NO WARRANTY.  See the\n"
     "documentation for more details, or visit this web page:\n"
-    "http://www.gnu.org/licenses/licenses.html\n"
+    "http://www.gnu.org/licenses/gpl.html\n"
     "\n"
   );
 }
@@ -311,8 +315,14 @@ int main(int argc, char **argv)
   Determine_InstallPath(argv[0]);
 
   FileChangeDir(working_path);
-  
-  LogInit(ArgvFind('d', "debug") >= 0);
+
+  LogInit(LOG_FILENAME);
+
+  if (ArgvFind('d', "debug") >= 0)
+    LogEnableDebug();
+
+  if (ArgvFind('t', "terminal") >= 0)
+    LogEnableTerminal();
 
   LogPrintf(OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006,2007 Andrew Apted\n\n");
 
@@ -329,6 +339,7 @@ int main(int argc, char **argv)
 
   main_win = new UI_MainWin(OBLIGE_TITLE);
 
+  // load config after creating window (set widget values)
   Cookie_Load(CONFIG_FILENAME);
 
   try

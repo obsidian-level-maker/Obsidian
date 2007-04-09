@@ -19,8 +19,6 @@
 #include "headers.h"
 #include "main.h"
 
-#define LOG_FILENAME  DATA_DIR "/LOGS.txt"
-
 
 static FILE *log_file = NULL;
 
@@ -28,25 +26,30 @@ static bool debugging = false;
 static bool terminal  = false;
 
 
-//
-// LogInit
-//
-void LogInit(bool debug_enable)
+void LogInit(const char *filename)
 {
-  log_file = fopen(LOG_FILENAME, "w");
+  if (filename)
+  {
+    log_file = fopen(filename, "w");
+  }
 
   LogPrintf("========= START OF OBLIGE LOGS =========\n\n");
-
-  debugging = debug_enable;
-  terminal  = debug_enable;
-
-  if (debugging)
-    LogPrintf("DEBUGGING ENABLED.\n\n");
 }
 
-//
-// LogClose
-//
+
+void LogEnableDebug(void)
+{
+  debugging = true;
+
+  LogPrintf("DEBUGGING ENABLED.\n\n");
+}
+
+void LogEnableTerminal(void)
+{
+  terminal = true;
+}
+
+
 void LogClose(void)
 {
   LogPrintf("\n========= END OF OBLIGE LOGS =========\n");
@@ -59,9 +62,7 @@ void LogClose(void)
   }
 }
 
-//
-// LogPrintf
-//
+
 void LogPrintf(const char *str, ...)
 {
   if (log_file)
@@ -86,9 +87,7 @@ void LogPrintf(const char *str, ...)
   }
 }
 
-//
-// DebugPrintf
-//
+
 void DebugPrintf(const char *str, ...)
 {
   if (log_file && debugging)
@@ -121,3 +120,5 @@ void DebugPrintf(const char *str, ...)
   }
 }
 
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab
