@@ -80,9 +80,15 @@ void Determine_WorkingPath(const char *argv0)
   // and LOGS.txt files are, as well the temp files.
 
 #ifndef FHS_INSTALL
-  // FIXME !!!!!
+  working_path = GetExecutablePath(argv0);
+
 #else
-  // FIXME !!!!!
+  working_path = StringNew(FL_PATH_MAX + 4);
+
+  fl_filename_expand(working_path, "$HOME/.oblige");
+
+  // try to create it (doesn't matter if it already exists)
+  FileMakeDir(working_path);
 #endif
 
   if (! working_path)
