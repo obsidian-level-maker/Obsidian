@@ -323,8 +323,8 @@ WINDOW_RAIL =
   structure =
   {
     "#wwwwwwwwww#",
-    "#wwwwwwwwww#",
     "#RRRRRRRRRR#",
+    "#wwwwwwwwww#",
     "#wwwwwwwwww#",
   },
 
@@ -332,7 +332,8 @@ WINDOW_RAIL =
   {
     w = { f_h=0, f_rel="low_h", c_h=0, c_rel="high_h" },
 
-    R = { copy="w", [8] = { rail="rail_w", impassible=true } },
+    R = { copy="w", mark=1,
+          [2] = { rail="rail_w", l_peg="bottom", impassible=true } },
   }
 },
 
@@ -1053,6 +1054,25 @@ WALL_PIC_FOUR_SIDED =
     L = { solid="wall", [4] = { l_tex="lite_w" }, [6] = { l_tex="lite_w" }}, 
     M = { solid="wall", [2] = { l_tex="lite_w" }, [8] = { l_tex="lite_w" }}, 
   },
+},
+
+FENCE_RAIL =
+{
+  structure =
+  {
+    "ffff",
+    "RRRR",
+    "ffff",
+    "ffff",
+  },
+
+  elements =
+  {
+    f = { f_h=0, f_rel="low_h" },
+
+    R = { copy="f", mark=2,
+          [2] = { rail="rail_w", l_peg="bottom", impassible=true } },
+  }
 },
 
 

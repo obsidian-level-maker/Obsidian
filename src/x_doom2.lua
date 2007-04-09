@@ -707,6 +707,12 @@ D2_PREFAB_SCENERY =
     },
   },
 
+  fence_MIDBARS3 =
+  {
+    prefab = "FENCE_RAIL",
+    skin = { rail_w="MIDBARS3" },
+  },
+  
   wall_lamp_RED_TORCH =
   {
     prefab = "WALL_LAMP",
