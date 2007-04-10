@@ -2137,11 +2137,15 @@ R.level_theme.name, R.combo.name)
 
   local function add_windows()
     
-    local function can_make_window(a, b)
+    local function can_make_window(a, b, dir)
+
+      local link = a.link[dir]
 
       if b.is_depot or b.is_bridge then return false end
 
       if (a.is_exit or b.is_exit) and rand_odds(90) then return false end
+
+      if link and link.kind == "vista" then return false end
 
       local cc = math.min(a.ceil_h, b.ceil_h) - 32
       local ff = math.max(a.f_max,  b.f_max)  + 32
@@ -2165,7 +2169,7 @@ R.level_theme.name, R.combo.name)
       for side = 6,9 do
         local other = neighbour_by_side(p, c, side)
 
-        if c.border[side] and other and can_make_window(c, other) then
+        if c.border[side] and other and can_make_window(c, other, side) then
 con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
           c.border[side].window = true
         end
@@ -2453,7 +2457,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
 -- FIXME add_bridges()
 
-    add_vistas()
+  add_vistas()
 --  add_surprises()
 
   create_corners(p)
