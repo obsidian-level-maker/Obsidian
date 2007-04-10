@@ -899,6 +899,10 @@ function B_vista(p, src,dest, x1,y1, x2,y2, side, b_combo,kind)
     if ROOM.c_h > dest.sky_h then
        ROOM.c_h = math.max(dest.sky_h, ROOM.f_h + 96)
     end
+
+    if src.combo.outdoor then
+      ROOM.c_tex = src.combo.ceil
+    end
   end
 
 
@@ -929,6 +933,12 @@ function B_vista(p, src,dest, x1,y1, x2,y2, side, b_combo,kind)
   local px1,py1, px2,py2 = side_coords(side,    fx1,fy1, fx2,fy2)
   local wx1,wy1, wx2,wy2 = side_coords(10-side, fx1,fy1, fx2,fy2)
 
+
+  local long = x2-x1+1
+  local deep = y2-y1+1
+
+  if side==4 or side==6 then long,deep = deep,long end
+  
 
   if kind == "wire" or kind == "fall_over" then
 
@@ -990,22 +1000,44 @@ function B_vista(p, src,dest, x1,y1, x2,y2, side, b_combo,kind)
 
 
   --- pillars ---
+
   if kind == "solid" or kind == "frame" then
 
-    local support = b_combo.wall  -- FIXME: "SUPPORT2"
-    
-    frag_fill(p,src, px1,py1, px1,py1, { solid=support })
-    frag_fill(p,src, px2,py2, px2,py2, { solid=support })
+    local support = b_combo.vista_support or b_combo.wall
 
+    local fp_min = 2.0 + long / 7.0
+    local fp_max = 2.0 + long / 3.0
 
-    if false then  -- FIXME
-      px1 = int((px1+wx1)/2)
-      py1 = int((py1+wy1)/2)
-      px2 = int((px2+wx2)/2)
-      py2 = int((py2+wy2)/2)
+    local sp_min = 2.0 + deep / 6.0
+    local sp_max = 2.0 + deep / 2.5
 
-      frag_fill(p,src, px1,py1, px1,py1, { solid=support })
-      frag_fill(p,src, px2,py2, px2,py2, { solid=support })
+    local front_pillars = int( rand_range(fp_min, fp_max) + rand_skew()*0.5 )
+    local  side_pillars = int( rand_range(sp_min, sp_max) + rand_skew()*0.5 )
+
+    con.debugf("VISTA %dx%d --> PILLARS front:%d side:%d\n", long, deep,
+               front_pillars, side_pillars)
+
+    for fp = 1, front_pillars do
+      local u = (fp - 1) / (front_pillars - 1)
+
+      local x = int(px1 + (px2-px1) * u)
+      local y = int(py1 + (py2-py1) * u)
+      
+      frag_fill(p,src, x,y, x,y, { solid=support })
+    end
+
+    for sp = 1, side_pillars do
+      local u = (sp - 1) / (side_pillars - 1)
+
+      local x1 = int(px1 + (wx1-px1) * u)
+      local y1 = int(py1 + (wy1-py1) * u)
+      
+      frag_fill(p,src, x1,y1, x1,y1, { solid=support })
+      
+      local x2 = int(px2 + (wx2-px2) * u)
+      local y2 = int(py2 + (wy2-py2) * u)
+
+      frag_fill(p,src, x2,y2, x2,y2, { solid=support })
     end
   end 
 
