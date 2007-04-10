@@ -713,6 +713,15 @@ D2_PREFAB_SCENERY =
     skin = { rail_w="MIDBARS3" },
   },
   
+  fence_beam_BLUETORCH =
+  {
+    prefab = "FENCE_BEAM_W_LAMP",
+
+    skin = { lamp_t="blue_torch", beam_h=72,
+             beam_w="METAL", beam_f="CEIL5_2",
+           },
+  },
+
   wall_lamp_RED_TORCH =
   {
     prefab = "WALL_LAMP",
