@@ -248,16 +248,14 @@ WINDOW_EDGE =
   }
 },
 
-WINDOW_EDGE_ARCHED =
+WINDOW_ARCHED =
 {
-  mirror=true,
-
   structure =
   {
-    "#abw",
-    "#abw",
-    "#abw",
-    "#abw",
+    "#abwwba#",
+    "#abwwba#",
+    "#abwwba#",
+    "#abwwba#",
   },
 
   elements =
@@ -267,6 +265,19 @@ WINDOW_EDGE_ARCHED =
     a = { copy="w", f_h=12, c_h=-12 },
     b = { copy="w", f_h=24, c_h=-24 },
   }
+},
+
+WINDOW_ARCHED_BIG =
+{
+  copy="WINDOW_ARCHED",
+
+  structure =
+  {
+    "#abbwwwwbba#",
+    "#abbwwwwbba#",
+    "#abbwwwwbba#",
+    "#abbwwwwbba#",
+  },
 },
 
 WINDOW_CROSS =
@@ -283,7 +294,7 @@ WINDOW_CROSS =
   {
     w = { f_h=0, f_rel="low_h", c_h=0, c_rel="high_h" },
 
-    a = { f_h=-16, f_rel="mid_h", c_h=16, c_rel="mid_h" },
+    a = { f_h=-32, f_rel="mid_h", c_h=32, c_rel="mid_h" },
   }
 },
 
