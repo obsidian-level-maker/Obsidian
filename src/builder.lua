@@ -55,6 +55,11 @@ function copy_block_with_new(B, newbie)
   return merge_table(copy_block(B), newbie)
 end
 
+function block_is_used(B)
+  if B.solid or B.f_tex or B.fragments then return true end
+  return false
+end
+
 
 function side_to_chunk(side)
   if side == 2 then return 2, 1 end
@@ -181,7 +186,7 @@ end
 
       local X = p.blocks[x][y]
 
-      if not X or not (X.solid or X.f_tex or X.fragments) then
+      if not X or not block_is_used(X) then
         fill(p,c, x,y, x,y, B, B2)
       end
     end
@@ -322,7 +327,8 @@ function B_prefab(p,c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
   parm.low_h  = parm.low_h  or (parm.floor_h + math.min(64, diff_h * 0.25))
   parm.high_h = parm.high_h or (parm. ceil_h - math.min(64, diff_h * 0.25))
-  parm.mid_h  = parm.mid_h  or (parm.floor_h + diff_h * 0.50)
+
+  parm.mid_h  = parm.mid_h  or (parm.low_h + parm.high_h) / 2
 
   -- simulate Y mirroring using X mirroring instead
   if mirror_y then
@@ -2469,7 +2475,7 @@ function setup_borders_and_corners(p)
         return "fence"
       end
 
-      if dual_odds(c1.combo.outdoor, 60, 6) then
+      if dual_odds(c1.combo.outdoor, 60, 5) then
         return "fence"
       end
     end
@@ -2534,6 +2540,57 @@ function setup_borders_and_corners(p)
       if c.corner[side] then init_corner(c, side) end
     end
   end
+end
+
+function find_border_spot(D)
+  assert(D)
+  assert(D.side)
+
+  local function get_all_free_spots(D)
+    local ax, ay = dir_to_across(D.side)
+
+    local spots = {}
+    local cur_spot
+
+    for pos = 0,30 do
+      local x,y = D.x1+pos*ax, D.y1+pos*ay
+      if x > D.x2 or y > D.y2 then break end
+
+      local B = PLAN.blocks[x][y]
+      if not (B and block_is_used(B)) then
+        if not cur_spot then
+          cur_spot = { x=x, y=y, long=1 }
+        else
+          cur_spot.long = cur_spot.long + 1
+        end
+      elseif cur_spot then
+        -- hit a used block, push the current spot
+        table.insert(spots, cur_spot)
+        cur_spot = nil
+      end
+    end
+
+    if cur_spot then
+      table.insert(spots, cur_spot)
+    end
+
+    return spots
+  end
+
+  -- find_border_spot --
+
+  local best
+  local all_spots = get_all_free_spots(D)
+
+  for zzz,spot in ipairs(all_spots) do
+    if not best or spot.long > best.long or
+       (spot.long == best.long and rand_odds(50))
+    then
+      best = spot
+    end
+  end
+
+  return best
 end
 
 function build_borders(p)
@@ -3071,41 +3128,85 @@ arch.f_tex = "TLITE6_6"
 
     if not (D and D.window and D.build == c) then return end
 
+    local dir = D.side  -- true side
+    local ax,ay = dir_to_across(dir)
+
     local link = c.link[side]
     local other = neighbour_by_side(p,c,side)
 
-    local b_combo = D.combo
+    assert(D.combo)
 
-    local WINDOW = 
+    -- FIXME: only consider chunks that touch the border
+    --        [IE: floor_border_range, use for fences too]
+    local parm =
     {
-      f_h = math.max(c.f_max, other.f_max) + 32,
-      c_h = math.min(c.rmodel.c_h, other.rmodel.c_h) - 32,
+      floor_h = math.max(c.f_min, other.f_min) + 16,
+      ceil_h  = math.max(c.c_max, other.c_max) - 16,
 
-      f_tex = b_combo.floor,
-      c_tex = b_combo.ceil,
-
-      l_tex = b_combo.wall,
-      u_tex = b_combo.wall,
-
-      light = c.rmodel.light,
+      low_h  = math.max(c.f_max, other.f_max) + 32,
+      high_h = math.min(c.rmodel.c_h, other.rmodel.c_h) - 32,
     }
 
-if (side%2)<=2 then WINDOW.light=255; WINDOW.kind=8 end
+    assert(parm.high_h > parm.low_h)
 
-    if other.scenic then WINDOW.impassible = true end
+    for loop=1,10 do
+      local spot = find_border_spot(D)
+      if not spot then break; end
+    
+      if spot.long >= 4 then
+        -- plain window
 
-    WINDOW.light = WINDOW.light - 16
-    WINDOW.c_tex = b_combo.arch_ceil or WINDOW.f_tex
+        local x1,y1 = spot.x, spot.y
+        local x2    = x1 + (spot.long-1)*ax
+        local    y2 = y1 + (spot.long-1)*ay
+       
+        fill (p,c, x1,y1, x1,y1, { solid=D.combo.wall })
+        fill (p,c, x2,y2, x2,y2, { solid=D.combo.wall })
 
-    local x = D.x1
-    local y = D.y1
+        local WINDOW =
+        {
+          f_h   = parm.low_h,
+          f_tex = D.combo.floor,
+          l_tex = D.combo.wall,
 
-    local ax, ay = dir_to_across(D.side)
+          c_h   = parm.high_h,
+          c_tex = D.combo.ceil,
+          u_tex = D.combo.wall,
 
-    while x <= D.x2 and y <= D.y2 do
-      gap_fill(p,c, x, y, x, y, WINDOW)
-      x, y = x+ax, y+ay
+          light = c.rmodel.light,
+        }
+
+        assert(WINDOW.f_h)
+        assert(WINDOW.f_tex)
+        assert(WINDOW.l_tex)
+
+        if (side%2)<=2 then WINDOW.light=255; WINDOW.kind=8 end
+        if other.scenic then WINDOW.impassible = true end
+
+        fill (p,c, x1+ax,y1+ay, x2-ax,y2-ay, WINDOW)
+      else
+        local DEFS = { "window_narrow", "window_rail_nar_MIDGRATE", "window_cross_big" }
+        local def_name = non_nil(DEFS[spot.long])
+
+        local def = non_nil(GAME.sc_fabs[def_name])
+        local fab = non_nil(PREFABS[def.prefab])
+
+        B_prefab(p,c, fab,def.skin,parm, c.rmodel,D.combo, spot.x,spot.y,10-dir)
+      end
     end
+
+---###    WINDOW.light = WINDOW.light - 16
+---###    WINDOW.c_tex = D.combo.arch_ceil or WINDOW.f_tex
+---###
+---###    local x = D.x1
+---###    local y = D.y1
+---###
+---###    local ax, ay = dir_to_across(D.side)
+---###
+---###    while x <= D.x2 and y <= D.y2 do
+---###      gap_fill(p,c, x, y, x, y, WINDOW)
+---###      x, y = x+ax, y+ay
+---###    end
 
 --[[ GOOD OLD STUFF
 
@@ -3207,10 +3308,10 @@ if (side%2)<=2 then WINDOW.light=255; WINDOW.kind=8 end
 
     elseif D.kind == "sky" then
       build_sky_border(D.side, x1,y1, x2,y2)
-
-    else -- solid
-      gap_fill(p,c, x1,y1, x2,y2, { solid=b_combo.wall })
     end
+
+    -- solid
+    gap_fill(p,c, x1,y1, x2,y2, { solid=b_combo.wall })
 
       -- handle the corner (check adjacent side)
 --[[ FIXME !!!!! "sky"
@@ -4396,7 +4497,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
 
       local D = c.border[side]
       if D and D.kind == "window" then
---!!!!!!        mark_walkable(c, 1, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy)
+        mark_walkable(c, 2, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy)
       end
     end
   end
@@ -4863,13 +4964,7 @@ function tizzy_up_room(p, c)
 
   local function block_is_free(B)
     if not B.chunk then return false end
-    if B.solid or B.f_tex or B.fragments then return false end
-    return true
-  end
-
-  local function block_is_used(B)
-    if B.solid or B.f_tex or B.fragments then return true end
-    return false
+    return not block_is_used(B)
   end
 
   local function verify_inner(c, fab, max_walk, x1,y1, x2,y2)
