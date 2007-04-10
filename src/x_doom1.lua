@@ -1688,7 +1688,7 @@ GAME_FACTORIES["doom_common"] = function()
     bump_probs = { [0]=40, [16]=20, [32]=20, [64]=10 },
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
-    window_probs = { out_diff=75, combo_diff=50, normal=30 },
+    window_probs = { out_diff=75, combo_diff=60, normal=35 },
   }
 end
 
