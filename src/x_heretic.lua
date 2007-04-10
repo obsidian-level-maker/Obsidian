@@ -714,7 +714,8 @@ GAME_FACTORIES["heretic"] = function()
     diff_probs = { [0]=20, [16]=40, [32]=80, [64]=30, [96]=5 },
     bump_probs = { [0]=30, [16]=30, [32]=20, [64]=5 },
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
-    door_probs = { nominal=15, out_diff=75, combo_diff=50 },
+    door_probs   = { out_diff=75, combo_diff=50, normal=15 },
+    window_probs = { out_diff=80, combo_diff=50, normal=30 },
   }
 end
 

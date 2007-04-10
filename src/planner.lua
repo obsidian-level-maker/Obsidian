@@ -420,6 +420,51 @@ con.debugf("  CHANGING SIDE %d\n", dir)
   end
 end
 
+function get_door_chance(c, other)
+
+  local probs =
+    c.room_type.door_probs or
+    other.room_type.door_probs or
+    c.combo.door_probs or
+    c.quest.level_theme.door_probs or
+    GAME.door_probs
+
+  assert(probs)
+
+  if c.combo.outdoor ~= other.combo.outdoor then
+    return non_nil(probs.out_diff)
+
+  elseif c.combo ~= other.combo then
+    return non_nil(probs.combo_diff)
+
+  else
+    return non_nil(probs.normal)
+  end
+end
+
+function get_window_chance(c, other)
+
+  local probs =
+    c.room_type.window_probs or
+    other.room_type.door_probs or
+    c.combo.window_probs or
+    c.quest.level_theme.window_probs or
+    GAME.window_probs
+
+  assert(probs)
+
+  if c.combo.outdoor ~= other.combo.outdoor then
+    return non_nil(probs.out_diff)
+
+  elseif c.combo ~= other.combo then
+    return non_nil(probs.combo_diff)
+
+  else
+    return non_nil(probs.normal)
+  end
+end
+
+-- FIXME: get_fence_chance(c, other) ???
 
 function compute_height_minmax(p)
 
@@ -918,6 +963,8 @@ end
 end
 
 
+----------------------------------------------------------------
+
 function plan_sp_level(is_coop)  -- returns Plan
 
   local p = get_base_plan(GAME.plan_size, GAME.cell_size)
@@ -1287,23 +1334,9 @@ end
       if c1.quest.level == c2.quest.level then
 
         local c = link.build
+        local other = link_other(link, c)
 
-        local probs =
-          c.room_type.door_probs or
-          c.combo.door_probs or
-          c.quest.level_theme.door_probs or
-          GAME.door_probs
-
-        assert(probs)
-
-        local door_chance
-
-            if c1.combo.outdoor ~= c2.combo.outdoor then door_chance = probs.out_diff
-        elseif c1.combo ~= c2.combo then door_chance = probs.combo_diff
-        else door_chance = probs.nominal
-        end
-
-        assert(door_chance)
+        local door_chance = get_door_chance(c, other)
 
         if rand_odds(door_chance) then link.kind = "door" end
 
@@ -2119,19 +2152,20 @@ R.level_theme.name, R.combo.name)
 ---###   if (b.ceil_h - a.floor_h) < 64 then return false end
       
       if a.combo.outdoor and b.combo.outdoor and a.ceil_h ~= b.ceil_h then return false end
+
 --!!      if a.combo.outdoor and not b.combo.outdoor and b.ceil_h > b.ceil_h + 32 then return false end
 --!!      if b.combo.outdoor and not a.combo.outdoor and a.ceil_h > a.ceil_h + 32 then return false end
 
-      return true
+      local window_chance = get_window_chance(a, b)
+
+      return rand_odds(window_chance)
     end
 
     for zzz,c in ipairs(p.all_cells) do
       for side = 6,9 do
         local other = neighbour_by_side(p, c, side)
 
-        if c.border[side] and other and rand_odds(100) and
-           can_make_window(c, other)
-        then
+        if c.border[side] and other and can_make_window(c, other) then
 con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
           c.border[side].window = true
         end
@@ -2425,7 +2459,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   create_corners(p)
   create_borders(p)
 
---  add_windows()
+  add_windows()
 
   return p
 end

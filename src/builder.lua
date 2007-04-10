@@ -2505,7 +2505,7 @@ function setup_borders_and_corners(p)
       -- Wire fences
       if GAME.caps.rails and rand_odds(33) and (side%2)==0 then
         D.kind = "wire"
-        if rand_odds(33) then D.fence_h = D.fence_h + 48 end
+        if rand_odds(35) then D.fence_h = D.fence_h + 48 end
       else
         D.fence_h = D.fence_h + 48 + 16*rand_irange(0,2)
       end
@@ -3020,6 +3020,11 @@ arch.f_tex = "TLITE6_6"
     local fab = non_nil(PREFABS[def.prefab])
     local parm = { low_h = D.fence_h }
 
+    -- Experimental shite
+    local def2 = GAME.sc_fabs["fence_beam_BLUETORCH"]
+    assert(def2)
+    local fab2 = non_nil(PREFABS[def2.prefab])
+
 ---###      local dir = 10-side
 ---###      if ((dir % 2) == 1) then
 ---###        dir = sel(x1 == x2, 4, 2)  -- not quite right...
@@ -3028,7 +3033,11 @@ arch.f_tex = "TLITE6_6"
     for x = x1,x2 do for y = y1,y2 do
       local B = p.blocks[x][y]
       if not B then
-        B_prefab(p,c, fab,def.skin,parm, c.rmodel,D.combo, x,y,10-side)
+        if rand_odds(25) and (x>x1 or y>y1) and (x<x2 or y<y2) then
+          B_prefab(p,c, fab2,def2.skin,parm, c.rmodel,D.combo, x,y,10-side)
+        else
+          B_prefab(p,c, fab,def.skin,parm, c.rmodel,D.combo, x,y,10-side)
+        end
       end
     end end
 
@@ -3080,7 +3089,7 @@ arch.f_tex = "TLITE6_6"
       light = c.rmodel.light,
     }
 
---if (side%2)==1 then WINDOW.light=255; WINDOW.kind=8 end
+if (side%2)<=2 then WINDOW.light=255; WINDOW.kind=8 end
 
     if other.scenic then WINDOW.impassible = true end
 

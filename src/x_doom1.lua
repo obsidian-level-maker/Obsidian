@@ -251,7 +251,7 @@ DM_COMBOS =
     scenery = { "blue_torch", "blue_torch_sm" },
 
     theme_probs = { URBAN=70, INDUSTRIAL=5 },
-    door_probs = { nominal=5, out_diff=75, combo_diff=10 }
+    door_probs = { out_diff=75, combo_diff=10, normal=5 }
   },
 
   BROWN =
@@ -273,7 +273,7 @@ DM_COMBOS =
     good_liquid = "blood",
 
     theme_probs = { URBAN=50 },
-    door_probs = { nominal=5, out_diff=75, combo_diff=10 }
+    door_probs = { out_diff=75, combo_diff=10, normal=5 }
   },
 }
 
@@ -1151,7 +1151,8 @@ DM_ROOMS =
   HALLWAY =
   {
     room_heights = { [96]=50, [128]=50 },
-    door_probs = { nominal=5, out_diff=75, combo_diff=50 },
+    door_probs   = { out_diff=75, combo_diff=50, normal=5 },
+    window_probs = { out_diff=1, combo_diff=1, normal=1 },
   },
  
   SCENIC =
@@ -1296,7 +1297,8 @@ DM_THEMES =
       demon=2.5, knight=2.0, baron=2.0, pain=2.0,
     },
 
-    door_probs = { nominal=5, out_diff=75, combo_diff=10 },
+    door_probs   = { out_diff=75, combo_diff=10, normal=5 },
+    window_probs = { out_diff=80, combo_diff=20, normal=20 },
 
     prefer_stairs = true,
   },
@@ -1331,7 +1333,8 @@ DM_THEMES =
 
     diff_probs = { [0]=10, [16]=40, [32]=80, [64]=60, [96]=20 },
     bump_probs = { [0]=5, [16]=30, [32]=30, [64]=20 },
-    door_probs = { nominal=1, out_diff=10, combo_diff=3 },
+    door_probs   = { out_diff=10, combo_diff= 3, normal=1 },
+    window_probs = { out_diff=20, combo_diff=30, normal=5 },
     prefer_stairs = true,
   },
 
@@ -1684,7 +1687,8 @@ GAME_FACTORIES["doom_common"] = function()
     diff_probs = { [0]=20, [16]=20, [32]=80, [64]=60, [96]=20 },
     bump_probs = { [0]=40, [16]=20, [32]=20, [64]=10 },
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
-    door_probs = { nominal=15, out_diff=75, combo_diff=50 },
+    door_probs   = { out_diff=75, combo_diff=50, normal=15 },
+    window_probs = { out_diff=80, combo_diff=50, normal=30 },
   }
 end
 
