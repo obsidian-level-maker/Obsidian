@@ -2449,14 +2449,13 @@ function setup_borders_and_corners(p)
       return "solid"
     end
 
+    -- FIXME: use room_type (e.g. fence_probs)
     if c1.hallway or c2.hallway then return "solid" end
 
-    -- TODO: sometimes allow it
+    -- TODO: sometimes allow windows
     if c1.is_exit or c2.is_exit then return "solid" end
 
     if not GAME.caps.heights then return "solid" end
-
-    if c1.border[side].window then return "window" end
 
     -- fencing anyone?   (move tests into Planner???)
     local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
@@ -2470,11 +2469,13 @@ function setup_borders_and_corners(p)
         return "fence"
       end
 
-      if dual_odds(c1.combo.outdoor, 60, 7) then
+      if dual_odds(c1.combo.outdoor, 60, 6) then
         return "fence"
       end
     end
  
+    if c1.border[side].window then return "window" end
+
     return "solid"
   end
 
