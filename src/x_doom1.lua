@@ -192,6 +192,8 @@ DM_COMBOS =
     pillar = "SLADPOIS",
 --FIXME: (not in doom1)   pic_wd = "BSTONE3",
 
+    vista_support = "DOORSTOP",
+
     floor = "FLOOR0_5",
     ceil = "CEIL5_1",
 
