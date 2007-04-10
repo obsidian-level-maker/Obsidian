@@ -337,7 +337,18 @@ WINDOW_RAIL =
   }
 },
 
+WINDOW_RAIL_NARROW =
+{
+  copy="WINDOW_RAIL",
 
+  structure =
+  {
+    "#wwwwww#",
+    "#RRRRRR#",
+    "#wwwwww#",
+    "#wwwwww#",
+  },
+},
 
 ------ Doors ------------------------------------
 

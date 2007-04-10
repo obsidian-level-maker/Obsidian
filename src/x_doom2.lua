@@ -759,6 +759,24 @@ D2_PREFAB_SCENERY =
     force_dir = 2, -- optimisation
   },
 
+  window_narrow =
+  {
+    prefab = "WINDOW_NARROW",
+    skin = { },
+  },
+
+  window_rail_nar_MIDGRATE =
+  {
+    prefab = "WINDOW_RAIL_NARROW",
+    skin = { rail_w="MIDGRATE" },
+  },
+
+  window_cross_big =
+  {
+    prefab = "WINDOW_CROSS_BIG",
+    skin = { },
+  },
+
   pillar_light1_METAL =
   {
     prefab = "PILLAR_LIGHT1",
