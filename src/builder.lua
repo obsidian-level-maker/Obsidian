@@ -148,15 +148,15 @@ function show_fragments(block)
 end
 
 
-function fill(p, c, sx, sy, ex, ey, B, B2)
+function fill(c, sx, sy, ex, ey, B, B2)
   if sx > ex then sx, ex = ex, sx end
   if sy > ey then sy, ey = ey, sy end
   for x = sx,ex do
     for y = sy,ey do
-      assert(valid_block(p, x, y))
+      assert(valid_block(PLAN, x, y))
 
       local N = copy_block(B)
-      p.blocks[x][y] = N
+      PLAN.blocks[x][y] = N
 
       if B2 then
         merge_table(N, B2)
@@ -167,33 +167,32 @@ function fill(p, c, sx, sy, ex, ey, B, B2)
   end
 end
 
-function c_fill(p, c, sx, sy, ex, ey, B, B2)
-
-  fill(p,c, c.bx1-1+sx, c.by1-1+sy, c.bx1-1+ex, c.by1-1+ey, B, B2)
+function c_fill(c, sx, sy, ex, ey, B, B2)
+  fill(PLAN,c, c.bx1-1+sx, c.by1-1+sy, c.bx1-1+ex, c.by1-1+ey, B, B2)
 end
 
-function gap_fill(p, c, sx, sy, ex, ey, B, B2)
+function gap_fill(c, sx, sy, ex, ey, B, B2)
   if sx > ex then sx, ex = ex, sx end
   if sy > ey then sy, ey = ey, sy end
   for x = sx,ex do
     for y = sy,ey do
 
-if not valid_block(p,x,y) then
-con.printf("gap_fill: invalid block (%d,%d)  max: (%d,%d)\n", x,y, p.blk_w, p.blk_h)
+if not valid_block(PLAN,x,y) then
+con.printf("gap_fill: invalid block (%d,%d)  max: (%d,%d)\n", x,y, PLAN.blk_w, PLAN.blk_h)
 error("invalid block")
 end
-      assert(valid_block(p, x, y))
+      assert(valid_block(PLAN, x, y))
 
-      local X = p.blocks[x][y]
+      local X = PLAN.blocks[x][y]
 
       if not X or not block_is_used(X) then
-        fill(p,c, x,y, x,y, B, B2)
+        fill(c, x,y, x,y, B, B2)
       end
     end
   end
 end
 
-function frag_fill(p, c, sx, sy, ex, ey, F, F2)
+function frag_fill(c, sx, sy, ex, ey, F, F2)
 
   if sx > ex then sx, ex = ex, sx end
   if sy > ey then sy, ey = ey, sy end
@@ -202,11 +201,11 @@ function frag_fill(p, c, sx, sy, ex, ey, F, F2)
       local bx, fx = div_mod(x, FW)
       local by, fy = div_mod(y, FH)
       
-      if not p.blocks[bx][by] then
-        p.blocks[bx][by] = {}
+      if not PLAN.blocks[bx][by] then
+        PLAN.blocks[bx][by] = {}
       end
 
-      local B = p.blocks[bx][by]
+      local B = PLAN.blocks[bx][by]
       B.solid = nil
 
       if not B.fragments then
@@ -226,7 +225,7 @@ end
 
 function move_corner(p,c, x,y,corner, dx,dy)
 
-  local B = p.blocks[x][y]
+  local B = PLAN.blocks[x][y]
   assert(B)
 
   if not B[corner] then
@@ -241,7 +240,7 @@ function move_corner(p,c, x,y,corner, dx,dy)
 
   -- ensure that the writer doesn't swallow up this block
   -- (which would lose the vertex we want to move)
-  B.mark = allocate_mark(p)
+  B.mark = allocate_mark(PLAN)
 end
 
 -- the c_ prefix means (x,y) are cell-relative coords
@@ -250,7 +249,7 @@ function c_move_frag_corner(p,c, x,y,corner, dx,dy)
   local bx, fx = div_mod(x, FW)
   local by, fy = div_mod(y, FH)
 
-  local B = p.blocks[c.bx1-1+bx][c.by1-1+by]
+  local B = PLAN.blocks[c.bx1-1+bx][c.by1-1+by]
   assert(B)
   assert(B.fragments)
 
@@ -267,7 +266,7 @@ function c_move_frag_corner(p,c, x,y,corner, dx,dy)
   F[corner].dx = dx
   F[corner].dy = dy
 
-  F.mark = allocate_mark(p)
+  F.mark = allocate_mark(PLAN)
 end
 
  
@@ -306,14 +305,14 @@ FAB_DIRECTION_MAP =
   [14] = { 1,4,7, 2,5,8, 3,6,9 },
 }
 
-function B_prefab(p,c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
+function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
   -- (x,y) is always the block with the lowest coordinate.
   -- dir == 2 is the natural mode, other values rotate it.
 
   assert(fab and skin and parm and combo)
 
-  local focus = p.blocks[x][y]
+  local focus = PLAN.blocks[x][y]
   if focus and focus.rmodel then
     focus = focus.rmodel
   else
@@ -506,7 +505,7 @@ function B_prefab(p,c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
           -- ensure that the writer doesn't swallow up the block
           -- (which would lose the vertex we want to move)
           if not sec.mark then
-            sec.mark = allocate_mark(p)
+            sec.mark = allocate_mark(PLAN)
           end
         end
 
@@ -555,9 +554,9 @@ function B_prefab(p,c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
       end
 
       if fab.scale == 64 then
-        fill(p,c, fx,fy, fx,fy, sec)
+        fill(c, fx,fy, fx,fy, sec)
       else
-        frag_fill(p,c, fx,fy, fx,fy, sec)
+        frag_fill(c, fx,fy, fx,fy, sec)
       end
 
       if elem and elem.thing then
@@ -646,7 +645,7 @@ function B_stair(p,c, rmodel, bx,by, dir, long, deep, step)
       [xo_dir2] = { x_offset=-i*16 },
     }
 
-    frag_fill(p,c, fx, fy, fx+zx, fy+zy, sec)
+    frag_fill(c, fx, fy, fx+zx, fy+zy, sec)
 
     fx = fx + dx
     fy = fy + dy
@@ -680,13 +679,13 @@ function B_lift(p,c, rmodel, bx,by, z, dir, long, deep)
     lift_kind = 123,  -- 62 for slower kind
     lift_walk = 120,  -- 88 for slower kind
 
-    tag = allocate_tag(p),
+    tag = allocate_tag(PLAN),
 
     [2] = { l_peg="top" }, [4] = { l_peg="top" },
     [6] = { l_peg="top" }, [8] = { l_peg="top" },
   }
 
-  fill(p,c, bx, by,
+  fill(c, bx, by,
        bx + (long-1) * ax + (deep-1) * dx,
        by + (long-1) * ay + (deep-1) * dy, LIFT)
 end
@@ -737,17 +736,17 @@ function B_double_pedestal(p, c, bx, by, base, ped_info, overrides)
   local fx = (bx - 1) * FW
   local fy = (by - 1) * FH
 
-  frag_fill(p,c, fx+1,fy+1, fx+4,fy+4, OUTER, overrides)
+  frag_fill(c, fx+1,fy+1, fx+4,fy+4, OUTER, overrides)
 
   if ped_info.rotate2 then
-    frag_fill(p,c, fx+2,fy+2, fx+2,fy+2, INNER)
+    frag_fill(c, fx+2,fy+2, fx+2,fy+2, INNER)
 
     c_move_frag_corner(p,c, fx+2,fy+2, 1, 16, -6)
     c_move_frag_corner(p,c, fx+2,fy+2, 3, 22, 16)
     c_move_frag_corner(p,c, fx+2,fy+2, 7, -6,  0)
     c_move_frag_corner(p,c, fx+2,fy+2, 9,  0, 22)
   else
-    frag_fill(p,c, fx+2,fy+2, fx+3,fy+3, INNER)
+    frag_fill(c, fx+2,fy+2, fx+3,fy+3, INNER)
   end
 end
 
@@ -821,7 +820,7 @@ function B_pillar_cage(p,c, theme, kx,ky, bx,by)
 --    rotate_block(CAGE,32)
 --  end
 
-  fill(p,c, bx,by, bx,by, CAGE)
+  fill(c, bx,by, bx,by, CAGE)
 
   local spot = {c=c, x=bx, y=by}
   if kx==2 and ky==2 then spot.different = true end
@@ -859,8 +858,8 @@ function B_monster_closet(p,c, K,kx,ky, z, tag)
   local fx = (bx - 1) * FW
   local fy = (by - 1) * FH
 
-  frag_fill(p,c, fx+1,fy+1, fx+3*FW,fy+3*FH, OUTER);
-  frag_fill(p,c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, INNER)
+  frag_fill(c, fx+1,fy+1, fx+3*FW,fy+3*FH, OUTER);
+  frag_fill(c, fx+2,fy+2, fx+3*FW-1,fy+3*FH-1, INNER)
 
   return { c=c, x=bx, y=by, double=true, dx=32, dy=32 }
 end
@@ -976,26 +975,26 @@ function B_vista(p, src,dest, x1,y1, x2,y2, side, b_combo,kind)
           if (x == cv_x1 and y == cv_y1) then
             -- 48 is the magical distance to align the railing
             overrides[cv_dir1] = { dx=(dx*48), dy=(dy*48) }
-            overrides.mark = allocate_mark(p)
+            overrides.mark = allocate_mark(PLAN)
           end
           if (x == cv_x2 and y == cv_y2) then
             overrides[cv_dir2] = { dx=(dx*48), dy=(dy*48) }
-            overrides.mark = allocate_mark(p)
+            overrides.mark = allocate_mark(PLAN)
           end
         end
 
-        fill(p,src, x,y, x,y, ROOM, overrides)
+        fill(src, x,y, x,y, ROOM, overrides)
       end
     end
 
   else -- solid, frame, open or fall_over
 
-    frag_fill(p,src, fx1,fy1, fx2,fy2, LEDGE)
-    frag_fill(p,src, fx1+1,fy1+1, fx2-1,fy2-1, ROOM)
+    frag_fill(src, fx1,fy1, fx2,fy2, LEDGE)
+    frag_fill(src, fx1+1,fy1+1, fx2-1,fy2-1, ROOM)
 
     --- walkway ---
 
-    frag_fill(p,src, wx1+ax,wy1+ay, wx2-ax,wy2-ay, ROOM)
+    frag_fill(src, wx1+ax,wy1+ay, wx2-ax,wy2-ay, ROOM)
   end
 
 
@@ -1023,7 +1022,7 @@ function B_vista(p, src,dest, x1,y1, x2,y2, side, b_combo,kind)
       local x = int(px1 + (px2-px1) * u)
       local y = int(py1 + (py2-py1) * u)
       
-      frag_fill(p,src, x,y, x,y, { solid=support })
+      frag_fill(src, x,y, x,y, { solid=support })
     end
 
     for sp = 1, side_pillars do
@@ -1032,12 +1031,12 @@ function B_vista(p, src,dest, x1,y1, x2,y2, side, b_combo,kind)
       local x1 = int(px1 + (wx1-px1) * u)
       local y1 = int(py1 + (wy1-py1) * u)
       
-      frag_fill(p,src, x1,y1, x1,y1, { solid=support })
+      frag_fill(src, x1,y1, x1,y1, { solid=support })
       
       local x2 = int(px2 + (wx2-px2) * u)
       local y2 = int(py2 + (wy2-py2) * u)
 
-      frag_fill(p,src, x2,y2, x2,y2, { solid=support })
+      frag_fill(src, x2,y2, x2,y2, { solid=support })
     end
   end 
 
@@ -1068,7 +1067,7 @@ function B_exit_elevator(p, c, x, y, side)
   elseif side == 6 then x=x-fab.deep+1; y=y-1
   end
 
-  B_prefab(p, c, fab, skin, parm, c.rmodel,c.combo, x, y, dir)
+  B_prefab(c, fab, skin, parm, c.rmodel,c.combo, x, y, dir)
 end
 
 
@@ -1135,7 +1134,7 @@ end
 ----------------------------------------------------------------
 
 
-function setup_rmodel(p, c)
+function setup_rmodel(c)
 
   c.rmodel =
   {
@@ -1160,7 +1159,7 @@ function setup_rmodel(p, c)
     c.rmodel.light = sel(c.combo.outdoor, 192, 144)
   end
 
-  c.mark = allocate_mark(p)
+  c.mark = allocate_mark(PLAN)
 end
 
 function make_chunks(p)
@@ -1785,7 +1784,7 @@ function make_chunks(p)
           con.printf("CELL (%d,%d)  CHUNK (%d,%d)\n", c.x, c.y, kx, ky)
           con.printf("%s\n", table_to_str(c.chunks[kx][ky], 2))
 
-          show_chunks(p)
+          show_chunks(PLAN)
         end
 
         con.debugf("CLOSET CHUNK @ (%d,%d) [%d,%d]\n", c.x, c.y, kx, ky)
@@ -2692,7 +2691,7 @@ function build_borders(p)
     local fab = PREFABS[door_info.prefab]
     assert(fab)
 
-    B_prefab(p,c, fab, door_info.skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
+    B_prefab(c, fab, door_info.skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
   end
 
   local function blocky_door( link, side, double_who )
@@ -2716,11 +2715,11 @@ function build_borders(p)
     end
 
     if side_tex then
-      gap_fill(p, c, link.x1-ax, link.y1-ay, link.x1+ax, link.y1+ay,
+      gap_fill(c, link.x1-ax, link.y1-ay, link.x1+ax, link.y1+ay,
         { solid=side_tex })
     end
     
-    p.blocks[link.x1][link.y1] =
+    PLAN.blocks[link.x1][link.y1] =
     {
       f_tex = 0,
       door_kind = (bit and bit.kind_rep) or "door",
@@ -2750,7 +2749,7 @@ end
       end
 
       if link.kind == "arch" then
-        gap_fill(p,c, link.x1,link.y1, link.x2,link.y2, D.build.rmodel)
+        gap_fill(c, link.x1,link.y1, link.x2,link.y2, D.build.rmodel)
         return
       end
 
@@ -2783,13 +2782,13 @@ if link.kind == "vista" then
   skin.floor = link.vista_src.rmodel.f_tex
 end
 
-B_prefab(p,c, fab, skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
+B_prefab(c, fab, skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
 return
 end
 
 
 do
-gap_fill(p, c, link.x1, link.y1, link.x2, link.y2,
+gap_fill(c, link.x1, link.y1, link.x2, link.y2,
 copy_block_with_new(link.build.rmodel,
 { f_tex = "NUKAGE1" }))
 return
@@ -2856,7 +2855,7 @@ end
 sec.f_tex = "FWATER1"
         sec.l_tex = tex
         sec.u_tex = tex
-        fill(p,c, x, y, ex, ey, sec)
+        fill(c, x, y, ex, ey, sec)
         return
       end
 
@@ -2888,14 +2887,14 @@ arch.f_tex = "TLITE6_6"
 
         tex = GAME.mats.ARCH.wall
 
-        fill(p,c, x, y, ex+ax, ey+ay, { solid=tex })
+        fill(c, x, y, ex+ax, ey+ay, { solid=tex })
       end
 
       arch.l_tex = tex
       arch.u_tex = tex
 
-      fill(p,c, x, y, ex+ax, ey+ay, { solid=tex })
-      fill(p,c, x+ax, y+ay, ex, ey, arch)
+      fill(c, x, y, ex+ax, ey+ay, { solid=tex })
+      fill(c, x+ax, y+ay, ex, ey, arch)
 
       if link.block_sound then
         -- FIXME block_sound(p, c, x,y, ex,ey, 1)
@@ -2908,7 +2907,7 @@ arch.f_tex = "TLITE6_6"
         ex,ey = ex-long*ax, ey-long*ay
 
         if x == ex and y == ey then
-          fill(p,c, x, y, ex, ey, { solid=tex })
+          fill(c, x, y, ex, ey, { solid=tex })
         end
       end
 
@@ -3017,12 +3016,12 @@ arch.f_tex = "TLITE6_6"
       if out_num < 4 then CORN.c_h = CORN.f_h + 1 end
 
       if CORN.f_h < CORN.c_h then
-        gap_fill(p,c, E.bx, E.by, E.bx, E.by, CORN)
+        gap_fill(c, E.bx, E.by, E.bx, E.by, CORN)
         return
       end
     end
 
-    gap_fill(p,c, E.bx, E.by, E.bx, E.by, { solid=E.combo.wall })
+    gap_fill(c, E.bx, E.by, E.bx, E.by, { solid=E.combo.wall })
   end
 
   local function build_sky_border(side, x1,y1, x2,y2)
@@ -3055,7 +3054,7 @@ arch.f_tex = "TLITE6_6"
 
     for x = x1,x2 do for y = y1,y2 do
 
-      local B = p.blocks[x][y]
+      local B = PLAN.blocks[x][y]
 
       -- overwrite a 64x64 block, but not a fragmented one
       if (not B) or (not B.fragments) then
@@ -3063,8 +3062,8 @@ arch.f_tex = "TLITE6_6"
         local fx = (x - 1) * FW
         local fy = (y - 1) * FH
 
-        frag_fill(p,c, fx+  1, fy+  1, fx+ FW, fy+ FH, BEHIND)
-        frag_fill(p,c, fx+ax1, fy+ay1, fx+ax2, fy+ay2, WALL)
+        frag_fill(c, fx+  1, fy+  1, fx+ FW, fy+ FH, BEHIND)
+        frag_fill(c, fx+ax1, fy+ay1, fx+ax2, fy+ay2, WALL)
       end
 
     end end
@@ -3090,13 +3089,13 @@ arch.f_tex = "TLITE6_6"
       u_tex = c.rmodel.u_tex,
     }
 
-    if not p.blocks[x][y] then
+    if not PLAN.blocks[x][y] then
 
       local fx = (x - 1) * FW
       local fy = (y - 1) * FH
 
-      frag_fill(p,c, fx+ 1, fy+ 1, fx+FW, fy+FH, BEHIND)
-      frag_fill(p,c, fx+wx, fy+wy, fx+wx, fy+wy, WALL)
+      frag_fill(c, fx+ 1, fy+ 1, fx+FW, fy+FH, BEHIND)
+      frag_fill(c, fx+wx, fy+wy, fx+wx, fy+wy, WALL)
     end
   end
 
@@ -3121,12 +3120,12 @@ arch.f_tex = "TLITE6_6"
 ---###      end
 
     for x = x1,x2 do for y = y1,y2 do
-      local B = p.blocks[x][y]
+      local B = PLAN.blocks[x][y]
       if not B then
         if rand_odds(25) and (x>x1 or y>y1) and (x<x2 or y<y2) then
-          B_prefab(p,c, fab2,def2.skin,parm, c.rmodel,D.combo, x,y,10-side)
+          B_prefab(c, fab2,def2.skin,parm, c.rmodel,D.combo, x,y,10-side)
         else
-          B_prefab(p,c, fab,def.skin,parm, c.rmodel,D.combo, x,y,10-side)
+          B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, x,y,10-side)
         end
       end
     end end
@@ -3151,7 +3150,7 @@ arch.f_tex = "TLITE6_6"
 
     if rand_odds(95) then FENCE.block_sound = 2 end
 
-    gap_fill(p,c, x1,y1, x2,y2, FENCE)
+    gap_fill(c, x1,y1, x2,y2, FENCE)
   end
 
   local function build_window(side)
@@ -3192,8 +3191,8 @@ arch.f_tex = "TLITE6_6"
         local x2    = x1 + (spot.long-1)*ax
         local    y2 = y1 + (spot.long-1)*ay
        
-        fill (p,c, x1,y1, x1,y1, { solid=D.combo.wall })
-        fill (p,c, x2,y2, x2,y2, { solid=D.combo.wall })
+        fill (c, x1,y1, x1,y1, { solid=D.combo.wall })
+        fill (c, x2,y2, x2,y2, { solid=D.combo.wall })
 
         local WINDOW =
         {
@@ -3215,7 +3214,7 @@ arch.f_tex = "TLITE6_6"
         if (side%2)<=2 then WINDOW.light=255; WINDOW.kind=8 end
         if other.scenic then WINDOW.impassible = true end
 
-        fill (p,c, x1+ax,y1+ay, x2-ax,y2-ay, WINDOW)
+        fill (c, x1+ax,y1+ay, x2-ax,y2-ay, WINDOW)
       else
         local DEFS = { "window_narrow", "window_rail_nar_MIDGRATE", "window_cross_big" }
         local def_name = non_nil(DEFS[spot.long])
@@ -3223,7 +3222,7 @@ arch.f_tex = "TLITE6_6"
         local def = non_nil(GAME.sc_fabs[def_name])
         local fab = non_nil(PREFABS[def.prefab])
 
-        B_prefab(p,c, fab,def.skin,parm, c.rmodel,D.combo, spot.x,spot.y,10-dir)
+        B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, spot.x,spot.y,10-dir)
       end
     end
 
@@ -3308,7 +3307,7 @@ arch.f_tex = "TLITE6_6"
         if bar then
           B_bars(p,c, wx,wy, math.min(side,10-side),long, bar,bar_step, GAME.mats.METAL, sec,b_combo.wall)
         else
-          gap_fill(p,c, wx,wy, wx+ax*(long-1),wy+ay*(long-1), sec)
+          gap_fill(c, wx,wy, wx+ax*(long-1),wy+ay*(long-1), sec)
         end
       end
     end
@@ -3343,7 +3342,7 @@ arch.f_tex = "TLITE6_6"
     end
 
     -- solid
-    gap_fill(p,c, x1,y1, x2,y2, { solid=b_combo.wall })
+    gap_fill(c, x1,y1, x2,y2, { solid=b_combo.wall })
 
       -- handle the corner (check adjacent side)
 --[[ FIXME !!!!! "sky"
@@ -3409,27 +3408,27 @@ function build_grotto(p, c, x1,y1, x2,y2)
 
   for y = y1+1, y2-1, 2 do
     for x = x1+1+(int(y/2)%2)*2, x2-3, 4 do
-      gap_fill(p,c, x-2,y, x-2,y, WALL)
-      gap_fill(p,c, x+2,y, x+2,y, WALL)
+      gap_fill(c, x-2,y, x-2,y, WALL)
+      gap_fill(c, x+2,y, x+2,y, WALL)
 
       local ax, ay = dir_to_across(rand_sel(50, 2, 4))
-      gap_fill(p,c, x-ax,y-ay, x+ax,y+ay, WALL)
+      gap_fill(c, x-ax,y-ay, x+ax,y+ay, WALL)
     end
   end
 
-  gap_fill(p,c, x1,y1, x2-3,y2-1, ROOM)
+  gap_fill(c, x1,y1, x2-3,y2-1, ROOM)
 end
 
 function build_pacman_level(p, c)
 
   local function free_spot(bx, by)
-    local B = p.blocks[bx][by]
+    local B = PLAN.blocks[bx][by]
     return B and not B.solid and not B.has_blocker and
            (not B.things or table_empty(B.things))
   end
 
   local function solid_spot(bx, by)
-    local B = p.blocks[bx][by]
+    local B = PLAN.blocks[bx][by]
     return B and B.solid
   end
 
@@ -3472,17 +3471,17 @@ function build_pacman_level(p, c)
   {
   }
 
-  B_prefab(p,c, mid_fab,skin,parm, c.rmodel,combo, mid_x-2, mid_y, 2, false)
+  B_prefab(c, mid_fab,skin,parm, c.rmodel,combo, mid_x-2, mid_y, 2, false)
 
-  B_prefab(p,c, top_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y+16, 2,false,top_flip)
-  B_prefab(p,c, top_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y+16, 2,true, top_flip)
+  B_prefab(c, top_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y+16, 2,false,top_flip)
+  B_prefab(c, top_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y+16, 2,true, top_flip)
 
-  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y-12, 2,false,bot_flip)
-  B_prefab(p,c, bot_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y-12, 2,true, bot_flip)
+  B_prefab(c, bot_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y-12, 2,false,bot_flip)
+  B_prefab(c, bot_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y-12, 2,true, bot_flip)
 
   B_exit_elevator(p,c, mid_x+19, mid_y+28, 2)
 
-  gap_fill(p,c, 2,2, 63,63, { solid=combo.wall })
+  gap_fill(c, 2,2, 63,63, { solid=combo.wall })
   
   -- player spot
   local px
@@ -3625,10 +3624,10 @@ function build_cell(p, c)
 
           jx,jy = (bx - 1)*FW, (by - 1)*FH
 
-          frag_fill(p,c, jx+1, jy+1, jx+FW, jy+FH, sec)
+          frag_fill(c, jx+1, jy+1, jx+FW, jy+FH, sec)
 
           if pillar then
-            frag_fill(p,c, jx+fx, jy+fy, jx+fx, jy+fy, { solid=K.sup_tex})
+            frag_fill(c, jx+fx, jy+fy, jx+fx, jy+fy, { solid=K.sup_tex})
           end
         end
       end
@@ -3660,7 +3659,7 @@ function build_cell(p, c)
 
     if K.void then
       --!!! TEST CRAP
-      gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, c.rmodel)
+      gap_fill(c, K.x1, K.y1, K.x2, K.y2, c.rmodel)
       do return end
 
       if K.closet then
@@ -3690,7 +3689,7 @@ function build_cell(p, c)
         B_void_pic(p,c, K,kx,ky, pic,cut)
 
       else
-        gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, { solid=c.combo.void })
+        gap_fill(c, K.x1, K.y1, K.x2, K.y2, { solid=c.combo.void })
       end
       return
     end -- K.void
@@ -3781,7 +3780,7 @@ function build_cell(p, c)
           else   error("Bad side for small_exit switch: " .. side)
           end
 
-          gap_fill(p,c, x1,y1, x2,y2, { solid=c.combo.wall })
+          gap_fill(c, x1,y1, x2,y2, { solid=c.combo.wall })
           
         elseif c.combo.hole_tex and rand_odds(75) then
           B_exit_hole(p,c, K,kx,ky, c.rmodel)
@@ -3803,7 +3802,7 @@ function build_cell(p, c)
 
     if K.quest and surprise and c == surprise.trigger_cell then
 
-      sec.mark = allocate_mark(p)
+      sec.mark = allocate_mark(PLAN)
       sec.walk_kind = 2
       sec.walk_tag  = surprise.door_tag
     end
@@ -3920,13 +3919,13 @@ function build_cell(p, c)
 
         for x = x1,x2 do for y = y1,y2 do
           if func(kx,ky, x,y) then
-            gap_fill(p,c, x,y, x,y, BB)
+            gap_fill(c, x,y, x,y, BB)
           end
         end end
       end
 
       -- get this *after* doing sky lights
-      local blocked = p.blocks[K.x1+1][K.y1+1] --!!!
+      local blocked = PLAN.blocks[K.x1+1][K.y1+1] --!!!
 
       if K.crate and not blocked then
         local combo = c.crate_combo
@@ -3957,13 +3956,13 @@ function build_cell(p, c)
 ---###      sec.l_tex = l_tex
 ---###      sec.u_tex = u_tex
 
-      gap_fill(p,c, K.x1, K.y1, K.x2, K.y2, sec)
+      gap_fill(c, K.x1, K.y1, K.x2, K.y2, sec)
 
       if not blocked and c.combo.scenery and not K.stair_dir and
          (dual_odds(c.combo.outdoor, 37, 22)
           or (c.scenic and rand_odds(51)))
       then
---!!!!!        p.blocks[K.x1+1][K.y1+1].has_scenery = true
+--!!!!!        PLAN.blocks[K.x1+1][K.y1+1].has_scenery = true
         local th = add_thing(c, K.x1+1, K.y1+1, c.combo.scenery, true)
         if c.scenic then
           th.dx = rand_irange(-64,64)
@@ -4003,11 +4002,11 @@ function build_cell(p, c)
       if type(dec_tex) == "table" then
         dec_tex = rand_element(dec_tex)
       end
-      gap_fill(p, c, K.x1,K.y1, K.x1,K.y1, { solid=dec_tex })
-      gap_fill(p, c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
+      gap_fill(c, K.x1,K.y1, K.x1,K.y1, { solid=dec_tex })
+      gap_fill(c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
     end
 
-    gap_fill(p, c, K.x1,K.y1, K.x2,K.y2, { solid=c.combo.void })
+    gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=c.combo.void })
   end
 
   local function reclaim_areas(c)
@@ -4061,7 +4060,7 @@ function build_cell(p, c)
           local y = sy1 + h*dy + w*ay
 
           assert(valid_cell_block(c, x, y))
-          local B = p.blocks[x][y]
+          local B = PLAN.blocks[x][y]
 
           if B.walk or B.solid or B.fragments then
             return false
@@ -4180,7 +4179,7 @@ con.printf("BLOCK RANGE w:%d-%d h:%d-%d (%d,%d)..(%d,%d)\n", x1,x2, y1,y2, x1,y1
 con.printf("cx:%d cy:%d dx:%d dy:%d\n", cx,cy, dx,dy)
 end
           assert(valid_cell_block(c, x, y))
-          local B = p.blocks[x][y]
+          local B = PLAN.blocks[x][y]
 
           if B.walk or B.solid or B.fragments then
             return false --FAIL--
@@ -4327,7 +4326,7 @@ c.x, c.y, other.x, other.y)
         assert(K.ground_model)
 ---###  gap_fill(p,c, K.x1,K.y1, K.x2,K.y2, K.ground_model)
         for x = K.x1,K.x2 do for y = K.y1,K.y2 do
-          p.blocks[x][y].rmodel = K.ground_model
+          PLAN.blocks[x][y].rmodel = K.ground_model
         end end
       end
     end end
@@ -4503,7 +4502,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     assert(c.by1 <= y1 and y2 <= c.by2)
 
     for x = x1,x2 do for y = y1,y2 do
-      local B = p.blocks[x][y]
+      local B = PLAN.blocks[x][y]
       assert(B)
 
       if not B.walk or walk > B.walk then
@@ -4681,7 +4680,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
 
           -- first: check stair itself
           for qx = st_x1,st_x2 do for qy = st_y1,st_y2 do
-            local B = p.blocks[qx][qy]
+            local B = PLAN.blocks[qx][qy]
             assert(B)
             if (B.walk and B.walk > max_walk) or not is_roomy(B.chunk) then
               able = false
@@ -4708,8 +4707,8 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
               able = false
 
             else
-              local B1 = p.blocks[qx][qy]
-              local B2 = p.blocks[rx][ry]
+              local B1 = PLAN.blocks[qx][qy]
+              local B2 = PLAN.blocks[rx][ry]
               assert(B1)
               assert(B2)
 
@@ -4972,7 +4971,7 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
   ---=== build_cell ===---
 
   if c.scenic == "solid" then
-    fill(p,c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.combo.void })
+    fill(c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.combo.void })
     return
   end
 
@@ -5006,7 +5005,7 @@ function tizzy_up_room(p, c)
     local f_h, c_h
 
     for x = x1,x2 do for y = y1,y2 do
-      local B = p.blocks[x][y]
+      local B = PLAN.blocks[x][y]
       assert(B)
 
       if not block_is_free(B) then return false end
@@ -5042,7 +5041,7 @@ function tizzy_up_room(p, c)
     if not valid_cell_block(c,x2,y2) then return false end
     
     for x = x1,x2 do for y = y1,y2 do
-      local B = p.blocks[x][y]
+      local B = PLAN.blocks[x][y]
       if not (B.walk or block_is_free(B)) then return false end
       if B.chunk.rmodel.f_h ~= f_h then return false end
     end end
@@ -5053,7 +5052,7 @@ function tizzy_up_room(p, c)
   local function verify_wall(c, f_h, x1,y1, x2,y2)
     for x = x1,x2 do for y = y1,y2 do
       if valid_cell_block(c, x, y) then
-        local B = p.blocks[x][y]
+        local B = PLAN.blocks[x][y]
         if block_is_free(B) then
           return (B.chunk.rmodel.f_h >= f_h + 80)
         end
@@ -5228,7 +5227,7 @@ function tizzy_up_room(p, c)
     for zzz,spot in ipairs(c.fab_spots) do
       local x = spot.x
       local y = spot.y
-      local B = p.blocks[x][y]
+      local B = PLAN.blocks[x][y]
 
       if B and block_is_free(B) and is_roomy(B.chunk) and not B.has_blocker then
         return x,y, dir or (rand_irange(1,4)*2)
@@ -5252,7 +5251,7 @@ function tizzy_up_room(p, c)
       if (x == x1-1 or x == x2+1 or y == y1-1 or y == y2+1) and
          valid_cell_block(c, x, y)
       then
-        local B = p.blocks[x][y]
+        local B = PLAN.blocks[x][y]
         
         if (B.walk and walk > B.walk) or block_is_free(B) then
           B.walk = walk
@@ -5298,7 +5297,7 @@ function tizzy_up_room(p, c)
       return
     end
 con.printf("add_object @ (%d,%d)\n", x, y)
-    gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
+    gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
     add_thing(c, x, y, name, true)
     fab_mark_walkable(c, x, y, 8, 1,1, 4)
   end
@@ -5360,7 +5359,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 ---###      parm.y_offset = tex_h - 72  -- TINY = 64
 ---###    end
 
-    B_prefab(p,c, fab,skin,parm, p.blocks[x][y].chunk.rmodel,c.combo, x, y, dir)
+    B_prefab(c, fab,skin,parm, PLAN.blocks[x][y].chunk.rmodel,c.combo, x, y, dir)
 
     fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
   end
@@ -5370,7 +5369,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
     for y = c.by1+1, c.by2-1, 2 do
       for x = c.bx1, c.bx2 do
-        local B = p.blocks[x][y]
+        local B = PLAN.blocks[x][y]
         if not B.c_tex and B.chunk then
           B.c_tex = "CEIL5_2"
           B.u_tex = "METAL"
@@ -5485,7 +5484,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
     local mirror
     if fab.mirror then mirror = rand_odds(50) end
 
-    B_prefab(p,c, fab, def.skin, parm, p.blocks[x][y].chunk.rmodel,c.combo, x, y, dir, mirror)
+    B_prefab(c, fab, def.skin, parm, PLAN.blocks[x][y].chunk.rmodel,c.combo, x, y, dir, mirror)
 
     fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
   end
@@ -5537,7 +5536,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
     if not x then return end
 
 con.debugf("add_scenery : %s\n", item)
-    gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel)
+    gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel)
     local th = add_thing(c, x, y, item, true)
 
     -- when there is wriggle room, use it!
@@ -5617,7 +5616,7 @@ function build_rooms(p)
     for kx=1,3 do for ky=1,3 do
       local K = c.chunks[kx][ky]
       for x = K.x1,K.x2 do for y = K.y1,K.y2 do
-        p.blocks[x][y] = { chunk = K }
+        PLAN.blocks[x][y] = { chunk = K }
       end end
     end end
   end
@@ -5653,7 +5652,7 @@ function build_rooms(p)
     -- GAP_FILL_ROOM --
 
     for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
-      local B = p.blocks[x][y]
+      local B = PLAN.blocks[x][y]
 
       if B.fragments then
         for fx = 1,FW do for fy = 1,FH do
@@ -5676,15 +5675,15 @@ function build_rooms(p)
       local K = c.chunks[kx][ky]
       if K.kind == "empty" then
 --!!!        void_up_chunk(c, K)
-        gap_fill(p, c, K.x1,K.y1, K.x2,K.y2,
+        gap_fill(c, K.x1,K.y1, K.x2,K.y2,
           c.rmodel, { f_h=c.f_max+32, f_tex="NUKAGE", has_blocker=true })
       elseif K.rec and K.rec.border and (K.rec.border.kind == "fence" or
            (K.rec.border.kind=="wire")) then
-        gap_fill(p, c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
+        gap_fill(c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
           c.rmodel, { f_h=K.rec.border.fence_h, f_tex=K.rec.border.combo.floor,
                       l_tex=K.rec.border.combo.wall, has_blocker=true })
       elseif K.rec then
-        gap_fill(p, c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
+        gap_fill(c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
           c.rmodel, { f_h=c.f_max+32, f_tex="FWATER1", has_blocker=true })
 --!!!        { solid=c.combo.void })
 ---     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
@@ -5721,9 +5720,9 @@ function build_depots()
 
   local p = PLAN -- FIXME
 
-  local function build_one_depot(p, c)
+  local function build_one_depot(c)
 
-    setup_rmodel(p, c)
+    setup_rmodel(c)
 
     c.bx1 = BORDER_BLK + (c.x-1) * (BW+1) + 1
     c.by1 = BORDER_BLK + (c.y-1) * (BH+1) + 1
@@ -5738,11 +5737,11 @@ function build_depots()
     assert(#places >= 2)
     assert(#places <= 4)
 
-    local start = p.quests[1].first
+    local start = PLAN.quests[1].first
   --!!!!
   --[[
     assert(start.player_pos)
-    local player_B = p.blocks[start.player_pos.x][start.player_pos.y]
+    local player_B = PLAN.blocks[start.player_pos.x][start.player_pos.y]
   --]] local player_B = start.rmodel
 
     -- check for double pedestals (Plutonia)
@@ -5777,31 +5776,31 @@ function build_depots()
     end
 
     for y = 1,#places do
-      c_fill(p, c, 1,y*2-1, BW,y*2, mon_sec, { mark=y })
+      c_fill(c, 1,y*2-1, BW,y*2, mon_sec, { mark=y })
       places[y].spots = rectangle_to_spots(c, c.bx1-1+m1, c.by1-1+y*2-1,
             c.bx1-1+m1+0, c.by1-1+y*2)
 
       for x = t1,t2 do
         local t = 1 + ((x + y) % #places)
-        c_fill(p, c, x,y*2-1, x,y*2, tele_sec, { mark=x*10+y, walk_tag=places[t].tag})
+        c_fill(c, x,y*2-1, x,y*2, tele_sec, { mark=x*10+y, walk_tag=places[t].tag})
       end
     end
 
     -- door separating monsters from teleporter lines
-    c_fill(p, c, 5,1, 5,2*#places, door_sec)
+    c_fill(c, 5,1, 5,2*#places, door_sec)
 
     -- bottom corner block is same sector as player start,
     -- to allow sound to wake up these monsters.
-    c_fill(p, c, m1,1, m1,1, copy_block(player_B), { same_sec=player_B })
+    c_fill(c, m1,1, m1,1, copy_block(player_B), { same_sec=player_B })
 
     -- put a border around the room
-    gap_fill(p, c, c.bx1-1, c.by1-1, c.bx2+1, c.by2+1, { solid=c.combo.wall })
+    gap_fill(c, c.bx1-1, c.by1-1, c.bx2+1, c.by2+1, { solid=c.combo.wall })
   end
 
   --- build_depots ---
 
-  for zzz,cell in ipairs(p.all_depots) do
-    build_one_depot(p, cell)
+  for zzz,cell in ipairs(PLAN.all_depots) do
+    build_one_depot(cell)
   end
 end
 
@@ -5809,7 +5808,7 @@ end
 function build_level(p)
 
   for zzz,cell in ipairs(p.all_cells) do
-    setup_rmodel(p, cell)
+    setup_rmodel(cell)
   end
 
 if string.find(p.lev_name, "L10") then
