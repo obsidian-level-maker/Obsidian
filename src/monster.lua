@@ -50,14 +50,14 @@ zprint = do_nothing
 zdump_table = do_nothing
 
 
-function add_thing(p,c, bx,by, name, blocking, angle, options)
+function add_thing(c, bx,by, name, blocking, angle, options)
 
   local kind = GAME.thing_nums[name]
   if not kind then
     error("Unknown thing kind: " .. name)
   end
 
-  local B = p.blocks[bx][by]
+  local B = PLAN.blocks[bx][by]
   
   if not B then
     error("Thing placed in the void")
@@ -76,7 +76,7 @@ function add_thing(p,c, bx,by, name, blocking, angle, options)
   -- con.debugf("INSERTING %s INTO BLOCK (%d,%d)\n", kind, c.bx1-1+bx, c.by1-1+by)
 
   table.insert(B.things, THING)
-  table.insert(p.all_things, THING)
+  table.insert(PLAN.all_things, THING)
 
   if blocking then
 --- DOESNT TAKE SKILLS INTO ACCOUNT: assert(not B.has_blocker)
@@ -86,9 +86,9 @@ function add_thing(p,c, bx,by, name, blocking, angle, options)
   return THING
 end
 
-function add_monster_to_spot(p, spot, dx,dy, name,info, angle,options)
+function add_monster_to_spot(spot, dx,dy, name,info, angle,options)
 
-  local th = add_thing(p, spot.c, spot.x, spot.y, name, true, angle, options)
+  local th = add_thing(spot.c, spot.x, spot.y, name, true, angle, options)
 
   if info.r >= 32 then
     -- Note: cannot handle monsters with radius >= 64 
@@ -105,7 +105,7 @@ function add_monster_to_spot(p, spot, dx,dy, name,info, angle,options)
 end
 
 
-function add_cage_spot(p,c, spot)
+function add_cage_spot(c, spot)
 
   if not c.cage_spots then
     c.cage_spots = {}
@@ -149,12 +149,12 @@ function rectangle_to_spots(c, x,y, x2,y2)
 end
 
 
-function find_free_spots(p, c)
+function find_free_spots(c)
 
   local function free_spot(bx, by)
 --  if not valid_block(p, bx, by) then return false end
 
-    local B = p.blocks[bx][by]
+    local B = PLAN.blocks[bx][by]
 
     return (B and not B.solid and B.f_h and
             (not B.fragments or B.can_thing) and
@@ -168,7 +168,7 @@ function find_free_spots(p, c)
     for dx = 0,1 do for dy = 0,1 do
       if not free_spot(bx+dx, by+dy) then return false end
 
-      local B = p.blocks[bx+dx][by+dy]
+      local B = PLAN.blocks[bx+dx][by+dy]
       if B.fragments then
         B = B.fragments[1][1]
         assert(B)
@@ -301,7 +301,7 @@ end
 -- Simulate the battle for skill SK (2|3|4).
 -- Updates the given player HModel.
 --
-function simulate_battle(p, HM, mon_set, quest)
+function simulate_battle(HM, mon_set, quest)
  
   local shoot_accuracy = ACCURACIES[HM.skill]
 
@@ -644,7 +644,7 @@ end
 ----------------------------------------------------------------
 
 
-function distribute_pickups(p, c, HM, backtrack)
+function distribute_pickups(c, HM, backtrack)
 
   local R -- table[SKILL] -> required num
 
@@ -890,7 +890,7 @@ function distribute_pickups(p, c, HM, backtrack)
 
       if not info then break end
 
-      if p.coop and stat ~= "health" then
+      if PLAN.coop and stat ~= "health" then
         add_coop_pickup(targets, name, info, cluster)
       else
         local tc = targets[rand_index_by_probs(distrib)]
@@ -903,7 +903,7 @@ function distribute_pickups(p, c, HM, backtrack)
 end
 
 
-function place_battle_stuff(p, c, stats)
+function place_battle_stuff(c, stats)
 
   local SK
 
@@ -1018,7 +1018,7 @@ function place_battle_stuff(p, c, stats)
 
       if spot.double then dx,dy = dx+32,dy+32 end
 
-      local th = add_thing(p, c, spot.x, spot.y, dat.name, false, 0, options)
+      local th = add_thing(c, spot.x, spot.y, dat.name, false, 0, options)
 
       th.dx = dx + (spot.dx or 0)
       th.dy = dy + (spot.dy or 0)
@@ -1079,7 +1079,7 @@ function place_battle_stuff(p, c, stats)
         options.ambush = true
       end
 
-      add_monster_to_spot(p, spot, 0,0, dat.name, dat.info, angle,options)
+      add_monster_to_spot(spot, 0,0, dat.name, dat.info, angle,options)
 
       stats[SK].monsters = stats[SK].monsters + 1
       stats[SK].power = stats[SK].power + dat.info.pow
@@ -1126,12 +1126,12 @@ function place_battle_stuff(p, c, stats)
   end
 end
 
-function place_quest_stuff(p, Q, stats)
+function place_quest_stuff(Q, stats)
   assert(stats)
 
   for zzz,c in ipairs(Q.path) do
     if c.mon_set or c.pickup_set then
-      place_battle_stuff(p, c, stats)
+      place_battle_stuff(c, stats)
       c.mon_set = nil
       c.pickup_set = nil
     end
@@ -1142,7 +1142,7 @@ end
 ----------------------------------------------------------------
 
 
-function battle_in_cell(p, c)
+function battle_in_cell(c)
 
   local T, U, SK
 
@@ -1170,7 +1170,7 @@ function battle_in_cell(p, c)
     assert(best_name)
 
     for name,info in pairs(GAME.weapons) do
-      if p.hmodels[skill][name] and not info.melee then
+      if PLAN.hmodels[skill][name] and not info.melee then
         if fire_power(info) > fire_power(best_info) then
           best_name, best_info = name, info
         end
@@ -1343,7 +1343,7 @@ function battle_in_cell(p, c)
         local angle = rand_irange(0,7) * 45
         local options = { [SK]=true }
 
-        add_monster_to_spot(p, spot, dx,dy, name,info, angle,options)
+        add_monster_to_spot(spot, dx,dy, name,info, angle,options)
 
         -- allow monster to take part in battle simulation
         table.insert(c.mon_set[SK], { name=name, horde=1, info=info, caged=true })
@@ -1380,7 +1380,7 @@ function battle_in_cell(p, c)
           local angle = delta_to_angle(5-(spot.x+dx/64), 5-(spot.y+dy/64))
           local options = { [SK]=true }
 
-          add_monster_to_spot(p, spot, dx,dy, name,info, angle,options)
+          add_monster_to_spot(spot, dx,dy, name,info, angle,options)
 
           table.insert(place.mon_set[SK], { name=name, horde=1, info=info, caged=true })
         end
@@ -1413,8 +1413,8 @@ function battle_in_cell(p, c)
         con.debugf("ADD_TELEPORTER @ (%d,%d) tag: %d\n", c.x, c.y, place.tag)
 
         local x,y = prev.x, prev.y
-        add_thing(p, c, x, y, "teleport_spot", true)
-        p.blocks[x][y].tag = place.tag
+        add_thing(c, x, y, "teleport_spot", true)
+        PLAN.blocks[x][y].tag = place.tag
       end
     end
   end
@@ -1425,7 +1425,7 @@ function battle_in_cell(p, c)
 
 zprint("BATTLE IN", c.x, c.y)
 
-  local spots, free_space = find_free_spots(p, c) --FIXME: move out of here
+  local spots, free_space = find_free_spots(c) --FIXME: move out of here
   rand_shuffle(spots)
   c.free_spots = spots
 
@@ -1447,7 +1447,7 @@ zprint("BATTLE IN", c.x, c.y)
     SK = skill
 
     T = c.toughness * (free_space ^ 0.7) * TOUGH_FACTOR[SK]
-    T = T + p.hmodels[SK].toughness
+    T = T + PLAN.hmodels[SK].toughness
     U = 0
 
     if GAME.caps.tiered_skills then
@@ -1460,29 +1460,29 @@ zprint("BATTLE IN", c.x, c.y)
     create_monsters(space)
 
     -- left over toughness gets compounded (but never decreased)
-    p.hmodels[SK].toughness = math.max(0, T + U)
+    PLAN.hmodels[SK].toughness = math.max(0, T + U)
 
     local quest = (c.along == #c.quest.path) and c.quest
 
 zprint("SIMULATE in CELL", c.x, c.y, SK)
 
-    simulate_battle(p, p.hmodels[SK], c.mon_set[SK], quest)
+    simulate_battle(PLAN.hmodels[SK], c.mon_set[SK], quest)
 
-    distribute_pickups(p, c, p.hmodels[SK])
+    distribute_pickups(c, PLAN.hmodels[SK])
   end
 end
 
 
-function backtrack_to_cell(p, c)
+function backtrack_to_cell(c)
 
   local function surprise_me(surprise)
     for zzz,place in ipairs(surprise.places) do
       if c == place.c then
         for zzz,SK in ipairs(SKILLS) do
 
-          simulate_battle(p, p.hmodels[SK], place.mon_set[SK]) 
+          simulate_battle(PLAN.hmodels[SK], place.mon_set[SK]) 
 
-          distribute_pickups(p, c, p.hmodels[SK], "backtrack")
+          distribute_pickups(c, PLAN.hmodels[SK], "backtrack")
         end
       end
     end
@@ -1500,17 +1500,17 @@ function backtrack_to_cell(p, c)
 end
 
 
-function battle_in_quest(p, Q)
+function battle_in_quest(Q)
   for zzz,c in ipairs(Q.path) do
     if c.toughness then
-      battle_in_cell(p, c)
+      battle_in_cell(c)
     end
   end
 
   for idx = #Q.path,1,-1 do
     local c = Q.path[idx]
     if c.toughness then
-      backtrack_to_cell(p, Q.path[idx])
+      backtrack_to_cell(Q.path[idx])
       c.toughness = nil
     end
   end
@@ -1529,14 +1529,14 @@ function dump_battle_stats(stats)
   con.printf("\n")
 end
 
-function battle_through_level(p)
+function battle_through_level()
 
   -- step 1: decide monsters, simulate battles, decide health/ammo
 
-  for zzz,Q in ipairs(p.quests) do
-    battle_in_quest(p, Q)
+  for zzz,Q in ipairs(PLAN.quests) do
+    battle_in_quest(Q)
     for yyy,R in ipairs(Q.children) do
-      battle_in_quest(p, R)
+      battle_in_quest(R)
     end
   end
 
@@ -1549,10 +1549,10 @@ function battle_through_level(p)
     hard   = { health = 0, ammo = 0, monsters = 0, power = 0 },
   }
 
-  for zzz,Q in ipairs(p.quests) do
-    place_quest_stuff(p, Q, stats)
+  for zzz,Q in ipairs(PLAN.quests) do
+    place_quest_stuff(Q, stats)
     for yyy,R in ipairs(Q.children) do
-      place_quest_stuff(p, R, stats)
+      place_quest_stuff(R, stats)
     end
   end
 
@@ -1561,7 +1561,7 @@ end
 
 ----------------------------------------------------------------
 
-function deathmatch_in_cell(p, c)
+function deathmatch_in_cell(c)
 
   local SK
 
@@ -1591,7 +1591,7 @@ name, c.x, c.y, SK)
   c.pickup_set = { easy={}, medium={}, hard={} }
   c.mon_set    = { easy={}, medium={}, hard={} }
 
-  c.free_spots = find_free_spots(p, c)
+  c.free_spots = find_free_spots(c)
 
   rand_shuffle(c.free_spots)
 
@@ -1632,7 +1632,7 @@ con.printf("== deathmatch_in_cell: spots = %d\n", #c.free_spots)
 end
 
 
-function deathmatch_through_level(p)
+function deathmatch_through_level()
 
   local stats =
   {
@@ -1641,11 +1641,11 @@ function deathmatch_through_level(p)
     hard   = { health = 0, ammo = 0, monsters = 0, power = 0 },
   }
 
-  for x = 1,p.w do for y = 1,p.h do
-    local c = p.cells[x][y]
+  for x = 1,PLAN.w do for y = 1,PLAN.h do
+    local c = PLAN.cells[x][y]
     if c then
-      deathmatch_in_cell(p, c)
-      place_battle_stuff(p, c, stats)
+      deathmatch_in_cell(c)
+      place_battle_stuff(c, stats)
     end
   end end
 

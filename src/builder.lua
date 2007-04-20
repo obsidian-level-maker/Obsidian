@@ -570,7 +570,7 @@ function B_prefab(p,c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
           by = div_mod(fy, FH)
         end
 
-        add_thing(p, c, bx,by, what_thing(elem.thing), false, elem.angle)
+        add_thing(c, bx,by, what_thing(elem.thing), false, elem.angle)
       end
     end
   end end
@@ -584,7 +584,7 @@ function B_prefab(p,c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
       if tdef.kind ~= "pickup_t" then -- ????
         -- FIXME: blocking
-        local th = add_thing(p, c, bx,by, what_thing(tdef.kind), false)
+        local th = add_thing(c, bx,by, what_thing(tdef.kind), false)
 
         th.dx = dx
         th.dy = dy
@@ -3502,7 +3502,7 @@ function build_pacman_level(p, c)
 
   if not px then error("Could not find spot for pacman!") end
 
-  add_thing(p, c, px, py, "player1", true, p_ang)
+  add_thing(c, px, py, "player1", true, p_ang)
 end
 
 ----------------------------------------------------------------
@@ -3716,7 +3716,7 @@ function build_cell(p, c)
           else
             B_pedestal(p, c, bx+dx, by+dy, K.rmodel, GAME.pedestals.PLAYER)
           end
-          add_thing(p, c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
+          add_thing(c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
           c.player_pos = {x=bx+dx, y=by+dy}
         end
       else
@@ -3725,14 +3725,14 @@ function build_cell(p, c)
         else
           B_pedestal(p, c, bx, by, K.rmodel, GAME.pedestals.PLAYER)
         end
-        add_thing(p, c, bx, by, sel(p.deathmatch, "dm_player", "player1"), true, angle)
+        add_thing(c, bx, by, sel(p.deathmatch, "dm_player", "player1"), true, angle)
         c.player_pos = {x=bx, y=by}
 
       end
 
     elseif K.dm_weapon then
       B_pedestal(p, c, bx, by, K.rmodel, GAME.pedestals.WEAPON)
-      add_thing(p, c, bx, by, K.dm_weapon, true)
+      add_thing(c, bx, by, K.dm_weapon, true)
 
     elseif K.quest then
 
@@ -3742,7 +3742,7 @@ function build_cell(p, c)
         -- weapon and keys are non-blocking, but we don't want
         -- a monster sitting on top of our quest item (especially
         -- when it has a pedestal).
-        add_thing(p, c, bx, by, c.quest.item, true)
+        add_thing(c, bx, by, c.quest.item, true)
 
       elseif c.quest.kind == "switch" then
         local info = GAME.switches[c.quest.item]
@@ -3964,7 +3964,7 @@ function build_cell(p, c)
           or (c.scenic and rand_odds(51)))
       then
 --!!!!!        p.blocks[K.x1+1][K.y1+1].has_scenery = true
-        local th = add_thing(p, c, K.x1+1, K.y1+1, c.combo.scenery, true)
+        local th = add_thing(c, K.x1+1, K.y1+1, c.combo.scenery, true)
         if c.scenic then
           th.dx = rand_irange(-64,64)
           th.dy = rand_irange(-64,64)
@@ -5278,7 +5278,7 @@ function tizzy_up_room(p, c)
 
         L.vista_got_obj = true
 
-        add_thing(p, c, x, y, name, true)
+        add_thing(c, x, y, name, true)
         return
       end
     end
@@ -5299,7 +5299,7 @@ function tizzy_up_room(p, c)
     end
 con.printf("add_object @ (%d,%d)\n", x, y)
     gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
-    add_thing(p, c, x, y, name, true)
+    add_thing(c, x, y, name, true)
     fab_mark_walkable(c, x, y, 8, 1,1, 4)
   end
 
@@ -5538,7 +5538,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
 
 con.debugf("add_scenery : %s\n", item)
     gap_fill(p,c, x,y, x,y, p.blocks[x][y].chunk.rmodel)
-    local th = add_thing(p, c, x, y, item, true)
+    local th = add_thing(c, x, y, item, true)
 
     -- when there is wriggle room, use it!
     if info.r < 30 then
@@ -5664,7 +5664,7 @@ function build_rooms(p)
         gap_fill_block(B)
 
         if B.walk then
---        add_thing(p, c, x, y, "candle", false)
+--        add_thing(c, x, y, "candle", false)
         end
       end
     end end
@@ -5717,7 +5717,9 @@ function build_rooms(p)
   end
 end
 
-function build_depots(p)
+function build_depots()
+
+  local p = PLAN -- FIXME
 
   local function build_one_depot(p, c)
 
@@ -5828,15 +5830,15 @@ end
   build_borders(p)
   con.ticker()
 
-  build_depots(p)
+  build_depots()
   con.ticker()
 
   con.progress(25); if con.abort() then return end
  
   if p.deathmatch then
-    deathmatch_through_level(p)
+    deathmatch_through_level()
   else
-    battle_through_level(p)
+    battle_through_level()
   end
 
   con.progress(40); if con.abort() then return end
