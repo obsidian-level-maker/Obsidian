@@ -4113,8 +4113,8 @@ function build_cell(p, c)
         corn = sel(y_dir == 2, 7, 1)
       end
 
-      local max_w = K.x2 - K.x1 + 1
-      local max_h = K.y2 - K.y1 + 1
+      local max_w = K.x2 - K.x1
+      local max_h = K.y2 - K.y1
 
       do
         -- allow neighbour chunks to have an reclaim area,
@@ -4202,7 +4202,7 @@ end
       while grow_w or grow_h do
         if grow_w and (not grow_h or rand_odds(50)) then
 
-          if w+1 < max_w and test_block(w,0, w,h-1) then
+          if w < max_w and test_block(w,0, w,h-1) then
             w = w + 1
           else
             grow_w = false
@@ -4210,7 +4210,7 @@ end
         else
           assert(grow_h)
 
-          if h+1 < max_h and test_block(0,h, w-1,h) then
+          if h < max_h and test_block(0,h, w-1,h) then
             h = h + 1
           else
             grow_h = false
@@ -5676,7 +5676,7 @@ function build_rooms(p)
       if K.kind == "empty" then
 --!!!        void_up_chunk(c, K)
         gap_fill(c, K.x1,K.y1, K.x2,K.y2,
-          c.rmodel, { f_h=c.f_max+32, f_tex="NUKAGE", has_blocker=true })
+          c.rmodel, { f_h=c.f_max+32, f_tex="NUKAGE3", has_blocker=true })
       elseif K.rec and K.rec.border and (K.rec.border.kind == "fence" or
            (K.rec.border.kind=="wire")) then
         gap_fill(c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
