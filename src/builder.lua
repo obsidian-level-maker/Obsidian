@@ -153,7 +153,7 @@ function fill(c, sx, sy, ex, ey, B, B2)
   if sy > ey then sy, ey = ey, sy end
   for x = sx,ex do
     for y = sy,ey do
-      assert(valid_block(PLAN, x, y))
+      assert(valid_block(x, y))
 
       local N = copy_block(B)
       PLAN.blocks[x][y] = N
@@ -177,11 +177,11 @@ function gap_fill(c, sx, sy, ex, ey, B, B2)
   for x = sx,ex do
     for y = sy,ey do
 
-if not valid_block(PLAN,x,y) then
+if not valid_block(x,y) then
 con.printf("gap_fill: invalid block (%d,%d)  max: (%d,%d)\n", x,y, PLAN.blk_w, PLAN.blk_h)
 error("invalid block")
 end
-      assert(valid_block(PLAN, x, y))
+      assert(valid_block(x, y))
 
       local X = PLAN.blocks[x][y]
 
@@ -1619,7 +1619,7 @@ function make_chunks(p)
       local MID = c.chunks[2][2]
 
       if MID.kind == "empty" and not c.hallway and
-         (c == p.quests[1].first or c == c.quest.last or rand_odds(25*0)) --!!!!!!!
+         (c == PLAN.quests[1].first or c == c.quest.last or rand_odds(25*0)) --!!!!!!!
       then
         MID.kind = "room"
       end
@@ -1684,7 +1684,7 @@ function make_chunks(p)
 
     if not (possible and common) then return end
 
-    if not p.coop then
+    if not PLAN.coop then
       -- let user adjustment parameters control whether closets and
       -- cages are made bigger.
       if common.closet and not rand_odds(BIG_CAGE_ADJUST[settings.traps]) then
@@ -1784,7 +1784,7 @@ function make_chunks(p)
           con.printf("CELL (%d,%d)  CHUNK (%d,%d)\n", c.x, c.y, kx, ky)
           con.printf("%s\n", table_to_str(c.chunks[kx][ky], 2))
 
-          show_chunks(PLAN)
+          show_chunks()
         end
 
         con.debugf("CLOSET CHUNK @ (%d,%d) [%d,%d]\n", c.x, c.y, kx, ky)
@@ -1837,7 +1837,7 @@ function make_chunks(p)
 
   local function flesh_out_cell(c)
     
-    if p.deathmatch and c.x == 1 and c.y == p.h then
+    if PLAN.deathmatch and c.x == 1 and c.y == PLAN.h then
       add_dm_exit(c)
     end
 
@@ -1855,7 +1855,7 @@ function make_chunks(p)
     if settings.mons == "less" then probs[4] = 3.2 end
     if settings.mons == "more" then probs[4] = 7.5 end
 
-    if p.deathmatch then probs[4] = 0 end
+    if PLAN.deathmatch then probs[4] = 0 end
 
     if c.scenic then probs[2] = 2; probs[4] = 0 end
 
@@ -2312,7 +2312,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
   local function good_Q_spot(c) -- REMOVE (use block-based alloc)
 
-    assert(not p.deathmatch)
+    assert(not PLAN.deathmatch)
 
     local function k_dist(kx,ky)
       local side = c.entry_dir or c.exit_dir or 2
@@ -2353,11 +2353,11 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
   --==-- make_chunks --==--
 
-  for zzz,cell in ipairs(p.all_cells) do
+  for zzz,cell in ipairs(PLAN.all_cells) do
     create_chunks(cell)
   end
 
-  for zzz,cell in ipairs(p.all_cells) do
+  for zzz,cell in ipairs(PLAN.all_cells) do
     for side = 2,8,2 do
       local L = cell.link[side]
       if L and not L.where then
@@ -2375,7 +2375,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
   for loop=1,(512+80) do 
     clashes = 0
 
-    for zzz,cell in ipairs(p.all_cells) do
+    for zzz,cell in ipairs(PLAN.all_cells) do
       if not alloc_link_chunks(cell, loop) then
         clashes = clashes + 1
       end
@@ -2393,7 +2393,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
   -- secondly, determine main walk areas
 
-  for zzz,cell in ipairs(p.all_cells) do
+  for zzz,cell in ipairs(PLAN.all_cells) do
 
     mark_vista_chunks(cell)
     create_huge_vista(cell)
@@ -2526,7 +2526,7 @@ function setup_borders_and_corners(p)
     local link = c.link[side]
     D.build = (link and link.build) or c
 
-    local other = neighbour_by_side(p,c, side)
+    local other = neighbour_by_side(c, side)
 
     -- vistas are an extension to the original room
     if link and link.kind == "vista" then
@@ -2562,7 +2562,7 @@ function setup_borders_and_corners(p)
 
   --- setup_borders_and_corners ---
 
-  for zzz,c in ipairs(p.all_cells) do
+  for zzz,c in ipairs(PLAN.all_cells) do
 
     for side = 1,9 do
       if c.border[side] then init_border(c, side) end
@@ -2642,7 +2642,7 @@ function build_borders(p)
       door_kind = 1, tag = 0,
     }
 
-    if dual_odds(p.deathmatch, 80, 15) and not link.is_exit then
+    if dual_odds(PLAN.deathmatch, 80, 15) and not link.is_exit then
       parm.door_kind = 117 -- Blaze
     end
 
@@ -2658,7 +2658,7 @@ function build_borders(p)
         tag = 0,
       }
 
-      parm.door_kind = sel(p.coop, door_info.kind_once, door_info.kind_rep)
+      parm.door_kind = sel(PLAN.coop, door_info.kind_once, door_info.kind_rep)
 
       -- FIXME: heretic statues !!!
 
@@ -2737,7 +2737,7 @@ function build_borders(p)
 
 if GAME.caps.elevator_exits and link.is_exit then
 local other = link_other(link, c)
-B_exit_elevator(p, other, link.x1, link.y1, side)
+B_exit_elevator(PLAN, other, link.x1, link.y1, side)
 return
 end
 
@@ -2897,7 +2897,7 @@ arch.f_tex = "TLITE6_6"
       fill(c, x+ax, y+ay, ex, ey, arch)
 
       if link.block_sound then
-        -- FIXME block_sound(p, c, x,y, ex,ey, 1)
+        -- FIXME block_sound(PLAN, c, x,y, ex,ey, 1)
       end
 
       -- pillar in middle of special arch
@@ -2913,7 +2913,7 @@ arch.f_tex = "TLITE6_6"
 
     elseif link.kind == "door" and link.is_exit and not link.quest then
 
-      B_exit_door(p,c, c.combo, link, x, y, c.floor_h, dir)
+      B_exit_door(PLAN,c, c.combo, link, x, y, c.floor_h, dir)
 
     elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
        GAME.switches[link.quest.item].bars
@@ -2936,7 +2936,7 @@ arch.f_tex = "TLITE6_6"
       local bar = link.bar_size
       local tag = link.quest.tag + 1
 
-      B_bars(p,c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_combo.wall, tag,true)
+      B_bars(PLAN,c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_combo.wall, tag,true)
 
     elseif link.kind == "door" then
 
@@ -2956,7 +2956,7 @@ arch.f_tex = "TLITE6_6"
       local key_tex = nil
 
 
-      B_door(p, c, link, b_combo, x, y, c.floor_h, dir,
+      B_door(PLAN, c, link, b_combo, x, y, c.floor_h, dir,
              1 + int(info.w / 64), 1, info, door_kind, tag, key_tex)
     else
       error("build_link: bad kind: " .. tostring(link.kind))
@@ -3163,7 +3163,7 @@ arch.f_tex = "TLITE6_6"
     local ax,ay = dir_to_across(dir)
 
     local link = c.link[side]
-    local other = neighbour_by_side(p,c,side)
+    local other = neighbour_by_side(c,side)
 
     assert(D.combo)
 
@@ -3235,7 +3235,7 @@ arch.f_tex = "TLITE6_6"
 ---###    local ax, ay = dir_to_across(D.side)
 ---###
 ---###    while x <= D.x2 and y <= D.y2 do
----###      gap_fill(p,c, x, y, x, y, WINDOW)
+---###      gap_fill(c, x, y, x, y, WINDOW)
 ---###      x, y = x+ax, y+ay
 ---###    end
 
@@ -3321,7 +3321,7 @@ arch.f_tex = "TLITE6_6"
     if D.build ~= c then return end
 
     local link = c.link[side]
-    local other = neighbour_by_side(p, c, side)
+    local other = neighbour_by_side(c, side)
 
     local b_combo = D.combo
     assert(b_combo)
@@ -3351,14 +3351,14 @@ arch.f_tex = "TLITE6_6"
         if side == 2 or side == 8 then nb_side = 4 end
         if cr == 2 then nb_side = 10 - nb_side end
 
-        local NB = neighbour_by_side(p, c, nb_side)
+        local NB = neighbour_by_side(c, nb_side)
 
         local cx, cy = corn_x1, corn_y1
         if cr == 2 then cx, cy = corn_x2, corn_y2 end
 
         if NB then
           local NB_link = NB.link[side]
-          local NB_other = neighbour_by_side(p, NB, side)
+          local NB_other = neighbour_by_side(NB, side)
 
           if false then --!!!!! FIXME what_border_type(NB, NB_link, NB_other, side) == "sky" then
             build_sky_border(side, cx, cy, cx, cy)
@@ -3378,7 +3378,7 @@ arch.f_tex = "TLITE6_6"
 
   --== build_borders ==--
 
-  for zzz,cell in ipairs(p.all_cells) do
+  for zzz,cell in ipairs(PLAN.all_cells) do
 
     c = cell
 
@@ -3577,7 +3577,7 @@ function build_cell(p, c)
       c.chunks[kx][ky].quest=true
 
       --[[ NOT NEEDED?
-      if p.coop and (c.quest.kind == "weapon") then
+      if PLAN.coop and (c.quest.kind == "weapon") then
         local total = rand_index_by_probs { 10, 50, 90, 50 }
         for i = 2,total do
           local kx, ky = good_Q_spot(c)
@@ -3678,7 +3678,7 @@ function build_cell(p, c)
         if not c.void_pic then decide_void_pic(p, c) end
         local pic,cut = c.void_pic,c.void_cut
 
-        if not c.quest.image and (p.deathmatch or
+        if not c.quest.image and (PLAN.deathmatch or
              (c.quest.mini and rand_odds(33)))
         then
           pic = GAME.images[1]
@@ -3707,7 +3707,7 @@ function build_cell(p, c)
     if K.player then
       local angle = player_angle(kx, ky)
       local offsets = sel(rand_odds(50), {1,3,7,9}, {2,4,6,8})
-      if p.coop then
+      if PLAN.coop then
         for i = 1,4 do
           local dx,dy = dir_to_delta(offsets[i])
           if settings.game == "plutonia" then
@@ -3724,7 +3724,7 @@ function build_cell(p, c)
         else
           B_pedestal(p, c, bx, by, K.rmodel, GAME.pedestals.PLAYER)
         end
-        add_thing(c, bx, by, sel(p.deathmatch, "dm_player", "player1"), true, angle)
+        add_thing(c, bx, by, sel(PLAN.deathmatch, "dm_player", "player1"), true, angle)
         c.player_pos = {x=bx, y=by}
 
       end
@@ -3943,7 +3943,7 @@ function build_cell(p, c)
       if K.pillar and not blocked then
 
         -- TEST CRUD
-        if rand_odds(22) and GAME.mats.CAGE and not p.deathmatch
+        if rand_odds(22) and GAME.mats.CAGE and not PLAN.deathmatch
           and K.rmodel.c_h >= K.rmodel.f_h + 128
         then
           B_pillar_cage(p,c, GAME.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
@@ -4404,7 +4404,7 @@ con.printf("  SHORTENED\n")
 
   local function build_one_vista(c, side, link)
 
-    local other = neighbour_by_side(p, c, side)
+    local other = neighbour_by_side(c, side)
 
     -- fixme: this code designed for opposite build site
     c,other,side = other,c,10-side
@@ -4860,7 +4860,7 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 
     if not info then
       -- Fuck!
-      show_cell_blocks(p,c)
+      show_cell_blocks(c)
       con.printf("Error in Cell (%d,%d) Chunk [%d,%d] dir:%d\n",
           c.x, c.y, K.kx, K.ky, K.stair_dir)
       error("Unable to find stair position!")
@@ -5291,7 +5291,7 @@ function tizzy_up_room(p, c)
       x,y,dir = find_emergency_loc(c)
     end
     if not x then
-      show_cell_blocks(p,c)
+      show_cell_blocks(c)
       con.printf("Could not find place for: %s\n", name)
 --!!!!!!      error("Could not find place for: " .. name)
       return
@@ -5330,7 +5330,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
     local x,y,dir = find_fab_loc(c, fab, 0,3)
     if not x then
-      show_cell_blocks(p,c)
+      show_cell_blocks(c)
       con.printf("Could not find place for SWITCH: %s %dx%d\n", fab.name, fab.long, fab.deep)
 --!!!!!!      error("Could not find place for switch!");
       return
@@ -5558,22 +5558,22 @@ con.debugf("add_scenery : %s\n", item)
   -- later items to no longer fit.
 
   -- PLAYERS
-  if not p.deathmatch and c == p.quests[1].first then
+  if not PLAN.deathmatch and c == p.quests[1].first then
     for i = 1,sel(settings.mode == "coop",4,1) do
       add_player(c, "player" .. tostring(i))
     end
 
-  elseif p.deathmatch and (c.require_player or rand_odds(50)) then
+  elseif PLAN.deathmatch and (c.require_player or rand_odds(50)) then
     add_player(c, "dm_player")
   end
 
-  if p.deathmatch and c.x==2 and not p.have_sp_player then
+  if PLAN.deathmatch and c.x==2 and not p.have_sp_player then
     add_player(c, "player1")
     p.have_sp_player = true
   end
 
   -- QUEST ITEM
-  if not p.deathmatch and c == c.quest.last then
+  if not PLAN.deathmatch and c == c.quest.last then
     if (c.quest.kind == "key") or
        (c.quest.kind == "weapon") or
        (c.quest.kind == "item")
@@ -5585,13 +5585,13 @@ con.debugf("add_scenery : %s\n", item)
     then
       add_switch(c)
     end
-  elseif p.deathmatch and (c.require_weapon or rand_odds(75)) then
+  elseif PLAN.deathmatch and (c.require_weapon or rand_odds(75)) then
     add_dm_weapon(c)
   end
 
   -- TODO: 'room switch'
 
-  if p.deathmatch then
+  if PLAN.deathmatch then
     -- secondary DM PLAYER
     if rand_odds(30) then
       add_object(c, "dm_player")
@@ -5695,30 +5695,28 @@ function build_rooms(p)
 
   -- build_rooms --
 
-  for zzz,cell in ipairs(p.all_cells) do
+  for zzz,cell in ipairs(PLAN.all_cells) do
     create_blocks(p, cell)
   end
 
-  for zzz,cell in ipairs(p.all_cells) do
+  for zzz,cell in ipairs(PLAN.all_cells) do
     build_cell(p, cell)
   end
 
-  for zzz,cell in ipairs(p.all_cells) do
+  for zzz,cell in ipairs(PLAN.all_cells) do
     build_void_space(cell)
   end
 
-  for zzz,cell in ipairs(p.all_cells) do
+  for zzz,cell in ipairs(PLAN.all_cells) do
     tizzy_up_room(p, cell)
   end
 
-  for zzz,cell in ipairs(p.all_cells) do
+  for zzz,cell in ipairs(PLAN.all_cells) do
     GAP_FILL_ROOM(p, cell)
   end
 end
 
 function build_depots()
-
-  local p = PLAN -- FIXME
 
   local function build_one_depot(c)
 
@@ -5807,7 +5805,7 @@ end
 
 function build_level(p)
 
-  for zzz,cell in ipairs(p.all_cells) do
+  for zzz,cell in ipairs(PLAN.all_cells) do
     setup_rmodel(cell)
   end
 
@@ -5816,17 +5814,17 @@ build_pacman_level(p, p.quests[1].first);
 return
 end
 
+  setup_borders_and_corners(p)
+
   make_chunks(p)
   con.ticker()
 
-  show_chunks(p)
-
-  setup_borders_and_corners(p)
+  show_chunks()
 
   build_rooms(p)
   con.ticker()
 
-  build_borders(p)
+  build_borders()
   con.ticker()
 
   build_depots()
@@ -5834,7 +5832,7 @@ end
 
   con.progress(25); if con.abort() then return end
  
-  if p.deathmatch then
+  if PLAN.deathmatch then
     deathmatch_through_level()
   else
     battle_through_level()

@@ -649,8 +649,8 @@ end
 function write_wolf_level(p)
 
   local function handle_block(x, y)
-    if not valid_block(p, x, y) then return end
-    local B = p.blocks[x][y]
+    if not valid_block(x, y) then return end
+    local B = PLAN.blocks[x][y]
     if not B then return end
 
     local tile = WF_NO_TILE

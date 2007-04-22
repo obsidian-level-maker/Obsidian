@@ -138,11 +138,11 @@ function build_cool_shit()
     con.rand_seed(settings.seed * 100 + idx)
  
     if settings.mode == "dm" then
-      PLAN = plan_dm_arena()
+      plan_dm_arena()
     elseif settings.mode == "coop" then
-      PLAN = plan_sp_level(true)
+      plan_sp_level(true)
     else
-      PLAN = plan_sp_level(false)
+      plan_sp_level(false)
     end
 
 PLAN.lev_name = lev

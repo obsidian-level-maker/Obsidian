@@ -152,7 +152,7 @@ end
 function find_free_spots(c)
 
   local function free_spot(bx, by)
---  if not valid_block(p, bx, by) then return false end
+--  if not valid_block(bx, by) then return false end
 
     local B = PLAN.blocks[bx][by]
 

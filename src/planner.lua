@@ -18,7 +18,7 @@
 
 
 function show_quests(p)
-  if p.deathmatch then
+  if PLAN.deathmatch then
     con.printf("Deathmatch Quest: frag fest!\n")
     return
   end
@@ -33,7 +33,7 @@ function show_quests(p)
         Q.level, Q.sub_level, Q.kind, Q.item, Q.want_len)
   end
 
-  for q_idx,Q in ipairs(p.quests) do
+  for q_idx,Q in ipairs(PLAN.quests) do
     display_quest(q_idx, Q)
     for r_idx,R in ipairs(Q.children) do
       display_mini_quest(r_idx, R)
@@ -94,19 +94,19 @@ function show_path(p)
 
   -- BEGIN show_path --
 
-  divider(p.w)
+  divider(PLAN.w)
 
-  for y = p.h,1,-1 do
-    for x = 1,p.w do
-      show_cell(p.cells[x][y])
+  for y = PLAN.h,1,-1 do
+    for x = 1,PLAN.w do
+      show_cell(PLAN.cells[x][y])
     end
     con.printf("\n")
-    divider(p.w)
+    divider(PLAN.w)
   end
 end
 
 
-function show_chunks(p)
+function show_chunks()
 
   local function show_cell(c,ky)
 
@@ -170,20 +170,20 @@ function show_chunks(p)
 
   -- BEGIN show_cell --
 
-  divider(p.w)
+  divider(PLAN.w)
 
-  for y = p.h,1,-1 do
+  for y = PLAN.h,1,-1 do
     for row = 3,1,-1 do
-      for x = 1,p.w do
-        show_cell(p.cells[x][y], row)
+      for x = 1,PLAN.w do
+        show_cell(PLAN.cells[x][y], row)
       end
       con.printf("\n")
     end
-    divider(p.w)
+    divider(PLAN.w)
   end
 end
 
-function show_cell_blocks(p, c)
+function show_cell_blocks(c)
 
   local function chk(B)
     if not B then return "!" end
@@ -202,7 +202,7 @@ function show_cell_blocks(p, c)
 
   for y = c.by2,c.by1,-1 do
     for x = c.bx1,c.bx2 do
-      con.printf("%s", chk(p.blocks[x][y]))
+      con.printf("%s", chk(PLAN.blocks[x][y]))
     end
     con.printf("\n")
   end
@@ -210,13 +210,13 @@ end
 
 
 function random_cell(p)
-  return rand_irange(1, p.w), rand_irange(1, p.h)
+  return rand_irange(1, PLAN.w), rand_irange(1, PLAN.h)
 end
 
 function empty_loc(p)  ---### UNUSED
   for loop = 1,999 do
     local x,y = random_cell(p)
-    if not p.cells[x][y] then return x, y end
+    if not PLAN.cells[x][y] then return x, y end
   end
 end
 
@@ -314,9 +314,9 @@ function create_cell(p, x, y, quest, along, combo, is_depot)
     monsters = {}
   }
 
-  CELL.bx1, CELL.by1, CELL.bx2, CELL.by2 = p.cell_base_coords(x, y)
+  CELL.bx1, CELL.by1, CELL.bx2, CELL.by2 = PLAN.cell_base_coords(x, y)
 
-  p.cells[x][y] = CELL
+  PLAN.cells[x][y] = CELL
 
   if is_depot then
     table.insert(p.all_depots, CELL)
@@ -341,7 +341,7 @@ function create_link(p, c, other, dir)
   c.link[dir] = LINK
   other.link[10-dir] = LINK
 
-  table.insert(p.all_links, LINK)
+  table.insert(PLAN.all_links, LINK)
 
   return LINK
 end
@@ -365,7 +365,7 @@ function shuffle_build_sites(p)
 
   -- shuffle_build_sites --
   
-  for zzz,link in ipairs(p.all_links) do
+  for zzz,link in ipairs(PLAN.all_links) do
 
     if link.is_exit or link.kind == "vista" then
       -- do not change this link
@@ -513,7 +513,7 @@ function resize_rooms(p)
 
     local ox,oy = c.x + dx, c.y + dy
 
-    local other = neighbour_by_side(p, c, side)
+    local other = neighbour_by_side(c, side)
 
     if c.is_exit or c.is_depot then return end
 
@@ -528,7 +528,7 @@ function resize_rooms(p)
     local dir
 
     if not other then
-      if valid_cell(p, ox, oy) then
+      if valid_cell(ox, oy) then
         if pass ~= 1 then return end
 
         -- empty cells on the map can only be nudged in one direction
@@ -551,7 +551,7 @@ function resize_rooms(p)
         local nx = c.x + dx*dmul + ax*amul
         local ny = c.y + dy*dmul + ay*amul
 
-        local n = valid_cell(p, nx, ny) and p.cells[nx][ny]
+        local n = valid_cell(nx, ny) and PLAN.cells[nx][ny]
 
         if n and n.combo.outdoor then return end
       end end
@@ -635,7 +635,7 @@ function resize_rooms(p)
 
   local visit_list = {}
 
-  for zzz,c in ipairs(p.all_cells) do
+  for zzz,c in ipairs(PLAN.all_cells) do
     for side = 2,8,2 do
       table.insert(visit_list, { c=c, side=side })
     end
@@ -650,26 +650,16 @@ function resize_rooms(p)
     end
   end
 
-for zzz,cell in ipairs(p.all_cells) do
+for zzz,cell in ipairs(PLAN.all_cells) do
 con.debugf("CELL @ (%d,%d) has coords [%d,%d]..[%d,%d]\n",
 cell.x, cell.y, cell.bx1, cell.by1, cell.bx2, cell.by2)
 end
-
----####  -- second pass: move borders that touch the edge of the map
----####  rand_shuffle(visit_list)
----####
----####  for zzz,v in ipairs(visit_list) do
----####    local x, y = v.c.x, v.c.y
----####    if (x == 1 or x == p.w or y == 1 or y == p.h) then
----####      try_nudge_cell(v.c, v.side, 2)
----####    end
----####  end
 
 ---  remove_dummies()
 end
 
 
-function create_corners(p)
+function create_corners()
 
   local SUB_TO_DIR = { { 1, 3 }, { 7, 9 } }
   
@@ -684,7 +674,7 @@ function create_corners(p)
       local cy = y + sub_y
       local c_dir = SUB_TO_DIR[2-sub_y][2-sub_x]
 
-      local c = valid_cell(p,cx,cy) and p.cells[cx][cy]
+      local c = valid_cell(cx,cy) and PLAN.cells[cx][cy]
 
       if c and not c.is_depot then
         local bx, by = corner_coords(c_dir, c.bx1, c.by1, c.bx2, c.by2)
@@ -713,7 +703,7 @@ function create_corners(p)
       for sub_x = 0,1 do for sub_y = 0,1 do
         local cx = x + sub_x
         local cy = y + sub_y
-        local c = valid_cell(p,cx,cy) and p.cells[cx][cy]
+        local c = valid_cell(cx,cy) and PLAN.cells[cx][cy]
 
         if c and not c.is_depot and
            (CN.bx >= c.bx1-1) and (CN.by >= c.by1-1) and
@@ -727,12 +717,14 @@ function create_corners(p)
 
   --- create_corners ---
 
-  for x = 0,p.w do for y = 0,p.h do  -- NOTE: goes outside the plan
-    find_corners(x, y)
-  end end
+  for x = 0, PLAN.w do -- NOTE: goes outside the plan
+    for y = 0, PLAN.h do
+      find_corners(x, y)
+    end
+  end
 end
 
-function create_borders(p)
+function create_borders()
 
   local function get_corner_dirs(side)
         if side == 2 then return 1,3
@@ -787,7 +779,7 @@ C.  l_cell: OK, other: XX
 
     for side = 2,8,2 do
 
-      local other = neighbour_by_side(p,c,side)
+      local other = neighbour_by_side(c, side)
 
       local dx,dy = dir_to_delta(side)
 
@@ -797,8 +789,8 @@ C.  l_cell: OK, other: XX
       cx2, cy2 = cx2+dx, cy2+dy
 
       local l_dir, h_dir = get_corner_dirs(side)
-      local l_cell = neighbour_by_side(p, c, l_dir)
-      local h_cell = neighbour_by_side(p, c, h_dir)
+      local l_cell = neighbour_by_side(c, l_dir)
+      local h_cell = neighbour_by_side(c, h_dir)
 
       if side == 2 or side == 8 then
 
@@ -866,7 +858,7 @@ C.  l_cell: OK, other: XX
     for side = 1,9,2 do if side ~= 5 then
       if not c.border[side] then
 
-        local other = neighbour_by_side(p,c,side)
+        local other = neighbour_by_side(c,side)
 if other then
         local D = other and other.border[10-side]
         assert(not D)
@@ -901,7 +893,7 @@ end
     for side = 1,9,2 do if side ~= 5 then
       if not c.border[side] then
 
-        local other = neighbour_by_side(p,c,side)
+        local other = neighbour_by_side(c,side)
 if other then
         local D = other and other.border[10-side]
         assert(not D)
@@ -957,7 +949,7 @@ end
 
   --- create_borders ---
 
-  for zzz,c in ipairs(p.all_cells) do
+  for zzz,c in ipairs(PLAN.all_cells) do
     find_borders(c)
   end
 end
@@ -967,7 +959,9 @@ end
 
 function plan_sp_level(is_coop)  -- returns Plan
 
-  local p = get_base_plan(GAME.plan_size, GAME.cell_size)
+  PLAN = get_base_plan(GAME.plan_size, GAME.cell_size)
+
+  local p = PLAN
 
 
   local function travel_cost(cells, cx, cy, nx, ny)
@@ -976,7 +970,7 @@ function plan_sp_level(is_coop)  -- returns Plan
   end
 
   local function valid_and_empty(cx, cy)
-    return valid_cell(p, cx, cy) and not p.cells[cx][cy]
+    return valid_cell(cx, cy) and not PLAN.cells[cx][cy]
   end
 
   local function get_quest_item(quest)
@@ -987,7 +981,7 @@ function plan_sp_level(is_coop)  -- returns Plan
     local t_probs = {}
 
     for item,prob in pairs(tab) do
-      if not p.used_items[item] then
+      if not PLAN.used_items[item] then
         table.insert(t_items, item)
         table.insert(t_probs, prob)
       end
@@ -1054,8 +1048,8 @@ function plan_sp_level(is_coop)  -- returns Plan
     local b_probs = {}
 
 --con.debugf(Q.mini and "MINI-Q: " or "QUEST: ", Q.level, "\n")
-    for x = 1,p.w do for y = 1,p.h do
-      local c = p.cells[x][y]
+    for x = 1,PLAN.w do for y = 1,PLAN.h do
+      local c = PLAN.cells[x][y]
       if c and not c.is_depot then
         local prob = branch_spot_score(c, Q)
 
@@ -1263,8 +1257,8 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
 
     -- add very first room somewhere in lower-left quarter of map
     if not Q.mini and Q.level == 1 then
-      local x = rand_irange(1, int(p.w / 2))
-      local y = rand_irange(1, int(p.h / 2))
+      local x = rand_irange(1, int(PLAN.w / 2))
+      local y = rand_irange(1, int(PLAN.h / 2))
       create_cell(p, x, y, Q, 1, combo)
     end
 
@@ -1308,7 +1302,7 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
 if false then --!!!!
     if Q.combo.outdoor and not Q.has_hallway then
       -- Experimental: start cell is a building
-      if #Q.path >= 3 and Q == p.quests[1] and rand_odds(30) then
+      if #Q.path >= 3 and Q == PLAN.quests[1] and rand_odds(30) then
         Q.first.combo = get_rand_indoor_combo()
       end
 
@@ -1327,7 +1321,7 @@ end
 
   local function decide_links()
 
-    for zzz,link in ipairs(p.all_links) do
+    for zzz,link in ipairs(PLAN.all_links) do
       local c1 = link.cells[1]
       local c2 = link.cells[2]
 
@@ -1343,16 +1337,16 @@ end
       else -- need a locked door
 
         local lock_level = math.max(c1.quest.level, c2.quest.level) - 1
-        assert(lock_level >= 1 and lock_level < #p.quests)
+        assert(lock_level >= 1 and lock_level < #PLAN.quests)
 
-        link.quest = p.quests[lock_level]
+        link.quest = PLAN.quests[lock_level]
         link.kind  = "door"
       end
     end
 
     -- for Wolfenstein3D, first room should have a door
     if GAME.caps.sealed_start then
-      local c = p.quests[1].first
+      local c = PLAN.quests[1].first
 
       for side=2,8,2 do
         local link = c.link[side]
@@ -1444,7 +1438,7 @@ end
       local f_max = MIN_FLOOR
 
       for dir = 2,8,2 do
-        local n = neighbour_by_side(p, c, dir)
+        local n = neighbour_by_side(c, dir)
         if n and n.combo.outdoor and not n.scenic then
           f_min = math.min(f_min, n.floor_h)
           f_max = math.max(f_max, n.floor_h)
@@ -1472,9 +1466,9 @@ end
 
     if not GAME.caps.heights then return end
 
-    p.quests[1].path[1].floor_h = start_height()
+    PLAN.quests[1].path[1].floor_h = start_height()
 
-    for zzz,Q in ipairs(p.quests) do
+    for zzz,Q in ipairs(PLAN.quests) do
       quest_heights(Q)
 
       for xxx,R in ipairs(Q.children) do
@@ -1483,7 +1477,7 @@ end
     end
 
     -- do scenic cells
-    for zzz,c in ipairs(p.all_cells) do
+    for zzz,c in ipairs(PLAN.all_cells) do
       if c.scenic then
         scenic_floor(c);
       end
@@ -1517,7 +1511,7 @@ end
     local function raise_the_rooves()
 
       local function merge_sky(c, dir)
-        local other = neighbour_by_side(p, c, dir)
+        local other = neighbour_by_side(c, dir)
         if other then
           -- FIXME: when border is 100% solid (no windows/doors/fences)
           --        then we don't need to merge sky heights.
@@ -1543,7 +1537,7 @@ end
 
         if c.is_exit then return end
 
-        local other = neighbour_by_side(p, c, dir)
+        local other = neighbour_by_side(c, dir)
         if not other then return end
 
         local need = sel(c.combo.outdoor, 96, 64)
@@ -1556,7 +1550,7 @@ end
 
       --- raise_the_rooves ---
 
-      for zzz,c in ipairs(p.all_cells) do
+      for zzz,c in ipairs(PLAN.all_cells) do
         for dir = 2,8,2 do
           if c.link[dir] then
             merge_link(c, dir)
@@ -1564,20 +1558,20 @@ end
         end
       end
 
-      for zzz,c in ipairs(p.all_cells) do
+      for zzz,c in ipairs(PLAN.all_cells) do
         c.sky_h = c.ceil_h
       end
 
       repeat
         local changed = false
-        for zzz,c in ipairs(p.all_cells) do
+        for zzz,c in ipairs(PLAN.all_cells) do
           for dir = 2,8,2 do
             if merge_sky(c, dir) then changed = true end
           end
         end
       until not changed
 
-      for zzz,c in ipairs(p.all_cells) do
+      for zzz,c in ipairs(PLAN.all_cells) do
         if c.combo.outdoor then
           c.ceil_h = math.max(c.ceil_h, c.sky_h)
         end
@@ -1586,7 +1580,7 @@ end
 
     --- select_ceiling_heights ---
 
-    for zzz,c in ipairs(p.all_cells) do
+    for zzz,c in ipairs(PLAN.all_cells) do
       initial_height(c)
     end
 
@@ -1631,7 +1625,7 @@ end
 
     -- standard flood-fill
     
-    local seeds = { p.quests[1].first }
+    local seeds = { PLAN.quests[1].first }
 
     seeds[1].floor_code = allocate_floor_code(p)
 
@@ -1640,7 +1634,7 @@ end
 
       if #seeds == 0 then
         -- grown as far as possible, so find new seeding spot
-        for zzz,c in ipairs(p.all_cells) do
+        for zzz,c in ipairs(PLAN.all_cells) do
           if not c.floor_code then
             c.floor_code = allocate_floor_code(p)
             table.insert(seeds, c)
@@ -1713,7 +1707,7 @@ end
       
       local parent
       if is_mini then
-        parent = p.quests[#p.quests]
+        parent = PLAN.quests[#PLAN.quests]
         assert(parent)
       end
 
@@ -1735,8 +1729,8 @@ end
         QUEST.level = parent.level
         QUEST.sub_level = #parent.children
       else
-        table.insert(p.quests, QUEST)
-        QUEST.level = #p.quests
+        table.insert(PLAN.quests, QUEST)
+        QUEST.level = #PLAN.quests
       end
 
       local len_probs = LEN_PROB_TAB[kind]
@@ -1834,7 +1828,7 @@ end
   end
 
   local function plot_quests()
-    for zzz,Q in ipairs(p.quests) do
+    for zzz,Q in ipairs(PLAN.quests) do
       make_quest_path(Q)
 
       for yyy,R in ipairs(Q.children) do
@@ -1856,14 +1850,14 @@ end
 --T2 = GAME.themes["CAVE"]
 
     -- choose change-over point
-    assert(#p.quests >= 2)
+    assert(#PLAN.quests >= 2)
 
     local h_probs = {}
-    for j = 1,#p.quests do
+    for j = 1,#PLAN.quests do
       local prob
-      if j == 1 or j == #p.quests then
+      if j == 1 or j == #PLAN.quests then
         table.insert(h_probs, 5)
-      elseif j == 2 or j == #p.quests-1 then
+      elseif j == 2 or j == #PLAN.quests-1 then
         table.insert(h_probs, 60)
       else
         table.insert(h_probs, 90)
@@ -1873,7 +1867,7 @@ end
     local change_over = rand_index_by_probs(h_probs)
 con.debugf("CHANGE_OVER = %d\n", change_over)
 
-    for idx,Q in ipairs(p.quests) do
+    for idx,Q in ipairs(PLAN.quests) do
       
       local diff = Q.level - change_over
 
@@ -1918,8 +1912,8 @@ R.level_theme.name, R.combo.name)
       peak = peak / 2.2;
     end
 
-    if p.coop then
-      peak = peak * p.coop_toughness
+    if PLAN.coop then
+      peak = peak * PLAN.coop_toughness
     end
 
     return peak
@@ -1927,7 +1921,7 @@ R.level_theme.name, R.combo.name)
 
   local function setup_exit_room()
     -- FIXME: handle secret exits too
-    local c = p.quests[#p.quests].last
+    local c = PLAN.quests[#PLAN.quests].last
 
     if not GAME.caps.elevator_exits then
       c.combo = get_rand_exit_combo()
@@ -1967,7 +1961,7 @@ R.level_theme.name, R.combo.name)
 
       for dx = 0,1 do
         for dy = 0,1 do
-          local c = p.cells[x+dx][y+dy]
+          local c = PLAN.cells[x+dx][y+dy]
           if not c then
             table.insert(empties, { x=x+dx, y=y+dy })
           elseif c.scenic == "solid" then
@@ -2013,8 +2007,8 @@ R.level_theme.name, R.combo.name)
     --- add_scenic_cells ---
 
     for loop = 1,3 do
-      for x = 1, p.w-1 do
-        for y = 1, p.h-1 do
+      for x = 1, PLAN.w-1 do
+        for y = 1, PLAN.h-1 do
           test_flat_front(x, y)
         end
       end
@@ -2096,7 +2090,7 @@ R.level_theme.name, R.combo.name)
 
     for zzz,c in ipairs(p.all_cells) do
       for dir = 2,8,2 do
-        local nb = neighbour_by_side(p, c, dir)
+        local nb = neighbour_by_side(c, dir)
 
         if nb and not c.link[dir] and rand_odds(100) and --FIXME
            prelim_check(c, nb, dir)
@@ -2167,7 +2161,7 @@ R.level_theme.name, R.combo.name)
 
     for zzz,c in ipairs(p.all_cells) do
       for side = 6,9 do
-        local other = neighbour_by_side(p, c, side)
+        local other = neighbour_by_side(c, side)
 
         if c.border[side] and other and can_make_window(c, other, side) then
 con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
@@ -2274,13 +2268,13 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
       if not GAME.caps.depots then return end
 
       local function valid_depot_spot(x, y)
-        if p.cells[x][y] then return false end
+        if PLAN.cells[x][y] then return false end
 
         -- check for overlap (FIXME: pre-allocate)
-        local bx1,by1, bx2,by2 = p.cell_base_coords(x, y)
+        local bx1,by1, bx2,by2 = PLAN.cell_base_coords(x, y)
 
         for dx = -1,1 do for dy = -1,1 do
-          local c = valid_cell(p, x+dx, y+dy) and p.cells[x+dx][y+dy]
+          local c = valid_cell(x+dx, y+dy) and PLAN.cells[x+dx][y+dy]
           if c then
             local ox1 = math.max(c.bx1-1, bx1)
             local oy1 = math.max(c.by1-1, by1)
@@ -2300,11 +2294,11 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
       local pos_x, pos_y
       local best_score = -999
 
-      local start = p.quests[1].first
+      local start = PLAN.quests[1].first
 
       -- find place on map to build the depot (furthest from start pos)
-      for x = 1,p.w do for y = 1,p.h do
-        if not p.cells[x][y] then
+      for x = 1,PLAN.w do for y = 1,PLAN.h do
+        if not PLAN.cells[x][y] then
           local score = dist(x, y, start.x, start.y)
           if score > best_score then
             best_score = score
@@ -2354,7 +2348,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     --- add_surprises ---
 
-    for zzz,Q in ipairs(p.quests) do
+    for zzz,Q in ipairs(PLAN.quests) do
       try_add_surprise(Q)
 
       for xxx,R in ipairs(Q.children) do
@@ -2400,7 +2394,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     -- toughen_it_up --
 
-    for zzz,Q in ipairs(p.quests) do
+    for zzz,Q in ipairs(PLAN.quests) do
       toughen_quest(Q)
 
       for yyy,R in ipairs(Q.children) do
@@ -2448,9 +2442,9 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   resize_rooms(p)
 
   if is_coop then
-    p.coop = true
-    p.coop_toughness = rand_range(1.66, 3.0)
-    con.debugf("coop_toughness = %d\n", p.coop_toughness);
+    PLAN.coop = true
+    PLAN.coop_toughness = rand_range(1.66, 3.0)
+    con.debugf("coop_toughness = %d\n", PLAN.coop_toughness);
   end
 
   toughen_it_up()
@@ -2460,8 +2454,8 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   add_vistas()
 --  add_surprises()
 
-  create_corners(p)
-  create_borders(p)
+  create_corners()
+  create_borders()
 
   add_windows()
 

@@ -315,12 +315,23 @@ end
 
 ----====| CELL/BLOCK UTILITIES |====----
 
-function valid_cell(p, cx, cy)
-  return not (cx < 1 or cy < 1 or cx > p.w or cy > p.h)
+function valid_cell(cx, cy)
+  return not (cx < 1 or cy < 1 or cx > PLAN.w or cy > PLAN.h)
 end
 
-function valid_block(p, bx, by)
-  return not (bx < 1 or by < 1 or bx > p.blk_w or by > p.blk_h)
+function valid_block(bx, by)
+  return not (bx < 1 or by < 1 or bx > PLAN.blk_w or by > PLAN.blk_h)
+end
+
+function valid_cell_block(c, x, y)
+  return
+    (c.bx1 <= x and x <= c.bx2) and
+    (c.by1 <= y and y <= c.by2)
+end
+
+function valid_chunk(kx,ky)
+  return 1 <= kx and kx <= 3 and
+         1 <= ky and ky <= 3
 end
 
 -- convert position into block/sub-block pair,
@@ -428,22 +439,11 @@ function corner_coords(side, x1,y1, x2,y2)
   error ("corner_coords: bad side " .. side)
 end
 
-function neighbour_by_side(p, c, dir)
+function neighbour_by_side(c, dir)
   local dx, dy = dir_to_delta(dir)
-  if valid_cell(p, c.x + dx, c.y + dy) then
-    return p.cells[c.x + dx][c.y + dy]
+  if valid_cell(c.x + dx, c.y + dy) then
+    return PLAN.cells[c.x + dx][c.y + dy]
   end
-end
-
-function valid_cell_block(c, x, y)
-  return
-    (c.bx1 <= x and x <= c.bx2) and
-    (c.by1 <= y and y <= c.by2)
-end
-
-function valid_chunk(kx,ky)
-  return 1 <= kx and kx <= 3 and
-         1 <= ky and ky <= 3
 end
 
 function chunk_neighbour(c, K, dir)

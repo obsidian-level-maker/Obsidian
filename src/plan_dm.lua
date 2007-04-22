@@ -55,17 +55,17 @@ function show_dm_links(p)
 
   -- BEGIN show_dm_links --
 
-  divider(p.w)
+  divider(PLAN.w)
 
   local x, y
-  for y = p.h,1,-1 do
+  for y = PLAN.h,1,-1 do
     for row = 3,1,-1 do
-      for x = 1,p.w do
-        show_cell(p.cells[x][y], row)
+      for x = 1,PLAN.w do
+        show_cell(PLAN.cells[x][y], row)
       end
       con.printf("\n")
     end
-    divider(p.w)
+    divider(PLAN.w)
   end
 end
 
@@ -110,39 +110,41 @@ end
 
 function plan_dm_arena()
 
-  local p = get_base_plan(8, 9)
+  PLAN = get_base_plan(8, 9)
 
-  p.deathmatch = true
+  PLAN.deathmatch = true
+
+  local p = PLAN
 
 
   local function insert_link(c, dir)
     local dx, dy = dir_to_delta(dir)
-    local other = p.cells[c.x+dx][c.y+dy]
+    local other = PLAN.cells[c.x+dx][c.y+dy]
 
     create_link(p, c, other, dir)
   end
 
   local function initial_links()
-    for x = 1,p.w do
-      for y = 1,p.h do
-        if x < p.w then insert_link(p.cells[x][y], 6) end
-        if y < p.h then insert_link(p.cells[x][y], 8) end
+    for x = 1,PLAN.w do
+      for y = 1,PLAN.h do
+        if x < PLAN.w then insert_link(PLAN.cells[x][y], 6) end
+        if y < PLAN.h then insert_link(PLAN.cells[x][y], 8) end
       end
     end
   end
 
   local function test_coverage(sx, sy)
-    local visited = array_2D(p.w, p.h)
+    local visited = array_2D(PLAN.w, PLAN.h)
     local count
 
     visited[sx][sy] = true  -- seed point
     
-    for loop = 1,(p.w + p.h + 10) do
+    for loop = 1,(PLAN.w + PLAN.h + 10) do
       count = 0
 
       -- flood-fill type algorithm
-      for x = 1,p.w do for y = 1,p.h do
-        local c = p.cells[x][y]
+      for x = 1,PLAN.w do for y = 1,PLAN.h do
+        local c = PLAN.cells[x][y]
         if visited[x][y] then
           count = count + 1
           for dir = 2,8,2 do
@@ -156,9 +158,9 @@ function plan_dm_arena()
       end end
     end
     
-    con.printf("COVERAGE = %d (want %d)\n", count, p.w * p.h)
+    con.printf("COVERAGE = %d (want %d)\n", count, PLAN.w * PLAN.h)
 
-    return count == (p.w * p.h)
+    return count == (PLAN.w * PLAN.h)
   end
 
   local function remove_dm_links(num)
@@ -166,7 +168,7 @@ function plan_dm_arena()
     local coords = {}
     local index = 1
 
-    rand_shuffle(coords, p.w * p.h * 2)
+    rand_shuffle(coords, PLAN.w * PLAN.h * 2)
 
     local x, y, dir
 
@@ -179,19 +181,19 @@ function plan_dm_arena()
       dir = ((x % 2) == 0) and 6 or 8
       x = math.floor(x / 2)
       
-      y = 1 + math.floor(x / p.w)
-      x = 1 + (x % p.w)
+      y = 1 + math.floor(x / PLAN.w)
+      x = 1 + (x % PLAN.w)
 
       return true
     end
 
     local function remove_one_link()
       while decode_next() do
-        if (x == p.w and dir == 6) or
-           (y == p.h and dir == 8) then
+        if (x == PLAN.w and dir == 6) or
+           (y == PLAN.h and dir == 8) then
           -- ignore the invalid links
         else
-          local c = p.cells[x][y]
+          local c = PLAN.cells[x][y]
 
           if c.link[dir] then
             other = link_other(c.link[dir], c)
@@ -233,7 +235,7 @@ function plan_dm_arena()
   local function unused_combo_pos()
     for loop = 1,999 do
       local x,y = random_cell(p)
-      if not p.cells[x][y].combo then return x, y end
+      if not PLAN.cells[x][y].combo then return x, y end
     end
   end
 
@@ -242,19 +244,19 @@ function plan_dm_arena()
     local y_order = {}
     local dir_order = { 2,4,6,8 }
 
-    rand_shuffle(x_order, p.w)
-    rand_shuffle(y_order, p.h)
+    rand_shuffle(x_order, PLAN.w)
+    rand_shuffle(y_order, PLAN.h)
     rand_shuffle(dir_order)
 
     for zz1,cx in ipairs(x_order) do
       for zz2,cy in ipairs(y_order) do
         for zz3,dir in ipairs(dir_order) do
           local dx, dy = dir_to_delta(dir)
-          local c = p.cells[cx][cy]
+          local c = PLAN.cells[cx][cy]
           assert(c)
 
-          if c.combo and valid_cell(p, cx+dx,cy+dy) then
-            local other = p.cells[cx+dx][cy+dy]
+          if c.combo and valid_cell(cx+dx,cy+dy) then
+            local other = PLAN.cells[cx+dx][cy+dy]
             if not other.combo then
               other.combo = c.combo
               other.liquid = c.liquid
@@ -272,22 +274,22 @@ function plan_dm_arena()
     -- place combos at random spots on the plan,
     -- then "grow" them until all cells are combod.
 
-    for cy = 1,p.h do
-      cx = rand_irange(1,p.w)
-      local c = p.cells[cx][cy]
+    for cy = 1,PLAN.h do
+      cx = rand_irange(1,PLAN.w)
+      local c = PLAN.cells[cx][cy]
       c.combo = get_rand_combo()
       c.liquid = liquid_for_seed(c.combo)
     end
 
-    for pass = 1,(p.w+p.h+10) do  -- FIXME: exit when no empty spots
+    for pass = 1,(PLAN.w+PLAN.h+10) do  -- FIXME: exit when no empty spots
       grow_dm_combos()
       con.ticker();
     end
   end
 
   local function create_dm_links(min_links, max_links)
-    local min_links = p.w * p.h
-    local max_links = p.w * (p.h-1) + p.h * (p.w-1)
+    local min_links = PLAN.w * PLAN.h
+    local max_links = PLAN.w * (PLAN.h-1) + PLAN.h * (PLAN.w-1)
 
     if min_links < max_links then
       min_links = min_links + 1
@@ -379,7 +381,7 @@ function plan_dm_arena()
       end
 
       -- use A* to find a path
-      local path = astar_find_path(p.cells, low.x,low.y, high.x,high.y, verify_scorer)
+      local path = astar_find_path(PLAN.cells, low.x,low.y, high.x,high.y, verify_scorer)
 
       return path
     end
@@ -403,7 +405,7 @@ function plan_dm_arena()
 
     rand_shuffle(locs)
 
-    local num_f = int((p.w + p.h) / 4)
+    local num_f = int((PLAN.w + PLAN.h) / 4)
 
     while #locs > 0 and num_f > 0 do
 
@@ -446,7 +448,7 @@ function plan_dm_arena()
     for zzz,c in ipairs(p.all_cells) do
       for dir = 6,8,2 do
         local dx, dy = dir_to_delta(dir)
-        local other = valid_cell(p, c.x+dx, c.y+dy) and p.cells[c.x+dx][c.y+dy]
+        local other = valid_cell(c.x+dx, c.y+dy) and PLAN.cells[c.x+dx][c.y+dy]
 
         if other and rand_odds(64) and
            can_make_window(c, other)
@@ -466,12 +468,13 @@ function plan_dm_arena()
 
   con.debugf("ARENA SIZE %dx%d\n", W, H)
 
-  assert(W <= p.w and H <= p.h)
+  assert(W <= PLAN.w and H <= PLAN.h)
 
-  p.w, p.h = W, H
+  PLAN.w = W
+  PLAN.h = H
 
   -- dummy quest
-  p.quests[1] =
+  PLAN.quests[1] =
   {
     level = 1, kind = "frag_fest", path = {}, children = {}
   }
@@ -479,7 +482,7 @@ function plan_dm_arena()
   for y = 1,H do
     for x = 1,W do
       -- note: dummy along and combo values
-      create_cell(p, x, y, p.quests[1], 1, nil)
+      create_cell(p, x, y, PLAN.quests[1], 1, nil)
     end
   end
 
@@ -505,21 +508,27 @@ function plan_dm_arena()
   add_doors()
   add_falloffs()
 
-  create_corners(p)
-  create_borders(p)
+  create_corners()
+  create_borders()
 
   add_windows()
 
   con.ticker();
 
   -- guarantee at least 4 players (each corner)
-  p.cells[ 1 ][ 1 ].require_player = true
-  p.cells[p.w][ 1 ].require_player = true
-  p.cells[ 1 ][p.h].require_player = true
-  p.cells[p.w][p.h].require_player = true
+  local pw = PLAN.w
+  local ph = PLAN.h
+
+  PLAN.cells[ 1][ 1].require_player = true
+  PLAN.cells[pw][ 1].require_player = true
+  PLAN.cells[ 1][ph].require_player = true
+  PLAN.cells[pw][ph].require_player = true
 
   -- guarantee at least one weapon (central cell)
-  p.cells[int((p.w+1)/2)][int((p.h+1)/2)].require_weapon = true
+  local mx = int((PLAN.w+1)/2)
+  local my = int((PLAN.h+1)/2)
+
+  PLAN.cells[mx][my].require_weapon = true
 
   return p
 end
