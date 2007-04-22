@@ -17,7 +17,7 @@
 ----------------------------------------------------------------
 
 
-function show_dm_links(p)
+function show_dm_links()
 
   local function show_cell(c,ky)
 
@@ -234,7 +234,7 @@ function plan_dm_arena()
 
   local function unused_combo_pos()
     for loop = 1,999 do
-      local x,y = random_cell(p)
+      local x,y = random_cell()
       if not PLAN.cells[x][y].combo then return x, y end
     end
   end
@@ -498,12 +498,12 @@ function plan_dm_arena()
   choose_dm_combos()
 
   create_dm_links()
-  shuffle_build_sites(p)
+  shuffle_build_sites()
 
   select_heights()
-  compute_height_minmax(p);
+  compute_height_minmax();
 
-  resize_rooms(p)
+  resize_rooms()
 
   add_doors()
   add_falloffs()

@@ -149,17 +149,17 @@ PLAN.lev_name = lev
 
     if con.abort() then aborted = true; break; end
 
-    show_quests(PLAN)
+    show_quests()
     con.printf("\n")
 
     if settings.mode == "dm" then
-      show_dm_links(PLAN)
+      show_dm_links()
     else
-      show_path(PLAN)
+      show_path()
     end
     con.printf("\n")
 
-    build_level(PLAN)
+    build_level()
 
     if con.abort() then aborted = true; break; end
 

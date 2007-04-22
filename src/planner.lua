@@ -17,7 +17,7 @@
 ----------------------------------------------------------------
 
 
-function show_quests(p)
+function show_quests()
   if PLAN.deathmatch then
     con.printf("Deathmatch Quest: frag fest!\n")
     return
@@ -42,7 +42,7 @@ function show_quests(p)
 end
 
 
-function show_path(p)
+function show_path()
 
   local function show_cell(c)
     if (c == nil) then
@@ -209,13 +209,13 @@ function show_cell_blocks(c)
 end
 
 
-function random_cell(p)
+function random_cell()
   return rand_irange(1, PLAN.w), rand_irange(1, PLAN.h)
 end
 
-function empty_loc(p)  ---### UNUSED
+function empty_loc()  ---### UNUSED
   for loop = 1,999 do
-    local x,y = random_cell(p)
+    local x,y = random_cell()
     if not PLAN.cells[x][y] then return x, y end
   end
 end
@@ -265,7 +265,7 @@ function get_base_plan(plan_size, cell_size)
 
     free_tag = 10,
     mark = 10,
-    floor_code = 0,
+    floor_code = 1,
 
     cell_base_coords = function (x, y)
       local bx = BORDER_BLK + 2 + (x-1) * (cell_size+1)
@@ -279,19 +279,25 @@ function get_base_plan(plan_size, cell_size)
   return PLAN
 end
  
-function allocate_tag(p)
-  p.free_tag = p.free_tag + 1
-  return p.free_tag
+function allocate_tag()
+  local result = PLAN.free_tag
+  PLAN.free_tag = PLAN.free_tag + 1
+
+  return result
 end
 
-function allocate_mark(p)
-  p.mark = p.mark + 1
-  return p.mark
+function allocate_mark()
+  local result = PLAN.mark
+  PLAN.mark = PLAN.mark + 1
+
+  return result
 end
 
-function allocate_floor_code(p)
-  p.floor_code = p.floor_code + 1
-  return p.floor_code
+function allocate_floor_code()
+  local result = PLAN.floor_code
+  PLAN.floor_code = PLAN.floor_code + 1
+
+  return result
 end
 
 function create_cell(p, x, y, quest, along, combo, is_depot)
@@ -346,7 +352,7 @@ function create_link(p, c, other, dir)
   return LINK
 end
 
-function shuffle_build_sites(p)
+function shuffle_build_sites()
 
   local function count_builds(c, external)
     local count = 0
@@ -395,7 +401,7 @@ function shuffle_build_sites(p)
   for loop = 1,4 do
     local modified = false
 
-    for zzz,c in ipairs(p.all_cells) do
+    for zzz,c in ipairs(PLAN.all_cells) do
       if count_builds(c, true) == 4 then
 con.debugf("EXTERNALS @ cell (%d,%d) total=4\n", c.x,c.y)
         for tries = 1,4 do
@@ -466,7 +472,7 @@ end
 
 -- FIXME: get_fence_chance(c, other) ???
 
-function compute_height_minmax(p)
+function compute_height_minmax()
 
   local function merge_neighbour(c, other)
     c.f_min = math.min(c.f_min, other.floor_h)
@@ -491,13 +497,13 @@ function compute_height_minmax(p)
     end
   end
 
-  for zzz,c in ipairs(p.all_cells) do
+  for zzz,c in ipairs(PLAN.all_cells) do
     minmax(c)
   end
 end
 
 
-function resize_rooms(p)
+function resize_rooms()
 
   local function try_nudge_cell(c, side, pass)
 
@@ -1627,7 +1633,7 @@ end
     
     local seeds = { PLAN.quests[1].first }
 
-    seeds[1].floor_code = allocate_floor_code(p)
+    seeds[1].floor_code = allocate_floor_code()
 
     repeat
       seeds = grow(seeds)
@@ -1636,7 +1642,7 @@ end
         -- grown as far as possible, so find new seeding spot
         for zzz,c in ipairs(PLAN.all_cells) do
           if not c.floor_code then
-            c.floor_code = allocate_floor_code(p)
+            c.floor_code = allocate_floor_code()
             table.insert(seeds, c)
             break
           end
@@ -1721,7 +1727,7 @@ end
         parent = parent,
         children = {},
 
-        tag = allocate_tag(p)
+        tag = allocate_tag()
       }
 
       if parent then
@@ -2220,7 +2226,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
       local SURPRISE =
       {
         trigger_cell = Q.last,
-        door_tag = allocate_tag(p),
+        door_tag = allocate_tag(),
         toughness = peak_toughness(Q) * 1.4,
         places = {}
       }
@@ -2228,7 +2234,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
       for idx,L in ipairs(locs) do
         if use_all or (idx <= #LOC_PROBS and rand_odds(LOC_PROBS[idx])) then
           table.insert(SURPRISE.places,
-            { c = L.c, side = L.side, tag = allocate_tag(p),
+            { c = L.c, side = L.side, tag = allocate_tag(),
               mon_set = { easy={}, medium={}, hard={} }, spots = {} })
           L.c.closet[L.side] = true
           con.debugf("CLOSET @ (%d,%d)\n", L.c.x, L.c.y)
@@ -2321,13 +2327,13 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
         depot_cell = CELL,
         spread = spread,
         toughness = peak_toughness(Q) * 1.2,
-        door_tag = allocate_tag(p),
+        door_tag = allocate_tag(),
         places = {}
       }
 
       for num = 1,4 do
         table.insert(SURPRISE.places,
-          { c = choose_depot_target(Q,num,spread), tag = allocate_tag(p),
+          { c = choose_depot_target(Q,num,spread), tag = allocate_tag(),
             mon_set = { easy={}, medium={}, hard={} }, spots = {} })
       end
 
@@ -2426,20 +2432,20 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   
   setup_exit_room()
   
-  shuffle_build_sites(p)
+  shuffle_build_sites()
   add_scenic_cells()
 
   con.ticker();
 
   select_floor_heights()
-  compute_height_minmax(p)
+  compute_height_minmax()
 
   select_ceiling_heights()
-  compute_height_minmax(p)
+  compute_height_minmax()
 
   assign_floor_codes()
 
-  resize_rooms(p)
+  resize_rooms()
 
   if is_coop then
     PLAN.coop = true

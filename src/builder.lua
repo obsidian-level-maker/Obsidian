@@ -240,7 +240,7 @@ function move_corner(p,c, x,y,corner, dx,dy)
 
   -- ensure that the writer doesn't swallow up this block
   -- (which would lose the vertex we want to move)
-  B.mark = allocate_mark(PLAN)
+  B.mark = allocate_mark()
 end
 
 -- the c_ prefix means (x,y) are cell-relative coords
@@ -266,7 +266,7 @@ function c_move_frag_corner(p,c, x,y,corner, dx,dy)
   F[corner].dx = dx
   F[corner].dy = dy
 
-  F.mark = allocate_mark(PLAN)
+  F.mark = allocate_mark()
 end
 
  
@@ -505,7 +505,7 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
           -- ensure that the writer doesn't swallow up the block
           -- (which would lose the vertex we want to move)
           if not sec.mark then
-            sec.mark = allocate_mark(PLAN)
+            sec.mark = allocate_mark()
           end
         end
 
@@ -679,7 +679,7 @@ function B_lift(p,c, rmodel, bx,by, z, dir, long, deep)
     lift_kind = 123,  -- 62 for slower kind
     lift_walk = 120,  -- 88 for slower kind
 
-    tag = allocate_tag(PLAN),
+    tag = allocate_tag(),
 
     [2] = { l_peg="top" }, [4] = { l_peg="top" },
     [6] = { l_peg="top" }, [8] = { l_peg="top" },
@@ -975,11 +975,11 @@ function B_vista(p, src,dest, x1,y1, x2,y2, side, b_combo,kind)
           if (x == cv_x1 and y == cv_y1) then
             -- 48 is the magical distance to align the railing
             overrides[cv_dir1] = { dx=(dx*48), dy=(dy*48) }
-            overrides.mark = allocate_mark(PLAN)
+            overrides.mark = allocate_mark()
           end
           if (x == cv_x2 and y == cv_y2) then
             overrides[cv_dir2] = { dx=(dx*48), dy=(dy*48) }
-            overrides.mark = allocate_mark(PLAN)
+            overrides.mark = allocate_mark()
           end
         end
 
@@ -1159,10 +1159,10 @@ function setup_rmodel(c)
     c.rmodel.light = sel(c.combo.outdoor, 192, 144)
   end
 
-  c.mark = allocate_mark(PLAN)
+  c.mark = allocate_mark()
 end
 
-function make_chunks(p)
+function make_chunks()
 
   local K_BORD_PROBS = { 0, 60, 90, 15, 5, 1 }
 
@@ -2413,7 +2413,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 end
 
 
-function setup_borders_and_corners(p)
+function setup_borders_and_corners()
 
   -- for each border and corner: decide on the type, the combo,
   -- and which cell is ultimately responsible for building it.
@@ -2624,7 +2624,7 @@ function find_border_spot(D)
   return best
 end
 
-function build_borders(p)
+function build_borders()
 
   local c
 
@@ -3802,7 +3802,7 @@ function build_cell(p, c)
 
     if K.quest and surprise and c == surprise.trigger_cell then
 
-      sec.mark = allocate_mark(PLAN)
+      sec.mark = allocate_mark()
       sec.walk_kind = 2
       sec.walk_tag  = surprise.door_tag
     end
@@ -4991,7 +4991,7 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 end
 
 
-function tizzy_up_room(p, c)
+function tizzy_up_room(c)
 
   local function block_is_free(B)
     if not B.chunk then return false end
@@ -5558,7 +5558,7 @@ con.debugf("add_scenery : %s\n", item)
   -- later items to no longer fit.
 
   -- PLAYERS
-  if not PLAN.deathmatch and c == p.quests[1].first then
+  if not PLAN.deathmatch and c == PLAN.quests[1].first then
     for i = 1,sel(settings.mode == "coop",4,1) do
       add_player(c, "player" .. tostring(i))
     end
@@ -5567,9 +5567,9 @@ con.debugf("add_scenery : %s\n", item)
     add_player(c, "dm_player")
   end
 
-  if PLAN.deathmatch and c.x==2 and not p.have_sp_player then
+  if PLAN.deathmatch and c.x==2 and not PLAN.have_sp_player then
     add_player(c, "player1")
-    p.have_sp_player = true
+    PLAN.have_sp_player = true
   end
 
   -- QUEST ITEM
@@ -5609,9 +5609,9 @@ con.debugf("add_scenery : %s\n", item)
 end
 
 
-function build_rooms(p)
+function build_rooms()
 
-  local function create_blocks(p, c)
+  local function create_blocks(c)
     
     for kx=1,3 do for ky=1,3 do
       local K = c.chunks[kx][ky]
@@ -5621,7 +5621,7 @@ function build_rooms(p)
     end end
   end
   
-  local function GAP_FILL_ROOM(p, c)
+  local function GAP_FILL_ROOM(c)
     
     local function gap_fill_block(B)
       if B.solid then return end
@@ -5696,11 +5696,11 @@ function build_rooms(p)
   -- build_rooms --
 
   for zzz,cell in ipairs(PLAN.all_cells) do
-    create_blocks(p, cell)
+    create_blocks(cell)
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
-    build_cell(p, cell)
+    build_cell(PLAN, cell)
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
@@ -5708,11 +5708,11 @@ function build_rooms(p)
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
-    tizzy_up_room(p, cell)
+    tizzy_up_room(cell)
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
-    GAP_FILL_ROOM(p, cell)
+    GAP_FILL_ROOM(cell)
   end
 end
 
@@ -5803,25 +5803,25 @@ function build_depots()
 end
 
 
-function build_level(p)
+function build_level()
 
   for zzz,cell in ipairs(PLAN.all_cells) do
     setup_rmodel(cell)
   end
 
-if string.find(p.lev_name, "L10") then
-build_pacman_level(p, p.quests[1].first);
+if string.find(PLAN.lev_name, "L10") then
+build_pacman_level(PLAN, PLAN.quests[1].first);
 return
 end
 
-  setup_borders_and_corners(p)
+  setup_borders_and_corners()
 
-  make_chunks(p)
+  make_chunks()
   con.ticker()
 
   show_chunks()
 
-  build_rooms(p)
+  build_rooms()
   con.ticker()
 
   build_borders()
