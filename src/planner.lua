@@ -133,11 +133,8 @@ function show_chunks()
       if K.kind == "cage"   then return "G" end
       if K.kind == "vista"  then return "V" end
 
-      --[[
-      if K.weapon then return "w" end
-      if K.player then return "p" end
-      if K.quest  then return "t" end
-      --]]
+      if K.kind == "player" then return "P" end
+      if K.kind == "quest"  then return "T" end
 
       if K.link then
 -- if K.link.build == c then return "/" end
