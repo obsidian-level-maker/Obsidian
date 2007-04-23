@@ -223,7 +223,7 @@ function frag_fill(c, sx, sy, ex, ey, F, F2)
 end
 
 
-function move_corner(p,c, x,y,corner, dx,dy)
+function move_corner(c, x,y,corner, dx,dy)
 
   local B = PLAN.blocks[x][y]
   assert(B)
@@ -244,7 +244,7 @@ function move_corner(p,c, x,y,corner, dx,dy)
 end
 
 -- the c_ prefix means (x,y) are cell-relative coords
-function c_move_frag_corner(p,c, x,y,corner, dx,dy)
+function c_move_frag_corner(c, x,y,corner, dx,dy)
 
   local bx, fx = div_mod(x, FW)
   local by, fy = div_mod(y, FH)
@@ -601,7 +601,7 @@ end
 --
 -- Z is the starting height
 --
-function B_stair(p,c, rmodel, bx,by, dir, long, deep, step)
+function B_stair(c, rmodel, bx,by, dir, long, deep, step)
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
@@ -659,7 +659,7 @@ end
 --
 -- Z is the starting height
 --
-function B_lift(p,c, rmodel, bx,by, z, dir, long, deep)
+function B_lift(c, rmodel, bx,by, z, dir, long, deep)
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
@@ -690,65 +690,6 @@ function B_lift(p,c, rmodel, bx,by, z, dir, long, deep)
        by + (long-1) * ay + (deep-1) * dy, LIFT)
 end
 
-
-
-function B_double_pedestal(p, c, bx, by, base, ped_info, overrides)
- 
-  local OUTER =
-  {
-    f_h   = ped_info.h + base.f_h,
-    f_tex = ped_info.floor,
-    l_tex = ped_info.wall,
-    light = ped_info.light,
-
-    c_h   = c.rmodel.c_h - ped_info.h,
-    c_tex = ped_info.floor,
-    u_tex = ped_info.wall,
-
-    kind  = ped_info.glow and 8 -- GLOW TYPE  (FIXME)
-  }
-
-  local INNER =
-  {
-    f_h   = ped_info.h2 + base.f_h,
-    f_tex = ped_info.floor2,
-    l_tex = ped_info.wall2,
-    light = ped_info.light2,
-
-    c_h   = c.rmodel.c_h - ped_info.h2,
-    c_tex = ped_info.floor2,
-    u_tex = ped_info.wall2,
-
-    kind = ped_info.glow2 and 8 -- GLOW TYPE  (FIXME)
-  }
-
-  if c.combo.outdoor then
-    OUTER.c_h   = c.rmodel.c_h
-    OUTER.c_tex = c.rmodel.c_tex
-
-    INNER.c_h   = c.rmodel.c_h
-    INNER.c_tex = c.rmodel.c_tex
-  end
-
-  assert((OUTER.c_h - OUTER.f_h) >= 64)
-  assert((INNER.c_h - INNER.f_h) >= 64)
-
-  local fx = (bx - 1) * FW
-  local fy = (by - 1) * FH
-
-  frag_fill(c, fx+1,fy+1, fx+4,fy+4, OUTER, overrides)
-
-  if ped_info.rotate2 then
-    frag_fill(c, fx+2,fy+2, fx+2,fy+2, INNER)
-
-    c_move_frag_corner(p,c, fx+2,fy+2, 1, 16, -6)
-    c_move_frag_corner(p,c, fx+2,fy+2, 3, 22, 16)
-    c_move_frag_corner(p,c, fx+2,fy+2, 7, -6,  0)
-    c_move_frag_corner(p,c, fx+2,fy+2, 9,  0, 22)
-  else
-    frag_fill(c, fx+2,fy+2, fx+3,fy+3, INNER)
-  end
-end
 
 
 function cage_select_height(p,c, kind, rail, floor_h, ceil_h)
@@ -873,7 +814,7 @@ end
 -- 
 -- The 'kind' can be: "solid", "frame", "open", "wire" OR "fall_over".
 --
-function B_vista(p, src,dest, x1,y1, x2,y2, side, b_combo,kind)
+function B_vista(src,dest, x1,y1, x2,y2, side, b_combo,kind)
 
   local ROOM
   
@@ -1046,7 +987,7 @@ function B_vista(p, src,dest, x1,y1, x2,y2, side, b_combo,kind)
 end
 
 
-function B_exit_elevator(p, c, x, y, side)
+function B_exit_elevator(c, x, y, side)
 
   fab = PREFABS["WOLF_ELEVATOR"]
   assert(fab)
@@ -2768,7 +2709,7 @@ function build_borders()
 
 if GAME.caps.elevator_exits and link.is_exit then
 local other = link_other(link, c)
-B_exit_elevator(PLAN, other, link.x1, link.y1, side)
+B_exit_elevator(other, link.x1, link.y1, side)
 return
 end
 
@@ -3450,7 +3391,7 @@ function build_grotto(p, c, x1,y1, x2,y2)
   gap_fill(c, x1,y1, x2-3,y2-1, ROOM)
 end
 
-function build_pacman_level(p, c)
+function build_pacman_level(c)
 
   local function free_spot(bx, by)
     local B = PLAN.blocks[bx][by]
@@ -3510,7 +3451,7 @@ function build_pacman_level(p, c)
   B_prefab(c, bot_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y-12, 2,false,bot_flip)
   B_prefab(c, bot_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y-12, 2,true, bot_flip)
 
-  B_exit_elevator(p,c, mid_x+19, mid_y+28, 2)
+  B_exit_elevator(c, mid_x+19, mid_y+28, 2)
 
   gap_fill(c, 2,2, 63,63, { solid=combo.wall })
   
@@ -4527,7 +4468,8 @@ end
 ---##    end
 
     -- loop until cannot grow any more tendrils
-    for loop = 1,6 do
+    local loop_num = 4
+    for loop = 1,loop_num do
       local changed = false
       local side = c.exit_dir or c.entry_dir or 2
 
@@ -4731,7 +4673,7 @@ con.printf("  link coords now: (%d,%d) .. (%d,%d)\n", link.x1,link.y1, link.x2,l
 con.debugf("  COORDS: (%d,%d) .. (%d,%d)  size:%dx%d\n", x1,y1, x2,y2, long,deep)
 con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
 
-    B_vista(p, link.vista_src, link.vista_dest, x1,y1, x2,y2, side, c.border[side].combo or c.combo, kind)
+    B_vista(link.vista_src, link.vista_dest, x1,y1, x2,y2, side, c.border[side].combo or c.combo, kind)
   end
 
   local function build_vistas(c)
@@ -5027,10 +4969,10 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
 con.debugf("Putting in Stair: (%d,%d)..(%d,%d) dir:%d size:%dx%d\n", x,y, ex,ey, dir, long, deep)
 
     if mode == "stair" then
-      B_stair(p,c, K.rmodel, x,y, dir, long,deep, step)
+      B_stair(c, K.rmodel, x,y, dir, long,deep, step)
 
     elseif mode == "lift" then
-      B_lift(p,c, K.rmodel, x,y, max_fh, dir, long, deep)
+      B_lift(c, K.rmodel, x,y, max_fh, dir, long, deep)
 
     else
       error("put_in_stair: unknown mode: " .. tostring(mode))
@@ -6090,7 +6032,7 @@ function build_level()
   end
 
 if string.find(PLAN.lev_name, "L10") then
-build_pacman_level(PLAN, PLAN.quests[1].first);
+build_pacman_level(PLAN.quests[1].first);
 return
 end
 
