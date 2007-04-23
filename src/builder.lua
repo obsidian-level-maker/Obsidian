@@ -4387,11 +4387,21 @@ end
 ---##      end
 ---##    end
 
-    local function reclaim_grow_side(side)
+    local function reclaim_grow_side(side, is_partial)
       local rec = c.reclaim[side]
       local changed = false
 
-      for pos = 1,rec.long do
+      local start_pos = 1
+      if is_partial and c.link[side] then
+        local L = c.link[side]
+            if side == 8 then start_pos = L.x2 - c.bx1
+        elseif side == 4 then start_pos = L.y2 - c.by1
+        elseif side == 6 then start_pos = c.by2 - L.y1
+        elseif side == 2 then start_pos = c.bx2 - L.x1
+        end
+      end
+
+      for pos = start_pos, rec.long do
         local T = rec.tendrils[pos]
         local deep = T.deep
 
@@ -4503,31 +4513,32 @@ end
     -- ID number of the previous side's last tendril.
     -- (assuming they actually touch).
 
-    local start_side = rand_irange(1,4)*2
-    local CORNERS = { [2]=3, [4]=1, [6]=9, [8]=7 }
-    for i = 1,4 do
-      local x, y = corner_coords(CORNERS[start_side], c.bx1,c.by1, c.bx2,c.by2)
-      local B = PLAN.blocks[x][y]
-       
-      if not basic_can_swallow(B) then
-        break;
-      end
-
-      start_side = rotate_cw90(start_side)
-    end
+---##    local start_side = rand_irange(1,4)*2
+---##    local CORNERS = { [2]=3, [4]=1, [6]=9, [8]=7 }
+---##    for i = 1,4 do
+---##      local x, y = corner_coords(CORNERS[start_side], c.bx1,c.by1, c.bx2,c.by2)
+---##      local B = PLAN.blocks[x][y]
+---##       
+---##      if not basic_can_swallow(B) then
+---##        break;
+---##      end
+---##
+---##      start_side = rotate_cw90(start_side)
+---##    end
 
     -- loop until cannot grow any more tendrils
-    repeat
+    for loop = 1,6 do
       local changed = false
-      local side = start_side
+      local side = c.exit_dir or c.entry_dir or 2
 
       for i = 1,4 do
-        if reclaim_grow_side(side) then
+        if reclaim_grow_side(side, loop==1 and i==1) then
           changed = true
         end
         side = rotate_cw90(side)
       end
-    until not changed
+      if not changed then break end
+    end
   end
 
   local function get_vista_coords(c, side, link, other)
@@ -5929,9 +5940,9 @@ function build_rooms()
             local B = PLAN.blocks[x][y]
             if B.reclaim and B.reclaim.rec == rec then
               fill(c, x,y, x,y,
---                     { solid = REC_TEX[side] })
-                       B.rmodel or (B.chunk and B.chunk.rmodel) or c.rmodel,
-                       { f_h = c.f_min - 12, f_tex = REC_FLATS[side], has_blocker=true })
+                       { solid = REC_TEX[side] })
+--                     B.rmodel or (B.chunk and B.chunk.rmodel) or c.rmodel,
+--                     { f_h = c.f_min - 12, f_tex = REC_FLATS[side], has_blocker=true })
             end
           end
         end
