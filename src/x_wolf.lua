@@ -646,7 +646,7 @@ end
 --  CUSTOM WRITER for WOLF MAPS
 ----------------------------------------------------------------
 
-function write_wolf_level(p)
+function write_wolf_level()
 
   local function handle_block(x, y)
     if not valid_block(x, y) then return end

@@ -164,14 +164,14 @@ PLAN.lev_name = lev
     if con.abort() then aborted = true; break; end
 
     if settings.game == "wolf3d" or settings.game == "spear" then
-      write_wolf_level(PLAN)
+      write_wolf_level()
     else
-      write_level(PLAN, lev)
+      write_level(lev)
     end
 
     if con.abort() then aborted = true; break; end
 
-    make_mini_map(PLAN)
+    make_mini_map()
   end
 
   if aborted then

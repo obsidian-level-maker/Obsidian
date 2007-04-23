@@ -84,7 +84,7 @@ XL_ACT_SHOOT   = (3 * 1024)
 XL_ACT_BUMP    = (4 * 1024)
 
 
-function write_level(p, lev_name)
+function write_level(lev_name)
  
   local sec_list   = {}
   local vert_list  = {}
@@ -134,9 +134,9 @@ function write_level(p, lev_name)
 
     --- construct_things ---
 
-    for bx = 1,p.blk_w do
-      for by = 1,p.blk_h do
-        local B = p.blocks[bx][by]
+    for bx = 1,PLAN.blk_w do
+      for by = 1,PLAN.blk_h do
+        local B = PLAN.blocks[bx][by]
         if B and B.things then
           for zzz,th in ipairs(B.things) do
             do_thing(bx, by, th)
@@ -483,8 +483,8 @@ function write_level(p, lev_name)
 
     --==-- construct_linedefs --==--
 
-    local frag_w = p.blk_w * FW
-    local frag_h = p.blk_h * FH
+    local frag_w = PLAN.blk_w * FW
+    local frag_h = PLAN.blk_h * FH
 
     -- first do all horizontal lines...
     -- Note: we go ONE PAST the right/top edges.
@@ -497,8 +497,8 @@ function write_level(p, lev_name)
         local by0, fy0 = div_mod(y-1, FH)
         local by1, fy1 = div_mod(y, FH)
 
-        local b0 = p.blocks[bx] and p.blocks[bx][by0]
-        local b1 = p.blocks[bx] and p.blocks[bx][by1]
+        local b0 = PLAN.blocks[bx] and PLAN.blocks[bx][by0]
+        local b1 = PLAN.blocks[bx] and PLAN.blocks[bx][by1]
 
         local f0 = b0 and b0.fragments and b0.fragments[fx][fy0]
         local f1 = b1 and b1.fragments and b1.fragments[fx][fy1]
@@ -532,8 +532,8 @@ function write_level(p, lev_name)
         local bx0, fx0 = div_mod(x-1, FW)
         local bx1, fx1 = div_mod(x, FW)
 
-        local b0 = p.blocks[bx0] and p.blocks[bx0][by]
-        local b1 = p.blocks[bx1] and p.blocks[bx1][by]
+        local b0 = PLAN.blocks[bx0] and PLAN.blocks[bx0][by]
+        local b1 = PLAN.blocks[bx1] and PLAN.blocks[bx1][by]
 
         local f0 = b0 and b0.fragments and b0.fragments[fx0][fy]
         local f1 = b1 and b1.fragments and b1.fragments[fx1][fy]
@@ -582,9 +582,9 @@ function write_level(p, lev_name)
 
     -- adjust_vertices --
 
-    for bx = 1,p.blk_w do
-      for by = 1,p.blk_h do
-        local B = p.blocks[bx][by]
+    for bx = 1,PLAN.blk_w do
+      for by = 1,PLAN.blk_h do
+        local B = PLAN.blocks[bx][by]
         if B and B.fragments then
           for fx=1,4 do for fy=1,4 do
             local F = B.fragments[fx][fy]
@@ -906,15 +906,15 @@ function write_level(p, lev_name)
 end
 
 
-function make_mini_map(p)
+function make_mini_map()
 
   if not con.map_begin then return end
 
-  con.map_begin(p.blk_w, p.blk_h)
+  con.map_begin(PLAN.blk_w, PLAN.blk_h)
 
-  for by = p.blk_h,1,-1 do
-    for bx = 1,p.blk_w do
-      local B = p.blocks[bx][by]
+  for by = PLAN.blk_h,1,-1 do
+    for bx = 1,PLAN.blk_w do
+      local B = PLAN.blocks[bx][by]
       if not B then con.map_pixel(0)
       elseif B.solid then con.map_pixel(1)
       elseif B.kind  then con.map_pixel(4)
