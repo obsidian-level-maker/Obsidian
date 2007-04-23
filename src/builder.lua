@@ -4040,7 +4040,7 @@ function build_cell(p, c)
     gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=c.combo.void })
   end
 
-  local function reclaim_areas(c)
+  local function reclaim_areas_OLD(c)
 
     local function get_reclaim_border(K, side)
       return
@@ -4276,7 +4276,7 @@ end
       return true --SUCCESS--
     end
     
-    ---== reclaim_areas ==---
+    ---== reclaim_areas_OLD ==---
 
     -- choose reclaim direction for central chunks.
     -- By limiting them to a single direction, we prevent the
@@ -4322,6 +4322,212 @@ end
         end
       end end  -- for kx for ky
     end -- for pass
+  end
+
+
+  local function reclaim_areas(c)
+
+    local function reclaim_init_side(side)
+      
+      local rec =
+      {
+        c = c, side = side,
+        tendrils = { },
+      }
+
+      rec.x1, rec.y1, rec.x2, rec.y2 =
+          side_coords(side, c.bx1, c.by1, c.bx2, c.by2)
+
+      if side == 2 or side == 8 then
+        rec.long = rec.x2 - rec.x1 + 1
+      else
+        rec.long = rec.y2 - rec.y1 + 1
+      end
+
+      local ax, ay = dir_to_across(side)
+
+      for pos = 1,rec.long do
+        rec.tendrils[pos] = { deep=0 }
+      end
+
+      c.reclaim[side] = rec
+    end
+
+    local function basic_can_swallow(B)
+      if not B.chunk or B.walk then return false end
+      if block_is_used(B) then return false end
+
+      if (B.chunk.kind == "vista" or B.chunk.kind == "player" or
+          B.chunk.kind == "quest") then
+        return false
+      end
+
+      return true
+    end
+
+---##    local function what_can_we_merge()
+---##
+---##      local CORNERS = { [2]=1, [4]=7, [6]=3, [8]=9 }
+---##      
+---##      for loop = 1,3 do
+---##        for side = 2,8,2 do
+---##          local other = rotate_cw90(side)
+---##
+---##          local rec1 = c.reclaim[side]
+---##          local rec2 = c.reclaim[other]
+---##
+---##          local x, y = corner_coords(CORNERS[side], c.bx1,c.by1, c.bx2,c.by2)
+---##          local B = PLAN.blocks[x][y]
+---##          
+---##          if basic_can_swallow(B) then
+---##            rec1.merge_id = math.min(rec1.merge_id, rec2.merge_id)
+---##            rec2.merge_id = rec1.merge_id
+---##          end
+---##        end
+---##      end
+---##    end
+
+    local function reclaim_grow_side(side)
+      local rec = c.reclaim[side]
+      local changed = false
+
+      for pos = 1,rec.long do
+        local T = rec.tendrils[pos]
+        local deep = T.deep
+
+        -- try_grow_tendril --
+        
+        local dx, dy = dir_to_delta(10 - side)
+        local ax, ay = dir_to_across(side)
+
+        local x, y
+        if (side==8 or side==4) then
+          x = rec.x1 + (pos-1)*ax + deep*dx
+          y = rec.y1 + (pos-1)*ay + deep*dy
+        else
+          x = rec.x2 - (pos-1)*ax + deep*dx
+          y = rec.y2 - (pos-1)*ay + deep*dy
+        end
+
+        assert(valid_cell_block(c, x, y))
+
+        local B = PLAN.blocks[x][y]
+        assert(B)
+
+        local able = basic_can_swallow(B)
+
+        if not valid_cell_block(c, x+dx*2,y+dy*2) then
+          able = false
+        end
+
+        if B.reclaim then able = false end
+
+        if able then
+          local F = PLAN.blocks[x+dx][y+dy]
+          if block_is_used(F) or F.walk then
+            able = false
+          end
+        end
+
+        -- closure check: don't touch a different reclaim area
+
+        if able then
+          for n_side = 1,9 do if n_side ~= 5 then
+            local ndx, ndy = dir_to_delta(n_side)
+            local nx, ny = x+ndx, y+ndy
+            if valid_cell_block(c, nx, ny) then
+              local N = PLAN.blocks[nx][ny]
+
+              if block_is_used(N) then
+                able = false
+                
+              elseif N.reclaim then
+                if not T.id and (n_side%2 == 0) then
+                  T.id = N.reclaim.id
+                elseif T.id and T.id ~= N.reclaim.id then
+                  able = false
+                end
+              end
+            end
+          end end
+        end
+
+        -- height check: don't isolate a corner
+
+        if able then
+          for wh = -1,1 do
+            local sx = x + wh*ax + 0*dx
+            local sy = y + wh*ay + 0*dy
+            local tx = x + wh*ax + 1*dx
+            local ty = y + wh*ay + 1*dy
+
+            if valid_cell_block(c, sx, sy) then
+              assert(valid_cell_block(c, tx, ty))
+
+              local S = PLAN.blocks[sx][sy]
+              local T = PLAN.blocks[tx][ty]
+
+              local S_fh = (S.rmodel and S.rmodel.f_h) or
+                           (S.chunk and S.chunk.rmodel.f_h) or
+                           c.rmodel.f_h
+
+              local T_fh = (T.rmodel and T.rmodel.f_h) or
+                           (T.chunk and T.chunk.rmodel.f_h) or
+                           c.rmodel.f_h
+
+              if S_fh ~= T_fh then able = false end
+            end
+          end
+        end
+
+        if able then
+          T.deep = deep+1
+          if not T.id then T.id = (side*1000 + pos) end
+          B.reclaim = { rec=rec, id=T.id }
+          changed = true
+        end
+      end
+
+      return changed
+    end
+
+    --== reclaim_areas ==--
+
+    for side = 2,8,2 do
+      reclaim_init_side(side)
+    end
+
+    -- the order we handle sides is important here.
+    -- We go clockwise around the room, so that the
+    -- first tendril (in the corner) can pickup the
+    -- ID number of the previous side's last tendril.
+    -- (assuming they actually touch).
+
+    local start_side = rand_irange(1,4)*2
+    local CORNERS = { [2]=3, [4]=1, [6]=9, [8]=7 }
+    for i = 1,4 do
+      local x, y = corner_coords(CORNERS[start_side], c.bx1,c.by1, c.bx2,c.by2)
+      local B = PLAN.blocks[x][y]
+       
+      if not basic_can_swallow(B) then
+        break;
+      end
+
+      start_side = rotate_cw90(start_side)
+    end
+
+    -- loop until cannot grow any more tendrils
+    repeat
+      local changed = false
+      local side = start_side
+
+      for i = 1,4 do
+        if reclaim_grow_side(side) then
+          changed = true
+        end
+        side = rotate_cw90(side)
+      end
+    until not changed
   end
 
   local function get_vista_coords(c, side, link, other)
@@ -5700,8 +5906,39 @@ function build_rooms()
     end end
   end
 
-  local function build_void_space(c)
+  local function build_reclamations(c)
 
+    local REC_FLATS =
+    {
+      [2]="FWATER1", [8]="LAVA1",
+      [4]="NUKAGE3", [6]="SFLR6_1",
+    }
+
+    local REC_TEX =
+    {
+      [2]="COMPBLUE", [8]="CRACKLE2",
+      [4]="SFALL1",   [6]="SKSNAKE1",
+    }
+
+    for side = 2,8,2 do
+      local rec = c.reclaim[side]
+
+      if rec then
+        for x = c.bx1, c.bx2 do
+          for y = c.by1, c.by2 do
+            local B = PLAN.blocks[x][y]
+            if B.reclaim and B.reclaim.rec == rec then
+              fill(c, x,y, x,y,
+--                     { solid = REC_TEX[side] })
+                       B.rmodel or (B.chunk and B.chunk.rmodel) or c.rmodel,
+                       { f_h = c.f_min - 12, f_tex = REC_FLATS[side], has_blocker=true })
+            end
+          end
+        end
+      end
+    end
+
+--[[
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       if K.kind == "empty" then
@@ -5721,6 +5958,7 @@ function build_rooms()
 ---        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
       end
     end end
+--]]
   end
 
 
@@ -5735,7 +5973,7 @@ function build_rooms()
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
-    build_void_space(cell)
+    build_reclamations(cell)
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do

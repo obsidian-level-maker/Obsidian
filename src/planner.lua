@@ -310,6 +310,7 @@ function create_cell(p, x, y, quest, along, combo, is_depot)
 
     link = {}, border = {}, corner = {},
     closet = {}, nudges = {}, vistas = {},
+    reclaim = {},
 
     is_depot = is_depot,
     liquid = quest.liquid,
