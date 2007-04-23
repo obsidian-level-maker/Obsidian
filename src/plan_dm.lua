@@ -121,7 +121,7 @@ function plan_dm_arena()
     local dx, dy = dir_to_delta(dir)
     local other = PLAN.cells[c.x+dx][c.y+dy]
 
-    create_link(p, c, other, dir)
+    create_link(c, other, dir)
   end
 
   local function initial_links()
@@ -482,7 +482,7 @@ function plan_dm_arena()
   for y = 1,H do
     for x = 1,W do
       -- note: dummy along and combo values
-      create_cell(p, x, y, PLAN.quests[1], 1, nil)
+      create_cell(x, y, PLAN.quests[1], 1, nil)
     end
   end
 

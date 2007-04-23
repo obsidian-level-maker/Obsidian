@@ -297,7 +297,7 @@ function allocate_floor_code()
   return result
 end
 
-function create_cell(p, x, y, quest, along, combo, is_depot)
+function create_cell(x, y, quest, along, combo, is_depot)
   local CELL =
   {
     x=x, y=y,
@@ -323,16 +323,16 @@ function create_cell(p, x, y, quest, along, combo, is_depot)
   PLAN.cells[x][y] = CELL
 
   if is_depot then
-    table.insert(p.all_depots, CELL)
+    table.insert(PLAN.all_depots, CELL)
   else
-    table.insert(p.all_cells, CELL)
+    table.insert(PLAN.all_cells, CELL)
   end
 
   return CELL
 end
 
 
-function create_link(p, c, other, dir)
+function create_link(c, other, dir)
   local LINK =
   {
     cells = { c, other },
@@ -1263,7 +1263,7 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
     if not Q.mini and Q.level == 1 then
       local x = rand_irange(1, int(PLAN.w / 2))
       local y = rand_irange(1, int(PLAN.h / 2))
-      create_cell(p, x, y, Q, 1, combo)
+      create_cell(x, y, Q, 1, combo)
     end
 
 
@@ -1284,12 +1284,12 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
       if not nx then break end
 
 
-      local nextc = create_cell(p, nx, ny, Q, along, combo)
+      local nextc = create_cell(nx, ny, Q, along, combo)
 
       nextc.entry_dir = 10 - dir
       if not cur.exit_dir then cur.exit_dir = dir end
 
-      create_link(p, cur, nextc, dir)
+      create_link(cur, nextc, dir)
 
       table.insert(Q.path, nextc)
       table.insert(path_dirs, dir)
@@ -1987,7 +1987,7 @@ R.level_theme.name, R.combo.name)
          (outies[1].y ~= empties[1].y)
       then return end
 
-      local c = create_cell(p, empties[1].x, empties[1].y,
+      local c = create_cell(empties[1].x, empties[1].y,
         outies[1].quest, outies[1].along, outies[1].combo)
 
       c.scenic = "outdoor"
@@ -2109,7 +2109,7 @@ R.level_theme.name, R.combo.name)
           if F and V and rand_odds(25) then V = false end
 
           if F or V then
-            local L = create_link(p, c, nb, dir)
+            local L = create_link(c, nb, dir)
             L.kind = sel(V, "vista", "falloff")
 
             if V and F and rand_odds(50) then
@@ -2317,7 +2317,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
       local spread = rand_key_by_probs { linear=3, random=3, last=5, behind=5, first=1 }
 
-      local CELL = create_cell(p, pos_x, pos_y, Q, 1, Q.first.combo, "depot")
+      local CELL = create_cell(pos_x, pos_y, Q, 1, Q.first.combo, "depot")
 
       local SURPRISE =
       {
