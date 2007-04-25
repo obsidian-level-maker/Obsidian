@@ -1394,7 +1394,7 @@ DM_MONSTERS =
   spectre   = { prob=20, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=40,melee=true },
   skull     = { prob=16, r=16,h=56, hp=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
  
-  barrel    = { prob=20, r=10,h=42, hp=10,  dm=2,  fp=5, melee=true, passive=true },
+--!!!!!  barrel    = { prob=20, r=10,h=42, hp=10,  dm=2,  fp=5, melee=true, passive=true },
 }
 
 DM_BOSSES =
