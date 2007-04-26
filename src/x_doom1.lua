@@ -147,6 +147,23 @@ DM_COMBOS =
     theme_probs = { HELL=70 },
   },
 
+  HOT =
+  {
+    mat_pri = 6,
+
+    wall = "SP_HOT1",
+    void = "SP_HOT1",
+    step = "STONE2",  -- STEP4
+
+    floor = "FLAT5_7",
+    ceil  = "FLOOR6_1",
+
+    bad_liquid = "blood",
+    good_liquid = "lava",
+
+    theme_probs = { HELL=50 },
+  },
+
   WOOD =
   {
     mat_pri = 7,
