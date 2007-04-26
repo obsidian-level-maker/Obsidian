@@ -24,6 +24,8 @@ BORDER_BLK = 3  -- number of spare blocks around plan
 MIN_FLOOR = 0
 MAX_CEIL  = 640
 
+MAX_STEP = 16
+
 SKILLS = { "easy", "medium", "hard" }
 
 GAME_FACTORIES = {}
