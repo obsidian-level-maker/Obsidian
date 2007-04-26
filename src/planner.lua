@@ -320,6 +320,9 @@ function create_cell(x, y, quest, along, combo, is_depot)
 
   CELL.bx1, CELL.by1, CELL.bx2, CELL.by2 = PLAN.cell_base_coords(x, y)
 
+  CELL.bw = CELL.bx2 - CELL.bx1 + 1
+  CELL.bh = CELL.by2 - CELL.by1 + 1
+
   PLAN.cells[x][y] = CELL
 
   if is_depot then
@@ -622,6 +625,9 @@ function resize_rooms()
       c.by2 = c.by2 + dy
     end
 
+    c.bw = c.bx2 - c.bx1 + 1
+    c.bh = c.by2 - c.by1 + 1
+
     if other then
       if (side == 2) or (side == 4) then
         other.bx2 = other.bx2 + dx
@@ -630,6 +636,9 @@ function resize_rooms()
         other.bx1 = other.bx1 + dx
         other.by1 = other.by1 + dy
       end
+
+      other.bw = other.bx2 - other.bx1 + 1
+      other.bh = other.by2 - other.by1 + 1
     end
   end
 
@@ -2022,7 +2031,7 @@ R.level_theme.name, R.combo.name)
 
   local function add_bridges()
     --[[
-    for zzz,c in ipairs(p.all_cells) do
+    for zzz,c in ipairs(PLAN.all_cells) do
       for dir = 2,8,2 do
         local pdir = rotate_cw90(dir)
         if c.link[dir].switch and

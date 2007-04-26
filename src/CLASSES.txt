@@ -61,8 +61,8 @@ class Cell
   scenic : bool -- if true, cell only for scenery (no walk)
   hallway : bool -- true for hallway cells
 
-  bx1, by1 : range of blocks for this cell (interior only)
-  bx2, by2
+  bw, bh           : size in blocks (interior)
+  bx1,by1, bx2,by2 : range of blocks for this cell (interior only)
 
   link : table[DIR] -> Link
   exit_dir  : next cell in stage
