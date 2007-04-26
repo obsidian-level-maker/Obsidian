@@ -651,6 +651,21 @@ function B_stair(c, rmodel, bx,by, dir, long, deep, step)
     fy = fy + dy
     z  = z  + step
   end
+
+  -- mark area with stair info
+  local min_h = math.min(rmodel.f_h, z)
+  local max_h = math.max(rmodel.f_h, z)
+
+  local stair_info = { dir=dir, step=step, min_h=min_h, max_h=max_h }
+
+  local sx1 = math.min(bx, bx + (deep-1)*dx + (long-1)*ax)
+  local sy1 = math.min(by, by + (deep-1)*dy + (long-1)*ay)
+  local sx2 = math.max(bx, bx + (deep-1)*dx + (long-1)*ax)
+  local sy2 = math.max(by, by + (deep-1)*dy + (long-1)*ay)
+
+  for ix = sx1,sx2 do for iy = sy1,sy2 do
+    PLAN.blocks[ix][iy].stair_info = stair_info
+  end end
 end
 
 
@@ -692,7 +707,7 @@ end
 
 
 
-function cage_select_height(p,c, kind, rail, floor_h, ceil_h)
+function cage_select_height(c, kind, rail, floor_h, ceil_h)
 
   if c[kind] and c[kind].z >= floor_h and rand_odds(80) then
     return c[kind].z, c[kind].open_top
@@ -735,7 +750,7 @@ function B_pillar_cage(p,c, theme, kx,ky, bx,by)
 
   local kind = sel(kx==2 and ky==2, "middle_cage", "pillar_cage")
 
-  local z, open_top = cage_select_height(p,c, kind, rail, K.rmodel.f_h,K.rmodel.c_h)
+  local z, open_top = cage_select_height(c, kind, rail, K.rmodel.f_h,K.rmodel.c_h)
 
   if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
     open_top = true
@@ -1126,17 +1141,14 @@ function make_chunks()
 
   local function create_chunks(c)
 
-    local cell_w = c.bx2 - c.bx1 + 1
-    local cell_h = c.by2 - c.by1 + 1
-
-    assert(cell_w >= GAME.cell_min_size)
-    assert(cell_h >= GAME.cell_min_size)
+    assert(c.bw >= GAME.cell_min_size)
+    assert(c.bh >= GAME.cell_min_size)
 
     c.chunks = array_2D(3, 3)
 
     -- decide depths of each side
-    local L, M, R = decide_chunk_sizes(cell_w)
-    local B, N, T = decide_chunk_sizes(cell_h)
+    local L, M, R = decide_chunk_sizes(c.bw)
+    local B, N, T = decide_chunk_sizes(c.bh)
 
     -- actually create the chunks
 
@@ -1560,7 +1572,8 @@ function make_chunks()
       local MID = c.chunks[2][2]
 
       if MID.kind == "empty" and not c.hallway and
-         (c == PLAN.quests[1].first or c == c.quest.last or rand_odds(10))
+         (c == PLAN.quests[1].first or c == c.quest.last or
+          dual_odds(links_in_cell(c) >= 3, 70, 25))
       then
         MID.kind = "room"
       end
@@ -2084,7 +2097,7 @@ function make_chunks()
     local function merge_connx()
 
       local function are_connected(K, N, dir)
-        if math.abs(K.rmodel.f_h - N.rmodel.f_h) <= 16 then
+        if math.abs(K.rmodel.f_h - N.rmodel.f_h) <= MAX_STEP then
           return true
         end
         if K.stair[dir] then return true end
@@ -2126,7 +2139,7 @@ function make_chunks()
               if K.connect_id and N.connect_id and K.connect_id ~= N.connect_id then
 
                 local diff = math.abs(K.rmodel.f_h - N.rmodel.f_h)
-                assert(diff > 16)
+                assert(diff > MAX_STEP)
 
                 if diff < best_diff then
                   -- clear out the previous (worse) results
@@ -2372,14 +2385,16 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
   for zzz,cell in ipairs(PLAN.all_cells) do
 
     mark_vista_chunks(cell)
-    create_huge_vista(cell)
+--!!!!!!    create_huge_vista(cell)
 
     add_travel_chunks(cell)
 
     setup_chunk_rmodels(cell)
     
     add_vista_environs(cell)
-    add_important_chunks(cell)
+
+---###### add_important_chunks(cell)  NOPE: use the reclaim areas
+
     add_stairs(cell)
   end
 end
@@ -3535,7 +3550,7 @@ function build_cell(p, c)
 
   local function position_sp_stuff(c)
 
-    if c == p.quests[1].first then
+    if c == PLAN.quests[1].first then
       local kx, ky = good_Q_spot(c, true)
       if not kx then error("NO FREE SPOT for Player!") end
       c.chunks[kx][ky].player=true
@@ -3902,11 +3917,11 @@ function build_cell(p, c)
       if K.crate and not blocked then
         local combo = c.crate_combo
         if not c.quest.image and not c.quest.mini and
-           (not p.image or rand_odds(11))
+           (not PLAN.image or rand_odds(11))
         then
           combo = GAME.images[2]
           c.quest.image = "crate"
-          p.image = true
+          PLAN.image = true
         end
         B_crate(p,c, combo, sec, kx,ky, K.x1+1,K.y1+1)
         blocked = true
@@ -3960,25 +3975,6 @@ function build_cell(p, c)
         c.sky_light.h = - c.sky_light.h
       end
     end
-  end
-
-  local function void_up_chunk(c, K)
-
-    --!!!!!! TESTING
-    if c.combo.decorate and not c.scenic and K.kind == "void" and
-      (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
-      (K.y2 > K.y1 or rand_odds(50)) and
-      rand_odds(65)
-    then
-      local dec_tex = c.combo.decorate
-      if type(dec_tex) == "table" then
-        dec_tex = rand_element(dec_tex)
-      end
-      gap_fill(c, K.x1,K.y1, K.x1,K.y1, { solid=dec_tex })
-      gap_fill(c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
-    end
-
-    gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=c.combo.void })
   end
 
   local function reclaim_areas_OLD(c)
@@ -4468,8 +4464,7 @@ end
 ---##    end
 
     -- loop until cannot grow any more tendrils
-    local loop_num = 4
-    for loop = 1,loop_num do
+    for loop = 1,4 do
       local changed = false
       local side = c.exit_dir or c.entry_dir or 2
 
@@ -4480,6 +4475,59 @@ end
         side = rotate_cw90(side)
       end
       if not changed then break end
+    end
+  end
+
+  local function shape_room(c)
+    -- create the room-shape by pushing tendrils back.
+
+    local density = rand_range(0.1, 0.8)
+
+    local push_chance = 100 -- * (1 - density)
+
+    local function pull_back_side(side)
+      local rec = c.reclaim[side]
+      local dx, dy = dir_to_delta(10 - side)
+      local ax, ay = dir_to_across(side)
+
+if c == PLAN.quests[1].first and side==2 then
+con.printf("REC = (%d,%d)..(%d,%d) long:%d\n", rec.x1,rec.y1, rec.x2,rec.y2, rec.long)
+end
+      for pos = 1,rec.long do
+        local T = rec.tendrils[pos]
+
+        local x, y
+        if (side==8 or side==4) then
+          x = rec.x1 + (pos-1)*ax + T.deep*dx
+          y = rec.y1 + (pos-1)*ay + T.deep*dy
+        else
+          x = rec.x2 - (pos-1)*ax + T.deep*dx
+          y = rec.y2 - (pos-1)*ay + T.deep*dy
+        end
+
+if c == PLAN.quests[1].first and side==2 then
+con.printf("  pos:%d deep:%d --> (%d,%d)\n", pos, T.deep, x, y)
+end
+        assert(valid_cell_block(c, x, y))
+
+        local B = PLAN.blocks[x][y]
+        assert(B)
+
+        if T.deep <= 0 or B.reclaim then
+          -- cannot push tendril
+
+        else -- if rand_odds(push_chance) then
+          T.deep = T.deep - 1
+
+          PLAN.blocks[x-dx][y-dy].reclaim = nil
+        end
+      end
+    end
+
+    for loop = 1,0 do
+      for side = 2,8,2 do
+        pull_back_side(side)
+      end
     end
   end
 
@@ -5083,6 +5131,7 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
       end
     end
 
+mode="stair" --!!!!!!
     if mode == "lift" then
       
       -- limit width to reasonable values (128 or 256 units)
@@ -5157,6 +5206,150 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
     end
   end
 
+  local function create_paths(c)
+    if c.scenic then return end
+
+    -- two basic methods:
+    --   1. pick a common point (e.g. middle of room) and
+    --      create a path from there to all the exits.
+    --   2. make paths between pairs of exits.
+
+    local function link_walk_pos(L)
+      local dx,dy = dir_to_delta(10-L.side) -- inwards
+
+      local x = int((L.link.x1 + L.link.x2) / 2)
+      local y = int((L.link.y1 + L.link.y2) / 2)
+
+      return x+dx, y+dy
+    end
+
+    local function path_scorer(cx,cy, nx,ny, dir)
+
+      cx, cy = c.bx1 + cx-1, c.by1 + cy-1
+      nx, ny = c.bx1 + nx-1, c.by1 + ny-1
+
+      assert(valid_cell_block(c, cx,cy))
+      assert(valid_cell_block(c, nx,ny))
+
+      local C = PLAN.blocks[cx][cy]
+      local N = PLAN.blocks[nx][ny]
+
+      if N.solid then return -1 end
+
+      if N.chunk and N.chunk.kind == "vista" then return -1 end
+
+      -- stair check
+
+      if C.stair_info or N.stair_info then
+        if C.stair_info == N.stair_info then return 2.0 end
+
+        local info = C.stair_info or N.stair_info
+
+        -- cannot pass stairs when dir is perpendicular
+        if math.min(info.dir, 10-info.dir) ~= math.min(dir,10-dir) then
+          return -1
+        end
+
+        return 2.0
+      end
+
+      -- FIXME: lift check
+
+      -- height check
+
+      local C_fh = (C.rmodel and C.rmodel.f_h) or
+                   (C.chunk and C.chunk.rmodel.f_h) or
+                   c.rmodel.f_h
+
+      local N_fh = (N.rmodel and N.rmodel.f_h) or
+                   (N.chunk and N.chunk.rmodel.f_h) or
+                   c.rmodel.f_h
+
+      if math.abs(C_fh - N_fh) > MAX_STEP then
+        return -1
+      end
+      
+      if N.chunk and N.chunk.kind == "empty" then
+        return 100
+      end
+
+      return sel(C_fh == N_fh, 1.0, 1.2)
+    end
+
+    local function find_path(L1, L2, sx, sy)
+      local ex, ey
+
+      if L1 ~= "room" then
+        sx, sy = link_walk_pos(L1)
+      end
+
+      ex, ey = link_walk_pos(L2)
+
+      -- coordinates must be relative for A* algorithm
+      sx, sy = (sx - c.bx1) + 1, (sy - c.by1) + 1
+      ex, ey = (ex - c.bx1) + 1, (ey - c.by1) + 1
+
+con.printf("\nROOM @ (%d,%d)\n", c.x, c.y)
+con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
+      local path = astar_find_path(c.bw, c.bh, sx,sy, ex,ey, path_scorer)
+
+      if not path then error("NO PATH INSIDE ROOM!\n"); return end
+
+      table.insert(path, { x=ex, y=ey })
+
+      for zzz, pos in ipairs(path) do
+        local x = pos.x + c.bx1 - 1
+        local y = pos.y + c.by1 - 1
+        assert(valid_cell_block(c, x, y))
+
+--con.printf(  "  |-- coord (%d,%d)\n", pos.x, pos.y)
+        PLAN.blocks[x][y].on_path = true
+        add_thing(c, x, y, "candle", false)
+      end
+    end
+
+    --- create_paths ---
+
+    local star_form = false
+    if c.chunks[2][2].kind == "room" and rand_odds(50) then
+      star_form = true
+    end
+star_form = false --- (((c.x+c.y)%2)==0)
+
+    local link_list = {}
+
+    for side = 2,8,2 do
+      local L = c.link[side]
+      if L and not (L.kind == "vista" and L.vista_dest == c) then
+        table.insert(link_list, { link=L, side=side })
+      end
+    end
+
+    assert(#link_list > 0)
+
+    rand_shuffle(link_list)
+
+    if star_form or #link_list == 1 then
+
+      local K = c.chunks[2][2]
+      if K.kind == "vista" then error("FUCK! VISTA ON PATH") end --!!!!!! FIXME
+
+      if K.kind == "empty" then K.kind = "room" end
+
+      -- FIXME: ensure block is not on stair/lift
+      local rx = int((K.x1+K.x2)/2)
+      local ry = int((K.y1+K.y2)/2)
+
+      for i = 1,#link_list do
+        find_path("room", link_list[i], rx, ry)
+      end
+    else
+      for i = 1,#link_list-1 do
+        find_path(link_list[i], link_list[i+1])
+      end
+    end
+  end
+
 
   ---=== build_cell ===---
 
@@ -5177,7 +5370,10 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
 
   build_stairs(c)
 
-  reclaim_areas(c)
+  create_paths(c)
+
+--  reclaim_areas(c)
+--  shape_room(c)
 end
 
 
@@ -5824,6 +6020,8 @@ function build_rooms()
         B.f_h   = model.f_h
         B.l_tex = model.l_tex
         B.floor_code = model.floor_code
+--!!!!!
+if B.chunk and B.chunk.kind == "empty" then B.f_tex="LAVA1" end
       end
 
       -- ceiling
@@ -5852,19 +6050,45 @@ function build_rooms()
       else
         gap_fill_block(B)
 
-        if B.walk then
---        add_thing(c, x, y, "candle", false)
+        if B.on_path then
+          add_thing(c, x, y, "candle", false)
         end
       end
     end end
   end
 
+  local function void_up_chunk(c, K)
+
+    --!!!!!! TESTING
+    if c.combo.decorate and not c.scenic and K.kind == "void" and
+      (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
+      (K.y2 > K.y1 or rand_odds(50)) and
+      rand_odds(65)
+    then
+      local dec_tex = c.combo.decorate
+      if type(dec_tex) == "table" then
+        dec_tex = rand_element(dec_tex)
+      end
+      gap_fill(c, K.x1,K.y1, K.x1,K.y1, { solid=dec_tex })
+      gap_fill(c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
+    end
+
+    gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=c.combo.void })
+  end
+
   local function build_reclamations(c)
+
+--!!!!
+for kx = 1,3 do for ky = 1,3 do
+  local K = c.chunks[kx][ky]
+  if K.kind == "empty" then void_up_chunk(c, K) end
+end end
+do return end
 
     local REC_FLATS =
     {
       [2]="FWATER1", [8]="LAVA1",
-      [4]="NUKAGE3", [6]="SFLR6_1",
+      [4]="NUKAGE3", [6]="SLIME01",
     }
 
     local REC_TEX =
@@ -5875,14 +6099,37 @@ function build_rooms()
 
     for side = 2,8,2 do
       local rec = c.reclaim[side]
+      local D   = c.border[side]
 
-      if rec then
+      if rec and D then
+
+        local sec
+
+--[[        if D.kind == "solid" and
+           not (D.cells[1].combo.outdoor and D.cells[2].combo.outdoor)
+        then
+          if c.combo.outdoor then
+            sec = { solid = D.combo.wall }
+          else
+            sec = { solid = c.combo.wall }
+          end
+
+        elseif D.kind == "fence" then
+          sec = copy_block_with_new(c.rmodel,
+                 { f_h=D.fence_h, f_tex=D.combo.floor,
+                   l_tex=D.combo.wall, has_blocker=true })
+
+--]] if false then
+        else
+          sec = copy_block_with_new(c.rmodel,
+                 { f_h=c.f_min-12, f_tex=REC_FLATS[side] })
+        end
+        
         for x = c.bx1, c.bx2 do
           for y = c.by1, c.by2 do
             local B = PLAN.blocks[x][y]
             if B.reclaim and B.reclaim.rec == rec then
-              fill(c, x,y, x,y,
-                       { solid = REC_TEX[side] })
+              fill(c, x,y, x,y, sec)
 --                     B.rmodel or (B.chunk and B.chunk.rmodel) or c.rmodel,
 --                     { f_h = c.f_min - 12, f_tex = REC_FLATS[side], has_blocker=true })
             end
@@ -5926,7 +6173,7 @@ function build_rooms()
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
-    build_reclamations(cell)
+--!!!!    build_reclamations(cell)
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
