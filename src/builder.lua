@@ -4343,7 +4343,7 @@ end
         local deep = T.deep
 
         -- try_grow_tendril --
-        
+
         local dx, dy = dir_to_delta(10 - side)
         local ax, ay = dir_to_across(side)
 
@@ -4368,6 +4368,7 @@ end
         end
 
         if B.reclaim then able = false end
+        if B.on_path then able = false end
 
         if able then
           local F = PLAN.blocks[x+dx][y+dy]
@@ -4387,20 +4388,23 @@ end
 
               if block_is_used(N) then
                 able = false
-                
+--[[                
               elseif N.reclaim then
                 if not T.id and (n_side%2 == 0) then
                   T.id = N.reclaim.id
                 elseif T.id and T.id ~= N.reclaim.id then
                   able = false
                 end
+--]]
               end
             end
           end end
         end
 
+
         -- height check: don't isolate a corner
 
+if not (B.chunk and B.chunk.kind == "empty") then
         if able then
           for wh = -1,1 do
             local sx = x + wh*ax + 0*dx
@@ -4426,6 +4430,7 @@ end
             end
           end
         end
+end
 
         if able then
           T.deep = deep+1
@@ -4450,21 +4455,8 @@ end
     -- ID number of the previous side's last tendril.
     -- (assuming they actually touch).
 
----##    local start_side = rand_irange(1,4)*2
----##    local CORNERS = { [2]=3, [4]=1, [6]=9, [8]=7 }
----##    for i = 1,4 do
----##      local x, y = corner_coords(CORNERS[start_side], c.bx1,c.by1, c.bx2,c.by2)
----##      local B = PLAN.blocks[x][y]
----##       
----##      if not basic_can_swallow(B) then
----##        break;
----##      end
----##
----##      start_side = rotate_cw90(start_side)
----##    end
-
     -- loop until cannot grow any more tendrils
-    for loop = 1,4 do
+    for loop = 1,5 do
       local changed = false
       local side = c.exit_dir or c.entry_dir or 2
 
@@ -5314,7 +5306,7 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
     if c.chunks[2][2].kind == "room" and rand_odds(50) then
       star_form = true
     end
-star_form = false --- (((c.x+c.y)%2)==0)
+star_form = true --- (((c.x+c.y)%2)==0)
 
     local link_list = {}
 
@@ -5372,7 +5364,7 @@ star_form = false --- (((c.x+c.y)%2)==0)
 
   create_paths(c)
 
---  reclaim_areas(c)
+  reclaim_areas(c)
 --  shape_room(c)
 end
 
@@ -6021,7 +6013,7 @@ function build_rooms()
         B.l_tex = model.l_tex
         B.floor_code = model.floor_code
 --!!!!!
-if B.chunk and B.chunk.kind == "empty" then B.f_tex="LAVA1" end
+if B.chunk and B.chunk.kind == "empty" then B.f_tex="GATE1" end
       end
 
       -- ceiling
@@ -6079,11 +6071,13 @@ if B.chunk and B.chunk.kind == "empty" then B.f_tex="LAVA1" end
   local function build_reclamations(c)
 
 --!!!!
-for kx = 1,3 do for ky = 1,3 do
-  local K = c.chunks[kx][ky]
-  if K.kind == "empty" then void_up_chunk(c, K) end
-end end
-do return end
+if false then
+  for kx = 1,3 do for ky = 1,3 do
+    local K = c.chunks[kx][ky]
+    if K.kind == "empty" then void_up_chunk(c, K) end
+  end end
+  do return end
+end
 
     local REC_FLATS =
     {
@@ -6173,7 +6167,7 @@ do return end
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
---!!!!    build_reclamations(cell)
+    build_reclamations(cell)
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
