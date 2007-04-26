@@ -168,7 +168,7 @@ function fill(c, sx, sy, ex, ey, B, B2)
 end
 
 function c_fill(c, sx, sy, ex, ey, B, B2)
-  fill(PLAN,c, c.bx1-1+sx, c.by1-1+sy, c.bx1-1+ex, c.by1-1+ey, B, B2)
+  fill(c, c.bx1-1+sx, c.by1-1+sy, c.bx1-1+ex, c.by1-1+ey, B, B2)
 end
 
 function gap_fill(c, sx, sy, ex, ey, B, B2)
@@ -736,7 +736,7 @@ function cage_select_height(c, kind, rail, floor_h, ceil_h)
   return (z1+z2)/2, open_top
 end
 
-function B_pillar_cage(p,c, theme, kx,ky, bx,by)
+function B_pillar_cage(c, theme, kx,ky, bx,by)
 
   local K = c.chunks[kx][ky]
 
@@ -781,14 +781,14 @@ function B_pillar_cage(p,c, theme, kx,ky, bx,by)
   local spot = {c=c, x=bx, y=by}
   if kx==2 and ky==2 then spot.different = true end
 
-  add_cage_spot(p,c, spot)
+  add_cage_spot(c, spot)
 end
 
 
 --
 -- Build a hidden monster closet
 --
-function B_monster_closet(p,c, K,kx,ky, z, tag)
+function B_monster_closet(c, K,kx,ky, z, tag)
 
   local bx, by = K.x1, K.y1
 
@@ -2890,7 +2890,7 @@ arch.f_tex = "TLITE6_6"
       fill(c, x+ax, y+ay, ex, ey, arch)
 
       if link.block_sound then
-        -- FIXME block_sound(PLAN, c, x,y, ex,ey, 1)
+        -- FIXME block_sound(c, x,y, ex,ey, 1)
       end
 
       -- pillar in middle of special arch
@@ -2906,7 +2906,7 @@ arch.f_tex = "TLITE6_6"
 
     elseif link.kind == "door" and link.is_exit and not link.quest then
 
-      B_exit_door(PLAN,c, c.combo, link, x, y, c.floor_h, dir)
+      B_exit_door(c, c.combo, link, x, y, c.floor_h, dir)
 
     elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
        GAME.switches[link.quest.item].bars
@@ -2929,7 +2929,7 @@ arch.f_tex = "TLITE6_6"
       local bar = link.bar_size
       local tag = link.quest.tag + 1
 
-      B_bars(PLAN,c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_combo.wall, tag,true)
+      B_bars(c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_combo.wall, tag,true)
 
     elseif link.kind == "door" then
 
@@ -2949,7 +2949,7 @@ arch.f_tex = "TLITE6_6"
       local key_tex = nil
 
 
-      B_door(PLAN, c, link, b_combo, x, y, c.floor_h, dir,
+      B_door(c, link, b_combo, x, y, c.floor_h, dir,
              1 + int(info.w / 64), 1, info, door_kind, tag, key_tex)
     else
       error("build_link: bad kind: " .. tostring(link.kind))
@@ -3298,7 +3298,7 @@ arch.f_tex = "TLITE6_6"
 
       if (d_pos+1) >= min_x and (d_pos+long) <= max_x then
         if bar then
-          B_bars(p,c, wx,wy, math.min(side,10-side),long, bar,bar_step, GAME.mats.METAL, sec,b_combo.wall)
+          B_bars(c, wx,wy, math.min(side,10-side),long, bar,bar_step, GAME.mats.METAL, sec,b_combo.wall)
         else
           gap_fill(c, wx,wy, wx+ax*(long-1),wy+ay*(long-1), sec)
         end
@@ -3390,11 +3390,11 @@ end
 
 ----------------------------------------------------------------
 
-function build_maze(p, c, x1,y1, x2,y2)
+function build_maze(c, x1,y1, x2,y2)
   -- FIXME
 end
 
-function build_grotto(p, c, x1,y1, x2,y2)
+function build_grotto(c, x1,y1, x2,y2)
   
   local ROOM = c.rmodel
   local WALL = { solid=c.combo.wall }
@@ -3500,7 +3500,7 @@ end
 ----------------------------------------------------------------
 
 
-function build_cell(p, c)
+function build_cell(c)
  
   local function player_angle(kx, ky)
 
@@ -3523,7 +3523,7 @@ function build_cell(p, c)
     return delta_to_angle(2-kx, 2-ky)
   end
 
-  local function decide_void_pic(p, c)
+  local function decide_void_pic(c)
     if c.combo.pic_wd and rand_odds(60) then
       c.void_pic = { wall=c.combo.pic_wd, w=128, h=c.combo.pic_wd_h or 128 }
       c.void_cut = 1
@@ -3659,16 +3659,16 @@ function build_cell(p, c)
         con.debugf("BUILDING CLOSET @ (%d,%d)\n", c.x, c.y)
 
         table.insert(K.place.spots,
-          B_monster_closet(p,c, K,kx,ky, c.floor_h + 0,
+          B_monster_closet(c, K,kx,ky, c.floor_h + 0,
             c.quest.closet.door_tag))
 
       elseif K.dm_exit then
-        B_deathmatch_exit(p,c, K,kx,ky,K.dir)
+        B_deathmatch_exit(c, K,kx,ky,K.dir)
 
       elseif GAME.pics and not c.small_exit
           and rand_odds(sel(c.combo.outdoor, 10, sel(c.hallway,20, 50)))
       then
-        if not c.void_pic then decide_void_pic(p, c) end
+        if not c.void_pic then decide_void_pic(c) end
         local pic,cut = c.void_pic,c.void_cut
 
         if not c.quest.image and (PLAN.deathmatch or
@@ -3679,7 +3679,7 @@ function build_cell(p, c)
           c.quest.image = "pic"
         end
 
-        B_void_pic(p,c, K,kx,ky, pic,cut)
+        B_void_pic(c, K,kx,ky, pic,cut)
 
       else
         gap_fill(c, K.x1, K.y1, K.x2, K.y2, { solid=c.combo.void })
@@ -3688,7 +3688,7 @@ function build_cell(p, c)
     end -- K.void
 
     if K.cage then
-      B_big_cage(p,c, GAME.mats.CAGE, K,kx,ky)
+      B_big_cage(c, GAME.mats.CAGE, K,kx,ky)
       return
     end
 
@@ -3704,18 +3704,18 @@ function build_cell(p, c)
         for i = 1,4 do
           local dx,dy = dir_to_delta(offsets[i])
           if settings.game == "plutonia" then
-            B_double_pedestal(p,c, bx+dx,by+dy, K.rmodel, GAME.special_ped)
+            B_double_pedestal(c, bx+dx,by+dy, K.rmodel, GAME.special_ped)
           else
-            B_pedestal(p, c, bx+dx, by+dy, K.rmodel, GAME.pedestals.PLAYER)
+            B_pedestal(c, bx+dx, by+dy, K.rmodel, GAME.pedestals.PLAYER)
           end
           add_thing(c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
           c.player_pos = {x=bx+dx, y=by+dy}
         end
       else
         if settings.game == "plutonia" then
-          B_double_pedestal(p,c, bx,by, K.rmodel, GAME.special_ped)
+          B_double_pedestal(c, bx,by, K.rmodel, GAME.special_ped)
         else
-          B_pedestal(p, c, bx, by, K.rmodel, GAME.pedestals.PLAYER)
+          B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.PLAYER)
         end
         add_thing(c, bx, by, sel(PLAN.deathmatch, "dm_player", "player1"), true, angle)
         c.player_pos = {x=bx, y=by}
@@ -3723,13 +3723,13 @@ function build_cell(p, c)
       end
 
     elseif K.dm_weapon then
-      B_pedestal(p, c, bx, by, K.rmodel, GAME.pedestals.WEAPON)
+      B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.WEAPON)
       add_thing(c, bx, by, K.dm_weapon, true)
 
     elseif K.quest then
 
       if c.quest.kind == "key" or c.quest.kind == "weapon" or c.quest.kind == "item" then
-        B_pedestal(p, c, bx, by, K.rmodel, GAME.pedestals.QUEST)
+        B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.QUEST)
 
         -- weapon and keys are non-blocking, but we don't want
         -- a monster sitting on top of our quest item (especially
@@ -3742,9 +3742,9 @@ function build_cell(p, c)
         local kind = 103; if info.bars then kind = 23 end
         if rand_odds(40) then
           local side = wall_switch_dir(kx, ky, c.entry_dir)
-          B_wall_switch(p,c, bx,by, K.rmodel.f_h, side, 2, info, kind, c.quest.tag + 1)
+          B_wall_switch(c, bx,by, K.rmodel.f_h, side, 2, info, kind, c.quest.tag + 1)
         else
-          B_pillar_switch(p,c, K,bx,by, info,kind, c.quest.tag + 1)
+          B_pillar_switch(c, K,bx,by, info,kind, c.quest.tag + 1)
         end
 
       elseif c.quest.kind == "exit" then
@@ -3753,14 +3753,14 @@ function build_cell(p, c)
         local side = wall_switch_dir(kx, ky, c.entry_dir)
 
         if settings.game == "plutonia" then
-          B_double_pedestal(p,c, bx,by, K.rmodel, GAME.special_ped,
+          B_double_pedestal(c, bx,by, K.rmodel, GAME.special_ped,
             { walk_kind = 52 }) -- FIXME "exit_W1"
 
         elseif c.small_exit and not c.smex_cage and rand_odds(80) then
           if c.combo.flush then
-            B_flush_switch(p,c, bx,by, K.rmodel.f_h,side, c.combo.switch, 11)
+            B_flush_switch(c, bx,by, K.rmodel.f_h,side, c.combo.switch, 11)
           else
-            B_wall_switch(p,c, bx,by, K.rmodel.f_h,side, 3, c.combo.switch, 11)
+            B_wall_switch(c, bx,by, K.rmodel.f_h,side, 3, c.combo.switch, 11)
           end
 
           -- make the area behind the switch solid
@@ -3776,12 +3776,12 @@ function build_cell(p, c)
           gap_fill(c, x1,y1, x2,y2, { solid=c.combo.wall })
           
         elseif c.combo.hole_tex and rand_odds(75) then
-          B_exit_hole(p,c, K,kx,ky, c.rmodel)
+          B_exit_hole(c, K,kx,ky, c.rmodel)
           return
         elseif rand_odds(85) then
-          B_floor_switch(p,c, bx,by, K.rmodel.f_h, side, c.combo.switch, 11)
+          B_floor_switch(c, bx,by, K.rmodel.f_h, side, c.combo.switch, 11)
         else
-          B_pillar_switch(p,c, K,bx,by, c.combo.switch, 11)
+          B_pillar_switch(c, K,bx,by, c.combo.switch, 11)
         end
       end
     end -- if K.player | K.quest etc...
@@ -3929,7 +3929,7 @@ function build_cell(p, c)
           c.quest.image = "crate"
           PLAN.image = true
         end
-        B_crate(p,c, combo, sec, kx,ky, K.x1+1,K.y1+1)
+        B_crate(c, combo, sec, kx,ky, K.x1+1,K.y1+1)
         blocked = true
       end
 
@@ -3939,9 +3939,9 @@ function build_cell(p, c)
         if rand_odds(22) and GAME.mats.CAGE and not PLAN.deathmatch
           and K.rmodel.c_h >= K.rmodel.f_h + 128
         then
-          B_pillar_cage(p,c, GAME.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
+          B_pillar_cage(c, GAME.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
         else
-          B_pillar(p,c, c.combo, kx,ky, K.x1+1,K.y1+1)
+          B_pillar(c, c.combo, kx,ky, K.x1+1,K.y1+1)
         end
         blocked = true
       end
@@ -4560,7 +4560,7 @@ c.x, c.y, other.x, other.y)
       local K = other.chunks[kx][ky]
       if K.kind == "vista" and K.link == link then
         assert(K.ground_model)
----###  gap_fill(p,c, K.x1,K.y1, K.x2,K.y2, K.ground_model)
+---###  gap_fill(c, K.x1,K.y1, K.x2,K.y2, K.ground_model)
         for x = K.x1,K.x2 do for y = K.y1,K.y2 do
           PLAN.blocks[x][y].rmodel = K.ground_model
         end end
@@ -6169,7 +6169,7 @@ end
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
-    build_cell(PLAN, cell)
+    build_cell(cell)
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
