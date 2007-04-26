@@ -996,7 +996,7 @@ function plan_sp_level(is_coop)  -- returns Plan
 
     local item = t_items[rand_index_by_probs(t_probs)]
 
-    p.used_items[item] = 1
+    PLAN.used_items[item] = 1
     return item
   end
 
@@ -2092,7 +2092,7 @@ R.level_theme.name, R.combo.name)
 
     -- add_vistas --
 
-    for zzz,c in ipairs(p.all_cells) do
+    for zzz,c in ipairs(PLAN.all_cells) do
       for dir = 2,8,2 do
         local nb = neighbour_by_side(c, dir)
 
@@ -2163,7 +2163,7 @@ R.level_theme.name, R.combo.name)
       return rand_odds(window_chance)
     end
 
-    for zzz,c in ipairs(p.all_cells) do
+    for zzz,c in ipairs(PLAN.all_cells) do
       for side = 6,9 do
         local other = neighbour_by_side(c, side)
 
@@ -2262,7 +2262,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
       end
 
       con.debugf("..Depot target %d @ (%d,%d) tag: %d\n", num,
-         Q.path[idx].x, Q.path[idx].y, p.free_tag+1);
+         Q.path[idx].x, Q.path[idx].y, PLAN.free_tag+1);
 
       return Q.path[idx]
     end
@@ -2461,7 +2461,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   create_corners()
   create_borders()
 
-  add_windows()
+--  add_windows()
 
   return p
 end
