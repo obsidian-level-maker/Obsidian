@@ -349,27 +349,21 @@ function plan_dm_arena()
       return true
     end
 
-    local function verify_scorer(arr, cx,cy, nx,ny)
-      local c = arr[cx][cy]
-      local n = arr[nx][ny]
-
-          if ny > cy then dir = 8
-      elseif ny < cy then dir = 2
-      elseif nx < cx then dir = 4
-      elseif nx > cx then dir = 6
-      else
-        error("verify_scorer: weird direction!")
-      end
-
+    local function verify_scorer(cx,cy, nx,ny, dir)
       local L = c.link[dir]
 
       if not L then return -1 end  -- blocked
+
+      if L.kind == "vista" then return -1 end
+
+      local c = PLAN.cells[cx][cy]
+      local n = PLAN.cells[nx][ny]
 
       if L.kind == "falloff" then
         if c.floor_h < n.floor_h then return -1 end  -- cannot go up
       end
 
-      return 0.2
+      return 1.0
     end
 
     local function verify_falloff(L)
@@ -381,7 +375,7 @@ function plan_dm_arena()
       end
 
       -- use A* to find a path
-      local path = astar_find_path(PLAN.cells, low.x,low.y, high.x,high.y, verify_scorer)
+      local path = astar_find_path(PLAN.w, PLAN.h, low.x,low.y, high.x,high.y, verify_scorer)
 
       return path
     end

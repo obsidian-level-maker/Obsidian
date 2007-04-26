@@ -21,11 +21,11 @@
 -- Find path from start (sx,sy) to end (ex,ey)
 --
 -- Score function:
---   f(arr, cx,cy, nx,ny) -> distance, negative for impossible
+--   f(cx,cy, nx,ny, dir) -> distance, negative for impossible
 --
-function astar_find_path(arr, sx, sy, ex, ey, scorer)
-  local open   = array_2D(arr.w, arr.h)
-  local closed = array_2D(arr.w, arr.h)
+function astar_find_path(w, h, sx, sy, ex, ey, scorer)
+  local open   = array_2D(w, h)
+  local closed = array_2D(w, h)
   local cx, cy
 
   local function calc_H(x,y)
@@ -53,11 +53,11 @@ function astar_find_path(arr, sx, sy, ex, ey, scorer)
     return rx, ry
   end
 
-  local function try_dir(nx, ny)
-    if nx < 1 or nx > arr.w then return end
-    if ny < 1 or ny > arr.h then return end
+  local function try_dir(nx, ny, dir)
+    if nx < 1 or nx > w then return end
+    if ny < 1 or ny > h then return end
 
-    local G = scorer(arr, cx, cy, nx, ny)
+    local G = scorer(cx,cy, nx,ny, dir)
 
     if G < 0 then return false end
 
@@ -101,8 +101,8 @@ function astar_find_path(arr, sx, sy, ex, ey, scorer)
     closed[cx][cy] = open[cx][cy]
     open[cx][cy] = nil
 
-    if try_dir(cx+1, cy) or try_dir(cx-1, cy) or
-       try_dir(cx, cy+1) or try_dir(cx, cy-1)
+    if try_dir(cx, cy-1, 2) or try_dir(cx-1, cy, 4) or
+       try_dir(cx, cy+1, 8) or try_dir(cx+1, cy, 6)
     then
       return collect_path()
     end
