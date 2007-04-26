@@ -314,7 +314,7 @@ function plan_dm_arena()
 
   local function select_heights()
     -- FIXME: TEMP JUNK
-    for zzz,c in ipairs(p.all_cells) do
+    for zzz,c in ipairs(PLAN.all_cells) do
       c.floor_h = rand_index_by_probs{ 1,2,4,2,1 } * 32 - 32
       c.ceil_h  = 256
       c.sky_h   = 256
@@ -322,7 +322,7 @@ function plan_dm_arena()
   end
 
   local function add_doors()
-    for zzz,link in ipairs(p.all_links) do
+    for zzz,link in ipairs(PLAN.all_links) do
       -- FIXME: theme based (more doors in bases)
       local c = link.cells[1]
       local d = link.cells[2]
@@ -390,7 +390,7 @@ function plan_dm_arena()
 
     local locs = {}
 
-    for zzz,c in ipairs(p.all_cells) do
+    for zzz,c in ipairs(PLAN.all_cells) do
       for dir = 2,8,2 do
         if c.link[dir] then
           local other = link_other(c.link[dir], c)
@@ -445,7 +445,7 @@ function plan_dm_arena()
       return true
     end
 
-    for zzz,c in ipairs(p.all_cells) do
+    for zzz,c in ipairs(PLAN.all_cells) do
       for dir = 6,8,2 do
         local dx, dy = dir_to_delta(dir)
         local other = valid_cell(c.x+dx, c.y+dy) and PLAN.cells[c.x+dx][c.y+dy]
