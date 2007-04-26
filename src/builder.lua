@@ -1150,6 +1150,12 @@ function make_chunks()
     local L, M, R = decide_chunk_sizes(c.bw)
     local B, N, T = decide_chunk_sizes(c.bh)
 
+    c.chunk_sizes =
+    {
+      L=L, M=M, R=R,
+      B=B, N=N, T=T
+    }
+
     -- actually create the chunks
 
     for kx = 1,3 do for ky = 1,3 do
