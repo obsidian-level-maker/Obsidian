@@ -302,7 +302,7 @@ D2_COMBOS =
 
     scenery = { "skull_rock", "brown_stub", "evil_eye" },
 
-    theme_probs = { NATURE=50 },
+    theme_probs = { HELL=30 },
   },
 
   MUDDY =
