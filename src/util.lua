@@ -334,6 +334,13 @@ function valid_chunk(kx,ky)
          1 <= ky and ky <= 3
 end
 
+function valid_chunk_block(K, x, y)
+  return
+    (K.x1 <= x and x <= K.x2) and
+    (K.y1 <= y and y <= K.y2)
+end
+
+
 -- convert position into block/sub-block pair,
 -- where all the index values start at 1
 function div_mod(x, mod)
