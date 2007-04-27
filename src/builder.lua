@@ -16,27 +16,6 @@
 --
 ----------------------------------------------------------------
 
---[[
-
-class BuildItem
-{
-   x1,y1,x2,y2 : used area (not including the "walk zone")
-
-   prefab : name    -- for prefabs
-   skin
-   parm
-   dir
-OR
-   connx  : name  e.g. "stairs"
-   dir
-OR
-   thing  : name
-   angle
-   options
-}
-
---]]
-
 
 function copy_block(B, ...)
   local result = copy_table(B)
@@ -1528,7 +1507,7 @@ function make_chunks()
                 last_K = N
               elseif N.travel_id ~= last_K.travel_id then
                 -- FOUND ONE !!
-                con.debugf("Found travel bridge @ (%d,%d) [%d,%d]^%d\n", c.x,c.y, kx,ky,side)
+--              con.debugf("Found travel bridge @ (%d,%d) [%d,%d]^%d\n", c.x,c.y, kx,ky,side)
                 if rand_odds(50) then
                   grow_a_pair(last_K, K, N)
                 else
@@ -1960,7 +1939,7 @@ function make_chunks()
       end
     end end
 
---[[
+-- [[
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       K.rmodel.light =
@@ -2253,7 +2232,7 @@ function make_chunks()
     for loop=1,99 do
       merge_connx()
       if is_fully_connected() then break end
-con.debugf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
+-- con.debugf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
       add_one_stair()
     end 
 
@@ -2345,6 +2324,13 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     end
   end
 
+  local function void_it_up(c, new_kind)
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.kind == "empty" then K.kind = new_kind end
+    end end
+  end
+
 
   ---===| make_chunks |===---
 
@@ -2391,17 +2377,19 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
   for zzz,cell in ipairs(PLAN.all_cells) do
 
     mark_vista_chunks(cell)
---!!!!!!    create_huge_vista(cell)
+    create_huge_vista(cell)
 
     add_travel_chunks(cell)
 
     setup_chunk_rmodels(cell)
     
     add_vista_environs(cell)
-
----###### add_important_chunks(cell)  NOPE: use the reclaim areas
+    add_important_chunks(cell)
 
     add_stairs(cell)
+
+--!!!!!! flesh_it_out(cell)
+         void_it_up(cell, rand_sel(50, "room", "void"))
   end
 end
 
@@ -3993,7 +3981,7 @@ function build_cell(c)
       or (K.ky == 3 and (side==8 or side==7 or side==9) and c.border[8])
     end
     
-    local function try_reclaim_side(K, dir)
+    local function try_reclaim_side_OLD(K, dir)
 
       -- Requirements
       --  (a) start side must be against solid wall (empty chunk)
@@ -4223,7 +4211,7 @@ end
 
     -- choose reclaim direction for central chunks.
     -- By limiting them to a single direction, we prevent the
-    -- chance of two neighbouring chunks cutting off the path
+    -- chance of two neighbouring chunks cutting off an area
     -- (because the opposite sides were reclaimed).
     --
     -- pass #2 is special, if no claims occurred for X or Y
@@ -4268,7 +4256,7 @@ end
   end
 
 
-  local function reclaim_areas(c)
+  local function reclaim_areas_SECOND_TRY(c)
 
     local function reclaim_init_side(side)
       
@@ -4449,7 +4437,7 @@ end
       return changed
     end
 
-    --== reclaim_areas ==--
+    --== reclaim_areas_SECOND_TRY ==--
 
     for side = 2,8,2 do
       reclaim_init_side(side)
@@ -4476,57 +4464,298 @@ end
     end
   end
 
-  local function shape_room(c)
-    -- create the room-shape by pushing tendrils back.
+---##  local function shape_room(c)
+---##    -- create the room-shape by pushing tendrils back.
+---##
+---##    local density = rand_range(0.1, 0.8)
+---##
+---##    local push_chance = 100 -- * (1 - density)
+---##
+---##    local function pull_back_side(side)
+---##      local rec = c.reclaim[side]
+---##      local dx, dy = dir_to_delta(10 - side)
+---##      local ax, ay = dir_to_across(side)
+---##
+---##if c == PLAN.quests[1].first and side==2 then
+---##con.printf("REC = (%d,%d)..(%d,%d) long:%d\n", rec.x1,rec.y1, rec.x2,rec.y2, rec.long)
+---##end
+---##      for pos = 1,rec.long do
+---##        local T = rec.tendrils[pos]
+---##
+---##        local x, y
+---##        if (side==8 or side==4) then
+---##          x = rec.x1 + (pos-1)*ax + T.deep*dx
+---##          y = rec.y1 + (pos-1)*ay + T.deep*dy
+---##        else
+---##          x = rec.x2 - (pos-1)*ax + T.deep*dx
+---##          y = rec.y2 - (pos-1)*ay + T.deep*dy
+---##        end
+---##
+---##if c == PLAN.quests[1].first and side==2 then
+---##con.printf("  pos:%d deep:%d --> (%d,%d)\n", pos, T.deep, x, y)
+---##end
+---##        assert(valid_cell_block(c, x, y))
+---##
+---##        local B = PLAN.blocks[x][y]
+---##        assert(B)
+---##
+---##        if T.deep <= 0 or B.reclaim then
+---##          -- cannot push tendril
+---##
+---##        else -- if rand_odds(push_chance) then
+---##          T.deep = T.deep - 1
+---##
+---##          PLAN.blocks[x-dx][y-dy].reclaim = nil
+---##        end
+---##      end
+---##    end
+---##
+---##    for loop = 1,0 do
+---##      for side = 2,8,2 do
+---##        pull_back_side(side)
+---##      end
+---##    end
+---##  end
 
-    local density = rand_range(0.1, 0.8)
+  local function reclaim_areas(c)
 
-    local push_chance = 100 -- * (1 - density)
+    local function create_reclaim(K, side)
+      local rec =
+      {
+        c=c, K=K, side=side, total_blk=0,
+        tendrils = {},
+      }
 
-    local function pull_back_side(side)
-      local rec = c.reclaim[side]
-      local dx, dy = dir_to_delta(10 - side)
-      local ax, ay = dir_to_across(side)
+      rec.x1, rec.y1, rec.x2, rec.y2 =
+          side_coords(side, K.x1, K.y1, K.x2, K.y2)
 
-if c == PLAN.quests[1].first and side==2 then
-con.printf("REC = (%d,%d)..(%d,%d) long:%d\n", rec.x1,rec.y1, rec.x2,rec.y2, rec.long)
+      rec.long = K.x2 - K.x1 + 1
+      rec.deep = K.y2 - K.y1 + 1
+
+      if side == 4 or side == 6 then
+        rec.long, rec.deep = rec.deep, rec.long
+      end
+
+if c.x==4 and c.y==1 then
+con.printf("CHUNK [%d,%d] size:%dx%d  (%d,%d)->(%d,%d) --> REC %dx%d\n",
+K.kx,K.ky, K.w,K.h, K.x1,K.y1, K.x2,K.y2,
+rec.long, rec.deep)
+
+local J = c.chunks[3][2]
+con.printf("CHUNK [%d,%d] size:%dx%d  (%d,%d)->(%d,%d)\n",
+J.kx,J.ky, J.w,J.h, J.x1,J.y1, J.x2,J.y2)
+con.printf("%s\n", table_to_str(J,2))
 end
+
       for pos = 1,rec.long do
-        local T = rec.tendrils[pos]
+        rec.tendrils[pos] = 0
+      end
 
-        local x, y
-        if (side==8 or side==4) then
-          x = rec.x1 + (pos-1)*ax + T.deep*dx
-          y = rec.y1 + (pos-1)*ay + T.deep*dy
-        else
-          x = rec.x2 - (pos-1)*ax + T.deep*dx
-          y = rec.y2 - (pos-1)*ay + T.deep*dy
-        end
+      return rec
+    end
 
-if c == PLAN.quests[1].first and side==2 then
-con.printf("  pos:%d deep:%d --> (%d,%d)\n", pos, T.deep, x, y)
-end
-        assert(valid_cell_block(c, x, y))
+    local function best_reclaim(A, B)
+      
+      -- FIXME: for wolf3d/spear: choose one next to border
+
+      if A.total_blk > B.total_blk+1 then return A end
+      if B.total_blk > A.total_blk+1 then return B end
+
+      return rand_sel(50, A, B)
+    end
+
+    local function neighbour_is_void(K, side)
+      local N = chunk_neighbour(c, K, side)
+      if N then 
+        return N.kind == "void"
+      else
+        return c.border[side] -- ???? border kinds? window?
+      end
+    end
+
+    local function flank_partner_is_void(K, flank_dir, dir)
+      local kx,ky = K.kx, K.ky
+      local dx,dy
+
+      dx,dy = dir_to_delta(flank_dir)
+      kx,ky = kx+dx, ky+dy
+
+      if not valid_chunk(kx,ky) then return true end
+
+      dx,dy = dir_to_delta(dir)
+      kx,ky = kx+dx, ky+dy
+
+      if not valid_chunk(kx,ky) then return true end
+
+      return c.chunks[kx][ky].kind == "void"
+    end
+
+    local function try_grow_tendril(K, dir, rec, pos)
+      local dx, dy = dir_to_delta(dir)
+      local ax, ay = dir_to_across(dir)
+
+      local max_deep = rec.deep - 1
+
+      -- allow tendrils next to a void space to grow
+      -- the complete depth
+      local flank_dir = sel(dx==0, 4, 2)
+      if (pos == 1 and neighbour_is_void(K,flank_dir) and
+            flank_partner_is_void(K, flank_dir, dir)) or
+         (pos == rec.long and neighbour_is_void(K,10-flank_dir) and
+            flank_partner_is_void(K, 10-flank_dir, dir))
+      then
+        max_deep = rec.deep
+      end
+
+--con.printf("\nTRY_GROW_TENDRIL: long:%d deep:%d\n", rec.long, rec.deep)
+      for deep = 1, max_deep do
+
+        local x = rec.x1 + (pos-1)*ax + (deep-1)*dx
+        local y = rec.y1 + (pos-1)*ay + (deep-1)*dy
+
+        assert(valid_chunk_block(K, x, y))
 
         local B = PLAN.blocks[x][y]
         assert(B)
 
-        if T.deep <= 0 or B.reclaim then
-          -- cannot push tendril
+--[[
+con.printf("_ pos:%d deep:%d --> chunk:%s used:%s walk:%s on_path:%s\n",
+pos, deep, sel(B.chunk,"YES","NO"),
+sel(block_is_used(B), "YES", "NO"),
+sel(B.walk, "YES", "NO"),
+sel(B.on_path, "YES", "NO"))
+--]]
+        if not B.chunk         then break; end
+        if block_is_used(B)    then break; end
+        if B.walk or B.on_path then break; end
 
-        else -- if rand_odds(push_chance) then
-          T.deep = T.deep - 1
+        -- OK, this block passed the tests
+        rec.tendrils[pos] = deep
 
-          PLAN.blocks[x-dx][y-dy].reclaim = nil
+        rec.total_blk = rec.total_blk + 1
+      end
+    end
+
+    local function try_reclaim_side(K, dir, claims)
+
+      -- Requirements:
+      --  (a) start side must be against solid wall or void chunk
+      --  (b) never fill chunk completely (leave 1 block free)
+      --  (c) never fill over a 'walk' or 'on_path' block
+      --  (d) if surrounded by 3 solids, only try dir towards gap
+
+      if K.kind == "vista" then return false end
+
+      local solids = {}
+      local sol_count = 0
+
+      for side = 2,8,2 do
+        if neighbour_is_void(K, side)
+        then
+          solids[side] = true
+          sol_count = sol_count + 1
         end
       end
+
+con.printf("TRY_RECLAIM_SIDE @ (%d,%d) [%d,%d] dir:%d\n",
+c.x,c.y, K.kx,K.ky, dir)
+
+if c.x==4 and c.y==1 and K.kx==3 and K.ky==2 then
+con.printf("\n***************\n");
+con.printf("dir:%d count:%d solids=\n%s\n", dir, sol_count, table_to_str(solids))
+con.printf("\n***************\n");
+end
+
+      assert(sol_count < 4)
+
+      if sol_count == 0 then return false end
+
+      if sol_count == 3 then
+        local gap_side = (not solids[2] and 2) or
+                         (not solids[4] and 4) or
+                         (not solids[6] and 6) or
+                         (not solids[8] and 8)
+        assert(gap_side)
+        
+        if dir ~= gap_side then
+          return false
+        end
+
+      else -- less than 3 surrounding solids
+
+        if claims > 0 then return false end
+
+        if not solids[10-dir] then return false end
+      end
+
+      -- OK, direction is valid, now try and grow tendrils
+
+      local rec = create_reclaim(K, 10-dir)
+
+      for pos = 1,rec.long do
+        try_grow_tendril (K, dir, rec, pos)
+      end
+
+con.printf(" --> total:%d\n", rec.total_blk);
+
+      if rec.total_blk == 0 then
+        return false
+      end
+
+      -- if chunk already has a reclaim area, need to choose
+      -- which one to keep.
+      K.rec = (K.rec and best_reclaim(K.rec, rec)) or rec
+
+      return true --SUCCESS--
     end
 
-    for loop = 1,0 do
-      for side = 2,8,2 do
-        pull_back_side(side)
-      end
-    end
+    --== reclaim_areas_==--
+
+    -- choose reclaim direction for rows and columns.
+    -- By limiting them to a single direction, we prevent the
+    -- chance of two neighbouring chunks closing off an area
+    -- (because the opposite sides were reclaimed).
+    --
+    -- pass #2 is special, if no claims occurred for X or Y
+    -- direction in pass #1, then try the opposite way.
+
+    local col_dirs = { 6, rand_sel(50,4,6), 4 }
+    local row_dirs = { 8, rand_sel(50,2,8), 2 }
+
+    if c.link[4] and not c.link[6] then col_dirs[2] = 4 end
+    if c.link[6] and not c.link[4] then col_dirs[2] = 6 end
+
+    if c.link[2] and not c.link[8] then row_dirs[2] = 2 end
+    if c.link[8] and not c.link[2] then row_dirs[2] = 8 end
+
+    local col_claims = { 0, 0, 0 }
+    local row_claims = { 0, 0, 0 }
+
+    local ROOMY_KINDS = { room=1, link=1, player=1, quest=1, }
+
+    for pass = 1,2 do
+      for kx = 1,3 do for ky = 1,3 do
+        local K = c.chunks[kx][ky]
+
+        if ROOMY_KINDS[K.kind] then
+
+          local x_dir = col_dirs[kx]
+          local y_dir = row_dirs[ky]
+
+          if pass == 2 then
+            x_dir, y_dir = 10-x_dir, 10-y_dir
+          end
+
+          if try_reclaim_side(K, x_dir, sel(pass==1,0,col_claims[kx])) then
+            col_claims[kx] = col_claims[kx] + 1
+          end
+
+          if try_reclaim_side(K, y_dir, sel(pass==1,0,row_claims[ky])) then
+            row_claims[ky] = row_claims[ky] + 1
+          end
+        end
+      end end  -- for kx for ky
+    end -- for pass
   end
 
   local function get_vista_coords(c, side, link, other)
@@ -4752,7 +4981,6 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     -- FIXME: many improvements here!
     --   (a) fence borders: walk 3
     --   (b) doors: second square away = walk 2
-    --   (c) next to walls and dropoffs: walk 1
  
     for side = 2,8,2 do
       local dx,dy = dir_to_delta(10-side) -- inwards
@@ -5234,7 +5462,9 @@ mode="stair" --!!!!!!
 
       if N.solid then return -1 end
 
-      if N.chunk and N.chunk.kind == "vista" then return -1 end
+      if N.chunk and (N.chunk.kind == "vista" or N.chunk.kind == "void") then
+        return -1
+      end
 
       -- stair check
 
@@ -5267,10 +5497,6 @@ mode="stair" --!!!!!!
         return -1
       end
       
-      if N.chunk and N.chunk.kind == "empty" then
-        return 100
-      end
-
       return sel(C_fh == N_fh, 1.0, 1.2)
     end
 
@@ -5309,10 +5535,11 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
     --- create_paths ---
 
     local star_form = false
-    if c.chunks[2][2].kind == "room" and rand_odds(50) then
+    local mid_K = c.chunks[2][2]
+
+    if (mid_K.kind == "room" or mid_K.kind == "link") and rand_odds(50) then
       star_form = true
     end
-star_form = true --- (((c.x+c.y)%2)==0)
 
     local link_list = {}
 
@@ -5371,7 +5598,6 @@ star_form = true --- (((c.x+c.y)%2)==0)
   create_paths(c)
 
   reclaim_areas(c)
---  shape_room(c)
 end
 
 
@@ -6071,19 +6297,10 @@ if B.chunk and B.chunk.kind == "empty" then B.f_tex="GATE1" end
       gap_fill(c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
     end
 
-    gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=c.combo.void })
+    gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid="BLAKWAL1", solid2=c.combo.void }) --!!!!!! FIXME
   end
 
   local function build_reclamations(c)
-
---!!!!
-if false then
-  for kx = 1,3 do for ky = 1,3 do
-    local K = c.chunks[kx][ky]
-    if K.kind == "empty" then void_up_chunk(c, K) end
-  end end
-  do return end
-end
 
     local REC_FLATS =
     {
@@ -6096,6 +6313,41 @@ end
       [2]="COMPBLUE", [8]="CRACKLE2",
       [4]="SFALL1",   [6]="SKSNAKE1",
     }
+
+    local function fill_tendril(c, K, rec, pos)
+      local dir = 10-rec.side
+      local dx, dy = dir_to_delta(dir)
+      local ax, ay = dir_to_across(dir)
+
+      local sec = copy_block_with_new(K.rmodel,
+                 { f_h=K.rmodel.f_h-8, f_tex=REC_FLATS[rec.side] })
+
+      for deep = 1,rec.tendrils[pos] do
+
+        local x = rec.x1 + (pos-1)*ax + (deep-1)*dx
+        local y = rec.y1 + (pos-1)*ay + (deep-1)*dy
+
+        assert(valid_cell_block(c, x, y))
+
+        fill(c, x,y, x,y, sec)
+      end
+    end
+
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.kind == "void" then
+        void_up_chunk(c, K)
+      elseif K.rec then
+        for pos = 1,K.rec.long do
+          fill_tendril(c, K, K.rec, pos)
+        end
+      end
+    end end
+
+    do return end
+
+
+    ---- OLD CRUD ----
 
     for side = 2,8,2 do
       local rec = c.reclaim[side]
