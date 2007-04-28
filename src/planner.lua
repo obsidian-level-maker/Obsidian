@@ -191,6 +191,7 @@ function show_cell_blocks(c)
 
     if not B.chunk then return "?" end
     if B.chunk.kind == "vista" then return "V" end
+    if B.chunk.kind == "void"  then return "x" end
 
     return "." -- unused
   end
