@@ -4598,6 +4598,7 @@ end
 
       -- allow tendrils next to a void space to grow
       -- the complete depth
+--[[ DOES NOT WORK (MAKES ISLANDS)
       local flank_dir = sel(dx==0, 4, 2)
       if (pos == 1 and neighbour_is_void(K,flank_dir) and
             flank_partner_is_void(K, flank_dir, dir)) or
@@ -4606,6 +4607,7 @@ end
       then
         max_deep = rec.deep
       end
+--]]
 
 --con.printf("\nTRY_GROW_TENDRIL: long:%d deep:%d\n", rec.long, rec.deep)
       for deep = 1, max_deep do
@@ -4701,6 +4703,9 @@ con.printf(" --> total:%d\n", rec.total_blk);
       if rec.total_blk == 0 then
         return false
       end
+
+      -- EXPERIMENTAL: allow 1 horizontal and 1 vertical
+      if K.rec and (K.rec.side ~= 10-rec.side) then K.rec2 = K.rec; K.rec = nil end
 
       -- if chunk already has a reclaim area, need to choose
       -- which one to keep.
@@ -5534,13 +5539,6 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
     --- create_paths ---
 
-    local star_form = false
-    local mid_K = c.chunks[2][2]
-
-    if (mid_K.kind == "room" or mid_K.kind == "link") and rand_odds(50) then
-      star_form = true
-    end
-
     local link_list = {}
 
     for side = 2,8,2 do
@@ -5551,10 +5549,21 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
     end
 
     assert(#link_list > 0)
+    
+    if #link_list == 1 then  -- nowhere to go?
+      return
+    end
 
     rand_shuffle(link_list)
 
-    if star_form or #link_list == 1 then
+    local star_form = false
+    local mid_K = c.chunks[2][2]
+
+    if (mid_K.kind == "room" or mid_K.kind == "link") and rand_odds(50) then
+      star_form = true
+    end
+
+    if star_form then
 
       local K = c.chunks[2][2]
       if K.kind == "vista" then error("FUCK! VISTA ON PATH") end --!!!!!! FIXME
@@ -6319,8 +6328,10 @@ if B.chunk and B.chunk.kind == "empty" then B.f_tex="GATE1" end
       local dx, dy = dir_to_delta(dir)
       local ax, ay = dir_to_across(dir)
 
-      local sec = copy_block_with_new(K.rmodel,
-                 { f_h=K.rmodel.f_h-8, f_tex=REC_FLATS[rec.side] })
+--    local sec = copy_block_with_new(K.rmodel,
+--               { f_h=K.rmodel.f_h-8, f_tex=REC_FLATS[rec.side] })
+
+      local sec = { solid=REC_TEX[rec.side] }
 
       for deep = 1,rec.tendrils[pos] do
 
@@ -6337,9 +6348,16 @@ if B.chunk and B.chunk.kind == "empty" then B.f_tex="GATE1" end
       local K = c.chunks[kx][ky]
       if K.kind == "void" then
         void_up_chunk(c, K)
-      elseif K.rec then
-        for pos = 1,K.rec.long do
-          fill_tendril(c, K, K.rec, pos)
+      else
+        if K.rec then
+          for pos = 1,K.rec.long do
+            fill_tendril(c, K, K.rec, pos)
+          end
+        end
+        if K.rec2 then
+          for pos = 1,K.rec2.long do
+            fill_tendril(c, K, K.rec2, pos)
+          end
         end
       end
     end end
