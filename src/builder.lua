@@ -610,7 +610,7 @@ function B_stair(c, rmodel, bx,by, dir, long, deep, step)
 
   for i = 1,deep*4 do
 
-    local sec = ---??? copy_block_with_new(c.rmodel, -- !!!!
+    local STEP =
     {
       rmodel = rmodel,
 
@@ -624,7 +624,7 @@ function B_stair(c, rmodel, bx,by, dir, long, deep, step)
       [xo_dir2] = { x_offset=-i*16 },
     }
 
-    frag_fill(c, fx, fy, fx+zx, fy+zy, sec)
+    frag_fill(c, fx, fy, fx+zx, fy+zy, STEP)
 
     fx = fx + dx
     fy = fy + dy
@@ -635,7 +635,7 @@ function B_stair(c, rmodel, bx,by, dir, long, deep, step)
   local min_h = math.min(rmodel.f_h, z)
   local max_h = math.max(rmodel.f_h, z)
 
-  local stair_info = { dir=dir, step=step, min_h=min_h, max_h=max_h }
+  local stair_info = { kind="stair", dir=dir, step=step, min_h=min_h, max_h=max_h }
 
   local sx1 = math.min(bx, bx + (deep-1)*dx + (long-1)*ax)
   local sy1 = math.min(by, by + (deep-1)*dy + (long-1)*ay)
@@ -653,7 +653,7 @@ end
 --
 -- Z is the starting height
 --
-function B_lift(c, rmodel, bx,by, z, dir, long, deep)
+function B_lift(c, rmodel, bx,by, z1,z2, dir, long, deep)
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
@@ -662,11 +662,11 @@ function B_lift(c, rmodel, bx,by, z, dir, long, deep)
     bx,by = bx-(deep-1)*dx, by-(deep-1)*dy
   end
 
-  local LIFT = ---??? copy_block_with_new(c.rmodel,
+  local LIFT =
   {
     rmodel = rmodel,
 
-    f_h = z,
+    f_h = z2,
     f_tex = c.combo.lift_floor or GAME.mats.LIFT.floor,
     l_tex = c.combo.lift or GAME.mats.LIFT.wall,
 
@@ -677,13 +677,14 @@ function B_lift(c, rmodel, bx,by, z, dir, long, deep)
 
     [2] = { l_peg="top" }, [4] = { l_peg="top" },
     [6] = { l_peg="top" }, [8] = { l_peg="top" },
+
+    stair_info = { kind="lift", dir=dir, step=step, min_h=z1, max_h=z2 },
   }
 
   fill(c, bx, by,
        bx + (long-1) * ax + (deep-1) * dx,
        by + (long-1) * ay + (deep-1) * dy, LIFT)
 end
-
 
 
 function cage_select_height(c, kind, rail, floor_h, ceil_h)
@@ -3488,7 +3489,7 @@ end
 ----------------------------------------------------------------
 
 
-function build_cell(c)
+function layout_cell(c)
  
   local function player_angle(kx, ky)
 
@@ -5241,6 +5242,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     local ey = y + ax*(deep-1) + ay*(long-1)
 
     local diff_h = K.rmodel.f_h - J.rmodel.f_h
+    local min_fh = math.min(K.rmodel.f_h, J.rmodel.f_h)
     local max_fh = math.max(K.rmodel.f_h, J.rmodel.f_h)
 
     local step = -diff_h / (deep * 4)
@@ -5251,7 +5253,7 @@ con.debugf("Putting in Stair: (%d,%d)..(%d,%d) dir:%d size:%dx%d\n", x,y, ex,ey,
       B_stair(c, K.rmodel, x,y, dir, long,deep, step)
 
     elseif mode == "lift" then
-      B_lift(c, K.rmodel, x,y, max_fh, dir, long, deep)
+      B_lift(c, K.rmodel, x,y, min_fh,max_fh, dir, long, deep)
 
     else
       error("put_in_stair: unknown mode: " .. tostring(mode))
@@ -5362,7 +5364,6 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
       end
     end
 
-mode="stair" --!!!!!!
     if mode == "lift" then
       
       -- limit width to reasonable values (128 or 256 units)
@@ -5585,7 +5586,7 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
   end
 
 
-  ---=== build_cell ===---
+  ---=== layout_cell ===---
 
   if c.scenic == "solid" then
     fill(c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.combo.void })
@@ -5684,9 +5685,7 @@ function build_reclamations(c)
 
     do return end
 
-
-    ---- OLD CRUD ----
-
+--[[
     for side = 2,8,2 do
       local rec = c.reclaim[side]
       local D   = c.border[side]
@@ -5695,7 +5694,7 @@ function build_reclamations(c)
 
         local sec
 
---[[        if D.kind == "solid" and
+        if D.kind == "solid" and
            not (D.cells[1].combo.outdoor and D.cells[2].combo.outdoor)
         then
           if c.combo.outdoor then
@@ -5709,45 +5708,8 @@ function build_reclamations(c)
                  { f_h=D.fence_h, f_tex=D.combo.floor,
                    l_tex=D.combo.wall, has_blocker=true })
 
---]] if false then
-        else
-          sec = copy_block_with_new(c.rmodel,
-                 { f_h=c.f_min-12, f_tex=REC_FLATS[side] })
-        end
-        
-        for x = c.bx1, c.bx2 do
-          for y = c.by1, c.by2 do
-            local B = PLAN.blocks[x][y]
-            if B.reclaim and B.reclaim.rec == rec then
-              fill(c, x,y, x,y, sec)
---                     B.rmodel or (B.chunk and B.chunk.rmodel) or c.rmodel,
---                     { f_h = c.f_min - 12, f_tex = REC_FLATS[side], has_blocker=true })
-            end
-          end
-        end
       end
-    end
-
---[[
-    for kx = 1,3 do for ky = 1,3 do
-      local K = c.chunks[kx][ky]
-      if K.kind == "empty" then
---!!!        void_up_chunk(c, K)
-        gap_fill(c, K.x1,K.y1, K.x2,K.y2,
-          c.rmodel, { f_h=c.f_max+32, f_tex="NUKAGE3", has_blocker=true })
-      elseif K.rec and K.rec.border and (K.rec.border.kind == "fence" or
-           (K.rec.border.kind=="wire")) then
-        gap_fill(c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
-          c.rmodel, { f_h=K.rec.border.fence_h, f_tex=K.rec.border.combo.floor,
-                      l_tex=K.rec.border.combo.wall, has_blocker=true })
-      elseif K.rec then
-        gap_fill(c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
-          c.rmodel, { f_h=c.f_max+32, f_tex="FWATER1", has_blocker=true })
---!!!        { solid=c.combo.void })
----     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
----        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
-      end
-    end end
+   end
 --]]
 end
 
@@ -6053,8 +6015,8 @@ function tizzy_up_room(c)
         K.rec  = nil  -- use up the rec space  FIXME: set tendrils to 0
         K.rec2 = nil
         
-        return x,y
-      
+        return x, y, "reclaim"
+
       else
 
       -- FIXME: side_coords(10-dir, K.x1,K.y1, K.x2,K.y2)
@@ -6080,8 +6042,8 @@ function tizzy_up_room(c)
     for zzz, K in ipairs(chunk_list) do
       for try_dir = 2,8,2 do
         if not dir or try_dir == dir then
-          local x, y = test_chunk(K, try_dir)
-          if x then return x, y, try_dir end
+          local x, y, mode = test_chunk(K, try_dir)
+          if x then return x, y, try_dir, mode end
         end
       end
     end
@@ -6264,8 +6226,6 @@ con.printf("\nADDING WALLISH PREFAB!!!! @ block (%d,%d) dir:%d\n", x,y, dir)
       "wall_lamp_GREEN_TORCH",
       "wall_lamp_BLUE_TORCH",
       "wall_pic_TV",
-      "wall_pic_2S_EAGLE",
-      "wall_pic_4S_ADOLF",
     }
 
     local def = GAME.wall_fabs[name]
@@ -6282,6 +6242,7 @@ con.printf("\nADDING WALLISH PREFAB!!!! @ block (%d,%d) dir:%d\n", x,y, dir)
       "billboard_lit_SHAWN",
       "billboard_stilts4_WREATH",
       "billboard_stilts_FLAGGY",
+      "four_sided_pic_ADOLF",
 
       "pillar_light1_METAL",
       "pillar_rnd_sm_POIS",
@@ -6577,18 +6538,12 @@ if B.chunk and B.chunk.kind == "empty" then B.f_tex="GATE1" end
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
-    build_cell(cell)
+    layout_cell(cell)
   end
 
----##  for zzz,cell in ipairs(PLAN.all_cells) do
----##    build_reclamations(cell)
----##  end
-
   for zzz,cell in ipairs(PLAN.all_cells) do
+--  build_reclamations(cell)
     tizzy_up_room(cell)
-  end
-
-  for zzz,cell in ipairs(PLAN.all_cells) do
     GAP_FILL_ROOM(cell)
   end
 end
