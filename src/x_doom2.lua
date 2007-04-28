@@ -675,7 +675,7 @@ D2_SCENERY =
 {
 }
 
-D2_PREFAB_SCENERY =
+D2_SCENERY_PREFABS =
 {
   pedestal_PLAYER =
   {
@@ -705,76 +705,6 @@ D2_PREFAB_SCENERY =
     {
       wall="METAL", floor="CEIL1_2", ped_h=12,
     },
-  },
-
-  fence_MIDBARS3 =
-  {
-    prefab = "FENCE_RAIL",
-    skin = { rail_w="MIDBARS3" },
-  },
-  
-  fence_beam_BLUETORCH =
-  {
-    prefab = "FENCE_BEAM_W_LAMP",
-
-    skin = { lamp_t="blue_torch", beam_h=72,
-             beam_w="METAL", beam_f="CEIL5_2",
-           },
-  },
-
-  wall_lamp_RED_TORCH =
-  {
-    prefab = "WALL_LAMP",
-    skin = { lamp_t="red_torch_sm" },
-  },
-
-  wall_lamp_GREEN_TORCH =
-  {
-    prefab = "WALL_LAMP",
-    skin = { lamp_t="green_torch_sm" },
-  },
-
-  wall_lamp_BLUE_TORCH =
-  {
-    prefab = "WALL_LAMP",
-    skin = { lamp_t="blue_torch_sm" },
-  },
-
-  wall_pic_TV =
-  {
-    prefab = "WALL_PIC",
-    skin = { pic_w="SPACEW3", lite_w="SUPPORT2" },
-  },
-
-  wall_pic_2S_EAGLE =
-  {
-    prefab = "WALL_PIC_TWO_SIDED",
-    skin = { pic_w="ZZWOLF6", lite_w="LITE5" },
-  },
-
-  wall_pic_4S_ADOLF =
-  {
-    prefab = "WALL_PIC_FOUR_SIDED",
-    skin = { pic_w="ZZWOLF7" },
-    force_dir = 2, -- optimisation
-  },
-
-  window_narrow =
-  {
-    prefab = "WINDOW_NARROW",
-    skin = { },
-  },
-
-  window_rail_nar_MIDGRATE =
-  {
-    prefab = "WINDOW_RAIL_NARROW",
-    skin = { rail_w="MIDGRATE" },
-  },
-
-  window_cross_big =
-  {
-    prefab = "WINDOW_CROSS_BIG",
-    skin = { },
   },
 
   pillar_light1_METAL =
@@ -1409,6 +1339,80 @@ D2_PREFAB_SCENERY =
   },
 }
 
+D2_WALL_PREFABS =
+{
+  fence_MIDBARS3 =
+  {
+    prefab = "FENCE_RAIL",
+    skin = { rail_w="MIDBARS3" },
+  },
+  
+  fence_beam_BLUETORCH =
+  {
+    prefab = "FENCE_BEAM_W_LAMP",
+
+    skin = { lamp_t="blue_torch", beam_h=72,
+             beam_w="METAL", beam_f="CEIL5_2",
+           },
+  },
+
+  wall_lamp_RED_TORCH =
+  {
+    prefab = "WALL_LAMP",
+    skin = { lamp_t="red_torch_sm" },
+  },
+
+  wall_lamp_GREEN_TORCH =
+  {
+    prefab = "WALL_LAMP",
+    skin = { lamp_t="green_torch_sm" },
+  },
+
+  wall_lamp_BLUE_TORCH =
+  {
+    prefab = "WALL_LAMP",
+    skin = { lamp_t="blue_torch_sm" },
+  },
+
+  wall_pic_TV =
+  {
+    prefab = "WALL_PIC",
+    skin = { pic_w="SPACEW3", lite_w="SUPPORT2" },
+  },
+
+  wall_pic_2S_EAGLE =
+  {
+    prefab = "WALL_PIC_TWO_SIDED",
+    skin = { pic_w="ZZWOLF6", lite_w="LITE5" },
+  },
+
+  wall_pic_4S_ADOLF =
+  {
+    prefab = "WALL_PIC_FOUR_SIDED",
+    skin = { pic_w="ZZWOLF7" },
+    force_dir = 2, -- optimisation
+  },
+
+  window_narrow =
+  {
+    prefab = "WINDOW_NARROW",
+    skin = { },
+  },
+
+  window_rail_nar_MIDGRATE =
+  {
+    prefab = "WINDOW_RAIL_NARROW",
+    skin = { rail_w="MIDGRATE" },
+  },
+
+  window_cross_big =
+  {
+    prefab = "WINDOW_CROSS_BIG",
+    skin = { },
+  },
+
+}
+
 D2_ROOMS =
 {
 }
@@ -1442,7 +1446,8 @@ GAME_FACTORIES["doom2"] = function()
   T.monsters = copy_and_merge(T.monsters, D2_MONSTERS)
 
   T.scenery = copy_and_merge(T.scenery, D2_SCENERY)
-  T.sc_fabs = copy_and_merge(T.sc_fabs, D2_PREFAB_SCENERY)
+  T.sc_fabs = copy_and_merge(T.sc_fabs, D2_SCENERY_PREFABS)
+  T.wall_fabs = copy_and_merge(T.wall_fabs, D2_WALL_PREFABS)
   T.rooms   = copy_and_merge(T.rooms,   D2_ROOMS)
   T.themes  = copy_and_merge(T.themes,  D2_THEMES)
 

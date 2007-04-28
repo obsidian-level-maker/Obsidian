@@ -1157,7 +1157,11 @@ DM_SCENERY =
   dead_caco    = { r=16,h=16, pass=true },
 }
 
-DM_PREFAB_SCENERY =
+DM_SCENERY_PREFABS =
+{
+}
+
+DM_WALL_PREFABS =
 {
 }
 
@@ -1699,7 +1703,8 @@ GAME_FACTORIES["doom_common"] = function()
     wall_lights = DM_WALL_LIGHTS,
 
     scenery   = DM_SCENERY,
-    sc_fabs   = DM_PREFAB_SCENERY,
+    sc_fabs   = DM_SCENERY_PREFABS,
+    wall_fabs = DM_WALL_PREFABS,
     rooms     = DM_ROOMS,
     themes    = DM_THEMES,
 
