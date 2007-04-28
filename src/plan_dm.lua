@@ -277,7 +277,8 @@ function plan_dm_arena()
     for cy = 1,PLAN.h do
       cx = rand_irange(1,PLAN.w)
       local c = PLAN.cells[cx][cy]
-      c.combo = get_rand_combo()
+      local level_theme = get_rand_theme()
+      c.combo = get_rand_combo(level_theme)
       c.liquid = liquid_for_seed(c.combo)
     end
 
@@ -350,14 +351,14 @@ function plan_dm_arena()
     end
 
     local function verify_scorer(cx,cy, nx,ny, dir)
+      local c = PLAN.cells[cx][cy]
+      local n = PLAN.cells[nx][ny]
+
       local L = c.link[dir]
 
       if not L then return -1 end  -- blocked
 
       if L.kind == "vista" then return -1 end
-
-      local c = PLAN.cells[cx][cy]
-      local n = PLAN.cells[nx][ny]
 
       if L.kind == "falloff" then
         if c.floor_h < n.floor_h then return -1 end  -- cannot go up
@@ -476,9 +477,13 @@ function plan_dm_arena()
   for y = 1,H do
     for x = 1,W do
       -- note: dummy along and combo values
-      create_cell(x, y, PLAN.quests[1], 1, nil)
+      local c = create_cell(x, y, PLAN.quests[1], 1, nil)
+
+      c.room_type = non_nil(GAME.rooms["PLAIN"])
     end
   end
+
+---???  PLAN.cells[1][PLAN.h].no_nudge = true
 
   if GAME.caps.liquids then
     p.liquid = choose_liquid()
