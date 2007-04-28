@@ -615,7 +615,7 @@ function resize_rooms()
     dx = dx * mv_x * dir
     dy = dy * mv_y * dir
 
-    con.debugf("~~~~~~~ NUDGING (%d,%d) side:%d  by %d/%d\n", c.x,c.y,side,dx,dy) 
+--  con.debugf("~~~~~~~ NUDGING (%d,%d) side:%d  by %d/%d\n", c.x,c.y,side,dx,dy) 
 
     if (side == 2) or (side == 4) then
       c.bx1 = c.bx1 + dx

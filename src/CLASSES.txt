@@ -142,10 +142,7 @@ class Border
 
   window: true if this border can contain windows
 
-  -- type indicators:
-  solid : true
-  empty : true
-  fence : true
+  kind : keyword, one of: "solid", "fence", "sky", "window"
 end
 
 
@@ -160,6 +157,7 @@ class Chunk
   x1, y1, x2, y2 : block range
 
   stair_dir  -- present to build a stair to neighbour chunk
+
 end
 
 
