@@ -319,6 +319,10 @@ function create_cell(x, y, quest, along, combo, is_depot)
     monsters = {}
   }
 
+  if is_depot then
+    CELL.no_nudge = true
+  end
+
   CELL.bx1, CELL.by1, CELL.bx2, CELL.by2 = PLAN.cell_base_coords(x, y)
 
   CELL.bw = CELL.bx2 - CELL.bx1 + 1
@@ -514,6 +518,9 @@ function resize_rooms()
     --   2: nudge against another valid cell
     --   3: nudge against the map's edge
 
+    if c.no_nudge then return end 
+    if other and other.no_nudge then return end
+
     if rand_odds(25) then return end  -- FIXME: depends on room (want_size ~= cur_size)
 
     local dx,dy = dir_to_delta(side)
@@ -645,8 +652,6 @@ function resize_rooms()
 
   --- resize_rooms ---
 
----  add_dummies()
-
   local visit_list = {}
 
   for zzz,c in ipairs(PLAN.all_cells) do
@@ -656,9 +661,7 @@ function resize_rooms()
   end
 
   for pass = 1,3 do
-
     rand_shuffle(visit_list)
-
     for zzz,v in ipairs(visit_list) do
       try_nudge_cell(v.c, v.side, pass)
     end
@@ -669,7 +672,6 @@ con.debugf("CELL @ (%d,%d) has coords [%d,%d]..[%d,%d]\n",
 cell.x, cell.y, cell.bx1, cell.by1, cell.bx2, cell.by2)
 end
 
----  remove_dummies()
 end
 
 
@@ -1941,6 +1943,7 @@ R.level_theme.name, R.combo.name)
       c.combo = get_rand_exit_combo()
     end
     c.is_exit = true
+    c.no_nudge = true
     c.light = 176
 
     c.small_exit = c.combo.small_exit or rand_odds(25)
