@@ -5765,29 +5765,16 @@ function tizzy_up_room(c)
       end
     end
 
-    if (not fab.add_mode or fab.add_mode == "wall") then
+    if (not fab.add_mode or fab.add_mode == "extend") then
 
       if verify_wall_extend(c, f_h, dir1, x1,y1, x2,y2) then
-        return true, "wall", dir1
+        return true, "extend", dir1
       
       elseif dir1 ~= dir2 and
         verify_wall_extend(c, f_h, dir2, x1,y1, x2,y2)
       then
-        return true, "wall", dir2
+        return true, "extend", dir2
       end
---[[
-        for g_dir = 2,8,2 do
-          local sx,sy, ex,ey = side_coords(10-g_dir, x1-1,y1-1, x2+1,y2+1)
-
-          if verify_wall(c, f_h, sx,sy, ex,ey) then
-            if verify_wall_extend(c, f_h, g_dir, x1,y1, x2,y2) then
-              return true, "wall", g_dir
-            end
-
-            break; -- can never have more than one wall
-          end
-        end
---]]
     end
 
     return false --FAIL--

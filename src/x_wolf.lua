@@ -315,14 +315,14 @@ WF_SCENERY =
   -- URBANE --
   
   puddle = { r=24,h= 4, pass=true },
-  sink   = { r=24,h=48, add_mode="wall" },
+  sink   = { r=24,h=48, add_mode="extend" },
 
   tree   = { r=24,h=48 },
   plant  = { r=24,h=48 },
   urn    = { r=24,h=48 },
-  pots   = { r=24,h=48, add_mode="wall", pass=true },
-  stove  = { r=24,h=48, add_mode="wall" },
-  bed    = { r=24,h=48, add_mode="wall" },
+  pots   = { r=24,h=48, add_mode="extend", pass=true },
+  stove  = { r=24,h=48, add_mode="extend" },
+  bed    = { r=24,h=48, add_mode="extend" },
   basket = { r=24,h=48 },
 
   bare_table    = { r=24,h=48, add_mode="island" },
@@ -331,7 +331,7 @@ WF_SCENERY =
 
   -- CASTLEY --
 
-  suit_of_armor = { r=24,h=48, add_mode="wall" },
+  suit_of_armor = { r=24,h=48, add_mode="extend" },
   red_pillar    = { r=24,h=48, add_mode="island" },
   barrel        = { r=24,h=48 },
   green_barrel  = { r=24,h=48 },
@@ -343,7 +343,7 @@ WF_SCENERY =
   junk_2 = { r=24,h=48, pass=true },
   junk_3 = { r=24,h=48, pass=true },
   vines  = { r=24,h=48, pass=true },
-  spears = { r=24,h=48, add_mode="wall" },
+  spears = { r=24,h=48, add_mode="extend" },
 
   -- GORY --
 

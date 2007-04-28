@@ -1889,7 +1889,7 @@ SKYLIGHT_CROSS_SMALL =
 
 BILLBOARD =
 {
-  add_mode="wall",
+  add_mode="extend",
   environment="outdoor",
   height_range={ 160,999 },
 
@@ -1925,7 +1925,7 @@ BILLBOARD =
 BILLBOARD_LIT =
 {
   region="floor",
-  add_mode="wall",
+  add_mode="extend",
   environment="outdoor",
   height_range={ 160,999 },
 
@@ -2100,7 +2100,7 @@ COMPUTER_TALL_THIN =
 
 COMPUTER_DESK =
 {
-  add_mode="wall",
+  add_mode="extend",
   region="floor",
   scale=64,
 
