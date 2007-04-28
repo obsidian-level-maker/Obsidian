@@ -715,10 +715,10 @@ EXIT_DEATHMATCH =
   elements =
   {
     -- inside area
-    i = { f_h=0, c_rel="floor_h", c_h=80, },
+    i = { f_h=0, c_rel="floor_h", c_add="inside_h", c_h=0, },
 
     -- step
-    s = { f_h=8, c_rel="door_top_h", c_h=8,
+    s = { f_h=8, c_rel="floor_h", c_add="door_h", c_h=8,
           f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
           l_peg="top", light=224
         },
@@ -727,10 +727,10 @@ EXIT_DEATHMATCH =
     F = { solid="front_w", l_peg="bottom" },
 
     -- door
-    d = { copy="s", c_rel="floor_h", c_h=8,
-          u_tex="door_w", c_tex="door_c",
-          u_peg="bottom", l_peg="bottom",
-          kind="door_kind", tag="tag",
+    d = { f_h=8, c_rel="floor_h", c_h=8,
+          f_tex="frame_f", l_tex="step_w", l_peg="bottom",
+          c_tex="door_c", u_tex="door_w",  u_peg="bottom",
+          light=224, kind="door_kind", tag="tag",
         },
 
     -- track

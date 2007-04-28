@@ -1312,6 +1312,8 @@ D2_SCENERY_PREFABS =
              switch_w="SW1COMM", side_w="SHAWN2", switch_f="FLAT23",
              frame_f="FLAT1", frame_c="FLAT1", step_w="STEP1",
              door_w="EXITDOOR", door_c="FLAT1", track_w="DOORTRAK",
+
+             inside_h=80, door_h=72,
              switch_yo=0,
              door_kind=1, tag=0, switch_kind=11
            },
@@ -1326,6 +1328,8 @@ D2_SCENERY_PREFABS =
              switch_w="SW1BLUE", side_w="COMPBLUE", switch_f="FLAT14",
              frame_f="FLOOR5_1", frame_c="TLITE6_6", step_w="STEP1",
              door_w="EXITDOOR", door_c="FLAT1", track_w="DOORTRAK",
+
+             inside_h=80, door_h=72,
              switch_yo=56,
              door_kind=1, tag=0, switch_kind=11
            },
@@ -1340,6 +1344,8 @@ D2_SCENERY_PREFABS =
              switch_w="SW1HOT", side_w="SP_HOT1", switch_f="FLAT5_3",
              frame_f="FLOOR5_1", frame_c="TLITE6_6", step_w="STEP1",
              door_w="EXITDOOR", door_c="FLAT1", track_w="DOORTRAK",
+
+             inside_h=80, door_h=72,
              switch_yo=56,
              door_kind=1, tag=0, switch_kind=11
            },
