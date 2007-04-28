@@ -3084,14 +3084,14 @@ arch.f_tex = "TLITE6_6"
 
     local D = c.border[side]
 
-    local def = GAME.sc_fabs["fence_MIDBARS3"] -- FIXME: not hard-code
+    local def = GAME.wall_fabs["fence_MIDBARS3"] -- FIXME: not hard-code
     assert(def)
 
     local fab = non_nil(PREFABS[def.prefab])
     local parm = { low_h = D.fence_h }
 
     -- Experimental shite
-    local def2 = GAME.sc_fabs["fence_beam_BLUETORCH"]
+    local def2 = GAME.wall_fabs["fence_beam_BLUETORCH"]
     assert(def2)
     local fab2 = non_nil(PREFABS[def2.prefab])
 
@@ -3200,7 +3200,7 @@ arch.f_tex = "TLITE6_6"
         local DEFS = { "window_narrow", "window_rail_nar_MIDGRATE", "window_cross_big" }
         local def_name = non_nil(DEFS[spot.long])
 
-        local def = non_nil(GAME.sc_fabs[def_name])
+        local def = non_nil(GAME.wall_fabs[def_name])
         local fab = non_nil(PREFABS[def.prefab])
 
         B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, spot.x,spot.y,10-dir)
@@ -4659,8 +4659,8 @@ sel(B.on_path, "YES", "NO"))
         end
       end
 
-con.printf("TRY_RECLAIM_SIDE @ (%d,%d) [%d,%d] dir:%d\n",
-c.x,c.y, K.kx,K.ky, dir)
+--con.printf("TRY_RECLAIM_SIDE @ (%d,%d) [%d,%d] dir:%d\n",
+--c.x,c.y, K.kx,K.ky, dir)
 
 if c.x==4 and c.y==1 and K.kx==3 and K.ky==2 then
 con.printf("\n***************\n");
@@ -5610,6 +5610,148 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 end
 
 
+function build_reclamations(c)
+
+    local function void_up_chunk(c, K)
+
+      --!!!!!! TESTING
+      if c.combo.decorate and not c.scenic and K.kind == "void" and
+        (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
+        (K.y2 > K.y1 or rand_odds(50)) and
+        rand_odds(65)
+      then
+        local dec_tex = c.combo.decorate
+        if type(dec_tex) == "table" then
+          dec_tex = rand_element(dec_tex)
+        end
+        gap_fill(c, K.x1,K.y1, K.x1,K.y1, { solid=dec_tex })
+        gap_fill(c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
+      end
+
+      gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid="BLAKWAL1", solid2=c.combo.void }) --!!!!!! FIXME
+    end
+
+    local REC_FLATS =
+    {
+      [2]="FWATER1", [8]="LAVA1",
+      [4]="NUKAGE3", [6]="SLIME01",
+    }
+
+    local REC_TEX =
+    {
+      [2]="COMPBLUE", [8]="CRACKLE2",
+      [4]="SFALL1",   [6]="SKSNAKE1",
+    }
+
+    local function fill_tendril(c, K, rec, pos)
+      local dir = 10-rec.side
+      local dx, dy = dir_to_delta(dir)
+      local ax, ay = dir_to_across(dir)
+
+--    local sec = copy_block_with_new(K.rmodel,
+--               { f_h=K.rmodel.f_h-8, f_tex=REC_FLATS[rec.side] })
+
+      local sec = { solid=REC_TEX[rec.side] }
+
+      for deep = 1,rec.tendrils[pos] do
+
+        local x = rec.x1 + (pos-1)*ax + (deep-1)*dx
+        local y = rec.y1 + (pos-1)*ay + (deep-1)*dy
+
+        assert(valid_cell_block(c, x, y))
+
+        fill(c, x,y, x,y, sec)
+      end
+    end
+
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.kind == "void" then
+        void_up_chunk(c, K)
+      else
+        if K.rec then
+          for pos = 1,K.rec.long do
+            fill_tendril(c, K, K.rec, pos)
+          end
+        end
+        if K.rec2 then
+          for pos = 1,K.rec2.long do
+            fill_tendril(c, K, K.rec2, pos)
+          end
+        end
+      end
+    end end
+
+    do return end
+
+
+    ---- OLD CRUD ----
+
+    for side = 2,8,2 do
+      local rec = c.reclaim[side]
+      local D   = c.border[side]
+
+      if rec and D then
+
+        local sec
+
+--[[        if D.kind == "solid" and
+           not (D.cells[1].combo.outdoor and D.cells[2].combo.outdoor)
+        then
+          if c.combo.outdoor then
+            sec = { solid = D.combo.wall }
+          else
+            sec = { solid = c.combo.wall }
+          end
+
+        elseif D.kind == "fence" then
+          sec = copy_block_with_new(c.rmodel,
+                 { f_h=D.fence_h, f_tex=D.combo.floor,
+                   l_tex=D.combo.wall, has_blocker=true })
+
+--]] if false then
+        else
+          sec = copy_block_with_new(c.rmodel,
+                 { f_h=c.f_min-12, f_tex=REC_FLATS[side] })
+        end
+        
+        for x = c.bx1, c.bx2 do
+          for y = c.by1, c.by2 do
+            local B = PLAN.blocks[x][y]
+            if B.reclaim and B.reclaim.rec == rec then
+              fill(c, x,y, x,y, sec)
+--                     B.rmodel or (B.chunk and B.chunk.rmodel) or c.rmodel,
+--                     { f_h = c.f_min - 12, f_tex = REC_FLATS[side], has_blocker=true })
+            end
+          end
+        end
+      end
+    end
+
+--[[
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.kind == "empty" then
+--!!!        void_up_chunk(c, K)
+        gap_fill(c, K.x1,K.y1, K.x2,K.y2,
+          c.rmodel, { f_h=c.f_max+32, f_tex="NUKAGE3", has_blocker=true })
+      elseif K.rec and K.rec.border and (K.rec.border.kind == "fence" or
+           (K.rec.border.kind=="wire")) then
+        gap_fill(c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
+          c.rmodel, { f_h=K.rec.border.fence_h, f_tex=K.rec.border.combo.floor,
+                      l_tex=K.rec.border.combo.wall, has_blocker=true })
+      elseif K.rec then
+        gap_fill(c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
+          c.rmodel, { f_h=c.f_max+32, f_tex="FWATER1", has_blocker=true })
+--!!!        { solid=c.combo.void })
+---     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
+---        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
+      end
+    end end
+--]]
+end
+
+
 function tizzy_up_room(c)
 
   local function block_is_free(B)
@@ -5841,6 +5983,112 @@ function tizzy_up_room(c)
     end
   end
 
+  local function find_wallish_loc(c, fab, dir)
+
+    local function test_chunk(K, dir)
+      local B = chunk_neighbour(c, K, 10-dir) -- behind chunk
+
+      local rec  --FIXME try rec2
+      if K.rec and K.rec.side == 10-dir then rec = K.rec end
+
+      if B and B.kind ~= "void" then return nil,nil end
+      if not B and not rec then return nil, nil end
+
+      local K_long, K_deep = K.w, K.h
+      local B_deep = (B and B.h) or 1
+
+      if (dir == 4) or (dir == 6) then
+        K_long, K_deep = K_deep, K_long
+        B_deep = (B and B.w) or 1
+      end
+
+      if fab.long > K_long then return nil, nil end
+
+      local dx,dy = dir_to_delta (10-dir)
+      local ax,ay = dir_to_across(10-dir)
+
+      local function test_pos(pos)
+        local usable_reclaim = 999
+
+        for L = 1,K_long do
+          if not rec then
+            usable_reclaim = 0
+          else
+            usable_reclaim = math.min(rec.tendrils[L], usable_reclaim)
+          end
+        end
+
+        if usable_reclaim >= fab.deep then
+          return 100  -- FIXME: score
+        end
+
+        -- FIXME: test void-space/border-space
+
+        return -1
+      end
+
+      local best_pos
+      local best_score = 0
+
+      for pos = 0, (K_long - fab.long) do
+        local score = test_pos(pos)
+        if score < 0 then
+          -- not possible
+        elseif score > best_score then
+          best_pos = pos
+          best_score = score
+        end
+      end
+
+      if not best_pos then return nil, nil end
+
+      -- found it! now build it...
+
+      local x, y
+
+      if rec then
+        x = rec.x1 + ax*best_pos    
+        y = rec.y1 + ay*best_pos
+
+        K.rec  = nil  -- use up the rec space  FIXME: set tendrils to 0
+        K.rec2 = nil
+        
+        return x,y
+      
+      else
+
+      -- FIXME: side_coords(10-dir, K.x1,K.y1, K.x2,K.y2)
+
+      end
+    end
+
+    --- find_wallish_loc ---
+
+    local chunk_list = {}
+
+    for kx=1,3 do for ky=1,3 do
+      local K = c.chunks[kx][ky]
+      if is_roomy(K) then
+         table.insert(chunk_list, K)
+      end
+    end end
+
+    assert(#chunk_list > 0)
+
+    rand_shuffle(chunk_list)
+
+    for zzz, K in ipairs(chunk_list) do
+      for try_dir = 2,8,2 do
+        if not dir or try_dir == dir then
+          local x, y = test_chunk(K, try_dir)
+          if x then return x, y, try_dir end
+        end
+      end
+    end
+
+    return nil, nil --FAIL--
+  end
+
   local function fab_mark_walkable(c, x, y, dir, long,deep, walk)
 
     if dir==4 or dir==6 then long,deep = deep,long end
@@ -5916,6 +6164,44 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     add_object(c, choose_dm_thing(GAME.dm.weapons, true))
   end
 
+  local function add_ceiling_beams(c) -- TEST JUNK
+    local dir = 8
+
+    for y = c.by1+1, c.by2-1, 2 do
+      for x = c.bx1, c.bx2 do
+        local B = PLAN.blocks[x][y]
+        if not B.c_tex and B.chunk then
+          B.c_tex = "CEIL5_2"
+          B.u_tex = "METAL"
+          B.c_h   = B.chunk.rmodel.c_h - 20
+        end
+      end
+    end
+  end
+
+  local function try_add_wall_prefab(c, def)
+    local fab = PREFABS[def.prefab]
+    assert(fab)
+    assert(def.skin)
+
+    if fab.environment then
+      if fab.environment == "indoor" and c.combo.outdoor then return end
+      if fab.environment == "outdoor" and not c.combo.outdoor then return end
+    end
+
+    local parm = {}
+
+    local x, y, dir = find_wallish_loc(c, fab)
+
+    if not x then return end
+
+con.printf("\nADDING WALLISH PREFAB!!!! @ block (%d,%d) dir:%d\n", x,y, dir)
+    B_prefab(c, fab, def.skin, parm, c.rmodel or PLAN.blocks[x][y].chunk.rmodel, c.combo, x, y, dir)
+
+    -- FIXME: mark area in front
+    -- mark_walkable(c, x,y, 2)
+  end
+
   local function add_switch(c)
 
     local info
@@ -5970,19 +6256,22 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
   end
 
-  local function add_ceiling_beams(c) -- TEST JUNK
-    local dir = 8
+  local function add_wall_stuff(c)
 
-    for y = c.by1+1, c.by2-1, 2 do
-      for x = c.bx1, c.bx2 do
-        local B = PLAN.blocks[x][y]
-        if not B.c_tex and B.chunk then
-          B.c_tex = "CEIL5_2"
-          B.u_tex = "METAL"
-          B.c_h   = B.chunk.rmodel.c_h - 20
-        end
-      end
-    end
+    local name = rand_element
+    {
+      "wall_lamp_RED_TORCH",
+      "wall_lamp_GREEN_TORCH",
+      "wall_lamp_BLUE_TORCH",
+      "wall_pic_TV",
+      "wall_pic_2S_EAGLE",
+      "wall_pic_4S_ADOLF",
+    }
+
+    local def = GAME.wall_fabs[name]
+    assert(def)
+
+    try_add_wall_prefab(c, def)
   end
 
   local function add_prefab(c)
@@ -5993,13 +6282,6 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       "billboard_lit_SHAWN",
       "billboard_stilts4_WREATH",
       "billboard_stilts_FLAGGY",
-
-      "wall_lamp_RED_TORCH",
-      "wall_lamp_GREEN_TORCH",
-      "wall_lamp_BLUE_TORCH",
-      "wall_pic_TV",
-      "wall_pic_2S_EAGLE",
-      "wall_pic_4S_ADOLF",
 
       "pillar_light1_METAL",
       "pillar_rnd_sm_POIS",
@@ -6159,9 +6441,24 @@ con.debugf("add_scenery : %s\n", item)
 
   --====| tizzy_up_room |====--
 
-
   -- the order here is important, earlier items may cause
   -- later items to no longer fit.
+
+
+  -- SWITCHES
+  if not PLAN.deathmatch and c == c.quest.last then
+    if (c.quest.kind == "switch") or (c.quest.kind == "exit") then
+      add_switch(c)
+    end
+  end
+
+  -- WALL STUFF
+  for loop = 1,10 do
+    add_wall_stuff(c)
+  end
+
+  build_reclamations(c)
+
 
   -- PLAYERS
   if not PLAN.deathmatch and c == PLAN.quests[1].first then
@@ -6185,12 +6482,8 @@ con.debugf("add_scenery : %s\n", item)
        (c.quest.kind == "item")
     then
       add_object(c, c.quest.item, "must")
-
-    elseif (c.quest.kind == "switch") or
-           (c.quest.kind == "exit")
-    then
-      add_switch(c)
     end
+
   elseif PLAN.deathmatch and (c.require_weapon or rand_odds(75)) then
     add_dm_weapon(c)
   end
@@ -6277,148 +6570,6 @@ if B.chunk and B.chunk.kind == "empty" then B.f_tex="GATE1" end
     end end
   end
 
-  local function void_up_chunk(c, K)
-
-    --!!!!!! TESTING
-    if c.combo.decorate and not c.scenic and K.kind == "void" and
-      (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
-      (K.y2 > K.y1 or rand_odds(50)) and
-      rand_odds(65)
-    then
-      local dec_tex = c.combo.decorate
-      if type(dec_tex) == "table" then
-        dec_tex = rand_element(dec_tex)
-      end
-      gap_fill(c, K.x1,K.y1, K.x1,K.y1, { solid=dec_tex })
-      gap_fill(c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
-    end
-
-    gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid="BLAKWAL1", solid2=c.combo.void }) --!!!!!! FIXME
-  end
-
-  local function build_reclamations(c)
-
-    local REC_FLATS =
-    {
-      [2]="FWATER1", [8]="LAVA1",
-      [4]="NUKAGE3", [6]="SLIME01",
-    }
-
-    local REC_TEX =
-    {
-      [2]="COMPBLUE", [8]="CRACKLE2",
-      [4]="SFALL1",   [6]="SKSNAKE1",
-    }
-
-    local function fill_tendril(c, K, rec, pos)
-      local dir = 10-rec.side
-      local dx, dy = dir_to_delta(dir)
-      local ax, ay = dir_to_across(dir)
-
---    local sec = copy_block_with_new(K.rmodel,
---               { f_h=K.rmodel.f_h-8, f_tex=REC_FLATS[rec.side] })
-
-      local sec = { solid=REC_TEX[rec.side] }
-
-      for deep = 1,rec.tendrils[pos] do
-
-        local x = rec.x1 + (pos-1)*ax + (deep-1)*dx
-        local y = rec.y1 + (pos-1)*ay + (deep-1)*dy
-
-        assert(valid_cell_block(c, x, y))
-
-        fill(c, x,y, x,y, sec)
-      end
-    end
-
-    for kx = 1,3 do for ky = 1,3 do
-      local K = c.chunks[kx][ky]
-      if K.kind == "void" then
-        void_up_chunk(c, K)
-      else
-        if K.rec then
-          for pos = 1,K.rec.long do
-            fill_tendril(c, K, K.rec, pos)
-          end
-        end
-        if K.rec2 then
-          for pos = 1,K.rec2.long do
-            fill_tendril(c, K, K.rec2, pos)
-          end
-        end
-      end
-    end end
-
-    do return end
-
-
-    ---- OLD CRUD ----
-
-    for side = 2,8,2 do
-      local rec = c.reclaim[side]
-      local D   = c.border[side]
-
-      if rec and D then
-
-        local sec
-
---[[        if D.kind == "solid" and
-           not (D.cells[1].combo.outdoor and D.cells[2].combo.outdoor)
-        then
-          if c.combo.outdoor then
-            sec = { solid = D.combo.wall }
-          else
-            sec = { solid = c.combo.wall }
-          end
-
-        elseif D.kind == "fence" then
-          sec = copy_block_with_new(c.rmodel,
-                 { f_h=D.fence_h, f_tex=D.combo.floor,
-                   l_tex=D.combo.wall, has_blocker=true })
-
---]] if false then
-        else
-          sec = copy_block_with_new(c.rmodel,
-                 { f_h=c.f_min-12, f_tex=REC_FLATS[side] })
-        end
-        
-        for x = c.bx1, c.bx2 do
-          for y = c.by1, c.by2 do
-            local B = PLAN.blocks[x][y]
-            if B.reclaim and B.reclaim.rec == rec then
-              fill(c, x,y, x,y, sec)
---                     B.rmodel or (B.chunk and B.chunk.rmodel) or c.rmodel,
---                     { f_h = c.f_min - 12, f_tex = REC_FLATS[side], has_blocker=true })
-            end
-          end
-        end
-      end
-    end
-
---[[
-    for kx = 1,3 do for ky = 1,3 do
-      local K = c.chunks[kx][ky]
-      if K.kind == "empty" then
---!!!        void_up_chunk(c, K)
-        gap_fill(c, K.x1,K.y1, K.x2,K.y2,
-          c.rmodel, { f_h=c.f_max+32, f_tex="NUKAGE3", has_blocker=true })
-      elseif K.rec and K.rec.border and (K.rec.border.kind == "fence" or
-           (K.rec.border.kind=="wire")) then
-        gap_fill(c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
-          c.rmodel, { f_h=K.rec.border.fence_h, f_tex=K.rec.border.combo.floor,
-                      l_tex=K.rec.border.combo.wall, has_blocker=true })
-      elseif K.rec then
-        gap_fill(c, K.rec.x1,K.rec.y1, K.rec.x2,K.rec.y2,
-          c.rmodel, { f_h=c.f_max+32, f_tex="FWATER1", has_blocker=true })
---!!!        { solid=c.combo.void })
----     { solid=sel(K.r_dir==2 or K.r_dir==8, "CRACKLE2",
----        sel((K.r_dir % 2) == 1, "SFALL1", "COMPBLUE")) })
-      end
-    end end
---]]
-  end
-
-
   -- build_rooms --
 
   for zzz,cell in ipairs(PLAN.all_cells) do
@@ -6429,9 +6580,9 @@ if B.chunk and B.chunk.kind == "empty" then B.f_tex="GATE1" end
     build_cell(cell)
   end
 
-  for zzz,cell in ipairs(PLAN.all_cells) do
-    build_reclamations(cell)
-  end
+---##  for zzz,cell in ipairs(PLAN.all_cells) do
+---##    build_reclamations(cell)
+---##  end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
     tizzy_up_room(cell)
@@ -6441,6 +6592,7 @@ if B.chunk and B.chunk.kind == "empty" then B.f_tex="GATE1" end
     GAP_FILL_ROOM(cell)
   end
 end
+
 
 function build_depots()
 
