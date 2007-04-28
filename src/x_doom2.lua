@@ -861,6 +861,13 @@ D2_SCENERY_PREFABS =
     force_dir = 2, -- optimisation
   },
 
+  four_sided_pic_ADOLF =
+  {
+    prefab = "WALL_PIC_FOUR_SIDED",
+    skin = { pic_w="ZZWOLF7" },
+    force_dir = 2, -- optimisation
+  },
+
   launch_pad_big_H =
   {
     prefab = "LAUNCH_PAD_LARGE",
@@ -1384,13 +1391,6 @@ D2_WALL_PREFABS =
   {
     prefab = "WALL_PIC_TWO_SIDED",
     skin = { pic_w="ZZWOLF6", lite_w="LITE5" },
-  },
-
-  wall_pic_4S_ADOLF =
-  {
-    prefab = "WALL_PIC_FOUR_SIDED",
-    skin = { pic_w="ZZWOLF7" },
-    force_dir = 2, -- optimisation
   },
 
   window_narrow =
