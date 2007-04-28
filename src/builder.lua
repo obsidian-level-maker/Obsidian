@@ -1100,6 +1100,18 @@ end
 
 function make_chunks()
 
+  local function space_it_out(c)
+    local range =
+      c.room_type.space_range or
+      c.combo.space_range or
+      (not PLAN.deathmatch and c.quest.level_theme.space_range) or
+      GAME.space_range
+
+    assert(range)
+
+    c.space_factor = rand_irange(range[1], range[2])
+  end
+
   local K_BORD_PROBS = { 0, 60, 90, 15, 5, 1 }
 
   local function decide_chunk_sizes(total)
@@ -1564,6 +1576,15 @@ function make_chunks()
         MID.kind = "room"
       end
     end
+
+    -- deathmatch exit is placed *above* top-central chunk
+    if PLAN.deathmatch and (c.x==1 and c.y==PLAN.h) then
+      for x = 2,3 do
+        local TOP = c.chunks[x][3]
+        if TOP.kind == "empty" then TOP.kind = "room" end
+        TOP.no_reclaim = true
+      end
+    end
  
     chunk_list = init()
 
@@ -1987,6 +2008,7 @@ function make_chunks()
       local K = c.chunks[kx][ky]
       if K.link and K.link.kind == "vista" and c == K.link.vista_dest then
         K.kind = "vista"
+        K.no_reclaim = true
       end
     end end
   end
@@ -2023,8 +2045,9 @@ function make_chunks()
 
     local N = c.chunks[2][2]
 
-    N.kind  = "vista"
-    N.link  = K.link
+    N.kind = "vista"
+    N.link = K.link
+    N.no_reclaim = true
 
     K.link.huge = true
   end
@@ -2332,10 +2355,20 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     end end
   end
 
+  local function add_closets(c)
+    -- FIXME: add_closets
+  end
+
+  local function void_up_cell(c)
+    -- FIXME !!!!!!
+    void_it_up(c, "room")
+  end
+
 
   ---===| make_chunks |===---
 
   for zzz,cell in ipairs(PLAN.all_cells) do
+    space_it_out(cell)
     create_chunks(cell)
   end
 
@@ -2385,12 +2418,14 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     setup_chunk_rmodels(cell)
     
     add_vista_environs(cell)
+
     add_important_chunks(cell)
 
     add_stairs(cell)
 
---!!!!!! flesh_it_out(cell)
-         void_it_up(cell, rand_sel(50, "room", "void"))
+    add_closets(cell)
+
+    void_up_cell(cell)
   end
 end
 
@@ -4340,7 +4375,7 @@ sel(B.on_path, "YES", "NO"))
       --  (c) never fill over a 'walk' or 'on_path' block
       --  (d) if surrounded by 3 solids, only try dir towards gap
 
-      if K.kind == "vista" then return false end
+      if K.no_reclaim then return false end
 
       local solids = {}
       local sol_count = 0
@@ -5037,8 +5072,9 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
     local step   = -diff_h / (deep * 4)
 
     local prefer_stairs = c.room_type.prefer_stairs or
-       c.quest.level_theme.prefer_stairs or GAME.caps.prefer_stairs
-    
+       (not PLAN.deathmatch and c.quest.level_theme.prefer_stairs) or
+       GAME.caps.prefer_stairs
+
     local max_step = sel(GAME.caps.prefer_stairs, 24, 16) --????
 
     -- decide whether to make a staircase or a lowering platform
@@ -5306,6 +5342,9 @@ end
 
 function build_reclamations(c)
 
+-- debug_with_liquid = true
+-- debug_with_solid  = true
+
     local function void_up_chunk(c, K)
 
       --!!!!!! TESTING
@@ -5322,7 +5361,11 @@ function build_reclamations(c)
         gap_fill(c, K.x2,K.y2, K.x2,K.y2, { solid=dec_tex })
       end
 
-      gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid="BLAKWAL1", solid2=c.combo.void }) --!!!!!! FIXME
+      if debug_with_solid then
+        gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid="BLAKWAL1" })
+      else
+        gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=c.combo.wall })
+      end
     end
 
     local REC_FLATS =
@@ -5342,10 +5385,17 @@ function build_reclamations(c)
       local dx, dy = dir_to_delta(dir)
       local ax, ay = dir_to_across(dir)
 
---    local sec = copy_block_with_new(K.rmodel,
---               { f_h=K.rmodel.f_h-8, f_tex=REC_FLATS[rec.side] })
+      local sec
+      if debug_with_liquid then
+        sec = copy_block_with_new(K.rmodel,
+              { f_h=K.rmodel.f_h-8, f_tex=REC_FLATS[rec.side] })
 
-      local sec = { solid=REC_TEX[rec.side] }
+      elseif debug_with_solid then
+        sec = { solid=REC_TEX[rec.side] }
+
+      else
+        sec = { solid=c.combo.void }
+      end
 
       for deep = 1,rec.tendrils[pos] do
 
@@ -5850,11 +5900,41 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
     if not x then return end
 
-con.printf("\nADDING WALLISH PREFAB!!!! @ block (%d,%d) dir:%d\n", x,y, dir)
+-- con.printf("\nADDING WALLISH PREFAB!!!! @ block (%d,%d) dir:%d\n", x,y, dir)
+
     B_prefab(c, fab, def.skin, parm, c.rmodel or PLAN.blocks[x][y].chunk.rmodel, c.combo, x, y, dir)
 
     -- FIXME: mark area in front
     -- mark_walkable(c, x,y, 2)
+  end
+
+  local function add_deathmatch_exit(c)
+    local K = c.chunks[2][3]
+
+    local name = rand_element
+    {
+      "exit_deathmatch_TECH",
+      "exit_deathmatch_METAL",
+      "exit_deathmatch_STONE",
+    }
+
+    local def = GAME.sc_fabs[name]  -- FIXME: yo gotta keep'em separated
+    assert(def)
+
+    local fab = PREFABS[def.prefab]
+    assert(fab)
+    assert(def.skin)
+
+    local x, y = K.x1, K.y2+1
+
+    if fab.long <= K.w and not K.stair_dir then  -- hackity hack!
+      y = y - 1
+    end
+
+    local D = c.border[8]
+    assert(D)
+
+    B_prefab(c, fab, def.skin, {}, K.rmodel, D.combo, x, y, 2)
   end
 
   local function add_switch(c)
@@ -6082,6 +6162,9 @@ con.debugf("add_scenery : %s\n", item)
   -- the order here is important, earlier items may cause
   -- later items to no longer fit.
 
+  if PLAN.deathmatch and c.x==1 and c.y==PLAN.h then
+    add_deathmatch_exit(c)
+  end
 
   -- SWITCHES
   if not PLAN.deathmatch and c == c.quest.last then
@@ -6222,6 +6305,7 @@ if B.chunk and B.chunk.kind == "empty" then B.f_tex="GATE1" end
 --  build_reclamations(cell)
     tizzy_up_room(cell)
     GAP_FILL_ROOM(cell)
+
   end
 end
 

@@ -1176,6 +1176,7 @@ DM_ROOMS =
     room_heights = { [96]=50, [128]=50 },
     door_probs   = { out_diff=75, combo_diff=50, normal=5 },
     window_probs = { out_diff=1, combo_diff=1, normal=1 },
+    space_range  = { 20, 65 },
   },
  
   SCENIC =
@@ -1322,6 +1323,7 @@ DM_THEMES =
 
     door_probs   = { out_diff=75, combo_diff=10, normal=5 },
     window_probs = { out_diff=75, combo_diff=40, normal=40 },
+    space_range  = { 50, 90 },
 
     prefer_stairs = true,
   },
@@ -1358,6 +1360,7 @@ DM_THEMES =
     bump_probs = { [0]=5, [16]=30, [32]=30, [64]=20 },
     door_probs   = { out_diff=10, combo_diff= 3, normal=1 },
     window_probs = { out_diff=20, combo_diff=30, normal=5 },
+    space_range  = { 1, 50 },
     prefer_stairs = true,
   },
 
@@ -1711,6 +1714,7 @@ GAME_FACTORIES["doom_common"] = function()
     diff_probs = { [0]=20, [16]=20, [32]=80, [64]=60, [96]=20 },
     bump_probs = { [0]=40, [16]=20, [32]=20, [64]=10 },
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
+    space_range  = { 20, 100 },
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
     window_probs = { out_diff=75, combo_diff=60, normal=35 },
   }
