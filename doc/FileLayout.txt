@@ -2,7 +2,7 @@
 Win32 File Layout
 =================
 
-Oblige-0.88/
+Oblige-0.90/    <<< working & install directory (chdir to it)
 
   Oblige.exe
 
@@ -11,6 +11,9 @@ Oblige-0.88/
 
   CONFIG.cfg
   LOGS.txt
+
+  TEMP.wad
+  GAMEMAPS.tmp
 
   scripts/
     oblige.lua
@@ -24,10 +27,6 @@ Oblige-0.88/
     w74b_2.raw
     ...etc...
  
-  temp/
-    TEMP.wad
-    GAMEMAPS.tmp
-
 
 
 UNIX Installation Layout
@@ -35,22 +34,41 @@ UNIX Installation Layout
 
 PREFIX = /usr  |  /usr/local  |  /opt
 
-$PREFIX/bin/oblige
+$PREFIX/bin/Oblige
 
-$PREFIX/share/oblige-0.88/
+$PREFIX/share/oblige-0.90/   <<< install directory
+
    scripts/
      oblige.lua
+     planner.lua
      ...
+   
    data/
      w74a_1.raw
+     w74a_2.raw
      ...
-   README.txt
 
-$HOME/.oblige/
+   README.txt
+   GPL.txt
+
+$HOME/.oblige/      <<< working directory (chdir to it)
    CONFIG.cfg
    LOGS.txt
 
-   temp/
-     TEMP.wad
-     MAPHEAD.tmp
+   TEMP.wad
+   MAPHEAD.tmp
+
+
+Paths in the Code:
+==================
+
+1. Working directory, find it, chdir to it.
+   Open CONFIG.cfg, LOGS.txt and temp/XXX using relative paths.
+
+2. Install directory.
+   Open scripts/XXX and data/XXX using absolute paths.
+
+3. Default Save directory:
+   working directory on Win32,
+   $(HOME) on Linux.
 
