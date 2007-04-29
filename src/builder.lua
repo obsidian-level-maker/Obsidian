@@ -5601,9 +5601,13 @@ end
 
 function tizzy_up_room(c)
 
-  local function block_is_free(B)
+  local function block_is_avail(B)
     if not B.chunk then return false end
-    return not block_is_used(B)
+    if block_is_used(B) then return false end
+    if B.has_blocker then return false end
+    if B.chunk.kind == "void"  then return false end
+    if B.chunk.kind == "vista" then return false end
+    return true
   end
 
   local function verify_inner(c, fab, max_walk, x1,y1, x2,y2)
@@ -5616,7 +5620,7 @@ function tizzy_up_room(c)
       local B = PLAN.blocks[x][y]
       assert(B)
 
-      if not block_is_free(B) then return false end
+      if not block_is_avail(B) then return false end
 
       if not f_h then
         f_h = B.chunk.rmodel.f_h
@@ -5650,7 +5654,7 @@ function tizzy_up_room(c)
     
     for x = x1,x2 do for y = y1,y2 do
       local B = PLAN.blocks[x][y]
-      if not (B.walk or block_is_free(B)) then return false end
+      if not block_is_avail(B) then return false end
       if B.chunk.rmodel.f_h ~= f_h then return false end
     end end
 
@@ -5661,9 +5665,10 @@ function tizzy_up_room(c)
     for x = x1,x2 do for y = y1,y2 do
       if valid_cell_block(c, x, y) then
         local B = PLAN.blocks[x][y]
-        if block_is_free(B) then
-          return (B.chunk.rmodel.f_h >= f_h + 80)
-        end
+        if not B.solid then return false end
+---??   if block_is_avail(B) then
+---??     return (B.chunk.rmodel.f_h >= f_h + 80)
+---??   end
       else
         -- "border" block is fine
       end
@@ -5671,7 +5676,7 @@ function tizzy_up_room(c)
 
     return true --OK--
   end
-  
+
   local function verify_island_spot(c, f_h, x1,y1, x2,y2)
    
     -- oooo
@@ -5824,7 +5829,7 @@ function tizzy_up_room(c)
       local y = spot.y
       local B = PLAN.blocks[x][y]
 
-      if B and block_is_free(B) and is_roomy(B.chunk) and not B.has_blocker then
+      if B and block_is_avail(B) and is_roomy(B.chunk) then
         return x,y, dir or (rand_irange(1,4)*2)
       end
     end
@@ -5956,7 +5961,7 @@ function tizzy_up_room(c)
       then
         local B = PLAN.blocks[x][y]
         
-        if (B.walk and walk > B.walk) or block_is_free(B) then
+        if (B.walk and walk > B.walk) or block_is_avail(B) then
           B.walk = walk
         end
       end
@@ -6077,7 +6082,9 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=def.skin.wall })
   end
 
-  local function add_switch(c)
+  local function add_switch(c, in_wall)
+
+if in_wall then return end -- FIXME
 
     local info
 
@@ -6105,10 +6112,13 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
     local skin = info.switch.skin
     local parm = { }
-    
+
     if not c.is_exit then 
       parm.tag = c.quest.tag + 1
     end
+
+con.printf("add_switch '%s' @ (%d,%d) block:(%d,%d) dir:%d\n",
+fab.name, c.x,c.y, x,y,dir)
 
     B_prefab(c, fab,skin,parm, PLAN.blocks[x][y].chunk.rmodel,c.combo, x, y, dir)
 
@@ -6306,10 +6316,10 @@ con.debugf("add_scenery : %s\n", item)
     add_deathmatch_exit(c)
   end
 
-  -- SWITCHES
+  -- WALL SWITCHES
   if not PLAN.deathmatch and c == c.quest.last then
     if (c.quest.kind == "switch") or (c.quest.kind == "exit") then
-      add_switch(c)
+      add_switch(c, true)
     end
   end
 
@@ -6334,6 +6344,13 @@ con.debugf("add_scenery : %s\n", item)
   if PLAN.deathmatch and c.x==2 and not PLAN.have_sp_player then
     add_player(c, "player1")
     PLAN.have_sp_player = true
+  end
+
+  -- NORMAL SWITCHES
+  if not PLAN.deathmatch and c == c.quest.last then
+    if (c.quest.kind == "switch") or (c.quest.kind == "exit") then
+      add_switch(c, false)
+    end
   end
 
   -- QUEST ITEM
