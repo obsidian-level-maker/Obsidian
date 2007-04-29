@@ -2,26 +2,62 @@
 TODO
 ----
 
->>> ROOM SHAPES >>>
+ROOM SHAPES:
 
-  -  must decide certain chunks (e.g. place for quest item)
-     BEFORE reclaiming sides
+  + tendril trimming:
+     (a) compute new total_blk, then shrink the tall poppies until
+         reached target.  [in CAVE mode: shrink random tendrils]
+     
+     (b) OR: "chop" method: all tendrils over X length are chopped.
+         how to decide 'X' for each rec in room??
 
-!!!  give empty chunks (+ reclaimed area) an rmodel (cf. gunk_it_up)
+     --> "prune", "hack" or "guillotine".
+         trim_mode IN room_type/combo/theme
+ 
 
-  #  stairs must be decided/built BEFORE reclaiming pass
-  #  reclaim a "side" of each roomy chunk as far as possible
+- properly use "player" / "quest" chunks
+
+- "niche cages" (a la MAP13).
+
+- put walk=1 at dist=2 from windows and doors
+
+- verify_outer: only checking B.chunk.rmodel.f_h !
+
+- OPTIMISE A* ALGORITHM
+
+? create_path: "widen" it to at least 2 blocks in any direction.
+
+- idea: combo.flood : liquid to use on f_min floors.
 
 
->>> Stairs
+VISTAS:
+  - solid/frame mode: only IN->OUT
+  - rare: IN->IN, wire mode
+  - very rare: OUT->IN
 
-  !!!  decide for lift/stair: take diff_h into account
-       (@ 64: 5%, @ 96: 25%, @ 128: 50%, @ 192: 95% LIFT)
+>> Vistas
 
-  !!!  NARROW STAIRS: don't always center: {10,90,10}
+   +  don't put monsters/pickups/scenery of dest room on them!
 
-  !!!  saner sizes for lifts (> 2 deep == teh silly),
-       and don't split them
+   +  great place for player start! or quest item! or teleport!
+
+
+>>>  Prefabs:
+ 
+   -  rename PLAIN to OBJECT_FLOOR, use OBJECT_CEILING too
+
+   -  use more "f_add", instead of parm[]
+
+   -  rework way pickup spots are done
+
+   -  support "monster" spots
+
+   +  use the standard heights more (low_h,mid_h,high_h)
+
+   -  optimise find_fab_loc
+
+   ?? move 'height_range' from PREFAB[] to XX_PREFABS defs.
+
 
 -  player angles: FIX!!
 
@@ -29,35 +65,7 @@ TODO
    that the face direction isn't into a solid wall.
 
 
->>>  Prefabs:
- 
-   +  have five "standard" heights:
-        floor_h <= low_h < mid_h < high_h <= ceil_h
-
-   ???  ARCHES: remove "frame" from skin names
-       (assume wall/ceil/floor == frame) ?
-   
-   -  rework way "pickup" spots are done (revert)
-
-   -  support "monster" spots
-
-   -  prefabs (etc) : capability system, e.g. "slopes", "xfloors"
-      [THEME.caps, controlled by "game" and "port" settings]. 
-
-+  Convert existing code into prefabs:
-
-   - EXIT_DEATHMATCH
-
-   ? PIC_WALL
-
-   - fix: crate_h value (etc) -- use f_h from fab_find_loc()
-
-
 >>> Theme system
-
-  ?? move 'combo_probs' into combos themselves
-   
-   + rename 'theme' to 'combo' in Cell and Quest classes
 
 -  Theme categories:
 
@@ -85,39 +93,26 @@ TODO
    ...?
 
 
->> Vistas
-   +  fix "curved wire" vistas for new sizes
-   +  make window edge 16 units thick
-   +  great place for player start! or quest item! or teleport!
-   -  theme should match "building" (border.theme)
-   -  shallow mode
-   -  narrow mode (esp. when one touches a corner)
-
-
->>>>>  create blocks for rooms, { empty=true },
-       -  a "walk" field,
-       -  a "model" field (K.rmodel)
-       -  eventually: empty="floor", "ceil", "both"
-
-       -  "soft" field, prefer to keep walkable, but use if have to
-          (use in front of windows, and as second layer in front of doors)
-
-       +BETTER: "walk" field takes number:
-                 4 = must walk (never use) -- links, stairs
-                 3 = should walk, use only in emergency (part of long link/stair)
-                 2 = prefer walk -- windows, tall_wall
-                 1 = hint at walk -- drop_offs
-
-  -  find_fab_loc:
-       -  ideally want empty/walkable around it
-       -  but allow _either_ top or bottom to abut a wall (not both)
-       -  (same goes for left or right side).
- 
-
 -  Improve toughness calcs:
    e.g. decide final quest toughness (e.g. 750-1500),
         then major quests (somewhat exponential)
         and minor quests (skew above/below major Q).
+
+   - at each room, pick 2-3 (rarer: 1,4) monster types
+     [depends on free space?]
+
+     then decide how many of each one (for each skill).
+     ??  choose lesser monster for lesser skill.
+
+  ?? monster adjustment: don't just increase toughness, actually
+                         create _more_ monsters.
+
+  -  battle_in_cell: arrange it so that cells could be visited
+     in any area (as much as possible).  Allow e.g. multiple
+     starting cells, "forked" paths (path splits and rejoins)...
+
+     IDEA: treat groups of cells (esp: multi starts and forked
+           paths) as a SINGLE BATTLE ARENA.
 
 
 -  Wolf3d mode:
@@ -147,29 +142,16 @@ TODO
    (later) widen some arches.
    (later) pacman levels: decorate walls
 
-   TEST: Keyed doors
-   TEST: adjust toughness calcs
-
-   DONE: limit level size (PLAN size: 7x7 of 7x7 rooms)
-   DONE: disallow Multiplayer/Coop modes [GUI]
-   DONE: multiple levels!
-   DONE: assign floor codes.
-   DONE: patrolling guards.
-   DONE: void_pics, door_sides, lock_sides.
-   DONE: pacman levels
-
 
 >>  Corner and Border stuff:
 
+   +  support sky_corner and T-junction sky_borders
+
    -  decide "kind" for corner (a la borders)
 
-   +  hallway->hallway arches: different materials (wood/metal).
-
-   -  archways, windows: have sides
+   -  hallway->hallway arches: different materials (wood/metal).
 
    -  windows: determine area can use first
-
-   -  support sky_corner and T-junction sky_borders
 
 -  "gappy" sky next to a building, caused by nudging an outdoor
    cell into another cell, and near an empty cell. Diagram:
@@ -186,16 +168,6 @@ TODO
     FIX B: don't allow outdoor cells to be nudged in this situation.
 
 
->>  Different size rooms
-
-   ??  roughly prioritize cells to enlarge
-     
-   This potentially allows (either X or Y dimension) to be
-   nearly anything from 6 blocks to 30 blocks.
-
-      6, 9, 12  |  15, 18, 21  |  24, 27, 30
-
-
 -  support these liquid wall animations:
 
    (a) water --> FIREMAGx (W74A_1, W74A_2, W74B_1)
@@ -205,58 +177,40 @@ TODO
 
 -  Heretic: not enough weapons (too many golems) near start.
 
-??? Renaming idea:
-
-   Themes:
-     void  --> extra
-     add 'upper'
 
 -  make scenics more interesting (esp. for vistas)
    -  choose another theme / liquid
    ?? perhaps "merge" same type scenics into one big thingy
 
-?? monster adjustment: don't just increase toughness, actually
-                       create _more_ monsters.
-
 -  rename: 'switch'/'wall' fields of a switch (to 'wall'/'side').
--  rename: 'tex' fields of PICS and LIGHTS to 'wall'.
+-  rename: 'tex' fields of PICS and LIGHTS to 'pic_w' and 'lite_w'.
 -  idea: 'corner' field for themes.
--  idea: "scenic_void" for middle of 3x3 chunk  [a kind of "flat pic" - ed.]
+-  idea: "decorate" for middle of 3x3 chunk side
 
 -  choose railings for windows/fences (per quest?)
 -  sky_lights: decide sky based on "ceiling thickness"
--  replace 'K.floor_h' and 'K.ceil_h' with the 'rmodel' field.
--  floor heights: for Heretic/Hexen, limit slope to prevent lifts
 
 -  fix cage railing when cage borders a higher chunk or Fence
    (raise fence to cage top and omit railing texture but keep IMPASS).
 -  don't put a railing _between_ cages
 -  exit "bumps" on floor outside -> ENTRY-WAYS
 -  exit teleport method -> B_teleporter
--  ex_tech ?
 
 
 GUI TODO
 --------
 
-+  GUI: look for 'obl_data' using EXE path.
-
-+  GUI / themes: build "Game" menu automatically from themes.
-
 +  remember save path in config file.
 
 +  make an icon for Win32 executable.
 
--  test if output file (unless it exists) can be written to.
-
--  don't crash if wad[.]func is called but wrong game.
-   --> BEST WAY: create "wad" object (etc) only when needed.
-
--  handle the Abort button better, also glbsp failure.
-
 -  different adjustment controls for DeathMatch levels.
 
--  a makefile (+ code) to install 'the unix way'.
+TEST: handle the Abort button better, also glbsp failure.
+
+TEST: a makefile (+ code) to install 'the unix way'.
+
+TEST (Win32): look for 'scripts/' using EXE path.
 
 
 Recent Changes (since 0.85)
@@ -264,17 +218,17 @@ Recent Changes (since 0.85)
 
 +  different sized rooms
 
-+  new prefab system, @@@  [Derek]
++  new prefab system, @@@
 
-+  Wolf3D and Spear-of-Destiny support  [DoomJedi]
++  Wolf3D and Spear-of-Destiny support
 
 +  theme/room_type system  @@@
 
-+  vistas
++  balconies
 
 -  Ultimate Doom: four episodes.
 
--  add single player start to deathmatch levels [Cliff].
+-  add single player start to deathmatch levels
 
 
 
@@ -338,43 +292,20 @@ MILESTONE 2  (reached!)
 MILESTONE 3  (heaps left to do!!)
 ===========
 
-#  heights: (a) each quest, target height (at end)
-            (b) approach modes: sharp vs gradual change, bumpy
+#  larger rooms
 
->>  allocation system for blocks (can_walk tests).
-
->> larger rooms (2-8 chunks in each dimension).
-
-+  teleporters!
-
-+  secrets
-
--  cage monsters: don't put hitscan snipers up really high.
-
--  bridge switches
-
--  liquid pools and traps
+#  allocation system for blocks (can_walk tests).
 
 +  good support for the different games (Doom 1/2, Heretic, Hexen),
    and initial support for add-ons (Eternal, Osiris)
 
--  Advanced button.
-
-?  pillar patterns: 1379, 2468, line thru center (based on entry and exit)
--  chunk-size cages: center of room
-
-#  chunk-size cages: outdoor and top-less
-#  floor switches: y_offset
+-  cage monsters: don't put hitscan snipers up really high.
 
 -  wall switches: place in the wall! 
->>  wall switches: "small" mode (32x32)
-
--  overhangs: thick and central pillars
 
 -  more mid-masked textures (esp. on windows)
 -  prefer not to create void chunks next to windows
 -  doors: underneath flat should match front texture.
--  compute_line_flags: more explicit flags (esp. override)
 
 -  closets: 
    (a) fix way closet is put in chunk (remove side field)
@@ -385,7 +316,15 @@ MILESTONE 3  (heaps left to do!!)
 MILESTONE 4  (pipe dreams...)
 ===========
 
--  allow "megacells" (a group of MxN cells).
+++ light up levels (a la quake).
+
++  secrets
+
+-  "megacells" (a group of 2x2 cells as a single room).
+
+-  prefabs : capability system, e.g. need_caps={ "slopes" }
+
++  teleporters!
 
 ?? one-way routes ??
    -  for example: at along:3 fall-off -> along:4
@@ -395,11 +334,28 @@ MILESTONE 4  (pipe dreams...)
 
    - One way connections:
      (a) fall-offs
-     (b) doors that only open from one side (esp. via a switch)
-     (c) teleporters
-     (d) an up-lift that goes up into a hole (esp. switch triggered)
-     (e) a down-lift also in a hole, the switch cannot be reached
-         once you get out at the bottom.
+     (b) teleporters
+     (c) doors that only open from one side (esp. via a switch)
+     (d) lifts that go up (or down) into a hole
+         (activated by a switch only on one side).
+
+-  bridge switches
+
+-  liquid pools and traps
+
+-  stair/lift selection: control via ROOM/COMBO/THEME/GAME.
+
+-  stair prefabs: use special '/' symbol for the stairs themselves.
+
+?  pillar patterns: 1379, 2468, line thru center
+
+-  overhangs: thick and central pillars
+
+-  GUI: create Game menu based on the lua scripts present.
+-  GUI: Advanced button.
+-  GUI: make sure target dir is writable _before_ making levels.
+   (have a "CheckDirWritable" function?)
+-  GUI: don't crash if wad[.]func is called but wrong game.
 
  ____________________
 |KEY:                |
