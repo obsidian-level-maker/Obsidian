@@ -4399,19 +4399,6 @@ end
 
       local max_deep = rec.deep - 1
 
-      -- allow tendrils next to a void space to grow
-      -- the complete depth
---[[ DOES NOT WORK (MAKES ISLANDS)
-      local flank_dir = sel(dx==0, 4, 2)
-      if (pos == 1 and neighbour_is_void(K,flank_dir) and
-            flank_partner_is_void(K, flank_dir, dir)) or
-         (pos == rec.long and neighbour_is_void(K,10-flank_dir) and
-            flank_partner_is_void(K, 10-flank_dir, dir))
-      then
-        max_deep = rec.deep
-      end
---]]
-
 --con.printf("\nTRY_GROW_TENDRIL: long:%d deep:%d\n", rec.long, rec.deep)
       for deep = 1, max_deep do
 
@@ -4433,6 +4420,27 @@ sel(B.on_path, "YES", "NO"))
         if not B.chunk         then break; end
         if block_is_used(B)    then break; end
         if B.walk or B.on_path then break; end
+
+        -- avoid touching stairs
+        local function test_area(x1,y1,x2,y2)
+          if x1 > x2 then x1,x2 = x2,x1 end
+          if y1 > y2 then y1,y2 = y2,y1 end
+
+          for tx = x1,x2 do for ty = y1,y2 do
+            if valid_cell_block(c, tx, ty) then
+              local B = PLAN.blocks[tx][ty]
+              if block_is_used(B) then
+                return false
+              end
+            end
+          end end
+
+          return true --OK--
+        end
+    
+        if not test_area(x-ax, y-ay, x+ax+dx, y+ay+dy) then
+          break;
+        end
 
         -- OK, this block passed the tests
         rec.tendrils[pos] = deep
@@ -4465,7 +4473,7 @@ sel(B.on_path, "YES", "NO"))
 --con.printf("TRY_RECLAIM_SIDE @ (%d,%d) [%d,%d] dir:%d\n",
 --c.x,c.y, K.kx,K.ky, dir)
 
-if c.x==4 and c.y==1 and K.kx==3 and K.ky==2 then
+if c.x==3 and c.y==4 and K.kx==3 and K.ky==3 then
 con.printf("\n***************\n");
 con.printf("dir:%d count:%d solids=\n%s\n", dir, sol_count, table_to_str(solids))
 con.printf("\n***************\n");
@@ -4475,7 +4483,7 @@ end
 
       if sol_count == 0 then return false end
 
-      if sol_count == 3 then
+      if false then --!!!!! sol_count == 3 then
         local gap_side = (not solids[2] and 2) or
                          (not solids[4] and 4) or
                          (not solids[6] and 6) or
@@ -4501,19 +4509,39 @@ end
         try_grow_tendril (K, dir, rec, pos)
       end
 
-con.printf(" --> total:%d\n", rec.total_blk);
+con.printf(" --> average:%1.1f\n", rec.total_blk / rec.long);
 
       if rec.total_blk == 0 then
         return false
       end
 
       -- EXPERIMENTAL: allow 1 horizontal and 1 vertical
-      if K.rec and (K.rec.side ~= 10-rec.side) then K.rec2 = K.rec; K.rec = nil end
+
+      if K.rec and K.rec2 then
+        if is_parallel(K.rec.side, rec.side) then
+          K.rec = best_reclaim(K.rec, rec)
+        else
+          K.rec2 = best_reclaim(K.rec2, rec)
+        end
+      
+      elseif K.rec then
+        if is_parallel(K.rec.side, rec.side) then
+          K.rec = best_reclaim(K.rec, rec)
+        else
+          K.rec2 = rec
+        end
+
+      else
+        K.rec = rec
+      end
+
+--[[ OLD ONE:
+      if K.rec and is_perpendicular(K.rec.side, rec.side) then K.rec2 = K.rec; K.rec = nil end
 
       -- if chunk already has a reclaim area, need to choose
       -- which one to keep.
       K.rec = (K.rec and best_reclaim(K.rec, rec)) or rec
-
+--]]
       return true --SUCCESS--
     end
 
@@ -4564,6 +4592,9 @@ con.printf(" --> total:%d\n", rec.total_blk);
         end
       end end  -- for kx for ky
     end -- for pass
+  end
+
+  local function trim_reclamations(c)
   end
 
   local function get_vista_coords(c, side, link, other)
@@ -5445,7 +5476,9 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
   build_stairs(c)
 
   create_paths(c)
+
   reclaim_areas(c)
+  trim_reclamations(c)
 end
 
 
@@ -6281,7 +6314,7 @@ con.debugf("add_scenery : %s\n", item)
   end
 
   -- WALL STUFF
-  for loop = 1,10 do
+  for loop = 1,0 do
     add_wall_stuff(c)
   end
 
