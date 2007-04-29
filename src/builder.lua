@@ -2183,9 +2183,7 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
         error("Cannot find stair position!")
       end
 
-      rand_shuffle(coords)
-
-      local loc = coords[1]
+      local loc = rand_element(coords)
 
       local K1, K2, dir = loc.K, loc.N, loc.side
 
@@ -2364,20 +2362,68 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     end
   end
 
-  local function void_it_up(c, new_kind)
-    for kx = 1,3 do for ky = 1,3 do
-      local K = c.chunks[kx][ky]
-      if K.kind == "empty" then K.kind = new_kind end
-    end end
-  end
+---###  local function void_it_up(c, new_kind)
+---###    for kx = 1,3 do for ky = 1,3 do
+---###      local K = c.chunks[kx][ky]
+---###      if K.kind == "empty" then K.kind = new_kind end
+---###    end end
+---###  end
 
   local function add_closets(c)
     -- FIXME: add_closets
   end
 
   local function void_up_cell(c)
-    -- FIXME !!!!!!
-    void_it_up(c, "room")
+    local SIDES = { 2,4,6,8 }
+
+    local function settle_chunk(K)
+      local roomy_nb
+      local near_window = 0
+
+      rand_shuffle(SIDES)
+
+      for zzz, side in ipairs(SIDES) do
+        local N = chunk_neighbour(c, K, side)
+        if N and is_roomy(N) and not roomy_nb then
+          roomy_nb = N
+
+        elseif not N then
+          local D = c.border[side]
+          if D and D.kind == "window" then
+            near_window = near_window + 1
+          end
+        end
+      end
+
+      if not roomy_nb then return end
+
+      local void_chance
+      if near_window > 0 then
+        void_chance = sel(near_window == 1, 10, 2)
+      else
+        void_chance = 100 - c.space_factor
+      end
+
+      if rand_odds(void_chance) then
+        K.kind = "room"
+        K.rmodel = roomy_nb.rmodel
+      else
+        K.kind = "void"
+      end
+    end
+
+    for loop = 1,4 do
+      for kx=1,3 do for ky=1,3 do
+        local K = c.chunks[kx][ky]
+        if K.kind == "empty" then
+          if loop < 4 then
+            settle_chunk(K)
+          else
+            K.kind = "void"
+          end
+        end
+      end end
+    end
   end
 
 
@@ -5368,7 +5414,7 @@ end
 function build_reclamations(c)
 
 -- debug_with_liquid = true
--- debug_with_solid  = true
+   debug_with_solid  = true
 
     local function void_up_chunk(c, K)
 
@@ -6450,7 +6496,7 @@ end
   con.progress(25); if con.abort() then return end
  
   if PLAN.deathmatch then
---!!!!!!    deathmatch_through_level()
+    deathmatch_through_level()
   else
     battle_through_level()
   end
