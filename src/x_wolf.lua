@@ -368,6 +368,8 @@ WF_ROOMS =
   HALLWAY =
   {
     scenery = { ceil_light=90 },
+
+    space_range = { 10, 50 },
   },
 
   STORAGE =
@@ -637,6 +639,7 @@ GAME_FACTORIES["wolf3d"] = function()
     themes    = WF_THEMES,
 
     room_heights = { [128]=50 },
+    space_range  = { 50, 100 },
     door_probs = { combo_diff=90, normal=20, out_diff=1 },
   }
 end
