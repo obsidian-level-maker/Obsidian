@@ -6084,10 +6084,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
   local function add_switch(c, in_wall)
 
-if in_wall then return end -- FIXME
-
     local info
-
     if c.is_exit then
       info = c.combo
     else
@@ -6102,7 +6099,18 @@ if in_wall then return end -- FIXME
     local fab = PREFABS[info.switch.prefab]
     assert(fab)
 
-    local x,y,dir = find_fab_loc(c, fab, 0,3)
+    if (not in_wall) == (fab.add_mode == "wall") then
+      return
+    end
+
+    local x,y,dir
+    
+    if in_wall then
+      x,y,dir = find_wallish_loc(c, fab)
+    else
+      x,y,dir = find_fab_loc(c, fab, 0,3)
+    end
+
     if not x then
       show_cell_blocks(c)
       con.printf("Could not find place for SWITCH: %s %dx%d\n", fab.name, fab.long, fab.deep)
@@ -6122,7 +6130,9 @@ fab.name, c.x,c.y, x,y,dir)
 
     B_prefab(c, fab,skin,parm, PLAN.blocks[x][y].chunk.rmodel,c.combo, x, y, dir)
 
-    fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
+    if not in_wall then  -- FIXME: mark front
+      fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
+    end
   end
 
   local function add_wall_stuff(c)
