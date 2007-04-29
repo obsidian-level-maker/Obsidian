@@ -381,6 +381,10 @@ function dir_to_across(dir)
   error ("dir_to_across: bad dir " .. dir)
 end
 
+function is_perpendicular(dir1, dir2)
+  return (dir1 == 2 or dir1 == 8) == (dir2 == 4 or dir2 == 6)
+end
+
 CW_45_ROTATES  = { 4, 1, 2,  7, 5, 3,  8, 9, 6 }
 CCW_45_ROTATES = { 2, 3, 6,  1, 5, 9,  4, 7, 8 }
 
@@ -421,6 +425,18 @@ function delta_to_angle(dx,dy)
     return sel(dx < 0, 135, 45)
   else
     return sel(dx < 0, 225, 315)
+  end
+end
+
+function box_size(x1, y1, x2, y2)
+  return (x2-x1+1), (y2-y1+1)
+end
+
+function get_long_deep(dir, w, h)
+  if (dir == 2) or (dir == 8) then
+    return w, h
+  else
+    return h, w
   end
 end
 
