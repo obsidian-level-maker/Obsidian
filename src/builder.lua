@@ -1101,6 +1101,12 @@ end
 function make_chunks()
 
   local function space_it_out(c)
+    
+    if PLAN.coop and c == PLAN.quests[1].first then
+      c.space_factor = 95
+      return
+    end
+
     local range =
       c.room_type.space_range or
       c.combo.space_range or
@@ -2336,6 +2342,8 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     if best_K then
       best_K.kind = new_kind
       best_K.rmodel = copy_table(best_N.rmodel)
+
+      c.q_spot = best_K
     end
   end
 
@@ -2405,18 +2413,18 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
       end
 
       if rand_odds(void_chance) then
+        K.kind = "void"
+      else
         K.kind = "room"
         K.rmodel = roomy_nb.rmodel
-      else
-        K.kind = "void"
       end
     end
 
-    for loop = 1,4 do
+    for loop = 1,3 do
       for kx=1,3 do for ky=1,3 do
         local K = c.chunks[kx][ky]
         if K.kind == "empty" then
-          if loop < 4 then
+          if loop < 3 then
             settle_chunk(K)
           else
             K.kind = "void"
@@ -4853,7 +4861,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
   local function sort_stair_chunks(c)
 
     -- Requirements:
-    --   That chunks with 'stair_dir' field are placed _after_ the
+    --   Each chunk with 'stair_dir' field is placed _after_ the
     --   chunk pointed to.
 
     -- Algorithm:
@@ -4863,7 +4871,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     --   (d) sort chunks into ascending ID numbers
     --
     -- NOTE: cyclic references prevent it from becoming truly
-    --       stable. We ignore this problem (should be rare).
+    --       stable. We ignore this problem (rare and benign).
 
     local ids = {}
     rand_shuffle(ids, 3*3)
@@ -4920,6 +4928,9 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     end
 
     local function check_stair_pos(pos, w)
+
+      if pos == 0      and edge1 == "bad" then return nil end
+      if pos+w == long and edge2 == "bad" then return nil end
 
       local x, y = x1 + ax*pos, y1 + ay*pos
       assert(K.x1 <= x and x <= K.x2)
@@ -4996,10 +5007,10 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
           elseif h >= min_deep then info.score = 200
           end
 
-          if not (pos == 0 and side1_K and side1_K.stair_dir) and
-             not (pos+w == long and side2_K and side2_K.stair_dir)
-          then
-            info.score = info.score + 100
+          if w >= 2 then info.score = info.score + 100 end
+
+          if pos > 0 and pos+w < long then
+            info.score = info.score + 5
           end
 
           info.score = info.score + math.min(w-1,4) * 10
@@ -5084,45 +5095,50 @@ con.debugf("Putting in Stair: (%d,%d)..(%d,%d) dir:%d size:%dx%d\n", x,y, ex,ey,
     local dx,dy = dir_to_delta(K.stair_dir)
     local ax,ay = dir_to_across(K.stair_dir)
 
-    assert(1<=kx+dx and kx+dx<=3)
-    assert(1<=ky+dy and ky+dy<=3)
+    assert(valid_chunk(kx+dx, ky+dy))
 
     local J = c.chunks[kx+dx][ky+dy]
     local diff_h = K.rmodel.f_h - J.rmodel.f_h
 
     local behind_K
-    if (1<=kx-dx and kx-dx<=3) and
-       (1<=ky-dy and ky-dy<=3)
-    then
+    if valid_chunk(kx-dx, ky-dy) then
       behind_K = c.chunks[kx-dx][ky-dy]
     end
 
-    local function side_is_bad(dir)
-      local kdx,kdy = dir_to_delta(dir)
-      local nx,ny   = kx+kdx, ky+kdy
-      if nx<1 or nx>3 or ny<1 or ny>3 then return nil end
-      local N = c.chunks[nx][ny]
+    local function side_is_bad(side)
+      local N = chunk_neighbour(c, K, side)
+
+      if not N then return nil end
       if not N.stair_dir then return nil end
-      if N.stair_dir ~= (10-dir) then return nil end
-      return N
+
+      if is_perpendicular(N.stair_dir, K.stair_dir) then return nil end
+
+      local k_long, k_deep = get_long_deep(K.stair_dir, K.w, K.h)
+      local n_long, n_deep = get_long_deep(K.stair_dir, N.w, N.h)
+
+      -- choose: let the narrowest chunk to use the edge
+      if k_long < n_long then return nil end --OK--
+
+      return "bad"
     end
-    
-    local side1_K, side2_K
+
+    local edge1, edge2
 
     if K.stair_dir==2 or K.stair_dir==8 then
-      side1_K = side_is_bad(4)
-      side2_K = side_is_bad(6)
+      edge1 = side_is_bad(4)
+      edge2 = side_is_bad(6)
     else
-      side1_K = side_is_bad(2)
-      side2_K = side_is_bad(8)
+      edge1 = side_is_bad(2)
+      edge2 = side_is_bad(8)
     end
 
 con.debugf("Building stair @ (%d,%d) chunk [%d,%d] dir:%d\n", c.x, c.y, kx,ky, K.stair_dir)
 con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
+con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
 
     local info
     for max_walk = 1,3 do
-      info = find_stair_loc(K, behind_K,side1_K,side2_K, max_walk,
+      info = find_stair_loc(K, behind_K, edge1,edge2, max_walk,
                             stair_depths(diff_h))
       if info then break; end
     end
@@ -5279,7 +5295,7 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
         local info = C.stair_info or N.stair_info
 
         -- cannot pass stairs when dir is perpendicular
-        if math.min(info.dir, 10-info.dir) ~= math.min(dir,10-dir) then
+        if is_perpendicular(info.dir, dir) then
           return -1
         end
 
@@ -5306,13 +5322,11 @@ con.debugf("  Chunk: (%d,%d)..(%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
     end
 
     local function find_path(L1, L2, sx, sy)
-      local ex, ey
-
       if L1 ~= "room" then
         sx, sy = link_walk_pos(L1)
       end
 
-      ex, ey = link_walk_pos(L2)
+      local ex, ey = link_walk_pos(L2)
 
       -- coordinates must be relative for A* algorithm
       sx, sy = (sx - c.bx1) + 1, (sy - c.by1) + 1
@@ -5350,37 +5364,56 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
     assert(#link_list > 0)
     
-    if #link_list == 1 then  -- nowhere to go?
-      return
+    if #link_list >= 2 then
+
+      rand_shuffle(link_list)
+
+      local star_form = false
+      local mid_K = c.chunks[2][2]
+
+      if (mid_K.kind == "room" or mid_K.kind == "link") and rand_odds(50) then
+        star_form = true
+      end
+
+      if star_form then
+
+        local K = c.chunks[2][2]
+        if K.kind == "vista" then error("FUCK! VISTA ON PATH") end --!!!!!! FIXME
+
+        if K.kind == "empty" then K.kind = "room" end
+
+        -- TODO: prefer block is not on stair/lift
+        local rx = int((K.x1+K.x2)/2)
+        local ry = int((K.y1+K.y2)/2)
+
+        for i = 1,#link_list do
+          find_path("room", link_list[i], rx, ry)
+        end
+      else
+        for i = 1,#link_list-1 do
+          find_path(link_list[i], link_list[i+1])
+        end
+      end
+
     end
 
-    rand_shuffle(link_list)
+    -- handle quest/player spot
 
-    local star_form = false
-    local mid_K = c.chunks[2][2]
+    if c.q_spot then
+      local K = c.q_spot
+      local qx, qy
 
-    if (mid_K.kind == "room" or mid_K.kind == "link") and rand_odds(50) then
-      star_form = true
-    end
-
-    if star_form then
-
-      local K = c.chunks[2][2]
-      if K.kind == "vista" then error("FUCK! VISTA ON PATH") end --!!!!!! FIXME
-
-      if K.kind == "empty" then K.kind = "room" end
-
-      -- FIXME: ensure block is not on stair/lift
-      local rx = int((K.x1+K.x2)/2)
-      local ry = int((K.y1+K.y2)/2)
-
-      for i = 1,#link_list do
-        find_path("room", link_list[i], rx, ry)
+          if K.kx == 1 then qx = K.x2
+      elseif K.kx == 3 then qx = K.x1
+      else   qx = int((K.x1+K.x2) / 2)
       end
-    else
-      for i = 1,#link_list-1 do
-        find_path(link_list[i], link_list[i+1])
+
+          if K.ky == 1 then qy = K.y2
+      elseif K.ky == 3 then qy = K.y1
+      else   qy = int((K.y1+K.y2) / 2)
       end
+
+      find_path("room", rand_element(link_list), qx, qy)
     end
   end
 
@@ -5406,7 +5439,6 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
   build_stairs(c)
 
   create_paths(c)
-
   reclaim_areas(c)
 end
 
