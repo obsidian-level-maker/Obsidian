@@ -1024,11 +1024,13 @@ function place_battle_stuff(c, stats)
       th.dy = dy + (spot.dy or 0)
 
       -- statistics....
-      if dat.info.stat == "health" then
-        stats[SK].health = stats[SK].health + dat.info.give
-      elseif dat.info.stat ~= "armor" then
-        -- not quite right, but close enough...
-        stats[SK].ammo = stats[SK].ammo + (dat.info.give or 1)
+      if dat.info then
+        if dat.info.stat == "health" then
+          stats[SK].health = stats[SK].health + dat.info.give
+        elseif dat.info.stat ~= "armor" then
+          -- not quite right, but close enough...
+          stats[SK].ammo = stats[SK].ammo + (dat.info.give or 1)
+        end
       end
     end
   end
@@ -1573,15 +1575,8 @@ function deathmatch_in_cell(c)
     if GAME.dm.cluster then cluster = GAME.dm.cluster[name] or 1 end
     assert(cluster >= 1 and cluster <= 8)
 
----###    local offsets = { 1,2,3,4, 6,7,8,9 }
----###    rand_shuffle(offsets)
----###
----###    for i = 1,cluster do
----###      local dx, dy = dir_to_delta(offsets[i])
----###      add_thing(p, c, bx+dx, by+dy, name, false)
----###    end
-
-con.printf("PICKUP '%s' @ (%d,%d) skill:%s\n",
+    local info = GAME.pickups[name]
+con.printf("DM PICKUP '%s' @ (%d,%d) skill:%s\n",
 name, c.x, c.y, SK)
     table.insert(c.pickup_set[SK], { name=name, info=info, cluster={ 0,0 } })
   end
