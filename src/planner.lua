@@ -135,6 +135,7 @@ function show_chunks()
 
       if K.kind == "player" then return "P" end
       if K.kind == "quest"  then return "T" end
+      if K.kind == "exit"   then return "E" end
 
       if K.link then
 -- if K.link.build == c then return "/" end
@@ -519,7 +520,6 @@ function resize_rooms()
     --   3: nudge against the map's edge
 
     if c.no_nudge then return end 
-    if other and other.no_nudge then return end
 
     if rand_odds(25) then return end  -- FIXME: depends on room (want_size ~= cur_size)
 
@@ -530,11 +530,7 @@ function resize_rooms()
 
     local other = neighbour_by_side(c, side)
 
-    if c.is_exit or c.is_depot then return end
-
-    if other then
-      if other.is_exit or other.is_depot then return end
-    end
+    if other and other.no_nudge then return end
 
     -- already moved this edge?
     if c.nudges[side] then return end
@@ -623,7 +619,7 @@ function resize_rooms()
     dx = dx * mv_x * dir
     dy = dy * mv_y * dir
 
---  con.debugf("~~~~~~~ NUDGING (%d,%d) side:%d  by %d/%d\n", c.x,c.y,side,dx,dy) 
+-- con.debugf("~~~~~~~ NUDGING (%d,%d) side:%d  by %d/%d\n", c.x,c.y,side,dx,dy)
 
     if (side == 2) or (side == 4) then
       c.bx1 = c.bx1 + dx
