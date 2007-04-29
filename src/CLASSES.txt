@@ -95,6 +95,8 @@ class Cell
   pickup_set : array(skill0 -> array(PickupDat)
 
   chunks : array_2D(Chunk)
+
+  no_nudge
 end
 
 
