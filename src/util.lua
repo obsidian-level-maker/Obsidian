@@ -381,6 +381,10 @@ function dir_to_across(dir)
   error ("dir_to_across: bad dir " .. dir)
 end
 
+function is_parallel(dir1, dir2)
+  return (dir1 == 2 or dir1 == 8) == (dir2 == 2 or dir2 == 8)
+end
+
 function is_perpendicular(dir1, dir2)
   return (dir1 == 2 or dir1 == 8) == (dir2 == 4 or dir2 == 6)
 end
