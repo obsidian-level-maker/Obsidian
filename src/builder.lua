@@ -1424,7 +1424,7 @@ function make_chunks()
   end
 
 
-  local function add_deathmatch_chunks(c)
+  local function setup_dm_chunks(c)
 
     local K = c.chunks[2][3]
 
@@ -1433,8 +1433,12 @@ function make_chunks()
       K.link = nil
     end
 
-    c.chunks[2][3].kind = "exit"
-    c.chunks[2][2].kind = "room"
+    K.kind = "exit"
+
+    local mid_K = c.chunks[2][2]
+
+    mid_K.kind = "room"
+    mid_K.no_reclaim = true
   end
 
   local function add_travel_chunks(c)
@@ -2484,7 +2488,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     create_huge_vista(c)
 
     if PLAN.deathmatch and c.x==1 and c.y==PLAN.h then
-      add_deathmatch_chunks(c)
+      setup_dm_chunks(c)
     end
 
     add_travel_chunks(c)
@@ -4961,6 +4965,8 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
           for qx = st_x1,st_x2 do for qy = st_y1,st_y2 do
             local B = PLAN.blocks[qx][qy]
             assert(B)
+            assert(not block_is_used(B))
+
             if (B.walk and B.walk > max_walk) or not is_roomy(B.chunk) then
               able = false
             end
@@ -4991,8 +4997,8 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
               assert(B1)
               assert(B2)
 
-              if (B1.solid or B1.f_tex) or not is_roomy(B1.chunk) or
-                 (B2.solid or B2.f_tex) or not is_roomy(B2.chunk)
+              if block_is_used(B1) or not is_roomy(B1.chunk) or
+                 block_is_used(B2) or not is_roomy(B2.chunk)
               then
                 able = false
               end
@@ -5010,7 +5016,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
           if w >= 2 then info.score = info.score + 100 end
 
           if pos > 0 and pos+w < long then
-            info.score = info.score + 5
+            info.score = info.score + 50
           end
 
           info.score = info.score + math.min(w-1,4) * 10
