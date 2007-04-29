@@ -1142,6 +1142,13 @@ function make_chunks()
     local L, M, R = decide_chunk_sizes(c.bw)
     local B, N, T = decide_chunk_sizes(c.bh)
 
+    if PLAN.deathmatch and c.x==1 and c.y==PLAN.h then
+      M, T = 3, 3
+      L, N = 2, 2
+      R, B = (c.bw - L - M), (c.bh - T - N)
+      assert(R >= 2 and B >= 2)
+    end
+
     c.chunk_sizes =
     {
       L=L, M=M, R=R,
@@ -1411,6 +1418,19 @@ function make_chunks()
   end
 
 
+  local function add_deathmatch_chunks(c)
+
+    local K = c.chunks[2][3]
+
+    if K.kind ~= "empty" then
+      con.printf("WARNING: deathmatch exit stomped a chunk!\n")
+      K.link = nil
+    end
+
+    c.chunks[2][3].kind = "exit"
+    c.chunks[2][2].kind = "room"
+  end
+
   local function add_travel_chunks(c)
 
     -- give each chunk a travel ID.  Touching chunks can
@@ -1430,14 +1450,14 @@ function make_chunks()
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
         K.travel_id = ky*10 + kx
-        if K.kind ~= "empty" then
+        if is_roomy(K) then
           table.insert(chunk_list, { x=kx,y=ky })
         end
       end end
-      
+
       return chunk_list
     end
-    
+
     local function merge()
       for loop=1,12 do
         for kx = 1,3 do for ky = 1,3 do
@@ -1449,7 +1469,7 @@ function make_chunks()
               local K1 = c.chunks[kx][ky]
               local K2 = c.chunks[nx][ny]
 
-              if K1.kind ~= "empty" and K2.kind ~= "empty" then
+              if is_roomy(K1) and is_roomy(K2) then
                 K1.travel_id = math.min(K1.travel_id, K2.travel_id)
                 K2.travel_id = K1.travel_id
               end
@@ -1463,7 +1483,7 @@ function make_chunks()
       local last
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
-        if K.kind == "empty" then
+        if not is_roomy(K) then
           -- skip it
         elseif not last then last = K
         elseif K.travel_id ~= last.travel_id then 
@@ -1515,12 +1535,12 @@ function make_chunks()
             local N = chunk_neighbour(c, K, side)
             local dx,dy = dir_to_delta(side)
 
-            if N and N.kind ~= "empty" then
+            if N and is_roomy(N) then
               if not last_K then
                 last_K = N
               elseif N.travel_id ~= last_K.travel_id then
                 -- FOUND ONE !!
---              con.debugf("Found travel bridge @ (%d,%d) [%d,%d]^%d\n", c.x,c.y, kx,ky,side)
+                con.debugf("Found travel bridge @ (%d,%d) [%d,%d]^%d\n", c.x,c.y, kx,ky,side)
                 if rand_odds(50) then
                   grow_a_pair(last_K, K, N)
                 else
@@ -1540,7 +1560,7 @@ function make_chunks()
 
         local kx,ky = chunk_list[i].x, chunk_list[i].y
         local K1 = c.chunks[kx][ky]
-        assert(K1 and K1.kind ~= "empty")
+        assert(K1 and is_roomy(K1))
 
         for zzz,side in ipairs(SIDES) do
           local dx,dy = dir_to_delta(side)
@@ -1550,6 +1570,7 @@ function make_chunks()
         
             if K2.kind == "empty" then
               grow_a_pair(K1, K2)
+con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
               return true
             end
 
@@ -1579,6 +1600,7 @@ function make_chunks()
 
     -- deathmatch exit is placed *above* top-central chunk
     if PLAN.deathmatch and (c.x==1 and c.y==PLAN.h) then
+      
       for x = 2,3 do
         local TOP = c.chunks[x][3]
         if TOP.kind == "empty" then TOP.kind = "room" end
@@ -1777,23 +1799,6 @@ function make_chunks()
     end
 
     void_it_up(c)
-  end
-
-  local function add_dm_exit(c)
-
-    if c.chunks[1][3] then
-      con.printf("WARNING: deathmatch exit stomped a chunk!\n")
-    end
-
-    local K = new_chunk(c, 1,3, "void")
-    K.dm_exit = true
-    K.dir = 2
-
-    c.chunks[1][3] = K
-
-    if not c.chunks[1][2] then
-      c.chunks[1][2] = new_chunk(c, 1,2, "room")
-    end
   end
 
   local function flesh_out_cell(c)
@@ -2083,10 +2088,20 @@ function make_chunks()
 
         K.stair = {}
 
-        if K.kind == "room" or K.kind == "link" or K.kind == "liquid" then
+        if is_roomy(K) then
           K.connect_id = ky*10 + kx
         end
       end end
+    end
+
+    local function dump_connx()
+      con.printf("connx @ (%d,%d):\n", c.x,c.y)
+      for ky = 3,1,-1 do
+        for kx = 1,3 do
+          con.printf(" % 3d", c.chunks[kx][ky].connect_id or -77)
+        end
+        con.printf("\n")
+      end
     end
 
     local function is_fully_connected()
@@ -2255,6 +2270,7 @@ function make_chunks()
 
     for loop=1,99 do
       merge_connx()
+
       if is_fully_connected() then break end
 -- con.debugf("CONNECT CHUNKS @ (%d,%d) loop: %d\n", c.x, c.y, loop)
       add_one_stair()
@@ -2408,24 +2424,24 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
   -- secondly, determine main walk areas
 
-  for zzz,cell in ipairs(PLAN.all_cells) do
+  for zzz,c in ipairs(PLAN.all_cells) do
 
-    mark_vista_chunks(cell)
-    create_huge_vista(cell)
+    mark_vista_chunks(c)
+    create_huge_vista(c)
 
-    add_travel_chunks(cell)
+    if PLAN.deathmatch and c.x==1 and c.y==PLAN.h then
+      add_deathmatch_chunks(c)
+    end
 
-    setup_chunk_rmodels(cell)
-    
-    add_vista_environs(cell)
+    add_travel_chunks(c)
+    setup_chunk_rmodels(c)
 
-    add_important_chunks(cell)
+    add_vista_environs(c)
+    add_important_chunks(c)
+    add_closets(c)
 
-    add_stairs(cell)
-
-    add_closets(cell)
-
-    void_up_cell(cell)
+    void_up_cell(c)
+    add_stairs(c)
   end
 end
 
@@ -4764,6 +4780,14 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     end
   end
 
+  local function mark_deathmatch_walk(c)
+    if PLAN.deathmatch and c.x==1 and c.y==PLAN.h then
+      local K = c.chunks[2][3]
+      local x, y = K.x1 + 1, K.y1 - 1
+      mark_walkable(c, 4, x,y, x,y)
+    end
+  end
+
   local function stair_depths(diff_h)
     diff_h = math.abs(diff_h)
 
@@ -5331,6 +5355,7 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
   mark_link_walks(c)
   mark_vista_walks(c)
+  mark_deathmatch_walk(c)
 
   build_stairs(c)
 
@@ -5749,6 +5774,8 @@ function tizzy_up_room(c)
 
       -- found it! now build it...
 
+      if B then B.is_solid = true end
+
       local x, y
 
       if rec then
@@ -5924,17 +5951,13 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     local fab = PREFABS[def.prefab]
     assert(fab)
     assert(def.skin)
+    assert(def.skin.wall)
 
-    local x, y = K.x1, K.y2+1
+    assert(fab.long <= K.w and fab.deep <= K.h)
 
-    if fab.long <= K.w and not K.stair_dir then  -- hackity hack!
-      y = y - 1
-    end
+    B_prefab(c, fab, def.skin, {}, K.rmodel, c.combo, K.x1, K.y1, 2)
 
-    local D = c.border[8]
-    assert(D)
-
-    B_prefab(c, fab, def.skin, {}, K.rmodel, D.combo, x, y, 2)
+    gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=def.skin.wall })
   end
 
   local function add_switch(c)
@@ -6427,7 +6450,7 @@ end
   con.progress(25); if con.abort() then return end
  
   if PLAN.deathmatch then
-    deathmatch_through_level()
+--!!!!!!    deathmatch_through_level()
   else
     battle_through_level()
   end
