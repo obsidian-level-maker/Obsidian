@@ -1324,7 +1324,7 @@ D2_SCENERY_PREFABS =
     prefab = "EXIT_DEATHMATCH",
 
     skin = { wall="METAL1", front_w="METAL1",
-             floor="FLOOR5_1", ceil="TLITE6_4",
+             floor="FLOOR5_1", ceil="CEIL5_1",
              switch_w="SW1BLUE", side_w="COMPBLUE", switch_f="FLAT14",
              frame_f="FLOOR5_1", frame_c="TLITE6_6", step_w="STEP1",
              door_w="EXITDOOR", door_c="FLAT1", track_w="DOORTRAK",
