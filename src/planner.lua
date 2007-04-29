@@ -189,6 +189,7 @@ function show_cell_blocks(c)
     if B.solid then return "#" end
     if B.fragments then return "%" end
     if B.f_tex then return "/" end
+    if B.has_blocker then return "B" end
 
     if not B.chunk then return "?" end
     if B.chunk.kind == "vista" then return "V" end
