@@ -483,7 +483,7 @@ function plan_dm_arena()
     end
   end
 
----???  PLAN.cells[1][PLAN.h].no_nudge = true
+  PLAN.cells[1][PLAN.h].no_nudge = true
 
   if GAME.caps.liquids then
     p.liquid = choose_liquid()
