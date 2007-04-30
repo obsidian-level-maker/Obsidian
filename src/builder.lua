@@ -1066,6 +1066,18 @@ function random_sky_light()
   return rand_element(names)
 end
 
+function tendril_min_max(rec)
+  local t_min = 9999
+  local t_max = 0
+
+  for pos = 1,rec.long do
+    t_min = math.min(rec.tendrils[pos], t_min)
+    t_max = math.max(rec.tendrils[pos], t_max)
+  end
+
+  return t_min, t_max
+end
+
 
 ----------------------------------------------------------------
 
@@ -4088,237 +4100,6 @@ function layout_cell(c)
       or (K.ky == 3 and (side==8 or side==7 or side==9) and c.border[8])
     end
     
-  local function reclaim_areas_OLD(c)
-
-    local function try_reclaim_side_OLD(K, dir)
-
-      -- Requirements
-      --  (a) start side must be against solid wall (empty chunk)
-      --  (b) don't move if side neighbours have stairs
-      --  (c) never fill chunk completely (leave 1 block free)
-      --  (d) never fill over a "walk=4" block
-      --  (e) choose side that gives greatest depth
-
-      local N = chunk_neighbour(c, K, 10-dir)
-
-      if N and N.kind ~= "empty" then return end
-
-      local S1 = chunk_neighbour(c, K, rotate_cw90(dir))
-      if S1 and S1.stair_dir and
-         math.min(S1.stair_dir, 10-S1.stair_dir) == math.min(dir,10-dir)
-      then return end
-
-      local S2 = chunk_neighbour(c, K, rotate_ccw90(dir))
-      if S2 and S2.stair_dir and
-         math.min(S2.stair_dir, 10-S2.stair_dir) == math.min(dir,10-dir)
-      then return end
-
-      local dx,dy = dir_to_delta(dir)
-      local ax,ay = dir_to_across(dir)
-
-      local long = K.x2 - K.x1 + 1
-      local deep = K.y2 - K.y1 + 1
-
-      if (dir == 4) or (dir == 6) then
-        long,deep = deep,long
-      end
-
-      local sx1,sy1, sx2,sy2 = side_coords(10-dir, K.x1,K.y1, K.x2,K.y2)
-
-      local function test_line(h)
-        for w = 0,long-1 do
-          local x = sx1 + h*dx + w*ax
-          local y = sy1 + h*dy + w*ay
-
-          assert(valid_cell_block(c, x, y))
-          local B = PLAN.blocks[x][y]
-
-          if B.walk or B.solid or B.fragments then
-            return false
-          end
-        end
-
-        return true --OK--
-      end
-
-      --> try_reclaim_side -->
-
-      local h = 0
-
-      while (h < deep-1) and test_line(h) do
-        h = h + 1
-      end
-
-      if h == 0 then return end --FAIL--
-
-      if K.rec and (h < K.rec.deep or (h == K.rec.deep and rand_odds(50))) then
-        return --FAIL--
-      end
-
-      K.rec =
-      {
-        deep = h, long = long, dir = dir,
-
-        x1 = sx1, x2 = sx1 + (h-1)*dx + (long-1)*ax,
-        y1 = sy1, y2 = sy1 + (h-1)*dy + (long-1)*ay,
-
-        border = get_reclaim_border(K, 10-dir)
-      }
-
-      if K.rec.x1 > K.rec.x2 then K.rec.x1,K.rec.x2 = K.rec.x2,K.rec.x1 end
-      if K.rec.y1 > K.rec.y2 then K.rec.y1,K.rec.y2 = K.rec.y2,K.rec.y1 end
-
-      return true --SUCCESS--
-    end
-    
-
-    local function try_reclaim_corner(K, x_dir, y_dir)
-
-      -- a reclaimed side trumps a corner
-      if K.rec and (K.rec.dir % 2) == 0 then return end
-
-      local corn
-      if x_dir == 4 then
-        corn = sel(y_dir == 2, 9, 3)
-      else
-        corn = sel(y_dir == 2, 7, 1)
-      end
-
-      local max_w = K.x2 - K.x1
-      local max_h = K.y2 - K.y1
-
-      do
-        -- allow neighbour chunks to have an reclaim area,
-        -- limiting long/deep accordingly.
-
-        local function try_side(side, perp_dir)
-          local N = chunk_neighbour(c, K, side)
-
-          if not N then return true end
-          if N.kind == "empty" then return true end
-
-          if not N.rec then return false end
-          if N.rec.dir ~= perp_dir then return false end
-
-          if side==4 or side==6 then
-            max_h = math.min(max_h, N.rec.y2 - N.rec.y1 + 1)
-          else
-            max_w = math.min(max_w, N.rec.x2 - N.rec.x1 + 1)
-          end
-
-          return true --OK--
-        end
-
-        if not try_side(10-x_dir, y_dir) then return end
-        if not try_side(10-y_dir, x_dir) then return end
-      end
-
-      local cx,cy = corner_coords(corn, K.x1,K.y1,K.x2,K.y2)
-
-      local dx = sel(x_dir==4, -1, 1)
-      local dy = sel(y_dir==2, -1, 1)
-
-      local function overlaps_stair(x1,y1, x2,y2)
-        if not K.stair_x1 then return false end
-
-        if x2 < K.stair_x1 or x1 > K.stair_x2 then return false end
-        if y2 < K.stair_y1 or y1 > K.stair_y2 then return false end
-
-        return true
-      end
-      
-      local function test_block(rx1,ry1, rx2,ry2)
-
-        -- input coordinates are relative to corner block,
-        -- convert them to absolute coordinates.
-        x1,y1 = cx + rx1*dx, cy + ry1*dy
-        x2,y2 = cx + rx2*dx, cy + ry2*dy
-
-        if x1 > x2 then x1,x2 = x2,x1 end
-        if y1 > y2 then y1,y2 = y2,y1 end
-
-        -- make sure it doesn't touch the chunk's stair
-        if overlaps_stair(x1-1, y1-1, x2+1, y2+1) then
-          return false --FAIL--
-        end
-
-        for x = x1,x2 do for y = y1,y2 do
-if not valid_cell_block(c,x,y) then
-con.printf("CELL (%d,%d) .. (%d,%d)\n", c.bx1,c.by1,c.bx2,c.by2)
-con.printf("CHUNK (%d,%d) .. (%d,%d)\n", K.x1,K.y1, K.x2,K.y2)
-con.printf("BLOCK RANGE w:%d-%d h:%d-%d (%d,%d)..(%d,%d)\n", x1,x2, y1,y2, x1,y1, x2,y2)
-con.printf("cx:%d cy:%d dx:%d dy:%d\n", cx,cy, dx,dy)
-end
-          assert(valid_cell_block(c, x, y))
-          local B = PLAN.blocks[x][y]
-
-          if B.walk or B.solid or B.fragments then
-            return false --FAIL--
-          end
-        end end
-
-        return true --OK--
-      end
-
-      --> try_reclaim_corner -->
-
-      if not test_block(0,0, 0,0) then
-        return --FAIL--
-      end
-
-      -- find largest rectangle
-      local w, h = 1, 1
-      local grow_w, grow_h = true,true
-
-      while grow_w or grow_h do
-        if grow_w and (not grow_h or rand_odds(50)) then
-
-          if w < max_w and test_block(w,0, w,h-1) then
-            w = w + 1
-          else
-            grow_w = false
-          end
-        else
-          assert(grow_h)
-
-          if h < max_h and test_block(0,h, w-1,h) then
-            h = h + 1
-          else
-            grow_h = false
-          end
-        end
-      end
-
-      -- if a corner was already reclaimed, choose greatest area
-      -- TODO: keep both if they don't overlap
-
-      if K.rec then
-        local area = w * h
-        local r_area = K.rec.long * K.rec.deep
-        if (area < r_area) or (area == r_area and rand_odds(50)) then
-          return --FAIL--
-        end
-      end
-
-      K.rec =
-      {
-        long = w, deep = h, dir = 10-corn,
-
-        x1 = cx, x2 = cx + (w-1)*dx,
-        y1 = cy, y2 = cy + (h-1)*dy,
-
-        border = get_reclaim_border(K, 10-corn)
-      }
-
-      if K.rec.x1 > K.rec.x2 then K.rec.x1,K.rec.x2 = K.rec.x2,K.rec.x1 end
-      if K.rec.y1 > K.rec.y2 then K.rec.y1,K.rec.y2 = K.rec.y2,K.rec.y1 end
-
-      return true --SUCCESS--
-    end
-    
-    ---== reclaim_areas_OLD ==---
-  end
-
   local function reclaim_areas(c)
 
     local function create_reclaim(K, side)
@@ -4472,11 +4253,11 @@ sel(B.on_path, "YES", "NO"))
 --con.printf("TRY_RECLAIM_SIDE @ (%d,%d) [%d,%d] dir:%d\n",
 --c.x,c.y, K.kx,K.ky, dir)
 
-if c.x==3 and c.y==4 and K.kx==3 and K.ky==3 then
-con.printf("\n***************\n");
-con.printf("dir:%d count:%d solids=\n%s\n", dir, sol_count, table_to_str(solids))
-con.printf("\n***************\n");
-end
+-- if c.x==3 and c.y==4 and K.kx==3 and K.ky==3 then
+-- con.printf("\n***************\n");
+-- con.printf("dir:%d count:%d solids=\n%s\n", dir, sol_count, table_to_str(solids))
+-- con.printf("\n***************\n");
+-- end
 
       assert(sol_count < 4)
 
@@ -4508,8 +4289,6 @@ end
         try_grow_tendril (K, dir, rec, pos)
       end
 
-con.printf(" --> average:%1.1f\n", rec.total_blk / rec.long);
-
       if rec.total_blk == 0 then
         return false
       end
@@ -4534,13 +4313,6 @@ con.printf(" --> average:%1.1f\n", rec.total_blk / rec.long);
         K.rec = rec
       end
 
---[[ OLD ONE:
-      if K.rec and is_perpendicular(K.rec.side, rec.side) then K.rec2 = K.rec; K.rec = nil end
-
-      -- if chunk already has a reclaim area, need to choose
-      -- which one to keep.
-      K.rec = (K.rec and best_reclaim(K.rec, rec)) or rec
---]]
       return true --SUCCESS--
     end
 
@@ -4593,18 +4365,6 @@ con.printf(" --> average:%1.1f\n", rec.total_blk / rec.long);
 
   local function trim_reclamations(c)
 
-    local function tendril_min_max(rec)
-      local t_min = 9999
-      local t_max = 0
-
-      for pos = 1,rec.long do
-        t_min = math.min(rec.tendrils[pos], t_min)
-        t_max = math.max(rec.tendrils[pos], t_max)
-      end
-
-      return t_min, t_max
-    end
-
     local function shrink_tendril(rec, pos)
       assert(rec.tendrils[pos] >= 1)
 
@@ -4620,7 +4380,6 @@ con.printf(" --> average:%1.1f\n", rec.total_blk / rec.long);
     end
 
     local function cut_tall_poppy(rec)
-      -- FIXME
       return false --FAIL--
     end
 
@@ -6002,88 +5761,139 @@ function tizzy_up_room(c)
     end
   end
 
-  local function find_wallish_loc(c, fab, dir)
+  local function wall_test_chunk(c, K, side)
 
-    local function test_chunk(K, dir)
-      local B = chunk_neighbour(c, K, 10-dir) -- behind chunk
-
-      local rec  --FIXME try rec2
-      if K.rec and K.rec.side == 10-dir then rec = K.rec end
-
-      if B and B.kind ~= "void" then return nil,nil end
-      if not B and not rec then return nil, nil end
-
-      local K_long, K_deep = K.w, K.h
-      local B_deep = (B and B.h) or 1
-
-      if (dir == 4) or (dir == 6) then
-        K_long, K_deep = K_deep, K_long
-        B_deep = (B and B.w) or 1
-      end
-
-      if fab.long > K_long then return nil, nil end
-
-      local dx,dy = dir_to_delta (10-dir)
-      local ax,ay = dir_to_across(10-dir)
-
-      local function test_pos(pos)
-        local usable_reclaim = 999
-
-        for L = 1,K_long do
-          if not rec then
-            usable_reclaim = 0
-          else
-            usable_reclaim = math.min(rec.tendrils[L], usable_reclaim)
-          end
-        end
-
-        if usable_reclaim >= fab.deep then
-          return 100  -- FIXME: score
-        end
-
-        -- FIXME: test void-space/border-space
-
-        return -1
-      end
-
-      local best_pos
-      local best_score = 0
-
-      for pos = 0, (K_long - fab.long) do
-        local score = test_pos(pos)
-        if score < 0 then
-          -- not possible
-        elseif score > best_score then
-          best_pos = pos
-          best_score = score
-        end
-      end
-
-      if not best_pos then return nil, nil end
-
-      -- found it! now build it...
-
-      if B then B.is_solid = true end
-
-      local x, y
-
-      if rec then
-        x = rec.x1 + ax*best_pos    
-        y = rec.y1 + ay*best_pos
-
-        K.rec  = nil  -- use up the rec space  FIXME: set tendrils to 0
-        K.rec2 = nil
-        
-        return x, y, "reclaim"
-
+    local rec
+    if K.rec then
+      if K.rec.side == side then
+        rec = K.rec
+      elseif K.rec2 and K.rec2.side == side then
+        rec = K.rec2
       else
-
-      -- FIXME: side_coords(10-dir, K.x1,K.y1, K.x2,K.y2)
-
+        -- a little harsh (this non-reclaimed side may be usable),
+        -- however it really simplifies the rec management.
+        return nil, nil
       end
     end
 
-    --- find_wallish_loc ---
+    local B = chunk_neighbour(c, K, side) -- behind chunk
+
+    if B and B.kind ~= "void" then return nil,nil end
+
+    -- one or both of 'rec' and 'B' can be nil.
+    -- When 'rec' is nil, it is as though all the tendrils were 0.
+    -- When  'B'  is nil, we might "eat" into the border itself.
+
+    local K_long, K_deep = get_long_deep(side, K.w, K.h)
+    local B_long, B_deep
+
+    if B then
+      B_long, B_deep = get_long_deep(side, B.w, B.h)
+    else
+      B_long, B_deep = K_long, 1
+    end
+
+    if fab.long > K_long then return nil, nil end
+
+    local dx,dy = dir_to_delta (10-side)
+    local ax,ay = dir_to_across(side)
+
+    local sx1,sy1, sx2,sy2 = side_coords(side, K.x1,K.y1, K.x2,K.y2)
+
+
+    local function test_pos(pos)
+      local usable_reclaim = 999
+
+      for L = 1,K_long do
+        if not rec then
+          usable_reclaim = 0
+        else
+          usable_reclaim = math.min(rec.tendrils[pos+L], usable_reclaim)
+        end
+      end
+
+      if usable_reclaim >= fab.deep then
+        return 100  -- FIXME: score
+      end
+
+      -- FIXME: test void-space/border-space
+
+      return -1
+    end
+
+    local best_pos
+    local best_score = 0
+    local best_delta  -- positive is outwards (forwards)
+
+    for pos = 0, (K_long - fab.long) do
+      local score, delta = test_pos(pos)
+      if score < 0 then
+        -- not possible
+      elseif score > best_score then
+        best_pos   = pos
+        best_score = score
+        best_delta = delta
+      end
+    end
+
+    if not best_pos then return nil, nil end
+
+
+    -- found it! now build it...
+
+    local x = sx1 + best_pos*ax + best_delta*dx
+    local y = sy1 + best_pos*ay + best_delta*dy
+
+    local x2 = x + (K_long-1)*ax
+    local y2 = y + (K_long-1)*ay
+
+    -- mark area in front of prefab
+    mark_walkable(c, 3, x+dx, y+dy, x2+dx, y2+dy)
+
+    if rec then
+
+      -- fill the area behind tendrils with c.combo.void
+      if best_delta >= fab.deep then
+
+        local tx1 = sx1 + best_pos*ax
+        local ty1 = sy1 + best_pos*ay
+
+        local tx2 = x2 - fab.deep*dx
+        local ty2 = y2 - fab.deep*dy
+
+        tx1, tx2 = low_high(tx1, tx2)
+        ty1, ty2 = low_high(ty1, ty2)
+      
+        gap_fill(c, tx1,ty1, tx2,ty2, { solid=c.combo.void })
+      end
+
+      for pos = best_pos+1, best_pos+fab.long do
+        rec.tendrils[pos] = -1
+      end
+
+      -- FIXME: properly adjust the other rec
+      --        (e.g. clip tendrils to the bounding box)
+
+      if rec == K.rec then
+        K.rec2 = nil
+      else
+        K.rec = K.rec2
+        K.rec2 = nil
+      end
+
+      return x, y, "reclaim"
+
+    elseif B then
+      B.is_solid = true
+
+      return x, y, "void"
+
+    else
+      return x, y, "border"
+    end
+  end
+
+  local function find_wallish_loc(c, fab, dir, q_spot)
 
     local chunk_list = {}
 
@@ -6098,10 +5908,15 @@ function tizzy_up_room(c)
 
     rand_shuffle(chunk_list)
 
+    -- make sure we try the Q-Spot first (if given)
+    if q_spot then
+      table.insert(chunk_list, 1)
+    end
+
     for zzz, K in ipairs(chunk_list) do
       for try_dir = 2,8,2 do
         if not dir or try_dir == dir then
-          local x, y, mode = test_chunk(K, try_dir)
+          local x, y, mode = wall_test_chunk(c, K, 10-try_dir)
           if x then return x, y, try_dir, mode end
         end
       end
@@ -6273,7 +6088,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     local x,y,dir
     
     if in_wall then
-      x,y,dir = find_wallish_loc(c, fab)
+      x,y,dir = find_wallish_loc(c, fab, nil, c.q_spot)
     else
       x,y,dir = find_fab_loc(c, fab, 0,3)
     end
