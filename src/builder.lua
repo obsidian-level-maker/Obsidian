@@ -4524,6 +4524,18 @@ sel(B.on_path, "YES", "NO"))
         error("Unknown trim_mode: " .. tostring(mode))
       end
     end end
+
+    -- remove empty reclamations
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      if K.rec2 and K.rec2.total_blk == 0 then
+        K.rec2 = nil
+      end
+      if K.rec and K.rec.total_blk == 0 then
+        K.rec  = K.rec2
+        K.rec2 = nil
+      end
+    end end
   end
 
   local function get_vista_coords(c, side, link, other)
@@ -5767,6 +5779,13 @@ function tizzy_up_room(c)
 
     local B = chunk_neighbour(c, K, side) -- behind chunk
 
+-- if c.x==2 and c.y==6 and K.kx==3 and K.ky==1 and side == 4 then
+-- con.printf("\n\n\n>>>>>>>>>>>>>>>>>>\n")
+-- con.printf("wall_test_chunk: rec:%s B:%s K:%dx%d fab:%dx%d\n",
+-- tostring(rec), tostring(B), K_long or -1,K_deep or -1, fab.long,fab.deep)
+-- end
+
+
     if B and B.kind ~= "void" then return nil,nil end
 
     -- one or both of 'rec' and 'B' can be nil.
@@ -5782,6 +5801,7 @@ function tizzy_up_room(c)
       B_long, B_deep = K_long, 1
     end
 
+
     if fab.long > K_long then return nil, nil end
 
     local dx,dy = dir_to_delta (10-side)
@@ -5792,40 +5812,64 @@ function tizzy_up_room(c)
 
     local function test_pos(pos)
 
-      local delta
+      local rec_min
 
       if rec then
+if rec.total_blk > 0 then return -1 end
         for L = 1,fab.long do
-          -- check for already used parts
+          -- check for already-used parts
           if rec.tendrils[pos+L] < 0 then return -1 end
 
           if L == 1 then
-            delta = rec.tendrils[pos+L]-1
+            rec_min = rec.tendrils[pos+L]
           else
-            delta = math.min(delta, rec.tendrils[pos+L]-1)
+            rec_min = math.min(rec_min, rec.tendrils[pos+L])
           end
         end
-      else
-        delta = -1
-      end
 
-      assert(delta)
-      
-      if delta+1 >= fab.deep then
-        -- FIXME: count blocks "chopped"
-        return 10 + delta + con.random()/2, delta
+        if rec_min >= fab.deep then
+          -- FIXME: count blocks "chopped"
+          return 200 + rec_min + con.random()/2, rec_min-1
+        end
+
+      else
+        rec_min = 0
       end
 
       -- here we know the prefab crosses into behind area
 
+      local v_deep = fab.deep - rec_min
+      assert(v_deep > 0)
+
+      -- TODO: maybe there are TWO void chunks behind us....
+
+      if v_deep > B_deep then return -1 end
+
       if not B then 
-        -- TODO: allow cell border (only for VIP stuff)
+        -- TODO: allow cell border (for VIP stuff)
         return -1
       end
 
-      -- FIXME: intrusion into void space
+      -- check if void area is already used
+      local vx1 = sx1 + pos*ax - dx
+      local vy1 = sy1 + pos*ay - dy
 
-      return -1
+      local vx2 = vx1 + (fab.long-1)*ax - (v_deep-1)*dx
+      local vy2 = vy1 + (fab.long-1)*ay - (v_deep-1)*dy
+
+      vx1, vx2 = low_high(vx1, vx2)
+      vy1, vy2 = low_high(vy1, vy2)
+
+      for x = vx1,vx2 do for y = vy1,vy2 do
+        assert(valid_chunk_block(B, x, y))
+        local B = PLAN.blocks[x][y]
+
+        if B and block_is_used(B) then
+          return -1
+        end
+      end end
+
+      return 100 + rec_min + con.random()/2, rec_min-1
     end
 
     local best_pos
@@ -5848,7 +5892,7 @@ function tizzy_up_room(c)
 
     -- found it! now build it...
 
-    -- don't co-opt reclamation for liquid (etc)
+    -- don't let reclamation be used for liquid (etc)
     if B then B.is_solid = true end
     if rec then rec.is_solid = true end
 
@@ -5918,14 +5962,27 @@ function tizzy_up_room(c)
 
     -- make sure we try the Q-Spot first (if given)
     if q_spot then
-      table.insert(chunk_list, 1)
+      table.insert(chunk_list, 1, q_spot)
+    end
+
+    local function passes_height_test(K)
+do return true end --!!!!!!
+      if fab.height_range then
+        local h = K.rmodel.c_h - K.rmodel.f_h
+        if h < fab.height_range[1] or h > fab.height_range[2] then
+          return false
+        end
+      end
+      return true
     end
 
     for zzz, K in ipairs(chunk_list) do
-      for try_dir = 2,8,2 do
-        if not dir or try_dir == dir then
-          local x, y, mode = wall_test_chunk(c, K, fab, 10-try_dir)
-          if x then return x, y, try_dir, mode end
+      if passes_height_test(K) then
+        for try_dir = 2,8,2 do
+          if not dir or try_dir == dir then
+            local x, y, mode = wall_test_chunk(c, K, fab, 10-try_dir)
+            if x then return x, y, try_dir, mode end
+          end
         end
       end
     end
