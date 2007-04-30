@@ -1066,6 +1066,21 @@ function random_sky_light()
   return rand_element(names)
 end
 
+function mark_walkable(c, walk, x1,y1, x2,y2)
+  assert(x2 >= x1 and y2 >= y1)
+  assert(valid_cell_block(c, x1, y1))
+  assert(valid_cell_block(c, x2, y2))
+
+  for x = x1,x2 do for y = y1,y2 do
+    local B = PLAN.blocks[x][y]
+    assert(B)
+
+    if not B.walk or walk > B.walk then
+      B.walk = walk
+    end
+  end end
+end
+
 function tendril_min_max(rec)
   local t_min = 9999
   local t_max = 0
@@ -4725,21 +4740,6 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
   end
 
 
-  local function mark_walkable(c, walk, x1,y1, x2,y2)
-    assert(x2 >= x1 and y2 >= y1)
-    assert(c.bx1 <= x1 and x2 <= c.bx2)
-    assert(c.by1 <= y1 and y2 <= c.by2)
-
-    for x = x1,x2 do for y = y1,y2 do
-      local B = PLAN.blocks[x][y]
-      assert(B)
-
-      if not B.walk or walk > B.walk then
-        B.walk = walk
-      end
-    end end
-  end
-
   local function mark_link_walks(c)
     
     -- FIXME: many improvements here!
@@ -5761,7 +5761,7 @@ function tizzy_up_room(c)
     end
   end
 
-  local function wall_test_chunk(c, K, side)
+  local function wall_test_chunk(c, K, fab, side)
 
     local rec
     if K.rec then
@@ -5802,21 +5802,39 @@ function tizzy_up_room(c)
 
 
     local function test_pos(pos)
-      local usable_reclaim = 999
 
-      for L = 1,K_long do
-        if not rec then
-          usable_reclaim = 0
-        else
-          usable_reclaim = math.min(rec.tendrils[pos+L], usable_reclaim)
+      local delta
+
+      if rec then
+        for L = 1,fab.long do
+          -- check for already used parts
+          if rec.tendrils[L] < 0 then return -1 end
+
+          if L==1 then
+            delta = rec.tendrils[L]-1
+          else
+            delta = math.min(delta, rec.tendrils[L]-1)
+          end
         end
+      else
+        delta = -1
       end
 
-      if usable_reclaim >= fab.deep then
-        return 100  -- FIXME: score
+      assert(delta)
+      
+      if delta+1 >= fab.deep then
+        -- FIXME: include blocks "chopped"
+        return 10 + delta + con.random()/2, delta
       end
 
-      -- FIXME: test void-space/border-space
+      -- at here, we know prefab crosses into behind area
+
+      if not B then 
+        -- TODO: allow cell border (only for VIP stuff)
+        return -1
+      end
+
+      -- FIXME: intrusion into void space
 
       return -1
     end
@@ -5841,17 +5859,20 @@ function tizzy_up_room(c)
 
     -- found it! now build it...
 
+    -- don't co-opt reclamation for liquid (etc)
+    if B then B.is_solid = true end
+    if rec then rec.is_solid = true end
+
     local x = sx1 + best_pos*ax + best_delta*dx
     local y = sy1 + best_pos*ay + best_delta*dy
 
-    local x2 = x + (K_long-1)*ax
-    local y2 = y + (K_long-1)*ay
+    local x2 = x + (fab.long-1)*ax
+    local y2 = y + (fab.long-1)*ay
 
     -- mark area in front of prefab
     mark_walkable(c, 3, x+dx, y+dy, x2+dx, y2+dy)
 
     if rec then
-
       -- fill the area behind tendrils with c.combo.void
       if best_delta >= fab.deep then
 
@@ -5884,8 +5905,6 @@ function tizzy_up_room(c)
       return x, y, "reclaim"
 
     elseif B then
-      B.is_solid = true
-
       return x, y, "void"
 
     else
@@ -5916,7 +5935,7 @@ function tizzy_up_room(c)
     for zzz, K in ipairs(chunk_list) do
       for try_dir = 2,8,2 do
         if not dir or try_dir == dir then
-          local x, y, mode = wall_test_chunk(c, K, 10-try_dir)
+          local x, y, mode = wall_test_chunk(c, K, fab, 10-try_dir)
           if x then return x, y, try_dir, mode end
         end
       end
@@ -6316,7 +6335,7 @@ con.debugf("add_scenery : %s\n", item)
   end
 
   -- WALL STUFF
-  for loop = 1,0 do
+  for loop = 1,40 do
     add_wall_stuff(c)
   end
 
