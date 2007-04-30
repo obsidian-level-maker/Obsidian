@@ -4134,17 +4134,6 @@ function layout_cell(c)
         rec.long, rec.deep = rec.deep, rec.long
       end
 
-if c.x==4 and c.y==1 then
-con.printf("CHUNK [%d,%d] size:%dx%d  (%d,%d)->(%d,%d) --> REC %dx%d\n",
-K.kx,K.ky, K.w,K.h, K.x1,K.y1, K.x2,K.y2,
-rec.long, rec.deep)
-
-local J = c.chunks[3][2]
-con.printf("CHUNK [%d,%d] size:%dx%d  (%d,%d)->(%d,%d)\n",
-J.kx,J.ky, J.w,J.h, J.x1,J.y1, J.x2,J.y2)
-con.printf("%s\n", table_to_str(J,2))
-end
-
       for pos = 1,rec.long do
         rec.tendrils[pos] = 0
       end
@@ -5309,7 +5298,7 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
 --con.printf(  "  |-- coord (%d,%d)\n", pos.x, pos.y)
         PLAN.blocks[x][y].on_path = true
-        add_thing(c, x, y, "candle", false)
+--      add_thing(c, x, y, "candle", false)
       end
     end
 
@@ -5808,12 +5797,12 @@ function tizzy_up_room(c)
       if rec then
         for L = 1,fab.long do
           -- check for already used parts
-          if rec.tendrils[L] < 0 then return -1 end
+          if rec.tendrils[pos+L] < 0 then return -1 end
 
-          if L==1 then
-            delta = rec.tendrils[L]-1
+          if L == 1 then
+            delta = rec.tendrils[pos+L]-1
           else
-            delta = math.min(delta, rec.tendrils[L]-1)
+            delta = math.min(delta, rec.tendrils[pos+L]-1)
           end
         end
       else
@@ -5823,11 +5812,11 @@ function tizzy_up_room(c)
       assert(delta)
       
       if delta+1 >= fab.deep then
-        -- FIXME: include blocks "chopped"
+        -- FIXME: count blocks "chopped"
         return 10 + delta + con.random()/2, delta
       end
 
-      -- at here, we know prefab crosses into behind area
+      -- here we know the prefab crosses into behind area
 
       if not B then 
         -- TODO: allow cell border (only for VIP stuff)
@@ -6050,12 +6039,10 @@ con.printf("add_object @ (%d,%d)\n", x, y)
 
     if not x then return end
 
--- con.printf("\nADDING WALLISH PREFAB!!!! @ block (%d,%d) dir:%d\n", x,y, dir)
+con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
+  fab.name, c.x, c.y, x, y, dir)
 
     B_prefab(c, fab, def.skin, parm, c.rmodel or PLAN.blocks[x][y].chunk.rmodel, c.combo, x, y, dir)
-
-    -- FIXME: mark area in front
-    -- mark_walkable(c, x,y, 2)
   end
 
   local function add_deathmatch_exit(c)
@@ -6452,7 +6439,7 @@ if B.chunk and B.chunk.kind == "empty" then B.f_tex="GATE1" end
       else
         gap_fill_block(B)
 
-        if B.on_path then
+        if B.walk then
           add_thing(c, x, y, "candle", false)
         end
       end
