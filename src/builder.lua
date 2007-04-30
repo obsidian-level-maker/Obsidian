@@ -4595,6 +4595,175 @@ con.printf(" --> average:%1.1f\n", rec.total_blk / rec.long);
   end
 
   local function trim_reclamations(c)
+
+    local function tendril_min_max(rec)
+      local t_min = 9999
+      local t_max = 0
+
+      for pos = 1,rec.long do
+        t_min = math.min(rec.tendrils[pos], t_min)
+        t_max = math.max(rec.tendrils[pos], t_max)
+      end
+
+      return t_min, t_max
+    end
+
+    local function shrink_tendril(rec, pos)
+      assert(rec.tendrils[pos] >= 1)
+
+      rec.tendrils[pos] = rec.tendrils[pos] - 1
+      rec.total_blk = rec.total_blk - 1
+    end
+
+    local function limit_tendril(rec, pos, deep)
+      if rec.tendrils[pos] > deep then
+        rec.total_blk = rec.total_blk - (rec.tendrils[pos] - deep)
+        rec.tendrils[pos] = deep
+      end
+    end
+
+    local function cut_tall_poppy(rec)
+      -- FIXME
+      return false --FAIL--
+    end
+
+    local function prune_chunk(K, rec)
+      -- Prune method: use total_blk and space_factor to compute
+      -- how many blocks should be removed, then remove them.
+
+      local skew = 1.0 + rand_skew() * 0.35
+
+      local kill_blk = int(rec.total_blk * c.space_factor / 100 * skew)
+
+      if kill_blk >= rec.total_blk then
+        for pos = 1,rec.long do
+          rec.tendrils[pos] = 0
+        end
+        return
+      end
+
+      -- determine what our neighbours are:
+      --   0 = open space
+      --   1 = reclaim (same side)
+      --   2 = void / border
+      local function neighbour_quantum(dir)
+        local N = chunk_neighbour(c, K, dir)
+        if not N then return 2 end
+        if N.kind == "void" then return 2 end
+        if N.rec  and N.rec.side  == rec.side then return 1 end
+        if N.rec2 and N.rec2.side == rec.side then return 1 end
+        return 0
+      end
+
+      local perp_dir = sel(rec.side==2 or rec.side==8, 4, 2)
+
+      local n1 = neighbour_quantum(perp_dir)
+      local n2 = neighbour_quantum(10-perp_dir)
+
+      while kill_blk > 0 do
+        if cut_tall_poppy(rec) then
+          kill_blk = kill_blk - 1
+        else
+          -- sweep from one side to the other
+          local sweep_d = n2 - n1
+          if sweep_d == 0 then sweep_d = rand_sel(50, -1, 1) end
+
+          for i = 1,rec.long do
+            local pos = sel(sweep_d > 0, i, rec.long+1 - i)
+
+            if rec.tendrils[pos] > 0 then
+              shrink_tendril(rec, pos)
+              kill_blk = kill_blk - 1
+            end
+
+            if kill_blk == 0 then break; end
+          end
+        end
+      end
+    end
+
+    local function rough_hew_chunk(K, rec)
+      -- Rough Hew method: use total_blk and space_factor to compute
+      -- how many blocks should be removed, then remove them randomly.
+
+      local skew = 1.0 + rand_skew() * 0.35
+
+      local kill_blk = int(rec.total_blk * c.space_factor / 100 * skew)
+
+      if kill_blk >= rec.total_blk then
+        for pos = 1,rec.long do
+          rec.tendrils[pos] = 0
+        end
+
+        rec.total_blk = 0
+        return
+      end
+
+      -- FIXME: optimise this algorithm
+      while kill_blk > 0 do
+        local pos = rand_irange(1, rec.long)
+
+        if rec.tendrils[pos] > 0 then
+          shrink_tendril(rec, pos)
+          kill_blk = kill_blk - 1
+        end
+      end
+    end
+
+    local function guillotine_chunk(K, rec)
+      -- Rough Hew method: use average_depth and space_factor to
+      -- compute a chop-off point.  All tendrils are limited to it.
+
+      local t_min, t_max = tendril_min_max(rec)
+      local t_avg = rec.total_blk / rec.long
+
+      local new_deep = t_avg * (1 - c.space_factor/100) * 1.25 + con.random()
+
+-- con.printf("GUILLOTINE: SPACE:%d  |  min:%1.1f max:%1.1f @avg:%1.1f --> new_deep:%1.2f\n",
+--   (c.space_factor/10), t_min, t_max, t_avg, new_deep)
+
+      new_deep = int(new_deep)
+
+      if new_deep <= 0 then
+        for pos = 1,rec.long do
+          rec.tendrils[pos] = 0
+        end
+
+        rec.total_blk = 0
+        return
+      end
+
+      for pos = 1, rec.long do
+        limit_tendril(rec, pos, new_deep)
+      end
+    end
+
+    --- trim_reclamations ---
+
+    local mode =
+      c.room_type.trim_mode or c.combo.trim_mode or
+      (not PLAN.deathmatch and c.quest.level_theme.trim_mode) or
+      "guillotine";
+
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+
+      if mode == "prune" then
+        if K.rec  then prune_chunk(K, K.rec)  end
+        if K.rec2 then prune_chunk(K, K.rec2) end
+
+      elseif mode == "rough_hew" then
+        if K.rec  then rough_hew_chunk(K, K.rec)  end
+        if K.rec2 then rough_hew_chunk(K, K.rec2) end
+
+      elseif mode == "guillotine" then
+        if K.rec  then guillotine_chunk(K, K.rec)  end
+        if K.rec2 then guillotine_chunk(K, K.rec2) end
+
+      else
+        error("Unknown trim_mode: " .. tostring(mode))
+      end
+    end end
   end
 
   local function get_vista_coords(c, side, link, other)
@@ -5607,6 +5776,7 @@ function tizzy_up_room(c)
     if B.has_blocker then return false end
     if B.chunk.kind == "void"  then return false end
     if B.chunk.kind == "vista" then return false end
+    if B.chunk.kind == "deathmatch" then return false end
     return true
   end
 
