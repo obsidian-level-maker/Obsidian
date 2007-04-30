@@ -2297,7 +2297,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     end
   end
 
-  local function good_Q_spot(c, bad_side, new_kind)
+  local function good_Q_spot(c, bad_side, purpose)
 
     local function k_dist(kx,ky)
       if bad_side==2 then return ky-1 end
@@ -2317,7 +2317,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
         local N
         for n_side = 2,8,2 do
           K2 = chunk_neighbour(c, K, n_side)
-          if K2 and (K2.kind == "room" or K2.kind == "link") then
+          if K2 and is_roomy(K2) then
             N = K2
             break;
           end
@@ -2327,8 +2327,6 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
           local score = k_dist(kx, ky) * 10
 
           score = score + math.min(K.w, K.h)
-
----###    if K.rmodel.f_h == c.rmodel.f_h then score = score + 0.2 end
 
           -- deadlock breaker...
           score = score + con.random() * 0.1
@@ -2344,7 +2342,8 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     end end
 
     if best_K then
-      best_K.kind = new_kind
+      best_K.kind = "room"
+      best_K.purpose = purpose
       best_K.rmodel = copy_table(best_N.rmodel)
 
       c.q_spot = best_K
@@ -2357,12 +2356,12 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
     if c == PLAN.quests[1].first then
       if PLAN.coop then
-        for kx = 1,3 do for ky = 1,3 do
-          local K = c.chunks[kx][ky]
-          if K.kind == "empty" then 
-             K.kind = "player"
-          end
-        end end
+---###        for kx = 1,3 do for ky = 1,3 do
+---###          local K = c.chunks[kx][ky]
+---###          if K.kind == "empty" then 
+---###             K.kind = "player"
+---###          end
+---###        end end
 
       else -- single player
         good_Q_spot(c, c.exit_dir, "player")
@@ -4567,13 +4566,11 @@ con.printf(" --> average:%1.1f\n", rec.total_blk / rec.long);
     local col_claims = { 0, 0, 0 }
     local row_claims = { 0, 0, 0 }
 
-    local ROOMY_KINDS = { room=1, link=1, player=1, quest=1, }
-
     for pass = 1,2 do
       for kx = 1,3 do for ky = 1,3 do
         local K = c.chunks[kx][ky]
 
-        if ROOMY_KINDS[K.kind] then
+        if is_roomy(K) then
 
           local x_dir = col_dirs[kx]
           local y_dir = row_dirs[ky]
