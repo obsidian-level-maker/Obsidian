@@ -496,6 +496,8 @@ WF_THEMES =
     {
       mutant=6.0, officer=2.0,
     },
+
+    trim_mode = "rough_hew",
   },
 
 --[[

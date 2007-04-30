@@ -1326,6 +1326,7 @@ DM_THEMES =
     space_range  = { 50, 90 },
 
     prefer_stairs = true,
+    trim_mode = "rough_hew",
   },
 
 
@@ -1361,7 +1362,9 @@ DM_THEMES =
     door_probs   = { out_diff=10, combo_diff= 3, normal=1 },
     window_probs = { out_diff=20, combo_diff=30, normal=5 },
     space_range  = { 1, 50 },
+
     prefer_stairs = true,
+    trim_mode = "rough_hew",
   },
 
   HELL =
