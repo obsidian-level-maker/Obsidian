@@ -2484,6 +2484,34 @@ CAGE_MEDIUM_W_LIQUID =
   },
 },
 
+CAGE_NICHE =
+{
+  add_mode="wall",
+  height_range={ 144,999 },
+
+  structure =
+  {
+    "########",
+    "#cccccc#",
+    "#cccccc#",
+    "#cccccc#",
+    "#cccccc#",
+    "#cccccc#",
+    "#cccccc#",
+    "#cccccc#",
+  },
+
+  elements =
+  {
+    c = { f_rel="low_h", f_h=0,
+          c_rel="low_h", c_h=0, c_add="rail_h",
+          l_peg="bottom", u_peg="bottom",
+
+          [2] = { rail="rail_w", impassible=true },
+        },
+  },
+},
+
 
 ------ Corners ------------------------------------
 

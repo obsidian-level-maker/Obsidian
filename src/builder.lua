@@ -6090,7 +6090,9 @@ con.printf("add_object @ (%d,%d)\n", x, y)
       if fab.environment == "outdoor" and not c.combo.outdoor then return end
     end
 
-    local parm = {}
+    local parm = {
+             cage_base_h = c.rmodel.f_h + 64,
+             }
 
     local x, y, dir = find_wallish_loc(c, fab)
 
@@ -6188,6 +6190,7 @@ fab.name, c.x,c.y, x,y,dir)
       "wall_lamp_GREEN_TORCH",
       "wall_lamp_BLUE_TORCH",
       "wall_pic_TV",
+      "cage_niche_MIDGRATE",
     }
 
     local def = GAME.wall_fabs[name]

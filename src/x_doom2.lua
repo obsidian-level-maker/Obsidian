@@ -1417,6 +1417,17 @@ D2_WALL_PREFABS =
     skin = { },
   },
 
+  cage_niche_MIDGRATE =
+  {
+    prefab = "CAGE_NICHE",
+
+    skin =
+    {
+      rail_w = "MIDGRATE",
+      rail_h = 128,
+    }
+  },
+
 }
 
 D2_ROOMS =
