@@ -41,6 +41,11 @@ function dist(x1,y1, x2,y2)
   return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
 end
 
+function low_high(a, b)
+  if b < a then return b, a end
+  return a, b
+end
+
 
 ----====| TABLE UTILITIES |====----
 
