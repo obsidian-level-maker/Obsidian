@@ -509,6 +509,7 @@ function plan_dm_arena()
 
   create_corners()
   create_borders()
+  match_borders_and_corners()
 
   add_windows()
 

@@ -604,9 +604,7 @@ function resize_rooms()
     -- don't make the shrinking cell too small
     local shrinker = sel(dir < 0, c, other)
     if shrinker then
-      local new_w, new_h = get_cell_size(shrinker)
-      new_w, new_h = new_w - mv_x, new_h - mv_y
-
+      local new_w, new_h = shrinker.bw - mv_x, shrinker.bh - mv_y
       local min_size = GAME.cell_min_size
 
       if new_w < min_size or new_h < min_size then return end
@@ -702,7 +700,7 @@ function create_corners()
 
           shared_corners[b_name] =
           {
-            bx=bx, by=by, cells={}
+            bx=bx, by=by, cells={}, borders={}
           }
         end
 
@@ -725,6 +723,7 @@ function create_corners()
           table.insert(CN.cells, c)
         end
       end end
+
     end
   end
 
@@ -865,105 +864,37 @@ C.  l_cell: OK, other: XX
     end
   end
 
---[[ REMOVE OLD CRUD !!!!
-  local function find_mini_border(c)
-
-    for side = 1,9,2 do if side ~= 5 then
-      if not c.border[side] then
-
-        local other = neighbour_by_side(c,side)
-if other then
-        local D = other and other.border[10-side]
-        assert(not D)
-
-        local dx,dy = dir_to_delta(side)
-
-        local cx1,cy1, cx2,cy2 = side_coords(side, c.bx1,c.by1, c.bx2,c.by2)
-
-        cx1, cy1 = cx1+dx, cy1+dy
-        cx2, cy2 = cx2+dx, cy2+dy
-
-
-        if D then
-          assert(D.x2 >= D.x1)
-          assert(D.y2 >= D.y1)
-
-          c.border[side] = D
-          D.cells = { c }
-
-          if other then
-            other.border[10-side] = D
-            table.insert(D.cells, other)
-          end
-        end
-end
-      end -- if not border[]
-    end end -- for + if
-  end
-
-  local function OLD_find_mini_border(c)  -- REMOVE OLD CRUD
-
-    for side = 1,9,2 do if side ~= 5 then
-      if not c.border[side] then
-
-        local other = neighbour_by_side(c,side)
-if other then
-        local D = other and other.border[10-side]
-        assert(not D)
-
-        local dx,dy = dir_to_delta(side)
-
-        local x1,y1 = corner_coords(side, c.bx1,c.by1, c.bx2,c.by2)
-        local x2,y2 = corner_coords(10-side, other.bx1,other.by1, other.bx2,other.by2)
-
-        x1,y1 = x1+dx, y1+dy
-        x2,y2 = x2-dx, y2-dy
-
-con.printf("CORNER PAIR @ (%d,%d):%d  1=(%d,%d)  2=(%d,%d)\n",
-c.x, c.y, side, x1,y1, x2,y2)
-        local diff_x = math.abs(x1-x2)
-        local diff_y = math.abs(y1-y2)
-
-        if (diff_x == 0) and (diff_y >= 2) then
-          D =
-          {
-            x1 = x1, x2 = x1,
-
-            y1 = math.min(y1,y2) + 1,
-            y2 = math.max(y1,y2) - 1,
-          }
-        elseif (diff_y == 0) and (diff_x >= 2) then
-          D =
-          {
-            x1 = math.min(x1,x2) + 1,
-            x2 = math.max(x1,x2) - 1,
-
-            y1 = y1, y2 = y1,
-          }
-        end
-
-        if D then
-          assert(D.x2 >= D.x1)
-          assert(D.y2 >= D.y1)
-
-          c.border[side] = D
-          D.cells = { c }
-
-          if other then
-            other.border[10-side] = D
-            table.insert(D.cells, other)
-          end
-        end
-end
-      end -- if not border[]
-    end end -- for + if
-  end
---]]
-
-  --- create_borders ---
+  ---| create_borders |---
 
   for zzz,c in ipairs(PLAN.all_cells) do
     find_borders(c)
+  end
+
+end
+
+function match_borders_and_corners()
+
+  local function insert_border(c, E, D)
+    for zzz, B in ipairs(E.borders) do
+      if B == D then return end
+    end
+    table.insert(E.borders, D)
+  end
+
+  for zzz,c in ipairs(PLAN.all_cells) do
+    for cnum = 1,9,2 do if cnum ~= 5 then
+      local E = c.corner[cnum]
+
+      if E then
+        for side = 1,9 do if side ~= 5 then
+          local D = c.border[side]
+          if D and boxes_touch_sides(E.bx,E.by,E.bx,E.by, D.x1,D.y1,D.x2,D.y2) then
+            insert_border(c, E, D)
+          end
+        end end
+      end
+          
+    end end
   end
 end
 
@@ -2470,8 +2401,9 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
   create_corners()
   create_borders()
+  match_borders_and_corners()
 
---  add_windows()
+--!!!!  add_windows()
 
   return p
 end
