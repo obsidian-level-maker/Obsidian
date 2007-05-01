@@ -441,16 +441,36 @@ function box_size(x1, y1, x2, y2)
   return (x2-x1+1), (y2-y1+1)
 end
 
+function boxes_overlap(x1,y1,x2,y2,  x3,y3,x4,y4)
+  assert(x2 >= x1 and y2 >= y1)
+  assert(x4 >= x3 and y4 >= y3)
+
+  if x3 > x2 or x4 < x1 then return false end
+  if y3 > y2 or y4 < y1 then return false end
+
+  return true
+end
+
+function boxes_touch_sides(x1,y1,x2,y2,  x3,y3,x4,y4)
+
+  if x3 > x2+1 or x4 < x1-1 then return false end
+  if y3 > y2+1 or y4 < y1-1 then return false end
+
+  if not (x3 > x2+1 or x4 < x1-1) and not (y3 > y2 or y4 < y1)
+  then return true end
+
+  if not (y3 > y2+1 or y4 < y1-1) and not (x3 > x2 or x4 < x1)
+  then return true end
+
+  return false
+end
+
 function get_long_deep(dir, w, h)
   if (dir == 2) or (dir == 8) then
     return w, h
   else
     return h, w
   end
-end
-
-function get_cell_size(c)
-  return (c.bx2 - c.bx1 + 1), (c.by2 - c.by1 + 1)
 end
 
 function side_coords(side, x1,y1, x2,y2)
