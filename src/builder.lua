@@ -826,6 +826,8 @@ function B_vista(src,dest, x1,y1, x2,y2, side, b_combo,kind)
 
   ROOM.light = (src.rmodel.light + dest.rmodel.light) / 2
 
+  ROOM.has_blocker = true
+
   if kind == "solid" then
     local h = rand_index_by_probs { 20, 80, 20, 40 }
 
