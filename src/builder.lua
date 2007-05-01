@@ -2670,7 +2670,10 @@ function setup_borders_and_corners()
 
     E.build = c
     E.combo = border_combo(E.cells)
-    E.kind  = "solid"
+
+    -- determine kind
+
+    E.kind = "solid" --FIXME
   end
 
   --- setup_borders_and_corners ---
@@ -3134,6 +3137,7 @@ arch.f_tex = "TLITE6_6"
       end
     end
 
+    -- solid
     gap_fill(c, E.bx, E.by, E.bx, E.by, { solid=E.combo.wall })
   end
 
@@ -3226,11 +3230,6 @@ arch.f_tex = "TLITE6_6"
     local def2 = GAME.wall_fabs["fence_beam_BLUETORCH"]
     assert(def2)
     local fab2 = non_nil(PREFABS[def2.prefab])
-
----###      local dir = 10-side
----###      if ((dir % 2) == 1) then
----###        dir = sel(x1 == x2, 4, 2)  -- not quite right...
----###      end
 
     for x = x1,x2 do for y = y1,y2 do
       local B = PLAN.blocks[x][y]
@@ -6011,7 +6010,6 @@ function tizzy_up_room(c)
     end
 
     local function passes_height_test(K)
-do return true end --!!!!!!
       if fab.height_range then
         local h = K.rmodel.c_h - K.rmodel.f_h
         if h < fab.height_range[1] or h > fab.height_range[2] then
@@ -6026,7 +6024,7 @@ do return true end --!!!!!!
         for try_dir = 2,8,2 do
           if not dir or try_dir == dir then
             local x, y, mode = wall_test_chunk(c, K, fab, 10-try_dir, kind)
-            if x then return x, y, try_dir, mode end
+            if x then return x, y, try_dir, K, mode end
           end
         end
       end
@@ -6220,14 +6218,14 @@ con.printf("add_object @ (%d,%d)\n", x, y)
              cage_base_h = c.rmodel.f_h + 64,
              }
 
-    local x, y, dir = find_wallish_loc(c, fab)
+    local x, y, dir, K = find_wallish_loc(c, fab)
 
     if not x then return end
 
 con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
   fab.name, c.x, c.y, x, y, dir)
 
-    B_prefab(c, fab, def.skin, parm, c.rmodel or PLAN.blocks[x][y].chunk.rmodel, c.combo, x, y, dir)
+    B_prefab(c, fab, def.skin, parm, K.rmodel, c.combo, x, y, dir)
   end
 
   local function add_deathmatch_exit(c)
