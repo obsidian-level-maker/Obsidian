@@ -5304,7 +5304,7 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
 --con.printf(  "  |-- coord (%d,%d)\n", pos.x, pos.y)
         PLAN.blocks[x][y].on_path = true
-        add_thing(c, x, y, "candle", false)
+--      add_thing(c, x, y, "candle", false)
       end
     end
 
@@ -6158,11 +6158,13 @@ do return true end --!!!!!!
     -- try a vista (FIXME: not good way to do this)
     for side = 2,8,2 do
       local L = c.link[side]
-      if L and L.kind == "vista" and not L.vista_got_obj then
+      if L and L.kind == "vista" and L.vista_src == c and
+         not L.vista_got_obj
+      then
         assert(L.vista_x1)
 
-        x = int((L.vista_x1 + L.vista_x2)/2)
-        y = int((L.vista_y1 + L.vista_y2)/2)
+        x = int((L.vista_x1 + L.vista_x2) / 2)
+        y = int((L.vista_y1 + L.vista_y2) / 2)
         dir = side
 
         L.vista_got_obj = true
@@ -6636,7 +6638,7 @@ function build_rooms()
         gap_fill_block(B)
 
         if B.on_path then
-          add_thing(c, x, y, "candle", false)
+--        add_thing(c, x, y, "candle", false)
         end
       end
     end end
