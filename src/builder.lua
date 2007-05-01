@@ -5408,7 +5408,48 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 end
 
 
-function fill_reclaim_area(c, @@@  x1,y1, x2,y2)
+function fill_reclaim_area(c, K, rec_kind, x1,y1, x2,y2)
+ 
+  if rec_kind == "plain" then
+    -- do nothing, allow GAP_FILL_ROOM to take care of it
+    return
+  end
+
+  if rec_kind == "solid" then
+    gap_fill(c, x1,y1, x2,y2, { solid=c.combo.void })
+    return
+  end
+
+  -- remaining types don't affect the ceiling
+
+  local AREA
+
+  if rec_kind == "fence" then
+
+    -- FIXME: use border[XX].fence_h for nicer joins
+    local fence_h = math.max(c.f_max, other.f_max)+48
+    
+    AREA =
+    {
+      f_h = fence_h,
+      f_tex = c.combo.floor,
+      l_tex = c.combo.wall,
+    }
+
+  elseif rec_kind == "liquid" then
+    AREA =
+    {
+      f_h = K.rmodel.f_h - 8,
+      f_tex = c.quest.liquid.floor,
+      l_tex = c.combo.wall,
+      kind  = c.quest.liquid.sec_kind,
+    }
+
+  else
+    error("void_up_chunk: unknown rec_kind: " .. tostring(K.rec_kind)) 
+  end
+
+  gap_fill(c, x1,y1, x2,y2, AREA, { has_blocker=true })
 end
 
 function build_reclamations(c)
@@ -5416,6 +5457,7 @@ function build_reclamations(c)
 -- debug_with_liquid = true
 -- debug_with_solid  = true
 
+--[[ FIXME incorporate DECORATE into fill_reclaim_area
     local function void_up_chunk(c, K)
 
       --!!!!!! TESTING
@@ -5445,7 +5487,6 @@ function build_reclamations(c)
         FIXME
 
       else
-        error("void_up_chunk: unknown rec_kind: " .. tostring(K.rec_kind)) 
       end
     end
 
@@ -5460,42 +5501,46 @@ function build_reclamations(c)
       [2]="COMPBLUE", [8]="CRACKLE2",
       [4]="SFALL1",   [6]="SKSNAKE1",
     }
+--]]
 
     local function fill_tendril(c, K, rec, pos)
-      local dir = 10-rec.side
-      local dx, dy = dir_to_delta(dir)
-      local ax, ay = dir_to_across(dir)
 
-      local sec
-      if debug_with_liquid then
-        sec = copy_block_with_new(K.rmodel,
-              { f_h=K.rmodel.f_h-8, f_tex=REC_FLATS[rec.side] })
+      if rec.tendrils[pos] > 0 then
+        local dir = 10-rec.side
+        local dx, dy = dir_to_delta(dir)
+        local ax, ay = dir_to_across(dir)
 
-      elseif debug_with_solid then
-        sec = { solid=REC_TEX[rec.side] }
+---###      local sec
+---###      if debug_with_liquid then
+---###        sec = copy_block_with_new(K.rmodel,
+---###              { f_h=K.rmodel.f_h-8, f_tex=REC_FLATS[rec.side] })
+---###
+---###      elseif debug_with_solid then
+---###        sec = { solid=REC_TEX[rec.side] }
+---###
+---###      elseif rec.rec_kind == "solid" then
+---###        sec = { solid=c.combo.void }
+---###
+---###      elseif rec.rec_kind == "fence" then
+---###        FIXME
+---###      end
 
-      elseif rec.rec_kind == "solid" then
-        sec = { solid=c.combo.void }
+        local x1 = rec.x1 + (pos-1)*ax
+        local y1 = rec.y1 + (pos-1)*ay
 
-      elseif rec.rec_kind == "fence" then
-        FIXME
-      end
+        local x2 = x1 + rec.tendrils[pos]*dx
+        local y2 = y1 + rec.tendrils[pos]*dy
 
-      for deep = 1,rec.tendrils[pos] do
-
-        local x = rec.x1 + (pos-1)*ax + (deep-1)*dx
-        local y = rec.y1 + (pos-1)*ay + (deep-1)*dy
-
-        assert(valid_cell_block(c, x, y))
-
-        fill(c, x,y, x,y, sec)
+        fill_reclaim_area(c, K, rec.rec_kind, x1,y1, x2,y2)
       end
     end
+
+    -- build_reclamations --
 
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       if K.kind == "void" then
-        void_up_chunk(c, K)
+        fill_reclaim_area(c, K, K.rec_kind, K.x1,K.y1, K.x2,K.y2)
       else
         if K.rec then
           for pos = 1,K.rec.long do
@@ -5928,7 +5973,7 @@ if rec.total_blk > 0 then return -1 end --!!!!!!
     mark_walkable(c, 3, x+dx, y+dy, x2+dx, y2+dy)
 
     if rec then
-      -- fill the area behind tendrils with c.combo.void
+      -- fill the area behind tendrils
       if best_delta >= fab.deep then
 
         local tx1 = sx1 + best_pos*ax
@@ -5940,9 +5985,7 @@ if rec.total_blk > 0 then return -1 end --!!!!!!
         tx1, tx2 = low_high(tx1, tx2)
         ty1, ty2 = low_high(ty1, ty2)
 
-        --!!!! FIXME: USE FILL_TENDRIL COMMON CODE
-
-        gap_fill(c, tx1,ty1, tx2,ty2, { solid=c.combo.void })
+        fill_reclaim_area(c, K, kind, tx1,ty1, tx2,ty2)
       end
 
       for pos = best_pos+1, best_pos+fab.long do
@@ -6050,7 +6093,7 @@ do return true end --!!!!!!
     local function kind_from_border(D)
       assert(D)
 
-      if liquid_chance() then return "liquid" end
+      if c.quest.liquid and liquid_chance() then return "liquid" end
 
       if D.kind == "fence" then return "fence" end
       if D.kind == "solid" then return "solid" end
