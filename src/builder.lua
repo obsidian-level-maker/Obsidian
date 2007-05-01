@@ -5408,15 +5408,18 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 end
 
 
+function fill_reclaim_area(c, @@@  x1,y1, x2,y2)
+end
+
 function build_reclamations(c)
 
 -- debug_with_liquid = true
-   debug_with_solid  = true
+-- debug_with_solid  = true
 
     local function void_up_chunk(c, K)
 
       --!!!!!! TESTING
-      if c.combo.decorate and not c.scenic and K.kind == "void" and
+      if c.combo.decorate and not c.scenic and K.rec_kind == "solid" and
         (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
         (K.y2 > K.y1 or rand_odds(50)) and
         rand_odds(65)
@@ -5431,8 +5434,18 @@ function build_reclamations(c)
 
       if debug_with_solid then
         gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid="BLAKWAL1" })
-      else
+
+      elseif K.rec_kind == "solid" then
         gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=c.combo.wall })
+
+      elseif K.rec_kind == "fence" then
+        FIXME
+
+      elseif K.rec_kind == "liquid" then
+        FIXME
+
+      else
+        error("void_up_chunk: unknown rec_kind: " .. tostring(K.rec_kind)) 
       end
     end
 
@@ -5461,8 +5474,11 @@ function build_reclamations(c)
       elseif debug_with_solid then
         sec = { solid=REC_TEX[rec.side] }
 
-      else
+      elseif rec.rec_kind == "solid" then
         sec = { solid=c.combo.void }
+
+      elseif rec.rec_kind == "fence" then
+        FIXME
       end
 
       for deep = 1,rec.tendrils[pos] do
@@ -5762,17 +5778,19 @@ function tizzy_up_room(c)
     end
   end
 
-  local function wall_test_chunk(c, K, fab, side)
+  local function wall_test_chunk(c, K, fab, side, kind)
 
     local rec
     if K.rec then
+      if K.rec.rec_kind and K.rec.rec_kind ~= kind then return nil,nil end
+
       if K.rec.side == side then
         rec = K.rec
       elseif K.rec2 and K.rec2.side == side then
         rec = K.rec2
       else
         -- a little harsh (this non-reclaimed side may be usable),
-        -- however it really simplifies the rec management.
+        -- however it simplifies the rec management.
         return nil, nil
       end
     end
@@ -5787,6 +5805,8 @@ function tizzy_up_room(c)
 
 
     if B and B.kind ~= "void" then return nil,nil end
+
+    if B and B.rec_kind and B.rec_kind ~= kind then return nil,nil end
 
     -- one or both of 'rec' and 'B' can be nil.
     -- When 'rec' is nil, it is as though all the tendrils were 0.
@@ -5815,7 +5835,7 @@ function tizzy_up_room(c)
       local rec_min
 
       if rec then
-if rec.total_blk > 0 then return -1 end
+if rec.total_blk > 0 then return -1 end --!!!!!!
         for L = 1,fab.long do
           -- check for already-used parts
           if rec.tendrils[pos+L] < 0 then return -1 end
@@ -5836,7 +5856,10 @@ if rec.total_blk > 0 then return -1 end
         rec_min = 0
       end
 
-      -- here we know the prefab crosses into behind area
+      --| here we know the prefab crosses into behind area
+
+      -- don't eat into different rec_kind
+      if B and B.rec_kind and B.rec_kind ~= kind then return -1 end
 
       local v_deep = fab.deep - rec_min
       assert(v_deep > 0)
@@ -5892,9 +5915,8 @@ if rec.total_blk > 0 then return -1 end
 
     -- found it! now build it...
 
-    -- don't let reclamation be used for liquid (etc)
-    if B then B.is_solid = true end
-    if rec then rec.is_solid = true end
+    if B and not B.rec_kind then B.rec_kind = kind end
+    if rec and not rec.rec_kind then rec.rec_kind = kind end
 
     local x = sx1 + best_pos*ax + best_delta*dx
     local y = sy1 + best_pos*ay + best_delta*dy
@@ -5917,7 +5939,9 @@ if rec.total_blk > 0 then return -1 end
 
         tx1, tx2 = low_high(tx1, tx2)
         ty1, ty2 = low_high(ty1, ty2)
-      
+
+        --!!!! FIXME: USE FILL_TENDRIL COMMON CODE
+
         gap_fill(c, tx1,ty1, tx2,ty2, { solid=c.combo.void })
       end
 
@@ -5945,7 +5969,9 @@ if rec.total_blk > 0 then return -1 end
     end
   end
 
-  local function find_wallish_loc(c, fab, dir, q_spot)
+  local function find_wallish_loc(c, fab, dir, q_spot, kind)
+
+    if not kind then kind = "solid" end
 
     local chunk_list = {}
 
@@ -5980,7 +6006,7 @@ do return true end --!!!!!!
       if passes_height_test(K) then
         for try_dir = 2,8,2 do
           if not dir or try_dir == dir then
-            local x, y, mode = wall_test_chunk(c, K, fab, 10-try_dir)
+            local x, y, mode = wall_test_chunk(c, K, fab, 10-try_dir, kind)
             if x then return x, y, try_dir, mode end
           end
         end
@@ -6013,6 +6039,83 @@ do return true end --!!!!!!
         end
       end
     end end
+  end
+
+  local function decide_reclaim_kinds(c)
+
+    local function liquid_chance()
+      return rand_odds(33)
+    end
+
+    local function kind_from_border(D)
+      assert(D)
+
+      if liquid_chance() then return "liquid" end
+
+      if D.kind == "fence" then return "fence" end
+      if D.kind == "solid" then return "solid" end
+
+      return sel(c.combo.outdoor, "fence", "solid")
+    end
+
+    local function set_void_kind(K)
+      if K.rec_kind then return end
+
+      local SIDES = { 2,4,6,8 }
+      rand_shuffle(SIDES)
+
+      for zzz, side in ipairs(SIDES) do
+        local N = chunk_neighbour(c, K, side)
+        local D = c.border[side]
+        
+        if N and N.rec_kind and rand_odds(50) then
+          K.rec_kind = N.rec_kind
+          return
+
+        elseif not N and D and rand_odds(50) then
+          K.rec_kind = kind_from_border(D)
+          return
+        end
+      end
+
+      K.rec_kind = sel(c.combo.outdoor, "fence", "solid")
+    end
+
+    local function set_rec_kind(K, rec)
+      
+      local B = chunk_neighbour(c, K, rec.side) -- behind chunk
+
+      if B then
+        assert(B.rec_kind)
+        rec.rec_kind = B.rec_kind
+        return
+      end
+
+      local D = c.border[rec.side]
+
+      if D then
+        rec.rec_kind = kind_from_border(D)
+        return
+      end
+
+      rec.rec_kind = "plain"
+    end
+
+    for pass = 1,2 do
+      for kx = 1,3 do for ky = 1,3 do
+        local K = c.chunks[kx][ky]
+
+        if pass == 1 and K.kind == "void" then
+          set_void_kind(K)
+        end
+
+        if pass == 2 and K.rec then
+          set_rec_kind(K, K.rec)
+          -- TODO: allow it to be different
+          if K.rec2 then K.rec2.rec_kind = K.rec.rec_kind end
+        end
+      end end
+    end
   end
 
 
@@ -6381,14 +6484,6 @@ con.debugf("add_scenery : %s\n", item)
     end
   end
 
-  -- WALL STUFF
-  for loop = 1,40 do
-    add_wall_stuff(c)
-  end
-
-  build_reclamations(c)
-
-
   -- PLAYERS
   if not PLAN.deathmatch and c == PLAN.quests[1].first then
     for i = 1,sel(settings.mode == "coop",4,1) do
@@ -6424,6 +6519,17 @@ con.debugf("add_scenery : %s\n", item)
     add_dm_weapon(c)
   end
 
+
+  decide_reclaim_kinds(c)
+
+  -- WALL STUFF
+  for loop = 1,40 do
+    add_wall_stuff(c)
+  end
+
+  build_reclamations(c)
+
+
   -- TODO: 'room switch'
 
   if PLAN.deathmatch then
@@ -6438,7 +6544,7 @@ con.debugf("add_scenery : %s\n", item)
   end
 
   -- SCENERY
-  for loop = 1,1 do
+  for loop = 1,0 do
     add_scenery(c)
   end
 end
