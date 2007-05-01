@@ -4227,13 +4227,12 @@ sel(B.on_path, "YES", "NO"))
       end
     end
 
-    local function try_reclaim_side(K, dir, claims)
+    local function try_reclaim_side(K, dir)
 
       -- Requirements:
       --  (a) start side must be against solid wall or void chunk
       --  (b) never fill chunk completely (leave 1 block free)
       --  (c) never fill over a 'walk' or 'on_path' block
-      --  (d) if surrounded by 3 solids, only try dir towards gap
 
       if K.no_reclaim then return false end
 
@@ -4248,9 +4247,6 @@ sel(B.on_path, "YES", "NO"))
         end
       end
 
---con.printf("TRY_RECLAIM_SIDE @ (%d,%d) [%d,%d] dir:%d\n",
---c.x,c.y, K.kx,K.ky, dir)
-
 -- if c.x==3 and c.y==4 and K.kx==3 and K.ky==3 then
 -- con.printf("\n***************\n");
 -- con.printf("dir:%d count:%d solids=\n%s\n", dir, sol_count, table_to_str(solids))
@@ -4261,23 +4257,7 @@ sel(B.on_path, "YES", "NO"))
 
       if sol_count == 0 then return false end
 
-      if false then --!!!!! sol_count == 3 then
-        local gap_side = (not solids[2] and 2) or
-                         (not solids[4] and 4) or
-                         (not solids[6] and 6) or
-                         (not solids[8] and 8)
-        assert(gap_side)
-        
-        if dir ~= gap_side then
-          return false
-        end
-
-      else -- less than 3 surrounding solids
-
-        if claims > 0 then return false end
-
-        if not solids[10-dir] then return false end
-      end
+      if not solids[10-dir] then return false end
 
       -- OK, direction is valid, now try and grow tendrils
 
@@ -4291,7 +4271,7 @@ sel(B.on_path, "YES", "NO"))
         return false
       end
 
-      -- EXPERIMENTAL: allow 1 horizontal and 1 vertical
+      -- allow 1 horizontal and 1 vertical per chunk
 
       if K.rec and K.rec2 then
         if is_parallel(K.rec.side, rec.side) then
@@ -4338,8 +4318,8 @@ sel(B.on_path, "YES", "NO"))
 
     for pass = 1,2 do
       for kx = 1,3 do for ky = 1,3 do
-        local K = c.chunks[kx][ky]
 
+        local K = c.chunks[kx][ky]
         if is_roomy(K) then
 
           local x_dir = col_dirs[kx]
@@ -4349,14 +4329,19 @@ sel(B.on_path, "YES", "NO"))
             x_dir, y_dir = 10-x_dir, 10-y_dir
           end
 
-          if try_reclaim_side(K, x_dir, sel(pass==1,0,col_claims[kx])) then
-            col_claims[kx] = col_claims[kx] + 1
+          if pass == 1 or col_claims[kx] == 0 then
+            if try_reclaim_side(K, x_dir) then
+              col_claims[kx] = 1
+            end
           end
 
-          if try_reclaim_side(K, y_dir, sel(pass==1,0,row_claims[ky])) then
-            row_claims[ky] = row_claims[ky] + 1
+          if pass == 1 or row_claims[ky] == 0 then
+            if try_reclaim_side(K, y_dir) then
+              row_claims[ky] = 1
+            end
           end
         end
+
       end end  -- for kx for ky
     end -- for pass
   end
@@ -6169,7 +6154,9 @@ do return true end --!!!!!!
 
         L.vista_got_obj = true
 
-        add_thing(c, x, y, name, true)
+        -- TODO: pedestal for player thing
+
+        add_thing(c, x, y, name, true, dir_to_angle(side))
         return
       end
     end
