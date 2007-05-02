@@ -2657,9 +2657,9 @@ function setup_borders_and_corners()
       if GAME.caps.rails and rand_odds(33) and (side%2)==0 then
         D.kind = "wire"
         D.wire_h = D.fence_h + rand_sel(35, 0, 48)
-      else
-        D.fence_h = D.fence_h + 48 + 16*rand_irange(0,2)
       end
+
+      D.fence_h = D.fence_h + 48 + 16*rand_irange(0,2)
     end
   end
 
@@ -2725,8 +2725,8 @@ function setup_borders_and_corners()
         else fence_h = math.max(fence_h, D.fence_h)
         end
       elseif D and D.kind == "wire" then
-        if not fence_h then fence_h = D.fence_h+48
-        else fence_h = math.max(fence_h, D.fence_h+48)
+        if not fence_h then fence_h = D.fence_h
+        else fence_h = math.max(fence_h, D.fence_h)
         end
       end
     end
@@ -2912,11 +2912,64 @@ function build_borders()
     con.debugf("BUILT BLOCK DOOR @ (%d,%d)\n", link.x1, link.y1)
   end
 
+  local function build_arch(link, side)
+
+    local D = c.border[side]
+
+    -- FIXME: use entries from GAME.wall_fabs[]
+    local name
+
+    if D.kind == "fence" then
+      name = "ARCH_FENCE"
+    elseif D.kind == "wire" then
+      name = "ARCH_WIRE_FENCE"
+    else
+      name = "ARCH"
+    end
+
+    -- rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
+
+    if link.long <= 2 then name = name .. "_NARROW" end
+    if link.long >= 5 then name = name .. "_WIDE" end
+
+    local fab = PREFABS[name]
+    if not fab then error("Missing arch prefab: " .. name) end
+
+    local parm =
+    {
+      door_top = math.min(link.build.rmodel.c_h-32, link.build.floor_h+128),
+--##  door_kind = 1, tag = 0,
+
+      frame_c = D.combo.floor,
+    }
+
+    if D.kind == "fence" then
+      parm.low_h = D.fence_h
+    elseif D.kind == "wire" then
+      parm.low_h = D.wire_h
+    end
+
+    local skin =
+    {
+      --  wall="ROCK1", ceil="RROCK13", -- floor="RROCK13",
+      beam_w = "METAL", beam_f = "CEIL5_1",
+      beam_h = 72,
+    }
+
+    if link.kind == "vista" then
+      skin.floor = link.vista_src.rmodel.f_tex
+    end
+
+    B_prefab(c, fab, skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
+  end
+
+
   local function build_real_link(link, side, double_who)
 
     local D = c.border[side]
     assert(D)
 
+--FIXME: tidy this up (build elevator _inside_ exit room)
 if GAME.caps.elevator_exits and link.is_exit then
 local other = link_other(link, c)
 B_exit_elevator(other, link.x1, link.y1, side)
@@ -2926,7 +2979,7 @@ end
     if GAME.caps.blocky_doors then
 
       if link.kind == "door" then
-        blocky_door( link, side, double_who )
+        blocky_door(link, side, double_who)
         return
       end
 
@@ -2939,35 +2992,13 @@ end
     end
 
     if link.kind == "door" then
-      build_door( link, side )
+      build_door(link, side)
       return
     end
 
-if true then
-local fab = "ARCH" -- rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
-if link.long <= 2 then fab = "ARCH_NARROW" end
-fab = PREFABS[fab]
-assert(fab)
-local parm =
-{
-  door_top = math.min(link.build.rmodel.c_h-32, link.build.floor_h+128),
-  door_kind = 1, tag = 0,
+    build_arch(link, side)
 
-  frame_c = D.combo.floor
-}
-local skin =
-{
---  wall="ROCK1", ceil="RROCK13", -- floor="RROCK13",
-  beam_w  = "WOOD1", beam_c = "FLAT5_2",
-}
-if link.kind == "vista" then
-  skin.floor = link.vista_src.rmodel.f_tex
-end
-
-B_prefab(c, fab, skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
-return
-end
-
+    do return end
 
 do
 gap_fill(c, link.x1, link.y1, link.x2, link.y2,

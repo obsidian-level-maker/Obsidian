@@ -236,7 +236,7 @@ ARCH_FENCE =
 
     f = { f_h=0, f_rel="low_h", },
 
-    B = { f_h=24, f_rel="low_h", f_add="beam_h",
+    B = { f_h=16, f_rel="low_h", f_add="beam_h",
           l_tex="beam_w", f_tex="beam_f", l_peg="top"
         },
   },
