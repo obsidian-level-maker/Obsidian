@@ -1354,6 +1354,18 @@ D2_SCENERY_PREFABS =
 
 D2_WALL_PREFABS =
 {
+  arch_fence =
+  {
+    prefab = "ARCH_FENCE",
+    skin = {},
+  },
+ 
+  arch_wire_fence =
+  {
+    prefab = "ARCH_WIRE_FENCE",
+    skin = {},
+  },
+ 
   fence_MIDBARS3 =
   {
     prefab = "FENCE_RAIL",

@@ -212,6 +212,102 @@ ARCH_CURVY =
 },
 
 
+ARCH_FENCE =
+{
+  environment="outdoor",
+
+  structure =
+  {
+    "fed......def",
+    "fed......def",
+    "fed......def",
+    "fed......def",
+  },
+
+  elements =
+  {
+    c = { f_h= 8, f_rel="floor_h" },
+    d = { f_h=16, f_rel="floor_h" },
+
+    e = { f_h=32, f_rel="floor_h",
+          [4] = { impassible=true },
+          [6] = { impassible=true },
+        },
+
+    f = { f_h=0, f_rel="low_h", },
+
+    B = { f_h=24, f_rel="low_h", f_add="beam_h",
+          l_tex="beam_w", f_tex="beam_f", l_peg="top"
+        },
+  },
+},
+
+ARCH_FENCE_NARROW =
+{
+  copy="ARCH_FENCE",
+
+  structure =
+  {
+    "fe....ef",
+    "fe....ef",
+    "fe....ef",
+    "fe....ef",
+  },
+},
+
+ARCH_FENCE_WIDE =
+{
+  copy="ARCH_FENCE",
+
+  structure =
+  {
+    "feddcc........ccddef",
+    "feddcc........ccddef",
+    "feddcc........ccddef",
+    "feddcc........ccddef",
+  },
+},
+
+ARCH_WIRE_FENCE =
+{
+  copy="ARCH_FENCE",
+
+  structure =
+  {
+    "f..........f",
+    "BB........BB",
+    "BB........BB",
+    "f..........f",
+  },
+},
+
+ARCH_WIRE_FENCE_NARROW =
+{
+  copy="ARCH_FENCE",
+
+  structure =
+  {
+    "f......f",
+    "BB....BB",
+    "BB....BB",
+    "f......f",
+  },
+},
+
+ARCH_WIRE_FENCE_WIDE =
+{
+  copy="ARCH_FENCE",
+
+  structure =
+  {
+    "f..................f",
+    "BB................BB",
+    "BB................BB",
+    "f..................f",
+  },
+},
+
+
 ------ Windows ------------------------------------
 
 WINDOW_NARROW =
