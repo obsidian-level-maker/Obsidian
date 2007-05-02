@@ -59,6 +59,8 @@ HC_COMBOS =
     ceil = "FLOOR11",
 
     scenery = "wall_torch",
+
+    theme_probs = { CITY=20 },
   },
 
   BLOCK =
@@ -73,6 +75,8 @@ HC_COMBOS =
     ceil = "FLOOR03",
 
     scenery = "barrel",
+
+    theme_probs = { CITY=20 },
   },
 
   MOSSY =
@@ -87,6 +91,8 @@ HC_COMBOS =
     ceil  = "FLOOR04",
 
     scenery = "chandelier",
+
+    theme_probs = { CITY=20 },
   },
 
   WOOD =
@@ -100,6 +106,8 @@ HC_COMBOS =
     ceil  = "FLOOR12",
 
     scenery = "hang_skull_1",
+
+    theme_probs = { CITY=20 },
   },
 
   HUT =
@@ -113,6 +121,8 @@ HC_COMBOS =
     ceil  = "FLOOR11",
 
     scenery = "barrel",
+
+    theme_probs = { CITY=20 },
   },
 
 
@@ -145,6 +155,8 @@ HC_COMBOS =
     ceil  = "FLOOR17",
 
     scenery = "fire_brazier",
+
+    theme_probs = { CITY=20 },
   },
   
   WATERY =
@@ -157,6 +169,8 @@ HC_COMBOS =
 
     floor = "FLTWAWA1",
     ceil  = "FLOOR27",
+
+    theme_probs = { CITY=20 },
   },
 
   SANDY =
@@ -172,6 +186,8 @@ HC_COMBOS =
     ceil  = "FLOOR27",
 
     scenery = "small_pillar",
+
+    theme_probs = { CITY=20 },
   },
   
 }
@@ -288,13 +304,50 @@ HC_LIQUIDS =
 
 HC_SWITCHES =
 {
-  sw_rock = { wall="RCKSNMUD", switch="SW1OFF" },
+---##  sw_rock = { wall="RCKSNMUD", switch="SW1OFF" },
+
+  sw_rock =
+  {
+    switch =
+    {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1OFF", wall="RCKSNMUD", kind=103,
+      }
+    },
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        door_w="DMNMSK", door_c="FLOOR10",
+        key_w="RCKSNMUD",
+
+---     step_w="STEP1",  track_w="DOORTRAK",
+---     frame_f="FLAT1", frame_c="FLAT1",
+      }
+    },
+  },
 }
 
 HC_DOORS =
 {
+  d_demon = { prefab="DOOR", w=128, h=128,
+
+               skin =
+               {
+                 door_w="DMNMSK", door_c="FLOOR10",
+                 track_w="METL2",
+---              lite_w="LITE5", step_w="STEP1",
+---              frame_f="FLAT1", frame_c="TLITE6_6",
+               }
+             },
+  
   d_wood   = { wall="DOORWOOD", w=64,  h=128, ceil="FLOOR10" },
-  d_demon  = { wall="DMNMSK",   w=128, h=128 },
+  
 --  d_stone  = { wall="DOORSTON", w=64,  h=128 },
 }
 
@@ -416,6 +469,39 @@ HC_SECRET_LEVELS =
   { leave="E3M4", enter="E3M9", kind="normal" },
 }
 
+HC_ROOMS =
+{
+  PLAIN =
+  {
+  },
+
+  HALLWAY =
+  {
+    room_heights = { [96]=50, [128]=50 },
+    door_probs   = { out_diff=75, combo_diff=50, normal=5 },
+    window_probs = { out_diff=1, combo_diff=1, normal=1 },
+    space_range  = { 20, 65 },
+  },
+ 
+  SCENIC =
+  {
+  },
+
+  -- TODO: check in-game level names for ideas
+}
+
+HC_THEMES =
+{
+  CITY =
+  {
+    prob = 50,
+
+    room_probs=
+    {
+      PLAIN=50,
+    },
+  },
+}
 
 ------------------------------------------------------------
 
@@ -603,8 +689,8 @@ HC_PICKUPS =
 
 HC_NICENESS =
 {
-  w1 = { weapon="crossbow",  quest=1, odds=70, always=true  },
-  w2 = { weapon="gauntlets", quest=3, odds=20, always=false },
+  w1 = { weapon="crossbow",  quest=1, prob=70, always=true  },
+  w2 = { weapon="gauntlets", quest=3, prob=20, always=false },
 
   p1 = { pickup="shield1", prob=2.0 },
   p2 = { pickup="shield2", prob=0.7 },
@@ -696,6 +782,9 @@ GAME_FACTORIES["heretic"] = function()
     exits     = HC_EXITS,
     hallways  = HC_HALLWAYS,
 
+    rooms     = HC_ROOMS,
+    themes    = HC_THEMES,
+
     hangs     = HC_OVERHANGS,
     pedestals = HC_PEDESTALS,
     mats      = HC_MATS,
@@ -711,9 +800,12 @@ GAME_FACTORIES["heretic"] = function()
     lights    = HC_LIGHTS,
     wall_lights = HC_WALL_LIGHTS,
 
+    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
+    space_range  = { 20, 90 },
+    
     diff_probs = { [0]=20, [16]=40, [32]=80, [64]=30, [96]=5 },
     bump_probs = { [0]=30, [16]=30, [32]=20, [64]=5 },
-    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
+    
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
     window_probs = { out_diff=80, combo_diff=50, normal=30 },
   }

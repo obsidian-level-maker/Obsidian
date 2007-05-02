@@ -89,6 +89,8 @@ XN_COMBOS =
     ceil = "F_014",
 
     scenery = "brass_brazier",
+
+    theme_probs = { CITY=20 },
   },
 
   ICY =
@@ -103,6 +105,8 @@ XN_COMBOS =
     ceil  = "F_009",
 
     bad_liquid = "lava",
+
+    theme_probs = { ICE=80 },
   },
 
   FIREY =
@@ -117,9 +121,11 @@ XN_COMBOS =
     ceil  = "F_032",
 
     good_liquid = "lava",
+
+    theme_probs = { CITY=20 },
   },
 
-  CAVE =
+  CAVEY =
   {
     mat_pri = 2,
 
@@ -130,6 +136,8 @@ XN_COMBOS =
     ceil  = "F_040",
 
     scenery = "stal_pillar",
+
+    theme_probs = { CAVE=70 },
   },
 
   ---- OUTDOOR ------------
@@ -146,6 +154,8 @@ XN_COMBOS =
     ceil  = "F_019",
 
     scenery = "short_statue",
+
+    theme_probs = { CITY=20 },
   },
   
   STONY =
@@ -160,6 +170,8 @@ XN_COMBOS =
     ceil  = "F_007",
 
     scenery = "lean_tree_L",
+
+    theme_probs = { CITY=20 },
   },
 }
 
@@ -277,17 +289,57 @@ XN_LIQUIDS =
 
 XN_SWITCHES =
 {
-  sw_rock = { wall="STEEL06", switch="SW_1_UP" },
+---###  sw_rock = { wall="STEEL06", switch="SW_1_UP" },
+
+  sw_rock =
+  {
+    switch =
+    {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW_1_UP", wall="STEEL06", kind=103,
+      }
+    },
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        door_w="BRASS1", door_c="F_009",
+        key_w="STEEL06",
+
+---     step_w="STEP1",  track_w="DOORTRAK",
+---     frame_f="FLAT1", frame_c="FLAT1",
+      }
+    },
+  },
 }
 
 XN_DOORS =
 {
+  d_big2   = { prefab="DOOR", w=128, h=128,
+
+               skin =
+               {
+                 door_w="DOOR51", door_c="F_009",
+                 track_w="STEEL08",
+---              lite_w="LITE5", step_w="STEP1",
+---              frame_f="FLAT1", frame_c="TLITE6_6",
+               }
+             },
+
+--[[ !!!!!
   d_big    = { wall="DOOR51",   w=128, h=128 },
   d_brass1 = { wall="BRASS1",   w=128, h=128 },
   d_brass2 = { wall="D_BRASS2", w=64,  h=128 },
 
   d_wood1  = { wall="D_WD07",   w=128, h=128 },
   d_wood2  = { wall="D_WD08",   w=64,  h=128 },
+--]]
+
   d_wood3  = { wall="D_WD10",   w=64,  h=128 },
 }
 
@@ -409,6 +461,61 @@ XN_QUESTS = --FIXME
     ex_stone=50
   }
 }
+
+XN_ROOMS =
+{
+  PLAIN =
+  {
+  },
+
+  HALLWAY =
+  {
+    room_heights = { [96]=50, [128]=50 },
+    door_probs   = { out_diff=75, combo_diff=50, normal=5 },
+    window_probs = { out_diff=1, combo_diff=1, normal=1 },
+    space_range  = { 20, 65 },
+  },
+ 
+  SCENIC =
+  {
+  },
+
+  -- TODO: check in-game level names for ideas
+}
+
+XN_THEMES =
+{
+  CITY =
+  {
+    prob = 50,
+
+    room_probs=
+    {
+      PLAIN=50,
+    },
+  },
+
+  CAVE =
+  {
+    prob = 30,
+
+    room_probs=
+    {
+      PLAIN=50,
+    },
+  },
+
+  ICE =
+  {
+    prob = 20,
+
+    room_probs=
+    {
+      PLAIN=50,
+    },
+  },
+}
+
 
 
 ------------------------------------------------------------
@@ -714,6 +821,9 @@ GAME_FACTORIES["hexen"] = function()
     exits     = XN_EXITS,
     hallways  = XN_HALLWAYS,
 
+    rooms     = XN_ROOMS,
+    themes    = XN_THEMES,
+
     hangs     = XN_OVERHANGS,
     pedestals = XN_PEDESTALS,
     mats      = XN_MATS,
@@ -729,9 +839,12 @@ GAME_FACTORIES["hexen"] = function()
     lights    = XN_LIGHTS,
     wall_lights = XN_WALL_LIGHTS,
 
+    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
+    space_range  = { 20, 90 },
+    
     diff_probs = { [0]=20, [16]=40, [32]=80, [64]=30, [96]=5 },
     bump_probs = { [0]=30, [16]=30, [32]=20, [64]=5 },
-    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
+    
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
     window_probs = { out_diff=80, combo_diff=50, normal=30 },
   }
