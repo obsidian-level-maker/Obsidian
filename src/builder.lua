@@ -1083,6 +1083,58 @@ function mark_walkable(c, walk, x1,y1, x2,y2)
   end end
 end
 
+function shrink_tendril(rec, pos)
+  assert(rec.tendrils[pos] >= 1)
+
+  rec.tendrils[pos] = rec.tendrils[pos] - 1
+  rec.total_blk = rec.total_blk - 1
+end
+
+function limit_tendril(rec, pos, deep)
+  if rec.tendrils[pos] > deep then
+    rec.total_blk = rec.total_blk - (rec.tendrils[pos] - deep)
+    rec.tendrils[pos] = deep
+  end
+end
+
+function clip_reclaim_by_bbox(rec, x1,y1, x2,y2)
+  local side = rec.side
+  local deep
+
+      if side == 2 then if y2 < rec.y1 then return else deep = y1 - rec.y1 end
+  elseif side == 4 then if x2 < rec.x1 then return else deep = x1 - rec.x1 end
+  elseif side == 8 then if y1 > rec.y1 then return else deep = rec.y1 - y2 end
+  elseif side == 6 then if x1 > rec.x1 then return else deep = rec.x1 - x2 end
+  end
+
+  deep = math.max(0, deep)
+
+  local p1, p2 = 1, rec.long
+
+  if (side == 2 or side == 8) then
+    if x1 > rec.x2 or x2 < rec.x1 then return end
+    
+    p1 = math.max(p1, x1 - rec.x1 + 1)
+    p2 = math.min(p2, x2 - rec.x1 + 1)
+  else
+    if y1 > rec.y2 or y2 < rec.y1 then return end
+    
+    p1 = math.max(p1, y1 - rec.y1 + 1)
+    p2 = math.min(p2, y2 - rec.y1 + 1)
+  end
+
+if p1>p2 then
+con.printf("p_range:%d..%d  rec:(%d,%d)..(%d,%d) side:%d\n", p1,p2,
+rec.x1,rec.y1, rec.x2,rec.y2, rec.side)
+con.printf("BBOX:(%d,%d)..(%d,%d)\n", x1,y1, x2,y2)
+end
+  assert(p1 <= p2)
+
+  for pos = p1, p2 do
+    limit_tendril(rec, pos, deep)
+  end
+end
+
 function tendril_min_max(rec)
   local t_min = 9999
   local t_max = 0
@@ -2857,7 +2909,7 @@ function build_borders()
       }
 
     elseif link.is_exit then
-      door_info = GAME.key_doors["ex_tech"]
+      door_info = GAME.key_doors["ex_tech"] --!!!!! FIXME: H/H
 
       parm =
       {
@@ -3515,38 +3567,8 @@ arch.f_tex = "TLITE6_6"
       build_sky_border(D.side, x1,y1, x2,y2)
     end
 
-    -- other solid
+    -- otherwise solid
     gap_fill(c, x1,y1, x2,y2, { solid=b_combo.wall })
-
-      -- handle the corner (check adjacent side)
---[[ FIXME !!!!! "sky"
-      for cr = 1,2 do
-        local nb_side = 2
-        if side == 2 or side == 8 then nb_side = 4 end
-        if cr == 2 then nb_side = 10 - nb_side end
-
-        local NB = neighbour_by_side(c, nb_side)
-
-        local cx, cy = corn_x1, corn_y1
-        if cr == 2 then cx, cy = corn_x2, corn_y2 end
-
-        if NB then
-          local NB_link = NB.link[side]
-          local NB_other = neighbour_by_side(NB, side)
-
-          if false then --!!!!! FIXME what_border_type(NB, NB_link, NB_other, side) == "sky" then
-            build_sky_border(side, cx, cy, cx, cy)
-          end
-        else
-          local wx, wy
-
-          if cx < BW/2 then wx = FW else wx = 1 end
-          if cy < BH/2 then wy = FH else wy = 1 end
-
-          build_sky_corner(cx, cy, wx, wy)
-        end
-      end
---]]
   end
 
   local function build_one_corner(side)
@@ -4405,6 +4427,41 @@ sel(B.on_path, "YES", "NO"))
       return true --SUCCESS--
     end
 
+    local function normalize_reclaims(K)
+      if K.rec and K.rec2 then
+
+        local R_good = K.rec
+        local R_clip = K.rec2
+
+        if (R_clip.total_blk > R_good.total_blk) or
+           (R_clip.total_blk == R_good.total_blk and
+            R_clip.long > R_good.long)
+        then
+          R_clip,R_good = R_good,R_clip
+        end
+
+        local dx, dy = dir_to_delta(10-R_good.side)
+        local ax, ay = dir_to_across(10-R_good.side)
+
+        for pos = 1, R_good.long do
+          local T = R_good.tendrils[pos]
+          if T > 0 then
+            local x1 = R_good.x1 + (pos-1)*ax
+            local y1 = R_good.y1 + (pos-1)*ay
+
+            -- Note: one block extra (prevent two corners closing off)
+            local x2 = x1 + (T+0)*dx
+            local y2 = y1 + (T+0)*dy
+
+            x1,x2 = low_high(x1,x2)
+            y1,y2 = low_high(y1,y2)
+
+            clip_reclaim_by_bbox(R_clip, x1,y1, x2,y2)
+          end
+        end 
+      end
+    end
+
     --== reclaim_areas_==--
 
     -- choose reclaim direction for rows and columns.
@@ -4455,23 +4512,15 @@ sel(B.on_path, "YES", "NO"))
 
       end end  -- for kx for ky
     end -- for pass
+
+    -- fix up reclaims that overlap each other   
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      normalize_reclaims(K)
+    end end
   end
 
   local function trim_reclamations(c)
-
-    local function shrink_tendril(rec, pos)
-      assert(rec.tendrils[pos] >= 1)
-
-      rec.tendrils[pos] = rec.tendrils[pos] - 1
-      rec.total_blk = rec.total_blk - 1
-    end
-
-    local function limit_tendril(rec, pos, deep)
-      if rec.tendrils[pos] > deep then
-        rec.total_blk = rec.total_blk - (rec.tendrils[pos] - deep)
-        rec.tendrils[pos] = deep
-      end
-    end
 
     local function cut_tall_poppy(rec)
       return false --FAIL--
@@ -5597,16 +5646,19 @@ function build_reclamations(c)
         [4]="SFALL1",   [6]="SKSNAKE1",
       }
 
-      if rec.tendrils[pos] > 0 then
-        local dir = 10-rec.side
-        local dx, dy = dir_to_delta(dir)
-        local ax, ay = dir_to_across(dir)
+      local dir = 10-rec.side
+      local dx, dy = dir_to_delta(dir)
+      local ax, ay = dir_to_across(dir)
 
+      local T = rec.tendrils[pos]
+      if T > 0 then
         local x1 = rec.x1 + (pos-1)*ax
         local y1 = rec.y1 + (pos-1)*ay
+        local x2 = x1 + (T-1)*dx
+        local y2 = y1 + (T-1)*dy
 
-        local x2 = x1 + (rec.tendrils[pos]-1)*dx
-        local y2 = y1 + (rec.tendrils[pos]-1)*dy
+        x1,x2 = low_high(x1,x2)
+        y1,y2 = low_high(y1,y2)
 
         if debug_with_solid then
           gap_fill(c, x1,y1, x2,y2, { solid=REC_TEX[rec.side] })
@@ -6618,7 +6670,7 @@ con.debugf("add_scenery : %s\n", item)
   decide_reclaim_kinds(c)
 
   -- WALL STUFF
-  for loop = 1,4 do
+  for loop = 1,0 do
     add_wall_stuff(c)
   end
 
