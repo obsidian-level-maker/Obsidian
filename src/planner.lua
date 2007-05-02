@@ -874,27 +874,40 @@ end
 
 function match_borders_and_corners()
 
-  local function insert_border(c, E, D)
-    for zzz, B in ipairs(E.borders) do
-      if B == D then return end
+---###  local function insert_border(c, E, D)
+---###    for zzz, B in ipairs(E.borders) do
+---###      if B == D then return end
+---###    end
+---###    table.insert(E.borders, D)
+---###  end
+
+  local function try_add_border(c, E, D)
+    
+    if D.y1 == E.by and D.y2 == E.by then
+
+      if D.x1 == E.bx+1 then E.borders[6] = D end
+      if D.x2 == E.bx-1 then E.borders[4] = D end
+      
+    elseif D.x1 == E.bx and D.x2 == E.bx then
+
+      if D.y1 == E.by+1 then E.borders[8] = D end
+      if D.y2 == E.by-1 then E.borders[2] = D end
     end
-    table.insert(E.borders, D)
   end
 
   for zzz,c in ipairs(PLAN.all_cells) do
-    for cnum = 1,9,2 do if cnum ~= 5 then
+    for cnum = 1,9,2 do
       local E = c.corner[cnum]
-
       if E then
-        for side = 1,9 do if side ~= 5 then
+        for side = 1,9 do
           local D = c.border[side]
-          if D and boxes_touch_sides(E.bx,E.by,E.bx,E.by, D.x1,D.y1,D.x2,D.y2) then
-            insert_border(c, E, D)
-          end
-        end end
+          if D then try_add_border(c, E, D) end
+---###          if D and boxes_touch_sides(E.bx,E.by,E.bx,E.by, D.x1,D.y1,D.x2,D.y2) then
+---###            insert_border(c, E, D)
+---###          end
+        end
       end
-          
-    end end
+    end
   end
 end
 
