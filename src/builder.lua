@@ -2656,7 +2656,7 @@ function setup_borders_and_corners()
       -- Wire fences
       if GAME.caps.rails and rand_odds(33) and (side%2)==0 then
         D.kind = "wire"
-        if rand_odds(35) then D.fence_h = D.fence_h + 48 end
+        D.wire_h = D.fence_h + rand_sel(35, 0, 48)
       else
         D.fence_h = D.fence_h + 48 + 16*rand_irange(0,2)
       end
@@ -2668,21 +2668,87 @@ function setup_borders_and_corners()
     local E = c.corner[side]
     if E.build then return end -- already done
 
+--local touches_it
+--for zzz,foo in ipairs(E.cells) do
+--if foo.x==3 and foo.y==2 then touches_it = true end
+--end
+--if touches_it then
+--con.printf("\n\n\nCORNERS @ (%d,%d)\n", c.x,c.y)
+--con.printf("[%d] =\n%s\n", side, table_to_str(E, 3))
+--con.printf("----\n")
+--end
+
     E.build = c
     E.combo = border_combo(E.cells)
 
-    -- determine kind
+    -- determine corner kind
 
-    E.kind = "solid" --FIXME
+    local outies = 0
+    local total  = 0
+    local fence_h
+
+    -- firstly, check for sky borders
+    for dir = 2,8,2 do
+      local D = E.borders[dir]
+
+      if D and (D.kind == "solid" or D.kind == "window") then
+        E.kind = "solid"
+        E.combo = D.combo
+        return
+      end
+
+      local rot = rotate_cw90(dir)
+      if not E.borders[10-dir] and
+         (E.borders[rot] and E.borders[rot].kind == "sky") and
+         (E.borders[10-rot] and E.borders[10-rot].kind == "sky")
+      then
+        E.kind = "sky_border"
+        E.sky_dir = dir
+        if D then E.combo = D.combo end
+        return
+      end
+
+      if not E.borders[10-dir] and not E.borders[10-rot] and
+         (E.borders[dir] and E.borders[dir].kind == "sky") and
+         (E.borders[rot] and E.borders[rot].kind == "sky")
+      then
+        E.kind = "sky_corner"
+        E.sky_dir = dir
+        return
+      end
+
+      if D then total = total + 1 end
+      if D and D.combo.outdoor then outies = outies + 1 end
+
+      if D and D.kind == "fence" then
+        if not fence_h then fence_h = D.fence_h
+        else fence_h = math.max(fence_h, D.fence_h)
+        end
+      elseif D and D.kind == "wire" then
+        if not fence_h then fence_h = D.fence_h+48
+        else fence_h = math.max(fence_h, D.fence_h+48)
+        end
+      end
+    end
+
+    if outies > 0 and outies == total and fence_h then
+      E.kind = "fence"
+      E.fence_h = fence_h
+      return
+    end
+
+    E.kind = "solid"
   end
 
   --- setup_borders_and_corners ---
 
   for zzz,c in ipairs(PLAN.all_cells) do
-
     for side = 1,9 do
       if c.border[side] then init_border(c, side) end
     end
+  end
+
+  for zzz,c in ipairs(PLAN.all_cells) do
     for side = 1,9,2 do
       if c.corner[side] then init_corner(c, side) end
     end
@@ -3103,44 +3169,6 @@ arch.f_tex = "TLITE6_6"
     end
   end
 
-  local function build_corner(side)
-
-    local E = c.corner[side]
-    if not E then return end
-    if E.build ~= c then return end
-
-    -- handle outside corners
-    local out_num = 0
-    local f_max = -99999
-
-    for zzz,c in ipairs(E.cells) do
-      if c.combo.outdoor then out_num = out_num + 1 end
-      f_max = math.max(c.f_max, f_max)
-    end
-
-    -- FIXME: determine corner_kind (like border_kind)
-    if E.kind == "sky" then
-
-      local CORN = copy_block_with_new(E.cells[1].rmodel,
-      {
-        f_h = f_max + 64,
-        f_tex = E.combo.floor,
-        l_tex = E.combo.wall,
-      })
-
-      -- crappy substitute to using a real sky corner
-      if out_num < 4 then CORN.c_h = CORN.f_h + 1 end
-
-      if CORN.f_h < CORN.c_h then
-        gap_fill(c, E.bx, E.by, E.bx, E.by, CORN)
-        return
-      end
-    end
-
-    -- solid
-    gap_fill(c, E.bx, E.by, E.bx, E.by, { solid=E.combo.wall })
-  end
-
   local function build_sky_border(side, x1,y1, x2,y2)
 
     local WALL =
@@ -3186,7 +3214,10 @@ arch.f_tex = "TLITE6_6"
     end end
   end
 
-  local function build_sky_corner(x, y, wx, wy)
+  local function build_sky_corner(side, x, y)
+    
+    local wx = sel(side==2 or side==4, 1, FW)
+    local wy = sel(side==2 or side==6, 1, FH)
 
     local WALL =
     {
@@ -3219,12 +3250,13 @@ arch.f_tex = "TLITE6_6"
   local function build_wire_fence(side, x1,y1, x2,y2, other, b_combo)
 
     local D = c.border[side]
+    assert(D.wire_h)
 
     local def = GAME.wall_fabs["fence_MIDBARS3"] -- FIXME: not hard-code
     assert(def)
 
     local fab = non_nil(PREFABS[def.prefab])
-    local parm = { low_h = D.fence_h }
+    local parm = { low_h = D.wire_h }
 
     -- Experimental shite
     local def2 = GAME.wall_fabs["fence_beam_BLUETORCH"]
@@ -3245,15 +3277,14 @@ arch.f_tex = "TLITE6_6"
     -- FIXME: sound blocking
   end
 
-  local function build_fence(side, x1,y1, x2,y2, other, b_combo)
-
-    local D = c.border[side]
+  local function build_fence(x1,y1, x2,y2, other, b_combo, fence_h)
+    assert(fence_h)
 
     -- FIXME: "castley" fences
 
     local FENCE = copy_block_with_new(c.rmodel,
     {
-      f_h = D.fence_h,
+      f_h = fence_h,
       f_tex = b_combo.floor,
       l_tex = b_combo.void,
     })
@@ -3441,7 +3472,7 @@ arch.f_tex = "TLITE6_6"
     local x1,y1, x2,y2 = D.x1, D.y1, D.x2, D.y2
 
     if D.kind == "fence" then
-      build_fence(side, x1,y1, x2,y2, other, b_combo)
+      build_fence(x1,y1, x2,y2, other, b_combo, D.fence_h)
 
     elseif D.kind == "wire" then
       build_wire_fence(side, x1,y1, x2,y2, other, b_combo)
@@ -3453,7 +3484,7 @@ arch.f_tex = "TLITE6_6"
       build_sky_border(D.side, x1,y1, x2,y2)
     end
 
-    -- solid
+    -- other solid
     gap_fill(c, x1,y1, x2,y2, { solid=b_combo.wall })
 
       -- handle the corner (check adjacent side)
@@ -3487,6 +3518,54 @@ arch.f_tex = "TLITE6_6"
 --]]
   end
 
+  local function build_one_corner(side)
+
+    local E = c.corner[side]
+    if not E then return end
+    if E.build ~= c then return end
+
+    if E.kind == "sky_border" then
+      build_sky_border(10-E.sky_dir, E.bx,E.by, E.bx,E.by)
+
+    elseif E.kind == "sky_corner" then
+      build_sky_corner(E.sky_dir, E.bx,E.by, E.bx,E.by)
+
+    elseif E.kind == "fence" then
+      build_fence(E.bx,E.by, E.bx,E.by, {}, E.combo, E.fence_h)
+    end
+
+---###    -- handle outside corners
+---###    local out_num = 0
+---###    local f_max = -99999
+---###
+---###    for zzz,c in ipairs(E.cells) do
+---###      if c.combo.outdoor then out_num = out_num + 1 end
+---###      f_max = math.max(c.f_max, f_max)
+---###    end
+---###
+---###    -- FIXME: determine corner_kind (like border_kind)
+---###    if E.kind == "sky" then
+---###
+---###      local CORN = copy_block_with_new(E.cells[1].rmodel,
+---###      {
+---###        f_h = f_max + 64,
+---###        f_tex = E.combo.floor,
+---###        l_tex = E.combo.wall,
+---###      })
+---###
+---###      -- crappy substitute to using a real sky corner
+---###      if out_num < 4 then CORN.c_h = CORN.f_h + 1 end
+---###
+---###      if CORN.f_h < CORN.c_h then
+---###        gap_fill(c, E.bx, E.by, E.bx, E.by, CORN)
+---###        return
+---###      end
+---###    end
+
+    -- otherwise solid
+    gap_fill(c, E.bx, E.by, E.bx, E.by, { solid=E.combo.wall })
+  end
+
 
   --== build_borders ==--
 
@@ -3495,7 +3574,7 @@ arch.f_tex = "TLITE6_6"
     c = cell
 
     for side = 1,9,2 do
-      build_corner(side)
+      build_one_corner(side)
       build_one_border(side)
     end
 
