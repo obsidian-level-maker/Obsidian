@@ -2487,7 +2487,7 @@ CAGE_MEDIUM_W_LIQUID =
 CAGE_NICHE =
 {
   add_mode="wall",
-  height_range={ 144,999 },
+  height_range={ 176,999 }, --FIXME: take rail_h into account
 
   structure =
   {
