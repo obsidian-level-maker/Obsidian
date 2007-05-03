@@ -6326,7 +6326,7 @@ function tizzy_up_room(c)
           return
         end
 
-        if D then --- and (not D.cells[1].combo.outdoor) ~= (not D.cells[2].combo.outdoor) then
+        if not N and D then
           K.solid_combo = D.combo
         end
       end
