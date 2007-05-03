@@ -60,7 +60,9 @@ TN_WALL_LIGHTS =
 
 TN_DOORS =
 {
+--[[ !!!! FIXME
   d_metal = { wall="METALDR", w=128, h=128 },
+--]]
 }
 
 TN_PICS =

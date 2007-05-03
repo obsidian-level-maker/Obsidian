@@ -104,8 +104,11 @@ PL_RAILS =
 
 PL_DOORS =
 {
+
+--[[ !!!! FIXME
   d_metal  = { wall="A-BROWN4", w=128, h=128 },
   d_poison = { wall="SLIME3",   w=128, h=128 },
+--]]
 }
 
 PL_PICS =
