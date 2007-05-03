@@ -20,9 +20,6 @@
 #include "hdr_lua.h"
 
 #include "g_lua.h"
-///--- #include "g_glbsp.h"
-///--- #include "g_doom.h"
-///--- #include "g_wolf.h"
 #include "main.h"
 
 #include "hdr_fltk.h"
@@ -274,9 +271,6 @@ void Script_Init(void)
     Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
 
   Script_SetLoadPath(LUA_ST);
-
-///---  Doom_InitLua(LUA_ST);
-///---  Wolf_InitLua(LUA_ST);
 }
 
 void Script_Close(void)
@@ -302,13 +296,6 @@ void Script_Load(void)
 
     Main_FatalError("Unable to load script 'oblige.lua' (%d)\n%s", status, msg);
   }
-
-///---  if (status != 0)
-///---  {
-///---    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-///---
-///---    Main_FatalError("Error with script (%d)\n%s", status, msg);
-///---  }
 }
 
 

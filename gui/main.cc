@@ -25,8 +25,6 @@
 #include "main.h"
 #include "g_cookie.h"
 #include "g_doom.h"
-///--- #include "g_glbsp.h"
-///--- #include "g_image.h"
 #include "g_lua.h"
 #include "g_wolf.h"
 
