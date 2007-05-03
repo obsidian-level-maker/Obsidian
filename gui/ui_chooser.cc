@@ -58,7 +58,7 @@ void Default_Location(void)
 
 bool UI_SetLastFile(const char *filename)
 {
-  if (filename[0] != '\'')
+  if (filename[0] != '\"')
   {
     LogPrintf("Weird filename in config: [%s]\n", filename);
     return false;
@@ -66,7 +66,7 @@ bool UI_SetLastFile(const char *filename)
 
   int len = strlen(filename);
 
-  if (filename[len-1] != '\'')
+  if (filename[len-1] != '\"')
   {
     LogPrintf("Unterminated filename in config: [%s]\n", filename);
     return false;
@@ -87,9 +87,9 @@ bool UI_SetLastFile(const char *filename)
 const char *UI_GetLastFile(void)
 {
   if (! last_file)
-    return "''";
+    return "\"\"";
 
-  return StringPrintf("'%s'", last_file);
+  return StringPrintf("\"%s\"", last_file);
 }
 
 char *Select_Output_File(void)
