@@ -1220,7 +1220,9 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
     if not Q.mini and Q.level == 1 then
       local x = rand_irange(1, int(PLAN.w / 2))
       local y = rand_irange(1, int(PLAN.h / 2))
-      create_cell(x, y, Q, 1, combo)
+
+      local c = create_cell(x, y, Q, 1, combo)
+      c.no_shrink = true
     end
 
 
@@ -1257,6 +1259,8 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
 
     Q.first = Q.path[1]
     Q.last  = Q.path[#Q.path]
+
+    Q.last.no_shrink = true
 
 --!!!!!!    make_hallways(Q)
 
