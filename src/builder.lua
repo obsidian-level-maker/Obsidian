@@ -5594,15 +5594,19 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 end
 
 
-function fill_reclaim_area(c, K, rec_kind, x1,y1, x2,y2)
+function fill_reclaim_area(c, K, rec_kind, solid_combo, x1,y1, x2,y2)
  
+  if not solid_combo then
+    solid_combo = c.combo
+  end
+
   if rec_kind == "plain" then
     -- do nothing, allow GAP_FILL_ROOM to take care of it
     return
   end
 
   if rec_kind == "solid" then
-    gap_fill(c, x1,y1, x2,y2, { solid=c.combo.void })
+    gap_fill(c, x1,y1, x2,y2, { solid=solid_combo.void })
     return
   end
 
@@ -5712,7 +5716,7 @@ function build_reclamations(c)
           return
         end
 
-        fill_reclaim_area(c, K, rec.rec_kind, x1,y1, x2,y2)
+        fill_reclaim_area(c, K, rec.rec_kind, rec.solid_combo, x1,y1, x2,y2)
       end
     end
 
@@ -5721,7 +5725,7 @@ function build_reclamations(c)
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       if K.kind == "void" then
-        fill_reclaim_area(c, K, K.rec_kind, K.x1,K.y1, K.x2,K.y2)
+        fill_reclaim_area(c, K, K.rec_kind, K.solid_combo, K.x1,K.y1, K.x2,K.y2)
       else
         if K.rec then
           for pos = 1,K.rec.long do
@@ -6157,7 +6161,11 @@ function tizzy_up_room(c)
     -- mark area in front of prefab
     mark_walkable(c, 3, x+dx, y+dy, x2+dx, y2+dy)
 
+    local combo = c.combo
+
     if rec then
+      if rec.solid_combo then combo = rec.solid_combo end
+
       -- fill the area behind tendrils
       if best_delta >= fab.deep then
 
@@ -6170,10 +6178,10 @@ function tizzy_up_room(c)
         tx1, tx2 = low_high(tx1, tx2)
         ty1, ty2 = low_high(ty1, ty2)
 
-        fill_reclaim_area(c, K, kind, tx1,ty1, tx2,ty2)
+        fill_reclaim_area(c, K, kind, combo, tx1,ty1, tx2,ty2)
 
         if perp then
-          clip_reclaim_by_bbox(perp, x1,y1, x2,y2)
+          clip_reclaim_by_bbox(perp, tx1,ty1, tx2,ty2)
         end
       end
 
@@ -6204,9 +6212,9 @@ function tizzy_up_room(c)
       clip_reclaim_by_bbox(perp, x,y, x+w-1, y+h-1)
     end
 
-    if rec then   return x, y, "reclaim"
-    elseif B then return x, y, "void"
-    else          return x, y, "border"
+    if rec then   return x, y, combo, "reclaim"
+    elseif B then return x, y, combo, "void"
+    else          return x, y, combo, "border"
     end
   end
 
@@ -6246,8 +6254,8 @@ function tizzy_up_room(c)
       if passes_height_test(K) then
         for try_dir = 2,8,2 do
           if not dir or try_dir == dir then
-            local x, y, mode = wall_test_chunk(c, K, fab, 10-try_dir, kind)
-            if x then return x, y, try_dir, K, mode end
+            local x, y, combo, mode = wall_test_chunk(c, K, fab, 10-try_dir, kind)
+            if x then return x, y, try_dir, K, combo end
           end
         end
       end
@@ -6311,11 +6319,17 @@ function tizzy_up_room(c)
         
         if N and N.rec_kind and rand_odds(50) then
           K.rec_kind = N.rec_kind
+          K.solid_combo = N.solid_combo
           return
 
         elseif not N and D and rand_odds(50) then
           K.rec_kind = kind_from_border(D)
+          K.solid_combo = D.combo
           return
+        end
+
+        if D then --- and (not D.cells[1].combo.outdoor) ~= (not D.cells[2].combo.outdoor) then
+          K.solid_combo = D.combo
         end
       end
 
@@ -6329,6 +6343,7 @@ function tizzy_up_room(c)
       if B then
         assert(B.rec_kind)
         rec.rec_kind = B.rec_kind
+        rec.solid_combo = B.solid_combo
         return
       end
 
@@ -6336,6 +6351,7 @@ function tizzy_up_room(c)
 
       if D then
         rec.rec_kind = kind_from_border(D)
+        rec.solid_combo = D.combo
         return
       end
 
@@ -6352,7 +6368,10 @@ function tizzy_up_room(c)
 
         if pass == 2 and K.rec then
           set_rec_kind(K, K.rec)
-          if K.rec2 then K.rec2.rec_kind = K.rec.rec_kind end
+          if K.rec2 then
+            K.rec2.rec_kind = K.rec.rec_kind
+            K.rec2.solid_combo = K.rec.solid_combo
+          end
         end
       end end
     end
@@ -6441,14 +6460,14 @@ con.printf("add_object @ (%d,%d)\n", x, y)
              cage_base_h = c.rmodel.f_h + 64,
              }
 
-    local x, y, dir, K = find_wallish_loc(c, fab)
+    local x, y, dir, K, combo = find_wallish_loc(c, fab)
 
     if not x then return end
 
 con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
   fab.name, c.x, c.y, x, y, dir)
 
-    B_prefab(c, fab, def.skin, parm, K.rmodel, c.combo, x, y, dir)
+    B_prefab(c, fab, def.skin, parm, K.rmodel, combo, x, y, dir)
   end
 
   local function add_deathmatch_exit(c)
@@ -6731,7 +6750,7 @@ con.debugf("add_scenery : %s\n", item)
   decide_reclaim_kinds(c)
 
   -- WALL STUFF
-  for loop = 1,0 do
+  for loop = 1,5 do
     add_wall_stuff(c)
   end
 
@@ -6865,7 +6884,6 @@ function build_rooms()
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
---  build_reclamations(cell)
     tizzy_up_room(cell)
     GAP_FILL_ROOM(cell)
 
