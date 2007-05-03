@@ -4929,21 +4929,19 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
 
   local function mark_link_walks(c)
     
-    -- FIXME: many improvements here!
-    --   (a) fence borders: walk 3
-    --   (b) doors: second square away = walk 2
- 
     for side = 2,8,2 do
       local dx,dy = dir_to_delta(10-side) -- inwards
 
       local L = c.link[side]
       if L and not (L.kind == "vista" and L.vista_dest == c) then
-        mark_walkable(c, 4, L.x1+dx, L.y1+dy, L.x2+dx, L.y2+dy)
+        mark_walkable(c, 4, L.x1+dx,   L.y1+dy,   L.x2+dx,   L.y2+dy)
+        mark_walkable(c, 2, L.x1+dx*2, L.y1+dy*2, L.x2+dx*2, L.y2+dy*2)
       end
 
       local D = c.border[side]
       if D and D.kind == "window" then
-        mark_walkable(c, 2, D.x1+dx, D.y1+dy, D.x2+dx, D.y2+dy)
+        mark_walkable(c, 2, D.x1+dx,   D.y1+dy,   D.x2+dx,   D.y2+dy)
+        mark_walkable(c, 1, D.x1+dx*2, D.y1+dy*2, D.x2+dx*2, D.y2+dy*2)
       end
     end
   end
@@ -5050,7 +5048,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     return result
   end
 
-  local function find_stair_loc(K, behind_K,side1_K,side2_K, max_walk, min_deep,want_deep)
+  local function find_stair_loc(K, behind_K,edge1,edge2, max_walk, min_deep,want_deep)
 
     -- Requirements:
     --   (a) blocks which stair will occupy are empty
@@ -5496,7 +5494,7 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
 --con.printf(  "  |-- coord (%d,%d)\n", pos.x, pos.y)
         PLAN.blocks[x][y].on_path = true
---      add_thing(c, x, y, "candle", false)
+        add_thing(c, x, y, "candle", false)
       end
     end
 
@@ -6867,7 +6865,7 @@ function build_rooms()
         gap_fill_block(B)
 
         if B.on_path then
---        add_thing(c, x, y, "candle", false)
+          add_thing(c, x, y, "candle", false)
         end
       end
     end end
