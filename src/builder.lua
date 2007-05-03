@@ -1182,7 +1182,7 @@ end
 function make_chunks()
 
   local function space_it_out(c)
-    
+
     if PLAN.coop and c == PLAN.quests[1].first then
       c.space_factor = 95
       return
@@ -1231,10 +1231,20 @@ function make_chunks()
 
   local function create_chunks(c)
 
+    c.chunks = array_2D(3, 3)
+
+    for kx = 1,3 do for ky = 1,3 do
+
+       c.chunks[kx][ky] =
+       {
+         c=c, kx=kx, ky=ky, kind="empty"
+       }
+    end end
+  end
+
+  local function setup_chunk_sizes(c)
     assert(c.bw >= GAME.cell_min_size)
     assert(c.bh >= GAME.cell_min_size)
-
-    c.chunks = array_2D(3, 3)
 
     -- decide depths of each side
     local L, M, R = decide_chunk_sizes(c.bw, c.q_spot and c.q_spot.kx)
@@ -1246,29 +1256,22 @@ function make_chunks()
       B=B, N=N, T=T
     }
 
-    -- actually create the chunks
-
     for kx = 1,3 do for ky = 1,3 do
-       local w  = sel(kx == 1, L, sel(kx == 2, M, R))
-       local h  = sel(ky == 1, B, sel(ky == 2, N, T))
+      local K = c.chunks[kx][ky]
 
-       local dx = sel(kx == 1, 0, sel(kx == 2, L, L+M))
-       local dy = sel(ky == 1, 0, sel(ky == 2, B, B+N))
+      K.w = sel(kx == 1, L, sel(kx == 2, M, R))
+      K.h = sel(ky == 1, B, sel(ky == 2, N, T))
 
-       c.chunks[kx][ky] =
-       {
-         kx=kx, ky=ky, w=w, h=h,
+      local dx = sel(kx == 1, 0, sel(kx == 2, L, L+M))
+      local dy = sel(ky == 1, 0, sel(ky == 2, B, B+N))
 
-         x1 = c.bx1 + dx,
-         y1 = c.by1 + dy,
-         x2 = c.bx1 + dx + w-1,
-         y2 = c.by1 + dy + h-1,
-
-         kind="empty"
-       }
+      K.x1 = c.bx1 + dx
+      K.y1 = c.by1 + dy
+      K.x2 = c.bx1 + dx + K.w - 1
+      K.y2 = c.by1 + dy + K.h - 1
     end end
   end
-  
+
   local function count_empty_chunks(c)
     local count = 0
     for kx = 1,3 do
@@ -1438,7 +1441,8 @@ function make_chunks()
     c.got_links = nil
 
     for kx = 1,3 do for ky = 1,3 do
-      c.chunks[kx][ky].kind  = "empty"
+      local K = c.chunks[kx][ky]
+      if K.kind == "link" then K.kind = "empty" end
     end end
   end
 
@@ -1490,7 +1494,7 @@ function make_chunks()
           --   3. remove falloffs/vistas
 
           if (loop % 8) < 3 then
-            create_chunks(c)
+            setup_chunk_sizes(c)
           elseif (loop % 8) < 6 then
             L.long = 2
           elseif (L.kind == "vista") or (L.kind == "falloff") then
@@ -1508,28 +1512,6 @@ function make_chunks()
     return true
   end
 
-
-  local function setup_dm_chunks(c)
-
-    if c.x==1 and c.y==PLAN.h then
-
-      local K = c.chunks[2][3]
-
-      if K.kind ~= "empty" then
-        con.printf("WARNING: deathmatch exit stomped a chunk!\n")
-        K.link = nil
-      end
-
-      K.kind = "exit"
-
-      c.q_spot = K
-
-      local mid_K = c.chunks[2][2]
-
-      mid_K.kind = "room"
-      mid_K.no_reclaim = true
-    end
-  end
 
   local function add_travel_chunks(c)
 
@@ -1599,9 +1581,11 @@ function make_chunks()
 
         assert(N.kind == "empty")
 
-        if N.kx==2 and N.ky==2 and rand_odds(50) then
+        --[[ if N.kx==2 and N.ky==2 and rand_odds(50) then
           N.kind = "room"
-        elseif K.kind == "vista" then
+        elseif --]]
+
+        if K.kind == "vista" then
           if bridge and bridge.link and bridge.kind ~= "vista" then
             N.kind = "link"
             N.link = bridge.link
@@ -2060,15 +2044,6 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
       end
     end end
 
---[[
-    for kx = 1,3 do for ky = 1,3 do
-      local K = c.chunks[kx][ky]
-      K.rmodel.light =
-       sel(kx==2 and ky==2, 176,
-        sel(kx==2 or ky==2, 144, 112))
-    end end
---]]
-
     -- fix c_min and c_max values
     c.c_min =  99999
     c.c_max = -99999
@@ -2383,21 +2358,35 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
   local function good_Q_spot(c, bad_side, purpose)
 
-    local function k_dist(kx,ky)
+    local DIST_PROBS = { 1, 3, 30, 90 }
+
+    local function k_dist(kx, ky)
       if bad_side==2 then return ky-1 end
       if bad_side==4 then return kx-1 end
       if bad_side==6 then return 3-kx end
       if bad_side==8 then return 3-ky end
     end
 
-    local best_K, best_N
-    local best_score = -10
+    local function next_to_link(kx, ky)
+      if kx==1 and c.link[4] then return true end
+      if kx==3 and c.link[6] then return true end
+      if ky==1 and c.link[2] then return true end
+      if ky==3 and c.link[8] then return true end
+      return false
+    end
+
+    local chunk_list = {}
+    local prob_list  = {}
+
+---    local best_K, best_N
+---    local best_score = -10
 
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
-      if K.kind == "empty" then
+      if K.kind == "empty" and not next_to_link(kx,ky) then
 
         -- find a visitable neighbour
+        --[[
         local N
         for n_side = 2,8,2 do
           K2 = chunk_neighbour(c, K, n_side)
@@ -2406,53 +2395,83 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
             break;
           end
         end
+        --]]
 
-        if N then
-          local score = k_dist(kx, ky) * 10
+        local prob = DIST_PROBS[1 + k_dist(kx, ky)]
+        assert(prob)
 
-          score = score + math.min(K.w, K.h)
+        table.insert(prob_list, prob)
+        table.insert(chunk_list, K)
 
-          -- deadlock breaker...
-          score = score + con.random() * 0.1
-
-          if score > best_score then
-            best_score = score
-            best_K = K
-            best_N = N
-          end
-        end
+---##        if N then
+---##          local prob = 
+---##          local score = k_dist(kx, ky) * 10
+---##
+---##          score = score + math.min(K.w, K.h)
+---##
+---##          -- deadlock breaker...
+---##          score = score + con.random() * 0.1
+---##
+---##          if score > best_score then
+---##            best_score = score
+---##            best_K = K
+---##            best_N = N
+---##          end
+---##        end
 
       end
     end end
 
-    if best_K then
-      best_K.kind = "room"
-      best_K.purpose = purpose
-      best_K.rmodel = copy_table(best_N.rmodel)
+    if #prob_list > 0 then
+      
+      c.q_spot = chunk_list[rand_index_by_probs(prob_list)]
+      assert(c.q_spot)
+      
+      c.q_spot.kind = "room"
+      c.q_spot.purpose = purpose
 
-      c.q_spot = best_K
+con.printf("Q-SPOT @ (%d,%d) chunk:[%d,%d] for:%s\n",
+c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
+
     end
+
+---##    if best_K then
+---##      best_K.kind = "room"
+---##      best_K.purpose = purpose
+---##      best_K.rmodel = copy_table(best_N.rmodel)
+---##
+---##      c.q_spot = best_K
+---##    end
   end
 
-  local function add_important_chunks(c)
-    
-    if PLAN.deathmatch then return end
+  local function find_q_spots(c)
+
+    if PLAN.deathmatch then
+      if c.x==1 and c.y==PLAN.h then
+        local K = c.chunks[2][3]
+        local M = c.chunks[2][2]
+
+        if K.kind ~= "empty" then
+          con.printf("WARNING: deathmatch exit stomped a chunk!\n")
+          K.link = nil
+        end
+
+        c.q_spot = K
+
+        K.kind = "exit"
+        K.no_reclaim = true
+
+        M.kind = "room"
+        M.no_reclaim = true
+      end
+
+      return
+    end
 
     if c == PLAN.quests[1].first then
-      if PLAN.coop then
----###        for kx = 1,3 do for ky = 1,3 do
----###          local K = c.chunks[kx][ky]
----###          if K.kind == "empty" then 
----###             K.kind = "player"
----###          end
----###        end end
-
-      else -- single player
-        good_Q_spot(c, c.exit_dir, "player")
-      end
-    end
+      good_Q_spot(c, c.exit_dir, "player")
     
-    if c == c.quest.last then
+    elseif c == c.quest.last then
       good_Q_spot(c, c.entry_dir, "quest")
     end
   end
@@ -2524,9 +2543,12 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
   ---===| make_chunks |===---
 
-  for zzz,cell in ipairs(PLAN.all_cells) do
-    space_it_out(cell)
-    create_chunks(cell)
+  for zzz,c in ipairs(PLAN.all_cells) do
+    space_it_out(c)
+    create_chunks(c)
+
+    find_q_spots(c)
+    setup_chunk_sizes(c)
   end
 
   for zzz,cell in ipairs(PLAN.all_cells) do
@@ -2570,17 +2592,25 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     mark_vista_chunks(c)
     create_huge_vista(c)
 
-    if PLAN.deathmatch then setup_dm_chunks(c) end
-
     add_travel_chunks(c)
     setup_chunk_rmodels(c)
 
     add_vista_environs(c)
-    add_important_chunks(c)
     add_closets(c)
 
     void_up_cell(c)
     add_stairs(c)
+
+--[[
+    for kx = 1,3 do for ky = 1,3 do
+      local K = c.chunks[kx][ky]
+      K.rmodel = copy_table(K.rmodel)
+      K.rmodel.light =
+       sel(kx==2 and ky==2, 176,
+        sel(kx==2 or ky==2, 144, 112))
+    end end
+--]]
+
   end
 end
 
@@ -3094,7 +3124,7 @@ end
       d_pos = d_min + 1
       long  = d_max - d_min - 1
     else
-      d_pos = where_to_block(where, long) --!!!!! MOVE
+      d_pos = where_to_block(where, long) --!!! MOVE
       d_max = d_max - (long-1)
 
       if (d_pos < d_min) then d_pos = d_min end
@@ -4213,7 +4243,7 @@ function layout_cell(c)
          (dual_odds(c.combo.outdoor, 37, 22)
           or (c.scenic and rand_odds(51)))
       then
---!!!!!        PLAN.blocks[K.x1+1][K.y1+1].has_scenery = true
+--!!!        PLAN.blocks[K.x1+1][K.y1+1].has_scenery = true
         local th = add_thing(c, K.x1+1, K.y1+1, c.combo.scenery, true)
         if c.scenic then
           th.dx = rand_irange(-64,64)
@@ -5594,8 +5624,8 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
   create_paths(c)
 
-  reclaim_areas(c)
-  trim_reclamations(c)
+-- reclaim_areas(c)
+-- trim_reclamations(c)
 end
 
 
@@ -6743,7 +6773,7 @@ con.debugf("add_scenery : %s\n", item)
   -- the order here is important, earlier items may cause
   -- later items to no longer fit.
 
-  if PLAN.deathmatch and c.x==1 and c.y==PLAN.h then
+  if c.q_spot and c.q_spot.kind == "exit" then
     add_deathmatch_exit(c)
   end
 
