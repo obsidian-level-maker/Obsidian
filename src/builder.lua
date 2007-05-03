@@ -1201,13 +1201,24 @@ function make_chunks()
 
   local K_BORD_PROBS = { 0, 60, 90, 15, 5, 1 }
 
-  local function decide_chunk_sizes(total)
+  local function decide_chunk_sizes(total, q_pos)
     assert(total >= 3)
 
     if total <  6 then return 1, total-2, 1 end
     if total == 6 then return 2, 2, 2 end
 
     local L, M, R
+
+    if q_pos then
+      M = int((total+2) / 3)
+      L = int(total / 3)
+      R = total - M - L
+
+          if q_pos == 1 then return M, L, R
+      elseif q_pos == 2 then return L, M, R
+      else assert(q_pos==3); return R, L, M
+      end
+    end 
 
     repeat
         L = rand_index_by_probs(K_BORD_PROBS)
@@ -1226,15 +1237,8 @@ function make_chunks()
     c.chunks = array_2D(3, 3)
 
     -- decide depths of each side
-    local L, M, R = decide_chunk_sizes(c.bw)
-    local B, N, T = decide_chunk_sizes(c.bh)
-
-    if PLAN.deathmatch and c.x==1 and c.y==PLAN.h then
-      M, T = 3, 3
-      L, N = 2, 2
-      R, B = (c.bw - L - M), (c.bh - T - N)
-      assert(R >= 2 and B >= 2)
-    end
+    local L, M, R = decide_chunk_sizes(c.bw, c.q_spot and c.q_spot.kx)
+    local B, N, T = decide_chunk_sizes(c.bh, c.q_spot and c.q_spot.ky)
 
     c.chunk_sizes =
     {
@@ -1507,19 +1511,24 @@ function make_chunks()
 
   local function setup_dm_chunks(c)
 
-    local K = c.chunks[2][3]
+    if c.x==1 and c.y==PLAN.h then
 
-    if K.kind ~= "empty" then
-      con.printf("WARNING: deathmatch exit stomped a chunk!\n")
-      K.link = nil
+      local K = c.chunks[2][3]
+
+      if K.kind ~= "empty" then
+        con.printf("WARNING: deathmatch exit stomped a chunk!\n")
+        K.link = nil
+      end
+
+      K.kind = "exit"
+
+      c.q_spot = K
+
+      local mid_K = c.chunks[2][2]
+
+      mid_K.kind = "room"
+      mid_K.no_reclaim = true
     end
-
-    K.kind = "exit"
-
-    local mid_K = c.chunks[2][2]
-
-    mid_K.kind = "room"
-    mid_K.no_reclaim = true
   end
 
   local function add_travel_chunks(c)
@@ -1689,15 +1698,15 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
       end
     end
 
-    -- deathmatch exit is placed *above* top-central chunk
-    if PLAN.deathmatch and (c.x==1 and c.y==PLAN.h) then
-      
-      for x = 2,3 do
-        local TOP = c.chunks[x][3]
-        if TOP.kind == "empty" then TOP.kind = "room" end
-        TOP.no_reclaim = true
-      end
-    end
+---###    -- deathmatch exit is placed *above* top-central chunk
+---###    if PLAN.deathmatch and (c.x==1 and c.y==PLAN.h) then
+---###      for x = 2,3 do
+---###        local TOP = c.chunks[x][3]
+---###        if TOP.kind == "empty" then TOP.kind = "room" end
+---###        TOP.no_reclaim = true
+---###        c.q_spot = TOP
+---###      end
+---###    end
  
     chunk_list = init()
 
@@ -2561,9 +2570,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     mark_vista_chunks(c)
     create_huge_vista(c)
 
-    if PLAN.deathmatch and c.x==1 and c.y==PLAN.h then
-      setup_dm_chunks(c)
-    end
+    if PLAN.deathmatch then setup_dm_chunks(c) end
 
     add_travel_chunks(c)
     setup_chunk_rmodels(c)
@@ -6469,7 +6476,9 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
   end
 
   local function add_deathmatch_exit(c)
-    local K = c.chunks[2][3]
+    local K = c.q_spot
+
+    assert(K.w >= 3 and K.h >= 3)
 
     local name = rand_element
     {
