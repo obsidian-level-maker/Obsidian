@@ -522,7 +522,7 @@ function resize_rooms()
 
     if c.no_nudge then return end 
 
-    if rand_odds(25) then return end  -- FIXME: depends on room (want_size ~= cur_size)
+    if rand_odds(25) then return end
 
     local dx,dy = dir_to_delta(side)
     local ax,ay = dir_to_across(side)
@@ -594,6 +594,10 @@ function resize_rooms()
     end
 
     dir = dir or rand_sel(66, 1, -1)
+
+    if (dir < 0 and c.no_shrink) or
+       (dir > 0 and other and other.no_shrink)
+    then return end
 
     local deep = rand_index_by_probs { 10, 30, 90 }
     local mv_x = math.abs(dx) * deep
@@ -1884,7 +1888,7 @@ R.level_theme.name, R.combo.name)
       c.combo = get_rand_exit_combo()
     end
     c.is_exit = true
-    c.no_nudge = true
+    c.no_shrink = true
     c.light = 176
 
     c.small_exit = c.combo.small_exit or rand_odds(25)
@@ -2416,7 +2420,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   create_borders()
   match_borders_and_corners()
 
---!!!!  add_windows()
+  add_windows()
 
   return p
 end
