@@ -56,6 +56,42 @@ void Default_Location(void)
   DebugPrintf("Default_Location: [%s]\n", last_file);
 }
 
+bool UI_SetLastFile(const char *filename)
+{
+  if (filename[0] != '\'')
+  {
+    LogPrintf("Weird filename in config: [%s]\n", filename);
+    return false;
+  }
+
+  int len = strlen(filename);
+
+  if (filename[len-1] != '\'')
+  {
+    LogPrintf("Unterminated filename in config: [%s]\n", filename);
+    return false;
+  }
+
+  filename++, len -= 2;
+
+  SYS_ASSERT(len >= 0);
+
+  last_file = StringDup(filename);
+  last_file[len] = 0;
+
+  DebugPrintf("Parsed last_file as: [%s]\n", last_file);
+ 
+  return true;
+}
+
+const char *UI_GetLastFile(void)
+{
+  if (! last_file)
+    return "''";
+
+  return StringPrintf("'%s'", last_file);
+}
+
 char *Select_Output_File(void)
 {
   SYS_ASSERT(last_file);

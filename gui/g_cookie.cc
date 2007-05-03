@@ -22,6 +22,7 @@
 #include "g_cookie.h"
 
 #include "lib_util.h"
+#include "ui_chooser.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
 #include "main.h"
@@ -62,6 +63,10 @@ static bool Cookie_SetValue(const char *name, const char *value)
   if (StrCaseCmp(name, "size") == 0)
     return main_win->adjust_box->set_Size(value);
 
+  // Other stuff...
+  if (StrCaseCmp(name, "last_file") == 0)
+    return UI_SetLastFile(value);
+
   LogPrintf("CONFIG: Ignoring unknown setting: %s = %s\n", name, value);
   return false;
 }
@@ -86,7 +91,7 @@ static bool Cookie_ParseLine(char *buf)
 
   if (! isalpha(*buf))
   {
-    DebugPrintf("Weird config line: [%s]\n", buf);
+    LogPrintf("Weird config line: [%s]\n", buf);
     return false;
   }
 
@@ -104,7 +109,7 @@ static bool Cookie_ParseLine(char *buf)
   
   if (*buf != '=')
   {
-    DebugPrintf("Config line missing '=': [%s]\n", buf);
+    LogPrintf("Config line missing '=': [%s]\n", buf);
     return false;
   }
 
@@ -115,7 +120,7 @@ static bool Cookie_ParseLine(char *buf)
 
   if (*buf == 0)
   {
-    DebugPrintf("Config line missing value!\n");
+    LogPrintf("Config line missing value!\n");
     return false;
   }
 
@@ -190,6 +195,11 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "mons = %s\n",   main_win->adjust_box->get_Monsters());
   fprintf(cookie_fp, "traps = %s\n",  main_win->adjust_box->get_Traps());
   fprintf(cookie_fp, "size = %s\n",  main_win->adjust_box->get_Size());
+  fprintf(cookie_fp, "\n");
+
+  fprintf(cookie_fp, "-- Miscellaneous --\n");
+  fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());
+  fprintf(cookie_fp, "\n");
 
   LogPrintf("DONE.\n\n");
 

@@ -23,4 +23,8 @@ void Default_Location(void);
 
 char *Select_Output_File(void);
 
+// for config file...
+bool UI_SetLastFile(const char *filename);
+const char *UI_GetLastFile(void);
+
 #endif /* __UI_CHOOSER_H__ */
