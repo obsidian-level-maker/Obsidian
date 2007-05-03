@@ -4427,6 +4427,8 @@ sel(B.on_path, "YES", "NO"))
       return true --SUCCESS--
     end
 
+--[[ UNUSED (didn't work well)
+
     local function normalize_reclaims(K)
       if K.rec and K.rec2 then
 
@@ -4461,6 +4463,7 @@ sel(B.on_path, "YES", "NO"))
         end 
       end
     end
+--]]
 
     --== reclaim_areas_==--
 
@@ -4513,14 +4516,52 @@ sel(B.on_path, "YES", "NO"))
       end end  -- for kx for ky
     end -- for pass
 
-    -- fix up reclaims that overlap each other   
-    for kx = 1,3 do for ky = 1,3 do
-      local K = c.chunks[kx][ky]
-      normalize_reclaims(K)
-    end end
+---###    -- fix up reclaims that overlap each other   
+---###    for kx = 1,3 do for ky = 1,3 do
+---###      local K = c.chunks[kx][ky]
+---###      normalize_reclaims(K)
+---###    end end
   end
 
   local function trim_reclamations(c)
+
+    local function can_shrink_tendril(K, rec, pos)
+      local T = rec.tendrils[pos]
+      if (T <= 0) then return false end
+
+      local perp = sel(rec == K.rec, K.rec2, K.rec)
+      if not perp then return true end
+
+      -- make sure we don't introduce a "hole", which is when
+      -- the perpendicular rec has a tendril that touches the
+      -- tip of the current tendril.
+
+--#     local dx,dy = dir_to_delta(10-rec.side)
+--#     local ax,ay = dir_to_across(10-rec.side)
+--#
+--#     -- compute block coord one ahead of tendril
+--#     local tx = rec.x1 + (pos-1)*ax + T*dx
+--#     local ty = rec.y1 + (pos-1)*ay + T*dy
+
+      -- test if this block is covered by perpendicular rec
+      -- NOTE: we assume that an existing hole can be enlarged
+      --       (hence only need to test a single perp tendril).
+      
+      local p_pos = T+1
+      if p_pos > perp.long then return true end
+
+      local T2 = perp.tendrils[p_pos]
+      if T2 <= 0 then return true end
+
+      local t_along
+      if perp.side == 6 or perp.side == 8 then
+        t_along = rec.long + 1 - pos
+      else
+        t_along = pos
+      end
+
+      return (T2 < t_along)
+    end
 
     local function cut_tall_poppy(rec)
       return false --FAIL--
@@ -4529,6 +4570,8 @@ sel(B.on_path, "YES", "NO"))
     local function prune_chunk(K, rec)
       -- Prune method: use total_blk and space_factor to compute
       -- how many blocks should be removed, then remove them.
+
+      error("prune_chunk does not handle overlapping reclaims")
 
       local skew = 1.0 + rand_skew() * 0.35
 
@@ -4599,13 +4642,17 @@ sel(B.on_path, "YES", "NO"))
       end
 
       -- FIXME: optimise this algorithm
-      while kill_blk > 0 do
+      for loop = 1,40 do
+        if kill_blk <= 0 then break; end
+
         local pos = rand_irange(1, rec.long)
 
-        if rec.tendrils[pos] > 0 then
-          shrink_tendril(rec, pos)
-          kill_blk = kill_blk - 1
-        end
+--#     if rec.tendrils[pos] > 0 then
+          if can_shrink_tendril(K, rec, pos) then
+            shrink_tendril(rec, pos)
+            kill_blk = kill_blk - 1
+          end
+--#     end
       end
     end
 
@@ -5960,13 +6007,18 @@ function tizzy_up_room(c)
   local function wall_test_chunk(c, K, fab, side, kind)
 
     local rec
+    local perp
+
     if K.rec then
       if K.rec.rec_kind and K.rec.rec_kind ~= kind then return nil,nil end
 
       if K.rec.side == side then
-        rec = K.rec
+        rec  = K.rec
+        perp = K.rec2
+
       elseif K.rec2 and K.rec2.side == side then
-        rec = K.rec2
+        rec  = K.rec2
+        perp = K.rec
       else
         -- a little harsh (this non-reclaimed side may be usable),
         -- however it simplifies the rec management.
@@ -6119,6 +6171,10 @@ function tizzy_up_room(c)
         ty1, ty2 = low_high(ty1, ty2)
 
         fill_reclaim_area(c, K, kind, tx1,ty1, tx2,ty2)
+
+        if perp then
+          clip_reclaim_by_bbox(perp, x1,y1, x2,y2)
+        end
       end
 
       for pos = best_pos+1, best_pos+fab.long do
@@ -6141,6 +6197,11 @@ function tizzy_up_room(c)
       x = x - (fab.deep - 1)
     elseif side == 2 then
       y = y - (fab.deep - 1)
+    end
+
+    if perp then
+      local w,h = get_long_deep(side, fab.long, fab.deep)
+      clip_reclaim_by_bbox(perp, x,y, x+w-1, y+h-1)
     end
 
     if rec then   return x, y, "reclaim"
@@ -6224,7 +6285,7 @@ function tizzy_up_room(c)
 
     local function liquid_chance()
       -- FIXME: room_type/combo/level_theme/GAME
-      return rand_odds(22)
+      return rand_odds(40)
     end
 
     local function kind_from_border(D)
