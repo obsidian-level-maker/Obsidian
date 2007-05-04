@@ -57,6 +57,7 @@ settings =
   mode   = "sp",
   length = "single",
 
+  size   = "regular",
   health = "normal",
   ammo   = "normal",
   mons   = "normal",
