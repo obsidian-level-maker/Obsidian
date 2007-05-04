@@ -643,6 +643,63 @@ end
 
 ----------------------------------------------------------------
 
+PICKUP_PATTERNS =
+{
+  { 0,0 },
+
+  { -0.5,0,  0.5,0 },
+
+  { -0.7,-0.7, 0.7,0.7 },
+
+  { -1,-1, 0,0, 1,1 },
+  { -1,0,  0,0, 1,0 },
+
+  { -1,-1, 0,1, 1,-1 },
+
+  { -1,-1, 1,-1,      -1,1, 1,1 },
+  { -1,-1, 1,-1, 0,0, -1,1, 1,1 },
+
+  { -1,0, 0,-1,      1,0, 0,1 },
+  { -1,0, 0,-1, 0,0, 1,0, 0,1 },
+
+  { -1,-1, -0.3,-0.3, 0.3,0.3, 1,1 },
+
+  { -1,-1, 0,-1, 1,-1,  -1,0,      1,0,  -1,1, 0,1, 1,1 },
+  { -1,-1, 0,-1, 1,-1,  -1,0, 0,0, 1,0,  -1,1, 0,1, 1,1 },
+
+  { -1,-1, -0.3,-1, 0.3,-1, 1,-1,  -1,1, -0.3,1, 0.3,1, 1,1 },
+
+  { -1,0, 0,-1, 1,0, 0,1,  -0.7,-0.7, 0.7,-0.7, -0.7,0.7, 0.7,0.7 },
+
+  { -1,0, -0.5,0, 1,0, 0.5,0,  0,-1, 0,-0.5, 0,1, 0,0.5 },
+}
+
+function select_cluster_pattern(count, maximum)
+
+  if count <= 1 then return PICKUP_PATTERNS[1] end
+
+  -- first try for an exact match
+  local probs = {}
+  local got_exact = false
+
+  for i,pat in ipairs(PICKUP_PATTERNS) do
+    probs[i] = 0
+    if (#pat/2) == count then probs[i] = 90; got_exact = true end
+  end
+
+  -- if that fails, look for the closest match
+  if not got_exact then
+    for i,pat in ipairs(PICKUP_PATTERNS) do
+      probs[i] = 0
+      if (#pat/2) <= maximum then
+        probs[i] = 90 / (1 + math.abs(#pat/2 - count)) ^ 2
+      end
+    end
+  end
+
+  return PICKUP_PATTERNS[rand_index_by_probs(probs)]
+end
+
 
 function distribute_pickups(c, HM, backtrack)
 
@@ -651,40 +708,10 @@ function distribute_pickups(c, HM, backtrack)
   local SK = HM.skill
   assert(SK)
 
-  local PICKUP_PATTERNS =
-  {
-    { 0,0 },
-
-    { -0.5,0,  0.5,0 },
-
-    { -0.7,-0.7, 0.7,0.7 },
-
-    { -1,-1, 0,0, 1,1 },
-    { -1,0,  0,0, 1,0 },
-
-    { -1,-1, 0,1, 1,-1 },
-
-    { -1,-1, 1,-1,      -1,1, 1,1 },
-    { -1,-1, 1,-1, 0,0, -1,1, 1,1 },
-
-    { -1,0, 0,-1,      1,0, 0,1 },
-    { -1,0, 0,-1, 0,0, 1,0, 0,1 },
-
-    { -1,-1, -0.3,-0.3, 0.3,0.3, 1,1 },
-
-    { -1,-1, 0,-1, 1,-1,  -1,0,      1,0,  -1,1, 0,1, 1,1 },
-    { -1,-1, 0,-1, 1,-1,  -1,0, 0,0, 1,0,  -1,1, 0,1, 1,1 },
-
-    { -1,-1, -0.3,-1, 0.3,-1, 1,-1,  -1,1, -0.3,1, 0.3,1, 1,1 },
-
-    { -1,0, 0,-1, 1,0, 0,1,  -0.7,-0.7, 0.7,-0.7, -0.7,0.7, 0.7,0.7 },
-
-    { -1,0, -0.5,0, 1,0, 0.5,0,  0,-1, 0,-0.5, 0,1, 0,0.5 },
-  }
   
   local function add_pickup(c, name, info, cluster)
 
-    if not cluster then cluster = PICKUP_PATTERNS[1] end
+    if not cluster then cluster = select_cluster_pattern(1) end
     if not c.pickup_set then
       c.pickup_set = { easy={}, medium={}, hard={} }
     end
@@ -770,32 +797,6 @@ function distribute_pickups(c, HM, backtrack)
     return sel(stat == "health", 70, 0)
   end
 
-  local function select_cluster_pattern(count)
-    if count <= 1 then return PICKUP_PATTERNS[1] end
-
-    -- first try for an exact match
-    local probs = {}
-    local got_exact = false
-
-    for i,pat in ipairs(PICKUP_PATTERNS) do
-      probs[i] = 0
-      if (#pat/2) == count then probs[i] = 90; got_exact = true end
-    end
-
-    -- if that fails, look for one closest to (count/2), which
-    -- hopefully helps to prevent "small cluster syndrome".
-    if not got_exact then
-      for i,pat in ipairs(PICKUP_PATTERNS) do
-        probs[i] = 0
-        if (#pat/2) <= count then
-          probs[i] = 90 / math.abs(#pat/2 - count + 1) ^ 2
-        end
-      end
-    end
- 
-    return PICKUP_PATTERNS[rand_index_by_probs(probs)]
-  end
-
   local function decide_pickup(stat, R)
 
     local infos = {}
@@ -821,12 +822,13 @@ function distribute_pickups(c, HM, backtrack)
     local idx = rand_index_by_probs(probs)
     local th_info = infos[idx]
 
-    local max_cluster = 1 + int(R / th_info.give)
-    if GAME.caps.blocky_items then max_cluster = 1 end
-    if th_info.clu_max then max_cluster = math.min(max_cluster, th_info.clu_max) end
+    local count = 1 + int(R / th_info.give)
+    if GAME.caps.blocky_items then count = 1 end
 
-    local cluster = select_cluster_pattern(max_cluster)
-    assert(#cluster/2 <= max_cluster)
+    if th_info.clu_max then count = math.min(count, th_info.clu_max) end
+
+    local cluster = select_cluster_pattern(count, count)
+    assert(#cluster/2 <= count)
 
     return names[idx], th_info, cluster
   end
@@ -1567,18 +1569,29 @@ function deathmatch_in_cell(c)
 
   local SK
 
+  local HEALTH_PROBS_1 = { less=33, normal=50, more=75 }
+  local HEALTH_PROBS_2 = { less=15, normal=20, more=40 }
+
+  local AMMO_PROBS_1 = { less=40, normal=70, more=90 }
+  local AMMO_PROBS_2 = { less=15, normal=30, more=50 }
+
+  local ITEM_PROB = 10
+
   local function add_dm_pickup(name)
+    local min_cluster = 1
+    local max_cluster = 1
 
-    -- FIXME: proper clusters!!!
+    if GAME.dm.min_clu then min_cluster = GAME.dm.min_clu[name] or 1 end
+    if GAME.dm.max_clu then max_cluster = GAME.dm.max_clu[name] or 1 end
 
-    local cluster = 1
-    if GAME.dm.cluster then cluster = GAME.dm.cluster[name] or 1 end
-    assert(cluster >= 1 and cluster <= 8)
+    local count = rand_irange(min_cluster, max_cluster)
+    local cluster = select_cluster_pattern(count, max_cluster)
 
-    local info = GAME.pickups[name]
-con.printf("DM PICKUP '%s' @ (%d,%d) skill:%s\n",
-name, c.x, c.y, SK)
-    table.insert(c.pickup_set[SK], { name=name, info=info, cluster={ 0,0 } })
+--con.printf("DM PICKUP '%s' @ (%d,%d) skill:%s\n", name, c.x, c.y, SK)
+
+    local info = GAME.pickups[name] -- may be nil
+
+    table.insert(c.pickup_set[SK], { name=name, info=info, cluster=cluster })
   end
 
   --== deathmatch_in_cell ==--
@@ -1587,42 +1600,45 @@ name, c.x, c.y, SK)
   c.mon_set    = { easy={}, medium={}, hard={} }
 
   c.free_spots = find_free_spots(c)
-
   rand_shuffle(c.free_spots)
 
-con.printf("== deathmatch_in_cell: spots = %d\n", #c.free_spots)
   if #c.free_spots == 0 then return end
 
-  for zzz,skill in ipairs(SKILLS) do   -- FIXME: add more stuff in lower skills
+  for zzz,skill in ipairs(SKILLS) do
 
     SK = skill
 
     -- health, ammo and items
-    if rand_odds(70) then
+    if rand_odds(HEALTH_PROBS_1[settings.health]) then
       local what = choose_dm_thing(GAME.dm.health, false)
       add_dm_pickup( what )
     end
 
-    if rand_odds(90) then
-      local what = choose_dm_thing(GAME.dm.ammo, true)
+    if rand_odds(AMMO_PROBS_1[settings.ammo]) then
+      local what = choose_dm_thing(GAME.dm.ammo, false)
       add_dm_pickup( what )
     end
 
-    if rand_odds(10) then
+    if rand_odds(ITEM_PROB) then
       local what = choose_dm_thing(GAME.dm.items, true)
       add_dm_pickup( what )
     end
 
     -- secondary health and ammo
-    if rand_odds(10) then
+    if rand_odds(HEALTH_PROBS_2[settings.health]) then
       local what = choose_dm_thing(GAME.dm.health, false)
       add_dm_pickup( what )
     end
-    if rand_odds(30) then
-      local what = choose_dm_thing(GAME.dm.ammo, true)
+    if rand_odds(AMMO_PROBS_2[settings.ammo]) then
+      local what = choose_dm_thing(GAME.dm.ammo, false)
       add_dm_pickup( what )
     end
 
+    -- tertiary ammo
+    if rand_odds(AMMO_PROBS_2[settings.ammo]) then
+      local what = choose_dm_thing(GAME.dm.ammo, true)
+      add_dm_pickup( what )
+    end
   end
 end
 
