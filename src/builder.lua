@@ -6464,7 +6464,37 @@ con.printf("add_object @ (%d,%d)\n", x, y)
   end
 
   local function add_dm_weapon(c)
-    add_object(c, choose_dm_thing(GAME.dm.weapons, true))
+
+    --TODO: place weapons on vistas
+
+    -- FIXME: use 'def' from game-specific stuff
+    local fab = PREFABS["PLAIN"]
+    assert(fab)
+
+    local x,y,dir = find_fab_loc(c, fab, 0, 3)
+
+--???    if not x then
+--???      x,y,dir = find_emergency_loc(c)
+--???    end
+
+    if not x then
+      con.printf("WARNING: unable to place DM weapon @ (%d,%d)\n", c.x,c.y)
+      return
+    end
+
+    gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
+    fab_mark_walkable(c, x, y, 8, 1,1, 4)
+
+    for idx,SK in ipairs(SKILLS) do
+
+      local name = choose_dm_thing(GAME.dm.weapons, true)
+      local angle = 0
+      local options = { [SK]=true }
+
+      con.debugf("add_dm_weapon: %s @ (%d,%d) SK=%s\n", name, x, y, SK)
+
+      add_thing(c, x, y, name, idx==1, angle, options)
+    end
   end
 
   local function add_ceiling_beams(c) -- TEST JUNK
