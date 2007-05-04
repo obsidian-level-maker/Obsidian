@@ -5531,7 +5531,7 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
 --con.printf(  "  |-- coord (%d,%d)\n", pos.x, pos.y)
         PLAN.blocks[x][y].on_path = true
-        add_thing(c, x, y, "candle", false)
+--      add_thing(c, x, y, "candle", false)
       end
     end
 
@@ -5624,8 +5624,8 @@ con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
 
   create_paths(c)
 
--- reclaim_areas(c)
--- trim_reclamations(c)
+  reclaim_areas(c)
+  trim_reclamations(c)
 end
 
 
@@ -6045,6 +6045,13 @@ function tizzy_up_room(c)
 
   local function wall_test_chunk(c, K, fab, side, kind)
 
+    local B = chunk_neighbour(c, K, side) -- behind chunk
+
+    if B and B.kind ~= "void" then return nil,nil end
+
+    if B and B.rec_kind and B.rec_kind ~= kind then return nil,nil end
+
+
     local rec
     local perp
 
@@ -6058,19 +6065,13 @@ function tizzy_up_room(c)
       elseif K.rec2 and K.rec2.side == side then
         rec  = K.rec2
         perp = K.rec
+
       else
         -- a little harsh (this non-reclaimed side may be usable),
         -- however it simplifies the rec management.
         return nil, nil
       end
     end
-
-    local B = chunk_neighbour(c, K, side) -- behind chunk
-
-
-    if B and B.kind ~= "void" then return nil,nil end
-
-    if B and B.rec_kind and B.rec_kind ~= kind then return nil,nil end
 
     -- one or both of 'rec' and 'B' can be nil.
     -- When 'rec' is nil, it is as though all the tendrils were 0.
@@ -6777,6 +6778,13 @@ con.debugf("add_scenery : %s\n", item)
     add_deathmatch_exit(c)
   end
 
+  local DM_PLAYERS_1 = { less=20, normal=40, more=55 }
+  local DM_PLAYERS_2 = { less=20, normal=25, more=35 }
+
+  local DM_WEAPONS_1 = { less=35, normal=60, more=70 }
+  local DM_WEAPONS_2 = { less=10, normal=15, more=30 }
+
+
   -- WALL SWITCHES
   if not PLAN.deathmatch and c == c.quest.last then
     if (c.quest.kind == "switch") or (c.quest.kind == "exit") then
@@ -6800,7 +6808,9 @@ con.debugf("add_scenery : %s\n", item)
       add_player(c, "player" .. tostring(i))
     end
 
-  elseif PLAN.deathmatch and (c.require_player or rand_odds(50)) then
+  elseif PLAN.deathmatch and (c.require_player or
+      rand_odds(DM_PLAYERS_1[settings.mons]))
+  then
     add_player(c, "dm_player")
   end
 
@@ -6825,7 +6835,9 @@ con.debugf("add_scenery : %s\n", item)
       add_object(c, c.quest.item, "must")
     end
 
-  elseif PLAN.deathmatch and (c.require_weapon or rand_odds(75)) then
+  elseif PLAN.deathmatch and (c.require_weapon or 
+       rand_odds(DM_WEAPONS_1[settings.traps]))
+  then
     add_dm_weapon(c)
   end
 
@@ -6834,11 +6846,11 @@ con.debugf("add_scenery : %s\n", item)
 
   if PLAN.deathmatch then
     -- secondary DM PLAYER
-    if rand_odds(30) then
+    if rand_odds(DM_PLAYERS_2[settings.mons]) then
       add_object(c, "dm_player")
     end
     -- secondary DM WEAPON
-    if rand_odds(15) then
+    if rand_odds(DM_WEAPONS_2[settings.traps]) then
       add_dm_weapon(c)
     end
   end
@@ -6904,7 +6916,7 @@ function build_rooms()
         gap_fill_block(B)
 
         if B.on_path then
-          add_thing(c, x, y, "candle", false)
+--        add_thing(c, x, y, "candle", false)
         end
       end
     end end
