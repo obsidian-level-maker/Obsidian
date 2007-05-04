@@ -5328,11 +5328,23 @@ con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
     end
 
     if not info then
-      -- Fuck!
-      show_cell_blocks(c)
-      con.printf("Error in Cell (%d,%d) Chunk [%d,%d] dir:%d\n",
-          c.x, c.y, K.kx, K.ky, K.stair_dir)
-      error("Unable to find stair position!")
+      -- Emergency!
+      info = find_stair_loc(K, behind_K, nil,nil, 3,
+                            stair_depths(diff_h))
+
+      if not info then
+        info = find_stair_loc(K, behind_K, nil,nil, 4,
+                              stair_depths(diff_h))
+      end
+
+      if not info then
+        -- Fuck!
+        show_cell_blocks(c)
+        con.printf("Error in Cell (%d,%d) Chunk [%d,%d] dir:%d\n",
+            c.x, c.y, K.kx, K.ky, K.stair_dir)
+        error("Unable to find stair position!")
+        return
+      end
     end
 
     local x, y = info.sx, info.sy
@@ -5520,7 +5532,10 @@ con.printf("\nROOM @ (%d,%d)\n", c.x, c.y)
 con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
       local path = astar_find_path(c.bw, c.bh, sx,sy, ex,ey, path_scorer)
 
-      if not path then error("NO PATH INSIDE ROOM!\n"); return end
+      if not path then
+        error("NO PATH INSIDE ROOM!\n")
+        return
+      end
 
       table.insert(path, { x=ex, y=ey })
 
