@@ -1560,7 +1560,8 @@ DM_DEATHMATCH =
 
   health =
   { 
-    potion=10, stimpack=60, medikit=20
+    potion=30, stimpack=60, medikit=20,
+    helmet=20
   },
 
   ammo =
@@ -1577,10 +1578,17 @@ DM_DEATHMATCH =
     soul=5, green_armor=40, blue_armor=5,
   },
 
-  cluster =
+  max_clu =
   {
-    potion = 8, helmet = 8, stimpack = 2,
-    bullets = 3, shells = 2, rocket = 4,
+    potion = 8, helmet = 8,
+    stimpack = 4, medikit = 2,
+    bullets = 4, shells = 4, rocket = 4,
+  },
+
+  min_clu =
+  {
+    potion = 3, helmet = 3,
+    rocket = 3, bullets = 2,
   },
 }
 
