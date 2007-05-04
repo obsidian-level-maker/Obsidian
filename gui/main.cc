@@ -198,17 +198,6 @@ void Build_Cool_Shit()
 
   bool is_hexen = (strcmp(main_win->setup_box->get_Game(), "hexen")  == 0);
 
-  // multiplayer not supported in Wolf3d / SOD
-  // FIXME: disable the "Mode:" control when wolf/spear are selected
-  if (is_wolf)
-  {
-    if (strcmp(main_win->setup_box->get_Mode(), "sp") != 0)
-    {
-      DLG_ShowError("Multiplayer modes not supported in Wolf3D or Spear-of-Destiny.");
-      return;
-    }
-  }
-
   UI_Build *bb_area = main_win->build_box;
 
   char *filename = NULL;

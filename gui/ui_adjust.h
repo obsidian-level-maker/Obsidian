@@ -35,6 +35,7 @@ public:
 public:
 
   void Locked(bool value);
+  void UpdateNetMode(const char *mode);
 
   const char *get_Health();
   const char *get_Ammo();

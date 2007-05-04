@@ -47,30 +47,23 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
 
   cy += 28;
 
-#if 1
-  health = new Fl_Choice(x+70, cy, 130, 24, "Health: ");
+  size = new Fl_Choice(x+ 96, cy, 130, 24, "Level Size: ");
+  size->align(FL_ALIGN_LEFT);
+  size->add("Small|Regular|X-Large");
+  size->value(1);
+
+  add(size);
+
+  cy += 32;
+
+  health = new Fl_Choice(x+320, cy, 130, 24, "Health: ");
   health->align(FL_ALIGN_LEFT);
   health->add("Less|Enough|More");
   health->value(1);
 
-#else  // SLIDER version (looks shite -- cannot set knob color)
-
-  health = new Fl_Slider(x+90, cy, 100, 16, "Health:   ");
-  health->align(FL_ALIGN_LEFT);
-  health->type(FL_HOR_NICE_SLIDER);
-  health->box(FL_FLAT_BOX);
-  health->color(fl_gray_ramp(10)); // fl_color_cube(2,5,4));
-  health->selection_color(FL_BLUE);
-
-  health->slider_size(0.3);
-  health->range(0,2);
-  health->step(1);
-  health->value(1);
-#endif
-
   add(health);
 
-  mons = new Fl_Choice(x+300, cy, 150, 24, "Monsters: ");
+  mons = new Fl_Choice(x+ 96, cy, 130, 24, "Monsters: ");
   mons->align(FL_ALIGN_LEFT);
   mons->add("Scarce|Plenty|Hordes");
   mons->value(1);
@@ -79,28 +72,19 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
 
   cy += 32;
 
-  ammo = new Fl_Choice(x+70, cy, 130, 24, "Ammo: ");
+  ammo = new Fl_Choice(x+320, cy, 130, 24, "Ammo: ");
   ammo->align(FL_ALIGN_LEFT);
   ammo->add("Less|Enough|More");
   ammo->value(1);
   
   add(ammo);
 
-  traps = new Fl_Choice(x+300, cy, 150, 24, "Traps: ");
+  traps = new Fl_Choice(x+ 96, cy, 130, 24, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
-  traps->add("A few|Some|Heaps");
+  traps->add("Few|Some|Heaps");
   traps->value(1);
 
   add(traps);
-
-  cy += 32;
-
-  size = new Fl_Choice(x+300, cy, 150, 24, "Level Size: ");
-  size->align(FL_ALIGN_LEFT);
-  size->add("Small|Regular|X-Large");
-  size->value(1);
-
-  add(size);
 
   resizable(0);  // don't resize our children
 }
@@ -117,20 +101,38 @@ void UI_Adjust::Locked(bool value)
 {
   if (value)
   {
+    size ->deactivate();
     health->deactivate();
     ammo ->deactivate();
     mons ->deactivate();
     traps->deactivate();
-    size ->deactivate();
   }
   else
   {
+    size ->activate();
     health->activate();
     ammo ->activate();
     mons ->activate();
     traps->activate();
-    size ->activate();
   }
+}
+
+void UI_Adjust::UpdateNetMode(const char *mode)
+{
+  if (strcmp(mode, "sp") != 0)
+  {
+    mons->label("Players: ");
+    traps->label("Weapons: ");
+  }
+  else
+  {
+    mons->label("Monsters: ");
+    traps->label("Traps: ");
+  }
+
+  SYS_ASSERT(main_win);
+
+  main_win->adjust_box->redraw();
 }
 
 //----------------------------------------------------------------

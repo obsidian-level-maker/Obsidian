@@ -64,7 +64,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
   game = new Fl_Choice(x+70, cy, 150, 24, "Game: ");
   game->align(FL_ALIGN_LEFT);
   game->add("Wolf 3d|"
-            "Spear of Destiny|"
+///         "Spear of Destiny|"
             "Doom 1|"
             "Doom 2|"
             "TNT Evilution|"
@@ -72,7 +72,8 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
             "FreeDoom 0.5|"
             "Heretic|"
             "Hexen");
-  game->value(3);
+  game->value(2);
+  game->callback(game_callback, this);
 
   add(game);
 
@@ -96,6 +97,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
   mode->align(FL_ALIGN_LEFT);
   mode->add("Single Player|Co-op|Deathmatch");
   mode->value(0);
+  mode->callback(mode_callback, this);
 
   add(mode);
 
@@ -146,6 +148,33 @@ void UI_Setup::bump_callback(Fl_Widget *w, void *data)
   that->BumpSeed();
 }
 
+void UI_Setup::game_callback(Fl_Widget *w, void *data)
+{
+  UI_Setup *that = (UI_Setup *)data;
+
+  // multiplayer is not supported in Wolf3d / SOD
+  if (strcmp(that->get_Game(), "wolf3d") == 0 ||
+      strcmp(that->get_Game(), "spear")  == 0)
+  {
+    that->mode->value(0);
+    mode_callback(that, that);
+
+    that->mode->deactivate();
+  }
+  else
+    that->mode->activate();
+}
+
+void UI_Setup::mode_callback(Fl_Widget *w, void *data)
+{
+  UI_Setup *that = (UI_Setup *)data;
+
+  if (main_win)
+  {
+    main_win->adjust_box->UpdateNetMode(that->get_Mode());
+  }
+}
+
 void UI_Setup::Locked(bool value)
 {
   if (value)
@@ -167,6 +196,9 @@ void UI_Setup::Locked(bool value)
     port->activate();
     mode->activate();
     length->activate();
+
+    game_callback(this, this);
+    mode_callback(this, this);
   }
 }
 
@@ -174,7 +206,7 @@ void UI_Setup::Locked(bool value)
 
 const char * UI_Setup::game_syms[] =
 {
-  "wolf3d", "spear",
+  "wolf3d", /// "spear",
   "doom1", "doom2", "tnt", "plutonia", "freedoom",
   "heretic", "hexen"
 };
@@ -236,6 +268,7 @@ bool UI_Setup::set_Game(const char *str)
     if (StrCaseCmp(str, game_syms[i]) == 0)
     {
       game->value(i);
+      game_callback(this, this);
       return true;
     }
   }
@@ -262,6 +295,9 @@ bool UI_Setup::set_Mode(const char *str)
     if (StrCaseCmp(str, mode_syms[i]) == 0)
     {
       mode->value(i);
+
+      mode_callback(this, this);
+      game_callback(this, this);
       return true;
     }
   }

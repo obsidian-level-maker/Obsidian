@@ -57,6 +57,8 @@ public:
   
 private:
   static void bump_callback(Fl_Widget *, void*);
+  static void game_callback(Fl_Widget *, void*);
+  static void mode_callback(Fl_Widget *, void*);
 
   static const char *game_syms[];
   static const char *port_syms[];
