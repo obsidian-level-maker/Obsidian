@@ -1582,13 +1582,14 @@ DM_DEATHMATCH =
   {
     potion = 8, helmet = 8,
     stimpack = 4, medikit = 2,
-    bullets = 4, shells = 4, rocket = 4,
+    bullets = 4, shells = 4,
+    rockets = 4,
   },
 
   min_clu =
   {
     potion = 3, helmet = 3,
-    rocket = 3, bullets = 2,
+    bullets = 2, rockets = 2,
   },
 }
 
