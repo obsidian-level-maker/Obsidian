@@ -6811,7 +6811,7 @@ con.debugf("add_scenery : %s\n", item)
   local DM_PLAYERS_1 = { less=20, normal=40, more=55 }
   local DM_PLAYERS_2 = { less=20, normal=25, more=35 }
 
-  local DM_WEAPONS_1 = { less=35, normal=60, more=70 }
+  local DM_WEAPONS_1 = { less=33, normal=50, more=70 }
   local DM_WEAPONS_2 = { less=10, normal=15, more=30 }
 
 
