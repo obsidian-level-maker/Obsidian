@@ -1200,6 +1200,10 @@ DM_ROOMS =
   {
   },
 
+  PRISON =
+  {
+  },
+
   -- TODO: check in-game level names for ideas
 }
 
