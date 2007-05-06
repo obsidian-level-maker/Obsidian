@@ -1660,10 +1660,10 @@ D1_WALL_LIGHTS =
 
 D1_EPISODE_THEMES =
 {
-  { URBAN=5, INDUSTRIAL=5, TECH=9, CAVE=1, HELL=1 },
-  { URBAN=9, INDUSTRIAL=5, TECH=5, CAVE=2, HELL=4 },
-  { URBAN=2, INDUSTRIAL=2, TECH=2, CAVE=3, HELL=9 },
-  { URBAN=4, INDUSTRIAL=2, TECH=2, CAVE=5, HELL=7 },
+  { URBAN=5, INDUSTRIAL=5, TECH=9, CAVE=2, HELL=2 },
+  { URBAN=9, INDUSTRIAL=5, TECH=4, CAVE=2, HELL=4 },
+  { URBAN=1, INDUSTRIAL=1, TECH=1, CAVE=2, HELL=9 },
+  { URBAN=4, INDUSTRIAL=2, TECH=2, CAVE=4, HELL=7 },
 }
 
 D1_SECRET_EXITS =
@@ -1694,6 +1694,11 @@ function doom1_get_levels(episode)
 
   local levels = {}
 
+  local theme_probs = D1_EPISODE_THEMES[episode]
+  if settings.length ~= "full" then
+    theme_probs = D1_EPISODE_THEMES[rand_irange(1,4)]
+  end
+
   for map = 1,9 do
     local LEVEL =
     {
@@ -1703,7 +1708,7 @@ function doom1_get_levels(episode)
       ep_along  = map,
       ep_length = 9,
 
-      theme_probs = D1_EPISODE_THEMES[episode],
+      theme_probs = theme_probs,
       sky_info = D1_SKY_INFO[episode],
 
       boss_kind   = (map == 8) and D1_BOSSES[episode],
