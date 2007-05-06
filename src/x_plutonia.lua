@@ -123,6 +123,13 @@ PL_LIQUIDS =
   water = { floor="FWATER1", wall="WFALL1" },
 }
 
+PL_SKY_INFO =
+{
+  { color="white",  light=192 },
+  { color="red",    light=192 },
+  { color="red",    light=192 },
+}
+
 PL_SPECIAL_PEDESTAL =
 {
   wall   ="COMPSPAN",
@@ -157,6 +164,7 @@ GAME_FACTORIES["plutonia"] = function()
   T.pics    = copy_and_merge(T.pics,    PL_PICS)
   T.liquids = copy_and_merge(T.liquids, PL_LIQUIDS)
 
+  T.sky_info    = PL_SKY_INFO
   T.special_ped = PL_SPECIAL_PEDESTAL
 
   T.monster_prefs = { gunner=2.0 }

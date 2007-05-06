@@ -78,6 +78,13 @@ TN_PICS =
   lt_yel = { wall="LITEYEL3", w=128, h=128, glow=true },
 }
 
+TN_SKY_INFO =
+{
+  { color="brown",  light=192 },
+  { color="black",  light=160 },
+  { color="red",    light=192 },
+}
+
 ----------------------------------------------------------------
 
 GAME_FACTORIES["tnt"] = function()
@@ -90,6 +97,8 @@ GAME_FACTORIES["tnt"] = function()
   T.pics    = copy_and_merge(T.pics,   TN_PICS)
 
   T.wall_lights = copy_and_merge(T.wall_lights, TN_WALL_LIGHTS)
+
+  T.sky_info = TN_SKY_INFO
 
   return T
 end

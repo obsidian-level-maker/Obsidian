@@ -1469,7 +1469,7 @@ D2_BOSSES =
 D2_SKY_INFO =
 {
   { color="brown",  light=192 },
-  { color="gray",   light=192 },
+  { color="gray",   light=192 }, -- bright clouds + dark buildings
   { color="red",    light=192 },
 }
 
@@ -1481,6 +1481,8 @@ D2_EPISODE_INFO =
 }
 
 function doom2_get_levels(episode)
+
+  assert(GAME.sky_info)
 
   local level_list = {}
 
@@ -1502,7 +1504,9 @@ function doom2_get_levels(episode)
       ep_length = ep_length,
 
       theme_probs = theme_probs,
-      sky_info = D2_SKY_INFO[episode],
+
+      -- allow TNT and Plutonia to override the sky stuff
+      sky_info = GAME.sky_info[episode],
 
       boss_kind   = (map == 8) and D2_BOSSES[episode],
       secret_kind = (map == 9) and "wolfy",
@@ -1555,6 +1559,8 @@ GAME_FACTORIES["doom2"] = function()
   T.wall_fabs = copy_and_merge(T.wall_fabs, D2_WALL_PREFABS)
   T.rooms   = copy_and_merge(T.rooms,   D2_ROOMS)
   T.themes  = copy_and_merge(T.themes,  D2_THEMES)
+
+  T.sky_info = D2_SKY_INFO
 
   return T
 end

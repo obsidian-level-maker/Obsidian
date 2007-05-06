@@ -46,6 +46,13 @@ FD_LIQUIDS =
   water = { floor="FWATER1", wall="WFALL1" },
 }
 
+FD_SKY_INFO =
+{
+  { color="brown",  light=192 },
+  { color="black",  light=160 },
+  { color="red",    light=192 },
+}
+
 ----------------------------------------------------------------
 
 GAME_FACTORIES["freedoom"] = function()
@@ -53,6 +60,9 @@ GAME_FACTORIES["freedoom"] = function()
   -- the FreeDOOM IWAD contains both Doom 1 and Doom 2 textures
 
   local T = GAME_FACTORIES.doom1()
+
+  T.episodes   = 3
+  T.level_func = doom2_get_levels
 
   T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
   T.exits    = copy_and_merge(T.exits,    D2_EXITS)
@@ -65,6 +75,8 @@ GAME_FACTORIES["freedoom"] = function()
   T.crates  = copy_and_merge(T.crates,  D2_CRATES)
 
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS, FD_LIQUIDS)
+
+  T.sky_info = FD_SKY_INFO
 
   -- FreeDOOM is lacking many monster sprites
 
