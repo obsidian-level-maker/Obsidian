@@ -125,7 +125,7 @@ PL_LIQUIDS =
 
 PL_SKY_INFO =
 {
-  { color="white",  light=192 },
+  { color="white",  light=208 },
   { color="red",    light=192 },
   { color="red",    light=192 },
 }
