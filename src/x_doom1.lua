@@ -1656,13 +1656,48 @@ D1_WALL_LIGHTS =
   stoned = { wall="LITESTON", w=32 },
 }
 
-D1_SECRET_LEVELS =
+D1_SECRET_EXITS =
 {
-  { leave="E1M3", enter="E1M9", kind="normal" },
-  { leave="E2M5", enter="E2M9", kind="normal" },
-  { leave="E3M6", enter="E3M9", kind="normal" },
-  { leave="E4M2", enter="E4M9", kind="normal" },
+  E1M3 = true,
+  E2M5 = true,
+  E3M6 = true,
+  E4M2 = true,
 }
+
+D1_BOSSES =
+{
+  "bruiser_bros",
+  "cyberdemon",
+  "spider_mastermind",
+  "spider_mastermind",
+}
+
+------------------------------------------------------------
+
+function doom1_get_levels(episode)
+  local levels = {}
+
+  for map = 1,9 do
+    local LEVEL =
+    {
+      name = string.format("E%dM%d", episode, map),
+      
+      -- FIXME
+    }
+
+    if map == 8 then LEVEL.boss_kind = D1_BOSSES[episode] end
+
+    if map == 9 then LEVEL.secret_kind = "plain" end
+
+    if D1_SECRET_EXITS[LEVEL.name] then
+      LEVEL.secret_exit = true
+    end
+
+    table.insert(levels, LEVEL)
+  end
+
+  return levels
+end
 
 ------------------------------------------------------------
 
@@ -1743,6 +1778,8 @@ GAME_FACTORIES["doom1"] = function()
 
   local T = GAME_FACTORIES.doom_common()
 
+  T.level_func = doom1_get_levels
+
   T.combos   = copy_and_merge(T.combos,   D1_COMBOS)
   T.exits    = copy_and_merge(T.exits,    D1_EXITS)
   T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
@@ -1751,8 +1788,6 @@ GAME_FACTORIES["doom1"] = function()
   T.wall_lights = copy_and_merge(T.wall_lights, D1_WALL_LIGHTS)
 
   T.rails = D1_RAILS
-
-  T.secrets = D1_SECRET_LEVELS
 
   -- remove DOOM2-only weapons and items --
 
