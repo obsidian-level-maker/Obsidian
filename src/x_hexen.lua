@@ -1111,7 +1111,9 @@ GAME_FACTORIES["hexen"] = function()
     ERROR_FLAT = "F_033",
 
     episodes   = 5,
-    level_func = function(episode) return XN_LEVELS[episode] end
+    level_func = function(episode) return XN_LEVELS[episode] end,
+
+    min_episodes = 2,
 
     monsters = XN_MONSTERS,
     bosses   = XN_BOSSES,
