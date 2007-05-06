@@ -16,7 +16,6 @@
 --
 ----------------------------------------------------------------
 
-
 function show_dm_links()
 
   local function show_cell(c,ky)
@@ -460,7 +459,7 @@ function plan_dm_arena()
   local SIZE_PROBS =
   {
     ----------  1   2   3   4   5   6   7  ------
-    small   = { 0, 60, 90, 30,  5,  0,  0 },
+    small   = { 0, 50, 90, 30,  5,  0,  0 },
     regular = { 0, 20, 80, 70, 20,  2,  0 },
     large   = { 0,  0, 30, 90, 60, 14,  2 },
   }
