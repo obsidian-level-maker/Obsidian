@@ -90,10 +90,10 @@ end
 
 function create_theme()
 
-  local factory = GAME_FACTORIES[settings.game]
+  local factory = GAME_FACTORIES[SETTINGS.game]
 
   if not factory then
-    error("UNKNOWN GAME '" .. settings.game .. "'")
+    error("UNKNOWN GAME '" .. SETTINGS.game .. "'")
   end
 
   GAME = factory()
@@ -108,7 +108,8 @@ end
 
 function build_cool_shit()
  
-  assert(settings)
+  assert(SETTINGS)
+  assert(SETTINGS.game)
 
   -- the missing console functions
   con.printf = function (fmt, ...)
@@ -121,13 +122,13 @@ function build_cool_shit()
 
   con.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
 
-  con.printf("SEED = %d\n\n", settings.seed)
-  con.printf("Settings =\n%s\n", table_to_str(settings))
+  con.printf("SEED = %d\n\n", SETTINGS.seed)
+  con.printf("Settings =\n%s\n", table_to_str(SETTINGS))
 
   create_theme()
 
   local aborted = false
-  local LEVELS = get_level_names(settings)
+  local LEVELS = get_level_names(SETTINGS)
 
   for idx,lev in ipairs(LEVELS) do
 
@@ -135,11 +136,11 @@ function build_cool_shit()
 
     con.printf("\n=====| %s |=====\n\n", lev)
 
-    con.rand_seed(settings.seed * 100 + idx)
+    con.rand_seed(SETTINGS.seed * 100 + idx)
  
-    if settings.mode == "dm" then
+    if SETTINGS.mode == "dm" then
       plan_dm_arena()
-    elseif settings.mode == "coop" then
+    elseif SETTINGS.mode == "coop" then
       plan_sp_level(true)
     else
       plan_sp_level(false)
@@ -152,7 +153,7 @@ PLAN.lev_name = lev
     show_quests()
     con.printf("\n")
 
-    if settings.mode == "dm" then
+    if SETTINGS.mode == "dm" then
       show_dm_links()
     else
       show_path()
@@ -163,7 +164,7 @@ PLAN.lev_name = lev
 
     if con.abort() then aborted = true; break; end
 
-    if settings.game == "wolf3d" or settings.game == "spear" then
+    if SETTINGS.game == "wolf3d" or SETTINGS.game == "spear" then
       write_wolf_level()
     else
       write_level(lev)

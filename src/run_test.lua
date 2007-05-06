@@ -48,7 +48,7 @@ function con.random()
   return math.random()
 end
 
-settings =
+SETTINGS =
 {
   seed = arg[1] or (os.time() % 1000)
   ,

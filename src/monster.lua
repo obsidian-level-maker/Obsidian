@@ -779,8 +779,8 @@ function distribute_pickups(c, HM, backtrack)
     local HEALTH_ADJUSTS = { less=0.7, normal=1.0, more=1.4 }
     local   AMMO_ADJUSTS = { less=0.8, normal=1.2, more=1.6 }
 
-    local health_mul = HEALTH_ADJUSTS[settings.health]
-    local   ammo_mul =   AMMO_ADJUSTS[settings.ammo]
+    local health_mul = HEALTH_ADJUSTS[SETTINGS.health]
+    local   ammo_mul =   AMMO_ADJUSTS[SETTINGS.ammo]
 
     for zzz,stat in ipairs(GAME.pickup_stats) do
       if stat == "health" then
@@ -1609,12 +1609,12 @@ function deathmatch_in_cell(c)
     SK = skill
 
     -- health, ammo and items
-    if rand_odds(HEALTH_PROBS_1[settings.health]) then
+    if rand_odds(HEALTH_PROBS_1[SETTINGS.health]) then
       local what = choose_dm_thing(GAME.dm.health, false)
       add_dm_pickup( what )
     end
 
-    if rand_odds(AMMO_PROBS_1[settings.ammo]) then
+    if rand_odds(AMMO_PROBS_1[SETTINGS.ammo]) then
       local what = choose_dm_thing(GAME.dm.ammo, false)
       add_dm_pickup( what )
     end
@@ -1625,17 +1625,17 @@ function deathmatch_in_cell(c)
     end
 
     -- secondary health and ammo
-    if rand_odds(HEALTH_PROBS_2[settings.health]) then
+    if rand_odds(HEALTH_PROBS_2[SETTINGS.health]) then
       local what = choose_dm_thing(GAME.dm.health, false)
       add_dm_pickup( what )
     end
-    if rand_odds(AMMO_PROBS_2[settings.ammo]) then
+    if rand_odds(AMMO_PROBS_2[SETTINGS.ammo]) then
       local what = choose_dm_thing(GAME.dm.ammo, false)
       add_dm_pickup( what )
     end
 
     -- tertiary ammo
-    if rand_odds(AMMO_PROBS_2[settings.ammo]) then
+    if rand_odds(AMMO_PROBS_2[SETTINGS.ammo]) then
       local what = choose_dm_thing(GAME.dm.ammo, true)
       add_dm_pickup( what )
     end

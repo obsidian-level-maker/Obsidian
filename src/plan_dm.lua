@@ -464,8 +464,8 @@ function plan_dm_arena()
     large   = { 0,  0, 30, 90, 60, 14,  2 },
   }
 
-  local W = rand_index_by_probs(SIZE_PROBS[settings.size]) 
-  local H = rand_index_by_probs(SIZE_PROBS[settings.size]) 
+  local W = rand_index_by_probs(SIZE_PROBS[SETTINGS.size]) 
+  local H = rand_index_by_probs(SIZE_PROBS[SETTINGS.size]) 
 
   if W < H then W,H = H,W end
 

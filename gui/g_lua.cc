@@ -325,7 +325,7 @@ static void Script_MakeSettings(lua_State *L)
   AddField(L, "traps",  main_win->adjust_box->get_Traps());
   AddField(L, "size",   main_win->adjust_box->get_Size());
 
-  lua_setglobal(L, "settings");
+  lua_setglobal(L, "SETTINGS");
 }
 
 bool Script_Run(void)

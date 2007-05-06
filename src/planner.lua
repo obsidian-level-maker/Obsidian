@@ -2146,8 +2146,8 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
     local sm_prob = 36
     local bg_prob = 60
 
-    if settings.traps == "less" then sm_prob, bg_prob = 15, 25 end
-    if settings.traps == "more" then sm_prob, bg_prob = 60, 80 end
+    if SETTINGS.traps == "less" then sm_prob, bg_prob = 15, 25 end
+    if SETTINGS.traps == "more" then sm_prob, bg_prob = 60, 80 end
 
     local function add_closet(Q)
 
@@ -2332,8 +2332,8 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
       local peak = peak_toughness(Q)
       local skip = 0
 
-      if settings.mons == "less"   then peak = peak/2.0 end
-      if settings.mons == "more"   then peak = peak*2.0 end
+      if SETTINGS.mons == "less"   then peak = peak/2.0 end
+      if SETTINGS.mons == "more"   then peak = peak*2.0 end
 
       -- go backwards from quest cell to start cell
       for i = #Q.path,1,-1 do

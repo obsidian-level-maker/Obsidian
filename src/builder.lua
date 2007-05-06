@@ -1754,10 +1754,10 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
     if not PLAN.coop then
       -- let user adjustment parameters control whether closets and
       -- cages are made bigger.
-      if common.closet and not rand_odds(BIG_CAGE_ADJUST[settings.traps]) then
+      if common.closet and not rand_odds(BIG_CAGE_ADJUST[SETTINGS.traps]) then
         return
       end
-      if common.cage and not rand_odds(BIG_CAGE_ADJUST[settings.mons]) then
+      if common.cage and not rand_odds(BIG_CAGE_ADJUST[SETTINGS.mons]) then
         return
       end
     end
@@ -1902,8 +1902,8 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
 
     if not c.combo.outdoor then probs[2] = 15 end
 
-    if settings.mons == "less" then probs[4] = 3.2 end
-    if settings.mons == "more" then probs[4] = 7.5 end
+    if SETTINGS.mons == "less" then probs[4] = 3.2 end
+    if SETTINGS.mons == "more" then probs[4] = 7.5 end
 
     if PLAN.deathmatch then probs[4] = 0 end
 
@@ -3991,7 +3991,7 @@ function layout_cell(c)
       if PLAN.coop then
         for i = 1,4 do
           local dx,dy = dir_to_delta(offsets[i])
-          if settings.game == "plutonia" then
+          if SETTINGS.game == "plutonia" then
             B_double_pedestal(c, bx+dx,by+dy, K.rmodel, GAME.special_ped)
           else
             B_pedestal(c, bx+dx, by+dy, K.rmodel, GAME.pedestals.PLAYER)
@@ -4000,7 +4000,7 @@ function layout_cell(c)
           c.player_pos = {x=bx+dx, y=by+dy}
         end
       else
-        if settings.game == "plutonia" then
+        if SETTINGS.game == "plutonia" then
           B_double_pedestal(c, bx,by, K.rmodel, GAME.special_ped)
         else
           B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.PLAYER)
@@ -4040,7 +4040,7 @@ function layout_cell(c)
 
         local side = wall_switch_dir(kx, ky, c.entry_dir)
 
-        if settings.game == "plutonia" then
+        if SETTINGS.game == "plutonia" then
           B_double_pedestal(c, bx,by, K.rmodel, GAME.special_ped,
             { walk_kind = 52 }) -- FIXME "exit_W1"
 
@@ -4099,7 +4099,7 @@ function layout_cell(c)
         sec.kind = 9  -- FIXME: "secret"
       end
 
-      if settings.mode == "coop" and settings.game == "plutonia" then
+      if SETTINGS.mode == "coop" and SETTINGS.game == "plutonia" then
         sec.light = GAME.special_ped.coop_light
       end
     end
@@ -6849,12 +6849,12 @@ con.debugf("add_scenery : %s\n", item)
 
   -- PLAYERS
   if not PLAN.deathmatch and c == PLAN.quests[1].first then
-    for i = 1,sel(settings.mode == "coop",4,1) do
+    for i = 1,sel(SETTINGS.mode == "coop",4,1) do
       add_player(c, "player" .. tostring(i))
     end
 
   elseif PLAN.deathmatch and (c.require_player or
-      rand_odds(DM_PLAYERS_1[settings.mons]))
+      rand_odds(DM_PLAYERS_1[SETTINGS.mons]))
   then
     add_player(c, "dm_player")
   end
@@ -6881,7 +6881,7 @@ con.debugf("add_scenery : %s\n", item)
     end
 
   elseif PLAN.deathmatch and (c.require_weapon or 
-       rand_odds(DM_WEAPONS_1[settings.traps]))
+       rand_odds(DM_WEAPONS_1[SETTINGS.traps]))
   then
     add_dm_weapon(c)
   end
@@ -6891,11 +6891,11 @@ con.debugf("add_scenery : %s\n", item)
 
   if PLAN.deathmatch then
     -- secondary DM PLAYER
-    if rand_odds(DM_PLAYERS_2[settings.mons]) then
+    if rand_odds(DM_PLAYERS_2[SETTINGS.mons]) then
       add_object(c, "dm_player")
     end
     -- secondary DM WEAPON
-    if rand_odds(DM_WEAPONS_2[settings.traps]) then
+    if rand_odds(DM_WEAPONS_2[SETTINGS.traps]) then
       add_dm_weapon(c)
     end
   end
