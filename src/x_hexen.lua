@@ -487,8 +487,6 @@ XN_THEMES =
 {
   CITY =
   {
-    prob = 50,
-
     room_probs=
     {
       PLAIN=50,
@@ -497,8 +495,6 @@ XN_THEMES =
 
   CAVE =
   {
-    prob = 30,
-
     room_probs=
     {
       PLAIN=50,
@@ -507,8 +503,6 @@ XN_THEMES =
 
   ICE =
   {
-    prob = 20,
-
     room_probs=
     {
       PLAIN=50,

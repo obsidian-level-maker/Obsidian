@@ -1223,8 +1223,6 @@ DM_THEMES =
 
   URBAN =
   {
-    prob = 50,
-
     room_probs=
     {
       PLAIN=50, WAREHOUSE=1, COMPUTER=1,
@@ -1250,8 +1248,6 @@ DM_THEMES =
 
   INDUSTRIAL =
   {
-    prob = 60,
-
     room_probs=
     {
       WAREHOUSE=50, COMPUTER=10,
@@ -1276,8 +1272,6 @@ DM_THEMES =
 
   TECH =
   {
-    prob = 90,
-
     room_probs=
     {
       COMPUTER=50, WAREHOUSE=5,
@@ -1303,8 +1297,6 @@ DM_THEMES =
 
   NATURE =
   {
-    prob = 50, --FIXME: Doom2 only
-
     room_probs=
     {
       PLAIN=50,
@@ -1336,8 +1328,6 @@ DM_THEMES =
 
   CAVE =
   {
-    prob = 20,
-
     room_probs=
     {
       PLAIN=50, WAREHOUSE=3, COMPUTER=1,
@@ -1373,8 +1363,6 @@ DM_THEMES =
 
   HELL =
   {
-    prob = 30,
-
     room_probs=
     {
       TORTURE=20,

@@ -487,8 +487,6 @@ HC_THEMES =
 {
   CITY =
   {
-    prob = 50,
-
     room_probs=
     {
       PLAIN=50,
