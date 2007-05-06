@@ -16,6 +16,11 @@
 --
 ----------------------------------------------------------------
 
+-- constants
+WF_NO_TILE = 48
+WF_NO_OBJ  = 0
+
+
 WF_THING_NUMS =
 {
   -- players
@@ -294,16 +299,6 @@ WF_QUESTS =
   }
 }
 
-WF_SECRET_LEVELS =
-{
-  { leave="E1L1", enter="E1L10", kind="pacman" },
-  { leave="E2L1", enter="E2L10", kind="pacman" },
-  { leave="E3L7", enter="E3L10", kind="pacman" },
-  { leave="E4L3", enter="E4L10", kind="pacman" },
-  { leave="E5L5", enter="E5L10", kind="pacman" },
-  { leave="E6L3", enter="E6L10", kind="pacman" },
-}
-
 WF_SCENERY =
 {
   -- LIGHTS --
@@ -436,8 +431,6 @@ WF_THEMES =
 
   BUNKER =
   {
-    prob = 40,
-
     room_probs =
     {
       STORAGE = 50,
@@ -454,8 +447,6 @@ WF_THEMES =
 
   CELLS =
   {
-    prob = 30,
-
     room_probs =
     {
       STORAGE = 40,
@@ -477,8 +468,6 @@ WF_THEMES =
 
   CAVE =
   {
-    prob = 20,
-
     room_probs =
     {
       STORAGE = 30,
@@ -589,17 +578,87 @@ WF_INITIAL_MODEL =
 }
 
 
+------------------------------------------------------------
+
+WF_EPISODE_THEMES =
+{
+  { CELLS=7, BUNKER=5, CAVE=3 },
+  { CELLS=6, BUNKER=8, CAVE=4 },
+  { CELLS=6, BUNKER=8, CAVE=4 },
+
+  { CELLS=6, BUNKER=8, CAVE=4 },
+  { CELLS=6, BUNKER=8, CAVE=4 },
+  { CELLS=6, BUNKER=8, CAVE=4 },
+}
+
+WF_SECRET_EXITS =
+{
+  E1L1 = true,
+  E2L1 = true,
+  E3L7 = true,
+
+  E4L3 = true,
+  E5L5 = true,
+  E6L3 = true,
+}
+
+WF_EPISODE_BOSSES =
+{
+  "hans_grosse",
+  "schabbs",
+  "hitler",
+
+  "giftmacher",
+  "gretel_grosse",
+  "fat_face",
+}
+
+function wolf3d_get_levels(episode)
+
+  local level_list = {}
+
+  local theme_probs = WF_EPISODE_THEMES[episode]
+
+  local boss_kind = WF_EPISODE_BOSSES[episode]
+  if SETTINGS.length ~= "full" then
+    boss_kind = WF_EPISODE_BOSSES[rand_irange(1,6)]
+  end
+
+  for map = 1,10 do
+    local Level =
+    {
+      name = string.format("E%dL%d", episode, map),
+
+      episode   = episode,
+      ep_along  = map,
+      ep_length = 10,
+
+      theme_probs = theme_probs,
+      sky_info = { color="blue", light=192 }, -- dummy
+
+      boss_kind   = (map == 9)  and boss_kind,
+      secret_kind = (map == 10) and "pacman",
+    }
+
+    if WF_SECRET_EXITS[Level.name] then
+      Level.secret_exit = true
+    end
+
+    table.insert(level_list, Level)
+  end
+
+  return level_list
+end
+
+
 ----------------------------------------------------------------
-
--- constants
-WF_NO_TILE = 48
-WF_NO_OBJ  = 0
-
 
 GAME_FACTORIES["wolf3d"] = function()
 
   return
   {
+    wolfy = true,
+
     plan_size = 7,
     cell_size = 7,
     cell_min_size = 3,
@@ -613,6 +672,9 @@ GAME_FACTORIES["wolf3d"] = function()
     ERROR_FLAT = 99, -- dummy
     SKY_TEX    = 77, -- dummy
 
+    episodes = 6,
+    level_func = wolf3d_get_levels,
+
     thing_nums = WF_THING_NUMS,
     monsters   = WF_MONSTERS,
     bosses     = WF_BOSSES,
@@ -625,7 +687,6 @@ GAME_FACTORIES["wolf3d"] = function()
     initial_model = WF_INITIAL_MODEL,
 
     quests  = WF_QUESTS,
-    secrets = WF_SECRET_LEVELS,
 
     dm = {},
 
