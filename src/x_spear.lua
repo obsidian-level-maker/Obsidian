@@ -55,8 +55,8 @@ SP_BOSSES =
   uber_mutant  = { hp=1200, dm=60, r=20,h=40, hitscan=true },
   death_knight = { hp=1400, dm=90, r=20,h=40, hitscan=true },
 
-  ghost        = { hp=15,   dm=20, r=20,h=40, melee=true },
-  angel        = { hp=1600, dm=150,r=20,h=40, },
+  ghost          = { hp=15,   dm=20, r=20,h=40, melee=true },
+  angel_of_death = { hp=1600, dm=150,r=20,h=40, },
 }
 
 
@@ -107,8 +107,6 @@ SP_THEMES =
 {
   CELLS =
   {
-    prob = 20,
-
     room_probs =
     {
       PLAIN = 90,    STORAGE = 40,
@@ -144,8 +142,6 @@ SP_THEMES =
 
   BUNKER =
   {
-    prob = 50,
-
     room_probs =
     {
       PLAIN = 90,    STORAGE = 50,
@@ -182,8 +178,6 @@ SP_THEMES =
 
   CAVE =
   {
-    prob=30,
-
     room_probs =
     {
       PLAIN = 120,   STORAGE = 30,
@@ -235,9 +229,87 @@ SP_THEMES =
 
 ----------------------------------------------------------------
 
+SP_EPISODE_THEMES =
+{
+  -- dummy
+  { CELLS=3, BUNKER=5, CAVE=4 },  -- Tunnels
+  { CELLS=3, BUNKER=5, CAVE=4 },  -- Dungeons
+  { CELLS=3, BUNKER=5, CAVE=4 },  -- Castle
+  { CELLS=3, BUNKER=5, CAVE=4 },  -- Ramparts
+  { CELLS=3, BUNKER=5, CAVE=4 },  -- Secret / Finale
+}
+
+SP_EPISODE_BOSSES =
+{
+  "trans_grosse",
+  "wilhelm",
+  "uber_mutant",
+  "death_knight",
+  "angel_of_death",
+}
+
+SP_EPISODE_INFO =
+{
+  { start=1,  len=5 },
+  { start=6,  len=5 },
+  { start=11, len=6 },
+  { start=17, len=2 },
+  { start=19, len=3 },  -- first two are secret levels
+}
+
+function spear_get_levels(episode)
+
+  local level_list = {}
+
+  local theme_probs = SP_EPISODE_THEMES[episode]
+  if SETTINGS.length ~= "full" then
+    theme_probs = SP_EPISODE_THEMES[rand_irange(1,4)]
+  end
+
+  local ep_start  = SP_EPISODE_INFO[episode].start
+  local ep_length = SP_EPISODE_INFO[episode].len
+
+  for map = 1,ep_length do
+    local Level =
+    {
+      name = string.format("E%dL%d", episode, map),
+
+      episode   = episode,
+      ep_along  = map,
+      ep_length = ep_length,
+
+      boss_kind = SP_EPISODE_BOSSES[episode],
+      sky_info  = { color="blue", light=192 }, -- dummy
+
+      theme_probs = theme_probs,
+    }
+
+    -- add secret levels
+    if SETTINGS.length == "full" then
+      if episode == 5 and map <= 2 then
+        Level.secret_kind = "spear"
+      end
+
+      if Level.name == "E1L4" or Level.name == "E3L2" then
+        Level.secret_exit = true
+      end
+    end
+
+    table.insert(level_list, Level)
+  end
+
+  return level_list
+end
+
+
+----------------------------------------------------------------
+
 GAME_FACTORIES["spear"] = function()
 
   local T = GAME_FACTORIES.wolf3d()
+
+  T.episodes   = 5,
+  T.level_func = spear_get_levels,
 
   T.bosses   = SP_BOSSES
 
