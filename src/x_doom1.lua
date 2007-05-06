@@ -1692,7 +1692,7 @@ D1_SKY_INFO =
 
 function doom1_get_levels(episode)
 
-  local levels = {}
+  local level_list = {}
 
   local theme_probs = D1_EPISODE_THEMES[episode]
   if settings.length ~= "full" then
@@ -1700,7 +1700,7 @@ function doom1_get_levels(episode)
   end
 
   for map = 1,9 do
-    local LEVEL =
+    local Level =
     {
       name = string.format("E%dM%d", episode, map),
 
@@ -1715,14 +1715,14 @@ function doom1_get_levels(episode)
       secret_kind = (map == 9) and "plain",
     }
 
-    if D1_SECRET_EXITS[LEVEL.name] then
-      LEVEL.secret_exit = true
+    if D1_SECRET_EXITS[Level.name] then
+      Level.secret_exit = true
     end
 
-    table.insert(levels, LEVEL)
+    table.insert(level_list, Level)
   end
 
-  return levels
+  return level_list
 end
 
 
@@ -1805,6 +1805,7 @@ GAME_FACTORIES["doom1"] = function()
 
   local T = GAME_FACTORIES.doom_common()
 
+  T.episodes   = 4
   T.level_func = doom1_get_levels
 
   T.combos   = copy_and_merge(T.combos,   D1_COMBOS)
