@@ -778,6 +778,294 @@ XN_DEATHMATCH =
 
 ------------------------------------------------------------
 
+XN_SKY_INFO =
+{
+  { color="orange", light=176 },
+  { color="blue",   light=160 },
+  { color="blue",   light=192 },
+  { color="red",    light=192 },
+  { color="gray",   light=176, foggy=true },
+}
+
+XN_LEVELS =
+{
+  --- Cluster 1 ---
+  {
+    {
+      name = "map01", -- "WINNOWING HALL"
+      episode = 1,
+      ep_along = 1,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+
+    {
+      name = "map02", -- "SEVEN PORTALS"
+      episode = 1,
+      ep_along = 2,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[4],
+    },
+
+    {
+      name = "map03", -- "GUARDIAN OF ICE"
+      episode = 1,
+      ep_along = 3,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[4],
+    },
+
+    {
+      name = "map04", -- "GUARDIAN OF FIRE"
+      episode = 1,
+      ep_along = 4,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[4],
+    },
+
+    {
+      name = "map05", -- "GUARDIAN OF STEEL"
+      episode = 1,
+      ep_along = 5,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[4],
+    },
+
+    {
+      name = "map06", -- "BRIGHT CRUCIBLE"
+      episode = 1,
+      ep_along = 6,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[4],
+    },
+  },
+
+  --- Cluster 2 ---
+  {
+    {
+      name = "map13", -- "SHADOW WOOD"
+      episode = 2,
+      ep_along = 1,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[1],
+    },
+
+    {
+      name = "map08", -- "DARKMERE"
+      episode = 2,
+      ep_along = 2,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[5],
+    },
+
+    {
+      name = "map09", -- "CAVES OF CIRCE"
+      episode = 2,
+      ep_along = 3,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[1],
+    },
+
+    {
+      name = "map10", -- "WASTELANDS"
+      episode = 2,
+      ep_along = 4,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[1],
+    },
+
+    {
+      name = "map11", -- "SACRED GROVE"
+      episode = 2,
+      ep_along = 5,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[5],
+    },
+
+    {
+      name = "map12", -- "HYPOSTYLE"
+      episode = 2,
+      ep_along = 6,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[1],
+    },
+  },
+
+  --- Cluster 3 ---
+  {
+    {
+      name = "map27", -- "HERESIARCH'S SEMINARY"
+      episode = 3,
+      ep_along = 1,
+      ep_length = 7,
+      sky_info = XN_SKY_INFO[4],
+    },
+
+    {
+      name = "map28", -- "DRAGON CHAPEL"
+      episode = 3,
+      ep_along = 2,
+      ep_length = 7,
+      sky_info = XN_SKY_INFO[4],
+    },
+
+    {
+      name = "map30", -- "GRIFFIN CHAPEL"
+      episode = 3,
+      ep_along = 3,
+      ep_length = 7,
+      sky_info = XN_SKY_INFO[4],
+    },
+
+    {
+      name = "map31", -- "DEATHWIND CHAPEL"
+      episode = 3,
+      ep_along = 4,
+      ep_length = 7,
+      sky_info = XN_SKY_INFO[4],
+    },
+
+    {
+      name = "map32", -- "ORCHARD OF LAMENTATIONS"
+      episode = 3,
+      ep_along = 5,
+      ep_length = 7,
+      sky_info = XN_SKY_INFO[5],
+    },
+
+    {
+      name = "map33", -- "SILENT REFECTORY"
+      episode = 3,
+      ep_along = 6,
+      ep_length = 7,
+      sky_info = XN_SKY_INFO[4],
+    },
+
+    {
+      name = "map34", -- "WOLF CHAPEL"
+      episode = 3,
+      ep_along = 7,
+      ep_length = 7,
+      sky_info = XN_SKY_INFO[4],
+    },
+  },
+
+  --- Cluster 4 ---
+  {
+    {
+      name = "map21", -- "FORSAKEN OUTPOST"
+      episode = 4,
+      ep_along = 1,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+
+    {
+      name = "map22", -- "CASTLE OF GRIEF"
+      episode = 4,
+      ep_along = 2,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+
+    {
+      name = "map23", -- "GIBBET"
+      episode = 4,
+      ep_along = 3,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+
+    {
+      name = "map24", -- "EFFLUVIUM"
+      episode = 4,
+      ep_along = 4,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+
+    {
+      name = "map25", -- "DUNGEONS"
+      episode = 4,
+      ep_along = 5,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+
+    {
+      name = "map26", -- "DESOLATE GARDEN"
+      episode = 4,
+      ep_along = 6,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+  },
+
+  --- Cluster 5 ---
+  {
+    {
+      name = "map35", -- "NECROPOLIS"
+      episode = 5,
+      ep_along = 1,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+
+    {
+      name = "map36", -- "ZEDEK'S TOMB"
+      episode = 5,
+      ep_along = 2,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+
+    {
+      name = "map37", -- "MENELKIR'S TOMB"
+      episode = 5,
+      ep_along = 3,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[4],
+    },
+
+    {
+      name = "map38", -- "TRADUCTUS' TOMB"
+      episode = 5,
+      ep_along = 4,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+
+    {
+      name = "map39", -- "VIVARIUM"
+      episode = 5,
+      ep_along = 5,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[3],
+      lightning = true,
+    },
+
+    {
+      name = "map40", -- "DARK CRUCIBLE"
+      episode = 5,
+      ep_along = 6,
+      ep_length = 6,
+      sky_info = XN_SKY_INFO[4],
+    },
+  },
+}
+
+------------------------------------------------------------
+
 GAME_FACTORIES["hexen"] = function()
 
   return
@@ -801,6 +1089,9 @@ GAME_FACTORIES["hexen"] = function()
     SKY_TEX    = "F_SKY",
     ERROR_TEX  = "ABADONE",
     ERROR_FLAT = "F_033",
+
+    episodes   = 5,
+    level_func = function(episode) return XN_LEVELS[episode] end
 
     monsters = XN_MONSTERS,
     bosses   = XN_BOSSES,
