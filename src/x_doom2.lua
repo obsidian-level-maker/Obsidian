@@ -665,12 +665,6 @@ D2_LIQUIDS =
   slime = { floor="SLIME01", sec_kind=7 }  --  5% damage
 }
 
-D2_SECRET_LEVELS =
-{
-  { leave="MAP15", enter="MAP31", kind="wolfy" },
-  { leave="MAP31", enter="MAP32", kind="wolfy" },
-}
-
 D2_SCENERY =
 {
 }
@@ -1452,17 +1446,99 @@ D2_THEMES =
 
 ------------------------------------------------------------
 
+D2_EPISODE_THEMES =
+{
+  { URBAN=4, INDUSTRIAL=3, TECH=3, NATURE=9, CAVE=2, HELL=2 },
+  { URBAN=9, INDUSTRIAL=6, TECH=6, NATURE=4, CAVE=2, HELL=4 },
+  { URBAN=5, INDUSTRIAL=2, TECH=5, NATURE=3, CAVE=2, HELL=8 },
+}
+
+D2_SECRET_EXITS =
+{
+  MAP15 = true,
+  MAP31 = true,
+}
+
+D2_BOSSES =
+{
+  "mancubus",
+  "spider_mastermind",
+  "boss_brain",
+}
+
+D2_SKY_INFO =
+{
+  { color="brown",  light=192 },
+  { color="gray",   light=192 },
+  { color="red",    light=192 },
+}
+
+D2_EPISODE_INFO =
+{
+  { start=1,  len=11 },
+  { start=12, len=11 },  -- last two are MAP31, MAP32
+  { start=21, len=10 },
+}
+
+function doom2_get_levels(episode)
+
+  local level_list = {}
+
+  local theme_probs = D2_EPISODE_THEMES[episode]
+  if settings.length ~= "full" then
+    theme_probs = D2_EPISODE_THEMES[rand_irange(1,4)]
+  end
+
+  local ep_start  = D2_EPISODE_INFO[episode].start
+  local ep_length = D2_EPISODE_INFO[episode].len
+
+  for map = 1,episode do
+    local Level =
+    {
+      name = string.format("MAP%02d", ep_start+map-1),
+
+      episode   = episode,
+      ep_along  = map,
+      ep_length = ep_length,
+
+      theme_probs = theme_probs,
+      sky_info = D2_SKY_INFO[episode],
+
+      boss_kind   = (map == 8) and D2_BOSSES[episode],
+      secret_kind = (map == 9) and "wolfy",
+    }
+
+    -- fixup for secret levels
+    if episode == 2 and map >= 10 then
+      Level.name = string.format("MAP%02d", 21+map)
+      Level.sky_info = D2_SKY_INFO[3]
+    end
+
+    if D2_SECRET_EXITS[Level.name] then
+      Level.secret_exit = true
+    end
+
+    table.insert(level_list, Level)
+  end
+
+  return level_list
+end
+
+
+------------------------------------------------------------
+
 GAME_FACTORIES["doom2"] = function()
 
   local T = GAME_FACTORIES.doom_common()
+
+  T.episodes   = 3
+  T.level_func = doom2_get_levels
 
   T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
   T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
   T.exits    = copy_and_merge(T.exits,    D2_EXITS)
 
   T.rails = D2_RAILS
-
-  T.secrets = D2_SECRET_LEVELS
 
   T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
   T.crates  = copy_and_merge(T.crates,  D2_CRATES)
