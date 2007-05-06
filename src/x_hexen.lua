@@ -778,11 +778,17 @@ XN_DEATHMATCH =
 
 ------------------------------------------------------------
 
+XN_THEME_PROBS =
+{
+  -- dummy entry
+  { CITY=50, ICE=20, CAVE=20 },
+}
+
 XN_SKY_INFO =
 {
   { color="orange", light=176 },
-  { color="blue",   light=160 },
-  { color="blue",   light=192 },
+  { color="blue",   light=144 },
+  { color="blue",   light=192, lightning=true },
   { color="red",    light=192 },
   { color="gray",   light=176, foggy=true },
 }
@@ -797,7 +803,7 @@ XN_LEVELS =
       ep_along = 1,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -806,6 +812,7 @@ XN_LEVELS =
       ep_along = 2,
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -814,6 +821,7 @@ XN_LEVELS =
       ep_along = 3,
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -822,6 +830,7 @@ XN_LEVELS =
       ep_along = 4,
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -830,6 +839,7 @@ XN_LEVELS =
       ep_along = 5,
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -838,6 +848,7 @@ XN_LEVELS =
       ep_along = 6,
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
   },
 
@@ -849,6 +860,7 @@ XN_LEVELS =
       ep_along = 1,
       ep_length = 6,
       sky_info = XN_SKY_INFO[1],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -857,6 +869,7 @@ XN_LEVELS =
       ep_along = 2,
       ep_length = 6,
       sky_info = XN_SKY_INFO[5],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -865,6 +878,7 @@ XN_LEVELS =
       ep_along = 3,
       ep_length = 6,
       sky_info = XN_SKY_INFO[1],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -873,6 +887,7 @@ XN_LEVELS =
       ep_along = 4,
       ep_length = 6,
       sky_info = XN_SKY_INFO[1],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -881,6 +896,7 @@ XN_LEVELS =
       ep_along = 5,
       ep_length = 6,
       sky_info = XN_SKY_INFO[5],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -889,6 +905,7 @@ XN_LEVELS =
       ep_along = 6,
       ep_length = 6,
       sky_info = XN_SKY_INFO[1],
+      theme_probs = XN_THEME_PROBS[1],
     },
   },
 
@@ -900,6 +917,7 @@ XN_LEVELS =
       ep_along = 1,
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -908,6 +926,7 @@ XN_LEVELS =
       ep_along = 2,
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -916,6 +935,7 @@ XN_LEVELS =
       ep_along = 3,
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -924,6 +944,7 @@ XN_LEVELS =
       ep_along = 4,
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -932,6 +953,7 @@ XN_LEVELS =
       ep_along = 5,
       ep_length = 7,
       sky_info = XN_SKY_INFO[5],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -940,6 +962,7 @@ XN_LEVELS =
       ep_along = 6,
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -948,6 +971,7 @@ XN_LEVELS =
       ep_along = 7,
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
   },
 
@@ -959,7 +983,7 @@ XN_LEVELS =
       ep_along = 1,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -968,7 +992,7 @@ XN_LEVELS =
       ep_along = 2,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -977,7 +1001,7 @@ XN_LEVELS =
       ep_along = 3,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -986,7 +1010,7 @@ XN_LEVELS =
       ep_along = 4,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -995,7 +1019,7 @@ XN_LEVELS =
       ep_along = 5,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -1004,7 +1028,7 @@ XN_LEVELS =
       ep_along = 6,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
   },
 
@@ -1016,7 +1040,7 @@ XN_LEVELS =
       ep_along = 1,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -1025,7 +1049,7 @@ XN_LEVELS =
       ep_along = 2,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -1034,6 +1058,7 @@ XN_LEVELS =
       ep_along = 3,
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -1042,7 +1067,7 @@ XN_LEVELS =
       ep_along = 4,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -1051,7 +1076,7 @@ XN_LEVELS =
       ep_along = 5,
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
-      lightning = true,
+      theme_probs = XN_THEME_PROBS[1],
     },
 
     {
@@ -1060,6 +1085,7 @@ XN_LEVELS =
       ep_along = 6,
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
+      theme_probs = XN_THEME_PROBS[1],
     },
   },
 }
