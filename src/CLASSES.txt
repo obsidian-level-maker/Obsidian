@@ -258,10 +258,8 @@ end
 class Level
 
   name : string  -- e.g. "E1M3" or "MAP05"
-  description : string  -- e.g. "Caves of Doom"
 
   episode   : number
-
   ep_along  : 1 .. ep_length
   ep_length : number
 
@@ -272,7 +270,8 @@ class Level
 
   theme_probs : table
 
-  sky_color : string -- e.g. "gray", "red" etc
-  outdoor_light : number 80-240
+  sky_info : table
+    color : string -- e.g. "gray", "red" etc
+    light : number 80-240
 end
 
