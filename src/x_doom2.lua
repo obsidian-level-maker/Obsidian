@@ -1492,7 +1492,7 @@ function doom2_get_levels(episode)
   local ep_start  = D2_EPISODE_INFO[episode].start
   local ep_length = D2_EPISODE_INFO[episode].len
 
-  for map = 1,episode do
+  for map = 1,ep_length do
     local Level =
     {
       name = string.format("MAP%02d", ep_start+map-1),
