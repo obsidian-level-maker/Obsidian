@@ -1488,8 +1488,9 @@ function doom2_get_levels(episode)
 
   local theme_probs = D2_EPISODE_THEMES[episode]
   if SETTINGS.length ~= "full" then
-    theme_probs = D2_EPISODE_THEMES[rand_irange(1,4)]
+    theme_probs = D2_EPISODE_THEMES[rand_irange(1,3)]
   end
+  assert(theme_probs)
 
   local ep_start  = D2_EPISODE_INFO[episode].start
   local ep_length = D2_EPISODE_INFO[episode].len
