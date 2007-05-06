@@ -462,13 +462,6 @@ HC_QUESTS =
   }
 }
 
-HC_SECRET_LEVELS =
-{
-  { leave="E1M6", enter="E1M9", kind="normal" },
-  { leave="E2M4", enter="E2M9", kind="normal" },
-  { leave="E3M4", enter="E3M9", kind="normal" },
-}
-
 HC_ROOMS =
 {
   PLAIN =
@@ -741,6 +734,71 @@ HC_INITIAL_MODEL =
 
 ------------------------------------------------------------
 
+HC_EPISODE_THEMES =
+{
+  { CITY=5 },
+  { CITY=5 },
+  { CITY=5 },
+}
+
+HC_SECRET_EXITS =
+{
+  E1M6 = true,
+  E2M4 = true,
+  E3M4 = true,
+}
+
+HC_BOSSES =
+{
+  "ironlich",
+  "maulotaur",
+  "d_sparil",
+}
+
+HC_SKY_INFO =
+{
+  { color="gray",  light=176 },
+  { color="red",   light=192 },
+  { color="blue",  light=176 },
+}
+
+function heretic_get_levels(episode)
+
+  local level_list = {}
+
+  local theme_probs = HC_EPISODE_THEMES[episode]
+  if SETTINGS.length ~= "full" then
+    theme_probs = HC_EPISODE_THEMES[rand_irange(1,4)]
+  end
+
+  for map = 1,9 do
+    local Level =
+    {
+      name = string.format("E%dM%d", episode, map),
+
+      episode   = episode,
+      ep_along  = map,
+      ep_length = 9,
+
+      theme_probs = theme_probs,
+      sky_info = HC_SKY_INFO[episode],
+
+      boss_kind   = (map == 8) and HC_BOSSES[episode],
+      secret_kind = (map == 9) and "plain",
+    }
+
+    if HC_SECRET_EXITS[Level.name] then
+      Level.secret_exit = true
+    end
+
+    table.insert(level_list, Level)
+  end
+
+  return level_list
+end
+
+------------------------------------------------------------
+
 GAME_FACTORIES["heretic"] = function()
 
   return
@@ -761,6 +819,9 @@ GAME_FACTORIES["heretic"] = function()
     ERROR_TEX  = "DRIPWALL",
     ERROR_FLAT = "FLOOR09",
 
+    episodes   = 3,
+    level_func = heretic_get_levels,
+
     thing_nums = HC_THING_NUMS,
     monsters   = HC_MONSTERS,
     bosses     = HC_BOSSES,
@@ -774,7 +835,6 @@ GAME_FACTORIES["heretic"] = function()
     initial_model = HC_INITIAL_MODEL,
 
     quests  = HC_QUESTS,
-    secrets = HC_SECRET_LEVELS,
 
     dm = HC_DEATHMATCH,
 
