@@ -107,9 +107,9 @@ function choose_dm_exit_combo()
 end
 
 
-function plan_dm_arena()
+function plan_dm_arena(level)
 
-  PLAN = get_base_plan(8, 9)
+  PLAN = get_base_plan(level, GAME.plan_size, GAME.cell_size)
 
   PLAN.deathmatch = true
 

@@ -31,64 +31,7 @@ require 'builder'
 require 'writer'
 
 
-function get_level_names(settings)
-
-  local LEVELS = {}
-
-  if (settings.game == "doom1") or (settings.game == "heretic") then
-
-    local epi_num = 1
-    local lev_num = sel(settings.length == "single", 1, 9)
-
-    if settings.length == "full" then
-      epi_num = sel(settings.game == "doom1", 4, 3)
-    end
-
-    for e = 1,epi_num do
-      for m = 1,lev_num do
-        table.insert(LEVELS, string.format("E%dM%d", e, m))
-      end
-    end
-
-  elseif (settings.game == "wolf3d") then
-
-    local epi_num = sel(settings.length == "full",   6, 1)
-    local lev_num = sel(settings.length == "single", 1, 10)
-
-    for e = 1,epi_num do
-      for m = 1,lev_num do
-        table.insert(LEVELS, string.format("E%dL%d", e, m))
-      end
-    end
-
-  elseif (settings.game == "spear") then
-
-    -- Spear of Destiny only has a single episode
-    local epi_num = 1
-    local lev_num = sel(settings.length == "single", 1, 21)
-
-    for e = 1,epi_num do
-      for m = 1,lev_num do
-        table.insert(LEVELS, string.format("L%d", e, m))
-      end
-    end
-
-  else  -- doom2 / freedoom / hexen
-
-    local TS = { single=1, episode=10, full=32 }
-    local total = TS[settings.length]
-    assert(total)
-
-    for i = 1,total do
-      table.insert(LEVELS, string.format("MAP%02d", i))
-    end
-  end
-
-  return LEVELS
-end
-
-
-function create_theme()
+function create_GAME()
 
   local factory = GAME_FACTORIES[SETTINGS.game]
 
@@ -99,10 +42,51 @@ function create_theme()
   GAME = factory()
 
   name_up_theme()
-
   expand_prefabs(PREFABS)
-
   compute_pow_factors()
+end
+
+
+function create_LEVEL(level, index, total)
+
+  con.at_level(level, index, total)
+  con.rand_seed(SETTINGS.seed * 100 + index)
+
+  con.printf("\n======| %s |======\n\n", level.name)
+
+  if SETTINGS.mode == "dm" then
+    plan_dm_arena(level)
+  else
+    plan_sp_level(level, SETTINGS.mode == "coop")
+  end
+
+  if con.abort() then return "abort" end
+
+  show_quests()
+  con.printf("\n")
+
+  if SETTINGS.mode == "dm" then
+    show_dm_links()
+  else
+    show_path()
+  end
+  con.printf("\n")
+
+  build_level()
+
+  if con.abort() then return "abort" end
+
+  if GAME.wolfy then
+    write_wolf_level()
+  else
+    write_level(level.name)
+  end
+
+  if con.abort() then return "abort" end
+
+  make_mini_map()
+
+  PLAN = nil
 end
 
 
@@ -125,54 +109,46 @@ function build_cool_shit()
   con.printf("SEED = %d\n\n", SETTINGS.seed)
   con.printf("Settings =\n%s\n", table_to_str(SETTINGS))
 
-  create_theme()
+  create_GAME()
+
+  assert(GAME)
+  assert(GAME.level_func)
 
   local aborted = false
-  local LEVELS = get_level_names(SETTINGS)
+  local episode_num
 
-  for idx,lev in ipairs(LEVELS) do
+  if SETTINGS.length == "single" then
+    episode_num = 1
+  elseif SETTINGS.length == "episode" then
+    episode_num = GAME.min_episodes or 1
+  else -- SETTINGS.length == "full"
+    episode_num = GAME.episodes
+  end
 
-    con.at_level(lev, idx, #LEVELS)
+  -- build episode/level lists
+  local all_levels = {}
 
-    con.printf("\n=====| %s |=====\n\n", lev)
-
-    con.rand_seed(SETTINGS.seed * 100 + idx)
- 
-    if SETTINGS.mode == "dm" then
-      plan_dm_arena()
-    elseif SETTINGS.mode == "coop" then
-      plan_sp_level(true)
-    else
-      plan_sp_level(false)
+  for epi = 1,episode_num do
+    local levels = GAME.level_func(epi)
+    for zzz, L in ipairs(levels) do
+      table.insert(all_levels, L)
     end
+  end
 
-PLAN.lev_name = lev
+  local total = #all_levels
 
-    if con.abort() then aborted = true; break; end
+  if SETTINGS.length == "single" then
+    total = 1
+  end
 
-    show_quests()
-    con.printf("\n")
+  for index = 1,total do
 
-    if SETTINGS.mode == "dm" then
-      show_dm_links()
-    else
-      show_path()
+    local result = create_LEVEL(all_levels[index], index, total)
+
+    if result == "abort" then
+      aborted = true
+      break;
     end
-    con.printf("\n")
-
-    build_level()
-
-    if con.abort() then aborted = true; break; end
-
-    if SETTINGS.game == "wolf3d" or SETTINGS.game == "spear" then
-      write_wolf_level()
-    else
-      write_level(lev)
-    end
-
-    if con.abort() then aborted = true; break; end
-
-    make_mini_map()
   end
 
   if aborted then

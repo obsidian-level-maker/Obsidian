@@ -4,6 +4,8 @@
 
 class Plan
 {
+  level : Level
+
   w, h  : size (cells)
   cells : array_2D(PlanCell)
 

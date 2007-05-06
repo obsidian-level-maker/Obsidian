@@ -7078,8 +7078,8 @@ function build_level()
     setup_rmodel(cell)
   end
 
-if string.find(PLAN.lev_name, "L10") then
-build_pacman_level(PLAN.quests[1].first);
+if string.find(PLAN.level.name, "L10") then
+build_pacman_level(PLAN.quests[1].first)
 return
 end
 

@@ -236,13 +236,15 @@ function links_in_cell(c)
 end
 
 
-function get_base_plan(plan_size, cell_size)
+function get_base_plan(level, plan_size, cell_size)
 
   local cw = plan_size
   local ch = plan_size
 
-  local PLAN =
+  local Plan =
   {
+    level = level,
+
     w = cw,
     h = ch,
 
@@ -274,9 +276,9 @@ function get_base_plan(plan_size, cell_size)
     end,
   }
 
-  PLAN.blocks = array_2D(PLAN.blk_w, PLAN.blk_h)
+  Plan.blocks = array_2D(Plan.blk_w, Plan.blk_h)
 
-  return PLAN
+  return Plan
 end
  
 function allocate_tag()
@@ -918,9 +920,11 @@ end
 
 ----------------------------------------------------------------
 
-function plan_sp_level(is_coop)  -- returns Plan
+function plan_sp_level(level, is_coop)
 
-  PLAN = get_base_plan(GAME.plan_size, GAME.cell_size)
+  PLAN = get_base_plan(level, GAME.plan_size, GAME.cell_size)
+
+  PLAN.coop = is_coop
 
   local p = PLAN
 
@@ -2407,8 +2411,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
   resize_rooms()
 
-  if is_coop then
-    PLAN.coop = true
+  if PLAN.coop then
     PLAN.coop_toughness = rand_range(1.66, 3.0)
     con.debugf("coop_toughness = %d\n", PLAN.coop_toughness);
   end
