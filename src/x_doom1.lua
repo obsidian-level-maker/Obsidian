@@ -1656,6 +1656,16 @@ D1_WALL_LIGHTS =
   stoned = { wall="LITESTON", w=32 },
 }
 
+------------------------------------------------------------
+
+D1_EPISODE_THEMES =
+{
+  { URBAN=5, INDUSTRIAL=5, TECH=9, CAVE=1, HELL=1 },
+  { URBAN=9, INDUSTRIAL=5, TECH=5, CAVE=2, HELL=4 },
+  { URBAN=2, INDUSTRIAL=2, TECH=2, CAVE=3, HELL=9 },
+  { URBAN=4, INDUSTRIAL=2, TECH=2, CAVE=5, HELL=7 },
+}
+
 D1_SECRET_EXITS =
 {
   E1M3 = true,
@@ -1672,22 +1682,33 @@ D1_BOSSES =
   "spider_mastermind",
 }
 
-------------------------------------------------------------
+D1_SKY_INFO =
+{
+  { color="white",  light=192 },
+  { color="red",    light=176 },
+  { color="red",    light=192 },
+  { color="orange", light=192 },
+}
 
 function doom1_get_levels(episode)
+
   local levels = {}
 
   for map = 1,9 do
     local LEVEL =
     {
       name = string.format("E%dM%d", episode, map),
-      
-      -- FIXME
+
+      episode   = episode,
+      ep_along  = map,
+      ep_length = 9,
+
+      theme_probs = D1_EPISODE_THEMES[episode],
+      sky_info = D1_SKY_INFO[episode],
+
+      boss_kind   = (map == 8) and D1_BOSSES[episode],
+      secret_kind = (map == 9) and "plain",
     }
-
-    if map == 8 then LEVEL.boss_kind = D1_BOSSES[episode] end
-
-    if map == 9 then LEVEL.secret_kind = "plain" end
 
     if D1_SECRET_EXITS[LEVEL.name] then
       LEVEL.secret_exit = true
@@ -1698,6 +1719,7 @@ function doom1_get_levels(episode)
 
   return levels
 end
+
 
 ------------------------------------------------------------
 
