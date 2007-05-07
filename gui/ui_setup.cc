@@ -163,6 +163,11 @@ void UI_Setup::game_callback(Fl_Widget *w, void *data)
   }
   else
     that->mode->activate();
+
+  if (main_win)
+  {
+    main_win->adjust_box->UpdateLabels(that->get_Game(), that->get_Mode());
+  }
 }
 
 void UI_Setup::mode_callback(Fl_Widget *w, void *data)
@@ -171,7 +176,7 @@ void UI_Setup::mode_callback(Fl_Widget *w, void *data)
 
   if (main_win)
   {
-    main_win->adjust_box->UpdateNetMode(that->get_Mode());
+    main_win->adjust_box->UpdateLabels(that->get_Game(), that->get_Mode());
   }
 }
 

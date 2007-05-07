@@ -117,9 +117,9 @@ void UI_Adjust::Locked(bool value)
   }
 }
 
-void UI_Adjust::UpdateNetMode(const char *mode)
+void UI_Adjust::UpdateLabels(const char *game, const char *mode)
 {
-  if (strcmp(mode, "sp") != 0)
+  if (strcmp(mode, "dm") == 0)
   {
     mons->label("Players: ");
     traps->label("Weapons: ");
@@ -127,7 +127,11 @@ void UI_Adjust::UpdateNetMode(const char *mode)
   else
   {
     mons->label("Monsters: ");
-    traps->label("Traps: ");
+
+    if (strcmp(game, "wolf3d") == 0 || strcmp(game, "spear") == 0)
+      traps->label("Bosses: ");
+    else
+      traps->label("Traps: ");
   }
 
   SYS_ASSERT(main_win);
