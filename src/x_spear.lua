@@ -231,12 +231,13 @@ SP_THEMES =
 
 SP_EPISODE_THEMES =
 {
-  -- dummy
+  -- FIXME
   { CELLS=3, BUNKER=5, CAVE=4 },  -- Tunnels
   { CELLS=3, BUNKER=5, CAVE=4 },  -- Dungeons
   { CELLS=3, BUNKER=5, CAVE=4 },  -- Castle
   { CELLS=3, BUNKER=5, CAVE=4 },  -- Ramparts
-  { CELLS=3, BUNKER=5, CAVE=4 },  -- Secret / Finale
+  { CELLS=3, BUNKER=5, CAVE=4 },  -- Secrets
+  { CELLS=3, BUNKER=5, CAVE=4 },  -- Finale
 }
 
 SP_EPISODE_BOSSES =
@@ -245,6 +246,7 @@ SP_EPISODE_BOSSES =
   "wilhelm",
   "uber_mutant",
   "death_knight",
+  "none",
   "angel_of_death",
 }
 
@@ -254,7 +256,8 @@ SP_EPISODE_INFO =
   { start=6,  len=5 },
   { start=11, len=6 },
   { start=17, len=2 },
-  { start=19, len=3 },  -- first two are secret levels
+  { start=19, len=2 },  -- secret levels
+  { start=21, len=1 },
 }
 
 function spear_get_levels(episode)
@@ -286,8 +289,9 @@ function spear_get_levels(episode)
 
     -- add secret levels
     if SETTINGS.length == "full" then
-      if episode == 5 and map <= 2 then
+      if episode == 5 then
         Level.secret_kind = "spear"
+        Level.boss_kind = nil
       end
 
       if Level.name == "E1L4" or Level.name == "E3L2" then
@@ -308,7 +312,7 @@ GAME_FACTORIES["spear"] = function()
 
   local T = GAME_FACTORIES.wolf3d()
 
-  T.episodes     = 5
+  T.episodes     = 6
   T.min_episodes = 2
 
   T.level_func = spear_get_levels
