@@ -1067,37 +1067,6 @@ DM_PICS =
 }
 
 
----- QUEST STUFF ----------------
-
-DM_QUESTS =
-{
-  key =
-  {
-    k_blue=50, k_red=50, k_yellow=50
-  },
-  switch =
-  {
-    sw_blue=50, sw_hot=30,
-    sw_vine=10, sw_skin=40,
-    sw_metl=50, sw_gray=20,
-    -- FIXME: sw_rock=10,
-    -- FIXME: sw_wood=30, 
-  },
-  weapon =
-  {
-    saw=10, super=40, launch=80, plasma=60, bfg=5
-  },
-  item =
-  {
-    blue_armor=40, invis=40, mega=25, backpack=25,
-    berserk=20, goggle=5, invul=2, map=3
-  },
-
-  exit = { exit=50 },
-
-  secret_exit = { secret_exit=50 },
-}
-
 DM_SCENERY =
 {
   -- LIGHTS --
@@ -1608,6 +1577,38 @@ DM_INITIAL_MODEL =
 
 ------------------------------------------------------------
 
+---- QUEST STUFF ----------------
+
+D1_QUESTS =
+{
+  key =
+  {
+    k_blue=50, k_red=50, k_yellow=50
+  },
+
+  switch =
+  {
+    sw_blue=50, sw_hot=30,
+    sw_vine=10, sw_skin=40,
+    sw_metl=50, sw_gray=20,
+  },
+
+  weapon =
+  {
+    saw=10, launch=80, plasma=60, bfg=5
+  },
+
+  item =
+  {
+    blue_armor=40, invis=40, backpack=25,
+    berserk=20, goggle=5, invul=2, map=3
+  },
+
+  exit = { exit=50 },
+
+  secret_exit = { secret_exit=50 },
+}
+
 D1_COMBOS =
 {
 }
@@ -1763,7 +1764,6 @@ GAME_FACTORIES["doom_common"] = function()
     pickup_stats = { "health", "bullet", "shell", "rocket", "cell" },
     niceness = DM_NICENESS,
 
-    quests  = DM_QUESTS,
     dm = DM_DEATHMATCH,
 
     combos    = DM_COMBOS,
@@ -1810,6 +1810,8 @@ GAME_FACTORIES["doom1"] = function()
   T.episodes   = 4
   T.level_func = doom1_get_levels
 
+  T.quests   = D1_QUESTS
+
   T.combos   = copy_and_merge(T.combos,   D1_COMBOS)
   T.exits    = copy_and_merge(T.exits,    D1_EXITS)
   T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
@@ -1823,12 +1825,6 @@ GAME_FACTORIES["doom1"] = function()
 
   T.weapons = copy_table(T.weapons)
   T.weapons["super"] = nil
-
-  T.quests = copy_table(T.quests)
-  T.quests.weapon = copy_table(T.quests.weapon)
-  T.quests.weapon["super"] = nil
-  T.quests.item = copy_table(T.quests.item)
-  T.quests.item["mega"] = nil
 
   T.dm = copy_table(T.dm)
   T.dm.weapons = copy_table(T.dm.weapons)

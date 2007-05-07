@@ -1452,6 +1452,38 @@ D2_THEMES =
 
 ------------------------------------------------------------
 
+D2_QUESTS =
+{
+  key =
+  {
+    k_blue=50, k_red=50, k_yellow=50
+  },
+
+  switch =
+  {
+    sw_blue=50, sw_hot=30,
+    sw_vine=10, -- sw_skin=40,
+    sw_metl=50, sw_gray=20,
+    -- FIXME: sw_rock=10,
+    -- FIXME: sw_wood=30, 
+  },
+
+  weapon =
+  {
+    saw=10, super=40, launch=80, plasma=60, bfg=5
+  },
+
+  item =
+  {
+    blue_armor=40, invis=40, mega=25, backpack=25,
+    berserk=20, goggle=5, invul=2, map=3
+  },
+
+  exit = { exit=50 },
+
+  secret_exit = { secret_exit=50 },
+}
+
 D2_EPISODE_THEMES =
 {
   { URBAN=4, INDUSTRIAL=3, TECH=3, NATURE=9, CAVE=2, HELL=2 },
@@ -1544,6 +1576,8 @@ GAME_FACTORIES["doom2"] = function()
 
   T.episodes   = 3
   T.level_func = doom2_get_levels
+
+  T.quests   = D2_QUESTS
 
   T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
   T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
