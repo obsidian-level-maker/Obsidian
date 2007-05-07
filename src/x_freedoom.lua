@@ -64,6 +64,8 @@ GAME_FACTORIES["freedoom"] = function()
   T.episodes   = 3
   T.level_func = doom2_get_levels
 
+  T.quests   = D2_QUESTS
+
   T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
   T.exits    = copy_and_merge(T.exits,    D2_EXITS)
   T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)

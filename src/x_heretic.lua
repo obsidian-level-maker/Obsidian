@@ -456,10 +456,10 @@ HC_QUESTS =
     bomb=30, chaos=30,
     shadow=50, tome=10,
   },
-  exit =
-  {
-    ex_stone=50
-  }
+
+  exit = { exit=50 },
+
+  secret_exit = { secret_exit=50 },
 }
 
 HC_ROOMS =
