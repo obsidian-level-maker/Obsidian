@@ -459,9 +459,9 @@ function plan_dm_arena(level)
   local SIZE_PROBS =
   {
     ----------  1   2   3   4   5   6   7  ------
-    small   = { 0, 50, 90, 30,  5,  0,  0 },
-    regular = { 0, 20, 80, 70, 20,  2,  0 },
-    large   = { 0,  0, 30, 90, 60, 14,  2 },
+    small   = { 0, 60, 90, 20,  2,  0,  0 },
+    regular = { 0, 14, 70, 70, 20,  2,  0 },
+    large   = { 0,  0, 20, 50, 75, 20,  4 },
   }
 
   local W = rand_index_by_probs(SIZE_PROBS[SETTINGS.size]) 
