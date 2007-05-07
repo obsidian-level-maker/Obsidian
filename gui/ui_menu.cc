@@ -43,7 +43,8 @@ static void menu_do_exit(Fl_Widget *w, void * data)
 //------------------------------------------------------------------------
 
 static const char *about_Text =
-  "Oblige is a random level generator for DOOM\n"
+  "Oblige is a random level generator for\n"
+  "DOOM, Heretic, Hexen & Wolf3d\n"
   "\n"
   "Copyright (C) 2006-2007 Andrew Apted\n"
   "\n"
@@ -66,7 +67,7 @@ void menu_do_about(Fl_Widget *w, void * data)
 {
   menu_want_to_quit = false;
 
-  Fl_Window *about = new Fl_Window(340, 356, "About Oblige");
+  Fl_Window *about = new Fl_Window(340, 364, "About Oblige");
   about->end();
 
   // non-resizable
@@ -86,7 +87,7 @@ void menu_do_about(Fl_Widget *w, void * data)
   cy += box->h() + 10;
   
   // the very informative text
-  box = new Fl_Box(10, cy, about->w()-20, 184, about_Text);
+  box = new Fl_Box(10, cy, about->w()-20, 192, about_Text);
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->box(FL_UP_BOX);
   box->color(INFO_COLOR);
