@@ -440,26 +440,29 @@ XN_QUESTS = --FIXME
 --    k_waste   = 80, k_swamp   = 80,
 --    k_rusty   = 80, k_gold    = 80,
   },
+
   switch =
   {
     sw_rock=50
   },
+  
   weapon =
   {
     c_staff = 40, c_fire   = 40,
     f_axe   = 40, f_hammer = 40,
     m_cone  = 40, m_blitz  = 40,
   },
+  
   item =
   {
     -- torch=10,
     wings=50,
     chaos=30,
   },
-  exit =
-  {
-    ex_stone=50
-  }
+
+  exit = { exit=50 },
+
+  secret_exit = { secret_exit=50 },
 }
 
 XN_ROOMS =
@@ -685,13 +688,11 @@ XN_MONSTERS =
   stalker2   = { prob=10, r=33,h=64, hp=250, dm=30, fp=10, environ="swamp" },
   bishop     = { prob=10, r=24,h=64, hp=130, dm=40, fp=70, float=true },
   reiver     = { prob= 5, r=24,h=64, hp=150, dm=50, fp=70, float=true },
-  wyvern     = { prob= 5, r=20,h=64, hp=640, dm=60, fp=70, float=true },
 }
 
 XN_BOSSES =
 {
-  -- wyvern???
-
+  wyvern     = { prob= 5, r=20,h=64, hp=640, dm=60, fp=70, float=true },
   heresiarch = { r=40,h=120,hp=5000,dm=70, fp=70 },
   korax      = { r=66,h=120,hp=5000,dm=90, fp=70 },
 }
@@ -798,6 +799,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 2,
     },
 
     {
@@ -807,6 +809,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 3,
     },
 
     {
@@ -816,6 +819,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 4,
+      secret_exit = 6,
     },
 
     {
@@ -825,6 +830,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 5,
     },
 
     {
@@ -834,6 +840,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 13,
     },
 
     {
@@ -843,6 +850,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      is_secret = true,
+      next_map = 4,
     },
   },
 
@@ -855,6 +864,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[1],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 8,
     },
 
     {
@@ -864,6 +874,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[5],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 9,
+      secret_exit = 11,
     },
 
     {
@@ -873,6 +885,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[1],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 10,
     },
 
     {
@@ -882,6 +895,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[1],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 12,
     },
 
     {
@@ -891,6 +905,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[5],
       theme_probs = XN_THEME_PROBS[1],
+      is_secret = true,
+      next_map = 9,
     },
 
     {
@@ -900,6 +916,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[1],
       theme_probs = XN_THEME_PROBS[1],
+      boss_kind = "wyvern",
+      next_map = 27,
     },
   },
 
@@ -912,6 +930,8 @@ XN_LEVELS =
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 28,
+      secret_exit = 33,
     },
 
     {
@@ -921,6 +941,7 @@ XN_LEVELS =
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 30,
     },
 
     {
@@ -930,6 +951,7 @@ XN_LEVELS =
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 31,
     },
 
     {
@@ -939,6 +961,7 @@ XN_LEVELS =
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 32,
     },
 
     {
@@ -948,6 +971,7 @@ XN_LEVELS =
       ep_length = 7,
       sky_info = XN_SKY_INFO[5],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 34,
     },
 
     {
@@ -957,6 +981,8 @@ XN_LEVELS =
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      is_secret = true,
+      next_map = 28,
     },
 
     {
@@ -966,6 +992,8 @@ XN_LEVELS =
       ep_length = 7,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      boss_kind = "heresiarch",
+      next_map = 21,
     },
   },
 
@@ -978,6 +1006,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 22,
     },
 
     {
@@ -987,6 +1016,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 23,
     },
 
     {
@@ -996,6 +1026,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 24,
     },
 
     {
@@ -1005,6 +1036,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 26,
+      secret_exit = 25,
     },
 
     {
@@ -1014,6 +1047,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      is_secret = true,
+      next_map = 26,
     },
 
     {
@@ -1023,6 +1058,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      boss_kind = "heresiarch",
+      next_map = 35,
     },
   },
 
@@ -1035,6 +1072,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 36,
     },
 
     {
@@ -1044,6 +1082,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 37,
+      secret_exit = 39,
     },
 
     {
@@ -1053,6 +1093,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 38,
     },
 
     {
@@ -1062,6 +1103,7 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      next_map = 40,
     },
 
     {
@@ -1071,6 +1113,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
+      is_secret = true,
+      next_map = 37,
     },
 
     {
@@ -1080,6 +1124,8 @@ XN_LEVELS =
       ep_length = 6,
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
+      boss_kind = "korax",
+      end_game = true,
     },
   },
 }
