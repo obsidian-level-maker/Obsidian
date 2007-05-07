@@ -939,6 +939,7 @@ function plan_sp_level(level, is_coop)
   end
 
   local function get_quest_item(quest)
+
     local tab = GAME.quests[quest]
     assert(tab)
 
@@ -967,6 +968,11 @@ function plan_sp_level(level, is_coop)
     -- make sure we have somewhere to go
     if not (valid_and_empty(c.x-1,c.y) or valid_and_empty(c.x+1,c.y) or
             valid_and_empty(c.x,c.y-1) or valid_and_empty(c.x,c.y+1)) then
+      return 0
+    end
+
+    -- never branch of exit quests (esp. the secret exit)
+    if c.quest.kind == "exit" then
       return 0
     end
 
@@ -1618,8 +1624,7 @@ end
   local function decide_quests()
     
     local function is_mini_quest(kind)
-      return kind == "weapon" or kind == "item" or
-             kind == "secret_exit"
+      return kind == "weapon" or kind == "item"
     end
     
     local function quest_score(qlist)
@@ -1672,7 +1677,7 @@ end
       item   = { 15, 70, 70, 12, 4, 2 }
     }
 
-    local function add_quest(kind, is_mini)
+    local function add_quest(kind, is_mini, item)
       
       local parent
       if is_mini then
@@ -1683,7 +1688,7 @@ end
       local QUEST =
       {
         kind = kind,
-        item = get_quest_item(kind),
+        item = item,
         path = {},
 
         mini = is_mini,
@@ -1758,9 +1763,9 @@ end
     end
 
     -- try and get a good order (we don't try too hard!)
-    for zzz,score in ipairs { 30, 60, 100 } do
+    for zzz,score in ipairs { 30, 60, 100, 150 } do
       local found = false
-      for loop = 1,10 do
+      for loop = 1,8 do
         rand_shuffle(qlist)
         if quest_score(qlist) < score then found = true break end
       end
@@ -1768,30 +1773,39 @@ end
       if found then break end
     end
 
-    con.debugf("Final Score: %d\n", quest_score(qlist))
+    con.debugf("Final Quest Score: %d\n", quest_score(qlist))
 
     -- find each main quest, pull it out, then all the
     -- mini-quests at the beginning of the list become
     -- assocatied with that main quest.
 
+    local need_secret_exit
+    if PLAN.level.secret_exit or true then --!!!!!! TEST ONLY
+      need_secret_exit = true
+    end
+
     while #qlist > 0 do
       local m = find_main_quest(qlist)
 
-      add_quest(qlist[m], nil)
+      add_quest(qlist[m], nil, get_quest_item(qlist[m]))
       table.remove(qlist, m)
 
       while is_mini_quest(qlist[1]) do
-        add_quest(qlist[1], "mini")
+        add_quest(qlist[1], "mini", get_quest_item(qlist[1]))
         table.remove(qlist, 1)
+      end
+
+      if need_secret_exit and rand_odds(33) then
+        add_quest("exit", "mini", "secret")
+        need_secret_exit = false
       end
     end
 
-    add_quest("exit", nil)
-
-    -- FIXME
-    if p.secret_exit then
-      add_quest("exit", "mini")
+    if need_secret_exit then
+      add_quest("exit", "mini", "secret")
     end
+
+    add_quest("exit", nil, "normal")
 
     con.ticker();
   end
@@ -1888,33 +1902,38 @@ R.level_theme.name, R.combo.name)
     return peak
   end
 
-  local function setup_exit_room()
-    -- FIXME: handle secret exits too
-    local c = PLAN.quests[#PLAN.quests].last
+  local function setup_exit_rooms()
 
-    if not GAME.caps.elevator_exits then
-      c.combo = get_rand_exit_combo()
-    end
-    c.is_exit = true
-    c.no_shrink = true
-    c.light = 176
+    local function setup_one_exit(c)
 
-    c.small_exit = c.combo.small_exit or rand_odds(25)
+      if not GAME.caps.elevator_exits then
+        c.combo = get_rand_exit_combo()
+      end
+      c.is_exit = true
+      c.no_shrink = true
+      c.light = 176
 
-    for dir = 2,8,2 do
-      if c.link[dir] then
-        local link = c.link[dir]
-        if link.kind == "arch" or link.kind == "door" then
-          link.kind = "door"
-          link.build = c
-          link.is_exit = true
-          link.long = sel(GAME.caps.blocky_doors, 1,
-               sel(c.combo.front_mark or c.small_exit, 3, 2))
+      c.small_exit = c.combo.small_exit or rand_odds(25)
+
+      for dir = 2,8,2 do
+        if c.link[dir] then
+          local link = c.link[dir]
+          if link.kind == "arch" or link.kind == "door" then
+            link.kind = "door"
+            link.build = c
+            link.is_exit = true
+            link.long = sel(GAME.caps.blocky_doors, 1,
+                 sel(c.combo.front_mark or c.small_exit, 3, 2))
+          end
         end
       end
     end
 
-    con.ticker();
+    for zzz,c in ipairs(PLAN.all_cells) do
+      if c.quest.kind == "exit" and c == c.quest.last then
+        setup_one_exit(c)
+      end
+    end
   end
   
   local function add_scenic_cells()
@@ -2394,7 +2413,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   plot_quests()
   decide_links()
   
-  setup_exit_room()
+  setup_exit_rooms()
   
   shuffle_build_sites()
   add_scenic_cells()

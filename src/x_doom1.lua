@@ -965,7 +965,7 @@ DM_KEY_DOORS =
     }
   },
 
-  ex_tech =
+  exit =
   {
     w=64, h=72,
 
@@ -981,7 +981,7 @@ DM_KEY_DOORS =
     }
   },
 
-  ex_stone =
+  secret_exit =
   {
     w=64, h=72,
 
@@ -1071,17 +1071,17 @@ DM_QUESTS =
   },
   weapon =
   {
-    saw=10, super=40, launch=80, plasma=60, bfg=4
+    saw=10, super=40, launch=80, plasma=60, bfg=5
   },
   item =
   {
     blue_armor=40, invis=40, mega=25, backpack=25,
     berserk=20, goggle=5, invul=2, map=3
   },
-  exit =
-  {
-    ex_tech=90, ex_stone=30
-  }
+
+  exit = { exit=50 },
+
+  secret_exit = { secret_exit=50 },
 }
 
 DM_SCENERY =

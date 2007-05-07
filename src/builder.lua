@@ -2946,7 +2946,7 @@ function build_borders()
       }
 
     elseif link.is_exit then
-      door_info = GAME.key_doors["ex_tech"] --!!!!! FIXME: H/H
+      door_info = GAME.key_doors["exit"] --!!!!! FIXME: H/H
 
       parm =
       {
