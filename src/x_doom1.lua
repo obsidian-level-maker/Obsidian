@@ -785,6 +785,18 @@ DM_SWITCHES =
         frame_f="FLAT1", frame_c="FLAT1",
       }
     },
+
+    bars =
+    {
+      w=128, h=112,
+      prefab = "BARS_FENCE_DOOR",
+      skin =
+      {
+        door_w="BIGDOOR7", door_f="CEIL5_2",
+        side_w="METAL",
+--      beam_w="SP_HOT1", beam_f="FLAT5_3",
+      }
+    },
   },
 
   sw_skin =

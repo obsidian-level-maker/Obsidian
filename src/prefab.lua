@@ -587,6 +587,55 @@ BARS_NARROW =
   },
 },
 
+BARS_FENCE =
+{
+  environment="outdoor",
+
+  structure =
+  {
+    "f..........f",
+    "f.BB.BB.BB.f",
+    "f.BB.BB.BB.f",
+    "f..........f",
+  },
+
+  elements =
+  {
+    f = { f_h=0, f_rel="low_h", },
+
+    B = { f_h=128, f_rel="floor_h",
+          l_tex="beam_w", f_tex="beam_f", l_peg="top",
+          kind="door_kind", tag="tag",
+        },
+  },
+},
+
+BARS_FENCE_DOOR =
+{
+  environment="outdoor",
+
+  structure =
+  {
+    "f..........f",
+    "f.DDDDDDDD.f",
+    "f..........f",
+    "f..........f",
+  },
+
+  elements =
+  {
+    f = { f_h=0, f_rel="low_h", },
+
+    D = { f_h=128, f_rel="floor_h",
+          l_tex="side_w", f_tex="door_f", l_peg="top",
+          kind="door_kind", tag="tag",
+
+          [2] = { l_tex="door_w" },
+          [8] = { l_tex="door_w" },
+        },
+  },
+},
+
 
 ------ Exit Stuff ------------------------------------
 
