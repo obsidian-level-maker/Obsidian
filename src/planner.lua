@@ -1790,7 +1790,7 @@ end
     -- assocatied with that main quest.
 
     local need_secret_exit
-    if PLAN.level.secret_exit or true then --!!!!!! TEST ONLY
+    if PLAN.level.secret_exit then
       need_secret_exit = true
     end
 
