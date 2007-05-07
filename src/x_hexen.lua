@@ -810,6 +810,7 @@ XN_LEVELS =
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
       next_map = 3,
+      weapon_pieces = true,
     },
 
     {
@@ -831,6 +832,7 @@ XN_LEVELS =
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
       next_map = 5,
+      weapon_pieces = true,
     },
 
     {
@@ -876,6 +878,7 @@ XN_LEVELS =
       theme_probs = XN_THEME_PROBS[1],
       next_map = 9,
       secret_exit = 11,
+      weapon_pieces = true,
     },
 
     {
@@ -896,6 +899,7 @@ XN_LEVELS =
       sky_info = XN_SKY_INFO[1],
       theme_probs = XN_THEME_PROBS[1],
       next_map = 12,
+      weapon_pieces = true,
     },
 
     {
@@ -942,6 +946,7 @@ XN_LEVELS =
       sky_info = XN_SKY_INFO[4],
       theme_probs = XN_THEME_PROBS[1],
       next_map = 30,
+      weapon_pieces = true,
     },
 
     {
@@ -972,6 +977,7 @@ XN_LEVELS =
       sky_info = XN_SKY_INFO[5],
       theme_probs = XN_THEME_PROBS[1],
       next_map = 34,
+      weapon_pieces = true,
     },
 
     {
@@ -1007,6 +1013,7 @@ XN_LEVELS =
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
       next_map = 22,
+      weapon_pieces = true,
     },
 
     {
@@ -1038,6 +1045,7 @@ XN_LEVELS =
       theme_probs = XN_THEME_PROBS[1],
       next_map = 26,
       secret_exit = 25,
+      weapon_pieces = true,
     },
 
     {
@@ -1084,6 +1092,7 @@ XN_LEVELS =
       theme_probs = XN_THEME_PROBS[1],
       next_map = 37,
       secret_exit = 39,
+      weapon_pieces = true,
     },
 
     {
@@ -1104,6 +1113,7 @@ XN_LEVELS =
       sky_info = XN_SKY_INFO[3],
       theme_probs = XN_THEME_PROBS[1],
       next_map = 40,
+      weapon_pieces = true,
     },
 
     {
