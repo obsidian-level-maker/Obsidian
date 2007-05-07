@@ -1434,6 +1434,12 @@ D2_WALL_PREFABS =
     }
   },
 
+  secret_DOOR =
+  {
+    w=128, h=128,
+    prefab = "DOOR",
+    skin = { }
+  },
 }
 
 D2_ROOMS =

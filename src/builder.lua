@@ -2945,6 +2945,10 @@ function build_borders()
         tag = link.quest.tag + 1,
       }
 
+    elseif link.is_secret then
+      door_info = GAME.wall_fabs["secret_DOOR"]
+      parm.door_kind = 31 -- open and stay open
+
     elseif link.is_exit then
       door_info = GAME.key_doors["exit"] --!!!!! FIXME: H/H
 

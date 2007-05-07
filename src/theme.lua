@@ -169,7 +169,10 @@ function get_rand_indoor_theme()
 end
 
 function get_rand_exit_combo()
-  local name,info = rand_table_pair(GAME.exits)
+  local name,info
+  repeat
+    name,info = rand_table_pair(GAME.exits)
+  until not info.secret_exit
   return info
 end
 

@@ -453,7 +453,9 @@ DM_EXITS =
 
   BLOODY =
   {
+    secret_exit = true,
     small_exit = true,
+
     mat_pri = 9,
 
     exit_h = 128,
@@ -479,7 +481,7 @@ DM_EXITS =
       {
         switch_w="SW1GSTON", wall="GSTONE2",
         left_w="GSTFONT1", right_w="GSTFONT2",
-        kind=11, tag=0,
+        kind=51, tag=0,
       }
     },
 

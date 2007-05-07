@@ -1309,6 +1309,12 @@ end
 
         if rand_odds(door_chance) then link.kind = "door" end
 
+        -- secret quests need a secret door
+        if (not c1.quest.is_secret) ~= (not c2.quest.is_secret) then
+          link.kind = "door"
+          link.is_secret = true
+        end
+
       else -- need a locked door
 
         local lock_level = math.max(c1.quest.level, c2.quest.level) - 1
@@ -1707,6 +1713,10 @@ end
         QUEST.level = #PLAN.quests
       end
 
+      if item == "secret" then
+        QUEST.is_secret = true
+      end
+
       local len_probs = LEN_PROB_TAB[kind]
       assert(len_probs)
 
@@ -1907,8 +1917,13 @@ R.level_theme.name, R.combo.name)
     local function setup_one_exit(c)
 
       if not GAME.caps.elevator_exits then
-        c.combo = get_rand_exit_combo()
+        if c.quest.is_secret then
+          c.combo = GAME.exits["BLOODY"] --FIXME
+        else
+          c.combo = get_rand_exit_combo()
+        end
       end
+
       c.is_exit = true
       c.no_shrink = true
       c.light = 176
@@ -2448,7 +2463,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   create_borders()
   match_borders_and_corners()
 
---!!!!  add_windows()
+  add_windows()
 
   return p
 end
