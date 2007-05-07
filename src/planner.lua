@@ -2059,6 +2059,8 @@ R.level_theme.name, R.combo.name)
 
       if b.scenic then return false end
 
+      if b.quest.kind == "exit" and a.quest ~= b.quest then return false end
+
       if a.f_min < (b.f_max + 64) then return false end
 
       return true
@@ -2446,7 +2448,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   create_borders()
   match_borders_and_corners()
 
-  add_windows()
+--!!!!  add_windows()
 
   return p
 end
