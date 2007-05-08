@@ -287,7 +287,7 @@ function spear_get_levels(episode)
     }
 
     if (map == ep_length) and episode ~= 5 then
-      Level.boss_kind = SP_EPISODE_BOSSES[episode],
+      Level.boss_kind = SP_EPISODE_BOSSES[episode]
     end
 
     -- add secret levels
