@@ -801,7 +801,7 @@ XN_LEVELS =
     { map=3, sky_info=XN_SKY_INFO[4] },
     { map=4, sky_info=XN_SKY_INFO[4] },
     { map=5, sky_info=XN_SKY_INFO[4] },
-    { map=6, sky_info=XN_SKY_INFO[4] },
+    { map=6, sky_info=XN_SKY_INFO[4], boss_kind="mixed" },
   },
 
   --- Cluster 2 ---
@@ -862,6 +862,7 @@ function hexen_get_levels(episode)
 
     local Level =
     {
+      map  = Src.map,
       name = string.format("MAP%02d", Src.map),
 
       episode   = episode,
@@ -889,10 +890,10 @@ function hexen_get_levels(episode)
   -- Key 1 is required to get to boss level
   -- Key 2 is required to get to weapon level
   --
-  -- Key levels always connect to [1]
+  -- Key levels connect to either [1] or other key level
   -- Boss level connects to either [1] or [3]
   -- Weapon level connects to either [1] or [2]
-  -- Secret level connects to any other level
+  -- Secret level connects to any non-start level
 
   local function add_connection(src, dest, d_kind, gate_req)
 
@@ -907,17 +908,20 @@ function hexen_get_levels(episode)
 
     table.insert(Gate.src.gates,  Gate)
     table.insert(Gate.dest.gates, Gate)
+
+--  con.printf("Connect %d -> %d\n", src, dest)
   end
 
   level_list[5].is_secret = true
 
-  add_connection(1, 2, "key1")
-  add_connection(1, 3, "key2")
+  local r = rand_irange(1,5)
+  add_connection(sel(r==3, 3, 1), 2, "key1")
+  add_connection(sel(r==2, 2, 1), 3, "key2")
 
-  add_connection(rand_sel(65, 1, 3), 6, "boss",   "key1")
-  add_connection(rand_sel(65, 1, 2), 4, "weapon", "key2")
+  add_connection(rand_sel(50, 1, 3), 6, "boss",   "key1")
+  add_connection(rand_sel(50, 1, 2), 4, "weapon", "key2")
 
-  add_connection(rand_index_by_probs { 1,6,6, 3,0,3 }, 5, "secret", "secret")
+  add_connection(rand_index_by_probs { 0,6,6, 4,0,2 }, 5, "secret", "secret")
 
   return level_list
 end
