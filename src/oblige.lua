@@ -50,6 +50,7 @@ end
 function create_LEVEL(level, index, total)
 
   con.at_level(level, index, total)
+
   con.rand_seed(SETTINGS.seed * 100 + index)
 
   con.printf("\n======| %s |======\n\n", level.name)
@@ -108,6 +109,8 @@ function build_cool_shit()
 
   con.printf("SEED = %d\n\n", SETTINGS.seed)
   con.printf("Settings =\n%s\n", table_to_str(SETTINGS))
+
+  con.rand_seed(SETTINGS.seed * 100)
 
   create_GAME()
 
