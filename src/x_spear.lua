@@ -275,23 +275,25 @@ function spear_get_levels(episode)
   for map = 1,ep_length do
     local Level =
     {
-      name = string.format("E%dL%d", episode, map),
+      name = string.format("E%dL%d", episode, ep_start + map-1),
 
       episode   = episode,
       ep_along  = map,
       ep_length = ep_length,
 
-      boss_kind = SP_EPISODE_BOSSES[episode],
       sky_info  = { color="blue", light=192 }, -- dummy
 
       theme_probs = theme_probs,
     }
 
+    if (map == ep_length) and episode ~= 5 then
+      Level.boss_kind = SP_EPISODE_BOSSES[episode],
+    end
+
     -- add secret levels
     if SETTINGS.length == "full" then
       if episode == 5 then
         Level.secret_kind = "spear"
-        Level.boss_kind = nil
       end
 
       if Level.name == "E1L4" or Level.name == "E3L2" then
