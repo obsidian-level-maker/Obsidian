@@ -775,8 +775,12 @@ XN_DEATHMATCH =
 
 XN_THEME_PROBS =
 {
-  -- dummy entry
-  { CITY=50, ICE=20, CAVE=20 },
+  { CITY=9, ICE=2, CAVE=1 },
+  { CITY=1, ICE=9, CAVE=2 },
+  { CITY=2, ICE=1, CAVE=9 },
+  { CITY=9, ICE=7, CAVE=1 },
+  { CITY=7, ICE=1, CAVE=9 },
+  { CITY=1, ICE=9, CAVE=7 },
 }
 
 XN_SKY_INFO =
@@ -792,353 +796,108 @@ XN_LEVELS =
 {
   --- Cluster 1 ---
   {
-    {
-      name = "map01", -- "WINNOWING HALL"
-      episode = 1,
-      ep_along = 1,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 2,
-    },
-
-    {
-      name = "map02", -- "SEVEN PORTALS"
-      episode = 1,
-      ep_along = 2,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 3,
-      weapon_pieces = true,
-    },
-
-    {
-      name = "map03", -- "GUARDIAN OF ICE"
-      episode = 1,
-      ep_along = 3,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 4,
-      secret_exit = 6,
-    },
-
-    {
-      name = "map04", -- "GUARDIAN OF FIRE"
-      episode = 1,
-      ep_along = 4,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 5,
-      weapon_pieces = true,
-    },
-
-    {
-      name = "map05", -- "GUARDIAN OF STEEL"
-      episode = 1,
-      ep_along = 5,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 13,
-    },
-
-    {
-      name = "map06", -- "BRIGHT CRUCIBLE"
-      episode = 1,
-      ep_along = 6,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      is_secret = true,
-      next_map = 4,
-    },
+    { map=1, sky_info=XN_SKY_INFO[3] },
+    { map=2, sky_info=XN_SKY_INFO[4] },
+    { map=3, sky_info=XN_SKY_INFO[4] },
+    { map=4, sky_info=XN_SKY_INFO[4] },
+    { map=5, sky_info=XN_SKY_INFO[4] },
+    { map=6, sky_info=XN_SKY_INFO[4] },
   },
 
   --- Cluster 2 ---
   {
-    {
-      name = "map13", -- "SHADOW WOOD"
-      episode = 2,
-      ep_along = 1,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[1],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 8,
-    },
-
-    {
-      name = "map08", -- "DARKMERE"
-      episode = 2,
-      ep_along = 2,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[5],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 9,
-      secret_exit = 11,
-      weapon_pieces = true,
-    },
-
-    {
-      name = "map09", -- "CAVES OF CIRCE"
-      episode = 2,
-      ep_along = 3,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[1],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 10,
-    },
-
-    {
-      name = "map10", -- "WASTELANDS"
-      episode = 2,
-      ep_along = 4,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[1],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 12,
-      weapon_pieces = true,
-    },
-
-    {
-      name = "map11", -- "SACRED GROVE"
-      episode = 2,
-      ep_along = 5,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[5],
-      theme_probs = XN_THEME_PROBS[1],
-      is_secret = true,
-      next_map = 9,
-    },
-
-    {
-      name = "map12", -- "HYPOSTYLE"
-      episode = 2,
-      ep_along = 6,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[1],
-      theme_probs = XN_THEME_PROBS[1],
-      boss_kind = "wyvern",
-      next_map = 27,
-    },
+    { map=13, sky_info=XN_SKY_INFO[1] },
+    { map= 8, sky_info=XN_SKY_INFO[5] },
+    { map= 9, sky_info=XN_SKY_INFO[1] },
+    { map=10, sky_info=XN_SKY_INFO[1] },
+    { map=11, sky_info=XN_SKY_INFO[5] },
+    { map=12, sky_info=XN_SKY_INFO[1], boss_kind="wyvern" },
   },
 
   --- Cluster 3 ---
   {
-    {
-      name = "map27", -- "HERESIARCH'S SEMINARY"
-      episode = 3,
-      ep_along = 1,
-      ep_length = 7,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 28,
-      secret_exit = 33,
-    },
+    -- Note: MAP30 is never used (FIXME: super-secret level)
 
-    {
-      name = "map28", -- "DRAGON CHAPEL"
-      episode = 3,
-      ep_along = 2,
-      ep_length = 7,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 30,
-      weapon_pieces = true,
-    },
-
-    {
-      name = "map30", -- "GRIFFIN CHAPEL"
-      episode = 3,
-      ep_along = 3,
-      ep_length = 7,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 31,
-    },
-
-    {
-      name = "map31", -- "DEATHWIND CHAPEL"
-      episode = 3,
-      ep_along = 4,
-      ep_length = 7,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 32,
-    },
-
-    {
-      name = "map32", -- "ORCHARD OF LAMENTATIONS"
-      episode = 3,
-      ep_along = 5,
-      ep_length = 7,
-      sky_info = XN_SKY_INFO[5],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 34,
-      weapon_pieces = true,
-    },
-
-    {
-      name = "map33", -- "SILENT REFECTORY"
-      episode = 3,
-      ep_along = 6,
-      ep_length = 7,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      is_secret = true,
-      next_map = 28,
-    },
-
-    {
-      name = "map34", -- "WOLF CHAPEL"
-      episode = 3,
-      ep_along = 7,
-      ep_length = 7,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      boss_kind = "heresiarch",
-      next_map = 21,
-    },
+    { map=27, sky_info=XN_SKY_INFO[4] },
+    { map=28, sky_info=XN_SKY_INFO[4] },
+    { map=31, sky_info=XN_SKY_INFO[4] },
+    { map=32, sky_info=XN_SKY_INFO[5] },
+    { map=33, sky_info=XN_SKY_INFO[4] },
+    { map=34, sky_info=XN_SKY_INFO[4], boss_kind="heresiarch" },
   },
 
   --- Cluster 4 ---
   {
-    {
-      name = "map21", -- "FORSAKEN OUTPOST"
-      episode = 4,
-      ep_along = 1,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 22,
-      weapon_pieces = true,
-    },
-
-    {
-      name = "map22", -- "CASTLE OF GRIEF"
-      episode = 4,
-      ep_along = 2,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 23,
-    },
-
-    {
-      name = "map23", -- "GIBBET"
-      episode = 4,
-      ep_along = 3,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 24,
-    },
-
-    {
-      name = "map24", -- "EFFLUVIUM"
-      episode = 4,
-      ep_along = 4,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 26,
-      secret_exit = 25,
-      weapon_pieces = true,
-    },
-
-    {
-      name = "map25", -- "DUNGEONS"
-      episode = 4,
-      ep_along = 5,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      is_secret = true,
-      next_map = 26,
-    },
-
-    {
-      name = "map26", -- "DESOLATE GARDEN"
-      episode = 4,
-      ep_along = 6,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      boss_kind = "heresiarch",
-      next_map = 35,
-    },
+    { map=21, sky_info=XN_SKY_INFO[3] }, 
+    { map=22, sky_info=XN_SKY_INFO[3] }, 
+    { map=23, sky_info=XN_SKY_INFO[3] }, 
+    { map=24, sky_info=XN_SKY_INFO[3] }, 
+    { map=25, sky_info=XN_SKY_INFO[3] }, 
+    { map=26, sky_info=XN_SKY_INFO[3], boss_kind="heresiarch" },
   },
 
   --- Cluster 5 ---
   {
-    {
-      name = "map35", -- "NECROPOLIS"
-      episode = 5,
-      ep_along = 1,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 36,
-    },
-
-    {
-      name = "map36", -- "ZEDEK'S TOMB"
-      episode = 5,
-      ep_along = 2,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 37,
-      secret_exit = 39,
-      weapon_pieces = true,
-    },
-
-    {
-      name = "map37", -- "MENELKIR'S TOMB"
-      episode = 5,
-      ep_along = 3,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 38,
-    },
-
-    {
-      name = "map38", -- "TRADUCTUS' TOMB"
-      episode = 5,
-      ep_along = 4,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      next_map = 40,
-      weapon_pieces = true,
-    },
-
-    {
-      name = "map39", -- "VIVARIUM"
-      episode = 5,
-      ep_along = 5,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[3],
-      theme_probs = XN_THEME_PROBS[1],
-      is_secret = true,
-      next_map = 37,
-    },
-
-    {
-      name = "map40", -- "DARK CRUCIBLE"
-      episode = 5,
-      ep_along = 6,
-      ep_length = 6,
-      sky_info = XN_SKY_INFO[4],
-      theme_probs = XN_THEME_PROBS[1],
-      boss_kind = "korax",
-      end_game = true,
-    },
+    { map=35, sky_info=XN_SKY_INFO[3] },
+    { map=36, sky_info=XN_SKY_INFO[3] },
+    { map=37, sky_info=XN_SKY_INFO[4] },
+    { map=38, sky_info=XN_SKY_INFO[3] },
+    { map=39, sky_info=XN_SKY_INFO[3] },
+    { map=40, sky_info=XN_SKY_INFO[4], boss_kind="korax" },
   },
 }
+
+function hexen_get_levels(episode)
+
+  local level_list = {}
+
+  local source_levels = XN_LEVELS[episode]
+  assert(#source_levels == 6)
+
+  local theme_mapping = { 1,2,3,4,5,6 }
+  rand_shuffle(theme_mapping)
+
+  for map = 1,6 do
+    local Src = source_levels[map]
+
+    local Level =
+    {
+      name = string.format("MAP%02d", Src.map),
+
+      episode   = episode,
+      ep_along  = map,
+      ep_length = 6,
+
+      sky_info  = Src.sky_info,
+      boss_kind = Src.boss_kind,
+
+      theme_probs = XN_THEME_PROBS[theme_mapping[map]],
+    }
+
+    table.insert(level_list, Level)
+  end
+
+  -- Structure of the episode:
+  --   [1] is the start level
+  --   [2] and [3] are levels for keys 1 bzw. 2
+  --   [4] is the weapon level (containing the three pieces)
+  --   [5] is the secret level
+  --   [6] is the boss (end) level
+  --
+  -- Key 1 is required to get to boss level
+  -- Key 2 is required to get to weapon level
+  --
+  -- Key levels always connect to [1]
+  -- Boss level connects to either [1] or [3]
+  -- Weapon level connects to either [1] or [2]
+  -- Secret level connects to any other level
+
+  -- FIXME !!!
+
+  level_list[5].is_secret = true
+
+  return level_list
+end
 
 ------------------------------------------------------------
 
@@ -1167,7 +926,7 @@ GAME_FACTORIES["hexen"] = function()
     ERROR_FLAT = "F_033",
 
     episodes   = 5,
-    level_func = function(episode) return XN_LEVELS[episode] end,
+    level_func = hexen_get_levels,
 
     min_episodes = 2,
 
