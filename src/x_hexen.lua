@@ -872,6 +872,8 @@ function hexen_get_levels(episode)
       boss_kind = Src.boss_kind,
 
       theme_probs = XN_THEME_PROBS[theme_mapping[map]],
+
+      gates = {},
     }
 
     table.insert(level_list, Level)
@@ -892,9 +894,30 @@ function hexen_get_levels(episode)
   -- Weapon level connects to either [1] or [2]
   -- Secret level connects to any other level
 
-  -- FIXME !!!
+  local function add_connection(src, dest, d_kind, gate_req)
+
+    local Gate =
+    {
+      src  = level_list[src],
+      dest = level_list[dest],
+    }
+    
+    -- FIXME !!!  d_kind
+    -- FIXME !!!  gate_req
+
+    table.insert(Gate.src.gates,  Gate)
+    table.insert(Gate.dest.gates, Gate)
+  end
 
   level_list[5].is_secret = true
+
+  add_connection(1, 2, "key1")
+  add_connection(1, 3, "key2")
+
+  add_connection(rand_sel(65, 1, 3), 6, "boss",   "key1")
+  add_connection(rand_sel(65, 1, 2), 4, "weapon", "key2")
+
+  add_connection(rand_index_by_probs { 1,6,6, 3,0,3 }, 5, "secret", "secret")
 
   return level_list
 end
