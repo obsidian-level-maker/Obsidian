@@ -554,13 +554,13 @@ XN_THING_NUMS =
   k_cave    = 8031,
   k_axe     = 8032,
   k_fire    = 8033,
-  k_castle  = 8034,
+  k_emerald = 8034,
   k_dungeon = 8035,
   k_silver  = 8036,
   k_rusty   = 8037,
-  k_waste   = 8038,
+  k_horn    = 8038,
   k_swamp   = 8039,
-  k_gold    = 8200,
+  k_castle  = 8200,
  
   c_staff   = 10,
   c_fire    = 8009,
@@ -790,6 +790,15 @@ XN_SKY_INFO =
   { color="blue",   light=192, lightning=true },
   { color="red",    light=192 },
   { color="gray",   light=176, foggy=true },
+}
+
+XN_KEY_PAIRS =
+{
+  { key1="k_emerald", key2="k_cave" },
+  { key1="k_silver",  key2="k_swamp" },
+  { key1="k_steel",   key2="k_rusty" },
+  { key1="k_fire",    key2="k_dungeon" },
+  { key1="k_horn",    key2="k_castle" },
 }
 
 XN_LEVELS =
