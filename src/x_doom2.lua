@@ -1508,6 +1508,7 @@ D2_LEVEL_BOSSES =
   MAP07 = "mancubus",
   MAP20 = "spider_mastermind",
   MAP30 = "boss_brain",
+  MAP32 = "commander_keen",
 }
 
 D2_SKY_INFO =
