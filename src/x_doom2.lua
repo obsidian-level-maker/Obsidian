@@ -1487,8 +1487,14 @@ D2_QUESTS =
 D2_EPISODE_THEMES =
 {
   { URBAN=4, INDUSTRIAL=3, TECH=3, NATURE=9, CAVE=2, HELL=2 },
-  { URBAN=9, INDUSTRIAL=6, TECH=6, NATURE=4, CAVE=2, HELL=4 },
+  { URBAN=9, INDUSTRIAL=5, TECH=6, NATURE=4, CAVE=2, HELL=4 },
   { URBAN=5, INDUSTRIAL=2, TECH=5, NATURE=3, CAVE=2, HELL=8 },
+}
+
+D2_SECRET_KIND =
+{
+  MAP31 = "wolfy",
+  MAP32 = "wolfy",
 }
 
 D2_SECRET_EXITS =
@@ -1497,11 +1503,11 @@ D2_SECRET_EXITS =
   MAP31 = true,
 }
 
-D2_BOSSES =
+D2_LEVEL_BOSSES =
 {
-  "mancubus",
-  "spider_mastermind",
-  "boss_brain",
+  MAP07 = "mancubus",
+  MAP20 = "spider_mastermind",
+  MAP30 = "boss_brain",
 }
 
 D2_SKY_INFO =
@@ -1536,7 +1542,7 @@ function doom2_get_levels(episode)
   for map = 1,ep_length do
     local Level =
     {
-      name = string.format("MAP%02d", ep_start+map-1),
+      name = string.format("MAP%02d", ep_start + map-1),
 
       episode   = episode,
       ep_along  = map,
@@ -1557,9 +1563,9 @@ function doom2_get_levels(episode)
       Level.sky_info = D2_SKY_INFO[3]
     end
 
-    if D2_SECRET_EXITS[Level.name] then
-      Level.secret_exit = true
-    end
+    Level.boss_kind   = D2_LEVEL_BOSSES[Level.name]
+    Level.secret_kind = D2_SECRET_KINDS[Level.name]
+    Level.secret_exit = D2_SECRET_EXITS[Level.name]
 
     table.insert(level_list, Level)
   end
