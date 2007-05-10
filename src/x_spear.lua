@@ -314,9 +314,7 @@ GAME_FACTORIES["spear"] = function()
 
   local T = GAME_FACTORIES.wolf3d()
 
-  T.episodes     = 6
-  T.min_episodes = 2
-
+  T.episodes   = 6
   T.level_func = spear_get_levels
 
   T.bosses   = SP_BOSSES
