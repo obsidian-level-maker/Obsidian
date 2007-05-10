@@ -445,7 +445,7 @@ XN_QUESTS = --FIXME
   {
     sw_rock=50
   },
-  
+
   weapon =
   {
     c_staff = 40, c_fire   = 40,
@@ -455,9 +455,12 @@ XN_QUESTS = --FIXME
   
   item =
   {
-    -- torch=10,
-    wings=50,
-    chaos=30,
+    wings = 5, chaos = 50,
+
+    banish    = 50, boots     = 70,
+    repulser  = 50, servant   = 10, 
+    porkies   = 30, incant    = 10,
+    defender  = 20, krater    = 50,
   },
 
   exit = { exit=50 },
@@ -735,19 +738,23 @@ XN_PICKUPS =
 
 XN_NICENESS =
 {
-  p1 = { pickup="ar_mesh",   prob=2 },
-  p2 = { pickup="ar_shield", prob=2 },
-  p3 = { pickup="ar_helmet", prob=2 },
-  p4 = { pickup="ar_amulet", prob=2 },
+  p1 = { pickup="ar_mesh",   prob=3 },
+  p2 = { pickup="ar_shield", prob=3 },
+  p3 = { pickup="ar_helmet", prob=3 },
+  p4 = { pickup="ar_amulet", prob=3 },
+
+  p5 = { pickup="flechette", prob=9 },
+  p6 = { pickup="bracer",    prob=5 },
+  p7 = { pickup="torch",     prob=7 },
 }
 
 XN_DEATHMATCH =
 {
   weapons =
   {
-    c_staff=40, c_fire  =40, c1_shaft=20, c2_cross=20, c3_arc  =20,
-    f_axe  =40, f_hammer=40, f1_hilt =20, f2_cross=20, f3_blade=20,
-    m_cone =40, m_blitz =40, m1_stick=20, m2_stub =20, m3_skull=20,
+    c_staff=40, c_fire  =40,
+    f_axe  =40, f_hammer=40,
+    m_cone =40, m_blitz =40,
   },
 
   health =
@@ -883,7 +890,8 @@ function hexen_get_levels(episode)
 
       theme_probs = XN_THEME_PROBS[theme_mapping[map]],
 
-      gates = {},
+      gates = {}, quests = {},
+      num_quests = 0,
     }
 
     table.insert(level_list, Level)
@@ -918,8 +926,28 @@ function hexen_get_levels(episode)
     table.insert(Gate.src.gates,  Gate)
     table.insert(Gate.dest.gates, Gate)
 
---  con.printf("Connect %d -> %d\n", src, dest)
+    local L = Gate.src
+
+    L.num_quests = L.num_quests + 1
+
+    con.printf("Connect %d -> %d\n", src, dest)
   end
+
+  local function add_quest(map, kind, item)
+
+    local L = level_list[map]
+
+    local BasicQuest =
+    {
+      kind = kind, item = item,
+    }
+
+    table.insert(L.quests, BasicQuest)
+    L.num_quests = L.num_quests + 1
+
+    con.printf("Add_quest to %d : %s (%s)\n", map, kind, item)
+  end
+
 
   level_list[5].is_secret = true
 
@@ -927,10 +955,48 @@ function hexen_get_levels(episode)
   add_connection(sel(r==3, 3, 1), 2, "key1")
   add_connection(sel(r==2, 2, 1), 3, "key2")
 
-  add_connection(rand_sel(50, 1, 3), 6, "boss",   "key1")
-  add_connection(rand_sel(50, 1, 2), 4, "weapon", "key2")
+  add_connection(rand_sel(50, 1, 3), 6, "boss",    "key1")
+  add_connection(rand_sel(50, 1, 2), 4, "weapon4", "key2")
 
   add_connection(rand_index_by_probs { 0,6,6, 4,0,2 }, 5, "secret", "secret")
+
+  -- weapon quests
+
+  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weapon2")
+  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weapon3")
+
+  -- item quests
+
+  local item_list = { 
+    "boots", "porkies", "repulser", "krater", -- these given twice
+    "wings", "chaos", "banish",
+    "servant", "incant", "defender" }
+
+  local item_where = { 1,2,3,4,5,6 }
+
+  for i = 1,#item_list do
+    local item = item_list[i]
+    
+    rand_shuffle(item_where)
+
+    add_quest(item_where[1], "item", item)
+
+    if i <= 4 and SETTINGS.size ~= "small" then
+      add_quest(item_where[2], "item", item)
+    end
+  end
+
+  -- switch quests
+
+  local switch_list = { "sw_rock" }  -- FIXME
+
+  rand_shuffle(switch_list)
+
+  -- FIXME
+
+  for map = 1,6 do
+    con.printf(">>> %s : %d quests\n", map, level_list[map].num_quests)
+  end
 
   return level_list
 end
@@ -938,6 +1004,8 @@ end
 ------------------------------------------------------------
 
 GAME_FACTORIES["hexen"] = function()
+
+  rand_shuffle(XN_KEY_PAIRS)
 
   return
   {
