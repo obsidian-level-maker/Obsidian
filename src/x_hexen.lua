@@ -960,6 +960,15 @@ function hexen_get_levels(episode)
 
   add_connection(rand_index_by_probs { 0,6,6, 4,0,2 }, 5, "secret", "secret")
 
+  add_quest(2, "key", "key1")
+  add_quest(3, "key", "key2")
+
+  add_quest(4, "weapon", "piece1")
+  add_quest(4, "weapon", "piece2")
+  add_quest(4, "weapon", "piece3")
+
+  add_quest(6, "boss", level_list[6].boss_kind)
+
   -- weapon quests
 
   add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weapon2")
@@ -972,30 +981,56 @@ function hexen_get_levels(episode)
     "wings", "chaos", "banish",
     "servant", "incant", "defender" }
 
-  local item_where = { 1,2,3,4,5,6 }
+  local item_where = { 1,2,3,4,4,5,5,5,6,6 }
+
+  assert(#item_list == #item_where)
+
+  rand_shuffle(item_where)
 
   for i = 1,#item_list do
-    local item = item_list[i]
-    
-    rand_shuffle(item_where)
+    local item  = item_list[i]
+    local where = item_where[i]
 
-    add_quest(item_where[1], "item", item)
+    add_quest(where, "item", item)
 
     if i <= 4 and SETTINGS.size ~= "small" then
-      add_quest(item_where[2], "item", item)
+      local where2
+      repeat
+        where2 = rand_element(item_where)
+      until where2 ~= where
+
+      add_quest(where2, "item", item)
     end
   end
 
   -- switch quests
 
-  local switch_list = { "sw_rock" }  -- FIXME
+  -- FIXME:
+  local switch_list = { "sw1", "sw2", "sw3", "sw4", "sw5", "sw6", "sw7" }
 
   rand_shuffle(switch_list)
 
-  -- FIXME
+  local num_switch = 7
+  if SETTINGS.size == "regular" then num_switch = 6 end
+  if SETTINGS.size == "small"   then num_switch = 4 end
 
-  for map = 1,6 do
-    con.printf(">>> %s : %d quests\n", map, level_list[map].num_quests)
+  local QN_SWITCH_PROBS = { 700, 200, 40, 15, 5, 1, 0 }
+  
+  for sw = 1,num_switch do
+
+    -- randomly select a level, preferring ones with fewest quests
+    local lev_probs = {}
+    for map = 1,6 do
+      local qn = level_list[map].num_quests
+      if qn < 1 then qn = 1 end
+      if qn > 7 then qn = 7 end
+
+      lev_probs[map] = QN_SWITCH_PROBS[qn]
+    end
+
+    local map = rand_index_by_probs(lev_probs)
+
+    add_quest(map, "switch", switch_list[sw])
   end
 
   return level_list
