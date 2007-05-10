@@ -1,0 +1,84 @@
+
+Quests Structure
+================
+
+A "quest" is a series of connected rooms where the final
+room contains the goal of the quest, such as a key or
+weapon.
+
+There are two basic types: "lock" quests and "mini" quests.
+Lock quests form the main structure of the level, containing
+all the things you _must_ do (e.g. when playing the level
+without any monsters).  Examples include: getting a key,
+pressing a switch (to open a door or lower bars), or even
+killing a boss monster which causes a pathway to open up
+(such as the Bruiser Brothers in E1M8 of DOOM).
+
+Mini quests are for weapons, powerups or could even be
+just a room full of health and ammo.  Secrets are always
+mini quests because you should never need to find a secret
+to finish a level.  Mini quests always "extend" an existing
+quest, basically making the parent quest larger and
+providing a sub-goal.
+
+The very last quest is called an "end" quest (though
+technically it has the same status as a lock quest).
+End quests usually lead to a room with an exit switch
+or an exit elevator (in Wolf3d).
+
+
+Example
+-------
+
+The essential structure of a level might be:
+
+     start
+       |
+       V
+  1. lock quest (red key)
+  2. lock quest (press blue switch)
+  3. lock quest (yellow key)
+  4. end quest
+
+
+Then add in some mini quests:
+
+  1. lock quest (red key)
+     1.1 mini quest (super shotgun)
+     1.2 mini quest (rocket launcher)
+     1.3 mini quest (chainsaw)
+
+  2. lock quest (press blue switch)
+     2.1 mini quest (invisibility sphere)
+
+  3. lock quest (yellow key)
+     3.1 mini quest (backpack full of ammo)
+     3.2 mini quest (plasma rifle)
+
+  4. end quest
+
+
+The level is built up by joining a quest (B say) onto an
+existing quest (A say).  Unless the quests have the same
+status (such as being mini quests with the same parent),
+then the join requires a locked door.
+
+The rule for what kind of door is simple: assuming B is a
+lock quest, then the lock for the door is the one picked up
+(or switched) on the lock quest IMMEDIATELY BEFORE quest B.
+Mini quests normally connect to their parent quest and hence
+don't need any lock.
+
+To refer to the example above: Quest 2 needs a red-keyed
+door where it joins onto quest 1.  Quest 3 needs a blue
+switched door where it joins onto quest 2 (or 1), and
+Quest 4 needs a yellow-keyed door where it joins onto
+quest 3 (or 2 or 1).
+
+
+Hexen Details
+-------------
+
+Hexen is more complicated because of the hub system
+
+
