@@ -18,13 +18,13 @@ Mini quests are for weapons, powerups or could even be
 just a room full of health and ammo.  Secrets are always
 mini quests because you should never need to find a secret
 to finish a level.  Mini quests always "extend" an existing
-quest, basically making the parent quest larger and
-providing a sub-goal.
+quest, basically making the parent quest larger and giving
+a sub-goal.
 
 The very last quest is called an "end" quest (though
 technically it has the same status as a lock quest).
 End quests usually lead to a room with an exit switch
-or an exit elevator (in Wolf3d).
+or an exit elevator (for Wolf3d).
 
 
 Example
@@ -97,8 +97,63 @@ of the super weapon.
 
 For Hexen maps there are some additional types of quests.
 The "gate" quest leads to a teleporter to a different map,
-and "back" quests lead to a teleporter that comes back.
+and a "back" quest leads to the teleporter that comes back.
+
+Gate quests are usually mini quests, because when the
+player comes back nothing has been unlocked.  Even for
+the two get-the-key levels, the gate quests are still
+mini quests since the keys are not used to control the
+progression /per se/ of the source map (the keys are
+used for access to the gates to the weapon/boss levels).
+
+The exception is the gate quest to the boss map, which
+is always used as the end quest of the start map.
+
+The "back" quests are normally used as end quests to the
+levels that the gate quests lead to.  The exception here
+is the Boss level, because the end quest on boss maps is
+the big bloody battle between the player and the bad-ass
+dude.
 
 
+Finally: the gates to the super weapon level and to the
+boss level are special since they must require a keyed
+door (using a key that might not be given by any quests
+on the map).  Hence they are mini quests which force the
+door to be keyed (and do not "extend" their parent).
+
+
+Example:
+--------
+
+start_map
+  1. lock quest (press moon switch)
+     1.1 mini quest (gate -> key A map)
+     1.2 mini quest (gate -> weapon map)
+
+  2. end quest (gate to boss map)
+     2.1 mini quest (gate -> key B map)
+
+key_A_map
+  1. lock quest (key A)
+     1.1 mini quest (gate -> secret level)
+     1.2 mini quest (weapon#2)
+
+  2. end quest (back -> start map)
+
+key_B_map
+  1. lock quest (press chain switch)
+     1.1 mini quest (weapon#3)
+
+  2. local quest (key B)
+     2.1 mini quest (item "porkulator")
+
+  3. end quest (back -> start map)
+
+boss_map
+  1. lock quest (axe key)
+
+  2. end quest (boss "korax")
+     2.1 mini quest (back -> start map)
 
 
