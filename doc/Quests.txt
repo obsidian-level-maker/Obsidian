@@ -80,5 +80,25 @@ Hexen Details
 -------------
 
 Hexen is more complicated because of the hub system
+which allows the player to travel back-n-forth between
+different maps.
+
+Oblige creates each episode using six maps:
+  1 = starting map
+  2 = map containing key A
+  3 = map containing key B
+  4 = weapon pieces map
+  5 = secret map
+  6 = boss (end) map
+
+Key A is required to get to the boss level, and Key B is
+required to get to the level containing the three pieces
+of the super weapon.
+
+For Hexen maps there are some additional types of quests.
+The "gate" quest leads to a teleporter to a different map,
+and "back" quests lead to a teleporter that comes back.
+
+
 
 
