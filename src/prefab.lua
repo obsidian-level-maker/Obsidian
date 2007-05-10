@@ -3147,6 +3147,51 @@ OVERHANG_3 =
 },
 
 
+------ Heretic and Hexen -------------------------------
+
+HEXEN_V_TELEPORT =
+{
+  structure =
+  {
+    "............",
+    "............",
+    "..WWWWWWWW..",
+    "..WWWWWWWW..",
+    "..WWxxxxWW..",
+    "..WWxxxxWW..",
+    "..WWxxxxWW..",
+    "..WWxxxxWW..",
+    "..WWttttWW..",
+    "..WWssssWW..",
+    "............",
+    "............",
+  },
+
+  elements =
+  {
+    W = { solid="wall",
+          [7] = { dx= 48, dy=0 },
+          [9] = { dx=-48, dy=0 },
+        },
+
+    s = { f_h=16, c_rel="floor_h", c_h=144, light=192,
+        },
+
+    t = { copy="s", mark=1,
+          [7] = { dx=0, dy=-8 },
+          [9] = { dx=0, dy=-8 },
+          [2] = { rail="border_w", l_peg="bottom", },
+          [8] = { rail="telep_w",  l_peg="bottom", kind="kind", tag="tag" },
+        },
+
+    x = { copy="s", light=0,
+          [7] = { dx= 24, dy=8 },
+          [9] = { dx=-24, dy=8 },
+        },
+  },
+},
+
+
 ------ Wolfenstein ------------------------------------
 
 WOLF_ELEVATOR =
