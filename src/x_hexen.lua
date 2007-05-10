@@ -873,6 +873,10 @@ function hexen_get_levels(episode)
   local theme_mapping = { 1,2,3,4,5,6 }
   rand_shuffle(theme_mapping)
 
+  local key1 = XN_KEY_PAIRS[episode].key1
+  local key2 = XN_KEY_PAIRS[episode].key2
+  assert(key1 and key2)
+
   for map = 1,6 do
     local Src = source_levels[map]
 
@@ -912,34 +916,16 @@ function hexen_get_levels(episode)
   -- Weapon level connects to either [1] or [2]
   -- Secret level connects to any non-start level
 
-  local function add_connection(src, dest, d_kind, gate_req)
-
-    local Gate =
-    {
-      src  = level_list[src],
-      dest = level_list[dest],
-    }
-    
-    -- FIXME !!!  d_kind
-    -- FIXME !!!  gate_req
-
-    table.insert(Gate.src.gates,  Gate)
-    table.insert(Gate.dest.gates, Gate)
-
-    local L = Gate.src
-
-    L.num_quests = L.num_quests + 1
-
-    con.printf("Connect %d -> %d\n", src, dest)
-  end
-
-  local function add_quest(map, kind, item)
+  local function add_quest(map, kind, item, is_mini, gate_req)
 
     local L = level_list[map]
 
     local BasicQuest =
     {
-      kind = kind, item = item,
+      kind = kind,
+      item = item,
+      is_mini = is_mini,
+      gate_req = gate_req,
     }
 
     table.insert(L.quests, BasicQuest)
@@ -948,31 +934,56 @@ function hexen_get_levels(episode)
     con.printf("Add_quest to %d : %s (%s)\n", map, kind, item)
   end
 
+  local function add_gate(src, dest, gate_req)
+
+    local Gate =
+    {
+      src  = level_list[src],
+      dest = level_list[dest],
+      gate_req = gate_req,
+    }
+
+    table.insert(Gate.src.gates,  Gate)
+    table.insert(Gate.dest.gates, Gate)
+
+    con.printf("Connect %d -> %d\n", src, dest)
+
+    local fwd_mini  = not (dest==2 or dest==3 or dest==6)
+    local back_mini = (dest == 6)
+
+    add_quest(src,  "gate", dest, fwd_mini, gate_req)
+    add_quest(dest, "back", src,  back_mini)
+  end
+
 
   level_list[5].is_secret = true
 
   local r = rand_irange(1,5)
-  add_connection(sel(r==3, 3, 1), 2, "key1")
-  add_connection(sel(r==2, 2, 1), 3, "key2")
+  add_gate(sel(r==3, 3, 1), 2)
+  add_gate(sel(r==2, 2, 1), 3)
 
-  add_connection(rand_sel(50, 1, 3), 6, "boss",    "key1")
-  add_connection(rand_sel(50, 1, 2), 4, "weapon4", "key2")
+  add_gate(rand_sel(50, 1, 3), 6, key1)
+  add_gate(rand_sel(50, 1, 2), 4, key2)
 
-  add_connection(rand_index_by_probs { 0,6,6, 4,0,2 }, 5, "secret", "secret")
+  add_gate(rand_index_by_probs { 0,6,6, 4,0,2 }, 5, "secret")
 
-  add_quest(2, "key", "key1")
-  add_quest(3, "key", "key2")
+  add_quest(2, "key", key1, false)
+  add_quest(3, "key", key2, false)
 
-  add_quest(4, "weapon", "piece1")
-  add_quest(4, "weapon", "piece2")
-  add_quest(4, "weapon", "piece3")
+  add_quest(4, "weapon", "piece1", "mini")
+  add_quest(4, "weapon", "piece2", "mini")
+  add_quest(4, "weapon", "piece3", "mini")
 
-  add_quest(6, "boss", level_list[6].boss_kind)
+  if episode == 5 then
+    add_quest(6, "key", "k_axe", false)
+  end
+
+  add_quest(6, "boss", level_list[6].boss_kind, false)
 
   -- weapon quests
 
-  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weapon2")
-  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weapon3")
+  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weapon2", "mini")
+  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weapon3", "mini")
 
   -- item quests
 
@@ -991,7 +1002,7 @@ function hexen_get_levels(episode)
     local item  = item_list[i]
     local where = item_where[i]
 
-    add_quest(where, "item", item)
+    add_quest(where, "item", item, "mini")
 
     if i <= 4 and SETTINGS.size ~= "small" then
       local where2
@@ -999,7 +1010,7 @@ function hexen_get_levels(episode)
         where2 = rand_element(item_where)
       until where2 ~= where
 
-      add_quest(where2, "item", item)
+      add_quest(where2, "item", item, "mini")
     end
   end
 
@@ -1030,7 +1041,7 @@ function hexen_get_levels(episode)
 
     local map = rand_index_by_probs(lev_probs)
 
-    add_quest(map, "switch", switch_list[sw])
+    add_quest(map, "switch", switch_list[sw], false)
   end
 
   return level_list
