@@ -110,18 +110,6 @@ function get_rand_theme()
   assert(info)
 
   return info
-
----###  local infos = {}
----###  local probs = {}
----###  for name,info in pairs(GAME.themes) do
----###    if info.prob > 0 then
----###      table.insert(infos, info)
----###      table.insert(probs, info.prob)
----###    end
----###  end
----###  assert(#infos > 0)
----###  assert(#infos == #probs)
----###  return infos[rand_index_by_probs(probs)]
 end
 
 function get_rand_combo(theme)
