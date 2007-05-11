@@ -276,8 +276,8 @@ function plan_dm_arena(level)
     for cy = 1,PLAN.h do
       cx = rand_irange(1,PLAN.w)
       local c = PLAN.cells[cx][cy]
-      local level_theme = get_rand_theme()
-      c.combo = get_rand_combo(level_theme)
+      local theme = get_rand_theme()
+      c.combo = get_rand_combo(theme)
       c.liquid = liquid_for_seed(c.combo)
     end
 

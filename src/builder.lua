@@ -716,7 +716,7 @@ function cage_select_height(c, kind, rail, floor_h, ceil_h)
   return (z1+z2)/2, open_top
 end
 
-function B_pillar_cage(c, theme, kx,ky, bx,by)
+function B_pillar_cage(c, combo, kx,ky, bx,by)
 
   local K = c.chunks[kx][ky]
 
@@ -732,27 +732,27 @@ function B_pillar_cage(c, theme, kx,ky, bx,by)
 
   local z, open_top = cage_select_height(c, kind, rail, K.rmodel.f_h,K.rmodel.c_h)
 
-  if kx==2 and ky==2 and dual_odds(c.theme.outdoor, 90, 20) then
+  if kx==2 and ky==2 and dual_odds(c.combo.outdoor, 90, 20) then
     open_top = true
   end
 
   local CAGE = copy_block_with_new(K.rmodel,
   {
     f_h   = z,
-    f_tex = theme.floor,
-    l_tex = theme.wall,
-    u_tex = theme.wall,
+    f_tex = combo.floor,
+    l_tex = combo.wall,
+    u_tex = combo.wall,
     rail  = rail.wall,
     is_cage = true,
   })
 
   if not open_top then
     CAGE.c_h = CAGE.f_h + rail.h
-    CAGE.c_tex = theme.ceil
-    CAGE.light = 192  -- FIXME: from CAGE theme
+    CAGE.c_tex = combo.ceil
+    CAGE.light = 192  -- FIXME: from CAGE combo
   end
 
---  if K.dud_chunk and (c.theme.outdoor or not c.sky_light) then
+--  if K.dud_chunk and (c.combo.outdoor or not c.sky_light) then
 --    rotate_block(CAGE,32)
 --  end
 
@@ -1191,7 +1191,7 @@ function make_chunks()
     local range =
       c.room_type.space_range or
       c.combo.space_range or
-      (not PLAN.deathmatch and c.quest.level_theme.space_range) or
+      (not PLAN.deathmatch and c.quest.theme.space_range) or
       GAME.space_range
 
     assert(range)
@@ -4729,7 +4729,7 @@ sel(B.on_path, "YES", "NO"))
 
     local mode =
       c.room_type.trim_mode or c.combo.trim_mode or
-      (not PLAN.deathmatch and c.quest.level_theme.trim_mode) or
+      (not PLAN.deathmatch and c.quest.theme.trim_mode) or
       "guillotine";
 
     for kx = 1,3 do for ky = 1,3 do
@@ -5358,7 +5358,7 @@ con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
     local step   = -diff_h / (deep * 4)
 
     local prefer_stairs = c.room_type.prefer_stairs or
-       (not PLAN.deathmatch and c.quest.level_theme.prefer_stairs) or
+       (not PLAN.deathmatch and c.quest.theme.prefer_stairs) or
        GAME.caps.prefer_stairs
 
     local max_step = sel(GAME.caps.prefer_stairs, 24, 16) --????
@@ -6347,7 +6347,7 @@ function tizzy_up_room(c)
   local function decide_reclaim_kinds(c)
 
     local function liquid_chance()
-      -- FIXME: room_type/combo/level_theme/GAME
+      -- FIXME: room_type/combo/theme/GAME
       return rand_odds(40)
     end
 
@@ -6782,8 +6782,8 @@ con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
       assert(item)
     end
 
-    if not item and c.quest.level_theme and c.quest.level_theme.general_scenery and rand_odds(30) then
-      item = rand_key_by_probs(c.quest.level_theme.general_scenery)
+    if not item and c.quest.theme and c.quest.theme.general_scenery and rand_odds(30) then
+      item = rand_key_by_probs(c.quest.theme.general_scenery)
       assert(item)
     end
 

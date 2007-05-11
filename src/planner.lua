@@ -443,7 +443,7 @@ function get_door_chance(c, other)
     c.room_type.door_probs or
     other.room_type.door_probs or
     c.combo.door_probs or
-    c.quest.level_theme.door_probs or
+    c.quest.theme.door_probs or
     GAME.door_probs
 
   assert(probs)
@@ -465,7 +465,7 @@ function get_window_chance(c, other)
     c.room_type.window_probs or
     other.room_type.door_probs or
     c.combo.window_probs or
-    c.quest.level_theme.window_probs or
+    c.quest.theme.window_probs or
     GAME.window_probs
 
   assert(probs)
@@ -1198,7 +1198,7 @@ function plan_sp_level(level, is_coop)
       local idx = rand_index_by_probs(probs)
       local c   = cells[idx]
 
-      c.room_type = get_rand_roomtype(Q.level_theme)
+      c.room_type = get_rand_roomtype(Q.theme)
 
 con.debugf("ROOM %d QUEST %d.%d ---> %s\n",
 c.along, Q.level, Q.sub_level, c.room_type.name)
@@ -1357,10 +1357,10 @@ end
     local function quest_heights(Q)
 
       local diff_probs = Q.combo.diff_probs or
-          Q.level_theme.diff_probs or GAME.diff_probs
+          Q.theme.diff_probs or GAME.diff_probs
 
       local bump_probs = Q.combo.bump_probs or
-          Q.level_theme.bump_probs or GAME.bump_probs
+          Q.theme.bump_probs or GAME.bump_probs
 
       assert(diff_probs)
       assert(bump_probs)
@@ -1482,7 +1482,7 @@ end
         local height_list =
           c.room_type.room_heights or
           c.combo.room_heights or
-          c.quest.level_theme.room_heights or
+          c.quest.theme.room_heights or
           GAME.room_heights
 
         assert(height_list)
@@ -1863,12 +1863,12 @@ con.debugf("CHANGE_OVER = %d (total:%d)\n", mid_q, #PLAN.quests)
       
       local Q = PLAN.quests[i]
 
-      Q.level_theme = sel(i >= mid_q, T2, T1)
+      Q.theme = sel(i >= mid_q, T2, T1)
 
-      Q.combo = get_rand_combo(Q.level_theme)
+      Q.combo = get_rand_combo(Q.theme)
 
 con.debugf("QUEST %d.%d theme:%s combo:%s\n", Q.level, Q.sub_level,
-Q.level_theme.name, Q.combo.name)
+Q.theme.name, Q.combo.name)
     end
   end
 

@@ -1215,7 +1215,7 @@ function battle_in_cell(c)
       end
     end
 
-    merge_prefs(c.quest.level_theme.monster_prefs)
+    merge_prefs(c.quest.theme.monster_prefs)
     merge_prefs(c.room_type.monster_prefs)
     merge_prefs(c.combo.monster_prefs)
 
