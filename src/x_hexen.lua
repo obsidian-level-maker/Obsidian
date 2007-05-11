@@ -923,7 +923,7 @@ function hexen_get_levels(episode)
   local w_src = rand_sel(50, 1, 2)
 
 
-  local function add_quest(map, kind, item, is_sub, gate_req)
+  local function add_quest(map, kind, item, is_sub, force_key)
 
     local L = level_list[map]
 
@@ -932,7 +932,7 @@ function hexen_get_levels(episode)
       kind = kind,
       item = item,
       is_sub = is_sub,
-      gate_req = gate_req,
+      force_key = force_key,
     }
 
     table.insert(L.quests, BasicQuest)
@@ -942,13 +942,12 @@ function hexen_get_levels(episode)
                sel(is_sub, "SUB", "Main"))
   end
 
-  local function join_map(src, dest, gate_req)
+  local function join_map(src, dest, force_key)
 
     local Gate =
     {
       src  = level_list[src],
       dest = level_list[dest],
-      gate_req = gate_req,
     }
 
     table.insert(Gate.src.gates,  Gate)
@@ -963,7 +962,7 @@ function hexen_get_levels(episode)
       fwd_sub = false
     end
 
-    add_quest(src,  "gate", dest, fwd_sub, gate_req)
+    add_quest(src,  "gate", dest, fwd_sub, force_key)
     add_quest(dest, "back", src,  back_sub)
   end
 
