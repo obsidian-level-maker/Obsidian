@@ -28,15 +28,15 @@ function show_quests()
         Q.level, Q.kind, Q.item, Q.want_len)
   end
 
-  local function display_mini_quest(idx, Q)
-    con.printf("  Mini-Quest %d.%d: Find %s (%s) Len %d\n",
+  local function display_sub_quest(idx, Q)
+    con.printf("  Sub-Quest %d.%d: Find %s (%s) Len %d\n",
         Q.level, Q.sub_level, Q.kind, Q.item, Q.want_len)
   end
 
   for q_idx,Q in ipairs(PLAN.quests) do
     display_quest(q_idx, Q)
     for r_idx,R in ipairs(Q.children) do
-      display_mini_quest(r_idx, R)
+      display_sub_quest(r_idx, R)
     end
   end
 end
@@ -57,7 +57,7 @@ function show_path()
       elseif c == c.quest.first then kind = "S"
       elseif c ~= c.quest.last then
             if c.hallway then kind = "h"
-        elseif c.quest.mini then kind = "q"
+        elseif c.quest.parent then kind = "q"
         else kind = "p"
         end
       elseif c.quest.kind == "exit" then kind = "E"
@@ -977,8 +977,8 @@ function plan_sp_level(level, is_coop)
       return 0
     end
 
-    -- mini quests *always* connect to their parent
-    if Q.mini then
+    -- sub quests *always* connect to their parent
+    if Q.parent then
       if Q.parent == c.quest then return 90 end
       if Q.parent == c.quest.parent then return 60 end
       return 0.3
@@ -993,9 +993,9 @@ function plan_sp_level(level, is_coop)
     assert(quest_d >= 1)
 
     -- how much backtracking (avoid forking off key room)
-    -- Need to handle a mini branching off a mini...
+    -- Need to handle a Sub branching off a Sub...
     local where = c
-    while where.quest.mini do
+    while where.quest.parent do
       where = where.quest.path[1]
     end
     local back_d = #where.quest.path - where.along
@@ -1009,8 +1009,8 @@ function plan_sp_level(level, is_coop)
        back_d = #FB_BACK_PROBS
     end
 
-    -- less chance for main quest branching off a mini
-    if c.quest.mini then quest_d = quest_d + 1.4 end
+    -- less chance for main quest branching off a Sub
+    if c.quest.parent then quest_d = quest_d + 1.4 end
 
     return FB_BACK_PROBS[back_d] / quest_d / quest_d
   end
@@ -1019,7 +1019,7 @@ function plan_sp_level(level, is_coop)
     local b_cells = {}  
     local b_probs = {}
 
---con.debugf(Q.mini and "MINI-Q: " or "QUEST: ", Q.level, "\n")
+--con.debugf(Q.parent and "SUB-Q: " or "QUEST: ", Q.level, "\n")
     for x = 1,PLAN.w do for y = 1,PLAN.h do
       local c = PLAN.cells[x][y]
       if c and not c.is_depot then
@@ -1092,11 +1092,11 @@ function plan_sp_level(level, is_coop)
       L = choose_liquid()
     end
 
-    if Q.combo.good_liquid and dual_odds(Q.mini, 33, 66) then
+    if Q.combo.good_liquid and dual_odds(Q.parent, 33, 66) then
       return find_liquid(Q.combo.good_liquid)
     end
 
-    if Q.mini then
+    if Q.parent then
       return Q.parent.liquid
     end
 
@@ -1201,7 +1201,7 @@ function plan_sp_level(level, is_coop)
       c.room_type = get_rand_roomtype(Q.level_theme)
 
 con.debugf("ROOM %d QUEST %d.%d ---> %s\n",
-c.along, Q.level, Q.sub_level or 0, c.room_type.name)
+c.along, Q.level, Q.sub_level, c.room_type.name)
 
       if rand_odds(70) then break end
 
@@ -1228,7 +1228,7 @@ c.along, Q.level, Q.sub_level or 0, c.room_type.name)
     end
 
     -- add very first room somewhere in lower-left quarter of map
-    if not Q.mini and Q.level == 1 then
+    if not Q.parent and Q.level == 1 then
       local x = rand_irange(1, int(PLAN.w / 2))
       local y = rand_irange(1, int(PLAN.h / 2))
 
@@ -1283,7 +1283,7 @@ if false then --!!!!
       end
 
       -- Experimental: quest cell is a building
-      if #Q.path >= 4 and dual_odds(Q.mini, 12, 30) then
+      if #Q.path >= 4 and dual_odds(Q.parent, 12, 30) then
         Q.last.combo = get_rand_indoor_combo()
       end
     end
@@ -1630,19 +1630,19 @@ end
   
   local function decide_quests()
     
-    local function is_mini_quest(kind)
+    local function is_sub_quest(kind)
       return kind == "weapon" or kind == "item"
     end
     
     local function quest_score(qlist)
       -- higher (worse) score when the same type of quest
       -- appears multiple times in a row.
-      -- also checks for how many mini-quests per quest.
+      -- also checks for how many sub-quests per quest.
 
       local total = { 0, 0, 0, 0 }
 
       local rep  = 0
-      local mini = 0
+      local sub = 0
 
       -- Note that we go ONE PAST the end
       for i = 1, #qlist+1 do
@@ -1654,11 +1654,11 @@ end
           rep = 1
         end
 
-        if is_mini_quest(qlist[i]) then
-          mini = math.min(4, mini + 1)
+        if is_sub_quest(qlist[i]) then
+          sub = math.min(4, sub + 1)
         else
-          if mini > 0 then total[mini] = total[mini] + 1.8 end
-          mini = 0
+          if sub > 0 then total[sub] = total[sub] + 1.8 end
+          sub = 0
         end
       end
 
@@ -1667,7 +1667,7 @@ end
 
     local function find_main_quest(qlist)
       for idx,kind in ipairs(qlist) do
-        if not is_mini_quest(kind) then
+        if not is_sub_quest(kind) then
           return idx
         end
       end
@@ -1685,10 +1685,10 @@ end
       item   = { 15, 70, 70, 12, 4, 2 }
     }
 
-    local function add_quest(kind, is_mini, item)
+    local function add_quest(kind, is_sub, item)
       
       local parent
-      if is_mini then
+      if is_sub then
         parent = PLAN.quests[#PLAN.quests]
         assert(parent)
       end
@@ -1699,7 +1699,6 @@ end
         item = item,
         path = {},
 
-        mini = is_mini,
         parent = parent,
         children = {},
 
@@ -1713,6 +1712,7 @@ end
       else
         table.insert(PLAN.quests, QUEST)
         QUEST.level = #PLAN.quests
+        QUEST.sub_level = 0
       end
 
       if item == "secret" then
@@ -1788,7 +1788,7 @@ end
     con.debugf("Final Quest Score: %d\n", quest_score(qlist))
 
     -- find each main quest, pull it out, then all the
-    -- mini-quests at the beginning of the list become
+    -- sub-quests at the beginning of the list become
     -- assocatied with that main quest.
 
     local need_secret_exit
@@ -1802,19 +1802,19 @@ end
       add_quest(qlist[m], nil, get_quest_item(qlist[m]))
       table.remove(qlist, m)
 
-      while is_mini_quest(qlist[1]) do
-        add_quest(qlist[1], "mini", get_quest_item(qlist[1]))
+      while is_sub_quest(qlist[1]) do
+        add_quest(qlist[1], "sub", get_quest_item(qlist[1]))
         table.remove(qlist, 1)
       end
 
       if need_secret_exit and rand_odds(33) then
-        add_quest("exit", "mini", "secret")
+        add_quest("exit", "sub", "secret")
         need_secret_exit = false
       end
     end
 
     if need_secret_exit then
-      add_quest("exit", "mini", "secret")
+      add_quest("exit", "sub", "secret")
     end
 
     add_quest("exit", nil, "normal")
@@ -1869,7 +1869,7 @@ con.debugf("CHANGE_OVER = %d\n", change_over)
       Q.level_theme = sel(diff >= 0, T2, T1)
 
       Q.combo = get_rand_combo(Q.level_theme)
-con.debugf("QUEST %d.%d theme:%s combo:%s\n", Q.level, Q.sub_level or 0,
+con.debugf("QUEST %d.%d theme:%s combo:%s\n", Q.level, Q.sub_level,
 Q.level_theme.name, Q.combo.name)
 
       for yyy,R in ipairs(Q.children) do
@@ -1890,7 +1890,7 @@ Q.level_theme.name, Q.combo.name)
 
           R.combo = get_rand_combo(R.level_theme)
         end
-con.debugf("SUB_QUEST %d.%d theme:%s combo:%s\n", R.level, R.sub_level or 0,
+con.debugf("SUB_QUEST %d.%d theme:%s combo:%s\n", R.level, R.sub_level,
 R.level_theme.name, R.combo.name)
       end
     end
@@ -1899,7 +1899,7 @@ R.level_theme.name, R.combo.name)
   local function peak_toughness(Q)
     local peak = 140 + 5 * #Q.path
 
-    peak = peak + 20 * (Q.sub_level or 0)
+    peak = peak + 20 * Q.sub_level
     peak = peak * (Q.level ^ 0.7) * (1 + rand_skew()/5)
 
     -- adjustment for Wolf3d/SOD  | FIXME: rework this func, use GAME values
@@ -2345,7 +2345,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
     local function try_add_surprise(Q)
       if Q.kind == "exit" then return end
 
-      if dual_odds(Q.mini, sm_prob, bg_prob) then
+      if dual_odds(Q.parent, sm_prob, bg_prob) then
         if rand_odds(70) then
           add_closet(Q)
         else

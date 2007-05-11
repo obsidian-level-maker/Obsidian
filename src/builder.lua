@@ -3964,7 +3964,7 @@ function layout_cell(c)
         local pic,cut = c.void_pic,c.void_cut
 
         if not c.quest.image and (PLAN.deathmatch or
-             (c.quest.mini and rand_odds(33)))
+             (c.quest.parent and rand_odds(33)))
         then
           pic = GAME.images[1]
           cut = 1
@@ -4214,7 +4214,7 @@ function layout_cell(c)
 
       if K.crate and not blocked then
         local combo = c.crate_combo
-        if not c.quest.image and not c.quest.mini and
+        if not c.quest.image and not c.quest.parent and
            (not PLAN.image or rand_odds(11))
         then
           combo = GAME.images[2]

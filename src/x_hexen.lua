@@ -923,7 +923,7 @@ function hexen_get_levels(episode)
   local w_src = rand_sel(50, 1, 2)
 
 
-  local function add_quest(map, kind, item, is_mini, gate_req)
+  local function add_quest(map, kind, item, is_sub, gate_req)
 
     local L = level_list[map]
 
@@ -931,7 +931,7 @@ function hexen_get_levels(episode)
     {
       kind = kind,
       item = item,
-      is_mini = is_mini,
+      is_sub = is_sub,
       gate_req = gate_req,
     }
 
@@ -939,7 +939,7 @@ function hexen_get_levels(episode)
     L.num_quests = L.num_quests + 1
 
     con.printf("Add_quest to %d : %s (%s) %s\n", map, kind, item,
-               sel(is_mini, "MINI", "LOCK"))
+               sel(is_sub, "SUB", "Main"))
   end
 
   local function join_map(src, dest, gate_req)
@@ -956,15 +956,15 @@ function hexen_get_levels(episode)
 
     con.printf("Connect %d -> %d\n", src, dest)
 
-    local fwd_mini  = "mini"
-    local back_mini = (dest == 6)
+    local fwd_sub  = "sub"
+    local back_sub = (dest == 6)
 
     if src == 1 and (dest == 6 or dest == b_src) then
-      fwd_mini = false
+      fwd_sub = false
     end
 
-    add_quest(src,  "gate", dest, fwd_mini, gate_req)
-    add_quest(dest, "back", src,  back_mini)
+    add_quest(src,  "gate", dest, fwd_sub, gate_req)
+    add_quest(dest, "back", src,  back_sub)
   end
 
 
@@ -981,9 +981,9 @@ function hexen_get_levels(episode)
   join_map(w_src, 4, key_B)
   join_map(b_src, 6, key_A)
 
-  add_quest(4, "weapon", "piece_1", "mini")
-  add_quest(4, "weapon", "piece_2", "mini")
-  add_quest(4, "weapon", "piece_3", "mini")
+  add_quest(4, "weapon", "piece_1", "sub")
+  add_quest(4, "weapon", "piece_2", "sub")
+  add_quest(4, "weapon", "piece_3", "sub")
 
   join_map(rand_index_by_probs { 0,6,6, 4,0,2 }, 5, "secret")
 
@@ -995,8 +995,8 @@ function hexen_get_levels(episode)
 
   -- weapon quests
 
-  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weap_2", "mini")
-  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weap_3", "mini")
+  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weap_2", "sub")
+  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weap_3", "sub")
 
   -- item quests
 
@@ -1015,7 +1015,7 @@ function hexen_get_levels(episode)
     local item  = item_list[i]
     local where = item_where[i]
 
-    add_quest(where, "item", item, "mini")
+    add_quest(where, "item", item, "sub")
 
     if i <= 4 and SETTINGS.size ~= "small" then
       local where2
@@ -1023,7 +1023,7 @@ function hexen_get_levels(episode)
         where2 = rand_element(item_where)
       until where2 ~= where
 
-      add_quest(where2, "item", item, "mini")
+      add_quest(where2, "item", item, "sub")
     end
   end
 
