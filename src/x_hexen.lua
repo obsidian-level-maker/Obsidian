@@ -983,8 +983,8 @@ function hexen_get_levels(episode)
     for idx,L in ipairs(level_list) do
       con.debugf("Hexen map #%d (%s)\n", idx, L.name)
       for zzz,Q in ipairs(L.quests) do
-        con.debugf("  %s-Quest : %s (%s)  len:%d  %s\n",
-            string.upper(Q.mode), Q.kind, tostring(Q.item), Q.want_len,
+        con.debugf("  %s-Quest : len:%d kind:%s (%s) %s\n",
+            string.upper(Q.mode), Q.want_len, Q.kind, tostring(Q.item),
             Q.force_key and ("force_key=" .. Q.force_key) or "")
       end
     end
