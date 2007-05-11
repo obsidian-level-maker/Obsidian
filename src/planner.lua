@@ -54,11 +54,12 @@ function show_path()
       elseif c.dm_weapon then kind = "W"
       elseif c.scenic    then kind = "C"
       elseif c.is_depot  then kind = "D"
-      elseif c.along == 1 then kind = "S"
-      elseif c.along < #c.quest.path then
-        if c.hallway then kind = "h"
+      elseif c == c.quest.first then kind = "S"
+      elseif c ~= c.quest.last then
+            if c.hallway then kind = "h"
         elseif c.quest.mini then kind = "q"
-        else kind = "p" end
+        else kind = "p"
+        end
       elseif c.quest.kind == "exit" then kind = "E"
       elseif c.quest.kind == "item" or
              c.quest.kind == "weapon" then kind = "W"
@@ -72,7 +73,7 @@ function show_path()
       elseif c.exit_dir == 6 then R = ">"
       end
 
-      if c.along == 2 then
+      if c == c.quest.path[2] then
             if c.entry_dir == 2 then L = "v"
         elseif c.entry_dir == 8 then L = "^"
         elseif c.entry_dir == 4 then L = "<"
@@ -1676,6 +1677,7 @@ end
     -- probability tables for length of quests
     local LEN_PROB_TAB =
     {
+      ---         2   3   4   5   6   7   8  9 10 11
       key    = {  5, 25, 50, 90, 70, 30, 12, 6, 2, 2 },
       exit   = {  5, 25, 50, 90, 70, 30, 12, 6, 2, 2 },
       switch = {  5, 70, 90, 50, 12, 4, 2, 2 },
@@ -1724,7 +1726,7 @@ end
       QUEST.want_len = 1 + rand_index_by_probs(len_probs)
 
       -- exit quests have minimum of 3, so that exit doors
-      -- are never locked -- FIXME
+      -- are never locked
       if QUEST.kind == "exit" then
         QUEST.want_len = QUEST.want_len + 1
       end
@@ -2379,7 +2381,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
       for i = #Q.path,1,-1 do
         local cell = Q.path[i]
         if not cell.toughness then
-          if skip > 0 or cell.is_exit or cell.along == 1 then
+          if skip > 0 or cell.is_exit or cell == PLAN.quests[1].first then
             cell.toughness = (1 + rand_skew()) * peak / 3.5
             skip = skip - 1
           else

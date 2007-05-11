@@ -4111,7 +4111,7 @@ function layout_cell(c)
     -- TEST CRUD : overhangs
     if rand_odds(9) and c.combo.outdoor
       and (sec.c_h - sec.f_h <= 256)
-      and not (c.quest.kind == "exit" and c.along == #c.quest.path-1)
+      and not (c.quest.kind == "exit" and c == c.quest.path[#c.quest.path-1])
       and not K.stair_dir
     then
 

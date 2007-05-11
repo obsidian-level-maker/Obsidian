@@ -16,18 +16,6 @@
 --
 ----------------------------------------------------------------
 
-
--- FIXME: some kind of "inventory" info
-AMMO_LIMITS =  -- double these for backpack
-{
-  bullet = 200, 
-  shell  = 50,
-  rocket = 50,
-  cell   = 300
-}
-
-------------------------------------------------------------
-
 TOUGH_FACTOR = { easy=0.75, medium=1.00, hard=1.33 }
 ACCURACIES   = { easy=0.55, medium=0.66, hard=0.77 }
 
@@ -727,7 +715,7 @@ function distribute_pickups(c, HM, backtrack)
     for zzz,ndef in pairs(GAME.niceness) do
       local prob = ndef.prob
 
-      if ndef.always and c.along == (#c.quest.path - 1) then prob=99 end
+      if ndef.always and c == c.quest.path[#c.quest.path - 1] then prob=99 end
       if ndef.weapon and HM[ndef.weapon] then prob=1 end
       if ndef.quest  and c.quest.level < ndef.quest then prob = 0 end
 
@@ -753,23 +741,6 @@ function distribute_pickups(c, HM, backtrack)
         end
       end
     end
-
----###      if c.along == #c.quest.path then return end
----###
----###      if not HM.shotty and rand_odds(66) then
----###        add_pickup(c, "shotty", GAME.weapons.shotty)
----###        hm_give_weapon(HM, "shotty")
----###      end
----###
----###      if not HM.chain and c.quest.level >= 3 and rand_odds(11) then
----###        add_pickup(c, "chain", GAME.weapons.chain)
----###        hm_give_weapon(HM, "chain")
----###      end
----###
----###      if HM.armor <= 0 and rand_odds(2) then
----###        add_pickup(c, "green_armor", GAME.pickups.green_armor)
----###        hm_give_armor(HM, 100, 100)
----###      end
   end
 
   local function adjust_hmodel(HM)
@@ -1079,7 +1050,7 @@ function place_battle_stuff(c, stats)
 
       local options = { [SK]=true }
 
-      if dual_odds(c.along == #c.quest.path, 88, 44) then
+      if dual_odds(c == c.quest.last, 88, 44) then
         options.ambush = true
       end
 
@@ -1466,7 +1437,7 @@ zprint("BATTLE IN", c.x, c.y)
     -- left over toughness gets compounded (but never decreased)
     PLAN.hmodels[SK].toughness = math.max(0, T + U)
 
-    local quest = (c.along == #c.quest.path) and c.quest
+    local quest = sel(c == c.quest.last, c.quest, nil)
 
 zprint("SIMULATE in CELL", c.x, c.y, SK)
 
