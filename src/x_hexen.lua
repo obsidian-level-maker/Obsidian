@@ -863,7 +863,24 @@ XN_LEVELS =
   },
 }
 
+XN_QUEST_LEN_PROBS =
+{
+  ----------  2   3   4   5   6   7   8   9  10  -------
+
+  switch = {  0, 40, 90, 90, 25, 2 },
+  gate   = {  1, 50, 90, 50, 20, 5 },
+  back   = {  0, 10, 40, 90, 50, 25, 3 },
+
+  key    = {  0,  0, 30, 70, 90, 70, 30, 15, 2 },
+  weapon = {  1, 25, 90, 60, 20, 1 },
+  item   = { 15, 90, 70, 25, 3 },
+
+  boss   = {  0,  5, 40, 90, 60, 30, 10, 1 },
+}
+
 function hexen_get_levels(episode)
+
+  -- NOTE: see doc/Quests.txt for structure of Hexen episodes
 
   local level_list = {}
 
@@ -894,52 +911,40 @@ function hexen_get_levels(episode)
 
       theme_probs = XN_THEME_PROBS[theme_mapping[map]],
 
-      gates = {}, quests = {},
-      num_quests = 0,
+      quests = {}, gates = {},
     }
 
     table.insert(level_list, Level)
   end
 
 
-  -- Structure of the episode:
-  --   [1] is the start level
-  --   [2] and [3] are levels for keys 1 bzw. 2
-  --   [4] is the weapon level (containing the three pieces)
-  --   [5] is the secret level
-  --   [6] is the boss (end) level
-  --
-  -- Key 1 is required to get to boss level
-  -- Key 2 is required to get to weapon level
-  --
-  -- Key levels connect to either [1] or other key level
-  -- Boss level connects to either [1] or [3]
-  -- Weapon level connects to either [1] or [2]
-  -- Secret level connects to any non-start level
-
   level_list[5].is_secret = true
+
+  level_list[4].assume_weapons = { weap_2=true, weap_3=true }
+  level_list[6].assume_weapons = { weap_2=true, weap_3=true }
 
   local b_src = rand_sel(50, 1, 3)
   local w_src = rand_sel(50, 1, 2)
 
 
-  local function add_quest(map, kind, item, is_sub, force_key)
+  local function add_quest(map, kind, item, mode, force_key)
 
     local L = level_list[map]
 
-    local BasicQuest =
+    local len_probs = non_nil(XN_QUEST_LEN_PROBS[kind])
+
+    local Quest =
     {
       kind = kind,
       item = item,
-      is_sub = is_sub,
+      mode = mode,
       force_key = force_key,
+      want_len = 1 + rand_index_by_probs(len_probs)
     }
 
-    table.insert(L.quests, BasicQuest)
-    L.num_quests = L.num_quests + 1
+    table.insert(L.quests, Quest)
 
-    con.printf("Add_quest to %d : %s (%s) %s\n", map, kind, item,
-               sel(is_sub, "SUB", "Main"))
+    return Quest
   end
 
   local function join_map(src, dest, force_key)
@@ -953,19 +958,37 @@ function hexen_get_levels(episode)
     table.insert(Gate.src.gates,  Gate)
     table.insert(Gate.dest.gates, Gate)
 
-    con.printf("Connect %d -> %d\n", src, dest)
+--  con.debugf("Connect %d -> %d\n", src, dest)
 
-    local fwd_sub  = "sub"
-    local back_sub = (dest == 6)
-
+    local fwd_mode  = "sub"
+    local back_mode = "end"
+    
     if src == 1 and (dest == 6 or dest == b_src) then
-      fwd_sub = false
+      fwd_mode = "end"
     end
 
-    add_quest(src,  "gate", dest, fwd_sub, force_key)
-    add_quest(dest, "back", src,  back_sub)
+    if dest == 6 then
+      back_mode = "sub"
+    end
+
+    local F = add_quest(src,  "gate", dest, fwd_mode, force_key)
+    local B = add_quest(dest, "back", src,  back_mode)
+
+    if dest == 5 then
+      F.is_secret = true
+    end
   end
 
+  local function dump_quests()
+    for idx,L in ipairs(level_list) do
+      con.debugf("Hexen map #%d (%s)\n", idx, L.name)
+      for zzz,Q in ipairs(L.quests) do
+        con.debugf("  %s-Quest : %s (%s)  len:%d  %s\n",
+            string.upper(Q.mode), Q.kind, tostring(Q.item), Q.want_len,
+            Q.force_key and ("force_key=" .. Q.force_key) or "")
+      end
+    end
+  end
 
   -- connections
   
@@ -974,8 +997,8 @@ function hexen_get_levels(episode)
   join_map(sel(r==3, 3, 1), 2)
   join_map(sel(r==2, 2, 1), 3)
 
-  add_quest(2, "key", key_A, false)
-  add_quest(3, "key", key_B, false)
+  add_quest(2, "key", key_A, "main")
+  add_quest(3, "key", key_B, "main")
 
   join_map(w_src, 4, key_B)
   join_map(b_src, 6, key_A)
@@ -984,18 +1007,18 @@ function hexen_get_levels(episode)
   add_quest(4, "weapon", "piece_2", "sub")
   add_quest(4, "weapon", "piece_3", "sub")
 
-  join_map(rand_index_by_probs { 0,6,6, 4,0,2 }, 5, "secret")
+  join_map(rand_index_by_probs { 0,6,6, 4,0,2 }, 5)
 
   if episode == 5 then
-    add_quest(6, "key", "k_axe", false)
+    add_quest(6, "key", "k_axe", "main")
   end
 
-  add_quest(6, "boss", level_list[6].boss_kind, false)
+  add_quest(6, "boss", level_list[6].boss_kind, "end")
 
   -- weapon quests
 
-  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weap_2", "sub")
-  add_quest(rand_index_by_probs { 7, 2, 2 }, "weapon", "weap_3", "sub")
+  add_quest(rand_index_by_probs { 7, 1, 1 }, "weapon", "weap_2", "sub")
+  add_quest(rand_index_by_probs { 2, 7, 7 }, "weapon", "weap_3", "sub")
 
   -- item quests
 
@@ -1044,7 +1067,7 @@ function hexen_get_levels(episode)
     -- randomly select a level, preferring ones with fewest quests
     local lev_probs = {}
     for map = 1,6 do
-      local qn = level_list[map].num_quests
+      local qn = # level_list[map].quests
       if qn < 1 then qn = 1 end
       if qn > 7 then qn = 7 end
 
@@ -1053,8 +1076,10 @@ function hexen_get_levels(episode)
 
     local map = rand_index_by_probs(lev_probs)
 
-    add_quest(map, "switch", switch_list[sw], false)
+    add_quest(map, "switch", switch_list[sw], "main")
   end
+
+  dump_quests()
 
   return level_list
 end
