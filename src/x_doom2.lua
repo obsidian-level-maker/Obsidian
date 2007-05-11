@@ -1491,7 +1491,7 @@ D2_EPISODE_THEMES =
   { URBAN=5, INDUSTRIAL=2, TECH=5, NATURE=3, CAVE=2, HELL=8 },
 }
 
-D2_SECRET_KIND =
+D2_SECRET_KINDS =
 {
   MAP31 = "wolfy",
   MAP32 = "wolfy",
@@ -1553,9 +1553,6 @@ function doom2_get_levels(episode)
 
       -- allow TNT and Plutonia to override the sky stuff
       sky_info = GAME.sky_info[episode],
-
-      boss_kind   = (map == 8) and D2_BOSSES[episode],
-      secret_kind = (map == 9) and "wolfy",
     }
 
     -- fixup for secret levels
