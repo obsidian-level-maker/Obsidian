@@ -32,18 +32,20 @@ class Plan
 
 
 class Quest
+  kind : one of "key" | "switch" | "exit"
+         (for mini-quests: "weapon" | "item")
+  item : name of key / switch_tex / weapon / item
+
   level : main quest number
   sub_level : index for sub-quest (0 for main quests)
 
   parent : Quest -- for sub quests (nil for main quests)
 
-  kind : one of "key" | "switch" | "exit"
-         (for mini-quests: "weapon" | "item")
-  item : name of key / switch_tex / weapon / item
-
   path  : array(Cell), includes start and end
   first : Cell  -- convenience, same as path[1]
   last  : Cell  -- convenience, same as path[#path]
+
+  force_key : must use locked door with this key (Hexen only)
 
   children : array(Quest)
 
