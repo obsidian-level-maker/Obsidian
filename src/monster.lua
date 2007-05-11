@@ -1510,9 +1510,6 @@ function battle_through_level()
 
   for zzz,Q in ipairs(PLAN.quests) do
     battle_in_quest(Q)
-    for yyy,R in ipairs(Q.children) do
-      battle_in_quest(R)
-    end
   end
 
   -- step 2: place monsters and health/ammo into level
@@ -1526,9 +1523,6 @@ function battle_through_level()
 
   for zzz,Q in ipairs(PLAN.quests) do
     place_quest_stuff(Q, stats)
-    for yyy,R in ipairs(Q.children) do
-      place_quest_stuff(R, stats)
-    end
   end
 
   dump_battle_stats(stats)

@@ -17,27 +17,27 @@
 ----------------------------------------------------------------
 
 
-function show_quests()
-  if PLAN.deathmatch then
-    con.printf("Deathmatch Quest: frag fest!\n")
-    return
-  end
+function show_quests(quests)
 
-  local function display_quest(idx, Q)
-    con.printf("Quest %d: Find %s (%s) Len %d\n",
-        Q.level, Q.kind, Q.item, Q.want_len)
-  end
-
-  local function display_sub_quest(idx, Q)
-    con.printf("  Sub-Quest %d.%d: Find %s (%s) Len %d\n",
-        Q.level, Q.sub_level, Q.kind, Q.item, Q.want_len)
-  end
-
-  for q_idx,Q in ipairs(PLAN.quests) do
-    display_quest(q_idx, Q)
-    for r_idx,R in ipairs(Q.children) do
-      display_sub_quest(r_idx, R)
+  if not quests then
+    if PLAN.deathmatch then
+      con.printf("Deathmatch Quest: frag fest!\n")
+      return
     end
+
+    con.printf("Quests:\n")
+
+    quests = PLAN.quests
+  end
+
+  for zzz,Q in ipairs(quests) do
+    con.printf("  %s %s : len:%d kind:%s (%s)%s%s\n",
+        (Q.mode and string.upper(Q.mode)) or sel(Q.parent, "SUB", "Main"),
+        (Q.level and string.format("%d.%d", Q.level, Q.sub_level)) or "",
+        Q.want_len, Q.kind, tostring(Q.item),
+        Q.is_secret and " SECRET" or "",
+        Q.force_key and (" force_key:" .. Q.force_key) or ""
+    )
   end
 end
 
@@ -972,8 +972,8 @@ function plan_sp_level(level, is_coop)
       return 0
     end
 
-    -- never branch of exit quests (esp. the secret exit)
-    if c.quest.kind == "exit" then
+    -- never branch of secret quests
+    if c.quest.is_secret then
       return 0
     end
 
@@ -1321,8 +1321,16 @@ end
         local lock_level = math.max(c1.quest.level, c2.quest.level) - 1
         assert(lock_level >= 1 and lock_level < #PLAN.quests)
 
-        link.quest = PLAN.quests[lock_level]
-        link.kind  = "door"
+        for zzz,Q in ipairs(PLAN.quests) do
+          if Q.level == lock_level and Q.sub_level == 0 then
+
+            link.quest = Q --FIXME: SHITTY WAY TO MARK A LOCK
+            link.kind  = "door"
+            break;
+          end
+        end
+
+        assert(link.quest)
       end
     end
 
@@ -1452,10 +1460,6 @@ end
 
     for zzz,Q in ipairs(PLAN.quests) do
       quest_heights(Q)
-
-      for xxx,R in ipairs(Q.children) do
-        quest_heights(R)
-      end
     end
 
     -- do scenic cells
@@ -1693,43 +1697,46 @@ end
         assert(parent)
       end
 
-      local QUEST =
+      local Quest =
       {
         kind = kind,
         item = item,
         path = {},
 
         parent = parent,
-        children = {},
 
         tag = allocate_tag()
       }
 
       if parent then
-        table.insert(parent.children, QUEST)
-        QUEST.level = parent.level
-        QUEST.sub_level = #parent.children
+        Quest.level = parent.level
+        Quest.sub_level = 1 -- FIXME !!!  was: #parent.children
       else
-        table.insert(PLAN.quests, QUEST)
-        QUEST.level = #PLAN.quests
-        QUEST.sub_level = 0
+        Quest.level = 1
+        Quest.sub_level = 0
+
+        for xxx,Q in ipairs(PLAN.quests) do
+          if not Q.parent then Quest.level = Quest.level + 1 end
+        end
       end
 
       if item == "secret" then
-        QUEST.is_secret = true
+        Quest.is_secret = true
       end
 
       local len_probs = LEN_PROB_TAB[kind]
       assert(len_probs)
 
       -- add '1' for starting square (minimum len == 2)
-      QUEST.want_len = 1 + rand_index_by_probs(len_probs)
+      Quest.want_len = 1 + rand_index_by_probs(len_probs)
 
       -- exit quests have minimum of 3, so that exit doors
       -- are never locked
-      if QUEST.kind == "exit" then
-        QUEST.want_len = QUEST.want_len + 1
+      if Quest.kind == "exit" then
+        Quest.want_len = Quest.want_len + 1
       end
+
+      table.insert(PLAN.quests, Quest)
     end
 
     ---- decide_quests ----
@@ -1825,13 +1832,9 @@ end
   local function plot_quests()
     for zzz,Q in ipairs(PLAN.quests) do
       make_quest_path(Q)
-
-      for yyy,R in ipairs(Q.children) do
-        make_quest_path(R)
-      end
-
-      con.ticker();
     end
+
+    con.ticker();
   end
 
   local function decide_themes()
@@ -1845,54 +1848,27 @@ end
 --T2 = GAME.themes["CAVE"]
 
     -- choose change-over point
-    assert(#PLAN.quests >= 2)
+    local mid_q = int(#PLAN.quests / 2 + con.random())
 
-    local h_probs = {}
-    for j = 1,#PLAN.quests do
-      local prob
-      if j == 1 or j == #PLAN.quests then
-        table.insert(h_probs, 5)
-      elseif j == 2 or j == #PLAN.quests-1 then
-        table.insert(h_probs, 60)
-      else
-        table.insert(h_probs, 90)
-      end
+    if #PLAN.quests >= 4 then
+      mid_q = mid_q + (rand_index_by_probs { 1,3,1 }) - 2
+    end
+    if #PLAN.quests >= 6 then
+      mid_q = mid_q + (rand_index_by_probs { 1,6,1 }) - 2
     end
 
-    local change_over = rand_index_by_probs(h_probs)
-con.debugf("CHANGE_OVER = %d\n", change_over)
+con.debugf("CHANGE_OVER = %d (total:%d)\n", mid_q, #PLAN.quests)
 
-    for idx,Q in ipairs(PLAN.quests) do
+    for i = 1,#PLAN.quests do
       
-      local diff = Q.level - change_over
+      local Q = PLAN.quests[i]
 
-      Q.level_theme = sel(diff >= 0, T2, T1)
+      Q.level_theme = sel(i >= mid_q, T2, T1)
 
       Q.combo = get_rand_combo(Q.level_theme)
+
 con.debugf("QUEST %d.%d theme:%s combo:%s\n", Q.level, Q.sub_level,
 Q.level_theme.name, Q.combo.name)
-
-      for yyy,R in ipairs(Q.children) do
-        
-        if rand_odds(50) then
-          R.level_theme = Q.level_theme
-          R.combo = Q.combo
-        else
-          local T_prob
-              if diff <= -2 then T_prob = 99
-          elseif diff == -1 then T_prob = 90
-          elseif diff ==  0 then T_prob = 40
-          elseif diff ==  1 then T_prob = 10
-          elseif diff >=  2 then T_prob = 1 
-          end
-
-          R.level_theme = rand_sel(T_prob, T1, T2)
-
-          R.combo = get_rand_combo(R.level_theme)
-        end
-con.debugf("SUB_QUEST %d.%d theme:%s combo:%s\n", R.level, R.sub_level,
-R.level_theme.name, R.combo.name)
-      end
     end
   end
 
@@ -2358,12 +2334,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     for zzz,Q in ipairs(PLAN.quests) do
       try_add_surprise(Q)
-
-      for xxx,R in ipairs(Q.children) do
-        try_add_surprise(R)
-      end
     end
-
   end
 
 
@@ -2404,10 +2375,6 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     for zzz,Q in ipairs(PLAN.quests) do
       toughen_quest(Q)
-
-      for yyy,R in ipairs(Q.children) do
-        toughen_quest(R)
-      end
     end
   end
 
@@ -2428,6 +2395,8 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
   decide_quests()
   decide_themes()
+
+--show_quests()
 
   plot_quests()
   decide_links()

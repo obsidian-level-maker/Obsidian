@@ -479,7 +479,8 @@ function plan_dm_arena(level)
   -- dummy quest
   PLAN.quests[1] =
   {
-    level = 1, kind = "frag_fest", path = {}, children = {}
+    kind = "deathmatch", item = "frags",
+    level = 1, path = {},
   }
 
   for y = 1,H do
