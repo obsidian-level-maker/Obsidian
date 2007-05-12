@@ -732,7 +732,8 @@ function wolf3d_get_levels(episode)
     -- bosses and exits
 
     if Level.boss_kind then
-      add_quest(Level, "boss", Level.boss_kind)
+      local Q = add_quest(Level, "boss", Level.boss_kind)
+      Q.give_key = "k_gold"
 
     elseif keys == 2 then
       add_quest(Level, "key", "k_gold")
@@ -745,7 +746,7 @@ function wolf3d_get_levels(episode)
     add_quest(Level, "exit", "normal")
   end
 
-  dump_levels()
+--  dump_levels()
 
   return level_list
 end
@@ -804,6 +805,7 @@ GAME_FACTORIES["wolf3d"] = function()
     room_heights = { [128]=50 },
     space_range  = { 50, 90 },
     door_probs = { combo_diff=90, normal=20, out_diff=1 },
+    window_probs = { out_diff=0, combo_diff=0, normal=0 },
   }
 end
 
