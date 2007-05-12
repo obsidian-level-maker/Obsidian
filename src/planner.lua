@@ -306,18 +306,21 @@ end
 
 function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
 
-  local ky_list = copy_table(QUEST_TAB.key)
-  local sw_list = copy_table(QUEST_TAB.switch)
-  local wp_list = copy_table(QUEST_TAB.weapon)
-  local it_list = copy_table(QUEST_TAB.item)
+  local function prob_tab_to_list(prob_tab)
+    local tab = copy_table(prob_tab)
+    local list = {}
+    while not table_empty(tab) do
+      local name = rand_key_by_probs(tab)
+      table.insert(list, name)
+      tab[name] = nil
+    end
+    return list
+  end
 
-  rand_shuffle(ky_list); rand_shuffle(sw_list)
-  rand_shuffle(wp_list); rand_shuffle(it_list)
-
-  local ky_num = table_size(ky_list)
-  local sw_num = table_size(sw_list)
-  local wp_num = table_size(wp_list)
-  local it_num = table_size(it_list)
+  local ky_list = prob_tab_to_list(QUEST_TAB.key)
+  local sw_list = prob_tab_to_list(QUEST_TAB.switch)
+  local wp_list = prob_tab_to_list(QUEST_TAB.weapon)
+  local it_list = prob_tab_to_list(QUEST_TAB.item)
 
 
   -- decide how many keys, switches, weapons & items
@@ -331,16 +334,16 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
   assert(tot_min and tot_max)
   assert(tot_min <= tot_max)
 
-  assert(ky_num + sw_num + wp_num + it_num >= tot_min)
+  assert(#ky_list + #sw_list + #wp_list + #it_list >= tot_min)
 
   local keys, switches, weapons, items
   local total, ratio
 
   repeat
-    keys     = rand_irange(1, ky_num)
-    switches = rand_irange(0, sw_num)
-    weapons  = rand_irange(1, wp_num)
-    items    = rand_irange(0, it_num)
+    keys     = rand_irange(1, #ky_list)
+    switches = rand_irange(0, #sw_list)
+    weapons  = rand_irange(1, #wp_list)
+    items    = rand_irange(0, #it_list)
 
     total    = keys + switches + weapons + items
     ratio    = (keys + switches) / (weapons + items)
@@ -1856,9 +1859,6 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
         function (A,B)
           return (A.level*100 + A.sub_level) < (B.level*100 + B.sub_level)
         end)
-
-      con.printf("assign_sub_quests: FINAL RESULT:\n")
-      show_quests(qlist)
     end
 
     local function find_main_quest(qlist)
