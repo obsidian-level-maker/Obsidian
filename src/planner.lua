@@ -304,7 +304,7 @@ function allocate_floor_code()
 end
 
 
-function std_decide_quests(QUEST_TAB, LENGTH_TAB)
+function std_decide_quests(QUEST_TAB, LEN_PROBS)
 
   local ky_list = copy_table(QUEST_TAB.key)
   local sw_list = copy_table(QUEST_TAB.switch)
@@ -314,6 +314,8 @@ function std_decide_quests(QUEST_TAB, LENGTH_TAB)
   rand_shuffle(ky_list); rand_shuffle(sw_list)
   rand_shuffle(wp_list); rand_shuffle(it_list)
 
+
+  -- decide how many keys, switches, weapons & items
 
   local TOT_MINIMUMS = { small=4, regular=6,  large=8 }
   local TOT_MAXIMUMS = { small=7, regular=10, large=13 }
@@ -346,13 +348,33 @@ function std_decide_quests(QUEST_TAB, LENGTH_TAB)
   con.printf("Keys %d, Switches %d, Weapons %d, Items %d\n",
       keys, switches, weapons, items)
 
-  local qlist = {}
-  for i = 1,20 do
-    if (i <= keys)     then table.insert(qlist, "key") end
-    if (i <= switches) then table.insert(qlist, "switch") end
-    if (i <= weapons)  then table.insert(qlist, "weapon") end
-    if (i <= items)    then table.insert(qlist, "item") end
+
+  -- build the quest list
+
+  local quest_list = {}
+
+  local function add_quest(kind, item)
+    local len_probs = non_nil(LEN_PROBS[kind])
+    local Quest =
+    {
+      kind = kind,
+      item = item,
+      want_len = 1 + rand_index_by_probs(len_probs),
+    }
+    table.insert(quest_list, Quest)
+    return Quest
   end
+
+  for i = 1,tot_max do
+    if (i <= keys)     then add_quest("key",    ky_list[i]) end
+    if (i <= switches) then add_quest("switch", sw_list[i]) end
+    if (i <= weapons)  then add_quest("weapon", wp_list[i]) end
+    if (i <= items)    then add_quest("item",   it_list[i]) end
+  end
+
+  add_quest("exit", "normal")
+
+  return quest_list
 end
 
 
