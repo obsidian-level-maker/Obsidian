@@ -61,10 +61,13 @@ function show_path()
         else kind = "p"
         end
       elseif c.quest.kind == "exit" then kind = "E"
+      elseif c.quest.kind == "boss" then kind = "B"
       elseif c.quest.kind == "item" or
              c.quest.kind == "weapon" then kind = "W"
       elseif c.quest.kind == "switch" or
              c.quest.kind == "key" then kind = "K"
+      elseif c.quest.kind == "gate" or
+             c.quest.kind == "back" then kind = "G"
       else kind = "?"
       end
           if c.exit_dir == 2 then R = "v"
