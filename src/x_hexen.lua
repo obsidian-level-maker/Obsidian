@@ -1075,7 +1075,7 @@ function hexen_get_levels(episode)
     add_quest(map, "switch", switch_list[sw], "main")
   end
 
-  dump_levels()
+--  dump_levels()
 
   return level_list
 end
