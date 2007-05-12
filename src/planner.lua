@@ -32,7 +32,7 @@ function show_quests(quests)
 
   for zzz,Q in ipairs(quests) do
     con.printf("  %s %s : len:%d kind:%s (%s)%s%s\n",
-        (Q.mode and string.upper(Q.mode)) or sel(Q.parent, "SUB", "Main"),
+        (Q.mode and string.upper(Q.mode)) or sel(Q.parent, "SUB", "MAIN"),
         (Q.level and string.format("%d.%d", Q.level, Q.sub_level)) or "",
         Q.want_len, Q.kind, tostring(Q.item),
         Q.is_secret and " SECRET" or "",
