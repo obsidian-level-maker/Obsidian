@@ -758,7 +758,7 @@ HC_SECRET_EXITS =
   E3M4 = true,
 }
 
-HC_BOSSES =
+HC_EPISODE_BOSSES =
 {
   "ironlich",
   "maulotaur",
@@ -793,7 +793,7 @@ function heretic_get_levels(episode)
       theme_probs = theme_probs,
       sky_info = HC_SKY_INFO[episode],
 
-      boss_kind   = (map == 8) and HC_BOSSES[episode],
+      boss_kind   = (map == 8) and HC_EPISODE_BOSSES[episode],
       secret_kind = (map == 9) and "plain",
     }
 
