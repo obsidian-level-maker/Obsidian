@@ -444,7 +444,7 @@ HC_QUESTS =
   },
   weapon =
   {
-    gauntlets=10, crossbow=60,
+    gauntlets=10, -- crossbow=60,
     claw=30, hellstaff=30, phoenix=30,
     firemace=20
   },
@@ -800,6 +800,8 @@ function heretic_get_levels(episode)
     if HC_SECRET_EXITS[Level.name] then
       Level.secret_exit = true
     end
+
+    std_decide_quests(Level, HC_QUESTS, HC_QUEST_LEN_PROBS)
 
     table.insert(level_list, Level)
   end

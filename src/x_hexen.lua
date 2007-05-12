@@ -979,14 +979,10 @@ function hexen_get_levels(episode)
     end
   end
 
-  local function dump_quests()
+  local function dump_levels()
     for idx,L in ipairs(level_list) do
-      con.debugf("Hexen map #%d (%s)\n", idx, L.name)
-      for zzz,Q in ipairs(L.quests) do
-        con.debugf("  %s-Quest : len:%d kind:%s (%s) %s\n",
-            string.upper(Q.mode), Q.want_len, Q.kind, tostring(Q.item),
-            Q.force_key and ("force_key=" .. Q.force_key) or "")
-      end
+      con.printf("Hexen episode [%d] map [%d] : %s\n", episode, idx, L.name)
+      show_quests(L.quests)
     end
   end
 
@@ -1079,7 +1075,7 @@ function hexen_get_levels(episode)
     add_quest(map, "switch", switch_list[sw], "main")
   end
 
-  dump_quests()
+  dump_levels()
 
   return level_list
 end

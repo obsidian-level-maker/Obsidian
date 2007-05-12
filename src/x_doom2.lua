@@ -1565,6 +1565,8 @@ function doom2_get_levels(episode)
     Level.secret_kind = D2_SECRET_KINDS[Level.name]
     Level.secret_exit = D2_SECRET_EXITS[Level.name]
 
+    std_decide_quests(Level, D2_QUESTS, DM_QUEST_LEN_PROBS)
+
     table.insert(level_list, Level)
   end
 

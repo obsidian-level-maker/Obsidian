@@ -1733,6 +1733,8 @@ function doom1_get_levels(episode)
       Level.secret_exit = true
     end
 
+    std_decide_quests(Level, D1_QUESTS, DM_QUEST_LEN_PROBS)
+
     table.insert(level_list, Level)
   end
 

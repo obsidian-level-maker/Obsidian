@@ -304,7 +304,7 @@ function allocate_floor_code()
 end
 
 
-function std_decide_quests(QUEST_TAB, LEN_PROBS)
+function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
 
   local ky_list = copy_table(QUEST_TAB.key)
   local sw_list = copy_table(QUEST_TAB.switch)
@@ -313,6 +313,11 @@ function std_decide_quests(QUEST_TAB, LEN_PROBS)
 
   rand_shuffle(ky_list); rand_shuffle(sw_list)
   rand_shuffle(wp_list); rand_shuffle(it_list)
+
+  local ky_num = table_size(ky_list)
+  local sw_num = table_size(sw_list)
+  local wp_num = table_size(wp_list)
+  local it_num = table_size(it_list)
 
 
   -- decide how many keys, switches, weapons & items
@@ -326,16 +331,16 @@ function std_decide_quests(QUEST_TAB, LEN_PROBS)
   assert(tot_min and tot_max)
   assert(tot_min <= tot_max)
 
-  assert(#ky_list + #sw_list + #wp_list + #it_list >= tot_min)
+  assert(ky_num + sw_num + wp_num + it_num >= tot_min)
 
   local keys, switches, weapons, items
   local total, ratio
 
   repeat
-    keys     = rand_irange(1, #ky_list)
-    switches = rand_irange(0, #sw_list)
-    weapons  = rand_irange(1, #wp_list)
-    items    = rand_irange(0, #it_list)
+    keys     = rand_irange(1, ky_num)
+    switches = rand_irange(0, sw_num)
+    weapons  = rand_irange(1, wp_num)
+    items    = rand_irange(0, it_num)
 
     total    = keys + switches + weapons + items
     ratio    = (keys + switches) / (weapons + items)
@@ -351,7 +356,7 @@ function std_decide_quests(QUEST_TAB, LEN_PROBS)
 
   -- build the quest list
 
-  local quest_list = {}
+  Level.quests = {}
 
   local function add_quest(kind, item)
     local len_probs = non_nil(LEN_PROBS[kind])
@@ -361,7 +366,7 @@ function std_decide_quests(QUEST_TAB, LEN_PROBS)
       item = item,
       want_len = 1 + rand_index_by_probs(len_probs),
     }
-    table.insert(quest_list, Quest)
+    table.insert(Level.quests, Quest)
     return Quest
   end
 
@@ -372,7 +377,16 @@ function std_decide_quests(QUEST_TAB, LEN_PROBS)
     if (i <= items)    then add_quest("item",   it_list[i]) end
   end
 
-  add_quest("exit", "normal")
+  if Level.secret_exit then
+    add_quest("exit", "secret")
+  end
+
+  if Level.boss_kind then
+    local Q = add_quest("exit", Level.boss_kind)
+    Q.kind = "boss" -- hackish
+  else
+    add_quest("exit", "normal")
+  end
 
   return quest_list
 end
@@ -1321,7 +1335,15 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
     local along = 2
     local path_dirs = {}
 
-    while along <= Q.want_len do
+    -- adjust wanted length based on size adjustment
+    local want_len = Q.want_len
+    if want_len >= 4 and SETTINGS.size == "small" then
+      want_len = int(want_len * 0.8 - con.random())
+    elseif SETTINGS.size == "large" then
+      want_len = int(want_len * 1.4 + con.random())
+    end
+
+    while along <= want_len do
 
       -- figure out where to go next
       local nx, ny, dir = where_now(cur.x, cur.y, path_dirs)
