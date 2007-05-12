@@ -267,7 +267,7 @@ function rand_shuffle(t, fill_size)
     for i = 1,fill_size do t[i] = i end
   end
 
-  if #t == 0 then return end
+  if #t <= 1 then return end
 
   for i = 1,(#t-1) do
     local j = rand_irange(i,#t)
