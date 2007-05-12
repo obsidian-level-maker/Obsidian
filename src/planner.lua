@@ -1764,12 +1764,16 @@ end
 
     local function shuffle_main_quests(qlist)
 
-      local MODE_PRI = { ["start"]=0, ["main"]=1, ["end"]=2, ["sub"]=3 }
+      local MODE_PRI = { ["start"]=0, ["main"]=1, ["end"]=3, ["sub"]=4 }
 
       -- put main quests into basic order
 
       for zzz,Q in ipairs(qlist) do
         Q.main_pri = non_nil(MODE_PRI[Q.mode]) + con.random()/2
+
+        if Q.kind == "boss" and Q.mode == "end" then
+          Q,main_pri = Q.main_pri - 1
+        end
       end
 
       table.sort(qlist,
@@ -1831,14 +1835,15 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
 
         local main_idx = rand_index_by_probs(probs)
 
-        -- FIXME: add an offset based on sub.prefer_pos
+        -- ??? FIXME: add an offset based on sub.prefer_pos
 
-        local main_Q   = non_nil(qlist[main_idx])
+        local main_Q = non_nil(qlist[main_idx])
 
         main_Q.num_children = main_Q.num_children + 1
 
         sub.level = main_Q.level
         sub.sub_level = main_Q.num_children
+        sub.parent = main_Q
 
         -- add sub quest to end of qlist.  The will be put into
         -- their proper place by a final sort of the list.
@@ -1922,10 +1927,12 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
 
     PLAN.quests = PLAN.level.quests
 
-    -- assign mode and tag to each quest
+    -- setup important fields in Quest class
     for zzz,Q in ipairs(PLAN.quests) do
       if not Q.mode then
         if Q.kind == "exit" and Q.item ~= "secret" then
+          Q.mode = "end"
+        elseif Q.kind == "boss" then
           Q.mode = "end"
         elseif Q.kind == "key" or Q.kind == "switch" then
           Q.mode = "main"
@@ -1935,6 +1942,7 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
       end
 
       Q.tag = allocate_tag()
+      Q.path = {}
     end
 
     shuffle_main_quests(PLAN.quests)
