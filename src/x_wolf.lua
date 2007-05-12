@@ -507,20 +507,6 @@ WF_THEMES =
 --]]
 }
 
-WF_QUEST_LEN_PROBS =
-{
-  ----------  2   3   4   5   6   7   8  9  10  -------
-
-  key    = {  0,  0,  0, 90, 70, 30, 12, 6, 2, 2, 2 },
-  boss   = {  0,  0,  0, 90, 70, 30, 12, 6, 2, 2, 2 },
-
-  exit   = {  0,  0, 50, 90, 70, 30, 12, 6, 2, 2, 2 },
-
-  weapon = {  0, 90, 50, 12, 4, 2 },
-
-  treasure = { 15, 70, 70, 15 }
-}
-
 
 ----------------------------------------------------------------
 
@@ -627,6 +613,25 @@ WF_EPISODE_BOSSES =
   "fat_face",
 }
 
+WF_KEY_NUM_PROBS =
+{
+  small   = { 90, 50, 20 },
+  regular = { 40, 90, 40 },
+  large   = { 20, 50, 90 },
+}
+
+WF_QUEST_LEN_PROBS =
+{
+  ----------  2   3   4   5   6   7   8  9  10  -------
+
+  key    = {  0,  0,  0, 90, 70, 30, 12, 6, 2, 2, 2 },
+  boss   = {  0,  0,  0, 90, 70, 30, 12, 6, 2, 2, 2 },
+  exit   = {  0,  0, 50, 90, 70, 30, 12, 6, 2, 2, 2 },
+
+  weapon = {  0, 90, 50, 12, 4, 2 },
+  item   = { 15, 70, 70, 15 },  -- treasure
+}
+
 function wolf3d_get_levels(episode)
 
   local level_list = {}
@@ -637,6 +642,8 @@ function wolf3d_get_levels(episode)
   if SETTINGS.length ~= "full" then
     boss_kind = WF_EPISODE_BOSSES[rand_irange(1,6)]
   end
+
+  local secret_kind = "pacman"
 
   for map = 1,10 do
     local Level =
@@ -651,7 +658,9 @@ function wolf3d_get_levels(episode)
       sky_info = { color="blue", light=192 }, -- dummy
 
       boss_kind   = (map == 9)  and boss_kind,
-      secret_kind = (map == 10) and "pacman",
+      secret_kind = (map == 10) and secret_kind,
+
+      quests = {},
     }
 
     if WF_SECRET_EXITS[Level.name] then
@@ -660,6 +669,83 @@ function wolf3d_get_levels(episode)
 
     table.insert(level_list, Level)
   end
+
+
+  -- decide quests
+  
+  local function add_quest(L, kind, item)
+    local len_probs = non_nil(WF_QUEST_LEN_PROBS[kind])
+    local Quest =
+    {
+      kind = kind,
+      item = item,
+      want_len = 1 + rand_index_by_probs(len_probs),
+    }
+    table.insert(L.quests, Quest)
+    return Quest
+  end
+
+  local function dump_levels()
+    for idx,L in ipairs(level_list) do
+      con.printf("Wolf3d episode [%d] map [%d] : %s\n", episode, idx, L.name)
+      show_quests(L.quests)
+    end
+  end
+
+
+  local gatling_maps =
+  {
+    [rand_irange(2,3)] = true,
+    [rand_irange(4,6)] = true,
+    [rand_irange(7,9)] = true,
+  }
+
+  for map = 1,10 do
+    local Level = level_list[map]
+
+    -- weapons and keys
+
+    if rand_odds(90 - map*8) then
+      add_quest(Level, "weapon", "machine_gun")
+    end
+
+    if gatling_maps[map] then
+      add_quest(Level, "weapon", "gatling_gun")
+    end
+
+    local keys = rand_index_by_probs(WF_KEY_NUM_PROBS[SETTINGS.size]) - 1
+
+    if keys >= 1 then
+      add_quest(Level, "key", "k_silver")
+    end
+
+    -- treasure
+
+    local ITEM_PROBS = { small=25, regular=50, large=75 }
+
+    for i = 1,4 do
+      if rand_odds(ITEM_PROBS[SETTINGS.size]) then
+        add_quest(Level, "item", "treasure")
+      end
+    end
+
+    -- bosses and exits
+
+    if Level.boss_kind then
+      add_quest(Level, "boss", Level.boss_kind)
+
+    elseif keys == 2 then
+      add_quest(Level, "key", "k_gold")
+    end
+
+    if Level.secret_exit then
+      add_quest(Level, "exit", "secret")
+    end
+
+    add_quest(Level, "exit", "normal")
+  end
+
+  dump_levels()
 
   return level_list
 end
