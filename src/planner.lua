@@ -303,6 +303,59 @@ function allocate_floor_code()
   return result
 end
 
+
+function std_decide_quests(QUEST_TAB, LENGTH_TAB)
+
+  local ky_list = copy_table(QUEST_TAB.key)
+  local sw_list = copy_table(QUEST_TAB.switch)
+  local wp_list = copy_table(QUEST_TAB.weapon)
+  local it_list = copy_table(QUEST_TAB.item)
+
+  rand_shuffle(ky_list); rand_shuffle(sw_list)
+  rand_shuffle(wp_list); rand_shuffle(it_list)
+
+
+  local TOT_MINIMUMS = { small=4, regular=6,  large=8 }
+  local TOT_MAXIMUMS = { small=7, regular=10, large=13 }
+
+  local tot_min = TOT_MINIMUMS[SETTINGS.size]
+  local tot_max = TOT_MAXIMUMS[SETTINGS.size]
+
+  assert(tot_min and tot_max)
+  assert(tot_min <= tot_max)
+
+  assert(#ky_list + #sw_list + #wp_list + #it_list >= tot_min)
+
+  local keys, switches, weapons, items
+  local total, ratio
+
+  repeat
+    keys     = rand_irange(1, #ky_list)
+    switches = rand_irange(0, #sw_list)
+    weapons  = rand_irange(1, #wp_list)
+    items    = rand_irange(0, #it_list)
+
+    total    = keys + switches + weapons + items
+    ratio    = (keys + switches) / (weapons + items)
+
+  until (tot_min <= total and total <= tot_max) and
+        (0.35 <= ratio and ratio <= 1.7)
+
+  assert(keys + switches >= 1)
+
+  con.printf("Keys %d, Switches %d, Weapons %d, Items %d\n",
+      keys, switches, weapons, items)
+
+  local qlist = {}
+  for i = 1,20 do
+    if (i <= keys)     then table.insert(qlist, "key") end
+    if (i <= switches) then table.insert(qlist, "switch") end
+    if (i <= weapons)  then table.insert(qlist, "weapon") end
+    if (i <= items)    then table.insert(qlist, "item") end
+  end
+end
+
+
 function create_cell(x, y, quest, along, combo, is_depot)
   local CELL =
   {
@@ -1682,11 +1735,11 @@ end
     local LEN_PROB_TAB =
     {
       ---         2   3   4   5   6   7   8  9 10 11
-      key    = {  5, 25, 50, 90, 70, 30, 12, 6, 2, 2 },
-      exit   = {  5, 25, 50, 90, 70, 30, 12, 6, 2, 2 },
-      switch = {  5, 70, 90, 50, 12, 4, 2, 2 },
-      weapon = { 15, 90, 50, 12, 4, 2 },
-      item   = { 15, 70, 70, 12, 4, 2 }
+      key    = {  5, 25, 50, 90, 70, 30, 12,  },
+      exit   = {  5, 25, 50, 90, 70, 30, 12,  },
+      switch = {  5, 70, 90, 50, 12, 4,  },
+      weapon = { 15, 90, 50, 12, 4,  },
+      item   = { 15, 70, 70, 12,   }
     }
 
     local function add_quest(kind, is_sub, item)
@@ -1744,13 +1797,13 @@ end
     local keys, switches, weapons, items, total, ratio
     local k_max, sw_max, wp_max, it_max;
 
-    k_max  = math.min(3, table_size(GAME.quests.key))
-    sw_max = math.min(3, table_size(GAME.quests.switch))
-    wp_max = math.min(4, table_size(GAME.quests.weapon))
-    it_max = math.min(2, table_size(GAME.quests.item))
+    k_max  = table_size(GAME.quests.key)    -- 3
+    sw_max = table_size(GAME.quests.switch) -- 3
+    wp_max = table_size(GAME.quests.weapon) -- 4
+    it_max = table_size(GAME.quests.item)   -- 2
 
-    local tot_min = 1 + rand_index_by_probs { 5, 70, 5 }
-    local tot_max = 4 + rand_index_by_probs { 1, 5, 15, 60, 15, 5, 1 }
+local tot_min = 8 -- 1 + rand_index_by_probs { 5, 70, 5 }
+local tot_max = 13 -- 4 + rand_index_by_probs { 1, 5, 15, 60, 15, 5, 1 }
 
     -- sanity check
     if tot_min >= tot_max then tot_min = tot_max - 1 end
