@@ -438,23 +438,27 @@ HC_QUESTS =
   {
     k_blue=20, k_green=40, k_yellow=60
   },
+
   switch =
   {
-    sw_rock=50
+    sw_rock=50,
+--  sw_stone=50,
+--  sw_brick=50,
   },
+
   weapon =
   {
-    gauntlets=10, -- crossbow=60,
-    claw=30, hellstaff=30, phoenix=30,
-    firemace=20
+    -- gauntlets=10, -- crossbow=60,
+
+    claw=30, hellstaff=30,
+    phoenix=30, firemace=20
   },
+
   item =
   {
-    shield2=10,
-    bag=10, torch=10,
-    wings=50, ovum=50,
-    bomb=30, chaos=30,
-    shadow=50, tome=10,
+    wings=50,  ovum=50,
+    bomb=30,  chaos=30,
+    shadow=50, tome=20,
   },
 
   exit = { exit=50 },
@@ -693,10 +697,15 @@ HC_PICKUPS =
 HC_NICENESS =
 {
   w1 = { weapon="crossbow",  quest=1, prob=70, always=true  },
-  w2 = { weapon="gauntlets", quest=3, prob=20, always=false },
+
+  w3 = { weapon="gauntlets", quest=1, prob=50, always=false },
+  w4 = { weapon="gauntlets", quest=3, prob=50, always=false },
 
   p1 = { pickup="shield1", prob=2.0 },
   p2 = { pickup="shield2", prob=0.7 },
+
+  p3 = { pickup="torch", prob=2.0 },
+  p4 = { pickup="bag",   prob=2.0 },
 }
 
 HC_DEATHMATCH =
