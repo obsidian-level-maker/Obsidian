@@ -1525,7 +1525,6 @@ DM_NICENESS =
   w3 = { weapon="plasma", quest=5, prob=35, always=true  },
 
   p1 = { pickup="green_armor", prob=2.0 },
-  p2 = { pickup="blue_armor",  prob=0.5 },
 }
 
 
