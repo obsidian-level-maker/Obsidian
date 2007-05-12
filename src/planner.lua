@@ -1421,7 +1421,7 @@ end
         for zzz,Q in ipairs(PLAN.quests) do
           if Q.level == lock_level and Q.sub_level == 0 then
 
-            link.quest = Q --FIXME: SHITTY WAY TO MARK A LOCK
+            link.quest = Q -- !!!! FIXME: SHITTY WAY TO MARK A LOCK
             link.kind  = "door"
             break;
           end
@@ -1729,41 +1729,131 @@ end
   end
 
   
-  local function decide_quests()
+  local function shuffle_quests()
     
-    local function is_sub_quest(kind)
-      return kind == "weapon" or kind == "item"
-    end
-    
-    local function quest_score(qlist)
+    local function sequence_score(qlist)
       -- higher (worse) score when the same type of quest
-      -- appears multiple times in a row.
-      -- also checks for how many sub-quests per quest.
+      -- appears multiple times in a row.  Also checks for
+      -- how many sub-quests per quest.
 
-      local total = { 0, 0, 0, 0 }
+      local score = { 0, 0, 0, 0 }
 
-      local rep  = 0
-      local sub = 0
+      local repeats = 0
+      local subs = 0
 
       -- Note that we go ONE PAST the end
       for i = 1, #qlist+1 do
 
-        if qlist[i-1] == qlist[i] then
-          rep = math.min(4, rep + 1)
+        if (qlist[i-1] and qlist[i-1].kind) == (qlist[i] and qlist[i].kind) then
+          repeats = math.min(4, repeats + 1)
         else
-          if rep > 0 then total[rep] = total[rep] + 1 end
-          rep = 1
+          if repeats > 0 then score[repeats] = score[repeats] + 1 end
+          repeats = 1
         end
 
-        if is_sub_quest(qlist[i]) then
-          sub = math.min(4, sub + 1)
+        if qlist[i] and qlist[i].mode == "sub" then
+          subs = math.min(4, subs + 1)
         else
-          if sub > 0 then total[sub] = total[sub] + 1.8 end
-          sub = 0
+          if subs > 0 then score[subs] = score[subs] + 1.8 end
+          subs = 0
         end
       end
 
-      return total[4]*100 + total[3]*40 + total[2]*10 
+      return score[4]*100 + score[3]*40 + score[2]*10 
+    end
+
+    local function shuffle_main_quests(qlist)
+
+      local MODE_PRI = { ["start"]=0, ["main"]=1, ["end"]=2, ["sub"]=3 }
+
+      -- put main quests into basic order
+
+      for zzz,Q in ipairs(qlist) do
+        Q.main_pri = non_nil(MODE_PRI[Q.mode]) + con.random()/2
+      end
+
+      table.sort(qlist,
+        function (A,B) return A.main_pri < B.main_pri end)
+
+      -- FIXME: break up long sequence of same kind of main quest
+
+con.debugf("\n*** shuffle_main_quests ***\n")
+con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
+    end
+
+    local function sub_join_score(main_Q, sub_Q)
+      
+      local score = 90
+
+      if sub_Q.kind == "weapon" then
+        score = score / (main_Q.level) ^ 2
+
+      elseif sub_Q.kind == "exit" and sub_Q.item == "secret" then
+        score = score / (5 - math.max(main_Q.level, 4)) ^ 2
+      end
+
+      score = score / (main_Q.num_children + 2) ^ 2
+
+      -- FIXME: take into account children of same type
+
+      return score
+    end
+
+    local function assign_sub_quests(qlist)
+
+      local sub_list = {}
+
+-- FIXME: no big need to remove subs ...
+
+      for i = #qlist,1,-1 do
+        if qlist[i].mode == "sub" then
+          table.insert(sub_list, table.remove(qlist, i))
+        end
+      end
+
+      local num_main = #qlist
+      assert(num_main > 0)
+
+      for i = 1,num_main do
+        qlist[i].level = i
+        qlist[i].sub_level = 0
+        qlist[i].num_children = 0
+      end
+
+      local probs = {}
+
+      while #sub_list > 0 do
+        local sub = table.remove(sub_list, 1)
+
+        for i = 1,num_main do
+          probs[i] = sub_join_score(qlist[i], sub)
+        end
+
+        local main_idx = rand_index_by_probs(probs)
+
+        -- FIXME: add an offset based on sub.prefer_pos
+
+        local main_Q   = non_nil(qlist[main_idx])
+
+        main_Q.num_children = main_Q.num_children + 1
+
+        sub.level = main_Q.level
+        sub.sub_level = main_Q.num_children
+
+        -- add sub quest to end of qlist.  The will be put into
+        -- their proper place by a final sort of the list.
+
+        table.insert(qlist, sub)
+      end
+
+
+      table.sort(qlist,
+        function (A,B)
+          return (A.level*100 + A.sub_level) < (B.level*100 + B.sub_level)
+        end)
+
+      con.printf("assign_sub_quests: FINAL RESULT:\n")
+      show_quests(qlist)
     end
 
     local function find_main_quest(qlist)
@@ -1775,19 +1865,8 @@ end
       error("find_main_quest: not found!")
     end
 
-    -- probability tables for length of quests
-    local LEN_PROB_TAB =
-    {
-      ---         2   3   4   5   6   7   8  9 10 11
-      key    = {  5, 25, 50, 90, 70, 30, 12,  },
-      exit   = {  5, 25, 50, 90, 70, 30, 12,  },
-      switch = {  5, 70, 90, 50, 12, 4,  },
-      weapon = { 15, 90, 50, 12, 4,  },
-      item   = { 15, 70, 70, 12,   }
-    }
-
     local function add_quest(kind, is_sub, item)
-      
+
       local parent
       if is_sub then
         parent = PLAN.quests[#PLAN.quests]
@@ -1802,7 +1881,6 @@ end
 
         parent = parent,
 
-        tag = allocate_tag()
       }
 
       if parent then
@@ -1836,64 +1914,51 @@ end
       table.insert(PLAN.quests, Quest)
     end
 
-    ---- decide_quests ----
+    ---- shuffle_quests ----
     
-    local keys, switches, weapons, items, total, ratio
-    local k_max, sw_max, wp_max, it_max;
+    assert(PLAN.level)
+    assert(PLAN.level.quests)
+    assert(# PLAN.level.quests >= 1)
 
-    k_max  = table_size(GAME.quests.key)    -- 3
-    sw_max = table_size(GAME.quests.switch) -- 3
-    wp_max = table_size(GAME.quests.weapon) -- 4
-    it_max = table_size(GAME.quests.item)   -- 2
+    PLAN.quests = PLAN.level.quests
 
-local tot_min = 8 -- 1 + rand_index_by_probs { 5, 70, 5 }
-local tot_max = 13 -- 4 + rand_index_by_probs { 1, 5, 15, 60, 15, 5, 1 }
+    -- assign mode and tag to each quest
+    for zzz,Q in ipairs(PLAN.quests) do
+      if not Q.mode then
+        if Q.kind == "exit" and Q.item ~= "secret" then
+          Q.mode = "end"
+        elseif Q.kind == "key" or Q.kind == "switch" then
+          Q.mode = "main"
+        else
+          Q.mode = "sub"
+        end
+      end
 
-    -- sanity check
-    if tot_min >= tot_max then tot_min = tot_max - 1 end
-
-    assert(k_max + sw_max + wp_max >= tot_min)
-
-    repeat
-      keys     = rand_irange(1, k_max)
-      switches = rand_irange(0, sw_max)
-      weapons  = rand_irange(1, wp_max)
-      items    = rand_irange(0, it_max)
-
-      total    = keys + switches + weapons + items
-      ratio    = (keys + switches) / (weapons + items)
-    until (tot_min <= total and total <= tot_max and
-           0.35 <= ratio and ratio <= 2.5)
-
-    assert(keys + switches >= 1)
-
-    con.printf("Keys %d, Switches %d, Weapons %d, Items %d\n",
-        keys, switches, weapons, items)
-
-    local qlist = {}
-    for i = 1,20 do
-      if (i <= keys)     then table.insert(qlist, "key") end
-      if (i <= switches) then table.insert(qlist, "switch") end
-      if (i <= weapons)  then table.insert(qlist, "weapon") end
-      if (i <= items)    then table.insert(qlist, "item") end
+      Q.tag = allocate_tag()
     end
+
+    shuffle_main_quests(PLAN.quests)
+
+    assign_sub_quests(PLAN.quests)
+do return end --!!!!!!
 
     -- try and get a good order (we don't try too hard!)
     for zzz,score in ipairs { 30, 60, 100, 150 } do
       local found = false
-      for loop = 1,8 do
-        rand_shuffle(qlist)
-        if quest_score(qlist) < score then found = true break end
+      for loop = 1,10 do
+        perform_shuffle(PLAN.quests)
+        if sequence_score(PLAN.quests) < score then
+          found = true
+          break;
+        end
       end
-      con.ticker();
+      con.ticker()
       if found then break end
     end
 
-    con.debugf("Final Quest Score: %d\n", quest_score(qlist))
+    con.debugf("Final Sequence Score: %d\n", sequence_score(PLAN.quests))
 
-    -- find each main quest, pull it out, then all the
-    -- sub-quests at the beginning of the list become
-    -- assocatied with that main quest.
+    -- associate each sub-quest with a main quest
 
     local need_secret_exit
     if PLAN.level.secret_exit then
@@ -2490,7 +2555,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
   con.printf("\n")
 
-  decide_quests()
+  shuffle_quests()
   decide_themes()
 
 --show_quests()
