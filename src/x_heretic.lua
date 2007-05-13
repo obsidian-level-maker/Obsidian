@@ -826,7 +826,7 @@ GAME_FACTORIES["heretic"] = function()
 
   return
   {
-    plan_size = 9,
+    plan_size = 10,
     cell_size = 9,
     cell_min_size = 6,
 
