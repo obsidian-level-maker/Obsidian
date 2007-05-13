@@ -1351,9 +1351,9 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
     -- adjust wanted length based on size adjustment
     local want_len = Q.want_len
     if want_len >= 4 and SETTINGS.size == "small" then
-      want_len = int(want_len * 0.8 - con.random())
+      want_len = int(want_len * 0.85 - con.random())
     elseif SETTINGS.size == "large" then
-      want_len = int(want_len * 1.4 + con.random())
+      want_len = int(want_len * 1.47 + con.random())
     end
 
     while along <= want_len do
