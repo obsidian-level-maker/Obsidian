@@ -4874,33 +4874,31 @@ con.printf("  SHORTENED\n")
   local SHALLOW_PROBS = { 0, 1, 20, 50, 90 }
   local SHALLOW_DBLS  = { 0, 0,  1, 15, 30 }
 
-  local function build_one_vista(c, side, link)
+  local function build_one_vista(c, nb, side, link)
 
-    local other = neighbour_by_side(c, side)
+    local kind
+    local diff_h = c.floor_h - nb.floor_h
 
-    -- fixme: this code designed for opposite build site
-    c,other,side = other,c,10-side
+    if link.fall_over then kind = "fall_over" end
 
+    if not kind and diff_h >= 48 and rand_odds(35) then
+      kind = "wire"
+    end
 
-    local kind = "open"
-    local diff_h = c.floor_h - other.floor_h
-
-    if diff_h >= 48 and rand_odds(50) then kind = "wire" end
-
-    if not c.combo.outdoor then
-      local space_h = other.ceil_h - c.floor_h
+    if not kind and not c.combo.outdoor and nb.combo.outdoor then
+      local space_h = nb.ceil_h - c.floor_h
       local r = con.random() * 100
 
       if space_h >= 96 and space_h <= 256 and r < 15 then
         kind = "frame"
-      elseif r < 60 then
+      elseif r < 70 then
         kind = "solid"
       end
     end
 
-    if link.fall_over then kind = "fall_over" end
+    if not kind then kind = "open" end
 
-    local x1,y1, x2,y2 = get_vista_coords(c, side, link, other)
+    local x1,y1, x2,y2 = get_vista_coords(c, side, link, nb)
     local sx,sy, ex,ey = x1,y1, x2,y2
 
     local long = x2 - x1 + 1
@@ -4927,14 +4925,14 @@ con.printf("  SHORTENED\n")
     -- don't touch the sides of the cell
     -- ALSO: don't go past the corner of the source cell
     if (side == 2) or (side == 8) then
-      if x1 == other.bx1 then x1 = x1+1 end
-      if x2 == other.bx2 then x2 = x2-1 end
+      if x1 == nb.bx1 then x1 = x1+1 end
+      if x2 == nb.bx2 then x2 = x2-1 end
 
       x1 = math.max(x1, c.bx1-1)
       x2 = math.min(x2, c.bx2+1)
     else
-      if y1 == other.by1 then y1 = y1+1 end
-      if y2 == other.by2 then y2 = y2-1 end
+      if y1 == nb.by1 then y1 = y1+1 end
+      if y2 == nb.by2 then y2 = y2-1 end
 
       y1 = math.max(y1, c.by1-1)
       y2 = math.min(y2, c.by2+1)
@@ -4946,10 +4944,10 @@ con.printf("  SHORTENED\n")
     link.vista_x2 = x2; link.vista_y2 = y2
 
     if sx ~= x1 or sy ~= y1 or ex ~= x2 or ey ~= y2 then
-      vista_gap_fill(c, side, link, other)
+      vista_gap_fill(c, side, link, nb)
     end
 
-    vista_jiggle_link(c, side, link, other, x1,y1, x2,y2)
+    vista_jiggle_link(c, side, link, nb, x1,y1, x2,y2)
 con.printf("  link coords now: (%d,%d) .. (%d,%d)\n", link.x1,link.y1, link.x2,link.y2)
 
 con.debugf("  COORDS: (%d,%d) .. (%d,%d)  size:%dx%d\n", x1,y1, x2,y2, long,deep)
@@ -4962,7 +4960,7 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
     for side = 2,8,2 do
       local L = c.link[side]
       if L and L.kind == "vista" and L.vista_dest == c then
-        build_one_vista(c, side, L)
+        build_one_vista(L.vista_src, c, 10-side, L)
       end
     end
   end

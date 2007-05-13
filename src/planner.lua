@@ -328,8 +328,8 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
 
   -- decide how many keys, switches, weapons & items
 
-  local TOT_MINIMUMS = { small=4, regular=6,  large=8 }
-  local TOT_MAXIMUMS = { small=7, regular=10, large=13 }
+  local TOT_MINIMUMS = { small=4, regular=6, large=8 }
+  local TOT_MAXIMUMS = { small=7, regular=9, large=12 }
 
   local tot_min = TOT_MINIMUMS[SETTINGS.size]
   local tot_max = TOT_MAXIMUMS[SETTINGS.size]
@@ -1353,7 +1353,7 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
     if want_len >= 4 and SETTINGS.size == "small" then
       want_len = int(want_len * 0.85 - con.random())
     elseif SETTINGS.size == "large" then
-      want_len = int(want_len * 1.47 + con.random())
+      want_len = int(want_len * 1.35 + con.random())
     end
 
     while along <= want_len do
@@ -2231,6 +2231,8 @@ Q.theme.name, Q.combo.name)
 
       if b.scenic then return false end
 
+      if b.quest.is_secret and a.quest ~= b.quest then return false end
+
       if b.quest.kind == "exit" and a.quest ~= b.quest then return false end
 
       if a.f_min < (b.f_max + 64) then return false end
@@ -2244,7 +2246,7 @@ Q.theme.name, Q.combo.name)
 
       if a.combo.outdoor and rand_odds(50) then return false end
 
-      if not b.combo.outdoor and rand_odds(50) then return false end
+      if not b.combo.outdoor and rand_odds(60) then return false end
 
       return true
     end
@@ -2265,13 +2267,13 @@ Q.theme.name, Q.combo.name)
           if q_cmp < 0 then F = false end
 
           -- without this check, falloffs will be rarely made
-          if F and V and rand_odds(25) then V = false end
+          if F and V and rand_odds(33) then V = false end
 
           if F or V then
             local L = create_link(c, nb, dir)
             L.kind = sel(V, "vista", "falloff")
 
-            if V and F and rand_odds(50) then
+            if V and F and dual_odds(nb.combo.outdoor, 40, 75) then
               L.fall_over = true
             end
 
