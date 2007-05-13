@@ -284,6 +284,7 @@ function spear_get_levels(episode)
       sky_info  = { color="blue", light=192 }, -- dummy
 
       theme_probs = theme_probs,
+      quests = {},
     }
 
     if (map == ep_length) and episode ~= 5 then
