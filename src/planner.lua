@@ -372,6 +372,13 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
       item = item,
       want_len = 1 + rand_index_by_probs(len_probs),
     }
+    if (item == "secret") or
+       (kind == "weapon" and rand_odds(15)) or
+       (kind == "item"   and rand_odds(30))
+    then
+      Quest.is_secret = true
+    end
+
     table.insert(Level.quests, Quest)
     return Quest
   end
@@ -1864,63 +1871,63 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
         end)
     end
 
-    local function find_main_quest(qlist)
-      for idx,kind in ipairs(qlist) do
-        if not is_sub_quest(kind) then
-          return idx
-        end
-      end
-      error("find_main_quest: not found!")
-    end
+---###    local function find_main_quest(qlist)
+---###      for idx,kind in ipairs(qlist) do
+---###        if not is_sub_quest(kind) then
+---###          return idx
+---###        end
+---###      end
+---###      error("find_main_quest: not found!")
+---###    end
 
-    local function add_quest(kind, is_sub, item)
-
-      local parent
-      if is_sub then
-        parent = PLAN.quests[#PLAN.quests]
-        assert(parent)
-      end
-
-      local Quest =
-      {
-        kind = kind,
-        item = item,
-        path = {},
-
-        parent = parent,
-
-      }
-
-      if parent then
-        Quest.level = parent.level
-        Quest.sub_level = 1 -- FIXME !!!  was: #parent.children
-      else
-        Quest.level = 1
-        Quest.sub_level = 0
-
-        for xxx,Q in ipairs(PLAN.quests) do
-          if not Q.parent then Quest.level = Quest.level + 1 end
-        end
-      end
-
-      if item == "secret" then
-        Quest.is_secret = true
-      end
-
-      local len_probs = LEN_PROB_TAB[kind]
-      assert(len_probs)
-
-      -- add '1' for starting square (minimum len == 2)
-      Quest.want_len = 1 + rand_index_by_probs(len_probs)
-
-      -- exit quests have minimum of 3, so that exit doors
-      -- are never locked
-      if Quest.kind == "exit" then
-        Quest.want_len = Quest.want_len + 1
-      end
-
-      table.insert(PLAN.quests, Quest)
-    end
+---###    local function add_quest(kind, is_sub, item)
+---###
+---###      local parent
+---###      if is_sub then
+---###        parent = PLAN.quests[#PLAN.quests]
+---###        assert(parent)
+---###      end
+---###
+---###      local Quest =
+---###      {
+---###        kind = kind,
+---###        item = item,
+---###        path = {},
+---###
+---###        parent = parent,
+---###
+---###      }
+---###
+---###      if parent then
+---###        Quest.level = parent.level
+---###        Quest.sub_level = 1 -- FIXME !!!  was: #parent.children
+---###      else
+---###        Quest.level = 1
+---###        Quest.sub_level = 0
+---###
+---###        for xxx,Q in ipairs(PLAN.quests) do
+---###          if not Q.parent then Quest.level = Quest.level + 1 end
+---###        end
+---###      end
+---###
+---###      if item == "secret" then
+---###        Quest.is_secret = true
+---###      end
+---###
+---###      local len_probs = LEN_PROB_TAB[kind]
+---###      assert(len_probs)
+---###
+---###      -- add '1' for starting square (minimum len == 2)
+---###      Quest.want_len = 1 + rand_index_by_probs(len_probs)
+---###
+---###      -- exit quests have minimum of 3, so that exit doors
+---###      -- are never locked
+---###      if Quest.kind == "exit" then
+---###        Quest.want_len = Quest.want_len + 1
+---###      end
+---###
+---###      table.insert(PLAN.quests, Quest)
+---###    end
 
     ---- shuffle_quests ----
     
@@ -1951,53 +1958,52 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
     shuffle_main_quests(PLAN.quests)
 
     assign_sub_quests(PLAN.quests)
-do return end --!!!!!!
 
-    -- try and get a good order (we don't try too hard!)
-    for zzz,score in ipairs { 30, 60, 100, 150 } do
-      local found = false
-      for loop = 1,10 do
-        perform_shuffle(PLAN.quests)
-        if sequence_score(PLAN.quests) < score then
-          found = true
-          break;
-        end
-      end
-      con.ticker()
-      if found then break end
-    end
-
-    con.debugf("Final Sequence Score: %d\n", sequence_score(PLAN.quests))
-
-    -- associate each sub-quest with a main quest
-
-    local need_secret_exit
-    if PLAN.level.secret_exit then
-      need_secret_exit = true
-    end
-
-    while #qlist > 0 do
-      local m = find_main_quest(qlist)
-
-      add_quest(qlist[m], nil, get_quest_item(qlist[m]))
-      table.remove(qlist, m)
-
-      while is_sub_quest(qlist[1]) do
-        add_quest(qlist[1], "sub", get_quest_item(qlist[1]))
-        table.remove(qlist, 1)
-      end
-
-      if need_secret_exit and rand_odds(33) then
-        add_quest("exit", "sub", "secret")
-        need_secret_exit = false
-      end
-    end
-
-    if need_secret_exit then
-      add_quest("exit", "sub", "secret")
-    end
-
-    add_quest("exit", nil, "normal")
+---###    -- try and get a good order (we don't try too hard!)
+---###    for zzz,score in ipairs { 30, 60, 100, 150 } do
+---###      local found = false
+---###      for loop = 1,10 do
+---###        perform_shuffle(PLAN.quests)
+---###        if sequence_score(PLAN.quests) < score then
+---###          found = true
+---###          break;
+---###        end
+---###      end
+---###      con.ticker()
+---###      if found then break end
+---###    end
+---###
+---###    con.debugf("Final Sequence Score: %d\n", sequence_score(PLAN.quests))
+---###
+---###    -- associate each sub-quest with a main quest
+---###
+---###    local need_secret_exit
+---###    if PLAN.level.secret_exit then
+---###      need_secret_exit = true
+---###    end
+---###
+---###    while #qlist > 0 do
+---###      local m = find_main_quest(qlist)
+---###
+---###      add_quest(qlist[m], nil, get_quest_item(qlist[m]))
+---###      table.remove(qlist, m)
+---###
+---###      while is_sub_quest(qlist[1]) do
+---###        add_quest(qlist[1], "sub", get_quest_item(qlist[1]))
+---###        table.remove(qlist, 1)
+---###      end
+---###
+---###      if need_secret_exit and rand_odds(33) then
+---###        add_quest("exit", "sub", "secret")
+---###        need_secret_exit = false
+---###      end
+---###    end
+---###
+---###    if need_secret_exit then
+---###      add_quest("exit", "sub", "secret")
+---###    end
+---###
+---###    add_quest("exit", nil, "normal")
 
     con.ticker();
   end

@@ -918,7 +918,7 @@ function hexen_get_levels(episode)
   end
 
 
-  level_list[5].is_secret = true
+  level_list[5].secret_kind = "plain"
 
   level_list[4].assume_weapons = { weap_2=true, weap_3=true }
   level_list[6].assume_weapons = { weap_2=true, weap_3=true }
@@ -1033,7 +1033,11 @@ function hexen_get_levels(episode)
     local item  = item_list[i]
     local where = item_where[i]
 
-    add_quest(where, "item", item, "sub")
+    local Q = add_quest(where, "item", item, "sub")
+
+    if rand_odds(25) then
+      Q.is_secret = true
+    end
 
     if i <= 4 and SETTINGS.size ~= "small" then
       local where2
@@ -1047,7 +1051,7 @@ function hexen_get_levels(episode)
 
   -- switch quests
 
-  -- FIXME: proper names
+  -- FIXME: select some proper names
   local switch_list = { "sw1", "sw2", "sw3", "sw4", "sw5", "sw6", "sw7" }
 
   rand_shuffle(switch_list)

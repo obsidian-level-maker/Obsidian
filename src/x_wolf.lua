@@ -634,7 +634,7 @@ WF_QUEST_LEN_PROBS =
 
 function wolfy_decide_quests(level_list, is_spear)
 
-  local function add_quest(L, kind, item)
+  local function add_quest(L, kind, item, secret_prob)
     local len_probs = non_nil(WF_QUEST_LEN_PROBS[kind])
     local Quest =
     {
@@ -642,6 +642,11 @@ function wolfy_decide_quests(level_list, is_spear)
       item = item,
       want_len = 1 + rand_index_by_probs(len_probs),
     }
+    if item == "secret" or (secret_prob and rand_odds(secret_prob)) then
+      Quest.is_secret = true
+      -- need at least one room in-between (for push-wall)
+      if Quest.want_len < 3 then Quest.want_len = 3 end
+    end
     table.insert(L.quests, Quest)
     return Quest
   end
@@ -653,17 +658,16 @@ function wolfy_decide_quests(level_list, is_spear)
     [rand_irange(7,9)] = true,
   }
 
-  for map = 1,10 do
-    local Level = level_list[map]
+  for zzz,Level in ipairs(level_list) do
 
     -- weapons and keys
 
-    if rand_odds(90 - map*8) then
-      add_quest(Level, "weapon", "machine_gun")
+    if rand_odds(90 - 40 * ((Level.ep_along-1) % 3)) then
+      add_quest(Level, "weapon", "machine_gun", 35)
     end
 
-    if gatling_maps[map] then
-      add_quest(Level, "weapon", "gatling_gun")
+    if gatling_maps[Level.ep_along] then
+      add_quest(Level, "weapon", "gatling_gun", 50)
     end
 
     local keys = rand_index_by_probs(WF_KEY_NUM_PROBS[SETTINGS.size]) - 1
@@ -674,16 +678,16 @@ function wolfy_decide_quests(level_list, is_spear)
 
     -- treasure
 
-    local ITEM_PROBS = { small=25, regular=50, large=75 }
+    local ITEM_PROBS = { small=33, regular=45, large=66 }
 
-    for i = 1,sel(is_spear,3,4) do
+    for i = 1,sel(is_spear,4,6) do
       if rand_odds(ITEM_PROBS[SETTINGS.size]) then
-        add_quest(Level, "item", "treasure")
+        add_quest(Level, "item", "treasure", 50)
       end
     end
 
-    if is_spear and rand_odds(map*9) then
-      add_quest(Level, "item", "clip_25")
+    if is_spear and rand_odds(60) then
+      add_quest(Level, "item", "clip_25", 50)
     end
 
     -- bosses and exits

@@ -45,9 +45,8 @@ class Quest
   first : Cell  -- convenience, same as path[1]
   last  : Cell  -- convenience, same as path[#path]
 
+  is_secret : true for secret areas (need a secret door)
   force_key : must use locked door with this key (Hexen only)
-
-  children : array(Quest)
 
   tag : tag number for switch
 
