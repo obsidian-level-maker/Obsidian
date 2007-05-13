@@ -632,6 +632,78 @@ WF_QUEST_LEN_PROBS =
   item   = { 15, 70, 70, 15 },  -- treasure
 }
 
+function wolfy_decide_quests(level_list, is_spear)
+
+  local function add_quest(L, kind, item)
+    local len_probs = non_nil(WF_QUEST_LEN_PROBS[kind])
+    local Quest =
+    {
+      kind = kind,
+      item = item,
+      want_len = 1 + rand_index_by_probs(len_probs),
+    }
+    table.insert(L.quests, Quest)
+    return Quest
+  end
+
+  local gatling_maps =
+  {
+    [rand_irange(2,3)] = true,
+    [rand_irange(4,6)] = true,
+    [rand_irange(7,9)] = true,
+  }
+
+  for map = 1,10 do
+    local Level = level_list[map]
+
+    -- weapons and keys
+
+    if rand_odds(90 - map*8) then
+      add_quest(Level, "weapon", "machine_gun")
+    end
+
+    if gatling_maps[map] then
+      add_quest(Level, "weapon", "gatling_gun")
+    end
+
+    local keys = rand_index_by_probs(WF_KEY_NUM_PROBS[SETTINGS.size]) - 1
+
+    if keys >= 1 then
+      add_quest(Level, "key", "k_silver")
+    end
+
+    -- treasure
+
+    local ITEM_PROBS = { small=25, regular=50, large=75 }
+
+    for i = 1,sel(is_spear,3,4) do
+      if rand_odds(ITEM_PROBS[SETTINGS.size]) then
+        add_quest(Level, "item", "treasure")
+      end
+    end
+
+    if is_spear and rand_odds(map*9) then
+      add_quest(Level, "item", "clip_25")
+    end
+
+    -- bosses and exits
+
+    if Level.boss_kind then
+      local Q = add_quest(Level, "boss", Level.boss_kind)
+      Q.give_key = "k_gold"
+
+    elseif keys == 2 then
+      add_quest(Level, "key", "k_gold")
+    end
+
+    if Level.secret_exit then
+      add_quest(Level, "exit", "secret")
+    end
+
+    add_quest(Level, "exit", "normal")
+  end
+end
+
 function wolf3d_get_levels(episode)
 
   local level_list = {}
@@ -671,20 +743,6 @@ function wolf3d_get_levels(episode)
   end
 
 
-  -- decide quests
-  
-  local function add_quest(L, kind, item)
-    local len_probs = non_nil(WF_QUEST_LEN_PROBS[kind])
-    local Quest =
-    {
-      kind = kind,
-      item = item,
-      want_len = 1 + rand_index_by_probs(len_probs),
-    }
-    table.insert(L.quests, Quest)
-    return Quest
-  end
-
   local function dump_levels()
     for idx,L in ipairs(level_list) do
       con.printf("Wolf3d episode [%d] map [%d] : %s\n", episode, idx, L.name)
@@ -692,59 +750,7 @@ function wolf3d_get_levels(episode)
     end
   end
 
-
-  local gatling_maps =
-  {
-    [rand_irange(2,3)] = true,
-    [rand_irange(4,6)] = true,
-    [rand_irange(7,9)] = true,
-  }
-
-  for map = 1,10 do
-    local Level = level_list[map]
-
-    -- weapons and keys
-
-    if rand_odds(90 - map*8) then
-      add_quest(Level, "weapon", "machine_gun")
-    end
-
-    if gatling_maps[map] then
-      add_quest(Level, "weapon", "gatling_gun")
-    end
-
-    local keys = rand_index_by_probs(WF_KEY_NUM_PROBS[SETTINGS.size]) - 1
-
-    if keys >= 1 then
-      add_quest(Level, "key", "k_silver")
-    end
-
-    -- treasure
-
-    local ITEM_PROBS = { small=25, regular=50, large=75 }
-
-    for i = 1,4 do
-      if rand_odds(ITEM_PROBS[SETTINGS.size]) then
-        add_quest(Level, "item", "treasure")
-      end
-    end
-
-    -- bosses and exits
-
-    if Level.boss_kind then
-      local Q = add_quest(Level, "boss", Level.boss_kind)
-      Q.give_key = "k_gold"
-
-    elseif keys == 2 then
-      add_quest(Level, "key", "k_gold")
-    end
-
-    if Level.secret_exit then
-      add_quest(Level, "exit", "secret")
-    end
-
-    add_quest(Level, "exit", "normal")
-  end
+  wolfy_decide_quests(level_list)
 
 --  dump_levels()
 

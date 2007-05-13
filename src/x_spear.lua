@@ -246,7 +246,7 @@ SP_EPISODE_BOSSES =
   "wilhelm",
   "uber_mutant",
   "death_knight",
-  "none",
+  "",
   "angel_of_death",
 }
 
@@ -303,6 +303,8 @@ function spear_get_levels(episode)
 
     table.insert(level_list, Level)
   end
+
+  wolfy_decide_quests(level_list, "spear")
 
   return level_list
 end
