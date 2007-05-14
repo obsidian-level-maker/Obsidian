@@ -1203,9 +1203,9 @@ DM_DOOR_PREFABS =
     theme_probs = { INDUSTRIAL=70,TECH=70,URBAN=10 },
   },
 
-  uac_lit =
+  uac_lit =  -- actual height is 96
   {
-    w=128, h=112, prefab="DOOR_LIT",
+    w=128, h=72, prefab="DOOR_LIT",
 
     skin =
     {
@@ -1213,10 +1213,10 @@ DM_DOOR_PREFABS =
       lite_w="LITE5", step_w="STEP1",
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
-      door_h=112,
+      door_h=72,
     },
 
-    theme_probs = { INDUSTRIAL=20,TECH=90 },
+    theme_probs = { INDUSTRIAL=20,TECH=50 },
   },
 
   wooden =
@@ -1225,7 +1225,7 @@ DM_DOOR_PREFABS =
 
     skin =
     {
-      door_w="BIGDOOR6", door_c="CEIL5_1",
+      door_w="BIGDOOR5", door_c="FLAT5_2",
       lite_w="LITE5", step_w="STEP1",
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
@@ -1241,7 +1241,7 @@ DM_DOOR_PREFABS =
 
     skin =
     {
-      door_w="BIGDOOR6", door_c="CEIL5_1",
+      door_w="BIGDOOR6", door_c="CEIL5_2",
       lite_w="LITE5", step_w="STEP1",
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
@@ -1257,7 +1257,7 @@ DM_DOOR_PREFABS =
 
     skin =
     {
-      door_w="BIGDOOR1", door_c="FLAT23",
+      door_w="BIGDOOR7", door_c="CEIL5_2",
       lite_w="LITE5", step_w="STEP1",
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
