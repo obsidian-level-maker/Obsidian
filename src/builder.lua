@@ -2906,7 +2906,7 @@ function build_borders()
     local D = c.border[side]
     local rmodel = link.build.rmodel
 
-    local door_info = GAME.doors[link.wide_door]
+    local door_info = link.wide_door
     assert(door_info)
     door_info = copy_table(door_info)
 
@@ -3278,9 +3278,9 @@ arch.f_tex = "TLITE6_6"
     local link = c.link[side]
     if not (link and link.build == c) then return end
 
-    if GAME.doors then
-      link.narrow_door = random_door_kind(64)
-      link.wide_door   = random_door_kind(128)
+    if GAME.door_fabs then
+      link.narrow_door = get_rand_door_kind(c.quest.theme, 64)
+      link.wide_door   = get_rand_door_kind(c.quest.theme, 128)
     end
     link.block_sound = rand_odds(90)
     link.bar_size    = rand_index_by_probs { 20,90 }

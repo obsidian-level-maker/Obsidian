@@ -234,14 +234,38 @@ function get_rand_wall_light()
   return info
 end
 
-function random_door_kind(w)
-  local names = {}
-  for kind,info in pairs(GAME.doors) do
+function get_rand_door_kind(theme, w)
+  assert(GAME.door_fabs)
+  local probs = {}
+  for name,info in pairs(GAME.door_fabs) do
     if info.w == w then
-      table.insert(names,kind)
+      assert(info.theme_probs)
+      if info.theme_probs[theme.name] then
+        probs[name] = info.theme_probs[theme.name]
+      end
     end
   end
-  assert(#names > 0)
-  return rand_element(names)
+  if table_empty(probs) then
+    return nil
+  end
+
+  local name = non_nil(rand_key_by_probs(probs))
+  local result = non_nil(GAME.door_fabs[name])
+
+  return result
+end
+
+function get_rand_door_kind_safe(theme, w)
+  for loop = 1,20 do
+    local info = get_rand_door_kind(theme, w)
+    if info then return info end
+
+    -- try again with a different theme
+    theme = get_rand_theme()
+  end
+
+--FIXME  return non_nil(GAME.backup_doors[w])
+
+  error("No matching doors for theme: " .. theme.name .. " width: " .. tostring(w))
 end
 
