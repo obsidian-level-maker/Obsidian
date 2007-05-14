@@ -486,7 +486,7 @@ function shuffle_build_sites()
   
   for zzz,link in ipairs(PLAN.all_links) do
 
-    if link.is_exit or link.kind == "vista" then
+    if link.is_exit or link.is_secret or link.kind == "vista" then
       -- do not change this link
     else
       local c1 = link.cells[1]
