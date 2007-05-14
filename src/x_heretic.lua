@@ -832,6 +832,8 @@ GAME_FACTORIES["heretic"] = function()
 
   return
   {
+    doom_format = true,
+
     plan_size = 10,
     cell_size = 9,
     cell_min_size = 6,
