@@ -47,7 +47,7 @@ DM_THING_NUMS =
   cyber     = 16,
   spider    = 7,
   keen      = 72,
-  wolf_ss   = 84,
+  ss_dude   = 84,
 
   --- pickups ---
   k_red     = 38,
@@ -358,6 +358,64 @@ D2_COMBOS =
     scenery = { "green_torch", "green_torch_sm" },
 
     theme_probs = { URBAN=20 },
+  },
+
+
+  ---- Wolf3D Emulation ----
+
+  WOLF_CELLS =
+  {
+    mat_pri = 5,
+
+    wall = "ZZWOLF9",
+    void = "ZZWOLF9",
+
+    floor = "FLAT1",
+    ceil  = "FLAT1",
+
+    theme_probs = { WOLF=50 },
+  },
+
+  WOLF_BRICK =
+  {
+    mat_pri = 6,
+
+    wall = "ZZWOLF11",
+    void = "ZZWOLF11",
+    -- decorate =  { ZZWOLF12, ZZWOLF13 }
+
+    floor = "FLAT1",
+    ceil  = "FLAT1",
+
+    theme_probs = { WOLF=60 },
+  },
+
+  WOLF_STONE =
+  {
+    mat_pri = 4,
+
+    wall = "ZZWOLF1",
+    void = "ZZWOLF1",
+    -- decorate =  { ZZWOLF2, ZZWOLF3, ZZWOLF4 }
+
+    floor = "FLAT1",
+    ceil  = "FLAT1",
+
+    theme_probs = { WOLF=70 },
+  },
+
+  WOLF_WOOD =
+  {
+    mat_pri = 4,
+
+    wall = "ZZWOLF5",
+    void = "ZZWOLF5",
+    -- decorate =  { ZZWOLF6, ZZWOLF7 }
+
+    ceil  = "CEIL1_1",
+    floor = "FLAT5_2",
+
+    theme_probs = { WOLF=30 },
   },
 }
 
@@ -1579,6 +1637,7 @@ function doom2_get_levels(episode)
     if episode == 2 and map >= 10 then
       Level.name = string.format("MAP%02d", 21+map)
       Level.sky_info = D2_SKY_INFO[3]
+      Level.theme_probs = { WOLF=10 }
     end
 
     Level.boss_kind   = D2_LEVEL_BOSSES[Level.name]

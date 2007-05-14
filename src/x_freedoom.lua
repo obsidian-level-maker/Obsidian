@@ -29,7 +29,7 @@ FD_MONSTER_LIST =
   "skull",  -- missing death frames
   "baron",  -- not yet coloured
   "gunner",
-  "wolf_ss", 
+  "ss_dude", 
   "vile",
 
   ---| missing sprites |---

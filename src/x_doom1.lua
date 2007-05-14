@@ -1226,11 +1226,6 @@ DM_THEMES =
       STONE=70, BROWN=50,
     },
 
-    hallway_probs=
-    {
-      BROWN1=50, SP_ROCK=5,
-    },
-
     monster_prefs =
     {
       zombie=2.0, shooter=2.0, gunner=2.0,
@@ -1249,11 +1244,6 @@ DM_THEMES =
     exit_probs=
     {
       BROWN=50, TECH=20, STONE=10, BLUE=5,
-    },
-
-    hallway_probs=
-    {
-      BROWN1=50, BLUECARPET=10
     },
 
     monster_prefs =
@@ -1275,11 +1265,6 @@ DM_THEMES =
       TECH=50, BLUE=50, STARTAN=50, BROWN=5,
     },
 
-    hallway_probs=
-    {
-      BLUECARPET=60, BROWN1=15,
-    },
-
     monster_prefs =
     {
       zombie=2.0, shooter=2.0, gunner=2.0,
@@ -1298,11 +1283,6 @@ DM_THEMES =
     exit_probs=
     {
       STONE=40, BROWN=20,
-    },
-
-    hallway_probs=
-    {
-      SP_ROCK=40, BROWN1=20
     },
 
     monster_prefs =
@@ -1331,11 +1311,6 @@ DM_THEMES =
       BROWN=50, STONE=10,
     },
 
-    hallway_probs=
-    {
-      SP_ROCK=50, BROWN1=30,
-    },
-
     room_heights = { [96]=50, [128]=50 },
 
     monster_prefs =
@@ -1354,6 +1329,7 @@ DM_THEMES =
     trim_mode = "rough_hew",
   },
 
+
   HELL =
   {
     room_probs=
@@ -1366,15 +1342,26 @@ DM_THEMES =
       STONE=10, BROWN=10, BLOODY=50,
     },
 
-    hallway_probs=
-    {
-      BROWN1=20, SP_ROCK=40,
-    },
-
     monster_prefs =
     {
       zombie=0.2, shooter=0.5, gunner=0.5,
       spectre=2.0, vile=2.0, arach=2.0,
+    },
+  },
+
+
+  WOLF =
+  {
+    room_probs=
+    {
+      PLAIN=50,
+    },
+
+    monster_prefs =
+    {
+      -- the SS guard normally has a very low probability, hence
+      -- we need a very large multiplier to make him dominant.
+      ss_dude=5000,
     },
   },
 }
@@ -1432,7 +1419,7 @@ DM_BOSSES =
 D2_MONSTERS =
 {
   gunner    = { prob=17, r=20,h=56, hp=70,  dm=40, fp=40, hitscan=true, cage_prob=70, },
-  wolf_ss   = { prob=0.2,r=20,h=56, hp=50,  dm=15, fp=90, hitscan=true, cage_prob=1 },
+  ss_dude   = { prob=0.1,r=20,h=56, hp=50,  dm=15, fp=90, hitscan=true, cage_prob=1 },
 
   revenant  = { prob=70, r=20,h=64, hp=300, dm=55, fp=58, cage_prob=50, },
   knight    = { prob=70, r=24,h=64, hp=500, dm=45, fp=70, cage_prob=50, },
