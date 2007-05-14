@@ -515,7 +515,8 @@ DOOR_LIT =
     -- steps
     s = { f_h=8, c_rel="floor_h", c_add="door_h", c_h=8,
           f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
-          l_peg="top", light=224
+          l_peg="top",
+          light=224
         },
 
     -- door
@@ -523,6 +524,7 @@ DOOR_LIT =
           f_tex="frame_f", c_tex="door_c", u_tex="door_w",
           u_peg="bottom", l_peg="bottom",
           kind="door_kind", tag="tag",
+          light=224
         },
 
     -- track
@@ -562,7 +564,8 @@ DOOR_LIT_LOCKED =
     -- steps
     s = { f_h=8, c_rel="floor_h", c_add="door_h", c_h=8,
           f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
-          l_peg="top", light=224
+          l_peg="top",
+          light=224
         },
 
     -- door
@@ -570,6 +573,7 @@ DOOR_LIT_LOCKED =
           f_tex="frame_f", c_tex="door_c", u_tex="door_w",
           u_peg="bottom", l_peg="bottom",
           kind="door_kind", tag="tag",
+          light=224
         },
 
     -- track
