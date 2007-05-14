@@ -6545,6 +6545,14 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     end
   end
 
+  local function get_rand_fab(fab_tab)
+    local info_list = {}
+    for name,info in pairs(fab_tab) do
+      table.insert(info_list, info)
+    end
+    return rand_element(info_list)
+  end
+
   local function try_add_wall_prefab(c, def)
     local fab = PREFABS[def.prefab]
     assert(fab)
@@ -6565,22 +6573,15 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
   end
 
   local function add_deathmatch_exit(c)
-    local K = c.q_spot
 
+    if not GAME.dm_exits then return end
+
+    local K = c.q_spot
     assert(K.w >= 3 and K.h >= 3)
 
-    local name = rand_element
-    {
-      "exit_deathmatch_TECH",
-      "exit_deathmatch_METAL",
-      "exit_deathmatch_STONE",
-    }
-
-    local def = GAME.sc_fabs[name]  -- FIXME: yo gotta keep'em separated
+    local def, fab = get_rand_fab(GAME.dm_exits)
     assert(def)
 
-    local fab = PREFABS[def.prefab]
-    assert(fab)
     assert(def.skin)
     assert(def.skin.wall)
 
@@ -6642,14 +6643,6 @@ fab.name, c.x,c.y, x,y,dir)
     if not in_wall then  -- FIXME: mark front
       fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
     end
-  end
-
-  local function get_rand_fab(fab_tab)
-    local info_list = {}
-    for name,info in pairs(fab_tab) do
-      table.insert(info_list, info)
-    end
-    return rand_element(info_list)
   end
 
   local function add_wall_stuff(c)
