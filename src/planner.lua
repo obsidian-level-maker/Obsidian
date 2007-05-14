@@ -1320,9 +1320,8 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
   end
 
   local function make_quest_path(Q)
- 
-    local combo = Q.combo
-    assert(combo)
+
+    assert(Q.combo)
 
     -- decide liquid
     if GAME.caps.liquids then
@@ -1334,7 +1333,7 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
       local x = rand_irange(1, int(PLAN.w / 2))
       local y = rand_irange(1, int(PLAN.h / 2))
 
-      local c = create_cell(x, y, Q, 1, combo)
+      local c = create_cell(x, y, Q, 1, Q.combo)
       c.no_shrink = true
     end
 
@@ -1356,6 +1355,12 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
       want_len = int(want_len * 1.35 + con.random())
     end
 
+    -- secrets don't work well going outdoor-->outdoor
+    if Q.is_secret and cur.combo.outdoor and Q.combo.outdoor then
+      Q.combo = get_rand_indoor_combo(Q.theme)
+con.printf("\nADJUSTED SECRET COMBO NEAR CELL (%d,%d)\n", cur.x,cur.y)
+    end
+
     while along <= want_len do
 
       -- figure out where to go next
@@ -1364,7 +1369,7 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
       if not nx then break end
 
 
-      local nextc = create_cell(nx, ny, Q, along, combo)
+      local nextc = create_cell(nx, ny, Q, along, Q.combo)
 
       nextc.entry_dir = 10 - dir
       if not cur.exit_dir then cur.exit_dir = dir end
@@ -1385,19 +1390,19 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
 
 --!!!!!!    make_hallways(Q)
 
-if false then --!!!!
-    if Q.combo.outdoor and not Q.has_hallway then
+    if GAME.shack_prob and Q.combo.outdoor and not Q.has_hallway then
       -- Experimental: start cell is a building
-      if #Q.path >= 3 and Q == PLAN.quests[1] and rand_odds(30) then
-        Q.first.combo = get_rand_indoor_combo()
+      if #Q.path >= 3 and Q == PLAN.quests[1] and rand_odds(GAME.shack_prob) then
+        Q.first.combo = get_rand_indoor_combo(Q.theme)
+con.printf("\nCHANGED INITIAL ROOM @ (%d,%d)\n", Q.first.x,Q.first.y)
       end
 
       -- Experimental: quest cell is a building
-      if #Q.path >= 4 and dual_odds(Q.parent, 12, 30) then
-        Q.last.combo = get_rand_indoor_combo()
+      if #Q.path >= 4 and dual_odds(Q.parent, GAME.shack_prob/4, GAME.shack_prob) then
+con.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
+        Q.last.combo = get_rand_indoor_combo(Q.theme)
       end
     end
-end
 
     specialize_rooms(Q)
 

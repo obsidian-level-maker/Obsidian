@@ -146,13 +146,17 @@ function get_rand_roomtype(theme)
   end
 end
 
-function get_rand_indoor_theme()
-  local name,info
+function get_rand_indoor_combo(theme)
+  local info
+  for loop = 1,35 do
+    info = get_rand_combo(theme)
+    if not info.outdoor then break; end
 
-  repeat
-    name,info = rand_table_pair(GAME.combos)
-  until not info.outdoor
-
+    -- use a random theme if unsuccessful with current theme
+    if loop==20 or loop==25 or loop==30 then
+      theme = get_rand_theme()
+    end
+  end
   return info
 end
 
