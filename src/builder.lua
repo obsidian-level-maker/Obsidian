@@ -2949,7 +2949,7 @@ function build_borders()
       }
 
     elseif link.is_secret then
-      door_info = GAME.wall_fabs["secret_DOOR"]
+      door_info = GAME.misc_fabs["secret_DOOR"]
       parm.door_kind = 31 -- open and stay open
 
     elseif link.is_exit then
@@ -3012,7 +3012,7 @@ function build_borders()
 
     local D = c.border[side]
 
-    -- FIXME: use entries from GAME.wall_fabs[]
+    -- FIXME: use entries from GAME.arch_fabs[]
     local name
 
     if D.kind == "fence" then
@@ -3379,21 +3379,20 @@ arch.f_tex = "TLITE6_6"
     local D = c.border[side]
     assert(D.wire_h)
 
-    local def = GAME.wall_fabs["fence_MIDBARS3"] -- FIXME: not hard-code
+    local def = GAME.misc_fabs["fence_MIDBARS3"] -- FIXME: not hard-code
     assert(def)
 
     local fab = non_nil(PREFABS[def.prefab])
     local parm = { low_h = D.wire_h }
 
     -- Experimental shite
-    local def2 = GAME.wall_fabs["fence_beam_BLUETORCH"]
-    assert(def2)
-    local fab2 = non_nil(PREFABS[def2.prefab])
+    local def2 = GAME.misc_fabs["fence_beam_BLUETORCH"]
+    local fab2 = def2 and non_nil(PREFABS[def2.prefab])
 
     for x = x1,x2 do for y = y1,y2 do
       local B = PLAN.blocks[x][y]
       if not B then
-        if rand_odds(25) and (x>x1 or y>y1) and (x<x2 or y<y2) then
+        if fab2 and rand_odds(25) and (x>x1 or y>y1) and (x<x2 or y<y2) then
           B_prefab(c, fab2,def2.skin,parm, c.rmodel,D.combo, x,y,10-side)
         else
           B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, x,y,10-side)
@@ -3486,13 +3485,14 @@ arch.f_tex = "TLITE6_6"
 
         fill (c, x1+ax,y1+ay, x2-ax,y2-ay, WINDOW)
       else
-        local DEFS = { "window_narrow", "window_rail_nar_MIDGRATE", "window_cross_big" }
+        local DEFS = { "window_narrow", "window_rail_nar_MIDGRATE", "window_cross_big" } ---!!!! FIXME: not hard coded
         local def_name = non_nil(DEFS[spot.long])
 
-        local def = non_nil(GAME.wall_fabs[def_name])
-        local fab = non_nil(PREFABS[def.prefab])
-
-        B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, spot.x,spot.y,10-dir)
+        local def = GAME.win_fabs[def_name]
+        if def then
+          local fab = non_nil(PREFABS[def.prefab])
+          B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, spot.x,spot.y,10-dir)
+        end
       end
     end
 

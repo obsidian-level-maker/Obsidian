@@ -1166,6 +1166,152 @@ DM_WALL_PREFABS =
 {
 }
 
+DM_ARCH_PREFABS =
+{
+  arch_fence =
+  {
+    prefab = "ARCH_FENCE",
+    skin = {},
+  },
+ 
+  arch_wire_fence =
+  {
+    prefab = "ARCH_WIRE_FENCE",
+    skin = {},
+  },
+}
+
+DM_DOOR_PREFABS =
+{
+  silver_lit =
+  {
+    w=128, h=112, prefab="DOOR_LIT",
+
+    skin =
+    {
+      door_w="BIGDOOR2", door_c="FLAT1",
+      lite_w="LITE5", step_w="STEP1",
+      frame_f="FLAT1", frame_c="TLITE6_6",
+      track_w="DOORTRAK",
+      door_h=112,
+    },
+
+    theme_probs = { INDUSTRIAL=70,TECH=70,URBAN=10 },
+  },
+
+  uac_lit =
+  {
+    w=128, h=112, prefab="DOOR_LIT",
+
+    skin =
+    {
+      door_w="BIGDOOR1", door_c="FLAT23",
+      lite_w="LITE5", step_w="STEP1",
+      frame_f="FLAT1", frame_c="TLITE6_6",
+      track_w="DOORTRAK",
+      door_h=112,
+    },
+
+    theme_probs = { INDUSTRIAL=20,TECH=90 },
+  },
+
+  wooden =
+  {
+    w=128, h=112, prefab="DOOR",
+
+    skin =
+    {
+      door_w="BIGDOOR6", door_c="CEIL5_1",
+      lite_w="LITE5", step_w="STEP1",
+      frame_f="FLAT1", frame_c="TLITE6_6",
+      track_w="DOORTRAK",
+      door_h=112,
+    },
+
+    theme_probs = { URBAN=70,CAVE=30,HELL=5 }
+  },
+
+  wood_garg =
+  {
+    w=128, h=112, prefab="DOOR",
+
+    skin =
+    {
+      door_w="BIGDOOR6", door_c="CEIL5_1",
+      lite_w="LITE5", step_w="STEP1",
+      frame_f="FLAT1", frame_c="TLITE6_6",
+      track_w="DOORTRAK",
+      door_h=112,
+    },
+
+    theme_probs = { CAVE=50,HELL=30 },
+  },
+
+  wood_skull =
+  {
+    w=128, h=112, prefab="DOOR",
+
+    skin =
+    {
+      door_w="BIGDOOR1", door_c="FLAT23",
+      lite_w="LITE5", step_w="STEP1",
+      frame_f="FLAT1", frame_c="TLITE6_6",
+      track_w="DOORTRAK",
+      door_h=112,
+    },
+
+    theme_probs = { HELL=90,CAVE=5 },
+  },
+
+}
+
+DM_WINDOW_PREFABS =
+{
+  window_narrow =
+  {
+    prefab = "WINDOW_NARROW",
+    skin = { },
+  },
+
+  window_rail_nar_MIDGRATE =
+  {
+    prefab = "WINDOW_RAIL_NARROW",
+    skin = { rail_w="MIDGRATE" },
+  },
+
+  window_cross_big =
+  {
+    prefab = "WINDOW_CROSS_BIG",
+    skin = { },
+  },
+}
+
+DM_MISC_PREFABS =
+{
+  fence_MIDBARS3 =
+  {
+    prefab = "FENCE_RAIL",
+    skin = { rail_w="MIDBARS3" },
+  },
+  
+  fence_beam_BLUETORCH =
+  {
+    prefab = "FENCE_BEAM_W_LAMP",
+
+    skin = { lamp_t="blue_torch", beam_h=72,
+             beam_w="METAL", beam_f="CEIL5_2",
+           },
+  },
+
+  secret_DOOR =
+  {
+    w=128, h=128, prefab = "DOOR",
+
+    skin = { track_w="DOORSTOP", door_h=128 }
+  },
+}
+
+
 DM_ROOMS =
 {
   PLAIN =
@@ -1806,11 +1952,17 @@ GAME_FACTORIES["doom_common"] = function()
     lights    = DM_LIGHTS,
     wall_lights = DM_WALL_LIGHTS,
 
-    scenery   = DM_SCENERY,
-    sc_fabs   = DM_SCENERY_PREFABS,
-    wall_fabs = DM_WALL_PREFABS,
     rooms     = DM_ROOMS,
     themes    = DM_THEMES,
+
+    scenery   = DM_SCENERY,
+
+    sc_fabs   = DM_SCENERY_PREFABS,
+    wall_fabs = DM_WALL_PREFABS,
+    door_fabs = DM_DOOR_PREFABS,
+    arch_fabs = DM_ARCH_PREFABS,
+    win_fabs  = DM_WINDOW_PREFABS,
+    misc_fabs = DM_MISC_PREFABS,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },

@@ -1426,32 +1426,6 @@ D2_SCENERY_PREFABS =
 
 D2_WALL_PREFABS =
 {
-  arch_fence =
-  {
-    prefab = "ARCH_FENCE",
-    skin = {},
-  },
- 
-  arch_wire_fence =
-  {
-    prefab = "ARCH_WIRE_FENCE",
-    skin = {},
-  },
- 
-  fence_MIDBARS3 =
-  {
-    prefab = "FENCE_RAIL",
-    skin = { rail_w="MIDBARS3" },
-  },
-  
-  fence_beam_BLUETORCH =
-  {
-    prefab = "FENCE_BEAM_W_LAMP",
-
-    skin = { lamp_t="blue_torch", beam_h=72,
-             beam_w="METAL", beam_f="CEIL5_2",
-           },
-  },
 
   wall_lamp_RED_TORCH =
   {
@@ -1483,24 +1457,6 @@ D2_WALL_PREFABS =
     skin = { pic_w="ZZWOLF6", lite_w="LITE5" },
   },
 
-  window_narrow =
-  {
-    prefab = "WINDOW_NARROW",
-    skin = { },
-  },
-
-  window_rail_nar_MIDGRATE =
-  {
-    prefab = "WINDOW_RAIL_NARROW",
-    skin = { rail_w="MIDGRATE" },
-  },
-
-  window_cross_big =
-  {
-    prefab = "WINDOW_CROSS_BIG",
-    skin = { },
-  },
-
   cage_niche_MIDGRATE =
   {
     prefab = "CAGE_NICHE",
@@ -1511,13 +1467,42 @@ D2_WALL_PREFABS =
       rail_h = 128,
     }
   },
+}
 
-  secret_DOOR =
+D2_DOOR_PREFABS =
+{
+  spacey =
   {
-    w=128, h=128,
-    prefab = "DOOR",
-    skin = { track_w="DOORSTOP", door_h=128 }
+    w=64, h=112, prefab="DOOR_LIT_NARROW",
+
+    skin =
+    {
+      door_w="SPCDOOR3", door_c="FLAT23",
+      lite_w="LITE5", step_w="STEP1",
+      frame_f="FLAT1", frame_c="TLITE6_6",
+      track_w="DOORTRAK",
+      door_h=112,
+    },
+
+    theme_probs = { TECH=60,INDUSTRIAL=5 },
   },
+
+  wolfy =
+  {
+    w=128, h=128, prefab="DOOR_WOLFY",
+
+    skin =
+    {
+      door_w="ZDOORF1", door_c="FLAT23",
+      back_w="ZDOORF2", trace_w="ZZWOLF10",
+    },
+
+    theme_probs = { WOLF=50 },
+  },
+}
+
+D2_MISC_PREFABS =
+{
 }
 
 D2_ROOMS =
@@ -1663,6 +1648,11 @@ GAME_FACTORIES["doom2"] = function()
   T.level_func = doom2_get_levels
 
   T.quests   = D2_QUESTS
+  T.sky_info = D2_SKY_INFO
+
+  T.themes   = copy_and_merge(T.themes,   D2_THEMES)
+  T.rooms    = copy_and_merge(T.rooms,    D2_ROOMS)
+  T.monsters = copy_and_merge(T.monsters, D2_MONSTERS)
 
   T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
   T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
@@ -1678,15 +1668,11 @@ GAME_FACTORIES["doom2"] = function()
   T.pics    = copy_and_merge(T.pics,    D2_PICS)
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
-  T.monsters = copy_and_merge(T.monsters, D2_MONSTERS)
-
-  T.scenery = copy_and_merge(T.scenery, D2_SCENERY)
-  T.sc_fabs = copy_and_merge(T.sc_fabs, D2_SCENERY_PREFABS)
+  T.scenery   = copy_and_merge(T.scenery,   D2_SCENERY)
+  T.sc_fabs   = copy_and_merge(T.sc_fabs,   D2_SCENERY_PREFABS)
   T.wall_fabs = copy_and_merge(T.wall_fabs, D2_WALL_PREFABS)
-  T.rooms   = copy_and_merge(T.rooms,   D2_ROOMS)
-  T.themes  = copy_and_merge(T.themes,  D2_THEMES)
-
-  T.sky_info = D2_SKY_INFO
+  T.door_fabs = copy_and_merge(T.door_fabs, D2_DOOR_PREFABS)
+  T.misc_fabs = copy_and_merge(T.misc_fabs, D2_MISC_PREFABS)
 
   return T
 end
