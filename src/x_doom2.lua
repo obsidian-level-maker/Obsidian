@@ -782,6 +782,7 @@ D2_SCENERY_PREFABS =
   pillar_light1_METAL =
   {
     prefab = "PILLAR_LIGHT1",
+    environment = "indoor",
 
     skin = { beam_w="METAL", beam_f="CEIL5_2",
              lite_w="LITE5" },
@@ -790,6 +791,7 @@ D2_SCENERY_PREFABS =
   pillar_rnd_sm_POIS =
   {
     prefab = "PILLAR_ROUND_SMALL",
+    environment = "indoor",
 
     skin = { wall="BRNPOIS" },
   },
@@ -811,6 +813,7 @@ D2_SCENERY_PREFABS =
   billboard_NAZI =
   {
     prefab = "BILLBOARD",
+    environment = "outdoor",
 
     skin =
     {
@@ -827,6 +830,7 @@ D2_SCENERY_PREFABS =
   billboard_lit_SHAWN =
   {
     prefab = "BILLBOARD_LIT",
+    environment = "outdoor",
 
     skin =
     {
@@ -844,6 +848,7 @@ D2_SCENERY_PREFABS =
   billboard_stilts_FLAGGY =
   {
     prefab = "BILLBOARD_ON_STILTS",
+    environment = "outdoor",
 
     skin =
     {
@@ -855,6 +860,7 @@ D2_SCENERY_PREFABS =
   billboard_stilts4_WREATH =
   {
     prefab = "BILLBOARD_STILTS_HUGE",
+    environment = "outdoor",
 
     skin =
     {
@@ -868,6 +874,7 @@ D2_SCENERY_PREFABS =
   statue_tech1 =
   {
     prefab = "STATUE_TECH_1",
+    environment = "indoor",
 
     skin =
     {
@@ -886,6 +893,7 @@ D2_SCENERY_PREFABS =
   statue_tech2 =
   {
     prefab = "STATUE_TECH_2",
+    environment = "indoor",
 
     skin =
     {
@@ -904,6 +912,7 @@ D2_SCENERY_PREFABS =
   machine_pump1 =
   {
     prefab = "MACHINE_PUMP",
+    environment = "indoor",
 
     skin =
     {
@@ -923,6 +932,7 @@ D2_SCENERY_PREFABS =
   ground_light_SILVER =
   {
     prefab = "GROUND_LIGHT",
+    environment = "outdoor",
 
     skin =
     { 
@@ -936,6 +946,7 @@ D2_SCENERY_PREFABS =
   four_sided_pic_ADOLF =
   {
     prefab = "WALL_PIC_FOUR_SIDED",
+    environment = "outdoor",
     skin = { pic_w="ZZWOLF7" },
     force_dir = 2, -- optimisation
   },
@@ -943,6 +954,7 @@ D2_SCENERY_PREFABS =
   launch_pad_big_H =
   {
     prefab = "LAUNCH_PAD_LARGE",
+    environment = "outdoor",
 
     skin =
     {
@@ -957,6 +969,7 @@ D2_SCENERY_PREFABS =
   launch_pad_med_F =
   {
     prefab = "LAUNCH_PAD_MEDIUM",
+    environment = "outdoor",
 
     skin =
     {
@@ -971,6 +984,7 @@ D2_SCENERY_PREFABS =
   launch_pad_sml_S =
   {
     prefab = "LAUNCH_PAD_SMALL",
+    environment = "outdoor",
 
     skin =
     {
@@ -985,6 +999,7 @@ D2_SCENERY_PREFABS =
   tech_pickup_STONE =
   {
     prefab = "TECH_PICKUP_LARGE",
+    environment = "indoor",
 
     skin =
     {
@@ -1080,6 +1095,7 @@ D2_SCENERY_PREFABS =
   skylight_mega_METAL =
   {
     prefab = "SKYLIGHT_MEGA_1",
+    environment = "indoor",
 
     skin =
     { 
@@ -1092,6 +1108,7 @@ D2_SCENERY_PREFABS =
   skylight_mega_METALWOOD =
   {
     prefab = "SKYLIGHT_MEGA_2",
+    environment = "indoor",
 
     skin =
     { 
@@ -1104,6 +1121,7 @@ D2_SCENERY_PREFABS =
   skylight_cross_sm_METAL =
   {
     prefab = "SKYLIGHT_CROSS_SMALL",
+    environment = "indoor",
 
     skin =
     { 

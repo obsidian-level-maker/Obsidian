@@ -214,8 +214,6 @@ ARCH_CURVY =
 
 ARCH_FENCE =
 {
-  environment="outdoor",
-
   structure =
   {
     "fed......def",
@@ -672,8 +670,6 @@ BARS_NARROW =
 
 BARS_FENCE =
 {
-  environment="outdoor",
-
   structure =
   {
     "f..........f",
@@ -695,8 +691,6 @@ BARS_FENCE =
 
 BARS_FENCE_DOOR =
 {
-  environment="outdoor",
-
   structure =
   {
     "f..........f",
@@ -803,7 +797,7 @@ EXIT_DOOR_W_SIGN =
 EXIT_SIGN_CEIL =
 {
   region="ceil",
-  environment="indoor",
+--  environment="indoor",
   height_range={ 80,160 },
 
   structure =
@@ -1090,7 +1084,6 @@ SWITCH_CEILING =
 {
   add_mode="island",
 --FIXME  height_range={ 96,256 },
---FIXME  environment="indoor",
 
   structure =
   {
@@ -1355,7 +1348,6 @@ FENCE_BEAM_W_LAMP =
 TECH_PICKUP_SMALL =
 {
   add_mode="island",
-  environment="indoor",
   height_range={ 160,256 },
 
   structure =
@@ -1439,7 +1431,6 @@ LAUNCH_PAD_LARGE =
 {
   add_mode="island",
   region="floor",
-  environment="outdoor",
 
   structure =
   {
@@ -1630,7 +1621,7 @@ PEDESTAL =
 
 PEDESTAL_PLUT =
 {
-  environment="outdoor",
+--  environment="outdoor",
 
   structure =
   {
@@ -1667,7 +1658,7 @@ PEDESTAL_PLUT_DOUBLE =
 {
   copy="PEDESTAL_PLUT",
 
-  environment="indoor",
+--  environment="indoor",
   height_range={ 112,999 },
 
   elements =
@@ -1696,7 +1687,6 @@ PEDESTAL_PLUT_DOUBLE =
 
 STATUE_TECH_1 =
 {
-  environment="indoor",
   height_range={ 176,248 },
 
   structure =
@@ -1755,7 +1745,6 @@ STATUE_TECH_1 =
 
 STATUE_TECH_2 =
 {
-  environment="indoor",
   height_range={ 160,256 },
 
   structure =
@@ -1843,7 +1832,6 @@ STATUE_CHAIR_DUDE =
 MACHINE_PUMP =
 {
   add_mode="island",
-  environment="indoor",
   height_range={ 192,240 },
 
   structure =
@@ -1945,7 +1933,6 @@ DRINKS_BAR =
 GROUND_LIGHT =
 {
   region="floor",
-  environment="outdoor",
   height_range={ 96,999 },
 
   structure =
@@ -1979,7 +1966,6 @@ SKYLIGHT_MEGA_1 =
 {
   region="ceil",
   add_mode="island",
-  environment="indoor",
   height_range={ 96,304 },
 
   structure =
@@ -2068,7 +2054,6 @@ SKYLIGHT_CROSS_SMALL =
 {
   region="ceil",
   add_mode="island",
-  environment="indoor",
   height_range={ 80,224 },
 
   structure =
@@ -2118,7 +2103,6 @@ SKYLIGHT_CROSS_SMALL =
 BILLBOARD =
 {
   add_mode="extend",
-  environment="outdoor",
   height_range={ 160,999 },
 
   structure =
@@ -2154,7 +2138,6 @@ BILLBOARD_LIT =
 {
   region="floor",
   add_mode="extend",
-  environment="outdoor",
   height_range={ 160,999 },
 
   structure =
@@ -2199,7 +2182,6 @@ BILLBOARD_LIT =
 
 BILLBOARD_ON_STILTS =
 {
-  environment="outdoor",
   height_range={ 144,999 },
 
   structure =
@@ -2235,7 +2217,6 @@ BILLBOARD_ON_STILTS =
 BILLBOARD_STILTS_HUGE =
 {
   add_mode="island",
-  environment="outdoor",
   height_range={ 144,999 },
 
   structure =
@@ -2917,7 +2898,6 @@ CORNER_CONVEX =
 PILLAR_LIGHT1 =
 {
   add_mode="island",
-  environment="indoor",
 
   structure =
   {
@@ -2955,7 +2935,6 @@ PILLAR_LIGHT2 =
 PILLAR_LIGHT3 =
 {
   add_mode="island",
-  environment="indoor",
 
   structure =
   {

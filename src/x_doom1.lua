@@ -802,6 +802,7 @@ DM_SWITCHES =
     {
       w=128, h=112,
       prefab = "BARS_FENCE_DOOR",
+      environment = "outdoor",
       skin =
       {
         door_w="BIGDOOR7", door_f="CEIL5_2",
@@ -869,6 +870,7 @@ DM_SWITCHES =
     switch =
     {
       prefab = "SWITCH_CEILING",
+      environment = "indoor",
       skin =
       {
         switch_w="SW1GARG", side_w="METAL",
@@ -1171,12 +1173,14 @@ DM_ARCH_PREFABS =
   arch_fence =
   {
     prefab = "ARCH_FENCE",
+--  environment = "outdoor",
     skin = {},
   },
  
   arch_wire_fence =
   {
     prefab = "ARCH_WIRE_FENCE",
+--  environment = "outdoor",
     skin = {},
   },
 }
