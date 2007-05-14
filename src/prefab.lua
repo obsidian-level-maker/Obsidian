@@ -463,6 +463,49 @@ DOOR =
 {
   structure =
   {
+    "##ssssssss##",
+    "#TddddddddT#",
+    "#TddddddddT#",
+    "##ssssssss##",
+  },
+
+  elements =
+  {
+    -- steps
+    s = { f_h=8, c_rel="floor_h", c_add="door_h", c_h=8,
+          f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
+          l_peg="top",
+        },
+
+    -- door
+    d = { f_h=8, c_rel="floor_h", c_h=8,
+          f_tex="frame_f", c_tex="door_c",
+          u_tex="door_w", u_peg="bottom", l_peg="bottom",
+          kind="door_kind", tag="tag",
+        },
+
+    -- track
+    T = { solid="track_w", l_peg="bottom" },
+  },
+},
+
+DOOR_NARROW =
+{
+  copy="DOOR",
+
+  structure =
+  {
+    "##ssss##",
+    "#TddddT#",
+    "#TddddT#",
+    "##ssss##",
+  },
+},
+
+DOOR_LIT =
+{
+  structure =
+  {
     "#LssssssssM#",
     "#TddddddddT#",
     "#TddddddddT#",
@@ -472,14 +515,16 @@ DOOR =
   elements =
   {
     -- steps
-    s = { f_h=8, c_rel="door_top", c_h=8,
+    s = { f_h=8, c_rel="floor_h", c_add="door_h", c_h=8,
           f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
           l_peg="top", light=224
         },
 
     -- door
-    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door_w", c_tex = "door_c",
-          kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
+    d = { f_h=8, c_rel="floor_h", c_h=8,
+          f_tex="frame_f", c_tex="door_c", u_tex="door_w",
+          u_peg="bottom", l_peg="bottom",
+          kind="door_kind", tag="tag",
         },
 
     -- track
@@ -491,20 +536,20 @@ DOOR =
   },
 },
 
-DOOR_NARROW =
+DOOR_LIT_NARROW =
 {
-  copy="DOOR",
+  copy="DOOR_LIT",
 
   structure =
   {
     "#LssssM#",
-    "#tddddt#",
-    "#tddddt#",
+    "#TddddT#",
+    "#TddddT#",
     "#LssssM#",
   },
 },
 
-DOOR_LOCKED =
+DOOR_LIT_LOCKED =
 {
   structure =
   {
@@ -517,14 +562,16 @@ DOOR_LOCKED =
   elements =
   {
     -- steps
-    s = { f_h=8, c_rel="door_top", c_h=8,
+    s = { f_h=8, c_rel="floor_h", c_add="door_h", c_h=8,
           f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
           l_peg="top", light=224
         },
 
     -- door
-    d = { copy="s", c_rel="floor_h", c_h=8, u_tex="door_w", c_tex = "door_c",
-          kind="door_kind", tag="tag", u_peg="bottom", l_peg="bottom"
+    d = { f_h=8, c_rel="floor_h", c_h=8,
+          f_tex="frame_f", c_tex="door_c", u_tex="door_w",
+          u_peg="bottom", l_peg="bottom",
+          kind="door_kind", tag="tag",
         },
 
     -- track
@@ -534,6 +581,7 @@ DOOR_LOCKED =
     K = { solid="key_w" },
   },
 },
+
 
 BARS_1 =
 {

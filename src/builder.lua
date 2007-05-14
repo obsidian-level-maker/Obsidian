@@ -2904,6 +2904,7 @@ function build_borders()
   local function build_door( link, side  )
 
     local D = c.border[side]
+    local rmodel = link.build.rmodel
 
     local door_info = GAME.doors[link.wide_door]
     assert(door_info)
@@ -2911,7 +2912,7 @@ function build_borders()
 
     local parm =
     {
-      door_top = link.build.rmodel.f_h + door_info.h,
+      door_top = rmodel.f_h + door_info.h,
       door_kind = 1, tag = 0,
     }
 
@@ -2926,7 +2927,7 @@ function build_borders()
 
       parm =
       {
-        door_top = link.build.rmodel.f_h + door_info.h,
+        door_top = rmodel.f_h + door_info.h,
         door_kind = 1,
         tag = 0,
       }
@@ -2942,7 +2943,7 @@ function build_borders()
 
       parm =
       {
-        door_top = link.build.rmodel.f_h + door_info.h,
+        door_top = rmodel.f_h + door_info.h,
         door_kind = 0,
         tag = link.quest.tag + 1,
       }
@@ -2956,7 +2957,7 @@ function build_borders()
 
       parm =
       {
-        door_top = link.build.rmodel.f_h + door_info.h,
+        door_top = rmodel.f_h + door_info.h,
         door_kind = 1,
         tag = 0,
       }
@@ -2968,7 +2969,7 @@ function build_borders()
     local fab = PREFABS[door_info.prefab]
     assert(fab)
 
-    B_prefab(c, fab, door_info.skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
+    B_prefab(c, fab, door_info.skin, parm, rmodel,D.combo, link.x1, link.y1, side)
   end
 
   local function blocky_door( link, side, double_who )

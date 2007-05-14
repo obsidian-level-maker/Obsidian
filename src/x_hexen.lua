@@ -310,6 +310,7 @@ XN_SWITCHES =
       {
         door_w="BRASS1", door_c="F_009",
         key_w="STEEL06",
+        door_h=128,
 
 ---     step_w="STEP1",  track_w="DOORTRAK",
 ---     frame_f="FLAT1", frame_c="FLAT1",
@@ -326,6 +327,8 @@ XN_DOORS =
                {
                  door_w="DOOR51", door_c="F_009",
                  track_w="STEEL08",
+                 door_h=128,
+
 ---              lite_w="LITE5", step_w="STEP1",
 ---              frame_f="FLAT1", frame_c="TLITE6_6",
                }
@@ -357,6 +360,7 @@ XN_KEY_DOORS =
       door_w="D_FIRE", door_c="F_009",
       track_w="STEEL08",
       frame_f="F_009",
+      door_h=128,
     }
   },
 
@@ -371,6 +375,7 @@ XN_KEY_DOORS =
       door_w="D_CAST", door_c="F_009",
       track_w="STEEL08",
       frame_f="F_009",
+      door_h=128,
     }
   },
 
@@ -385,6 +390,7 @@ XN_KEY_DOORS =
       door_w="D_SILVER", door_c="F_009",
       track_w="STEEL08",
       frame_f="F_009",
+      door_h=128,
     }
   },
 }

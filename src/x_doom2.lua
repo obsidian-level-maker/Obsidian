@@ -1516,7 +1516,7 @@ D2_WALL_PREFABS =
   {
     w=128, h=128,
     prefab = "DOOR",
-    skin = { }
+    skin = { track_w="DOORSTOP", door_h=128 }
   },
 }
 

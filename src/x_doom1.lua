@@ -761,13 +761,14 @@ DM_SWITCHES =
     door =
     {
       w=128, h=112,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR_LIT_LOCKED",
       skin =
       {
         key_w="COMPBLUE",
         door_w="BIGDOOR3", door_c="FLAT1",
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
+        door_h=112,
       }
     },
   },
@@ -786,13 +787,14 @@ DM_SWITCHES =
     door =
     {
       w=128, h=112,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR_LIT_LOCKED",
       skin =
       {
         key_w="SP_HOT1",
         door_w="BIGDOOR3", door_c="FLAT1",
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
+        door_h=112,
       }
     },
 
@@ -824,13 +826,14 @@ DM_SWITCHES =
     door =
     {
       w=128, h=112,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR_LIT_LOCKED",
       skin =
       {
         key_w="SKINFACE",
         door_w="BIGDOOR3", door_c="FLAT1",
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
+        door_h=112,
       }
     },
   },
@@ -849,13 +852,14 @@ DM_SWITCHES =
     door =
     {
       w=128, h=112,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR_LIT_LOCKED",
       skin =
       {
         key_w="GRAYVINE",
         door_w="BIGDOOR3", door_c="FLAT1",
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
+        door_h=112,
       }
     },
   },
@@ -914,7 +918,7 @@ DM_DOORS =
   -- Note: most of these with h=112 are really 128 pixels
   --       tall, but work fine when truncated.
 
-  d_big2   = { prefab="DOOR", w=128, h=112,
+  d_big2   = { prefab="DOOR_LIT", w=128, h=112,
 
                skin =
                {
@@ -922,6 +926,7 @@ DM_DOORS =
                  lite_w="LITE5", step_w="STEP1",
                  frame_f="FLAT1", frame_c="TLITE6_6",
                  track_w="DOORTRAK",
+                 door_h=112,
                }
              },
 
@@ -946,7 +951,7 @@ DM_KEY_DOORS =
   {
     w=128, h=112, kind_rep=26, kind_once=32,
 
-    prefab = "DOOR_LOCKED",
+    prefab = "DOOR_LIT_LOCKED",
     
     skin =
     {
@@ -954,6 +959,7 @@ DM_KEY_DOORS =
       door_w="BIGDOOR4", door_c="FLAT1",
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
+      door_h=112,
     }
   },
 
@@ -961,7 +967,7 @@ DM_KEY_DOORS =
   {
     w=128, h=112, kind_rep=27, kind_once=34,
 
-    prefab = "DOOR_LOCKED",
+    prefab = "DOOR_LIT_LOCKED",
 
     skin =
     {
@@ -969,6 +975,7 @@ DM_KEY_DOORS =
       door_w="BIGDOOR4", door_c="FLAT1",
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
+      door_h=112,
     }
   },
 
@@ -976,7 +983,7 @@ DM_KEY_DOORS =
   {
     w=128, h=112, kind_rep=28, kind_once=33,
 
-    prefab = "DOOR_LOCKED",
+    prefab = "DOOR_LIT_LOCKED",
 
     skin =
     {
@@ -984,6 +991,7 @@ DM_KEY_DOORS =
       door_w="BIGDOOR4", door_c="FLAT1",
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
+      door_h=112,
     }
   },
 
@@ -1000,6 +1008,7 @@ DM_KEY_DOORS =
 
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="TLITE6_5",
+      door_h=72,
     }
   },
 
@@ -1017,6 +1026,7 @@ DM_KEY_DOORS =
 
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="TLITE6_5",
+      door_h=72,
     }
   },
 }

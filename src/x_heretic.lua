@@ -325,6 +325,7 @@ HC_SWITCHES =
       {
         door_w="DMNMSK", door_c="FLOOR10",
         key_w="RCKSNMUD",
+        door_h=128,
 
 ---     step_w="STEP1",  track_w="DOORTRAK",
 ---     frame_f="FLAT1", frame_c="FLAT1",
@@ -341,6 +342,8 @@ HC_DOORS =
                {
                  door_w="DMNMSK", door_c="FLOOR10",
                  track_w="METL2",
+                 door_h=128,
+
 ---              lite_w="LITE5", step_w="STEP1",
 ---              frame_f="FLAT1", frame_c="TLITE6_6",
                }
@@ -364,6 +367,7 @@ HC_KEY_DOORS =
       door_w="DOORSTON", door_c="FLOOR04",
       track_w="METL2",
       frame_f="FLOOR04",
+      door_h=128, 
     },
 
     thing="blue_statue",
@@ -380,6 +384,7 @@ HC_KEY_DOORS =
       door_w="DOORSTON", door_c="FLOOR04",
       track_w="METL2",
       frame_f="FLOOR04",
+      door_h=128, 
     },
 
     thing="green_statue",
@@ -396,6 +401,7 @@ HC_KEY_DOORS =
       door_w="DOORSTON", door_c="FLOOR04",
       track_w="METL2",
       frame_f="FLOOR04",
+      door_h=128, 
     },
 
     thing="yellow_statue",
