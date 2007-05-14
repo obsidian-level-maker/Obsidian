@@ -582,6 +582,41 @@ DOOR_LIT_LOCKED =
   },
 },
 
+DOOR_WOLFY =
+{
+  structure =
+  {
+    "#TssssssssT#",
+    "#TssssssssT#",
+    "#TddddddddT#",
+    "#TssssssssT#",
+  },
+
+  elements =
+  {
+    -- step
+    s = { f_h=0, c_rel="floor_h", c_add="door_h", c_h=0,
+          f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
+          l_peg="top",
+        },
+
+    -- door
+    d = { f_h=0, c_rel="floor_h", c_h=0,
+          f_tex="frame_f", c_tex="door_c",
+          u_tex="door_w", u_peg="bottom", l_peg="bottom",
+          kind="door_kind", tag="tag",
+
+          [8] = { u_tex="back_w", u_peg="bottom" },
+
+          [1] = { dx=0, dy=12 }, [7] = { dx=0, dy=4 },
+          [3] = { dx=0, dy=12 }, [9] = { dx=0, dy=4 },
+        },
+
+    -- track
+    T = { solid="track_w", l_peg="bottom" },
+  },
+},
+
 
 BARS_1 =
 {
