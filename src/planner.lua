@@ -1074,21 +1074,21 @@ function plan_sp_level(level, is_coop)
       return 0
     end
 
-    -- never branch of exit rooms (except in emergencies)
-    if c.is_exit then
-      return 0.001
-    end
-    
     -- never branch of secret quests
     if c.quest.is_secret then
       return 0
+    end
+
+    -- never branch of exit rooms (except in emergencies)
+    if c.is_exit then
+      return 0.0001
     end
 
     -- sub quests *always* connect to their parent
     if Q.parent then
       if Q.parent == c.quest then return 90 end
       if Q.parent == c.quest.parent then return 60 end
-      return 0.3
+      return 0.2
     end
 
     -- first main quest always joins the initial room
