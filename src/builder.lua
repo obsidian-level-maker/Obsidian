@@ -6550,11 +6550,6 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     assert(fab)
     assert(def.skin)
 
-    if fab.environment then
-      if fab.environment == "indoor" and c.combo.outdoor then return end
-      if fab.environment == "outdoor" and not c.combo.outdoor then return end
-    end
-
     local parm = {
              cage_base_h = c.rmodel.f_h + 64,
              }
@@ -6649,98 +6644,70 @@ fab.name, c.x,c.y, x,y,dir)
     end
   end
 
+  local function get_rand_fab(fab_tab)
+    local info_list = {}
+    for name,info in pairs(fab_tab) do
+      table.insert(info_list, info)
+    end
+    return rand_element(info_list)
+  end
+
   local function add_wall_stuff(c)
 
-    local name = rand_element
-    {
-      "wall_lamp_RED_TORCH",
-      "wall_lamp_GREEN_TORCH",
-      "wall_lamp_BLUE_TORCH",
-      "wall_pic_TV",
-      "cage_niche_MIDGRATE",
-    }
+    if not GAME.wall_fabs then return end
 
-    local def = GAME.wall_fabs[name]
-    assert(def)
+    local function get_rand_wall_fab(c)
+
+      -- FIXME: better selection  [ MERGE with get_rand_scenery_prefab ?? ]
+
+      for loop = 1,20 do
+        local def = get_rand_fab(GAME.wall_fabs)
+        local fab = non_nil(PREFABS[def.prefab])
+        local is_OK = true
+
+        if def.environment then
+          if (def.environment == "indoor" and c.combo.outdoor) or
+             (def.environment == "outdoor" and not c.combo.outdoor)
+          then is_OK = false end
+        end
+
+        if is_OK then return def, fab end
+      end
+    end
+
+    local def, fab = get_rand_wall_fab(c.quest.theme)
+
+    if not def then return end
 
     try_add_wall_prefab(c, def)
   end
 
   local function add_prefab(c)
 
-    local name = rand_element
-    {
-      "billboard_NAZI",
-      "billboard_lit_SHAWN",
-      "billboard_stilts4_WREATH",
-      "billboard_stilts_FLAGGY",
-      "four_sided_pic_ADOLF",
+    if not GAME.sc_fabs then return end
 
-      "pillar_light1_METAL",
-      "pillar_rnd_sm_POIS",
-      "pillar_rnd_med_COMPSTA",
-      "pillar_rnd_bg_COMPSTA",
+    local function get_rand_scenery_prefab(c)
 
-      "statue_tech1",
-      "ground_light_SILVER",
-      "drinks_bar_WOOD_POTION",
+      -- FIXME: better selection
 
-      "crate_CRATE1",
-      "crate_CRATE2",
-      "crate_WOODSKUL",
-      "crate_TV",
-      "crate_rotnar_SILVER",
-      "crate_rotate_CRATE1",
-      "crate_rotate_CRATE2",
+      for loop = 1,20 do
+        local def = get_rand_fab(GAME.sc_fabs)
+        local fab = non_nil(PREFABS[def.prefab])
+        local is_OK = true
+        
+        if def.environment then
+          if (def.environment == "indoor" and c.combo.outdoor) or
+             (def.environment == "outdoor" and not c.combo.outdoor)
+          then is_OK = false end
+        end
 
-      "crate_triple_A",
-      "crate_triple_B",
-      "crate_jumble",
-
-      "cage_pillar_METAL",
-      "cage_small_METAL",
-      "cage_large_METAL",
-      "cage_medium_METAL",
-
-      "cage_large_liq_NUKAGE",
-      "cage_medium_liq_BLOOD",
-      "cage_medium_liq_LAVA",
-
-      "skylight_mega_METAL",
-      "skylight_mega_METALWOOD",
-      "skylight_cross_sm_METAL",
-      "statue_tech2",
-      "launch_pad_sml_S",
-      "launch_pad_big_H",
-      "launch_pad_med_F",
-      "liquid_pickup_NUKAGE",
-
-      "machine_pump1",
-      "comp_tall_STATION1",
-      "comp_tall_STATION2",
-      "comp_thin_STATION1",
-      "comp_thin_STATION2",
-      "comp_desk_EW8",
-      "comp_desk_EW2",
-      "comp_desk_NS6",
-      "comp_desk_USHAPE1",
-      "comp_desk_USHAPE2",
-
-      "pedestal_PLAYER",
-      "pedestal_KEY",
-      "pedestal_WEAPON",
-
-    }
-    local def = GAME.sc_fabs[name]
-    assert(def)
-    local fab = PREFABS[def.prefab]
-    assert(fab)
-    assert(def.skin)
-
-    if fab.environment then
-      if fab.environment == "indoor" and c.combo.outdoor then return end
-      if fab.environment == "outdoor" and not c.combo.outdoor then return end
+        if is_OK then return def, fab end
+      end
     end
+
+    local def, fab = get_rand_scenery_prefab(c)
+
+    assert(def.skin)
 
 ---###    if fab.height_range then
 ---###      local h = c.ceil_h - c.floor_h
@@ -6750,7 +6717,7 @@ fab.name, c.x,c.y, x,y,dir)
     local x,y,dir = find_fab_loc(c, fab, 0,2, def.force_dir)
     if not x then return end
 
-con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
+con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
 
     local parm = {
 
@@ -6774,7 +6741,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", name, dir)
 
     -- choose kind: prefabs | scenery items
 
-    if GAME.sc_fabs and rand_odds(60) then
+    if GAME.sc_fabs and rand_odds(40) then
       add_prefab(c)
       return
     end
@@ -6858,7 +6825,7 @@ con.debugf("add_scenery : %s\n", item)
   decide_reclaim_kinds(c)
 
   -- WALL STUFF
-  for loop = 1,5 do
+  for loop = 1,4 do
     add_wall_stuff(c)
   end
 
@@ -6919,7 +6886,7 @@ con.debugf("add_scenery : %s\n", item)
   end
 
   -- SCENERY
-  for loop = 1,0 do
+  for loop = 1,8 do
     add_scenery(c)
   end
 end
