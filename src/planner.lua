@@ -1210,12 +1210,9 @@ function plan_sp_level(level, is_coop)
     return L
   end
 
-  local HALL_CHANCE    = {   0,  0, 20, 33, 45, 64, 81 }
   local HALL_LEN_PROBS = { 100, 80, 50, 25,  6,  1,  0 }
 
   local function make_hallways(Q)
-
-    if table_empty(GAME.hallways) then return end
 
     local function hall_lighting(start,idx,finish)
       local level = 128
@@ -1227,17 +1224,23 @@ function plan_sp_level(level, is_coop)
       return level
     end
 
+    if #Q.path < 3 then return end
+
     if Q.combo.outdoor and Q.first.combo.outdoor then return end
 
+    local h_probs =
+      Q.combo.hallway_probs or
+      Q.theme.hallway_probs or
+      GAME.hallway_probs
+
+    if not h_probs then return end
+
     -- longer quests are more likely to add hallways
-    local chance = HALL_CHANCE[math.min(7, #Q.path)]
---!!!!!!    if not rand_odds(chance) then return end
-if #Q.path < 3 then return end
+    local chance = h_probs[math.min(#h_probs, #Q.path-2)]
+    if not rand_odds(chance) then return end
 
     local start  = 2
     local finish = #Q.path - 1
-
----??    if Q == PLAN.quests[1] then
 
     local st_movable = true
 
@@ -1267,7 +1270,7 @@ if #Q.path < 3 then return end
         break;
       end
 
-      if st_movable and rand_odds(35) then
+      if st_movable and rand_odds(33) then
         start = start + 1
       else
         finish = finish - 1

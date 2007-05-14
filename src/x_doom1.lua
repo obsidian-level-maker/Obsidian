@@ -1810,7 +1810,9 @@ GAME_FACTORIES["doom_common"] = function()
 
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
     window_probs = { out_diff=75, combo_diff=60, normal=35 },
-    shack_prob   = 25,
+
+    hallway_probs = { 20, 30, 41, 53, 66 },
+    shack_prob    = 25,
   }
 end
 
