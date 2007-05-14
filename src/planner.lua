@@ -1281,7 +1281,7 @@ function plan_sp_level(level, is_coop)
     if start == 2 and Q.first.hallway then
       -- extend the hallway in the previous quest
       combo = Q.first.combo
-    elseif GAME.wolfy then
+    elseif GAME.wolf_format then
       -- for Wolf3d/SOD, too many combo changes look bad
       combo = Q.first.combo
     else

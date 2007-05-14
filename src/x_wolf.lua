@@ -768,7 +768,7 @@ GAME_FACTORIES["wolf3d"] = function()
 
   return
   {
-    wolfy = true,
+    wolf_format = true,
 
     plan_size = 7,
     cell_size = 7,

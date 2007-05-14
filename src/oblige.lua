@@ -77,7 +77,7 @@ function create_LEVEL(level, index, total)
 
   if con.abort() then return "abort" end
 
-  if GAME.wolfy then
+  if GAME.wolf_format then
     write_wolf_level()
   else
     write_level(level.name)
