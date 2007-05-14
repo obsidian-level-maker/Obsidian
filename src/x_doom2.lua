@@ -471,6 +471,8 @@ D2_HALLWAYS =
     floor = "FLOOR0_2",
     ceil  = "FLAT5_5",
 
+    theme_probs = { URBAN=70 },
+    trim_mode = "guillotine",
   },
 
   BRICK =
@@ -484,6 +486,9 @@ D2_HALLWAYS =
 
     floor = "FLAT5_7",
     ceil  = "FLAT5_4",
+
+    theme_probs = { URBAN=70,NATURE=10,HELL=10 },
+    trim_mode = "guillotine",
   },
 
   BSTONE =
@@ -497,6 +502,9 @@ D2_HALLWAYS =
 
     floor = "FLAT5",
     ceil  = "FLAT1",
+
+    theme_probs = { URBAN=50,NATURE=50,CAVE=30 },
+    trim_mode = "guillotine",
   },
 
   WOOD =
@@ -510,6 +518,9 @@ D2_HALLWAYS =
 
     floor = "FLAT5_2",
     ceil  = "MFLR8_2",
+
+    theme_probs = { URBAN=30 },
+    trim_mode = "guillotine",
   },
 
   METAL =
@@ -523,6 +534,9 @@ D2_HALLWAYS =
 
     floor = "FLAT5_5",
     ceil  = "CEIL5_1",
+
+    theme_probs = { INDUSTRIAL=70,TECH=30 },
+    trim_mode = "guillotine",
   },
 
   TEKGREN =
@@ -538,6 +552,9 @@ D2_HALLWAYS =
     ceil  = "GRNLITE1",
 
     well_lit = true,
+
+    theme_probs = { TECH=80,INDUSTRIAL=40 },
+    trim_mode = "guillotine",
   },
 
   PIPES =
@@ -551,6 +568,9 @@ D2_HALLWAYS =
 
     floor = "FLAT5_4",
     ceil  = "FLAT5_4",
+
+    theme_probs = { INDUSTRIAL=70 },
+    trim_mode = "guillotine",
   },
 }
 

@@ -1074,6 +1074,11 @@ function plan_sp_level(level, is_coop)
       return 0
     end
 
+    -- never branch of exit rooms (except in emergencies)
+    if c.is_exit then
+      return 0.001
+    end
+    
     -- never branch of secret quests
     if c.quest.is_secret then
       return 0
@@ -1205,7 +1210,8 @@ function plan_sp_level(level, is_coop)
     return L
   end
 
-  local HALL_CHANCE = { 0, 0, 25, 36, 49, 64, 81 }
+  local HALL_CHANCE    = {   0,  0, 20, 33, 45, 64, 81 }
+  local HALL_LEN_PROBS = { 100, 80, 50, 25,  6,  1,  0 }
 
   local function make_hallways(Q)
 
@@ -1221,41 +1227,66 @@ function plan_sp_level(level, is_coop)
       return level
     end
 
-    if #Q.path < 3 then return end
-
-    if Q.combo.outdoor and rand_odds(66) then return end
+    if Q.combo.outdoor and Q.first.combo.outdoor then return end
 
     -- longer quests are more likely to add hallways
     local chance = HALL_CHANCE[math.min(7, #Q.path)]
-    if not rand_odds(chance) then return end
+--!!!!!!    if not rand_odds(chance) then return end
+if #Q.path < 3 then return end
 
-    local length
-    repeat
-      length = rand_index_by_probs { 30, 70, 40, 15, 7, 3, 3, 3 }
-    until length <= (#Q.path - 2)
+    local start  = 2
+    local finish = #Q.path - 1
 
-    local start
-    if Q.first.hallway and rand_odds(30) then
-      start = 2
-    else
-      start = rand_irange(2, #Q.path - length)
+---??    if Q == PLAN.quests[1] then
+
+    local st_movable = true
+
+    if Q.first.hallway then
+      st_movable = false
     end
 
-    local finish = start + length - 1
+    -- don't leave an outdoor gap when branching off an indoor area
+    if Q.combo.outdoor and not Q.first.combo.outdoor then
+      st_movable = false
+    end
+
+--[[
+    then
+      while start < finish do
+        local length = finish - start + 1
+        if rand_odds(HALL_LEN_PROBS[math.min(length, 7)]) then
+          break;
+        end
+          start = start + 1
+      end
+    end
+--]]
+    while finish > start do
+      local length = finish - start + 1
+      if rand_odds(HALL_LEN_PROBS[math.min(length, 7)]) then
+        break;
+      end
+
+      if st_movable and rand_odds(35) then
+        start = start + 1
+      else
+        finish = finish - 1
+      end
+    end
 
     local combo
-    if start == 2 and Q.first.hallway and rand_odds(96) then
+    if start == 2 and Q.first.hallway then
       -- extend the hallway in the previous quest
       combo = Q.first.combo
-    elseif not GAME.caps.heights then
+    elseif GAME.wolfy then
       -- for Wolf3d/SOD, too many combo changes look bad
       combo = Q.first.combo
     else
-      combo = get_rand_hallway()
+      combo = get_rand_hallway(Q.theme)
     end
     assert(combo)
 
-    con.debugf("HALLWAY: start=%d len=%d QLEN:%d\n", start, length, #Q.path)
+    con.debugf("HALLWAY: start=%d len=%d QLEN:%d\n", start, finish-start+1, #Q.path)
 
     for idx = start,finish do
       local c = Q.path[idx]
@@ -1388,7 +1419,7 @@ con.printf("\nADJUSTED SECRET COMBO NEAR CELL (%d,%d)\n", cur.x,cur.y)
 
     Q.last.no_shrink = true
 
---!!!!!!    make_hallways(Q)
+    make_hallways(Q)
 
     if GAME.shack_prob and Q.combo.outdoor and not Q.has_hallway then
       -- Experimental: start cell is a building

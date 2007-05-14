@@ -168,9 +168,31 @@ function get_rand_exit_combo()
   return info
 end
 
-function get_rand_hallway()
-  local name,info = rand_table_pair(GAME.hallways)
-  return info
+function get_rand_hallway(theme)
+---###  local name,info = rand_table_pair(GAME.hallways)
+---###  return info
+
+  -- FIXME: duplicate code with get_rand_combo --> MERGE!
+
+  local probs = {}
+
+  for name,hall in pairs(GAME.hallways) do
+    if hall.theme_probs and hall.theme_probs[theme.name] then
+      probs[name] = hall.theme_probs[theme.name]
+    end
+  end
+
+  if table_empty(probs) then
+    error("No matching hallways for theme: " .. theme.name)
+  end
+
+  local name = rand_key_by_probs(probs)
+  local result = GAME.hallways[name]
+
+  assert(name)
+  assert(result)
+
+  return result
 end
 
 function get_rand_crate()

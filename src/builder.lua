@@ -2514,6 +2514,8 @@ c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
       local void_chance
       if near_window > 0 then
         void_chance = sel(near_window == 1, 10, 2)
+      elseif c.hallway then
+        void_chance = 99
       else
         void_chance = 100 - c.space_factor
       end
@@ -6345,8 +6347,13 @@ function tizzy_up_room(c)
   local function decide_reclaim_kinds(c)
 
     local function liquid_chance()
-      -- FIXME: room_type/combo/theme/GAME
-      return rand_odds(40)
+      local chance =
+        c.room_type.liquid_prob or
+        c.combo.liquid_prob or
+        (not PLAN.deathmatch and c.quest.theme.liquid_prob) or
+        GAME.liquid_prob or 40
+
+      return rand_odds(chance)
     end
 
     local function kind_from_border(D)
@@ -6375,7 +6382,7 @@ function tizzy_up_room(c)
           K.solid_combo = N.solid_combo
           return
 
-        elseif not N and D and rand_odds(50) then
+        elseif not N and D and rand_odds(50) and not c.hallway then
           K.rec_kind = kind_from_border(D)
           K.solid_combo = D.combo
           return
@@ -6387,6 +6394,10 @@ function tizzy_up_room(c)
       end
 
       K.rec_kind = sel(c.combo.outdoor, "fence", "solid")
+
+      if c.hallway then
+        K.solid_combo = c.combo
+      end
     end
 
     local function set_rec_kind(K, rec)
@@ -6405,6 +6416,10 @@ function tizzy_up_room(c)
       if D then
         rec.rec_kind = kind_from_border(D)
         rec.solid_combo = D.combo
+
+        if rec.rec_kind == "solid" and c.hallway then
+          rec.solid_combo = c.combo
+        end
         return
       end
 

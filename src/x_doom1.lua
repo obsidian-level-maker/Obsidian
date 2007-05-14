@@ -505,6 +505,9 @@ DM_HALLWAYS =
 
     floor = "FLOOR5_1",
     ceil  = "CEIL5_2",
+
+    theme_probs = { INDUSTRIAL=50,URBAN=20 },
+    trim_mode = "guillotine",
   },
 
   SP_ROCK =
@@ -518,6 +521,9 @@ DM_HALLWAYS =
 
     floor = "MFLR8_3",
     ceil  = "FLOOR6_2",
+
+    theme_probs = { HELL=70,CAVE=30 },
+    trim_mode = "rough_hew",
   },
 
   BLUECARPET =
@@ -535,7 +541,9 @@ DM_HALLWAYS =
     arch_floor = "FLAT20",
     arch_ceil  = "CEIL3_2",
 
+    theme_probs = { TECH=80,INDUSTRIAL=30 },
     well_lit = true,
+    trim_mode = "guillotine",
   },
 }
 
@@ -1156,10 +1164,12 @@ DM_ROOMS =
 
   HALLWAY =
   {
+    liquid_prob = 0,
+
     room_heights = { [96]=50, [128]=50 },
     door_probs   = { out_diff=75, combo_diff=50, normal=5 },
     window_probs = { out_diff=1, combo_diff=1, normal=1 },
-    space_range  = { 20, 65 },
+    space_range  = { 33, 66 },
   },
  
   SCENIC =
