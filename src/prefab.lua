@@ -802,7 +802,7 @@ EXIT_SIGN_CEIL =
 {
   region="ceil",
 --  environment="indoor",
-  height_range={ 80,160 },
+--  height_range={ 80,160 },
 
   structure =
   {
@@ -1231,8 +1231,6 @@ WALL_LAMP =
 
 WALL_PIC =
 {
-  height_range={ 160,999 },
-
   structure =
   {
     "############",
@@ -1272,7 +1270,6 @@ WALL_PIC_TWO_SIDED =
 WALL_PIC_FOUR_SIDED =
 {
   add_mode="island",
-  height_range={ 192,999 },
 
   structure =
   {
@@ -1352,7 +1349,7 @@ FENCE_BEAM_W_LAMP =
 TECH_PICKUP_SMALL =
 {
   add_mode="island",
-  height_range={ 160,256 },
+--  height_range={ 160,256 },
 
   structure =
   {
@@ -1398,8 +1395,6 @@ TECH_PICKUP_SMALL =
 TECH_PICKUP_LARGE =
 {
   copy="TECH_PICKUP_SMALL",
-
-  height_range={ 192,320 },
 
   structure =
   {
@@ -1555,8 +1550,6 @@ LAUNCH_PAD_SMALL =
 
 LIQUID_PICKUP =
 {
-  height_range={ 128,384 },
-
   structure =
   {
     "##ssssssssssss##",
@@ -1663,7 +1656,7 @@ PEDESTAL_PLUT_DOUBLE =
   copy="PEDESTAL_PLUT",
 
 --  environment="indoor",
-  height_range={ 112,999 },
+--  height_range={ 112,999 },
 
   elements =
   {
@@ -1691,8 +1684,6 @@ PEDESTAL_PLUT_DOUBLE =
 
 STATUE_TECH_1 =
 {
-  height_range={ 176,248 },
-
   structure =
   {
     "....................",
@@ -1749,8 +1740,6 @@ STATUE_TECH_1 =
 
 STATUE_TECH_2 =
 {
-  height_range={ 160,256 },
-
   structure =
   {
     "................",
@@ -1801,7 +1790,7 @@ STATUE_TECH_2 =
 STATUE_CHAIR_DUDE =
 {
   region="floor",
-  height_range={ 136,999 },
+--  height_range={ 136,999 },
 
   structure =
   {
@@ -1836,7 +1825,6 @@ STATUE_CHAIR_DUDE =
 MACHINE_PUMP =
 {
   add_mode="island",
-  height_range={ 192,240 },
 
   structure =
   {
@@ -1905,7 +1893,6 @@ MACHINE_PUMP =
 DRINKS_BAR =
 {
   region="floor",
-  height_range={ 64,512 },
 
   structure =
   {
@@ -1937,7 +1924,6 @@ DRINKS_BAR =
 GROUND_LIGHT =
 {
   region="floor",
-  height_range={ 96,999 },
 
   structure =
   {
@@ -1970,7 +1956,6 @@ SKYLIGHT_MEGA_1 =
 {
   region="ceil",
   add_mode="island",
-  height_range={ 96,304 },
 
   structure =
   {
@@ -2058,7 +2043,6 @@ SKYLIGHT_CROSS_SMALL =
 {
   region="ceil",
   add_mode="island",
-  height_range={ 80,224 },
 
   structure =
   {
@@ -2107,7 +2091,6 @@ SKYLIGHT_CROSS_SMALL =
 BILLBOARD =
 {
   add_mode="extend",
-  height_range={ 160,999 },
 
   structure =
   {
@@ -2142,7 +2125,6 @@ BILLBOARD_LIT =
 {
   region="floor",
   add_mode="extend",
-  height_range={ 160,999 },
 
   structure =
   {
@@ -2186,8 +2168,6 @@ BILLBOARD_LIT =
 
 BILLBOARD_ON_STILTS =
 {
-  height_range={ 144,999 },
-
   structure =
   {
     "............",
@@ -2221,7 +2201,6 @@ BILLBOARD_ON_STILTS =
 BILLBOARD_STILTS_HUGE =
 {
   add_mode="island",
-  height_range={ 144,999 },
 
   structure =
   {
@@ -2478,7 +2457,6 @@ CRATE_ROTATE =
 CRATE_TRIPLE =
 {
   add_mode="island",
-  height_range={ 144,999 },
 
   structure =
   {
@@ -2509,7 +2487,6 @@ CRATE_JUMBLE =
 {
   scale=64,
   add_mode="island",
-  height_range={ 224,999 },
 
   structure =
   {
@@ -2541,7 +2518,6 @@ CAGE_PILLAR =
 {
   scale=64,
   add_mode="island",
-  height_range={ 160,999 },
 
   structure = { "c" },
 
@@ -2564,7 +2540,6 @@ CAGE_SMALL =
 {
   scale=64,
   add_mode="island",
-  height_range={ 144,999 },
 
   structure = { "c" },
 
@@ -2608,7 +2583,6 @@ CAGE_LARGE_W_LIQUID =
 {
   scale=64,
   add_mode="island",
-  height_range={ 256,999 },
 
   structure =
   {
@@ -2667,7 +2641,6 @@ CAGE_MEDIUM_W_LIQUID =
 {
   scale=64,
   add_mode="island",
-  height_range={ 160,999 },
 
   structure =
   {
@@ -2700,7 +2673,6 @@ CAGE_MEDIUM_W_LIQUID =
 CAGE_NICHE =
 {
   add_mode="wall",
-  height_range={ 176,999 }, --FIXME: take rail_h into account
 
   structure =
   {

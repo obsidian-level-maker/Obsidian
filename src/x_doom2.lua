@@ -814,6 +814,7 @@ D2_SCENERY_PREFABS =
   {
     prefab = "BILLBOARD",
     environment = "outdoor",
+    min_height = 160,
 
     skin =
     {
@@ -831,6 +832,7 @@ D2_SCENERY_PREFABS =
   {
     prefab = "BILLBOARD_LIT",
     environment = "outdoor",
+    min_height = 160,
 
     skin =
     {
@@ -849,6 +851,7 @@ D2_SCENERY_PREFABS =
   {
     prefab = "BILLBOARD_ON_STILTS",
     environment = "outdoor",
+    min_height = 160,
 
     skin =
     {
@@ -861,6 +864,7 @@ D2_SCENERY_PREFABS =
   {
     prefab = "BILLBOARD_STILTS_HUGE",
     environment = "outdoor",
+    min_height = 160,
 
     skin =
     {
@@ -875,6 +879,8 @@ D2_SCENERY_PREFABS =
   {
     prefab = "STATUE_TECH_1",
     environment = "indoor",
+    min_height = 176,
+    max_height = 248,
 
     skin =
     {
@@ -894,6 +900,8 @@ D2_SCENERY_PREFABS =
   {
     prefab = "STATUE_TECH_2",
     environment = "indoor",
+    min_height = 160,
+    max_height = 256,
 
     skin =
     {
@@ -913,6 +921,8 @@ D2_SCENERY_PREFABS =
   {
     prefab = "MACHINE_PUMP",
     environment = "indoor",
+    min_height = 192,
+    max_height = 240,
 
     skin =
     {
@@ -933,6 +943,7 @@ D2_SCENERY_PREFABS =
   {
     prefab = "GROUND_LIGHT",
     environment = "outdoor",
+    min_height = 96,
 
     skin =
     { 
@@ -947,6 +958,7 @@ D2_SCENERY_PREFABS =
   {
     prefab = "WALL_PIC_FOUR_SIDED",
     environment = "outdoor",
+    min_height = 192,
     skin = { pic_w="ZZWOLF7" },
     force_dir = 2, -- optimisation
   },
@@ -1000,6 +1012,8 @@ D2_SCENERY_PREFABS =
   {
     prefab = "TECH_PICKUP_LARGE",
     environment = "indoor",
+    min_height = 192,
+    max_height = 320,
 
     skin =
     {
@@ -1014,7 +1028,9 @@ D2_SCENERY_PREFABS =
   liquid_pickup_NUKAGE =
   {
     prefab = "LIQUID_PICKUP",
-    
+    min_height = 144,
+    max_height = 384,
+
     skin =
     {
       wall="METAL", floor="CEIL5_2", ceil="CEIL5_2",
@@ -1096,6 +1112,8 @@ D2_SCENERY_PREFABS =
   {
     prefab = "SKYLIGHT_MEGA_1",
     environment = "indoor",
+    min_height = 96,
+    -- max_height = 304,  ???
 
     skin =
     { 
@@ -1109,6 +1127,7 @@ D2_SCENERY_PREFABS =
   {
     prefab = "SKYLIGHT_MEGA_2",
     environment = "indoor",
+    min_height = 96,
 
     skin =
     { 
@@ -1122,6 +1141,7 @@ D2_SCENERY_PREFABS =
   {
     prefab = "SKYLIGHT_CROSS_SMALL",
     environment = "indoor",
+    min_height = 80,
 
     skin =
     { 
@@ -1133,6 +1153,7 @@ D2_SCENERY_PREFABS =
   drinks_bar_WOOD_POTION =
   {
     prefab = "DRINKS_BAR",
+    min_height = 64,
 
     skin = { bar_w = "PANBORD1", bar_f = "FLAT5_2",
              drink_t = "potion",
@@ -1240,6 +1261,7 @@ D2_SCENERY_PREFABS =
   crate_triple_A =
   {
     prefab = "CRATE_TRIPLE",
+    min_height = 144,
 
     skin =
     {
@@ -1253,6 +1275,7 @@ D2_SCENERY_PREFABS =
   crate_triple_B =
   {
     prefab = "CRATE_TRIPLE",
+    min_height = 144,
 
     skin =
     {
@@ -1266,6 +1289,7 @@ D2_SCENERY_PREFABS =
   crate_jumble =
   {
     prefab = "CRATE_JUMBLE",
+    min_height = 224,
 
     skin =
     {
@@ -1280,6 +1304,7 @@ D2_SCENERY_PREFABS =
   cage_pillar_METAL =
   {
     prefab = "CAGE_PILLAR",
+    min_height = 160,
 
     skin =
     {
@@ -1292,6 +1317,7 @@ D2_SCENERY_PREFABS =
   cage_small_METAL =
   {
     prefab = "CAGE_SMALL",
+    min_height = 144,
 
     skin =
     {
@@ -1335,6 +1361,7 @@ D2_SCENERY_PREFABS =
   cage_large_liq_NUKAGE =
   {
     prefab = "CAGE_LARGE_W_LIQUID",
+    min_height = 256,
 
     skin =
     {
@@ -1353,6 +1380,7 @@ D2_SCENERY_PREFABS =
   cage_medium_liq_BLOOD =
   {
     prefab = "CAGE_MEDIUM_W_LIQUID",
+    min_height = 160,
 
     skin =
     {
@@ -1410,18 +1438,22 @@ D2_WALL_PREFABS =
   wall_pic_TV =
   {
     prefab = "WALL_PIC",
+    min_height = 160,
+
     skin = { pic_w="SPACEW3", lite_w="SUPPORT2" },
   },
 
   wall_pic_2S_EAGLE =
   {
     prefab = "WALL_PIC_TWO_SIDED",
+    min_height = 160,
     skin = { pic_w="ZZWOLF6", lite_w="LITE5" },
   },
 
   cage_niche_MIDGRATE =
   {
     prefab = "CAGE_NICHE",
+    min_height = 160,
 
     skin =
     {
