@@ -986,15 +986,12 @@ end
 
 function B_exit_elevator(c, x, y, side)
 
-  fab = PREFABS["WOLF_ELEVATOR"]
-  assert(fab)
+  local def = non_nil(GAME.misc_fabs["elevator"])
+  local fab = non_nil(PREFABS[def.prefab])
+
   local parm =
   {
     door_kind = "door_elevator", door_dir = side,
-  }
-  local skin =
-  {
-    elevator = 21, front = 14,
   }
 
   local dir = 10-side
@@ -1005,7 +1002,7 @@ function B_exit_elevator(c, x, y, side)
   elseif side == 6 then x=x-fab.deep+1; y=y-1
   end
 
-  B_prefab(c, fab, skin, parm, c.rmodel,c.combo, x, y, dir)
+  B_prefab(c, fab, def.skin, parm, c.rmodel,c.combo, x, y, dir)
 end
 
 

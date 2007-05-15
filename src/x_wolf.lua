@@ -277,6 +277,18 @@ WF_KEY_DOORS =
   k_gold   = { kind_rep="door_gold",   door_side=14 },
 }
 
+WF_MISC_PREFABS =
+{
+  elevator =
+  {
+    prefab = "WOLF_ELEVATOR",
+
+    skin = { elevator=21, front=14, }
+  },
+}
+
+
+
 ---- QUEST STUFF ----------------
 
 WF_QUESTS =
@@ -811,6 +823,8 @@ GAME_FACTORIES["wolf3d"] = function()
     scenery   = WF_SCENERY,
     rooms     = WF_ROOMS,
     themes    = WF_THEMES,
+
+    misc_fabs = WF_MISC_PREFABS,
 
     room_heights = { [128]=50 },
     space_range  = { 50, 90 },
