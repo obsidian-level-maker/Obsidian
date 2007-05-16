@@ -1099,7 +1099,7 @@ SWITCH_FLOOR_TINY_PED =
 
   elements =
   {
-    s = { f_h=16, f_add="switch_h",
+    s = { f_h=20, f_add="switch_h",
           l_tex="side_w", f_tex="switch_f", l_peg="top",
 
           [2] = { l_tex="switch_w", l_peg="top", kind="kind", tag="tag",
@@ -1108,7 +1108,7 @@ SWITCH_FLOOR_TINY_PED =
 
         },
 
-    p = { f_h=16,
+    p = { f_h=20,
           l_tex="ped_w", f_tex="ped_f", l_peg="top",
         }
   },
