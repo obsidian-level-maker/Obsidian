@@ -3305,6 +3305,33 @@ HEXEN_V_TELEPORT =
   },
 },
 
+HEXEN_TRIPLE_PED =
+{
+  scale=64,
+  region="floor",
+
+  structure =
+  {
+    "p.p",
+    ".p.",
+    "...",
+  },
+
+  elements =
+  {
+    p = { f_h=0, f_add="ped_h",
+          f_tex="ped_f", l_tex="ped_w", l_peg="top",
+        }
+  },
+
+  things =
+  {
+    { kind="item_F_t", x=96,  y=96  },
+    { kind="item_C_t", x=32,  y=160 },
+    { kind="item_M_t", x=160, y=160 },
+  },
+},
+
 
 ------ Wolfenstein ------------------------------------
 
