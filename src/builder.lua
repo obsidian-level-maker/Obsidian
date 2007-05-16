@@ -2355,7 +2355,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
   local function good_Q_spot(c, bad_side, purpose)
 
-    local DIST_PROBS = { 1, 3, 30, 90 }
+    local DIST_PROBS = { 1, 10, 100, 900 }
 
     local function k_dist(kx, ky)
       if bad_side==2 then return ky-1 end
@@ -6601,7 +6601,9 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     assert(K)
     assert(fab.long <= K.w and fab.deep <= K.h)
 
-    B_prefab(c, fab, def.skin, {}, K.rmodel, c.combo, K.x1, K.y1, 2)
+    local dir = c.entry_dir or (10 - c.exit_dir)
+
+    B_prefab(c, fab, def.skin, {}, K.rmodel, c.combo, K.x1, K.y1, dir)
 
     gap_fill(c, K.x1,K.y1, K.x2,K.y2, K.rmodel)
   end
@@ -6815,7 +6817,9 @@ con.debugf("add_scenery : %s\n", item)
     add_deathmatch_exit(c)
   end
 
-  if c.q_spot and (c.quest.kind == "gate" or c.quest.kind == "back") then
+  if c.q_spot and c == c.quest.last and
+     (c.quest.kind == "gate" or c.quest.kind == "back")
+  then
     add_gate_exit(c)
   end
 
