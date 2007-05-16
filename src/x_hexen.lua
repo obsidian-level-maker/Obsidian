@@ -289,16 +289,18 @@ XN_LIQUIDS =
 
 XN_SWITCHES =
 {
----###  sw_rock = { wall="STEEL06", switch="SW_1_UP" },
-
-  sw_rock =
+  sw_cow =
   {
     switch =
     {
-      prefab = "SWITCH_PILLAR",
+      prefab = "SWITCH_NICHE_TINY",
+      add_mode = "island",
       skin =
       {
-        switch_w="SW_1_UP", wall="STEEL06", kind=103,
+        switch_w="SW_1_UP", wall="STEEL02",
+        floor="F_075", ceil="F_075",
+        switch_h=48, x_offset=0, y_offset=0,
+        kind=103,
       }
     },
 
@@ -308,12 +310,170 @@ XN_SWITCHES =
       prefab = "DOOR_LOCKED",
       skin =
       {
-        door_w="BRASS1", door_c="F_009",
-        key_w="STEEL06",
+        door_w="STEEL01", door_c="F_074",
+--      key_w="STEEL06",
         door_h=128,
 
 ---     step_w="STEP1",  track_w="DOORTRAK",
 ---     frame_f="FLAT1", frame_c="FLAT1",
+      }
+    },
+  },
+
+  sw_ball =
+  {
+    switch =
+    {
+      prefab = "SWITCH_NICHE_TINY",
+      add_mode = "island",
+      skin =
+      {
+        switch_w="SW53_UP", wall="MONK02",
+        floor="F_025", ceil="F_025",
+        switch_h=40, x_offset=0, y_offset=0,
+        kind=103,
+      }
+    },
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        door_w="MONK17", door_c="F_014",
+        door_h=128,
+      }
+    },
+  },
+
+  sw_sheep =
+  {
+    switch =
+    {
+      prefab = "SWITCH_NICHE_TINY",
+      add_mode = "wall",
+      skin =
+      {
+        switch_w="SW_2_UP",
+        switch_h=48, x_offset=0, y_offset=0,
+        kind=103,
+      }
+    },
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        door_w="MONK08", door_c="F_027",
+        door_h=128,
+      }
+    },
+  },
+
+  sw_demon =
+  {
+    switch =
+    {
+      prefab = "SWITCH_NICHE_TINY",
+      add_mode = "wall",
+      skin =
+      {
+        switch_w="SW51_UP",
+        switch_h=32, x_offset=0, y_offset=0,
+        kind=103,
+      }
+    },
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        door_w="PRTL06", door_c="F_013",
+        door_h=128,
+      }
+    },
+  },
+
+  sw_spin =
+  {
+    switch =
+    {
+      prefab = "SWITCH_NICHE_HEXEN",
+      add_mode = "wall",
+      skin =
+      {
+        switch_w="SW_EL1",
+        switch_h=32, x_offset=0, y_offset=0,
+        kind=103,
+      }
+    },
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        door_w="CLOCKA", door_c="F_010",
+        door_h=128,
+      }
+    },
+  },
+
+  sw_chain =
+  {
+    switch =
+    {
+      prefab = "SWITCH_NICHE_HEXEN",
+      add_mode = "wall",
+      skin =
+      {
+        switch_w="SW_OL1",
+        switch_h=32, x_offset=0, y_offset=0,
+        kind=103,
+      }
+    },
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        door_w="STEEL07", door_c="F_066",
+        door_h=128,
+      }
+    },
+  },
+
+  sw_moon =
+  {
+    switch =
+    {
+      prefab = "SWITCH_FLOOR_TINY_PED",
+      add_mode = "island",
+      skin =
+      {
+        switch_w="SW52_UP", side_w="FIRE06", ped_w="FIRE06",
+        switch_f="F_012", ped_f="F_012",
+        switch_h=32, x_offset=0, y_offset=0,
+        kind=103,
+      }
+    },
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "DOOR_LOCKED",
+      skin =
+      {
+        door_w="FOREST03", door_c="F_017",
+        door_h=128,
       }
     },
   },
@@ -435,44 +595,44 @@ XN_PICS =
 
 ---- QUEST STUFF ----------------
 
-XN_QUESTS = --FIXME
-{
-  key =
-  {
-    k_fire = 50, k_castle = 50, k_silver = 50,
-
---    k_steel   = 80, k_cave    = 80,
---    k_axe     = 80, k_dungeon = 80,
---    k_waste   = 80, k_swamp   = 80,
---    k_rusty   = 80, k_gold    = 80,
-  },
-
-  switch =
-  {
-    sw_rock=50
-  },
-
-  weapon =
-  {
-    c_staff = 40, c_fire   = 40,
-    f_axe   = 40, f_hammer = 40,
-    m_cone  = 40, m_blitz  = 40,
-  },
-  
-  item =
-  {
-    wings = 5, chaos = 50,
-
-    banish    = 50, boots     = 70,
-    repulser  = 50, servant   = 10, 
-    porkies   = 30, incant    = 10,
-    defender  = 20, krater    = 50,
-  },
-
-  exit = { exit=50 },
-
-  secret_exit = { secret_exit=50 },
-}
+---## XN_QUESTS = --FIXME
+---## {
+---##   key =
+---##   {
+---##     k_fire = 50, k_castle = 50, k_silver = 50,
+---## 
+---## --    k_steel   = 80, k_cave    = 80,
+---## --    k_axe     = 80, k_dungeon = 80,
+---## --    k_waste   = 80, k_swamp   = 80,
+---## --    k_rusty   = 80, k_gold    = 80,
+---##   },
+---## 
+---##   switch =
+---##   {
+---##     sw_rock=50
+---##   },
+---## 
+---##   weapon =
+---##   {
+---##     c_staff = 40, c_fire   = 40,
+---##     f_axe   = 40, f_hammer = 40,
+---##     m_cone  = 40, m_blitz  = 40,
+---##   },
+---##   
+---##   item =
+---##   {
+---##     wings = 5, chaos = 50,
+---## 
+---##     banish    = 50, boots     = 70,
+---##     repulser  = 50, servant   = 10, 
+---##     porkies   = 30, incant    = 10,
+---##     defender  = 20, krater    = 50,
+---##   },
+---## 
+---##   exit = { exit=50 },
+---## 
+---##   secret_exit = { secret_exit=50 },
+---## }
 
 XN_ROOMS =
 {
@@ -520,14 +680,6 @@ XN_THEMES =
       PLAIN=50,
     },
   },
-}
-
-XN_SCENERY =
-{
-  brass_brazier = { r=16,h=48, light=true },
-  stal_pillar = { r=16,h=48, },
-  short_statue = { r=16,h=48, },
-  lean_tree_L = { r=16,h=48, },
 }
 
 
@@ -680,6 +832,14 @@ XN_THING_NUMS =
   snd_ice    = 1407,
   snd_earth  = 1408,
   snd_metal2 = 1409,
+}
+
+XN_SCENERY =
+{
+  brass_brazier = { r=16,h=48, light=true },
+  stal_pillar = { r=16,h=48, },
+  short_statue = { r=16,h=48, },
+  lean_tree_L = { r=16,h=48, },
 }
 
 XN_INITIAL_MODEL =
@@ -1064,8 +1224,9 @@ function hexen_get_levels(episode)
 
   -- switch quests
 
-  -- FIXME: select some proper names
-  local switch_list = { "sw1", "sw2", "sw3", "sw4", "sw5", "sw6", "sw7" }
+  local switch_list = { "sw_demon", "sw_ball", "sw_cow",
+                        "sw_chain", "sw_moon", "sw_spin",
+                        "sw_sheep" }
 
   rand_shuffle(switch_list)
 
@@ -1136,7 +1297,6 @@ GAME_FACTORIES["hexen"] = function()
 
     thing_nums = XN_THING_NUMS,
 
-    quests = XN_QUESTS,
     dm = XN_DEATHMATCH,
 
     pickups = XN_PICKUPS,
