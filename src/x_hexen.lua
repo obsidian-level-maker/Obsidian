@@ -522,6 +522,13 @@ XN_THEMES =
   },
 }
 
+XN_SCENERY =
+{
+  brass_brazier = { r=16,h=48, light=true },
+  stal_pillar = { r=16,h=48, },
+  short_statue = { r=16,h=48, },
+  lean_tree_L = { r=16,h=48, },
+}
 
 
 ------------------------------------------------------------
@@ -1159,6 +1166,7 @@ GAME_FACTORIES["hexen"] = function()
     images    = XN_IMAGES,
     lights    = XN_LIGHTS,
     wall_lights = XN_WALL_LIGHTS,
+    scenery   = XN_SCENERY,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },
