@@ -1041,29 +1041,29 @@ function plan_sp_level(level, is_coop)
     return valid_cell(cx, cy) and not PLAN.cells[cx][cy]
   end
 
-  local function get_quest_item(quest)
-
-    local tab = GAME.quests[quest]
-    assert(tab)
-
-    local t_items = {}
-    local t_probs = {}
-
-    for item,prob in pairs(tab) do
-      if not PLAN.used_items[item] then
-        table.insert(t_items, item)
-        table.insert(t_probs, prob)
-      end
-    end
-
-    assert(#t_items > 0) -- decide_quest() guarantees this
-    assert(#t_probs == #t_items)
-
-    local item = t_items[rand_index_by_probs(t_probs)]
-
-    PLAN.used_items[item] = 1
-    return item
-  end
+---##  local function get_quest_item(quest)
+---##
+---##    local tab = GAME.quests[quest]
+---##    assert(tab)
+---##
+---##    local t_items = {}
+---##    local t_probs = {}
+---##
+---##    for item,prob in pairs(tab) do
+---##      if not PLAN.used_items[item] then
+---##        table.insert(t_items, item)
+---##        table.insert(t_probs, prob)
+---##      end
+---##    end
+---##
+---##    assert(#t_items > 0) -- decide_quest() guarantees this
+---##    assert(#t_probs == #t_items)
+---##
+---##    local item = t_items[rand_index_by_probs(t_probs)]
+---##
+---##    PLAN.used_items[item] = 1
+---##    return item
+---##  end
 
   local FB_BACK_PROBS = { 20, 90, 70, 50, 30, 10 }
 
