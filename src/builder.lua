@@ -2903,6 +2903,8 @@ function build_borders()
     local D = c.border[side]
     local rmodel = link.build.rmodel
 
+if not link.wide_door then error("Missing DOOR") end
+
     local door_info = link.wide_door
     assert(door_info)
     door_info = copy_table(door_info)
@@ -3377,6 +3379,7 @@ arch.f_tex = "TLITE6_6"
     assert(D.wire_h)
 
     local def = GAME.misc_fabs["fence_MIDBARS3"] -- FIXME: not hard-code
+if not def then return end --!!!!!!!!
     assert(def)
 
     local fab = non_nil(PREFABS[def.prefab])
@@ -3485,7 +3488,7 @@ arch.f_tex = "TLITE6_6"
         local DEFS = { "window_narrow", "window_rail_nar_MIDGRATE", "window_cross_big" } ---!!!! FIXME: not hard coded
         local def_name = non_nil(DEFS[spot.long])
 
-        local def = GAME.win_fabs[def_name]
+        local def = GAME.win_fabs and GAME.win_fabs[def_name]
         if def then
           local fab = non_nil(PREFABS[def.prefab])
           B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, spot.x,spot.y,10-dir)
@@ -5530,8 +5533,8 @@ con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
       sx, sy = (sx - c.bx1) + 1, (sy - c.by1) + 1
       ex, ey = (ex - c.bx1) + 1, (ey - c.by1) + 1
 
-con.printf("\nROOM @ (%d,%d)\n", c.x, c.y)
-con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
+--con.printf("\nROOM @ (%d,%d)\n", c.x, c.y)
+--con.printf(  "  path from (%d,%d) .. (%d,%d)\n", sx,sy, ex,ey)
       local path = astar_find_path(c.bw, c.bh, sx,sy, ex,ey, path_scorer)
 
       if not path then
@@ -6574,7 +6577,6 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     if not GAME.dm_exits then return end
 
     local K = c.q_spot
-    assert(K.w >= 3 and K.h >= 3)
 
     local def, fab = get_rand_fab(GAME.dm_exits)
     assert(def)
@@ -6587,6 +6589,21 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     B_prefab(c, fab, def.skin, {}, K.rmodel, c.combo, K.x1, K.y1, 2)
 
     gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=def.skin.wall })
+  end
+
+  local function add_gate_exit(c)
+    local def = GAME.misc_fabs and GAME.misc_fabs["gate_EXIT"]
+    if not def then return end --!!!!
+
+    local fab = non_nil(PREFABS[def.prefab])
+
+    local K = c.q_spot
+    assert(K)
+    assert(fab.long <= K.w and fab.deep <= K.h)
+
+    B_prefab(c, fab, def.skin, {}, K.rmodel, c.combo, K.x1, K.y1, 2)
+
+    gap_fill(c, K.x1,K.y1, K.x2,K.y2, K.rmodel)
   end
 
   local function add_switch(c, in_wall)
@@ -6797,6 +6814,11 @@ con.debugf("add_scenery : %s\n", item)
   if c.q_spot and c.q_spot.kind == "exit" then
     add_deathmatch_exit(c)
   end
+
+  if c.q_spot and (c.quest.kind == "gate" or c.quest.kind == "back") then
+    add_gate_exit(c)
+  end
+
 
   local DM_PLAYERS_1 = { less=20, normal=40, more=55 }
   local DM_PLAYERS_2 = { less=20, normal=25, more=35 }
