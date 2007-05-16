@@ -957,21 +957,6 @@ XN_DOOR_PREFABS =
 
 XN_ITEM_PREFABS =
 {
-  weap_1 =
-  {
-    prefab = "HEXEN_TRIPLE_PED",
-
-    skin =
-    {
-      ped_f="F_084", ped_w="CASTLE07",
-      ped_h=16,
-
-      item_F_t="f_axe",  -- FIXME: flag as Fighter-only
-      item_C_t="c_staff",
-      item_M_t="m_cone",
-    }
-  },
-
   weap_2 =
   {
     prefab = "HEXEN_TRIPLE_PED",
@@ -979,7 +964,22 @@ XN_ITEM_PREFABS =
     skin =
     {
       ped_f="F_084", ped_w="CASTLE07",
-      ped_h=16,
+      ped_h=8,
+
+      item_F_t="f_axe",  -- FIXME: flag as Fighter-only
+      item_C_t="c_staff",
+      item_M_t="m_cone",
+    }
+  },
+
+  weap_3 =
+  {
+    prefab = "HEXEN_TRIPLE_PED",
+
+    skin =
+    {
+      ped_f="F_084", ped_w="CASTLE07",
+      ped_h=8,
 
       item_F_t="f_hammer",
       item_C_t="c_fire",
@@ -994,7 +994,7 @@ XN_ITEM_PREFABS =
     skin =
     {
       ped_f="F_084", ped_w="CASTLE07",
-      ped_h=16,
+      ped_h=8,
 
       item_F_t="f1_hilt",
       item_C_t="c1_shaft",
@@ -1009,7 +1009,7 @@ XN_ITEM_PREFABS =
     skin =
     {
       ped_f="F_084", ped_w="CASTLE07",
-      ped_h=16,
+      ped_h=8,
 
       item_F_t="f2_cross",
       item_C_t="c2_cross",
@@ -1024,7 +1024,7 @@ XN_ITEM_PREFABS =
     skin =
     {
       ped_f="F_084", ped_w="CASTLE07",
-      ped_h=16,
+      ped_h=8,
 
       item_F_t="f3_blade",
       item_C_t="c3_arc",
