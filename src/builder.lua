@@ -6608,6 +6608,23 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     gap_fill(c, K.x1,K.y1, K.x2,K.y2, K.rmodel)
   end
 
+  local function add_special_item(c)
+    local def = GAME.item_fabs[c.quest.item]
+    assert(def)
+
+    local fab = non_nil(PREFABS[def.prefab])
+
+    local K = c.q_spot
+    assert(K)
+    assert(fab.long <= K.w and fab.deep <= K.h)
+
+    local dir = c.entry_dir or (10 - c.exit_dir)
+
+    B_prefab(c, fab, def.skin, {}, K.rmodel, c.combo, K.x1, K.y1, dir)
+
+    gap_fill(c, K.x1,K.y1, K.x2,K.y2, K.rmodel)
+  end
+
   local function add_switch(c, in_wall)
 
     local info
@@ -6878,7 +6895,11 @@ con.debugf("add_scenery : %s\n", item)
        (c.quest.kind == "weapon") or
        (c.quest.kind == "item")
     then
-      add_object(c, c.quest.item, "must")
+      if GAME.item_fabs and GAME.item_fabs[c.quest.item] then
+        add_special_item(c)
+      else
+        add_object(c, c.quest.item, "must")
+      end
     end
 
   elseif PLAN.deathmatch and (c.require_weapon or 
