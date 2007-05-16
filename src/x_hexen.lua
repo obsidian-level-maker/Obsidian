@@ -307,7 +307,7 @@ XN_SWITCHES =
     door =
     {
       w=128, h=128,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR", -- DOOR_LOCKED
       skin =
       {
         door_w="STEEL01", door_c="F_074",
@@ -338,7 +338,7 @@ XN_SWITCHES =
     door =
     {
       w=128, h=128,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR", -- DOOR_LOCKED
       skin =
       {
         door_w="MONK17", door_c="F_014",
@@ -364,7 +364,7 @@ XN_SWITCHES =
     door =
     {
       w=128, h=128,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR", -- DOOR_LOCKED
       skin =
       {
         door_w="MONK08", door_c="F_027",
@@ -381,7 +381,7 @@ XN_SWITCHES =
       add_mode = "wall",
       skin =
       {
-        switch_w="SW51_UP",
+        switch_w="SW51_OFF",
         switch_h=32, x_offset=0, y_offset=0,
         kind=103,
       }
@@ -390,7 +390,7 @@ XN_SWITCHES =
     door =
     {
       w=128, h=128,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR", -- DOOR_LOCKED
       skin =
       {
         door_w="PRTL06", door_c="F_013",
@@ -416,7 +416,7 @@ XN_SWITCHES =
     door =
     {
       w=128, h=128,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR", -- DOOR_LOCKED
       skin =
       {
         door_w="CLOCKA", door_c="F_010",
@@ -442,7 +442,7 @@ XN_SWITCHES =
     door =
     {
       w=128, h=128,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR", -- DOOR_LOCKED
       skin =
       {
         door_w="STEEL07", door_c="F_066",
@@ -459,7 +459,7 @@ XN_SWITCHES =
       add_mode = "island",
       skin =
       {
-        switch_w="SW52_UP", side_w="FIRE06", ped_w="FIRE06",
+        switch_w="SW52_OFF", side_w="FIRE06", ped_w="FIRE06",
         switch_f="F_012", ped_f="F_012",
         switch_h=32, x_offset=0, y_offset=0,
         kind=103,
@@ -469,7 +469,7 @@ XN_SWITCHES =
     door =
     {
       w=128, h=128,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR", -- DOOR_LOCKED
       skin =
       {
         door_w="FOREST03", door_c="F_017",
@@ -508,12 +508,23 @@ XN_DOORS =
 
 XN_KEY_DOORS =
 {
-  -- lockable doors -- FIXME: the rest??
-  k_fire   =
+  k_emerald =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+    prefab = "DOOR", -- DOOR_LOCKED
+    skin =
+    {
+      door_w="D_CAST", door_c="F_009",
+      track_w="STEEL08", frame_f="F_009",
+      door_h=128,
+    }
+  },
+
+  k_fire =
   {
     w=128, h=128, kind_rep=13, kind_once=13,
 
-    prefab = "DOOR_LOCKED", 
+    prefab = "DOOR", -- DOOR_LOCKED
 
     skin =
     {
@@ -528,11 +539,11 @@ XN_KEY_DOORS =
   {
     w=128, h=128, kind_rep=13, kind_once=13,
 
-    prefab = "DOOR_LOCKED", 
+    prefab = "DOOR", -- DOOR_LOCKED
 
     skin =
     {
-      door_w="D_CAST", door_c="F_009",
+      door_w="CASTLE06", door_c="F_009",  --FIXME !!!!  castle door
       track_w="STEEL08",
       frame_f="F_009",
       door_h=128,
@@ -543,7 +554,7 @@ XN_KEY_DOORS =
   {
     w=128, h=128, kind_rep=13, kind_once=13,
 
-    prefab = "DOOR_LOCKED", 
+    prefab = "DOOR", -- DOOR_LOCKED
 
     skin =
     {
@@ -553,6 +564,91 @@ XN_KEY_DOORS =
       door_h=128,
     }
   },
+
+  k_cave =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+    prefab = "DOOR", -- DOOR_LOCKED
+    skin =
+    {
+      door_w="D_CAVE2", door_c="F_009",
+      track_w="STEEL08", frame_f="F_009",
+      door_h=128,
+    }
+  },
+
+  k_swamp =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+    prefab = "DOOR", -- DOOR_LOCKED
+    skin =
+    {
+      door_w="D_SWAMP2", door_c="F_009",
+      track_w="STEEL08", frame_f="F_009",
+      door_h=128,
+    }
+  },
+
+  k_steel =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+    prefab = "DOOR", -- DOOR_LOCKED
+    skin =
+    {
+      door_w="D_STEEL", door_c="F_009",
+      track_w="STEEL08", frame_f="F_009",
+      door_h=128,
+    }
+  },
+
+  k_rusty =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+    prefab = "DOOR", -- DOOR_LOCKED
+    skin =
+    {
+      door_w="D_RUST", door_c="F_009",
+      track_w="STEEL08", frame_f="F_009",
+      door_h=128,
+    }
+  },
+
+  k_dungeon =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+    prefab = "DOOR", -- DOOR_LOCKED
+    skin =
+    {
+      door_w="D_DUNGEO", door_c="F_009",
+      track_w="STEEL08", frame_f="F_009",
+      door_h=128,
+    }
+  },
+
+  k_horn =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+    prefab = "DOOR", -- DOOR_LOCKED
+    skin =
+    {
+      door_w="D_WASTE", door_c="F_009",
+      track_w="STEEL08", frame_f="F_009",
+      door_h=128,
+    }
+  },
+
+  k_axe =
+  {
+    w=128, h=128, kind_rep=13, kind_once=13,
+    prefab = "DOOR", -- DOOR_LOCKED
+    skin =
+    {
+      door_w="D_AXE", door_c="F_009",
+      track_w="STEEL08", frame_f="F_009",
+      door_h=128,
+    }
+  },
+
 }
 
 XN_RAILS =
@@ -842,6 +938,46 @@ XN_SCENERY =
   lean_tree_L = { r=16,h=48, },
 }
 
+XN_DOOR_PREFABS =
+{
+  winnow =
+  {
+    w=128, h=128, prefab="DOOR",
+
+    skin =
+    {
+      door_w="D_WINNOW", door_c="F_009",
+      track_w="STEEL08",
+      door_h=128,
+    },
+
+    theme_probs = { CITY=60,ICE=10,CAVE=20 },
+  },
+}
+
+XN_MISC_PREFABS =
+{
+  secret_DOOR =
+  {
+    w=128, h=128, prefab = "DOOR",
+
+    skin = { door_h=128 }
+  },
+
+  gate_EXIT =
+  {
+    prefab = "HEXEN_V_TELEPORT",
+
+    skin =
+    {
+      frame_w="WOOD01", frame_f="F_054", frame_c="F_054",
+      telep_w="TPORT1", border_w="TPORTX",
+      kind=0, tag=0,  -- FIXME
+    },
+  },
+}
+
+
 XN_INITIAL_MODEL =
 {
   health=100, armor=0,
@@ -916,9 +1052,9 @@ XN_NICENESS =
   p3 = { pickup="ar_helmet", prob=3 },
   p4 = { pickup="ar_amulet", prob=3 },
 
-  p5 = { pickup="flechette", prob=9 },
-  p6 = { pickup="bracer",    prob=5 },
-  p7 = { pickup="torch",     prob=7 },
+--!!!!!!  p5 = { pickup="flechette", prob=9 },
+--!!!!!!  p6 = { pickup="bracer",    prob=5 },
+--!!!!!!  p7 = { pickup="torch",     prob=7 },
 }
 
 XN_DEATHMATCH =
@@ -1327,6 +1463,9 @@ GAME_FACTORIES["hexen"] = function()
     lights    = XN_LIGHTS,
     wall_lights = XN_WALL_LIGHTS,
     scenery   = XN_SCENERY,
+
+    door_fabs = XN_DOOR_PREFABS,
+    misc_fabs = XN_MISC_PREFABS,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },
