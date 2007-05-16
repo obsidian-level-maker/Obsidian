@@ -3284,7 +3284,10 @@ HEXEN_V_TELEPORT =
 
   elements =
   {
-    s = { f_h=16, c_rel="floor_h", c_h=144, light=192,
+    s = { f_h=16, c_rel="floor_h", c_h=144, light=200,
+          f_tex="frame_f", c_tex="frame_c",
+          l_tex="frame_w", u_tex="frame_w",
+          l_peg="bottom", u_peg="top",
         },
 
     t = { copy="s", mark=1,
@@ -3295,8 +3298,8 @@ HEXEN_V_TELEPORT =
                   kind="kind", tag="tag" },
         },
 
-    W = { solid="wall", [7] = { dx= 48, dy=0 }},
-    Z = { solid="wall", [9] = { dx=-48, dy=0 }},
+    W = { solid="frame_w", [7] = { dx= 48, dy=0 }},
+    Z = { solid="frame_w", [9] = { dx=-48, dy=0 }},
 
     x = { copy="s", light=0 },
   },
