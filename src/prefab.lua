@@ -1084,6 +1084,36 @@ SWITCH_FLOOR_TINY =
   },
 },
 
+SWITCH_FLOOR_TINY_PED =
+{
+  region="floor",
+--FIXME  height_range={ 64,512 },
+
+  structure =
+  {
+    "pppp",
+    "pssp",
+    "pppp",
+    "....",
+  },
+
+  elements =
+  {
+    s = { f_h=16, f_add="switch_h",
+          l_tex="side_w", f_tex="switch_f", l_peg="top",
+
+          [2] = { l_tex="switch_w", l_peg="top", kind="kind", tag="tag",
+                  x_offset="x_offset", y_offset="y_offset"
+                },
+
+        },
+
+    p = { f_h=16,
+          l_tex="ped_w", f_tex="ped_f", l_peg="top",
+        }
+  },
+},
+
 SWITCH_CEILING =
 {
   add_mode="island",
@@ -1156,8 +1186,8 @@ SWITCH_NICHE_TINY =
   structure =
   {
     "####",
+    "####",
     "#ss#",
-    "LnnM",
     "LnnM",
   },
 
@@ -1177,6 +1207,53 @@ SWITCH_NICHE_TINY =
     -- sides
     L = { solid="wall", [6] = { l_tex="frame_w" } },
     M = { solid="wall", [4] = { l_tex="frame_w" } },
+  },
+},
+
+SWITCH_NICHE_TINY_DEEP =
+{
+  copy="SWITCH_NICHE_TINY",
+
+  structure =
+  {
+    "####",
+    "#ss#",
+    "LnnM",
+    "LnnM",
+  },
+},
+
+SWITCH_NICHE_HEXEN =
+{
+  add_mode="wall",
+
+  structure =
+  {
+    "###ss###",
+    "###nn###",
+    "LLL..RRR",
+    "........",
+  },
+
+  elements =
+  {
+    -- niche
+    n = { f_h=32, c_rel="floor_h", c_add="switch_h", c_h=32,
+          f_tex="frame_f", c_tex="frame_c",
+        },
+
+    -- switch
+    s = { solid="wall",
+          [2] = { kind="kind", tag="tag", l_tex="switch_w",
+                  x_offset="x_offset", y_offset="y_offset" },
+
+          [1] = { dx=0, dy=-8 },
+          [3] = { dx=0, dy=-8 },
+        },
+
+    -- diagonals
+    L = { solid="wall", mark=7, [3] = { VDEL=true }},
+    R = { solid="wall", mark=8, [1] = { VDEL=true }},
   },
 },
 

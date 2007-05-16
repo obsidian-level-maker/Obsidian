@@ -438,7 +438,7 @@ D2_EXITS =
 
     switch =
     {
-      prefab="SWITCH_NICHE_TINY",
+      prefab="SWITCH_NICHE_TINY_DEEP",
       skin =
       {
         switch_w="SW1COMP", switch_h=32,
