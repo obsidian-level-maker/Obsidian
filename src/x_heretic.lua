@@ -320,7 +320,7 @@ HC_SWITCHES =
     door =
     {
       w=128, h=128,
-      prefab = "DOOR_LOCKED",
+      prefab = "DOOR", -- DOOR_LOCKED
       skin =
       {
         door_w="DMNMSK", door_c="FLOOR10",
@@ -360,7 +360,7 @@ HC_KEY_DOORS =
   {
     w=128, h=128, kind_rep=26, kind_once=32,
 
-    prefab = "DOOR_LOCKED", 
+    prefab = "DOOR", -- DOOR_LOCKED
 
     skin =
     {
@@ -377,7 +377,7 @@ HC_KEY_DOORS =
   {
     w=128, h=128, kind_rep=28, kind_once=33,
 
-    prefab = "DOOR_LOCKED", 
+    prefab = "DOOR", -- DOOR_LOCKED
 
     skin =
     {
@@ -394,7 +394,7 @@ HC_KEY_DOORS =
   {
     w=128, h=128, kind_rep=27, kind_once=34,
 
-    prefab = "DOOR_LOCKED", 
+    prefab = "DOOR", -- DOOR_LOCKED
 
     skin =
     {
