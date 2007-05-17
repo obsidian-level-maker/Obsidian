@@ -2952,7 +2952,7 @@ if not link.wide_door then error("Missing DOOR") end
       parm.door_kind = 31 -- open and stay open
 
     elseif link.is_exit then
-      door_info = GAME.key_doors["exit"] --!!!!! FIXME: H/H
+      door_info = GAME.misc_fabs["exit_DOOR"]
 
       parm =
       {
@@ -6640,7 +6640,9 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     assert(info.switch)
 
     local fab = PREFABS[info.switch.prefab]
-    assert(fab)
+    if not fab then
+      error("Unknown switch prefab: " .. tostring(info.switch.prefab))
+    end
 
     if (not in_wall) == (fab.add_mode == "wall") then
       return
