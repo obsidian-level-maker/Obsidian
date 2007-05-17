@@ -408,6 +408,44 @@ HC_KEY_DOORS =
   },
 }
 
+HC_DOOR_PREFABS =
+{
+  demon =
+  {
+    w=128, h=128, prefab="DOOR",
+
+    skin =
+    {
+      door_w="DMNMSK", door_c="FLOOR10",
+      track_w="METL2",
+      door_h=128,
+    },
+
+    theme_probs = { CITY=20 },
+  },
+}
+
+HC_MISC_PREFABS =
+{
+  exit_DOOR =
+  {
+    w=64, h=96, prefab = "DOOR_NARROW",
+
+    skin =
+    {
+      door_w="DOOREXIT",
+      door_h=96
+    },
+  },
+
+  secret_DOOR =
+  {
+    w=128, h=128, prefab = "DOOR",
+
+    skin = { door_h=128 }
+  },
+}
+
 HC_RAILS =
 {
   r_1 = { wall="WDGAT64", w=128, h=64  },
@@ -467,9 +505,9 @@ HC_QUESTS =
     shadow=50, tome=20,
   },
 
-  exit = { exit=50 },
-
-  secret_exit = { secret_exit=50 },
+---##  exit = { exit=50 },
+---##
+---##  secret_exit = { secret_exit=50 },
 }
 
 HC_ROOMS =
@@ -758,6 +796,19 @@ HC_INITIAL_MODEL =
   staff=true, wand=true,
 }
 
+HC_SCENERY =
+{
+  -- FIXME
+
+  wall_torch = { r=16,h=48, light=true },
+  serpent_torch = { r=16,h=48, light=true },
+  fire_brazier = { r=16,h=48, light=true },
+  chandelier = { r=16,h=48, light=true },
+
+  small_pillar = { r=16,h=48 },
+  barrel = { r=16,h=48 },
+  hang_skull_1 = { r=16,h=48 },
+}
 
 ------------------------------------------------------------
 
@@ -890,6 +941,10 @@ GAME_FACTORIES["heretic"] = function()
     images    = HC_IMAGES,
     lights    = HC_LIGHTS,
     wall_lights = HC_WALL_LIGHTS,
+
+    scenery     = HC_SCENERY,
+    door_fabs   = HC_DOOR_PREFABS,
+    misc_fabs   = HC_MISC_PREFABS,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },
