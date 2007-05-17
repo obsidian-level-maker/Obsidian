@@ -997,40 +997,6 @@ DM_KEY_DOORS =
     }
   },
 
-  exit =
-  {
-    w=64, h=72,
-
-    prefab = "EXIT_DOOR",
-
-    skin =
-    {
-      door_w = "EXITDOOR", door_c = "CEIL5_2",
-      exit_w = "EXITSIGN", exit_c = "CEIL5_2",
-
-      step_w="STEP1",  track_w="DOORTRAK",
-      frame_f="FLAT1", frame_c="TLITE6_5",
-      door_h=72,
-    }
-  },
-
-  secret_exit =
-  {
-    w=64, h=72,
-
-    prefab = "EXIT_DOOR_WIDE",
-
-    skin =
-    {
-      front_w = "EXITSTON",
-      door_w = "EXITDOOR", door_c = "CEIL5_2",
-      exit_w = "EXITSIGN", exit_c = "CEIL5_2",
-
-      step_w="STEP1",  track_w="DOORTRAK",
-      frame_f="FLAT1", frame_c="TLITE6_5",
-      door_h=72,
-    }
-  },
 }
 
 DM_IMAGES =
@@ -1305,6 +1271,41 @@ DM_MISC_PREFABS =
     skin = { lamp_t="blue_torch", beam_h=72,
              beam_w="METAL", beam_f="CEIL5_2",
            },
+  },
+
+  exit_DOOR =
+  {
+    w=64, h=72,
+
+    prefab = "EXIT_DOOR",
+
+    skin =
+    {
+      door_w = "EXITDOOR", door_c = "CEIL5_2",
+      exit_w = "EXITSIGN", exit_c = "CEIL5_2",
+
+      step_w="STEP1",  track_w="DOORTRAK",
+      frame_f="FLAT1", frame_c="TLITE6_5",
+      door_h=72,
+    }
+  },
+
+  exit_DOOR_WIDE =
+  {
+    w=64, h=72,
+
+    prefab = "EXIT_DOOR_WIDE",
+
+    skin =
+    {
+      front_w = "EXITSTON",
+      door_w = "EXITDOOR", door_c = "CEIL5_2",
+      exit_w = "EXITSIGN", exit_c = "CEIL5_2",
+
+      step_w="STEP1",  track_w="DOORTRAK",
+      frame_f="FLAT1", frame_c="TLITE6_5",
+      door_h=72,
+    }
   },
 
   secret_DOOR =
@@ -1773,9 +1774,9 @@ D1_QUESTS =
     berserk=20, goggle=5, invul=2, map=3
   },
 
-  exit = { exit=50 },
-
-  secret_exit = { secret_exit=50 },
+---##  exit = { exit=50 },
+---##
+---##  secret_exit = { secret_exit=50 },
 }
 
 D1_COMBOS =
@@ -1846,9 +1847,9 @@ D1_SECRET_EXITS =
   E4M2 = true,
 }
 
-D1_BOSSES =
+D1_EPISODE_BOSSES =
 {
-  "bruiser_bros",
+  "baron", -- the Bruiser Brothers
   "cyberdemon",
   "spider_mastermind",
   "spider_mastermind",
@@ -1883,7 +1884,7 @@ function doom1_get_levels(episode)
       theme_probs = theme_probs,
       sky_info = D1_SKY_INFO[episode],
 
-      boss_kind   = (map == 8) and D1_BOSSES[episode],
+      boss_kind   = (map == 8) and D1_EPISODE_BOSSES[episode],
       secret_kind = (map == 9) and "plain",
     }
 
@@ -1963,8 +1964,8 @@ GAME_FACTORIES["doom_common"] = function()
 
     scenery   = DM_SCENERY,
 
-    sc_fabs   = DM_SCENERY_PREFABS,
-    wall_fabs = DM_WALL_PREFABS,
+--  sc_fabs   = DM_SCENERY_PREFABS,
+--  wall_fabs = DM_WALL_PREFABS,
     door_fabs = DM_DOOR_PREFABS,
     arch_fabs = DM_ARCH_PREFABS,
     win_fabs  = DM_WINDOW_PREFABS,

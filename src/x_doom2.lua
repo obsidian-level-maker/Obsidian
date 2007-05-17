@@ -1596,9 +1596,9 @@ D2_QUESTS =
     berserk=20, goggle=5, invul=2, map=3
   },
 
-  exit = { exit=50 },
-
-  secret_exit = { secret_exit=50 },
+---##  exit = { exit=50 },
+---##
+---##  secret_exit = { secret_exit=50 },
 }
 
 D2_EPISODE_THEMES =
