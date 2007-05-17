@@ -204,9 +204,19 @@ HC_EXITS =
     floor = "FLOOR03",
     ceil  = "FLOOR19",
 
-    switch = { switch="SW2OFF", wall="METL2", h=64 },
+---##    switch = { switch="SW2OFF", wall="METL2", h=64 },
 
-    door = { wall="DOOREXIT", w=64, h=96 },
+    switch =
+    {
+      prefab="SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW2OFF", side_w="METL2",
+        kind=11, tag=0,
+      }
+    },
+
+---##    door = { wall="DOOREXIT", w=64, h=96 },
   },
 }
 
@@ -750,8 +760,8 @@ HC_NICENESS =
   p1 = { pickup="shield1", prob=2.0 },
   p2 = { pickup="shield2", prob=0.7 },
 
-  p3 = { pickup="torch", prob=2.0 },
-  p4 = { pickup="bag",   prob=2.0 },
+---!!!!!!  p3 = { pickup="torch", prob=2.0 },
+---!!!!!!  p4 = { pickup="bag",   prob=2.0 },
 }
 
 HC_DEATHMATCH =
@@ -846,7 +856,7 @@ function heretic_get_levels(episode)
 
   local theme_probs = HC_EPISODE_THEMES[episode]
   if SETTINGS.length ~= "full" then
-    theme_probs = HC_EPISODE_THEMES[rand_irange(1,4)]
+    theme_probs = HC_EPISODE_THEMES[rand_irange(1,3)]
   end
 
   for map = 1,9 do
