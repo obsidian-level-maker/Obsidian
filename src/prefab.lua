@@ -3313,8 +3313,8 @@ HEXEN_TRIPLE_PED =
   structure =
   {
     "p.p",
-    ".p.",
     "...",
+    ".p.",
   },
 
   elements =
