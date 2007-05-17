@@ -1079,12 +1079,12 @@ function plan_sp_level(level, is_coop)
       return 0
     end
 
-    -- never branch of exit rooms (except in emergencies)
-    if c.is_exit then
-      return 0.0001
+    -- never branch of exit/quest rooms (except in emergencies)
+    if c.is_exit or c == c.quest.last then
+      return 0.00001
     end
 
-    -- sub quests *always* connect to their parent
+    -- sub quests always connect to their parent
     if Q.parent then
       if Q.parent == c.quest then return 90 end
       if Q.parent == c.quest.parent then return 60 end
@@ -1110,7 +1110,7 @@ function plan_sp_level(level, is_coop)
     -- doesn't matter when branching off non-parent ancestor
     if quest_d >= 2 then back_d = 1 end
 
-    if back_d < 1 then return 0.01 end
+    if back_d < 1 then return 0.001 end
 
     if back_d > #FB_BACK_PROBS then
        back_d = #FB_BACK_PROBS
@@ -2236,6 +2236,9 @@ Q.theme.name, Q.combo.name)
       if b.is_exit or b.hallway or b.is_depot then return false end
 
       if b.scenic == "solid" then return false end
+
+      -- ensure last cell has enough room for quest item
+      if b == b.quest.last then return false end
 
       if a.small_exit or a.scenic or a.is_depot then return false end
 
