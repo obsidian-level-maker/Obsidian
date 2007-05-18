@@ -21,134 +21,155 @@ WF_NO_TILE = 48
 WF_NO_OBJ  = 0
 
 
-WF_THING_NUMS =
+WF_THINGS =
 {
   -- players
-  player1 = { easy=19, medium=19, hard=19, dirs="player" },
+  player1 = { kind="other", r=30, h=60,
+              id={ easy=19, medium=19, hard=19, dirs="player" },
+            },
 
   -- enemies
-  dog     = { easy=138, medium=174, hard=210, dirs=true },
-
-  guard   = { easy=108, medium=144, hard=180, dirs=true, patrol=4 },
-  officer = { easy=116, medium=152, hard=188, dirs=true, patrol=4 },
-  ss_dude = { easy=126, medium=162, hard=198, dirs=true, patrol=4 },
-  mutant  = { easy=216, medium=234, hard=252, dirs=true, patrol=4 },
+  dog     = { kind="monster", r=30, h=60,
+              id={ easy=138, medium=174, hard=210, dirs=true },
+            },
+  guard   = { kind="monster", r=30, h=60,
+              id={ easy=108, medium=144, hard=180, dirs=true, patrol=4 },
+            },
+  officer = { kind="monster", r=30, h=60,
+              id={ easy=116, medium=152, hard=188, dirs=true, patrol=4 },
+            },
+  ss_dude = { kind="monster", r=30, h=60,
+              id={ easy=126, medium=162, hard=198, dirs=true, patrol=4 },
+            },
+  mutant  = { kind="monster", r=30, h=60,
+              id={ easy=216, medium=234, hard=252, dirs=true, patrol=4 },
+            },
 
   -- bosses
-  fake_hitler   = 160,
-  fat_face      = 179,
-  gretel_grosse = 197,
-  hans_grosse   = 214,
+  fake_hitler   = { kind="monster", id=160, r=30, h=60 },
+  fat_face      = { kind="monster", id=179, r=30, h=60 },
+  gretel_grosse = { kind="monster", id=197, r=30, h=60 },
+  hans_grosse   = { kind="monster", id=214, r=30, h=60 },
 
-  schabbs       = 196,
-  giftmacher    = 215,
-  hitler        = 178,
+  schabbs       = { kind="monster", id=196, r=30, h=60 },
+  giftmacher    = { kind="monster", id=215, r=30, h=60 },
+  hitler        = { kind="monster", id=178, r=30, h=60 },
 
-  -- ghosts
-  blinky = 224, -- red
-  clyde  = 225, -- yellow
-  pinky  = 226, -- pink
-  inky   = 227, -- blue
+  -- ghosts (red, yellow, pink, blue)
+  blinky = { kind="monster", id=224, r=30, h=60 },
+  clyde  = { kind="monster", id=225, r=30, h=60 },
+  pinky  = { kind="monster", id=226, r=30, h=60 },
+  inky   = { kind="monster", id=227, r=30, h=60 },
 
   -- pickups
-  k_silver = 43,
-  k_gold = 44,
+  k_silver = { kind="pickup", id=43, r=30, h=60, pass=true },
+  k_gold   = { kind="pickup", id=44, r=30, h=60, pass=true },
 
-  first_aid = 48,
-  good_food = 47,
-  dog_food  = 29,
+  first_aid = { kind="pickup", id=48, r=30, h=60, pass=true },
+  good_food = { kind="pickup", id=47, r=30, h=60, pass=true },
+  dog_food  = { kind="pickup", id=29, r=30, h=60, pass=true },
 
-  clip_8 = 49,
-  machine_gun = 50,
-  gatling_gun = 51,
+  clip_8      = { kind="pickup", id=49, r=30, h=60, pass=true },
+  machine_gun = { kind="pickup", id=50, r=30, h=60, pass=true },
+  gatling_gun = { kind="pickup", id=51, r=30, h=60, pass=true },
 
-  cross   = 52,
-  chalice = 53,
-  bible   = 54,
-  crown   = 55,
-  one_up  = 56,
+  cross   = { kind="pickup", id=52, r=30, h=60, pass=true },
+  chalice = { kind="pickup", id=53, r=30, h=60, pass=true },
+  bible   = { kind="pickup", id=54, r=30, h=60, pass=true },
+  crown   = { kind="pickup", id=55, r=30, h=60, pass=true },
+  one_up  = { kind="pickup", id=56, r=30, h=60, pass=true },
 
   -- scenery
-  puddle = 23,
-  green_barrel = 24,
-  table_chairs = 25,
-  floor_lamp = 26,
-  chandelier = 27,
-  hanged_man = 28,
-  red_pillar = 30,
+  green_barrel = { kind="scenery", id=24, r=30, h=60 },
+  table_chairs = { kind="scenery", id=25, r=30, h=60 },
 
-  tree = 31,
-  skeleton_flat = 32,
-  sink = 33,
-  plant = 34,
-  urn = 35,
-  bare_table = 36,
-  ceil_light = 37,
-  kitchen_stuff = 38,
+  puddle     = { kind="scenery", id=23, r=30, h=60, pass=true },
+  floor_lamp = { kind="scenery", id=26, r=30, h=60 },
+  chandelier = { kind="scenery", id=27, r=30, h=60 },
+  hanged_man = { kind="scenery", id=28, r=30, h=60 },
+  red_pillar = { kind="scenery", id=30, r=30, h=60 },
 
-  suit_of_armor = 39,
-  hanging_cage = 40,
-  skeleton_in_cage = 41,
-  skeleton_relax = 42,
+  tree  = { kind="scenery", id=31, r=30, h=60 },
+  sink  = { kind="scenery", id=33, r=30, h=60 },
+  plant = { kind="scenery", id=34, r=30, h=60 },
+  urn   = { kind="scenery", id=35, r=30, h=60 },
 
-  bed    = 45,  --???
-  basket = 46,
+  bare_table    = { kind="scenery", id=36, r=30, h=60 },
+  ceil_light    = { kind="scenery", id=37, r=30, h=60 },
+  skeleton_flat = { kind="scenery", id=32, r=30, h=60 },
+  kitchen_stuff = { kind="scenery", id=38, r=30, h=60 },
+  suit_of_armor = { kind="scenery", id=39, r=30, h=60 },
+  hanging_cage  = { kind="scenery", id=40, r=30, h=60 },
 
-  gibs_1 = 57,
-  barrel = 58,
-  water_well = 59,
-  empty_well = 60,
-  gibs_2 = 61,
-  flag = 62,
+  skeleton_in_cage = { kind="scenery", id=41, r=30, h=60 },
+  skeleton_relax   = { kind="scenery", id=42, r=30, h=60 },
 
-  aardwolf = 63,
-  junk_1 = 64,
-  junk_2 = 65,
-  junk_3 = 66,
-  pots = 67,
-  stove = 68,
-  spears = 69,
-  vines = 70,
+  bed    = { kind="scenery", id=45, r=30, h=60 },
+  basket = { kind="scenery", id=46, r=30, h=60 },
+  gibs_1 = { kind="scenery", id=57, r=30, h=60 },
+  barrel = { kind="scenery", id=58, r=30, h=60 },
+  gibs_2 = { kind="scenery", id=61, r=30, h=60 },
+  flag   = { kind="scenery", id=62, r=30, h=60 },
 
-  dud_clip = 71,
+  water_well = { kind="scenery", id=59, r=30, h=60 },
+  empty_well = { kind="scenery", id=60, r=30, h=60 },
+  aardwolf   = { kind="scenery", id=63, r=30, h=60 },
 
-  dead_guard = 124,
+  junk_1 = { kind="scenery", id=64, r=30, h=60 },
+  junk_2 = { kind="scenery", id=65, r=30, h=60 },
+  junk_3 = { kind="scenery", id=66, r=30, h=60 },
+  pots   = { kind="scenery", id=67, r=30, h=60 },
+  stove  = { kind="scenery", id=68, r=30, h=60 },
+  spears = { kind="scenery", id=69, r=30, h=60 },
+  vines  = { kind="scenery", id=70, r=30, h=60 },
+
+  dud_clip   = { kind="scenery", id=71, r=30, h=60 },
+  dead_guard = { kind="scenery", id=124, r=30, h=60 },
 
   -- special
-  secret  = 98,
-  trigger = 99,
+  secret  = { kind="other", id=98, r=30,h=60, pass=true },
+  trigger = { kind="other", id=99, r=30,h=60, pass=true },
 
-  turn_E  = 90,
-  turn_NE = 91,
-  turn_N  = 92,
-  turn_NW = 93,
-  turn_W  = 94,
-  turn_SW = 95,
-  turn_S  = 96,
-  turn_SE = 97,
+  turn_E  = { kind="other", id=90, r=30,h=60, pass=true },
+  turn_NE = { kind="other", id=91, r=30,h=60, pass=true },
+  turn_N  = { kind="other", id=92, r=30,h=60, pass=true },
+  turn_NW = { kind="other", id=93, r=30,h=60, pass=true },
+  turn_W  = { kind="other", id=94, r=30,h=60, pass=true },
+  turn_SW = { kind="other", id=95, r=30,h=60, pass=true },
+  turn_S  = { kind="other", id=96, r=30,h=60, pass=true },
+  turn_SE = { kind="other", id=97, r=30,h=60, pass=true },
 
-  --- Spear of Destiny ---
 
-  spear_of_destiny = 74,
+  ---===| Spear of Destiny |===---
 
-  clip_25 = 72,
 
-  trans_grosse = 125,
-  uber_mutant  = 142,
-  wilhelm = 143,
-  death_knight = 161,
+  chest_of_ammo    = { kind="pickup", id=72, r=30, h=60 },
+  spear_of_destiny = { kind="pickup", id=74, r=30, h=60 },
 
-  ghost = 106,
-  angel = 107,
+  ghost          = { kind="monster", id=106, r=30, h=60 },
+  angel_of_death = { kind="monster", id=107, r=30, h=60 },
+  trans_grosse   = { kind="monster", id=125, r=30, h=60 },
+  uber_mutant    = { kind="monster", id=142, r=30, h=60 },
+  wilhelm        = { kind="monster", id=143, r=30, h=60 },
+  death_knight   = { kind="monster", id=161, r=30, h=60 },
 
-  skull_stick = 33,   -- REPLACES: sink
-  skull_cage  = 45,   -- REPLACES: bed
-  ceil_light2 = 63,   -- REPLACES: aardwolf
+  -- skull_stick REPLACES: sink
+  -- skull_cage  REPLACES: bed
+  -- ceil_light2 REPLACES: aardwolf
 
-  cow_skull    = 67,  -- REPLACES: pots
-  blood_well   = 68,  -- REPLACES: stove
-  angel_statue = 69,  -- REPLACES: spears
-  marble_column = 71, -- REPLACES: dud_clip
+  skull_stick = { kind="scenery", id=33, r=30, h=60 },
+  skull_cage  = { kind="scenery", id=45, r=30, h=60 },
+  ceil_light2 = { kind="scenery", id=63, r=30, h=60 },
+
+  -- cow_skull     REPLACES: pots
+  -- blood_well    REPLACES: stove
+  -- angel_statue  REPLACES: spears
+  -- marble_column REPLACES: dud_clip
+
+  cow_skull    = { kind="scenery", id=67, r=30, h=60 },
+  blood_well   = { kind="scenery", id=68, r=30, h=60 },
+  angel_statue = { kind="scenery", id=69, r=30, h=60 },
+  marble_column = { kind="scenery", id=71, r=30, h=60 },
 }
 
 WF_TILE_NUMS =
