@@ -827,6 +827,9 @@ HC_EPISODE_THEMES =
   { CITY=5 },
   { CITY=5 },
   { CITY=5 },
+
+  { CITY=5 },
+  { CITY=5 },
 }
 
 HC_SECRET_EXITS =
@@ -834,6 +837,9 @@ HC_SECRET_EXITS =
   E1M6 = true,
   E2M4 = true,
   E3M4 = true,
+
+  E4M4 = true,
+  E5M3 = true,
 }
 
 HC_EPISODE_BOSSES =
@@ -841,12 +847,18 @@ HC_EPISODE_BOSSES =
   "ironlich",
   "maulotaur",
   "d_sparil",
+
+  "ironlich",
+  "maulotaur",
 }
 
 HC_SKY_INFO =
 {
   { color="gray",  light=176 },
   { color="red",   light=192 },
+  { color="blue",  light=176 },
+
+  { color="gray",  light=176 },
   { color="blue",  light=176 },
 }
 
@@ -856,7 +868,7 @@ function heretic_get_levels(episode)
 
   local theme_probs = HC_EPISODE_THEMES[episode]
   if SETTINGS.length ~= "full" then
-    theme_probs = HC_EPISODE_THEMES[rand_irange(1,3)]
+    theme_probs = HC_EPISODE_THEMES[rand_irange(1,5)]
   end
 
   for map = 1,9 do
@@ -911,7 +923,7 @@ GAME_FACTORIES["heretic"] = function()
     ERROR_TEX  = "DRIPWALL",
     ERROR_FLAT = "FLOOR09",
 
-    episodes   = 3,
+    episodes   = 5,
     level_func = heretic_get_levels,
 
     thing_nums = HC_THING_NUMS,
