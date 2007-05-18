@@ -778,8 +778,8 @@ function B_monster_closet(c, K,kx,ky, z, tag)
 
     --!! c_tex = c.combo.arch_ceil or c.rmodel.f_tex,
 
-    l_tex = c.combo.void,
-    u_tex = c.combo.void,
+    l_tex = c.combo.wall,
+    u_tex = c.combo.wall,
 
     is_cage = true,
   })
@@ -3395,7 +3395,7 @@ if not def then return end --!!!!!!!!
     {
       f_h = fence_h,
       f_tex = b_combo.floor,
-      l_tex = b_combo.void,
+      l_tex = b_combo.wall,
     })
 
     if c.scenic or other.scenic then FENCE.impassible = true end
@@ -3932,7 +3932,7 @@ function layout_cell(c)
         B_void_pic(c, K,kx,ky, pic,cut)
 
       else
-        gap_fill(c, K.x1, K.y1, K.x2, K.y2, { solid=c.combo.void })
+        gap_fill(c, K.x1, K.y1, K.x2, K.y2, { solid=c.combo.wall })
       end
       return
     end -- K.void
@@ -5572,7 +5572,7 @@ con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
   ---=== layout_cell ===---
 
   if c.scenic == "solid" then
-    fill(c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.combo.void })
+    fill(c, c.bx1, c.by1, c.bx2, c.by2, { solid=c.combo.wall })
     return
   end
 
@@ -5608,7 +5608,7 @@ function fill_reclaim_area(c, K, rec_kind, solid_combo, x1,y1, x2,y2)
   end
 
   if rec_kind == "solid" then
-    gap_fill(c, x1,y1, x2,y2, { solid=solid_combo.void })
+    gap_fill(c, x1,y1, x2,y2, { solid=solid_combo.wall })
     return
   end
 
@@ -6991,7 +6991,7 @@ function build_depots()
 
     local sec = { f_h = player_B.f_h, c_h = player_B.f_h + 128,
                   f_tex = c.rmodel.f_tex, c_tex = c.rmodel.c_tex,
-                  l_tex = c.combo.void,  u_tex = c.combo.void,
+                  l_tex = c.combo.wall,  u_tex = c.combo.wall,
                   light = 0
                 }
 
