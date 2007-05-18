@@ -3224,6 +3224,47 @@ OVERHANG_3 =
 },
 
 
+------ Doom and Doom II -------------------------------
+
+DOOM2_667_END_SWITCH =
+{
+  region="floor",
+
+  structure =
+  {
+    "................",
+    ".RRRRRRRRRRRRRR.",
+    ".RnnnnnnnnnnnnR.",
+    ".RnnnnnnnnnnnnR.",
+    ".RnnnnnnnnnnnnR.",
+    ".RnnnnnnnnnnnnR.",
+    ".RnnnnSSSSnnnnR.",
+    ".RnnnnSSSSnnnnR.",
+    ".RnnnnSSSSnnnnR.",
+    ".RnnnnSSSSnnnnR.",
+    ".RnnnnnnnnnnnnR.",
+    ".RnnnnnnnnnnnnR.",
+    ".RnnnnnnnnnnnnR.",
+    ".RnnnnnnnnnnnnR.",
+    ".RRRRRRRRRRRRRR.",
+    "................",
+  },
+
+  elements =
+  {
+    n = { f_h=32 },
+
+    -- Raising part
+    R = { f_h=-6, kind="kind", tag="tag" },
+
+    -- Switch
+    S = { f_h=96, f_tex="switch_f", l_tex="switch_w",
+          l_peg="top", y_offset="y_offset",
+        }
+  },
+},
+
+
 ------ Heretic and Hexen -------------------------------
 
 HEXEN_V_TELEPORT =

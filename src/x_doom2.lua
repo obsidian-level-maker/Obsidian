@@ -1604,6 +1604,17 @@ D2_MISC_PREFABS =
 --FIXME  HOLE.is_cage = true  -- don't place items/monsters here
   },
 
+  end_switch_667 =
+  {
+    prefab = "DOOM2_667_END_SWITCH",
+    add_mode = "island",
+
+    skin =
+    {
+      switch_w="SW1SKIN", switch_f="SFLR6_4",
+      kind=9, tag=667,
+    }
+  },
 }
 
 D2_ROOMS =
