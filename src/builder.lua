@@ -3278,8 +3278,8 @@ arch.f_tex = "TLITE6_6"
     if not (link and link.build == c) then return end
 
     if GAME.door_fabs then
-      link.narrow_door = get_rand_door_kind(c.quest.theme, 64)
-      link.wide_door   = get_rand_door_kind(c.quest.theme, 128)
+      link.narrow_door = get_rand_door_kind_safe(c.quest.theme, 64)
+      link.wide_door   = get_rand_door_kind_safe(c.quest.theme, 128)
     end
     link.block_sound = rand_odds(90)
     link.bar_size    = rand_index_by_probs { 20,90 }
