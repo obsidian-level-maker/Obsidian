@@ -691,45 +691,6 @@ XN_PICS =
 
 ---- QUEST STUFF ----------------
 
----## XN_QUESTS = --FIXME
----## {
----##   key =
----##   {
----##     k_fire = 50, k_castle = 50, k_silver = 50,
----## 
----## --    k_steel   = 80, k_cave    = 80,
----## --    k_axe     = 80, k_dungeon = 80,
----## --    k_waste   = 80, k_swamp   = 80,
----## --    k_rusty   = 80, k_gold    = 80,
----##   },
----## 
----##   switch =
----##   {
----##     sw_rock=50
----##   },
----## 
----##   weapon =
----##   {
----##     c_staff = 40, c_fire   = 40,
----##     f_axe   = 40, f_hammer = 40,
----##     m_cone  = 40, m_blitz  = 40,
----##   },
----##   
----##   item =
----##   {
----##     wings = 5, chaos = 50,
----## 
----##     banish    = 50, boots     = 70,
----##     repulser  = 50, servant   = 10, 
----##     porkies   = 30, incant    = 10,
----##     defender  = 20, krater    = 50,
----##   },
----## 
----##   exit = { exit=50 },
----## 
----##   secret_exit = { secret_exit=50 },
----## }
-
 XN_ROOMS =
 {
   PLAIN =

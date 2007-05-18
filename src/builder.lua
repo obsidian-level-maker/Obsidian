@@ -1679,16 +1679,6 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
       end
     end
 
----###    -- deathmatch exit is placed *above* top-central chunk
----###    if PLAN.deathmatch and (c.x==1 and c.y==PLAN.h) then
----###      for x = 2,3 do
----###        local TOP = c.chunks[x][3]
----###        if TOP.kind == "empty" then TOP.kind = "room" end
----###        TOP.no_reclaim = true
----###        c.q_spot = TOP
----###      end
----###    end
- 
     chunk_list = init()
 
     assert(#chunk_list >= 1)
@@ -2472,13 +2462,6 @@ c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
       good_Q_spot(c, c.entry_dir, "quest")
     end
   end
-
----###  local function void_it_up(c, new_kind)
----###    for kx = 1,3 do for ky = 1,3 do
----###      local K = c.chunks[kx][ky]
----###      if K.kind == "empty" then K.kind = new_kind end
----###    end end
----###  end
 
   local function add_closets(c)
     -- FIXME: add_closets
@@ -3631,34 +3614,6 @@ if not def then return end --!!!!!!!!
       build_fence(E.bx,E.by, E.bx,E.by, {}, E.combo, E.fence_h)
     end
 
----###    -- handle outside corners
----###    local out_num = 0
----###    local f_max = -99999
----###
----###    for zzz,c in ipairs(E.cells) do
----###      if c.combo.outdoor then out_num = out_num + 1 end
----###      f_max = math.max(c.f_max, f_max)
----###    end
----###
----###    -- FIXME: determine corner_kind (like border_kind)
----###    if E.kind == "sky" then
----###
----###      local CORN = copy_block_with_new(E.cells[1].rmodel,
----###      {
----###        f_h = f_max + 64,
----###        f_tex = E.combo.floor,
----###        l_tex = E.combo.wall,
----###      })
----###
----###      -- crappy substitute to using a real sky corner
----###      if out_num < 4 then CORN.c_h = CORN.f_h + 1 end
----###
----###      if CORN.f_h < CORN.c_h then
----###        gap_fill(c, E.bx, E.by, E.bx, E.by, CORN)
----###        return
----###      end
----###    end
-
     -- otherwise solid
     gap_fill(c, E.bx, E.by, E.bx, E.by, { solid=E.combo.wall })
   end
@@ -4241,9 +4196,6 @@ function layout_cell(c)
         blocked = true
       end
 
----###      sec.l_tex = l_tex
----###      sec.u_tex = u_tex
-
       gap_fill(c, K.x1, K.y1, K.x2, K.y2, sec)
 
       if not blocked and c.combo.scenery and not K.stair_dir and
@@ -4560,11 +4512,6 @@ sel(B.on_path, "YES", "NO"))
       end end  -- for kx for ky
     end -- for pass
 
----###    -- fix up reclaims that overlap each other   
----###    for kx = 1,3 do for ky = 1,3 do
----###      local K = c.chunks[kx][ky]
----###      normalize_reclaims(K)
----###    end end
   end
 
   local function trim_reclamations(c)
