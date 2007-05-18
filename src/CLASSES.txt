@@ -222,6 +222,20 @@ class Thing
 end
 
 
+class ThingInfo
+
+   kind : "monster" | "pickup" | "scenery" | "other"
+   id : number (wolf: can be table)
+   r : radius
+   h : height
+   ceil : true
+   pass : true
+   light : number
+   add_mode : "island" or "extend"
+   env : "indoor" or "outdoor"
+end
+
+
 class HModel
   skill : skill type: "easy" | "medium" | "hard"
 
