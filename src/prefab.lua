@@ -844,8 +844,6 @@ EXIT_SIGN_FLOOR =
 
 EXIT_HOLE_ROUND =
 {
-  add_mode="island",
-
   structure =
   {
     "............",
@@ -1346,8 +1344,6 @@ WALL_PIC_TWO_SIDED =
 
 WALL_PIC_FOUR_SIDED =
 {
-  add_mode="island",
-
   structure =
   {
     "#LiiiiiiiiL#",
@@ -1425,7 +1421,6 @@ FENCE_BEAM_W_LAMP =
 
 TECH_PICKUP_SMALL =
 {
-  add_mode="island",
 --  height_range={ 160,256 },
 
   structure =
@@ -1505,7 +1500,6 @@ TECH_PICKUP_LARGE =
 
 LAUNCH_PAD_LARGE =
 {
-  add_mode="island",
   region="floor",
 
   structure =
@@ -1901,8 +1895,6 @@ STATUE_CHAIR_DUDE =
 
 MACHINE_PUMP =
 {
-  add_mode="island",
-
   structure =
   {
     "ZZZZZZZZZZZZZZZZ",
@@ -2032,7 +2024,6 @@ GROUND_LIGHT =
 SKYLIGHT_MEGA_1 =
 {
   region="ceil",
-  add_mode="island",
 
   structure =
   {
@@ -2119,7 +2110,6 @@ SKYLIGHT_MEGA_3 =
 SKYLIGHT_CROSS_SMALL =
 {
   region="ceil",
-  add_mode="island",
 
   structure =
   {
@@ -2167,8 +2157,6 @@ SKYLIGHT_CROSS_SMALL =
 
 BILLBOARD =
 {
-  add_mode="extend",
-
   structure =
   {
     "................",
@@ -2201,7 +2189,6 @@ BILLBOARD =
 BILLBOARD_LIT =
 {
   region="floor",
-  add_mode="extend",
 
   structure =
   {
@@ -2277,8 +2264,6 @@ BILLBOARD_ON_STILTS =
 
 BILLBOARD_STILTS_HUGE =
 {
-  add_mode="island",
-
   structure =
   {
     ".CrrrrrrrrC.",
@@ -2335,8 +2320,8 @@ BILLBOARD_STILTS_HUGE =
 
 COMPUTER_TALL =
 {
-  region="floor",
   scale=64,
+  region="floor",
 
   structure =
   {
@@ -2369,9 +2354,8 @@ COMPUTER_TALL_THIN =
 
 COMPUTER_DESK =
 {
-  add_mode="extend",
-  region="floor",
   scale=64,
+  region="floor",
 
   structure =
   {
@@ -2386,9 +2370,8 @@ COMPUTER_DESK =
 
 COMPUTER_DESK_U_SHAPE =
 {
-  region="floor",
-  add_mode="island",
   scale=64,
+  region="floor",
 
   structure =
   {
@@ -2478,8 +2461,6 @@ CRATE_TWO_SIDED =
 
 CRATE_ROTATE_NARROW =
 {
-  add_mode="island",
-
   structure =
   {
     "....",
@@ -2533,8 +2514,6 @@ CRATE_ROTATE =
 
 CRATE_TRIPLE =
 {
-  add_mode="island",
-
   structure =
   {
     "aaaacccc",
@@ -2563,7 +2542,6 @@ CRATE_TRIPLE =
 CRATE_JUMBLE =
 {
   scale=64,
-  add_mode="island",
 
   structure =
   {
@@ -2594,7 +2572,6 @@ CRATE_JUMBLE =
 CAGE_PILLAR =
 {
   scale=64,
-  add_mode="island",
 
   structure = { "c" },
 
@@ -2616,7 +2593,6 @@ CAGE_PILLAR =
 CAGE_SMALL =
 {
   scale=64,
-  add_mode="island",
 
   structure = { "c" },
 
@@ -2659,7 +2635,6 @@ CAGE_LARGE =
 CAGE_LARGE_W_LIQUID =
 {
   scale=64,
-  add_mode="island",
 
   structure =
   {
@@ -2717,7 +2692,6 @@ CAGE_LARGE_W_LIQUID =
 CAGE_MEDIUM_W_LIQUID =
 {
   scale=64,
-  add_mode="island",
 
   structure =
   {
@@ -2749,8 +2723,6 @@ CAGE_MEDIUM_W_LIQUID =
 
 CAGE_NICHE =
 {
-  add_mode="wall",
-
   structure =
   {
     "########",
@@ -2950,8 +2922,6 @@ CORNER_CONVEX =
 
 PILLAR_LIGHT1 =
 {
-  add_mode="island",
-
   structure =
   {
     "BsB.",
@@ -2987,8 +2957,6 @@ PILLAR_LIGHT2 =
 
 PILLAR_LIGHT3 =
 {
-  add_mode="island",
-
   structure =
   {
     "pppp",
@@ -3007,8 +2975,6 @@ PILLAR_LIGHT3 =
 
 PILLAR_ROUND_SMALL =
 {
-  add_mode="island",
-
   structure =
   {
     "....",
@@ -3036,8 +3002,6 @@ PILLAR_ROUND_SMALL =
 
 PILLAR_ROUND_MEDIUM =
 {
-  add_mode="island",
-
   structure =
   {
     "........",
@@ -3108,8 +3072,6 @@ PILLAR_ROUND_MEDIUM =
 
 PILLAR_ROUND_LARGE =
 {
-  add_mode="island",
-
   structure =
   {
     "............",
