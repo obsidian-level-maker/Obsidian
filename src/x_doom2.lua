@@ -1723,8 +1723,9 @@ GAME_FACTORIES["doom2"] = function()
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
   T.scenery   = copy_and_merge(T.scenery,   D2_SCENERY)
-  T.sc_fabs   = copy_and_merge(T.sc_fabs,   D2_SCENERY_PREFABS)
-  T.wall_fabs = copy_and_merge(T.wall_fabs, D2_WALL_PREFABS)
+  --!!!!! FIXME
+  T.sc_fabs   = copy_and_merge(T.sc_fabs or {},   D2_SCENERY_PREFABS)
+  T.wall_fabs = copy_and_merge(T.wall_fabs or {}, D2_WALL_PREFABS)
   T.door_fabs = copy_and_merge(T.door_fabs, D2_DOOR_PREFABS)
   T.misc_fabs = copy_and_merge(T.misc_fabs, D2_MISC_PREFABS)
 
