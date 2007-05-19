@@ -134,40 +134,43 @@ DM_THINGS =
   big_tree   = { id=54, kind="scenery", r=31,h=120,add_mode="island" },
 
   -- gore --
-  evil_eye    = { id=41, kind="scenery", r=16,h=16, add_mode="island" },
-  skull_rock  = { id=42, kind="scenery", r=16,h=16, },
-  skull_pole  = { id=27, kind="scenery", r=16,h=16, },
-  skull_kebab = { id=28, kind="scenery", r=16,h=16, },
-  skull_cairn = { id=29, kind="scenery", r=16,h=16, add_mode="island" },
+  evil_eye    = { id=41, kind="scenery", r=16,h=56, add_mode="island" },
+  skull_rock  = { id=42, kind="scenery", r=16,h=48, },
+  skull_pole  = { id=27, kind="scenery", r=16,h=52, },
+  skull_kebab = { id=28, kind="scenery", r=20,h=64, },
+  skull_cairn = { id=29, kind="scenery", r=20,h=40, add_mode="island" },
 
-  impaled_human  = { id=25,kind="scenery", r=16,h=16, },
-  impaled_twitch = { id=26,kind="scenery", r=16,h=16, },
+  impaled_human  = { id=25,kind="scenery", r=20,h=64, },
+  impaled_twitch = { id=26,kind="scenery", r=16,h=64, },
 
-  gutted_victim1 = { id=73, kind="scenery", r=16,h=16, ceil=true },
-  gutted_victim2 = { id=74, kind="scenery", r=16,h=16, ceil=true },
-  gutted_torso1  = { id=75, kind="scenery", r=16,h=16, ceil=true },
-  gutted_torso2  = { id=76, kind="scenery", r=16,h=16, ceil=true },
-  gutted_torso3  = { id=77, kind="scenery", r=16,h=16, ceil=true },
-  gutted_torso4  = { id=78, kind="scenery", r=16,h=16, ceil=true },
+  gutted_victim1 = { id=73, kind="scenery", r=16,h=88, ceil=true },
+  gutted_victim2 = { id=74, kind="scenery", r=16,h=88, ceil=true },
+  gutted_torso1  = { id=75, kind="scenery", r=16,h=64, ceil=true },
+  gutted_torso2  = { id=76, kind="scenery", r=16,h=64, ceil=true },
+  gutted_torso3  = { id=77, kind="scenery", r=16,h=64, ceil=true },
+  gutted_torso4  = { id=78, kind="scenery", r=16,h=64, ceil=true },
 
-  hang_arm_pair  = { id=59, kind="scenery", r=16,h=16, ceil=true, pass=true },
-  hang_leg_pair  = { id=60, kind="scenery", r=16,h=16, ceil=true, pass=true },
-  hang_leg_gone  = { id=61, kind="scenery", r=16,h=16, ceil=true, pass=true },
-  hang_leg       = { id=62, kind="scenery", r=16,h=16, ceil=true, pass=true },
-  hang_twitching = { id=63, kind="scenery", r=16,h=16, ceil=true, pass=true },
+  hang_arm_pair  = { id=59, kind="scenery", r=20,h=84, ceil=true, pass=true },
+  hang_leg_pair  = { id=60, kind="scenery", r=20,h=68, ceil=true, pass=true },
+  hang_leg_gone  = { id=61, kind="scenery", r=20,h=52, ceil=true, pass=true },
+  hang_leg       = { id=62, kind="scenery", r=20,h=52, ceil=true, pass=true },
+  hang_twitching = { id=63, kind="scenery", r=20,h=68, ceil=true, pass=true },
 
-  gibs          = { id=24, kind="scenery", r=16,h=16, pass=true },
-  gibbed_player = { id=10, kind="scenery", r=16,h=16, pass=true },
-  pool_blood_1  = { id=79, kind="scenery", r=16,h=16, pass=true },
-  pool_blood_2  = { id=80, kind="scenery", r=16,h=16, pass=true },
-  pool_brains   = { id=81, kind="scenery", r=16,h=16, pass=true },
+  gibs          = { id=24, kind="scenery", r=20,h=16, pass=true },
+  gibbed_player = { id=10, kind="scenery", r=20,h=16, pass=true },
+  pool_blood_1  = { id=79, kind="scenery", r=20,h=16, pass=true },
+  pool_blood_2  = { id=80, kind="scenery", r=20,h=16, pass=true },
+  pool_brains   = { id=81, kind="scenery", r=20,h=16, pass=true },
+
+  -- Note: id=12 exists, but is exactly the same as id=10
 
   dead_player  = { id=15, kind="scenery", r=16,h=16, pass=true },
   dead_zombie  = { id=18, kind="scenery", r=16,h=16, pass=true },
   dead_shooter = { id=19, kind="scenery", r=16,h=16, pass=true },
   dead_imp     = { id=20, kind="scenery", r=16,h=16, pass=true },
   dead_demon   = { id=21, kind="scenery", r=16,h=16, pass=true },
-  dead_caco    = { id=23, kind="scenery", r=16,h=16, pass=true },
+  dead_caco    = { id=22, kind="scenery", r=16,h=16, pass=true },
+  dead_skull   = { id=23, kind="scenery", r=16,h=16, pass=true },
 }
 
 
