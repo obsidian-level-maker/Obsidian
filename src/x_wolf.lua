@@ -87,7 +87,7 @@ WF_THINGS =
   floor_lamp = { kind="scenery", id=26, r=30, h=60, light=255 },
   chandelier = { kind="scenery", id=27, r=30, h=60, pass=true, ceil=true, light=true, add_mode="island" },
   hanged_man = { kind="scenery", id=28, r=30, h=60, add_mode="island" },
-  red_pillar = { kind="scenery", id=30, r=30, h=60 },
+  red_pillar = { kind="scenery", id=30, r=30, h=60, add_mode="island" },
 
   tree  = { kind="scenery", id=31, r=30, h=60 },
   sink  = { kind="scenery", id=33, r=30, h=60, add_mode="extend" },
@@ -98,7 +98,7 @@ WF_THINGS =
   ceil_light    = { kind="scenery", id=37, r=30, h=60, pass=true, ceil=true, light=true, add_mode="island" },
   skeleton_flat = { kind="scenery", id=32, r=30, h=60, pass=true },
   kitchen_stuff = { kind="scenery", id=38, r=30, h=60 },
-  suit_of_armor = { kind="scenery", id=39, r=30, h=60 },
+  suit_of_armor = { kind="scenery", id=39, r=30, h=60, add_mode="extend" },
   hanging_cage  = { kind="scenery", id=40, r=30, h=60, add_mode="island" },
 
   skeleton_in_cage = { kind="scenery", id=41, r=30, h=60, add_mode="island" },
@@ -169,7 +169,7 @@ WF_THINGS =
   cow_skull    = { kind="scenery", id=67, r=30, h=60 },
   blood_well   = { kind="scenery", id=68, r=30, h=60 },
   angel_statue = { kind="scenery", id=69, r=30, h=60 },
-  marble_column = { kind="scenery", id=71, r=30, h=60 },
+  marble_column = { kind="scenery", id=71, r=30, h=60, add_mode="island" },
 }
 
 WF_TILE_NUMS =
