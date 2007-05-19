@@ -157,16 +157,16 @@ XN_THINGS =
   -- FIXME: lots more...
 
   --- sounds ---
-  snd_stone  = { id=1400, kind="other", r=xx,h=xx },
-  snd_heavy  = { id=1401, kind="other", r=xx,h=xx },
-  snd_metal1 = { id=1402, kind="other", r=xx,h=xx },
-  snd_creak  = { id=1403, kind="other", r=xx,h=xx },
-  snd_silent = { id=1404, kind="other", r=xx,h=xx },
-  snd_lava   = { id=1405, kind="other", r=xx,h=xx },
-  snd_water  = { id=1406, kind="other", r=xx,h=xx },
-  snd_ice    = { id=1407, kind="other", r=xx,h=xx },
-  snd_earth  = { id=1408, kind="other", r=xx,h=xx },
-  snd_metal2 = { id=1409, kind="other", r=xx,h=xx },
+  snd_stone  = { id=1400, kind="other", r=16,h=16, pass=true },
+  snd_heavy  = { id=1401, kind="other", r=16,h=16, pass=true },
+  snd_metal1 = { id=1402, kind="other", r=16,h=16, pass=true },
+  snd_creak  = { id=1403, kind="other", r=16,h=16, pass=true },
+  snd_silent = { id=1404, kind="other", r=16,h=16, pass=true },
+  snd_lava   = { id=1405, kind="other", r=16,h=16, pass=true },
+  snd_water  = { id=1406, kind="other", r=16,h=16, pass=true },
+  snd_ice    = { id=1407, kind="other", r=16,h=16, pass=true },
+  snd_earth  = { id=1408, kind="other", r=16,h=16, pass=true },
+  snd_metal2 = { id=1409, kind="other", r=16,h=16, pass=true },
 }
 
 XN_LINE_TYPES =
