@@ -16,6 +16,124 @@
 --
 ----------------------------------------------------------------
 
+HC_THINGS =
+{
+  --- special stuff ---
+  player1 = { id=1, kind="other", r=16,h=xx },
+  player2 = { id=2, kind="other", r=16,h=xx },
+  player3 = { id=3, kind="other", r=16,h=xx },
+  player4 = { id=4, kind="other", r=16,h=xx },
+
+  dm_player     = { id=11, kind="other", r=16,h=xx },
+  teleport_spot = { id=14, kind="other", r=16,h=xx },
+
+  --- monsters ---
+  gargoyle    = { id=66, kind="monster", r=xx,h=xx },
+  fire_garg   = { id=5,  kind="monster", r=xx,h=xx },
+  golem       = { id=68, kind="monster", r=xx,h=xx },
+  golem_inv   = { id=69, kind="monster", r=xx,h=xx },
+  nitro       = { id=45, kind="monster", r=xx,h=xx },
+  nitro_inv   = { id=46, kind="monster", r=xx,h=xx },
+  warrior     = { id=64, kind="monster", r=xx,h=xx },
+  warrior_inv = { id=65, kind="monster", r=xx,h=xx },
+
+  disciple   = { id=15, kind="monster", r=xx,h=xx },
+  sabreclaw  = { id=90, kind="monster", r=xx,h=xx },
+  weredragon = { id=70, kind="monster", r=xx,h=xx },
+  ophidian   = { id=92, kind="monster", r=xx,h=xx },
+  ironlich   = { id=6,  kind="monster", r=xx,h=xx },
+  maulotaur  = { id=9,  kind="monster", r=xx,h=xx },
+  d_sparil   = { id=7,  kind="monster", r=xx,h=xx },
+
+  --- pickups ---
+  k_yellow   = { id=80, kind="pickup", r=xx,h=xx },
+  k_green    = { id=73, kind="pickup", r=xx,h=xx },
+  k_blue     = { id=79, kind="pickup", r=xx,h=xx },
+
+  gauntlets  = { id=2005, kind="pickup", r=xx,h=xx },
+  crossbow   = { id=2001, kind="pickup", r=xx,h=xx },
+  claw       = { id=53,   kind="pickup", r=xx,h=xx },
+  hellstaff  = { id=2004, kind="pickup", r=xx,h=xx },
+  phoenix    = { id=2003, kind="pickup", r=xx,h=xx },
+  firemace   = { id=2002, kind="pickup", r=xx,h=xx },
+
+  crystal    = { id=10, kind="pickup", r=xx,h=xx },
+  geode      = { id=12, kind="pickup", r=xx,h=xx },
+  arrows     = { id=18, kind="pickup", r=xx,h=xx },
+  quiver     = { id=19, kind="pickup", r=xx,h=xx },
+  claw_orb1  = { id=54, kind="pickup", r=xx,h=xx },
+  claw_orb2  = { id=55, kind="pickup", r=xx,h=xx },
+  runes1     = { id=20, kind="pickup", r=xx,h=xx },
+  runes2     = { id=21, kind="pickup", r=xx,h=xx },
+  flame_orb1 = { id=22, kind="pickup", r=xx,h=xx },
+  flame_orb2 = { id=23, kind="pickup", r=xx,h=xx },
+  mace_orbs  = { id=13, kind="pickup", r=xx,h=xx },
+  mace_pile  = { id=16, kind="pickup", r=xx,h=xx },
+
+  h_vial  = { id=81, kind="pickup", r=xx,h=xx },
+  h_flask = { id=82, kind="pickup", r=xx,h=xx },
+  h_urn   = { id=32, kind="pickup", r=xx,h=xx },
+  shield1 = { id=85, kind="pickup", r=xx,h=xx },
+  shield2 = { id=31, kind="pickup", r=xx,h=xx },
+
+  bag     = { id=8,  kind="pickup", r=xx,h=xx },
+  wings   = { id=23, kind="pickup", r=xx,h=xx },
+  ovum    = { id=30, kind="pickup", r=xx,h=xx },
+  torch   = { id=33, kind="pickup", r=xx,h=xx },
+  bomb    = { id=34, kind="pickup", r=xx,h=xx },
+  map     = { id=35, kind="pickup", r=xx,h=xx },
+  chaos   = { id=36, kind="pickup", r=xx,h=xx },
+  shadow  = { id=75, kind="pickup", r=xx,h=xx },
+  ring    = { id=84, kind="pickup", r=xx,h=xx },
+  tome    = { id=86, kind="pickup", r=xx,h=xx },
+
+  --- scenery ---
+  wall_torch    = { id=50, kind="scenery", r=xx,h=xx, light=255, add_mode="extend" },
+  serpent_torch = { id=27, kind="scenery", r=xx,h=xx, light=255 },
+  fire_brazier  = { id=76, kind="scenery", r=xx,h=xx, light=255 },
+  chandelier    = { id=28, kind="scenery", r=xx,h=xx, light=255, pass=true, ceil=true, add_mode="island" },
+
+  barrel  = { id=44,   kind="scenery", r=xx,h=xx },
+  pod     = { id=2035, kind="scenery", r=xx,h=xx },
+  glitter = { id=74,   kind="scenery", r=xx,h=xx },
+
+  blue_statue   = { id=94, kind="scenery", r=xx,h=xx },
+  green_statue  = { id=95, kind="scenery", r=xx,h=xx },
+  yellow_statue = { id=96, kind="scenery", r=xx,h=xx },
+
+  moss1   = { id=48, kind="scenery", r=xx,h=xx },
+  moss2   = { id=49, kind="scenery", r=xx,h=xx },
+  volcano = { id=87, kind="scenery", r=xx,h=xx },
+  
+  small_pillar = { id=29, kind="scenery", r=xx,h=xx },
+  brown_pillar = { id=47, kind="scenery", r=xx,h=xx },
+  stal_small_F = { id=37, kind="scenery", r=xx,h=xx },
+  stal_small_C = { id=39, kind="scenery", r=xx,h=xx },
+  stal_big_F   = { id=38, kind="scenery", r=xx,h=xx },
+  stal_big_C   = { id=40, kind="scenery", r=xx,h=xx },
+
+  hang_corpse  = { id=51, kind="scenery", r=xx,h=xx },
+  hang_skull_1 = { id=17, kind="scenery", r=xx,h=xx },
+  hang_skull_2 = { id=24, kind="scenery", r=xx,h=xx },
+  hang_skull_3 = { id=25, kind="scenery", r=xx,h=xx },
+  hang_skull_4 = { id=26, kind="scenery", r=xx,h=xx },
+
+  --- ambient sounds ---
+  amb_scream = { id=1200, kind="other", r=xx,h=xx },
+  amb_squish = { id=1201, kind="other", r=xx,h=xx },
+  amb_drip   = { id=1202, kind="other", r=xx,h=xx },
+  amb_feet   = { id=1203, kind="other", r=xx,h=xx },
+  amb_heart  = { id=1204, kind="other", r=xx,h=xx },
+  amb_bells  = { id=1205, kind="other", r=xx,h=xx },
+  amb_growl  = { id=1206, kind="other", r=xx,h=xx },
+  amb_magic  = { id=1207, kind="other", r=xx,h=xx },
+  amb_laugh  = { id=1208, kind="other", r=xx,h=xx },
+  amb_run    = { id=1209, kind="other", r=xx,h=xx },
+
+  env_water  = { id=41, kind="other", r=xx,h=xx },
+  env_wind   = { id=42, kind="other", r=xx,h=xx },
+}
+
 HC_LINE_TYPES =  -- NOTE: only includes differences to DOOM
 {
   A1_scroll_right = { kind=99 },
@@ -568,122 +686,6 @@ HC_QUEST_LEN_PROBS =
 
 ------------------------------------------------------------
 
-HC_THING_NUMS =
-{
-  --- special stuff ---
-  player1 = 1,
-  player2 = 2,
-  player3 = 3,
-  player4 = 4,
-  dm_player = 11,
-  teleport_spot = 14,
-
-  --- monsters ---
-  gargoyle    = 66,
-  fire_garg   = 5,
-  golem       = 68,
-  golem_inv   = 69,
-  nitro       = 45,
-  nitro_inv   = 46,
-  warrior     = 64,
-  warrior_inv = 65,
-
-  disciple   = 15,
-  sabreclaw  = 90,
-  weredragon = 70,
-  ophidian   = 92,
-  ironlich   = 6,
-  maulotaur  = 9,
-  d_sparil   = 7,
-
-  --- pickups ---
-  k_yellow   = 80,
-  k_green    = 73,
-  k_blue     = 79,
-
-  gauntlets  = 2005,
-  crossbow   = 2001,
-  claw       = 53,
-  hellstaff  = 2004,
-  phoenix    = 2003,
-  firemace   = 2002,
-
-  crystal    = 10,
-  geode      = 12,
-  arrows     = 18,
-  quiver     = 19,
-  claw_orb1  = 54,
-  claw_orb2  = 55,
-  runes1     = 20,
-  runes2     = 21,
-  flame_orb1 = 22,
-  flame_orb2 = 23,
-  mace_orbs  = 13,
-  mace_pile  = 16,
-
-  h_vial  = 81,
-  h_flask = 82,
-  h_urn   = 32,
-  shield1 = 85,
-  shield2 = 31,
-
-  bag     = 8,
-  wings   = 23,
-  ovum    = 30,
-  torch   = 33,
-  bomb    = 34,
-  map     = 35,
-  chaos   = 36,
-  shadow  = 75,
-  ring    = 84,
-  tome    = 86,
-
-  --- scenery ---
-  wall_torch = 50,
-  serpent_torch = 27,
-  fire_brazier = 76,
-  chandelier = 28,
-
-  barrel = 44,
-  small_pillar = 29,
-  brown_pillar = 47,
-  pod = 2035,
-  glitter = 74,
-
-  blue_statue = 94,
-  green_statue = 95,
-  yellow_statue = 96,
-
-  moss1 = 48,
-  moss2 = 49,
-  stal_small_F = 37,
-  stal_small_C = 39,
-  stal_big_F = 38,
-  stal_big_C = 40,
-  volcano = 87,
-
-  hang_corpse = 51,
-  hang_skull_1 = 17,
-  hang_skull_2 = 24,
-  hang_skull_3 = 25,
-  hang_skull_4 = 26,
-
-  --- ambient sounds ---
-  amb_scream = 1200,
-  amb_squish = 1201,
-  amb_drip   = 1202,
-  amb_feet   = 1203,
-  amb_heart  = 1204,
-  amb_bells  = 1205,
-  amb_growl  = 1206,
-  amb_magic  = 1207,
-  amb_laugh  = 1208,
-  amb_run    = 1209,
-
-  env_water  = 41,
-  env_wind   = 42,
-}
-
 HC_MONSTERS =
 {
   -- FIXME: dm and fp values are CRAP!
@@ -806,19 +808,6 @@ HC_INITIAL_MODEL =
   staff=true, wand=true,
 }
 
-HC_SCENERY =
-{
-  -- FIXME
-
-  wall_torch = { r=16,h=48, light=true },
-  serpent_torch = { r=16,h=48, light=true },
-  fire_brazier = { r=16,h=48, light=true },
-  chandelier = { r=16,h=48, light=true },
-
-  small_pillar = { r=16,h=48 },
-  barrel = { r=16,h=48 },
-  hang_skull_1 = { r=16,h=48 },
-}
 
 ------------------------------------------------------------
 
@@ -926,7 +915,7 @@ GAME_FACTORIES["heretic"] = function()
     episodes   = 5,
     level_func = heretic_get_levels,
 
-    thing_nums = HC_THING_NUMS,
+    things     = HC_THINGS,
     monsters   = HC_MONSTERS,
     bosses     = HC_BOSSES,
     weapons    = HC_WEAPONS,
@@ -964,7 +953,6 @@ GAME_FACTORIES["heretic"] = function()
     lights    = HC_LIGHTS,
     wall_lights = HC_WALL_LIGHTS,
 
-    scenery     = HC_SCENERY,
     door_fabs   = HC_DOOR_PREFABS,
     misc_fabs   = HC_MISC_PREFABS,
 
