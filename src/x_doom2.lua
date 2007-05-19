@@ -71,14 +71,14 @@ DM_THINGS =
   saw    = { id=2005, kind="pickup", r=16,h=16, pass=true },
   bfg    = { id=2006, kind="pickup", r=16,h=16, pass=true },
 
-  backpack = { id= 8, kind="pickup", r=16,h=16, pass=true },
-  mega   = { id=  83, kind="pickup", r=16,h=16, pass=true },
-  invul  = { id=2022, kind="pickup", r=16,h=16, pass=true },
-  berserk= { id=2023, kind="pickup", r=16,h=16, pass=true },
-  invis  = { id=2024, kind="pickup", r=16,h=16, pass=true },
-  suit   = { id=2025, kind="pickup", r=16,h=16, pass=true },
-  map    = { id=2026, kind="pickup", r=16,h=16, pass=true },
-  goggle = { id=2045, kind="pickup", r=16,h=16, pass=true },
+  backpack = { id=   8, kind="pickup", r=16,h=16, pass=true },
+  mega     = { id=  83, kind="pickup", r=16,h=16, pass=true },
+  invul    = { id=2022, kind="pickup", r=16,h=16, pass=true },
+  berserk  = { id=2023, kind="pickup", r=16,h=16, pass=true },
+  invis    = { id=2024, kind="pickup", r=16,h=16, pass=true },
+  suit     = { id=2025, kind="pickup", r=16,h=16, pass=true },
+  map      = { id=2026, kind="pickup", r=16,h=16, pass=true },
+  goggle   = { id=2045, kind="pickup", r=16,h=16, pass=true },
 
   potion   = { id=2014, kind="pickup", r=16,h=16, pass=true },
   stimpack = { id=2011, kind="pickup", r=16,h=16, pass=true },
@@ -98,108 +98,50 @@ DM_THINGS =
   cells      = { id=2047, kind="pickup", r=16,h=16, pass=true },
   cell_pack  = { id=  17, kind="pickup", r=16,h=16, pass=true },
 
-  --- scenery ---
-  lamp = 2028,
-  mercury_lamp = 85, 
-  short_lamp = 86,
-  tech_column = 48,
-
-  barrel = 2035,
-  candle = 34,  -- non-blocking
-  candelabra = 35,
-  burning_barrel = 70,
-
-  blue_torch     = 44,
-  blue_torch_sm  = 55,
-  green_torch    = 45,
-  green_torch_sm = 56,
-  red_torch      = 46,
-  red_torch_sm   = 57,
-
-  green_pillar = 30,
-  green_column = 31,
-  green_column_hrt = 36,
-
-  red_pillar = 32,
-  red_column = 33,
-  red_column_skl = 37,
-
-  brown_stub = 47,
-  burnt_tree = 43,
-  big_tree = 54,  
-
-  evil_eye    = 41,
-  skull_rock  = 42,
-  skull_pole  = 27,
-  skull_kebab = 28,
-  skull_cairn = 29,
-
-  impaled_human  = 25,
-  impaled_twitch = 26,
-
-  -- all the rest are non-blocking
-  hang_twitching = 63,
-  hang_arm_pair  = 59,
-  hang_leg_pair  = 60,
-  hang_leg_gone  = 61,
-  hang_leg       = 62,
-
-  gibs = 24,
-  gibbed_player = 10,
-  pool_blood_1 = 79,
-  pool_blood_2 = 80,
-  pool_brains  = 81,
-
-  dead_player  = 15,
-  dead_zombie  = 18,
-  dead_shooter = 19,
-  dead_imp     = 20,
-  dead_demon   = 21,
-  dead_caco    = 23,
-
 
   --- SCENERY ---
 
   -- lights --
-  lamp         = { kind="scenery", r=16,h=16, light=true, },
-  mercury_lamp = { kind="scenery", r=16,h=16, light=true, },
-  short_lamp   = { kind="scenery", r=16,h=16, light=true, },
-  tech_column  = { kind="scenery", r=16,h=16, light=true, },
+  lamp         = { id=2028,kind="scenery", r=16,h=16, light=255, },
+  mercury_lamp = { id=85,  kind="scenery", r=16,h=16, light=255, },
+  short_lamp   = { id=86,  kind="scenery", r=16,h=16, light=255, },
+  tech_column  = { id=48,  kind="scenery", r=16,h=16, light=255, },
 
-  candle         = { kind="scenery", r=16,h=16, light=true, pass=true },
-  candelabra     = { kind="scenery", r=16,h=16, light=true, },
-  burning_barrel = { kind="scenery", r=16,h=16, light=true, },
+  candle         = { id=34, kind="scenery", r=16,h=16, light=111, pass=true },
+  candelabra     = { id=35, kind="scenery", r=16,h=16, light=255, },
+  burning_barrel = { id=70, kind="scenery", r=16,h=16, light=255, },
 
-  blue_torch     = { kind="scenery", r=16,h=16, light=true, },
-  blue_torch_sm  = { kind="scenery", r=16,h=16, light=true, },
-  green_torch    = { kind="scenery", r=16,h=16, light=true, },
-  green_torch_sm = { kind="scenery", r=16,h=16, light=true, },
-  red_torch      = { kind="scenery", r=16,h=16, light=true, },
-  red_torch_sm   = { kind="scenery", r=16,h=16, light=true, },
+  blue_torch     = { id=44, kind="scenery", r=16,h=16, light=255, },
+  blue_torch_sm  = { id=55, kind="scenery", r=16,h=16, light=255, },
+  green_torch    = { id=45, kind="scenery", r=16,h=16, light=255, },
+  green_torch_sm = { id=56, kind="scenery", r=16,h=16, light=255, },
+  red_torch      = { id=46, kind="scenery", r=16,h=16, light=255, },
+  red_torch_sm   = { id=57, kind="scenery", r=16,h=16, light=255, },
 
   -- decoration --
-  green_pillar = { kind="scenery", r=16,h=16, },
-  green_column = { kind="scenery", r=16,h=16, },
-  red_pillar   = { kind="scenery", r=16,h=16, },
-  red_column   = { kind="scenery", r=16,h=16, },
+  barrel = { id=2035, kind="scenery", r=12, h=44 },
 
-  green_column_hrt = { kind="scenery", r=16,h=16, add_mode="island" },
-  red_column_skl   = { kind="scenery", r=16,h=16, add_mode="island" },
+  green_pillar     = { id=30, kind="scenery", r=16,h=16, },
+  green_column     = { id=31, kind="scenery", r=16,h=16, },
+  green_column_hrt = { id=36, kind="scenery", r=16,h=16, add_mode="island" },
 
-  brown_stub = { kind="scenery", r=16,h=16, add_mode="island" },
-  burnt_tree = { kind="scenery", r=16,h=16, add_mode="island" },
-  big_tree   = { kind="scenery", r=16,h=16, add_mode="island" },
+  red_pillar     = { id=32, kind="scenery", r=16,h=16, },
+  red_column     = { id=33, kind="scenery", r=16,h=16, },
+  red_column_skl = { id=37, kind="scenery", r=16,h=16, add_mode="island" },
 
-  evil_eye    = { kind="scenery", r=16,h=16, add_mode="island" },
-  skull_rock  = { kind="scenery", r=16,h=16, },
+  burnt_tree = { id=43, kind="scenery", r=16,h=16, add_mode="island" },
+  brown_stub = { id=47, kind="scenery", r=16,h=16, add_mode="island" },
+  big_tree   = { id=54, kind="scenery", r=16,h=16, add_mode="island" },
 
   -- gore --
-  skull_pole  = { kind="scenery", r=16,h=16, },
-  skull_kebab = { kind="scenery", r=16,h=16, },
-  skull_cairn = { kind="scenery", r=16,h=16, add_mode="island" },
+  evil_eye    = { id=41, kind="scenery", r=16,h=16, add_mode="island" },
+  skull_rock  = { id=42, kind="scenery", r=16,h=16, },
+  skull_pole  = { id=27, kind="scenery", r=16,h=16, },
+  skull_kebab = { id=28, kind="scenery", r=16,h=16, },
+  skull_cairn = { id=29, kind="scenery", r=16,h=16, add_mode="island" },
 
-  impaled_human  = { kind="scenery", r=16,h=16, },
-  impaled_twitch = { kind="scenery", r=16,h=16, },
+  impaled_human  = { id=25,kind="scenery", r=16,h=16, },
+  impaled_twitch = { id=26,kind="scenery", r=16,h=16, },
 
   gutted_victim1 = { id=73, kind="scenery", r=16,h=16, ceil=true },
   gutted_victim2 = { id=74, kind="scenery", r=16,h=16, ceil=true },
@@ -208,26 +150,25 @@ DM_THINGS =
   gutted_torso3  = { id=77, kind="scenery", r=16,h=16, ceil=true },
   gutted_torso4  = { id=78, kind="scenery", r=16,h=16, ceil=true },
 
-  hang_twitching = { kind="scenery", r=16,h=16, ceil=true, pass=true },
-  hang_arm_pair  = { kind="scenery", r=16,h=16, ceil=true, pass=true },
-  hang_leg_pair  = { kind="scenery", r=16,h=16, ceil=true, pass=true },
-  hang_leg_gone  = { kind="scenery", r=16,h=16, ceil=true, pass=true },
-  hang_leg       = { kind="scenery", r=16,h=16, ceil=true, pass=true },
+  hang_arm_pair  = { id=59, kind="scenery", r=16,h=16, ceil=true, pass=true },
+  hang_leg_pair  = { id=60, kind="scenery", r=16,h=16, ceil=true, pass=true },
+  hang_leg_gone  = { id=61, kind="scenery", r=16,h=16, ceil=true, pass=true },
+  hang_leg       = { id=62, kind="scenery", r=16,h=16, ceil=true, pass=true },
+  hang_twitching = { id=63, kind="scenery", r=16,h=16, ceil=true, pass=true },
 
-  gibs          = { kind="scenery", r=16,h=16, pass=true },
-  gibbed_player = { kind="scenery", r=16,h=16, pass=true },
-  pool_blood_1  = { kind="scenery", r=16,h=16, pass=true },
-  pool_blood_2  = { kind="scenery", r=16,h=16, pass=true },
-  pool_brains   = { kind="scenery", r=16,h=16, pass=true },
+  gibs          = { id=24, kind="scenery", r=16,h=16, pass=true },
+  gibbed_player = { id=10, kind="scenery", r=16,h=16, pass=true },
+  pool_blood_1  = { id=79, kind="scenery", r=16,h=16, pass=true },
+  pool_blood_2  = { id=80, kind="scenery", r=16,h=16, pass=true },
+  pool_brains   = { id=81, kind="scenery", r=16,h=16, pass=true },
 
-  dead_player  = { kind="scenery", r=16,h=16, pass=true },
-  dead_zombie  = { kind="scenery", r=16,h=16, pass=true },
-  dead_shooter = { kind="scenery", r=16,h=16, pass=true },
-  dead_imp     = { kind="scenery", r=16,h=16, pass=true },
-  dead_demon   = { kind="scenery", r=16,h=16, pass=true },
-  dead_caco    = { kind="scenery", r=16,h=16, pass=true },
+  dead_player  = { id=15, kind="scenery", r=16,h=16, pass=true },
+  dead_zombie  = { id=18, kind="scenery", r=16,h=16, pass=true },
+  dead_shooter = { id=19, kind="scenery", r=16,h=16, pass=true },
+  dead_imp     = { id=20, kind="scenery", r=16,h=16, pass=true },
+  dead_demon   = { id=21, kind="scenery", r=16,h=16, pass=true },
+  dead_caco    = { id=23, kind="scenery", r=16,h=16, pass=true },
 }
-
 
 
 -----==============######################==============-----
