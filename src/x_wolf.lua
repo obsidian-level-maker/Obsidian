@@ -81,50 +81,50 @@ WF_THINGS =
 
   -- scenery
   green_barrel = { kind="scenery", id=24, r=30, h=60 },
-  table_chairs = { kind="scenery", id=25, r=30, h=60 },
+  table_chairs = { kind="scenery", id=25, r=30, h=60, add_mode="island" },
 
   puddle     = { kind="scenery", id=23, r=30, h=60, pass=true },
-  floor_lamp = { kind="scenery", id=26, r=30, h=60 },
-  chandelier = { kind="scenery", id=27, r=30, h=60 },
-  hanged_man = { kind="scenery", id=28, r=30, h=60 },
+  floor_lamp = { kind="scenery", id=26, r=30, h=60, light=255 },
+  chandelier = { kind="scenery", id=27, r=30, h=60, pass=true, ceil=true, light=true, add_mode="island" },
+  hanged_man = { kind="scenery", id=28, r=30, h=60, add_mode="island" },
   red_pillar = { kind="scenery", id=30, r=30, h=60 },
 
   tree  = { kind="scenery", id=31, r=30, h=60 },
-  sink  = { kind="scenery", id=33, r=30, h=60 },
+  sink  = { kind="scenery", id=33, r=30, h=60, add_mode="extend" },
   plant = { kind="scenery", id=34, r=30, h=60 },
   urn   = { kind="scenery", id=35, r=30, h=60 },
 
-  bare_table    = { kind="scenery", id=36, r=30, h=60 },
-  ceil_light    = { kind="scenery", id=37, r=30, h=60 },
-  skeleton_flat = { kind="scenery", id=32, r=30, h=60 },
+  bare_table    = { kind="scenery", id=36, r=30, h=60, add_mode="island" },
+  ceil_light    = { kind="scenery", id=37, r=30, h=60, pass=true, ceil=true, light=true, add_mode="island" },
+  skeleton_flat = { kind="scenery", id=32, r=30, h=60, pass=true },
   kitchen_stuff = { kind="scenery", id=38, r=30, h=60 },
   suit_of_armor = { kind="scenery", id=39, r=30, h=60 },
-  hanging_cage  = { kind="scenery", id=40, r=30, h=60 },
+  hanging_cage  = { kind="scenery", id=40, r=30, h=60, add_mode="island" },
 
-  skeleton_in_cage = { kind="scenery", id=41, r=30, h=60 },
-  skeleton_relax   = { kind="scenery", id=42, r=30, h=60 },
+  skeleton_in_cage = { kind="scenery", id=41, r=30, h=60, add_mode="island" },
+  skeleton_relax   = { kind="scenery", id=42, r=30, h=60, pass=true },
 
   bed    = { kind="scenery", id=45, r=30, h=60 },
   basket = { kind="scenery", id=46, r=30, h=60 },
-  gibs_1 = { kind="scenery", id=57, r=30, h=60 },
   barrel = { kind="scenery", id=58, r=30, h=60 },
-  gibs_2 = { kind="scenery", id=61, r=30, h=60 },
+  gibs_1 = { kind="scenery", id=57, r=30, h=60, pass=true },
+  gibs_2 = { kind="scenery", id=61, r=30, h=60, pass=true },
   flag   = { kind="scenery", id=62, r=30, h=60 },
 
   water_well = { kind="scenery", id=59, r=30, h=60 },
   empty_well = { kind="scenery", id=60, r=30, h=60 },
   aardwolf   = { kind="scenery", id=63, r=30, h=60 },
 
-  junk_1 = { kind="scenery", id=64, r=30, h=60 },
-  junk_2 = { kind="scenery", id=65, r=30, h=60 },
-  junk_3 = { kind="scenery", id=66, r=30, h=60 },
-  pots   = { kind="scenery", id=67, r=30, h=60 },
+  junk_1 = { kind="scenery", id=64, r=30, h=60, pass=true },
+  junk_2 = { kind="scenery", id=65, r=30, h=60, pass=true },
+  junk_3 = { kind="scenery", id=66, r=30, h=60, pass=true },
+  pots   = { kind="scenery", id=67, r=30, h=60, pass=true, add_mode="extend" },
   stove  = { kind="scenery", id=68, r=30, h=60 },
-  spears = { kind="scenery", id=69, r=30, h=60 },
-  vines  = { kind="scenery", id=70, r=30, h=60 },
+  spears = { kind="scenery", id=69, r=30, h=60, add_mode="extend" },
+  vines  = { kind="scenery", id=70, r=30, h=60, pass=true },
 
   dud_clip   = { kind="scenery", id=71, r=30, h=60 },
-  dead_guard = { kind="scenery", id=124, r=30, h=60 },
+  dead_guard = { kind="scenery", id=124, r=30, h=60, pass=true },
 
   -- special
   secret  = { kind="other", id=98, r=30,h=60, pass=true },
@@ -159,7 +159,7 @@ WF_THINGS =
 
   skull_stick = { kind="scenery", id=33, r=30, h=60 },
   skull_cage  = { kind="scenery", id=45, r=30, h=60 },
-  ceil_light2 = { kind="scenery", id=63, r=30, h=60 },
+  ceil_light2 = { kind="scenery", id=63, r=30, h=60, pass=true, ceil=true, light=true },
 
   -- cow_skull     REPLACES: pots
   -- blood_well    REPLACES: stove
