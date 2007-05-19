@@ -765,7 +765,7 @@ GAME_FACTORIES["wolf3d"] = function()
     episodes = 6,
     level_func = wolf3d_get_levels,
 
-    thing_nums = WF_THING_NUMS,
+    things     = WF_THINGS,
     monsters   = WF_MONSTERS,
     bosses     = WF_BOSSES,
     mon_give   = WF_MONSTER_GIVE,
