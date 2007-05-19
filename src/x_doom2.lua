@@ -16,82 +16,87 @@
 --
 ----------------------------------------------------------------
 
-DM_THING_NUMS =
+DM_THINGS =
 {
-  --- special stuff ---
-  player1 = 1,
-  player2 = 2,
-  player3 = 3,
-  player4 = 4,
-  dm_player = 11,
-  teleport_spot = 14,
+  --- PLAYERS ---
 
-  --- monsters ---
-  zombie    = 3004,
-  shooter   = 9,
-  gunner    = 65,
-  imp       = 3001,
-  caco      = 3005,
-  revenant  = 66,
-  knight    = 69,
-  baron     = 3003,
+  player1 = { id=1, kind="other", r=16,h=56 },
+  player2 = { id=2, kind="other", r=16,h=56 },
+  player3 = { id=3, kind="other", r=16,h=56 },
+  player4 = { id=4, kind="other", r=16,h=56 },
 
-  mancubus  = 67,
-  arach     = 68,
-  pain      = 71,
-  vile      = 64,
-  demon     = 3002,
-  spectre   = 58,
-  skull     = 3006,
+  dm_player     = { id=11, kind="other", r=16,h=56 },
+  teleport_spot = { id=14, kind="other", r=16,h=56 },
 
-  cyber     = 16,
-  spider    = 7,
-  keen      = 72,
-  ss_dude   = 84,
+  --- MONSTERS ---
 
-  --- pickups ---
-  k_red     = 38,
-  k_yellow  = 39,
-  k_blue    = 40,
+  zombie    = { id=3004,kind="monster", r=20,h=56 },
+  shooter   = { id=9,   kind="monster", r=20,h=56 },
+  gunner    = { id=65,  kind="monster", r=20,h=56 },
+  imp       = { id=3001,kind="monster", r=20,h=56 },
 
-  kc_blue   = 5,
-  kc_yellow = 6,
-  kc_red    = 13,
+  caco      = { id=3005,kind="monster", r=31,h=56 },
+  revenant  = { id=66,  kind="monster", r=20,h=64 },
+  knight    = { id=69,  kind="monster", r=24,h=64 },
+  baron     = { id=3003,kind="monster", r=24,h=64 },
 
-  shotty = 2001,
-  super  =   82,
-  chain  = 2002,
-  launch = 2003,
-  plasma = 2004,
-  saw    = 2005,
-  bfg    = 2006,
+  mancubus  = { id=67,  kind="monster", r=48,h=64 },
+  arach     = { id=68,  kind="monster", r=66,h=64 },
+  pain      = { id=71,  kind="monster", r=31,h=56 },
+  vile      = { id=64,  kind="monster", r=20,h=56 },
+  demon     = { id=3002,kind="monster", r=30,h=56 },
+  spectre   = { id=58,  kind="monster", r=30,h=56 },
+  skull     = { id=3006,kind="monster", r=16,h=56 },
 
-  backpack =  8,
-  mega   =   83,
-  invul  = 2022,
-  berserk= 2023,
-  invis  = 2024,
-  suit   = 2025,
-  map    = 2026,
-  goggle = 2045,
+  spider    = { id=7,  kind="monster", r=128,h=100 },
+  cyber     = { id=16, kind="monster", r=40, h=110 },
+  ss_dude   = { id=84, kind="monster", r=20, h=56 },
+  keen      = { id=72, kind="monster", r=16, h=72, ceil=true },
 
-  potion   = 2014,
-  stimpack = 2011,
-  medikit  = 2012,
-  soul     = 2013,
+  --- PICKUPS ---
 
-  helmet      = 2015,
-  green_armor = 2018,
-  blue_armor  = 2019,
+  k_red     = { id=38, kind="pickup", r=16,h=16, pass=true },
+  k_yellow  = { id=39, kind="pickup", r=16,h=16, pass=true },
+  k_blue    = { id=40, kind="pickup", r=16,h=16, pass=true },
 
-  bullets    = 2007,
-  bullet_box = 2048,
-  shells     = 2008,
-  shell_box  = 2049,
-  rockets    = 2010,
-  rocket_box = 2046,
-  cells      = 2047,
-  cell_pack  =   17,
+  kc_blue   = { id=5,  kind="pickup", r=16,h=16, pass=true },
+  kc_yellow = { id=6,  kind="pickup", r=16,h=16, pass=true },
+  kc_red    = { id=13, kind="pickup", r=16,h=16, pass=true },
+
+  shotty = { id=2001, kind="pickup", r=16,h=16, pass=true },
+  super  = { id=  82, kind="pickup", r=16,h=16, pass=true },
+  chain  = { id=2002, kind="pickup", r=16,h=16, pass=true },
+  launch = { id=2003, kind="pickup", r=16,h=16, pass=true },
+  plasma = { id=2004, kind="pickup", r=16,h=16, pass=true },
+  saw    = { id=2005, kind="pickup", r=16,h=16, pass=true },
+  bfg    = { id=2006, kind="pickup", r=16,h=16, pass=true },
+
+  backpack = { id= 8, kind="pickup", r=16,h=16, pass=true },
+  mega   = { id=  83, kind="pickup", r=16,h=16, pass=true },
+  invul  = { id=2022, kind="pickup", r=16,h=16, pass=true },
+  berserk= { id=2023, kind="pickup", r=16,h=16, pass=true },
+  invis  = { id=2024, kind="pickup", r=16,h=16, pass=true },
+  suit   = { id=2025, kind="pickup", r=16,h=16, pass=true },
+  map    = { id=2026, kind="pickup", r=16,h=16, pass=true },
+  goggle = { id=2045, kind="pickup", r=16,h=16, pass=true },
+
+  potion   = { id=2014, kind="pickup", r=16,h=16, pass=true },
+  stimpack = { id=2011, kind="pickup", r=16,h=16, pass=true },
+  medikit  = { id=2012, kind="pickup", r=16,h=16, pass=true },
+  soul     = { id=2013, kind="pickup", r=16,h=16, pass=true },
+
+  helmet      = { id=2015, kind="pickup", r=16,h=16, pass=true },
+  green_armor = { id=2018, kind="pickup", r=16,h=16, pass=true },
+  blue_armor  = { id=2019, kind="pickup", r=16,h=16, pass=true },
+
+  bullets    = { id=2007, kind="pickup", r=16,h=16, pass=true },
+  bullet_box = { id=2048, kind="pickup", r=16,h=16, pass=true },
+  shells     = { id=2008, kind="pickup", r=16,h=16, pass=true },
+  shell_box  = { id=2049, kind="pickup", r=16,h=16, pass=true },
+  rockets    = { id=2010, kind="pickup", r=16,h=16, pass=true },
+  rocket_box = { id=2046, kind="pickup", r=16,h=16, pass=true },
+  cells      = { id=2047, kind="pickup", r=16,h=16, pass=true },
+  cell_pack  = { id=  17, kind="pickup", r=16,h=16, pass=true },
 
   --- scenery ---
   lamp = 2028,
@@ -132,13 +137,6 @@ DM_THING_NUMS =
   impaled_human  = 25,
   impaled_twitch = 26,
 
-  gutted_victim1 = 73,
-  gutted_victim2 = 74,
-  gutted_torso1  = 75,
-  gutted_torso2  = 76,
-  gutted_torso3  = 77,
-  gutted_torso4  = 78,
-
   -- all the rest are non-blocking
   hang_twitching = 63,
   hang_arm_pair  = 59,
@@ -158,7 +156,78 @@ DM_THING_NUMS =
   dead_imp     = 20,
   dead_demon   = 21,
   dead_caco    = 23,
+
+
+  --- SCENERY ---
+
+  -- lights --
+  lamp         = { kind="scenery", r=16,h=16, light=true, },
+  mercury_lamp = { kind="scenery", r=16,h=16, light=true, },
+  short_lamp   = { kind="scenery", r=16,h=16, light=true, },
+  tech_column  = { kind="scenery", r=16,h=16, light=true, },
+
+  candle         = { kind="scenery", r=16,h=16, light=true, pass=true },
+  candelabra     = { kind="scenery", r=16,h=16, light=true, },
+  burning_barrel = { kind="scenery", r=16,h=16, light=true, },
+
+  blue_torch     = { kind="scenery", r=16,h=16, light=true, },
+  blue_torch_sm  = { kind="scenery", r=16,h=16, light=true, },
+  green_torch    = { kind="scenery", r=16,h=16, light=true, },
+  green_torch_sm = { kind="scenery", r=16,h=16, light=true, },
+  red_torch      = { kind="scenery", r=16,h=16, light=true, },
+  red_torch_sm   = { kind="scenery", r=16,h=16, light=true, },
+
+  -- decoration --
+  green_pillar = { kind="scenery", r=16,h=16, },
+  green_column = { kind="scenery", r=16,h=16, },
+  red_pillar   = { kind="scenery", r=16,h=16, },
+  red_column   = { kind="scenery", r=16,h=16, },
+
+  green_column_hrt = { kind="scenery", r=16,h=16, add_mode="island" },
+  red_column_skl   = { kind="scenery", r=16,h=16, add_mode="island" },
+
+  brown_stub = { kind="scenery", r=16,h=16, add_mode="island" },
+  burnt_tree = { kind="scenery", r=16,h=16, add_mode="island" },
+  big_tree   = { kind="scenery", r=16,h=16, add_mode="island" },
+
+  evil_eye    = { kind="scenery", r=16,h=16, add_mode="island" },
+  skull_rock  = { kind="scenery", r=16,h=16, },
+
+  -- gore --
+  skull_pole  = { kind="scenery", r=16,h=16, },
+  skull_kebab = { kind="scenery", r=16,h=16, },
+  skull_cairn = { kind="scenery", r=16,h=16, add_mode="island" },
+
+  impaled_human  = { kind="scenery", r=16,h=16, },
+  impaled_twitch = { kind="scenery", r=16,h=16, },
+
+  gutted_victim1 = { id=73, kind="scenery", r=16,h=16, ceil=true },
+  gutted_victim2 = { id=74, kind="scenery", r=16,h=16, ceil=true },
+  gutted_torso1  = { id=75, kind="scenery", r=16,h=16, ceil=true },
+  gutted_torso2  = { id=76, kind="scenery", r=16,h=16, ceil=true },
+  gutted_torso3  = { id=77, kind="scenery", r=16,h=16, ceil=true },
+  gutted_torso4  = { id=78, kind="scenery", r=16,h=16, ceil=true },
+
+  hang_twitching = { kind="scenery", r=16,h=16, ceil=true, pass=true },
+  hang_arm_pair  = { kind="scenery", r=16,h=16, ceil=true, pass=true },
+  hang_leg_pair  = { kind="scenery", r=16,h=16, ceil=true, pass=true },
+  hang_leg_gone  = { kind="scenery", r=16,h=16, ceil=true, pass=true },
+  hang_leg       = { kind="scenery", r=16,h=16, ceil=true, pass=true },
+
+  gibs          = { kind="scenery", r=16,h=16, pass=true },
+  gibbed_player = { kind="scenery", r=16,h=16, pass=true },
+  pool_blood_1  = { kind="scenery", r=16,h=16, pass=true },
+  pool_blood_2  = { kind="scenery", r=16,h=16, pass=true },
+  pool_brains   = { kind="scenery", r=16,h=16, pass=true },
+
+  dead_player  = { kind="scenery", r=16,h=16, pass=true },
+  dead_zombie  = { kind="scenery", r=16,h=16, pass=true },
+  dead_shooter = { kind="scenery", r=16,h=16, pass=true },
+  dead_imp     = { kind="scenery", r=16,h=16, pass=true },
+  dead_demon   = { kind="scenery", r=16,h=16, pass=true },
+  dead_caco    = { kind="scenery", r=16,h=16, pass=true },
 }
+
 
 
 -----==============######################==============-----
@@ -1781,7 +1850,6 @@ GAME_FACTORIES["doom2"] = function()
   T.pics    = copy_and_merge(T.pics,    D2_PICS)
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
-  T.scenery   = copy_and_merge(T.scenery,   D2_SCENERY)
   --!!!!! FIXME
   T.sc_fabs   = copy_and_merge(T.sc_fabs or {},   D2_SCENERY_PREFABS)
   T.feat_fabs = copy_and_merge(T.feat_fabs or {}, D2_FEATURE_PREFABS)
