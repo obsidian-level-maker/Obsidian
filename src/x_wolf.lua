@@ -85,7 +85,7 @@ WF_THINGS =
 
   puddle     = { kind="scenery", id=23, r=30, h=60, pass=true },
   floor_lamp = { kind="scenery", id=26, r=30, h=60, light=255 },
-  chandelier = { kind="scenery", id=27, r=30, h=60, pass=true, ceil=true, light=true, add_mode="island" },
+  chandelier = { kind="scenery", id=27, r=30, h=60, light=255, pass=true, ceil=true, add_mode="island" },
   hanged_man = { kind="scenery", id=28, r=30, h=60, add_mode="island" },
   red_pillar = { kind="scenery", id=30, r=30, h=60, add_mode="island" },
 
@@ -95,7 +95,7 @@ WF_THINGS =
   urn   = { kind="scenery", id=35, r=30, h=60 },
 
   bare_table    = { kind="scenery", id=36, r=30, h=60, add_mode="island" },
-  ceil_light    = { kind="scenery", id=37, r=30, h=60, pass=true, ceil=true, light=true, add_mode="island" },
+  ceil_light    = { kind="scenery", id=37, r=30, h=60, pass=true, ceil=true, light=255, add_mode="island" },
   skeleton_flat = { kind="scenery", id=32, r=30, h=60, pass=true },
   kitchen_stuff = { kind="scenery", id=38, r=30, h=60 },
   suit_of_armor = { kind="scenery", id=39, r=30, h=60, add_mode="extend" },
@@ -159,7 +159,7 @@ WF_THINGS =
 
   skull_stick = { kind="scenery", id=33, r=30, h=60 },
   skull_cage  = { kind="scenery", id=45, r=30, h=60 },
-  ceil_light2 = { kind="scenery", id=63, r=30, h=60, pass=true, ceil=true, light=true },
+  ceil_light2 = { kind="scenery", id=63, r=30, h=60, pass=true, ceil=true, light=255 },
 
   -- cow_skull     REPLACES: pots
   -- blood_well    REPLACES: stove
@@ -332,60 +332,6 @@ WF_QUESTS =
   }
 }
 
-WF_SCENERY =
-{
-  -- LIGHTS --
-
-  floor_lamp = { r=24,h=48, light=true },
-  ceil_light = { r=24,h=48, pass=true, ceil=true, light=true, add_mode="island" },
-  chandelier = { r=24,h=48, pass=true, ceil=true, light=true, add_mode="island" },
-
-  -- URBANE --
-  
-  puddle = { r=24,h= 4, pass=true },
-  sink   = { r=24,h=48, add_mode="extend" },
-
-  tree   = { r=24,h=48 },
-  plant  = { r=24,h=48 },
-  urn    = { r=24,h=48 },
-  pots   = { r=24,h=48, add_mode="extend", pass=true },
-  stove  = { r=24,h=48, add_mode="extend" },
-  bed    = { r=24,h=48, add_mode="extend" },
-  basket = { r=24,h=48 },
-
-  bare_table    = { r=24,h=48, add_mode="island" },
-  table_chairs  = { r=24,h=48, add_mode="island" },
-  kitchen_stuff = { r=24,h=48 },
-
-  -- CASTLEY --
-
-  suit_of_armor = { r=24,h=48, add_mode="extend" },
-  red_pillar    = { r=24,h=48, add_mode="island" },
-  barrel        = { r=24,h=48 },
-  green_barrel  = { r=24,h=48 },
-  water_well    = { r=24,h=48 },
-  empty_well    = { r=24,h=48 },
-
-  flag   = { r=24,h=48 },
-  junk_1 = { r=24,h=48, pass=true },
-  junk_2 = { r=24,h=48, pass=true },
-  junk_3 = { r=24,h=48, pass=true },
-  vines  = { r=24,h=48, pass=true },
-  spears = { r=24,h=48, add_mode="extend" },
-
-  -- GORY --
-
-  hanged_man       = { r=24,h=48, add_mode="island" },
-  hanging_cage     = { r=24,h=48, add_mode="island" },
-  skeleton_in_cage = { r=24,h=48, add_mode="island" },
-  skeleton_flat    = { r=24,h= 8, pass=true },
-  skeleton_relax   = { r=24,h= 8, pass=true },
-
-  dead_guard = { r=24,h=8, pass=true },
-
-  gibs_1 = { r=24,h=4, pass=true },
-  gibs_2 = { r=24,h=4, pass=true },
-}
 
 WF_ROOMS =
 {
@@ -841,7 +787,6 @@ GAME_FACTORIES["wolf3d"] = function()
     doors     = WF_DOORS,
     key_doors = WF_KEY_DOORS,
 
-    scenery   = WF_SCENERY,
     rooms     = WF_ROOMS,
     themes    = WF_THEMES,
 
