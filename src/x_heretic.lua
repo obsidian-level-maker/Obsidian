@@ -102,25 +102,25 @@ HC_THINGS =
   green_statue  = { id=95, kind="scenery", r=16,h=54 },
   yellow_statue = { id=96, kind="scenery", r=16,h=54 },
 
-  moss1   = { id=48, kind="scenery", r=16,h=28, ceil=true },
-  moss2   = { id=49, kind="scenery", r=16,h=28, ceil=true },
+  moss1   = { id=48, kind="scenery", r=16,h=24, ceil=true, pass=true },
+  moss2   = { id=49, kind="scenery", r=16,h=28, ceil=true, pass=true },
   volcano = { id=87, kind="scenery", r=12,h=32 },
   
-  small_pillar = { id=29, kind="scenery", r=xx,h=xx },
-  brown_pillar = { id=47, kind="scenery", r=xx,h=xx },
-  glitter_red  = { id=74, kind="scenery", r=20,h=16 },
-  glitter_blue = { id=52, kind="scenery", r=20,h=16 },
+  small_pillar = { id=29, kind="scenery", r=16,h=36 },
+  brown_pillar = { id=47, kind="scenery", r=16,h=128 },
+  glitter_red  = { id=74, kind="scenery", r=20,h=16, pass=true },
+  glitter_blue = { id=52, kind="scenery", r=20,h=16, pass=true },
 
-  stal_small_F = { id=37, kind="scenery", r=xx,h=xx },
-  stal_small_C = { id=39, kind="scenery", r=xx,h=xx },
-  stal_big_F   = { id=38, kind="scenery", r=xx,h=xx },
-  stal_big_C   = { id=40, kind="scenery", r=xx,h=xx },
+  stal_small_F = { id=37, kind="scenery", r=12,h=36 },
+  stal_small_C = { id=39, kind="scenery", r=16,h=36, ceil=true },
+  stal_big_F   = { id=38, kind="scenery", r=12,h=72 },
+  stal_big_C   = { id=40, kind="scenery", r=16,h=72, ceil=true },
 
   hang_skull_1 = { id=17, kind="scenery", r=20,h=64, ceil=true, pass=true },
   hang_skull_2 = { id=24, kind="scenery", r=20,h=64, ceil=true, pass=true },
   hang_skull_3 = { id=25, kind="scenery", r=20,h=64, ceil=true, pass=true },
   hang_skull_4 = { id=26, kind="scenery", r=20,h=64, ceil=true, pass=true },
-  hang_corpse  = { id=51, kind="scenery", r=12,h=104, ceil=true },
+  hang_corpse  = { id=51, kind="scenery", r=12,h=104,ceil=true },
 
   --- ambient sounds ---
   amb_scream = { id=1200, kind="other", r=20,h=16, pass=true },
