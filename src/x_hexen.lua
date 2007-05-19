@@ -16,6 +16,158 @@
 --
 ----------------------------------------------------------------
 
+XN_THINGS =
+{
+  --- special stuff ---
+  player1 = { id=1, kind="other", r=xx,h=xx },
+  player2 = { id=2, kind="other", r=xx,h=xx },
+  player3 = { id=3, kind="other", r=xx,h=xx },
+  player4 = { id=4, kind="other", r=xx,h=xx },
+
+  dm_player     = { id=11, kind="other", r=xx,h=xx },
+  teleport_spot = { id=14, kind="other", r=xx,h=xx },
+  
+  --- monsters ---
+  ettin    = { id=10030,kind="monster", r=xx,h=xx },
+  afrit    = { id=10060,kind="monster", r=xx,h=xx },
+  serpent1 = { id=121,  kind="monster", r=xx,h=xx },
+  serpent2 = { id=120,  kind="monster", r=xx,h=xx },
+  wendigo  = { id=8020, kind="monster", r=xx,h=xx },
+  centaur1 = { id=107,  kind="monster", r=xx,h=xx },
+  centaur2 = { id=115,  kind="monster", r=xx,h=xx },
+
+  stalker1  = { id=31,   kind="monster", r=xx,h=xx },
+  stalker2  = { id=8080, kind="monster", r=xx,h=xx },
+  bishop    = { id=114,  kind="monster", r=xx,h=xx },
+  reiver    = { id=34,   kind="monster", r=xx,h=xx },
+  reiver_bd = { id=10011,kind="monster", r=xx,h=xx },
+  wyvern    = { id=254,  kind="monster", r=xx,h=xx },
+
+  heresiarch   = { id=10080, kind="monster", r=xx,h=xx },
+  fighter_boss = { id=10100, kind="monster", r=xx,h=xx },
+  cleric_boss  = { id=10101, kind="monster", r=xx,h=xx },
+  mage_boss    = { id=10102, kind="monster", r=xx,h=xx },
+  korax        = { id=10200, kind="monster", r=xx,h=xx },
+
+  --- pickups ---
+  k_steel   = { id=8030, kind="pickup", r=xx,h=xx },
+  k_cave    = { id=8031, kind="pickup", r=xx,h=xx },
+  k_axe     = { id=8032, kind="pickup", r=xx,h=xx },
+  k_fire    = { id=8033, kind="pickup", r=xx,h=xx },
+  k_emerald = { id=8034, kind="pickup", r=xx,h=xx },
+  k_dungeon = { id=8035, kind="pickup", r=xx,h=xx },
+  k_silver  = { id=8036, kind="pickup", r=xx,h=xx },
+  k_rusty   = { id=8037, kind="pickup", r=xx,h=xx },
+  k_horn    = { id=8038, kind="pickup", r=xx,h=xx },
+  k_swamp   = { id=8039, kind="pickup", r=xx,h=xx },
+  k_castle  = { id=8200, kind="pickup", r=xx,h=xx },
+ 
+  c_staff   = { id=10,  kind="pickup", r=xx,h=xx },
+  c_fire    = { id=8009,kind="pickup", r=xx,h=xx },
+  c1_shaft  = { id=20,  kind="pickup", r=xx,h=xx },
+  c2_cross  = { id=19,  kind="pickup", r=xx,h=xx },
+  c3_arc    = { id=18,  kind="pickup", r=xx,h=xx },
+
+  f_axe     = { id=8010,kind="pickup", r=xx,h=xx },
+  f_hammer  = { id=123, kind="pickup", r=xx,h=xx },
+  f1_hilt   = { id=16,  kind="pickup", r=xx,h=xx },
+  f2_cross  = { id=13,  kind="pickup", r=xx,h=xx },
+  f3_blade  = { id=12,  kind="pickup", r=xx,h=xx },
+
+  m_cone    = { id=53,  kind="pickup", r=xx,h=xx },
+  m_blitz   = { id=8040,kind="pickup", r=xx,h=xx },
+  m1_stick  = { id=23,  kind="pickup", r=xx,h=xx },
+  m2_stub   = { id=22,  kind="pickup", r=xx,h=xx },
+  m3_skull  = { id=21,  kind="pickup", r=xx,h=xx },
+
+  blue_mana  = { id=122, kind="pickup", r=xx,h=xx },
+  green_mana = { id=124, kind="pickup", r=xx,h=xx },
+  dual_mana  = { id=8004,kind="pickup", r=xx,h=xx },
+
+  ar_mesh   = { id=8005, kind="pickup", r=xx,h=xx },
+  ar_shield = { id=8006, kind="pickup", r=xx,h=xx },
+  ar_helmet = { id=8007, kind="pickup", r=xx,h=xx },
+  ar_amulet = { id=8008, kind="pickup", r=xx,h=xx },
+
+  h_vial  = { id=81, kind="pickup", r=xx,h=xx },
+  h_flask = { id=82, kind="pickup", r=xx,h=xx },
+  h_urn   = { id=32, kind="pickup", r=xx,h=xx },
+
+  wings = { id=83, kind="pickup", r=xx,h=xx },
+  chaos = { id=36, kind="pickup", r=xx,h=xx },
+  torch = { id=33, kind="pickup", r=xx,h=xx },
+
+  banish    = { id=10040,kind="pickup", r=xx,h=xx },
+  boots     = { id=8002, kind="pickup", r=xx,h=xx },
+  bracer    = { id=8041, kind="pickup", r=xx,h=xx },
+  repulser  = { id=8000, kind="pickup", r=xx,h=xx },
+  flechette = { id=10110,kind="pickup", r=xx,h=xx },
+  servant   = { id=86,   kind="pickup", r=xx,h=xx },
+  porkies   = { id=30,   kind="pickup", r=xx,h=xx },
+  incant    = { id=10120,kind="pickup", r=xx,h=xx },
+  defender  = { id=84,   kind="pickup", r=xx,h=xx },
+  krater    = { id=8003, kind="pickup", r=xx,h=xx },
+
+  --- scenery ---
+  candle        = { id=119,  kind="scenery", r=xx,h=xx, light=255 },
+  blue_candle   = { id=8066, kind="scenery", r=xx,h=xx, light=255 },
+  brass_brazier = { id=8061, kind="scenery", r=xx,h=xx, light=255 },
+
+  wall_torch      = { id=54,  kind="scenery", r=xx,h=xx, light=255 },
+  wall_torch_out  = { id=55,  kind="scenery", r=xx,h=xx },
+  twine_torch     = { id=116, kind="scenery", r=xx,h=xx, light=255 },
+  twine_torch_out = { id=117, kind="scenery", r=xx,h=xx },
+
+  tree1 = { id=25, kind="scenery", r=xx,h=xx },
+  tree2 = { id=8062, kind="scenery", r=xx,h=xx },
+  lean_tree_R = { id=78, kind="scenery", r=xx,h=xx },
+  lean_tree_L = { id=79, kind="scenery", r=xx,h=xx },
+  gnarled_tree_R = { id=80, kind="scenery", r=xx,h=xx },
+  gnarled_tree_L = { id=87, kind="scenery", r=xx,h=xx },
+  dead_tree = { id=24, kind="scenery", r=xx,h=xx },
+
+  hedge  = { id=8068, kind="scenery", r=xx,h=xx },
+  shrub1 = { id=8101, kind="scenery", r=xx,h=xx },
+  shrub2 = { id=8102, kind="scenery", r=xx,h=xx },
+
+  rock1  = { id=6,  kind="scenery", r=xx,h=xx },
+  rock2  = { id=7,  kind="scenery", r=xx,h=xx },
+  rock3  = { id=9,  kind="scenery", r=xx,h=xx },
+  rock4  = { id=15, kind="scenery", r=xx,h=xx },
+
+  winged_statue = { id=5,   kind="scenery", r=xx,h=xx },
+  garg_statue   = { id=72,  kind="scenery", r=xx,h=xx },
+  short_statue  = { id=74,  kind="scenery", r=xx,h=xx },
+  iron_maiden   = { id=8067,kind="scenery", r=xx,h=xx },
+  vase_pillar   = { id=103, kind="scenery", r=xx,h=xx },
+
+  bell   = { id=8065, kind="scenery", r=xx,h=xx },
+  bucket = { id=8103, kind="scenery", r=xx,h=xx },
+  banner = { id=77,   kind="scenery", r=xx,h=xx },
+
+  stal_pillar   = { id=48, kind="scenery", r=xx,h=xx },
+  big_stal_F    = { id=49, kind="scenery", r=xx,h=xx },
+  big_stal_C    = { id=52, kind="scenery", r=xx,h=xx },
+  medium_stal_F = { id=50, kind="scenery", r=xx,h=xx },
+  medium_stal_C = { id=56, kind="scenery", r=xx,h=xx },
+  small_stal_F  = { id=51, kind="scenery", r=xx,h=xx },
+  small_stal_C  = { id=57, kind="scenery", r=xx,h=xx },
+
+  -- FIXME: lots more...
+
+  --- sounds ---
+  snd_stone  = { id=1400, kind="other", r=xx,h=xx },
+  snd_heavy  = { id=1401, kind="other", r=xx,h=xx },
+  snd_metal1 = { id=1402, kind="other", r=xx,h=xx },
+  snd_creak  = { id=1403, kind="other", r=xx,h=xx },
+  snd_silent = { id=1404, kind="other", r=xx,h=xx },
+  snd_lava   = { id=1405, kind="other", r=xx,h=xx },
+  snd_water  = { id=1406, kind="other", r=xx,h=xx },
+  snd_ice    = { id=1407, kind="other", r=xx,h=xx },
+  snd_earth  = { id=1408, kind="other", r=xx,h=xx },
+  snd_metal2 = { id=1409, kind="other", r=xx,h=xx },
+}
+
 XN_LINE_TYPES =
 {
   -- FIXME: speeds (16) and delays (64) are just guesses!!
@@ -740,164 +892,6 @@ XN_THEMES =
 }
 
 
-------------------------------------------------------------
-
-XN_THING_NUMS =
-{
-  --- special stuff ---
-  player1 = 1,
-  player2 = 2,
-  player3 = 3,
-  player4 = 4,
-  dm_player = 11,
-  teleport_spot = 14,
-  
-  --- monsters ---
-  ettin    = 10030,
-  afrit    = 10060,
-  serpent1 = 121,
-  serpent2 = 120,
-  wendigo  = 8020,
-  centaur1 = 107,
-  centaur2 = 115,
-
-  stalker1   = 31,
-  stalker2   = 8080,
-  bishop     = 114,
-  reiver     = 34,
-  reiver_bd  = 10011,
-  wyvern     = 254,
-
-  heresiarch   = 10080,
-  fighter_boss = 10100,
-  cleric_boss  = 10101, 
-  mage_boss    = 10102,
-  korax        = 10200,
-
-  --- pickups ---
-  k_steel   = 8030,
-  k_cave    = 8031,
-  k_axe     = 8032,
-  k_fire    = 8033,
-  k_emerald = 8034,
-  k_dungeon = 8035,
-  k_silver  = 8036,
-  k_rusty   = 8037,
-  k_horn    = 8038,
-  k_swamp   = 8039,
-  k_castle  = 8200,
- 
-  c_staff   = 10,
-  c_fire    = 8009,
-  c1_shaft  = 20,
-  c2_cross  = 19,
-  c3_arc    = 18,
-
-  f_axe     = 8010,
-  f_hammer  = 123,
-  f1_hilt   = 16,
-  f2_cross  = 13,
-  f3_blade  = 12,
-
-  m_cone    = 53,
-  m_blitz   = 8040,
-  m1_stick  = 23,
-  m2_stub   = 22,
-  m3_skull  = 21,
-
-  blue_mana  = 122,
-  green_mana = 124,
-  dual_mana  = 8004,
-
-  ar_mesh   = 8005,
-  ar_shield = 8006,
-  ar_helmet = 8007,
-  ar_amulet = 8008,
-
-  h_vial  = 81,
-  h_flask = 82,
-  h_urn   = 32,
-
-  wings = 83,
-  chaos = 36,
-  torch = 33,
-
-  banish    = 10040,
-  boots     = 8002,
-  bracer    = 8041,
-  repulser  = 8000,
-  flechette = 10110,
-  servant   = 86, 
-  porkies   = 30,
-  incant    = 10120,
-  defender  = 84,
-  krater    = 8003,
-
-  --- scenery ---
-  candle = 119,
-  blue_candle = 8066,
-  brass_brazier = 8061,
-  wall_torch = 54,
-  wall_torch_out = 55,
-  twine_torch = 116,
-  twine_torch_out = 117,
-
-  tree1 = 25,
-  tree2 = 8062,
-  lean_tree_R = 78,
-  lean_tree_L = 79,
-  gnarled_tree_R = 80,
-  gnarled_tree_L = 87,
-  dead_tree = 24,
-
-  hedge = 8068,
-  shrub1 = 8101,
-  shrub2 = 8102,
-  rock1 = 6,
-  rock2 = 7,
-  rock3 = 9,
-  rock4 = 15,
-
-  winged_statue = 5,
-  garg_statue = 72,
-  short_statue = 74,
-  iron_maiden = 8067,
-  vase_pillar = 103,
-
-  bell = 8065,  -- we are saved!!
-  bucket = 8103,
-  banner = 77,
-
-  stal_pillar = 48,
-  big_stal_F = 49,
-  big_stal_C = 52,
-  medium_stal_F = 50,
-  medium_stal_C = 56,
-  small_stal_F = 51,
-  small_stal_C = 57,
-
-  -- FIXME: lots more...
-
-  --- sounds ---
-  snd_stone  = 1400,
-  snd_heavy  = 1401,
-  snd_metal1 = 1402,
-  snd_creak  = 1403,
-  snd_silent = 1404,
-  snd_lava   = 1405,
-  snd_water  = 1406,
-  snd_ice    = 1407,
-  snd_earth  = 1408,
-  snd_metal2 = 1409,
-}
-
-XN_SCENERY =
-{
-  brass_brazier = { r=16,h=48, light=true },
-  stal_pillar = { r=16,h=48, },
-  short_statue = { r=16,h=48, },
-  lean_tree_L = { r=16,h=48, },
-}
 
 XN_DOOR_PREFABS =
 {
@@ -1470,7 +1464,7 @@ GAME_FACTORIES["hexen"] = function()
     bosses   = XN_BOSSES,
     weapons  = XN_WEAPONS,
 
-    thing_nums = XN_THING_NUMS,
+    things = XN_THINGS,
 
     dm = XN_DEATHMATCH,
 
@@ -1501,7 +1495,6 @@ GAME_FACTORIES["hexen"] = function()
     images    = XN_IMAGES,
     lights    = XN_LIGHTS,
     wall_lights = XN_WALL_LIGHTS,
-    scenery   = XN_SCENERY,
 
     door_fabs = XN_DOOR_PREFABS,
     item_fabs = XN_ITEM_PREFABS,
