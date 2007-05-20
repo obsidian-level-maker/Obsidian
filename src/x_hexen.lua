@@ -155,13 +155,13 @@ XN_THINGS =
   rock3  = { id=9,  kind="scenery", r=20,h=16 },
   rock4  = { id=15, kind="scenery", r=20,h=16 },
 
-  stal_pillar   = { id=48, kind="scenery", r=xx,h=xx },
-  big_stal_F    = { id=49, kind="scenery", r=xx,h=xx },
-  big_stal_C    = { id=52, kind="scenery", r=xx,h=xx },
-  medium_stal_F = { id=50, kind="scenery", r=xx,h=xx },
-  medium_stal_C = { id=56, kind="scenery", r=xx,h=xx },
-  small_stal_F  = { id=51, kind="scenery", r=xx,h=xx },
-  small_stal_C  = { id=57, kind="scenery", r=xx,h=xx },
+--!!  stal_pillar   = { id=48, kind="scenery", r=xx,h=xx },
+--!!  big_stal_F    = { id=49, kind="scenery", r=xx,h=xx },
+--!!  big_stal_C    = { id=52, kind="scenery", r=xx,h=xx },
+--!!  medium_stal_F = { id=50, kind="scenery", r=xx,h=xx },
+--!!  medium_stal_C = { id=56, kind="scenery", r=xx,h=xx },
+--!!  small_stal_F  = { id=51, kind="scenery", r=xx,h=xx },
+--!!  small_stal_C  = { id=57, kind="scenery", r=xx,h=xx },
 
   -- gory --
   impaled_corpse = { id=61,  kind="scenery", r=12, h=96 },
