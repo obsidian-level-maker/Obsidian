@@ -124,15 +124,29 @@ XN_THINGS =
   twine_torch     = { id=116, kind="scenery", r=12,h=64, light=255 },
   twine_torch_out = { id=117, kind="scenery", r=12,h=64 },
 
-  tree1 = { id=25, kind="scenery", r=xx,h=xx },
-  tree2 = { id=8062, kind="scenery", r=xx,h=xx },
-  lean_tree_R = { id=78, kind="scenery", r=xx,h=xx },
-  lean_tree_L = { id=79, kind="scenery", r=xx,h=xx },
-  gnarled_tree_R = { id=80, kind="scenery", r=xx,h=xx },
-  gnarled_tree_L = { id=87, kind="scenery", r=xx,h=xx },
-  dead_tree = { id=24, kind="scenery", r=xx,h=xx },
+  -- xxx --
+  winged_statue = { id=5,   kind="scenery", r=12,h=64 },
+  garg_statue   = { id=72,  kind="scenery", r=16,h=108 },
+  short_statue  = { id=74,  kind="scenery", r=16,h=64 },
+  vase_pillar   = { id=103, kind="scenery", r=12,h=56 },
 
-  xmas_tree = { id=8068, kind="scenery", r=12,h=132 },
+  bell   = { id=8065, kind="scenery", r=56,h=120 },
+  bucket = { id=8103, kind="scenery", r=12,h=72 },
+  banner = { id=77,   kind="scenery", r=12,h=120 },
+
+  -- natural --
+  tree1 = { id=25, kind="scenery", r=16,h=128 },
+  tree2 = { id=26, kind="scenery", r=12,h=180 },
+  tree3 = { id=27, kind="scenery", r=12,h=160 },
+
+  lean_tree1 = { id=78,  kind="scenery", r=16,h=180 },
+  lean_tree2 = { id=79,  kind="scenery", r=16,h=180 },
+  smash_tree = { id=8062,kind="scenery", r=16,h=180 },
+  xmas_tree  = { id=8068,kind="scenery", r=12,h=132 },
+
+  gnarled_tree1 = { id=80, kind="scenery", r=24,h=96 },
+  gnarled_tree2 = { id=87, kind="scenery", r=24,h=96 },
+
   shrub1 = { id=8101, kind="scenery", r=12,h=24 },
   shrub2 = { id=8102, kind="scenery", r=16,h=40 },
 
@@ -141,16 +155,6 @@ XN_THINGS =
   rock3  = { id=9,  kind="scenery", r=20,h=16 },
   rock4  = { id=15, kind="scenery", r=20,h=16 },
 
-  winged_statue = { id=5,   kind="scenery", r=12,h=64 },
-  garg_statue   = { id=72,  kind="scenery", r=16,h=108 },
-  short_statue  = { id=74,  kind="scenery", r=16,h=64 },
-  iron_maiden   = { id=8067,kind="scenery", r=16,h=60 },
-  vase_pillar   = { id=103, kind="scenery", r=12,h=56 },
-
-  bell   = { id=8065, kind="scenery", r=56,h=120 },
-  bucket = { id=8103, kind="scenery", r=12,h=72 },
-  banner = { id=77,   kind="scenery", r=12,h=120 },
-
   stal_pillar   = { id=48, kind="scenery", r=xx,h=xx },
   big_stal_F    = { id=49, kind="scenery", r=xx,h=xx },
   big_stal_C    = { id=52, kind="scenery", r=xx,h=xx },
@@ -158,6 +162,16 @@ XN_THINGS =
   medium_stal_C = { id=56, kind="scenery", r=xx,h=xx },
   small_stal_F  = { id=51, kind="scenery", r=xx,h=xx },
   small_stal_C  = { id=57, kind="scenery", r=xx,h=xx },
+
+  -- gory --
+  impaled_corpse = { id=61,  kind="scenery", r=12, h=96 },
+  laying_corpse  = { id=62,  kind="scenery", r=12, h=44 },
+  hang_corpse_1  = { id=71,  kind="scenery", r=12, h=75, ceil=true },
+  hang_corpse_1  = { id=108, kind="scenery", r=12, h=96, ceil=true },
+  hang_corpse_1  = { id=109, kind="scenery", r=12, h=100,ceil=true },
+  smash_corpse   = { id=110, kind="scenery", r=12, h=40 },
+
+  iron_maiden   = { id=8067,kind="scenery", r=16,h=60 },
 
   -- FIXME: lots more...
 
