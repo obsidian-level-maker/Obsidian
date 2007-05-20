@@ -18,7 +18,8 @@
 
 XN_THINGS =
 {
-  --- special stuff ---
+  --- PLAYERS ---
+
   player1 = { id=1, kind="other", r=16,h=64 },
   player2 = { id=2, kind="other", r=16,h=64 },
   player3 = { id=3, kind="other", r=16,h=64 },
@@ -27,7 +28,8 @@ XN_THINGS =
   dm_player     = { id=11, kind="other", r=16,h=64 },
   teleport_spot = { id=14, kind="other", r=16,h=64 },
   
-  --- monsters ---
+  --- MONSTERS ---
+
   ettin    = { id=10030,kind="monster", r=24,h=64 },
   afrit    = { id=10060,kind="monster", r=24,h=64 },
   serpent1 = { id=121,  kind="monster", r=33,h=70 },
@@ -50,7 +52,8 @@ XN_THINGS =
   mage_boss    = { id=10102, kind="monster", r=16,h=64  },
   korax        = { id=10200, kind="monster", r=66,h=120 },
 
-  --- pickups ---
+  --- PICKUPS ---
+
   k_steel   = { id=8030, kind="pickup", r=8,h=16 },
   k_cave    = { id=8031, kind="pickup", r=8,h=16 },
   k_axe     = { id=8032, kind="pickup", r=8,h=16 },
@@ -109,15 +112,17 @@ XN_THINGS =
   defender  = { id=84,   kind="pickup", r=20,h=16 },
   krater    = { id=8003, kind="pickup", r=20,h=16 },
 
-  --- scenery ---
-  candle        = { id=119,  kind="scenery", r=xx,h=xx, light=255 },
-  blue_candle   = { id=8066, kind="scenery", r=xx,h=xx, light=255 },
-  brass_brazier = { id=8061, kind="scenery", r=xx,h=xx, light=255 },
+  --- SCENERY ---
 
-  wall_torch      = { id=54,  kind="scenery", r=xx,h=xx, light=255 },
-  wall_torch_out  = { id=55,  kind="scenery", r=xx,h=xx },
-  twine_torch     = { id=116, kind="scenery", r=xx,h=xx, light=255 },
-  twine_torch_out = { id=117, kind="scenery", r=xx,h=xx },
+  -- lights --
+  candle        = { id=119,  kind="scenery", r=20,h=20, light=255 },
+  blue_candle   = { id=8066, kind="scenery", r=20,h=20, light=255 },
+  brass_brazier = { id=8061, kind="scenery", r=12,h=40, light=255 },
+
+  wall_torch      = { id=54,  kind="scenery", r=20,h=48, light=255 },
+  wall_torch_out  = { id=55,  kind="scenery", r=20,h=48 },
+  twine_torch     = { id=116, kind="scenery", r=12,h=64, light=255 },
+  twine_torch_out = { id=117, kind="scenery", r=12,h=64 },
 
   tree1 = { id=25, kind="scenery", r=xx,h=xx },
   tree2 = { id=8062, kind="scenery", r=xx,h=xx },
@@ -127,24 +132,24 @@ XN_THINGS =
   gnarled_tree_L = { id=87, kind="scenery", r=xx,h=xx },
   dead_tree = { id=24, kind="scenery", r=xx,h=xx },
 
-  hedge  = { id=8068, kind="scenery", r=xx,h=xx },
-  shrub1 = { id=8101, kind="scenery", r=xx,h=xx },
-  shrub2 = { id=8102, kind="scenery", r=xx,h=xx },
+  xmas_tree = { id=8068, kind="scenery", r=12,h=132 },
+  shrub1 = { id=8101, kind="scenery", r=12,h=24 },
+  shrub2 = { id=8102, kind="scenery", r=16,h=40 },
 
-  rock1  = { id=6,  kind="scenery", r=xx,h=xx },
-  rock2  = { id=7,  kind="scenery", r=xx,h=xx },
-  rock3  = { id=9,  kind="scenery", r=xx,h=xx },
-  rock4  = { id=15, kind="scenery", r=xx,h=xx },
+  rock1  = { id=6,  kind="scenery", r=29,h=16 },
+  rock2  = { id=7,  kind="scenery", r=20,h=16 },
+  rock3  = { id=9,  kind="scenery", r=20,h=16 },
+  rock4  = { id=15, kind="scenery", r=20,h=16 },
 
-  winged_statue = { id=5,   kind="scenery", r=xx,h=xx },
-  garg_statue   = { id=72,  kind="scenery", r=xx,h=xx },
-  short_statue  = { id=74,  kind="scenery", r=xx,h=xx },
-  iron_maiden   = { id=8067,kind="scenery", r=xx,h=xx },
-  vase_pillar   = { id=103, kind="scenery", r=xx,h=xx },
+  winged_statue = { id=5,   kind="scenery", r=12,h=64 },
+  garg_statue   = { id=72,  kind="scenery", r=16,h=108 },
+  short_statue  = { id=74,  kind="scenery", r=16,h=64 },
+  iron_maiden   = { id=8067,kind="scenery", r=16,h=60 },
+  vase_pillar   = { id=103, kind="scenery", r=12,h=56 },
 
-  bell   = { id=8065, kind="scenery", r=xx,h=xx },
-  bucket = { id=8103, kind="scenery", r=xx,h=xx },
-  banner = { id=77,   kind="scenery", r=xx,h=xx },
+  bell   = { id=8065, kind="scenery", r=56,h=120 },
+  bucket = { id=8103, kind="scenery", r=12,h=72 },
+  banner = { id=77,   kind="scenery", r=12,h=120 },
 
   stal_pillar   = { id=48, kind="scenery", r=xx,h=xx },
   big_stal_F    = { id=49, kind="scenery", r=xx,h=xx },
