@@ -123,6 +123,8 @@ XN_THINGS =
   wall_torch_out  = { id=55,  kind="scenery", r=20,h=48 },
   twine_torch     = { id=116, kind="scenery", r=12,h=64, light=255 },
   twine_torch_out = { id=117, kind="scenery", r=12,h=64 },
+  chandelier      = { id=17,  kind="scenery", r=20,h=60, light=255, ceil=true },
+  chandelier_out  = { id=8063,kind="scenery", r=20,h=60, light=255, ceil=true },
 
   -- xxx --
   winged_statue = { id=5,   kind="scenery", r=12,h=64 },
@@ -131,6 +133,7 @@ XN_THINGS =
   vase_pillar   = { id=103, kind="scenery", r=12,h=56 },
 
   bell   = { id=8065, kind="scenery", r=56,h=120 },
+  barrel = { id=8100, kind="scenery", r=16,h=36 },
   bucket = { id=8103, kind="scenery", r=12,h=72 },
   banner = { id=77,   kind="scenery", r=12,h=120 },
 
@@ -307,7 +310,7 @@ XN_COMBOS =
     floor = "F_040",
     ceil  = "F_040",
 
-    scenery = "stal_pillar",
+--!!    scenery = "stal_pillar",
 
     theme_probs = { CAVE=70 },
   },
@@ -341,7 +344,7 @@ XN_COMBOS =
     floor = "F_007",
     ceil  = "F_007",
 
-    scenery = "lean_tree_L",
+    scenery = "lean_tree1",
 
     theme_probs = { CITY=20 },
   },
