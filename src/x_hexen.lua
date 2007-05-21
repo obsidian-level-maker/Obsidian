@@ -54,6 +54,7 @@ XN_THINGS =
 
   --- PICKUPS ---
 
+  -- keys --
   k_steel   = { id=8030, kind="pickup", r=8,h=16 },
   k_cave    = { id=8031, kind="pickup", r=8,h=16 },
   k_axe     = { id=8032, kind="pickup", r=8,h=16 },
@@ -66,6 +67,7 @@ XN_THINGS =
   k_swamp   = { id=8039, kind="pickup", r=8,h=16 },
   k_castle  = { id=8200, kind="pickup", r=8,h=16 },
  
+  -- weapons --
   c_staff   = { id=10,  kind="pickup", r=20,h=16 },
   c_fire    = { id=8009,kind="pickup", r=20,h=16 },
   c1_shaft  = { id=20,  kind="pickup", r=20,h=16 },
@@ -84,6 +86,7 @@ XN_THINGS =
   m2_stub   = { id=22,  kind="pickup", r=20,h=16 },
   m3_skull  = { id=21,  kind="pickup", r=20,h=16 },
 
+  -- health/ammo/armor --
   blue_mana  = { id=122, kind="pickup", r=20,h=16 },
   green_mana = { id=124, kind="pickup", r=20,h=16 },
   dual_mana  = { id=8004,kind="pickup", r=20,h=16 },
@@ -97,6 +100,7 @@ XN_THINGS =
   h_flask = { id=82, kind="pickup", r=20,h=16 },
   h_urn   = { id=32, kind="pickup", r=20,h=16 },
 
+  -- artifacts --
   wings = { id=83, kind="pickup", r=20,h=16 },
   chaos = { id=36, kind="pickup", r=20,h=16 },
   torch = { id=33, kind="pickup", r=20,h=16 },
@@ -210,7 +214,11 @@ XN_THINGS =
 
   iron_maiden    = { id=8067,kind="scenery", r=16,h=60 },
 
-  --- sounds ---
+  -- misc --
+  teleport_smoke = { id=140, kind="scenery", r=20,h=80, pass=true },
+
+  --- SOUNDS ---
+
   snd_stone  = { id=1400, kind="other", r=16,h=16, pass=true },
   snd_heavy  = { id=1401, kind="other", r=16,h=16, pass=true },
   snd_metal1 = { id=1402, kind="other", r=16,h=16, pass=true },
