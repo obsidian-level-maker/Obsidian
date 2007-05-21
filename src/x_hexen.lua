@@ -115,8 +115,9 @@ XN_THINGS =
   --- SCENERY ---
 
   -- lights --
-  candle        = { id=119,  kind="scenery", r=20,h=20, light=255 },
+  candles       = { id=119,  kind="scenery", r=20,h=20, light=255 },
   blue_candle   = { id=8066, kind="scenery", r=20,h=20, light=255 },
+  fire_skull    = { id=8060, kind="scenery", r=12,h=12, light=255 },
   brass_brazier = { id=8061, kind="scenery", r=12,h=40, light=255 },
 
   wall_torch      = { id=54,  kind="scenery", r=20,h=48, light=255 },
@@ -126,7 +127,12 @@ XN_THINGS =
   chandelier      = { id=17,  kind="scenery", r=20,h=60, light=255, ceil=true },
   chandelier_out  = { id=8063,kind="scenery", r=20,h=60, light=255, ceil=true },
 
-  -- xxx --
+  cauldron        = { id=8069,kind="scenery", r=16,h=32, light=255 },
+  cauldron_out    = { id=8070,kind="scenery", r=16,h=32 },
+  fire_bull       = { id=8042,kind="scenery", r=24,h=80, light=255 },
+  fire_bull_out   = { id=8043,kind="scenery", r=24,h=80 },
+
+  -- urbane --
   winged_statue = { id=5,   kind="scenery", r=12,h=64 },
   garg_statue   = { id=72,  kind="scenery", r=16,h=108 },
   short_statue  = { id=74,  kind="scenery", r=16,h=64 },
@@ -153,18 +159,29 @@ XN_THINGS =
   shrub1 = { id=8101, kind="scenery", r=12,h=24 },
   shrub2 = { id=8102, kind="scenery", r=16,h=40 },
 
-  rock1  = { id=6,  kind="scenery", r=29,h=16 },
+  rock1  = { id=6,  kind="scenery", r=20,h=16 },
   rock2  = { id=7,  kind="scenery", r=20,h=16 },
   rock3  = { id=9,  kind="scenery", r=20,h=16 },
   rock4  = { id=15, kind="scenery", r=20,h=16 },
 
---!!  stal_pillar   = { id=48, kind="scenery", r=xx,h=xx },
---!!  big_stal_F    = { id=49, kind="scenery", r=xx,h=xx },
---!!  big_stal_C    = { id=52, kind="scenery", r=xx,h=xx },
---!!  medium_stal_F = { id=50, kind="scenery", r=xx,h=xx },
---!!  medium_stal_C = { id=56, kind="scenery", r=xx,h=xx },
---!!  small_stal_F  = { id=51, kind="scenery", r=xx,h=xx },
---!!  small_stal_C  = { id=57, kind="scenery", r=xx,h=xx },
+  stal_pillar   = { id=48, kind="scenery", r=12,h=136 },
+  stal_F_big    = { id=49, kind="scenery", r=12,h=48 },
+  stal_F_medium = { id=50, kind="scenery", r=12,h=40 },
+  stal_F_small  = { id=51, kind="scenery", r=12,h=40 },
+
+  stal_C_big    = { id=52, kind="scenery", r=12,h=68 },
+  stal_C_medium = { id=56, kind="scenery", r=12,h=52 },
+  stal_C_small  = { id=57, kind="scenery", r=12,h=40 },
+
+  ice_stal_F_big    = { id=93, kind="scenery", r=12,h=68 },
+  ice_stal_F_medium = { id=94, kind="scenery", r=12,h=52 },
+  ice_stal_F_small  = { id=95, kind="scenery", r=12,h=36 },
+  ice_stal_F_tiny   = { id=95, kind="scenery", r=12,h=16 },
+
+  ice_stal_C_big    = { id=89, kind="scenery", r=12,h=68 },
+  ice_stal_C_medium = { id=90, kind="scenery", r=12,h=52 },
+  ice_stal_C_small  = { id=91, kind="scenery", r=12,h=36 },
+  ice_stal_C_tiny   = { id=92, kind="scenery", r=12,h=16 },
 
   -- gory --
   impaled_corpse = { id=61,  kind="scenery", r=12, h=96 },
@@ -174,7 +191,7 @@ XN_THINGS =
   hang_corpse_1  = { id=109, kind="scenery", r=12, h=100,ceil=true },
   smash_corpse   = { id=110, kind="scenery", r=12, h=40 },
 
-  iron_maiden   = { id=8067,kind="scenery", r=16,h=60 },
+  iron_maiden    = { id=8067,kind="scenery", r=16,h=60 },
 
   -- FIXME: lots more...
 
@@ -310,7 +327,7 @@ XN_COMBOS =
     floor = "F_040",
     ceil  = "F_040",
 
---!!    scenery = "stal_pillar",
+    scenery = "stal_pillar",
 
     theme_probs = { CAVE=70 },
   },
