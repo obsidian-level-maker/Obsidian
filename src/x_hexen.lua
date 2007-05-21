@@ -133,15 +133,32 @@ XN_THINGS =
   fire_bull_out   = { id=8043,kind="scenery", r=24,h=80 },
 
   -- urbane --
-  winged_statue = { id=5,   kind="scenery", r=12,h=64 },
-  garg_statue   = { id=72,  kind="scenery", r=16,h=108 },
-  short_statue  = { id=74,  kind="scenery", r=16,h=64 },
-  vase_pillar   = { id=103, kind="scenery", r=12,h=56 },
+  winged_statue1 = { id=5,   kind="scenery", r=12,h=64 },
+  winged_statue1 = { id=9011,kind="scenery", r=12,h=64 },
+  suit_of_armor  = { id=8064,kind="scenery", r=16,h=72 },
+
+  gargoyle_tall  = { id=72, kind="scenery", r=16,h=108 },
+  gargoyle_short = { id=74, kind="scenery", r=16,h=64  },
+  garg_ice_tall  = { id=73, kind="scenery", r=16,h=108 },
+  garg_ice_short = { id=76, kind="scenery", r=16,h=64  },
+
+  garg_corrode     = { id=8044, kind="scenery", r=16,h=108 },
+  garg_red_tall    = { id=8045, kind="scenery", r=16,h=108 },
+  garg_red_short   = { id=8049, kind="scenery", r=16,h=64  },
+  garg_lava_tall   = { id=8046, kind="scenery", r=16,h=108 },
+  garg_lava_short  = { id=8050, kind="scenery", r=16,h=64  },
+
+  garg_bronz_tall  = { id=8047, kind="scenery", r=16,h=108 },
+  garg_bronz_short = { id=8051, kind="scenery", r=16,h=64  },
+  garg_steel_tall  = { id=8048, kind="scenery", r=16,h=108 },
+  garg_steel_short = { id=8052, kind="scenery", r=16,h=64  },
 
   bell   = { id=8065, kind="scenery", r=56,h=120 },
   barrel = { id=8100, kind="scenery", r=16,h=36 },
   bucket = { id=8103, kind="scenery", r=12,h=72 },
   banner = { id=77,   kind="scenery", r=12,h=120 },
+
+  vase_pillar = { id=103, kind="scenery", r=12,h=56 },
 
   -- natural --
   tree1 = { id=25, kind="scenery", r=16,h=128 },
@@ -192,8 +209,6 @@ XN_THINGS =
   smash_corpse   = { id=110, kind="scenery", r=12, h=40 },
 
   iron_maiden    = { id=8067,kind="scenery", r=16,h=60 },
-
-  -- FIXME: lots more...
 
   --- sounds ---
   snd_stone  = { id=1400, kind="other", r=16,h=16, pass=true },
