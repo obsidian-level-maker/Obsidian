@@ -75,7 +75,7 @@ WF_THINGS =
 
   cross   = { kind="pickup", id=52, r=30, h=60, pass=true },
   chalice = { kind="pickup", id=53, r=30, h=60, pass=true },
-  bible   = { kind="pickup", id=54, r=30, h=60, pass=true },
+  chest   = { kind="pickup", id=54, r=30, h=60, pass=true },
   crown   = { kind="pickup", id=55, r=30, h=60, pass=true },
   one_up  = { kind="pickup", id=56, r=30, h=60, pass=true },
 
@@ -123,7 +123,7 @@ WF_THINGS =
   spears = { kind="scenery", id=69, r=30, h=60, add_mode="extend" },
   vines  = { kind="scenery", id=70, r=30, h=60, pass=true },
 
-  dud_clip   = { kind="scenery", id=71, r=30, h=60 },
+  dud_clip   = { kind="scenery", id=71,  r=30, h=60, pass=true },
   dead_guard = { kind="scenery", id=124, r=30, h=60, pass=true },
 
   -- special
@@ -322,7 +322,7 @@ WF_QUESTS =
 
   item =
   {
-    crown = 50, bible = 50, cross = 50, chalice = 50,
+    crown = 50, chest = 50, cross = 50, chalice = 50,
     one_up = 2,
   },
 
@@ -353,7 +353,7 @@ WF_ROOMS =
 
   TREASURE =
   {
-    pickups = { cross=90, chalice=90, bible=20, crown=5 },
+    pickups = { cross=90, chalice=90, chest=20, crown=5 },
     pickup_rate = 90,
   },
 
