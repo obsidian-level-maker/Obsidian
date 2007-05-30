@@ -615,7 +615,7 @@ D2_HALLWAYS =
   {
     mat_pri = 0,
 
-    wall = "TEKGREN4",
+    wall = "TEKGREN2",
     void = "TEKGREN2",
     step = "STEP2",
     pillar = "TEKGREN3",  -- was: "BRONZE2"
