@@ -1482,17 +1482,17 @@ DM_QUEST_LEN_PROBS =
 DM_MONSTERS =
 {
   -- FIXME: probs for CLOSET/DEPOT
-  zombie    = { prob=60, hp=20,  dm=4,  fp=10, cage_fallback=14, hitscan=true, },
-  shooter   = { prob=40, hp=30,  dm=10, fp=10, cage_prob= 8, hitscan=true, },
+  zombie    = { prob=60, hp=20,  dm=4,  fp=1.0, cage_fallback=14, hitscan=true, },
+  shooter   = { prob=40, hp=30,  dm=10, fp=1.3, cage_prob= 8, hitscan=true, },
 
-  imp       = { prob=80, hp=60,  dm=20, fp=20, cage_prob=50, },
-  caco      = { prob=80, hp=400, dm=45, fp=30, cage_prob=14, float=true },
-  baron     = { prob=50, hp=1000,dm=45, fp=110,cage_prob= 3, },
+  imp       = { prob=80, hp=60,  dm=20, fp=1.6, cage_prob=50, },
+  caco      = { prob=80, hp=400, dm=45, fp=2.0, cage_prob=14, float=true },
+  baron     = { prob=50, hp=1000,dm=45, fp=3.8, cage_prob= 3, },
 
   -- MELEE only monsters
-  demon     = { prob=60, hp=150, dm=25, fp=30, cage_prob=66,melee=true },
-  spectre   = { prob=20, hp=150, dm=25, fp=30, cage_prob=40,melee=true },
-  skull     = { prob=16, hp=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
+  demon     = { prob=60, hp=150, dm=25, fp=2.3, cage_prob=66,melee=true },
+  spectre   = { prob=20, hp=150, dm=25, fp=2.3, cage_prob=40,melee=true },
+  skull     = { prob=16, hp=100, dm=7,  fp=2.6, cage_prob= 2, melee=true, float=true },
  
 --!!!!!  barrel    = { prob=20, hp=10,  dm=2,  fp=5, melee=true, passive=true },
 }
@@ -1500,22 +1500,22 @@ DM_MONSTERS =
 DM_BOSSES =
 {
   -- special monsters (only for boss levels)
-  cyber     = { hp=4000,dm=150, fp=150 },
-  spider    = { hp=3000,dm=200, fp=240, hitscan=true },
+  cyber     = { hp=4000,dm=150, fp=4.0 },
+  spider    = { hp=3000,dm=200, fp=4.0, hitscan=true },
 }
 
 D2_MONSTERS =
 {
-  gunner    = { prob=17, hp=70,  dm=40, fp=40, hitscan=true, cage_prob=70, },
-  ss_dude   = { prob=0.1,hp=50,  dm=15, fp=90, hitscan=true, cage_prob=1 },
+  gunner    = { prob=17, hp=70,  dm=40, fp=2.5, hitscan=true, cage_prob=70, },
+  ss_dude   = { prob=0.1,hp=50,  dm=15, fp=2.4, hitscan=true, cage_prob=1 },
 
-  revenant  = { prob=70, hp=300, dm=55, fp=58, cage_prob=50, },
-  knight    = { prob=70, hp=500, dm=45, fp=70, cage_prob=50, },
-  mancubus  = { prob=95, hp=600, dm=80, fp=92, cage_prob=88, },
+  revenant  = { prob=70, hp=300, dm=55, fp=2.9, cage_prob=50, },
+  knight    = { prob=70, hp=500, dm=45, fp=2.9, cage_prob=50, },
+  mancubus  = { prob=95, hp=600, dm=80, fp=3.5, cage_prob=88, },
 
-  arach     = { prob=36, hp=500, dm=70, fp=92, cage_prob=95, },
-  vile      = { prob=20, hp=700, dm=50, fp=120,cage_prob=12, hitscan=true },
-  pain      = { prob=14, hp=400, dm=88, fp=40, float=true },
+  arach     = { prob=36, hp=500, dm=70, fp=2.5, cage_prob=95, },
+  vile      = { prob=20, hp=700, dm=50, fp=3.7, cage_prob=12, hitscan=true },
+  pain      = { prob=14, hp=400, dm=88, fp=3.0, float=true },
 }
 
 DM_MONSTER_GIVE =
@@ -1528,6 +1528,7 @@ DM_MONSTER_GIVE =
 -- Weapon list
 -- ===========
 --
+-- fp   : firepower level
 -- per  : ammo per shot
 -- rate : firing rate (shots per second)
 -- dm   : damage can inflict per shot
@@ -1536,18 +1537,20 @@ DM_MONSTER_GIVE =
 
 DM_WEAPONS =
 {
-  fist    = { melee=true, rate=1.5, dm=10, freq=0.1, held=true },
-  berserk = { melee=true, rate=1.5, dm=50, freq=10 },
-  saw     = { melee=true, rate=8.7, dm=10, freq=2 },
+  fist    = { fp=0, melee=true, rate=1.5, dm=10, freq=0.1, held=true },
 
-  pistol = { ammo="bullet",         per=1, rate=1.8, dm=10 , freq=10, held=true },
-  shotty = { ammo="shell",  give=8, per=1, rate=0.9, dm=70 , freq=81 },
-  super  = { ammo="shell",  give=8, per=2, rate=0.6, dm=170, freq=50 },
-  chain  = { ammo="bullet", give=20,per=1, rate=8.5, dm=10 , freq=91 },
+  saw     = { fp=1, melee=true, rate=8.7, dm=10, freq=3 },
+  berserk = { fp=1, melee=true, rate=1.5, dm=50, freq=6 },
 
-  launch = { ammo="rocket", give=2, per=1, rate=1.7, dm=90,  freq=50, dangerous=true },
-  plasma = { ammo="cell",   give=40,per=1, rate=11,  dm=22 , freq=80 },
-  bfg    = { ammo="cell",   give=40,per=40,rate=0.8, dm=450, freq=30 },
+  pistol  = { fp=1, ammo="bullet",         per=1, rate=1.8, dm=10 , freq=10, held=true },
+  shotty  = { fp=2, ammo="shell",  give=8, per=1, rate=0.9, dm=70 , freq=81 },
+
+  super   = { fp=3, ammo="shell",  give=8, per=2, rate=0.6, dm=170, freq=50 },
+  chain   = { fp=3, ammo="bullet", give=20,per=1, rate=8.5, dm=10 , freq=91 },
+
+  launch  = { fp=4, ammo="rocket", give=2, per=1, rate=1.7, dm=90,  freq=50, dangerous=true },
+  plasma  = { fp=4, ammo="cell",   give=40,per=1, rate=11,  dm=22 , freq=80 },
+  bfg     = { fp=5, ammo="cell",   give=40,per=40,rate=0.8, dm=450, freq=30 },
 
   -- Note: Berserk is not really an extra weapon, but a powerup
   -- which makes fist do much more damage.  The effect lasts till

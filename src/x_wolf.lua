@@ -491,11 +491,11 @@ WF_THEMES =
 
 WF_MONSTERS =
 {
-  dog     = { prob=20, hp=1,   dm=5,  fp=10, melee=true, },
-  guard   = { prob=60, hp=25,  dm=10, fp=10, hitscan=true, cage_fallback=10 },
-  officer = { prob=30, hp=50,  dm=20, fp=10, hitscan=true, },
-  mutant  = { prob=10, hp=55,  dm=35, fp=10, hitscan=true, },
-  ss_dude = { prob=50, hp=100, dm=30, fp=10, hitscan=true, },
+  dog     = { prob=20, hp=1,   dm=5,  fp=1.0, melee=true, },
+  guard   = { prob=60, hp=25,  dm=10, fp=1.0, hitscan=true, cage_fallback=10 },
+  officer = { prob=30, hp=50,  dm=20, fp=1.7, hitscan=true, },
+  mutant  = { prob=10, hp=55,  dm=35, fp=1.9, hitscan=true, },
+  ss_dude = { prob=60, hp=100, dm=30, fp=1.4, hitscan=true, },
 }
 
 WF_BOSSES =
@@ -527,11 +527,11 @@ WF_MONSTER_GIVE =
 
 WF_WEAPONS =
 {
-  knife       = { melee=true,           rate=3.0, dm= 7, freq= 2, held=true },
-  pistol      = { ammo="bullet", per=1, rate=3.0, dm=17, freq=10, held=true },
+  knife       = { fp=0, melee=true,           rate=3.0, dm= 7, freq= 2, held=true },
+  pistol      = { fp=1, ammo="bullet", per=1, rate=3.0, dm=17, freq=10, held=true },
 
-  machine_gun = { ammo="bullet", give=4, per=1, rate=8.0,  dm=17, freq=30, },
-  gatling_gun = { ammo="bullet", give=6, per=1, rate=16.0, dm=17, freq=90, },
+  machine_gun = { fp=2, ammo="bullet", give=4, per=1, rate=8.0,  dm=17, freq=30, },
+  gatling_gun = { fp=3, ammo="bullet", give=6, per=1, rate=16.0, dm=17, freq=90, },
 
   -- Note: machine_gun actually gives _6_ bullets.
   -- However: we don't model the fact that the SS_DUDE only

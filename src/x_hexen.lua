@@ -1084,44 +1084,45 @@ XN_INITIAL_MODEL =
 XN_MONSTERS =
 {
   -- FIXME: these stats are CRAP!
-  ettin      = { prob=70, hp=170, dm= 5, fp= 1, melee=true },
-  serpent1   = { prob=30, hp=90,  dm= 9, fp=10, },
-  afrit      = { prob=70, hp=80,  dm=10, fp= 1, float=true, cage_fallback=2 },
-  serpent2   = { prob=20, hp=90,  dm=15, fp=10, },
-  wendigo    = { prob=20, hp=120, dm=25, fp=10, environ="ice" },
-  centaur1   = { prob=30, hp=200, dm=10, fp=10, melee=true},
-  centaur2   = { prob=15, hp=250, dm=20, fp=10, },
+  ettin      = { prob=70, hp=170, dm= 5, fp=1.0, melee=true },
+  afrit      = { prob=70, hp=80,  dm=10, fp=1.0, float=true, cage_fallback=2 },
+  serpent1   = { prob=30, hp=90,  dm= 9, fp=1.0, },
+  serpent2   = { prob=20, hp=90,  dm=15, fp=1.0, },
 
-  stalker1   = { prob=30, hp=250, dm=60, fp=10, environ="swamp", melee=true },
-  stalker2   = { prob=10, hp=250, dm=30, fp=10, environ="swamp" },
-  bishop     = { prob=10, hp=130, dm=40, fp=70, float=true },
-  reiver     = { prob= 5, hp=150, dm=50, fp=70, float=true },
+  wendigo    = { prob=20, hp=120, dm=25, fp=2.0, environ="ice" },
+  centaur1   = { prob=30, hp=200, dm=10, fp=2.0, melee=true},
+  centaur2   = { prob=15, hp=250, dm=20, fp=2.0, },
+
+  stalker1   = { prob=30, hp=250, dm=60, fp=2.0, environ="swamp", melee=true },
+  stalker2   = { prob=10, hp=250, dm=30, fp=2.0, environ="swamp" },
+  bishop     = { prob=10, hp=130, dm=40, fp=2.0, float=true },
+  reiver     = { prob= 5, hp=150, dm=50, fp=2.0, float=true },
 }
 
 XN_BOSSES =
 {
-  wyvern     = { hp=640, dm=60, fp=70, float=true },
-  heresiarch = { hp=5000,dm=70, fp=70 },
-  korax      = { hp=5000,dm=90, fp=70 },
+  wyvern     = { hp=640, dm=60, fp=3.0, float=true },
+  heresiarch = { hp=5000,dm=70, fp=3.0 },
+  korax      = { hp=5000,dm=90, fp=3.0 },
 }
 
 XN_WEAPONS =
 {
   -- FIXME: all these stats are CRAP!
-  c_mace    = { melee=true,                rate=1.1, dm=12, freq=10, held=true, },
-  c_staff   = { ammo="blue_mana",  per=1,  rate=1.1, dm= 6, freq=62, },
-  c_fire    = { ammo="green_mana", per=4,  rate=1.1, dm=27, freq=62, },
-  c_wraith  = { ammo="dual_mana",  per=18, rate=2.2, dm=85, freq=30, pieces={c1_shaft, c2_cross, c3_arc} },
+  c_mace    = { fp=1, melee=true,                rate=1.1, dm=12, freq=10, held=true, },
+  c_staff   = { fp=2, ammo="blue_mana",  per=1,  rate=1.1, dm= 6, freq=62, },
+  c_fire    = { fp=3, ammo="green_mana", per=4,  rate=1.1, dm=27, freq=62, },
+  c_wraith  = { fp=4, ammo="dual_mana",  per=18, rate=2.2, dm=85, freq=30, pieces={c1_shaft, c2_cross, c3_arc} },
 
-  f_gaunt   = { melee=true,                rate=1.1, dm=20, freq=10, held=true, },
-  f_axe     = { ammo="blue_mana",  per=2,  rate=1.1, dm=60, freq=62, melee=true },
-  f_hammer  = { ammo="green_mana", per=3,  rate=1.1, dm=27, freq=62, },
-  f_quietus = { ammo="dual_mana",  per=14, rate=2.2, dm=50, freq=30, pieces={f1_hilt, f2_cross, f3_blade} },
+  f_gaunt   = { fp=1, melee=true,                rate=1.1, dm=20, freq=10, held=true, },
+  f_axe     = { fp=2, ammo="blue_mana",  per=2,  rate=1.1, dm=60, freq=62, melee=true },
+  f_hammer  = { fp=3, ammo="green_mana", per=3,  rate=1.1, dm=27, freq=62, },
+  f_quietus = { fp=4, ammo="dual_mana",  per=14, rate=2.2, dm=50, freq=30, pieces={f1_hilt, f2_cross, f3_blade} },
 
-  m_wand    = { held=true,                 rate=1.1, dm= 8, freq=10, continues=true },
-  m_cone    = { ammo="blue_mana",  per=3,  rate=1.1, dm=27, freq=62, },
-  m_blitz   = { ammo="green_mana", per=5,  rate=1.1, dm=60, freq=62, },
-  m_scourge = { ammo="dual_mana",  per=15, rate=2.2, dm=50, freq=30, pieces={m1_stick, m2_stub, m3_skull} },
+  m_wand    = { fp=1, held=true,                 rate=1.1, dm= 8, freq=10, continues=true },
+  m_cone    = { fp=2, ammo="blue_mana",  per=3,  rate=1.1, dm=27, freq=62, },
+  m_blitz   = { fp=3, ammo="green_mana", per=5,  rate=1.1, dm=60, freq=62, },
+  m_scourge = { fp=4, ammo="dual_mana",  per=15, rate=2.2, dm=50, freq=30, pieces={m1_stick, m2_stub, m3_skull} },
 }
 
 XN_PICKUPS =

@@ -693,43 +693,44 @@ HC_QUEST_LEN_PROBS =
 HC_MONSTERS =
 {
   -- FIXME: dm and fp values are CRAP!
-  gargoyle    = { prob=30, hp=20,  dm= 7, fp=10, cage_fallback=10, float=true, melee=true },
-  fire_garg   = { prob=20, hp=80,  dm=21, fp=30, float=true },
-  golem       = { prob=90, hp=80,  dm= 7, fp=10, melee=true },
-  golem_inv   = { prob=20, hp=80,  dm= 7, fp=10, melee=true },
+  gargoyle    = { prob=30, hp=20,  dm= 7, fp=1.0, cage_fallback=10, float=true, melee=true },
+  fire_garg   = { prob=20, hp=80,  dm=21, fp=2.0, float=true },
+  golem       = { prob=90, hp=80,  dm= 7, fp=1.3, melee=true },
+  golem_inv   = { prob=20, hp=80,  dm= 7, fp=1.5, melee=true },
 
-  nitro       = { prob=70, hp=100, dm=21, fp=30, },
-  nitro_inv   = { prob=10, hp=100, dm=21, fp=30, },
-  warrior     = { prob=70, hp=200, dm=15, fp=50, },
-  warrior_inv = { prob=20, hp=200, dm=15, fp=50, },
+  nitro       = { prob=70, hp=100, dm=21, fp=2.5, },
+  nitro_inv   = { prob=10, hp=100, dm=21, fp=2.7, },
+  warrior     = { prob=70, hp=200, dm=15, fp=2.5, },
+  warrior_inv = { prob=20, hp=200, dm=15, fp=2.7, },
 
-  disciple    = { prob=25, hp=180, dm=30, fp=90, float=true },
-  sabreclaw   = { prob=25, hp=150, dm=30, fp=90, melee=true },
-  weredragon  = { prob=20, hp=220, dm=50, fp=90, },
-  ophidian    = { prob=20, hp=280, dm=50, fp=90, },
+  disciple    = { prob=25, hp=180, dm=30, fp=3.0, float=true },
+  sabreclaw   = { prob=25, hp=150, dm=30, fp=2.3, melee=true },
+  weredragon  = { prob=20, hp=220, dm=50, fp=3.0, },
+  ophidian    = { prob=20, hp=280, dm=50, fp=3.0, },
 
   --!!!! pod = ... hp=45
 }
 
 HC_BOSSES =
 {
-  ironlich    = { prob= 4, hp=700,  dm=99, fp=200, float=true },
-  maulotaur   = { prob= 1, hp=3000, dm=99, fp=200, },
-  d_sparil    = { prob= 1, hp=2000, dm=99, fp=200, },
+  ironlich    = { prob= 4, hp=700,  dm=99, fp=3.0, float=true },
+  maulotaur   = { prob= 1, hp=3000, dm=99, fp=3.0, },
+  d_sparil    = { prob= 1, hp=2000, dm=99, fp=3.0, },
 }
 
 HC_WEAPONS =
 {
   -- FIXME: all these stats are CRAP!
-  staff      = { melee=true, rate=3.0, dm=10, freq= 2, held=true },
-  gauntlets  = { melee=true, rate=6.0, dm=50, freq= 8 },
+  staff      = { fp=0, melee=true, rate=3.0, dm=10, freq= 2, held=true },
+  gauntlets  = { fp=1, melee=true, rate=6.0, dm=50, freq= 8 },
 
-  wand       = { ammo="crystal",           per=1, rate=1.1, dm=10, freq=15, held=true },
-  crossbow   = { ammo="arrow",     give=4, per=1, rate=1.1, dm=30, freq=90 },
-  claw       = { ammo="claw_orb",  give=4, per=1, rate=1.1, dm=50, freq=50 },
-  hellstaff  = { ammo="runes",     give=4, per=1, rate=1.1, dm=60, freq=50 },
-  phoenix    = { ammo="flame_orb", give=4, per=1, rate=1.1, dm=70, freq=50 },
-  firemace   = { ammo="mace_orb",  give=4, per=1, rate=1.1, dm=90, freq=25 },
+  wand       = { fp=1, ammo="crystal",           per=1, rate=1.1, dm=10, freq=15, held=true },
+  crossbow   = { fp=2, ammo="arrow",     give=4, per=1, rate=1.1, dm=30, freq=90 },
+  claw       = { fp=2, ammo="claw_orb",  give=4, per=1, rate=1.1, dm=50, freq=50 },
+
+  hellstaff  = { fp=3, ammo="runes",     give=4, per=1, rate=1.1, dm=60, freq=50 },
+  phoenix    = { fp=3, ammo="flame_orb", give=4, per=1, rate=1.1, dm=70, freq=50 },
+  firemace   = { fp=4, ammo="mace_orb",  give=4, per=1, rate=1.1, dm=90, freq=25 },
 }
 
 HC_PICKUPS =
