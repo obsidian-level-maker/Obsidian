@@ -1084,25 +1084,25 @@ XN_INITIAL_MODEL =
 XN_MONSTERS =
 {
   -- FIXME: these stats are CRAP!
-  ettin      = { prob=70, r=24,h=64, hp=170, dm= 5, fp= 1, melee=true },
-  serpent1   = { prob=30, r=33,h=70, hp=90,  dm= 9, fp=10, },
-  afrit      = { prob=70, r=24,h=64, hp=80,  dm=10, fp= 1, float=true, cage_fallback=2 },
-  serpent2   = { prob=20, r=33,h=70, hp=90,  dm=15, fp=10, },
-  wendigo    = { prob=20, r=24,h=80, hp=120, dm=25, fp=10, environ="ice" },
-  centaur1   = { prob=30, r=20,h=64, hp=200, dm=10, fp=10, melee=true},
-  centaur2   = { prob=15, r=20,h=64, hp=250, dm=20, fp=10, },
+  ettin      = { prob=70, hp=170, dm= 5, fp= 1, melee=true },
+  serpent1   = { prob=30, hp=90,  dm= 9, fp=10, },
+  afrit      = { prob=70, hp=80,  dm=10, fp= 1, float=true, cage_fallback=2 },
+  serpent2   = { prob=20, hp=90,  dm=15, fp=10, },
+  wendigo    = { prob=20, hp=120, dm=25, fp=10, environ="ice" },
+  centaur1   = { prob=30, hp=200, dm=10, fp=10, melee=true},
+  centaur2   = { prob=15, hp=250, dm=20, fp=10, },
 
-  stalker1   = { prob=30, r=33,h=64, hp=250, dm=60, fp=10, environ="swamp", melee=true },
-  stalker2   = { prob=10, r=33,h=64, hp=250, dm=30, fp=10, environ="swamp" },
-  bishop     = { prob=10, r=24,h=64, hp=130, dm=40, fp=70, float=true },
-  reiver     = { prob= 5, r=24,h=64, hp=150, dm=50, fp=70, float=true },
+  stalker1   = { prob=30, hp=250, dm=60, fp=10, environ="swamp", melee=true },
+  stalker2   = { prob=10, hp=250, dm=30, fp=10, environ="swamp" },
+  bishop     = { prob=10, hp=130, dm=40, fp=70, float=true },
+  reiver     = { prob= 5, hp=150, dm=50, fp=70, float=true },
 }
 
 XN_BOSSES =
 {
-  wyvern     = { prob= 5, r=20,h=64, hp=640, dm=60, fp=70, float=true },
-  heresiarch = { r=40,h=120,hp=5000,dm=70, fp=70 },
-  korax      = { r=66,h=120,hp=5000,dm=90, fp=70 },
+  wyvern     = { hp=640, dm=60, fp=70, float=true },
+  heresiarch = { hp=5000,dm=70, fp=70 },
+  korax      = { hp=5000,dm=90, fp=70 },
 }
 
 XN_WEAPONS =

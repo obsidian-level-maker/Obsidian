@@ -1482,40 +1482,40 @@ DM_QUEST_LEN_PROBS =
 DM_MONSTERS =
 {
   -- FIXME: probs for CLOSET/DEPOT
-  zombie    = { prob=60, r=20,h=56, hp=20,  dm=4,  fp=10, cage_fallback=14, hitscan=true, },
-  shooter   = { prob=40, r=20,h=56, hp=30,  dm=10, fp=10, cage_prob= 8, hitscan=true, },
+  zombie    = { prob=60, hp=20,  dm=4,  fp=10, cage_fallback=14, hitscan=true, },
+  shooter   = { prob=40, hp=30,  dm=10, fp=10, cage_prob= 8, hitscan=true, },
 
-  imp       = { prob=80, r=20,h=56, hp=60,  dm=20, fp=20, cage_prob=50, },
-  caco      = { prob=80, r=31,h=56, hp=400, dm=45, fp=30, cage_prob=14, float=true },
-  baron     = { prob=50, r=24,h=64, hp=1000,dm=45, fp=110,cage_prob= 3, },
+  imp       = { prob=80, hp=60,  dm=20, fp=20, cage_prob=50, },
+  caco      = { prob=80, hp=400, dm=45, fp=30, cage_prob=14, float=true },
+  baron     = { prob=50, hp=1000,dm=45, fp=110,cage_prob= 3, },
 
   -- MELEE only monsters
-  demon     = { prob=60, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=66,melee=true },
-  spectre   = { prob=20, r=30,h=56, hp=150, dm=25, fp=30, cage_prob=40,melee=true },
-  skull     = { prob=16, r=16,h=56, hp=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
+  demon     = { prob=60, hp=150, dm=25, fp=30, cage_prob=66,melee=true },
+  spectre   = { prob=20, hp=150, dm=25, fp=30, cage_prob=40,melee=true },
+  skull     = { prob=16, hp=100, dm=7,  fp=40, cage_prob= 2, melee=true, float=true },
  
---!!!!!  barrel    = { prob=20, r=10,h=42, hp=10,  dm=2,  fp=5, melee=true, passive=true },
+--!!!!!  barrel    = { prob=20, hp=10,  dm=2,  fp=5, melee=true, passive=true },
 }
 
 DM_BOSSES =
 {
   -- special monsters (only for boss levels)
-  cyber     = { r=40, h=110,hp=4000,dm=150, fp=150 },
-  spider    = { r=128,h=100,hp=3000,dm=200, fp=240, hitscan=true },
+  cyber     = { hp=4000,dm=150, fp=150 },
+  spider    = { hp=3000,dm=200, fp=240, hitscan=true },
 }
 
 D2_MONSTERS =
 {
-  gunner    = { prob=17, r=20,h=56, hp=70,  dm=40, fp=40, hitscan=true, cage_prob=70, },
-  ss_dude   = { prob=0.1,r=20,h=56, hp=50,  dm=15, fp=90, hitscan=true, cage_prob=1 },
+  gunner    = { prob=17, hp=70,  dm=40, fp=40, hitscan=true, cage_prob=70, },
+  ss_dude   = { prob=0.1,hp=50,  dm=15, fp=90, hitscan=true, cage_prob=1 },
 
-  revenant  = { prob=70, r=20,h=64, hp=300, dm=55, fp=58, cage_prob=50, },
-  knight    = { prob=70, r=24,h=64, hp=500, dm=45, fp=70, cage_prob=50, },
-  mancubus  = { prob=95, r=48,h=64, hp=600, dm=80, fp=92, cage_prob=88, },
+  revenant  = { prob=70, hp=300, dm=55, fp=58, cage_prob=50, },
+  knight    = { prob=70, hp=500, dm=45, fp=70, cage_prob=50, },
+  mancubus  = { prob=95, hp=600, dm=80, fp=92, cage_prob=88, },
 
-  arach     = { prob=36, r=64,h=64, hp=500, dm=70, fp=92, cage_prob=95, },
-  vile      = { prob=20, r=20,h=56, hp=700, dm=50, fp=120,cage_prob=12, hitscan=true },
-  pain      = { prob=14, r=31,h=56, hp=400, dm=88, fp=40, float=true },
+  arach     = { prob=36, hp=500, dm=70, fp=92, cage_prob=95, },
+  vile      = { prob=20, hp=700, dm=50, fp=120,cage_prob=12, hitscan=true },
+  pain      = { prob=14, hp=400, dm=88, fp=40, float=true },
 }
 
 DM_MONSTER_GIVE =

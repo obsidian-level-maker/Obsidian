@@ -50,13 +50,13 @@ SP_BOSSES =
 {
   -- FIXME: dm values were pulled straight out of my arse
 
-  trans_grosse = { hp=1000, dm=40, r=20,h=40, hitscan=true },
-  wilhelm      = { hp=1100, dm=70, r=20,h=40, hitscan=true },
-  uber_mutant  = { hp=1200, dm=60, r=20,h=40, hitscan=true },
-  death_knight = { hp=1400, dm=90, r=20,h=40, hitscan=true },
+  trans_grosse = { hp=1000, dm=40, hitscan=true },
+  wilhelm      = { hp=1100, dm=70, hitscan=true },
+  uber_mutant  = { hp=1200, dm=60, hitscan=true },
+  death_knight = { hp=1400, dm=90, hitscan=true },
 
-  ghost          = { hp=15,   dm=20, r=20,h=40, melee=true },
-  angel_of_death = { hp=1600, dm=150,r=20,h=40, },
+  ghost          = { hp=15,   dm=20, melee=true },
+  angel_of_death = { hp=1600, dm=150,},
 }
 
 

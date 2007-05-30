@@ -491,11 +491,11 @@ WF_THEMES =
 
 WF_MONSTERS =
 {
-  dog     = { prob=20, hp=1,   dm=5,  fp=10, r=20,h=40, melee=true, },
-  guard   = { prob=60, hp=25,  dm=10, fp=10, r=20,h=40, hitscan=true, cage_fallback=10 },
-  officer = { prob=30, hp=50,  dm=20, fp=10, r=20,h=40, hitscan=true, },
-  mutant  = { prob=10, hp=55,  dm=35, fp=10, r=20,h=40, hitscan=true, },
-  ss_dude = { prob=50, hp=100, dm=30, fp=10, r=20,h=40, hitscan=true, },
+  dog     = { prob=20, hp=1,   dm=5,  fp=10, melee=true, },
+  guard   = { prob=60, hp=25,  dm=10, fp=10, hitscan=true, cage_fallback=10 },
+  officer = { prob=30, hp=50,  dm=20, fp=10, hitscan=true, },
+  mutant  = { prob=10, hp=55,  dm=35, fp=10, hitscan=true, },
+  ss_dude = { prob=50, hp=100, dm=30, fp=10, hitscan=true, },
 }
 
 WF_BOSSES =
@@ -504,16 +504,16 @@ WF_BOSSES =
  
   -- FIXME: dm values are crap!
 
-  fat_face      = { hp=1000, dm=50, r=20,h=40, hitscan=true },
-  hans_grosse   = { hp=1000, dm=30, r=20,h=40, hitscan=true },
-  gretel_grosse = { hp=1000, dm=50, r=20,h=40, hitscan=true },
-  giftmacher    = { hp=1000, dm=50, r=20,h=40 },
+  fat_face      = { hp=1000, dm=50, hitscan=true },
+  hans_grosse   = { hp=1000, dm=30, hitscan=true },
+  gretel_grosse = { hp=1000, dm=50, hitscan=true },
+  giftmacher    = { hp=1000, dm=50 },
 
-  fake_hitler   = { hp=350,  dm=50, r=20,h=40 },
-  schabbs       = { hp=1250, dm=70, r=20,h=40 },
+  fake_hitler   = { hp=350,  dm=50 },
+  schabbs       = { hp=1250, dm=70 },
 
   -- this includes both Hitlers (in and out of the armor suit)
-  hitler        = { hp=1100, dm=90, r=20,h=40, hitscan=true },
+  hitler        = { hp=1100, dm=90, hitscan=true },
 }
 
 WF_MONSTER_GIVE =

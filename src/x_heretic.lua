@@ -693,29 +693,29 @@ HC_QUEST_LEN_PROBS =
 HC_MONSTERS =
 {
   -- FIXME: dm and fp values are CRAP!
-  gargoyle    = { prob=30, r=16,h=36, hp=20,  dm= 7, fp=10, cage_fallback=10, float=true, melee=true },
-  fire_garg   = { prob=20, r=16,h=36, hp=80,  dm=21, fp=30, float=true },
-  golem       = { prob=90, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
-  golem_inv   = { prob=20, r=22,h=64, hp=80,  dm= 7, fp=10, melee=true },
+  gargoyle    = { prob=30, hp=20,  dm= 7, fp=10, cage_fallback=10, float=true, melee=true },
+  fire_garg   = { prob=20, hp=80,  dm=21, fp=30, float=true },
+  golem       = { prob=90, hp=80,  dm= 7, fp=10, melee=true },
+  golem_inv   = { prob=20, hp=80,  dm= 7, fp=10, melee=true },
 
-  nitro       = { prob=70, r=22,h=64, hp=100, dm=21, fp=30, },
-  nitro_inv   = { prob=10, r=22,h=64, hp=100, dm=21, fp=30, },
-  warrior     = { prob=70, r=24,h=80, hp=200, dm=15, fp=50, },
-  warrior_inv = { prob=20, r=24,h=80, hp=200, dm=15, fp=50, },
+  nitro       = { prob=70, hp=100, dm=21, fp=30, },
+  nitro_inv   = { prob=10, hp=100, dm=21, fp=30, },
+  warrior     = { prob=70, hp=200, dm=15, fp=50, },
+  warrior_inv = { prob=20, hp=200, dm=15, fp=50, },
 
-  disciple    = { prob=25, r=16,h=72, hp=180, dm=30, fp=90, float=true },
-  sabreclaw   = { prob=25, r=20,h=64, hp=150, dm=30, fp=90, melee=true },
-  weredragon  = { prob=20, r=34,h=80, hp=220, dm=50, fp=90, },
-  ophidian    = { prob=20, r=22,h=72, hp=280, dm=50, fp=90, },
+  disciple    = { prob=25, hp=180, dm=30, fp=90, float=true },
+  sabreclaw   = { prob=25, hp=150, dm=30, fp=90, melee=true },
+  weredragon  = { prob=20, hp=220, dm=50, fp=90, },
+  ophidian    = { prob=20, hp=280, dm=50, fp=90, },
 
   --!!!! pod = ... hp=45
 }
 
 HC_BOSSES =
 {
-  ironlich    = { prob= 4, r=40,h=72, hp=700, dm=99, fp=200, float=true },
-  maulotaur   = { prob= 1, r=28,h=104,hp=3000,dm=99, fp=200, },
-  d_sparil    = { prob= 1, r=28,h=104,hp=2000,dm=99, fp=200, },
+  ironlich    = { prob= 4, hp=700,  dm=99, fp=200, float=true },
+  maulotaur   = { prob= 1, hp=3000, dm=99, fp=200, },
+  d_sparil    = { prob= 1, hp=2000, dm=99, fp=200, },
 }
 
 HC_WEAPONS =

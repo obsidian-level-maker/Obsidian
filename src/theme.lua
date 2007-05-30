@@ -53,6 +53,8 @@ end
 
 function compute_pow_factors()
 
+  -- also copies radius/height values to monster info
+  
   local function pow_factor(info)
     return 5 + 19 * info.hp ^ 0.5 * (info.dm / 50) ^ 1.2
   end
@@ -61,6 +63,14 @@ function compute_pow_factors()
     info.pow = pow_factor(info)
 
     con.debugf("Monster %s : power %d\n", name, info.pow)
+
+    local def = GAME.things[name]
+    if not def then
+      error("Monster has no definition?? : " .. tostring(name))
+    end
+
+    info.r = non_nil(def.r)
+    info.h = non_nil(def.h)
   end
 end
 
