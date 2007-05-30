@@ -280,11 +280,6 @@ function random_turn(angle)
 end
 
 
-function fire_power(wp_info)
-  return wp_info.rate * wp_info.dm
-end
-
-
 ----------------------------------------------------------------
 
 -- Simulate the battle for skill SK (2|3|4).
@@ -1147,7 +1142,7 @@ function battle_in_cell(c)
 
     for name,info in pairs(GAME.weapons) do
       if PLAN.hmodels[skill][name] and not info.melee then
-        if fire_power(info) > fire_power(best_info) then
+        if info.fp > best_info.fp then
           best_name, best_info = name, info
         end
       end
@@ -1157,22 +1152,21 @@ function battle_in_cell(c)
   end
 
 
-
   local function decide_monster(firepower)
 
     local names = { "none" }
     local probs = { 30     }
 
     for name,info in pairs(GAME.monsters) do
-      if (info.pow < T*2) and (info.fp < firepower*2) then
+      if (info.pow < T*2) and (firepower >= int(info.fp)) then
 
         local prob = info.prob * (c.mon_prefs[name] or 1)
 
         if info.pow > T then
           prob = prob * (2 - info.pow / T) ^ 1.7
         end
-        if (info.fp > firepower) then
-          prob = prob * (2 - info.fp / firepower) ^ 2.3
+        if (firepower < info.fp) then
+          prob = prob * (1 - (info.fp - firepower))
         end
 
         table.insert(names, name)
@@ -1224,7 +1218,8 @@ function battle_in_cell(c)
 
   local function create_monsters()
 
-    local fp = fire_power(best_weapon(SK))
+    local best_weap = best_weapon(SK)
+    local fp = non_nil(best_weap.fp)
 
     -- create monsters until T is exhausted
     for loop = 1,99 do
@@ -1249,12 +1244,12 @@ function battle_in_cell(c)
 
     for name,info in pairs(GAME.monsters) do
       if (info.cage_fallback) or 
-         ((info.pow < T*2/x_horde) and (info.fp < firepower*2))
+         ((info.pow < T*2/x_horde) and (firepower >= int(info.fp)))
       then
         local prob = info.cage_prob or info.cage_fallback or 0
 
-        if is_surprise and (info.fp > firepower) then
-          prob = prob * (2 - info.fp / firepower) ^ 2
+        if is_surprise and (firepower < info.fp) then
+          prob = prob * (1 - (info.fp - firepower))
         end
 
         if info.melee and not is_surprise then prob = 0 end
@@ -1293,7 +1288,8 @@ function battle_in_cell(c)
 
     local orig_T = T
 
-    local fp = fire_power(best_weapon(SK))
+    local best_weap = best_weapon(SK)
+    local fp = non_nil(best_weap.fp)
     
     local small = decide_cage_monster(T, fp, #c.cage_spots)
     local big   = decide_cage_monster(T, fp, #c.cage_spots, true, true)
@@ -1336,7 +1332,8 @@ function battle_in_cell(c)
   local function try_fill_closet(surprise)
     if not surprise or surprise.trigger_cell ~= c then return end
 
-    local fp = fire_power(best_weapon(SK))
+    local best_weap = best_weapon(SK)
+    local fp = non_nil(best_weap.fp)
 
     local CT = surprise.toughness * TOUGH_FACTOR[SK]
 
