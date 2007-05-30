@@ -773,7 +773,7 @@ function write_level(lev_name)
 
       wad.add_thing(
           NORMALIZE(th.x), NORMALIZE(th.y), NORMALIZE(th.z or 0),
-          th.kind, th.angle or 0, th.flags or 7,
+          th.kind.id, th.angle or 0, th.flags or 7,
           th.tid or 0, th.special or 0, th.args)
     end
   end
@@ -856,7 +856,7 @@ function write_level(lev_name)
     for zzz,th in pairs(thing_list) do
       tx_file:write(
         string.format("%d : %d %d %d %d\n",
-          th.kind, NORMALIZE(th.x), NORMALIZE(th.y),
+          th.kind.id, NORMALIZE(th.x), NORMALIZE(th.y),
           th.angle or 0, th.flags or 7))
     end
 
@@ -966,7 +966,7 @@ function write_wolf_level()
 
     if B.things and B.things[1] then
       local th   = B.things[1]
-      local kind = th.kind
+      local kind = th.kind.id
 
       if type(kind) == "table" then
 
