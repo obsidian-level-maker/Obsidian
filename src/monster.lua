@@ -40,9 +40,10 @@ zdump_table = do_nothing
 
 function add_thing(c, bx,by, name, blocking, angle, options)
 
-  local kind = GAME.thing_nums[name]
+  local kind = GAME.things[name]
   if not kind then
     error("Unknown thing kind: " .. name)
+    return
   end
 
   local B = PLAN.blocks[bx][by]
