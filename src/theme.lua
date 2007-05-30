@@ -36,6 +36,7 @@ function name_up_theme()
 
   local SUB_LISTS =
   {
+    "things",
     "monsters", "bosses", "weapons", "pickups",
     "combos",   "exits",  "hallways",
     "hangs",    "crates", "doors",    "mats",
