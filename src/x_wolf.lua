@@ -303,6 +303,7 @@ WF_MISC_PREFABS =
   elevator =
   {
     prefab = "WOLF_ELEVATOR",
+    add_mode = "extend",
 
     skin = { elevator=21, front=14, }
   },
@@ -601,14 +602,15 @@ WF_KEY_NUM_PROBS =
 
 WF_QUEST_LEN_PROBS =
 {
-  ----------  2   3   4   5   6   7   8  9  10  -------
+  ----------  2   3   4   5   6   7   8   9  10  11  12  -------
 
-  key    = {  0,  0,  0, 90, 70, 30, 12, 6, 2, 2, 2 },
-  boss   = {  0,  0,  0, 90, 70, 30, 12, 6, 2, 2, 2 },
-  exit   = {  0,  0, 50, 90, 70, 30, 12, 6, 2, 2, 2 },
+  key    = {  0,  0,  2, 10, 20, 50, 75, 40, 20, 10, 5, 1 },
+  exit   = {  0,  0,  2, 10, 20, 50, 75, 40, 20, 10, 5, 1 },
+
+  boss   = {  0,  0,  2, 10, 30, 50, 30, 10, 2 },
 
   weapon = {  0, 90, 50, 12, 4, 2 },
-  item   = { 15, 70, 70, 15 },  -- treasure
+  item   = { 30, 70, 70, 10 },  -- treasure
 }
 
 function wolfy_decide_quests(level_list, is_spear)
