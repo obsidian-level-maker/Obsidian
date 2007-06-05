@@ -5784,7 +5784,7 @@ function tizzy_up_room(c)
     return true
   end
 
-  local function verify_inner(c, fab, max_walk, x1,y1, x2,y2)
+  local function verify_inner(c, fab,def, max_walk, x1,y1, x2,y2)
     assert(valid_cell_block(c,x1,y1))
     assert(valid_cell_block(c,x2,y2))
 
@@ -5801,11 +5801,9 @@ function tizzy_up_room(c)
         c_h = B.chunk.rmodel.c_h
 
         local h = c_h - f_h
-        if fab.height_range then
-          if h < fab.height_range[1] or h > fab.height_range[2] then
-            return false
-          end
-        end
+        if def.min_height and h < def.min_height then return false end
+        if def.max_height and h > def.max_height then return false end
+
       else
         if B.chunk.rmodel.f_h ~= f_h and fab.region ~= "ceiling" then
           return false
@@ -5916,24 +5914,24 @@ function tizzy_up_room(c)
 ---    return false --FAIL--
 ---  end
 
-  local function fab_check_position(c, fab, max_walk, dir1, dir2, x1,y1, x2,y2)
+  local function fab_check_position(c, fab,def, max_walk, dir1, dir2, x1,y1, x2,y2)
 
     assert(x1 <= x2 and y1 <= y2)
 
     if not valid_cell_block(c,x1,y1) then return false end
     if not valid_cell_block(c,x2,y2) then return false end
 
-    local able, f_h = verify_inner(c, fab, max_walk, x1,y1, x2,y2)
+    local able, f_h = verify_inner(c, fab,def, max_walk, x1,y1, x2,y2)
 
     if not able then return false end
 
-    if (not fab.add_mode or fab.add_mode == "island") then
+    if (not def.add_mode or def.add_mode == "island") then
       if verify_island_spot(c, f_h, x1,y1, x2,y2) then
         return true, "island", rand_sel(50, dir1, dir2)
       end
     end
 
-    if (not fab.add_mode or fab.add_mode == "extend") then
+    if (not def.add_mode or def.add_mode == "extend") then
 
       if verify_wall_extend(c, f_h, dir1, x1,y1, x2,y2) then
         return true, "extend", dir1
@@ -5948,27 +5946,28 @@ function tizzy_up_room(c)
     return false --FAIL--
   end
 
-  local function try_one_fab_loc(c, fab, max_walk, dir, x, y)
+  local function try_one_fab_loc(c, fab,def, max_walk, dir, x, y)
     local long = fab.long
     local deep = fab.deep
 
     if dir==4 or dir==6 then deep,long = long,deep end
 
     local able, g_mode, g_dir =
-        fab_check_position(c, fab, max_walk, dir or 2, dir or 8, x,y, x+long-1, y+deep-1)
+        fab_check_position(c, fab,def, max_walk, dir or 2, dir or 8, x,y, x+long-1, y+deep-1)
 
     if able then return true, g_dir end
 
     if not dir then
       long,deep = deep,long
       local able, g_mode, g_dir =
-          fab_check_position(c, fab, max_walk, 4, 6, x,y, x+long-1, y+deep-1)
+          fab_check_position(c, fab,def, max_walk, 4, 6, x,y, x+long-1, y+deep-1)
 
       if able then return true, g_dir end
     end
   end
 
-  local function find_fab_loc(c, fab, walk1,walk2, dir)
+  local function find_fab_loc(c, fab,def, walk1,walk2, dir)
+assert(def)
 
     if not c.fab_spots then
       c.fab_spots = {}
@@ -5985,7 +5984,7 @@ function tizzy_up_room(c)
         local x = spot.x
         local y = spot.y
 
-        local able, g_dir = try_one_fab_loc(c, fab, max_walk, dir, x, y)
+        local able, g_dir = try_one_fab_loc(c, fab,def, max_walk, dir, x, y)
 
         if able then return x, y, g_dir end
       end
@@ -6418,10 +6417,11 @@ function tizzy_up_room(c)
       end
     end
 
+    local def = {}
     local fab = PREFABS["PLAIN"]
     assert(fab)
 
-    if not x then x,y,dir = find_fab_loc(c, fab, 0, sel(must_put,3,2)) end
+    if not x then x,y,dir = find_fab_loc(c, fab,def, 0, sel(must_put,3,2)) end
 
     if not x and must_put then
       x,y,dir = find_emergency_loc(c)
@@ -6450,7 +6450,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     local fab = PREFABS["PLAIN"]
     assert(fab)
 
-    local x,y,dir = find_fab_loc(c, fab, 0, 3)
+    local x,y,dir = find_fab_loc(c, fab,{}, 0, 3)
 
 --???    if not x then
 --???      x,y,dir = find_emergency_loc(c)
@@ -6599,7 +6599,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     if in_wall then
       x,y,dir = find_wallish_loc(c, fab, nil, c.q_spot)
     else
-      x,y,dir = find_fab_loc(c, fab, 0,3)
+      x,y,dir = find_fab_loc(c, fab,{}, 0,3)
     end
 
     if not x then
@@ -6638,7 +6638,7 @@ fab.name, c.x,c.y, x,y,dir)
       door_kind = "door_elevator", door_dir = 10-want_dir,
     }
 
-    local x,y,dir = find_fab_loc(c, fab, 0,3, want_dir)
+    local x,y,dir = find_fab_loc(c, fab,def, 0,3, want_dir)
 
     if not x then error("cannot find place for exit elevator!") end
 
@@ -6707,7 +6707,7 @@ fab.name, c.x,c.y, x,y,dir)
 ---###      if h < fab.height_range[1] or h > fab.height_range[2] then return end
 ---###    end
 
-    local x,y,dir = find_fab_loc(c, fab, 0,2, def.force_dir)
+    local x,y,dir = find_fab_loc(c, fab,def, 0,2, def.force_dir)
     if not x then return end
 
 con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
@@ -6769,7 +6769,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
     local fab = PREFABS[info.prefab or "PLAIN"]
     assert(fab)
 
-    local x,y,dir = find_fab_loc(c, fab, 0,2)
+    local x,y,dir = find_fab_loc(c, fab,{}, 0,2)
     if not x then return end
 
 con.debugf("add_scenery : %s\n", item)
