@@ -128,7 +128,7 @@ WF_THINGS =
 
   -- special
   secret  = { kind="other", id=98, r=30,h=60, pass=true },
-  trigger = { kind="other", id=99, r=30,h=60, pass=true },
+  endgame = { kind="other", id=99, r=30,h=60, pass=true },
 
   turn_E  = { kind="other", id=90, r=30,h=60, pass=true },
   turn_NE = { kind="other", id=91, r=30,h=60, pass=true },
