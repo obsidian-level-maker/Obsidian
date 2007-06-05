@@ -50,12 +50,13 @@ SP_BOSSES =
 {
   -- FIXME: dm values were pulled straight out of my arse
 
-  trans_grosse = { hp=1000, dm=40, hitscan=true },
-  wilhelm      = { hp=1100, dm=70, hitscan=true },
-  uber_mutant  = { hp=1200, dm=60, hitscan=true },
-  death_knight = { hp=1400, dm=90, hitscan=true },
+  trans_grosse = { hp=1000, dm=40, hitscan=true, give_key="k_gold" },
+  wilhelm      = { hp=1100, dm=70, hitscan=true, give_key="k_gold" },
+  uber_mutant  = { hp=1200, dm=60, hitscan=true, give_key="k_gold" },
+  death_knight = { hp=1400, dm=90, hitscan=true, give_key="k_gold" },
 
-  ghost          = { hp=15,   dm=20, melee=true },
+  ghost = { hp=15,   dm=20, melee=true },  -- not a boss, move out???
+
   angel_of_death = { hp=1600, dm=150,},
 }
 

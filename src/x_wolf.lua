@@ -505,12 +505,13 @@ WF_BOSSES =
  
   -- FIXME: dm values are crap!
 
+  hans_grosse   = { hp=1000, dm=30, hitscan=true, give_key="k_gold" },
+  gretel_grosse = { hp=1000, dm=50, hitscan=true, give_key="k_gold" },
+
   fat_face      = { hp=1000, dm=50, hitscan=true },
-  hans_grosse   = { hp=1000, dm=30, hitscan=true },
-  gretel_grosse = { hp=1000, dm=50, hitscan=true },
   giftmacher    = { hp=1000, dm=50 },
 
-  fake_hitler   = { hp=350,  dm=50 },
+  fake_hitler   = { hp=350,  dm=50 },  -- not a boss, move out????
   schabbs       = { hp=1250, dm=70 },
 
   -- this includes both Hitlers (in and out of the armor suit)
