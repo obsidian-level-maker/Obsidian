@@ -62,8 +62,8 @@ WF_THINGS =
   inky   = { kind="monster", id=227, r=30, h=60 },
 
   -- pickups
-  k_silver = { kind="pickup", id=43, r=30, h=60, pass=true },
-  k_gold   = { kind="pickup", id=44, r=30, h=60, pass=true },
+  k_silver = { kind="pickup", id=44, r=30, h=60, pass=true },
+  k_gold   = { kind="pickup", id=43, r=30, h=60, pass=true },
 
   first_aid = { kind="pickup", id=48, r=30, h=60, pass=true },
   good_food = { kind="pickup", id=47, r=30, h=60, pass=true },
