@@ -3047,13 +3047,6 @@ if not link.wide_door then error("Missing DOOR") end
     local D = c.border[side]
     assert(D)
 
---FIXME: tidy this up (build elevator _inside_ exit room)
-if GAME.caps.elevator_exits and link.is_exit then
-local other = link_other(link, c)
-B_exit_elevator(other, link.x1, link.y1, side)
-return
-end
-
     if GAME.caps.blocky_doors then
 
       if link.kind == "door" then
@@ -3701,7 +3694,7 @@ function build_pacman_level(c)
 
     dot_t = rand_sel(50,"chalice","cross"),
 
-    treasure1 = "bible",
+    treasure1 = "chest",
     treasure2 = "crown",
 
     blinky = "blinky",
@@ -6743,13 +6736,9 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
       assert(item)
     end
 
-    if not item and GAME.scenery and rand_odds(1) then
-      item = rand_table_pair(GAME.scenery)
-    end
-
     if not item then return end
 
-    local info = GAME.scenery[item]
+    local info = GAME.things[item]
     if not info then error("Missing info for item: " .. item) end
 
     local fab = PREFABS[info.prefab or "PLAIN"]
@@ -6799,7 +6788,10 @@ con.debugf("add_scenery : %s\n", item)
 
   -- WALL SWITCHES
   if not PLAN.deathmatch and c == c.quest.last then
-    if (c.quest.kind == "switch") or (c.quest.kind == "exit") then
+    if GAME.caps.elevator_exits and c.quest.kind == "exit" then
+      --!!!! FIXME
+      --!!!!!! B_exit_elevator(other, link.x1, link.y1, side)
+    elseif (c.quest.kind == "switch") or (c.quest.kind == "exit") then
       add_switch(c, true)
     end
   end
@@ -6833,7 +6825,7 @@ con.debugf("add_scenery : %s\n", item)
 
   -- NORMAL SWITCHES
   if not PLAN.deathmatch and c == c.quest.last then
-    if (c.quest.kind == "switch") or (c.quest.kind == "exit") then
+    if (c.quest.kind == "switch") or (c.quest.kind == "exit" and not GAME.caps.elevator_exits) then
       add_switch(c, false)
     end
   end
@@ -6846,6 +6838,8 @@ con.debugf("add_scenery : %s\n", item)
     then
       if GAME.item_fabs and GAME.item_fabs[c.quest.item] then
         add_special_item(c)
+      elseif c.quest.item == "treasure" then
+        -- FIXME: room full of treasure (USE ROOM_TYPE INSTEAD)
       else
         add_object(c, c.quest.item, "must")
       end
