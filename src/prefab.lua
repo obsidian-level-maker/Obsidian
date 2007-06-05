@@ -3344,9 +3344,10 @@ WOLF_ELEVATOR =
 
   structure =
   {
-    "#E#",
-    "E.E",
-    "FdF",
+    "#####",
+    "##E##",
+    "#E.E#",
+    "#FdF#",
   },
 
   elements =

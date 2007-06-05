@@ -2489,6 +2489,12 @@ c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
         end
       end
 
+      if GAME.caps.elevator_exits and c.is_exit then
+        K.kind = "room"
+        K.rmodel = c.rmodel
+        return
+      end
+
       if not roomy_nb then return end
 
       local void_chance
@@ -3715,7 +3721,7 @@ function build_pacman_level(c)
   B_prefab(c, bot_fab,skin,parm, c.rmodel,combo, mid_x-10, mid_y-12, 2,false,bot_flip)
   B_prefab(c, bot_fab,skin,parm, c.rmodel,combo, mid_x+10, mid_y-12, 2,true, bot_flip)
 
-  B_exit_elevator(c, mid_x+19, mid_y+28, 2)
+  B_exit_elevator(c, mid_x+18, mid_y+28, 2)
 
   gap_fill(c, 2,2, 63,63, { solid=combo.wall })
   
@@ -5569,7 +5575,7 @@ con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
     return
   end
 
-  -- elevator exits are done in build_link   FIXME: CHANGE
+  -- elevator exits are handled specially
   if GAME.caps.elevator_exits and c.is_exit then return end
 
   decide_sky_lights(c)
@@ -6620,6 +6626,25 @@ fab.name, c.x,c.y, x,y,dir)
     end
   end
 
+  local function add_exit_elevator(c)
+    local def = non_nil(GAME.misc_fabs["elevator"])
+    local fab = non_nil(PREFABS[def.prefab])
+
+    local want_dir = 4
+    if (c.entry_dir == 6) then want_dir = 6 end
+
+    local parm =
+    {
+      door_kind = "door_elevator", door_dir = 10-want_dir,
+    }
+
+    local x,y,dir = find_fab_loc(c, fab, 0,3, want_dir)
+
+    if not x then error("cannot find place for exit elevator!") end
+
+    B_prefab(c, fab, def.skin, parm, c.rmodel,c.combo, x, y, dir)
+  end
+
   local function add_wall_stuff(c)
 
     if not GAME.wall_fabs then return end
@@ -6789,8 +6814,7 @@ con.debugf("add_scenery : %s\n", item)
   -- WALL SWITCHES
   if not PLAN.deathmatch and c == c.quest.last then
     if GAME.caps.elevator_exits and c.quest.kind == "exit" then
-      --!!!! FIXME
-      --!!!!!! B_exit_elevator(other, link.x1, link.y1, side)
+      add_exit_elevator(c)
     elseif (c.quest.kind == "switch") or (c.quest.kind == "exit") then
       add_switch(c, true)
     end
