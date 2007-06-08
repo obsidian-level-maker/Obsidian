@@ -769,6 +769,7 @@ DM_SWITCHES =
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
         door_h=112,
+        door_kind=0,
       }
     },
   },
@@ -795,6 +796,7 @@ DM_SWITCHES =
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
         door_h=112,
+        door_kind=0,
       }
     },
 
@@ -808,6 +810,7 @@ DM_SWITCHES =
         door_w="BIGDOOR7", door_f="CEIL5_2",
         side_w="METAL",
 --      beam_w="SP_HOT1", beam_f="FLAT5_3",
+        door_kind=0,
       }
     },
   },
@@ -835,6 +838,7 @@ DM_SWITCHES =
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
         door_h=112,
+        door_kind=0,
       }
     },
   },
@@ -861,6 +865,7 @@ DM_SWITCHES =
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
         door_h=112,
+        door_kind=0,
       }
     },
   },
@@ -886,7 +891,11 @@ DM_SWITCHES =
     {
       w=128, h=128,
       prefab = "BARS_1",
-      skin = { bar_w="SUPPORT3", bar_f="CEIL5_2" },
+      skin =
+      {
+        bar_w="SUPPORT3", bar_f="CEIL5_2",
+        door_kind=0,
+      }
     },
   },
 
@@ -905,7 +914,11 @@ DM_SWITCHES =
     {
       w=128, h=128,
       prefab = "BARS_2",
-      skin = { bar_w="GRAY7", bar_f="FLAT19" },
+      skin =
+      {
+        bar_w="GRAY7", bar_f="FLAT19",
+        door_kind=0
+      },
     },
 
   },
@@ -951,7 +964,7 @@ DM_KEY_DOORS =
 {
   k_blue =
   {
-    w=128, h=112, kind_rep=26, kind_once=32,
+    w=128, h=112, kind_rep=26, 
 
     prefab = "DOOR_LIT_LOCKED",
     
@@ -962,12 +975,13 @@ DM_KEY_DOORS =
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
+      door_kind=26, tag=0,  -- kind_once=32
     }
   },
 
   k_yellow =
   {
-    w=128, h=112, kind_rep=27, kind_once=34,
+    w=128, h=112,
 
     prefab = "DOOR_LIT_LOCKED",
 
@@ -978,12 +992,13 @@ DM_KEY_DOORS =
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
+      door_kind=27, tag=0, -- kind_once=34
     }
   },
 
   k_red =
   {
-    w=128, h=112, kind_rep=28, kind_once=33,
+    w=128, h=112,
 
     prefab = "DOOR_LIT_LOCKED",
 
@@ -994,6 +1009,7 @@ DM_KEY_DOORS =
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
+      door_kind=28, tag=0, -- kind_once=33
     }
   },
 
@@ -1080,6 +1096,19 @@ DM_ARCH_PREFABS =
 
 DM_DOOR_PREFABS =
 {
+  backup_plan =
+  {
+    w=64, h=112, prefab="DOOR_SUPER_NARROW",
+
+    skin =
+    {
+      door_w="SPCDOOR1", door_c="FLAT1",
+      track_w="DOORTRAK",
+      door_h=112,
+      door_kind=1, tag=0,
+    },
+  },
+
   silver_lit =
   {
     w=128, h=112, prefab="DOOR_LIT",
@@ -1091,6 +1120,7 @@ DM_DOOR_PREFABS =
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
       door_h=112,
+      door_kind=1, tag=0,
     },
 
     theme_probs = { INDUSTRIAL=70,TECH=70,URBAN=10 },
@@ -1107,6 +1137,7 @@ DM_DOOR_PREFABS =
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
       door_h=72,
+      door_kind=1, tag=0,
     },
 
     theme_probs = { INDUSTRIAL=20,TECH=50 },
@@ -1123,6 +1154,7 @@ DM_DOOR_PREFABS =
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
       door_h=112,
+      door_kind=1, tag=0,
     },
 
     theme_probs = { URBAN=70,CAVE=30,HELL=5 }
@@ -1139,6 +1171,7 @@ DM_DOOR_PREFABS =
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
       door_h=112,
+      door_kind=1, tag=0,
     },
 
     theme_probs = { CAVE=50,HELL=30 },
@@ -1155,11 +1188,12 @@ DM_DOOR_PREFABS =
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
       door_h=112,
+      door_kind=1, tag=0,
     },
 
     theme_probs = { HELL=90,CAVE=5 },
   },
-
+ 
 }
 
 DM_WINDOW_PREFABS =
@@ -1214,6 +1248,7 @@ DM_MISC_PREFABS =
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="TLITE6_5",
       door_h=72,
+      door_kind=1, tag=0,
     }
   },
 
@@ -1232,6 +1267,7 @@ DM_MISC_PREFABS =
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="TLITE6_5",
       door_h=72,
+      door_kind=1, tag=0,
     }
   },
 
@@ -1239,7 +1275,9 @@ DM_MISC_PREFABS =
   {
     w=128, h=128, prefab = "DOOR",
 
-    skin = { track_w="DOORSTOP", door_h=128 }
+    skin = { track_w="DOORSTOP", door_h=128,
+             door_kind=31, tag=0,
+           }
   },
 }
 

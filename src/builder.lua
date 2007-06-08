@@ -399,8 +399,8 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
   end
 
   local function what_tex(base, key)
-    if skin[key] then return skin[key] end
     if parm[key] then return parm[key] end
+    if skin[key] then return skin[key] end
 
     if key == "sky" and combo.outdoor then return GAME.SKY_TEX end
 
@@ -2887,68 +2887,153 @@ function build_borders()
 
   local c
 
+  local function select_rand_arch(c, link, D)
+
+    -- !!! FIXME: use GAME.arch_fabs[]
+    local name
+
+    if D.kind == "fence" then
+      name = "ARCH_FENCE"
+    elseif D.kind == "wire" then
+      name = "ARCH_WIRE_FENCE"
+    else
+      name = "ARCH"
+    end
+
+    -- rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
+
+    if link.long <= 2 then name = name .. "_NARROW" end
+    if link.long >= 5 then name = name .. "_WIDE" end
+
+    return
+    {
+      prefab = name,
+      skin = { beam_w = "METAL", beam_f = "CEIL5_1", beam_h = 72, },
+    }
+  end
+
+  local function build_arch(link, side)
+
+    local D = c.border[side]
+
+    if not link.arch_def then
+      link.arch_def = select_rand_arch(c, link, D)
+    end
+
+    local arch_def = link.arch_def
+
+    local fab = PREFABS[arch_def.prefab]
+    if not fab then error("Missing arch prefab: " .. arch_def.prefab) end
+
+    local parm =
+    {
+      door_top = math.min(link.build.rmodel.c_h-32, link.build.floor_h+128),
+--##  door_kind = 1, tag = 0,
+
+      frame_c = D.combo.floor,
+    }
+
+    if D.kind == "fence" then
+      parm.low_h = D.fence_h
+    elseif D.kind == "wire" then
+      parm.low_h = D.wire_h
+    end
+
+    if link.kind == "vista" then
+      parm.floor = link.vista_src.rmodel.f_tex
+    end
+
+    B_prefab(c, fab, arch_def.skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
+  end
+
+
+  local function select_rand_door(c, link, D)
+
+    if link.quest and link.quest.kind == "key" then
+
+      return GAME.key_doors[link.quest.item]
+
+    elseif link.quest and link.quest.kind == "switch" then
+
+      return GAME.switches[link.quest.item].door
+
+    elseif link.is_secret then
+
+      return GAME.misc_fabs["secret_DOOR"]
+
+    elseif link.is_exit then
+
+      return GAME.misc_fabs["exit_DOOR"]
+
+    end
+
+    -- plain door
+
+    return get_rand_door_kind(c.quest.theme, link.long)
+  end
+
+
   local function build_door( link, side  )
 
     local D = c.border[side]
     local rmodel = link.build.rmodel
 
-if not link.wide_door then error("Missing DOOR") end
+    if not link.door_def then
+      link.door_def = select_rand_door(c, link, D)
+    end
 
-    local door_info = link.wide_door
-    assert(door_info)
-    door_info = copy_table(door_info)
+    local door_def = link.door_def
+    assert(door_def);
+
+    door_info = copy_table(door_def)
 
     local parm =
     {
       door_top = rmodel.f_h + door_info.h,
-      door_kind = 1, tag = 0,
+--    door_kind = 1, tag = 0,
     }
 
-    if dual_odds(PLAN.deathmatch, 80, 15) and not link.is_exit then
+    if GAME.doom_format and not link.is_exit and
+       dual_odds(PLAN.deathmatch, 80, 15)
+    then
       parm.door_kind = 117 -- Blaze
     end
 
     if link.quest and link.quest.kind == "key" then
 
-      door_info = GAME.key_doors[link.quest.item]
-      assert(door_info)
-
-      parm =
-      {
-        door_top = rmodel.f_h + door_info.h,
-        door_kind = 1,
-        tag = 0,
-      }
-
-      parm.door_kind = sel(PLAN.coop, door_info.kind_once, door_info.kind_rep)
+---###      door_info = GAME.key_doors[link.quest.item]
+---###      assert(door_info)
+---###
+---###      parm =
+---###      {
+---###        door_top = rmodel.f_h + door_info.h,
+---###        door_kind = 1,
+---###        tag = 0,
+---###      }
+---###
+---###      parm.door_kind = sel(PLAN.coop, door_info.kind_once, door_info.kind_rep)
 
       -- FIXME: heretic statues !!!
+    end
 
-    elseif link.quest and link.quest.kind == "switch" then
+    if link.quest and link.quest.kind == "switch" then
 
-      door_info = GAME.switches[link.quest.item].door
-      assert(door_info)
+---   parm.door_kind = 0
+      parm.tag = link.quest.tag + 1
 
-      parm =
-      {
-        door_top = rmodel.f_h + door_info.h,
-        door_kind = 0,
-        tag = link.quest.tag + 1,
-      }
-
-    elseif link.is_secret then
-      door_info = GAME.misc_fabs["secret_DOOR"]
-      parm.door_kind = 31 -- open and stay open
-
-    elseif link.is_exit then
-      door_info = GAME.misc_fabs["exit_DOOR"]
-
-      parm =
-      {
-        door_top = rmodel.f_h + door_info.h,
-        door_kind = 1,
-        tag = 0,
-      }
+---###    elseif link.is_secret then
+---###      door_info = GAME.misc_fabs["secret_DOOR"]
+---###      parm.door_kind = 31 -- open and stay open
+---###
+---###    elseif link.is_exit then
+---###      door_info = GAME.misc_fabs["exit_DOOR"]
+---###
+---###      parm =
+---###      {
+---###        door_top = rmodel.f_h + door_info.h,
+---###        door_kind = 1,
+---###        tag = 0,
+---###      }
     end
 
     if not door_info.prefab then print(table_to_str(door_info)) end
@@ -2959,6 +3044,7 @@ if not link.wide_door then error("Missing DOOR") end
 
     B_prefab(c, fab, door_info.skin, parm, rmodel,D.combo, link.x1, link.y1, side)
   end
+
 
   local function blocky_door( link, side, double_who )
     local D = c.border[side]
@@ -2996,64 +3082,13 @@ if not link.wide_door then error("Missing DOOR") end
     con.debugf("BUILT BLOCK DOOR @ (%d,%d)\n", link.x1, link.y1)
   end
 
-  local function build_arch(link, side)
-
-    local D = c.border[side]
-
-    -- FIXME: use entries from GAME.arch_fabs[]
-    local name
-
-    if D.kind == "fence" then
-      name = "ARCH_FENCE"
-    elseif D.kind == "wire" then
-      name = "ARCH_WIRE_FENCE"
-    else
-      name = "ARCH"
-    end
-
-    -- rand_element { "ARCH", "ARCH_ARCHED", "ARCH_TRUSS", "ARCH_BEAMS", "ARCH_RUSSIAN", "ARCH_CURVY" }
-
-    if link.long <= 2 then name = name .. "_NARROW" end
-    if link.long >= 5 then name = name .. "_WIDE" end
-
-    local fab = PREFABS[name]
-    if not fab then error("Missing arch prefab: " .. name) end
-
-    local parm =
-    {
-      door_top = math.min(link.build.rmodel.c_h-32, link.build.floor_h+128),
---##  door_kind = 1, tag = 0,
-
-      frame_c = D.combo.floor,
-    }
-
-    if D.kind == "fence" then
-      parm.low_h = D.fence_h
-    elseif D.kind == "wire" then
-      parm.low_h = D.wire_h
-    end
-
-    local skin =
-    {
-      --  wall="ROCK1", ceil="RROCK13", -- floor="RROCK13",
-      beam_w = "METAL", beam_f = "CEIL5_1",
-      beam_h = 72,
-    }
-
-    if link.kind == "vista" then
-      skin.floor = link.vista_src.rmodel.f_tex
-    end
-
-    B_prefab(c, fab, skin, parm, link.build.rmodel,D.combo, link.x1, link.y1, side)
-  end
-
 
   local function build_real_link(link, side, double_who)
 
     local D = c.border[side]
     assert(D)
 
-    if GAME.caps.blocky_doors then
+    if GAME.wolf_format then
 
       if link.kind == "door" then
         blocky_door(link, side, double_who)
@@ -3087,171 +3122,171 @@ end
 ---- OLD STUFF FROM HERE (Need to MERGE IT) --------
 
     -- DIR here points to center of current cell
-    local dir = 10-side  -- FIXME: remove
-
-    assert (link.build == c)
-
-    local other = link_other(link, c)
-    assert(other)
-
-
-    local b_combo = D.combo
-
-    local x, y
-    local dx, dy = dir_to_delta(dir)
-    local ax, ay = dir_to_across(dir)
-
-    local long = link.long or 2
-
-    local d_min = 1
-    local d_max = BW
-
-    local d_pos
-    
-    if link.where == "wide" then
-      d_pos = d_min + 1
-      long  = d_max - d_min - 1
-    else
-      d_pos = where_to_block(where, long) --!!! MOVE
-      d_max = d_max - (long-1)
-
-      if (d_pos < d_min) then d_pos = d_min end
-      if (d_pos > d_max) then d_pos = d_max end
-    end
-
-        if side == 2 then x,y = d_pos, 1
-    elseif side == 8 then x,y = d_pos, BH
-    elseif side == 4 then x,y =  1, d_pos
-    elseif side == 6 then x,y = BW, d_pos
-    end
-
-    x = D.x1
-    y = D.y1
-
-    if (link.kind == "arch" or link.kind == "falloff") then
-
-      local ex, ey = x + ax*(long-1), y + ay*(long-1)
-      local tex = b_combo.wall
-
-      -- sometimes leave it empty
-      if D.kind == "wire" then link.arch_rand = link.arch_rand * 4 end
-
-      if link.kind == "arch" and link.where ~= "wide" and
-        c.combo.outdoor == other.combo.outdoor and
-        ((c.combo.outdoor and link.arch_rand < 50) or
-         (not c.combo.outdoor and link.arch_rand < 10))
-      then
-        local sec = copy_block(c.rmodel)
-sec.f_tex = "FWATER1"
-        sec.l_tex = tex
-        sec.u_tex = tex
-        fill(c, x, y, ex, ey, sec)
-        return
-      end
-
-      local arch = copy_block(c.rmodel)
-      arch.c_h = math.min(c.ceil_h-32, other.ceil_h-32, c.floor_h+128)
-      arch.f_tex = c.combo.arch_floor or c.rmodel.f_tex
-      arch.c_tex = c.combo.arch_ceil  or arch.f_tex
-arch.f_tex = "TLITE6_6"
-
-      if (arch.c_h - arch.f_h) < 64 then
-        arch.c_h = arch.f_h + 64
-      end
-
-      if c.hallway and other.hallway then
-        arch.light = (c.rmodel.light + other.rmodel.light) / 2.0
-      elseif c.combo.outdoor then
-        arch.light = arch.light - 32
-      else
-        arch.light = arch.light - 16
-      end
-
-      local special_arch
-
-      if link.where == "wide" and GAME.mats.ARCH and rand_odds(70) then
-        special_arch = true
-
-        arch.c_h = math.max(arch.c_h, c.ceil_h - 48)
-        arch.c_tex = GAME.mats.ARCH.ceil
-
-        tex = GAME.mats.ARCH.wall
-
-        fill(c, x, y, ex+ax, ey+ay, { solid=tex })
-      end
-
-      arch.l_tex = tex
-      arch.u_tex = tex
-
-      fill(c, x, y, ex+ax, ey+ay, { solid=tex })
-      fill(c, x+ax, y+ay, ex, ey, arch)
-
-      if link.block_sound then
-        -- FIXME block_sound(c, x,y, ex,ey, 1)
-      end
-
-      -- pillar in middle of special arch
-      if link.where == "wide" then
-        long = int((long-1) / 2)
-        x, y  = x+long*ax,  y+long*ay
-        ex,ey = ex-long*ax, ey-long*ay
-
-        if x == ex and y == ey then
-          fill(c, x, y, ex, ey, { solid=tex })
-        end
-      end
-
-    elseif link.kind == "door" and link.is_exit and not link.quest then
-
-      B_exit_door(c, c.combo, link, x, y, c.floor_h, dir)
-
-    elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
-       GAME.switches[link.quest.item].bars
-    then
-      local info = GAME.switches[link.quest.item]
-      local sec = copy_block_with_new(c.rmodel,
-      {
-        f_tex = b_combo.floor,
-        c_tex = b_combo.ceil,
-      })
-
-      if not (c.combo.outdoor and other.combo.outdoor) then
-        sec.c_h = sec.c_h - 32
-        while sec.c_h > (sec.c_h+sec.f_h+128)/2 do
-          sec.c_h = sec.c_h - 32
-        end
-        if b_combo.outdoor then sec.c_tex = b_combo.arch_ceil or sec.f_tex end
-      end
-
-      local bar = link.bar_size
-      local tag = link.quest.tag + 1
-
-      B_bars(c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_combo.wall, tag,true)
-
-    elseif link.kind == "door" then
-
-      local kind = link.wide_door
-
-      if c.quest == other.quest
-        and link.door_rand < sel(c.combo.outdoor or other.combo.outdoor, 10, 20)
-      then
-        kind = link.narrow_door
-      end
-
-      local info = GAME.doors[kind]
-      assert(info)
-
-      local door_kind = 1
-      local tag = nil
-      local key_tex = nil
-
-
-      B_door(c, link, b_combo, x, y, c.floor_h, dir,
-             1 + int(info.w / 64), 1, info, door_kind, tag, key_tex)
-    else
-      error("build_link: bad kind: " .. tostring(link.kind))
-    end
-
+--    local dir = 10-side  -- FIXME: remove
+--
+--    assert (link.build == c)
+--
+--    local other = link_other(link, c)
+--    assert(other)
+--
+--
+--    local b_combo = D.combo
+--
+--    local x, y
+--    local dx, dy = dir_to_delta(dir)
+--    local ax, ay = dir_to_across(dir)
+--
+--    local long = link.long or 2
+--
+--    local d_min = 1
+--    local d_max = BW
+--
+--    local d_pos
+--    
+--    if link.where == "wide" then
+--      d_pos = d_min + 1
+--      long  = d_max - d_min - 1
+--    else
+--      d_pos = where_to_block(where, long) --!!! MOVE
+--      d_max = d_max - (long-1)
+--
+--      if (d_pos < d_min) then d_pos = d_min end
+--      if (d_pos > d_max) then d_pos = d_max end
+--    end
+--
+--        if side == 2 then x,y = d_pos, 1
+--    elseif side == 8 then x,y = d_pos, BH
+--    elseif side == 4 then x,y =  1, d_pos
+--    elseif side == 6 then x,y = BW, d_pos
+--    end
+--
+--    x = D.x1
+--    y = D.y1
+--
+--    if (link.kind == "arch" or link.kind == "falloff") then
+--
+--      local ex, ey = x + ax*(long-1), y + ay*(long-1)
+--      local tex = b_combo.wall
+--
+--      -- sometimes leave it empty
+--      if D.kind == "wire" then link.arch_rand = link.arch_rand * 4 end
+--
+--      if link.kind == "arch" and link.where ~= "wide" and
+--        c.combo.outdoor == other.combo.outdoor and
+--        ((c.combo.outdoor and link.arch_rand < 50) or
+--         (not c.combo.outdoor and link.arch_rand < 10))
+--      then
+--        local sec = copy_block(c.rmodel)
+--sec.f_tex = "FWATER1"
+--        sec.l_tex = tex
+--        sec.u_tex = tex
+--        fill(c, x, y, ex, ey, sec)
+--        return
+--      end
+--
+--      local arch = copy_block(c.rmodel)
+--      arch.c_h = math.min(c.ceil_h-32, other.ceil_h-32, c.floor_h+128)
+--      arch.f_tex = c.combo.arch_floor or c.rmodel.f_tex
+--      arch.c_tex = c.combo.arch_ceil  or arch.f_tex
+--arch.f_tex = "TLITE6_6"
+--
+--      if (arch.c_h - arch.f_h) < 64 then
+--        arch.c_h = arch.f_h + 64
+--      end
+--
+--      if c.hallway and other.hallway then
+--        arch.light = (c.rmodel.light + other.rmodel.light) / 2.0
+--      elseif c.combo.outdoor then
+--        arch.light = arch.light - 32
+--      else
+--        arch.light = arch.light - 16
+--      end
+--
+--      local special_arch
+--
+--      if link.where == "wide" and GAME.mats.ARCH and rand_odds(70) then
+--        special_arch = true
+--
+--        arch.c_h = math.max(arch.c_h, c.ceil_h - 48)
+--        arch.c_tex = GAME.mats.ARCH.ceil
+--
+--        tex = GAME.mats.ARCH.wall
+--
+--        fill(c, x, y, ex+ax, ey+ay, { solid=tex })
+--      end
+--
+--      arch.l_tex = tex
+--      arch.u_tex = tex
+--
+--      fill(c, x, y, ex+ax, ey+ay, { solid=tex })
+--      fill(c, x+ax, y+ay, ex, ey, arch)
+--
+--      if link.block_sound then
+--        -- FIXME block_sound(c, x,y, ex,ey, 1)
+--      end
+--
+--      -- pillar in middle of special arch
+--      if link.where == "wide" then
+--        long = int((long-1) / 2)
+--        x, y  = x+long*ax,  y+long*ay
+--        ex,ey = ex-long*ax, ey-long*ay
+--
+--        if x == ex and y == ey then
+--          fill(c, x, y, ex, ey, { solid=tex })
+--        end
+--      end
+--
+--    elseif link.kind == "door" and link.is_exit and not link.quest then
+--
+--      B_exit_door(c, c.combo, link, x, y, c.floor_h, dir)
+--
+--    elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
+--       GAME.switches[link.quest.item].bars
+--    then
+--      local info = GAME.switches[link.quest.item]
+--      local sec = copy_block_with_new(c.rmodel,
+--      {
+--        f_tex = b_combo.floor,
+--        c_tex = b_combo.ceil,
+--      })
+--
+--      if not (c.combo.outdoor and other.combo.outdoor) then
+--        sec.c_h = sec.c_h - 32
+--        while sec.c_h > (sec.c_h+sec.f_h+128)/2 do
+--          sec.c_h = sec.c_h - 32
+--        end
+--        if b_combo.outdoor then sec.c_tex = b_combo.arch_ceil or sec.f_tex end
+--      end
+--
+--      local bar = link.bar_size
+--      local tag = link.quest.tag + 1
+--
+--      B_bars(c, x,y, math.min(dir,10-dir),long, bar,bar*2, info, sec,b_combo.wall, tag,true)
+--
+--    elseif link.kind == "door" then
+--
+--      local kind = link.wide_door
+--
+--      if c.quest == other.quest
+--        and link.door_rand < sel(c.combo.outdoor or other.combo.outdoor, 10, 20)
+--      then
+--        kind = link.narrow_door
+--      end
+--
+--      local info = GAME.doors[kind]
+--      assert(info)
+--
+--      local door_kind = 1
+--      local tag = nil
+--      local key_tex = nil
+--
+--
+--      B_door(c, link, b_combo, x, y, c.floor_h, dir,
+--             1 + int(info.w / 64), 1, info, door_kind, tag, key_tex)
+--    else
+--      error("build_link: bad kind: " .. tostring(link.kind))
+--    end
+--
   end
 
   local function build_link(side)
@@ -3259,10 +3294,9 @@ arch.f_tex = "TLITE6_6"
     local link = c.link[side]
     if not (link and link.build == c) then return end
 
-    if GAME.door_fabs then
-      link.narrow_door = get_rand_door_kind_safe(c.quest.theme, 64)
-      link.wide_door   = get_rand_door_kind_safe(c.quest.theme, 128)
-    end
+---###    if GAME.door_fabs then
+---###      link.door_def = get_rand_door_kind(c.quest.theme, link.long)
+---###    end
     link.block_sound = rand_odds(90)
     link.bar_size    = rand_index_by_probs { 20,90 }
     link.arch_rand   = con.random() * 100

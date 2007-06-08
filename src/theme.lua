@@ -245,38 +245,42 @@ function get_rand_wall_light()
   return info
 end
 
-function get_rand_door_kind(theme, w)
+function get_rand_door_kind(theme, long)
   assert(GAME.door_fabs)
-  local probs = {}
-  for name,info in pairs(GAME.door_fabs) do
-    if info.w == w then
-      assert(info.theme_probs)
-      if info.theme_probs[theme.name] then
+
+  for pass = 1,3 do
+    -- pass 1: require same theme and long
+    -- pass 2: require same long
+    -- pass 3: require long <= wanted
+
+    local probs = {}
+    for name,info in pairs(GAME.door_fabs) do
+      local fab = non_nil(PREFABS[info.prefab])
+      local prob = 10
+
+      if pass == 1 then
+        if info.theme_probs then
+          prob = info.theme_probs[theme.name] or 0
+        else
+          prob = 0
+        end
+      end
+
+      if (pass <  3 and fab.long ~= long) or
+         (pass == 3 and fab.long >  long)
+      then prob = 0 end
+
+      if prob > 0 then
         probs[name] = info.theme_probs[theme.name]
       end
     end
-  end
-  if table_empty(probs) then
-    return nil
-  end
 
-  local name = non_nil(rand_key_by_probs(probs))
-  local result = non_nil(GAME.door_fabs[name])
+    if not table_empty(probs) then
+      local name = non_nil(rand_key_by_probs(probs))
+      return non_nil(GAME.door_fabs[name])
+    end
+  end -- for pass
 
-  return result
-end
-
-function get_rand_door_kind_safe(theme, w)
-  for loop = 1,20 do
-    local info = get_rand_door_kind(theme, w)
-    if info then return info end
-
-    -- try again with a different theme
-    theme = get_rand_theme()
-  end
-
---FIXME  return non_nil(GAME.backup_doors[w])
-
-  error("No matching doors for theme: " .. theme.name .. " width: " .. tostring(w))
+  error("No matching doors for theme: " .. theme.name .. " long: " .. tostring(long))
 end
 
