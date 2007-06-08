@@ -1532,6 +1532,7 @@ D2_DOOR_PREFABS =
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
       door_h=112,
+      door_kind=1, tag=0,
     },
 
     theme_probs = { TECH=60,INDUSTRIAL=5 },
@@ -1544,7 +1545,9 @@ D2_DOOR_PREFABS =
     skin =
     {
       door_w="ZDOORF1", door_c="FLAT23",
-      back_w="ZDOORF2", trace_w="ZZWOLF10",
+      back_w="ZDOORB1", trace_w="ZZWOLF10",
+      door_h=128,
+      door_kind=1, tag=0,
     },
 
     theme_probs = { WOLF=50 },
