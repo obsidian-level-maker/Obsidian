@@ -785,7 +785,7 @@ GAME_FACTORIES["wolf3d"] = function()
 
     combos    = WF_COMBOS,
     exits     = WF_EXITS,
-    hallways  = WF_THEMES, -- not used
+    hallways  = nil,
 
     doors     = WF_DOORS,
     key_doors = WF_KEY_DOORS,
