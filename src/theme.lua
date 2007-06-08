@@ -194,7 +194,8 @@ function get_rand_hallway(theme)
   end
 
   if table_empty(probs) then
-    error("No matching hallways for theme: " .. theme.name)
+    return nil
+    -- error("No matching hallways for theme: " .. theme.name)
   end
 
   local name = rand_key_by_probs(probs)
@@ -271,7 +272,7 @@ function get_rand_door_kind(theme, long)
       then prob = 0 end
 
       if prob > 0 then
-        probs[name] = info.theme_probs[theme.name]
+        probs[name] = prob
       end
     end
 
