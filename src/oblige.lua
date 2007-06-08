@@ -88,6 +88,8 @@ function create_LEVEL(level, index, total)
   make_mini_map()
 
   PLAN = nil
+
+  collectgarbage("collect");
 end
 
 
