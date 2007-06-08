@@ -63,9 +63,6 @@ function create_LEVEL(level, index, total)
 
   if con.abort() then return "abort" end
 
-  show_quests()
-  con.printf("\n")
-
   if SETTINGS.mode == "dm" then
     show_dm_links()
   else

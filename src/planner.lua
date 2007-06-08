@@ -39,6 +39,8 @@ function show_quests(quests)
         Q.force_key and (" force_key:" .. Q.force_key) or ""
     )
   end
+
+  con.printf("\n");
 end
 
 
@@ -56,7 +58,8 @@ function show_path()
       elseif c.is_depot  then kind = "D"
       elseif c == c.quest.first then kind = "S"
       elseif c ~= c.quest.last then
-            if c.hallway then kind = "h"
+            if c.quest.is_secret then kind = "z"
+        elseif c.hallway then kind = "h"
         elseif c.quest.parent then kind = "q"
         else kind = "p"
         end
@@ -1042,6 +1045,7 @@ function plan_sp_level(level, is_coop)
 
     -- never branch of secret quests
     if c.quest.is_secret then
+      if Q.is_secret then return 0.01 end
       return 0
     end
 
@@ -1107,6 +1111,7 @@ function plan_sp_level(level, is_coop)
     end end
 
     if #b_cells == 0 then
+      show_path()
       error("Unable to find branch spot for quest " .. Q.level)
     end
 
@@ -1910,8 +1915,19 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
   end
 
   local function plot_quests()
-    for zzz,Q in ipairs(PLAN.quests) do
-      make_quest_path(Q)
+
+    -- plot secret quests _after_ normal quests, otherwise
+    -- the secret quests can block off all possible branch
+    -- spots for normal quests (which cannot connect to a
+    -- secret quest).
+  
+    for pass = 1,2 do
+      for zzz,Q in ipairs(PLAN.quests) do
+        if pass == sel(Q.is_secret,2,1) then
+con.printf("\n\npass=%d  is_secret=%s\n\n", pass, sel(Q.is_secret, "YES", "NO"))
+          make_quest_path(Q)
+        end
+      end
     end
 
     con.ticker();
@@ -2481,7 +2497,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   shuffle_quests()
   decide_themes()
 
---show_quests()
+  show_quests()
 
   plot_quests()
   decide_links()
