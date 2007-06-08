@@ -1924,7 +1924,6 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
     for pass = 1,2 do
       for zzz,Q in ipairs(PLAN.quests) do
         if pass == sel(Q.is_secret,2,1) then
-con.printf("\n\npass=%d  is_secret=%s\n\n", pass, sel(Q.is_secret, "YES", "NO"))
           make_quest_path(Q)
         end
       end
