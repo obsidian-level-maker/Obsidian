@@ -500,6 +500,42 @@ DOOR_NARROW =
   },
 },
 
+DOOR_SUPER_NARROW =
+{
+  copy="DOOR",
+
+  structure =
+  {
+    "#ss#",
+    "TddT",
+    "TddT",
+    "#ss#",
+  },
+
+  elements =
+  {
+    -- steps
+    s = { f_h=8, c_rel="floor_h", c_add="door_h", c_h=8,
+          f_tex="frame_f", c_tex="frame_c", l_tex="step_w",
+          l_peg="top",
+
+          [1] = { dx=-12,dy=0 }, [3] = { dx=12,dy=0 },
+          [7] = { dx=-12,dy=0 }, [9] = { dx=12,dy=0 },
+        },
+
+    -- door
+    d = { f_h=8, c_rel="floor_h", c_h=8,
+          f_tex="frame_f", c_tex="door_c",
+          u_tex="door_w", u_peg="bottom", l_peg="bottom",
+          kind="door_kind", tag="tag",
+          [2] = { x_offset=4 }, [8] = { x_offset=4 },
+        },
+
+    -- track
+    T = { solid="track_w", l_peg="bottom" },
+  }
+},
+
 DOOR_LIT =
 {
   structure =
