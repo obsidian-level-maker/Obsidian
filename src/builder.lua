@@ -3936,321 +3936,321 @@ function layout_cell(c)
 
     ---=== OLD_build_chunk ===---
 
-    local K = c.chunks[kx][ky]
-    assert(K)
-
-
-
-    if K.void then
-      --!!! TEST CRAP
-      gap_fill(c, K.x1, K.y1, K.x2, K.y2, c.rmodel)
-      do return end
-
-      if K.closet then
-        con.debugf("BUILDING CLOSET @ (%d,%d)\n", c.x, c.y)
-
-        table.insert(K.place.spots,
-          B_monster_closet(c, K,kx,ky, c.floor_h + 0,
-            c.quest.closet.door_tag))
-
-      elseif K.dm_exit then
-        B_deathmatch_exit(c, K,kx,ky,K.dir)
-
-      elseif GAME.pics and not c.small_exit
-          and rand_odds(sel(c.combo.outdoor, 10, sel(c.hallway,20, 50)))
-      then
-        if not c.void_pic then decide_void_pic(c) end
-        local pic,cut = c.void_pic,c.void_cut
-
-        if not c.quest.image and (PLAN.deathmatch or
-             (c.quest.parent and rand_odds(33)))
-        then
-          pic = GAME.images[1]
-          cut = 1
-          c.quest.image = "pic"
-        end
-
-        B_void_pic(c, K,kx,ky, pic,cut)
-
-      else
-        gap_fill(c, K.x1, K.y1, K.x2, K.y2, { solid=c.combo.wall })
-      end
-      return
-    end -- K.void
-
-    if K.cage then
-      B_big_cage(c, GAME.mats.CAGE, K,kx,ky)
-      return
-    end
-
-
-
-    local bx = K.x1 + 1
-    local by = K.y1 + 1
-    
-    if K.player then
-      local angle = player_angle(kx, ky)
-      local offsets = sel(rand_odds(50), {1,3,7,9}, {2,4,6,8})
-      if PLAN.coop then
-        for i = 1,4 do
-          local dx,dy = dir_to_delta(offsets[i])
-          if SETTINGS.game == "plutonia" then
-            B_double_pedestal(c, bx+dx,by+dy, K.rmodel, GAME.special_ped)
-          else
-            B_pedestal(c, bx+dx, by+dy, K.rmodel, GAME.pedestals.PLAYER)
-          end
-          add_thing(c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
-          c.player_pos = {x=bx+dx, y=by+dy}
-        end
-      else
-        if SETTINGS.game == "plutonia" then
-          B_double_pedestal(c, bx,by, K.rmodel, GAME.special_ped)
-        else
-          B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.PLAYER)
-        end
-        add_thing(c, bx, by, sel(PLAN.deathmatch, "dm_player", "player1"), true, angle)
-        c.player_pos = {x=bx, y=by}
-
-      end
-
-    elseif K.dm_weapon then
-      B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.WEAPON)
-      add_thing(c, bx, by, K.dm_weapon, true)
-
-    elseif K.quest then
-
-      if c.quest.kind == "key" or c.quest.kind == "weapon" or c.quest.kind == "item" then
-        B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.QUEST)
-
-        -- weapon and keys are non-blocking, but we don't want
-        -- a monster sitting on top of our quest item (especially
-        -- when it has a pedestal).
-        add_thing(c, bx, by, c.quest.item, true)
-
-      elseif c.quest.kind == "switch" then
-        local info = GAME.switches[c.quest.item]
-        assert(info.switch)
-        local kind = 103; if info.bars then kind = 23 end
-        if rand_odds(40) then
-          local side = wall_switch_dir(kx, ky, c.entry_dir)
-          B_wall_switch(c, bx,by, K.rmodel.f_h, side, 2, info, kind, c.quest.tag + 1)
-        else
-          B_pillar_switch(c, K,bx,by, info,kind, c.quest.tag + 1)
-        end
-
-      elseif c.quest.kind == "exit" then
-        assert(c.combo.switch)
-
-        local side = wall_switch_dir(kx, ky, c.entry_dir)
-
-        if SETTINGS.game == "plutonia" then
-          B_double_pedestal(c, bx,by, K.rmodel, GAME.special_ped,
-            { walk_kind = 52 }) -- FIXME "exit_W1"
-
-        elseif c.small_exit and not c.smex_cage and rand_odds(80) then
-          if c.combo.flush then
-            B_flush_switch(c, bx,by, K.rmodel.f_h,side, c.combo.switch, 11)
-          else
-            B_wall_switch(c, bx,by, K.rmodel.f_h,side, 3, c.combo.switch, 11)
-          end
-
-          -- make the area behind the switch solid
-          local x1, y1 = K.x1, K.y1
-          local x2, y2 = K.x2, K.y2
-              if side == 4 then x1 = x1+2
-          elseif side == 6 then x2 = x2-2
-          elseif side == 2 then y1 = y1+2
-          elseif side == 8 then y2 = y2-2
-          else   error("Bad side for small_exit switch: " .. side)
-          end
-
-          gap_fill(c, x1,y1, x2,y2, { solid=c.combo.wall })
-          
-        elseif c.combo.hole_tex and rand_odds(75) then
-          B_exit_hole(c, K,kx,ky, c.rmodel)
-          return
-        elseif rand_odds(85) then
-          B_floor_switch(c, bx,by, K.rmodel.f_h, side, c.combo.switch, 11)
-        else
-          B_pillar_switch(c, K,bx,by, c.combo.switch, 11)
-        end
-      end
-    end -- if K.player | K.quest etc...
-
-
-    ---| fill in the rest |---
-
-    local sec = copy_block(K.rmodel)
-
-    local surprise = c.quest.closet or c.quest.depot
-
-    if K.quest and surprise and c == surprise.trigger_cell then
-
-      sec.mark = allocate_mark()
-      sec.walk_kind = 2
-      sec.walk_tag  = surprise.door_tag
-    end
-
-    if K.liquid then  -- FIXME: put into setup_chunk_rmodels
-      sec.kind = c.liquid.sec_kind
-    end
-
-    if K.player then
-
-      sec.near_player = true;
-      if not sec.kind then
-        sec.kind = 9  -- FIXME: "secret"
-      end
-
-      if SETTINGS.mode == "coop" and SETTINGS.game == "plutonia" then
-        sec.light = GAME.special_ped.coop_light
-      end
-    end
-
-    -- TEST CRUD : overhangs
-    if rand_odds(9) and c.combo.outdoor
-      and (sec.c_h - sec.f_h <= 256)
-      and not (c.quest.kind == "exit" and c == c.quest.path[#c.quest.path-1])
-      and not K.stair_dir
-    then
-
-      K.overhang = true
-
-      if not c.overhang then
-        local name
-        name, c.overhang = rand_table_pair(GAME.hangs)
-      end
-      local overhang = c.overhang
-
-      K.sup_tex = overhang.thin
-
-      sec.c_tex = overhang.ceil
-      sec.u_tex = overhang.upper
-
-      sec.c_h = sec.c_h - (overhang.h or 24)
-      sec.light = sec.light - 48
-    end
-
-    -- TEST CRUD : crates
-    if not c.scenic and not K.stair_dir
-      and GAME.crates
-      and dual_odds(c.combo.outdoor, 20, 33)
-      and (not c.hallway or rand_odds(25))
-      and (not c.exit or rand_odds(50))
-    then
-      K.crate = true
-      if not c.crate_combo then
-        c.crate_combo = get_rand_crate()
-      end
-    end
-
-    -- TEST CRUD : pillars
-    if not K.crate and not c.scenic and not K.stair_dir
-      and dual_odds(c.combo.outdoor, 12, 25)
-      and (not c.hallway or rand_odds(15))
-      and (not c.exit or rand_odds(22))
-    then
-      K.pillar = true
-    end
-
-    --FIXME: very cruddy check...
-    if c.is_exit and chunk_touches_side(kx, ky, c.entry_dir) then
-      K.crate  = nil
-      K.pillar = nil
-    end
-
-    -- TEST CRUD : sky lights
-    if c.sky_light then
-      if kx==2 and ky==2 and c.sky_light.pattern == "pillar" then
-        K.pillar = true
-      end
-
-      K.sky_light_sec = copy_block(sec)
-      K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.sky_h, sec.c_h + c.sky_light.h)
-      K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, GAME.SKY_TEX, c.sky_light.light_info.floor)
-      K.sky_light_sec.light = 176
-      K.sky_light_utex = c.sky_light.light_info.side
-
-      -- make sure sky light doesn't come down too low
-      K.sky_light_sec.c_h = math.max(K.sky_light_sec.c_h,
-        sel(c.sky_light.is_sky, c.c_max+16, c.c_min))
-    end
- 
-    ---- Chunk Fill ----
-
-    local l_tex = c.rmodel.l_tex
-
-    do
-      assert(sec)
-
-      if K.overhang then
-        add_overhang_pillars(c, K, kx, ky, sec, sec.l_tex, sec.u_tex)
-      end
-
-      if K.sky_light_sec then
-        local x1,y1,x2,y2 = K.x1,K.y1,K.x2,K.y2
-        if kx==1 then x1=x1+1 end
-        if kx==3 then x2=x2-1 end
-        if ky==1 then y1=y1+1 end
-        if ky==3 then y2=y2-1 end
-
-        local func = SKY_LIGHT_FUNCS[c.sky_light.pattern]
-        assert(func)
-
-        local BB = copy_block(K.sky_light_sec)
-        BB.l_tex = sec.l_tex
-        BB.u_tex = K.sky_light_utex or sec.u_tex
-
-        for x = x1,x2 do for y = y1,y2 do
-          if func(kx,ky, x,y) then
-            gap_fill(c, x,y, x,y, BB)
-          end
-        end end
-      end
-
-      -- get this *after* doing sky lights
-      local blocked = PLAN.blocks[K.x1+1][K.y1+1] --!!!
-
-      if K.crate and not blocked then
-        local combo = c.crate_combo
-        if not c.quest.image and not c.quest.parent and
-           (not PLAN.image or rand_odds(11))
-        then
-          combo = GAME.images[2]
-          c.quest.image = "crate"
-          PLAN.image = true
-        end
-        B_crate(c, combo, sec, kx,ky, K.x1+1,K.y1+1)
-        blocked = true
-      end
-
-      if K.pillar and not blocked then
-
-        -- TEST CRUD
-        if rand_odds(22) and GAME.mats.CAGE and not PLAN.deathmatch
-          and K.rmodel.c_h >= K.rmodel.f_h + 128
-        then
-          B_pillar_cage(c, GAME.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
-        else
-          B_pillar(c, c.combo, kx,ky, K.x1+1,K.y1+1)
-        end
-        blocked = true
-      end
-
-      gap_fill(c, K.x1, K.y1, K.x2, K.y2, sec)
-
-      if not blocked and c.combo.scenery and not K.stair_dir and
-         (dual_odds(c.combo.outdoor, 37, 22)
-          or (c.scenic and rand_odds(51)))
-      then
---!!!        PLAN.blocks[K.x1+1][K.y1+1].has_scenery = true
-        local th = add_thing(c, K.x1+1, K.y1+1, c.combo.scenery, true)
-        if c.scenic then
-          th.dx = rand_irange(-64,64)
-          th.dy = rand_irange(-64,64)
-        end
-      end
-    end
+--     local K = c.chunks[kx][ky]
+--     assert(K)
+-- 
+-- 
+-- 
+--     if K.void then
+--       --!!! TEST CRAP
+--       gap_fill(c, K.x1, K.y1, K.x2, K.y2, c.rmodel)
+--       do return end
+-- 
+--       if K.closet then
+--         con.debugf("BUILDING CLOSET @ (%d,%d)\n", c.x, c.y)
+-- 
+--         table.insert(K.place.spots,
+--           B_monster_closet(c, K,kx,ky, c.floor_h + 0,
+--             c.quest.closet.door_tag))
+-- 
+--       elseif K.dm_exit then
+--         B_deathmatch_exit(c, K,kx,ky,K.dir)
+-- 
+--       elseif GAME.pics and not c.small_exit
+--           and rand_odds(sel(c.combo.outdoor, 10, sel(c.hallway,20, 50)))
+--       then
+--         if not c.void_pic then decide_void_pic(c) end
+--         local pic,cut = c.void_pic,c.void_cut
+-- 
+--         if not c.quest.image and (PLAN.deathmatch or
+--              (c.quest.parent and rand_odds(33)))
+--         then
+--           pic = GAME.images[1]
+--           cut = 1
+--           c.quest.image = "pic"
+--         end
+-- 
+--         B_void_pic(c, K,kx,ky, pic,cut)
+-- 
+--       else
+--         gap_fill(c, K.x1, K.y1, K.x2, K.y2, { solid=c.combo.wall })
+--       end
+--       return
+--     end -- K.void
+-- 
+--     if K.cage then
+--       B_big_cage(c, GAME.mats.CAGE, K,kx,ky)
+--       return
+--     end
+-- 
+-- 
+-- 
+--     local bx = K.x1 + 1
+--     local by = K.y1 + 1
+--     
+--     if K.player then
+--       local angle = player_angle(kx, ky)
+--       local offsets = sel(rand_odds(50), {1,3,7,9}, {2,4,6,8})
+--       if PLAN.coop then
+--         for i = 1,4 do
+--           local dx,dy = dir_to_delta(offsets[i])
+--           if SETTINGS.game == "plutonia" then
+--             B_double_pedestal(c, bx+dx,by+dy, K.rmodel, GAME.special_ped)
+--           else
+--             B_pedestal(c, bx+dx, by+dy, K.rmodel, GAME.pedestals.PLAYER)
+--           end
+--           add_thing(c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
+--           c.player_pos = {x=bx+dx, y=by+dy}
+--         end
+--       else
+--         if SETTINGS.game == "plutonia" then
+--           B_double_pedestal(c, bx,by, K.rmodel, GAME.special_ped)
+--         else
+--           B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.PLAYER)
+--         end
+--         add_thing(c, bx, by, sel(PLAN.deathmatch, "dm_player", "player1"), true, angle)
+--         c.player_pos = {x=bx, y=by}
+-- 
+--       end
+-- 
+--     elseif K.dm_weapon then
+--       B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.WEAPON)
+--       add_thing(c, bx, by, K.dm_weapon, true)
+-- 
+--     elseif K.quest then
+-- 
+--       if c.quest.kind == "key" or c.quest.kind == "weapon" or c.quest.kind == "item" then
+--         B_pedestal(c, bx, by, K.rmodel, GAME.pedestals.QUEST)
+-- 
+--         -- weapon and keys are non-blocking, but we don't want
+--         -- a monster sitting on top of our quest item (especially
+--         -- when it has a pedestal).
+--         add_thing(c, bx, by, c.quest.item, true)
+-- 
+--       elseif c.quest.kind == "switch" then
+--         local info = GAME.switches[c.quest.item]
+--         assert(info.switch)
+--         local kind = 103; if info.bars then kind = 23 end
+--         if rand_odds(40) then
+--           local side = wall_switch_dir(kx, ky, c.entry_dir)
+--           B_wall_switch(c, bx,by, K.rmodel.f_h, side, 2, info, kind, c.quest.tag + 1)
+--         else
+--           B_pillar_switch(c, K,bx,by, info,kind, c.quest.tag + 1)
+--         end
+-- 
+--       elseif c.quest.kind == "exit" then
+--         assert(c.combo.switch)
+-- 
+--         local side = wall_switch_dir(kx, ky, c.entry_dir)
+-- 
+--         if SETTINGS.game == "plutonia" then
+--           B_double_pedestal(c, bx,by, K.rmodel, GAME.special_ped,
+--             { walk_kind = 52 }) -- FIXME "exit_W1"
+-- 
+--         elseif c.small_exit and not c.smex_cage and rand_odds(80) then
+--           if c.combo.flush then
+--             B_flush_switch(c, bx,by, K.rmodel.f_h,side, c.combo.switch, 11)
+--           else
+--             B_wall_switch(c, bx,by, K.rmodel.f_h,side, 3, c.combo.switch, 11)
+--           end
+-- 
+--           -- make the area behind the switch solid
+--           local x1, y1 = K.x1, K.y1
+--           local x2, y2 = K.x2, K.y2
+--               if side == 4 then x1 = x1+2
+--           elseif side == 6 then x2 = x2-2
+--           elseif side == 2 then y1 = y1+2
+--           elseif side == 8 then y2 = y2-2
+--           else   error("Bad side for small_exit switch: " .. side)
+--           end
+-- 
+--           gap_fill(c, x1,y1, x2,y2, { solid=c.combo.wall })
+--           
+--         elseif c.combo.hole_tex and rand_odds(75) then
+--           B_exit_hole(c, K,kx,ky, c.rmodel)
+--           return
+--         elseif rand_odds(85) then
+--           B_floor_switch(c, bx,by, K.rmodel.f_h, side, c.combo.switch, 11)
+--         else
+--           B_pillar_switch(c, K,bx,by, c.combo.switch, 11)
+--         end
+--       end
+--     end -- if K.player | K.quest etc...
+-- 
+-- 
+--     ---| fill in the rest |---
+-- 
+--     local sec = copy_block(K.rmodel)
+-- 
+--     local surprise = c.quest.closet or c.quest.depot
+-- 
+--     if K.quest and surprise and c == surprise.trigger_cell then
+-- 
+--       sec.mark = allocate_mark()
+--       sec.walk_kind = 2
+--       sec.walk_tag  = surprise.door_tag
+--     end
+-- 
+--     if K.liquid then  -- FIXME: put into setup_chunk_rmodels
+--       sec.kind = c.liquid.sec_kind
+--     end
+-- 
+--     if K.player then
+-- 
+--       sec.near_player = true;
+--       if not sec.kind then
+--         sec.kind = 9  -- FIXME: "secret"
+--       end
+-- 
+--       if SETTINGS.mode == "coop" and SETTINGS.game == "plutonia" then
+--         sec.light = GAME.special_ped.coop_light
+--       end
+--     end
+-- 
+--     -- TEST CRUD : overhangs
+--     if rand_odds(9) and c.combo.outdoor
+--       and (sec.c_h - sec.f_h <= 256)
+--       and not (c.quest.kind == "exit" and c == c.quest.path[#c.quest.path-1])
+--       and not K.stair_dir
+--     then
+-- 
+--       K.overhang = true
+-- 
+--       if not c.overhang then
+--         local name
+--         name, c.overhang = rand_table_pair(GAME.hangs)
+--       end
+--       local overhang = c.overhang
+-- 
+--       K.sup_tex = overhang.thin
+-- 
+--       sec.c_tex = overhang.ceil
+--       sec.u_tex = overhang.upper
+-- 
+--       sec.c_h = sec.c_h - (overhang.h or 24)
+--       sec.light = sec.light - 48
+--     end
+-- 
+--     -- TEST CRUD : crates
+--     if not c.scenic and not K.stair_dir
+--       and GAME.crates
+--       and dual_odds(c.combo.outdoor, 20, 33)
+--       and (not c.hallway or rand_odds(25))
+--       and (not c.exit or rand_odds(50))
+--     then
+--       K.crate = true
+--       if not c.crate_combo then
+--         c.crate_combo = get_rand_crate()
+--       end
+--     end
+-- 
+--     -- TEST CRUD : pillars
+--     if not K.crate and not c.scenic and not K.stair_dir
+--       and dual_odds(c.combo.outdoor, 12, 25)
+--       and (not c.hallway or rand_odds(15))
+--       and (not c.exit or rand_odds(22))
+--     then
+--       K.pillar = true
+--     end
+-- 
+--     --FIXME: very cruddy check...
+--     if c.is_exit and chunk_touches_side(kx, ky, c.entry_dir) then
+--       K.crate  = nil
+--       K.pillar = nil
+--     end
+-- 
+--     -- TEST CRUD : sky lights
+--     if c.sky_light then
+--       if kx==2 and ky==2 and c.sky_light.pattern == "pillar" then
+--         K.pillar = true
+--       end
+-- 
+--       K.sky_light_sec = copy_block(sec)
+--       K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.sky_h, sec.c_h + c.sky_light.h)
+--       K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, GAME.SKY_TEX, c.sky_light.light_info.floor)
+--       K.sky_light_sec.light = 176
+--       K.sky_light_utex = c.sky_light.light_info.side
+-- 
+--       -- make sure sky light doesn't come down too low
+--       K.sky_light_sec.c_h = math.max(K.sky_light_sec.c_h,
+--         sel(c.sky_light.is_sky, c.c_max+16, c.c_min))
+--     end
+--  
+--     ---- Chunk Fill ----
+-- 
+--     local l_tex = c.rmodel.l_tex
+-- 
+--     do
+--       assert(sec)
+-- 
+--       if K.overhang then
+--         add_overhang_pillars(c, K, kx, ky, sec, sec.l_tex, sec.u_tex)
+--       end
+-- 
+--       if K.sky_light_sec then
+--         local x1,y1,x2,y2 = K.x1,K.y1,K.x2,K.y2
+--         if kx==1 then x1=x1+1 end
+--         if kx==3 then x2=x2-1 end
+--         if ky==1 then y1=y1+1 end
+--         if ky==3 then y2=y2-1 end
+-- 
+--         local func = SKY_LIGHT_FUNCS[c.sky_light.pattern]
+--         assert(func)
+-- 
+--         local BB = copy_block(K.sky_light_sec)
+--         BB.l_tex = sec.l_tex
+--         BB.u_tex = K.sky_light_utex or sec.u_tex
+-- 
+--         for x = x1,x2 do for y = y1,y2 do
+--           if func(kx,ky, x,y) then
+--             gap_fill(c, x,y, x,y, BB)
+--           end
+--         end end
+--       end
+-- 
+--       -- get this *after* doing sky lights
+--       local blocked = PLAN.blocks[K.x1+1][K.y1+1] --!!!
+-- 
+--       if K.crate and not blocked then
+--         local combo = c.crate_combo
+--         if not c.quest.image and not c.quest.parent and
+--            (not PLAN.image or rand_odds(11))
+--         then
+--           combo = GAME.images[2]
+--           c.quest.image = "crate"
+--           PLAN.image = true
+--         end
+--         B_crate(c, combo, sec, kx,ky, K.x1+1,K.y1+1)
+--         blocked = true
+--       end
+-- 
+--       if K.pillar and not blocked then
+-- 
+--         -- TEST CRUD
+--         if rand_odds(22) and GAME.mats.CAGE and not PLAN.deathmatch
+--           and K.rmodel.c_h >= K.rmodel.f_h + 128
+--         then
+--           B_pillar_cage(c, GAME.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
+--         else
+--           B_pillar(c, c.combo, kx,ky, K.x1+1,K.y1+1)
+--         end
+--         blocked = true
+--       end
+-- 
+--       gap_fill(c, K.x1, K.y1, K.x2, K.y2, sec)
+-- 
+--       if not blocked and c.combo.scenery and not K.stair_dir and
+--          (dual_odds(c.combo.outdoor, 37, 22)
+--           or (c.scenic and rand_odds(51)))
+--       then
+-- --!!!        PLAN.blocks[K.x1+1][K.y1+1].has_scenery = true
+--         local th = add_thing(c, K.x1+1, K.y1+1, c.combo.scenery, true)
+--         if c.scenic then
+--           th.dx = rand_irange(-64,64)
+--           th.dy = rand_irange(-64,64)
+--         end
+--       end
+--     end
 
   end
 
