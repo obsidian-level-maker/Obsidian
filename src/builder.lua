@@ -2995,7 +2995,7 @@ function build_borders()
 
     if GAME.doom_format and not link.is_exit and
        dual_odds(PLAN.deathmatch, 80, 15) and
-       parm.door_kind == 1 then
+       door_def.skin.door_kind == 1
     then
       parm.door_kind = 117 -- Blaze
     end
@@ -3050,20 +3050,20 @@ function build_borders()
   local function blocky_door( link, side, double_who )
     local D = c.border[side]
 
-    local bit
+    local def
     if link.quest and link.quest.kind == "key" then
-      bit = GAME.key_doors[link.quest.item]
-      assert(bit)
-      assert(bit.kind_rep)
+      def = GAME.key_doors[link.quest.item]
+      assert(def)
+      assert(def.door_kind)
     end
 
     -- door sides
     local side_tex
     local ax,ay = dir_to_across(side)
     
-    if bit and bit.lock_side then
-      side_tex = bit.lock_side
-    elseif not bit and D.combo.door_side then
+    if def and def.lock_side then
+      side_tex = def.lock_side
+    elseif not def and D.combo.door_side then
       side_tex = D.combo.door_side
     end
 
@@ -3075,7 +3075,7 @@ function build_borders()
     PLAN.blocks[link.x1][link.y1] =
     {
       f_tex = 0,
-      door_kind = (bit and bit.kind_rep) or "door",
+      door_kind = (def and def.door_kind) or "door",
       door_dir  = side,
       blocked = true,
     }
