@@ -2994,7 +2994,8 @@ function build_borders()
     }
 
     if GAME.doom_format and not link.is_exit and
-       dual_odds(PLAN.deathmatch, 80, 15)
+       dual_odds(PLAN.deathmatch, 80, 15) and
+       parm.door_kind == 1 then
     then
       parm.door_kind = 117 -- Blaze
     end
