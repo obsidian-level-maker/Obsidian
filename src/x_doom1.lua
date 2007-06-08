@@ -1878,7 +1878,7 @@ end
 
 ------------------------------------------------------------
 
-GAME_FACTORIES["doom_common"] = function()
+function doom_common_factory()
 
   return
   {
@@ -1962,7 +1962,7 @@ end
 
 GAME_FACTORIES["doom1"] = function()
 
-  local T = GAME_FACTORIES.doom_common()
+  local T = doom_common_factory()
 
   T.episodes   = 4
   T.level_func = doom1_get_levels
