@@ -1015,6 +1015,12 @@ DM_KEY_DOORS =
 
 }
 
+DM_LIFTS =
+{
+  slow = { kind=62,  walk=88  },
+  fast = { kind=123, walk=120 },
+}
+
 DM_IMAGES =
 {
   { wall = "CEMENT1", w=128, h=128, glow=true },
@@ -1922,6 +1928,7 @@ GAME_FACTORIES["doom_common"] = function()
     switches  = DM_SWITCHES,
     doors     = DM_DOORS,
     key_doors = DM_KEY_DOORS,
+    lifts     = DM_LIFTS,
 
     pics      = DM_PICS,
     images    = DM_IMAGES,

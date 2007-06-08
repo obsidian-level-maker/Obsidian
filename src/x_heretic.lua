@@ -540,6 +540,11 @@ HC_KEY_DOORS =
   },
 }
 
+HC_LIFTS =
+{
+  slow = { kind=62,  walk=88 },
+}
+
 HC_DOOR_PREFABS =
 {
   demon =
@@ -954,6 +959,7 @@ GAME_FACTORIES["heretic"] = function()
     switches  = HC_SWITCHES,
     doors     = HC_DOORS,
     key_doors = HC_KEY_DOORS,
+    lifts     = HC_LIFTS,
 
     pics      = HC_PICS,
     images    = HC_IMAGES,

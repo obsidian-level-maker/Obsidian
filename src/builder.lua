@@ -655,6 +655,13 @@ end
 --
 function B_lift(c, rmodel, bx,by, z1,z2, dir, long, deep)
 
+  assert(GAME.lifts)
+
+  local lift_def = GAME.lifts["fast"]
+  if not lift_def or rand_odds(20) then
+    lift_def = non_nil(GAME.lifts["slow"])
+  end
+
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_across(dir)
 
@@ -670,8 +677,8 @@ function B_lift(c, rmodel, bx,by, z1,z2, dir, long, deep)
     f_tex = c.combo.lift_floor or GAME.mats.LIFT.floor,
     l_tex = c.combo.lift or GAME.mats.LIFT.wall,
 
-    lift_kind = 123,  -- 62 for slower kind
-    lift_walk = 120,  -- 88 for slower kind
+    lift_kind = lift_def.kind,
+    lift_walk = lift_def.walk,
 
     tag = allocate_tag(),
 

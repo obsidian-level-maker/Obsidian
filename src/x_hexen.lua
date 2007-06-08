@@ -955,6 +955,21 @@ XN_THEMES =
 }
 
 
+XN_LIFTS =
+{
+  slow =
+  {
+    kind = { 62, "tag", 16, 64 },
+    walk = { 62, "tag", 16, 64 },
+  },
+
+  fast =
+  {
+    kind = { 62, "tag", 32, 64 },
+    walk = { 62, "tag", 32, 64 },
+  },
+}
+
 
 XN_DOOR_PREFABS =
 {
@@ -1554,6 +1569,7 @@ GAME_FACTORIES["hexen"] = function()
     switches  = XN_SWITCHES,
     doors     = XN_DOORS,
     key_doors = XN_KEY_DOORS,
+    lifts     = XN_LIFTS,
 
     pics      = XN_PICS,
     images    = XN_IMAGES,
