@@ -7062,8 +7062,10 @@ function build_depots()
     door_sec.c_h = door_sec.f_h
     door_sec.tag = depot.door_tag
 
+    assert(GAME.depot_info)
+
     tele_sec = copy_block(sec)
-    tele_sec.walk_kind = 126
+    tele_sec.walk_kind = non_nil(GAME.depot_info.teleport_kind)
 
     local m1,m2 = 1,4
     local t1,t2 = 6,BW

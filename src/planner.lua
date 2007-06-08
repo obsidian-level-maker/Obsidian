@@ -2354,6 +2354,8 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
     local function add_depot(Q)
 
       if not GAME.caps.depots then return end
+      assert(GAME.depot_info)
+      assert(GAME.depot_info.teleport_kind)
 
       local function valid_depot_spot(x, y)
         if PLAN.cells[x][y] then return false end
