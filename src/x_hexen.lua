@@ -515,7 +515,8 @@ XN_SWITCHES =
         switch_w="SW_1_UP", wall="STEEL02",
         floor="F_075", ceil="F_075",
         switch_h=48, x_offset=0, y_offset=0,
-        kind=103,
+
+        kind = { 12, "tag", 16, 64 },
       }
     },
 
@@ -528,6 +529,7 @@ XN_SWITCHES =
         door_w="STEEL01", door_c="F_074",
 --      key_w="STEEL06",
         door_h=128,
+        door_kind=0,
 
 ---     step_w="STEP1",  track_w="DOORTRAK",
 ---     frame_f="FLAT1", frame_c="FLAT1",
@@ -546,7 +548,8 @@ XN_SWITCHES =
         switch_w="SW53_UP", wall="MONK02",
         floor="F_025", ceil="F_025",
         switch_h=40, x_offset=0, y_offset=0,
-        kind=103,
+
+        kind = { 12, "tag", 16, 64 },
       }
     },
 
@@ -558,6 +561,7 @@ XN_SWITCHES =
       {
         door_w="MONK17", door_c="F_014",
         door_h=128,
+        door_kind=0,
       }
     },
   },
@@ -572,7 +576,8 @@ XN_SWITCHES =
       {
         switch_w="SW_2_UP",
         switch_h=48, x_offset=0, y_offset=0,
-        kind=103,
+
+        kind = { 12, "tag", 16, 64 },
       }
     },
 
@@ -584,6 +589,7 @@ XN_SWITCHES =
       {
         door_w="MONK08", door_c="F_027",
         door_h=128,
+        door_kind=0,
       }
     },
   },
@@ -598,7 +604,8 @@ XN_SWITCHES =
       {
         switch_w="SW51_OFF",
         switch_h=32, x_offset=0, y_offset=0,
-        kind=103,
+
+        kind = { 12, "tag", 16, 64 },
       }
     },
 
@@ -610,6 +617,7 @@ XN_SWITCHES =
       {
         door_w="PRTL06", door_c="F_013",
         door_h=128,
+        door_kind=0,
       }
     },
   },
@@ -624,7 +632,8 @@ XN_SWITCHES =
       {
         switch_w="SW_EL1",
         switch_h=32, x_offset=0, y_offset=0,
-        kind=103,
+
+        kind = { 12, "tag", 16, 64 },
       }
     },
 
@@ -636,6 +645,7 @@ XN_SWITCHES =
       {
         door_w="CLOCKA", door_c="F_010",
         door_h=128,
+        door_kind=0,
       }
     },
   },
@@ -650,7 +660,8 @@ XN_SWITCHES =
       {
         switch_w="SW_OL1",
         switch_h=32, x_offset=0, y_offset=0,
-        kind=103,
+
+        kind = { 12, "tag", 16, 64 },
       }
     },
 
@@ -662,6 +673,7 @@ XN_SWITCHES =
       {
         door_w="STEEL07", door_c="F_066",
         door_h=128,
+        door_kind=0,
       }
     },
   },
@@ -677,7 +689,8 @@ XN_SWITCHES =
         switch_w="SW52_OFF", side_w="FIRE06", ped_w="FIRE06",
         switch_f="F_012", ped_f="F_012",
         switch_h=32, x_offset=0, y_offset=0,
-        kind=103,
+
+        kind = { 12, "tag", 16, 64 },
       }
     },
 
@@ -689,6 +702,7 @@ XN_SWITCHES =
       {
         door_w="FOREST03", door_c="F_017",
         door_h=128,
+        door_kind=0,
       }
     },
   },
@@ -725,19 +739,20 @@ XN_KEY_DOORS =
 {
   k_emerald =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
     prefab = "DOOR", -- DOOR_LOCKED
     skin =
     {
       door_w="D_CAST", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 5 },
     }
   },
 
   k_fire =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
 
     prefab = "DOOR", -- DOOR_LOCKED
 
@@ -747,12 +762,13 @@ XN_KEY_DOORS =
       track_w="STEEL08",
       frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 4 },
     }
   },
 
   k_castle =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
 
     prefab = "DOOR", -- DOOR_LOCKED
 
@@ -762,12 +778,13 @@ XN_KEY_DOORS =
       track_w="STEEL08",
       frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 11 },
     }
   },
 
   k_silver =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
 
     prefab = "DOOR", -- DOOR_LOCKED
 
@@ -777,90 +794,98 @@ XN_KEY_DOORS =
       track_w="STEEL08",
       frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 7 },
     }
   },
 
   k_cave =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
     prefab = "DOOR", -- DOOR_LOCKED
     skin =
     {
       door_w="D_CAVE2", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 2 },
     }
   },
 
   k_swamp =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
     prefab = "DOOR", -- DOOR_LOCKED
     skin =
     {
       door_w="D_SWAMP2", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 10 },
     }
   },
 
   k_steel =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
     prefab = "DOOR", -- DOOR_LOCKED
     skin =
     {
       door_w="D_STEEL", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 1 },
     }
   },
 
   k_rusty =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
     prefab = "DOOR", -- DOOR_LOCKED
     skin =
     {
       door_w="D_RUST", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 8 },
     }
   },
 
   k_dungeon =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
     prefab = "DOOR", -- DOOR_LOCKED
     skin =
     {
       door_w="D_DUNGEO", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 6 },
     }
   },
 
   k_horn =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
     prefab = "DOOR", -- DOOR_LOCKED
     skin =
     {
       door_w="D_WASTE", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 9 },
     }
   },
 
   k_axe =
   {
-    w=128, h=128, kind_rep=13, kind_once=13,
+    w=128, h=128,
     prefab = "DOOR", -- DOOR_LOCKED
     skin =
     {
       door_w="D_AXE", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
+      door_kind = { 13, 0, 16, 64, 3 },
     }
   },
 
@@ -982,6 +1007,7 @@ XN_DOOR_PREFABS =
       door_w="D_WINNOW", door_c="F_009",
       track_w="STEEL08",
       door_h=128,
+      door_kind = { 12, 0, 16, 64 },
     },
 
     theme_probs = { CITY=60,ICE=10,CAVE=20 },
