@@ -516,7 +516,7 @@ XN_SWITCHES =
         floor="F_075", ceil="F_075",
         switch_h=48, x_offset=0, y_offset=0,
 
-        kind = { 12, "tag", 16, 64 },
+        kind = { id=12, act="S1", args={"tag", 16, 64} },
       }
     },
 
@@ -549,7 +549,7 @@ XN_SWITCHES =
         floor="F_025", ceil="F_025",
         switch_h=40, x_offset=0, y_offset=0,
 
-        kind = { 12, "tag", 16, 64 },
+        kind = { id=12, act="S1", args={"tag", 16, 64} },
       }
     },
 
@@ -577,7 +577,7 @@ XN_SWITCHES =
         switch_w="SW_2_UP",
         switch_h=48, x_offset=0, y_offset=0,
 
-        kind = { 12, "tag", 16, 64 },
+        kind = { id=12, act="S1", args={"tag", 16, 64} },
       }
     },
 
@@ -605,7 +605,7 @@ XN_SWITCHES =
         switch_w="SW51_OFF",
         switch_h=32, x_offset=0, y_offset=0,
 
-        kind = { 12, "tag", 16, 64 },
+        kind = { id=12, act="S1", args={"tag", 16, 64} },
       }
     },
 
@@ -633,7 +633,7 @@ XN_SWITCHES =
         switch_w="SW_EL1",
         switch_h=32, x_offset=0, y_offset=0,
 
-        kind = { 12, "tag", 16, 64 },
+        kind = { id=12, act="S1", args={"tag", 16, 64} },
       }
     },
 
@@ -661,7 +661,7 @@ XN_SWITCHES =
         switch_w="SW_OL1",
         switch_h=32, x_offset=0, y_offset=0,
 
-        kind = { 12, "tag", 16, 64 },
+        kind = { id=12, act="S1", args={"tag", 16, 64} },
       }
     },
 
@@ -690,7 +690,7 @@ XN_SWITCHES =
         switch_f="F_012", ped_f="F_012",
         switch_h=32, x_offset=0, y_offset=0,
 
-        kind = { 12, "tag", 16, 64 },
+        kind = { id=12, act="S1", args={"tag", 16, 64} },
       }
     },
 
@@ -746,7 +746,7 @@ XN_KEY_DOORS =
       door_w="D_CAST", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 5 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 5} },
     }
   },
 
@@ -762,7 +762,7 @@ XN_KEY_DOORS =
       track_w="STEEL08",
       frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 4 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 4} },
     }
   },
 
@@ -778,7 +778,7 @@ XN_KEY_DOORS =
       track_w="STEEL08",
       frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 11 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 11} },
     }
   },
 
@@ -794,7 +794,7 @@ XN_KEY_DOORS =
       track_w="STEEL08",
       frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 7 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 7} },
     }
   },
 
@@ -807,7 +807,7 @@ XN_KEY_DOORS =
       door_w="D_CAVE2", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 2 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 2} },
     }
   },
 
@@ -820,7 +820,7 @@ XN_KEY_DOORS =
       door_w="D_SWAMP2", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 10 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 10} },
     }
   },
 
@@ -833,7 +833,7 @@ XN_KEY_DOORS =
       door_w="D_STEEL", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 1 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 1} },
     }
   },
 
@@ -846,7 +846,7 @@ XN_KEY_DOORS =
       door_w="D_RUST", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 8 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 8} },
     }
   },
 
@@ -859,7 +859,7 @@ XN_KEY_DOORS =
       door_w="D_DUNGEO", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 6 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 6} },
     }
   },
 
@@ -872,7 +872,7 @@ XN_KEY_DOORS =
       door_w="D_WASTE", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 9 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 9} },
     }
   },
 
@@ -885,7 +885,7 @@ XN_KEY_DOORS =
       door_w="D_AXE", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { 13, 0, 16, 64, 3 },
+      door_kind = { id=13, act="SR", args={"tag", 16, 64, 3} },
     }
   },
 
@@ -984,14 +984,14 @@ XN_LIFTS =
 {
   slow =
   {
-    kind = { 62, "tag", 16, 64 },
-    walk = { 62, "tag", 16, 64 },
+    kind = { id=62, act="SR", args={"tag", 16, 64} },
+    walk = { id=62, act="SR", args={"tag", 16, 64} },
   },
 
   fast =
   {
-    kind = { 62, "tag", 32, 64 },
-    walk = { 62, "tag", 32, 64 },
+    kind = { id=62, act="SR", args={"tag", 32, 64} },
+    walk = { id=62, act="SR", args={"tag", 32, 64} },
   },
 }
 
@@ -1007,7 +1007,7 @@ XN_DOOR_PREFABS =
       door_w="D_WINNOW", door_c="F_009",
       track_w="STEEL08",
       door_h=128,
-      door_kind = { 12, 0, 16, 64 },
+      door_kind = { id=12, act="SR", args={"tag", 16, 64} },
     },
 
     theme_probs = { CITY=60,ICE=10,CAVE=20 },
