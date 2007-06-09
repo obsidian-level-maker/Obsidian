@@ -49,7 +49,7 @@ function add_thing(c, bx,by, name, blocking, angle, options)
   local B = PLAN.blocks[bx][by]
   
   if not B then
-    error("Thing placed in the void")
+    error("Thing placed in the void: " .. name)
   end
 
   if not B.things then B.things = {} end
