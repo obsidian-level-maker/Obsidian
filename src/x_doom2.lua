@@ -192,7 +192,7 @@ D2_COMBOS =
     floor = "FLOOR5_4",
     ceil = "CEIL1_2",
 
-    scenery = { "candelabra", "evil_eye" },
+    scenery = { candelabra=6, evil_eye=3 },
 
     theme_probs = { URBAN=50 },
   },
@@ -211,7 +211,7 @@ D2_COMBOS =
     floor = "FLOOR1_1",
     ceil = "FLAT4",
 
-    scenery = { "mercury_lamp", "short_lamp" },
+    scenery = { mercury_lamp=5, short_lamp=5 },
     bad_liquid = "water",
 
     theme_probs = { TECH=20 },
@@ -230,7 +230,7 @@ D2_COMBOS =
     floor = "GRNROCK",
     ceil = "RROCK04",
 
-    scenery = { "red_pillar", "red_column", "red_column_skl" },
+    scenery = { red_pillar=5, red_column=5, red_column_skl=5 },
 
     bad_liquid = "nukage",
     good_liquid = "blood",
@@ -274,7 +274,7 @@ D2_COMBOS =
     ceil  = "RROCK04",
   --  lift_floor = "FLOOR4_8",
 
-    scenery = { "burnt_tree", "big_tree" },
+    scenery = { burnt_tree=5, big_tree=5 },
     bad_liquid = "slime",
 
     theme_probs = { NATURE=50 },
@@ -314,7 +314,7 @@ D2_COMBOS =
     floor = "MFLR8_4",
     ceil  = "MFLR8_4",
 
-    scenery = { "skull_rock", "brown_stub", "evil_eye" },
+    scenery = { skull_rock=5, brown_stub=3, evil_eye=5 },
 
     theme_probs = { HELL=30 },
   },
@@ -351,7 +351,7 @@ D2_COMBOS =
     floor = "FLOOR0_7",
     ceil = "CEIL5_2",
 
-    scenery = { "red_torch", "red_torch_sm" },
+    scenery = { red_torch=5, red_torch_sm=3 },
     bad_liquid = "slime",
 
     theme_probs = { URBAN=30 },
@@ -369,7 +369,7 @@ D2_COMBOS =
     floor = "RROCK12",
     ceil = "FLAT1",
 
-    scenery = { "green_torch", "green_torch_sm" },
+    scenery = { green_torch=5, green_torch_sm=3 },
 
     theme_probs = { URBAN=20 },
   },

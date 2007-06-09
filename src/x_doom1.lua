@@ -139,7 +139,7 @@ DM_COMBOS =
     floor = "FLOOR7_2",
     ceil = "FLOOR7_1",
 
-    scenery = { "red_pillar", "red_column", "red_column_skl" },
+    scenery = { red_pillar=5, red_column=5, red_column_skl=5 },
 
     bad_liquid = "nukage",
     good_liquid = "blood",
@@ -177,7 +177,7 @@ DM_COMBOS =
     ceil = "CEIL1_1",
     floor = "FLAT5_1",
 
-    scenery = { "impaled_human", "hang_twitching" },
+    scenery = { impaled_human=5, hang_twitching=5 },
 
     theme_probs = { URBAN=30 },
   },
@@ -234,7 +234,7 @@ DM_COMBOS =
     ceil = "FLAT1",
   --  lift_floor = "FLOOR4_8",
 
-    scenery = { "green_pillar", "green_column", "green_column_hrt" },
+    scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
 
     theme_probs = { INDUSTRIAL=66, URBAN=10 },
   },
@@ -267,7 +267,7 @@ DM_COMBOS =
     floor = "MFLR8_1",
     ceil = "MFLR8_1",
 
-    scenery = { "blue_torch", "blue_torch_sm" },
+    scenery = { blue_torch=5, blue_torch_sm=3 },
 
     theme_probs = { URBAN=70, INDUSTRIAL=5 },
     door_probs = { out_diff=75, combo_diff=10, normal=5 }
@@ -288,7 +288,7 @@ DM_COMBOS =
     ceil = "MFLR8_2",
   --  lift_floor = "FLOOR4_8",
 
-    scenery = { "skull_pole", "skull_kebab" },
+    scenery = { skull_pole=5, skull_kebab=5 },
     good_liquid = "blood",
 
     theme_probs = { URBAN=50 },
