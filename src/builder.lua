@@ -6781,19 +6781,25 @@ fab.name, c.x,c.y, x,y,dir)
 
     local def
 
-    if not def and c.room_type and c.room_type.wall_fabs and rand_odds(88) then
+    if not def and c.room_type and c.room_type.wall_fabs then
       local name = rand_key_by_probs(c.room_type.wall_fabs)
-      def = non_nil(GAME.wall_fabs[name])
+      if name ~= "other" then
+        def = non_nil(GAME.wall_fabs[name])
+      end
     end
 
-    if not def and c.combo.wall_fabs and rand_odds(60) then
+    if not def and c.combo.wall_fabs then
       local name = rand_key_by_probs(c.combo.wall_fabs)
-      def = non_nil(GAME.wall_fabs[name])
+      if name ~= "other" then
+        def = non_nil(GAME.wall_fabs[name])
+      end
     end
 
-    if not def and c.quest.theme.wall_fabs and rand_odds(60) then
+    if not def and c.quest.theme.wall_fabs then
       local name = rand_key_by_probs(c.quest.theme.wall_fabs)
-      def = non_nil(GAME.wall_fabs[name])
+      if name ~= "other" then
+        def = non_nil(GAME.wall_fabs[name])
+      end
     end
 
     if not def then
@@ -6835,19 +6841,25 @@ fab.name, c.x,c.y, x,y,dir)
     if is_feature then
       def = select_nice_fab(c, GAME.feat_fabs)
     else
-      if not def and c.room_type and c.room_type.sc_fabs and rand_odds(88) then
+      if not def and c.room_type and c.room_type.sc_fabs then
         local name = rand_key_by_probs(c.room_type.sc_fabs)
-        def = non_nil(GAME.sc_fabs[name])
+        if name ~= "other" then
+          def = non_nil(GAME.sc_fabs[name])
+        end
       end
 
-      if not def and c.combo.sc_fabs and rand_odds(60) then
+      if not def and c.combo.sc_fabs then
         local name = rand_key_by_probs(c.combo.sc_fabs)
-        def = non_nil(GAME.sc_fabs[name])
+        if name ~= "other" then
+          def = non_nil(GAME.sc_fabs[name])
+        end
       end
 
-      if not def and c.quest.theme.sc_fabs and rand_odds(60) then
+      if not def and c.quest.theme.sc_fabs then
         local name = rand_key_by_probs(c.quest.theme.sc_fabs)
-        def = non_nil(GAME.sc_fabs[name])
+        if name ~= "other" then
+          def = non_nil(GAME.sc_fabs[name])
+        end
       end
 
       if not def then
@@ -6914,22 +6926,23 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
     -- FIXME: use multiple times
 
     local item
-    if c.combo.scenery and rand_odds(30) then
-      item = c.combo.scenery
-      if type(item) == "table" then
-        item = rand_element(item)
-      end
-      assert(item)
-    end
 
-    if not item and c.room_type and c.room_type.scenery and rand_odds(80) then
+    if not item and c.room_type and c.room_type.scenery then
       item = rand_key_by_probs(c.room_type.scenery)
-      assert(item)
+      if item == "other" then item = nil end
     end
 
-    if not item and c.quest.theme and c.quest.theme.general_scenery and rand_odds(30) then
+    if not item and c.combo.scenery then
+      item = rand_sel(40, c.combo.scenery, "other")
+      if type(item) == "table" then
+        item = rand_key_by_probs(item)
+      end
+      if item == "other" then item = nil end
+    end
+
+    if not item and c.quest.theme and c.quest.theme.scenery then
       item = rand_key_by_probs(c.quest.theme.general_scenery)
-      assert(item)
+      if item == "other" then item = nil end
     end
 
     if not item then return end
