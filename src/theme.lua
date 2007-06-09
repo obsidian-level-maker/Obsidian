@@ -41,7 +41,8 @@ function name_up_theme()
     "combos",   "exits",  "hallways",
     "hangs",    "crates", "doors",    "mats",
     "lights",   "pics",   "liquids",  "rails",
-    "scenery",  "sc_fabs", "rooms",   "themes"
+    "scenery",  "rooms",   "themes",
+    "sc_fabs",  "feat_fabs",
   }
 
   for zzz,sub in ipairs(SUB_LISTS) do

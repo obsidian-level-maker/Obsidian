@@ -6013,19 +6013,38 @@ function tizzy_up_room(c)
     end
   end
 
-  local function find_fab_loc(c, fab,def, walk1,walk2, dir)
-assert(def)
+  local function sort_fab_locs(c, mode, x, y)
 
     if not c.fab_spots then
       c.fab_spots = {}
       for x = c.bx1,c.bx2 do for y = c.by1,c.by2 do
-        table.insert(c.fab_spots, {x=x, y=y})
+        table.insert(c.fab_spots, {c=c, x=x, y=y, rand=con.random()})
       end end
     end
 
-    for max_walk = walk1,walk2 do
-
+    if mode == "random" then
       rand_shuffle(c.fab_spots)
+
+    elseif mode == "near" then
+      
+      table.sort(c.fab_spots,
+        function (a, b)
+          local a_dist = dist(x, y, a.x, a.y) + a.rand/2
+          local b_dist = dist(x, y, b.x, b.y) + b.rand/2
+          return a_dist < b_dist
+        end
+      )
+
+    else
+      error("Unknwon sort_fab_locs mode: " .. tostring(mode))
+    end
+  end
+
+  local function find_fab_loc(c, fab,def, walk1,walk2, dir)
+    assert(def)
+    assert(c.fab_spots)
+
+    for max_walk = walk1,walk2 do
 
       for zzz,spot in ipairs(c.fab_spots) do
         local x = spot.x
@@ -6468,6 +6487,7 @@ assert(def)
     local fab = PREFABS["PLAIN"]
     assert(fab)
 
+    sort_fab_locs(c, "random");
     if not x then x,y,dir = find_fab_loc(c, fab,def, 0, sel(must_put,3,2)) end
 
     if not x and must_put then
@@ -6497,6 +6517,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
     local fab = PREFABS["PLAIN"]
     assert(fab)
 
+    sort_fab_locs(c, "random");
     local x,y,dir = find_fab_loc(c, fab,{}, 0, 3)
 
 --???    if not x then
@@ -6646,6 +6667,8 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     if in_wall then
       x,y,dir = find_wallish_loc(c, fab, nil, c.q_spot)
     else
+      assert(c.q_spot)
+      sort_fab_locs(c, "near", (c.q_spot.x1+c.q_spot.x2)/2, (c.q_spot.y1+c.q_spot.y2)/2 );
       x,y,dir = find_fab_loc(c, fab,{}, 0,3)
     end
 
@@ -6685,6 +6708,7 @@ fab.name, c.x,c.y, x,y,dir)
       door_kind = "door_elevator", door_dir = 10-want_dir,
     }
 
+    sort_fab_locs(c, "random");
     local x,y,dir = find_fab_loc(c, fab,def, 0,3, want_dir)
 
     if not x then error("cannot find place for exit elevator!") end
@@ -6722,16 +6746,14 @@ fab.name, c.x,c.y, x,y,dir)
     try_add_wall_prefab(c, def)
   end
 
-  local function add_prefab(c)
-
-    if not GAME.sc_fabs then return end
+  local function add_prefab(c, is_feature)
 
     local function get_rand_scenery_prefab(c)
 
       -- FIXME: better selection
 
       for loop = 1,20 do
-        local def = get_rand_fab(GAME.sc_fabs)
+        local def = get_rand_fab(sel(is_feature, GAME.feat_fabs, GAME.sc_fabs))
         local fab = non_nil(PREFABS[def.prefab])
         local is_OK = true
         
@@ -6749,10 +6771,11 @@ fab.name, c.x,c.y, x,y,dir)
 
     assert(def.skin)
 
----###    if fab.height_range then
----###      local h = c.ceil_h - c.floor_h
----###      if h < fab.height_range[1] or h > fab.height_range[2] then return end
----###    end
+    if is_feature then
+      sort_fab_locs(c, "near", (c.bx1+c.bx2)/2, (c.by1+c.by2)/2)
+    else
+      sort_fab_locs(c, "random");
+    end
 
     local x,y,dir = find_fab_loc(c, fab,def, 0,2, def.force_dir)
     if not x then return end
@@ -6816,6 +6839,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
     local fab = PREFABS[info.prefab or "PLAIN"]
     assert(fab)
 
+    sort_fab_locs(c, "random");
     local x,y,dir = find_fab_loc(c, fab,{}, 0,2)
     if not x then return end
 
@@ -6937,6 +6961,10 @@ con.debugf("add_scenery : %s\n", item)
   end
 
   -- SCENERY
+  if GAME.feat_fabs and rand_odds(90) then
+    add_prefab(c, "feature")
+  end
+
   for loop = 1,8 do
     add_scenery(c)
   end
