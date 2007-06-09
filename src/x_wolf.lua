@@ -419,7 +419,7 @@ WF_THEMES =
       KITCHEN = 30,  TORTURE = 20,
     },
 
-    general_scenery =
+    scenery =
     {
       suit_of_armor=50, flag=20,
     },
@@ -435,7 +435,7 @@ WF_THEMES =
       KITCHEN = 10,  TORTURE = 60,
     },
 
-    general_scenery =
+    scenery =
     {
       dead_guard=50, puddle=10,
     },
@@ -456,7 +456,7 @@ WF_THEMES =
       KITCHEN = 5,   TORTURE = 30,
     },
 
-    general_scenery =
+    scenery =
     {
       vines=90, spears=30,
     },

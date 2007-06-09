@@ -120,7 +120,7 @@ SP_THEMES =
       PURPLE_BRICK = 20,
     },
 
-    general_scenery =
+    scenery =
     {
       dead_guard=50, blood_well=40, puddle=10,
     },
@@ -155,7 +155,7 @@ SP_THEMES =
       PURPLE_BRICK= 10,
     },
 
-    general_scenery =
+    scenery =
     {
       marble_column=90, angel_statue=30,
       suit_of_armor=10, flag=10,
@@ -191,7 +191,7 @@ SP_THEMES =
       PURPLE_BRICK = 5,
     },
 
-    general_scenery =
+    scenery =
     {
       vines=70, cow_skull=30, skull_stick=20
     },
