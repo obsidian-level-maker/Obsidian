@@ -138,7 +138,7 @@ XN_THINGS =
 
   -- urbane --
   winged_statue1 = { id=5,   kind="scenery", r=12,h=64 },
-  winged_statue1 = { id=9011,kind="scenery", r=12,h=64 },
+  winged_statue2 = { id=9011,kind="scenery", r=12,h=64 },
   suit_of_armor  = { id=8064,kind="scenery", r=16,h=72 },
 
   gargoyle_tall  = { id=72, kind="scenery", r=16,h=108 },
@@ -368,7 +368,7 @@ XN_COMBOS =
     floor = "F_019",
     ceil  = "F_019",
 
-    scenery = "short_statue",
+    scenery = "gargoyle_short",
 
     theme_probs = { CITY=20 },
   },
