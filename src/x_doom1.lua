@@ -964,7 +964,7 @@ DM_KEY_DOORS =
 {
   k_blue =
   {
-    w=128, h=112, kind_rep=26, 
+    w=128, h=112,
 
     prefab = "DOOR_LIT_LOCKED",
     
