@@ -83,6 +83,15 @@ XL_ACT_MONSTER = (2 * 1024)
 XL_ACT_SHOOT   = (3 * 1024)
 XL_ACT_BUMP    = (4 * 1024)
 
+HEXEN_ACTION_LOOKUP =
+{
+  W1 = 0x0000, WR = 0x0200,
+  S1 = 0x0400, SR = 0x0600,
+  M1 = 0x0800, MR = 0x0a00,
+  G1 = 0x0c00, GR = 0x0e00,
+  B1 = 0x1000, BR = 0x1200,
+}
+
 
 function write_level(lev_name)
  
@@ -127,6 +136,27 @@ function write_level(lev_name)
         if th.options.medium then th.flags = th.flags + MTF_MEDIUM end
         if th.options.hard   then th.flags = th.flags + MTF_HARD end
         if th.options.ambush then th.flags = th.flags + MTF_AMBUSH end
+
+        if GAME.hexen_format then
+          -- the thing might only for a certain player class,
+          -- otherwise it exits for every class.
+              if th.options.fighter_only then th.flags = th.flags + XTF_FIGHTER
+          elseif th.options.cleric_only  then th.flags = th.flags + XTF_CLERIC
+          elseif th.options.mage_only    then th.flags = th.flags + XTF_MAGE
+          else
+            th.flags = th.flags + XTF_FIGHTER + XTF_CLERIC + XTF_MAGE
+          end
+
+          th.flags = th.flags + XTF_SP + XTF_COOP + XTF_DM
+        end
+
+      else -- default options
+        th.flags = MTF_EASY + MTF_MEDIUM + MTF_HARD
+
+        if GAME.hexen_format then
+          th.flags = th.flags + XTF_FIGHTER + XTF_CLERIC + XTF_MAGE
+          th.flags = th.flags + XTF_SP + XTF_COOP + XTF_DM
+        end
       end
 
       table.insert(thing_list, th)
@@ -706,7 +736,7 @@ function write_level(lev_name)
       end
     end
   end
-  
+ 
   local function write_vertex(vert)
 
     vert.index = total_vert
@@ -758,11 +788,28 @@ function write_level(lev_name)
         if L.back  and not L.back.index  then
           write_sidedef(L.back)
         end
-      
-        wad.add_linedef(L.v1.index, L.v2.index,
-              L.front and L.front.index or -1,
-              L.back  and L.back.index  or -1,
-              L.kind or 0, L.flags or 0, L.tag or 0, L.args);
+
+        -- Hexen linetypes
+        if type(L.kind) == "table" then
+          local flags = non_nil(L.flags)
+
+          local args = copy_table(L.kind.args)
+
+          if args[1] == "tag" then args[1] = L.tag or 0 end
+          if args[2] == "tag" then args[2] = L.tag or 0 end
+
+          flags = flags + HEXEN_ACTION_LOOKUP(L.kind.act)
+
+          wad.add_linedef(L.v1.index, L.v2.index,
+                L.front and L.front.index or -1,
+                L.back  and L.back.index  or -1,
+                L.kind.id, flags, 0, args);
+        else
+          wad.add_linedef(L.v1.index, L.v2.index,
+                L.front and L.front.index or -1,
+                L.back  and L.back.index  or -1,
+                L.kind or 0, non_nil(L.flags), L.tag or 0, L.args);
+        end
       end
     end
   end
@@ -773,7 +820,7 @@ function write_level(lev_name)
 
       wad.add_thing(
           NORMALIZE(th.x), NORMALIZE(th.y), NORMALIZE(th.z or 0),
-          th.kind.id, th.angle or 0, th.flags or 7,
+          th.kind.id, th.angle or 0, non_nil(th.flags),
           th.tid or 0, th.special or 0, th.args)
     end
   end
