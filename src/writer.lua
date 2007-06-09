@@ -798,7 +798,7 @@ function write_level(lev_name)
           if args[1] == "tag" then args[1] = L.tag or 0 end
           if args[2] == "tag" then args[2] = L.tag or 0 end
 
-          flags = flags + HEXEN_ACTION_LOOKUP(L.kind.act)
+          flags = flags + HEXEN_ACTION_LOOKUP[L.kind.act]
 
           wad.add_linedef(L.v1.index, L.v2.index,
                 L.front and L.front.index or -1,

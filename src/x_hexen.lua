@@ -1098,7 +1098,11 @@ XN_MISC_PREFABS =
   {
     w=128, h=128, prefab = "DOOR",
 
-    skin = { door_h=128 }
+    skin =
+    {
+      door_h=128,
+      door_kind = { id=12, act="SR", args={"tag", 16, 64} },
+    }
   },
 
   gate_EXIT =
