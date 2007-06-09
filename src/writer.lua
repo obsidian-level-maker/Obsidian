@@ -485,6 +485,11 @@ function write_level(lev_name)
         kind = not b.solid and (b.door_kind or b.lift_kind)
       }
 
+      -- FIXME: crud !!!!
+      if not b.solid and b.door_kind and GAME.hexen_format then
+        cur_line.tag = b.tag
+      end
+
       if not b.solid and b.lift_kind then
         cur_line.tag = b.tag
 
