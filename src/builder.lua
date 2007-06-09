@@ -350,8 +350,8 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
   end
 
   local function th_coords(tx, ty)
-    local mid_x = long * 8
-    local mid_y = deep * 8
+    local mid_x = long * (fab.scale or 16) / 2
+    local mid_y = deep * (fab.scale or 16) / 2
 
     tx, ty = dd_coords(tx - mid_x, ty - mid_y)
 
@@ -374,6 +374,7 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
     if skin[key] then return skin[key] end
     if model[key] then return model[key] end
 
+--con.printf("Parms =\n%s\nSkin=\n%s\n", table_to_str(parm), table_to_str(skin))
     error("Bad fab/parameters: missing value for " .. key .. " in prefab: " .. fab.name)
   end
 
@@ -3042,6 +3043,10 @@ function build_borders()
 ---###        door_kind = 1,
 ---###        tag = 0,
 ---###      }
+--
+    elseif GAME.hexen_format then
+      -- Hexen doors need tags (AFAIK)
+      parm.tag = allocate_tag()
     end
 
     if not door_info.prefab then print(table_to_str(door_info)) end
