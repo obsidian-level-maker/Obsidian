@@ -2424,6 +2424,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
       
       c.q_spot.kind = "room"
       c.q_spot.purpose = purpose
+      c.q_spot.no_reclaim = true
 
 con.printf("Q-SPOT @ (%d,%d) chunk:[%d,%d] for:%s\n",
 c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
@@ -4533,7 +4534,7 @@ sel(B.on_path, "YES", "NO"))
       for kx = 1,3 do for ky = 1,3 do
 
         local K = c.chunks[kx][ky]
-        if is_roomy(K) then
+        if is_roomy(K) and not K.no_reclaim then
 
           local x_dir = col_dirs[kx]
           local y_dir = row_dirs[ky]
@@ -6487,7 +6488,12 @@ function tizzy_up_room(c)
     local fab = PREFABS["PLAIN"]
     assert(fab)
 
-    sort_fab_locs(c, "random");
+    if c.q_spot and must_put then
+      sort_fab_locs(c, "near", (c.q_spot.x1+c.q_spot.x2)/2, (c.q_spot.y1+c.q_spot.y2)/2 );
+    else
+      sort_fab_locs(c, "random");
+    end
+
     if not x then x,y,dir = find_fab_loc(c, fab,def, 0, sel(must_put,3,2)) end
 
     if not x and must_put then
@@ -6798,6 +6804,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
     B_prefab(c, fab, def.skin, parm, PLAN.blocks[x][y].chunk.rmodel,c.combo, x, y, dir, mirror)
 
     fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
+    return true
   end
 
   local function add_scenery(c)
@@ -6960,11 +6967,13 @@ con.debugf("add_scenery : %s\n", item)
     end
   end
 
-  -- SCENERY
   if GAME.feat_fabs and rand_odds(90) then
-    add_prefab(c, "feature")
+    if not add_prefab(c, "feature") then
+           add_prefab(c, "feature")
+    end
   end
 
+  -- SCENERY
   for loop = 1,8 do
     add_scenery(c)
   end
