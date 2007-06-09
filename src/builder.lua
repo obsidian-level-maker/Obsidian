@@ -6722,58 +6722,142 @@ fab.name, c.x,c.y, x,y,dir)
     B_prefab(c, fab, def.skin, parm, c.rmodel,c.combo, x, y, dir)
   end
 
+  local function select_nice_fab(c, fab_tab)
+
+    local list = {}
+
+    for name,def in pairs(fab_tab) do
+      
+      local prob = 10
+
+      local fab = non_nil(PREFABS[def.prefab])
+
+      if def.environment then
+        if (def.environment == "indoor" and c.combo.outdoor) or
+           (def.environment == "outdoor" and not c.combo.outdoor)
+        then prob = 0 end
+      end
+
+      if prob > 0 and def.theme_probs then
+        prob = def.theme_probs[theme.name] or 0
+      end
+
+      if prob > 0 then
+        list[name] = prob
+      end
+    end
+
+    if table_empty(list) then
+      return nil
+    end
+
+    local name = rand_key_by_probs(list)
+
+    return non_nil(fab_tab[name])
+  end
+
   local function add_wall_stuff(c)
 
     if not GAME.wall_fabs then return end
 
-    local function get_rand_wall_fab(c)
+---##    local function get_rand_wall_fab(c)
+---##
+---##      -- FIXME: better selection  [ MERGE with get_rand_scenery_prefab ?? ]
+---##
+---##      for loop = 1,20 do
+---##        local def = get_rand_fab(GAME.wall_fabs)
+---##        local fab = non_nil(PREFABS[def.prefab])
+---##        local is_OK = true
+---##
+---##        if def.environment then
+---##          if (def.environment == "indoor" and c.combo.outdoor) or
+---##             (def.environment == "outdoor" and not c.combo.outdoor)
+---##          then is_OK = false end
+---##        end
+---##
+---##        if is_OK then return def, fab end
+---##      end
+---##    end
 
-      -- FIXME: better selection  [ MERGE with get_rand_scenery_prefab ?? ]
+    local def
 
-      for loop = 1,20 do
-        local def = get_rand_fab(GAME.wall_fabs)
-        local fab = non_nil(PREFABS[def.prefab])
-        local is_OK = true
-
-        if def.environment then
-          if (def.environment == "indoor" and c.combo.outdoor) or
-             (def.environment == "outdoor" and not c.combo.outdoor)
-          then is_OK = false end
-        end
-
-        if is_OK then return def, fab end
-      end
+    if not def and c.room_type and c.room_type.wall_fabs and rand_odds(88) then
+      local name = rand_key_by_probs(c.room_type.wall_fabs)
+      def = non_nil(GAME.wall_fabs[name])
     end
 
-    local def, fab = get_rand_wall_fab(c.quest.theme)
+    if not def and c.combo.wall_fabs and rand_odds(60) then
+      local name = rand_key_by_probs(c.combo.wall_fabs)
+      def = non_nil(GAME.wall_fabs[name])
+    end
 
-    if not def then return end
+    if not def and c.quest.theme.wall_fabs and rand_odds(60) then
+      local name = rand_key_by_probs(c.quest.theme.wall_fabs)
+      def = non_nil(GAME.wall_fabs[name])
+    end
 
-    try_add_wall_prefab(c, def)
+    if not def then
+      def = select_nice_fab(c, GAME.wall_fabs)
+    end
+
+    if def then
+      try_add_wall_prefab(c, def)
+
+      while def.repeat_chance and rand_odds(def.repeat_chance) do
+        try_add_wall_prefab(c, def)
+      end 
+    end
   end
 
   local function add_prefab(c, is_feature)
 
-    local function get_rand_scenery_prefab(c)
+---##    local function get_rand_scenery_prefab(c)
+---##
+---##      -- FIXME: better selection
+---##
+---##      for loop = 1,20 do
+---##        local def = get_rand_fab(sel(is_feature, GAME.feat_fabs, GAME.sc_fabs))
+---##        local fab = non_nil(PREFABS[def.prefab])
+---##        local is_OK = true
+---##        
+---##        if def.environment then
+---##          if (def.environment == "indoor" and c.combo.outdoor) or
+---##             (def.environment == "outdoor" and not c.combo.outdoor)
+---##          then is_OK = false end
+---##        end
+---##
+---##        if is_OK then return def, fab end
+---##      end
+---##    end
 
-      -- FIXME: better selection
+    local def
 
-      for loop = 1,20 do
-        local def = get_rand_fab(sel(is_feature, GAME.feat_fabs, GAME.sc_fabs))
-        local fab = non_nil(PREFABS[def.prefab])
-        local is_OK = true
-        
-        if def.environment then
-          if (def.environment == "indoor" and c.combo.outdoor) or
-             (def.environment == "outdoor" and not c.combo.outdoor)
-          then is_OK = false end
-        end
+    if is_feature then
+      def = select_nice_fab(c, GAME.feat_fabs)
+    else
+      if not def and c.room_type and c.room_type.sc_fabs and rand_odds(88) then
+        local name = rand_key_by_probs(c.room_type.sc_fabs)
+        def = non_nil(GAME.sc_fabs[name])
+      end
 
-        if is_OK then return def, fab end
+      if not def and c.combo.sc_fabs and rand_odds(60) then
+        local name = rand_key_by_probs(c.combo.sc_fabs)
+        def = non_nil(GAME.sc_fabs[name])
+      end
+
+      if not def and c.quest.theme.sc_fabs and rand_odds(60) then
+        local name = rand_key_by_probs(c.quest.theme.sc_fabs)
+        def = non_nil(GAME.sc_fabs[name])
+      end
+
+      if not def then
+        def = select_nice_fab(c, GAME.sc_fabs)
       end
     end
 
-    local def, fab = get_rand_scenery_prefab(c)
+    if not def then return end
+
+    local fab = non_nil(PREFABS[def.prefab])
 
     assert(def.skin)
 
@@ -6802,8 +6886,18 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
     if fab.mirror then mirror = rand_odds(50) end
 
     B_prefab(c, fab, def.skin, parm, PLAN.blocks[x][y].chunk.rmodel,c.combo, x, y, dir, mirror)
-
     fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
+
+    -- some prefabs look good used multiple times
+    while def.repeat_chance and rand_odds(def.repeat_chance) do
+      sort_fab_locs("random");
+      local x,y,dir = find_fab_loc(c, fab,def, 0,2, def.force_dir)
+      if x then
+        B_prefab(c, fab, def.skin, parm, PLAN.blocks[x][y].chunk.rmodel,c.combo, x, y, dir, mirror)
+        fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
+      end
+    end
+
     return true
   end
 
@@ -6846,23 +6940,30 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
     local fab = PREFABS[info.prefab or "PLAIN"]
     assert(fab)
 
-    sort_fab_locs(c, "random");
-    local x,y,dir = find_fab_loc(c, fab,{}, 0,2)
-    if not x then return end
+    while true do
+      sort_fab_locs(c, "random");
+      local x,y,dir = find_fab_loc(c, fab,{}, 0,2)
+      if not x then return end
 
 con.debugf("add_scenery : %s\n", item)
-    gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel)
-    local th = add_thing(c, x, y, item, true)
+      gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel)
+      local th = add_thing(c, x, y, item, true)
 
-    -- when there is wriggle room, use it!
-    if info.r < 30 then
-      local gap = 30 - info.r
-      
-      th.dx = rand_irange(-gap,gap)
-      th.dy = rand_irange(-gap,gap)
+      -- when there is wriggle room, use it!
+      if info.r < 30 then
+        local gap = 30 - info.r
+        
+        th.dx = rand_irange(-gap,gap)
+        th.dy = rand_irange(-gap,gap)
+      end
+
+      fab_mark_walkable(c, x, y, 8, 1,1, 4)
+    
+      -- some scenery looks good used multiple times
+      if not (info.repeat_chance and rand_odds(info.rand_odds)) then
+        return
+      end
     end
-
-    fab_mark_walkable(c, x, y, 8, 1,1, 4)
   end
 
 
