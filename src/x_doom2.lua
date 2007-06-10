@@ -763,35 +763,25 @@ D2_SCENERY =
 
 D2_SCENERY_PREFABS =
 {
+  --[[
   pedestal_PLAYER =
   {
     prefab = "PEDESTAL",
-
-    skin =
-    {
-      wall="SHAWN2", floor="FLAT22", ped_h=8,
-    },
+    skin = { wall="SHAWN2", floor="FLAT22", ped_h=8 },
   },
 
   pedestal_KEY =
   {
     prefab = "PEDESTAL",
-
-    skin =
-    {
-      wall="METAL", floor="GATE4", ped_h=16,
-    },
+    skin = { wall="METAL", floor="GATE4", ped_h=16 },
   },
 
   pedestal_WEAPON =
   {
     prefab = "PEDESTAL",
-
-    skin =
-    {
-      wall="METAL", floor="CEIL1_2", ped_h=12,
-    },
+    skin = { wall="METAL", floor="CEIL1_2", ped_h=12 },
   },
+  --]]
 
   pillar_light1_METAL =
   {
@@ -1162,6 +1152,7 @@ D2_FEATURE_PREFABS =
       beam_w = "WOOD1", beam_f = "FLAT5_2",
     },
 
+    pickup_specialness = 61,
     force_dir = 2, -- optimisation
   },
 
@@ -1254,6 +1245,7 @@ D2_FEATURE_PREFABS =
       step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
     },
 
+    pickup_specialness = 90,
     force_dir = 2, -- optimisation
   },
   
@@ -1270,6 +1262,7 @@ D2_FEATURE_PREFABS =
       step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
     },
 
+    pickup_specialness = 80,
     force_dir = 4, -- optimisation
   },
   
@@ -1304,6 +1297,7 @@ D2_FEATURE_PREFABS =
       step_w="STEP1", carpet_f="FLOOR1_1",
     },
 
+    pickup_specialness = 100,
     force_dir = 2, -- optimisation
   },
 
@@ -1319,6 +1313,8 @@ D2_FEATURE_PREFABS =
 
       liquid_f="NUKAGE1", sky_c="F_SKY1",
     },
+
+    pickup_specialness = 95,
   },
 
   skylight_mega_METAL =
@@ -1378,6 +1374,8 @@ D2_FEATURE_PREFABS =
       comp_Sf="CONS1_5",
       comp_cf="COMP01", side_w ="SILVER1"
     },
+
+    pickup_specialness = 60,
     force_dir = 2,
   },
 
@@ -1391,6 +1389,7 @@ D2_FEATURE_PREFABS =
       comp_Sf="CONS1_5",
       comp_cf="COMP01", side_w ="SILVER1"
     },
+    pickup_specialness = 60,
     force_dir = 2,
   },
 
