@@ -376,7 +376,7 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
       want_len = 1 + rand_index_by_probs(len_probs),
     }
     if (item == "secret") or
-       (kind == "weapon" and rand_odds(15)) or
+       (kind == "weapon" and rand_odds(2)) or
        (kind == "item"   and rand_odds(30))
     then
       Quest.is_secret = true
