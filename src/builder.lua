@@ -126,6 +126,28 @@ function show_fragments(block)
   end
 end
 
+function add_special_pickup_spot(c, bx,by, dx,dy, specialness)
+  if not c.special_spots then
+    c.special_spots = {}
+  end
+
+con.printf("ADD SPECIAL SPOT @ (%d,%d) sn:%d\n", c.x,c.y, specialness)
+
+  local SPOT =
+  {
+    c=c, x=bx, y=by, dx=dx, dy=dy, double=false,
+    specialness=specialness,
+  }
+
+  table.insert(c.special_spots, SPOT)
+
+  table.sort(c.special_spots,
+    function(a, b)
+      return a.specialness > b.specialness
+    end)
+
+  return SPOT
+end
 
 function fill(c, sx, sy, ex, ey, B, B2)
   if sx > ex then sx, ex = ex, sx end
@@ -561,7 +583,10 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
       local bx,by, dx,dy = th_coords(tdef.x, tdef.y)
 
-      if tdef.kind ~= "pickup_t" then -- ????
+      if tdef.kind == "pickup_t" then
+
+        add_special_pickup_spot(c, bx,by, dx,dy, skin.pickup_specialness or 20)
+     else
         -- FIXME: blocking
         local th = add_thing(c, bx,by, what_thing(tdef.kind), false)
 
@@ -4951,6 +4976,31 @@ con.debugf("  COORDS: (%d,%d) .. (%d,%d)  size:%dx%d\n", x1,y1, x2,y2, long,deep
 con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
 
     B_vista(link.vista_src, link.vista_dest, x1,y1, x2,y2, side, c.border[side].combo or c.combo, kind)
+
+    -- add special spots
+    local w = x2-x1+1
+    local h = y2-y1+1
+
+    if w >= 2 and h >= 2 then
+      local count = 1
+
+      if w >= 5 or h >= 5 then count = 2 end
+
+      for i = 1,count do
+        local x, y
+        if w >= h then
+          x = x1 + i*w/(count+1)
+          y = y1 + 1*h/2
+        else
+          x = x1 + 1*w/2
+          y = y1 + i*h/(count+1)
+        end
+
+        local spot = add_special_pickup_spot(c, int(x), int(y), 32,32, 200)
+
+        spot.vista_side = side
+      end
+    end
   end
 
   local function build_vistas(c)
@@ -6459,29 +6509,14 @@ function tizzy_up_room(c)
   end
 
 
-  local function add_object(c, name, must_put)
+  local function add_object(c, name, must_put, can_special)
 
     local x,y,dir
     
-    -- try a vista (FIXME: not good way to do this)
-    for side = 2,8,2 do
-      local L = c.link[side]
-      if L and L.kind == "vista" and L.vista_src == c and
-         not L.vista_got_obj
-      then
-        assert(L.vista_x1)
-
-        x = int((L.vista_x1 + L.vista_x2) / 2)
-        y = int((L.vista_y1 + L.vista_y2) / 2)
-        dir = side
-
-        L.vista_got_obj = true
-
-        -- TODO: pedestal for player thing
-
-        add_thing(c, x, y, name, true, dir_to_angle(side))
-        return
-      end
+    if can_special and c.special_spots and #c.special_spots >= 1 then
+      local spot = table.remove(c.special_spots, 1)
+      add_thing(c, spot.x, spot.y, name, true, dir_to_angle(spot.vista_side or c.exit_dir))
+      return
     end
 
     local def = {}
@@ -6512,7 +6547,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
   end
 
   local function add_player(c, name)
-    add_object(c, name, "must")
+    add_object(c, name, "must", "special")
   end
 
   local function add_dm_weapon(c)
@@ -7057,7 +7092,7 @@ con.debugf("add_scenery : %s\n", item)
       elseif c.quest.item == "treasure" then
         -- FIXME: room full of treasure (USE ROOM_TYPE INSTEAD)
       else
-        add_object(c, c.quest.item, "must")
+        add_object(c, c.quest.item, "must", "special")
       end
     end
 
@@ -7073,7 +7108,7 @@ con.debugf("add_scenery : %s\n", item)
   if PLAN.deathmatch then
     -- secondary DM PLAYER
     if rand_odds(DM_PLAYERS_2[SETTINGS.mons]) then
-      add_object(c, "dm_player")
+      add_object(c, "dm_player", false, "special")
     end
     -- secondary DM WEAPON
     if rand_odds(DM_WEAPONS_2[SETTINGS.traps]) then
@@ -7167,7 +7202,6 @@ function build_rooms()
   for zzz,cell in ipairs(PLAN.all_cells) do
     tizzy_up_room(cell)
     GAP_FILL_ROOM(cell)
-
   end
 end
 
