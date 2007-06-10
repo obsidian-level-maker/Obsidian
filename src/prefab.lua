@@ -2352,6 +2352,11 @@ BILLBOARD_STILTS_HUGE =
           [9] = { dx= 8, dy=0 },
         },
   },
+
+  things =
+  {
+    { kind="pickup_t", x=96, y=96 },
+  },
 },
 
 COMPUTER_TALL =
@@ -2425,6 +2430,11 @@ COMPUTER_DESK_U_SHAPE =
     -- corner
     c = { f_h=28, f_tex="comp_cf", l_tex="side_w", l_peg="top", },
   },
+
+  things =
+  {
+    { kind="pickup_t", x=36, y=96 },
+  },
 },
 
 COMPUTER_DESK_HUGE =
@@ -2437,6 +2447,11 @@ COMPUTER_DESK_HUGE =
     "..b",
     "..b",
     "ddc",
+  },
+
+  things =
+  {
+    { kind="pickup_t", x=80, y=128 },
   },
 },
 
