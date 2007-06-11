@@ -1077,10 +1077,356 @@ DM_PICS =
 
 DM_SCENERY_PREFABS =
 {
+  pillar_light1_METAL =
+  {
+    prefab = "PILLAR_LIGHT1",
+    add_mode = "island",
+
+    environment = "indoor",
+
+    skin = { beam_w="METAL", beam_f="CEIL5_2",
+             lite_w="LITE5" },
+  },
+
+  pillar_rnd_sm_POIS =
+  {
+    prefab = "PILLAR_ROUND_SMALL",
+    add_mode = "island",
+    environment = "indoor",
+
+    skin = { wall="BRNPOIS" },
+  },
+
+  billboard_lit_SHAWN =
+  {
+    prefab = "BILLBOARD_LIT",
+    environment = "outdoor",
+    add_mode = "extend",
+    min_height = 160,
+
+    skin =
+    {
+      pic_w  = "SHAWN1", pic_back = "SHAWN2",
+      pic_f = "CEIL3_5", pic_h = 88,
+
+      corn_w = "SHAWN2", corn2_w = "DOORSTOP",
+      corn_f = "FLAT19", corn_h  = 112,
+
+      step_w = "STEP4", step_f = "CEIL3_5",
+      lite_w = "LITE5",
+    },
+  },
+
+  ground_light_SILVER =
+  {
+    prefab = "GROUND_LIGHT",
+    environment = "outdoor",
+    min_height = 96,
+
+    skin =
+    { 
+      shawn_w = "SHAWN3", shawn_f = "FLAT1",
+      lite_w  = "LITE5",  lite_f  = "CEIL5_1",
+    },
+
+    force_dir = 2, -- optimisation
+  },
+
+  skylight_cross_sm_METAL =
+  {
+    prefab = "SKYLIGHT_CROSS_SMALL",
+    environment = "indoor",
+    add_mode = "island",
+    min_height = 80,
+
+    skin =
+    { 
+      sky_c = "F_SKY1",
+      frame_w = "METAL", frame_c = "CEIL5_2",
+    }
+  },
+
+  crate_CRATE1 =
+  {
+    prefab = "CRATE",
+
+    skin =
+    {
+      crate_h = 64,
+      crate_w = "CRATE1",
+      crate_f = "CRATOP2",
+    }
+  },
+
+  crate_CRATE2 =
+  {
+    prefab = "CRATE",
+
+    skin =
+    {
+      crate_h = 64,
+      crate_w = "CRATE2",
+      crate_f = "CRATOP1",
+    }
+  },
+
+  crate_WIDE =
+  {
+    prefab = "CRATE_BIG",
+
+    skin =
+    {
+      crate_h = 128,
+      crate_w = "CRATWIDE",
+      crate_f = "CRATOP1",
+    },
+
+    force_dir = 2, -- optimisation
+  },
+
+  crate_WOODSKUL =
+  {
+    prefab = "CRATE",
+
+    skin =
+    {
+      crate_h = 64,
+      crate_w = "WOOD4",
+      crate_f = "CEIL1_1",
+    }
+  },
+
+  crate_rotate_CRATE1 =
+  {
+    prefab = "CRATE_ROTATE",
+
+    skin =
+    {
+      crate_h = 64,
+      crate_w = "CRATE1",
+      crate_f = "CRATOP2",
+    }
+  },
+
+  crate_rotate_CRATE2 =
+  {
+    prefab = "CRATE_ROTATE",
+
+    skin =
+    {
+      crate_h = 128,
+      crate_w = "CRATE2",
+      crate_f = "CRATOP1",
+    }
+  },
+
+  crate_triple_A =
+  {
+    prefab = "CRATE_TRIPLE",
+    add_mode = "island",
+    min_height = 144,
+
+    skin =
+    {
+      crate_w1 = "CRATE1", crate_f1 = "CRATOP2",
+      crate_w2 = "CRATE1", crate_f2 = "CRATOP2",
+      crate_w3 = "CRATE2", crate_f3 = "CRATOP1",
+      small_w  = "CRATELIT", small_f = "CRATOP1",
+    },
+  },
+
+  crate_triple_B =
+  {
+    prefab = "CRATE_TRIPLE",
+    add_mode = "island",
+    min_height = 144,
+
+    skin =
+    {
+      crate_w1 = "CRATE2", crate_f1 = "CRATOP1",
+      crate_w2 = "CRATE1", crate_f2 = "CRATOP2",
+      crate_w3 = "CRATE1", crate_f3 = "CRATOP2",
+      small_w  = "CRATELIT", small_f = "CRATOP1",
+    },
+  },
+
+  cage_pillar_METAL =
+  {
+    prefab = "CAGE_PILLAR",
+    add_mode = "island",
+    min_height = 160,
+
+    skin =
+    {
+      cage_w = "METAL",
+      cage_f = "CEIL5_2", cage_c = "TLITE6_4",
+      rail_w = "MIDGRATE", rail_h = 72,
+    }
+  },
+
+}
+
+DM_FEATURE_PREFABS =
+{
+  pillar_rnd_med_COMPSTA =
+  {
+    prefab = "PILLAR_ROUND_MEDIUM",
+    add_mode = "island",
+
+    skin = { wall="COMPSTA1" },
+  },
+
+  pillar_rnd_bg_COMPSTA =
+  {
+    prefab = "PILLAR_ROUND_LARGE",
+    add_mode = "island",
+
+    skin = { wall="COMPSTA2" },
+  },
+
+  launch_pad_big_H =
+  {
+    prefab = "LAUNCH_PAD_LARGE",
+    environment = "outdoor",
+    add_mode = "island",
+
+    skin =
+    {
+      pad_f="FLAT1", letter_f="CRATOP1",
+      outer_w="METAL1", outer_f="FLOOR4_8",
+      step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
+    },
+
+    pickup_specialness = 90,
+    force_dir = 2, -- optimisation
+  },
+  
+  launch_pad_med_F =
+  {
+    prefab = "LAUNCH_PAD_MEDIUM",
+    environment = "outdoor",
+    add_mode = "island",
+
+    skin =
+    {
+      pad_f="FLAT1", letter_f="CRATOP1",
+      outer_w="METAL1", outer_f="FLOOR4_8",
+      step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
+    },
+
+    pickup_specialness = 80,
+    force_dir = 4, -- optimisation
+  },
+  
+  launch_pad_sml_S =
+  {
+    prefab = "LAUNCH_PAD_SMALL",
+    environment = "outdoor",
+    add_mode = "island",
+
+    skin =
+    {
+      pad_f="FLAT1", letter_f="CRATOP1",
+      outer_w="METAL1", outer_f="FLOOR4_8",
+      step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
+    },
+
+    pickup_specialness = 80,
+    force_dir = 2, -- optimisation
+  },
+ 
+  tech_pickup_STONE =
+  {
+    prefab = "TECH_PICKUP_LARGE",
+    environment = "indoor",
+    add_mode = "island",
+    min_height = 192,
+    max_height = 320,
+
+    skin =
+    {
+      wall="STONE2", floor="CEIL5_2", ceil="CEIL3_5",
+      lite_w="LITE5", sky_c="F_SKY1",
+      step_w="STEP1", carpet_f="FLOOR1_1",
+    },
+
+    pickup_specialness = 100,
+    force_dir = 2, -- optimisation
+  },
+
+  liquid_pickup_NUKAGE =
+  {
+    prefab = "LIQUID_PICKUP",
+    min_height = 144,
+    max_height = 384,
+
+    skin =
+    {
+      wall="METAL", floor="CEIL5_2", ceil="CEIL5_2",
+
+      liquid_f="NUKAGE1", sky_c="F_SKY1",
+    },
+
+    pickup_specialness = 95,
+  },
+
+  skylight_mega_METAL =
+  {
+    prefab = "SKYLIGHT_MEGA_1",
+    environment = "indoor",
+    add_mode = "island",
+    min_height = 96,
+    -- max_height = 304,  ???
+
+    skin =
+    { 
+      sky_c = "F_SKY1",
+      frame_w = "METAL", frame_c = "CEIL5_2",
+      beam_w = "METAL", beam_c = "CEIL5_2",
+    }
+  },
+
+  crate_jumble =
+  {
+    prefab = "CRATE_JUMBLE",
+    add_mode = "island",
+    min_height = 224,
+
+    skin =
+    {
+      tall_w   = "CRATE1",   tall_f = "CRATOP2",
+      wide_w   = "CRATWIDE", wide_f = "CRATOP1",
+
+      crate_w1 = "CRATE1", crate_f1 = "CRATOP2",
+      crate_w2 = "CRATE2", crate_f2 = "CRATOP1",
+    },
+  },
+
 }
 
 DM_WALL_PREFABS =
 {
+  wall_lamp_RED_TORCH =
+  {
+    prefab = "WALL_LAMP",
+    skin = { lamp_t="red_torch_sm" },
+    theme_probs = { CAVE=90, HELL=50, URBAN=5 }, 
+  },
+
+  wall_lamp_GREEN_TORCH =
+  {
+    prefab = "WALL_LAMP",
+    skin = { lamp_t="green_torch_sm" },
+    theme_probs = { CAVE=90, HELL=50, URBAN=5 }, 
+  },
+
+  wall_lamp_BLUE_TORCH =
+  {
+    prefab = "WALL_LAMP",
+    skin = { lamp_t="blue_torch_sm" },
+    theme_probs = { CAVE=90, HELL=50, URBAN=5 }, 
+  },
+
 }
 
 DM_ARCH_PREFABS =
@@ -1938,8 +2284,10 @@ function doom_common_factory()
     rooms     = DM_ROOMS,
     themes    = DM_THEMES,
 
---  sc_fabs   = DM_SCENERY_PREFABS,
---  wall_fabs = DM_WALL_PREFABS,
+    sc_fabs   = DM_SCENERY_PREFABS,
+    feat_fabs = DM_FEATURE_PREFABS,
+    wall_fabs = DM_WALL_PREFABS,
+
     door_fabs = DM_DOOR_PREFABS,
     arch_fabs = DM_ARCH_PREFABS,
     win_fabs  = DM_WINDOW_PREFABS,
