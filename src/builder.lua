@@ -3535,10 +3535,20 @@ if not def then return end --!!!!!!!!
         assert(WINDOW.f_tex)
         assert(WINDOW.l_tex)
 
-        if (side%2)<=2 then WINDOW.light=255; WINDOW.kind=8 end
+---     if (side%2)<=2 then WINDOW.light=255; WINDOW.kind=8 end
         if other.scenic then WINDOW.impassible = true end
 
         fill (c, x1+ax,y1+ay, x2-ax,y2-ay, WINDOW)
+
+        if spot.long >= 7 or
+           (spot.long >= 5 and (WINDOW.c_h - WINDOW.f_h) < 72)
+        then
+          local mx1 = int((x1+x2)/2)
+          local my1 = int((y1+y2)/2)
+          local mx2 = int((x1+x2+1)/2)
+          local my2 = int((y1+y2+1)/2)
+          fill (c, mx1,my1, mx2,my2, { solid=D.combo.wall })
+        end
       else
         local DEFS = { "window_narrow", "window_rail_nar_MIDGRATE", "window_cross_big" } ---!!!! FIXME: not hard coded
         local def_name = non_nil(DEFS[spot.long])
@@ -6763,7 +6773,7 @@ fab.name, c.x,c.y, x,y,dir)
 
     for name,def in pairs(fab_tab) do
       
-      local prob = 10
+      local prob = def.prob or 0
 
       local fab = non_nil(PREFABS[def.prefab])
 
