@@ -1305,19 +1305,22 @@ D2_ROOMS =
 {
   WAREHOUSE =
   {
-    -- crate it up baby!
+    space_range = { 80, 99 },
 
+    pf_count = { 6,12 },
+
+    -- crate it up baby!
     sc_fabs =
     {
-      crate_triple_A = 70,
-      crate_triple_B = 70,
-      crate_CRATE1 = 40,
-      crate_CRATE2 = 40,
-      crate_WIDE = 50,
-      crate_rotate_CRATE1 = 20,
-      crate_rotate_CRATE2 = 20,
+      crate_triple_A = 40,
+      crate_triple_B = 40,
+      crate_CRATE1 = 50,
+      crate_CRATE2 = 50,
+      crate_WIDE = 30,
+      crate_rotate_CRATE1 = 15,
+      crate_rotate_CRATE2 = 15,
 
-      other = 50
+      other = 20
     },
   },
 
@@ -1342,7 +1345,7 @@ D2_ROOMS =
 
   COMPUTER =
   {
-    sc_count = { 2,4 },
+    pf_count = { 2,4 },
 
     sc_fabs =
     {
@@ -1361,6 +1364,8 @@ D2_ROOMS =
 
   TORTURE =
   {
+    space_range = { 60, 90 },
+
     sc_count = { 6,16 },
 
     scenery =
