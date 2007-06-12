@@ -1654,28 +1654,6 @@ DM_ROOMS =
   {
   },
 
-  WAREHOUSE =
-  {
-    -- crate it up baby!
-  },
-
-  PLANT =
-  {
-  },
-
-  COMPUTER =
-  {
-  },
-
-  TORTURE =
-  {
-  },
-
-  PRISON =
-  {
-  },
-
-  -- TODO: check in-game level names for ideas
 }
 
 DM_THEMES =
@@ -1696,7 +1674,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=50, WAREHOUSE=1, COMPUTER=1,
+      PLAIN=1,
     },
 
     exit_probs=
@@ -1716,7 +1694,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      WAREHOUSE=50, COMPUTER=10,
+      PLAIN=3, PLANT=90, WAREHOUSE=50, COMPUTER=5,
     },
 
     exit_probs=
@@ -1735,7 +1713,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      COMPUTER=50, WAREHOUSE=5,
+      PLAIN=5, COMPUTER=25, WAREHOUSE=5,
     },
 
     exit_probs=
@@ -1755,7 +1733,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=50,
+      PLAIN=5,
     },
 
     exit_probs=
@@ -1781,7 +1759,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=50, WAREHOUSE=3, COMPUTER=1,
+      PLAIN=1, WAREHOUSE=5, TORTURE=10,
     },
 
     exit_probs=
@@ -1812,7 +1790,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      TORTURE=20,
+      PLAIN=1, TORTURE=25,
     },
 
     exit_probs=
@@ -2150,6 +2128,10 @@ D1_WALL_LIGHTS =
   stoned = { wall="LITESTON", w=32 },
 }
 
+D1_ROOMS =
+{
+}
+
 ------------------------------------------------------------
 
 D1_EPISODE_THEMES =
@@ -2319,6 +2301,7 @@ GAME_FACTORIES["doom1"] = function()
 
   T.quests   = D1_QUESTS
 
+  T.rooms    = copy_and_merge(T.rooms,    D1_ROOMS)
   T.combos   = copy_and_merge(T.combos,   D1_COMBOS)
   T.exits    = copy_and_merge(T.exits,    D1_EXITS)
   T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)

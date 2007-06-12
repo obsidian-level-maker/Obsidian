@@ -1301,6 +1301,91 @@ D2_MISC_PREFABS =
 
 D2_ROOMS =
 {
+  WAREHOUSE =
+  {
+    -- crate it up baby!
+
+    sc_fabs =
+    {
+      crate_triple_A = 70,
+      crate_triple_B = 70,
+      crate_CRATE1 = 40,
+      crate_CRATE2 = 40,
+      crate_WIDE = 50,
+      crate_rotate_CRATE1 = 20,
+      crate_rotate_CRATE2 = 20,
+
+      other = 50
+    },
+  },
+
+  PLANT =
+  {
+    sc_fabs =
+    {
+---   machine_pump1 = 50,   [feature prefab]
+      crate_TV = 10,
+      comp_desk_EW8 = 10,
+      comp_desk_EW2 = 10,
+      comp_desk_NS6 = 10,
+      other = 50
+    },
+
+    wall_fabs =
+    {
+      wall_pic_TV = 30, 
+      other = 100
+    },
+  },
+
+  COMPUTER =
+  {
+    sc_fabs =
+    {
+      comp_tall_STATION1 = 10, comp_tall_STATION2 = 10,
+      comp_thin_STATION1 = 30, comp_thin_STATION2 = 30,
+
+      other = 50
+    },
+
+    wall_fabs =
+    {
+      wall_pic_TV = 30, 
+      other = 100
+    },
+  },
+
+  TORTURE =
+  {
+    scenery =
+    {
+      impaled_human  = 10, impaled_twitch = 10,
+      gutted_victim1 = 10, gutted_victim2 = 10,
+      gutted_torso1  = 10, gutted_torso2  = 10,
+      gutted_torso3  = 10, gutted_torso4  = 10,
+
+      hang_arm_pair  = 10, hang_leg_pair  = 10,
+      hang_leg_gone  = 10, hang_leg       = 10,
+      hang_twitching = 10,
+
+      pool_blood_1  = 40,
+      pool_blood_2  = 40, pool_brains   = 40,
+
+      other = 100
+    },
+
+    wall_fabs =
+    {
+      cage_niche_MIDGRATE = 30,
+      other = 100
+    },
+  },
+
+  PRISON =
+  {
+  },
+
+  -- TODO: check in-game level names for ideas
 }
 
 D2_THEMES =

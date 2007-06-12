@@ -1288,6 +1288,11 @@ function plan_sp_level(level, is_coop)
       local c_next = Q.path[i-1]
 
       if not c.hallway then
+        c.room_type = get_rand_roomtype(Q.theme)
+con.debugf("ROOM %d QUEST %d.%d ---> %s\n",
+c.along, Q.level, Q.sub_level, c.room_type.name)
+
+--[[ KEEP ???
         local prob = 10
 
         if not c_prev then prob = 40 end
@@ -1297,9 +1302,11 @@ function plan_sp_level(level, is_coop)
 
         table.insert(cells, c)
         table.insert(probs, prob)
+--]]
       end
     end
 
+--[[ KEEP ???
     while #cells > 0 do
 
       local idx = rand_index_by_probs(probs)
@@ -1310,11 +1317,12 @@ function plan_sp_level(level, is_coop)
 con.debugf("ROOM %d QUEST %d.%d ---> %s\n",
 c.along, Q.level, Q.sub_level, c.room_type.name)
 
-      if rand_odds(70) then break end
+--      if rand_odds(70) then break end
 
       table.remove(cells, idx)
       table.remove(probs, idx)
     end
+--]]
 
     -- use PLAIN type of every other cell
     for zzz, c in ipairs(Q.path) do
