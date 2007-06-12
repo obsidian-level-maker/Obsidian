@@ -1143,7 +1143,9 @@ DM_SCENERY_PREFABS =
     { 
       sky_c = "F_SKY1",
       frame_w = "METAL", frame_c = "CEIL5_2",
-    }
+    },
+
+    prob = 20,
   },
 
   crate_CRATE1 =
@@ -1383,7 +1385,9 @@ DM_FEATURE_PREFABS =
       sky_c = "F_SKY1",
       frame_w = "METAL", frame_c = "CEIL5_2",
       beam_w = "METAL", beam_c = "CEIL5_2",
-    }
+    },
+
+    prob = 10,
   },
 
   crate_jumble =

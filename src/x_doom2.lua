@@ -1041,7 +1041,9 @@ D2_FEATURE_PREFABS =
       sky_c = "F_SKY1",
       frame_w = "METAL", frame_c = "CEIL5_2",
       beam_w = "WOOD12", beam_c = "FLAT5_2",
-    }
+    },
+
+    prob = 10,
   },
 
   comp_desk_USHAPE1 =
@@ -1340,6 +1342,8 @@ D2_ROOMS =
 
   COMPUTER =
   {
+    sc_count = { 2,4 },
+
     sc_fabs =
     {
       comp_tall_STATION1 = 10, comp_tall_STATION2 = 10,
@@ -1357,6 +1361,8 @@ D2_ROOMS =
 
   TORTURE =
   {
+    sc_count = { 6,16 },
+
     scenery =
     {
       impaled_human  = 10, impaled_twitch = 10,
