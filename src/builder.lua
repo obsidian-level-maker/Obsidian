@@ -453,23 +453,13 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
         sec.f_h   = what_h_ref(sec.f_h, elem.f_rel, elem.f_h, elem.f_add)
         sec.f_tex = what_tex("floor",elem.f_tex)
         sec.l_tex = what_tex("wall", elem.l_tex)
-        sec.l_peg = elem.l_peg
       end
 
       if elem.c_h or elem.c_tex or elem.u_tex then
         sec.c_h   = what_h_ref(sec.c_h, elem.c_rel, elem.c_h, elem.c_add)
         sec.c_tex = what_tex("ceil", elem.c_tex)
         sec.u_tex = what_tex("wall", elem.u_tex)
-        sec.u_peg = elem.u_peg
       end
-
-      sec.x_offset = elem.x_offset
-      sec.y_offset = elem.y_offset
-
-      if elem.mark then sec.mark = elem.mark end
-
-      if elem.kind then sec[elem.kind] = parm_val(elem.kind) end
-      if elem.tag  then sec[elem.tag]  = parm_val(elem.tag) end
 
       if elem.kind == "door_kind" then sec.door_dir = parm.door_dir end
 
@@ -481,6 +471,17 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
         sec.light = sec.light + elem.light_add
       end
     end
+
+    sec.l_peg = elem.l_peg
+    sec.u_peg = elem.u_peg
+
+    sec.x_offset = elem.x_offset
+    sec.y_offset = elem.y_offset
+
+    if elem.mark then sec.mark = elem.mark end
+
+    if elem.kind then sec[elem.kind] = parm_val(elem.kind) end
+    if elem.tag  then sec[elem.tag]  = parm_val(elem.tag) end
 
     -- handle overrides
 
