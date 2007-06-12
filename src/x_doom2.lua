@@ -195,6 +195,7 @@ D2_COMBOS =
     scenery = { candelabra=6, evil_eye=3 },
 
     theme_probs = { URBAN=50 },
+    sc_fabs = { bookcase_MED=50, other=30 },
   },
 
   GRNTECH =
@@ -801,6 +802,8 @@ D2_SCENERY_PREFABS =
 
       step_w = "ZZWOLF5", step_f = "FLAT5_1",
     },
+
+    theme_probs = { URBAN=2, WOLF=20 },
   },
 
   billboard_stilts_FLAGGY =
@@ -815,6 +818,8 @@ D2_SCENERY_PREFABS =
       pic_w  = "ZZWOLF12", pic_offset_h = 64,
       beam_w = "WOOD1", beam_f = "FLAT5_2",
     },
+
+    theme_probs = { NATURE=5, URBAN=5 },
   },
 
   comp_tall_STATION1 =
@@ -865,6 +870,12 @@ D2_SCENERY_PREFABS =
     force_dir = 4,
   },
 
+  bookcase_MED =
+  {
+    prefab = "COMPUTER_TALL",
+    skin   = { comp_w="PANBOOK", comp_f="FLAT5_2", side_w="PANCASE1" },
+  },
+
   drinks_bar_WOOD_POTION =
   {
     prefab = "DRINKS_BAR",
@@ -872,7 +883,9 @@ D2_SCENERY_PREFABS =
 
     skin = { bar_w = "PANBORD1", bar_f = "FLAT5_2",
              drink_t = "potion",
-           }
+           },
+
+    prob = 2,
   },
 
   crate_TV =
@@ -949,6 +962,7 @@ D2_FEATURE_PREFABS =
       beam_w = "WOOD1", beam_f = "FLAT5_2",
     },
 
+    theme_probs = { NATURE=2, URBAN=2 },
     pickup_specialness = 61,
     force_dir = 2, -- optimisation
   },
@@ -971,6 +985,7 @@ D2_FEATURE_PREFABS =
       lamp_t="lamp"
     },
     
+    theme_probs = { TECH=80, INDUSTRIAL=20 },
     force_dir = 2, -- optimisation
   },
 
@@ -992,6 +1007,7 @@ D2_FEATURE_PREFABS =
       span_w="COMPSPAN", span_f="FLAT4",
     },
 
+    theme_probs = { TECH=80, INDUSTRIAL=20 },
     force_dir = 2, -- optimisation
   },
 
@@ -1017,6 +1033,8 @@ D2_FEATURE_PREFABS =
 
       kind=48 -- scroll left
     },
+
+    theme_probs = { INDUSTRIAL=80 },
   },
   
   four_sided_pic_ADOLF =
@@ -1025,7 +1043,9 @@ D2_FEATURE_PREFABS =
     environment = "outdoor",
     add_mode = "island",
     min_height = 192,
+
     skin = { pic_w="ZZWOLF7" },
+    theme_probs = { WOLF=40, URBAN=5 },
     force_dir = 2, -- optimisation
   },
 
@@ -1340,12 +1360,13 @@ D2_ROOMS =
   {
     sc_fabs =
     {
----   machine_pump1 = 50,   [feature prefab]
-      crate_TV = 10,
-      comp_desk_EW8 = 10,
-      comp_desk_EW2 = 10,
-      comp_desk_NS6 = 10,
-      other = 50
+      crate_TV = 50,
+      comp_desk_EW8 = 30,
+      comp_desk_EW2 = 30,
+      comp_desk_NS6 = 30,
+      comp_desk_USHAPE1 = 20,
+      comp_desk_USHAPE2 = 15,
+      other = 30
     },
 
     wall_fabs =
