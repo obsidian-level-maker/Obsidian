@@ -91,7 +91,6 @@ DM_COMBOS =
     void = "STARTAN2",
     step = "STEP1",
     lift = "PLAT1",
-    pillar = "COMPWERD",
 
     pic_wd = "COMPSTA2",    -- "COMP2" for Doom 1 !!
     pic_wd_h = 64,
@@ -104,6 +103,7 @@ DM_COMBOS =
     good_liquid = "blood",
 
     theme_probs = { TECH=80 },
+    sc_fabs = { pillar_COMPWERD=50, other=30 },
   },
 
   BASE2 =
@@ -114,7 +114,7 @@ DM_COMBOS =
     void = "STARG2",
     step = "STEP1",
     lift = "PLAT1",
-    pillar = "METAL",  -- was "METAL4", not in doom 1
+
     pic_wd = "COMPBLUE",
 
     floor = "FLOOR5_1",
@@ -124,6 +124,7 @@ DM_COMBOS =
     scenery = "tech_column",
 
     theme_probs = { TECH=40, INDUSTRIAL=5 }, 
+    sc_fabs = { pillar_COMPWERD=50, other=30 },
   },
 
   MARBLE =
@@ -145,6 +146,7 @@ DM_COMBOS =
     good_liquid = "blood",
 
     theme_probs = { HELL=70 },
+    sc_fabs = { pillar_GSTLION=50, other=30 },
   },
 
   HOT =
@@ -1077,6 +1079,27 @@ DM_PICS =
 
 DM_SCENERY_PREFABS =
 {
+  pillar_COMPWERD =
+  {
+    prefab = "PILLAR", add_mode = "island",
+    environment = "indoor",
+    skin = { wall="COMPWERD" },
+  },
+  
+  pillar_GSTLION =
+  {
+    prefab = "PILLAR", add_mode = "island",
+    environment = "indoor",
+    skin = { wall="GSTLION" },
+  },
+  
+  pillar_SPDUDE5 =
+  {
+    prefab = "PILLAR", add_mode = "island",
+    environment = "indoor",
+    skin = { wall="SP_DUDE5" },
+  },
+  
   pillar_light1_METAL =
   {
     prefab = "PILLAR_LIGHT1",
@@ -1431,6 +1454,43 @@ DM_WALL_PREFABS =
     theme_probs = { CAVE=90, HELL=50, URBAN=5 }, 
   },
 
+  wall_pic_MARBFACE =
+  {
+    prefab = "WALL_PIC",
+    min_height = 160,
+    skin = { pic_w="MARBFACE" },
+    theme_probs = { HELL=90 },
+  },
+
+  wall_pic_MARBFAC2 =
+  {
+    prefab = "WALL_PIC",
+    min_height = 160,
+    skin = { pic_w="MARBFAC2" },
+    theme_probs = { HELL=60, CAVE=10 },
+  },
+
+  wall_pic_MARBFAC3 =
+  {
+    prefab = "WALL_PIC",
+    min_height = 160,
+    skin = { pic_w="MARBFAC3" },
+    theme_probs = { HELL=50, URBAN=5 },
+  },
+
+  wall_pic_SPDUDE1 =
+  {
+    prefab = "WALL_PIC",
+    min_height = 160,
+    skin = { pic_w="SP_DUDE1" },
+  },
+
+  wall_pic_SPDUDE2 =
+  {
+    prefab = "WALL_PIC",
+    min_height = 160,
+    skin = { pic_w="SP_DUDE2" },
+  },
 }
 
 DM_ARCH_PREFABS =
