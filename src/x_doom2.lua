@@ -870,6 +870,21 @@ D2_SCENERY_PREFABS =
     force_dir = 4,
   },
 
+  comp_desk_USHAPE1 =
+  {
+    prefab = "COMPUTER_DESK_U_SHAPE",
+    add_mode = "island",
+    skin   =
+    {
+      comp_Nf="CONS1_1", comp_Wf="CONS1_7",
+      comp_Sf="CONS1_5",
+      comp_cf="COMP01", side_w ="SILVER1"
+    },
+
+--  pickup_specialness = 60,
+    force_dir = 2,
+  },
+
   bookcase_MED =
   {
     prefab = "COMPUTER_TALL",
@@ -1064,21 +1079,6 @@ D2_FEATURE_PREFABS =
     },
 
     prob = 10,
-  },
-
-  comp_desk_USHAPE1 =
-  {
-    prefab = "COMPUTER_DESK_U_SHAPE",
-    add_mode = "island",
-    skin   =
-    {
-      comp_Nf="CONS1_1", comp_Wf="CONS1_7",
-      comp_Sf="CONS1_5",
-      comp_cf="COMP01", side_w ="SILVER1"
-    },
-
-    pickup_specialness = 60,
-    force_dir = 2,
   },
 
   comp_desk_USHAPE2 =
@@ -1365,7 +1365,6 @@ D2_ROOMS =
       comp_desk_EW2 = 30,
       comp_desk_NS6 = 30,
       comp_desk_USHAPE1 = 20,
-      comp_desk_USHAPE2 = 15,
       other = 30
     },
 
