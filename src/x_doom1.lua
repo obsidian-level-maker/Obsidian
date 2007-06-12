@@ -134,7 +134,6 @@ DM_COMBOS =
     wall = "MARBLE2",
     void = "SP_DUDE5",
     step = "STEP1",
-    pillar = "GSTLION",
     pic_wd  = "SP_DUDE1",
 
     floor = "FLOOR7_2",
@@ -208,8 +207,6 @@ DM_COMBOS =
     wall = "SLADWALL",
     void = "SLADSKUL",
     step = "STEP1",
-    pillar = "SLADPOIS",
---FIXME: (not in doom1)   pic_wd = "BSTONE3",
 
     vista_support = "DOORSTOP",
 
@@ -220,6 +217,7 @@ DM_COMBOS =
     good_liquid = "nukage",
 
     theme_probs = { INDUSTRIAL=50, TECH=15 },
+    sc_fabs = { pillar_rnd_sm_POIS=50, other=30 },
   },
 
   GRAY =
@@ -229,7 +227,6 @@ DM_COMBOS =
     wall = "GRAY7",
     void = "ICKWALL3",
     lift = "SUPPORT3",
-    pillar = "CRATE1",
     pic_wd = "REDWALL",
 
     floor = "FLOOR0_5",
@@ -1109,6 +1106,8 @@ DM_SCENERY_PREFABS =
 
     skin = { beam_w="METAL", beam_f="CEIL5_2",
              lite_w="LITE5" },
+
+    theme_probs = { TECH=20, INDUSTRIAL=20 },
   },
 
   pillar_rnd_sm_POIS =
@@ -1138,6 +1137,8 @@ DM_SCENERY_PREFABS =
       step_w = "STEP4", step_f = "CEIL3_5",
       lite_w = "LITE5",
     },
+
+    theme_probs = { NATURE=20, URBAN=10 },
   },
 
   ground_light_SILVER =
@@ -1152,6 +1153,7 @@ DM_SCENERY_PREFABS =
       lite_w  = "LITE5",  lite_f  = "CEIL5_1",
     },
 
+    theme_probs = { NATURE=50, URBAN=5 },
     force_dir = 2, -- optimisation
   },
 
@@ -1307,6 +1309,8 @@ DM_FEATURE_PREFABS =
     add_mode = "island",
 
     skin = { wall="COMPSTA2" },
+
+    theme_probs = { TECH=50, INDUSTRIAL=20 },
   },
 
   launch_pad_big_H =
@@ -1322,6 +1326,7 @@ DM_FEATURE_PREFABS =
       step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
     },
 
+    prob = 5,
     pickup_specialness = 90,
     force_dir = 2, -- optimisation
   },
@@ -1339,6 +1344,7 @@ DM_FEATURE_PREFABS =
       step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
     },
 
+    prob = 5,
     pickup_specialness = 80,
     force_dir = 4, -- optimisation
   },
@@ -1356,6 +1362,7 @@ DM_FEATURE_PREFABS =
       step_w="STEP1", side_w="METAL1", step_f="FLOOR4_8",
     },
 
+    prob = 5,
     pickup_specialness = 80,
     force_dir = 2, -- optimisation
   },
@@ -1375,6 +1382,7 @@ DM_FEATURE_PREFABS =
       step_w="STEP1", carpet_f="FLOOR1_1",
     },
 
+    prob = 5,
     pickup_specialness = 100,
     force_dir = 2, -- optimisation
   },
@@ -1392,6 +1400,7 @@ DM_FEATURE_PREFABS =
       liquid_f="NUKAGE1", sky_c="F_SKY1",
     },
 
+    prob = 5,
     pickup_specialness = 95,
   },
 
@@ -1427,8 +1436,25 @@ DM_FEATURE_PREFABS =
       crate_w1 = "CRATE1", crate_f1 = "CRATOP2",
       crate_w2 = "CRATE2", crate_f2 = "CRATOP1",
     },
+
+    theme_probs = { INDUSTRIAL=20 },
   },
 
+  fountain_STONE =
+  {
+    prefab = "FOUNTAIN_SQUARE",
+    environment = "outdoor",
+    add_mode = "island",
+
+    skin =
+    {
+      edge_w="STONE",  edge_f="FLAT19",
+      beam_w="STONE3", beam_f="FLAT1",
+      liquid="FWATER1",
+    },
+
+    theme_probs = { URBAN=90, NATURE=40, HELL=5 },
+  },
 }
 
 DM_WALL_PREFABS =

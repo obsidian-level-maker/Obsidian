@@ -2081,7 +2081,7 @@ FOUNTAIN_SQUARE =
   elements =
   {
     e = { f_h=28, f_tex="edge_f", l_tex="edge_w", l_peg="top" },
-    p = { f_h=100,f_tex="beam_f", l_tex="beam_w", l_peg="top" },
+    p = { f_h=84, f_tex="beam_f", l_tex="beam_w", l_peg="top" },
 
     L = { f_h=20, f_tex="liquid" },
   },
