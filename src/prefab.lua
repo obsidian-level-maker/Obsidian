@@ -2975,9 +2975,12 @@ PILLAR =
 {
   scale=64,
 
-  structure = { "#" },
+  structure = { "P" },
 
-  elements = { },
+  elements =
+  {
+    P = { solid="wall", l_peg="bottom" }
+  },
 },
 
 PILLAR_LIGHT1 =
