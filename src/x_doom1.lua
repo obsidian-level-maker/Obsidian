@@ -1678,7 +1678,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=10,
+      PLAIN=50, WAREHOUSE=10,
     },
 
     exit_probs=

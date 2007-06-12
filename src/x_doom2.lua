@@ -1370,19 +1370,18 @@ D2_ROOMS =
 
     scenery =
     {
-      impaled_human  = 10, impaled_twitch = 10,
-      gutted_victim1 = 10, gutted_victim2 = 10,
-      gutted_torso1  = 10, gutted_torso2  = 10,
-      gutted_torso3  = 10, gutted_torso4  = 10,
+      impaled_human  = 40, impaled_twitch = 40,
+      gutted_victim1 = 40, gutted_victim2 = 40,
+      gutted_torso1  = 40, gutted_torso2  = 40,
+      gutted_torso3  = 40, gutted_torso4  = 40,
 
-      hang_arm_pair  = 10, hang_leg_pair  = 10,
-      hang_leg_gone  = 10, hang_leg       = 10,
-      hang_twitching = 10,
+      hang_arm_pair  = 40, hang_leg_pair  = 40,
+      hang_leg_gone  = 40, hang_leg       = 40,
+      hang_twitching = 40,
 
-      pool_blood_1  = 40,
-      pool_blood_2  = 40, pool_brains   = 40,
+---   pool_blood_1  = 10, pool_blood_2  = 10, pool_brains = 10,
 
-      other = 100
+      other = 50
     },
 
     wall_fabs =
