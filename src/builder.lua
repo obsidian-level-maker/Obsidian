@@ -1742,118 +1742,118 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
 
   local BIG_CAGE_ADJUST = { less=50, normal=75, more=90 }
 
-  local function try_flush_side(c)
+--  local function try_flush_side(c)
+--
+--    -- select a side
+--    local side = rand_irange(1,4) * 2
+--    local x1, y1, x2, y2 = side_coords(side, 1,1, 3,3)
+--
+--    local common
+--    local possible = true
+--
+--    for x = x1,x2 do
+--      for y = y1,y2 do
+--        if not possible then break end
+--        
+--        local K = c.chunks[x][y]
+--
+--        if not K then
+--          -- continue
+--        elseif K.vista then
+--          possible = false
+--        elseif not common then
+--          common = K
+--        elseif not chunk_similar(common, K) then
+--          possible = false
+--        end
+--      end
+--    end
+--
+--    if not (possible and common) then return end
+--
+--    if not PLAN.coop then
+--      -- let user adjustment parameters control whether closets and
+--      -- cages are made bigger.
+--      if common.closet and not rand_odds(BIG_CAGE_ADJUST[SETTINGS.traps]) then
+--        return
+--      end
+--      if common.cage and not rand_odds(BIG_CAGE_ADJUST[SETTINGS.mons]) then
+--        return
+--      end
+--    end
+--
+--    for kx = x1,x2 do
+--      for ky = y1,y2 do
+--        if not c.chunks[kx][ky] then
+--          c.chunks[kx][ky] = copy_chunk(c, kx, ky, common)
+--        end
+--      end
+--    end
+--  end
 
-    -- select a side
-    local side = rand_irange(1,4) * 2
-    local x1, y1, x2, y2 = side_coords(side, 1,1, 3,3)
+--  local function try_grow_room(c)
+--    local kx, ky
+--
+--    repeat
+--      kx, ky = rand_irange(1,3), rand_irange(1,3)
+--    until c.chunks[kx][ky] and c.chunks[kx][ky].room
+--
+--    local dir_order = { 2,4,6,8 }
+--    rand_shuffle(dir_order)
+--
+--    for zzz,dir in ipairs(dir_order) do
+--      local nx,ny = dir_to_delta(dir)
+--      nx, ny = kx+nx, ky+ny
+--
+--      if valid_chunk(nx, ny) then
+--        if not c.chunks[nx][ny] then
+--          c.chunks[nx][ny] = new_chunk(c, nx, ny, "room")
+--          return -- SUCCESS --
+--        end
+--      end
+--    end
+--  end
 
-    local common
-    local possible = true
-
-    for x = x1,x2 do
-      for y = y1,y2 do
-        if not possible then break end
-        
-        local K = c.chunks[x][y]
-
-        if not K then
-          -- continue
-        elseif K.vista then
-          possible = false
-        elseif not common then
-          common = K
-        elseif not chunk_similar(common, K) then
-          possible = false
-        end
-      end
-    end
-
-    if not (possible and common) then return end
-
-    if not PLAN.coop then
-      -- let user adjustment parameters control whether closets and
-      -- cages are made bigger.
-      if common.closet and not rand_odds(BIG_CAGE_ADJUST[SETTINGS.traps]) then
-        return
-      end
-      if common.cage and not rand_odds(BIG_CAGE_ADJUST[SETTINGS.mons]) then
-        return
-      end
-    end
-
-    for kx = x1,x2 do
-      for ky = y1,y2 do
-        if not c.chunks[kx][ky] then
-          c.chunks[kx][ky] = copy_chunk(c, kx, ky, common)
-        end
-      end
-    end
-  end
-
-  local function try_grow_room(c)
-    local kx, ky
-
-    repeat
-      kx, ky = rand_irange(1,3), rand_irange(1,3)
-    until c.chunks[kx][ky] and c.chunks[kx][ky].room
-
-    local dir_order = { 2,4,6,8 }
-    rand_shuffle(dir_order)
-
-    for zzz,dir in ipairs(dir_order) do
-      local nx,ny = dir_to_delta(dir)
-      nx, ny = kx+nx, ky+ny
-
-      if valid_chunk(nx, ny) then
-        if not c.chunks[nx][ny] then
-          c.chunks[nx][ny] = new_chunk(c, nx, ny, "room")
-          return -- SUCCESS --
-        end
-      end
-    end
-  end
-
-  local function try_add_special(c, kind)
-    
-    if kind == "liquid" then
-      if not c.liquid then return end
-      if c.is_exit and rand_odds(98) then return end
-    end
-
-    -- TODO: more cage themes...
-    if kind == "cage" then
-      if not GAME.mats.CAGE then return end
-      if c.scenic then return end
-    end
-
-    local posits = {}
-
-    for kx = 1,3 do
-      for ky = 1,3 do
-        if not c.chunks[kx][ky] then
-          -- make sure cage has a walkable neighbour
-          for dir = 2,8,2 do
-            local nx,ny = dir_to_delta(dir)
-            nx, ny = kx+nx, ky+ny
-
-            if valid_chunk(nx, ny) and c.chunks[nx][ny] and
-               (c.chunks[nx][ny].room or c.chunks[nx][ny].link)
-            then
-              table.insert(posits, {x=kx, y=ky})
-              break;
-            end
-          end
-        end
-      end
-    end
-
-    if #posits == 0 then return end
-
-    local p = rand_element(posits)
-
-    c.chunks[p.x][p.y] = new_chunk(c, p.x, p.y, kind)
-  end
+--  local function try_add_special(c, kind)
+--    
+--    if kind == "liquid" then
+--      if not c.liquid then return end
+--      if c.is_exit and rand_odds(98) then return end
+--    end
+--
+--    -- TODO: more cage themes...
+--    if kind == "cage" then
+--      if not GAME.mats.CAGE then return end
+--      if c.scenic then return end
+--    end
+--
+--    local posits = {}
+--
+--    for kx = 1,3 do
+--      for ky = 1,3 do
+--        if not c.chunks[kx][ky] then
+--          -- make sure cage has a walkable neighbour
+--          for dir = 2,8,2 do
+--            local nx,ny = dir_to_delta(dir)
+--            nx, ny = kx+nx, ky+ny
+--
+--            if valid_chunk(nx, ny) and c.chunks[nx][ny] and
+--               (c.chunks[nx][ny].room or c.chunks[nx][ny].link)
+--            then
+--              table.insert(posits, {x=kx, y=ky})
+--              break;
+--            end
+--          end
+--        end
+--      end
+--    end
+--
+--    if #posits == 0 then return end
+--
+--    local p = rand_element(posits)
+--
+--    c.chunks[p.x][p.y] = new_chunk(c, p.x, p.y, kind)
+--  end
 
   local function add_closet_chunks(c)
     if not c.quest.closet then return end
@@ -1885,87 +1885,87 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
     end
   end
 
-  local function grow_small_exit(c)
-    assert(c.entry_dir)
-    local kx,ky = side_to_chunk(10 - c.entry_dir)
+--  local function grow_small_exit(c)
+--    assert(c.entry_dir)
+--    local kx,ky = side_to_chunk(10 - c.entry_dir)
+--
+--    if c.chunks[kx][ky] then
+--      con.printf("WARNING: small_exit stomped a chunk!\n")
+--    end
+--
+--    local r = con.random() * 100
+--
+--    if r < 2 then
+--      c.chunks[kx][ky] = new_chunk(c, kx,ky, "room")
+--    elseif r < 12 then
+--      c.chunks[kx][ky] = new_chunk(c, kx,ky, "cage")
+--      c.smex_cage = true
+--    end
+--
+--    void_it_up(c)
+--  end
 
-    if c.chunks[kx][ky] then
-      con.printf("WARNING: small_exit stomped a chunk!\n")
-    end
-
-    local r = con.random() * 100
-
-    if r < 2 then
-      c.chunks[kx][ky] = new_chunk(c, kx,ky, "room")
-    elseif r < 12 then
-      c.chunks[kx][ky] = new_chunk(c, kx,ky, "cage")
-      c.smex_cage = true
-    end
-
-    void_it_up(c)
-  end
-
-  local function flesh_out_cell(c)
-
-    if PLAN.deathmatch and c.x == 1 and c.y == PLAN.h then
-      add_dm_exit(c)
-    end
-
-    -- possibilities:
-    --   (a) fill unused chunks with void
-    --   (b) fill unused chunks with room
-    --   (c) fill unused chunk from nearby ledge
-
-    -- FIXME get probabilities from theme
-    local kinds = { "room", "void", "flush", "cage", "liquid" }
-    local probs = { 60, 10, 97, 5, 70 }
-
-    if not c.combo.outdoor then probs[2] = 15 end
-
-    if SETTINGS.mons == "less" then probs[4] = 3.2 end
-    if SETTINGS.mons == "more" then probs[4] = 7.5 end
-
-    if PLAN.deathmatch then probs[4] = 0 end
-
-    if c.scenic then probs[2] = 2; probs[4] = 0 end
-
-    -- special handling for hallways...
-    if c.hallway then
-      if rand_odds(probs[4]) then
-        try_add_special(c, "cage")
-      end
-      void_it_up(c)
-    end
-
-    if c.small_exit then
-      grow_small_exit(c)
-    end
-
-    if c.scenic and c.vista_from then
-      -- Bleh...
-      if c.liquid and rand_odds(75) then
-        void_it_up(c, "liquid")
-      else
-        void_it_up(c, "room")
-      end
-    end
-
-    while count_empty_chunks(c) > 0 do
-
-      local idx = rand_index_by_probs(probs)
-      local kind = kinds[idx]
-
-      if kind == "room" then
-        try_grow_room(c)
-      elseif kind == "void" then
-        void_it_up(c)
-      elseif kind == "flush" then
-        try_flush_side(c)
-      else
-        try_add_special(c, kind)
-      end
-    end
-  end
+--  local function flesh_out_cell(c)
+--
+--    if PLAN.deathmatch and c.x == 1 and c.y == PLAN.h then
+--      add_dm_exit(c)
+--    end
+--
+--    -- possibilities:
+--    --   (a) fill unused chunks with void
+--    --   (b) fill unused chunks with room
+--    --   (c) fill unused chunk from nearby ledge
+--
+--    -- FIXME get probabilities from theme
+--    local kinds = { "room", "void", "flush", "cage", "liquid" }
+--    local probs = { 60, 10, 97, 5, 70 }
+--
+--    if not c.combo.outdoor then probs[2] = 15 end
+--
+--    if SETTINGS.mons == "less" then probs[4] = 3.2 end
+--    if SETTINGS.mons == "more" then probs[4] = 7.5 end
+--
+--    if PLAN.deathmatch then probs[4] = 0 end
+--
+--    if c.scenic then probs[2] = 2; probs[4] = 0 end
+--
+--    -- special handling for hallways...
+--    if c.hallway then
+--      if rand_odds(probs[4]) then
+--        try_add_special(c, "cage")
+--      end
+--      void_it_up(c)
+--    end
+--
+--    if c.small_exit then
+--      grow_small_exit(c)
+--    end
+--
+--    if c.scenic and c.vista_from then
+--      -- Bleh...
+--      if c.liquid and rand_odds(75) then
+--        void_it_up(c, "liquid")
+--      else
+--        void_it_up(c, "room")
+--      end
+--    end
+--
+--    while count_empty_chunks(c) > 0 do
+--
+--      local idx = rand_index_by_probs(probs)
+--      local kind = kinds[idx]
+--
+--      if kind == "room" then
+--        try_grow_room(c)
+--      elseif kind == "void" then
+--        void_it_up(c)
+--      elseif kind == "flush" then
+--        try_flush_side(c)
+--      else
+--        try_add_special(c, kind)
+--      end
+--    end
+--  end
 
 
   local function setup_chunk_rmodels(c)
