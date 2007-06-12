@@ -1674,7 +1674,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=1,
+      PLAIN=10,
     },
 
     exit_probs=
@@ -1694,7 +1694,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=3, PLANT=90, WAREHOUSE=50, COMPUTER=5,
+      PLAIN=30, PLANT=90, WAREHOUSE=50, COMPUTER=5,
     },
 
     exit_probs=
@@ -1713,7 +1713,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=5, COMPUTER=25, WAREHOUSE=5,
+      PLAIN=20, COMPUTER=25, WAREHOUSE=5,
     },
 
     exit_probs=
@@ -1733,7 +1733,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=5,
+      PLAIN=50,
     },
 
     exit_probs=
@@ -1759,7 +1759,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=1, WAREHOUSE=5, TORTURE=10,
+      PLAIN=20, WAREHOUSE=5, TORTURE=10,
     },
 
     exit_probs=
@@ -1790,7 +1790,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=1, TORTURE=25,
+      PLAIN=20, TORTURE=25,
     },
 
     exit_probs=
