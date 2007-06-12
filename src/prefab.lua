@@ -2054,6 +2054,39 @@ GROUND_LIGHT =
   },
 },
 
+FOUNTAIN_SQUARE =
+{
+  region="floor",
+
+  structure =
+  {
+    "eeeeeeeeeeeeeeee",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLppLLLLLLe",
+    "eLLLLLLppLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eLLLLLLLLLLLLLLe",
+    "eeeeeeeeeeeeeeee",
+  },
+
+  elements =
+  {
+    e = { f_h=28, f_tex="edge_f", l_tex="edge_w", l_peg="top" },
+    p = { f_h=100,f_tex="beam_f", l_tex="beam_w", l_peg="top" },
+
+    L = { f_h=20, f_tex="liquid" },
+  },
+},
+
 
 ------ Skylights ------------------------------------
 
