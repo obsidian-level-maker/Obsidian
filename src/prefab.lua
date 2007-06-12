@@ -2971,6 +2971,15 @@ CORNER_CONVEX =
 
 ------ Pillars ------------------------------------
 
+PILLAR =
+{
+  scale=64,
+
+  structure = { "#" },
+
+  elements = { },
+},
+
 PILLAR_LIGHT1 =
 {
   structure =
