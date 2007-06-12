@@ -6773,7 +6773,7 @@ fab.name, c.x,c.y, x,y,dir)
 
     for name,def in pairs(fab_tab) do
       
-      local prob = def.prob or 0
+      local prob = def.prob
 
       local fab = non_nil(PREFABS[def.prefab])
 
@@ -6783,11 +6783,11 @@ fab.name, c.x,c.y, x,y,dir)
         then prob = 0 end
       end
 
-      if prob > 0 and def.theme_probs then
-        prob = def.theme_probs[theme.name] or 0
+      if not prob and def.theme_probs then
+        prob = def.theme_probs[c.quest.theme.name] or 0
       end
 
-      if prob > 0 then
+      if prob and prob > 0 then
         list[name] = prob
       end
     end
@@ -6861,6 +6861,8 @@ fab.name, c.x,c.y, x,y,dir)
   end
 
   local function add_prefab(c, is_feature)
+
+    if not GAME.sc_fabs then return end
 
 ---##    local function get_rand_scenery_prefab(c)
 ---##
@@ -6960,13 +6962,6 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
 
   local function add_scenery(c)
 
-    -- choose kind: prefabs | scenery items
-
-    if GAME.sc_fabs and rand_odds(40) then
-      add_prefab(c)
-      return
-    end
-
     -- select type of item
     -- FIXME: use multiple times
 
@@ -6986,7 +6981,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
     end
 
     if not item and c.quest.theme and c.quest.theme.scenery then
-      item = rand_key_by_probs(c.quest.theme.general_scenery)
+      item = rand_key_by_probs(c.quest.theme.scenery)
       if item == "other" then item = nil end
     end
 
@@ -7060,7 +7055,13 @@ con.debugf("add_scenery : %s\n", item)
   decide_reclaim_kinds(c)
 
   -- WALL STUFF
-  for loop = 1,4 do
+  local wf_count =
+    c.room_type.ff_count or
+    c.combo.ff_count or
+    c.quest.theme.ff_count or
+    { 1, 4 }
+
+  for loop = 1,rand_irange(wf_count[1],wf_count[2]) do
     add_wall_stuff(c)
   end
 
@@ -7132,8 +7133,25 @@ con.debugf("add_scenery : %s\n", item)
     end
   end
 
+  -- PREFABS
+  local pf_count =
+    c.room_type.pf_count or
+    c.combo.pf_count or
+    c.quest.theme.pf_count or
+    { 1, 5 }
+
+  for loop = 1,rand_irange(pf_count[1],pf_count[2]) do
+    add_prefab(c)
+  end
+
   -- SCENERY
-  for loop = 1,8 do
+  local sc_count =
+    c.room_type.sc_count or
+    c.combo.sc_count or
+    c.quest.theme.sc_count or
+    { 2, 8 }
+
+  for loop = 1,rand_irange(sc_count[1],sc_count[2]) do
     add_scenery(c)
   end
 end
