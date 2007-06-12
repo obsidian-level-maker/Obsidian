@@ -6892,21 +6892,24 @@ fab.name, c.x,c.y, x,y,dir)
       if not def and c.room_type and c.room_type.sc_fabs then
         local name = rand_key_by_probs(c.room_type.sc_fabs)
         if name ~= "other" then
-          def = non_nil(GAME.sc_fabs[name])
+          def = GAME.sc_fabs[name]
+          if not def then error("No such sc_fab: " .. tostring(name)) end
         end
       end
 
       if not def and c.combo.sc_fabs then
         local name = rand_key_by_probs(c.combo.sc_fabs)
         if name ~= "other" then
-          def = non_nil(GAME.sc_fabs[name])
+          def = GAME.sc_fabs[name]
+          if not def then error("No such sc_fab: " .. tostring(name)) end
         end
       end
 
       if not def and c.quest.theme.sc_fabs then
         local name = rand_key_by_probs(c.quest.theme.sc_fabs)
         if name ~= "other" then
-          def = non_nil(GAME.sc_fabs[name])
+          def = GAME.sc_fabs[name]
+          if not def then error("No such sc_fab: " .. tostring(name)) end
         end
       end
 
