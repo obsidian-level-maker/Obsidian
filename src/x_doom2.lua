@@ -216,6 +216,7 @@ D2_COMBOS =
     bad_liquid = "water",
 
     theme_probs = { TECH=20 },
+    sc_fabs = { crate_rotnar_SILVER=30, other=50 },
   },
 
   MARBLE =
@@ -225,7 +226,6 @@ D2_COMBOS =
     wall = "MARBLE2",
     void = "MARBGRAY",
     step = "STEP1",
-    pillar = "MARBFAC4",
     pic_wd  = "SP_DUDE1",
 
     floor = "GRNROCK",
@@ -237,6 +237,7 @@ D2_COMBOS =
     good_liquid = "blood",
 
     theme_probs = { HELL=70 },
+    sc_fabs = { pillar_MARBFAC4=30, other=50 },
   },
 
   -------->
@@ -928,6 +929,13 @@ D2_SCENERY_PREFABS =
     }
   },
 
+  pillar_MARBFAC4 =
+  {
+    prefab = "PILLAR", add_mode = "island",
+    environment = "indoor",
+    skin = { wall="MARBFAC4" },
+  },
+  
   cage_small_METAL =
   {
     prefab = "CAGE_SMALL",

@@ -1448,8 +1448,8 @@ DM_FEATURE_PREFABS =
 
     skin =
     {
-      edge_w="STONE",  edge_f="FLAT19",
-      beam_w="STONE3", beam_f="FLAT1",
+      edge_w="STONE", edge_f="FLAT19",
+      beam_w="STONE", beam_f="FLAT1",
       liquid="FWATER1",
     },
 
