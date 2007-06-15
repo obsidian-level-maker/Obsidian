@@ -2054,6 +2054,25 @@ GROUND_LIGHT =
   },
 },
 
+BOOKCASE_WIDE =
+{
+  scale=64,
+  region="floor",
+
+  structure =
+  {
+    "cc",
+  },
+
+  elements =
+  {
+    c = { f_h=128, f_tex="book_f", l_tex="side_w", l_peg="top",
+          [2] = { l_tex="book_w" },
+          [8] = { l_tex="book_w" },
+        }
+  },
+},
+
 FOUNTAIN_SQUARE =
 {
   region="floor",
@@ -3263,14 +3282,17 @@ OVERHANG_1 =
 
   elements =
   {
-    P = { solid = "hang_w" }, 
+    P = { solid="beam_w" }, 
 
-    o = { c_h = -24, c_tex = "hang_c", u_tex = "hang_u",
-            light_add = -32,
-          },
+    o = { c_h=-24, c_tex="hang_c", u_tex="hang_u",
+          u_peg="top", light_add = -32,
+        },
   },
 
-  -- FIXME: double spot for monsters / objects
+  things =
+  {
+    { kind="pickup_t", x=96, y=96 },
+  },
 },
 
 OVERHANG_2 =
@@ -3292,8 +3314,6 @@ OVERHANG_2 =
     "PPooooooooPP",
     "PPooooooooPP",
   },
-
-  -- FIXME: double spot for monsters / objects
 },
 
 OVERHANG_3 =
@@ -3315,8 +3335,6 @@ OVERHANG_3 =
     "oPPooooooPPo",
     "oooooooooooo",
   },
-
-  -- FIXME: double spot for monsters / objects
 },
 
 
