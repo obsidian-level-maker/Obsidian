@@ -195,7 +195,7 @@ D2_COMBOS =
     scenery = { candelabra=6, evil_eye=3 },
 
     theme_probs = { URBAN=50 },
-    sc_fabs = { bookcase_MED=50, other=30 },
+    sc_fabs = { bookcase_WIDE=50, other=30 },
   },
 
   GRNTECH =
@@ -886,10 +886,10 @@ D2_SCENERY_PREFABS =
     force_dir = 2,
   },
 
-  bookcase_MED =
+  bookcase_WIDE =
   {
-    prefab = "COMPUTER_TALL",
-    skin   = { comp_w="PANBOOK", comp_f="FLAT5_2", side_w="PANCASE1" },
+    prefab = "BOOKCASE_WIDE",
+    skin   = { book_w="PANBOOK", book_f="FLAT5_2", side_w="PANCASE1" },
   },
 
   drinks_bar_WOOD_POTION =
@@ -972,6 +972,25 @@ D2_SCENERY_PREFABS =
 
 D2_FEATURE_PREFABS =
 {
+  overhang3_METAL6 =
+  {
+    prefab = "OVERHANG_3",
+    environment = "outdoor",
+    add_mode = "island",
+    min_height = 128,
+    max_height = 320,
+
+    skin =
+    {
+      beam_w = "METAL",
+      hang_u = "METAL6",
+      hang_c = "CEIL5_1",
+    },
+
+    pickup_specialness = 35,
+    theme_probs = { URBAN=30 },
+  },
+
   billboard_stilts4_WREATH =
   {
     prefab = "BILLBOARD_STILTS_HUGE",

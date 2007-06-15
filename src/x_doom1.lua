@@ -745,6 +745,20 @@ DM_SWITCHES =
   {
     switch =
     {
+      prefab = "SWITCH_FLOOR",
+      skin =
+      {
+        switch_w="SW1BLUE", side_w="COMPBLUE",
+        switch_f="FLAT14", switch_h=64,
+
+        beam_w="WOOD1", beam_f="FLAT5_2",
+
+        x_offset=0, y_offset=56, kind=103,
+      }
+    },
+
+    switch2 = -- FIXME: use sometimes
+    {
       prefab = "SWITCH_FLOOR_BEAM",
       skin =
       {
@@ -1311,6 +1325,44 @@ DM_FEATURE_PREFABS =
     skin = { wall="COMPSTA2" },
 
     theme_probs = { TECH=50, INDUSTRIAL=20 },
+  },
+
+  overhang1_WOOD =
+  {
+    prefab = "OVERHANG_1",
+    environment = "outdoor",
+    add_mode = "island",
+    min_height = 128,
+    max_height = 320,
+
+    skin =
+    {
+      beam_w = "WOOD1",
+      hang_u = "WOOD1",
+      hang_c = "FLAT5_1",
+    },
+
+    pickup_specialness = 35,
+    theme_probs = { NATURE=40, URBAN=15 },
+  },
+
+  overhang1_MARBLE =
+  {
+    prefab = "OVERHANG_1",
+    environment = "outdoor",
+    add_mode = "island",
+    min_height = 128,
+    max_height = 320,
+
+    skin =
+    {
+      beam_w = "MARBLE1",
+      hang_u = "MARBLE3",
+      hang_c = "DEM1_6",
+    },
+
+    pickup_specialness = 35,
+    theme_probs = { HELL=25, NATURE=10 },
   },
 
   launch_pad_big_H =
