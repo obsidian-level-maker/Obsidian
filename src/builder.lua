@@ -146,6 +146,7 @@ con.printf("ADD SPECIAL SPOT @ (%d,%d) sn:%d\n", c.x,c.y, specialness)
       return a.specialness > b.specialness
     end)
 
+con.printf("SPOT LIST NOW: %s\n", tostring(c.special_spots))
   return SPOT
 end
 
@@ -3835,27 +3836,6 @@ end
 
 function layout_cell(c)
  
-  local function player_angle(kx, ky)
-
-    if c.exit_dir then
-      return dir_to_angle(c.exit_dir)
-    end
-
-    -- when in middle of room, find an exit to look at
-    if (kx==2 and ky==2) then
-      for i = 1,20 do
-        local dir = rand_irange(1,4)*2
-        if c.link[dir] then
-          return dir_to_angle(dir)
-        end
-      end
-
-      return rand_irange(1,4)*2
-    end
-
-    return delta_to_angle(2-kx, 2-ky)
-  end
-
   local function decide_void_pic(c)
     if c.combo.pic_wd and rand_odds(60) then
       c.void_pic = { wall=c.combo.pic_wd, w=128, h=c.combo.pic_wd_h or 128 }
@@ -6520,13 +6500,20 @@ function tizzy_up_room(c)
   end
 
 
-  local function add_object(c, name, must_put, can_special)
+  local function add_object(c, name, must_put, can_special, angle)
 
     local x,y,dir
     
+con.printf("@@@@ add_object %s @ (%d,%d) : can_special:%s spots:%s angle:%s\n",
+name, c.x, c.y,
+sel(can_special, "yes", "NO"),
+tostring(c.special_spots), tostring(angle))
+
     if can_special and c.special_spots and #c.special_spots >= 1 then
+con.printf("--> USING SPECIAL SPOT @ (%d,%d) FOR %s\n", c.x,c.y, name)
       local spot = table.remove(c.special_spots, 1)
-      add_thing(c, spot.x, spot.y, name, true, dir_to_angle(spot.vista_side or c.exit_dir))
+      add_thing(c, spot.x, spot.y, name, true,
+        (spot.vista_side and dir_to_angle(spot.vista_side)) or angle or 0)
       return
     end
 
@@ -6551,14 +6538,51 @@ function tizzy_up_room(c)
 --!!!!!!      error("Could not find place for: " .. name)
       return
     end
+    
 con.printf("add_object @ (%d,%d)\n", x, y)
     gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
-    add_thing(c, x, y, name, true)
+    add_thing(c, x, y, name, true, angle or 0)
     fab_mark_walkable(c, x, y, 8, 1,1, 4)
   end
 
+  local function player_angle(c)
+
+    if c.q_spot then
+      local kx = c.q_spot.kx
+      local ky = c.q_spot.ky
+
+      if not (kx==2 and ky==2) and is_roomy(c.chunks[2][2]) then
+        return delta_to_angle(2-kx, 2-ky)
+      end
+
+      for i = 1,20 do
+        local dir = rand_irange(1,4)*2
+        local N = chunk_neighbour(c, c.q_spot, dir)
+        if N and is_roomy(N) then
+          return dir_to_angle(dir)
+        end
+      end
+    end
+
+    if c.exit_dir then
+      return dir_to_angle(c.exit_dir)
+    end
+
+    for i = 1,20 do
+      local dir = rand_irange(1,4)*2
+      if c.link[dir] then
+        return dir_to_angle(dir)
+      end
+    end
+
+    -- failsafe: select a random direction
+    local dir = rand_irange(1,4)*2
+
+    return dir_to_angle(dir)
+  end
+
   local function add_player(c, name)
-    add_object(c, name, "must", "special")
+    add_object(c, name, "must", "special", player_angle(c))
   end
 
   local function add_dm_weapon(c)
