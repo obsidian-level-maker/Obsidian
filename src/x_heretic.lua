@@ -691,22 +691,15 @@ HC_QUESTS =
 
   weapon =
   {
-    -- gauntlets=10, -- crossbow=60,
-
-    claw=30, hellstaff=30,
-    phoenix=30, firemace=20
+    claw=60, hellstaff=40,
+    phoenix=40, firemace=20
   },
 
   item =
   {
-    wings=50,  ovum=50,
-    bomb=30,  chaos=30,
-    shadow=50, tome=20,
+    shadow=60, bag=50, wings=40, ovum=30,
+    bomb=25, tome=20, chaos=15,
   },
-
----##  exit = { exit=50 },
----##
----##  secret_exit = { secret_exit=50 },
 }
 
 HC_ROOMS =
@@ -762,7 +755,7 @@ HC_MONSTERS =
   -- FIXME: dm and fp values are CRAP!
   gargoyle    = { prob=30, hp=20,  dm= 7, fp=1.0, cage_fallback=10, float=true, melee=true },
   fire_garg   = { prob=20, hp=80,  dm=21, fp=2.0, float=true },
-  golem       = { prob=90, hp=80,  dm= 7, fp=1.3, melee=true },
+  golem       = { prob=80, hp=80,  dm= 7, fp=1.3, melee=true },
   golem_inv   = { prob=20, hp=80,  dm= 7, fp=1.5, melee=true },
 
   nitro       = { prob=70, hp=100, dm=21, fp=2.5, },
@@ -775,7 +768,7 @@ HC_MONSTERS =
   weredragon  = { prob=20, hp=220, dm=50, fp=3.0, },
   ophidian    = { prob=20, hp=280, dm=50, fp=3.0, },
 
-  --!!!! pod = ... hp=45
+  pod = { prob=5, hp=45, dm=2, fp=1.0, melee=true, passive=true },
 }
 
 HC_BOSSES =
@@ -833,11 +826,10 @@ HC_NICENESS =
   w3 = { weapon="gauntlets", quest=1, prob=50, always=false },
   w4 = { weapon="gauntlets", quest=3, prob=50, always=false },
 
-  p1 = { pickup="shield1", prob=2.0 },
-  p2 = { pickup="shield2", prob=0.7 },
+  a1 = { pickup="shield1", prob=2.0 },
+  a2 = { pickup="shield2", prob=0.7 },
 
----!!!!!!  p3 = { pickup="torch", prob=2.0 },
----!!!!!!  p4 = { pickup="bag",   prob=2.0 },
+  p1 = { pickup="torch",   prob=2.0 },
 }
 
 HC_DEATHMATCH =
