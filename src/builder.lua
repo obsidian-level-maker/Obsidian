@@ -2943,11 +2943,14 @@ function build_borders()
     if link.long <= 2 then name = name .. "_NARROW" end
     if link.long >= 5 then name = name .. "_WIDE" end
 
-    return
-    {
-      prefab = name,
-      skin = { beam_w = "METAL", beam_f = "CEIL5_1", beam_h = 72, },
-    }
+    local skin = { beam_h = 72 }
+
+    if string.match(SETTINGS.game, "doom") then
+      skin.beam_w = "METAL"
+      skin.beam_f = "CEIL5_1"
+    end
+
+    return { prefab=name, skin=skin }
   end
 
   local function build_arch(link, side)
