@@ -59,24 +59,27 @@ GAME_FACTORIES["freedoom"] = function()
 
   -- the FreeDOOM IWAD contains both Doom 1 and Doom 2 textures
 
-  local T = GAME_FACTORIES.doom1()
+---!!!  local T = GAME_FACTORIES.doom1()
+---!!!
+---!!!  T.episodes   = 3
+---!!!  T.level_func = doom2_get_levels
+---!!!
+---!!!  T.quests   = D2_QUESTS
+---!!!
+---!!!  T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
+---!!!  T.exits    = copy_and_merge(T.exits,    D2_EXITS)
+---!!!  T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
+---!!!
+---!!!  T.rails = copy_and_merge(T.rails, D2_RAILS)
+---!!!
+---!!!  T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
+---!!!  T.mats    = copy_and_merge(T.mats,    D2_MATS)
+---!!!  T.crates  = copy_and_merge(T.crates,  D2_CRATES)
+---!!!
+---!!!  T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS, FD_LIQUIDS)
 
-  T.episodes   = 3
-  T.level_func = doom2_get_levels
-
-  T.quests   = D2_QUESTS
-
-  T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
-  T.exits    = copy_and_merge(T.exits,    D2_EXITS)
-  T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
-
-  T.rails = copy_and_merge(T.rails, D2_RAILS)
-
-  T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
-  T.mats    = copy_and_merge(T.mats,    D2_MATS)
-  T.crates  = copy_and_merge(T.crates,  D2_CRATES)
-
-  T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS, FD_LIQUIDS)
+  -- TEMPORARY HACK
+  local T = GAME_FACTORIES.doom2()
 
   T.sky_info = FD_SKY_INFO
 
