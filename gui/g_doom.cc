@@ -151,9 +151,9 @@ void WAD_WritePatches()
 
   static const char *patch_names[3][2] =
   {
-    { "WALL52_1", "WALL53_1" },  // Doom
-    { "WALL01",   "WALL02"   },  // Heretic
-    { "W_320",    "W_321"    }   // Hexen
+    { "WALL52_1", "WALL53_1" },  // Doom    : CEMENT1,  CEMENT2
+    { "WALL01",   "WALL02"   },  // Heretic : GRSKULL2, GRSKULL1 
+    { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
   };
 
   int game = 0;
