@@ -605,7 +605,7 @@ HC_LIFTS =
 
 HC_DOOR_PREFABS =
 {
-  demon =
+  d_wood =
   {
     w=128, h=128, prefab="DOOR",
 
