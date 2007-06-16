@@ -6721,24 +6721,24 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
 
   local function add_switch(c, in_wall)
 
-    local info
+    local def
+
     if c.is_exit then
-      info = c.combo
+      def = non_nil(c.combo.switch)
     else
-      info = GAME.switches[c.quest.item]
+      local info = GAME.switches[c.quest.item]
       if not info then
         error("Missing switch: " .. tostring(c.quest.item))
       end
+      def = non_nil(info.switch)
     end
-    assert(info)
-    assert(info.switch)
 
-    local fab = PREFABS[info.switch.prefab]
+    local fab = PREFABS[def.prefab]
     if not fab then
-      error("Unknown switch prefab: " .. tostring(info.switch.prefab))
+      error("Unknown switch prefab: " .. tostring(def.prefab))
     end
 
-    if (not in_wall) == (info.add_mode == "wall") then
+    if (not in_wall) == (def.add_mode == "wall") then
       return
     end
 
@@ -6759,7 +6759,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
       return
     end
 
-    local skin = info.switch.skin
+    local skin = def.skin
     local parm = { }
 
     if not c.is_exit then 
