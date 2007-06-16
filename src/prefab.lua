@@ -1225,6 +1225,7 @@ SWITCH_NICHE_TINY =
     -- niche
     n = { f_h=32, c_rel="floor_h", c_add="switch_h", c_h=32,
           f_tex="frame_f", c_tex="frame_c",
+          [2] = { x_offset=16, l_peg="bottom", u_peg="top" },
         },
 
     -- switch
@@ -1234,8 +1235,12 @@ SWITCH_NICHE_TINY =
         },
 
     -- sides
-    L = { solid="wall", [6] = { l_tex="frame_w" } },
-    M = { solid="wall", [4] = { l_tex="frame_w" } },
+    L = { solid="wall", [6] = { l_tex="frame_w" },
+          [2] = { x_offset=0, l_peg="top" }
+        },
+    M = { solid="wall", [4] = { l_tex="frame_w" },
+          [2] = { x_offset=48, l_peg="top" }
+        },
   },
 },
 
