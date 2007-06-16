@@ -724,12 +724,11 @@ function distribute_pickups(c, HM, backtrack)
           hm_give_weapon(HM, ndef.weapon)
 
         elseif ndef.pickup then
-          local info = GAME.pickups[ndef.pickup]
-          assert(info)
+          local info = GAME.pickups[ndef.pickup]  -- may be nil
 
           add_pickup(c, ndef.pickup, info)
 
-          if (info.stat == "armor") then
+          if info and (info.stat == "armor") then
             hm_give_armor(HM, info.give, info.limit or info.give)
           else
             -- ????
