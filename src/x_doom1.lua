@@ -1870,7 +1870,7 @@ DM_THEMES =
 
     monster_prefs =
     {
-      caco=2.0, barrel=6.0,
+      caco=2.0, barrel=4.0,
     },
   },
 
@@ -1890,7 +1890,7 @@ DM_THEMES =
     monster_prefs =
     {
       zombie=2.0, shooter=2.0, gunner=2.0,
-      barrel=3.5,
+      barrel=2.7,
     },
   },
 
@@ -1910,7 +1910,7 @@ DM_THEMES =
     monster_prefs =
     {
       demon=2.5, knight=2.0, baron=2.0, pain=2.0,
-      barrel=0.2,
+      barrel=0.5,
     },
 
     door_probs   = { out_diff=75, combo_diff=10, normal=5 },
@@ -1939,7 +1939,7 @@ DM_THEMES =
     monster_prefs =
     {
       imp=3.0, skull=2.0, revenant=2.0,
-      barrel=0.2,
+      barrel=0.5,
     },
 
     diff_probs = { [0]=10, [16]=40, [32]=80, [64]=60, [96]=20 },
@@ -2029,7 +2029,7 @@ DM_MONSTERS =
   spectre   = { prob=20, hp=150, dm=25, fp=2.3, cage_prob=40,melee=true },
   skull     = { prob=16, hp=100, dm=7,  fp=2.6, cage_prob= 2, melee=true, float=true },
  
-  barrel    = { prob=12, hp=10,  dm=2,  fp=1.0, melee=true, passive=true },
+  barrel    = { prob=17, hp=10,  dm=2,  fp=1.0, melee=true, passive=true },
 }
 
 DM_BOSSES =
