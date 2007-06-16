@@ -2767,7 +2767,9 @@ function setup_borders_and_corners()
       D.fence_h = math.max(c.f_max, other.f_max)
 
       -- Wire fences
-      if GAME.caps.rails and rand_odds(33) and (side%2)==0 then
+      if GAME.misc_fabs and GAME.misc_fabs["fence_STD"] and
+         rand_odds(33) and (side%2)==0
+      then
         D.kind = "wire"
         D.wire_h = D.fence_h + rand_sel(35, 0, 48)
       end
@@ -3435,8 +3437,7 @@ end
     local D = c.border[side]
     assert(D.wire_h)
 
-    local def = GAME.misc_fabs["fence_MIDBARS3"] -- FIXME: not hard-code
-if not def then return end --!!!!!!!!
+    local def = GAME.misc_fabs["fence_STD"]
     assert(def)
 
     local fab = non_nil(PREFABS[def.prefab])

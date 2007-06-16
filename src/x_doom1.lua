@@ -1713,10 +1713,10 @@ DM_WINDOW_PREFABS =
 
 DM_MISC_PREFABS =
 {
-  fence_MIDBARS3 =
+  fence_STD =
   {
     prefab = "FENCE_RAIL",
-    skin = { rail_w="MIDBARS3" },
+    skin = { rail_w="BRNSMALC" },
   },
   
   fence_beam_BLUETORCH =
@@ -1794,6 +1794,27 @@ DM_ROOMS =
  
   SCENIC =
   {
+  },
+
+  WAREHOUSE =
+  {
+    space_range = { 80, 99 },
+
+    pf_count = { 6,12 },
+
+    -- crate it up baby!
+    sc_fabs =
+    {
+      crate_triple_A = 40,
+      crate_triple_B = 40,
+      crate_CRATE1 = 50,
+      crate_CRATE2 = 50,
+      crate_WIDE = 30,
+      crate_rotate_CRATE1 = 15,
+      crate_rotate_CRATE2 = 15,
+
+      other = 20
+    },
   },
 
 }
@@ -2270,8 +2291,70 @@ D1_WALL_LIGHTS =
   stoned = { wall="LITESTON", w=32 },
 }
 
+D1_WALL_PREFABS =
+{
+  wall_pic_COMP2 =
+  {
+    prefab = "WALL_PIC",
+    min_height = 160,
+    skin = { pic_w="COMP2", lite_w="SUPPORT2" },
+    theme_probs = { TECH=90, INDUSTRIAL=30 },
+  },
+}
+
 D1_ROOMS =
 {
+  PLANT =
+  {
+    wall_fabs =
+    {
+      wall_pic_COMP2 = 30, 
+      other = 100
+    },
+  },
+
+  COMPUTER =
+  {
+    wall_fabs =
+    {
+      wall_pic_COMP2 = 30, 
+      other = 100
+    },
+  },
+
+  TORTURE =
+  {
+    space_range = { 60, 90 },
+
+    sc_count = { 6,16 },
+
+    scenery =
+    {
+      impaled_human  = 40, impaled_twitch = 40,
+
+      hang_arm_pair  = 40, hang_leg_pair  = 40,
+      hang_leg_gone  = 40, hang_leg       = 40,
+      hang_twitching = 40,
+
+      other = 50
+    },
+
+    sc_fabs =
+    {
+      pillar_SPDUDE5=30, other=50
+    },
+
+    wall_fabs =
+    {
+      wall_pic_SPDUDE1 = 20, wall_pic_SPDUDE2 = 20,
+
+      other = 50
+    },
+  },
+
+  PRISON =
+  {
+  },
 }
 
 ------------------------------------------------------------
@@ -2448,6 +2531,9 @@ GAME_FACTORIES["doom1"] = function()
   T.exits    = copy_and_merge(T.exits,    D1_EXITS)
   T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
   T.crates   = copy_and_merge(T.crates,   D1_CRATES)
+
+  T.sc_fabs   = copy_and_merge(T.sc_fabs,   D1_SCENERY_PREFABS)
+  T.wall_fabs = copy_and_merge(T.wall_fabs, D1_WALL_PREFABS)
 
   T.wall_lights = copy_and_merge(T.wall_lights, D1_WALL_LIGHTS)
 

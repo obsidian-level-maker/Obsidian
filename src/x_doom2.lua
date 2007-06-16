@@ -1333,6 +1333,12 @@ D2_DEATHMATCH_EXITS =
 
 D2_MISC_PREFABS =
 {
+  fence_STD =
+  {
+    prefab = "FENCE_RAIL",
+    skin = { rail_w="MIDBARS3" },
+  },
+  
   exit_hole_SKY =
   {
     prefab = "EXIT_HOLE_ROUND",
@@ -1362,27 +1368,6 @@ D2_MISC_PREFABS =
 
 D2_ROOMS =
 {
-  WAREHOUSE =
-  {
-    space_range = { 80, 99 },
-
-    pf_count = { 6,12 },
-
-    -- crate it up baby!
-    sc_fabs =
-    {
-      crate_triple_A = 40,
-      crate_triple_B = 40,
-      crate_CRATE1 = 50,
-      crate_CRATE2 = 50,
-      crate_WIDE = 30,
-      crate_rotate_CRATE1 = 15,
-      crate_rotate_CRATE2 = 15,
-
-      other = 20
-    },
-  },
-
   PLANT =
   {
     sc_fabs =
