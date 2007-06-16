@@ -2002,7 +2002,7 @@ Q.theme.name, Q.combo.name)
     local function setup_one_exit(c)
 
       if not GAME.caps.elevator_exits then
-        if c.quest.is_secret then
+        if c.quest.is_secret and GAME.exits["BLOODY"] then
           c.combo = GAME.exits["BLOODY"] --FIXME
         else
           c.combo = get_rand_exit_combo()
