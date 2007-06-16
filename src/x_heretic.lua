@@ -457,6 +457,7 @@ HC_SWITCHES =
       skin =
       {
         door_w="DMNMSK", door_c="FLOOR10",
+        track_w="METL2",
         door_h=128,
         door_kind=0, tag=0,
       }
@@ -484,6 +485,7 @@ HC_SWITCHES =
       skin =
       {
         door_w="CELTIC", door_c="FLAT522",
+        track_w="METL2",
         door_h=128,
         door_kind=0, tag=0,
       }
@@ -511,6 +513,7 @@ HC_SWITCHES =
       skin =
       {
         door_w="GRNBLOK4", door_c="FLOOR18",
+        track_w="METL2",
         door_h=128,
         door_kind=0, tag=0,
       }
@@ -548,11 +551,11 @@ HC_KEY_DOORS =
 
     skin =
     {
-      door_w="DOORSTON", door_c="FLOOR04",
+      door_w="DOORSTON", door_c="FLOOR28",
       track_w="METL2",
       frame_f="FLOOR04",
       door_h=128, 
-      door_kind=26, tag=0,  -- kind_once=32
+      door_kind=32, tag=0,  -- kind_rep=26
     },
 
     thing = "blue_statue",
@@ -566,11 +569,11 @@ HC_KEY_DOORS =
 
     skin =
     {
-      door_w="DOORSTON", door_c="FLOOR04",
+      door_w="DOORSTON", door_c="FLOOR28",
       track_w="METL2",
       frame_f="FLOOR04",
       door_h=128, 
-      door_kind=28, tag=0, -- kind_once=33,
+      door_kind=33, tag=0, -- kind_rep=28,
     },
 
     thing = "green_statue",
@@ -584,11 +587,11 @@ HC_KEY_DOORS =
 
     skin =
     {
-      door_w="DOORSTON", door_c="FLOOR04",
+      door_w="DOORSTON", door_c="FLOOR28",
       track_w="METL2",
       frame_f="FLOOR04",
       door_h=128, 
-      door_kind=27, tag=0, -- kind_once=34,
+      door_kind=34, tag=0, -- kind_rep=27,
     },
 
     thing = "yellow_statue",
@@ -636,7 +639,11 @@ HC_MISC_PREFABS =
   {
     w=128, h=128, prefab = "DOOR",
 
-    skin = { door_h=128, door_kind=1, tag=0 }
+    skin =
+    {
+      track_w="METL2",
+      door_h=128, door_kind=31, tag=0
+    },
   },
 }
 
