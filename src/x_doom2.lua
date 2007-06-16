@@ -455,6 +455,7 @@ D2_EXITS =
     switch =
     {
       prefab="SWITCH_NICHE_TINY_DEEP",
+      add_mode="wall",
       skin =
       {
         switch_w="SW1COMP", switch_h=32,
@@ -518,6 +519,7 @@ D2_EXITS =
     switch =
     {
       prefab="SWITCH_FLUSH",
+      add_mode="wall",
       skin =
       {
         switch_w="SW1SKULL", wall="SLOPPY1",

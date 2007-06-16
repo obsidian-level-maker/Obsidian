@@ -1031,7 +1031,6 @@ SWITCH_PILLAR =
 
 SWITCH_FLUSH =
 {
-  add_mode="wall",  -- IN THE WALL
   scale=64,
 
   structure =
@@ -1180,8 +1179,6 @@ SWITCH_CEILING =
 
 SWITCH_NICHE =
 {
-  add_mode="wall",
-
   structure =
   {
     "########",
@@ -1215,8 +1212,6 @@ SWITCH_NICHE =
 
 SWITCH_NICHE_TINY =
 {
-  add_mode="wall",
-
   structure =
   {
     "####",
@@ -1259,8 +1254,6 @@ SWITCH_NICHE_TINY_DEEP =
 
 SWITCH_NICHE_HEXEN =
 {
-  add_mode="wall",
-
   structure =
   {
     "###ss###",

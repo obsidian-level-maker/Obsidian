@@ -313,6 +313,7 @@ DM_EXITS =
     switch =
     {
       prefab="SWITCH_NICHE",
+      add_mode="wall",
       skin =
       {
         switch_w="SW1COMP", switch_h=64,
@@ -374,6 +375,7 @@ DM_EXITS =
     switch =
     {
       prefab="SWITCH_FLUSH",
+      add_mode="wall",
       skin =
       {
         switch_w="SW1BRN2", wall="BROWN1",
@@ -436,6 +438,7 @@ DM_EXITS =
     switch =
     {
       prefab="SWITCH_FLUSH",
+      add_mode="wall",
       skin =
       {
         switch_w="SW1STRTN", wall="STARTAN2",
@@ -476,6 +479,7 @@ DM_EXITS =
     switch =
     {
       prefab="SWITCH_FLUSH",
+      add_mode="wall",
       skin =
       {
         switch_w="SW1GSTON", wall="GSTONE2",
@@ -1184,7 +1188,7 @@ DM_SCENERY_PREFABS =
       frame_w = "METAL", frame_c = "CEIL5_2",
     },
 
-    prob = 20,
+    prob = 10,
   },
 
   crate_CRATE1 =

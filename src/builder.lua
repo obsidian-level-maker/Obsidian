@@ -3453,7 +3453,7 @@ end
     for x = x1,x2 do for y = y1,y2 do
       local B = PLAN.blocks[x][y]
       if not B then
-        if fab2 and rand_odds(15) and (x>x1 or y>y1) and (x<x2 or y<y2) then
+        if fab2 and rand_odds(10) and (x>x1 or y>y1) and (x<x2 or y<y2) then
           B_prefab(c, fab2,def2.skin,parm, c.rmodel,D.combo, x,y,10-side)
         else
           B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, x,y,10-side)
@@ -6738,7 +6738,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
       error("Unknown switch prefab: " .. tostring(info.switch.prefab))
     end
 
-    if (not in_wall) == (fab.add_mode == "wall") then
+    if (not in_wall) == (info.add_mode == "wall") then
       return
     end
 

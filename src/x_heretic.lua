@@ -441,6 +441,7 @@ HC_SWITCHES =
     switch =
     {
       prefab = "SWITCH_NICHE_TINY",
+      add_mode = "island",
       skin =
       {
         wall="CHAINSD",
@@ -467,6 +468,7 @@ HC_SWITCHES =
     switch =
     {
       prefab="SWITCH_NICHE_TINY",
+      add_mode = "island",
       skin =
       {
         wall="CELTIC",
@@ -493,6 +495,7 @@ HC_SWITCHES =
     switch =
     {
       prefab = "SWITCH_NICHE_TINY",
+      add_mode = "island",
       skin =
       {
         wall="GRNBLOK1",
