@@ -3453,7 +3453,7 @@ end
     for x = x1,x2 do for y = y1,y2 do
       local B = PLAN.blocks[x][y]
       if not B then
-        if fab2 and rand_odds(25) and (x>x1 or y>y1) and (x<x2 or y<y2) then
+        if fab2 and rand_odds(15) and (x>x1 or y>y1) and (x<x2 or y<y2) then
           B_prefab(c, fab2,def2.skin,parm, c.rmodel,D.combo, x,y,10-side)
         else
           B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, x,y,10-side)
