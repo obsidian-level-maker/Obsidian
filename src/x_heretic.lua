@@ -436,31 +436,80 @@ HC_LIQUIDS =
 
 HC_SWITCHES =
 {
----##  sw_rock = { wall="RCKSNMUD", switch="SW1OFF" },
-
-  sw_rock =
+  sw_demon =
   {
     switch =
     {
-      prefab = "SWITCH_PILLAR",
+      prefab = "SWITCH_NICHE_TINY",
       skin =
       {
-        switch_w="SW1OFF", wall="RCKSNMUD", kind=103,
+        wall="CHAINSD",
+        switch_w="SW1OFF", switch_h=32,
+        x_offset=16, y_offset=48, kind=103,
       }
     },
 
     door =
     {
       w=128, h=128,
-      prefab = "DOOR", -- DOOR_LOCKED
+      prefab = "DOOR",
       skin =
       {
         door_w="DMNMSK", door_c="FLOOR10",
-        key_w="RCKSNMUD",
         door_h=128,
+        door_kind=0, tag=0,
+      }
+    },
+  },
 
----     step_w="STEP1",  track_w="DOORTRAK",
----     frame_f="FLAT1", frame_c="FLAT1",
+  sw_celtic =
+  {
+    switch =
+    {
+      prefab="SWITCH_NICHE_TINY",
+      skin =
+      {
+        wall="CELTIC",
+        switch_w="SW1OFF", switch_h=32,
+        x_offset=16, y_offset=48, kind=103,
+      }
+    },
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "DOOR",
+      skin =
+      {
+        door_w="CELTIC", door_c="FLAT522",
+        door_h=128,
+        door_kind=0, tag=0,
+      }
+    },
+  },
+
+  sw_green =
+  {
+    switch =
+    {
+      prefab = "SWITCH_NICHE_TINY",
+      skin =
+      {
+        wall="GRNBLOK1",
+        switch_w="SW1OFF", switch_h=32,
+        x_offset=16, y_offset=48, kind=103,
+      }
+    },
+
+    door =
+    {
+      w=128, h=128,
+      prefab = "DOOR",
+      skin =
+      {
+        door_w="GRNBLOK4", door_c="FLOOR18",
+        door_h=128,
+        door_kind=0, tag=0,
       }
     },
   },
@@ -488,9 +537,9 @@ HC_DOORS =
 
 HC_KEY_DOORS =
 {
-  k_blue   =
+  k_blue =
   {
-    w=128, h=128, kind_rep=26, kind_once=32,
+    w=128, h=128,
 
     prefab = "DOOR", -- DOOR_LOCKED
 
@@ -500,14 +549,15 @@ HC_KEY_DOORS =
       track_w="METL2",
       frame_f="FLOOR04",
       door_h=128, 
+      door_kind=26, tag=0,  -- kind_once=32
     },
 
-    thing="blue_statue",
+    thing = "blue_statue",
   },
 
-  k_green  =
+  k_green =
   {
-    w=128, h=128, kind_rep=28, kind_once=33,
+    w=128, h=128,
 
     prefab = "DOOR", -- DOOR_LOCKED
 
@@ -517,14 +567,15 @@ HC_KEY_DOORS =
       track_w="METL2",
       frame_f="FLOOR04",
       door_h=128, 
+      door_kind=28, tag=0, -- kind_once=33,
     },
 
-    thing="green_statue",
+    thing = "green_statue",
   },
 
   k_yellow =
   {
-    w=128, h=128, kind_rep=27, kind_once=34,
+    w=128, h=128,
 
     prefab = "DOOR", -- DOOR_LOCKED
 
@@ -534,9 +585,10 @@ HC_KEY_DOORS =
       track_w="METL2",
       frame_f="FLOOR04",
       door_h=128, 
+      door_kind=27, tag=0, -- kind_once=34,
     },
 
-    thing="yellow_statue",
+    thing = "yellow_statue",
   },
 }
 
@@ -553,9 +605,10 @@ HC_DOOR_PREFABS =
 
     skin =
     {
-      door_w="DMNMSK", door_c="FLOOR10",
+      door_w="DOORWOOD", door_c="FLOOR10",
       track_w="METL2",
       door_h=128,
+      door_kind=1, tag=0,
     },
 
     theme_probs = { CITY=20 },
@@ -571,7 +624,8 @@ HC_MISC_PREFABS =
     skin =
     {
       door_w="DOOREXIT",
-      door_h=96
+      door_h=96,
+      door_kind=1, tag=0,
     },
   },
 
@@ -579,7 +633,7 @@ HC_MISC_PREFABS =
   {
     w=128, h=128, prefab = "DOOR",
 
-    skin = { door_h=128 }
+    skin = { door_h=128, door_kind=1, tag=0 }
   },
 }
 
@@ -617,14 +671,12 @@ HC_QUESTS =
 {
   key =
   {
-    k_blue=20, k_green=40, k_yellow=60
+    k_blue=30, k_green=45, k_yellow=60
   },
 
   switch =
   {
-    sw_rock=50,
---  sw_stone=50,
---  sw_brick=50,
+    sw_demon=60, sw_green=45, sw_celtic=30,
   },
 
   weapon =
