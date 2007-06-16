@@ -326,19 +326,19 @@ HC_EXITS =
     floor = "FLOOR03",
     ceil  = "FLOOR19",
 
----##    switch = { switch="SW2OFF", wall="METL2", h=64 },
-
     switch =
     {
-      prefab="SWITCH_PILLAR",
+      prefab="SWITCH_NICHE_TINY_DEEP",
+      add_mode="wall",
       skin =
       {
-        switch_w="SW2OFF", side_w="METL2",
+        switch_w="SW2OFF", wall="METL2",
+--      switch_f="FLOOR28",
+
+        switch_h=32, x_offset=16, y_offset=48,
         kind=11, tag=0,
       }
     },
-
----##    door = { wall="DOOREXIT", w=64, h=96 },
   },
 }
 
