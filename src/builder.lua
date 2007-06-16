@@ -3055,7 +3055,6 @@ function build_borders()
 ---###
 ---###      parm.door_kind = sel(PLAN.coop, door_info.kind_once, door_info.kind_rep)
 
-      -- FIXME: heretic statues !!!
     end
 
     if link.quest and link.quest.kind == "switch" then
@@ -3089,6 +3088,22 @@ function build_borders()
     assert(fab)
 
     B_prefab(c, fab, door_info.skin, parm, rmodel,D.combo, link.x1, link.y1, side)
+
+    -- add heretic statues
+    if door_def.thing then
+      local dx, dy = dir_to_delta(10 - side)
+      local ax, ay = dir_to_across(10 - side)
+      local x, y = link.x1, link.y1
+
+      for j = 1,2 do
+        local th = add_thing(c, x+dx, y+dy, door_def.thing, true, dir_to_angle(10-side))
+
+        th.dx = (-dx-ax) * 12
+        th.dy = (-dy-ay) * 12
+
+        dx, dy, side = -dx, -dy, 10-side
+      end
+    end
   end
 
 
