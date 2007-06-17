@@ -38,7 +38,7 @@ zprint = do_nothing
 zdump_table = do_nothing
 
 
-function add_thing(c, bx,by, name, blocking, angle, options)
+function add_thing(c, bx,by, name, blocking, angle, options, classes)
 
   local kind = GAME.things[name]
   if not kind then
@@ -59,7 +59,8 @@ function add_thing(c, bx,by, name, blocking, angle, options)
     name = name,
     kind = kind,
     angle = angle,
-    options = options
+    options = options,
+    classes = classes
   }
 
   -- con.debugf("INSERTING %s INTO BLOCK (%d,%d)\n", kind, c.bx1-1+bx, c.by1-1+by)
@@ -251,10 +252,15 @@ end
 function initial_hmodels()
   local MODELS = {}
 
-  for zzz,SK in ipairs(SKILLS) do
-    MODELS[SK] = copy_table(GAME.initial_model)
-    MODELS[SK].skill = SK
-    MODELS[SK].toughness = 0
+  for xxx,CL in ipairs(GAME.classes) do
+    MODELS[CL] = { }
+
+    for zzz,SK in ipairs(SKILLS) do
+      MODELS[CL][SK] = copy_table(non_nil(GAME.initial_model[CL]))
+
+      MODELS[CL][SK].class = CL
+      MODELS[CL][SK].skill = SK
+    end
   end
 
   return MODELS
@@ -876,7 +882,7 @@ end
 
 function place_battle_stuff(c, stats)
 
-  local SK
+  local CL, SK
 
   local function copy_shuffle_spots(list)
     local copies = {}
@@ -973,6 +979,7 @@ function place_battle_stuff(c, stats)
     end
 
     local options = { [SK]=true }
+    local classes = { ]CL]=true }
 
     local mirror = rand_odds(50)
     local rotate = rand_odds(50)
@@ -989,7 +996,7 @@ function place_battle_stuff(c, stats)
 
       if spot.double then dx,dy = dx+32,dy+32 end
 
-      local th = add_thing(c, spot.x, spot.y, dat.name, false, 0, options)
+      local th = add_thing(c, spot.x, spot.y, dat.name, false, 0, options, classes)
 
       th.dx = dx + (spot.dx or 0)
       th.dy = dy + (spot.dy or 0)
@@ -1086,11 +1093,13 @@ function place_battle_stuff(c, stats)
   if GAME.caps.elevator_exits and c.is_exit then return end
 
   for zzz,skill in ipairs(SKILLS) do
-
     SK = skill
 
-    if c.pickup_set then
-      place_pickup_list(c.pickup_set[SK])
+    for xxx,clazz in ipairs(GAME.classes) do
+      CL = clazz
+      if c.pickup_set then
+        place_pickup_list(c.pickup_set[CL][SK])
+      end
     end
 
     if c.mon_set then
@@ -1127,48 +1136,41 @@ function battle_in_cell(c)
     return math.max(T.easy, T.medium, T.hard)
   end
 
-  local function best_weapon(skill)
-    local best_name
-    local best_info
+  local function best_weapon_fp(skill)
 
-    -- most basic weapon
-    for name,info in pairs(GAME.weapons) do
-      if info.melee and info.held then
-        best_name = name
-        best_info = info
-        break;
-      end
-    end
+    local fp = 0
 
-    assert(best_name)
+    -- note: for Hexen we check _all_ classes, which is OK
+    -- because the quest structure means every class gets
+    -- weapon #2 (for example) at the same time.
 
     for name,info in pairs(GAME.weapons) do
-      if PLAN.hmodels[skill][name] and not info.melee then
-        if info.fp > best_info.fp then
-          best_name, best_info = name, info
+      for xxx,CL in ipairs(GAME.classes) do
+        local HM = PLAN.hmodels[CL][skill]
+        if HM[name] and info.fp > fp then
+          fp = info.fp
         end
       end
     end
 
-    return best_info, best_name
+    return fp
   end
 
-
-  local function decide_monster(firepower)
+  local function decide_monster(fp)
 
     local names = { "none" }
     local probs = { 30     }
 
     for name,info in pairs(GAME.monsters) do
-      if (info.pow < T*2) and (firepower >= int(info.fp)) then
+      if (info.pow < T*2) and (fp >= int(info.fp)) then
 
         local prob = info.prob * (c.mon_prefs[name] or 1)
 
         if info.pow > T then
           prob = prob * (2 - info.pow / T) ^ 1.7
         end
-        if (firepower < info.fp) then
-          prob = prob * (1 - (info.fp - firepower))
+        if (fp < info.fp) then
+          prob = prob * (1 - (info.fp - fp))
         end
 
         table.insert(names, name)
@@ -1220,8 +1222,7 @@ function battle_in_cell(c)
 
   local function create_monsters()
 
-    local best_weap = best_weapon(SK)
-    local fp = non_nil(best_weap.fp)
+    local fp = best_weapon_fp(SK)
 
     -- create monsters until T is exhausted
     for loop = 1,99 do
@@ -1239,19 +1240,19 @@ function battle_in_cell(c)
     end
   end
 
-  local function decide_cage_monster(T, firepower, x_horde, allow_big, allow_horde, is_surprise)
+  local function decide_cage_monster(T, fp, x_horde, allow_big, allow_horde, is_surprise)
 
     local names = {}
     local probs = {}
 
     for name,info in pairs(GAME.monsters) do
       if (info.cage_fallback) or 
-         ((info.pow < T*2/x_horde) and (firepower >= int(info.fp)))
+         ((info.pow < T*2/x_horde) and (fp >= int(info.fp)))
       then
         local prob = info.cage_prob or info.cage_fallback or 0
 
-        if is_surprise and (firepower < info.fp) then
-          prob = prob * (1 - (info.fp - firepower))
+        if is_surprise and (fp < info.fp) then
+          prob = prob * (1 - (info.fp - fp))
         end
 
         if info.melee and not is_surprise then prob = 0 end
@@ -1290,9 +1291,8 @@ function battle_in_cell(c)
 
     local orig_T = T
 
-    local best_weap = best_weapon(SK)
-    local fp = non_nil(best_weap.fp)
-    
+    local fp = best_weapon_fp(SK)
+ 
     local small = decide_cage_monster(T, fp, #c.cage_spots)
     local big   = decide_cage_monster(T, fp, #c.cage_spots, true, true)
 
@@ -1334,8 +1334,7 @@ function battle_in_cell(c)
   local function try_fill_closet(surprise)
     if not surprise or surprise.trigger_cell ~= c then return end
 
-    local best_weap = best_weapon(SK)
-    local fp = non_nil(best_weap.fp)
+    local fp = best_weapon_fp(SK)
 
     local CT = surprise.toughness * TOUGH_FACTOR[SK]
 
@@ -1417,12 +1416,16 @@ zprint("BATTLE IN", c.x, c.y)
 
   local last_T = 0
 
+  if not PLAN.left_overs then
+    PLAN.left_overs = { easy=0, medium=0, hard=0 }
+  end
+
   for zzz,skill in ipairs(SKILLS) do
   
     SK = skill
 
     T = c.toughness * (free_space ^ 0.7) * TOUGH_FACTOR[SK]
-    T = T + PLAN.hmodels[SK].toughness
+    T = T + PLAN.left_overs[SK]
     U = 0
 
     if GAME.caps.tiered_skills then
@@ -1435,15 +1438,18 @@ zprint("BATTLE IN", c.x, c.y)
     create_monsters(space)
 
     -- left over toughness gets compounded (but never decreased)
-    PLAN.hmodels[SK].toughness = math.max(0, T + U)
+    PLAN.left_overs[SK] = math.max(0, T + U)
 
     local quest = sel(c == c.quest.last, c.quest, nil)
 
 zprint("SIMULATE in CELL", c.x, c.y, SK)
 
-    simulate_battle(PLAN.hmodels[SK], c.mon_set[SK], quest)
+    for xxx,CL in ipairs(GAME.classes) do
 
-    distribute_pickups(c, PLAN.hmodels[SK])
+      simulate_battle(PLAN.hmodels[CL][SK], c.mon_set[SK], quest)
+
+      distribute_pickups(c, PLAN.hmodels[CL][SK])
+    end
   end
 end
 
@@ -1453,11 +1459,11 @@ function backtrack_to_cell(c)
   local function surprise_me(surprise)
     for zzz,place in ipairs(surprise.places) do
       if c == place.c then
-        for zzz,SK in ipairs(SKILLS) do
-
-          simulate_battle(PLAN.hmodels[SK], place.mon_set[SK]) 
-
-          distribute_pickups(c, PLAN.hmodels[SK], "backtrack")
+        for xxx,CL in ipairs(GAME.classes) do
+          for zzz,SK in ipairs(SKILLS) do
+            simulate_battle(PLAN.hmodels[CL][SK], place.mon_set[SK]) 
+            distribute_pickups(c, PLAN.hmodels[CL][SK], "backtrack")
+          end
         end
       end
     end
