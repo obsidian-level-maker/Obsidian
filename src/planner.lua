@@ -1795,7 +1795,7 @@ con.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
 
     local function shuffle_main_quests(qlist)
 
-      local MODE_PRI = { ["start"]=0, ["main"]=1, ["end"]=3, ["sub"]=4 }
+      local MODE_PRI = { ["begin"]=0, ["main"]=1, ["end"]=3, ["sub"]=4 }
 
       -- put main quests into basic order
 
