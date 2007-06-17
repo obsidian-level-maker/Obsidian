@@ -130,31 +130,34 @@ function write_level(lev_name)
       th.x = BLOCK_X(bx + 0.5) + (th.dx or 0)
       th.y = BLOCK_Y(by + 0.5) + (th.dy or 0)
 
+      th.flags = 0
+
       if th.options then
-        th.flags = 0
-        if th.options.easy   then th.flags = th.flags + MTF_EASY end
+        if th.options.easy   then th.flags = th.flags + MTF_EASY   end
         if th.options.medium then th.flags = th.flags + MTF_MEDIUM end
-        if th.options.hard   then th.flags = th.flags + MTF_HARD end
+        if th.options.hard   then th.flags = th.flags + MTF_HARD   end
         if th.options.ambush then th.flags = th.flags + MTF_AMBUSH end
+      else
+        -- default options
+        th.flags = th.flags + MTF_EASY + MTF_MEDIUM + MTF_HARD
+      end
 
-        if GAME.hexen_format then
-          -- the thing may be limited to a certain player class,
-          -- otherwise it exits for every class.
-              if th.options.fighter_only then th.flags = th.flags + XTF_FIGHTER
-          elseif th.options.cleric_only  then th.flags = th.flags + XTF_CLERIC
-          elseif th.options.mage_only    then th.flags = th.flags + XTF_MAGE
-          else
-            th.flags = th.flags + XTF_FIGHTER + XTF_CLERIC + XTF_MAGE
-          end
-
-          th.flags = th.flags + XTF_SP + XTF_COOP + XTF_DM
+      if GAME.hexen_format then
+        if th.classes then
+          if th.classes.fighter then th.flags = th.flags + XTF_FIGHTER end
+          if th.classes.cleric  then th.flags = th.flags + XTF_CLERIC  end
+          if th.classes.mage    then th.flags = th.flags + XTF_MAGE    end
+        else
+          -- default classes
+          th.flags = th.flags + XTF_FIGHTER + XTF_CLERIC + XTF_MAGE
         end
 
-      else -- default options
-        th.flags = MTF_EASY + MTF_MEDIUM + MTF_HARD
-
-        if GAME.hexen_format then
-          th.flags = th.flags + XTF_FIGHTER + XTF_CLERIC + XTF_MAGE
+        if th.modes then
+          if th.modes.sp   then th.flags = th.flags + XTF_SP   end
+          if th.modes.coop then th.flags = th.flags + XTF_COOP end
+          if th.modes.dm   then th.flags = th.flags + XTF_DM   end
+        else
+          -- default game modes
           th.flags = th.flags + XTF_SP + XTF_COOP + XTF_DM
         end
       end
@@ -912,7 +915,7 @@ function write_level(lev_name)
       tx_file:write(
         string.format("%d : %d %d %d %d\n",
           th.kind.id, NORMALIZE(th.x), NORMALIZE(th.y),
-          th.angle or 0, th.flags or 7))
+          th.angle or 0, non_nil(th.flags)))
     end
 
     tx_file:write("THINGS_END\n")
