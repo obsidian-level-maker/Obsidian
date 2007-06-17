@@ -465,8 +465,9 @@ zprint(active_mon, #active_mon, active_mon[1])
 
       if info.ammo then
         if info.ammo == "dual_mana" then
-          HM[blue_mana]  = HM[blue_mana]  - info.per
-          HM[green_mana] = HM[green_mana] - info.per
+
+          HM["blue_mana"]  = HM["blue_mana"]  - info.per
+          HM["green_mana"] = HM["green_mana"] - info.per
         else
           HM[info.ammo] = HM[info.ammo] - info.per
         end
