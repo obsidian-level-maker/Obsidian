@@ -1123,7 +1123,7 @@ XN_INITIAL_MODEL =
 {
   health=100, armor=0,
   blue_mana=0, green_mana=0,
-  f_gaunt=true -- FIXME: classes
+  weap_1=true
 }
 
 XN_MONSTERS =
@@ -1189,14 +1189,14 @@ XN_PICKUPS =
 
 XN_NICENESS =
 {
-  p1 = { pickup="ar_mesh",   prob=3 },
-  p2 = { pickup="ar_shield", prob=3 },
-  p3 = { pickup="ar_helmet", prob=3 },
-  p4 = { pickup="ar_amulet", prob=3 },
+  a1 = { pickup="ar_mesh",   prob=3 },
+  a2 = { pickup="ar_shield", prob=3 },
+  a3 = { pickup="ar_helmet", prob=3 },
+  a4 = { pickup="ar_amulet", prob=3 },
 
---!!!!!!  p5 = { pickup="flechette", prob=9 },
---!!!!!!  p6 = { pickup="bracer",    prob=5 },
---!!!!!!  p7 = { pickup="torch",     prob=7 },
+  p1 = { pickup="flechette", prob=9 },
+  p2 = { pickup="bracer",    prob=5 },
+  p3 = { pickup="torch",     prob=7 },
 }
 
 XN_DEATHMATCH =
