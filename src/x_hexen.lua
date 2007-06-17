@@ -1101,7 +1101,7 @@ XN_MISC_PREFABS =
     skin =
     {
       door_h=128,
-      door_kind = { id=12, act="SR", args={"tag", 16, 64} },
+      door_kind = { id=12, act="S1", args={"tag", 16, 64} },
     }
   },
 
@@ -1421,6 +1421,8 @@ function hexen_get_levels(episode)
   local b_src = rand_sel(50, 1, 3)
   local w_src = rand_sel(50, 1, 2)
 
+  local gate_idx = 2
+
 
   local function add_quest(map, kind, item, mode, force_key)
 
@@ -1448,10 +1450,15 @@ function hexen_get_levels(episode)
     {
       src  = level_list[src],
       dest = level_list[dest],
+
+      src_idx  = gate_idx,
+      dest_idx = gate_idx + 1,
     }
 
     table.insert(Gate.src.gates,  Gate)
     table.insert(Gate.dest.gates, Gate)
+
+    gate_idx = gate_idx + 2
 
 --  con.debugf("Connect %d -> %d\n", src, dest)
 
@@ -1468,6 +1475,9 @@ function hexen_get_levels(episode)
 
     local F = add_quest(src,  "gate", dest, fwd_mode, force_key)
     local B = add_quest(dest, "back", src,  back_mode)
+
+    F.gate_pid = 0
+    B.gate_pid = Gate.src_idx
 
     if dest == 5 then
       F.is_secret = true
