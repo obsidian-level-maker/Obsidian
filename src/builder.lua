@@ -6531,9 +6531,8 @@ tostring(c.special_spots), tostring(angle))
     if can_special and c.special_spots and #c.special_spots >= 1 then
 con.printf("--> USING SPECIAL SPOT @ (%d,%d) FOR %s\n", c.x,c.y, name)
       local spot = table.remove(c.special_spots, 1)
-      add_thing(c, spot.x, spot.y, name, true,
+      return add_thing(c, spot.x, spot.y, name, true,
         (spot.vista_side and dir_to_angle(spot.vista_side)) or angle or 0)
-      return
     end
 
     local def = {}
@@ -6560,8 +6559,10 @@ con.printf("--> USING SPECIAL SPOT @ (%d,%d) FOR %s\n", c.x,c.y, name)
     
 con.printf("add_object @ (%d,%d)\n", x, y)
     gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
-    add_thing(c, x, y, name, true, angle or 0)
+    local th = add_thing(c, x, y, name, true, angle or 0)
     fab_mark_walkable(c, x, y, 8, 1,1, 4)
+
+    return th
   end
 
   local function player_angle(c)
@@ -6700,7 +6701,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=def.skin.wall })
   end
 
-  local function add_gate_exit(c)
+  local function add_hexen_gate(c)
     local def = GAME.misc_fabs and GAME.misc_fabs["gate_EXIT"]
     if not def then return end --!!!!
 
@@ -6710,11 +6711,30 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     assert(K)
     assert(fab.long <= K.w and fab.deep <= K.h)
 
+    local parm = { kind=non_nil(c.quest.gate_kind) }
+    
     local dir = c.entry_dir or (10 - c.exit_dir)
 
-    B_prefab(c, fab, def.skin, {}, K.rmodel, c.combo, K.x1, K.y1, dir)
+    B_prefab(c, fab, def.skin, parm, K.rmodel, c.combo, K.x1, K.y1, dir)
 
     gap_fill(c, K.x1,K.y1, K.x2,K.y2, K.rmodel)
+
+    -- add player return spots
+    if c.quest.return_args then
+      local dx,dy = dir_to_delta(dir)
+
+      local x  = int((K.x1+K.x2) / 2) + dx * 4
+      local y  = int((K.y1+K.y2) / 2) + dy * 4
+
+      sort_fab_locs(c, "near", x, y)
+
+      for p = 1,sel(SETTINGS.mode == "coop",4,1) do
+        local th = add_object(c, "player" .. tostring(p), "must", false, dir_to_angle(dir))
+        if th then
+          th.args = c.quest.return_args
+        end
+      end
+    end
   end
 
   local function add_special_item(c)
@@ -7079,7 +7099,7 @@ con.debugf("add_scenery : %s\n", item)
   if c.q_spot and c == c.quest.last and
      (c.quest.kind == "gate" or c.quest.kind == "back")
   then
-    add_gate_exit(c)
+    add_hexen_gate(c)
   end
 
 

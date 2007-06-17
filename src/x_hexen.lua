@@ -1113,7 +1113,7 @@ XN_MISC_PREFABS =
     {
       frame_w="WOOD01", frame_f="F_054", frame_c="F_054",
       telep_w="TPORT1", border_w="TPORTX",
-      kind=0, tag=0,  -- FIXME
+      tag=0,
     },
   },
 }
@@ -1476,8 +1476,10 @@ function hexen_get_levels(episode)
     local F = add_quest(src,  "gate", dest, fwd_mode, force_key)
     local B = add_quest(dest, "back", src,  back_mode)
 
-    F.gate_pid = 0
-    B.gate_pid = Gate.src_idx
+    F.gate_kind = { id=74, act="WR", args={ B.map, 0 }}
+    B.gate_kind = { id=74, act="WR", args={ F.map, Gate.src_idx }}
+
+    F.return_args = { Gate.src_idx }
 
     if dest == 5 then
       F.is_secret = true
