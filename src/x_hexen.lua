@@ -1121,9 +1121,26 @@ XN_MISC_PREFABS =
 
 XN_INITIAL_MODEL =
 {
-  health=100, armor=0,
-  blue_mana=0, green_mana=0,
-  weap_1=true
+  fighter =
+  {
+    health=100, armor=0,
+    blue_mana=0, green_mana=0,
+    f_gaunt=true
+  },
+
+  cleric =
+  {
+    health=100, armor=0,
+    blue_mana=0, green_mana=0,
+    c_mace=true
+  },
+
+  mage =
+  {
+    health=100, armor=0,
+    blue_mana=0, green_mana=0,
+    m_wand=true
+  },
 }
 
 XN_MONSTERS =

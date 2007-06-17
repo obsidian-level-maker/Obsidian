@@ -2201,12 +2201,15 @@ DM_DEATHMATCH =
 
 DM_INITIAL_MODEL =
 {
-  -- Note: bullet numbers are understated (should be 50)
-  -- so that the player isn't forced to empty the pistol.
+  doomguy =
+  {
+    -- Note: bullet numbers are understated (should be 50)
+    -- so that the player isn't forced to empty the pistol.
 
-  health=100, armor=0,
-  bullet=20, shell=0, rocket=0, cell=0,
-  fist=true, pistol=true,
+    health=100, armor=0,
+    bullet=20, shell=0, rocket=0, cell=0,
+    fist=true, pistol=true,
+  }
 }
 
 

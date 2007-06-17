@@ -868,10 +868,13 @@ HC_DEATHMATCH =
 
 HC_INITIAL_MODEL =
 {
-  health=100, armor=0,
-  crystal=30, arrow=0, runes=0,
-  claw_orb=0, flame_orb=0, mace_orb=0,
-  staff=true, wand=true,
+  cleric =
+  {
+    health=100, armor=0,
+    crystal=30, arrow=0, runes=0,
+    claw_orb=0, flame_orb=0, mace_orb=0,
+    staff=true, wand=true,
+  }
 }
 
 

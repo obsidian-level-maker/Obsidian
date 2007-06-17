@@ -554,8 +554,11 @@ WF_PICKUPS =
 
 WF_INITIAL_MODEL =
 {
-  health=100, armor=0, bullet=8,
-  knife=true, pistol=true
+  bj =
+  {
+    health=100, armor=0, bullet=8,
+    knife=true, pistol=true
+  }
 }
 
 
