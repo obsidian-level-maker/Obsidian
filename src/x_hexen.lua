@@ -1187,6 +1187,33 @@ XN_WEAPONS =
   m_scourge = { fp=4, ammo="dual_mana",  per=15, rate=2.2, dm=50, freq=30, pieces={m1_stick, m2_stub, m3_skull} },
 }
 
+XN_WEAPON_KLUDGE =
+{
+  fighter =
+  {
+    weap_1="f_gaunt",
+    weap_2="f_axe",
+    weap_3="f_hammer",
+    weap_4="f_quietus",
+  },
+
+  cleric =
+  {
+    weap_1="c_mace",
+    weap_2="c_staff",
+    weap_3="c_fire",
+    weap_4="c_wraith",
+  },
+
+  mage =
+  {
+    weap_1="m_wand",
+    weap_2="m_cone",
+    weap_3="m_blitz",
+    weap_4="m_scourge",
+  },
+}
+
 XN_PICKUPS =
 {
   h_vial  = { stat="health", give=10,  prob=70 },
@@ -1636,6 +1663,8 @@ GAME_FACTORIES["hexen"] = function()
     
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
     window_probs = { out_diff=80, combo_diff=50, normal=30 },
+
+    weapon_kludge = XN_WEAPON_KLUDGE,
   }
 end
 

@@ -206,6 +206,30 @@ end
 
 function hm_give_weapon(HM, weapon, ammo_mul)
 
+  if GAME.hexen_format then
+
+    if string.match(weapon, "piece_") then
+      -- already have it?
+      if not HM[weapon] then
+        HM[weapon] = true;
+
+        -- when get all pieces, you get the mega weapon
+        if HM["piece_1"] and HM["piece_2"] and HM["piece_3"] then
+          return hm_give_weapon(HM, "weap_4")
+        end
+      end
+
+      return;
+    end
+
+    local new_weap = GAME.weapon_kludge[HM.class][weapon]
+    if new_weap then
+      return hm_give_weapon(HM, new_weap)
+    end 
+
+    -- fall through...
+  end
+
   HM[weapon] = true
 
   local info = GAME.weapons[weapon]
@@ -695,18 +719,21 @@ function distribute_pickups(c, HM, backtrack)
 
   local R -- table[SKILL] -> required num
 
-  local SK = HM.skill
-  assert(SK)
 
-  
   local function add_pickup(c, name, info, cluster)
 
-    if not cluster then cluster = select_cluster_pattern(1) end
-    if not c.pickup_set then
-      c.pickup_set = { easy={}, medium={}, hard={} }
+    if not cluster then
+      cluster = select_cluster_pattern(1)
     end
 
-    table.insert(c.pickup_set[SK], { name=name, info=info, cluster=cluster })
+    if not c.pickup_set then
+      c.pickup_set = { }
+      for xxx,CL in ipairs(GAME.classes) do
+        c.pickup_set[CL] = { easy={}, medium={}, hard={} }
+      end
+    end
+
+    table.insert(c.pickup_set[HM.class][HM.skill], { name=name, info=info, cluster=cluster })
   end
 
 
@@ -979,7 +1006,7 @@ function place_battle_stuff(c, stats)
     end
 
     local options = { [SK]=true }
-    local classes = { ]CL]=true }
+    local classes = { [CL]=true }
 
     local mirror = rand_odds(50)
     local rotate = rand_odds(50)
@@ -1562,13 +1589,20 @@ function deathmatch_in_cell(c)
 
     local info = GAME.pickups[name] -- may be nil
 
-    table.insert(c.pickup_set[SK], { name=name, info=info, cluster=cluster })
+    -- FIXME: this stinks
+    for xxx,CL in ipairs(GAME.classes) do
+      table.insert(c.pickup_set[CL][SK], { name=name, info=info, cluster=cluster })
+    end
   end
 
   --== deathmatch_in_cell ==--
 
-  c.pickup_set = { easy={}, medium={}, hard={} }
-  c.mon_set    = { easy={}, medium={}, hard={} }
+  c.pickup_set = {}
+  for xxx,CL in ipairs(GAME.classes) do
+    c.pickup_set[CL] = { easy={}, medium={}, hard={} }
+  end
+
+  c.mon_set = { easy={}, medium={}, hard={} }
 
   c.free_spots = find_free_spots(c)
   rand_shuffle(c.free_spots)
