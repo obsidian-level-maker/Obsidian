@@ -138,7 +138,7 @@ function write_level(lev_name)
         if th.options.ambush then th.flags = th.flags + MTF_AMBUSH end
 
         if GAME.hexen_format then
-          -- the thing might only for a certain player class,
+          -- the thing may be limited to a certain player class,
           -- otherwise it exits for every class.
               if th.options.fighter_only then th.flags = th.flags + XTF_FIGHTER
           elseif th.options.cleric_only  then th.flags = th.flags + XTF_CLERIC
@@ -485,8 +485,11 @@ function write_level(lev_name)
         kind = not b.solid and (b.door_kind or b.lift_kind)
       }
 
-      -- FIXME: crud !!!!
-      if not b.solid and b.door_kind and GAME.hexen_format then
+      -- FIXME remove this door_kind/lift_kind/walk_kind shit
+
+      if GAME.hexen_format and not b.solid and
+        b.door_kind and b.door_kind ~= 0
+      then
         cur_line.tag = b.tag
       end
 

@@ -3077,7 +3077,7 @@ function build_borders()
 ---###      }
 --
     elseif GAME.hexen_format then
-      -- Hexen doors need tags (AFAIK)
+      -- Hexen doors need tags
       parm.tag = allocate_tag()
     end
 
