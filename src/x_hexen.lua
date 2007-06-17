@@ -1569,11 +1569,12 @@ GAME_FACTORIES["hexen"] = function()
     episodes   = 5,
     level_func = hexen_get_levels,
 
+    classes  = { "fighter", "cleric", "mage" },
+
+    things   = XN_THINGS,
     monsters = XN_MONSTERS,
     bosses   = XN_BOSSES,
     weapons  = XN_WEAPONS,
-
-    things = XN_THINGS,
 
     dm = XN_DEATHMATCH,
 

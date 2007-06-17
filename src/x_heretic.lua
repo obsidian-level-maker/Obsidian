@@ -981,6 +981,8 @@ GAME_FACTORIES["heretic"] = function()
     episodes   = 5,
     level_func = heretic_get_levels,
 
+    classes  = { "cleric" },
+
     things     = HC_THINGS,
     monsters   = HC_MONSTERS,
     bosses     = HC_BOSSES,
@@ -988,7 +990,7 @@ GAME_FACTORIES["heretic"] = function()
 
     pickups = HC_PICKUPS,
     pickup_stats = { "health", "crystal", "arrow", "claw_orb",
-                       "runes", "flame_orb", "mace_orb" },
+                     "runes", "flame_orb", "mace_orb" },
     niceness = HC_NICENESS,
 
     initial_model = HC_INITIAL_MODEL,

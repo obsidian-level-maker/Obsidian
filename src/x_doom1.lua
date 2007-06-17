@@ -2456,6 +2456,8 @@ function doom_common_factory()
     ERROR_TEX  = "FIREBLU1",
     ERROR_FLAT = "SFLR6_4",
 
+    classes  = { "doomguy" },
+
     monsters = DM_MONSTERS,
     bosses   = DM_BOSSES,
     weapons  = DM_WEAPONS,
