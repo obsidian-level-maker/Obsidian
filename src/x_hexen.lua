@@ -516,7 +516,7 @@ XN_SWITCHES =
         floor="F_075", ceil="F_075",
         switch_h=48, x_offset=0, y_offset=0,
 
-        kind = { id=12, act="S1", args={"tag", 16, 64} },
+        kind = { id=11, act="S1", args={"tag", 2 } },
       }
     },
 
@@ -529,7 +529,7 @@ XN_SWITCHES =
         door_w="STEEL01", door_c="F_074",
 --      key_w="STEEL06",
         door_h=128,
-        door_kind=0,
+        door_kind=0, tag=0,
 
 ---     step_w="STEP1",  track_w="DOORTRAK",
 ---     frame_f="FLAT1", frame_c="FLAT1",
@@ -549,7 +549,7 @@ XN_SWITCHES =
         floor="F_025", ceil="F_025",
         switch_h=40, x_offset=0, y_offset=0,
 
-        kind = { id=12, act="S1", args={"tag", 16, 64} },
+        kind = { id=11, act="S1", args={"tag", 2 } },
       }
     },
 
@@ -561,7 +561,7 @@ XN_SWITCHES =
       {
         door_w="MONK17", door_c="F_014",
         door_h=128,
-        door_kind=0,
+        door_kind=0, tag=0,
       }
     },
   },
@@ -577,7 +577,7 @@ XN_SWITCHES =
         switch_w="SW_2_UP",
         switch_h=48, x_offset=0, y_offset=0,
 
-        kind = { id=12, act="S1", args={"tag", 16, 64} },
+        kind = { id=11, act="S1", args={"tag", 2 } },
       }
     },
 
@@ -589,7 +589,7 @@ XN_SWITCHES =
       {
         door_w="MONK08", door_c="F_027",
         door_h=128,
-        door_kind=0,
+        door_kind=0, tag=0,
       }
     },
   },
@@ -605,7 +605,7 @@ XN_SWITCHES =
         switch_w="SW51_OFF",
         switch_h=32, x_offset=0, y_offset=0,
 
-        kind = { id=12, act="S1", args={"tag", 16, 64} },
+        kind = { id=11, act="S1", args={"tag", 2 } },
       }
     },
 
@@ -617,7 +617,7 @@ XN_SWITCHES =
       {
         door_w="PRTL06", door_c="F_013",
         door_h=128,
-        door_kind=0,
+        door_kind=0, tag=0,
       }
     },
   },
@@ -633,7 +633,7 @@ XN_SWITCHES =
         switch_w="SW_EL1",
         switch_h=32, x_offset=0, y_offset=0,
 
-        kind = { id=12, act="S1", args={"tag", 16, 64} },
+        kind = { id=11, act="S1", args={"tag", 2 } },
       }
     },
 
@@ -645,7 +645,7 @@ XN_SWITCHES =
       {
         door_w="CLOCKA", door_c="F_010",
         door_h=128,
-        door_kind=0,
+        door_kind=0, tag=0,
       }
     },
   },
@@ -658,10 +658,10 @@ XN_SWITCHES =
       add_mode = "wall",
       skin =
       {
-        switch_w="SW_OL1",
+        switch_w="SW_OL5",
         switch_h=32, x_offset=0, y_offset=0,
 
-        kind = { id=12, act="S1", args={"tag", 16, 64} },
+        kind = { id=11, act="S1", args={"tag", 2 } },
       }
     },
 
@@ -673,7 +673,7 @@ XN_SWITCHES =
       {
         door_w="STEEL07", door_c="F_066",
         door_h=128,
-        door_kind=0,
+        door_kind=0, tag=0,
       }
     },
   },
@@ -690,7 +690,7 @@ XN_SWITCHES =
         switch_f="F_012", ped_f="F_012",
         switch_h=32, x_offset=0, y_offset=0,
 
-        kind = { id=12, act="S1", args={"tag", 16, 64} },
+        kind = { id=11, act="S1", args={"tag", 2 } },
       }
     },
 
@@ -702,7 +702,7 @@ XN_SWITCHES =
       {
         door_w="FOREST03", door_c="F_017",
         door_h=128,
-        door_kind=0,
+        door_kind=0, tag=0,
       }
     },
   },
@@ -746,7 +746,8 @@ XN_KEY_DOORS =
       door_w="D_CAST", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 5} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 5} },
+      tag=0,
     }
   },
 
@@ -762,7 +763,8 @@ XN_KEY_DOORS =
       track_w="STEEL08",
       frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 4} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 4} },
+      tag=0,
     }
   },
 
@@ -778,7 +780,8 @@ XN_KEY_DOORS =
       track_w="STEEL08",
       frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 11} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 11} },
+      tag=0,
     }
   },
 
@@ -794,7 +797,8 @@ XN_KEY_DOORS =
       track_w="STEEL08",
       frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 7} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 7} },
+      tag=0,
     }
   },
 
@@ -807,7 +811,8 @@ XN_KEY_DOORS =
       door_w="D_CAVE2", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 2} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 2} },
+      tag=0,
     }
   },
 
@@ -820,7 +825,8 @@ XN_KEY_DOORS =
       door_w="D_SWAMP2", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 10} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 10} },
+      tag=0,
     }
   },
 
@@ -833,7 +839,8 @@ XN_KEY_DOORS =
       door_w="D_STEEL", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 1} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 1} },
+      tag=0,
     }
   },
 
@@ -846,7 +853,8 @@ XN_KEY_DOORS =
       door_w="D_RUST", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 8} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 8} },
+      tag=0,
     }
   },
 
@@ -859,7 +867,8 @@ XN_KEY_DOORS =
       door_w="D_DUNGEO", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 6} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 6} },
+      tag=0,
     }
   },
 
@@ -872,7 +881,8 @@ XN_KEY_DOORS =
       door_w="D_WASTE", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 9} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 9} },
+      tag=0,
     }
   },
 
@@ -885,7 +895,8 @@ XN_KEY_DOORS =
       door_w="D_AXE", door_c="F_009",
       track_w="STEEL08", frame_f="F_009",
       door_h=128,
-      door_kind = { id=13, act="SR", args={"tag", 16, 64, 3} },
+      door_kind = { id=13, act="SR", args={0, 16, 128, 3} },
+      tag=0,
     }
   },
 
@@ -1007,7 +1018,8 @@ XN_DOOR_PREFABS =
       door_w="D_WINNOW", door_c="F_009",
       track_w="STEEL08",
       door_h=128,
-      door_kind = { id=12, act="SR", args={"tag", 16, 64} },
+      door_kind = { id=12, act="SR", args={0, 16, 128} },
+      tag=0,
     },
 
     theme_probs = { CITY=60,ICE=10,CAVE=20 },
@@ -1101,7 +1113,8 @@ XN_MISC_PREFABS =
     skin =
     {
       door_h=128,
-      door_kind = { id=12, act="S1", args={"tag", 16, 64} },
+      door_kind = { id=12, act="S1", args={0, 16, 64} },
+      tag=0,
     }
   },
 
@@ -1476,8 +1489,8 @@ function hexen_get_levels(episode)
     local F = add_quest(src,  "gate", dest, fwd_mode, force_key)
     local B = add_quest(dest, "back", src,  back_mode)
 
-    F.gate_kind = { id=74, act="WR", args={ B.map, 0 }}
-    B.gate_kind = { id=74, act="WR", args={ F.map, Gate.src_idx }}
+    F.gate_kind = { id=74, act="WR", args={ Gate.dest.map, 0 }}
+    B.gate_kind = { id=74, act="WR", args={ Gate.src.map, Gate.src_idx }}
 
     F.return_args = { Gate.src_idx }
 

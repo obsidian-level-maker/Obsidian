@@ -490,11 +490,11 @@ function write_level(lev_name)
 
       -- FIXME remove this door_kind/lift_kind/walk_kind shit
 
-      if GAME.hexen_format and not b.solid and
-        b.door_kind and b.door_kind ~= 0
-      then
-        cur_line.tag = b.tag
-      end
+---##   if GAME.hexen_format and not b.solid and
+---##     b.door_kind and b.door_kind ~= 0
+---##   then
+---##     cur_line.tag = b.tag
+---##   end
 
       if not b.solid and b.lift_kind then
         cur_line.tag = b.tag

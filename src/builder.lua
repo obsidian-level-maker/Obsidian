@@ -3075,10 +3075,11 @@ function build_borders()
 ---###        door_kind = 1,
 ---###        tag = 0,
 ---###      }
---
-    elseif GAME.hexen_format then
-      -- Hexen doors need tags
-      parm.tag = allocate_tag()
+
+
+---##    elseif GAME.hexen_format then
+---##      -- Hexen doors need tags
+---##      parm.tag = allocate_tag()
     end
 
     if not door_info.prefab then print(table_to_str(door_info)) end
@@ -6707,7 +6708,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     assert(fab.long <= K.w and fab.deep <= K.h)
 
     local parm = { kind=non_nil(c.quest.gate_kind) }
-    
+
     local dir = c.entry_dir or (10 - c.exit_dir)
 
     B_prefab(c, fab, def.skin, parm, K.rmodel, c.combo, K.x1, K.y1, dir)
