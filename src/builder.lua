@@ -2378,15 +2378,15 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     end
   end
 
-  local function good_Q_spot(c, bad_side, purpose)
+  local function good_Q_spot(c, exit_dir, purpose)
 
-    local DIST_PROBS = { 1, 10, 100, 900 }
+    local DIST_PROBS = { 1, 20, 100 }
 
     local function k_dist(kx, ky)
-      if bad_side==2 then return ky-1 end
-      if bad_side==4 then return kx-1 end
-      if bad_side==6 then return 3-kx end
-      if bad_side==8 then return 3-ky end
+      if exit_dir==2 then return ky-1 end
+      if exit_dir==4 then return kx-1 end
+      if exit_dir==6 then return 3-kx end
+      if exit_dir==8 then return 3-ky end
     end
 
     local function next_to_link(kx, ky)
@@ -2397,18 +2397,54 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
       return false
     end
 
+    local M = c.chunks[2][2]
+    assert(M.kind == "empty")
+
+    -- first: try to find a usuable chunk next to middle one.
+    -- Note: should only fail when cell has four links.
+
     local chunk_list = {}
     local prob_list  = {}
 
----    local best_K, best_N
----    local best_score = -10
+    for dir = 2,8,2 do
+      local K = chunk_neighbour(c, M, dir)
+      if K.kind == "empty" and not next_to_link(K.kx, K.ky) then
+        local prob = DIST_PROBS[1 + k_dist(K.kx, K.ky)]
+        assert(prob)
 
+        table.insert(prob_list, prob)
+        table.insert(chunk_list, { K=K, dir=10-dir })
+      end
+    end
+
+    if #prob_list > 0 then
+      local info = chunk_list[rand_index_by_probs(prob_list)]
+
+      c.q_spot = info.K
+      c.q_spot.q_dir = info.dir
+
+      M.kind = "room"
+      M.no_reclaim = true
+    else
+      c.q_spot = M
+      c.q_spot.q_dir = exit_dir
+    end
+
+    c.q_spot.kind = "q_spot"
+    c.q_spot.purpose = purpose
+    c.q_spot.no_reclaim = true
+
+con.printf("Q-SPOT @ (%d,%d) chunk:[%d,%d] for:%s\n",
+c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
+
+
+--[[ PREVIOUS CODE
     for kx = 1,3 do for ky = 1,3 do
       local K = c.chunks[kx][ky]
       if K.kind == "empty" and not next_to_link(kx,ky) then
 
         -- find a visitable neighbour
-        --[[
+        --((
         local N
         for n_side = 2,8,2 do
           K2 = chunk_neighbour(c, K, n_side)
@@ -2417,7 +2453,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
             break;
           end
         end
-        --]]
+        --))
 
         local prob = DIST_PROBS[1 + k_dist(kx, ky)]
         assert(prob)
@@ -2446,15 +2482,10 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
 
     if #prob_list > 0 then
       
-      c.q_spot = chunk_list[rand_index_by_probs(prob_list)]
       assert(c.q_spot)
       
       c.q_spot.kind = "room"
       c.q_spot.purpose = purpose
-      c.q_spot.no_reclaim = true
-
-con.printf("Q-SPOT @ (%d,%d) chunk:[%d,%d] for:%s\n",
-c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
 
     end
 
@@ -2465,6 +2496,8 @@ c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
 ---##
 ---##      c.q_spot = best_K
 ---##    end
+
+--]]
   end
 
   local function find_q_spots(c)
@@ -6564,32 +6597,53 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
   local function player_angle(c)
 
     if c.q_spot then
-      local kx = c.q_spot.kx
-      local ky = c.q_spot.ky
+      local dir = non_nil(c.q_spot.q_dir)
 
-      if not (kx==2 and ky==2) and is_roomy(c.chunks[2][2]) then
-        return delta_to_angle(2-kx, 2-ky)
-      end
+      local dir2 = c.exit_dir or c.entry_dir
 
-      for i = 1,20 do
-        local dir = rand_irange(1,4)*2
-        local N = chunk_neighbour(c, c.q_spot, dir)
-        if N and is_roomy(N) then
-          return dir_to_angle(dir)
+      -- look diagonally sometimes
+      if not GAME.caps.four_dirs then
+        if dir2 and dir2 ~= dir and rand_odds(75) then
+          if dir2 == rotate_cw90(dir) then
+            dir = rotate_cw45(dir)
+          elseif dir2 == rotate_ccw90(dir) then
+            dir = rotate_ccw45(dir)
+          end
+        elseif rand_odds(2) then
+          dir = rotate_cw45(dir)
+        elseif rand_odds(2) then
+          dir = rotate_ccw45(dir)
         end
       end
+
+      return dir_to_angle(dir)
+
+---###   local kx = c.q_spot.kx
+---###   local ky = c.q_spot.ky
+---###
+---###   if not (kx==2 and ky==2) and is_roomy(c.chunks[2][2]) then
+---###     return delta_to_angle(2-kx, 2-ky)
+---###   end
+---###
+---###   for i = 1,20 do
+---###     local dir = rand_irange(1,4)*2
+---###     local N = chunk_neighbour(c, c.q_spot, dir)
+---###     if N and is_roomy(N) then
+---###       return dir_to_angle(dir)
+---###     end
+---###   end
     end
 
     if c.exit_dir then
       return dir_to_angle(c.exit_dir)
     end
 
-    for i = 1,20 do
-      local dir = rand_irange(1,4)*2
-      if c.link[dir] then
-        return dir_to_angle(dir)
-      end
-    end
+---###    for i = 1,20 do
+---###      local dir = rand_irange(1,4)*2
+---###      if c.link[dir] then
+---###        return dir_to_angle(dir)
+---###      end
+---###    end
 
     -- failsafe: select a random direction
     local dir = rand_irange(1,4)*2
@@ -6697,24 +6751,6 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=def.skin.wall })
   end
 
-  local function gate_angle(c)
-
-    if c.q_spot then
-      local kx = c.q_spot.kx
-      local ky = c.q_spot.ky
-
-      for i = 1,20 do
-        local dir = rand_irange(1,4)*2
-        local N = chunk_neighbour(c, c.q_spot, dir)
-        if N and is_roomy(N) then
-          return dir
-        end
-      end
-    end
-
-    return c.entry_dir or (10 - c.exit_dir)
-  end
-
   local function add_hexen_gate(c)
     assert(GAME.misc_fabs)
 
@@ -6729,7 +6765,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
 
     local parm = { kind=non_nil(c.quest.gate_kind) }
 
-    local dir = gate_angle(c)
+    local dir = non_nil(K.q_dir)
 
     B_prefab(c, fab, def.skin, parm, K.rmodel, c.combo, K.x1, K.y1, dir)
 
