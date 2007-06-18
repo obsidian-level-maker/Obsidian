@@ -6519,23 +6519,18 @@ function tizzy_up_room(c)
   end
 
 
-  local function add_object(c, name, must_put, can_special, angle)
+  local function add_quest_object(c, name, must_put, can_special, angle)
 
     local x,y,dir
     
-con.printf("@@@@ add_object %s @ (%d,%d) : can_special:%s spots:%s angle:%s\n",
-name, c.x, c.y,
-sel(can_special, "yes", "NO"),
-tostring(c.special_spots), tostring(angle))
-
     if can_special and c.special_spots and #c.special_spots >= 1 then
-con.printf("--> USING SPECIAL SPOT @ (%d,%d) FOR %s\n", c.x,c.y, name)
       local spot = table.remove(c.special_spots, 1)
       return add_thing(c, spot.x, spot.y, name, true,
         (spot.vista_side and dir_to_angle(spot.vista_side)) or angle or 0)
     end
 
-    local def = {}
+    local info = GAME.things[name] or {}
+
     local fab = PREFABS["PLAIN"]
     assert(fab)
 
@@ -6545,7 +6540,7 @@ con.printf("--> USING SPECIAL SPOT @ (%d,%d) FOR %s\n", c.x,c.y, name)
       sort_fab_locs(c, "random");
     end
 
-    if not x then x,y,dir = find_fab_loc(c, fab,def, 0, sel(must_put,3,2)) end
+    if not x then x,y,dir = find_fab_loc(c, fab,info, 0, sel(must_put,3,2)) end
 
     if not x and must_put then
       x,y,dir = find_emergency_loc(c)
@@ -6557,7 +6552,7 @@ con.printf("--> USING SPECIAL SPOT @ (%d,%d) FOR %s\n", c.x,c.y, name)
       return
     end
     
-con.printf("add_object @ (%d,%d)\n", x, y)
+con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
     gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
     local th = add_thing(c, x, y, name, true, angle or 0)
     fab_mark_walkable(c, x, y, 8, 1,1, 4)
@@ -6602,7 +6597,7 @@ con.printf("add_object @ (%d,%d)\n", x, y)
   end
 
   local function add_player(c, name)
-    add_object(c, name, "must", "special", player_angle(c))
+    add_quest_object(c, name, "must", "special", player_angle(c))
   end
 
   local function add_dm_weapon(c)
@@ -6729,7 +6724,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
       sort_fab_locs(c, "near", x, y)
 
       for p = 1,sel(SETTINGS.mode == "coop",4,1) do
-        local th = add_object(c, "player" .. tostring(p), "must", false, dir_to_angle(dir))
+        local th = add_quest_object(c, "player" .. tostring(p), "must", false, dir_to_angle(dir))
         if th then
           th.args = c.quest.return_args
         end
@@ -7062,7 +7057,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
 
     while true do
       sort_fab_locs(c, "random");
-      local x,y,dir = find_fab_loc(c, fab,{}, 0,2)
+      local x,y,dir = find_fab_loc(c, fab,info, 0,2)
       if not x then return end
 
 con.debugf("add_scenery : %s\n", item)
@@ -7073,8 +7068,14 @@ con.debugf("add_scenery : %s\n", item)
       if info.r < 30 then
         local gap = 30 - info.r
         
-        th.dx = rand_irange(-gap,gap)
-        th.dy = rand_irange(-gap,gap)
+        if info.add_mode == "extend" and gap >= 4 then
+          local odx,ody = dir_to_delta(10 - dir)
+          th.dx = (gap - 2) * odx
+          th.dy = (gap - 2) * ody
+        else
+          th.dx = rand_irange(-gap,gap)
+          th.dy = rand_irange(-gap,gap)
+        end
       end
 
       fab_mark_walkable(c, x, y, 8, 1,1, 4)
@@ -7170,7 +7171,7 @@ con.debugf("add_scenery : %s\n", item)
       elseif c.quest.item == "treasure" then
         -- FIXME: room full of treasure (USE ROOM_TYPE INSTEAD)
       else
-        add_object(c, c.quest.item, "must", "special")
+        add_quest_object(c, c.quest.item, "must", "special")
       end
     end
 
@@ -7186,7 +7187,7 @@ con.debugf("add_scenery : %s\n", item)
   if PLAN.deathmatch then
     -- secondary DM PLAYER
     if rand_odds(DM_PLAYERS_2[SETTINGS.mons]) then
-      add_object(c, "dm_player", false, "special")
+      add_quest_object(c, "dm_player", false, "special")
     end
     -- secondary DM WEAPON
     if rand_odds(DM_WEAPONS_2[SETTINGS.traps]) then
