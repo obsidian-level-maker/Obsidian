@@ -6718,7 +6718,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
   local function add_hexen_gate(c)
     assert(GAME.misc_fabs)
 
-    local def = GAME.misc_fabs[sel(c.quest.return_args, "gate_BACK", "gate_FORWARD")]
+    local def = GAME.misc_fabs[sel(c.quest.return_args, "gate_FORWARD", "gate_BACK")]
     assert(def)
 
     local fab = non_nil(PREFABS[def.prefab])
