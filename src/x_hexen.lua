@@ -1171,6 +1171,11 @@ XN_THEMES =
     {
       PLAIN=50,
     },
+
+    monster_prefs =
+    {
+      serpent1=2.0, serpent2=2.0, afrit=3.3
+    },
   },
 
   DUNGEON =
@@ -1178,6 +1183,11 @@ XN_THEMES =
     room_probs=
     {
       PLAIN=50,
+    },
+
+    monster_prefs =
+    {
+      centaur1=3.0, centaur2=3.0, reiver=2.3
     },
   },
 
@@ -1187,6 +1197,11 @@ XN_THEMES =
     {
       PLAIN=50,
     },
+
+    monster_prefs =
+    {
+      wendigo=300
+    },
   },
 
   SWAMP =
@@ -1195,6 +1210,12 @@ XN_THEMES =
     {
       PLAIN=50,
     },
+
+    monster_prefs =
+    {
+      -- need high values just to make them appear
+      stalker1=1000, stalker2=1000
+    },
   },
 
   VILLAGE =
@@ -1202,6 +1223,11 @@ XN_THEMES =
     room_probs=
     {
       PLAIN=50,
+    },
+
+    monster_prefs =
+    {
+      ettin=3.0, bishop=2.3
     },
   },
 }
@@ -1387,19 +1413,20 @@ XN_INITIAL_MODEL =
 XN_MONSTERS =
 {
   -- FIXME: these stats are CRAP!
-  ettin      = { prob=70, hp=170, dm= 5, fp=1.0, melee=true },
-  afrit      = { prob=70, hp=80,  dm=10, fp=1.0, float=true, cage_fallback=2 },
-  serpent1   = { prob=30, hp=90,  dm= 9, fp=1.0, },
-  serpent2   = { prob=20, hp=90,  dm=15, fp=1.0, },
+  ettin      = { prob=60, hp=170, dm= 5, fp=1.0, melee=true },
 
-  wendigo    = { prob=20, hp=120, dm=25, fp=2.0, environ="ice" },
-  centaur1   = { prob=30, hp=200, dm=10, fp=2.0, melee=true},
-  centaur2   = { prob=15, hp=250, dm=20, fp=2.0, },
+  afrit      = { prob=20, hp=80,  dm=15, fp=1.0, float=true },
+  serpent1   = { prob=20, hp=90,  dm=12, fp=1.0, cage_fallback=2 },
+  serpent2   = { prob=15, hp=90,  dm=20, fp=1.0, },
 
-  stalker1   = { prob=30, hp=250, dm=60, fp=2.0, environ="swamp", melee=true },
-  stalker2   = { prob=10, hp=250, dm=30, fp=2.0, environ="swamp" },
-  bishop     = { prob=10, hp=130, dm=40, fp=2.0, float=true },
-  reiver     = { prob= 5, hp=150, dm=50, fp=2.0, float=true },
+  wendigo    = { prob= 1, hp=120, dm=25, fp=1.2, },
+  centaur1   = { prob=30, hp=200, dm=10, fp=1.6, melee=true },
+  centaur2   = { prob=15, hp=250, dm=20, fp=2.1, },
+
+  stalker1   = { prob=0.1,hp=250, dm=60, fp=1.4, melee=true },
+  stalker2   = { prob=0.1,hp=250, dm=40, fp=1.8, },
+  bishop     = { prob= 9, hp=130, dm=60, fp=2.6, float=true },
+  reiver     = { prob= 4, hp=150, dm=50, fp=2.3, float=true },
 }
 
 XN_BOSSES =
