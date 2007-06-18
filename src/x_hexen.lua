@@ -1334,13 +1334,25 @@ XN_MISC_PREFABS =
     }
   },
 
-  gate_EXIT =
+  gate_FORWARD =
   {
     prefab = "HEXEN_V_TELEPORT",
 
     skin =
     {
       frame_w="WOOD01", frame_f="F_054", frame_c="F_054",
+      telep_w="TPORT1", border_w="TPORTX",
+      tag=0,
+    },
+  },
+
+  gate_BACK =
+  {
+    prefab = "HEXEN_V_TELEPORT",
+
+    skin =
+    {
+      frame_w="FOREST05", frame_f="F_048", frame_c="F_048",
       telep_w="TPORT1", border_w="TPORTX",
       tag=0,
     },
@@ -1400,47 +1412,34 @@ XN_BOSSES =
 XN_WEAPONS =
 {
   -- FIXME: all these stats are CRAP!
-  c_mace    = { fp=1, melee=true,                rate=1.1, dm=12, freq=10, held=true, },
+  c_mace    = { fp=1, held=true, melee=true,     rate=1.1, dm=12, freq=10, held=true, },
   c_staff   = { fp=2, ammo="blue_mana",  per=1,  rate=1.1, dm= 6, freq=62, },
   c_fire    = { fp=3, ammo="green_mana", per=4,  rate=1.1, dm=27, freq=62, },
-  c_wraith  = { fp=4, ammo="dual_mana",  per=18, rate=2.2, dm=85, freq=30, pieces={c1_shaft, c2_cross, c3_arc} },
+  c_wraith  = { fp=4, ammo="dual_mana",  per=18, rate=2.2, dm=85, freq=30, },
 
-  f_gaunt   = { fp=1, melee=true,                rate=1.1, dm=20, freq=10, held=true, },
+  f_gaunt   = { fp=1, held=true, melee=true,     rate=1.1, dm=20, freq=10, held=true, },
   f_axe     = { fp=2, ammo="blue_mana",  per=2,  rate=1.1, dm=60, freq=62, melee=true },
   f_hammer  = { fp=3, ammo="green_mana", per=3,  rate=1.1, dm=27, freq=62, },
-  f_quietus = { fp=4, ammo="dual_mana",  per=14, rate=2.2, dm=50, freq=30, pieces={f1_hilt, f2_cross, f3_blade} },
+  f_quietus = { fp=4, ammo="dual_mana",  per=14, rate=2.2, dm=50, freq=30, },
 
-  m_wand    = { fp=1, held=true,                 rate=1.1, dm= 8, freq=10, continues=true },
+  m_wand    = { fp=1, held=true,                 rate=1.1, dm= 8, freq=10, penetrates=true },
   m_cone    = { fp=2, ammo="blue_mana",  per=3,  rate=1.1, dm=27, freq=62, },
   m_blitz   = { fp=3, ammo="green_mana", per=5,  rate=1.1, dm=60, freq=62, },
-  m_scourge = { fp=4, ammo="dual_mana",  per=15, rate=2.2, dm=50, freq=30, pieces={m1_stick, m2_stub, m3_skull} },
+  m_scourge = { fp=4, ammo="dual_mana",  per=15, rate=2.2, dm=50, freq=30, },
 }
 
-XN_WEAPON_KLUDGE =
+XN_WEAPON_NAMES =
 {
-  fighter =
-  {
-    weap_1="f_gaunt",
-    weap_2="f_axe",
-    weap_3="f_hammer",
-    weap_4="f_quietus",
-  },
+  fighter = { "f_gaunt", "f_axe",   "f_hammer", "f_quietus" },
+  cleric  = { "c_mace",  "c_staff", "c_fire",   "c_wraith"  },
+  mage    = { "m_wand",  "m_cone",  "m_blitz",  "m_scourge" },
+}
 
-  cleric =
-  {
-    weap_1="c_mace",
-    weap_2="c_staff",
-    weap_3="c_fire",
-    weap_4="c_wraith",
-  },
-
-  mage =
-  {
-    weap_1="m_wand",
-    weap_2="m_cone",
-    weap_3="m_blitz",
-    weap_4="m_scourge",
-  },
+XN_WEAPON_PIECES =
+{
+  fighter = { "f1_hilt",  "f2_cross", "f3_blade" },
+  cleric  = { "c1_shaft", "c2_cross", "c3_arc"   },
+  mage    = { "m1_stick", "m2_stub",  "m3_skull" },
 }
 
 XN_PICKUPS =
@@ -1591,8 +1590,8 @@ XN_QUEST_LEN_PROBS =
   back   = {  0, 10, 40, 90, 50, 25, 3 },
 
   key    = {  0,  0, 30, 70, 90, 70, 30, 15, 2 },
-  weapon = {  1, 25, 90, 60, 20, 1 },
   item   = { 15, 90, 70, 25, 3 },
+  weapon = { 50, 50, 10,  1 },
 
   boss   = {  0,  5, 40, 90, 60, 30, 10, 1 },
 }
@@ -1736,9 +1735,12 @@ function hexen_get_levels(episode)
   join_map(w_src, 4, key_B)
   join_map(b_src, 6, key_A)
 
-  add_quest(4, "weapon", "piece_1", "sub")
-  add_quest(4, "weapon", "piece_2", "sub")
-  add_quest(4, "weapon", "piece_3", "sub")
+  for xxx,CL in ipairs(GAME.classes) do
+    for piece = 1,3 do
+      local name = non_nil(XN_WEAPON_PIECES[CL][piece])
+      add_quest(4, "weapon", name, "sub")
+    end
+  end
 
   join_map(rand_index_by_probs { 0,6,6, 4,0,2 }, 5)
 
@@ -1750,8 +1752,13 @@ function hexen_get_levels(episode)
 
   -- weapon quests
 
-  add_quest(rand_index_by_probs { 7, 1, 1 }, "weapon", "weap_2", "sub")
-  add_quest(rand_index_by_probs { 2, 7, 7 }, "weapon", "weap_3", "sub")
+  for xxx,CL in ipairs(GAME.classes) do
+    local weap_2 = non_nil(XN_WEAPON_NAMES[CL][2])
+    local weap_3 = non_nil(XN_WEAPON_NAMES[CL][3])
+
+    add_quest(rand_index_by_probs { 7, 1, 1 }, "weapon", weap_2, "sub")
+    add_quest(rand_index_by_probs { 2, 7, 7 }, "weapon", weap_3, "sub")
+  end
 
   -- item quests
 
