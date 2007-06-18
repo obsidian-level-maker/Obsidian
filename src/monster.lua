@@ -756,6 +756,7 @@ function distribute_pickups(c, HM, backtrack)
 
           add_pickup(c, ndef.weapon, info)
           hm_give_weapon(HM, ndef.weapon)
+          return;
 
         elseif ndef.pickup then
           local info = GAME.pickups[ndef.pickup]  -- may be nil
@@ -768,6 +769,7 @@ function distribute_pickups(c, HM, backtrack)
             -- ????
           end
 
+          return;
         else
           error("Bad NICENESS table!")
         end
