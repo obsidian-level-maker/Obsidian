@@ -1495,6 +1495,9 @@ D2_EPISODE_THEMES =
   { URBAN=4, INDUSTRIAL=3, TECH=3, NATURE=9, CAVE=2, HELL=2 },
   { URBAN=9, INDUSTRIAL=5, TECH=6, NATURE=4, CAVE=2, HELL=4 },
   { URBAN=5, INDUSTRIAL=2, TECH=5, NATURE=3, CAVE=2, HELL=8 },
+
+  -- this entry used for a single episode or level
+  { URBAN=5, INDUSTRIAL=4, TECH=6, NATURE=5, CAVE=3, HELL=6 },
 }
 
 D2_SECRET_KINDS =
@@ -1539,7 +1542,7 @@ function doom2_get_levels(episode)
 
   local theme_probs = D2_EPISODE_THEMES[episode]
   if SETTINGS.length ~= "full" then
-    theme_probs = D2_EPISODE_THEMES[rand_irange(1,3)]
+    theme_probs = D2_EPISODE_THEMES[4]
   end
   assert(theme_probs)
 

@@ -2372,6 +2372,9 @@ D1_EPISODE_THEMES =
   { URBAN=9, INDUSTRIAL=5, TECH=4, CAVE=2, HELL=4 },
   { URBAN=1, INDUSTRIAL=1, TECH=1, CAVE=2, HELL=9 },
   { URBAN=4, INDUSTRIAL=2, TECH=2, CAVE=4, HELL=7 },
+
+  -- this entry used for a single episode or level
+  { URBAN=5, INDUSTRIAL=4, TECH=6, CAVE=3, HELL=6 },
 }
 
 D1_SECRET_EXITS =
@@ -2404,7 +2407,7 @@ function doom1_get_levels(episode)
 
   local theme_probs = D1_EPISODE_THEMES[episode]
   if SETTINGS.length ~= "full" then
-    theme_probs = D1_EPISODE_THEMES[rand_irange(1,4)]
+    theme_probs = D1_EPISODE_THEMES[5]
   end
 
   for map = 1,9 do
