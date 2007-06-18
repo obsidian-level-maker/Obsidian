@@ -6697,9 +6697,29 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=def.skin.wall })
   end
 
+  local function gate_angle(c)
+
+    if c.q_spot then
+      local kx = c.q_spot.kx
+      local ky = c.q_spot.ky
+
+      for i = 1,20 do
+        local dir = rand_irange(1,4)*2
+        local N = chunk_neighbour(c, c.q_spot, dir)
+        if N and is_roomy(N) then
+          return dir
+        end
+      end
+    end
+
+    return c.entry_dir or (10 - c.exit_dir)
+  end
+
   local function add_hexen_gate(c)
-    local def = GAME.misc_fabs and GAME.misc_fabs["gate_EXIT"]
-    if not def then return end --!!!!
+    assert(GAME.misc_fabs)
+
+    local def = GAME.misc_fabs[sel(c.quest.return_args, "gate_BACK", "gate_FORWARD")]
+    assert(def)
 
     local fab = non_nil(PREFABS[def.prefab])
 
@@ -6709,7 +6729,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
 
     local parm = { kind=non_nil(c.quest.gate_kind) }
 
-    local dir = c.entry_dir or (10 - c.exit_dir)
+    local dir = gate_angle(c)
 
     B_prefab(c, fab, def.skin, parm, K.rmodel, c.combo, K.x1, K.y1, dir)
 
