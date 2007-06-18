@@ -3409,14 +3409,15 @@ HEXEN_V_TELEPORT =
           [7] = { dx=0, dy=-12 },
           [9] = { dx=0, dy=-12 },
           [2] = { rail="border_w", l_peg="bottom", },
-          [8] = { rail="telep_w",  l_peg="bottom",
-                  kind="kind", tag="tag" },
+          [8] = { rail="telep_w",  l_peg="bottom", },
+        },
+
+    x = { copy="s", light=0,
+          [2] = { kind="kind", tag="tag" },
         },
 
     W = { solid="frame_w", [7] = { dx= 48, dy=0 }},
     Z = { solid="frame_w", [9] = { dx=-48, dy=0 }},
-
-    x = { copy="s", light=0 },
   },
 },
 
