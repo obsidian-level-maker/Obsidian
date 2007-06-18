@@ -208,32 +208,43 @@ function hm_give_weapon(HM, weapon, ammo_mul)
 
   if GAME.hexen_format then
 
-    if string.match(weapon, "piece_") then
-      -- already have it?
-      if not HM[weapon] then
-        HM[weapon] = true;
-
-        -- when get all pieces, you get the mega weapon
-        if HM["piece_1"] and HM["piece_2"] and HM["piece_3"] then
-          return hm_give_weapon(HM, "weap_4")
-        end
-      end
-
-      return;
+    -- weapon not for our class?
+    if string.sub(HM.class, 1,1) ~= string.sub(weapon,1,1) then
+      return
     end
 
-    local new_weap = GAME.weapon_kludge[HM.class][weapon]
-    if new_weap then
-      return hm_give_weapon(HM, new_weap)
-    end 
+    -- already have it?
+    if HM[weapon] then return end
 
-    -- fall through...
+    HM[weapon] = true
+
+    -- handle getting all pieces of the mega weapon.
+    -- Note: it's OK to check all classes at once here.
+
+    if string.match(weapon, "%a%d_.*") then
+      if (HM["f1_hilt"]  and  HM["f2_cross"] and  HM["f3_blade"]) or
+         (HM["c1_shaft"] and  HM["c2_cross"] and  HM["c3_arc"])   or
+         (HM["m1_stick"] and  HM["m2_stub"]  and  HM["m3_skull"])
+      then
+        local name = XN_WEAPON_NAMES[HM.class][4]
+        assert(name)
+
+        return hm_give_weapon(HM, name)
+      end
+
+      -- the pieces are not in the GAME.weapons table, so return now
+      return
+    end
+
+    -- fall through
   end
 
   HM[weapon] = true
 
   local info = GAME.weapons[weapon]
-  assert(info)
+  if not info then
+    error("No such weapon: " .. tostring(weapon))
+  end
 
   if info.ammo and info.give then
     if info.ammo == "dual_mana" then
