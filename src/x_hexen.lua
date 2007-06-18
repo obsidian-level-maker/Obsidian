@@ -290,63 +290,13 @@ XN_SECTOR_TYPES =
 
 XN_COMBOS =
 {
-  ---- INDOOR ------------
+  ---- CAVE ------------
 
-  GOLD =
-  {
-    mat_pri = 6,
-
-    wall = "FOREST01",
-    void = "WINNOW02",
-    pillar = "PILLAR01",
-
-    floor = "F_089",
-    ceil = "F_014",
-
-    scenery = "brass_brazier",
-
-    theme_probs = { CITY=20 },
-  },
-
-  ICY =
-  {
-    mat_pri = 1,
-
-    wall = "ICE06",
-    void = "ICE02",
-    pillar = "ICE01",
-
-    floor = "F_033",  -- F_013
-    ceil  = "F_009",
-
-    bad_liquid = "lava",
-
-    theme_probs = { ICE=80 },
-  },
-
-  FIREY =
-  {
-    mat_pri = 5,
-
-    wall = "FIRE01",
-    void = "FIRE09",
-    pillar = "FIRE15",
-
-    floor = "F_012",
-    ceil  = "F_032",
-
-    good_liquid = "lava",
-
-    theme_probs = { CITY=20 },
-  },
-
-  CAVEY =
+  CAVE1 =
   {
     mat_pri = 2,
 
-    wall = "CAVE06",
-    void = "CAVE03",
-    
+    wall  = "CAVE06",
     floor = "F_040",
     ceil  = "F_040",
 
@@ -355,38 +305,168 @@ XN_COMBOS =
     theme_probs = { CAVE=70 },
   },
 
-  ---- OUTDOOR ------------
+  ---- DUNGEON ------------
 
-  GRAY =
+  DUNGEON1 =
   {
+    theme_probs = { DUNGEON=20 },
+    mat_pri = 5,
+
+    wall  = "FIRE01",
+    floor = "F_012",
+    ceil  = "F_032",
+
+    pillar = "FIRE15",
+    good_liquid = "lava",
+
+  },
+
+  ---- ICE ------------
+
+  ICE1 =
+  {
+    theme_probs = { ICE=30 },
+    mat_pri = 1,
+
+    wall = "ICE01",
+    floor = "F_033",
+    ceil  = "F_033",
+
+    pillar = "ICE02",
+    bad_liquid = "lava",
+  },
+
+  ICE2 =
+  {
+    theme_probs = { ICE=80 },
+    mat_pri = 2,
+
+    wall = "ICE06",
+    floor = "F_013",
+    ceil  = "F_009",
+
+    pillar = "ICE02",
+    bad_liquid = "lava",
+  },
+
+  ICE3 =
+  {
+    theme_probs = { ICE=60 },
+    mat_pri = 2,
+
+    wall = "CAVE02",
+    floor = "F_013",
+    ceil  = "F_009",
+
+    bad_liquid = "lava",
+  },
+
+  ICE4 =
+  {
+    theme_probs = { ICE=60 },
+    mat_pri = 2,
+    outdoor = true
+
+    wall = "CAVE07",
+    floor = "F_013",
+    ceil  = "F_013",
+
+    bad_liquid = "lava",
+  },
+
+  ---- SWAMP ------------
+
+  SWAMP1 =
+  {
+    theme_probs = { SWAMP=50 },
+    mat_pri = 2,
+
+    wall = "SEWER01",
+    floor = "X_009",
+    ceil  = "F_013",
+
+    bad_liquid = "lava",
+  },
+
+  SWAMP2 =
+  {
+    theme_probs = { SWAMP=50 },
+    mat_pri = 2,
+
+    wall = "SEWER08",
+    floor = "X_009",
+    ceil  = "F_013",
+
+    bad_liquid = "lava",
+  },
+
+  SWAMP3 =
+  {
+    theme_probs = { SWAMP=50 },
+    mat_pri = 2,
     outdoor = true,
+
+    wall = "FOREST06",
+    floor = "X_009",
+    ceil  = "F_013",
+
+    bad_liquid = "lava",
+  },
+
+  SWAMP4 =
+  {
+    theme_probs = { SWAMP=50 },
+    mat_pri = 2,
+    outdoor = true,
+
+    wall = "SWAMP03",
+    floor = "X_009",
+    ceil  = "F_013",
+
+    bad_liquid = "lava",
+  },
+
+  ---- VILLAGE ------------
+
+  VILLAGE1 =
+  {
+    theme_probs = { VILLAGE=20 },
+    mat_pri = 6,
+
+    wall = "FOREST01",
+    floor = "F_089",
+    ceil = "F_014",
+
+    pillar = "PILLAR01",
+    scenery = "brass_brazier",
+  },
+
+  VILLAGE2 =
+  {
+    theme_probs = { CITY=20 },
     mat_pri = 4,
+    outdoor = true,
 
-    wall = "PRTL02",
-    void = "PRTL03",
-
+    wall  = "PRTL02",
     floor = "F_019",
     ceil  = "F_019",
 
     scenery = "gargoyle_short",
 
-    theme_probs = { CITY=20 },
   },
   
-  STONY =
+  VILLAGE3 =
   {
-    outdoor = true,
+    theme_probs = { VILLAGE=20 },
     mat_pri = 3,
+    outdoor = true,
 
-    wall = "CAVE01",
-    void = "CAVE02",
-
+    wall  = "CAVE01",
     floor = "F_007",
     ceil  = "F_007",
 
     scenery = "lean_tree1",
 
-    theme_probs = { CITY=20 },
   },
 }
 
@@ -965,14 +1045,6 @@ XN_ROOMS =
 
 XN_THEMES =
 {
-  CITY =
-  {
-    room_probs=
-    {
-      PLAIN=50,
-    },
-  },
-
   CAVE =
   {
     room_probs=
@@ -981,7 +1053,31 @@ XN_THEMES =
     },
   },
 
+  DUNGEON =
+  {
+    room_probs=
+    {
+      PLAIN=50,
+    },
+  },
+
   ICE =
+  {
+    room_probs=
+    {
+      PLAIN=50,
+    },
+  },
+
+  SWAMP =
+  {
+    room_probs=
+    {
+      PLAIN=50,
+    },
+  },
+
+  VILLAGE =
   {
     room_probs=
     {
@@ -1022,7 +1118,7 @@ XN_DOOR_PREFABS =
       tag=0,
     },
 
-    theme_probs = { CITY=60,ICE=10,CAVE=20 },
+--    theme_probs = { CITY=60,ICE=10,CAVE=20 },
   },
 }
 
@@ -1288,14 +1384,9 @@ XN_DEATHMATCH =
 
 ------------------------------------------------------------
 
-XN_THEME_PROBS =
+XN_THEME_LIST =
 {
-  { CITY=9, ICE=2, CAVE=1 },
-  { CITY=1, ICE=9, CAVE=2 },
-  { CITY=2, ICE=1, CAVE=9 },
-  { CITY=9, ICE=7, CAVE=1 },
-  { CITY=7, ICE=1, CAVE=9 },
-  { CITY=1, ICE=9, CAVE=7 },
+  "CAVE", "DUNGEON", "ICE", "SWAMP", "VILLAGE"
 }
 
 XN_SKY_INFO =
@@ -1395,7 +1486,7 @@ function hexen_get_levels(episode)
   local source_levels = XN_LEVELS[episode]
   assert(#source_levels == 6)
 
-  local theme_mapping = { 1,2,3,4,5,6 }
+  local theme_mapping = { 1,2,3,4,5 }
   rand_shuffle(theme_mapping)
 
   local key_A = XN_KEY_PAIRS[episode].key_A
@@ -1417,10 +1508,16 @@ function hexen_get_levels(episode)
       sky_info  = Src.sky_info,
       boss_kind = Src.boss_kind,
 
-      theme_probs = XN_THEME_PROBS[theme_mapping[map]],
-
       quests = {}, gates = {},
     }
+
+    if map == 5 or SETTINGS.length == "single" then
+      -- secret level is a mixture
+      Level.theme_probs = { ICE=3,SWAMP=4,DUNGEON=5,CAVE=6,VILLAGE=7 }
+    else
+      local th_name = XN_THEME_LIST[sel(map==6, 5, map)]
+      Level.theme_probs = { [th_name] = 5 }
+    end
 
     table.insert(level_list, Level)
   end
