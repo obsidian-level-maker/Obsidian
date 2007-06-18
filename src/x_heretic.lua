@@ -823,7 +823,7 @@ HC_NICENESS =
 {
   w1 = { weapon="crossbow",  quest=1, prob=70, always=true  },
 
-  w3 = { weapon="gauntlets", quest=1, prob=50, always=false },
+  w3 = { weapon="gauntlets", quest=1, prob=33, always=false },
   w4 = { weapon="gauntlets", quest=3, prob=50, always=false },
 
   a1 = { pickup="shield1", prob=2.0 },
