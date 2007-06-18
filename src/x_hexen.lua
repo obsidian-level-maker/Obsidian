@@ -294,6 +294,7 @@ XN_COMBOS =
 
   CAVE1 =
   {
+    theme_probs = { CAVE=50 },
     mat_pri = 2,
 
     wall  = "CAVE06",
@@ -301,18 +302,97 @@ XN_COMBOS =
     ceil  = "F_040",
 
     scenery = "stal_pillar",
+  },
 
+  CAVE2 =
+  {
+    theme_probs = { CAVE=50 },
+    mat_pri = 2,
+
+    wall  = "CAVE05",
+    floor = "F_040",
+    ceil  = "F_040",
+
+    scenery = "stal_pillar",
+  },
+
+  CAVE3 =
+  {
     theme_probs = { CAVE=70 },
+    mat_pri = 2,
+    outdoor = true,
+
+    wall  = "CAVE03",
+    floor = "F_040",
+    ceil  = "F_040",
+
+    scenery = "stal_pillar",
+  },
+
+  CAVE4 =
+  {
+    theme_probs = { CAVE=50 },
+    mat_pri = 3,
+    outdoor = true,
+
+    wall  = "CAVE01",
+    floor = "F_007",
+    ceil  = "F_007",
+
+    scenery = "lean_tree1",
   },
 
   ---- DUNGEON ------------
 
   DUNGEON1 =
   {
-    theme_probs = { DUNGEON=20 },
+    theme_probs = { DUNGEON=50 },
     mat_pri = 5,
 
     wall  = "FIRE01",
+    floor = "F_012",
+    ceil  = "F_032",
+
+    pillar = "FIRE15",
+    good_liquid = "lava",
+
+  },
+
+  DUNGEON2 =
+  {
+    theme_probs = { DUNGEON=50 },
+    mat_pri = 5,
+
+    wall  = "FIRE06",
+    floor = "F_012",
+    ceil  = "F_032",
+
+    pillar = "FIRE15",
+    good_liquid = "lava",
+
+  },
+
+  DUNGEON3 =
+  {
+    theme_probs = { DUNGEON=50 },
+    mat_pri = 5,
+
+    wall  = "CASTLE11",
+    floor = "F_012",
+    ceil  = "F_032",
+
+    pillar = "FIRE15",
+    good_liquid = "lava",
+
+  },
+
+  DUNGEON4 =
+  {
+    theme_probs = { DUNGEON=50 },
+    mat_pri = 5,
+    outdoor = true,
+
+    wall  = "PRTL03",
     floor = "F_012",
     ceil  = "F_032",
 
@@ -443,6 +523,60 @@ XN_COMBOS =
 
   VILLAGE2 =
   {
+    theme_probs = { VILLAGE=20 },
+    mat_pri = 4,
+
+    wall = "WOOD03",
+    floor = "F_055",
+    ceil = "F_014",
+
+    pillar = "PILLAR01",
+    scenery = "brass_brazier",
+  },
+
+  VILLAGE3 =
+  {
+    theme_probs = { VILLAGE=20 },
+    mat_pri = 6,
+
+    wall = "MONK02",
+    floor = "F_089",
+    ceil = "F_014",
+
+    pillar = "PILLAR01",
+    scenery = "brass_brazier",
+  },
+
+  VILLAGE4 =
+  {
+    theme_probs = { VILLAGE=20 },
+    mat_pri = 6,
+    outdoor = true,
+
+    wall = "MONK16",
+    floor = "F_089",
+    ceil = "F_014",
+
+    pillar = "PILLAR01",
+    scenery = "brass_brazier",
+  },
+
+  VILLAGE5 =
+  {
+    theme_probs = { VILLAGE=20 },
+    mat_pri = 6,
+    outdoor = true,
+
+    wall = "CASTLE07",
+    floor = "F_089",
+    ceil = "F_014",
+
+    pillar = "PILLAR01",
+    scenery = "brass_brazier",
+  },
+
+  VILLAGE6 =
+  {
     theme_probs = { CITY=20 },
     mat_pri = 4,
     outdoor = true,
@@ -452,22 +586,8 @@ XN_COMBOS =
     ceil  = "F_019",
 
     scenery = "gargoyle_short",
-
   },
   
-  VILLAGE3 =
-  {
-    theme_probs = { VILLAGE=20 },
-    mat_pri = 3,
-    outdoor = true,
-
-    wall  = "CAVE01",
-    floor = "F_007",
-    ceil  = "F_007",
-
-    scenery = "lean_tree1",
-
-  },
 }
 
 XN_EXITS =
