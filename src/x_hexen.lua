@@ -1242,83 +1242,83 @@ XN_DOOR_PREFABS =
   },
 }
 
-XN_ITEM_PREFABS =
-{
-  weap_2 =
-  {
-    prefab = "HEXEN_TRIPLE_PED",
-
-    skin =
-    {
-      ped_f="F_084", ped_w="CASTLE07",
-      ped_h=8,
-
-      item_F_t="f_axe",  -- FIXME: flag as Fighter-only
-      item_C_t="c_staff",
-      item_M_t="m_cone",
-    }
-  },
-
-  weap_3 =
-  {
-    prefab = "HEXEN_TRIPLE_PED",
-
-    skin =
-    {
-      ped_f="F_084", ped_w="CASTLE07",
-      ped_h=8,
-
-      item_F_t="f_hammer",
-      item_C_t="c_fire",
-      item_M_t="m_blitz",
-    }
-  },
-
-  piece_1 =
-  {
-    prefab = "HEXEN_TRIPLE_PED",
-
-    skin =
-    {
-      ped_f="F_084", ped_w="CASTLE07",
-      ped_h=8,
-
-      item_F_t="f1_hilt",
-      item_C_t="c1_shaft",
-      item_M_t="m1_stick",
-    }
-  },
-
-  piece_2 =
-  {
-    prefab = "HEXEN_TRIPLE_PED",
-
-    skin =
-    {
-      ped_f="F_084", ped_w="CASTLE07",
-      ped_h=8,
-
-      item_F_t="f2_cross",
-      item_C_t="c2_cross",
-      item_M_t="m2_stub",
-    }
-  },
-
-  piece_3 =
-  {
-    prefab = "HEXEN_TRIPLE_PED",
-
-    skin =
-    {
-      ped_f="F_084", ped_w="CASTLE07",
-      ped_h=8,
-
-      item_F_t="f3_blade",
-      item_C_t="c3_arc",
-      item_M_t="m3_skull",
-    }
-  },
-}
+---#XN_ITEM_PREFABS =
+---#{
+---#  weap_2 =
+---#  {
+---#    prefab = "HEXEN_TRIPLE_PED",
+---#
+---#    skin =
+---#    {
+---#      ped_f="F_084", ped_w="CASTLE07",
+---#      ped_h=8,
+---#
+---#      item_F_t="f_axe",  -- FIXME: flag as Fighter-only
+---#      item_C_t="c_staff",
+---#      item_M_t="m_cone",
+---#    }
+---#  },
+---#
+---#  weap_3 =
+---#  {
+---#    prefab = "HEXEN_TRIPLE_PED",
+---#
+---#    skin =
+---#    {
+---#      ped_f="F_084", ped_w="CASTLE07",
+---#      ped_h=8,
+---#
+---#      item_F_t="f_hammer",
+---#      item_C_t="c_fire",
+---#      item_M_t="m_blitz",
+---#    }
+---#  },
+---#
+---#  piece_1 =
+---#  {
+---#    prefab = "HEXEN_TRIPLE_PED",
+---#
+---#    skin =
+---#    {
+---#      ped_f="F_084", ped_w="CASTLE07",
+---#      ped_h=8,
+---#
+---#      item_F_t="f1_hilt",
+---#      item_C_t="c1_shaft",
+---#      item_M_t="m1_stick",
+---#    }
+---#  },
+---#
+---#  piece_2 =
+---#  {
+---#    prefab = "HEXEN_TRIPLE_PED",
+---#
+---#    skin =
+---#    {
+---#      ped_f="F_084", ped_w="CASTLE07",
+---#      ped_h=8,
+---#
+---#      item_F_t="f2_cross",
+---#      item_C_t="c2_cross",
+---#      item_M_t="m2_stub",
+---#    }
+---#  },
+---#
+---#  piece_3 =
+---#  {
+---#    prefab = "HEXEN_TRIPLE_PED",
+---#
+---#    skin =
+---#    {
+---#      ped_f="F_084", ped_w="CASTLE07",
+---#      ped_h=8,
+---#
+---#      item_F_t="f3_blade",
+---#      item_C_t="c3_arc",
+---#      item_M_t="m3_skull",
+---#    }
+---#  },
+---#}
 
 XN_MISC_PREFABS =
 {
@@ -1413,19 +1413,19 @@ XN_WEAPONS =
 {
   -- FIXME: all these stats are CRAP!
   c_mace    = { fp=1, held=true, melee=true,     rate=1.1, dm=12, freq=10, held=true, },
-  c_staff   = { fp=2, ammo="blue_mana",  per=1,  rate=1.1, dm= 6, freq=62, },
-  c_fire    = { fp=3, ammo="green_mana", per=4,  rate=1.1, dm=27, freq=62, },
-  c_wraith  = { fp=4, ammo="dual_mana",  per=18, rate=2.2, dm=85, freq=30, },
+  c_staff   = { fp=2, ammo="blue_mana",  per=1,  rate=1.1, dm= 6, freq=21, },
+  c_fire    = { fp=3, ammo="green_mana", per=4,  rate=1.1, dm=27, freq=42, },
+  c_wraith  = { fp=4, ammo="dual_mana",  per=18, rate=2.2, dm=200,freq=94, },
 
   f_gaunt   = { fp=1, held=true, melee=true,     rate=1.1, dm=20, freq=10, held=true, },
-  f_axe     = { fp=2, ammo="blue_mana",  per=2,  rate=1.1, dm=60, freq=62, melee=true },
-  f_hammer  = { fp=3, ammo="green_mana", per=3,  rate=1.1, dm=27, freq=62, },
-  f_quietus = { fp=4, ammo="dual_mana",  per=14, rate=2.2, dm=50, freq=30, },
+  f_axe     = { fp=2, ammo="blue_mana",  per=2,  rate=1.1, dm=60, freq=21, melee=true },
+  f_hammer  = { fp=3, ammo="green_mana", per=3,  rate=1.1, dm=27, freq=42, },
+  f_quietus = { fp=4, ammo="dual_mana",  per=14, rate=2.2, dm=200,freq=94, },
 
   m_wand    = { fp=1, held=true,                 rate=1.1, dm= 8, freq=10, penetrates=true },
-  m_cone    = { fp=2, ammo="blue_mana",  per=3,  rate=1.1, dm=27, freq=62, },
-  m_blitz   = { fp=3, ammo="green_mana", per=5,  rate=1.1, dm=60, freq=62, },
-  m_scourge = { fp=4, ammo="dual_mana",  per=15, rate=2.2, dm=50, freq=30, },
+  m_cone    = { fp=2, ammo="blue_mana",  per=3,  rate=1.1, dm=27, freq=21, },
+  m_blitz   = { fp=3, ammo="green_mana", per=5,  rate=1.1, dm=60, freq=42, },
+  m_scourge = { fp=4, ammo="dual_mana",  per=15, rate=2.2, dm=200,freq=94, },
 }
 
 XN_WEAPON_NAMES =
@@ -1591,7 +1591,7 @@ XN_QUEST_LEN_PROBS =
 
   key    = {  0,  0, 30, 70, 90, 70, 30, 15, 2 },
   item   = { 15, 90, 70, 25, 3 },
-  weapon = { 50, 50, 10,  1 },
+  weapon = { 30, 60, 10,  2 },
 
   boss   = {  0,  5, 40, 90, 60, 30, 10, 1 },
 }
@@ -1901,7 +1901,6 @@ GAME_FACTORIES["hexen"] = function()
     wall_lights = XN_WALL_LIGHTS,
 
     door_fabs = XN_DOOR_PREFABS,
-    item_fabs = XN_ITEM_PREFABS,
     misc_fabs = XN_MISC_PREFABS,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
