@@ -445,7 +445,7 @@ XN_COMBOS =
   {
     theme_probs = { ICE=60 },
     mat_pri = 2,
-    outdoor = true
+    outdoor = true,
 
     wall = "CAVE07",
     floor = "F_013",
@@ -486,7 +486,7 @@ XN_COMBOS =
     mat_pri = 2,
     outdoor = true,
 
-    wall = "FOREST06",
+    wall = "WASTE01",
     floor = "X_009",
     ceil  = "F_013",
 
@@ -510,7 +510,7 @@ XN_COMBOS =
 
   VILLAGE1 =
   {
-    theme_probs = { VILLAGE=20 },
+    theme_probs = { VILLAGE=50 },
     mat_pri = 6,
 
     wall = "FOREST01",
@@ -523,7 +523,7 @@ XN_COMBOS =
 
   VILLAGE2 =
   {
-    theme_probs = { VILLAGE=20 },
+    theme_probs = { VILLAGE=50 },
     mat_pri = 4,
 
     wall = "WOOD03",
@@ -536,7 +536,7 @@ XN_COMBOS =
 
   VILLAGE3 =
   {
-    theme_probs = { VILLAGE=20 },
+    theme_probs = { VILLAGE=50 },
     mat_pri = 6,
 
     wall = "MONK02",
@@ -549,7 +549,7 @@ XN_COMBOS =
 
   VILLAGE4 =
   {
-    theme_probs = { VILLAGE=20 },
+    theme_probs = { VILLAGE=50 },
     mat_pri = 6,
     outdoor = true,
 
@@ -563,7 +563,7 @@ XN_COMBOS =
 
   VILLAGE5 =
   {
-    theme_probs = { VILLAGE=20 },
+    theme_probs = { VILLAGE=50 },
     mat_pri = 6,
     outdoor = true,
 
@@ -577,7 +577,7 @@ XN_COMBOS =
 
   VILLAGE6 =
   {
-    theme_probs = { CITY=20 },
+    theme_probs = { VILLAGE=50 },
     mat_pri = 4,
     outdoor = true,
 
@@ -1635,7 +1635,7 @@ function hexen_get_levels(episode)
       -- secret level is a mixture
       Level.theme_probs = { ICE=3,SWAMP=4,DUNGEON=5,CAVE=6,VILLAGE=7 }
     else
-      local th_name = XN_THEME_LIST[sel(map==6, 5, map)]
+      local th_name = XN_THEME_LIST[theme_mapping[sel(map==6, 5, map)]]
       Level.theme_probs = { [th_name] = 5 }
     end
 
