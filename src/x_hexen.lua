@@ -1468,7 +1468,7 @@ XN_NICENESS =
 
   p1 = { pickup="flechette", prob=9 },
   p2 = { pickup="bracer",    prob=5 },
-  p3 = { pickup="torch",     prob=7 },
+  p3 = { pickup="torch",     prob=2 },
 }
 
 XN_DEATHMATCH =
