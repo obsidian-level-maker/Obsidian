@@ -3033,6 +3033,17 @@ PILLAR =
   },
 },
 
+PILLAR_WIDE =
+{
+  copy="PILLAR",
+
+  structure =
+  {
+    "PP",
+    "PP",
+  },
+},
+
 PILLAR_LIGHT1 =
 {
   structure =
