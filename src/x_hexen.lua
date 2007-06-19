@@ -1214,7 +1214,7 @@ XN_THEMES =
     monster_prefs =
     {
       -- need high values just to make them appear
-      stalker1=1000, stalker2=1000
+      stalker1=3000, stalker2=1000
     },
   },
 
@@ -1415,18 +1415,18 @@ XN_MONSTERS =
   -- FIXME: these stats are CRAP!
   ettin      = { prob=60, hp=170, dm= 5, fp=1.0, melee=true },
 
-  afrit      = { prob=20, hp=80,  dm=15, fp=1.0, float=true },
+  afrit      = { prob=20, hp=80,  dm=15, fp=1.2, float=true },
   serpent1   = { prob=20, hp=90,  dm=12, fp=1.0, cage_fallback=2 },
-  serpent2   = { prob=15, hp=90,  dm=20, fp=1.0, },
+  serpent2   = { prob=15, hp=90,  dm=20, fp=1.4, },
 
   wendigo    = { prob= 1, hp=120, dm=25, fp=1.2, },
   centaur1   = { prob=30, hp=200, dm=10, fp=1.6, melee=true },
   centaur2   = { prob=15, hp=250, dm=20, fp=2.1, },
 
-  stalker1   = { prob=0.1,hp=250, dm=60, fp=1.4, melee=true },
-  stalker2   = { prob=0.1,hp=250, dm=40, fp=1.8, },
-  bishop     = { prob= 9, hp=130, dm=60, fp=2.6, float=true },
-  reiver     = { prob= 4, hp=150, dm=50, fp=2.3, float=true },
+  stalker1   = { prob=0.01,hp=250, dm=60, fp=1.5, melee=true },
+  stalker2   = { prob=0.01,hp=250, dm=40, fp=2.5, },
+  bishop     = { prob= 9,  hp=130, dm=60, fp=2.7, float=true },
+  reiver     = { prob= 4,  hp=150, dm=50, fp=2.3, float=true },
 }
 
 XN_BOSSES =
@@ -1929,6 +1929,8 @@ GAME_FACTORIES["hexen"] = function()
 
     door_fabs = XN_DOOR_PREFABS,
     misc_fabs = XN_MISC_PREFABS,
+
+    toughness_factor = 0.55,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },
