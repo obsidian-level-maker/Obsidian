@@ -32,15 +32,15 @@ XN_THINGS =
 
   ettin    = { id=10030,kind="monster", r=24,h=64 },
   afrit    = { id=10060,kind="monster", r=24,h=64 },
-  serpent1 = { id=121,  kind="monster", r=33,h=70 },
-  serpent2 = { id=120,  kind="monster", r=33,h=70 },
+  demon1   = { id=31,   kind="monster", r=33,h=70 },
+  demon2   = { id=8080, kind="monster", r=33,h=70 },
 
   wendigo  = { id=8020, kind="monster", r=24,h=80 },
   centaur1 = { id=107,  kind="monster", r=20,h=64 },
   centaur2 = { id=115,  kind="monster", r=20,h=64 },
 
-  stalker1  = { id=31,   kind="monster", r=33,h=64 },
-  stalker2  = { id=8080, kind="monster", r=33,h=64 },
+  stalker1  = { id=121,  kind="monster", r=33,h=64 },
+  stalker2  = { id=120,  kind="monster", r=33,h=64 },
   bishop    = { id=114,  kind="monster", r=24,h=64 },
   reiver    = { id=34,   kind="monster", r=24,h=64 },
   reiver_bd = { id=10011,kind="monster", r=24,h=64 },
@@ -1157,7 +1157,7 @@ XN_THEMES =
 
     monster_prefs =
     {
-      serpent1=2.0, serpent2=2.0, afrit=3.3
+      demon1=3.0, demon2=3.0, afrit=3.0
     },
   },
 
@@ -1170,7 +1170,7 @@ XN_THEMES =
 
     monster_prefs =
     {
-      centaur1=3.0, centaur2=3.0, reiver=2.3
+      centaur1=3.0, centaur2=3.0, reiver=2.5
     },
   },
 
@@ -1210,7 +1210,7 @@ XN_THEMES =
 
     monster_prefs =
     {
-      ettin=3.0, bishop=2.3
+      ettin=2.3, bishop=2.5
     },
   },
 }
@@ -1399,17 +1399,17 @@ XN_MONSTERS =
   ettin      = { prob=60, hp=170, dm= 5, fp=1.0, melee=true },
 
   afrit      = { prob=20, hp=80,  dm=15, fp=1.2, float=true },
-  serpent1   = { prob=20, hp=90,  dm=12, fp=1.0, cage_fallback=2 },
-  serpent2   = { prob=15, hp=90,  dm=20, fp=1.4, },
+  demon1     = { prob=20, hp=90,  dm=12, fp=1.0, cage_fallback=2 },
+  demon2     = { prob=15, hp=90,  dm=20, fp=1.4, },
 
   wendigo    = { prob= 1, hp=120, dm=25, fp=1.2, },
   centaur1   = { prob=30, hp=200, dm=10, fp=1.6, melee=true },
   centaur2   = { prob=15, hp=250, dm=20, fp=2.1, },
 
-  stalker1   = { prob=0.01,hp=250, dm=60, fp=1.5, melee=true },
-  stalker2   = { prob=0.01,hp=250, dm=40, fp=2.5, },
-  bishop     = { prob= 9,  hp=130, dm=60, fp=2.7, float=true },
-  reiver     = { prob= 4,  hp=150, dm=50, fp=2.3, float=true },
+  stalker1   = { prob=0.1,hp=250, dm=60, fp=1.3, melee=true },
+  stalker2   = { prob=0.1,hp=250, dm=40, fp=2.3, },
+  bishop     = { prob= 9, hp=130, dm=60, fp=2.5, float=true },
+  reiver     = { prob= 4, hp=150, dm=50, fp=2.8, float=true },
 }
 
 XN_BOSSES =
@@ -1545,7 +1545,7 @@ XN_LEVELS =
     { map=3, sky_info=XN_SKY_INFO[4] },
     { map=4, sky_info=XN_SKY_INFO[4] },
     { map=5, sky_info=XN_SKY_INFO[4] },
-    { map=6, sky_info=XN_SKY_INFO[4], boss_kind="mixed" },
+    { map=6, sky_info=XN_SKY_INFO[4], boss_kind="centaur2" },
   },
 
   --- Cluster 2 ---
@@ -1930,7 +1930,7 @@ GAME_FACTORIES["hexen"] = function()
     door_fabs = XN_DOOR_PREFABS,
     misc_fabs = XN_MISC_PREFABS,
 
-    toughness_factor = 0.55,
+    toughness_factor = 0.66,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },
