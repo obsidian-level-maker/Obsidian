@@ -310,10 +310,8 @@ XN_COMBOS =
     mat_pri = 2,
 
     wall  = "CAVE05",
-    floor = "F_040",
-    ceil  = "F_040",
-
-    scenery = "stal_pillar",
+    floor = "F_001",
+    ceil  = "F_001",
   },
 
   CAVE3 =
@@ -323,10 +321,12 @@ XN_COMBOS =
     outdoor = true,
 
     wall  = "CAVE03",
-    floor = "F_040",
-    ceil  = "F_040",
+    floor = "F_039",
+    ceil  = "F_039",
 
-    scenery = "stal_pillar",
+    scenery = "lean_tree2",
+
+    space_range = { 40,80 },
   },
 
   CAVE4 =
@@ -336,10 +336,12 @@ XN_COMBOS =
     outdoor = true,
 
     wall  = "CAVE01",
-    floor = "F_007",
-    ceil  = "F_007",
+    floor = "F_001",
+    ceil  = "F_001",
 
     scenery = "lean_tree1",
+
+    space_range = { 40,80 },
   },
 
   ---- DUNGEON ------------
@@ -351,7 +353,7 @@ XN_COMBOS =
 
     wall  = "FIRE01",
     floor = "F_012",
-    ceil  = "F_032",
+    ceil  = "F_082",
 
     pillar = "FIRE15",
     good_liquid = "lava",
@@ -378,8 +380,8 @@ XN_COMBOS =
     mat_pri = 5,
 
     wall  = "CASTLE11",
-    floor = "F_012",
-    ceil  = "F_032",
+    floor = "F_011", -- F_014
+    ceil  = "F_045",
 
     pillar = "FIRE15",
     good_liquid = "lava",
@@ -393,8 +395,8 @@ XN_COMBOS =
     outdoor = true,
 
     wall  = "PRTL03",
-    floor = "F_012",
-    ceil  = "F_032",
+    floor = "F_018",
+    ceil  = "F_018",
 
     pillar = "FIRE15",
     good_liquid = "lava",
@@ -414,6 +416,17 @@ XN_COMBOS =
 
     pillar = "ICE02",
     bad_liquid = "lava",
+
+    sc_count = { 3,7 },
+    scenery =
+    {
+      ice_stal_F_big    = 10, ice_stal_C_big    = 10,
+      ice_stal_F_medium = 20, ice_stal_C_medium = 20,
+      ice_stal_F_small  = 30, ice_stal_C_small  = 30,
+      ice_stal_F_tiny   = 20, ice_stal_C_tiny   = 20,
+    },
+
+    trim_mode = "rough_hew",
   },
 
   ICE2 =
@@ -421,7 +434,7 @@ XN_COMBOS =
     theme_probs = { ICE=80 },
     mat_pri = 2,
 
-    wall = "ICE06",
+    wall  = "ICE06",
     floor = "F_013",
     ceil  = "F_009",
 
@@ -434,9 +447,9 @@ XN_COMBOS =
     theme_probs = { ICE=60 },
     mat_pri = 2,
 
-    wall = "CAVE02",
-    floor = "F_013",
-    ceil  = "F_009",
+    wall  = "CAVE02",
+    floor = "F_034",
+    ceil  = "F_008",
 
     bad_liquid = "lava",
   },
@@ -447,9 +460,9 @@ XN_COMBOS =
     mat_pri = 2,
     outdoor = true,
 
-    wall = "CAVE07",
-    floor = "F_013",
-    ceil  = "F_013",
+    wall  = "CAVE07",
+    floor = "F_008",
+    ceil  = "F_008",
 
     bad_liquid = "lava",
   },
@@ -513,12 +526,12 @@ XN_COMBOS =
     theme_probs = { VILLAGE=50 },
     mat_pri = 6,
 
-    wall = "FOREST01",
+    wall  = "FOREST01",
     floor = "F_089",
-    ceil = "F_014",
+    ceil  = "F_010",
 
-    pillar = "PILLAR01",
     scenery = "brass_brazier",
+    sc_fabs = { pillar_rnd_PILLAR01=50, other=30 },
   },
 
   VILLAGE2 =
@@ -526,9 +539,9 @@ XN_COMBOS =
     theme_probs = { VILLAGE=50 },
     mat_pri = 4,
 
-    wall = "WOOD03",
+    wall  = "WOOD03",
     floor = "F_055",
-    ceil = "F_014",
+    ceil  = "F_014",
 
     pillar = "PILLAR01",
     scenery = "brass_brazier",
@@ -536,15 +549,15 @@ XN_COMBOS =
 
   VILLAGE3 =
   {
-    theme_probs = { VILLAGE=50 },
+    theme_probs = { VILLAGE=60 },
     mat_pri = 6,
 
-    wall = "MONK02",
-    floor = "F_089",
-    ceil = "F_014",
+    wall  = "MONK02",
+    floor = "F_059",  -- F_011
+    ceil  = "F_037",
 
-    pillar = "PILLAR01",
     scenery = "brass_brazier",
+    sc_fabs = { pillar_rnd_PILLAR02=50, pillar_wide_MONK03=40, other=30 },
   },
 
   VILLAGE4 =
@@ -553,9 +566,9 @@ XN_COMBOS =
     mat_pri = 6,
     outdoor = true,
 
-    wall = "MONK16",
-    floor = "F_089",
-    ceil = "F_014",
+    wall  = "MONK15",
+    floor = "F_029",
+    ceil  = "F_029",
 
     pillar = "PILLAR01",
     scenery = "brass_brazier",
@@ -567,9 +580,9 @@ XN_COMBOS =
     mat_pri = 6,
     outdoor = true,
 
-    wall = "CASTLE07",
-    floor = "F_089",
-    ceil = "F_014",
+    wall  = "CASTLE07",
+    floor = "F_057",
+    ceil  = "F_057",
 
     pillar = "PILLAR01",
     scenery = "brass_brazier",
@@ -582,8 +595,8 @@ XN_COMBOS =
     outdoor = true,
 
     wall  = "PRTL02",
-    floor = "F_019",
-    ceil  = "F_019",
+    floor = "F_044",
+    ceil  = "F_044",
 
     scenery = "gargoyle_short",
   },
@@ -1159,6 +1172,14 @@ XN_THEMES =
     {
       demon1=3.0, demon2=3.0, afrit=3.0
     },
+
+    diff_probs = { [0]=10, [16]=40, [32]=80, [64]=60, [96]=20 },
+    bump_probs = { [0]=5, [16]=30, [32]=30, [64]=20 },
+    door_probs   = { out_diff=10, combo_diff= 3, normal=1 },
+    window_probs = { out_diff=30, combo_diff=30, normal=5 },
+    space_range  = { 1, 50 },
+
+    trim_mode = "rough_hew",
   },
 
   DUNGEON =
@@ -1183,7 +1204,7 @@ XN_THEMES =
 
     monster_prefs =
     {
-      wendigo=400, afrit=0.3
+      wendigo=500, afrit=0.3
     },
   },
 
@@ -1368,6 +1389,35 @@ XN_MISC_PREFABS =
   },
 }
 
+XN_SCENERY_PREFABS =
+{
+  pillar_rnd_PILLAR01 =
+  {
+    prefab = "PILLAR_ROUND_SMALL",
+    add_mode = "island",
+    environment = "indoor",
+
+    skin = { wall="PILLAR01" },
+  },
+
+  pillar_rnd_PILLAR02 =
+  {
+    prefab = "PILLAR_ROUND_SMALL",
+    add_mode = "island",
+    environment = "indoor",
+
+    skin = { wall="PILLAR02" },
+  },
+
+  pillar_wide_MONK03 =
+  {
+    prefab = "PILLAR_WIDE",
+    add_mode = "island",
+    environment = "indoor",
+
+    skin = { wall="MONK03" },
+  },
+}
 
 XN_INITIAL_MODEL =
 {
@@ -1929,8 +1979,9 @@ GAME_FACTORIES["hexen"] = function()
 
     door_fabs = XN_DOOR_PREFABS,
     misc_fabs = XN_MISC_PREFABS,
+    sc_fabs   = XN_SCENERY_PREFABS,
 
-    toughness_factor = 0.66,
+    toughness_factor = 0.70,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },
