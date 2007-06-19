@@ -1515,9 +1515,9 @@ D2_SECRET_EXITS =
 D2_LEVEL_BOSSES =
 {
   MAP07 = "mancubus",
-  MAP20 = "spider_mastermind",
+  MAP20 = "spider",
   MAP30 = "boss_brain",
-  MAP32 = "commander_keen",
+  MAP32 = "keen",
 }
 
 D2_SKY_INFO =

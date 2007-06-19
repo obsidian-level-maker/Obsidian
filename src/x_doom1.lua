@@ -2037,6 +2037,9 @@ DM_BOSSES =
   -- special monsters (only for boss levels)
   cyber     = { hp=4000,dm=150, fp=4.0 },
   spider    = { hp=3000,dm=200, fp=4.0, hitscan=true },
+
+  -- FIXME: added just for kicks
+  keen = { hp=300, dm=1, fp=2.0 },
 }
 
 D2_MONSTERS =
@@ -2388,9 +2391,9 @@ D1_SECRET_EXITS =
 D1_EPISODE_BOSSES =
 {
   "baron", -- the Bruiser Brothers
-  "cyberdemon",
-  "spider_mastermind",
-  "spider_mastermind",
+  "cyber",
+  "spider",
+  "spider",
 }
 
 D1_SKY_INFO =
