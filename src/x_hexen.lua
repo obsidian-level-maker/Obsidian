@@ -1671,14 +1671,23 @@ function hexen_get_levels(episode)
 
   level_list[5].secret_kind = "plain"
 
-  level_list[4].assume_weapons = { weap_2=true, weap_3=true }
-  level_list[6].assume_weapons = { weap_2=true, weap_3=true }
-
   local b_src = rand_sel(50, 1, 3)
   local w_src = rand_sel(50, 1, 2)
 
   local gate_idx = 2
 
+
+  local function add_assumed_weaps(quest, wp)
+    if not quest.assumed_stuff then
+      quest.assumed_stuff = {}
+    end
+    for xxx,CL in ipairs(GAME.classes) do
+      table.insert(quest.assumed_stuff,
+      {
+        weapon = XN_WEAPON_NAMES[CL][wp]
+      })
+    end
+  end
 
   local function add_quest(map, kind, item, mode, force_key)
 
@@ -1694,6 +1703,13 @@ function hexen_get_levels(episode)
       force_key = force_key,
       want_len = 1 + rand_index_by_probs(len_probs)
     }
+
+    if mode ~= "sub" then
+      if map >= 3 then add_assumed_weaps(Quest, 2) end
+      if map == 4 then add_assumed_weaps(Quest, 3) end
+      if map == 6 then add_assumed_weaps(Quest, 3) end
+      if map == 6 then add_assumed_weaps(Quest, 4) end
+    end
 
     table.insert(L.quests, Quest)
 
@@ -1940,8 +1956,6 @@ GAME_FACTORIES["hexen"] = function()
     
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
     window_probs = { out_diff=80, combo_diff=50, normal=30 },
-
-    weapon_kludge = XN_WEAPON_KLUDGE,
   }
 end
 

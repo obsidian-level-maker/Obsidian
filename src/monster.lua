@@ -283,6 +283,25 @@ function hm_give_item(HM, item)
   end
 end
 
+function give_assumed_stuff(list)
+  if not list then return end
+
+  for zzz,def in ipairs(list) do
+con.printf("&&&&& give_assumed_stuff: weap=%s &&&&&\n", def.weapon or "-")
+    for xxx,CL in ipairs(GAME.classes) do
+      for yyy,SK in ipairs(SKILLS) do
+        local HM = PLAN.hmodels[CL][SK]
+    
+        if def.weapon then
+          hm_give_weapon(HM, def.weapon)
+        else
+          -- ????
+        end
+      end
+    end
+  end
+end
+
 
 function initial_hmodels()
   local MODELS = {}
@@ -1523,6 +1542,9 @@ end
 
 
 function battle_in_quest(Q)
+
+  give_assumed_stuff(Q.assumed_stuff)
+
   for zzz,c in ipairs(Q.path) do
     if c.toughness then
       battle_in_cell(c)
