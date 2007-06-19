@@ -972,7 +972,7 @@ function make_mini_map()
 
   con.map_begin(PLAN.blk_w, PLAN.blk_h)
 
-  for by = PLAN.blk_h,1,-1 do
+  for by = 1,PLAN.blk_h do
     for bx = 1,PLAN.blk_w do
       local B = PLAN.blocks[bx][by]
       if not B then con.map_pixel(0)
