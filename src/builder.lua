@@ -6582,7 +6582,7 @@ function tizzy_up_room(c)
     if not x then
       show_cell_blocks(c)
       con.printf("Could not find place for: %s\n", name)
---!!!!!!      error("Could not find place for: " .. name)
+      error("Could not find place for: " .. name)
       return
     end
     
@@ -6842,7 +6842,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     if not x then
       show_cell_blocks(c)
       con.printf("Could not find place for SWITCH: %s %dx%d\n", fab.name, fab.long, fab.deep)
---!!!!!!      error("Could not find place for switch!");
+      error("Could not find place for switch!");
       return
     end
 
