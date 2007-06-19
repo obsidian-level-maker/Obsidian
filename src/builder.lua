@@ -6581,8 +6581,10 @@ function tizzy_up_room(c)
     end
     if not x then
       show_cell_blocks(c)
-      con.printf("Could not find place for: %s\n", name)
-      error("Could not find place for: " .. name)
+      con.printf("WARNING: Could not find place for: %s\n", name)
+      if must_put then
+        error("Could not find place for: " .. name)
+      end
       return
     end
     
