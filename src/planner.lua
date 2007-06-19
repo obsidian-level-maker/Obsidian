@@ -1050,7 +1050,9 @@ function plan_sp_level(level, is_coop)
     end
 
     -- never branch of exit/quest rooms (except in emergencies)
-    if c.is_exit or c == c.quest.last then
+    if c.is_exit or c == c.quest.last or
+       (c.is_start and links_in_cell(c) >= 3)
+    then
       return 0.00001
     end
 
@@ -1348,6 +1350,7 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
 
       local c = create_cell(x, y, Q, 1, Q.combo)
       c.no_shrink = true
+      c.is_start = true
     end
 
 
@@ -2127,6 +2130,9 @@ Q.theme.name, Q.combo.name)
       if b == b.quest.last then return false end
 
       if a.small_exit or a.scenic or a.is_depot then return false end
+
+      if (a.is_start and links_in_cell(a) >= 2) then return false end
+      if (b.is_start and links_in_cell(b) >= 2) then return false end
 
       if a.f_min  < (b.f_max + 24) then return false end
       if b.ceil_h < (a.f_max + 96) then return false end
