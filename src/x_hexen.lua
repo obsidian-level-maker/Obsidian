@@ -1183,7 +1183,7 @@ XN_THEMES =
 
     monster_prefs =
     {
-      wendigo=300
+      wendigo=400, afrit=0.3
     },
   },
 
@@ -1197,7 +1197,7 @@ XN_THEMES =
     monster_prefs =
     {
       -- need high values just to make them appear
-      stalker1=3000, stalker2=1000
+      stalker1=5000, stalker2=3000
     },
   },
 
@@ -1406,10 +1406,10 @@ XN_MONSTERS =
   centaur1   = { prob=30, hp=200, dm=10, fp=1.6, melee=true },
   centaur2   = { prob=15, hp=250, dm=20, fp=2.1, },
 
-  stalker1   = { prob=0.1,hp=250, dm=60, fp=1.3, melee=true },
+  stalker1   = { prob=0.1,hp=250, dm=40, fp=1.3, melee=true },
   stalker2   = { prob=0.1,hp=250, dm=40, fp=2.3, },
-  bishop     = { prob= 9, hp=130, dm=60, fp=2.5, float=true },
-  reiver     = { prob= 4, hp=150, dm=50, fp=2.8, float=true },
+  bishop     = { prob= 9, hp=130, dm=50, fp=2.5, float=true },
+  reiver     = { prob= 4, hp=150, dm=60, fp=2.8, float=true },
 }
 
 XN_BOSSES =

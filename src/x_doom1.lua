@@ -2025,7 +2025,7 @@ DM_MONSTERS =
   baron     = { prob=50, hp=1000,dm=45, fp=3.8, cage_prob= 3, },
 
   -- MELEE only monsters
-  demon     = { prob=60, hp=150, dm=25, fp=2.3, cage_prob=66,melee=true },
+  demon     = { prob=50, hp=150, dm=25, fp=2.3, cage_prob=66,melee=true },
   spectre   = { prob=20, hp=150, dm=25, fp=2.3, cage_prob=40,melee=true },
   skull     = { prob=16, hp=100, dm=7,  fp=2.6, cage_prob= 2, melee=true, float=true },
  
