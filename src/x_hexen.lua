@@ -336,8 +336,8 @@ XN_COMBOS =
     outdoor = true,
 
     wall  = "CAVE01",
-    floor = "F_001",
-    ceil  = "F_001",
+    floor = "F_007",
+    ceil  = "F_007",
 
     scenery = "lean_tree1",
 
@@ -584,8 +584,7 @@ XN_COMBOS =
     floor = "F_057",
     ceil  = "F_057",
 
-    pillar = "PILLAR01",
-    scenery = "brass_brazier",
+    scenery = "banner",
   },
 
   VILLAGE6 =

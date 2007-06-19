@@ -1028,7 +1028,7 @@ GAME_FACTORIES["heretic"] = function()
     door_fabs   = HC_DOOR_PREFABS,
     misc_fabs   = HC_MISC_PREFABS,
 
-    toughness_factor = 0.75,
+    toughness_factor = 0.80,
 
     depot_info  = { teleport_kind=97 },
 
