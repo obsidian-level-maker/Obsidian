@@ -787,11 +787,22 @@ XN_SWITCHES =
       prefab = "DOOR", -- DOOR_LOCKED
       skin =
       {
-        door_w="MONK08", door_c="F_027",
+        door_w="FOREST03", door_c="F_017",
         door_h=128,
         door_kind=0, tag=0,
       }
     },
+---#    door =
+---#    {
+---#      w=128, h=128,
+---#      prefab = "DOOR", -- DOOR_LOCKED
+---#      skin =
+---#      {
+---#        door_w="MONK08", door_c="F_027",
+---#        door_h=128,
+---#        door_kind=0, tag=0,
+---#      }
+---#    },
   },
 
   sw_demon =
@@ -822,61 +833,33 @@ XN_SWITCHES =
     },
   },
 
-  sw_spin =
-  {
-    switch =
-    {
-      prefab = "SWITCH_NICHE_HEXEN",
-      add_mode = "wall",
-      skin =
-      {
-        switch_w="SW_EL1",
-        switch_h=32, x_offset=0, y_offset=0,
-
-        kind = { id=11, act="S1", args={"tag", 2 } },
-      }
-    },
-
-    door =
-    {
-      w=128, h=128,
-      prefab = "DOOR", -- DOOR_LOCKED
-      skin =
-      {
-        door_w="CLOCKA", door_c="F_010",
-        door_h=128,
-        door_kind=0, tag=0,
-      }
-    },
-  },
-
-  sw_chain =
-  {
-    switch =
-    {
-      prefab = "SWITCH_NICHE_HEXEN",
-      add_mode = "wall",
-      skin =
-      {
-        switch_w="SW_OL5",
-        switch_h=32, x_offset=0, y_offset=0,
-
-        kind = { id=11, act="S1", args={"tag", 2 } },
-      }
-    },
-
-    door =
-    {
-      w=128, h=128,
-      prefab = "DOOR", -- DOOR_LOCKED
-      skin =
-      {
-        door_w="STEEL07", door_c="F_066",
-        door_h=128,
-        door_kind=0, tag=0,
-      }
-    },
-  },
+---#  sw_chain =
+---#  {
+---#    switch =
+---#    {
+---#      prefab = "SWITCH_NICHE_HEXEN",
+---#      add_mode = "wall",
+---#      skin =
+---#      {
+---#        switch_w="SW_OL5",
+---#        switch_h=32, x_offset=0, y_offset=0,
+---#
+---#        kind = { id=11, act="S1", args={"tag", 2 } },
+---#      }
+---#    },
+---#
+---#    door =
+---#    {
+---#      w=128, h=128,
+---#      prefab = "DOOR", -- DOOR_LOCKED
+---#      skin =
+---#      {
+---#        door_w="STEEL07", door_c="F_066",
+---#        door_h=128,
+---#        door_kind=0, tag=0,
+---#      }
+---#    },
+---#  },
 
   sw_moon =
   {
@@ -900,7 +883,7 @@ XN_SWITCHES =
       prefab = "DOOR", -- DOOR_LOCKED
       skin =
       {
-        door_w="FOREST03", door_c="F_017",
+        door_w="CLOCKA", door_c="F_010",
         door_h=128,
         door_kind=0, tag=0,
       }
@@ -1839,18 +1822,16 @@ function hexen_get_levels(episode)
   -- switch quests
 
   local switch_list = { "sw_demon", "sw_ball", "sw_cow",
-                        "sw_chain", "sw_moon", "sw_spin",
-                        "sw_sheep" }
+                        "sw_sheep", "sw_moon" }
 
   rand_shuffle(switch_list)
 
-  local num_switch = 7
-  if SETTINGS.size == "regular" then num_switch = 6 end
-  if SETTINGS.size == "small"   then num_switch = 4 end
+---##  if SETTINGS.size == "regular" then num_switch = 6 end
+---##  if SETTINGS.size == "small"   then num_switch = 4 end
 
   local QN_SWITCH_PROBS = { 700, 200, 40, 15, 5, 1, 0 }
   
-  for sw = 1,num_switch do
+  for sw = 1,#switch_list do
 
     -- randomly select a level, preferring ones with fewest quests
     local lev_probs = {}
