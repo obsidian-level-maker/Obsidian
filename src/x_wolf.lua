@@ -802,6 +802,8 @@ GAME_FACTORIES["wolf3d"] = function()
 
     misc_fabs = WF_MISC_PREFABS,
 
+    toughness_factor = 0.40,
+
     room_heights = { [128]=50 },
     space_range  = { 50, 90 },
     door_probs = { combo_diff=90, normal=20, out_diff=1 },

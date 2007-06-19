@@ -1981,10 +1981,7 @@ Q.theme.name, Q.combo.name)
     peak = peak + 20 * Q.sub_level
     peak = peak * (Q.level ^ 0.7) * (1 + rand_skew()/5)
 
-    -- adjustment for Wolf3d/SOD  | FIXME: rework this func, use GAME values
-    if GAME.wolf_format then
-      peak = peak / 2.2;
-    end
+    peak = peak * GAME.toughness_factor
 
     if Q.is_secret then
       peak = math.max(0, peak / 2 - 40)

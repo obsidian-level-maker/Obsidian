@@ -1028,6 +1028,8 @@ GAME_FACTORIES["heretic"] = function()
     door_fabs   = HC_DOOR_PREFABS,
     misc_fabs   = HC_MISC_PREFABS,
 
+    toughness_factor = 0.75,
+
     depot_info  = { teleport_kind=97 },
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },

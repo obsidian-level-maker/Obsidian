@@ -2512,6 +2512,8 @@ function doom_common_factory()
     win_fabs  = DM_WINDOW_PREFABS,
     misc_fabs = DM_MISC_PREFABS,
 
+    toughness_factor = 1.00,
+    
     depot_info = { teleport_kind=97 },
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
