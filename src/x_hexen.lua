@@ -1673,6 +1673,7 @@ function hexen_get_levels(episode)
   end
 
   local function add_quest(map, kind, item, mode, force_key)
+    assert(map)
 
     local L = level_list[map]
 
@@ -1700,6 +1701,7 @@ function hexen_get_levels(episode)
   end
 
   local function join_map(src, dest, force_key)
+    assert(src and dest)
 
     local Gate =
     {
@@ -1720,8 +1722,9 @@ function hexen_get_levels(episode)
     local fwd_mode  = "sub"
     local back_mode = "end"
     
-    if src == 1 and (dest == 6 or dest == b_src) then
+    if src == 1 and not Gate.src.has_main then
       fwd_mode = "end"
+      Gate.src.has_main = true
     end
 
     if dest == 6 then
@@ -1749,17 +1752,17 @@ function hexen_get_levels(episode)
   end
 
   -- connections
-  
+
+  join_map(b_src, 6, key_A)
+  join_map(w_src, 4, key_B)
+
   local r = rand_irange(1,5)
 
-  join_map(sel(r==3, 3, 1), 2)
   join_map(sel(r==2, 2, 1), 3)
+  join_map(sel(r==3, 3, 1), 2)
 
   add_quest(2, "key", key_A, "main")
   add_quest(3, "key", key_B, "main")
-
-  join_map(w_src, 4, key_B)
-  join_map(b_src, 6, key_A)
 
   for xxx,CL in ipairs(GAME.classes) do
     for piece = 1,3 do
@@ -1829,7 +1832,7 @@ function hexen_get_levels(episode)
 ---##  if SETTINGS.size == "regular" then num_switch = 6 end
 ---##  if SETTINGS.size == "small"   then num_switch = 4 end
 
-  local QN_SWITCH_PROBS = { 700, 200, 40, 15, 5, 1, 0 }
+  local QN_SWITCH_PROBS = { 700, 200, 40, 15, 5, 1 }
   
   for sw = 1,#switch_list do
 
@@ -1838,7 +1841,7 @@ function hexen_get_levels(episode)
     for map = 1,6 do
       local qn = # level_list[map].quests
       if qn < 1 then qn = 1 end
-      if qn > 7 then qn = 7 end
+      if qn > 6 then qn = 6 end
 
       lev_probs[map] = QN_SWITCH_PROBS[qn]
     end
@@ -1848,7 +1851,7 @@ function hexen_get_levels(episode)
     add_quest(map, "switch", switch_list[sw], "main")
   end
 
---  dump_levels()
+  dump_levels()
 
   return level_list
 end
