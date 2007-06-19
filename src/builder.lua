@@ -6655,6 +6655,25 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
     add_quest_object(c, name, "must", "special", player_angle(c))
   end
 
+  local function add_boss(c)
+    local name = non_nil(c.quest.item)
+
+    -- FIXME!!! boss_brain levels
+    if name == "boss_brain" then return end
+
+    local info = GAME.bosses[name] or GAME.monsters[name]
+    if not info then error("Unknown boss: " .. name) end
+
+    local count = 1
+    if info.hp < 900 then count = int(1900/info.hp) end
+
+    for i = 1,count do
+      add_quest_object(c, name)
+    end
+
+    c.toughness = 0
+  end
+
   local function add_dm_weapon(c)
 
     --TODO: place weapons on vistas
@@ -7234,6 +7253,10 @@ con.debugf("add_scenery : %s\n", item)
       else
         add_quest_object(c, c.quest.item, "must", "special")
       end
+    end
+
+    if c.quest.kind == "boss" then
+      add_boss(c)
     end
 
   elseif PLAN.deathmatch and (c.require_weapon or 
