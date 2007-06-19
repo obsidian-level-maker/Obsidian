@@ -6666,10 +6666,6 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
     sort_fab_locs(c, "random");
     local x,y,dir = find_fab_loc(c, fab,{}, 0, 3)
 
---???    if not x then
---???      x,y,dir = find_emergency_loc(c)
---???    end
-
     if not x then
       con.printf("WARNING: unable to place DM weapon @ (%d,%d)\n", c.x,c.y)
       return
@@ -6825,7 +6821,9 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
       error("Unknown switch prefab: " .. tostring(def.prefab))
     end
 
-    if (not in_wall) == (def.add_mode == "wall") then
+    if (not in_wall) == (def.add_mode == "wall") and
+       not c.quest.wall_switch_emergency
+    then
       return
     end
 
@@ -6833,6 +6831,12 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     
     if in_wall then
       x,y,dir = find_wallish_loc(c, fab, nil, c.q_spot)
+
+      -- if not found, try again later as a "normal" prefab
+      if not x then
+        c.quest.wall_switch_emergency = true
+        return
+      end
     else
       assert(c.q_spot)
       sort_fab_locs(c, "near", (c.q_spot.x1+c.q_spot.x2)/2, (c.q_spot.y1+c.q_spot.y2)/2 );
