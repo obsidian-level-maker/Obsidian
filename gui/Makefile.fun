@@ -53,6 +53,7 @@ OBJS=	main.o      \
 	ui_build.o  \
 	ui_chooser.o \
 	ui_dialog.o \
+	ui_map.o    \
 	ui_menu.o   \
 	ui_setup.o  \
 	ui_window.o
