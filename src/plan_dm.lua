@@ -231,14 +231,7 @@ function plan_dm_arena(level)
     return p.liquid
   end
 
-  local function unused_combo_pos()
-    for loop = 1,999 do
-      local x,y = random_cell()
-      if not PLAN.cells[x][y].combo then return x, y end
-    end
-  end
-
-  local function grow_dm_combos()
+  local function grow_dm_themes()
     local x_order = {}
     local y_order = {}
     local dir_order = { 2,4,6,8 }
@@ -257,8 +250,13 @@ function plan_dm_arena(level)
           if c.combo and valid_cell(cx+dx,cy+dy) then
             local other = PLAN.cells[cx+dx][cy+dy]
             if not other.combo then
-              other.combo = c.combo
+              other.quest  = c.quest
+              other.combo  = c.combo
               other.liquid = c.liquid
+
+              if rand_odds(25) then
+                other.combo = get_rand_combo(other.quest.theme)
+              end
             end
           end
         end
@@ -268,23 +266,51 @@ function plan_dm_arena(level)
     end
   end
 
-  local function choose_dm_combos()
+  local function assign_dm_themes()
 
-    -- place combos at random spots on the plan,
+    -- place themes at random spots on the plan,
     -- then "grow" them until all cells are combod.
 
     for cy = 1,PLAN.h do
       cx = rand_irange(1,PLAN.w)
+
       local c = PLAN.cells[cx][cy]
-      local theme = get_rand_theme()
-      c.combo = get_rand_combo(theme)
+
+      c.quest =
+      {
+        kind = "deathmatch", item = "frags",
+        level = 1, path = {},
+        theme = get_rand_theme(),
+      }
+      table.insert(PLAN.quests, c.quest)
+
+      c.combo = get_rand_combo(c.quest.theme)
       c.liquid = liquid_for_seed(c.combo)
     end
 
-    for pass = 1,(PLAN.w+PLAN.h+10) do  -- FIXME: exit when no empty spots
-      grow_dm_combos()
-      con.ticker();
+    for pass = 1,(PLAN.w + PLAN.h + 10) do
+      grow_dm_themes()
     end
+
+    con.ticker();
+  end
+
+  local function assign_dm_roomtypes()
+
+    for cy = 1,PLAN.h do
+      for cx = 1,PLAN.w do
+        local c = PLAN.cells[cx][cy]
+
+        -- use PLAIN rooms more often in DM since they flow better
+        if rand_odds(35) then
+          c.room_type = non_nil(GAME.rooms["PLAIN"])
+        else
+          c.room_type = get_rand_roomtype(c.quest.theme)
+        end
+      end
+    end
+
+    con.ticker();
   end
 
   local function create_dm_links(min_links, max_links)
@@ -467,7 +493,7 @@ function plan_dm_arena(level)
   local W = rand_index_by_probs(SIZE_PROBS[SETTINGS.size]) 
   local H = rand_index_by_probs(SIZE_PROBS[SETTINGS.size]) 
 
-  if W < H then W,H = H,W end
+---#  if W < H then W,H = H,W end
 
   con.debugf("ARENA SIZE %dx%d\n", W, H)
 
@@ -476,19 +502,10 @@ function plan_dm_arena(level)
   PLAN.w = W
   PLAN.h = H
 
-  -- dummy quest
-  PLAN.quests[1] =
-  {
-    kind = "deathmatch", item = "frags",
-    level = 1, path = {},
-  }
-
   for y = 1,H do
     for x = 1,W do
-      -- note: dummy along and combo values
-      local c = create_cell(x, y, PLAN.quests[1], 1, nil)
-
-      c.room_type = non_nil(GAME.rooms["PLAIN"])
+      -- Note: dummy quest, along and combo values
+      create_cell(x, y, {}, 1, nil)
     end
   end
 
@@ -503,7 +520,8 @@ function plan_dm_arena(level)
   con.debugf("DM LIQUID: %s\n", (p.liquid and p.liquid.name) or "NONE")
   con.debugf("DM EXIT COMBO: %s\n", p.exit_combo.wall)
 
-  choose_dm_combos()
+  assign_dm_themes()
+  assign_dm_roomtypes()
 
   create_dm_links()
   shuffle_build_sites()
