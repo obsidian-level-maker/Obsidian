@@ -3920,34 +3920,6 @@ function layout_cell(c)
   end
 
 
-  local function position_sp_stuff(c)
-
-    if c == PLAN.quests[1].first then
-      local kx, ky = good_Q_spot(c, true)
-      if not kx then error("NO FREE SPOT for Player!") end
-      c.chunks[kx][ky].player=true
-    end
-
-    if c == c.quest.last then
-      local can_vista = (c.quest.kind == "key") or
-              (c.quest.kind == "weapon") or (c.quest.kind == "item")
-      local kx, ky = good_Q_spot(c, can_vista)
-      if not kx then error("NO FREE SPOT for Quest Item!") end
-      c.chunks[kx][ky].quest=true
-
-      --[[ NOT NEEDED?
-      if PLAN.coop and (c.quest.kind == "weapon") then
-        local total = rand_index_by_probs { 10, 50, 90, 50 }
-        for i = 2,total do
-          local kx, ky = good_Q_spot(c)
-          if kx then c.chunks[kx][ky].quest=true end
-        end
-      end
-      --]]
-    end
-  end
-
-
   local function OLD_build_chunk(kx, ky)
 
     local function link_is_door(c, side)
@@ -6607,7 +6579,7 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
 
   local function player_angle(c)
 
-    if c.q_spot then
+    if c.q_spot and c.q_spot.purpose == "player" then
       local dir = non_nil(c.q_spot.q_dir)
 
       local dir2 = c.exit_dir or c.entry_dir
@@ -6649,12 +6621,13 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
       return dir_to_angle(c.exit_dir)
     end
 
----###    for i = 1,20 do
----###      local dir = rand_irange(1,4)*2
----###      if c.link[dir] then
----###        return dir_to_angle(dir)
----###      end
----###    end
+    -- this logic is mainly for deathmatch games
+    for i = 1,20 do
+      local dir = rand_irange(1,4)*2
+      if c.link[dir] then
+        return dir_to_angle(dir)
+      end
+    end
 
     -- failsafe: select a random direction
     local dir = rand_irange(1,4)*2
@@ -6769,8 +6742,11 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
 
     local K = c.q_spot
 
-    local def, fab = get_rand_fab(GAME.dm_exits)
+    local def = get_rand_fab(GAME.dm_exits)
     assert(def)
+
+    local fab = PREFABS[def.prefab]
+    assert(fab)
 
     assert(def.skin)
     assert(def.skin.wall)
