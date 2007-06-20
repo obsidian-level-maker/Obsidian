@@ -6600,21 +6600,6 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
       end
 
       return dir_to_angle(dir)
-
----###   local kx = c.q_spot.kx
----###   local ky = c.q_spot.ky
----###
----###   if not (kx==2 and ky==2) and is_roomy(c.chunks[2][2]) then
----###     return delta_to_angle(2-kx, 2-ky)
----###   end
----###
----###   for i = 1,20 do
----###     local dir = rand_irange(1,4)*2
----###     local N = chunk_neighbour(c, c.q_spot, dir)
----###     if N and is_roomy(N) then
----###       return dir_to_angle(dir)
----###     end
----###   end
     end
 
     if c.exit_dir then
@@ -6635,8 +6620,8 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
     return dir_to_angle(dir)
   end
 
-  local function add_player(c, name)
-    add_quest_object(c, name, "pedestal_PLAYER", "must", "special", player_angle(c))
+  local function add_player(c, name, must_put)
+    add_quest_object(c, name, "pedestal_PLAYER", must_put, "special", player_angle(c))
   end
 
   local function add_boss(c)
@@ -7211,17 +7196,17 @@ con.debugf("add_scenery : %s\n", item)
   -- PLAYERS
   if not PLAN.deathmatch and c == PLAN.quests[1].first then
     for i = 1,sel(SETTINGS.mode == "coop",4,1) do
-      add_player(c, "player" .. tostring(i))
+      add_player(c, "player" .. tostring(i), "must")
     end
 
   elseif PLAN.deathmatch and (c.require_player or
       rand_odds(DM_PLAYERS_1[SETTINGS.mons]))
   then
-    add_player(c, "dm_player")
+    add_player(c, "dm_player", "must")
   end
 
   if PLAN.deathmatch and c.x==2 and not PLAN.have_sp_player then
-    add_player(c, "player1")
+    add_player(c, "player1", "must")
     PLAN.have_sp_player = true
   end
 
@@ -7263,7 +7248,7 @@ con.debugf("add_scenery : %s\n", item)
   if PLAN.deathmatch then
     -- secondary DM PLAYER
     if rand_odds(DM_PLAYERS_2[SETTINGS.mons]) then
-      add_quest_object(c, "dm_player", "pedestal_PLAYER", false, "special")
+      add_player(c, "dm_player")
     end
     -- secondary DM WEAPON
     if rand_odds(DM_WEAPONS_2[SETTINGS.traps]) then
