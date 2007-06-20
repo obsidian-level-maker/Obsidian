@@ -1270,6 +1270,22 @@ XN_DOOR_PREFABS =
 
 --    theme_probs = { CITY=60,ICE=10,CAVE=20 },
   },
+
+  door51 =
+  {
+    w=128, h=128, prefab="DOOR",
+
+    skin =
+    {
+      door_w="DOOR51", door_c="F_009",
+      track_w="STEEL08",
+      door_h=128,
+      door_kind = { id=12, act="SR", args={0, 16, 128} },
+      tag=0,
+    },
+
+--    theme_probs = { CITY=60,ICE=10,CAVE=20 },
+  },
 }
 
 ---#XN_ITEM_PREFABS =
@@ -1427,6 +1443,27 @@ XN_SCENERY_PREFABS =
   },
 }
 
+-- XN_DEATHMATCH_EXITS =
+-- {
+--   exit_dm_GREEN =
+--   {
+--     prefab = "EXIT_DEATHMATCH",
+-- 
+--     skin = { wall="FOREST05", front_w="FOREST05",
+--              floor="F_009", ceil="F_009",
+--              switch_w="SW51_OFF", side_w="FIRE07", switch_f="F_013",
+--              frame_f="F_048", frame_c="F_048",
+--              door_w="D_BRASS1", door_c="F_075",
+-- 
+--              inside_h=160, door_h=128,
+--              switch_yo=0,  tag=0,
+-- 
+--              door_kind  ={ id=12, act="S1", args={0, 16, 64} },
+--              switch_kind={ id=
+--            },
+--   },
+-- }
+
 XN_INITIAL_MODEL =
 {
   fighter =
@@ -1550,23 +1587,27 @@ XN_DEATHMATCH =
 
   health =
   { 
-    h_vial=70, h_flask=25, h_urn=5
+    h_vial=50, h_flask=50, h_urn=5
   },
 
   ammo =
   { 
-    blue_mana=40, green_mana=40, dual_mana=15
+    blue_mana=50, green_mana=50, dual_mana=80, krater=1
   },
 
   items =
   {
-    ar_mesh=50, ar_shield=70, ar_helmet=90, ar_amulet=50,
+    ar_mesh=100, ar_shield=100, ar_helmet=100, ar_amulet=100,
 
-    --FIXME: artifacts!
+    flechette=30, bracer=20, incant=3, boots=8,
+    wings=3, chaos=10, banish=10, repulser=10,
+    torch=10, porkies=20, defender=1,
   },
 
   cluster = {}
 }
+
+
 
 
 ------------------------------------------------------------
