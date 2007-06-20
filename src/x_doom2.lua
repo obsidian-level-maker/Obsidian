@@ -758,7 +758,7 @@ D2_PICS =
 
 D2_LIQUIDS =
 {
-  slime = { floor="SLIME01", sec_kind=7 }  --  5% damage
+  slime = { floor="SLIME01", wall="BLODRIP1", sec_kind=7 }  -- 5% damage
 }
 
 D2_SCENERY =

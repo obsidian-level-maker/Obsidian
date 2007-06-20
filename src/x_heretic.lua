@@ -430,8 +430,10 @@ HC_OVERHANGS =
 
 HC_LIQUIDS =
 {
-  water = { floor="FLTFLWW1" },
-  -- FIXME
+  water  = { floor="FLTFLWW1", wall="WATRWAL1" },
+  lava   = { floor="FLATHUH1", wall="LAVAFL1", sec_kind=16 },
+  magma  = { floor="FLTLAVA1", wall="LAVA1",   sec_kind=5 },
+  sludge = { floor="FLTSLUD1", wall="LAVA1",   sec_kind=7 },
 }
 
 HC_SWITCHES =
