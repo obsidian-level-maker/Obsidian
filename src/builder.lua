@@ -6553,7 +6553,7 @@ function tizzy_up_room(c)
   end
 
 
-  local function add_quest_object(c, name, must_put, can_special, angle)
+  local function add_quest_object(c, name, ped, must_put, can_special, angle)
 
     local x,y,dir
     
@@ -6565,7 +6565,9 @@ function tizzy_up_room(c)
 
     local info = GAME.things[name] or {}
 
-    local fab = PREFABS["PLAIN"]
+    local def = (GAME.misc_fabs and GAME.misc_fabs[ped]) or {}
+
+    local fab = PREFABS[def.prefab or "PLAIN"]
     assert(fab)
 
     if c.q_spot and must_put then
@@ -6578,6 +6580,9 @@ function tizzy_up_room(c)
 
     if not x and must_put then
       x,y,dir = find_emergency_loc(c)
+      def = {}
+      fab = PREFABS["PLAIN"]
+      assert(fab)
     end
     if not x then
       show_cell_blocks(c)
@@ -6588,12 +6593,16 @@ function tizzy_up_room(c)
       return
     end
     
+    local K = PLAN.blocks[x][y].chunk
+    assert(K)
+
 con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
-    gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
-    local th = add_thing(c, x, y, name, true, angle or 0)
+---##    gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
+
+    B_prefab(c, fab, def.skin or {}, {}, K.rmodel, c.combo, x, y, dir)
     fab_mark_walkable(c, x, y, 8, 1,1, 4)
 
-    return th
+    return add_thing(c, x, y, name, true, angle or 0)
   end
 
   local function player_angle(c)
@@ -6654,7 +6663,7 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
   end
 
   local function add_player(c, name)
-    add_quest_object(c, name, "must", "special", player_angle(c))
+    add_quest_object(c, name, "pedestal_PLAYER", "must", "special", player_angle(c))
   end
 
   local function add_boss(c)
@@ -6678,21 +6687,26 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
 
   local function add_dm_weapon(c)
 
-    --TODO: place weapons on vistas
+    local ped = "pedestal_ITEM"
 
-    -- FIXME: use 'def' from game-specific stuff
-    local fab = PREFABS["PLAIN"]
+    local def = (GAME.misc_fabs and GAME.misc_fabs[ped]) or {}
+
+    local fab = PREFABS[def.prefab or "PLAIN"]
     assert(fab)
 
     sort_fab_locs(c, "random");
-    local x,y,dir = find_fab_loc(c, fab,{}, 0, 3)
+    local x,y,dir = find_fab_loc(c, fab,def, 0, 3)
 
     if not x then
       con.printf("WARNING: unable to place DM weapon @ (%d,%d)\n", c.x,c.y)
       return
     end
 
-    gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
+    local K = PLAN.blocks[x][y].chunk
+    assert(K)
+
+---##    gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
+    B_prefab(c, fab, def.skin or {}, {}, K.rmodel, c.combo, x, y, dir)
     fab_mark_walkable(c, x, y, 8, 1,1, 4)
 
     for idx,SK in ipairs(SKILLS) do
@@ -6798,7 +6812,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
       sort_fab_locs(c, "near", x, y)
 
       for p = 1,sel(SETTINGS.mode == "coop",4,1) do
-        local th = add_quest_object(c, "player" .. tostring(p), "must", false, dir_to_angle(dir))
+        local th = add_quest_object(c, "player" .. tostring(p), nil, "must", false, dir_to_angle(dir))
         if th then
           th.args = c.quest.return_args
         end
@@ -7253,7 +7267,7 @@ con.debugf("add_scenery : %s\n", item)
       elseif c.quest.item == "treasure" then
         -- FIXME: room full of treasure (USE ROOM_TYPE INSTEAD)
       else
-        add_quest_object(c, c.quest.item, "must", "special")
+        add_quest_object(c, c.quest.item, "pedestal_ITEM", "must", "special")
       end
     end
 
@@ -7273,7 +7287,7 @@ con.debugf("add_scenery : %s\n", item)
   if PLAN.deathmatch then
     -- secondary DM PLAYER
     if rand_odds(DM_PLAYERS_2[SETTINGS.mons]) then
-      add_quest_object(c, "dm_player", false, "special")
+      add_quest_object(c, "dm_player", "pedestal_PLAYER", false, "special")
     end
     -- secondary DM WEAPON
     if rand_odds(DM_WEAPONS_2[SETTINGS.traps]) then
