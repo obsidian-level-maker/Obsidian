@@ -57,7 +57,7 @@ function compute_pow_factors()
   -- also copies radius/height values to monster info
   
   local function pow_factor(info)
-    return 5 + 19 * info.hp ^ 0.5 * (info.dm / sel(info.melee,100,50)) ^ 1.2
+    return 5 + 19 * info.hp ^ 0.5 * (info.dm / sel(info.melee,80,50)) ^ 1.2
   end
 
   for name,info in pairs(GAME.monsters) do

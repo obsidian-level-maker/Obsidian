@@ -767,8 +767,8 @@ HC_MONSTERS =
   -- FIXME: dm and fp values are CRAP!
   gargoyle    = { prob=30, hp=20,  dm= 7, fp=1.0, cage_fallback=10, float=true, melee=true },
   fire_garg   = { prob=20, hp=80,  dm=21, fp=2.0, float=true },
-  golem       = { prob=80, hp=80,  dm= 7, fp=1.3, melee=true },
-  golem_inv   = { prob=20, hp=80,  dm= 7, fp=1.5, melee=true },
+  golem       = { prob=60, hp=80,  dm= 7, fp=1.1, melee=true },
+  golem_inv   = { prob=20, hp=80,  dm= 7, fp=2.1, melee=true },
 
   nitro       = { prob=70, hp=100, dm=21, fp=2.5, },
   nitro_inv   = { prob=10, hp=100, dm=21, fp=2.7, },
