@@ -623,6 +623,18 @@ HC_DOOR_PREFABS =
 
 HC_MISC_PREFABS =
 {
+  pedestal_PLAYER =
+  {
+    prefab = "PEDESTAL",
+    skin = { wall="TMBSTON2", floor="FLOOR26", ped_h=8 },
+  },
+
+  pedestal_ITEM =
+  {
+    prefab = "PEDESTAL",
+    skin = { wall="SAINT1", floor="FLAT500", ped_h=12 },
+  },
+
   exit_DOOR =
   {
     w=64, h=96, prefab = "DOOR_NARROW",

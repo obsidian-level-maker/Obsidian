@@ -767,26 +767,6 @@ D2_SCENERY =
 
 D2_SCENERY_PREFABS =
 {
-  --[[
-  pedestal_PLAYER =
-  {
-    prefab = "PEDESTAL",
-    skin = { wall="SHAWN2", floor="FLAT22", ped_h=8 },
-  },
-
-  pedestal_KEY =
-  {
-    prefab = "PEDESTAL",
-    skin = { wall="METAL", floor="GATE4", ped_h=16 },
-  },
-
-  pedestal_WEAPON =
-  {
-    prefab = "PEDESTAL",
-    skin = { wall="METAL", floor="CEIL1_2", ped_h=12 },
-  },
-  --]]
-
   billboard_NAZI =
   {
     prefab = "BILLBOARD",
@@ -1335,6 +1315,18 @@ D2_DEATHMATCH_EXITS =
 
 D2_MISC_PREFABS =
 {
+  pedestal_PLAYER =
+  {
+    prefab = "PEDESTAL",
+    skin = { wall="SHAWN2", floor="FLAT22", ped_h=8 },
+  },
+
+  pedestal_ITEM =
+  {
+    prefab = "PEDESTAL",
+    skin = { wall="METAL", floor="CEIL1_2", ped_h=12 },
+  },
+
   fence_STD =
   {
     prefab = "FENCE_RAIL",

@@ -130,22 +130,21 @@ PL_SKY_INFO =
   { color="red",    light=192 },
 }
 
-PL_SPECIAL_PEDESTAL =
+PL_MISC_PREFABS =
 {
-  wall   ="COMPSPAN",
-  floor  ="CEIL5_1",
-  h      = 16,
-  light  = 80,
+  pedestal_PLAYER =
+  {
+    prefab = "PEDESTAL_PLUT",
 
-  wall2  ="COMPSPAN",
-  floor2 ="TLITE6_1",
-  h2     = 28,
-  light2 = 255,
+    skin =
+    {
+      ped_w ="COMPSPAN", ped_f ="CEIL5_1",
+      ped_w2="COMPSPAN", ped_f2="TLITE6_1",
 
-  glow2  = true,
-  rotate2 = true,
-
-  coop_light = 112,
+      ped_h  = 16, ped_h2 = 28,
+      light  = 80, light2 = 255,
+    }
+  },
 }
 
 ----------------------------------------------------------------
@@ -163,6 +162,8 @@ GAME_FACTORIES["plutonia"] = function()
   T.doors   = copy_and_merge(T.doors,   PL_DOORS)
   T.pics    = copy_and_merge(T.pics,    PL_PICS)
   T.liquids = copy_and_merge(T.liquids, PL_LIQUIDS)
+
+  T.misc_fabs = copy_and_merge(T.misc_fabs, PL_MISC_PREFABS)
 
   T.sky_info    = PL_SKY_INFO
   T.special_ped = PL_SPECIAL_PEDESTAL

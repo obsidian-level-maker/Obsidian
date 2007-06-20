@@ -1169,7 +1169,7 @@ XN_THEMES =
 
     monster_prefs =
     {
-      demon1=3.0, demon2=3.0, afrit=3.0
+      demon1=3.0, demon2=3.0
     },
 
     diff_probs = { [0]=10, [16]=40, [32]=80, [64]=60, [96]=20 },
@@ -1203,7 +1203,7 @@ XN_THEMES =
 
     monster_prefs =
     {
-      wendigo=500, afrit=0.3
+      wendigo=500, afrit=0.2
     },
   },
 
@@ -1230,7 +1230,7 @@ XN_THEMES =
 
     monster_prefs =
     {
-      ettin=2.3, bishop=2.5
+      afrit=3.0, bishop=2.5
     },
   },
 }
@@ -1351,6 +1351,14 @@ XN_DOOR_PREFABS =
 
 XN_MISC_PREFABS =
 {
+  -- Note: pedestal_PLAYER intentionally omitted
+
+  pedestal_ITEM =
+  {
+    prefab = "PEDESTAL",
+    skin = { wall="CASTLE07", floor="F_084", ped_h=12 },
+  },
+
   secret_DOOR =
   {
     w=128, h=128, prefab = "DOOR",
@@ -1444,10 +1452,10 @@ XN_INITIAL_MODEL =
 
 XN_MONSTERS =
 {
-  -- FIXME: these stats are CRAP!
+  -- FIXME: dm stats are CRAP!
   ettin      = { prob=60, hp=170, dm= 5, fp=1.0, melee=true },
 
-  afrit      = { prob=20, hp=80,  dm=15, fp=1.2, float=true },
+  afrit      = { prob=30, hp=80,  dm=15, fp=1.2, float=true },
   demon1     = { prob=20, hp=90,  dm=12, fp=1.0, cage_fallback=2 },
   demon2     = { prob=15, hp=90,  dm=20, fp=1.4, },
 
@@ -1470,7 +1478,7 @@ XN_BOSSES =
 
 XN_WEAPONS =
 {
-  -- FIXME: all these stats are CRAP!
+  -- FIXME: rate and dm values are CRAP!
   c_mace    = { fp=1, held=true, melee=true,     rate=1.1, dm=12, freq=10, held=true, },
   c_staff   = { fp=2, ammo="blue_mana",  per=1,  rate=1.1, dm= 6, freq=21, },
   c_fire    = { fp=3, ammo="green_mana", per=4,  rate=1.1, dm=27, freq=42, },
@@ -1980,7 +1988,7 @@ GAME_FACTORIES["hexen"] = function()
     misc_fabs = XN_MISC_PREFABS,
     sc_fabs   = XN_SCENERY_PREFABS,
 
-    toughness_factor = 0.70,
+    toughness_factor = 0.66,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },
