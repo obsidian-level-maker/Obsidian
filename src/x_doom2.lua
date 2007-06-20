@@ -1262,71 +1262,8 @@ D2_DOOR_PREFABS =
   },
 }
 
-D2_DEATHMATCH_EXITS =
-{
-  exit_deathmatch_TECH =
-  {
-    prefab = "EXIT_DEATHMATCH",
-
-    skin = { wall="TEKWALL4", front_w="TEKWALL4",
-             floor="CEIL4_3", ceil="TLITE6_5",
-             switch_w="SW1COMM", side_w="SHAWN2", switch_f="FLAT23",
-             frame_f="FLAT1", frame_c="FLAT1", step_w="STEP1",
-             door_w="EXITDOOR", door_c="FLAT1", track_w="DOORTRAK",
-
-             inside_h=80, door_h=72,
-             switch_yo=0,
-             door_kind=1, tag=0, switch_kind=11
-           },
-  },
-
-  exit_deathmatch_METAL =
-  {
-    prefab = "EXIT_DEATHMATCH",
-
-    skin = { wall="METAL1", front_w="METAL1",
-             floor="FLOOR5_1", ceil="CEIL5_1",
-             switch_w="SW1BLUE", side_w="COMPBLUE", switch_f="FLAT14",
-             frame_f="FLOOR5_1", frame_c="TLITE6_6", step_w="STEP1",
-             door_w="EXITDOOR", door_c="FLAT1", track_w="DOORTRAK",
-
-             inside_h=80, door_h=72,
-             switch_yo=56,
-             door_kind=1, tag=0, switch_kind=11
-           },
-  },
-
-  exit_deathmatch_STONE =
-  {
-    prefab = "EXIT_DEATHMATCH",
-
-    skin = { wall="STONE2", front_w="EXITSTON",
-             floor="FLOOR7_2", ceil="FLAT1",
-             switch_w="SW1HOT", side_w="SP_HOT1", switch_f="FLAT5_3",
-             frame_f="FLOOR5_1", frame_c="TLITE6_6", step_w="STEP1",
-             door_w="EXITDOOR", door_c="FLAT1", track_w="DOORTRAK",
-
-             inside_h=80, door_h=72,
-             switch_yo=56,
-             door_kind=1, tag=0, switch_kind=11
-           },
-  },
-}
-
 D2_MISC_PREFABS =
 {
-  pedestal_PLAYER =
-  {
-    prefab = "PEDESTAL",
-    skin = { wall="SHAWN2", floor="FLAT22", ped_h=8 },
-  },
-
-  pedestal_ITEM =
-  {
-    prefab = "PEDESTAL",
-    skin = { wall="METAL", floor="CEIL1_2", ped_h=12 },
-  },
-
   fence_STD =
   {
     prefab = "FENCE_RAIL",
@@ -1611,8 +1548,6 @@ GAME_FACTORIES["doom2"] = function()
   T.wall_fabs = copy_and_merge(T.wall_fabs, D2_WALL_PREFABS)
   T.door_fabs = copy_and_merge(T.door_fabs, D2_DOOR_PREFABS)
   T.misc_fabs = copy_and_merge(T.misc_fabs, D2_MISC_PREFABS)
-
-  T.dm_exits = D2_DEATHMATCH_EXITS  -- FIXME: doom1
 
   return T
 end
