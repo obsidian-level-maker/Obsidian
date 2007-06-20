@@ -320,9 +320,7 @@ HC_EXITS =
   {
     mat_pri = 9,
 
-    wall = "METL2",
-    void = "SKULLSB1",
-
+    wall  = "METL2",
     floor = "FLOOR03",
     ceil  = "FLOOR19",
 
@@ -658,6 +656,25 @@ HC_MISC_PREFABS =
       track_w="METL2",
       door_h=128, door_kind=31, tag=0
     },
+  },
+}
+
+HC_DEATHMATCH_EXITS =
+{
+  exit_dm_METAL =
+  {
+    prefab = "EXIT_DEATHMATCH",
+
+    skin = { wall="METL2", front_w="METL2",
+             floor="FLAT502", ceil="FLAT502",
+             switch_w="SW2OFF", side_w="METL2", switch_f="FLOOR03",
+             frame_f="FLAT504", frame_c="FLAT504", -- step_w="STEP1",
+             door_w="DOOREXIT", door_c="FLOOR08", -- track_w="DOORTRAK",
+
+             inside_h=128, door_h=96,
+             switch_yo=32,
+             door_kind=1, tag=0, switch_kind=11
+           },
   },
 }
 
@@ -1015,6 +1032,7 @@ GAME_FACTORIES["heretic"] = function()
     quests  = HC_QUESTS,
 
     dm = HC_DEATHMATCH,
+    dm_exits = HC_DEATHMATCH_EXITS,
 
     combos    = HC_COMBOS,
     exits     = HC_EXITS,
