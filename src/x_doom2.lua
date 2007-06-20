@@ -258,7 +258,7 @@ D2_COMBOS =
 
     bad_liquid = "nukage",
 
-    theme_probs = { NATURE=50 },
+    theme_probs = { NATURE=30 },
   },
 
   ROCKY =

@@ -123,7 +123,7 @@ DM_COMBOS =
 
     scenery = "tech_column",
 
-    theme_probs = { TECH=40, INDUSTRIAL=5 }, 
+    theme_probs = { TECH=40 }, 
     sc_fabs = { pillar_COMPWERD=50, other=30 },
   },
 
@@ -197,7 +197,7 @@ DM_COMBOS =
     ceil = "CEIL3_5",  -- "SLIME14" not in doom 1
   --  lift_floor = "FLOOR4_8",
 
-    theme_probs = { URBAN=50, INDUSTRIAL=10 },
+    theme_probs = { INDUSTRIAL=50 },
   },
 
   SLAD =
@@ -235,7 +235,7 @@ DM_COMBOS =
 
     scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
 
-    theme_probs = { INDUSTRIAL=66, URBAN=10 },
+    theme_probs = { INDUSTRIAL=50 },
   },
 
   CAVEY =
@@ -268,7 +268,7 @@ DM_COMBOS =
 
     scenery = { blue_torch=5, blue_torch_sm=3 },
 
-    theme_probs = { URBAN=70, INDUSTRIAL=5 },
+    theme_probs = { URBAN=70 },
     door_probs = { out_diff=75, combo_diff=10, normal=5 }
   },
 
