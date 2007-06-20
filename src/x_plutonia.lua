@@ -143,6 +143,7 @@ PL_MISC_PREFABS =
 
       ped_h  = 16, ped_h2 = 28,
       light  = 80, light2 = 255,
+      kind   = 8, -- glowing
     }
   },
 }
@@ -168,7 +169,7 @@ GAME_FACTORIES["plutonia"] = function()
   T.sky_info    = PL_SKY_INFO
   T.special_ped = PL_SPECIAL_PEDESTAL
 
-  T.monster_prefs = { gunner=1.7 }
+  T.monster_prefs = { gunner=2.0 }
 
   return T
 end

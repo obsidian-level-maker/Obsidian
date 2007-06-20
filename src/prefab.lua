@@ -1741,7 +1741,7 @@ PEDESTAL_PLUT =
 
     T = { f_h=28, f_tex="ped_f2", l_tex="ped_w2", l_peg="top",
 
-          light=255, glow=true, -- FIXME: proper glow (parm option)
+          light=255, kind="kind",
 
           [1] = { dx=16, dy=-6 },
           [3] = { dx=22, dy=16 },
@@ -1773,7 +1773,7 @@ PEDESTAL_PLUT_DOUBLE =
     T = { f_h= 28, f_tex="ped_f2", l_tex="ped_w2", l_peg="top",
           c_h=-28, c_tex="ped_f2", u_tex="ped_w2", u_peg="bottom",
 
-          light=255, glow=true, -- FIXME: proper glow (parm option)
+          light=255, kind="kind",
 
           [1] = { dx=16, dy=-6 },
           [3] = { dx=22, dy=16 },
