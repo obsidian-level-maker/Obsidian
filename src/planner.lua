@@ -1351,6 +1351,7 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
       local c = create_cell(x, y, Q, 1, Q.combo)
       c.no_shrink = true
       c.is_start = true
+      if GAME.wolf_format then c.no_monsters=true end
     end
 
 

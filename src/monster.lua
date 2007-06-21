@@ -1544,6 +1544,8 @@ zprint("BATTLE IN", c.x, c.y)
     PLAN.left_overs = { easy=0, medium=0, hard=0 }
   end
 
+  if c.no_monsters then return end
+
   for zzz,skill in ipairs(SKILLS) do
   
     SK = skill
