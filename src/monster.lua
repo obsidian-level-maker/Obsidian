@@ -321,22 +321,84 @@ function initial_hmodels()
 end
 
 
-function random_turn(angle)
-  local r = con.random() * 100
-  local step = sel(rand_odds(22), 90, 45)
+function determine_face_dir(c, x, y, last_dir)
 
-  if r < 33 then
-    -- no change
-  elseif r < 66 then
-    angle = angle - step
-  else
-    angle = angle + step
+---#  -- randomly rotate last direction
+---#  local r = con.random() * 100
+---#
+---#      if r <  5 then last_dir = rotate_cw90 (last_dir)
+---#  elseif r < 10 then last_dir = rotate_ccw90(last_dir)
+---#  elseif r < 40 then last_dir = rotate_cw45 (last_dir)
+---#  elseif r < 70 then last_dir = rotate_ccw45(last_dir)
+---#  end
+
+  -- find what angles we can face
+  local probs = {}
+
+  for dir = 1,9 do
+    if dir == 5 then
+      probs[dir] = 0
+    else
+      local dx,dy = dir_to_delta(dir)
+      local nx,ny = x+dx, y+dy
+
+      if not valid_block(nx,ny) then
+        probs[dir] = 0
+      elseif GAME.caps.four_dirs and ((dir%2) == 1) then
+        probs[dir] = 0
+      else
+        local B = PLAN.blocks[nx][ny]
+        if not B or B.solid or B.door_kind then
+          probs[dir] = 0
+        elseif B.fragments then
+          probs[dir] = 1
+        elseif B.has_blocker then
+          probs[dir] = 2
+        else
+          probs[dir] = 3
+        end
+      end
+    end
   end
 
-  if angle <  0   then angle = angle + 360 end
-  if angle >= 360 then angle = angle - 360 end
+  -- check that at least one direction is possible
+  local max_prob = 0
+  for dir = 1,9 do
+    max_prob = math.max(max_prob, probs[dir])
+  end
 
-  return angle
+  if max_prob == 0 then
+    con.printf("WARNING: no valid face_dir for monster @ (%d,%d)\n", c.x, c.y)
+    return last_dir
+  end
+
+  -- convert list into probability table, clearing out the worse
+  -- directions and aiming towards the last_dir.
+
+  local function p_dist(d1, d2)
+    assert(1 <= d1 and d1 <= 9 and d1 ~= 5)
+    assert(1 <= d2 and d2 <= 9 and d2 ~= 5)
+
+    if d1 == d2 then return 60 end
+
+    if d1 == rotate_ccw45(d2) then return 90 end 
+    if d1 == rotate_cw45 (d2) then return 90 end 
+
+    if d1 == rotate_ccw90(d2) then return 20 end 
+    if d1 == rotate_cw90 (d2) then return 20 end 
+
+    return sel(d1 == 10-d2, 0.1, 1)
+  end
+
+  for dir = 1,9 do
+    if probs[dir] < max_prob then
+      probs[dir] = 0
+    else
+      probs[dir] = p_dist(dir, last_dir)
+    end
+  end
+
+  return rand_index_by_probs(probs)
 end
 
 
@@ -1100,7 +1162,8 @@ function place_battle_stuff(c, stats)
 
     if dat.caged then return end
 
-    local angle = rand_irange(0,7) * 45
+    local face_dir
+    repeat face_dir = rand_irange(1,9) until face_dir ~= 5
 
     local is_big = (dat.info.r >= 32)
     local spot = alloc_spot(spots, is_big)
@@ -1119,12 +1182,13 @@ function place_battle_stuff(c, stats)
         options.ambush = true
       end
 
-      add_monster_to_spot(spot, 0,0, dat.name, dat.info, angle,options)
+      face_dir = determine_face_dir(spot.c, spot.x, spot.y, face_dir)
+
+      add_monster_to_spot(spot, 0,0, dat.name, dat.info,
+                          dir_to_angle(face_dir), options)
 
       stats[SK].monsters = stats[SK].monsters + 1
       stats[SK].power = stats[SK].power + dat.info.pow
-
-      angle = random_turn(angle)
 
       spot = alloc_spot(spots, is_big, spot)
     end
