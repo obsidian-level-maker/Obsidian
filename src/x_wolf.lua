@@ -620,7 +620,7 @@ WF_QUEST_LEN_PROBS =
 function wolfy_decide_quests(level_list, is_spear)
 
   local function add_quest(L, kind, item, secret_prob)
-    secret_prob = nil --FIXME
+    secret_prob = 0 --FIXME !!!!
 
     local len_probs = non_nil(WF_QUEST_LEN_PROBS[kind])
     local Quest =
