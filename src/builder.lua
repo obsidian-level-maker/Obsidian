@@ -2022,6 +2022,7 @@ con.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
         if K.kind == "liquid" then -- FIXME
           K.rmodel.f_h   = K.rmodel.f_h - 12
           K.rmodel.f_tex = c.liquid.floor
+          K.rmodel.l_tex = c.liquid.wall or c.rmodel.l_tex
         end
       end
     end end
@@ -5746,7 +5747,7 @@ function fill_reclaim_area(c, K, rec_kind, solid_combo, x1,y1, x2,y2)
     {
       f_h = K.rmodel.f_h - 8,
       f_tex = c.quest.liquid.floor,
-      l_tex = c.combo.wall,
+      l_tex = c.quest.liquid.wall or c.combo.wall,
       kind  = c.quest.liquid.sec_kind,
     }
 
