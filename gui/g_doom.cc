@@ -33,7 +33,6 @@
 
 #define TEMP_FILENAME    "TEMP.wad"
 
-
 typedef std::vector<u8_t> lump_c;
 
 typedef std::vector<raw_dir_entry_t> directory_c;
@@ -175,6 +174,35 @@ void WAD_WritePatches()
     Image_FreePatch(pat);
   }
 
+  // load some patches from external files (DOOM only)
+  if (game == 0)
+  {
+    static const char *ext_patches[] =
+    {
+      "W74A_1", "W74A_2", "W74B_1",       // FIREMAGx (water)
+      "WALL64_2", "W64B_1", "W64B_2",     // ROCKREDx (lava)
+      "RP2_1", "RP2_2", "RP2_3", "RP2_4", // BLODRIPx (slime)
+
+      NULL // end marker
+    };
+
+    for (int i=0; ext_patches[i]; i++)
+    {
+      const char *filename = StringPrintf("%s/data/%s.lmp", install_path, ext_patches[i]);
+
+      int length;
+
+      u8_t *data = FileLoad(filename, &length);
+
+      if (! data)
+        Main_FatalError("Missing data file: %s.lmp", ext_patches[i]);
+
+      WAD_WriteLump(ext_patches[i], data, length);
+
+      FileFree(data);
+    }
+  }
+
   WAD_WriteLump("PP_END", NULL, 0);
 }
 
@@ -242,11 +270,11 @@ void WAD_CreateInfoLump()
   WAD_Printf(L, "\n");
 
   WAD_Printf(L, "-- Adjustments --\n");
-  WAD_Printf(L, "health = %s\n", main_win->adjust_box->get_Health());
-  WAD_Printf(L, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
+  WAD_Printf(L, "size = %s\n",   main_win->adjust_box->get_Size());
   WAD_Printf(L, "mons = %s\n",   main_win->adjust_box->get_Monsters());
   WAD_Printf(L, "traps = %s\n",  main_win->adjust_box->get_Traps());
-  WAD_Printf(L, "size = %s\n",  main_win->adjust_box->get_Size());
+  WAD_Printf(L, "health = %s\n", main_win->adjust_box->get_Health());
+  WAD_Printf(L, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
 
   WAD_Printf(L, "\n\n\n\n\n\n");
 
