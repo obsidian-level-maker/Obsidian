@@ -977,7 +977,7 @@ function make_mini_map()
       local B = PLAN.blocks[bx][by]
       if not B then con.map_pixel(0)
       elseif B.solid then con.map_pixel(1)
-      elseif B.kind  then con.map_pixel(4)
+--    elseif B.kind or B.fragments then con.map_pixel(4)
       elseif B.c_tex == GAME.SKY_TEX then con.map_pixel(3)
       else con.map_pixel(2)
       end
