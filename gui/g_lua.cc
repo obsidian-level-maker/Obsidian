@@ -319,11 +319,11 @@ static void Script_MakeSettings(lua_State *L)
   AddField(L, "mode",  main_win->setup_box->get_Mode());
   AddField(L, "length",main_win->setup_box->get_Length());
 
-  AddField(L, "health", main_win->adjust_box->get_Health());
-  AddField(L, "ammo",   main_win->adjust_box->get_Ammo());
+  AddField(L, "size",   main_win->adjust_box->get_Size());
   AddField(L, "mons",   main_win->adjust_box->get_Monsters());
   AddField(L, "traps",  main_win->adjust_box->get_Traps());
-  AddField(L, "size",   main_win->adjust_box->get_Size());
+  AddField(L, "health", main_win->adjust_box->get_Health());
+  AddField(L, "ammo",   main_win->adjust_box->get_Ammo());
 
   lua_setglobal(L, "SETTINGS");
 }

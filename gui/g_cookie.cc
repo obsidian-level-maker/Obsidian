@@ -190,11 +190,11 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "\n");
 
   fprintf(cookie_fp, "-- Adjustments --\n");
-  fprintf(cookie_fp, "health = %s\n", main_win->adjust_box->get_Health());
-  fprintf(cookie_fp, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
+  fprintf(cookie_fp, "size = %s\n",  main_win->adjust_box->get_Size());
   fprintf(cookie_fp, "mons = %s\n",   main_win->adjust_box->get_Monsters());
   fprintf(cookie_fp, "traps = %s\n",  main_win->adjust_box->get_Traps());
-  fprintf(cookie_fp, "size = %s\n",  main_win->adjust_box->get_Size());
+  fprintf(cookie_fp, "health = %s\n", main_win->adjust_box->get_Health());
+  fprintf(cookie_fp, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
   fprintf(cookie_fp, "\n");
 
   fprintf(cookie_fp, "-- Miscellaneous --\n");
