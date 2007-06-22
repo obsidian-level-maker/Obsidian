@@ -19,6 +19,7 @@
 #ifndef __UI_WINDOW_H__
 #define __UI_WINDOW_H__
 
+#include "ui_map.h"
 #include "ui_build.h"
 #include "ui_menu.h"
 #include "ui_setup.h"

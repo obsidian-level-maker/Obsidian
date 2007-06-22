@@ -141,7 +141,7 @@ int map_begin(lua_State *L)
   SYS_ASSERT(1 <= pixel_W && pixel_W < 1000);
   SYS_ASSERT(1 <= pixel_H && pixel_H < 1000);
 
-  main_win->build_box->MapBegin(pixel_W, pixel_H);
+  main_win->build_box->mini_map->MapBegin(pixel_W, pixel_H);
 
   return 0;
 }
@@ -150,7 +150,7 @@ int map_begin(lua_State *L)
 //
 int map_end(lua_State *L)
 {
-  main_win->build_box->MapFinish();
+  main_win->build_box->mini_map->MapFinish();
 
   return 0;
 }
@@ -161,7 +161,7 @@ int map_pixel(lua_State *L)
 {
   int kind = luaL_checkint(L, 1);
 
-  main_win->build_box->MapPixel(kind);
+  main_win->build_box->mini_map->MapPixel(kind);
 
   return 0;
 }
