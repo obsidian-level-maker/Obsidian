@@ -22,15 +22,17 @@
 
 #include "main.h"
 #include "ui_map.h"
+#include "ui_window.h"
 
 
-#define MAP_BORDER   2
-#define MAP_BG       fl_gray_ramp(FL_NUM_GRAY * 2 / 24)
+#define MAP_BORDER  2
+
+#define BG_COLOR  fl_gray_ramp(FL_NUM_GRAY * 2 / 24)
 
 
 UI_MiniMap::UI_MiniMap(int x, int y, int w, int h, const char *label) :
     Fl_Box(x, y, w, h, label),
-    map(NULL)
+    pixels(NULL), cur_image(NULL)
 {
   box(FL_FLAT_BOX);
   color(MAIN_BG_COLOR, MAIN_BG_COLOR);
@@ -39,6 +41,14 @@ UI_MiniMap::UI_MiniMap(int x, int y, int w, int h, const char *label) :
 
 UI_MiniMap::~UI_MiniMap()
 {
+  if (cur_image)
+  {
+    image(NULL);
+    delete cur_image;
+  }
+
+  if (pixels)
+    delete[] pixels;
 }
 
 void UI_MiniMap::MapBegin(int pixel_W, int pixel_H)
@@ -48,27 +58,35 @@ void UI_MiniMap::MapBegin(int pixel_W, int pixel_H)
   map_W = pixel_W;
   map_H = pixel_H;
 
-  int real_size = (map_box->w() - MAP_BORDER * map_box->h() * 3)
+  real_W = w();
+  real_H = h();
 
-  map_pix = new u8_t[real_size];
+  int real_size = real_W * real_H * 3;
 
-  // clear the image
+  if (pixels)
+    delete[] pixels;
+
+  pixels = new u8_t[real_size];
+
+  MapClear();
+}
+
+void UI_MiniMap::MapClear()
+{
   u8_t r, g, b;
+  u8_t *map_end = pixels + (map_W * map_H * 3);
 
-  Fl::get_color(MAP_BG, r, g, b);
+  Fl::get_color(BG_COLOR, r, g, b);
 
-  u8_t* map_end = map_start + (map_W * map_H * 3);
-
-  for (u8_t *pos = map_pix; pos < map_end; )
+  for (u8_t *pos = pixels; pos < map_end; )
   {
-    *pos++ = r;
-    *pos++ = g;
-    *pos++ = b;
+    *pos++ = r; *pos++ = g; *pos++ = b;
   }
 }
 
 void UI_MiniMap::MapPixel(int kind)
 {
+  SYS_ASSERT(pixels);
   SYS_ASSERT(0 <= kind && kind <= 4);
 
   static u8_t colors[5*3] =
@@ -76,38 +94,51 @@ void UI_MiniMap::MapPixel(int kind)
     0,0,0,  224,216,208,  192,96,96,  96,96,192,  224,96,224
   };
 
-  if (map_X >= MAP_BORDER && map_X < map_W-MAP_BORDER &&
-      map_Y >= MAP_BORDER && map_Y < map_H-MAP_BORDER)
-
-  if (kind == 0)
+  if (kind > 0)
   {
-    map_pos += 3;
-    return;
+    int x = MAP_BORDER + map_X;
+    int y = real_H-1 - MAP_BORDER - map_Y;
+
+    if (x >= 0 && x < real_W && y >= 0 && y < real_H)
+    {
+      u8_t *pos = pixels + (y*real_W + x) * 3;
+
+      *pos++ = colors[kind*3 + 0];
+      *pos++ = colors[kind*3 + 1];
+      *pos++ = colors[kind*3 + 2];
+    }
   }
 
-  *map_pos++ = colors[kind*3 + 0];
-  *map_pos++ = colors[kind*3 + 1];
-  *map_pos++ = colors[kind*3 + 2];
+  map_Y++;
+
+  if (map_X >= map_W)
+  {
+    map_X = 0; map_Y++;
+  }
 }
 
 void UI_MiniMap::MapFinish()
 {
   MapCorner(0, 0);
-  MapCorner(0, map_H-1);
-  MapCorner(map_W-1, 0);
-  MapCorner(map_W-1, map_H-1);
+  MapCorner(0, real_H-1);
+  MapCorner(real_W-1, 0);
+  MapCorner(real_W-1, real_H-1);
 
-  if (map) { map_box->image(NULL); delete map; }
+  if (cur_image)
+  {
+    image(NULL);
+    delete cur_image;
+  }
 
-  map = new Fl_RGB_Image(map_pix, map_box->w(), map_box->h());
+  cur_image = new Fl_RGB_Image(pixels, real_W, real_H);
 
-  map_box->image(map);
-  map_box->redraw();
+  image(cur_image);
+  redraw();
 }
 
 void UI_MiniMap::MapCorner(int x, int y)
 {
-  u8_t *pos = map_pix + (y*map_W+x)*3;
+  u8_t *pos = pixels + (y*real_W + x)*3;
 
   Fl::get_color(MAIN_BG_COLOR, pos[0], pos[1], pos[2]);
 }
