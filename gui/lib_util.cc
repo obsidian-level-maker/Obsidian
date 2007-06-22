@@ -282,6 +282,50 @@ bool FileMakeDir(const char *dir_name)
 #endif
 }
 
+u8_t *FileLoad(const char *filename, int *length)
+{
+  *length = 0;
+
+  FILE *fp = fopen(filename, "rb");
+
+  if (! fp)
+    return NULL;
+
+  // determine size of file (via seeking)
+  fseek(fp, 0, SEEK_END);
+  {
+    (*length) = (int)ftell(fp);
+  }
+  fseek(fp, 0, SEEK_SET);
+
+  if (ferror(fp) || *length < 0)
+  {
+    fclose(fp);
+    return NULL;
+  }
+
+  u8_t *data = (u8_t *) malloc(*length + 1);
+
+  if (! data)
+    AssertFail("Out of memory (%d bytes for FileLoad)\n", *length);
+
+  if (1 != fread(data, *length, 1, fp))
+  {
+    FileFree(data);
+    fclose(fp);
+    return NULL;
+  }
+
+  fclose(fp);
+
+  return data;
+}
+
+void FileFree(u8_t *mem)
+{
+  free((void*) mem);
+}
+
 //------------------------------------------------------------------------
 
 int StrCaseCmp(const char *A, const char *B)
