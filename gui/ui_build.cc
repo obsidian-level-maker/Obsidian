@@ -21,6 +21,7 @@
 #include "lib_util.h"
 
 #include "main.h"
+#include "ui_map.h"
 #include "ui_build.h"
 #include "ui_window.h"
 
@@ -31,16 +32,13 @@
 
 #define ABORT_COLOR  fl_color_cube(3,1,1)
 
-#define MAP_BG       fl_gray_ramp(FL_NUM_GRAY * 2 / 24)
-
 
 /* extern */
 void menu_do_about(Fl_Widget *w, void * data);
 
 
 UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
-    Fl_Group(x, y, w, h, label),
-    map(NULL)
+    Fl_Group(x, y, w, h, label)
 {
   end(); // cancel begin() in Fl_Group constructor
  
@@ -93,10 +91,9 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   add(build);
 
-  map_box = new Fl_Box(x+w - 308, y + h - 94, 120, 90);
-//  map_box->color(MAP_BG, MAP_BG);
+  mini_map = new UI_MiniMap(x+w - 308, y + h - 94, 120, 90);
 
-  add(map_box);
+  add(mini_map);
 
   resizable(sizer);
 }
@@ -105,6 +102,20 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 UI_Build::~UI_Build()
 {
 }
+
+void UI_Build::Locked(bool value)
+{
+  if (value)
+  {
+    quit->deactivate();
+  }
+  else
+  {
+    quit->activate();
+  }
+}
+
+//----------------------------------------------------------------
 
 void UI_Build::ProgInit(int num_pass)
 {
@@ -175,85 +186,6 @@ void UI_Build::ProgSetButton(bool abort)
   }
 }
 
-//----------------------------------------------------------------
-
-void UI_Build::Locked(bool value)
-{
-  if (value)
-  {
-    quit->deactivate();
-  }
-  else
-  {
-    quit->activate();
-  }
-}
-
-void UI_Build::MapBegin(int pixel_W, int pixel_H)
-{
-  map_W = pixel_W;
-  map_H = pixel_H;
-
-  map_start = new u8_t[map_W * map_H * 3];
-  map_pos   = map_start;
-  map_end   = map_start + (map_W * map_H * 3);
-
-  // clear map
-  u8_t r, g, b;
-
-  Fl::get_color(MAP_BG, r, g, b);
-
-  for (u8_t *pos = map_start; pos < map_end; )
-  {
-    *pos++ = r;
-    *pos++ = g;
-    *pos++ = b;
-  }
-}
-
-void UI_Build::MapPixel(int kind)
-{
-  SYS_ASSERT(0 <= kind && kind <= 4);
-
-  static u8_t colors[5*3] =
-  {
-    0,0,0,  224,216,208,  192,96,96,  96,96,192,  0,224,96
-  };
-
-  SYS_ASSERT(map_pos < map_end);
-
-  if (kind == 0)
-  {
-    map_pos += 3;
-    return;
-  }
-
-  *map_pos++ = colors[kind*3 + 0];
-  *map_pos++ = colors[kind*3 + 1];
-  *map_pos++ = colors[kind*3 + 2];
-}
-
-void UI_Build::MapFinish()
-{
-  MapCorner(0, 0);
-  MapCorner(0, map_H-1);
-  MapCorner(map_W-1, 0);
-  MapCorner(map_W-1, map_H-1);
-
-  if (map) { map_box->image(NULL); delete map; }
-
-  map = new Fl_RGB_Image(map_start, map_W, map_H);
-
-  map_box->image(map);
-  map_box->redraw();
-}
-
-void UI_Build::MapCorner(int x, int y)
-{
-  u8_t *pos = map_start + (y*map_W+x)*3;
-
-  Fl::get_color(MAIN_BG_COLOR, pos[0], pos[1], pos[2]);
-}
 
 //----------------------------------------------------------------
   

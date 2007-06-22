@@ -34,14 +34,8 @@ private:
   Fl_Button *stop;
   Fl_Button *quit;
 
-  Fl_Box *map_box;
-  Fl_RGB_Image *map;
-
-  int map_W, map_H;
-
-  u8_t *map_start;
-  u8_t *map_pos;
-  u8_t *map_end;
+public:
+  UI_MiniMap *mini_map;
 
 public:
   UI_Build(int x, int y, int w, int h, const char *label = NULL);
@@ -56,12 +50,6 @@ public:
   void ProgSetButton(bool abort);
 
   void Locked(bool value);
-
-  void MapBegin(int pixel_W, int pixel_H);
-  void MapPixel(int kind);
-  void MapFinish();
-
-  void MapCorner(int x, int y);
 
 private:
   static void build_callback(Fl_Widget *, void*);
