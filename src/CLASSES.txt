@@ -101,6 +101,7 @@ class Cell
   chunks : array_2D(Chunk)
 
   no_nudge
+  no_monsters
 end
 
 
