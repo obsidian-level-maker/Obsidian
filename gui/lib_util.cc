@@ -20,7 +20,9 @@
 
 #include "lib_util.h"
 
-#ifndef WIN32
+#ifdef WIN32
+#include <io.h>      // access()
+#else
 #include <sys/time.h>
 #include <time.h>
 #endif
