@@ -142,7 +142,7 @@ int rle_compress_plane(u16_t *plane, int src_len)
 static void DumpMap(void)
 {
   static char *turning_points = ">/^\\</v\\";
-  static char *player_angles  = "^>v<";
+//static char *player_angles  = "^>v<";
 
   bool show_floors = false;
 
