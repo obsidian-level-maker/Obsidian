@@ -1380,7 +1380,7 @@ XN_MISC_PREFABS =
   {
     prefab = "CRATE",
     add_mode = "island",
-    skin = { crate_h=64, crate_w="BRASS4", crate_f="F_016" },
+    skin = { crate_h=64, crate_w="BRASS4", crate_f="F_044" },
   },
 
   image_2 =
