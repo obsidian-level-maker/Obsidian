@@ -151,7 +151,7 @@ void WAD_WritePatches()
   static const char *patch_names[3][2] =
   {
     { "WALL52_1", "WALL53_1" },  // Doom    : CEMENT1,  CEMENT2
-    { "WALL01",   "WALL02"   },  // Heretic : GRSKULL2, GRSKULL1 
+    { "WALL00",   "WALL42"   },  // Heretic : GRSKULL2, CHAINSD
     { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
   };
 
@@ -163,7 +163,7 @@ void WAD_WritePatches()
 
   for (int what=0; what < 2; what++)
   {
-    // Heretic's WALL02 patch is only 64 wide
+    // Heretic's WALL42 patch is only 64 wide
     int patch_w = (game == 1 && what == 1) ? 64 : 128;
 
     int length;
