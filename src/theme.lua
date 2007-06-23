@@ -181,8 +181,6 @@ function get_rand_exit_combo()
 end
 
 function get_rand_hallway(theme)
----###  local name,info = rand_table_pair(GAME.hallways)
----###  return info
 
   -- FIXME: duplicate code with get_rand_combo --> MERGE!
 

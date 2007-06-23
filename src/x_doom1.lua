@@ -2324,10 +2324,6 @@ D1_QUESTS =
     blue_armor=40, invis=40, backpack=25,
     berserk=20, goggle=5, invul=2, map=3
   },
-
----##  exit = { exit=50 },
----##
----##  secret_exit = { secret_exit=50 },
 }
 
 D1_COMBOS =

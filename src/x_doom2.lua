@@ -512,10 +512,6 @@ D2_EXITS =
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
----###    flush = true,
----###    flush_left  = "SK_LEFT",
----###    flush_right = "SK_RIGHT",
-
     switch =
     {
       prefab="SWITCH_FLUSH",
@@ -1413,10 +1409,6 @@ D2_QUESTS =
     blue_armor=40, invis=40, mega=25, backpack=25,
     berserk=20, goggle=5, invul=2, map=3
   },
-
----##  exit = { exit=50 },
----##
----##  secret_exit = { secret_exit=50 },
 }
 
 D2_EPISODE_THEMES =

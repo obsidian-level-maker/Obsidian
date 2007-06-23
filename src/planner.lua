@@ -2246,9 +2246,6 @@ Q.theme.name, Q.combo.name)
 
       if (cc - ff) < 32 then return false end
 
----###   if a.f_min < (b.f_max + 64) then return false end
----###   if (b.ceil_h - a.floor_h) < 64 then return false end
-      
       if a.combo.outdoor and b.combo.outdoor and a.ceil_h ~= b.ceil_h then return false end
 
 --!!      if a.combo.outdoor and not b.combo.outdoor and b.ceil_h > b.ceil_h + 32 then return false end

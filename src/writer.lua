@@ -266,13 +266,6 @@ function write_level(lev_name)
 
         flags = flags + ML_TWO_SIDED
 
----##        -- railing textures (assume blocking)
----##        if (f_side.mid or b_side.mid) and
----##           not (f_over.passable or b_over.passable)
----##        then
----##          impassible = true
----##        end
-
         u_peg = u_peg or "top"
         l_peg = l_peg or "bottom"
 
@@ -489,12 +482,6 @@ function write_level(lev_name)
       }
 
       -- FIXME remove this door_kind/lift_kind/walk_kind shit
-
----##   if GAME.hexen_format and not b.solid and
----##     b.door_kind and b.door_kind ~= 0
----##   then
----##     cur_line.tag = b.tag
----##   end
 
       if not b.solid and b.lift_kind then
         cur_line.tag = b.tag

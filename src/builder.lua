@@ -2462,22 +2462,6 @@ c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
         table.insert(prob_list, prob)
         table.insert(chunk_list, K)
 
----##        if N then
----##          local prob = 
----##          local score = k_dist(kx, ky) * 10
----##
----##          score = score + math.min(K.w, K.h)
----##
----##          -- deadlock breaker...
----##          score = score + con.random() * 0.1
----##
----##          if score > best_score then
----##            best_score = score
----##            best_K = K
----##            best_N = N
----##          end
----##        end
-
       end
     end end
 
@@ -2489,14 +2473,6 @@ c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
       c.q_spot.purpose = purpose
 
     end
-
----##    if best_K then
----##      best_K.kind = "room"
----##      best_K.purpose = purpose
----##      best_K.rmodel = copy_table(best_N.rmodel)
----##
----##      c.q_spot = best_K
----##    end
 
 --]]
   end
@@ -3077,18 +3053,6 @@ function build_borders()
 
     if link.quest and link.quest.kind == "key" then
 
----###      door_info = GAME.key_doors[link.quest.item]
----###      assert(door_info)
----###
----###      parm =
----###      {
----###        door_top = rmodel.f_h + door_info.h,
----###        door_kind = 1,
----###        tag = 0,
----###      }
----###
----###      parm.door_kind = sel(PLAN.coop, door_info.kind_once, door_info.kind_rep)
-
     end
 
     if link.quest and link.quest.kind == "switch" then
@@ -3096,24 +3060,6 @@ function build_borders()
 ---   parm.door_kind = 0
       parm.tag = link.quest.tag + 1
 
----###    elseif link.is_secret then
----###      door_info = GAME.misc_fabs["secret_DOOR"]
----###      parm.door_kind = 31 -- open and stay open
----###
----###    elseif link.is_exit then
----###      door_info = GAME.misc_fabs["exit_DOOR"]
----###
----###      parm =
----###      {
----###        door_top = rmodel.f_h + door_info.h,
----###        door_kind = 1,
----###        tag = 0,
----###      }
-
-
----##    elseif GAME.hexen_format then
----##      -- Hexen doors need tags
----##      parm.tag = allocate_tag()
     end
 
     if not door_info.prefab then print(table_to_str(door_info)) end
@@ -3390,9 +3336,6 @@ end
     local link = c.link[side]
     if not (link and link.build == c) then return end
 
----###    if GAME.door_fabs then
----###      link.door_def = get_rand_door_kind(c.quest.theme, link.long)
----###    end
     link.block_sound = rand_odds(90)
     link.bar_size    = rand_index_by_probs { 20,90 }
     link.arch_rand   = con.random() * 100
@@ -3616,19 +3559,6 @@ end
         end
       end
     end
-
----###    WINDOW.light = WINDOW.light - 16
----###    WINDOW.c_tex = D.combo.arch_ceil or WINDOW.f_tex
----###
----###    local x = D.x1
----###    local y = D.y1
----###
----###    local ax, ay = dir_to_across(D.side)
----###
----###    while x <= D.x2 and y <= D.y2 do
----###      gap_fill(c, x, y, x, y, WINDOW)
----###      x, y = x+ax, y+ay
----###    end
 
 --[[ GOOD OLD STUFF
 
@@ -6923,25 +6853,6 @@ fab.name, c.x,c.y, x,y,dir)
   local function add_wall_stuff(c)
 
     if not GAME.wall_fabs then return end
-
----##    local function get_rand_wall_fab(c)
----##
----##      -- FIXME: better selection  [ MERGE with get_rand_scenery_prefab ?? ]
----##
----##      for loop = 1,20 do
----##        local def = get_rand_fab(GAME.wall_fabs)
----##        local fab = non_nil(PREFABS[def.prefab])
----##        local is_OK = true
----##
----##        if def.environment then
----##          if (def.environment == "indoor" and c.combo.outdoor) or
----##             (def.environment == "outdoor" and not c.combo.outdoor)
----##          then is_OK = false end
----##        end
----##
----##        if is_OK then return def, fab end
----##      end
----##    end
 
     local def
 

@@ -1943,9 +1943,6 @@ function hexen_get_levels(episode)
 
   rand_shuffle(switch_list)
 
----##  if SETTINGS.size == "regular" then num_switch = 6 end
----##  if SETTINGS.size == "small"   then num_switch = 4 end
-
   local QN_SWITCH_PROBS = { 700, 200, 40, 15, 5, 1 }
   
   for sw = 1,#switch_list do
