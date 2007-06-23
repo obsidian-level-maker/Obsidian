@@ -962,7 +962,7 @@ DM_DOORS =
                }
              },
 
---[[ !!!!! DM_DOORS
+--[[ !!! DM_DOORS
   d_uac    = { wall="BIGDOOR1", w=128, h=72  },  -- actual height is 96
   d_big1   = { wall="BIGDOOR2", w=128, h=112 },
   d_big2   = { wall="BIGDOOR3", w=128, h=112 },

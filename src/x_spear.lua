@@ -217,7 +217,7 @@ SP_THEMES =
 
 SP_EPISODE_THEMES =
 {
-  -- FIXME
+  -- FIXME: proper themes for Spear episodes
   { CELLS=3, BUNKER=5, CAVE=4 },  -- Tunnels
   { CELLS=3, BUNKER=5, CAVE=4 },  -- Dungeons
   { CELLS=3, BUNKER=5, CAVE=4 },  -- Castle

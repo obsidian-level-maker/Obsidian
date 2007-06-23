@@ -2381,7 +2381,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
             local oy2 = math.max(c.by2+1, by2)
 
             if ox1 <= ox2 and oy1 <= oy2 then
-              error("DEPOT OVERLAP!")  --!!!!!
+              error("DEPOT OVERLAP!")  --!!!
               return false
             end
           end

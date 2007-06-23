@@ -3615,9 +3615,7 @@ end
       end
     end
 
-    -- !!! FIXME: test crud
     if not bar and D.kind ~= "fence" then
-      -- FIXME: choose window rail
       sec[side] = { rail = GAME.rails["r_2"].wall }
     end
 
@@ -3709,7 +3707,7 @@ end
 ----------------------------------------------------------------
 
 function build_maze(c, x1,y1, x2,y2)
-  -- FIXME
+  -- FIXME: build_maze
 end
 
 function build_grotto(c, x1,y1, x2,y2)
@@ -3920,7 +3918,6 @@ function layout_cell(c)
 -- 
 -- 
 --     if K.void then
---       --!!! TEST CRAP
 --       gap_fill(c, K.x1, K.y1, K.x2, K.y2, c.rmodel)
 --       do return end
 -- 
@@ -5573,7 +5570,7 @@ con.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
       if star_form then
 
         local K = c.chunks[2][2]
-        if K.kind == "vista" then error("FUCK! VISTA ON PATH") end --!!!!!! FIXME
+        if K.kind == "vista" then error("VISTA ON PATH!!") end
 
         if K.kind == "empty" then K.kind = "room" end
 
@@ -5696,7 +5693,6 @@ function build_reclamations(c)
 --[[ FIXME incorporate DECORATE into fill_reclaim_area
     local function void_up_chunk(c, K)
 
-      --!!!!!! TESTING
       if c.combo.decorate and not c.scenic and K.rec_kind == "solid" and
         (K.x2 > K.x1 or rand_odds(50)) and  -- FIXME: better randomness
         (K.y2 > K.y1 or rand_odds(50)) and
@@ -5717,10 +5713,8 @@ function build_reclamations(c)
         gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=c.combo.wall })
 
       elseif K.rec_kind == "fence" then
-        FIXME
 
       elseif K.rec_kind == "liquid" then
-        FIXME
 
       else
       end
@@ -5954,7 +5948,7 @@ function tizzy_up_room(c)
 ---    -- WIIo
 ---    -- WWWX
 ---
----    -- FIXME !!!
+---    -- FIXME !!! verify_corner_extend
 ---
 ---    return false --FAIL--
 ---  end
@@ -7308,7 +7302,7 @@ function build_depots()
     assert(#places <= 4)
 
     local start = PLAN.quests[1].first
-  --!!!!
+  --!!!! FIXME: start.player_pos
   --[[
     assert(start.player_pos)
     local player_B = PLAN.blocks[start.player_pos.x][start.player_pos.y]

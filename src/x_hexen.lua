@@ -919,7 +919,7 @@ XN_DOORS =
                }
              },
 
---[[ !!!!!
+--[[ !!!
   d_big    = { wall="DOOR51",   w=128, h=128 },
   d_brass1 = { wall="BRASS1",   w=128, h=128 },
   d_brass2 = { wall="D_BRASS2", w=64,  h=128 },
