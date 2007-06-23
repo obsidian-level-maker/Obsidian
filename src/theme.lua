@@ -42,7 +42,7 @@ function name_up_theme()
     "hangs",    "crates", "doors",    "mats",
     "lights",   "pics",   "liquids",  "rails",
     "scenery",  "rooms",   "themes",
-    "sc_fabs",  "feat_fabs",
+    "sc_fabs",  "misc_fabs", "feat_fabs",
   }
 
   for zzz,sub in ipairs(SUB_LISTS) do

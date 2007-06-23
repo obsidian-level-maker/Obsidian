@@ -1729,7 +1729,7 @@ DM_MISC_PREFABS =
     skin = { wall="METAL", floor="CEIL1_2", ped_h=12 },
   },
 
-  fence_STD =
+  fence_wire_STD =
   {
     prefab = "FENCE_RAIL",
     skin = { rail_w="BRNSMALC" },
@@ -1742,6 +1742,21 @@ DM_MISC_PREFABS =
     skin = { lamp_t="blue_torch", beam_h=72,
              beam_w="METAL", beam_f="CEIL5_2",
            },
+  },
+
+  image_1 =
+  {
+    prefab = "CRATE",
+    add_mode = "island",
+    skin = { crate_h=64, crate_w="CEMENT2", crate_f="MFLR8_3" },
+  },
+
+  image_2 =
+  {
+    prefab = "WALL_PIC_TWO_SIDED",
+    add_mode = "wall",
+    min_height = 144,
+    skin = { pic_w="CEMENT1" },
   },
 
   exit_DOOR =

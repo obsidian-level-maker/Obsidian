@@ -2801,7 +2801,7 @@ function setup_borders_and_corners()
       D.fence_h = math.max(c.f_max, other.f_max)
 
       -- Wire fences
-      if GAME.misc_fabs and GAME.misc_fabs["fence_STD"] and
+      if GAME.misc_fabs and GAME.misc_fabs["fence_wire_STD"] and
          rand_odds(33) and (side%2)==0
       then
         D.kind = "wire"
@@ -3490,7 +3490,7 @@ end
     local D = c.border[side]
     assert(D.wire_h)
 
-    local def = GAME.misc_fabs["fence_STD"]
+    local def = GAME.misc_fabs["fence_wire_STD"]
     assert(def)
 
     local fab = non_nil(PREFABS[def.prefab])
@@ -6720,6 +6720,8 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
   fab.name, c.x, c.y, x, y, dir)
 
     B_prefab(c, fab, def.skin, parm, K.rmodel, combo, x, y, dir)
+
+    return true
   end
 
   local function add_deathmatch_exit(c)
@@ -6977,64 +6979,7 @@ fab.name, c.x,c.y, x,y,dir)
     end
   end
 
-  local function add_prefab(c, is_feature)
-
-    if not GAME.sc_fabs then return end
-
----##    local function get_rand_scenery_prefab(c)
----##
----##      -- FIXME: better selection
----##
----##      for loop = 1,20 do
----##        local def = get_rand_fab(sel(is_feature, GAME.feat_fabs, GAME.sc_fabs))
----##        local fab = non_nil(PREFABS[def.prefab])
----##        local is_OK = true
----##        
----##        if def.environment then
----##          if (def.environment == "indoor" and c.combo.outdoor) or
----##             (def.environment == "outdoor" and not c.combo.outdoor)
----##          then is_OK = false end
----##        end
----##
----##        if is_OK then return def, fab end
----##      end
----##    end
-
-    local def
-
-    if is_feature then
-      def = select_nice_fab(c, GAME.feat_fabs)
-    else
-      if not def and c.room_type and c.room_type.sc_fabs then
-        local name = rand_key_by_probs(c.room_type.sc_fabs)
-        if name ~= "other" then
-          def = GAME.sc_fabs[name]
-          if not def then error("No such sc_fab: " .. tostring(name)) end
-        end
-      end
-
-      if not def and c.combo.sc_fabs then
-        local name = rand_key_by_probs(c.combo.sc_fabs)
-        if name ~= "other" then
-          def = GAME.sc_fabs[name]
-          if not def then error("No such sc_fab: " .. tostring(name)) end
-        end
-      end
-
-      if not def and c.quest.theme.sc_fabs then
-        local name = rand_key_by_probs(c.quest.theme.sc_fabs)
-        if name ~= "other" then
-          def = GAME.sc_fabs[name]
-          if not def then error("No such sc_fab: " .. tostring(name)) end
-        end
-      end
-
-      if not def then
-        def = select_nice_fab(c, GAME.sc_fabs)
-      end
-    end
-
-    if not def then return end
+  local function try_add_prefab(c, def, is_feature)
 
     local fab = non_nil(PREFABS[def.prefab])
 
@@ -7078,6 +7023,70 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
     end
 
     return true
+  end
+
+  local function add_prefab(c, is_feature)
+
+    if not GAME.sc_fabs then return end
+
+    local def
+
+    if is_feature then
+      def = select_nice_fab(c, GAME.feat_fabs)
+    else
+      if not def and c.room_type and c.room_type.sc_fabs then
+        local name = rand_key_by_probs(c.room_type.sc_fabs)
+        if name ~= "other" then
+          def = GAME.sc_fabs[name]
+          if not def then error("No such sc_fab: " .. tostring(name)) end
+        end
+      end
+
+      if not def and c.combo.sc_fabs then
+        local name = rand_key_by_probs(c.combo.sc_fabs)
+        if name ~= "other" then
+          def = GAME.sc_fabs[name]
+          if not def then error("No such sc_fab: " .. tostring(name)) end
+        end
+      end
+
+      if not def and c.quest.theme.sc_fabs then
+        local name = rand_key_by_probs(c.quest.theme.sc_fabs)
+        if name ~= "other" then
+          def = GAME.sc_fabs[name]
+          if not def then error("No such sc_fab: " .. tostring(name)) end
+        end
+      end
+
+      if not def then
+        def = select_nice_fab(c, GAME.sc_fabs)
+      end
+    end
+
+    return def and try_add_prefab(c, def, is_feature)
+  end
+
+  local function add_image(c, what)
+    if GAME.wolf_format then return end
+    if not GAME.misc_fabs then return end
+
+    local def = GAME.misc_fabs["image_" .. tostring(what)]
+    assert(def)
+
+    if c.quest.image then return end
+
+    local Q_val = (c.quest.level*3 + c.quest.sub_level) % 4
+
+    -- roughly every second quest has an image
+    if 2*(what-1) ~= Q_val then return end
+
+    if what == 1 then
+      if not try_add_prefab(c, def) then return end
+    else
+      if not try_add_wall_prefab(c, def) then return end
+    end
+
+    c.quest.image = true
   end
 
   local function add_scenery(c)
@@ -7180,6 +7189,8 @@ con.debugf("add_scenery : %s\n", item)
 
   decide_reclaim_kinds(c)
 
+  add_image(c, 2)
+
   -- WALL STUFF
   local wf_count =
     c.room_type.ff_count or
@@ -7262,6 +7273,8 @@ con.debugf("add_scenery : %s\n", item)
            add_prefab(c, "feature")
     end
   end
+
+  add_image(c, 1)
 
   -- PREFABS
   local pf_count =

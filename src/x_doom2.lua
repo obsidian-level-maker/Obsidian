@@ -1264,7 +1264,7 @@ D2_DOOR_PREFABS =
 
 D2_MISC_PREFABS =
 {
-  fence_STD =
+  fence_wire_STD =
   {
     prefab = "FENCE_RAIL",
     skin = { rail_w="MIDBARS3" },

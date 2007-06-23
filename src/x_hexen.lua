@@ -1376,6 +1376,21 @@ XN_MISC_PREFABS =
     skin = { wall="CASTLE07", floor="F_084", ped_h=12 },
   },
 
+  image_1 =
+  {
+    prefab = "CRATE",
+    add_mode = "island",
+    skin = { crate_h=64, crate_w="BRASS4", crate_f="F_016" },
+  },
+
+  image_2 =
+  {
+    prefab = "WALL_PIC_TWO_SIDED",
+    add_mode = "wall",
+    min_height = 144,
+    skin = { pic_w="BRASS3" },
+  },
+
   secret_DOOR =
   {
     w=128, h=128, prefab = "DOOR",

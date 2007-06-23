@@ -444,7 +444,7 @@ HC_SWITCHES =
       add_mode = "island",
       skin =
       {
-        wall="CHAINSD",
+        wall="GRSKULL1",
         switch_w="SW1OFF", switch_h=32,
         x_offset=16, y_offset=48, kind=103,
       }
@@ -633,6 +633,21 @@ HC_MISC_PREFABS =
   {
     prefab = "PEDESTAL",
     skin = { wall="SAINT1", floor="FLAT500", ped_h=12 },
+  },
+
+  image_1 =
+  {
+    prefab = "CRATE",
+    add_mode = "island",
+    skin = { crate_h=64, crate_w="CHAINSD", crate_f="FLOOR27" },
+  },
+
+  image_2 =
+  {
+    prefab = "WALL_PIC_TWO_SIDED",
+    add_mode = "wall",
+    min_height = 144,
+    skin = { pic_w="GRSKULL2" },
   },
 
   exit_DOOR =
