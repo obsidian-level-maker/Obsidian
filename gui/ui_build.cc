@@ -132,8 +132,6 @@ void UI_Build::ProgBegin(int pass, float limit)
   prog_pass  = pass;
   prog_limit = limit;
 
-///---  progress->value((pass == 1) ? 0.0 : 75.0);
-
   progress->color(PROGRESS_BG, (pass==1) ? PROGRESS_FG : GLBSP_FG);
   progress->show();
 }
