@@ -17,15 +17,16 @@
 
 <h1>OBLIGE Level Maker</h1>
 
-by Andrew Apted. &nbsp; February 2007
+by Andrew Apted. &nbsp; June 2007
 
 
 <h2>INTRODUCTION</h2>
 
 OBLIGE is a random level maker for the following games:
 DOOM&nbsp;1, DOOM&nbsp;2, Final&nbsp;DOOM, FreeDOOM,
-Heretic&nbsp;1 and Hexen&nbsp;1.
-These games all share the same basic level structure.
+Wolfenstein-3D, Heretic&nbsp;1 and Hexen&nbsp;1.
+These games all share the same basic level structure
+(except for Wolf3d which is much more limited).
 
 <p>
 OBLIGE will have the following features which set it apart
@@ -45,10 +46,10 @@ from existing programs (like the famous
 
 <h2>STATUS</h2>
 
-OBLIGE 0.85 is the current version (the previous version was 0.81,
-the very first public release).
-The core level-making algorithm exists and works well,
-and the GUI interface is simple but very usable.
+OBLIGE 0.93 is the current version,
+which was released pending a rewrite of the
+core level-making algorithms.
+The GUI interface is simple but very usable.
 The battle simulator produces reasonable
 ammo and health to fight the monsters in the map.
 
@@ -69,9 +70,12 @@ and better lighting.
 Nearly every decision in OBLIGE, such as what monsters to
 make and what themes to use for rooms, is just roll-of-the-die
 random. There is so much potential for using much better
-algorithms (and hence creating much nicer levels). Send me an
-email if you are interested in helping out, you certainly don't
-need to be a programmer!
+algorithms (and hence creating much nicer levels).
+
+
+<h2>CHANGES IN 0.93</h2>
+
+<PRE>
 
 
 <h2>CHANGES IN 0.85</h2>
@@ -121,14 +125,15 @@ Using the same SEED number always produces the exact same level
 <p>
 Other settings include:
 <ul>
-  <li>the "Game" type (DOOM&nbsp;1, DOOM&nbsp;2, HERETIC or HEXEN), 
+  <li>the "Game" type (DOOM, WOLF3D, HERETIC or HEXEN), 
   <li>the "Mode" of the game (SINGLE-PLAYER, CO-OP, or DEATHMATCH)
   <li>the "Length" of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
 </ul>
 
-In the <b>Adjustments</b> panel you can control how much health
-and ammunition, and how many monsters and traps are put into the
-created levels.  OBLIGE also implements the different skill levels
+In the <b>Adjustments</b> panel you can control the size of
+the created levels, as well as how much health,
+ammunition and how many monsters and traps are added.
+OBLIGE also implements the different skill levels
 for each map (e.g. Hurt-me-Plenty vs Ultra-Violence).
 
 <p>
@@ -136,6 +141,14 @@ After you've chosen the desired settings, press the "Build..." button,
 which will open a Save-File dialog asking you what the output file
 should be. Enter something appropriate, e.g. TEST, and after that
 OBLIGE will starting building the levels.
+
+<p>
+In Wolfenstein-3D mode, the "Build..." button does not bring up
+a dialog box.
+OBLIGE simply creates the output files in the same folder where
+it is installed. These files are called <b>GAMEMAPS.WL6</b> and
+<b>MAPHEAD.WL6</b> and you need to copy them into your
+Wolf3d folder (after making a backup!).
 
 <p>
 To exit, press the "Quit" button in the bottom right corner.
@@ -154,39 +167,57 @@ get the dreaded "Visplane Overflow" error, which is fatal.
 
 <h2>STATUS OF EACH GAME</h2>
 
-<b>DOOM 2</b>: by far the most well tested and stable game target,
-and contains the most number of different themes.
+<b>DOOM 2</b>: the most well tested game and produces the best results.
 <p>
 
-<b>DOOM 1</b>: has been tested and works pretty well.
-Some extra themes would be nice to have (e.g. for hell levels
-that DOOM 1 does so well).
+<b>DOOM 1</b>: fairly well tested and working well.
 <p>
 
-<b>HERETIC</b>: poorly tested and very lacking in different themes,
-and it's possible that some keyed doors might not work properly
-(requiring the wrong key) or other similar problems.
+<b>HERETIC</b>: tested and working quite well, though
+very lacking in different themes and scenery.
 <p>
 
-<b>HEXEN</b>: basically borked, can create levels but they won't work
-properly, e.g. none of the linedefs have the correct line-types
-(for doors and lifts etc). Also very lacking in themes. Plus
-there is no support yet for HEXEN's special features, such as the hub system, player
-classes, the three-part weapons, or polyobjects.
+<b>HEXEN</b>: tested and works pretty well (greatly improved
+since the last v0.85 release). The sequence of hubs is not
+working properly.
+<p>
+
+<b>WOLF 3D</b>: very buggy at the moment. No pushwall secrets yet,
+sometimes keys don't get placed, no patrolling enemies.
+
 
 
 <h2>DOWNLOAD</h2>
 
 <b>Windows Package</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige_085_win.zip">oblige_085_win.zip</a> (462 KB)
+<a href="http://downloads.sourceforge.net/oblige/oblige_093_win.zip">oblige_093_win.zip</a> (??? KB)
 
 <p>
 <b>Linux Package</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige_085_linux.tar.gz">oblige_085_linux.tar.gz</a> (481 KB)
+<a href="http://downloads.sourceforge.net/oblige/oblige_093_linux.tar.gz">oblige_093_linux.tar.gz</a> (??? KB)
 
 <p>
 <b>Source Code</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige_085_src.zip">oblige_085_src.zip</a> (230 KB)
+<a href="http://downloads.sourceforge.net/oblige/oblige_093_src.zip">oblige_093_src.zip</a> (??? KB)
+
+
+<h2>ACKNOWLEDGEMENTS</h2>
+
+Thanks to Derek "Dittohead" Braun for making a whole swag of
+Prefab structures, which kicked off some big improvements to the
+way OBLIGE builds stuff.
+
+<p>
+Thanks to DoomJedi. 
+
+<p>
+I'm grateful to everyone who provided positive feedback,
+bug reports and ideas for improvements, both in email and
+on the various forums. Cheers guys!
+
+<p>
+OBLIGE uses the cool FLTK widget library
+(<a href="http://www.fltk.org">http://www.fltk.org</a>).
 
 
 <h2>COPYRIGHT and LICENSE</h2>
