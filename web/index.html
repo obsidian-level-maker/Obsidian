@@ -61,9 +61,8 @@ There is still a lot to do however.
 There is no support (yet) for the special levels, such as the
 end-of-episode levels of DOOM&nbsp;1 and the end-of-game level (MAP30)
 of DOOM&nbsp;2.
-Other nice features would be:
-secret areas, player teleports,
-and better lighting.
+Other desired features are: nicer (non-square) architecture,
+player teleports, and better lighting.
 
 
 <p>
@@ -76,6 +75,20 @@ algorithms (and hence creating much nicer levels).
 <h2>CHANGES IN 0.93</h2>
 
 <PRE>
++  new prefab system.
++  new theme system for more consistent levels.
++  different sized rooms.
++  greatly improved Hexen support.
+
+-  preliminary Wolfenstein-3D support.
+-  Heretic support is a bit better.
+-  balconies.
+
+-  new adjustment for level size.
+-  adjustments for deathmatch games.
+-  secret areas and levels.
+
+<i>Note: some things also broke in this release</i> :-(
 
 
 <h2>CHANGES IN 0.85</h2>
@@ -167,10 +180,14 @@ get the dreaded "Visplane Overflow" error, which is fatal.
 
 <h2>STATUS OF EACH GAME</h2>
 
+<b>DOOM 1</b>: fairly well tested and working well.
+<p>
+
 <b>DOOM 2</b>: the most well tested game and produces the best results.
 <p>
 
-<b>DOOM 1</b>: fairly well tested and working well.
+<b>WOLF 3D</b>: very buggy at the moment. No pushwall secrets,
+sometimes keys don't appear, no patrolling enemies.
 <p>
 
 <b>HERETIC</b>: tested and working quite well, though
@@ -179,12 +196,7 @@ very lacking in different themes and scenery.
 
 <b>HEXEN</b>: tested and works pretty well (greatly improved
 since the last v0.85 release). The sequence of hubs is not
-working properly.
-<p>
-
-<b>WOLF 3D</b>: very buggy at the moment. No pushwall secrets yet,
-sometimes keys don't get placed, no patrolling enemies.
-
+working properly yet.
 
 
 <h2>DOWNLOAD</h2>
