@@ -7,6 +7,7 @@ Oblige-0.90/    <<< working & install directory (chdir to it)
   Oblige.exe
 
   README.txt
+  TODO.txt
   GPL.txt
 
   CONFIG.cfg
