@@ -766,7 +766,7 @@ D2_SCENERY_PREFABS =
   billboard_NAZI =
   {
     prefab = "BILLBOARD",
-    environment = "outdoor",
+--  environment = "outdoor",
     add_mode = "extend",
 
     min_height = 160,
@@ -782,7 +782,7 @@ D2_SCENERY_PREFABS =
       step_w = "ZZWOLF5", step_f = "FLAT5_1",
     },
 
-    theme_probs = { URBAN=2, WOLF=20 },
+    theme_probs = { WOLF=5 },
   },
 
   billboard_stilts_FLAGGY =
@@ -798,7 +798,7 @@ D2_SCENERY_PREFABS =
       beam_w = "WOOD1", beam_f = "FLAT5_2",
     },
 
-    theme_probs = { NATURE=5, URBAN=5 },
+    theme_probs = { NATURE=2 },
   },
 
   comp_tall_STATION1 =
@@ -982,7 +982,7 @@ D2_FEATURE_PREFABS =
       beam_w = "WOOD1", beam_f = "FLAT5_2",
     },
 
-    theme_probs = { NATURE=2, URBAN=2 },
+    theme_probs = { NATURE=3 },
     pickup_specialness = 61,
     force_dir = 2, -- optimisation
   },
@@ -1190,7 +1190,7 @@ D2_WALL_PREFABS =
     min_height = 160,
     skin = { pic_w="ZZWOLF6", lite_w="LITE5" },
 
-    theme_probs = { URBAN=20 }, 
+    theme_probs = { URBAN=8 }, 
   },
 
   wall_pic_SPDUDE7 =
@@ -1492,7 +1492,7 @@ function doom2_get_levels(episode)
       Level.theme_probs = { WOLF=10 }
     end
 
-    Level.boss_kind   = D2_LEVEL_BOSSES[Level.name]
+---!!! Level.boss_kind   = D2_LEVEL_BOSSES[Level.name]
     Level.secret_kind = D2_SECRET_KINDS[Level.name]
     Level.secret_exit = D2_SECRET_EXITS[Level.name]
 
