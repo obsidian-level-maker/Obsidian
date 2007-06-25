@@ -1349,9 +1349,11 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
       local y = rand_irange(1, int(PLAN.h / 2))
 
       local c = create_cell(x, y, Q, 1, Q.combo)
-      c.no_shrink = true
+
       c.is_start = true
-      if GAME.wolf_format then c.no_monsters=true end
+      c.no_shrink = true
+      c.no_monsters = true
+---#  if GAME.wolf_format then c.no_monsters=true end
     end
 
 
@@ -2012,6 +2014,7 @@ Q.theme.name, Q.combo.name)
 
       c.is_exit = true
       c.no_shrink = true
+      c.no_monsters = true
       c.light = 176
 
       c.small_exit = c.combo.small_exit or rand_odds(25)
