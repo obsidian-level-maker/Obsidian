@@ -6819,7 +6819,8 @@ fab.name, c.x,c.y, x,y,dir)
       
       local prob = def.prob
 
-      local fab = non_nil(PREFABS[def.prefab])
+      local fab = PREFABS[def.prefab]
+      if not fab then error("Missing prefab: " .. tostring(def.prefab)) end
 
       if def.environment then
         if (def.environment == "indoor" and c.combo.outdoor) or
