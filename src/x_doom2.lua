@@ -894,6 +894,81 @@ D2_SCENERY_PREFABS =
     prob = 2,
   },
 
+  crate_WOOD3 =
+  {
+    prefab = "CRATE_TWO_SIDED",
+
+    skin =
+    {
+      crate_h = 62,
+      crate_w = "WOOD3", crate_w2 = "WOOD3",
+      crate_f = "CEIL1_1",
+      x_offset = 128,
+    }
+  },
+
+  crate_WOODSKULL =
+  {
+    prefab = "CRATE",
+
+    skin =
+    {
+      crate_h = 62,
+      crate_w = "WOOD4",
+      crate_f = "CEIL1_1",
+    }
+  },
+
+  crate_WOODMET1 =
+  {
+    prefab = "CRATE_TWO_SIDED",
+
+    skin =
+    {
+      crate_h = 64,
+      crate_w = "WOODMET1", crate_w2 = "WOODMET3",
+      crate_f = "CEIL5_1",
+      x_offset = 0,
+    }
+  },
+
+  crate_rotate_WOOD3 =
+  {
+    prefab = "CRATE_ROTATE",
+
+    skin =
+    {
+      crate_h = 62,
+      crate_w = "WOOD3",
+      crate_f = "CEIL1_1",
+    }
+  },
+
+  crate_rot22_WOODMET1 =
+  {
+    prefab = "CRATE_ROTATE",
+
+    skin =
+    {
+      crate_h = 64,
+      crate_w = "WOODMET1",
+      crate_f = "CEIL5_1",
+    }
+  },
+
+  crate_big_WOOD10 =
+  {
+    prefab = "CRATE_BIG",
+    min_height = 144,
+
+    skin =
+    {
+      crate_h = 128,
+      crate_w = "WOOD10",
+      crate_f = "FLAT5_2"
+    }
+  },
+
   crate_TV =
   {
     prefab = "CRATE",
@@ -1396,6 +1471,27 @@ D2_ROOMS =
 
   PRISON =
   {
+  },
+
+  WAREHOUSE2 =
+  {
+    space_range = { 80, 99 },
+
+    pf_count = { 5,10 },
+
+    -- crate it up baby!
+    sc_fabs =
+    {
+      crate_WOOD3 = 50,
+      crate_WOODMET1 = 40,
+      crate_WOODSKULL = 30,
+      crate_big_WOOD10 = 25,
+
+      crate_rotate_WOOD3 = 10,
+      crate_rot22_WOODMET1 = 15,
+
+      other = 20
+    },
   },
 
   -- TODO: check in-game level names for ideas

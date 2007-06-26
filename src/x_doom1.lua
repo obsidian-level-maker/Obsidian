@@ -1923,6 +1923,10 @@ DM_ROOMS =
     },
   },
 
+  WAREHOUSE2 =
+  {
+  },
+
 }
 
 DM_THEMES =
@@ -1943,7 +1947,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=50, WAREHOUSE=10,
+      PLAIN=40, WAREHOUSE2=10, WAREHOUSE=10,
     },
 
     exit_probs=
@@ -2028,7 +2032,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=20, WAREHOUSE=5, TORTURE=10,
+      PLAIN=25, WAREHOUSE2=10, TORTURE=10,
     },
 
     exit_probs=

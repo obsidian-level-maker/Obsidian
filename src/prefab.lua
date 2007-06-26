@@ -2638,8 +2638,8 @@ CRATE_TWO_SIDED =
   {
     c = { f_add="crate_h", f_h=0,
           f_tex="crate_f", l_tex="crate_w", l_peg="top",
-          [4] = { l_tex="crate2", x_offset=64 },
-          [6] = { l_tex="crate2", x_offset=64 },
+          [4] = { l_tex="crate_w2", x_offset="x_offset" },
+          [6] = { l_tex="crate_w2", x_offset="x_offset" },
         },
   },
 },
