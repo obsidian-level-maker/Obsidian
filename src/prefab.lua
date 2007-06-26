@@ -19,6 +19,9 @@
 --  Thanks to Derek "Dittohead" Braun who originally made
 --  some of these Prefabs.
 --
+--  Thanks to "JohnnyRancid" who also contributed some
+--  prefabs.
+--
 ----------------------------------------------------------------
 
 
@@ -2503,6 +2506,53 @@ COMPUTER_DESK_HUGE =
   {
     { kind="pickup_t", x=80, y=128 },
   },
+},
+
+
+------ Nature Stuff ----------------------------------
+
+POND_LARGE =
+{
+  region="floor",
+
+  structure =
+  {
+    "xxxxxxxxxxxxxxxxxxxxxxxx",
+    "xxxxxxxxxxxxxxxxxxxxxxxx",
+    "xxxxxxxxxxxcccddxxxxxxxx",
+    "xxxxxcccppppppppdxxxxxxx",
+    "xxxxcbbwwwwwwwwwapddxxxx",
+    "xxxcbwwwwwwwwwwwwwwadxxx",
+    "xxcbwwwccppwwwwwwwwwadxx",
+    "xcpwwwwpppbwwwwwwwwwwadx",
+    "xcpwwwwwwwwwwwwwwwwwwwdx",
+    "xapwwwwwwwwwwwwwwwwwwwpx",
+    "xxawwwwwwccddwwwwwwwwwcx",
+    "xxadwwwcppppppdwwwwwcpcx",
+    "xxxapppbbxxxxxaaapppbbxx",
+    "xxxxabcxxxxxxxxxxxxxxxxx",
+    "xxxxxxxxxxxxxxxxxxxxxxxx",
+    "xxxxxxxxxxxxxxxxxxxxxxxx",
+  },
+ 
+  elements =
+  {
+    -- pool boundary
+    p = { f_h=-14, f_tex="pool_f", l_tex="pool_w", l_peg="top" },
+
+    a = { copy="p", mark=1, [1] = { VDEL=true }},
+    b = { copy="p", mark=2, [3] = { VDEL=true }},
+    c = { copy="p", mark=3, [7] = { VDEL=true }},
+    d = { copy="p", mark=4, [9] = { VDEL=true }},
+
+    -- water
+    w = { f_h=-24, f_tex="liquid_f" },
+
+    -- outside area
+    x = { l_tex="outer_w", l_peg="top" },
+  },
+
+  --FIXME: pickup spot (on island)
 },
 
 
