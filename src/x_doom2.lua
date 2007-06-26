@@ -801,6 +801,18 @@ D2_SCENERY_PREFABS =
     theme_probs = { NATURE=2 },
   },
 
+  pond_small_GRASS =
+  {
+    prefab = "POND_SMALL",
+    environment = "outdoor",
+    skin = 
+    {
+      pool_w="ZIMMER2", pool_f="RROCK19",
+      outer_w="BROWNHUG", liquid_f="FWATER1",
+    },
+    theme_probs = { NATURE=120 },
+  },
+  
   comp_tall_STATION1 =
   {
     prefab = "COMPUTER_TALL",

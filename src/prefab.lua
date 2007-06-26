@@ -2555,6 +2555,40 @@ POND_LARGE =
   --FIXME: pickup spot (on island)
 },
 
+POND_SMALL =
+{
+  region="floor",
+
+  structure =
+  {
+    "xxxxxxxxxxxx",
+    "xxccppddxxxx",
+    "xcbwwwwappdx",
+    "xpwwwwwwwwpx",
+    "xpwwwwwwwwpx",
+    "xppdwccddwbx",
+    "xaxaapppppbx",
+    "xxxxxxxxxxxx",
+  },
+
+  elements =
+  {
+    -- pool boundary
+    p = { f_h=-9, f_tex="pool_f", l_tex="pool_w", l_peg="top" },
+
+    a = { copy="p", mark=1, [1] = { VDEL=true }},
+    b = { copy="p", mark=2, [3] = { VDEL=true }},
+    c = { copy="p", mark=3, [7] = { VDEL=true }},
+    d = { copy="p", mark=4, [9] = { VDEL=true }},
+
+    -- water
+    w = { f_h=-16, f_tex="liquid_f" },
+
+    -- outside area
+    x = { l_tex="outer_w", l_peg="top" },
+  },
+},
+
 
 ------ Crates ------------------------------------
 
