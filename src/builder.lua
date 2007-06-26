@@ -428,6 +428,7 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
     if key == "sky" and combo.outdoor then return GAME.SKY_TEX end
 
+    if parm[base]  then return parm[base] end
     if skin[base]  then return skin[base] end
     if combo[base] then return combo[base] end
 
@@ -435,8 +436,8 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
   end
 
   local function what_thing(name)
-    if skin[name] then return skin[name] end
     if parm[name] then return parm[name] end
+    if skin[name] then return skin[name] end
 
     error("Unknown thing ref: " .. name .. " in prefab: " .. fab.name)
   end
