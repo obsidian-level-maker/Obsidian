@@ -2538,7 +2538,7 @@ POND_LARGE =
   elements =
   {
     -- pool boundary
-    p = { f_h=-14, f_tex="pool_f", l_tex="pool_w", l_peg="top" },
+    p = { f_h=-14, f_tex="pond_f", l_tex="pond_w", l_peg="top" },
 
     a = { copy="p", mark=1, [1] = { VDEL=true }},
     b = { copy="p", mark=2, [3] = { VDEL=true }},
@@ -2573,16 +2573,62 @@ POND_SMALL =
 
   elements =
   {
+    -- water
+    w = { f_h=-16, f_tex="liquid_f" },
+
     -- pool boundary
-    p = { f_h=-9, f_tex="pool_f", l_tex="pool_w", l_peg="top" },
+    p = { f_h=-9, f_tex="pond_f", l_tex="pond_w", l_peg="top" },
 
     a = { copy="p", mark=1, [1] = { VDEL=true }},
     b = { copy="p", mark=2, [3] = { VDEL=true }},
     c = { copy="p", mark=3, [7] = { VDEL=true }},
     d = { copy="p", mark=4, [9] = { VDEL=true }},
 
+    -- outside area
+    x = { l_tex="outer_w", l_peg="top" },
+  },
+},
+
+POND_MEDIUM =
+{
+  region="floor",
+
+  structure =
+  {
+    "xxxxxxxxxxxxxxxx",
+    "xxxxxgssssshhxxx",
+    "xxxggsppppppshxx",
+    "xsssspbwwwwasshx",
+    "xessspwwwwwapphx",
+    "xxesspwwwwwwwpsx",
+    "xxxespwwwwwwwpsx",
+    "xxxespddwwwccpsx",
+    "xxxxeespppppsffx",
+    "xxxxxxeessssfxxx",
+    "xxxxxxxxxxxxxxxx",
+    "xxxxxxxxxxxxxxxx",
+  },
+
+  elements =
+  {
     -- water
-    w = { f_h=-16, f_tex="liquid_f" },
+    w = { f_h=-22, f_tex="liquid_f" },
+
+    -- pool inner
+    p = { f_h=-16, f_tex="pond_f", l_tex="pond_w", l_peg="top" },
+
+    a = { copy="p", mark=1, [1] = { VDEL=true }},
+    b = { copy="p", mark=2, [3] = { VDEL=true }},
+    c = { copy="p", mark=3, [7] = { VDEL=true }},
+    d = { copy="p", mark=4, [9] = { VDEL=true }},
+
+    -- pool outer
+    s = { f_h=-8, f_tex="pond_f2", l_tex="pond_w2", l_peg="top" },
+
+    e = { copy="s", mark=5, [1] = { VDEL=true }},
+    f = { copy="s", mark=6, [3] = { VDEL=true }},
+    g = { copy="s", mark=7, [7] = { VDEL=true }},
+    h = { copy="s", mark=8, [9] = { VDEL=true }},
 
     -- outside area
     x = { l_tex="outer_w", l_peg="top" },

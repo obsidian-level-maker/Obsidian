@@ -807,7 +807,7 @@ D2_SCENERY_PREFABS =
     environment = "outdoor",
     skin = 
     {
-      pool_w="ZIMMER2", pool_f="RROCK19",
+      pond_w="ZIMMER2", pond_f="RROCK19",
       outer_w="BROWNHUG", liquid_f="FWATER1",
     },
     theme_probs = { NATURE=120 },
@@ -1144,13 +1144,26 @@ D2_FEATURE_PREFABS =
     theme_probs = { INDUSTRIAL=80 },
   },
   
+  pond_medium_GRASS =
+  {
+    prefab = "POND_MEDIUM",
+    environment = "outdoor",
+    skin = 
+    {
+      pond_w="BROWNHUG", pond_w2="ZIMMER2",
+      pond_f="RROCK18",  pond_f2="RROCK19",
+      outer_w="ZIMMER2", liquid_f="FWATER1",
+    },
+    theme_probs = { NATURE=100 },
+  },
+  
   pond_large_GRASS =
   {
     prefab = "POND_LARGE",
     environment = "outdoor",
     skin = 
     {
-      pool_w="ZIMMER2", pool_f="RROCK19",
+      pond_w="ZIMMER2", pond_f="RROCK19",
       outer_w="BROWNHUG", liquid_f="FWATER1",
     },
     theme_probs = { NATURE=200 },
