@@ -807,7 +807,7 @@ D2_SCENERY_PREFABS =
     environment = "outdoor",
     skin = 
     {
-      pond_w="ZIMMER2", pond_f="RROCK19",
+      pond_w="ZIMMER4", pond_f="RROCK18",
       outer_w="BROWNHUG", liquid_f="FWATER1",
     },
     theme_probs = { NATURE=120 },
