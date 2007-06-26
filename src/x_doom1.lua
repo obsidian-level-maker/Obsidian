@@ -185,6 +185,7 @@ DM_COMBOS =
 
   CEMENT =
   {
+    theme_probs = { INDUSTRIAL=50 },
     mat_pri = 1,
 
     wall = "CEMENT6",
@@ -197,7 +198,6 @@ DM_COMBOS =
     ceil = "CEIL3_5",  -- "SLIME14" not in doom 1
   --  lift_floor = "FLOOR4_8",
 
-    theme_probs = { INDUSTRIAL=50 },
   },
 
   SLAD =
@@ -222,6 +222,7 @@ DM_COMBOS =
 
   GRAY =
   {
+    theme_probs = { INDUSTRIAL=50 },
     mat_pri = 3,
 
     wall = "GRAY7",
@@ -235,11 +236,11 @@ DM_COMBOS =
 
     scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
 
-    theme_probs = { INDUSTRIAL=50 },
   },
 
   CAVEY =
   {
+    theme_probs = { CAVE=50 },
     mat_pri = 3,
 
     wall = "BROWNHUG",
@@ -247,7 +248,7 @@ DM_COMBOS =
     floor = "FLAT10",
     ceil  = "FLAT10",
 
-    theme_probs = { CAVE=50 },
+    sc_fabs = { stalagmite_STD=90, other=10 },
   },
 
 
@@ -1135,6 +1136,15 @@ DM_SCENERY_PREFABS =
     environment = "indoor",
 
     skin = { wall="BRNPOIS" },
+  },
+
+  stalagmite_STD =
+  {
+    prefab = "STALAGMITE",
+    add_mode = "island",
+    environment = "indoor",
+    min_height = 128,
+    skin = {},
   },
 
   billboard_lit_SHAWN =

@@ -2635,6 +2635,78 @@ POND_MEDIUM =
   },
 },
 
+STALAGMITE =
+{
+  structure =
+  {
+    "........",
+    ".jjjjjk.",
+    ".mdbbbk.",
+    ".md##ck.",
+    ".meeeck.",
+    ".mnnnnn.",
+    "........",
+    "........",
+  },
+
+  elements =
+  {
+    -- inside column (# = WALL)
+
+    -- middle column
+    b = { f_h=36, c_h=-56, l_peg="top", c_peg="bottom",
+          [1] = { dx = -2, dy =  0 },
+          [7] = { dx =  8, dy =  0 },
+          [9] = { dx = -6, dy = -6 },
+          [3] = { dx = 00, dy = 00 },
+        },
+    c = { f_h=36, c_h=-56, l_peg="top", c_peg="bottom",
+          [1] = { dx = 00, dy = 00 },
+          [7] = { dx =  2, dy = -6 },
+          [9] = { dx =  0, dy = -8 },
+          [3] = { dx = -8, dy =  4 },
+        },
+    d = { f_h=36, c_h=-56, l_peg="top", c_peg="bottom",
+          [1] = { dx =  0, dy =  8 },
+          [7] = { dx =  2, dy = -6 },
+          [9] = { dx = 00, dy = 00 },
+          [3] = { dx =  0, dy =  6 },
+        },
+    e = { f_h=36, c_h=-56, l_peg="top", c_peg="bottom",
+          [1] = { dx = 10, dy =  4 },
+          [7] = { dx = 00, dy = 00 },
+          [9] = { dx = -4, dy =  0 },
+          [3] = { dx = -8, dy =  0 },
+        },
+    
+    -- outer column
+    j = { f_h=16, c_h=-24, l_peg="top", c_peg="bottom",
+          [1] = { dx = 00, dy = 00 },
+          [7] = { dx =  8, dy = -8 },
+          [9] = { dx =-24, dy =  0 },
+          [3] = { dx = 00, dy = 00 },
+        },
+    k = { f_h=16, c_h=-24, l_peg="top", c_peg="bottom",
+          [1] = { dx = 00, dy = 00 },
+          [7] = { dx = 00, dy = 00 },
+          [9] = { dx =-12, dy =-10 },
+          [3] = { dx =  0, dy = 24 },
+        },
+    m = { f_h=16, c_h=-24, l_peg="top", c_peg="bottom",
+          [1] = { dx =  6, dy = 12 },
+          [7] = { dx =  0, dy =-24 },
+          [9] = { dx = 00, dy = 00 },
+          [3] = { dx = 00, dy = 00 },
+        },
+    n = { f_h=16, c_h=-24, l_peg="top", c_peg="bottom",
+          [1] = { dx = 24, dy =  0 },
+          [7] = { dx = 00, dy = 00 },
+          [9] = { dx = 00, dy = 00 },
+          [3] = { dx = -6, dy = 12 },
+        },
+  },
+},
+
 
 ------ Crates ------------------------------------
 
