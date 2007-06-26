@@ -591,9 +591,10 @@ function write_level(lev_name)
       local str = string.format("%d:%d", x, y)
       local V = vert_map[str]
       if V then
-        vert_list[V].dx = adj.dx
-        vert_list[V].dy = adj.dy
-        vert_list[V].VDEL = adj.VDEL
+        V = vert_list[V]
+        V.dx = (V.dx or 0) + adj.dx
+        V.dy = (V.dy or 0) + adj.dy
+        V.VDEL = adj.VDEL
       end
     end
 
