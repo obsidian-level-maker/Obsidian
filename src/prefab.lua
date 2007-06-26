@@ -2660,9 +2660,9 @@ CRATE_ROTATE_NARROW =
           f_tex="crate_f", l_tex="crate_w", l_peg="top",
 
           [1] = { dx=-14, dy= 16 },
-          [3] = { dx= 0,  dy=-14 },
+          [3] = { dx=  0, dy=-14 },
+          [9] = { dx= 30, dy=  0 },
           [7] = { dx= 16, dy= 30 },
-          [9] = { dx= 30, dy= 0 },
 
           [2] = { x_offset=10 }, [4] = { x_offset=10 },
           [6] = { x_offset=10 }, [8] = { x_offset=10 },
@@ -2690,9 +2690,36 @@ CRATE_ROTATE =
           f_tex="crate_f", l_tex="crate_w", l_peg="top",
 
           [1] = { dx=-29, dy= 16 },
-          [3] = { dx= 0,  dy=-29 },
+          [3] = { dx=  0, dy=-29 },
+          [9] = { dx= 45, dy=  0 },
           [7] = { dx= 16, dy= 45 },
-          [9] = { dx= 45, dy= 0 },
+        },
+  },
+},
+
+CRATE_ROTATE_22DEG =
+{
+  structure =
+  {
+    "........",
+    "........",
+    "........",
+    "........",
+    "...c....",
+    "........",
+    "........",
+    "........",
+  },
+
+  elements =
+  {
+    c = { f_add="crate_h", f_h=0,
+          f_tex="crate_f", l_tex="crate_w", l_peg="top",
+
+          [1] = { dx=-24, dy=  0 },
+          [3] = { dx= 19, dy=-24 },
+          [9] = { dx= 43, dy= 19 },
+          [7] = { dx=  0, dy= 43 },
         },
   },
 },

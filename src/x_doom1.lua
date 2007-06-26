@@ -1265,6 +1265,30 @@ DM_SCENERY_PREFABS =
     }
   },
 
+  crate_rot22_CRATE1 =
+  {
+    prefab = "CRATE_ROTATE_22DEG",
+
+    skin =
+    {
+      crate_h = 64,
+      crate_w = "CRATE1",
+      crate_f = "CRATOP2",
+    }
+  },
+
+  crate_rot22_CRATE2 =
+  {
+    prefab = "CRATE_ROTATE_22DEG",
+
+    skin =
+    {
+      crate_h = 128,
+      crate_w = "CRATE2",
+      crate_f = "CRATOP1",
+    }
+  },
+
   crate_triple_A =
   {
     prefab = "CRATE_TRIPLE",
@@ -1888,13 +1912,12 @@ DM_ROOMS =
     -- crate it up baby!
     sc_fabs =
     {
-      crate_triple_A = 40,
-      crate_triple_B = 40,
-      crate_CRATE1 = 50,
-      crate_CRATE2 = 50,
-      crate_WIDE = 30,
-      crate_rotate_CRATE1 = 15,
-      crate_rotate_CRATE2 = 15,
+      crate_CRATE1 = 50, crate_triple_A = 40,
+      crate_CRATE2 = 50, crate_triple_B = 40,
+      crate_WIDE = 20,
+
+      crate_rotate_CRATE1 = 10, crate_rot22_CRATE1 = 20,
+      crate_rotate_CRATE2 = 20, crate_rot22_CRATE2 = 10,
 
       other = 20
     },
