@@ -1430,7 +1430,7 @@ DM_FEATURE_PREFABS =
     environment = "indoor",
     min_height = 128,
     max_height = 192,
-    theme_probs = { CAVE=9999 },
+    theme_probs = { CAVE=90 },
     skin = { liquid_f="LAVA1", liquid_w="ROCKRED1", kind=16 },
   },
 
