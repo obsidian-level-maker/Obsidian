@@ -592,8 +592,8 @@ function write_level(lev_name)
       local V = vert_map[str]
       if V then
         V = vert_list[V]
-        V.dx = (V.dx or 0) + adj.dx
-        V.dy = (V.dy or 0) + adj.dy
+        V.dx = (V.dx or 0) + (adj.dx or 0)
+        V.dy = (V.dy or 0) + (adj.dy or 0)
         V.VDEL = adj.VDEL
       end
     end
