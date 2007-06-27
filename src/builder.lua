@@ -7175,10 +7175,8 @@ con.debugf("add_scenery : %s\n", item)
     end
   end
 
-  if GAME.feat_fabs and rand_odds(90) then
-    if not add_prefab(c, "feature") then
-           add_prefab(c, "feature")
-    end
+  if GAME.feat_fabs then
+    add_prefab(c, "feature")
   end
 
   add_image(c, 1)
