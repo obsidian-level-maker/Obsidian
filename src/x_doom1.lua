@@ -1424,6 +1424,16 @@ DM_FEATURE_PREFABS =
     },
   },
 
+  leakage_pool_LAVA =
+  {
+    prefab = "LEAKAGE_POOL",
+    environment = "indoor",
+    min_height = 128,
+    max_height = 192,
+    theme_probs = { CAVE=9999 },
+    skin = { liquid_f="LAVA1", liquid_w="ROCKRED1", kind=16 },
+  },
+
   launch_pad_big_H =
   {
     prefab = "LAUNCH_PAD_LARGE",
