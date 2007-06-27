@@ -238,13 +238,12 @@ DM_COMBOS =
 
   },
 
-  CAVEY =
+  CAVE_BROWN =
   {
     theme_probs = { CAVE=50 },
     mat_pri = 3,
 
-    wall = "BROWNHUG",
-    void = "BROWNHUG",
+    wall  = "BROWNHUG",
     floor = "FLAT10",
     ceil  = "FLAT10",
 
@@ -2396,6 +2395,18 @@ D1_QUESTS =
 
 D1_COMBOS =
 {
+  CAVE_ASH =
+  {
+    theme_probs = { CAVE=30 },
+    mat_pri = 2,
+
+    wall  = "ASHWALL",
+    floor = "FLOOR6_2",
+    ceil  = "FLAT5_8",
+
+    sc_fabs = { stalagmite_MED=40, other=10 },
+  },
+
 }
 
 D1_EXITS =

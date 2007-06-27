@@ -179,6 +179,8 @@ DM_THINGS =
 
 D2_COMBOS =
 {
+  ---- URBAN ------------
+
   PANEL =
   {
     mat_pri = 6,
@@ -197,6 +199,18 @@ D2_COMBOS =
     theme_probs = { URBAN=50 },
     sc_fabs = { bookcase_WIDE=50, other=30 },
   },
+
+  STONE4 =
+  {
+    theme_probs = { URBAN=10 },
+    mat_pri = 2,
+
+    wall  = "STONE4",
+    floor = "FLAT5_5",
+    ceil  = "FLAT1",
+  },
+
+  ---- TECH -----------------
 
   GRNTECH =
   {
@@ -219,6 +233,8 @@ D2_COMBOS =
     sc_fabs = { crate_rotnar_SILVER=30, other=50 },
   },
 
+  ---- HELL ----------------
+
   MARBLE =
   {
     mat_pri = 6,
@@ -240,7 +256,45 @@ D2_COMBOS =
     sc_fabs = { pillar_MARBFAC4=30, other=50 },
   },
 
-  -------->
+  ---- CAVE ----------------
+  
+  CAVE_ASH =
+  {
+    theme_probs = { CAVE=20 },
+    mat_pri = 2,
+
+    wall  = "ASHWALL2",
+    floor = "FLOOR6_2",
+    ceil  = "FLAT5_8",
+
+    sc_fabs = { stalagmite_MED=40, other=10 },
+  },
+
+  CAVE_ZIMMER =
+  {
+    theme_probs = { CAVE=3 },
+    mat_pri = 2,
+
+    wall  = "ZIMMER4",
+    floor = "RROCK04",
+    ceil  = "RROCK03",
+
+    sc_fabs = { stalagmite_MED=40, other=10 },
+  },
+
+  CAVE_ROCK =
+  {
+    theme_probs = { CAVE=20 },
+    mat_pri = 2,
+
+    wall  = "ROCK2",
+    floor = "RROCK13",
+    ceil  = "CEIL5_1",
+
+    sc_fabs = { stalagmite_MED=40, other=10 },
+  },
+
+  ----- NATURE -----------------
 
   GRASSY =
   {
