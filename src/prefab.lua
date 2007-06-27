@@ -2724,6 +2724,82 @@ STALAGMITE =
   },
 },
 
+STALAGMITE_HUGE =
+{
+  structure =
+  {
+    "................",
+    ".jjjjjjkkkkkkkk.",
+    ".jjooooooooookk.",
+    ".jjoddddffffokk.",
+    ".jjoddeeeeffokk.",
+    ".hhocce##effokk.",
+    ".hhocceeeebbogg.",
+    ".hhoccccbbbbogg.",
+    ".hhoooooooooogg.",
+    ".hhhhhhhhgggggg.",
+    "................",
+    "................",
+  },
+
+  elements =
+  {
+    e = { f_rel="mid_h", c_rel="mid_h", f_h=-16, c_h=16 },
+
+    b = { f_rel="mid_h", c_rel="mid_h", f_h=-32, c_h=32,
+          [1] = { dx=1* -2, dy=1* -8 },
+          [7] = { dx=1*  8, dy=1* -4 },
+          [9] = { dx=1*  6, dy=1* 10 },
+          [3] = { dx=1* -4, dy=1*  6 },
+        },
+    c = { f_rel="mid_h", c_rel="mid_h", f_h=-32, c_h=32,
+          [1] = { dx=0*  8, dy=0*  6 },
+          [7] = { dx=0*  6, dy=0*  4 },
+          [9] = { dx=0*  4, dy=0* -8 },
+          [3] = { dx=0* -8, dy=0* -4 },
+        },
+    d = { f_rel="mid_h", c_rel="mid_h", f_h=-32, c_h=32,
+          [1] = { dx=1* -2, dy=1* -2 },
+          [7] = { dx=1* -4, dy=1*-10 },
+          [9] = { dx=1*  0, dy=1* -6 },
+          [3] = { dx=1*  8, dy=1*  4 },
+        },
+    f = { f_rel="mid_h", c_rel="mid_h", f_h=-32, c_h=32,
+          [1] = { dx=0* -6, dy=0*  8 },
+          [7] = { dx=0*  4, dy=0*  2 },
+          [9] = { dx=0*  8, dy=0* -4 },
+          [3] = { dx=0* -8, dy=0*  6 },
+        },
+
+    o = { f_rel="mid_h", c_rel="mid_h", f_h=-48, c_h=48 },
+
+    g = { f_rel="mid_h", c_rel="mid_h", f_h=-64, c_h=64,
+          [1] = { dx=0*  2, dy=0*-10 },
+          [7] = { dx=0* -6, dy=0*  8 },
+          [9] = { dx=0*  6, dy=0* -8 },
+          [3] = { dx=0*  4, dy=0*  6 },
+        },
+    h = { f_rel="mid_h", c_rel="mid_h", f_h=-64, c_h=64,
+          [1] = { dx=1*  2, dy=1* -8 },
+          [7] = { dx=1* -8, dy=1*  6 },
+          [9] = { dx=1* -2, dy=1*  0 },
+          [3] = { dx=1*  6, dy=1*-20 },
+        },
+    j = { f_rel="mid_h", c_rel="mid_h", f_h=-64, c_h=64,
+          [1] = { dx=0* -4, dy=0* -6 },
+          [7] = { dx=1*  0, dy=1*-10 },
+          [9] = { dx=0* -8, dy=0*  8 },
+          [3] = { dx=0* 10, dy=0*  2 },
+        },
+    k = { f_rel="mid_h", c_rel="mid_h", f_h=-64, c_h=64,
+          [1] = { dx=1* -6, dy=1* -8 },
+          [7] = { dx=1*  6, dy=1*  2 },
+          [9] = { dx=1*-10, dy=1*-10 },
+          [3] = { dx=1*  4, dy=1* -4 },
+        },
+  },
+},
+
 CAVE_IN_SMALL =
 {
   structure =

@@ -248,7 +248,7 @@ DM_COMBOS =
     floor = "FLAT10",
     ceil  = "FLAT10",
 
-    sc_fabs = { stalagmite_STD=90, other=10 },
+    sc_fabs = { stalagmite_MED=90, other=10 },
   },
 
 
@@ -1138,7 +1138,7 @@ DM_SCENERY_PREFABS =
     skin = { wall="BRNPOIS" },
   },
 
-  stalagmite_STD =
+  stalagmite_MED =
   {
     prefab = "STALAGMITE",
     add_mode = "island",
@@ -1401,6 +1401,15 @@ DM_FEATURE_PREFABS =
 
     pickup_specialness = 35,
     theme_probs = { HELL=25, NATURE=10 },
+  },
+
+  stalagmite_HUGE =
+  {
+    prefab = "STALAGMITE_HUGE",
+    environment = "indoor",
+    min_height = 144,
+    theme_probs = { CAVE=150 },
+    skin = {},
   },
 
   cave_in_FLOOR7 =
