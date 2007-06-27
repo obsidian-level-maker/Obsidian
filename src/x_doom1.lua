@@ -129,7 +129,7 @@ DM_COMBOS =
 
   ---- HELL ----------
 
-  MARBLE =
+  HELL_MARBLE =
   {
     theme_probs = { HELL=70 },
     mat_pri = 6,
@@ -138,6 +138,9 @@ DM_COMBOS =
     void = "SP_DUDE5",
     step = "STEP1",
     pic_wd  = "SP_DUDE1",
+
+    lift = "SKSPINE1",
+    lift_floor = "SFLR6_2",
 
     floor = "FLOOR7_2",
     ceil = "FLOOR7_1",
@@ -150,22 +153,39 @@ DM_COMBOS =
     sc_fabs = { pillar_GSTLION=50, other=30 },
   },
 
-  HOT =
+  HELL_HOT =
   {
-    theme_probs = { HELL=40 },
+    theme_probs = { HELL=60 },
     mat_pri = 6,
 
     wall = "SP_HOT1",
-    void = "SP_HOT1",
-    step = "STONE2",  -- STEP4
+    step = "STEP6",  -- STEP4
 
-    floor = "FLAT5_7",
-    ceil  = "FLOOR6_1",
+    floor = "FLAT5_1",  -- was: FLAT5_7
+    ceil  = "FLAT5_3",  -- was: FLOOR6_1
+
+    lift = "SKSPINE1",
+    lift_floor = "SFLR6_2",
 
     scenery = "red_torch",
 
     bad_liquid = "blood",
     good_liquid = "lava",
+  },
+
+  HELL_VINE =
+  {
+    theme_probs = { HELL=40 },
+    mat_pri = 1,
+
+    wall = "GSTVINE1",
+    step = "STONE3",
+
+    floor = "SFLR6_1",
+    ceil  = "FLOOR7_1",
+
+    lift = "SKSPINE1",
+    lift_floor = "SFLR6_2",
   },
 
   ---- URBAN --------
@@ -230,7 +250,7 @@ DM_COMBOS =
 
   ---- INDUSTRIAL --------
 
-  CEMENT =
+  INDY_CEMENT =
   {
     theme_probs = { INDUSTRIAL=50 },
     mat_pri = 1,
@@ -247,7 +267,7 @@ DM_COMBOS =
 
   },
 
-  SLAD =
+  INDY_SLAD =
   {
     theme_probs = { INDUSTRIAL=50, TECH=10 },
     mat_pri = 4,
@@ -267,7 +287,7 @@ DM_COMBOS =
     sc_fabs = { pillar_rnd_sm_POIS=50, other=30 },
   },
 
-  GRAY =
+  INDY_GRAY =
   {
     theme_probs = { INDUSTRIAL=50 },
     mat_pri = 3,

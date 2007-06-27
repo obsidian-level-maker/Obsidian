@@ -181,7 +181,7 @@ D2_COMBOS =
 {
   ---- URBAN ------------
 
-  PANEL =
+  URBAN_PANEL =
   {
     theme_probs = { URBAN=50 },
     mat_pri = 6,
@@ -200,7 +200,7 @@ D2_COMBOS =
     sc_fabs = { bookcase_WIDE=50, other=30 },
   },
 
-  BRICK =
+  URBAN_BRICK =
   {
     theme_probs = { URBAN=30 },
     mat_pri = 6,
@@ -218,7 +218,7 @@ D2_COMBOS =
     bad_liquid = "slime",
   },
 
-  BRICK2 =
+  URBAN_BRICK2 =
   {
     theme_probs = { URBAN=20 },
     mat_pri = 6,
@@ -234,7 +234,7 @@ D2_COMBOS =
     scenery = { green_torch=5, green_torch_sm=3 },
   },
 
-  STONE4 =
+  URBAN_STONE4 =
   {
     theme_probs = { URBAN=10 },
     mat_pri = 2,
@@ -246,7 +246,7 @@ D2_COMBOS =
 
   ---- TECH -----------------
 
-  GRNTECH =
+  TECH_GREEN =
   {
     mat_pri = 4,
 
@@ -269,7 +269,7 @@ D2_COMBOS =
 
   ---- HELL ----------------
 
-  MARBLE =
+  HELL_MARBLE =
   {
     theme_probs = { HELL=70 },
     mat_pri = 6,
@@ -290,7 +290,7 @@ D2_COMBOS =
     sc_fabs = { pillar_MARBFAC4=30, other=50 },
   },
 
-  ASHY =
+  HELL_ASH =
   {
     theme_probs = { HELL=30 },
     outdoor = true,
@@ -349,15 +349,14 @@ D2_COMBOS =
 
   ----- NATURE -----------------
 
-  GRASSY =
+  NAT_GRASS =
   {
     theme_probs = { NATURE=30 },
     outdoor = true,
     mat_pri = 2,
 
     wall = "ZIMMER7",
-    void = "ZIMMER8",
-    step = "STEP5",
+    step = "ASHWALL2",
 
     floor = "RROCK19",
     ceil  = "RROCK19",
@@ -368,7 +367,7 @@ D2_COMBOS =
 
   },
 
-  ROCKY =
+  NAT_TANROCK7 =
   {
     theme_probs = { NATURE=50 },
     outdoor = true,
@@ -388,7 +387,7 @@ D2_COMBOS =
     bad_liquid = "slime",
   },
 
-  ROCKY2 =
+  NAT_TANROCK8 =
   {
     theme_probs = { NATURE=50 },
     outdoor = true,
@@ -407,7 +406,7 @@ D2_COMBOS =
     bad_liquid = "slime",
   },
 
-  MUDDY =
+  NAT_MUDDY =
   {
     theme_probs = { NATURE=50 },
     outdoor = true,
