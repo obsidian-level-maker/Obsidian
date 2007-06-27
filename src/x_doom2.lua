@@ -246,7 +246,7 @@ D2_COMBOS =
 
   ---- TECH -----------------
 
-  TECH_GREEN =
+  TECH_BLUECARPET =
   {
     mat_pri = 4,
 
@@ -274,13 +274,12 @@ D2_COMBOS =
     theme_probs = { HELL=70 },
     mat_pri = 6,
 
-    wall = "MARBLE2",
-    void = "MARBGRAY",
+    wall  = "MARBLE2",
+    floor = "GRNROCK",
+    ceil  = "RROCK04",
+
     step = "STEP1",
     pic_wd  = "SP_DUDE1",
-
-    floor = "GRNROCK",
-    ceil = "RROCK04",
 
     scenery = { red_pillar=5, red_column=5, red_column_skl=5 },
 
@@ -288,6 +287,26 @@ D2_COMBOS =
     good_liquid = "blood",
 
     sc_fabs = { pillar_MARBFAC4=30, other=50 },
+  },
+
+  HELL_GRAYMARB =
+  {
+    theme_probs = { HELL=70 },
+    mat_pri = 6,
+
+    wall  = "MARBGRAY",
+    floor = "DEM1_6",
+    ceil  = "CEIL1_1",
+
+    step = "STEP1",
+    pic_wd  = "SP_DUDE1",
+
+    scenery = { red_pillar=5, red_column=5, red_column_skl=5 },
+
+    bad_liquid = "nukage",
+    good_liquid = "blood",
+
+---   sc_fabs = { pillar_MARBFAC4=30, other=50 },
   },
 
   HELL_ASH =

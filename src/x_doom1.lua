@@ -88,16 +88,15 @@ DM_COMBOS =
     theme_probs = { TECH=80 },
     mat_pri = 8,
 
-    wall = "STARTAN3",
-    void = "STARTAN2",
-    step = "STEP1",
-    lift = "PLAT1",
+    wall  = "STARTAN3",
+    floor = "FLOOR4_8",
+    ceil  = "CEIL3_6",
 
     pic_wd = "COMPSTA2",    -- "COMP2" for Doom 1 !!
     pic_wd_h = 64,
 
-    floor = "FLOOR4_8",
-    ceil = "CEIL3_6",
+    lift = "PLAT1",
+    step = "STEP1",
     step_floor = "STEP2",
 
     scenery = "lamp",
@@ -111,20 +110,49 @@ DM_COMBOS =
     theme_probs = { TECH=40 }, 
     mat_pri = 8,
 
-    wall = "STARG3",
-    void = "STARG2",
-    step = "STEP1",
-    lift = "PLAT1",
-
-    pic_wd = "COMPBLUE",
-
+    wall  = "STARG3",
     floor = "FLOOR5_1",
-    ceil = "FLOOR4_5",
+    ceil  = "FLOOR4_5",
+
+    lift = "PLAT1",
+    step = "STEP1",
     step_floor = "STEP1",
 
     scenery = "tech_column",
 
     sc_fabs = { pillar_COMPWERD=50, other=30 },
+  },
+
+  TECH_SILVER =
+  {
+    theme_probs = { TECH=40 },
+    mat_pri = 8,
+
+    wall  = "STARGR2",
+    floor = "FLOOR0_1",
+    ceil  = "FLAT3",
+
+    lift = "PLAT1",
+    step = "STEP1",
+    step_floor = "STEP1",
+
+    scenery = "tech_column",
+  },
+
+  TECH_BROWN =
+  {
+    theme_probs = { TECH=60 },
+    mat_pri = 8,
+
+    wall  = "STARBR2",
+    floor = "FLOOR5_1",
+    ceil  = "CEIL4_3",
+
+    lift = "PLAT1",
+    step = "STEP1",
+    step_floor = "STEP1",
+
+    scenery = "tech_column",
   },
 
   ---- HELL ----------
@@ -2422,6 +2450,22 @@ D1_QUESTS =
 
 D1_COMBOS =
 {
+  ---- TECH ------------
+
+  TECH_TRON =
+  {
+    theme_probs = { TECH=20 },
+    mat_pri = 12,
+
+    wall  = "COMPOHSO",
+    floor = "CEIL3_2",
+    ceil  = "CEIL5_2",
+
+    lift = "PLAT1",
+    step = "STEP1",
+    step_floor = "STEP1",
+  },
+
   ---- CAVE ---------------
 
   CAVE_ASH =
