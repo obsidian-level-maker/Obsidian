@@ -481,9 +481,7 @@ DM_EXITS =
     small_exit = true,
     mat_pri = 6,
 
-    wall = "STARBR2",
-    void = "STARTAN2",
-
+    wall  = "STARTAN2",
     floor = "FLOOR5_2",
     ceil  = "TLITE6_4",
 
