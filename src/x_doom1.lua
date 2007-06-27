@@ -168,7 +168,7 @@ DM_COMBOS =
     pic_wd  = "SP_DUDE1",
 
     lift = "SKSPINE1",
-    lift_floor = "SFLR6_2",
+    lift_floor = "SFLR6_4",
 
     floor = "FLOOR7_2",
     ceil = "FLOOR7_1",
@@ -193,7 +193,7 @@ DM_COMBOS =
     ceil  = "FLAT5_3",  -- was: FLOOR6_1
 
     lift = "SKSPINE1",
-    lift_floor = "SFLR6_2",
+    lift_floor = "SFLR6_4",
 
     scenery = "red_torch",
 
@@ -213,7 +213,7 @@ DM_COMBOS =
     ceil  = "FLOOR7_1",
 
     lift = "SKSPINE1",
-    lift_floor = "SFLR6_2",
+    lift_floor = "SFLR6_4",
   },
 
   ---- URBAN --------

@@ -278,6 +278,9 @@ D2_COMBOS =
     floor = "GRNROCK",
     ceil  = "RROCK04",
 
+    lift = "SKSPINE1",
+    lift_floor = "SFLR6_4",
+
     step = "STEP1",
     pic_wd  = "SP_DUDE1",
 
@@ -298,6 +301,9 @@ D2_COMBOS =
     floor = "DEM1_6",
     ceil  = "CEIL1_1",
 
+    lift = "SKSPINE1",
+    lift_floor = "SFLR6_4",
+
     step = "STEP1",
     pic_wd  = "SP_DUDE1",
 
@@ -311,18 +317,21 @@ D2_COMBOS =
 
   HELL_ASH =
   {
-    theme_probs = { HELL=30 },
+    theme_probs = { HELL=20 },
     outdoor = true,
     mat_pri = 6,
 
-    wall = "ASHWALL2",
-    void = "BLAKWAL2",
-    step = "STEP4",
-    piller = "STONE5",
-    pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
-
+    wall  = "ASHWALL2",
     floor = "MFLR8_4",
     ceil  = "MFLR8_4",
+
+    step = "STEP4",
+    lift = "SKSPINE1",
+    lift_floor = "SFLR6_4",
+
+    void = "BLAKWAL2",
+    piller = "STONE5",
+    pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
 
     scenery = { skull_rock=5, brown_stub=3, evil_eye=5 },
   },
@@ -370,7 +379,7 @@ D2_COMBOS =
 
   NAT_GRASS =
   {
-    theme_probs = { NATURE=30 },
+    theme_probs = { NATURE=50 },
     outdoor = true,
     mat_pri = 2,
 
@@ -386,9 +395,26 @@ D2_COMBOS =
 
   },
 
+  NAT_SWAMP =
+  {
+    theme_probs = { NATURE=70 },
+    outdoor = true,
+    mat_pri = 2,
+
+    wall = "ZIMMER8",
+    step = "ASHWALL2",
+
+    floor = "GRASS2",
+    ceil  = "GRASS2",
+
+    scenery = "brown_stub",
+
+    bad_liquid = "nukage",
+  },
+
   NAT_TANROCK7 =
   {
-    theme_probs = { NATURE=50 },
+    theme_probs = { NATURE=30 },
     outdoor = true,
     mat_pri = 3,
 
@@ -408,7 +434,7 @@ D2_COMBOS =
 
   NAT_TANROCK8 =
   {
-    theme_probs = { NATURE=50 },
+    theme_probs = { NATURE=20 },
     outdoor = true,
     mat_pri = 3,
 
