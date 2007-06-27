@@ -1179,14 +1179,14 @@ D2_FEATURE_PREFABS =
   {
     prefab = "POND_LARGE",
     environment = "outdoor",
+    theme_probs = { NATURE=200 },
     skin = 
     {
       pond_w="ZIMMER2", pond_f="RROCK19",
       outer_w="BROWNHUG", liquid_f="FWATER1",
     },
-    theme_probs = { NATURE=200 },
   },
-  
+
   four_sided_pic_ADOLF =
   {
     prefab = "WALL_PIC_FOUR_SIDED",

@@ -2724,6 +2724,47 @@ STALAGMITE =
   },
 },
 
+CAVE_IN_SMALL =
+{
+  structure =
+  {
+    ".qq...rrr...",
+    ".qq.ctrrr...",
+    "qqq.sttttd..",
+    "....sttttsss",
+    "..cssttccsss",
+    ".csssssssuuu",
+    "ssssuuuusuuc",
+    "sttadduusuuc",
+    "stttssssssss",
+    "sttcsbttssb.",
+    "aasssttx.ab.",
+    "..mmmdtx....",
+  },
+
+  elements =
+  {
+    -- sky
+    s = { c_h=16, c_tex="sky_c", light=192 },
+
+    a = { copy="s", [1] = { VDEL=true }},
+    b = { copy="s", [3] = { VDEL=true }},
+    c = { copy="s", [7] = { VDEL=true }},
+    d = { copy="s", [9] = { VDEL=true }},
+
+    m = { copy="s", [1] = { dx=20, dy=8 }},
+
+    -- rocks
+    r = { f_h=10, f_tex="rock_f", l_tex="rock_w" },
+    q = { copy="r", f_h=8, [1]={ dx=0, dy=8 } },
+
+    t = { copy="r", c_h=16, c_tex="sky_c", light=192 },
+    u = { copy="t", f_h=6 },
+
+    x = { copy="r", [7] = { VDEL=true }},
+  },
+},
+
 
 ------ Crates ------------------------------------
 

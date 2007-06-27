@@ -1403,6 +1403,18 @@ DM_FEATURE_PREFABS =
     theme_probs = { HELL=25, NATURE=10 },
   },
 
+  cave_in_FLOOR7 =
+  {
+    prefab = "CAVE_IN_SMALL",
+    environment = "indoor",
+    theme_probs = { CAVE=90 },
+    skin =
+    {
+      rock_f="FLOOR7_1", -- rock_w="BROWN144",
+      sky_c="F_SKY1",
+    },
+  },
+
   launch_pad_big_H =
   {
     prefab = "LAUNCH_PAD_LARGE",
