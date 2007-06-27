@@ -375,11 +375,11 @@ DM_EXITS =
 
     switch =
     {
-      prefab="SWITCH_FLUSH",
+      prefab="SWITCH_WIDE",
       add_mode="wall",
       skin =
       {
-        switch_w="SW1BRN2", wall="BROWN1",
+        switch_w="SW1BRCOM", wall="BROWN96",
         kind=11, tag=0,
       }
     },

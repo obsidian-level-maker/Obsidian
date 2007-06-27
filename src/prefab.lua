@@ -1032,6 +1032,23 @@ SWITCH_PILLAR =
   },
 },
 
+SWITCH_WIDE =
+{
+  scale=64,
+
+  structure =
+  {
+    "ss"
+  },
+
+  elements =
+  {
+    s = { solid="wall",
+          [2] = { l_tex="switch_w", l_peg="bottom", kind="kind", tag="tag" }
+        },
+  },
+},
+
 SWITCH_FLUSH =
 {
   scale=64,
