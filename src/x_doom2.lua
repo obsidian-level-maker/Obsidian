@@ -341,7 +341,7 @@ D2_COMBOS =
   
   CAVE_ASH =
   {
-    theme_probs = { CAVE=20 },
+    theme_probs = { CAVE=30 },
     mat_pri = 2,
 
     wall  = "ASHWALL2",
@@ -353,7 +353,7 @@ D2_COMBOS =
 
   CAVE_ZIMMER =
   {
-    theme_probs = { CAVE=3 },
+    theme_probs = { CAVE=5 },
     mat_pri = 2,
 
     wall  = "ZIMMER4",
@@ -365,7 +365,7 @@ D2_COMBOS =
 
   CAVE_ROCK =
   {
-    theme_probs = { CAVE=20 },
+    theme_probs = { CAVE=30 },
     mat_pri = 2,
 
     wall  = "ROCK2",
@@ -1658,11 +1658,11 @@ D2_QUESTS =
 D2_EPISODE_THEMES =
 {
   { URBAN=4, INDUSTRIAL=3, TECH=3, NATURE=9, CAVE=2, HELL=2 },
-  { URBAN=9, INDUSTRIAL=5, TECH=6, NATURE=4, CAVE=2, HELL=4 },
-  { URBAN=5, INDUSTRIAL=2, TECH=5, NATURE=3, CAVE=2, HELL=8 },
+  { URBAN=9, INDUSTRIAL=5, TECH=7, NATURE=4, CAVE=2, HELL=4 },
+  { URBAN=3, INDUSTRIAL=2, TECH=5, NATURE=3, CAVE=6, HELL=8 },
 
   -- this entry used for a single episode or level
-  { URBAN=5, INDUSTRIAL=4, TECH=6, NATURE=5, CAVE=3, HELL=6 },
+  { URBAN=5, INDUSTRIAL=4, TECH=6, NATURE=5, CAVE=4, HELL=6 },
 }
 
 D2_SECRET_KINDS =
