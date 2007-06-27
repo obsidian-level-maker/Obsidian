@@ -183,6 +183,7 @@ D2_COMBOS =
 
   PANEL =
   {
+    theme_probs = { URBAN=50 },
     mat_pri = 6,
 
     wall = "PANEL7",
@@ -196,8 +197,41 @@ D2_COMBOS =
 
     scenery = { candelabra=6, evil_eye=3 },
 
-    theme_probs = { URBAN=50 },
     sc_fabs = { bookcase_WIDE=50, other=30 },
+  },
+
+  BRICK =
+  {
+    theme_probs = { URBAN=30 },
+    mat_pri = 6,
+
+    wall = "BRICK7",
+    void = "BRICK5",
+    step = "STEP1",
+    pillar = "BRICKLIT",
+    pic_wd = "BRWINDOW",
+
+    floor = "FLOOR0_7",
+    ceil = "CEIL5_2",
+
+    scenery = { red_torch=5, red_torch_sm=3 },
+    bad_liquid = "slime",
+  },
+
+  BRICK2 =
+  {
+    theme_probs = { URBAN=20 },
+    mat_pri = 6,
+
+    wall = "BIGBRIK1",
+    void = "BIGBRIK3",
+    step = "STEP1",
+    pillar = "BRICK12",
+
+    floor = "RROCK12",
+    ceil = "FLAT1",
+
+    scenery = { green_torch=5, green_torch_sm=3 },
   },
 
   STONE4 =
@@ -237,6 +271,7 @@ D2_COMBOS =
 
   MARBLE =
   {
+    theme_probs = { HELL=70 },
     mat_pri = 6,
 
     wall = "MARBLE2",
@@ -252,9 +287,27 @@ D2_COMBOS =
     bad_liquid = "nukage",
     good_liquid = "blood",
 
-    theme_probs = { HELL=70 },
     sc_fabs = { pillar_MARBFAC4=30, other=50 },
   },
+
+  ASHY =
+  {
+    theme_probs = { HELL=30 },
+    outdoor = true,
+    mat_pri = 6,
+
+    wall = "ASHWALL2",
+    void = "BLAKWAL2",
+    step = "STEP4",
+    piller = "STONE5",
+    pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
+
+    floor = "MFLR8_4",
+    ceil  = "MFLR8_4",
+
+    scenery = { skull_rock=5, brown_stub=3, evil_eye=5 },
+  },
+
 
   ---- CAVE ----------------
   
@@ -298,6 +351,7 @@ D2_COMBOS =
 
   GRASSY =
   {
+    theme_probs = { NATURE=30 },
     outdoor = true,
     mat_pri = 2,
 
@@ -312,11 +366,11 @@ D2_COMBOS =
 
     bad_liquid = "nukage",
 
-    theme_probs = { NATURE=30 },
   },
 
   ROCKY =
   {
+    theme_probs = { NATURE=50 },
     outdoor = true,
     mat_pri = 3,
 
@@ -332,12 +386,11 @@ D2_COMBOS =
 
     scenery = { burnt_tree=5, big_tree=5 },
     bad_liquid = "slime",
-
-    theme_probs = { NATURE=50 },
   },
 
   ROCKY2 =
   {
+    theme_probs = { NATURE=50 },
     outdoor = true,
     mat_pri = 3,
 
@@ -352,31 +405,11 @@ D2_COMBOS =
 
     scenery = "brown_stub",
     bad_liquid = "slime",
-
-    theme_probs = { NATURE=50 },
-  },
-
-  ASHY =
-  {
-    outdoor = true,
-    mat_pri = 6,
-
-    wall = "ASHWALL2",
-    void = "BLAKWAL2",
-    step = "STEP4",
-    piller = "STONE5",
-    pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
-
-    floor = "MFLR8_4",
-    ceil  = "MFLR8_4",
-
-    scenery = { skull_rock=5, brown_stub=3, evil_eye=5 },
-
-    theme_probs = { HELL=30 },
   },
 
   MUDDY =
   {
+    theme_probs = { NATURE=50 },
     outdoor = true,
     mat_pri = 2,
 
@@ -390,48 +423,10 @@ D2_COMBOS =
     scenery = "burnt_tree",
 
     bad_liquid = "slime",
-
-    theme_probs = { NATURE=50 },
-  },
-
-  BRICK =
-  {
-    mat_pri = 6,
-
-    wall = "BRICK7",
-    void = "BRICK5",
-    step = "STEP1",
-    pillar = "BRICKLIT",
-    pic_wd = "BRWINDOW",
-
-    floor = "FLOOR0_7",
-    ceil = "CEIL5_2",
-
-    scenery = { red_torch=5, red_torch_sm=3 },
-    bad_liquid = "slime",
-
-    theme_probs = { URBAN=30 },
-  },
-
-  BRICK2 =
-  {
-    mat_pri = 6,
-
-    wall = "BIGBRIK1",
-    void = "BIGBRIK3",
-    step = "STEP1",
-    pillar = "BRICK12",
-
-    floor = "RROCK12",
-    ceil = "FLAT1",
-
-    scenery = { green_torch=5, green_torch_sm=3 },
-
-    theme_probs = { URBAN=20 },
   },
 
 
-  ---- Wolf3D Emulation ----
+  ---- Wolf3D Secret Levels ----
 
   WOLF_CELLS =
   {
@@ -503,7 +498,7 @@ D2_EXITS =
 
     hole_tex = "LITE3",
 
-    sign = "EXITSIGN",    -- FIXME !!! make the sign into a MATERIAL
+    sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
     switch =

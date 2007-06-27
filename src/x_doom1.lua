@@ -81,10 +81,11 @@ DM_SECTOR_TYPES =
 
 DM_COMBOS =
 {
----- INDOOR ------------
+  ---- TECH ------------
 
-  BASE =
+  TECH_BASE =
   {
+    theme_probs = { TECH=80 },
     mat_pri = 8,
 
     wall = "STARTAN3",
@@ -102,12 +103,12 @@ DM_COMBOS =
     scenery = "lamp",
     good_liquid = "blood",
 
-    theme_probs = { TECH=80 },
     sc_fabs = { pillar_COMPWERD=50, other=30 },
   },
 
-  BASE2 =
+  TECH_BASE2 =
   {
+    theme_probs = { TECH=40 }, 
     mat_pri = 8,
 
     wall = "STARG3",
@@ -123,12 +124,14 @@ DM_COMBOS =
 
     scenery = "tech_column",
 
-    theme_probs = { TECH=40 }, 
     sc_fabs = { pillar_COMPWERD=50, other=30 },
   },
 
+  ---- HELL ----------
+
   MARBLE =
   {
+    theme_probs = { HELL=70 },
     mat_pri = 6,
 
     wall = "MARBLE2",
@@ -144,12 +147,12 @@ DM_COMBOS =
     bad_liquid = "nukage",
     good_liquid = "blood",
 
-    theme_probs = { HELL=70 },
     sc_fabs = { pillar_GSTLION=50, other=30 },
   },
 
   HOT =
   {
+    theme_probs = { HELL=40 },
     mat_pri = 6,
 
     wall = "SP_HOT1",
@@ -159,14 +162,58 @@ DM_COMBOS =
     floor = "FLAT5_7",
     ceil  = "FLOOR6_1",
 
+    scenery = "red_torch",
+
     bad_liquid = "blood",
     good_liquid = "lava",
-
-    theme_probs = { HELL=50 },
   },
 
-  WOOD =
+  ---- URBAN --------
+
+  URBAN_STONE =
   {
+    theme_probs = { URBAN=70 },
+    outdoor = true,
+    mat_pri = 5,
+
+    wall = "STONE",
+    void = "STONE3",
+    step = "STEP4",
+    piller = "STONE5",
+
+    floor = "MFLR8_1",
+    ceil = "MFLR8_1",
+
+    scenery = { blue_torch=5, blue_torch_sm=3 },
+
+    door_probs = { out_diff=75, combo_diff=10, normal=5 }
+  },
+
+  URBAN_BROWN =
+  {
+    theme_probs = { URBAN=50 },
+    outdoor = true,
+    mat_pri = 3,
+
+    wall = "BROWN1",
+    void = "BROWNPIP",
+    step = "STEP5",
+    lift = "SUPPORT3",
+    pillar = "BROWN96",  -- was "BRONZE2" (not in doom 1)
+
+    floor = "MFLR8_2",  -- "RROCK16" (not in doom 1)
+    ceil = "MFLR8_2",
+  --  lift_floor = "FLOOR4_8",
+
+    scenery = { skull_pole=5, skull_kebab=5 },
+    good_liquid = "blood",
+
+    door_probs = { out_diff=75, combo_diff=10, normal=5 }
+  },
+
+  URBAN_WOOD =
+  {
+    theme_probs = { URBAN=30 },
     mat_pri = 7,
 
     wall = "WOOD1",
@@ -179,9 +226,9 @@ DM_COMBOS =
     floor = "FLAT5_1",
 
     scenery = { impaled_human=5, hang_twitching=5 },
-
-    theme_probs = { URBAN=30 },
   },
+
+  ---- INDUSTRIAL --------
 
   CEMENT =
   {
@@ -202,6 +249,7 @@ DM_COMBOS =
 
   SLAD =
   {
+    theme_probs = { INDUSTRIAL=50, TECH=10 },
     mat_pri = 4,
 
     wall = "SLADWALL",
@@ -216,7 +264,6 @@ DM_COMBOS =
     scenery = "burning_barrel",
     good_liquid = "nukage",
 
-    theme_probs = { INDUSTRIAL=50, TECH=15 },
     sc_fabs = { pillar_rnd_sm_POIS=50, other=30 },
   },
 
@@ -235,8 +282,9 @@ DM_COMBOS =
   --  lift_floor = "FLOOR4_8",
 
     scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
-
   },
+
+  ---- CAVE ----------
 
   CAVE_BROWN =
   {
@@ -250,49 +298,8 @@ DM_COMBOS =
     sc_fabs = { stalagmite_MED=90, other=10 },
   },
 
+  -- FIXME: SP_ROCK1
 
-  ---- OUTDOOR ------------
-
-  STONY =
-  {
-    outdoor = true,
-    mat_pri = 5,
-
-    wall = "STONE",
-    void = "STONE3",
-    step = "STEP4",
-    piller = "STONE5",
-
-    floor = "MFLR8_1",
-    ceil = "MFLR8_1",
-
-    scenery = { blue_torch=5, blue_torch_sm=3 },
-
-    theme_probs = { URBAN=70 },
-    door_probs = { out_diff=75, combo_diff=10, normal=5 }
-  },
-
-  BROWN =
-  {
-    outdoor = true,
-    mat_pri = 3,
-
-    wall = "BROWN1",
-    void = "BROWNPIP",
-    step = "STEP5",
-    lift = "SUPPORT3",
-    pillar = "BROWN96",  -- was "BRONZE2" (not in doom 1)
-
-    floor = "MFLR8_2",  -- "RROCK16" (not in doom 1)
-    ceil = "MFLR8_2",
-  --  lift_floor = "FLOOR4_8",
-
-    scenery = { skull_pole=5, skull_kebab=5 },
-    good_liquid = "blood",
-
-    theme_probs = { URBAN=50 },
-    door_probs = { out_diff=75, combo_diff=10, normal=5 }
-  },
 }
 
 DM_EXITS =
@@ -2395,6 +2402,8 @@ D1_QUESTS =
 
 D1_COMBOS =
 {
+  ---- CAVE ---------------
+
   CAVE_ASH =
   {
     theme_probs = { CAVE=30 },
