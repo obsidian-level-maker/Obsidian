@@ -1362,7 +1362,7 @@ DM_FEATURE_PREFABS =
 
     skin = { wall="COMPSTA2" },
 
-    theme_probs = { TECH=50, INDUSTRIAL=20 },
+    theme_probs = { TECH=30, INDUSTRIAL=10 },
   },
 
   overhang1_WOOD =
