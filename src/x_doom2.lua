@@ -1123,6 +1123,7 @@ D2_FEATURE_PREFABS =
     prefab = "MACHINE_PUMP",
     environment = "indoor",
     add_mode = "island",
+    theme_probs = { INDUSTRIAL=80 },
 
     min_height = 192,
     max_height = 240,
@@ -1141,9 +1142,26 @@ D2_FEATURE_PREFABS =
       kind=48 -- scroll left
     },
 
-    theme_probs = { INDUSTRIAL=80 },
   },
-  
+
+  pillar_double_TEKLITE =
+  {
+    prefab = "PILLAR_DOUBLE_TECH_LARGE",
+    environment = "indoor",
+    add_mode = "island",
+    min_height = 160,
+    theme_probs = { TECH=70 },
+
+    skin =
+    {
+      outer_f ="FLOOR0_3", outer_w ="STEP4",   outer_lt =160,
+      inner_f ="FLOOR0_2", inner_w ="STEP5",   inner_lt =160,
+      shine_f ="RROCK03",  shine_w ="METAL6",  shine_lt =160,
+      pillar_f="FLOOR7_1", pillar_w="TEKLITE", pillar_lt=240,
+      shine_side="METAL2", light_w ="LITEBLU4", kind=8,
+    },
+  },
+
   pond_medium_GRASS =
   {
     prefab = "POND_MEDIUM",

@@ -3497,6 +3497,75 @@ PILLAR_ROUND_LARGE =
   },
 },
 
+PILLAR_DOUBLE_TECH_LARGE =
+{
+  structure =
+  {
+    "........................",
+    ".oaaaaaaaap..oaaaaaaaap.",
+    ".aatbbbbuaa..aatbbbbuaa.",
+    ".atbddddbuaaaatbddddbua.",
+    ".abceffecbbbbbbceffecba.",
+    ".abcfLLfcbbbbbbcfLLfcba.",
+    ".abcfLLfcbbbbbbcfLLfcba.",
+    ".abceffecbbbbbbceffecba.",
+    ".arbddddbsaaaarbddddbsa.",
+    ".aarbbbbsaa..aarbbbbsaa.",
+    ".maaaaaaaan..maaaaaaaan.",
+    "........................",
+  },
+
+  elements =
+  {
+    -- outer base
+    a = { f_h= 8, f_tex="outer_f", l_tex="outer_w",
+          c_h=-8, c_tex="outer_f", u_tex="outer_w",
+          light="outer_lt",
+        },
+
+    m = { copy="a", mark=1, [1] = { VDEL=true }},
+    n = { copy="a", mark=2, [3] = { VDEL=true }},
+    o = { copy="a", mark=3, [7] = { VDEL=true }},
+    p = { copy="a", mark=4, [9] = { VDEL=true }},
+
+    -- inner base
+    b = { f_h= 16, f_tex="inner_f", l_tex="inner_w",
+          c_h=-16, c_tex="inner_f", u_tex="inner_w",
+          light="inner_lt",
+        },
+
+    r = { copy="b", mark=1, [1] = { VDEL=true }},
+    s = { copy="b", mark=2, [3] = { VDEL=true }},
+    t = { copy="b", mark=3, [7] = { VDEL=true }},
+    u = { copy="b", mark=4, [9] = { VDEL=true }},
+
+    -- shiny decoration
+    c = { f_h= 32, f_tex="shine_f", l_tex="shine_w", l_peg="top",
+          c_h=-32, c_tex="shine_f", u_tex="shine_w", u_peg="top",
+          light="shine_lt",
+          [2] = { l_tex="shine_side", u_tex="shine_side" },
+          [8] = { l_tex="shine_side", u_tex="shine_side" },
+        },
+    d = { f_h= 32, f_tex="shine_f", l_tex="shine_w", l_peg="top",
+          c_h=-32, c_tex="shine_f", u_tex="shine_w", u_peg="top",
+          light="shine_lt",
+          [4] = { l_tex="shine_side", u_tex="shine_side" },
+          [6] = { l_tex="shine_side", u_tex="shine_side" },
+        },
+
+    -- pillars
+    e = { solid="pillar_w" },
+    L = { solid="light_w"  },
+
+    f = { f_h= 48, f_tex="pillar_f", l_tex="pillar_w", l_peg="bottom",
+          c_h=-48, c_tex="pillar_f", u_tex="pillar_w", u_peg="top",
+          light="pillar_lt", kind="kind",
+        },
+  },
+
+  -- FIXME: spot for thing
+},
+
 
 ------ Overhangs ------------------------------------
 
