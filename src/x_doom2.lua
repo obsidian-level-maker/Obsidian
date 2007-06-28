@@ -234,9 +234,55 @@ D2_COMBOS =
     scenery = { green_torch=5, green_torch_sm=3 },
   },
 
-  URBAN_STONE4 =
+  URBAN_STUCCO =
   {
-    theme_probs = { URBAN=10 },
+    theme_probs = { URBAN=999 }, --!!!!
+    mat_pri = 2,
+
+    wall  = "STUCCO3",
+    floor = "FLAT8",
+    ceil  = "CEIL3_5",
+  },
+
+  URBAN_GREENBRK =
+  {
+    theme_probs = { URBAN=999 }, --!!!!
+    outdoor = true,
+    mat_pri = 2,
+
+    wall  = "BRICK10",
+    floor = "RROCK14",
+    ceil  = "GRNROCK",
+
+    step  = "STEP5",  -- BIGBRIK1
+  },
+
+  URBAN_BLACK =
+  {
+    theme_probs = { URBAN=2000 }, --!!!!
+    outdoor = true,
+    mat_pri = 6,
+
+    wall  = "BLAKWAL1",
+    floor = "MFLR8_4",
+    ceil  = "MFLR8_4",
+
+    step = "STEP4",
+    lift = "SKSPINE1",
+    lift_floor = "SFLR6_4",
+
+    void = "BLAKWAL2",
+    piller = "STONE5",
+    pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
+
+    scenery = { skull_rock=5, brown_stub=3, evil_eye=5 },
+  },
+
+  ---- INDUSTRIAL ------------
+
+  INDY_STONE4 =
+  {
+    theme_probs = { INDUSTRIAL=15 },
     mat_pri = 2,
 
     wall  = "STONE4",
@@ -313,27 +359,6 @@ D2_COMBOS =
     good_liquid = "blood",
 
 ---   sc_fabs = { pillar_MARBFAC4=30, other=50 },
-  },
-
-  HELL_ASH =
-  {
-    theme_probs = { HELL=20 },
-    outdoor = true,
-    mat_pri = 6,
-
-    wall  = "ASHWALL2",
-    floor = "MFLR8_4",
-    ceil  = "MFLR8_4",
-
-    step = "STEP4",
-    lift = "SKSPINE1",
-    lift_floor = "SFLR6_4",
-
-    void = "BLAKWAL2",
-    piller = "STONE5",
-    pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
-
-    scenery = { skull_rock=5, brown_stub=3, evil_eye=5 },
   },
 
 
