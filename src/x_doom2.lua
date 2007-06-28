@@ -337,7 +337,7 @@ D2_COMBOS =
     sc_fabs = { pillar_MARBFAC4=30, other=50 },
   },
 
-  HELL_GRAYMARB =
+  HELL_GRAY =
   {
     theme_probs = { HELL=70 },
     mat_pri = 6,
@@ -352,7 +352,7 @@ D2_COMBOS =
     step = "STEP1",
     pic_wd  = "SP_DUDE1",
 
-    scenery = { red_pillar=5, red_column=5, red_column_skl=5 },
+    scenery = "red_torch",
 
     bad_liquid = "nukage",
     good_liquid = "blood",
