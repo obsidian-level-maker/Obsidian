@@ -2525,6 +2525,85 @@ COMPUTER_DESK_HUGE =
   },
 },
 
+PENTAGRAM =
+{
+  region="floor",
+
+  structure =
+  {
+    "............",
+    "............",
+    "............",
+    "....ttt.....",
+    "....ttt.....",
+    "..llppprr...",
+    "....b.c.....",
+    "....b.c.....",
+    "............",
+    "............",
+    "............",
+    "............",
+  },
+
+  elements =
+  {
+    -- pentagram
+    p = { f_add="gram_h", f_h=0,
+          f_tex="gram_f", l_tex="gram_w", l_peg="top",
+          light="gram_lt", kind="kind",
+        },
+ 
+    t = { copy="p",
+          [7] = { dx= 22, dy= 32 },
+          [9] = { dx=-22, dy= 32 },
+          [1] = { dx= 12, dy= 12 },
+          [3] = { dx=-12, dy= 12 },
+        },
+
+    l = { copy="p",
+          [7] = { dx=-20, dy= 18 },
+          [1] = { dx=-20, dy= 30 },
+          [3] = { dx=  0, dy=  0 },
+          [9] = { dx=  0, dy=  0 },
+        },
+ 
+    r = { copy="p",
+          [9] = { dx= 20, dy= 18 },
+          [3] = { dx= 20, dy= 30 },
+          [1] = { dx=  0, dy=  0 },
+          [7] = { dx=  0, dy=  0 },
+        },
+ 
+    b = { copy="p",
+          [1] = { dx=-26, dy=-24 },
+          [3] = { dx=-38, dy=-24 },
+          [7] = { dx=  0, dy= -4 },
+          [9] = { dx=  6, dy=-16 },
+        },
+ 
+    c = { copy="p",
+          [3] = { dx= 26, dy=-24 },
+          [1] = { dx= 38, dy=-24 },
+          [9] = { dx=  0, dy= -4 },
+          [7] = { dx= -6, dy=-16 },
+        },
+ 
+    -- outside
+    x = { l_tex="outer_w" },
+  },
+
+  --[[
+  things =
+  {
+    { kind="pickup_t", x=000, y=000 },
+    { kind="pickup_t", x=000, y=000 },
+    { kind="pickup_t", x=000, y=000 },
+    { kind="pickup_t", x=000, y=000 },
+    { kind="pickup_t", x=000, y=000 },
+  },
+  --]]
+},
+
 
 ------ Nature Stuff ----------------------------------
 
