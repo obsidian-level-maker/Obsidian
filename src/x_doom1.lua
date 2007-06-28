@@ -1277,6 +1277,30 @@ DM_SCENERY_PREFABS =
     force_dir = 2, -- optimisation
   },
 
+  pentagram_RED =
+  {
+    prefab = "PENTAGRAM",
+    add_mode = "island",
+    theme_probs = { HELL=20 },
+    skin =
+    {
+      gram_w="REDWALL", gram_f="FLAT5_3",
+      gram_h=12, gram_lt=240, kind=8,
+      pickup_t="candle",
+    }
+  },
+
+  pentagram_LAVA =
+  {
+    prefab = "PENTAGRAM",
+    add_mode = "island",
+    theme_probs = { HELL=50 },
+    skin =
+    {
+      gram_f="LAVA1", gram_h=-10, gram_lt=192, kind=0,
+    }
+  },
+
   skylight_cross_sm_METAL =
   {
     prefab = "SKYLIGHT_CROSS_SMALL",
@@ -1668,6 +1692,7 @@ DM_FEATURE_PREFABS =
 
     theme_probs = { URBAN=90, NATURE=40, HELL=5 },
   },
+
 }
 
 DM_WALL_PREFABS =
