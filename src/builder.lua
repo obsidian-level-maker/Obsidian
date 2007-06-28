@@ -590,13 +590,16 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
         add_special_pickup_spot(c, bx,by, dx,dy, skin.pickup_specialness or 20)
      else
-        -- FIXME: blocking
-        local th = add_thing(c, bx,by, what_thing(tdef.kind), false)
+        local name = what_thing(tdef.kind)
 
-        th.dx = dx
-        th.dy = dy
+        if name ~= "none" then
+          -- FIXME !!! blocking
+          local th = add_thing(c, bx,by, name, false)
+
+          th.dx = dx
+          th.dy = dy
+        end
       end
-
     end
   end
 end
