@@ -644,10 +644,10 @@ HC_MISC_PREFABS =
 
   image_2 =
   {
-    prefab = "WALL_PIC_TWO_SIDED",
+    prefab = "WALL_PIC_SHALLOW",
     add_mode = "wall",
     min_height = 144,
-    skin = { pic_w="GRSKULL2" },
+    skin = { pic_w="GRSKULL2", pic_h=128 },
   },
 
   exit_DOOR =

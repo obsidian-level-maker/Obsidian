@@ -1385,10 +1385,10 @@ XN_MISC_PREFABS =
 
   image_2 =
   {
-    prefab = "WALL_PIC_TWO_SIDED",
+    prefab = "WALL_PIC_SHALLOW",
     add_mode = "wall",
     min_height = 144,
-    skin = { pic_w="BRASS3" },
+    skin = { pic_w="BRASS3", pic_h=128 },
   },
 
   secret_DOOR =

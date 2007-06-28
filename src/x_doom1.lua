@@ -1723,7 +1723,7 @@ DM_WALL_PREFABS =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="MARBFACE" },
+    skin = { pic_w="MARBFACE", pic_h=128 },
     theme_probs = { HELL=90 },
   },
 
@@ -1731,7 +1731,7 @@ DM_WALL_PREFABS =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="MARBFAC2" },
+    skin = { pic_w="MARBFAC2", pic_h=128 },
     theme_probs = { HELL=60, CAVE=10 },
   },
 
@@ -1739,7 +1739,7 @@ DM_WALL_PREFABS =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="MARBFAC3" },
+    skin = { pic_w="MARBFAC3", pic_h=128 },
     theme_probs = { HELL=50, URBAN=5 },
   },
 
@@ -1747,14 +1747,14 @@ DM_WALL_PREFABS =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="SP_DUDE1" },
+    skin = { pic_w="SP_DUDE1", pic_h=128 },
   },
 
   wall_pic_SPDUDE2 =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="SP_DUDE2" },
+    skin = { pic_w="SP_DUDE2", pic_h=128 },
   },
 
   wall_cross_RED =
@@ -1949,10 +1949,10 @@ DM_MISC_PREFABS =
 
   image_2 =
   {
-    prefab = "WALL_PIC_TWO_SIDED",
+    prefab = "WALL_PIC_SHALLOW",
     add_mode = "wall",
     min_height = 144,
-    skin = { pic_w="CEMENT1" },
+    skin = { pic_w="CEMENT1", pic_h=128 },
   },
 
   exit_DOOR =
@@ -2611,7 +2611,7 @@ D1_WALL_PREFABS =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="COMP2", lite_w="SUPPORT2" },
+    skin = { pic_w="COMP2", lite_w="SUPPORT2", pic_h=128 },
     theme_probs = { TECH=90, INDUSTRIAL=30 },
   },
 }

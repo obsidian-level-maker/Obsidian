@@ -1370,7 +1370,7 @@ WALL_PIC =
 
   elements =
   {
-    i = { f_rel="low_h", f_h=0, c_rel="low_h", c_h=128,
+    i = { f_rel="low_h", f_h=0, c_rel="low_h", c_h=0, c_add="pic_h",
           light=192,
         },
 
@@ -1380,6 +1380,32 @@ WALL_PIC =
           [4] = { l_tex="lite_w" }, 
           [6] = { l_tex="lite_w" }, 
         },
+  },
+},
+
+WALL_PIC_SHALLOW =
+{
+  copy="WALL_PIC",
+
+  structure =
+  {
+    "############",
+    "############",
+    "##pppppppp##",
+    "#LiiiiiiiiL#",
+  },
+},
+
+WALL_PIC_NARROW =
+{
+  copy="WALL_PIC",
+
+  structure =
+  {
+    "########",
+    "########",
+    "##pppp##",
+    "#LiiiiL#",
   },
 },
 

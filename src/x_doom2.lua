@@ -1427,15 +1427,15 @@ D2_WALL_PREFABS =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="SPACEW3", lite_w="SUPPORT2" },
+    skin = { pic_w="SPACEW3", lite_w="SUPPORT2", pic_h=128 },
     theme_probs = { TECH=90, INDUSTRIAL=30 },
   },
 
   wall_pic_2S_EAGLE =
   {
-    prefab = "WALL_PIC_TWO_SIDED",
+    prefab = "WALL_PIC_SHALLOW",
     min_height = 160,
-    skin = { pic_w="ZZWOLF6", lite_w="LITE5" },
+    skin = { pic_w="ZZWOLF6", lite_w="LITE5", pic_h=128 },
 
     theme_probs = { URBAN=8 }, 
   },
@@ -1444,14 +1444,14 @@ D2_WALL_PREFABS =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="SP_DUDE8" },
+    skin = { pic_w="SP_DUDE7", pic_h=128 },
   },
 
   wall_pic_SPDUDE8 =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="SP_DUDE8" },
+    skin = { pic_w="SP_DUDE8", pic_h=128 },
   },
 
   cage_niche_MIDGRATE =
