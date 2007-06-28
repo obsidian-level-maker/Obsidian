@@ -224,13 +224,13 @@ DM_COMBOS =
     outdoor = true,
     mat_pri = 5,
 
-    wall = "STONE",
-    void = "STONE3",
+    wall  = "STONE",
+    floor = "MFLR8_1",
+    ceil  = "MFLR8_1",
+
+--  void = "STONE3",
     step = "STEP4",
     piller = "STONE5",
-
-    floor = "MFLR8_1",
-    ceil = "MFLR8_1",
 
     scenery = { blue_torch=5, blue_torch_sm=3 },
 
@@ -243,14 +243,15 @@ DM_COMBOS =
     outdoor = true,
     mat_pri = 3,
 
-    wall = "BROWN1",
-    void = "BROWNPIP",
+    wall  = "BROWN1",
+    floor = "MFLR8_2",  -- "RROCK16" (not in doom 1)
+    ceil  = "MFLR8_2",
+
+--  void = "BROWNPIP",
     step = "STEP5",
     lift = "SUPPORT3",
     pillar = "BROWN96",  -- was "BRONZE2" (not in doom 1)
 
-    floor = "MFLR8_2",  -- "RROCK16" (not in doom 1)
-    ceil = "MFLR8_2",
   --  lift_floor = "FLOOR4_8",
 
     scenery = { skull_pole=5, skull_kebab=5 },
@@ -264,14 +265,14 @@ DM_COMBOS =
     theme_probs = { URBAN=30 },
     mat_pri = 7,
 
-    wall = "WOOD1",
-    void = "WOOD3",
+    wall  = "WOOD1",
+    floor = "FLAT5_1",
+    ceil  = "CEIL1_1",
+
+--  void = "WOOD3",
     step = "STEP1",
     pillar = "WOODGARG", -- "WOODMET4" not in doom 1
     pic_wd = "MARBFACE",
-
-    ceil = "CEIL1_1",
-    floor = "FLAT5_1",
 
     scenery = { impaled_human=5, hang_twitching=5 },
   },
@@ -283,15 +284,16 @@ DM_COMBOS =
     theme_probs = { INDUSTRIAL=50 },
     mat_pri = 1,
 
-    wall = "CEMENT6",
-    void = "CEMENT4",
+    wall  = "CEMENT6",
+    floor = "FLAT9",
+    ceil  = "CEIL3_5",  -- "SLIME14" not in doom 1
+
+--  void = "CEMENT4",
     step = "STEP1",
-    lift = "SUPPORT3",
     pillar = "BROWNGRN",  -- "CEMENT8" not in doom 1
 
-    floor = "FLAT9",
-    ceil = "CEIL3_5",  -- "SLIME14" not in doom 1
-  --  lift_floor = "FLOOR4_8",
+    lift = "SUPPORT3",
+--  lift_floor = "FLOOR4_8",
 
   },
 
@@ -300,14 +302,14 @@ DM_COMBOS =
     theme_probs = { INDUSTRIAL=50, TECH=10 },
     mat_pri = 4,
 
-    wall = "SLADWALL",
-    void = "SLADSKUL",
+    wall  = "SLADWALL",
+    floor = "FLOOR0_5",
+    ceil  = "CEIL5_1",
+
+--  void = "SLADSKUL",
     step = "STEP1",
 
     vista_support = "DOORSTOP",
-
-    floor = "FLOOR0_5",
-    ceil = "CEIL5_1",
 
     scenery = "burning_barrel",
     good_liquid = "nukage",
@@ -320,14 +322,50 @@ DM_COMBOS =
     theme_probs = { INDUSTRIAL=50 },
     mat_pri = 3,
 
-    wall = "GRAY7",
-    void = "ICKWALL3",
+    wall  = "GRAY7",
+    floor = "FLOOR0_5",
+    ceil  = "FLAT1",
+
     lift = "SUPPORT3",
     pic_wd = "REDWALL",
 
-    floor = "FLOOR0_5",
-    ceil = "FLAT1",
-  --  lift_floor = "FLOOR4_8",
+--  lift_floor = "FLOOR4_8",
+
+    scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
+  },
+
+  INDY_PIPES =
+  {
+    theme_probs = { INDUSTRIAL=45 },
+    mat_pri = 4,
+
+    wall  = "PIPE2",
+    floor = "FLAT1_1",
+    ceil  = "FLAT1_1",
+
+    step = "STEP1",
+    lift = "SUPPORT3",
+    pic_wd = "REDWALL",
+
+--  lift_floor = "FLOOR4_8",
+
+    scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
+  },
+
+  INDY_ICKY =
+  {
+    theme_probs = { INDUSTRIAL=25 },
+    mat_pri = 4,
+
+    wall  = "ICKWALL3",
+    floor = "FLAT4",
+    ceil  = "CEIL3_1", -- CEIL1_3
+
+    step = "STEP4",
+    lift = "SUPPORT3",
+    pic_wd = "REDWALL",
+
+--  lift_floor = "FLOOR4_8",
 
     scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
   },

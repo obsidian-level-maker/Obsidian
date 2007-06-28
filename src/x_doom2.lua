@@ -236,7 +236,7 @@ D2_COMBOS =
 
   URBAN_STUCCO =
   {
-    theme_probs = { URBAN=999 }, --!!!!
+    theme_probs = { URBAN=30 },
     mat_pri = 2,
 
     wall  = "STUCCO3",
@@ -246,7 +246,7 @@ D2_COMBOS =
 
   URBAN_GREENBRK =
   {
-    theme_probs = { URBAN=999 }, --!!!!
+    theme_probs = { URBAN=40 },
     outdoor = true,
     mat_pri = 2,
 
@@ -259,7 +259,7 @@ D2_COMBOS =
 
   URBAN_BLACK =
   {
-    theme_probs = { URBAN=2000 }, --!!!!
+    theme_probs = { URBAN=20 },
     outdoor = true,
     mat_pri = 6,
 
@@ -288,6 +288,8 @@ D2_COMBOS =
     wall  = "STONE4",
     floor = "FLAT5_5",
     ceil  = "FLAT1",
+
+    step  = "STEP1",
   },
 
   ---- TECH -----------------
