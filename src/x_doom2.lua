@@ -242,6 +242,8 @@ D2_COMBOS =
     wall  = "STUCCO3",
     floor = "FLAT8",
     ceil  = "CEIL3_5",
+
+    wall_fabs = { solid_STUCCO2=30, other=60 },
   },
 
   URBAN_GREENBRK =
@@ -293,23 +295,24 @@ D2_COMBOS =
 
   TECH_BLUECARPET =
   {
+    theme_probs = { TECH=20 },
     mat_pri = 4,
 
-    wall = "TEKGREN2",
-    void = "TEKGREN1",
+    wall  = "TEKGREN2",
+    floor = "FLOOR1_1",
+    ceil  = "FLAT4",
+
     step = "STEP1",
     pillar = "TEKLITE2",  -- TODO: doom 1: "COMPUTE1"
 
     pic_wd = "COMPSTA1", pic_wd_h = 64,
 
-    floor = "FLOOR1_1",
-    ceil = "FLAT4",
-
     scenery = { mercury_lamp=5, short_lamp=5 },
     bad_liquid = "water",
 
-    theme_probs = { TECH=20 },
     sc_fabs = { crate_rotnar_SILVER=30, other=50 },
+
+    wall_fabs = { solid_TEKGREN3=30, solid_TEKGREN4=30, other=30 },
   },
 
   ---- HELL ----------------
@@ -682,17 +685,16 @@ D2_HALLWAYS =
 
   BSTONE =
   {
+    theme_probs = { URBAN=50,NATURE=50,CAVE=30 },
     mat_pri = 0,
 
     wall = "BSTONE2",
-    void = "BSTONE2",
-    step = "METAL",
-    pillar = "BSTONE3",
-
     floor = "FLAT5",
     ceil  = "FLAT1",
 
-    theme_probs = { URBAN=50,NATURE=50,CAVE=30 },
+    step = "METAL",
+    pillar = "BSTONE3",
+
     trim_mode = "guillotine",
   },
 
@@ -733,17 +735,18 @@ D2_HALLWAYS =
     mat_pri = 0,
 
     wall = "TEKGREN2",
-    void = "TEKGREN2",
-    step = "STEP2",
-    pillar = "TEKGREN3",  -- was: "BRONZE2"
-
     floor = "FLOOR3_3",
     ceil  = "GRNLITE1",
+
+    step = "STEP2",
+    pillar = "TEKGREN3",  -- was: "BRONZE2"
 
     well_lit = true,
 
     theme_probs = { TECH=80,INDUSTRIAL=40 },
     trim_mode = "guillotine",
+
+    wall_fabs = { solid_TEKGREN5=30, other=50 },
   },
 
   PIPES =
@@ -1423,6 +1426,26 @@ D2_FEATURE_PREFABS =
 
 D2_WALL_PREFABS =
 {
+  solid_STUCCO2 =
+  {
+    prefab = "SOLID", skin = { wall="STUCCO2" },
+  },
+  
+  solid_TEKGREN3 =
+  {
+    prefab = "SOLID", skin = { wall="TEKGREN3" },
+  },
+  
+  solid_TEKGREN4 =
+  {
+    prefab = "SOLID", skin = { wall="TEKGREN4" },
+  },
+  
+  solid_TEKGREN5 =
+  {
+    prefab = "SOLID", skin = { wall="TEKGREN5" },
+  },
+  
   wall_pic_TV =
   {
     prefab = "WALL_PIC",

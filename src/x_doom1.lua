@@ -290,13 +290,13 @@ DM_COMBOS =
     floor = "FLAT9",
     ceil  = "CEIL3_5",  -- "SLIME14" not in doom 1
 
---  void = "CEMENT4",
     step = "STEP1",
     pillar = "BROWNGRN",  -- "CEMENT8" not in doom 1
 
     lift = "SUPPORT3",
 --  lift_floor = "FLOOR4_8",
 
+    wall_fabs = { solid_CEMENT4=20, solid_CEMENT5=20, other=50 },
   },
 
   INDY_SLAD =
@@ -317,6 +317,8 @@ DM_COMBOS =
     good_liquid = "nukage",
 
     sc_fabs = { pillar_rnd_sm_POIS=50, other=30 },
+
+    wall_fabs = { solid_SLADSKUL=30, other=50 },
   },
 
   INDY_GRAY =
@@ -352,6 +354,8 @@ DM_COMBOS =
 --  lift_floor = "FLOOR4_8",
 
     scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
+
+    wall_fabs = { solid_PIPE4=20, other=30 },
   },
 
   INDY_ICKY =
@@ -370,6 +374,9 @@ DM_COMBOS =
 --  lift_floor = "FLOOR4_8",
 
     scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
+
+    wall_fabs = { solid_ICKWALL4=20, solid_ICKWALL5=20,
+                  solid_ICKWALL7=20, other=60 },
   },
 
   ---- CAVE ----------
@@ -1730,6 +1737,41 @@ DM_FEATURE_PREFABS =
 
 DM_WALL_PREFABS =
 {
+  solid_CEMENT4 =
+  {
+    prefab = "SOLID_WIDE", skin = { wall="CEMENT4" },
+  },
+  
+  solid_CEMENT5 =
+  {
+    prefab = "SOLID_WIDE", skin = { wall="CEMENT5" },
+  },
+  
+  solid_ICKWALL4 =
+  {
+    prefab = "SOLID", skin = { wall="ICKWALL4" },
+  },
+  
+  solid_ICKWALL5 =
+  {
+    prefab = "SOLID", skin = { wall="ICKWALL5" },
+  },
+  
+  solid_ICKWALL7 =
+  {
+    prefab = "SOLID", skin = { wall="ICKWALL7" },
+  },
+  
+  solid_PIPE4 =
+  {
+    prefab = "SOLID_WIDE", skin = { wall="PIPE4" },
+  },
+  
+  solid_SLADSKUL =
+  {
+    prefab = "SOLID", skin = { wall="SLADSKUL" },
+  },
+  
   wall_lamp_RED_TORCH =
   {
     prefab = "WALL_LAMP",
