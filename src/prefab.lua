@@ -55,6 +55,38 @@ PLAIN_BIG =
   elements = { },
 },
 
+SOLID =
+{
+  scale=64,
+
+  structure = { "#" },
+
+  elements = { },
+},
+
+SOLID_WIDE =
+{
+  scale=64,
+
+  structure = { "##" },
+
+  elements = { },
+},
+
+SOLID_BIG =
+{
+  scale=64,
+
+  structure =
+  {
+    "##",
+    "##",
+  },
+
+  elements = { },
+},
+
+
 ------ Arches ------------------------------------
 
 ARCH =
