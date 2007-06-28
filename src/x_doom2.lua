@@ -186,18 +186,20 @@ D2_COMBOS =
     theme_probs = { URBAN=50 },
     mat_pri = 6,
 
-    wall = "PANEL7",
-    void = "PANBOOK",
+    wall  = "PANEL7",
+    floor = "FLOOR5_4",
+    ceil  = "CEIL1_2",
+
     step = "STEP2",
     pillar = "PANBLUE",
     pic_wd = "SPACEW3",
 
-    floor = "FLOOR5_4",
-    ceil = "CEIL1_2",
-
     scenery = { candelabra=6, evil_eye=3 },
 
+    -- FIXME: 'LIBRARY" room type
     sc_fabs = { bookcase_WIDE=50, other=30 },
+
+    wall_fabs = { solid_PANEL8=30, solid_PANEL9=30, other=50 },
   },
 
   URBAN_BRICK =
@@ -205,14 +207,13 @@ D2_COMBOS =
     theme_probs = { URBAN=30 },
     mat_pri = 6,
 
-    wall = "BRICK7",
-    void = "BRICK5",
+    wall  = "BRICK7",
+    floor = "FLOOR0_7",
+    ceil  = "CEIL5_2",
+
     step = "STEP1",
     pillar = "BRICKLIT",
     pic_wd = "BRWINDOW",
-
-    floor = "FLOOR0_7",
-    ceil = "CEIL5_2",
 
     scenery = { red_torch=5, red_torch_sm=3 },
     bad_liquid = "slime",
@@ -242,6 +243,8 @@ D2_COMBOS =
     wall  = "STUCCO3",
     floor = "FLAT8",
     ceil  = "CEIL3_5",
+
+    sc_fabs = { pillar_PANBLUE=20, pillar_PANELRED=20, other=70 },
 
     wall_fabs = { solid_STUCCO2=30, other=60 },
   },
@@ -1121,6 +1124,27 @@ D2_SCENERY_PREFABS =
     skin = { wall="MARBFAC4" },
   },
   
+  pillar_PANBLUE =
+  {
+    prefab = "PILLAR", add_mode = "island",
+    environment = "indoor",
+    skin = { wall="PANBLUE" },
+  },
+ 
+  pillar_PANRED =
+  {
+    prefab = "PILLAR", add_mode = "island",
+    environment = "indoor",
+    skin = { wall="PANRED" },
+  },
+ 
+  pillar_PANEL5 =
+  {
+    prefab = "PILLAR", add_mode = "island",
+    environment = "indoor",
+    skin = { wall="PANEL5" },
+  },
+ 
   cage_small_METAL =
   {
     prefab = "CAGE_SMALL",
@@ -1444,6 +1468,16 @@ D2_WALL_PREFABS =
   solid_TEKGREN5 =
   {
     prefab = "SOLID", skin = { wall="TEKGREN5" },
+  },
+  
+  solid_PANEL8 =
+  {
+    prefab = "SOLID", skin = { wall="PANEL8" },
+  },
+  
+  solid_PANEL9 =
+  {
+    prefab = "SOLID", skin = { wall="PANEL9" },
   },
   
   wall_pic_TV =
