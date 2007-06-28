@@ -203,7 +203,7 @@ DM_COMBOS =
 
   HELL_VINE =
   {
-    theme_probs = { HELL=40 },
+    theme_probs = { HELL=20 },
     mat_pri = 1,
 
     wall = "GSTVINE1",
@@ -214,6 +214,8 @@ DM_COMBOS =
 
     lift = "SKSPINE1",
     lift_floor = "SFLR6_4",
+
+    scenery = "red_torch",
   },
 
   ---- URBAN --------

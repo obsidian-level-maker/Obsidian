@@ -268,10 +268,7 @@ D2_COMBOS =
     ceil  = "MFLR8_4",
 
     step = "STEP4",
-    lift = "SKSPINE1",
-    lift_floor = "SFLR6_4",
 
-    void = "BLAKWAL2",
     piller = "STONE5",
     pic_wd = "MODWALL2", pic_wd_h = 64,  -- FIXME
 
