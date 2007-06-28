@@ -3040,6 +3040,76 @@ LEAKAGE_POOL =
   },
 },
 
+PUMP_INTO_VAT =
+{
+  structure =
+  {
+    "............",
+    "..CCZZZZDD..",
+    ".CBwwwwwwAD.",
+    ".CwwwwwwwwD.",
+    ".ZwwohhpwwZ.",
+    ".ZwwhcdhwwZ.",
+    ".ZwwhabhwwZ.",
+    ".ZwwmhhnwwZ.",
+    ".AwwwwwwwwB.",
+    ".ADwwwwwwCB.",
+    "..AAZZZZBB..",
+    "............",
+  },
+
+  elements =
+  {
+    -- vat
+    Z = { f_h=26, f_tex="vat_f", l_tex="vat_w", l_peg="top" },
+
+    A = { copy="Z", mark=1, [1]={ VDEL=true }},
+    B = { copy="Z", mark=2, [3]={ VDEL=true }},
+    C = { copy="Z", mark=3, [7]={ VDEL=true }},
+    D = { copy="Z", mark=4, [9]={ VDEL=true }},
+
+    -- pool
+    w = { f_h=16, f_tex="liquid_f", l_tex="liquid_w", kind="kind" },
+
+    r = { copy="w", mark=1, [1]={ VDEL=true }},
+    s = { copy="w", mark=2, [3]={ VDEL=true }},
+    t = { copy="w", mark=3, [7]={ VDEL=true }},
+    u = { copy="w", mark=4, [9]={ VDEL=true }},
+
+    -- hose
+    h = { copy="w", c_rel="floor_h", c_h=136,
+          c_tex="hose_c", u_tex="hose_w", u_peg="bottom",
+        },
+
+    m = { copy="h", mark=1, [1]={ VDEL=true }},
+    n = { copy="h", mark=2, [3]={ VDEL=true }},
+    o = { copy="h", mark=3, [7]={ VDEL=true }},
+    p = { copy="h", mark=4, [9]={ VDEL=true }},
+
+    -- failing liquid
+    a = { copy="h", mark=5,
+          [2] = { rail="liquid_w", x_offset=84 },
+          [4] = { rail="liquid_w", x_offset=72 },
+          [1]={ dx=4,dy=4 },
+        },
+    b = { copy="h", mark=6,
+          [2] = { rail="liquid_w", x_offset=0 },
+          [6] = { rail="liquid_w", x_offset=12 },
+          [3]={ dx=-4,dy=4 },
+        },
+    c = { copy="h", mark=7,
+          [8] = { rail="liquid_w", x_offset=48 },
+          [4] = { rail="liquid_w", x_offset=60 },
+          [7]={ dx=4,dy=-4 },
+        },
+    d = { copy="h", mark=8,
+          [8] = { rail="liquid_w", x_offset=36 },
+          [6] = { rail="liquid_w", x_offset=24 },
+          [9]={ dx=-4,dy=-4 },
+        },
+  },
+},
+
 
 ------ Crates ------------------------------------
 

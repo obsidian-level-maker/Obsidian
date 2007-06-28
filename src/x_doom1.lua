@@ -1551,6 +1551,38 @@ DM_FEATURE_PREFABS =
     skin = { liquid_f="LAVA1", liquid_w="ROCKRED1", kind=16 },
   },
 
+  pump_vat_NUKAGE =
+  {
+    prefab = "PUMP_INTO_VAT",
+    environment = "indoor",
+    min_height = 160,
+    max_height = 256,
+    theme_probs = { INDUSTRIAL=40 },
+    skin =
+    {
+      vat_w="SHAWN2", vat_f="FLAT23",
+      hose_w="PIPE2", hose_c="FLAT5",
+      liquid_w="SFALL1", liquid_f="NUKAGE1",
+      kind=16
+    }
+  },
+
+  pump_vat_WATER =
+  {
+    prefab = "PUMP_INTO_VAT",
+    environment = "indoor",
+    min_height = 160,
+    max_height = 256,
+    theme_probs = { INDUSTRIAL=2 },
+    skin =
+    {
+      vat_w="METAL", vat_f="CEIL5_2",
+      hose_w="METAL", hose_c="CEIL5_2",
+      liquid_w="FIREMAG1", liquid_f="FWATER1",
+      kind=0
+    }
+  },
+
   launch_pad_big_H =
   {
     prefab = "LAUNCH_PAD_LARGE",
