@@ -1281,12 +1281,12 @@ DM_SCENERY_PREFABS =
   {
     prefab = "PENTAGRAM",
     add_mode = "island",
-    theme_probs = { HELL=20 },
+    theme_probs = { HELL=30 },
     skin =
     {
       gram_w="REDWALL", gram_f="FLAT5_3",
       gram_h=12, gram_lt=240, kind=8,
-      pickup_t="candle",
+      gram_t="candle",
     }
   },
 
@@ -1294,10 +1294,11 @@ DM_SCENERY_PREFABS =
   {
     prefab = "PENTAGRAM",
     add_mode = "island",
-    theme_probs = { HELL=50 },
+    theme_probs = { HELL=20 },
     skin =
     {
       gram_f="LAVA1", gram_h=-10, gram_lt=192, kind=0,
+      gram_t="none"
     }
   },
 
