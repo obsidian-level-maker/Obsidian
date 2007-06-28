@@ -1755,6 +1755,19 @@ DM_WALL_PREFABS =
     min_height = 160,
     skin = { pic_w="SP_DUDE2" },
   },
+
+  wall_cross_RED =
+  {
+    prefab = "WALL_CROSS",
+    min_height = 160,
+    theme_probs = { HELL=200 },
+    skin =
+    {
+      cross_w="REDWALL", back_w="REDWALL",
+      cross_f="FLAT5_3",
+      cross_lt=255, kind=0,
+    },
+  },
 }
 
 DM_ARCH_PREFABS =

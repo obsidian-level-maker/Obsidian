@@ -1427,6 +1427,36 @@ WALL_PIC_FOUR_SIDED =
   },
 },
 
+WALL_CROSS =
+{
+  structure =
+  {
+    "############",
+    "############",
+    "##BBBBBBBB##",
+    "#LaaawwaaaL#",
+  },
+
+  elements =
+  {
+    B = { solid="back_w" },
+
+    L = { solid="wall",
+          [4]={ l_tex="cross_w" },
+          [6]={ l_tex="cross_w" },
+        },
+
+    a = { f_h=-24, f_rel="mid_h", c_h=0, c_rel="mid_h",
+          f_tex="cross_f", c_tex="cross_f",
+          light="cross_lt", kind="kind",
+          [4]={ l_tex="cross_w", u_tex="cross_w" },
+          [6]={ l_tex="cross_w", u_tex="cross_w" },
+        },
+
+    w = { copy="a", f_h=-78, c_h=78 },
+  }
+},
+
 FENCE_RAIL =
 {
   structure =
