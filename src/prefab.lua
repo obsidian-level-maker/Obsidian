@@ -1428,6 +1428,26 @@ WALL_PIC_SHALLOW =
   },
 },
 
+WALL_PIC_SCROLLER =
+{
+  structure =
+  {
+    "############",
+    "############",
+    "##pppppppp##",
+    "##iiiiiiii##",
+  },
+
+  elements =
+  {
+    i = { f_rel="low_h", f_h=0, c_rel="low_h", c_h=0, c_add="pic_h",
+          light=182,
+        },
+
+    p = { solid="pic_w", [2] = { kind="kind" } },
+  },
+},
+
 WALL_PIC_NARROW =
 {
   copy="WALL_PIC",

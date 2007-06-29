@@ -1869,6 +1869,22 @@ DM_WALL_PREFABS =
     skin = { pic_w="SP_DUDE2", pic_h=128 },
   },
 
+  wall_scroll_FACES =
+  {
+    prefab = "WALL_PIC_SCROLLER",
+    min_height = 144,
+    theme_probs = { HELL=4 },
+    skin = { pic_w="SP_FACE1", pic_h=96, kind=48 },
+  },
+
+  wall_scroll_SPINE =
+  {
+    prefab = "WALL_PIC_SCROLLER",
+    min_height = 144,
+    theme_probs = { HELL=8 },
+    skin = { pic_w="SKSPINE2", pic_h=96, kind=48 },
+  },
+
   wall_cross_RED =
   {
     prefab = "WALL_CROSS",
