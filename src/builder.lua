@@ -7189,7 +7189,7 @@ con.debugf("add_scenery : %s\n", item)
     c.room_type.pf_count or
     c.combo.pf_count or
     c.quest.theme.pf_count or
-    { 1, 5 }
+    { 1, 4 }
 
   for loop = 1,rand_irange(pf_count[1],pf_count[2]) do
     add_prefab(c)
@@ -7200,7 +7200,7 @@ con.debugf("add_scenery : %s\n", item)
     c.room_type.sc_count or
     c.combo.sc_count or
     c.quest.theme.sc_count or
-    { 2, 8 }
+    { 2, 6 }
 
   for loop = 1,rand_irange(sc_count[1],sc_count[2]) do
     add_scenery(c)
