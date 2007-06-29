@@ -1450,7 +1450,7 @@ DM_SCENERY_PREFABS =
       rail_w = "MIDGRATE", rail_h = 72,
     },
 
-    prob = 2
+    prob = 3.3
   },
 
 }
@@ -1982,7 +1982,7 @@ DM_DOOR_PREFABS =
     {
       door_w="BIGDOOR5", door_c="FLAT5_2",
       lite_w="LITE5", step_w="STEP1",
-      frame_f="FLAT1", frame_c="TLITE6_6",
+      frame_f="FLAT1", frame_c="FLAT1",
       track_w="DOORTRAK",
       door_h=112,
       door_kind=1, tag=0,
@@ -1999,7 +1999,7 @@ DM_DOOR_PREFABS =
     {
       door_w="BIGDOOR6", door_c="CEIL5_2",
       lite_w="LITE5", step_w="STEP1",
-      frame_f="FLAT1", frame_c="TLITE6_6",
+      frame_f="FLAT1", frame_c="FLAT1",
       track_w="DOORTRAK",
       door_h=112,
       door_kind=1, tag=0,
@@ -2016,7 +2016,7 @@ DM_DOOR_PREFABS =
     {
       door_w="BIGDOOR7", door_c="CEIL5_2",
       lite_w="LITE5", step_w="STEP1",
-      frame_f="FLAT1", frame_c="TLITE6_6",
+      frame_f="FLAT1", frame_c="FLAT1",
       track_w="DOORTRAK",
       door_h=112,
       door_kind=1, tag=0,
@@ -2272,7 +2272,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=40, WAREHOUSE2=10, WAREHOUSE=10,
+      PLAIN=40, WAREHOUSE2=10, WAREHOUSE=10, PRISON=5,
     },
 
     exit_probs=
@@ -2359,7 +2359,7 @@ DM_THEMES =
 
     room_probs=
     {
-      PLAIN=25, WAREHOUSE2=10, TORTURE=10,
+      PLAIN=25, WAREHOUSE2=10, TORTURE=5, PRISON=20
     },
 
     exit_probs=
@@ -2390,7 +2390,7 @@ DM_THEMES =
   {
     room_probs=
     {
-      PLAIN=20, TORTURE=25,
+      PLAIN=20, TORTURE=25, PRISON=10,
     },
 
     exit_probs=
