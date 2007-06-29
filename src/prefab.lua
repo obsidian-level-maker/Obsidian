@@ -29,7 +29,7 @@ PREFABS =
 {
 
 -- Note: texture names (like STARTAN3) are never used here.
--- Instead the names here (like "frame") are looked-up in a
+-- Instead the names here (like "beam_w") are looked-up in a
 -- SKIN table.  This allows the same prefab to be used with
 -- different textures (which are game-dependent).
 
@@ -1514,6 +1514,44 @@ WALL_CROSS =
     w = { copy="a", f_h=-78, c_h=78 },
   }
 },
+
+WALL_LIGHTS_THIN =
+{
+  structure =
+  {
+    "########",
+    "########",
+    "##B##B##",
+    "#LsRLsR#",
+  },
+
+  elements =
+  {
+    s = { f_h=0, f_rel="low_h", c_h=0, c_rel="high_h",
+          f_tex="frame_f", c_tex="frame_f",
+          light="wall_lt", kind="kind",
+        },
+
+    B = { solid="lite_w" },
+
+    L = { solid="wall", [6] = { l_tex="lite_side" }},
+    R = { solid="wall", [4] = { l_tex="lite_side" }},
+  },
+},
+
+WALL_LIGHTS_WIDE =
+{
+  copy="WALL_LIGHTS_THIN",
+
+  structure =
+  {
+    "############",
+    "#BB##BB##BB#",
+    "LssRLssRLssR",
+    "LssRLssRLssR",
+  },
+},
+
 
 FENCE_RAIL =
 {
