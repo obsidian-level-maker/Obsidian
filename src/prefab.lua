@@ -3430,6 +3430,11 @@ CAGE_PILLAR =
           [8] = { rail="rail_w", impassible=true },
         },
   },
+
+  things =
+  {
+    { kind="cage_spot", x=32, y=32 },
+  },
 },
 
 CAGE_SMALL =
@@ -3449,6 +3454,11 @@ CAGE_SMALL =
           [8] = { rail="rail_w", impassible=true },
         },
   },
+
+  things =
+  {
+    { kind="cage_spot", x=32, y=32 },
+  },
 },
 
 CAGE_MEDIUM =
@@ -3459,6 +3469,11 @@ CAGE_MEDIUM =
   {
     "cc",
     "cc",
+  },
+
+  things =
+  {
+    { kind="cage_spot", x=32, y=32, double=true, },
   },
 },
 
@@ -3471,6 +3486,11 @@ CAGE_LARGE =
     "ccc",
     "ccc",
     "ccc",
+  },
+
+  things =
+  {
+    { kind="cage_spot", x=64, y=64, double=true },
   },
 },
 
@@ -3544,6 +3564,11 @@ CAGE_OPEN_W_POSTS =
           [3] = { dx=-4, dy=0 }, [9] = { dx=-4, dy=0 },
         },
   },
+
+  things =
+  {
+    { kind="cage_spot", x=64, y=64, double=true },
+  },
 },
 
 CAGE_LARGE_W_LIQUID =
@@ -3601,6 +3626,11 @@ CAGE_LARGE_W_LIQUID =
     d = { copy="e", f_h=104, [6] = { l_tex="cage_sign_w" },
           [3] = { dx=-32,dy=0 }, [9] = { dx=-32,dy=0 } },
   },
+
+  things =
+  {
+    { kind="cage_spot", x=160, y=160 },
+  },
 },
 
 CAGE_MEDIUM_W_LIQUID =
@@ -3633,6 +3663,11 @@ CAGE_MEDIUM_W_LIQUID =
     -- central pillar
     e = { f_h=96, f_tex="cage_f", l_tex="cage_w", l_peg="top" },
   },
+
+  things =
+  {
+    { kind="cage_spot", x=96, y=96, double=true },
+  },
 },
 
 CAGE_NICHE =
@@ -3657,6 +3692,11 @@ CAGE_NICHE =
 
           [2] = { rail="rail_w", impassible=true },
         },
+  },
+
+  things =
+  {
+    { kind="cage_spot", x=64, y=64 },
   },
 },
 

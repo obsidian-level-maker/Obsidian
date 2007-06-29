@@ -589,7 +589,19 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
       if tdef.kind == "pickup_t" then
 
         add_special_pickup_spot(c, bx,by, dx,dy, skin.pickup_specialness or 20)
-     else
+
+      elseif tdef.kind == "cage_spot" then
+
+        assert(not mirror_x)
+
+        if tdef.double then
+          if dir == 8 or dir == 6 then bx=bx-1 end
+          if dir == 8 or dir == 4 then by=by-1 end
+        end
+
+        add_cage_spot(c, { c=c, x=bx, y=by, dx=dx, dy=dy, double=tdef.double })
+
+      else
         local name = what_thing(tdef.kind)
 
         if name ~= "none" then

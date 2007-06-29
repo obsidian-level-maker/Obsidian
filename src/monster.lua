@@ -1423,7 +1423,7 @@ function battle_in_cell(c)
     for zzz,spot in ipairs(c.cage_spots) do
 
       local name
-      if spot.different then
+      if true then -- spot.different then
         name = decide_cage_monster(T, fp, sel(spot.double,2,1), spot.double, spot.double)
       else
         name = sel(spot.double, big, small)
