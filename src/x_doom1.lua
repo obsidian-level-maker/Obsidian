@@ -405,9 +405,7 @@ DM_EXITS =
   {
     mat_pri = 9,
 
-    wall = "TEKWALL1",
-    void = "TEKWALL4",
-
+    wall  = "TEKWALL1",
     floor = "CEIL4_3",
     ceil  = "TLITE6_5",
 
@@ -501,10 +499,10 @@ DM_EXITS =
     mat_pri = 9,
 
     wall = "TEKWALL1",
-    void = "COMPBLUE",
-
     floor = "FLAT14",
     ceil  = "FLAT22",
+
+---  void = "COMPBLUE",
 
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
@@ -1808,21 +1806,21 @@ DM_WALL_PREFABS =
   {
     prefab = "WALL_LAMP",
     skin = { lamp_t="red_torch_sm" },
-    theme_probs = { CAVE=90, HELL=50, URBAN=5 }, 
+    theme_probs = { CAVE=90, HELL=70 }, 
   },
 
   wall_lamp_GREEN_TORCH =
   {
     prefab = "WALL_LAMP",
     skin = { lamp_t="green_torch_sm" },
-    theme_probs = { CAVE=90, HELL=50, URBAN=5 }, 
+    theme_probs = { CAVE=90, HELL=30, URBAN=10 }, 
   },
 
   wall_lamp_BLUE_TORCH =
   {
     prefab = "WALL_LAMP",
     skin = { lamp_t="blue_torch_sm" },
-    theme_probs = { CAVE=90, HELL=50, URBAN=5 }, 
+    theme_probs = { CAVE=90, URBAN=20 }, 
   },
 
   wall_pic_MARBFACE =
@@ -2753,6 +2751,30 @@ D1_WALL_PREFABS =
     min_height = 160,
     theme_probs = { TECH=90, INDUSTRIAL=30 },
     skin = { pic_w="COMP2", lite_w="SUPPORT2", pic_h=128 },
+  },
+
+  wall_pic_TEKWALL2 =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 144,
+    skin = { pic_w="TEKWALL2", lite_w="METAL", pic_h=128 },
+    theme_probs = { TECH=10 },
+  },
+
+  wall_pic_TEKWALL3 =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 144,
+    skin = { pic_w="TEKWALL3", lite_w="METAL", pic_h=128 },
+    theme_probs = { TECH=10 },
+  },
+
+  wall_pic_TEKWALL5 =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 144,
+    skin = { pic_w="TEKWALL5", lite_w="METAL", pic_h=128 },
+    theme_probs = { TECH=10 },
   },
 
   lights_thin_LITERED =
