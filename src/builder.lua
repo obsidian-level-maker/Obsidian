@@ -2941,6 +2941,15 @@ function build_borders()
 
   local function select_rand_arch(c, link, D)
 
+    if link.long == 3 then
+      if c.combo.arch then
+        return non_nil(GAME.misc_fabs[c.combo.arch])
+      end
+      if c.quest.theme.arch and rand_odds(50) then
+        return non_nil(GAME.misc_fabs[c.quest.theme.arch])
+      end
+    end
+
     -- !!! FIXME: use GAME.arch_fabs[]
     local name
 
