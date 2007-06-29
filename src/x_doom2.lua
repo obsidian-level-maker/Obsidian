@@ -378,6 +378,8 @@ D2_COMBOS =
     floor = "FLOOR6_2",
     ceil  = "FLAT5_8",
 
+    arch  = "arch_russian_WOOD",
+
     sc_fabs = { stalagmite_MED=40, other=10 },
   },
 

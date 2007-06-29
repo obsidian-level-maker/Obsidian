@@ -392,6 +392,8 @@ DM_COMBOS =
     floor = "FLAT10",
     ceil  = "FLAT10",
 
+    arch  = "arch_arched",
+
     sc_fabs = { stalagmite_MED=90, other=10 },
   },
 
@@ -2066,6 +2068,22 @@ DM_MISC_PREFABS =
     skin = { rail_w="BRNSMALC" },
   },
   
+  arch_arched =
+  {
+    prefab = "ARCH_ARCHED", skin = {},
+  },
+
+  arch_hole =
+  {
+    prefab = "ARCH_HOLE1", skin = {},
+  },
+
+  arch_russian_WOOD =
+  {
+    prefab = "ARCH_RUSSIAN",
+    skin = { beam_w="WOOD1", beam_c="FLAT5_2" },
+  },
+
   fence_beam_BLUETORCH =
   {
     prefab = "FENCE_BEAM_W_LAMP",
@@ -2337,6 +2355,8 @@ DM_THEMES =
 
   CAVE =
   {
+    arch = "arch_hole",
+
     room_probs=
     {
       PLAIN=25, WAREHOUSE2=10, TORTURE=10,
@@ -2688,6 +2708,8 @@ D1_COMBOS =
     wall  = "ASHWALL",
     floor = "FLOOR6_2",
     ceil  = "FLAT5_8",
+
+    arch  = "arch_russian_WOOD",
 
     sc_fabs = { stalagmite_MED=40, other=10 },
   },
