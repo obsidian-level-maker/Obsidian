@@ -336,6 +336,8 @@ DM_COMBOS =
 --  lift_floor = "FLOOR4_8",
 
     scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
+
+    sc_fabs = { crate_rotnar_GRAY2=35, other=50 },
   },
 
   INDY_PIPES =
@@ -1225,7 +1227,7 @@ DM_SCENERY_PREFABS =
     skin = { beam_w="METAL", beam_f="CEIL5_2",
              lite_w="LITE5" },
 
-    theme_probs = { TECH=20, INDUSTRIAL=20 },
+    theme_probs = { TECH=5, INDUSTRIAL=12 },
   },
 
   pillar_rnd_sm_POIS =
@@ -1451,6 +1453,19 @@ DM_SCENERY_PREFABS =
       crate_w3 = "CRATE1", crate_f3 = "CRATOP2",
       small_w  = "CRATELIT", small_f = "CRATOP1",
     },
+  },
+
+  crate_rotnar_GRAY2 =
+  {
+    prefab = "CRATE_ROTATE_NARROW",
+    add_mode = "island",
+
+    skin =
+    {
+      crate_h = 64,
+      crate_w = "GRAY2",
+      crate_f = "FLAT5_4"
+    }
   },
 
   cage_pillar_METAL =
