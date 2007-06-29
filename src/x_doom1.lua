@@ -337,7 +337,7 @@ DM_COMBOS =
 
     scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
 
-    sc_fabs = { crate_rotnar_GRAY2=35, other=50 },
+    sc_fabs = { crate_rotnar_GRAY2=30, other=50 },
   },
 
   INDY_PIPES =
@@ -1462,7 +1462,7 @@ DM_SCENERY_PREFABS =
 
     skin =
     {
-      crate_h = 64,
+      crate_h = 58,
       crate_w = "GRAY2",
       crate_f = "FLAT5_4"
     }
@@ -1664,7 +1664,7 @@ DM_FEATURE_PREFABS =
     prefab = "TECH_PICKUP_LARGE",
     environment = "indoor",
     add_mode = "island",
-    min_height = 192,
+    min_height = 224,
     max_height = 320,
 
     skin =
@@ -1748,6 +1748,21 @@ DM_FEATURE_PREFABS =
     theme_probs = { URBAN=90, NATURE=40, HELL=5 },
   },
 
+  cage_w_posts_WOOD_MIDGRATE =
+  {
+    prefab = "CAGE_OPEN_W_POSTS",
+    add_mode = "island",
+    min_height = 208,
+
+    skin =
+    {
+      beam_w="SUPPORT3", beam_f="CEIL5_2",
+      cage_w="WOOD1",    cage_f="FLAT5_2",
+      rail_w="MIDGRATE", rail_h=128,
+    },
+
+    prob = 5
+  },
 }
 
 DM_WALL_PREFABS =

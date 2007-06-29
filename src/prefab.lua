@@ -3435,6 +3435,66 @@ CAGE_LARGE =
   },
 },
 
+CAGE_OPEN_W_POSTS =
+{
+  region="floor",
+
+  structure =
+  {
+    "OOccccccccPP",
+    "OBddddddddBP",
+    "cfccccccccgc",
+    "cfccccccccgc",
+    "cfccccccccgc",
+    "cfccccccccgc",
+    "cfccccccccgc",
+    "cfccccccccgc",
+    "cfccccccccgc",
+    "cfccccccccgc",
+    "MBeeeeeeeeBN",
+    "MMccccccccNN",
+  },
+
+  elements =
+  {
+    -- posts
+    B = { f_add="rail_h", f_h=56,
+          l_tex="beam_w", f_tex="beam_f",
+        },
+
+    M = { copy="B",
+          [1] = { dx= 8, dy= 8 },
+          [7] = { dx= 8, dy= 0 },
+          [3] = { dx= 0, dy= 8 },
+        },
+    N = { copy="B",
+          [3] = { dx=-8, dy= 8 },
+          [9] = { dx=-8, dy= 0 },
+          [1] = { dx= 0, dy= 8 },
+        },
+    O = { copy="B",
+          [7] = { dx= 8, dy=-8 },
+          [1] = { dx= 8, dy= 0 },
+          [9] = { dx= 0, dy=-8 },
+        },
+    P = { copy="B",
+          [9] = { dx=-8, dy=-8 },
+          [3] = { dx=-8, dy= 0 },
+          [7] = { dx= 0, dy=-8 },
+        },
+
+    -- cage area
+    c = { f_h=48, l_tex="cage_w", f_tex="cage_f",
+        },
+    
+    -- grating
+    d = { copy="c", mark=1, [8] = { rail="rail_w", l_peg="bottom", impassible=true }},
+    e = { copy="c", mark=1, [2] = { rail="rail_w", l_peg="bottom", impassible=true }},
+    f = { copy="c", mark=1, [4] = { rail="rail_w", l_peg="bottom", impassible=true }},
+    g = { copy="c", mark=1, [6] = { rail="rail_w", l_peg="bottom", impassible=true }},
+  },
+},
+
 CAGE_LARGE_W_LIQUID =
 {
   scale=64,
