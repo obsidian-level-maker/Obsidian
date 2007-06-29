@@ -152,6 +152,25 @@ ARCH_ARCHED =
   },
 },
 
+ARCH_HOLE1 =
+{
+  structure =
+  {
+    "##cbaaaabc##",
+    "##cbaaaabc##",
+    "##cbaaaabc##",
+    "##cbaaaabc##",
+  },
+
+  elements =
+  {
+    a = { f_h=0, c_rel="door_top", c_h=0, },
+
+    b = { copy="a", f_h=12, c_h=-12 },
+    c = { copy="a", f_h=24, c_h=-24 },
+  },
+},
+
 ARCH_TRUSS =
 {
   structure =
