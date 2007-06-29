@@ -1408,7 +1408,7 @@ D2_FEATURE_PREFABS =
       rail_w = "MIDBARS3",
     },
 
-    prob = 3,
+    prob = 4,
     force_dir = 2, -- optimisation
   },
 
@@ -1447,7 +1447,7 @@ D2_FEATURE_PREFABS =
       rail_w = "MIDBARS3",
     },
 
-    prob = 1,
+    prob = 2,
     force_dir = 2, -- optimisation
   },
 }
@@ -1528,6 +1528,7 @@ D2_WALL_PREFABS =
       rail_h = 128,
     },
 
+    prob = 3,
   },
 }
 
@@ -1680,6 +1681,17 @@ D2_ROOMS =
 
   PRISON =
   {
+    space_range = { 40, 80 },
+
+    sc_fabs =
+    {
+      cage_pillar_METAL=50, other=10
+    },
+
+    wall_fabs =
+    {
+      cage_niche_MIDGRATE = 50, other = 10
+    },
   },
 
   WAREHOUSE2 =
