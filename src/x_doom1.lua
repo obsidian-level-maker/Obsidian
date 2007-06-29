@@ -1843,6 +1843,32 @@ DM_WALL_PREFABS =
       cross_lt=255, kind=0,
     },
   },
+
+  lights_thin_LITE5 =
+  {
+    prefab = "WALL_LIGHTS_THIN",
+    min_height = 128,
+    theme_probs = { TECH=40, INDUSTRIAL=10 },
+    skin =
+    {
+      lite_w="LITE5", lite_side="LITE5",
+      frame_f="FLAT20",
+      wall_lt=255, kind=8,
+    },
+  },
+
+  lights_wide_LITEBLU4 =
+  {
+    prefab = "WALL_LIGHTS_WIDE",
+    min_height = 128,
+    theme_probs = { INDUSTRIAL=40 },
+    skin =
+    {
+      lite_w="LITEBLU4", lite_side="LITEBLU4",
+      frame_f="FLAT22",
+      wall_lt=255, kind=8,
+    },
+  },
 }
 
 DM_ARCH_PREFABS =
@@ -2685,9 +2711,23 @@ D1_WALL_PREFABS =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="COMP2", lite_w="SUPPORT2", pic_h=128 },
     theme_probs = { TECH=90, INDUSTRIAL=30 },
+    skin = { pic_w="COMP2", lite_w="SUPPORT2", pic_h=128 },
   },
+
+  lights_thin_LITERED =
+  {
+    prefab = "WALL_LIGHTS_THIN",
+    min_height = 128,
+    theme_probs = { TECH=90, HELL=2 },
+    skin =
+    {
+      lite_w="LITERED", lite_side="LITERED",
+      frame_f="FLOOR1_6",
+      wall_lt=255, kind=8,
+    },
+  },
+
 }
 
 D1_ROOMS =
