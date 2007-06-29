@@ -204,48 +204,47 @@ HC_COMBOS =
 
   MOSSY =
   {
+    theme_probs = { CITY=20 },
     mat_pri = 2,
 
-    wall = "MOSSRCK1",
-    void = "MOSSRCK1",
-    pillar = "SKULLSB1", -- SPINE1
-    
+    wall  = "MOSSRCK1",
     floor = "FLOOR00",
     ceil  = "FLOOR04",
 
+    pillar = "SKULLSB1", -- SPINE1
+
     scenery = "chandelier",
 
-    theme_probs = { CITY=20 },
   },
 
   WOOD =
   {
+    theme_probs = { CITY=20 },
     mat_pri = 2,
 
-    wall = "WOODWL",
-    void = "CTYSTUC3",
-
+    wall  = "WOODWL",
     floor = "FLOOR10",
     ceil  = "FLOOR12",
 
+--  void = "CTYSTUC3",
+
     scenery = "hang_skull_1",
 
-    theme_probs = { CITY=20 },
   },
 
   HUT =
   {
+    theme_probs = { CITY=20 },
     mat_pri = 1,
     
-    wall = "CTYSTUC3",
-    void = "CTYSTUC4",
-    
+    wall  = "CTYSTUC3",
     floor = "FLOOR10",
     ceil  = "FLOOR11",
 
+--  void = "CTYSTUC4",
+
     scenery = "barrel",
 
-    theme_probs = { CITY=20 },
   },
 
 
@@ -253,64 +252,64 @@ HC_COMBOS =
 
   STONY =
   {
+    theme_probs = { CITY=20 },
     outdoor = true,
     mat_pri = 3,
 
-    wall = "GRSTNPB",
-    void = "GRSTNPBV",
-
+    wall  = "GRSTNPB",
     floor = "FLOOR00",
-    ceil =  "FLOOR00",
+    ceil  = "FLOOR00",
 
+--  void = "GRSTNPBV",
     scenery = "serpent_torch",
   },
 
   MUDDY =
   {
+    theme_probs = { CITY=20 },
     outdoor = true,
     mat_pri = 3,
 
-    wall = "CSTLRCK",
-    void = "SQPEB1",
-    pillar = "SPINE1",
-
+    wall  = "CSTLRCK",
     floor = "FLOOR17",
     ceil  = "FLOOR17",
 
+--  void = "SQPEB1",
+    pillar = "SPINE1",
+
     scenery = "fire_brazier",
 
-    theme_probs = { CITY=20 },
   },
   
   WATERY =
   {
+    theme_probs = { CITY=20 },
     outdoor = true,
     mat_pri = 1,
 
-    wall = "SNDBLCKS",
-    void = "CTYSTCI4",
-
+    wall  = "SNDBLCKS",
     floor = "FLTWAWA1",
     ceil  = "FLOOR27",
 
-    theme_probs = { CITY=20 },
+--  void = "CTYSTCI4",
+
+    liquid_prob = 0,
   },
 
   SANDY =
   {
+    theme_probs = { CITY=20 },
     outdoor = true,
     mat_pri = 2,
     
-    wall = "CTYSTUC2",
-    void = "CTYSTUC3",
-    pillar = "SPINE2",
-
+    wall  = "CTYSTUC2",
     floor = "FLOOR27",
     ceil  = "FLOOR27",
 
-    scenery = "small_pillar",
+--  void = "CTYSTUC3",
+    pillar = "SPINE2",
 
-    theme_probs = { CITY=20 },
+    scenery = "small_pillar",
   },
   
 }
