@@ -869,12 +869,6 @@ D2_LIGHTS =
   green1 = { floor="GRNLITE1", side="TEKGREN2" },
 }
 
-D2_PICS =
-{
-  wolf6 = { wall="ZZWOLF6", w=128, h=128 },
-  wolf7 = { wall="ZZWOLF7", w=128, h=128 },
-}
-
 D2_LIQUIDS =
 {
   slime = { floor="SLIME01", wall="BLODRIP1", sec_kind=7 }  -- 5% damage
@@ -1862,7 +1856,6 @@ GAME_FACTORIES["doom2"] = function()
   T.mats    = copy_and_merge(T.mats,    D2_MATS)
   T.doors   = copy_and_merge(T.doors,   D2_DOORS)
   T.lights  = copy_and_merge(T.lights,  D2_LIGHTS)
-  T.pics    = copy_and_merge(T.pics,    D2_PICS)
   T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
 
   T.sc_fabs   = copy_and_merge(T.sc_fabs,   D2_SCENERY_PREFABS)

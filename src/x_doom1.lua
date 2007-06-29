@@ -1160,37 +1160,6 @@ DM_LIGHTS =
   tl66 = { floor="TLITE6_6", side="METAL" },
 }
 
-DM_WALL_LIGHTS =
-{
-  white2 = { wall="LITE3",    w=32 },
-  white5 = { wall="LITE5",    w=16 },
-  blue4  = { wall="LITEBLU4", w=32 },
---  { wall="REDWALL",  w=32 },
-}
-
-DM_PICS =
-{
-  lite3 = { wall="LITE3", w=128, h=16 },
-
-  m1 = { wall="MARBFACE", w=128, h=128 },
-  m2 = { wall="MARBFAC2", w=128, h=128 },
-  m3 = { wall="MARBFAC3", w=128, h=128 },
-
-  f1 = { wall="FIRELAVA", w=128, h=128 },
-  f2 = { wall="FIREMAG1", w=128, h=128 },
-  f3 = { wall="FIREWALL", w=128, h=112 },
-
-  shawn1 = { wall="SHAWN1",   w=128, h=96  },
-  skin1  = { wall="SKINEDGE", w=128, h=128 },
-  wood1  = { wall="WOOD3",    w=128, h=64  },
-
---  { wall="SKSPINE2", w=128, h=128, scroll=48 },
---  { wall="SPFACE1",  w=128, h=96,  scroll=48 },
-
---FIXME  { wall="WOOD10",   w=128, h=128 },
---FIXME  { wall="TEKBRON1", w=128, h=128 },
-}
-
 
 DM_SCENERY_PREFABS =
 {
@@ -2552,19 +2521,19 @@ DM_MONSTER_WEAPON_PREFS =
 DM_PICKUPS =
 {
   bullets    = { stat="bullet", give=10, prob=10 },
-  bullet_box = { stat="bullet", give=50, prob=70, clu_max=2 },
+  bullet_box = { stat="bullet", give=50, prob=70, clu_max=1 },
   shells     = { stat="shell",  give= 4, prob=30 },
-  shell_box  = { stat="shell",  give=20, prob=70, clu_max=4 },
+  shell_box  = { stat="shell",  give=20, prob=70, clu_max=3 },
 
   rockets    = { stat="rocket", give= 1, prob=20 },
-  rocket_box = { stat="rocket", give= 5, prob=70, clu_max=4 },
+  rocket_box = { stat="rocket", give= 5, prob=70, clu_max=1 },
   cells      = { stat="cell",   give=20, prob=30 },
   cell_pack  = { stat="cell",   give=100,prob=70, clu_max=1 },
 
-  potion   = { stat="health", give=1,  prob=30 },
+  potion   = { stat="health", give=1,  prob=20 },
   stimpack = { stat="health", give=10, prob=40 },
-  medikit  = { stat="health", give=25, prob=70, clu_max=4 },
-  soul     = { stat="health", give=100,prob=15, limit=200, clu_max=1 },
+  medikit  = { stat="health", give=25, prob=70, clu_max=1 },
+  soul     = { stat="health", give=100,prob=15, clu_max=1, limit=200 },
 
   -- BERSERK and MEGA are quest items
 
@@ -2751,12 +2720,6 @@ D1_RAILS =
 {
   r_1 = { wall="BRNSMALC", w=128, h=64  },
   r_2 = { wall="MIDGRATE", w=128, h=128 },
-}
-
-D1_WALL_LIGHTS =
-{
-  reddy  = { wall="LITERED",  w=16 },
-  stoned = { wall="LITESTON", w=32 },
 }
 
 D1_WALL_PREFABS =
@@ -2995,10 +2958,8 @@ function doom_common_factory()
     key_doors = DM_KEY_DOORS,
     lifts     = DM_LIFTS,
 
-    pics      = DM_PICS,
     images    = DM_IMAGES,
     lights    = DM_LIGHTS,
-    wall_lights = DM_WALL_LIGHTS,
 
     rooms     = DM_ROOMS,
     themes    = DM_THEMES,
@@ -3048,8 +3009,6 @@ GAME_FACTORIES["doom1"] = function()
 
   T.sc_fabs   = copy_and_merge(T.sc_fabs,   D1_SCENERY_PREFABS)
   T.wall_fabs = copy_and_merge(T.wall_fabs, D1_WALL_PREFABS)
-
-  T.wall_lights = copy_and_merge(T.wall_lights, D1_WALL_LIGHTS)
 
   T.rails = D1_RAILS
 
