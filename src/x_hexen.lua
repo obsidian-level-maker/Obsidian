@@ -301,6 +301,8 @@ XN_COMBOS =
     floor = "F_040",
     ceil  = "F_040",
 
+    arch  = "arch_arched",
+
     scenery = "stal_pillar",
   },
 
@@ -312,6 +314,8 @@ XN_COMBOS =
     wall  = "CAVE05",
     floor = "F_001",
     ceil  = "F_001",
+
+    arch  = "arch_hole",
   },
 
   CAVE3 =
@@ -478,7 +482,11 @@ XN_COMBOS =
     floor = "X_009",
     ceil  = "F_013",
 
-    bad_liquid = "lava",
+    liquid_prob = 0,
+
+    wall_fabs = { solid_SEWER02=30, other=30 },
+
+    -- FIXME !!!! X_SWR1 pillar
   },
 
   SWAMP2 =
@@ -490,7 +498,9 @@ XN_COMBOS =
     floor = "X_009",
     ceil  = "F_013",
 
-    bad_liquid = "lava",
+    liquid_prob = 0,
+
+    wall_fabs = { solid_SEWER10=60, other=30 },
   },
 
   SWAMP3 =
@@ -503,7 +513,7 @@ XN_COMBOS =
     floor = "X_009",
     ceil  = "F_013",
 
-    bad_liquid = "lava",
+    liquid_prob = 0,
   },
 
   SWAMP4 =
@@ -512,11 +522,11 @@ XN_COMBOS =
     mat_pri = 2,
     outdoor = true,
 
-    wall = "SWAMP03",
+    wall  = "SWAMP03",
     floor = "X_009",
     ceil  = "F_013",
 
-    bad_liquid = "lava",
+    liquid_prob = 0,
   },
 
   ---- VILLAGE ------------
@@ -1366,6 +1376,19 @@ XN_DOOR_PREFABS =
 ---#  },
 ---#}
 
+XN_WALL_PREFABS =
+{
+  solid_SEWER02 =
+  {
+    prefab = "SOLID", skin = { wall="SEWER02" },
+  },
+
+  solid_SEWER10 =
+  {
+    prefab = "SOLID", skin = { wall="SEWER10" },
+  },
+}
+
 XN_MISC_PREFABS =
 {
   -- Note: pedestal_PLAYER intentionally omitted
@@ -1381,6 +1404,16 @@ XN_MISC_PREFABS =
     prefab = "CRATE",
     add_mode = "island",
     skin = { crate_h=64, crate_w="BRASS4", crate_f="F_044" },
+  },
+
+  arch_arched =
+  {
+    prefab = "ARCH_ARCHED", skin = {},
+  },
+
+  arch_hole =
+  {
+    prefab = "ARCH_HOLE1", skin = {},
   },
 
   image_2 =
@@ -2039,8 +2072,9 @@ GAME_FACTORIES["hexen"] = function()
     wall_lights = XN_WALL_LIGHTS,
 
     door_fabs = XN_DOOR_PREFABS,
-    misc_fabs = XN_MISC_PREFABS,
+    wall_fabs = XN_WALL_PREFABS,
     sc_fabs   = XN_SCENERY_PREFABS,
+    misc_fabs = XN_MISC_PREFABS,
 
     toughness_factor = 0.66,
 
