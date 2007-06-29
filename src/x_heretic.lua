@@ -171,34 +171,35 @@ HC_COMBOS =
 
   GOLD =
   {
+    theme_probs = { CITY=20 },
     mat_pri = 6,
 
-    wall = "SANDSQ2",
-    void = "SNDBLCKS",
-    pillar = "SNDCHNKS",
-
+    wall  = "SANDSQ2",
     floor = "FLOOR06",
-    ceil = "FLOOR11",
+    ceil  = "FLOOR11",
+
+--  void = "SNDBLCKS",
+    pillar = "SNDCHNKS",
 
     scenery = "wall_torch",
 
-    theme_probs = { CITY=20 },
+    wall_fabs = { wall_pic_GLASS1=30, wall_pic_GLASS2=15, other=10 },
   },
 
   BLOCK =
   {
+    theme_probs = { CITY=20 },
     mat_pri = 7,
 
-    wall = "GRSTNPB",
+    wall  = "GRSTNPB",
+    floor = "FLOOR03",
+    ceil  = "FLOOR03",
+
     void = "GRSTNPBW",
     pillar = "WOODWL",
 
-    floor = "FLOOR03",
-    ceil = "FLOOR03",
-
     scenery = "barrel",
 
-    theme_probs = { CITY=20 },
   },
 
   MOSSY =
@@ -618,6 +619,23 @@ HC_DOOR_PREFABS =
     },
 
     theme_probs = { CITY=20 },
+  },
+}
+
+HC_WALL_PREFABS =
+{
+  wall_pic_GLASS1 =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 160,
+    skin = { pic_w="STNGLS1", pic_h=128 },
+  },
+
+  wall_pic_GLASS2 =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 160,
+    skin = { pic_w="STNGLS2", pic_h=128 },
   },
 }
 
@@ -1073,6 +1091,7 @@ GAME_FACTORIES["heretic"] = function()
     wall_lights = HC_WALL_LIGHTS,
 
     door_fabs   = HC_DOOR_PREFABS,
+    wall_fabs   = HC_WALL_PREFABS,
     misc_fabs   = HC_MISC_PREFABS,
 
     toughness_factor = 0.80,
