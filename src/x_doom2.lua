@@ -1173,6 +1173,7 @@ D2_SCENERY_PREFABS =
       rail_w = "MIDBARS3",
     },
 
+    prob = 1,
     force_dir = 2, -- optimisation
   },
 
@@ -1387,6 +1388,7 @@ D2_FEATURE_PREFABS =
       rail_w = "MIDBARS3",
     },
 
+    prob = 1,
     force_dir = 2, -- optimisation
   },
 
@@ -1407,6 +1409,7 @@ D2_FEATURE_PREFABS =
       rail_w = "MIDBARS3",
     },
 
+    prob = 3,
     force_dir = 2, -- optimisation
   },
 
@@ -1426,6 +1429,7 @@ D2_FEATURE_PREFABS =
       rail_w = "MIDBARS3",
     },
 
+    prob = 2,
     force_dir = 2, -- optimisation
   },
 
@@ -1444,6 +1448,7 @@ D2_FEATURE_PREFABS =
       rail_w = "MIDBARS3",
     },
 
+    prob = 1,
     force_dir = 2, -- optimisation
   },
 }

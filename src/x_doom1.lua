@@ -1479,7 +1479,9 @@ DM_SCENERY_PREFABS =
       cage_w = "METAL",
       cage_f = "CEIL5_2", cage_c = "TLITE6_4",
       rail_w = "MIDGRATE", rail_h = 72,
-    }
+    },
+
+    prob = 2
   },
 
 }
@@ -1761,7 +1763,7 @@ DM_FEATURE_PREFABS =
       rail_w="MIDGRATE", rail_h=128,
     },
 
-    prob = 5
+    prob = 4
   },
 }
 
@@ -1845,6 +1847,14 @@ DM_WALL_PREFABS =
     min_height = 160,
     skin = { pic_w="MARBFAC3", pic_h=128 },
     theme_probs = { HELL=50, URBAN=5 },
+  },
+
+  wall_pic_FIREWALL =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 144,
+    skin = { pic_w="FIREWALL", pic_h=112 },
+    theme_probs = { HELL=120 },
   },
 
   wall_pic_SPDUDE1 =
