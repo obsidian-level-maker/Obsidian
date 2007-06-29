@@ -1532,6 +1532,18 @@ DM_FEATURE_PREFABS =
     },
   },
 
+  pond_small_LAVA =
+  {
+    prefab = "POND_SMALL",
+    theme_probs = { CAVE=30 },
+    skin = 
+    {
+      pond_f="LAVA1", pond_w="ROCKRED1",
+      liquid_f="LAVA1", -- outer_w
+      kind=16
+    },
+  },
+  
   leakage_pool_LAVA =
   {
     prefab = "LEAKAGE_POOL",

@@ -926,6 +926,7 @@ D2_SCENERY_PREFABS =
     {
       pond_w="ZIMMER4", pond_f="RROCK18",
       outer_w="BROWNHUG", liquid_f="FWATER1",
+      kind=0
     },
     theme_probs = { NATURE=120 },
   },
@@ -1310,6 +1311,7 @@ D2_FEATURE_PREFABS =
       pond_w="BROWNHUG", pond_w2="ZIMMER2",
       pond_f="RROCK18",  pond_f2="RROCK19",
       outer_w="ZIMMER2", liquid_f="FWATER1",
+      kind=0
     },
     theme_probs = { NATURE=100 },
   },
@@ -1323,6 +1325,7 @@ D2_FEATURE_PREFABS =
     {
       pond_w="ZIMMER2", pond_f="RROCK19",
       outer_w="BROWNHUG", liquid_f="FWATER1",
+      kind=0
     },
   },
 

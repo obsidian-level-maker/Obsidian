@@ -2786,7 +2786,7 @@ POND_LARGE =
     d = { copy="p", mark=4, [9] = { VDEL=true }},
 
     -- water
-    w = { f_h=-24, f_tex="liquid_f" },
+    w = { f_h=-24, f_tex="liquid_f", light=192, kind="kind" },
 
     -- outside area
     x = { l_tex="outer_w", l_peg="top" },
@@ -2814,7 +2814,7 @@ POND_SMALL =
   elements =
   {
     -- water
-    w = { f_h=-16, f_tex="liquid_f" },
+    w = { f_h=-16, f_tex="liquid_f", light=192, kind="kind" },
 
     -- pool boundary
     p = { f_h=-9, f_tex="pond_f", l_tex="pond_w", l_peg="top" },
@@ -2852,7 +2852,7 @@ POND_MEDIUM =
   elements =
   {
     -- water
-    w = { f_h=-22, f_tex="liquid_f" },
+    w = { f_h=-22, f_tex="liquid_f", light=192, kind="kind" },
 
     -- pool inner
     p = { f_h=-16, f_tex="pond_f", l_tex="pond_w", l_peg="top" },
