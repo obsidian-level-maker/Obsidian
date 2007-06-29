@@ -330,7 +330,7 @@ D2_COMBOS =
     ceil  = "RROCK04",
 
     lift = "SKSPINE1",
-    lift_floor = "SFLR6_4",
+    lift_floor = "FLAT5_6",
 
     step = "STEP1",
     pic_wd  = "SP_DUDE1",
@@ -353,7 +353,7 @@ D2_COMBOS =
     ceil  = "CEIL1_1",
 
     lift = "SKSPINE1",
-    lift_floor = "SFLR6_4",
+    lift_floor = "FLAT5_6",
 
     step = "STEP1",
     pic_wd  = "SP_DUDE1",
