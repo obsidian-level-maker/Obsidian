@@ -1988,6 +1988,7 @@ Q.theme.name, Q.combo.name)
     peak = peak * (Q.level ^ 0.7) * (1 + rand_skew()/5)
 
     peak = peak * GAME.toughness_factor
+    peak = peak * (PLAN.level.toughness_factor or 1)
 
     if Q.is_secret then
       peak = math.max(0, peak / 2 - 40)
@@ -2537,7 +2538,7 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   resize_rooms()
 
   if PLAN.coop then
-    PLAN.coop_toughness = rand_range(1.66, 3.0)
+    PLAN.coop_toughness = rand_range(1.5, 2.1)
     con.debugf("coop_toughness = %d\n", PLAN.coop_toughness);
   end
 
