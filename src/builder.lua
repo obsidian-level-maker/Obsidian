@@ -6871,7 +6871,7 @@ fab.name, c.x,c.y, x,y,dir)
         then prob = 0 end
       end
 
-      if def.is_cage and SETTINGS.mode == "dm" then
+      if def.is_cage and c.no_monsters then
         prob = 0
       end
 
@@ -6920,7 +6920,9 @@ fab.name, c.x,c.y, x,y,dir)
       end
     end
 
-    if def and def.is_cage and SETTINGS.mode == "dm" then def = nil end
+    if def and def.is_cage and c.no_monsters then
+      def = nil
+    end
 
     if not def then
       def = select_nice_fab(c, GAME.wall_fabs)
@@ -7014,7 +7016,9 @@ con.debugf("add_prefab: %s  dir:%d\n", def.name, dir)
         end
       end
 
-      if def and def.is_cage and SETTINGS.mode == "dm" then def = nil end
+      if def and def.is_cage and c.no_monsters then
+        def = nil
+      end
 
       if not def then
         def = select_nice_fab(c, GAME.sc_fabs)

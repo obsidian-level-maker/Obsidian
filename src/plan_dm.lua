@@ -506,7 +506,9 @@ function plan_dm_arena(level)
   for y = 1,H do
     for x = 1,W do
       -- Note: dummy quest, along and combo values
-      create_cell(x, y, {}, 1, nil)
+      local c = create_cell(x, y, {}, 1, nil)
+
+      c.no_monsters = true  -- prevent cages
     end
   end
 
