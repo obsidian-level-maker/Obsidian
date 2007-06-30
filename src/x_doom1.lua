@@ -2923,7 +2923,7 @@ function doom1_get_levels(episode)
       boss_kind   = (map == 8) and D1_EPISODE_BOSSES[episode],
       secret_kind = (map == 9) and "plain",
 
-      toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 7),
+      toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 5),
     }
 
     if D1_SECRET_EXITS[Level.name] then

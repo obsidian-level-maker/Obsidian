@@ -244,7 +244,7 @@ D2_COMBOS =
     floor = "FLAT8",
     ceil  = "CEIL3_5",
 
-    sc_fabs = { pillar_PANBLUE=20, pillar_PANELRED=20, other=70 },
+    sc_fabs = { pillar_PANBLUE=20, pillar_PANRED=20, other=70 },
 
     wall_fabs = { solid_STUCCO2=30, other=60 },
   },
@@ -1837,7 +1837,7 @@ function doom2_get_levels(episode)
       -- allow TNT and Plutonia to override the sky stuff
       sky_info = GAME.sky_info[episode],
 
-      toughness_factor = 1 + (map-1) / (ep_length-1),
+      toughness_factor = 1 + 1.5 * (map-1) / (ep_length-1),
     }
 
     -- fixup for secret levels
@@ -1845,7 +1845,7 @@ function doom2_get_levels(episode)
       Level.name = string.format("MAP%02d", 21+map)
       Level.sky_info = D2_SKY_INFO[3]
       Level.theme_probs = { WOLF=10 }
-      Level.toughness_factor = 1.1
+      Level.toughness_factor = 1.2
     end
 
 ---!!! Level.boss_kind   = D2_LEVEL_BOSSES[Level.name]
