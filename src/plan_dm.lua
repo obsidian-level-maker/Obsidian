@@ -279,7 +279,8 @@ function plan_dm_arena(level)
       c.quest =
       {
         kind = "deathmatch", item = "frags",
-        level = 1, path = {},
+        level = 1, sub_level = 0,
+        path = {},
         theme = get_rand_theme(),
       }
       table.insert(PLAN.quests, c.quest)
