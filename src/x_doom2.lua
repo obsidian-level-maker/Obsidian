@@ -1829,6 +1829,8 @@ function doom2_get_levels(episode)
 
       -- allow TNT and Plutonia to override the sky stuff
       sky_info = GAME.sky_info[episode],
+
+      toughness_factor = 1 + (map-1) / (ep_length-1),
     }
 
     -- fixup for secret levels
@@ -1836,6 +1838,7 @@ function doom2_get_levels(episode)
       Level.name = string.format("MAP%02d", 21+map)
       Level.sky_info = D2_SKY_INFO[3]
       Level.theme_probs = { WOLF=10 }
+      Level.toughness_factor = 1.1
     end
 
 ---!!! Level.boss_kind   = D2_LEVEL_BOSSES[Level.name]

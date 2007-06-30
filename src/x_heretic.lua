@@ -1006,6 +1006,8 @@ function heretic_get_levels(episode)
 
       boss_kind   = (map == 8) and HC_EPISODE_BOSSES[episode],
       secret_kind = (map == 9) and "plain",
+
+      toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 7),
     }
 
     if HC_SECRET_EXITS[Level.name] then

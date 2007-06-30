@@ -1785,6 +1785,8 @@ function hexen_get_levels(episode)
       boss_kind = Src.boss_kind,
 
       quests = {}, gates = {},
+
+      toughness_factor = 1 + (episode-1) / 3,
     }
 
     if map == 5 or SETTINGS.length == "single" then
