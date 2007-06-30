@@ -1453,7 +1453,7 @@ DM_SCENERY_PREFABS =
       rail_w = "MIDGRATE", rail_h = 72,
     },
 
-    prob = 3.3
+    prob = 3
   },
 
 }
