@@ -6750,18 +6750,29 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     gap_fill(c, K.x1,K.y1, K.x2,K.y2, K.rmodel)
   end
 
-  local function add_switch(c, in_wall)
+  local function add_switch(c, in_wall, override_def)
 
-    local def
+    local def = override_def
 
-    if c.is_exit then
-      def = non_nil(c.combo.switch)
-    else
-      local info = GAME.switches[c.quest.item]
-      if not info then
-        error("Missing switch: " .. tostring(c.quest.item))
+    if not def then
+      if c.is_exit then
+        def = non_nil(c.combo.switch)
+      else
+        local info = GAME.switches[c.quest.item]
+        if not info then
+          error("Missing switch: " .. tostring(c.quest.item))
+        end
+        -- alternative switches (FIXME: awful hack!!)
+        if not in_wall then
+          if info.switch3 and rand_odds(25) then
+            if add_switch(c, false, info.switch3) then return true end
+          end
+          if info.switch2 and rand_odds(80) then
+            if add_switch(c, false, info.switch2) then return true end
+          end
+        end
+        def = non_nil(info.switch)
       end
-      def = non_nil(info.switch)
     end
 
     local fab = PREFABS[def.prefab]
@@ -6792,6 +6803,9 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     end
 
     if not x then
+      if override_def then
+        return false
+      end
       show_cell_blocks(c)
       con.printf("Could not find place for SWITCH: %s %dx%d\n", fab.name, fab.long, fab.deep)
       error("Could not find place for switch!");
@@ -6813,6 +6827,8 @@ fab.name, c.x,c.y, x,y,dir)
     if not in_wall then  -- FIXME: mark front
       fab_mark_walkable(c, x,y, dir, fab.long,fab.deep, 4)
     end
+
+    return true
   end
 
   local function add_exit_elevator(c)
@@ -7003,6 +7019,10 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
 
     local def = GAME.misc_fabs["image_" .. tostring(what)]
     assert(def)
+
+    if SETTINGS.mode == "dm" then
+      return --!!!!!!!!!!!!! images in DM mode
+    end
 
     if c.quest.image then return end
 
