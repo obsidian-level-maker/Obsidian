@@ -1679,7 +1679,7 @@ TECH_PICKUP_SMALL =
 
   things =
   {
-    { kind="pickup_t", x=128, y=128 },
+    { kind="pickup_spot", x=128, y=128 },
   },
 },
 
@@ -1713,7 +1713,7 @@ TECH_PICKUP_LARGE =
 
   things =
   {
-    { kind="pickup_t", x=160, y=160 },
+    { kind="pickup_spot", x=160, y=160 },
   },
 },
 
@@ -1770,7 +1770,7 @@ LAUNCH_PAD_LARGE =
 
   things =
   {
-    { kind="pickup_t", x=192, y=192 },
+    { kind="pickup_spot", x=192, y=192 },
   },
 },
 
@@ -1804,7 +1804,7 @@ LAUNCH_PAD_MEDIUM =
 
   things =
   {
-    { kind="pickup_t", x=160, y=160 },
+    { kind="pickup_spot", x=160, y=160 },
   },
 },
 
@@ -1834,7 +1834,7 @@ LAUNCH_PAD_SMALL =
 
   things =
   {
-    { kind="pickup_t", x=128, y=128 },
+    { kind="pickup_spot", x=128, y=128 },
   },
 },
 
@@ -1878,7 +1878,7 @@ LIQUID_PICKUP =
 
   things =
   {
-    { kind="pickup_t", x=128, y=128 },
+    { kind="pickup_spot", x=128, y=128 },
   },
 },
 
@@ -1898,11 +1898,6 @@ PEDESTAL =
           f_tex = "ped_f", l_tex = "ped_side",
           l_peg = "top",
         }
-  },
-
-  things =
-  {
-    { kind="pickup_t", x=32, y=32 },
   },
 },
 
@@ -1933,11 +1928,6 @@ PEDESTAL_PLUT =
           [7] = { dx=-6, dy= 0 },
           [9] = { dx= 0, dy=22 },
         },
-  },
-
-  things =
-  {
-    { kind="pickup_t", x=32, y=32 },
   },
 },
 
@@ -2592,7 +2582,7 @@ BILLBOARD_STILTS_HUGE =
 
   things =
   {
-    { kind="pickup_t", x=96, y=96 },
+    { kind="pickup_spot", x=96, y=96 },
   },
 },
 
@@ -2670,7 +2660,7 @@ COMPUTER_DESK_U_SHAPE =
 
   things =
   {
-    { kind="pickup_t", x=36, y=96 },
+    { kind="pickup_spot", x=36, y=96 },
   },
 },
 
@@ -2688,7 +2678,7 @@ COMPUTER_DESK_HUGE =
 
   things =
   {
-    { kind="pickup_t", x=80, y=128 },
+    { kind="pickup_spot", x=80, y=128 },
   },
 },
 
@@ -4220,11 +4210,6 @@ OVERHANG_1 =
     o = { c_h=-24, c_tex="hang_c", u_tex="hang_u",
           u_peg="top", light_add = -32,
         },
-  },
-
-  things =
-  {
-    { kind="pickup_t", x=96, y=96 },
   },
 },
 
