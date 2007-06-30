@@ -2464,8 +2464,8 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
       local peak = peak_toughness(Q)
       local skip = 0
 
-      if SETTINGS.mons == "less"   then peak = peak/2.0 end
-      if SETTINGS.mons == "more"   then peak = peak*2.0 end
+      if SETTINGS.mons == "less" then peak = peak/1.8 end
+      if SETTINGS.mons == "more" then peak = peak*1.8 end
 
       -- go backwards from quest cell to start cell
       for i = #Q.path,1,-1 do
