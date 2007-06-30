@@ -1151,6 +1151,7 @@ D2_SCENERY_PREFABS =
     prefab = "CAGE_SMALL",
     add_mode = "island",
     min_height = 144,
+    is_cage = true,
 
     skin =
     {
@@ -1165,6 +1166,7 @@ D2_SCENERY_PREFABS =
   {
     prefab = "CAGE_MEDIUM",
     add_mode = "island",
+    is_cage = true,
 
     skin =
     {
@@ -1382,6 +1384,7 @@ D2_FEATURE_PREFABS =
   {
     prefab = "CAGE_LARGE",
     add_mode = "island",
+    is_cage = true,
 
     skin =
     {
@@ -1400,6 +1403,7 @@ D2_FEATURE_PREFABS =
     prefab = "CAGE_LARGE_W_LIQUID",
     add_mode = "island",
     min_height = 256,
+    is_cage = true,
 
     skin =
     {
@@ -1421,6 +1425,7 @@ D2_FEATURE_PREFABS =
     prefab = "CAGE_MEDIUM_W_LIQUID",
     add_mode = "island",
     min_height = 160,
+    is_cage = true,
 
     skin =
     {
@@ -1440,6 +1445,7 @@ D2_FEATURE_PREFABS =
   {
     prefab = "CAGE_MEDIUM_W_LIQUID",
     add_mode = "island",
+    is_cage = true,
 
     skin =
     {
@@ -1524,6 +1530,7 @@ D2_WALL_PREFABS =
     prefab = "CAGE_NICHE",
 ---  environment = "indoor",
     add_mode = "wall",
+    is_cage = true,
 
     min_height = 160,
 

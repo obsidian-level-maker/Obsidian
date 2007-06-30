@@ -1444,6 +1444,7 @@ DM_SCENERY_PREFABS =
     prefab = "CAGE_PILLAR",
     add_mode = "island",
     min_height = 160,
+    is_cage = true,
 
     skin =
     {
@@ -1738,6 +1739,7 @@ DM_FEATURE_PREFABS =
     prefab = "CAGE_OPEN_W_POSTS",
     add_mode = "island",
     min_height = 208,
+    is_cage = true,
 
     skin =
     {
