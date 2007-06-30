@@ -131,8 +131,6 @@ function add_special_pickup_spot(c, bx,by, dx,dy, specialness)
     c.special_spots = {}
   end
 
-con.printf("ADD SPECIAL SPOT @ (%d,%d) sn:%d\n", c.x,c.y, specialness)
-
   local SPOT =
   {
     c=c, x=bx, y=by, dx=dx, dy=dy, double=false,
@@ -146,7 +144,6 @@ con.printf("ADD SPECIAL SPOT @ (%d,%d) sn:%d\n", c.x,c.y, specialness)
       return a.specialness > b.specialness
     end)
 
-con.printf("SPOT LIST NOW: %s\n", tostring(c.special_spots))
   return SPOT
 end
 
@@ -586,7 +583,7 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
 
       local bx,by, dx,dy = th_coords(tdef.x, tdef.y)
 
-      if tdef.kind == "pickup_t" then
+      if tdef.kind == "pickup_spot" then
 
         add_special_pickup_spot(c, bx,by, dx,dy, skin.pickup_specialness or 20)
 
@@ -2451,7 +2448,7 @@ con.debugf("SELECT STAIR SPOTS @ (%d,%d) loop: %d\n", c.x, c.y, loop);
     c.q_spot.purpose = purpose
     c.q_spot.no_reclaim = true
 
-con.printf("Q-SPOT @ (%d,%d) chunk:[%d,%d] for:%s\n",
+con.debugf("Q-SPOT @ (%d,%d) chunk:[%d,%d] for:%s\n",
 c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
 
 
@@ -4774,7 +4771,7 @@ sel(B.on_path, "YES", "NO"))
       end
     end end
 
-con.printf("get_vista_coords @ (%d,%d) --> (%d,%d)\n",
+con.debugf("get_vista_coords @ (%d,%d) --> (%d,%d)\n",
 c.x, c.y, other.x, other.y)
     if not x1 then error("missing vista chunks!?!?") end
 
@@ -4798,10 +4795,10 @@ c.x, c.y, other.x, other.y)
   local function vista_jiggle_link(c, side, L, other, x1,y1, x2,y2)
     local D = c.border[side]
 
-con.printf("\n vista_jiggle_link:\n")
-con.printf("  new size: (%d,%d) .. (%d,%d)\n", x1,y1, x2,y2)
-con.printf("  link coords: (%d,%d) .. (%d,%d)\n", L.x1,L.y1, L.x2,L.y2)
-con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
+con.debugf("\n vista_jiggle_link:\n")
+con.debugf("  new size: (%d,%d) .. (%d,%d)\n", x1,y1, x2,y2)
+con.debugf("  link coords: (%d,%d) .. (%d,%d)\n", L.x1,L.y1, L.x2,L.y2)
+con.debugf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
 
     local dir
 
@@ -4814,20 +4811,17 @@ con.printf("  boorder cds: (%d,%d) .. (%d,%d)\n\n", D.x1,D.y1, D.x2,D.y2)
 
       if dir == 8 and L.y2 < math.min(y2, D.y2) then
         L.y1, L.y2 = L.y1+1, L.y2+1
-con.printf("  SHIFT UP\n")
         return
       end
 
       if dir == 2 and L.y1 > math.max(y1, D.y1) then
         L.y1, L.y2 = L.y1-1, L.y2-1
-con.printf("  SHIFT DOWN\n")
         return
       end
 
       -- unable to move link, backup plan: shorten it
       L.long = math.max(L.long-1, 2)
 
-con.printf("  SHORTENED\n")
       if dir == 2 then
         L.y2 = L.y1 + L.long - 1
       else
@@ -4939,7 +4933,7 @@ con.printf("  SHORTENED\n")
     end
 
     vista_jiggle_link(c, side, link, nb, x1,y1, x2,y2)
-con.printf("  link coords now: (%d,%d) .. (%d,%d)\n", link.x1,link.y1, link.x2,link.y2)
+con.debugf("  link coords now: (%d,%d) .. (%d,%d)\n", link.x1,link.y1, link.x2,link.y2)
 
 con.debugf("  COORDS: (%d,%d) .. (%d,%d)  size:%dx%d\n", x1,y1, x2,y2, long,deep)
 con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
@@ -6514,11 +6508,11 @@ function tizzy_up_room(c)
       end
       return
     end
-    
+ 
     local K = PLAN.blocks[x][y].chunk
     assert(K)
 
-con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
+con.debugf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
 ---##    gap_fill(c, x,y, x,y, PLAN.blocks[x][y].chunk.rmodel, { light=255, kind=8 })
 
     B_prefab(c, fab, def.skin or {}, {}, K.rmodel, c.combo, x, y, dir)
@@ -6595,6 +6589,24 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
 
   local function add_dm_weapon(c)
 
+    local function do_add_weap(x, y)
+      for idx,SK in ipairs(SKILLS) do
+
+        local name = choose_dm_thing(GAME.dm.weapons, true)
+        local angle = 0
+        local options = { [SK]=true }
+
+        con.debugf("add_dm_weapon: %s @ (%d,%d) SK=%s\n", name, x, y, SK)
+
+        add_thing(c, x, y, name, idx==1, angle, options)
+      end
+    end
+
+    if c.special_spots and #c.special_spots >= 1 then
+      local spot = table.remove(c.special_spots, 1)
+      return do_add_weap(spot.x, spot.y)
+    end
+
     local ped = "pedestal_ITEM"
 
     local def = (GAME.misc_fabs and GAME.misc_fabs[ped]) or {}
@@ -6617,16 +6629,7 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
     B_prefab(c, fab, def.skin or {}, {}, K.rmodel, c.combo, x, y, dir)
     fab_mark_walkable(c, x, y, 8, 1,1, 4)
 
-    for idx,SK in ipairs(SKILLS) do
-
-      local name = choose_dm_thing(GAME.dm.weapons, true)
-      local angle = 0
-      local options = { [SK]=true }
-
-      con.debugf("add_dm_weapon: %s @ (%d,%d) SK=%s\n", name, x, y, SK)
-
-      add_thing(c, x, y, name, idx==1, angle, options)
-    end
+    do_add_weap(x, y)
   end
 
   local function add_ceiling_beams(c) -- TEST JUNK
@@ -6665,7 +6668,7 @@ con.printf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
 
     if not x then return end
 
-con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
+con.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
   fab.name, c.x, c.y, x, y, dir)
 
     B_prefab(c, fab, def.skin, parm, K.rmodel, combo, x, y, dir)
@@ -6819,7 +6822,7 @@ con.printf("@ add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
       parm.tag = c.quest.tag + 1
     end
 
-con.printf("add_switch '%s' @ (%d,%d) block:(%d,%d) dir:%d\n",
+con.debugf("add_switch '%s' @ (%d,%d) block:(%d,%d) dir:%d\n",
 fab.name, c.x,c.y, x,y,dir)
 
     B_prefab(c, fab,skin,parm, PLAN.blocks[x][y].chunk.rmodel,c.combo, x, y, dir)
@@ -6868,6 +6871,10 @@ fab.name, c.x,c.y, x,y,dir)
         then prob = 0 end
       end
 
+      if def.is_cage and SETTINGS.mode == "dm" then
+        prob = 0
+      end
+
       if not prob and def.theme_probs then
         prob = def.theme_probs[c.quest.theme.name] or 0
       end
@@ -6913,6 +6920,8 @@ fab.name, c.x,c.y, x,y,dir)
       end
     end
 
+    if def and def.is_cage and SETTINGS.mode == "dm" then def = nil end
+
     if not def then
       def = select_nice_fab(c, GAME.wall_fabs)
     end
@@ -6941,7 +6950,7 @@ fab.name, c.x,c.y, x,y,dir)
     local x,y,dir = find_fab_loc(c, fab,def, 0,2, def.force_dir)
     if not x then return end
 
-con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
+con.debugf("add_prefab: %s  dir:%d\n", def.name, dir)
 
     local parm = {
 
@@ -7005,6 +7014,8 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
         end
       end
 
+      if def and def.is_cage and SETTINGS.mode == "dm" then def = nil end
+
       if not def then
         def = select_nice_fab(c, GAME.sc_fabs)
       end
@@ -7021,15 +7032,25 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
     assert(def)
 
     if SETTINGS.mode == "dm" then
-      return --!!!!!!!!!!!!! images in DM mode
+      -- for DM maps put an image in each corner and middle
+      if c.has_image then return end
+      if what==2 and rand_odds(20) then return end
+
+      if (c.x==1 and c.y==1) or (c.x==PLAN.w and c.y==PLAN.h) then
+        -- OK
+      elseif math.max(PLAN.w,PLAN.h) >= 5 and
+             c.x == int(PLAN.w/2 + 0.6) and
+             c.y == int(PLAN.h/2 + 0.6) then
+        -- OK
+      else return end
+    else
+      -- every second quest has an image
+      if c.quest.image then return end
+
+      local Q_val = (c.quest.level*3 + c.quest.sub_level) % 4
+
+      if 2*(what-1) ~= Q_val then return end
     end
-
-    if c.quest.image then return end
-
-    local Q_val = (c.quest.level*3 + c.quest.sub_level) % 4
-
-    -- roughly every second quest has an image
-    if 2*(what-1) ~= Q_val then return end
 
     if what == 1 then
       if not try_add_prefab(c, def) then return end
@@ -7038,6 +7059,7 @@ con.printf("@ add_prefab: %s  dir:%d\n", def.name, dir)
     end
 
     c.quest.image = true
+    c.has_image = true
   end
 
   local function add_scenery(c)
@@ -7208,6 +7230,13 @@ con.debugf("add_scenery : %s\n", item)
 
   -- TODO: 'room switch'
 
+  add_image(c, 1)
+
+  if GAME.feat_fabs then
+    add_prefab(c, "feature")
+  end
+
+
   if PLAN.deathmatch then
     -- secondary DM PLAYER
     if rand_odds(DM_PLAYERS_2[SETTINGS.mons]) then
@@ -7218,12 +7247,6 @@ con.debugf("add_scenery : %s\n", item)
       add_dm_weapon(c)
     end
   end
-
-  if GAME.feat_fabs then
-    add_prefab(c, "feature")
-  end
-
-  add_image(c, 1)
 
   -- PREFABS
   local pf_count =
