@@ -392,7 +392,7 @@ DM_COMBOS =
     floor = "FLAT10",
     ceil  = "FLAT10",
 
-    arch  = "arch_arched",
+    arch  = "arch_hole",
 
     sc_fabs = { stalagmite_MED=90, other=10 },
   },
@@ -626,6 +626,8 @@ DM_HALLWAYS =
 
     floor = "MFLR8_3",
     ceil  = "FLOOR6_2",
+
+    arch = "arch_arched",
 
     theme_probs = { HELL=70,CAVE=30 },
     trim_mode = "rough_hew",
@@ -863,7 +865,7 @@ DM_SWITCHES =
       }
     },
 
-    switch2 = -- FIXME: use sometimes
+    switch2 =
     {
       prefab = "SWITCH_FLOOR_BEAM",
       skin =
@@ -1725,10 +1727,10 @@ DM_FEATURE_PREFABS =
     {
       edge_w="STONE", edge_f="FLAT19",
       beam_w="STONE", beam_f="FLAT1",
-      liquid="FWATER1",
+      liquid_f="FWATER1", liquid_w="FIREMAG1",
     },
 
-    theme_probs = { URBAN=90, NATURE=40, HELL=5 },
+    theme_probs = { URBAN=90, NATURE=50, HELL=5 },
   },
 
   cage_w_posts_WOOD_MIDGRATE =
@@ -2355,8 +2357,6 @@ DM_THEMES =
 
   CAVE =
   {
-    arch = "arch_hole",
-
     room_probs=
     {
       PLAIN=25, WAREHOUSE2=10, TORTURE=5, PRISON=20

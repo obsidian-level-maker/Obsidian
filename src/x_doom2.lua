@@ -385,12 +385,14 @@ D2_COMBOS =
 
   CAVE_ZIMMER =
   {
-    theme_probs = { CAVE=5 },
+    theme_probs = { CAVE=10 },
     mat_pri = 2,
 
     wall  = "ZIMMER4",
     floor = "RROCK04",
     ceil  = "RROCK03",
+
+    arch  = "arch_hole",
 
     sc_fabs = { stalagmite_MED=40, other=10 },
   },
@@ -403,6 +405,8 @@ D2_COMBOS =
     wall  = "ROCK2",
     floor = "RROCK13",
     ceil  = "CEIL5_1",
+
+    arch  = "arch_arched",
 
     sc_fabs = { stalagmite_MED=40, other=10 },
   },
@@ -1518,6 +1522,7 @@ D2_WALL_PREFABS =
   cage_niche_MIDGRATE =
   {
     prefab = "CAGE_NICHE",
+---  environment = "indoor",
     add_mode = "wall",
 
     min_height = 160,
