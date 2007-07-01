@@ -78,6 +78,29 @@ TN_PICS =
   lt_yel = { wall="LITEYEL3", w=128, h=128, glow=true },
 }
 
+TN_COMBOS =
+{
+  --!!!! FIXME: URBAN_EGYPTIAN
+}
+
+TN_SCENERY_PREFABS =
+{
+  --!!!! FIXME: crates
+}
+
+TN_WALL_PREFABS =
+{
+  wall_pic_DISASTER =
+  {
+    prefab = "WALL_PIC",
+    min_height = 160,
+    skin = { pic_w="DISASTER", pic_h=128 },
+    prob = 10,
+  },
+
+  --!!!! FIXME: lights (yel/red -> TECH, grn -> INDY)
+}
+
 TN_SKY_INFO =
 {
   { color="brown",  light=192 },
@@ -92,11 +115,13 @@ GAME_FACTORIES["tnt"] = function()
   local T = GAME_FACTORIES.doom2()
 
   T.rails   = copy_and_merge(T.rails,  TN_RAILS)
-  T.crates  = copy_and_merge(T.crates, TN_CRATES)
-  T.doors   = copy_and_merge(T.doors,  TN_DOORS)
-  T.pics    = copy_and_merge(T.pics,   TN_PICS)
 
-  T.wall_lights = copy_and_merge(T.wall_lights, TN_WALL_LIGHTS)
+---##  T.crates  = copy_and_merge(T.crates, TN_CRATES)
+---##  T.doors   = copy_and_merge(T.doors,  TN_DOORS)
+---##  T.pics    = copy_and_merge(T.pics,   TN_PICS)
+---##  T.wall_lights = copy_and_merge(T.wall_lights, TN_WALL_LIGHTS)
+
+  T.wall_fabs = copy_and_merge(T.wall_fabs, TN_WALL_PREFABS)
 
   T.sky_info = TN_SKY_INFO
 
