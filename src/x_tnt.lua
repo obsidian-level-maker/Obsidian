@@ -80,12 +80,53 @@ TN_PICS =
 
 TN_COMBOS =
 {
-  --!!!! FIXME: URBAN_EGYPTIAN
+  URBAN_EGYPT =
+  {
+    theme_probs = { URBAN=9999 }, --!!!
+    mat_pri = 8,
+
+    wall  = "BIGWALL",
+    floor = "FLOOR0_2",
+    ceil  = "FLOOR0_2", -- "FLAT1_2",
+    step  = "BRICK2",
+
+    sc_fabs = { pillar_rnd_DRSIDE1=50, pillar_rnd_DRSIDE2=50, other=3 },
+
+    wall_fabs = { wall_pic_MURAL1=50, wall_pic_MURAL2=50, other=3 },
+  },
+
+  URBAN_STONEW1 =
+  {
+    theme_probs = { URBAN=1 }, --!!!
+    mat_pri = 5,
+
+    wall  = "STONEW1",
+    floor = "RROCK11",
+    ceil  = "FLAT10",
+    step  = "STEP6",
+  },
 }
 
 TN_SCENERY_PREFABS =
 {
   --!!!! FIXME: crates
+
+  pillar_rnd_DRSIDE1 =
+  {
+    prefab = "PILLAR_ROUND_SMALL",
+    add_mode = "island",
+    environment = "indoor",
+    skin = { wall="DRSIDE1" },
+  },
+
+  pillar_rnd_DRSIDE2 =
+  {
+    prefab = "PILLAR_ROUND_SMALL",
+    add_mode = "island",
+    environment = "indoor",
+    skin = { wall="DRSIDE2" },
+  },
+
 }
 
 TN_WALL_PREFABS =
@@ -96,6 +137,22 @@ TN_WALL_PREFABS =
     min_height = 160,
     skin = { pic_w="DISASTER", pic_h=128 },
     prob = 10,
+  },
+
+  wall_pic_MURAL1 =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 160,
+    skin = { pic_w="MURAL1", pic_h=128 },
+    prob = 0.5,
+  },
+
+  wall_pic_MURAL2 =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 160,
+    skin = { pic_w="MURAL2", pic_h=128 },
+    prob = 0.5,
   },
 
   --!!!! FIXME: lights (yel/red -> TECH, grn -> INDY)
@@ -121,6 +178,9 @@ GAME_FACTORIES["tnt"] = function()
 ---##  T.pics    = copy_and_merge(T.pics,   TN_PICS)
 ---##  T.wall_lights = copy_and_merge(T.wall_lights, TN_WALL_LIGHTS)
 
+  T.combos = copy_and_merge(T.combos, TN_COMBOS)
+
+  T.sc_fabs   = copy_and_merge(T.sc_fabs,   TN_SCENERY_PREFABS)
   T.wall_fabs = copy_and_merge(T.wall_fabs, TN_WALL_PREFABS)
 
   T.sky_info = TN_SKY_INFO
