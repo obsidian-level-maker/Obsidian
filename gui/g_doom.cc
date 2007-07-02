@@ -179,9 +179,10 @@ void WAD_WritePatches()
   {
     static const char *ext_patches[] =
     {
-      "W74A_1", "W74A_2", "W74B_1",       // FIREMAGx (water)
-      "WALL64_2", "W64B_1", "W64B_2",     // ROCKREDx (lava)
-      "RP2_1", "RP2_2", "RP2_3", "RP2_4", // BLODRIPx (slime)
+      "W74A_1",   "W74A_2", "W74B_1",         // FIREMAGx (water)
+      "WALL64_2", "W64B_1", "W64B_2",         // ROCKREDx (lava)
+      "RP2_1",    "RP2_2",  "RP2_3", "RP2_4", // BLODRIPx (blood)
+      "TP5_1",    "TP5_2",  "TP5_3", "TP5_4", // BLODGRx  (nukage)
 
       NULL // end marker
     };
