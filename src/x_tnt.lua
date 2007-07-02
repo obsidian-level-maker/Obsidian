@@ -82,13 +82,15 @@ TN_COMBOS =
 {
   URBAN_EGYPT =
   {
-    theme_probs = { URBAN=9999 }, --!!!
+    theme_probs = { URBAN=130 },
     mat_pri = 8,
 
     wall  = "BIGWALL",
     floor = "FLOOR0_2",
     ceil  = "FLOOR0_2", -- "FLAT1_2",
     step  = "BRICK2",
+
+    scenery = "green_torch",
 
     sc_fabs = { pillar_rnd_DRSIDE1=50, pillar_rnd_DRSIDE2=50, other=3 },
 
@@ -97,7 +99,7 @@ TN_COMBOS =
 
   URBAN_STONEW1 =
   {
-    theme_probs = { URBAN=1 }, --!!!
+    theme_probs = { URBAN=15 },
     mat_pri = 5,
 
     wall  = "STONEW1",
@@ -109,8 +111,6 @@ TN_COMBOS =
 
 TN_SCENERY_PREFABS =
 {
-  --!!!! FIXME: crates
-
   pillar_rnd_DRSIDE1 =
   {
     prefab = "PILLAR_ROUND_SMALL",
@@ -127,6 +127,13 @@ TN_SCENERY_PREFABS =
     skin = { wall="DRSIDE2" },
   },
 
+  --!!!! FIXME: crates
+
+  crate_WOOD_L6 =
+  {
+    prefab = "CRATE",
+    skin = { crate_h = 64, crate_w = "CRLWDL6", crate_f = "FLOOR4_1" }
+  },
 }
 
 TN_WALL_PREFABS =
@@ -139,12 +146,21 @@ TN_WALL_PREFABS =
     prob = 10,
   },
 
+  wall_pic_TNTDOOR =
+  {
+    prefab = "WALL_PIC",
+    min_height = 160,
+    skin = { pic_w="TNTDOOR", pic_h=128 },
+    theme_probs = { TECH=5, INDUSTRIAL=20 },
+  },
+
   wall_pic_MURAL1 =
   {
     prefab = "WALL_PIC_SHALLOW",
     min_height = 160,
     skin = { pic_w="MURAL1", pic_h=128 },
     prob = 0.5,
+    theme_probs = { URBAN=5, NATURE=3 },
   },
 
   wall_pic_MURAL2 =
@@ -152,10 +168,64 @@ TN_WALL_PREFABS =
     prefab = "WALL_PIC_SHALLOW",
     min_height = 160,
     skin = { pic_w="MURAL2", pic_h=128 },
-    prob = 0.5,
+    theme_probs = { URBAN=5, NATURE=3 },
   },
 
-  --!!!! FIXME: lights (yel/red -> TECH, grn -> INDY)
+  lights_wide_LITEGRN1 =
+  {
+    prefab = "WALL_LIGHTS_WIDE",
+    min_height = 128,
+    theme_probs = { INDUSTRIAL=50 },
+    skin =
+    {
+      lite_w="LITEGRN1", lite_side="LITEGRN1",
+---   frame_f="FLAT20",
+      wall_lt=255, kind=8,
+    },
+  },
+
+  lights_wide_LITERED1 =
+  {
+    prefab = "WALL_LIGHTS_WIDE",
+    min_height = 128,
+    theme_probs = { TECH=45 },
+    skin =
+    {
+      lite_w="LITERED1", lite_side="LITERED1",
+---   frame_f="FLAT20",
+      wall_lt=255, kind=8,
+    },
+  },
+
+  lights_wide_LITEYEL1 =
+  {
+    prefab = "WALL_LIGHTS_WIDE",
+    min_height = 128,
+    theme_probs = { TECH=15 },
+    skin =
+    {
+      lite_w="LITEYEL1", lite_side="LITEYEL1",
+---   frame_f="FLAT20",
+      wall_lt=255, kind=8,
+    },
+  },
+}
+
+TN_ROOMS =
+{
+  WAREHOUSE2 =
+  {
+    space_range = { 80, 99 },
+
+    pf_count = { 5,10 },
+
+    sc_fabs =
+    {
+      crate_WOOD_L6 = 50,
+
+      other = 10
+    },
+  },
 }
 
 TN_SKY_INFO =
@@ -179,6 +249,7 @@ GAME_FACTORIES["tnt"] = function()
 ---##  T.wall_lights = copy_and_merge(T.wall_lights, TN_WALL_LIGHTS)
 
   T.combos = copy_and_merge(T.combos, TN_COMBOS)
+  T.rooms  = copy_and_merge(T.rooms,  TN_ROOMS)
 
   T.sc_fabs   = copy_and_merge(T.sc_fabs,   TN_SCENERY_PREFABS)
   T.wall_fabs = copy_and_merge(T.wall_fabs, TN_WALL_PREFABS)
