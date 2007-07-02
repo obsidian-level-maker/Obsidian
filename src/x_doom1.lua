@@ -842,8 +842,8 @@ DM_CRATES =
 DM_LIQUIDS =
 {
   water = { floor="FWATER1", wall="FIREMAG1" },
-  blood = { floor="BLOOD1",  wall="BFALL1" }, -- no damage
-  nukage= { floor="NUKAGE1", wall="SFALL1",   sec_kind=5 },  -- 10% damage
+  blood = { floor="BLOOD1",  wall="BFALL1",   sec_kind=7 }, --  5% damage
+  nukage= { floor="NUKAGE1", wall="SFALL1",   sec_kind=5 }, -- 10% damage
   lava  = { floor="LAVA1",   wall="ROCKRED1", sec_kind=16, add_light=64 }, -- 20% damage
 }
 
