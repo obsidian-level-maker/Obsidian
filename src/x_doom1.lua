@@ -886,7 +886,7 @@ DM_SWITCHES =
       skin =
       {
         key_w="COMPBLUE",
-        door_w="BIGDOOR3", door_c="FLAT1",
+        door_w="BIGDOOR3", door_c="FLOOR7_2",
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
         door_h=112,
@@ -913,7 +913,7 @@ DM_SWITCHES =
       skin =
       {
         key_w="SP_HOT1",
-        door_w="BIGDOOR3", door_c="FLAT1",
+        door_w="BIGDOOR3", door_c="FLOOR7_2",
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
         door_h=112,
@@ -955,7 +955,7 @@ DM_SWITCHES =
       skin =
       {
         key_w="SKINFACE",
-        door_w="BIGDOOR3", door_c="FLAT1",
+        door_w="BIGDOOR3", door_c="FLOOR7_2",
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
         door_h=112,
@@ -982,7 +982,7 @@ DM_SWITCHES =
       skin =
       {
         key_w="GRAYVINE",
-        door_w="BIGDOOR3", door_c="FLAT1",
+        door_w="BIGDOOR3", door_c="FLOOR7_2",
         step_w="STEP1",  track_w="DOORTRAK",
         frame_f="FLAT1", frame_c="FLAT1",
         door_h=112,
@@ -1092,7 +1092,7 @@ DM_KEY_DOORS =
     skin =
     {
       key_w="DOORBLU2",
-      door_w="BIGDOOR4", door_c="FLAT1",
+      door_w="BIGDOOR4", door_c="FLOOR3_3",
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
@@ -1109,7 +1109,7 @@ DM_KEY_DOORS =
     skin =
     {
       key_w="DOORYEL2",
-      door_w="BIGDOOR4", door_c="FLAT1",
+      door_w="BIGDOOR4", door_c="FLOOR3_3",
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
@@ -1126,7 +1126,7 @@ DM_KEY_DOORS =
     skin =
     {
       key_w="DOORRED2",
-      door_w="BIGDOOR4", door_c="FLAT1",
+      door_w="BIGDOOR4", door_c="FLOOR3_3",
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
