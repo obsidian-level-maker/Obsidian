@@ -22,34 +22,6 @@ TN_RAILS =
   r_4 = { wall="TYIRONLG", w=128, h=128 },
 }
 
-TN_CRATES =
-{
-  WOOD_L6 =
-  {
-    wall = "CRLWDL6", h=64, floor = "FLOOR4_1",
-  },
-  
-  WOOD_L6C =
-  {
-    wall = "CRLWDL6C", h=64, floor = "FLAT5_5",
-  },
-  
-  WOOD_H =
-  {
-    wall = "CRWDH64", h=128, floor = "FLAT5_2",
-  },
-
-  WOOD_LA =
-  {
-    wall = "CRWDL64A", h=128, floor = "FLOOR7_1",
-  },
-
-  WOOD_BH =
-  {
-    wall = "CRBLWDH6", h=128, floor = "FLAT5_5",
-  },
-
-}
 
 TN_WALL_LIGHTS =
 {
@@ -127,13 +99,52 @@ TN_SCENERY_PREFABS =
     skin = { wall="DRSIDE2" },
   },
 
-  --!!!! FIXME: crates
-
   crate_WOOD_L6 =
   {
     prefab = "CRATE",
-    skin = { crate_h = 64, crate_w = "CRLWDL6", crate_f = "FLOOR4_1" }
+    skin = { crate_h=64, crate_w="CRLWDL6", crate_f="FLOOR4_1" }
   },
+
+  crate_big_WOOD_L12 =
+  {
+    prefab = "CRATE_BIG",
+    min_height = 144,
+    skin = { crate_h=128, crate_w="CRLWDL12", crate_f="FLOOR4_1" }
+  },
+
+  crate_rot_WOOD_L6C =
+  {
+    prefab = "CRATE_ROTATE",
+    skin = { crate_w="CRLWDL6C", crate_h=64, crate_f="FLAT5_5" }
+  },
+  
+  crate_WOOD_H =
+  {
+    prefab = "CRATE",
+    min_height = 144,
+    skin = { crate_w="CRWDH64", crate_h=128, crate_f="FLAT5_2" }
+  },
+
+  crate_rot_WOOD2_H =
+  {
+    prefab = "CRATE_ROTATE",
+    min_height = 144,
+    skin = { crate_w="CRWDH64B", crate_h=128, crate_f="FLOOR7_1" }
+  },
+
+  crate_WOOD_LA =
+  {
+    prefab = "CRATE",
+    skin = { crate_w="CRWDL64A", crate_h=64, crate_f="FLOOR7_1" }
+  },
+
+  crate_rot_WOOD_BH =
+  {
+    prefab = "CRATE_ROTATE",
+    min_height = 144,
+    skin = { crate_w="CRBLWDH6", crate_h=128, crate_f="FLAT5_5" }
+  },
+
 }
 
 TN_WALL_PREFABS =
@@ -222,6 +233,14 @@ TN_ROOMS =
     sc_fabs =
     {
       crate_WOOD_L6 = 50,
+      crate_WOOD_H = 50,
+      crate_WOOD_LA = 50,
+
+      crate_big_WOOD_L12 = 70,
+
+      crate_rot_WOOD_L6C = 30,
+      crate_rot_WOOD2_H = 30,
+      crate_rot_WOOD_BH = 30,
 
       other = 10
     },
@@ -243,7 +262,6 @@ GAME_FACTORIES["tnt"] = function()
 
   T.rails   = copy_and_merge(T.rails,  TN_RAILS)
 
----##  T.crates  = copy_and_merge(T.crates, TN_CRATES)
 ---##  T.doors   = copy_and_merge(T.doors,  TN_DOORS)
 ---##  T.pics    = copy_and_merge(T.pics,   TN_PICS)
 ---##  T.wall_lights = copy_and_merge(T.wall_lights, TN_WALL_LIGHTS)
