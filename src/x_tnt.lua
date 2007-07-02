@@ -22,32 +22,11 @@ TN_RAILS =
   r_4 = { wall="TYIRONLG", w=128, h=128 },
 }
 
-
-TN_WALL_LIGHTS =
-{
-  br_grn = { wall="LITEGRN1", w=32 },
-  br_red = { wall="LITERED1", w=32 },
-  br_yel = { wall="LITEYEL1", w=32 },
-}
-
 TN_DOORS =
 {
 --[[ !!!! FIXME
   d_metal = { wall="METALDR", w=128, h=128 },
 --]]
-}
-
-TN_PICS =
-{
-  egypt1 = { wall="BIGWALL",  w=128, h=128 },
-  egypt2 = { wall="LONGWALL", w=128, h=128 },
-  egypt3 = { wall="MURAL1",   w=128, h=128 },
-  egypt4 = { wall="MURAL2",   w=128, h=128 },
-
-  tnt1   = { wall="TNTDOOR",  w=128, h=128 },
-  disast = { wall="DISASTER", w=128, h=128 },
-  gr_men = { wall="GRNMEN",   w=128, h=128 },
-  lt_yel = { wall="LITEYEL3", w=128, h=128, glow=true },
 }
 
 TN_COMBOS =
@@ -66,7 +45,7 @@ TN_COMBOS =
 
     sc_fabs = { pillar_rnd_DRSIDE1=50, pillar_rnd_DRSIDE2=50, other=3 },
 
-    wall_fabs = { wall_pic_MURAL1=50, wall_pic_MURAL2=50, other=3 },
+    wall_fabs = { wall_pic_MURAL1=50, wall_pic_MURAL2=50, wall_pic_LONGWALL=10, other=5 },
   },
 
   URBAN_STONEW1 =
@@ -168,7 +147,7 @@ TN_WALL_PREFABS =
   wall_pic_MURAL1 =
   {
     prefab = "WALL_PIC_SHALLOW",
-    min_height = 160,
+    min_height = 144,
     skin = { pic_w="MURAL1", pic_h=128 },
     prob = 0.5,
     theme_probs = { URBAN=5, NATURE=3 },
@@ -177,9 +156,16 @@ TN_WALL_PREFABS =
   wall_pic_MURAL2 =
   {
     prefab = "WALL_PIC_SHALLOW",
-    min_height = 160,
+    min_height = 144,
     skin = { pic_w="MURAL2", pic_h=128 },
     theme_probs = { URBAN=5, NATURE=3 },
+  },
+
+  wall_pic_LONGWALL =
+  {
+    prefab = "WALL_PIC_SCROLLER",
+    min_height = 160,
+    skin = { pic_w="LONGWALL", pic_h=128, kind=48 },
   },
 
   lights_wide_LITEGRN1 =
@@ -190,7 +176,7 @@ TN_WALL_PREFABS =
     skin =
     {
       lite_w="LITEGRN1", lite_side="LITEGRN1",
----   frame_f="FLAT20",
+      frame_f="FLAT3",
       wall_lt=255, kind=8,
     },
   },
@@ -203,7 +189,7 @@ TN_WALL_PREFABS =
     skin =
     {
       lite_w="LITERED1", lite_side="LITERED1",
----   frame_f="FLAT20",
+      frame_f="FLAT3",
       wall_lt=255, kind=8,
     },
   },
@@ -216,7 +202,7 @@ TN_WALL_PREFABS =
     skin =
     {
       lite_w="LITEYEL1", lite_side="LITEYEL1",
----   frame_f="FLAT20",
+      frame_f="FLAT3",
       wall_lt=255, kind=8,
     },
   },
@@ -263,8 +249,6 @@ GAME_FACTORIES["tnt"] = function()
   T.rails   = copy_and_merge(T.rails,  TN_RAILS)
 
 ---##  T.doors   = copy_and_merge(T.doors,  TN_DOORS)
----##  T.pics    = copy_and_merge(T.pics,   TN_PICS)
----##  T.wall_lights = copy_and_merge(T.wall_lights, TN_WALL_LIGHTS)
 
   T.combos = copy_and_merge(T.combos, TN_COMBOS)
   T.rooms  = copy_and_merge(T.rooms,  TN_ROOMS)
