@@ -342,20 +342,35 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
 
   assert(#ky_list + #sw_list + #wp_list + #it_list >= tot_min)
 
+
+  local RATIO_MINIMUMS = { less=0.0, normal=0.4, more=1.2 }
+  local RATIO_MAXIMUMS = { less=0.7, normal=1.4, more=2.5 }
+
+  local ratio_min = RATIO_MINIMUMS[SETTINGS.traps]
+  local ratio_max = RATIO_MAXIMUMS[SETTINGS.traps]
+
+  assert(ratio_min and ratio_max)
+  assert(ratio_min <= ratio_max)
+
+
   local keys, switches, weapons, items
   local total, ratio
 
-  repeat
-    keys     = rand_irange(1, #ky_list)
-    switches = rand_irange(0, #sw_list)
-    weapons  = rand_irange(1, #wp_list)
-    items    = rand_irange(0, #it_list)
+  local ky_min = sel(SETTINGS.traps == "less", 0, 1)
+
+  for loop = 1,99 do
+    keys     = rand_irange(ky_min, #ky_list)
+    switches = rand_irange(0,      #sw_list)
+    weapons  = rand_irange(1,      #wp_list)
+    items    = rand_irange(0,      #it_list)
 
     total    = keys + switches + weapons + items
     ratio    = (keys + switches) / (weapons + items)
 
-  until (tot_min <= total and total <= tot_max) and
-        (0.35 <= ratio and ratio <= 1.7)
+    if (tot_min   <= total and total <= tot_max) and
+       (ratio_min <= ratio and ratio <= ratio_max)
+    then break; end
+  end
 
   assert(keys + switches >= 1)
 
@@ -2543,10 +2558,9 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
   toughen_it_up()
 
--- FIXME add_bridges()
-
   add_vistas()
---  add_surprises()
+
+-- FIXME add_surprises()
 
   create_corners()
   create_borders()
