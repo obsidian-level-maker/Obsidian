@@ -1435,7 +1435,12 @@ con.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
       local c1 = link.cells[1]
       local c2 = link.cells[2]
 
-      if c1.quest.level == c2.quest.level then
+      if (not c1.quest.is_secret) ~= (not c2.quest.is_secret) then
+        -- secret quests need a secret door
+        link.kind = "door"
+        link.is_secret = true
+
+      elseif c1.quest.level == c2.quest.level then
 
         local c = link.build
         local other = link_other(link, c)
@@ -1443,12 +1448,6 @@ con.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
         local door_chance = get_door_chance(c, other)
 
         if rand_odds(door_chance) then link.kind = "door" end
-
-        -- secret quests need a secret door
-        if (not c1.quest.is_secret) ~= (not c2.quest.is_secret) then
-          link.kind = "door"
-          link.is_secret = true
-        end
 
       else -- need a locked door
 
