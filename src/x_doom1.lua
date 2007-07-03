@@ -2708,7 +2708,7 @@ D1_COMBOS =
     mat_pri = 2,
 
     wall  = "ASHWALL",
-    floor = "FLOOR6_2",
+    floor = "FLAT5_8", -- FLOOR6_2
     ceil  = "FLAT5_8",
 
     arch  = "arch_russian_WOOD",
