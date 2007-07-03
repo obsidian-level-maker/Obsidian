@@ -638,6 +638,8 @@ D2_EXITS =
     floor = "FWATER1",
     ceil  = "SFLR6_4",
 
+    liquid_prob = 0,
+
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 

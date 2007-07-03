@@ -571,6 +571,8 @@ DM_EXITS =
     floor = "BLOOD1",
     ceil  = "FLOOR7_2",
 
+    liquid_prob = 0,
+
     sign = "EXITSIGN",
     sign_ceil="CEIL5_2",
 
