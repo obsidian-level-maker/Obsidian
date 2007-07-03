@@ -1,5 +1,5 @@
 
-OBLIGE 0.93 Read-Me
+OBLIGE 0.94 Read-Me
 ===================
 
 by Andrew Apted.   June 2007
@@ -25,7 +25,7 @@ INTRODUCTION
 
 STATUS
 
-  OBLIGE 0.93 is the current version, which was released pending a
+  OBLIGE 0.94 is the current version, which was released pending a
   rewrite of the core level-making algorithms. The GUI interface
   is simple but very usable. The battle simulator produces
   reasonable ammo and health to fight the monsters in the map.
@@ -38,26 +38,21 @@ STATUS
   desirable features are: nicer (non-square) architecture,
   player teleports, and better lighting.
 
-  Nearly every decision in OBLIGE, such as what monsters to make
-  and what themes to use for rooms, is roll-of-the-die random.
-  There is so much potential for using much better algorithms to
-  create much nicer levels...
 
-
-CHANGES IN 0.93
+CHANGES IN 0.94
 
   +  new prefab system.
   +  new theme system for more consistent levels.
   +  different sized rooms.
   +  greatly improved Hexen support.
 
-  -  preliminary Wolfenstein-3D support.
-  -  Heretic support is a bit better.
-  -  balconies.
-
-  -  new adjustment for level size.
+  -  new adjustments for level size and puzzles.
   -  adjustments for deathmatch games.
   -  secret areas and levels.
+
+  -  experimental Wolfenstein-3D support.
+  -  later levels get progressively harder.
+  -  balconies.
 
 Note: some things also broke in this release, e.g. traps :-(
 
@@ -102,7 +97,7 @@ USAGE GUIDE
 
   In the Adjustments panel you can control the size of the created
   levels, as well as how much health, ammunition and how many
-  monsters and traps are added. OBLIGE also implements the various
+  monsters and puzzles are added. OBLIGE also implements the various
   skill levels for each map (e.g. Hurt-me-Plenty vs Ultra-Violence).
 
   After you've chosen the desired settings, press the "Build..."
@@ -134,15 +129,15 @@ STATUS OF EACH GAME
 
   DOOM 2: the most well tested game and produces the best results.
 
-  WOLF 3D: very buggy at the moment. No pushwall secrets, keys
-  sometimes don't appear, no patrolling enemies.
-
   HERETIC: tested and working quite well, though very lacking in
   different themes and scenery.
 
   HEXEN: tested and works pretty well (greatly improved since the
   last v0.85 release). The sequence of hubs is not working
   properly yet.
+
+  WOLF 3D: very buggy at the moment. No pushwall secrets, keys
+  sometimes don't appear, no patrolling enemies.
 
 
 ACKNOWLEDGEMENTS
@@ -151,7 +146,9 @@ ACKNOWLEDGEMENTS
   Prefab structures, which kicked off some big improvements to the
   way OBLIGE builds stuff.
 
-  Thanks to DoomJedi for his support.
+  Thanks to JohnnyRancid who also created some prefabs for OBLIGE.
+
+  Thanks to DoomJedi for his help.
 
   I'm grateful to everyone who provided positive feedback, bug
   reports and ideas for improvements, both in email and on the
