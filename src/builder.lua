@@ -6313,7 +6313,7 @@ function tizzy_up_room(c)
     end
   end
 
-  local function find_wallish_loc(c, fab, dir, q_spot, kind)
+  local function find_wallish_loc(c, def,fab, dir, q_spot, kind)
 
     if not kind then kind = "solid" end
 
@@ -6336,12 +6336,9 @@ function tizzy_up_room(c)
     end
 
     local function passes_height_test(K)
-      if fab.height_range then
-        local h = K.rmodel.c_h - K.rmodel.f_h
-        if h < fab.height_range[1] or h > fab.height_range[2] then
-          return false
-        end
-      end
+      local h = K.rmodel.c_h - K.rmodel.f_h
+      if def.min_height and h < def.min_height then return false end
+      if def.max_height and h > def.max_height then return false end
       return true
     end
 
@@ -6681,7 +6678,7 @@ con.debugf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
              cage_base_h = c.rmodel.f_h + 64,
              }
 
-    local x, y, dir, K, combo = find_wallish_loc(c, fab)
+    local x, y, dir, K, combo = find_wallish_loc(c, def,fab)
 
     if not x then return end
 
@@ -6809,7 +6806,7 @@ con.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     local x,y,dir
     
     if in_wall then
-      x,y,dir = find_wallish_loc(c, fab, nil, c.q_spot)
+      x,y,dir = find_wallish_loc(c, def,fab, nil, c.q_spot)
 
       -- if not found, try again later as a "normal" prefab
       if not x then
