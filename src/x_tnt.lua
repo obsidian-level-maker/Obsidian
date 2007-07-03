@@ -16,19 +16,6 @@
 --
 ----------------------------------------------------------------
 
-TN_RAILS =
-{
-  r_3 = { wall="TYIRONSM", w=64,  h=72  },
-  r_4 = { wall="TYIRONLG", w=128, h=128 },
-}
-
-TN_DOORS =
-{
---[[ !!!! FIXME
-  d_metal = { wall="METALDR", w=128, h=128 },
---]]
-}
-
 TN_COMBOS =
 {
   URBAN_EGYPT =
@@ -206,6 +193,19 @@ TN_WALL_PREFABS =
       wall_lt=255, kind=8,
     },
   },
+}
+
+TN_RAILS =
+{
+  r_3 = { wall="TYIRONSM", w=64,  h=72  },
+  r_4 = { wall="TYIRONLG", w=128, h=128 },
+}
+
+TN_DOORS =
+{
+--[[ !!!! FIXME
+  d_metal = { wall="METALDR", w=128, h=128 },
+--]]
 }
 
 TN_ROOMS =

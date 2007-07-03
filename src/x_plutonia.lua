@@ -107,13 +107,6 @@ PL_DOORS =
 --]]
 }
 
-PL_PICS =
-{
-  redrok = { wall="A-REDROK", w=128, h=128 },
-  askin3 = { wall="A-ASKIN3", w=128, h=128 },
-  askin4 = { wall="A-ASKIN4", w=128, h=128 },
-}
-
 PL_WALL_PREFABS =
 {
 }
@@ -161,7 +154,6 @@ GAME_FACTORIES["plutonia"] = function()
 
   T.rails   = copy_and_merge(T.rails,   PL_RAILS)
   T.doors   = copy_and_merge(T.doors,   PL_DOORS)
-  T.pics    = copy_and_merge(T.pics,    PL_PICS)
   T.liquids = copy_and_merge(T.liquids, PL_LIQUIDS)
 
   T.misc_fabs = copy_and_merge(T.misc_fabs, PL_MISC_PREFABS)
