@@ -272,8 +272,9 @@ void WAD_CreateInfoLump()
 
   WAD_Printf(L, "-- Adjustments --\n");
   WAD_Printf(L, "size = %s\n",   main_win->adjust_box->get_Size());
-  WAD_Printf(L, "mons = %s\n",   main_win->adjust_box->get_Monsters());
+  WAD_Printf(L, "puzzles = %s\n",  main_win->adjust_box->get_Puzzles());
   WAD_Printf(L, "traps = %s\n",  main_win->adjust_box->get_Traps());
+  WAD_Printf(L, "mons = %s\n",   main_win->adjust_box->get_Monsters());
   WAD_Printf(L, "health = %s\n", main_win->adjust_box->get_Health());
   WAD_Printf(L, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
 

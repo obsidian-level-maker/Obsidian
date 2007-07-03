@@ -25,7 +25,7 @@ private:
   Fl_Choice *health;
   Fl_Choice *ammo;
   Fl_Choice *mons;
-  Fl_Choice *traps;
+  Fl_Choice *puzzles;
   Fl_Choice *size;
 
 public:
@@ -37,17 +37,21 @@ public:
   void Locked(bool value);
   void UpdateLabels(const char *game, const char *mode);
 
+  const char *get_Size();
+  const char *get_Puzzles();
+  const char *get_Traps();
+
+  const char *get_Monsters();
   const char *get_Health();
   const char *get_Ammo();
-  const char *get_Monsters();
-  const char *get_Traps();
-  const char *get_Size();
 
-  bool set_Health(const char *str);
-  bool set_Ammo  (const char *str);
-  bool set_Monsters(const char *str);
+  bool set_Size(const char *str);
+  bool set_Puzzles(const char *str);
   bool set_Traps(const char *str);
-  bool set_Size (const char *str);
+
+  bool set_Monsters(const char *str);
+  bool set_Health(const char *str);
+  bool set_Ammo(const char *str);
 
 private:
   static const char *adjust_syms[3];

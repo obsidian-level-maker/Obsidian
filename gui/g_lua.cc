@@ -319,9 +319,11 @@ static void Script_MakeSettings(lua_State *L)
   AddField(L, "mode",  main_win->setup_box->get_Mode());
   AddField(L, "length",main_win->setup_box->get_Length());
 
+  // FIXME: rename 'traps' setting to 'puzzles'
+
   AddField(L, "size",   main_win->adjust_box->get_Size());
+  AddField(L, "traps",  main_win->adjust_box->get_Puzzles());
   AddField(L, "mons",   main_win->adjust_box->get_Monsters());
-  AddField(L, "traps",  main_win->adjust_box->get_Traps());
   AddField(L, "health", main_win->adjust_box->get_Health());
   AddField(L, "ammo",   main_win->adjust_box->get_Ammo());
 

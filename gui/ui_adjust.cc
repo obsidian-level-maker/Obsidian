@@ -79,12 +79,12 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
   
   add(ammo);
 
-  traps = new Fl_Choice(x+ 96, cy, 130, 24, "Traps: ");
-  traps->align(FL_ALIGN_LEFT);
-  traps->add("Few|Some|Heaps");
-  traps->value(1);
+  puzzles = new Fl_Choice(x+ 96, cy, 130, 24, "Puzzles: ");
+  puzzles->align(FL_ALIGN_LEFT);
+  puzzles->add("Few|Some|Heaps");
+  puzzles->value(1);
 
-  add(traps);
+  add(puzzles);
 
   resizable(0);  // don't resize our children
 }
@@ -105,7 +105,7 @@ void UI_Adjust::Locked(bool value)
     health->deactivate();
     ammo ->deactivate();
     mons ->deactivate();
-    traps->deactivate();
+    puzzles->deactivate();
   }
   else
   {
@@ -113,7 +113,7 @@ void UI_Adjust::Locked(bool value)
     health->activate();
     ammo ->activate();
     mons ->activate();
-    traps->activate();
+    puzzles->activate();
   }
 }
 
@@ -122,16 +122,16 @@ void UI_Adjust::UpdateLabels(const char *game, const char *mode)
   if (strcmp(mode, "dm") == 0)
   {
     mons->label("Players: ");
-    traps->label("Weapons: ");
+    puzzles->label("Weapons: ");
   }
   else
   {
     mons->label("Monsters: ");
 
     if (strcmp(game, "wolf3d") == 0 || strcmp(game, "spear") == 0)
-      traps->label("Bosses: ");
+      puzzles->label("Bosses: ");
     else
-      traps->label("Traps: ");
+      puzzles->label("Puzzles: ");
   }
 
   SYS_ASSERT(main_win);
@@ -168,7 +168,12 @@ const char *UI_Adjust::get_Monsters()
 
 const char *UI_Adjust::get_Traps()
 {
-  return adjust_syms[traps->value()];
+  return adjust_syms[1];  // TODO
+}
+
+const char *UI_Adjust::get_Puzzles()
+{
+  return adjust_syms[puzzles->value()];
 }
 
 const char *UI_Adjust::get_Size()
@@ -214,12 +219,18 @@ bool UI_Adjust::set_Monsters(const char *str)
   return false;
 }
 
-bool UI_Adjust::set_Traps(const char *str)
+bool UI_Adjust::set_Puzzles(const char *str)
 {
   int i = FindSym(str);
 
-  if (i >= 0) { traps->value(i); return true; }
+  if (i >= 0) { puzzles->value(i); return true; }
 
+  return false;
+}
+
+bool UI_Adjust::set_Traps(const char *str)
+{
+  // TODO !!! set_Traps
   return false;
 }
 

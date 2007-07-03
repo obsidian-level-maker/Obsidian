@@ -52,16 +52,19 @@ static bool Cookie_SetValue(const char *name, const char *value)
 
   // Adjustments...
 
+  if (StrCaseCmp(name, "size") == 0)
+    return main_win->adjust_box->set_Size(value);
+  if (StrCaseCmp(name, "puzzles") == 0)
+    return main_win->adjust_box->set_Puzzles(value);
+  if (StrCaseCmp(name, "traps") == 0)
+    return main_win->adjust_box->set_Traps(value);
+
   if (StrCaseCmp(name, "health") == 0)
     return main_win->adjust_box->set_Health(value);
   if (StrCaseCmp(name, "ammo") == 0)
     return main_win->adjust_box->set_Ammo(value);
   if (StrCaseCmp(name, "mons") == 0)
     return main_win->adjust_box->set_Monsters(value);
-  if (StrCaseCmp(name, "traps") == 0)
-    return main_win->adjust_box->set_Traps(value);
-  if (StrCaseCmp(name, "size") == 0)
-    return main_win->adjust_box->set_Size(value);
 
   // Other stuff...
   if (StrCaseCmp(name, "last_file") == 0)
@@ -191,8 +194,9 @@ bool Cookie_Save(const char *filename)
 
   fprintf(cookie_fp, "-- Adjustments --\n");
   fprintf(cookie_fp, "size = %s\n",  main_win->adjust_box->get_Size());
-  fprintf(cookie_fp, "mons = %s\n",   main_win->adjust_box->get_Monsters());
+  fprintf(cookie_fp, "puzzles = %s\n",  main_win->adjust_box->get_Puzzles());
   fprintf(cookie_fp, "traps = %s\n",  main_win->adjust_box->get_Traps());
+  fprintf(cookie_fp, "mons = %s\n",   main_win->adjust_box->get_Monsters());
   fprintf(cookie_fp, "health = %s\n", main_win->adjust_box->get_Health());
   fprintf(cookie_fp, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
   fprintf(cookie_fp, "\n");
