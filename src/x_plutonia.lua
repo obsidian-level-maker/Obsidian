@@ -18,10 +18,11 @@
 
 PL_COMBOS =
 {
-  --- Indoor ---
+  ---- CAVE -------------
 
   D_ROCK =
   {
+    theme_probs = { CAVE=100 },
     mat_pri = 7,
 
     wall = "A-DROCK2",
@@ -33,46 +34,41 @@ PL_COMBOS =
     ceil  = "FLAT10",
 
     bad_liquid = "slime",
-
-    theme_probs = { CAVE=100 },
   },
 
-  --- Outdoor ---
+  ---- URBAN -----------
 
   B_ROCK =
   {
+    theme_probs = { URBAN=120 },
     outdoor = true,
     mat_pri = 4,
 
-    wall = "A-BROCK2",
-    void = "A-BROCK2",
-    step = "STEP5",
-    pillar = "A-MOSBRI",
-
+    wall  = "A-BROCK2",
     floor = "RROCK14",  -- "FLOOR7_1",
     ceil  = "RROCK14",
 
-    bad_liquid = "slime",
+    step = "STEP5",
+    pillar = "A-MOSBRI",
 
-    theme_probs = { URBAN=120 },
+    bad_liquid = "slime",
   },
 
   A_ROCK =
   {
+    theme_probs = { URBAN=50 },
     outdoor = true,
     mat_pri = 3,
 
-    wall = "AROCK2",  -- NOTE: animated!
-    void = "A-MOSROK",
-    step = "ROCK2",
-    pillar = "A-MOSRK2",
-
+    wall  = "AROCK2",  -- NOTE: animated!
     floor = "RROCK13",
     ceil  = "RROCK13",
 
-    good_liquid = "water",
+    step = "ROCK2",
+--  void = "A-MOSROK",
+    pillar = "A-MOSRK2",
 
-    theme_probs = { URBAN=50 },
+    good_liquid = "water",
   },
 
 }
@@ -83,13 +79,13 @@ PL_HALLWAYS =
   {
     mat_pri = 3,
 
-    wall = "A-BRBRK",
-    void = "A-BRBRK2",
-    step = "STEP1",
-    pillar = "A-BROWN5",
-
+    wall  = "A-BRBRK",
     floor = "FLOOR7_1",
     ceil  = "RROCK03",
+
+    step = "STEP1",
+--  void = "A-BRBRK2",
+    pillar = "A-BROWN5",
 
     bad_liquid = "slime",
   },
@@ -116,6 +112,10 @@ PL_PICS =
   redrok = { wall="A-REDROK", w=128, h=128 },
   askin3 = { wall="A-ASKIN3", w=128, h=128 },
   askin4 = { wall="A-ASKIN4", w=128, h=128 },
+}
+
+PL_WALL_PREFABS =
+{
 }
 
 PL_LIQUIDS =
