@@ -228,6 +228,8 @@ function find_liquid(name)
   if not info then
     error("Unknown liquid: " .. name)
   end
+
+  return info
 end
 
 function get_rand_pic()
