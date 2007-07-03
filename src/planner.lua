@@ -331,8 +331,8 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
 
   -- decide how many keys, switches, weapons & items
 
-  local TOT_MINIMUMS = { small=4, regular=6, large=8 }
-  local TOT_MAXIMUMS = { small=7, regular=9, large=12 }
+  local TOT_MINIMUMS = { small=3, regular=5, large=8  }
+  local TOT_MAXIMUMS = { small=6, regular=9, large=12 }
 
   local tot_min = TOT_MINIMUMS[SETTINGS.size]
   local tot_max = TOT_MAXIMUMS[SETTINGS.size]
@@ -358,7 +358,7 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
 
   local ky_min = sel(SETTINGS.traps == "less", 0, 1)
 
-  for loop = 1,99 do
+  for loop = 1,999 do
     keys     = rand_irange(ky_min, #ky_list)
     switches = rand_irange(0,      #sw_list)
     weapons  = rand_irange(1,      #wp_list)
@@ -367,12 +367,10 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
     total    = keys + switches + weapons + items
     ratio    = (keys + switches) / (weapons + items)
 
-    if (tot_min   <= total and total <= tot_max) and
-       (ratio_min <= ratio and ratio <= ratio_max)
+    if (tot_min <= total and total <= tot_max) and
+       ((ratio_min <= ratio and ratio <= ratio_max) or loop >= 900)
     then break; end
   end
-
-  assert(keys + switches >= 1)
 
   con.printf("Keys %d, Switches %d, Weapons %d, Items %d\n",
       keys, switches, weapons, items)
