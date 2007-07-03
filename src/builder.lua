@@ -4976,6 +4976,19 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
   end
 
 
+  local function mark_secret(c, x1,y1, x2,y2)
+    assert(x2 >= x1 and y2 >= y1)
+
+    if not GAME.doom_format then return end
+
+    for x = x1,x2 do for y = y1,y2 do
+      local B = PLAN.blocks[x][y]
+      assert(B)
+
+      B.kind = 9
+    end end
+  end
+
   local function mark_link_walks(c)
     
     for side = 2,8,2 do
@@ -4985,6 +4998,10 @@ con.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
       if L and not (L.kind == "vista" and L.vista_dest == c) then
         mark_walkable(c, 4, L.x1+dx,   L.y1+dy,   L.x2+dx,   L.y2+dy)
         mark_walkable(c, 2, L.x1+dx*2, L.y1+dy*2, L.x2+dx*2, L.y2+dy*2)
+      end
+
+      if L and L.is_secret and L.build == c then
+        mark_secret(c, L.x1-dx, L.y1-dy, L.x2-dx, L.y2-dy)
       end
 
       local D = c.border[side]
