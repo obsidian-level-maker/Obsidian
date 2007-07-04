@@ -930,7 +930,7 @@ D2_SCENERY_PREFABS =
   {
     prefab = "POND_SMALL",
     environment = "outdoor",
-    theme_probs = { NATURE=120 },
+    theme_probs = { NATURE=90 },
     skin = 
     {
       pond_w="ZIMMER4", pond_f="RROCK18",
@@ -1358,7 +1358,7 @@ D2_FEATURE_PREFABS =
   {
     prefab = "POND_LARGE",
     environment = "outdoor",
-    theme_probs = { NATURE=200 },
+    theme_probs = { NATURE=170 },
     skin = 
     {
       pond_w="ZIMMER2", pond_f="RROCK19",

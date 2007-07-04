@@ -1262,7 +1262,7 @@ DM_SCENERY_PREFABS =
   {
     prefab = "ROCK_PIECES",
     environment = "outdoor",
-    theme_probs = { NATURE=40 },
+    theme_probs = { NATURE=60 },
     skin = { rock_w="BROWNHUG", rock_f="FLAT1_2", rock_h=12 },
   },
 
@@ -1270,7 +1270,7 @@ DM_SCENERY_PREFABS =
   {
     prefab = "ROCK_PIECES",
     environment = "outdoor",
-    theme_probs = { NATURE=10 },
+    theme_probs = { NATURE=20 },
     skin = { rock_w="GRAYBIG", rock_f="MFLR8_3", rock_h=6 },
   },
 
@@ -1278,7 +1278,7 @@ DM_SCENERY_PREFABS =
   {
     prefab = "ROCK_PIECES",
     environment = "outdoor",
-    theme_probs = { NATURE=25 },
+    theme_probs = { NATURE=60 },
     skin = { rock_f="FLAT5_7", rock_h=-6 },
   },
 
