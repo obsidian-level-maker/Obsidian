@@ -2067,6 +2067,66 @@ STATUE_TECH_2 =
   },
 },
 
+STATUE_TECH_JR =
+{
+  structure =
+  {
+    "............",
+    "....dddd....",
+    "..BjjjjjkB..",
+    "..kmmmmmms..",
+    ".csmLmmLmsc.",
+    ".csmmTTmmsc.",
+    ".csmmTTmmsc.",
+    ".csmLmmLmsc.",
+    "..smmmmmmk..",
+    "..BkjjjjjB..",
+    "....dddd....",
+    "............",
+  },
+
+  elements =
+  {
+    -- inside
+    m = { f_h=32, f_tex="tech_f", 
+          c_h=0,  c_tex="tech_c",
+          light="tech_lt", kind="kind"
+        },
+    
+    T = { solid="tech_w" },
+    
+    L = { f_h=12, f_rel="mid_h", f_tex="lite_f",
+          l_tex="lite_w", c_tex="tech_c",
+          light="tech_lt"
+        },
+
+    -- outside
+    B = { solid="beam_w" },
+
+    k = { f_h= 64, f_tex="outer_f", l_tex="outer_w",
+          c_h=-64, c_tex="outer_f", u_tex="outer_w",
+          light="outer_lt",
+        },
+
+    j = { copy="k", [2] = { x_offset=16 }, [8] = { x_offset=16 }},
+    s = { copy="k", [4] = { x_offset=16 }, [6] = { x_offset=16 }},
+
+    -- shiny decoration
+    c = { f_h= 16, f_tex="shine_f", l_tex="shine_w", l_peg="top",
+          c_h=-16, c_tex="shine_f", u_tex="shine_w", u_peg="top",
+          light="shine_lt",
+          [2] = { l_tex="shine_side", u_tex="shine_side" },
+          [8] = { l_tex="shine_side", u_tex="shine_side" },
+        },
+    d = { f_h= 16, f_tex="shine_f", l_tex="shine_w", l_peg="top",
+          c_h=-16, c_tex="shine_f", u_tex="shine_w", u_peg="top",
+          light="shine_lt",
+          [4] = { l_tex="shine_side", u_tex="shine_side" },
+          [6] = { l_tex="shine_side", u_tex="shine_side" },
+        },
+  },
+},
+
 STATUE_CHAIR_DUDE =
 {
   region="floor",

@@ -1312,6 +1312,26 @@ D2_FEATURE_PREFABS =
     },
   },
 
+  statue_tech_jr_BLUE_METAL =
+  {
+    prefab = "STATUE_TECH_JR",
+    environment = "indoor",
+    add_mode = "island",
+    min_height = 160,
+    max_height = 320,
+    theme_probs = { TECH=70 },
+
+    skin =
+    {
+      outer_f ="CEIL5_1",  outer_w ="METAL5",   outer_lt =176,
+      tech_f  ="FLAT14",   tech_w  ="TEKWALL4", tech_lt  =255,
+      tech_c  ="FLAT14",   beam_w  ="SUPPORT3",
+      lite_f  ="FLAT14",   lite_w  ="LITEBLU4",
+      shine_f ="RROCK03",  shine_w ="METAL6",   shine_lt =144,
+      shine_side="METAL2", kind=3,
+    },
+  },
+
   pond_medium_GRASS =
   {
     prefab = "POND_MEDIUM",
