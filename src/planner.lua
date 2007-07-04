@@ -343,8 +343,8 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
   assert(#ky_list + #sw_list + #wp_list + #it_list >= tot_min)
 
 
-  local RATIO_MINIMUMS = { less=0.0, normal=0.4, more=1.2 }
-  local RATIO_MAXIMUMS = { less=0.7, normal=1.4, more=2.5 }
+  local RATIO_MINIMUMS = { less=0.0, normal=0.4, more=1.0 }
+  local RATIO_MAXIMUMS = { less=0.6, normal=1.2, more=2.5 }
 
   local ratio_min = RATIO_MINIMUMS[SETTINGS.traps]
   local ratio_max = RATIO_MAXIMUMS[SETTINGS.traps]
@@ -356,7 +356,7 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
   local keys, switches, weapons, items
   local total, ratio
 
-  local ky_min = sel(SETTINGS.traps == "less", 0, 1)
+  local ky_min = 1 -- sel(SETTINGS.traps == "less", 0, 1)
 
   for loop = 1,999 do
     keys     = rand_irange(ky_min, #ky_list)
