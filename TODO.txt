@@ -208,6 +208,8 @@ MILESTONE 4  (pipe dreams...)
 
 +  teleporters!
 
++  make Oblige easier to mod.
+
 -  bridges (activate by a switch)
 
 ?  light up levels (a la quake).
