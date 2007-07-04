@@ -1318,7 +1318,7 @@ D2_FEATURE_PREFABS =
     environment = "indoor",
     add_mode = "island",
     min_height = 160,
-    max_height = 320,
+    max_height = 480,
     theme_probs = { TECH=70 },
 
     skin =

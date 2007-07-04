@@ -1518,6 +1518,24 @@ DM_FEATURE_PREFABS =
     theme_probs = { HELL=25, NATURE=10 },
   },
 
+  street_lamp_1 =
+  {
+    prefab = "STREET_LAMP_TWO_SIDED",
+    environment = "outdoor",
+    add_mode = "island",
+    min_height = 160,
+    max_height = 512,
+    theme_probs = { URBAN=25, NATURE=5 },
+
+    skin =
+    {
+      lite_w="METAL",  lite_c="CEIL1_2",
+      arm_w="BROWN1",  arm_f="FLOOR3_3",
+      arm_u="BROWN96", arm_c="CEIL5_2",
+      beam_w="METAL"
+    },
+  },
+
   stalagmite_HUGE =
   {
     prefab = "STALAGMITE_HUGE",

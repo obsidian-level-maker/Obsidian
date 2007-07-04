@@ -2287,6 +2287,62 @@ GROUND_LIGHT =
   },
 },
 
+STREET_LAMP_TWO_SIDED =
+{
+  structure =
+  {
+    "........................",
+    "........................",
+    "........ttffffuu........",
+    "...oggggffffffffggggp...",
+    "..ogLLLLdddffcccLLLLgp..",
+    "..ggLLLLeeeMMeeeLLLLgg..",
+    "..ggLLLLeeeMMeeeLLLLgg..",
+    "..mgLLLLbbbffaaaLLLLgn..",
+    "...mggggffffffffggggn...",
+    "........rrffffss........",
+    "........................",
+    "........................",
+  },
+
+  elements =
+  {
+    -- central pillar and arms
+    M = { solid="beam_w" },
+
+    f = { f_h =12, f_tex="arm_f", l_tex="arm_w",
+          light=208,
+        },
+
+    r = { copy="f", mark=1, [1] = { VDEL=true }},
+    s = { copy="f", mark=2, [3] = { VDEL=true }},
+    t = { copy="f", mark=3, [7] = { VDEL=true }},
+    u = { copy="f", mark=4, [9] = { VDEL=true }},
+
+    e = { copy="f",
+          c_h=-16, c_tex="arm_c", u_tex="arm_u", u_peg="bottom",
+        },
+
+    a = { copy="e", [1] = { VDEL=true }},
+    b = { copy="e", [3] = { VDEL=true }},
+    c = { copy="e", [7] = { VDEL=true }},
+    d = { copy="e", [9] = { VDEL=true }},
+
+    -- lights and glow
+    L = { c_h=-40, c_tex="lite_c", u_tex="lite_w",
+          light=255,
+        },
+
+    g = { light=255 },
+
+    m = { copy="g", mark=1, [1]={ VDEL=true }},
+    n = { copy="g", mark=2, [3]={ VDEL=true }},
+    o = { copy="g", mark=3, [7]={ VDEL=true }},
+    p = { copy="g", mark=4, [9]={ VDEL=true }},
+  },
+},
+
+
 BOOKCASE_WIDE =
 {
   scale=64,
