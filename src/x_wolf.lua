@@ -182,8 +182,8 @@ WF_TILE_NUMS =
 
   door = { 90, 91 },  -- E/W then N/S
 
-  door_silver = { 92, 93 },
-  door_gold   = { 94, 95 },
+  door_gold   = { 92, 93 },
+  door_silver = { 94, 95 },
 
   door_elevator = { 100, 101 },
 }
@@ -724,6 +724,8 @@ function wolf3d_get_levels(episode)
       secret_kind = (map == 10) and secret_kind,
 
       quests = {},
+
+      toughness_factor = sel(map==10, 1.1, 1 + (map-1) / 5),
     }
 
     if WF_SECRET_EXITS[Level.name] then
