@@ -2282,7 +2282,7 @@ FOUNTAIN_SQUARE =
 },
 
 
------- Skylights ------------------------------------
+------ Ceiling Lights --------------------------------
 
 SKYLIGHT_MEGA_1 =
 {
@@ -2412,6 +2412,53 @@ SKYLIGHT_CROSS_SMALL =
           [7] = { dx=-24,dy=-16 },
           [3] = { dx=24, dy= 0 },
         },
+  },
+},
+
+LIGHT_GROOVY =
+{
+  structure =
+  {
+    "..bmmmmmma..",
+    "..mmtLLumm..",
+    "..mmLLLLmm..",
+    "..mtLLLLum..",
+    "..mrLLLLsm..",
+    "..mmLLLLmm..",
+    "..mmLLLLmm..",
+    "..mtLLLLum..",
+    "..mrLLLLsm..",
+    "..mmLLLLmm..",
+    "..mmLLLLmm..",
+    "..mtLLLLum..",
+    "..mrLLLLsm..",
+    "..mmLLLLmm..",
+    "..mmrLLsmm..",
+    "..dmmmmmmc..",
+  },
+
+  elements =
+  {
+    -- light area
+    L = { c_h=0, c_tex="lite_c",
+          light="lite_lt", kind="kind",
+        },
+
+    -- frame
+    m = { c_h=-8, c_tex="frame_c", u_tex="frame_w", u_peg="top",
+          light="frame_lt",
+        },
+ 
+    r = { copy="L", mark=1, [1] = { VDEL=true }},
+    s = { copy="L", mark=2, [3] = { VDEL=true }},
+    t = { copy="L", mark=3, [7] = { VDEL=true }},
+    u = { copy="L", mark=4, [9] = { VDEL=true }},
+
+    -- outside
+    a = { [1] = { VDEL=true }},
+    b = { [3] = { VDEL=true }},
+    c = { [7] = { VDEL=true }},
+    d = { [9] = { VDEL=true }},
   },
 },
 

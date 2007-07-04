@@ -1684,6 +1684,22 @@ DM_FEATURE_PREFABS =
     pickup_specialness = 95,
   },
 
+  light_groovy_RED =
+  {
+    prefab = "LIGHT_GROOVY",
+    environment = "indoor",
+    add_mode = "island",
+    theme_probs = { TECH=50 },
+    force_dir = 2,
+
+    skin =
+    {
+      frame_c="CEIL5_2", frame_w="SKINSYMB",
+      lite_c="FLOOR1_7",
+      lite_lt=255, frame_lt=168, kind=8,
+    }
+  },
+  
   skylight_mega_METAL =
   {
     prefab = "SKYLIGHT_MEGA_1",
