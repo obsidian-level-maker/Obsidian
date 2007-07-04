@@ -1,82 +1,47 @@
 
 TODO
-----
+====
 
-ROOM SHAPES:
+General:
 
-  + tendril trimming:
-     (a) compute new total_blk, then shrink the tall poppies until
-         reached target.  [in CAVE mode: shrink random tendrils]
-     
-     (b) OR: "chop" method: all tendrils over X length are chopped.
-         how to decide 'X' for each rec in room??
++  create special BOSS levels (e.g. E1M8, MAP30)
 
-     --> "prune", "hack" or "guillotine".
-         trim_mode IN room_type/combo/theme
- 
-
-- properly use "player" / "quest" chunks
-
-- "niche cages" (a la MAP13).
-
-- put walk=1 at dist=2 from windows and doors
-
-- verify_outer: only checking B.chunk.rmodel.f_h !
-
-- OPTIMISE A* ALGORITHM
-
-? create_path: "widen" it to at least 2 blocks in any direction.
-
-- idea: combo.flood : liquid to use on f_min floors.
+-  get traps (closets / depots) working again.
 
 
-VISTAS:
-  - solid/frame mode: only IN->OUT
-  - rare: IN->IN, wire mode
-  - very rare: OUT->IN
+GUI:
 
->> Vistas
+++ update to LUA 5.1.2
 
-   +  don't put monsters/pickups/scenery of dest room on them!
++  errors get full traceback (see interpreter source)
 
-   +  great place for player start! or quest item! or teleport!
+-  remember save path in config file (Win32).
 
-
->>>  Prefabs:
- 
-   -  rename PLAIN to OBJECT_FLOOR, use OBJECT_CEILING too
-
-   -  use more "f_add", instead of parm[]
-
-   -  rework way pickup spots are done
-
-   -  support "monster" spots
-
-   +  use the standard heights more (low_h,mid_h,high_h)
-
-   -  optimise find_fab_loc
-
-   ?? move 'height_range' from PREFAB[] to XX_PREFABS defs.
+-  make an icon for Win32 executable.
 
 
--  player angles: FIX!!
+Hexen:
 
-+  monster angles: honor 'caps.four_dirs' and make damn sure
-   that the face direction isn't into a solid wall.
++  rework teleporter gates (make them bi-directional).
+
++  fix key usage (REQUIRE both to get to boss level).
 
 
->>> Theme system
+Docs:
 
--  Theme categories:
+-  note that you need full version of XXX to play the games
+   (shareware won't work).
 
-   (a) nature  (outdoor, grassy/rocky/muddy, water)
-   (b) urban   (outdoor, bricks/concrete,  slime)
 
-   (c) tech       (indoor, computers, lights, lifts) 
-   (d) cave       (indoor, rocky/ashy, darkness, lava)
-   (e) industrial (indoor, machines, lifts, crates, nukage)
+Secrets:
 
-   (h) hell    (indoor+outdoor, gstone, fire/lava, bodies, blood)
+-  fix battle simulator to ignore stuff got in secrets
+   (push state onto stack, pop afterwards).
+
+-  different item probs, e.g. invuln & berserk are good
+
+
+Theme system:
 
 -  Room types:
 
@@ -90,145 +55,71 @@ VISTAS:
    (g) processing plant (machines)
    (h) torture  (wolf3d/SOD)
 
-   ...?
+
+Monsters:
+
+-  at each room, pick 2-3 (rarer: 1,4) monster types
+   then decide how many of each one (for each skill).
+
+-  monster adjustment: don't just increase toughness, actually
+   create _more_ monsters.
+
+-  battle_in_cell: arrange it so that cells could be visited
+   in any area (as much as possible).  Allow e.g. multiple
+   starting cells, "forked" paths (path splits and rejoins)...
+
+   IDEA: treat groups of cells (esp: multi starts and forked
+         paths) as a SINGLE BATTLE ARENA.
+
+-  idea: horde_size depends on (pl_weap.fp - monst.fp)
+
+-  cage monsters: don't put hitscan snipers up really high.
 
 
--  Improve toughness calcs:
-   e.g. decide final quest toughness (e.g. 750-1500),
-        then major quests (somewhat exponential)
-        and minor quests (skew above/below major Q).
-
-   - at each room, pick 2-3 (rarer: 1,4) monster types
-     [depends on free space?]
-
-     then decide how many of each one (for each skill).
-     ??  choose lesser monster for lesser skill.
-
-  ?? monster adjustment: don't just increase toughness, actually
-                         create _more_ monsters.
-
-  -  battle_in_cell: arrange it so that cells could be visited
-     in any area (as much as possible).  Allow e.g. multiple
-     starting cells, "forked" paths (path splits and rejoins)...
-
-     IDEA: treat groups of cells (esp: multi starts and forked
-           paths) as a SINGLE BATTLE ARENA.
-
-
--  Wolf3d mode:
+Wolf3D:
  
+   + push-walls for secret quests!
    + secret elevators
+   + bosses!
 
-   >> scenery! (room types: storage, dining)
+   - decide_monster : skills are "tiered"
+   - health/ammo : no skills! -- use medium one
+   - place_items : never where monsters are!
+   - create rooms with 'endgame' object.
 
-   + ensure limits are enforced:
+   (later) ensure limits are enforced:
      - MAXACTORS = 150  (remove actors at random)
      - MAXSTATS  = 400  (remove statics at random)
      - MAXDOORS  = 64   (remove unneeded doors at random)
 
-   TEST !!! : Elevator exit
-   TEST !!! : decide_monster : skills are "tiered"
-
-   - health/ammo : no skills! -- use medium one
-   - place_items : never where monsters are!
-   - don't place monsters near player start
-   - patrolling monsters (need 2x1 space AND path with arrows).
-
-   (later) bosses!
+   (later) patrolling monsters (need to create path with arrows).
    (later) secret levels (full of treasure)
    (later) something interesting in middle of big rooms.
    (later) elevator "entry" in first room.
-   (later) make sure elevators face east/west.
    (later) widen some arches.
    (later) pacman levels: decorate walls
 
 
->>  Corner and Border stuff:
+Miscellaneous:
 
-   +  support sky_corner and T-junction sky_borders
++  don't put monsters/pickups/scenery on normal Prefabs.
 
-   -  decide "kind" for corner (a la borders)
+-  put switches on Vistas, eat the special spot or use a
+   wide pillar at the far end.
 
-   -  hallway->hallway arches: different materials (wood/metal).
+-  plot_quests: if cannot get want_len, try again AND/OR backtrack
 
-   -  windows: determine area can use first
+-  optimise A* algorithm
+-  optimise find_fab_loc
 
--  "gappy" sky next to a building, caused by nudging an outdoor
-   cell into another cell, and near an empty cell. Diagram:
+-  GUI: Advanced button.
+-  GUI: create menus based on the lua scripts present.
+-  GUI: make sure target dir is writable _before_ making levels.
+   (have a "CheckDirWritable" function?)
 
-      outdr >>|  XXX
-              |
-      ------+-+---------
-            |
-    building| EMPTY
-
-    FIX A: give the mini-border the "solid" type (steal theme from building)
-           (as if the EMPTY cell was a scenic=solid)
-
-    FIX B: don't allow outdoor cells to be nudged in this situation.
-
-
--  support these liquid wall animations:
-
-   (a) water --> FIREMAGx (W74A_1, W74A_2, W74B_1)
-   (b) lava  --> ROCKREDx (WALL64_2, W64B_1, W64B_2)
-   (c) slime --> BLODRIPx (RP2_1, RP2_2, RP2_3, RP2_4)
-
-
--  Heretic: not enough weapons (too many golems) near start.
-
-
--  make scenics more interesting (esp. for vistas)
-   -  choose another theme / liquid
-   ?? perhaps "merge" same type scenics into one big thingy
-
--  rename: 'switch'/'wall' fields of a switch (to 'wall'/'side').
--  rename: 'tex' fields of PICS and LIGHTS to 'pic_w' and 'lite_w'.
--  idea: 'corner' field for themes.
--  idea: "decorate" for middle of 3x3 chunk side
-
--  choose railings for windows/fences (per quest?)
--  sky_lights: decide sky based on "ceiling thickness"
-
--  fix cage railing when cage borders a higher chunk or Fence
-   (raise fence to cage top and omit railing texture but keep IMPASS).
--  don't put a railing _between_ cages
--  exit "bumps" on floor outside -> ENTRY-WAYS
--  exit teleport method -> B_teleporter
-
-
-GUI TODO
---------
-
-+  remember save path in config file.
-
-+  make an icon for Win32 executable.
-
--  different adjustment controls for DeathMatch levels.
-
-TEST: handle the Abort button better, also glbsp failure.
-
-TEST: a makefile (+ code) to install 'the unix way'.
-
-TEST (Win32): look for 'scripts/' using EXE path.
-
-
-Recent Changes (since 0.85)
----------------------------
-
-+  different sized rooms
-
-+  new prefab system, @@@
-
-+  Wolf3D and Spear-of-Destiny support
-
-+  theme/room_type system  @@@
-
-+  balconies
-
--  Ultimate Doom: four episodes.
-
--  add single player start to deathmatch levels
+-  idea: LOCK POSTPONING: making a locked door not at the branch
+         point but somewhere else along the new path (could even
+         be the door of last cell).
 
 
 
@@ -289,42 +180,39 @@ MILESTONE 2  (reached!)
    #  monsters teleporting in
 
 
-MILESTONE 3  (heaps left to do!!)
+MILESTONE 3  (sorta reached)
 ===========
 
-#  larger rooms
+#  larger rooms, different shapes.
+
+#  handle adjustment controls for DeathMatch levels.
+
+#  better support for Wolf3d, Doom 1/2, Heretic, and Hexen.
 
 #  allocation system for blocks (can_walk tests).
 
-+  good support for the different games (Doom 1/2, Heretic, Hexen),
-   and initial support for add-ons (Eternal, Osiris)
+#  secrets.
 
--  cage monsters: don't put hitscan snipers up really high.
+#  wall switches: place in the wall! 
 
--  wall switches: place in the wall! 
-
--  more mid-masked textures (esp. on windows)
--  prefer not to create void chunks next to windows
--  doors: underneath flat should match front texture.
-
--  closets: 
-   (a) fix way closet is put in chunk (remove side field)
-
-++ overall consistency (doors/lights/overhangs/windows)
+#  support these liquid wall animations:
+   (a) water --> FIREMAGx (W74A_1, W74A_2, W74B_1)
+   (b) lava  --> ROCKREDx (WALL64_2, W64B_1, W64B_2)
+   (c) slime --> BLODRIPx (RP2_1, RP2_2, RP2_3, RP2_4)
 
 
 MILESTONE 4  (pipe dreams...)
 ===========
 
-++ light up levels (a la quake).
-
-+  secrets
-
--  "megacells" (a group of 2x2 cells as a single room).
-
--  prefabs : capability system, e.g. need_caps={ "slopes" }
+++ better global architecture, room-in-a-room.
 
 +  teleporters!
+
+-  bridges (activate by a switch)
+
+?  light up levels (a la quake).
+
+-  exit via teleporter pad or holes in floor
 
 ?? one-way routes ??
    -  for example: at along:3 fall-off -> along:4
@@ -339,23 +227,10 @@ MILESTONE 4  (pipe dreams...)
      (d) lifts that go up (or down) into a hole
          (activated by a switch only on one side).
 
--  bridge switches
-
 -  liquid pools and traps
 
--  stair/lift selection: control via ROOM/COMBO/THEME/GAME.
+?  support for Eternal III
 
--  stair prefabs: use special '/' symbol for the stairs themselves.
-
-?  pillar patterns: 1379, 2468, line thru center
-
--  overhangs: thick and central pillars
-
--  GUI: create Game menu based on the lua scripts present.
--  GUI: Advanced button.
--  GUI: make sure target dir is writable _before_ making levels.
-   (have a "CheckDirWritable" function?)
--  GUI: don't crash if wad[.]func is called but wrong game.
 
  ____________________
 |KEY:                |
