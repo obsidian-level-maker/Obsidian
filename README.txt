@@ -49,10 +49,12 @@ CHANGES IN 0.94
   -  new adjustments for level size and puzzles.
   -  adjustments for deathmatch games.
   -  secret areas and levels.
+  -  balconies.
 
   -  experimental Wolfenstein-3D support.
   -  later levels get progressively harder.
-  -  balconies.
+  -  slightly better Heretic maps.
+  -  more DOOM themes.
 
 Note: some things also broke in this release, e.g. traps :-(
 
@@ -120,7 +122,7 @@ USAGE GUIDE
   You should use a Source Port to play the levels, because the
   original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
   architecture which OBLIGE creates. For example, you might get
-  the dreaded "Visplane Overflow" error, which is fatal.
+  the "Visplane Overflow" error, which quits the game.
 
 
 STATUS OF EACH GAME
@@ -132,12 +134,14 @@ STATUS OF EACH GAME
   HERETIC: tested and working quite well, though very lacking in
   different themes and scenery.
 
-  HEXEN: tested and works pretty well (greatly improved since the
-  last v0.85 release). The sequence of hubs is not working
+  HEXEN: tested and works pretty well (greatly improved since
+  the last v0.85 release). The sequence of hubs is not working
   properly yet.
 
-  WOLF 3D: very buggy at the moment. No pushwall secrets, keys
-  sometimes don't appear, no patrolling enemies.
+  WOLF 3D: very buggy and incomplete at the moment.  It is
+  lacking: pushwall secrets, patrolling enemies, treasure rooms,
+  proper episode endings, and may create levels with too many
+  actors or static objects.
 
 
 ACKNOWLEDGEMENTS
