@@ -930,15 +930,23 @@ D2_SCENERY_PREFABS =
   {
     prefab = "POND_SMALL",
     environment = "outdoor",
+    theme_probs = { NATURE=120 },
     skin = 
     {
       pond_w="ZIMMER4", pond_f="RROCK18",
       outer_w="BROWNHUG", liquid_f="FWATER1",
       kind=0
     },
-    theme_probs = { NATURE=120 },
   },
-  
+
+  rock_pieces_GRNROCK =
+  {
+    prefab = "ROCK_PIECES",
+    environment = "outdoor",
+    theme_probs = { NATURE=2 },
+    skin = { rock_w="ROCK2", rock_f="GRNROCK", rock_h=16 },
+  },
+
   comp_tall_STATION1 =
   {
     prefab = "COMPUTER_TALL",

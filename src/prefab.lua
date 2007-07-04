@@ -3049,6 +3049,70 @@ POND_MEDIUM =
   },
 },
 
+ROCK_PIECES =
+{
+  structure =
+  {
+    "............",
+    "xxxxxxxxxxxx",
+    "xxxxxxxxxxxx",
+    "xxxxxxxmxnxx",
+    "xxxxxxxmxnxx",
+    "xxxxhhxjepxx",
+    "xccceexjepxx",
+    "xccceexjekkx",
+    "xxxxbbxjekkx",
+    "xxxxbbxxxxxx",
+    "xxxxxxxxxxxx",
+    "............",
+  },
+
+  elements =
+  {
+    x = { l_tex="outer_w" },
+    
+    e = { f_h=0, f_add="rock_h", f_tex="rock_f", l_tex="rock_w" },
+
+    b = { copy="e",
+          [1] = { dx=-40, dy= 44 }, [3] = { dx=-56, dy=  8 },
+          [7] = { dx= -8, dy= 26 }, [9] = { dx=-24, dy=-16 },
+        },
+
+    c = { copy="e",
+          [1] = { dx= 24, dy= 72 }, [7] = { dx= 56, dy= 86 },
+        },
+
+    h = { copy="e",
+          [1] = { dx= 24, dy= 22 }, [3] = { dx=-20, dy=-18 },
+          [7] = { dx= 40, dy=  6 }, [9] = { dx= 00, dy=-10 },
+        },
+
+    j = { copy="e",
+          [1] = { dx= -4, dy= 24 }, [7] = { dx= 24, dy=  8 },
+          [3] = { dx=-20, dy=  4 },
+        },
+
+    k = { copy="e",
+          [1] = { dx= -8, dy=  0 }, [3] = { dx=-26, dy=-10 },
+          [7] = { dx= -4, dy=  8 }, [9] = { dx= -6, dy=-24 },
+        },
+
+    m = { copy="e",
+          [1] = { dx= 00, dy= 00 }, [3] = { dx= 26, dy= -6 },
+          [7] = { dx= 56, dy= -8 }, [9] = { dx= 40, dy=-24 },
+        },
+
+    n = { copy="e",
+          [1] = { dx= 14, dy=-12 }, [3] = { dx= 00, dy= 00 },
+          [7] = { dx= 44, dy=-24 }, [9] = { dx= 24, dy=-38 },
+        },
+
+    p = { copy="e",
+          [3] = { dx= 00, dy= 00 }, [9] = { dx= 00, dy=-30 },
+        },
+  },
+},
+
 STALAGMITE =
 {
   structure =

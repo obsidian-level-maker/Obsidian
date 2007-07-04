@@ -206,11 +206,11 @@ DM_COMBOS =
     theme_probs = { HELL=20 },
     mat_pri = 1,
 
-    wall = "GSTVINE1",
-    step = "STONE3",
-
+    wall  = "GSTVINE1",
     floor = "SFLR6_1",
     ceil  = "FLOOR7_1",
+
+    step = "STONE3",
 
     lift = "SKSPINE1",
     lift_floor = "FLAT5_6",
@@ -564,12 +564,11 @@ DM_EXITS =
 
     exit_h = 128,
 
-    wall = "GSTVINE1",
-    step = "GSTVINE1",
-    void = "GSTONE2",
-
+    wall  = "GSTVINE2",
     floor = "BLOOD1",
     ceil  = "FLOOR7_2",
+
+--  void = "GSTONE2",
 
     liquid_prob = 0,
 
@@ -1257,6 +1256,30 @@ DM_SCENERY_PREFABS =
 
     theme_probs = { NATURE=50, URBAN=5 },
     force_dir = 2, -- optimisation
+  },
+
+  rock_pieces_BROWN =
+  {
+    prefab = "ROCK_PIECES",
+    environment = "outdoor",
+    theme_probs = { NATURE=40 },
+    skin = { rock_w="BROWNHUG", rock_f="FLAT1_2", rock_h=12 },
+  },
+
+  rock_pieces_WHITE =
+  {
+    prefab = "ROCK_PIECES",
+    environment = "outdoor",
+    theme_probs = { NATURE=10 },
+    skin = { rock_w="GRAYBIG", rock_f="MFLR8_3", rock_h=6 },
+  },
+
+  rock_pieces_ASH_HOLE =
+  {
+    prefab = "ROCK_PIECES",
+    environment = "outdoor",
+    theme_probs = { NATURE=25 },
+    skin = { rock_f="FLAT5_7", rock_h=-6 },
   },
 
   pentagram_RED =
