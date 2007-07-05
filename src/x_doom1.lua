@@ -1591,7 +1591,22 @@ DM_FEATURE_PREFABS =
       kind=16
     },
   },
-  
+
+--[[
+  rock_volcano_SPROCK_LAVA =
+  {
+    prefab = "ROCK_VOLCANO",
+    environment = "outdoor",
+    theme_probs = { NATURE=40 },
+    min_height = 256,
+    skin = 
+    {
+      rock_w="SP_ROCK1", rock_f="MFLR8_3",
+      liquid_w="ROCKRED1", liquid_f="LAVA1",
+    },
+  },
+--]]
+
   leakage_pool_LAVA =
   {
     prefab = "LEAKAGE_POOL",

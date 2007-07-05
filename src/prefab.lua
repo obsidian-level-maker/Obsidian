@@ -3053,7 +3053,7 @@ ROCK_PIECES =
 {
   structure =
   {
-    "............",
+    "xxxxxxxxxxxx",
     "xxxxxxxxxxxx",
     "xxxxxxxxxxxx",
     "xxxxxxxmxnxx",
@@ -3064,7 +3064,7 @@ ROCK_PIECES =
     "xxxxbbxjekkx",
     "xxxxbbxxxxxx",
     "xxxxxxxxxxxx",
-    "............",
+    "xxxxxxxxxxxx",
   },
 
   elements =
@@ -3112,6 +3112,69 @@ ROCK_PIECES =
         },
   },
 },
+
+--[[
+ROCK_VOLCANO =
+{
+  structure =
+  {
+    "..wwhzppzz..",
+    ".wwwhzzzzzz.",
+    "wwffkwwwwizz",
+    "wkkkeyyyywwz",
+    "wkkkeyyyywwz",
+    "gwkyyxccydwz",
+    "gwwyaxxxxdwz",
+    ".jjeaxxxyyh.",
+    ".jjeyybbywh.",
+    ".njjjooyyw..",
+    ".zzzzzzzzz..",
+    "...zzzzmm...",
+  },
+
+  elements =
+  {
+    x = { f_h=248, f_tex="rock_f", l_tex="rock_w" },
+
+    y = { copy="x", f_h=192, f_tex="liquid_f" },
+
+    w = { copy="y", f_h=120 },
+    k = { copy="y", f_h=160 },
+    j = { copy="y", f_h=96  },
+    z = { copy="y", f_h=64  },
+
+    a = { copy="x", l_tex="liquid_w" },
+    b = { copy="x", l_tex="liquid_w", [3] = { VDEL=true }},
+    c = { copy="x", l_tex="liquid_w", [9] = { VDEL=true }},
+
+    d = { copy="y", l_tex="liquid_w" },
+    e = { copy="y", l_tex="liquid_w" },
+    o = { copy="y", l_tex="liquid_w" },
+    f = { copy="k", l_tex="liquid_w", [7] = { VDEL=true }},
+
+    g = { copy="w", l_tex="liquid_w", [1] = { dx=0, dy=12 }},
+    i = { copy="w", l_tex="liquid_w", [9] = { VDEL=true }},
+    h = { copy="w", [6] = { l_tex="liquid_w" }},
+
+    m = { copy="z", [2] = { l_tex="liquid_w" }, [3] = { dx=-8, dy=0 }},
+    p = { copy="z", l_tex="liquid_w" },
+
+    n = { copy="j", l_tex="liquid_w", [1] = { VDEL=true }},
+  },
+
+---    a = { copy="x", [4] = { l_tex="liquid_w" }},
+---    b = { copy="x", [2] = { l_tex="liquid_w" }},
+---    c = { copy="x", [8] = { l_tex="liquid_w" }},
+---
+---    d = { copy="y", [6] = { l_tex="liquid_w" }},
+---    e = { copy="y", [4] = { l_tex="liquid_w" }},
+---    o = { copy="y", [2] = { l_tex="liquid_w" }},
+---    f = { copy="k", [8] = { l_tex="liquid_w" }},
+---
+---    g = { copy="w", [4] = { l_tex="liquid_w" }},
+---    i = { copy="w", [8] = { l_tex="liquid_w" }, [6] = { l_tex="liquid_w" }},
+},
+--]]
 
 STALAGMITE =
 {
