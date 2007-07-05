@@ -1570,7 +1570,7 @@ D2_WALL_PREFABS =
       rail_h = 128,
     },
 
-    prob = 2.4,
+    prob = 2,
   },
 }
 
