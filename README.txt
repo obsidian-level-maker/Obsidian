@@ -2,7 +2,7 @@
 OBLIGE 0.94 Read-Me
 ===================
 
-by Andrew Apted.   June 2007
+by Andrew Apted.   July 2007
 
 
 INTRODUCTION
