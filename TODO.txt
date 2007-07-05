@@ -6,14 +6,14 @@ General:
 
 +  create special BOSS levels (e.g. E1M8, MAP30)
 
--  get traps (closets / depots) working again.
++  get traps (closets / depots) working again.
 
 
 GUI:
 
 ++ update to LUA 5.1.2
 
-+  errors get full traceback (see interpreter source)
++  errors show full traceback (see interpreter source)
 
 -  remember save path in config file (Win32).
 
@@ -104,6 +104,9 @@ Miscellaneous:
 
 +  don't put monsters/pickups/scenery on normal Prefabs.
 
++  prefabs: improve "kind" fields, allow "x_offset" fields
+   default to 0.
+
 -  put switches on Vistas, eat the special spot or use a
    wide pillar at the far end.
 
@@ -185,7 +188,7 @@ MILESTONE 3  (sorta reached)
 
 #  larger rooms, different shapes.
 
-#  handle adjustment controls for DeathMatch levels.
+#  adjustment controls for DeathMatch levels.
 
 #  better support for Wolf3d, Doom 1/2, Heretic, and Hexen.
 
@@ -216,6 +219,8 @@ MILESTONE 4  (pipe dreams...)
 
 -  exit via teleporter pad or holes in floor
 
+-  improved use of liquids.
+
 ?? one-way routes ??
    -  for example: at along:3 fall-off -> along:4
       BUT... how to get back to along:3 ??
@@ -228,8 +233,6 @@ MILESTONE 4  (pipe dreams...)
      (c) doors that only open from one side (esp. via a switch)
      (d) lifts that go up (or down) into a hole
          (activated by a switch only on one side).
-
--  liquid pools and traps
 
 ?  support for Eternal III
 
