@@ -46,12 +46,20 @@ from existing programs (like the famous
 
 <h2>STATUS</h2>
 
-OBLIGE 0.94 is the current version,
-which was released pending a rewrite of the
-core level-making algorithms.
+OBLIGE 0.94 is the current version.
 The GUI interface is simple but very usable.
 The battle simulator produces reasonable
 ammo and health to fight the monsters in the map.
+
+<p>
+<b>NOTE WELL:</b>The 0.94 release does have some problems.
+I am releasing it so that I can begin rewriting
+the level-building code to fix these problems
+(and also to generate better architecture).
+For example, you might get an error message saying
+that some stairs or a switch could not be added into
+a room.  The only workaround is to try a different
+SEED value.
 
 <p>
 <i>See below for the status of each game</i>
@@ -62,7 +70,7 @@ There is no support (yet) for the special levels, such as the
 end-of-episode levels of DOOM&nbsp;1 and the end-of-game level (MAP30)
 of DOOM&nbsp;2.
 Other desirable features are: nicer (non-square) architecture,
-player teleports, and better lighting.
+player teleporters, and better lighting.
 
 
 <h2>CHANGES IN 0.94</h2>
@@ -192,7 +200,7 @@ working properly yet.
 <p>
 
 <b>WOLF 3D</b>: very buggy and incomplete at the moment.
-It is lacking: pushwall secrets, patrolling enemies,
+It lacks : pushwall secrets, patrolling enemies,
 treasure rooms, proper episode endings, and may create
 levels with too many actors or static objects.
 
@@ -218,7 +226,7 @@ Prefab structures, which kicked off some big improvements to the
 way OBLIGE builds stuff.
 
 <p>
-Thanks to JohnnyRancid who also created some prefabs for
+Thanks to JohnnyRancid who also created heaps of prefabs for
 OBLIGE.
 
 <p>

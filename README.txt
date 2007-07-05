@@ -30,13 +30,20 @@ STATUS
   is simple but very usable. The battle simulator produces
   reasonable ammo and health to fight the monsters in the map.
 
+  NOTE WELL: The 0.94 release does have some problems.  I am
+  releasing it so that I can begin rewriting the level-building
+  code to fix these problems (and also to generate better
+  architecture).  For example, you might get an error message
+  saying that some stairs or a switch could not be added into a
+  room.  The only workaround is to try a different SEED value.
+
   See below for the status of each game...
 
   There is still a lot to do however. There is no support (yet)
   for the special levels, such as the end-of-episode levels of
   DOOM 1 and the end-of-game level (MAP30) of DOOM 2. Other
   desirable features are: nicer (non-square) architecture,
-  player teleports, and better lighting.
+  player teleporters, and better lighting.
 
 
 CHANGES IN 0.94
@@ -138,19 +145,20 @@ STATUS OF EACH GAME
   the last v0.85 release). The sequence of hubs is not working
   properly yet.
 
-  WOLF 3D: very buggy and incomplete at the moment.  It is
-  lacking: pushwall secrets, patrolling enemies, treasure rooms,
-  proper episode endings, and may create levels with too many
-  actors or static objects.
+  WOLF 3D: very buggy and incomplete at the moment.  It lacks:
+  pushwall secrets, patrolling enemies, treasure rooms, proper
+  episode endings, and may create levels with too many actors
+  or static objects.
 
 
 ACKNOWLEDGEMENTS
 
   Thanks to Derek "Dittohead" Braun for making a whole swag of
-  Prefab structures, which kicked off some big improvements to the
-  way OBLIGE builds stuff.
+  Prefab structures, which kicked off some big improvements to
+  the way OBLIGE builds stuff.
 
-  Thanks to JohnnyRancid who also created some prefabs for OBLIGE.
+  Thanks to JohnnyRancid who also created heaps of prefabs for
+  OBLIGE.
 
   Thanks to DoomJedi for his help.
 
