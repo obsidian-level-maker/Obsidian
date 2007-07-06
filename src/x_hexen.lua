@@ -1431,7 +1431,7 @@ XN_MISC_PREFABS =
     skin =
     {
       door_h=128,
-      door_kind = { id=12, act="S1", args={0, 16, 64} },
+      door_kind = { id=11, act="S1", args={0, 16, 64} },
       tag=0,
     }
   },
