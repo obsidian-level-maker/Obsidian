@@ -43,13 +43,13 @@ function grow_all(SEEDS)
   local function mark_seed(S, dir, mode)
 
     -- we also mark all the seeds in the same room and column/row
-    local friends = { S }
+    local friends = {}
 
     local ax,ay = dir_to_across(dir)
 
-    for dist = 1,20 do for sign = -1,1,2 do
-      local nx = S.sx + ax*dist*sign
-      local ny = S.sy + ay*dist*sign
+    for dist = -16,16 do
+      local nx = S.sx + ax*dist
+      local ny = S.sy + ay*dist
 
       local N = valid_seed(nx,ny) and SEEDS[nx][ny]
       if N and same_room(S, N) then
@@ -59,11 +59,11 @@ function grow_all(SEEDS)
 
     if mode == "shrink" then
       for zzz,T in ipairs(friends) do
-        T.shrink[dir] = T.shrink[dir] + 1
+        T.shrink[dir] = 1
 
----        if T.twin and not same_room(T.twin, T) then
----          T.twin.shrink[10-dir] = T.twin.shrink[10-dir] + 1
----        end
+        if T.twin and is_perpendicular(T.twin_dir, DIR) then
+          T.twin.shrink[10-dir] = 1
+        end
 
         if T.cur_W <= T.min_W then
           mode = "grow"
@@ -73,12 +73,11 @@ function grow_all(SEEDS)
 
     if mode == "grow" then
       for zzz,T in ipairs(friends) do
-        T.grow[dir] = T.grow[dir] + 1
+        T.grow[dir] = 1
 
----        if T.twin then
----          T.twin.grow[10-dir] = T.twin.grow[10-dir] + 1
----        end
-
+        if T.twin and is_perpendicular(T.twin_dir, DIR) then
+          T.twin.grow[10-dir] = 1
+        end
       end
     end
   end
@@ -97,7 +96,7 @@ function grow_all(SEEDS)
   end
 --]]
 
-  local function maintain_link(S, L, dir, mode)
+  local function maintain_link(S, L, dir, mode) -- FIXME !!!! do this in SEPARATE PASS
 
     N = get_neighbour(L, S)
 
