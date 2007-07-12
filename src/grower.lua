@@ -16,6 +16,35 @@
 --
 ----------------------------------------------------------------
 
+require 'defs'
+require 'util'
+
+
+-- [[
+require 'gd'
+
+RENDER_NUM = 1
+
+function debug_render_seeds(SEEDS)
+
+  local im = gd.createTrueColor(500, 500);
+
+  local black = im:colorAllocate(0, 0, 0);
+  local white = im:colorAllocate(255, 255, 255);
+
+  local red   = im:colorAllocate(255, 0, 0);
+  local green = im:colorAllocate(0, 255, 0);
+  local blue  = im:colorAllocate(0, 0, 255);
+
+  im:filledRectangle(0, 0, 500, 500, black);
+
+  im:png(string.format("seed%4d.png\n", RENDER_NUM))
+
+  RENDER_NUM = RENDER_NUM + 1
+end
+--]]
+
+
 function grow_all(SEEDS)
 
   local DIR
@@ -96,12 +125,12 @@ function grow_all(SEEDS)
   end
 --]]
 
-  local function maintain_link(S, L, dir, mode) -- FIXME !!!! do this in SEPARATE PASS
+  local function maintain_link(L, mode)
 
     N = get_neighbour(L, S)
 
     s1,s2 = S.pos[10-dir], S.pos[dir]
-    if mode == "grow" then s2 += 1 else s1 += 1 end
+--!!!!    if mode == "grow" then s2 += 1 else s1 += 1 end
 
     n1, n2 = N.pos[10-dir], N.pos[dir]
     
@@ -136,7 +165,8 @@ function grow_all(SEEDS)
     for L in S.links do
       N = get_neighbour(L, S)
       if dir_is_perp(L_dir, DIR) and not same_room(N,S) then
-        maintain_link(S, L, DIR, "grow")
+        L.need_maintain = true
+--##    maintain_link(S, L, DIR, "grow")
       end
     end
 
@@ -162,10 +192,11 @@ function grow_all(SEEDS)
           mark_seed(N, DIR, "shrink")
         end
       elseif same_room(L, N) then
-        mark_seed(N, DIR, "shrink") @@@
+---!!!!        mark_seed(N, DIR, "shrink") @@@
       elseif not same_room(L, N) then   -- HMMM link implies !same_room ???
         -- perpendicular
-        maintain_link(S, L, DIR, "shrink")
+        L.need_maintain = true
+--##    maintain_link(S, L, DIR, "shrink")
       end
     end
 
@@ -228,19 +259,44 @@ function grow_all(SEEDS)
       return result
     end
     
+    local function collect_links()
+      local result = {}
+
+      for x = 1,SEEDS.w do for y = 1,SEEDS.h do
+        local S = SEEDS[x][y]
+        for dir = 6,8,6 do
+          if S and S.link[dir] and S.link[dir].need_maintain then
+            table.insert(result, S.link[dir])
+            S.link[dir].need_maintain = nil
+          end
+        end
+      end end
+
+      return result
+    end
+    
     local function growth_spurt()
       done = true
       for pass = 1,2 do
-        local list = collect(sel(pass==1, "grow", "shrink"))
+        local mode = sel(pass==1, "grow", "shrink")
+        local list = collect(mode)
 
-        --???  sort list
+--??    rand_shuffle(list)
 
         for zzz,S in ipairs(list) do
-            if pass==1 then
-              if do_growth(S) then done=false end
-            else
-              if do_shrink(S) then done=false end
-            end
+          if pass==1 then
+            if do_growth(S) then done=false end
+          else
+            if do_shrink(S) then done=false end
+          end
+        end
+
+        list = collect_links()
+
+--??    rand_shuffle(list)
+
+        for zzz,L in ipairs(list) do
+          maintain_link(L, mode)
         end
 
 --[[
@@ -278,6 +334,8 @@ function grow_all(SEEDS)
     for x = 1,SEEDS.w do for y = 1,SEEDS.h do
       local S = SEEDS[x][y]
       if S then
+        S.sx, S.sy = x, y
+
         S.x1, S.y1 = x*3+0, y*3+0
         S.x2, S.y2 = x*3+2, y*3+2
 
@@ -358,6 +416,8 @@ function grow_all(SEEDS)
   local SIDES = { 2,4,6,8 }
 
   repeat
+    debug_render_seeds()
+
     for loop = 1,4 do
       rand_shuffle(SIDES)
       for zzz,side in ipairs(SIDES) do
@@ -369,4 +429,19 @@ function grow_all(SEEDS)
   adjust_coordinates();
 
 end -- grow_all
+
+
+function test_grow_all()
+
+  print("test_grow_all...")
+
+  local seeds = array_2D(16,12)
+
+  grow_all(seeds)
+end
+
+
+math.randomseed(1)
+
+test_grow_all()
 
