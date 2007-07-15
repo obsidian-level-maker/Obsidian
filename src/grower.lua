@@ -85,29 +85,42 @@ function grow_all(SEEDS)
     return valid_seed(sx, sy) and SEEDS[sx][sy]
   end
 
-  local function seeds_overlap(S, T)
-    return boxes_overlap(S.x1,S.y1, S.x2,S.y2, T.x1,T.y1, T.x2,T.y2)
-  end
-
-  local function old_maintain_link(L, mode)
-
-    N = get_neighbour(L, S)
-
-    s1,s2 = S.pos[10-dir], S.pos[dir]
---!!!!    if mode == "grow" then s2 += 1 else s1 += 1 end
-
-    n1, n2 = N.pos[10-dir], N.pos[dir]
+  local function seed_new_size(S)
     
-    b1 = math.max(s1,n1)
-    b2 = math.min(s2,n2)
+    local x1,y1 = S.x1, S.y1
+    local x2,y2 = S.x2, S.y2
 
-    long = (b2-b1+1)
-
-    -- FIXME: need better ways specifying WHERE the link occurs
-
-    if long < L.long or rand_odds(33) then
-      mark_seed(N, dir, "grow")
+    if S.grow then
+          if DIR==2 then y1 = y1-1
+      elseif DIR==8 then y2 = y2+1
+      elseif DIR==4 then x1 = x1-1
+      elseif DIR==6 then x2 = x2+1
+      end
     end
+
+    if S.shrink then
+          if DIR==2 then y2 = y2-1
+      elseif DIR==8 then y1 = y1+1
+      elseif DIR==4 then x2 = x2-1
+      elseif DIR==6 then x1 = x1+1
+      end
+    end
+
+    return x1,y1, x2,y2
+  end
+  
+  local function growth_overlap(G, T)
+
+    local x1,y1, x2,y2 = G.x1, G.y1, G.x2, G.y2
+
+    -- coordinates for just the "new growth"
+        if DIR == 6 then x2 = x2 + 1 ; x1 = x2
+    elseif DIR == 4 then x1 = x1 - 1 ; x2 = x1
+    elseif DIR == 8 then y2 = y2 + 1 ; y1 = y2
+    elseif DIR == 2 then y1 = y1 - 1 ; y2 = y1
+    end
+  
+    return boxes_overlap(x1,y1, x2,y2, T.x1,T.y1, T.x2,T.y2)
   end
 
   local function do_grow(S)
@@ -133,35 +146,59 @@ function grow_all(SEEDS)
       local F = SEEDS[x][y]
 
       if F and F ~= S then
-        -- FIXME: must take grow/shrink flags into account!!!!
-        if seeds_overlap(S, F) then
-          F.shrink[DIR] = 1
-          F.grow[DIR] = 1
+        if growth_overlap(S, F) then
+          F.shrink = 1
+          F.grow = 1   -- FIXME: unless pure shrink OK
         end
       end
     end end
   end
 
+  local function link_cur_long(S, N)
+    if DIR == 4 or DIR == 6 then
+
+      local x1 = math.max(S.x1, N.x1)
+      local x2 = math.min(S.x2, N.x2)
+
+      assert(x2 >= x1)
+
+      return x2 - x1 + 1
+    else
+
+      local y1 = math.max(S.y1, N.y1)
+      local y2 = math.min(S.y2, N.y2)
+
+      assert(y2 >= y1)
+
+      return y2 - y1 + 1
+    end
+  end
+
   local function maintain_side_link(S, N, L)
+
+    if same_room(S, N) then
+      S.grow = S.grow or N.grow
+      N.grow = S.grow
+
+      S.shrink = S.shrink or N.shrink
+      N.shrink = S.shrink
+
+      return true
+    end
 
     -- actually linked?
     if not L and not same_room(S, N) then return end
 
     -- nothing to do if both are changing the same way
-    if S.grow[DIR] == N.grow[DIR] and
-       S.shrink[DIR] == N.shrink[DIR] then return end
+    if S.grow == N.grow and S.shrink == N.shrink then return end
 
     -- figure out overlap (after grow/shrink)
-    local overlap  -- FIXME !!!!
+    local cur_long = link_cur_long(S, N)
+    --FIXME !!! take new sizes into account
 
-    if same_room(S, N) or L.hard_link or overlap < L.long then
-      S.grow[DIR] = math.max(S.grow[DIR], N.grow[DIR])
-      N.grow[DIR] = S.grow[DIR]
-
-      S.shrink[DIR] = math.max(S.shrink[DIR], N.shrink[DIR])
-      N.shrink[DIR] = S.shrink[DIR]
-
-      return true
+    if cur_long < L.long then
+      S.grow = S.grow or N.grow   --- ???
+      N.grow = S.grow
     end
 
     if N.mass > S.mass then S,N = N,S end
@@ -179,19 +216,13 @@ function grow_all(SEEDS)
     local changed = false
 
     if same_room(S, B) or true then
-      if S.shrink[DIR] then B.grow[DIR]   = 1 ; changed = true end
-      if B.grow[DIR]   then S.shrink[DIR] = 1 ; S.grow[DIR] = 1 ; changed = true end
+      if S.shrink then B.grow   = 1 ; changed = true end
+      if B.grow   then S.shrink = 1 ;
+                       S.grow = 1 ;   -- FIXME: unless pure shrink OK
+                       changed = true end
     
       return changed
     end
-
-    ---????
-
-    -- no problem if not moving
-    if not S.shrink[DIR] then return end
-
-    -- no problem if back seed is growing
-    if B.grow[DIR] then return end
   end
 
   local function maintain_links()
@@ -199,8 +230,8 @@ function grow_all(SEEDS)
     for x = 1,SEEDS.w-1 do for y = 1,SEEDS.h-1 do
       local S = SEEDS[x][y]
       if S then
-        check_for_overlap(S)
-        
+        if S.grow then check_for_overlap(S) end
+
 --        for side = 6,8,2 do
         local side = 6
         if is_parallel(side, DIR) then side = 8 end
@@ -227,7 +258,7 @@ function grow_all(SEEDS)
       end
     end end
 
-    -- !!!! FIXME symmetry pass
+    -- !! FIXME symmetry pass
 
     return changed
   end
@@ -248,10 +279,6 @@ function grow_all(SEEDS)
     end end
 
     return list
-  end
-
-  local function growth_spurt()
-
   end
 
   local function perform_pass(cur_dir)
@@ -321,11 +348,6 @@ function grow_all(SEEDS)
       if S then
         if get_width (S) < S.min_W then return false end
         if get_height(S) < S.min_H then return false end
-
----     for dir = 2,8,2 do
----       if S.grow[dir]   > 0 then return false end
----       if S.shrink[dir] > 0 then return false end
----     end
       end
     end end
 
