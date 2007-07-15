@@ -85,62 +85,9 @@ function grow_all(SEEDS)
     return valid_seed(sx, sy) and SEEDS[sx][sy]
   end
 
-  local function mark_seed(S, dir, mode)
-
-    -- we also mark all the seeds in the same room and column/row
-    local friends = {}
-
-    local ax,ay = dir_to_across(dir)
-
-    for dist = -16,16 do
-      local nx = S.sx + ax*dist
-      local ny = S.sy + ay*dist
-
-      local N = valid_seed(nx,ny) and SEEDS[nx][ny]
-      if N and same_room(S, N) then
-        table.insert(friends, N)
-      end
-    end
-
-    if mode == "shrink" then
-      for zzz,T in ipairs(friends) do
-        T.shrink[dir] = 1
-
-        if T.twin and is_perpendicular(T.twin_dir, DIR) then
-          T.twin.shrink[dir] = 1
-        end
-
-        if T.cur_W <= T.min_W then
-          mode = "grow"
-        end
-      end
-    end
-
-    if mode == "grow" then
-      for zzz,T in ipairs(friends) do
-        T.grow[dir] = 1
-
-        if T.twin and is_perpendicular(T.twin_dir, DIR) then
-          T.twin.grow[dir] = 1
-        end
-      end
-    end
+  local function seeds_overlap(S, T)
+    return boxes_overlap(S.x1,S.y1, S.x2,S.y2, T.x1,T.y1, T.x2,T.y2)
   end
-
-
---[[
-  local function mark_seed(S, dir, mode)
-    table.insert(MARKAGE, { S=S, dir=dir, mode=mode })
-  end
-
-  local function apply_markage()
-    for zzz, M in ipairs(MARKAGE) do
-      mark_seed(M.S, M.dir, M.mode)
-    end
-
-    MARKAGE = {}
-  end
---]]
 
   local function old_maintain_link(L, mode)
 
@@ -164,63 +111,19 @@ function grow_all(SEEDS)
   end
 
   local function do_grow(S)
-
         if DIR==2 then S.y1 = S.y1-1
     elseif DIR==8 then S.y2 = S.y2+1
     elseif DIR==4 then S.x1 = S.x1-1
     elseif DIR==6 then S.x2 = S.x2+1
     end
-
---[[
-    for x = 1,SEEDS.w do for y = 1,SEEDS.h do
-      local T = SEEDS[x][y]
-      if T and overlaps(S, T) then
-        -- TODO: optimise when N.shrink[dir]  -- possible???
-        mark_seed(T, DIR, "shrink")
-      end
-    end end
-
-    for L in S.links do
-      N = get_neighbour(L, S)
-      if dir_is_perp(L_dir, DIR) and not same_room(N,S) then
-        L.need_maintain = true
---##    maintain_link(S, L, DIR, "grow")
-      end
-    end
-
-    return true
---]]
   end
 
   local function do_shrink(S)
-
         if DIR==2 then S.y2 = S.y2-1
     elseif DIR==8 then S.y1 = S.y1+1
     elseif DIR==4 then S.x2 = S.x2-1
     elseif DIR==6 then S.x1 = S.x1+1
     end
-
---[[
-    for L in S.links do
-      N = get_neighbour(L, S)
-
-      if L_dir == DIR then
-        -- no problem
-      elseif L_dir == 10-DIR then
-        mark_seed(N, DIR, "grow")
-        if get_width(N) >= N.min_W and rand_odds(XXX) then
-          mark_seed(N, DIR, "shrink")
-        end
-      elseif same_room(L, N) then
----!!!!        mark_seed(N, DIR, "shrink") @@@
-      elseif not same_room(L, N) then   -- HMMM link implies !same_room ???
-        -- perpendicular
-        L.need_maintain = true
---##    maintain_link(S, L, DIR, "shrink")
-      end
-    end
-    return true
---]]
   end
 
   local function check_for_overlap(S)
@@ -230,9 +133,10 @@ function grow_all(SEEDS)
       local F = SEEDS[x][y]
 
       if F and F ~= S then
-        if overlap(F, S) then
-          S.shrink[DIR] = 1
-          S.grow[DIR] = 1
+        -- FIXME: must take grow/shrink flags into account!!!!
+        if seeds_overlap(S, F) then
+          F.shrink[DIR] = 1
+          F.grow[DIR] = 1
         end
       end
     end end
@@ -328,34 +232,26 @@ function grow_all(SEEDS)
     return changed
   end
 
-  local function growth_spurt()
+  local function collect_changes()
+    -- also clears the grow/shrink flags
 
-    while maintain_links() do end
-
-    -- collect (and clear) all changes first
     local list = {}
 
     for x = 1,SEEDS.w do for y = 1,SEEDS.h do
       local S = SEEDS[x][y]
 
-      if S then
-        local g = S.grow[DIR]   ; S.grow[DIR]   = 0
-        local h = S.shrink[DIR] ; S.shrink[DIR] = 0
-
-        if g > 0 or h > 0 then
-          table.insert(list, { S=S, grow=g, shrink=h })
-        end
+      if S and (S.grow or S.shrink) then
+          table.insert(list, { S=S, grow=S.grow, shrink=S.shrink })
+          S.grow   = nil
+          S.shrink = nil
       end
     end end
 
-    if table_empty(list) then return false end
+    return list
+  end
 
-    for zzz,info in ipairs(list) do
-      if info.grow   then do_grow  (info.S) end
-      if info.shrink then do_shrink(info.S) end
-    end
+  local function growth_spurt()
 
-    return true
   end
 
   local function perform_pass(cur_dir)
@@ -363,8 +259,6 @@ function grow_all(SEEDS)
     DIR = cur_dir
      
     -- 1. mark which seeds we want to grow in this pass
-
-    visit_list = {}
 
     for x = 1,SEEDS.w do for y = 1,SEEDS.h do
       local S = SEEDS[x][y]
@@ -383,8 +277,7 @@ function grow_all(SEEDS)
           if diff >= 4 then chance = 99 end
 
           if rand_odds(chance) then
-            mark_seed(S, DIR, "grow")
-            table.insert(grow_list, {S=S, dir=DIR, mode="grow"})
+            S.grow = 1
           end
         end
 
@@ -393,15 +286,14 @@ function grow_all(SEEDS)
 
     -- 2. repeat the growth spurts until all done
 
-    local done
+    while maintain_links() do end
 
-    local a_max, b_max = SEEDS.w, SEEDS.h
-    if (DIR==2 or DIR==8) then
-      a_max, b_max = SEEDS.h, SEEDS.w
+    list = collect_changes()
+
+    for zzz,info in ipairs(list) do
+      if info.grow   then do_grow  (info.S) end
+      if info.shrink then do_shrink(info.S) end
     end
-
-
-    while growth_spurt() do end
   end
 
   local function initialise_seeds()
@@ -416,8 +308,8 @@ function grow_all(SEEDS)
         S.x1, S.y1 = x*3+0, y*3+0
         S.x2, S.y2 = x*3+2, y*3+2
 
-        S.grow   = { [2]=0, [4]=0, [6]=0, [8]=0 }
-        S.shrink = { [2]=0, [4]=0, [6]=0, [8]=0 }
+---     S.grow   = { [2]=0, [4]=0, [6]=0, [8]=0 }
+---     S.shrink = { [2]=0, [4]=0, [6]=0, [8]=0 }
       end
     end end
   end
@@ -430,10 +322,10 @@ function grow_all(SEEDS)
         if get_width (S) < S.min_W then return false end
         if get_height(S) < S.min_H then return false end
 
-        for dir = 2,8,2 do
-          if S.grow[dir]   > 0 then return false end
-          if S.shrink[dir] > 0 then return false end
-        end
+---     for dir = 2,8,2 do
+---       if S.grow[dir]   > 0 then return false end
+---       if S.shrink[dir] > 0 then return false end
+---     end
       end
     end end
 
@@ -495,12 +387,12 @@ function grow_all(SEEDS)
   repeat
     debug_render_seeds()
 
-    for loop = 1,4 do
+--  for loop = 1,4 do
       rand_shuffle(SIDES)
       for zzz,side in ipairs(SIDES) do
         perform_pass(side)
       end
-    end
+--  end
   until is_finished()
 
   adjust_coordinates();
