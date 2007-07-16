@@ -216,19 +216,22 @@ function grow_all(SEEDS)
 
 
     -- for "low" and "high" WHERE values, we simply ensure that
-    -- the corresponding side is lock-stepped.  The rest of the
-    -- growing algorithm ensures the seeds reach their min size.
+    -- the corresponding side is lock-stepped.
 
-    if L.where == "low" then
+    if (L.where == "low"  and (DIR==6 or DIR==8)) or
+       (L.where == "high" and (DIR==4 or DIR==2))
+    then
       if S.shrink ~= N.shrink then
         mark_shrink(sel(S.shrink, N, S))
       end
       return
     end
 
-    if L.where == "high" then
-      if S.shrink ~= N.shrink then
-        mark_shrink(sel(S.shrink, N, S))
+    if (L.where == "high" and (DIR==6 or DIR==8)) or
+       (L.where == "low"  and (DIR==4 or DIR==2))
+    then
+      if S.grow ~= N.grow then
+        mark_grow(sel(S.grow, N, S))
       end
       return
     end
