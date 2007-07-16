@@ -115,10 +115,17 @@ function grow_all(SEEDS)
     CHANGED = true
   end
 
+  local function mark_move(S)
+    S.grow   = true
+    S.shrink = true
+    CHANGED  = true
+  end
+
   local function mark_shrink(S)
     S.shrink = true
     CHANGED  = true
 
+    -- once a seed reaches its minimum size, never lose it
     if DIR==4 or DIR==6 then
       if get_width(S) <= S.min_W then
         S.grow = true
@@ -221,11 +228,45 @@ function grow_all(SEEDS)
       return
     end
 
+    if L.where == "middle" then
 
---[[  HMMMMM
+      if S.shrink and S.grow then mark_move(N) ; return end
+      if N.shrink and N.grow then mark_move(S) ; return end
+
+      local s_diff = sel(S.shrink or S.grow, 1, 0)
+      local n_diff = sel(N.shrink or N.grow, 1, 0)
+
+      if s_diff == n_diff then return end
+
+      -- to get here, one is stationary and one is shrinking/growing.
+      -- Put the stationary one into S
+
+      if s_diff == 1 then S,N = N,S end
+
+      assert(not (S.shrink or S.grow))
+      assert(N.shrink or N.grow)
+
+      local diff
+
+      if DIR==4 or DIR==6 then
+        diff = (N.x1 + N.x2 + 1) - (S.x1 + S.x2)
+      else
+        diff = (N.y1 + N.y2 + 1) - (S.y1 + S.y2)
+      end
+
+      if math.abs(diff) >= 2 then  -- FIXME: correct logic??
+        mark_grow(S)
+      end
+
+      return
+    end
+
+    ---> "lazy" mode : only grow when we have to
+
     -- both are growing : not a lot we can do
     if S.grow and N.grow then return end
 
+--[[  HMMMMM
     if not (S.shrink or N.shrink) then
       assert(S.grow or N.grow)
 
