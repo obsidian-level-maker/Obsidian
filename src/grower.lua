@@ -203,6 +203,26 @@ function grow_all(SEEDS)
     -- both are moving : nothing to do
     if S.grow and N.grow and S.shrink and N.shrink then return end
 
+    -- for "low" and "high" WHERE values, we simply ensure that
+    -- the corresponding side is lock-stepped.  The rest of the
+    -- growing algorithm ensures the seeds reach their min size.
+
+    if L.where == "low" then
+      if S.shrink ~= N.shrink then
+        mark_shrink(sel(S.shrink, N, S))
+      end
+      return
+    end
+
+    if L.where == "high" then
+      if S.shrink ~= N.shrink then
+        mark_shrink(sel(S.shrink, N, S))
+      end
+      return
+    end
+
+
+--[[  HMMMMM
     -- both are growing : not a lot we can do
     if S.grow and N.grow then return end
 
@@ -232,7 +252,7 @@ function grow_all(SEEDS)
     end
 
     if N.mass > S.mass then S,N = N,S end
-
+--]]
   end
 
   local function check_back_link(S, B, L)
@@ -311,13 +331,19 @@ function grow_all(SEEDS)
       if S then
         
         local diff
+        local force
+
         if (DIR==4 or DIR==6) then
           diff = S.min_W - get_width(S)
+          if S.min_W < 3 then force = true end
         else
           diff = S.min_H - get_height(S)
+          if S.min_H < 3 then force = true end
         end
 
-        if diff > 0 then
+        if force then
+          mark_grow(S)
+        elseif diff > 0 then
           local chance = 33
           if diff >= 2 then chance = 66 end
           if diff >= 4 then chance = 99 end
