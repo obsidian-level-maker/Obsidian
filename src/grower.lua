@@ -86,7 +86,7 @@ function grow_all(SEEDS)
     return valid_seed(sx, sy) and SEEDS[sx][sy]
   end
 
-  local function seed_new_size(S)
+  local function seed_new_pos(S)
     
     local x1,y1 = S.x1, S.y1
     local x2,y2 = S.x2, S.y2
@@ -165,23 +165,26 @@ function grow_all(SEEDS)
     end end
   end
 
-  local function link_cur_long(S, N)
-    if DIR == 4 or DIR == 6 then
+  local function link_cur_length(S, N)
 
-      local x1 = math.max(S.x1, N.x1)
-      local x2 = math.min(S.x2, N.x2)
-
-      assert(x2 >= x1)
-
-      return x2 - x1 + 1
+    if DIR==4 or DIR==6 then
+      return math.min(S.x2,N.x2) - math.max(S.x1,N.x1) + 1
     else
+      return math.min(S.x2,N.x2) - math.max(S.x1,N.x1) + 1
+    end
+  end
 
-      local y1 = math.max(S.y1, N.y1)
-      local y2 = math.min(S.y2, N.y2)
+  local function link_new_length(S, N)
 
-      assert(y2 >= y1)
+    local sx1,sy1, sx2,sy2 = seed_new_pos(S)
+    local nx1,ny1, nx2,ny2 = seed_new_pos(N)
 
-      return y2 - y1 + 1
+    local low, high
+
+    if DIR==4 or DIR==6 then
+      return math.min(sx2,nx2) - math.max(sx1,nx1)
+    else
+      return math.min(sx2,nx2) - math.max(sx1,nx1)
     end
   end
 
@@ -201,6 +204,7 @@ function grow_all(SEEDS)
       return
     end
 
+
     -- actually linked?
     if not L then return end
 
@@ -209,6 +213,7 @@ function grow_all(SEEDS)
 
     -- both are moving : nothing to do
     if S.grow and N.grow and S.shrink and N.shrink then return end
+
 
     -- for "low" and "high" WHERE values, we simply ensure that
     -- the corresponding side is lock-stepped.  The rest of the
@@ -238,7 +243,7 @@ function grow_all(SEEDS)
 
       if s_diff == n_diff then return end
 
-      -- to get here, one is stationary and one is shrinking/growing.
+      -- to get here, one is stationary and the other is changing.
       -- Put the stationary one into S
 
       if s_diff == 1 then S,N = N,S end
@@ -254,46 +259,33 @@ function grow_all(SEEDS)
         diff = (N.y1 + N.y2 + 1) - (S.y1 + S.y2)
       end
 
-      if math.abs(diff) >= 2 then  -- FIXME: correct logic??
+      if DIR==4 or DIR==2 then diff = -diff end
+
+      if diff >= 2 then
         mark_grow(S)
       end
 
       return
     end
 
-    ---> "lazy" mode : only grow when we have to
 
-    -- both are growing : not a lot we can do
+    ---> "lazy" mode : only grow when necessary
+
+    -- neither seeds are shrinking : nothing to do
+    if not S.shrink and not N.shrink then return end
+
+    -- both are growing : not much we can do
     if S.grow and N.grow then return end
 
---[[  HMMMMM
-    if not (S.shrink or N.shrink) then
-      assert(S.grow or N.grow)
+    local long = link_new_length(S, N)
 
-      -- FIXME: more to do here
-      ----> need better ways specifying WHERE the link occurs
-
-      return  -- overlap is not shrinking
+    if long < L.long then
+          if S.grow then mark_grow(N)
+      elseif N.grow then mark_grow(S)
+      else
+        mark_grow(sel(S.mass < N.mass, S, N))
+      end
     end
-
-    -- at least one seed is shrinking : move it to S
-
-    if not S.shrink then S,N = N,S end
-    assert(S.shrink)
-
-    @@@
-
-    -- figure out overlap (after grow/shrink)
-    local cur_long = link_cur_long(S, N)
-    --FIXME !!! take new sizes into account
-
-    if cur_long < L.long then
-      S.grow = S.grow or N.grow   --- ???
-      N.grow = S.grow
-    end
-
-    if N.mass > S.mass then S,N = N,S end
---]]
   end
 
   local function check_back_link(S, B, L)
