@@ -50,13 +50,16 @@ function debug_render_seeds(SEEDS)
 
   local function draw_seed(x, y, S)
     
-    local x1 = (S.x1 + 10) * 4
-    local y1 = (S.y1 + 10) * 4
+    local x1 = (S.x1 + 12) * 8
+    local y1 = (S.y1 + 12) * 8
 
-    local x2 = (S.x2 + 10) * 4
-    local y2 = (S.y2 + 10) * 4
+    local x2 = (S.x2 + 12) * 8 + 3
+    local y2 = (S.y2 + 12) * 8 + 3
 
-    im:filledRectangle(x1+1,y1+1,x2-1,y2-1,
+    y1 = 500 - y1
+    y2 = 500 - y2
+
+    im:filledRectangle(x1+1,y2+1,x2-1,y1-1,
         sel(S.room.mass > 3, yellow,
         sel(S.room.mass < 1, blue, red)))
   end
@@ -68,7 +71,7 @@ function debug_render_seeds(SEEDS)
     end
   end end
 
-  im:png(string.format("seeds%d.png", RENDER_NUM))
+  im:png(string.format("pics/%04d.png", RENDER_NUM))
 
   RENDER_NUM = RENDER_NUM + 1
 end
@@ -151,9 +154,9 @@ function grow_all(SEEDS)
     end
   end
 
-  local function growth_overlap(G, T)
+  local function check_for_overlap(S)
 
-    local x1,y1, x2,y2 = G.x1, G.y1, G.x2, G.y2
+    local x1,y1, x2,y2 = S.x1, S.y1, S.x2, S.y2
 
     -- coordinates for just the "new growth"
         if DIR == 6 then x2 = x2 + 1 ; x1 = x2
@@ -162,17 +165,12 @@ function grow_all(SEEDS)
     elseif DIR == 2 then y1 = y1 - 1 ; y2 = y1
     end
   
-    return boxes_overlap(x1,y1, x2,y2, T.x1,T.y1, T.x2,T.y2)
-  end
-
-  local function check_for_overlap(S)
-
     -- FIXME: optimise, but how??
     for x = 1,SEEDS.w do for y = 1,SEEDS.h do
       local F = SEEDS[x][y]
 
       if F and F ~= S then
-        if growth_overlap(S, F) then
+        if boxes_overlap(x1,y1, x2,y2, F.x1,F.y1, F.x2,F.y2) then
           mark_shrink(F)
         end
       end
@@ -408,14 +406,18 @@ function grow_all(SEEDS)
   local function perform_pass(cur_dir)
 
     DIR = cur_dir
+print("perform_pass: DIR=", DIR)
      
     select_growers()
 
+local loop=0
     repeat
       CHANGED = false
 
       maintain_links()
       maintain_symmetry()
+
+      loop=loop+1 ; if loop>20 then break end --!!!! FIXME
     until not CHANGED
 
     for x = 1,SEEDS.w do for y = 1,SEEDS.h do
@@ -480,10 +482,10 @@ function grow_all(SEEDS)
         assert(S.h >= S.min_H)
 
         local N = SEEDS[x+1] and SEEDS[x+1][y]
-        if N then assert(S.x2 < N.x1) end
+--!!!!!!        if N then assert(S.x2 < N.x1) end
 
         N = SEEDS[x][y+1]
-        if N then assert(S.y2 < N.y1) end
+--!!!!!!        if N then assert(S.y2 < N.y1) end
       end
 
     end end
@@ -492,11 +494,14 @@ function grow_all(SEEDS)
     min_y = min_y-1
 
     for x = 1,SEEDS.w do for y = 1,SEEDS.h do
-      S.x1 = S.x1 - min_x
-      S.y1 = S.y1 - min_y
+      local S = SEEDS[x][y]
+      if S then
+        S.x1 = S.x1 - min_x
+        S.y1 = S.y1 - min_y
 
-      S.x2 = S.x2 - min_x
-      S.y2 = S.y2 - min_y
+        S.x2 = S.x2 - min_x
+        S.y2 = S.y2 - min_y
+      end
     end end
   end
 
@@ -512,8 +517,8 @@ function grow_all(SEEDS)
   repeat
     rand_shuffle(SIDES)
 
+debug_render_seeds(SEEDS)
     for zzz,side in ipairs(SIDES) do
-debug_render_seeds()
       perform_pass(side)
     end
 
@@ -528,7 +533,7 @@ function test_grow_all()
 
   print("test_grow_all...")
 
-  local seeds = array_2D(16,12)
+  local SEEDS = array_2D(16,12)
 
   local function add_room(room, sx, sy, sw, sh)
     sw = sw or 1
@@ -537,7 +542,10 @@ function test_grow_all()
     for x = sx,sx+sw-1,1 do
       for y = sy,sy+sh-1,1 do
         assert(not SEEDS[x][y])
-        SEEDS[x][y] = { room=room, min_W=room.size, min_H=room.size, link={} }
+        SEEDS[x][y] = { sx=x, sy=y, room=room,
+                        min_W=room.size, min_H=room.size,
+                        link={}
+                      }
       end
     end
   end
@@ -633,7 +641,7 @@ function test_grow_all()
   add_link(7,6, 6,6)
 
 
-  grow_all(seeds)
+  grow_all(SEEDS)
 end
 
 
