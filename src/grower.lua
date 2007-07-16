@@ -180,6 +180,7 @@ function grow_all(SEEDS)
 
   local function check_side_link(S, N, L)
 
+    -- keep rooms in lock-step
     if same_room(S, N) then
 
       if S.grow ~= N.grow then
@@ -193,13 +194,33 @@ function grow_all(SEEDS)
       return
     end
 
-    @@@
-
     -- actually linked?
-    if not L and not same_room(S, N) then return end
+    if not L then return end
 
-    -- nothing to do if both are changing the same way
-    if S.grow == N.grow and S.shrink == N.shrink then return end
+    -- both are stationary : nothing to do
+    if not (S.grow or N.grow or S.shrink or N.shrink) then return end
+
+    -- both are moving : nothing to do
+    if S.grow and N.grow and S.shrink and N.shrink then return end
+
+    -- both are growing : not a lot we can do
+    if S.grow and N.grow then return end
+
+    if not (S.shrink or N.shrink) then
+      assert(S.grow or N.grow)
+
+      -- FIXME: more to do here
+      ----> need better ways specifying WHERE the link occurs
+
+      return  -- overlap is not shrinking
+    end
+
+    -- at least one seed is shrinking : move it to S
+
+    if not S.shrink then S,N = N,S end
+    assert(S.shrink)
+
+    @@@
 
     -- figure out overlap (after grow/shrink)
     local cur_long = link_cur_long(S, N)
@@ -212,9 +233,6 @@ function grow_all(SEEDS)
 
     if N.mass > S.mass then S,N = N,S end
 
-    -- FIXME: need better ways specifying WHERE the link occurs
-
-    -- FIXME: support "symmetric" links (L.twin ??)
   end
 
   local function check_back_link(S, B, L)
@@ -222,9 +240,9 @@ function grow_all(SEEDS)
     -- actually linked?
     if not L and not same_room(S, B) then return end
 
-      if S.shrink then mark_grow(B)   end
+    if S.shrink then mark_grow(B)   end
 
----#  if B.grow   then mark_shrink(S) end
+    -- the "B.grow" case already handled (in check_for_overlap)
 
   end
 
@@ -265,26 +283,10 @@ function grow_all(SEEDS)
 
   local function maintain_symmetry()
 
-    --!!!! FIXME
-  end
+    --!!!! FIXME maintain_symmetry
 
---##  local function collect_changes()
---##    -- Note: also clears the grow/shrink flags
---##
---##    local list = {}
---##
---##    for x = 1,SEEDS.w do for y = 1,SEEDS.h do
---##      local S = SEEDS[x][y]
---##
---##      if S and S.grow or S.shrink) then
---##          table.insert(list, { S=S, grow=S.grow, shrink=S.shrink })
---##          S.grow   = nil
---##          S.shrink = nil
---##      end
---##    end end
---##
---##    return list
---##  end
+    -- FIXME: support "symmetric" links (L.twin ??)
+  end
 
   local function do_grow(S)
         if DIR==2 then S.y1 = S.y1-1
