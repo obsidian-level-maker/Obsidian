@@ -241,25 +241,22 @@ function grow_all(SEEDS)
       if S.shrink and S.grow then mark_move(N) ; return end
       if N.shrink and N.grow then mark_move(S) ; return end
 
-      local s_diff = sel(S.shrink or S.grow, 1, 0)
-      local n_diff = sel(N.shrink or N.grow, 1, 0)
+      -- both are growing : not much we can do
+      if S.grow and N.grow then return end
 
-      if s_diff == n_diff then return end
+      -- Put the non-growing one into S.
+      -- If neither are growing, then use the lightest one
+      if S.grow or (not N.grow and S.mass < N.mass) then S,N = N,S end
 
-      -- to get here, one is stationary and the other is changing.
-      -- Put the stationary one into S
-
-      if s_diff == 1 then S,N = N,S end
-
-      assert(not (S.shrink or S.grow))
-      assert(N.shrink or N.grow)
+      local s_add = sel(S.shrink or S.grow, 1, 0)
+      local n_add = sel(N.shrink or N.grow, 1, 0)
 
       local diff
 
       if DIR==4 or DIR==6 then
-        diff = (N.x1 + N.x2 + 1) - (S.x1 + S.x2)
+        diff = (N.x1 + N.x2 + n_add) - (S.x1 + S.x2 + s_add)
       else
-        diff = (N.y1 + N.y2 + 1) - (S.y1 + S.y2)
+        diff = (N.y1 + N.y2 + n_add) - (S.y1 + S.y2 + s_add)
       end
 
       if DIR==4 or DIR==2 then diff = -diff end
@@ -283,11 +280,12 @@ function grow_all(SEEDS)
     local long = link_new_length(S, N)
 
     if long < L.long then
-          if S.grow then mark_grow(N)
-      elseif N.grow then mark_grow(S)
-      else
-        mark_grow(sel(S.mass < N.mass, S, N))
-      end
+
+      -- Put the non-growing one into S.
+      -- If neither are growing, then use the lightest one
+      if S.grow or (not N.grow and S.mass < N.mass) then S,N = N,S end
+
+      mark_grow(S)
     end
   end
 
