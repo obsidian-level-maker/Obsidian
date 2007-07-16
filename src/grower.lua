@@ -44,17 +44,31 @@ function debug_render_seeds(SEEDS)
   local red    = im:colorAllocate(255, 0, 0);
   local blue   = im:colorAllocate(0, 0, 255);
   local purple = im:colorAllocate(255, 0, 255);
+  local yellow = im:colorAllocate(255, 255, 0);
 
   im:filledRectangle(0, 0, 500, 500, black);
 
-  im:png(string.format("seeds%d.png", RENDER_NUM))
+  local function draw_seed(x, y, S)
+    
+    local x1 = (S.x1 + 10) * 4
+    local y1 = (S.y1 + 10) * 4
+
+    local x2 = (S.x2 + 10) * 4
+    local y2 = (S.y2 + 10) * 4
+
+    im:filledRectangle(x1+1,y1+1,x2-1,y2-1,
+        sel(S.room.mass > 3, yellow,
+        sel(S.room.mass < 1, blue, red)))
+  end
 
   for x = 1,SEEDS.w do for y = 1,SEEDS.h do
     local S = SEEDS[x][y]
     if S then
-      -- FIXME....
+      draw_seed(x, y, S)
     end
   end end
+
+  im:png(string.format("seeds%d.png", RENDER_NUM))
 
   RENDER_NUM = RENDER_NUM + 1
 end
@@ -496,11 +510,10 @@ function grow_all(SEEDS)
   local SIDES = { 2,4,6,8 }
 
   repeat
-    debug_render_seeds()
-
     rand_shuffle(SIDES)
 
     for zzz,side in ipairs(SIDES) do
+debug_render_seeds()
       perform_pass(side)
     end
 
@@ -546,7 +559,9 @@ function test_grow_all()
     L.seeds = { S, N }
   end
 
+
   -- rooms
+
   local r1 = { mass=6.5, size=7 }
   local r2 = { mass=4.3, size=9 }
 
@@ -569,7 +584,9 @@ function test_grow_all()
   add_room(r7, 6,1)
   add_room(r8, 7,6)
 
+
   -- halls
+
   local h1 = { mass=0.5, size=3 }
   local h2 = { mass=0.5, size=3 }
   local h3 = { mass=0.5, size=3 }
@@ -588,6 +605,7 @@ function test_grow_all()
   add_room(h4, 2,1, 3,1)
   add_room(h5, 6,5, 1,2)
   add_room(h6, 6,2, 1,2)
+
 
   -- linkage
 
