@@ -246,7 +246,7 @@ function grow_all(SEEDS)
 
       -- Put the non-growing one into S.
       -- If neither are growing, then use the lightest one
-      if S.grow or (not N.grow and S.mass < N.mass) then S,N = N,S end
+      if S.grow or (not N.grow and S.room.mass < N.room.mass) then S,N = N,S end
 
       local s_add = sel(S.shrink or S.grow, 1, 0)
       local n_add = sel(N.shrink or N.grow, 1, 0)
@@ -283,7 +283,7 @@ function grow_all(SEEDS)
 
       -- Put the non-growing one into S.
       -- If neither are growing, then use the lightest one
-      if S.grow or (not N.grow and S.mass < N.mass) then S,N = N,S end
+      if S.grow or (not N.grow and S.room.mass < N.room.mass) then S,N = N,S end
 
       mark_grow(S)
     end
@@ -516,6 +516,104 @@ function test_grow_all()
   print("test_grow_all...")
 
   local seeds = array_2D(16,12)
+
+  local function add_room(room, sx, sy, sw, sh)
+    sw = sw or 1
+    sh = sh or 1
+    
+    for x = sx,sx+sw-1,1 do
+      for y = sy,sy+sh-1,1 do
+        assert(not SEEDS[x][y])
+        SEEDS[x][y] = { room=room, min_W=room.size, min_H=room.size, link={} }
+      end
+    end
+  end
+
+  local function add_link(sx, sy, ex, ey, long)
+    long = long or 3
+
+    local dir = delta_to_dir(ex-sx, ey-sy)
+    assert(dir==2 or dir==4 or dir==6 or dir==8)
+
+    local S = SEEDS[sx][sy] ; assert(S)
+    local N = SEEDS[ex][ey] ; assert(N)
+
+    local L = { where="lazy", long=long }
+
+    S.link[dir] = L
+    N.link[10-dir] = L
+
+    L.seeds = { S, N }
+  end
+
+  -- rooms
+  local r1 = { mass=6.5, size=7 }
+  local r2 = { mass=4.3, size=9 }
+
+  local r3 = { mass=1.8, size=5 }
+  local r4 = { mass=1.3, size=6 }
+  local r5 = { mass=1.3, size=10 }
+
+  local r6 = { mass=1.2, size=11 }
+  local r7 = { mass=1.9, size=6 }
+  local r8 = { mass=1.5, size=9 }
+
+  add_room(r1, 4,3, 2,3)
+  add_room(r2, 1,3, 2,2)
+
+  add_room(r3, 3,4)
+  add_room(r4, 1,5)
+  add_room(r5, 2,2)
+
+  add_room(r6, 5,1)
+  add_room(r7, 6,1)
+  add_room(r8, 7,6)
+
+  -- halls
+  local h1 = { mass=0.5, size=3 }
+  local h2 = { mass=0.5, size=3 }
+  local h3 = { mass=0.5, size=3 }
+
+  local h4 = { mass=0.5, size=5 }
+  local h5 = { mass=0.5, size=3 }
+  local h6 = { mass=0.5, size=3 }
+
+  add_room(h1, 3,5, 1,2)
+  add_room(h1, 4,6)
+
+  add_room(h2, 3,2, 1,2)
+  add_room(h2, 4,2)
+
+  add_room(h3, 1,2)
+  add_room(h4, 2,1, 3,1)
+  add_room(h5, 6,5, 1,2)
+  add_room(h6, 6,2, 1,2)
+
+  -- linkage
+
+  add_link(3,4, 4,4, 5)
+  add_link(4,5, 4,6)
+  add_link(4,3, 4,2)
+  add_link(5,5, 6,5, 2)
+  add_link(5,3, 6,3, 2)
+
+  add_link(1,4, 1,5)
+  add_link(1,3, 1,2)
+  add_link(2,4, 3,4)
+  add_link(2,2, 2,3, 6)
+
+  add_link(3,4, 3,5)
+  add_link(3,4, 3,3)
+
+  add_link(2,2, 1,2)
+  add_link(2,2, 2,1)
+
+  add_link(5,1, 4,1)
+  add_link(5,1, 6,1, 4)
+  add_link(6,1, 6,2)
+
+  add_link(7,6, 6,6)
+
 
   grow_all(seeds)
 end
