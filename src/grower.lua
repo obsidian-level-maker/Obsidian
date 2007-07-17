@@ -16,6 +16,12 @@
 --
 ----------------------------------------------------------------
 
+
+-- TODO:  1. fix the "middle" link mode
+-- TODO:  2. implement symmetry preservation
+-- TODO:  3. tidy up
+
+
 require 'defs'
 
 -- FIXME: temp stuff for util module
@@ -28,40 +34,69 @@ function con.random() return math.random() end
 
 require 'util'
 
+SEEDS = {}
+
+function valid_seed(sx, sy)
+  return sx >= 1 and sx <= SEEDS.w and sy >= 1 and sy <= SEEDS.h
+end
+
+function get_seed_safe(sx, sy)
+  return valid_seed(sx, sy) and SEEDS[sx][sy]
+end
+
 
 -- [[
 require 'gd'
 
 RENDER_NUM = 1
 
-function debug_render_seeds(SEEDS)
+function debug_render_seeds()
 
-  local im = gd.createTrueColor(500, 500);
+  local im = gd.createTrueColor(500, 300);
 
   local black = im:colorAllocate(0, 0, 0);
+  local gray  = im:colorAllocate(127, 127, 127);
   local white = im:colorAllocate(255, 255, 255);
 
-  local red    = im:colorAllocate(255, 0, 0);
-  local blue   = im:colorAllocate(0, 0, 255);
-  local purple = im:colorAllocate(255, 0, 255);
-  local yellow = im:colorAllocate(255, 255, 0);
+  local red    = im:colorAllocate(200, 0, 0);
+  local blue   = im:colorAllocate(0, 0, 200);
+  local purple = im:colorAllocate(200, 0, 200);
+  local yellow = im:colorAllocate(200, 200, 0);
+  local green  = im:colorAllocate(0, 200, 0);
 
-  im:filledRectangle(0, 0, 500, 500, black);
+  im:filledRectangle(0, 0, 500, 300, black);
 
   local function draw_seed(x, y, S)
     
-    local x1 = (S.x1 + 12) * 8
-    local y1 = (S.y1 + 12) * 8
+    local x1 = (S.x1 + 16) * 6
+    local y1 = (S.y1 + 16) * 6
 
-    local x2 = (S.x2 + 12) * 8 + 3
-    local y2 = (S.y2 + 12) * 8 + 3
+    local x2 = (S.x2 + 16) * 6 + 5
+    local y2 = (S.y2 + 16) * 6 + 5
 
-    y1 = 500 - y1
-    y2 = 500 - y2
+    y1,y2 = 300-y2, 300-y1
 
-    im:filledRectangle(x1+1,y2+1,x2-1,y1-1,
-        sel(S.room.mass > 3, yellow,
-        sel(S.room.mass < 1, blue, red)))
+local aa = (S.x2 - S.x1 + 1) - S.min_W
+local bb = (S.y2 - S.y1 + 1) - S.min_H
+
+    im:filledRectangle(x1,y1,x2,y2,
+      sel(aa < 0 or bb < 0, blue,
+      sel(aa > 5 or bb > 5, red,
+      sel(aa > 2 or bb > 2, yellow, green))))
+
+--      sel(S.room.mass > 3, yellow,
+--      sel(S.room.mass < 1, blue, red)))
+
+    for side=2,8,2 do
+      local dx,dy = dir_to_delta(side)
+      local N = get_seed_safe(x+dx,y-dy)
+      local ax,ay, bx,by = side_coords(side, x1,y1, x2,y2)
+      if (N and N.room == S.room) then
+        im:filledRectangle(ax,ay, bx,by, black)
+      else
+        im:filledRectangle(ax,ay, bx,by, white)
+      end
+    end
   end
 
   for x = 1,SEEDS.w do for y = 1,SEEDS.h do
@@ -73,12 +108,18 @@ function debug_render_seeds(SEEDS)
 
   im:png(string.format("pics/%04d.png", RENDER_NUM))
 
+  print("WROTE PIC", RENDER_NUM)
+  print()
+
   RENDER_NUM = RENDER_NUM + 1
+
+  im = nil ; collectgarbage("collect");
+
 end
 --]]
 
 
-function grow_all(SEEDS)
+function grow_all()
 
   local DIR
   local CHANGED
@@ -93,14 +134,6 @@ function grow_all(SEEDS)
 
   local function same_room(S1, S2)
     return S1.room == S2.room
-  end
-
-  local function valid_seed(sx, sy)
-    return sx >= 1 and sx <= SEEDS.w and sy >= 1 and sy <= SEEDS.h
-  end
-
-  local function get_seed_safe(sx, sy)
-    return valid_seed(sx, sy) and SEEDS[sx][sy]
   end
 
   local function seed_new_pos(S)
@@ -128,29 +161,33 @@ function grow_all(SEEDS)
   end
 
   local function mark_grow(S)
+    if S.grow then return end
+
     S.grow  = true
     CHANGED = true
   end
 
   local function mark_move(S)
+    if S.grow and S.shrink then return end
+
     S.grow   = true
     S.shrink = true
     CHANGED  = true
   end
 
   local function mark_shrink(S)
+    if S.shrink then return end
+
     S.shrink = true
     CHANGED  = true
 
-    -- once a seed reaches its minimum size, never lose it
+    -- once a seed reaches its minimum size, never make it smaller.
+    -- (It turns out that this check is very important).
+
     if DIR==4 or DIR==6 then
-      if get_width(S) <= S.min_W then
-        S.grow = true
-      end
-    else -- DIR==2 or DIR==8
-      if get_height(S) <= S.min_H then
-        S.grow = true
-      end
+      if get_width(S)  <= S.min_W then S.grow = true end
+    else
+      if get_height(S) <= S.min_H then S.grow = true end
     end
   end
 
@@ -220,8 +257,8 @@ function grow_all(SEEDS)
     -- actually linked?
     if not L then return end
 
-    -- both are stationary : nothing to do
-    if not (S.grow or N.grow or S.shrink or N.shrink) then return end
+--!!!!!    -- both are stationary : nothing to do
+--!!!!!    if not (S.grow or N.grow or S.shrink or N.shrink) then return end
 
     -- both are moving : nothing to do
     if S.grow and N.grow and S.shrink and N.shrink then return end
@@ -280,7 +317,9 @@ function grow_all(SEEDS)
       return
     end
 
+    error("Link contains bad WHERE mode.")
 
+--[[
     ---> "lazy" mode : only grow when necessary
 
     -- neither seeds are shrinking : nothing to do
@@ -299,6 +338,7 @@ function grow_all(SEEDS)
 
       mark_grow(S)
     end
+--]]
   end
 
   local function check_back_link(S, B, L)
@@ -360,6 +400,8 @@ function grow_all(SEEDS)
     elseif DIR==4 then S.x1 = S.x1-1
     elseif DIR==6 then S.x2 = S.x2+1
     end
+
+    S.grow = nil
   end
 
   local function do_shrink(S)
@@ -368,36 +410,49 @@ function grow_all(SEEDS)
     elseif DIR==4 then S.x2 = S.x2-1
     elseif DIR==6 then S.x1 = S.x1+1
     end
+
+    S.shrink = nil
   end
 
+  local GROW_CHANCE   = { 25, 37, 50, 75, 99 }
+  local SHRINK_CHANCE = {  5, 10, 15, 25, 50 }
+ 
   local function select_growers()
 
     for x = 1,SEEDS.w do for y = 1,SEEDS.h do
       local S = SEEDS[x][y]
       if S then
         
-        local diff
-        local force
+        local w = get_width(S)
+        local h = get_height(S)
 
-        if (DIR==4 or DIR==6) then
-          diff = S.min_W - get_width(S)
-          if S.min_W < 3 then force = true end
-        else
-          diff = S.min_H - get_height(S)
-          if S.min_H < 3 then force = true end
-        end
+        local diff  = S.min_W - w
+        local other = S.min_H - h
 
-        if force then
+        if (DIR==2 or DIR==8) then diff,other = other,diff end
+
+        if sel(DIR==4 or DIR==6, S.min_W, S.min_H) < 3 then
           mark_grow(S)
-        elseif diff > 0 then
-          local chance = 33
-          if diff >= 2 then chance = 66 end
-          if diff >= 4 then chance = 99 end
 
-          if rand_odds(chance) then
-            mark_grow(S)
-          end
+        elseif diff > 0 and rand_odds(GROW_CHANCE[math.min(diff,5)]) then
+          mark_grow(S)
+
+        elseif diff < 0 and rand_odds(SHRINK_CHANCE[math.min(-diff,5)]) then
+          mark_shrink(S)
+
         end
+
+---#        if force then
+---#          mark_grow(S)
+---#        elseif diff > 0 then
+---#          local chance = 33
+---#          if diff >= 2 then chance = 66 end
+---#          if diff >= 4 then chance = 99 end
+---#
+---#          if true then --!!!!!! rand_odds(chance) then
+---#            mark_grow(S)
+---#          end
+---#        end
 
       end
     end end
@@ -410,21 +465,19 @@ print("perform_pass: DIR=", DIR)
      
     select_growers()
 
-local loop=0
     repeat
       CHANGED = false
 
       maintain_links()
       maintain_symmetry()
 
-      loop=loop+1 ; if loop>20 then break end --!!!! FIXME
     until not CHANGED
 
     for x = 1,SEEDS.w do for y = 1,SEEDS.h do
       local S = SEEDS[x][y]
 
-      if S and S.grow   then do_grow(S)   ; S.grow   = nil end
-      if S and S.shrink then do_shrink(S) ; S.shrink = nil end
+      if S and S.grow   then do_grow(S)   end
+      if S and S.shrink then do_shrink(S) end
     end end
   end
 
@@ -514,16 +567,22 @@ local loop=0
   -- perform growth passes until every seed is full-sized
   local SIDES = { 2,4,6,8 }
 
+  local extra = 0
+
   repeat
+debug_render_seeds()
+
     rand_shuffle(SIDES)
 
-debug_render_seeds(SEEDS)
     for zzz,side in ipairs(SIDES) do
       perform_pass(side)
     end
 
-  until is_finished()
+    if is_finished() then extra = extra + 1 end
 
+  until extra >= 4
+
+debug_render_seeds()
   adjust_coordinates();
 
 end -- grow_all
@@ -533,7 +592,7 @@ function test_grow_all()
 
   print("test_grow_all...")
 
-  local SEEDS = array_2D(16,12)
+  SEEDS = array_2D(16,12)
 
   local function add_room(room, sx, sy, sw, sh)
     sw = sw or 1
@@ -550,8 +609,9 @@ function test_grow_all()
     end
   end
 
-  local function add_link(sx, sy, ex, ey, long)
-    long = long or 3
+  local function add_link(sx, sy, ex, ey, long, where)
+    long  = long or 3
+    where = where or "low"
 
     local dir = delta_to_dir(ex-sx, ey-sy)
     assert(dir==2 or dir==4 or dir==6 or dir==8)
@@ -559,7 +619,7 @@ function test_grow_all()
     local S = SEEDS[sx][sy] ; assert(S)
     local N = SEEDS[ex][ey] ; assert(N)
 
-    local L = { where="lazy", long=long }
+    local L = { where=where, long=long }
 
     S.link[dir] = L
     N.link[10-dir] = L
@@ -570,14 +630,14 @@ function test_grow_all()
 
   -- rooms
 
-  local r1 = { mass=6.5, size=7 }
+  local r1 = { mass=6.5, size=4 }
   local r2 = { mass=4.3, size=9 }
 
-  local r3 = { mass=1.8, size=5 }
+  local r3 = { mass=2.8, size=11 }
   local r4 = { mass=1.3, size=6 }
   local r5 = { mass=1.3, size=10 }
 
-  local r6 = { mass=1.2, size=11 }
+  local r6 = { mass=1.2, size=8 }
   local r7 = { mass=1.9, size=6 }
   local r8 = { mass=1.5, size=9 }
 
@@ -595,19 +655,21 @@ function test_grow_all()
 
   -- halls
 
-  local h1 = { mass=0.5, size=3 }
-  local h2 = { mass=0.5, size=3 }
-  local h3 = { mass=0.5, size=3 }
+  local h1  = { mass=0.5, size=3, max=4 }
+  local h1x = { mass=0.1, size=3 }
+  local h2  = { mass=0.5, size=3, max=4 }
+  local h2x = { mass=0.1, size=3 }
+  local h3  = { mass=0.5, size=3 }
 
   local h4 = { mass=0.5, size=5 }
   local h5 = { mass=0.5, size=3 }
   local h6 = { mass=0.5, size=3 }
 
-  add_room(h1, 3,5, 1,2)
-  add_room(h1, 4,6)
+  add_room(h1,  3,5, 1,2)
+  add_room(h1x, 4,6)
 
-  add_room(h2, 3,2, 1,2)
-  add_room(h2, 4,2)
+  add_room(h2,  3,2, 1,2)
+  add_room(h2x, 4,2)
 
   add_room(h3, 1,2)
   add_room(h4, 2,1, 3,1)
@@ -617,9 +679,9 @@ function test_grow_all()
 
   -- linkage
 
-  add_link(3,4, 4,4, 5)
-  add_link(4,5, 4,6)
-  add_link(4,3, 4,2)
+  add_link(3,4, 4,4, 5, "middle")
+  add_link(4,5, 4,6, nil, "high")
+  add_link(4,3, 4,2, nil, "high")
   add_link(5,5, 6,5, 2)
   add_link(5,3, 6,3, 2)
 
@@ -628,8 +690,11 @@ function test_grow_all()
   add_link(2,4, 3,4)
   add_link(2,2, 2,3, 6)
 
-  add_link(3,4, 3,5)
-  add_link(3,4, 3,3)
+  add_link(3,6, 4,6, nil, "high")
+  add_link(3,2, 4,2, nil, "low")
+
+  add_link(3,4, 3,5, nil, "middle")
+  add_link(3,4, 3,3, nil, "middle")
 
   add_link(2,2, 1,2)
   add_link(2,2, 2,1)
@@ -641,11 +706,11 @@ function test_grow_all()
   add_link(7,6, 6,6)
 
 
-  grow_all(SEEDS)
+  grow_all()
 end
 
 
-math.randomseed(1)
+math.randomseed(2)
 
 test_grow_all()
 
