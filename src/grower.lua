@@ -50,7 +50,7 @@ require 'gd'
 
 RENDER_NUM = 1
 
-function debug_render_seeds()
+function debug_render()
 
   local im = gd.createTrueColor(500, 300);
 
@@ -81,7 +81,7 @@ local bb = (S.y2 - S.y1 + 1) - S.min_H
 
     im:filledRectangle(x1,y1,x2,y2,
       sel(aa < 0 or bb < 0, blue,
-      sel(aa > 5 or bb > 5, red,
+      sel(aa > 4 or bb > 4, red,
       sel(aa > 2 or bb > 2, yellow, green))))
 
 --      sel(S.room.mass > 3, yellow,
@@ -567,10 +567,8 @@ print("perform_pass: DIR=", DIR)
   -- perform growth passes until every seed is full-sized
   local SIDES = { 2,4,6,8 }
 
-  local extra = 0
-
   repeat
-debug_render_seeds()
+    debug_render()
 
     rand_shuffle(SIDES)
 
@@ -578,11 +576,10 @@ debug_render_seeds()
       perform_pass(side)
     end
 
-    if is_finished() then extra = extra + 1 end
+  until is_finished()
 
-  until extra >= 4
+  debug_render()
 
-debug_render_seeds()
   adjust_coordinates();
 
 end -- grow_all
@@ -611,7 +608,7 @@ function test_grow_all()
 
   local function add_link(sx, sy, ex, ey, long, where)
     long  = long or 3
-    where = where or "low"
+    where = where or rand_sel(65, "low", "high")
 
     local dir = delta_to_dir(ex-sx, ey-sy)
     assert(dir==2 or dir==4 or dir==6 or dir==8)
@@ -699,8 +696,8 @@ function test_grow_all()
   add_link(2,2, 1,2)
   add_link(2,2, 2,1)
 
-  add_link(5,1, 4,1)
-  add_link(5,1, 6,1, 4)
+  add_link(5,1, 4,1, nil)
+  add_link(5,1, 6,1)
   add_link(6,1, 6,2)
 
   add_link(7,6, 6,6)
@@ -710,7 +707,7 @@ function test_grow_all()
 end
 
 
-math.randomseed(2)
+math.randomseed(6)
 
 test_grow_all()
 
