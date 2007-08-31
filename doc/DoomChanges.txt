@@ -106,7 +106,9 @@ Differences between DOOM 1 and DOOM 2
 
 -  Textures which are different:
 
-     SW1BRN1  SW1STONE  SW1STON2
+     BRNPOIS  NUKEPOIS  STEP1  STEP3
+
+     SW1BRN1  SW1STONE  SW1STON2  SW1STARG
 
 -  Flats only DOOM 2 has:
 
