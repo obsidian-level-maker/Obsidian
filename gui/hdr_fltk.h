@@ -16,8 +16,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __FJX__
-#define __FJX__
+#ifndef __OB_HDR_FLTK__
+#define __OB_HDR_FLTK__
 
 /* FLTK - Widget Library */
 
@@ -61,4 +61,4 @@
 
 // #include "zf_input.h"
 
-#endif /*_*/
+#endif // __OB_HDR_FLTK__

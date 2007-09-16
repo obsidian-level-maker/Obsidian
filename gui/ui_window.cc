@@ -102,7 +102,7 @@ UI_MainWin::UI_MainWin(const char *title) :
 
   // show window (pass some dummy arguments)
   int argc = 1;
-  char *argv[] = { "ObligeNG", NULL };
+  char *argv[] = { "Oblige.exe", NULL };
 
   show(argc, argv);
 }
