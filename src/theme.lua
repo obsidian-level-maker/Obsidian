@@ -119,7 +119,9 @@ function get_rand_theme()
 
   local name = rand_key_by_probs(PLAN.level.theme_probs)
   local info = GAME.themes[name]
-  assert(info)
+  if not info then
+    error("No such theme: " .. tostring(name))
+  end
 
   return info
 end
