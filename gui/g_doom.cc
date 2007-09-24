@@ -362,8 +362,6 @@ int end_level(lua_State *L)
   if (wad_hexen)
     WAD_WriteBehavior();
 
-  WAD_WritePatches();
-  
   // free data
   delete thing_lump;   thing_lump   = NULL;
   delete sector_lump;  sector_lump  = NULL;
@@ -587,6 +585,8 @@ bool Doom_Start(bool is_hexen)
 
 bool Doom_Finish(void)
 {
+  WAD_WritePatches();
+ 
   // compute *real* header 
   raw_wad_header_t header;
 
