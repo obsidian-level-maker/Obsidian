@@ -399,6 +399,18 @@ DM_COMBOS =
 
   -- FIXME: SP_ROCK1
 
+
+  ---- SPECIAL --------
+ 
+  WATER_SKY =
+  {
+    outdoor = true,
+    mat_pri = 0,
+
+    wall  = "STONE",
+    floor = "FWATER1",
+    ceil  = "FLAT1",
+  },
 }
 
 DM_EXITS =
