@@ -49,6 +49,8 @@ public:
 
   /// double y_offset;  // default
 
+  double z1, z2;
+
   int sec_kind, sec_tag;
   int t_light, b_light;
 
@@ -147,19 +149,110 @@ static void CSG2_MergeAreas(void)
   // TODO
 }
 
+
+//------------------------------------------------------------------------
+
 static void CSG2_WriteDoom(void)
 {
   // converts the Merged list into the sectors, linedefs (etc)
   // required for a DOOM level.
   
+  CSG2_MergeAreas();
+
   // TODO
 }
 
-static void CSG2_WriteQuake(void)
-{
-  // converts the Merged list into a QUAKE ".map" file.
 
-  // TODO
+//------------------------------------------------------------------------
+
+static FILE *map_fp;
+
+static void Q_WriteField(const char *field, const char *val_str, ...)
+{
+  fprintf(map_fp, "  \"%s\"  \"", field);
+
+  va_list args;
+
+  va_start(args, val_str);
+  vfprintf(map_fp, val_str, args);
+  va_end(args);
+
+  fprintf(map_fp, "\"\n");
+}
+
+static void Q_WriteBrush(area_poly_c *P)
+{
+  fprintf(map_fp, "  {\n");
+
+  // TODO: slopes
+
+  // Top
+  fprintf(map_fp, "    ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
+      0.0, 0.0, P->info->z2,
+      0.0, 1.0, P->info->z2,
+      1.0, 0.0, P->info->z2,
+      P->info->t_tex.c_str());
+
+  // Bottom
+  fprintf(map_fp, "    ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
+      0.0, 0.0, P->info->z1,
+      1.0, 0.0, P->info->z1,
+      0.0, 1.0, P->info->z1,
+      P->info->b_tex.c_str());
+
+  // Sides
+  for (int j1 = 0; j1 < (int)P->verts.size(); j1++)
+  {
+    int j2 = (j1+1 < (int)P->verts.size()) ? j1+1 : 0;
+
+    area_vert_c *v1 = P->verts[j1];
+    area_vert_c *v2 = P->verts[j2];
+
+    SYS_ASSERT(v1 && v2);
+
+    const char *tex = v1->front.w_tex.c_str();
+    if (strlen(tex) == 0)
+      tex = P->info->w_tex.c_str();
+
+    SYS_ASSERT(tex);
+
+    fprintf(map_fp, "    ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
+        v1->x, v1->y, P->info->z1,
+        v1->x, v1->y, P->info->z2,
+        v2->x, v2->y, P->info->z1, tex);
+  }
+
+  fprintf(map_fp, "  }\n");
+}
+
+static void CSG2_WriteQuakeMap(void)
+{
+  // converts the area_poly list into a QUAKE ".map" file.
+
+  map_fp = fopen("TEST.map", "w");
+  SYS_ASSERT(map_fp);
+
+  fprintf(map_fp, "{\n");
+
+  Q_WriteField("classname", "worldspawn");
+  Q_WriteField("worldtype", "0");
+  Q_WriteField("wad", "textures.wad");
+
+  fprintf(map_fp, "\n");
+
+  for (int i = 0; i < (int)all_polys.size(); i++)
+  {
+    area_poly_c *P = all_polys[i];
+    SYS_ASSERT(P);
+
+    Q_WriteBrush(P);
+  }
+
+  fprintf(map_fp, "}\n\n");
+
+  // FIXME: entities !!!!
+
+  fclose(map_fp);
 }
 
 
