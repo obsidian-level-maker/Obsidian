@@ -26,12 +26,18 @@
 #include "g_cookie.h"
 #include "g_doom.h"
 #include "g_lua.h"
+#include "g_solid.h"
 #include "g_wolf.h"
 
 #include "hdr_fltk.h"
 #include "ui_chooser.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
+
+#if 0 //!!!!
+#define GRID_TEST 1
+#include "ui_grid.h"
+#endif
 
 
 #define TICKER_TIME  20 /* ms */
@@ -326,6 +332,7 @@ int main(int argc, char **argv)
 
   Script_Init();
   Doom_Init();
+  CSG2_Init();
   Wolf_Init();
 
   Default_Location();
@@ -336,7 +343,17 @@ int main(int argc, char **argv)
   Cookie_Load(CONFIG_FILENAME);
 
   Script_Load();
-  
+
+#ifdef GRID_TEST
+//!!!! Temporary crud
+Fl_Double_Window *editor = new Fl_Double_Window(200,200, 500,300, "Room Editor");
+editor->end();
+UI_Grid *grid = new UI_Grid(0, 0, editor->w(), editor->h());
+editor->add(grid);
+editor->resizable(grid);
+editor->show();
+#endif
+
   try
   {
     // run the GUI until the user quits
