@@ -25,9 +25,6 @@ require 'x_freedoom'
 require 'x_heretic'
 require 'x_hexen'
 
-require 'x_wolf'
-require 'x_spear'
-
 
 ----------------------------------------------------------------
 
