@@ -25,8 +25,7 @@ INTRODUCTION
 
 STATUS
 
-  OBLIGE 0.94 is the current version, which was released pending a
-  rewrite of the core level-making algorithms. The GUI interface
+  OBLIGE 0.94 is the current version.  The GUI interface
   is simple but very usable. The battle simulator produces
   reasonable ammo and health to fight the monsters in the map.
 
@@ -37,7 +36,7 @@ STATUS
   saying that some stairs or a switch could not be added into a
   room.  The only workaround is to try a different SEED value.
 
-  See below for the status of each game...
+  (See below for the status of each game...)
 
   There is still a lot to do however. There is no support (yet)
   for the special levels, such as the end-of-episode levels of
