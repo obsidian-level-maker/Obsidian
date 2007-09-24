@@ -3,9 +3,16 @@
 #----------------------------------------------------------------
 
 all:
-	lua run_test.lua $(SEED)
+	./lua run_test.lua $(SEED)
 	wadlc TEMP.txt TEMP.wad
 	glbsp -q -pack -warn TEMP.wad -o ../TEST.wad
+
+grow:
+	rm -f pics/*.png
+	./lua grower.lua
+
+room:
+	./lua rooms.lua
 
 clean:
 	rm -f ../TEST.wad ../TEST.bak TEMP.wad
