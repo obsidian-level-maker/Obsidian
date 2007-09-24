@@ -29,6 +29,88 @@
 #include "ui_window.h"
 
 
+#define IVAL_NONE  -27777
+#define FVAL_NONE  -27777.75
+
+
+class area_info_c
+{
+public:
+  std::string t_tex;
+  std::string b_tex;
+  std::string w_tex;  // default
+
+  ///  peg_mode_e  peg;  // default
+
+  /// double y_offset;  // default
+
+  int sec_kind, sec_tag;
+  int t_light, b_light;
+
+  // --- slope stuff ---
+
+  double slope_tz1, slope_tz2;
+  double slope_bz1, slope_bz2;
+  double slope_x1, slope_y1, slope_x2, slope_y2;
+  
+public:
+   area_info_c();
+  ~area_info_c();
+};
+
+
+class area_side_c
+{
+public:
+  std::string w_tex;
+  std::string rail;
+
+  /// peg_mode_e peg;
+ 
+  double x_offset;
+  double y_offset;
+
+public:
+   area_side_c();
+  ~area_side_c();
+};
+
+
+class area_vert_c
+{
+public:
+  double x, y;
+
+  area_side_c front;
+  area_side_c back;
+
+  int line_kind;
+  int line_tag;
+  int line_flags;
+
+  byte line_args[5];
+
+public:
+   area_vert_c();
+  ~area_vert_c();
+};
+
+
+class area_poly_c
+{
+public:
+  area_info_c *info;
+
+  std::vector<area_vert_c *> verts;
+
+public:
+   area_poly_c();
+  ~area_poly_c();
+};
+
+
+//------------------------------------------------------------------------
+
 namespace csg2
 {
 
