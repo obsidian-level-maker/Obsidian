@@ -17,9 +17,7 @@
 ----------------------------------------------------------------
 
 
--- TODO:  1. fix the "middle" link mode
 -- TODO:  2. implement symmetry preservation
--- TODO:  3. tidy up
 
 
 require 'defs'
@@ -45,7 +43,7 @@ function get_seed_safe(sx, sy)
 end
 
 
--- [[
+--[[
 require 'gd'
 
 RENDER_NUM = 1
@@ -461,7 +459,7 @@ function grow_all()
   local function perform_pass(cur_dir)
 
     DIR = cur_dir
-print("perform_pass: DIR=", DIR)
+--print("perform_pass: DIR=", DIR)
      
     select_growers()
 
@@ -568,7 +566,7 @@ print("perform_pass: DIR=", DIR)
   local SIDES = { 2,4,6,8 }
 
   repeat
-    debug_render()
+    --debug_render()
 
     rand_shuffle(SIDES)
 
@@ -578,7 +576,7 @@ print("perform_pass: DIR=", DIR)
 
   until is_finished()
 
-  debug_render()
+  --debug_render()
 
   adjust_coordinates();
 
