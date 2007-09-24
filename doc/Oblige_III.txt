@@ -216,3 +216,42 @@ dir[2/4/6/8] : information for South/East/West/North
 
      link: reference to 'joined' seed, or NIL
 
+
+
+DEATHMATCH MAPS
+---------------
+
+Talk about "Cycles" : start at room R and go through rooms S/T/U
+(however many there are) until you get back to R.
+
+Each Cycle will either be Clockwise or Anti-Clockwise.
+Most of the time, some rooms in a Cycle will be at significantly
+different heights than other rooms.  Hence can define the
+"height profile" for a Cycle.
+
+Cycles can be one-way, e.g. using falloffs or teleporters.
+
+Can also talk about the "hallway profile" of a Cycle.
+Also could be "outdoor profile", but that is probably not
+the best way to decide the inside/outside-ness of rooms.
+
+
+Topology Algorithm:
+
+1. create very first room R
+
+2. create N cycles, as follows:
+
+   (1) pick a start room
+   (2) choose turn dir (Clockwise or Anti-Clockwise)
+   (3) branch out from start room at random angle (can be 45deg)
+       to a free spot on node grid.
+   (4) create new room at that spot
+   (5) cur room := new room
+   (6) angle += turn_angle
+   (7) try to branch out, if successful goto (4),
+       else connect back onto the graph
+
+3. [NO] turn node graph into seed matrix.
+   Instead, create whole rooms as we go.
+
