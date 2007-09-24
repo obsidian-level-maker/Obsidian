@@ -231,7 +231,7 @@ bool UI_Adjust::set_Puzzles(const char *str)
 bool UI_Adjust::set_Traps(const char *str)
 {
   // TODO !!! set_Traps
-  return false;
+  return true;
 }
 
 bool UI_Adjust::set_Size(const char *str)
