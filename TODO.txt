@@ -11,6 +11,8 @@ General:
 
 GUI:
 
++  disable sidedef packing (cause problem with Doomsday).
+
 ++ update to LUA 5.1.2
 
 +  errors show full traceback (see interpreter source)
@@ -21,6 +23,8 @@ GUI:
 
 
 Hexen:
+
+-  put 'fighter only' bit on fighter's weapons, etc..
 
 +  rework teleporter gates (make them bi-directional).
 
@@ -57,6 +61,8 @@ Theme system:
 
 
 Monsters:
+
++  put in some Cyberdemons or Spider Masterminds
 
 -  at each room, pick 2-3 (rarer: 1,4) monster types
    then decide how many of each one (for each skill).
@@ -106,6 +112,8 @@ Miscellaneous:
 
 +  prefabs: improve "kind" fields, allow "x_offset" fields
    default to 0.
+
+-  support keycards
 
 -  put switches on Vistas, eat the special spot or use a
    wide pillar at the far end.
