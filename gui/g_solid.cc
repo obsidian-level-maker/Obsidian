@@ -21,6 +21,7 @@
 #include "hdr_lua.h"
 
 #include "g_solid.h"
+#include "g_doom.h"
 #include "g_lua.h"
 
 #include "main.h"
@@ -323,37 +324,37 @@ static void CSG2_WriteQuakeMap(void)
 namespace csg2
 {
 
-// LUA: begin_level(name)
-//
-int begin_level(lua_State *L)
-{
-  const char *name = luaL_checkstring(L,1);
-
-  // TODO
-
-  return 0;
-}
-
-// LUA: end_level()
-//
-int end_level(lua_State *L)
-{
-  // TODO
-
-  // FIXME: free all polys
-
-  return 0;
-}
-
-
-// LUA: add_thing(x, y, h, type, angle, flags, tid, special, args)
-//
-int add_thing(lua_State *L)
-{
-  // TODO
-
-  return 0;
-}
+///---  // LUA: begin_level(name)
+///---  //
+///---  int begin_level(lua_State *L)
+///---  {
+///---    const char *name = luaL_checkstring(L,1);
+///---  
+///---    // TODO
+///---  
+///---    return 0;
+///---  }
+///---  
+///---  // LUA: end_level()
+///---  //
+///---  int end_level(lua_State *L)
+///---  {
+///---    // TODO
+///---  
+///---    // FIXME: free all polys
+///---  
+///---    return 0;
+///---  }
+///---  
+///---  
+///---  // LUA: add_thing(x, y, h, type, angle, flags, tid, special, args)
+///---  //
+///---  int add_thing(lua_State *L)
+///---  {
+///---    // TODO
+///---  
+///---    return 0;
+///---  }
 
 
 // LUA: add_solid(loop, info, z1, z2, slope_info)
@@ -392,10 +393,6 @@ int add_solid(lua_State *L)
 
 static const luaL_Reg csg2_funcs[] =
 {
-  { "begin_level", csg2::begin_level },
-  { "end_level",   csg2::end_level   },
-
-  { "add_thing",   csg2::add_thing   },
   { "add_solid",   csg2::add_solid   },
 
   { NULL, NULL } // the end
