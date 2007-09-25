@@ -124,6 +124,72 @@ std::vector<area_poly_c *> all_polys;
 
 //------------------------------------------------------------------------
 
+static void AddPoly_MakeConvex(area_poly_c *P)
+{
+  // splits this area_poly into convex pieces (if needed) and
+  // add each separate piece (sharing the same sector info).
+
+  // TODO: Make convex
+
+  all_polys.push_back(P);
+}
+
+
+//------------------------------------------------------------------------
+
+static int Grab_SectorInfo(lua_State *L, int stack_pos, area_info_c *A)
+{
+}
+
+static int Grab_SlopeInfo(lua_State *L, int stack_pos, area_info_c *A)
+{
+  int what = lua_type(L, stack_pos);
+
+  if (what == LUA_TNONE || what == LUA_TNIL)
+    return 0;
+
+  // TODO
+  Main_FatalError("CSG2: slope_info not yet supported!\n");
+}
+
+static int Grab_SideDef(lua_State *L, int stack_pos, area_side_c *S)
+{
+  // TODO
+  return 0;
+}
+
+static int Grab_Vertex(lua_State *L, int stack_pos, area_poly_c *P)
+{
+}
+
+static int Grab_LineLoop(lua_State *L, int stack_pos, area_poly_c *P)
+{
+  memset(args, 0, 5);
+
+  int what = lua_type(L, stack_pos);
+
+  if (what == LUA_TNONE || what == LUA_TNIL)
+    return 0;
+
+  if (what != LUA_TTABLE)
+    return luaL_argerror(L, stack_pos, "expected a table");
+
+  for (int i = 0; i < 5; i++)
+  {
+    lua_pushinteger(L, i+1);
+    lua_gettable(L, stack_pos);
+
+    if (lua_isnumber(L, -1))
+    {
+      args[i] = lua_tointeger(L, -1);
+    }
+
+    lua_pop(L, 1);
+  }
+
+  return 0;
+}
+
 namespace csg2
 {
 
@@ -157,7 +223,7 @@ int add_solid(lua_State *L)
 
   // ...
 
-  all_polys.push_back(P);
+  AddPoly_MakeConvex(P);
   
   return 0;
 }
