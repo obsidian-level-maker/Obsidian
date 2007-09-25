@@ -70,7 +70,7 @@ class area_side_c
 {
 public:
   std::string w_tex;
-  std::string rail;
+  std::string t_rail;
 
   /// peg_mode_e peg;
  
@@ -128,6 +128,8 @@ class merged_area_c
 public:
   std::vector<area_poly_c *> polys;
 
+  int sector_index;
+
 public:
    merged_area_c();
   ~merged_area_c();
@@ -152,6 +154,62 @@ static void CSG2_MergeAreas(void)
 
 //------------------------------------------------------------------------
 
+static int total_sectors;
+static int total_lines;
+
+static void CreateSectors(void)
+{
+  total_sectors = 0;
+
+  for (int i = 0; i < (int)all_merges.size(); i++)
+  {
+    merged_area_c *M = all_merges[i];
+
+    SYS_ASSERT(M);
+
+    if (M->sector_index < 0)
+    {
+      M->sector_index = total_sectors;
+      total_sectors++;
+
+      // FIXME: propagate step:
+      //   (1) clear the 'process' list, add in current area
+      //   (2) iterate over process list
+      //   (3) if neighbour area has no sector AND matches this area,
+      //       propagate the sector index into it,
+      //       THEN add all the new neighbours into new process list.
+      //   (4) when done, old list := new list
+      //   (5) if new list not empty, goto 2
+    }
+  }
+}
+
+static void CreateLinedefs(void)
+{
+  total_lines = 0;
+
+  for (int i = 0; i < (int)all_merges.size(); i++)
+  {
+    merged_area_c *M = all_merges[i];
+
+    SYS_ASSERT(M->polys.size() > 0);
+
+    int num_vert = (int)M->polys[0]->verts.size();
+
+    for (int j1 = 0; j1 < num_vert; j1++)
+    {
+      int j2 = (j1+1) % num_vert;
+
+      area_vert_c *v1 = M->polys[0]->verts[j1];
+      area_vert_c *v2 = M->polys[0]->verts[j2];
+
+      SYS_ASSERT(v1 && v2);
+
+      // FIXME !!!
+    }
+  }
+}
+
 static void CSG2_WriteDoom(void)
 {
   // converts the Merged list into the sectors, linedefs (etc)
@@ -159,7 +217,11 @@ static void CSG2_WriteDoom(void)
   
   CSG2_MergeAreas();
 
-  // TODO
+  CreateSectors();
+
+  CreateLinedefs();
+
+  // FIXME: things !!!!
 }
 
 
