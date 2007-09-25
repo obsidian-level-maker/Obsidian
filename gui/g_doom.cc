@@ -432,6 +432,18 @@ int add_vertex(lua_State *L)
   return 0;
 }
 
+// C++ version
+void add_vertex(int x, int y)
+{
+  raw_vertex_t vert;
+
+  vert.x = LE_S16(x);
+  vert.y = LE_S16(y);
+
+  WAD_Append(vertex_lump, &vert, sizeof(vert));
+}
+
+
 // LUA: add_sector(f_h, c_h, f_tex, c_tex, light, type, tag)
 //   
 int add_sector(lua_State *L)
@@ -441,8 +453,8 @@ int add_sector(lua_State *L)
   sec.floor_h = LE_S16(luaL_checkint(L,1));
   sec.ceil_h  = LE_S16(luaL_checkint(L,2));
 
-  memcpy(sec.floor_tex, luaL_checkstring(L,3), 8);
-  memcpy(sec.ceil_tex,  luaL_checkstring(L,4), 8);
+  strncpy(sec.floor_tex, luaL_checkstring(L,3), 8);
+  strncpy(sec.ceil_tex,  luaL_checkstring(L,4), 8);
 
   sec.light   = LE_U16(luaL_checkint(L,5));
   sec.special = LE_U16(luaL_checkint(L,6));
@@ -453,6 +465,27 @@ int add_sector(lua_State *L)
   return 0;
 }
 
+// C++ version
+void add_sector(int f_h, const char * f_tex, 
+                int c_h, const char * c_tex,
+                int light, int special, int tag)
+{
+  raw_sector_t sec;
+
+  sec.floor_h = LE_S16(f_h);
+  sec.ceil_h  = LE_S16(c_h);
+
+  strncpy(sec.floor_tex, f_tex, 8);
+  strncpy(sec.ceil_tex,  c_tex, 8);
+
+  sec.light   = LE_U16(light);
+  sec.special = LE_U16(special);
+  sec.tag     = LE_S16(tag);
+
+  WAD_Append(sector_lump, &sec, sizeof(sec));
+}
+
+
 // LUA: add_sidedef(sec, lower, mid, upper, x, y)
 //   
 int add_sidedef(lua_State *L)
@@ -461,9 +494,9 @@ int add_sidedef(lua_State *L)
 
   side.sector = LE_S16(luaL_checkint(L,1));
 
-  memcpy(side.lower_tex, luaL_checkstring(L,2), 8);
-  memcpy(side.mid_tex,   luaL_checkstring(L,3), 8);
-  memcpy(side.upper_tex, luaL_checkstring(L,4), 8);
+  strncpy(side.lower_tex, luaL_checkstring(L,2), 8);
+  strncpy(side.mid_tex,   luaL_checkstring(L,3), 8);
+  strncpy(side.upper_tex, luaL_checkstring(L,4), 8);
 
   side.x_offset = LE_S16(luaL_checkint(L,5));
   side.y_offset = LE_S16(luaL_checkint(L,6));
@@ -472,6 +505,26 @@ int add_sidedef(lua_State *L)
 
   return 0;
 }
+
+// C++ version
+void add_sidedef(int sector, const char *l_tex,
+                 const char *m_tex, const char *u_tex,
+                 int x_offset, int y_offset)
+{
+  raw_sidedef_t side;
+
+  side.sector = LE_S16(sector);
+
+  strncpy(side.lower_tex, l_tex, 8);
+  strncpy(side.mid_tex,   m_tex, 8);
+  strncpy(side.upper_tex, u_tex, 8);
+
+  side.x_offset = LE_S16(x_offset);
+  side.y_offset = LE_S16(y_offset);
+
+  WAD_Append(sidedef_lump, &side, sizeof(side));
+}
+
 
 // LUA: add_linedef(vert1, vert2, side1, side2, type, flags, tag, args)
 //
@@ -523,6 +576,52 @@ int add_linedef(lua_State *L)
   }
 
   return 0;
+}
+
+// C++ version
+void add_linedef(int vert1, int vert2, int side1, int side2,
+                 int type,  int flags, int tag,
+                 const byte *args)
+{
+  if (! wad_hexen)
+  {
+    raw_linedef_t line;
+
+    line.start = LE_U16(vert1);
+    line.end   = LE_U16(vert2);
+
+    line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
+    line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+
+    line.type  = LE_U16(type);
+    line.flags = LE_U16(flags);
+    line.tag   = LE_S16(tag);
+
+    WAD_Append(linedef_lump, &line, sizeof(line));
+  }
+  else  // Hexen format
+  {
+    raw_hexen_linedef_t line;
+
+    // clear unused fields (specials)
+    memset(&line, 0, sizeof(line));
+
+    line.start = LE_U16(vert1);
+    line.end   = LE_U16(vert2);
+
+    line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
+    line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+
+    line.special = type; // 8 bits
+    line.flags = LE_U16(flags);
+
+    // tag value is UNUSED
+
+    if (args)
+      memcpy(line.args, args, 5);
+
+    WAD_Append(linedef_lump, &line, sizeof(line));
+  }
 }
 
 } // namespace wad

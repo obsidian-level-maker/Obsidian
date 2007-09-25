@@ -28,6 +28,26 @@ bool Doom_Nodes(const char *target_file);
 void Doom_Tidy(void);
 
 
+/* ---- API for the CSG code to use ---- */
+
+namespace wad
+{
+  void add_vertex(int x, int y);
+
+  void add_sector(int f_h, const char * f_tex, 
+                  int c_h, const char * c_tex,
+                  int light, int special, int tag);
+
+  void add_sidedef(int sector, const char *l_tex,
+                   const char *m_tex, const char *u_tex,
+                   int x_offset, int y_offset);
+
+  void add_linedef(int vert1, int vert2, int side1, int side2,
+                   int type,  int flags, int tag,
+                   const byte *args);
+}
+
+
 /* ----- WAD structures ---------------------- */
 
 typedef struct
