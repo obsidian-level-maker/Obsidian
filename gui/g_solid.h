@@ -21,6 +21,9 @@
 
 void CSG2_Init(void);
 
+void CSG2_BeginLevel(void);
+void CSG2_EndLevel(void);
+
 /* ----- File structures ---------------------- */
 
 #endif /* __OBLIGE_G_SOLID_H__ */

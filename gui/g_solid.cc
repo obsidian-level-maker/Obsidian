@@ -124,6 +124,49 @@ std::vector<area_poly_c *> all_polys;
 
 //------------------------------------------------------------------------
 
+namespace csg2
+{
+
+// LUA: add_solid(loop, info, z1, z2, slope_info)
+//
+// info is a table:
+//   t_tex, b_tex  : top and bottom textures
+//   w_tex         : default wall (side) texture
+//   peg, y_offset : default peg and y_offset for sides
+//   t_kind, t_tag
+//   t_light, b_light
+// 
+// slope_info is a table (can be nil)
+//    x1, y1, x2, y2  : coordinates on 2D map for slope points
+//    tz1, tz2        : height coords for top slope
+//    bz1, bz2        : height coords for bottom slope
+//
+// loop is an array of Vertices:
+//    x, y,
+//    front, back,
+//    ln_kind, ln_tag, ln_flags, ln_args
+//
+// front and back are Sidedefs:
+//    w_tex, peg, rail, x_offset, y_offset
+//
+int add_solid(lua_State *L)
+{
+  // TODO
+
+  area_poly_c *P = new area_poly_c();
+
+  // ...
+
+  all_polys.push_back(P);
+  
+  return 0;
+}
+
+} // namespace csg2
+
+
+//------------------------------------------------------------------------
+
 class merged_area_c
 {
 public:
@@ -199,7 +242,7 @@ static void CreateLinedefs(void)
 
     for (int j1 = 0; j1 < num_vert; j1++)
     {
-      int j2 = (j1+1) % num_vert;
+      int j2 = (j1 + 1) % num_vert;
 
       area_vert_c *v1 = M->polys[0]->verts[j1];
       area_vert_c *v2 = M->polys[0]->verts[j2];
@@ -249,6 +292,8 @@ static void Q_WriteBrush(area_poly_c *P)
 
   // TODO: slopes
 
+  // TODO: x/y offsets
+
   // Top
   fprintf(map_fp, "    ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
       0.0, 0.0, P->info->z2,
@@ -266,7 +311,7 @@ static void Q_WriteBrush(area_poly_c *P)
   // Sides
   for (int j1 = 0; j1 < (int)P->verts.size(); j1++)
   {
-    int j2 = (j1+1 < (int)P->verts.size()) ? j1+1 : 0;
+    int j2 = (j1 + 1) % (int)P->verts.size();
 
     area_vert_c *v1 = P->verts[j1];
     area_vert_c *v2 = P->verts[j2];
@@ -321,76 +366,6 @@ static void CSG2_WriteQuakeMap(void)
 
 //------------------------------------------------------------------------
 
-namespace csg2
-{
-
-///---  // LUA: begin_level(name)
-///---  //
-///---  int begin_level(lua_State *L)
-///---  {
-///---    const char *name = luaL_checkstring(L,1);
-///---  
-///---    // TODO
-///---  
-///---    return 0;
-///---  }
-///---  
-///---  // LUA: end_level()
-///---  //
-///---  int end_level(lua_State *L)
-///---  {
-///---    // TODO
-///---  
-///---    // FIXME: free all polys
-///---  
-///---    return 0;
-///---  }
-///---  
-///---  
-///---  // LUA: add_thing(x, y, h, type, angle, flags, tid, special, args)
-///---  //
-///---  int add_thing(lua_State *L)
-///---  {
-///---    // TODO
-///---  
-///---    return 0;
-///---  }
-
-
-// LUA: add_solid(loop, info, z1, z2, slope_info)
-//
-// info is a table:
-//   t_tex, b_tex  : top and bottom textures
-//   w_tex         : default wall (side) texture
-//   peg, y_offset : default peg and y_offset for sides
-//   t_kind, t_tag
-//   t_light, b_light
-// 
-// slope_info is a table (can be nil)
-//    x1, y1, x2, y2  : coordinates on 2D map for slope points
-//    tz1, tz2        : height coords for top slope
-//    bz1, bz2        : height coords for bottom slope
-//
-// loop is an array of Vertices:
-//    x, y,
-//    front, back,
-//    ln_kind, ln_tag, ln_flags, ln_args
-//
-// front and back are Sidedefs:
-//    w_tex, peg, rail, x_offset, y_offset
-//
-int add_solid(lua_State *L)
-{
-  // TODO
-
-  return 0;
-}
-
-} // namespace csg2
-
-
-//------------------------------------------------------------------------
-
 static const luaL_Reg csg2_funcs[] =
 {
   { "add_solid",   csg2::add_solid   },
@@ -402,6 +377,18 @@ static const luaL_Reg csg2_funcs[] =
 void CSG2_Init(void)
 {
   Script_RegisterLib("csg2", csg2_funcs);
+}
+
+void CSG2_BeginLevel(void)
+{
+  // nothing needed (yet)
+}
+
+void CSG2_EndLevel(void)
+{
+  // FIXME: free all_polys
+
+  // FIXME: free all_merges
 }
 
 

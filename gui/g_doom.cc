@@ -23,6 +23,7 @@
 #include "g_doom.h"
 #include "g_glbsp.h"
 #include "g_image.h"
+#include "g_solid.h"
 #include "g_lua.h"
 
 #include "main.h"
@@ -338,6 +339,8 @@ int begin_level(lua_State *L)
   linedef_lump = new lump_c();
   sidedef_lump = new lump_c();
 
+  CSG2_BeginLevel();
+
   return 0;
 }
 
@@ -370,6 +373,8 @@ int end_level(lua_State *L)
   delete linedef_lump; linedef_lump = NULL;
 
   delete level_name; level_name = NULL;
+
+  CSG2_EndLevel();
 
   return 0;
 }
