@@ -538,14 +538,14 @@ static void Q_WriteBrush(area_poly_c *P)
   // TODO: x/y offsets
 
   // Top
-  fprintf(map_fp, "    ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
+  fprintf(map_fp, "    ( %1.1f %1.1f %1.1f ) ( %1.1f %1.1f %1.1f ) ( %1.1f %1.1f %1.1f ) %s 0 0 0 1 1\n",
       0.0, 0.0, P->info->z2,
       0.0, 1.0, P->info->z2,
       1.0, 0.0, P->info->z2,
       P->info->t_tex.c_str());
 
   // Bottom
-  fprintf(map_fp, "    ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
+  fprintf(map_fp, "    ( %1.1f %1.1f %1.1f ) ( %1.1f %1.1f %1.1f ) ( %1.1f %1.1f %1.1f ) %s 0 0 0 1 1\n",
       0.0, 0.0, P->info->z1,
       1.0, 0.0, P->info->z1,
       0.0, 1.0, P->info->z1,
@@ -567,16 +567,16 @@ static void Q_WriteBrush(area_poly_c *P)
 
     SYS_ASSERT(tex);
 
-    fprintf(map_fp, "    ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
+    fprintf(map_fp, "    ( %1.1f %1.1f %1.1f ) ( %1.1f %1.1f %1.1f ) ( %1.1f %1.1f %1.1f ) %s 0 0 0 1 1\n",
         v1->x, v1->y, P->info->z1,
-        v1->x, v1->y, P->info->z2,
-        v2->x, v2->y, P->info->z1, tex);
+        v2->x, v2->y, P->info->z1,
+        v1->x, v1->y, P->info->z2, tex);
   }
 
   fprintf(map_fp, "  }\n");
 }
 
-static void CSG2_WriteQuakeMap(void)
+static void CSG2_TestQuake(void)
 {
   // converts the area_poly list into a QUAKE ".map" file.
 
@@ -629,6 +629,7 @@ void CSG2_BeginLevel(void)
 
 void CSG2_EndLevel(void)
 {
+  CSG2_TestQuake();
   CSG2_TestDoom();
 
   // FIXME: free all_polys
