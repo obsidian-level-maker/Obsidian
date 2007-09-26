@@ -326,7 +326,7 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 namespace csg2
 {
 
-// LUA: add_solid(loop, info, z1, z2, slope_info)
+// LUA: add_solid(info. loop, z1. z2. slope_info)
 //
 // info is a table:
 //   t_tex, b_tex  : top and bottom textures
@@ -350,14 +350,14 @@ namespace csg2
 //
 int add_solid(lua_State *L)
 {
-  area_info_c *A = Grab_SectorInfo(L, 2);
+  area_info_c *A = Grab_SectorInfo(L, 1);
 
   all_areas.push_back(A);
 
   Grab_Heights(L, 3, A);
   Grab_SlopeInfo(L, 5, A);
-  
-  area_poly_c *P = Grab_LineLoop(L, 1, A);
+
+  area_poly_c *P = Grab_LineLoop(L, 2, A);
 
   AddPoly_MakeConvex(P);
   
