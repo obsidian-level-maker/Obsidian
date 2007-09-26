@@ -30,6 +30,8 @@ require 'monster'
 require 'builder'
 require 'writer'
 
+require 'test_csg'
+
 
 function create_GAME()
 
@@ -110,6 +112,18 @@ function build_cool_shit()
   con.printf("Settings =\n%s\n", table_to_str(SETTINGS))
 
   con.rand_seed(SETTINGS.seed * 100)
+
+
+-- [[  CSG TEST CODE
+  wad.begin_level("MAP01");
+  
+  test_csg();
+
+  wad.end_level();
+
+  do return "ok" end
+--]]
+
 
   create_GAME()
 

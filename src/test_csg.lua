@@ -17,7 +17,7 @@
 ----------------------------------------------------------------
 
 
-function csg_test()
+function test_csg()
 
   local START_F  = "FLAT22"
   local START_W  = "COMPBLUE"
