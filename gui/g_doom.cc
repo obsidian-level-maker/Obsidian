@@ -629,6 +629,20 @@ void add_linedef(int vert1, int vert2, int side1, int side2,
   }
 }
 
+
+int num_vertexes(void)
+{
+  return vertex_lump->size() / sizeof(raw_vertex_t);
+}
+int num_sectors(void)
+{
+  return sector_lump->size() / sizeof(raw_sector_t);
+}
+int num_sidedefs(void)
+{
+  return sidedef_lump->size() / sizeof(raw_sidedef_t);
+}
+
 } // namespace wad
 
 

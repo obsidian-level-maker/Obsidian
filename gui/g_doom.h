@@ -45,6 +45,10 @@ namespace wad
   void add_linedef(int vert1, int vert2, int side1, int side2,
                    int type,  int flags, int tag,
                    const byte *args);
+
+  int num_vertexes(void);
+  int num_sectors(void);
+  int num_sidedefs(void);
 }
 
 
