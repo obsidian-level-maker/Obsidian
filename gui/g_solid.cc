@@ -181,7 +181,7 @@ static void AddPoly_MakeConvex(area_poly_c *P)
 static area_info_c * Grab_SectorInfo(lua_State *L, int stack_pos)
 {
   if (stack_pos < 0)
-    stack_pos += lua_gettop(L);
+    stack_pos += lua_gettop(L) + 1;
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
@@ -261,10 +261,11 @@ static int Grab_SideDef(lua_State *L, int stack_pos, area_side_c *S)
 static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
 {
   if (stack_pos < 0)
-    stack_pos += lua_gettop(L);
+    stack_pos += lua_gettop(L) + 1;
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
+fprintf(stderr, "TYPE WAS: %d\n", lua_type(L, stack_pos));
     luaL_argerror(L, stack_pos, "expected a table (vertex)");
     return 0; /* NOT REACHED */
   }
@@ -300,6 +301,7 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 
   for (;;)
   {
+fprintf(stderr, "trying vertex %d\n", index);
     lua_pushinteger(L, index);
     lua_gettable(L, stack_pos);
 
@@ -314,6 +316,8 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
     P->verts.push_back(V);
 
     lua_pop(L, 1);
+
+    index++;
   }
 
   if (P->verts.size() < 3)
@@ -326,7 +330,7 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 namespace csg2
 {
 
-// LUA: add_solid(info. loop, z1. z2. slope_info)
+// LUA: add_solid(info, loop, z1, z2, slope_info)
 //
 // info is a table:
 //   t_tex, b_tex  : top and bottom textures
@@ -360,7 +364,7 @@ int add_solid(lua_State *L)
   area_poly_c *P = Grab_LineLoop(L, 2, A);
 
   AddPoly_MakeConvex(P);
-  
+
   return 0;
 }
 
