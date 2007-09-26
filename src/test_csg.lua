@@ -37,6 +37,25 @@ function test_csg()
   local BEAM_F   = "FLAT1"
   local BEAM_W   = "SUPPORT2"
 
+-- [[ QUAKE 1
+  START_F  = "tech01_1"
+  START_W  = "tech01_1"
+
+  ROOM_F   = "rock1_2"
+  ROOM_W   = "rock1_2"
+
+  PILLAR_F = "metal1_1"
+  PILLAR_W = "metal1_1"
+
+  NICHE_F  = "city1_4"
+  NICHE_W  = "city1_4"
+
+  STAIR_F  = "ground1_1"
+  STAIR_W  = "ground1_1"
+
+  BEAM_F   = "wood1_1"
+  BEAM_W   = "wood1_1"
+--
 
   ---- Starting Area ----
 
