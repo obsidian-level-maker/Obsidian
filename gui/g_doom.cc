@@ -348,6 +348,8 @@ int begin_level(lua_State *L)
 //
 int end_level(lua_State *L)
 {
+  CSG2_EndLevel();
+
   SYS_ASSERT(level_name);
 
   WAD_WriteLump(level_name, NULL, 0);
@@ -373,8 +375,6 @@ int end_level(lua_State *L)
   delete linedef_lump; linedef_lump = NULL;
 
   delete level_name; level_name = NULL;
-
-  CSG2_EndLevel();
 
   return 0;
 }
