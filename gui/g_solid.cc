@@ -31,10 +31,31 @@
 
 
 #define IVAL_NONE  -27777
-#define FVAL_NONE  -27777.75
+#define FVAL_NONE  -27777.75f
+
+
+static int cur_poly_time;
 
 
 class merged_area_c;
+
+
+class slope_points_c
+{
+public:
+  double tz1, tz2;
+  double bz1, bz2;
+  double x1, y1, x2, y2;
+
+public:
+  slope_points_c() : x1(0), y1(0), x2(0), y2(0),
+                     tz1(FVAL_NONE), tz2(FVAL_NONE),
+                     bz1(FVAL_NONE), bz2(FVAL_NONE)
+  { }
+
+  ~slope_points_c()
+  { }
+};
 
 
 class area_info_c
@@ -52,18 +73,23 @@ public:
 
   double z1, z2;
 
+  slope_points_c slope;
+
   int sec_kind, sec_tag;
   int t_light, b_light;
 
-  // --- slope stuff ---
-
-  double slope_tz1, slope_tz2;
-  double slope_bz1, slope_bz2;
-  double slope_x1, slope_y1, slope_x2, slope_y2;
-  
 public:
-   area_info_c();
-  ~area_info_c();
+  area_info_c() : time(cur_poly_time),
+                  t_tex(), b_tex(), w_tex(),
+                  z1(-1), z2(-1), slope(),
+                  sec_kind(0), sec_tag(0),
+                  t_light(255), b_light(255),
+  {
+    cur_poly_time++;
+  }
+
+  ~area_info_c()
+  { }
 };
 
 
@@ -81,8 +107,11 @@ public:
 //??  merged_area_c *face;
 
 public:
-   area_side_c();
-  ~area_side_c();
+  area_side_c() : w_tex(), t_rail(), x_offset(0), y_offset(0)
+  { }
+
+  ~area_side_c()
+  { }
 };
 
 
@@ -101,8 +130,16 @@ public:
   byte line_args[5];
 
 public:
-   area_vert_c();
-  ~area_vert_c();
+  area_vert_c(double _x, double _y) :
+       x(_x), y(_y),
+       front(), back(),
+       line_lind(0), line_tag(0), line_flags(0)
+  {
+    memset(line_args, 0, sizeof(line_args));
+  }
+
+  ~area_vert_c()
+  { }
 };
 
 
@@ -114,11 +151,17 @@ public:
   std::vector<area_vert_c *> verts;
 
 public:
-   area_poly_c();
-  ~area_poly_c();
+  area_poly_c(area_info_c *_info) : info(_info), verts()
+  { }
+
+  ~area_poly_c()
+  {
+    // FIXME: free verts
+  }
 };
 
 
+std::vector<area_info_c *> all_areas;
 std::vector<area_poly_c *> all_polys;
 
 
@@ -137,8 +180,38 @@ static void AddPoly_MakeConvex(area_poly_c *P)
 
 //------------------------------------------------------------------------
 
-static int Grab_SectorInfo(lua_State *L, int stack_pos, area_info_c *A)
+static area_info_c * Grab_SectorInfo(lua_State *L, int stack_pos)
 {
+  area_info_c *A = new area_info_c();
+
+  lua_getfield(L, stack_pos, "t_tex");
+  lua_getfield(L, stack_pos, "b_tex");
+  lua_getfield(L, stack_pos, "w_tex");
+
+  A->t_tex = std::string(luaL_checkstring(L, -3));
+  A->b_tex = std::string(luaL_checkstring(L, -2));
+  A->w_tex = std::string(luaL_checkstring(L, -1));
+
+  lua_pop(L, 3);
+
+  // TODO: sec_kind, sec_tag
+  // TODO: t_light, b_light
+  // TODO: y_offset, peg
+
+  return A;
+}
+
+static void Grab_Heights(lua_State *L, int stack_pos, area_info_c *A)
+{
+  A->z1 = luaL_checknumner(L, stack_pos + 0);
+  A->z2 = luaL_checknumner(L, stack_pos + 1);
+
+  if (A->z2 <= A->z1 + 0.1)
+  {
+    luaL_error(L, "add_solid: bad z1..z2 range given (%1.2f .. %1.2f)", A->z1, A->z2);
+    return NULL; /* NOT REACHED */
+  }
+
 }
 
 static int Grab_SlopeInfo(lua_State *L, int stack_pos, area_info_c *A)
@@ -149,30 +222,29 @@ static int Grab_SlopeInfo(lua_State *L, int stack_pos, area_info_c *A)
     return 0;
 
   // TODO
+
   Main_FatalError("CSG2: slope_info not yet supported!\n");
+  return 0; /* NOT REACHED */
 }
 
 static int Grab_SideDef(lua_State *L, int stack_pos, area_side_c *S)
 {
   // TODO
-  return 0;
+
+  Main_FatalError("CSG2: sidedef info not yet supported!\n");
+  return 0; /* NOT REACHED */
 }
 
-static int Grab_Vertex(lua_State *L, int stack_pos, area_poly_c *P)
+static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos, area_poly_c *P)
 {
 }
 
-static int Grab_LineLoop(lua_State *L, int stack_pos, area_poly_c *P)
+static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos)
 {
-  memset(args, 0, 5);
-
   int what = lua_type(L, stack_pos);
 
-  if (what == LUA_TNONE || what == LUA_TNIL)
-    return 0;
-
   if (what != LUA_TTABLE)
-    return luaL_argerror(L, stack_pos, "expected a table");
+    return luaL_argerror(L, stack_pos, "expected a table (line loop)");
 
   for (int i = 0; i < 5; i++)
   {
@@ -217,11 +289,12 @@ namespace csg2
 //
 int add_solid(lua_State *L)
 {
-  // TODO
+  area_info_c *A = Grab_SectorInfo(L, 2);
 
-  area_poly_c *P = new area_poly_c();
-
-  // ...
+  Grab_Heights(L, 3, A);
+  Grab_SlopeInfo(L, 5, A);
+  
+  area_poly_c *P = Grab_LineLoop(L, 1, A);
 
   AddPoly_MakeConvex(P);
   
@@ -447,7 +520,7 @@ void CSG2_Init(void)
 
 void CSG2_BeginLevel(void)
 {
-  // nothing needed (yet)
+  cur_poly_time = 0;
 }
 
 void CSG2_EndLevel(void)
