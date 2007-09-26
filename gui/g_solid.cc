@@ -474,6 +474,43 @@ static void CSG2_WriteDoom(void)
   // FIXME: things !!!!
 }
 
+static void CSG2_TestDoom(void)
+{
+  // for debugging only: each area_poly_c becomes a single sector
+  // on the map.
+ 
+  for (int i = 0; i < (int)all_polys.size(); i++)
+  {
+    area_poly_c *P = all_polys[i];
+    area_info_c *A = P->info;
+    
+    int sec_idx = wad::num_sectors();
+
+    wad::add_sector(I_ROUND(A->z1), A->b_tex.c_str(),
+                    I_ROUND(A->z2), A->t_tex.c_str(),
+                    192, 0, 0);
+
+    int side_idx = wad::num_sidedefs();
+
+    wad::add_sidedef(sec_idx, "-", A->w_tex.c_str(), "-", 0, 0);
+
+    int vert_base = wad::num_vertexes();
+
+    for (int j1 = 0; j1 < (int)P->verts.size(); j1++)
+    {
+      int j2 = (j1 + 1) % (int)P->verts.size();
+
+      area_vert_c *v1 = P->verts[j1];
+      area_vert_c *v2 = P->verts[j2];
+
+      wad::add_vertex(I_ROUND(v1->x), I_ROUND(v1->y));
+
+      wad::add_linedef(vert_base+j1, vert_base+j2, side_idx, -1,
+                       0, 1 /*impassible*/, 0, NULL /* args */);
+    }
+  }
+}
+
 
 //------------------------------------------------------------------------
 
@@ -592,6 +629,8 @@ void CSG2_BeginLevel(void)
 
 void CSG2_EndLevel(void)
 {
+  CSG2_TestDoom();
+
   // FIXME: free all_polys
 
   // FIXME: free all_merges
