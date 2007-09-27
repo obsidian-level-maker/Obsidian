@@ -57,7 +57,7 @@ function test_csg()
   BEAM_W   = "wood1_1"
 --
 
-  ---- Starting Area ----
+  ---===| Starting Area |===---
 
   -- floor
   csg2.add_solid(
@@ -83,7 +83,7 @@ function test_csg()
     { x= 136, y= 64 },
     { x= 136, y=-72 },
   },
-  144, 2048)
+  192, 2048)
 
   -- back wall
   csg2.add_solid(
@@ -125,7 +125,8 @@ function test_csg()
   -2048, 2048)
 
 
-  ---- Main Room ----
+
+  ---===| Main Room |===---
 
   -- floor
   csg2.add_solid(
@@ -151,7 +152,7 @@ function test_csg()
     { x= 384, y= 520 },
     { x= 384, y=-128 },
   },
-  192, 2048)
+  256, 2048)
 
   -- south wall, left
   csg2.add_solid(
@@ -187,8 +188,8 @@ function test_csg()
   {
     { x=-336, y= 512 },
     { x=-336, y= 700 },
-    { x= -64*0, y= 700 }, --!!!
-    { x= -64*0, y= 512 },
+    { x= -80, y= 700 },
+    { x= -80, y= 512 },
   },
   -2048, 2048)
 
@@ -198,8 +199,8 @@ function test_csg()
     t_tex=ROOM_F, b_tex=ROOM_F, w_tex=ROOM_W,
   },
   {
-    { x=  64*0, y= 512 }, --!!!
-    { x=  64*0, y= 700 },
+    { x=  80, y= 512 },
+    { x=  80, y= 700 },
     { x= 336, y= 700 },
     { x= 336, y= 512 },
   },
@@ -230,7 +231,8 @@ function test_csg()
   -2048, 2048)
 
 
-  ---- Pillar Pair ----
+
+  ---===| Pillar Pair |===---
 
   csg2.add_solid(
   {
@@ -257,18 +259,129 @@ function test_csg()
   -2048, 2048)
 
 
-  ---- Niche ----
+
+  ---===| Niche |===---
+
+  -- floor
+  csg2.add_solid(
+  {
+    t_tex=NICHE_F, b_tex=NICHE_F, w_tex=NICHE_W,
+  },
+  {
+    { x= -80, y=512 },
+    { x= -80, y=700 },
+    { x=  80, y=700 },
+    { x=  80, y=512 },
+  },
+  -2048, 64)
+
+  -- ceiling
+  csg2.add_solid(
+  {
+    t_tex=NICHE_F, b_tex=NICHE_F, w_tex=NICHE_W,
+  },
+  {
+    { x= -80, y=512 },
+    { x= -80, y=700 },
+    { x=  80, y=700 },
+    { x=  80, y=512 },
+  },
+  144, 2048)
+
+  -- north wall
+  csg2.add_solid(
+  {
+    t_tex=NICHE_F, b_tex=NICHE_F, w_tex=NICHE_W,
+  },
+  {
+    { x= -80, y=664 },
+    { x= -80, y=680 },
+    { x=  80, y=680 },
+    { x=  80, y=664 },
+  },
+  -2048, 2048)
+
+  -- west wall
+  csg2.add_solid(
+  {
+    t_tex=NICHE_F, b_tex=NICHE_F, w_tex=NICHE_W,
+  },
+  {
+    { x= -80, y=512 },
+    { x= -80, y=720 },
+    { x= -64, y=720 },
+    { x= -64, y=512 },
+  },
+  -2048, 2048)
+
+  -- east wall
+  csg2.add_solid(
+  {
+    t_tex=NICHE_F, b_tex=NICHE_F, w_tex=NICHE_W,
+  },
+  {
+    { x= 64, y=512 },
+    { x= 64, y=720 },
+    { x= 80, y=720 },
+    { x= 80, y=512 },
+  },
+  -2048, 2048)
+
+
+
+  ---===| Support Beams |===---
+
+  csg2.add_solid(
+  {
+    t_tex=BEAM_F, b_tex=BEAM_F, w_tex=BEAM_W,
+  },
+  {
+    { x=-148, y= 44 },
+    { x=-148, y= 68 },
+    { x=-124, y= 68 },
+    { x=-124, y= 44 },
+  },
+  -2048, 2048)
+
+  csg2.add_solid(
+  {
+    t_tex=BEAM_F, b_tex=BEAM_F, w_tex=BEAM_W,
+  },
+  {
+    { x= 124, y= 44 },
+    { x= 124, y= 68 },
+    { x= 148, y= 68 },
+    { x= 148, y= 44 },
+  },
+  -2048, 2048)
+
+  csg2.add_solid(
+  {
+    t_tex=BEAM_F, b_tex=BEAM_F, w_tex=BEAM_W,
+  },
+  {
+    { x=-88, y=512 },
+    { x=-64, y=536 },
+    { x=-64, y=512 },
+  },
+  -2048, 2048)
+
+  csg2.add_solid(
+  {
+    t_tex=BEAM_F, b_tex=BEAM_F, w_tex=BEAM_W,
+  },
+  {
+    { x= 64, y=512 },
+    { x= 64, y=536 },
+    { x= 88, y=512 },
+  },
+  -2048, 2048)
+
+
+
+  ---===| Stairs |===---
 
   -- FIXME
 
-
-  ---- Stairs ----
-
-  -- FIXME
-
-
-  ---- Support Beams ----
-
-  -- FIXME
 
 end
