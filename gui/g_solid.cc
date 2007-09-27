@@ -20,6 +20,8 @@
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 
+#include <algorithm>
+
 #include "g_solid.h"
 #include "g_doom.h"
 #include "g_lua.h"
@@ -148,6 +150,9 @@ public:
 
   std::vector<area_vert_c *> verts;
 
+  double min_x, min_y;
+  double max_x, max_y;
+
 public:
   area_poly_c(area_info_c *_info) : info(_info), verts()
   { }
@@ -155,6 +160,27 @@ public:
   ~area_poly_c()
   {
     // FIXME: free verts
+  }
+
+  void ComputeBBox()
+  {
+    std::vector<area_vert_c *>::iterator VI;
+
+    min_x = +999999.9;
+    min_y = +999999.9;
+    max_x = -999999.9;
+    max_y = -999999.9;
+
+    for (VI = verts.begin(); VI != verts.end(); VI++)
+    {
+      area_vert_c *V = *VI;
+
+      if (V->x < min_x) min_x = V->x;
+      if (V->x > max_x) max_x = V->x;
+
+      if (V->y < min_y) min_y = V->y;
+      if (V->y > max_y) max_y = V->y;
+    }
   }
 };
 
@@ -321,6 +347,8 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
   if (P->verts.size() < 3)
     Main_FatalError("line loop contains less than 3 vertices!\n");
 
+  P->ComputeBBox();
+
   return P;
 }
 
@@ -374,6 +402,7 @@ int add_solid(lua_State *L)
 class merged_area_c
 {
 public:
+  // all polys for this area (sorted by height)
   std::vector<area_poly_c *> polys;
 
   int sector_index;
@@ -387,6 +416,14 @@ public:
 std::vector<merged_area_c *> all_merges;
 
 
+struct Compare_PolyMinX_pred
+{
+  inline bool operator() (const area_poly_c *A, const area_poly_c *B) const
+  {
+    return A->min_x < B->min_x;
+  }
+};
+
 static void CSG2_MergeAreas(void)
 {
   // this takes all the area_polys, figures out what OVERLAPS
@@ -395,6 +432,11 @@ static void CSG2_MergeAreas(void)
   //
   // also figures out which area_polys are TOUCHING, and ensures
   // there are vertices where needed (at 'T' junctions).
+
+
+  /* STEP 1: sort area_polys from left to right */
+
+  std::sort(all_polys.begin(), all_polys.end(), Compare_PolyMinX_pred());
 
   // TODO
 }
@@ -477,9 +519,18 @@ static void CSG2_TestDoom(void)
   // for debugging only: each area_poly_c becomes a single sector
   // on the map.
  
-  for (int i = 0; i < (int)all_polys.size(); i++)
+  std::vector<area_poly_c *>::iterator PLI;
+
+#if 1
+  CSG2_MergeAreas();
+
+  for (int r = 0; r < (int)all_merges.size(); r++)
+  if ( (PLI = all_merges[r]->polys.begin()), true )
+#else
+  for (PLI = all_polys.begin(); PLI != all_polys.end(); PLI++)
+#endif
   {
-    area_poly_c *P = all_polys[i];
+    area_poly_c *P = *PLI;
     area_info_c *A = P->info;
     
     int sec_idx = wad::num_sectors();
