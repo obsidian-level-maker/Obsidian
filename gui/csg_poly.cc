@@ -22,171 +22,104 @@
 
 #include <algorithm>
 
-#include "g_solid.h"
-#include "g_doom.h"
+#include "csg_poly.h"
 #include "g_lua.h"
+#include "lib_util.h"
 
 #include "main.h"
-#include "lib_util.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
 
 
-#define IVAL_NONE  -27777
-#define FVAL_NONE  -27777.75f
+std::vector<area_info_c *> all_areas;
+std::vector<area_poly_c *> all_polys;
+
+std::vector<merged_area_c *> all_merges;
 
 
 static int cur_poly_time;
 
 
-class merged_area_c;
+slope_points_c::slope_points_c() :
+      tz1(FVAL_NONE), tz2(FVAL_NONE),
+      bz1(FVAL_NONE), bz2(FVAL_NONE),
+      x1(0), y1(0), x2(0), y2(0)
+{ }
+
+slope_points_c::~slope_points_c()
+{ }
 
 
-class slope_points_c
+area_info_c::area_info_c() :
+      t_tex(), b_tex(), w_tex(),
+      z1(-1), z2(-1), slope(),
+      sec_kind(0), sec_tag(0),
+      t_light(255), b_light(255)
 {
-public:
-  double tz1, tz2;
-  double bz1, bz2;
+  time = cur_poly_time++;
+}
 
-  double x1, y1, x2, y2;
-
-public:
-  slope_points_c() : tz1(FVAL_NONE), tz2(FVAL_NONE),
-                     bz1(FVAL_NONE), bz2(FVAL_NONE),
-                     x1(0), y1(0), x2(0), y2(0)
-  { }
-
-  ~slope_points_c()
-  { }
-};
+area_info_c::~area_info_c()
+{ }
 
 
-class area_info_c
+area_side_c::area_side_c() :
+      w_tex(), t_rail(), x_offset(0), y_offset(0)
+{ }
+
+area_side_c::~area_side_c()
+{ }
+
+
+area_vert_c::area_vert_c() :
+      x(0), y(0), front(), back(),
+      line_kind(0), line_tag(0), line_flags(0)
 {
-public:
-  int time; // increases for each new solid area
+  memset(line_args, 0, sizeof(line_args));
+}
 
-  std::string t_tex;
-  std::string b_tex;
-  std::string w_tex;  // default
+area_vert_c::~area_vert_c()
+{ }
 
-  ///  peg_mode_e  peg;  // default
 
-  /// double y_offset;  // default
+area_poly_c::area_poly_c(area_info_c *_info) : info(_info), verts()
+{ }
 
-  double z1, z2;
+area_poly_c::~area_poly_c()
+{
+  // FIXME: free verts
+}
 
-  slope_points_c slope;
+void area_poly_c::ComputeBBox()
+{
+  min_x = +999999.9;
+  min_y = +999999.9;
+  max_x = -999999.9;
+  max_y = -999999.9;
 
-  int sec_kind, sec_tag;
-  int t_light, b_light;
+  std::vector<area_vert_c *>::iterator VI;
 
-public:
-  area_info_c() : t_tex(), b_tex(), w_tex(),
-                  z1(-1), z2(-1), slope(),
-                  sec_kind(0), sec_tag(0),
-                  t_light(255), b_light(255)
+  for (VI = verts.begin(); VI != verts.end(); VI++)
   {
-    time = cur_poly_time++;
+    area_vert_c *V = *VI;
+
+    if (V->x < min_x) min_x = V->x;
+    if (V->x > max_x) max_x = V->x;
+
+    if (V->y < min_y) min_y = V->y;
+    if (V->y > max_y) max_y = V->y;
   }
-
-  ~area_info_c()
-  { }
-};
+}
 
 
-class area_side_c
+merged_area_c::merged_area_c() : polys(), sector_index(-1)
+{ }
+
+merged_area_c::~merged_area_c() :
 {
-public:
-  std::string w_tex;
-  std::string t_rail;
+  // TODO: free stuff
+}
 
-  /// peg_mode_e peg;
- 
-  double x_offset;
-  double y_offset;
-
-//??  merged_area_c *face;
-
-public:
-  area_side_c() : w_tex(), t_rail(), x_offset(0), y_offset(0)
-  { }
-
-  ~area_side_c()
-  { }
-};
-
-
-class area_vert_c
-{
-public:
-  double x, y;
-
-  area_side_c front;
-  area_side_c back;
-
-  int line_kind;
-  int line_tag;
-  int line_flags;
-
-  byte line_args[5];
-
-public:
-  area_vert_c() : x(0), y(0), front(), back(),
-                  line_kind(0), line_tag(0), line_flags(0)
-  {
-    memset(line_args, 0, sizeof(line_args));
-  }
-
-  ~area_vert_c()
-  { }
-};
-
-
-class area_poly_c
-{
-public:
-  area_info_c *info;
-
-  std::vector<area_vert_c *> verts;
-
-  double min_x, min_y;
-  double max_x, max_y;
-
-public:
-  area_poly_c(area_info_c *_info) : info(_info), verts()
-  { }
-
-  ~area_poly_c()
-  {
-    // FIXME: free verts
-  }
-
-  void ComputeBBox()
-  {
-    std::vector<area_vert_c *>::iterator VI;
-
-    min_x = +999999.9;
-    min_y = +999999.9;
-    max_x = -999999.9;
-    max_y = -999999.9;
-
-    for (VI = verts.begin(); VI != verts.end(); VI++)
-    {
-      area_vert_c *V = *VI;
-
-      if (V->x < min_x) min_x = V->x;
-      if (V->x > max_x) max_x = V->x;
-
-      if (V->y < min_y) min_y = V->y;
-      if (V->y > max_y) max_y = V->y;
-    }
-  }
-};
-
-
-std::vector<area_info_c *> all_areas;
-std::vector<area_poly_c *> all_polys;
 
 
 //------------------------------------------------------------------------
@@ -399,21 +332,6 @@ int add_solid(lua_State *L)
 
 //------------------------------------------------------------------------
 
-class merged_area_c
-{
-public:
-  // all polys for this area (sorted by height)
-  std::vector<area_poly_c *> polys;
-
-  int sector_index;
-
-public:
-   merged_area_c();
-  ~merged_area_c();
-};
-
-
-std::vector<merged_area_c *> all_merges;
 
 
 struct Compare_PolyMinX_pred
@@ -467,9 +385,6 @@ void CSG2_BeginLevel(void)
 
 void CSG2_EndLevel(void)
 {
-  CSG2_TestQuake();
-  CSG2_TestDoom();
-
   // FIXME: free all_polys
 
   // FIXME: free all_merges
