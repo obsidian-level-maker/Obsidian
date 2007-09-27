@@ -23,10 +23,10 @@
 #include "lib_util.h"
 
 #include "main.h"
+#include "csg_poly.h"
 #include "g_cookie.h"
 #include "g_doom.h"
 #include "g_lua.h"
-#include "g_solid.h"
 #include "g_wolf.h"
 
 #include "hdr_fltk.h"

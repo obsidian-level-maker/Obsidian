@@ -20,10 +20,13 @@
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 
+#include "csg_poly.h"
+#include "csg_doom.h"
+#include "csg_quake.h"
+
 #include "g_doom.h"
 #include "g_glbsp.h"
 #include "g_image.h"
-#include "g_solid.h"
 #include "g_lua.h"
 
 #include "main.h"
@@ -348,7 +351,11 @@ int begin_level(lua_State *L)
 //
 int end_level(lua_State *L)
 {
+  CSG2_TestQuake();
+  CSG2_TestDoom();
+
   CSG2_EndLevel();
+
 
   SYS_ASSERT(level_name);
 
