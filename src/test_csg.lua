@@ -37,12 +37,12 @@ function test_csg()
   local BEAM_F   = "FLAT1"
   local BEAM_W   = "SUPPORT2"
 
--- [[ QUAKE 1
+--[[ QUAKE 1
   START_F  = "tech01_1"
   START_W  = "tech01_1"
 
-  ROOM_F   = "rock1_2"
-  ROOM_W   = "rock1_2"
+  ROOM_F  = "ground1_1"
+  ROOM_W  = "ground1_1"
 
   PILLAR_F = "metal1_1"
   PILLAR_W = "metal1_1"
@@ -50,12 +50,13 @@ function test_csg()
   NICHE_F  = "city1_4"
   NICHE_W  = "city1_4"
 
-  STAIR_F  = "ground1_1"
-  STAIR_W  = "ground1_1"
+  STAIR_F   = "rock1_2"
+  STAIR_W   = "rock1_2"
 
   BEAM_F   = "wood1_1"
   BEAM_W   = "wood1_1"
---
+--]]
+
 
   ---===| Starting Area |===---
 
@@ -381,7 +382,41 @@ function test_csg()
 
   ---===| Stairs |===---
 
-  -- FIXME
+  -- largest and lowest
+  csg2.add_solid(
+  {
+    t_tex=STAIR_F, b_tex=STAIR_F, w_tex=STAIR_W,
+  },
+  {
+    { x=-240, y=584 },
+    { x= 240, y=584 },
+    { x=   0, y=224 },
+  },
+  -2048, 16)
+
+  -- middle
+  csg2.add_solid(
+  {
+    t_tex=STAIR_F, b_tex=STAIR_F, w_tex=STAIR_W,
+  },
+  {
+    { x=-176, y=584 },
+    { x= 176, y=584 },
+    { x=   0, y=320 },
+  },
+  -2048, 32)
+
+  -- smallest and highest
+  csg2.add_solid(
+  {
+    t_tex=STAIR_F, b_tex=STAIR_F, w_tex=STAIR_W,
+  },
+  {
+    { x=-112, y=584 },
+    { x= 112, y=584 },
+    { x=   0, y=416 },
+  },
+  -2048, 48)
 
 
 end
