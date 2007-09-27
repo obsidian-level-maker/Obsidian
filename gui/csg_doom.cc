@@ -25,7 +25,7 @@
 #include "csg_poly.h"
 #include "csg_doom.h"
 
-// #include "g_lua.h"
+#include "g_doom.h"
 #include "main.h"
 #include "lib_util.h"
 
@@ -107,7 +107,7 @@ void CSG2_TestDoom(void)
  
   std::vector<area_poly_c *>::iterator PLI;
 
-#if 1
+#if 0
   CSG2_MergeAreas();
 
   for (int r = 0; r < (int)all_merges.size(); r++)

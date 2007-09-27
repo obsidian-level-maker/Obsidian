@@ -115,7 +115,7 @@ void area_poly_c::ComputeBBox()
 merged_area_c::merged_area_c() : polys(), sector_index(-1)
 { }
 
-merged_area_c::~merged_area_c() :
+merged_area_c::~merged_area_c()
 {
   // TODO: free stuff
 }
@@ -342,7 +342,7 @@ struct Compare_PolyMinX_pred
   }
 };
 
-static void CSG2_MergeAreas(void)
+void CSG2_MergeAreas(void)
 {
   // this takes all the area_polys, figures out what OVERLAPS
   // (on the 2D map), and performs the CSG operations to create

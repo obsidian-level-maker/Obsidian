@@ -157,6 +157,8 @@ void CSG2_Init(void);
 void CSG2_BeginLevel(void);
 void CSG2_EndLevel(void);
 
+void CSG2_MergeAreas(void);
+
 #endif /* __OBLIGE_CSG_POLY_H__ */
 
 //--- editor settings ---
