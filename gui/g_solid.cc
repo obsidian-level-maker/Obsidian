@@ -265,7 +265,6 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-fprintf(stderr, "TYPE WAS: %d\n", lua_type(L, stack_pos));
     luaL_argerror(L, stack_pos, "expected a table (vertex)");
     return 0; /* NOT REACHED */
   }
@@ -301,7 +300,6 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 
   for (;;)
   {
-fprintf(stderr, "trying vertex %d\n", index);
     lua_pushinteger(L, index);
     lua_gettable(L, stack_pos);
 
