@@ -58,6 +58,12 @@ function test_csg()
 --]]
 
 
+  local MIN_Z = -2048
+  local MAX_Z =  2048
+
+  -- TODO  csg2.z_range(MIN_Z, MAX_Z)
+
+
   ---===| Starting Area |===---
 
   -- floor
@@ -71,7 +77,7 @@ function test_csg()
     { x= 136, y= 64 },
     { x= 136, y=-72 },
   },
-  -2048, 64)
+  { z1=MIN_Z, z2=64 })
 
   -- ceiling
   csg2.add_solid(
@@ -84,7 +90,7 @@ function test_csg()
     { x= 136, y= 64 },
     { x= 136, y=-72 },
   },
-  192, 2048)
+  { z1=192, z2=MAX_Z })
 
   -- back wall
   csg2.add_solid(
@@ -97,7 +103,7 @@ function test_csg()
     { x= 144, y=-64 },
     { x= 144, y=-72 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   -- left wall
   csg2.add_solid(
@@ -110,7 +116,7 @@ function test_csg()
     { x=-128, y= 56 },
     { x=-128, y=-80 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   -- right wall
   csg2.add_solid(
@@ -123,7 +129,7 @@ function test_csg()
     { x= 144, y= 56 },
     { x= 144, y=-80 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
 
 
@@ -140,7 +146,7 @@ function test_csg()
     { x= 384, y= 520 },
     { x= 384, y=-128 },
   },
-  -2048, 0)
+  { z1=MIN_Z, z2=0 })
 
   -- ceiling
   csg2.add_solid(
@@ -153,7 +159,7 @@ function test_csg()
     { x= 384, y= 520 },
     { x= 384, y=-128 },
   },
-  256, 2048)
+  { z1=256, z2=MAX_Z })
 
   -- south wall, left
   csg2.add_solid(
@@ -166,7 +172,7 @@ function test_csg()
     { x=-128, y= 64 },
     { x=-128, y= 56 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   -- south wall, right
   csg2.add_solid(
@@ -179,7 +185,7 @@ function test_csg()
     { x= 336, y= 64 },
     { x= 336, y= 56 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   -- north wall, left
   csg2.add_solid(
@@ -192,7 +198,7 @@ function test_csg()
     { x= -80, y= 700 },
     { x= -80, y= 512 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   -- north wall, right
   csg2.add_solid(
@@ -205,7 +211,7 @@ function test_csg()
     { x= 336, y= 700 },
     { x= 336, y= 512 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   -- west wall
   csg2.add_solid(
@@ -217,7 +223,7 @@ function test_csg()
     { x=-320, y= 512 },
     { x=-192, y= 512 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   -- east wall
   csg2.add_solid(
@@ -229,7 +235,7 @@ function test_csg()
     { x= 320, y= 512 },
     { x= 320, y=  64 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
 
 
@@ -245,7 +251,7 @@ function test_csg()
     { x=-128, y=256 },
     { x=-128, y=192 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   csg2.add_solid(
   {
@@ -257,7 +263,7 @@ function test_csg()
     { x=192, y=256 },
     { x=192, y=192 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
 
 
@@ -274,7 +280,7 @@ function test_csg()
     { x=  80, y=700 },
     { x=  80, y=512 },
   },
-  -2048, 64)
+  { z1=MIN_Z, z2=64 })
 
   -- ceiling
   csg2.add_solid(
@@ -287,7 +293,7 @@ function test_csg()
     { x=  80, y=700 },
     { x=  80, y=512 },
   },
-  144, 2048)
+  { z1=144, z2=MAX_Z })
 
   -- north wall
   csg2.add_solid(
@@ -300,7 +306,7 @@ function test_csg()
     { x=  80, y=680 },
     { x=  80, y=664 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   -- west wall
   csg2.add_solid(
@@ -313,7 +319,7 @@ function test_csg()
     { x= -64, y=720 },
     { x= -64, y=512 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   -- east wall
   csg2.add_solid(
@@ -326,7 +332,7 @@ function test_csg()
     { x= 80, y=720 },
     { x= 80, y=512 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
 
 
@@ -342,7 +348,7 @@ function test_csg()
     { x=-124, y= 68 },
     { x=-124, y= 44 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   csg2.add_solid(
   {
@@ -354,7 +360,7 @@ function test_csg()
     { x= 148, y= 68 },
     { x= 148, y= 44 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   csg2.add_solid(
   {
@@ -365,7 +371,7 @@ function test_csg()
     { x=-64, y=536 },
     { x=-64, y=512 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
   csg2.add_solid(
   {
@@ -376,7 +382,7 @@ function test_csg()
     { x= 64, y=536 },
     { x= 88, y=512 },
   },
-  -2048, 2048)
+  { z1=MIN_Z, z2=MAX_Z })
 
 
 
@@ -392,7 +398,7 @@ function test_csg()
     { x= 240, y=584 },
     { x=   0, y=224 },
   },
-  -2048, 16)
+  { z1=MIN_Z, z2=16 })
 
   -- middle
   csg2.add_solid(
@@ -404,7 +410,7 @@ function test_csg()
     { x= 176, y=584 },
     { x=   0, y=320 },
   },
-  -2048, 32)
+  { z1=MIN_Z, z2=32 })
 
   -- smallest and highest
   csg2.add_solid(
@@ -416,7 +422,7 @@ function test_csg()
     { x= 112, y=584 },
     { x=   0, y=416 },
   },
-  -2048, 48)
+  { z1=MIN_Z, z2=48 })
 
 
 end
