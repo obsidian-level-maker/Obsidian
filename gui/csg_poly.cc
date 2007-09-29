@@ -351,14 +351,14 @@ public:
 
   inline bool Match(double _xx, double _yy) const
   {
-    return (fabs(_xx - x) < EPSILON) &&
-           (fabs(_yy - y) < EPSILON);
+    return (fabs(_xx - x) <= EPSILON) &&
+           (fabs(_yy - y) <= EPSILON);
   }
     
   inline bool Match(const vertex_c *other) const
   {
-    return (fabs(other->x - x) < EPSILON) &&
-           (fabs(other->y - y) < EPSILON);
+    return (fabs(other->x - x) <= EPSILON) &&
+           (fabs(other->y - y) <= EPSILON);
   }
     
   void AddSeg(segment_c *seg)
@@ -501,11 +501,11 @@ static void Mug_FindOverlappers(void)
       double bx2 = B->end->x;
       double by2 = B->end->y;
 
-      if (MIN(bx1, bx2) > MAX(ax1, ax2))
+      if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON)
         break;
 
-      if (MIN(by1, by2) > MAX(ay1, ay2) ||
-          MIN(ay1, ay2) > MAX(by1, by2))
+      if (MIN(by1, by2) > MAX(ay1, ay2)+EPSILON ||
+          MIN(ay1, ay2) > MAX(by1, by2)+EPSILON)
         continue;
 
       /* to get here, the bounding boxes must touch or overlap.
@@ -529,7 +529,7 @@ static void Mug_FindOverlappers(void)
         continue;
 
       // check if on the same line
-      if (fabs(bp1) < EPSILON && fabs(bp2) < EPSILON)
+      if (fabs(bp1) <= EPSILON && fabs(bp2) <= EPSILON)
       {
         // same start + end points?
         if (A->Match(B))
@@ -543,12 +543,45 @@ static void Mug_FindOverlappers(void)
       }
 
       // check for sharing a single vertex
+      // (NOTE: **rely** on the fact that all vertices are unique)
       if (A->start->Match(B->start) || A->start->Match(B->end) ||
           A->end  ->Match(B->start) || A->end  ->Match(B->end))
         continue;
 
       // check for T junction
-      // if (bp1 < -EPSILON && bp2 > EPSILON && 
+      if (fabs(bp1) <= EPSILON)
+      {
+        Mug_SplitSegment(A, B->start);
+        continue;
+      }
+      else if (fabs(bp2) <= EPSILON)
+      {
+        Mug_SplitSegment(A, B->end);
+        continue;
+      }
+      else if (fabs(ap1) <= EPSILON)
+      {
+        Mug_SplitSegment(B, A->start);
+        continue;
+      }
+      else if (fabs(ap2) <= EPSILON)
+      {
+        Mug_SplitSegment(B, A->end);
+        continue;
+      }
+
+      /* pure overlap */
+      
+      // intersection point
+      double along = bp1 / (bp1 - bp2);
+
+      double ix = bx1 + along * (bx2 - bx1);
+      double iy = by1 + along * (by2 - by1);
+
+      vertex_c * NV = Mug_AddVertex(ix, iy);
+      
+      Mug_SplitSegment(A, NV);
+      Mug_SplitSegment(B, NV);
     }
   }
 }
