@@ -369,6 +369,27 @@ public:
 
     segs.push_back(seg);
   }
+
+  void RemoveSeg(segment_c *seg)
+  {
+    std::vector<segment_c *>::iterator ENDP;
+
+    ENDP = std::remove(segs.begin(), segs.end(), seg);
+
+    segs.erase(ENDP, segs.end());
+  }
+
+  void ReplaceSeg(segment_c *old_seg, segment_c *new_seg)
+  {
+    for (int j=0; j < (int)segs.size(); j++)
+      if (segs[j] == old_seg)
+      {
+        segs[j] = new_seg;
+        return;
+      }
+
+    Main_FatalError("ReplaceSeg: does not exist!\n");
+  }
 };
 
 
@@ -396,11 +417,23 @@ public:
     return (other->start == start && other->end   == end) ||
            (other->end   == start && other->start == end);
   }
+
+  void Kill(void)
+  {
+    start->RemoveSeg(this);
+    end  ->RemoveSeg(this);
+
+    start = end = NULL;
+  }
 };
 
 
 static std::vector<vertex_c *>  mug_vertices;
 static std::vector<segment_c *> mug_segments;
+
+static std::vector<segment_c *> mug_new_segs;
+
+static int mug_changes = 0;
 
 
 static vertex_c *Mug_AddVertex(double x, double y)
@@ -452,6 +485,51 @@ static void Mug_MakeSegments(area_poly_c *P)
   }
 }
 
+static void Mug_SplitSegment(segment_c *S, vertex_c *V)
+{
+  segment_c *NS = new segment_c(V, S->end);
+
+  S->end = V;
+
+  mug_new_segs.push_back(NS);
+
+  // update join info
+
+  NS->end->ReplaceSeg(S, NS);
+
+  V->AddSeg(S);
+  V->AddSeg(NS);
+}
+
+struct SegDead_pred
+{
+  inline bool operator() (const segment_c *S) const
+  {
+    return ! S->start;
+  }
+};
+
+static void Mug_AdjustList(void)
+{
+  /* Removes dead segs and Appends new segs */
+
+  std::vector<segment_c *>::iterator ENDP;
+
+  ENDP = std::remove_if(mug_segments.begin(), mug_segments.end(), SegDead_pred());
+
+  mug_segments.erase(ENDP, mug_segments.end());
+
+
+  while (mug_new_segs.size() > 0)
+  {
+    segment_c *S = mug_new_segs.back();
+
+    mug_new_segs.pop_back();
+    mug_segments.push_back(S);
+  }
+}
+
+
 struct Compare_SegmentMinX_pred
 {
   inline bool operator() (const segment_c *A, const segment_c *B) const
@@ -473,23 +551,35 @@ static inline double PerpDist(double x, double y,
   return (x * y2 - y * x2) / len;
 }
 
-static void Mug_FindOverlappers(void)
+static inline double AlongDist(double x, double y,
+                               double x1, double y1, double x2, double y2)
 {
-  std::sort(mug_segments.begin(), mug_segments.end(), Compare_SegmentMinX_pred());
+  x  -= x1; y  -= y1;
+  x2 -= x1; y2 -= y1;
+
+  double len = sqrt(x2*x2 + y2*y2);
+
+  SYS_ASSERT(len > 0);
+
+  return (x * x2 + y * y2) / len;
+}
+
+
+static void Mug_OverlapPass(void)
+{
+//!!!!  std::sort(mug_segments.begin(), mug_segments.end(), Compare_SegmentMinX_pred());
 
   for (int i=0; i < (int)mug_segments.size(); i++)
   {
     segment_c *A = mug_segments[i];
 
-    if (! A->start)  // skip deleted segments
-      continue;
-        
     for (int k=i+1; k < (int)mug_segments.size(); k++)
     {
       segment_c *B = mug_segments[k];
 
-      if (! B->start)  // skip deleted segments
-        continue;
+      // skip deleted segments
+      if (! A->start) break;
+      if (! B->start) continue;
 
       double ax1 = A->start->x;
       double ay1 = A->start->y;
@@ -501,8 +591,14 @@ static void Mug_FindOverlappers(void)
       double bx2 = B->end->x;
       double by2 = B->end->y;
 
+#if 0 //!!!! TESTING
       if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON)
         break;
+#else
+      if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON ||
+          MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON)
+        continue;
+#endif
 
       if (MIN(by1, by2) > MAX(ay1, ay2)+EPSILON ||
           MIN(ay1, ay2) > MAX(by1, by2)+EPSILON)
@@ -531,14 +627,35 @@ static void Mug_FindOverlappers(void)
       // check if on the same line
       if (fabs(bp1) <= EPSILON && fabs(bp2) <= EPSILON)
       {
+#if 1
         // same start + end points?
         if (A->Match(B))
         {
-          B->start = B->end = NULL;  // kill B
+          B->Kill();
+          mug_changes++;
           continue;
         }
+#endif
+        // find vertices that split a segment
+        double a1_along = 0.0;
+        double a2_along = AlongDist(ax2,ay2, ax1,ay1, ax2,ay2);
+        double b1_along = AlongDist(bx1,by1, ax1,ay1, ax2,ay2);
+        double b2_along = AlongDist(bx2,by2, ax1,ay1, ax2,ay2);
 
-        @@@
+        if (b1_along > a1_along+EPSILON && b1_along < a2_along-EPSILON)
+          Mug_SplitSegment(A, B->start);
+
+        if (b2_along > a1_along+EPSILON && b2_along < a2_along-EPSILON)
+          Mug_SplitSegment(A, B->end);
+
+        if (a1_along > b1_along+EPSILON && a1_along < b2_along-EPSILON)
+          Mug_SplitSegment(B, A->start);
+
+        if (a2_along > b1_along+EPSILON && a2_along < b2_along-EPSILON)
+          Mug_SplitSegment(B, A->end);
+#if 0
+        // check for total overlap (A covers B or vice versa)
+#endif
         continue;
       }
 
@@ -584,6 +701,18 @@ static void Mug_FindOverlappers(void)
       Mug_SplitSegment(B, NV);
     }
   }
+}
+
+static void Mug_FindOverlaps(void)
+{
+  do
+  {
+    mug_changes = 0;
+
+    Mug_OverlapPass();
+    Mug_AdjustList();
+  }
+  while (mug_changes > 0);
 }
 
 
