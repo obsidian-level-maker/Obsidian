@@ -502,6 +502,8 @@ static void Mug_SplitSegment(segment_c *S, vertex_c *V)
 
   V->AddSeg(S);
   V->AddSeg(NS);
+
+  mug_changes++;
 }
 
 struct SegDead_pred
@@ -570,7 +572,9 @@ static inline double AlongDist(double x, double y,
 
 static void Mug_OverlapPass(void)
 {
-//!!!!  std::sort(mug_segments.begin(), mug_segments.end(), Compare_SegmentMinX_pred());
+  /* sort segments in order of minimum X coordinate */
+  std::sort(mug_segments.begin(), mug_segments.end(),
+            Compare_SegmentMinX_pred());
 
   for (int i=0; i < (int)mug_segments.size(); i++)
   {
@@ -594,10 +598,10 @@ static void Mug_OverlapPass(void)
       double bx2 = B->end->x;
       double by2 = B->end->y;
 
-#if 0 //!!!! TESTING
+#if 1 // normal code
       if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON)
         break;
-#else
+#else // non-sort method (TESTING only)
       if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON ||
           MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON)
         continue;
@@ -658,6 +662,7 @@ static void Mug_OverlapPass(void)
           Mug_SplitSegment(B, A->end);
 #if 0
         // check for total overlap (A covers B or vice versa)
+        // NOTE: this will be detected in next pass
 #endif
         continue;
       }
