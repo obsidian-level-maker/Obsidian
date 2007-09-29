@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include "csg_poly.h"
+#include "g_doom.h"
 #include "g_lua.h"
 #include "lib_util.h"
 
@@ -344,9 +345,11 @@ public:
   // list of segments that touch this vertex
   std::vector<segment_c *> segs;
 
+  int index;
+
 public:
-   vertex_c() : x(0), y(0) { }
-   vertex_c(double _xx, double _yy) : x(_xx), y(_yy) { }
+   vertex_c() : x(0), y(0), segs(), index(-1) { }
+   vertex_c(double _xx, double _yy) : x(_xx), y(_yy), segs(), index(-1) { }
   ~vertex_c() { }
 
   inline bool Match(double _xx, double _yy) const
@@ -689,7 +692,7 @@ static void Mug_OverlapPass(void)
 
       /* pure overlap */
       
-      // intersection point
+      // add a new vertex at the intersection point
       double along = bp1 / (bp1 - bp2);
 
       double ix = bx1 + along * (bx2 - bx1);
@@ -705,12 +708,20 @@ static void Mug_OverlapPass(void)
 
 static void Mug_FindOverlaps(void)
 {
+  int loops = 0;
+
   do
   {
+    SYS_ASSERT(loops < 1000);
+
     mug_changes = 0;
 
     Mug_OverlapPass();
     Mug_AdjustList();
+
+    loops++;
+
+fprintf(stderr, "Mug_FindOverlaps: loop %d, changes %d\n", loops, mug_changes);
   }
   while (mug_changes > 0);
 }
@@ -746,7 +757,41 @@ void CSG2_MergeAreas(void)
     Mug_MakeSegments(P);
   }
 
+  Mug_FindOverlaps();
+
   // TODO
+}
+
+void CSG2_DumpSegmentsToWAD(void)
+{
+  /* debugging function */
+
+  int total_vert = 0;
+
+  std::vector<vertex_c *>::iterator VI;
+
+  for (VI = mug_vertices.begin(); VI != mug_vertices.end(); VI++)
+  {
+    vertex_c *V = *VI;
+    
+    V->index = total_vert;
+    total_vert++;
+
+    wad::add_vertex(I_ROUND(V->x), I_ROUND(V->y));
+  }
+
+  std::vector<segment_c *>::iterator SGI;
+
+  for (SGI = mug_segments.begin(); SGI != mug_segments.end(); SGI++)
+  {
+    segment_c *S = *SGI;
+
+    SYS_ASSERT(S);
+    SYS_ASSERT(S->start);
+
+    wad::add_linedef(S->start->index, S->end->index, -1, -1,
+                     0, 1 /*impassible*/, 0, NULL /* args */);
+  }
 }
 
 
