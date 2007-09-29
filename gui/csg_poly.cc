@@ -171,35 +171,30 @@ static area_info_c * Grab_SectorInfo(lua_State *L, int stack_pos)
 
 static int Grab_Heights(lua_State *L, int stack_pos, area_info_c *A)
 {
-  A->z1 = luaL_checknumber(L, stack_pos + 0);
-  A->z2 = luaL_checknumber(L, stack_pos + 1);
+  if (stack_pos < 0)
+    stack_pos += lua_gettop(L) + 1;
 
-  if (A->z2 <= A->z1 + 0.1)
+  if (lua_type(L, stack_pos) != LUA_TTABLE)
+  {
+    return luaL_argerror(L, stack_pos, "expected a table (height info)");
+  }
+
+  lua_getfield(L, stack_pos, "z1");
+  lua_getfield(L, stack_pos, "z2");
+
+  A->z1 = luaL_checknumber(L, -2);
+  A->z2 = luaL_checknumber(L, -1);
+
+  lua_pop(L, 2);
+
+  if (A->z2 <= A->z1 + EPSILON)
   {
     return luaL_error(L, "add_solid: bad z1..z2 range given (%1.2f .. %1.2f)", A->z1, A->z2);
   }
 
+  // TODO: px1, py1, px2, py2,  tz1, tz2, bz1, bz2
+
   return 0;
-}
-
-
-static int Grab_SlopeInfo(lua_State *L, int stack_pos, area_info_c *A)
-{
-  int what = lua_type(L, stack_pos);
-
-  if (what == LUA_TNONE || what == LUA_TNIL)
-    return 0;
-
-  if (what != LUA_TTABLE)
-  {
-    luaL_argerror(L, stack_pos, "expected a table (slope info)");
-    return 0; /* NOT REACHED */
-  }
-
-  // TODO
-
-  Main_FatalError("CSG2: slope_info not yet supported!\n");
-  return 0; /* NOT REACHED */
 }
 
 
@@ -207,8 +202,7 @@ static int Grab_SideDef(lua_State *L, int stack_pos, area_side_c *S)
 {
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table (sidedef)");
-    return 0; /* NOT REACHED */
+    return luaL_argerror(L, stack_pos, "expected a table (sidedef)");
   }
 
   // TODO
@@ -226,7 +220,7 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
     luaL_argerror(L, stack_pos, "expected a table (vertex)");
-    return 0; /* NOT REACHED */
+    return NULL; /* NOT REACHED */
   }
 
   area_vert_c *V = new area_vert_c();
@@ -251,7 +245,7 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
     luaL_argerror(L, stack_pos, "expected a table (line loop)");
-    return 0; /* NOT REACHED */
+    return NULL; /* NOT REACHED */
   }
 
   area_poly_c *P = new area_poly_c(A);
@@ -290,7 +284,7 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 namespace csg2
 {
 
-// LUA: add_solid(info, loop, z1, z2, slope_info)
+// LUA: add_solid(info, loop, heights)
 //
 // info is a table:
 //   t_tex, b_tex  : top and bottom textures
@@ -299,18 +293,20 @@ namespace csg2
 //   t_kind, t_tag
 //   t_light, b_light
 // 
-// slope_info is a table (can be nil)
-//    x1, y1, x2, y2  : coordinates on 2D map for slope points
-//    tz1, tz2        : height coords for top slope
-//    bz1, bz2        : height coords for bottom slope
+// heights is a table (can be nil)
+//    z1, z2             : height range (compulsory)
+//    px1, py1, px2, py2 : coordinates on 2D map for slope points
+//    tz1, tz2           : height values for top slope
+//    bz1, bz2           : height values for bottom slope
 //
 // loop is an array of Vertices:
 //    x, y,
 //    front, back,
-//    ln_kind, ln_tag, ln_flags, ln_args
+//    line_kind, line_tag, line_flags, line_args
 //
 // front and back are Sidedefs:
-//    w_tex, peg, rail, x_offset, y_offset
+//    w_tex, peg, rail,
+//    x_offset, y_offset
 //
 int add_solid(lua_State *L)
 {
@@ -319,7 +315,6 @@ int add_solid(lua_State *L)
   all_areas.push_back(A);
 
   Grab_Heights(L, 3, A);
-  Grab_SlopeInfo(L, 5, A);
 
   area_poly_c *P = Grab_LineLoop(L, 2, A);
 
