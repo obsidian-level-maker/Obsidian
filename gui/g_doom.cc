@@ -34,6 +34,9 @@
 #include "ui_dialog.h"
 #include "ui_window.h"
 
+//!!!! TEMP
+extern void CSG2_DumpSegmentsToWAD(void);
+
 
 #define TEMP_FILENAME    "TEMP.wad"
 
@@ -351,8 +354,11 @@ int begin_level(lua_State *L)
 //
 int end_level(lua_State *L)
 {
-  CSG2_TestQuake();
-  CSG2_TestDoom();
+//  CSG2_TestQuake();
+//  CSG2_TestDoom();
+
+CSG2_MergeAreas();
+CSG2_DumpSegmentsToWAD();
 
   CSG2_EndLevel();
 
