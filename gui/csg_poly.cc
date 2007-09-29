@@ -333,6 +333,226 @@ int add_solid(lua_State *L)
 //------------------------------------------------------------------------
 
 
+class segment_c;
+
+
+class vertex_c
+{
+public:
+  double x, y;
+
+  // list of segments that touch this vertex
+  std::vector<segment_c *> segs;
+
+public:
+   vertex_c() : x(0), y(0) { }
+   vertex_c(double _xx, double _yy) : x(_xx), y(_yy) { }
+  ~vertex_c() { }
+
+  inline bool Match(double _xx, double _yy) const
+  {
+    return (fabs(_xx - x) < EPSILON) &&
+           (fabs(_yy - y) < EPSILON);
+  }
+    
+  inline bool Match(const vertex_c *other) const
+  {
+    return (fabs(other->x - x) < EPSILON) &&
+           (fabs(other->y - y) < EPSILON);
+  }
+    
+  void AddSeg(segment_c *seg)
+  {
+    for (int j=0; j < (int)segs.size(); j++)
+      if (segs[j] == seg)
+        return;
+
+    segs.push_back(seg);
+  }
+};
+
+
+class segment_c
+{
+public:
+  vertex_c *start;
+  vertex_c *end;
+
+public:
+  segment_c(vertex_c *_v1, vertex_c *_v2) : start(_v1), end(_v2)
+  { }
+
+  ~segment_c()
+  { }
+
+  inline bool Match(vertex_c *_v1, vertex_c *_v2) const
+  {
+    return (_v1 == start && _v2 == end) ||
+           (_v2 == start && _v1 == end);
+  }
+
+  inline bool Match(const segment_c *other) const
+  {
+    return (other->start == start && other->end   == end) ||
+           (other->end   == start && other->start == end);
+  }
+};
+
+
+static std::vector<vertex_c *>  mug_vertices;
+static std::vector<segment_c *> mug_segments;
+
+
+static vertex_c *Mug_AddVertex(double x, double y)
+{
+  // check if already present (FIXME: OPTIMISE !!)
+
+  for (int i=0; i < (int)mug_vertices.size(); i++)
+    if (mug_vertices[i]->Match(x, y))
+      return mug_vertices[i];
+
+  vertex_c * V = new vertex_c(x, y);
+
+  mug_vertices.push_back(V);
+
+  return V;
+}
+
+static segment_c *Mug_AddSegment(vertex_c *start, vertex_c *end)
+{
+  // check if already present (FIXME: OPTIMISE !!)
+
+  SYS_ASSERT(start != end);
+
+  for (int i=0; i < (int)mug_segments.size(); i++)
+    if (mug_segments[i]->Match(start, end))
+      return mug_segments[i];
+
+  segment_c * S = new segment_c(start, end);
+
+  mug_segments.push_back(S);
+
+  start->AddSeg(S);
+  end  ->AddSeg(S);
+
+  return S;
+}
+
+static void Mug_MakeSegments(area_poly_c *P)
+{
+  for (int k=0; k < (int)P->verts.size(); k++)
+  {
+    area_vert_c *v1 = P->verts[k];
+    area_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
+
+    vertex_c *new_v1 = Mug_AddVertex(v1->x, v1->y);
+    vertex_c *new_v2 = Mug_AddVertex(v2->x, v2->y);
+
+    Mug_AddSegment(new_v1, new_v2);
+  }
+}
+
+struct Compare_SegmentMinX_pred
+{
+  inline bool operator() (const segment_c *A, const segment_c *B) const
+  {
+    return MIN(A->start->x, A->end->x) < MIN(B->start->x, B->end->x);
+  }
+};
+
+static inline double PerpDist(double x, double y,
+                              double x1, double y1, double x2, double y2)
+{
+  x  -= x1; y  -= y1;
+  x2 -= x1; y2 -= y1;
+
+  double len = sqrt(x2*x2 + y2*y2);
+
+  SYS_ASSERT(len > 0);
+
+  return (x * y2 - y * x2) / len;
+}
+
+static void Mug_FindOverlappers(void)
+{
+  std::sort(mug_segments.begin(), mug_segments.end(), Compare_SegmentMinX_pred());
+
+  for (int i=0; i < (int)mug_segments.size(); i++)
+  {
+    segment_c *A = mug_segments[i];
+
+    if (! A->start)  // skip deleted segments
+      continue;
+        
+    for (int k=i+1; k < (int)mug_segments.size(); k++)
+    {
+      segment_c *B = mug_segments[k];
+
+      if (! B->start)  // skip deleted segments
+        continue;
+
+      double ax1 = A->start->x;
+      double ay1 = A->start->y;
+      double ax2 = A->end->x;
+      double ay2 = A->end->y;
+
+      double bx1 = B->start->x;
+      double by1 = B->start->y;
+      double bx2 = B->end->x;
+      double by2 = B->end->y;
+
+      if (MIN(bx1, bx2) > MAX(ax1, ax2))
+        break;
+
+      if (MIN(by1, by2) > MAX(ay1, ay2) ||
+          MIN(ay1, ay2) > MAX(by1, by2))
+        continue;
+
+      /* to get here, the bounding boxes must touch or overlap.
+       * now we perform the line-line intersection test.
+       */
+
+      double ap1 = PerpDist(ax1,ay1, bx1,by1, bx2,by2);
+      double ap2 = PerpDist(ax2,ay2, bx1,by1, bx2,by2);
+
+      double bp1 = PerpDist(bx1,by1, ax1,ay1, ax2,ay2);
+      double bp2 = PerpDist(bx2,by2, ax1,ay1, ax2,ay2);
+
+      // does A cross B-extended-to-infinity?
+      if ((ap1 >  EPSILON && ap2 >  EPSILON) ||
+          (ap1 < -EPSILON && ap2 < -EPSILON))
+        continue;
+
+      // does B cross A-extended-to-infinity?
+      if ((bp1 >  EPSILON && bp2 >  EPSILON) ||
+          (bp1 < -EPSILON && bp2 < -EPSILON))
+        continue;
+
+      // check if on the same line
+      if (fabs(bp1) < EPSILON && fabs(bp2) < EPSILON)
+      {
+        // same start + end points?
+        if (A->Match(B))
+        {
+          B->start = B->end = NULL;  // kill B
+          continue;
+        }
+
+        @@@
+        continue;
+      }
+
+      // check for sharing a single vertex
+      if (A->start->Match(B->start) || A->start->Match(B->end) ||
+          A->end  ->Match(B->start) || A->end  ->Match(B->end))
+        continue;
+
+      // check for T junction
+      // if (bp1 < -EPSILON && bp2 > EPSILON && 
+    }
+  }
+}
+
 
 struct Compare_PolyMinX_pred
 {
@@ -352,12 +572,17 @@ void CSG2_MergeAreas(void)
   // there are vertices where needed (at 'T' junctions).
 
   // Algorithm:
-  //   (1) create segments for every line
-  //   (2) create vertices for every seg start and end
-  //   (3) check seg against every other seg for overlap/T-junction
-  //   (4) create merge_polys from segs
+  //   (1) create segments and vertices for every line
+  //   (2) check seg against every other seg for overlap/T-junction
+  //   (3) create merge_polys from seg list
 
-  std::sort(all_polys.begin(), all_polys.end(), Compare_PolyMinX_pred());
+  for (int j=0; j < (int)all_polys.size(); j++)
+  {
+    area_poly_c *P = all_polys[j];
+    SYS_ASSERT(P);
+
+    Mug_MakeSegments(P);
+  }
 
   // TODO
 }
