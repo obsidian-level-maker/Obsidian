@@ -517,9 +517,11 @@ static void Mug_AdjustList(void)
 
   ENDP = std::remove_if(mug_segments.begin(), mug_segments.end(), SegDead_pred());
 
+#if 0
 fprintf(stderr, ".. %d new segments, %d dead ones\n",
-    (int)mug_new_segs.size(), (int)(mug_segments.end() - ENDP));
-  
+       (int)mug_new_segs.size(), (int)(mug_segments.end() - ENDP));
+#endif
+
   mug_segments.erase(ENDP, mug_segments.end());
 
 
@@ -701,9 +703,11 @@ static void Mug_OverlapPass(void)
       double ix = bx1 + along * (bx2 - bx1);
       double iy = by1 + along * (by2 - by1);
 
+#if 0
 fprintf(stderr, ".. pure cross-over at (%1.2f, %1.2f)\n", ix, iy);
 fprintf(stderr, "   A = (%1.0f,%1.0f) --> (%1.0f,%1.0f)\n", ax1,ay1, ax2,ay2);
 fprintf(stderr, "   B = (%1.0f,%1.0f) --> (%1.0f,%1.0f)\n", bx1,by1, bx2,by2);
+#endif
 
       vertex_c * NV = Mug_AddVertex(ix, iy);
       
@@ -731,6 +735,30 @@ static void Mug_FindOverlaps(void)
 fprintf(stderr, "Mug_FindOverlaps: loop %d, changes %d\n", loops, mug_changes);
   }
   while (mug_changes > 0);
+}
+
+
+//------------------------------------------------------------------------
+
+static void Mug_TraceSegLoops(void)
+{
+  // Algorithm:
+  //
+  // starting at a particular seg and a particular vertex of
+  // that seg, follow the segs around in the tightest loop
+  // possible until we get back to the beginning.  The result
+  // will form a 'merged_area' (i.e. a "sector" for Doom).
+  //
+  // Note: if the average angle is > 180, then the sector
+  //       faces outward (i.e. it is really an island within
+  //       another sector -OR- it is the edge of the map).
+
+  for (;;)
+  {
+    // find a segment with a unknown side
+
+    // trace it
+  }
 }
 
 
