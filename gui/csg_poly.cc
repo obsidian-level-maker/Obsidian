@@ -590,6 +590,29 @@ static inline double AlongDist(double x, double y,
   return (x * x2 + y * y2) / len;
 }
 
+static inline double CalcAngle(double sx, double sy, double ex, double ey)
+{
+  // result is Degrees (0 <= angle < 360).
+  // East  (increasing X) -->  0 degrees
+  // North (increasing Y) --> 90 degrees
+
+  ex -= sx;
+  ey -= sy;
+
+  if (fabs(ex) < 0.0001)
+    return (ey > 0) ? 90.0 : 270.0;
+
+  if (fabs(ey) < 0.0001)
+    return (ex > 0) ? 0.0 : 180.0;
+
+  double angle = atan2(ey, ex) * 180.0 / M_PI;
+
+  if (angle < 0) 
+    angle += 360.0;
+
+  return angle;
+}
+
 
 static void Mug_OverlapPass(void)
 {
@@ -791,7 +814,7 @@ static void TraceNext(void)
 
     double angle = CalcAngle(next_v->x, next_v->y, TV2->x, TV2->y);
 
-    if (trace side == 0)
+    if (trace_side == 0)
     {
       // FRONT: want lowest angle ANTI-Clockwise from current seg
       angle = angle - old_angle;
@@ -855,7 +878,7 @@ static void TraceSegment(segment_c *S, int side)
     }
     else
     {
-      SYS_ASSERT(trace_vert == trace_seg->end)
+      SYS_ASSERT(trace_vert == trace_seg->end);
       SYS_ASSERT(! trace_seg->back);
       trace_seg->back = R;
     }

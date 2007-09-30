@@ -21,7 +21,7 @@
 
 #define EPSILON  0.005
 
-#define ANGLE_EPSILON  0.0002
+#define ANGLE_EPSILON  0.0003
 
 
 // unset values (handy sometimes)
