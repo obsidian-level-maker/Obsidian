@@ -330,6 +330,7 @@ int add_solid(lua_State *L)
 
 
 class segment_c;
+class region_c;
 
 
 class vertex_c
@@ -397,8 +398,11 @@ public:
   vertex_c *start;
   vertex_c *end;
 
+  region_c *front;
+  region_c *back;
+
 public:
-  segment_c(vertex_c *_v1, vertex_c *_v2) : start(_v1), end(_v2)
+  segment_c(vertex_c *_v1, vertex_c *_v2) : start(_v1), end(_v2), front(NULL), back(NULL)
   { }
 
   ~segment_c()
@@ -426,8 +430,25 @@ public:
 };
 
 
+class region_c
+{
+public:
+  bool faces_out;
+
+  int index;
+
+public:
+  region_c() : faces_out(false), index(-1)
+  { }
+
+  ~region_c()
+  { }
+};
+
+
 static std::vector<vertex_c *>  mug_vertices;
 static std::vector<segment_c *> mug_segments;
+static std::vector<region_c *>  mug_regions;
 
 static std::vector<segment_c *> mug_new_segs;
 
@@ -740,6 +761,116 @@ fprintf(stderr, "Mug_FindOverlaps: loop %d, changes %d\n", loops, mug_changes);
 
 //------------------------------------------------------------------------
 
+static segment_c *trace_seg;
+static vertex_c  *trace_vert;
+static int        trace_side;
+static double     trace_angles;
+
+static void TraceNext(void)
+{
+  vertex_c *next_v;
+
+  if (trace_vert == trace_seg->start)
+    next_v = trace_seg->end;
+  else
+    next_v = trace_seg->start;
+
+  segment_c *best_seg = NULL;
+  double     best_angle = 999;
+
+  double old_angle = CalcAngle(next_v->x, next_v->y, trace_vert->x, trace_vert->y);
+  
+  for (int k = 0; k < (int)next_v->segs.size(); k++)
+  {
+    segment_c *T = next_v->segs[k];
+
+    if (T == trace_seg)
+      continue;
+
+    vertex_c *TV2 = (next_v == T->start) ? T->end : T->start;
+
+    double angle = CalcAngle(next_v->x, next_v->y, TV2->x, TV2->y);
+
+    if (trace side == 0)
+    {
+      // FRONT: want lowest angle ANTI-Clockwise from current seg
+      angle = angle - old_angle;
+    }
+    else
+    {
+      // BACK: want lowest angle CLOCKWISE from current seg
+      angle = old_angle - angle;
+    }
+
+    // should never have two segments with same angle (pt 1)
+    SYS_ASSERT(fabs(angle) > ANGLE_EPSILON);
+
+    if (angle < 0)
+      angle += 360.0;
+
+    SYS_ASSERT(angle > -ANGLE_EPSILON);
+    SYS_ASSERT(angle < 360.0 + ANGLE_EPSILON);
+
+    // should never have two segments with same angle (pt 2)
+    SYS_ASSERT(fabs(best_angle - angle) > ANGLE_EPSILON);
+
+    if (angle < best_angle)
+    {
+      best_seg = T;
+      best_angle = angle;
+    }
+  }
+
+  SYS_ASSERT(best_seg);
+
+  trace_seg  = best_seg;
+  trace_vert = next_v;
+
+  trace_angles += best_angle;
+}
+
+static void TraceSegment(segment_c *S, int side)
+{
+  region_c *R = new region_c();
+
+  mug_regions.push_back(R);
+
+  
+  trace_seg  = S;
+  trace_vert = (side == 0) ? S->start : S->end;
+  trace_side = side;
+
+  trace_angles = 0.0;
+ 
+  int count = 0;
+
+  do
+  {
+    TraceNext();
+
+    if (trace_vert == trace_seg->start)
+    {
+      SYS_ASSERT(! trace_seg->front);
+      trace_seg->front = R;
+    }
+    else
+    {
+      SYS_ASSERT(trace_vert == trace_seg->end)
+      SYS_ASSERT(! trace_seg->back);
+      trace_seg->back = R;
+    }
+
+    count++;
+
+    SYS_ASSERT(count < 9000);
+  }
+  while (trace_seg != S);
+
+  SYS_ASSERT(count >= 3);
+
+  R->faces_out = (trace_angles / count) > 180.0;
+}
+
 static void Mug_TraceSegLoops(void)
 {
   // Algorithm:
@@ -753,11 +884,15 @@ static void Mug_TraceSegLoops(void)
   //       faces outward (i.e. it is really an island within
   //       another sector -OR- it is the edge of the map).
 
-  for (;;)
+  for (int i = 0; i < (int)mug_segments.size(); i++)
   {
-    // find a segment with a unknown side
+    segment_c *S = mug_segments[i];
 
-    // trace it
+    if (! S->front)
+      TraceSegment(S, 0);
+
+    if (! S->back)
+      TraceSegment(S, 1);
   }
 }
 
