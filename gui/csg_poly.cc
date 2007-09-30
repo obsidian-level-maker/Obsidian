@@ -517,6 +517,9 @@ static void Mug_AdjustList(void)
 
   ENDP = std::remove_if(mug_segments.begin(), mug_segments.end(), SegDead_pred());
 
+fprintf(stderr, ".. %d new segments, %d dead ones\n",
+    (int)mug_new_segs.size(), (int)(mug_segments.end() - ENDP));
+  
   mug_segments.erase(ENDP, mug_segments.end());
 
 
@@ -596,7 +599,7 @@ static void Mug_OverlapPass(void)
 #if 1 // normal code
       if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON)
         break;
-#else // non-sort method (TESTING only)
+#else // non-sorted method (TESTING only)
       if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON ||
           MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON)
         continue;
@@ -690,13 +693,17 @@ static void Mug_OverlapPass(void)
         continue;
       }
 
-      /* pure overlap */
+      /* pure cross-over */
       
       // add a new vertex at the intersection point
       double along = bp1 / (bp1 - bp2);
 
       double ix = bx1 + along * (bx2 - bx1);
       double iy = by1 + along * (by2 - by1);
+
+fprintf(stderr, ".. pure cross-over at (%1.2f, %1.2f)\n", ix, iy);
+fprintf(stderr, "   A = (%1.0f,%1.0f) --> (%1.0f,%1.0f)\n", ax1,ay1, ax2,ay2);
+fprintf(stderr, "   B = (%1.0f,%1.0f) --> (%1.0f,%1.0f)\n", bx1,by1, bx2,by2);
 
       vertex_c * NV = Mug_AddVertex(ix, iy);
       
