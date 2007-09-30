@@ -19,7 +19,10 @@
 #ifndef __OBLIGE_CSG_POLY_H__
 #define __OBLIGE_CSG_POLY_H__
 
-#define EPSILON  0.001
+#define EPSILON  0.005
+
+#define ANGLE_EPSILON  0.0002
+
 
 // unset values (handy sometimes)
 #define IVAL_NONE  -27777
