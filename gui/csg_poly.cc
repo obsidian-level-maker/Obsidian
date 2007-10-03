@@ -854,6 +854,11 @@ static void TraceNext(void)
 
 static void TraceSegment(segment_c *S, int side)
 {
+fprintf(stderr, "TraceSegment (%1.1f,%1.1f) .. (%1.1f,%1.1f) side:%d\n",
+S->start->x, S->start->y,
+S->end->x, S->end->y, side);
+
+  
   region_c *R = new region_c();
 
   R->index = (int)mug_regions.size();
@@ -862,7 +867,7 @@ static void TraceSegment(segment_c *S, int side)
 
   
   trace_seg  = S;
-  trace_vert = (side == 0) ? S->start : S->end;
+  trace_vert = S->start;
   trace_side = side;
 
   trace_angles = 0.0;
@@ -873,14 +878,23 @@ static void TraceSegment(segment_c *S, int side)
   {
     TraceNext();
 
-    if (trace_vert == trace_seg->start)
+fprintf(stderr, "  CUR SEG (%1.1f,%1.1f) .. (%1.1f,%1.1f)\n",
+trace_seg->start->x, trace_seg->start->y,
+trace_seg->end->x, trace_seg->end->y);
+
+fprintf(stderr, "  CUR VERT: %s\n",
+(trace_vert == trace_seg->start) ? "start" :
+(trace_vert == trace_seg->end) ? "end" : "FUCKED");
+
+    if ((trace_vert == trace_seg->start) == (side == 0))
     {
+      // TODO: this assert indicates we hit some dead-end or
+      //       non-returning loop.  Make it a mere WARNING.
       SYS_ASSERT(! trace_seg->front);
       trace_seg->front = R;
     }
     else
     {
-      SYS_ASSERT(trace_vert == trace_seg->end);
       SYS_ASSERT(! trace_seg->back);
       trace_seg->back = R;
     }
@@ -894,6 +908,8 @@ static void TraceSegment(segment_c *S, int side)
   SYS_ASSERT(count >= 3);
 
   R->faces_out = (trace_angles / count) > 180.0;
+
+fprintf(stderr, "DONE\n\n");
 }
 
 static void Mug_TraceSegLoops(void)
