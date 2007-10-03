@@ -856,6 +856,8 @@ static void TraceSegment(segment_c *S, int side)
 {
   region_c *R = new region_c();
 
+  R->index = (int)mug_regions.size();
+
   mug_regions.push_back(R);
 
   
@@ -904,8 +906,8 @@ static void Mug_TraceSegLoops(void)
   // will form a 'merged_area' (i.e. a "sector" for Doom).
   //
   // Note: if the average angle is > 180, then the sector
-  //       faces outward (i.e. it is really an island within
-  //       another sector -OR- it is the edge of the map).
+  //       faces outward (i.e. it's actually an island within
+  //       another sector -OR- the edge of the map).
 
   for (int i = 0; i < (int)mug_segments.size(); i++)
   {
@@ -952,6 +954,8 @@ void CSG2_MergeAreas(void)
 
   Mug_FindOverlaps();
 
+  Mug_TraceSegLoops();
+
   // TODO
 }
 
@@ -973,6 +977,21 @@ void CSG2_DumpSegmentsToWAD(void)
     wad::add_vertex(I_ROUND(V->x), I_ROUND(V->y));
   }
 
+
+  std::vector<region_c *>::iterator RNI;
+
+  for (RNI = mug_regions.begin(); RNI != mug_regions.end(); RNI++)
+  {
+    region_c *R = *RNI;
+
+    wad::add_sector(0, "FLAT1", 128, "FLAT1", 200, 0, 0);
+
+    const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
+
+    wad::add_sidedef(R->index, tex, "-", tex, 0, 0);
+  }
+
+
   std::vector<segment_c *>::iterator SGI;
 
   for (SGI = mug_segments.begin(); SGI != mug_segments.end(); SGI++)
@@ -982,8 +1001,11 @@ void CSG2_DumpSegmentsToWAD(void)
     SYS_ASSERT(S);
     SYS_ASSERT(S->start);
 
-    wad::add_linedef(S->start->index, S->end->index, -1, -1,
-                     0, 1 /*impassible*/, 0, NULL /* args */);
+    wad::add_linedef(S->start->index, S->end->index,
+                     S->front ? S->front->index : -1,
+                     S->back ? S->back->index   : -1,
+                     0, 1 /*impassible*/, 0,
+                     NULL /* args */);
   }
 }
 
