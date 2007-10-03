@@ -427,6 +427,13 @@ public:
 
     start = end = NULL;
   }
+
+  void Flip(void)
+  {
+    vertex_c *tmp_V = start; start = end; end = tmp_V;
+
+    region_c *tmp_R = front; front = back; back = tmp_R;
+  }
 };
 
 
@@ -854,14 +861,13 @@ static void TraceNext(void)
 
 static void TraceSegment(segment_c *S, int side)
 {
+#if 0
 fprintf(stderr, "TraceSegment (%1.1f,%1.1f) .. (%1.1f,%1.1f) side:%d\n",
 S->start->x, S->start->y,
 S->end->x, S->end->y, side);
-
+#endif
   
   region_c *R = new region_c();
-
-  R->index = (int)mug_regions.size();
 
   mug_regions.push_back(R);
 
@@ -878,6 +884,7 @@ S->end->x, S->end->y, side);
   {
     TraceNext();
 
+#if 0
 fprintf(stderr, "  CUR SEG (%1.1f,%1.1f) .. (%1.1f,%1.1f)\n",
 trace_seg->start->x, trace_seg->start->y,
 trace_seg->end->x, trace_seg->end->y);
@@ -885,6 +892,7 @@ trace_seg->end->x, trace_seg->end->y);
 fprintf(stderr, "  CUR VERT: %s\n",
 (trace_vert == trace_seg->start) ? "start" :
 (trace_vert == trace_seg->end) ? "end" : "FUCKED");
+#endif
 
     if ((trace_vert == trace_seg->start) == (side == 0))
     {
@@ -909,7 +917,7 @@ fprintf(stderr, "  CUR VERT: %s\n",
 
   R->faces_out = (trace_angles / count) > 180.0;
 
-fprintf(stderr, "DONE\n\n");
+//fprintf(stderr, "DONE\n\n");
 }
 
 static void Mug_TraceSegLoops(void)
@@ -935,6 +943,58 @@ static void Mug_TraceSegLoops(void)
     if (! S->back)
       TraceSegment(S, 1);
   }
+}
+
+
+static region_c *FindIslandParent(region_c *R)
+{
+  // FIXME !!!!
+}
+
+static void ReplaceRegion(region_c *R_old, region_c *R_new)
+{
+  for (int i = 0; i < (int)mug_segments.size(); i++)
+  {
+    segment_c *S = mug_segments[i];
+
+    if (S->front == R_old) S->front = R_new;
+    if (S->back  == R_old) S->back  = R_new;
+
+    if (S->back && ! S->front)
+      S->Flip();
+  }
+}
+
+static void Mug_RemoveIslands(void)
+{
+  // Algorithm:
+  //
+  // For each island (i.e. region->faces_out is true), cast a
+  // line outwards from one of the segments and see what we hit.
+  // If we hit nothing at all, the region is the edge of the map.
+  // If we hit ourselves, need to try another segment.
+
+  for (int i = 0; i < (int)mug_regions.size(); i++)
+  {
+    region_c *R = mug_regions[i];
+    
+    if (R->faces_out)
+    {
+      region_c *parent = FindIslandParent(R);
+
+      ReplaceRegion(R, parent);
+      
+      mug_regions[i] = NULL; // kill it
+      delete R;
+    }
+  }
+
+  // remove the NULL pointers
+  std::vector<region_c *>::iterator ENDP;
+
+  ENDP = std::remove(mug_regions.begin(), mug_regions.end(), (region_c*)NULL);
+
+  mug_regions.erase(ENDP, mug_regions.end());
 }
 
 
@@ -1000,6 +1060,8 @@ void CSG2_DumpSegmentsToWAD(void)
   {
     region_c *R = *RNI;
 
+    R->index = (int)(RNI - mug_regions.begin());
+
     wad::add_sector(0, "FLAT1", 128, "FLAT1", 200, 0, 0);
 
     const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
@@ -1019,7 +1081,7 @@ void CSG2_DumpSegmentsToWAD(void)
 
     wad::add_linedef(S->start->index, S->end->index,
                      S->front ? S->front->index : -1,
-                     S->back ? S->back->index   : -1,
+                     S->back  ? S->back->index  : -1,
                      0, 1 /*impassible*/, 0,
                      NULL /* args */);
   }
