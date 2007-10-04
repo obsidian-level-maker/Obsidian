@@ -948,7 +948,7 @@ static void Mug_TraceSegLoops(void)
 }
 
 static bool GetOppositeSegment(segment_c *S, int side, 
-    segment_c **hit, int *hit_side, double along = 0.5)
+    segment_c **hit, int *hit_side, double along)
 {
   // Returns false if result was ambiguous (e.g. the only segment
   // hit was parallel to the casting line, and two-sided).
@@ -1058,8 +1058,8 @@ static bool GetOppositeSegment(segment_c *S, int side,
         best_vert = (fabs(ss) <= EPSILON || fabs(ee) <= EPSILON);
         best_side = side;
 
-        if (S->end->x > S->start->x) best_side ^= 1;
-        if (T->end->x < T->start->x) best_side ^= 1;
+        if (S->end->y > S->start->y) best_side ^= 1;
+        if (T->end->y < T->start->y) best_side ^= 1;
       }
     }
 
@@ -1085,8 +1085,9 @@ static bool GetOppositeSegment(segment_c *S, int side,
 
 static region_c *FindIslandParent(region_c *R)
 {
-fprintf(stderr, "FindIslandParent for RGN %d\n", R->index);
-
+  // there is a small possibility that every segment we test
+  // will hit a vertex opposite it.  So when that happens we
+  // need to try a different 'along' value.
   static const double along_tries[] =
   {
     0.5, 0.7, 0.3, 0.6, 0,4,
@@ -1099,53 +1100,41 @@ fprintf(stderr, "FindIslandParent for RGN %d\n", R->index);
     -1 // THE END
   };
 
-///!!!!  for (int a = 0; along_tries[a] > 0; a++)
-
-  for (int i = 0; i < (int)mug_segments.size(); i++)
+  for (int a = 0; along_tries[a] > 0; a++)
   {
-    segment_c *S = mug_segments[i];
-    segment_c *T;
-
-    int S_side;
-    int T_side;
-
-    if (S->front == R)
-      S_side = 0;
-    else if (S->back == R)
-      S_side = 1;
-    else
-      continue;
-
-fprintf(stderr, "  Testing segment:%d (%1.0f,%1.0f)..(%1.0f,%1.0f) side:%d\n", i,
-S->start->x, S->start->y, S->end->x, S->end->y, S_side);
-
-    if (! GetOppositeSegment(S, S_side, &T, &T_side))
+    for (int i = 0; i < (int)mug_segments.size(); i++)
     {
-fprintf(stderr, "  Only hit Vertices!\n");
-      continue;
+      segment_c *S = mug_segments[i];
+      segment_c *T;
+
+      int S_side;
+      int T_side;
+
+      if (S->front == R)
+        S_side = 0;
+      else if (S->back == R)
+        S_side = 1;
+      else
+        continue;
+
+      if (! GetOppositeSegment(S, S_side, &T, &T_side, along_tries[a]))
+      {
+        continue;
+      }
+
+      if (! T)
+      {
+        return NULL;  // edge of map
+      }
+
+      region_c *R_opp = (T_side == 0) ? T->front : T->back;
+
+      if (R_opp != R)
+        return R_opp;
     }
-
-    if (! T)
-    {
-fprintf(stderr, "  Hit nothing at all!\n");
-continue; //!!!!
-
-      return NULL;  // edge of map
-    }
-
-fprintf(stderr, "  Opposite segment:??? (%1.0f,%1.0f)..(%1.0f,%1.0f) side:%d\n",
-T->start->x, T->start->y, T->end->x, T->end->y, T_side);
-
-    region_c *R_opp = (T_side == 0) ? T->front : T->back;
-
-fprintf(stderr, "  Region: %d\n\n", (R_opp == NULL) ? -1 : R_opp->index);
- 
-//   if (R_opp != R) return R_opp;
   }
 
-fprintf(stderr, "DONE\n");
-
-//  Main_FatalError("FindIslandParent: cannot find container!\n");
+  Main_FatalError("FindIslandParent: cannot find container!\n");
   return NULL; /* NOT REACHED */
 }
 
@@ -1179,7 +1168,6 @@ static void Mug_RemoveIslands(void)
     if (R->faces_out)
     {
       region_c *parent = FindIslandParent(R);
-continue; //!!!!!!
 
       ReplaceRegion(R, parent);
       
