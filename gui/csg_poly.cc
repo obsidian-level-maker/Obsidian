@@ -968,9 +968,8 @@ static bool GetOppositeSegment(segment_c *S, int side,
 
   bool cast_vert = (hx-lx) > (hy-ly);
 
-  int hit_count = 0;
-
   segment_c *best_seg  = NULL;
+  bool       best_vert = false;
   int        best_side = 0;
   double     best_dist = 999999.0;
 
@@ -991,11 +990,6 @@ static bool GetOppositeSegment(segment_c *S, int side,
       if (MAX(ss, ee) < -EPSILON || MIN(ss, ee) > EPSILON)
         continue;  // no intersection
 
-      hit_count++;
-
-      if (fabs(ss) <= EPSILON && fabs(ee) <= EPSILON)
-        continue;
-
       // compute distance from S to T
       double dist;
 
@@ -1013,10 +1007,14 @@ static bool GetOppositeSegment(segment_c *S, int side,
       if ((S->start->x < S->end->x) == (side == 0))
           dist = -dist;
 
-      if (dist > EPSILON && dist < best_dist)
+      if (dist <= EPSILON)
+        continue; // intersects on wrong side
+
+      if (dist < best_dist)
       {
-        best_seg  = T;
         best_dist = dist;
+        best_seg  = T;
+        best_vert = (fabs(ss) <= EPSILON || fabs(ee) <= EPSILON);
         best_side = side;
 
         if (S->end->x > S->start->x) best_side ^= 1;
@@ -1032,11 +1030,6 @@ static bool GetOppositeSegment(segment_c *S, int side,
 
       if (MAX(ss, ee) < -EPSILON || MIN(ss, ee) > EPSILON)
         continue;  // no intersection
-
-      hit_count++;
-
-      if (fabs(ss) <= EPSILON && fabs(ee) <= EPSILON)
-        continue;  // parallel to casting line
 
       // compute distance from S to T
       double dist;
@@ -1055,39 +1048,58 @@ static bool GetOppositeSegment(segment_c *S, int side,
       if ((S->start->y < S->end->y) != (side == 0))
           dist = -dist;
 
-      if (dist > EPSILON && dist < best_dist)
+      if (dist <= EPSILON)
+        continue; // intersects on wrong side
+
+      if (dist < best_dist)
       {
-        best_seg  = T;
         best_dist = dist;
+        best_seg  = T;
+        best_vert = (fabs(ss) <= EPSILON || fabs(ee) <= EPSILON);
         best_side = side;
 
-        if (S->end->y > S->start->y) best_side ^= 1;
-        if (T->end->y < T->start->y) best_side ^= 1;
+        if (S->end->x > S->start->x) best_side ^= 1;
+        if (T->end->x < T->start->x) best_side ^= 1;
       }
     }
 
   }
 
+  // hitting a vertex is bad (can be ambiguous)
+  if (best_vert)
+    return false;
+
   if (best_seg)
   {
     *hit = best_seg;
     *hit_side = best_side;
-    return true;
   }
-
-  if (hit_count == 0)
+  else
   {
     *hit = NULL;
     *hit_side = 0;
-    return true;
   }
 
-  return false;
+  return true;
 }
 
 static region_c *FindIslandParent(region_c *R)
 {
 fprintf(stderr, "FindIslandParent for RGN %d\n", R->index);
+
+  static const double along_tries[] =
+  {
+    0.5, 0.7, 0.3, 0.6, 0,4,
+    0,8, 0.2, 0.9, 0.1,
+
+    0.55, 0.45, 0.65, 0.35,
+    0.75, 0.25, 0.85, 0.15,
+    0.95, 0.05,
+
+    -1 // THE END
+  };
+
+///!!!!  for (int a = 0; along_tries[a] > 0; a++)
 
   for (int i = 0; i < (int)mug_segments.size(); i++)
   {
@@ -1108,7 +1120,18 @@ fprintf(stderr, "  Testing segment:%d (%1.0f,%1.0f)..(%1.0f,%1.0f) side:%d\n", i
 S->start->x, S->start->y, S->end->x, S->end->y, S_side);
 
     if (! GetOppositeSegment(S, S_side, &T, &T_side))
+    {
+fprintf(stderr, "  Only hit Vertices!\n");
       continue;
+    }
+
+    if (! T)
+    {
+fprintf(stderr, "  Hit nothing at all!\n");
+continue; //!!!!
+
+      return NULL;  // edge of map
+    }
 
 fprintf(stderr, "  Opposite segment:??? (%1.0f,%1.0f)..(%1.0f,%1.0f) side:%d\n",
 T->start->x, T->start->y, T->end->x, T->end->y, T_side);
