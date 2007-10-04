@@ -945,6 +945,81 @@ static void Mug_TraceSegLoops(void)
   }
 }
 
+static bool GetOppositeSegment(segment_c *S, int side, 
+    segment_c **hit, int *hit_side, double along = 0.5)
+{
+  // Returns false if result was ambiguous (e.g. the only segment
+  // hit was parallel to the casting line, and two-sided).
+
+  // Algorithm: cast a line (horizontal or vertical, depending
+  // on the source segment's orientation) and test all segments
+  // which intersect or touch it.
+
+  double lx = MIN(S->start->x, S->end->x);
+  double ly = MIN(S->start->y, S->end->y);
+
+  double hx = MAX(S->start->x, S->end->x);
+  double hy = MAX(S->start->y, S->end->y);
+
+  double mx = S->start->x + (S->end->x - S->start->x) * along;
+  double my = S->start->y + (S->end->y - S->start->y) * along;
+
+  bool cast_vert = (hx-lx) > (hy-ly);
+
+  int hit_count = 0;
+  int parallels = 0;
+    
+  for (int t = 0; t < (int)mug_segments.size(); t++)
+  {
+    segment_c *T = mug_segments[t];
+
+    if (T == S)
+      continue;
+
+    if (cast_vert)
+    {
+      /* vertical cast line */
+
+      double ss = T->start->x - mx;
+      double ee = T->end->x   - mx;
+
+      if (MAX(ss, ee) < -EPSILON || MIN(ss, ee) > EPSILON)
+        continue;  // no intersection
+
+      hit_count++;
+
+      if (fabs(ss) <= EPSILON && fabs(ee) <= EPSILON)
+      {
+        parallels++;
+        continue;
+      }
+
+      // compute distance from S to T
+      double dist;
+
+      if (fabs(ss) <= EPSILON)
+        dist = T->start->y - my;
+      else if (fabs(ee) <= EPSILON)
+        dist = T->end->y - my;
+      else
+      {
+        double iy = T->start->y + (T->end->y - T->start->y) * fabs(ss) / fabs(ss - ee);
+
+        dist = iy - my;
+      }
+
+      @@@
+    }
+    else
+    {
+      /* horizontal cast line */
+
+
+      @@@
+    }
+
+  }
+}
 
 static region_c *FindIslandParent(region_c *R)
 {
@@ -1029,8 +1104,8 @@ void CSG2_MergeAreas(void)
   }
 
   Mug_FindOverlaps();
-
   Mug_TraceSegLoops();
+  Mug_RemoveIslands();
 
   // TODO
 }
