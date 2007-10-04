@@ -869,9 +869,11 @@ S->end->x, S->end->y, side);
   
   region_c *R = new region_c();
 
+R->index = (int)mug_regions.size(); // ONLY NEED FOR DEBUG
+
   mug_regions.push_back(R);
 
-  
+
   trace_seg  = S;
   trace_vert = S->start;
   trace_side = side;
@@ -967,8 +969,11 @@ static bool GetOppositeSegment(segment_c *S, int side,
   bool cast_vert = (hx-lx) > (hy-ly);
 
   int hit_count = 0;
-  int parallels = 0;
-    
+
+  segment_c *best_seg  = NULL;
+  int        best_side = 0;
+  double     best_dist = 999999.0;
+
   for (int t = 0; t < (int)mug_segments.size(); t++)
   {
     segment_c *T = mug_segments[t];
@@ -989,10 +994,7 @@ static bool GetOppositeSegment(segment_c *S, int side,
       hit_count++;
 
       if (fabs(ss) <= EPSILON && fabs(ee) <= EPSILON)
-      {
-        parallels++;
         continue;
-      }
 
       // compute distance from S to T
       double dist;
@@ -1004,26 +1006,124 @@ static bool GetOppositeSegment(segment_c *S, int side,
       else
       {
         double iy = T->start->y + (T->end->y - T->start->y) * fabs(ss) / fabs(ss - ee);
-
         dist = iy - my;
       }
 
-      @@@
+      // correct the sign based on 'side' and orientation of S
+      if ((S->start->x < S->end->x) == (side == 0))
+          dist = -dist;
+
+      if (dist > EPSILON && dist < best_dist)
+      {
+        best_seg  = T;
+        best_dist = dist;
+        best_side = side;
+
+        if (S->end->x > S->start->x) best_side ^= 1;
+        if (T->end->x < T->start->x) best_side ^= 1;
+      }
     }
     else
     {
       /* horizontal cast line */
 
+      double ss = T->start->y - my;
+      double ee = T->end->y   - my;
 
-      @@@
+      if (MAX(ss, ee) < -EPSILON || MIN(ss, ee) > EPSILON)
+        continue;  // no intersection
+
+      hit_count++;
+
+      if (fabs(ss) <= EPSILON && fabs(ee) <= EPSILON)
+        continue;  // parallel to casting line
+
+      // compute distance from S to T
+      double dist;
+
+      if (fabs(ss) <= EPSILON)
+        dist = T->start->x - mx;
+      else if (fabs(ee) <= EPSILON)
+        dist = T->end->x - mx;
+      else
+      {
+        double ix = T->start->x + (T->end->x - T->start->x) * fabs(ss) / fabs(ss - ee);
+        dist = ix - mx;
+      }
+
+      // correct the sign based on 'side' and orientation of S
+      if ((S->start->y < S->end->y) != (side == 0))
+          dist = -dist;
+
+      if (dist > EPSILON && dist < best_dist)
+      {
+        best_seg  = T;
+        best_dist = dist;
+        best_side = side;
+
+        if (S->end->y > S->start->y) best_side ^= 1;
+        if (T->end->y < T->start->y) best_side ^= 1;
+      }
     }
 
   }
+
+  if (best_seg)
+  {
+    *hit = best_seg;
+    *hit_side = best_side;
+    return true;
+  }
+
+  if (hit_count == 0)
+  {
+    *hit = NULL;
+    *hit_side = 0;
+    return true;
+  }
+
+  return false;
 }
 
 static region_c *FindIslandParent(region_c *R)
 {
-  // FIXME !!!!
+fprintf(stderr, "FindIslandParent for RGN %d\n", R->index);
+
+  for (int i = 0; i < (int)mug_segments.size(); i++)
+  {
+    segment_c *S = mug_segments[i];
+    segment_c *T;
+
+    int S_side;
+    int T_side;
+
+    if (S->front == R)
+      S_side = 0;
+    else if (S->back == R)
+      S_side = 1;
+    else
+      continue;
+
+fprintf(stderr, "  Testing segment:%d (%1.0f,%1.0f)..(%1.0f,%1.0f) side:%d\n", i,
+S->start->x, S->start->y, S->end->x, S->end->y, S_side);
+
+    if (! GetOppositeSegment(S, S_side, &T, &T_side))
+      continue;
+
+fprintf(stderr, "  Opposite segment:??? (%1.0f,%1.0f)..(%1.0f,%1.0f) side:%d\n",
+T->start->x, T->start->y, T->end->x, T->end->y, T_side);
+
+    region_c *R_opp = (T_side == 0) ? T->front : T->back;
+
+fprintf(stderr, "  Region: %d\n\n", (R_opp == NULL) ? -1 : R_opp->index);
+ 
+//   if (R_opp != R) return R_opp;
+  }
+
+fprintf(stderr, "DONE\n");
+
+//  Main_FatalError("FindIslandParent: cannot find container!\n");
+  return NULL; /* NOT REACHED */
 }
 
 static void ReplaceRegion(region_c *R_old, region_c *R_new)
@@ -1056,6 +1156,7 @@ static void Mug_RemoveIslands(void)
     if (R->faces_out)
     {
       region_c *parent = FindIslandParent(R);
+continue; //!!!!!!
 
       ReplaceRegion(R, parent);
       
