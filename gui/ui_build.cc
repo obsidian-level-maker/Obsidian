@@ -48,13 +48,6 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 4;
 
-  mini_map = new UI_MiniMap(x+10, cy, 120, 90);
-
-  add(mini_map);
-
-  cy += mini_map->h() + 8;
-
-
 #if 0
   Fl_Box *sizer = new Fl_Box(FL_NO_BOX, x+12 , cy, x+120, 8, NULL);
   sizer->color(FL_RED, FL_RED);
@@ -62,6 +55,14 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   add(sizer);
 #endif
 
+
+  status = new Fl_Box(FL_FLAT_BOX, x+12, cy, 136, 24, "Ready to go!");
+  status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
+  status->color(MAIN_BG_COLOR, MAIN_BG_COLOR);
+  add(status);
+
+  cy += status->h() + 8;
+  
 
   progress = new Fl_Progress(x+12, cy+8, w-24, 20);
   progress->align(FL_ALIGN_INSIDE);
@@ -76,13 +77,13 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   cy += progress->h() + 4;
 
 
-  status = new Fl_Box(FL_FLAT_BOX, x+12, cy, 136, 24, "Ready to go!");
-  status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
-  status->color(MAIN_BG_COLOR, MAIN_BG_COLOR);
-  add(status);
+  mini_map = new UI_MiniMap(x+10, cy, 120, 90);
 
-  cy += status->h() + 8;
-  
+  add(mini_map);
+
+  cy += mini_map->h() + 8;
+
+
 
   cy = y + h - 40;
 
