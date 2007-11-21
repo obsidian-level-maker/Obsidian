@@ -1,5 +1,5 @@
 //----------------------------------------------------------------
-//  Mod list
+//  Custom Mod list
 //----------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -49,13 +49,14 @@ UI_Mods::UI_Mods(int x, int y, int w, int h, const char *label) :
   cy += 28;
 
 
-  pack = new Fl_Pack(x, cy, 600, 600);
-  pack->end();
+  Fl_Box *
+  pack = new Fl_Box(x, cy, 600, 600);
+//  pack->end();
   pack->box(FL_FLAT_BOX);
   pack->color(FL_BLACK);
 
 
-  scroll = new Fl_Scroll(x, cy, w, h - cy);
+  scroll = new Fl_Scroll(x, cy, w, y+h - cy);
   scroll->end();
   scroll->type(Fl_Scroll::VERTICAL_ALWAYS);
 
@@ -64,7 +65,7 @@ UI_Mods::UI_Mods(int x, int y, int w, int h, const char *label) :
   add(scroll);
 
 
-  resizable(0);  // don't resize our children
+  resizable(scroll);
 }
 
 
