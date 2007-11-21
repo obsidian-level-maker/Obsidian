@@ -269,11 +269,14 @@ void WAD_CreateInfoLump()
   WAD_Printf(L, "-- http://oblige.sourceforge.net/\n");
   WAD_Printf(L, "\n");
 
+  // Note: duplicate code to that in g_cookie.cc,
+  //       probably not worth merging the two.
+ 
   WAD_Printf(L, "-- Settings --\n");
   WAD_Printf(L, "seed = %s\n",  main_win->setup_box->get_Seed());
   WAD_Printf(L, "game = %s\n",  main_win->setup_box->get_Game());
-  WAD_Printf(L, "port = %s\n",  main_win->setup_box->get_Port());
   WAD_Printf(L, "mode = %s\n",  main_win->setup_box->get_Mode());
+  WAD_Printf(L, "engine = %s\n",main_win->setup_box->get_Engine());
   WAD_Printf(L, "length = %s\n",main_win->setup_box->get_Length());
   WAD_Printf(L, "\n");
 

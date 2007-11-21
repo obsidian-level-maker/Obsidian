@@ -315,8 +315,8 @@ static void Script_MakeSettings(lua_State *L)
   AddField(L, "seed",  main_win->setup_box->get_Seed());
 
   AddField(L, "game",  main_win->setup_box->get_Game());
-  AddField(L, "port",  main_win->setup_box->get_Port());
   AddField(L, "mode",  main_win->setup_box->get_Mode());
+  AddField(L, "engine",main_win->setup_box->get_Engine());
   AddField(L, "length",main_win->setup_box->get_Length());
 
   // FIXME: rename 'traps' setting to 'puzzles'

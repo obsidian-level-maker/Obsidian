@@ -26,9 +26,9 @@ private:
   Fl_Button *bump;
 
   Fl_Choice *game;
-  Fl_Choice *port;
   Fl_Choice *length;
   Fl_Choice *mode;
+  Fl_Choice *engine;
 
 public:
   UI_Setup(int x, int y, int w, int h, const char *label = NULL);
@@ -45,15 +45,15 @@ public:
 
   const char *get_Seed();
   const char *get_Game();
-  const char *get_Port();
   const char *get_Mode();
   const char *get_Length();
+  const char *get_Engine();
   
   bool set_Seed(const char *str);
   bool set_Game(const char *str);
-  bool set_Port(const char *str);
   bool set_Mode(const char *str);
   bool set_Length(const char *str);
+  bool set_Engine(const char *str);
   
 private:
   static void bump_callback(Fl_Widget *, void*);
@@ -61,7 +61,7 @@ private:
   static void mode_callback(Fl_Widget *, void*);
 
   static const char *game_syms[];
-  static const char *port_syms[];
+///---  static const char *port_syms[];
   static const char *mode_syms[];
   static const char *length_syms[];
 };

@@ -86,12 +86,12 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   cy += 32;
 
-  port = new Fl_Choice(x+70, cy, 150, 24, "Port: ");
-  port->align(FL_ALIGN_LEFT);
-  port->add("Limit Removing"); //TODO: BOOM|EDGE|Legacy|JDoom|ZDoom
-  port->value(0);
+  engine = new Fl_Choice(x+70, cy, 150, 24, "Engine: ");
+  engine->align(FL_ALIGN_LEFT);
+  engine->add("Limit Removing"); //TODO: BOOM|EDGE|Legacy|JDoom|ZDoom
+  engine->value(0);
 
-  add(port);
+  add(engine);
 
   mode = new Fl_Choice(x+300, cy, 150, 24, "Mode: ");
   mode->align(FL_ALIGN_LEFT);
@@ -188,9 +188,9 @@ void UI_Setup::Locked(bool value)
     bump->deactivate();
 
     game->deactivate();
-    port->deactivate();
     mode->deactivate();
     length->deactivate();
+    engine->deactivate();
   }
   else
   {
@@ -198,9 +198,9 @@ void UI_Setup::Locked(bool value)
     bump->activate();
 
     game->activate();
-    port->activate();
     mode->activate();
     length->activate();
+    engine->activate();
 
     game_callback(this, this);
     mode_callback(this, this);
@@ -216,10 +216,10 @@ const char * UI_Setup::game_syms[] =
   "heretic", "hexen"
 };
 
-const char * UI_Setup::port_syms[] =
-{
-  "nolimit" /// , "boom", "edge", "zdoom", etc..
-};
+///--- const char * UI_Setup::port_syms[] =
+///--- {
+///---   "nolimit" /// , "boom", "edge", "zdoom", etc..
+///--- };
 
 const char * UI_Setup::mode_syms[] =
 {
@@ -242,9 +242,9 @@ const char *UI_Setup::get_Game()
   return game_syms[game->value()];
 }
 
-const char *UI_Setup::get_Port()
+const char *UI_Setup::get_Engine()
 {
-  return port_syms[port->value()];
+  return "nolimit";  // FIXME !!!!
 }
 
 const char *UI_Setup::get_Mode()
@@ -280,8 +280,9 @@ bool UI_Setup::set_Game(const char *str)
   return false; // Unknown
 }
 
-bool UI_Setup::set_Port(const char *str)
+bool UI_Setup::set_Engine(const char *str)
 {
+#if 0 // FIXME !!!
   for (int i=0; port_syms[i]; i++)
   {
     if (StrCaseCmp(str, port_syms[i]) == 0)
@@ -290,6 +291,7 @@ bool UI_Setup::set_Port(const char *str)
       return true;
     }
   }
+#endif
   return false; // Unknown
 }
 
