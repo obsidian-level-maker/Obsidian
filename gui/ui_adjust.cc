@@ -38,53 +38,93 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 8;
 
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Adjustments");
+  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Level Adjustments");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
 
   add(heading);
 
-  cy += 28;
+  cy += heading->h() + 6;
 
-  size = new Fl_Choice(x+ 96, cy, 130, 24, "Level Size: ");
+
+  size = new Fl_Choice(x+ 80, cy, 120, 24, "Size: ");
   size->align(FL_ALIGN_LEFT);
   size->add("Small|Regular|X-Large");
   size->value(1);
 
   add(size);
 
-  cy += 32;
+  cy += size->h() + 6;
 
-  health = new Fl_Choice(x+320, cy, 130, 24, "Health: ");
-  health->align(FL_ALIGN_LEFT);
-  health->add("Less|Enough|More");
-  health->value(1);
 
-  add(health);
+Fl_Choice *
+  detail = new Fl_Choice(x+ 80, cy, 120, 24, "Detail: ");
+  detail->align(FL_ALIGN_LEFT);
+  detail->add("None|Low|Medium|High");
+  detail->value(2);
 
-  mons = new Fl_Choice(x+ 96, cy, 130, 24, "Monsters: ");
+  add(detail);
+
+  cy += detail->h() + 6;
+
+  cy += 10;
+
+
+  mons = new Fl_Choice(x+ 80, cy, 120, 24, "Monsters: ");
   mons->align(FL_ALIGN_LEFT);
   mons->add("Scarce|Plenty|Hordes");
   mons->value(1);
 
   add(mons);
 
-  cy += 32;
+  cy += mons->h() + 6;
 
-  ammo = new Fl_Choice(x+320, cy, 130, 24, "Ammo: ");
-  ammo->align(FL_ALIGN_LEFT);
-  ammo->add("Less|Enough|More");
-  ammo->value(1);
-  
-  add(ammo);
 
-  puzzles = new Fl_Choice(x+ 96, cy, 130, 24, "Puzzles: ");
+  puzzles = new Fl_Choice(x+ 80, cy, 120, 24, "Puzzles: ");
   puzzles->align(FL_ALIGN_LEFT);
   puzzles->add("Few|Some|Heaps");
   puzzles->value(1);
 
   add(puzzles);
+
+  cy += puzzles->h() + 6;
+
+
+Fl_Choice *
+  traps = new Fl_Choice(x+ 80, cy, 120, 24, "Traps: ");
+  traps->align(FL_ALIGN_LEFT);
+  traps->add("Few|Some|Heaps");
+  traps->value(1);
+
+  add(traps);
+
+  cy += traps->h() + 6;
+
+  cy += 10;
+
+
+  health = new Fl_Choice(x+80, cy, 120, 24, "Health: ");
+  health->align(FL_ALIGN_LEFT);
+  health->add("Less|Enough|More");
+  health->value(1);
+
+  add(health);
+
+  cy += health->h() + 6;
+
+
+  ammo = new Fl_Choice(x+80, cy, 120, 24, "Ammo: ");
+  ammo->align(FL_ALIGN_LEFT);
+  ammo->add("Less|Enough|More");
+  ammo->value(1);
+  
+  add(ammo);
+  
+  cy += ammo->h() + 6;
+
+
+  DebugPrintf("UI_Adjust: final h = %d\n", cy - y);
 
   resizable(0);  // don't resize our children
 }
