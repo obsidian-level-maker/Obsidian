@@ -30,6 +30,8 @@
 #define PROGRESS_FG  fl_color_cube(3,3,0)
 #define GLBSP_FG     fl_color_cube(1,4,2)
 
+#define BUILD_BG     fl_gray_ramp(FL_NUM_GRAY * 9 / 24)
+
 #define ABORT_COLOR  fl_color_cube(3,1,1)
 
 
@@ -43,7 +45,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   end(); // cancel begin() in Fl_Group constructor
  
   box(FL_FLAT_BOX);
-  color(MAIN_BG_COLOR, MAIN_BG_COLOR);
+  color(BUILD_BG, BUILD_BG);
 
 
   int cy = y + 4;
@@ -58,7 +60,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   status = new Fl_Box(FL_FLAT_BOX, x+12, cy, 136, 24, "Ready to go!");
   status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
-  status->color(MAIN_BG_COLOR, MAIN_BG_COLOR);
+  status->color(BUILD_BG, BUILD_BG);
   add(status);
 
   cy += status->h() + 8;

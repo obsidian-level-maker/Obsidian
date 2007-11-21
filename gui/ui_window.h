@@ -27,7 +27,7 @@
 #include "ui_themes.h"
 #include "ui_adjust.h"
 
-#define MAIN_BG_COLOR  fl_gray_ramp(FL_NUM_GRAY * 7 / 24)
+#define MAIN_BG_COLOR  fl_gray_ramp(FL_NUM_GRAY * 3 / 24)
 
 class UI_MainWin : public Fl_Double_Window
 {
