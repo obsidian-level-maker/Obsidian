@@ -34,12 +34,11 @@ UI_Themes::UI_Themes(int x, int y, int w, int h, const char *label) :
   end(); // cancel begin() in Fl_Group constructor
  
   box(FL_THIN_UP_BOX);
-//  align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
 
 
   int cy = y + 8;
 
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Themes");
+  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Theme Selection");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
@@ -49,14 +48,13 @@ UI_Themes::UI_Themes(int x, int y, int w, int h, const char *label) :
   cy += 28;
 
 
-  Fl_Box *
+Fl_Box *
   pack = new Fl_Box(x, cy, 600, 600);
 //  pack->end();
   pack->box(FL_FLAT_BOX);
-  pack->color(FL_BLACK);
 
 
-  scroll = new Fl_Scroll(x, cy, w, y+h - cy);
+  scroll = new Fl_Scroll(x+4, cy, w-8, y+h-4 - cy);
   scroll->end();
   scroll->type(Fl_Scroll::VERTICAL_ALWAYS);
 
