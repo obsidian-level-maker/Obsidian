@@ -24,6 +24,7 @@
 #include "ui_menu.h"
 #include "ui_mods.h"
 #include "ui_setup.h"
+#include "ui_themes.h"
 #include "ui_adjust.h"
 
 #define MAIN_BG_COLOR  fl_gray_ramp(FL_NUM_GRAY * 7 / 24)
@@ -40,12 +41,12 @@ public:
 #endif
 
   UI_Setup *setup_box;
-
-  UI_Mods *mod_box;
+  UI_Mods  *mod_box;
 
   UI_Adjust *adjust_box;
 
-  UI_Build *build_box;
+  UI_Themes *theme_box;
+  UI_Build  *build_box;
 
   enum  // actions
   {

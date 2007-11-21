@@ -35,8 +35,11 @@
 
 UI_MainWin *main_win;
 
-#define MAIN_WINDOW_W  600
+#define MAIN_WINDOW_W  620
 #define MAIN_WINDOW_H  450
+
+#define MAX_WINDOW_W  770
+#define MAX_WINDOW_H  720
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
@@ -55,9 +58,7 @@ UI_MainWin::UI_MainWin(const char *title) :
 {
   end(); // cancel begin() in Fl_Group constructor
 
-  size_range(MAIN_WINDOW_W, MAIN_WINDOW_H,
-             MAIN_WINDOW_W + MAIN_WINDOW_W/2,
-             MAIN_WINDOW_H * 2);
+  size_range(MAIN_WINDOW_W, MAIN_WINDOW_H, MAX_WINDOW_W, MAX_WINDOW_H);
 
   callback((Fl_Callback *) main_win_close_CB);
 
@@ -79,16 +80,15 @@ UI_MainWin::UI_MainWin(const char *title) :
   }
 #endif
 
-  int LW = 200;
-  int MW = 200;
-  int RW = 200;
+  int LW = 220;
+  int MW = 220;
+  int RW = 180;
 
-  int MOD_H = 200;
+  int MOD_H = 150;
   int THM_H = 200;
 
   setup_box = new UI_Setup(0, 0, LW-4, h() - MOD_H - 4);
   add(setup_box);
-
 
   mod_box = new UI_Mods(0, h()-MOD_H, LW-4, MOD_H);
   add(mod_box);
@@ -97,16 +97,15 @@ UI_MainWin::UI_MainWin(const char *title) :
   adjust_box = new UI_Adjust(LW, 0, MW, h());
   add(adjust_box);
 
- 
-  Fl_Widget *theme_box = new UI_Mods(LW+MW+4, 0, RW-4, THM_H - 4);
-  add(theme_box);
 
+  theme_box = new UI_Themes(LW+MW+4, 0, RW-4, THM_H - 4);
+  add(theme_box);
 
   build_box = new UI_Build(LW+MW+4, THM_H, RW-4, h() - THM_H);
   add(build_box);
 
 
-  resizable(setup_box);
+  resizable(mod_box);
 
   // show window (pass some dummy arguments)
   int argc = 1;
@@ -124,7 +123,9 @@ UI_MainWin::~UI_MainWin()
 
 void UI_MainWin::Locked(bool value)
 {
-  setup_box->Locked(value);
+  setup_box ->Locked(value);
+  mod_box   ->Locked(value);
   adjust_box->Locked(value);
-  build_box->Locked(value);
+  build_box ->Locked(value);
+  theme_box ->Locked(value);
 }
