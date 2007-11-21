@@ -62,6 +62,7 @@ OBJS=	main.o      \
 	ui_menu.o   \
 	ui_mods.o   \
 	ui_setup.o  \
+	ui_themes.o \
 	ui_window.o
 
 
