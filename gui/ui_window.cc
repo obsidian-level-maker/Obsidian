@@ -84,13 +84,13 @@ UI_MainWin::UI_MainWin(const char *title) :
   int MW = 220;
   int RW = 180;
 
-  int MOD_H = 150;
+  int GAM_H = 220;
   int THM_H = 200;
 
-  setup_box = new UI_Setup(0, 0, LW-4, h() - MOD_H - 4);
+  setup_box = new UI_Setup(0, 0, LW-4, GAM_H);
   add(setup_box);
 
-  mod_box = new UI_Mods(0, h()-MOD_H, LW-4, MOD_H);
+  mod_box = new UI_Mods(0, GAM_H+4, LW-4, h()-GAM_H-4);
   add(mod_box);
 
 
