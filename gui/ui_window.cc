@@ -36,9 +36,9 @@
 UI_MainWin *main_win;
 
 #define MAIN_WINDOW_W  620
-#define MAIN_WINDOW_H  450
+#define MAIN_WINDOW_H  440
 
-#define MAX_WINDOW_W  770
+#define MAX_WINDOW_W  760
 #define MAX_WINDOW_H  720
 
 
@@ -84,9 +84,9 @@ UI_MainWin::UI_MainWin(const char *title) :
   int MW = 220;
   int RW = 180;
 
-  int GAME_H  = 220;
+  int GAME_H  = 216;
   int ADJ_H   = 280;
-  int THEME_H = 200;
+  int THEME_H = 180;
 
   setup_box = new UI_Setup(0, 0, LW-4, GAME_H);
   add(setup_box);
