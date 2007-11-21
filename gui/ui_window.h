@@ -29,6 +29,7 @@
 
 #define MAIN_BG_COLOR  fl_gray_ramp(FL_NUM_GRAY * 3 / 24)
 
+
 class UI_MainWin : public Fl_Double_Window
 {
 public:
@@ -44,6 +45,7 @@ public:
   UI_Mods  *mod_box;
 
   UI_Adjust *adjust_box;
+  UI_ModOptions *option_box;
 
   UI_Themes *theme_box;
   UI_Build  *build_box;
