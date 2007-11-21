@@ -48,25 +48,17 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   color(BUILD_BG, BUILD_BG);
 
 
-  int cy = y + 4;
-
-#if 0
-  Fl_Box *sizer = new Fl_Box(FL_NO_BOX, x+12 , cy, x+120, 8, NULL);
-  sizer->color(FL_RED, FL_RED);
-
-  add(sizer);
-#endif
-
+  int cy = y + 8;
 
   status = new Fl_Box(FL_FLAT_BOX, x+12, cy, 136, 24, "Ready to go!");
   status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
   status->color(BUILD_BG, BUILD_BG);
   add(status);
 
-  cy += status->h() + 8;
+  cy += status->h() + 12;
   
 
-  progress = new Fl_Progress(x+12, cy+8, w-24, 20);
+  progress = new Fl_Progress(x+12, cy, w-24, 20);
   progress->align(FL_ALIGN_INSIDE);
   progress->box(FL_FLAT_BOX);
   progress->color(PROGRESS_BG, PROGRESS_FG);
@@ -74,38 +66,47 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   add(progress);
 
-///  progress->hide();
+///!!!  progress->hide();
 
-  cy += progress->h() + 4;
+  cy += progress->h() + 8;
 
 
-  mini_map = new UI_MiniMap(x+10, cy, 120, 90);
+  mini_map = new UI_MiniMap(x+18, cy, 140, 90);
 
   add(mini_map);
 
   cy += mini_map->h() + 8;
 
+  DebugPrintf("UI_Build: mini map h = %d\n", cy - y);
 
 
-  cy = y + h - 40;
+  cy = y + h - 80;
 
-  quit = new Fl_Button(x+w - 82, cy, 70, 30, "Quit");
+  DebugPrintf("UI_Build: button h = %d\n", cy - y);
+
+  quit = new Fl_Button(x+w - 80, cy+40, 70, 30, "Quit");
   quit->callback(quit_callback, this);
 
   add(quit);
 
-  Fl_Button *about = new Fl_Button(x+w - 82, cy-40, 70, 30, "About");
+  Fl_Button *about = new Fl_Button(x+w - 80, cy, 70, 30, "About");
   about->callback(menu_do_about, this);
 
   add(about);
 
-  build = new Fl_Button(x+w - 170, cy, 76, 30, "Build...");
+  build = new Fl_Button(x+w - 164, cy+40, 76, 30, "Build...");
   build->labelfont(FL_HELVETICA_BOLD);
   build->callback(build_callback, this);
 
   add(build);
 
-  resizable(0);
+
+  Fl_Box *sizer = new Fl_Box(FL_NO_BOX, x+1, cy-4, w-2, 2, NULL);
+  sizer->color(FL_RED, FL_RED);
+
+  add(sizer);
+
+  resizable(sizer);
 }
 
 
