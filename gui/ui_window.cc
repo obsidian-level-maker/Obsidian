@@ -35,8 +35,8 @@
 
 UI_MainWin *main_win;
 
-#define MAIN_WINDOW_W   470
-#define MAIN_WINDOW_H  (406-28+32)
+#define MAIN_WINDOW_W  600
+#define MAIN_WINDOW_H  450
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
@@ -55,17 +55,15 @@ UI_MainWin::UI_MainWin(const char *title) :
 {
   end(); // cancel begin() in Fl_Group constructor
 
-  // no need for window to be resizable
   size_range(MAIN_WINDOW_W, MAIN_WINDOW_H,
-             MAIN_WINDOW_W, MAIN_WINDOW_H);
+             MAIN_WINDOW_W + MAIN_WINDOW_W/2,
+             MAIN_WINDOW_H * 2);
 
   callback((Fl_Callback *) main_win_close_CB);
 
   color(MAIN_BG_COLOR, MAIN_BG_COLOR);
   image(NULL);
 
-
-  int cy = 0;
 
 #if 0  // EXPERIMENT: Do we NEED the menu bar ?
 
@@ -81,24 +79,34 @@ UI_MainWin::UI_MainWin(const char *title) :
   }
 #endif
 
-  setup_box = new UI_Setup(0, cy, w(), 154);
+  int LW = 200;
+  int MW = 200;
+  int RW = 200;
+
+  int MOD_H = 200;
+  int THM_H = 200;
+
+  setup_box = new UI_Setup(0, 0, LW-4, h() - MOD_H - 4);
   add(setup_box);
 
-  cy += setup_box->h();
 
-  adjust_box = new UI_Adjust(0, cy, w(), 106+32);
+  mod_box = new UI_Mods(0, h()-MOD_H, LW-4, MOD_H);
+  add(mod_box);
+
+
+  adjust_box = new UI_Adjust(LW, 0, MW, h());
   add(adjust_box);
 
-  cy += adjust_box->h();
+ 
+  Fl_Widget *theme_box = new UI_Mods(LW+MW+4, 0, RW-4, THM_H - 4);
+  add(theme_box);
 
-  build_box = new UI_Build(0, cy, w(), h() - cy);
+
+  build_box = new UI_Build(LW+MW+4, THM_H, RW-4, h() - THM_H);
   add(build_box);
 
-  cy += build_box->h();
 
-  DebugPrintf("Final main_win.cy = %d\n", cy);
-
-  resizable(build_box);
+  resizable(setup_box);
 
   // show window (pass some dummy arguments)
   int argc = 1;

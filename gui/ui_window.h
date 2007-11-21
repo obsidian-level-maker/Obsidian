@@ -22,6 +22,7 @@
 #include "ui_map.h"
 #include "ui_build.h"
 #include "ui_menu.h"
+#include "ui_mods.h"
 #include "ui_setup.h"
 #include "ui_adjust.h"
 
@@ -39,6 +40,8 @@ public:
 #endif
 
   UI_Setup *setup_box;
+
+  UI_Mods *mod_box;
 
   UI_Adjust *adjust_box;
 

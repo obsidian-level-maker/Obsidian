@@ -38,7 +38,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 8;
 
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Settings");
+  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Game Settings");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
@@ -47,14 +47,14 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   cy += 28;
 
-  seed = new Fl_Int_Input(x+120, cy, 80, 24, "Random Seed: ");
+  seed = new Fl_Int_Input(x+60, cy, 72, 24, "Seed: ");
   seed->align(FL_ALIGN_LEFT);
   seed->maximum_size(4);
   seed->value("1");
 
   add(seed);
 
-  bump = new Fl_Button(x+208, cy, 96, 24, "New Seed");
+  bump = new Fl_Button(x+140, cy, 96, 24, "Bump");
   bump->callback(bump_callback, this);
 
   add(bump);

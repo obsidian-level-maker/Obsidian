@@ -48,15 +48,22 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 4;
 
+  mini_map = new UI_MiniMap(x+10, cy, 120, 90);
+
+  add(mini_map);
+
+  cy += mini_map->h() + 8;
+
+
+#if 0
   Fl_Box *sizer = new Fl_Box(FL_NO_BOX, x+12 , cy, x+120, 8, NULL);
   sizer->color(FL_RED, FL_RED);
 
   add(sizer);
+#endif
 
 
-  cy = y + h - 70;
-
-  progress = new Fl_Progress(x+12, cy+8, 136, 20);
+  progress = new Fl_Progress(x+12, cy+8, w-24, 20);
   progress->align(FL_ALIGN_INSIDE);
   progress->box(FL_FLAT_BOX);
   progress->color(PROGRESS_BG, PROGRESS_FG);
@@ -64,17 +71,21 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   add(progress);
 
-  progress->hide();
+///  progress->hide();
 
+  cy += progress->h() + 4;
 
-  cy = y + h - 40;
 
   status = new Fl_Box(FL_FLAT_BOX, x+12, cy, 136, 24, "Ready to go!");
   status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
   status->color(MAIN_BG_COLOR, MAIN_BG_COLOR);
   add(status);
 
+  cy += status->h() + 8;
   
+
+  cy = y + h - 40;
+
   quit = new Fl_Button(x+w - 82, cy, 70, 30, "Quit");
   quit->callback(quit_callback, this);
 
@@ -91,11 +102,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   add(build);
 
-  mini_map = new UI_MiniMap(x+w - 308, y + h - 94, 120, 90);
-
-  add(mini_map);
-
-  resizable(sizer);
+  resizable(0);
 }
 
 
