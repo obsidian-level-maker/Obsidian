@@ -45,23 +45,25 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   add(heading);
 
-  cy += 28;
+  cy += heading->h() + 6;
 
-  seed = new Fl_Int_Input(x+60, cy, 72, 24, "Seed: ");
+
+  seed = new Fl_Int_Input(x+64, cy, 64, 24, "Seed: ");
   seed->align(FL_ALIGN_LEFT);
   seed->maximum_size(4);
   seed->value("1");
 
   add(seed);
 
-  bump = new Fl_Button(x+140, cy, 96, 24, "Bump");
+  bump = new Fl_Button(x+134, cy, 74, 24, "Bump");
   bump->callback(bump_callback, this);
 
   add(bump);
 
-  cy += 32;
+  cy += seed->h() + 14;
 
-  game = new Fl_Choice(x+70, cy, 150, 24, "Game: ");
+
+  game = new Fl_Choice(x+64, cy, 130, 24, "Game: ");
   game->align(FL_ALIGN_LEFT);
   game->add("Wolf 3d|"
 ///         "Spear of Destiny|"
@@ -76,30 +78,42 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
   game->callback(game_callback, this);
 
   add(game);
+  
+  cy += game->h() + 6;
 
-  length = new Fl_Choice(x +300, cy, 150, 24, "Length: ");
-  length->align(FL_ALIGN_LEFT);
-  length->add("Single Level|One Episode|Full Game");
-  length->value(1);
 
-  add(length);
-
-  cy += 32;
-
-  engine = new Fl_Choice(x+70, cy, 150, 24, "Engine: ");
-  engine->align(FL_ALIGN_LEFT);
-  engine->add("Limit Removing"); //TODO: BOOM|EDGE|Legacy|JDoom|ZDoom
-  engine->value(0);
-
-  add(engine);
-
-  mode = new Fl_Choice(x+300, cy, 150, 24, "Mode: ");
+  mode = new Fl_Choice(x+64, cy, 130, 24, "Mode: ");
   mode->align(FL_ALIGN_LEFT);
   mode->add("Single Player|Co-op|Deathmatch");
   mode->value(0);
   mode->callback(mode_callback, this);
 
   add(mode);
+
+  cy += mode->h() + 14;
+
+
+  engine = new Fl_Choice(x+64, cy, 130, 24, "Engine: ");
+  engine->align(FL_ALIGN_LEFT);
+  engine->add("Limit Removing"); //TODO: BOOM|EDGE|Legacy|JDoom|ZDoom
+  engine->value(0);
+
+  add(engine);
+
+  cy += engine->h() + 6;
+
+
+  length = new Fl_Choice(x +64, cy, 130, 24, "Length: ");
+  length->align(FL_ALIGN_LEFT);
+  length->add("Single Level|One Episode|Full Game");
+  length->value(1);
+
+  add(length);
+
+  cy += length->h() + 6;
+
+
+  DebugPrintf("UI_Setup: final h = %d\n", cy - y);
 
   resizable(0);  // don't resize our children
 
