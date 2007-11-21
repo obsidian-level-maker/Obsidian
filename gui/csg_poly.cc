@@ -130,7 +130,7 @@ static void AddPoly_MakeConvex(area_poly_c *P)
   // splits this area_poly into convex pieces (if needed) and
   // add each separate piece (sharing the same sector info).
 
-  // TODO: Make convex
+  // TODO: Make convex  -  needed ???
 
   all_polys.push_back(P);
 }
@@ -444,8 +444,10 @@ public:
 
   int index;
 
+  std::vector<area_poly_c *> areas;
+
 public:
-  region_c() : faces_out(false), index(-1)
+  region_c() : faces_out(false), index(-1), areas()
   { }
 
   ~region_c()
@@ -1093,9 +1095,8 @@ static region_c *FindIslandParent(region_c *R)
     0.5, 0.7, 0.3, 0.6, 0,4,
     0,8, 0.2, 0.9, 0.1,
 
-    0.55, 0.45, 0.65, 0.35,
-    0.75, 0.25, 0.85, 0.15,
-    0.95, 0.05,
+    0.55, 0.45, 0.65, 0.35, 0.75, 0.25,
+    0.85, 0.15, 0.95, 0.05,
 
     -1 // THE END
   };
@@ -1184,6 +1185,12 @@ static void Mug_RemoveIslands(void)
   mug_regions.erase(ENDP, mug_regions.end());
 }
 
+static void Mug_AssignAreas(void)
+{
+  // @@
+}
+
+
 
 struct Compare_PolyMinX_pred
 {
@@ -1205,7 +1212,9 @@ void CSG2_MergeAreas(void)
   // Algorithm:
   //   (1) create segments and vertices for every line
   //   (2) check seg against every other seg for overlap/T-junction
-  //   (3) create merge_polys from seg list
+  //   (3) create regions from segs, remove islands
+  //   (4) assign area_polys to the regions
+  //   (5) perform merge (etc) operations
 
   for (int j=0; j < (int)all_polys.size(); j++)
   {
@@ -1219,6 +1228,8 @@ void CSG2_MergeAreas(void)
   Mug_TraceSegLoops();
   Mug_RemoveIslands();
 
+  Mug_AssignAreas();
+    
   // TODO
 }
 
