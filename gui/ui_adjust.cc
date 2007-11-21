@@ -48,7 +48,7 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
   cy += heading->h() + 6;
 
 
-  size = new Fl_Choice(x+ 80, cy, 120, 24, "Size: ");
+  size = new Fl_Choice(x+ 82, cy, 120, 24, "Size: ");
   size->align(FL_ALIGN_LEFT);
   size->add("Small|Regular|X-Large");
   size->value(1);
@@ -59,7 +59,7 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
 
 
 Fl_Choice *
-  detail = new Fl_Choice(x+ 80, cy, 120, 24, "Detail: ");
+  detail = new Fl_Choice(x+ 82, cy, 120, 24, "Detail: ");
   detail->align(FL_ALIGN_LEFT);
   detail->add("None|Low|Medium|High");
   detail->value(2);
@@ -71,7 +71,7 @@ Fl_Choice *
   cy += 10;
 
 
-  mons = new Fl_Choice(x+ 80, cy, 120, 24, "Monsters: ");
+  mons = new Fl_Choice(x+ 82, cy, 120, 24, "Monsters: ");
   mons->align(FL_ALIGN_LEFT);
   mons->add("Scarce|Plenty|Hordes");
   mons->value(1);
@@ -81,7 +81,7 @@ Fl_Choice *
   cy += mons->h() + 6;
 
 
-  puzzles = new Fl_Choice(x+ 80, cy, 120, 24, "Puzzles: ");
+  puzzles = new Fl_Choice(x+ 82, cy, 120, 24, "Puzzles: ");
   puzzles->align(FL_ALIGN_LEFT);
   puzzles->add("Few|Some|Heaps");
   puzzles->value(1);
@@ -92,7 +92,7 @@ Fl_Choice *
 
 
 Fl_Choice *
-  traps = new Fl_Choice(x+ 80, cy, 120, 24, "Traps: ");
+  traps = new Fl_Choice(x+ 82, cy, 120, 24, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
   traps->add("Few|Some|Heaps");
   traps->value(1);
@@ -104,7 +104,7 @@ Fl_Choice *
   cy += 10;
 
 
-  health = new Fl_Choice(x+80, cy, 120, 24, "Health: ");
+  health = new Fl_Choice(x+82, cy, 120, 24, "Health: ");
   health->align(FL_ALIGN_LEFT);
   health->add("Less|Enough|More");
   health->value(1);
@@ -114,7 +114,7 @@ Fl_Choice *
   cy += health->h() + 6;
 
 
-  ammo = new Fl_Choice(x+80, cy, 120, 24, "Ammo: ");
+  ammo = new Fl_Choice(x+82, cy, 120, 24, "Ammo: ");
   ammo->align(FL_ALIGN_LEFT);
   ammo->add("Less|Enough|More");
   ammo->value(1);

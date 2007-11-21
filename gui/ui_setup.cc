@@ -48,22 +48,24 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
   cy += heading->h() + 6;
 
 
-  seed = new Fl_Int_Input(x+64, cy, 64, 24, "Seed: ");
+  seed = new Fl_Int_Input(x+68, cy, 60, 24, "Seed: ");
   seed->align(FL_ALIGN_LEFT);
-  seed->maximum_size(4);
+  seed->maximum_size(5);
   seed->value("1");
 
   add(seed);
 
-  bump = new Fl_Button(x+134, cy, 74, 24, "Bump");
+  bump = new Fl_Button(x+140, cy, 66, 24, "Bump");
   bump->callback(bump_callback, this);
 
   add(bump);
 
-  cy += seed->h() + 14;
+  cy += seed->h() + 6;
+
+  cy += 10;
 
 
-  game = new Fl_Choice(x+64, cy, 130, 24, "Game: ");
+  game = new Fl_Choice(x+68, cy, 130, 24, "Game: ");
   game->align(FL_ALIGN_LEFT);
   game->add("Wolf 3d|"
 ///         "Spear of Destiny|"
@@ -82,7 +84,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
   cy += game->h() + 6;
 
 
-  mode = new Fl_Choice(x+64, cy, 130, 24, "Mode: ");
+  mode = new Fl_Choice(x+68, cy, 130, 24, "Mode: ");
   mode->align(FL_ALIGN_LEFT);
   mode->add("Single Player|Co-op|Deathmatch");
   mode->value(0);
@@ -90,10 +92,12 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   add(mode);
 
-  cy += mode->h() + 14;
+  cy += mode->h() + 6;
+
+  cy += 10;
 
 
-  engine = new Fl_Choice(x+64, cy, 130, 24, "Engine: ");
+  engine = new Fl_Choice(x+68, cy, 130, 24, "Engine: ");
   engine->align(FL_ALIGN_LEFT);
   engine->add("Limit Removing"); //TODO: BOOM|EDGE|Legacy|JDoom|ZDoom
   engine->value(0);
@@ -103,7 +107,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
   cy += engine->h() + 6;
 
 
-  length = new Fl_Choice(x +64, cy, 130, 24, "Length: ");
+  length = new Fl_Choice(x +68, cy, 130, 24, "Length: ");
   length->align(FL_ALIGN_LEFT);
   length->add("Single Level|One Episode|Full Game");
   length->value(1);
@@ -132,7 +136,7 @@ void UI_Setup::SetSeed(u32_t new_val)
 {
   char num_buf[40];
 
-  sprintf(num_buf, "%04d", new_val % 10000);
+  sprintf(num_buf, "%05d", new_val % 100000);
 
   seed->value(num_buf);
 }
@@ -150,7 +154,7 @@ void UI_Setup::BumpSeed()
 {
   u32_t old_val = atoi(seed->value());
 
-  u32_t bump = 90 + (IntHash(old_val) & 255);
+  u32_t bump = 100 + (IntHash(old_val) & 255);
 
   SetSeed(old_val + bump);
 }
