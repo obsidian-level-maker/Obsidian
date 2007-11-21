@@ -40,4 +40,26 @@ private:
 
 };
 
+
+class UI_ModOptions : public Fl_Group
+{
+private:
+
+  Fl_Pack   *pack;
+  Fl_Scroll *scroll;
+
+public:
+  UI_ModOptions(int x, int y, int w, int h, const char *label = NULL);
+  virtual ~UI_ModOptions();
+
+public:
+
+  void Locked(bool value);
+
+  
+private:
+  static void bump_callback(Fl_Widget *, void*);
+
+};
+
 #endif /* __UI_MODS_H__ */
