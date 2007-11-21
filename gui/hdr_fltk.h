@@ -42,6 +42,7 @@
 #include <FL/Fl_Progress.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Round_Button.H>
+#include <FL/Fl_Scroll.H>
 #include <FL/Fl_Scrollbar.H>
 #include <FL/Fl_Slider.H>
 #ifdef MACOSX
