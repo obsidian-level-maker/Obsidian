@@ -54,7 +54,7 @@ Fl_Box *
   pack->box(FL_FLAT_BOX);
 
 
-  scroll = new Fl_Scroll(x+4, cy, w-8, y+h-4 - cy);
+  scroll = new Fl_Scroll(x+4, cy, w-4, y+h-4 - cy);
   scroll->end();
   scroll->type(Fl_Scroll::VERTICAL_ALWAYS);
 
