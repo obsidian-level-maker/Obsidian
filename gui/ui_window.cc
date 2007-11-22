@@ -128,8 +128,10 @@ UI_MainWin::~UI_MainWin()
 void UI_MainWin::Locked(bool value)
 {
   setup_box ->Locked(value);
-  mod_box   ->Locked(value);
   adjust_box->Locked(value);
   build_box ->Locked(value);
-  theme_box ->Locked(value);
+
+//!!!!  mod_box   ->Locked(value);
+//!!!!  option_box->Locked(value);
+//!!!!  theme_box ->Locked(value);
 }
