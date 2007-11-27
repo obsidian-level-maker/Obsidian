@@ -11,10 +11,10 @@ CXX=i586-mingw32msvc-g++
 
 LIB_LOC=/home/aapted/ebuild
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.1.7
-LUA_DIR=$(LIB_LOC)/lua-5.1
+FLTK_DIR=$(LIB_LOC)/fltk-1.1.x-r5989
+LUA_DIR=$(LIB_LOC)/lua-5.1.2
 ZLIB_DIR=$(LIB_LOC)/zlib-1.2.3
-GLBSP_DIR=$(LIB_LOC)/glbsp-2.20
+GLBSP_DIR=$(LIB_LOC)/glbsp-2.24-source
 
 # operating system choices: UNIX WIN32
 OS=WIN32
@@ -29,7 +29,7 @@ FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
 LUA_FLAGS=-I$(LUA_DIR)/src
 LUA_LIBS=$(LUA_DIR)/src/liblua.a
 
-GLBSP_FLAGS=-I$(GLBSP_DIR)
+GLBSP_FLAGS=-I$(GLBSP_DIR)/src
 GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
 ZLIB_FLAGS=-I$(ZLIB_DIR)

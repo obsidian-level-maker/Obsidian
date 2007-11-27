@@ -11,9 +11,9 @@ CXX=g++
 
 LIB_LOC=/home/aapted/other
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.1.x-r5479
-LUA_DIR=$(LIB_LOC)/lua-5.1
-GLBSP_DIR=$(LIB_LOC)/glbsp-2.20
+FLTK_DIR=$(LIB_LOC)/fltk-1.1.x-r5989
+LUA_DIR=$(LIB_LOC)/lua-5.1.2
+GLBSP_DIR=$(LIB_LOC)/glbsp-2.24-source
 
 OPTIMISE=-O -g3
 
@@ -31,7 +31,7 @@ FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
 LUA_FLAGS=-I$(LUA_DIR)/src
 LUA_LIBS=$(LUA_DIR)/src/liblua.a
 
-GLBSP_FLAGS=-I$(GLBSP_DIR)
+GLBSP_FLAGS=-I$(GLBSP_DIR)/src
 GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
