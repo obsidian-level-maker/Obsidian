@@ -138,6 +138,18 @@ Miscellaneous:
          be the door of last cell).
 
 
+COMPILING NOTES
+===============
+
+Lua-5.1.2:
+  (1) edit src/Makefile to use 'g++' instead of 'gcc'.
+      For Win32 cross-compile, prefix g++, ar and ranlib
+      with 'i586-mingw32msvc-'.
+
+  (2) use 'make linux' for Linux,
+      use 'make generic' for Win32 cross-compile.
+
+
 
 MILESTONE 0  (reached!)
 ===========
