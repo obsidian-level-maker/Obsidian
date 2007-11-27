@@ -22,11 +22,15 @@
 class UI_Adjust : public Fl_Group
 {
 private:
-  Fl_Choice *health;
-  Fl_Choice *ammo;
+  Fl_Choice *size;
+  Fl_Choice *detail;
+
   Fl_Choice *mons;
   Fl_Choice *puzzles;
-  Fl_Choice *size;
+  Fl_Choice *traps;
+
+  Fl_Choice *health;
+  Fl_Choice *ammo;
 
 public:
   UI_Adjust(int x, int y, int w, int h, const char *label = NULL);

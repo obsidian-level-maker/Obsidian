@@ -58,7 +58,6 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
   cy += size->h() + 6;
 
 
-Fl_Choice *
   detail = new Fl_Choice(x+ 82, cy, 120, 24, "Detail: ");
   detail->align(FL_ALIGN_LEFT);
   detail->add("None|Low|Medium|High");
@@ -91,7 +90,6 @@ Fl_Choice *
   cy += puzzles->h() + 6;
 
 
-Fl_Choice *
   traps = new Fl_Choice(x+ 82, cy, 120, 24, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
   traps->add("Few|Some|Heaps");
