@@ -22,6 +22,11 @@ GUI:
 -  make an icon for Win32 executable.
 
 
+Heretic:
+
+-  don't build Blaze doors into maps.
+
+
 Hexen:
 
 -  put 'fighter only' bit on fighter's weapons, etc..
