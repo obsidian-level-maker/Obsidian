@@ -67,6 +67,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   game = new Fl_Choice(x+68, cy, 130, 24, "Game: ");
   game->align(FL_ALIGN_LEFT);
+  game->selection_color(FL_BLUE);
   game->add("Wolf 3d|"
 ///         "Spear of Destiny|"
             "Doom 1|"
@@ -86,6 +87,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   mode = new Fl_Choice(x+68, cy, 130, 24, "Mode: ");
   mode->align(FL_ALIGN_LEFT);
+  mode->selection_color(FL_BLUE);
   mode->add("Single Player|Co-op|Deathmatch");
   mode->value(0);
   mode->callback(mode_callback, this);
@@ -99,6 +101,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   engine = new Fl_Choice(x+68, cy, 130, 24, "Engine: ");
   engine->align(FL_ALIGN_LEFT);
+  engine->selection_color(FL_BLUE);
   engine->add("Limit Removing"); //TODO: BOOM|EDGE|Legacy|JDoom|ZDoom
   engine->value(0);
 
@@ -109,6 +112,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   length = new Fl_Choice(x +68, cy, 130, 24, "Length: ");
   length->align(FL_ALIGN_LEFT);
+  length->selection_color(FL_BLUE);
   length->add("Single Level|One Episode|Full Game");
   length->value(1);
 
