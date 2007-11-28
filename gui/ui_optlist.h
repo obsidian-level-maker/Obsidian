@@ -36,6 +36,8 @@
 
 class option_data_c
 {
+friend class UI_OptionList;
+
 public:
   const char *id;    // terse identifier
   const char *desc;  // description (for the UI)
@@ -45,9 +47,12 @@ public:
 
   int priority;   // priority for on-screen ordering
  
+protected:
+  Fl_Check_Button *widget;
+ 
 public:
    option_data_c() : id(NULL), desc(NULL), shown(0), value(-1),
-                     priority(50)
+                     priority(50), widget(NULL)
    { }
    
    option_data_c(const char *_id, const char *_desc, int _pri = 50, int _val = 0);
@@ -72,13 +77,26 @@ public:
 
 public:
   void AddOption(const char *id, const char *desc, int pri = 50, int val = 0);
-  // add a new option to the list.
+  // add a new option to the list.  If an option with the same 'id'
+  // already exists, that option is replaced instead.
+  // The option will begin as not shown (shown == 0).
 
   bool SetOption(const char *id, int value);
 
   bool ShowOption(const char *id, int shown);
 
   void IterateOptions(option_iter_f func, void *data);
+
+  enum
+  {
+    CF_OPTION = (1 << 0),  // added/removed options
+    CF_SHOWN  = (1 << 1),  // changed 'shown' fields
+    CF_VALUE  = (1 << 2),  // changed 'value' fields
+  };
+  
+  void Commit(int flags);
+  // this must be called after any changes to the option list
+  // have been made.
 
 private:
   option_data_c *FindOption(const char *id);

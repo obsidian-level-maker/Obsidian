@@ -27,7 +27,7 @@
 
 option_data_c::option_data_c(const char *_id, const char *_desc,
                              int _pri, int _val) :
-    shown(0), value(_val), priority(_pri)
+    shown(0), value(_val), priority(_pri), widget(NULL)
 {
   id   = StringDup(_id);
   desc = StringDup(_desc);
@@ -37,6 +37,11 @@ option_data_c::~option_data_c()
 {
   if (id)   StringFree(id);
   if (desc) StringFree(desc);
+
+  // ignore 'widget' field when shown, assuming it exists in
+  // an Fl_Group and hence FLTK will take care to delete it.
+  if (shown == 0)
+    delete widget;
 }
 
 
@@ -49,31 +54,52 @@ UI_OptionList::UI_OptionList(int x, int y, int w, int h, const char *label) :
 {
   end(); // cancel begin() in Fl_Group constructor
  
-//  box(FL_THIN_UP_BOX);
-
   type(Fl_Scroll::VERTICAL_ALWAYS);
   
 
-Fl_Box *
-  pack = new Fl_Box(x, y, 600, 600);
-//  pack->end();
+  pack = new Fl_Pack(x, y, w - 20, 10);
+  pack->end();
   pack->box(FL_THIN_UP_BOX);
-  pack->color(FL_RED);
+  pack->color(FL_BLACK);
 
-
-  add(pack);
+//  add(pack);
 }
 
 
 UI_OptionList::~UI_OptionList()
 {
+  for (unsigned int i = 0; i < opt_list.size(); i++)
+  {
+    delete opt_list[i];
+  }
 }
 
 
 void UI_OptionList::AddOption(const char *id, const char *desc,
                               int pri, int val)
 {
-  // FIXME
+  option_data_c *opt = FindOption(id);
+
+  if (opt)
+  {
+    StringFree(opt->desc);
+    opt->desc = StringDup(desc);
+
+    opt->shown = 0;
+    opt->value = val;
+    opt->priority = pri;
+
+    opt->widget->label(opt->desc);
+  }
+  else
+  {
+    opt = new option_data_c(id, desc, pri, val);
+
+    opt->widget = new Fl_Check_Button(0, 0, w(), 30, opt->desc);
+    opt->widget->box(FL_UP_BOX);
+
+    opt_list.push_back(opt);
+  }
 }
 
 bool UI_OptionList::SetOption(const char *id, int value)
@@ -110,6 +136,48 @@ void UI_OptionList::IterateOptions(option_iter_f func, void *data)
   }
 }
 
+void UI_OptionList::Commit(int flags)
+{
+  // FIXME: visit in correct order (shown + priority + alphabetical)
+
+  int cy = y();
+
+  for (unsigned int i = 0; i < opt_list.size(); i++)
+  {
+    option_data_c *opt = opt_list[i];
+
+    Fl_Check_Button *button = opt->widget;
+
+    if ((opt->shown ? 1 : 0) != (button->inside(this) ? 1 : 0))
+    {
+      if (opt->shown > 0)
+        this->add(button);
+      else
+        this->remove(*button);
+    }
+
+    // no mucking about with off-screen widgets
+    if (opt->shown == 0)
+      continue;
+ 
+    button->position(x(), cy);
+
+fprintf(stderr, "%p visible: %s\n", button, button->visible() ? "YES" : "no");
+    cy += button->h();
+
+    if (opt->shown != (button->active() ? 1 : 2))
+    {
+      if (opt->shown == 1)
+        button->activate();
+      else
+        button->deactivate();
+    }
+
+    button->value(opt->value);
+  }
+
+  this->redraw();
+}
 
 option_data_c *UI_OptionList::FindOption(const char *id)
 {
