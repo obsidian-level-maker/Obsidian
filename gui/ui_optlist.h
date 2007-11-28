@@ -40,13 +40,13 @@ public:
   const char *id;    // terse identifier
   const char *desc;  // description (for the UI)
   
-  bool shown;        // shown in the UI?
-  int  value;        // 0 or 1
+  int shown;      // 0 = hidden, 1 = shown, 2 = greyed out
+  int value;      // 0 or 1
 
-  int  priority;     // priority for on-screen ordering
+  int priority;   // priority for on-screen ordering
  
 public:
-   option_data_c() : id(NULL), desc(NULL), shown(false), value(-1),
+   option_data_c() : id(NULL), desc(NULL), shown(0), value(-1),
                      priority(50)
    { }
    
@@ -71,17 +71,19 @@ public:
   virtual ~UI_OptionList();
 
 public:
-  void AddOption(const char *_id, const char *_desc, int _pri = 50, int _val = 0);
+  void AddOption(const char *id, const char *desc, int pri = 50, int val = 0);
   // add a new option to the list.
 
-  bool SetOption(const char *_id, int _val);
+  bool SetOption(const char *id, int value);
 
-  bool ShowOption(const char *_id, bool enable);
+  bool ShowOption(const char *id, int shown);
 
   void IterateOptions(option_iter_f func, void *data);
 
 private:
-  void BuildPack(void);
+  option_data_c *FindOption(const char *id);
+
+  void BuildPack();
 };
 
 
