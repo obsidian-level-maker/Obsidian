@@ -75,7 +75,7 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
   mons = new Fl_Choice(x+ 82, cy, 120, 24, "Monsters: ");
   mons->align(FL_ALIGN_LEFT);
   mons->selection_color(FL_RED);
-  mons->add("Scarce|Plenty|Hordes");
+  mons->add("Scarce|Normal|Hordes");
   mons->value(1);
 
   add(mons);
@@ -86,7 +86,7 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
   puzzles = new Fl_Choice(x+ 82, cy, 120, 24, "Puzzles: ");
   puzzles->align(FL_ALIGN_LEFT);
   puzzles->selection_color(FL_RED);
-  puzzles->add("Few|Some|Heaps");
+  puzzles->add("Few|Normal|Heaps");
   puzzles->value(1);
 
   add(puzzles);
@@ -97,7 +97,7 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
   traps = new Fl_Choice(x+ 82, cy, 120, 24, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
   traps->selection_color(FL_RED);
-  traps->add("Few|Some|Heaps");
+  traps->add("Few|Normal|Heaps");
   traps->value(1);
 
   add(traps);
