@@ -50,6 +50,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
   seed = new Fl_Int_Input(x+68, cy, 60, 24, "Seed: ");
   seed->align(FL_ALIGN_LEFT);
+  seed->selection_color(FL_BLUE);
   seed->maximum_size(5);
   seed->value("1");
 
