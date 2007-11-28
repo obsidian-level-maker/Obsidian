@@ -23,8 +23,7 @@ class UI_Themes : public Fl_Group
 {
 private:
 
-  Fl_Pack   *pack;
-  Fl_Scroll *scroll;
+  UI_OptionList *opts;
 
 public:
   UI_Themes(int x, int y, int w, int h, const char *label = NULL);
@@ -33,7 +32,6 @@ public:
 public:
 
   void Locked(bool value);
-
   
 private:
   static void bump_callback(Fl_Widget *, void*);

@@ -19,6 +19,7 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 
+#include "ui_optlist.h"
 #include "ui_themes.h"
 #include "ui_window.h"
 
@@ -48,22 +49,30 @@ UI_Themes::UI_Themes(int x, int y, int w, int h, const char *label) :
   cy += 28;
 
 
-Fl_Box *
-  pack = new Fl_Box(x, cy, 600, 600);
-//  pack->end();
-  pack->box(FL_FLAT_BOX);
+  opts = new UI_OptionList(x+4, cy, w-8, y+h-4 - cy); 
+
+  add(opts);
+  
+  resizable(opts);
 
 
-  scroll = new Fl_Scroll(x+4, cy, w-4, y+h-4 - cy);
-  scroll->end();
-  scroll->type(Fl_Scroll::VERTICAL_ALWAYS);
+  opts->AddOption("tnt", "TNT Evilution");
+  opts->AddOption("plu", "Plutonia");
+  opts->AddOption("etn", "Eternal III");
+  opts->AddOption("qdm", "QDOOM");
+  opts->AddOption("foo", "Foo Bar 3000");
+  opts->AddOption("xxx", "X-Men X-Treme");
 
-  scroll->add(pack);
+  opts->Commit(UI_OptionList::CF_OPTION);
 
-  add(scroll);
+  opts->ShowOption("tnt", 1);
+  opts->ShowOption("plu", 1);
+  opts->ShowOption("etn", 1);
+  opts->ShowOption("qdm", 2);
+  opts->ShowOption("foo", 2);
+  opts->ShowOption("xxx", 1);
 
-
-  resizable(scroll);
+  opts->Commit(UI_OptionList::CF_VALUE);
 }
 
 
@@ -87,11 +96,11 @@ void UI_Themes::Locked(bool value)
 {
   if (value)
   {
-    pack->deactivate();
+    opts->deactivate();
   }
   else
   {
-    pack->activate();
+    opts->activate();
   }
 }
 
