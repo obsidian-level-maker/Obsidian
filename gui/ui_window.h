@@ -22,6 +22,7 @@
 #include "ui_map.h"
 #include "ui_build.h"
 #include "ui_menu.h"
+#include "ui_optlist.h"
 #include "ui_mods.h"
 #include "ui_setup.h"
 #include "ui_themes.h"
