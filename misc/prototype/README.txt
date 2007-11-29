@@ -14,4 +14,13 @@ Some points of interest:
   - output for numerous games: Doom, Wolf3d, Quake1, Cube.
   - GUI which shows the generated map.
   - A* path finder.
+
+Command line usage:
+
+  ./oblige [-g] [-r 1234] [-s 64] -o output.wad
+
+     -g : show the GUI
+     -r : set the random seed
+     -s : size of map (in blocks)
+     -o : specify the output filename
  
