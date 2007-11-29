@@ -24,8 +24,8 @@
 #include "main.h"
 
 
-static bool menu_want_to_quit;
 
+static bool menu_want_to_quit;
 
 static void menu_quit_CB(Fl_Widget *w, void *data)
 {
@@ -62,6 +62,8 @@ static const char *about_Web =
 
 #define INFO_COLOR  fl_color_cube(0,6,4)
   
+#define BOTTOM_BG   fl_gray_ramp(FL_NUM_GRAY * 9 / 24)
+
 
 void menu_do_about(Fl_Widget *w, void * data)
 {
@@ -110,7 +112,7 @@ void menu_do_about(Fl_Widget *w, void * data)
   Fl_Group *darkish = new Fl_Group(0, cy, about->w(), about->h()-cy);
   darkish->end();
   darkish->box(FL_FLAT_BOX);
-  darkish->color(FL_DARK3, FL_DARK3);
+  darkish->color(BOTTOM_BG, BOTTOM_BG);
   about->add(darkish);
 
   // finally add an "OK" button
