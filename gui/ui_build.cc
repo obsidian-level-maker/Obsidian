@@ -85,18 +85,18 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   DebugPrintf("UI_Build: button h = %d\n", cy - y);
 
 
-  build = new Fl_Button(x+w - 88, y+h-132, 74, 30, "Build...");
+  build = new Fl_Button(x+w - 88, y+h-126, 74, 30, "Build...");
   build->labelfont(FL_HELVETICA_BOLD);
   build->callback(build_callback, this);
 
   add(build);
 
-  Fl_Button *about = new Fl_Button(x+w - 88, y+h-86, 74, 30, "About");
+  Fl_Button *about = new Fl_Button(x+w - 88, y+h-84, 74, 30, "About");
   about->callback(menu_do_about, this);
 
   add(about);
 
-  quit = new Fl_Button(x+w - 88, y+h-40, 74, 32, "Quit");
+  quit = new Fl_Button(x+w - 88, y+h-42, 74, 32, "Quit");
   quit->callback(quit_callback, this);
 
   add(quit);

@@ -83,9 +83,9 @@ UI_MainWin::UI_MainWin(const char *title) :
   int MW = 208;
   int RW = 196;
 
-  int GAME_H  = 216;
-  int ADJ_H   = 280;
-  int MOD_H   = 240;
+  int GAME_H  = 232;
+  int ADJ_H   = 272;
+  int MOD_H   = GAME_H;
 
   setup_box = new UI_Setup(0, 0, LW-4, GAME_H);
   add(setup_box);
