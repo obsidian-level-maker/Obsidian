@@ -300,7 +300,7 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  Fl::scheme("plastic");
+//!!!!  Fl::scheme("plastic");
 
   fl_message_font(FL_HELVETICA /* _BOLD */, 18);
 
@@ -334,11 +334,23 @@ int main(int argc, char **argv)
 
   main_win = new UI_MainWin(OBLIGE_TITLE);
 
+  // show window (pass some dummy arguments)
+  {
+    int argc = 1;
+    char *argv[] = { "Oblige.exe", NULL };
+
+    main_win->show(argc, argv);
+  }
+
   // kill the stupid bright background of the "plastic" scheme
   delete Fl::scheme_bg_;
   Fl::scheme_bg_ = NULL;
 
   main_win->image(NULL);
+
+  // draw an empty map (must be done after main window is
+  // shown() because that is when FLTK finalises the colors).
+  main_win->build_box->mini_map->EmptyMap();
 
   // load config after creating window (set widget values)
   Cookie_Load(CONFIG_FILENAME);

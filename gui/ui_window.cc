@@ -109,12 +109,6 @@ UI_MainWin::UI_MainWin(const char *title) :
 
 
   resizable(mod_box);
-
-  // show window (pass some dummy arguments)
-  int argc = 1;
-  char *argv[] = { "Oblige.exe", NULL };
-
-  show(argc, argv);
 }
 
 //
