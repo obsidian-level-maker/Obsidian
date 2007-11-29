@@ -79,33 +79,33 @@ UI_MainWin::UI_MainWin(const char *title) :
   }
 #endif
 
-  int LW = 220;
-  int MW = 220;
-  int RW = 180;
+  int LW = 208;
+  int MW = 208;
+  int RW = 208;
 
   int GAME_H  = 216;
   int ADJ_H   = 280;
-  int THEME_H = 180;
+  int MOD_H   = 180;
 
   setup_box = new UI_Setup(0, 0, LW-4, GAME_H);
   add(setup_box);
 
-  mod_box = new UI_Mods(0, GAME_H+4, LW-4, h()-GAME_H-4);
-  add(mod_box);
+  build_box = new UI_Build(0, GAME_H+4, LW-4, h()-GAME_H-4);
+  add(build_box);
 
 
   adjust_box = new UI_Adjust(LW, 0, MW, ADJ_H);
   add(adjust_box);
 
-  option_box = new UI_ModOptions(LW, ADJ_H+4, MW, h()-ADJ_H-4);
-  add(option_box);
-
-
-  theme_box = new UI_Themes(LW+MW+4, 0, RW-4, THEME_H - 4);
+  theme_box = new UI_Themes(LW, ADJ_H+4, MW, h()-ADJ_H-4);
   add(theme_box);
 
-  build_box = new UI_Build(LW+MW+4, THEME_H, RW-4, h() - THEME_H);
-  add(build_box);
+
+  mod_box = new UI_Mods(LW+MW+4, 0, RW-4, MOD_H);
+  add(mod_box);
+
+  option_box = new UI_ModOptions(LW+MW+4, MOD_H+4, RW-4, h()-MOD_H-4);
+  add(option_box);
 
 
   resizable(mod_box);

@@ -71,7 +71,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   cy += progress->h() + 8;
 
 
-  mini_map = new UI_MiniMap(x+18, cy, 140, 90);
+  mini_map = new UI_MiniMap(x+12, y+h - 120, 100, 100);
 
   add(mini_map);
 
@@ -80,25 +80,26 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   DebugPrintf("UI_Build: mini map h = %d\n", cy - y);
 
 
-  cy = y + h - 80;
+  cy = y + h - 120;
 
   DebugPrintf("UI_Build: button h = %d\n", cy - y);
 
-  quit = new Fl_Button(x+w - 80, cy+40, 70, 30, "Quit");
-  quit->callback(quit_callback, this);
 
-  add(quit);
-
-  Fl_Button *about = new Fl_Button(x+w - 80, cy, 70, 30, "About");
-  about->callback(menu_do_about, this);
-
-  add(about);
-
-  build = new Fl_Button(x+w - 164, cy+40, 76, 30, "Build...");
+  build = new Fl_Button(x+w - 80, y+h-132, 72, 30, "Build...");
   build->labelfont(FL_HELVETICA_BOLD);
   build->callback(build_callback, this);
 
   add(build);
+
+  Fl_Button *about = new Fl_Button(x+w - 80, y+h-86, 72, 30, "About");
+  about->callback(menu_do_about, this);
+
+  add(about);
+
+  quit = new Fl_Button(x+w - 80, y+h-40, 70, 32, "Quit");
+  quit->callback(quit_callback, this);
+
+  add(quit);
 
 
   Fl_Box *sizer = new Fl_Box(FL_NO_BOX, x+1, cy-4, w-2, 2, NULL);
