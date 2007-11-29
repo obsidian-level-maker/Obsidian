@@ -56,10 +56,10 @@ UI_Themes::UI_Themes(int x, int y, int w, int h, const char *label) :
   resizable(opts);
 
 
-  opts->AddOption("tnt", "TNT Evilution");
-  opts->AddOption("plu", "Plutonia");
-  opts->AddOption("etn", "Eternal III");
-  opts->AddOption("qdm", "QDOOM");
+  opts->AddOption("tnt", "Tech");
+  opts->AddOption("plu", "Industrial");
+  opts->AddOption("etn", "Hell");
+  opts->AddOption("qdm", "Nature");
   opts->AddOption("foo", "Foo Bar 3000");
   opts->AddOption("xxx", "X-Men X-Treme");
 
@@ -67,10 +67,10 @@ UI_Themes::UI_Themes(int x, int y, int w, int h, const char *label) :
 
   opts->ShowOption("tnt", 1);
   opts->ShowOption("plu", 1);
-  opts->ShowOption("etn", 2);
+  opts->ShowOption("etn", 1);
   opts->ShowOption("qdm", 1);
-  opts->ShowOption("foo", 1);
-  opts->ShowOption("xxx", 2);
+  opts->ShowOption("foo", 0);
+  opts->ShowOption("xxx", 0);
 
   opts->Commit(UI_OptionList::CF_VALUE);
 }
