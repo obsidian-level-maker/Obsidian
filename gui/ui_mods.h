@@ -23,8 +23,7 @@ class UI_Mods : public Fl_Group
 {
 private:
 
-  Fl_Pack   *pack;
-  Fl_Scroll *scroll;
+  UI_OptionList *opts;
 
 public:
   UI_Mods(int x, int y, int w, int h, const char *label = NULL);
@@ -45,8 +44,7 @@ class UI_ModOptions : public Fl_Group
 {
 private:
 
-  Fl_Pack   *pack;
-  Fl_Scroll *scroll;
+  UI_OptionList *opts;
 
 public:
   UI_ModOptions(int x, int y, int w, int h, const char *label = NULL);

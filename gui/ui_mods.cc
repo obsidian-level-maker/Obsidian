@@ -19,6 +19,7 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 
+#include "ui_optlist.h"
 #include "ui_mods.h"
 #include "ui_window.h"
 
@@ -35,7 +36,7 @@ UI_Mods::UI_Mods(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 8;
 
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Custom Mods");
+  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Custom Mods");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
@@ -45,22 +46,11 @@ UI_Mods::UI_Mods(int x, int y, int w, int h, const char *label) :
   cy += 28;
 
 
-Fl_Box *
-  pack = new Fl_Box(x, cy, 600, 600);
-//  pack->end();
-  pack->box(FL_FLAT_BOX);
+  opts = new UI_OptionList(x+4, cy, w-4, y+h-4 - cy);
 
+  add(opts);
 
-  scroll = new Fl_Scroll(x+4, cy, w-4, y+h - cy);
-  scroll->end();
-  scroll->type(Fl_Scroll::VERTICAL_ALWAYS);
-
-  scroll->add(pack);
-
-  add(scroll);
-
-
-  resizable(scroll);
+  resizable(opts);
 }
 
 
@@ -81,11 +71,11 @@ void UI_Mods::Locked(bool value)
 {
   if (value)
   {
-    pack->deactivate();
+    opts->deactivate();
   }
   else
   {
-    pack->activate();
+    opts->activate();
   }
 }
 
@@ -103,7 +93,7 @@ UI_ModOptions::UI_ModOptions(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 8;
 
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Custom Options");
+  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Custom Options");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
@@ -113,22 +103,11 @@ UI_ModOptions::UI_ModOptions(int x, int y, int w, int h, const char *label) :
   cy += 28;
 
 
-Fl_Box *
-  pack = new Fl_Box(x, cy, 600, 600);
-//  pack->end();
-  pack->box(FL_FLAT_BOX);
+  opts = new UI_OptionList(x+4, cy, w-4, y+h-4 - cy);
 
+  add(opts);
 
-  scroll = new Fl_Scroll(x+4, cy, w-4, y+h - cy);
-  scroll->end();
-  scroll->type(Fl_Scroll::VERTICAL_ALWAYS);
-
-  scroll->add(pack);
-
-  add(scroll);
-
-
-  resizable(scroll);
+  resizable(opts);
 }
 
 
@@ -149,10 +128,10 @@ void UI_ModOptions::Locked(bool value)
 {
   if (value)
   {
-    pack->deactivate();
+    opts->deactivate();
   }
   else
   {
-    pack->activate();
+    opts->activate();
   }
 }
