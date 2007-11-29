@@ -163,7 +163,6 @@ void UI_OptionList::Commit(int flags)
  
     button->resize(x()+GAP_W, cy, w() - Fl::scrollbar_size()-GAP_W*2, BUTTON_H);
 
-fprintf(stderr, "%p visible: %s\n", button, button->visible() ? "YES" : "no");
     cy += button->h() + GAP_H;
 
     if (opt->shown != (button->active() ? 1 : 2))
