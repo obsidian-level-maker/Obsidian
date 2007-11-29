@@ -132,11 +132,11 @@ static void CreateWAD()
 
 #if 0
 	level_block::WriteBlock(filename);
-#elif 0
+#elif 1
 	level_doom::WriteWAD(filename);
 #elif 0
 	level_doom::WriteText(filename);
-#elif 1
+#elif 0
 	level_quake::WriteText(filename);
 #elif 0
 	level_cube::WriteCube(filename);
