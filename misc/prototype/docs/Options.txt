@@ -1,0 +1,23 @@
+
+Options in User Interface
+-------------------------
+
+Game mode:  Single player  |  Coop  |  DeathMatch  |  CTF
+
+Players:  2  |  4  |  6  |  8  |  10  |  12  |  16  |  24  |  32
+
+Map sizes:  Small  |  Medium  |  Large
+
+Detail Level:  Low  |  Medium  |  High
+
+Bias towards / against: Buildings  |  Caves  |  Land  |  Water
+
+Bias towards / against: Puzzles  |  Battles  |  Traps
+
+Engine:  Original Doom  |  Limit-removing port  |  Boom  |
+         EDGE  |  ZDoom  |  Legacy  |  Vavoom  |  Skulltag
+
+Style:  Doom 1  |  Doom 2  |  TNT  |  Plutonia  |  Freedoom  |
+        Heretic  |  Hexen  |
+        QDOOM   |  Eternal  |  Batman  |  Gothic
+

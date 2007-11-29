@@ -1,0 +1,8 @@
+
+TODO
+====
+
++  Link pruning algorithm.
+
+-  u_rand.cpp/h : mersenne twister random numbers
+

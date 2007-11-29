@@ -1,0 +1,9 @@
+
+Map is represented by 64x64 squares.
+
+Each square contains a high-level concept value:
+
+"." = not used yet (void space)
+"O" = outside area (sky ceiling)
+"I" = inside area (solid ceiling)
+
