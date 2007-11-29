@@ -162,6 +162,7 @@ FLTK-1.1.x-5989:
           gcc, g++, ar and ranlib.
       (e) in makeinclude: use '-ruv' instead of 'cr' for ar command.
       (f) in makeinclude: comment out .SILENT directive.
+      (g) in makeinclude: remove -fno-exceptions
 
       (g) in config.h: set HAVE_GL and HAVE_GL_GLU to 0.
           comment out HAVE_LIBPNG, HAVE_LIBJPEG, HAVE_LIBZ.
