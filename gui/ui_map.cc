@@ -27,15 +27,16 @@
 
 #define MAP_BORDER  2
 
-#define BG_COLOR  fl_gray_ramp(FL_NUM_GRAY * 2 / 24)
+#define SURROUND_BG   fl_gray_ramp(FL_NUM_GRAY * 8 / 24)
 
 
 UI_MiniMap::UI_MiniMap(int x, int y, int w, int h, const char *label) :
     Fl_Box(x, y, w, h, label),
     pixels(NULL), cur_image(NULL)
 {
-  box(FL_FLAT_BOX);
-  color(MAIN_BG_COLOR, MAIN_BG_COLOR);
+  box(FL_NO_BOX);
+
+//  color(MAIN_BG_COLOR);
 }
 
 
@@ -49,6 +50,12 @@ UI_MiniMap::~UI_MiniMap()
 
   if (pixels)
     delete[] pixels;
+}
+
+void UI_MiniMap::EmptyMap()
+{
+  MapBegin(w(), h());
+  MapFinish();
 }
 
 void UI_MiniMap::MapBegin(int pixel_W, int pixel_H)
@@ -71,14 +78,17 @@ void UI_MiniMap::MapBegin(int pixel_W, int pixel_H)
 
 void UI_MiniMap::MapClear()
 {
-  u8_t r, g, b;
-  u8_t *map_end = pixels + (real_W * real_H * 3);
+  memset(pixels, 0, real_W * real_H * 3);
 
-  Fl::get_color(BG_COLOR, r, g, b);
-
-  for (u8_t *pos = pixels; pos < map_end; )
+  for (int py = 0; py < real_H; py++)
+  for (int px = 0; px < real_W; px++)
   {
-    *pos++ = r; *pos++ = g; *pos++ = b;
+    u8_t *pix = pixels + (py*real_W + px) * 3;
+
+    if ((px % 10) == 5 || (py % 10) == 5)
+    {
+      pix[2] = 176;
+    }
   }
 }
 
@@ -120,10 +130,10 @@ void UI_MiniMap::MapFinish()
 {
   SYS_ASSERT(pixels);
 
-  MapCorner(0, 0);
-  MapCorner(0, real_H-1);
-  MapCorner(real_W-1, 0);
-  MapCorner(real_W-1, real_H-1);
+  MapCorner(0, 0, 1, 1);
+  MapCorner(0, real_H-1, 1, -1);
+  MapCorner(real_W-1, 0, -1, 1);
+  MapCorner(real_W-1, real_H-1, -1, -1);
 
   if (cur_image)
   {
@@ -137,10 +147,23 @@ void UI_MiniMap::MapFinish()
   redraw();
 }
 
-void UI_MiniMap::MapCorner(int x, int y)
+void UI_MiniMap::MapCorner(int x, int y, int dx, int dy)
+{
+  u8_t r, g, b;
+
+  Fl::get_color(SURROUND_BG, r, g, b);
+
+  DrawPixel(x+dx*0, y+dy*0, r, g, b);
+  DrawPixel(x+dx*1, y+dy*0, r, g, b);
+  DrawPixel(x+dx*0, y+dy*1, r, g, b);
+}
+
+void UI_MiniMap::DrawPixel(int x, int y, u8_t r, u8_t g, u8_t b)
 {
   u8_t *pos = pixels + (y*real_W + x)*3;
 
-  Fl::get_color(MAIN_BG_COLOR, pos[0], pos[1], pos[2]);
+  pos[0] = r;
+  pos[1] = g;
+  pos[2] = b;
 }
 

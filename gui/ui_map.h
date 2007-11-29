@@ -38,12 +38,16 @@ public:
   virtual ~UI_MiniMap();
 
 public:
+  void EmptyMap();
+
   void MapBegin(int pixel_W, int pixel_H);
   void MapPixel(int kind);
   void MapFinish();
 
   void MapClear();
-  void MapCorner(int x, int y);
+  void MapCorner(int x, int y, int dx, int dy);
+
+  void DrawPixel(int x, int y, u8_t r, u8_t g, u8_t b);
 };
 
 #endif /* __UI_MAP_H__ */
