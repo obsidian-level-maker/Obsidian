@@ -60,6 +60,7 @@ OBJS=	main.o      \
 	ui_dialog.o \
 	ui_map.o    \
 	ui_menu.o   \
+	ui_optlist.o \
 	ui_setup.o  \
 	ui_window.o
 
