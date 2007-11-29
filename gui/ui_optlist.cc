@@ -25,6 +25,13 @@
 #include "lib_util.h"
 
 
+#define BUTTON_H  24
+#define GAP_H     1
+#define GAP_W     1
+
+#define LIST_BG   FL_DARK2  // fl_gray_ramp(FL_NUM_GRAY * 12 / 24)
+
+
 option_data_c::option_data_c(const char *_id, const char *_desc,
                              int _pri, int _val) :
     shown(0), value(_val), priority(_pri), widget(NULL)
@@ -56,13 +63,7 @@ UI_OptionList::UI_OptionList(int x, int y, int w, int h, const char *label) :
  
   type(Fl_Scroll::VERTICAL_ALWAYS);
   
-
-  pack = new Fl_Pack(x, y, w - 20, 10);
-  pack->end();
-  pack->box(FL_THIN_UP_BOX);
-  pack->color(FL_BLACK);
-
-//  add(pack);
+  color(LIST_BG);
 }
 
 
@@ -95,7 +96,7 @@ void UI_OptionList::AddOption(const char *id, const char *desc,
   {
     opt = new option_data_c(id, desc, pri, val);
 
-    opt->widget = new Fl_Check_Button(0, 0, w(), 30, opt->desc);
+    opt->widget = new Fl_Check_Button(0, 0, 20, 20, opt->desc);
     opt->widget->box(FL_UP_BOX);
 
     opt_list.push_back(opt);
@@ -160,10 +161,10 @@ void UI_OptionList::Commit(int flags)
     if (opt->shown == 0)
       continue;
  
-    button->position(x(), cy);
+    button->resize(x()+GAP_W, cy, w() - Fl::scrollbar_size()-GAP_W*2, BUTTON_H);
 
 fprintf(stderr, "%p visible: %s\n", button, button->visible() ? "YES" : "no");
-    cy += button->h();
+    cy += button->h() + GAP_H;
 
     if (opt->shown != (button->active() ? 1 : 2))
     {

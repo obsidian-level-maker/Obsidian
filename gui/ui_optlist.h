@@ -67,7 +67,6 @@ typedef void (* option_iter_f)(option_data_c *opt, void *data);
 class UI_OptionList : public Fl_Scroll
 {
 private:
-  Fl_Pack *pack;
 
   std::vector<option_data_c *> opt_list;
  
