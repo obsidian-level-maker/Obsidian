@@ -39,7 +39,7 @@ UI_Themes::UI_Themes(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 8;
 
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, 160, 24, "Theme Selection");
+  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Theme Selection");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
@@ -67,10 +67,10 @@ UI_Themes::UI_Themes(int x, int y, int w, int h, const char *label) :
 
   opts->ShowOption("tnt", 1);
   opts->ShowOption("plu", 1);
-  opts->ShowOption("etn", 1);
-  opts->ShowOption("qdm", 2);
-  opts->ShowOption("foo", 2);
-  opts->ShowOption("xxx", 1);
+  opts->ShowOption("etn", 2);
+  opts->ShowOption("qdm", 1);
+  opts->ShowOption("foo", 1);
+  opts->ShowOption("xxx", 2);
 
   opts->Commit(UI_OptionList::CF_VALUE);
 }
