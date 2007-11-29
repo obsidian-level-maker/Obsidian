@@ -29,7 +29,7 @@
 #define GAP_H     1
 #define GAP_W     1
 
-#define LIST_BG   FL_DARK2  // fl_gray_ramp(FL_NUM_GRAY * 12 / 24)
+#define LIST_BG   fl_gray_ramp(FL_NUM_GRAY * 9 / 24)  // FL_DARK3
 
 
 option_data_c::option_data_c(const char *_id, const char *_desc,
