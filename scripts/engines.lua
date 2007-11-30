@@ -16,59 +16,57 @@
 --
 ----------------------------------------------------------------
 
-require 'util'
-
 
 OB_ENGINES =
 {
   nolimit =
   {
-    name = "Limit Removing",
-    priority = 100,
+    label = "Limit Removing",
+    priority = 95,
   },
 
   boom =
   {
-    name = "BOOM Compat",
-    priority = 90,
-    for_games = { "doom1", "doom2", "freedoom" },
+    label = "BOOM Compat",
+    priority = 92,
+    for_games = { "doom1", "doom2" },
   },
 
   edge =
   {
-    name = "EDGE",
-    priority = 80,
-    for_games = { "doom1", "doom2", "freedoom" },
+    label = "EDGE",
+    priority = 90,
+    for_games = { "doom1", "doom2" },
   },
 
   doomsday =
   {
-    name = "Doomsday",
-    for_games = { "doom1", "doom2", "freedoom", "heretic", "hexen" },
+    label = "Doomsday",
+    for_games = { "doom1", "doom2", "heretic", "hexen" },
   },
 
   legacy =
   {
-    name = "Legacy",
-    for_games = { "doom1", "doom2", "freedoom" },
+    label = "Legacy",
+    for_games = { "doom1", "doom2" },
   },
 
   skulltag =
   {
-    name = "Skulltag",
-    for_games = { "doom1", "doom2", "freedoom", "heretic", "hexen" },
+    label = "Skulltag",
+    for_games = { "doom1", "doom2", "heretic", "hexen" },
   },
 
   vavoom =
   {
-    name = "Vavoom",
-    for_games = { "doom1", "doom2", "freedoom", "heretic", "hexen", "strife" },
+    label = "Vavoom",
+    for_games = { "doom1", "doom2", "heretic", "hexen", "strife" },
   },
 
   zdoom =
   {
-    name = "ZDoom",
-    for_games = { "doom1", "doom2", "freedoom", "heretic", "hexen" },
+    label = "ZDoom",
+    for_games = { "doom1", "doom2", "heretic", "hexen" },
   },
 
 }
