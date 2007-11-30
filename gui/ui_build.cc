@@ -26,11 +26,10 @@
 #include "ui_window.h"
 
 
-#define PROGRESS_BG  fl_gray_ramp(FL_NUM_GRAY * 16 / 24)
 #define PROGRESS_FG  fl_color_cube(3,3,0)
-#define GLBSP_FG     fl_color_cube(1,4,2)
+#define INACTIVE_BG  fl_gray_ramp(5)
 
-#define BUILD_BG     fl_gray_ramp(FL_NUM_GRAY * 9 / 24)
+#define GLBSP_FG     fl_color_cube(1,4,2)
 
 #define ABORT_COLOR  fl_color_cube(3,1,1)
 
@@ -92,8 +91,8 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   progress = new Fl_Progress(x+12, cy, w-24, 20);
   progress->align(FL_ALIGN_INSIDE);
   progress->box(FL_FLAT_BOX);
-  progress->color(fl_gray_ramp(5), PROGRESS_FG);
-  progress->value(0);
+  progress->color(INACTIVE_BG, PROGRESS_FG);
+  progress->value(0.0);
 
   add(progress);
 
@@ -151,7 +150,7 @@ void UI_Build::ProgBegin(int pass, float limit)
   prog_pass  = pass;
   prog_limit = limit;
 
-  progress->color(PROGRESS_BG, (pass==1) ? PROGRESS_FG : GLBSP_FG);
+  progress->color(FL_BACKGROUND_COLOR, (pass==1) ? PROGRESS_FG : GLBSP_FG);
   progress->show();
 }
 
@@ -181,7 +180,8 @@ void UI_Build::ProgFinish()
 {
 ///  progress->hide();
 
-  progress->color(PROGRESS_BG, PROGRESS_FG);
+  progress->color(INACTIVE_BG, PROGRESS_FG);
+  progress->value(0.0);
 }
 
 void UI_Build::ProgStatus(const char *msg)
