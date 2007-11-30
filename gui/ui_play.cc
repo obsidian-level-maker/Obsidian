@@ -19,8 +19,7 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 
-#include "ui_optlist.h"
-#include "ui_themes.h"
+#include "ui_play.h"
 #include "ui_window.h"
 
 #include "lib_util.h"
@@ -139,8 +138,6 @@ void UI_Play::Locked(bool value)
 
 void UI_Play::UpdateLabels(const char *game, const char *mode)
 {
-return; //!!!!
-  
   if (strcmp(mode, "dm") == 0)
   {
     mons->label("Players: ");
@@ -158,7 +155,7 @@ return; //!!!!
 
   SYS_ASSERT(main_win);
 
-  main_win->theme_box->redraw();
+  redraw();
 }
 
 

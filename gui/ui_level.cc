@@ -19,7 +19,7 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 
-#include "ui_adjust.h"
+#include "ui_level.h"
 #include "ui_window.h"
 
 #include "lib_util.h"
