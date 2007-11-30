@@ -235,8 +235,6 @@ void UI_Game::Locked(bool value)
 
 //----------------------------------------------------------------
 
-const char *UI_Game::last_allval_str = NULL;
-
 void UI_Game::TransferToLUA()
 {
   Script_AddSetting("seed",   get_Seed());
@@ -248,23 +246,21 @@ void UI_Game::TransferToLUA()
  
 const char * UI_Game::GetAllValues()
 {
-  if (last_allval_str)
-    StringFree(last_allval_str);
+  static const char *last_str = NULL;
 
-  last_allval_str = StringPrintf(
-      "seed = %s\n"
-      "game = %s\n"
-      "mode = %s\n"
-      "engine = %s\n"
+  if (last_str)
+    StringFree(last_str);
+
+  last_str = StringPrintf(
+      "seed = %s\n"  "game = %s\n"
+      "mode = %s\n"  "engine = %s\n"
       "length = %s\n",
-      main_win->game_box->get_Seed(),
-      main_win->game_box->get_Game(),
-      main_win->game_box->get_Mode(),
-      main_win->game_box->get_Engine(),
-      main_win->game_box->get_Length()
+      get_Seed(), get_Game(),
+      get_Mode(), get_Engine(),
+      get_Length()
   );
 
-  return last_allval_str;
+  return last_str;
 }
 
 bool UI_Game::ParseValue(const char *key, const char *value)

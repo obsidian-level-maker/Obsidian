@@ -18,10 +18,12 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
+#include "hdr_lua.h"
 
 #include "ui_level.h"
 #include "ui_window.h"
 
+#include "g_lua.h"
 #include "lib_util.h"
 
 
@@ -141,6 +143,56 @@ void UI_Level::Locked(bool value)
     heights->activate();
     yyy   ->activate();
   }
+}
+
+
+//----------------------------------------------------------------
+
+void UI_Level::TransferToLUA()
+{
+  Script_AddSetting("size",    get_Size());
+  Script_AddSetting("theme",   get_Theme());
+  Script_AddSetting("detail",  get_Detail());
+  Script_AddSetting("heights", get_Heights());
+
+  // YYY
+}
+ 
+const char * UI_Level::GetAllValues()
+{
+  static const char *last_str = NULL;
+
+  if (last_str)
+    StringFree(last_str);
+
+  last_str = StringPrintf(
+      "size = %s\n"    "theme = %s\n"
+      "detail = %s\n"  "heights = %s\n",
+      // yyy
+      get_Size(),   get_Theme(),
+      get_Detail(), get_Heights()
+  );
+
+  return last_str;
+}
+
+bool UI_Level::ParseValue(const char *key, const char *value)
+{
+  if (StrCaseCmp(key, "size") == 0)
+    return set_Size(value);
+
+  if (StrCaseCmp(key, "theme") == 0)
+    return set_Theme(value);
+
+  if (StrCaseCmp(key, "detail") == 0)
+    return set_Detail(value);
+
+  if (StrCaseCmp(key, "heights") == 0)
+    return set_Heights(value);
+
+  // YYY
+
+  return false;
 }
 
 

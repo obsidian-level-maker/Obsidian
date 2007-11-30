@@ -79,7 +79,6 @@ private:
   static const char *mode_syms[];
   static const char *length_syms[];
 
-  static const char *last_allval_str;
 };
 
 #endif /* __UI_GAME_H__ */

@@ -39,6 +39,20 @@ public:
 
   void Locked(bool value);
 
+  void TransferToLUA();
+  // transfer the settings from this panel into the LUA
+  // global table called 'SETTINGS'.
+ 
+  const char *GetAllValues();
+  // return a string containing all the values from this panel,
+  // in a form suitable for the Config file.
+  // The string should NOT be freed.
+
+  bool ParseValue(const char *key, const char *value);
+  // parse the name and store the value in the appropriate
+  // widget.  Returns false if the key was unknown or the
+  // value was invalid.
+
   const char *get_Size();
   const char *get_Theme();
   const char *get_Detail();

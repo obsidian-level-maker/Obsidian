@@ -18,10 +18,12 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
+#include "hdr_lua.h"
 
 #include "ui_play.h"
 #include "ui_window.h"
 
+#include "g_lua.h"
 #include "lib_util.h"
 
 
@@ -157,6 +159,56 @@ void UI_Play::UpdateLabels(const char *game, const char *mode)
   redraw();
 }
 
+
+//----------------------------------------------------------------
+
+void UI_Play::TransferToLUA()
+{
+  Script_AddSetting("mons",    get_Monsters());
+  Script_AddSetting("puzzles", get_Puzzles());
+  Script_AddSetting("traps",   get_Traps());
+  Script_AddSetting("health",  get_Health());
+  Script_AddSetting("ammo",    get_Ammo());
+}
+ 
+const char * UI_Play::GetAllValues()
+{
+  static const char *last_str = NULL;
+
+  if (last_str)
+    StringFree(last_str);
+
+  last_str = StringPrintf(
+      "mons = %s\n"  "puzzles = %s\n"
+      "traps = %s\n" "health = %s\n"
+      "ammo = %s\n",
+      get_Monsters(), get_Puzzles(),
+      get_Traps(),    get_Health(),
+      get_Ammo()
+  );
+
+  return last_str;
+}
+
+bool UI_Play::ParseValue(const char *key, const char *value)
+{
+  if (StrCaseCmp(key, "mons") == 0)
+    return set_Monsters(value);
+
+  if (StrCaseCmp(key, "puzzles") == 0)
+    return set_Puzzles(value);
+
+  if (StrCaseCmp(key, "traps") == 0)
+    return set_Traps(value);
+
+  if (StrCaseCmp(key, "health") == 0)
+    return set_Health(value);
+
+  if (StrCaseCmp(key, "ammo") == 0)
+    return set_Ammo(value);
+
+  return false;
+}
 
 //----------------------------------------------------------------
 
