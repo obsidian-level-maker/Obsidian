@@ -16,10 +16,10 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_SETUP_H__
-#define __UI_SETUP_H__
+#ifndef __UI_GAME_H__
+#define __UI_GAME_H__
 
-class UI_Setup : public Fl_Group
+class UI_Game : public Fl_Group
 {
 private:
   Fl_Int_Input *seed;
@@ -31,8 +31,8 @@ private:
   Fl_Choice *engine;
 
 public:
-  UI_Setup(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_Setup();
+  UI_Game(int x, int y, int w, int h, const char *label = NULL);
+  virtual ~UI_Game();
 
 public:
 
@@ -66,4 +66,4 @@ private:
   static const char *length_syms[];
 };
 
-#endif /* __UI_SETUP_H__ */
+#endif /* __UI_GAME_H__ */

@@ -19,16 +19,16 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 
-#include "ui_setup.h"
+#include "ui_game.h"
 #include "ui_window.h"
 
 #include "lib_util.h"
 
 
 //
-// Setup Constructor
+// Constructor
 //
-UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
+UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label)
 {
   end(); // cancel begin() in Fl_Group constructor
@@ -122,7 +122,7 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
   cy += length->h() + 6;
 
 
-  DebugPrintf("UI_Setup: final h = %d\n", cy - y);
+  DebugPrintf("UI_Game: final h = %d\n", cy - y);
 
   resizable(0);  // don't resize our children
 
@@ -131,13 +131,13 @@ UI_Setup::UI_Setup(int x, int y, int w, int h, const char *label) :
 
 
 //
-// Setup Destructor
+// Destructor
 //
-UI_Setup::~UI_Setup()
+UI_Game::~UI_Game()
 {
 }
 
-void UI_Setup::SetSeed(u32_t new_val)
+void UI_Game::SetSeed(u32_t new_val)
 {
   char num_buf[40];
 
@@ -146,7 +146,7 @@ void UI_Setup::SetSeed(u32_t new_val)
   seed->value(num_buf);
 }
 
-void UI_Setup::FreshSeed()
+void UI_Game::FreshSeed()
 {
   u32_t bump = TimeGetMillies();
 
@@ -155,7 +155,7 @@ void UI_Setup::FreshSeed()
   SetSeed(bump);
 }
 
-void UI_Setup::BumpSeed()
+void UI_Game::BumpSeed()
 {
   u32_t old_val = atoi(seed->value());
 
@@ -164,16 +164,16 @@ void UI_Setup::BumpSeed()
   SetSeed(old_val + bump);
 }
 
-void UI_Setup::bump_callback(Fl_Widget *w, void *data)
+void UI_Game::bump_callback(Fl_Widget *w, void *data)
 {
-  UI_Setup *that = (UI_Setup *)data;
+  UI_Game *that = (UI_Game *)data;
 
   that->BumpSeed();
 }
 
-void UI_Setup::game_callback(Fl_Widget *w, void *data)
+void UI_Game::game_callback(Fl_Widget *w, void *data)
 {
-  UI_Setup *that = (UI_Setup *)data;
+  UI_Game *that = (UI_Game *)data;
 
   // multiplayer is not supported in Wolf3d / SOD
   if (strcmp(that->get_Game(), "wolf3d") == 0 ||
@@ -189,21 +189,21 @@ void UI_Setup::game_callback(Fl_Widget *w, void *data)
 
   if (main_win)
   {
-    main_win->adjust_box->UpdateLabels(that->get_Game(), that->get_Mode());
+    main_win->play_box->UpdateLabels(that->get_Game(), that->get_Mode());
   }
 }
 
-void UI_Setup::mode_callback(Fl_Widget *w, void *data)
+void UI_Game::mode_callback(Fl_Widget *w, void *data)
 {
-  UI_Setup *that = (UI_Setup *)data;
+  UI_Game *that = (UI_Game *)data;
 
   if (main_win)
   {
-    main_win->adjust_box->UpdateLabels(that->get_Game(), that->get_Mode());
+    main_win->play_box->UpdateLabels(that->get_Game(), that->get_Mode());
   }
 }
 
-void UI_Setup::Locked(bool value)
+void UI_Game::Locked(bool value)
 {
   if (value)
   {
@@ -232,64 +232,64 @@ void UI_Setup::Locked(bool value)
 
 //----------------------------------------------------------------
 
-const char * UI_Setup::game_syms[] =
+const char * UI_Game::game_syms[] =
 {
   "wolf3d", /// "spear",
   "doom1", "doom2", "tnt", "plutonia", "freedoom",
   "heretic", "hexen"
 };
 
-///--- const char * UI_Setup::port_syms[] =
+///--- const char * UI_Game::port_syms[] =
 ///--- {
 ///---   "nolimit" /// , "boom", "edge", "zdoom", etc..
 ///--- };
 
-const char * UI_Setup::mode_syms[] =
+const char * UI_Game::mode_syms[] =
 {
   "sp", "coop", "dm"
 };
 
-const char * UI_Setup::length_syms[] =
+const char * UI_Game::length_syms[] =
 {
   "single", "episode", "full"
 };
 
 
-const char *UI_Setup::get_Seed()
+const char *UI_Game::get_Seed()
 {
   return seed->value();
 }
 
-const char *UI_Setup::get_Game()
+const char *UI_Game::get_Game()
 {
   return game_syms[game->value()];
 }
 
-const char *UI_Setup::get_Engine()
+const char *UI_Game::get_Engine()
 {
   return "nolimit";  // FIXME !!!!
 }
 
-const char *UI_Setup::get_Mode()
+const char *UI_Game::get_Mode()
 {
   return mode_syms[mode->value()];
 }
 
-const char *UI_Setup::get_Length()
+const char *UI_Game::get_Length()
 {
   return length_syms[length->value()];
 }
 
 //----------------------------------------------------------------
 
-bool UI_Setup::set_Seed(const char *str)
+bool UI_Game::set_Seed(const char *str)
 {
   seed->value(str);
 
   return true;
 }
 
-bool UI_Setup::set_Game(const char *str)
+bool UI_Game::set_Game(const char *str)
 {
   for (int i=0; game_syms[i]; i++)
   {
@@ -303,7 +303,7 @@ bool UI_Setup::set_Game(const char *str)
   return false; // Unknown
 }
 
-bool UI_Setup::set_Engine(const char *str)
+bool UI_Game::set_Engine(const char *str)
 {
 #if 0 // FIXME !!!
   for (int i=0; port_syms[i]; i++)
@@ -318,7 +318,7 @@ bool UI_Setup::set_Engine(const char *str)
   return false; // Unknown
 }
 
-bool UI_Setup::set_Mode(const char *str)
+bool UI_Game::set_Mode(const char *str)
 {
   for (int i=0; mode_syms[i]; i++)
   {
@@ -334,7 +334,7 @@ bool UI_Setup::set_Mode(const char *str)
   return false; // Unknown
 }
 
-bool UI_Setup::set_Length(const char *str)
+bool UI_Game::set_Length(const char *str)
 {
   for (int i=0; length_syms[i]; i++)
   {
