@@ -2,6 +2,20 @@
 TODO
 ====
 
+New Window Layout:
+
+-  save the new Level stuff (Detail, Theme etc) into config,
+   and pass values to LUA scripts.
+
+-  load games from 'games/' dir, setup Gama button.
+
+-  load engines from scripts/engines.lua
+
+-  load custom mods from 'mods/' directory.
+
+-  setup Theme button based on games and mods.
+
+
 General:
 
 +  create special BOSS levels (e.g. E1M8, MAP30)
@@ -12,8 +26,6 @@ General:
 GUI:
 
 +  disable sidedef packing (cause problem with Doomsday).
-
-++ update to LUA 5.1.2
 
 +  errors show full traceback (see interpreter source)
 
@@ -85,30 +97,6 @@ Monsters:
 -  idea: horde_size depends on (pl_weap.fp - monst.fp)
 
 -  cage monsters: don't put hitscan snipers up really high.
-
-
-Wolf3D:
- 
-   + push-walls for secret quests!
-   + secret elevators
-   + bosses!
-
-   - decide_monster : skills are "tiered"
-   - health/ammo : no skills! -- use medium one
-   - place_items : never where monsters are!
-   - create rooms with 'endgame' object.
-
-   (later) ensure limits are enforced:
-     - MAXACTORS = 150  (remove actors at random)
-     - MAXSTATS  = 400  (remove statics at random)
-     - MAXDOORS  = 64   (remove unneeded doors at random)
-
-   (later) patrolling monsters (need to create path with arrows).
-   (later) secret levels (full of treasure)
-   (later) something interesting in middle of big rooms.
-   (later) elevator "entry" in first room.
-   (later) widen some arches.
-   (later) pacman levels: decorate walls
 
 
 Miscellaneous:
