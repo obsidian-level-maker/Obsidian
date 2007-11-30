@@ -299,26 +299,30 @@ void Script_Load(void)
 }
 
 
-static void AddField(lua_State *L, const char *key, const char *value)
+void Script_AddSetting(const char *key, const char *value)
 {
+  // FIXME: !!!!!! FUCKED
+
+  SYS_NULL_CHECK(key);
   SYS_NULL_CHECK(value);
 
-  lua_pushstring(L, key);
-  lua_pushstring(L, value);
-  lua_rawset(L, -3);
+  lua_pushstring(LUA_ST, key);
+  lua_pushstring(LUA_ST, value);
+  lua_rawset(LUA_ST, -3);
 }
 
 static void Script_MakeSettings(lua_State *L)
 {
+  // FIXME: !!!!!! FUCKED
+
   lua_newtable(L);
 
-  AddField(L, "seed",  main_win->game_box->get_Seed());
+  main_win->game_box ->TransferToLUA();
+//main_win->level_box->TransferToLUA();
+//main_win->play_box ->TransferToLUA();
+//main_win->option_box->TransferToLUA();
 
-  AddField(L, "game",  main_win->game_box->get_Game());
-  AddField(L, "mode",  main_win->game_box->get_Mode());
-  AddField(L, "engine",main_win->game_box->get_Engine());
-  AddField(L, "length",main_win->game_box->get_Length());
-
+#if 0
   AddField(L, "size",   main_win->level_box->get_Size());
 
   AddField(L, "mons",   main_win->play_box->get_Monsters());
@@ -326,7 +330,7 @@ static void Script_MakeSettings(lua_State *L)
   AddField(L, "traps",  main_win->play_box->get_Traps());
   AddField(L, "health", main_win->play_box->get_Health());
   AddField(L, "ammo",   main_win->play_box->get_Ammo());
-
+#endif
   lua_setglobal(L, "SETTINGS");
 }
 

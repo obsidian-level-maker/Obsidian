@@ -28,6 +28,8 @@ void Script_Load(void);
 
 int Script_RegisterLib(const char *name, const luaL_Reg *reg);
 
+void Script_AddSetting(const char *key, const char *value);
+
 bool Script_Run(void);
 
 #endif // __SCRIPTING_HEADER__
