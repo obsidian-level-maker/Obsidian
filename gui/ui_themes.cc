@@ -137,6 +137,30 @@ void UI_Play::Locked(bool value)
   }
 }
 
+void UI_Play::UpdateLabels(const char *game, const char *mode)
+{
+return; //!!!!
+  
+  if (strcmp(mode, "dm") == 0)
+  {
+    mons->label("Players: ");
+    puzzles->label("Weapons: ");
+  }
+  else
+  {
+    mons->label("Monsters: ");
+
+    if (strcmp(game, "wolf3d") == 0 || strcmp(game, "spear") == 0)
+      puzzles->label("Bosses: ");
+    else
+      puzzles->label("Puzzles: ");
+  }
+
+  SYS_ASSERT(main_win);
+
+  main_win->theme_box->redraw();
+}
+
 
 //----------------------------------------------------------------
 
