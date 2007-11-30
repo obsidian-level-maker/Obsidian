@@ -18,10 +18,12 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
+#include "hdr_lua.h"
 
 #include "ui_game.h"
 #include "ui_window.h"
 
+#include "g_lua.h"
 #include "lib_util.h"
 
 
@@ -230,8 +232,64 @@ void UI_Game::Locked(bool value)
   }
 }
 
+
 //----------------------------------------------------------------
 
+const char *UI_Game::last_allval_str = NULL;
+
+void UI_Game::TransferToLUA()
+{
+  Script_AddSetting("seed",   get_Seed());
+  Script_AddSetting("game",   get_Game());
+  Script_AddSetting("mode",   get_Mode());
+  Script_AddSetting("engine", get_Engine());
+  Script_AddSetting("length", get_Length());
+}
+ 
+const char * UI_Game::GetAllValues()
+{
+  if (last_allval_str)
+    StringFree(last_allval_str);
+
+  last_allval_str = StringPrintf(
+      "seed = %s\n"
+      "game = %s\n"
+      "mode = %s\n"
+      "engine = %s\n"
+      "length = %s\n",
+      main_win->game_box->get_Seed(),
+      main_win->game_box->get_Game(),
+      main_win->game_box->get_Mode(),
+      main_win->game_box->get_Engine(),
+      main_win->game_box->get_Length()
+  );
+
+  return last_allval_str;
+}
+
+bool UI_Game::ParseValue(const char *key, const char *value)
+{
+  if (StrCaseCmp(key, "seed") == 0)
+    return set_Seed(value);
+
+  if (StrCaseCmp(key, "game") == 0)
+    return set_Game(value);
+
+  if (StrCaseCmp(key, "mode") == 0)
+    return set_Mode(value);
+
+  if (StrCaseCmp(key, "engine") == 0)
+    return set_Engine(value);
+
+  if (StrCaseCmp(key, "length") == 0)
+    return set_Length(value);
+
+  return false;
+}
+
+
+//----------------------------------------------------------------
+  
 const char * UI_Game::game_syms[] =
 {
   "wolf3d", /// "spear",

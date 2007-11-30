@@ -43,6 +43,20 @@ public:
 
   void Locked(bool value);
 
+  void TransferToLUA();
+  // transfer the settings from this panel into the LUA
+  // global table called 'SETTINGS'.
+ 
+  const char *GetAllValues();
+  // return a string containing all the values from this panel,
+  // in a form suitable for the Config file.
+  // The string should NOT be freed.
+
+  bool ParseValue(const char *key, const char *value);
+  // parse the name and store the value in the appropriate
+  // widget.  Returns false if the key was unknown or the
+  // value was invalid.
+
   const char *get_Seed();
   const char *get_Game();
   const char *get_Mode();
@@ -64,6 +78,8 @@ private:
 ///---  static const char *port_syms[];
   static const char *mode_syms[];
   static const char *length_syms[];
+
+  static const char *last_allval_str;
 };
 
 #endif /* __UI_GAME_H__ */
