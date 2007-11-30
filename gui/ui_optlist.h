@@ -42,7 +42,7 @@ public:
   const char *id;    // terse identifier
   const char *desc;  // description (for the UI)
   
-  int shown;      // 0 = hidden, 1 = shown, 2 = greyed out
+  int shown;      // 0 = hidden, 1 = shown, -1 = greyed out
   int value;      // 0 or 1
 
   int priority;   // priority for on-screen ordering
@@ -86,21 +86,13 @@ public:
 
   void IterateOptions(option_iter_f func, void *data);
 
-  enum
-  {
-    CF_OPTION = (1 << 0),  // added/removed options
-    CF_SHOWN  = (1 << 1),  // changed 'shown' fields
-    CF_VALUE  = (1 << 2),  // changed 'value' fields
-  };
-  
-  void Commit(int flags);
+  void Commit();
   // this must be called after any changes to the option list
   // have been made.
 
 private:
   option_data_c *FindOption(const char *id);
 
-  void BuildPack();
 };
 
 

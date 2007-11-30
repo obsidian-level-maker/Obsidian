@@ -137,7 +137,7 @@ void UI_OptionList::IterateOptions(option_iter_f func, void *data)
   }
 }
 
-void UI_OptionList::Commit(int flags)
+void UI_OptionList::Commit()
 {
   // FIXME: visit in correct order (shown + priority + alphabetical)
 
@@ -165,7 +165,7 @@ void UI_OptionList::Commit(int flags)
 
     cy += button->h() + GAP_H;
 
-    if (opt->shown != (button->active() ? 1 : 2))
+    if (opt->shown != (button->active() ? 1 : -1))
     {
       if (opt->shown == 1)
         button->activate();
@@ -191,9 +191,4 @@ option_data_c *UI_OptionList::FindOption(const char *id)
 
   return NULL; // not found
 }
-  
-void UI_OptionList::BuildPack()
-{
-  // FIXME
-}
-
+ 
