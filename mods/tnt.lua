@@ -263,10 +263,11 @@ end
 OB_MODS["tnt"] =
 {
   label = "TNT Evilution",
+  priority = 94,
 
   for_games = { "doom2" },
 
-  conflicts = { "plut" },
+  conflict_mods = { "plut" },
 
   mod_func = tnt_modifier,
 }

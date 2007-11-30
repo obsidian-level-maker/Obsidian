@@ -89,10 +89,11 @@ end
 OB_MODS["freedoom"] =
 {
   label = "FreeDoom 0.5",
+  priority = 90,
 
   for_games = { "doom2" },
 
-  conflicts = { "tnt", "plut" },
+  conflict_mods = { "tnt", "plut" },
 
   mod_func = freedoom_modifier,
 }

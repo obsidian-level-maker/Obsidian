@@ -168,10 +168,11 @@ end
 OB_MODS["plut"] =
 {
   label = "Plutonia",
+  priority = 92,
 
   for_games = { "doom2" },
 
-  conflicts = { "tnt" },
+  conflict_mods = { "tnt" },
 
   mod_func = plut_modifier,
 }
