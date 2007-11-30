@@ -54,16 +54,16 @@ OBJS=	main.o      \
 	g_lua.o     \
 	g_wolf.o    \
 	twister.o   \
-	ui_adjust.o \
 	ui_build.o  \
 	ui_chooser.o \
 	ui_dialog.o \
+	ui_game.o  \
+	ui_level.o \
 	ui_map.o    \
 	ui_menu.o   \
 	ui_mods.o   \
 	ui_optlist.o \
-	ui_setup.o  \
-	ui_themes.o \
+	ui_play.o \
 	ui_window.o
 
 

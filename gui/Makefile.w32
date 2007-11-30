@@ -47,6 +47,9 @@ OBJS=	main.o      \
 	lib_util.o  \
 	sys_assert.o \
 	sys_debug.o \
+	csg_poly.o  \
+	csg_doom.o  \
+	csg_quake.o \
 	g_cookie.o  \
 	g_doom.o    \
 	g_glbsp.o   \
@@ -54,14 +57,16 @@ OBJS=	main.o      \
 	g_lua.o     \
 	g_wolf.o    \
 	twister.o   \
-	ui_adjust.o  \
 	ui_build.o  \
 	ui_chooser.o \
 	ui_dialog.o \
+	ui_game.o  \
+	ui_level.o \
 	ui_map.o    \
 	ui_menu.o   \
+	ui_mods.o   \
 	ui_optlist.o \
-	ui_setup.o  \
+	ui_play.o \
 	ui_window.o
 
 
