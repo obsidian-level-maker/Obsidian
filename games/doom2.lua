@@ -1936,6 +1936,6 @@ OB_GAMES["doom2"] =
 
   format = "doom",
 
-  info_func = doom2_factory,
+  game_func = doom2_factory,
 }
 

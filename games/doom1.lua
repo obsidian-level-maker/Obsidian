@@ -3155,6 +3155,6 @@ OB_GAMES["doom1"] =
 
   format = "doom",
 
-  info_func = doom1_factory,
+  game_func = doom1_factory,
 }
 

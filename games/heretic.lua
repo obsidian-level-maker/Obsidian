@@ -1117,6 +1117,6 @@ OB_GAMES["heretic"] =
 
   format = "doom",
 
-  info_func = heretic_factory,
+  game_func = heretic_factory,
 }
 

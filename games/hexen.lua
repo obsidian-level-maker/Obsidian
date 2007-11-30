@@ -2097,6 +2097,6 @@ OB_GAMES["hexen"] =
 
   format = "hexen",
 
-  info_func = hexen_factory,
+  game_func = hexen_factory,
 }
 
