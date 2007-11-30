@@ -48,7 +48,38 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   color(BUILD_BG, BUILD_BG);
 
 
-  int cy = y + 8;
+  int cy = y + 16;
+
+  mini_map = new UI_MiniMap(x+12, cy + 6, 100, 100);
+
+  add(mini_map);
+
+//  cy += mini_map->h() + 8;
+//  DebugPrintf("UI_Build: mini map h2 = %d\n", cy - y);
+
+
+///  cy = y + h - 120;
+
+  build = new Fl_Button(x+w - 88, cy, 74, 30, "Build...");
+  build->labelfont(FL_HELVETICA_BOLD);
+  build->callback(build_callback, this);
+
+  add(build);  cy += 42;
+
+  Fl_Button *about = new Fl_Button(x+w - 88, cy, 74, 30, "About");
+  about->callback(menu_do_about, this);
+
+  add(about);  cy += 42;
+
+  quit = new Fl_Button(x+w - 88, cy, 74, 32, "Quit");
+  quit->callback(quit_callback, this);
+
+  add(quit);  cy += 42;
+
+  DebugPrintf("UI_Build: button h2 = %d\n", cy - y);
+
+
+  cy = y + h - 70;
 
   status = new Fl_Box(FL_FLAT_BOX, x+12, cy, 136, 24, "Ready to go!");
   status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
@@ -61,53 +92,29 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   progress = new Fl_Progress(x+12, cy, w-24, 20);
   progress->align(FL_ALIGN_INSIDE);
   progress->box(FL_FLAT_BOX);
-  progress->color(PROGRESS_BG, PROGRESS_FG);
-  progress->value(50);
+  progress->color(fl_gray_ramp(5), PROGRESS_FG);
+  progress->value(0);
 
   add(progress);
 
-///!!!  progress->hide();
+///  progress->hide();
 
-  cy += progress->h() + 8;
-
-
-  mini_map = new UI_MiniMap(x+12, y+h - 120, 100, 100);
-
-  add(mini_map);
-
-  cy += mini_map->h() + 8;
-
-  DebugPrintf("UI_Build: mini map h = %d\n", cy - y);
+  cy += progress->h() + 12;
 
 
-  cy = y + h - 120;
-
-  DebugPrintf("UI_Build: button h = %d\n", cy - y);
+  DebugPrintf("UI_Build: status h2 = %d\n", cy - y);
 
 
-  build = new Fl_Button(x+w - 88, y+h-126, 74, 30, "Build...");
-  build->labelfont(FL_HELVETICA_BOLD);
-  build->callback(build_callback, this);
-
-  add(build);
-
-  Fl_Button *about = new Fl_Button(x+w - 88, y+h-84, 74, 30, "About");
-  about->callback(menu_do_about, this);
-
-  add(about);
-
-  quit = new Fl_Button(x+w - 88, y+h-42, 74, 32, "Quit");
-  quit->callback(quit_callback, this);
-
-  add(quit);
-
-
+#if 0
   Fl_Box *sizer = new Fl_Box(FL_NO_BOX, x+1, cy-4, w-2, 2, NULL);
   sizer->color(FL_RED, FL_RED);
 
   add(sizer);
 
   resizable(sizer);
+#else
+  resizable(NULL);
+#endif
 }
 
 
@@ -172,7 +179,9 @@ void UI_Build::ProgUpdate(float val)
 
 void UI_Build::ProgFinish()
 {
-  progress->hide();
+///  progress->hide();
+
+  progress->color(PROGRESS_BG, PROGRESS_FG);
 }
 
 void UI_Build::ProgStatus(const char *msg)
