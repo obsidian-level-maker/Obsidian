@@ -143,17 +143,13 @@ void UI_Play::UpdateLabels(const char *game, const char *mode)
 {
   if (strcmp(mode, "dm") == 0)
   {
-    mons->label("Players: ");
-    puzzles->label("Weapons: ");
+    mons->label("Weapons: ");
+    puzzles->label("Players: ");
   }
   else
   {
     mons->label("Monsters: ");
-
-    if (strcmp(game, "wolf3d") == 0 || strcmp(game, "spear") == 0)
-      puzzles->label("Bosses: ");
-    else
-      puzzles->label("Puzzles: ");
+    puzzles->label("Puzzles: ");
   }
 
   SYS_ASSERT(main_win);
