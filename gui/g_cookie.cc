@@ -39,16 +39,10 @@ static bool Cookie_SetValue(const char *name, const char *value)
   if (StrCaseCmp(name, "seed") == 0)
     return true;
 
-  // Settings...
+  // -- Game Settings --
+  if (main_win->game_box->ParseValue(name, value))
+    return true;
 
-  if (StrCaseCmp(name, "game") == 0)
-    return main_win->game_box->set_Game(value);
-  if (StrCaseCmp(name, "mode") == 0)
-    return main_win->game_box->set_Mode(value);
-  if (StrCaseCmp(name, "length") == 0)
-    return main_win->game_box->set_Length(value);
-  if (StrCaseCmp(name, "engine") == 0)
-    return main_win->game_box->set_Engine(value);
 
   // Adjustments...
 
@@ -183,15 +177,21 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006,2007 Andrew Apted\n");
   fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
-  fprintf(cookie_fp, "-- Settings --\n");
-  fprintf(cookie_fp, "seed = %s\n",  main_win->game_box->get_Seed());
-  fprintf(cookie_fp, "game = %s\n",  main_win->game_box->get_Game());
-  fprintf(cookie_fp, "mode = %s\n",  main_win->game_box->get_Mode());
-  fprintf(cookie_fp, "length = %s\n",main_win->game_box->get_Length());
-  fprintf(cookie_fp, "engine = %s\n",  main_win->game_box->get_Engine());
-  fprintf(cookie_fp, "\n");
+  fprintf(cookie_fp, "-- Game Settings --\n");
+  fprintf(cookie_fp, "%s\n", main_win->game_box->GetAllValues());
 
-  fprintf(cookie_fp, "-- Adjustments --\n");
+  fprintf(cookie_fp, "-- Level Architecture --\n");
+//fprintf(cookie_fp, "%s\n", main_win->level_box->GetAllValues());
+
+  fprintf(cookie_fp, "-- Playing Style --\n");
+//fprintf(cookie_fp, "%s\n", main_win->play_box->GetAllValues());
+
+  fprintf(cookie_fp, "-- Custom Mods --\n");
+//fprintf(cookie_fp, "%s\n", main_win->mod_box->GetAllValues());
+
+  fprintf(cookie_fp, "-- Custom Options --\n");
+//fprintf(cookie_fp, "%s\n", main_win->option_box->GetAllValues());
+
   fprintf(cookie_fp, "size = %s\n",  main_win->level_box->get_Size());
 
   fprintf(cookie_fp, "mons = %s\n",   main_win->play_box->get_Monsters());
@@ -199,7 +199,6 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "traps = %s\n",  main_win->play_box->get_Traps());
   fprintf(cookie_fp, "health = %s\n", main_win->play_box->get_Health());
   fprintf(cookie_fp, "ammo = %s\n",   main_win->play_box->get_Ammo());
-  fprintf(cookie_fp, "\n");
 
   fprintf(cookie_fp, "-- Miscellaneous --\n");
   fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());

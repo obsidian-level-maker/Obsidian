@@ -269,16 +269,22 @@ void WAD_CreateInfoLump()
   WAD_Printf(L, "-- http://oblige.sourceforge.net/\n");
   WAD_Printf(L, "\n");
 
-  // Note: duplicate code to that in g_cookie.cc,
-  //       probably not worth merging the two.
  
-  WAD_Printf(L, "-- Settings --\n");
-  WAD_Printf(L, "seed = %s\n",  main_win->game_box->get_Seed());
-  WAD_Printf(L, "game = %s\n",  main_win->game_box->get_Game());
-  WAD_Printf(L, "mode = %s\n",  main_win->game_box->get_Mode());
-  WAD_Printf(L, "engine = %s\n",main_win->game_box->get_Engine());
-  WAD_Printf(L, "length = %s\n",main_win->game_box->get_Length());
-  WAD_Printf(L, "\n");
+  WAD_Printf(L, "-- Game Settings --\n");
+  WAD_Printf(L, "%s\n", main_win->game_box->GetAllValues());
+
+  WAD_Printf(L, "-- Level Architecture --\n");
+//WAD_Printf(L, "%s\n", main_win->level_box->GetAllValues());
+
+  WAD_Printf(L, "-- Playing Style --\n");
+//WAD_Printf(L, "%s\n", main_win->play_box->GetAllValues());
+
+  WAD_Printf(L, "-- Custom Mods --\n");
+//WAD_Printf(L, "%s\n", main_win->mod_box->GetAllValues());
+
+  WAD_Printf(L, "-- Custom Options --\n");
+//WAD_Printf(L, "%s\n", main_win->option_box->GetAllValues());
+
 
   WAD_Printf(L, "-- Adjustments --\n");
   WAD_Printf(L, "size = %s\n",   main_win->level_box->get_Size());
