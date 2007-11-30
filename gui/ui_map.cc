@@ -27,16 +27,12 @@
 
 #define MAP_BORDER  2
 
-#define SURROUND_BG   fl_gray_ramp(FL_NUM_GRAY * 8 / 24)
-
 
 UI_MiniMap::UI_MiniMap(int x, int y, int w, int h, const char *label) :
     Fl_Box(x, y, w, h, label),
     pixels(NULL), cur_image(NULL)
 {
   box(FL_NO_BOX);
-
-//  color(MAIN_BG_COLOR);
 }
 
 
@@ -151,7 +147,7 @@ void UI_MiniMap::MapCorner(int x, int y, int dx, int dy)
 {
   u8_t r, g, b;
 
-  Fl::get_color(SURROUND_BG, r, g, b);
+  Fl::get_color(BUILD_BG, r, g, b);
 
   DrawPixel(x+dx*0, y+dy*0, r, g, b);
   DrawPixel(x+dx*1, y+dy*0, r, g, b);

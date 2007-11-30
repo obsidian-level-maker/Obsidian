@@ -67,7 +67,7 @@ UI_MainWin::UI_MainWin(const char *title) :
 
   callback((Fl_Callback *) main_win_close_CB);
 
-  color(MAIN_BG_COLOR, MAIN_BG_COLOR);
+  color(WINDOW_BG, WINDOW_BG);
 
 
 #if 0  // EXPERIMENT: Do we NEED the menu bar ?

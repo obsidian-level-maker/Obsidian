@@ -30,7 +30,9 @@
 #include "ui_optlist.h"
 #include "ui_mods.h"
 
-#define MAIN_BG_COLOR  fl_gray_ramp(FL_NUM_GRAY * 3 / 24)
+#define WINDOW_BG  fl_gray_ramp(3)
+
+#define BUILD_BG   fl_gray_ramp(9)
 
 
 class UI_MainWin : public Fl_Double_Window
