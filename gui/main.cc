@@ -194,10 +194,9 @@ void Main_FatalError(const char *msg, ...)
 
 void Build_Cool_Shit()
 {
-  bool is_wolf  = (strcmp(main_win->setup_box->get_Game(), "wolf3d") == 0) ||
-                  (strcmp(main_win->setup_box->get_Game(), "spear")  == 0);
+  bool is_wolf  = false;
 
-  bool is_hexen = (strcmp(main_win->setup_box->get_Game(), "hexen")  == 0);
+  bool is_hexen = (strcmp(main_win->game_box->get_Game(), "hexen")  == 0);
 
   UI_Build *bb_area = main_win->build_box;
 
@@ -300,7 +299,7 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-//!!!!  Fl::scheme("plastic");
+  Fl::scheme("plastic");
 
   fl_message_font(FL_HELVETICA /* _BOLD */, 18);
 

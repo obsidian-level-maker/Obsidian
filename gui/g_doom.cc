@@ -163,9 +163,9 @@ void WAD_WritePatches()
   };
 
   int game = 0;
-  if (strcmp(main_win->setup_box->get_Game(), "heretic") == 0)
+  if (strcmp(main_win->game_box->get_Game(), "heretic") == 0)
     game = 1;
-  if (strcmp(main_win->setup_box->get_Game(), "hexen") == 0)
+  if (strcmp(main_win->game_box->get_Game(), "hexen") == 0)
     game = 2;
 
   for (int what=0; what < 2; what++)
@@ -273,20 +273,21 @@ void WAD_CreateInfoLump()
   //       probably not worth merging the two.
  
   WAD_Printf(L, "-- Settings --\n");
-  WAD_Printf(L, "seed = %s\n",  main_win->setup_box->get_Seed());
-  WAD_Printf(L, "game = %s\n",  main_win->setup_box->get_Game());
-  WAD_Printf(L, "mode = %s\n",  main_win->setup_box->get_Mode());
-  WAD_Printf(L, "engine = %s\n",main_win->setup_box->get_Engine());
-  WAD_Printf(L, "length = %s\n",main_win->setup_box->get_Length());
+  WAD_Printf(L, "seed = %s\n",  main_win->game_box->get_Seed());
+  WAD_Printf(L, "game = %s\n",  main_win->game_box->get_Game());
+  WAD_Printf(L, "mode = %s\n",  main_win->game_box->get_Mode());
+  WAD_Printf(L, "engine = %s\n",main_win->game_box->get_Engine());
+  WAD_Printf(L, "length = %s\n",main_win->game_box->get_Length());
   WAD_Printf(L, "\n");
 
   WAD_Printf(L, "-- Adjustments --\n");
-  WAD_Printf(L, "size = %s\n",   main_win->adjust_box->get_Size());
-  WAD_Printf(L, "puzzles = %s\n",  main_win->adjust_box->get_Puzzles());
-  WAD_Printf(L, "traps = %s\n",  main_win->adjust_box->get_Traps());
-  WAD_Printf(L, "mons = %s\n",   main_win->adjust_box->get_Monsters());
-  WAD_Printf(L, "health = %s\n", main_win->adjust_box->get_Health());
-  WAD_Printf(L, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
+  WAD_Printf(L, "size = %s\n",   main_win->level_box->get_Size());
+
+  WAD_Printf(L, "mons = %s\n",   main_win->play_box->get_Monsters());
+  WAD_Printf(L, "puzzles = %s\n",  main_win->play_box->get_Puzzles());
+  WAD_Printf(L, "traps = %s\n",  main_win->play_box->get_Traps());
+  WAD_Printf(L, "health = %s\n", main_win->play_box->get_Health());
+  WAD_Printf(L, "ammo = %s\n",   main_win->play_box->get_Ammo());
 
   WAD_Printf(L, "\n\n\n\n\n\n");
 

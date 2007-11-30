@@ -359,10 +359,10 @@ const byte *Image_MakePatch(int what, int *length, int dest_w)
   // palette conversion
   const byte *mapper = pixel_to_doom;
 
-  if (strcmp(main_win->setup_box->get_Game(), "heretic") == 0)
+  if (strcmp(main_win->game_box->get_Game(), "heretic") == 0)
     mapper = pixel_to_heretic;
 
-  if (strcmp(main_win->setup_box->get_Game(), "hexen") == 0)
+  if (strcmp(main_win->game_box->get_Game(), "hexen") == 0)
     mapper = pixel_to_hexen;
 
   // patch posts

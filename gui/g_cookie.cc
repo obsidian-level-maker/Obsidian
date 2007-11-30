@@ -42,29 +42,30 @@ static bool Cookie_SetValue(const char *name, const char *value)
   // Settings...
 
   if (StrCaseCmp(name, "game") == 0)
-    return main_win->setup_box->set_Game(value);
+    return main_win->game_box->set_Game(value);
   if (StrCaseCmp(name, "mode") == 0)
-    return main_win->setup_box->set_Mode(value);
+    return main_win->game_box->set_Mode(value);
   if (StrCaseCmp(name, "length") == 0)
-    return main_win->setup_box->set_Length(value);
+    return main_win->game_box->set_Length(value);
   if (StrCaseCmp(name, "engine") == 0)
-    return main_win->setup_box->set_Engine(value);
+    return main_win->game_box->set_Engine(value);
 
   // Adjustments...
 
   if (StrCaseCmp(name, "size") == 0)
-    return main_win->adjust_box->set_Size(value);
+    return main_win->level_box->set_Size(value);
+
   if (StrCaseCmp(name, "puzzles") == 0)
-    return main_win->adjust_box->set_Puzzles(value);
+    return main_win->play_box->set_Puzzles(value);
   if (StrCaseCmp(name, "traps") == 0)
-    return main_win->adjust_box->set_Traps(value);
+    return main_win->play_box->set_Traps(value);
 
   if (StrCaseCmp(name, "health") == 0)
-    return main_win->adjust_box->set_Health(value);
+    return main_win->play_box->set_Health(value);
   if (StrCaseCmp(name, "ammo") == 0)
-    return main_win->adjust_box->set_Ammo(value);
+    return main_win->play_box->set_Ammo(value);
   if (StrCaseCmp(name, "mons") == 0)
-    return main_win->adjust_box->set_Monsters(value);
+    return main_win->play_box->set_Monsters(value);
 
   // Other stuff...
   if (StrCaseCmp(name, "last_file") == 0)
@@ -183,20 +184,21 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
   fprintf(cookie_fp, "-- Settings --\n");
-  fprintf(cookie_fp, "seed = %s\n",  main_win->setup_box->get_Seed());
-  fprintf(cookie_fp, "game = %s\n",  main_win->setup_box->get_Game());
-  fprintf(cookie_fp, "mode = %s\n",  main_win->setup_box->get_Mode());
-  fprintf(cookie_fp, "length = %s\n",main_win->setup_box->get_Length());
-  fprintf(cookie_fp, "engine = %s\n",  main_win->setup_box->get_Engine());
+  fprintf(cookie_fp, "seed = %s\n",  main_win->game_box->get_Seed());
+  fprintf(cookie_fp, "game = %s\n",  main_win->game_box->get_Game());
+  fprintf(cookie_fp, "mode = %s\n",  main_win->game_box->get_Mode());
+  fprintf(cookie_fp, "length = %s\n",main_win->game_box->get_Length());
+  fprintf(cookie_fp, "engine = %s\n",  main_win->game_box->get_Engine());
   fprintf(cookie_fp, "\n");
 
   fprintf(cookie_fp, "-- Adjustments --\n");
-  fprintf(cookie_fp, "size = %s\n",  main_win->adjust_box->get_Size());
-  fprintf(cookie_fp, "puzzles = %s\n",  main_win->adjust_box->get_Puzzles());
-  fprintf(cookie_fp, "traps = %s\n",  main_win->adjust_box->get_Traps());
-  fprintf(cookie_fp, "mons = %s\n",   main_win->adjust_box->get_Monsters());
-  fprintf(cookie_fp, "health = %s\n", main_win->adjust_box->get_Health());
-  fprintf(cookie_fp, "ammo = %s\n",   main_win->adjust_box->get_Ammo());
+  fprintf(cookie_fp, "size = %s\n",  main_win->level_box->get_Size());
+
+  fprintf(cookie_fp, "mons = %s\n",   main_win->play_box->get_Monsters());
+  fprintf(cookie_fp, "puzzles = %s\n",  main_win->play_box->get_Puzzles());
+  fprintf(cookie_fp, "traps = %s\n",  main_win->play_box->get_Traps());
+  fprintf(cookie_fp, "health = %s\n", main_win->play_box->get_Health());
+  fprintf(cookie_fp, "ammo = %s\n",   main_win->play_box->get_Ammo());
   fprintf(cookie_fp, "\n");
 
   fprintf(cookie_fp, "-- Miscellaneous --\n");
