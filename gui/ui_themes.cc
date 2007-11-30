@@ -1,5 +1,5 @@
 //----------------------------------------------------------------
-//  Theme list
+//  Play Settings
 //----------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -27,9 +27,9 @@
 
 
 //
-// Themes Constructor
+// Constructor
 //
-UI_Themes::UI_Themes(int x, int y, int w, int h, const char *label) :
+UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label)
 {
   end(); // cancel begin() in Fl_Group constructor
@@ -39,7 +39,7 @@ UI_Themes::UI_Themes(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 8;
 
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Theme Selection");
+  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Playing Style");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
@@ -49,58 +49,181 @@ UI_Themes::UI_Themes(int x, int y, int w, int h, const char *label) :
   cy += 28;
 
 
-  opts = new UI_OptionList(x+4, cy, w-8, y+h-4 - cy); 
+  mons = new Fl_Choice(x+ 82, cy, 112, 24, "Monsters: ");
+  mons->align(FL_ALIGN_LEFT);
+  mons->selection_color(FL_RED);
+  mons->add("Scarce|Normal|Hordes");
+  mons->value(1);
 
-  add(opts);
+  add(mons);
+
+  cy += mons->h() + 6;
+
+
+  puzzles = new Fl_Choice(x+ 82, cy, 112, 24, "Puzzles: ");
+  puzzles->align(FL_ALIGN_LEFT);
+  puzzles->selection_color(FL_RED);
+  puzzles->add("Few|Normal|Heaps");
+  puzzles->value(1);
+
+  add(puzzles);
+
+  cy += puzzles->h() + 6;
+
+
+  traps = new Fl_Choice(x+ 82, cy, 112, 24, "Traps: ");
+  traps->align(FL_ALIGN_LEFT);
+  traps->selection_color(FL_RED);
+  traps->add("Few|Normal|Heaps");
+  traps->value(1);
+
+  add(traps);
+
+  cy += traps->h() + 6;
+
+  cy += 10;
+
+
+  health = new Fl_Choice(x+82, cy, 112, 24, "Health: ");
+  health->align(FL_ALIGN_LEFT);
+  health->selection_color(FL_RED);
+  health->add("Less|Enough|More");
+  health->value(1);
+
+  add(health);
+
+  cy += health->h() + 6;
+
+
+  ammo = new Fl_Choice(x+82, cy, 112, 24, "Ammo: ");
+  ammo->align(FL_ALIGN_LEFT);
+  ammo->selection_color(FL_RED);
+  ammo->add("Less|Enough|More");
+  ammo->value(1);
   
-  resizable(opts);
+  add(ammo);
+  
+  cy += ammo->h() + 6;
 
 
-  opts->AddOption("tnt", "Tech");
-  opts->AddOption("plu", "Industrial");
-  opts->AddOption("etn", "Hell");
-  opts->AddOption("qdm", "Nature");
-  opts->AddOption("foo", "Foo Bar 3000");
-  opts->AddOption("xxx", "X-Men X-Treme");
-
-  opts->Commit(UI_OptionList::CF_OPTION);
-
-  opts->ShowOption("tnt", 1);
-  opts->ShowOption("plu", 1);
-  opts->ShowOption("etn", 1);
-  opts->ShowOption("qdm", 1);
-  opts->ShowOption("foo", 0);
-  opts->ShowOption("xxx", 0);
-
-  opts->Commit(UI_OptionList::CF_VALUE);
+  DebugPrintf("UI_Play: final h = %d\n", cy - y);
 }
 
 
 //
-// Themes Destructor
+// Destructor
 //
-UI_Themes::~UI_Themes()
+UI_Play::~UI_Play()
 {
 }
 
-
-void UI_Themes::bump_callback(Fl_Widget *w, void *data)
-{
-  UI_Themes *that = (UI_Themes *)data;
-
-//  that->BumpSeed();
-}
-
-
-void UI_Themes::Locked(bool value)
+void UI_Play::Locked(bool value)
 {
   if (value)
   {
-    opts->deactivate();
+    mons  ->deactivate();
+    puzzles->deactivate();
+    traps ->deactivate();
+    health->deactivate();
+    ammo  ->deactivate();
   }
   else
   {
-    opts->activate();
+    mons  ->activate();
+    puzzles->activate();
+    traps ->activate();
+    health->activate();
+    ammo  ->activate();
   }
+}
+
+
+//----------------------------------------------------------------
+
+const char * UI_Play::adjust_syms[3] =
+{
+  "less", "normal", "more"
+};
+
+const char *UI_Play::get_Health()
+{
+  return adjust_syms[health->value()];
+}
+
+const char *UI_Play::get_Ammo()
+{
+  return adjust_syms[ammo->value()];
+}
+
+const char *UI_Play::get_Monsters()
+{
+  return adjust_syms[mons->value()];
+}
+
+const char *UI_Play::get_Traps()
+{
+  return adjust_syms[traps->value()];
+}
+
+const char *UI_Play::get_Puzzles()
+{
+  return adjust_syms[puzzles->value()];
+}
+
+
+//----------------------------------------------------------------
+
+int UI_Play::FindSym(const char *str)
+{
+  for (int i=0; adjust_syms[i]; i++)
+    if (StrCaseCmp(str, adjust_syms[i]) == 0)
+      return i;
+
+  return -1; // Unknown
+}
+
+bool UI_Play::set_Monsters(const char *str)
+{
+  int i = FindSym(str);
+
+  if (i >= 0) { mons->value(i); return true; }
+
+  return false;
+}
+
+bool UI_Play::set_Puzzles(const char *str)
+{
+  int i = FindSym(str);
+
+  if (i >= 0) { puzzles->value(i); return true; }
+
+  return false;
+}
+
+bool UI_Play::set_Traps(const char *str)
+{
+  int i = FindSym(str);
+
+  if (i >= 0) { traps->value(i); return true; }
+
+  return false;
+}
+
+bool UI_Play::set_Health(const char *str)
+{
+  int i = FindSym(str);
+
+  if (i >= 0) { health->value(i); return true; }
+
+  return false;
+}
+
+bool UI_Play::set_Ammo(const char *str)
+{
+  int i = FindSym(str);
+
+  if (i >= 0) { ammo->value(i); return true; }
+
+  return false;
 }
 

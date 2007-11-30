@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  Theme list
+//  Play Settings
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -16,26 +16,46 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_THEMES_H__
-#define __UI_THEMES_H__
+#ifndef __UI_PLAY_H__
+#define __UI_PLAY_H__
 
-class UI_Themes : public Fl_Group
+class UI_Play : public Fl_Group
 {
 private:
 
-  UI_OptionList *opts;
+  Fl_Choice *mons;
+  Fl_Choice *puzzles;
+  Fl_Choice *traps;
+
+  Fl_Choice *health;
+  Fl_Choice *ammo;
 
 public:
-  UI_Themes(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_Themes();
+  UI_Play(int x, int y, int w, int h, const char *label = NULL);
+  virtual ~UI_Play();
 
 public:
 
   void Locked(bool value);
   
-private:
-  static void bump_callback(Fl_Widget *, void*);
+  void UpdateLabels(const char *game, const char *mode);
 
+  const char *get_Monsters();
+  const char *get_Puzzles();
+  const char *get_Traps();
+  const char *get_Health();
+  const char *get_Ammo();
+
+  bool set_Monsters(const char *str);
+  bool set_Puzzles (const char *str);
+  bool set_Traps   (const char *str);
+  bool set_Health  (const char *str);
+  bool set_Ammo    (const char *str);
+
+private:
+  int FindSym(const char *str);
+
+  static const char *adjust_syms[3];
 };
 
-#endif /* __UI_THEMES_H__ */
+#endif /* __UI_PLAY_H__ */
