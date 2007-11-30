@@ -43,25 +43,15 @@ static bool Cookie_SetValue(const char *name, const char *value)
   if (main_win->game_box->ParseValue(name, value))
     return true;
 
+  // -- Level Architecture --
+  if (main_win->level_box->ParseValue(name, value))
+    return true;
 
-  // Adjustments...
+  // -- Playing Style --
+  if (main_win->play_box->ParseValue(name, value))
+    return true;
 
-  if (StrCaseCmp(name, "size") == 0)
-    return main_win->level_box->set_Size(value);
-
-  if (StrCaseCmp(name, "puzzles") == 0)
-    return main_win->play_box->set_Puzzles(value);
-  if (StrCaseCmp(name, "traps") == 0)
-    return main_win->play_box->set_Traps(value);
-
-  if (StrCaseCmp(name, "health") == 0)
-    return main_win->play_box->set_Health(value);
-  if (StrCaseCmp(name, "ammo") == 0)
-    return main_win->play_box->set_Ammo(value);
-  if (StrCaseCmp(name, "mons") == 0)
-    return main_win->play_box->set_Monsters(value);
-
-  // Other stuff...
+  // -- Miscellaneous --
   if (StrCaseCmp(name, "last_file") == 0)
     return UI_SetLastFile(value);
 
@@ -125,6 +115,7 @@ static bool Cookie_ParseLine(char *buf)
   return Cookie_SetValue(name, buf);
 }
 
+
 //------------------------------------------------------------------------
 
 
@@ -181,24 +172,16 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "%s\n", main_win->game_box->GetAllValues());
 
   fprintf(cookie_fp, "-- Level Architecture --\n");
-//fprintf(cookie_fp, "%s\n", main_win->level_box->GetAllValues());
+  fprintf(cookie_fp, "%s\n", main_win->level_box->GetAllValues());
 
   fprintf(cookie_fp, "-- Playing Style --\n");
-//fprintf(cookie_fp, "%s\n", main_win->play_box->GetAllValues());
+  fprintf(cookie_fp, "%s\n", main_win->play_box->GetAllValues());
 
-  fprintf(cookie_fp, "-- Custom Mods --\n");
+//fprintf(cookie_fp, "-- Custom Mods --\n");
 //fprintf(cookie_fp, "%s\n", main_win->mod_box->GetAllValues());
 
-  fprintf(cookie_fp, "-- Custom Options --\n");
+//fprintf(cookie_fp, "-- Custom Options --\n");
 //fprintf(cookie_fp, "%s\n", main_win->option_box->GetAllValues());
-
-  fprintf(cookie_fp, "size = %s\n",  main_win->level_box->get_Size());
-
-  fprintf(cookie_fp, "mons = %s\n",   main_win->play_box->get_Monsters());
-  fprintf(cookie_fp, "puzzles = %s\n",  main_win->play_box->get_Puzzles());
-  fprintf(cookie_fp, "traps = %s\n",  main_win->play_box->get_Traps());
-  fprintf(cookie_fp, "health = %s\n", main_win->play_box->get_Health());
-  fprintf(cookie_fp, "ammo = %s\n",   main_win->play_box->get_Ammo());
 
   fprintf(cookie_fp, "-- Miscellaneous --\n");
   fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());

@@ -318,19 +318,11 @@ static void Script_MakeSettings(lua_State *L)
   lua_newtable(L);
 
   main_win->game_box ->TransferToLUA();
-//main_win->level_box->TransferToLUA();
-//main_win->play_box ->TransferToLUA();
+  main_win->level_box->TransferToLUA();
+  main_win->play_box ->TransferToLUA();
+
 //main_win->option_box->TransferToLUA();
 
-#if 0
-  AddField(L, "size",   main_win->level_box->get_Size());
-
-  AddField(L, "mons",   main_win->play_box->get_Monsters());
-  AddField(L, "puzzles",main_win->play_box->get_Puzzles());
-  AddField(L, "traps",  main_win->play_box->get_Traps());
-  AddField(L, "health", main_win->play_box->get_Health());
-  AddField(L, "ammo",   main_win->play_box->get_Ammo());
-#endif
   lua_setglobal(L, "SETTINGS");
 }
 

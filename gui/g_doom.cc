@@ -274,26 +274,16 @@ void WAD_CreateInfoLump()
   WAD_Printf(L, "%s\n", main_win->game_box->GetAllValues());
 
   WAD_Printf(L, "-- Level Architecture --\n");
-//WAD_Printf(L, "%s\n", main_win->level_box->GetAllValues());
+  WAD_Printf(L, "%s\n", main_win->level_box->GetAllValues());
 
   WAD_Printf(L, "-- Playing Style --\n");
-//WAD_Printf(L, "%s\n", main_win->play_box->GetAllValues());
+  WAD_Printf(L, "%s\n", main_win->play_box->GetAllValues());
 
-  WAD_Printf(L, "-- Custom Mods --\n");
+//WAD_Printf(L, "-- Custom Mods --\n");
 //WAD_Printf(L, "%s\n", main_win->mod_box->GetAllValues());
 
-  WAD_Printf(L, "-- Custom Options --\n");
+//WAD_Printf(L, "-- Custom Options --\n");
 //WAD_Printf(L, "%s\n", main_win->option_box->GetAllValues());
-
-
-  WAD_Printf(L, "-- Adjustments --\n");
-  WAD_Printf(L, "size = %s\n",   main_win->level_box->get_Size());
-
-  WAD_Printf(L, "mons = %s\n",   main_win->play_box->get_Monsters());
-  WAD_Printf(L, "puzzles = %s\n",  main_win->play_box->get_Puzzles());
-  WAD_Printf(L, "traps = %s\n",  main_win->play_box->get_Traps());
-  WAD_Printf(L, "health = %s\n", main_win->play_box->get_Health());
-  WAD_Printf(L, "ammo = %s\n",   main_win->play_box->get_Ammo());
 
   WAD_Printf(L, "\n\n\n\n\n\n");
 
