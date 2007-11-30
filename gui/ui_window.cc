@@ -83,22 +83,22 @@ UI_MainWin::UI_MainWin(const char *title) :
   int MW = 208;
   int RW = 196;
 
-  int GAME_H  = 232;
-  int ADJ_H   = 272;
+  int GAME_H  = 224;
+  int ADJ_H   = GAME_H;
   int MOD_H   = GAME_H;
 
-  setup_box = new UI_Setup(0, 0, LW-4, GAME_H);
-  add(setup_box);
+  game_box = new UI_Game(0, 0, LW-4, GAME_H);
+  add(game_box);
 
   build_box = new UI_Build(0, GAME_H+4, LW-4, h()-GAME_H-4);
   add(build_box);
 
 
-  adjust_box = new UI_Adjust(LW, 0, MW, ADJ_H);
-  add(adjust_box);
+  level_box = new UI_Level(LW, 0, MW, ADJ_H);
+  add(level_box);
 
-  theme_box = new UI_Themes(LW, ADJ_H+4, MW, h()-ADJ_H-4);
-  add(theme_box);
+  play_box = new UI_Play(LW, ADJ_H+4, MW, h()-ADJ_H-4);
+  add(play_box);
 
 
   mod_box = new UI_Mods(LW+MW+4, 0, RW-4, MOD_H);
@@ -120,11 +120,11 @@ UI_MainWin::~UI_MainWin()
 
 void UI_MainWin::Locked(bool value)
 {
-  setup_box ->Locked(value);
-  adjust_box->Locked(value);
-  build_box ->Locked(value);
+  game_box ->Locked(value);
+  build_box->Locked(value);
+  level_box->Locked(value);
+  play_box ->Locked(value);
 
 //!!!!  mod_box   ->Locked(value);
 //!!!!  option_box->Locked(value);
-//!!!!  theme_box ->Locked(value);
 }

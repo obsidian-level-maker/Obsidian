@@ -22,11 +22,13 @@
 #include "ui_map.h"
 #include "ui_build.h"
 #include "ui_menu.h"
+
+#include "ui_game.h"
+#include "ui_level.h"
+#include "ui_play.h"
+
 #include "ui_optlist.h"
 #include "ui_mods.h"
-#include "ui_setup.h"
-#include "ui_themes.h"
-#include "ui_adjust.h"
 
 #define MAIN_BG_COLOR  fl_gray_ramp(FL_NUM_GRAY * 3 / 24)
 
@@ -42,14 +44,14 @@ public:
   Fl_Menu_Bar *menu_bar;
 #endif
 
-  UI_Setup *setup_box;
-  UI_Mods  *mod_box;
+  UI_Game  *game_box;
+  UI_Build *build_box;
 
-  UI_Adjust *adjust_box;
+  UI_Level *level_box;
+  UI_Play  *play_box;
+
+  UI_Mods       *mod_box;
   UI_ModOptions *option_box;
-
-  UI_Themes *theme_box;
-  UI_Build  *build_box;
 
   enum  // actions
   {
