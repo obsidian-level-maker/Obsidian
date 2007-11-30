@@ -38,8 +38,13 @@ UI_MainWin *main_win;
 #define MAIN_WINDOW_W  620
 #define MAIN_WINDOW_H  440
 
+#if 0
 #define MAX_WINDOW_W  760
 #define MAX_WINDOW_H  720
+#else
+#define MAX_WINDOW_W  MAIN_WINDOW_W
+#define MAX_WINDOW_H  MAIN_WINDOW_H
+#endif
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
