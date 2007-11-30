@@ -25,6 +25,9 @@
 #include "lib_util.h"
 
 
+#define MY_GREEN  fl_rgb_color(0,166,0)
+
+
 //
 // Constructor
 //
@@ -50,7 +53,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   size = new Fl_Choice(x+ 82, cy, 112, 24, "Size: ");
   size->align(FL_ALIGN_LEFT);
-  size->selection_color(FL_GREEN);
+  size->selection_color(MY_GREEN);
   size->add("Small|Regular|X-Large");
   size->value(1);
 
@@ -63,7 +66,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   theme = new Fl_Choice(x+ 82, cy, 112, 24, "Theme: ");
   theme->align(FL_ALIGN_LEFT);
-  theme->selection_color(FL_GREEN);
+  theme->selection_color(MY_GREEN);
   theme->add("Mixture|Hell|Nature|Tech|Urban");
   theme->value(0);
 
@@ -74,7 +77,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   detail = new Fl_Choice(x+ 82, cy, 112, 24, "Detail: ");
   detail->align(FL_ALIGN_LEFT);
-  detail->selection_color(FL_GREEN);
+  detail->selection_color(MY_GREEN);
   detail->add("None|Low|Medium|High");
   detail->value(2);
 
@@ -87,7 +90,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   heights = new Fl_Choice(x+ 82, cy, 112, 24, "Heights: ");
   heights->align(FL_ALIGN_LEFT);
-  heights->selection_color(FL_GREEN);
+  heights->selection_color(MY_GREEN);
   heights->add("Flat|Gentle|Normal|Wild");
   heights->value(1);
 
@@ -98,7 +101,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   yyy = new Fl_Choice(x+ 82, cy, 112, 24, "YYY: ");
   yyy->align(FL_ALIGN_LEFT);
-  yyy->selection_color(FL_GREEN);
+  yyy->selection_color(MY_GREEN);
   yyy->add("Few|Normal|Heaps");
   yyy->value(1);
 
