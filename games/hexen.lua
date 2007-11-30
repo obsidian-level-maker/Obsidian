@@ -1656,8 +1656,6 @@ XN_DEATHMATCH =
 }
 
 
-
-
 ------------------------------------------------------------
 
 XN_THEME_LIST =
@@ -2002,9 +2000,10 @@ function hexen_get_levels(episode)
   return level_list
 end
 
+
 ------------------------------------------------------------
 
-GAME_FACTORIES["hexen"] = function()
+function hexen_factory()
 
   rand_shuffle(XN_KEY_PAIRS)
 
@@ -2090,4 +2089,14 @@ GAME_FACTORIES["hexen"] = function()
     window_probs = { out_diff=80, combo_diff=50, normal=30 },
   }
 end
+
+
+OB_GAMES["hexen"] =
+{
+  label = "Hexen",
+
+  format = "hexen",
+
+  info_func = hexen_factory,
+}
 

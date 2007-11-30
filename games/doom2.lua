@@ -1893,7 +1893,7 @@ end
 
 ------------------------------------------------------------
 
-GAME_FACTORIES["doom2"] = function()
+function doom2_factory()
 
   local T = doom_common_factory()
 
@@ -1928,4 +1928,14 @@ GAME_FACTORIES["doom2"] = function()
 
   return T
 end
+
+
+OB_GAMES["doom2"] =
+{
+  label = "Doom 2",
+
+  format = "doom",
+
+  info_func = doom2_factory,
+}
 

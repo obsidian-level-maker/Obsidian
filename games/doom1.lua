@@ -3116,7 +3116,7 @@ function doom_common_factory()
 end
 
 
-GAME_FACTORIES["doom1"] = function()
+function doom1_factory()
 
   local T = doom_common_factory()
 
@@ -3147,4 +3147,14 @@ GAME_FACTORIES["doom1"] = function()
 
   return T
 end
+
+
+OB_GAMES["doom1"] =
+{
+  label = "Doom 1",
+
+  format = "doom",
+
+  info_func = doom1_factory,
+}
 

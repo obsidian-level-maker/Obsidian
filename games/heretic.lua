@@ -1024,7 +1024,7 @@ end
 
 ------------------------------------------------------------
 
-GAME_FACTORIES["heretic"] = function()
+function heretic_factory()
 
   return
   {
@@ -1109,4 +1109,14 @@ GAME_FACTORIES["heretic"] = function()
     window_probs = { out_diff=80, combo_diff=50, normal=30 },
   }
 end
+
+
+OB_GAMES["heretic"] =
+{
+  label = "Heretic",
+
+  format = "doom",
+
+  info_func = heretic_factory,
+}
 
