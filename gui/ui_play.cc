@@ -25,6 +25,9 @@
 #include "lib_util.h"
 
 
+#define MY_RED  fl_rgb_color(224,0,0)
+
+
 //
 // Constructor
 //
@@ -50,7 +53,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   mons = new Fl_Choice(x+ 82, cy, 112, 24, "Monsters: ");
   mons->align(FL_ALIGN_LEFT);
-  mons->selection_color(FL_RED);
+  mons->selection_color(MY_RED);
   mons->add("Scarce|Normal|Hordes");
   mons->value(1);
 
@@ -61,7 +64,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   puzzles = new Fl_Choice(x+ 82, cy, 112, 24, "Puzzles: ");
   puzzles->align(FL_ALIGN_LEFT);
-  puzzles->selection_color(FL_RED);
+  puzzles->selection_color(MY_RED);
   puzzles->add("Few|Normal|Heaps");
   puzzles->value(1);
 
@@ -72,7 +75,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   traps = new Fl_Choice(x+ 82, cy, 112, 24, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
-  traps->selection_color(FL_RED);
+  traps->selection_color(MY_RED);
   traps->add("Few|Normal|Heaps");
   traps->value(1);
 
@@ -85,7 +88,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   health = new Fl_Choice(x+82, cy, 112, 24, "Health: ");
   health->align(FL_ALIGN_LEFT);
-  health->selection_color(FL_RED);
+  health->selection_color(MY_RED);
   health->add("Less|Enough|More");
   health->value(1);
 
@@ -96,7 +99,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   ammo = new Fl_Choice(x+82, cy, 112, 24, "Ammo: ");
   ammo->align(FL_ALIGN_LEFT);
-  ammo->selection_color(FL_RED);
+  ammo->selection_color(MY_RED);
   ammo->add("Less|Enough|More");
   ammo->value(1);
   
