@@ -7203,7 +7203,7 @@ con.debugf("add_scenery : %s\n", item)
     end
 
   elseif PLAN.deathmatch and (c.require_player or
-      rand_odds(DM_PLAYERS_1[SETTINGS.mons]))
+      rand_odds(DM_PLAYERS_1[SETTINGS.puzzles]))
   then
     add_player(c, "dm_player", "must")
   end
@@ -7240,7 +7240,7 @@ con.debugf("add_scenery : %s\n", item)
     end
 
   elseif PLAN.deathmatch and (c.require_weapon or 
-       rand_odds(DM_WEAPONS_1[SETTINGS.traps]))
+       rand_odds(DM_WEAPONS_1[SETTINGS.mons]))
   then
     add_dm_weapon(c)
   end
@@ -7257,11 +7257,11 @@ con.debugf("add_scenery : %s\n", item)
 
   if PLAN.deathmatch then
     -- secondary DM PLAYER
-    if rand_odds(DM_PLAYERS_2[SETTINGS.mons]) then
+    if rand_odds(DM_PLAYERS_2[SETTINGS.puzzles]) then
       add_player(c, "dm_player")
     end
     -- secondary DM WEAPON
-    if rand_odds(DM_WEAPONS_2[SETTINGS.traps]) then
+    if rand_odds(DM_WEAPONS_2[SETTINGS.mons]) then
       add_dm_weapon(c)
     end
   end
