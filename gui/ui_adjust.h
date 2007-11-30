@@ -16,46 +16,40 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_ADJUST_H__
-#define __UI_ADJUST_H__
+#ifndef __UI_LEVEL_H__
+#define __UI_LEVEL_H__
 
-class UI_Adjust : public Fl_Group
+class UI_Level : public Fl_Group
 {
 private:
   Fl_Choice *size;
+
+  Fl_Choice *theme;
   Fl_Choice *detail;
 
-  Fl_Choice *mons;
-  Fl_Choice *puzzles;
-  Fl_Choice *traps;
+  Fl_Choice *heights;
+  Fl_Choice *yyy;
 
-  Fl_Choice *health;
-  Fl_Choice *ammo;
 
 public:
-  UI_Adjust(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_Adjust();
+  UI_Level(int x, int y, int w, int h, const char *label = NULL);
+  virtual ~UI_Level();
 
 public:
 
   void Locked(bool value);
-  void UpdateLabels(const char *game, const char *mode);
 
   const char *get_Size();
-  const char *get_Puzzles();
-  const char *get_Traps();
+  const char *get_Theme();
+  const char *get_Detail();
+  const char *get_Heights();
+//const char *get_YYY();
 
-  const char *get_Monsters();
-  const char *get_Health();
-  const char *get_Ammo();
-
-  bool set_Size(const char *str);
-  bool set_Puzzles(const char *str);
-  bool set_Traps(const char *str);
-
-  bool set_Monsters(const char *str);
-  bool set_Health(const char *str);
-  bool set_Ammo(const char *str);
+  bool set_Size   (const char *str);
+  bool set_Theme  (const char *str);
+  bool set_Detail (const char *str);
+  bool set_Heights(const char *str);
+//bool set_YYY(const char *str);
 
 private:
   static const char *adjust_syms[3];
@@ -64,4 +58,4 @@ private:
   int FindSym(const char *str);
 };
 
-#endif /* __UI_ADJUST_H__ */
+#endif /* __UI_LEVEL_H__ */

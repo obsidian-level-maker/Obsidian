@@ -26,9 +26,9 @@
 
 
 //
-// Adjust Constructor
+// Constructor
 //
-UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
+UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label)
 {
   end(); // cancel begin() in Fl_Group constructor
@@ -50,7 +50,7 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
 
   size = new Fl_Choice(x+ 82, cy, 112, 24, "Size: ");
   size->align(FL_ALIGN_LEFT);
-  size->selection_color(FL_RED);
+  size->selection_color(FL_GREEN);
   size->add("Small|Regular|X-Large");
   size->value(1);
 
@@ -58,10 +58,23 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
 
   cy += size->h() + 6;
 
+  cy += 10;
+
+
+  theme = new Fl_Choice(x+ 82, cy, 112, 24, "Theme: ");
+  theme->align(FL_ALIGN_LEFT);
+  theme->selection_color(FL_GREEN);
+  theme->add("Mixture|Hell|Nature|Tech|Urban");
+  theme->value(0);
+
+  add(theme);
+
+  cy += theme->h() + 6;
+
 
   detail = new Fl_Choice(x+ 82, cy, 112, 24, "Detail: ");
   detail->align(FL_ALIGN_LEFT);
-  detail->selection_color(FL_RED);
+  detail->selection_color(FL_GREEN);
   detail->add("None|Low|Medium|High");
   detail->value(2);
 
@@ -72,163 +85,99 @@ UI_Adjust::UI_Adjust(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  mons = new Fl_Choice(x+ 82, cy, 112, 24, "Monsters: ");
-  mons->align(FL_ALIGN_LEFT);
-  mons->selection_color(FL_RED);
-  mons->add("Scarce|Normal|Hordes");
-  mons->value(1);
+  heights = new Fl_Choice(x+ 82, cy, 112, 24, "Heights: ");
+  heights->align(FL_ALIGN_LEFT);
+  heights->selection_color(FL_GREEN);
+  heights->add("Flat|Gentle|Normal|Wild");
+  heights->value(1);
 
-  add(mons);
+  add(heights);
 
-  cy += mons->h() + 6;
-
-
-  puzzles = new Fl_Choice(x+ 82, cy, 112, 24, "Puzzles: ");
-  puzzles->align(FL_ALIGN_LEFT);
-  puzzles->selection_color(FL_RED);
-  puzzles->add("Few|Normal|Heaps");
-  puzzles->value(1);
-
-  add(puzzles);
-
-  cy += puzzles->h() + 6;
+  cy += heights->h() + 6;
 
 
-  traps = new Fl_Choice(x+ 82, cy, 112, 24, "Traps: ");
-  traps->align(FL_ALIGN_LEFT);
-  traps->selection_color(FL_RED);
-  traps->add("Few|Normal|Heaps");
-  traps->value(1);
+  yyy = new Fl_Choice(x+ 82, cy, 112, 24, "YYY: ");
+  yyy->align(FL_ALIGN_LEFT);
+  yyy->selection_color(FL_GREEN);
+  yyy->add("Few|Normal|Heaps");
+  yyy->value(1);
 
-  add(traps);
+  add(yyy);
 
-  cy += traps->h() + 6;
-
-  cy += 10;
+  cy += yyy->h() + 6;
 
 
-  health = new Fl_Choice(x+82, cy, 112, 24, "Health: ");
-  health->align(FL_ALIGN_LEFT);
-  health->selection_color(FL_RED);
-  health->add("Less|Enough|More");
-  health->value(1);
-
-  add(health);
-
-  cy += health->h() + 6;
-
-
-  ammo = new Fl_Choice(x+82, cy, 112, 24, "Ammo: ");
-  ammo->align(FL_ALIGN_LEFT);
-  ammo->selection_color(FL_RED);
-  ammo->add("Less|Enough|More");
-  ammo->value(1);
-  
-  add(ammo);
-  
-  cy += ammo->h() + 6;
-
-
-  DebugPrintf("UI_Adjust: final h = %d\n", cy - y);
+  DebugPrintf("UI_Level: final h = %d\n", cy - y);
 
   resizable(0);  // don't resize our children
 }
 
 
 //
-// Adjust Destructor
+// Destructor
 //
-UI_Adjust::~UI_Adjust()
+UI_Level::~UI_Level()
 {
 }
 
-void UI_Adjust::Locked(bool value)
+void UI_Level::Locked(bool value)
 {
   if (value)
   {
-    size ->deactivate();
-    health->deactivate();
-    ammo ->deactivate();
-    mons ->deactivate();
-    puzzles->deactivate();
+    size  ->deactivate();
+    theme ->deactivate();
+    detail->deactivate();
+    heights->deactivate();
+    yyy   ->deactivate();
   }
   else
   {
-    size ->activate();
-    health->activate();
-    ammo ->activate();
-    mons ->activate();
-    puzzles->activate();
+    size  ->activate();
+    theme ->activate();
+    detail->activate();
+    heights->activate();
+    yyy   ->activate();
   }
 }
 
-void UI_Adjust::UpdateLabels(const char *game, const char *mode)
-{
-  if (strcmp(mode, "dm") == 0)
-  {
-    mons->label("Players: ");
-    puzzles->label("Weapons: ");
-  }
-  else
-  {
-    mons->label("Monsters: ");
-
-    if (strcmp(game, "wolf3d") == 0 || strcmp(game, "spear") == 0)
-      puzzles->label("Bosses: ");
-    else
-      puzzles->label("Puzzles: ");
-  }
-
-  SYS_ASSERT(main_win);
-
-  main_win->adjust_box->redraw();
-}
 
 //----------------------------------------------------------------
 
-const char * UI_Adjust::adjust_syms[3] =
+const char * UI_Level::adjust_syms[3] =
 {
   "less", "normal", "more"
 };
 
-const char * UI_Adjust::size_syms[3] =
+const char * UI_Level::size_syms[3] =
 {
   "small", "regular", "large"
 };
 
-const char *UI_Adjust::get_Health()
-{
-  return adjust_syms[health->value()];
-}
 
-const char *UI_Adjust::get_Ammo()
-{
-  return adjust_syms[ammo->value()];
-}
-
-const char *UI_Adjust::get_Monsters()
-{
-  return adjust_syms[mons->value()];
-}
-
-const char *UI_Adjust::get_Traps()
-{
-  return adjust_syms[1];  // TODO
-}
-
-const char *UI_Adjust::get_Puzzles()
-{
-  return adjust_syms[puzzles->value()];
-}
-
-const char *UI_Adjust::get_Size()
+const char *UI_Level::get_Size()
 {
   return size_syms[size->value()];
 }
 
+const char *UI_Level::get_Theme()  // FIXME
+{
+  return adjust_syms[1];
+}
+
+const char *UI_Level::get_Detail()  // FIXME
+{
+  return adjust_syms[1];
+}
+
+const char *UI_Level::get_Heights()  // FIXME
+{
+  return adjust_syms[1];
+}
+
+
 //----------------------------------------------------------------
 
-int UI_Adjust::FindSym(const char *str)
+int UI_Level::FindSym(const char *str)
 {
   for (int i=0; adjust_syms[i]; i++)
     if (StrCaseCmp(str, adjust_syms[i]) == 0)
@@ -237,49 +186,8 @@ int UI_Adjust::FindSym(const char *str)
   return -1; // Unknown
 }
 
-bool UI_Adjust::set_Health(const char *str)
-{
-  int i = FindSym(str);
 
-  if (i >= 0) { health->value(i); return true; }
-
-  return false;
-}
-
-bool UI_Adjust::set_Ammo(const char *str)
-{
-  int i = FindSym(str);
-
-  if (i >= 0) { ammo->value(i); return true; }
-
-  return false;
-}
-
-bool UI_Adjust::set_Monsters(const char *str)
-{
-  int i = FindSym(str);
-
-  if (i >= 0) { mons->value(i); return true; }
-
-  return false;
-}
-
-bool UI_Adjust::set_Puzzles(const char *str)
-{
-  int i = FindSym(str);
-
-  if (i >= 0) { puzzles->value(i); return true; }
-
-  return false;
-}
-
-bool UI_Adjust::set_Traps(const char *str)
-{
-  // TODO !!! set_Traps
-  return true;
-}
-
-bool UI_Adjust::set_Size(const char *str)
+bool UI_Level::set_Size(const char *str)
 {
   for (int i=0; size_syms[i]; i++)
     if (StrCaseCmp(str, size_syms[i]) == 0)
@@ -288,5 +196,23 @@ bool UI_Adjust::set_Size(const char *str)
     }
 
   return false;
+}
+
+bool UI_Level::set_Theme(const char *str)
+{
+  // TODO !!! set_Theme
+  return true;
+}
+
+bool UI_Level::set_Detail(const char *str)
+{
+  // TODO !!! set_Detail
+  return true;
+}
+
+bool UI_Level::set_Heights(const char *str)
+{
+  // TODO !!! set_Heights
+  return true;
 }
 
