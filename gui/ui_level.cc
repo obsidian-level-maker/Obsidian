@@ -1,5 +1,5 @@
 //----------------------------------------------------------------
-//  Adjustment screen
+//  Level Architecture
 //----------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006,2007 Andrew Apted
@@ -41,7 +41,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 8;
 
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Level Adjustments");
+  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Level Architecture");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
