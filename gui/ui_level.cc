@@ -69,7 +69,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   theme = new Fl_Choice(x+ 82, cy, 112, 24, "Theme: ");
   theme->align(FL_ALIGN_LEFT);
   theme->selection_color(MY_GREEN);
-  theme->add("Mixture|Hell|Nature|Tech|Urban");
+  theme->add("Mix it Up|Hell|Nature|Tech|Urban");
   theme->value(0);
 
   add(theme);

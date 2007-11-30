@@ -50,7 +50,7 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   cy += heading->h() + 6;
 
 
-  seed = new Fl_Int_Input(x+68, cy, 60, 24, "Seed: ");
+  seed = new Fl_Int_Input(x+66, cy, 60, 24, "Seed: ");
   seed->align(FL_ALIGN_LEFT);
   seed->selection_color(FL_BLUE);
   seed->maximum_size(5);
@@ -58,7 +58,7 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
   add(seed);
 
-  bump = new Fl_Button(x+140, cy, 66, 24, "Bump");
+  bump = new Fl_Button(x+134, cy, 66, 24, "Bump");
   bump->callback(bump_callback, this);
 
   add(bump);

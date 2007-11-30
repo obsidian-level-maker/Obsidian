@@ -44,7 +44,7 @@ static void menu_do_exit(Fl_Widget *w, void * data)
 
 static const char *about_Text =
   "Oblige is a random level generator for\n"
-  "DOOM, Heretic, Hexen & Wolf3d\n"
+  "DOOM, Heretic & Hexen\n"
   "\n"
   "Copyright (C) 2006-2007 Andrew Apted\n"
   "\n"
