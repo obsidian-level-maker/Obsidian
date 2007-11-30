@@ -53,33 +53,24 @@ FD_SKY_INFO =
   { color="red",    light=192 },
 }
 
+
 ----------------------------------------------------------------
 
-GAME_FACTORIES["freedoom"] = function()
+function freedoom_modifier(T)
 
   -- the FreeDOOM IWAD contains both Doom 1 and Doom 2 textures
 
----!!!  local T = GAME_FACTORIES.doom1()
+---!!!  T.combos   = copy_and_merge(T.combos,   D1_COMBOS)
+---!!!  T.exits    = copy_and_merge(T.exits,    D1_EXITS)
+---!!!  T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
 ---!!!
----!!!  T.episodes   = 3
----!!!  T.level_func = doom2_get_levels
+---!!!  T.rails = copy_and_merge(T.rails, D1_RAILS)
 ---!!!
----!!!  T.quests   = D2_QUESTS
+---!!!  T.hangs   = copy_and_merge(T.hangs,   D1_OVERHANGS)
+---!!!  T.mats    = copy_and_merge(T.mats,    D1_MATS)
+---!!!  T.crates  = copy_and_merge(T.crates,  D1_CRATES)
 ---!!!
----!!!  T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
----!!!  T.exits    = copy_and_merge(T.exits,    D2_EXITS)
----!!!  T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
----!!!
----!!!  T.rails = copy_and_merge(T.rails, D2_RAILS)
----!!!
----!!!  T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
----!!!  T.mats    = copy_and_merge(T.mats,    D2_MATS)
----!!!  T.crates  = copy_and_merge(T.crates,  D2_CRATES)
----!!!
----!!!  T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS, FD_LIQUIDS)
-
-  -- TEMPORARY HACK
-  local T = GAME_FACTORIES.doom2()
+---!!!  T.liquids = copy_and_merge(T.liquids, D1_LIQUIDS, FD_LIQUIDS)
 
   T.sky_info = FD_SKY_INFO
 
@@ -93,4 +84,16 @@ GAME_FACTORIES["freedoom"] = function()
 
   return T
 end
+
+
+OB_MODS["freedoom"] =
+{
+  label = "FreeDoom 0.5",
+
+  for_games = { "doom2" },
+
+  conflicts = { "tnt", "plut" },
+
+  mod_func = freedoom_modifier,
+}
 

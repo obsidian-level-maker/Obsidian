@@ -143,9 +143,7 @@ PL_MISC_PREFABS =
 
 ----------------------------------------------------------------
 
-GAME_FACTORIES["plutonia"] = function()
-
-  local T = GAME_FACTORIES.doom2()
+function plut_modifier(T)
 
   T.ERROR_TEX = "SLOPPY1"
 
@@ -165,4 +163,16 @@ GAME_FACTORIES["plutonia"] = function()
 
   return T
 end
+
+
+OB_MODS["plut"] =
+{
+  label = "Plutonia",
+
+  for_games = { "doom2" },
+
+  conflicts = { "tnt" },
+
+  mod_func = plut_modifier,
+}
 

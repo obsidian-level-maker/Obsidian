@@ -242,11 +242,9 @@ TN_SKY_INFO =
 
 ----------------------------------------------------------------
 
-GAME_FACTORIES["tnt"] = function()
+function tnt_modifier(T)
 
-  local T = GAME_FACTORIES.doom2()
-
-  T.rails   = copy_and_merge(T.rails,  TN_RAILS)
+  T.rails = copy_and_merge(T.rails,  TN_RAILS)
 
 ---##  T.doors   = copy_and_merge(T.doors,  TN_DOORS)
 
@@ -260,3 +258,16 @@ GAME_FACTORIES["tnt"] = function()
 
   return T
 end
+
+
+OB_MODS["tnt"] =
+{
+  label = "TNT Evilution",
+
+  for_games = { "doom2" },
+
+  conflicts = { "plut" },
+
+  mod_func = tnt_modifier,
+}
+
