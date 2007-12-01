@@ -28,8 +28,17 @@ MAX_STEP = 16
 
 SKILLS = { "easy", "medium", "hard" }
 
-GAME_FACTORIES = {}
-
 PLAN = {}
 GAME = {}
+
+
+-- tables which interface with GUI code:
+
+SETTINGS = {}
+
+OB_GAMES = {}
+OB_MODS  = {}
+
+OB_THEMES  = {}
+OB_ENGINES = {}
 
