@@ -21,7 +21,7 @@ require 'util'
 require 'a_star'
 
 require 'prefab'
-require 'theme'
+--- require 'theme'
 
 require 'planner'
 require 'plan_dm'
@@ -35,10 +35,10 @@ require 'test_csg'
 
 function create_GAME()
 
-  local factory = GAME_FACTORIES[SETTINGS.game]
+  local factory = GAME_FACTORIES[OB_CONFIG.game]
 
   if not factory then
-    error("UNKNOWN GAME '" .. SETTINGS.game .. "'")
+    error("UNKNOWN GAME '" .. OB_CONFIG.game .. "'")
   end
 
   GAME = factory()
@@ -53,19 +53,19 @@ function create_LEVEL(level, index, total)
 
   con.at_level(level, index, total)
 
-  con.rand_seed(SETTINGS.seed * 100 + index)
+  con.rand_seed(OB_CONFIG.seed * 100 + index)
 
   con.printf("\n======| %s |======\n\n", level.name)
 
-  if SETTINGS.mode == "dm" then
+  if OB_CONFIG.mode == "dm" then
     plan_dm_arena(level)
   else
-    plan_sp_level(level, SETTINGS.mode == "coop")
+    plan_sp_level(level, OB_CONFIG.mode == "coop")
   end
 
   if con.abort() then return "abort" end
 
-  if SETTINGS.mode == "dm" then
+  if OB_CONFIG.mode == "dm" then
     show_dm_links()
   else
     show_path()
@@ -94,8 +94,8 @@ end
 
 function build_cool_shit()
  
-  assert(SETTINGS)
-  assert(SETTINGS.game)
+  assert(OB_CONFIG)
+  assert(OB_CONFIG.game)
 
   -- the missing console functions
   con.printf = function (fmt, ...)
@@ -108,10 +108,10 @@ function build_cool_shit()
 
   con.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
 
-  con.printf("SEED = %d\n\n", SETTINGS.seed)
-  con.printf("Settings =\n%s\n", table_to_str(SETTINGS))
+  con.printf("SEED = %d\n\n", OB_CONFIG.seed)
+  con.printf("Settings =\n%s\n", table_to_str(OB_CONFIG))
 
-  con.rand_seed(SETTINGS.seed * 100)
+  con.rand_seed(OB_CONFIG.seed * 100)
 
 
 -- [[  CSG TEST CODE
@@ -133,11 +133,11 @@ function build_cool_shit()
   local aborted = false
   local episode_num
 
-  if SETTINGS.length == "single" then
+  if OB_CONFIG.length == "single" then
     episode_num = 1
-  elseif SETTINGS.length == "episode" then
+  elseif OB_CONFIG.length == "episode" then
     episode_num = GAME.min_episodes or 1
-  else -- SETTINGS.length == "full"
+  else -- OB_CONFIG.length == "full"
     episode_num = GAME.episodes
   end
 
@@ -153,7 +153,7 @@ function build_cool_shit()
 
   local total = #all_levels
 
-  if SETTINGS.length == "single" then
+  if OB_CONFIG.length == "single" then
     total = 1
   end
 

@@ -34,7 +34,7 @@ GAME = {}
 
 -- tables which interface with GUI code:
 
-SETTINGS = {}
+OB_CONFIG = {}
 
 OB_GAMES = {}
 OB_MODS  = {}

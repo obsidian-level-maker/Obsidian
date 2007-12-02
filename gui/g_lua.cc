@@ -306,6 +306,8 @@ void Script_AddSetting(const char *key, const char *value)
   SYS_NULL_CHECK(key);
   SYS_NULL_CHECK(value);
 
+  lua_getglobal(L, "OB_CONFIG");
+
   lua_pushstring(LUA_ST, key);
   lua_pushstring(LUA_ST, value);
   lua_rawset(LUA_ST, -3);
@@ -323,7 +325,6 @@ static void Script_MakeSettings(lua_State *L)
 
 //main_win->option_box->TransferToLUA();
 
-  lua_setglobal(L, "SETTINGS");
 }
 
 bool Script_Run(void)

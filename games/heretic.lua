@@ -988,7 +988,7 @@ function heretic_get_levels(episode)
   local level_list = {}
 
   local theme_probs = HC_EPISODE_THEMES[episode]
-  if SETTINGS.length ~= "full" then
+  if OB_CONFIG.length ~= "full" then
     theme_probs = HC_EPISODE_THEMES[rand_irange(1,5)]
   end
 

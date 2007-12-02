@@ -334,8 +334,8 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
   local TOT_MINIMUMS = { small=3, regular=5, large=8  }
   local TOT_MAXIMUMS = { small=6, regular=9, large=12 }
 
-  local tot_min = TOT_MINIMUMS[SETTINGS.size]
-  local tot_max = TOT_MAXIMUMS[SETTINGS.size]
+  local tot_min = TOT_MINIMUMS[OB_CONFIG.size]
+  local tot_max = TOT_MAXIMUMS[OB_CONFIG.size]
 
   assert(tot_min and tot_max)
   assert(tot_min <= tot_max)
@@ -346,8 +346,8 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
   local RATIO_MINIMUMS = { less=0.0, normal=0.4, more=1.0 }
   local RATIO_MAXIMUMS = { less=0.6, normal=1.2, more=2.5 }
 
-  local ratio_min = RATIO_MINIMUMS[SETTINGS.traps]
-  local ratio_max = RATIO_MAXIMUMS[SETTINGS.traps]
+  local ratio_min = RATIO_MINIMUMS[OB_CONFIG.traps]
+  local ratio_max = RATIO_MAXIMUMS[OB_CONFIG.traps]
 
   assert(ratio_min and ratio_max)
   assert(ratio_min <= ratio_max)
@@ -356,7 +356,7 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
   local keys, switches, weapons, items
   local total, ratio
 
-  local ky_min = 1 -- sel(SETTINGS.traps == "less", 0, 1)
+  local ky_min = 1 -- sel(OB_CONFIG.traps == "less", 0, 1)
 
   for loop = 1,999 do
     keys     = rand_irange(ky_min, #ky_list)
@@ -1381,9 +1381,9 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
 
     -- adjust wanted length based on size adjustment
     local want_len = Q.want_len
-    if want_len >= 4 and SETTINGS.size == "small" then
+    if want_len >= 4 and OB_CONFIG.size == "small" then
       want_len = int(want_len * 0.85 - con.random())
-    elseif SETTINGS.size == "large" then
+    elseif OB_CONFIG.size == "large" then
       want_len = int(want_len * 1.35 + con.random())
     end
 
@@ -2293,8 +2293,8 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
     local sm_prob = 36
     local bg_prob = 60
 
-    if SETTINGS.traps == "less" then sm_prob, bg_prob = 15, 25 end
-    if SETTINGS.traps == "more" then sm_prob, bg_prob = 60, 80 end
+    if OB_CONFIG.traps == "less" then sm_prob, bg_prob = 15, 25 end
+    if OB_CONFIG.traps == "more" then sm_prob, bg_prob = 60, 80 end
 
     local function add_closet(Q)
 
@@ -2476,8 +2476,8 @@ con.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
       local peak = peak_toughness(Q)
       local skip = 0
 
-      if SETTINGS.mons == "less" then peak = peak/1.8 end
-      if SETTINGS.mons == "more" then peak = peak*1.8 end
+      if OB_CONFIG.mons == "less" then peak = peak/1.8 end
+      if OB_CONFIG.mons == "more" then peak = peak*1.8 end
 
       -- go backwards from quest cell to start cell
       for i = #Q.path,1,-1 do

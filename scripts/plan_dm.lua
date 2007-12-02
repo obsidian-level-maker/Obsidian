@@ -491,8 +491,8 @@ function plan_dm_arena(level)
     large   = { 0,  0, 20, 50, 75, 20,  4 },
   }
 
-  local W = rand_index_by_probs(SIZE_PROBS[SETTINGS.size]) 
-  local H = rand_index_by_probs(SIZE_PROBS[SETTINGS.size]) 
+  local W = rand_index_by_probs(SIZE_PROBS[OB_CONFIG.size]) 
+  local H = rand_index_by_probs(SIZE_PROBS[OB_CONFIG.size]) 
 
 ---#  if W < H then W,H = H,W end
 

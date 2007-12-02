@@ -251,7 +251,7 @@ function write_level(lev_name)
       end
 
       -- FIXME: temp hack for Doom1 liquid sides
-      if SETTINGS.game == "doom1" then
+      if OB_CONFIG.game == "doom1" then
         if SIDE.mid   == "BFALL1" then SIDE.mid   = "BLODRIP1" end
         if SIDE.upper == "BFALL1" then SIDE.upper = "BLODRIP1" end
         if SIDE.lower == "BFALL1" then SIDE.lower = "BLODRIP1" end

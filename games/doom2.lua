@@ -1845,7 +1845,7 @@ function doom2_get_levels(episode)
   local level_list = {}
 
   local theme_probs = D2_EPISODE_THEMES[episode]
-  if SETTINGS.length ~= "full" then
+  if OB_CONFIG.length ~= "full" then
     theme_probs = D2_EPISODE_THEMES[4]
   end
   assert(theme_probs)

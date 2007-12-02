@@ -41,8 +41,7 @@ public:
   void UpdateLabels(const char *game, const char *mode);
 
   void TransferToLUA();
-  // transfer the settings from this panel into the LUA
-  // global table called 'SETTINGS'.
+  // transfer settings from this panel into the LUA config table.
  
   const char *GetAllValues();
   // return a string containing all the values from this panel,

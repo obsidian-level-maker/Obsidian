@@ -1787,7 +1787,7 @@ function hexen_get_levels(episode)
       toughness_factor = 1 + (episode-1) / 3,
     }
 
-    if map == 5 or SETTINGS.length == "single" then
+    if map == 5 or OB_CONFIG.length == "single" then
       -- secret level is a mixture
       Level.theme_probs = { ICE=3,SWAMP=4,DUNGEON=5,CAVE=6,VILLAGE=7 }
     else
@@ -1959,7 +1959,7 @@ function hexen_get_levels(episode)
       Q.is_secret = true
     end
 
-    if i <= 4 and SETTINGS.size ~= "small" then
+    if i <= 4 and OB_CONFIG.size ~= "small" then
       local where2
       repeat
         where2 = rand_element(item_where)
