@@ -1,0 +1,38 @@
+
+COMPILING NOTES
+===============
+
+(still being written...)
+
+
+Lua-5.1.2:
+  (1) edit src/Makefile to use 'g++' instead of 'gcc'.
+      For Win32 cross-compile, prefix g++, ar and ranlib
+      with 'i586-mingw32msvc-'.
+
+  (2) use 'make linux' for Linux,
+      use 'make generic' for Win32 cross-compile.
+
+
+FLTK-1.1.x-5989:
+  (1) Linux: /configure --quiet --disable-shared --disable-gl \
+             --disable-localjpeg --disable-localzlib --disable-localpng
+
+  (2) Win32 cross-compile:
+      (a) copy makefiles/Makefile.mingw --> ./Makefile
+      (b) copy makefiles/makeinclude.mingw --> ./makeinclude
+      (c) copy makefiles/config.mingw --> ./config.h
+
+      (d) in makeinclude: add 'i586-mingw32msvc-' prefix to
+          gcc, g++, ar and ranlib.
+      (e) in makeinclude: use '-ruv' instead of 'cr' for ar command.
+      (f) in makeinclude: comment out .SILENT directive.
+      (g) in makeinclude: remove -fno-exceptions
+
+      (g) in config.h: set HAVE_GL and HAVE_GL_GLU to 0.
+          comment out HAVE_LIBPNG, HAVE_LIBJPEG, HAVE_LIBZ.
+          comment out HAVE_LONG_LONG.
+
+      (h) in Makefile: remove the 'makeinclude' and 'configure' targets.
+      (i) in Makefile: remove $(IMAGEDIRS) and 'fluid' from DIRS variable.
+
