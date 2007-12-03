@@ -4,16 +4,13 @@ TODO
 
 New Window Layout:
 
--  save the new Level stuff (Detail, Theme etc) into config,
-   and pass values to LUA scripts.
-
--  load games from 'games/' dir, setup Gama button.
-
 -  load engines from scripts/engines.lua
 
--  load custom mods from 'mods/' directory.
+-  load games from 'games/' dir, setup Game button.
 
 -  setup Theme button based on games and mods.
+
+-  load custom mods from 'mods/' directory.
 
 
 General:
@@ -158,84 +155,6 @@ FLTK-1.1.x-5989:
 
       (h) in Makefile: remove the 'makeinclude' and 'configure' targets.
       (i) in Makefile: remove $(IMAGEDIRS) and 'fluid' from DIRS variable.
-
-
-MILESTONE 0  (reached!)
-===========
-
-Able to create a map of connected areas, with a
-few items / monsters, and which works in DOOM.
-
-
-MILESTONE 1  (reached!)
-===========
-
-a) Planning:
-
-   #  proper quest structure, E branches off a cell
-      between S and K.
-
-   #  quests: KEY, SWITCH, WEAPON
-
-b) Builder:
- 
-   #  create a reasonable room in each cell,
-
-   #  create doors between rooms, KEYED when required
-
-   #  add exit switch to final room
-
-   #  player model: (health, armour, ammo, weapons)
-
-   #  add some monsters
- 
-   #  add some supplies (health, ammo)
-
-c) Writer:
-
-   #  support fragments
-
-   #  texture X alignment (esp. fragments)
-
-
-MILESTONE 2  (reached!)
-===========
-
-#  working GUI interface using FLTK
-
-#  build WAD files directly (no wadlc step).
-
-#  use GLBSP plugin to build nodes automatically.
-
-#  more architecture features:
-
-   #  pillars
-   #  lights / sky-holes in the ceiling
-   #  paintings / computers / lights in the wall
-   #  monster cages
-   #  monster closets (esp. along a back-track route)
-   #  monsters teleporting in
-
-
-MILESTONE 3  (sorta reached)
-===========
-
-#  larger rooms, different shapes.
-
-#  adjustment controls for DeathMatch levels.
-
-#  better support for Wolf3d, Doom 1/2, Heretic, and Hexen.
-
-#  allocation system for blocks (can_walk tests).
-
-#  secrets.
-
-#  wall switches: place in the wall! 
-
-#  support these liquid wall animations:
-   (a) water --> FIREMAGx (W74A_1, W74A_2, W74B_1)
-   (b) lava  --> ROCKREDx (WALL64_2, W64B_1, W64B_2)
-   (c) slime --> BLODRIPx (RP2_1, RP2_2, RP2_3, RP2_4)
 
 
 MILESTONE 4  (pipe dreams...)
