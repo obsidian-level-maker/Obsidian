@@ -28,8 +28,6 @@
 
 class remember_pair_c
 {
-friend class UI_RChoice;
-
 public:
   const char *id;     // terse identifier
   const char *label;  // description (for the UI)
@@ -41,6 +39,9 @@ public:
   remember_pair_c(const char *_id, const char *_label);
 
   ~remember_pair_c();
+
+public:
+  bool Equal(const remember_pair_c *other) const;
 };
 
 
@@ -51,6 +52,8 @@ private:
   std::vector<remember_pair_c *> id_list;
 
   std::vector<remember_pair_c *> new_list;
+
+  bool updating;
 
 public:
   UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
@@ -71,15 +74,18 @@ public:
   // entry is used.  Nothing happens if the new list is exactly
   // the same as the old list.
 
-  const char *GetId() const;
+  const char *GetID() const;
   // get the id string for the currently shown value.
 
-  bool SetId(const char *id);
+  bool SetID(const char *id);
   // set the currently shown value via the new 'id'.  If no
   // such exists, returns false and nothing was changed.
   
 private:
-  remember_pair_c *FindPair(const char *id);
+  int FindID(const char *id);
+
+  bool ListsEqual();
+  // returns true if the old and new lists are identical.
 
 };
 

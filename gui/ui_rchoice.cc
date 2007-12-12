@@ -38,6 +38,13 @@ remember_pair_c::~remember_pair_c()
 }
 
 
+bool remember_pair_c::Equal(const remember_pair_c *other) const
+{
+  return (StrCaseCmp(id,    other->id)    == 0) &&
+         (StrCaseCmp(label, other->label) == 0);
+}
+
+
 //----------------------------------------------------------------
 
 
@@ -51,43 +58,87 @@ UI_RChoice::~UI_RChoice()
 { }
 
 
+void UI_RChoice::BeginUpdate()
+{
+  // ??
+
+  updating = true;
+}
+
 void UI_RChoice::AddPair(const char *id, const char *label)
 {
-  option_data_c *opt = FindOption(id);
+  SYS_ASSERT(updating);
+  SYS_ASSERT(id && label);
 
-  if (opt)
+  new_list.push_back(new remember_pair_c(id, label));
+}
+
+void UI_RChoice::EndUpdate()
+{
+  SYS_ASSERT(updating);
+
+  if (! ListsEqual())
   {
-    StringFree(opt->desc);
-    opt->desc = StringDup(desc);
-
-    opt->shown = 0;
-    opt->value = val;
-    opt->priority = pri;
-
-    opt->widget->label(opt->desc);
+    // TODO
   }
-  else
-  {
-    opt = new option_data_c(id, desc, pri, val);
 
-    opt->widget = new Fl_Check_Button(0, 0, 20, 20, opt->desc);
-    opt->widget->box(FL_UP_BOX);
+  // FIXME transfer new to old, kill new
+ 
+  updating = false;
+}
 
-    opt_list.push_back(opt);
-  }
+const char *UI_RChoice::GetID() const
+{
+  SYS_ASSERT(value() >= 0);
+  SYS_ASSERT(value() < (int)id_list.size());
+
+  return id_list[value()]->id;
+}
+
+bool UI_RChoice::SetID(const char *id)
+{
+  int index = FindID(id);
+
+  if (index < 0)
+    return false;
+
+  SYS_ASSERT(index < (int)id_list.size());
+
+  value(index);
+
+  return true;
 }
 
 
-remember_pair_c *UI_RChoice::FindPair(const char *id)
+//----------------------------------------------------------------
+
+int UI_RChoice::FindID(const char *id)
 {
   for (unsigned int i = 0; i < id_list.size(); i++)
   {
     remember_pair_c *pair = id_list[i];
     
     if (strcmp(pair->id, id) == 0)
-      return pair;
+      return (int)i;
   }
 
-  return NULL; // not found
+  return -1; // not found
 }
  
+bool UI_RChoice::ListsEqual()
+{
+  if (id_list.size() != new_list.size())
+    return false;
+
+  for (unsigned int i = 0; i < id_list.size(); i++)
+  {
+    remember_pair_c *p1 =  id_list[i];
+    remember_pair_c *p2 = new_list[i];
+
+    if (! p1->Equal(p2))
+      return false;
+  }
+
+  return true;
+}
+
