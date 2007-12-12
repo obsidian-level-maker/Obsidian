@@ -72,7 +72,7 @@ all: $(PROGRAM)
 
 clean:
 	rm -f $(PROGRAM) *.o core core.*
-	rm -f ob_debug.txt ERRS update.log
+	rm -f ERRS update.log
 
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
