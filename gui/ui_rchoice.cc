@@ -53,15 +53,12 @@ UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label) :
     id_list(), new_list(), updating(false)
 { }
 
-
 UI_RChoice::~UI_RChoice()
 { }
 
 
 void UI_RChoice::BeginUpdate()
 {
-  // ??
-
   updating = true;
 }
 
@@ -77,22 +74,74 @@ void UI_RChoice::EndUpdate()
 {
   SYS_ASSERT(updating);
 
-  if (! ListsEqual())
+  updating = false;
+
+  if (ListsEqual())
   {
-    // TODO
+    KillList(new_list);
+    return;
   }
 
-  // FIXME transfer new to old, kill new
- 
-  updating = false;
+  // remember the id and label of current entry
+
+  const char *cur_id  = StringDup(GetID());
+  const char *cur_lab = StringDup(GetLabel());
+
+
+  // transfer new list to old (emptying the new list)
+  
+  clear();
+
+  KillList(id_list);
+
+  for (unsigned int j = 0; j < new_list.size(); j++)
+  {
+    remember_pair_c *pair = new_list[j];
+
+    id_list.push_back(pair);
+    new_list[j] = NULL;
+
+    add(pair->label, 0, 0, 0, 0);
+  }
+
+  new_list.clear();
+
+
+  // update the currently selected choice
+
+  if (cur_lab[0] && SetLabel(cur_lab))
+  { /* OK */ }
+  else if (cur_id[0] && SetID(cur_id))
+  { /* OK */ }
+  else
+  {
+    value(0);
+  }
+
+  StringFree(cur_id);
+  StringFree(cur_lab);
 }
 
 const char *UI_RChoice::GetID() const
 {
+  if (size() <= 1)
+    return "";
+      
   SYS_ASSERT(value() >= 0);
   SYS_ASSERT(value() < (int)id_list.size());
 
   return id_list[value()]->id;
+}
+
+const char *UI_RChoice::GetLabel() const
+{
+  if (size() <= 1)
+    return "";
+
+  SYS_ASSERT(value() >= 0);
+  SYS_ASSERT(value() < (int)id_list.size());
+
+  return id_list[value()]->label;
 }
 
 bool UI_RChoice::SetID(const char *id)
@@ -109,10 +158,24 @@ bool UI_RChoice::SetID(const char *id)
   return true;
 }
 
+bool UI_RChoice::SetLabel(const char *lab)
+{
+  int index = FindLabel(lab);
+
+  if (index < 0)
+    return false;
+
+  SYS_ASSERT(index < (int)id_list.size());
+
+  value(index);
+
+  return true;
+}
+
 
 //----------------------------------------------------------------
 
-int UI_RChoice::FindID(const char *id)
+int UI_RChoice::FindID(const char *id) const
 {
   for (unsigned int i = 0; i < id_list.size(); i++)
   {
@@ -125,7 +188,20 @@ int UI_RChoice::FindID(const char *id)
   return -1; // not found
 }
  
-bool UI_RChoice::ListsEqual()
+int UI_RChoice::FindLabel(const char *lab) const
+{
+  for (unsigned int i = 0; i < id_list.size(); i++)
+  {
+    remember_pair_c *pair = id_list[i];
+    
+    if (strcmp(pair->label, lab) == 0)
+      return (int)i;
+  }
+
+  return -1; // not found
+}
+ 
+bool UI_RChoice::ListsEqual() const
 {
   if (id_list.size() != new_list.size())
     return false;
@@ -140,5 +216,15 @@ bool UI_RChoice::ListsEqual()
   }
 
   return true;
+}
+
+void UI_RChoice::KillList(std::vector<remember_pair_c *> &list)
+{
+  for (unsigned int i = 0; i < list.size(); i++)
+  {
+    delete list[i]; list[i] = NULL;
+  }
+
+  list.clear();
 }
 

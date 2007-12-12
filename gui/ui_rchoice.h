@@ -76,17 +76,23 @@ public:
 
   const char *GetID() const;
   // get the id string for the currently shown value.
+  // returns an empty string if there are no choices.
 
   bool SetID(const char *id);
   // set the currently shown value via the new 'id'.  If no
   // such exists, returns false and nothing was changed.
-  
-private:
-  int FindID(const char *id);
 
-  bool ListsEqual();
+private:
+  const char *GetLabel() const;
+  bool SetLabel(const char *lab);
+  
+  int FindID(const char *id) const;
+  int FindLabel(const char *lab) const;
+
+  bool ListsEqual() const;
   // returns true if the old and new lists are identical.
 
+  void KillList(std::vector<remember_pair_c *> &list);
 };
 
 
