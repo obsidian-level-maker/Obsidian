@@ -80,6 +80,23 @@ int raw_debug_print(lua_State *L)
 }
 
 
+// LUA: game_button(name, label)
+//
+int game_button(lua_State *L)
+{
+  // TODO !!
+  return 0;
+}
+
+// LUA: theme_button(name, label)
+//
+int theme_button(lua_State *L)
+{
+  // TODO !!
+  return 0;
+}
+
+
 // LUA: at_level(name, idx, total)
 //
 int at_level(lua_State *L)
@@ -198,6 +215,9 @@ static const luaL_Reg console_lib[] =
   { "raw_log_print",   con::raw_log_print },
   { "raw_debug_print", con::raw_debug_print },
 
+  { "game_button",   con::game_button  },
+  { "theme_button",  con::theme_button },
+
   { "at_level",   con::at_level },
   { "progress",   con::progress },
   { "ticker",     con::ticker },
@@ -301,24 +321,18 @@ void Script_Load(void)
 
 void Script_AddSetting(const char *key, const char *value)
 {
-  // FIXME: !!!!!! FUCKED
-
   SYS_NULL_CHECK(key);
   SYS_NULL_CHECK(value);
 
-  lua_getglobal(L, "OB_CONFIG");
-
+  lua_getglobal(LUA_ST, "OB_CONFIG");
   lua_pushstring(LUA_ST, key);
   lua_pushstring(LUA_ST, value);
-  lua_rawset(LUA_ST, -3);
+  lua_settable(LUA_ST, -3);
+  lua_pop(LUA_ST, 1);
 }
 
-static void Script_MakeSettings(lua_State *L)
+void Script_MakeSettings()
 {
-  // FIXME: !!!!!! FUCKED
-
-  lua_newtable(L);
-
   main_win->game_box ->TransferToLUA();
   main_win->level_box->TransferToLUA();
   main_win->play_box ->TransferToLUA();
@@ -329,7 +343,7 @@ static void Script_MakeSettings(lua_State *L)
 
 bool Script_Run(void)
 {
-  Script_MakeSettings(LUA_ST);
+  Script_MakeSettings();
 
   // LUA: build_cool_shit()
   //
