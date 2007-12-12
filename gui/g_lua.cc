@@ -80,7 +80,9 @@ int raw_debug_print(lua_State *L)
 }
 
 
-// LUA: game_button(name, label)
+// LUA: game_button  (name, label)
+// LUA: engine_button(name, label)
+// LUA: theme_button (name, label)
 //
 int game_button(lua_State *L)
 {
@@ -88,8 +90,12 @@ int game_button(lua_State *L)
   return 0;
 }
 
-// LUA: theme_button(name, label)
-//
+int engine_button(lua_State *L)
+{
+  // TODO !!
+  return 0;
+}
+
 int theme_button(lua_State *L)
 {
   // TODO !!
@@ -215,7 +221,8 @@ static const luaL_Reg console_lib[] =
   { "raw_log_print",   con::raw_log_print },
   { "raw_debug_print", con::raw_debug_print },
 
-  { "game_button",   con::game_button  },
+  { "game_button",   con::game_button },
+  { "engine_button", con::engine_button },
   { "theme_button",  con::theme_button },
 
   { "at_level",   con::at_level },
