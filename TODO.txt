@@ -19,6 +19,8 @@ General:
 
 +  get traps (closets / depots) working again.
 
+-  Deathmatch: initial starting weapon (None,Basic,Heavy)
+
 
 GUI:
 
