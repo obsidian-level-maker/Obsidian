@@ -104,6 +104,15 @@ function ob_init()
   name_it_up(OB_MODS)
   name_it_up(OB_THEMES)
   name_it_up(OB_ENGINES)
+
+  -- the missing console functions
+  con.printf = function (fmt, ...)
+    if fmt then con.raw_log_print(string.format(fmt, ...)) end
+  end
+
+  con.debugf = function (fmt, ...)
+    if fmt then con.raw_debug_print(string.format(fmt, ...)) end
+  end
 end
 
 
@@ -152,7 +161,7 @@ function ob_setup_game_button()
 
   local function sorter(A, B)
     if A.priority or B.priority then
-      return (A.priority or 0) < (B.priority or 0)
+      return (A.priority or 0) > (B.priority or 0)
     end
     return A.label < B.label
   end
@@ -168,11 +177,8 @@ end
 function ob_setup_engine_button()
 
   if not OB_ENGINES or table_empty(OB_ENGINES) then
-    error("No themes definitions were loaded!")
+    error("No engine definitions were loaded!")
   end
-
-  local game = OB_CONFIG.game
-  assert(game)
 
   local engine_list = {}
 
@@ -185,7 +191,7 @@ function ob_setup_engine_button()
 
   local function sorter(A, B)
     if A.priority or B.priority then
-      return (A.priority or 0) < (B.priority or 0)
+      return (A.priority or 0) > (B.priority or 0)
     end
     return A.label < B.label
   end
@@ -212,9 +218,6 @@ function ob_setup_theme_button()
   if not OB_THEMES or table_empty(OB_THEMES) then
     error("No themes definitions were loaded!")
   end
-
-  local game = OB_CONFIG.game
-  assert(game)
 
   local theme_list = {}
 
@@ -247,14 +250,6 @@ function ob_build_cool_shit()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
-  -- the missing console functions
-  con.printf = function (fmt, ...)
-    if fmt then con.raw_log_print(string.format(fmt, ...)) end
-  end
-
-  con.debugf = function (fmt, ...)
-    if fmt then con.raw_debug_print(string.format(fmt, ...)) end
-  end
 
   con.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
 
