@@ -92,13 +92,23 @@ int game_button(lua_State *L)
 
 int engine_button(lua_State *L)
 {
-  // TODO !!
+  const char *name  = luaL_checkstring(L,1);
+  const char *label = luaL_checkstring(L,2);
+
+  SYS_ASSERT(name && label);
+
+  main_win->game_box->Engine_Add(name, label);
   return 0;
 }
 
 int theme_button(lua_State *L)
 {
-  // TODO !!
+  const char *name  = luaL_checkstring(L,1);
+  const char *label = luaL_checkstring(L,2);
+
+  SYS_ASSERT(name && label);
+
+  main_win->level_box->Theme_Add(name, label); 
   return 0;
 }
 
@@ -323,6 +333,14 @@ void Script_Load(void)
 
     Main_FatalError("Unable to load script 'oblige.lua' (%d)\n%s", status, msg);
   }
+
+  // FIXME: load game scripts
+  // FIXME: load mods
+
+  // FIXME: setup GAME button
+
+  Script_UpdateEngine();
+  Script_UpdateTheme();
 }
 
 
@@ -348,26 +366,35 @@ void Script_MakeSettings()
 
 }
 
-bool Script_Run(void)
-{
-  Script_MakeSettings();
 
-  // LUA: build_cool_shit()
-  //
-  lua_getglobal(LUA_ST, "build_cool_shit");
+bool Script_DoRun(const char *func_name)
+{
+  lua_getglobal(LUA_ST, func_name);
 
   if (lua_type(LUA_ST, -1) == LUA_TNIL)
-    Main_FatalError("LUA script problem: missing build function!");
+    Main_FatalError("LUA script problem: missing function '%s'", func_name);
 
   int status = lua_pcall(LUA_ST, 0, 1, 0);
   if (status != 0)
   {
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-    DLG_ShowError("Problem occurred while making level:\n%s", msg);
+    DLG_ShowError("LUA script error:\n%s", msg);
 
     return false;
   }
+  
+  return true;
+}
+
+
+
+bool Script_Build(void)
+{
+  Script_MakeSettings();
+
+  if (! Script_DoRun("build_cool_shit"))
+    return false;
 
   const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
@@ -375,5 +402,30 @@ bool Script_Run(void)
     return true;
 
   return false;
+}
+
+
+void Script_UpdateEngine(void)
+{
+  Script_MakeSettings();
+
+  main_win->game_box->Engine_BeginUpdate();
+
+  if (! Script_DoRun("ob_setup_engine_button"))
+  { /* ??? */ }
+
+  main_win->game_box->Engine_EndUpdate(); 
+}
+
+void Script_UpdateTheme(void)
+{
+  Script_MakeSettings();
+
+  main_win->level_box->Theme_BeginUpdate();
+
+  if (! Script_DoRun("ob_setup_theme_button"))
+  { /* ??? */ }
+
+  main_win->level_box->Theme_EndUpdate();
 }
 
