@@ -94,7 +94,113 @@ function create_LEVEL(level, index, total)
 end
 
 
-function build_cool_shit()
+----------------------------------------------------------------
+--  FUNCTIONS CALLED FROM GUI CODE
+----------------------------------------------------------------
+
+function ob_init()
+
+  name_it_up(OB_GAMES)
+  name_it_up(OB_MODS)
+  name_it_up(OB_THEMES)
+  name_it_up(OB_ENGINES)
+end
+
+
+function ob_match_conf(tab)
+
+  assert(OB_CONFIG.game)
+  assert(OB_CONFIG.mode)
+  assert(OB_CONFIG.engine)
+
+  if tab.for_games then
+    if not tab.for_games[OB_CONFIG.game] then
+      return false
+    end
+  end
+
+  if tab.for_modes then
+    if not tab.for_modes[OB_CONFIG.mode] then
+      return false
+    end
+  end
+
+  if tab.for_engines then
+    if not tab.for_engines[OB_CONFIG.engine] then
+      return false
+    end
+  end
+
+  return true -- OK
+end
+
+
+function ob_setup_game_button()
+
+  if not OB_GAMES or table_empty(OB_GAMES) then
+    error("No game definitions were loaded!")
+  end
+
+  local game_list = {}
+
+  for name,info in pairs(OB_GAMES) do
+    assert(info.name)
+    assert(info.label)
+
+    table.insert(game_list, info)
+  end
+
+  local function sorter(A, B)
+    if A.priority or B.priority then
+      return (A.priority or 0) < (B.priority or 0)
+    end
+    return A.label < B.label
+  end
+
+  table.sort(game_list, sorter)
+
+  for xxx,info in ipairs(game_list) do
+    con.game_button(info.name, info.label)
+  end
+end
+
+
+function ob_setup_theme_button()
+
+  if not OB_THEMES or table_empty(OB_THEMES) then
+    error("No themes definitions were loaded!")
+  end
+
+  local game = OB_CONFIG.game
+  assert(game)
+
+  local theme_list = {}
+
+  for name,info in pairs(OB_THEMES) do
+    assert(info.name)
+    assert(info.label)
+
+    table.insert(theme_list, info)
+  end
+
+  table.sort(theme_list, function (A,B) return A.label < B.label end)
+
+  local count = 0
+
+  for xxx,info in ipairs(theme_list) do
+    if ob_match_conf(info) then
+      con.theme_button(info.name, info.label);
+      count = count + 1
+    end
+  end
+
+  if count == 0 then
+    error("No themes matching current game!")
+  end
+end
+
+
+function ob_build_cool_shit()
  
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
