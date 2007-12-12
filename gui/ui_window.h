@@ -23,12 +23,14 @@
 #include "ui_build.h"
 #include "ui_menu.h"
 
+#include "ui_optlist.h"
+#include "ui_rchoice.h"
+
 #include "ui_game.h"
 #include "ui_level.h"
+#include "ui_mods.h"
 #include "ui_play.h"
 
-#include "ui_optlist.h"
-#include "ui_mods.h"
 
 #define WINDOW_BG  fl_gray_ramp(3)
 
