@@ -4,13 +4,9 @@ TODO
 
 New Window Layout:
 
--  load engines from scripts/engines.lua
-
 -  load games from 'games/' dir, setup Game button.
 
--  setup Theme button based on games and mods.
-
--  load custom mods from 'mods/' directory.
+-  load mods from 'mods/' directory.
 
 
 General:
@@ -19,7 +15,7 @@ General:
 
 +  get traps (closets / depots) working again.
 
--  Deathmatch: initial starting weapon (None,Basic,Heavy)
+-  Deathmatch: initial starting weapon (None,Basic,Heavy) : "Equip"
 
 
 GUI:
