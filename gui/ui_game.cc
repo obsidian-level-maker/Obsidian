@@ -20,6 +20,7 @@
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 
+#include "ui_rchoice.h"
 #include "ui_game.h"
 #include "ui_window.h"
 
@@ -102,11 +103,16 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  engine = new Fl_Choice(x+68, cy, 130, 24, "Engine: ");
+  engine = new UI_RChoice(x+68, cy, 130, 24, "Engine: ");
   engine->align(FL_ALIGN_LEFT);
   engine->selection_color(FL_BLUE);
-  engine->add("Limit Removing"); //TODO: BOOM|EDGE|Legacy|JDoom|ZDoom
-  engine->value(0);
+///---  engine->value(0);
+
+  engine->BeginUpdate();
+  engine->AddPair("nolimit", "Limit Removing");
+  engine->AddPair("boom", "Boom Compat");
+  engine->AddPair("edge", "EDGE");
+  engine->EndUpdate();
 
   add(engine);
 

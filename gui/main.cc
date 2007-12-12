@@ -230,7 +230,7 @@ void Build_Cool_Shit()
     bb_area->ProgStatus("Making levels");
     bb_area->ProgBegin(1, 100);
 
-    was_ok = Script_Run();
+    was_ok = Script_Build();
 
     if (! was_ok)
     {

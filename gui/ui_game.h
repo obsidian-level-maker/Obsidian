@@ -25,10 +25,12 @@ private:
   Fl_Int_Input *seed;
   Fl_Button *bump;
 
+public:
   Fl_Choice *game;
   Fl_Choice *length;
   Fl_Choice *mode;
-  Fl_Choice *engine;
+
+  UI_RChoice *engine;
 
 public:
   UI_Game(int x, int y, int w, int h, const char *label = NULL);
@@ -67,6 +69,7 @@ public:
   bool set_Mode(const char *str);
   bool set_Length(const char *str);
   bool set_Engine(const char *str);
+
   
 private:
   static void bump_callback(Fl_Widget *, void*);

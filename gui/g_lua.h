@@ -30,6 +30,9 @@ int Script_RegisterLib(const char *name, const luaL_Reg *reg);
 
 void Script_AddSetting(const char *key, const char *value);
 
-bool Script_Run(void);
+bool Script_Build(void);
+
+void Script_UpdateEngine(void);
+void Script_UpdateTheme(void);
 
 #endif // __SCRIPTING_HEADER__

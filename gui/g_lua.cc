@@ -97,7 +97,8 @@ int engine_button(lua_State *L)
 
   SYS_ASSERT(name && label);
 
-  main_win->game_box->Engine_Add(name, label);
+DebugPrintf("engine_button: '%s' = '%s'\n", name, label);
+  main_win->game_box->engine->AddPair(name, label);
   return 0;
 }
 
@@ -253,6 +254,10 @@ static const luaL_Reg console_lib[] =
 
 //------------------------------------------------------------------------
 
+// forward decl
+bool Script_DoRun(const char *func_name);
+
+
 int Script_RegisterLib(const char *name, const luaL_Reg *reg)
 {
   SYS_NULL_CHECK(LUA_ST);
@@ -337,10 +342,15 @@ void Script_Load(void)
   // FIXME: load game scripts
   // FIXME: load mods
 
+  if (! Script_DoRun("ob_init"))
+  { /* ??? */ }
+  
   // FIXME: setup GAME button
 
+#if 1 //!!!!!
   Script_UpdateEngine();
-  Script_UpdateTheme();
+//!!!!!  Script_UpdateTheme();
+#endif
 }
 
 
@@ -409,12 +419,12 @@ void Script_UpdateEngine(void)
 {
   Script_MakeSettings();
 
-  main_win->game_box->Engine_BeginUpdate();
+  main_win->game_box->engine->BeginUpdate();
 
   if (! Script_DoRun("ob_setup_engine_button"))
   { /* ??? */ }
 
-  main_win->game_box->Engine_EndUpdate(); 
+  main_win->game_box->engine->EndUpdate(); 
 }
 
 void Script_UpdateTheme(void)
