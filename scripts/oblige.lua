@@ -35,6 +35,13 @@ require 'engines'
 require 'test_csg'
 
 
+OB_THEMES["mixed"] =
+{
+  label = "Mix It Up",
+  priority = 95,
+}
+
+
 function create_GAME()
 
   local factory = GAME_FACTORIES[OB_CONFIG.game]
@@ -140,7 +147,16 @@ function ob_match_conf(tab)
     end
   end
 
-  return true -- OK
+  return true --OK--
+end
+
+
+function ob_button_sorter(A, B)
+  if A.priority or B.priority then
+    return (A.priority or 0) > (B.priority or 0)
+  end
+
+  return A.label < B.label
 end
 
 
@@ -159,14 +175,7 @@ function ob_setup_game_button()
     table.insert(game_list, info)
   end
 
-  local function sorter(A, B)
-    if A.priority or B.priority then
-      return (A.priority or 0) > (B.priority or 0)
-    end
-    return A.label < B.label
-  end
-
-  table.sort(game_list, sorter)
+  table.sort(game_list, ob_button_sorter)
 
   for xxx,info in ipairs(game_list) do
     con.game_button(info.name, info.label)
@@ -189,14 +198,7 @@ function ob_setup_engine_button()
     table.insert(engine_list, info)
   end
 
-  local function sorter(A, B)
-    if A.priority or B.priority then
-      return (A.priority or 0) > (B.priority or 0)
-    end
-    return A.label < B.label
-  end
-
-  table.sort(engine_list, sorter)
+  table.sort(engine_list, ob_button_sorter)
 
   local count = 0
 
@@ -228,7 +230,7 @@ function ob_setup_theme_button()
     table.insert(theme_list, info)
   end
 
-  table.sort(theme_list, function (A,B) return A.label < B.label end)
+  table.sort(theme_list, ob_button_sorter)
 
   local count = 0
 
