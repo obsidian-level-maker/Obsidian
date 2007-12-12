@@ -1022,6 +1022,16 @@ function heretic_get_levels(episode)
   return level_list
 end
 
+
+------------------------------------------------------------
+
+OB_THEMES["hc_castle"] =
+{
+  label = "Castle",
+  for_games = { "heretic" },
+}
+
+
 ------------------------------------------------------------
 
 function heretic_factory()

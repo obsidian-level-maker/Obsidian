@@ -2003,6 +2003,39 @@ end
 
 ------------------------------------------------------------
 
+OB_THEMES["xn_cave"] =
+{
+  label = "Cave",
+  for_games = { "hexen" },
+}
+
+OB_THEMES["xn_dungeon"] =
+{
+  label = "Dungeon",
+  for_games = { "hexen" },
+}
+
+OB_THEMES["xn_ice"] =
+{
+  label = "Ice",
+  for_games = { "hexen" },
+}
+
+OB_THEMES["xn_swamp"] =
+{
+  label = "Swamp",
+  for_games = { "hexen" },
+}
+
+OB_THEMES["xn_village"] =
+{
+  label = "Village",
+  for_games = { "hexen" },
+}
+
+
+------------------------------------------------------------
+
 function hexen_factory()
 
   rand_shuffle(XN_KEY_PAIRS)

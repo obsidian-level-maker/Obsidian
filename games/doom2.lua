@@ -1893,6 +1893,34 @@ end
 
 ------------------------------------------------------------
 
+
+OB_THEMES["d2_tech"] =
+{
+  label = "Tech",
+  for_games = { "doom2" },
+}
+
+OB_THEMES["d2_indy"] =
+{
+  label = "Industrial",
+  for_games = { "doom2" },
+}
+
+OB_THEMES["d2_nature"] =
+{
+  label = "Nature",
+  for_games = { "doom2" },
+}
+
+OB_THEMES["d2_hell"] =
+{
+  label = "Hell",
+  for_games = { "doom2" },
+}
+
+
+------------------------------------------------------------
+
 function doom2_factory()
 
   local T = doom_common_factory()
