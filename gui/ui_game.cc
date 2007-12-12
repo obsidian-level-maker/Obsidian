@@ -108,11 +108,11 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   engine->selection_color(FL_BLUE);
 ///---  engine->value(0);
 
-  engine->BeginUpdate();
-  engine->AddPair("nolimit", "Limit Removing");
-  engine->AddPair("boom", "Boom Compat");
-  engine->AddPair("edge", "EDGE");
-  engine->EndUpdate();
+///---  engine->BeginUpdate();
+///---  engine->AddPair("nolimit", "Limit Removing");
+///---  engine->AddPair("boom", "Boom Compat");
+///---  engine->AddPair("edge", "EDGE");
+///---  engine->EndUpdate();
 
   add(engine);
 
@@ -183,20 +183,11 @@ void UI_Game::game_callback(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  // multiplayer is not supported in Wolf3d / SOD
-  if (strcmp(that->get_Game(), "wolf3d") == 0 ||
-      strcmp(that->get_Game(), "spear")  == 0)
-  {
-    that->mode->value(0);
-    mode_callback(that, that);
-
-    that->mode->deactivate();
-  }
-  else
-    that->mode->activate();
-
   if (main_win)
   {
+    Script_UpdateEngine();
+    Script_UpdateTheme();
+ 
     main_win->play_box->UpdateLabels(that->get_Game(), that->get_Mode());
   }
 }
@@ -207,7 +198,20 @@ void UI_Game::mode_callback(Fl_Widget *w, void *data)
 
   if (main_win)
   {
+    Script_UpdateEngine();
+    Script_UpdateTheme();
+
     main_win->play_box->UpdateLabels(that->get_Game(), that->get_Mode());
+  }
+}
+
+void UI_Game::engine_callback(Fl_Widget *w, void *data)
+{
+  UI_Game *that = (UI_Game *)data;
+
+  if (main_win)
+  {
+    Script_UpdateTheme();
   }
 }
 
@@ -356,7 +360,7 @@ bool UI_Game::set_Game(const char *str)
     if (StrCaseCmp(str, game_syms[i]) == 0)
     {
       game->value(i);
-      game_callback(this, this);
+//!!!!!!      game_callback(this, this);
       return true;
     }
   }
@@ -386,8 +390,8 @@ bool UI_Game::set_Mode(const char *str)
     {
       mode->value(i);
 
-      mode_callback(this, this);
-      game_callback(this, this);
+//!!!!!!      mode_callback(this, this);
+//!!!!!!      game_callback(this, this);
       return true;
     }
   }

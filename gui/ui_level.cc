@@ -20,6 +20,7 @@
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 
+#include "ui_rchoice.h"
 #include "ui_level.h"
 #include "ui_window.h"
 
@@ -66,11 +67,11 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  theme = new Fl_Choice(x+ 82, cy, 112, 24, "Theme: ");
+  theme = new UI_RChoice(x+ 82, cy, 112, 24, "Theme: ");
   theme->align(FL_ALIGN_LEFT);
   theme->selection_color(MY_GREEN);
-  theme->add("Mix it Up|Hell|Nature|Tech|Urban");
-  theme->value(0);
+///---  theme->add("Mix it Up|Hell|Nature|Tech|Urban");
+///---  theme->value(0);
 
   add(theme);
 

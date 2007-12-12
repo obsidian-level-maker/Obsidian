@@ -24,11 +24,13 @@ class UI_Level : public Fl_Group
 private:
   Fl_Choice *size;
 
-  Fl_Choice *theme;
   Fl_Choice *detail;
 
   Fl_Choice *heights;
   Fl_Choice *yyy;
+
+public:
+  UI_RChoice *theme;
 
 
 public:

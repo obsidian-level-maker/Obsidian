@@ -97,7 +97,6 @@ int engine_button(lua_State *L)
 
   SYS_ASSERT(name && label);
 
-DebugPrintf("engine_button: '%s' = '%s'\n", name, label);
   main_win->game_box->engine->AddPair(name, label);
   return 0;
 }
@@ -109,7 +108,7 @@ int theme_button(lua_State *L)
 
   SYS_ASSERT(name && label);
 
-  main_win->level_box->Theme_Add(name, label); 
+  main_win->level_box->theme->AddPair(name, label); 
   return 0;
 }
 
@@ -349,7 +348,7 @@ void Script_Load(void)
 
 #if 1 //!!!!!
   Script_UpdateEngine();
-//!!!!!  Script_UpdateTheme();
+  Script_UpdateTheme();
 #endif
 }
 
@@ -431,11 +430,11 @@ void Script_UpdateTheme(void)
 {
   Script_MakeSettings();
 
-  main_win->level_box->Theme_BeginUpdate();
+  main_win->level_box->theme->BeginUpdate();
 
   if (! Script_DoRun("ob_setup_theme_button"))
   { /* ??? */ }
 
-  main_win->level_box->Theme_EndUpdate();
+  main_win->level_box->theme->EndUpdate();
 }
 
