@@ -165,6 +165,48 @@ function ob_setup_game_button()
 end
 
 
+function ob_setup_engine_button()
+
+  if not OB_ENGINES or table_empty(OB_ENGINES) then
+    error("No themes definitions were loaded!")
+  end
+
+  local game = OB_CONFIG.game
+  assert(game)
+
+  local engine_list = {}
+
+  for name,info in pairs(OB_ENGINES) do
+    assert(info.name)
+    assert(info.label)
+
+    table.insert(engine_list, info)
+  end
+
+  local function sorter(A, B)
+    if A.priority or B.priority then
+      return (A.priority or 0) < (B.priority or 0)
+    end
+    return A.label < B.label
+  end
+
+  table.sort(engine_list, sorter)
+
+  local count = 0
+
+  for xxx,info in ipairs(engine_list) do
+    if ob_match_conf(info) then
+      con.engine_button(info.name, info.label);
+      count = count + 1
+    end
+  end
+
+  if count == 0 then
+    error("No engines matching current game!")
+  end
+end
+
+
 function ob_setup_theme_button()
 
   if not OB_THEMES or table_empty(OB_THEMES) then
