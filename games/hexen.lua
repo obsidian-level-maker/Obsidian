@@ -2006,31 +2006,31 @@ end
 OB_THEMES["xn_cave"] =
 {
   label = "Cave",
-  for_games = { "hexen" },
+  for_games = { hexen=1 },
 }
 
 OB_THEMES["xn_dungeon"] =
 {
   label = "Dungeon",
-  for_games = { "hexen" },
+  for_games = { hexen=1 },
 }
 
 OB_THEMES["xn_ice"] =
 {
   label = "Ice",
-  for_games = { "hexen" },
+  for_games = { hexen=1 },
 }
 
 OB_THEMES["xn_swamp"] =
 {
   label = "Swamp",
-  for_games = { "hexen" },
+  for_games = { hexen=1 },
 }
 
 OB_THEMES["xn_village"] =
 {
   label = "Village",
-  for_games = { "hexen" },
+  for_games = { hexen=1 },
 }
 
 

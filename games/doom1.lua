@@ -3031,25 +3031,25 @@ end
 OB_THEMES["d1_tech"] =
 {
   label = "Tech",
-  for_games = { "doom1" },
+  for_games = { doom1=1 },
 }
 
 OB_THEMES["d1_indy"] =
 {
   label = "Industrial",
-  for_games = { "doom1" },
+  for_games = { doom1=1 },
 }
 
 OB_THEMES["d1_cave"] =
 {
   label = "Cave",
-  for_games = { "doom1" },
+  for_games = { doom1=1 },
 }
 
 OB_THEMES["d1_hell"] =
 {
   label = "Hell",
-  for_games = { "doom1" },
+  for_games = { doom1=1 },
 }
 
 

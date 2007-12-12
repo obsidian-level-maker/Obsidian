@@ -1897,25 +1897,25 @@ end
 OB_THEMES["d2_tech"] =
 {
   label = "Tech",
-  for_games = { "doom2" },
+  for_games = { doom2=1 },
 }
 
 OB_THEMES["d2_indy"] =
 {
   label = "Industrial",
-  for_games = { "doom2" },
+  for_games = { doom2=1 },
 }
 
 OB_THEMES["d2_nature"] =
 {
   label = "Nature",
-  for_games = { "doom2" },
+  for_games = { doom2=1 },
 }
 
 OB_THEMES["d2_hell"] =
 {
   label = "Hell",
-  for_games = { "doom2" },
+  for_games = { doom2=1 },
 }
 
 

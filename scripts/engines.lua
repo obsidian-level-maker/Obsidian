@@ -27,43 +27,43 @@ OB_ENGINES["boom"] =
 {
   label = "BOOM Compat",
   priority = 92,
-  for_games = { "doom1", "doom2" },
+  for_games = { doom1=1, doom2=1 },
 }
 
 OB_ENGINES["edge"] =
 {
   label = "EDGE",
   priority = 90,
-  for_games = { "doom1", "doom2" },
+  for_games = { doom1=1, doom2=1 },
 }
 
 OB_ENGINES["doomsday"] =
 {
   label = "Doomsday",
-  for_games = { "doom1", "doom2", "heretic", "hexen" },
+  for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
 }
 
 OB_ENGINES["legacy"] =
 {
   label = "Legacy",
-  for_games = { "doom1", "doom2" },
+  for_games = { doom1=1, doom2=1 },
 }
 
 OB_ENGINES["skulltag"] =
 {
   label = "Skulltag",
-  for_games = { "doom1", "doom2", "heretic", "hexen" },
+  for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
 }
 
 OB_ENGINES["vavoom"] =
 {
   label = "Vavoom",
-  for_games = { "doom1", "doom2", "heretic", "hexen", "strife" },
+  for_games = { doom1=1, doom2=1, heretic=1, hexen=1, strife=1 },
 }
 
 OB_ENGINES["zdoom"] =
 {
   label = "ZDoom",
-  for_games = { "doom1", "doom2", "heretic", "hexen" },
+  for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
 }
 

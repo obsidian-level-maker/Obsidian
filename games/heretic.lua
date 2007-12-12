@@ -1028,7 +1028,7 @@ end
 OB_THEMES["hc_castle"] =
 {
   label = "Castle",
-  for_games = { "heretic" },
+  for_games = { heretic=1 },
 }
 
 

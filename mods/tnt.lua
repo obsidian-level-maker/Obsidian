@@ -265,9 +265,9 @@ OB_MODS["tnt"] =
   label = "TNT Evilution",
   priority = 94,
 
-  for_games = { "doom2" },
+  for_games = { doom2=1 },
 
-  conflict_mods = { "plut" },
+  conflict_mods = { plut=1 },
 
   mod_func = tnt_modifier,
 }
