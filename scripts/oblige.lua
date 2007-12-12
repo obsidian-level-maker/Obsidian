@@ -30,6 +30,8 @@ require 'monster'
 require 'builder'
 require 'writer'
 
+require 'engines'
+
 require 'test_csg'
 
 
