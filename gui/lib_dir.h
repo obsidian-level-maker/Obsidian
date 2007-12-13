@@ -36,9 +36,9 @@ typedef enum
 }
 scan_error_e;
 
-int ScanDirectory(const char *path,
-                  void (* func)(void *privdat, const char *name, int flags),
-                  void *priv_data);
+typedef void (* directory_iter_f)(const char *name, int flags, void *priv_dat);
+
+int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
 // scan the directory with the given path and call the given
 // function (passing the private data pointer to it) for each
 // entry in the directory.  Returns the total number of entries,

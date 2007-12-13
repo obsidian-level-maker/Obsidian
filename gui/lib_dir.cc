@@ -18,7 +18,7 @@
 
 #include "headers.h"
 
-#include "lib_scan.h"
+#include "lib_dir.h"
 #include "lib_util.h"
 
 #ifdef LINUX
@@ -29,59 +29,62 @@
 #endif
 
 
-int ScanDirectory(const char *path,
-                  void (* func)(void *privdat, const char *name, int flags),
-                  void *priv_data)
+#ifndef MAX_PATH
+#define MAX_PATH  1024
+#endif
+
+
+int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
 {
   int count = 0;
 
 #ifdef WIN32
 
-		if (! FS_GetCurrDir(tmp, MAX_PATH))
-(::GetCurrentDirectory(bufsize, (LPSTR)dir) != FALSE);
-			return false;
+  // this is a bit clunky.  We set the current directory to the
+  // target and use FindFirstFile with "*.*" as the pattern. 
+  // Afterwards we restore the current directory.
 
-		prev_dir = std::string(tmp);
-	}
+  char buffer old_dir[MAX_PATH+1];
+  
+  if (GetCurrentDirectory(MAX_PATH, (LPSTR)old_dir) == FALSE)
+			return SCAN_ERROR;
 
-	if (! FS_SetCurrDir(dir))
-(::SetCurrentDirectory(dir) != FALSE);
-		return false;
+	if (SetCurrentDirectory(path) == FALSE)
+		return SCAN_ERR_NoExist;
 
 	WIN32_FIND_DATA fdata;
 
 	HANDLE handle = FindFirstFile("*.*", &fdata);
 	if (handle == INVALID_HANDLE_VALUE)
-		return false;
+  {
+    SetCurrentDirectory(old_dir);
 
-	// Ensure the container is empty
-	fsd->Clear();
+    return 0;  //??? (GetLastError() == ERROR_FILE_NOT_FOUND) ? 0 : SCAN_ERROR;
+  }
 
 	do
 	{
-		filesys_direntry_c tmp_entry;
+    int flags = 0;
 
-		tmp_entry.name = std::string(fdata.cFileName);
-		tmp_entry.size = fdata.nFileSizeLow;
-		tmp_entry.is_dir = (fdata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)?true:false; 
+    if (fdata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+      flags |= SCAN_F_IsDir;
 
-		if (! fsd->AddEntry(&tmp_entry))
-		{
-			FindClose(handle);
-			FS_SetCurrDir(prev_dir.c_str());
-(::SetCurrentDirectory(dir) != FALSE);
-			return false;
-		}
+    if (fdata.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
+      flags |= SCAN_F_ReadOnly;
+
+    if (fdata.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN)
+      flags |= SCAN_F_Hidden;
+
+    (* func)(fdata.cFileName, flags, priv_dat);
 	}
-	while(FindNextFile(handle, &fdata));
+	while (FindNextFile(handle, &fdata) != FALSE);
 
 	FindClose(handle);
 
-	FS_SetCurrDir(prev_dir.c_str());
-(::SetCurrentDirectory(dir) != FALSE);
+  SetCurrentDirectory(old_dir);
 
 
-#else // LINUX
+#else // ---- LINUX ------------------------------------------------
 
 	DIR *handle = opendir(dir);
 	if (handle == NULL)
@@ -98,24 +101,21 @@ int ScanDirectory(const char *path,
 		if (stat(fdata->d_name, &finfo) != 0)
 			continue;
 
-		filesys_direntry_c tmp_entry;
+    int flags = 0;
 
-		tmp_entry.name = std::string(fdata->d_name);
-		tmp_entry.size = finfo.st_size;
-		tmp_entry.is_dir = S_ISDIR(finfo.st_mode) ?true:false;
+    if (S_ISDIR(finfo.st_mode))
+      flags |= SCAN_F_IsDir;
 
-    (* func)(priv_data, name, flags);
-      
-		if (! fsd->AddEntry(&tmp_entry))
-		{
-			closedir(handle);
-			FS_SetCurrDir(olddir);
-			return false;
-		}
+    if ((finfo.st_mode & (S_IWUSR | S_IWGRP | S_IWOTH)) == 0)
+      flags |= SCAN_F_ReadOnly;
+
+    if (fdata->f_name[0] == '.' && isalpha(fdata->f_name[1]))
+      flags |= SCAN_F_Hidden;
+
+		(* func)(fdata->d_name, flags, priv_dat);
 	}
 
 	closedir(handle);
-
 #endif
 
   return count;
