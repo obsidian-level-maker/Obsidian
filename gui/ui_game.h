@@ -26,11 +26,13 @@ private:
   Fl_Button *bump;
 
 public:
-  Fl_Choice *game;
-  Fl_Choice *length;
+  UI_RChoice *game;
+
   Fl_Choice *mode;
 
   UI_RChoice *engine;
+  
+  Fl_Choice *length;
 
 public:
   UI_Game(int x, int y, int w, int h, const char *label = NULL);

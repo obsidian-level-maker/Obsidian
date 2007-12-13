@@ -69,19 +69,19 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  game = new Fl_Choice(x+68, cy, 130, 24, "Game: ");
+  game = new UI_RChoice(x+68, cy, 130, 24, "Game: ");
   game->align(FL_ALIGN_LEFT);
   game->selection_color(FL_BLUE);
-  game->add("Wolf 3d|"
-///         "Spear of Destiny|"
-            "Doom 1|"
-            "Doom 2|"
-            "TNT Evilution|"
-            "Plutonia|"
-            "FreeDoom 0.5|"
-            "Heretic|"
-            "Hexen");
-  game->value(2);
+
+///---  game->add("Wolf 3d|"
+///---            "Doom 1|"
+///---            "Doom 2|"
+///---            "TNT Evilution|"
+///---            "Plutonia|"
+///---            "FreeDoom 0.5|"
+///---            "Heretic|"
+///---            "Hexen");
+///---  game->value(2);
   game->callback(game_callback, this);
 
   add(game);
