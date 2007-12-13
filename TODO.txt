@@ -2,11 +2,26 @@
 TODO
 ====
 
+!!!  errors show full traceback (see interpreter source)
+
+!!  replace non_nil() with assert()
+
+-  create 'hdr_ui.h' header.
+
+
 New Window Layout:
+ 
+-  RChoice: keep complete list of ID/Label pairs, only
+   enable/disable certain entries (AddPair --> EnableID).
 
--  load games from 'games/' dir, setup Game button.
+-  Game button: should affect Engine/Theme buttons
+   (THINK: can these dependencies be modelled better??)
 
--  load mods from 'mods/' directory.
+-  load mods from 'mods/' directory
+   - setup mod box,
+   - setup option box
+   - have mod/option boxes change when Game/Mode/Engine change
+   - have options change when mods are enabled/disabled
 
 
 General:
@@ -21,8 +36,6 @@ General:
 GUI:
 
 +  disable sidedef packing (cause problem with Doomsday).
-
-+  errors show full traceback (see interpreter source)
 
 -  remember save path in config file (Win32).
 
