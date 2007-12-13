@@ -88,7 +88,12 @@ int raw_debug_print(lua_State *L)
 //
 int game_button(lua_State *L)
 {
-  // TODO !!
+  const char *name  = luaL_checkstring(L,1);
+  const char *label = luaL_checkstring(L,2);
+
+  SYS_ASSERT(name && label);
+
+  main_win->game_box->game->AddPair(name, label);
   return 0;
 }
 
@@ -380,13 +385,29 @@ void Script_LoadFromDir(const char *subdir)
  
     const char *full_name = StringPrintf("%s/%s", path, file_list[i]);
 
-    // TODO : load it !!!    
+    // load it !!
+    int status = luaL_loadfile(LUA_ST, full_name);
+
+    if (status == 0)
+      status = lua_pcall(LUA_ST, 0, 0, 0);
+
+    if (status != 0)
+    {
+      const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+
+      Main_FatalError("Unable to load script '%s' (%d)\n%s",
+                      file_list[i], status, msg);
+    }
 
     StringFree(full_name);
-    StringFree(file_list[i]); file_list[i] = NULL;
+    StringFree(file_list[i]);
+    
+    file_list[i] = NULL;
   }
  
   StringFree(path);
+
+  LogPrintf("\n");
 }
 
 void Script_Load(void)
@@ -417,6 +438,8 @@ void Script_Load(void)
 
 void Script_AddSetting(const char *key, const char *value)
 {
+  fprintf(stderr, "%c/%c ", key[0], value[0]);
+
   SYS_NULL_CHECK(key);
   SYS_NULL_CHECK(value);
 
