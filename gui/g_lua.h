@@ -32,6 +32,7 @@ void Script_AddSetting(const char *key, const char *value);
 
 bool Script_Build(void);
 
+void Script_UpdateGame(void);
 void Script_UpdateEngine(void);
 void Script_UpdateTheme(void);
 

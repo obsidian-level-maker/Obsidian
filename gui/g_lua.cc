@@ -24,6 +24,8 @@
 
 #include "hdr_fltk.h"
 #include "lib_util.h"
+#include "lib_dir.h"
+
 #include "twister.h"
 #include "ui_dialog.h"
 #include "ui_window.h"
@@ -324,6 +326,69 @@ void Script_Close(void)
   }
 }
 
+
+static void add_extra_script(const char *name, int flags, void *priv_dat)
+{
+  std::vector<const char*> *list = (std::vector<const char*> *) priv_dat;
+    
+  DebugPrintf("  file [%s] flags:%d\n", name, flags);
+      
+  if (flags & SCAN_F_IsDir)
+    return;
+
+  if (flags & SCAN_F_Hidden)
+    return;
+
+  if (! CheckExtension(name, "lua"))
+    return;
+
+  list->push_back(StringDup(name));
+}
+
+struct Compare_ScriptFilename_pred
+{
+  inline bool operator() (const char *A, const char *B) const
+  {
+    return StrCaseCmp(A, B) < 0;
+  }
+};
+
+void Script_LoadFromDir(const char *subdir)
+{
+  // load all scripts (files which match "*.lua") from a
+  // sub-directory.
+
+  const char *path = StringPrintf("%s/%s", install_path, subdir);
+
+  LogPrintf("Loading extra scripts from: [%s]\n", path);
+
+  std::vector<const char*> file_list;
+
+  int count = ScanDirectory(path, add_extra_script, &file_list);
+
+  if (count < 0)
+    Main_FatalError("Unable to find extra scripts! (%d)\n", count);
+
+  DebugPrintf("Scanned %d entries in sub-directory.\n", count);
+
+  std::sort(file_list.begin(), file_list.end(),
+            Compare_ScriptFilename_pred());
+
+  for (unsigned int i = 0; i < file_list.size(); i++)
+  {
+    LogPrintf("Loading %d/%d : %s\n", i+1, file_list.size(), file_list[i]);
+ 
+    const char *full_name = StringPrintf("%s/%s", path, file_list[i]);
+
+    // TODO : load it !!!    
+
+    StringFree(full_name);
+    StringFree(file_list[i]); file_list[i] = NULL;
+  }
+ 
+  StringFree(path);
+}
+
 void Script_Load(void)
 {
   int status = luaL_loadstring(LUA_ST, "require 'oblige'");
@@ -338,18 +403,15 @@ void Script_Load(void)
     Main_FatalError("Unable to load script 'oblige.lua' (%d)\n%s", status, msg);
   }
 
-  // FIXME: load game scripts
-  // FIXME: load mods
+  Script_LoadFromDir("games");
+  Script_LoadFromDir("mods");
 
   if (! Script_DoRun("ob_init"))
-  { /* ??? */ }
-  
-  // FIXME: setup GAME button
+    Main_FatalError("The ob_init script failed.\n");  //??
 
-#if 1 //!!!!!
+  Script_UpdateGame();
   Script_UpdateEngine();
   Script_UpdateTheme();
-#endif
 }
 
 
@@ -413,6 +475,18 @@ bool Script_Build(void)
   return false;
 }
 
+
+void Script_UpdateGame(void)
+{
+///---  Script_MakeSettings();
+
+  main_win->game_box->game->BeginUpdate();
+
+  if (! Script_DoRun("ob_setup_game_button"))
+    Main_FatalError("Error occurred setting up Game button!\n");
+
+  main_win->game_box->game->EndUpdate(); 
+}
 
 void Script_UpdateEngine(void)
 {
