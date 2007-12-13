@@ -96,11 +96,24 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
     if (fdata == NULL)
       break;
 
-    struct stat finfo;
-
-    if (stat(fdata->d_name, &finfo) != 0)
+    if (strlen(fdata->d_name) == 0)
       continue;
 
+
+    const char *full_name = StringPrintf("%s/%s", path, fdata->d_name);
+ 
+    struct stat finfo;
+
+    if (stat(full_name, &finfo) != 0)
+    {
+      DebugPrintf(".... stat failed: %s\n", strerror(errno));
+      StringFree(full_name);
+      continue;
+    }
+
+    StringFree(full_name);
+
+    
     int flags = 0;
 
     if (S_ISDIR(finfo.st_mode))
