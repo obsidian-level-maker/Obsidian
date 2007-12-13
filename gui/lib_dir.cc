@@ -21,7 +21,7 @@
 #include "lib_dir.h"
 #include "lib_util.h"
 
-#ifdef LINUX
+#ifdef UNIX
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -34,7 +34,7 @@
 #endif
 
 
-int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
+int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
 {
   int count = 0;
 
@@ -44,26 +44,26 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
   // target and use FindFirstFile with "*.*" as the pattern. 
   // Afterwards we restore the current directory.
 
-  char buffer old_dir[MAX_PATH+1];
+  char old_dir[MAX_PATH+1];
   
   if (GetCurrentDirectory(MAX_PATH, (LPSTR)old_dir) == FALSE)
-			return SCAN_ERROR;
+      return SCAN_ERROR;
 
-	if (SetCurrentDirectory(path) == FALSE)
-		return SCAN_ERR_NoExist;
+  if (SetCurrentDirectory(path) == FALSE)
+    return SCAN_ERR_NoExist;
 
-	WIN32_FIND_DATA fdata;
+  WIN32_FIND_DATA fdata;
 
-	HANDLE handle = FindFirstFile("*.*", &fdata);
-	if (handle == INVALID_HANDLE_VALUE)
+  HANDLE handle = FindFirstFile("*.*", &fdata);
+  if (handle == INVALID_HANDLE_VALUE)
   {
     SetCurrentDirectory(old_dir);
 
     return 0;  //??? (GetLastError() == ERROR_FILE_NOT_FOUND) ? 0 : SCAN_ERROR;
   }
 
-	do
-	{
+  do
+  {
     int flags = 0;
 
     if (fdata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
@@ -76,30 +76,30 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
       flags |= SCAN_F_Hidden;
 
     (* func)(fdata.cFileName, flags, priv_dat);
-	}
-	while (FindNextFile(handle, &fdata) != FALSE);
+  }
+  while (FindNextFile(handle, &fdata) != FALSE);
 
-	FindClose(handle);
+  FindClose(handle);
 
   SetCurrentDirectory(old_dir);
 
 
 #else // ---- LINUX ------------------------------------------------
 
-	DIR *handle = opendir(dir);
-	if (handle == NULL)
-		return SCAN_ERR_NoExist;
+  DIR *handle = opendir(path);
+  if (handle == NULL)
+    return SCAN_ERR_NoExist;
 
-	for (;;)
-	{
-		const struct dirent *fdata = readdir(handle);
-		if (fdata == NULL)
-			break;
+  for (;;)
+  {
+    const struct dirent *fdata = readdir(handle);
+    if (fdata == NULL)
+      break;
 
-		struct stat finfo;
+    struct stat finfo;
 
-		if (stat(fdata->d_name, &finfo) != 0)
-			continue;
+    if (stat(fdata->d_name, &finfo) != 0)
+      continue;
 
     int flags = 0;
 
@@ -109,13 +109,13 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
     if ((finfo.st_mode & (S_IWUSR | S_IWGRP | S_IWOTH)) == 0)
       flags |= SCAN_F_ReadOnly;
 
-    if (fdata->f_name[0] == '.' && isalpha(fdata->f_name[1]))
+    if (fdata->d_name[0] == '.' && isalpha(fdata->d_name[1]))
       flags |= SCAN_F_Hidden;
 
-		(* func)(fdata->d_name, flags, priv_dat);
-	}
+    (* func)(fdata->d_name, flags, priv_dat);
+  }
 
-	closedir(handle);
+  closedir(handle);
 #endif
 
   return count;
