@@ -18,7 +18,7 @@
 
 #include "headers.h"
 
-#include "lib_dir.h"
+#include "lib_file.h"
 #include "lib_util.h"
 
 #ifdef WIN32
