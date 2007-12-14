@@ -159,7 +159,7 @@ void Main_Shutdown()
 {
   if (main_win)
   {
-    Cookie_Save(CONFIG_FILENAME);
+//!!!!!!    Cookie_Save(CONFIG_FILENAME);
 
     delete main_win;
     main_win = NULL;
@@ -352,7 +352,7 @@ int main(int argc, char **argv)
   main_win->build_box->mini_map->EmptyMap();
 
   // load config after creating window (set widget values)
-  Cookie_Load(CONFIG_FILENAME);
+//!!!!!!  Cookie_Load(CONFIG_FILENAME);
 
   Script_Load();
 
