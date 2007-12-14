@@ -76,6 +76,8 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
       flags |= SCAN_F_Hidden;
 
     (* func)(fdata.cFileName, flags, priv_dat);
+
+    count++;
   }
   while (FindNextFile(handle, &fdata) != FALSE);
 
@@ -126,6 +128,8 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
       flags |= SCAN_F_Hidden;
 
     (* func)(fdata->d_name, flags, priv_dat);
+
+    count++;
   }
 
   closedir(handle);
