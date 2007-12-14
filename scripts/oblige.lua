@@ -97,7 +97,7 @@ function create_LEVEL(level, index, total)
 
   PLAN = nil
 
-  collectgarbage("collect");
+  collectgarbage("collect")
 end
 
 
@@ -125,20 +125,24 @@ end
 
 function ob_traceback(msg)
 
-  -- guard against _very_ early errors
+  -- guard against very early errors
   if not con or not con.printf then
     return msg
   end
  
-  con.printf("ERROR: %s\n", msg);
-  con.printf("Stack-Trace:\n");
+--con.printf("\nERROR: %s\n\n", msg)
+  con.printf("\nStack Trace:\n")
 
   local stack_limit = 40
 
   local function format_source(info)
-    if not info.short_src then return "" end
+    if not info.short_src or info.currentline <= 0 then
+      return ""
+    end
 
-    return string.format("%s:%d", info.short_src, info.currentline);
+    local base_fn = string.match(info.short_src, "[^/]*$")
+ 
+    return string.format("@ %s:%d", base_fn, info.currentline)
   end
 
   for i = 1,stack_limit do
@@ -168,15 +172,21 @@ function ob_traceback(msg)
         end
       end
 
-      con.printf("@%d %s() %s\n", i, func_name, format_source(info));
+      con.printf("  %d: %s() %s\n", i, func_name, format_source(info))
 
     elseif info.what == "main" then
 
-      con.printf("@%d main body %s\n", i, format_source(info));
+      con.printf("  %d: main body %s\n", i, format_source(info))
 
     elseif info.what == "tail" then
 
-      con.printf("@%d tail call\n");
+      con.printf("  %d: tail call\n", i)
+
+    elseif info.what == "C" then
+
+      if info.namewhat and info.namewhat ~= "" then
+        con.printf("  %d: c-function %s()\n", i, info.name or "???")
+      end
     end
   end
 
@@ -265,7 +275,7 @@ function ob_setup_engine_button()
 
   for xxx,info in ipairs(engine_list) do
     if ob_match_conf(info) then
-      con.engine_button(info.name, info.label);
+      con.engine_button(info.name, info.label)
       count = count + 1
     end
   end
@@ -297,7 +307,7 @@ function ob_setup_theme_button()
 
   for xxx,info in ipairs(theme_list) do
     if ob_match_conf(info) then
-      con.theme_button(info.name, info.label);
+      con.theme_button(info.name, info.label)
       count = count + 1
     end
   end
@@ -312,10 +322,6 @@ function ob_build_cool_shit()
  
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
-
-  local foo
-  local bar = foo.bar
-  error("crikey!")
 
 
   con.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
