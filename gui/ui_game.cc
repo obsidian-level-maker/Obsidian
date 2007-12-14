@@ -326,7 +326,7 @@ const char *UI_Game::get_Seed()
 
 const char *UI_Game::get_Game()
 {
-  return game_syms[game->value()];
+  return "doom2"; //!!!! FIXME game_syms[game->value()];
 }
 
 const char *UI_Game::get_Engine()
