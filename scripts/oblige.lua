@@ -123,6 +123,67 @@ function ob_init()
 end
 
 
+function ob_traceback(msg)
+
+  -- guard against _very_ early errors
+  if not con or not con.printf then
+    return msg
+  end
+ 
+  con.printf("ERROR: %s\n", msg);
+  con.printf("Stack-Trace:\n");
+
+  local stack_limit = 40
+
+  local function format_source(info)
+    if not info.short_src then return "" end
+
+    return string.format("%s:%d", info.short_src, info.currentline);
+  end
+
+  for i = 1,stack_limit do
+    local info = debug.getinfo(i+1)
+    if not info then break end
+
+    if i == stack_limit then
+      con.printf("(remaining stack trace omitted)\n")
+      break;
+    end
+
+    if info.what == "Lua" then
+
+      local func_name = "???"
+
+      if info.namewhat and info.namewhat ~= "" then
+        func_name = info.name or "???"
+      else
+        -- perform our own search of the global namespace,
+        -- since the standard LUA code (5.1.2) will not check it
+        -- for the topmost function (the one called by C code)
+        for k,v in pairs(_G) do
+          if v == info.func then
+            func_name = k
+            break;
+          end
+        end
+      end
+
+      con.printf("@%d %s() %s\n", i, func_name, format_source(info));
+
+    elseif info.what == "main" then
+
+      con.printf("@%d main body %s\n", i, format_source(info));
+
+    elseif info.what == "tail" then
+
+      con.printf("@%d tail call\n");
+    end
+  end
+
+  return msg
+end
+
+
 function ob_match_conf(tab)
 
   assert(OB_CONFIG.game)
@@ -251,6 +312,10 @@ function ob_build_cool_shit()
  
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
+
+  local foo
+  local bar = foo.bar
+  error("crikey!")
 
 
   con.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
