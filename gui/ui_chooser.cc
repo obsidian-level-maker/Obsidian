@@ -21,6 +21,8 @@
 
 #include "ui_chooser.h"
 #include "ui_window.h"
+
+#include "lib_file.h"
 #include "lib_util.h"
 #include "main.h"
 

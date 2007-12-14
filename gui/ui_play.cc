@@ -192,19 +192,19 @@ const char * UI_Play::GetAllValues()
 
 bool UI_Play::ParseValue(const char *key, const char *value)
 {
-  if (StrCaseCmp(key, "mons") == 0)
+  if (StringCaseCmp(key, "mons") == 0)
     return set_Monsters(value);
 
-  if (StrCaseCmp(key, "puzzles") == 0)
+  if (StringCaseCmp(key, "puzzles") == 0)
     return set_Puzzles(value);
 
-  if (StrCaseCmp(key, "traps") == 0)
+  if (StringCaseCmp(key, "traps") == 0)
     return set_Traps(value);
 
-  if (StrCaseCmp(key, "health") == 0)
+  if (StringCaseCmp(key, "health") == 0)
     return set_Health(value);
 
-  if (StrCaseCmp(key, "ammo") == 0)
+  if (StringCaseCmp(key, "ammo") == 0)
     return set_Ammo(value);
 
   return false;
@@ -248,7 +248,7 @@ const char *UI_Play::get_Puzzles()
 int UI_Play::FindSym(const char *str)
 {
   for (int i=0; adjust_syms[i]; i++)
-    if (StrCaseCmp(str, adjust_syms[i]) == 0)
+    if (StringCaseCmp(str, adjust_syms[i]) == 0)
       return i;
 
   return -1; // Unknown

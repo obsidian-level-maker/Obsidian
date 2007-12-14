@@ -30,6 +30,7 @@
 #include "g_lua.h"
 
 #include "main.h"
+#include "lib_file.h"
 #include "lib_util.h"
 #include "ui_dialog.h"
 #include "ui_window.h"

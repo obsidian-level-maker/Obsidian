@@ -18,15 +18,15 @@
 
 #include "headers.h"
 #include "hdr_lua.h"
+#include "hdr_fltk.h"
 
 #include "g_lua.h"
 #include "main.h"
 
-#include "hdr_fltk.h"
+#include "lib_file.h"
 #include "lib_util.h"
-#include "lib_dir.h"
-
 #include "twister.h"
+
 #include "ui_dialog.h"
 #include "ui_window.h"
 
@@ -354,7 +354,7 @@ struct Compare_ScriptFilename_pred
 {
   inline bool operator() (const char *A, const char *B) const
   {
-    return StrCaseCmp(A, B) < 0;
+    return StringCaseCmp(A, B) < 0;
   }
 };
 

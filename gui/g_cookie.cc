@@ -36,7 +36,7 @@ static bool Cookie_SetValue(const char *name, const char *value)
   DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
 
   // ignore the seed value
-  if (StrCaseCmp(name, "seed") == 0)
+  if (StringCaseCmp(name, "seed") == 0)
     return true;
 
   // -- Game Settings --
@@ -52,7 +52,7 @@ static bool Cookie_SetValue(const char *name, const char *value)
     return true;
 
   // -- Miscellaneous --
-  if (StrCaseCmp(name, "last_file") == 0)
+  if (StringCaseCmp(name, "last_file") == 0)
     return UI_SetLastFile(value);
 
   LogPrintf("CONFIG: Ignoring unknown setting: %s = %s\n", name, value);

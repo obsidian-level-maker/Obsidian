@@ -40,8 +40,8 @@ remember_pair_c::~remember_pair_c()
 
 bool remember_pair_c::Equal(const remember_pair_c *other) const
 {
-  return (StrCaseCmp(id,    other->id)    == 0) &&
-         (StrCaseCmp(label, other->label) == 0);
+  return (StringCaseCmp(id,    other->id)    == 0) &&
+         (StringCaseCmp(label, other->label) == 0);
 }
 
 

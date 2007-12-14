@@ -179,16 +179,16 @@ const char * UI_Level::GetAllValues()
 
 bool UI_Level::ParseValue(const char *key, const char *value)
 {
-  if (StrCaseCmp(key, "size") == 0)
+  if (StringCaseCmp(key, "size") == 0)
     return set_Size(value);
 
-  if (StrCaseCmp(key, "theme") == 0)
+  if (StringCaseCmp(key, "theme") == 0)
     return set_Theme(value);
 
-  if (StrCaseCmp(key, "detail") == 0)
+  if (StringCaseCmp(key, "detail") == 0)
     return set_Detail(value);
 
-  if (StrCaseCmp(key, "heights") == 0)
+  if (StringCaseCmp(key, "heights") == 0)
     return set_Heights(value);
 
   // YYY
@@ -236,7 +236,7 @@ const char *UI_Level::get_Heights()  // FIXME
 int UI_Level::FindSym(const char *str)
 {
   for (int i=0; adjust_syms[i]; i++)
-    if (StrCaseCmp(str, adjust_syms[i]) == 0)
+    if (StringCaseCmp(str, adjust_syms[i]) == 0)
       return i;
 
   return -1; // Unknown
@@ -246,7 +246,7 @@ int UI_Level::FindSym(const char *str)
 bool UI_Level::set_Size(const char *str)
 {
   for (int i=0; size_syms[i]; i++)
-    if (StrCaseCmp(str, size_syms[i]) == 0)
+    if (StringCaseCmp(str, size_syms[i]) == 0)
     {
       size->value(i); return true;
     }
