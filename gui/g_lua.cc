@@ -438,8 +438,6 @@ void Script_Load(void)
 
 void Script_AddSetting(const char *key, const char *value)
 {
-  fprintf(stderr, "%c/%c ", key[0], value[0]);
-
   SYS_NULL_CHECK(key);
   SYS_NULL_CHECK(value);
 
@@ -463,22 +461,27 @@ void Script_MakeSettings()
 
 bool Script_DoRun(const char *func_name)
 {
+  lua_getglobal(LUA_ST, "ob_traceback");
+ 
+  if (lua_type(LUA_ST, -1) == LUA_TNIL)
+    Main_FatalError("LUA script problem: missing function '%s'", "ob_traceback");
+
   lua_getglobal(LUA_ST, func_name);
 
   if (lua_type(LUA_ST, -1) == LUA_TNIL)
     Main_FatalError("LUA script problem: missing function '%s'", func_name);
 
-  int status = lua_pcall(LUA_ST, 0, 1, 0);
+  int status = lua_pcall(LUA_ST, 0, 1, -2);
   if (status != 0)
   {
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
     DLG_ShowError("LUA script error:\n%s", msg);
-
-    return false;
   }
-  
-  return true;
+ 
+  lua_pop(LUA_ST, 1);
+
+  return (status == 0) ? true : false;
 }
 
 
@@ -487,7 +490,7 @@ bool Script_Build(void)
 {
   Script_MakeSettings();
 
-  if (! Script_DoRun("build_cool_shit"))
+  if (! Script_DoRun("ob_build_cool_shit"))
     return false;
 
   const char *res = lua_tolstring(LUA_ST, -1, NULL);
