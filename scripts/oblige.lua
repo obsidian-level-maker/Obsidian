@@ -112,7 +112,6 @@ function ob_traceback(msg)
     return msg
   end
  
---con.printf("\nERROR: %s\n\n", msg)
   con.printf("\nStack Trace:\n")
 
   local stack_limit = 40
@@ -176,128 +175,81 @@ function ob_traceback(msg)
 end
 
 
-function ob_match_conf(tab)
+function ob_match_conf(T)
 
   assert(OB_CONFIG.game)
   assert(OB_CONFIG.mode)
   assert(OB_CONFIG.engine)
 
-  if tab.for_games then
-    if not tab.for_games[OB_CONFIG.game] then
-      return false
-    end
+  if T.for_games and not T.for_games[OB_CONFIG.game] then
+    return false
+  end
+  if T.conflict_games and T.conflict_games[OB_CONFIG.game] then
+    return false
   end
 
-  if tab.for_modes then
-    if not tab.for_modes[OB_CONFIG.mode] then
-      return false
-    end
+  if T.for_modes and not T.for_modes[OB_CONFIG.mode] then
+    return false
+  end
+  if T.conflict_modes and T.conflict_modes[OB_CONFIG.mode] then
+    return false
   end
 
-  if tab.for_engines then
-    if not tab.for_engines[OB_CONFIG.engine] then
-      return false
-    end
+  if T.for_engines and not T.for_engines[OB_CONFIG.engine] then
+    return false
+  end
+  if T.conflict_engines and T.conflict_engines[OB_CONFIG.engine] then
+    return false
   end
 
   return true --OK--
 end
 
 
-function ob_button_sorter(A, B)
-  if A.priority or B.priority then
-    return (A.priority or 0) > (B.priority or 0)
-  end
-
-  return A.label < B.label
-end
-
-
-function ob_setup_game_button()
-
-  if not OB_GAMES or table_empty(OB_GAMES) then
-    error("No game definitions were loaded!")
-  end
-
-  local game_list = {}
-
-  for name,info in pairs(OB_GAMES) do
-    assert(info.name)
-    assert(info.label)
-
-    table.insert(game_list, info)
-  end
-
-  table.sort(game_list, ob_button_sorter)
-
-  for xxx,info in ipairs(game_list) do
-    con.game_button(info.name, info.label)
+function ob_update_engines()
+  for name,def in pairs(OB_ENGINES) do
+    con.show_button("engine", name, ob_match_conf(def))
   end
 end
 
 
-function ob_setup_engine_button()
-
-  if not OB_ENGINES or table_empty(OB_ENGINES) then
-    error("No engine definitions were loaded!")
-  end
-
-  local engine_list = {}
-
-  for name,info in pairs(OB_ENGINES) do
-    assert(info.name)
-    assert(info.label)
-
-    table.insert(engine_list, info)
-  end
-
-  table.sort(engine_list, ob_button_sorter)
-
-  local count = 0
-
-  for xxx,info in ipairs(engine_list) do
-    if ob_match_conf(info) then
-      con.engine_button(info.name, info.label)
-      count = count + 1
-    end
-  end
-
-  if count == 0 then
-    error("No engines matching current game!")
+function ob_update_themes()
+  for name,def in pairs(OB_THEMES) do
+    con.show_button("theme", name, ob_match_conf(def))
   end
 end
 
 
-function ob_setup_theme_button()
-
-  if not OB_THEMES or table_empty(OB_THEMES) then
-    error("No themes definitions were loaded!")
-  end
-
-  local theme_list = {}
-
-  for name,info in pairs(OB_THEMES) do
-    assert(info.name)
-    assert(info.label)
-
-    table.insert(theme_list, info)
-  end
-
-  table.sort(theme_list, ob_button_sorter)
-
-  local count = 0
-
-  for xxx,info in ipairs(theme_list) do
-    if ob_match_conf(info) then
-      con.theme_button(info.name, info.label)
-      count = count + 1
-    end
-  end
-
-  if count == 0 then
-    error("No themes matching current game!")
-  end
-end
+--- function ob_setup_theme_button()
+--- 
+---   if not OB_THEMES or table_empty(OB_THEMES) then
+---     error("No themes definitions were loaded!")
+---   end
+--- 
+---   local theme_list = {}
+--- 
+---   for name,info in pairs(OB_THEMES) do
+---     assert(info.name)
+---     assert(info.label)
+--- 
+---     table.insert(theme_list, info)
+---   end
+--- 
+---   table.sort(theme_list, ob_button_sorter)
+--- 
+---   local count = 0
+--- 
+---   for xxx,info in ipairs(theme_list) do
+---     if ob_match_conf(info) then
+---       con.theme_button(info.name, info.label)
+---       count = count + 1
+---     end
+---   end
+--- 
+---   if count == 0 then
+---     error("No themes matching current game!")
+---   end
+--- end
 
 
 function ob_init()
