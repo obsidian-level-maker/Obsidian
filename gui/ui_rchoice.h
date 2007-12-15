@@ -53,7 +53,10 @@ private:
 
 ///---  std::vector<remember_pair_c *> new_list;
 
+
+  
   bool updating;
+  bool modified;
 
 public:
   UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
@@ -92,8 +95,10 @@ private:
   const char *GetLabel() const;
   bool SetLabel(const char *lab);
   
-  int FindID(const char *id) const;
-  int FindLabel(const char *lab) const;
+  option_data_c * FindID(const char *id) const;
+  option_data_c * FindLabel(const char *lab) const;
+
+  option_data_c * FindMapped() const;
 
   bool ListsEqual() const;
   // returns true if the old and new lists are identical.

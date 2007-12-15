@@ -48,7 +48,7 @@
 
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label) :
     Fl_Choice(x, y, w, h, label),
-    opt_list(), updating(false)
+    opt_list(), updating(false), modified(false)
 { }
 
 UI_RChoice::~UI_RChoice()
@@ -59,7 +59,7 @@ UI_RChoice::~UI_RChoice()
 
 void UI_RChoice::AddPair(const char *id, const char *label)
 {
-  option_data_c *opt = FindPair(id);
+  option_data_c *opt = FindID(id);
 
   if (opt)
   {
@@ -81,19 +81,24 @@ void UI_RChoice::AddPair(const char *id, const char *label)
 void UI_RChoice::BeginUpdate()
 {
   updating = true;
+  modified = false;
 }
 
 bool UI_RChoice::ShowOrHide(const char *id, int new_shown)
 {
-  SYS_ASSERT(id)
+  SYS_ASSERT(id);
   SYS_ASSERT(updating);
 
-  int idx = FindId(id);
+  option_data_c *P = FindID(id);
 
-  if (idx < 0)
+  if (! P)
     return false;
 
-  opt_list[idx].shown = new_shown;
+  if (P->shown != new_shown)
+  {
+    P->shown = new_shown;
+    modified = true;
+  }
 
   return true;
 }
@@ -104,74 +109,96 @@ void UI_RChoice::EndUpdate()
 
   updating = false;
 
-  if (ListsEqual())
-  {
-    KillList(new_list);
+  if (! modified)
     return;
-  }
-
-  // remember the id and label of current entry
-
-  const char *cur_id  = StringDup(GetID());
-  const char *cur_lab = StringDup(GetLabel());
 
 
-  // transfer new list to old (emptying the new list)
-  
+  // remember the current entry
+
+  option_data_c *CUR = FindMapped();
+
+///---  const char *old_id  = StringDup(GetID());
+///---  const char *old_lab = StringDup(GetLabel());
+
+
+  // recreate the choice list
+
   clear();
 
-  KillList(id_list);
-
-  for (unsigned int j = 0; j < new_list.size(); j++)
+  int map_index = 0;
+  
+  for (unsigned int j = 0; j < opt_list.size(); j++)
   {
-    remember_pair_c *pair = new_list[j];
+    option_data_c *P = opt_list[j];
 
-    id_list.push_back(pair);
-    new_list[j] = NULL;
+    if (P->shown <= 0)
+      P->mapped = -1;
+    else
+      P->mapped = map_index++;
 
-    add(pair->label, 0, 0, 0, 0);
+    add(P->label, 0, 0, 0, 0);
   }
-
-  new_list.clear();
 
 
   // update the currently selected choice
 
-  if (cur_lab[0] && SetLabel(cur_lab))
-  { /* OK */ }
-  else if (cur_id[0] && SetID(cur_id))
-  { /* OK */ }
-  else
+  int new_index = 0;
+
+  if (CUR)
   {
-    value(0);
+    if (CUR->mapped >= 0)
+    {
+      // still shown, but index may have changed
+      value(CUR->mapped);
+    }
+    else
+    {
+      for (unsigned int j = 0; j < opt_list.size(); j++)
+      {
+        option_data_c *P = opt_list[j];
+
+        if (P->mapped < 0)
+          continue;
+
+        if (StringCaseCmp(P->label, CUR->label) == 0)
+        {
+          new_index = P->mapped;
+          break;
+        }
+      }
+    }
   }
 
-  StringFree(cur_id);
-  StringFree(cur_lab);
+  value(new_index);
+ 
+///---   if (old_lab[0] && SetLabel(old_lab))
+///---   { /* OK */ }
+///---   else if (old_id[0] && SetID(old_id))
+///---   { /* OK */ }
+///---   else
+///---   {
+///---     value(0);
+///---   }
+
+///---   StringFree(old_id);
+///---   StringFree(old_lab);
 }
 
 const char *UI_RChoice::GetID() const
 {
-  if (size() <= 1)
-    return "none";
+  option_data_c *P = FindMapped();
 
-  SYS_ASSERT(value() >= 0);
-  SYS_ASSERT(value() < (int)id_list.size());
-
-  return id_list[value()]->id;
+  return P ? P->id : "";
 }
 
 const char *UI_RChoice::GetLabel() const
 {
-  if (size() <= 1)
-    return "";
+  option_data_c *P = FindMapped();
 
-  SYS_ASSERT(value() >= 0);
-  SYS_ASSERT(value() < (int)id_list.size());
-
-  return id_list[value()]->label;
+  return P ? P->label : "";
 }
 
+#if 0 // NEEDED ???
 bool UI_RChoice::SetID(const char *id)
 {
   int index = FindID(id);
@@ -199,23 +226,25 @@ bool UI_RChoice::SetLabel(const char *lab)
 
   return true;
 }
+#endif
 
 
 //----------------------------------------------------------------
 
-int UI_RChoice::FindID(const char *id) const
+option_data_c * UI_RChoice::FindID(const char *id) const
 {
-  for (unsigned int i = 0; i < id_list.size(); i++)
+  for (unsigned int j = 0; j < opt_list.size(); j++)
   {
-    remember_pair_c *pair = id_list[i];
+    option_data_c *P = opt_list[j];
     
-    if (strcmp(pair->id, id) == 0)
-      return (int)i;
+    if (strcmp(P->id, id) == 0)
+      return P;
   }
 
-  return -1; // not found
+  return NULL;
 }
  
+#if 0  // NEEDED ???
 int UI_RChoice::FindLabel(const char *lab) const
 {
   for (unsigned int i = 0; i < id_list.size(); i++)
@@ -228,31 +257,45 @@ int UI_RChoice::FindLabel(const char *lab) const
 
   return -1; // not found
 }
+#endif
  
-bool UI_RChoice::ListsEqual() const
+option_data_c * UI_RChoice::FindMapped() const
 {
-  if (id_list.size() != new_list.size())
-    return false;
-
-  for (unsigned int i = 0; i < id_list.size(); i++)
+  for (unsigned int j = 0; j < opt_list.size(); j++)
   {
-    remember_pair_c *p1 =  id_list[i];
-    remember_pair_c *p2 = new_list[i];
+    option_data_c *P = opt_list[j];
 
-    if (! p1->Equal(p2))
-      return false;
+    if (P->mapped == value())
+      return P;
   }
 
-  return true;
+  return NULL;
 }
 
-void UI_RChoice::KillList(std::vector<remember_pair_c *> &list)
-{
-  for (unsigned int i = 0; i < list.size(); i++)
-  {
-    delete list[i]; list[i] = NULL;
-  }
-
-  list.clear();
-}
+///--- bool UI_RChoice::ListsEqual() const
+///--- {
+///---   if (id_list.size() != new_list.size())
+///---     return false;
+///--- 
+///---   for (unsigned int i = 0; i < id_list.size(); i++)
+///---   {
+///---     remember_pair_c *p1 =  id_list[i];
+///---     remember_pair_c *p2 = new_list[i];
+///--- 
+///---     if (! p1->Equal(p2))
+///---       return false;
+///---   }
+///--- 
+///---   return true;
+///--- }
+///--- 
+///--- void UI_RChoice::KillList(std::vector<remember_pair_c *> &list)
+///--- {
+///---   for (unsigned int i = 0; i < list.size(); i++)
+///---   {
+///---     delete list[i]; list[i] = NULL;
+///---   }
+///--- 
+///---   list.clear();
+///--- }
 
