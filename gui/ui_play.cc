@@ -24,6 +24,7 @@
 #include "ui_window.h"
 
 #include "g_lua.h"
+#include "lib_signal.h"
 #include "lib_util.h"
 
 
@@ -111,6 +112,9 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
 
   DebugPrintf("UI_Play: final h = %d\n", cy - y);
+
+
+  Signal_Watch("mode", notify_mode, this);
 }
 
 
@@ -120,6 +124,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 UI_Play::~UI_Play()
 {
 }
+
 
 void UI_Play::Locked(bool value)
 {
@@ -141,22 +146,46 @@ void UI_Play::Locked(bool value)
   }
 }
 
-void UI_Play::UpdateLabels(const char *game, const char *mode)
+///---void UI_Play::UpdateLabels(const char *game, const char *mode)
+///---{
+///---  if (strcmp(mode, "dm") == 0)
+///---  {
+///---    mons->label("Weapons: ");
+///---    puzzles->label("Players: ");
+///---  }
+///---  else
+///---  {
+///---    mons->label("Monsters: ");
+///---    puzzles->label("Puzzles: ");
+///---  }
+///---
+///---  SYS_ASSERT(main_win);
+///---
+///---  redraw();
+///---}
+
+void UI_Play::notify_mode(const char *name, void *priv_dat)
 {
+  if (! main_win)
+    return;
+
+  UI_Play *play = (UI_Play *)priv_dat;
+  SYS_ASSERT(play);
+
+  const char *mode = main_win->game_box->get_Mode();
+
   if (strcmp(mode, "dm") == 0)
   {
-    mons->label("Weapons: ");
-    puzzles->label("Players: ");
+    play->mons->label("Weapons: ");
+    play->puzzles->label("Players: ");
   }
   else
   {
-    mons->label("Monsters: ");
-    puzzles->label("Puzzles: ");
+    play->mons->label("Monsters: ");
+    play->puzzles->label("Puzzles: ");
   }
 
-  SYS_ASSERT(main_win);
-
-  redraw();
+  play->redraw();
 }
 
 

@@ -38,8 +38,6 @@ public:
 
   void Locked(bool value);
   
-  void UpdateLabels(const char *game, const char *mode);
-
   void TransferToLUA();
   // transfer settings from this panel into the LUA config table.
  
@@ -67,6 +65,10 @@ public:
 
 private:
   int FindSym(const char *str);
+
+///---  void UpdateLabels(const char *game, const char *mode);
+
+  static void notify_mode(const char *name, void *priv_dat);
 
   static const char *adjust_syms[3];
 };

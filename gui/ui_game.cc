@@ -25,6 +25,7 @@
 #include "ui_window.h"
 
 #include "g_lua.h"
+#include "lib_signal.h"
 #include "lib_util.h"
 
 
@@ -181,38 +182,44 @@ void UI_Game::bump_callback(Fl_Widget *w, void *data)
 
 void UI_Game::game_callback(Fl_Widget *w, void *data)
 {
-  UI_Game *that = (UI_Game *)data;
+  Signal_Raise("game");
 
-  if (main_win)
-  {
-    Script_UpdateEngine();
-    Script_UpdateTheme();
- 
-    main_win->play_box->UpdateLabels(that->get_Game(), that->get_Mode());
-  }
+///---  UI_Game *that = (UI_Game *)data;
+///---
+///---  if (main_win)
+///---  {
+///---    Script_UpdateEngine();
+///---    Script_UpdateTheme();
+///--- 
+///---    main_win->play_box->UpdateLabels(that->get_Game(), that->get_Mode());
+///---  }
 }
 
 void UI_Game::mode_callback(Fl_Widget *w, void *data)
 {
-  UI_Game *that = (UI_Game *)data;
+  Signal_Raise("mode");
 
-  if (main_win)
-  {
-    Script_UpdateEngine();
-    Script_UpdateTheme();
-
-    main_win->play_box->UpdateLabels(that->get_Game(), that->get_Mode());
-  }
+///---  UI_Game *that = (UI_Game *)data;
+///---
+///---  if (main_win)
+///---  {
+///---    Script_UpdateEngine();
+///---    Script_UpdateTheme();
+///---
+///---    main_win->play_box->UpdateLabels(that->get_Game(), that->get_Mode());
+///---  }
 }
 
 void UI_Game::engine_callback(Fl_Widget *w, void *data)
 {
-  UI_Game *that = (UI_Game *)data;
+  Signal_Raise("engine");
 
-  if (main_win)
-  {
-    Script_UpdateTheme();
-  }
+///---  UI_Game *that = (UI_Game *)data;
+///---
+///---  if (main_win)
+///---  {
+///---    Script_UpdateTheme();
+///---  }
 }
 
 void UI_Game::Locked(bool value)
@@ -237,8 +244,8 @@ void UI_Game::Locked(bool value)
     length->activate();
     engine->activate();
 
-    game_callback(this, this);
-    mode_callback(this, this);
+// ????    game_callback(this, this);
+// ????    mode_callback(this, this);
   }
 }
 
