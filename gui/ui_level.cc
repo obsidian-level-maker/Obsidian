@@ -54,19 +54,6 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += heading->h() + 6;
 
 
-  size = new Fl_Choice(x+ 82, cy, 112, 24, "Size: ");
-  size->align(FL_ALIGN_LEFT);
-  size->selection_color(MY_GREEN);
-  size->add("Small|Regular|X-Large");
-  size->value(1);
-
-  add(size);
-
-  cy += size->h() + 6;
-
-  cy += 10;
-
-
   theme = new UI_RChoice(x+ 82, cy, 112, 24, "Theme: ");
   theme->align(FL_ALIGN_LEFT);
   theme->selection_color(MY_GREEN);
@@ -76,6 +63,19 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   add(theme);
 
   cy += theme->h() + 6;
+
+  cy += 10;
+
+
+  size = new Fl_Choice(x+ 82, cy, 112, 24, "Size: ");
+  size->align(FL_ALIGN_LEFT);
+  size->selection_color(MY_GREEN);
+  size->add("Small|Regular|X-Large");
+  size->value(1);
+
+  add(size);
+
+  cy += size->h() + 6;
 
 
   detail = new Fl_Choice(x+ 82, cy, 112, 24, "Detail: ");
