@@ -30,18 +30,18 @@
 #define LIST_BG   BUILD_BG
 
 
-option_data_c::option_data_c(const char *_id, const char *_desc,
+option_data_c::option_data_c(const char *_id, const char *_label,
                              int _pri, int _val) :
     shown(0), value(_val), priority(_pri), widget(NULL)
 {
-  id   = StringDup(_id);
-  desc = StringDup(_desc);
+  id    = StringDup(_id);
+  label = StringDup(_label);
 }
  
 option_data_c::~option_data_c()
 {
-  if (id)   StringFree(id);
-  if (desc) StringFree(desc);
+  if (id)    StringFree(id);
+  if (label) StringFree(label);
 
   // ignore 'widget' field when shown, assuming it exists in
   // an Fl_Group and hence FLTK will take care to delete it.
@@ -74,27 +74,27 @@ UI_OptionList::~UI_OptionList()
 }
 
 
-void UI_OptionList::AddOption(const char *id, const char *desc,
+void UI_OptionList::AddOption(const char *id, const char *label,
                               int pri, int val)
 {
   option_data_c *opt = FindOption(id);
 
   if (opt)
   {
-    StringFree(opt->desc);
-    opt->desc = StringDup(desc);
+    StringFree(opt->label);
+    opt->label = StringDup(label);
 
     opt->shown = 0;
     opt->value = val;
     opt->priority = pri;
 
-    opt->widget->label(opt->desc);
+    opt->widget->label(opt->label);
   }
   else
   {
-    opt = new option_data_c(id, desc, pri, val);
+    opt = new option_data_c(id, label, pri, val);
 
-    opt->widget = new Fl_Check_Button(0, 0, 20, 20, opt->desc);
+    opt->widget = new Fl_Check_Button(0, 0, 20, 20, opt->label);
     opt->widget->box(FL_UP_BOX);
 
     opt_list.push_back(opt);

@@ -39,9 +39,9 @@ class option_data_c
 friend class UI_OptionList;
 
 public:
-  const char *id;    // terse identifier
-  const char *desc;  // description (for the UI)
-  
+  const char *id;     // terse identifier
+  const char *label;  // description (for the UI)
+ 
   int shown;      // 0 = hidden, 1 = shown, -1 = greyed out
   int value;      // 0 or 1
 
@@ -51,11 +51,11 @@ protected:
   Fl_Check_Button *widget;
  
 public:
-   option_data_c() : id(NULL), desc(NULL), shown(0), value(-1),
+   option_data_c() : id(NULL), label(NULL), shown(0), value(-1),
                      priority(50), widget(NULL)
    { }
    
-   option_data_c(const char *_id, const char *_desc, int _pri = 50, int _val = 0);
+   option_data_c(const char *_id, const char *_label, int _pri = 50, int _val = 0);
  
    ~option_data_c();
 };
@@ -75,7 +75,7 @@ public:
   virtual ~UI_OptionList();
 
 public:
-  void AddOption(const char *id, const char *desc, int pri = 50, int val = 0);
+  void AddOption(const char *id, const char *label, int pri = 50, int val = 0);
   // add a new option to the list.  If an option with the same 'id'
   // already exists, that option is replaced instead.
   // The option will begin as not shown (shown == 0).
