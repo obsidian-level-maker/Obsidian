@@ -32,13 +32,14 @@ PLAN = {}
 GAME = {}
 
 
--- tables which interface with GUI code:
+-- tables which interface with GUI code --
 
 OB_CONFIG = {}
 
-OB_GAMES = {}
-OB_MODS  = {}
-
+OB_GAMES   = {}
 OB_THEMES  = {}
 OB_ENGINES = {}
+
+OB_MODS  = {}
+OB_MOPTS = {}
 
