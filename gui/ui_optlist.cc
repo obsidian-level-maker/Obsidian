@@ -49,6 +49,12 @@ option_data_c::~option_data_c()
     delete widget;
 }
 
+bool option_data_c::Equal(const option_data_c& other) const
+{
+  return (StringCaseCmp(id,    other.id)    == 0) &&
+         (StringCaseCmp(label, other.label) == 0);
+}
+
 
 //----------------------------------------------------------------
 

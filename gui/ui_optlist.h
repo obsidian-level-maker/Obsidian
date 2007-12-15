@@ -51,13 +51,17 @@ protected:
   Fl_Check_Button *widget;
  
 public:
-   option_data_c() : id(NULL), label(NULL), shown(0), value(-1),
-                     priority(50), widget(NULL)
-   { }
+  option_data_c() : id(NULL), label(NULL), shown(0), value(-1),
+                    priority(50), widget(NULL)
+  { }
    
-   option_data_c(const char *_id, const char *_label, int _pri = 50, int _val = 0);
+  option_data_c(const char *_id, const char *_label, int _pri = 50, int _val = 0);
  
-   ~option_data_c();
+  ~option_data_c();
+
+public:
+  bool Equal(const option_data_c& other) const;
+  // returns true if they both have the same 'id' and 'label'.
 };
 
 
