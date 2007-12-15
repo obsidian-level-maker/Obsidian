@@ -42,6 +42,7 @@ LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
 OBJS=	main.o      \
 	lib_argv.o  \
 	lib_file.o  \
+	lib_signal.o \
 	lib_util.o  \
 	sys_assert.o \
 	sys_debug.o \
