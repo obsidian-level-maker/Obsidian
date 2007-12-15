@@ -18,12 +18,10 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
-#include "lib_util.h"
+#include "hdr_ui.h"
 
+#include "lib_util.h"
 #include "main.h"
-#include "ui_map.h"
-#include "ui_build.h"
-#include "ui_window.h"
 
 
 #define PROGRESS_FG  fl_color_cube(3,3,0)

@@ -22,7 +22,6 @@
 #include "g_image.h"
 
 #include "lib_util.h"
-#include "ui_window.h"
 #include "main.h"
 
 
@@ -330,7 +329,7 @@ static void FillPost(byte *pat, int x, const byte *src, int src_w, int src_h,
   *dest++ = 255; // END-OF-POST
 }
 
-const byte *Image_MakePatch(int what, int *length, int dest_w)
+const byte *Image_MakePatch(int what, int *length, int dest_w, const char *game)
 {
   SYS_ASSERT(0 <= what && what <= 1);
 
@@ -359,10 +358,10 @@ const byte *Image_MakePatch(int what, int *length, int dest_w)
   // palette conversion
   const byte *mapper = pixel_to_doom;
 
-  if (strcmp(main_win->game_box->get_Game(), "heretic") == 0)
+  if (strcmp(game, "heretic") == 0)
     mapper = pixel_to_heretic;
 
-  if (strcmp(main_win->game_box->get_Game(), "hexen") == 0)
+  if (strcmp(game, "hexen") == 0)
     mapper = pixel_to_hexen;
 
   // patch posts

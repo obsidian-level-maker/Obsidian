@@ -21,7 +21,7 @@
 
 void Image_Setup(void);
 
-const byte *Image_MakePatch(int what, int *length, int dest_w);
+const byte *Image_MakePatch(int what, int *length, int dest_w, const char *game);
 
 void Image_FreePatch(const byte *pat);
 

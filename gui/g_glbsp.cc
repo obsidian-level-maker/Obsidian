@@ -17,16 +17,16 @@
 //----------------------------------------------------------------------------
 
 #include "headers.h"
+#include "hdr_fltk.h"
+#include "hdr_ui.h"
+
+#include "g_glbsp.h"
 #include "lib_util.h"
+#include "main.h"
+
 
 // GLBSP interface header
 #include "glbsp.h"
-
-#include "g_glbsp.h"
-#include "main.h"
-
-#include "hdr_fltk.h"
-#include "ui_window.h"
 
 
 static nodebuildinfo_t nb_info;

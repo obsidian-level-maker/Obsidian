@@ -19,15 +19,14 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
+#include "hdr_ui.h"
+
+#include "lib_file.h"
+#include "lib_util.h"
 
 #include "g_wolf.h"
 #include "g_lua.h"
-
 #include "main.h"
-#include "lib_file.h"
-#include "lib_util.h"
-#include "ui_dialog.h"
-#include "ui_window.h"
 
 
 #define TEMP_GAMEFILE  "GAMEMAPS.tmp"

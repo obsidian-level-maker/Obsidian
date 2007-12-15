@@ -19,10 +19,7 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
-
-#include "ui_rchoice.h"
-#include "ui_game.h"
-#include "ui_window.h"
+#include "hdr_ui.h"
 
 #include "g_lua.h"
 #include "lib_signal.h"

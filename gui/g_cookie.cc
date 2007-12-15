@@ -18,13 +18,12 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
-
-#include "g_cookie.h"
+#include "hdr_ui.h"
 
 #include "lib_util.h"
+
+#include "g_cookie.h"
 #include "ui_chooser.h"
-#include "ui_dialog.h"
-#include "ui_window.h"
 #include "main.h"
 
 

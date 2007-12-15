@@ -18,11 +18,9 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
+#include "hdr_ui.h"
 
-#include "ui_menu.h"
-#include "ui_window.h"
 #include "main.h"
-
 
 
 static bool menu_want_to_quit;

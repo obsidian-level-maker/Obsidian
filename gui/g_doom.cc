@@ -19,6 +19,10 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
+#include "hdr_ui.h"
+
+#include "lib_file.h"
+#include "lib_util.h"
 
 #include "csg_poly.h"
 #include "csg_doom.h"
@@ -30,10 +34,7 @@
 #include "g_lua.h"
 
 #include "main.h"
-#include "lib_file.h"
-#include "lib_util.h"
-#include "ui_dialog.h"
-#include "ui_window.h"
+
 
 //!!!! TEMP
 extern void CSG2_DumpSegmentsToWAD(void);
@@ -163,10 +164,12 @@ void WAD_WritePatches()
     { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
   };
 
+  const char *game_str = main_win->game_box->get_Game();
+  
   int game = 0;
-  if (strcmp(main_win->game_box->get_Game(), "heretic") == 0)
+  if (strcmp(game_str, "heretic") == 0)
     game = 1;
-  if (strcmp(main_win->game_box->get_Game(), "hexen") == 0)
+  if (strcmp(game_str, "hexen") == 0)
     game = 2;
 
   for (int what=0; what < 2; what++)
@@ -175,7 +178,7 @@ void WAD_WritePatches()
     int patch_w = (game == 1 && what == 1) ? 64 : 128;
 
     int length;
-    const byte *pat = Image_MakePatch(what, &length, patch_w);
+    const byte *pat = Image_MakePatch(what, &length, patch_w, game_str);
 
     WAD_WriteLump(patch_names[game][what], pat, length);
 

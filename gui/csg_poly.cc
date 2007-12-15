@@ -29,7 +29,6 @@
 
 #include "main.h"
 #include "ui_dialog.h"
-#include "ui_window.h"
 
 
 std::vector<area_info_c *> all_areas;

@@ -18,9 +18,7 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
-
-#include "ui_setup.h"
-#include "ui_window.h"
+#include "hdr_ui.h"
 
 #include "lib_util.h"
 

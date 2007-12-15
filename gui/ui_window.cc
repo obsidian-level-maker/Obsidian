@@ -18,9 +18,7 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
-
-#include "ui_menu.h"
-#include "ui_window.h"
+#include "hdr_ui.h"
 
 #ifndef WIN32
 #include <unistd.h>

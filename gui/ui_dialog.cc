@@ -18,9 +18,7 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
-
-#include "ui_dialog.h"
-#include "ui_window.h"
+#include "hdr_ui.h"
 
 static bool dialog_done;
 

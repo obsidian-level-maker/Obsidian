@@ -18,11 +18,10 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
-#include "lib_util.h"
+#include "hdr_ui.h"
 
+#include "lib_util.h"
 #include "main.h"
-#include "ui_map.h"
-#include "ui_window.h"
 
 
 #define MAP_BORDER  2
