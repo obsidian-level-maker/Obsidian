@@ -37,6 +37,7 @@
 class option_data_c
 {
 friend class UI_OptionList;
+friend class UI_RChoice;
 
 public:
   const char *id;     // terse identifier
@@ -49,10 +50,13 @@ public:
  
 protected:
   Fl_Check_Button *widget;
+
+  int mapped;  // for RChoice, the index in the current list,
+               // or -1 if not present.
  
 public:
   option_data_c() : id(NULL), label(NULL), shown(0), value(-1),
-                    priority(50), widget(NULL)
+                    priority(50), widget(NULL), mapped(-1)
   { }
    
   option_data_c(const char *_id, const char *_label, int _pri = 50, int _val = 0);

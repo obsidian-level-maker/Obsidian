@@ -32,7 +32,7 @@
 
 option_data_c::option_data_c(const char *_id, const char *_label,
                              int _pri, int _val) :
-    shown(0), value(_val), priority(_pri), widget(NULL)
+    shown(0), value(_val), priority(_pri), widget(NULL), mapped(-1)
 {
   id    = StringDup(_id);
   label = StringDup(_label);
