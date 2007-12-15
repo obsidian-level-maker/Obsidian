@@ -26,7 +26,9 @@ class signal_pair_c
 {
 public:
   const char *name;
+  
   signal_notify_f func;
+  
   void *priv_dat;
 
 public:
@@ -52,7 +54,17 @@ static const char * signal_in_progress = NULL;
 
 void Signal_Watch(const char *name, signal_notify_f func, void *priv_dat)
 {
-  // FIXME !!!
+  // check if already exists
+  for (unsigned int i = 0; i < sig_list.size(); i++)
+  {
+    signal_pair_c *P = sig_list[i];
+
+    if (strcmp(P->name, name) == 0 && P->func == func)
+    {
+      P->priv_dat = priv_dat;
+      return;
+    }
+  }
 
   sig_list.push_back(new signal_pair_c(name, func, priv_dat));
 }
@@ -60,7 +72,25 @@ void Signal_Watch(const char *name, signal_notify_f func, void *priv_dat)
 
 void Signal_DontCare(const char *name, signal_notify_f func)
 {
-  // FIXME !!!
+  for (unsigned int i = 0; i < sig_list.size(); i++)
+  {
+    signal_pair_c *P = sig_list[i];
+
+    if (strcmp(P->name, name) == 0 && P->func == func)
+    {
+      delete P;
+      sig_list[i] = NULL;
+
+      break;
+    }
+  }
+ 
+  // remove NULL pointer(s) from the list
+  std::vector<signal_pair_c *>::iterator ENDP;
+
+  ENDP = std::remove(sig_list.begin(), sig_list.end(), (signal_pair_c*)NULL);
+
+  sig_list.erase(ENDP, sig_list.end());
 }
 
 
@@ -70,7 +100,7 @@ void Signal_Raise(const char *name)
   {
     if (strcmp(signal_in_progress, name) == 0)
     {
-      DebugPrintf("Signal %s raised when already in progress\n", name);
+      DebugPrintf("Signal '%s' raised when already in progress\n", name);
       return;
     }
 
@@ -80,7 +110,7 @@ void Signal_Raise(const char *name)
     {
       if (strcmp(*LI, name) == 0)
       {
-        DebugPrintf("Signal %s raised when already in future list\n", name);
+        DebugPrintf("Signal '%s' raised when already on future list\n", name);
         return;
       }
     }
