@@ -23,24 +23,24 @@
 #include "lib_util.h"
 
 
-remember_pair_c::remember_pair_c(const char *_id, const char *_label)
-{
-  id    = StringDup(_id);
-  label = StringDup(_label);
-}
- 
-remember_pair_c::~remember_pair_c()
-{
-  if (id)    StringFree(id);
-  if (label) StringFree(label);
-}
-
-
-bool remember_pair_c::Equal(const remember_pair_c *other) const
-{
-  return (StringCaseCmp(id,    other->id)    == 0) &&
-         (StringCaseCmp(label, other->label) == 0);
-}
+///---remember_pair_c::remember_pair_c(const char *_id, const char *_label)
+///---{
+///---  id    = StringDup(_id);
+///---  label = StringDup(_label);
+///---}
+///--- 
+///---remember_pair_c::~remember_pair_c()
+///---{
+///---  if (id)    StringFree(id);
+///---  if (label) StringFree(label);
+///---}
+///---
+///---
+///---bool remember_pair_c::Equal(const remember_pair_c *other) const
+///---{
+///---  return (StringCaseCmp(id,    other->id)    == 0) &&
+///---         (StringCaseCmp(label, other->label) == 0);
+///---}
 
 
 //----------------------------------------------------------------
@@ -48,11 +48,34 @@ bool remember_pair_c::Equal(const remember_pair_c *other) const
 
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label) :
     Fl_Choice(x, y, w, h, label),
-    id_list(), new_list(), updating(false)
+    opt_list(), updating(false)
 { }
 
 UI_RChoice::~UI_RChoice()
-{ }
+{
+  // FIXME: free the option_data_c objects
+}
+
+
+void UI_RChoice::AddPair(const char *id, const char *label)
+{
+  option_data_c *opt = FindPair(id);
+
+  if (opt)
+  {
+    StringFree(opt->label);
+    opt->label = StringDup(label);
+
+    opt->shown = 0;
+    opt->value = 0;
+  }
+  else
+  {
+    opt = new option_data_c(id, label);
+
+    opt_list.push_back(opt);
+  }
+}
 
 
 void UI_RChoice::BeginUpdate()
@@ -60,12 +83,19 @@ void UI_RChoice::BeginUpdate()
   updating = true;
 }
 
-void UI_RChoice::AddPair(const char *id, const char *label)
+bool UI_RChoice::ShowOrHide(const char *id, int new_shown)
 {
+  SYS_ASSERT(id)
   SYS_ASSERT(updating);
-  SYS_ASSERT(id && label);
 
-  new_list.push_back(new remember_pair_c(id, label));
+  int idx = FindId(id);
+
+  if (idx < 0)
+    return false;
+
+  opt_list[idx].shown = new_shown;
+
+  return true;
 }
 
 void UI_RChoice::EndUpdate()
@@ -123,8 +153,8 @@ void UI_RChoice::EndUpdate()
 const char *UI_RChoice::GetID() const
 {
   if (size() <= 1)
-    return "";
-      
+    return "none";
+
   SYS_ASSERT(value() >= 0);
   SYS_ASSERT(value() < (int)id_list.size());
 

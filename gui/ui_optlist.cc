@@ -80,8 +80,8 @@ UI_OptionList::~UI_OptionList()
 }
 
 
-void UI_OptionList::AddOption(const char *id, const char *label,
-                              int pri, int val)
+void UI_OptionList::AddPair(const char *id, const char *label,
+                            int pri, int val)
 {
   option_data_c *opt = FindOption(id);
 
@@ -119,7 +119,7 @@ bool UI_OptionList::SetOption(const char *id, int value)
   return true;
 }
 
-bool UI_OptionList::ShowOption(const char *id, int shown)
+bool UI_OptionList::ShowOrHide(const char *id, int shown)
 {
   option_data_c *opt = FindOption(id);
 

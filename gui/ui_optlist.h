@@ -79,14 +79,21 @@ public:
   virtual ~UI_OptionList();
 
 public:
-  void AddOption(const char *id, const char *label, int pri = 50, int val = 0);
+  void AddPair(const char *id, const char *label, int pri = 50, int val = 0);
   // add a new option to the list.  If an option with the same 'id'
   // already exists, that option is replaced instead.
   // The option will begin as not shown (shown == 0).
 
+    void BeginUpdate();
+    
+    bool ShowOrHide(const char *id, int value);
+
+    void EndUpdate();
+
+  
   bool SetOption(const char *id, int value);
 
-  bool ShowOption(const char *id, int shown);
+//  bool ShowOption(const char *id, int shown);
 
   void IterateOptions(option_iter_f func, void *data);
 

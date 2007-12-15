@@ -26,32 +26,32 @@
 //   these ids and labels to be updated at any time.
 //
 
-class remember_pair_c
-{
-public:
-  const char *id;     // terse identifier
-  const char *label;  // description (for the UI)
-  
-public:
-  remember_pair_c() : id(NULL), label(NULL)
-  { }
-
-  remember_pair_c(const char *_id, const char *_label);
-
-  ~remember_pair_c();
-
-public:
-  bool Equal(const remember_pair_c *other) const;
-};
+///---class remember_pair_c
+///---{
+///---public:
+///---  const char *id;     // terse identifier
+///---  const char *label;  // description (for the UI)
+///---  
+///---public:
+///---  remember_pair_c() : id(NULL), label(NULL)
+///---  { }
+///---
+///---  remember_pair_c(const char *_id, const char *_label);
+///---
+///---  ~remember_pair_c();
+///---
+///---public:
+///---  bool Equal(const remember_pair_c *other) const;
+///---};
 
 
 class UI_RChoice : public Fl_Choice
 {
 private:
 
-  std::vector<remember_pair_c *> id_list;
+  std::vector<option_data_c *> opt_list;
 
-  std::vector<remember_pair_c *> new_list;
+///---  std::vector<remember_pair_c *> new_list;
 
   bool updating;
 
@@ -60,23 +60,29 @@ public:
   virtual ~UI_RChoice();
 
 public:
+  void AddPair(const char *id, const char *label);
+  // add a new option to the list.  If an option with the same 'id'
+  // already exists, that option is replaced instead.
+  // The option will begin with shown == 0.
+
   void BeginUpdate();
   // begin an update session.
 
-  void AddPair(const char *id, const char *label);
-  // add a new id/label pair to the list.
+  bool ShowOrHide(const char *id, int new_shown);
+  // finds the option with the given ID, and update the shown
+  // value.  Returns true if successful, or false if no such
+  // option exists.
 
   void EndUpdate();
-  // end the current update session.  If the old selected value
-  // still exists (check label first, id second) then that will
-  // become the new selected value, regardless of number of
-  // entries or their ordering.  If it doesn't exist, the first
-  // entry is used.  Nothing happens if the new list is exactly
-  // the same as the old list.
+  // end the current update session.  The available choices
+  // will be updated to reflect the 'shown' values.  If the
+  // previous selected item is still valid, it remains set,
+  // otherwise we try and find a shown value with the same
+  // label, and failing that: select the first entry.
 
   const char *GetID() const;
   // get the id string for the currently shown value.
-  // returns an empty string if there are no choices.
+  // Returns the string "none" if there are no choices.
 
   bool SetID(const char *id);
   // set the currently shown value via the new 'id'.  If no
@@ -92,7 +98,7 @@ private:
   bool ListsEqual() const;
   // returns true if the old and new lists are identical.
 
-  void KillList(std::vector<remember_pair_c *> &list);
+//???  void KillList(std::vector<remember_pair_c *> &list);
 };
 
 

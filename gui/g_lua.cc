@@ -88,7 +88,7 @@ int add_button(lua_State *L)
   const char *id    = luaL_checkstring(L,2);
   const char *label = luaL_checkstring(L,3);
 
-  SYS_ASSERT(what && name && label);
+  SYS_ASSERT(what && id && label);
 
   // FIXME only allowed during startup
   // if (! allow_add_button) Main_FatalError(...)
@@ -103,10 +103,10 @@ int add_button(lua_State *L)
     main_win->level_box->theme->AddPair(id, label);
 
   else if (StringCaseCmp(what, "mod") == 0)
-    main_win->mod_box->AddPair(id, label);
+    main_win->mod_box->opts->AddPair(id, label);
 
   else if (StringCaseCmp(what, "option") == 0)
-    main_win->opt_box->AddPair(id, label);
+    main_win->option_box->opts->AddPair(id, label);
 
   else
     Main_FatalError("add_button: unknown what value '%s'\n", what);
@@ -114,31 +114,31 @@ int add_button(lua_State *L)
   return 0;
 }
 
-// LUA: show_button(what, id, enable)
+// LUA: show_button(what, id, shown)
 //
 int show_button(lua_State *L)
 {
   const char *what = luaL_checkstring(L,1);
   const char *id   = luaL_checkstring(L,2);
 
-  int enable = lua_toboolean(L,3);
+  int shown = lua_toboolean(L,3) ? 1 : 0;
 
   SYS_ASSERT(what && id);
 
   if (StringCaseCmp(what, "game") == 0)
-    main_win->game_box->game->Modify(id, enable);
+    main_win->game_box->game->ShowOrHide(id, shown);
 
   else if (StringCaseCmp(what, "engine") == 0)
-    main_win->game_box->engine->Modify(id, enable);
+    main_win->game_box->engine->ShowOrHide(id, shown);
 
   else if (StringCaseCmp(what, "theme") == 0)
-    main_win->level_box->theme->Modify(id, enable);
+    main_win->level_box->theme->ShowOrHide(id, shown);
 
   else if (StringCaseCmp(what, "mod") == 0)
-    main_win->mod_box->Modify(id, enable);
+    main_win->mod_box->opts->ShowOrHide(id, shown);
 
   else if (StringCaseCmp(what, "option") == 0)
-    main_win->opt_box->Modify(id, enable);
+    main_win->option_box->opts->ShowOrHide(id, shown);
 
   else
     Main_FatalError("show_button: unknown what value '%s'\n", what);

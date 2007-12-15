@@ -21,7 +21,7 @@
 
 class UI_Mods : public Fl_Group
 {
-private:
+public: /// private:
 
   UI_OptionList *opts;
 
@@ -42,7 +42,7 @@ private:
 
 class UI_ModOptions : public Fl_Group
 {
-private:
+public: /// private:
 
   UI_OptionList *opts;
 
