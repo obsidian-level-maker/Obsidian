@@ -19,7 +19,7 @@
 #ifndef __LIB_SIGNAL_H__
 #define __LIB_SIGNAL_H__
 
-typedef void (* signal_notify_f)(const char (name, void *priv_dat);
+typedef void (* signal_notify_f)(const char *name, void *priv_dat);
 
 void Signal_Watch(const char *name, signal_notify_f func, void *priv_dat);
 // adds a signal notifier function for the signal name.

@@ -19,22 +19,105 @@
 #include "headers.h"
 
 #include "lib_signal.h"
+#include "lib_util.h"
+
+
+class signal_pair_c
+{
+public:
+  const char *name;
+  signal_notify_f func;
+  void *priv_dat;
+
+public:
+  signal_pair_c(const char *_name, signal_notify_f _func, void *_priv) :
+      func(_func), priv_dat(_priv)
+  {
+    name = StringDup(_name);
+  }
+  
+  ~signal_pair_c()
+  {
+    StringFree(name);
+  }
+};
+
+
+static std::vector<signal_pair_c *> sig_list;
+
+static std::list<const char *> future_sigs;
+
+static const char * signal_in_progress = NULL;
 
 
 void Signal_Watch(const char *name, signal_notify_f func, void *priv_dat)
 {
-  // FIXME
+  // FIXME !!!
+
+  sig_list.push_back(new signal_pair_c(name, func, priv_dat));
 }
 
 
 void Signal_DontCare(const char *name, signal_notify_f func)
 {
-  // FIXME
+  // FIXME !!!
 }
 
 
 void Signal_Raise(const char *name)
 {
-  // FIXME
+  if (signal_in_progress)
+  {
+    if (strcmp(signal_in_progress, name) == 0)
+    {
+      DebugPrintf("Signal %s raised when already in progress\n", name);
+      return;
+    }
+
+    std::list<const char *>::iterator LI;
+
+    for (LI = future_sigs.begin(); LI != future_sigs.end(); LI++)
+    {
+      if (strcmp(*LI, name) == 0)
+      {
+        DebugPrintf("Signal %s raised when already in future list\n", name);
+        return;
+      }
+    }
+
+    future_sigs.push_back(StringDup(name));
+    return;
+  }
+
+  // memory management strategy:
+  //   - copy names when added in the future list
+  //   - free names after we perform a notification run
+
+  name = StringDup(name);
+
+  for (;;)
+  {
+    signal_in_progress = name;
+
+    for (unsigned int i = 0; i < sig_list.size(); i++)
+    {
+      signal_pair_c *P = sig_list[i];
+
+      if (strcmp(P->name, name) != 0)
+        continue;
+      
+      (* P->func)(name, P->priv_dat);
+    }
+
+    signal_in_progress = NULL;
+
+    StringFree(name);
+
+    if (future_sigs.empty())
+      break;
+
+    name = future_sigs.front();
+    future_sigs.pop_front();
+  }
 }
 
