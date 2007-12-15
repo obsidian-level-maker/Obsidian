@@ -80,40 +80,69 @@ int raw_debug_print(lua_State *L)
 }
 
 
-// LUA: game_button  (name, label)
-// LUA: engine_button(name, label)
-// LUA: theme_button (name, label)
+// LUA: add_button (what, id, label)
 //
-int game_button(lua_State *L)
+int add_button(lua_State *L)
 {
-  const char *name  = luaL_checkstring(L,1);
-  const char *label = luaL_checkstring(L,2);
+  const char *what  = luaL_checkstring(L,1);
+  const char *id    = luaL_checkstring(L,2);
+  const char *label = luaL_checkstring(L,3);
 
-  SYS_ASSERT(name && label);
+  SYS_ASSERT(what && name && label);
 
-  main_win->game_box->game->AddPair(name, label);
+  // FIXME only allowed during startup
+  // if (! allow_add_button) Main_FatalError(...)
+
+  if (StringCaseCmp(what, "game") == 0)
+    main_win->game_box->game->AddPair(id, label);
+
+  else if (StringCaseCmp(what, "engine") == 0)
+    main_win->game_box->engine->AddPair(id, label);
+
+  else if (StringCaseCmp(what, "theme") == 0)
+    main_win->level_box->theme->AddPair(id, label);
+
+  else if (StringCaseCmp(what, "mod") == 0)
+    main_win->mod_box->AddPair(id, label);
+
+  else if (StringCaseCmp(what, "option") == 0)
+    main_win->opt_box->AddPair(id, label);
+
+  else
+    Main_FatalError("add_button: unknown what value '%s'\n", what);
+
   return 0;
 }
 
-int engine_button(lua_State *L)
+// LUA: show_button(what, id, enable)
+//
+int show_button(lua_State *L)
 {
-  const char *name  = luaL_checkstring(L,1);
-  const char *label = luaL_checkstring(L,2);
+  const char *what = luaL_checkstring(L,1);
+  const char *id   = luaL_checkstring(L,2);
 
-  SYS_ASSERT(name && label);
+  int enable = lua_toboolean(L,3);
 
-  main_win->game_box->engine->AddPair(name, label);
-  return 0;
-}
+  SYS_ASSERT(what && id);
 
-int theme_button(lua_State *L)
-{
-  const char *name  = luaL_checkstring(L,1);
-  const char *label = luaL_checkstring(L,2);
+  if (StringCaseCmp(what, "game") == 0)
+    main_win->game_box->game->Modify(id, enable);
 
-  SYS_ASSERT(name && label);
+  else if (StringCaseCmp(what, "engine") == 0)
+    main_win->game_box->engine->Modify(id, enable);
 
-  main_win->level_box->theme->AddPair(name, label); 
+  else if (StringCaseCmp(what, "theme") == 0)
+    main_win->level_box->theme->Modify(id, enable);
+
+  else if (StringCaseCmp(what, "mod") == 0)
+    main_win->mod_box->Modify(id, enable);
+
+  else if (StringCaseCmp(what, "option") == 0)
+    main_win->opt_box->Modify(id, enable);
+
+  else
+    Main_FatalError("show_button: unknown what value '%s'\n", what);
+
   return 0;
 }
 
@@ -236,21 +265,20 @@ static const luaL_Reg console_lib[] =
   { "raw_log_print",   con::raw_log_print },
   { "raw_debug_print", con::raw_debug_print },
 
-  { "game_button",   con::game_button },
-  { "engine_button", con::engine_button },
-  { "theme_button",  con::theme_button },
+  { "add_button",   con::add_button },
+  { "show_button",  con::show_button },
 
   { "at_level",   con::at_level },
   { "progress",   con::progress },
   { "ticker",     con::ticker },
   { "abort",      con::abort },
-  
-  { "map_begin",  con::map_begin },
-  { "map_pixel",  con::map_pixel },
-  { "map_end",    con::map_end },
-
+ 
   { "rand_seed",  con::rand_seed },
   { "random",     con::random },
+
+  { "map_begin",  con::map_begin },  // REMOVE!
+  { "map_pixel",  con::map_pixel },
+  { "map_end",    con::map_end },
 
   { NULL, NULL } // the end
 };
