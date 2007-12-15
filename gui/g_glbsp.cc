@@ -178,7 +178,10 @@ bool GB_BuildNodes(const char *filename, const char *out_name)
   nb_info.output_file = GlbspStrDup(out_name);
 
   nb_info.quiet = true;
+
+#if 0  // this is not supported by the Doomsday engine
   nb_info.pack_sides = true;
+#endif
 
   glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
 
