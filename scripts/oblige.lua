@@ -105,24 +105,6 @@ end
 --  FUNCTIONS CALLED FROM GUI CODE
 ----------------------------------------------------------------
 
-function ob_init()
-
-  name_it_up(OB_GAMES)
-  name_it_up(OB_MODS)
-  name_it_up(OB_THEMES)
-  name_it_up(OB_ENGINES)
-
-  -- the missing console functions
-  con.printf = function (fmt, ...)
-    if fmt then con.raw_log_print(string.format(fmt, ...)) end
-  end
-
-  con.debugf = function (fmt, ...)
-    if fmt then con.raw_debug_print(string.format(fmt, ...)) end
-  end
-end
-
-
 function ob_traceback(msg)
 
   -- guard against very early errors
@@ -318,6 +300,56 @@ function ob_setup_theme_button()
 end
 
 
+function ob_init()
+
+  -- the missing console functions
+  con.printf = function (fmt, ...)
+    if fmt then con.raw_log_print(string.format(fmt, ...)) end
+  end
+
+  con.debugf = function (fmt, ...)
+    if fmt then con.raw_debug_print(string.format(fmt, ...)) end
+  end
+
+  name_it_up(OB_GAMES)
+  name_it_up(OB_THEMES)
+  name_it_up(OB_ENGINES)
+  name_it_up(OB_MODS)
+  name_it_up(OB_MOPTS)
+
+  local function button_sorter(A, B)
+    if A.priority or B.priority then
+      return (A.priority or 0) > (B.priority or 0)
+    end
+
+    return A.label < B.label
+  end
+
+  local function create_buttons(what, DEFS)
+    assert(DEFS)
+  
+    local list = {}
+
+    for name,def in pairs(DEFS) do
+      assert(def.name and def.label)
+      table.insert(list, def)
+    end
+
+    table.sort(list, button_sorter)
+
+    for xxx,def in ipairs(list) do
+      con.add_button(what, def.name, def.label)
+    end
+  end
+
+  create_buttons("game",   OB_GAMES)
+  create_buttons("theme",  OB_THEMES)
+  create_buttons("engine", OB_ENGINES)
+  create_buttons("mod",    OB_MODS)
+  create_buttons("option", OB_MOPTS)
+end
+
+
 function ob_build_cool_shit()
  
   assert(OB_CONFIG)
@@ -332,7 +364,7 @@ function ob_build_cool_shit()
   con.rand_seed(OB_CONFIG.seed * 100)
 
 
--- [[  CSG TEST CODE
+--[[  CSG TEST CODE
   wad.begin_level("MAP01");
   
   test_csg();
