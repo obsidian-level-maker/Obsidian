@@ -32,7 +32,10 @@ void Signal_DontCare(const char *name, signal_notify_f func);
 void Signal_Raise(const char *name);
 // raises the named signal.  If this is called during a
 // signal notification run, then it is remembered and another
-// run will occur after the current run.  If the same signal
-// that is currently being notified is raised, it is ignored.
+// run will occur after the current run, even if the raised
+// signal is the same one.
+//
+// Care must be taked to prevent infinite loops (excessive
+// looping will be detected and cause a fatal error).
 
 #endif /* __LIB_SIGNAL_H__ */

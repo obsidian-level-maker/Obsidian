@@ -21,6 +21,11 @@
 #include "lib_signal.h"
 #include "lib_util.h"
 
+#include "main.h"
+
+
+#define EXCESSIVE_LOOPS  128
+
 
 class signal_pair_c
 {
@@ -47,7 +52,7 @@ public:
 
 static std::vector<signal_pair_c *> sig_list;
 
-static std::list<const char *> future_sigs;
+static std::list<const char *> pending_sigs;
 
 static const char * signal_in_progress = NULL;
 
@@ -98,35 +103,43 @@ void Signal_Raise(const char *name)
 {
   if (signal_in_progress)
   {
+#if 0
     if (strcmp(signal_in_progress, name) == 0)
     {
       DebugPrintf("Signal '%s' raised when already in progress\n", name);
       return;
     }
+#endif
 
     std::list<const char *>::iterator LI;
 
-    for (LI = future_sigs.begin(); LI != future_sigs.end(); LI++)
+    for (LI = pending_sigs.begin(); LI != pending_sigs.end(); LI++)
     {
       if (strcmp(*LI, name) == 0)
       {
-        DebugPrintf("Signal '%s' raised when already on future list\n", name);
+        DebugPrintf("Signal '%s' raised when already pending\n", name);
         return;
       }
     }
 
-    future_sigs.push_back(StringDup(name));
+    pending_sigs.push_back(StringDup(name));
     return;
   }
 
+  int loop_count = 0;
+
   // memory management strategy:
-  //   - copy names when added in the future list
+  //   - copy names when added in the pending list
   //   - free names after we perform a notification run
 
   name = StringDup(name);
 
   for (;;)
   {
+    loop_count++;
+    if (loop_count >= EXCESSIVE_LOOPS)
+      Main_FatalError("Signal_Raise(%s) : excessive looping!\n", name);
+
     signal_in_progress = name;
 
     for (unsigned int i = 0; i < sig_list.size(); i++)
@@ -143,11 +156,11 @@ void Signal_Raise(const char *name)
 
     StringFree(name);
 
-    if (future_sigs.empty())
+    if (pending_sigs.empty())
       break;
 
-    name = future_sigs.front();
-    future_sigs.pop_front();
+    name = pending_sigs.front();
+    pending_sigs.pop_front();
   }
 }
 
