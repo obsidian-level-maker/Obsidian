@@ -51,9 +51,13 @@ UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label) :
     opt_list(), updating(false), modified(false)
 { }
 
+
 UI_RChoice::~UI_RChoice()
 {
-  // FIXME: free the option_data_c objects
+  for (unsigned int i = 0; i < opt_list.size(); i++)
+  {
+    delete opt_list[i];
+  }
 }
 
 
@@ -66,12 +70,13 @@ void UI_RChoice::AddPair(const char *id, const char *label)
     StringFree(opt->label);
     opt->label = StringDup(label);
 
-    opt->shown = 0;
+    opt->shown = 1; //!!!!
     opt->value = 0;
   }
   else
   {
-    opt = new option_data_c(id, label);
+DebugPrintf("AddPair(%s, %s)\n", id, label);
+    opt = new option_data_c(id, label, 50, 1);
 
     opt_list.push_back(opt);
   }
@@ -112,15 +117,11 @@ void UI_RChoice::EndUpdate()
   if (! modified)
     return;
 
+  Recreate(FindMapped());
+}
 
-  // remember the current entry
-
-  option_data_c *CUR = FindMapped();
-
-///---  const char *old_id  = StringDup(GetID());
-///---  const char *old_lab = StringDup(GetLabel());
-
-
+void UI_RChoice::Recreate(option_data_c *LAST)
+{
   // recreate the choice list
 
   clear();
@@ -136,52 +137,43 @@ void UI_RChoice::EndUpdate()
     else
       P->mapped = map_index++;
 
+DebugPrintf("EndUpdate: adding: %s\n", P->label);
     add(P->label, 0, 0, 0, 0);
   }
 
 
   // update the currently selected choice
 
-  int new_index = 0;
-
-  if (CUR)
+  if (! LAST)
   {
-    if (CUR->mapped >= 0)
-    {
-      // still shown, but index may have changed
-      value(CUR->mapped);
-    }
-    else
-    {
-      for (unsigned int j = 0; j < opt_list.size(); j++)
-      {
-        option_data_c *P = opt_list[j];
+    value(0);
+    return;
+  }
 
-        if (P->mapped < 0)
-          continue;
+  if (LAST->mapped >= 0)
+  {
+    // OK it is still shown, but index may have changed
+    value(LAST->mapped);
+    return;
+  }
 
-        if (StringCaseCmp(P->label, CUR->label) == 0)
-        {
-          new_index = P->mapped;
-          break;
-        }
-      }
+  for (unsigned int j = 0; j < opt_list.size(); j++)
+  {
+    option_data_c *P = opt_list[j];
+
+    if (P->mapped < 0)
+      continue;
+
+    if (StringCaseCmp(P->label, LAST->label) == 0)
+    {
+      // found equivalent entry
+      value(P->mapped);
+      break;
     }
   }
 
-  value(new_index);
+  value(0);
  
-///---   if (old_lab[0] && SetLabel(old_lab))
-///---   { /* OK */ }
-///---   else if (old_id[0] && SetID(old_id))
-///---   { /* OK */ }
-///---   else
-///---   {
-///---     value(0);
-///---   }
-
-///---   StringFree(old_id);
-///---   StringFree(old_lab);
 }
 
 const char *UI_RChoice::GetID() const

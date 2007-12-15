@@ -68,6 +68,8 @@ public:
   // already exists, that option is replaced instead.
   // The option will begin with shown == 0.
 
+  void Recreate(option_data_c *LAST = NULL);
+
   void BeginUpdate();
   // begin an update session.
 

@@ -454,11 +454,15 @@ void Script_Load(void)
   Script_LoadFromDir("mods");
 
   if (! Script_DoRun("ob_init"))
-    Main_FatalError("The ob_init script failed.\n");  //??
+    Main_FatalError("The ob_init script failed.\n");
 
-  Script_UpdateGame();
-  Script_UpdateEngine();
-  Script_UpdateTheme();
+  // IDEA: perhaps should watch for "loaded" Signal ??
+  main_win->game_box->game->Recreate();
+  main_win->game_box->engine->Recreate();
+  main_win->level_box->theme->Recreate();
+
+  main_win->mod_box->opts->Commit();
+  main_win->option_box->opts->Commit();
 }
 
 
@@ -528,17 +532,17 @@ bool Script_Build(void)
 }
 
 
-void Script_UpdateGame(void)
-{
-///---  Script_MakeSettings();
-
-  main_win->game_box->game->BeginUpdate();
-
-  if (! Script_DoRun("ob_setup_game_button"))
-    Main_FatalError("Error occurred setting up Game button!\n");
-
-  main_win->game_box->game->EndUpdate(); 
-}
+///--- void Script_UpdateGame(void)
+///--- {
+///--- ///---  Script_MakeSettings();
+///--- 
+///---   main_win->game_box->game->BeginUpdate();
+///--- 
+///---   if (! Script_DoRun("ob_setup_game_button"))
+///---     Main_FatalError("Error occurred setting up Game button!\n");
+///--- 
+///---   main_win->game_box->game->EndUpdate(); 
+///--- }
 
 void Script_UpdateEngine(void)
 {
@@ -546,7 +550,7 @@ void Script_UpdateEngine(void)
 
   main_win->game_box->engine->BeginUpdate();
 
-  if (! Script_DoRun("ob_setup_engine_button"))
+  if (! Script_DoRun("ob_update_engine"))
   { /* ??? */ }
 
   main_win->game_box->engine->EndUpdate(); 
@@ -558,7 +562,7 @@ void Script_UpdateTheme(void)
 
   main_win->level_box->theme->BeginUpdate();
 
-  if (! Script_DoRun("ob_setup_theme_button"))
+  if (! Script_DoRun("ob_update_theme"))
   { /* ??? */ }
 
   main_win->level_box->theme->EndUpdate();

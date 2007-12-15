@@ -32,7 +32,7 @@
 
 option_data_c::option_data_c(const char *_id, const char *_label,
                              int _pri, int _val) :
-    shown(0), value(_val), priority(_pri), widget(NULL), mapped(-1)
+    shown(1), value(_val), priority(_pri), widget(NULL), mapped(-1)
 {
   id    = StringDup(_id);
   label = StringDup(_label);
@@ -85,12 +85,13 @@ void UI_OptionList::AddPair(const char *id, const char *label,
 {
   option_data_c *opt = FindOption(id);
 
+DebugPrintf("UI_OptionList::AddPair(%s,%s) %s\n", id, label, opt ? "EXIST" : "new");
   if (opt)
   {
     StringFree(opt->label);
     opt->label = StringDup(label);
 
-    opt->shown = 0;
+    opt->shown = 1;  //!!!!!!
     opt->value = val;
     opt->priority = pri;
 
@@ -147,14 +148,19 @@ void UI_OptionList::Commit()
 
   int cy = y();
 
+DebugPrintf("UI_OptionList::Commit begun\n");
   for (unsigned int i = 0; i < opt_list.size(); i++)
   {
     option_data_c *opt = opt_list[i];
 
     Fl_Check_Button *button = opt->widget;
 
+DebugPrintf("UI_OptionList::Commit [%d] shown:%d inside:%d\n",
+i, (opt->shown ? 1 : 0), (button->inside(this) ? 1 : 0));
+
     if ((opt->shown ? 1 : 0) != (button->inside(this) ? 1 : 0))
     {
+DebugPrintf("UI_OptionList::Commit changing [%d]\n", i);
       if (opt->shown > 0)
         this->add(button);
       else
