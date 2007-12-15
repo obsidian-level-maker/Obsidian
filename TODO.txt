@@ -2,12 +2,6 @@
 TODO
 ====
 
-!!!  errors show full traceback (see interpreter source)
-
-!!  replace non_nil() with assert()
-
--  create 'hdr_ui.h' header.
-
 
 New Window Layout:
  
@@ -32,14 +26,21 @@ General:
 
 -  Deathmatch: initial starting weapon (None,Basic,Heavy) : "Equip"
 
++  replace non_nil() with assert()
+
 
 GUI:
-
-+  disable sidedef packing (cause problem with Doomsday).
 
 -  remember save path in config file (Win32).
 
 -  make an icon for Win32 executable.
+
+-  ideas for remaining button (YYY) :
+   -  Secrets   (would be useless for DM)
+   -  Powerups
+   -  Outdoor-iness
+   +  Lighting adjustment
+   -  Big monster adjustment
 
 
 Heretic:
@@ -134,8 +135,7 @@ Miscellaneous:
          be the door of last cell).
 
 
-MILESTONE 4  (pipe dreams...)
-===========
+Pipe Dreams:
 
 ++ better global architecture, room-in-a-room.
 
@@ -145,11 +145,13 @@ MILESTONE 4  (pipe dreams...)
 
 -  bridges (activate by a switch)
 
-?  light up levels (a la quake).
+-  light up levels (a la quake).
 
 -  exit via teleporter pad or holes in floor
 
 -  improved use of liquids.
+
+-  a mod for Eternal III
 
 ?? one-way routes ??
    -  for example: at along:3 fall-off -> along:4
@@ -163,8 +165,6 @@ MILESTONE 4  (pipe dreams...)
      (c) doors that only open from one side (esp. via a switch)
      (d) lifts that go up (or down) into a hole
          (activated by a switch only on one side).
-
-?  support for Eternal III
 
 
  ____________________
