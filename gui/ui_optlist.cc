@@ -61,7 +61,7 @@ bool option_data_c::Equal(const option_data_c& other) const
 
 UI_OptionList::UI_OptionList(int x, int y, int w, int h, const char *label) :
     Fl_Scroll(x, y, w, h, label),
-    opt_list(), cb_func(NULL)
+    opt_list(), cb_func(NULL), cb_data(NULL)
 {
   end(); // cancel begin() in Fl_Group constructor
  
@@ -80,9 +80,10 @@ UI_OptionList::~UI_OptionList()
 }
 
 
-void UI_OptionList::callback2(option_callback_f func)
+void UI_OptionList::callback2(option_callback_f func, void *priv_dat)
 {
   cb_func = func;
+  cb_data = priv_dat;
 }
 
 
@@ -238,7 +239,7 @@ void UI_OptionList::callback_Widget(Fl_Widget *w, void *data)
   
     if (opt->widget == w)
     {
-      (* that->cb_func)(that, opt);
+      (* that->cb_func)(opt, that->cb_data);
       return;
     }
   }      

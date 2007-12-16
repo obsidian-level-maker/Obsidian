@@ -35,7 +35,7 @@ public:
 
   
 private:
-  static void bump_callback(Fl_Widget *, void*);
+  static void callback_Module(option_data_c *, void *);
 
 };
 
@@ -56,7 +56,7 @@ public:
 
   
 private:
-  static void bump_callback(Fl_Widget *, void*);
+  static void callback_Option(option_data_c *, void *);
 
 };
 

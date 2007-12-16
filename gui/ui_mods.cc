@@ -44,6 +44,7 @@ UI_Mods::UI_Mods(int x, int y, int w, int h, const char *label) :
 
 
   opts = new UI_OptionList(x+4, cy, w-4, y+h-4 - cy);
+  opts->callback2(callback_Module, this);
 
   add(opts);
 
@@ -56,11 +57,11 @@ UI_Mods::~UI_Mods()
 }
 
 
-void UI_Mods::bump_callback(Fl_Widget *w, void *data)
+void UI_Mods::callback_Module(option_data_c *opt, void *data)
 {
   UI_Mods *that = (UI_Mods *)data;
 
-//  that->BumpSeed();
+  DebugPrintf("UI_Mods: callback for %s\n", opt->id);
 }
 
 
@@ -101,6 +102,7 @@ UI_ModOptions::UI_ModOptions(int x, int y, int w, int h, const char *label) :
 
 
   opts = new UI_OptionList(x+4, cy, w-4, y+h-4 - cy);
+  opts->callback2(callback_Option, this);
 
   add(opts);
 
@@ -113,11 +115,11 @@ UI_ModOptions::~UI_ModOptions()
 }
 
 
-void UI_ModOptions::bump_callback(Fl_Widget *w, void *data)
+void UI_ModOptions::callback_Option(option_data_c *opt, void *data)
 {
   UI_ModOptions *that = (UI_ModOptions *)data;
-
-//  that->BumpSeed();
+ 
+  DebugPrintf("UI_ModOptions: callback for %s\n", opt->id);
 }
 
 
