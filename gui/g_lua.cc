@@ -22,6 +22,7 @@
 #include "hdr_ui.h"
 
 #include "lib_file.h"
+#include "lib_signal.h"
 #include "lib_util.h"
 
 #include "g_lua.h"
@@ -358,6 +359,44 @@ void Script_Close(void)
 }
 
 
+#if 0
+void Script_MakeSettings()
+{
+  main_win->game_box ->TransferToLUA();
+  main_win->level_box->TransferToLUA();
+  main_win->play_box ->TransferToLUA();
+
+//main_win->option_box->TransferToLUA();
+
+}
+#endif
+
+void Script_UpdateEngine(const char *signame, void *priv_dat)
+{
+///---  Script_MakeSettings();
+
+  main_win->game_box->engine->BeginUpdate();
+
+  if (! Script_DoRun("ob_update_engine"))
+  { /* ??? */ }
+
+  if (main_win->game_box->engine->EndUpdate())
+    Signal_Raise("engine");
+}
+
+void Script_UpdateTheme(const char *signame, void *priv_dat)
+{
+///---  Script_MakeSettings();
+
+  main_win->level_box->theme->BeginUpdate();
+
+  if (! Script_DoRun("ob_update_theme"))
+  { /* ??? */ }
+
+  main_win->level_box->theme->EndUpdate();
+}
+
+
 static void add_extra_script(const char *name, int flags, void *priv_dat)
 {
   std::vector<const char*> *list = (std::vector<const char*> *) priv_dat;
@@ -463,6 +502,13 @@ void Script_Load(void)
 
   main_win->mod_box->opts->Commit();
   main_win->option_box->opts->Commit();
+
+  Signal_Watch("game", Script_UpdateEngine);
+  Signal_Watch("mode", Script_UpdateEngine);
+
+  Signal_Watch("game",   Script_UpdateTheme);
+  Signal_Watch("mode",   Script_UpdateTheme);
+  Signal_Watch("engine", Script_UpdateTheme);
 }
 
 
@@ -472,20 +518,13 @@ void Script_AddSetting(const char *key, const char *value)
   SYS_NULL_CHECK(value);
 
   lua_getglobal(LUA_ST, "OB_CONFIG");
-  lua_pushstring(LUA_ST, key);
-  lua_pushstring(LUA_ST, value);
-  lua_settable(LUA_ST, -3);
+  {
+    lua_pushstring(LUA_ST, key);
+    lua_pushstring(LUA_ST, value);
+
+    lua_settable(LUA_ST, -3);
+  }
   lua_pop(LUA_ST, 1);
-}
-
-void Script_MakeSettings()
-{
-  main_win->game_box ->TransferToLUA();
-  main_win->level_box->TransferToLUA();
-  main_win->play_box ->TransferToLUA();
-
-//main_win->option_box->TransferToLUA();
-
 }
 
 
@@ -518,7 +557,7 @@ bool Script_DoRun(const char *func_name)
 
 bool Script_Build(void)
 {
-  Script_MakeSettings();
+  Script_AddSetting("seed", main_win->game_box->get_Seed());
 
   if (! Script_DoRun("ob_build_cool_shit"))
     return false;
@@ -529,42 +568,5 @@ bool Script_Build(void)
     return true;
 
   return false;
-}
-
-
-///--- void Script_UpdateGame(void)
-///--- {
-///--- ///---  Script_MakeSettings();
-///--- 
-///---   main_win->game_box->game->BeginUpdate();
-///--- 
-///---   if (! Script_DoRun("ob_setup_game_button"))
-///---     Main_FatalError("Error occurred setting up Game button!\n");
-///--- 
-///---   main_win->game_box->game->EndUpdate(); 
-///--- }
-
-void Script_UpdateEngine(void)
-{
-  Script_MakeSettings();
-
-  main_win->game_box->engine->BeginUpdate();
-
-  if (! Script_DoRun("ob_update_engine"))
-  { /* ??? */ }
-
-  main_win->game_box->engine->EndUpdate(); 
-}
-
-void Script_UpdateTheme(void)
-{
-  Script_MakeSettings();
-
-  main_win->level_box->theme->BeginUpdate();
-
-  if (! Script_DoRun("ob_update_theme"))
-  { /* ??? */ }
-
-  main_win->level_box->theme->EndUpdate();
 }
 
