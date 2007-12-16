@@ -419,7 +419,7 @@ bool Wolf_Rename(void)
 {
   const char *ext = "WL6";
 
-  if (strcmp(main_win->game_box->get_Game(), "spear")  == 0)
+  if (strcmp(main_win->game_box->game->GetID(), "spear")  == 0)
     ext = "SOD";
 
   char gamemaps[40];

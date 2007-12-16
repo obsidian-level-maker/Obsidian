@@ -164,7 +164,7 @@ void WAD_WritePatches()
     { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
   };
 
-  const char *game_str = main_win->game_box->get_Game();
+  const char *game_str = main_win->game_box->game->GetID();
   
   int game = 0;
   if (strcmp(game_str, "heretic") == 0)
