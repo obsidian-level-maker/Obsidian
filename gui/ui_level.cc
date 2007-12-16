@@ -56,6 +56,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   theme->selection_color(MY_GREEN);
 ///---  theme->add("Mix it Up|Hell|Nature|Tech|Urban");
 ///---  theme->value(0);
+  theme->callback(callback_Any, this);
 
   add(theme);
 
@@ -69,6 +70,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   size->selection_color(MY_GREEN);
   size->add("Small|Regular|X-Large");
   size->value(1);
+  size->callback(callback_Any, this);
 
   add(size);
 
@@ -80,6 +82,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   detail->selection_color(MY_GREEN);
   detail->add("None|Low|Medium|High");
   detail->value(2);
+  detail->callback(callback_Any, this);
 
   add(detail);
 
@@ -93,6 +96,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   heights->selection_color(MY_GREEN);
   heights->add("Flat|Gentle|Normal|Wild");
   heights->value(1);
+  heights->callback(callback_Any, this);
 
   add(heights);
 
@@ -104,6 +108,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   yyy->selection_color(MY_GREEN);
   yyy->add("Few|Normal|Heaps");
   yyy->value(1);
+  yyy->callback(callback_Any, this);
 
   add(yyy);
 
@@ -145,6 +150,13 @@ void UI_Level::Locked(bool value)
 
 
 //----------------------------------------------------------------
+
+void UI_Level::callback_Any(Fl_Widget *w, void *data)
+{
+  UI_Level *that = (UI_Level *) data;
+
+  that->TransferToLUA();
+}
 
 void UI_Level::TransferToLUA()
 {

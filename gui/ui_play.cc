@@ -57,6 +57,8 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   mons->selection_color(MY_RED);
   mons->add("Scarce|Normal|Hordes");
   mons->value(1);
+  mons->callback(callback_Any, this);
+  
 
   add(mons);
 
@@ -68,6 +70,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   puzzles->selection_color(MY_RED);
   puzzles->add("Few|Normal|Heaps");
   puzzles->value(1);
+  puzzles->callback(callback_Any, this);
 
   add(puzzles);
 
@@ -79,6 +82,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   traps->selection_color(MY_RED);
   traps->add("Few|Normal|Heaps");
   traps->value(1);
+  traps->callback(callback_Any, this);
 
   add(traps);
 
@@ -92,6 +96,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   health->selection_color(MY_RED);
   health->add("Less|Enough|More");
   health->value(1);
+  health->callback(callback_Any, this);
 
   add(health);
 
@@ -103,7 +108,8 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   ammo->selection_color(MY_RED);
   ammo->add("Less|Enough|More");
   ammo->value(1);
-  
+  ammo->callback(callback_Any, this);
+ 
   add(ammo);
   
   cy += ammo->h() + 6;
@@ -170,7 +176,7 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
   UI_Play *play = (UI_Play *)priv_dat;
   SYS_ASSERT(play);
 
-  const char *mode = main_win->game_box->get_Mode();
+  const char *mode = main_win->game_box->mode->GetID();
 
   if (strcmp(mode, "dm") == 0)
   {
@@ -188,6 +194,13 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
 
 
 //----------------------------------------------------------------
+
+void UI_Play::callback_Any(Fl_Widget *w, void *data)
+{
+  UI_Play *that = (UI_Play *) data;
+
+  that->TransferToLUA();
+}
 
 void UI_Play::TransferToLUA()
 {

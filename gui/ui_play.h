@@ -71,6 +71,8 @@ private:
   static void notify_Mode(const char *name, void *priv_dat);
 
   static const char *adjust_syms[3];
+
+  static void callback_Any(Fl_Widget *, void*);
 };
 
 #endif /* __UI_PLAY_H__ */

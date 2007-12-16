@@ -71,6 +71,8 @@ private:
   static const char *size_syms[3];
 
   int FindSym(const char *str);
+
+  static void callback_Any(Fl_Widget *, void*);
 };
 
 #endif /* __UI_LEVEL_H__ */
