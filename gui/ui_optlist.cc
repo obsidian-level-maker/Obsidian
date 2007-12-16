@@ -61,7 +61,7 @@ bool option_data_c::Equal(const option_data_c& other) const
 
 UI_OptionList::UI_OptionList(int x, int y, int w, int h, const char *label) :
     Fl_Scroll(x, y, w, h, label),
-    opt_list()
+    opt_list(), cb_func(NULL)
 {
   end(); // cancel begin() in Fl_Group constructor
  
@@ -77,6 +77,12 @@ UI_OptionList::~UI_OptionList()
   {
     delete opt_list[i];
   }
+}
+
+
+void UI_OptionList::callback2(option_callback_f func)
+{
+  cb_func = func;
 }
 
 
@@ -103,6 +109,7 @@ DebugPrintf("UI_OptionList::AddPair(%s,%s) %s\n", id, label, opt ? "EXIST" : "ne
 
     opt->widget = new Fl_Check_Button(0, 0, 20, 20, opt->label);
     opt->widget->box(FL_UP_BOX);
+    opt->widget->callback(callback_Widget, this);
 
     opt_list.push_back(opt);
   }
@@ -158,7 +165,7 @@ void UI_OptionList::IterateOptions(option_iter_f func, void *data)
 
 void UI_OptionList::Commit()
 {
-  // FIXME: visit in correct order (shown + priority + alphabetical)
+  // FIXME: visit in correct order (shown)
 
   int cy = y();
 
@@ -216,3 +223,26 @@ option_data_c *UI_OptionList::FindOption(const char *id)
   return NULL; // not found
 }
  
+
+void UI_OptionList::callback_Widget(Fl_Widget *w, void *data)
+{
+  UI_OptionList *that = (UI_OptionList *)data;
+  SYS_ASSERT(that);
+
+  if (! that->cb_func)
+    return;
+
+  for (unsigned int i = 0; i < that->opt_list.size(); i++)
+  {
+    option_data_c *opt = that->opt_list[i];
+  
+    if (opt->widget == w)
+    {
+      (* that->cb_func)(that, opt);
+      return;
+    }
+  }      
+
+  DebugPrintf("UI_OptionList::callback_Widget: cannot find widget %p\n", w);
+}
+

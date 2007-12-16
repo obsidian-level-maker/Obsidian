@@ -69,7 +69,11 @@ public:
 };
 
 
+class UI_OptionList;
+
 typedef void (* option_iter_f)(option_data_c *opt, void *data);
+
+typedef void (* option_callback_f)(UI_OptionList *list, option_data_c *opt);
 
 
 class UI_OptionList : public Fl_Scroll
@@ -78,11 +82,16 @@ private:
 
   std::vector<option_data_c *> opt_list;
  
+  option_callback_f cb_func;
+
 public:
   UI_OptionList(int x, int y, int w, int h, const char *label = NULL);
   virtual ~UI_OptionList();
 
 public:
+  void callback2(option_callback_f func);
+  // call this function whenever the user modifies an option.
+      
   void AddPair(const char *id, const char *label, int pri = 50, int val = 0);
   // add a new option to the list.  If an option with the same 'id'
   // already exists, that option is replaced instead.
@@ -108,6 +117,7 @@ public:
 private:
   option_data_c *FindOption(const char *id);
 
+  static void callback_Widget(Fl_Widget*, void*);
 };
 
 
