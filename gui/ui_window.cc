@@ -34,7 +34,7 @@
 UI_MainWin *main_win;
 
 #define MAIN_WINDOW_W  620
-#define MAIN_WINDOW_H  440
+#define MAIN_WINDOW_H  432
 
 #if 0
 #define MAX_WINDOW_W  760
@@ -86,7 +86,7 @@ UI_MainWin::UI_MainWin(const char *title) :
   int MW = 208;
   int RW = 196;
 
-  int GAME_H  = 224;
+  int GAME_H  = 220;
   int ADJ_H   = GAME_H;
   int MOD_H   = GAME_H;
 
