@@ -112,7 +112,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   DebugPrintf("UI_Play: final h = %d\n", cy - y);
 
 
-  Signal_Watch("mode", notify_mode, this);
+  Signal_Watch("mode", notify_Mode, this);
 }
 
 
@@ -162,7 +162,7 @@ void UI_Play::Locked(bool value)
 ///---  redraw();
 ///---}
 
-void UI_Play::notify_mode(const char *name, void *priv_dat)
+void UI_Play::notify_Mode(const char *name, void *priv_dat)
 {
   if (! main_win)
     return;

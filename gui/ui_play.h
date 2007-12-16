@@ -68,7 +68,7 @@ private:
 
 ///---  void UpdateLabels(const char *game, const char *mode);
 
-  static void notify_mode(const char *name, void *priv_dat);
+  static void notify_Mode(const char *name, void *priv_dat);
 
   static const char *adjust_syms[3];
 };
