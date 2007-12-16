@@ -120,6 +120,11 @@ bool UI_OptionList::SetOption(const char *id, int value)
   return true;
 }
 
+void UI_OptionList::BeginUpdate()
+{
+  // updating = true;
+}
+
 bool UI_OptionList::ShowOrHide(const char *id, int shown)
 {
   option_data_c *opt = FindOption(id);
@@ -130,6 +135,15 @@ bool UI_OptionList::ShowOrHide(const char *id, int shown)
   opt->shown = shown;
 
   return true;
+}
+
+void UI_OptionList::EndUpdate()
+{
+  // updating = false;
+  // if (! modified)
+  //   return;
+
+  Commit();
 }
 
 void UI_OptionList::IterateOptions(option_iter_f func, void *data)
