@@ -272,3 +272,20 @@ OB_MODULES["tnt"] =
   mod_func = tnt_modifier,
 }
 
+
+---- TEST STUFF ----
+
+OB_THEMES["tnt_egypt"] =
+{
+  label = "Egyptian",
+
+  for_module = "tnt",
+}
+
+OB_OPTIONS["tnt_funk"] =
+{
+  label = "Funk It Up",
+
+  for_module = "tnt",
+}
+
