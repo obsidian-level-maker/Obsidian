@@ -5,17 +5,23 @@ TODO
 
 New Window Layout:
  
--  RChoice: keep complete list of ID/Label pairs, only
-   enable/disable certain entries (AddPair --> EnableID).
+-  initial setup for OB_CONFIG ('game' field etc)
 
--  Game button: should affect Engine/Theme buttons
-   (THINK: can these dependencies be modelled better??)
+-  mod_box and option_box: send changes to LUA
+   (need a new func like Script_SetConfig, e.g. SetModule).
+   also need to Signal_Raise("module") etc.
 
 -  load mods from 'mods/' directory
    - setup mod box,
    - setup option box
    - have mod/option boxes change when Game/Mode/Engine change
    - have options change when mods are enabled/disabled
+
+-  Mod Box: shown=0  for game mismatch
+            shown=-1 for engine/mode mismatch
+
+?  use LUA code for handling the config file
+   (not everything though)
 
 
 General:
@@ -41,6 +47,7 @@ GUI:
    -  Outdoor-iness
    +  Lighting adjustment
    -  Big monster adjustment
+   -  Linearity
 
 
 Heretic:
