@@ -371,29 +371,41 @@ void Script_MakeSettings()
 }
 #endif
 
-void Script_UpdateEngine(const char *signame, void *priv_dat)
+static void UpdateEngines(const char *signame, void *priv_dat)
 {
-///---  Script_MakeSettings();
-
   main_win->game_box->engine->BeginUpdate();
 
-  if (! Script_DoRun("ob_update_engine"))
-  { /* ??? */ }
+  Script_DoRun("ob_update_engines");
 
   if (main_win->game_box->engine->EndUpdate())
     Signal_Raise("engine");
 }
 
-void Script_UpdateTheme(const char *signame, void *priv_dat)
+static void UpdateThemes(const char *signame, void *priv_dat)
 {
-///---  Script_MakeSettings();
-
   main_win->level_box->theme->BeginUpdate();
 
-  if (! Script_DoRun("ob_update_theme"))
-  { /* ??? */ }
+  Script_DoRun("ob_update_themes");
 
   main_win->level_box->theme->EndUpdate();
+}
+
+static void UpdateModules(const char *signame, void *priv_dat)
+{
+  main_win->mod_box->opts->BeginUpdate();
+
+  Script_DoRun("ob_update_modules");
+
+  main_win->mod_box->opts->EndUpdate();
+}
+
+static void UpdateOptions(const char *signame, void *priv_dat)
+{
+  main_win->option_box->opts->BeginUpdate();
+
+  Script_DoRun("ob_update_options");
+
+  main_win->option_box->opts->EndUpdate();
 }
 
 
@@ -503,12 +515,20 @@ void Script_Load(void)
   main_win->mod_box->opts->Commit();
   main_win->option_box->opts->Commit();
 
-  Signal_Watch("game", Script_UpdateEngine);
-  Signal_Watch("mode", Script_UpdateEngine);
+  Signal_Watch("game",   UpdateEngines);
+  Signal_Watch("mode",   UpdateEngines);
 
-  Signal_Watch("game",   Script_UpdateTheme);
-  Signal_Watch("mode",   Script_UpdateTheme);
-  Signal_Watch("engine", Script_UpdateTheme);
+  Signal_Watch("game",   UpdateThemes);
+  Signal_Watch("mode",   UpdateThemes);
+  Signal_Watch("engine", UpdateThemes);
+
+  Signal_Watch("game",   UpdateModules);
+  Signal_Watch("mode",   UpdateModules);
+  Signal_Watch("engine", UpdateModules);
+
+  Signal_Watch("game",   UpdateOptions);
+  Signal_Watch("mode",   UpdateOptions);
+  Signal_Watch("engine", UpdateOptions);
 }
 
 
