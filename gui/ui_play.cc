@@ -57,7 +57,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   mons->selection_color(MY_RED);
   mons->add("Scarce|Normal|Hordes");
   mons->value(1);
-  mons->callback(callback_Any, this);
+  mons->callback(callback_Monsters, this);
   
 
   add(mons);
@@ -70,7 +70,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   puzzles->selection_color(MY_RED);
   puzzles->add("Few|Normal|Heaps");
   puzzles->value(1);
-  puzzles->callback(callback_Any, this);
+  puzzles->callback(callback_Puzzles, this);
 
   add(puzzles);
 
@@ -82,7 +82,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   traps->selection_color(MY_RED);
   traps->add("Few|Normal|Heaps");
   traps->value(1);
-  traps->callback(callback_Any, this);
+  traps->callback(callback_Traps, this);
 
   add(traps);
 
@@ -96,7 +96,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   health->selection_color(MY_RED);
   health->add("Less|Enough|More");
   health->value(1);
-  health->callback(callback_Any, this);
+  health->callback(callback_Health, this);
 
   add(health);
 
@@ -108,7 +108,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   ammo->selection_color(MY_RED);
   ammo->add("Less|Enough|More");
   ammo->value(1);
-  ammo->callback(callback_Any, this);
+  ammo->callback(callback_Ammo, this);
  
   add(ammo);
   
@@ -195,21 +195,41 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
 
 //----------------------------------------------------------------
 
-void UI_Play::callback_Any(Fl_Widget *w, void *data)
+void UI_Play::callback_Monsters(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  that->TransferToLUA();
+  Script_SetConfig("mons", that->get_Monsters());
 }
 
-void UI_Play::TransferToLUA()
+void UI_Play::callback_Puzzles(Fl_Widget *w, void *data)
 {
-  Script_SetConfig("mons",    get_Monsters());
-  Script_SetConfig("puzzles", get_Puzzles());
-  Script_SetConfig("traps",   get_Traps());
-  Script_SetConfig("health",  get_Health());
-  Script_SetConfig("ammo",    get_Ammo());
+  UI_Play *that = (UI_Play *) data;
+
+  Script_SetConfig("puzzles", that->get_Puzzles());
 }
+
+void UI_Play::callback_Traps(Fl_Widget *w, void *data)
+{
+  UI_Play *that = (UI_Play *) data;
+
+  Script_SetConfig("traps", that->get_Traps());
+}
+
+void UI_Play::callback_Health(Fl_Widget *w, void *data)
+{
+  UI_Play *that = (UI_Play *) data;
+
+  Script_SetConfig("health", that->get_Health());
+}
+
+void UI_Play::callback_Ammo(Fl_Widget *w, void *data)
+{
+  UI_Play *that = (UI_Play *) data;
+
+  Script_SetConfig("ammo", that->get_Ammo());
+}
+
  
 const char * UI_Play::GetAllValues()
 {

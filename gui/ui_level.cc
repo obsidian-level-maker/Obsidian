@@ -56,7 +56,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   theme->selection_color(MY_GREEN);
 ///---  theme->add("Mix it Up|Hell|Nature|Tech|Urban");
 ///---  theme->value(0);
-  theme->callback(callback_Any, this);
+  theme->callback(callback_Theme, this);
 
   add(theme);
 
@@ -70,7 +70,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   size->selection_color(MY_GREEN);
   size->add("Small|Regular|X-Large");
   size->value(1);
-  size->callback(callback_Any, this);
+  size->callback(callback_Size, this);
 
   add(size);
 
@@ -82,7 +82,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   detail->selection_color(MY_GREEN);
   detail->add("None|Low|Medium|High");
   detail->value(2);
-  detail->callback(callback_Any, this);
+  detail->callback(callback_Detail, this);
 
   add(detail);
 
@@ -96,7 +96,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   heights->selection_color(MY_GREEN);
   heights->add("Flat|Gentle|Normal|Wild");
   heights->value(1);
-  heights->callback(callback_Any, this);
+  heights->callback(callback_Heights, this);
 
   add(heights);
 
@@ -108,7 +108,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   yyy->selection_color(MY_GREEN);
   yyy->add("Few|Normal|Heaps");
   yyy->value(1);
-  yyy->callback(callback_Any, this);
+  yyy->callback(callback_YYY, this);
 
   add(yyy);
 
@@ -132,16 +132,16 @@ void UI_Level::Locked(bool value)
 {
   if (value)
   {
-    size  ->deactivate();
     theme ->deactivate();
+    size  ->deactivate();
     detail->deactivate();
     heights->deactivate();
     yyy   ->deactivate();
   }
   else
   {
-    size  ->activate();
     theme ->activate();
+    size  ->activate();
     detail->activate();
     heights->activate();
     yyy   ->activate();
@@ -151,23 +151,42 @@ void UI_Level::Locked(bool value)
 
 //----------------------------------------------------------------
 
-void UI_Level::callback_Any(Fl_Widget *w, void *data)
+void UI_Level::callback_Theme(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  that->TransferToLUA();
-}
-
-void UI_Level::TransferToLUA()
-{
-  Script_SetConfig("size",    get_Size());
-  Script_SetConfig("theme",   get_Theme());
-  Script_SetConfig("detail",  get_Detail());
-  Script_SetConfig("heights", get_Heights());
-
-  // YYY
+  Script_SetConfig("theme", that->get_Theme());
 }
  
+void UI_Level::callback_Size(Fl_Widget *w, void *data)
+{
+  UI_Level *that = (UI_Level *) data;
+
+  Script_SetConfig("size", that->get_Size());
+}
+ 
+void UI_Level::callback_Detail(Fl_Widget *w, void *data)
+{
+  UI_Level *that = (UI_Level *) data;
+
+  Script_SetConfig("detail", that->get_Detail());
+}
+ 
+void UI_Level::callback_Heights(Fl_Widget *w, void *data)
+{
+  UI_Level *that = (UI_Level *) data;
+
+  Script_SetConfig("heights", that->get_Heights());
+}
+ 
+void UI_Level::callback_YYY(Fl_Widget *w, void *data)
+{
+  UI_Level *that = (UI_Level *) data;
+
+//  Script_SetConfig("yyy", that->get_YYY());
+}
+ 
+
 const char * UI_Level::GetAllValues()
 {
   static const char *last_str = NULL;
@@ -188,11 +207,11 @@ const char * UI_Level::GetAllValues()
 
 bool UI_Level::ParseValue(const char *key, const char *value)
 {
-  if (StringCaseCmp(key, "size") == 0)
-    return set_Size(value);
-
   if (StringCaseCmp(key, "theme") == 0)
     return set_Theme(value);
+
+  if (StringCaseCmp(key, "size") == 0)
+    return set_Size(value);
 
   if (StringCaseCmp(key, "detail") == 0)
     return set_Detail(value);

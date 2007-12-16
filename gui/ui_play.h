@@ -38,9 +38,6 @@ public:
 
   void Locked(bool value);
   
-  void TransferToLUA();
-  // transfer settings from this panel into the LUA config table.
- 
   const char *GetAllValues();
   // return a string containing all the values from this panel,
   // in a form suitable for the Config file.
@@ -72,7 +69,11 @@ private:
 
   static const char *adjust_syms[3];
 
-  static void callback_Any(Fl_Widget *, void*);
+  static void callback_Monsters(Fl_Widget *, void*);
+  static void callback_Puzzles (Fl_Widget *, void*);
+  static void callback_Traps   (Fl_Widget *, void*);
+  static void callback_Health  (Fl_Widget *, void*);
+  static void callback_Ammo    (Fl_Widget *, void*);
 };
 
 #endif /* __UI_PLAY_H__ */
