@@ -103,7 +103,7 @@ int add_button(lua_State *L)
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->AddPair(id, label);
 
-  else if (StringCaseCmp(what, "mod") == 0)
+  else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->opts->AddPair(id, label);
 
   else if (StringCaseCmp(what, "option") == 0)
@@ -135,7 +135,7 @@ int show_button(lua_State *L)
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->ShowOrHide(id, shown);
 
-  else if (StringCaseCmp(what, "mod") == 0)
+  else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->opts->ShowOrHide(id, shown);
 
   else if (StringCaseCmp(what, "option") == 0)
@@ -532,7 +532,32 @@ void Script_Load(void)
 }
 
 
-void Script_AddSetting(const char *key, const char *value)
+const char * Script_GetConfig(const char *key)
+{
+  static const char *last_val = NULL;
+    
+  SYS_NULL_CHECK(key);
+
+  lua_getglobal(LUA_ST, "OB_CONFIG");
+  lua_getfield(LUA_ST, -1, key);
+
+  if (last_val)
+    StringFree(last_val);
+
+  last_val = lua_tostring(LUA_ST, -1);
+
+  if (! last_val)
+    last_val = "";
+
+  // make a copy of the result
+  last_val = StringDup(last_val);
+
+  lua_pop(LUA_ST, 1);
+ 
+  return last_val;
+}
+
+void Script_SetConfig(const char *key, const char *value)
 {
   SYS_NULL_CHECK(key);
   SYS_NULL_CHECK(value);
@@ -577,7 +602,7 @@ bool Script_DoRun(const char *func_name)
 
 bool Script_Build(void)
 {
-  Script_AddSetting("seed", main_win->game_box->get_Seed());
+  Script_SetConfig("seed", main_win->game_box->get_Seed());
 
   if (! Script_DoRun("ob_build_cool_shit"))
     return false;

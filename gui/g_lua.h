@@ -28,7 +28,8 @@ void Script_Load(void);
 
 int Script_RegisterLib(const char *name, const luaL_Reg *reg);
 
-void Script_AddSetting(const char *key, const char *value);
+const char * Script_GetConfig(const char *key);
+void         Script_SetConfig(const char *key, const char *value);
 
 bool Script_Build(void);
 
