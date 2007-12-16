@@ -292,11 +292,15 @@ function ob_init()
     for xxx,def in ipairs(list) do
       con.add_button(what, def.name, def.label)
     end
+
+    return list[1] and list[1].name
   end
 
-  create_buttons("game",   OB_GAMES)
-  create_buttons("theme",  OB_THEMES)
-  create_buttons("engine", OB_ENGINES)
+  OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
+  OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
+  OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
+  OB_CONFIG.mode   = "sp"
+
   create_buttons("mod",    OB_MODS)
   create_buttons("option", OB_MOPTS)
 end
