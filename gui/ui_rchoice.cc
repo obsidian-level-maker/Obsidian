@@ -108,16 +108,18 @@ bool UI_RChoice::ShowOrHide(const char *id, int new_shown)
   return true;
 }
 
-void UI_RChoice::EndUpdate()
+bool UI_RChoice::EndUpdate()
 {
   SYS_ASSERT(updating);
 
   updating = false;
 
   if (! modified)
-    return;
+    return false;
 
   Recreate(FindMapped());
+
+  return true;
 }
 
 void UI_RChoice::Recreate(option_data_c *LAST)

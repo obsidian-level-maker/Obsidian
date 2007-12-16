@@ -78,12 +78,15 @@ public:
   // value.  Returns true if successful, or false if no such
   // option exists.
 
-  void EndUpdate();
-  // end the current update session.  The available choices
-  // will be updated to reflect the 'shown' values.  If the
-  // previous selected item is still valid, it remains set,
-  // otherwise we try and find a shown value with the same
-  // label, and failing that: select the first entry.
+  bool EndUpdate();
+  // end the current update session.  Returns true if the
+  // list of choices was modified, otherwise false.
+  //
+  // The available choices will be updated to reflect the
+  // 'shown' values.  If the previous selected item is still
+  // valid, it remains set, otherwise we try and find a shown
+  // value with the same label, and failing that: select the
+  // first entry.
 
   const char *GetID() const;
   // get the id string for the currently shown value.
