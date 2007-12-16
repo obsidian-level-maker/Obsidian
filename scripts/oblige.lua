@@ -184,27 +184,18 @@ function ob_match_conf(T)
   if T.for_games and not T.for_games[OB_CONFIG.game] then
     return false
   end
----  if T.conflict_games and T.conflict_games[OB_CONFIG.game] then
----    return false
----  end
 
   if T.for_modes and not T.for_modes[OB_CONFIG.mode] then
     return false
   end
----  if T.conflict_modes and T.conflict_modes[OB_CONFIG.mode] then
----    return false
----  end
 
   if T.for_engines and not T.for_engines[OB_CONFIG.engine] then
     return false
   end
----  if T.conflict_engines and T.conflict_engines[OB_CONFIG.engine] then
----    return false
----  end
 
   if T.for_module then
     local def = OB_MODULES[T.for_module]
-    if not def or not def.enabled then
+    if not (def and def.shown and def.enabled) then
       return false
     end
   end
@@ -228,15 +219,33 @@ end
 
 
 function ob_update_modules()
-  for name,def in pairs(OB_MODULES) do
-    con.show_button("module", name, ob_match_conf(def))
+  -- modules may depend on other modules, hence we may need
+  -- to repeat this multiple times until all the dependencies
+  -- have flowed through.
+  
+  for loop = 1,10 do
+    local changed = false
+
+    for name,def in pairs(OB_MODULES) do
+      local old_shown = def.shown
+      def.shown = ob_match_conf(def)
+
+      con.show_button("module", name, def.shown)
+
+      if old_shown ~= def.shown then
+        changes = true
+      end
+    end
+
+    if not changed then return end
   end
 end
 
 
 function ob_update_options()
   for name,def in pairs(OB_OPTIONS) do
-    con.show_button("option", name, ob_match_conf(def))
+    def.shown = ob_match_conf(def)
+    con.show_button("option", name, def.shown)
   end
 end
 
