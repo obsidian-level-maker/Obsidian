@@ -165,7 +165,7 @@ function plut_modifier(T)
 end
 
 
-OB_MODS["plut"] =
+OB_MODULES["plut"] =
 {
   label = "Plutonia",
   priority = 92,

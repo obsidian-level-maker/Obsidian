@@ -86,7 +86,7 @@ function freedoom_modifier(T)
 end
 
 
-OB_MODS["freedoom"] =
+OB_MODULES["freedoom"] =
 {
   label = "FreeDoom 0.5",
   priority = 90,

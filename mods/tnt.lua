@@ -260,7 +260,7 @@ function tnt_modifier(T)
 end
 
 
-OB_MODS["tnt"] =
+OB_MODULES["tnt"] =
 {
   label = "TNT Evilution",
   priority = 94,
