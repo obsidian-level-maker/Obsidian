@@ -30,9 +30,8 @@
 #define LIST_BG   BUILD_BG
 
 
-option_data_c::option_data_c(const char *_id, const char *_label,
-                             int _pri, int _val) :
-    shown(1), value(_val), priority(_pri), widget(NULL), mapped(-1)
+option_data_c::option_data_c(const char *_id, const char *_label, int _val) :
+    shown(1), value(_val), widget(NULL), mapped(-1)
 {
   id    = StringDup(_id);
   label = StringDup(_label);
@@ -87,8 +86,7 @@ void UI_OptionList::callback2(option_callback_f func, void *priv_dat)
 }
 
 
-void UI_OptionList::AddPair(const char *id, const char *label,
-                            int pri, int val)
+void UI_OptionList::AddPair(const char *id, const char *label, int val)
 {
   option_data_c *opt = FindOption(id);
 
@@ -100,13 +98,12 @@ DebugPrintf("UI_OptionList::AddPair(%s,%s) %s\n", id, label, opt ? "EXIST" : "ne
 
     opt->shown = 1;  //!!!!!!
     opt->value = val;
-    opt->priority = pri;
 
     opt->widget->label(opt->label);
   }
   else
   {
-    opt = new option_data_c(id, label, pri, val);
+    opt = new option_data_c(id, label, val);
 
     opt->widget = new Fl_Check_Button(0, 0, 20, 20, opt->label);
     opt->widget->box(FL_UP_BOX);

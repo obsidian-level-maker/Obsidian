@@ -53,7 +53,7 @@ void UI_RChoice::AddPair(const char *id, const char *label)
   else
   {
 //DebugPrintf("AddPair(%s, %s)\n", id, label);
-    opt = new option_data_c(id, label, 50, 1);
+    opt = new option_data_c(id, label, 1);
 
     opt_list.push_back(opt);
   }

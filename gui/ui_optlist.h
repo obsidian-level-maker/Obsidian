@@ -46,8 +46,6 @@ public:
   int shown;      // 0 = hidden, 1 = shown, -1 = greyed out
   int value;      // 0 or 1
 
-  int priority;   // priority for on-screen ordering
- 
 protected:
   Fl_Check_Button *widget;
 
@@ -56,10 +54,10 @@ protected:
  
 public:
   option_data_c() : id(NULL), label(NULL), shown(0), value(-1),
-                    priority(50), widget(NULL), mapped(-1)
+                    widget(NULL), mapped(-1)
   { }
    
-  option_data_c(const char *_id, const char *_label, int _pri = 50, int _val = 0);
+  option_data_c(const char *_id, const char *_label, int _val = 0);
  
   ~option_data_c();
 
@@ -93,7 +91,7 @@ public:
   void callback2(option_callback_f func, void *priv_dat);
   // call this function whenever the user modifies an option.
       
-  void AddPair(const char *id, const char *label, int pri = 50, int val = 0);
+  void AddPair(const char *id, const char *label, int val = 0);
   // add a new option to the list.  If an option with the same 'id'
   // already exists, that option is replaced instead.
   // The option will begin as not shown (shown == 0).
