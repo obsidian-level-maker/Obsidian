@@ -34,6 +34,9 @@ static lua_State *LUA_ST;
 
 static const char *script_path;
 
+static bool has_loaded = false;
+static bool has_added_buttons = false;
+
 
 namespace con
 {
@@ -91,8 +94,9 @@ int add_button(lua_State *L)
 
   SYS_ASSERT(what && id && label);
 
-  // FIXME only allowed during startup
-  // if (! allow_add_button) Main_FatalError(...)
+  // only allowed during startup
+  if (has_added_buttons)
+    Main_FatalError("LUA script problem: con.add_button called late.\n");
 
   if (StringCaseCmp(what, "game") == 0)
     main_win->game_box->game->AddPair(id, label);
@@ -359,18 +363,6 @@ void Script_Close(void)
 }
 
 
-#if 0
-void Script_MakeSettings()
-{
-  main_win->game_box ->TransferToLUA();
-  main_win->level_box->TransferToLUA();
-  main_win->play_box ->TransferToLUA();
-
-//main_win->option_box->TransferToLUA();
-
-}
-#endif
-
 static void UpdateEngines(const char *signame, void *priv_dat)
 {
   main_win->game_box->engine->BeginUpdate();
@@ -504,9 +496,13 @@ void Script_Load(void)
   Script_LoadFromDir("games");
   Script_LoadFromDir("mods");
 
+  has_loaded = true;
+ 
   if (! Script_DoRun("ob_init"))
     Main_FatalError("The ob_init script failed.\n");
 
+  has_added_buttons = true;
+  
   // IDEA: perhaps should watch for "loaded" Signal ??
   main_win->game_box->game->Recreate();
   main_win->game_box->engine->Recreate();
@@ -538,6 +534,8 @@ const char * Script_GetConfig(const char *key)
     
   SYS_NULL_CHECK(key);
 
+  SYS_ASSERT(has_loaded);
+
   lua_getglobal(LUA_ST, "OB_CONFIG");
   lua_getfield(LUA_ST, -1, key);
 
@@ -561,6 +559,12 @@ void Script_SetConfig(const char *key, const char *value)
 {
   SYS_NULL_CHECK(key);
   SYS_NULL_CHECK(value);
+
+  if (! has_loaded)
+  {
+    DebugPrintf("Script_SetConfig(%s) called before loaded.\n", key);
+    return;
+  }
 
   lua_getglobal(LUA_ST, "OB_CONFIG");
   {
