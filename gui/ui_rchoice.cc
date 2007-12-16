@@ -23,29 +23,6 @@
 #include "lib_util.h"
 
 
-///---remember_pair_c::remember_pair_c(const char *_id, const char *_label)
-///---{
-///---  id    = StringDup(_id);
-///---  label = StringDup(_label);
-///---}
-///--- 
-///---remember_pair_c::~remember_pair_c()
-///---{
-///---  if (id)    StringFree(id);
-///---  if (label) StringFree(label);
-///---}
-///---
-///---
-///---bool remember_pair_c::Equal(const remember_pair_c *other) const
-///---{
-///---  return (StringCaseCmp(id,    other->id)    == 0) &&
-///---         (StringCaseCmp(label, other->label) == 0);
-///---}
-
-
-//----------------------------------------------------------------
-
-
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label) :
     Fl_Choice(x, y, w, h, label),
     opt_list(), updating(false), modified(false)
@@ -265,31 +242,4 @@ option_data_c * UI_RChoice::FindMapped() const
 
   return NULL;
 }
-
-///--- bool UI_RChoice::ListsEqual() const
-///--- {
-///---   if (id_list.size() != new_list.size())
-///---     return false;
-///--- 
-///---   for (unsigned int i = 0; i < id_list.size(); i++)
-///---   {
-///---     remember_pair_c *p1 =  id_list[i];
-///---     remember_pair_c *p2 = new_list[i];
-///--- 
-///---     if (! p1->Equal(p2))
-///---       return false;
-///---   }
-///--- 
-///---   return true;
-///--- }
-///--- 
-///--- void UI_RChoice::KillList(std::vector<remember_pair_c *> &list)
-///--- {
-///---   for (unsigned int i = 0; i < list.size(); i++)
-///---   {
-///---     delete list[i]; list[i] = NULL;
-///---   }
-///--- 
-///---   list.clear();
-///--- }
 

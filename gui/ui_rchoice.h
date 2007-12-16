@@ -26,24 +26,6 @@
 //   these ids and labels to be updated at any time.
 //
 
-///---class remember_pair_c
-///---{
-///---public:
-///---  const char *id;     // terse identifier
-///---  const char *label;  // description (for the UI)
-///---  
-///---public:
-///---  remember_pair_c() : id(NULL), label(NULL)
-///---  { }
-///---
-///---  remember_pair_c(const char *_id, const char *_label);
-///---
-///---  ~remember_pair_c();
-///---
-///---public:
-///---  bool Equal(const remember_pair_c *other) const;
-///---};
-
 
 class UI_RChoice : public Fl_Choice
 {
@@ -51,10 +33,6 @@ private:
 
   std::vector<option_data_c *> opt_list;
 
-///---  std::vector<remember_pair_c *> new_list;
-
-
-  
   bool updating;
   bool modified;
 
