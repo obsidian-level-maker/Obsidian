@@ -517,14 +517,17 @@ void Script_Load(void)
   Signal_Watch("game",   UpdateThemes);
   Signal_Watch("mode",   UpdateThemes);
   Signal_Watch("engine", UpdateThemes);
+  Signal_Watch("module", UpdateThemes);
 
   Signal_Watch("game",   UpdateModules);
   Signal_Watch("mode",   UpdateModules);
   Signal_Watch("engine", UpdateModules);
+  Signal_Watch("module", UpdateModules);
 
   Signal_Watch("game",   UpdateOptions);
   Signal_Watch("mode",   UpdateOptions);
   Signal_Watch("engine", UpdateOptions);
+  Signal_Watch("module", UpdateOptions);
 }
 
 
