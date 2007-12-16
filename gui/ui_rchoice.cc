@@ -52,7 +52,7 @@ void UI_RChoice::AddPair(const char *id, const char *label)
   }
   else
   {
-DebugPrintf("AddPair(%s, %s)\n", id, label);
+//DebugPrintf("AddPair(%s, %s)\n", id, label);
     opt = new option_data_c(id, label, 50, 1);
 
     opt_list.push_back(opt);
@@ -103,6 +103,7 @@ void UI_RChoice::Recreate(option_data_c *LAST)
 {
   // recreate the choice list
 
+//DebugPrintf("clear\n");
   clear();
 
   int map_index = 0;
@@ -112,14 +113,16 @@ void UI_RChoice::Recreate(option_data_c *LAST)
     option_data_c *P = opt_list[j];
 
     if (P->shown <= 0)
+    {
       P->mapped = -1;
-    else
-      P->mapped = map_index++;
+      continue;
+    }
 
-DebugPrintf("EndUpdate: adding: %s\n", P->label);
+    P->mapped = map_index++;
+
+//DebugPrintf("add: %s @ %d\n", P->label, P->mapped);
     add(P->label, 0, 0, 0, 0);
   }
-
 
   // update the currently selected choice
 
@@ -128,6 +131,8 @@ DebugPrintf("EndUpdate: adding: %s\n", P->label);
     value(0);
     return;
   }
+
+//DebugPrintf("LAST mapped: %d = %s\n", LAST->mapped, LAST->label);
 
   if (LAST->mapped >= 0)
   {
@@ -147,12 +152,11 @@ DebugPrintf("EndUpdate: adding: %s\n", P->label);
     {
       // found equivalent entry
       value(P->mapped);
-      break;
+      return;
     }
   }
 
   value(0);
- 
 }
 
 const char *UI_RChoice::GetID() const
@@ -232,6 +236,7 @@ int UI_RChoice::FindLabel(const char *lab) const
  
 option_data_c * UI_RChoice::FindMapped() const
 {
+
   for (unsigned int j = 0; j < opt_list.size(); j++)
   {
     option_data_c *P = opt_list[j];
@@ -242,4 +247,12 @@ option_data_c * UI_RChoice::FindMapped() const
 
   return NULL;
 }
+
+#if 0  // TODO: dump function
+for (unsigned int j = 0; j < opt_list.size(); j++)
+{
+option_data_c *P = opt_list[j];
+DebugPrintf("[ %d = %s : map=%d %s\n", j, P->id, P->mapped, P->shown ? "Shown" : "Hidden");
+}
+#endif
 
