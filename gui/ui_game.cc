@@ -58,7 +58,7 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   add(seed);
 
   bump = new Fl_Button(x+134, cy, 66, 24, "Bump");
-  bump->callback(bump_callback, this);
+  bump->callback(callback_Bump, this);
 
   add(bump);
 
@@ -70,29 +70,22 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   game = new UI_RChoice(x+68, cy, 130, 24, "Game: ");
   game->align(FL_ALIGN_LEFT);
   game->selection_color(FL_BLUE);
-
-///---  game->add("Wolf 3d|"
-///---            "Doom 1|"
-///---            "Doom 2|"
-///---            "TNT Evilution|"
-///---            "Plutonia|"
-///---            "FreeDoom 0.5|"
-///---            "Heretic|"
-///---            "Hexen");
-///---  game->value(2);
-  game->callback(game_callback, this);
+  game->callback(callback_Game, this);
 
   add(game);
   
   cy += game->h() + 6;
 
 
-  mode = new Fl_Choice(x+68, cy, 130, 24, "Mode: ");
+  mode = new UI_RChoice(x+68, cy, 130, 24, "Mode: ");
   mode->align(FL_ALIGN_LEFT);
   mode->selection_color(FL_BLUE);
-  mode->add("Single Player|Co-op|Deathmatch");
-  mode->value(0);
-  mode->callback(mode_callback, this);
+///---  mode->add("Single Player|Co-op|Deathmatch");
+///---  mode->value(0);
+  mode->callback(callback_Mode, this);
+
+  setup_Mode();
+  
 
   add(mode);
 
@@ -104,24 +97,21 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   engine = new UI_RChoice(x+68, cy, 130, 24, "Engine: ");
   engine->align(FL_ALIGN_LEFT);
   engine->selection_color(FL_BLUE);
-///---  engine->value(0);
-
-///---  engine->BeginUpdate();
-///---  engine->AddPair("nolimit", "Limit Removing");
-///---  engine->AddPair("boom", "Boom Compat");
-///---  engine->AddPair("edge", "EDGE");
-///---  engine->EndUpdate();
+  engine->callback(callback_Engine, this);
 
   add(engine);
 
   cy += engine->h() + 6;
 
 
-  length = new Fl_Choice(x +68, cy, 130, 24, "Length: ");
+  length = new UI_RChoice(x +68, cy, 130, 24, "Length: ");
   length->align(FL_ALIGN_LEFT);
   length->selection_color(FL_BLUE);
-  length->add("Single Level|One Episode|Full Game");
-  length->value(1);
+///---  length->add("Single Level|One Episode|Full Game");
+///---  length->value(1);
+  length->callback(callback_Length, this);
+
+  setup_Length();
 
   add(length);
 
@@ -170,53 +160,43 @@ void UI_Game::BumpSeed()
   SetSeed(old_val + bump);
 }
 
-void UI_Game::bump_callback(Fl_Widget *w, void *data)
+void UI_Game::callback_Bump(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
   that->BumpSeed();
 }
 
-void UI_Game::game_callback(Fl_Widget *w, void *data)
+void UI_Game::callback_Game(Fl_Widget *w, void *data)
 {
+  UI_Game *that = (UI_Game *)data;
+
+  Script_AddSetting("game", that->game->GetID());
   Signal_Raise("game");
-
-///---  UI_Game *that = (UI_Game *)data;
-///---
-///---  if (main_win)
-///---  {
-///---    Script_UpdateEngine();
-///---    Script_UpdateTheme();
-///--- 
-///---    main_win->play_box->UpdateLabels(that->get_Game(), that->get_Mode());
-///---  }
 }
 
-void UI_Game::mode_callback(Fl_Widget *w, void *data)
+void UI_Game::callback_Mode(Fl_Widget *w, void *data)
 {
+  UI_Game *that = (UI_Game *)data;
+
+  Script_AddSetting("mode", that->get_Mode());
   Signal_Raise("mode");
-
-///---  UI_Game *that = (UI_Game *)data;
-///---
-///---  if (main_win)
-///---  {
-///---    Script_UpdateEngine();
-///---    Script_UpdateTheme();
-///---
-///---    main_win->play_box->UpdateLabels(that->get_Game(), that->get_Mode());
-///---  }
 }
 
-void UI_Game::engine_callback(Fl_Widget *w, void *data)
+void UI_Game::callback_Engine(Fl_Widget *w, void *data)
 {
-  Signal_Raise("engine");
+  UI_Game *that = (UI_Game *)data;
 
-///---  UI_Game *that = (UI_Game *)data;
-///---
-///---  if (main_win)
-///---  {
-///---    Script_UpdateTheme();
-///---  }
+  Script_AddSetting("engine", that->engine->GetID());
+  Signal_Raise("engine");
+}
+
+void UI_Game::callback_Length(Fl_Widget *w, void *data)
+{
+  UI_Game *that = (UI_Game *)data;
+
+  Script_AddSetting("length", that->get_Length());
+  Signal_Raise("length");
 }
 
 void UI_Game::Locked(bool value)
@@ -251,11 +231,13 @@ void UI_Game::Locked(bool value)
 
 void UI_Game::TransferToLUA()
 {
+#if 0
   Script_AddSetting("seed",   get_Seed());
   Script_AddSetting("game",   get_Game());
   Script_AddSetting("mode",   get_Mode());
   Script_AddSetting("engine", get_Engine());
   Script_AddSetting("length", get_Length());
+#endif
 }
  
 const char * UI_Game::GetAllValues()
@@ -300,12 +282,12 @@ bool UI_Game::ParseValue(const char *key, const char *value)
 
 //----------------------------------------------------------------
   
-const char * UI_Game::game_syms[] =
-{
-  "wolf3d", /// "spear",
-  "doom1", "doom2", "tnt", "plutonia", "freedoom",
-  "heretic", "hexen"
-};
+///--- const char * UI_Game::game_syms[] =
+///--- {
+///---   "wolf3d", /// "spear",
+///---   "doom1", "doom2", "tnt", "plutonia", "freedoom",
+///---   "heretic", "hexen"
+///--- };
 
 ///--- const char * UI_Game::port_syms[] =
 ///--- {
@@ -314,13 +296,38 @@ const char * UI_Game::game_syms[] =
 
 const char * UI_Game::mode_syms[] =
 {
-  "sp", "coop", "dm"
+  "sp",   "Single Player",
+  "coop", "Co-op",
+  "dm",   "Deathmatch",
+
+  NULL, NULL
 };
 
 const char * UI_Game::length_syms[] =
 {
-  "single", "episode", "full"
+  "single",  "Single Level",
+  "episode", "One Episode",
+  "full",    "Full Game",
+
+  NULL, NULL
 };
+
+void UI_Game::setup_Mode()
+{
+  for (int i = 0; mode_syms[i]; i += 2)
+    mode->AddPair(mode_syms[i], mode_syms[i+1]);
+
+  mode->Recreate();
+}
+
+void UI_Game::setup_Length()
+{
+  for (int i = 0; length_syms[i]; i += 2)
+    length->AddPair(length_syms[i], length_syms[i+1]);
+
+  length->Recreate();
+}
+
 
 
 const char *UI_Game::get_Seed()
@@ -359,6 +366,7 @@ bool UI_Game::set_Seed(const char *str)
 
 bool UI_Game::set_Game(const char *str)
 {
+#if 0
   for (int i=0; game_syms[i]; i++)
   {
     if (StringCaseCmp(str, game_syms[i]) == 0)
@@ -368,6 +376,7 @@ bool UI_Game::set_Game(const char *str)
       return true;
     }
   }
+#endif
   return false; // Unknown
 }
 

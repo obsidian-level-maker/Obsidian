@@ -27,12 +27,10 @@ private:
 
 public:
   UI_RChoice *game;
-
-  Fl_Choice *mode;
+  UI_RChoice *mode;
 
   UI_RChoice *engine;
-  
-  Fl_Choice *length;
+  UI_RChoice *length;
 
 public:
   UI_Game(int x, int y, int w, int h, const char *label = NULL);
@@ -74,13 +72,16 @@ public:
 
   
 private:
-  static void bump_callback(Fl_Widget *, void*);
-  static void game_callback(Fl_Widget *, void*);
-  static void mode_callback(Fl_Widget *, void*);
-  static void engine_callback(Fl_Widget *, void*);
+  void setup_Mode();
+  void setup_Length();
 
-  static const char *game_syms[];
-///---  static const char *port_syms[];
+  static void callback_Bump(Fl_Widget *, void*);
+
+  static void callback_Game  (Fl_Widget *, void*);
+  static void callback_Mode  (Fl_Widget *, void*);
+  static void callback_Engine(Fl_Widget *, void*);
+  static void callback_Length(Fl_Widget *, void*);
+
   static const char *mode_syms[];
   static const char *length_syms[];
 
