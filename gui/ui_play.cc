@@ -204,11 +204,11 @@ void UI_Play::callback_Any(Fl_Widget *w, void *data)
 
 void UI_Play::TransferToLUA()
 {
-  Script_AddSetting("mons",    get_Monsters());
-  Script_AddSetting("puzzles", get_Puzzles());
-  Script_AddSetting("traps",   get_Traps());
-  Script_AddSetting("health",  get_Health());
-  Script_AddSetting("ammo",    get_Ammo());
+  Script_SetConfig("mons",    get_Monsters());
+  Script_SetConfig("puzzles", get_Puzzles());
+  Script_SetConfig("traps",   get_Traps());
+  Script_SetConfig("health",  get_Health());
+  Script_SetConfig("ammo",    get_Ammo());
 }
  
 const char * UI_Play::GetAllValues()

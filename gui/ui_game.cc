@@ -171,7 +171,7 @@ void UI_Game::callback_Game(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_AddSetting("game", that->game->GetID());
+  Script_SetConfig("game", that->game->GetID());
   Signal_Raise("game");
 }
 
@@ -179,7 +179,7 @@ void UI_Game::callback_Mode(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_AddSetting("mode", that->get_Mode());
+  Script_SetConfig("mode", that->get_Mode());
   Signal_Raise("mode");
 }
 
@@ -187,7 +187,7 @@ void UI_Game::callback_Engine(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_AddSetting("engine", that->engine->GetID());
+  Script_SetConfig("engine", that->engine->GetID());
   Signal_Raise("engine");
 }
 
@@ -195,7 +195,7 @@ void UI_Game::callback_Length(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_AddSetting("length", that->get_Length());
+  Script_SetConfig("length", that->get_Length());
   Signal_Raise("length");
 }
 
@@ -232,11 +232,11 @@ void UI_Game::Locked(bool value)
 void UI_Game::TransferToLUA()
 {
 #if 0
-  Script_AddSetting("seed",   get_Seed());
-  Script_AddSetting("game",   get_Game());
-  Script_AddSetting("mode",   get_Mode());
-  Script_AddSetting("engine", get_Engine());
-  Script_AddSetting("length", get_Length());
+  Script_SetConfig("seed",   get_Seed());
+  Script_SetConfig("game",   get_Game());
+  Script_SetConfig("mode",   get_Mode());
+  Script_SetConfig("engine", get_Engine());
+  Script_SetConfig("length", get_Length());
 #endif
 }
  

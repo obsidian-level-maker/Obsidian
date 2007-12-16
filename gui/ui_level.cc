@@ -160,10 +160,10 @@ void UI_Level::callback_Any(Fl_Widget *w, void *data)
 
 void UI_Level::TransferToLUA()
 {
-  Script_AddSetting("size",    get_Size());
-  Script_AddSetting("theme",   get_Theme());
-  Script_AddSetting("detail",  get_Detail());
-  Script_AddSetting("heights", get_Heights());
+  Script_SetConfig("size",    get_Size());
+  Script_SetConfig("theme",   get_Theme());
+  Script_SetConfig("detail",  get_Detail());
+  Script_SetConfig("heights", get_Heights());
 
   // YYY
 }
