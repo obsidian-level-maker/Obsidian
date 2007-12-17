@@ -295,15 +295,15 @@ function ob_default_config()
   OB_CONFIG.length = "episode"
 
   --| Level Adjustments |--
-  OB_CONFIG.size    = "regular"
+  OB_CONFIG.size    = "mixed"
   OB_CONFIG.detail  = "normal"
-  OB_CONFIG.heights = "normal"
-  OB_CONFIG.light   = "normal"
+  OB_CONFIG.heights = "mixed"
+  OB_CONFIG.light   = "mixed"
  
   --| Playing Style |--
-  OB_CONFIG.mons    = "normal"
-  OB_CONFIG.puzzles = "normal"
-  OB_CONFIG.traps   = "normal"
+  OB_CONFIG.mons    = "mixed"
+  OB_CONFIG.puzzles = "mixed"
+  OB_CONFIG.traps   = "low"
   OB_CONFIG.health  = "normal"
   OB_CONFIG.ammo    = "normal"
 
