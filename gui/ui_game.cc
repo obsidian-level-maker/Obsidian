@@ -179,7 +179,7 @@ void UI_Game::callback_Mode(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_SetConfig("mode", that->get_Mode());
+  Script_SetConfig("mode", that->mode->GetID());
   Signal_Raise("mode");
 }
 
@@ -195,7 +195,7 @@ void UI_Game::callback_Length(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_SetConfig("length", that->get_Length());
+  Script_SetConfig("length", that->length->GetID());
   Signal_Raise("length");
 }
 
@@ -247,52 +247,40 @@ const char * UI_Game::GetAllValues()
   if (last_str)
     StringFree(last_str);
 
-  last_str = StringPrintf(
-      "seed = %s\n"  "game = %s\n"
-      "mode = %s\n"  "engine = %s\n"
-      "length = %s\n",
-      get_Seed(), get_Game(),
-      get_Mode(), get_Engine(),
-      get_Length()
-  );
+//!!!!  last_str = StringPrintf(
+//!!!!      "seed = %s\n"  "game = %s\n"
+//!!!!      "mode = %s\n"  "engine = %s\n"
+//!!!!      "length = %s\n",
+//!!!!      get_Seed(), get_Game(),
+//!!!!      get_Mode(), get_Engine(),
+//!!!!      get_Length()
+//!!!!  );
 
   return last_str;
 }
 
 bool UI_Game::ParseValue(const char *key, const char *value)
 {
-  if (StringCaseCmp(key, "seed") == 0)
-    return set_Seed(value);
-
-  if (StringCaseCmp(key, "game") == 0)
-    return set_Game(value);
-
-  if (StringCaseCmp(key, "mode") == 0)
-    return set_Mode(value);
-
-  if (StringCaseCmp(key, "engine") == 0)
-    return set_Engine(value);
-
-  if (StringCaseCmp(key, "length") == 0)
-    return set_Length(value);
+///  if (StringCaseCmp(key, "seed") == 0)
+///    return set_Seed(value);
+///
+///  if (StringCaseCmp(key, "game") == 0)
+///    return set_Game(value);
+///
+///  if (StringCaseCmp(key, "mode") == 0)
+///    return set_Mode(value);
+///
+///  if (StringCaseCmp(key, "engine") == 0)
+///    return set_Engine(value);
+///
+///  if (StringCaseCmp(key, "length") == 0)
+///    return set_Length(value);
 
   return false;
 }
 
 
 //----------------------------------------------------------------
-  
-///--- const char * UI_Game::game_syms[] =
-///--- {
-///---   "wolf3d", /// "spear",
-///---   "doom1", "doom2", "tnt", "plutonia", "freedoom",
-///---   "heretic", "hexen"
-///--- };
-
-///--- const char * UI_Game::port_syms[] =
-///--- {
-///---   "nolimit" /// , "boom", "edge", "zdoom", etc..
-///--- };
 
 const char * UI_Game::mode_syms[] =
 {
@@ -328,99 +316,8 @@ void UI_Game::setup_Length()
   length->Recreate();
 }
 
-
-
 const char *UI_Game::get_Seed()
 {
   return seed->value();
-}
-
-const char *UI_Game::get_Game()
-{
-  return "doom2"; //!!!! FIXME game_syms[game->value()];
-}
-
-const char *UI_Game::get_Engine()
-{
-  return "nolimit";  // FIXME !!!!
-}
-
-const char *UI_Game::get_Mode()
-{
-  return mode_syms[mode->value()];
-}
-
-const char *UI_Game::get_Length()
-{
-  return length_syms[length->value()];
-}
-
-//----------------------------------------------------------------
-
-bool UI_Game::set_Seed(const char *str)
-{
-  seed->value(str);
-
-  return true;
-}
-
-bool UI_Game::set_Game(const char *str)
-{
-#if 0
-  for (int i=0; game_syms[i]; i++)
-  {
-    if (StringCaseCmp(str, game_syms[i]) == 0)
-    {
-      game->value(i);
-//!!!!!!      game_callback(this, this);
-      return true;
-    }
-  }
-#endif
-  return false; // Unknown
-}
-
-bool UI_Game::set_Engine(const char *str)
-{
-#if 0 // FIXME !!!
-  for (int i=0; port_syms[i]; i++)
-  {
-    if (StringCaseCmp(str, port_syms[i]) == 0)
-    {
-      port->value(i);
-      return true;
-    }
-  }
-#endif
-  return false; // Unknown
-}
-
-bool UI_Game::set_Mode(const char *str)
-{
-  for (int i=0; mode_syms[i]; i++)
-  {
-    if (StringCaseCmp(str, mode_syms[i]) == 0)
-    {
-      mode->value(i);
-
-//!!!!!!      mode_callback(this, this);
-//!!!!!!      game_callback(this, this);
-      return true;
-    }
-  }
-  return false; // Unknown
-}
-
-bool UI_Game::set_Length(const char *str)
-{
-  for (int i=0; length_syms[i]; i++)
-  {
-    if (StringCaseCmp(str, length_syms[i]) == 0)
-    {
-      length->value(i);
-      return true;
-    }
-  }
-  return false; // Unknown
 }
 

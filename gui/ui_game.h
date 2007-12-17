@@ -59,18 +59,8 @@ public:
   // value was invalid.
 
   const char *get_Seed();
-  const char *get_Game();
-  const char *get_Mode();
-  const char *get_Length();
-  const char *get_Engine();
   
-  bool set_Seed(const char *str);
-  bool set_Game(const char *str);
-  bool set_Mode(const char *str);
-  bool set_Length(const char *str);
-  bool set_Engine(const char *str);
 
-  
 private:
   void setup_Mode();
   void setup_Length();

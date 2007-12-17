@@ -183,35 +183,35 @@ void UI_Play::callback_Monsters(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  Script_SetConfig("mons", that->get_Monsters());
+  Script_SetConfig("mons", that->mons->GetID());
 }
 
 void UI_Play::callback_Puzzles(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  Script_SetConfig("puzzles", that->get_Puzzles());
+  Script_SetConfig("puzzles", that->puzzles->GetID());
 }
 
 void UI_Play::callback_Traps(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  Script_SetConfig("traps", that->get_Traps());
+  Script_SetConfig("traps", that->traps->GetID());
 }
 
 void UI_Play::callback_Health(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  Script_SetConfig("health", that->get_Health());
+  Script_SetConfig("health", that->health->GetID());
 }
 
 void UI_Play::callback_Ammo(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  Script_SetConfig("ammo", that->get_Ammo());
+  Script_SetConfig("ammo", that->ammo->GetID());
 }
 
  
@@ -222,34 +222,34 @@ const char * UI_Play::GetAllValues()
   if (last_str)
     StringFree(last_str);
 
-  last_str = StringPrintf(
-      "mons = %s\n"  "puzzles = %s\n"
-      "traps = %s\n" "health = %s\n"
-      "ammo = %s\n",
-      get_Monsters(), get_Puzzles(),
-      get_Traps(),    get_Health(),
-      get_Ammo()
-  );
+//!!!!  last_str = StringPrintf(
+//!!!!      "mons = %s\n"  "puzzles = %s\n"
+//!!!!      "traps = %s\n" "health = %s\n"
+//!!!!      "ammo = %s\n",
+//!!!!      get_Monsters(), get_Puzzles(),
+//!!!!      get_Traps(),    get_Health(),
+//!!!!      get_Ammo()
+//!!!!  );
 
   return last_str;
 }
 
 bool UI_Play::ParseValue(const char *key, const char *value)
 {
-  if (StringCaseCmp(key, "mons") == 0)
-    return set_Monsters(value);
-
-  if (StringCaseCmp(key, "puzzles") == 0)
-    return set_Puzzles(value);
-
-  if (StringCaseCmp(key, "traps") == 0)
-    return set_Traps(value);
-
-  if (StringCaseCmp(key, "health") == 0)
-    return set_Health(value);
-
-  if (StringCaseCmp(key, "ammo") == 0)
-    return set_Ammo(value);
+///  if (StringCaseCmp(key, "mons") == 0)
+///    return set_Monsters(value);
+///
+///  if (StringCaseCmp(key, "puzzles") == 0)
+///    return set_Puzzles(value);
+///
+///  if (StringCaseCmp(key, "traps") == 0)
+///    return set_Traps(value);
+///
+///  if (StringCaseCmp(key, "health") == 0)
+///    return set_Health(value);
+///
+///  if (StringCaseCmp(key, "ammo") == 0)
+///    return set_Ammo(value);
 
   return false;
 }
@@ -333,89 +333,5 @@ void UI_Play::setup_Ammo()
     ammo->AddPair(health_syms[i], health_syms[i+1]);
 
   ammo->Recreate();
-}
-
-
-const char *UI_Play::get_Health()
-{
-//  return adjust_syms[health->value()];
-}
-
-const char *UI_Play::get_Ammo()
-{
-//  return adjust_syms[ammo->value()];
-}
-
-const char *UI_Play::get_Monsters()
-{
-//  return adjust_syms[mons->value()];
-}
-
-const char *UI_Play::get_Traps()
-{
-//  return adjust_syms[traps->value()];
-}
-
-const char *UI_Play::get_Puzzles()
-{
-//  return adjust_syms[puzzles->value()];
-}
-
-
-//----------------------------------------------------------------
-
-int UI_Play::FindSym(const char *str)
-{
-
-///  for (int i=0; adjust_syms[i]; i++)
-///    if (StringCaseCmp(str, adjust_syms[i]) == 0)
-///      return i;
-
-  return -1; // Unknown
-}
-
-bool UI_Play::set_Monsters(const char *str)
-{
-  int i = FindSym(str);
-
-  if (i >= 0) { mons->value(i); return true; }
-
-  return false;
-}
-
-bool UI_Play::set_Puzzles(const char *str)
-{
-  int i = FindSym(str);
-
-  if (i >= 0) { puzzles->value(i); return true; }
-
-  return false;
-}
-
-bool UI_Play::set_Traps(const char *str)
-{
-  int i = FindSym(str);
-
-  if (i >= 0) { traps->value(i); return true; }
-
-  return false;
-}
-
-bool UI_Play::set_Health(const char *str)
-{
-  int i = FindSym(str);
-
-  if (i >= 0) { health->value(i); return true; }
-
-  return false;
-}
-
-bool UI_Play::set_Ammo(const char *str)
-{
-  int i = FindSym(str);
-
-  if (i >= 0) { ammo->value(i); return true; }
-
-  return false;
 }
 

@@ -152,35 +152,35 @@ void UI_Level::callback_Theme(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  Script_SetConfig("theme", that->get_Theme());
+  Script_SetConfig("theme", that->theme->GetID());
 }
  
 void UI_Level::callback_Size(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  Script_SetConfig("size", that->get_Size());
+  Script_SetConfig("size", that->size->GetID());
 }
  
 void UI_Level::callback_Detail(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  Script_SetConfig("detail", that->get_Detail());
+  Script_SetConfig("detail", that->detail->GetID());
 }
  
 void UI_Level::callback_Heights(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  Script_SetConfig("heights", that->get_Heights());
+  Script_SetConfig("heights", that->heights->GetID());
 }
  
 void UI_Level::callback_Light(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-//!!!  Script_SetConfig("light", that->get_Light());
+  Script_SetConfig("light", that->light->GetID());
 }
  
 
@@ -191,32 +191,30 @@ const char * UI_Level::GetAllValues()
   if (last_str)
     StringFree(last_str);
 
-  last_str = StringPrintf(
-      "size = %s\n"    "theme = %s\n"
-      "detail = %s\n"  "heights = %s\n",
-      //!!! light
-      get_Size(),   get_Theme(),
-      get_Detail(), get_Heights()
-  );
+//!!!!  last_str = StringPrintf(
+//!!!!      "size = %s\n"    "theme = %s\n"
+//!!!!      "detail = %s\n"  "heights = %s\n",
+//!!!!      //!!! light
+//!!!!      get_Size(),   get_Theme(),
+//!!!!      get_Detail(), get_Heights()
+//!!!!  );
 
   return last_str;
 }
 
 bool UI_Level::ParseValue(const char *key, const char *value)
 {
-  if (StringCaseCmp(key, "theme") == 0)
-    return set_Theme(value);
-
-  if (StringCaseCmp(key, "size") == 0)
-    return set_Size(value);
-
-  if (StringCaseCmp(key, "detail") == 0)
-    return set_Detail(value);
-
-  if (StringCaseCmp(key, "heights") == 0)
-    return set_Heights(value);
-
-  // YYY
+///  if (StringCaseCmp(key, "theme") == 0)
+///    return set_Theme(value);
+///
+///  if (StringCaseCmp(key, "size") == 0)
+///    return set_Size(value);
+///
+///  if (StringCaseCmp(key, "detail") == 0)
+///    return set_Detail(value);
+///
+///  if (StringCaseCmp(key, "heights") == 0)
+///    return set_Heights(value);
 
   return false;
 }
@@ -300,75 +298,5 @@ void UI_Level::setup_Light()
     light->AddPair(light_syms[i], light_syms[i+1]);
 
   light->Recreate();
-}
-
-
-
-const char * UI_Level::adjust_syms[3] =  // REMOVE !!
-{
-  "less", "normal", "more"
-};
-
-
-const char *UI_Level::get_Size()
-{
-  return size_syms[size->value()];
-}
-
-const char *UI_Level::get_Theme()  // FIXME
-{
-  return adjust_syms[1];
-}
-
-const char *UI_Level::get_Detail()  // FIXME
-{
-  return adjust_syms[1];
-}
-
-const char *UI_Level::get_Heights()  // FIXME
-{
-  return adjust_syms[1];
-}
-
-
-//----------------------------------------------------------------
-
-int UI_Level::FindSym(const char *str)
-{
-  for (int i=0; adjust_syms[i]; i++)
-    if (StringCaseCmp(str, adjust_syms[i]) == 0)
-      return i;
-
-  return -1; // Unknown
-}
-
-
-bool UI_Level::set_Size(const char *str)
-{
-  for (int i=0; size_syms[i]; i++)
-    if (StringCaseCmp(str, size_syms[i]) == 0)
-    {
-      size->value(i); return true;
-    }
-
-  return false;
-}
-
-bool UI_Level::set_Theme(const char *str)
-{
-  // TODO !!! set_Theme
-  return true;
-}
-
-bool UI_Level::set_Detail(const char *str)
-{
-  // TODO !!! set_Detail
-  return true;
-}
-
-bool UI_Level::set_Heights(const char *str)
-{
-  // TODO !!! set_Heights
-  return true;
 }
 

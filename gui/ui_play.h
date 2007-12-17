@@ -48,20 +48,7 @@ public:
   // widget.  Returns false if the key was unknown or the
   // value was invalid.
 
-  const char *get_Monsters();
-  const char *get_Puzzles();
-  const char *get_Traps();
-  const char *get_Health();
-  const char *get_Ammo();
-
-  bool set_Monsters(const char *str);
-  bool set_Puzzles (const char *str);
-  bool set_Traps   (const char *str);
-  bool set_Health  (const char *str);
-  bool set_Ammo    (const char *str);
-
 private:
-  int FindSym(const char *str);
 
   void setup_Monsters();
   void setup_Puzzles ();
