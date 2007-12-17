@@ -62,24 +62,24 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  size = new Fl_Choice(x+ 82, cy, 112, 24, "Size: ");
+  size = new UI_RChoice(x+ 82, cy, 112, 24, "Size: ");
   size->align(FL_ALIGN_LEFT);
   size->selection_color(MY_GREEN);
-  size->add("Tiny|Small|Regular|X-Large|Mix It Up");
-  size->value(2);
   size->callback(callback_Size, this);
+
+  setup_Size();
 
   add(size);
 
   cy += size->h() + 6;
 
 
-  detail = new Fl_Choice(x+ 82, cy, 112, 24, "Detail: ");
+  detail = new UI_RChoice(x+ 82, cy, 112, 24, "Detail: ");
   detail->align(FL_ALIGN_LEFT);
   detail->selection_color(MY_GREEN);
-  detail->add("None|Low|Medium|High");
-  detail->value(2);
   detail->callback(callback_Detail, this);
+
+  setup_Detail();
 
   add(detail);
 
@@ -88,24 +88,24 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  heights = new Fl_Choice(x+ 82, cy, 112, 24, "Heights: ");
+  heights = new UI_RChoice(x+ 82, cy, 112, 24, "Heights: ");
   heights->align(FL_ALIGN_LEFT);
   heights->selection_color(MY_GREEN);
-  heights->add("Flat|Gentle|Normal|Wild|Mix It Up");
-  heights->value(2);
   heights->callback(callback_Heights, this);
+
+  setup_Heights();
 
   add(heights);
 
   cy += heights->h() + 6;
 
 
-  light = new Fl_Choice(x+ 82, cy, 112, 24, "Lighting: ");
+  light = new UI_RChoice(x+ 82, cy, 112, 24, "Lighting: ");
   light->align(FL_ALIGN_LEFT);
   light->selection_color(MY_GREEN);
-  light->add("Flat|Dark|Normal|Bright|Mix It Up");
-  light->value(2);
   light->callback(callback_Light, this);
+
+  setup_Light();
 
   add(light);
 
@@ -224,14 +224,89 @@ bool UI_Level::ParseValue(const char *key, const char *value)
 
 //----------------------------------------------------------------
 
-const char * UI_Level::adjust_syms[3] =
+const char * UI_Level::size_syms[] =
 {
-  "less", "normal", "more"
+  "mixed",  "Mix It Up",
+
+  "low",    "Tiny",
+  "less",   "Small",
+  "normal", "Regular",
+  "more",   "X-Large",
+
+  NULL, NULL
 };
 
-const char * UI_Level::size_syms[3] =
+const char * UI_Level::detail_syms[] =
 {
-  "small", "regular", "large"
+  "low",    "None",
+  "less",   "Low",
+  "normal", "Medium",
+  "more",   "High",
+
+  NULL, NULL
+};
+
+const char * UI_Level::height_syms[] =
+{
+  "mixed",  "Mix It Up",
+
+  "low",    "Flat",
+  "less",   "Gentle",
+  "normal", "Normal",
+  "more",   "Wild",
+
+  NULL, NULL
+};
+
+const char * UI_Level::light_syms[] =
+{
+  "mixed",  "Mix It Up",
+
+  "low",    "Flat",
+  "less",   "Dark",
+  "normal", "Normal",
+  "more",   "Bright",
+
+  NULL, NULL
+};
+
+void UI_Level::setup_Size()
+{
+  for (int i = 0; size_syms[i]; i += 2)
+    size->AddPair(size_syms[i], size_syms[i+1]);
+
+  size->Recreate();
+}
+
+void UI_Level::setup_Detail()
+{
+  for (int i = 0; detail_syms[i]; i += 2)
+    detail->AddPair(detail_syms[i], detail_syms[i+1]);
+
+  detail->Recreate();
+}
+
+void UI_Level::setup_Heights()
+{
+  for (int i = 0; height_syms[i]; i += 2)
+    heights->AddPair(height_syms[i], height_syms[i+1]);
+
+  heights->Recreate();
+}
+
+void UI_Level::setup_Light()
+{
+  for (int i = 0; light_syms[i]; i += 2)
+    light->AddPair(light_syms[i], light_syms[i+1]);
+
+  light->Recreate();
+}
+
+
+
+const char * UI_Level::adjust_syms[3] =  // REMOVE !!
+{
+  "less", "normal", "more"
 };
 
 

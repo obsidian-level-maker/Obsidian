@@ -21,16 +21,15 @@
 
 class UI_Level : public Fl_Group
 {
-private:
-  Fl_Choice *size;
+public: /// private:
 
-  Fl_Choice *detail;
-
-  Fl_Choice *heights;
-  Fl_Choice *light;
-
-public:
   UI_RChoice *theme;
+
+  UI_RChoice *size;
+  UI_RChoice *detail;
+
+  UI_RChoice *heights;
+  UI_RChoice *light;
 
 
 public:
@@ -65,15 +64,24 @@ public:
 
 private:
   static const char *adjust_syms[3];
-  static const char *size_syms[3];
 
   int FindSym(const char *str);
+
+  void setup_Size();
+  void setup_Detail();
+  void setup_Heights();
+  void setup_Light();
 
   static void callback_Size   (Fl_Widget *, void*);
   static void callback_Theme  (Fl_Widget *, void*);
   static void callback_Detail (Fl_Widget *, void*);
   static void callback_Heights(Fl_Widget *, void*);
   static void callback_Light  (Fl_Widget *, void*);
+
+  static const char * size_syms[];
+  static const char * detail_syms[];
+  static const char * height_syms[];
+  static const char * light_syms[];
 };
 
 #endif /* __UI_LEVEL_H__ */
