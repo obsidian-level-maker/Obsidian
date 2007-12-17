@@ -151,6 +151,36 @@ int show_button(lua_State *L)
   return 0;
 }
 
+// LUA: change_button(what, id)
+//
+int change_button(lua_State *L)
+{
+  const char *what = luaL_checkstring(L,1);
+  const char *id   = luaL_checkstring(L,2);
+
+  SYS_ASSERT(what && id);
+
+  if (StringCaseCmp(what, "game") == 0)
+    main_win->game_box->game->SetID(id);
+
+  else if (StringCaseCmp(what, "engine") == 0)
+    main_win->game_box->engine->SetID(id);
+
+  else if (StringCaseCmp(what, "theme") == 0)
+    main_win->level_box->theme->SetID(id);
+
+  else if (StringCaseCmp(what, "module") == 0)
+    main_win->mod_box->opts->SetOption(id, 0);
+
+  else if (StringCaseCmp(what, "option") == 0)
+    main_win->option_box->opts->SetOption(id, 0);
+
+  else
+    Main_FatalError("change_button: unknown what value '%s'\n", what);
+
+  return 0;
+}
+
 
 // LUA: at_level(name, idx, total)
 //
@@ -270,8 +300,9 @@ static const luaL_Reg console_lib[] =
   { "raw_log_print",   con::raw_log_print },
   { "raw_debug_print", con::raw_debug_print },
 
-  { "add_button",   con::add_button },
-  { "show_button",  con::show_button },
+  { "add_button",    con::add_button },
+  { "show_button",   con::show_button },
+  { "change_button", con::change_button },
 
   { "at_level",   con::at_level },
   { "progress",   con::progress },
