@@ -173,21 +173,21 @@ const char *UI_RChoice::GetLabel() const
   return P ? P->label : "";
 }
 
-#if 0 // NEEDED ???
 bool UI_RChoice::SetID(const char *id)
 {
-  int index = FindID(id);
+  SYS_ASSERT(id);
 
-  if (index < 0)
+  option_data_c *P = FindID(id);
+
+  if (! P || P->mapped < 0)
     return false;
 
-  SYS_ASSERT(index < (int)id_list.size());
-
-  value(index);
+  value(P->mapped);
 
   return true;
 }
 
+#if 0
 bool UI_RChoice::SetLabel(const char *lab)
 {
   int index = FindLabel(lab);
