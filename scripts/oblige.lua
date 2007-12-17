@@ -426,7 +426,7 @@ function ob_parse_config(name, value)
            (odef.conflict_mods and odef.conflict_mods[name] )
         then
           odef.enabled = false
-          con.change_button("module", other)
+          con.change_button("module", other, odef.enabled)
         end
       end
     end
@@ -451,7 +451,7 @@ function ob_parse_config(name, value)
            (odef.conflict_opts and odef.conflict_opts[name] )
         then
           odef.enabled = false
-          con.change_button("option", other)
+          con.change_button("option", other, odef.enabled)
         end
       end
     end

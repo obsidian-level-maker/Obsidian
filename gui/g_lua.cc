@@ -151,12 +151,14 @@ int show_button(lua_State *L)
   return 0;
 }
 
-// LUA: change_button(what, id)
+// LUA: change_button(what, id [, bool])
 //
 int change_button(lua_State *L)
 {
   const char *what = luaL_checkstring(L,1);
   const char *id   = luaL_checkstring(L,2);
+
+  int opt_val = lua_toboolean(L,3) ? 1 : 0;
 
   SYS_ASSERT(what && id);
 
@@ -170,10 +172,10 @@ int change_button(lua_State *L)
     main_win->level_box->theme->SetID(id);
 
   else if (StringCaseCmp(what, "module") == 0)
-    main_win->mod_box->opts->SetOption(id, 0);
+    main_win->mod_box->opts->SetOption(id, opt_val);
 
   else if (StringCaseCmp(what, "option") == 0)
-    main_win->option_box->opts->SetOption(id, 0);
+    main_win->option_box->opts->SetOption(id, opt_val);
 
   else
     Main_FatalError("change_button: unknown what value '%s'\n", what);
