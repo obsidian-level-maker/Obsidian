@@ -250,10 +250,19 @@ function ob_update_options()
 end
 
 
+function ob_update_all()
+  ob_update_engines()
+  ob_update_modules()
+  ob_update_options()
+  ob_update_themes()
+end
+
+
 function ob_default_config()
   -- Note: game, engine & theme are set up elsewhere
 
   --| Game Settings |--
+  OB_CONFIG.seed   = 0
   OB_CONFIG.mode   = "sp"
   OB_CONFIG.length = "episode"
 
@@ -339,7 +348,34 @@ function ob_parse_config(name, value)
   end
 
   if OB_CONFIG[name] then
+    if OB_CONFIG[name] == value then
+      return
+    end
+
+    -- validate some important variables
+    if name == "game" then
+      if not OB_GAMES[value] then
+        con.printf("Ignoring unknown game: %s\n", value)
+        return;
+      end
+    elseif name == "engine" then
+      if not OB_ENGINES[value] then
+        con.printf("Ignoring unknown engine: %s\n", value)
+        return;
+      end
+    elseif name == "theme" then
+      if not OB_THEMES[value] then
+        con.printf("Ignoring unknown theme: %s\n", value)
+        return;
+      end
+    end
+
     OB_CONFIG[name] = value
+
+    if (name == "game") or (name == "mode") or (name == "engine") then
+      ob_update_all()
+    end
+
     return
   end
 
@@ -347,12 +383,19 @@ function ob_parse_config(name, value)
   value = not (value == "false" or value == "0")
 
   if OB_MODULES[name] then
+    if OB_MODULES[name].enabled == value then
+      return
+    end
+
     OB_MODULES[name].enabled = value
+
+    ob_update_all()
     return
   end
     
   if OB_OPTIONS[name] then
     OB_OPTIONS[name].enabled = value
+    -- nothing in the GUI depends on options
     return
   end
 
@@ -368,7 +411,7 @@ function ob_write_config()
 
   do_line("-- Game Settings --\n");
 
-  do_line("seed = %s\n",   OB_CONFIG.seed or "0")
+  do_line("seed = %d\n",   OB_CONFIG.seed or 0)
   do_line("game = %s\n",   OB_CONFIG.game)
   do_line("mode = %s\n",   OB_CONFIG.mode)
   do_line("engine = %s\n", OB_CONFIG.engine)
@@ -409,7 +452,6 @@ function ob_build_cool_shit()
  
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
-
 
   con.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
 
