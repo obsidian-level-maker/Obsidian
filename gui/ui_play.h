@@ -21,14 +21,14 @@
 
 class UI_Play : public Fl_Group
 {
-private:
+public: // private:
 
-  Fl_Choice *mons;
-  Fl_Choice *puzzles;
-  Fl_Choice *traps;
+  UI_RChoice *mons;
+  UI_RChoice *puzzles;
+  UI_RChoice *traps;
 
-  Fl_Choice *health;
-  Fl_Choice *ammo;
+  UI_RChoice *health;
+  UI_RChoice *ammo;
 
 public:
   UI_Play(int x, int y, int w, int h, const char *label = NULL);
@@ -63,17 +63,26 @@ public:
 private:
   int FindSym(const char *str);
 
+  void setup_Monsters();
+  void setup_Puzzles ();
+  void setup_Traps   ();
+  void setup_Health  ();
+  void setup_Ammo    ();
+
 ///---  void UpdateLabels(const char *game, const char *mode);
 
   static void notify_Mode(const char *name, void *priv_dat);
-
-  static const char *adjust_syms[3];
 
   static void callback_Monsters(Fl_Widget *, void*);
   static void callback_Puzzles (Fl_Widget *, void*);
   static void callback_Traps   (Fl_Widget *, void*);
   static void callback_Health  (Fl_Widget *, void*);
   static void callback_Ammo    (Fl_Widget *, void*);
+
+  static const char * monster_syms[];
+  static const char * trap_syms[];
+  static const char * equip_syms[];
+  static const char * health_syms[];
 };
 
 #endif /* __UI_PLAY_H__ */

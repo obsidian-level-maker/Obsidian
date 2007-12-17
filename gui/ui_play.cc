@@ -52,37 +52,36 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += 28;
 
 
-  mons = new Fl_Choice(x+ 82, cy, 112, 24, "Monsters: ");
+  mons = new UI_RChoice(x+ 82, cy, 112, 24, "Monsters: ");
   mons->align(FL_ALIGN_LEFT);
   mons->selection_color(MY_RED);
-  mons->add("Scarce|Normal|Hordes");
-  mons->value(1);
   mons->callback(callback_Monsters, this);
-  
+
+  setup_Monsters();
 
   add(mons);
 
   cy += mons->h() + 6;
 
 
-  puzzles = new Fl_Choice(x+ 82, cy, 112, 24, "Puzzles: ");
+  puzzles = new UI_RChoice(x+ 82, cy, 112, 24, "Puzzles: ");
   puzzles->align(FL_ALIGN_LEFT);
   puzzles->selection_color(MY_RED);
-  puzzles->add("Few|Normal|Heaps");
-  puzzles->value(1);
   puzzles->callback(callback_Puzzles, this);
+
+  setup_Puzzles();
 
   add(puzzles);
 
   cy += puzzles->h() + 6;
 
 
-  traps = new Fl_Choice(x+ 82, cy, 112, 24, "Traps: ");
+  traps = new UI_RChoice(x+ 82, cy, 112, 24, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
   traps->selection_color(MY_RED);
-  traps->add("Few|Normal|Heaps");
-  traps->value(1);
   traps->callback(callback_Traps, this);
+
+  setup_Traps();
 
   add(traps);
 
@@ -91,25 +90,25 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  health = new Fl_Choice(x+82, cy, 112, 24, "Health: ");
+  health = new UI_RChoice(x+82, cy, 112, 24, "Health: ");
   health->align(FL_ALIGN_LEFT);
   health->selection_color(MY_RED);
-  health->add("Less|Enough|More");
-  health->value(1);
   health->callback(callback_Health, this);
+
+  setup_Health();
 
   add(health);
 
   cy += health->h() + 6;
 
 
-  ammo = new Fl_Choice(x+82, cy, 112, 24, "Ammo: ");
+  ammo = new UI_RChoice(x+82, cy, 112, 24, "Ammo: ");
   ammo->align(FL_ALIGN_LEFT);
   ammo->selection_color(MY_RED);
-  ammo->add("Less|Enough|More");
-  ammo->value(1);
   ammo->callback(callback_Ammo, this);
  
+  setup_Ammo();
+
   add(ammo);
   
   cy += ammo->h() + 6;
@@ -272,34 +271,118 @@ bool UI_Play::ParseValue(const char *key, const char *value)
 
 //----------------------------------------------------------------
 
-const char * UI_Play::adjust_syms[3] =
+const char * UI_Play::monster_syms[] =
 {
-  "less", "normal", "more"
+  // also used for: Puzzles, Weapons and Players
+
+  "scarce", "Scarce",
+  "less",   "Less",
+  "normal", "Normal",
+  "heaps",  "Hordes",
+  "mixed",  "Mix It Up",
+
+  NULL, NULL
 };
+
+const char * UI_Play::trap_syms[] =
+{
+  "scarce", "None",
+  "less",   "Less",
+  "normal", "Normal",
+  "more",   "Heaps",
+  "heaps",  "Mix It Up",
+
+  NULL, NULL
+};
+
+const char * UI_Play::equip_syms[] =
+{
+  "scarce", "Small Weap",
+  "less",   "Medium Weap",
+  "normal", "None",
+  "more",   "Big Weap",
+  "heaps",  "Mix It Up",
+
+  NULL, NULL
+};
+
+const char * UI_Play::health_syms[] =
+{
+  // also used for: Ammo
+
+  "scarce", "Scarce",
+  "less",   "Less",
+  "normal", "Normal",
+  "more",   "More",
+  "heaps",  "Heaps",
+
+  NULL, NULL
+};
+
+void UI_Play::setup_Monsters()
+{
+  for (int i = 0; monster_syms[i]; i += 2)
+    mons->AddPair(monster_syms[i], monster_syms[i+1]);
+
+  mons->Recreate();
+}
+
+void UI_Play::setup_Puzzles()
+{
+  for (int i = 0; monster_syms[i]; i += 2)
+    puzzles->AddPair(monster_syms[i], monster_syms[i+1]);
+
+  puzzles->Recreate();
+}
+
+void UI_Play::setup_Traps()
+{
+  for (int i = 0; equip_syms[i]; i += 2)
+    traps->AddPair(equip_syms[i], equip_syms[i+1]);
+
+  traps->Recreate();
+}
+
+void UI_Play::setup_Health()
+{
+  for (int i = 0; health_syms[i]; i += 2)
+    health->AddPair(health_syms[i], health_syms[i+1]);
+
+  health->Recreate();
+}
+
+void UI_Play::setup_Ammo()
+{
+  for (int i = 0; health_syms[i]; i += 2)
+    ammo->AddPair(health_syms[i], health_syms[i+1]);
+
+  ammo->Recreate();
+}
+
 
 const char *UI_Play::get_Health()
 {
-  return adjust_syms[health->value()];
+//  return adjust_syms[health->value()];
 }
 
 const char *UI_Play::get_Ammo()
 {
-  return adjust_syms[ammo->value()];
+//  return adjust_syms[ammo->value()];
 }
 
 const char *UI_Play::get_Monsters()
 {
-  return adjust_syms[mons->value()];
+//  return adjust_syms[mons->value()];
 }
 
 const char *UI_Play::get_Traps()
 {
-  return adjust_syms[traps->value()];
+//  return adjust_syms[traps->value()];
 }
 
 const char *UI_Play::get_Puzzles()
 {
-  return adjust_syms[puzzles->value()];
+//  return adjust_syms[puzzles->value()];
 }
 
 
@@ -307,9 +390,10 @@ const char *UI_Play::get_Puzzles()
 
 int UI_Play::FindSym(const char *str)
 {
-  for (int i=0; adjust_syms[i]; i++)
-    if (StringCaseCmp(str, adjust_syms[i]) == 0)
-      return i;
+
+///  for (int i=0; adjust_syms[i]; i++)
+///    if (StringCaseCmp(str, adjust_syms[i]) == 0)
+///      return i;
 
   return -1; // Unknown
 }
