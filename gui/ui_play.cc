@@ -149,23 +149,6 @@ void UI_Play::Locked(bool value)
   }
 }
 
-///---void UI_Play::UpdateLabels(const char *game, const char *mode)
-///---{
-///---  if (strcmp(mode, "dm") == 0)
-///---  {
-///---    mons->label("Weapons: ");
-///---    puzzles->label("Players: ");
-///---  }
-///---  else
-///---  {
-///---    mons->label("Monsters: ");
-///---    puzzles->label("Puzzles: ");
-///---  }
-///---
-///---  SYS_ASSERT(main_win);
-///---
-///---  redraw();
-///---}
 
 void UI_Play::notify_Mode(const char *name, void *priv_dat)
 {
@@ -179,13 +162,15 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
 
   if (strcmp(mode, "dm") == 0)
   {
-    play->mons->label("Weapons: ");
+    play->mons->label   ("Weapons: ");
     play->puzzles->label("Players: ");
+    play->traps->label  ("Equip: ");
   }
   else
   {
-    play->mons->label("Monsters: ");
+    play->mons->label   ("Monsters: ");
     play->puzzles->label("Puzzles: ");
+    play->traps->label  ("Traps: ");
   }
 
   play->redraw();
@@ -275,33 +260,24 @@ const char * UI_Play::monster_syms[] =
 {
   // also used for: Puzzles, Weapons and Players
 
-  "scarce", "Scarce",
+  "mixed",  "Mix It Up",
+  "low",    "Scarce",
   "less",   "Less",
   "normal", "Normal",
-  "heaps",  "Hordes",
-  "mixed",  "Mix It Up",
+  "high",   "Hordes",
 
   NULL, NULL
 };
 
 const char * UI_Play::trap_syms[] =
 {
-  "scarce", "None",
-  "less",   "Less",
-  "normal", "Normal",
-  "more",   "Heaps",
-  "heaps",  "Mix It Up",
+  //_________Traps________Equip________
 
-  NULL, NULL
-};
-
-const char * UI_Play::equip_syms[] =
-{
-  "scarce", "Small Weap",
-  "less",   "Medium Weap",
-  "normal", "None",
-  "more",   "Big Weap",
-  "heaps",  "Mix It Up",
+  "mixed",  "Mix It Up", "Mix It Up",
+  "low",    "None",      "None",
+  "less",   "Less",      "Small",
+  "normal", "Normal",    "Medium",
+  "high",   "Heaps",     "Large",
 
   NULL, NULL
 };
@@ -310,11 +286,11 @@ const char * UI_Play::health_syms[] =
 {
   // also used for: Ammo
 
-  "scarce", "Scarce",
+  "low",    "Scarce",
   "less",   "Less",
   "normal", "Normal",
   "more",   "More",
-  "heaps",  "Heaps",
+  "high",   "Heaps",
 
   NULL, NULL
 };
@@ -337,8 +313,8 @@ void UI_Play::setup_Puzzles()
 
 void UI_Play::setup_Traps()
 {
-  for (int i = 0; equip_syms[i]; i += 2)
-    traps->AddPair(equip_syms[i], equip_syms[i+1]);
+  for (int i = 0; trap_syms[i]; i += 3)
+    traps->AddPair(trap_syms[i], trap_syms[i+2]);
 
   traps->Recreate();
 }
