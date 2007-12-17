@@ -262,7 +262,7 @@ const char * UI_Level::light_syms[] =
 {
   "mixed",  "Mix It Up",
 
-  "low",    "Flat",
+  "low",    "None",
   "less",   "Dark",
   "normal", "Normal",
   "more",   "Bright",
