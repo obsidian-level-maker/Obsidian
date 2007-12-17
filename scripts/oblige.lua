@@ -250,36 +250,28 @@ function ob_update_options()
 end
 
 
---- function ob_setup_theme_button()
---- 
----   if not OB_THEMES or table_empty(OB_THEMES) then
----     error("No themes definitions were loaded!")
----   end
---- 
----   local theme_list = {}
---- 
----   for name,info in pairs(OB_THEMES) do
----     assert(info.name)
----     assert(info.label)
---- 
----     table.insert(theme_list, info)
----   end
---- 
----   table.sort(theme_list, ob_button_sorter)
---- 
----   local count = 0
---- 
----   for xxx,info in ipairs(theme_list) do
----     if ob_match_conf(info) then
----       con.theme_button(info.name, info.label)
----       count = count + 1
----     end
----   end
---- 
----   if count == 0 then
----     error("No themes matching current game!")
----   end
---- end
+function ob_default_config()
+  -- Note: game, engine & theme are set up elsewhere
+
+  --| Game Settings |--
+  OB_CONFIG.mode   = "sp"
+  OB_CONFIG.length = "episode"
+
+  --| Level Adjustments |--
+  OB_CONFIG.size    = "regular"
+  OB_CONFIG.detail  = "normal"
+  OB_CONFIG.heights = "normal"
+  OB_CONFIG.yyy     = "normal"
+ 
+  --| Playing Style |--
+  OB_CONFIG.mons    = "normal"
+  OB_CONFIG.puzzles = "normal"
+  OB_CONFIG.traps   = "normal"
+  OB_CONFIG.health  = "normal"
+  OB_CONFIG.ammo    = "normal"
+
+  -- modules and options default to disabled
+end
 
 
 function ob_init()
@@ -326,13 +318,90 @@ function ob_init()
     return list[1] and list[1].name
   end
 
+  ob_default_config()
+
   OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
-  OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
   OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
-  OB_CONFIG.mode   = "sp"
+  OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
 
   create_buttons("module", OB_MODULES)
   create_buttons("option", OB_OPTIONS)
+
+end
+
+
+function ob_parse_config(name, value)
+  assert(name and value)
+
+  if name == "seed" then
+    OB_CONFIG[name] = tonumber(value) or 0
+    return
+  end
+
+  if OB_CONFIG[name] then
+    OB_CONFIG[name] = value
+    return
+  end
+
+  -- convert 'value' from string to a boolean
+  value = not (value == "false" or value == "0")
+
+  if OB_MODULES[name] then
+    OB_MODULES[name].enabled = value
+    return
+  end
+    
+  if OB_OPTIONS[name] then
+    OB_OPTIONS[name].enabled = value
+    return
+  end
+
+  con.printf("Unknown config variable: %s\n", name)
+end
+
+
+function ob_write_config()
+
+  local function do_line(fmt, ...)
+    con.config_line(string.format(fmt, ...))
+  end
+
+  do_line("-- Game Settings --\n");
+
+  do_line("seed = %s\n",   OB_CONFIG.seed or "0")
+  do_line("game = %s\n",   OB_CONFIG.game)
+  do_line("mode = %s\n",   OB_CONFIG.mode)
+  do_line("engine = %s\n", OB_CONFIG.engine)
+  do_line("length = %s\n", OB_CONFIG.length)
+  do_line("\n")
+
+  do_line("-- Level Architecture --\n");
+  do_line("theme = %s\n",   OB_CONFIG.theme)
+  do_line("size = %s\n",    OB_CONFIG.size)
+  do_line("detail = %s\n",  OB_CONFIG.detail)
+  do_line("heights = %s\n", OB_CONFIG.heights)
+  do_line("yyy = %s\n",     OB_CONFIG.yyy or "yyy")
+  do_line("\n")
+
+  do_line("-- Playing Style --\n");
+  do_line("mons = %s\n",    OB_CONFIG.mons)
+  do_line("puzzles = %s\n", OB_CONFIG.puzzles)
+  do_line("traps = %s\n",   OB_CONFIG.traps)
+  do_line("health = %s\n",  OB_CONFIG.health)
+  do_line("ammo = %s\n",    OB_CONFIG.ammo)
+  do_line("\n")
+
+  do_line("-- Custom Mods --\n");
+  for name,def in pairs(OB_MODULES) do
+    do_line("%s = %s\n", name, sel(def.enabled, "true", "false"))
+  end
+  do_line("\n")
+
+  do_line("-- Custom Options --\n");
+  for name,def in pairs(OB_OPTIONS) do
+    do_line("%s = %s\n", name, sel(def.enabled, "true", "false"))
+  end
+  do_line("\n")
 end
 
 
