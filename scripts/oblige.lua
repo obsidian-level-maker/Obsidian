@@ -436,8 +436,28 @@ function ob_parse_config(name, value)
   end
     
   if OB_OPTIONS[name] then
-    OB_OPTIONS[name].enabled = value
-    -- nothing in the GUI depends on options
+    if OB_OPTIONS[name].enabled == value then
+      return
+    end
+
+    local def = OB_OPTIONS[name]
+
+    def.enabled = value
+
+    -- handle conflicting options (like Radio buttons)
+    if value then
+      for other,odef in pairs(OB_OPTIONS) do
+        if ( def.conflict_opts and  def.conflict_opts[other]) or
+           (odef.conflict_opts and odef.conflict_opts[name] )
+        then
+          odef.enabled = false
+          con.change_button("option", other)
+        end
+      end
+    end
+
+    -- no need to call ob_update_all
+    -- (nothing in the GUI depends on custom options)
     return
   end
 
