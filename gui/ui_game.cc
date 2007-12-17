@@ -85,7 +85,6 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   mode->callback(callback_Mode, this);
 
   setup_Mode();
-  
 
   add(mode);
 
@@ -122,7 +121,8 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
   resizable(0);  // don't resize our children
 
-  FreshSeed();
+
+  length->SetID("episode");
 }
 
 
@@ -197,6 +197,19 @@ void UI_Game::callback_Length(Fl_Widget *w, void *data)
 
   Script_SetConfig("length", that->length->GetID());
   Signal_Raise("length");
+}
+
+void UI_Game::Defaults()
+{
+  // Note: game, engine are handled by LUA code (ob_init)
+
+  FreshSeed();
+
+  mode  ->SetID("sp");
+  length->SetID("episode");
+  
+  Script_SetConfig("mode",   mode->GetID());
+  Script_SetConfig("length", length->GetID());
 }
 
 void UI_Game::Locked(bool value)

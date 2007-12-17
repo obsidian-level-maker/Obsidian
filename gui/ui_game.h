@@ -60,6 +60,7 @@ public:
 
   const char *get_Seed();
   
+  void Defaults();
 
 private:
   void setup_Mode();

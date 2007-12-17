@@ -353,10 +353,14 @@ int main(int argc, char **argv)
   // shown() because that is when FLTK finalises the colors).
   main_win->build_box->mini_map->EmptyMap();
 
+  Script_Load();
+
+  main_win->game_box ->Defaults();
+  main_win->level_box->Defaults();
+  main_win->play_box ->Defaults();
+
   // load config after creating window (set widget values)
 //!!!!!!  Cookie_Load(CONFIG_FILENAME);
-
-  Script_Load();
 
   try
   {

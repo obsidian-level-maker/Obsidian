@@ -182,6 +182,21 @@ void UI_Level::callback_Light(Fl_Widget *w, void *data)
 
   Script_SetConfig("light", that->light->GetID());
 }
+
+void UI_Level::Defaults()
+{
+  // Note: theme handled by LUA code (ob_init)
+
+  size   ->SetID("mixed");
+  detail ->SetID("normal");
+  heights->SetID("mixed");
+  light  ->SetID("mixed");
+
+  Script_SetConfig("size",    this->size->GetID());
+  Script_SetConfig("detail",  this->detail->GetID());
+  Script_SetConfig("heights", this->heights->GetID());
+  Script_SetConfig("light",   this->light->GetID());
+}
  
 
 const char * UI_Level::GetAllValues()

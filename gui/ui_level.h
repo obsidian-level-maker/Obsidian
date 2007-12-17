@@ -38,7 +38,7 @@ public:
 
 public:
 
-  void Locked(bool value);
+  void Defaults();
 
   const char *GetAllValues();
   // return a string containing all the values from this panel,
@@ -49,6 +49,8 @@ public:
   // parse the name and store the value in the appropriate
   // widget.  Returns false if the key was unknown or the
   // value was invalid.
+
+  void Locked(bool value);
 
 private:
 

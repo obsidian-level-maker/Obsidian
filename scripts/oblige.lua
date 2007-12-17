@@ -286,29 +286,28 @@ function ob_update_all()
 end
 
 
-function ob_default_config()
-  -- Note: game, engine & theme are set up elsewhere
-
-  --| Game Settings |--
-  OB_CONFIG.seed   = 0
-  OB_CONFIG.mode   = "sp"
-  OB_CONFIG.length = "episode"
-
-  --| Level Adjustments |--
-  OB_CONFIG.size    = "mixed"
-  OB_CONFIG.detail  = "normal"
-  OB_CONFIG.heights = "mixed"
-  OB_CONFIG.light   = "mixed"
- 
-  --| Playing Style |--
-  OB_CONFIG.mons    = "mixed"
-  OB_CONFIG.puzzles = "mixed"
-  OB_CONFIG.traps   = "low"
-  OB_CONFIG.health  = "normal"
-  OB_CONFIG.ammo    = "normal"
-
-  -- modules and options default to disabled
-end
+----  function ob_default_config()
+----    -- Note: game, engine & theme are set up elsewhere
+----  
+----    --| Game Settings |--
+----    OB_CONFIG.mode   = "sp"
+----    OB_CONFIG.length = "episode"
+----  
+----    --| Level Adjustments |--
+----    OB_CONFIG.size    = "mixed"
+----    OB_CONFIG.detail  = "normal"
+----    OB_CONFIG.heights = "mixed"
+----    OB_CONFIG.light   = "mixed"
+----   
+----    --| Playing Style |--
+----    OB_CONFIG.mons    = "mixed"
+----    OB_CONFIG.puzzles = "mixed"
+----    OB_CONFIG.traps   = "low"
+----    OB_CONFIG.health  = "normal"
+----    OB_CONFIG.ammo    = "normal"
+----  
+----    -- modules and options default to disabled
+----  end
 
 
 function ob_parse_config(name, value)
@@ -498,7 +497,7 @@ function ob_init()
     return list[1] and list[1].name
   end
 
-  ob_default_config()
+  OB_CONFIG.seed   = 0
 
   OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
   OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
@@ -507,6 +506,7 @@ function ob_init()
   create_buttons("module", OB_MODULES)
   create_buttons("option", OB_OPTIONS)
 
+  ob_update_all()
 end
 
 

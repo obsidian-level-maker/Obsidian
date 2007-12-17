@@ -38,6 +38,8 @@ public:
 
   void Locked(bool value);
   
+  void Defaults();
+
   const char *GetAllValues();
   // return a string containing all the values from this panel,
   // in a form suitable for the Config file.

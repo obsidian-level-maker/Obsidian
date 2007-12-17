@@ -214,6 +214,20 @@ void UI_Play::callback_Ammo(Fl_Widget *w, void *data)
   Script_SetConfig("ammo", that->ammo->GetID());
 }
 
+void UI_Play::Defaults()
+{
+  mons   ->SetID("mixed");
+  puzzles->SetID("mixed");
+  traps  ->SetID("mixed");
+  health ->SetID("normal");
+  ammo   ->SetID("normal");
+
+  Script_SetConfig("mons",    this->mons->GetID());
+  Script_SetConfig("puzzles", this->puzzles->GetID());
+  Script_SetConfig("traps",   this->traps->GetID());
+  Script_SetConfig("health",  this->health->GetID());
+  Script_SetConfig("ammo",    this->ammo->GetID());
+}
  
 const char * UI_Play::GetAllValues()
 {
