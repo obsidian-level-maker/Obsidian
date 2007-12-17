@@ -198,7 +198,7 @@ void Build_Cool_Shit()
 {
   bool is_wolf  = false;
 
-  bool is_hexen = (strcmp(main_win->game_box->get_Game(), "hexen")  == 0);
+  bool is_hexen = (strcmp(main_win->game_box->game->GetID(), "hexen")  == 0);
 
   UI_Build *bb_area = main_win->build_box;
 
