@@ -17,11 +17,16 @@ New Window Layout:
    - have mod/option boxes change when Game/Mode/Engine change
    - have options change when mods are enabled/disabled
 
--  Mod Box: shown=0  for game mismatch
-            shown=-1 for engine/mode mismatch
+?  have a OB_ACTIVE[] table for currently active modules
+   and options -- ya gotta keep 'em separated.
 
 ?  use LUA code for handling the config file
    (not everything though)
+   -  on serious script errors: remember it, so that we
+      don't try calling into LUA to write the config.
+
+?? Mod Box: shown=0  for game mismatch
+            shown=-1 for engine/mode mismatch
 
 
 General:
