@@ -27,7 +27,7 @@ private:
   Fl_Choice *detail;
 
   Fl_Choice *heights;
-  Fl_Choice *yyy;
+  Fl_Choice *light;
 
 public:
   UI_RChoice *theme;
@@ -73,7 +73,7 @@ private:
   static void callback_Theme  (Fl_Widget *, void*);
   static void callback_Detail (Fl_Widget *, void*);
   static void callback_Heights(Fl_Widget *, void*);
-  static void callback_YYY    (Fl_Widget *, void*);
+  static void callback_Light  (Fl_Widget *, void*);
 };
 
 #endif /* __UI_LEVEL_H__ */

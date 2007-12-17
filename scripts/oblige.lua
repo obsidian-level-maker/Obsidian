@@ -298,7 +298,7 @@ function ob_default_config()
   OB_CONFIG.size    = "regular"
   OB_CONFIG.detail  = "normal"
   OB_CONFIG.heights = "normal"
-  OB_CONFIG.yyy     = "normal"
+  OB_CONFIG.light   = "normal"
  
   --| Playing Style |--
   OB_CONFIG.mons    = "normal"
@@ -485,7 +485,7 @@ function ob_write_config()
   do_line("size = %s\n",    OB_CONFIG.size)
   do_line("detail = %s\n",  OB_CONFIG.detail)
   do_line("heights = %s\n", OB_CONFIG.heights)
-  do_line("yyy = %s\n",     OB_CONFIG.yyy or "yyy")
+  do_line("light = %s\n",   OB_CONFIG.light)
   do_line("\n")
 
   do_line("-- Playing Style --\n");

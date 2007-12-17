@@ -37,7 +37,6 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   end(); // cancel begin() in Fl_Group constructor
  
   box(FL_THIN_UP_BOX);
-//  align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
 
   int cy = y + 8;
 
@@ -54,8 +53,6 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   theme = new UI_RChoice(x+ 82, cy, 112, 24, "Theme: ");
   theme->align(FL_ALIGN_LEFT);
   theme->selection_color(MY_GREEN);
-///---  theme->add("Mix it Up|Hell|Nature|Tech|Urban");
-///---  theme->value(0);
   theme->callback(callback_Theme, this);
 
   add(theme);
@@ -68,8 +65,8 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   size = new Fl_Choice(x+ 82, cy, 112, 24, "Size: ");
   size->align(FL_ALIGN_LEFT);
   size->selection_color(MY_GREEN);
-  size->add("Small|Regular|X-Large");
-  size->value(1);
+  size->add("Tiny|Small|Regular|X-Large|Mix It Up");
+  size->value(2);
   size->callback(callback_Size, this);
 
   add(size);
@@ -94,8 +91,8 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   heights = new Fl_Choice(x+ 82, cy, 112, 24, "Heights: ");
   heights->align(FL_ALIGN_LEFT);
   heights->selection_color(MY_GREEN);
-  heights->add("Flat|Gentle|Normal|Wild");
-  heights->value(1);
+  heights->add("Flat|Gentle|Normal|Wild|Mix It Up");
+  heights->value(2);
   heights->callback(callback_Heights, this);
 
   add(heights);
@@ -103,16 +100,16 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += heights->h() + 6;
 
 
-  yyy = new Fl_Choice(x+ 82, cy, 112, 24, "YYY: ");
-  yyy->align(FL_ALIGN_LEFT);
-  yyy->selection_color(MY_GREEN);
-  yyy->add("Few|Normal|Heaps");
-  yyy->value(1);
-  yyy->callback(callback_YYY, this);
+  light = new Fl_Choice(x+ 82, cy, 112, 24, "Lighting: ");
+  light->align(FL_ALIGN_LEFT);
+  light->selection_color(MY_GREEN);
+  light->add("Flat|Dark|Normal|Bright|Mix It Up");
+  light->value(2);
+  light->callback(callback_Light, this);
 
-  add(yyy);
+  add(light);
 
-  cy += yyy->h() + 6;
+  cy += light->h() + 6;
 
 
   DebugPrintf("UI_Level: final h = %d\n", cy - y);
@@ -132,19 +129,19 @@ void UI_Level::Locked(bool value)
 {
   if (value)
   {
-    theme ->deactivate();
-    size  ->deactivate();
-    detail->deactivate();
+    theme  ->deactivate();
+    size   ->deactivate();
+    detail ->deactivate();
     heights->deactivate();
-    yyy   ->deactivate();
+    light  ->deactivate();
   }
   else
   {
-    theme ->activate();
-    size  ->activate();
-    detail->activate();
+    theme  ->activate();
+    size   ->activate();
+    detail ->activate();
     heights->activate();
-    yyy   ->activate();
+    light  ->activate();
   }
 }
 
@@ -179,11 +176,11 @@ void UI_Level::callback_Heights(Fl_Widget *w, void *data)
   Script_SetConfig("heights", that->get_Heights());
 }
  
-void UI_Level::callback_YYY(Fl_Widget *w, void *data)
+void UI_Level::callback_Light(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-//  Script_SetConfig("yyy", that->get_YYY());
+//!!!  Script_SetConfig("light", that->get_Light());
 }
  
 
@@ -197,7 +194,7 @@ const char * UI_Level::GetAllValues()
   last_str = StringPrintf(
       "size = %s\n"    "theme = %s\n"
       "detail = %s\n"  "heights = %s\n",
-      // yyy
+      //!!! light
       get_Size(),   get_Theme(),
       get_Detail(), get_Heights()
   );
