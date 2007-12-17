@@ -50,22 +50,7 @@ public:
   // widget.  Returns false if the key was unknown or the
   // value was invalid.
 
-  const char *get_Size();
-  const char *get_Theme();
-  const char *get_Detail();
-  const char *get_Heights();
-//const char *get_YYY();
-
-  bool set_Size   (const char *str);
-  bool set_Theme  (const char *str);
-  bool set_Detail (const char *str);
-  bool set_Heights(const char *str);
-//bool set_YYY(const char *str);
-
 private:
-  static const char *adjust_syms[3];
-
-  int FindSym(const char *str);
 
   void setup_Size();
   void setup_Detail();
