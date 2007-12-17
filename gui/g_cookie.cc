@@ -18,13 +18,15 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
+#include "hdr_lua.h"
 #include "hdr_ui.h"
 
 #include "lib_util.h"
+#include "main.h"
 
 #include "g_cookie.h"
+#include "g_lua.h"
 #include "ui_chooser.h"
-#include "main.h"
 
 
 static FILE *cookie_fp;
