@@ -205,15 +205,43 @@ end
 
 
 function ob_update_engines()
+  local need_new = false
+
   for name,def in pairs(OB_ENGINES) do
-    con.show_button("engine", name, ob_match_conf(def))
+    local shown = ob_match_conf(def)
+
+    if not shown and (OB_CONFIG.engine == name) then
+      need_new = true
+    end
+
+    con.show_button("engine", name, shown)
+  end
+
+  if need_new then
+    OB_CONFIG.engine = "nolimit"
+    con.change_button("engine", OB_CONFIG.engine)
   end
 end
 
 
 function ob_update_themes()
+  local need_new = false
+
   for name,def in pairs(OB_THEMES) do
-    con.show_button("theme", name, ob_match_conf(def))
+    local shown = ob_match_conf(def)
+    
+    if not shown and (OB_CONFIG.theme == name) then
+      need_new = true
+    end
+
+    con.show_button("theme", name, shown)
+  end
+
+  if need_new then
+    -- TODO: if same label exists, use that one
+
+    OB_CONFIG.theme = "mixed"
+    con.change_button("theme", "", OB_CONFIG.theme)
   end
 end
 
@@ -237,7 +265,7 @@ function ob_update_modules()
       end
     end
 
-    if not changed then return end
+    if not changed then break; end
   end
 end
 
@@ -387,7 +415,21 @@ function ob_parse_config(name, value)
       return
     end
 
-    OB_MODULES[name].enabled = value
+    local def = OB_MODULES[name]
+
+    def.enabled = value
+
+    -- handle conflicting modules (like Radio buttons)
+    if value then
+      for other,odef in pairs(OB_MODULES) do
+        if ( def.conflict_mods and  def.conflict_mods[other]) or
+           (odef.conflict_mods and odef.conflict_mods[name] )
+        then
+          odef.enabled = false
+          con.change_button("module", other)
+        end
+      end
+    end
 
     ob_update_all()
     return
