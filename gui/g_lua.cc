@@ -542,6 +542,7 @@ void Script_Load(void)
   main_win->mod_box->opts->Commit();
   main_win->option_box->opts->Commit();
 
+#if 0
   Signal_Watch("game",   UpdateEngines);
   Signal_Watch("mode",   UpdateEngines);
 
@@ -559,6 +560,7 @@ void Script_Load(void)
   Signal_Watch("mode",   UpdateOptions);
   Signal_Watch("engine", UpdateOptions);
   Signal_Watch("module", UpdateOptions);
+#endif
 }
 
 
@@ -599,7 +601,8 @@ void Script_SetConfig(const char *key, const char *value)
     DebugPrintf("Script_SetConfig(%s) called before loaded.\n", key);
     return;
   }
-
+ 
+#if 0  // OLD (DIRECT) WAY
   lua_getglobal(LUA_ST, "OB_CONFIG");
   {
     lua_pushstring(LUA_ST, key);
@@ -608,6 +611,21 @@ void Script_SetConfig(const char *key, const char *value)
     lua_settable(LUA_ST, -3);
   }
   lua_pop(LUA_ST, 1);
+#endif
+
+  main_win->game_box->engine->BeginUpdate();
+  main_win->mod_box->opts->BeginUpdate();
+  main_win->option_box->opts->BeginUpdate();
+  main_win->level_box->theme->BeginUpdate();
+  {
+
+//!!!!!!    FIXME  call  ob_parse_config
+
+  }
+  main_win->game_box->engine->EndUpdate();
+  main_win->mod_box->opts->EndUpdate();
+  main_win->option_box->opts->EndUpdate();
+  main_win->level_box->theme->EndUpdate();
 }
 
 
@@ -652,4 +670,5 @@ bool Script_Build(void)
 
   return false;
 }
+
 
