@@ -311,62 +311,6 @@ function ob_default_config()
 end
 
 
-function ob_init()
-
-  -- the missing console functions
-  con.printf = function (fmt, ...)
-    if fmt then con.raw_log_print(string.format(fmt, ...)) end
-  end
-
-  con.debugf = function (fmt, ...)
-    if fmt then con.raw_debug_print(string.format(fmt, ...)) end
-  end
-
-  name_it_up(OB_GAMES)
-  name_it_up(OB_THEMES)
-  name_it_up(OB_ENGINES)
-  name_it_up(OB_MODULES)
-  name_it_up(OB_OPTIONS)
-
-  local function button_sorter(A, B)
-    if A.priority or B.priority then
-      return (A.priority or 0) > (B.priority or 0)
-    end
-
-    return A.label < B.label
-  end
-
-  local function create_buttons(what, DEFS)
-    assert(DEFS)
-  
-    local list = {}
-
-    for name,def in pairs(DEFS) do
-      assert(def.name and def.label)
-      table.insert(list, def)
-    end
-
-    table.sort(list, button_sorter)
-
-    for xxx,def in ipairs(list) do
-      con.add_button(what, def.name, def.label)
-    end
-
-    return list[1] and list[1].name
-  end
-
-  ob_default_config()
-
-  OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
-  OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
-  OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
-
-  create_buttons("module", OB_MODULES)
-  create_buttons("option", OB_OPTIONS)
-
-end
-
-
 function ob_parse_config(name, value)
   assert(name and value)
 
@@ -507,6 +451,62 @@ function ob_write_config()
     do_line("%s = %s\n", name, sel(def.enabled, "true", "false"))
   end
   do_line("\n")
+end
+
+
+function ob_init()
+
+  -- the missing console functions
+  con.printf = function (fmt, ...)
+    if fmt then con.raw_log_print(string.format(fmt, ...)) end
+  end
+
+  con.debugf = function (fmt, ...)
+    if fmt then con.raw_debug_print(string.format(fmt, ...)) end
+  end
+
+  name_it_up(OB_GAMES)
+  name_it_up(OB_THEMES)
+  name_it_up(OB_ENGINES)
+  name_it_up(OB_MODULES)
+  name_it_up(OB_OPTIONS)
+
+  local function button_sorter(A, B)
+    if A.priority or B.priority then
+      return (A.priority or 0) > (B.priority or 0)
+    end
+
+    return A.label < B.label
+  end
+
+  local function create_buttons(what, DEFS)
+    assert(DEFS)
+  
+    local list = {}
+
+    for name,def in pairs(DEFS) do
+      assert(def.name and def.label)
+      table.insert(list, def)
+    end
+
+    table.sort(list, button_sorter)
+
+    for xxx,def in ipairs(list) do
+      con.add_button(what, def.name, def.label)
+    end
+
+    return list[1] and list[1].name
+  end
+
+  ob_default_config()
+
+  OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
+  OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
+  OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
+
+  create_buttons("module", OB_MODULES)
+  create_buttons("option", OB_OPTIONS)
+
 end
 
 
