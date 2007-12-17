@@ -46,7 +46,7 @@ public:
   int shown;      // 0 = hidden, 1 = shown, -1 = greyed out
   int value;      // 0 or 1
 
-protected:
+//????  protected:
   Fl_Check_Button *widget;
 
   int mapped;  // for RChoice, the index in the current list,
@@ -114,6 +114,7 @@ public:
   // have been made.
 
 private:
+  
   option_data_c *FindOption(const char *id);
 
   static void callback_Widget(Fl_Widget*, void*);

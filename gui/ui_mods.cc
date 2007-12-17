@@ -18,9 +18,12 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
+#include "hdr_lua.h"
 #include "hdr_ui.h"
 
 #include "lib_util.h"
+
+#include "g_lua.h"
 
 
 UI_Mods::UI_Mods(int x, int y, int w, int h, const char *label) :
@@ -59,9 +62,12 @@ UI_Mods::~UI_Mods()
 
 void UI_Mods::callback_Module(option_data_c *opt, void *data)
 {
-  UI_Mods *that = (UI_Mods *)data;
+//  UI_Mods *that = (UI_Mods *)data;
 
   DebugPrintf("UI_Mods: callback for %s\n", opt->id);
+
+  // TODO: make a method in option_data_c
+  Script_SetConfig(opt->id, opt->widget->value() ? "true" : "false");
 }
 
 
@@ -117,9 +123,11 @@ UI_ModOptions::~UI_ModOptions()
 
 void UI_ModOptions::callback_Option(option_data_c *opt, void *data)
 {
-  UI_ModOptions *that = (UI_ModOptions *)data;
+//  UI_ModOptions *that = (UI_ModOptions *)data;
  
   DebugPrintf("UI_ModOptions: callback for %s\n", opt->id);
+
+  Script_SetConfig(opt->id, opt->widget->value() ? "true" : "false");
 }
 
 
