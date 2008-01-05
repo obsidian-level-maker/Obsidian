@@ -98,8 +98,7 @@ class area_vert_c
 public:
   double x, y;
 
-  area_side_c front;
-  area_side_c back;
+  area_side_c side;
 
   int line_kind;
   int line_tag;

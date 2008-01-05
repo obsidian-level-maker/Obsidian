@@ -72,7 +72,7 @@ area_side_c::~area_side_c()
 
 
 area_vert_c::area_vert_c() :
-      x(0), y(0), front(), back(),
+      x(0), y(0), side(),
       line_kind(0), line_tag(0), line_flags(0)
 {
   memset(line_args, 0, sizeof(line_args));
@@ -232,7 +232,8 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
 
   lua_pop(L, 2);
 
-  // TODO: front, back
+  // TODO: side
+
   // TODO: kind, tag, flags, args
 
   return V;
@@ -300,12 +301,14 @@ namespace csg2
 //
 // loop is an array of Vertices:
 //    x, y,
-//    front, back,
-//    line_kind, line_tag, line_flags, line_args
+//    side,
+//    line_kind, line_tag,
+//    line_flags, line_args
 //
-// front and back are Sidedefs:
-//    w_tex, peg, rail,
-//    x_offset, y_offset
+// side is a table (can be nil)
+//    w_tex,
+//    x_offset, y_offset,
+//    peg, rail (DOOM only)
 //
 int add_solid(lua_State *L)
 {
