@@ -1208,8 +1208,14 @@ static void Mug_AssignAreas(void)
   // Check each segment along the line and mark the region_c
   // on the correct side as belonging to our area_poly.
   // 
-  // THAT IS NOT ENOUGH ....
- 
+  // BUT WAIT, THERE'S MORE!
+  //
+  // The above logic will not find regions that are fully
+  // inside the area_poly_c (no vertices touching the outer
+  // line loop).  However it is sufficient to simply "spread"
+  // the area_poly_c from each "infected" region_c to every
+  // neighbour as long as the shared segment is not part of
+  // the area_poly_c boundary (no escaping!).
 }
 
 
