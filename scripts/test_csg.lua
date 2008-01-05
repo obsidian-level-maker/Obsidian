@@ -19,23 +19,23 @@
 
 function test_csg()
 
---[[
+-- [[ DOOM
   local START_F  = "FLAT22"
   local START_W  = "COMPBLUE"
 
   local ROOM_F   = "FLOOR7_1"
   local ROOM_W   = "BROWN1"
 
-  local PILLAR_F = "FLAT1"
-  local PILLAR_W = "SW1GSTON"
+  local PILLAR_F = "CEIL5_2"
+  local PILLAR_W = "SW1GARG"
 
   local NICHE_F  = "GRNLITE1"
   local NICHE_W  = "TEKGREN5"
 
-  local STAIR_F  = "STEP4"
-  local STAIR_W  = "FLAT18"
+  local STAIR_F  = "FLAT18"
+  local STAIR_W  = "STEP4"
 
-  local BEAM_F   = "FLAT1"
+  local BEAM_F   = "FLAT23"
   local BEAM_W   = "SUPPORT2"
 --]]
 
@@ -59,7 +59,7 @@ function test_csg()
   local BEAM_W   = "wood1_1"
 --]]
 
--- [[ OPEN ARENA
+--[[ OPEN ARENA
   local START_F  = "e7/e7sbrickfloor"
   local START_W  = "e7/e7sbrickfloor"
 
