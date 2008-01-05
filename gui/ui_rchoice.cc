@@ -25,7 +25,7 @@
 
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label) :
     Fl_Choice(x, y, w, h, label),
-    opt_list(), updating(false), modified(false)
+    opt_list()
 { }
 
 
@@ -60,16 +60,9 @@ void UI_RChoice::AddPair(const char *id, const char *label)
 }
 
 
-void UI_RChoice::BeginUpdate()
-{
-  updating = true;
-  modified = false;
-}
-
 bool UI_RChoice::ShowOrHide(const char *id, int new_shown)
 {
   SYS_ASSERT(id);
-  SYS_ASSERT(updating);
 
   option_data_c *P = FindID(id);
 
@@ -79,25 +72,13 @@ bool UI_RChoice::ShowOrHide(const char *id, int new_shown)
   if (P->shown != new_shown)
   {
     P->shown = new_shown;
-    modified = true;
+
+    Recreate(FindMapped());
   }
 
   return true;
 }
 
-bool UI_RChoice::EndUpdate()
-{
-  SYS_ASSERT(updating);
-
-  updating = false;
-
-  if (! modified)
-    return false;
-
-  Recreate(FindMapped());
-
-  return true;
-}
 
 void UI_RChoice::Recreate(option_data_c *LAST)
 {
@@ -236,7 +217,6 @@ int UI_RChoice::FindLabel(const char *lab) const
  
 option_data_c * UI_RChoice::FindMapped() const
 {
-
   for (unsigned int j = 0; j < opt_list.size(); j++)
   {
     option_data_c *P = opt_list[j];
