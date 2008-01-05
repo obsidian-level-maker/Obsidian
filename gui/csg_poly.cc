@@ -575,6 +575,15 @@ struct Compare_SegmentMinX_pred
   }
 };
 
+struct Compare_PolyMinX_pred
+{
+  inline bool operator() (const area_poly_c *A, const area_poly_c *B) const
+  {
+    return A->min_x < B->min_x;
+  }
+};
+
+
 static inline double PerpDist(double x, double y,
                               double x1, double y1, double x2, double y2)
 {
@@ -723,7 +732,7 @@ static void Mug_OverlapPass(void)
       }
 
       // check for sharing a single vertex
-      // (NOTE: **rely** on the fact that all vertices are unique)
+      // Note: **RELYING** on the fact that all vertices are unique
       if (A->start->Match(B->start) || A->start->Match(B->end) ||
           A->end  ->Match(B->start) || A->end  ->Match(B->end))
         continue;
@@ -930,7 +939,7 @@ static void Mug_TraceSegLoops(void)
 {
   // Algorithm:
   //
-  // starting at a particular seg and a particular vertex of
+  // starting at a untraced seg and a particular vertex of
   // that seg, follow the segs around in the tightest loop
   // possible until we get back to the beginning.  The result
   // will form a 'merged_area' (i.e. a "sector" for Doom).
@@ -954,8 +963,8 @@ static void Mug_TraceSegLoops(void)
 static bool GetOppositeSegment(segment_c *S, int side, 
     segment_c **hit, int *hit_side, double along)
 {
-  // Returns false if result was ambiguous (e.g. the only segment
-  // hit was parallel to the casting line, and two-sided).
+  // Returns false if result was ambiguous (e.g. the closest
+  // segment hit was parallel to the casting line).
 
   // Algorithm: cast a line (horizontal or vertical, depending
   // on the source segment's orientation) and test all segments
@@ -1143,6 +1152,8 @@ static region_c *FindIslandParent(region_c *R)
 
 static void ReplaceRegion(region_c *R_old, region_c *R_new)
 {
+  // NOTE: R_new can be NULL
+ 
   for (int i = 0; i < (int)mug_segments.size(); i++)
   {
     segment_c *S = mug_segments[i];
@@ -1189,18 +1200,18 @@ static void Mug_RemoveIslands(void)
 
 static void Mug_AssignAreas(void)
 {
-  // @@
+  // Algorithm:
+
+  // For each area poly, iterate over each line in the loop.
+  // Since vertices are never removed (only added), we will
+  // always be able to find the first vertex of each line.
+  // Check each segment along the line and mark the region_c
+  // on the correct side as belonging to our area_poly.
+  // 
+  // THAT IS NOT ENOUGH ....
+ 
 }
 
-
-
-struct Compare_PolyMinX_pred
-{
-  inline bool operator() (const area_poly_c *A, const area_poly_c *B) const
-  {
-    return A->min_x < B->min_x;
-  }
-};
 
 void CSG2_MergeAreas(void)
 {
@@ -1227,7 +1238,9 @@ void CSG2_MergeAreas(void)
   }
 
   Mug_FindOverlaps();
+
   Mug_TraceSegLoops();
+
   Mug_RemoveIslands();
 
   Mug_AssignAreas();
@@ -1262,7 +1275,7 @@ void CSG2_DumpSegmentsToWAD(void)
 
     R->index = (int)(RNI - mug_regions.begin());
 
-    wad::add_sector(0, "FLAT1", 128, "FLAT1", 200, 0, 0);
+    wad::add_sector(0,"FLAT1", 144,"FLAT1", 255,0,0);
 
     const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
 
