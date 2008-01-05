@@ -318,42 +318,10 @@ function ob_parse_config(name, value)
     return
   end
 
-  if OB_CONFIG[name] then
-    if OB_CONFIG[name] == value then
-      return
-    end
-
-    -- validate some important variables
-    if name == "game" then
-      if not OB_GAMES[value] then
-        con.printf("Ignoring unknown game: %s\n", value)
-        return;
-      end
-    elseif name == "engine" then
-      if not OB_ENGINES[value] then
-        con.printf("Ignoring unknown engine: %s\n", value)
-        return;
-      end
-    elseif name == "theme" then
-      if not OB_THEMES[value] then
-        con.printf("Ignoring unknown theme: %s\n", value)
-        return;
-      end
-    end
-
-    OB_CONFIG[name] = value
-
-    if (name == "game") or (name == "mode") or (name == "engine") then
-      ob_update_all()
-    end
-
-    return
-  end
-
-  -- convert 'value' from string to a boolean
-  value = not (value == "false" or value == "0")
-
   if OB_MODULES[name] then
+    -- convert 'value' from string to a boolean
+    value = not (value == "false" or value == "0")
+
     if OB_MODULES[name].enabled == value then
       return
     end
@@ -377,8 +345,11 @@ function ob_parse_config(name, value)
     ob_update_all()
     return
   end
-    
+
   if OB_OPTIONS[name] then
+    -- convert 'value' from string to a boolean
+    value = not (value == "false" or value == "0")
+
     if OB_OPTIONS[name].enabled == value then
       return
     end
@@ -404,7 +375,37 @@ function ob_parse_config(name, value)
     return
   end
 
-  con.printf("Unknown config variable: %s\n", name)
+
+  if OB_CONFIG[name] and OB_CONFIG[name] == value then
+    return
+  end
+
+  -- validate some important variables
+  if name == "game" then
+    assert(OB_CONFIG.game)
+    if not OB_GAMES[value] then
+      con.printf("Ignoring unknown game: %s\n", value)
+      return
+    end
+  elseif name == "engine" then
+    assert(OB_CONFIG.engine)
+    if not OB_ENGINES[value] then
+      con.printf("Ignoring unknown engine: %s\n", value)
+      return
+    end
+  elseif name == "theme" then
+    assert(OB_CONFIG.theme)
+    if not OB_THEMES[value] then
+      con.printf("Ignoring unknown theme: %s\n", value)
+      return
+    end
+  end
+
+  OB_CONFIG[name] = value
+
+  if (name == "game") or (name == "mode") or (name == "engine") then
+    ob_update_all()
+  end
 end
 
 
