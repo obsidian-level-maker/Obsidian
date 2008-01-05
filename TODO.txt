@@ -19,8 +19,6 @@ General:
 
 -  Deathmatch: initial starting weapon (None,Basic,Heavy) : "Equip"
 
-+  replace non_nil() with assert()
-
 
 GUI:
 
