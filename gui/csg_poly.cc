@@ -403,8 +403,14 @@ public:
   region_c *front;
   region_c *back;
 
+  // temporary value that is only used by Mug_AssignAreas(),
+  // and refers to the current area_poly_c if this segment lies
+  // along it's border (just an efficient boolean test).
+  area_poly_c *border_of;
+
 public:
-  segment_c(vertex_c *_v1, vertex_c *_v2) : start(_v1), end(_v2), front(NULL), back(NULL)
+  segment_c(vertex_c *_v1, vertex_c *_v2) :
+      start(_v1), end(_v2), front(NULL), back(NULL), border_of(NULL)
   { }
 
   ~segment_c()
@@ -420,6 +426,15 @@ public:
   {
     return (other->start == start && other->end   == end) ||
            (other->end   == start && other->start == end);
+  }
+
+  inline vertex_c *Other(const vertex_c *v) const
+  {
+    if (v == start)
+      return end;
+
+    SYS_ASSERT(v == end);
+    return start;
   }
 
   void Kill(void)
@@ -811,12 +826,7 @@ static double     trace_angles;
 
 static void TraceNext(void)
 {
-  vertex_c *next_v;
-
-  if (trace_vert == trace_seg->start)
-    next_v = trace_seg->end;
-  else
-    next_v = trace_seg->start;
+  vertex_c *next_v = trace_seg->Other(trace_vert);
 
   segment_c *best_seg = NULL;
   double     best_angle = 999;
@@ -830,7 +840,7 @@ static void TraceNext(void)
     if (T == trace_seg)
       continue;
 
-    vertex_c *TV2 = (next_v == T->start) ? T->end : T->start;
+    vertex_c *TV2 = T->Other(next_v);
 
     double angle = CalcAngle(next_v->x, next_v->y, TV2->x, TV2->y);
 
@@ -1184,7 +1194,7 @@ static void Mug_RemoveIslands(void)
       region_c *parent = FindIslandParent(R);
 
       ReplaceRegion(R, parent);
-      
+
       mug_regions[i] = NULL; // kill it
       delete R;
     }
@@ -1196,6 +1206,79 @@ static void Mug_RemoveIslands(void)
   ENDP = std::remove(mug_regions.begin(), mug_regions.end(), (region_c*)NULL);
 
   mug_regions.erase(ENDP, mug_regions.end());
+}
+
+
+//------------------------------------------------------------------------
+
+static segment_c *FindAlongSeg(area_vert_c *v1, area_vert_c *v2)
+{
+  double v_angle = CalcAngle(v1->x, v1->y, v2->x, v2->y);
+
+//--  double vdx = v2->x - v1->x;
+//--  double vdy = v2->y - v1->y;
+//--
+//--  // adjust for length, rough is OK
+//--  double v_max = MAX(fabs(fdy), fabs(vdy));
+//--  vdx /= v_max;
+//--  vdy /= v_max;
+ 
+  for (int k = 0; k < (int)v1->segs.size(); k++)
+  {
+    segment_c *S = v1->segs[k];
+
+    vertex_c *other = S->Other(v1);
+
+    double s_angle = CalcAngle(v1->x, v1->y, other->x, other->y);
+
+//--    double sdx = other->x - v1->x;
+//--    double sdy = other->y - v1->y;
+//--
+//--    // seg lies along the line?
+//--    double a = vdx * sdy - vdy * sdx;
+
+    double diff = fabs(v_angle - s_angle);
+    
+    if (diff <= ANGLE_EPSILON)
+      return S;
+
+    // handle corner cases where one angle is very close to 0 and
+    // the other angle is very close to 360.
+    if (fabs(diff) >= 360.0 - ANGLE_EPSILON)
+      return S;
+  }
+
+  // TODO: make this a WARNING instead of fatal error
+  Main_FatalError("CSG2: cannot find segment (angle:%1.1f @ %1.0f,%1.0f)!\n",
+        v_angle, v1->x, v1->y);
+
+  return NULL;  // not found
+}
+
+static void MarkBoundaryRegions(area_poly_c *P)
+{
+  for (int k=0; k < (int)P->verts.size(); k++)
+  {
+    area_vert_c *v1 = P->verts[k];
+    area_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
+
+    double along = 0;
+
+    area_vert_c *V = v1;
+
+    while (V != v2)
+    {
+      segment_c *S = FindAlongSeg(V, v2);
+      if (! S)
+        break;
+
+      ASSOCIATE_REGION(P, V, S);
+
+      S->border_of = P;
+
+      V = S->Other(v1);
+    }
+  }
 }
 
 static void Mug_AssignAreas(void)
@@ -1216,6 +1299,15 @@ static void Mug_AssignAreas(void)
   // the area_poly_c from each "infected" region_c to every
   // neighbour as long as the shared segment is not part of
   // the area_poly_c boundary (no escaping!).
+
+  for (int j=0; j < (int)all_polys.size(); j++)
+  {
+    area_poly_c *P = all_polys[j];
+
+    MarkBoundaryRegions(P);
+
+    MarkInnerRegions(P);
+  }
 }
 
 
