@@ -122,6 +122,9 @@ bool UI_OptionList::SetOption(const char *id, int value)
 
   opt->value = value;
 
+  if (opt->shown != 0)
+    opt->widget->value(opt->value);
+
   return true;
 }
 
@@ -165,6 +168,7 @@ DebugPrintf("UI_OptionList::Recreate begun\n");
     option_data_c *opt = opt_list[i];
 
     Fl_Check_Button *button = opt->widget;
+    SYS_ASSERT(button);
 
 DebugPrintf("UI_OptionList::Recreate [%d] shown:%d inside:%d\n",
 i, (opt->shown ? 1 : 0), (button->inside(this) ? 1 : 0));
@@ -194,6 +198,7 @@ DebugPrintf("UI_OptionList::Recreate changing [%d]\n", i);
         button->deactivate();
     }
 
+DebugPrintf("Button %s value %d\n", opt->id, opt->value);
     button->value(opt->value);
   }
 
@@ -228,6 +233,8 @@ void UI_OptionList::callback_Widget(Fl_Widget *w, void *data)
   
     if (opt->widget == w)
     {
+      opt->value = opt->widget->value();
+        
       (* that->cb_func)(opt, that->cb_data);
       return;
     }
