@@ -73,7 +73,8 @@ area_side_c::~area_side_c()
 
 area_vert_c::area_vert_c() :
       x(0), y(0), side(),
-      line_kind(0), line_tag(0), line_flags(0)
+      line_kind(0), line_tag(0), line_flags(0),
+      partner(NULL)
 {
   memset(line_args, 0, sizeof(line_args));
 }
@@ -82,7 +83,8 @@ area_vert_c::~area_vert_c()
 { }
 
 
-area_poly_c::area_poly_c(area_info_c *_info) : info(_info), verts()
+area_poly_c::area_poly_c(area_info_c *_info) :
+     info(_info), verts(), regions()
 { }
 
 area_poly_c::~area_poly_c()
@@ -527,6 +529,10 @@ static void Mug_MakeSegments(area_poly_c *P)
     vertex_c *new_v2 = Mug_AddVertex(v2->x, v2->y);
 
     Mug_AddSegment(new_v1, new_v2);
+
+    // associate the new vertex with the area_vert
+    v1->partner = new_v1;
+    v2->partner = new_v2;
   }
 }
 
@@ -1211,7 +1217,7 @@ static void Mug_RemoveIslands(void)
 
 //------------------------------------------------------------------------
 
-static segment_c *FindAlongSeg(area_vert_c *v1, area_vert_c *v2)
+static segment_c *FindAlongSeg(vertex_c *v1, vertex_c *v2)
 {
   double v_angle = CalcAngle(v1->x, v1->y, v2->x, v2->y);
 
@@ -1262,21 +1268,32 @@ static void MarkBoundaryRegions(area_poly_c *P)
     area_vert_c *v1 = P->verts[k];
     area_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
 
+    SYS_ASSERT(v1->partner);
+    SYS_ASSERT(v2->partner);
+
     double along = 0;
 
-    area_vert_c *V = v1;
+    vertex_c *V = v1->partner;
 
-    while (V != v2)
+    while (V != v2->partner)
     {
-      segment_c *S = FindAlongSeg(V, v2);
+      segment_c *S = FindAlongSeg(V, v2->partner);
       if (! S)
         break;
 
-      ASSOCIATE_REGION(P, V, S);
+      region_c *R = (S->start == V) ? S->front : S->back;
+
+      if (R)
+        P->regions.push_back(R);
+      else
+      {
+        // DO WHAT ??
+fprintf(stderr, "WARNING: missing region along line loop\n");
+      }
 
       S->border_of = P;
 
-      V = S->Other(v1);
+      V = S->Other(V);
     }
   }
 }
@@ -1306,7 +1323,7 @@ static void Mug_AssignAreas(void)
 
     MarkBoundaryRegions(P);
 
-    MarkInnerRegions(P);
+    // MarkInnerRegions(P);
   }
 }
 
