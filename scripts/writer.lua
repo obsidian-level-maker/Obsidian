@@ -801,7 +801,7 @@ function write_level(lev_name)
 
         -- Hexen linetypes
         if type(L.kind) == "table" then
-          local flags = non_nil(L.flags)
+          local flags = assert(L.flags)
 
           local args = copy_table(L.kind.args)
 
@@ -818,7 +818,7 @@ function write_level(lev_name)
           wad.add_linedef(L.v1.index, L.v2.index,
                 L.front and L.front.index or -1,
                 L.back  and L.back.index  or -1,
-                L.kind or 0, non_nil(L.flags), L.tag or 0, L.args);
+                L.kind or 0, assert(L.flags), L.tag or 0, L.args);
         end
       end
     end
@@ -830,7 +830,7 @@ function write_level(lev_name)
 
       wad.add_thing(
           NORMALIZE(th.x), NORMALIZE(th.y), NORMALIZE(th.z or 0),
-          th.kind.id, th.angle or 0, non_nil(th.flags),
+          th.kind.id, th.angle or 0, assert(th.flags),
           th.tid or 0, th.special or 0, th.args)
     end
   end
@@ -914,7 +914,7 @@ function write_level(lev_name)
       tx_file:write(
         string.format("%d : %d %d %d %d\n",
           th.kind.id, NORMALIZE(th.x), NORMALIZE(th.y),
-          th.angle or 0, non_nil(th.flags)))
+          th.angle or 0, assert(th.flags)))
     end
 
     tx_file:write("THINGS_END\n")

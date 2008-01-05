@@ -381,7 +381,7 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
   Level.quests = {}
 
   local function add_quest(kind, item)
-    local len_probs = non_nil(LEN_PROBS[kind])
+    local len_probs = assert(LEN_PROBS[kind])
     local Quest =
     {
       kind = kind,
@@ -567,13 +567,13 @@ function get_door_chance(c, other)
   assert(probs)
 
   if c.combo.outdoor ~= other.combo.outdoor then
-    return non_nil(probs.out_diff)
+    return assert(probs.out_diff)
 
   elseif c.combo ~= other.combo then
-    return non_nil(probs.combo_diff)
+    return assert(probs.combo_diff)
 
   else
-    return non_nil(probs.normal)
+    return assert(probs.normal)
   end
 end
 
@@ -589,13 +589,13 @@ function get_window_chance(c, other)
   assert(probs)
 
   if c.combo.outdoor ~= other.combo.outdoor then
-    return non_nil(probs.out_diff)
+    return assert(probs.out_diff)
 
   elseif c.combo ~= other.combo then
-    return non_nil(probs.combo_diff)
+    return assert(probs.combo_diff)
 
   else
-    return non_nil(probs.normal)
+    return assert(probs.normal)
   end
 end
 
@@ -1281,7 +1281,7 @@ function plan_sp_level(level, is_coop)
       local c = Q.path[idx]
       c.hallway = true
       c.combo = combo
-      c.room_type = non_nil(GAME.rooms["HALLWAY"])
+      c.room_type = assert(GAME.rooms["HALLWAY"])
       if combo.well_lit then
         c.light = 176
       else
@@ -1342,7 +1342,7 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
     -- use PLAIN type of every other cell
     for zzz, c in ipairs(Q.path) do
       if not c.room_type then
-        c.room_type = non_nil(GAME.rooms["PLAIN"])
+        c.room_type = assert(GAME.rooms["PLAIN"])
       end
     end
   end
@@ -1818,7 +1818,7 @@ con.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
       -- put main quests into basic order
 
       for zzz,Q in ipairs(qlist) do
-        Q.main_pri = non_nil(MODE_PRI[Q.mode]) + con.random()/2
+        Q.main_pri = assert(MODE_PRI[Q.mode]) + con.random()/2
 
         if Q.kind == "boss" and Q.mode == "end" then
           Q,main_pri = Q.main_pri - 1
@@ -1886,7 +1886,7 @@ con.debugf("qlist now:\n%s\n\n", table_to_str(qlist,2))
 
         -- ??? FIXME: add an offset based on sub.prefer_pos
 
-        local main_Q = non_nil(qlist[main_idx])
+        local main_Q = assert(qlist[main_idx])
 
         main_Q.num_children = main_Q.num_children + 1
 
@@ -2093,7 +2093,7 @@ Q.theme.name, Q.combo.name)
         outies[1].quest, outies[1].along, outies[1].combo)
 
       c.scenic = "outdoor"
-      c.room_type = non_nil(GAME.rooms["SCENIC"])
+      c.room_type = assert(GAME.rooms["SCENIC"])
 
       -- Experimental "SOLID SCENIC" cells
       if #innies >= 1 and rand_odds(66) and

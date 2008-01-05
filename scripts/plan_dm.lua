@@ -304,7 +304,7 @@ function plan_dm_arena(level)
 
         -- use PLAIN rooms more often in DM since they flow better
         if rand_odds(35) then
-          c.room_type = non_nil(GAME.rooms["PLAIN"])
+          c.room_type = assert(GAME.rooms["PLAIN"])
         else
           c.room_type = get_rand_roomtype(c.quest.theme)
         end

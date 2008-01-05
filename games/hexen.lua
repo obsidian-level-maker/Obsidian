@@ -1824,7 +1824,7 @@ function hexen_get_levels(episode)
 
     local L = level_list[map]
 
-    local len_probs = non_nil(XN_QUEST_LEN_PROBS[kind])
+    local len_probs = assert(XN_QUEST_LEN_PROBS[kind])
 
     local Quest =
     {
@@ -1913,7 +1913,7 @@ function hexen_get_levels(episode)
 
   for xxx,CL in ipairs(GAME.classes) do
     for piece = 1,3 do
-      local name = non_nil(XN_WEAPON_PIECES[CL][piece])
+      local name = assert(XN_WEAPON_PIECES[CL][piece])
       add_quest(4, "weapon", name, "sub")
     end
   end
@@ -1929,8 +1929,8 @@ function hexen_get_levels(episode)
   -- weapon quests
 
   for xxx,CL in ipairs(GAME.classes) do
-    local weap_2 = non_nil(XN_WEAPON_NAMES[CL][2])
-    local weap_3 = non_nil(XN_WEAPON_NAMES[CL][3])
+    local weap_2 = assert(XN_WEAPON_NAMES[CL][2])
+    local weap_3 = assert(XN_WEAPON_NAMES[CL][3])
 
     add_quest(rand_index_by_probs { 7, 1, 1 }, "weapon", weap_2, "sub")
     add_quest(rand_index_by_probs { 2, 7, 7 }, "weapon", weap_3, "sub")

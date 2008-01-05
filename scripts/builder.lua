@@ -700,7 +700,7 @@ function B_lift(c, rmodel, bx,by, z1,z2, dir, long, deep)
 
   local lift_def = GAME.lifts["fast"]
   if not lift_def or rand_odds(20) then
-    lift_def = non_nil(GAME.lifts["slow"])
+    lift_def = assert(GAME.lifts["slow"])
   end
 
   local dx, dy = dir_to_delta(dir)
@@ -1034,8 +1034,8 @@ end
 
 function B_exit_elevator(c, x, y, side)
 
-  local def = non_nil(GAME.misc_fabs["elevator"])
-  local fab = non_nil(PREFABS[def.prefab])
+  local def = assert(GAME.misc_fabs["elevator"])
+  local fab = assert(PREFABS[def.prefab])
 
   local parm =
   {
@@ -2952,10 +2952,10 @@ function build_borders()
 
     if link.long == 3 then
       if c.combo.arch then
-        return non_nil(GAME.misc_fabs[c.combo.arch])
+        return assert(GAME.misc_fabs[c.combo.arch])
       end
       if c.quest.theme.arch and rand_odds(50) then
-        return non_nil(GAME.misc_fabs[c.quest.theme.arch])
+        return assert(GAME.misc_fabs[c.quest.theme.arch])
       end
     end
 
@@ -3458,12 +3458,12 @@ end
     local def = GAME.misc_fabs["fence_wire_STD"]
     assert(def)
 
-    local fab = non_nil(PREFABS[def.prefab])
+    local fab = assert(PREFABS[def.prefab])
     local parm = { low_h = D.wire_h }
 
     -- Experimental shite
     local def2 = GAME.misc_fabs["fence_beam_BLUETORCH"]
-    local fab2 = def2 and non_nil(PREFABS[def2.prefab])
+    local fab2 = def2 and assert(PREFABS[def2.prefab])
 
     for x = x1,x2 do for y = y1,y2 do
       local B = PLAN.blocks[x][y]
@@ -3572,11 +3572,11 @@ end
         end
       else
         local DEFS = { "window_narrow", "window_rail_nar_MIDGRATE", "window_cross_big" } ---!!!! FIXME: not hard coded
-        local def_name = non_nil(DEFS[spot.long])
+        local def_name = assert(DEFS[spot.long])
 
         local def = GAME.win_fabs and GAME.win_fabs[def_name]
         if def then
-          local fab = non_nil(PREFABS[def.prefab])
+          local fab = assert(PREFABS[def.prefab])
           B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, spot.x,spot.y,10-dir)
         end
       end
@@ -6538,7 +6538,8 @@ con.debugf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
   local function player_angle(c)
 
     if c.q_spot and c.q_spot.purpose == "player" then
-      local dir = non_nil(c.q_spot.q_dir)
+      local dir = c.q_spot.q_dir
+      assert(dir ~= nil)
 
       local dir2 = c.exit_dir or c.entry_dir
 
@@ -6583,7 +6584,7 @@ con.debugf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
   end
 
   local function add_boss(c)
-    local name = non_nil(c.quest.item)
+    local name = assert(c.quest.item)
 
     -- FIXME!!! boss_brain levels
     if name == "boss_brain" then return end
@@ -6718,15 +6719,16 @@ con.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     local def = GAME.misc_fabs[sel(c.quest.return_args, "gate_FORWARD", "gate_BACK")]
     assert(def)
 
-    local fab = non_nil(PREFABS[def.prefab])
+    local fab = assert(PREFABS[def.prefab])
 
     local K = c.q_spot
     assert(K)
     assert(fab.long <= K.w and fab.deep <= K.h)
 
-    local parm = { kind=non_nil(c.quest.gate_kind) }
+    local parm = { kind=assert(c.quest.gate_kind) }
 
-    local dir = non_nil(K.q_dir)
+    local dir = K.q_dir
+    assert(dir ~= nil)
 
     B_prefab(c, fab, def.skin, parm, K.rmodel, c.combo, K.x1, K.y1, dir)
 
@@ -6754,7 +6756,7 @@ con.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     local def = GAME.item_fabs[c.quest.item]
     assert(def)
 
-    local fab = non_nil(PREFABS[def.prefab])
+    local fab = assert(PREFABS[def.prefab])
 
     local K = c.q_spot
     assert(K)
@@ -6773,7 +6775,7 @@ con.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
 
     if not def then
       if c.is_exit then
-        def = non_nil(c.combo.switch)
+        def = assert(c.combo.switch)
       else
         local info = GAME.switches[c.quest.item]
         if not info then
@@ -6788,7 +6790,7 @@ con.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
             if add_switch(c, false, info.switch2) then return true end
           end
         end
-        def = non_nil(info.switch)
+        def = assert(info.switch)
       end
     end
 
@@ -6849,8 +6851,8 @@ fab.name, c.x,c.y, x,y,dir)
   end
 
   local function add_exit_elevator(c)
-    local def = non_nil(GAME.misc_fabs["elevator"])
-    local fab = non_nil(PREFABS[def.prefab])
+    local def = assert(GAME.misc_fabs["elevator"])
+    local fab = assert(PREFABS[def.prefab])
 
     local want_dir = 4
     if (c.entry_dir == 6) then want_dir = 6 end
@@ -6904,7 +6906,7 @@ fab.name, c.x,c.y, x,y,dir)
 
     local name = rand_key_by_probs(list)
 
-    return non_nil(fab_tab[name])
+    return assert(fab_tab[name])
   end
 
   local function add_wall_stuff(c)
@@ -6916,21 +6918,21 @@ fab.name, c.x,c.y, x,y,dir)
     if not def and c.room_type and c.room_type.wall_fabs then
       local name = rand_key_by_probs(c.room_type.wall_fabs)
       if name ~= "other" then
-        def = non_nil(GAME.wall_fabs[name])
+        def = assert(GAME.wall_fabs[name])
       end
     end
 
     if not def and c.combo.wall_fabs then
       local name = rand_key_by_probs(c.combo.wall_fabs)
       if name ~= "other" then
-        def = non_nil(GAME.wall_fabs[name])
+        def = assert(GAME.wall_fabs[name])
       end
     end
 
     if not def and c.quest.theme.wall_fabs then
       local name = rand_key_by_probs(c.quest.theme.wall_fabs)
       if name ~= "other" then
-        def = non_nil(GAME.wall_fabs[name])
+        def = assert(GAME.wall_fabs[name])
       end
     end
 
@@ -6953,7 +6955,7 @@ fab.name, c.x,c.y, x,y,dir)
 
   local function try_add_prefab(c, def, is_feature)
 
-    local fab = non_nil(PREFABS[def.prefab])
+    local fab = assert(PREFABS[def.prefab])
 
     assert(def.skin)
 
@@ -7416,7 +7418,7 @@ function build_depots()
     assert(GAME.depot_info)
 
     tele_sec = copy_block(sec)
-    tele_sec.walk_kind = non_nil(GAME.depot_info.teleport_kind)
+    tele_sec.walk_kind = assert(GAME.depot_info.teleport_kind)
 
     local m1,m2 = 1,4
     local t1,t2 = 6,BW

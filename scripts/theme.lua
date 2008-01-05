@@ -67,8 +67,8 @@ function compute_pow_factors()
       error("Monster has no definition?? : " .. tostring(name))
     end
 
-    info.r = non_nil(def.r)
-    info.h = non_nil(def.h)
+    info.r = assert(def.r)
+    info.h = assert(def.h)
   end
 end
 
@@ -256,7 +256,7 @@ function get_rand_door_kind(theme, long)
 
     local probs = {}
     for name,info in pairs(GAME.door_fabs) do
-      local fab = non_nil(PREFABS[info.prefab])
+      local fab = assert(PREFABS[info.prefab])
       local prob = 10
 
       if pass == 1 then
@@ -277,8 +277,8 @@ function get_rand_door_kind(theme, long)
     end
 
     if not table_empty(probs) then
-      local name = non_nil(rand_key_by_probs(probs))
-      return non_nil(GAME.door_fabs[name])
+      local name = assert(rand_key_by_probs(probs))
+      return assert(GAME.door_fabs[name])
     end
   end -- for pass
 

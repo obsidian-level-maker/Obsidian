@@ -310,7 +310,7 @@ function initial_hmodels()
     MODELS[CL] = { }
 
     for zzz,SK in ipairs(SKILLS) do
-      MODELS[CL][SK] = copy_table(non_nil(GAME.initial_model[CL]))
+      MODELS[CL][SK] = copy_table(assert(GAME.initial_model[CL]))
 
       MODELS[CL][SK].class = CL
       MODELS[CL][SK].skill = SK
