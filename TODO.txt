@@ -5,7 +5,7 @@ TODO
 
 New Window Layout:
  
--  initial setup for OB_CONFIG ('game' field etc)
++  remove the need for BeginUpdate..EndUpdate
 
 -  mod_box and option_box: send changes to LUA
    (need a new func like Script_SetConfig, e.g. SetModule).
