@@ -497,7 +497,8 @@ function ob_init()
     return list[1] and list[1].name
   end
 
-  OB_CONFIG.seed   = 0
+  OB_CONFIG.seed = 0
+  OB_CONFIG.mode = "sp"
 
   OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
   OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
