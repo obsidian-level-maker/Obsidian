@@ -33,6 +33,10 @@
 
 class merged_area_c;
 
+// private classes
+class vertex_c;
+class region_c;
+
 
 class slope_points_c
 {
@@ -106,6 +110,9 @@ public:
 
   byte line_args[5];
 
+  // this only used temporary during the merger
+  vertex_c *partner;
+
 public:
    area_vert_c();
   ~area_vert_c();
@@ -121,6 +128,9 @@ public:
 
   double min_x, min_y;
   double max_x, max_y;
+
+  // this only used temporary during the merger
+  std::vector<region_c *> regions;
 
 public:
    area_poly_c(area_info_c *_info);
