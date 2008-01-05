@@ -311,7 +311,7 @@ end
 
 
 function ob_parse_config(name, value)
-  assert(name and value)
+  assert(name and value and type(value) == "string")
 
   if name == "seed" then
     OB_CONFIG[name] = tonumber(value) or 0
