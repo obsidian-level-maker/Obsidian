@@ -397,44 +397,6 @@ void Script_Close(void)
 }
 
 
-static void UpdateEngines(const char *signame, void *priv_dat)
-{
-  main_win->game_box->engine->BeginUpdate();
-
-  Script_DoRun("ob_update_engines");
-
-  if (main_win->game_box->engine->EndUpdate())
-    Signal_Raise("engine");
-}
-
-static void UpdateThemes(const char *signame, void *priv_dat)
-{
-  main_win->level_box->theme->BeginUpdate();
-
-  Script_DoRun("ob_update_themes");
-
-  main_win->level_box->theme->EndUpdate();
-}
-
-static void UpdateModules(const char *signame, void *priv_dat)
-{
-  main_win->mod_box->opts->BeginUpdate();
-
-  Script_DoRun("ob_update_modules");
-
-  main_win->mod_box->opts->EndUpdate();
-}
-
-static void UpdateOptions(const char *signame, void *priv_dat)
-{
-  main_win->option_box->opts->BeginUpdate();
-
-  Script_DoRun("ob_update_options");
-
-  main_win->option_box->opts->EndUpdate();
-}
-
-
 static void add_extra_script(const char *name, int flags, void *priv_dat)
 {
   std::vector<const char*> *list = (std::vector<const char*> *) priv_dat;
@@ -542,28 +504,9 @@ void Script_Load(void)
   main_win->game_box->engine->Recreate();
   main_win->level_box->theme->Recreate();
 
-  main_win->mod_box->opts->Commit();
-  main_win->option_box->opts->Commit();
+  main_win->mod_box->opts->Recreate();
+  main_win->option_box->opts->Recreate();
 
-#if 0
-  Signal_Watch("game",   UpdateEngines);
-  Signal_Watch("mode",   UpdateEngines);
-
-  Signal_Watch("game",   UpdateThemes);
-  Signal_Watch("mode",   UpdateThemes);
-  Signal_Watch("engine", UpdateThemes);
-  Signal_Watch("module", UpdateThemes);
-
-  Signal_Watch("game",   UpdateModules);
-  Signal_Watch("mode",   UpdateModules);
-  Signal_Watch("engine", UpdateModules);
-  Signal_Watch("module", UpdateModules);
-
-  Signal_Watch("game",   UpdateOptions);
-  Signal_Watch("mode",   UpdateOptions);
-  Signal_Watch("engine", UpdateOptions);
-  Signal_Watch("module", UpdateOptions);
-#endif
 }
 
 
@@ -605,37 +548,17 @@ void Script_SetConfig(const char *key, const char *value)
     return;
   }
  
-#if 0  // OLD (DIRECT) WAY
-  lua_getglobal(LUA_ST, "OB_CONFIG");
+  const char *params[3];
+
+  params[0] = key;
+  params[1] = value;
+  params[2] = NULL; // end of list
+
+  if (! Script_DoRun("ob_parse_config", 0, params))
   {
-    lua_pushstring(LUA_ST, key);
-    lua_pushstring(LUA_ST, value);
-
-    lua_settable(LUA_ST, -3);
+    /* DO WHAT ?? */
+    DebugPrintf("Failed trying to call 'ob_parse_config'\n");
   }
-  lua_pop(LUA_ST, 1);
-#endif
-
-  main_win->game_box->engine->BeginUpdate();
-  main_win->mod_box->opts->BeginUpdate();
-  main_win->option_box->opts->BeginUpdate();
-  main_win->level_box->theme->BeginUpdate();
-  {
-    const char *params[3];
-
-    params[0] = key;
-    params[1] = value;
-    params[2] = NULL; // end of list
-
-    if (! Script_DoRun("ob_parse_config", 0, params))
-    { /* DO WHAT ?? */
-      DebugPrintf("ob_parse_config FAILED\n");
-    }
-  }
-  main_win->game_box->engine->EndUpdate();
-  main_win->mod_box->opts->EndUpdate();
-  main_win->option_box->opts->EndUpdate();
-  main_win->level_box->theme->EndUpdate();
 }
 
 
