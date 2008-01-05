@@ -19,6 +19,7 @@
 
 function test_csg()
 
+--[[
   local START_F  = "FLAT22"
   local START_W  = "COMPBLUE"
 
@@ -36,25 +37,46 @@ function test_csg()
 
   local BEAM_F   = "FLAT1"
   local BEAM_W   = "SUPPORT2"
+--]]
 
 --[[ QUAKE 1
-  START_F  = "tech01_1"
-  START_W  = "tech01_1"
+  local START_F  = "tech01_1"
+  local START_W  = "tech01_1"
 
-  ROOM_F  = "ground1_1"
-  ROOM_W  = "ground1_1"
+  local ROOM_F  = "ground1_1"
+  local ROOM_W  = "ground1_1"
 
-  PILLAR_F = "metal1_1"
-  PILLAR_W = "metal1_1"
+  local PILLAR_F = "metal1_1"
+  local PILLAR_W = "metal1_1"
 
-  NICHE_F  = "city1_4"
-  NICHE_W  = "city1_4"
+  local NICHE_F  = "city1_4"
+  local NICHE_W  = "city1_4"
 
-  STAIR_F   = "rock1_2"
-  STAIR_W   = "rock1_2"
+  local STAIR_F  = "rock1_2"
+  local STAIR_W  = "rock1_2"
 
-  BEAM_F   = "wood1_1"
-  BEAM_W   = "wood1_1"
+  local BEAM_F   = "wood1_1"
+  local BEAM_W   = "wood1_1"
+--]]
+
+-- [[ OPEN ARENA
+  local START_F  = "e7/e7sbrickfloor"
+  local START_W  = "e7/e7sbrickfloor"
+
+  local ROOM_F   = "e7/e7panelwood"
+  local ROOM_W   = "e7/e7panelwood"
+
+  local PILLAR_F = "e7/e7bricks01"
+  local PILLAR_W = "e7/e7bricks01"
+
+  local NICHE_F  = "e7/e7brnmetal"
+  local NICHE_W  = "e7/e7brnmetal"
+
+  local STAIR_F  = "evil6_floors/e6c_floor"
+  local STAIR_W  = "evil6_floors/e6c_floor"
+
+  local BEAM_F   = "e7/e7beam01"
+  local BEAM_W   = "e7/e7beam01"
 --]]
 
 
@@ -219,7 +241,7 @@ function test_csg()
     t_tex=ROOM_F, b_tex=ROOM_F, w_tex=ROOM_W,
   },
   {
-    { x=-320, y=  64 },
+    { x=-320, y=  64-32 }, --!!!!!!
     { x=-320, y= 512 },
     { x=-192, y= 512 },
   },
@@ -233,7 +255,7 @@ function test_csg()
   {
     { x= 192, y= 512 },
     { x= 320, y= 512 },
-    { x= 320, y=  64 },
+    { x= 320, y=  64-32 }, --!!!!!!
   },
   { z1=MIN_Z, z2=MAX_Z })
 
