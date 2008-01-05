@@ -325,7 +325,8 @@ static const luaL_Reg console_lib[] =
 //------------------------------------------------------------------------
 
 // forward decl
-bool Script_DoRun(const char *func_name);
+static bool Script_DoRun(const char *func_name, int nresult=0,
+                         const char **params = NULL);
 
 
 int Script_RegisterLib(const char *name, const luaL_Reg *reg)
@@ -620,9 +621,16 @@ void Script_SetConfig(const char *key, const char *value)
   main_win->option_box->opts->BeginUpdate();
   main_win->level_box->theme->BeginUpdate();
   {
+    const char *params[3];
 
-//!!!!!!    FIXME  call  ob_parse_config
+    params[0] = key;
+    params[1] = value;
+    params[2] = NULL; // end of list
 
+    if (! Script_DoRun("ob_parse_config", 0, params))
+    { /* DO WHAT ?? */
+      DebugPrintf("ob_parse_config FAILED\n");
+    }
   }
   main_win->game_box->engine->EndUpdate();
   main_win->mod_box->opts->EndUpdate();
@@ -631,7 +639,7 @@ void Script_SetConfig(const char *key, const char *value)
 }
 
 
-bool Script_DoRun(const char *func_name)
+static bool Script_DoRun(const char *func_name, int nresult, const char **params)
 {
   lua_getglobal(LUA_ST, "ob_traceback");
  
@@ -643,7 +651,14 @@ bool Script_DoRun(const char *func_name)
   if (lua_type(LUA_ST, -1) == LUA_TNIL)
     Main_FatalError("LUA script problem: missing function '%s'", func_name);
 
-  int status = lua_pcall(LUA_ST, 0, 1, -2);
+  int nargs = 0;
+  if (params)
+  {
+    for (; *params; params++, nargs++)
+      lua_pushstring(LUA_ST, *params);
+  }
+
+  int status = lua_pcall(LUA_ST, nargs, nresult, -2-nargs);
   if (status != 0)
   {
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
@@ -651,7 +666,8 @@ bool Script_DoRun(const char *func_name)
     DLG_ShowError("LUA script error:\n%s", msg);
   }
  
-  lua_pop(LUA_ST, 1);
+  // remove the traceback function
+  lua_remove(LUA_ST, -1-nresult);
 
   return (status == 0) ? true : false;
 }
@@ -662,15 +678,17 @@ bool Script_Build(void)
 {
   Script_SetConfig("seed", main_win->game_box->get_Seed());
 
-  if (! Script_DoRun("ob_build_cool_shit"))
+  if (! Script_DoRun("ob_build_cool_shit", 1))
     return false;
 
   const char *res = lua_tolstring(LUA_ST, -1, NULL);
+
+  // remove result from lua stack
+  lua_pop(LUA_ST, 1);
 
   if (res && strcmp(res, "ok") == 0)
     return true;
 
   return false;
 }
-
 
