@@ -96,20 +96,16 @@ public:
   // already exists, that option is replaced instead.
   // The option will begin as not shown (shown == 0).
 
-    void BeginUpdate();
-    
-    bool ShowOrHide(const char *id, int value);
+  bool ShowOrHide(const char *id, int value);
 
-    void EndUpdate();
 
-  
   bool SetOption(const char *id, int value);
 
 //  bool ShowOption(const char *id, int shown);
 
   void IterateOptions(option_iter_f func, void *data);
 
-  void Commit();
+  void Recreate();
   // this must be called after any changes to the option list
   // have been made.
 

@@ -125,10 +125,6 @@ bool UI_OptionList::SetOption(const char *id, int value)
   return true;
 }
 
-void UI_OptionList::BeginUpdate()
-{
-  // updating = true;
-}
 
 bool UI_OptionList::ShowOrHide(const char *id, int shown)
 {
@@ -137,19 +133,15 @@ bool UI_OptionList::ShowOrHide(const char *id, int shown)
   if (! opt)
     return false;
 
-  opt->shown = shown;
+  if (opt->shown != shown)
+  {
+    opt->shown = shown;
+    Recreate();
+  }
 
   return true;
 }
 
-void UI_OptionList::EndUpdate()
-{
-  // updating = false;
-  // if (! modified)
-  //   return;
-
-  Commit();
-}
 
 void UI_OptionList::IterateOptions(option_iter_f func, void *data)
 {
@@ -161,25 +153,25 @@ void UI_OptionList::IterateOptions(option_iter_f func, void *data)
   }
 }
 
-void UI_OptionList::Commit()
+void UI_OptionList::Recreate()
 {
   // FIXME: visit in correct order (shown)
 
   int cy = y();
 
-DebugPrintf("UI_OptionList::Commit begun\n");
+DebugPrintf("UI_OptionList::Recreate begun\n");
   for (unsigned int i = 0; i < opt_list.size(); i++)
   {
     option_data_c *opt = opt_list[i];
 
     Fl_Check_Button *button = opt->widget;
 
-DebugPrintf("UI_OptionList::Commit [%d] shown:%d inside:%d\n",
+DebugPrintf("UI_OptionList::Recreate [%d] shown:%d inside:%d\n",
 i, (opt->shown ? 1 : 0), (button->inside(this) ? 1 : 0));
 
     if ((opt->shown ? 1 : 0) != (button->inside(this) ? 1 : 0))
     {
-DebugPrintf("UI_OptionList::Commit changing [%d]\n", i);
+DebugPrintf("UI_OptionList::Recreate changing [%d]\n", i);
       if (opt->shown > 0)
         this->add(button);
       else
