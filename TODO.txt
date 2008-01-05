@@ -5,8 +5,6 @@ TODO
 
 New Window Layout:
  
-+  remove the need for BeginUpdate..EndUpdate
-
 -  mod_box and option_box: send changes to LUA
    (need a new func like Script_SetConfig, e.g. SetModule).
    also need to Signal_Raise("module") etc.
