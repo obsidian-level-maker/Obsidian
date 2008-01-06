@@ -3,10 +3,18 @@ TODO
 ====
 
 
-New Window Layout:
+CSG Polygoniser:
+
+-  store results of CSG_MergeAreas() in a usable format
+   (turn regions into line loops ?)
+
+-  csg_doom: proper sector analysis code
+
+
+GUI:
+
++  reading and writing the config file (via LUA code) 
  
-?  use LUA code for handling the config file
-   (not everything though)
    -  on serious script errors: remember it, so that we
       don't try calling into LUA to write the config.
 
