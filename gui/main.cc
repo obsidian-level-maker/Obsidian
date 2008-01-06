@@ -33,7 +33,6 @@
 #include "g_lua.h"
 #include "g_wolf.h"
 
-#include "csg_poly.h"
 #include "ui_chooser.h"
 
 
@@ -45,6 +44,10 @@
 
 const char *working_path = NULL;
 const char *install_path = NULL;
+
+
+// skip inclusion of the large csg_poly.h header
+extern void CSG2_Init(void);
 
 
 /* ----- user information ----------------------------- */
