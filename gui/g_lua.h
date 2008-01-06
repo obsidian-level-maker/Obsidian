@@ -38,3 +38,6 @@ bool Script_Build(void);
 ///---void Script_UpdateTheme(void);
 
 #endif // __SCRIPTING_HEADER__
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

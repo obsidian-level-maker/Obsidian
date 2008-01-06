@@ -29,3 +29,6 @@ int ArgvFind(char short_name, const char *long_name, int *num_params = NULL);
 bool ArgvIsOption(int index);
 
 #endif /* __LIB_ARGV_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

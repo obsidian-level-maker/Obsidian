@@ -26,3 +26,6 @@ const byte *Image_MakePatch(int what, int *length, int dest_w, const char *game)
 void Image_FreePatch(const byte *pat);
 
 #endif /* __OBLIGE_IMAGE_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

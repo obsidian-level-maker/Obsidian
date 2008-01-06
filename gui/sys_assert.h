@@ -68,3 +68,6 @@ void AssertFail(const char *msg, ...);
 // throw an assertion exception with the given message.
 
 #endif  /* __SYS_ASSERT__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

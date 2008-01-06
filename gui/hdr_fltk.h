@@ -63,3 +63,6 @@
 // #include "zf_input.h"
 
 #endif // __OB_HDR_FLTK__
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

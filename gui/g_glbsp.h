@@ -24,3 +24,6 @@ void GB_Ticker(void);
 bool GB_BuildNodes(const char *filename, const char *out_name);
 
 #endif /* __G_GLBSP_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

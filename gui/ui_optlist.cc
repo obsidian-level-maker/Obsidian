@@ -243,3 +243,6 @@ void UI_OptionList::callback_Widget(Fl_Widget *w, void *data)
   DebugPrintf("UI_OptionList::callback_Widget: cannot find widget %p\n", w);
 }
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

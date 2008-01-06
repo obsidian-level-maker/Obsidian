@@ -164,3 +164,6 @@ void Signal_Raise(const char *name)
   }
 }
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

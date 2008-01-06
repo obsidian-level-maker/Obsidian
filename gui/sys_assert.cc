@@ -65,3 +65,6 @@ void AssertFail(const char *msg, ...)
   Main_FatalError("Sorry, an internal error occurred.\n%s", buffer);
 }
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

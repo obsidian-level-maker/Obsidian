@@ -615,3 +615,6 @@ bool Script_Build(void)
   return false;
 }
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

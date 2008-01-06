@@ -192,3 +192,6 @@ char *Select_Output_File(void)
   return name;
 }
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

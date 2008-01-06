@@ -23,3 +23,6 @@ bool Cookie_Load(const char *filename);
 bool Cookie_Save(const char *filename);
 
 #endif /* __OBLIGE_COOKIE_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

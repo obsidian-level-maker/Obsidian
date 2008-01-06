@@ -162,3 +162,6 @@ void UI_MiniMap::DrawPixel(int x, int y, u8_t r, u8_t g, u8_t b)
   pos[2] = b;
 }
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

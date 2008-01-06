@@ -193,3 +193,6 @@ bool Cookie_Save(const char *filename)
   return true;
 }
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

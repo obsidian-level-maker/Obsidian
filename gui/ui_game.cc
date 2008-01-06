@@ -334,3 +334,6 @@ const char *UI_Game::get_Seed()
   return seed->value();
 }
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

@@ -31,3 +31,6 @@ void Main_FatalError(const char *msg, ...);
 void Main_Ticker();
 
 #endif /* __OBLIGE_MAIN_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

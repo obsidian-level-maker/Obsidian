@@ -33,3 +33,6 @@
 #include "ui_window.h"
 
 #endif /* __OB_HDR_UI_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

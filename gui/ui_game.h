@@ -79,3 +79,6 @@ private:
 };
 
 #endif /* __UI_GAME_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

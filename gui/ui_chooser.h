@@ -28,3 +28,6 @@ bool UI_SetLastFile(const char *filename);
 const char *UI_GetLastFile(void);
 
 #endif /* __UI_CHOOSER_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

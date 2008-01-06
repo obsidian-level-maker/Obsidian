@@ -315,3 +315,6 @@ void UI_Level::setup_Light()
   light->Recreate();
 }
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

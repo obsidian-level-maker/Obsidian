@@ -32,3 +32,6 @@ typedef unsigned int   u32_t;
 typedef u8_t byte;
 
 #endif  /* __SYS_TYPE_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

@@ -214,3 +214,6 @@ void UI_File::browse_callback(Fl_Widget *w, void *data)
   }
 }
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

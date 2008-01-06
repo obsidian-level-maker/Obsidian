@@ -66,3 +66,6 @@ extern UI_MainWin * main_win;
 
 
 #endif /* __UI_WINDOW_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

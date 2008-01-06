@@ -142,3 +142,6 @@ void UI_ModOptions::Locked(bool value)
     opts->activate();
   }
 }
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

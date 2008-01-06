@@ -39,3 +39,6 @@ void Signal_Raise(const char *name);
 // looping will be detected and cause a fatal error).
 
 #endif /* __LIB_SIGNAL_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

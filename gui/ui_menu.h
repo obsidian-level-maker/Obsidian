@@ -27,3 +27,6 @@ Fl_Menu_Bar
 * MenuCreate(int x, int y, int w, int h);
 
 #endif /* __UI_MENU_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

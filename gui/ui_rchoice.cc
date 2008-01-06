@@ -236,3 +236,6 @@ DebugPrintf("[ %d = %s : map=%d %s\n", j, P->id, P->mapped, P->shown ? "Shown" :
 }
 #endif
 
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

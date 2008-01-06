@@ -131,3 +131,6 @@ void UI_MainWin::Locked(bool value)
 //!!!!  mod_box   ->Locked(value);
 //!!!!  option_box->Locked(value);
 }
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

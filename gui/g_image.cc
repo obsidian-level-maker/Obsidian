@@ -377,3 +377,6 @@ void Image_FreePatch(const byte *pat)
 {
   delete[] pat;
 }
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

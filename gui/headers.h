@@ -54,3 +54,6 @@
 #define MSG_BUF_LEN  2000
 
 #endif /* __OBLIGE_INCLUDES_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

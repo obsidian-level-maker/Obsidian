@@ -75,3 +75,6 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
 // or a negative value on error (SCAN_ERR_xx value).
 
 #endif /* __LIB_FILE_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

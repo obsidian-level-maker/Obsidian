@@ -51,3 +51,6 @@ private:
 };
 
 #endif /* __UI_FILE_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

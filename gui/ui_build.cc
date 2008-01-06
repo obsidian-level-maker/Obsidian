@@ -226,3 +226,6 @@ void UI_Build::quit_callback(Fl_Widget *w, void *data)
 {
   main_win->action = UI_MainWin::QUIT;
 }
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

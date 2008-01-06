@@ -51,3 +51,6 @@ public:
 };
 
 #endif /* __UI_MAP_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab
