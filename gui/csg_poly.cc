@@ -101,11 +101,9 @@ void area_poly_c::ComputeBBox()
   max_x = -999999.9;
   max_y = -999999.9;
 
-  std::vector<area_vert_c *>::iterator VI;
-
-  for (VI = verts.begin(); VI != verts.end(); VI++)
+  for (unsigned int i = 0; i < verts.size(); i++)
   {
-    area_vert_c *V = *VI;
+    area_vert_c *V = verts[i];
 
     if (V->x < min_x) min_x = V->x;
     if (V->x > max_x) max_x = V->x;
@@ -1301,11 +1299,11 @@ void CSG2_DumpSegmentsToWAD(void)
 
   int total_vert = 0;
 
-  std::vector<merge_vertex_c *>::iterator VI;
+  unsigned int i;
 
-  for (VI = mug_vertices.begin(); VI != mug_vertices.end(); VI++)
+  for (i = 0; i < mug_vertices.size(); i++)
   {
-    merge_vertex_c *V = *VI;
+    merge_vertex_c *V = mug_vertices[i];
     
     V->index = total_vert;
     total_vert++;
@@ -1314,13 +1312,11 @@ void CSG2_DumpSegmentsToWAD(void)
   }
 
 
-  std::vector<merge_region_c *>::iterator RNI;
-
-  for (RNI = mug_regions.begin(); RNI != mug_regions.end(); RNI++)
+  for (i = 0; i < mug_regions.size(); i++)
   {
-    merge_region_c *R = *RNI;
+    merge_region_c *R = mug_regions[i];
 
-    R->index = (int)(RNI - mug_regions.begin());
+    R->index = (int)i;
 
     const char *flat = "FLAT1";
  
@@ -1345,11 +1341,9 @@ P->info->b_tex.c_str(), P->info->t_tex.c_str());
   }
 
 
-  std::vector<merge_segment_c *>::iterator SGI;
-
-  for (SGI = mug_segments.begin(); SGI != mug_segments.end(); SGI++)
+  for (i = 0; i < mug_segments.size(); i++)
   {
-    merge_segment_c *S = *SGI;
+    merge_segment_c *S = mug_segments[i];
 
     SYS_ASSERT(S);
     SYS_ASSERT(S->start);
