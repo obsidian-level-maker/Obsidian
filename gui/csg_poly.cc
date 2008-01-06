@@ -463,7 +463,7 @@ public:
 
   int index;
 
-  std::vector<area_poly_c *> areas;
+  std::vector<area_poly_c *> areas;  // UGH, NOT USED!
 
 public:
   region_c() : faces_out(false), index(-1), areas()
@@ -1217,31 +1217,28 @@ static void Mug_RemoveIslands(void)
 
 //------------------------------------------------------------------------
 
+static bool AreaHasRegion(area_poly_c *P, region_c *R)
+{
+  for (unsigned int j = 0; j < P->regions.size(); j++)
+  {
+    if (R == P->regions[j])
+      return true;
+  }
+
+  return false; // nope
+}
+
 static segment_c *FindAlongSeg(vertex_c *v1, vertex_c *v2)
 {
   double v_angle = CalcAngle(v1->x, v1->y, v2->x, v2->y);
 
-//--  double vdx = v2->x - v1->x;
-//--  double vdy = v2->y - v1->y;
-//--
-//--  // adjust for length, rough is OK
-//--  double v_max = MAX(fabs(fdy), fabs(vdy));
-//--  vdx /= v_max;
-//--  vdy /= v_max;
- 
-  for (int k = 0; k < (int)v1->segs.size(); k++)
+  for (unsigned int k = 0; k < v1->segs.size(); k++)
   {
     segment_c *S = v1->segs[k];
 
     vertex_c *other = S->Other(v1);
 
     double s_angle = CalcAngle(v1->x, v1->y, other->x, other->y);
-
-//--    double sdx = other->x - v1->x;
-//--    double sdy = other->y - v1->y;
-//--
-//--    // seg lies along the line?
-//--    double a = vdx * sdy - vdy * sdx;
 
     double diff = fabs(v_angle - s_angle);
     
@@ -1284,7 +1281,10 @@ static void MarkBoundaryRegions(area_poly_c *P)
       region_c *R = (S->start == V) ? S->front : S->back;
 
       if (R)
-        P->regions.push_back(R);
+      {
+        if (! AreaHasRegion(P, R))
+          P->regions.push_back(R);
+      }
       else
       {
         // DO WHAT ??
@@ -1295,6 +1295,44 @@ fprintf(stderr, "WARNING: missing region along line loop\n");
 
       V = S->Other(V);
     }
+  }
+}
+
+static void MarkInnerRegions(area_poly_c *P)
+{
+  for (;;)
+  {
+    int changes = 0;
+
+    for (unsigned j = 0; j < mug_segments.size(); j++)
+    {
+      segment_c *S = mug_segments[j];
+
+      if (! S->front || ! S->back)
+        continue;
+
+      // contain the virus
+      if (S->border_of == P)
+        continue;
+
+      bool got_back  = AreaHasRegion(P, S->back);
+      bool got_front = AreaHasRegion(P, S->front);
+
+      if (got_back != got_front)
+      {
+        region_c *R = got_back ? S->front : S->back;
+
+        P->regions.push_back(R);
+
+        changes++;
+      }
+    }
+
+fprintf(stderr, "area_poly_c %p: changes %d\n", P, changes);
+
+    // stop when it cannot spread any further
+    if (changes == 0)
+      return;
   }
 }
 
@@ -1314,7 +1352,7 @@ static void Mug_AssignAreas(void)
   // inside the area_poly_c (no vertices touching the outer
   // line loop).  However it is sufficient to simply "spread"
   // the area_poly_c from each "infected" region_c to every
-  // neighbour as long as the shared segment is not part of
+  // neighbour as long as crossing segment is not part of
   // the area_poly_c boundary (no escaping!).
 
   for (int j=0; j < (int)all_polys.size(); j++)
@@ -1323,7 +1361,7 @@ static void Mug_AssignAreas(void)
 
     MarkBoundaryRegions(P);
 
-    // MarkInnerRegions(P);
+    MarkInnerRegions(P);
   }
 }
 
@@ -1390,7 +1428,17 @@ void CSG2_DumpSegmentsToWAD(void)
 
     R->index = (int)(RNI - mug_regions.begin());
 
-    wad::add_sector(0,"FLAT1", 144,"FLAT1", 255,0,0);
+    const char *flat = "FLAT1";
+    
+// QUICK TEST CRAP
+for (unsigned int p = 0; p < all_polys.size(); p++)
+{  area_poly_c *P = all_polys[p];
+for (unsigned int q = 0; q < P->regions.size(); q++)
+{  region_c *Q = P->regions[q];
+if (Q == R) { flat = P->info->t_tex.c_str(); break; }
+}}
+    
+    wad::add_sector(0,flat, 144,flat, 255,0,0);
 
     const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
 
