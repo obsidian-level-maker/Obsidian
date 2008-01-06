@@ -77,7 +77,7 @@ static void Q_WriteBrush(area_poly_c *P)
 
     SYS_ASSERT(v1 && v2);
 
-    const char *tex = v1->front.w_tex.c_str();
+    const char *tex = v1->side.w_tex.c_str();
     if (strlen(tex) == 0)
       tex = P->info->w_tex.c_str();
 
