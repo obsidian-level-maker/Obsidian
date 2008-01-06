@@ -34,7 +34,9 @@
 std::vector<area_info_c *> all_areas;
 std::vector<area_poly_c *> all_polys;
 
-std::vector<merged_area_c *> all_merges;
+std::vector<merge_vertex_c *>  mug_vertices;
+std::vector<merge_segment_c *> mug_segments;
+std::vector<merge_region_c *>  mug_regions;
 
 
 static int cur_poly_time;
@@ -112,16 +114,6 @@ void area_poly_c::ComputeBBox()
     if (V->y > max_y) max_y = V->y;
   }
 }
-
-
-merged_area_c::merged_area_c() : polys(), sector_index(-1)
-{ }
-
-merged_area_c::~merged_area_c()
-{
-  // TODO: free stuff
-}
-
 
 
 //------------------------------------------------------------------------
@@ -333,157 +325,59 @@ int add_solid(lua_State *L)
 //------------------------------------------------------------------------
 
 
-class segment_c;
-class region_c;
-
-
-class vertex_c
+void merge_vertex_c::AddSeg(merge_segment_c *seg)
 {
-public:
-  double x, y;
+  for (int j=0; j < (int)segs.size(); j++)
+    if (segs[j] == seg)
+      return;
 
-  // list of segments that touch this vertex
-  std::vector<segment_c *> segs;
-
-  int index;
-
-public:
-   vertex_c() : x(0), y(0), segs(), index(-1) { }
-   vertex_c(double _xx, double _yy) : x(_xx), y(_yy), segs(), index(-1) { }
-  ~vertex_c() { }
-
-  inline bool Match(double _xx, double _yy) const
-  {
-    return (fabs(_xx - x) <= EPSILON) &&
-           (fabs(_yy - y) <= EPSILON);
-  }
-    
-  inline bool Match(const vertex_c *other) const
-  {
-    return (fabs(other->x - x) <= EPSILON) &&
-           (fabs(other->y - y) <= EPSILON);
-  }
-    
-  void AddSeg(segment_c *seg)
-  {
-    for (int j=0; j < (int)segs.size(); j++)
-      if (segs[j] == seg)
-        return;
-
-    segs.push_back(seg);
-  }
-
-  void RemoveSeg(segment_c *seg)
-  {
-    std::vector<segment_c *>::iterator ENDP;
-
-    ENDP = std::remove(segs.begin(), segs.end(), seg);
-
-    segs.erase(ENDP, segs.end());
-  }
-
-  void ReplaceSeg(segment_c *old_seg, segment_c *new_seg)
-  {
-    for (int j=0; j < (int)segs.size(); j++)
-      if (segs[j] == old_seg)
-      {
-        segs[j] = new_seg;
-        return;
-      }
-
-    Main_FatalError("ReplaceSeg: does not exist!\n");
-  }
-};
-
-
-class segment_c
+  segs.push_back(seg);
+}
+  
+void merge_vertex_c::RemoveSeg(merge_segment_c *seg)
 {
-public:
-  vertex_c *start;
-  vertex_c *end;
+  std::vector<merge_segment_c *>::iterator ENDP;
 
-  region_c *front;
-  region_c *back;
+  ENDP = std::remove(segs.begin(), segs.end(), seg);
 
-  // temporary value that is only used by Mug_AssignAreas(),
-  // and refers to the current area_poly_c if this segment lies
-  // along it's border (just an efficient boolean test).
-  area_poly_c *border_of;
+  segs.erase(ENDP, segs.end());
+}
 
-public:
-  segment_c(vertex_c *_v1, vertex_c *_v2) :
-      start(_v1), end(_v2), front(NULL), back(NULL), border_of(NULL)
-  { }
-
-  ~segment_c()
-  { }
-
-  inline bool Match(vertex_c *_v1, vertex_c *_v2) const
-  {
-    return (_v1 == start && _v2 == end) ||
-           (_v2 == start && _v1 == end);
-  }
-
-  inline bool Match(const segment_c *other) const
-  {
-    return (other->start == start && other->end   == end) ||
-           (other->end   == start && other->start == end);
-  }
-
-  inline vertex_c *Other(const vertex_c *v) const
-  {
-    if (v == start)
-      return end;
-
-    SYS_ASSERT(v == end);
-    return start;
-  }
-
-  void Kill(void)
-  {
-    start->RemoveSeg(this);
-    end  ->RemoveSeg(this);
-
-    start = end = NULL;
-  }
-
-  void Flip(void)
-  {
-    vertex_c *tmp_V = start; start = end; end = tmp_V;
-
-    region_c *tmp_R = front; front = back; back = tmp_R;
-  }
-};
-
-
-class region_c
+void merge_vertex_c::ReplaceSeg(merge_segment_c *old_seg, merge_segment_c *new_seg)
 {
-public:
-  bool faces_out;
+  for (int j=0; j < (int)segs.size(); j++)
+    if (segs[j] == old_seg)
+    {
+      segs[j] = new_seg;
+      return;
+    }
 
-  int index;
-
-  std::vector<area_poly_c *> areas;  // UGH, NOT USED!
-
-public:
-  region_c() : faces_out(false), index(-1), areas()
-  { }
-
-  ~region_c()
-  { }
-};
+  Main_FatalError("ReplaceSeg: does not exist!\n");
+}
 
 
-static std::vector<vertex_c *>  mug_vertices;
-static std::vector<segment_c *> mug_segments;
-static std::vector<region_c *>  mug_regions;
+void merge_segment_c::Kill(void)
+{
+  start->RemoveSeg(this);
+  end  ->RemoveSeg(this);
 
-static std::vector<segment_c *> mug_new_segs;
+  start = end = NULL;
+}
+
+void merge_segment_c::Flip(void)
+{
+  merge_vertex_c *tmp_V = start; start = end; end = tmp_V;
+
+  merge_region_c *tmp_R = front; front = back; back = tmp_R;
+}
+
+
+static std::vector<merge_segment_c *> mug_new_segs;
 
 static int mug_changes = 0;
 
 
-static vertex_c *Mug_AddVertex(double x, double y)
+static merge_vertex_c *Mug_AddVertex(double x, double y)
 {
   // check if already present (FIXME: OPTIMISE !!)
 
@@ -491,14 +385,14 @@ static vertex_c *Mug_AddVertex(double x, double y)
     if (mug_vertices[i]->Match(x, y))
       return mug_vertices[i];
 
-  vertex_c * V = new vertex_c(x, y);
+  merge_vertex_c * V = new merge_vertex_c(x, y);
 
   mug_vertices.push_back(V);
 
   return V;
 }
 
-static segment_c *Mug_AddSegment(vertex_c *start, vertex_c *end)
+static merge_segment_c *Mug_AddSegment(merge_vertex_c *start, merge_vertex_c *end)
 {
   // check if already present (FIXME: OPTIMISE !!)
 
@@ -508,7 +402,7 @@ static segment_c *Mug_AddSegment(vertex_c *start, vertex_c *end)
     if (mug_segments[i]->Match(start, end))
       return mug_segments[i];
 
-  segment_c * S = new segment_c(start, end);
+  merge_segment_c * S = new merge_segment_c(start, end);
 
   mug_segments.push_back(S);
 
@@ -525,8 +419,8 @@ static void Mug_MakeSegments(area_poly_c *P)
     area_vert_c *v1 = P->verts[k];
     area_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
 
-    vertex_c *new_v1 = Mug_AddVertex(v1->x, v1->y);
-    vertex_c *new_v2 = Mug_AddVertex(v2->x, v2->y);
+    merge_vertex_c *new_v1 = Mug_AddVertex(v1->x, v1->y);
+    merge_vertex_c *new_v2 = Mug_AddVertex(v2->x, v2->y);
 
     Mug_AddSegment(new_v1, new_v2);
 
@@ -536,9 +430,9 @@ static void Mug_MakeSegments(area_poly_c *P)
   }
 }
 
-static void Mug_SplitSegment(segment_c *S, vertex_c *V)
+static void Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V)
 {
-  segment_c *NS = new segment_c(V, S->end);
+  merge_segment_c *NS = new merge_segment_c(V, S->end);
 
   S->end = V;
 
@@ -556,7 +450,7 @@ static void Mug_SplitSegment(segment_c *S, vertex_c *V)
 
 struct SegDead_pred
 {
-  inline bool operator() (const segment_c *S) const
+  inline bool operator() (const merge_segment_c *S) const
   {
     return ! S->start;
   }
@@ -566,7 +460,7 @@ static void Mug_AdjustList(void)
 {
   /* Removes dead segs and Appends new segs */
 
-  std::vector<segment_c *>::iterator ENDP;
+  std::vector<merge_segment_c *>::iterator ENDP;
 
   ENDP = std::remove_if(mug_segments.begin(), mug_segments.end(), SegDead_pred());
 
@@ -580,7 +474,7 @@ fprintf(stderr, ".. %d new segments, %d dead ones\n",
 
   while (mug_new_segs.size() > 0)
   {
-    segment_c *S = mug_new_segs.back();
+    merge_segment_c *S = mug_new_segs.back();
 
     mug_new_segs.pop_back();
     mug_segments.push_back(S);
@@ -590,7 +484,7 @@ fprintf(stderr, ".. %d new segments, %d dead ones\n",
 
 struct Compare_SegmentMinX_pred
 {
-  inline bool operator() (const segment_c *A, const segment_c *B) const
+  inline bool operator() (const merge_segment_c *A, const merge_segment_c *B) const
   {
     return MIN(A->start->x, A->end->x) < MIN(B->start->x, B->end->x);
   }
@@ -663,11 +557,11 @@ static void Mug_OverlapPass(void)
 
   for (int i=0; i < (int)mug_segments.size(); i++)
   {
-    segment_c *A = mug_segments[i];
+    merge_segment_c *A = mug_segments[i];
 
     for (int k=i+1; k < (int)mug_segments.size(); k++)
     {
-      segment_c *B = mug_segments[k];
+      merge_segment_c *B = mug_segments[k];
 
       // skip deleted segments
       if (! A->start) break;
@@ -794,7 +688,7 @@ fprintf(stderr, "   A = (%1.0f,%1.0f) --> (%1.0f,%1.0f)\n", ax1,ay1, ax2,ay2);
 fprintf(stderr, "   B = (%1.0f,%1.0f) --> (%1.0f,%1.0f)\n", bx1,by1, bx2,by2);
 #endif
 
-      vertex_c * NV = Mug_AddVertex(ix, iy);
+      merge_vertex_c * NV = Mug_AddVertex(ix, iy);
       
       Mug_SplitSegment(A, NV);
       Mug_SplitSegment(B, NV);
@@ -825,28 +719,28 @@ fprintf(stderr, "Mug_FindOverlaps: loop %d, changes %d\n", loops, mug_changes);
 
 //------------------------------------------------------------------------
 
-static segment_c *trace_seg;
-static vertex_c  *trace_vert;
+static merge_segment_c *trace_seg;
+static merge_vertex_c  *trace_vert;
 static int        trace_side;
 static double     trace_angles;
 
 static void TraceNext(void)
 {
-  vertex_c *next_v = trace_seg->Other(trace_vert);
+  merge_vertex_c *next_v = trace_seg->Other(trace_vert);
 
-  segment_c *best_seg = NULL;
+  merge_segment_c *best_seg = NULL;
   double     best_angle = 999;
 
   double old_angle = CalcAngle(next_v->x, next_v->y, trace_vert->x, trace_vert->y);
   
   for (int k = 0; k < (int)next_v->segs.size(); k++)
   {
-    segment_c *T = next_v->segs[k];
+    merge_segment_c *T = next_v->segs[k];
 
     if (T == trace_seg)
       continue;
 
-    vertex_c *TV2 = T->Other(next_v);
+    merge_vertex_c *TV2 = T->Other(next_v);
 
     double angle = CalcAngle(next_v->x, next_v->y, TV2->x, TV2->y);
 
@@ -888,7 +782,7 @@ static void TraceNext(void)
   trace_angles += best_angle;
 }
 
-static void TraceSegment(segment_c *S, int side)
+static void TraceSegment(merge_segment_c *S, int side)
 {
 #if 0
 fprintf(stderr, "TraceSegment (%1.1f,%1.1f) .. (%1.1f,%1.1f) side:%d\n",
@@ -896,7 +790,7 @@ S->start->x, S->start->y,
 S->end->x, S->end->y, side);
 #endif
   
-  region_c *R = new region_c();
+  merge_region_c *R = new merge_region_c();
 
 R->index = (int)mug_regions.size(); // ONLY NEED FOR DEBUG
 
@@ -966,7 +860,7 @@ static void Mug_TraceSegLoops(void)
 
   for (int i = 0; i < (int)mug_segments.size(); i++)
   {
-    segment_c *S = mug_segments[i];
+    merge_segment_c *S = mug_segments[i];
 
     if (! S->front)
       TraceSegment(S, 0);
@@ -976,8 +870,8 @@ static void Mug_TraceSegLoops(void)
   }
 }
 
-static bool GetOppositeSegment(segment_c *S, int side, 
-    segment_c **hit, int *hit_side, double along)
+static bool GetOppositeSegment(merge_segment_c *S, int side, 
+    merge_segment_c **hit, int *hit_side, double along)
 {
   // Returns false if result was ambiguous (e.g. the closest
   // segment hit was parallel to the casting line).
@@ -997,14 +891,14 @@ static bool GetOppositeSegment(segment_c *S, int side,
 
   bool cast_vert = (hx-lx) > (hy-ly);
 
-  segment_c *best_seg  = NULL;
+  merge_segment_c *best_seg  = NULL;
   bool       best_vert = false;
   int        best_side = 0;
   double     best_dist = 999999.0;
 
   for (int t = 0; t < (int)mug_segments.size(); t++)
   {
-    segment_c *T = mug_segments[t];
+    merge_segment_c *T = mug_segments[t];
 
     if (T == S)
       continue;
@@ -1112,7 +1006,7 @@ static bool GetOppositeSegment(segment_c *S, int side,
   return true;
 }
 
-static region_c *FindIslandParent(region_c *R)
+static merge_region_c *FindIslandParent(merge_region_c *R)
 {
   // there is a small possibility that every segment we test
   // will hit a vertex opposite it.  So when that happens we
@@ -1132,8 +1026,8 @@ static region_c *FindIslandParent(region_c *R)
   {
     for (int i = 0; i < (int)mug_segments.size(); i++)
     {
-      segment_c *S = mug_segments[i];
-      segment_c *T;
+      merge_segment_c *S = mug_segments[i];
+      merge_segment_c *T;
 
       int S_side;
       int T_side;
@@ -1155,7 +1049,7 @@ static region_c *FindIslandParent(region_c *R)
         return NULL;  // edge of map
       }
 
-      region_c *R_opp = (T_side == 0) ? T->front : T->back;
+      merge_region_c *R_opp = (T_side == 0) ? T->front : T->back;
 
       if (R_opp != R)
         return R_opp;
@@ -1166,13 +1060,13 @@ static region_c *FindIslandParent(region_c *R)
   return NULL; /* NOT REACHED */
 }
 
-static void ReplaceRegion(region_c *R_old, region_c *R_new)
+static void ReplaceRegion(merge_region_c *R_old, merge_region_c *R_new)
 {
   // NOTE: R_new can be NULL
  
   for (int i = 0; i < (int)mug_segments.size(); i++)
   {
-    segment_c *S = mug_segments[i];
+    merge_segment_c *S = mug_segments[i];
 
     if (S->front == R_old) S->front = R_new;
     if (S->back  == R_old) S->back  = R_new;
@@ -1193,11 +1087,11 @@ static void Mug_RemoveIslands(void)
 
   for (int i = 0; i < (int)mug_regions.size(); i++)
   {
-    region_c *R = mug_regions[i];
+    merge_region_c *R = mug_regions[i];
     
     if (R->faces_out)
     {
-      region_c *parent = FindIslandParent(R);
+      merge_region_c *parent = FindIslandParent(R);
 
       ReplaceRegion(R, parent);
 
@@ -1207,9 +1101,9 @@ static void Mug_RemoveIslands(void)
   }
 
   // remove the NULL pointers
-  std::vector<region_c *>::iterator ENDP;
+  std::vector<merge_region_c *>::iterator ENDP;
 
-  ENDP = std::remove(mug_regions.begin(), mug_regions.end(), (region_c*)NULL);
+  ENDP = std::remove(mug_regions.begin(), mug_regions.end(), (merge_region_c*)NULL);
 
   mug_regions.erase(ENDP, mug_regions.end());
 }
@@ -1217,7 +1111,7 @@ static void Mug_RemoveIslands(void)
 
 //------------------------------------------------------------------------
 
-static bool AreaHasRegion(area_poly_c *P, region_c *R)
+static bool AreaHasRegion(area_poly_c *P, merge_region_c *R)
 {
   for (unsigned int j = 0; j < P->regions.size(); j++)
   {
@@ -1228,15 +1122,15 @@ static bool AreaHasRegion(area_poly_c *P, region_c *R)
   return false; // nope
 }
 
-static segment_c *FindAlongSeg(vertex_c *v1, vertex_c *v2)
+static merge_segment_c *FindAlongSeg(merge_vertex_c *v1, merge_vertex_c *v2)
 {
   double v_angle = CalcAngle(v1->x, v1->y, v2->x, v2->y);
 
   for (unsigned int k = 0; k < v1->segs.size(); k++)
   {
-    segment_c *S = v1->segs[k];
+    merge_segment_c *S = v1->segs[k];
 
-    vertex_c *other = S->Other(v1);
+    merge_vertex_c *other = S->Other(v1);
 
     double s_angle = CalcAngle(v1->x, v1->y, other->x, other->y);
 
@@ -1270,15 +1164,15 @@ static void MarkBoundaryRegions(area_poly_c *P)
 
     double along = 0;
 
-    vertex_c *V = v1->partner;
+    merge_vertex_c *V = v1->partner;
 
     while (V != v2->partner)
     {
-      segment_c *S = FindAlongSeg(V, v2->partner);
+      merge_segment_c *S = FindAlongSeg(V, v2->partner);
       if (! S)
         break;
 
-      region_c *R = (S->start == V) ? S->front : S->back;
+      merge_region_c *R = (S->start == V) ? S->front : S->back;
 
       if (R)
       {
@@ -1306,7 +1200,7 @@ static void MarkInnerRegions(area_poly_c *P)
 
     for (unsigned j = 0; j < mug_segments.size(); j++)
     {
-      segment_c *S = mug_segments[j];
+      merge_segment_c *S = mug_segments[j];
 
       if (! S->front || ! S->back)
         continue;
@@ -1320,7 +1214,7 @@ static void MarkInnerRegions(area_poly_c *P)
 
       if (got_back != got_front)
       {
-        region_c *R = got_back ? S->front : S->back;
+        merge_region_c *R = got_back ? S->front : S->back;
 
         P->regions.push_back(R);
 
@@ -1343,7 +1237,7 @@ static void Mug_AssignAreas(void)
   // For each area poly, iterate over each line in the loop.
   // Since vertices are never removed (only added), we will
   // always be able to find the first vertex of each line.
-  // Check each segment along the line and mark the region_c
+  // Check each segment along the line and mark the merge_region_c
   // on the correct side as belonging to our area_poly.
   // 
   // BUT WAIT, THERE'S MORE!
@@ -1351,7 +1245,7 @@ static void Mug_AssignAreas(void)
   // The above logic will not find regions that are fully
   // inside the area_poly_c (no vertices touching the outer
   // line loop).  However it is sufficient to simply "spread"
-  // the area_poly_c from each "infected" region_c to every
+  // the area_poly_c from each "infected" merge_region_c to every
   // neighbour as long as crossing segment is not part of
   // the area_poly_c boundary (no escaping!).
 
@@ -1407,11 +1301,11 @@ void CSG2_DumpSegmentsToWAD(void)
 
   int total_vert = 0;
 
-  std::vector<vertex_c *>::iterator VI;
+  std::vector<merge_vertex_c *>::iterator VI;
 
   for (VI = mug_vertices.begin(); VI != mug_vertices.end(); VI++)
   {
-    vertex_c *V = *VI;
+    merge_vertex_c *V = *VI;
     
     V->index = total_vert;
     total_vert++;
@@ -1420,24 +1314,29 @@ void CSG2_DumpSegmentsToWAD(void)
   }
 
 
-  std::vector<region_c *>::iterator RNI;
+  std::vector<merge_region_c *>::iterator RNI;
 
   for (RNI = mug_regions.begin(); RNI != mug_regions.end(); RNI++)
   {
-    region_c *R = *RNI;
+    merge_region_c *R = *RNI;
 
     R->index = (int)(RNI - mug_regions.begin());
 
     const char *flat = "FLAT1";
-    
-// QUICK TEST CRAP
+ 
+#if 0 // QUICK TEST CRAP
 for (unsigned int p = 0; p < all_polys.size(); p++)
 {  area_poly_c *P = all_polys[p];
 for (unsigned int q = 0; q < P->regions.size(); q++)
-{  region_c *Q = P->regions[q];
-if (Q == R) { flat = P->info->t_tex.c_str(); break; }
+{  merge_region_c *Q = P->regions[q];
+if (Q == R) { flat = P->info->t_tex.c_str();
+DebugPrintf("Region %d has poly %p (%1.0f..%1.0f %s:%s)\n",
+R->index, P, P->info->z1, P->info->z2,
+P->info->b_tex.c_str(), P->info->t_tex.c_str());
+  }
 }}
-    
+#endif
+ 
     wad::add_sector(0,flat, 144,flat, 255,0,0);
 
     const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
@@ -1446,11 +1345,11 @@ if (Q == R) { flat = P->info->t_tex.c_str(); break; }
   }
 
 
-  std::vector<segment_c *>::iterator SGI;
+  std::vector<merge_segment_c *>::iterator SGI;
 
   for (SGI = mug_segments.begin(); SGI != mug_segments.end(); SGI++)
   {
-    segment_c *S = *SGI;
+    merge_segment_c *S = *SGI;
 
     SYS_ASSERT(S);
     SYS_ASSERT(S->start);
@@ -1468,7 +1367,7 @@ if (Q == R) { flat = P->info->t_tex.c_str(); break; }
 
 static const luaL_Reg csg2_funcs[] =
 {
-  { "add_solid",   csg2::add_solid   },
+  { "add_solid",   csg2::add_solid  },
 
   { NULL, NULL } // the end
 };

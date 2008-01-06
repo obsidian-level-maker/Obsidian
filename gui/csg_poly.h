@@ -31,11 +31,9 @@
 
 /* ----- CLASSES ----- */
 
-class merged_area_c;
-
-// private classes
-class vertex_c;
-class region_c;
+class merge_vertex_c;
+class merge_segment_c;
+class merge_region_c;
 
 
 class slope_points_c
@@ -110,8 +108,7 @@ public:
 
   byte line_args[5];
 
-  // this only used temporary during the merger
-  vertex_c *partner;
+  merge_vertex_c *partner;
 
 public:
    area_vert_c();
@@ -129,8 +126,7 @@ public:
   double min_x, min_y;
   double max_x, max_y;
 
-  // this only used temporary during the merger
-  std::vector<region_c *> regions;
+  std::vector<merge_region_c *> regions;
 
 public:
    area_poly_c(area_info_c *_info);
@@ -140,17 +136,121 @@ public:
 };
 
 
-class merged_area_c
+///---class merged_area_c
+///---{
+///---public:
+///---  // all polys for this area (sorted by height)
+///---  std::vector<area_poly_c *> polys;
+///---
+///---  int sector_index;
+///---
+///---public:
+///---   merged_area_c();
+///---  ~merged_area_c();
+///---};
+
+
+//------------------------------------------------------------------------
+
+
+class merge_vertex_c
 {
 public:
-  // all polys for this area (sorted by height)
-  std::vector<area_poly_c *> polys;
+  double x, y;
 
-  int sector_index;
+  // list of segments that touch this vertex
+  std::vector<merge_segment_c *> segs;
+
+  int index;
 
 public:
-   merged_area_c();
-  ~merged_area_c();
+   merge_vertex_c() : x(0), y(0), segs(), index(-1) { }
+   merge_vertex_c(double _xx, double _yy) : x(_xx), y(_yy), segs(), index(-1) { }
+  ~merge_vertex_c() { }
+
+  inline bool Match(double _xx, double _yy) const
+  {
+    return (fabs(_xx - x) <= EPSILON) &&
+           (fabs(_yy - y) <= EPSILON);
+  }
+    
+  inline bool Match(const merge_vertex_c *other) const
+  {
+    return (fabs(other->x - x) <= EPSILON) &&
+           (fabs(other->y - y) <= EPSILON);
+  }
+    
+  void AddSeg(merge_segment_c *seg);
+
+  void RemoveSeg(merge_segment_c *seg);
+
+  void ReplaceSeg(merge_segment_c *old_seg, merge_segment_c *new_seg);
+};
+
+
+class merge_segment_c
+{
+public:
+  merge_vertex_c *start;
+  merge_vertex_c *end;
+
+  merge_region_c *front;
+  merge_region_c *back;
+
+  // temporary value that is only used by Mug_AssignAreas(),
+  // and refers to the current area_poly_c if this segment lies
+  // along it's border (just an efficient boolean test).
+  area_poly_c *border_of;
+
+public:
+  merge_segment_c(merge_vertex_c *_v1, merge_vertex_c *_v2) :
+      start(_v1), end(_v2), front(NULL), back(NULL), border_of(NULL)
+  { }
+
+  ~merge_segment_c()
+  { }
+
+  inline bool Match(merge_vertex_c *_v1, merge_vertex_c *_v2) const
+  {
+    return (_v1 == start && _v2 == end) ||
+           (_v2 == start && _v1 == end);
+  }
+
+  inline bool Match(const merge_segment_c *other) const
+  {
+    return (other->start == start && other->end   == end) ||
+           (other->end   == start && other->start == end);
+  }
+
+  inline merge_vertex_c *Other(const merge_vertex_c *v) const
+  {
+    if (v == start)
+      return end;
+
+    SYS_ASSERT(v == end);
+    return start;
+  }
+
+  void Kill(void);
+  void Flip(void);
+};
+
+
+class merge_region_c
+{
+public:
+  bool faces_out;
+
+  int index;
+
+///---  std::vector<area_poly_c *> areas;
+
+public:
+  merge_region_c() : faces_out(false), index(-1) /// , areas()
+  { }
+
+  ~merge_region_c()
+  { }
 };
 
 
@@ -159,7 +259,9 @@ public:
 extern std::vector<area_info_c *> all_areas;
 extern std::vector<area_poly_c *> all_polys;
 
-extern std::vector<merged_area_c *> all_merges;
+extern std::vector<merge_vertex_c *>  mug_vertices;
+extern std::vector<merge_segment_c *> mug_segments;
+extern std::vector<merge_region_c *>  mug_regions;
 
 
 /* ----- FUNCTIONS ----- */
