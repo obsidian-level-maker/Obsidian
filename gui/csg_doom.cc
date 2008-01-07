@@ -170,6 +170,7 @@ static void CreateSectors(void)
 {
   dm_sectors.clear();
 
+  // #0 represents VOID (removed later)
   dm_sectors.push_back(new sector_info_c);
 
   for (unsigned int i = 0; i < mug_regions.size(); i++)
@@ -183,6 +184,21 @@ static void CreateSectors(void)
       R->index = 0;
       continue;
     }
+
+    bool is_void = false;
+    for (unsigned k=0; k < R->areas.size(); k++)
+    {
+      area_poly_c *A = R->areas[k];
+
+      if (A->info->z1 < -1999 && A->info->z2 > 1999)
+      {
+        R->index = 0;
+        is_void=true;
+        break;
+      }
+    }
+    if (is_void)
+        continue;
 
     // FIXME: proper analysis !!!!!
     int B = 0;
@@ -266,8 +282,7 @@ static int WriteVertex(merge_vertex_c *V)
 
 static int WriteSector(merge_region_c *R)
 {
-  if (R->index <= 0)  // FIXME !!!! do not allow
-    return 0;
+  SYS_ASSERT(R->index > 0);
 
   sector_info_c *S = dm_sectors[R->index];
 
@@ -286,15 +301,15 @@ static int WriteSector(merge_region_c *R)
  
 static int WriteSidedef(merge_region_c *F, merge_region_c *B)
 {
-  if (! F)
+  if (! (F && F->index > 0))
     return -1;
 
   const char *tex = "STARTAN3";
 
-  if (B)
+  if (B && B->index > 0)
     wad::add_sidedef(WriteSector(F), tex, "-", tex, 0, 0);
   else
-    wad::add_sidedef(WriteSector(F), tex, "-", tex, 0, 0);
+    wad::add_sidedef(WriteSector(F), "-", tex, "-", 0, 0);
 
   total_sides++;
 
@@ -315,18 +330,29 @@ static void WriteLinedefs(void)
 
     SYS_ASSERT(S);
     SYS_ASSERT(S->start);
-    SYS_ASSERT(S->front);
 
     int front_idx = WriteSidedef(S->front, S->back);
     int back_idx  = WriteSidedef(S->back, S->front);
+
+    if (front_idx < 0 && back_idx < 0)
+      continue;
+
+    int v1 = WriteVertex(S->start);
+    int v2 = WriteVertex(S->end);
+
+    if (front_idx < 0)
+    {
+      front_idx = back_idx;
+      back_idx  = -1;
+
+      int TMP = v1; v1 = v2; v2 = TMP;
+    }
 
     int flags = 0;
     if (back_idx < 0)
       flags = 1; /* impassible */
 
-    wad::add_linedef(WriteVertex(S->start),
-                     WriteVertex(S->end),
-                     front_idx, back_idx,
+    wad::add_linedef(v1, v2, front_idx, back_idx,
                      0 /* type */, flags,
                      0 /* tag */, NULL /* args */);
   }
