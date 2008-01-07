@@ -32,9 +32,39 @@
 
 #define VOID_INDEX  -2
 
+
+class sector_info_c 
+{
+public:
+  int f_h;
+  int c_h;
+
+  std::string f_tex;
+  std::string c_tex;
+  
+  int light; int special;
+  int tag; int mark;
+
+  int index;
+  
+public:
+  sector_info_c() : f_h(0), c_h(0), f_tex(), c_tex(),
+                    light(255), special(0), tag(0), mark(0),
+                    index(-1)
+  { }
+
+  ~sector_info_c()
+  { }
+
+};
+
+
 static int total_verts;
 static int total_sides;
 static int total_sectors;
+
+
+static std::vector<sector_info_c *> dm_sectors;
 
 
 void CSG2_TestDoom_Areas(void)
@@ -134,16 +164,47 @@ void CSG2_TestDoom_Segments(void)
 
 static void CreateSectors(void)
 {
+  dm_sectors.clear();
+
+  dm_sectors.push_back(new sector_info_c);
 
   for (unsigned int i = 0; i < mug_regions.size(); i++)
   {
     merge_region_c *R = mug_regions[i];
 
-    R->index = (int)i;
+    // if only one brush, area must be solid
+    // (FIXME: be more lenient of contains a player/teleport thing)
+    if (R->areas.size() <= 1)
+    {
+      R->index = 0;
+      continue;
+    }
 
-    const char *flat = "FLAT10";
- 
-    wad::add_sector(0,flat, 144,flat, 255,0,0);
+    // FIXME: proper analysis !!!!
+    int B = 0;
+    int T = (int)R->areas.size() - 1;
+
+    area_poly_c *bottom = R->areas[B];
+    area_poly_c *top    = R->areas[T];
+
+    if (bottom->info->z1 > top->info->z2)
+    {
+      area_poly_c *TMP = top; top = bottom; bottom = TMP;
+    }
+    
+    R->index = (int)dm_sectors.size();
+
+    sector_info_c *sec = new sector_info_c;
+
+    sec->f_h   = I_ROUND(bottom->info->z2);
+    sec->c_h   = I_ROUND(top->info->z1);
+
+    sec->f_tex = bottom->info->t_tex;
+    sec->c_tex = top->info->b_tex;
+
+    // FIXME ETC...
+
+    dm_sectors.push_back(sec);
   }
 }
 
@@ -167,14 +228,16 @@ static int WriteVertex(merge_vertex_c *V)
   return V->index;
 }
 
-static int WriteSector( XXX )
+static int WriteSector(sector_info_c *S)
 {
   if (S->index < 0)
   {
     S->index = total_sectors;
     total_sectors++;
 
-    wad::add_sector( ZZZ );
+    wad::add_sector(S->f_h, S->f_tex.c_str(),
+                    S->c_h, S->c_tex.c_str(),
+                    S->light, S->special, S->tag);
   }
 
   return S->index;
@@ -184,7 +247,7 @@ static int WriteSidedef( XXX )
 {
   const char *tex = "STARTAN3";
 
-  wad::add_sidedef(WriteSector(R), tex, "-", tex, 0, 0);
+  wad::add_sidedef(WriteSector(ZZZ), tex, "-", tex, 0, 0);
 
   return total_sides-1;
 }
@@ -206,10 +269,10 @@ static void WriteLinedefs(void)
     int back_idx  = -1;
 
     if (S->front)
-      front_idx = WriteSidedef( XXX );
+      front_idx = WriteSidedef( ); //!!!!
 
     if (S->back)
-      back_idx = WriteSidedef( XXX );
+      back_idx = WriteSidedef( );
 
     int flags = 0;
     if (back_idx < 0)
@@ -233,19 +296,23 @@ void CSG2_WriteDoom(void)
   //
   // Algorithm:
   //
-  // 1) create a sector for each region (use VOID_INDEX for solids)
-  // 2) coalesce same sectors:
+  // 1) reserve sector #0 to represent VOID space (removed later)
+  // 2) create a sector for each region
+  // 3) coalesce neighbouring sectors with same properties
   //    - mark border segments as unused
   //    - mark vertices with all unused segs as unused
-  // 3) ???
+  // 4) profit!
  
   CSG2_MergeAreas();
 
   CreateSectors();
+  CoalesceSectors();
 
   WriteLinedefs();
 
   // FIXME: things !!!!
+
+  // FIXME: Free everything
 }
 
 
