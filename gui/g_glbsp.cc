@@ -58,6 +58,7 @@ static const char *GetErrorString(glbsp_ret_e ret)
 
     // an unknown error occurred (this is the catch-all value)
     case GLBSP_E_Unknown:
+
     default:
       return "Unknown Error";
   }
@@ -91,7 +92,7 @@ void GB_FatalError(const char *str, ...)
 
   message_buf[MSG_BUF_LEN-2] = 0;
 
-  Main_FatalError("%s", message_buf);
+  Main_FatalError("glBSP Failure:\n%s", message_buf);
   /* NOT REACHED */
 }
 
