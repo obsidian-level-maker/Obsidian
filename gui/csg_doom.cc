@@ -58,7 +58,7 @@ public:
 
   bool Match(const sector_info_c *other) const
   {
-    return false; // FIXME sector_info_c::Match
+    return false; // FIXME !!!!! sector_info_c::Match
   }
 };
 
@@ -264,8 +264,13 @@ static int WriteVertex(merge_vertex_c *V)
   return V->index;
 }
 
-static int WriteSector(sector_info_c *S)
+static int WriteSector(merge_region_c *R)
 {
+  if (R->index <= 0)  // FIXME !!!! do not allow
+    return 0;
+
+  sector_info_c *S = dm_sectors[R->index];
+
   if (S->index < 0)
   {
     S->index = total_sectors;
@@ -279,11 +284,19 @@ static int WriteSector(sector_info_c *S)
   return S->index;
 }
  
-static int WriteSidedef( XXX )
+static int WriteSidedef(merge_region_c *F, merge_region_c *B)
 {
+  if (! F)
+    return -1;
+
   const char *tex = "STARTAN3";
 
-  wad::add_sidedef(WriteSector(ZZZ), tex, "-", tex, 0, 0);
+  if (B)
+    wad::add_sidedef(WriteSector(F), tex, "-", tex, 0, 0);
+  else
+    wad::add_sidedef(WriteSector(F), tex, "-", tex, 0, 0);
+
+  total_sides++;
 
   return total_sides-1;
 }
@@ -304,14 +317,8 @@ static void WriteLinedefs(void)
     SYS_ASSERT(S->start);
     SYS_ASSERT(S->front);
 
-    int front_idx = -1;
-    int back_idx  = -1;
-
-    if (S->front)
-      front_idx = WriteSidedef( ); //!!!!
-
-    if (S->back)
-      back_idx = WriteSidedef( );
+    int front_idx = WriteSidedef(S->front, S->back);
+    int back_idx  = WriteSidedef(S->back, S->front);
 
     int flags = 0;
     if (back_idx < 0)
