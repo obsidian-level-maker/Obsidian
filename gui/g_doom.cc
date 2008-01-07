@@ -361,8 +361,7 @@ int end_level(lua_State *L)
 //  CSG2_TestQuake();
 //  CSG2_TestDoom();
 
-CSG2_MergeAreas();
-CSG2_DumpSegmentsToWAD();
+  CSG2_WriteDoom();
 
   CSG2_EndLevel();
 
