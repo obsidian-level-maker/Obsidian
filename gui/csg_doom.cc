@@ -56,6 +56,10 @@ public:
   ~sector_info_c()
   { }
 
+  bool Match(const sector_info_c *other) const
+  {
+    return false; // FIXME sector_info_c::Match
+  }
 };
 
 
@@ -180,7 +184,7 @@ static void CreateSectors(void)
       continue;
     }
 
-    // FIXME: proper analysis !!!!
+    // FIXME: proper analysis !!!!!
     int B = 0;
     int T = (int)R->areas.size() - 1;
 
@@ -211,7 +215,39 @@ static void CreateSectors(void)
 
 static void CoalesceSectors(void)
 {
-  // TODO: CoalesceSectors
+  for (int loop=0; loop < 99; loop++)
+  {
+    int changes = 0;
+
+    for (unsigned int i = 0; i < mug_segments.size(); i++)
+    {
+      merge_segment_c *S = mug_segments[i];
+
+      if (! S->front || ! S->back)
+        continue;
+
+      if (S->front->index <= 0 || S->back->index <= 0)
+        continue;
+      
+      // already merged?
+      if (S->front->index == S->back->index)
+        continue;
+
+      sector_info_c *F = dm_sectors[S->front->index];
+      sector_info_c *B = dm_sectors[S->back ->index];
+
+      if (F->Match(B))
+      {
+        S->front->index = MIN(S->front->index, S->back->index);
+        S->back ->index = S->front->index;
+
+        changes++;
+      }
+    }
+
+    if (changes == 0)
+      return;
+  }
 }
 
 
@@ -256,6 +292,9 @@ static void WriteLinedefs(void)
 {
   total_verts = 0;
   total_sides = 0;
+
+  // TODO: optimise maps by merging two contiguous segments
+  //       sitting on a area_poly line where possible.
 
   for (unsigned int i = 0; i < mug_segments.size(); i++)
   {
