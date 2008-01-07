@@ -55,8 +55,8 @@ slope_points_c::~slope_points_c()
 area_info_c::area_info_c() :
       t_tex(), b_tex(), w_tex(),
       z1(-1), z2(-1), slope(),
-      sec_kind(0), sec_tag(0),
-      t_light(255), b_light(255)
+      t_light(255), b_light(255),
+      sec_kind(0), sec_tag(0), mark(0)
 {
   time = cur_poly_time++;
 }
@@ -152,9 +152,10 @@ static area_info_c * Grab_SectorInfo(lua_State *L, int stack_pos)
 
   lua_pop(L, 3);
 
-  // TODO: sec_kind, sec_tag
+  // TODO: sec_kind, sec_tag   !!!!!
   // TODO: t_light, b_light
   // TODO: y_offset, peg
+  // TODO: mark
 
   return A;
 }
@@ -282,8 +283,9 @@ namespace csg2
 //   t_tex, b_tex  : top and bottom textures
 //   w_tex         : default wall (side) texture
 //   peg, y_offset : default peg and y_offset for sides
-//   t_kind, t_tag
 //   t_light, b_light
+//   sec_kind, sec_tag
+//   mark          : separating number
 // 
 // heights is a table (can be nil)
 //    z1, z2             : height range (compulsory)

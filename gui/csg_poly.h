@@ -67,8 +67,10 @@ public:
 
   slope_points_c slope;
 
-  int sec_kind, sec_tag;
   int t_light, b_light;
+
+  int sec_kind, sec_tag;
+  int mark;
 
 public:
    area_info_c();
