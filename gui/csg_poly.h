@@ -126,7 +126,7 @@ public:
   double min_x, min_y;
   double max_x, max_y;
 
-  std::vector<merge_region_c *> regions;
+///---  std::vector<merge_region_c *> regions;
 
 public:
    area_poly_c(area_info_c *_info);
@@ -134,20 +134,6 @@ public:
 
   void ComputeBBox();
 };
-
-
-///---class merged_area_c
-///---{
-///---public:
-///---  // all polys for this area (sorted by height)
-///---  std::vector<area_poly_c *> polys;
-///---
-///---  int sector_index;
-///---
-///---public:
-///---   merged_area_c();
-///---  ~merged_area_c();
-///---};
 
 
 //------------------------------------------------------------------------
@@ -161,12 +147,19 @@ public:
   // list of segments that touch this vertex
   std::vector<merge_segment_c *> segs;
 
+  // this index is not used by the polygoniser code (csg_poly.cc),
+  // only by the Doom conversion code.  -1 means "unused".
   int index;
-
+  
 public:
-   merge_vertex_c() : x(0), y(0), segs(), index(-1) { }
-   merge_vertex_c(double _xx, double _yy) : x(_xx), y(_yy), segs(), index(-1) { }
-  ~merge_vertex_c() { }
+  merge_vertex_c() : x(0), y(0), segs(), index(-1)
+  { }
+
+  merge_vertex_c(double _xx, double _yy) : x(_xx), y(_yy), segs(), index(-1)
+  { }
+
+  ~merge_vertex_c()
+  { }
 
   inline bool Match(double _xx, double _yy) const
   {
@@ -202,9 +195,13 @@ public:
   // along it's border (just an efficient boolean test).
   area_poly_c *border_of;
 
+  // this index is not used by the polygoniser code (csg_poly.cc),
+  // only by the Doom conversion code.  -1 means "unused".
+  int index;
+
 public:
   merge_segment_c(merge_vertex_c *_v1, merge_vertex_c *_v2) :
-      start(_v1), end(_v2), front(NULL), back(NULL), border_of(NULL)
+      start(_v1), end(_v2), front(NULL), back(NULL), border_of(NULL), index(-1)
   { }
 
   ~merge_segment_c()
@@ -241,12 +238,14 @@ class merge_region_c
 public:
   bool faces_out;
 
+  std::vector<area_poly_c *> areas;
+
+  // this index is not used by the polygoniser code (csg_poly.cc),
+  // only by the Doom conversion code.  -1 means "unused".
   int index;
 
-///---  std::vector<area_poly_c *> areas;
-
 public:
-  merge_region_c() : faces_out(false), index(-1) /// , areas()
+  merge_region_c() : faces_out(false), areas(), index(-1)
   { }
 
   ~merge_region_c()

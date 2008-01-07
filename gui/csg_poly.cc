@@ -86,7 +86,7 @@ area_vert_c::~area_vert_c()
 
 
 area_poly_c::area_poly_c(area_info_c *_info) :
-     info(_info), verts(), regions()
+     info(_info), verts()
 { }
 
 area_poly_c::~area_poly_c()
@@ -790,8 +790,6 @@ S->end->x, S->end->y, side);
   
   merge_region_c *R = new merge_region_c();
 
-R->index = (int)mug_regions.size(); // ONLY NEED FOR DEBUG
-
   mug_regions.push_back(R);
 
 
@@ -1111,9 +1109,9 @@ static void Mug_RemoveIslands(void)
 
 static bool AreaHasRegion(area_poly_c *P, merge_region_c *R)
 {
-  for (unsigned int j = 0; j < P->regions.size(); j++)
+  for (unsigned int j = 0; j < R->areas.size(); j++)
   {
-    if (R == P->regions[j])
+    if (P == R->areas[j])
       return true;
   }
 
@@ -1175,7 +1173,7 @@ static void MarkBoundaryRegions(area_poly_c *P)
       if (R)
       {
         if (! AreaHasRegion(P, R))
-          P->regions.push_back(R);
+          R->areas.push_back(P);
       }
       else
       {
@@ -1214,7 +1212,7 @@ static void MarkInnerRegions(area_poly_c *P)
       {
         merge_region_c *R = got_back ? S->front : S->back;
 
-        P->regions.push_back(R);
+        R->areas.push_back(P);
 
         changes++;
       }
