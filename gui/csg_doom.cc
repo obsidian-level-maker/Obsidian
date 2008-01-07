@@ -30,77 +30,12 @@
 #include "lib_util.h"
 
 
-static int total_sectors;
-static int total_lines;
+///-- static int total_vertices;
+///-- static int total_sectors;
+///-- static int total_lines;
 
-static void CreateSectors(void)
-{
-  total_sectors = 0;
 
-  for (int i = 0; i < (int)all_merges.size(); i++)
-  {
-    merged_area_c *M = all_merges[i];
-
-    SYS_ASSERT(M);
-
-    if (M->sector_index < 0)
-    {
-      M->sector_index = total_sectors;
-      total_sectors++;
-
-      // FIXME: propagate step:
-      //   (1) clear the 'process' list, add in current area
-      //   (2) iterate over process list
-      //   (3) if neighbour area has no sector AND matches this area,
-      //       propagate the sector index into it,
-      //       THEN add all the new neighbours into new process list.
-      //   (4) when done, old list := new list
-      //   (5) if new list not empty, goto 2
-    }
-  }
-}
-
-static void CreateLinedefs(void)
-{
-  total_lines = 0;
-
-  for (int i = 0; i < (int)all_merges.size(); i++)
-  {
-    merged_area_c *M = all_merges[i];
-
-    SYS_ASSERT(M->polys.size() > 0);
-
-    int num_vert = (int)M->polys[0]->verts.size();
-
-    for (int j1 = 0; j1 < num_vert; j1++)
-    {
-      int j2 = (j1 + 1) % num_vert;
-
-      area_vert_c *v1 = M->polys[0]->verts[j1];
-      area_vert_c *v2 = M->polys[0]->verts[j2];
-
-      SYS_ASSERT(v1 && v2);
-
-      // FIXME !!!
-    }
-  }
-}
-
-void CSG2_WriteDoom(void)
-{
-  // converts the Merged list into the sectors, linedefs (etc)
-  // required for a DOOM level.
-  
-  CSG2_MergeAreas();
-
-  CreateSectors();
-
-  CreateLinedefs();
-
-  // FIXME: things !!!!
-}
-
-void CSG2_TestDoom(void)
+void CSG2_TestDoom_Areas(void)
 {
   // for debugging only: each area_poly_c becomes a single sector
   // on the map.
@@ -144,6 +79,148 @@ void CSG2_TestDoom(void)
                        0, 1 /*impassible*/, 0, NULL /* args */);
     }
   }
+}
+
+static void CreateVertexes(void)
+{
+  for (unsigned int i = 0; i < mug_vertices.size(); i++)
+  {
+    merge_vertex_c *V = mug_vertices[i];
+    
+    V->index = (int)i;
+
+    wad::add_vertex(I_ROUND(V->x), I_ROUND(V->y));
+  }
+}
+ 
+void CSG2_TestDoom_Segments(void)
+{
+  // for debugging only: each merge_region becomes a single
+  // sector on the map.
+
+  unsigned int i;
+
+  CreateVertexes();
+
+
+  for (i = 0; i < mug_regions.size(); i++)
+  {
+    merge_region_c *R = mug_regions[i];
+
+    R->index = (int)i;
+
+    const char *flat = "FLAT1";
+ 
+#if 0 // QUICK TEST CRAP
+for (unsigned int p = 0; p < all_polys.size(); p++)
+{  area_poly_c *P = all_polys[p];
+for (unsigned int q = 0; q < P->regions.size(); q++)
+{  merge_region_c *Q = P->regions[q];
+if (Q == R) { flat = P->info->t_tex.c_str();
+DebugPrintf("Region %d has poly %p (%1.0f..%1.0f %s:%s)\n",
+R->index, P, P->info->z1, P->info->z2,
+P->info->b_tex.c_str(), P->info->t_tex.c_str());
+  }
+}}
+#endif
+ 
+    wad::add_sector(0,flat, 144,flat, 255,0,0);
+
+    const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
+
+    wad::add_sidedef(R->index, tex, "-", tex, 0, 0);
+  }
+
+
+  for (i = 0; i < mug_segments.size(); i++)
+  {
+    merge_segment_c *S = mug_segments[i];
+
+    SYS_ASSERT(S);
+    SYS_ASSERT(S->start);
+
+    wad::add_linedef(S->start->index, S->end->index,
+                     S->front ? S->front->index : -1,
+                     S->back  ? S->back->index  : -1,
+                     0, 1 /*impassible*/, 0,
+                     NULL /* args */);
+  }
+}
+
+
+static void CreateSectors(void)
+{
+  for (unsigned int i = 0; i < mug_regions.size(); i++)
+  {
+    merge_region_c *R = mug_regions[i];
+
+    R->index = (int)i;
+
+    const char *flat = "FLAT10";
+ 
+    wad::add_sector(0,flat, 144,flat, 255,0,0);
+  }
+}
+
+
+static void CreateSidedefs(void)
+{
+  for (unsigned int i = 0; i < mug_regions.size(); i++)
+  {
+    merge_region_c *R = mug_regions[i];
+
+    const char *tex = "STARTAN3";
+
+    wad::add_sidedef(R->index, "-", tex, "-", 0, 0);
+    wad::add_sidedef(R->index, tex, "-", tex, 0, 0);
+  }
+}
+
+
+static void CoalesceSectors(void)
+{
+  // TODO: CoalesceSectors
+}
+
+
+static void CreateLinedefs(void)
+{
+  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  {
+    merge_segment_c *S = mug_segments[i];
+
+    SYS_ASSERT(S);
+    SYS_ASSERT(S->start);
+    SYS_ASSERT(S->front);
+
+    int flags = 0;
+
+    if (! S->back)
+      flags = 1; /* impassible */
+
+    wad::add_linedef(S->start->index, S->end->index,
+                     S->front ? (2*S->front->index+1-flags) : -1,
+                     S->back  ? (2*S->back->index+1-flags)  : -1,
+                     0 /* type */, flags,
+                     0 /* tag */, NULL /* args */);
+  }
+}
+
+
+void CSG2_WriteDoom(void)
+{
+  // converts the Merged list into the sectors, linedefs (etc)
+  // required for a DOOM level.
+  
+  CSG2_MergeAreas();
+
+  CreateSectors();
+  CoalesceSectors();
+
+  CreateSidedefs();
+  CreateLinedefs();
+
+  // FIXME: things !!!!
 }
 
 

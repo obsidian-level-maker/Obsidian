@@ -1293,69 +1293,6 @@ void CSG2_MergeAreas(void)
   // TODO
 }
 
-void CSG2_DumpSegmentsToWAD(void)
-{
-  /* debugging function */
-
-  int total_vert = 0;
-
-  unsigned int i;
-
-  for (i = 0; i < mug_vertices.size(); i++)
-  {
-    merge_vertex_c *V = mug_vertices[i];
-    
-    V->index = total_vert;
-    total_vert++;
-
-    wad::add_vertex(I_ROUND(V->x), I_ROUND(V->y));
-  }
-
-
-  for (i = 0; i < mug_regions.size(); i++)
-  {
-    merge_region_c *R = mug_regions[i];
-
-    R->index = (int)i;
-
-    const char *flat = "FLAT1";
- 
-#if 0 // QUICK TEST CRAP
-for (unsigned int p = 0; p < all_polys.size(); p++)
-{  area_poly_c *P = all_polys[p];
-for (unsigned int q = 0; q < P->regions.size(); q++)
-{  merge_region_c *Q = P->regions[q];
-if (Q == R) { flat = P->info->t_tex.c_str();
-DebugPrintf("Region %d has poly %p (%1.0f..%1.0f %s:%s)\n",
-R->index, P, P->info->z1, P->info->z2,
-P->info->b_tex.c_str(), P->info->t_tex.c_str());
-  }
-}}
-#endif
- 
-    wad::add_sector(0,flat, 144,flat, 255,0,0);
-
-    const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
-
-    wad::add_sidedef(R->index, tex, "-", tex, 0, 0);
-  }
-
-
-  for (i = 0; i < mug_segments.size(); i++)
-  {
-    merge_segment_c *S = mug_segments[i];
-
-    SYS_ASSERT(S);
-    SYS_ASSERT(S->start);
-
-    wad::add_linedef(S->start->index, S->end->index,
-                     S->front ? S->front->index : -1,
-                     S->back  ? S->back->index  : -1,
-                     0, 1 /*impassible*/, 0,
-                     NULL /* args */);
-  }
-}
-
 
 //------------------------------------------------------------------------
 
