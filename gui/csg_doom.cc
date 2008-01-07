@@ -30,9 +30,11 @@
 #include "lib_util.h"
 
 
-///-- static int total_vertices;
-///-- static int total_sectors;
-///-- static int total_lines;
+#define VOID_INDEX  -2
+
+static int total_verts;
+static int total_sides;
+static int total_sectors;
 
 
 void CSG2_TestDoom_Areas(void)
@@ -81,18 +83,6 @@ void CSG2_TestDoom_Areas(void)
   }
 }
 
-static void CreateVertexes(void)
-{
-  for (unsigned int i = 0; i < mug_vertices.size(); i++)
-  {
-    merge_vertex_c *V = mug_vertices[i];
-    
-    V->index = (int)i;
-
-    wad::add_vertex(I_ROUND(V->x), I_ROUND(V->y));
-  }
-}
- 
 void CSG2_TestDoom_Segments(void)
 {
   // for debugging only: each merge_region becomes a single
@@ -100,7 +90,14 @@ void CSG2_TestDoom_Segments(void)
 
   unsigned int i;
 
-  CreateVertexes();
+  for (i = 0; i < mug_vertices.size(); i++)
+  {
+    merge_vertex_c *V = mug_vertices[i];
+    
+    V->index = (int)i;
+
+    wad::add_vertex(I_ROUND(V->x), I_ROUND(V->y));
+  }
 
 
   for (i = 0; i < mug_regions.size(); i++)
@@ -110,19 +107,6 @@ void CSG2_TestDoom_Segments(void)
     R->index = (int)i;
 
     const char *flat = "FLAT1";
- 
-#if 0 // QUICK TEST CRAP
-for (unsigned int p = 0; p < all_polys.size(); p++)
-{  area_poly_c *P = all_polys[p];
-for (unsigned int q = 0; q < P->regions.size(); q++)
-{  merge_region_c *Q = P->regions[q];
-if (Q == R) { flat = P->info->t_tex.c_str();
-DebugPrintf("Region %d has poly %p (%1.0f..%1.0f %s:%s)\n",
-R->index, P, P->info->z1, P->info->z2,
-P->info->b_tex.c_str(), P->info->t_tex.c_str());
-  }
-}}
-#endif
  
     wad::add_sector(0,flat, 144,flat, 255,0,0);
 
@@ -150,6 +134,7 @@ P->info->b_tex.c_str(), P->info->t_tex.c_str());
 
 static void CreateSectors(void)
 {
+
   for (unsigned int i = 0; i < mug_regions.size(); i++)
   {
     merge_region_c *R = mug_regions[i];
@@ -163,28 +148,52 @@ static void CreateSectors(void)
 }
 
 
-static void CreateSidedefs(void)
-{
-  for (unsigned int i = 0; i < mug_regions.size(); i++)
-  {
-    merge_region_c *R = mug_regions[i];
-
-    const char *tex = "STARTAN3";
-
-    wad::add_sidedef(R->index, "-", tex, "-", 0, 0);
-    wad::add_sidedef(R->index, tex, "-", tex, 0, 0);
-  }
-}
-
-
 static void CoalesceSectors(void)
 {
   // TODO: CoalesceSectors
 }
 
 
-static void CreateLinedefs(void)
+static int WriteVertex(merge_vertex_c *V)
 {
+  if (V->index < 0)
+  {
+    V->index = total_verts;
+    total_verts++;
+
+    wad::add_vertex(I_ROUND(V->x), I_ROUND(V->y));
+  }
+
+  return V->index;
+}
+
+static int WriteSector( XXX )
+{
+  if (S->index < 0)
+  {
+    S->index = total_sectors;
+    total_sectors++;
+
+    wad::add_sector( ZZZ );
+  }
+
+  return S->index;
+}
+ 
+static int WriteSidedef( XXX )
+{
+  const char *tex = "STARTAN3";
+
+  wad::add_sidedef(WriteSector(R), tex, "-", tex, 0, 0);
+
+  return total_sides-1;
+}
+
+static void WriteLinedefs(void)
+{
+  total_verts = 0;
+  total_sides = 0;
+
   for (unsigned int i = 0; i < mug_segments.size(); i++)
   {
     merge_segment_c *S = mug_segments[i];
@@ -193,17 +202,27 @@ static void CreateLinedefs(void)
     SYS_ASSERT(S->start);
     SYS_ASSERT(S->front);
 
-    int flags = 0;
+    int front_idx = -1;
+    int back_idx  = -1;
 
-    if (! S->back)
+    if (S->front)
+      front_idx = WriteSidedef( XXX );
+
+    if (S->back)
+      back_idx = WriteSidedef( XXX );
+
+    int flags = 0;
+    if (back_idx < 0)
       flags = 1; /* impassible */
 
-    wad::add_linedef(S->start->index, S->end->index,
-                     S->front ? (2*S->front->index+1-flags) : -1,
-                     S->back  ? (2*S->back->index+1-flags)  : -1,
+    wad::add_linedef(WriteVertex(S->start),
+                     WriteVertex(S->end),
+                     front_idx, back_idx,
                      0 /* type */, flags,
                      0 /* tag */, NULL /* args */);
   }
+
+  SYS_ASSERT(total_verts > 0);
 }
 
 
@@ -211,14 +230,20 @@ void CSG2_WriteDoom(void)
 {
   // converts the Merged list into the sectors, linedefs (etc)
   // required for a DOOM level.
-  
+  //
+  // Algorithm:
+  //
+  // 1) create a sector for each region (use VOID_INDEX for solids)
+  // 2) coalesce same sectors:
+  //    - mark border segments as unused
+  //    - mark vertices with all unused segs as unused
+  // 3) ???
+ 
   CSG2_MergeAreas();
 
   CreateSectors();
-  CoalesceSectors();
 
-  CreateSidedefs();
-  CreateLinedefs();
+  WriteLinedefs();
 
   // FIXME: things !!!!
 }
