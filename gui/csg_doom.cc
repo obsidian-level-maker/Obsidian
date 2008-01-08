@@ -179,72 +179,108 @@ void CSG2_TestDoom_Segments(void)
 }
 
 
-static void CreateSectors(void)
+static void CreateOneSector(merge_region_c *R)
 {
-  dm_sectors.clear();
-
-  // #0 represents VOID (removed later)
-  dm_sectors.push_back(new sector_info_c);
-
-  for (unsigned int i = 0; i < mug_regions.size(); i++)
+  // if only one brush, area must be solid
+  if (R->areas.size() <= 1)
   {
-    merge_region_c *R = mug_regions[i];
+    R->index = 0;
+    return;
+  }
 
-    // if only one brush, area must be solid
-    // (FIXME: be more lenient of contains a player/teleport thing)
-    if (R->areas.size() <= 1)
+  double min_z = +999999;
+  double max_z = -999999;
+
+  unsigned int k;
+  
+  for (k=0; k < R->areas.size(); k++)
+  {
+    area_poly_c *A = R->areas[k];
+
+    min_z = MIN(min_z, A->info->z1);
+    max_z = MAX(max_z, A->info->z2);
+  }
+
+  // look for a completely "void" brush
+  for (k=0; k < R->areas.size(); k++)
+  {
+    area_poly_c *A = R->areas[k];
+
+    if (A->info->z1 < min_z + EPSILON &&
+        A->info->z2 > max_z - EPSILON)
     {
       R->index = 0;
-      continue;
+      return;
     }
-
-    bool is_void = false;
-    int mark = 0;
-
-    for (unsigned k=0; k < R->areas.size(); k++)
-    {
-      area_poly_c *A = R->areas[k];
-
-      if (A->info->z1 < -1999 && A->info->z2 > 1999)
-      {
-        R->index = 0;
-        is_void=true;
-        break;
-      }
-
-      mark = MAX(mark, A->info->mark);
-    }
-    if (is_void)
-        continue;
-
-    // FIXME: proper analysis !!!!!
-    int B = 0;
-    int T = (int)R->areas.size() - 1;
-
-    area_poly_c *bottom = R->areas[B];
-    area_poly_c *top    = R->areas[T];
-
-    if (bottom->info->z1 > top->info->z2)
-    {
-      area_poly_c *TMP = top; top = bottom; bottom = TMP;
-    }
-    
-    R->index = (int)dm_sectors.size();
-
-    sector_info_c *sec = new sector_info_c;
-
-    sec->f_h   = I_ROUND(bottom->info->z2);
-    sec->c_h   = I_ROUND(top->info->z1);
-
-    sec->f_tex = bottom->info->t_tex;
-    sec->c_tex = top->info->b_tex;
-
-    // FIXME ETC...
-
-    dm_sectors.push_back(sec);
   }
-}
 
+  // OK, we will have a sector
+
+  // find bottom most (B) and top most (T) brushes
+  area_poly_c *B = NULL;
+  area_poly_c *T = NULL;
+
+  for (k=1; k < R->areas.size(); k++)
+  {
+    area_poly_c *A = R->areas[k];
+    
+    if (A->info->z1 < min_z + EPSILON)
+    {
+      if (! B || (A->info->z2 > B->info->z2 + EPSILON) )
+// FIXME: same height, prioritise   || (fabs(A->info->z2 - B->info->z2) <= EPSILON ....
+      {
+        B = A;
+      }
+    }
+
+    if (A->info->z2 > max_z - EPSILON)
+    {
+      if (! T || (A->info->z1 < T->info->z1 - EPSILON) )
+// FIXME: same height, prioritise   || (fabs(A->info->z1 - B->info->z1) <= EPSILON ....
+      {
+        T = A;
+      }
+    }
+  }
+
+  SYS_ASSERT(B && T);
+
+
+  sector_info_c *sec = new sector_info_c;
+
+  sec->f_h = I_ROUND(B->info->z2);
+  sec->c_h = I_ROUND(T->info->z1);
+
+  sec->f_tex = B->info->t_tex;
+  sec->c_tex = T->info->b_tex;
+
+  sec->light = MAX(B->info->t_light, T->info->b_light);
+  sec->mark  = MAX(B->info->mark,    T->info->mark);
+
+  if (B->info->sec_kind > 0)
+  {
+    sec->special = B->info->sec_kind;
+    sec->tag     = B->info->sec_tag;
+  }
+  else if (T->info->sec_kind > 0)
+  {
+    sec->special = T->info->sec_kind;
+    sec->tag     = T->info->sec_tag;
+  }
+  else
+  {
+    sec->special = 0;
+    sec->tag     = 0;
+  }
+
+
+  R->index = (int)dm_sectors.size();
+
+  dm_sectors.push_back(sec);
+
+
+  // TODO: find brushes floating in-between, make extrafloors
+}
 
 static void CoalesceSectors(void)
 {
@@ -281,6 +317,23 @@ static void CoalesceSectors(void)
     if (changes == 0)
       return;
   }
+}
+
+static void CreateSectors(void)
+{
+  dm_sectors.clear();
+
+  // #0 represents VOID (removed later)
+  dm_sectors.push_back(new sector_info_c);
+
+  for (unsigned int i = 0; i < mug_regions.size(); i++)
+  {
+    merge_region_c *R = mug_regions[i];
+
+    CreateOneSector(R);
+  }
+
+  CoalesceSectors();
 }
 
 
@@ -395,7 +448,6 @@ void CSG2_WriteDoom(void)
   CSG2_MergeAreas();
 
   CreateSectors();
-  CoalesceSectors();
 
   WriteLinedefs();
 
