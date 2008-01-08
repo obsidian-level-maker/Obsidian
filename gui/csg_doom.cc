@@ -120,7 +120,7 @@ void CSG2_TestDoom_Areas(void)
       int j2 = (j1 + 1) % (int)P->verts.size();
 
       area_vert_c *v1 = P->verts[j1];
-      area_vert_c *v2 = P->verts[j2];
+   // area_vert_c *v2 = P->verts[j2];
 
       wad::add_vertex(I_ROUND(v1->x), I_ROUND(v1->y));
 
@@ -220,7 +220,7 @@ static void CreateOneSector(merge_region_c *R)
   area_poly_c *B = NULL;
   area_poly_c *T = NULL;
 
-  for (k=1; k < R->areas.size(); k++)
+  for (k=0; k < R->areas.size(); k++)
   {
     area_poly_c *A = R->areas[k];
     
