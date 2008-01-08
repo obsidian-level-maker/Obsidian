@@ -22,6 +22,12 @@ Oblige-0.90/    <<< working & install directory (chdir to it)
     builder.lua
     ...etc...
  
+  games/
+    doom1.lua
+    ...etc...
+
+  mods/
+
   data/
     w74a_1.raw
     w74a_2.raw
