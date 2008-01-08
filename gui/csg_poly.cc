@@ -710,8 +710,6 @@ static void Mug_FindOverlaps(void)
     Mug_AdjustList();
 
     loops++;
-
-fprintf(stderr, "Mug_FindOverlaps: loop %d, changes %d\n", loops, mug_changes);
   }
   while (mug_changes > 0);
 }
@@ -1219,8 +1217,6 @@ static void MarkInnerRegions(area_poly_c *P)
         changes++;
       }
     }
-
-fprintf(stderr, "area_poly_c %p: changes %d\n", P, changes);
 
     // stop when it cannot spread any further
     if (changes == 0)
