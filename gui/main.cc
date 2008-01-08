@@ -327,7 +327,9 @@ int main(int argc, char **argv)
   LogPrintf("install_path: [%s]\n\n", install_path);
 
   // load icons for file chooser
+#ifndef WIN32
   Fl_File_Icon::load_system_icons();
+#endif
 
   Script_Init();
   Doom_Init();

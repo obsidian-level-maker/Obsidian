@@ -23,8 +23,9 @@ OS=WIN32
 #--- Internal stuff from here -----------------------------------
 
 FLTK_FLAGS=-I$(FLTK_DIR)
-FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
-          $(FLTK_DIR)/lib/libfltk.a
+## FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
+##           $(FLTK_DIR)/lib/libfltk.a
+FLTK_LIBS=$(FLTK_DIR)/lib/libfltk.a
 
 LUA_FLAGS=-I$(LUA_DIR)/src
 LUA_LIBS=$(LUA_DIR)/src/liblua.a
