@@ -44,6 +44,7 @@ LIBS=-lm $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS) $(ZLIB_LIBS) \
      -lcomctl32 -lwsock32 -lsupc++
 
 OBJS=	main.o      \
+	oblige_res.o \
 	lib_argv.o  \
 	lib_file.o  \
 	lib_signal.o \
@@ -83,8 +84,11 @@ $(PROGRAM): $(OBJS)
 
 g_image.o: img_data.h
 
+oblige_res.o: oblige.rc
+	i586-mingw32msvc-windres $^ -o $@
+
 bin: all
-	mingw32-strip --strip-unneeded $(PROGRAM)
+	i586-mingw32msvc-strip --strip-unneeded $(PROGRAM)
 
 .PHONY: all clean bin
 
