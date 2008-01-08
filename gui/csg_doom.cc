@@ -350,12 +350,9 @@ static int WriteVertex(merge_vertex_c *V)
   return V->index;
 }
 
-static int WriteSector(merge_region_c *R)
+
+static int WriteSector(sector_info_c *S)
 {
-  SYS_ASSERT(R->index > 0);
-
-  sector_info_c *S = dm_sectors[R->index];
-
   if (S->index < 0)
   {
     S->index = total_sectors;
@@ -368,23 +365,70 @@ static int WriteSector(merge_region_c *R)
 
   return S->index;
 }
- 
-static int WriteSidedef(merge_region_c *F, merge_region_c *B)
+
+
+static std::string FindSideTexture(double z, merge_segment_c *G,
+                                   merge_region_c *F, merge_region_c *B)
+{
+  if (! B)
+    return std::string("FIREBLU1");  // FIXME: ERROR_TEX
+
+  // TODO: find texture in line loops using segment 'G'
+
+  // TODO: check for multiple matches, prioritise
+
+  unsigned int k;
+
+  // examine *back* region
+  for (k = 0; k < B->areas.size(); k++)
+  {
+    area_poly_c *A = B->areas[k];
+
+    if ((z > A->info->z1 - EPSILON) && (z < A->info->z2 + EPSILON))
+      return A->info->w_tex;
+  }
+
+  // none found ???  FIXME use closest area
+  return std::string("CRACKLE2");
+}
+
+static int WriteSidedef(merge_segment_c *G, merge_region_c *F, merge_region_c *B)
 {
   if (! (F && F->index > 0))
     return -1;
 
-  const char *tex = "STARTAN3";
+  sector_info_c *S = dm_sectors[F->index];
+
+  int sec_num = WriteSector(S);
 
   if (B && B->index > 0)
-    wad::add_sidedef(WriteSector(F), tex, "-", tex, 0, 0);
+  {
+    sector_info_c *BS = dm_sectors[B->index];
+
+    double fz = (S->f_h + BS->f_h) / 2.0;
+    double cz = (S->c_h + BS->c_h) / 2.0;
+
+    std::string lower = FindSideTexture(fz, G, F, B);
+    std::string upper = FindSideTexture(cz, G, F, B);
+
+    std::string rail = "-"; // TODO = FindRailTexture( xxx )
+
+    wad::add_sidedef(sec_num, lower.c_str(), rail.c_str(), upper.c_str(), 0, 0);
+  }
   else
-    wad::add_sidedef(WriteSector(F), "-", tex, "-", 0, 0);
+  {
+    double z = (S->f_h + S->c_h) / 2.0;
+
+    std::string wall = FindSideTexture(z, G, F, B);
+
+    wad::add_sidedef(sec_num, "-", wall.c_str(), "-", 0, 0);
+  }
 
   total_sides++;
 
   return total_sides-1;
 }
+
 
 static void WriteLinedefs(void)
 {
@@ -392,23 +436,27 @@ static void WriteLinedefs(void)
   total_sides = 0;
 
   // TODO: optimise maps by merging two contiguous segments
-  //       sitting on a area_poly line where possible.
+  //       sitting on a area_poly line when they are exactly
+  //       the same.
 
   for (unsigned int i = 0; i < mug_segments.size(); i++)
   {
-    merge_segment_c *S = mug_segments[i];
+    merge_segment_c *G = mug_segments[i];
 
-    SYS_ASSERT(S);
-    SYS_ASSERT(S->start);
+    SYS_ASSERT(G);
+    SYS_ASSERT(G->start);
 
-    int front_idx = WriteSidedef(S->front, S->back);
-    int back_idx  = WriteSidedef(S->back, S->front);
+    // TODO: if same sector on both sides, continue, unless
+    //       we have a rail texture.
+
+    int front_idx = WriteSidedef(G, G->front, G->back);
+    int back_idx  = WriteSidedef(G, G->back, G->front);
 
     if (front_idx < 0 && back_idx < 0)
       continue;
 
-    int v1 = WriteVertex(S->start);
-    int v2 = WriteVertex(S->end);
+    int v1 = WriteVertex(G->start);
+    int v2 = WriteVertex(G->end);
 
     if (front_idx < 0)
     {
