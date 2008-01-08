@@ -5,10 +5,8 @@ TODO
 
 CSG Polygoniser:
 
--  store results of CSG_MergeAreas() in a usable format
-   (turn regions into line loops ?)
-
--  csg_doom: proper sector analysis code
+-  stuff.... 
+  
 
 
 GUI:
