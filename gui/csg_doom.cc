@@ -33,6 +33,11 @@
 #define VOID_INDEX  -2
 
 
+static int total_verts;
+static int total_sides;
+static int total_sectors;
+
+
 class sector_info_c 
 {
 public:
@@ -42,8 +47,10 @@ public:
   std::string f_tex;
   std::string c_tex;
   
-  int light; int special;
-  int tag; int mark;
+  int light;
+  int special;
+  int tag;
+  int mark;
 
   int index;
   
@@ -58,17 +65,32 @@ public:
 
   bool Match(const sector_info_c *other) const
   {
-    return false; // FIXME !!!!! sector_info_c::Match
+    return (f_h == other->f_h) &&
+           (c_h == other->c_h) &&
+           (light == other->light) &&
+           (special == other->special) &&
+           (tag  == other->tag)  &&
+           (mark == other->mark) &&
+           (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
+           (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0);
   }
 };
 
-
-static int total_verts;
-static int total_sides;
-static int total_sectors;
-
-
 static std::vector<sector_info_c *> dm_sectors;
+
+
+class open_space_c
+{
+public:
+  double z1, z2;
+ 
+public:
+  open_space_c()
+  { }
+
+  ~open_space_c()
+  { }
+};
 
 
 void CSG2_TestDoom_Areas(void)
@@ -76,18 +98,9 @@ void CSG2_TestDoom_Areas(void)
   // for debugging only: each area_poly_c becomes a single sector
   // on the map.
  
-  std::vector<area_poly_c *>::iterator PLI;
-
-#if 0
-  CSG2_MergeAreas();
-
-  for (int r = 0; r < (int)all_merges.size(); r++)
-  if ( (PLI = all_merges[r]->polys.begin()), true )
-#else
-  for (PLI = all_polys.begin(); PLI != all_polys.end(); PLI++)
-#endif
+  for (unsigned int k = 0; k < all_polys.size(); k++)
   {
-    area_poly_c *P = *PLI;
+    area_poly_c *P = all_polys[k];
     area_info_c *A = P->info;
     
     int sec_idx = wad::num_sectors();
@@ -186,6 +199,8 @@ static void CreateSectors(void)
     }
 
     bool is_void = false;
+    int mark = 0;
+
     for (unsigned k=0; k < R->areas.size(); k++)
     {
       area_poly_c *A = R->areas[k];
@@ -196,6 +211,8 @@ static void CreateSectors(void)
         is_void=true;
         break;
       }
+
+      mark = MAX(mark, A->info->mark);
     }
     if (is_void)
         continue;
