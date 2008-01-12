@@ -20,15 +20,14 @@ require 'defs'
 require 'util'
 require 'a_star'
 
-require 'prefab'
+--- require 'prefab'
 --- require 'theme'
 
-require 'planner'
-require 'plan_dm'
+--- require 'planner'
+--- require 'plan_dm'
 
-require 'monster'
-require 'builder'
-require 'writer'
+--- require 'monster'
+--- require 'builder'
 
 require 'engines'
 
