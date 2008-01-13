@@ -20,7 +20,6 @@
 #define __OBLIGE_CSG_DOOM_H__
 
 void CSG2_WriteDoom(void);
-void CSG2_TestDoom(void);
 
 #endif /* __OBLIGE_CSG_DOOM_H__ */
 
