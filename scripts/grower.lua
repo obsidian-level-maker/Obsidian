@@ -606,7 +606,7 @@ function test_grow_all()
 
   local function add_link(sx, sy, ex, ey, long, where)
     long  = long or 3
-    where = where or rand_sel(65, "low", "high")
+    where = where or "lax"
 
     local dir = delta_to_dir(ex-sx, ey-sy)
     assert(dir==2 or dir==4 or dir==6 or dir==8)
@@ -705,7 +705,168 @@ function test_grow_all()
 end
 
 
-math.randomseed(6)
+function test_grow_3D()
 
-test_grow_all()
+  print("test_grow_3D...")
+
+  SEEDS = {}
+
+
+  local function coord_key(x, y, z)
+    return tostring(10+x) .. tostring(10+y) .. tostring(10+z)
+  end
+
+  local function add_seed(x, y, z, rm, f_h, c_h, kind)
+
+    if not kind then kind = "walkway" end
+    
+    local S =
+    {
+      sx = x, sy = y, sz = z,
+
+      f_h = f_h, c_h = c_h,
+
+      room = rm, kind = kind,
+
+      link = {}
+    }
+
+    if SEEDS[coord_key(x,y,z)] then
+      error(string.format("Seed already exists at %d,%d,%d", x,y,z))
+    end
+
+    SEEDS[coord_key(x,y,z)] = S
+  end
+
+  local function add_link(x1,y1,z1, x2,y2,z2)
+
+    local dx = math.abs(x2-x1)
+    local dy = math.abs(y2-y1)
+    local dz = math.abs(z2-z1)
+
+    assert( (dx==0 and dy==0 and dz==1) or
+            (dx==0 and dy==1 and dz==0) or
+            (dx==1 and dy==0 and dz==0))
+
+    local S = SEEDS[coord_key(x1,y1,z1)]
+    local T = SEEDS[coord_key(x2,y2,z2)]
+
+    if not S then error(string.format("No such source for link: %d,%d,%d", x1,y1,z1)) end
+    if not T then error(string.format("No such dest for link: %d,%d,%d", x2,y2,z2)) end
+
+    local dir
+        if (dx == 1) then dir = sel(x1 > x2, 4, 6)
+    elseif (dy == 1) then dir = sel(y1 > y2, 2, 8)
+    else                  dir = sel(z1 > z2, 1, 9)
+    end
+
+    local tdir = 10 - dir
+
+    assert(not S.link[dir])
+    assert(not T.link[tdir])
+
+    S.link[dir]  = T
+    T.link[tdir] = S
+  end
+
+
+  -- rooms --
+
+  local room = { mass=6.0, f_h=0, c_h=384 }
+
+  local h_green = { mass=1.0, f_h=0,   c_h=128 }
+  local h_blue  = { mass=1.0, f_h=128, c_h=256 }
+  local h_red   = { mass=1.0, f_h=256, c_h=384 }
+
+  -- seeds --
+
+  -- GREEN:
+  add_seed(3,3,1, room, 0,128)
+  add_seed(4,3,1, room, 0,128)
+  add_seed(5,3,1, room, 0,128)
+  --
+  add_seed(3,4,1, room, 0,128)
+  add_seed(4,4,1, room, 0,128, "solid")
+  add_seed(5,4,1, room, 0,128)
+  --
+  add_seed(3,5,1, room, 0,128)
+  add_seed(4,5,1, room, 0,128)
+  add_seed(5,5,1, room, 0,128)
+  --
+  add_seed(2,5,1, h_green, 0,128)
+  add_seed(6,5,1, h_green, 0,128)
+
+  -- BLUE:
+  add_seed(1,3,2, h_blue, 128,256) 
+  add_seed(2,3,2, h_blue, 128,256)
+  add_seed(6,3,2, h_blue, 128,256)
+  add_seed(7,3,2, h_blue, 128,256)
+  --
+  add_seed(3,3,2, room, 128,256)
+  add_seed(4,3,2, room, 128,256,"solid")
+  add_seed(5,3,2, room, 128,256)
+  --
+  add_seed(3,4,2, room, 128,256)
+  add_seed(4,4,2, room, 128,256)
+  add_seed(5,4,2, room, 128,256)
+  --
+  add_seed(3,5,2, room, 128,256,"empty")
+  add_seed(4,5,2, room, 128,256)
+  add_seed(5,5,2, room, 128,256,"empty")
+  --
+  add_seed(4,6,2, h_blue, 128,256)
+  add_seed(4,7,2, h_blue, 128,256)
+  
+  -- RED:
+  add_seed(4,1,3, h_red, 256,384)
+  add_seed(4,2,3, h_red, 256,384)
+  --
+  add_seed(3,3,3, room, 256,384)
+  add_seed(4,3,3, room, 256,384)
+  add_seed(5,3,3, room, 256,384)
+  --
+  add_seed(3,4,3, room, 256,384,"empty")
+  add_seed(4,4,3, room, 256,384,"empty")
+  add_seed(5,4,3, room, 256,384,"empty")
+  --
+  add_seed(3,5,3, room, 256,384,"empty")
+  add_seed(4,5,3, room, 256,384,"empty")
+  add_seed(5,5,3, room, 256,384,"empty")
+
+
+  -- links --
+
+  -- ROOM
+  for x = 3,5 do for y = 3,5 do for z = 1,3 do
+    if (x < 5) then
+      add_link(x,y,z, x+1,y,z)
+    end
+    if (y < 5) then
+      add_link(x,y,z, x,y+1,z)
+    end
+    if (z < 3) then
+      add_link(x,y,z, x,y,z+1)
+    end
+  end end end
+
+  -- BLUE
+  add_link(1,3,2, 2,3,2)
+  add_link(2,3,2, 3,3,2)
+  add_link(5,3,2, 6,3,2)
+  add_link(6,3,2, 7,3,2)
+
+  -- GREEN
+  add_link(2,5,1, 3,5,1)
+  add_link(5,5,1, 6,5,1)
+
+  -- RED
+  add_link(4,1,3, 4,2,3)
+  add_link(4,2,3, 4,3,3)
+
+end
+
+
+math.randomseed(1)
+
+test_grow_3D()
 
