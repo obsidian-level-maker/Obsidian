@@ -29,6 +29,9 @@ function con.abort() return false end
 function con.rand_seed(value) math.randomseed(value) end
 function con.random() return math.random() end
 
+csg2 = {}
+function csg2.add_solid() end
+
 
 require 'util'
 
@@ -705,11 +708,126 @@ function test_grow_all()
 end
 
 
+------------------------------------------------------------------------
+
+MIN_Z = -2048
+MAX_Z =  2048
+
+function get_seed_wall(S, side)
+  
+  if side == 4 then
+    return
+    {
+      { x = S.x1,    y = S.y1 },
+      { x = S.x1,    y = S.y2 },
+      { x = S.x1+16, y = S.y2-16 },
+      { x = S.x1+16, y = S.y1+16 },
+    }
+  end
+
+  if side == 6 then
+    return
+    {
+      { x = S.x2,    y = S.y2 },
+      { x = S.x2,    y = S.y1 },
+      { x = S.x2-16, y = S.y1+16 },
+      { x = S.x2-16, y = S.y2-16 },
+    }
+  end
+
+  if side == 2 then
+    return
+    {
+      { x = S.x2,    y = S.y1 },
+      { x = S.x1,    y = S.y1 },
+      { x = S.x1+16, y = S.y1+16 },
+      { x = S.x2-16, y = S.y1+16 },
+    }
+  end
+
+  if side == 8 then
+    return
+    {
+      { x = S.x1,    y = S.y2 },
+      { x = S.x2,    y = S.y2 },
+      { x = S.x2-16, y = S.y2-16 },
+      { x = S.x1+16, y = S.y2-16 },
+    }
+  end
+
+  error("BAD SIDE for get_seed_wall: " .. tostring(side))
+end
+
+function render_seed(S)
+  
+  if S.kind == "solid" then return end
+
+  local tex = "rock1_2"
+
+  if S.z1 > 100 then tex = "tech01_1"  end
+  if S.z1 > 200 then tex = "ground1_1" end
+
+  -- floor
+  if S.kind == "walkway" then
+    csg2.add_solid(
+    {
+      t_tex = tex, b_tex = tex, w_tex = tex
+    },
+    {
+      { x = S.x1, y = S.y1 },
+      { x = S.x1, y = S.y2 },
+      { x = S.x2, y = S.y2 },
+      { x = S.x2, y = S.y1 },
+    },
+    {
+      z1 = S.z1, z2 = S.z1+16
+    })
+  end
+
+  -- ceiling
+  if S.z2 > S.room.c_h-8 and not S.link[9] then
+    csg2.add_solid(
+    {
+      t_tex = tex, b_tex = tex, w_tex = tex
+    },
+    {
+      { x = S.x1, y = S.y1 },
+      { x = S.x1, y = S.y2 },
+      { x = S.x2, y = S.y2 },
+      { x = S.x2, y = S.y1 },
+    },
+    {
+      z1 = S.z2-16, z2 = S.z2
+    })
+  end
+
+  -- walls
+  for side = 2,8,2 do
+    local L = S.link[side]
+    local other
+    if L then other = assert(sel(S == L.src, L.dest, L.src)) end
+    
+    if not L or other.kind == "solid" then
+    
+      csg2.add_solid(
+      {
+        t_tex = tex, b_tex = tex, w_tex = tex
+      },
+      get_seed_wall(S, side),
+      {
+        z1 = S.z1, z2 = S.z2
+      })
+    end
+  end
+end
+
+
 function test_grow_3D()
 
   print("test_grow_3D...")
 
-  SEEDS = {}
+  SEED_LIST = {}
+  SEED_MAP  = {}
 
 
   local function coord_key(x, y, z)
@@ -724,18 +842,24 @@ function test_grow_3D()
     {
       sx = x, sy = y, sz = z,
 
-      f_h = f_h, c_h = c_h,
+      -- hard code the coordinates (NOT GROWN)
+      x1 = x*192, y1=y*192, z1=f_h,
+      x2 = (x+1)*192, y2=(y+1)*192, z2=c_h,
+
+---   f_h = f_h, c_h = c_h,
 
       room = rm, kind = kind,
 
       link = {}
     }
 
-    if SEEDS[coord_key(x,y,z)] then
+    if SEED_MAP[coord_key(x,y,z)] then
       error(string.format("Seed already exists at %d,%d,%d", x,y,z))
     end
 
-    SEEDS[coord_key(x,y,z)] = S
+    SEED_MAP[coord_key(x,y,z)] = S
+
+    table.insert(SEED_LIST, S)
   end
 
   local function add_link(x1,y1,z1, x2,y2,z2)
@@ -748,8 +872,8 @@ function test_grow_3D()
             (dx==0 and dy==1 and dz==0) or
             (dx==1 and dy==0 and dz==0))
 
-    local S = SEEDS[coord_key(x1,y1,z1)]
-    local T = SEEDS[coord_key(x2,y2,z2)]
+    local S = SEED_MAP[coord_key(x1,y1,z1)]
+    local T = SEED_MAP[coord_key(x2,y2,z2)]
 
     if not S then error(string.format("No such source for link: %d,%d,%d", x1,y1,z1)) end
     if not T then error(string.format("No such dest for link: %d,%d,%d", x2,y2,z2)) end
@@ -765,8 +889,14 @@ function test_grow_3D()
     assert(not S.link[dir])
     assert(not T.link[tdir])
 
-    S.link[dir]  = T
-    T.link[tdir] = S
+    local LINK =
+    {
+      src = S, dest = T,
+      kind = "empty"
+    }
+
+    S.link[dir]  = LINK
+    T.link[tdir] = LINK
   end
 
 
@@ -863,6 +993,12 @@ function test_grow_3D()
   add_link(4,1,3, 4,2,3)
   add_link(4,2,3, 4,3,3)
 
+
+  -- convert seeds into brushes
+
+  for zzz,S in ipairs(SEED_LIST) do
+    render_seed(S)
+  end
 end
 
 
