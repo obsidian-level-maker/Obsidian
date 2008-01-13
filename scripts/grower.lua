@@ -22,6 +22,7 @@
 
 require 'defs'
 
+--[[
 -- FIXME: temp stuff for util module
 con = { }
 function con.ticker() end
@@ -31,6 +32,7 @@ function con.random() return math.random() end
 
 csg2 = {}
 function csg2.add_solid() end
+--]]
 
 
 require 'util'
@@ -713,45 +715,47 @@ end
 MIN_Z = -2048
 MAX_Z =  2048
 
+PAD = 0
+
 function get_seed_wall(S, side)
   
   if side == 4 then
     return
     {
-      { x = S.x1,    y = S.y1 },
-      { x = S.x1,    y = S.y2 },
-      { x = S.x1+16, y = S.y2-16 },
-      { x = S.x1+16, y = S.y1+16 },
+      { x = S.x1-PAD,  y = S.y1-PAD },
+      { x = S.x1-PAD,  y = S.y2+PAD },
+      { x = S.x1+16,   y = S.y2+PAD },
+      { x = S.x1+16,   y = S.y1-PAD },
     }
   end
 
   if side == 6 then
     return
     {
-      { x = S.x2,    y = S.y2 },
-      { x = S.x2,    y = S.y1 },
-      { x = S.x2-16, y = S.y1+16 },
-      { x = S.x2-16, y = S.y2-16 },
+      { x = S.x2+PAD,  y = S.y2+PAD },
+      { x = S.x2+PAD,  y = S.y1-PAD },
+      { x = S.x2-16,   y = S.y1-PAD },
+      { x = S.x2-16,   y = S.y2+PAD },
     }
   end
 
   if side == 2 then
     return
     {
-      { x = S.x2,    y = S.y1 },
-      { x = S.x1,    y = S.y1 },
-      { x = S.x1+16, y = S.y1+16 },
-      { x = S.x2-16, y = S.y1+16 },
+      { x = S.x2+PAD, y = S.y1 },
+      { x = S.x1-PAD, y = S.y1 },
+      { x = S.x1-PAD, y = S.y1+16 },
+      { x = S.x2+PAD, y = S.y1+16 },
     }
   end
 
   if side == 8 then
     return
     {
-      { x = S.x1,    y = S.y2 },
-      { x = S.x2,    y = S.y2 },
-      { x = S.x2-16, y = S.y2-16 },
-      { x = S.x1+16, y = S.y2-16 },
+      { x = S.x1-PAD, y = S.y2+PAD },
+      { x = S.x2+PAD, y = S.y2+PAD },
+      { x = S.x2+PAD, y = S.y2-16 },
+      { x = S.x1-PAD, y = S.y2-16 },
     }
   end
 
@@ -762,10 +766,10 @@ function render_seed(S)
   
   if S.kind == "solid" then return end
 
-  local tex = "rock1_2"
+  local tex = "STARTAN3" -- "rock1_2"
 
-  if S.z1 > 100 then tex = "tech01_1"  end
-  if S.z1 > 200 then tex = "ground1_1" end
+---  if S.z1 > 100 then tex = "tech01_1"  end
+---  if S.z1 > 200 then tex = "ground1_1" end
 
   -- floor
   if S.kind == "walkway" then
@@ -780,12 +784,16 @@ function render_seed(S)
       { x = S.x2, y = S.y1 },
     },
     {
-      z1 = S.z1, z2 = S.z1+16
+      z1 = S.z1-PAD, z2 = S.z1+16
     })
   end
 
   -- ceiling
-  if S.z2 > S.room.c_h-8 and not S.link[9] then
+  if not S.link[9] or
+     (S.link[9].src == S and S.link[9].dest.kind == "solid") or
+     (S.link[9].dest == S and S.link[9].src.kind == "solid")
+  then
+    
     csg2.add_solid(
     {
       t_tex = tex, b_tex = tex, w_tex = tex
@@ -797,7 +805,7 @@ function render_seed(S)
       { x = S.x2, y = S.y1 },
     },
     {
-      z1 = S.z2-16, z2 = S.z2
+      z1 = S.z2-16, z2 = S.z2+PAD
     })
   end
 
@@ -815,7 +823,7 @@ function render_seed(S)
       },
       get_seed_wall(S, side),
       {
-        z1 = S.z1, z2 = S.z2
+        z1 = S.z1-PAD, z2 = S.z2+PAD
       })
     end
   end
@@ -982,8 +990,12 @@ function test_grow_3D()
   -- BLUE
   add_link(1,3,2, 2,3,2)
   add_link(2,3,2, 3,3,2)
+  
   add_link(5,3,2, 6,3,2)
   add_link(6,3,2, 7,3,2)
+  
+  add_link(4,5,2, 4,6,2)
+  add_link(4,6,2, 4,7,2)
 
   -- GREEN
   add_link(2,5,1, 3,5,1)
@@ -1002,7 +1014,8 @@ function test_grow_3D()
 end
 
 
+--[[
 math.randomseed(1)
 
 test_grow_3D()
-
+--]]

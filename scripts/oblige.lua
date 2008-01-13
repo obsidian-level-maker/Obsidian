@@ -20,17 +20,9 @@ require 'defs'
 require 'util'
 require 'a_star'
 
---- require 'prefab'
---- require 'theme'
-
---- require 'planner'
---- require 'plan_dm'
-
---- require 'monster'
---- require 'builder'
-
 require 'engines'
 
+require 'grower'
 require 'test_csg'
 
 
@@ -523,6 +515,16 @@ function ob_build_cool_shit()
 
   con.rand_seed(OB_CONFIG.seed * 100)
 
+
+-- [[ Quake 3D TEST
+  wad.begin_level("MAP01");
+
+  test_grow_3D();
+
+  wad.end_level();
+
+  do return "ok" end
+--]]
 
 --[[  CSG TEST CODE
   wad.begin_level("MAP01");
