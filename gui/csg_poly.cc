@@ -404,6 +404,13 @@ static merge_segment_c *Mug_AddSegment(merge_vertex_c *start, merge_vertex_c *en
 
   merge_segment_c * S = new merge_segment_c(start, end);
 
+  // check for zero-length lines
+  double dist = MAX(fabs(start->x - end->x), fabs(start->y - end->y));
+
+  if (dist < EPSILON*2)
+      Main_FatalError("line loop contains a zero-length line! (%1.1f,%1.1f)\n",
+             start->x, start->y);
+ 
   mug_segments.push_back(S);
 
   start->AddSeg(S);
@@ -432,6 +439,21 @@ static void Mug_MakeSegments(area_poly_c *P)
 
 static void Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V)
 {
+#if 0  // DEBUG CHECK
+  {
+    double d1 = MAX(fabs(S->start->x - V->x), fabs(S->start->y - V->y));
+    double d2 = MAX(fabs(S->end  ->x - V->x), fabs(S->end  ->y - V->y));
+
+    if (d1 < EPSILON || d2 < EPSILON)
+    {
+      Main_FatalError("INTERNAL ERROR: Mug_SplitSegment bad split point\n"
+           "Segment = (%1.5f %1.5f) .. (%1.5f %1.5f)\n"
+           "Vertex  = (%1.5f %1.5f)\n",
+           S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
+    }
+  }
+#endif
+  
   merge_segment_c *NS = new merge_segment_c(V, S->end);
 
   S->end = V;
@@ -594,6 +616,9 @@ static void Mug_OverlapPass(void)
        * now we perform the line-line intersection test.
        */
 
+///fprintf(stderr, "\nA = (%1.4f %1.4f) .. (%1.4f %1.4f)\n", ax1,ay1, ax2,ay2);
+///fprintf(stderr,   "B = (%1.4f %1.4f) .. (%1.4f %1.4f)\n", bx1,by1, bx2,by2);
+
       double ap1 = PerpDist(ax1,ay1, bx1,by1, bx2,by2);
       double ap2 = PerpDist(ax2,ay2, bx1,by1, bx2,by2);
 
@@ -614,7 +639,7 @@ static void Mug_OverlapPass(void)
       if (fabs(bp1) <= EPSILON && fabs(bp2) <= EPSILON)
       {
 #if 1
-        // same start + end points?
+        // total overlap (same start + end points) ?
         if (A->Match(B))
         {
           B->Kill();
@@ -631,18 +656,15 @@ static void Mug_OverlapPass(void)
         if (b1_along > a1_along+EPSILON && b1_along < a2_along-EPSILON)
           Mug_SplitSegment(A, B->start);
 
-        if (b2_along > a1_along+EPSILON && b2_along < a2_along-EPSILON)
+        else if (b2_along > a1_along+EPSILON && b2_along < a2_along-EPSILON)
           Mug_SplitSegment(A, B->end);
 
-        if (a1_along > b1_along+EPSILON && a1_along < b2_along-EPSILON)
+        else if (a1_along > b1_along+EPSILON && a1_along < b2_along-EPSILON)
           Mug_SplitSegment(B, A->start);
 
-        if (a2_along > b1_along+EPSILON && a2_along < b2_along-EPSILON)
+        else if (a2_along > b1_along+EPSILON && a2_along < b2_along-EPSILON)
           Mug_SplitSegment(B, A->end);
-#if 0
-        // check for total overlap (A covers B or vice versa)
-        // NOTE: this will be detected in next pass
-#endif
+
         continue;
       }
 
