@@ -130,7 +130,7 @@ void CSG2_TestDoom_Areas(void)
   }
 }
 
-void CSG2_TestDoom_Segments(void)
+void CSG2_TestDoom_Regions(void)
 {
   // for debugging only: each merge_region becomes a single
   // sector on the map.
@@ -245,11 +245,43 @@ static void CreateOneSector(merge_region_c *R)
 
   SYS_ASSERT(B && T);
 
+  // upgrade brushes if another solid intersects
+
+  for (;;)
+  {
+    bool changed = false;
+
+    for (k=0; k < R->areas.size(); k++)
+    {
+      area_poly_c *A = R->areas[k];
+
+      if (A->info->z1 < B->info->z2 + EPSILON &&
+          A->info->z2 > B->info->z2 + EPSILON &&
+          A->info->z2 < T->info->z1 + EPSILON)
+      {
+        B = A; changed = true; break;
+      }
+
+      if (A->info->z2 > T->info->z1 - EPSILON &&
+          A->info->z1 < T->info->z1 - EPSILON &&
+          A->info->z1 > B->info->z1 - EPSILON)
+      {
+        T = A; changed = true; break;
+      }
+    }
+
+    if (! changed)
+      break;
+  }
+  
 
   sector_info_c *sec = new sector_info_c;
 
   sec->f_h = I_ROUND(B->info->z2);
   sec->c_h = I_ROUND(T->info->z1);
+
+  if (sec->c_h < sec->f_h)
+      sec->c_h = sec->f_h;
 
   sec->f_tex = B->info->t_tex;
   sec->c_tex = T->info->b_tex;
@@ -435,9 +467,6 @@ static void WriteLinedefs(void)
   total_verts = 0;
   total_sides = 0;
 
-  // TODO: optimise maps by merging two contiguous segments
-  //       sitting on a area_poly line when they are exactly
-  //       the same.
 
   for (unsigned int i = 0; i < mug_segments.size(); i++)
   {
@@ -446,8 +475,18 @@ static void WriteLinedefs(void)
     SYS_ASSERT(G);
     SYS_ASSERT(G->start);
 
-    // TODO: if same sector on both sides, continue, unless
-    //       we have a rail texture.
+    if (! G->front && ! G->back)
+      continue;
+
+    // if same sector on both sides, skip the line, unless
+    // we have a rail texture or a special line.
+    if (G->front && G->back && G->front->index == G->back->index)
+    {
+      // FIXME: check for a rail texture (on any line)
+
+      // FIXME: check for a special line-type (on any line)
+      continue;
+    }
 
     int front_idx = WriteSidedef(G, G->front, G->back);
     int back_idx  = WriteSidedef(G, G->back, G->front);
@@ -495,6 +534,10 @@ void CSG2_WriteDoom(void)
  
   CSG2_MergeAreas();
 
+//!!!
+// CSG2_TestDoom_Areas();
+// return;
+ 
   CreateSectors();
 
   WriteLinedefs();
