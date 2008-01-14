@@ -376,26 +376,82 @@ int W_Editor::ParseNumber(const char *text, const char *t_end, char *style)
 
 const char * W_Editor::keywords[] =
 {
-    "K:function",
-    "K:local",
-    "K:end", 
-    "K:if",
-    "K:then",
+    // special values
+    "N:nil",
+    "N:true",
+    "N:false",
+    "N:_G",
+    "N:_VERSION",
+
+    // keywords
+    "K:and",
+    "K:break",
+    "K:do",
     "K:else",
     "K:elseif",
+    "K:end",
     "K:for",
-    "K:in",
-    "K:do",
-    "K:while",
-    "K:repeat",
-    "K:unttl",
-    "K:return",
+    "K:function",
 
+    "K:if",
+    "K:in",
+    "K:local",
+    "K:nil",
+    "K:not",
+    "K:or",
+    "K:repeat",
+    "K:return",
+    "K:then",
+    "K:until",
+    "K:while",
+
+    // --- basic library ---
+    "F:next",
     "F:pairs",
     "F:ipairs",
 
+    "F:assert",
+    "F:collectgarbage",
+    "F:dofile",
+    "F:error",
+    "F:getfenv",
+    "F:getmetatable",
+    "F:setfenv",
+    "F:setmetatable",
+
+    "F:load",
+    "F:loadfile",
+    "F:loadstring",
+    "F:pcall",
+    "F:print",
+    "F:rawequal",
+    "F:rawget",
+    "F:rawset",
+    "F:select",
+    "F:tonumber",
+    "F:tostring",
+    "F:type",
+    "F:unpack",
+    "F:xpcall",
+ 
+    // co-routines
+    
+
+    // package library
+    
+    // string library
+    
+    // table library
     "F:table.insert",
     "F:table.remove",
+
+    // math library
+    
+    // I/O library
+
+    // operating system
+
+    // debugging
 
     // Oblige specific stuff
     "F:con.printf",
