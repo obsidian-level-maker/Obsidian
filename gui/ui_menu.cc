@@ -2,7 +2,7 @@
 //  Menus
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker (C) 2006,2007 Andrew Apted
+//  Oblige Level Maker (C) 2006-2008 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -44,7 +44,7 @@ static const char *about_Text =
   "Oblige is a random level generator for\n"
   "DOOM, Heretic & Hexen\n"
   "\n"
-  "Copyright (C) 2006-2007 Andrew Apted\n"
+  "Copyright (C) 2006-2008 Andrew Apted\n"
   "\n"
   "This program is free software, and may be\n"
   "distributed and modified under the terms of\n"

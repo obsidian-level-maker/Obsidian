@@ -2,7 +2,7 @@
 //  LEVEL building - DOOM format
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker (C) 2006,2007 Andrew Apted
+//  Oblige Level Maker (C) 2006-2008 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -269,7 +269,7 @@ void WAD_CreateInfoLump()
 
   WAD_Printf(L, "\n");
   WAD_Printf(L, "-- Levels created by OBLIGE %s\n", OBLIGE_VERSION);
-  WAD_Printf(L, "-- " OBLIGE_TITLE " (C) 2006,2007 Andrew Apted\n");
+  WAD_Printf(L, "-- " OBLIGE_TITLE " (C) 2006-2008 Andrew Apted\n");
   WAD_Printf(L, "-- http://oblige.sourceforge.net/\n");
   WAD_Printf(L, "\n");
 
@@ -358,8 +358,7 @@ int begin_level(lua_State *L)
 //
 int end_level(lua_State *L)
 {
-//  CSG2_TestQuake();
-//  CSG2_TestDoom();
+  CSG2_TestQuake();
 
   CSG2_WriteDoom();
 
