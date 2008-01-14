@@ -1,0 +1,15 @@
+
+LuaModify TODO
+==============
+
+-  remove unused syntax code
+
++  remove CR chars from files (remember "DOS" mode, write them back).
+
+-  prevent ESCAPE from exiting.
+
+-  Open file, Save and SaveAs in menu.
+
++  if run without any file, find files (*.lua + */*.lua) and
+   present user with a menu.
+

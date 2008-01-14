@@ -1,0 +1,44 @@
+#
+#  Editor for DDF
+#
+#  Makefile for Unix/FLTK
+#
+
+PROGRAM=LuaModify
+
+FLTK_CFLAGS=-I/usr/local/lib
+FLTK_LIBS=-lfltk_images -lfltk -lX11 -lXext -lpng -ljpeg
+
+CC=gcc
+CXX=g++
+CFLAGS=-O -g3 -Wall -DUNIX $(FLTK_CFLAGS)
+CXXFLAGS=$(CFLAGS)
+LDFLAGS=-L/usr/X11R6/lib
+LIBS=-lm $(FLTK_LIBS)
+
+OBJS=./main.o     \
+     ./asserts.o  \
+     ./dialog.o   \
+     ./editor.o   \
+     ./menu.o     \
+     ./replace.o  \
+     ./system.o   \
+     ./util.o     \
+     ./window.o
+
+
+# ----- TARGETS ------------------------------------------------------
+
+all:    $(PROGRAM)
+
+clean:
+	rm -f $(PROGRAM) *.o core core.* ERRS ed_debug.txt
+
+$(PROGRAM): $(OBJS)
+	$(CXX) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(LDFLAGS) $(LIBS)
+
+bin: all
+	strip --strip-unneeded $(PROGRAM)
+
+.PHONY: all clean bin install
+
