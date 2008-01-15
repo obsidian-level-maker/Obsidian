@@ -113,36 +113,40 @@ int W_Editor::handle(int event)
 #define COL_CYAN    MY_FL_COLOR(0,255,255)
 #define COL_BROWN   MY_FL_COLOR(200,100,50)
 #define COL_GRAY    MY_FL_COLOR(200,200,200)
- 
+
+
+#define MY_FONT  FL_COURIER_BOLD
+#define MY_SIZE  12
+
 
 Fl_Text_Display::Style_Table_Entry W_Editor::table_dark[W_Editor::TABLE_SIZE] =
 {
-    { COL_GRAY,      FL_COURIER,        14, 0 }, // 'A' - All else
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'B'
-    { COL_BLUE,      FL_COURIER,        14, 0 }, // 'C' - Comments --
-    { COL_BLUE,      FL_COURIER,        14, 0 }, // 'D' - Comments --[[ ]]
-    { COL_CYAN,      FL_COURIER_BOLD,   14, 0 }, // 'E' - ERRORS
-    { COL_GREEN,     FL_COURIER,        14, 0 }, // 'F' - Function
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'G'
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'H'
-    { FL_DARK2,      FL_COURIER_BOLD,   14, 0 }, // 'I'
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'J'
-    { COL_BROWN,     FL_COURIER,        14, 0 }, // 'K' - Keyword
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'L'
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'M'
-    { COL_YELLOW,    FL_COURIER,        14, 0 }, // 'N' - Numbers
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'O'
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'P'
-    { COL_RED,       FL_COURIER,        14, 0 }, // 'Q' - Strings ''
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'R'
-    { COL_RED,       FL_COURIER,        14, 0 }, // 'S' - Strings ""
-    { COL_GREEN,     FL_COURIER,        14, 0 }, // 'T' - Table
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'U'
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'V'
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'W'
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'X' - no comma (command)
-    { FL_DARK2,      FL_COURIER,        14, 0 }, // 'Y' - no comma (states)
-    { FL_DARK2,      FL_COURIER,        14, 0 }  // 'Z' - no comma (flags)
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'A' - All else
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'B'
+    { COL_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'C' - Comments --
+    { COL_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'D' - Comments --[[ ]]
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'E'
+    { COL_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'F' - Function
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'G'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'H'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'I'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'J'
+    { COL_BROWN,   MY_FONT,  MY_SIZE, 0 },  // 'K' - Keyword
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'L'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'M'
+    { COL_YELLOW,  MY_FONT,  MY_SIZE, 0 },  // 'N' - Numbers
+    { COL_CYAN,    MY_FONT,  MY_SIZE, 0 },  // 'O' - Oblige Stuff
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'P'
+    { COL_RED,     MY_FONT,  MY_SIZE, 0 },  // 'Q' - Strings ''
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'R'
+    { COL_RED,     MY_FONT,  MY_SIZE, 0 },  // 'S' - Strings ""
+    { COL_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'T' - Table {}
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'U'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'V'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'W'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'X'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'Y'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 }   // 'Z'
 };
 
 
@@ -376,14 +380,14 @@ int W_Editor::ParseNumber(const char *text, const char *t_end, char *style)
 
 const char * W_Editor::keywords[] =
 {
-    // special values
+    // --- special values ---
     "N:nil",
     "N:true",
     "N:false",
     "N:_G",
     "N:_VERSION",
 
-    // keywords
+    // --- Lua keywords ---
     "K:and",
     "K:break",
     "K:do",
@@ -405,7 +409,9 @@ const char * W_Editor::keywords[] =
     "K:until",
     "K:while",
 
-    // --- basic library ---
+    // --- Lua Libraries ---
+
+    // basic library
     "F:next",
     "F:pairs",
     "F:ipairs",
@@ -552,10 +558,25 @@ const char * W_Editor::keywords[] =
     "F:debug.setupvalue",
     "F:debug.traceback",
 
-    // Oblige specific stuff
-    "F:con.printf",
-    "F:con.ticker",
-    "F:con.abort",
+    // --- Oblige specific stuff ---
+
+    "O:int",
+    "O:sel",
+
+    "O:con.printf",
+    "O:con.debugf",
+    "O:con.raw_log_print",
+    "O:con.raw_debug_print",
+    "O:con.add_button",
+    "O:con.show_button",
+    "O:con.change_button",
+
+    "O:con.rand_seed",
+    "O:con.random",
+    "O:con.at_level",
+    "O:con.progress",
+    "O:con.ticker",
+    "O:con.abort",
 
     NULL // end of list
 };
