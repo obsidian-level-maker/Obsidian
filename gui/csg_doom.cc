@@ -204,9 +204,63 @@ static area_poly_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
 }
 
 
-static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
-                           area_poly_c *EF)
+static double MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
+                             area_poly_c *T)
 {
+  // T is the top-most brush.  Find the bottom-most brush
+  // which is connected to T (via intersecting brushes).
+  area_poly_c *B = T;
+
+  for (;;)
+  {
+    bool changed = false;
+
+    for (unsigned int k=0; k < R->areas.size(); k++)
+    {
+      area_poly_c *A = R->areas[k];
+
+      if (A->info->z1 < B->info->z2 + EPSILON &&
+          A->info->z2 > B->info->z2 + EPSILON &&
+          A->info->z2 < T->info->z1 + EPSILON)
+      {
+        B = A; changed = true; break;
+      }
+    }
+
+    if (! changed)
+      break;
+  }
+
+
+  // find the brush which we will use for the side texture
+  area_poly_c *MID = NULL;
+  double best_h = 0;
+
+  for (unsigned int j = 0; j < R->areas.size(); j++)
+  {
+    area_poly_c *A = R->areas[j];
+
+    if (A->info->z1 > B->info->z1 - EPSILON &&
+        A->info->z2 < T->info->z2 + EPSILON)
+    {
+      double h = A->info->z2 - A->info->z1;
+
+      // TODO: priorities
+
+//      if (MID && fabs(h - best_h) < EPSILON)
+//      { /* same height, prioritise */ }
+
+      if (h > best_h)
+      {
+        best_h = h;
+        MID = A;
+      }
+    }
+  }
+
+  SYS_ASSERT(MID);
+
+
   extrafloor_slot++;
 
   if (sec->tag <= 0)
@@ -238,19 +292,17 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
  
   int sec_ref = wad::num_sectors();
 
-  // TODO: check for overlapping brushes
+  int f_h = I_ROUND(B->info->z1);
+  int c_h = I_ROUND(T->info->z2);
 
-  int f_h = I_ROUND(EF->info->z1);
-  int c_h = I_ROUND(EF->info->z2);
-
-  wad::add_sector(f_h, EF->info->b_tex.c_str(),
-                  c_h, EF->info->t_tex.c_str(),
+  wad::add_sector(f_h, B->info->b_tex.c_str(),
+                  c_h, T->info->t_tex.c_str(),
                   144, 0, 0); // FIXME !!!! light, special
 
 
   int side_ref = wad::num_sidedefs();
 
-  wad::add_sidedef(sec_ref, "-", EF->info->w_tex.c_str(), "-", 0, 0);
+  wad::add_sidedef(sec_ref, "-", MID->info->w_tex.c_str(), "-", 0, 0);
 
 
   // FIXME: 400 is EDGE extrafloor (don't hard-code it)
@@ -262,6 +314,8 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   wad::add_linedef(vert_ref+1, vert_ref+2, side_ref, -1, 0,1,0, NULL);
   wad::add_linedef(vert_ref+2, vert_ref+3, side_ref, -1, 0,1,0, NULL);
   wad::add_linedef(vert_ref+3, vert_ref+0, side_ref, -1, 0,1,0, NULL);
+
+  return B->info->z1;
 }
 
 
@@ -409,9 +463,7 @@ static void CreateOneSector(merge_region_c *R)
     if (! EF)
       break;
 
-    MakeExtraFloor(R, sec, EF);
-
-    exfloor_z2 = EF->info->z1 - 1;
+    exfloor_z2 = MakeExtraFloor(R, sec, EF) - 1;
   }
 }
 
