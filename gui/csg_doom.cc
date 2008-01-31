@@ -187,7 +187,7 @@ static area_poly_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
   {
     area_poly_c *E = R->areas[k];
 
-    if (! (E->info->z1 < z1 && E->info->z2 < z2))
+    if (! (E->info->z1 > z1 && E->info->z2 < z2))
       continue;
 
     // we prefer the one closest to the top (because when the engine
@@ -216,10 +216,16 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   // FIXME !!! find vertical extent of map, use "map_min_y - 128"
 
   int x1 =    0 + (extrafloor_slot & 31) * 64;
-  int y1 = -160 - (extrafloor_slot / 32) * 32;
+  int y1 = -160 - (extrafloor_slot / 32) * 64;
+
+  if (extrafloor_slot & 1024) x1 += 2200;
+  if (extrafloor_slot & 2048) y1 -= 2200;
+
+  if (extrafloor_slot & 4096)
+    Main_FatalError("Too many extrafloors! (over %d)%d\n", extrafloor_slot);
 
   int x2 = x1 + 32;
-  int y2 = y1 + 16;
+  int y2 = y1 + 32;
 
 
   int vert_ref = wad::num_vertexes();
