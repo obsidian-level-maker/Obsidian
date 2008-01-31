@@ -6,12 +6,16 @@
 
 PROGRAM=LuaModify
 
-FLTK_CFLAGS=-I/usr/local/lib
-FLTK_LIBS=-lfltk_images -lfltk -lX11 -lXext -lpng -ljpeg
+FLTK_DIR=../lib/fltk-1.1.x-r5989
+
+FLTK_FLAGS=-I$(FLTK_DIR)
+FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
+          $(FLTK_DIR)/lib/libfltk.a \
+          -lX11 -lXext -lpng -ljpeg
 
 CC=gcc
 CXX=g++
-CFLAGS=-O -g3 -Wall -DUNIX $(FLTK_CFLAGS)
+CFLAGS=-O -g3 -Wall -DUNIX $(FLTK_FLAGS)
 CXXFLAGS=$(CFLAGS)
 LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm $(FLTK_LIBS)
