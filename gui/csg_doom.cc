@@ -219,11 +219,11 @@ static double MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
     {
       area_poly_c *A = R->areas[k];
 
-      if (A->info->z1 < B->info->z2 + EPSILON &&
-          A->info->z2 > B->info->z2 + EPSILON &&
-          A->info->z2 < T->info->z1 + EPSILON)
+      if (A->info->z1 < B->info->z1 - EPSILON &&
+          A->info->z2 > B->info->z1 - EPSILON)
+///       A->info->z2 < T->info->z2 + EPSILON)
       {
-        B = A; changed = true; break;
+        B = A; changed = true;
       }
     }
 
@@ -367,7 +367,6 @@ static void CreateOneSector(merge_region_c *R)
     if (A->info->z1 < min_z + EPSILON)
     {
       if (! B || (A->info->z2 > B->info->z2 + EPSILON) )
-// FIXME: same height, prioritise   || (fabs(A->info->z2 - B->info->z2) <= EPSILON ....
       {
         B = A;
       }
@@ -376,7 +375,6 @@ static void CreateOneSector(merge_region_c *R)
     if (A->info->z2 > max_z - EPSILON)
     {
       if (! T || (A->info->z1 < T->info->z1 - EPSILON) )
-// FIXME: same height, prioritise   || (fabs(A->info->z1 - B->info->z1) <= EPSILON ....
       {
         T = A;
       }
@@ -387,6 +385,8 @@ static void CreateOneSector(merge_region_c *R)
 
   // upgrade brushes if another solid intersects
 
+  // FIXME: prioritise when heights are the same
+
   for (;;)
   {
     bool changed = false;
@@ -395,18 +395,18 @@ static void CreateOneSector(merge_region_c *R)
     {
       area_poly_c *A = R->areas[k];
 
-      if (A->info->z1 < B->info->z2 + EPSILON &&
-          A->info->z2 > B->info->z2 + EPSILON &&
+      if (A->info->z2 > B->info->z2 + EPSILON &&
+          A->info->z1 < B->info->z2 + EPSILON &&
           A->info->z2 < T->info->z1 + EPSILON)
       {
-        B = A; changed = true; break;
+        B = A; changed = true; /// break;
       }
 
-      if (A->info->z2 > T->info->z1 - EPSILON &&
-          A->info->z1 < T->info->z1 - EPSILON &&
-          A->info->z1 > B->info->z1 - EPSILON)
+      if (A->info->z1 < T->info->z1 - EPSILON &&
+          A->info->z2 > T->info->z1 - EPSILON &&
+          A->info->z1 > B->info->z2 - EPSILON)
       {
-        T = A; changed = true; break;
+        T = A; changed = true; /// break;
       }
     }
 
