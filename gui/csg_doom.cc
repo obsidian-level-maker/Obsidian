@@ -33,9 +33,8 @@
 #define VOID_INDEX  -2
 
 
-static int total_verts;
-static int total_sides;
-static int total_sectors;
+static int extrafloor_tag;
+static int extrafloor_slot;
 
 
 class sector_info_c 
@@ -179,6 +178,87 @@ void CSG2_TestDoom_Regions(void)
 }
 
 
+
+static area_poly_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
+{
+  area_poly_c *best = NULL;
+
+  for (unsigned int k=0; k < R->areas.size(); k++)
+  {
+    area_poly_c *E = R->areas[k];
+
+    if (! (E->info->z1 < z1 && E->info->z2 < z2))
+      continue;
+
+    // we prefer the one closest to the top (because when the engine
+    // adds an extrafloor, the upper region stays the same and the
+    // lower regions gets the lighting/special from the extrafloor).
+
+    if (! best || E->info->z2 > best->info->z2) 
+    {
+      best = E;
+    }
+  }
+
+  return best;
+}
+
+
+static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
+                           area_poly_c *EF)
+{
+  extrafloor_slot++;
+
+  if (sec->tag <= 0)
+    sec->tag = extrafloor_tag++;
+
+
+  // FIXME !!! find vertical extent of map, use "map_min_y - 128"
+
+  int x1 =    0 + (extrafloor_slot & 31) * 64;
+  int y1 = -160 - (extrafloor_slot / 32) * 32;
+
+  int x2 = x1 + 32;
+  int y2 = y1 + 16;
+
+
+  int vert_ref = wad::num_vertexes();
+
+  wad::add_vertex(x1, y1);
+  wad::add_vertex(x1, y2);
+  wad::add_vertex(x2, y2);
+  wad::add_vertex(x2, y1);
+
+ 
+  int sec_ref = wad::num_sectors();
+
+  // TODO: check for overlapping brushes
+
+  int f_h = I_ROUND(EF->info->z1);
+  int c_h = I_ROUND(EF->info->z2);
+
+  wad::add_sector(f_h, EF->info->b_tex.c_str(),
+                  c_h, EF->info->t_tex.c_str(),
+                  144, 0, 0); // FIXME !!!! light, special
+
+
+  int side_ref = wad::num_sidedefs();
+
+  wad::add_sidedef(sec_ref, "-", "CRATWIDE", "-", 0, 0);  // FIXME
+
+
+  // FIXME: 400 is EDGE extrafloor (don't hard-code it)
+
+  wad::add_linedef(vert_ref+0, vert_ref+1, side_ref, -1,
+                   400 /* EDGE !! */, 1 /* impassible */,
+                   sec->tag, NULL /* args */);
+
+  wad::add_linedef(vert_ref+1, vert_ref+2, side_ref, -1, 0,1,0, NULL);
+  wad::add_linedef(vert_ref+2, vert_ref+3, side_ref, -1, 0,1,0, NULL);
+  wad::add_linedef(vert_ref+3, vert_ref+0, side_ref, -1, 0,1,0, NULL);
+}
+
+
 static void CreateOneSector(merge_region_c *R)
 {
   // if only one brush, area must be solid
@@ -311,7 +391,22 @@ static void CreateOneSector(merge_region_c *R)
   dm_sectors.push_back(sec);
 
 
-  // TODO: find brushes floating in-between, make extrafloors
+  // find brushes floating in-between --> make extrafloors
+
+  double exfloor_z1 = B->info->z2 + 1;
+  double exfloor_z2 = T->info->z1 - 1;
+
+  for (;;)
+  {
+    area_poly_c *EF = FindExtraFloor(R, exfloor_z1, exfloor_z2);
+
+    if (! EF)
+      break;
+
+    MakeExtraFloor(R, sec, EF);
+
+    exfloor_z2 = EF->info->z1 - 1;
+  }
 }
 
 static void CoalesceSectors(void)
@@ -373,8 +468,7 @@ static int WriteVertex(merge_vertex_c *V)
 {
   if (V->index < 0)
   {
-    V->index = total_verts;
-    total_verts++;
+    V->index = wad::num_vertexes();
 
     wad::add_vertex(I_ROUND(V->x), I_ROUND(V->y));
   }
@@ -387,8 +481,7 @@ static int WriteSector(sector_info_c *S)
 {
   if (S->index < 0)
   {
-    S->index = total_sectors;
-    total_sectors++;
+    S->index = wad::num_sectors();
 
     wad::add_sector(S->f_h, S->f_tex.c_str(),
                     S->c_h, S->c_tex.c_str(),
@@ -433,6 +526,8 @@ static int WriteSidedef(merge_segment_c *G, merge_region_c *F, merge_region_c *B
 
   int sec_num = WriteSector(S);
 
+  int side_ref = wad::num_sidedefs();
+
   if (B && B->index > 0)
   {
     sector_info_c *BS = dm_sectors[B->index];
@@ -456,18 +551,12 @@ static int WriteSidedef(merge_segment_c *G, merge_region_c *F, merge_region_c *B
     wad::add_sidedef(sec_num, "-", wall.c_str(), "-", 0, 0);
   }
 
-  total_sides++;
-
-  return total_sides-1;
+  return side_ref;
 }
 
 
 static void WriteLinedefs(void)
 {
-  total_verts = 0;
-  total_sides = 0;
-
-
   for (unsigned int i = 0; i < mug_segments.size(); i++)
   {
     merge_segment_c *G = mug_segments[i];
@@ -514,7 +603,7 @@ static void WriteLinedefs(void)
                      0 /* tag */, NULL /* args */);
   }
 
-  SYS_ASSERT(total_verts > 0);
+  SYS_ASSERT(wad::num_vertexes() > 0);
 }
 
 
@@ -538,6 +627,9 @@ void CSG2_WriteDoom(void)
 // CSG2_TestDoom_Areas();
 // return;
  
+  extrafloor_tag  = 9000;
+  extrafloor_slot = 0;
+
   CreateSectors();
 
   WriteLinedefs();
