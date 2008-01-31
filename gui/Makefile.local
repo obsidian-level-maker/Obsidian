@@ -9,11 +9,11 @@ PROGRAM=../Oblige
 
 CXX=g++
 
-LIB_LOC=/home/aapted/other
+LIB_LOC=../lib
 
 FLTK_DIR=$(LIB_LOC)/fltk-1.1.x-r5989
 LUA_DIR=$(LIB_LOC)/lua-5.1.2
-GLBSP_DIR=$(LIB_LOC)/glbsp-2.24-source
+GLBSP_DIR=$(LIB_LOC)/glbsp-2.24
 
 OPTIMISE=-O -g3
 
