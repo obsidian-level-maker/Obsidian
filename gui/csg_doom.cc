@@ -213,7 +213,7 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
     sec->tag = extrafloor_tag++;
 
 
-  // FIXME !!! find vertical extent of map, use "map_min_y - 128"
+  // FIXME !!! find extent of map, use "map_min_y - 128"
 
   int x1 =    0 + (extrafloor_slot & 31) * 64;
   int y1 = -160 - (extrafloor_slot / 32) * 64;
@@ -250,7 +250,7 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 
   int side_ref = wad::num_sidedefs();
 
-  wad::add_sidedef(sec_ref, "-", "CRATWIDE", "-", 0, 0);  // FIXME
+  wad::add_sidedef(sec_ref, "-", EF->info->w_tex.c_str(), "-", 0, 0);
 
 
   // FIXME: 400 is EDGE extrafloor (don't hard-code it)
