@@ -20,6 +20,8 @@
 function test_csg()
 
 -- [[ DOOM
+  local ENTITY   = "1"
+
   local START_F  = "FLAT22"
   local START_W  = "COMPBLUE"
 
@@ -40,6 +42,8 @@ function test_csg()
 --]]
 
 --[[ QUAKE 1
+  local ENTITY   = "info_player_start"
+
   local START_F  = "tech01_1"
   local START_W  = "tech01_1"
 
@@ -60,6 +64,8 @@ function test_csg()
 --]]
 
 --[[ OPEN ARENA
+  local ENTITY   = "info_player_deathmatch"
+
   local START_F  = "e7/e7sbrickfloor"
   local START_W  = "e7/e7sbrickfloor"
 
@@ -84,6 +90,11 @@ function test_csg()
   local MAX_Z =  2048
 
   -- TODO  csg2.z_range(MIN_Z, MAX_Z)
+
+
+  ---===| Entities |===---
+
+  csg2.add_entity(ENTITY, 0, 0, 65)
 
 
   ---===| Starting Area |===---
