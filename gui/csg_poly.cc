@@ -1362,6 +1362,71 @@ static void Mug_DiscoverGaps(void)
 }
 
 
+static merge_region_c *FindRegionForPoint(double x, double y)
+{
+  // Note: assumes segments are sorted by minimum X
+  //
+  // Algorithm: cast a line vertically (upwards and downwards) and
+  //            see which segments we hit.
+  //
+  //            @@@@
+
+  // FIXME !!!!!!
+}
+
+
+static merge_gap_c *FindGapForPoint(merge_region_c *R, double x, double y, double z)
+{
+  for (unsigned int k = 0; k < R->gaps.size(); k++)
+  {
+    merge_gap_c *gap = R->gaps[k];
+
+    // allow some leeway
+    double z1 = (gap->bottom->info->z1 + gap->bottom->info->z2) / 2.0;
+    double z2 = (gap->top   ->info->z1 + gap->top   ->info->z2) / 2.0;
+
+    if (z1 < z && z < z2)
+      return gap;
+  }
+
+  return NULL; // not found
+}
+
+
+static void Mug_PlaceEntities(void)
+{
+  /* sort segments in order of minimum X coordinate */
+  std::sort(mug_segments.begin(), mug_segments.end(),
+            Compare_SegmentMinX_pred());
+
+  for (unsigned int i = 0; i < all_entities.size(); i++)
+  {
+    entity_info_c *E = all_entities[i];
+
+    merge_region_c *R = FindRegionForPoint(E->x, E->y);
+
+    if (! R || R->gaps.size() == 0)
+    {
+      // TODO: error for important entities (esp. Players)
+      LogPrintf("WARNING: cannot find region for entity '%s' @ (%1.0f,%1.0f)\n",
+                E->name.c_str(), E->x, E->y);
+      continue;
+    }
+
+    merge_gap_c *gap = FindGapForPoint(R, E->x, E->y, E->z);
+
+    if (! gap)
+    {
+      LogPrintf("WARNING: entity '%s' is inside solid @ (%1.0f,%1.0f,%1.0f)\n",
+                E->name.c_str(), E->x, E->y, E->z);
+      gap = R->gaps[0];
+    }
+
+    gap->entities.push_back(E);
+  }
+}
+
+
 void CSG2_MergeAreas(void)
 {
   // this takes all the area_polys, figures out what OVERLAPS
@@ -1395,12 +1460,12 @@ void CSG2_MergeAreas(void)
   Mug_AssignAreas();
     
   Mug_DiscoverGaps();
-#if 0  // TODO
-  Mug_FindGapNeighbours();
+
+  // Mug_GapNeighbours();
 
   Mug_PlaceEntities();
-  Mug_FillUnusedGaps();
-#endif
+
+  // Mug_FillUnusedGaps();
 }
 
 

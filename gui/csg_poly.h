@@ -265,9 +265,12 @@ public:
 
   std::list<merge_gap_c *> neighbours;
 
+  std::vector<entity_info_c *> entities;
+
 public:
   merge_gap_c(merge_region_c *R, area_poly_c *B, area_poly_c *T) :
-      parent(R), bottom(B), top(T), neighbours()
+      parent(R), bottom(B), top(T),
+      neighbours(), entities()
   { }
 
   ~merge_gap_c()
