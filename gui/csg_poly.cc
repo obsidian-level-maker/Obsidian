@@ -37,6 +37,7 @@ std::vector<area_poly_c *> all_polys;
 std::vector<merge_vertex_c *>  mug_vertices;
 std::vector<merge_segment_c *> mug_segments;
 std::vector<merge_region_c *>  mug_regions;
+std::vector<merge_gap_c *>     mug_gaps;
 
 
 static int cur_poly_time;
@@ -517,6 +518,14 @@ struct Compare_PolyMinX_pred
   inline bool operator() (const area_poly_c *A, const area_poly_c *B) const
   {
     return A->min_x < B->min_x;
+  }
+};
+
+struct Compare_PolyZ1_pred
+{
+  inline bool operator() (const area_poly_c *A, const area_poly_c *B) const
+  {
+    return A->info->z1 < B->info->z1;
   }
 };
 
@@ -1262,7 +1271,7 @@ static void Mug_AssignAreas(void)
   // inside the area_poly_c (no vertices touching the outer
   // line loop).  However it is sufficient to simply "spread"
   // the area_poly_c from each "infected" merge_region_c to every
-  // neighbour as long as crossing segment is not part of
+  // neighbour as long as the crossing segment is not part of
   // the area_poly_c boundary (no escaping!).
 
   for (int j=0; j < (int)all_polys.size(); j++)
@@ -1272,6 +1281,52 @@ static void Mug_AssignAreas(void)
     MarkBoundaryRegions(P);
 
     MarkInnerRegions(P);
+  }
+}
+
+
+static void Mug_DiscoverGaps(void)
+{
+  // Algorithm:
+  // 
+  // sort the area_polys by ascending z1 values.
+  // Hence any gap must occur between two adjacent entries.
+  // We also must check the gap is not covered by a previous
+  // brush, simply by maintaining a ref to the brush with the
+  // currently highest z2 value.
+
+  for (int i = 0; i < (int)mug_regions.size(); i++)
+  {
+    merge_region_c *R = mug_regions[i];
+
+    std::sort(R->areas.begin(), R->areas.end(),
+              Compare_PolyZ1_pred());
+
+    if (R->areas.size() <= 1)
+      continue;
+
+    area_poly_c *high = R->areas[0];
+
+    for (unsigned int k = 1; k < R->areas.size(); k++)
+    {
+      area_poly_c *A = R->areas[k];
+
+      if (A->info->z1 > high->info->z2 + EPSILON)
+      {
+        // found a gap
+        merge_gap_c *gap = new merge_gap_c(high, A);
+
+        R->gaps.push_back(gap);
+
+        continue;
+      }
+
+      // no gap implies that these two brushes touch/overlap,
+      // hence update the highest one.
+      
+      if (A->info->z2 > high->info->z2)
+        high = A;
+    }
   }
 }
 
@@ -1290,7 +1345,7 @@ void CSG2_MergeAreas(void)
   //   (2) check seg against every other seg for overlap/T-junction
   //   (3) create regions from segs, remove islands
   //   (4) assign area_polys to the regions
-  //   (5) perform merge (etc) operations
+  //   (5) find the gaps in each region
 
   for (int j=0; j < (int)all_polys.size(); j++)
   {
@@ -1308,7 +1363,7 @@ void CSG2_MergeAreas(void)
 
   Mug_AssignAreas();
     
-  // TODO
+  Mug_DiscoverGaps();
 }
 
 
