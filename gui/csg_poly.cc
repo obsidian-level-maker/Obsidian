@@ -1318,6 +1318,7 @@ static void Mug_DiscoverGaps(void)
 
         R->gaps.push_back(gap);
 
+        high = A;
         continue;
       }
 
