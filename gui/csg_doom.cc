@@ -321,13 +321,14 @@ static double MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 
 static void CreateOneSector(merge_region_c *R)
 {
-  // if only one brush, area must be solid
-  if (R->areas.size() <= 1)
+  // completely solid (no gaps) ?
+  if (R->gaps.size() == 0)
   {
     R->index = 0;
     return;
   }
 
+#if 0  // OLD CODE
   double min_z = +999999;
   double max_z = -999999;
 
@@ -413,7 +414,22 @@ static void CreateOneSector(merge_region_c *R)
     if (! changed)
       break;
   }
+
+DebugPrintf("SECTOR #%d:\n", (int) dm_sectors.size());
+DebugPrintf("{\n");
+for (unsigned jk=0; jk < R->gaps.size(); jk++)
+{
+  DebugPrintf("GAP: %1.0f..%1.0f to %1.0f..%1.0f\n",
+    R->gaps[jk]->bottom->info->z1, R->gaps[jk]->bottom->info->z2,
+    R->gaps[jk]->top->info->z1, R->gaps[jk]->top->info->z2);
+}
+DebugPrintf("}\n");
   
+#endif
+
+
+  area_poly_c *B = R->gaps[0]->bottom;
+  area_poly_c *T = R->gaps[R->gaps.size()-1]->top;
 
   sector_info_c *sec = new sector_info_c;
 
@@ -453,6 +469,7 @@ static void CreateOneSector(merge_region_c *R)
 
   // find brushes floating in-between --> make extrafloors
 
+#if 0
   double exfloor_z1 = B->info->z2 + 1;
   double exfloor_z2 = T->info->z1 - 1;
 
@@ -465,6 +482,7 @@ static void CreateOneSector(merge_region_c *R)
 
     exfloor_z2 = MakeExtraFloor(R, sec, EF) - 1;
   }
+#endif
 }
 
 static void CoalesceSectors(void)

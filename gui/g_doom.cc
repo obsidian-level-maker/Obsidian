@@ -358,7 +358,7 @@ int begin_level(lua_State *L)
 //
 int end_level(lua_State *L)
 {
-  CSG2_TestQuake();
+//  CSG2_TestQuake();
 
   CSG2_WriteDoom();
 
