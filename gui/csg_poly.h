@@ -120,6 +120,11 @@ public:
 
 class area_poly_c
 {
+  // This represents a "brush" in Quake terms, a solid area
+  // on the map with out-facing sides and top/bottom.
+  // Unlike quake brushes, area_polys don't have to be convex
+  // (FIXME: actually must be convex when output is .map format).
+
 public:
   area_info_c *info;
 
@@ -185,6 +190,8 @@ public:
 
 class merge_segment_c
 {
+  // This is a just a line on the 2D map.
+
 public:
   merge_vertex_c *start;
   merge_vertex_c *end;
@@ -235,19 +242,42 @@ public:
 };
 
 
+class merge_gap_c
+{
+public:
+  area_poly_c *bottom;
+  area_poly_c *top;
+
+public:
+  merge_gap_c(area_poly_c *B, area_poly_c *T) : bottom(B), top(T)
+  { }
+
+  ~merge_gap_c()
+  { }
+};
+
+
 class merge_region_c
 {
+  // This represents an a region on the 2D map, bounded by a set
+  // of segments (not explicitly stored here, but implicit in the
+  // merge_segment_c::front and back fields).  Each region lists
+  // all the area_polys ("brushes") contained, as well as the gaps
+  // (spaces between brushes where objects can go).
+
 public:
   bool faces_out;
 
   std::vector<area_poly_c *> areas;
+
+  std::vector<merge_gap_c *> gaps;
 
   // this index is not used by the polygoniser code (csg_poly.cc),
   // only by the Doom conversion code.  -1 means "unused".
   int index;
 
 public:
-  merge_region_c() : faces_out(false), areas(), index(-1)
+  merge_region_c() : faces_out(false), areas(), gaps(), index(-1)
   { }
 
   ~merge_region_c()
@@ -263,6 +293,7 @@ extern std::vector<area_poly_c *> all_polys;
 extern std::vector<merge_vertex_c *>  mug_vertices;
 extern std::vector<merge_segment_c *> mug_segments;
 extern std::vector<merge_region_c *>  mug_regions;
+extern std::vector<merge_gap_c *>     mug_gaps;
 
 
 /* ----- FUNCTIONS ----- */
