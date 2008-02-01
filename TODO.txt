@@ -151,6 +151,14 @@ Pipe Dreams:
 
 -  a mod for Eternal III
 
+-  CTF maps (boomctf) :
+
+      5130 = "Blue flag";
+      5131 = "Red flag";
+
+      5080 = "Blue Start"      
+      5081 = "Red Start"
+
 ?? one-way routes ??
    -  for example: at along:3 fall-off -> along:4
       BUT... how to get back to along:3 ??
