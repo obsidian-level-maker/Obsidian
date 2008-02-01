@@ -34,10 +34,11 @@
 std::vector<area_info_c *> all_areas;
 std::vector<area_poly_c *> all_polys;
 
+std::vector<entity_info_c *> all_entities;
+
 std::vector<merge_vertex_c *>  mug_vertices;
 std::vector<merge_segment_c *> mug_segments;
 std::vector<merge_region_c *>  mug_regions;
-std::vector<merge_gap_c *>     mug_gaps;
 
 
 static int cur_poly_time;
@@ -113,6 +114,13 @@ void area_poly_c::ComputeBBox()
     if (V->y > max_y) max_y = V->y;
   }
 }
+
+entity_info_c::entity_info_c(const char *_name, double xpos, double ypos, double zpos) :
+    name(_name), x(xpos), y(ypos), z(zpos)
+{ }
+
+entity_info_c::~entity_info_c()
+{ }
 
 
 //------------------------------------------------------------------------
@@ -316,6 +324,28 @@ int add_solid(lua_State *L)
   area_poly_c *P = Grab_LineLoop(L, 2, A);
 
   AddPoly_MakeConvex(P);
+
+  return 0;
+}
+
+// LUA: add_entity(name, x, y, z, info)
+//
+// info is a table:
+//   XXX 
+//
+int add_entity(lua_State *L)
+{
+  const char *name = luaL_checkstring(L,1);
+
+  double x = luaL_checknumber(L,2);
+  double y = luaL_checknumber(L,3);
+  double z = luaL_checknumber(L,4);
+
+  entity_info_c *E = new entity_info_c(name, x, y, z);
+
+  // TODO: extra info
+
+  all_entities.push_back(E);
 
   return 0;
 }
@@ -1314,7 +1344,7 @@ static void Mug_DiscoverGaps(void)
       if (A->info->z1 > high->info->z2 + EPSILON)
       {
         // found a gap
-        merge_gap_c *gap = new merge_gap_c(high, A);
+        merge_gap_c *gap = new merge_gap_c(R, high, A);
 
         R->gaps.push_back(gap);
 
@@ -1346,7 +1376,9 @@ void CSG2_MergeAreas(void)
   //   (2) check seg against every other seg for overlap/T-junction
   //   (3) create regions from segs, remove islands
   //   (4) assign area_polys to the regions
-  //   (5) find the gaps in each region
+  //   (5) find the gaps and their neighbours
+  //   (6) place every entity into a gap
+  //   (7) remove gaps which no entity can reach
 
   for (int j=0; j < (int)all_polys.size(); j++)
   {
@@ -1357,14 +1389,18 @@ void CSG2_MergeAreas(void)
   }
 
   Mug_FindOverlaps();
-
   Mug_TraceSegLoops();
-
   Mug_RemoveIslands();
 
   Mug_AssignAreas();
     
   Mug_DiscoverGaps();
+#if 0  // TODO
+  Mug_FindGapNeighbours();
+
+  Mug_PlaceEntities();
+  Mug_FillUnusedGaps();
+#endif
 }
 
 
@@ -1373,6 +1409,7 @@ void CSG2_MergeAreas(void)
 static const luaL_Reg csg2_funcs[] =
 {
   { "add_solid",   csg2::add_solid  },
+  { "add_entity",  csg2::add_entity },
 
   { NULL, NULL } // the end
 };

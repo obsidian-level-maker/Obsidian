@@ -143,6 +143,19 @@ public:
 };
 
 
+class entity_info_c
+{
+public:
+  std::string name;
+
+  double x, y, z;
+
+public:
+   entity_info_c(const char *_name, double xpos, double ypos, double zpos);
+  ~entity_info_c();
+};
+
+
 //------------------------------------------------------------------------
 
 
@@ -245,11 +258,16 @@ public:
 class merge_gap_c
 {
 public:
+  merge_region_c *parent;
+
   area_poly_c *bottom;
   area_poly_c *top;
 
+  std::list<merge_gap_c *> neighbours;
+
 public:
-  merge_gap_c(area_poly_c *B, area_poly_c *T) : bottom(B), top(T)
+  merge_gap_c(merge_region_c *R, area_poly_c *B, area_poly_c *T) :
+      parent(R), bottom(B), top(T), neighbours()
   { }
 
   ~merge_gap_c()
@@ -289,6 +307,8 @@ public:
 
 extern std::vector<area_info_c *> all_areas;
 extern std::vector<area_poly_c *> all_polys;
+
+extern std::vector<entity_info_c *> all_entities;
 
 extern std::vector<merge_vertex_c *>  mug_vertices;
 extern std::vector<merge_segment_c *> mug_segments;
