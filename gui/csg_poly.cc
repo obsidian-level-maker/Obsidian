@@ -1670,7 +1670,7 @@ fprintf(stderr, "Mug_FillUnusedGaps: changes = %d\n", changes);
     Main_FatalError("CSG2: all gaps were unreachable (no entities?)\n");
   }
 
-  LogPrintf("CSG2: filled %d gaps (out of %d total)\n", gap_filled, gap_total);
+  LogPrintf("CSG2: filled %d gaps (of %d total)\n", gap_filled, gap_total);
 }
 
 
