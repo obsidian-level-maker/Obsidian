@@ -263,14 +263,16 @@ public:
   area_poly_c *bottom;
   area_poly_c *top;
 
-  std::list<merge_gap_c *> neighbours;
+  std::vector<merge_gap_c *> neighbours;
 
   std::vector<entity_info_c *> entities;
+
+  bool reachable;
 
 public:
   merge_gap_c(merge_region_c *R, area_poly_c *B, area_poly_c *T) :
       parent(R), bottom(B), top(T),
-      neighbours(), entities()
+      neighbours(), entities(), reachable(false)
   { }
 
   ~merge_gap_c()

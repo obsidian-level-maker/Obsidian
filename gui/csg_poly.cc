@@ -1362,6 +1362,69 @@ static void Mug_DiscoverGaps(void)
 }
 
 
+static void MarkNeighbouringGaps(merge_gap_c *B, merge_gap_c *F)
+{
+  // check if already marked
+  std::vector<merge_gap_c *>::iterator GI;
+
+  for (GI = B->neighbours.begin(); GI != B->neighbours.end(); GI++)
+    if (*GI == F)
+      return;
+
+  B->neighbours.push_back(F);
+  F->neighbours.push_back(B);
+}
+
+static void Mug_GapNeighbours(void)
+{
+  // TODO: optimise this by only checking each region-region pair once
+
+  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  {
+    merge_segment_c *S = mug_segments[i];
+
+    if (! S->back || ! S->front)
+      continue;
+
+    SYS_ASSERT(S->back != S->front);
+
+    // gaps are sorted from lowest to highest, hence we can optimise
+    // the comparison using a staggered approach.
+    unsigned int b_idx = 0;
+    unsigned int f_idx = 0;
+
+    while (b_idx < S->back->gaps.size() && f_idx < S->front->gaps.size())
+    {
+      merge_gap_c *B = S->back ->gaps[b_idx];
+      merge_gap_c *F = S->front->gaps[f_idx];
+
+      double B_z1 = B->bottom->info->z2;
+      double B_z2 = B->top->info->z1;
+
+      double F_z1 = F->bottom->info->z2;
+      double F_z2 = F->top->info->z1;
+
+      if (B_z2 < F_z1 + EPSILON)
+      {
+        b_idx++; continue;
+      }
+      if (F_z2 < B_z1 + EPSILON)
+      {
+        f_idx++; continue;
+      }
+
+      // overlap found
+      MarkNeighbouringGaps(B, F);
+
+      if (F_z2 < B_z2)
+        f_idx++;
+      else
+        b_idx++;
+    }
+  }
+}
+
+
 static merge_segment_c *ClosestSegmentToPoint(double x, double y, bool *hit_vertex)
 {
   // Note: assumes segments are sorted by minimum X
@@ -1565,8 +1628,7 @@ void CSG2_MergeAreas(void)
   Mug_AssignAreas();
     
   Mug_DiscoverGaps();
-
-  // Mug_GapNeighbours();
+  Mug_GapNeighbours();
 
   Mug_PlaceEntities();
 
