@@ -1362,14 +1362,13 @@ static void Mug_DiscoverGaps(void)
 }
 
 
-static merge_segment_c *ClosestSegmentToPoint(double x, double y)
+static merge_segment_c *ClosestSegmentToPoint(double x, double y, bool *hit_vertex)
 {
   // Note: assumes segments are sorted by minimum X
   //
   // Algorithm: cast a line vertically (upwards and downwards) and
-  //            see which segments we hit.  We skip ones that hit
-  //            purely at a vertex, hence this can return NULL when
-  //            both up and down hit a vertex.
+  //            see which segments we hit.  Note that the result
+  //            might hit at a vertex.
 
   merge_segment_c *closest_up   = NULL;
   merge_segment_c *closest_down = NULL;
@@ -1381,10 +1380,10 @@ static merge_segment_c *ClosestSegmentToPoint(double x, double y)
   {
     merge_segment_c *S = mug_segments[i];
 
-    if (MAX(S->start->x, S->end->x) < x + EPSILON)
+    if (MAX(S->start->x, S->end->x) < x - EPSILON)
       continue;
 
-    if (MIN(S->start->x, S->end->x) > x - EPSILON)
+    if (MIN(S->start->x, S->end->x) > x + EPSILON)
       break;
 
     // skip vertical segments (prevent division by zero)
@@ -1414,37 +1413,63 @@ static merge_segment_c *ClosestSegmentToPoint(double x, double y)
     }
   }
 
-  if (closest_up && (up_dist < down_dist))
-    return closest_up;
+  *hit_vertex = false;
 
-  return closest_down;
+  if (! closest_up && ! closest_down)
+    return NULL;  // outside map?
+
+  if (fabs(x - closest_up->start->x) > EPSILON &&
+      fabs(x - closest_up->end  ->x) > EPSILON)
+  {
+    return closest_up;
+  }
+
+  if (fabs(x - closest_down->start->x) > EPSILON &&
+      fabs(x - closest_down->end  ->x) > EPSILON)
+  {
+    return closest_down;
+  }
+
+  *hit_vertex = true;
+
+  return closest_up;
 }
 
 static merge_region_c *FindRegionForPoint(double x, double y)
 {
   // it is possible that we hit vertices both up and down, so
   // for that case we need to try a slightly moved point.
-  static const double along_tries[9] =
+  static const double along_tries[13] =
   {
     0.0,  +0.05, -0.05,  +0.10, -0.10,
           +0.15, -0.15,  +0.20, -0.20,
-//        +0.25, -0.25,  +0.30, -0.30
+          +0.25, -0.25,  +0.35, -0.35
   };
 
-  for (int a = 0; a < 9; a++)
+  for (int a = 0; a < 13; a++)
   {
     double xx = x + along_tries[a];
 
-    merge_segment_c *S = ClosestSegmentToPoint(xx, y);
+    bool hit_vertex;
+
+    merge_segment_c *S = ClosestSegmentToPoint(xx, y, &hit_vertex);
 
     if (! S)
+    {
+      if (a == 0)
+        return NULL; // outside map?
+
+      continue;
+    }
+
+    if (hit_vertex)
       continue;
 
     // determine side
     double perp = PerpDist(xx, y, S->start->x, S->start->y, S->end->x, S->end->y);
 
-    // hack for sitting on a one-sided line
-    if (fabs(perp) < 0.1 && ! S->back)
+    // kludge for sitting on a one-sided line
+    if (fabs(perp) < 0.2 && ! S->back)
       return S->front;
 
     merge_region_c *R = (perp < 0) ? S->back : S->front;
