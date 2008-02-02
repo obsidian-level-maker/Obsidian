@@ -1142,7 +1142,7 @@ static void Mug_RemoveIslands(void)
   // If we hit nothing at all, the region is the edge of the map.
   // If we hit ourselves, need to try another segment.
 
-  for (int i = 0; i < (int)mug_regions.size(); i++)
+  for (unsigned int i = 0; i < mug_regions.size(); i++)
   {
     merge_region_c *R = mug_regions[i];
     
@@ -1304,7 +1304,7 @@ static void Mug_AssignAreas(void)
   // neighbour as long as the crossing segment is not part of
   // the area_poly_c boundary (no escaping!).
 
-  for (int j=0; j < (int)all_polys.size(); j++)
+  for (unsigned int j=0; j < all_polys.size(); j++)
   {
     area_poly_c *P = all_polys[j];
 
@@ -1325,7 +1325,7 @@ static void Mug_DiscoverGaps(void)
   // brush, simply by maintaining a ref to the brush with the
   // currently highest z2 value.
 
-  for (int i = 0; i < (int)mug_regions.size(); i++)
+  for (unsigned int i = 0; i < mug_regions.size(); i++)
   {
     merge_region_c *R = mug_regions[i];
 
@@ -1362,18 +1362,98 @@ static void Mug_DiscoverGaps(void)
 }
 
 
-static merge_region_c *FindRegionForPoint(double x, double y)
+static merge_segment_c *ClosestSegmentToPoint(double x, double y)
 {
   // Note: assumes segments are sorted by minimum X
   //
   // Algorithm: cast a line vertically (upwards and downwards) and
-  //            see which segments we hit.
-  //
-  //            @@@@
+  //            see which segments we hit.  We skip ones that hit
+  //            purely at a vertex, hence this can return NULL when
+  //            both up and down hit a vertex.
 
-  // FIXME !!!!!!
+  merge_segment_c *closest_up   = NULL;
+  merge_segment_c *closest_down = NULL;
+
+  double up_dist   = 9e9;
+  double down_dist = 9e9;
+
+  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  {
+    merge_segment_c *S = mug_segments[i];
+
+    if (MAX(S->start->x, S->end->x) < x + EPSILON)
+      continue;
+
+    if (MIN(S->start->x, S->end->x) > x - EPSILON)
+      break;
+
+    // skip vertical segments (prevent division by zero)
+    if (fabs(S->start->x - S->end->x) < EPSILON*4)
+      continue;
+
+    double iy = S->start->y + (S->end->y - S->start->y) * (x - S->start->x) / (S->end->x - S->start->x);
+    double dist = iy - y;
+
+    if (dist >= 0)
+    {
+      if (! closest_up || dist < up_dist)
+      {
+        closest_up = S;
+        up_dist = dist;
+      }
+    }
+    else
+    {
+      dist = -dist;
+
+      if (! closest_down || dist < down_dist)
+      {
+        closest_down = S;
+        down_dist = dist;
+      }
+    }
+  }
+
+  if (closest_up && (up_dist < down_dist))
+    return closest_up;
+
+  return closest_down;
 }
 
+static merge_region_c *FindRegionForPoint(double x, double y)
+{
+  // it is possible that we hit vertices both up and down, so
+  // for that case we need to try a slightly moved point.
+  static const double along_tries[9] =
+  {
+    0.0,  +0.05, -0.05,  +0.10, -0.10,
+          +0.15, -0.15,  +0.20, -0.20,
+//        +0.25, -0.25,  +0.30, -0.30
+  };
+
+  for (int a = 0; a < 9; a++)
+  {
+    double xx = x + along_tries[a];
+
+    merge_segment_c *S = ClosestSegmentToPoint(xx, y);
+
+    if (! S)
+      continue;
+
+    // determine side
+    double perp = PerpDist(xx, y, S->start->x, S->start->y, S->end->x, S->end->y);
+
+    // hack for sitting on a one-sided line
+    if (fabs(perp) < 0.1 && ! S->back)
+      return S->front;
+
+    merge_region_c *R = (perp < 0) ? S->back : S->front;
+
+    return R;
+  }
+
+  return NULL;
+}
 
 static merge_gap_c *FindGapForPoint(merge_region_c *R, double x, double y, double z)
 {
@@ -1445,7 +1525,7 @@ void CSG2_MergeAreas(void)
   //   (6) place every entity into a gap
   //   (7) remove gaps which no entity can reach
 
-  for (int j=0; j < (int)all_polys.size(); j++)
+  for (unsigned int j=0; j < all_polys.size(); j++)
   {
     area_poly_c *P = all_polys[j];
     SYS_ASSERT(P);
