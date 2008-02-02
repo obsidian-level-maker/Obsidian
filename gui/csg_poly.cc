@@ -1560,7 +1560,6 @@ static merge_gap_c *FindGapForPoint(merge_region_c *R, double x, double y, doubl
   return NULL; // not found
 }
 
-
 static void Mug_PlaceEntities(void)
 {
   /* sort segments in order of minimum X coordinate */
@@ -1591,7 +1590,87 @@ static void Mug_PlaceEntities(void)
     }
 
     gap->entities.push_back(E);
+
+    gap->reachable = true;
   }
+}
+
+
+static void Mug_FillUnusedGaps(void)
+{
+  // Algorithm: spread the 'reachable' flag from each gap to
+  //            every neighbour, until it cannot spread any
+  //            further.  Then all gaps without the flag are
+  //            unreachable and should be filled.
+
+  // TODO: a lua mechanism to force the reachable flag
+  int changes;
+
+  do
+  {
+    changes = 0;
+
+    for (unsigned int i = 0; i < mug_regions.size(); i++)
+    {
+      merge_region_c *R = mug_regions[i];
+
+      for (unsigned int k = 0; k < R->gaps.size(); k++)
+      {
+        merge_gap_c *G = R->gaps[k];
+
+        if (! G->reachable)
+          continue;
+
+        for (unsigned int n = 0; n < G->neighbours.size(); n++)
+        {
+          merge_gap_c *H = G->neighbours[n];
+
+          if (! H->reachable)
+          {
+            H->reachable = true;
+            changes++;
+          }
+        }
+      }
+    }
+fprintf(stderr, "Mug_FillUnusedGaps: changes = %d\n", changes);
+  } while (changes > 0);
+
+  // statistics
+  int gap_total  = 0;
+  int gap_filled = 0;
+
+  for (unsigned int i = 0; i < mug_regions.size(); i++)
+  {
+    merge_region_c *R = mug_regions[i];
+
+    for (unsigned int k = 0; k < R->gaps.size(); k++)
+    {
+      merge_gap_c *G = R->gaps[k];
+
+      gap_total++;
+
+      if (G->reachable)
+        continue;
+
+      gap_filled++;
+
+      delete G;
+      R->gaps[k] = NULL;
+    }
+
+    // remove the NULL pointers
+    std::vector<merge_gap_c *>::iterator ENDP =
+         std::remove(R->gaps.begin(), R->gaps.end(), (merge_gap_c*)NULL);
+    R->gaps.erase(ENDP, R->gaps.end());
+  }
+
+  if (gap_filled == gap_total)
+  {
+    Main_FatalError("CSG2: all gaps were unreachable (no entities?)\n");
+  }
+
+  LogPrintf("CSG2: filled %d gaps (out of %d total)\n", gap_filled, gap_total);
 }
 
 
@@ -1631,8 +1710,7 @@ void CSG2_MergeAreas(void)
   Mug_GapNeighbours();
 
   Mug_PlaceEntities();
-
-  // Mug_FillUnusedGaps();
+  Mug_FillUnusedGaps();
 }
 
 
