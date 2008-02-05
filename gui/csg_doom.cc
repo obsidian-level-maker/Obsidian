@@ -47,8 +47,10 @@ public:
 
   std::string w_tex;
 
+  std::vector<sector_info_c *> users;
+
 public:
-   extrafloor_c() : sec(NULL), w_tex() { }
+   extrafloor_c() : sec(NULL), w_tex(), users() { }
   ~extrafloor_c() { } 
 
   bool Match(const extrafloor_c *other) const;
@@ -267,8 +269,8 @@ static area_poly_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
 
 static void DetermineMapBounds(void)
 {
-  bounds_x1 = bounds_y2 = +99999;
-  bounds_x1 = bounds_y2 = -99999;
+  bounds_x1 = bounds_y1 = +99999;
+  bounds_x2 = bounds_y2 = -99999;
 
   for (unsigned int i = 0; i < mug_vertices.size(); i++)
   {
@@ -278,8 +280,8 @@ static void DetermineMapBounds(void)
     bounds_x1 = MIN(x, bounds_x1);
     bounds_y1 = MIN(y, bounds_y1);
 
-    bounds_x2 = MAX(x+1, bounds_x1);
-    bounds_y2 = MAX(y+1, bounds_y1);
+    bounds_x2 = MAX(x+1, bounds_x2);
+    bounds_y2 = MAX(y+1, bounds_y2);
   }
 
   // add some leeyway
@@ -353,14 +355,16 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 
   EF->w_tex = MID->info->w_tex;
 
+  EF->users.push_back(sec);
+
 
   EF->sec = new sector_info_c();
 
-  EF->sec->f_h = I_ROUND(B->top->info->z2);
-  EF->sec->c_h = I_ROUND(T->bottom->info->z1);
+  EF->sec->f_h = I_ROUND(B->top->info->z1);
+  EF->sec->c_h = I_ROUND(T->bottom->info->z2);
 
-  EF->sec->f_tex = B->top->info->t_tex.c_str();
-  EF->sec->f_tex = T->bottom->info->b_tex.c_str();
+  EF->sec->f_tex = B->top->info->b_tex.c_str();
+  EF->sec->c_tex = T->bottom->info->t_tex.c_str();
 
   // FIXME !!!! light, special
 
@@ -520,15 +524,33 @@ static void CoalesceExtraFloors(void)
         if (E1 == E2)
           continue;
 
-        if (E1->Match(E2))
-        {
-          // choose one of them. Using the minimum pointer is a
-          // bit arbitrary, but is repeatable and transitive.
-          F->exfloors[j] = MIN(E1, E2);
-          B->exfloors[k] = MIN(E1, E2);
+        if (! E1->Match(E2))
+          continue;
 
-          changes++;
+        // don't merge with special stuff
+        if (F->tag < 9000 || B->tag < 9000)
+          continue;
+        
+        // limit how many sectors we can share
+        if (E1->users.size() + E2->users.size() > 4)
+          continue;
+
+        // choose one of them. Using the minimum pointer is a
+        // bit arbitrary, but is repeatable and transitive.
+        extrafloor_c * EF    = MIN(E1, E2);
+        extrafloor_c * other = MAX(E1, E2);
+
+        F->exfloors[j] = EF;
+        B->exfloors[k] = EF;
+
+        // transfer the users
+        while (other->users.size() > 0)
+        {
+          EF->users.push_back(other->users.back());
+          other->users.pop_back();
         }
+
+        changes++;
       }
     }
 
@@ -536,6 +558,24 @@ fprintf(stderr, "CoalesceExtraFloors: changes = %d\n", changes);
 
     if (changes == 0)
       break;
+  }
+}
+
+static void AssignExtraFloorTags(void)
+{
+  for (unsigned int j = 0; j < mug_regions.size(); j++)
+  {
+    merge_region_c *R = mug_regions[j];
+
+    if (R->index <= 0)
+      continue;
+
+    sector_info_c *S = dm_sectors[R->index];
+
+    if (S->exfloors.size() > 0 && S->tag <= 0)
+    {
+      S->tag = extrafloor_tag++;
+    }
   }
 }
 
@@ -553,21 +593,29 @@ static void CreateSectors(void)
     CreateOneSector(R);
   }
 
-  CoalesceExtraFloors();
-
   CoalesceSectors();
+
+  AssignExtraFloorTags();
+
+  CoalesceExtraFloors();
 }
 
 
 //------------------------------------------------------------------------
 
-static void WriteDummySector( sector_info_c *sec )
+static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
 {
-#if 0
-  extrafloor_slot++;
+  if (EF->sec->index >= 0)
+    return;
 
-  if (sec->tag <= 0)
-    sec->tag = extrafloor_tag++;
+  EF->sec->index = wad::num_sectors();
+
+  wad::add_sector(EF->sec->f_h, EF->sec->f_tex.c_str(),
+                  EF->sec->c_h, EF->sec->c_tex.c_str(),
+                  EF->sec->light, EF->sec->special, EF->sec->tag);
+
+
+  extrafloor_slot++;
 
 
   int x1 = bounds_x1 +       (extrafloor_slot & 31) * 64;
@@ -591,33 +639,41 @@ static void WriteDummySector( sector_info_c *sec )
   wad::add_vertex(x2, y1);
 
  
-  int sec_ref = wad::num_sectors();
-
-  int f_h = I_ROUND(B->info->z1);
-  int c_h = I_ROUND(T->info->z2);
-
-  wad::add_sector(f_h, B->info->b_tex.c_str(),
-                  c_h, T->info->t_tex.c_str(),
-                  144, 0, 0); // FIXME !!!! light, special
-
-
   int side_ref = wad::num_sidedefs();
 
-  wad::add_sidedef(sec_ref, "-", MID->info->w_tex.c_str(), "-", 0, 0);
+  wad::add_sidedef(EF->sec->index, "-", EF->w_tex.c_str(), "-", 0, 0);
 
 
   // FIXME: 400 is EDGE extrafloor (don't hard-code it)
 
-  wad::add_linedef(vert_ref+0, vert_ref+1, side_ref, -1,
-                   400 /* EDGE !! */, 1 /* impassible */,
-                   sec->tag, NULL /* args */);
+fprintf(stderr, "USERS = %d\n", (int)EF->users.size());
+  for (unsigned int n = 0; n < 4; n++)
+  {
+    int type = 0;
+    int tag  = 0;
 
-  wad::add_linedef(vert_ref+1, vert_ref+2, side_ref, -1, 0,1,0, NULL);
-  wad::add_linedef(vert_ref+2, vert_ref+3, side_ref, -1, 0,1,0, NULL);
-  wad::add_linedef(vert_ref+3, vert_ref+0, side_ref, -1, 0,1,0, NULL);
-#endif
+    if (n < EF->users.size())
+    {
+      type = 400;
+      tag  = EF->users[n]->tag;
+
+      SYS_ASSERT(tag > 0);
+    }
+
+    wad::add_linedef(vert_ref + (n), vert_ref + ((n+1) % 4),
+                     side_ref, -1 /* side2 */,
+                     type, 1 /* impassible */,
+                     tag, NULL /* args */);
+  }
+
+///---  wad::add_linedef(vert_ref+0, vert_ref+1, side_ref, -1,
+///---                   400 /* EDGE !! */,
+///---                   sec->tag,
+///---
+///---  wad::add_linedef(vert_ref+1, vert_ref+2, side_ref, -1, 0,1,0, NULL);
+///---  wad::add_linedef(vert_ref+2, vert_ref+3, side_ref, -1, 0,1,0, NULL);
+///---  wad::add_linedef(vert_ref+3, vert_ref+0, side_ref, -1, 0,1,0, NULL);
 }
-
 
 
 static int WriteVertex(merge_vertex_c *V)
@@ -637,6 +693,11 @@ static int WriteSector(sector_info_c *S)
 {
   if (S->index < 0)
   {
+    for (unsigned int k = 0; k < S->exfloors.size(); k++)
+    {
+      WriteExtraFloor(S, S->exfloors[k]);
+    }
+
     S->index = wad::num_sectors();
 
     wad::add_sector(S->f_h, S->f_tex.c_str(),
