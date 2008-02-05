@@ -532,7 +532,7 @@ static void CoalesceExtraFloors(void)
           continue;
         
         // limit how many sectors we can share
-        if (E1->users.size() + E2->users.size() > 4)
+        if (E1->users.size() + E2->users.size() > 8)
           continue;
 
         // choose one of them. Using the minimum pointer is a
@@ -618,7 +618,7 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
   extrafloor_slot++;
 
 
-  int x1 = bounds_x1 +       (extrafloor_slot & 31) * 64;
+  int x1 = bounds_x1 +       (extrafloor_slot % 32) * 64;
   int y1 = bounds_y1 - 128 - (extrafloor_slot / 32) * 64;
 
   if (extrafloor_slot & 1024) x1 += 2200;
@@ -630,13 +630,24 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
   int x2 = x1 + 32;
   int y2 = y1 + 32;
 
+  int xm = x1 + 16;
+  int ym = y1 + 16;
+
+  bool morev = (EF->users.size() > 4);
 
   int vert_ref = wad::num_vertexes();
 
-  wad::add_vertex(x1, y1);
-  wad::add_vertex(x1, y2);
-  wad::add_vertex(x2, y2);
-  wad::add_vertex(x2, y1);
+  if (true)  wad::add_vertex(x1, y1);
+  if (morev) wad::add_vertex(x1, ym);
+
+  if (true)  wad::add_vertex(x1, y2);
+  if (morev) wad::add_vertex(xm, y2);
+
+  if (true)  wad::add_vertex(x2, y2);
+  if (morev) wad::add_vertex(x2, ym);
+
+  if (true)  wad::add_vertex(x2, y1);
+  if (morev) wad::add_vertex(xm, y1);
 
  
   int side_ref = wad::num_sidedefs();
@@ -646,13 +657,14 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
 
   // FIXME: 400 is EDGE extrafloor (don't hard-code it)
 
-fprintf(stderr, "USERS = %d\n", (int)EF->users.size());
-  for (unsigned int n = 0; n < 4; n++)
+  int vert_num = morev ? 8 : 4;
+
+  for (int n = 0; n < vert_num; n++)
   {
     int type = 0;
     int tag  = 0;
 
-    if (n < EF->users.size())
+    if (n < (int)EF->users.size())
     {
       type = 400;
       tag  = EF->users[n]->tag;
@@ -660,7 +672,7 @@ fprintf(stderr, "USERS = %d\n", (int)EF->users.size());
       SYS_ASSERT(tag > 0);
     }
 
-    wad::add_linedef(vert_ref + (n), vert_ref + ((n+1) % 4),
+    wad::add_linedef(vert_ref + (n), vert_ref + ((n+1) % vert_num),
                      side_ref, -1 /* side2 */,
                      type, 1 /* impassible */,
                      tag, NULL /* args */);
