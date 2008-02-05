@@ -37,6 +37,24 @@ static int extrafloor_tag;
 static int extrafloor_slot;
 
 
+class sector_info_c;
+
+
+class extrafloor_c
+{
+public:
+  sector_info_c * sec;
+
+  std::string w_tex;
+
+public:
+   extrafloor_c() : sec(NULL), w_tex() { }
+  ~extrafloor_c() { } 
+
+  bool Match(const extrafloor_c *other) const;
+};
+
+
 class sector_info_c 
 {
 public:
@@ -51,16 +69,38 @@ public:
   int tag;
   int mark;
 
+  std::vector<extrafloor_c *> exfloors;
+
   int index;
   
 public:
   sector_info_c() : f_h(0), c_h(0), f_tex(), c_tex(),
                     light(255), special(0), tag(0), mark(0),
-                    index(-1)
+                    exfloors(), index(-1)
   { }
 
   ~sector_info_c()
   { }
+
+  bool SameExtraFloors(const sector_info_c *other) const
+  {
+    if (exfloors.size() != other->exfloors.size())
+      return false;
+
+    for (unsigned int i = 0; i < exfloors.size(); i++)
+    {
+      extrafloor_c *E1 = exfloors[i];
+      extrafloor_c *E2 = other->exfloors[i];
+
+      if (E1 == E2)
+        continue;
+
+      if (! E1->Match(E2))
+        return false;
+    }
+
+    return true;
+  }
 
   bool Match(const sector_info_c *other) const
   {
@@ -71,13 +111,31 @@ public:
            (tag  == other->tag)  &&
            (mark == other->mark) &&
            (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
-           (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0);
+           (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0) &&
+           SameExtraFloors(other);
   }
 };
 
+
 static std::vector<sector_info_c *> dm_sectors;
+static std::vector<extrafloor_c *>  dm_exfloors;
+
+static int bounds_x1, bounds_y1;
+static int bounds_x2, bounds_y2;
 
 
+bool extrafloor_c::Match(const extrafloor_c *other) const
+{
+  SYS_ASSERT(sec && other->sec);
+
+  if (strcmp(w_tex.c_str(), other->w_tex.c_str()) != 0)
+    return false;
+
+  return sec->Match(other->sec);
+}
+
+
+#if 0
 class open_space_c
 {
 public:
@@ -90,6 +148,7 @@ public:
   ~open_space_c()
   { }
 };
+#endif
 
 
 void CSG2_TestDoom_Areas(void)
@@ -178,7 +237,9 @@ void CSG2_TestDoom_Regions(void)
 }
 
 
+//------------------------------------------------------------------------
 
+#if 0
 static area_poly_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
 {
   area_poly_c *best = NULL;
@@ -202,11 +263,38 @@ static area_poly_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
 
   return best;
 }
+#endif
+
+static void DetermineMapBounds(void)
+{
+  bounds_x1 = bounds_y2 = +99999;
+  bounds_x1 = bounds_y2 = -99999;
+
+  for (unsigned int i = 0; i < mug_vertices.size(); i++)
+  {
+    int x = (int)floor(mug_vertices[i]->x);
+    int y = (int)floor(mug_vertices[i]->y);
+
+    bounds_x1 = MIN(x, bounds_x1);
+    bounds_y1 = MIN(y, bounds_y1);
+
+    bounds_x2 = MAX(x+1, bounds_x1);
+    bounds_y2 = MAX(y+1, bounds_y1);
+  }
+
+  // add some leeyway
+  bounds_x1 -= 16; bounds_y1 -= 16;
+  bounds_x2 += 16; bounds_y2 += 16;
+
+  SYS_ASSERT(bounds_x1 < bounds_x2);
+  SYS_ASSERT(bounds_y1 < bounds_y2);
+}
 
 
 static double MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
-                             area_poly_c *T)
+                             merge_gap_c *T, merge_gap_c *B)
 {
+#if 0 // OLD CODE
   // T is the top-most brush.  Find the bottom-most brush
   // which is connected to T (via intersecting brushes).
   area_poly_c *B = T;
@@ -230,7 +318,7 @@ static double MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
     if (! changed)
       break;
   }
-
+#endif
 
   // find the brush which we will use for the side texture
   area_poly_c *MID = NULL;
@@ -240,8 +328,8 @@ static double MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   {
     area_poly_c *A = R->areas[j];
 
-    if (A->info->z1 > B->info->z1 - EPSILON &&
-        A->info->z2 < T->info->z2 + EPSILON)
+    if (A->info->z1 > B->top->info->z1 - EPSILON &&
+        A->info->z2 < T->bottom->info->z2 + EPSILON)
     {
       double h = A->info->z2 - A->info->z1;
 
@@ -261,61 +349,25 @@ static double MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   SYS_ASSERT(MID);
 
 
-  extrafloor_slot++;
+  extrafloor_c *EF = new extrafloor_c();
 
-  if (sec->tag <= 0)
-    sec->tag = extrafloor_tag++;
-
-
-  // FIXME !!! find extent of map, use "map_min_y - 128"
-
-  int x1 =    0 + (extrafloor_slot & 31) * 64;
-  int y1 = -160 - (extrafloor_slot / 32) * 64;
-
-  if (extrafloor_slot & 1024) x1 += 2200;
-  if (extrafloor_slot & 2048) y1 -= 2200;
-
-  if (extrafloor_slot & 4096)
-    Main_FatalError("Too many extrafloors! (over %d)%d\n", extrafloor_slot);
-
-  int x2 = x1 + 32;
-  int y2 = y1 + 32;
+  EF->w_tex = MID->info->w_tex;
 
 
-  int vert_ref = wad::num_vertexes();
+  EF->sec = new sector_info_c();
 
-  wad::add_vertex(x1, y1);
-  wad::add_vertex(x1, y2);
-  wad::add_vertex(x2, y2);
-  wad::add_vertex(x2, y1);
+  EF->sec->f_h = I_ROUND(B->top->info->z2);
+  EF->sec->c_h = I_ROUND(T->bottom->info->z1);
 
- 
-  int sec_ref = wad::num_sectors();
+  EF->sec->f_tex = B->top->info->t_tex.c_str();
+  EF->sec->f_tex = T->bottom->info->b_tex.c_str();
 
-  int f_h = I_ROUND(B->info->z1);
-  int c_h = I_ROUND(T->info->z2);
-
-  wad::add_sector(f_h, B->info->b_tex.c_str(),
-                  c_h, T->info->t_tex.c_str(),
-                  144, 0, 0); // FIXME !!!! light, special
+  // FIXME !!!! light, special
 
 
-  int side_ref = wad::num_sidedefs();
+  sec->exfloors.push_back(EF);
 
-  wad::add_sidedef(sec_ref, "-", MID->info->w_tex.c_str(), "-", 0, 0);
-
-
-  // FIXME: 400 is EDGE extrafloor (don't hard-code it)
-
-  wad::add_linedef(vert_ref+0, vert_ref+1, side_ref, -1,
-                   400 /* EDGE !! */, 1 /* impassible */,
-                   sec->tag, NULL /* args */);
-
-  wad::add_linedef(vert_ref+1, vert_ref+2, side_ref, -1, 0,1,0, NULL);
-  wad::add_linedef(vert_ref+2, vert_ref+3, side_ref, -1, 0,1,0, NULL);
-  wad::add_linedef(vert_ref+3, vert_ref+0, side_ref, -1, 0,1,0, NULL);
-
-  return B->info->z1;
+  dm_exfloors.push_back(EF);
 }
 
 
@@ -327,105 +379,6 @@ static void CreateOneSector(merge_region_c *R)
     R->index = 0;
     return;
   }
-
-#if 0  // OLD CODE
-  double min_z = +999999;
-  double max_z = -999999;
-
-  unsigned int k;
-  
-  for (k=0; k < R->areas.size(); k++)
-  {
-    area_poly_c *A = R->areas[k];
-
-    min_z = MIN(min_z, A->info->z1);
-    max_z = MAX(max_z, A->info->z2);
-  }
-
-  // look for a completely "void" brush
-  for (k=0; k < R->areas.size(); k++)
-  {
-    area_poly_c *A = R->areas[k];
-
-    if (A->info->z1 < min_z + EPSILON &&
-        A->info->z2 > max_z - EPSILON)
-    {
-      R->index = 0;
-      return;
-    }
-  }
-
-  // OK, we will have a sector
-
-  // find bottom most (B) and top most (T) brushes
-  area_poly_c *B = NULL;
-  area_poly_c *T = NULL;
-
-  for (k=0; k < R->areas.size(); k++)
-  {
-    area_poly_c *A = R->areas[k];
-    
-    if (A->info->z1 < min_z + EPSILON)
-    {
-      if (! B || (A->info->z2 > B->info->z2 + EPSILON) )
-      {
-        B = A;
-      }
-    }
-
-    if (A->info->z2 > max_z - EPSILON)
-    {
-      if (! T || (A->info->z1 < T->info->z1 - EPSILON) )
-      {
-        T = A;
-      }
-    }
-  }
-
-  SYS_ASSERT(B && T);
-
-  // upgrade brushes if another solid intersects
-
-  // FIXME: prioritise when heights are the same
-
-  for (;;)
-  {
-    bool changed = false;
-
-    for (k=0; k < R->areas.size(); k++)
-    {
-      area_poly_c *A = R->areas[k];
-
-      if (A->info->z2 > B->info->z2 + EPSILON &&
-          A->info->z1 < B->info->z2 + EPSILON &&
-          A->info->z2 < T->info->z1 + EPSILON)
-      {
-        B = A; changed = true; /// break;
-      }
-
-      if (A->info->z1 < T->info->z1 - EPSILON &&
-          A->info->z2 > T->info->z1 - EPSILON &&
-          A->info->z1 > B->info->z2 - EPSILON)
-      {
-        T = A; changed = true; /// break;
-      }
-    }
-
-    if (! changed)
-      break;
-  }
-
-DebugPrintf("SECTOR #%d:\n", (int) dm_sectors.size());
-DebugPrintf("{\n");
-for (unsigned jk=0; jk < R->gaps.size(); jk++)
-{
-  DebugPrintf("GAP: %1.0f..%1.0f to %1.0f..%1.0f\n",
-    R->gaps[jk]->bottom->info->z1, R->gaps[jk]->bottom->info->z2,
-    R->gaps[jk]->top->info->z1, R->gaps[jk]->top->info->z2);
-}
-DebugPrintf("}\n");
-  
-#endif
 
 
   area_poly_c *B = R->gaps[0]->bottom;
@@ -469,7 +422,21 @@ DebugPrintf("}\n");
 
   // find brushes floating in-between --> make extrafloors
 
-#if 0
+  // Note: top-to-bottom is the most natural order, because when
+  // the engine adds an extrafloor into a sector, the upper part
+  // remains the same and the lower part gets the new properties
+  // (lighting/special) from the extrafloor.
+
+  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
+  {
+    merge_gap_c *T = R->gaps[g];
+    merge_gap_c *B = R->gaps[g-1];
+
+    MakeExtraFloor(R, sec, T, B);
+  }
+
+
+#if 0  // OLD CODE
   double exfloor_z1 = B->info->z2 + 1;
   double exfloor_z2 = T->info->z1 - 1;
 
@@ -538,6 +505,66 @@ static void CreateSectors(void)
 
   CoalesceSectors();
 }
+
+
+//------------------------------------------------------------------------
+
+static void WriteDummySector( sector_info_c *sec )
+{
+  extrafloor_slot++;
+
+  if (sec->tag <= 0)
+    sec->tag = extrafloor_tag++;
+
+
+  int x1 = bounds_x1 +       (extrafloor_slot & 31) * 64;
+  int y1 = bounds_y1 - 128 - (extrafloor_slot / 32) * 64;
+
+  if (extrafloor_slot & 1024) x1 += 2200;
+  if (extrafloor_slot & 2048) y1 -= 2200;
+
+  if (extrafloor_slot & 4096)
+    Main_FatalError("Too many extrafloors! (over %d)%d\n", extrafloor_slot);
+
+  int x2 = x1 + 32;
+  int y2 = y1 + 32;
+
+
+  int vert_ref = wad::num_vertexes();
+
+  wad::add_vertex(x1, y1);
+  wad::add_vertex(x1, y2);
+  wad::add_vertex(x2, y2);
+  wad::add_vertex(x2, y1);
+
+ 
+  int sec_ref = wad::num_sectors();
+
+  int f_h = I_ROUND(B->info->z1);
+  int c_h = I_ROUND(T->info->z2);
+
+  wad::add_sector(f_h, B->info->b_tex.c_str(),
+                  c_h, T->info->t_tex.c_str(),
+                  144, 0, 0); // FIXME !!!! light, special
+
+
+  int side_ref = wad::num_sidedefs();
+
+  wad::add_sidedef(sec_ref, "-", MID->info->w_tex.c_str(), "-", 0, 0);
+
+
+  // FIXME: 400 is EDGE extrafloor (don't hard-code it)
+
+  wad::add_linedef(vert_ref+0, vert_ref+1, side_ref, -1,
+                   400 /* EDGE !! */, 1 /* impassible */,
+                   sec->tag, NULL /* args */);
+
+  wad::add_linedef(vert_ref+1, vert_ref+2, side_ref, -1, 0,1,0, NULL);
+  wad::add_linedef(vert_ref+2, vert_ref+3, side_ref, -1, 0,1,0, NULL);
+  wad::add_linedef(vert_ref+3, vert_ref+0, side_ref, -1, 0,1,0, NULL);
+
+}
+
 
 
 static int WriteVertex(merge_vertex_c *V)
@@ -706,7 +733,11 @@ void CSG2_WriteDoom(void)
   extrafloor_tag  = 9000;
   extrafloor_slot = 0;
 
+  DetermineMapBounds();
+
   CreateSectors();
+
+  WriteDummies();
 
   WriteLinedefs();
 
