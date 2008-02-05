@@ -291,8 +291,8 @@ static void DetermineMapBounds(void)
 }
 
 
-static double MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
-                             merge_gap_c *T, merge_gap_c *B)
+static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
+                           merge_gap_c *T, merge_gap_c *B)
 {
 #if 0 // OLD CODE
   // T is the top-most brush.  Find the bottom-most brush
@@ -484,8 +484,58 @@ static void CoalesceSectors(void)
       }
     }
 
+fprintf(stderr, "CoalesceSectors: changes = %d\n", changes);
+
     if (changes == 0)
       return;
+  }
+}
+
+static void CoalesceExtraFloors(void)
+{
+  for (int loop=0; loop < 99; loop++)
+  {
+    int changes = 0;
+
+    for (unsigned int i = 0; i < mug_segments.size(); i++)
+    {
+      merge_segment_c *S = mug_segments[i];
+
+      if (! S->front || ! S->back)
+        continue;
+
+      if (S->front->index <= 0 || S->back->index <= 0)
+        continue;
+
+      sector_info_c *F = dm_sectors[S->front->index];
+      sector_info_c *B = dm_sectors[S->back ->index];
+      
+      for (unsigned int j = 0; j < F->exfloors.size(); j++)
+      for (unsigned int k = 0; k < B->exfloors.size(); k++)
+      {
+        extrafloor_c *E1 = F->exfloors[j];
+        extrafloor_c *E2 = B->exfloors[k];
+
+        // already merged?
+        if (E1 == E2)
+          continue;
+
+        if (E1->Match(E2))
+        {
+          // choose one of them. Using the minimum pointer is a
+          // bit arbitrary, but is repeatable and transitive.
+          F->exfloors[j] = MIN(E1, E2);
+          B->exfloors[k] = MIN(E1, E2);
+
+          changes++;
+        }
+      }
+    }
+
+fprintf(stderr, "CoalesceExtraFloors: changes = %d\n", changes);
+
+    if (changes == 0)
+      break;
   }
 }
 
@@ -503,6 +553,8 @@ static void CreateSectors(void)
     CreateOneSector(R);
   }
 
+  CoalesceExtraFloors();
+
   CoalesceSectors();
 }
 
@@ -511,6 +563,7 @@ static void CreateSectors(void)
 
 static void WriteDummySector( sector_info_c *sec )
 {
+#if 0
   extrafloor_slot++;
 
   if (sec->tag <= 0)
@@ -562,7 +615,7 @@ static void WriteDummySector( sector_info_c *sec )
   wad::add_linedef(vert_ref+1, vert_ref+2, side_ref, -1, 0,1,0, NULL);
   wad::add_linedef(vert_ref+2, vert_ref+3, side_ref, -1, 0,1,0, NULL);
   wad::add_linedef(vert_ref+3, vert_ref+0, side_ref, -1, 0,1,0, NULL);
-
+#endif
 }
 
 
@@ -737,7 +790,7 @@ void CSG2_WriteDoom(void)
 
   CreateSectors();
 
-  WriteDummies();
+///  WriteDummies();
 
   WriteLinedefs();
 
