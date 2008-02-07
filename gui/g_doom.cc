@@ -36,10 +36,6 @@
 #include "main.h"
 
 
-//!!!! TEMP
-extern void CSG2_DumpSegmentsToWAD(void);
-
-
 #define TEMP_FILENAME    "TEMP.wad"
 
 typedef std::vector<u8_t> lump_c;
