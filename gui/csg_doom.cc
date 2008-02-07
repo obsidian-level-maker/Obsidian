@@ -153,7 +153,7 @@ public:
 #endif
 
 
-void CSG2_TestDoom_Areas(void)
+void CSG2_Doom_TestAreas(void)
 {
   // for debugging only: each area_poly_c becomes a single sector
   // on the map.
@@ -190,7 +190,7 @@ void CSG2_TestDoom_Areas(void)
   }
 }
 
-void CSG2_TestDoom_Regions(void)
+void CSG2_Doom_TestRegions(void)
 {
   // for debugging only: each merge_region becomes a single
   // sector on the map.
@@ -215,7 +215,7 @@ void CSG2_TestDoom_Regions(void)
 
     const char *flat = "FLAT1";
  
-    wad::add_sector(0,flat, 144,flat, 255,0,0);
+    wad::add_sector(0,flat, 144,flat, 255,(int)R->areas.size(),(int)R->gaps.size());
 
     const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
 
@@ -849,12 +849,14 @@ void CSG2_WriteDoom(void)
   //    - mark border segments as unused
   //    - mark vertices with all unused segs as unused
   // 4) profit!
- 
+
+//CSG2_Doom_TestAreas();
+//return;
+
   CSG2_MergeAreas();
 
-//!!!
-// CSG2_TestDoom_Areas();
-// return;
+//CSG2_Doom_TestRegions();
+//return;
  
   extrafloor_tag  = 9000;
   extrafloor_slot = 0;
