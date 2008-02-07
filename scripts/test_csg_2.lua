@@ -19,7 +19,7 @@
 
 function test_csg()
 
--- [[ DOOM
+--[[ DOOM
   local ENTITY   = "1"
 
   local START_F  = "FLAT22"
@@ -32,17 +32,17 @@ function test_csg()
   local NICHE_W  = "TEKGREN2"
 --]]
 
---[[ QUAKE 1
+-- [[ QUAKE 1
   local ENTITY   = "info_player_start"
 
   local START_F  = "tech01_1"
   local START_W  = "tech01_1"
 
-  local ROOM_F  = "ground1_1"
-  local ROOM_W  = "ground1_1"
+  local ROOM_F   = "city1_4"
+  local ROOM_W   = "city1_4"
 
-  local NICHE_F  = "city1_4"
-  local NICHE_W  = "city1_4"
+  local NICHE_F  = "ground1_1"
+  local NICHE_W  = "ground1_1"
 --]]
 
 --[[ OPEN ARENA
