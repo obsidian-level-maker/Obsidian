@@ -343,7 +343,7 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
 
     qSide_c *S = *SI;
 
-    /* get state of lines' relation to each other */
+    // get state of lines' relation to each other
     double a = PerpDist(S->seg->start->x, S->seg->start->y,
                         part->seg->start->x, part->seg->start->y,
                         part->seg->end->x, part->seg->end->y);
@@ -414,6 +414,7 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
   return (splits * splits * 20 + diff * 100) / (front + back);
 }
 
+
 static void FindPartitionXY(qNode_c *node, qLeaf_c *leaf)
 {
   std::list<qSide_c *>::iterator SI;
@@ -480,10 +481,91 @@ static void FindPartitionXY(qNode_c *node, qLeaf_c *leaf)
   node->dy = best_p->seg->end->y - node->y;
 }
 
-static void Split_XY(qNode_c *node, qLeaf_c *leaf)
+
+static void Split_XY(qNode_c *part, qLeaf_c *leaf)
 {
-  // FIXME !!!!!
+  part->front_l = leaf;
+  part->back_l  = new qLeaf_c;
+
+
+  std::list<qSide_c *> all_sides;
+
+  all_sides.swap(leaf->sides);
+
+  while (! all_sides.empty())
+  {
+    qSide_c *S = all_sides.front();
+
+    all_sides.pop_front();
+
+    double sdx = S->seg->end->x - S->seg->start->x;
+    double sdy = S->seg->end->y - S->seg->start->y;
+
+    // get state of lines' relation to each other
+    double a = PerpDist(S->seg->start->x, S->seg->start->y,
+                        part->x, part->y,
+                        part->x + part->dx, part->y + part->dy);
+
+    double b = PerpDist(S->seg->end->x, S->seg->end->y,
+                        part->x, part->y,
+                        part->x + part->dx, part->y + part->dy);
+
+    double fa = fabs(a);
+    double fb = fabs(b);
+
+    if (fa <= Q_EPSILON && fb <= Q_EPSILON)
+    {
+      // lines are colinear
+
+      if (part->dx * sdx + part->dy * sdy < 0.0)
+        part->back_l->sides.push_back(S);
+      else
+        part->front_l->sides.push_back(S);
+
+      continue;
+    }
+
+    if (fa <= Q_EPSILON || fb <= Q_EPSILON)
+    {
+      // partition passes through one vertex
+
+      if ( ((fa <= Q_EPSILON) ? b : a) < 0 )
+        part->back_l->sides.push_back(S);
+      else
+        part->front_l->sides.push_back(S);
+
+      continue;
+    }
+
+    if (a < 0 && b < 0)
+    {
+      part->back_l->sides.push_back(S);
+      continue;
+    }
+
+    if (a > 0 && b > 0)
+    {
+      part->front_l->sides.push_back(S);
+      continue;
+    }
+
+    /* need to split it */
+
+    // determine the intersection point
+    double along = a / (a - b);
+
+    double ix = S->seg->start->x + along * sdx;
+    double iy = S->seg->start->y + along * sdy;
+
+    // FIXME !!!!!  actually split the side
+
+    qSide_c *T = new qSide_c;
+
+    part->front_l->sides.push_back(S);
+    part-> back_l->sides.push_back(T);
+  }
 }
+
 
 static qNode_c * PartitionXY(qLeaf_c *leaf)
 {
