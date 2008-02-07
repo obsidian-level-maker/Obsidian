@@ -82,12 +82,16 @@ public:
 
   std::list<qSide_c *> sides;
 
+  // Note: qSide_c objects are shared when gap > 0
+
+  int gap;
+
   double min_x, min_y;
   double max_x, max_y;
 
 public:
   qLeaf_c() : contents(CONTENTS_EMPTY), faces(), sides(),
-              min_x(0), min_y(0), max_x(0), max_y(0)
+              gap(0), min_x(0), min_y(0), max_x(0), max_y(0)
   { }
 
   ~qLeaf_c()
@@ -95,10 +99,23 @@ public:
     // TODO: delete faces and sides
   }
 
+  qLeaf_c(qLeaf_c& other, int _gap) :
+          contents(other.contents), faces(), sides(), gap(_gap),
+          min_x(other.min_x), min_y(other.min_y),
+          max_x(other.max_x), max_y(other.max_y)
+  {
+    // copy the side pointers
+    std::list<qSide_c *>::iterator SI;
+
+    for (SI = other.sides.begin(); SI != other.sides.end(); SI++)
+      sides.push_back(*SI);
+  }
+
   void AddSide(merge_segment_c *_seg, int _side)
   {
     sides.push_back(new qSide_c(_seg, _side));
   }
+
 
   merge_region_c *GetRegion() const
   {
@@ -171,7 +188,8 @@ public:
 class qNode_c
 {
 public:
-  // true if this node splits the tree by Z (with a horizontal plane)
+  // true if this node splits the tree by Z
+  // (with a horizontal upward-facing plane, i.e. dz = 1).
   bool z_splitter;
 
   double z;
@@ -220,23 +238,54 @@ static inline double PerpDist(double x, double y,
 }
 
 
-static void Split_Z(qNode_c *node, qLeaf_c *leaf)
-{
-  merge_region_c *R = leaf->GetRegion();
-  SYS_ASSERT(R && R->gaps.size() > 1);
-
-  unsigned int gap = R->gaps.size() / 2;
-
-  // choose height halfway between the two gaps (in the solid)
-  node->z = (R->gaps[gap-1]->GetZ2() + R->gaps[gap]->GetZ1()) / 2.0;
-
-  // FIXME !!!!!
-}
+///---static void Split_Z(qNode_c *node, qLeaf_c *leaf)
+///---{
+///---
+///---  unsigned int gap = R->gaps.size() / 2;
+///---
+///---
+///---  node->front_l = leaf;
+///---  node->back_l  = new qLeaf_c;
+///---
+///---  // FIXME !!!!!
+///---}
 
 static qNode_c * PartitionZ(qLeaf_c *leaf)
 {
-  qNode_c *node = new qNode_c(true /* z_splitter */);
+  merge_region_c *R = leaf->GetRegion();
 
+  SYS_ASSERT(R && R->gaps.size() > 1);
+
+  
+  qLeaf_c ** leaf_list = new qLeaf_c* [R->gaps.size()];
+  qNode_c ** node_list = new qNode_c* [R->gaps.size()-1];
+
+  leaf_list[0] = leaf;
+
+  for (int gap = 1; gap < (int)R->gaps.size(); gap++)
+  {
+    leaf_list[gap]   = new qLeaf_c(*leaf, gap);
+    node_list[gap-1] = new qNode_c(true /* z_splitter */);
+  }
+
+  // TODO: produce a well balanced tree
+
+  for (int gap = 1; gap < (int)R->gaps.size(); gap++)
+  {
+    qNode_c *n = node_list[gap-1];
+
+    // choose height halfway between the two gaps (in the solid)
+    n->z = (R->gaps[gap-1]->GetZ2() + R->gaps[gap]->GetZ1()) / 2.0;
+
+    n->back_l = leaf_list[gap-1];
+
+    if (gap < (int)R->gaps.size()-1)
+      n->front_n = node_list[gap];
+    else
+      n->front_l = leaf_list[gap];
+  } 
+
+#if 0 // OLD CODE
   Split_Z(node, leaf);
 
   if (! node->front_l->IsConvex_Z())
@@ -250,6 +299,12 @@ static qNode_c * PartitionZ(qLeaf_c *leaf)
     node->back_n = PartitionZ(node->back_l);
     node->back_l = NULL;
   }
+#endif
+
+  qNode_c *node = node_list[0];
+
+  delete[] leaf_list;
+  delete[] node_list;
 
   return node;
 }
