@@ -95,6 +95,16 @@ public:
     sides.push_back(new qSide_c(_seg, _side));
   }
 
+  merge_region_c *GetRegion() const
+  {
+    // NOTE: assumes a convex leaf (in XY) !!
+    SYS_ASSERT(! sides.empty());
+
+    qSide_c *S = *sides.begin();
+
+    return S->GetRegion();
+  }
+
   bool IsConvex_XY()
   {
     // Requirements for Convexicity:
@@ -123,7 +133,7 @@ public:
         return false;
     }
 
-    // all sides belong to the same region.
+    // OK, all sides belong to the same region.
 
     // Now rearrange sides in the list so they are contiguous
     // (winding in an anti-clockwise direction).
@@ -179,10 +189,42 @@ public:
 };
 
 
-// FIXME: DO Z PARTITIONING AS FINAL PART OF XY PARTITIONING
+static void Split_Z(qNode_c *node, qLeaf_c *leaf)
+{
+  merge_region_c *R = leaf->GetRegion();
+  SYS_ASSERT(R && R->gaps.size() > 1);
+
+  unsigned int gap = R->gaps.size() / 2;
+
+  // choose the z halfway between the two gaps (in the solid area)
+  double z = (R->gaps[gap-1]->GetZ2() + R->gaps[gap]->GetZ1()) / 2.0;
+
+  // FIXME !!!!!
+}
+
+static qNode_c * PartitionZ(qLeaf_c *leaf)
+{
+  qNode_c *node = new qNode_c();
+
+  Split_Z(node, leaf);
+
+  if (! node->front_l->IsConvex_Z())
+  {
+    node->front_n = PartitionZ(node->front_l);
+    node->front_l = NULL;
+  }
+
+  if (! node->back_l->IsConvex_Z())
+  {
+    node->back_n = PartitionZ(node->back_l);
+    node->back_l = NULL;
+  }
+
+  return node;
+}
 
 
-static XXX FindPartitionXY( XXX )
+static void FindPartitionXY(qNode_c *node)
 {
   // FIXME !!!!!
 }
@@ -194,9 +236,9 @@ static void Split_XY(qNode_c *node, qLeaf_c *leaf)
 
 static qNode_c * PartitionXY(qLeaf_c *leaf)
 {
-  XXX = FindPartition(XXX);
-
   qNode_c *node = new qNode_c();
+
+  FindPartitionXY(node);
 
   Split_XY(node, leaf);
 
@@ -205,63 +247,49 @@ static qNode_c * PartitionXY(qLeaf_c *leaf)
     node->front_n = PartitionXY(node->front_l);
     node->front_l = NULL;
   }
+  else if (! node->front_l->IsConvex_Z())
+  {
+    node->front_n = PartitionZ(node->front_l);
+    node->front_l = NULL;
+  }
 
   if (! node->back_l->IsConvex_XY())
   {
     node->back_n = PartitionXY(node->back_l);
     node->back_l = NULL;
   }
-}
-
-
-static void Split_Z(qNode_c *node, qLeaf_c *leaf)
-{
-  double z = XXXX;
-
-  // FIXME !!!!!
-}
-
-static qNode_c * PartitionZ_Leaf(qLeaf_c *leaf)
-{
-  qNode_c *node = new qNode_c();
-
-  Split_Z(node, leaf);
-
-  if (! node->front_l->IsConvex_Z())
-  {
-    node->front_n = PartitionZ_Leaf(node->front_l);
-    node->front_l = NULL;
-  }
-
-  if (! node->back_l->IsConvex_Z())
-  {
-    node->back_n = PartitionZ_Leaf(node->back_l);
-    node->back_l = NULL;
-  }
-}
-
-static void PartitionZ(qNode_c *node)
-{
-  if (node->front_n)
-  {
-    PartitionZ(node->front_n);
-  }
-  else if (! node->front_l->IsConvex_Z())
-  {
-    node->front_n = PartitionZ_Leaf(node->front_l);
-    node->front_l = NULL;
-  }
-
-  if (node->back_n)
-  {
-    PartitionZ(node->back_n);
-  }
   else if (! node->back_l->IsConvex_Z())
   {
-    node->back_n = PartitionZ_Leaf(node->back_l);
+    node->back_n = PartitionZ(node->back_l);
     node->back_l = NULL;
   }
+
+  return node;
 }
+
+
+///---static void PartitionZ(qNode_c *node)
+///---{
+///---  if (node->front_n)
+///---  {
+///---    PartitionZ(node->front_n);
+///---  }
+///---  else if (! node->front_l->IsConvex_Z())
+///---  {
+///---    node->front_n = PartitionZ_Leaf(node->front_l);
+///---    node->front_l = NULL;
+///---  }
+///---
+///---  if (node->back_n)
+///---  {
+///---    PartitionZ(node->back_n);
+///---  }
+///---  else if (! node->back_l->IsConvex_Z())
+///---  {
+///---    node->back_n = PartitionZ_Leaf(node->back_l);
+///---    node->back_l = NULL;
+///---  }
+///---}
 
 
 void Quake1_BuildBSP( void )
@@ -295,12 +323,11 @@ void Quake1_BuildBSP( void )
 
   // NOTE WELL: we assume at least one partition (hence at least
   //            one node).  The simplest possible map is already a
-  //            convex space, no partitions are needed, so in that
-  //            case we create an arbitrary splitter plane.
+  //            convex space (no partitions are needed) so in that
+  //            case we use an arbitrary splitter plane.
 
   qNode_c *root = PartitionXY(begin);
 
-  PartitionZ(root);
 }
 
 
