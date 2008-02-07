@@ -129,7 +129,27 @@ public:
 
   void ComputeBBox()
   {
-    // FIXME : ComputeBBox
+    min_x = min_y = +9e9;
+    max_x = max_y = -9e9;
+
+    std::list<qSide_c *>::iterator SI;
+
+    for (SI = sides.begin(); SI != sides.end(); SI++)
+    {
+      merge_segment_c *seg = (*SI)->seg;
+
+      if (seg->start->x < min_x) min_x = seg->start->x;
+      if (seg-> end ->x < min_x) min_x = seg-> end ->x;
+
+      if (seg->start->y < min_y) min_y = seg->start->y;
+      if (seg-> end ->y < min_y) min_y = seg-> end ->y;
+
+      if (seg->start->x > max_x) max_x = seg->start->x;
+      if (seg-> end ->x > max_x) max_x = seg-> end ->x;
+
+      if (seg->start->y > max_y) max_y = seg->start->y;
+      if (seg-> end ->y > max_y) max_y = seg-> end ->y;
+    }
   }
 
   bool IsConvex_XY()
