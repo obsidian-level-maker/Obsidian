@@ -1322,7 +1322,7 @@ static void Mug_DiscoverGaps(void)
   // sort the area_polys by ascending z1 values.
   // Hence any gap must occur between two adjacent entries.
   // We also must check the gap is not covered by a previous
-  // brush, simply by maintaining a ref to the brush with the
+  // brush, done by maintaining a ref to the brush with the
   // currently highest z2 value.
 
   for (unsigned int i = 0; i < mug_regions.size(); i++)
