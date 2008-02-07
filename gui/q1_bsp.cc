@@ -64,6 +64,11 @@ public:
 
   ~qSide_c()
   { }
+
+  merge_region_c *GetRegion() const
+  {
+    return (side == 0) ? seg->front : seg->back;
+  }
 };
 
 
@@ -84,27 +89,82 @@ public:
   {
     // TODO: delete faces and sides
   }
+
+  void AddSide(merge_segment_c *_seg, int _side)
+  {
+    sides.push_back(new qSide_c(_seg, _side));
+  }
+
+  bool IsConvex_XY()
+  {
+    // Requirements for Convexicity:
+    // 1. all sides look into the same region
+    // 2. all sides are connected (no separate parts)
+    // 3. angle between any two connected sides <= 180 degrees.
+
+    std::list<qSide_c *>::iterator SI;
+
+    merge_region_c *R = NULL;
+
+    for (SI = sides.begin(); SI != sides.end(); SI++)
+    {
+      qSide_c *S = *SI;
+
+      merge_region_c *cur_R = S->GetRegion();
+      SYS_ASSERT(cur_R);
+
+      if (! R)
+      {
+        R = cur_R;
+        continue;
+      }
+
+      if (R != cur_R)
+        return false;
+    }
+
+    // all sides belong to the same region.
+
+    // Now rearrange sides in the list so they are contiguous
+    // (winding in an anti-clockwise direction).
+    // If any are left over, then requirement #2 is not satisfied.
+    // Early out if any angle is > 180 degrees.
+
+    // FIXME !!!!!!
+
+    return true;
+  }
+
+  bool IsConvex_Z()
+  {
+    SYS_ASSERT(! sides.empty());
+
+    qSide_c *first = * sides.begin();
+
+    merge_region_c *R = first->GetRegion();
+
+    return (R->gaps.size() <= 1);
+  }
 };
 
 
 class qNode_c
 {
 public:
-  // ture if this node splits the tree by Z
-  // (with a horizontal split plane)
+  // true if this node splits the tree by Z (with a horizontal plane)
   bool z_splitter;
-  
+
   double z;
 
   // normal splitting planes are vertical, and here are the
-  // coordinates.
-  double x1, y1;
-  double x2, y2;
+  // coordinates on the map.
+  double x,  y;
+  double dx, dy;
 
-  qLeaf_c *front_l;  // one of this is non-NULL
+  qLeaf_c *front_l;  // front space : one of these is non-NULL
   qNode_c *front_n;
 
-  qLeaf_c *back_l;  // one of this is non-NULL
+  qLeaf_c *back_l;   // back space : one of these is non-NULL
   qNode_c *back_n;
 
 public:
@@ -119,33 +179,88 @@ public:
 };
 
 
+// FIXME: DO Z PARTITIONING AS FINAL PART OF XY PARTITIONING
+
+
+static XXX FindPartitionXY( XXX )
+{
+  // FIXME !!!!!
+}
+
+static void Split_XY(qNode_c *node, qLeaf_c *leaf)
+{
+  // FIXME !!!!!
+}
+
 static qNode_c * PartitionXY(qLeaf_c *leaf)
 {
   XXX = FindPartition(XXX);
 
   qNode_c *node = new qNode_c();
 
-  DoSplit(node, leaf);
+  Split_XY(node, leaf);
 
-  if (! node->front_l->ConvexXY())
+  if (! node->front_l->IsConvex_XY())
   {
     node->front_n = PartitionXY(node->front_l);
-
-    // ???  delete node->front_l
     node->front_l = NULL;
   }
 
-  if (! node->back_l->ConvexXY())
+  if (! node->back_l->IsConvex_XY())
   {
     node->back_n = PartitionXY(node->back_l);
+    node->back_l = NULL;
+  }
+}
 
-    // ???  delete node->back_l
+
+static void Split_Z(qNode_c *node, qLeaf_c *leaf)
+{
+  double z = XXXX;
+
+  // FIXME !!!!!
+}
+
+static qNode_c * PartitionZ_Leaf(qLeaf_c *leaf)
+{
+  qNode_c *node = new qNode_c();
+
+  Split_Z(node, leaf);
+
+  if (! node->front_l->IsConvex_Z())
+  {
+    node->front_n = PartitionZ_Leaf(node->front_l);
+    node->front_l = NULL;
+  }
+
+  if (! node->back_l->IsConvex_Z())
+  {
+    node->back_n = PartitionZ_Leaf(node->back_l);
     node->back_l = NULL;
   }
 }
 
 static void PartitionZ(qNode_c *node)
 {
+  if (node->front_n)
+  {
+    PartitionZ(node->front_n);
+  }
+  else if (! node->front_l->IsConvex_Z())
+  {
+    node->front_n = PartitionZ_Leaf(node->front_l);
+    node->front_l = NULL;
+  }
+
+  if (node->back_n)
+  {
+    PartitionZ(node->back_n);
+  }
+  else if (! node->back_l->IsConvex_Z())
+  {
+    node->back_n = PartitionZ_Leaf(node->back_l);
+    node->back_l = NULL;
+  }
 }
 
 
@@ -165,7 +280,6 @@ void Quake1_BuildBSP( void )
   //      (c) recursively handle front/back lists
   //   3. perform Z splitting
 
-
   qLeaf_c *begin = new qLeaf_c();
 
   for (unsigned int i = 0; i < mug_segments.size(); i++)
@@ -179,11 +293,14 @@ void Quake1_BuildBSP( void )
       begin->AddSide(S, 1);
   }
 
+  // NOTE WELL: we assume at least one partition (hence at least
+  //            one node).  The simplest possible map is already a
+  //            convex space, no partitions are needed, so in that
+  //            case we create an arbitrary splitter plane.
 
   qNode_c *root = PartitionXY(begin);
 
   PartitionZ(root);
-
 }
 
 
