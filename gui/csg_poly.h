@@ -277,6 +277,16 @@ public:
 
   ~merge_gap_c()
   { }
+
+  inline double GetZ1() const
+  {
+    return bottom->info->z2;
+  }
+
+  inline double GetZ2() const
+  {
+    return top->info->z1;
+  }
 };
 
 
