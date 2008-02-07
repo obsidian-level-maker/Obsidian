@@ -57,10 +57,19 @@ public:
   merge_segment_c *seg;
 
   int side;  // 0 is front, 1 is back
+
+  double x1, y1;
+  double x2, y2;
  
 public:
   qSide_c(merge_segment_c * _seg, int _side) : seg(_seg), side(_side)
-  { }
+  {
+    x1 = seg->start->x;
+    y1 = seg->start->y;
+
+    x2 = seg->end->x;
+    y2 = seg->end->y;
+  }
 
   ~qSide_c()
   { }
@@ -136,19 +145,17 @@ public:
 
     for (SI = sides.begin(); SI != sides.end(); SI++)
     {
-      merge_segment_c *seg = (*SI)->seg;
+      qSide_c *S = (*SI);
 
-      if (seg->start->x < min_x) min_x = seg->start->x;
-      if (seg-> end ->x < min_x) min_x = seg-> end ->x;
+      if (S->x1 < min_x) min_x = S->x1;
+      if (S->x2 < min_x) min_x = S->x2;
+      if (S->y1 < min_y) min_y = S->y1;
+      if (S->y2 < min_y) min_y = S->y2;
 
-      if (seg->start->y < min_y) min_y = seg->start->y;
-      if (seg-> end ->y < min_y) min_y = seg-> end ->y;
-
-      if (seg->start->x > max_x) max_x = seg->start->x;
-      if (seg-> end ->x > max_x) max_x = seg-> end ->x;
-
-      if (seg->start->y > max_y) max_y = seg->start->y;
-      if (seg-> end ->y > max_y) max_y = seg-> end ->y;
+      if (S->x1 > max_x) max_x = S->x1;
+      if (S->x2 > max_x) max_x = S->x2;
+      if (S->y1 > max_y) max_y = S->y1;
+      if (S->y2 > max_y) max_y = S->y2;
     }
   }
 
@@ -344,13 +351,11 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
     qSide_c *S = *SI;
 
     // get state of lines' relation to each other
-    double a = PerpDist(S->seg->start->x, S->seg->start->y,
-                        part->seg->start->x, part->seg->start->y,
-                        part->seg->end->x, part->seg->end->y);
+    double a = PerpDist(S->x1, S->y1,
+                        part->x1, part->y1, part->x2, part->y2);
 
-    double b = PerpDist(S->seg->end->x, S->seg->end->y,
-                        part->seg->start->x, part->seg->start->y,
-                        part->seg->end->x, part->seg->end->y);
+    double b = PerpDist(S->x2, S->y2,
+                        part->x1, part->y1, part->x2, part->y2);
 
     double fa = fabs(a);
     double fb = fabs(b);
@@ -359,11 +364,11 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
     {
       // lines are colinear
 
-      double pdx = part->seg->end->x - part->seg->start->x;
-      double pdy = part->seg->end->y - part->seg->start->y;
+      double pdx = part->x2 - part->x1;
+      double pdy = part->y2 - part->y1;
 
-      double sdx = S->seg->end->x - S->seg->start->x;
-      double sdy = S->seg->end->y - S->seg->start->y;
+      double sdx = S->x2 - S->x1;
+      double sdy = S->y2 - S->y1;
 
       if (pdx * sdx + pdy * sdy < 0.0)
         back++;
@@ -474,11 +479,11 @@ static void FindPartitionXY(qNode_c *node, qLeaf_c *leaf)
     return;
   }
 
-  node->x = best_p->seg->start->x;
-  node->y = best_p->seg->start->y;
+  node->x = best_p->x1;
+  node->y = best_p->y1;
 
-  node->dx = best_p->seg->end->x - node->x;
-  node->dy = best_p->seg->end->y - node->y;
+  node->dx = best_p->x2 - node->x;
+  node->dy = best_p->y2 - node->y;
 }
 
 
@@ -498,15 +503,15 @@ static void Split_XY(qNode_c *part, qLeaf_c *leaf)
 
     all_sides.pop_front();
 
-    double sdx = S->seg->end->x - S->seg->start->x;
-    double sdy = S->seg->end->y - S->seg->start->y;
+    double sdx = S->x2 - S->x1;
+    double sdy = S->y2 - S->y1;
 
     // get state of lines' relation to each other
-    double a = PerpDist(S->seg->start->x, S->seg->start->y,
+    double a = PerpDist(S->x1, S->y1,
                         part->x, part->y,
                         part->x + part->dx, part->y + part->dy);
 
-    double b = PerpDist(S->seg->end->x, S->seg->end->y,
+    double b = PerpDist(S->x2, S->y2,
                         part->x, part->y,
                         part->x + part->dx, part->y + part->dy);
 
@@ -554,8 +559,8 @@ static void Split_XY(qNode_c *part, qLeaf_c *leaf)
     // determine the intersection point
     double along = a / (a - b);
 
-    double ix = S->seg->start->x + along * sdx;
-    double iy = S->seg->start->y + along * sdy;
+    double ix = S->x1 + along * sdx;
+    double iy = S->y1 + along * sdy;
 
     // FIXME !!!!!  actually split the side
 
