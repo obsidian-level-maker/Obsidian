@@ -74,11 +74,28 @@ public:
   ~qSide_c()
   { }
 
+private:
+  qSide_c(const qSide_c *other, double new_x, double new_y) :
+          seg(other->seg), side(other->side),
+          x1(new_x), y1(new_y),
+          x2(other->x2), y2(other->y2)
+  { }
+
+public:
   merge_region_c *GetRegion() const
   {
     return (side == 0) ? seg->front : seg->back;
   }
 
+  qSide_c *SplitAt(double new_x, double new_y)
+  {
+    qSide_c *T = new qSide_c(this, new_x, new_y);
+
+    x2 = new_x;
+    y2 = new_y;
+
+    return T;
+  }
 };
 
 
@@ -562,12 +579,20 @@ static void Split_XY(qNode_c *part, qLeaf_c *leaf)
     double ix = S->x1 + along * sdx;
     double iy = S->y1 + along * sdy;
 
-    // FIXME !!!!!  actually split the side
+    qSide_c *T = S->SplitAt(ix, iy);
 
-    qSide_c *T = new qSide_c;
+    if (a < 0)
+    {
+      part-> back_l->sides.push_back(S);
+      part->front_l->sides.push_back(T);
+    }
+    else
+    {
+      SYS_ASSERT(b < 0);
 
-    part->front_l->sides.push_back(S);
-    part-> back_l->sides.push_back(T);
+      part->front_l->sides.push_back(S);
+      part-> back_l->sides.push_back(T);
+    }
   }
 }
 
