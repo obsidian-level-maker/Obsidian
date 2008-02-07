@@ -69,6 +69,7 @@ public:
   {
     return (side == 0) ? seg->front : seg->back;
   }
+
 };
 
 
@@ -81,8 +82,12 @@ public:
 
   std::list<qSide_c *> sides;
 
+  double min_x, min_y;
+  double max_x, max_y;
+
 public:
-  qLeaf_c() : contents(CONTENTS_EMPTY), faces(), sides()
+  qLeaf_c() : contents(CONTENTS_EMPTY), faces(), sides(),
+              min_x(0), min_y(0), max_x(0), max_y(0)
   { }
 
   ~qLeaf_c()
@@ -103,6 +108,11 @@ public:
     qSide_c *S = *sides.begin();
 
     return S->GetRegion();
+  }
+
+  void ComputeBBox()
+  {
+    // FIXME : ComputeBBox
   }
 
   bool IsConvex_XY()
@@ -178,12 +188,19 @@ public:
   qNode_c *back_n;
 
 public:
-  qNode_c()
+  qNode_c(bool _Zsplit) : z_splitter(_Zsplit), z(0),
+                          x(0), y(0), dx(0), dy(0),
+                          front_l(NULL), front_n(NULL),
+                          back_l(NULL),  back_n(NULL)
   { }
 
   ~qNode_c()
   {
-    // TODO: delete child nodes & leaves
+    if (front_l) delete front_l;
+    if (front_n) delete front_n;
+
+    if (back_l) delete back_l;
+    if (back_n) delete back_n;
   }
 
 };
@@ -196,15 +213,15 @@ static void Split_Z(qNode_c *node, qLeaf_c *leaf)
 
   unsigned int gap = R->gaps.size() / 2;
 
-  // choose the z halfway between the two gaps (in the solid area)
-  double z = (R->gaps[gap-1]->GetZ2() + R->gaps[gap]->GetZ1()) / 2.0;
+  // choose height halfway between the two gaps (in the solid)
+  node->z = (R->gaps[gap-1]->GetZ2() + R->gaps[gap]->GetZ1()) / 2.0;
 
   // FIXME !!!!!
 }
 
 static qNode_c * PartitionZ(qLeaf_c *leaf)
 {
-  qNode_c *node = new qNode_c();
+  qNode_c *node = new qNode_c(true /* z_splitter */);
 
   Split_Z(node, leaf);
 
@@ -224,9 +241,73 @@ static qNode_c * PartitionZ(qLeaf_c *leaf)
 }
 
 
-static void FindPartitionXY(qNode_c *node)
+static int EvaluatePartition(qLeaf_c *leaf, qSide_c *p, int best_n)
 {
-  // FIXME !!!!!
+  // FIXME:  EvaluatePartition
+  
+}
+
+static void FindPartitionXY(qNode_c *node, qLeaf_c *leaf)
+{
+  std::list<qSide_c *>::iterator SI;
+
+  int best_n = 0;
+  qSide_c *best_S = NULL;
+
+  int count = 0;
+
+  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
+  {
+    qSide_c *S = *SI;
+
+    count++;
+
+    // Optimisation: skip the back sides of segments, since there
+    // is always a corresponding front side (except when they've
+    // been separated by a partition line, and in that case it
+    // can never be a valid partition candidate).
+#if 1
+    if (S->side != 0)
+      continue;
+#endif
+
+    // TODO: skip sides that lie on the same vertical plane
+
+    int niceness = EvaluatePartition(leaf, S, best_n);
+
+    if (niceness < 0)  // either invalid or not as good
+      continue;
+
+    best_n = niceness;
+    best_S = S;
+  }
+
+  if (! best_S)
+  {
+    // this is quite possible for the root node of the simplest
+    // possible map, otherwise it is a serious error because the
+    // IsConvex_XY() must have told us the area was not convex.
+    //
+    // TODO: take action in the serious case
+
+    fprintf(stderr, "FindPartitionXY: cannot find any splitter (in %d sides).\n", count);
+
+    leaf->ComputeBBox();
+
+    node->x = (leaf->min_x + leaf->max_x) / 2.0;
+    node->y = leaf->min_y;
+
+    node->dx = 0;
+    node->dy = leaf->max_y - leaf->min_y;
+
+    return;
+  }
+
+  node->x = best_S->seg->start->x;
+  node->y = best_S->seg->start->y;
+
+  node->dx = best_S->seg->end->x - node->x;
+  node->dy = best_S->seg->end->y - node->y;
 }
 
 static void Split_XY(qNode_c *node, qLeaf_c *leaf)
@@ -236,9 +317,9 @@ static void Split_XY(qNode_c *node, qLeaf_c *leaf)
 
 static qNode_c * PartitionXY(qLeaf_c *leaf)
 {
-  qNode_c *node = new qNode_c();
+  qNode_c *node = new qNode_c(false /* z_splitter */);
 
-  FindPartitionXY(node);
+  FindPartitionXY(node, leaf);
 
   Split_XY(node, leaf);
 
@@ -314,10 +395,10 @@ void Quake1_BuildBSP( void )
   {
     merge_segment_c *S = mug_segments[i];
 
-    if (S->front)
+    if (S->front && S->front->gaps.size() > 0)
       begin->AddSide(S, 0);
 
-    if (S->back)
+    if (S->back && S->back->gaps.size() > 0)
       begin->AddSide(S, 1);
   }
 
