@@ -37,7 +37,7 @@
 #include "main.h"
 
 
-// TODO
+#define Q_EPSILON  0.02
 
 
 class qFace_c
@@ -206,6 +206,20 @@ public:
 };
 
 
+static inline double PerpDist(double x, double y,
+                              double x1, double y1, double x2, double y2)
+{
+  x  -= x1; y  -= y1;
+  x2 -= x1; y2 -= y1;
+
+  double len = sqrt(x2*x2 + y2*y2);
+
+  SYS_ASSERT(len > 0);
+
+  return (x * y2 - y * x2) / len;
+}
+
+
 static void Split_Z(qNode_c *node, qLeaf_c *leaf)
 {
   merge_region_c *R = leaf->GetRegion();
@@ -241,24 +255,102 @@ static qNode_c * PartitionZ(qLeaf_c *leaf)
 }
 
 
-static int EvaluatePartition(qLeaf_c *leaf, qSide_c *p, int best_n)
+static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
 {
-  // FIXME:  EvaluatePartition
-  
+  std::list<qSide_c *>::iterator SI;
+
+  int back   = 0;
+  int front  = 0;
+  int splits = 0;
+
+  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
+  {
+
+    qSide_c *S = *SI;
+
+    /* get state of lines' relation to each other */
+    double a = PerpDist(S->seg->start->x, S->seg->start->y,
+                        part->seg->start->x, part->seg->start->y,
+                        part->seg->end->x, part->seg->end->y);
+
+    double b = PerpDist(S->seg->end->x, S->seg->end->y,
+                        part->seg->start->x, part->seg->start->y,
+                        part->seg->end->x, part->seg->end->y);
+
+    double fa = fabs(a);
+    double fb = fabs(b);
+
+    if (fa <= Q_EPSILON && fb <= Q_EPSILON)
+    {
+      // lines are colinear
+
+      double pdx = part->seg->end->x - part->seg->start->x;
+      double pdy = part->seg->end->y - part->seg->start->y;
+
+      double sdx = S->seg->end->x - S->seg->start->x;
+      double sdy = S->seg->end->y - S->seg->start->y;
+
+      if (pdx * sdx + pdy * sdy < 0.0)
+        back++;
+      else
+        front++;
+
+      continue;
+    }
+
+    if (fa <= Q_EPSILON || fb <= Q_EPSILON)
+    {
+      // partition passes through one vertex
+
+      if ( ((fa <= Q_EPSILON) ? b : a) < 0 )
+        back++;
+      else
+        front++;
+
+      continue;
+    }
+
+    if (a < 0 && b < 0)
+    {
+      back++;
+      continue;
+    }
+
+    if (a > 0 && b > 0)
+    {
+      front++;
+      continue;
+    }
+
+    // the partition line will split it
+
+    splits++;
+
+    back++;
+    front++;
+  }
+
+  if (front == 0 || back == 0)
+    return -1;
+
+  // calculate heuristic
+  int diff = ABS(front - back);
+
+  return (splits * splits * 20 + diff * 100) / (front + back);
 }
 
 static void FindPartitionXY(qNode_c *node, qLeaf_c *leaf)
 {
   std::list<qSide_c *>::iterator SI;
 
-  int best_n = 0;
-  qSide_c *best_S = NULL;
+  int best_c = 99999;
+  qSide_c *best_p = NULL;
 
   int count = 0;
 
   for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
   {
-    qSide_c *S = *SI;
+    qSide_c *part = *SI;
 
     count++;
 
@@ -267,22 +359,25 @@ static void FindPartitionXY(qNode_c *node, qLeaf_c *leaf)
     // been separated by a partition line, and in that case it
     // can never be a valid partition candidate).
 #if 1
-    if (S->side != 0)
+    if (part->side != 0)
       continue;
 #endif
 
     // TODO: skip sides that lie on the same vertical plane
 
-    int niceness = EvaluatePartition(leaf, S, best_n);
+    int cost = EvaluatePartition(leaf, part);
 
-    if (niceness < 0)  // either invalid or not as good
+    if (cost < 0)  // not a potential candidate
       continue;
 
-    best_n = niceness;
-    best_S = S;
+    if (! best_p || cost < best_c)
+    {
+      best_c = cost;
+      best_p = part;
+    }
   }
 
-  if (! best_S)
+  if (! best_p)
   {
     // this is quite possible for the root node of the simplest
     // possible map, otherwise it is a serious error because the
@@ -303,11 +398,11 @@ static void FindPartitionXY(qNode_c *node, qLeaf_c *leaf)
     return;
   }
 
-  node->x = best_S->seg->start->x;
-  node->y = best_S->seg->start->y;
+  node->x = best_p->seg->start->x;
+  node->y = best_p->seg->start->y;
 
-  node->dx = best_S->seg->end->x - node->x;
-  node->dy = best_S->seg->end->y - node->y;
+  node->dx = best_p->seg->end->x - node->x;
+  node->dy = best_p->seg->end->y - node->y;
 }
 
 static void Split_XY(qNode_c *node, qLeaf_c *leaf)
