@@ -33,6 +33,8 @@
 #include "g_lua.h"
 #include "g_wolf.h"
 
+#include "q1_main.h"
+
 #include "ui_chooser.h"
 
 
@@ -200,6 +202,7 @@ void Main_FatalError(const char *msg, ...)
 void Build_Cool_Shit()
 {
   bool is_wolf  = false;
+  bool is_quake = true;
 
   bool is_hexen = (strcmp(main_win->game_box->game->GetID(), "hexen")  == 0);
 
@@ -227,6 +230,8 @@ void Build_Cool_Shit()
 
   if (is_wolf)
     was_ok = Wolf_Start();
+  else if (is_quake)
+    was_ok = Quake1_Start();
   else
     was_ok = Doom_Start(is_hexen);
 
@@ -248,11 +253,13 @@ void Build_Cool_Shit()
     // FIXME: test the result here???
     if (is_wolf)
       Wolf_Finish();
+    else if (is_quake)
+      Quake1_Finish();
     else
       Doom_Finish();
   }
 
-  if (was_ok)
+  if (was_ok && !is_quake)
   {
     bb_area->ProgStatus("Building nodes");
 
@@ -274,6 +281,8 @@ void Build_Cool_Shit()
 
   if (is_wolf)
     Wolf_Tidy();
+  else if (is_quake)
+    Quake1_Tidy();
   else
     Doom_Tidy();
 
@@ -335,6 +344,7 @@ int main(int argc, char **argv)
   Doom_Init();
   CSG2_Init();
   Wolf_Init();
+  Quake1_Init();
 
   Default_Location();
 
