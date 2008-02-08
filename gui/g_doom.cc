@@ -69,7 +69,7 @@ static u32_t AlignLen(u32_t len)
   return ((len + 3) & ~3);
 }
 
-void WAD_RawSeek(u32_t pos)
+static void WAD_RawSeek(u32_t pos)
 {
   fflush(wad_fp);
 
@@ -84,7 +84,7 @@ void WAD_RawSeek(u32_t pos)
   }
 }
 
-void WAD_RawWrite(const void *data, u32_t len)
+static void WAD_RawWrite(const void *data, u32_t len)
 {
   SYS_ASSERT(wad_fp);
 
@@ -99,7 +99,7 @@ void WAD_RawWrite(const void *data, u32_t len)
   }
 }
 
-void WAD_WriteLump(const char *name, const void *data, u32_t len)
+static void WAD_WriteLump(const char *name, const void *data, u32_t len)
 {
   SYS_ASSERT(strlen(name) <= 8);
 
@@ -131,12 +131,12 @@ void WAD_WriteLump(const char *name, const void *data, u32_t len)
   }
 }
 
-void WAD_WriteLump(const char *name, lump_c *lump)
+static void WAD_WriteLump(const char *name, lump_c *lump)
 {
   WAD_WriteLump(name, &(*lump)[0], lump->size());
 }
 
-void WAD_WriteBehavior()
+static void WAD_WriteBehavior()
 {
   raw_behavior_header_t behavior;
 
@@ -149,7 +149,7 @@ void WAD_WriteBehavior()
   WAD_WriteLump("BEHAVIOR", &behavior, sizeof(behavior));
 }
 
-void WAD_WritePatches()
+static void WAD_WritePatches()
 {
   WAD_WriteLump("PP_START", NULL, 0);
 
