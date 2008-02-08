@@ -70,8 +70,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 typedef struct
 {
-  s32_t file_ofs;
-  s32_t file_len;
+  s32_t start;
+  s32_t length;
 }
 lump_t;
 
@@ -108,23 +108,23 @@ dmodel_t;
 typedef struct
 {
   s32_t version;
-  lump_t lumps[HEADER_LUMPS];
+  lump_t lumps[HEADER_LUMPS+1];   /* AJA: fake extra lump */
 }
 dheader_t;
 
 typedef struct
 {
-  s32_t nummiptex;
-  s32_t dataofs[4];   // [nummiptex]
+  s32_t num_miptex;
+  s32_t data_ofs[4];   // [nummiptex]
 }
 dmiptexlump_t;
 
-#define MIPLEVELS 4
+#define MIP_LEVELS 4
 typedef struct miptex_s
 {
   char name[16];
   u32_t width, height;
-  u32_t offsets[MIPLEVELS]; // four mip maps stored
+  u32_t offsets[MIP_LEVELS]; // four mip maps stored
 }
 miptex_t;
 
@@ -171,7 +171,6 @@ dplane_t;
 #define CONTENTS_CURRENT_DOWN  -14
 
 
-// !!! if this is changed, it must be changed in asm_i386.h too !!!
 typedef struct
 {
   s32_t planenum;
