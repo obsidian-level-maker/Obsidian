@@ -681,6 +681,9 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) vec:(%1.2f,%1.2f)\n",
 ///---}
 
 
+
+//------------------------------------------------------------------------
+
 void Quake1_BuildBSP( void )
 {
   // INPUTS:
@@ -717,8 +720,8 @@ void Quake1_BuildBSP( void )
 
   qNode_c *root = PartitionXY(begin);
 
+  
 }
-
 
 
 //--- editor settings ---

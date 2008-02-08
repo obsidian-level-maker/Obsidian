@@ -345,7 +345,7 @@ void Quake1_Init(void)
 
 }
 
-bool Quake1_Start(void)
+bool Quake1_Start(const char *target_file)
 {
   q1_planes.clear();
 
@@ -353,6 +353,14 @@ bool Quake1_Start(void)
   seek_errors_seen  = 0;
 
   ClearLumps();
+
+  bsp_fp = fopen(target_file, "wb");
+
+  if (! bsp_fp)
+  {
+    DLG_ShowError("Unable to create bsp file:\n%s", strerror(errno));
+    return false;
+  }
 
   return true; //OK
 }

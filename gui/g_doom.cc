@@ -328,6 +328,11 @@ int Hexen_GrabArgs(lua_State *L, u8_t *args, int stack_pos)
 
 //------------------------------------------------------------------------
 
+//!!!!! TEMP HACK
+extern int Q1_begin_level(lua_State *L);
+extern int Q1_end_level(lua_State *L);
+
+
 namespace wad
 {
 
@@ -661,8 +666,8 @@ int num_sidedefs(void)
 
 static const luaL_Reg wad_funcs[] =
 {
-  { "begin_level", wad::begin_level },
-  { "end_level",   wad::end_level   },
+  { "begin_level", Q1_begin_level },  //!!!!! FIXME TEST CRUD
+  { "end_level",   Q1_end_level   },
 
   { "add_thing",   wad::add_thing   },
   { "add_vertex",  wad::add_vertex  },

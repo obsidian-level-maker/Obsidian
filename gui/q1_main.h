@@ -21,10 +21,10 @@
 
 void Quake1_Init(void);
 
-bool Quake1_Start(void);
+bool Quake1_Start(const char *target_file);
 bool Quake1_Finish(void);
 
-bool Quake1_Nodes(const char *target_file);
+/// bool Quake1_Nodes();
 void Quake1_Tidy(void);
 
 

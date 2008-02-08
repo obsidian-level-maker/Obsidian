@@ -231,7 +231,7 @@ void Build_Cool_Shit()
   if (is_wolf)
     was_ok = Wolf_Start();
   else if (is_quake)
-    was_ok = Quake1_Start();
+    was_ok = Quake1_Start(filename);
   else
     was_ok = Doom_Start(is_hexen);
 
