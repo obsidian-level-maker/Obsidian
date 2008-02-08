@@ -140,6 +140,10 @@ public:
   ~area_poly_c();
 
   void ComputeBBox();
+
+  void Validate();
+  // makes sure there are enough vertices and they are in
+  // clockwise order
 };
 
 

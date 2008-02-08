@@ -44,6 +44,58 @@ std::vector<merge_region_c *>  mug_regions;
 static int cur_poly_time;
 
 
+static inline double PerpDist(double x, double y,
+                              double x1, double y1, double x2, double y2)
+{
+  x  -= x1; y  -= y1;
+  x2 -= x1; y2 -= y1;
+
+  double len = sqrt(x2*x2 + y2*y2);
+
+  SYS_ASSERT(len > 0);
+
+  return (x * y2 - y * x2) / len;
+}
+
+static inline double AlongDist(double x, double y,
+                               double x1, double y1, double x2, double y2)
+{
+  x  -= x1; y  -= y1;
+  x2 -= x1; y2 -= y1;
+
+  double len = sqrt(x2*x2 + y2*y2);
+
+  SYS_ASSERT(len > 0);
+
+  return (x * x2 + y * y2) / len;
+}
+
+
+static inline double CalcAngle(double sx, double sy, double ex, double ey)
+{
+  // result is Degrees (0 <= angle < 360).
+  // East  (increasing X) -->  0 degrees
+  // North (increasing Y) --> 90 degrees
+
+  ex -= sx;
+  ey -= sy;
+
+  if (fabs(ex) < 0.0001)
+    return (ey > 0) ? 90.0 : 270.0;
+
+  if (fabs(ey) < 0.0001)
+    return (ex > 0) ? 0.0 : 180.0;
+
+  double angle = atan2(ey, ex) * 180.0 / M_PI;
+
+  if (angle < 0) 
+    angle += 360.0;
+
+  return angle;
+}
+
+
+
 slope_points_c::slope_points_c() :
       tz1(FVAL_NONE), tz2(FVAL_NONE),
       bz1(FVAL_NONE), bz2(FVAL_NONE),
@@ -94,6 +146,41 @@ area_poly_c::area_poly_c(area_info_c *_info) :
 area_poly_c::~area_poly_c()
 {
   // FIXME: free verts
+}
+
+void area_poly_c::Validate()
+{
+  if (verts.size() < 3)
+    Main_FatalError("Line loop contains less than 3 vertices!\n");
+
+  // make sure vertices are clockwise
+
+  double average_ang = 0;
+
+  for (unsigned int k = 0; k < verts.size(); k++)
+  {
+    area_vert_c *v1 = verts[k];
+    area_vert_c *v2 = verts[(k+1) % (int)verts.size()];
+    area_vert_c *v3 = verts[(k+2) % (int)verts.size()];
+
+    double ang1 = CalcAngle(v2->x, v2->y, v1->x, v1->y);
+    double ang2 = CalcAngle(v2->x, v2->y, v3->x, v3->y);
+
+    double diff = ang2 - ang1;
+
+    if (diff < 0) diff += 360.0;
+
+// fprintf(stderr, "... [%d] ang1=%1.5f  ang2=%1.5f diff=%1.5f\n", (int)k, ang1, ang2, diff);
+
+    average_ang += diff;
+  }
+
+  average_ang /= (double)verts.size();
+
+// fprintf(stderr, "Average angle = %1.4f\n\n", average_ang);
+
+  if (average_ang > 180.0)
+    Main_FatalError("Line loop is not clockwise!\n");
 }
 
 void area_poly_c::ComputeBBox()
@@ -274,9 +361,7 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
     index++;
   }
 
-  if (P->verts.size() < 3)
-    Main_FatalError("line loop contains less than 3 vertices!\n");
-
+  P->Validate();
   P->ComputeBBox();
 
   return P;
@@ -560,56 +645,6 @@ struct Compare_PolyZ1_pred
 };
 
 
-static inline double PerpDist(double x, double y,
-                              double x1, double y1, double x2, double y2)
-{
-  x  -= x1; y  -= y1;
-  x2 -= x1; y2 -= y1;
-
-  double len = sqrt(x2*x2 + y2*y2);
-
-  SYS_ASSERT(len > 0);
-
-  return (x * y2 - y * x2) / len;
-}
-
-static inline double AlongDist(double x, double y,
-                               double x1, double y1, double x2, double y2)
-{
-  x  -= x1; y  -= y1;
-  x2 -= x1; y2 -= y1;
-
-  double len = sqrt(x2*x2 + y2*y2);
-
-  SYS_ASSERT(len > 0);
-
-  return (x * x2 + y * y2) / len;
-}
-
-static inline double CalcAngle(double sx, double sy, double ex, double ey)
-{
-  // result is Degrees (0 <= angle < 360).
-  // East  (increasing X) -->  0 degrees
-  // North (increasing Y) --> 90 degrees
-
-  ex -= sx;
-  ey -= sy;
-
-  if (fabs(ex) < 0.0001)
-    return (ey > 0) ? 90.0 : 270.0;
-
-  if (fabs(ey) < 0.0001)
-    return (ex > 0) ? 0.0 : 180.0;
-
-  double angle = atan2(ey, ex) * 180.0 / M_PI;
-
-  if (angle < 0) 
-    angle += 360.0;
-
-  return angle;
-}
-
-
 static void Mug_OverlapPass(void)
 {
   /* sort segments in order of minimum X coordinate */
@@ -788,7 +823,7 @@ static void TraceNext(void)
   merge_vertex_c *next_v = trace_seg->Other(trace_vert);
 
   merge_segment_c *best_seg = NULL;
-  double     best_angle = 999;
+  double best_angle = 9999;
 
   double old_angle = CalcAngle(next_v->x, next_v->y, trace_vert->x, trace_vert->y);
   
@@ -1198,7 +1233,7 @@ static merge_segment_c *FindAlongSeg(merge_vertex_c *v1, merge_vertex_c *v2)
 
     // handle corner cases where one angle is very close to 0 and
     // the other angle is very close to 360.
-    if (fabs(diff) >= 360.0 - ANGLE_EPSILON)
+    if (diff >= 360.0 - ANGLE_EPSILON)
       return S;
   }
 
