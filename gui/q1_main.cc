@@ -36,13 +36,14 @@
 #include "main.h"
 
 
-typedef std::vector<raw_dir_entry_t> directory_c;
-
 
 static FILE *bsp_fp;
 
 static qLump_c * bsp_directory[HEADER_LUMPS + 1];
 // NB: the extra lump (+1) stores the Oblige information
+
+
+#define LUMP_OBLIGE_INFO  HEADER_LUMPS
 
 
 static int write_errors_seen;
@@ -88,23 +89,28 @@ static void BSP_RawWrite(const void *data, u32_t len)
   }
 }
 
-static void BSP_WriteLump(const char *name, const void *data, u32_t len)
+static void BSP_WriteLump(int entry, lump_t *info)
 {
-  SYS_ASSERT(strlen(name) <= 8);
+  qLump_c *lump = bsp_directory[entry];
 
-  // create entry for directory (written out later)
-  raw_dir_entry_t entry;
+  if (! lump)
+  {
+    info->start  = 0;
+    info->length = 0;
 
-  entry.start  = LE_U32((u32_t)ftell(bsp_fp));
-  entry.length = LE_U32(len);
+    return;
+  }
 
-  strncpy(entry.name, name, 8);
 
-  wad_dir.push_back(entry);
+  int len = (int)lump->size();
+
+  info->start  = LE_S32((u32_t)ftell(bsp_fp));
+  info->length = LE_S32(len);
+
 
   if (len > 0)
   {
-    BSP_RawWrite(data, len);
+    BSP_RawWrite(& (*lump)[0], len);
 
     // pad lumps to a multiple of four bytes
     u32_t padding = AlignLen(len) - len;
@@ -118,11 +124,6 @@ static void BSP_WriteLump(const char *name, const void *data, u32_t len)
       BSP_RawWrite(zeros, padding);
     }
   }
-}
-
-static void BSP_WriteLump(const char *name, lump_c *lump)
-{
-  BSP_WriteLump(name, &(*lump)[0], lump->size());
 }
 
 
@@ -189,7 +190,7 @@ void Q1_Printf(qLump_c *lump, const char *str, ...)
 void BSP_CreateInfoLump()
 {
   // fake 16th lump in file
-  lump_c *L = Q1_NewLump(HEADER_LUMPS);
+  qLump_c *L = Q1_NewLump(LUMP_OBLIGE_INFO);
 
   Q1_Printf(L, "\n\n\n\n");
 
@@ -301,9 +302,21 @@ u16_t Q1_AddPlane(double x, double y, double z,
 
 //------------------------------------------------------------------------
 
+static void ClearLumps(void)
+{
+  for (int i = 0; i < HEADER_LUMPS+1; i++)
+  {
+    if (bsp_directory[i])
+    {
+      delete bsp_directory[i];
+
+      bsp_directory[i] = NULL;
+    }
+  }
+}
+
 static int begin_level(lua_State *L)
 {
-
   return 0;
 }
 
@@ -311,19 +324,12 @@ static int end_level(lua_State *L)
 {
 //  CSG2_TestQuake();
 
-  CSG2_WriteDoom();
-
-  CSG2_EndLevel();
-
-
   SYS_ASSERT(level_name);
 
-  for (int i = 0; i < HEADER_LUMPS+1; i++)
-  {
-    BSP_WriteLump(i);
-  }
+  CSG2_MergeAreas();
 
-  // FIXME !!!!  free bsp_directory[] entries
+  Quake1_BuildBSP();
+
 
   return 0;
 }
@@ -343,20 +349,7 @@ bool Quake1_Start(void)
   write_errors_seen = 0;
   seek_errors_seen  = 0;
 
-  wad_dir.clear();
-  wad_hexen = is_hexen;
-
-  // dummy header
-  raw_wad_header_t header;
-
-  strncpy(header.type, "XWAD", 4);
-
-  header.dir_start   = 0;
-  header.num_entries = 0;
-
-  BSP_RawWrite(&header, sizeof(header));
-
-  BSP_CreateInfoLump();
+  ClearLumps();
 
   return true; //OK
 }
@@ -364,26 +357,29 @@ bool Quake1_Start(void)
 
 bool Quake1_Finish(void)
 {
-  WAD_WritePatches();
- 
-  // compute *real* header 
-  raw_wad_header_t header;
+  // yada yada
 
-  strncpy(header.type, "PWAD", 4);
-
-  header.dir_start   = LE_U32((u32_t)ftell(bsp_fp));
-  header.num_entries = LE_U32(wad_dir.size());
+  BSP_CreateInfoLump();
 
 
-  // WRITE DIRECTORY
-  directory_c::iterator D;
+  // WRITE FAKE HEADER
+  dheader_t header;
+  memset(&header, 0, sizeof(header));
 
-  for (D = wad_dir.begin(); D != wad_dir.end(); D++)
+  BSP_RawWrite(&header, sizeof(header));
+
+
+  // WRITE ALL LUMPS
+
+  header.version = LE_U32(0x1D); 
+
+  for (int L = 0; L < HEADER_LUMPS+1; L++)
   {
-    BSP_RawWrite(& *D, sizeof(raw_dir_entry_t));
+    BSP_WriteLump(L, &header.lumps[L]);
   }
 
-  // FSEEK, WRITE HEADER
+
+  // FSEEK, WRITE REAL HEADER
 
   BSP_RawSeek(0);
   BSP_RawWrite(&header, sizeof(header));

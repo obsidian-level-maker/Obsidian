@@ -40,6 +40,11 @@ void Q1_Printf(qLump_c *lump, const char *str, ...);
 u16_t Q1_AddPlane(double dx, double dy, double dz, double dist);
 
 
+// q1_bsp.cc
+
+void Quake1_BuildBSP(void);
+
+
 #endif /* __OBLIGE_QUAKE1_H__ */
 
 //--- editor settings ---
