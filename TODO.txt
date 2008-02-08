@@ -3,6 +3,13 @@ TODO
 ====
 
 
+Quake1_BuildBSP:
+
+- replace IsConvex_XY() test with just failing to find a
+  partition line.
+
+
+
 CSG Polygoniser:
 
 -  stuff.... 
