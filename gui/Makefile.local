@@ -55,6 +55,8 @@ OBJS=	main.o      \
 	g_image.o   \
 	g_lua.o     \
 	g_wolf.o    \
+	q1_bsp.o    \
+	q1_main.o   \
 	twister.o   \
 	ui_build.o  \
 	ui_chooser.o \
