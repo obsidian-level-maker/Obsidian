@@ -14,6 +14,10 @@ CSG Polygoniser:
 
 -  stuff.... 
   
+-  DOOM: remove (comment out) no longer needed LUA funcs:
+         add_sector, add_linedef etc...
+         
+   >> move 'add_level' and 'finish_level' to "csg2" module ??
 
 
 GUI:
