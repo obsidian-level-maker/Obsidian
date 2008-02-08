@@ -140,6 +140,10 @@ public:
   void AddSide(merge_segment_c *_seg, int _side)
   {
     sides.push_back(new qSide_c(_seg, _side));
+fprintf(stderr, "Side #%p : seg (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
+         sides.back(),
+         _seg->start->x, _seg->start->y,
+         _seg->end->x, _seg->end->y, _side);
   }
 
 
@@ -387,10 +391,10 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
       double sdx = S->x2 - S->x1;
       double sdy = S->y2 - S->y1;
 
-      if (pdx * sdx + pdy * sdy < 0.0)
-        back++;
-      else
+      if ( ((pdx * sdx + pdy * sdy < 0.0) ? 1 : 0) == S->side)
         front++;
+      else
+        back++;
 
       continue;
     }
@@ -399,23 +403,23 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
     {
       // partition passes through one vertex
 
-      if ( ((fa <= Q_EPSILON) ? b : a) < 0 )
-        back++;
-      else
+      if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
         front++;
+      else
+        back++;
 
-      continue;
-    }
-
-    if (a < 0 && b < 0)
-    {
-      back++;
       continue;
     }
 
     if (a > 0 && b > 0)
     {
       front++;
+      continue;
+    }
+
+    if (a < 0 && b < 0)
+    {
+      back++;
       continue;
     }
 
@@ -539,10 +543,10 @@ static void Split_XY(qNode_c *part, qLeaf_c *leaf)
     {
       // lines are colinear
 
-      if (part->dx * sdx + part->dy * sdy < 0.0)
-        part->back_l->sides.push_back(S);
-      else
+      if ( ((part->dx * sdx + part->dy * sdy < 0.0) ? 1 : 0) == S->side)
         part->front_l->sides.push_back(S);
+      else
+        part->back_l->sides.push_back(S);
 
       continue;
     }
@@ -551,23 +555,23 @@ static void Split_XY(qNode_c *part, qLeaf_c *leaf)
     {
       // partition passes through one vertex
 
-      if ( ((fa <= Q_EPSILON) ? b : a) < 0 )
-        part->back_l->sides.push_back(S);
-      else
+      if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
         part->front_l->sides.push_back(S);
+      else
+        part->back_l->sides.push_back(S);
 
-      continue;
-    }
-
-    if (a < 0 && b < 0)
-    {
-      part->back_l->sides.push_back(S);
       continue;
     }
 
     if (a > 0 && b > 0)
     {
       part->front_l->sides.push_back(S);
+      continue;
+    }
+
+    if (a < 0 && b < 0)
+    {
+      part->back_l->sides.push_back(S);
       continue;
     }
 
@@ -594,6 +598,24 @@ static void Split_XY(qNode_c *part, qLeaf_c *leaf)
       part-> back_l->sides.push_back(T);
     }
   }
+
+for (int kk=0; kk < 2; kk++)
+{
+fprintf(stderr, "%s:\n", (kk==0) ? "FRONT" : "BACK");
+
+std::list<qSide_c *>& LLL = (kk==0) ? part->front_l->sides : part->back_l->sides;
+std::list<qSide_c *>::iterator LI;
+
+  for (LI = LLL.begin(); LI != LLL.end(); LI++)
+  {
+    qSide_c *S = *LI;
+    fprintf(stderr, "  side #%p : seg (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
+             S, S->seg->start->x, S->seg->start->y,
+                S->seg->end->x, S->seg->end->y, S->side);
+  }
+fprintf(stderr, "\n");
+}
+
 }
 
 
@@ -602,6 +624,10 @@ static qNode_c * PartitionXY(qLeaf_c *leaf)
   qNode_c *node = new qNode_c(false /* z_splitter */);
 
   FindPartitionXY(node, leaf);
+
+fprintf(stderr, "Using partition (%1.0f,%1.0f) vec:(%1.2f,%1.2f)\n",
+                 node->x, node->y, node->dx, node->dy);
+
 
   Split_XY(node, leaf);
 
