@@ -32,12 +32,12 @@ void Quake1_Tidy(void);
 
 typedef std::vector<u8_t> qLump_c;
 
-int Q1_AddPlane(double dx, double dy, double dz, double dist);
-
 qLump_c *Q1_NewLump(int entry);
 
 void Q1_Append(qLump_c *lump, const void *data, u32_t len);
 void Q1_Printf(qLump_c *lump, const char *str, ...);
+
+u16_t Q1_AddPlane(double dx, double dy, double dz, double dist);
 
 
 #endif /* __OBLIGE_QUAKE1_H__ */

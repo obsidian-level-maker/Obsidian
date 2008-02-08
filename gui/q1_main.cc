@@ -225,6 +225,82 @@ void BSP_CreateInfoLump()
 
 //------------------------------------------------------------------------
 
+
+std::vector<dplane_t> q1_planes;
+
+
+u16_t Q1_AddPlane(double x, double y, double z,
+                  double dx, double dy, double dz,
+                  int *side)
+{
+  double len = sqrt(dx*dx + dy*dy + dz*dz);
+
+  SYS_ASSERT(len > 0);
+
+  dx /= len;
+  dy /= len;
+  dz /= len;
+
+  // distance to the origin (0,0,0)
+  double dist = - (x*dx + y*dy + z*dz);
+
+  *side = 0;
+
+  if (dist < 0)
+  {
+    dx = -dx;  dy = -dy;  dz = -dz;
+    dist = -dist;
+
+    *side = 1;
+  }
+
+  // FIXME !!!! find an existing matching plane
+  //            For speed use a hash-table based on dx/dy/dz
+
+  dplane_t dp;
+
+  dp.normal[0] = dx;
+  dp.normal[1] = dy;
+  dp.normal[2] = dz;
+
+  dp.dist = dist;
+
+  SYS_ASSERT(! (dx < -1.0 + EPSILON));
+  SYS_ASSERT(! (dy < -1.0 + EPSILON));
+  SYS_ASSERT(! (dz < -1.0 + EPSILON));
+
+  if (dx > 1.0 - EPSILON)
+    dp.type = PLANE_X;
+  else if (dy > 1.0 - EPSILON)
+    dp.type = PLANE_Y;
+  else if (dz > 1.0 - EPSILON)
+    dp.type = PLANE_Z;
+  else
+  {
+    double ax = fabs(dx);
+    double ay = fabs(dy);
+    double az = fabs(dz);
+
+    if (ax >= MAX(ay, az))
+      dp.type = PLANE_ANYX;
+    else if (ay >= MAX(ax, az))
+      dp.type = PLANE_ANYY;
+    else
+      dp.type = PLANE_ANYZ;
+  }
+
+  if (q1_planes.size() >= MAX_MAP_PLANES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d PLANES\n",
+                    MAX_MAP_PLANES);
+
+  q1_planes.push_back(dp);
+
+  return (int)q1_planes.size() - 1;
+}
+
+
+//------------------------------------------------------------------------
+
 static int begin_level(lua_State *L)
 {
 
@@ -262,6 +338,7 @@ void Quake1_Init(void)
 
 bool Quake1_Start(void)
 {
+  q1_planes.clear();
 
   write_errors_seen = 0;
   seek_errors_seen  = 0;
