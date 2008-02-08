@@ -315,21 +315,24 @@ static void ClearLumps(void)
   }
 }
 
-static int begin_level(lua_State *L)
+int Q1_begin_level(lua_State *L)
 {
+  CSG2_BeginLevel();
+
   return 0;
 }
 
-static int end_level(lua_State *L)
+int Q1_end_level(lua_State *L)
 {
 //  CSG2_TestQuake();
 
-  SYS_ASSERT(level_name);
+//!!!!! FIXME  SYS_ASSERT(level_name);
 
   CSG2_MergeAreas();
 
   Quake1_BuildBSP();
 
+  CSG2_EndLevel();
 
   return 0;
 }
@@ -413,6 +416,8 @@ bool Quake1_Nodes(const char *target_file)
   Quake1_Backup(target_file);
 
   // ... TODO
+
+  return true;
 }
 
 

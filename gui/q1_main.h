@@ -21,7 +21,7 @@
 
 void Quake1_Init(void);
 
-bool Quake1_Start(bool is_hexen);
+bool Quake1_Start(void);
 bool Quake1_Finish(void);
 
 bool Quake1_Nodes(const char *target_file);
