@@ -535,6 +535,79 @@ static void BSP_CreateEdges(void)
 
 //------------------------------------------------------------------------
 
+static void BSP_CreateMipTex(void)
+{
+  /* TEMP DUMMY STUFF */
+
+  // 0 = "error"
+  // 1 = "gray"
+
+  qLump_c *lump = Q1_NewLump(LUMP_TEXTURES);
+
+  dmiptexlump_t mm_dir;
+
+  mm_dir.num_miptex = LE_S32(2);
+
+  miptex_t mm_tex[2];
+
+  mm_dir.data_ofs[0] = LE_S32(sizeof(mm_dir));
+  mm_dir.data_ofs[1] = LE_S32(sizeof(mm_dir) + sizeof(miptex_t));
+
+  u32_t offset = sizeof(mm_dir) + sizeof(mm_tex);
+
+  // with the following logic, all the pixels are places after
+  // all the miptex_t structures.
+
+  int mt;
+
+  for (mt = 0; mt < 2; mt++)
+  {
+    strcpy(mm_tex[mt].name, (mt == 0) ? "error" : "gray");
+
+    mm_tex[mt].width  = LE_U32(8);
+    mm_tex[mt].height = LE_U32(8);
+
+    int size = 8 * 8;
+
+    for (int i = 0; i < MIP_LEVELS; i++)
+    {
+      mm_tex[mt].offsets[i] = LE_U32(offset);
+
+      offset += (u32_t)size;
+
+      size = size / 4;
+    }
+  }
+
+  Q1_Append(lump, &mm_dir, sizeof(mm_dir));
+  Q1_Append(lump, &mm_tex, sizeof(mm_tex));
+
+  // create the basic textures
+  for (mt = 0; mt < 2; mt++)
+  {
+    u8_t pixels[2];
+
+    pixels[0] = (mt == 0) ? 209 : 4;
+    pixels[1] = (mt == 0) ? 251 : 12;
+
+    int size = 8;
+
+    for (int i = 0; i < MIP_LEVELS; i++)
+    {
+      for (int y = 0; y < size; y++)
+      for (int x = 0; x < size; x++)
+      {
+        Q1_Append(lump, pixels + ((x^y) & 1), 1);
+      }
+
+      size = size / 4;
+    }
+  }
+}
+
+
+//------------------------------------------------------------------------
+
 static void ClearLumps(void)
 {
   for (int i = 0; i < HEADER_LUMPS+1; i++)
@@ -608,6 +681,7 @@ bool Quake1_Finish(void)
   BSP_CreatePlanes();
   BSP_CreateVertexes();
   BSP_CreateEdges();
+  BSP_CreateMipTex();
 
   BSP_CreateEntities();
   BSP_CreateInfoLump();

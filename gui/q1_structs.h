@@ -115,7 +115,7 @@ dheader_t;
 typedef struct
 {
   s32_t num_miptex;
-  s32_t data_ofs[4];   // [nummiptex]
+  s32_t data_ofs[2];   // [nummiptex]
 }
 dmiptexlump_t;
 
