@@ -654,6 +654,24 @@ static void BSP_CreateTexInfo(void)
   }
 }
 
+static void BSP_CreateClipNodes(void)
+{
+  /* TEMP DUMMY STUFF */
+
+  qLump_c *lump = Q1_NewLump(LUMP_CLIPNODES);
+
+  // a single node which makes everything passable
+
+  dclipnode_t cnode;
+
+  cnode.planenum = LE_S32(0);
+
+  cnode.children[0] = LE_S16(CONTENTS_EMPTY);
+  cnode.children[1] = LE_S16(CONTENTS_EMPTY);
+
+  Q1_Append(lump, &cnode, sizeof(cnode));
+}
+
 
 //------------------------------------------------------------------------
 
@@ -732,6 +750,9 @@ bool Quake1_Finish(void)
   BSP_CreateEdges();
   BSP_CreateMipTex();
   BSP_CreateTexInfo();
+  BSP_CreateClipNodes();
+
+  
 
   BSP_CreateEntities();
   BSP_CreateInfoLump();
