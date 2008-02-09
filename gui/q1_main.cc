@@ -50,6 +50,9 @@ static int write_errors_seen;
 static int seek_errors_seen;
 
 
+extern void BSP_CreateModel(void);
+
+
 //------------------------------------------------------------------------
 //  BSP-FILE OUTPUT
 //------------------------------------------------------------------------
@@ -295,7 +298,7 @@ static void ClearPlanes(void)
 
 u16_t Q1_AddPlane(double x, double y, double z,
                   double dx, double dy, double dz,
-                  int *flipped)
+                  bool *flipped)
 {
   *flipped = false;
 
