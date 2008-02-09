@@ -605,6 +605,55 @@ static void BSP_CreateMipTex(void)
   }
 }
 
+static void BSP_CreateTexInfo(void)
+{
+  /* TEMP DUMMY STUFF */
+
+  // 0 = "error" on PLANE_X / PLANE_ANYX
+  // 1 = "error" on PLANE_Y / PLANE_ANYY
+  // 2 = "error" on PLANE_Z / PLANE_ANYZ
+  //
+  // 3 = "gray"  on PLANE_X / PLANE_ANYX
+  // 4 = "gray"  on PLANE_Y / PLANE_ANYY
+  // 5 = "gray"  on PLANE_Z / PLANE_ANYZ
+
+  qLump_c *lump = Q1_NewLump(LUMP_TEXINFO);
+
+  float scale = 8.0;
+
+  for (int T = 0; T < 6; T++)
+  {
+    int P = T % 3;
+
+    texinfo_t tex;
+
+    tex.s[0] = (P == PLANE_X) ? 0 : 1;
+    tex.s[1] = (P == PLANE_X) ? 1 : 0;
+    tex.s[2] = 0;
+    tex.s[3] = 0;
+
+    tex.t[0] = 0;
+    tex.t[1] = (P == PLANE_Z) ? 1 : 0;
+    tex.t[2] = (P == PLANE_Z) ? 0 : 1;
+    tex.t[3] = 0;
+
+    for (int k = 0; k < 3; k++)
+    {
+      tex.s[k] /= scale;
+      tex.t[k] /= scale;
+
+      // FIXME: endianness swap!
+    }
+
+    int flags = 0;
+
+    tex.miptex = LE_S32(T / 3);
+    tex.miptex = LE_S32(flags);
+
+    Q1_Append(lump, &tex, sizeof(tex));
+  }
+}
+
 
 //------------------------------------------------------------------------
 
@@ -682,6 +731,7 @@ bool Quake1_Finish(void)
   BSP_CreateVertexes();
   BSP_CreateEdges();
   BSP_CreateMipTex();
+  BSP_CreateTexInfo();
 
   BSP_CreateEntities();
   BSP_CreateInfoLump();
