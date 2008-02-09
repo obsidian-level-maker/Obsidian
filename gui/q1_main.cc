@@ -569,16 +569,16 @@ static void BSP_CreateMipTex(void)
   {
     strcpy(mm_tex[mt].name, (mt == 0) ? "error" : "gray");
 
-    mm_tex[mt].width  = LE_U32(8);
-    mm_tex[mt].height = LE_U32(8);
+    int size = 16;
 
-    int size = 8 * 8;
+    mm_tex[mt].width  = LE_U32(size);
+    mm_tex[mt].height = LE_U32(size);
 
     for (int i = 0; i < MIP_LEVELS; i++)
     {
       mm_tex[mt].offsets[i] = LE_U32(offset);
 
-      offset += (u32_t)size;
+      offset += (u32_t)(size * size);
 
       size = size / 4;
     }
@@ -595,7 +595,7 @@ static void BSP_CreateMipTex(void)
     pixels[0] = (mt == 0) ? 209 : 4;
     pixels[1] = (mt == 0) ? 251 : 12;
 
-    int size = 8;
+    int size = 16;
 
     for (int i = 0; i < MIP_LEVELS; i++)
     {
