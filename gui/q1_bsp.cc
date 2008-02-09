@@ -918,7 +918,14 @@ static s32_t RecursiveMakeNodes(qNode_c *node)
 
 static void CreateSolidLeaf(void)
 {
-  // FIXME !!!! CreateSolidLeaf
+  dleaf_t raw_lf;
+
+  memset(&raw_lf, 0, sizeof(raw_lf));
+
+  raw_lf.contents = CONTENTS_SOLID;
+  raw_lf.visofs   = -1;  // no visibility info
+
+  Q1_Append(q_leafs, &raw_lf, sizeof(raw_lf));
 }
 
 
