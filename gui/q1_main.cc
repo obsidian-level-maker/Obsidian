@@ -386,11 +386,11 @@ u16_t Q1_AddVertex(double x, double y, double z)
 
   for (u16_t i = 0; i < q1_vertices.size(); i++)
   {
-    dvertex_t *test_v = &q1_vertices[i];
+    dvertex_t *test = &q1_vertices[i];
 
-    if (fabs(test_v->x - x) < Q_EPSILON &&
-        fabs(test_v->y - y) < Q_EPSILON &&
-        fabs(test_v->z - z) < Q_EPSILON)
+    if (fabs(test->x - x) < Q_EPSILON &&
+        fabs(test->y - y) < Q_EPSILON &&
+        fabs(test->z - z) < Q_EPSILON)
     {
       return i;  // found it
     }
@@ -414,6 +414,72 @@ static void BSP_CreateVertexes(void)
   qLump_c *lump = Q1_NewLump(LUMP_VERTEXES);
 
   Q1_Append(lump, &q1_vertices[0], q1_vertices.size() * sizeof(dvertex_t));
+}
+
+
+//------------------------------------------------------------------------
+
+std::vector<dedge_t> q1_edges;
+
+
+static void ClearEdges(void)
+{
+  q1_edges.clear();
+
+  // insert dummy edge #0
+  dedge_t dummy;
+
+  dummy.v[0] = dummy.v[1] = 0;
+
+  q1_edges.push_back(dummy);
+}
+
+
+s32_t Q1_AddEdge(u16_t start, u16_t end)
+{
+  bool flipped = false;
+
+  if (start > end)
+  {
+    flipped = true;
+    u16_t tmp = start; start = end; end = tmp;
+  }
+
+  dedge_t edge;
+
+  edge.v[0] = start;
+  edge.v[1] = end;
+
+
+  // find existing edge
+  // FIXME: OPTIMISE THIS !!!!
+
+  for (int i = 1; i < (int)q1_edges.size(); i++)
+  {
+    dedge_t *test = &q1_edges[i];
+
+    if (test->v[0] == start && test->v[1] == end)
+      return flipped ? -i : i;
+  }
+
+
+  // not found, so add new one
+  int edge_idx = q1_edges.size();
+
+  if (edge_idx >= MAX_MAP_EDGES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d EDGES\n",
+                    MAX_MAP_EDGES);
+
+  q1_edges.push_back(edge);
+
+  return flipped ? -edge_idx : edge_idx;
+}
+
+static void BSP_CreateEdges(void)
+{
+  qLump_c *lump = Q1_NewLump(LUMP_EDGES);
+
+  Q1_Append(lump, &q1_edges[0], q1_edges.size() * sizeof(dedge_t));
 }
 
 
@@ -469,6 +535,7 @@ bool Quake1_Start(const char *target_file)
 
   ClearPlanes();
   ClearVertices();
+  ClearEdges();
 
   ClearLumps();
 
@@ -490,6 +557,8 @@ bool Quake1_Finish(void)
 
   BSP_CreatePlanes();
   BSP_CreateVertexes();
+  BSP_CreateEdges();
+
   BSP_CreateInfoLump();
 
 

@@ -39,6 +39,7 @@ void Q1_Printf(qLump_c *lump, const char *str, ...);
 
 u16_t Q1_AddPlane(double dx, double dy, double dz, double dist, bool *flipped);
 u16_t Q1_AddVertex(double x, double y, double z);
+s32_t Q1_AddEdge(u16_t start, u16_t end);
 
 
 // q1_bsp.cc
