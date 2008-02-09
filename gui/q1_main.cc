@@ -691,6 +691,10 @@ static void BSP_CreateClipNodes(void)
   cnode.children[0] = LE_S16(CONTENTS_EMPTY);
   cnode.children[1] = LE_S16(CONTENTS_EMPTY);
 
+  // hull [1]
+  Q1_Append(lump, &cnode, sizeof(cnode));
+
+  // hull [2]
   Q1_Append(lump, &cnode, sizeof(cnode));
 }
 
