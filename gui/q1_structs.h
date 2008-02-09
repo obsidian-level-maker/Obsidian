@@ -266,8 +266,8 @@ typedef struct
   s16_t mins[3];    // for frustum culling
   s16_t maxs[3];
 
-  u16_t firstmarksurface;
-  u16_t nummarksurfaces;
+  u16_t first_marksurf;
+  u16_t num_marksurf;
 
   u8_t ambient_level[NUM_AMBIENTS];
 }
