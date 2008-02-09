@@ -401,6 +401,8 @@ u16_t Q1_AddPlane(double x, double y, double z,
                     MAX_MAP_PLANES);
 
   q1_planes.push_back(dp);
+fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
+                 (int)plane_idx, (int)q1_planes.size());
 
   hashtab->push_back(plane_idx);
 
@@ -748,17 +750,17 @@ bool Quake1_Finish(void)
 {
   // yada yada
 
+  BSP_CreateEntities();
+  BSP_CreateInfoLump();
+
+  BSP_CreateModel();
+
   BSP_CreatePlanes();
   BSP_CreateVertexes();
   BSP_CreateEdges();
   BSP_CreateMipTex();
   BSP_CreateTexInfo();
   BSP_CreateClipNodes();
-
-  
-
-  BSP_CreateEntities();
-  BSP_CreateInfoLump();
 
 
   // WRITE FAKE HEADER
