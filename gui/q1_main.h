@@ -42,6 +42,8 @@ u16_t Q1_AddPlane(double dx, double dy, double dz, double dist, bool *flipped);
 
 // q1_bsp.cc
 
+#define Q_EPSILON  0.02
+
 void Quake1_BuildBSP(void);
 
 

@@ -28,16 +28,15 @@
 #include "csg_doom.h"
 #include "csg_quake.h"
 
-#include "q1_structs.h"
-
 #include "g_glbsp.h"
 #include "g_image.h"
 #include "g_lua.h"
 
+#include "q1_main.h"
+#include "q1_structs.h"
+
 #include "main.h"
 
-
-#define Q_EPSILON  0.02
 
 
 class qFace_c
