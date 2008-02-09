@@ -232,6 +232,17 @@ std::vector<dplane_t> q1_planes;
 static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
 
 
+static void ClearPlanes(void)
+{
+  q1_planes.clear();
+
+  for (int h = 0; h < NUM_PLANE_HASH; h++)
+  {
+    delete plane_hashtab[h];
+    plane_hashtab[h] = NULL;
+  }
+}
+
 u16_t Q1_AddPlane(double x, double y, double z,
                   double dx, double dy, double dz,
                   int *flipped)
@@ -391,12 +402,11 @@ void Quake1_Init(void)
 
 bool Quake1_Start(const char *target_file)
 {
-  q1_planes.clear();
-
   write_errors_seen = 0;
   seek_errors_seen  = 0;
 
   ClearLumps();
+  ClearPlanes();
 
   bsp_fp = fopen(target_file, "wb");
 
