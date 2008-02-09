@@ -329,9 +329,9 @@ u16_t Q1_AddPlane(double x, double y, double z,
     // Note: ignore the 'type' field because it was generated
     //       from (completely depends on) the plane normal.
     if (fabs(test_p->dist - dist) > Q_EPSILON ||
-        fabs(test_p->normal[0] - dp.normal[0]) > Q_EPSILON ||
-        fabs(test_p->normal[1] - dp.normal[1]) > Q_EPSILON ||
-        fabs(test_p->normal[2] - dp.normal[2]) > Q_EPSILON)
+        fabs(test_p->normal[0] - dp.normal[0]) > EPSILON ||
+        fabs(test_p->normal[1] - dp.normal[1]) > EPSILON ||
+        fabs(test_p->normal[2] - dp.normal[2]) > EPSILON)
     {
       continue;
     }
@@ -352,6 +352,68 @@ u16_t Q1_AddPlane(double x, double y, double z,
   hashtab->push_back(plane_idx);
 
   return plane_idx;
+}
+
+static void BSP_CreatePlanes(void)
+{
+  qLump_c *lump = Q1_NewLump(LUMP_PLANES);
+
+  Q1_Append(lump, &q1_planes[0], q1_planes.size() * sizeof(dplane_t));
+}
+
+
+//------------------------------------------------------------------------
+
+std::vector<dvertex_t> q1_vertices;
+
+
+static void ClearVertices(void)
+{
+  q1_vertices.clear();
+}
+
+u16_t Q1_AddVertex(double x, double y, double z)
+{
+  dvertex_t vert;
+
+  vert.x = x;
+  vert.y = y;
+  vert.z = z;
+
+
+  // find existing vertex
+  // FIXME: OPTIMISE THIS
+
+  for (u16_t i = 0; i < q1_vertices.size(); i++)
+  {
+    dvertex_t *test_v = &q1_vertices[i];
+
+    if (fabs(test_v->x - x) < Q_EPSILON &&
+        fabs(test_v->y - y) < Q_EPSILON &&
+        fabs(test_v->z - z) < Q_EPSILON)
+    {
+      return i;  // found it
+    }
+  }
+
+
+  // not found, so add new one
+  u16_t vert_idx = q1_vertices.size();
+
+  if (vert_idx >= MAX_MAP_VERTS)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d VERTEXES\n",
+                    MAX_MAP_VERTS);
+
+  q1_vertices.push_back(vert);
+
+  return vert_idx;
+}
+
+static void BSP_CreateVertexes(void)
+{
+  qLump_c *lump = Q1_NewLump(LUMP_VERTEXES);
+
+  Q1_Append(lump, &q1_vertices[0], q1_vertices.size() * sizeof(dvertex_t));
 }
 
 
@@ -405,8 +467,10 @@ bool Quake1_Start(const char *target_file)
   write_errors_seen = 0;
   seek_errors_seen  = 0;
 
-  ClearLumps();
   ClearPlanes();
+  ClearVertices();
+
+  ClearLumps();
 
   bsp_fp = fopen(target_file, "wb");
 
@@ -424,6 +488,8 @@ bool Quake1_Finish(void)
 {
   // yada yada
 
+  BSP_CreatePlanes();
+  BSP_CreateVertexes();
   BSP_CreateInfoLump();
 
 
@@ -438,7 +504,9 @@ bool Quake1_Finish(void)
 
   header.version = LE_U32(0x1D); 
 
-  for (int L = 0; L < HEADER_LUMPS+1; L++)
+  BSP_WriteLump(LUMP_OBLIGE_INFO, &header.lumps[LUMP_OBLIGE_INFO]);
+
+  for (int L = 0; L < HEADER_LUMPS; L++)
   {
     BSP_WriteLump(L, &header.lumps[L]);
   }

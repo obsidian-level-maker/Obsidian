@@ -130,7 +130,7 @@ miptex_t;
 
 typedef struct
 {
-  float point[3];
+  float x, y, z;
 }
 dvertex_t;
 
