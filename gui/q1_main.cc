@@ -226,8 +226,10 @@ void BSP_CreateInfoLump()
 
 //------------------------------------------------------------------------
 
-
 std::vector<dplane_t> q1_planes;
+
+#define NUM_PLANE_HASH  128
+static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
 
 
 u16_t Q1_AddPlane(double x, double y, double z,
@@ -267,14 +269,7 @@ u16_t Q1_AddPlane(double x, double y, double z,
   SYS_ASSERT(! (dz < -1.0 + EPSILON));
 
 
-  // FIXME !!!! find an existing matching plane
-  //            For speed use a hash-table based on dx/dy/dz
-  int hash = 0;
-  hash = IntHash(hash ^ I_ROUND((dx+1.0) * 8));
-  hash = IntHash(hash ^ I_ROUND((dy+1.0) * 8));
-  hash = IntHash(hash ^ I_ROUND((dz+1.0) * 8));
-
-
+  // create plane structure
   dplane_t dp;
 
   dp.normal[0] = dx;
@@ -297,13 +292,55 @@ u16_t Q1_AddPlane(double x, double y, double z,
     dp.type = PLANE_ANYZ;
 
 
-  if (q1_planes.size() >= MAX_MAP_PLANES)
+  // find an existing matching plane.
+  // For speed we use a hash-table based on dx/dy/dz/dist
+  int hash = I_ROUND(dist / 8.0);
+  hash = IntHash(hash ^ I_ROUND((dx+1.0) * 8));
+  hash = IntHash(hash ^ I_ROUND((dy+1.0) * 8));
+  hash = IntHash(hash ^ I_ROUND((dz+1.0) * 8));
+
+  hash = hash & (NUM_PLANE_HASH-1);
+  SYS_ASSERT(hash >= 0);
+
+  if (! plane_hashtab[hash])
+    plane_hashtab[hash] = new std::vector<u16_t>;
+    
+  std::vector<u16_t> *hashtab = plane_hashtab[hash];
+
+  for (unsigned int i = 0; i < hashtab->size(); i++)
+  {
+    u16_t plane_idx = (*hashtab)[i];
+
+    SYS_ASSERT(plane_idx < q1_planes.size());
+
+    dplane_t *test_p = &q1_planes[plane_idx];
+
+    // Note: ignore the 'type' field because it was generated
+    //       from (completely depends on) the plane normal.
+    if (fabs(test_p->dist - dist) > Q_EPSILON ||
+        fabs(test_p->normal[0] - dp.normal[0]) > Q_EPSILON ||
+        fabs(test_p->normal[1] - dp.normal[1]) > Q_EPSILON ||
+        fabs(test_p->normal[2] - dp.normal[2]) > Q_EPSILON)
+    {
+      continue;
+    }
+
+    return plane_idx; // found it
+  }
+
+
+  // not found, so add new one
+  u16_t plane_idx = q1_planes.size();
+
+  if (plane_idx >= MAX_MAP_PLANES)
     Main_FatalError("Quake1 build failure: exceeded limit of %d PLANES\n",
                     MAX_MAP_PLANES);
 
   q1_planes.push_back(dp);
 
-  return (int)q1_planes.size() - 1;
+  hashtab->push_back(plane_idx);
+
+  return plane_idx;
 }
 
 
