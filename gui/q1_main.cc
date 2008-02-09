@@ -156,6 +156,23 @@ void Q1_Append(qLump_c *lump, const void *data, u32_t len)
   }
 }
 
+void Q1_Prepend(qLump_c *lump, const void *data, u32_t len)
+{
+  if (len > 0)
+  {
+    u32_t old_size = lump->size();
+    u32_t new_size = old_size + len;
+
+    lump->resize(new_size);
+
+    if (old_size > 0)
+    {
+      memmove(& (*lump)[len], & (*lump)[0], old_size);
+    }
+    memcpy(& (*lump)[0], data, len);
+  }
+}
+
 
 void Q1_Printf(qLump_c *lump, int crlf, const char *str, ...)
 {
