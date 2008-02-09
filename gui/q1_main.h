@@ -35,7 +35,7 @@ typedef std::vector<u8_t> qLump_c;
 qLump_c *Q1_NewLump(int entry);
 
 void Q1_Append(qLump_c *lump, const void *data, u32_t len);
-void Q1_Printf(qLump_c *lump, const char *str, ...);
+void Q1_Printf(qLump_c *lump, int crlf, const char *str, ...);
 
 u16_t Q1_AddPlane(double dx, double dy, double dz, double dist, bool *flipped);
 u16_t Q1_AddVertex(double x, double y, double z);

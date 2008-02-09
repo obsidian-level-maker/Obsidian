@@ -154,7 +154,7 @@ void Q1_Append(qLump_c *lump, const void *data, u32_t len)
 }
 
 
-void Q1_Printf(qLump_c *lump, const char *str, ...)
+void Q1_Printf(qLump_c *lump, int crlf, const char *str, ...)
 {
   static char buffer[MSG_BUF_LEN];
 
@@ -165,6 +165,12 @@ void Q1_Printf(qLump_c *lump, const char *str, ...)
   va_end(args);
 
   buffer[MSG_BUF_LEN-2] = 0;
+
+  if (! crlf)
+  {
+    Q1_Append(lump, buffer, strlen(buffer));
+    return;
+  }
 
   // convert each newline into CR/LF pair
 
@@ -187,40 +193,84 @@ void Q1_Printf(qLump_c *lump, const char *str, ...)
 }
 
 
+void ENT_KeyPair(qLump_c *lump, const char *key, const char *val)
+{
+  Q1_Printf(lump,0, "\"%s\" \"%s\"\n", key, val);
+}
+
+
+void BSP_CreateEntities(void)
+{
+  qLump_c *lump = Q1_NewLump(LUMP_ENTITIES);
+
+  /* add the worldspawn entity */
+
+  Q1_Printf(lump,0, "{\n");
+
+  ENT_KeyPair(lump,  "classname", "worldspawn");
+  ENT_KeyPair(lump,  "worldtype", "0");
+  ENT_KeyPair(lump,  "message",   "level created by Oblige");
+//ENT_KeyPair(lump,  "origin",    "0 0 0");
+
+  Q1_Printf(lump,0, "}\n");
+
+  // add everything else
+
+  for (unsigned int j = 0; j < all_entities.size(); j++)
+  {
+    entity_info_c *E = all_entities[j];
+
+    char orig_buf[80];
+    sprintf(orig_buf, "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
+
+    Q1_Printf(lump,0, "{\n");
+
+    ENT_KeyPair(lump,  "classname", E->name.c_str());
+    ENT_KeyPair(lump,  "origin",    orig_buf);
+
+    // FIXME: other entity properties
+
+    // TODO: other models (doors etc) --> "model" "*45"
+
+    Q1_Printf(lump,0, "}\n");
+  }
+}
+
+
 void BSP_CreateInfoLump()
 {
   // fake 16th lump in file
-  qLump_c *L = Q1_NewLump(LUMP_OBLIGE_INFO);
+  qLump_c *lump = Q1_NewLump(LUMP_OBLIGE_INFO);
 
-  Q1_Printf(L, "\n\n\n\n");
+  Q1_Printf(lump,1, "\n\n\n\n");
 
-  Q1_Printf(L, "-- Map created by OBLIGE %s\n", OBLIGE_VERSION);
-  Q1_Printf(L, "-- " OBLIGE_TITLE " (C) 2006-2008 Andrew Apted\n");
-  Q1_Printf(L, "-- http://oblige.sourceforge.net/\n");
-  Q1_Printf(L, "\n");
+  Q1_Printf(lump,1, "-- Map created by OBLIGE %s\n", OBLIGE_VERSION);
+  Q1_Printf(lump,1, "-- " OBLIGE_TITLE " (C) 2006-2008 Andrew Apted\n");
+  Q1_Printf(lump,1, "-- http://oblige.sourceforge.net/\n");
+  Q1_Printf(lump,1, "\n");
 
  
-  Q1_Printf(L, "-- Game Settings --\n");
-  Q1_Printf(L, "%s\n", main_win->game_box->GetAllValues());
+  Q1_Printf(lump,1, "-- Game Settings --\n");
+  Q1_Printf(lump,1, "%s\n", main_win->game_box->GetAllValues());
 
-  Q1_Printf(L, "-- Level Architecture --\n");
-  Q1_Printf(L, "%s\n", main_win->level_box->GetAllValues());
+  Q1_Printf(lump,1, "-- Level Architecture --\n");
+  Q1_Printf(lump,1, "%s\n", main_win->level_box->GetAllValues());
 
-  Q1_Printf(L, "-- Playing Style --\n");
-  Q1_Printf(L, "%s\n", main_win->play_box->GetAllValues());
+  Q1_Printf(lump,1, "-- Playing Style --\n");
+  Q1_Printf(lump,1, "%s\n", main_win->play_box->GetAllValues());
 
-//Q1_Printf(L, "-- Custom Mods --\n");
-//Q1_Printf(L, "%s\n", main_win->mod_box->GetAllValues());
+//Q1_Printf(lump,1, "-- Custom Mods --\n");
+//Q1_Printf(lump,1, "%s\n", main_win->mod_box->GetAllValues());
 
-//Q1_Printf(L, "-- Custom Options --\n");
-//Q1_Printf(L, "%s\n", main_win->option_box->GetAllValues());
+//Q1_Printf(lump,1, "-- Custom Options --\n");
+//Q1_Printf(lump,1, "%s\n", main_win->option_box->GetAllValues());
 
-  Q1_Printf(L, "\n\n\n\n\n\n");
+  Q1_Printf(lump,1, "\n\n\n\n\n\n");
 
   // terminate lump with ^Z and a NUL character
   static const byte terminator[2] = { 26, 0 };
 
-  Q1_Append(L, terminator, 2);
+  Q1_Append(lump, terminator, 2);
 }
 
 
@@ -559,6 +609,7 @@ bool Quake1_Finish(void)
   BSP_CreateVertexes();
   BSP_CreateEdges();
 
+  BSP_CreateEntities();
   BSP_CreateInfoLump();
 
 
