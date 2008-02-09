@@ -268,6 +268,16 @@ public:
     if (back_n) delete back_n;
   }
 
+  void Flip()
+  {
+    SYS_ASSERT(! z_splitter);
+
+    qLeaf_c *tmp_l = front_l; front_l = back_l; back_l = tmp_l;
+    qNode_c *tmp_n = front_n; front_n = back_n; back_n = tmp_n;
+
+    dx = -dx;
+    dy = -dy;
+  }
 };
 
 
@@ -683,6 +693,8 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) vec:(%1.2f,%1.2f)\n",
 
 //------------------------------------------------------------------------
 
+static qNode_c *q_root;
+
 void Quake1_BuildBSP( void )
 {
   // INPUTS:
@@ -717,11 +729,115 @@ void Quake1_BuildBSP( void )
   //            convex space (no partitions are needed) so in that
   //            case we use an arbitrary splitter plane.
 
-  qNode_c *root = PartitionXY(begin);
-
-  
+  q_root = PartitionXY(begin);
 }
 
+
+//------------------------------------------------------------------------
+
+static dmodel_t model;
+
+static qLump_c *q_nodes;
+static qLump_c *q_leafs;
+
+static int total_nodes;
+static int total_leafs;
+
+
+static s16_t MakeLeaf(qLeaf_c *leaf)
+{
+  dleaf_t raw_lf;
+
+  // FIXME !!!!!!
+
+  // FIXME: fix endianness in raw_lf
+
+  s32_t index = total_leafs++;
+
+  if (index >= MAX_MAP_LEAFS)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d LEAFS\n",
+                    MAX_MAP_LEAFS);
+
+  Q1_Append(q_leafs, &raw_lf, sizeof(raw_lf));
+
+  return -(index+2);
+}
+
+
+static s32_t RecursiveMakeNodes(qNode_c *node)
+{
+  dnode_t raw_nd;
+
+  bool flipped;
+
+  if (node->z_splitter)
+    raw_nd.planenum = Q1_AddPlane(0, 0, node->z, 0, 0, 1, &flipped);
+  else
+    raw_nd.planenum = Q1_AddPlane(node->x, node->y, 0,
+                                  node->dy, -node->dx, 0, &flipped);
+  if (flipped)
+    node->Flip();
+
+
+  if (node->front_n)
+    raw_nd.children[0] = RecursiveMakeNodes(node->front_n);
+  else
+    raw_nd.children[0] = MakeLeaf(node->front_l);
+
+  if (node->back_n)
+    raw_nd.children[1] = RecursiveMakeNodes(node->back_n);
+  else
+    raw_nd.children[1] = MakeLeaf(node->back_l);
+
+
+  // FIXME: fix endianness in raw_nd
+
+  s32_t index = total_nodes++;
+
+  if (index >= MAX_MAP_NODES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
+                    MAX_MAP_NODES);
+
+  Q1_Append(q_nodes, &raw_nd, sizeof(raw_nd));
+
+  return index;
+}
+
+
+void BSP_CreateModel(void)
+{
+  qLump_c *lump = Q1_NewLump(LUMP_MODELS);
+
+///  dmodel_t model;
+
+  for (int k = 0; k < 3; k++)
+  {
+    model.mins[k] = +9e6;
+    model.maxs[k] = -9e6;
+
+    model.origin[k] = 0;
+  }
+
+  model.headnode[1] = 0;  // dummy clipper
+  model.headnode[2] = 0;  // dummy clipper
+  model.headnode[3] = 0;  // unused
+
+  model.visleafs  = 0;
+  model.firstface = 0;
+  model.numfaces  = 0;
+
+  total_nodes = 0;
+  total_leafs = 0;
+
+  q_nodes = Q1_NewLump(LUMP_NODES);
+  q_leafs = Q1_NewLump(LUMP_LEAFS);
+
+  model.headnode[0] = RecursiveMakeNodes(q_root);
+
+  // FIXME: fix endianness in model
+
+  Q1_Append(lump, &model, sizeof(model));
+}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
