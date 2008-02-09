@@ -39,15 +39,15 @@
 
 
 
-class qFace_c
-{
-public:
-  int foo;
- 
-public:
-   qFace_c(  ) { }
-  ~qFace_c() { }
-};
+///  class qFace_c
+///  {
+///  public:
+///    int foo;
+///   
+///  public:
+///     qFace_c(  ) { }
+///    ~qFace_c() { }
+///  };
 
 
 class qSide_c
@@ -103,7 +103,7 @@ class qLeaf_c
 public:
   int contents;
 
-  std::vector<qFace_c *> faces;
+///  std::vector<qFace_c *> faces;
 
   std::list<qSide_c *> sides;
 
@@ -115,7 +115,7 @@ public:
   double max_x, max_y;
 
 public:
-  qLeaf_c() : contents(CONTENTS_EMPTY), faces(), sides(),
+  qLeaf_c() : contents(CONTENTS_EMPTY), /* faces(), */ sides(),
               gap(0), min_x(0), min_y(0), max_x(0), max_y(0)
   { }
 
@@ -125,7 +125,7 @@ public:
   }
 
   qLeaf_c(qLeaf_c& other, int _gap) :
-          contents(other.contents), faces(), sides(), gap(_gap),
+          contents(other.contents), /* faces(), */ sides(), gap(_gap),
           min_x(other.min_x), min_y(other.min_y),
           max_x(other.max_x), max_y(other.max_y)
   {
@@ -740,12 +740,38 @@ static dmodel_t model;
 static qLump_c *q_nodes;
 static qLump_c *q_leafs;
 static qLump_c *q_faces;
+static qLump_c *q_mark_surfs;
+static qLump_c *q_surf_edges;
 
 static int total_nodes;
+static int total_mark_surfs;
+static int total_surf_edges;
 
 
-static s32_t MakeSideFace(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
+static void AddEdge(double x1, double y1, double z1,
+                    double x2, double y2, double z2,
+                    dface_t *face)
 {
+  u16_t v1 = Q1_AddVertex(x1, y1, z1);
+  u16_t v2 = Q1_AddVertex(x2, y2, z2);
+
+  s32_t edge_idx = Q1_AddEdge(v1, v2);
+
+
+  edge_idx = LE_S32(edge_idx);
+
+  Q1_Append(q_surf_edges, &edge_idx, 4);
+
+  face->numedges += 1;
+}
+
+
+static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
+{
+  merge_region_c *R = leaf->GetRegion();
+  merge_gap_c *gap  = R->gaps.at(leaf->gap);
+
+
   dface_t face;
 
   bool flipped;
@@ -755,8 +781,6 @@ static s32_t MakeSideFace(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
                               &flipped);
 
   face.side = flipped ? 1 : 0;
-
-  face.numedges = 4;
 
   face.texinfo = 0;
 
@@ -770,12 +794,21 @@ static s32_t MakeSideFace(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
 
   // add the edges
 
-  face.firstedge
+  face.firstedge = total_surf_edges;
+  face.numedges  = 0;
+
+  double z1 = gap->GetZ1();
+  double z2 = gap->GetZ2();
+
+  AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  &face);
+  AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  &face);
+  AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  &face);
+  AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  &face);
 
 
   // FIXME: fix endianness in face
 
-  s32_t index = model.numfaces++;
+  u16_t index = model.numfaces++;
 
   if (index >= MAX_MAP_FACES)
     Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
@@ -783,7 +816,13 @@ static s32_t MakeSideFace(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
 
   Q1_Append(q_faces, &face, sizeof(face));
 
-  return index;
+
+  // add it into the mark_surfs lump
+  index = LE_U16(index);
+
+  Q1_Append(q_mark_surfs, &index, 2);
+
+  raw_lf->num_marksurf += 1;
 }
 
 
@@ -802,14 +841,14 @@ static s16_t MakeLeaf(qLeaf_c *leaf)
 
   memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
 
+  raw_lf.first_marksurf = total_mark_surfs;
+  raw_lf.num_marksurf   = 0;
 
-  merge_region_c *R = leaf->GetRegion();
-  merge_gap_c *gap  = R->gaps.at(leaf->gap);
 
   // FIXME !!!! make faces for floor and ceiling
 
-  // MakeFlatFace( xxx )
-  // MakeFlatFace( yyy )
+  // Floor_to_Face(S, leaf, &raw_lf, 0);
+  // Floor_to_Face(S, leaf, &raw_lf, 1);
 
 
   // make faces for real sides
@@ -819,7 +858,7 @@ static s16_t MakeLeaf(qLeaf_c *leaf)
   {
     qSide_c *S = *SI;
 
-    MakeSideFace(S, leaf, &raw_lf);
+    Side_to_Face(S, leaf, &raw_lf);
   }
 
 
@@ -877,11 +916,14 @@ static s32_t RecursiveMakeNodes(qNode_c *node)
 }
 
 
+static void CreateSolidLeaf(void)
+{
+  // FIXME !!!! CreateSolidLeaf
+}
+
+
 void BSP_CreateModel(void)
 {
-
-//!!!!! FIXME add leaf #0
-
   qLump_c *lump = Q1_NewLump(LUMP_MODELS);
 
 ///  dmodel_t model;
@@ -907,6 +949,11 @@ void BSP_CreateModel(void)
   q_nodes = Q1_NewLump(LUMP_NODES);
   q_leafs = Q1_NewLump(LUMP_LEAFS);
   q_faces = Q1_NewLump(LUMP_FACES);
+
+  q_mark_surfs = Q1_NewLump(LUMP_MARKSURFACES);
+  q_surf_edges = Q1_NewLump(LUMP_SURFEDGES);
+
+  CreateSolidLeaf();
 
   model.headnode[0] = RecursiveMakeNodes(q_root);
 
