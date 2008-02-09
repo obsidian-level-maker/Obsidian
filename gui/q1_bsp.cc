@@ -179,7 +179,7 @@ fprintf(stderr, "Side #%p : seg (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
     }
   }
 
-  bool IsConvex_XY()
+  bool IsConvex_XY()  // REMOVE ME 
   {
     // Requirements for Convexicity:
     // 1. all sides look into the same region
@@ -876,7 +876,7 @@ static s16_t MakeLeaf(qLeaf_c *leaf)
 }
 
 
-static s32_t RecursiveMakeNodes(qNode_c *node)
+static s32_t RecursiveMakeNodes(qNode_c *node, bool is_root)
 {
   dnode_t raw_nd;
 
@@ -892,17 +892,29 @@ static s32_t RecursiveMakeNodes(qNode_c *node)
 
 
   if (node->front_n)
-    raw_nd.children[0] = RecursiveMakeNodes(node->front_n);
+    raw_nd.children[0] = RecursiveMakeNodes(node->front_n, false);
   else
     raw_nd.children[0] = MakeLeaf(node->front_l);
 
   if (node->back_n)
-    raw_nd.children[1] = RecursiveMakeNodes(node->back_n);
+    raw_nd.children[1] = RecursiveMakeNodes(node->back_n, false);
   else
     raw_nd.children[1] = MakeLeaf(node->back_l);
 
 
   // FIXME: fix endianness in raw_nd
+
+  // -AJA- NOTE WELL: the Quake1 code assumes the root node is the
+  //       very first one.  The following is a hack to achieve that.
+  //       (Hopefully no other assumptions about node ordering exist
+  //        in the Quake1 code!).
+
+  if (is_root)
+  {
+    Q1_Prepend(q_nodes, &raw_nd, sizeof(raw_nd));
+
+    return 0;
+  }
 
   s32_t index = total_nodes++;
 
@@ -943,15 +955,16 @@ void BSP_CreateModel(void)
     model.origin[k] = 0;
   }
 
-  model.headnode[1] = 0;  // dummy clipper
-  model.headnode[2] = 0;  // dummy clipper
+  model.headnode[0] = 0;  // root of drawing BSP
+  model.headnode[1] = 0;  // dummy clipper #1
+  model.headnode[2] = 1;  // dummy clipper #2
   model.headnode[3] = 0;  // unused
 
   model.visleafs  = 0;
   model.firstface = 0;
   model.numfaces  = 0;
 
-  total_nodes = 0;
+  total_nodes = 1;  // root node is always first
 
   q_nodes = Q1_NewLump(LUMP_NODES);
   q_leafs = Q1_NewLump(LUMP_LEAFS);
@@ -962,7 +975,7 @@ void BSP_CreateModel(void)
 
   CreateSolidLeaf();
 
-  model.headnode[0] = RecursiveMakeNodes(q_root);
+  RecursiveMakeNodes(q_root, true /* is_root */);
 
   // FIXME: fix endianness in model
 
