@@ -739,20 +739,93 @@ static dmodel_t model;
 
 static qLump_c *q_nodes;
 static qLump_c *q_leafs;
+static qLump_c *q_faces;
 
 static int total_nodes;
-static int total_leafs;
+
+
+static s32_t MakeSideFace(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
+{
+  dface_t face;
+
+  bool flipped;
+
+  face.planenum = Q1_AddPlane(S->x1, S->y1, 0,
+                              (S->y2 - S->y1), (S->x1 - S->x2), 0,
+                              &flipped);
+
+  face.side = flipped ? 1 : 0;
+
+  face.numedges = 4;
+
+  face.texinfo = 0;
+
+  face.styles[0] = 0xFF;  // no lightmap
+  face.styles[1] = 0x33;  // fairly bright
+  face.styles[2] = 0;
+  face.styles[3] = 0;
+
+  face.lightofs = -1;  // no lightmap
+
+
+  // add the edges
+
+  face.firstedge
+
+
+  // FIXME: fix endianness in face
+
+  s32_t index = model.numfaces++;
+
+  if (index >= MAX_MAP_FACES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
+                    MAX_MAP_FACES);
+
+  Q1_Append(q_faces, &face, sizeof(face));
+
+  return index;
+}
 
 
 static s16_t MakeLeaf(qLeaf_c *leaf)
 {
   dleaf_t raw_lf;
 
-  // FIXME !!!!!!
+  raw_lf.contents = leaf->contents;
+  raw_lf.visofs   = -1;  // no visibility info
+
+  for (int k = 0; k < 3; k++)
+  {
+    raw_lf.mins[k] = +32767;
+    raw_lf.maxs[k] = -32767;
+  }
+
+  memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
+
+
+  merge_region_c *R = leaf->GetRegion();
+  merge_gap_c *gap  = R->gaps.at(leaf->gap);
+
+  // FIXME !!!! make faces for floor and ceiling
+
+  // MakeFlatFace( xxx )
+  // MakeFlatFace( yyy )
+
+
+  // make faces for real sides
+  std::list<qSide_c *>::iterator SI;
+
+  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
+  {
+    qSide_c *S = *SI;
+
+    MakeSideFace(S, leaf, &raw_lf);
+  }
+
 
   // FIXME: fix endianness in raw_lf
 
-  s32_t index = total_leafs++;
+  s32_t index = model.visleafs++;
 
   if (index >= MAX_MAP_LEAFS)
     Main_FatalError("Quake1 build failure: exceeded limit of %d LEAFS\n",
@@ -806,6 +879,9 @@ static s32_t RecursiveMakeNodes(qNode_c *node)
 
 void BSP_CreateModel(void)
 {
+
+//!!!!! FIXME add leaf #0
+
   qLump_c *lump = Q1_NewLump(LUMP_MODELS);
 
 ///  dmodel_t model;
@@ -827,10 +903,10 @@ void BSP_CreateModel(void)
   model.numfaces  = 0;
 
   total_nodes = 0;
-  total_leafs = 0;
 
   q_nodes = Q1_NewLump(LUMP_NODES);
   q_leafs = Q1_NewLump(LUMP_LEAFS);
+  q_faces = Q1_NewLump(LUMP_FACES);
 
   model.headnode[0] = RecursiveMakeNodes(q_root);
 
