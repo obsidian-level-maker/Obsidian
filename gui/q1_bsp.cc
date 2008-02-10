@@ -784,8 +784,8 @@ static void AddEdge(double x1, double y1, double z1,
 
   for (int b = 0; b < 3; b++)
   {
-    s16_t low  =  (I_ROUND( lows[b]) - 2) & ~7;
-    s16_t high = ((I_ROUND(highs[b]) + 2) |  7) + 1;
+    s16_t low  =  (I_ROUND( lows[b]) - 2) & ~3;
+    s16_t high = ((I_ROUND(highs[b]) + 2) |  3) + 1;
 
     raw_lf->mins[b] = MIN(raw_lf->mins[b], low);
     raw_lf->maxs[b] = MAX(raw_lf->maxs[b], high);

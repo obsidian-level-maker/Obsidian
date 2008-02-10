@@ -666,7 +666,7 @@ static void BSP_CreateTexInfo(void)
     int flags = 0;
 
     tex.miptex = LE_S32(T / 3);
-    tex.miptex = LE_S32(flags);
+    tex.flags  = LE_S32(flags);
 
     Q1_Append(lump, &tex, sizeof(tex));
   }
