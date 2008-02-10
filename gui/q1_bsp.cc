@@ -735,6 +735,8 @@ void Quake1_BuildBSP( void )
 
 //------------------------------------------------------------------------
 
+#define Q_SIDESPACE  24
+
 static dmodel_t model;
 
 static qLump_c *q_nodes;
@@ -750,7 +752,7 @@ static int total_surf_edges;
 
 static void AddEdge(double x1, double y1, double z1,
                     double x2, double y2, double z2,
-                    dface_t *face)
+                    dface_t *face, dleaf_t *raw_lf)
 {
   u16_t v1 = Q1_AddVertex(x1, y1, z1);
   u16_t v2 = Q1_AddVertex(x2, y2, z2);
@@ -763,6 +765,29 @@ static void AddEdge(double x1, double y1, double z1,
   Q1_Append(q_surf_edges, &edge_idx, 4);
 
   face->numedges += 1;
+
+
+  // update bounding boxes
+  double lows[3], highs[3];
+
+  lows[0] = MIN(x1, x2);  highs[0] = MAX(x1, x2);
+  lows[1] = MIN(y1, y2);  highs[1] = MAX(y1, y2);
+  lows[2] = MIN(z1, z2);  highs[2] = MAX(z1, z2);
+
+  for (int b = 0; b < 3; b++)
+  {
+    s16_t low  =  (I_ROUND( lows[b]) - 2) & ~7;
+    s16_t high = ((I_ROUND(highs[b]) + 2) |  7) + 1;
+
+    raw_lf->mins[b] = MIN(raw_lf->mins[b], low);
+    raw_lf->maxs[b] = MAX(raw_lf->maxs[b], high);
+
+    double m_low  =  lows[b] - Q_SIDESPACE;
+    double m_high = highs[b] + Q_SIDESPACE;
+
+    model.mins[b] = MIN(model.mins[b], m_low);
+    model.maxs[b] = MAX(model.maxs[b], m_high);
+  }
 }
 
 
@@ -800,10 +825,10 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
   double z1 = gap->GetZ1();
   double z2 = gap->GetZ2();
 
-  AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  &face);
-  AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  &face);
-  AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  &face);
-  AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  &face);
+  AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  &face, raw_lf);
+  AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  &face, raw_lf);
+  AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  &face, raw_lf);
+  AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  &face, raw_lf);
 
 
   // FIXME: fix endianness in face
@@ -826,17 +851,19 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
 }
 
 
-static s16_t MakeLeaf(qLeaf_c *leaf)
+static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 {
   dleaf_t raw_lf;
 
   raw_lf.contents = leaf->contents;
   raw_lf.visofs   = -1;  // no visibility info
 
-  for (int k = 0; k < 3; k++)
+  int b;
+
+  for (b = 0; b < 3; b++)
   {
-    raw_lf.mins[k] = +32767;
-    raw_lf.maxs[k] = -32767;
+    raw_lf.mins[b] = +32767;
+    raw_lf.maxs[b] = -32767;
   }
 
   memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
@@ -862,6 +889,13 @@ static s16_t MakeLeaf(qLeaf_c *leaf)
   }
 
 
+  for (b = 0; b < 3; b++)
+  {
+    parent->mins[b] = MIN(parent->mins[b], raw_lf.mins[b]);
+    parent->maxs[b] = MAX(parent->maxs[b], raw_lf.maxs[b]);
+  }
+
+
   // FIXME: fix endianness in raw_lf
 
   s32_t index = model.visleafs++;
@@ -876,10 +910,11 @@ static s16_t MakeLeaf(qLeaf_c *leaf)
 }
 
 
-static s32_t RecursiveMakeNodes(qNode_c *node, bool is_root)
+static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
 {
   dnode_t raw_nd;
 
+  int b;
   bool flipped;
 
   if (node->z_splitter)
@@ -890,16 +925,33 @@ static s32_t RecursiveMakeNodes(qNode_c *node, bool is_root)
   if (flipped)
     node->Flip();
 
+  
+  raw_nd.firstface = 0;
+  raw_nd.numfaces  = 0;
+
+  for (b = 0; b < 3; b++)
+  {
+    raw_nd.mins[b] = +32767;
+    raw_nd.maxs[b] = -32767;
+  }
+
 
   if (node->front_n)
-    raw_nd.children[0] = RecursiveMakeNodes(node->front_n, false);
+    raw_nd.children[0] = RecursiveMakeNodes(node->front_n, &raw_nd);
   else
-    raw_nd.children[0] = MakeLeaf(node->front_l);
+    raw_nd.children[0] = MakeLeaf(node->front_l, &raw_nd);
 
   if (node->back_n)
-    raw_nd.children[1] = RecursiveMakeNodes(node->back_n, false);
+    raw_nd.children[1] = RecursiveMakeNodes(node->back_n, &raw_nd);
   else
-    raw_nd.children[1] = MakeLeaf(node->back_l);
+    raw_nd.children[1] = MakeLeaf(node->back_l, &raw_nd);
+
+
+  for (b = 0; b < 3; b++)
+  {
+    parent->mins[b] = MIN(parent->mins[b], raw_nd.mins[b]);
+    parent->maxs[b] = MAX(parent->maxs[b], raw_nd.maxs[b]);
+  }
 
 
   // FIXME: fix endianness in raw_nd
@@ -909,7 +961,7 @@ static s32_t RecursiveMakeNodes(qNode_c *node, bool is_root)
   //       (Hopefully no other assumptions about node ordering exist
   //        in the Quake1 code!).
 
-  if (is_root)
+  if (! parent) // is_root
   {
     Q1_Prepend(q_nodes, &raw_nd, sizeof(raw_nd));
 
@@ -947,12 +999,12 @@ void BSP_CreateModel(void)
 
 ///  dmodel_t model;
 
-  for (int k = 0; k < 3; k++)
+  for (int b = 0; b < 3; b++)
   {
-    model.mins[k] = +9e6;
-    model.maxs[k] = -9e6;
+    model.mins[b] = +9e6;
+    model.maxs[b] = -9e6;
 
-    model.origin[k] = 0;
+    model.origin[b] = 0;
   }
 
   model.headnode[0] = 0;  // root of drawing BSP
@@ -975,7 +1027,7 @@ void BSP_CreateModel(void)
 
   CreateSolidLeaf();
 
-  RecursiveMakeNodes(q_root, true /* is_root */);
+  RecursiveMakeNodes(q_root, NULL /* parent */);
 
   // FIXME: fix endianness in model
 
