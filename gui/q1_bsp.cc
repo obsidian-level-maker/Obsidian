@@ -294,6 +294,29 @@ static inline double PerpDist(double x, double y,
   return (x * y2 - y * x2) / len;
 }
 
+static inline double CalcAngle(double sx, double sy, double ex, double ey)
+{
+  // result is Degrees (0 <= angle < 360).
+  // East  (increasing X) -->  0 degrees
+  // North (increasing Y) --> 90 degrees
+
+  ex -= sx;
+  ey -= sy;
+
+  if (fabs(ex) < 0.0001)
+    return (ey > 0) ? 90.0 : 270.0;
+
+  if (fabs(ey) < 0.0001)
+    return (ex > 0) ? 0.0 : 180.0;
+
+  double angle = atan2(ey, ex) * 180.0 / M_PI;
+
+  if (angle < 0) 
+    angle += 360.0;
+
+  return angle;
+}
+
 
 ///---static void Split_Z(qNode_c *node, qLeaf_c *leaf)
 ///---{
@@ -813,6 +836,9 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
                               (S->y1 - S->y2), (S->x2 - S->x1), 0,
                               &flipped);
 
+  if (S->side == 1)
+    flipped = !flipped;
+
   face.side = flipped ? 1 : 0;
 
   face.texinfo = 0;
@@ -873,8 +899,97 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
 }
 
 
+struct Compare_FloorAngle_pred
+{
+  double *angles;
+
+   Compare_FloorAngle_pred(double *p) : angles(p) { }
+  ~Compare_FloorAngle_pred() { }
+
+  inline bool operator() (int A, int B) const
+  {
+    return angles[A] < angles[B];
+  }
+};
+
+
+static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf)
+{
+  int v_num = 0;
+
+  std::list<qSide_c *>::iterator SI;
+
+  double mid_x = 0;
+  double mid_y = 0;
+  
+
+  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++, v_num++)
+  {
+    qSide_c *S = *SI;
+
+    if (S->side == 1)
+    {
+      vert_x[v_num] = S->x2;
+      vert_y[v_num] = S->y2;
+    }
+    else
+    {
+      vert_x[v_num] = S->x1;
+      vert_y[v_num] = S->y1;
+    }
+
+    mid_x += vert_x[v_num];
+    mid_y += vert_y[v_num];
+  }
+
+  mid_x /= v_num;
+  mid_y /= v_num;
+
+  
+  // determine angles, then sort into clockwise order
+
+  double angles[256];
+
+  std::vector<int> mapping(v_num);
+
+  for (int a = 0; a < v_num; a++)
+  {
+    angles[a] = CalcAngle(mid_x, mid_y, vert_x[a], vert_y[a]);
+
+    mapping[a] = a;
+  }
+
+
+  std::sort(mapping.begin(), mapping.end(),
+            Compare_FloorAngle_pred(angles));
+
+
+  // apply mapping to vertices
+  float old_x[256];
+  float old_y[256];
+
+  for (int k = 0; k < v_num; k++)
+  {
+    old_x[k] = vert_x[k];
+    old_y[k] = vert_y[k];
+  }
+
+fprintf(stderr, "\nMIDDLE @ (%1.2f %1.2f) COUNT:%d\n", mid_x, mid_y, v_num);
+  for (int m = 0; m < v_num-1; m++)
+  {
+    vert_x[m] = old_x[mapping[m]];
+    vert_y[m] = old_y[mapping[m]];
+
+fprintf(stderr, "___ (%1.0f %1.0f)\n", vert_x[m], vert_y[m]);
+  }
+
+  return v_num;
+}
+
 static void Floor_to_Face(qLeaf_c *leaf, dleaf_t *raw_lf, int is_ceil)
 {
+if (is_ceil) return; //!!!!!!1
+
   merge_region_c *R = leaf->GetRegion();
   merge_gap_c *gap  = R->gaps.at(leaf->gap);
 
@@ -903,26 +1018,25 @@ static void Floor_to_Face(qLeaf_c *leaf, dleaf_t *raw_lf, int is_ceil)
   face.lightofs = -1;  // no lightmap
 
 
+  // collect the vertices and sort in clockwise order
+
+  float vert_x[256];
+  float vert_y[256];
+
+  int v_num = CollectClockwiseVerts(vert_x, vert_y, leaf);
+
+
   // add the edges
 
   face.firstedge = total_surf_edges;
   face.numedges  = 0;
 
-  std::list<qSide_c *>::iterator SI;
-  std::list<qSide_c *>::iterator EI;
-
-  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
+  for (int pos = 0; pos < v_num; pos++)
   {
-    EI = SI; EI++;
-    if (EI == leaf->sides.end())
-      EI = leaf->sides.begin();
+    int p2 = (pos + 1) % v_num;
 
-    qSide_c *S = *SI;
-    qSide_c *E = *EI;
-
-    SYS_ASSERT(S != E);
-
-    AddEdge(S->x1, S->y1, z,  E->x1, E->y1, z,  &face, raw_lf);
+    AddEdge(vert_x[pos], vert_y[pos], z,
+            vert_x[p2 ], vert_y[p2 ], z, &face, raw_lf);
   }
 
 
@@ -971,8 +1085,8 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
   // make faces for floor and ceiling
 
-//!!!  Floor_to_Face(leaf, &raw_lf, 0);
-//!!!  Floor_to_Face(leaf, &raw_lf, 1);
+  Floor_to_Face(leaf, &raw_lf, 0);
+  Floor_to_Face(leaf, &raw_lf, 1);
 
 
   // make faces for real sides
