@@ -764,6 +764,8 @@ static void AddEdge(double x1, double y1, double z1,
 
   Q1_Append(q_surf_edges, &edge_idx, 4);
 
+  total_surf_edges += 1;
+
   face->numedges += 1;
 
 
@@ -805,14 +807,14 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
                               (S->y2 - S->y1), (S->x1 - S->x2), 0,
                               &flipped);
 
-  face.side = flipped ? 1 : 0;
+  face.side = !flipped ? 1 : 0;  // !!!!! WTF???
 
   face.texinfo = 0;
 
   face.styles[0] = 0xFF;  // no lightmap
   face.styles[1] = 0x33;  // fairly bright
-  face.styles[2] = 0;
-  face.styles[3] = 0;
+  face.styles[2] = 0xFF;
+  face.styles[3] = 0xFF;
 
   face.lightofs = -1;  // no lightmap
 
@@ -825,10 +827,20 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
   double z1 = gap->GetZ1();
   double z2 = gap->GetZ2();
 
-  AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  &face, raw_lf);
-  AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  &face, raw_lf);
-  AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  &face, raw_lf);
-  AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  &face, raw_lf);
+  if (false) // !flipped)
+  {
+    AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  &face, raw_lf);
+    AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  &face, raw_lf);
+    AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  &face, raw_lf);
+    AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  &face, raw_lf);
+  }
+  else
+  {
+    AddEdge(S->x1, S->y1, z1,  S->x2, S->y2, z1,  &face, raw_lf);
+    AddEdge(S->x2, S->y2, z1,  S->x2, S->y2, z2,  &face, raw_lf);
+    AddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  &face, raw_lf);
+    AddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  &face, raw_lf);
+  }
 
 
   // FIXME: fix endianness in face
@@ -846,6 +858,8 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
   index = LE_U16(index);
 
   Q1_Append(q_mark_surfs, &index, 2);
+
+  total_mark_surfs += 1;
 
   raw_lf->num_marksurf += 1;
 }
@@ -947,10 +961,13 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
     raw_nd.children[1] = MakeLeaf(node->back_l, &raw_nd);
 
 
-  for (b = 0; b < 3; b++)
+  if (parent)
   {
-    parent->mins[b] = MIN(parent->mins[b], raw_nd.mins[b]);
-    parent->maxs[b] = MAX(parent->maxs[b], raw_nd.maxs[b]);
+    for (b = 0; b < 3; b++)
+    {
+      parent->mins[b] = MIN(parent->mins[b], raw_nd.mins[b]);
+      parent->maxs[b] = MAX(parent->maxs[b], raw_nd.maxs[b]);
+    }
   }
 
 

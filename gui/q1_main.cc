@@ -327,9 +327,6 @@ u16_t Q1_AddPlane(double x, double y, double z,
   dy /= len;
   dz /= len;
 
-  // distance to the origin (0,0,0)
-  double dist = - (x*dx + y*dy + z*dz);
-
   double ax = fabs(dx);
   double ay = fabs(dy);
   double az = fabs(dz);
@@ -341,13 +338,17 @@ u16_t Q1_AddPlane(double x, double y, double z,
   {
     *flipped = true;
 
-    dx = -dx;  dy = -dy;  dz = -dz;
-    dist = -dist;
+    dx = -dx;
+    dy = -dy;
+    dz = -dz;
   }
 
   SYS_ASSERT(! (dx < -1.0 + EPSILON));
   SYS_ASSERT(! (dy < -1.0 + EPSILON));
   SYS_ASSERT(! (dz < -1.0 + EPSILON));
+
+  // distance to the origin (0,0,0)
+  double dist = (x*dx + y*dy + z*dz);
 
 
   // create plane structure
