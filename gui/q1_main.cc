@@ -227,10 +227,10 @@ void BSP_CreateEntities(void)
 
   Q1_Printf(lump,0, "{\n");
 
-  ENT_KeyPair(lump,  "classname", "worldspawn");
-  ENT_KeyPair(lump,  "worldtype", "0");
   ENT_KeyPair(lump,  "message",   "level created by Oblige");
+  ENT_KeyPair(lump,  "worldtype", "0");
 //ENT_KeyPair(lump,  "origin",    "0 0 0");
+  ENT_KeyPair(lump,  "classname", "worldspawn");
 
   Q1_Printf(lump,0, "}\n");
 
@@ -245,12 +245,12 @@ void BSP_CreateEntities(void)
 
     Q1_Printf(lump,0, "{\n");
 
-    ENT_KeyPair(lump,  "classname", E->name.c_str());
-    ENT_KeyPair(lump,  "origin",    orig_buf);
+    // TODO: other models (doors etc) --> "model" "*45"
 
     // FIXME: other entity properties
 
-    // TODO: other models (doors etc) --> "model" "*45"
+    ENT_KeyPair(lump,  "origin",    orig_buf);
+    ENT_KeyPair(lump,  "classname", E->name.c_str());
 
     Q1_Printf(lump,0, "}\n");
   }
@@ -567,53 +567,48 @@ static void BSP_CreateMipTex(void)
 
   qLump_c *lump = Q1_NewLump(LUMP_TEXTURES);
 
+
   dmiptexlump_t mm_dir;
 
   mm_dir.num_miptex = LE_S32(2);
 
-  miptex_t mm_tex[2];
-
   mm_dir.data_ofs[0] = LE_S32(sizeof(mm_dir));
-  mm_dir.data_ofs[1] = LE_S32(sizeof(mm_dir) + sizeof(miptex_t));
+  mm_dir.data_ofs[1] = LE_S32(sizeof(mm_dir) + sizeof(miptex_t) + 85*4);
 
-  u32_t offset = sizeof(mm_dir) + sizeof(mm_tex);
+  Q1_Append(lump, &mm_dir, sizeof(mm_dir));
 
-  // with the following logic, all the pixels are places after
-  // all the miptex_t structures.
 
-  int mt;
-
-  for (mt = 0; mt < 2; mt++)
+  for (int mt = 0; mt < 2; mt++)
   {
-    strcpy(mm_tex[mt].name, (mt == 0) ? "error" : "gray");
+    miptex_t mm_tex;
+
+    strcpy(mm_tex.name, (mt == 0) ? "error" : "gray");
 
     int size = 16;
 
-    mm_tex[mt].width  = LE_U32(size);
-    mm_tex[mt].height = LE_U32(size);
+    mm_tex.width  = LE_U32(size);
+    mm_tex.height = LE_U32(size);
+
+    int offset = sizeof(mm_tex);
 
     for (int i = 0; i < MIP_LEVELS; i++)
     {
-      mm_tex[mt].offsets[i] = LE_U32(offset);
+      mm_tex.offsets[i] = LE_U32(offset);
 
       offset += (u32_t)(size * size);
 
-      size = size / 4;
+      size = size / 2;
     }
-  }
 
-  Q1_Append(lump, &mm_dir, sizeof(mm_dir));
-  Q1_Append(lump, &mm_tex, sizeof(mm_tex));
+    Q1_Append(lump, &mm_tex, sizeof(mm_tex));
 
-  // create the basic textures
-  for (mt = 0; mt < 2; mt++)
-  {
+
     u8_t pixels[2];
 
-    pixels[0] = (mt == 0) ? 209 : 4;
+    pixels[0] = (mt == 0) ? 210 : 4;
     pixels[1] = (mt == 0) ? 251 : 12;
 
-    int size = 16;
+    size = 16;
 
     for (int i = 0; i < MIP_LEVELS; i++)
     {
@@ -623,7 +618,7 @@ static void BSP_CreateMipTex(void)
         Q1_Append(lump, pixels + ((x^y) & 1), 1);
       }
 
-      size = size / 4;
+      size = size / 2;
     }
   }
 }
