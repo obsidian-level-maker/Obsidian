@@ -810,6 +810,8 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
   face.side = !flipped ? 1 : 0;  // !!!!! WTF???
 
   face.texinfo = 0;
+  if (fabs(S->x1 - S->x2) > fabs(S->y1 - S->y2))
+    face.texinfo = 1;
 
   face.styles[0] = 0xFF;  // no lightmap
   face.styles[1] = 0x33;  // fairly bright
@@ -865,6 +867,80 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
 }
 
 
+static void Floor_to_Face(qLeaf_c *leaf, dleaf_t *raw_lf, int is_ceil)
+{
+  merge_region_c *R = leaf->GetRegion();
+  merge_gap_c *gap  = R->gaps.at(leaf->gap);
+
+  double z1 = gap->GetZ1();
+  double z2 = gap->GetZ2();
+
+  double z = is_ceil ? z2 : z1;
+
+
+  dface_t face;
+
+  bool flipped;
+
+  face.planenum = Q1_AddPlane(0, 0, z,
+                              0, 0, is_ceil ? -1 : +1, &flipped);
+
+  face.side = !flipped ? 1 : 0;  // !!!!! WTF???
+
+  face.texinfo = 2;
+
+  face.styles[0] = 0xFF;  // no lightmap
+  face.styles[1] = 0x66;  // fairly bright
+  face.styles[2] = 0xFF;
+  face.styles[3] = 0xFF;
+
+  face.lightofs = -1;  // no lightmap
+
+
+  // add the edges
+
+  face.firstedge = total_surf_edges;
+  face.numedges  = 0;
+
+  std::list<qSide_c *>::iterator SI;
+
+  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
+  {
+    std::list<qSide_c *>::iterator EI = SI;
+    
+    EI++;
+    if (EI == leaf->sides.end())
+      EI = leaf->sides.begin();
+
+    qSide_c *S = *SI;
+    qSide_c *E = *EI;
+
+    AddEdge(S->x1, S->y1, z,  E->x1, E->y1, z,  &face, raw_lf);
+  }
+
+
+  // FIXME: fix endianness in face
+
+  u16_t index = model.numfaces++;
+
+  if (index >= MAX_MAP_FACES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
+                    MAX_MAP_FACES);
+
+  Q1_Append(q_faces, &face, sizeof(face));
+
+
+  // add it into the mark_surfs lump
+  index = LE_U16(index);
+
+  Q1_Append(q_mark_surfs, &index, 2);
+
+  total_mark_surfs += 1;
+
+  raw_lf->num_marksurf += 1;
+}
+
+
 static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 {
   dleaf_t raw_lf;
@@ -886,10 +962,10 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
   raw_lf.num_marksurf   = 0;
 
 
-  // FIXME !!!! make faces for floor and ceiling
+  // make faces for floor and ceiling
 
-  // Floor_to_Face(S, leaf, &raw_lf, 0);
-  // Floor_to_Face(S, leaf, &raw_lf, 1);
+  Floor_to_Face(leaf, &raw_lf, 0);
+  Floor_to_Face(leaf, &raw_lf, 1);
 
 
   // make faces for real sides
