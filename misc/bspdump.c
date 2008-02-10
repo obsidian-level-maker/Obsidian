@@ -7,6 +7,12 @@
 #include "bspfile.h"
 
 
+#define MIP_NAME_MAX  2000
+static char *miptex_names[MIP_NAME_MAX];
+
+static int nummiptex;
+
+
 static const char *VectorStr(float *vec)
 {
   static char buffer[256];
@@ -71,6 +77,35 @@ static const char *PlaneTypeName(int type)
     default: return "????";
   }
 }
+
+static const char *PaddedString(const char *name, int max_len)
+{
+  static char buffer[1024];
+  char *pos;
+
+  if (max_len > 1000)
+      max_len = 1000;
+
+  pos = buffer;
+
+  *pos++ = '"';
+
+  for (; max_len > 0 && *name; max_len--)
+  {
+    *pos++ = *name++;
+  }
+
+  *pos++ = '"';
+
+  for (; max_len > 0; max_len--)
+    *pos++ = ' ';
+
+
+  *pos = 0;
+
+  return buffer;
+}
+
 
 static void DumpPlanes(void)
 {
@@ -244,7 +279,95 @@ static void DumpFaces(void)
 }
 
 
-int main (int argc, char **argv)
+static void DumpMipTex(void)
+{
+  int i;
+  dmiptexlump_t *mm_dir;
+
+  memset(&miptex_names, 0, sizeof(miptex_names));
+  nummiptex = 0;
+
+  printf("TEXTURE DATA SIZE: %d\n", texdatasize);
+
+  if (texdatasize > 0)
+  {
+    mm_dir = (dmiptexlump_t *) dtexdata;
+
+    nummiptex = mm_dir->nummiptex;
+
+    printf("\nMIPTEX COUNT: %d\n\n", nummiptex);
+
+    for (i = 0; i < nummiptex; i++)
+    {
+      int offset = mm_dir->dataofs[i];
+
+      miptex_t *M;
+      
+      printf("Texture #%02d : ", i);
+
+      if (offset < 8 || offset > texdatasize-85*4)
+      {
+        printf("INVALID OFFSET! (%d)\n", offset);
+        continue;
+      }
+
+      M = (miptex_t *) (dtexdata + offset);
+
+      miptex_names[i] = strdup(PaddedString(M->name, 16));
+
+      printf("%3dx%-3d %s offsets:%d %d %d %d\n",
+             M->width, M->height, miptex_names[i],
+             M->offsets[0], M->offsets[1], M->offsets[2], M->offsets[3]);
+    }
+  }
+
+  printf("\n------------------------------------------------------------\n\n");
+}
+
+
+static void DumpTexInfo(void)
+{
+  int i;
+
+  printf("TEXINFO COUNT : %d\n\n", numtexinfo);
+
+  for (i = 0; i < numtexinfo; i++)
+  {
+    texinfo_t *T = &texinfo[i];
+
+    const char *name = "";
+
+    if (T->miptex >= 0)
+    {
+      if (T->miptex >= nummiptex)
+        name = "(OUT OF RANGE)";
+      else if (! miptex_names[T->miptex])
+        name = "(NAME UNKNOWN)";
+      else
+        name = miptex_names[T->miptex];
+    }
+
+    printf("Tex-Info #%04d : flags:0x%04x miptex:%d %s\n",
+           i, T->flags, T->miptex, name);
+
+    if (true)
+    {
+      printf("                 s = (%s) offset:%+1.5f\n",
+             NormalStr(T->vecs[0]), T->vecs[0][3]);
+
+      printf("                 t = (%s) offset:%+1.5f\n",
+             NormalStr(T->vecs[1]), T->vecs[1][3]);
+
+      printf("\n");
+    }
+  }
+
+  printf("\n------------------------------------------------------------\n\n");
+}
+
+
+
+int main(int argc, char **argv)
 {
   char source[1024];
 
@@ -267,6 +390,9 @@ int main (int argc, char **argv)
   DumpFaces();
 
   DumpModels();
+
+  DumpMipTex();
+  DumpTexInfo();
   DumpEntities();
 
   return 0;
