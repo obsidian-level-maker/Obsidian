@@ -913,7 +913,7 @@ struct Compare_FloorAngle_pred
 };
 
 
-static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf)
+static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf, bool anticlock)
 {
   int v_num = 0;
 
@@ -956,6 +956,9 @@ static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf)
   {
     angles[a] = CalcAngle(mid_x, mid_y, vert_x[a], vert_y[a]);
 
+    if (! anticlock)
+      angles[a] *= -1.0;
+
     mapping[a] = a;
   }
 
@@ -975,12 +978,12 @@ static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf)
   }
 
 fprintf(stderr, "\nMIDDLE @ (%1.2f %1.2f) COUNT:%d\n", mid_x, mid_y, v_num);
-  for (int m = 0; m < v_num-1; m++)
+  for (int m = 0; m < v_num; m++)
   {
     vert_x[m] = old_x[mapping[m]];
     vert_y[m] = old_y[mapping[m]];
 
-fprintf(stderr, "___ (%1.0f %1.0f)\n", vert_x[m], vert_y[m]);
+fprintf(stderr, "___ (%+5.0f %+5.0f)\n", vert_x[m], vert_y[m]);
   }
 
   return v_num;
@@ -988,8 +991,6 @@ fprintf(stderr, "___ (%1.0f %1.0f)\n", vert_x[m], vert_y[m]);
 
 static void Floor_to_Face(qLeaf_c *leaf, dleaf_t *raw_lf, int is_ceil)
 {
-if (is_ceil) return; //!!!!!!1
-
   merge_region_c *R = leaf->GetRegion();
   merge_gap_c *gap  = R->gaps.at(leaf->gap);
 
@@ -1023,7 +1024,7 @@ if (is_ceil) return; //!!!!!!1
   float vert_x[256];
   float vert_y[256];
 
-  int v_num = CollectClockwiseVerts(vert_x, vert_y, leaf);
+  int v_num = CollectClockwiseVerts(vert_x, vert_y, leaf, flipped);
 
 
   // add the edges
