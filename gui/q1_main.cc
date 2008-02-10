@@ -605,8 +605,8 @@ static void BSP_CreateMipTex(void)
 
     u8_t pixels[2];
 
-    pixels[0] = (mt == 0) ? 244 : 4;
-    pixels[1] = (mt == 0) ? 251 : 12;
+    pixels[0] = (mt == 0) ? 210 : 4;
+    pixels[1] = (mt == 0) ? 231 : 12;
 
     size = 16;
 
@@ -615,7 +615,7 @@ static void BSP_CreateMipTex(void)
       for (int y = 0; y < size; y++)
       for (int x = 0; x < size; x++)
       {
-        Q1_Append(lump, pixels + ((x^y) & 1), 1);
+        Q1_Append(lump, pixels + (((x^y) & 2)/2), 1);
       }
 
       size = size / 2;
