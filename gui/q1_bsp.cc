@@ -757,6 +757,12 @@ static void AddEdge(double x1, double y1, double z1,
   u16_t v1 = Q1_AddVertex(x1, y1, z1);
   u16_t v2 = Q1_AddVertex(x2, y2, z2);
 
+  if (v1 == v2)
+  {
+    Main_FatalError("INTERNAL ERROR (Q1 AddEdge): zero length!\n"
+                    "coordinate (%1.2f %1.2f %1.2f)\n", x1, y1, z1);
+  }
+
   s32_t edge_idx = Q1_AddEdge(v1, v2);
 
 
@@ -804,10 +810,10 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
   bool flipped;
 
   face.planenum = Q1_AddPlane(S->x1, S->y1, 0,
-                              (S->y2 - S->y1), (S->x1 - S->x2), 0,
+                              (S->y1 - S->y2), (S->x2 - S->x1), 0,
                               &flipped);
 
-  face.side = !flipped ? 1 : 0;  // !!!!! WTF???
+  face.side = flipped ? 1 : 0;
 
   face.texinfo = 0;
   if (fabs(S->x1 - S->x2) > fabs(S->y1 - S->y2))
@@ -885,7 +891,7 @@ static void Floor_to_Face(qLeaf_c *leaf, dleaf_t *raw_lf, int is_ceil)
   face.planenum = Q1_AddPlane(0, 0, z,
                               0, 0, is_ceil ? -1 : +1, &flipped);
 
-  face.side = !flipped ? 1 : 0;  // !!!!! WTF???
+  face.side = flipped ? 1 : 0;
 
   face.texinfo = 2;
 
@@ -903,17 +909,18 @@ static void Floor_to_Face(qLeaf_c *leaf, dleaf_t *raw_lf, int is_ceil)
   face.numedges  = 0;
 
   std::list<qSide_c *>::iterator SI;
+  std::list<qSide_c *>::iterator EI;
 
   for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
   {
-    std::list<qSide_c *>::iterator EI = SI;
-    
-    EI++;
+    EI = SI; EI++;
     if (EI == leaf->sides.end())
       EI = leaf->sides.begin();
 
     qSide_c *S = *SI;
     qSide_c *E = *EI;
+
+    SYS_ASSERT(S != E);
 
     AddEdge(S->x1, S->y1, z,  E->x1, E->y1, z,  &face, raw_lf);
   }
@@ -964,8 +971,8 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
   // make faces for floor and ceiling
 
-  Floor_to_Face(leaf, &raw_lf, 0);
-  Floor_to_Face(leaf, &raw_lf, 1);
+//!!!  Floor_to_Face(leaf, &raw_lf, 0);
+//!!!  Floor_to_Face(leaf, &raw_lf, 1);
 
 
   // make faces for real sides
