@@ -605,7 +605,7 @@ static void BSP_CreateMipTex(void)
 
     u8_t pixels[2];
 
-    pixels[0] = (mt == 0) ? 210 : 4;
+    pixels[0] = (mt == 0) ? 244 : 4;
     pixels[1] = (mt == 0) ? 251 : 12;
 
     size = 16;
