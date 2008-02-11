@@ -5,9 +5,22 @@ TODO
 
 Quake1_BuildBSP:
 
++ fix face creation (side faces: take neighbour into account)
+
++ fix node creation (need SOLID in tree)
+
++ create clipping hulls from normal nodes
+
++ node creation: add "portal" sides
+
 - replace IsConvex_XY() test with just failing to find a
   partition line.
 
+- find better place for OBLIGE_INFO
+  (c) >> put info into worldspawn entity
+         "_Oblige_version"  "1.02"
+         "_Oblige_seed" "18234"
+         yada yada
 
 
 CSG Polygoniser:
@@ -17,7 +30,8 @@ CSG Polygoniser:
 -  DOOM: remove (comment out) no longer needed LUA funcs:
          add_sector, add_linedef etc...
          
-   >> move 'add_level' and 'finish_level' to "csg2" module ??
+   >> integrate begin_level() and end_level() properly
+      (part of "(ob)con" or "csg2" or module).
 
 
 GUI:
