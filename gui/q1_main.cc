@@ -227,6 +227,8 @@ void BSP_CreateEntities(void)
 
   Q1_Printf(lump,0, "{\n");
 
+  //FIXME !!!! Oblige Information
+
   ENT_KeyPair(lump,  "message",   "level created by Oblige");
   ENT_KeyPair(lump,  "worldtype", "0");
 //ENT_KeyPair(lump,  "origin",    "0 0 0");
@@ -254,6 +256,11 @@ void BSP_CreateEntities(void)
 
     Q1_Printf(lump,0, "}\n");
   }
+
+  // add a trailing nul
+  u8_t zero = 0;
+
+  Q1_Append(lump, &zero, 1);
 }
 
 
