@@ -9,6 +9,8 @@ Quake1_BuildBSP:
 
 + fix node creation (need SOLID in tree)
 
++ add faces to nodes (how ?)
+
 + create clipping hulls from normal nodes
 
 + node creation: add "portal" sides
