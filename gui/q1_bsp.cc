@@ -68,9 +68,11 @@ public:
  
   bool original;  // false for split-off pieces
 
+  bool on_node;  // true if has already been on a partition line
+
 public:
   qSide_c(merge_segment_c * _seg, int _side) :
-      seg(_seg), side(_side), original(true)
+      seg(_seg), side(_side), original(true), on_node(false)
   {
     x1 = seg->start->x;
     y1 = seg->start->y;
@@ -127,8 +129,6 @@ class qLeaf_c
 public:
   int contents;
 
-///  std::vector<qFace_c *> faces;
-
   std::list<qSide_c *> sides;
 
   // Note: qSide_c objects are shared when gap > 0
@@ -138,9 +138,14 @@ public:
   double min_x, min_y;
   double max_x, max_y;
 
+  // list of faces is created when the leaf is vertically partitioned
+  // NB: faces are managed by qSide_c, we only store copies here
+  std::vector<qFace_c *> faces;
+
 public:
   qLeaf_c() : contents(CONTENTS_EMPTY), /* faces(), */ sides(),
-              gap(0), min_x(0), min_y(0), max_x(0), max_y(0)
+              gap(0), min_x(0), min_y(0), max_x(0), max_y(0),
+              faces()
   { }
 
   ~qLeaf_c()
@@ -151,18 +156,21 @@ public:
   qLeaf_c(qLeaf_c& other, int _gap) :
           contents(other.contents), /* faces(), */ sides(), gap(_gap),
           min_x(other.min_x), min_y(other.min_y),
-          max_x(other.max_x), max_y(other.max_y)
+          max_x(other.max_x), max_y(other.max_y),
+          faces()
   {
     // copy the side pointers
     std::list<qSide_c *>::iterator SI;
 
     for (SI = other.sides.begin(); SI != other.sides.end(); SI++)
       sides.push_back(*SI);
+
+    // we don't copy faces (???)
   }
 
   qSide_c * AddSide(merge_segment_c *_seg, int _side)
   {
-    qSide_c *S =new qSide_c(_seg, _side); 
+    qSide_c *S = new qSide_c(_seg, _side); 
 
     sides.push_back(S);
 fprintf(stderr, "Side #%p : seg (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
@@ -256,6 +264,24 @@ fprintf(stderr, "Side #%p : seg (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
 
     return (R->gaps.size() <= 1);
   }
+
+  void AssignFaces()
+  {
+    std::list<qSide_c *>::iterator SI;
+
+    for (SI = sides.begin(); SI != sides.end(); SI++)
+    {
+      qSide_c *S = *SI;
+
+      for (unsigned int k = 0; k < S->faces->size(); k++)
+      {
+        qFace_c *F = (* S->faces)[k];
+
+        if (F->gap == gap)
+          faces.push_back(F);
+      }
+    }
+  }
 };
 
 
@@ -279,11 +305,15 @@ public:
   qLeaf_c *back_l;   // back space : one of these is non-NULL
   qNode_c *back_n;
 
+  // NB: faces are managed by qSide_c, we only store copies here
+  std::vector<qFace_c *> faces;
+
 public:
   qNode_c(bool _Zsplit) : z_splitter(_Zsplit), z(0),
                           x(0), y(0), dx(0), dy(0),
                           front_l(NULL), front_n(NULL),
-                          back_l(NULL),  back_n(NULL)
+                          back_l(NULL),  back_n(NULL),
+                          faces()
   { }
 
   ~qNode_c()
@@ -304,6 +334,12 @@ public:
 
     dx = -dx;
     dy = -dy;
+  }
+
+  void AssignFaces(qSide_c *S)
+  {
+      for (unsigned int f = 0; f < S->faces->size(); f++)
+        faces.push_back((*S->faces)[f]);
   }
 };
 
@@ -359,6 +395,8 @@ static inline double CalcAngle(double sx, double sy, double ex, double ey)
 
 static qNode_c * PartitionZ(qLeaf_c *leaf)
 {
+  int gap;
+
   merge_region_c *R = leaf->GetRegion();
 
   SYS_ASSERT(R && R->gaps.size() > 1);
@@ -369,7 +407,7 @@ static qNode_c * PartitionZ(qLeaf_c *leaf)
 
   leaf_list[0] = leaf;
 
-  for (int gap = 1; gap < (int)R->gaps.size(); gap++)
+  for (gap = 1; gap < (int)R->gaps.size(); gap++)
   {
     leaf_list[gap]   = new qLeaf_c(*leaf, gap);
     node_list[gap-1] = new qNode_c(true /* z_splitter */);
@@ -377,7 +415,7 @@ static qNode_c * PartitionZ(qLeaf_c *leaf)
 
   // TODO: produce a well balanced tree
 
-  for (int gap = 1; gap < (int)R->gaps.size(); gap++)
+  for (gap = 1; gap < (int)R->gaps.size(); gap++)
   {
     qNode_c *n = node_list[gap-1];
 
@@ -392,21 +430,16 @@ static qNode_c * PartitionZ(qLeaf_c *leaf)
       n->front_l = leaf_list[gap];
   } 
 
-#if 0 // OLD CODE
-  Split_Z(node, leaf);
 
-  if (! node->front_l->IsConvex_Z())
+  // create face lists for the leaves
+
+  for (gap = 0; gap < (int)R->gaps.size(); gap++)
   {
-    node->front_n = PartitionZ(node->front_l);
-    node->front_l = NULL;
+    qLeaf_c *L = leaf_list[gap];
+
+    L->AssignFaces();
   }
 
-  if (! node->back_l->IsConvex_Z())
-  {
-    node->back_n = PartitionZ(node->back_l);
-    node->back_l = NULL;
-  }
-#endif
 
   qNode_c *node = node_list[0];
 
@@ -607,6 +640,10 @@ static void Split_XY(qNode_c *part, qLeaf_c *leaf)
       else
         part->back_l->sides.push_back(S);
 
+      // remember the faces along this node
+      part->AssignFaces(S);
+
+      S->on_node = true;
       continue;
     }
 
