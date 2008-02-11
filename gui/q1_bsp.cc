@@ -38,46 +38,63 @@
 #include "main.h"
 
 
+class qFace_c
+{
+public:
+  double z1, z2;
 
-///  class qFace_c
-///  {
-///  public:
-///    int foo;
-///   
-///  public:
-///     qFace_c(  ) { }
-///    ~qFace_c() { }
-///  };
+  int gap;
+
+  int index;  // final index into Faces lump
+
+public:
+   qFace_c() : index(-1) { }
+  ~qFace_c() { }
+};
 
 
 class qSide_c
 {
 public:
-  merge_segment_c *seg;
+  merge_segment_c *seg;  // NULL means "portal"
 
   int side;  // 0 is front, 1 is back
 
   double x1, y1;
   double x2, y2;
+
+  // faces on this side (this pointer is shared by all split-off pieces)
+  std::vector<qFace_c *> * faces;
  
+  bool original;  // false for split-off pieces
+
 public:
-  qSide_c(merge_segment_c * _seg, int _side) : seg(_seg), side(_side)
+  qSide_c(merge_segment_c * _seg, int _side) :
+      seg(_seg), side(_side), original(true)
   {
     x1 = seg->start->x;
     y1 = seg->start->y;
 
     x2 = seg->end->x;
     y2 = seg->end->y;
+
+    faces = new std::vector<qFace_c *>;
   }
 
   ~qSide_c()
-  { }
+  {
+    if (faces && original)
+    {
+      // TODO: delete the faces
+    }
+  }
 
 private:
   qSide_c(const qSide_c *other, double new_x, double new_y) :
           seg(other->seg), side(other->side),
           x1(new_x), y1(new_y),
-          x2(other->x2), y2(other->y2)
+          x2(other->x2), y2(other->y2),
+          faces(other->faces), original(false)
   { }
 
 public:
@@ -94,6 +111,13 @@ public:
     y2 = new_y;
 
     return T;
+  }
+
+  void AddFace(qFace_c *F)
+  {
+    SYS_ASSERT(original);
+
+    faces->push_back(F);
   }
 };
 
@@ -136,13 +160,16 @@ public:
       sides.push_back(*SI);
   }
 
-  void AddSide(merge_segment_c *_seg, int _side)
+  qSide_c * AddSide(merge_segment_c *_seg, int _side)
   {
-    sides.push_back(new qSide_c(_seg, _side));
+    qSide_c *S =new qSide_c(_seg, _side); 
+
+    sides.push_back(S);
 fprintf(stderr, "Side #%p : seg (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
-         sides.back(),
-         _seg->start->x, _seg->start->y,
-         _seg->end->x, _seg->end->y, _side);
+         S, _seg->start->x, _seg->start->y,
+           _seg->end->x, _seg->end->y, _side);
+
+    return S;
   }
 
 
@@ -712,6 +739,61 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) vec:(%1.2f,%1.2f)\n",
 ///---  }
 ///---}
 
+static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
+{
+  qSide_c *S = leaf->AddSide(seg, side);
+
+  // create the faces
+  merge_region_c *R  = (side == 0) ? seg->front : seg->back;
+  merge_region_c *RX = (side == 0) ? seg->back  : seg->front;
+
+  for (unsigned int k = 0; k < R->gaps.size(); k++)
+  {
+    merge_gap_c *G = R->gaps[k];
+
+    double gz1 = G->GetZ1();
+    double gz2 = G->GetZ2();
+
+    // simple case: other side is completely solid
+    if (RX == NULL || RX->gaps.size() == 0)
+    {
+      qFace_c *F = new qFace_c();
+
+      F->gap = k;
+      F->z1  = gz1;
+      F->z2  = gz2;
+
+      S->AddFace(F);
+fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f) - (%1.0f,%1.0f)\n",
+        F->z1, F->z2, F->gap, S->x1, S->y1, S->x2, S->y2);
+      continue;
+    }
+
+    // complex case: compare with solids on other side
+
+    for (unsigned m = 0; m <= RX->gaps.size(); m++)
+    {
+      double sz1 = (m == 0) ? -9e6 : RX->gaps[m-1]->GetZ2();
+      double sz2 = (m == RX->gaps.size()) ? +9e6 : RX->gaps[m]->GetZ1();
+
+      if (sz1 < gz1) sz1 = gz1;
+      if (sz2 > gz2) sz2 = gz2;
+
+      if (sz2 > sz1 + Q_EPSILON)
+      {
+        qFace_c *F = new qFace_c();
+
+        F->gap = k;
+        F->z1  = sz1;
+        F->z2  = sz2;
+
+        S->AddFace(F);
+fprintf(stderr, "Making face %1.0f..%1.0f gap:%u neighbour:%u (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
+        F->z1, F->z2, F->gap, m, S->x1, S->y1, S->x2, S->y2, side);
+      }
+    }
+  }
+}
 
 
 //------------------------------------------------------------------------
@@ -741,10 +823,10 @@ void Quake1_BuildBSP( void )
     merge_segment_c *S = mug_segments[i];
 
     if (S->front && S->front->gaps.size() > 0)
-      begin->AddSide(S, 0);
+      MakeSide(begin, S, 0);
 
     if (S->back && S->back->gaps.size() > 0)
-      begin->AddSide(S, 1);
+      MakeSide(begin, S, 1);
   }
 
   // NOTE WELL: we assume at least one partition (hence at least
