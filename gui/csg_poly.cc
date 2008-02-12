@@ -70,7 +70,6 @@ static inline double AlongDist(double x, double y,
   return (x * x2 + y * y2) / len;
 }
 
-
 static inline double CalcAngle(double sx, double sy, double ex, double ey)
 {
   // result is Degrees (0 <= angle < 360).
@@ -1274,7 +1273,7 @@ static void MarkBoundaryRegions(area_poly_c *P)
       else
       {
         // DO WHAT ??
-fprintf(stderr, "WARNING: missing region along line loop\n");
+        fprintf(stderr, "WARNING: missing region along line loop\n");
       }
 
       S->border_of = P;
@@ -1577,6 +1576,14 @@ static merge_region_c *FindRegionForPoint(double x, double y)
 
   return NULL;
 }
+
+bool CSG2_PointInSolid(double x, double y)
+{
+  merge_region_c *R = FindRegionForPoint(x, y);
+
+  return ! (R && R->gaps.size() > 0);
+}
+
 
 static merge_gap_c *FindGapForPoint(merge_region_c *R, double x, double y, double z)
 {
