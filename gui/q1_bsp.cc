@@ -41,6 +41,15 @@
 class qFace_c
 {
 public:
+  enum face_kind_e
+  {
+    WALL  =  0,
+    FLOOR = -1,
+    CEIL  = +1
+  };
+
+  int kind;
+
   double z1, z2;
 
   int gap;
@@ -48,7 +57,7 @@ public:
   int index;  // final index into Faces lump
 
 public:
-   qFace_c() : index(-1) { }
+   qFace_c(bool _kind = WALL) : kind(_kind), index(-1) { }
   ~qFace_c() { }
 };
 
@@ -74,11 +83,16 @@ public:
   qSide_c(merge_segment_c * _seg, int _side) :
       seg(_seg), side(_side), original(true), on_node(false)
   {
-    x1 = seg->start->x;
-    y1 = seg->start->y;
-
-    x2 = seg->end->x;
-    y2 = seg->end->y;
+    if (side == 0)
+    {
+      x1 = seg->start->x;  x2 = seg->end->x;
+      y1 = seg->start->y;  y2 = seg->end->y;
+    }
+    else  // back
+    {
+      x1 = seg->end->x;  x2 = seg->start->x;
+      y1 = seg->end->y;  y2 = seg->start->y;
+    }
 
     faces = new std::vector<qFace_c *>;
   }
@@ -214,56 +228,56 @@ fprintf(stderr, "Side #%p : seg (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
     }
   }
 
-  bool IsConvex_XY()  // REMOVE ME 
-  {
-    // Requirements for Convexicity:
-    // 1. all sides look into the same region
-    // 2. all sides are connected (no separate parts)
-    // 3. angle between any two connected sides <= 180 degrees.
-
-    std::list<qSide_c *>::iterator SI;
-
-    merge_region_c *R = NULL;
-
-    for (SI = sides.begin(); SI != sides.end(); SI++)
-    {
-      qSide_c *S = *SI;
-
-      merge_region_c *cur_R = S->GetRegion();
-      SYS_ASSERT(cur_R);
-
-      if (! R)
-      {
-        R = cur_R;
-        continue;
-      }
-
-      if (R != cur_R)
-        return false;
-    }
-
-    // OK, all sides belong to the same region.
-
-    // Now rearrange sides in the list so they are contiguous
-    // (winding in an anti-clockwise direction).
-    // If any are left over, then requirement #2 is not satisfied.
-    // Early out if any angle is > 180 degrees.
-
-    // FIXME !!!!!!
-
-    return true;
-  }
-
-  bool IsConvex_Z()
-  {
-    SYS_ASSERT(! sides.empty());
-
-    qSide_c *first = * sides.begin();
-
-    merge_region_c *R = first->GetRegion();
-
-    return (R->gaps.size() <= 1);
-  }
+///---  bool IsConvex_XY()  // REMOVE ME 
+///---  {
+///---    // Requirements for Convexicity:
+///---    // 1. all sides look into the same region
+///---    // 2. all sides are connected (no separate parts)
+///---    // 3. angle between any two connected sides <= 180 degrees.
+///---
+///---    std::list<qSide_c *>::iterator SI;
+///---
+///---    merge_region_c *R = NULL;
+///---
+///---    for (SI = sides.begin(); SI != sides.end(); SI++)
+///---    {
+///---      qSide_c *S = *SI;
+///---
+///---      merge_region_c *cur_R = S->GetRegion();
+///---      SYS_ASSERT(cur_R);
+///---
+///---      if (! R)
+///---      {
+///---        R = cur_R;
+///---        continue;
+///---      }
+///---
+///---      if (R != cur_R)
+///---        return false;
+///---    }
+///---
+///---    // OK, all sides belong to the same region.
+///---
+///---    // Now rearrange sides in the list so they are contiguous
+///---    // (winding in an anti-clockwise direction).
+///---    // If any are left over, then requirement #2 is not satisfied.
+///---    // Early out if any angle is > 180 degrees.
+///---
+///---    // FIXME !!!!!!
+///---
+///---    return true;
+///---  }
+///---
+///---  bool IsConvex_Z()
+///---  {
+///---    SYS_ASSERT(! sides.empty());
+///---
+///---    qSide_c *first = * sides.begin();
+///---
+///---    merge_region_c *R = first->GetRegion();
+///---
+///---    return (R->gaps.size() <= 1);
+///---  }
 
   void AssignFaces()
   {
@@ -357,6 +371,19 @@ static inline double PerpDist(double x, double y,
   return (x * y2 - y * x2) / len;
 }
 
+static inline double AlongDist(double x, double y,
+                               double x1, double y1, double x2, double y2)
+{
+  x  -= x1; y  -= y1;
+  x2 -= x1; y2 -= y1;
+
+  double len = sqrt(x2*x2 + y2*y2);
+
+  SYS_ASSERT(len > 0);
+
+  return (x * x2 + y * y2) / len;
+}
+
 static inline double CalcAngle(double sx, double sy, double ex, double ey)
 {
   // result is Degrees (0 <= angle < 360).
@@ -393,17 +420,22 @@ static inline double CalcAngle(double sx, double sy, double ex, double ey)
 ///---  // FIXME !!!!!
 ///---}
 
-static qNode_c * PartitionZ(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
+static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
+{
+}
+
+
+static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 {
   int gap;
 
   merge_region_c *R = leaf->GetRegion();
 
-  SYS_ASSERT(R && R->gaps.size() > 1);
+  SYS_ASSERT(R && R->gaps.size() > 0);
 
-  
+
   qLeaf_c ** leaf_list = new qLeaf_c* [R->gaps.size()];
-  qNode_c ** node_list = new qNode_c* [R->gaps.size()-1];
+  qNode_c ** node_list = new qNode_c* [R->gaps.size()];
 
   leaf_list[0] = leaf;
 
@@ -441,12 +473,13 @@ static qNode_c * PartitionZ(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
   }
 
 
-  qNode_c *node = node_list[0];
+  if (R->gaps.size() == 1)
+    *out_l = leaf_list[0];
+  else
+    *out_n = node_list[0];
 
   delete[] leaf_list;
   delete[] node_list;
-
-  return node;
 }
 
 
@@ -483,7 +516,8 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
       double sdx = S->x2 - S->x1;
       double sdy = S->y2 - S->y1;
 
-      if ( ((pdx * sdx + pdy * sdy < 0.0) ? 1 : 0) == S->side)
+//!!!!!!      if ( ((pdx * sdx + pdy * sdy < 0.0) ? 1 : 0) == S->side)
+      if (pdx * sdx + pdy * sdy < 0.0)
         front++;
       else
         back++;
@@ -533,7 +567,7 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
 }
 
 
-static qSide_c * FindPartitionXY(qLeaf_c *leaf)
+static qSide_c * FindPartition(qLeaf_c *leaf)
 {
   std::list<qSide_c *>::iterator SI;
 
@@ -575,15 +609,82 @@ static qSide_c * FindPartitionXY(qLeaf_c *leaf)
 }
 
 
+class intersection_c
+{
+public:
+  enum closed_kind_e
+  {
+    OPEN   = 0,
+    BEFORE = 1,
+    AFTER  = 2,
+  };
+
+  int closed;
+
+  double along;  // distance along partition
+
+  double x, y;
+
+public:
+   intersection_c() { }
+  ~intersection_c() { }
+};
+
+struct Compare_Intersection_pred
+{
+  inline bool operator() (const intersection_c *A, const intersection_c *B) const
+  {
+    return A->along < B->along;
+  }
+};
+
+static void AddIntersection(std::vector<intersection_c *>& cut_list,
+                            qNode_c *part, double x, double y,
+                            int closed = intersection_c::OPEN)
+{
+  intersection_c *K = new intersection_c();
+
+  K->closed = closed;
+  K->x = x;
+  K->y = y;
+
+  K->along = AlongDist(x, y,
+                       part->x, part->y,
+                       part->x + part->dx, part->y + part->dy);
+
+  cut_list.push_back(K);
+}
+
+static void MergeIntersections(std::vector<intersection_c *>& cut_list)
+{
+  // sort intersections by their position on the partition line,
+  // and merge any points at the same location.
+
+  std::sort(cut_list.begin(), cut_list.end(), Compare_Intersection_pred());
+
+printf("INTERSECTIONS:\n");
+  for (unsigned int i = 0; i < cut_list.size(); i++)
+  {
+    intersection_c *K = cut_list[i];
+printf("(%1.1f %1.1f) along:%8.3f closed:%s\n",
+       K->x, K->y, K->along,
+       (K->closed == intersection_c::BEFORE) ? "BEFORE" :
+       (K->closed == intersection_c::AFTER)  ? "AFTER " : "OPEN  ");
+  }
+printf("\n");
+}
+
 static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
 {
 //  part->front_l = leaf;
 //  part->back_l  = new qLeaf_c;
 
-
   std::list<qSide_c *> all_sides;
 
   all_sides.swap(front_l->sides);
+
+  std::vector<intersection_c *> cut_list;
+
 
   while (! all_sides.empty())
   {
@@ -610,10 +711,21 @@ static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
     {
       // lines are colinear
 
-      if ( ((part->dx * sdx + part->dy * sdy < 0.0) ? 1 : 0) == S->side)
+//!!!!!!      if ( ((pdx * sdx + pdy * sdy < 0.0) ? 1 : 0) == S->side)
+      if (part->dx * sdx + part->dy * sdy < 0.0)
+      {
         part->front_l->sides.push_back(S);
+
+        AddIntersection(cut_list, part, S->x1, S->y1, intersection_c::AFTER);
+        AddIntersection(cut_list, part, S->x2, S->y2, intersection_c::BEFORE);
+      }
       else
+      {
         part->back_l->sides.push_back(S);
+
+        AddIntersection(cut_list, part, S->x2, S->y2, intersection_c::AFTER);
+        AddIntersection(cut_list, part, S->x1, S->y1, intersection_c::BEFORE);
+      }
 
       // remember the faces along this node
       part->AssignFaces(S);
@@ -630,6 +742,11 @@ static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
         part->front_l->sides.push_back(S);
       else
         part->back_l->sides.push_back(S);
+
+      if (fa <= Q_EPSILON)
+        AddIntersection(cut_list, part, S->x1, S->y1);
+      else // fb <= Q_EPSILON
+        AddIntersection(cut_list, part, S->x2, S->y2);
 
       continue;
     }
@@ -668,6 +785,8 @@ static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
       part->front_l->sides.push_back(S);
       part-> back_l->sides.push_back(T);
     }
+
+    AddIntersection(cut_list, part, ix, iy);
   }
 
 for (int kk=0; kk < 2; kk++)
@@ -687,10 +806,12 @@ std::list<qSide_c *>::iterator LI;
 fprintf(stderr, "\n");
 }
 
+  MergeIntersections(cut_list);
+
 }
 
 
-static void PartitionXY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
+static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
 {
   bool is_root = (out_l == NULL);
 
@@ -699,7 +820,7 @@ static void PartitionXY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
   *out_n = NULL;
   *out_l = NULL;
 
-  qSide_c *best_p = FindPartitionXY(leaf);
+  qSide_c *best_p = FindPartition(leaf);
   qNode_c *node;
 
   if (! best_p)
@@ -708,7 +829,7 @@ static void PartitionXY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
 
     if (! is_root)
     {
-      PartitionZ(leaf, out_n, out_l);
+      Partition_Z(leaf, out_n, out_l);
       return;
     }
 
@@ -748,8 +869,8 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) vec:(%1.2f,%1.2f)\n",
   Split_XY(node, leaf, back_l);
 
 
-  PartitionXY(front_l, &node->front_n, &node->front_l);
-  PartitionXY( back_l, &node-> back_n, &node-> back_l);
+  Partition_XY(front_l, &node->front_n, &node->front_l);
+  Partition_XY( back_l, &node-> back_n, &node-> back_l);
 
 #if 0
   if (! node->front_l->IsConvex_XY())
@@ -896,7 +1017,7 @@ void Quake1_BuildBSP( void )
   //            convex space (no partitions are needed) so in that
   //            case we use an arbitrary splitter plane.
 
-  PartitionXY(begin, &q_root, NULL);
+  Partition_XY(begin, &q_root, NULL);
 }
 
 
@@ -980,8 +1101,8 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
                               (S->y1 - S->y2), (S->x2 - S->x1), 0,
                               &flipped);
 
-  if (S->side == 1)
-    flipped = !flipped;
+//!!!!!  if (S->side == 1)
+//!!!!!    flipped = !flipped;
 
   face.side = flipped ? 1 : 0;
 
@@ -1071,12 +1192,12 @@ static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf, bo
   {
     qSide_c *S = *SI;
 
-    if (S->side == 1)
-    {
-      vert_x[v_num] = S->x2;
-      vert_y[v_num] = S->y2;
-    }
-    else
+///!!!!!!    if (S->side == 1)
+///!!!!!!    {
+///!!!!!!      vert_x[v_num] = S->x2;
+///!!!!!!      vert_y[v_num] = S->y2;
+///!!!!!!    }
+///!!!!!!    else
     {
       vert_x[v_num] = S->x1;
       vert_y[v_num] = S->y1;
