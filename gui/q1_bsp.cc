@@ -40,7 +40,9 @@
 
 extern bool CSG2_PointInSolid(double x, double y);
 
+
 class qSide_c;
+class qLeaf_c;
 
 
 class qFace_c
@@ -60,11 +62,12 @@ public:
   int gap;
 
   qSide_c *side;
+  qLeaf_c *floor_leaf;
 
   int index;  // final index into Faces lump
 
 public:
-   qFace_c(bool _kind = WALL) : kind(_kind), index(-1) { }
+   qFace_c(bool _kind = WALL) : kind(_kind), side(NULL), floor_leaf(NULL), index(-1) { }
   ~qFace_c() { }
 };
 
@@ -179,6 +182,7 @@ public:
   // Note: qSide_c objects are shared when gap > 0
 
   int gap;
+  int numgap;
 
   double min_x, min_y;
   double max_x, max_y;
@@ -187,10 +191,14 @@ public:
   // NB: faces are managed by qSide_c, we only store copies here
   std::vector<qFace_c *> faces;
 
+  bool floor_on_node;
+  bool ceil_on_node;
+
 public:
   qLeaf_c() : contents(CONTENTS_EMPTY), /* faces(), */ sides(),
-              gap(0), min_x(0), min_y(0), max_x(0), max_y(0),
-              faces()
+              gap(0), numgap(0),
+              min_x(0), min_y(0), max_x(0), max_y(0),
+              faces(), floor_on_node(false), ceil_on_node(false)
   { }
 
   ~qLeaf_c()
@@ -242,6 +250,18 @@ public:
     return NULL; /* NOT REACHED */
   }
 
+  merge_gap_c *GetGap()
+  {
+    SYS_ASSERT(numgap == 1);
+
+    merge_region_c *R = GetRegion();
+
+    SYS_ASSERT(R);
+    SYS_ASSERT(gap >= 0 && gap < R->gaps.size());
+
+    return R->gaps[gap];
+  }
+
   void ComputeBBox()
   {
     min_x = min_y = +9e9;
@@ -265,46 +285,6 @@ public:
     }
   }
 
-///---  bool IsConvex_XY()  // REMOVE ME 
-///---  {
-///---    // Requirements for Convexicity:
-///---    // 1. all sides look into the same region
-///---    // 2. all sides are connected (no separate parts)
-///---    // 3. angle between any two connected sides <= 180 degrees.
-///---
-///---    std::list<qSide_c *>::iterator SI;
-///---
-///---    merge_region_c *R = NULL;
-///---
-///---    for (SI = sides.begin(); SI != sides.end(); SI++)
-///---    {
-///---      qSide_c *S = *SI;
-///---
-///---      merge_region_c *cur_R = S->GetRegion();
-///---      SYS_ASSERT(cur_R);
-///---
-///---      if (! R)
-///---      {
-///---        R = cur_R;
-///---        continue;
-///---      }
-///---
-///---      if (R != cur_R)
-///---        return false;
-///---    }
-///---
-///---    // OK, all sides belong to the same region.
-///---
-///---    // Now rearrange sides in the list so they are contiguous
-///---    // (winding in an anti-clockwise direction).
-///---    // If any are left over, then requirement #2 is not satisfied.
-///---    // Early out if any angle is > 180 degrees.
-///---
-///---    // FIXME !!!!!!
-///---
-///---    return true;
-///---  }
-///---
 ///---  bool IsConvex_Z()
 ///---  {
 ///---    SYS_ASSERT(! sides.empty());
@@ -318,6 +298,8 @@ public:
 
   void AssignFaces()
   {
+    SYS_ASSERT(numgap == 1);
+
     std::list<qSide_c *>::iterator SI;
 
     for (SI = sides.begin(); SI != sides.end(); SI++)
@@ -452,6 +434,13 @@ static inline double CalcAngle(double sx, double sy, double ex, double ey)
 }
 
 
+//------------------------------------------------------------------------
+
+static qNode_c *Q_ROOT;
+
+static qLeaf_c *SOLID_LEAF;
+
+
 ///---static void Split_Z(qNode_c *node, qLeaf_c *leaf)
 ///---{
 ///---
@@ -466,10 +455,78 @@ static inline double CalcAngle(double sx, double sy, double ex, double ey)
 
 static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 {
+  std::list<qSide_c *>::iterator SI;
+
+  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
+  {
+    qSide_c *S = *SI;
+
+    if (S->seg && ! S->on_node)
+    {
+      S->on_node = true;
+
+      qNode_c * node = new qNode_c(false /* z_splitter */);
+      (*out_n) = node;
+
+      node->x = S->x1;
+      node->y = S->y1;
+
+      node->dx = S->x2 - S->x1;
+      node->dy = S->y2 - S->y1;
+
+      // SHIT!!!!  :  HANDLE _TWO_ COLINEAR SIDES !!!!!
+
+      node->AssignFaces(S);
+
+      node->back_l = SOLID_LEAF;
+
+      Partition_Solid(leaf, &node->front_n, &node->front_l);
+      return;
+    }
+  }
+
+    
+  merge_gap_c *gap = leaf->GetGap();
+
+  if (! leaf->floor_on_node)
+  {
+      leaf->floor_on_node = true;
+
+      qNode_c * node = new qNode_c(true /* z_splitter */);
+      (*out_n) = node;
+
+      node->z = gap->GetZ1();
+
+      // FIXME: floor face --> node !!!!!
+
+      node->back_l = SOLID_LEAF;
+
+      Partition_Solid(leaf, &node->front_n, &node->front_l);
+      return;
+  }
+
+
+  SYS_ASSERT(! leaf->ceil_on_node);
+  {
+      leaf->ceil_on_node = true;
+  
+      qNode_c * node = new qNode_c(true /* z_splitter */);
+      (*out_n) = node;
+
+      node->z = gap->GetZ2();
+
+      // FIXME: ceil face --> node !!!!!
+
+      node->front_l = leaf;
+      node-> back_l = SOLID_LEAF;
+
+      return;
+  }
 }
 
 
-static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
+#if 0
+static void Partition_Z_OLD(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 {
   int gap;
 
@@ -495,7 +552,6 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
   {
     qNode_c *n = node_list[gap-1];
 
-    // choose height halfway between the two gaps (in the solid)
     n->z = (R->gaps[gap-1]->GetZ2() + R->gaps[gap]->GetZ1()) / 2.0;
 
     n->back_l = leaf_list[gap-1];
@@ -525,18 +581,54 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
   delete[] leaf_list;
   delete[] node_list;
 }
+#endif
+
+static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
+{
+  merge_region_c *R = leaf->GetRegion();
+
+  // !!!! FIXME: not quite right (getting Faces into Leafs)
+
+  if (leaf->numgap > 1)
+  {
+    int new_g = leaf->gap + leaf->numgap / 2;
+
+    qLeaf_c *top_leaf = new qLeaf_c(*leaf, new_g);
+
+    // TODO: OPTIMISE THIS : too many nodes!  Use bottom of gaps[new_g] as
+    //       the splitting plane.
+
+    qNode_c *node = new qNode_c(true /* z_splitter */);
+
+    // choose height halfway between the two gaps (in the solid)
+    node->z = (R->gaps[new_g-1]->GetZ2() + R->gaps[new_g]->GetZ1()) / 2.0;
+
+    Partition_Z(top_leaf, &node->front_n, &node->front_l);
+    Partition_Z(    leaf, &node->back_n,  &node->back_l);
+    return;
+  }
+
+  SYS_ASSERT(leaf->numgap == 1);
+
+  // create face list for the leaf
+  leaf->AssignFaces();
+
+  // FIXME: create floor and ceiling faces here !!!!!
+
+  Partition_Solid(leaf, out_n, out_l);
+}
 
 
 static double EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
 {
-  std::list<qSide_c *>::iterator SI;
-
   int back   = 0;
   int front  = 0;
   int splits = 0;
 
   double pdx = part->x2 - part->x1;
   double pdy = part->y2 - part->y1;
+
+  std::list<qSide_c *>::iterator SI;
 
   for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
   {
@@ -980,10 +1072,10 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
 
   SYS_ASSERT(out_n);
 
-  *out_n = NULL;
-
-  if (out_l)
-    *out_l = NULL;
+///--  *out_n = NULL;
+///--
+///--  if (out_l)
+///--    *out_l = NULL;
 
   qSide_c *best_p = FindPartition(leaf);
   qNode_c *node;
@@ -995,6 +1087,9 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
 fprintf(stderr, "LEAF %p IS CONVEX\n", leaf);
     if (! is_root)
     {
+      leaf->numgap = (int) leaf->GetRegion()->gaps.size();
+      SYS_ASSERT(leaf->numgap > 0);
+
       Partition_Z(leaf, out_n, out_l);
       return;
     }
@@ -1040,55 +1135,8 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
   Partition_XY(front_l, &node->front_n, &node->front_l);
   Partition_XY( back_l, &node-> back_n, &node-> back_l);
 
-// fprintf(stderr, "Partition_XY DONE\n");
-#if 0
-  if (! node->front_l->IsConvex_XY())
-  {
-    node->front_n = PartitionXY(node->front_l);
-    node->front_l = NULL;
-  }
-  else if (! node->front_l->IsConvex_Z())
-  {
-    node->front_n = PartitionZ(node->front_l);
-    node->front_l = NULL;
-  }
-
-  if (! node->back_l->IsConvex_XY())
-  {
-    node->back_n = PartitionXY(node->back_l);
-    node->back_l = NULL;
-  }
-  else if (! node->back_l->IsConvex_Z())
-  {
-    node->back_n = PartitionZ(node->back_l);
-    node->back_l = NULL;
-  }
-#endif
 }
 
-
-///---static void PartitionZ(qNode_c *node)
-///---{
-///---  if (node->front_n)
-///---  {
-///---    PartitionZ(node->front_n);
-///---  }
-///---  else if (! node->front_l->IsConvex_Z())
-///---  {
-///---    node->front_n = PartitionZ_Leaf(node->front_l);
-///---    node->front_l = NULL;
-///---  }
-///---
-///---  if (node->back_n)
-///---  {
-///---    PartitionZ(node->back_n);
-///---  }
-///---  else if (! node->back_l->IsConvex_Z())
-///---  {
-///---    node->back_n = PartitionZ_Leaf(node->back_l);
-///---    node->back_l = NULL;
-///---  }
-///---}
 
 static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
 {
@@ -1151,7 +1199,6 @@ fprintf(stderr, "Making face %1.0f..%1.0f gap:%u neighbour:%u (%1.0f,%1.0f) - (%
 
 //------------------------------------------------------------------------
 
-static qNode_c *q_root;
 
 void Quake1_BuildBSP( void )
 {
@@ -1169,6 +1216,8 @@ void Quake1_BuildBSP( void )
   //      (c) recursively handle front/back lists
   //   3. perform Z splitting (the gaps)
   //   4. perform solid splitting
+
+  SOLID_LEAF = new qLeaf_c();
 
   qLeaf_c *begin = new qLeaf_c();
 
@@ -1189,7 +1238,7 @@ void Quake1_BuildBSP( void )
   //            case we use an arbitrary splitter plane.
 
 fprintf(stderr, "Quake1_BuildBSP BEGUN\n");
-  Partition_XY(begin, &q_root, NULL);
+  Partition_XY(begin, &Q_ROOT, NULL);
 }
 
 
@@ -1262,8 +1311,17 @@ static void AddEdge(double x1, double y1, double z1,
 }
 
 
+static void MakeFloor(qFace_c *F, dleaf_t *raw_lf);
+
+
 static void MakeFace(qFace_c *F,  dleaf_t *raw_lf)
 {
+  if (F->kind != qFace_c::WALL)
+  {
+    MakeFloor(F, raw_lf);
+    return;
+  }
+
   qSide_c *S = F->side;
 
   merge_region_c *R = S->GetRegion();
@@ -1287,7 +1345,7 @@ static void MakeFace(qFace_c *F,  dleaf_t *raw_lf)
     face.texinfo = 1;
 
   face.styles[0] = 0xFF;  // no lightmap
-  face.styles[1] = 0x33;  // fairly bright
+  face.styles[1] = 0xFF;  // fairly bright
   face.styles[2] = 0xFF;
   face.styles[3] = 0xFF;
 
@@ -1514,15 +1572,20 @@ fprintf(stderr, "___ (%+5.0f %+5.0f)\n", vert_x[m], vert_y[m]);
   return v_num;
 }
 
-static void Floor_to_Face(qLeaf_c *leaf, dleaf_t *raw_lf, int is_ceil)
+static void MakeFloor(qFace_c *F, dleaf_t *raw_lf)
 {
+  qLeaf_c *leaf = F->floor_leaf;
+  SYS_ASSERT(leaf);
+
   merge_region_c *R = leaf->GetRegion();
-  merge_gap_c *gap  = R->gaps.at(leaf->gap);
+  SYS_ASSERT(R);
+
+  merge_gap_c *gap  = R->gaps.at(F->gap);
 
   double z1 = gap->GetZ1();
   double z2 = gap->GetZ2();
 
-  double z = is_ceil ? z2 : z1;
+  double z = (F->kind == qFace_c::CEIL) ? z2 : z1;
 
 
   dface_t face;
@@ -1530,14 +1593,14 @@ static void Floor_to_Face(qLeaf_c *leaf, dleaf_t *raw_lf, int is_ceil)
   bool flipped;
 
   face.planenum = Q1_AddPlane(0, 0, z,
-                              0, 0, is_ceil ? -1 : +1, &flipped);
+                              0, 0, (F->kind == qFace_c::CEIL) ? -1 : +1, &flipped);
 
   face.side = flipped ? 1 : 0;
 
   face.texinfo = 2;
 
   face.styles[0] = 0xFF;  // no lightmap
-  face.styles[1] = 0x66;  // fairly bright
+  face.styles[1] = 0xFF;  // fairly bright
   face.styles[2] = 0xFF;
   face.styles[3] = 0xFF;
 
@@ -1578,13 +1641,16 @@ static void Floor_to_Face(qLeaf_c *leaf, dleaf_t *raw_lf, int is_ceil)
 
 
   // add it into the mark_surfs lump
-  index = LE_U16(index);
+  SYS_ASSERT(raw_lf);
+  {
+    index = LE_U16(index);
 
-  Q1_Append(q_mark_surfs, &index, 2);
+    Q1_Append(q_mark_surfs, &index, 2);
 
-  total_mark_surfs += 1;
+    total_mark_surfs += 1;
 
-  raw_lf->num_marksurf += 1;
+    raw_lf->num_marksurf += 1;
+  }
 }
 
 
@@ -1609,13 +1675,12 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
   raw_lf.num_marksurf   = 0;
 
 
-  // make faces for floor and ceiling
+///---  // make faces for floor and ceiling
+///---  Floor_to_Face(leaf, &raw_lf, 0);
+///---  Floor_to_Face(leaf, &raw_lf, 1);
 
-  Floor_to_Face(leaf, &raw_lf, 0);
-  Floor_to_Face(leaf, &raw_lf, 1);
 
-
-  // make faces for the sides
+  // make faces
   for (unsigned int n = 0; n < leaf->faces.size(); n++)
   {
     qFace_c *F = leaf->faces[n];
@@ -1795,7 +1860,7 @@ void BSP_CreateModel(void)
 
   CreateSolidLeaf();
 
-  RecursiveMakeNodes(q_root, NULL /* parent */);
+  RecursiveMakeNodes(Q_ROOT, NULL /* parent */);
 
   // FIXME: fix endianness in model
 
