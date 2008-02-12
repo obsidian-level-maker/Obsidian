@@ -956,8 +956,8 @@ function test_grow_3D()
   add_seed(4,7,2, h_blue, 128,256)
   
   -- RED:
-  add_seed(4,1,3, h_red, 256,384)
-  add_seed(4,2,3, h_red, 256,384)
+  add_seed(4,1,3, h_red, 256,364)
+  add_seed(4,2,3, h_red, 256,364)
   --
   add_seed(3,3,3, room, 256,384)
   add_seed(4,3,3, room, 256,384)
@@ -1011,6 +1011,8 @@ function test_grow_3D()
   for zzz,S in ipairs(SEED_LIST) do
     render_seed(S)
   end
+
+  csg2.add_entity("1", 800, 800, 260)
 end
 
 
