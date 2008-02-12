@@ -40,6 +40,8 @@
 
 extern bool CSG2_PointInSolid(double x, double y);
 
+class qSide_c;
+
 
 class qFace_c
 {
@@ -56,6 +58,8 @@ public:
   double z1, z2;
 
   int gap;
+
+  qSide_c *side;
 
   int index;  // final index into Faces lump
 
@@ -215,10 +219,11 @@ public:
 
     sides.push_back(S);
 
-fprintf(stderr, "Side #%p : seg (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
+#if 0
+    fprintf(stderr, "Side #%p : seg (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
          S, _seg->start->x, _seg->start->y,
            _seg->end->x, _seg->end->y, _side);
-
+#endif
     return S;
   }
 
@@ -522,13 +527,16 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 }
 
 
-static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
+static double EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
 {
   std::list<qSide_c *>::iterator SI;
 
   int back   = 0;
   int front  = 0;
   int splits = 0;
+
+  double pdx = part->x2 - part->x1;
+  double pdy = part->y2 - part->y1;
 
   for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
   {
@@ -551,9 +559,6 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
     if (fa <= Q_EPSILON && fb <= Q_EPSILON)
     {
       // lines are colinear
-
-      double pdx = part->x2 - part->x1;
-      double pdy = part->y2 - part->y1;
 
       double sdx = S->x2 - S->x1;
       double sdy = S->y2 - S->y1;
@@ -599,13 +604,25 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
     front++;
   }
 
+fprintf(stderr, "PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits:%d\n",
+        part->x1, part->y1, part->x2, part->y2,
+        back, front, splits);
+
+
   if (front == 0 || back == 0)
     return -1;
 
   // calculate heuristic
   int diff = ABS(front - back);
 
-  return (splits * splits * 20 + diff * 100) / (front + back);
+  double cost = (splits * (splits+1) * 365.0 + diff * 100.0) /
+                (double)(front + back);
+
+  // slight preference for axis-aligned planes
+  if (fabs(pdx) < EPSILON || fabs(pdy) < EPSILON)
+    cost += 1.0;
+
+  return cost;
 }
 
 
@@ -613,7 +630,7 @@ static qSide_c * FindPartition(qLeaf_c *leaf)
 {
   std::list<qSide_c *>::iterator SI;
 
-  int best_c = 99999;
+  double   best_c = 9e30;
   qSide_c *best_p = NULL;
 
   int count = 0;
@@ -622,11 +639,11 @@ static qSide_c * FindPartition(qLeaf_c *leaf)
   {
     qSide_c *part = *SI;
 
-    count++;
-
     // ignore portal sides
     if (! part->seg)
       continue;
+
+    count++;
 
 ///---    // Optimisation: skip the back sides of segments, since there
 ///---    // is always a corresponding front side (except when they've
@@ -639,10 +656,10 @@ static qSide_c * FindPartition(qLeaf_c *leaf)
 
     // TODO: skip sides that lie on the same vertical plane
 
-    int cost = EvaluatePartition(leaf, part);
+    double cost = EvaluatePartition(leaf, part);
 
-fprintf(stderr, "COST %d FOR (%1.1f %1.1f)..(%1.1f %1.1f)\n",
-        cost, part->x1, part->y1, part->x2, part->y2);
+fprintf(stderr, "--> COST:%1.2f for %p\n", cost, part);
+
     if (cost < 0)  // not a potential candidate
       continue;
 
@@ -652,7 +669,7 @@ fprintf(stderr, "COST %d FOR (%1.1f %1.1f)..(%1.1f %1.1f)\n",
       best_p = part;
     }
   }
-fprintf(stderr, "ALL DONE : best_c=%d best_p=%p\n", best_c, best_p);
+fprintf(stderr, "ALL DONE : best_c=%1.0f best_p=%p\n", best_c, best_p);
 
   return best_p;
 }
@@ -692,7 +709,6 @@ static void AddIntersection(std::vector<intersection_c *>& cut_list,
                             qNode_c *part, double x, double y,
                             int closed = intersection_c::OPEN)
 {
-fprintf(stderr, "ADD INTERSECTION @ (%1.1f %1.1f)\n", x, y);
   intersection_c *K = new intersection_c();
 
   K->closed = closed;
@@ -713,7 +729,7 @@ static void DumpIntersections(std::vector<intersection_c *>& cut_list)
     "OPEN", "BEFORE", "AFTER", "CLOSED"
   };
 
-fprintf(stderr, "INTERSECTIONS:\n");
+  fprintf(stderr, "INTERSECTIONS:\n");
 
   for (unsigned int i = 0; i < cut_list.size(); i++)
   {
@@ -735,7 +751,7 @@ static void MergeIntersections(std::vector<intersection_c *>& cut_list)
 
   std::sort(cut_list.begin(), cut_list.end(), Compare_Intersection_pred());
 
-  DumpIntersections(cut_list);
+///  DumpIntersections(cut_list);
 
   unsigned int pos = 0;
 
@@ -765,7 +781,7 @@ static void MergeIntersections(std::vector<intersection_c *>& cut_list)
   ENDP = std::remove(cut_list.begin(), cut_list.end(), (intersection_c*)NULL);
   cut_list.erase(ENDP, cut_list.end());
 
-  DumpIntersections(cut_list);
+///  DumpIntersections(cut_list);
 }
 
 static void CreatePortals(std::vector<intersection_c *>& cut_list, 
@@ -789,12 +805,15 @@ static void CreatePortals(std::vector<intersection_c *>& cut_list,
     if (! (k1_open && k2_open))
       continue;
 
+    if (K2->along - K1->along < 0.99) // don't create tiny portals
+      continue;
+
     // check if portal crosses solid space
     // (NOTE: this is hackish!)
     double mx = (K1->x + K2->x) / 2.0;
     double my = (K1->y + K2->y) / 2.0;
 
-    if (! CSG2_PointInSolid(mx, my))
+    if (CSG2_PointInSolid(mx, my))
       continue;
 
     qSide_c *front_pt = qSide_c::NewPortal(K1->x,K1->y, K2->x,K2->y, 0);
@@ -803,8 +822,10 @@ static void CreatePortals(std::vector<intersection_c *>& cut_list,
     front_l->sides.push_back(front_pt);
      back_l->sides.push_back( back_pt);
 
-fprintf(stderr, "Portal along (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
-      K1->x,K1->y, K2->x,K2->y);
+#if 0
+    fprintf(stderr, "Portal along (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
+         K1->x,K1->y, K2->x,K2->y);
+#endif
   }
 }
 
@@ -943,19 +964,18 @@ static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
 
   CreatePortals(cut_list, part, front_l, back_l);
 
-
+if (0) {
 for (int kk=0; kk < 2; kk++)
 {
   fprintf(stderr, "%s:\n", (kk==0) ? "FRONT" : "BACK");
   DumpLeaf((kk==0) ? front_l : back_l);
-}
+}}
 
 }
 
 
 static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
 {
-fprintf(stderr, "Partition_XY BEGUN\n");
   bool is_root = (out_l == NULL);
 
   SYS_ASSERT(out_n);
@@ -994,7 +1014,7 @@ fprintf(stderr, "LEAF %p IS CONVEX\n", leaf);
   }
   else
   {
-fprintf(stderr, "LEAF HAS SPLITTER %p \n", best_p);
+// fprintf(stderr, "LEAF HAS SPLITTER %p \n", best_p);
     node = new qNode_c(false /* z_splitter */);
 
     node->x = best_p->x1;
@@ -1020,7 +1040,7 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
   Partition_XY(front_l, &node->front_n, &node->front_l);
   Partition_XY( back_l, &node-> back_n, &node-> back_l);
 
-fprintf(stderr, "Partition_XY DONE\n");
+// fprintf(stderr, "Partition_XY DONE\n");
 #if 0
   if (! node->front_l->IsConvex_XY())
   {
@@ -1093,6 +1113,7 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
       F->gap = k;
       F->z1  = gz1;
       F->z2  = gz2;
+      F->side = S;
 
       S->AddFace(F);
 fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f) - (%1.0f,%1.0f)\n",
@@ -1110,13 +1131,14 @@ fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f)
       if (sz1 < gz1) sz1 = gz1;
       if (sz2 > gz2) sz2 = gz2;
 
-      if (sz2 > sz1 + Q_EPSILON)
+      if (sz2 > sz1 + 0.99)  // don't create tiny faces
       {
         qFace_c *F = new qFace_c();
 
         F->gap = k;
         F->z1  = sz1;
         F->z2  = sz2;
+        F->side = S;
 
         S->AddFace(F);
 fprintf(stderr, "Making face %1.0f..%1.0f gap:%u neighbour:%u (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
@@ -1225,8 +1247,11 @@ static void AddEdge(double x1, double y1, double z1,
     s16_t low  =  (I_ROUND( lows[b]) - 2) & ~3;
     s16_t high = ((I_ROUND(highs[b]) + 2) |  3) + 1;
 
-    raw_lf->mins[b] = MIN(raw_lf->mins[b], low);
-    raw_lf->maxs[b] = MAX(raw_lf->maxs[b], high);
+    if (raw_lf)
+    {
+      raw_lf->mins[b] = MIN(raw_lf->mins[b], low);
+      raw_lf->maxs[b] = MAX(raw_lf->maxs[b], high);
+    }
 
     double m_low  =  lows[b] - Q_SIDESPACE;
     double m_high = highs[b] + Q_SIDESPACE;
@@ -1237,6 +1262,90 @@ static void AddEdge(double x1, double y1, double z1,
 }
 
 
+static void MakeFace(qFace_c *F,  dleaf_t *raw_lf)
+{
+  qSide_c *S = F->side;
+
+  merge_region_c *R = S->GetRegion();
+  SYS_ASSERT(R);
+
+  merge_gap_c *gap  = R->gaps.at(F->gap);
+
+
+  dface_t face;
+
+  bool flipped;
+
+  face.planenum = Q1_AddPlane(S->x1, S->y1, 0,
+                              (S->y1 - S->y2), (S->x2 - S->x1), 0,
+                              &flipped);
+
+  face.side = flipped ? 1 : 0;
+
+  face.texinfo = 0;
+  if (fabs(S->x1 - S->x2) > fabs(S->y1 - S->y2))
+    face.texinfo = 1;
+
+  face.styles[0] = 0xFF;  // no lightmap
+  face.styles[1] = 0x33;  // fairly bright
+  face.styles[2] = 0xFF;
+  face.styles[3] = 0xFF;
+
+  face.lightofs = -1;  // no lightmap
+
+
+  // add the edges
+
+  face.firstedge = total_surf_edges;
+  face.numedges  = 0;
+
+  double z1 = F->z1;
+  double z2 = F->z2;
+
+  if (true) // !flipped)
+  {
+    AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  &face, raw_lf);
+    AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  &face, raw_lf);
+    AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  &face, raw_lf);
+    AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  &face, raw_lf);
+  }
+  else
+  {
+    AddEdge(S->x1, S->y1, z1,  S->x2, S->y2, z1,  &face, raw_lf);
+    AddEdge(S->x2, S->y2, z1,  S->x2, S->y2, z2,  &face, raw_lf);
+    AddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  &face, raw_lf);
+    AddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  &face, raw_lf);
+  }
+
+
+  // FIXME: fix endianness in face
+
+  u16_t index = model.numfaces++;
+
+  if (index >= MAX_MAP_FACES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
+                    MAX_MAP_FACES);
+
+  F->index = (int)index;
+
+  Q1_Append(q_faces, &face, sizeof(face));
+
+
+  // add it into the mark_surfs lump
+
+  if (raw_lf)
+  {
+    index = LE_U16(index);
+
+    Q1_Append(q_mark_surfs, &index, 2);
+
+    total_mark_surfs += 1;
+
+    raw_lf->num_marksurf += 1;
+  }
+}
+
+#if 0  // OLD CODE
 static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
 {
   merge_region_c *R = leaf->GetRegion();
@@ -1312,6 +1421,7 @@ static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
 
   raw_lf->num_marksurf += 1;
 }
+#endif
 
 
 struct Compare_FloorAngle_pred
@@ -1505,15 +1615,26 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
   Floor_to_Face(leaf, &raw_lf, 1);
 
 
-  // make faces for real sides
-  std::list<qSide_c *>::iterator SI;
-
-  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
+  // make faces for the sides
+  for (unsigned int n = 0; n < leaf->faces.size(); n++)
   {
-    qSide_c *S = *SI;
+    qFace_c *F = leaf->faces[n];
 
-    Side_to_Face(S, leaf, &raw_lf);
+    if (F->index < 0)
+      MakeFace(F, &raw_lf);
   }
+
+///--  std::list<qSide_c *>::iterator SI;
+///--
+///--  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
+///--  {
+///--    qSide_c *S = *SI;
+///--
+///--    if (! S->seg) // skip portals
+///--      continue;
+///--
+///--    Side_to_Face(S, leaf, &raw_lf);
+///--  }
 
 
   for (b = 0; b < 3; b++)
@@ -1563,6 +1684,22 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   }
 
 
+  // make faces [NOTE: must be done before recursing down]
+  for (unsigned int j = 0; j < node->faces.size(); j++)
+  {
+    qFace_c *F = node->faces[j];
+
+    SYS_ASSERT(F->index < 0);
+
+    MakeFace(F, NULL);
+
+    if (j == 0)
+      raw_nd.firstface = F->index;
+    
+    raw_nd.numfaces++;
+  }
+
+
   if (node->front_n)
     raw_nd.children[0] = RecursiveMakeNodes(node->front_n, &raw_nd);
   else
@@ -1582,6 +1719,7 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
       parent->maxs[b] = MAX(parent->maxs[b], raw_nd.maxs[b]);
     }
   }
+
 
 
   // FIXME: fix endianness in raw_nd
