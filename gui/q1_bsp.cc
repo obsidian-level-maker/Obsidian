@@ -393,7 +393,7 @@ static inline double CalcAngle(double sx, double sy, double ex, double ey)
 ///---  // FIXME !!!!!
 ///---}
 
-static qNode_c * PartitionZ(qLeaf_c *leaf)
+static qNode_c * PartitionZ(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 {
   int gap;
 
@@ -533,7 +533,7 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
 }
 
 
-static void FindPartitionXY(qNode_c *node, qLeaf_c *leaf)
+static qSide_c * FindPartitionXY(qLeaf_c *leaf)
 {
   std::list<qSide_c *>::iterator SI;
 
@@ -571,44 +571,19 @@ static void FindPartitionXY(qNode_c *node, qLeaf_c *leaf)
     }
   }
 
-  if (! best_p)
-  {
-    // this is quite possible for the root node of the simplest
-    // possible map, otherwise it is a serious error because the
-    // IsConvex_XY() must have told us the area was not convex.
-    //
-    // TODO: take action in the serious case
-
-    fprintf(stderr, "FindPartitionXY: cannot find any splitter (in %d sides).\n", count);
-
-    leaf->ComputeBBox();
-
-    node->x = (leaf->min_x + leaf->max_x) / 2.0;
-    node->y = leaf->min_y;
-
-    node->dx = 0;
-    node->dy = leaf->max_y - leaf->min_y;
-
-    return;
-  }
-
-  node->x = best_p->x1;
-  node->y = best_p->y1;
-
-  node->dx = best_p->x2 - node->x;
-  node->dy = best_p->y2 - node->y;
+  return best_p;
 }
 
 
-static void Split_XY(qNode_c *part, qLeaf_c *leaf)
+static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
 {
-  part->front_l = leaf;
-  part->back_l  = new qLeaf_c;
+//  part->front_l = leaf;
+//  part->back_l  = new qLeaf_c;
 
 
   std::list<qSide_c *> all_sides;
 
-  all_sides.swap(leaf->sides);
+  all_sides.swap(front_l->sides);
 
   while (! all_sides.empty())
   {
@@ -715,18 +690,68 @@ fprintf(stderr, "\n");
 }
 
 
-static qNode_c * PartitionXY(qLeaf_c *leaf)
+static void PartitionXY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
 {
-  qNode_c *node = new qNode_c(false /* z_splitter */);
+  bool is_root = (out_l == NULL);
 
-  FindPartitionXY(node, leaf);
+  SYS_ASSERT(out_n);
+
+  *out_n = NULL;
+  *out_l = NULL;
+
+  qSide_c *best_p = FindPartitionXY(leaf);
+  qNode_c *node;
+
+  if (! best_p)
+  {
+    // current leaf is convex
+
+    if (! is_root)
+    {
+      PartitionZ(leaf, out_n, out_l);
+      return;
+    }
+
+    // we need a root node, even on the simplest possible map.
+    // This one is fairly arbitrary.
+
+    leaf->ComputeBBox();
+
+    node = new qNode_c(false /* z_splitter */);
+
+    node->x = (leaf->min_x + leaf->max_x) / 2.0;
+    node->y = leaf->min_y;
+
+    node->dx = 0;
+    node->dy = leaf->max_y - leaf->min_y;
+  }
+  else
+  {
+    node = new qNode_c(false /* z_splitter */);
+
+    node->x = best_p->x1;
+    node->y = best_p->y1;
+
+    node->dx = best_p->x2 - node->x;
+    node->dy = best_p->y2 - node->y;
+  }
+
+
+  *out_n = node;
 
 fprintf(stderr, "Using partition (%1.0f,%1.0f) vec:(%1.2f,%1.2f)\n",
                  node->x, node->y, node->dx, node->dy);
 
+  qLeaf_c *front_l = leaf;
+  qLeaf_c *back_l  = new qLeaf_c;
 
-  Split_XY(node, leaf);
+  Split_XY(node, leaf, back_l);
 
+
+  PartitionXY(front_l, &node->front_n, &node->front_l);
+  PartitionXY( back_l, &node-> back_n, &node-> back_l);
+
+#if 0
   if (! node->front_l->IsConvex_XY())
   {
     node->front_n = PartitionXY(node->front_l);
@@ -748,8 +773,7 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) vec:(%1.2f,%1.2f)\n",
     node->back_n = PartitionZ(node->back_l);
     node->back_l = NULL;
   }
-
-  return node;
+#endif
 }
 
 
@@ -851,7 +875,8 @@ void Quake1_BuildBSP( void )
   //      (a) find a splitter side --> create qNode
   //      (b) split list into front and back
   //      (c) recursively handle front/back lists
-  //   3. perform Z splitting
+  //   3. perform Z splitting (the gaps)
+  //   4. perform solid splitting
 
   qLeaf_c *begin = new qLeaf_c();
 
@@ -871,7 +896,7 @@ void Quake1_BuildBSP( void )
   //            convex space (no partitions are needed) so in that
   //            case we use an arbitrary splitter plane.
 
-  q_root = PartitionXY(begin);
+  PartitionXY(begin, &q_root, NULL);
 }
 
 
