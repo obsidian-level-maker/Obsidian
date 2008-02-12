@@ -113,9 +113,26 @@ private:
           faces(other->faces), original(false)
   { }
 
+  // for NewPortal
+  qSide_c(double px1, double py1, double px2, double py2, int _side) :
+      seg(NULL), side(_side), faces(), original(true), on_node(false)
+  {
+    if (side == 0)
+    {
+      x1 = px1; y1 = py1;
+      x2 = px2; y2 = py2;
+    }
+    else  // back
+    {
+      x1 = px2; y1 = py2;
+      x2 = px1; y2 = py1;
+    }
+  }
+
 public:
   merge_region_c *GetRegion() const
   {
+    SYS_ASSERT(seg);
     return (side == 0) ? seg->front : seg->back;
   }
 
@@ -127,6 +144,12 @@ public:
     y2 = new_y;
 
     return T;
+  }
+
+  static qSide_c *NewPortal(double px1, double py1, double px2, double py2,
+                     int _side)
+  {
+    return new qSide_c(px1,py1, px2,py2, _side);
   }
 
   void AddFace(qFace_c *F)
@@ -518,9 +541,9 @@ static int EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
 
 //!!!!!!      if ( ((pdx * sdx + pdy * sdy < 0.0) ? 1 : 0) == S->side)
       if (pdx * sdx + pdy * sdy < 0.0)
-        front++;
-      else
         back++;
+      else
+        front++;
 
       continue;
     }
@@ -617,6 +640,7 @@ public:
     OPEN   = 0,
     BEFORE = 1,
     AFTER  = 2,
+    CLOSED = 3
   };
 
   int closed;
@@ -642,6 +666,7 @@ static void AddIntersection(std::vector<intersection_c *>& cut_list,
                             qNode_c *part, double x, double y,
                             int closed = intersection_c::OPEN)
 {
+fprintf(stderr, "ADD INTERSECTION @ (%1.1f %1.1f)\n", x, y);
   intersection_c *K = new intersection_c();
 
   K->closed = closed;
@@ -655,6 +680,28 @@ static void AddIntersection(std::vector<intersection_c *>& cut_list,
   cut_list.push_back(K);
 }
 
+static void DumpIntersections(std::vector<intersection_c *>& cut_list)
+{
+  static const char *closed_names[4] =
+  {
+    "OPEN", "BEFORE", "AFTER", "CLOSED"
+  };
+
+fprintf(stderr, "INTERSECTIONS:\n");
+
+  for (unsigned int i = 0; i < cut_list.size(); i++)
+  {
+    intersection_c *K = cut_list[i];
+
+fprintf(stderr, "(%1.1f %1.1f) along:%8.3f closed:%s\n",
+        K->x, K->y, K->along,
+        (K->closed < 0 || K->closed > 4) ? "?????" :
+        closed_names[K->closed]);
+  }
+
+fprintf(stderr, "\n");
+}
+
 static void MergeIntersections(std::vector<intersection_c *>& cut_list)
 {
   // sort intersections by their position on the partition line,
@@ -662,23 +709,70 @@ static void MergeIntersections(std::vector<intersection_c *>& cut_list)
 
   std::sort(cut_list.begin(), cut_list.end(), Compare_Intersection_pred());
 
-printf("INTERSECTIONS:\n");
-  for (unsigned int i = 0; i < cut_list.size(); i++)
+  DumpIntersections(cut_list);
+
+  unsigned int pos = 0;
+
+  while (pos < cut_list.size())
   {
-    intersection_c *K = cut_list[i];
-printf("(%1.1f %1.1f) along:%8.3f closed:%s\n",
-       K->x, K->y, K->along,
-       (K->closed == intersection_c::BEFORE) ? "BEFORE" :
-       (K->closed == intersection_c::AFTER)  ? "AFTER " : "OPEN  ");
+    unsigned int n = 0;  // neighbour count
+
+    double along = cut_list[pos]->along;
+
+    while ( (pos + n + 1) < cut_list.size() &&
+            (cut_list[pos+n+1]->along - along) < Q_EPSILON )
+    { n++; }
+
+    for (unsigned int i = 1; i <= n; i++)
+    {
+      cut_list[pos]->closed |= cut_list[pos+i]->closed;
+
+      delete cut_list[pos+i];
+      cut_list[pos+i] = NULL;
+    }
+
+    pos += (n + 1);
   }
-printf("\n");
+
+  // remove the NULL pointers
+  std::vector<intersection_c *>::iterator ENDP;
+  ENDP = std::remove(cut_list.begin(), cut_list.end(), (intersection_c*)NULL);
+  cut_list.erase(ENDP, cut_list.end());
+
+  DumpIntersections(cut_list);
+}
+
+static void CreatePortals(std::vector<intersection_c *>& cut_list, 
+                          qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
+{
+  for (unsigned int i = 0; i < cut_list.size()-1; i++)
+  {
+    intersection_c *K1 = cut_list[i];
+    intersection_c *K2 = cut_list[i+1];
+
+    bool k1_open = (K1->closed & intersection_c::AFTER)  ? false : true;
+    bool k2_open = (K2->closed & intersection_c::BEFORE) ? false : true;
+
+    if (k1_open != k2_open) // sanity check
+    {
+      fprintf(stderr, "WARNING: portal mismatch from (%1.1f %1.1f) to (%1.1f %1.1f)\n",
+              K1->x, K1->y, K2->x, K2->y);
+      continue;
+    }
+
+    if (k1_open && k2_open)
+    {
+      qSide_c *front_pt = qSide_c::NewPortal(K1->x,K1->y, K2->x,K2->y, 0);
+      qSide_c * back_pt = qSide_c::NewPortal(K1->x,K1->y, K2->x,K2->y, 1);
+
+      front_l->sides.push_back(front_pt);
+       back_l->sides.push_back( back_pt);
+    }
+  }
 }
 
 static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
 {
-//  part->front_l = leaf;
-//  part->back_l  = new qLeaf_c;
-
   std::list<qSide_c *> all_sides;
 
   all_sides.swap(front_l->sides);
@@ -714,17 +808,17 @@ static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
 //!!!!!!      if ( ((pdx * sdx + pdy * sdy < 0.0) ? 1 : 0) == S->side)
       if (part->dx * sdx + part->dy * sdy < 0.0)
       {
-        part->front_l->sides.push_back(S);
-
-        AddIntersection(cut_list, part, S->x1, S->y1, intersection_c::AFTER);
-        AddIntersection(cut_list, part, S->x2, S->y2, intersection_c::BEFORE);
-      }
-      else
-      {
-        part->back_l->sides.push_back(S);
+        back_l->sides.push_back(S);
 
         AddIntersection(cut_list, part, S->x2, S->y2, intersection_c::AFTER);
         AddIntersection(cut_list, part, S->x1, S->y1, intersection_c::BEFORE);
+      }
+      else
+      {
+        front_l->sides.push_back(S);
+
+        AddIntersection(cut_list, part, S->x1, S->y1, intersection_c::AFTER);
+        AddIntersection(cut_list, part, S->x2, S->y2, intersection_c::BEFORE);
       }
 
       // remember the faces along this node
@@ -739,9 +833,9 @@ static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
       // partition passes through one vertex
 
       if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
-        part->front_l->sides.push_back(S);
+        front_l->sides.push_back(S);
       else
-        part->back_l->sides.push_back(S);
+        back_l->sides.push_back(S);
 
       if (fa <= Q_EPSILON)
         AddIntersection(cut_list, part, S->x1, S->y1);
@@ -753,13 +847,13 @@ static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
 
     if (a > 0 && b > 0)
     {
-      part->front_l->sides.push_back(S);
+      front_l->sides.push_back(S);
       continue;
     }
 
     if (a < 0 && b < 0)
     {
-      part->back_l->sides.push_back(S);
+      back_l->sides.push_back(S);
       continue;
     }
 
@@ -775,15 +869,15 @@ static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
 
     if (a < 0)
     {
-      part-> back_l->sides.push_back(S);
-      part->front_l->sides.push_back(T);
+       back_l->sides.push_back(S);
+      front_l->sides.push_back(T);
     }
     else
     {
       SYS_ASSERT(b < 0);
 
-      part->front_l->sides.push_back(S);
-      part-> back_l->sides.push_back(T);
+      front_l->sides.push_back(S);
+       back_l->sides.push_back(T);
     }
 
     AddIntersection(cut_list, part, ix, iy);
@@ -793,7 +887,7 @@ for (int kk=0; kk < 2; kk++)
 {
 fprintf(stderr, "%s:\n", (kk==0) ? "FRONT" : "BACK");
 
-std::list<qSide_c *>& LLL = (kk==0) ? part->front_l->sides : part->back_l->sides;
+std::list<qSide_c *>& LLL = (kk==0) ? front_l->sides : back_l->sides;
 std::list<qSide_c *>::iterator LI;
 
   for (LI = LLL.begin(); LI != LLL.end(); LI++)
@@ -808,17 +902,21 @@ fprintf(stderr, "\n");
 
   MergeIntersections(cut_list);
 
+  CreatePortals(cut_list, part, front_l, back_l);
 }
 
 
 static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
 {
+fprintf(stderr, "Partition_XY BEGUN\n");
   bool is_root = (out_l == NULL);
 
   SYS_ASSERT(out_n);
 
   *out_n = NULL;
-  *out_l = NULL;
+
+  if (out_l)
+    *out_l = NULL;
 
   qSide_c *best_p = FindPartition(leaf);
   qNode_c *node;
@@ -827,6 +925,7 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
   {
     // current leaf is convex
 
+fprintf(stderr, "LEAF IS CONVEX\n");
     if (! is_root)
     {
       Partition_Z(leaf, out_n, out_l);
@@ -848,6 +947,7 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
   }
   else
   {
+fprintf(stderr, "LEAF HAS SPLITTER %p \n", best_p);
     node = new qNode_c(false /* z_splitter */);
 
     node->x = best_p->x1;
@@ -872,6 +972,7 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) vec:(%1.2f,%1.2f)\n",
   Partition_XY(front_l, &node->front_n, &node->front_l);
   Partition_XY( back_l, &node-> back_n, &node-> back_l);
 
+fprintf(stderr, "Partition_XY DONE\n");
 #if 0
   if (! node->front_l->IsConvex_XY())
   {
@@ -1017,6 +1118,7 @@ void Quake1_BuildBSP( void )
   //            convex space (no partitions are needed) so in that
   //            case we use an arbitrary splitter plane.
 
+fprintf(stderr, "Quake1_BuildBSP BEGUN\n");
   Partition_XY(begin, &q_root, NULL);
 }
 
