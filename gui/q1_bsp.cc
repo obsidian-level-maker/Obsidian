@@ -43,6 +43,10 @@ extern bool CSG2_PointInSolid(double x, double y);
 
 class qSide_c;
 class qLeaf_c;
+class qNode_c;
+
+
+void DoAssignFaces(qNode_c *N, qSide_c *S);
 
 
 class qFace_c
@@ -93,7 +97,7 @@ public:
  
   bool original;  // false for split-off pieces
 
-  bool on_node;  // true if has already been on a partition line
+  qNode_c * on_node;  // non-null if has been on a partition line
 
 public:
   qSide_c(merge_segment_c * _seg, int _side) :
@@ -124,15 +128,19 @@ private:
           faces(), original(false), on_node(other->on_node)
   {
     // duplicate the faces
-    for (unsigned int i = 0; i < faces.size(); i++)
+    for (unsigned int i = 0; i < other->faces.size(); i++)
     {
-      faces.push_back(new qFace_c(faces[i], this));
+      faces.push_back(new qFace_c(other->faces[i], this));
     }
+
+    if (on_node)
+      DoAssignFaces(on_node, this);
   }
 
   // for NewPortal
   qSide_c(double px1, double py1, double px2, double py2, int _side) :
-      seg(NULL), side(_side), faces(), original(true), on_node(true)
+      seg(NULL), side(_side), faces(), original(true),
+      on_node(NULL) // FIXME !!!!!
   {
     if (side == 0)
     {
@@ -404,6 +412,12 @@ public:
     }
   }
 };
+
+
+void DoAssignFaces(qNode_c *N, qSide_c *S)
+{
+  N->AssignFaces(S);
+}
 
 
 static inline double PerpDist(double x, double y,
@@ -836,7 +850,7 @@ static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
       // remember the faces along this node
       part->AssignFaces(S);
 
-      S->on_node = true;
+      S->on_node = part;
       continue;
     }
 
@@ -948,7 +962,7 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
         node->AssignFaces(T);
 
-        T->on_node = true;
+        T->on_node = node;
       }
 
       node->back_l = SOLID_LEAF;
@@ -1020,6 +1034,9 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
     // !!!! FIXME: not quite right (getting Faces into Leafs)
     //      NEED to transfer faces from bottom leaf --> top_leaf
+
+    top_leaf->numgap = leaf->gap + leaf->numgap - new_g;
+        leaf->numgap = new_g - leaf->gap;
 
     Partition_Z(top_leaf, &node->front_n, &node->front_l);
     Partition_Z(    leaf, &node->back_n,  &node->back_l);
