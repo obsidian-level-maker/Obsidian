@@ -194,21 +194,11 @@ dnode_t;
 typedef struct dclipnode_s
 {
   s32_t planenum;
-  s16_t children[2];
-
-  inline int get_child(int child) const
-  {
-    int ret = *(u16_t *) &children[child];
-
-    if (ret > 0xfff0)
-      ret -= 0x10000;
-
-    return ret;
-  }
+  u16_t children[2];
 }
 dclipnode_t;
 
-///--- inline int clipnode_child(dclipnode_t *node, int child)
+#define CLIP_SPECIAL  0xFFF0
 
 
 typedef struct texinfo_s

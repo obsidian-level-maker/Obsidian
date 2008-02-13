@@ -679,6 +679,7 @@ static void BSP_CreateTexInfo(void)
   }
 }
 
+#if 0
 static void BSP_CreateClipNodes(void)
 {
   /* TEMP DUMMY STUFF */
@@ -700,6 +701,7 @@ static void BSP_CreateClipNodes(void)
   // hull [2]
   Q1_Append(lump, &cnode, sizeof(cnode));
 }
+#endif
 
 
 //------------------------------------------------------------------------
@@ -726,6 +728,8 @@ int Q1_begin_level(lua_State *L)
 
 int Q1_end_level(lua_State *L)
 {
+fprintf(stderr, "Q1_end_level\n");
+
 //  CSG2_TestQuake();
 
 //!!!!! FIXME  SYS_ASSERT(level_name);
@@ -784,7 +788,6 @@ bool Quake1_Finish(void)
   BSP_CreateEdges();
   BSP_CreateMipTex();
   BSP_CreateTexInfo();
-  BSP_CreateClipNodes();
 
 
   // WRITE FAKE HEADER

@@ -1209,10 +1209,12 @@ static qLump_c *q_leafs;
 static qLump_c *q_faces;
 static qLump_c *q_mark_surfs;
 static qLump_c *q_surf_edges;
+static qLump_c *q_clip_nodes;
 
 static int total_nodes;
 static int total_mark_surfs;
 static int total_surf_edges;
+static int total_clip_nodes;
 
 
 static void DoAddEdge(double x1, double y1, double z1,
@@ -1679,6 +1681,79 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
 }
 
 
+static s32_t RecursiveMakeClipNodes(qNode_c *node, bool is_root)
+{
+  dclipnode_t clip;
+
+  double x, y, z;
+  double dx, dy, dz;
+
+  if (node->z_splitter)
+  {
+    x  = 0;  y = 0;  z = node->z;
+    dx = 0; dy = 0; dz = +1;
+
+    // hackish: assumes the floor node always has the leaf
+    if (node->front_l && true) //!!!! leaf's gap >= 26 high
+      z += 24;
+  }
+  else
+  {
+    x = node->x;
+    y = node->y;
+    z = 0;
+
+    dx =  node->dy;
+    dy = -node->dx;
+    dz = 0;
+  }
+
+  bool flipped;
+
+  clip.planenum = Q1_AddPlane(x,y,z, dx,dy,dz, &flipped);
+
+  if (node->front_n)
+    clip.children[0] = RecursiveMakeClipNodes(node->front_n, false);
+  else if (node->front_l == SOLID_LEAF)
+    clip.children[0] = (u16_t) CONTENTS_SOLID;
+  else
+    clip.children[0] = (u16_t) CONTENTS_EMPTY;
+
+
+  if (node->back_n)
+    clip.children[1] = RecursiveMakeClipNodes(node->back_n, false);
+  else if (node->back_l == SOLID_LEAF)
+    clip.children[1] = (u16_t) CONTENTS_SOLID;
+  else
+    clip.children[1] = (u16_t) CONTENTS_EMPTY;
+
+
+  // TEMP HACK: we have made the wall planes before, hence node
+  //            should already have been Flip()ed.
+  SYS_ASSERT(! flipped);
+
+
+  // TODO: fix endianness in 'clip'
+
+  if (is_root)
+  {
+    Q1_Prepend(q_clip_nodes, &clip, sizeof(clip));
+
+    return 0;
+  }
+
+  s32_t index = total_clip_nodes++;
+
+  if (index >= MAX_MAP_CLIPNODES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d CLIPNODES\n",
+                    MAX_MAP_CLIPNODES);
+
+  Q1_Append(q_clip_nodes, &clip, sizeof(clip));
+
+  return index;
+}
+
+
 static void CreateSolidLeaf(void)
 {
   dleaf_t raw_lf;
@@ -1706,11 +1781,6 @@ void BSP_CreateModel(void)
     model.origin[b] = 0;
   }
 
-  model.headnode[0] = 0;  // root of drawing BSP
-  model.headnode[1] = 0;  // dummy clipper #1
-  model.headnode[2] = 1;  // dummy clipper #2
-  model.headnode[3] = 0;  // unused
-
   model.visleafs  = 0;
   model.firstface = 0;
   model.numfaces  = 0;
@@ -1727,6 +1797,30 @@ void BSP_CreateModel(void)
   CreateSolidLeaf();
 
   RecursiveMakeNodes(Q_ROOT, NULL /* parent */);
+
+
+  total_clip_nodes = 1;  // root clip node is first
+
+  q_clip_nodes = Q1_NewLump(LUMP_CLIPNODES);
+
+  RecursiveMakeClipNodes(Q_ROOT, false);
+
+  // FIXME: create proper 3rd hull for monsters
+  dclipnode_t clip;
+
+  clip.planenum = LE_S32(0);
+
+  clip.children[0] = LE_S16(CONTENTS_SOLID);
+  clip.children[1] = LE_S16(CONTENTS_SOLID);
+
+  Q1_Append(q_clip_nodes, &clip, sizeof(clip));
+
+
+  model.headnode[0] = 0;                 // root of drawing BSP
+  model.headnode[1] = 0;                 // clipper #1
+  model.headnode[2] = total_clip_nodes;  // clipper #2 (dummy)
+  model.headnode[3] = 0;                 // unused
+
 
   // FIXME: fix endianness in model
 
