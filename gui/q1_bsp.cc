@@ -290,16 +290,6 @@ public:
     }
   }
 
-///---  bool IsConvex_Z()
-///---  {
-///---    SYS_ASSERT(! sides.empty());
-///---
-///---    qSide_c *first = * sides.begin();
-///---
-///---    merge_region_c *R = first->GetRegion();
-///---
-///---    return (R->gaps.size() <= 1);
-///---  }
 
   void AssignFaces()
   {
@@ -446,98 +436,6 @@ static qNode_c *Q_ROOT;
 static qLeaf_c *SOLID_LEAF;
 
 
-static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
-{
-  // handle sides first
-
-  std::list<qSide_c *>::iterator SI;
-
-  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
-  {
-    qSide_c *S = *SI;
-
-    if (S->seg && ! S->on_node)
-    {
-      qNode_c * node = new qNode_c(false /* z_splitter */);
-      (*out_n) = node;
-
-      node->x = S->x1;
-      node->y = S->y1;
-
-      node->dx = S->x2 - S->x1;
-      node->dy = S->y2 - S->y1;
-
-      // find _ALL_ sides that lie on the partition
-      std::list<qSide_c *>::iterator TI;
-
-      for (TI = leaf->sides.begin(); TI != leaf->sides.end(); TI++)
-      {
-        qSide_c *T = *TI;
-
-        if (! T->seg || T->on_node)
-          continue;
-
-        double a = PerpDist(T->x1, T->y1,  S->x1, S->y1, S->x2, S->y2);
-        double b = PerpDist(T->x2, T->y2,  S->x1, S->y1, S->x2, S->y2);
-
-        if (! (fabs(a) <= Q_EPSILON && fabs(b) <= Q_EPSILON))
-          continue;
-
-        T->on_node = true;
-
-        node->AssignFaces(T);
-      }
-
-      node->back_l = SOLID_LEAF;
-
-      Partition_Solid(leaf, &node->front_n, &node->front_l);
-      return;
-    }
-  }
-
-
-  merge_gap_c *gap = leaf->GetGap();
-
-  if (! leaf->ceil_on_node)
-  {
-      leaf->ceil_on_node = true;
-
-      qNode_c * node = new qNode_c(true /* z_splitter */);
-      (*out_n) = node;
-
-      node->z = gap->GetZ2();
-
-      SYS_ASSERT(leaf->ceil);
-      node->faces.push_back(leaf->ceil);
-
-      node->back_l = SOLID_LEAF;
-
-      Partition_Solid(leaf, &node->front_n, &node->front_l);
-      return;
-  }
-
-
-  SYS_ASSERT(! leaf->floor_on_node);
-  {
-      leaf->floor_on_node = true;
-  
-      qNode_c * node = new qNode_c(true /* z_splitter */);
-      (*out_n) = node;
-
-      node->z = gap->GetZ1();
-
-      SYS_ASSERT(leaf->floor);
-      node->faces.push_back(leaf->floor);
-
-      node->front_l = leaf;
-      node-> back_l = SOLID_LEAF;
-
-      // End of the road, folks!
-      return;
-  }
-}
-
-
 #if 0
 static void Partition_Z_OLD(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 {
@@ -595,41 +493,6 @@ static void Partition_Z_OLD(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
   delete[] node_list;
 }
 #endif
-
-static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
-{
-  merge_region_c *R = leaf->GetRegion();
-
-  // !!!! FIXME: not quite right (getting Faces into Leafs)
-
-  if (leaf->numgap > 1)
-  {
-    int new_g = leaf->gap + leaf->numgap / 2;
-
-    qLeaf_c *top_leaf = new qLeaf_c(*leaf, new_g);
-
-    // TODO: OPTIMISE THIS : too many nodes!  Use bottom of gaps[new_g] as
-    //       the splitting plane.
-
-    qNode_c *node = new qNode_c(true /* z_splitter */);
-
-    // choose height halfway between the two gaps (in the solid)
-    node->z = (R->gaps[new_g-1]->GetZ2() + R->gaps[new_g]->GetZ1()) / 2.0;
-
-    Partition_Z(top_leaf, &node->front_n, &node->front_l);
-    Partition_Z(    leaf, &node->back_n,  &node->back_l);
-    return;
-  }
-
-  SYS_ASSERT(leaf->numgap == 1);
-
-  // create face list for the leaf
-  leaf->AssignFaces();
-
-  // FIXME: create floor and ceiling faces here !!!!!
-
-  Partition_Solid(leaf, out_n, out_l);
-}
 
 
 static double EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
@@ -1076,6 +939,137 @@ for (int kk=0; kk < 2; kk++)
   DumpLeaf((kk==0) ? front_l : back_l);
 }}
 
+}
+
+
+static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
+{
+  // handle sides first
+
+  std::list<qSide_c *>::iterator SI;
+
+  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
+  {
+    qSide_c *S = *SI;
+
+    if (S->seg && ! S->on_node)
+    {
+      qNode_c * node = new qNode_c(false /* z_splitter */);
+      (*out_n) = node;
+
+      node->x = S->x1;
+      node->y = S->y1;
+
+      node->dx = S->x2 - S->x1;
+      node->dy = S->y2 - S->y1;
+
+      // find _ALL_ sides that lie on the partition
+      std::list<qSide_c *>::iterator TI;
+
+      for (TI = leaf->sides.begin(); TI != leaf->sides.end(); TI++)
+      {
+        qSide_c *T = *TI;
+
+        if (! T->seg || T->on_node)
+          continue;
+
+        double a = PerpDist(T->x1, T->y1,  S->x1, S->y1, S->x2, S->y2);
+        double b = PerpDist(T->x2, T->y2,  S->x1, S->y1, S->x2, S->y2);
+
+        if (! (fabs(a) <= Q_EPSILON && fabs(b) <= Q_EPSILON))
+          continue;
+
+        T->on_node = true;
+
+        node->AssignFaces(T);
+      }
+
+      node->back_l = SOLID_LEAF;
+
+      Partition_Solid(leaf, &node->front_n, &node->front_l);
+      return;
+    }
+  }
+
+
+  merge_gap_c *gap = leaf->GetGap();
+
+  if (! leaf->ceil_on_node)
+  {
+      leaf->ceil_on_node = true;
+
+      qNode_c * node = new qNode_c(true /* z_splitter */);
+      (*out_n) = node;
+
+      node->z = gap->GetZ2();
+
+      SYS_ASSERT(leaf->ceil);
+      node->faces.push_back(leaf->ceil);
+
+      node->back_l = SOLID_LEAF;
+
+      Partition_Solid(leaf, &node->front_n, &node->front_l);
+      return;
+  }
+
+
+  SYS_ASSERT(! leaf->floor_on_node);
+  {
+      leaf->floor_on_node = true;
+  
+      qNode_c * node = new qNode_c(true /* z_splitter */);
+      (*out_n) = node;
+
+      node->z = gap->GetZ1();
+
+      SYS_ASSERT(leaf->floor);
+      node->faces.push_back(leaf->floor);
+
+      node->front_l = leaf;
+      node-> back_l = SOLID_LEAF;
+
+      // End of the road, folks!
+      return;
+  }
+}
+
+static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
+{
+  merge_region_c *R = leaf->GetRegion();
+
+  if (leaf->numgap > 1)
+  {
+    int new_g = leaf->gap + leaf->numgap / 2;
+
+    qLeaf_c *top_leaf = new qLeaf_c(*leaf, new_g);
+
+    // TODO: OPTIMISE THIS : too many nodes!  Use bottom of gaps[new_g] as
+    //       the splitting plane.
+
+    qNode_c *node = new qNode_c(true /* z_splitter */);
+
+    // choose height halfway between the two gaps (in the solid)
+    node->z = (R->gaps[new_g-1]->GetZ2() + R->gaps[new_g]->GetZ1()) / 2.0;
+
+    // !!!! FIXME: not quite right (getting Faces into Leafs)
+    //      NEED to transfer faces from leaf --> top_leaf
+
+    Partition_Z(top_leaf, &node->front_n, &node->front_l);
+    Partition_Z(    leaf, &node->back_n,  &node->back_l);
+    return;
+  }
+
+  SYS_ASSERT(leaf->numgap == 1);
+
+  // create face list for the leaf
+  leaf->AssignFaces();
+
+
+  // FIXME: create floor and ceiling faces here !!!!!
+  leaf->floor = new qFace_c();
+  leaf->ceil  = new qFace_c();
+
+  Partition_Solid(leaf, out_n, out_l);
 }
 
 
