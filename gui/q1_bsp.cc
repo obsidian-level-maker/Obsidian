@@ -436,65 +436,6 @@ static qNode_c *Q_ROOT;
 static qLeaf_c *SOLID_LEAF;
 
 
-#if 0
-static void Partition_Z_OLD(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
-{
-  int gap;
-
-  merge_region_c *R = leaf->GetRegion();
-
-  SYS_ASSERT(R && R->gaps.size() > 0);
-
-
-  qLeaf_c ** leaf_list = new qLeaf_c* [R->gaps.size()];
-  qNode_c ** node_list = new qNode_c* [R->gaps.size()];
-
-  leaf_list[0] = leaf;
-
-  for (gap = 1; gap < (int)R->gaps.size(); gap++)
-  {
-    leaf_list[gap]   = new qLeaf_c(*leaf, gap);
-    node_list[gap-1] = new qNode_c(true /* z_splitter */);
-  }
-
-  // TODO: produce a well balanced tree
-
-  for (gap = 1; gap < (int)R->gaps.size(); gap++)
-  {
-    qNode_c *n = node_list[gap-1];
-
-    n->z = (R->gaps[gap-1]->GetZ2() + R->gaps[gap]->GetZ1()) / 2.0;
-
-    n->back_l = leaf_list[gap-1];
-
-    if (gap < (int)R->gaps.size()-1)
-      n->front_n = node_list[gap];
-    else
-      n->front_l = leaf_list[gap];
-  } 
-
-
-  // create face lists for the leaves
-
-  for (gap = 0; gap < (int)R->gaps.size(); gap++)
-  {
-    qLeaf_c *L = leaf_list[gap];
-
-    L->AssignFaces();
-  }
-
-
-  if (R->gaps.size() == 1)
-    *out_l = leaf_list[0];
-  else
-    *out_n = node_list[0];
-
-  delete[] leaf_list;
-  delete[] node_list;
-}
-#endif
-
-
 static double EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
 {
   int back   = 0;
@@ -1065,9 +1006,16 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
   leaf->AssignFaces();
 
 
-  // FIXME: create floor and ceiling faces here !!!!!
-  leaf->floor = new qFace_c();
-  leaf->ceil  = new qFace_c();
+  // create floor and ceiling faces here
+  leaf->floor = new qFace_c(qFace_c::FLOOR);
+  leaf->ceil  = new qFace_c(qFace_c::CEIL);
+
+  leaf->floor->gap = leaf->gap;
+  leaf-> ceil->gap = leaf->gap;
+
+  leaf->floor->floor_leaf = leaf;
+  leaf-> ceil->floor_leaf = leaf;
+
 
   Partition_Solid(leaf, out_n, out_l);
 }
@@ -1266,9 +1214,9 @@ static int total_mark_surfs;
 static int total_surf_edges;
 
 
-static void AddEdge(double x1, double y1, double z1,
-                    double x2, double y2, double z2,
-                    dface_t *face, dleaf_t *raw_lf)
+static void DoAddEdge(double x1, double y1, double z1,
+                      double x2, double y2, double z2,
+                      dface_t *face, dleaf_t *raw_lf)
 {
   u16_t v1 = Q1_AddVertex(x1, y1, z1);
   u16_t v2 = Q1_AddVertex(x2, y2, z2);
@@ -1318,6 +1266,18 @@ static void AddEdge(double x1, double y1, double z1,
 }
 
 
+static void DoAddSurf(u16_t index, dleaf_t *raw_lf )
+{
+    index = LE_U16(index);
+
+    Q1_Append(q_mark_surfs, &index, 2);
+
+    total_mark_surfs += 1;
+
+    raw_lf->num_marksurf += 1;
+}
+
+
 static void MakeFloor(qFace_c *F, dleaf_t *raw_lf);
 
 
@@ -1328,6 +1288,14 @@ static void MakeFace(qFace_c *F,  dleaf_t *raw_lf)
     MakeFloor(F, raw_lf);
     return;
   }
+
+  if (F->index >= 0)
+  {
+    if (raw_lf)
+      DoAddSurf(F->index, raw_lf);
+    return;
+  }
+
 
   qSide_c *S = F->side;
 
@@ -1369,17 +1337,17 @@ static void MakeFace(qFace_c *F,  dleaf_t *raw_lf)
 
   if (true) // !flipped)
   {
-    AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  &face, raw_lf);
-    AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  &face, raw_lf);
-    AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  &face, raw_lf);
-    AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  &face, raw_lf);
+    DoAddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  &face, raw_lf);
+    DoAddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  &face, raw_lf);
+    DoAddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  &face, raw_lf);
+    DoAddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  &face, raw_lf);
   }
   else
   {
-    AddEdge(S->x1, S->y1, z1,  S->x2, S->y2, z1,  &face, raw_lf);
-    AddEdge(S->x2, S->y2, z1,  S->x2, S->y2, z2,  &face, raw_lf);
-    AddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  &face, raw_lf);
-    AddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  &face, raw_lf);
+    DoAddEdge(S->x1, S->y1, z1,  S->x2, S->y2, z1,  &face, raw_lf);
+    DoAddEdge(S->x2, S->y2, z1,  S->x2, S->y2, z2,  &face, raw_lf);
+    DoAddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  &face, raw_lf);
+    DoAddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  &face, raw_lf);
   }
 
 
@@ -1393,100 +1361,14 @@ static void MakeFace(qFace_c *F,  dleaf_t *raw_lf)
 
   F->index = (int)index;
 
+  
   Q1_Append(q_faces, &face, sizeof(face));
 
 
   // add it into the mark_surfs lump
-
   if (raw_lf)
-  {
-    index = LE_U16(index);
-
-    Q1_Append(q_mark_surfs, &index, 2);
-
-    total_mark_surfs += 1;
-
-    raw_lf->num_marksurf += 1;
-  }
+    DoAddSurf(F->index, raw_lf);
 }
-
-#if 0  // OLD CODE
-static void Side_to_Face(qSide_c *S, qLeaf_c *leaf, dleaf_t *raw_lf)
-{
-  merge_region_c *R = leaf->GetRegion();
-  merge_gap_c *gap  = R->gaps.at(leaf->gap);
-
-
-  dface_t face;
-
-  bool flipped;
-
-  face.planenum = Q1_AddPlane(S->x1, S->y1, 0,
-                              (S->y1 - S->y2), (S->x2 - S->x1), 0,
-                              &flipped);
-
-//!!!!!  if (S->side == 1)
-//!!!!!    flipped = !flipped;
-
-  face.side = flipped ? 1 : 0;
-
-  face.texinfo = 0;
-  if (fabs(S->x1 - S->x2) > fabs(S->y1 - S->y2))
-    face.texinfo = 1;
-
-  face.styles[0] = 0xFF;  // no lightmap
-  face.styles[1] = 0x33;  // fairly bright
-  face.styles[2] = 0xFF;
-  face.styles[3] = 0xFF;
-
-  face.lightofs = -1;  // no lightmap
-
-
-  // add the edges
-
-  face.firstedge = total_surf_edges;
-  face.numedges  = 0;
-
-  double z1 = gap->GetZ1();
-  double z2 = gap->GetZ2();
-
-  if (false) // !flipped)
-  {
-    AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  &face, raw_lf);
-    AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  &face, raw_lf);
-    AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  &face, raw_lf);
-    AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  &face, raw_lf);
-  }
-  else
-  {
-    AddEdge(S->x1, S->y1, z1,  S->x2, S->y2, z1,  &face, raw_lf);
-    AddEdge(S->x2, S->y2, z1,  S->x2, S->y2, z2,  &face, raw_lf);
-    AddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  &face, raw_lf);
-    AddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  &face, raw_lf);
-  }
-
-
-  // FIXME: fix endianness in face
-
-  u16_t index = model.numfaces++;
-
-  if (index >= MAX_MAP_FACES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
-                    MAX_MAP_FACES);
-
-  Q1_Append(q_faces, &face, sizeof(face));
-
-
-  // add it into the mark_surfs lump
-  index = LE_U16(index);
-
-  Q1_Append(q_mark_surfs, &index, 2);
-
-  total_mark_surfs += 1;
-
-  raw_lf->num_marksurf += 1;
-}
-#endif
 
 
 struct Compare_FloorAngle_pred
@@ -1631,8 +1513,8 @@ static void MakeFloor(qFace_c *F, dleaf_t *raw_lf)
   {
     int p2 = (pos + 1) % v_num;
 
-    AddEdge(vert_x[pos], vert_y[pos], z,
-            vert_x[p2 ], vert_y[p2 ], z, &face, raw_lf);
+    DoAddEdge(vert_x[pos], vert_y[pos], z,
+              vert_x[p2 ], vert_y[p2 ], z, &face, raw_lf);
   }
 
 
@@ -1648,7 +1530,7 @@ static void MakeFloor(qFace_c *F, dleaf_t *raw_lf)
 
 
   // add it into the mark_surfs lump
-  SYS_ASSERT(raw_lf);
+  if (raw_lf)
   {
     index = LE_U16(index);
 
@@ -1663,6 +1545,10 @@ static void MakeFloor(qFace_c *F, dleaf_t *raw_lf)
 
 static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 {
+  if (leaf == SOLID_LEAF)
+    return -1;
+
+
   dleaf_t raw_lf;
 
   raw_lf.contents = leaf->contents;
@@ -1694,19 +1580,11 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
     if (F->index < 0)
       MakeFace(F, &raw_lf);
-  }
 
-///--  std::list<qSide_c *>::iterator SI;
-///--
-///--  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
-///--  {
-///--    qSide_c *S = *SI;
-///--
-///--    if (! S->seg) // skip portals
-///--      continue;
-///--
-///--    Side_to_Face(S, leaf, &raw_lf);
-///--  }
+    // ???  probably should just put into leaf->faces array 
+    if (leaf->floor->index < 0) MakeFace(leaf->floor, &raw_lf);
+    if (leaf-> ceil->index < 0) MakeFace(leaf-> ceil, &raw_lf);
+  }
 
 
   for (b = 0; b < 3; b++)
