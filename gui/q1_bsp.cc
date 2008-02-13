@@ -69,6 +69,12 @@ public:
 public:
    qFace_c(int _kind = WALL) : kind(_kind), side(NULL), floor_leaf(NULL), index(-1) { }
   ~qFace_c() { }
+
+   qFace_c(const qFace_c *other, qSide_c *new_side) :
+           kind(other->kind), z1(other->z1), z2(other->z2),
+           gap(other->gap), side(new_side),
+           floor_leaf(NULL), index(-1)
+   { }
 };
 
 
@@ -82,8 +88,8 @@ public:
   double x1, y1;
   double x2, y2;
 
-  // faces on this side (this pointer is shared by all split-off pieces)
-  std::vector<qFace_c *> * faces;
+  // faces on this side
+  std::vector<qFace_c *> faces;
  
   bool original;  // false for split-off pieces
 
@@ -91,7 +97,7 @@ public:
 
 public:
   qSide_c(merge_segment_c * _seg, int _side) :
-      seg(_seg), side(_side), original(true), on_node(false)
+      seg(_seg), side(_side), faces(), original(true), on_node(false)
   {
     if (side == 0)
     {
@@ -103,26 +109,26 @@ public:
       x1 = seg->end->x;  x2 = seg->start->x;
       y1 = seg->end->y;  y2 = seg->start->y;
     }
-
-    faces = new std::vector<qFace_c *>;
   }
 
   ~qSide_c()
   {
-    if (faces && original)
-    {
       // TODO: delete the faces
-    }
   }
 
 private:
+  // copy constructor, used when splitting
   qSide_c(const qSide_c *other, double new_x, double new_y) :
           seg(other->seg), side(other->side),
-          x1(new_x), y1(new_y),
-          x2(other->x2), y2(other->y2),
-          faces(other->faces),
-          original(false), on_node(other->on_node)
-  { }
+          x1(new_x), y1(new_y), x2(other->x2), y2(other->y2),
+          faces(), original(false), on_node(other->on_node)
+  {
+    // duplicate the faces
+    for (unsigned int i = 0; i < faces.size(); i++)
+    {
+      faces.push_back(new qFace_c(faces[i], this));
+    }
+  }
 
   // for NewPortal
   qSide_c(double px1, double py1, double px2, double py2, int _side) :
@@ -167,7 +173,9 @@ public:
   {
     SYS_ASSERT(original);
 
-    faces->push_back(F);
+    faces.push_back(F);
+
+    F->side = this;
   }
 };
 
@@ -303,7 +311,6 @@ public:
     }
   }
 
-
   void AssignFaces()
   {
     SYS_ASSERT(numgap == 1);
@@ -317,14 +324,16 @@ public:
       if (! S->seg) // ignore portals
         continue;
 
-      for (unsigned int k = 0; k < S->faces->size(); k++)
+      for (unsigned int k = 0; k < S->faces.size(); k++)
       {
-        qFace_c *F = (* S->faces)[k];
+        qFace_c *F = S->faces[k];
 
         // check if already there
         bool already = false;
         for (unsigned int m=0; m < faces.size(); m++)
-          if (faces[m] == F) { already = true; break; }
+        {
+          SYS_ASSERT(faces[m] != F); // { already = true; break; }
+        }
 
         if (F->gap == gap && !already)
           faces.push_back(F);
@@ -389,9 +398,9 @@ public:
   {
     SYS_ASSERT(S->seg); // should never be a portal
 
-    for (unsigned int f = 0; f < S->faces->size(); f++)
+    for (unsigned int f = 0; f < S->faces.size(); f++)
     {
-      faces.push_back((*S->faces)[f]);
+      faces.push_back(S->faces[f]);
     }
   }
 };
@@ -1010,7 +1019,7 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
     node->z = (R->gaps[new_g-1]->GetZ2() + R->gaps[new_g]->GetZ1()) / 2.0;
 
     // !!!! FIXME: not quite right (getting Faces into Leafs)
-    //      NEED to transfer faces from leaf --> top_leaf
+    //      NEED to transfer faces from bottom leaf --> top_leaf
 
     Partition_Z(top_leaf, &node->front_n, &node->front_l);
     Partition_Z(    leaf, &node->back_n,  &node->back_l);
@@ -1133,7 +1142,6 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
       F->gap = k;
       F->z1  = gz1;
       F->z2  = gz2;
-      F->side = S;
 
       S->AddFace(F);
 fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f) - (%1.0f,%1.0f)\n",
@@ -1158,7 +1166,6 @@ fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f)
         F->gap = k;
         F->z1  = sz1;
         F->z2  = sz2;
-        F->side = S;
 
         S->AddFace(F);
 fprintf(stderr, "Making face %1.0f..%1.0f gap:%u neighbour:%u (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
