@@ -1737,6 +1737,7 @@ static s32_t RecursiveMakeClipNodes(qNode_c *node, bool is_root)
 
   if (is_root)
   {
+fprintf(stderr, "ROOT CLIPPER: %d %d\n", clip.children[0], clip.children[1]);
     Q1_Prepend(q_clip_nodes, &clip, sizeof(clip));
 
     return 0;
@@ -1803,7 +1804,7 @@ void BSP_CreateModel(void)
 
   q_clip_nodes = Q1_NewLump(LUMP_CLIPNODES);
 
-  RecursiveMakeClipNodes(Q_ROOT, false);
+  RecursiveMakeClipNodes(Q_ROOT, true);
 
   // FIXME: create proper 3rd hull for monsters
   dclipnode_t clip;
