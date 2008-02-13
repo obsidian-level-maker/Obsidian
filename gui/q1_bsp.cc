@@ -948,9 +948,9 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       SYS_ASSERT(leaf->ceil);
       node->faces.push_back(leaf->ceil);
 
-      node->back_l = SOLID_LEAF;
+      node->front_l = SOLID_LEAF;
 
-      Partition_Solid(leaf, &node->front_n, &node->front_l);
+      Partition_Solid(leaf, &node->back_n, &node->back_l);
       return;
   }
 
@@ -1393,7 +1393,7 @@ fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
 
   face->side = flipped ? 1 : 0;
 
-  face->texinfo = 2;
+  face->texinfo = 3+2;
 
   face->styles[0] = 0xFF;  // no lightmap
   face->styles[1] = 0xFF;  // fairly bright
@@ -1438,14 +1438,14 @@ static void MakeWallFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
   bool flipped;
 
   face->planenum = Q1_AddPlane(S->x1, S->y1, 0,
-                              (S->y1 - S->y2), (S->x2 - S->x1), 0,
+                              -(S->y1 - S->y2), -(S->x2 - S->x1), 0,
                               &flipped);
 
   face->side = flipped ? 1 : 0;
 
-  face->texinfo = 0;
+  face->texinfo = 3+0;
   if (fabs(S->x1 - S->x2) > fabs(S->y1 - S->y2))
-    face->texinfo = 1;
+    face->texinfo = 3+1;
 
   face->styles[0] = 0xFF;  // no lightmap
   face->styles[1] = 0xFF;  // fairly bright
@@ -1531,8 +1531,8 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
   for (b = 0; b < 3; b++)
   {
-    raw_lf.mins[b] = +32767;
-    raw_lf.maxs[b] = -32767;
+    raw_lf.mins[b] = -3276; //!!!!!!!!!!!
+    raw_lf.maxs[b] = +3276;
   }
 
   memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
@@ -1608,8 +1608,8 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
 
   for (b = 0; b < 3; b++)
   {
-    raw_nd.mins[b] = +32767;
-    raw_nd.maxs[b] = -32767;
+    raw_nd.mins[b] = -3276;
+    raw_nd.maxs[b] = +3276;
   }
 
 
