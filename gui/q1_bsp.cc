@@ -50,9 +50,9 @@ class qFace_c
 public:
   enum face_kind_e
   {
-    WALL  =  0,
-    FLOOR = -1,
-    CEIL  = +1
+    WALL  = 0,
+    FLOOR = 1,
+    CEIL  = 2
   };
 
   int kind;
@@ -67,7 +67,7 @@ public:
   int index;  // final index into Faces lump
 
 public:
-   qFace_c(bool _kind = WALL) : kind(_kind), side(NULL), floor_leaf(NULL), index(-1) { }
+   qFace_c(int _kind = WALL) : kind(_kind), side(NULL), floor_leaf(NULL), index(-1) { }
   ~qFace_c() { }
 };
 
@@ -578,7 +578,8 @@ fprintf(stderr, "--> COST:%1.2f for %p\n", cost, part);
       best_p = part;
     }
   }
-fprintf(stderr, "ALL DONE : best_c=%1.0f best_p=%p\n", best_c, best_p);
+fprintf(stderr, "ALL DONE : best_c=%1.0f best_p=%p\n",
+        best_p ? best_c : -9999, best_p);
 
   return best_p;
 }
@@ -1376,18 +1377,19 @@ static void MakeFloorFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
   merge_region_c *R = leaf->GetRegion();
   SYS_ASSERT(R);
 
-  merge_gap_c *gap  = R->gaps.at(F->gap);
+  merge_gap_c *gap = R->gaps.at(F->gap);
 
   double z1 = gap->GetZ1();
   double z2 = gap->GetZ2();
 
   double z = (F->kind == qFace_c::CEIL) ? z2 : z1;
+fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
 
 
   bool flipped;
 
   face->planenum = Q1_AddPlane(0, 0, z,
-                              0, 0, (F->kind == qFace_c::CEIL) ? -1 : +1, &flipped);
+                               0, 0, (F->kind == qFace_c::CEIL) ? -1 : +1, &flipped);
 
   face->side = flipped ? 1 : 0;
 
@@ -1549,13 +1551,19 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
   {
     qFace_c *F = leaf->faces[n];
 
-    if (F->index < 0)
-      MakeFace(F, &raw_lf);
+    // should have been in a node already
+    SYS_ASSERT(F->index >= 0);
 
-    // ???  probably should just put into leaf->faces array 
-    if (leaf->floor->index < 0) MakeFace(leaf->floor, &raw_lf);
-    if (leaf-> ceil->index < 0) MakeFace(leaf-> ceil, &raw_lf);
+///    if (F->index < 0)
+    MakeFace(F, &raw_lf);
   }
+
+  // ???  probably should just put into leaf->faces array 
+  SYS_ASSERT(leaf->floor->index >= 0);
+  SYS_ASSERT(leaf-> ceil->index >= 0);
+
+  MakeFace(leaf->floor, &raw_lf);
+  MakeFace(leaf-> ceil, &raw_lf);
 
 
   for (b = 0; b < 3; b++)
@@ -1613,6 +1621,8 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
     SYS_ASSERT(F->index < 0);
 
     MakeFace(F, NULL);
+
+    SYS_ASSERT(F->index >= 0);
 
     if (j == 0)
       raw_nd.firstface = F->index;
