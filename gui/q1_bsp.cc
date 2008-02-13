@@ -191,6 +191,9 @@ public:
   // NB: faces are managed by qSide_c, we only store copies here
   std::vector<qFace_c *> faces;
 
+  qFace_c *floor;
+  qFace_c *ceil;
+
   bool floor_on_node;
   bool ceil_on_node;
 
@@ -198,7 +201,8 @@ public:
   qLeaf_c() : contents(CONTENTS_EMPTY), /* faces(), */ sides(),
               gap(0), numgap(0),
               min_x(0), min_y(0), max_x(0), max_y(0),
-              faces(), floor_on_node(false), ceil_on_node(false)
+              faces(), floor(NULL), ceil(NULL),
+              floor_on_node(false), ceil_on_node(false)
   { }
 
   ~qLeaf_c()
@@ -207,10 +211,11 @@ public:
   }
 
   qLeaf_c(qLeaf_c& other, int _gap) :
-          contents(other.contents), /* faces(), */ sides(), gap(_gap),
+          contents(other.contents), sides(), gap(_gap),
           min_x(other.min_x), min_y(other.min_y),
           max_x(other.max_x), max_y(other.max_y),
-          faces()
+          faces(), floor(NULL), ceil(NULL),
+          floor_on_node(false), ceil_on_node(false)
   {
     // copy the side pointers
     std::list<qSide_c *>::iterator SI;
@@ -441,20 +446,10 @@ static qNode_c *Q_ROOT;
 static qLeaf_c *SOLID_LEAF;
 
 
-///---static void Split_Z(qNode_c *node, qLeaf_c *leaf)
-///---{
-///---
-///---  unsigned int gap = R->gaps.size() / 2;
-///---
-///---
-///---  node->front_l = leaf;
-///---  node->back_l  = new qLeaf_c;
-///---
-///---  // FIXME !!!!!
-///---}
-
 static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 {
+  // handle sides first
+
   std::list<qSide_c *>::iterator SI;
 
   for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
@@ -463,8 +458,6 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
     if (S->seg && ! S->on_node)
     {
-      S->on_node = true;
-
       qNode_c * node = new qNode_c(false /* z_splitter */);
       (*out_n) = node;
 
@@ -474,9 +467,26 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       node->dx = S->x2 - S->x1;
       node->dy = S->y2 - S->y1;
 
-      // SHIT!!!!  :  HANDLE _TWO_ COLINEAR SIDES !!!!!
+      // find _ALL_ sides that lie on the partition
+      std::list<qSide_c *>::iterator TI;
 
-      node->AssignFaces(S);
+      for (TI = leaf->sides.begin(); TI != leaf->sides.end(); TI++)
+      {
+        qSide_c *T = *TI;
+
+        if (! T->seg || T->on_node)
+          continue;
+
+        double a = PerpDist(T->x1, T->y1,  S->x1, S->y1, S->x2, S->y2);
+        double b = PerpDist(T->x2, T->y2,  S->x1, S->y1, S->x2, S->y2);
+
+        if (! (fabs(a) <= Q_EPSILON && fabs(b) <= Q_EPSILON))
+          continue;
+
+        T->on_node = true;
+
+        node->AssignFaces(T);
+      }
 
       node->back_l = SOLID_LEAF;
 
@@ -485,19 +495,20 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
     }
   }
 
-    
+
   merge_gap_c *gap = leaf->GetGap();
 
-  if (! leaf->floor_on_node)
+  if (! leaf->ceil_on_node)
   {
-      leaf->floor_on_node = true;
+      leaf->ceil_on_node = true;
 
       qNode_c * node = new qNode_c(true /* z_splitter */);
       (*out_n) = node;
 
-      node->z = gap->GetZ1();
+      node->z = gap->GetZ2();
 
-      // FIXME: floor face --> node !!!!!
+      SYS_ASSERT(leaf->ceil);
+      node->faces.push_back(leaf->ceil);
 
       node->back_l = SOLID_LEAF;
 
@@ -506,20 +517,22 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
   }
 
 
-  SYS_ASSERT(! leaf->ceil_on_node);
+  SYS_ASSERT(! leaf->floor_on_node);
   {
-      leaf->ceil_on_node = true;
+      leaf->floor_on_node = true;
   
       qNode_c * node = new qNode_c(true /* z_splitter */);
       (*out_n) = node;
 
-      node->z = gap->GetZ2();
+      node->z = gap->GetZ1();
 
-      // FIXME: ceil face --> node !!!!!
+      SYS_ASSERT(leaf->floor);
+      node->faces.push_back(leaf->floor);
 
       node->front_l = leaf;
       node-> back_l = SOLID_LEAF;
 
+      // End of the road, folks!
       return;
   }
 }
