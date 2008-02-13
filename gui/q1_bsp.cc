@@ -1278,99 +1278,6 @@ static void DoAddSurf(u16_t index, dleaf_t *raw_lf )
 }
 
 
-static void MakeFloor(qFace_c *F, dleaf_t *raw_lf);
-
-
-static void MakeFace(qFace_c *F,  dleaf_t *raw_lf)
-{
-  if (F->kind != qFace_c::WALL)
-  {
-    MakeFloor(F, raw_lf);
-    return;
-  }
-
-  if (F->index >= 0)
-  {
-    if (raw_lf)
-      DoAddSurf(F->index, raw_lf);
-    return;
-  }
-
-
-  qSide_c *S = F->side;
-
-  merge_region_c *R = S->GetRegion();
-  SYS_ASSERT(R);
-
-  merge_gap_c *gap  = R->gaps.at(F->gap);
-
-
-  dface_t face;
-
-  bool flipped;
-
-  face.planenum = Q1_AddPlane(S->x1, S->y1, 0,
-                              (S->y1 - S->y2), (S->x2 - S->x1), 0,
-                              &flipped);
-
-  face.side = flipped ? 1 : 0;
-
-  face.texinfo = 0;
-  if (fabs(S->x1 - S->x2) > fabs(S->y1 - S->y2))
-    face.texinfo = 1;
-
-  face.styles[0] = 0xFF;  // no lightmap
-  face.styles[1] = 0xFF;  // fairly bright
-  face.styles[2] = 0xFF;
-  face.styles[3] = 0xFF;
-
-  face.lightofs = -1;  // no lightmap
-
-
-  // add the edges
-
-  face.firstedge = total_surf_edges;
-  face.numedges  = 0;
-
-  double z1 = F->z1;
-  double z2 = F->z2;
-
-  if (true) // !flipped)
-  {
-    DoAddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  &face, raw_lf);
-    DoAddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  &face, raw_lf);
-    DoAddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  &face, raw_lf);
-    DoAddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  &face, raw_lf);
-  }
-  else
-  {
-    DoAddEdge(S->x1, S->y1, z1,  S->x2, S->y2, z1,  &face, raw_lf);
-    DoAddEdge(S->x2, S->y2, z1,  S->x2, S->y2, z2,  &face, raw_lf);
-    DoAddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  &face, raw_lf);
-    DoAddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  &face, raw_lf);
-  }
-
-
-  // FIXME: fix endianness in face
-
-  u16_t index = model.numfaces++;
-
-  if (index >= MAX_MAP_FACES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
-                    MAX_MAP_FACES);
-
-  F->index = (int)index;
-
-  
-  Q1_Append(q_faces, &face, sizeof(face));
-
-
-  // add it into the mark_surfs lump
-  if (raw_lf)
-    DoAddSurf(F->index, raw_lf);
-}
-
-
 struct Compare_FloorAngle_pred
 {
   double *angles;
@@ -1461,7 +1368,7 @@ fprintf(stderr, "___ (%+5.0f %+5.0f)\n", vert_x[m], vert_y[m]);
   return v_num;
 }
 
-static void MakeFloor(qFace_c *F, dleaf_t *raw_lf)
+static void MakeFloorFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
 {
   qLeaf_c *leaf = F->floor_leaf;
   SYS_ASSERT(leaf);
@@ -1477,23 +1384,21 @@ static void MakeFloor(qFace_c *F, dleaf_t *raw_lf)
   double z = (F->kind == qFace_c::CEIL) ? z2 : z1;
 
 
-  dface_t face;
-
   bool flipped;
 
-  face.planenum = Q1_AddPlane(0, 0, z,
+  face->planenum = Q1_AddPlane(0, 0, z,
                               0, 0, (F->kind == qFace_c::CEIL) ? -1 : +1, &flipped);
 
-  face.side = flipped ? 1 : 0;
+  face->side = flipped ? 1 : 0;
 
-  face.texinfo = 2;
+  face->texinfo = 2;
 
-  face.styles[0] = 0xFF;  // no lightmap
-  face.styles[1] = 0xFF;  // fairly bright
-  face.styles[2] = 0xFF;
-  face.styles[3] = 0xFF;
+  face->styles[0] = 0xFF;  // no lightmap
+  face->styles[1] = 0xFF;  // fairly bright
+  face->styles[2] = 0xFF;
+  face->styles[3] = 0xFF;
 
-  face.lightofs = -1;  // no lightmap
+  face->lightofs = -1;  // no lightmap
 
 
   // collect the vertices and sort in clockwise order
@@ -1506,16 +1411,88 @@ static void MakeFloor(qFace_c *F, dleaf_t *raw_lf)
 
   // add the edges
 
-  face.firstedge = total_surf_edges;
-  face.numedges  = 0;
+  face->firstedge = total_surf_edges;
+  face->numedges  = 0;
 
   for (int pos = 0; pos < v_num; pos++)
   {
     int p2 = (pos + 1) % v_num;
 
     DoAddEdge(vert_x[pos], vert_y[pos], z,
-              vert_x[p2 ], vert_y[p2 ], z, &face, raw_lf);
+              vert_x[p2 ], vert_y[p2 ], z, face, raw_lf);
   }
+}
+
+static void MakeWallFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
+{
+  qSide_c *S = F->side;
+
+  merge_region_c *R = S->GetRegion();
+  SYS_ASSERT(R);
+
+  merge_gap_c *gap  = R->gaps.at(F->gap);
+
+
+  bool flipped;
+
+  face->planenum = Q1_AddPlane(S->x1, S->y1, 0,
+                              (S->y1 - S->y2), (S->x2 - S->x1), 0,
+                              &flipped);
+
+  face->side = flipped ? 1 : 0;
+
+  face->texinfo = 0;
+  if (fabs(S->x1 - S->x2) > fabs(S->y1 - S->y2))
+    face->texinfo = 1;
+
+  face->styles[0] = 0xFF;  // no lightmap
+  face->styles[1] = 0xFF;  // fairly bright
+  face->styles[2] = 0xFF;
+  face->styles[3] = 0xFF;
+
+  face->lightofs = -1;  // no lightmap
+
+
+  // add the edges
+
+  face->firstedge = total_surf_edges;
+  face->numedges  = 0;
+
+  double z1 = F->z1;
+  double z2 = F->z2;
+
+  if (true) // !flipped)
+  {
+    DoAddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  face, raw_lf);
+    DoAddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  face, raw_lf);
+    DoAddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  face, raw_lf);
+    DoAddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  face, raw_lf);
+  }
+  else
+  {
+    DoAddEdge(S->x1, S->y1, z1,  S->x2, S->y2, z1,  face, raw_lf);
+    DoAddEdge(S->x2, S->y2, z1,  S->x2, S->y2, z2,  face, raw_lf);
+    DoAddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  face, raw_lf);
+    DoAddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  face, raw_lf);
+  }
+}
+
+static void MakeFace(qFace_c *F, dleaf_t *raw_lf)
+{
+  if (F->index >= 0)
+  {
+    if (raw_lf)
+      DoAddSurf(F->index, raw_lf);
+    return;
+  }
+
+
+  dface_t face;
+
+  if (F->kind == qFace_c::WALL)
+    MakeWallFace(F, &face, raw_lf);
+  else
+    MakeFloorFace(F, &face, raw_lf);
 
 
   // FIXME: fix endianness in face
@@ -1526,20 +1503,14 @@ static void MakeFloor(qFace_c *F, dleaf_t *raw_lf)
     Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
                     MAX_MAP_FACES);
 
+  F->index = (int)index;
+
   Q1_Append(q_faces, &face, sizeof(face));
 
 
   // add it into the mark_surfs lump
   if (raw_lf)
-  {
-    index = LE_U16(index);
-
-    Q1_Append(q_mark_surfs, &index, 2);
-
-    total_mark_surfs += 1;
-
-    raw_lf->num_marksurf += 1;
-  }
+    DoAddSurf(F->index, raw_lf);
 }
 
 
