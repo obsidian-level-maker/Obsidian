@@ -188,7 +188,7 @@ public:
   double max_x, max_y;
 
   // list of faces is created when the leaf is vertically partitioned
-  // NB: faces are managed by qSide_c, we only store copies here
+  // NB: faces are managed by qSide_c, we only store ptr-copies here
   std::vector<qFace_c *> faces;
 
   qFace_c *floor;
@@ -255,6 +255,19 @@ public:
     return NULL; /* NOT REACHED */
   }
 
+  bool HasSide(qSide_c *side)
+  {
+    for (std::list<qSide_c *>::iterator SI = sides.begin();
+         SI != sides.end();
+         SI++)
+    {
+      if ((*SI) == side)
+        return true;
+    }
+
+    return false;
+  }
+
   merge_gap_c *GetGap()
   {
     SYS_ASSERT(numgap == 1);
@@ -308,7 +321,12 @@ public:
       {
         qFace_c *F = (* S->faces)[k];
 
-        if (F->gap == gap)
+        // check if already there
+        bool already = false;
+        for (unsigned int m=0; m < faces.size(); m++)
+          if (faces[m] == F) { already = true; break; }
+
+        if (F->gap == gap && !already)
           faces.push_back(F);
       }
     }
@@ -472,7 +490,6 @@ static double EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
       double sdx = S->x2 - S->x1;
       double sdy = S->y2 - S->y1;
 
-//!!!!!!      if ( ((pdx * sdx + pdy * sdy < 0.0) ? 1 : 0) == S->side)
       if (pdx * sdx + pdy * sdy < 0.0)
         back++;
       else
@@ -792,7 +809,6 @@ static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
     {
       // lines are colinear
 
-//!!!!!!      if ( ((pdx * sdx + pdy * sdy < 0.0) ? 1 : 0) == S->side)
       if (part->dx * sdx + part->dy * sdy < 0.0)
       {
         back_l->sides.push_back(S);
@@ -921,9 +937,9 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
         if (! (fabs(a) <= Q_EPSILON && fabs(b) <= Q_EPSILON))
           continue;
 
-        T->on_node = true;
-
         node->AssignFaces(T);
+
+        T->on_node = true;
       }
 
       node->back_l = SOLID_LEAF;
@@ -1174,6 +1190,7 @@ void Quake1_BuildBSP( void )
   //   4. perform solid splitting
 
   SOLID_LEAF = new qLeaf_c();
+  SOLID_LEAF->contents = CONTENTS_SOLID;
 
   qLeaf_c *begin = new qLeaf_c();
 
@@ -1309,16 +1326,8 @@ static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf, bo
   {
     qSide_c *S = *SI;
 
-///!!!!!!    if (S->side == 1)
-///!!!!!!    {
-///!!!!!!      vert_x[v_num] = S->x2;
-///!!!!!!      vert_y[v_num] = S->y2;
-///!!!!!!    }
-///!!!!!!    else
-    {
-      vert_x[v_num] = S->x1;
-      vert_y[v_num] = S->y1;
-    }
+    vert_x[v_num] = S->x1;
+    vert_y[v_num] = S->y1;
 
     mid_x += vert_x[v_num];
     mid_y += vert_y[v_num];
@@ -1554,6 +1563,8 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
     qFace_c *F = leaf->faces[n];
 
     // should have been in a node already
+fprintf(stderr, "unseen face %p (leaf %p)\n", F, leaf);
+// if (F->index < 0) continue; //!!!!!!
     SYS_ASSERT(F->index >= 0);
 
 ///    if (F->index < 0)
@@ -1619,6 +1630,9 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   for (unsigned int j = 0; j < node->faces.size(); j++)
   {
     qFace_c *F = node->faces[j];
+
+fprintf(stderr, "node face: %p kind:%d (node %1.4f,%1.4f += %1.4f,%1.4f)\n",
+        F, F->kind, node->x, node->y, node->dx, node->dy);
 
     SYS_ASSERT(F->index < 0);
 
@@ -1714,18 +1728,14 @@ static s32_t RecursiveMakeClipNodes(qNode_c *node, bool is_root)
 
   if (node->front_n)
     clip.children[0] = RecursiveMakeClipNodes(node->front_n, false);
-  else if (node->front_l == SOLID_LEAF)
-    clip.children[0] = (u16_t) CONTENTS_SOLID;
   else
-    clip.children[0] = (u16_t) CONTENTS_EMPTY;
+    clip.children[0] = (u16_t) node->front_l->contents;
 
 
   if (node->back_n)
     clip.children[1] = RecursiveMakeClipNodes(node->back_n, false);
-  else if (node->back_l == SOLID_LEAF)
-    clip.children[1] = (u16_t) CONTENTS_SOLID;
   else
-    clip.children[1] = (u16_t) CONTENTS_EMPTY;
+    clip.children[1] = (u16_t) node->back_l->contents;
 
 
   // TEMP HACK: we have made the wall planes before, hence node
