@@ -936,7 +936,6 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
     if (S->seg && ! S->on_node)
     {
       qNode_c * node = new qNode_c(false /* z_splitter */);
-      (*out_n) = node;
 
       node->x = S->x1;
       node->y = S->y1;
@@ -968,6 +967,8 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       node->back_l = SOLID_LEAF;
 
       Partition_Solid(leaf, &node->front_n, &node->front_l);
+
+      (*out_n) = node;
       return;
     }
   }
@@ -980,7 +981,6 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       leaf->ceil_on_node = true;
 
       qNode_c * node = new qNode_c(true /* z_splitter */);
-      (*out_n) = node;
 
       node->z = gap->GetZ2();
 
@@ -990,6 +990,8 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       node->front_l = SOLID_LEAF;
 
       Partition_Solid(leaf, &node->back_n, &node->back_l);
+
+      (*out_n) = node;
       return;
   }
 
@@ -999,17 +1001,17 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       leaf->floor_on_node = true;
   
       qNode_c * node = new qNode_c(true /* z_splitter */);
-      (*out_n) = node;
 
       node->z = gap->GetZ1();
 
       SYS_ASSERT(leaf->floor);
       node->faces.push_back(leaf->floor);
 
+      // End of the road, folks!
       node->front_l = leaf;
       node-> back_l = SOLID_LEAF;
 
-      // End of the road, folks!
+      (*out_n) = node;
       return;
   }
 }
@@ -1024,7 +1026,7 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
     qLeaf_c *top_leaf = new qLeaf_c(*leaf, new_g);
 
-    // TODO: OPTIMISE THIS : too many nodes!  Use bottom of gaps[new_g] as
+    // TODO: OPTIMISE THIS : too many nodes!  Use top of gaps[new_g-1] as
     //       the splitting plane.
 
     qNode_c *node = new qNode_c(true /* z_splitter */);
@@ -1032,14 +1034,13 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
     // choose height halfway between the two gaps (in the solid)
     node->z = (R->gaps[new_g-1]->GetZ2() + R->gaps[new_g]->GetZ1()) / 2.0;
 
-    // !!!! FIXME: not quite right (getting Faces into Leafs)
-    //      NEED to transfer faces from bottom leaf --> top_leaf
-
     top_leaf->numgap = leaf->gap + leaf->numgap - new_g;
         leaf->numgap = new_g - leaf->gap;
 
     Partition_Z(top_leaf, &node->front_n, &node->front_l);
     Partition_Z(    leaf, &node->back_n,  &node->back_l);
+
+    *out_n = node;
     return;
   }
 
@@ -1069,11 +1070,6 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
   bool is_root = (out_l == NULL);
 
   SYS_ASSERT(out_n);
-
-///--  *out_n = NULL;
-///--
-///--  if (out_l)
-///--    *out_l = NULL;
 
   qSide_c *best_p = FindPartition(leaf);
   qNode_c *node;
@@ -1118,8 +1114,6 @@ fprintf(stderr, "LEAF %p IS CONVEX\n", leaf);
   }
 
 
-  *out_n = node;
-
 fprintf(stderr, "Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
                  node->x, node->y,
                  node->x + node->dx, node->y + node->dy);
@@ -1133,6 +1127,7 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
   Partition_XY(front_l, &node->front_n, &node->front_l);
   Partition_XY( back_l, &node-> back_n, &node-> back_l);
 
+  *out_n = node;
 }
 
 
@@ -1588,7 +1583,6 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
     // should have been in a node already
 fprintf(stderr, "unseen face %p (leaf %p)\n", F, leaf);
-// if (F->index < 0) continue; //!!!!!!
     SYS_ASSERT(F->index >= 0);
 
 ///    if (F->index < 0)
@@ -1749,6 +1743,11 @@ static s32_t RecursiveMakeClipNodes(qNode_c *node, bool is_root)
   bool flipped;
 
   clip.planenum = Q1_AddPlane(x,y,z, dx,dy,dz, &flipped);
+
+SYS_ASSERT(node);
+
+SYS_ASSERT(node->front_n || node->front_l);
+SYS_ASSERT(node->back_n  || node->back_l);
 
   if (node->front_n)
     clip.children[0] = RecursiveMakeClipNodes(node->front_n, false);
