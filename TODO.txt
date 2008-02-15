@@ -5,13 +5,20 @@ TODO
 
 Quake1 output:
 
+>>> finish texture extractor:
+    (a) read from multiple paks
+        (i.e. if first is pak0, check for pak1 ... pak9)
+    (b) create a GUI for the user, with progress bar
+
 - find better place for OBLIGE_INFO
   (c) >> put info into worldspawn entity
-         "_generated_by" "Oblige 1.02 (c) Andrew Apted"
+         "_generated_by" "Oblige 3.03 (c) Andrew Apted"
          "_oblige_seed" "18234"
          yada yada
 
 + split faces larger than 240 units
+  (a) split qSide_c with length > 240
+  (b) make multiple faces when height > 240
 
 + create proper clipping hulls:
   (a) make the area_polys convex
