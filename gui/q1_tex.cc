@@ -71,6 +71,21 @@ typedef std::map<std::string, miptex_locator_c*> miptex_database_t;
 static miptex_database_t miptex_db;
 
 
+static void MiptexDB_Clear(void)
+{
+  miptex_database_t::iterator MDI;
+
+  for (MDI = miptex_db.begin(); MDI != miptex_db.end(); MDI++)
+  {
+    miptex_locator_c *loc = MDI->second;
+
+    delete loc;
+  }
+
+  miptex_db.clear();
+}
+
+
 static bool MiptexDB_Load(const char *filename)
 {
   FILE *fp = fopen(filename, "r");
@@ -81,11 +96,31 @@ static bool MiptexDB_Load(const char *filename)
     return false;
   }
   
-  char * line_buf = new char[PATH_MAX+1];
+  char tex_buf [32];
+  char file_buf[PATH_MAX+1];
+  char data_buf[256];
 
-  while (fgets(line_buf, PATH_MAX, fp))
+  while (fgets(tex_buf,  sizeof(tex_buf)-1,  fp) &&
+         fgets(file_buf, sizeof(file_buf)-1, fp) &&
+         fgets(data_buf, sizeof(data_buf)-1, fp))
   {
-    
+    RemoveNL(tex_buf);
+    RemoveNL(file_buf);
+
+    int offset;
+    int length;
+
+    if (strlen(tex_buf) == 0 || strlen(tex_buf) > 16 ||
+        strlen(file_buf) == 0 ||
+        sscanf(data_buf, " %i %i ", &offset, &length) != 2 ||
+        offset < 12 || length < 12)
+    {
+      Main_FatalError("MiptexDB_Load: corrupt miptex file!\n");
+      return false; /* NOT REACHED */
+    }
+
+    miptex_locator_c *loc = new miptex_locator_c(file_buf, );
+
   }
 
   delete[] line_buf;
