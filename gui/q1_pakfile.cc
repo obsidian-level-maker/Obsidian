@@ -30,7 +30,7 @@
 
 
 //------------------------------------------------------------------------
-//  READING
+//  PAK READING
 //------------------------------------------------------------------------
 
 static FILE *read_fp;
@@ -198,7 +198,7 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer)
 
 
 //------------------------------------------------------------------------
-//  WRITING
+//  PAK WRITING
 //------------------------------------------------------------------------
 
 static FILE *write_fp;
@@ -225,6 +225,70 @@ void PAK_AppendData(const void *data, int length)
 }
 
 void PAK_FinishLump(void)
+{
+  // TODO
+}
+
+
+//------------------------------------------------------------------------
+//  WAD2 READING
+//------------------------------------------------------------------------
+
+bool WAD2_OpenRead(const char *filename)
+{
+  // TODO: WAD2_OpenRead
+  return false;
+}
+
+void WAD2_CloseRead(void)
+{
+  // TODO
+}
+
+int  WAD2_FindEntry(const char *name)
+{
+  // TODO
+  return -1;
+}
+
+int  WAD2_EntryLen(int entry)
+{
+  // TODO
+  return 0;
+}
+
+bool WAD2_ReadData(int entry, int offset, int length, void *buffer)
+{
+  // TODO
+  return false;
+}
+
+
+//------------------------------------------------------------------------
+//  WAD2 WRITING
+//------------------------------------------------------------------------
+
+bool WAD2_OpenWrite(const char *filename)
+{
+  return false; // TODO: WAD2_OpenWrite
+}
+
+void WAD2_CloseWrite(void)
+{
+  // TODO
+}
+
+void WAD2_NewLump(const char *name)
+{
+  // TODO
+}
+
+void WAD2_AppendData(const void *data, int length)
+{
+  // TODO
+}
+
+void WAD2_FinishLump(void)
 {
   // TODO
 }
