@@ -57,11 +57,6 @@ extern void BSP_CreateModel(void);
 //  BSP-FILE OUTPUT
 //------------------------------------------------------------------------
 
-static u32_t AlignLen(u32_t len)
-{
-  return ((len + 3) & ~3);
-}
-
 static void BSP_RawSeek(u32_t pos)
 {
   fflush(bsp_fp);

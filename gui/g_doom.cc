@@ -64,11 +64,6 @@ static int seek_errors_seen;
 //  WAD OUTPUT
 //------------------------------------------------------------------------
 
-static u32_t AlignLen(u32_t len)
-{
-  return ((len + 3) & ~3);
-}
-
 static void WAD_RawSeek(u32_t pos)
 {
   fflush(wad_fp);
