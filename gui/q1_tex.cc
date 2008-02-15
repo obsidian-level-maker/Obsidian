@@ -57,9 +57,22 @@ typedef std::map<std::string, int> miptex_database_t;
 
 static void ExtractMipTex(miptex_database_t& tex_db, int map_idx)
 {
+  dheader_t bsp;
+
+  if (! PAK_ReadData(map_idx, 0, sizeof(bsp), &bsp))
+    Main_FatalError("dheader_t");
+
+  // FIXME: check version in header (for sanity)
+
+  u32_t tex_start = LE_U32(bsp.lumps[LUMP_TEXTURES].start);
+  u32_t tex_total = LE_U32(bsp.lumps[LUMP_TEXTURES].length);
+
+fprintf(stderr, "  BSP: version:0x%08x tex:0x%08x len:0x%08x\n",
+                 LE_U32(bsp.version), tex_start, tex_total);
+
   dmiptexlump_t header;
 
-  if (! PAK_ReadData(map_idx, 0, sizeof(header), &header))
+  if (! PAK_ReadData(map_idx, tex_start, sizeof(header), &header))
     Main_FatalError("dmiptexlump_t");
 
   int num_miptex = LE_S32(header.num_miptex);
@@ -69,14 +82,19 @@ static void ExtractMipTex(miptex_database_t& tex_db, int map_idx)
 fprintf(stderr, "  mip %d/%d\n", i+1, num_miptex);
     u32_t data_ofs;
 
-    if (! PAK_ReadData(map_idx, 4 + i*4, 4, &data_ofs))
+    if (! PAK_ReadData(map_idx, tex_start + 4 + i*4, 4, &data_ofs))
       Main_FatalError("data_ofs");
 
     data_ofs = LE_U32(data_ofs);
+fprintf(stderr, "  data_ofs=%d\n", data_ofs);
+
+    // -1 means unused slot
+    if (data_ofs & 0x8000000U)
+      continue;
 
     miptex_t mip;
 
-    if (! PAK_ReadData(map_idx, data_ofs, sizeof(miptex_t), &mip))
+    if (! PAK_ReadData(map_idx, tex_start + data_ofs, sizeof(miptex_t), &mip))
       Main_FatalError("miptex_t");
 
     mip.width  = LE_U32(mip.width);
@@ -86,7 +104,7 @@ fprintf(stderr, "  mip %d/%d\n", i+1, num_miptex);
 fprintf(stderr, "    name:%s size:%dx%d\n", mip.name, mip.width, mip.height);
 
     // already seen it?
-    if (miptex_db.find[mip.name] != miptex_db.end())
+    if (tex_db.find((const char *)mip.name) != tex_db.end())
       continue;
 
     // sanity check
@@ -100,7 +118,7 @@ fprintf(stderr, "    name:%s size:%dx%d\n", mip.name, mip.width, mip.height);
     data_ofs += sizeof(mip);
 
     // create WAD2 lump and mark database as seen
-    miptex_db[mip.name] = 1;
+    tex_db[(const char *)mip.name] = 1;
 
     WAD2_NewLump(mip.name);
 
@@ -116,7 +134,7 @@ fprintf(stderr, "    name:%s size:%dx%d\n", mip.name, mip.width, mip.height);
     {
       int count = MIN(pixels, 1024);
 
-      if (! PAK_ReadData(map_idx, data_ofs, count, buffer))
+      if (! PAK_ReadData(map_idx, tex_start + data_ofs, count, buffer))
         Main_FatalError("pixels");
 
       WAD2_AppendData(buffer, count);

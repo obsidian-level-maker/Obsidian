@@ -28,6 +28,7 @@ bool Quake1_Finish(void);
 void Quake1_Tidy(void);
 
 
+
 // internal API
 
 typedef std::vector<u8_t> qLump_c;
@@ -50,6 +51,10 @@ s32_t Q1_AddEdge(u16_t start, u16_t end);
 
 void Quake1_BuildBSP(void);
 
+
+// q1_tex.cc
+
+void Quake1_ExtractTextures(void);
 
 #endif /* __OBLIGE_QUAKE1_H__ */
 
