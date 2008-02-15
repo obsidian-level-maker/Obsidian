@@ -142,6 +142,8 @@ fprintf(stderr, "    name:%s size:%dx%d\n", mip.name, mip.width, mip.height);
       data_ofs += (u32_t)count;
       pixels   -= count;
     }
+
+    WAD2_FinishLump();
   }
 }
 
