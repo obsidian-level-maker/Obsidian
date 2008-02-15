@@ -19,7 +19,8 @@
 #ifndef __LIB_UTIL_H__
 #define __LIB_UTIL_H__
 
-// string utilities
+/* string utilities */
+
 int StringCaseCmp(const char *A, const char *B);
 int StringCaseCmpPartial(const char *A, const char *B);
 void StringMaxCopy(char *dest, const char *src, int max);
@@ -30,13 +31,23 @@ char *StringDup(const char *orig);
 char *StringPrintf(const char *str, ...); // GCCATTR((format (printf, 1, 2)));
 void StringFree(const char *str);
 
-// math utilities
+/* time utilities */
+
+u32_t TimeGetMillies();
+void TimeDelay(u32_t millies);
+
+/* math utilities */
+
 u32_t IntHash(u32_t key);
 u32_t StringHash(const char *str);
 
-// time utilities
-u32_t TimeGetMillies();
-void TimeDelay(u32_t millies);
+#define AlignLen(x)  (((x) + 3) & ~3)
+
+double  PerpDist(double x, double y,
+                 double x1, double y1, double x2, double y2);
+double AlongDist(double x, double y,
+                 double x1, double y1, double x2, double y2);
+double CalcAngle(double sx, double sy, double ex, double ey);
 
 #endif /* __LIB_UTIL_H__ */
 

@@ -160,6 +160,55 @@ u32_t StringHash(const char *str)
   return hash;
 }
 
+double PerpDist(double x, double y,
+                double x1, double y1, double x2, double y2)
+{
+  x  -= x1; y  -= y1;
+  x2 -= x1; y2 -= y1;
+
+  double len = sqrt(x2*x2 + y2*y2);
+
+  SYS_ASSERT(len > 0);
+
+  return (x * y2 - y * x2) / len;
+}
+
+double AlongDist(double x, double y,
+                 double x1, double y1, double x2, double y2)
+{
+  x  -= x1; y  -= y1;
+  x2 -= x1; y2 -= y1;
+
+  double len = sqrt(x2*x2 + y2*y2);
+
+  SYS_ASSERT(len > 0);
+
+  return (x * x2 + y * y2) / len;
+}
+
+double CalcAngle(double sx, double sy, double ex, double ey)
+{
+  // result is Degrees (0 <= angle < 360).
+  // East  (increasing X) -->  0 degrees
+  // North (increasing Y) --> 90 degrees
+
+  ex -= sx;
+  ey -= sy;
+
+  if (fabs(ex) < 0.0001)
+    return (ey > 0) ? 90.0 : 270.0;
+
+  if (fabs(ey) < 0.0001)
+    return (ex > 0) ? 0.0 : 180.0;
+
+  double angle = atan2(ey, ex) * 180.0 / M_PI;
+
+  if (angle < 0) 
+    angle += 360.0;
+
+  return angle;
+}
+
 
 //------------------------------------------------------------------------
 
