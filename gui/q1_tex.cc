@@ -30,14 +30,131 @@
 
 #include "q1_main.h"
 #include "q1_structs.h"
+#include "q1_pakfile.h"
 
 #include "main.h"
 
 
+// WAD2_OpenWrite
+// {
+//   for each pakfile do
+//   {
+//     PAK_OpenRead
+//
+//     for each map do
+//       for each miptex do
+//         if not already seen
+//           copy miptex into WAD2 file
+// 
+//     PAK_CloseRead
+//   }
+// }
+// WAD2_CloseWrite
+
+
+typedef std::map<std::string, int> miptex_database_t;
+
+
+static void ExtractMipTex(miptex_database_t& tex_db, int map_idx)
+{
+  dmiptexlump_t header;
+
+  if (! PAK_ReadData(map_idx, 0, sizeof(header), &header))
+    Main_FatalError("dmiptexlump_t");
+
+  int num_miptex = LE_S32(header.num_miptex);
+  
+  for (int i = 0; i < num_miptex; i++)
+  {
+fprintf(stderr, "  mip %d/%d\n", i+1, num_miptex);
+    u32_t data_ofs;
+
+    if (! PAK_ReadData(map_idx, 4 + i*4, 4, &data_ofs))
+      Main_FatalError("data_ofs");
+
+    data_ofs = LE_U32(data_ofs);
+
+    miptex_t mip;
+
+    if (! PAK_ReadData(map_idx, data_ofs, sizeof(miptex_t), &mip))
+      Main_FatalError("miptex_t");
+
+    mip.width  = LE_U32(mip.width);
+    mip.height = LE_U32(mip.height);
+
+    mip.name[15] = 0;
+fprintf(stderr, "    name:%s size:%dx%d\n", mip.name, mip.width, mip.height);
+
+    // already seen it?
+    if (miptex_db.find[mip.name] != miptex_db.end())
+      continue;
+
+    // sanity check
+    SYS_ASSERT(mip.width  <= 2048);
+    SYS_ASSERT(mip.height <= 2048);
+
+    // Quake ignores the offsets, hence we do too!
+
+    int pixels = (mip.width * mip.height) / 64 * 85;
+
+    data_ofs += sizeof(mip);
+
+    // create WAD2 lump and mark database as seen
+    miptex_db[mip.name] = 1;
+
+    WAD2_NewLump(mip.name);
+
+    mip.width  = LE_U32(mip.width);
+    mip.height = LE_U32(mip.height);
+
+    WAD2_AppendData(&mip, (int)sizeof(mip));
+
+    // copy the pixel data
+    static byte buffer[1024];
+
+    while (pixels > 0)
+    {
+      int count = MIN(pixels, 1024);
+
+      if (! PAK_ReadData(map_idx, data_ofs, count, buffer))
+        Main_FatalError("pixels");
+
+      WAD2_AppendData(buffer, count);
+
+      data_ofs += (u32_t)count;
+      pixels   -= count;
+    }
+  }
+}
+
 
 void Quake1_ExtractTextures(void)
 {
-  
+  if (! WAD2_OpenWrite("data/quake_tex.wad"))
+  {
+    Main_FatalError("FUCK");
+  }
+
+  if (! PAK_OpenRead("/home/aapted/quake/id1/pak2.pak"))
+  {
+    Main_FatalError("SHIT");
+  }
+
+  miptex_database_t tex_db;
+
+  std::vector<int> maps;
+
+  PAK_FindMaps(maps);
+
+  for (unsigned int m = 0; m < maps.size(); m++)
+  {
+fprintf(stderr, "Doing map %d/%d\n", m+1, (int)maps.size());
+    ExtractMipTex(tex_db, maps[m]);
+  }
+
+  PAK_CloseRead();
+
+  WAD2_CloseWrite();
 }
 
 //--- editor settings ---
