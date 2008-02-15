@@ -146,10 +146,54 @@ void PAK_CloseRead(void)
   LogPrintf("Closed PAK file\n");
 }
 
-int PAK_FindMaps(std::vector<int>& entries)
+
+void PAK_FindMaps(std::vector<int>& entries)
 {
-  // TODO
-  return 0;
+  entries.resize(0);
+  entries.reserve(r_header.entry_num);
+
+  for (int i = 0; i < (int)r_header.entry_num; i++)
+  {
+    raw_pak_entry_t *E = &r_directory[i];
+
+    const char *name = E->name;
+
+    if (strncmp(name, "maps/", 5) != 0)
+      continue;
+
+    name += 5;
+
+    // ignore the ammo boxes
+    if (strncmp(name, "b_", 2) == 0)
+      continue;
+
+    while (*name && *name != '/' && *name != '.')
+      name++;
+
+    if (strcmp(name, ".bsp") == 0)
+    {
+      entries.push_back(i);
+
+      DebugPrintf("Found map [%d] : '%s'\n", i, E->name);
+    }
+  }
+}
+
+
+bool PAK_ReadData(int entry, int offset, int length, void *buffer)
+{
+  SYS_ASSERT(entry >= 0 && entry < (int)r_header.entry_num);
+  SYS_ASSERT(offset >= 0);
+  SYS_ASSERT(length > 0);
+
+  raw_pak_entry_t *E = &r_directory[entry];
+
+  if (fseek(read_fp, E->offset + offset, SEEK_SET) != 0)
+    return false;
+
+  int res = fread(buffer, length, 1, read_fp);
+
+  return (res == 1);
 }
 
 

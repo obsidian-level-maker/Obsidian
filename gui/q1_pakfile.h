@@ -23,7 +23,9 @@
 bool PAK_OpenRead(const char *filename);
 void PAK_CloseRead(void);
 
-int PAK_FindMaps(std::vector<int>& entries);
+void PAK_FindMaps(std::vector<int>& entries);
+
+bool PAK_ReadData(int entry, int offset, int length, void *buffer);
 
 
 bool PAK_OpenWrite(const char *filename);
