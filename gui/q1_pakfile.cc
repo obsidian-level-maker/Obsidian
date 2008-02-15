@@ -33,7 +33,7 @@
 //  PAK READING
 //------------------------------------------------------------------------
 
-static FILE *read_fp;
+static FILE *r_pak_fp;
 
 static raw_pak_header_t r_header;
 
@@ -42,9 +42,9 @@ static raw_pak_entry_t * r_directory;
 
 bool PAK_OpenRead(const char *filename)
 {
-  read_fp = fopen(filename, "rb");
+  r_pak_fp = fopen(filename, "rb");
 
-  if (! read_fp)
+  if (! r_pak_fp)
   {
     LogPrintf("PAK_OpenRead: cannot open file: %s\n", filename);
     return false;
@@ -52,17 +52,17 @@ bool PAK_OpenRead(const char *filename)
 
   LogPrintf("Opened PAK file: %s\n", filename);
 
-  if (fread(&r_header, sizeof(r_header), 1, read_fp) != 1)
+  if (fread(&r_header, sizeof(r_header), 1, r_pak_fp) != 1)
   {
     LogPrintf("PAK_OpenRead: failed reading header\n");
-    fclose(read_fp);
+    fclose(r_pak_fp);
     return false;
   }
 
   if (memcmp(r_header.magic, PAK_MAGIC, 4) != 0)
   {
     LogPrintf("PAK_OpenRead: not a PAK file!\n");
-    fclose(read_fp);
+    fclose(r_pak_fp);
     return false;
   }
 
@@ -77,20 +77,20 @@ bool PAK_OpenRead(const char *filename)
   if (r_header.entry_num == 0)
   {
     LogPrintf("PAK_OpenRead: empty PAK file!\n");
-    fclose(read_fp);
+    fclose(r_pak_fp);
     return false;
   }
   if (r_header.entry_num >= 4000)  // sanity check
   {
     LogPrintf("PAK_OpenRead: bad header (%d entries?)\n", r_header.entry_num);
-    fclose(read_fp);
+    fclose(r_pak_fp);
     return false;
   }
 
-  if (fseek(read_fp, r_header.dir_start, SEEK_SET) != 0)
+  if (fseek(r_pak_fp, r_header.dir_start, SEEK_SET) != 0)
   {
     LogPrintf("PAK_OpenRead: cannot seek to directory (at 0x%08x)\n", r_header.dir_start);
-    fclose(read_fp);
+    fclose(r_pak_fp);
     return false;
   }
 
@@ -100,9 +100,9 @@ bool PAK_OpenRead(const char *filename)
   {
     raw_pak_entry_t *E = &r_directory[i];
 
-    int res = fread(E, sizeof(raw_pak_entry_t), 1, read_fp);
+    int res = fread(E, sizeof(raw_pak_entry_t), 1, r_pak_fp);
 
-    if (res == EOF || res != 1 || ferror(read_fp))
+    if (res == EOF || res != 1 || ferror(r_pak_fp))
     {
       LogPrintf("PAK_OpenRead: hit EOF reading dir-entry %d\n", i);
 
@@ -129,7 +129,7 @@ bool PAK_OpenRead(const char *filename)
     delete[] r_directory;
     r_directory = NULL;
 
-    fclose(read_fp);
+    fclose(r_pak_fp);
     return false;
   }
 
@@ -138,12 +138,12 @@ bool PAK_OpenRead(const char *filename)
 
 void PAK_CloseRead(void)
 {
-  fclose(read_fp);
+  fclose(r_pak_fp);
+
+  LogPrintf("Closed PAK file\n");
 
   delete[] r_directory;
   r_directory = NULL;
-
-  LogPrintf("Closed PAK file\n");
 }
 
 
@@ -188,10 +188,10 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer)
 
   raw_pak_entry_t *E = &r_directory[entry];
 
-  if (fseek(read_fp, E->offset + offset, SEEK_SET) != 0)
+  if (fseek(r_pak_fp, E->offset + offset, SEEK_SET) != 0)
     return false;
 
-  int res = fread(buffer, length, 1, read_fp);
+  int res = fread(buffer, length, 1, r_pak_fp);
 
   return (res == 1);
 }
@@ -201,7 +201,7 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer)
 //  PAK WRITING
 //------------------------------------------------------------------------
 
-static FILE *write_fp;
+static FILE *w_pak_fp;
 
 bool PAK_OpenWrite(const char *filename)
 {
@@ -233,6 +233,8 @@ void PAK_FinishLump(void)
 //------------------------------------------------------------------------
 //  WAD2 READING
 //------------------------------------------------------------------------
+
+static FILE *wad_R_fp;
 
 bool WAD2_OpenRead(const char *filename)
 {
@@ -268,29 +270,125 @@ bool WAD2_ReadData(int entry, int offset, int length, void *buffer)
 //  WAD2 WRITING
 //------------------------------------------------------------------------
 
+static FILE *wad_W_fp;
+
+static std::list<raw_wad2_lump_t> wad_W_directory;
+
+static raw_wad2_lump_t wad_W_lump;
+
+
 bool WAD2_OpenWrite(const char *filename)
 {
-  return false; // TODO: WAD2_OpenWrite
+  wad_W_fp = fopen(filename, "wb");
+
+  if (! wad_W_fp)
+  {
+    LogPrintf("WAD2_OpenWrite: cannot create file: %s\n", filename);
+    return false;
+  }
+
+  LogPrintf("Created WAD2 file: %s\n", filename);
+
+  // write out a dummy header
+  raw_wad2_header_t header;
+  memset(&header, 0, sizeof(header));
+
+  fwrite(&header, sizeof(raw_wad2_header_t), 1, wad_W_fp);
+
+  return true;
 }
+
 
 void WAD2_CloseWrite(void)
 {
-  // TODO
+  fflush(wad_W_fp);
+
+  // write the directory
+
+  raw_wad2_header_t header;
+
+  memcpy(header.magic, WAD2_MAGIC, 4);
+
+  header.dir_start = (int)ftell(wad_W_fp);
+  header.num_lumps = 0;
+
+  std::list<raw_wad2_lump_t>::iterator WDI;
+
+  for (WDI = wad_W_directory.begin(); WDI != wad_W_directory.end(); WDI++)
+  {
+    raw_wad2_lump_t *E = & (*WDI);
+
+    fwrite(E, sizeof(raw_wad2_lump_t), 1, wad_W_fp);
+
+    header.num_lumps++;
+  }
+
+  fflush(wad_W_fp);
+
+  // finally write the _real_ WAD2 header
+
+  header.dir_start = LE_U32(header.dir_start);
+  header.num_lumps = LE_U32(header.num_lumps);
+
+  fseek(wad_W_fp, 0, SEEK_SET);
+
+  fwrite(&header, sizeof(header), 1, wad_W_fp);
+
+  fflush(wad_W_fp);
+  fclose(wad_W_fp);
+
+  LogPrintf("Closed WAD2 file\n");
+
+  wad_W_directory.clear();
 }
+
 
 void WAD2_NewLump(const char *name)
 {
-  // TODO
+  SYS_ASSERT(strlen(name) <= 15);
+
+  memset(&wad_W_lump, 0, sizeof(wad_W_lump));
+
+  strcpy(wad_W_lump.name, name);
+
+  wad_W_lump.start = (u32_t)ftell(wad_W_fp);
 }
+
 
 void WAD2_AppendData(const void *data, int length)
 {
-  // TODO
+  SYS_ASSERT(length >= 0);
+
+  if (length > 0)
+  {
+    if (fwrite(data, length, 1, wad_W_fp) != 1)
+    {
+      //TODO : write_errors++
+    }
+  }
 }
+
 
 void WAD2_FinishLump(void)
 {
-  // TODO
+  int len = (int)ftell(wad_W_fp) - (int)wad_W_lump.start;
+
+  // pad lumps to a multiple of four bytes
+  int padding = AlignLen(len) - len;
+
+  if (padding > 0)
+  {
+    static u8_t zeros[4] = { 0,0,0,0 };
+
+    fwrite(zeros, padding, 1, wad_W_fp);
+  }
+
+  // fix endianness
+  wad_W_lump.start  = LE_U32(wad_W_lump.start);
+  wad_W_lump.length = LE_U32(len);
+  wad_W_lump.u_len  = LE_U32(len);
+
+  wad_W_directory.push_back(wad_W_lump);
 }
 
 
