@@ -37,7 +37,7 @@ static FILE *read_fp;
 
 static raw_pak_header_t r_header;
 
-static std::vector<raw_pak_entry_t> r_directory;
+static raw_pak_entry_t * r_directory;
 
 
 bool PAK_OpenRead(const char *filename)
@@ -94,13 +94,13 @@ bool PAK_OpenRead(const char *filename)
     return false;
   }
 
-  r_directory.resize(r_header.entry_num);
+  r_directory = new raw_pak_entry_t[r_header.entry_num];
 
   for (int i = 0; i < (int)r_header.entry_num; i++)
   {
     raw_pak_entry_t *E = &r_directory[i];
 
-    int res = fread(&E, sizeof(raw_pak_entry_t), 1, read_fp);
+    int res = fread(E, sizeof(raw_pak_entry_t), 1, read_fp);
 
     if (res == EOF || res != 1 || ferror(read_fp))
     {
@@ -119,12 +119,16 @@ bool PAK_OpenRead(const char *filename)
     E->offset = LE_U32(E->offset);
     E->length = LE_U32(E->length);
 
-    DebugPrintf("-- %3d: %08x %08x '%s'\n", i, E->offset, E->length, E->name);
+    DebugPrintf(" %4d: %08x %08x : %s\n", i, E->offset, E->length, E->name);
   }
 
   if (r_header.entry_num == 0)
   {
     LogPrintf("PAK_OpenRead: could not read any dir-entries!\n");
+
+    delete[] r_directory;
+    r_directory = NULL;
+
     fclose(read_fp);
     return false;
   }
@@ -136,7 +140,8 @@ void PAK_CloseRead(void)
 {
   fclose(read_fp);
 
-  r_directory.resize(0);
+  delete[] r_directory;
+  r_directory = NULL;
 
   LogPrintf("Closed PAK file\n");
 }
