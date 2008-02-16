@@ -55,6 +55,9 @@
 typedef std::map<std::string, int> miptex_database_t;
 
 
+#define EXTRACT_PROGRESS_FG  fl_color_cube(2,4,4)
+
+
 static void ExtractMipTex(miptex_database_t& tex_db, int map_idx)
 {
   dheader_t bsp;
@@ -201,6 +204,55 @@ NULL //  "C:\\Program Files\\Quake 1.23b\\ID1\\PAK0.PAK"
   };
 
   DLG_ExtractStuff(&info);
+
+  
+  UI_Build *bb_area = main_win->build_box;
+
+  // lock most widgets of user interface
+  main_win->Locked(true);
+
+  bb_area->ProgSetButton(true);
+
+  bb_area->ProgInit(1);
+  bb_area->ProgBegin(0, 100, EXTRACT_PROGRESS_FG);
+
+  bb_area->ProgStatus("Extracting Textures");
+
+  bool was_ok = true;
+
+  // fake crap
+  for (int i = 0; i < 100; i++)
+  {
+    TimeDelay(50);
+
+    // this update function calls Main_Ticker() for us
+    bb_area->ProgUpdate(i);
+
+    if (main_win->action >= UI_MainWin::ABORT)
+    {
+      was_ok = false;
+      break;
+    }
+  }
+
+  if (! was_ok)
+    bb_area->ProgStatus("Aborted");
+  else
+  {
+    bb_area->ProgUpdate(100);
+    bb_area->ProgStatus("Success");
+  }
+
+  for (int pause = 0; pause < 5; pause++);
+  {
+    Main_Ticker(); TimeDelay(300);
+  }
+
+  bb_area->ProgFinish();
+
+  bb_area->ProgSetButton(false);
+
+  main_win->Locked(false);
 }
 
 
