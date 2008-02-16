@@ -24,7 +24,6 @@
 #include "ui_map.h"
 #include "ui_optlist.h"
 #include "ui_rchoice.h"
-#include "ui_extract.h"
 
 #include "ui_build.h"
 #include "ui_game.h"
