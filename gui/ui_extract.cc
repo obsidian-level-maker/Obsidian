@@ -34,7 +34,7 @@ static void DialogCallback(Fl_Widget *w, void *data)
 #define ICON_W  40
 #define ICON_H  40
 
-#define FONT_SIZE  18
+#define FONT_SIZE  16
 
 static void
 DialogShowAndRun(const char *message, const char *title, bool detected)
@@ -200,8 +200,8 @@ void DLG_ExtractStuff(extract_info_t *info)
   else
   {
     sprintf(bottom,
-        "Oblige has checked for an existing %s installation "
-        "but did not find it.  Please find it yourself by clicking "
+        "Oblige dit not find any existing %s installation. "
+        "Please locate it by clicking "
         "on the Find Manually button.",
         info->game);
   }
