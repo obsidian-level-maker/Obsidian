@@ -25,6 +25,7 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+#include "ui_chooser.h"
 
 #include "g_image.h"
 
@@ -203,9 +204,28 @@ void Quake1_ExtractTextures(void)
 NULL //  "C:\\Program Files\\Quake 1.23b\\ID1\\PAK0.PAK"
   };
 
-  DLG_ExtractStuff(&info);
+  int res = DLG_ExtractStuff(&info);
 
-  
+  if (res == EXDLG_Abort)
+    return;
+
+  const char *filename = info.detected;
+
+  if (! (filename && res == EXDLG_UseDetected))
+  {
+    filename = Select_Input_File();
+
+    if (! filename)
+      return;
+  }
+
+  if (! FileExists(filename))
+  {
+    Main_FatalError("No such file: %s", filename);
+    return; /* NOT REACHED */
+  }
+
+
   UI_Build *bb_area = main_win->build_box;
 
   // lock most widgets of user interface
@@ -239,17 +259,16 @@ NULL //  "C:\\Program Files\\Quake 1.23b\\ID1\\PAK0.PAK"
     bb_area->ProgStatus("Aborted");
   else
   {
-    bb_area->ProgUpdate(100);
     bb_area->ProgStatus("Success");
+    bb_area->ProgUpdate(100);
   }
 
-  for (int pause = 0; pause < 5; pause++);
+  for (int pause = 0; pause < 6; pause++)
   {
     Main_Ticker(); TimeDelay(300);
   }
 
   bb_area->ProgFinish();
-
   bb_area->ProgSetButton(false);
 
   main_win->Locked(false);
