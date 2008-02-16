@@ -31,7 +31,15 @@ typedef struct extract_info_s
 }
 extract_info_t;
 
-void DLG_ExtractStuff(extract_info_t *info);
+typedef enum
+{
+  EXDLG_Abort = 1,
+  EXDLG_UseDetected  = 2,
+  EXDLG_FindManually = 3
+}
+extract_dialog_result_e;
+
+int DLG_ExtractStuff(extract_info_t *info);
 
 #endif // __DIALOG_HEADER__
 
