@@ -155,27 +155,47 @@ void Quake1_ExtractTextures(void)
     Main_FatalError("FUCK");
   }
 
-  if (! PAK_OpenRead("/home/aapted/quake/id1/pak2.pak"))
-  {
-    Main_FatalError("SHIT");
-  }
-
   miptex_database_t tex_db;
 
-  std::vector<int> maps;
-
-  PAK_FindMaps(maps);
-
-  for (unsigned int m = 0; m < maps.size(); m++)
+  for (int pp = 0; pp <= 1; pp++)
   {
-fprintf(stderr, "Doing map %d/%d\n", m+1, (int)maps.size());
-    ExtractMipTex(tex_db, maps[m]);
-  }
+    const char *filename = StringPrintf("/home/aapted/quake/id1/pak%d.pak", pp);
 
-  PAK_CloseRead();
+fprintf(stderr, "Opening: %s\n", filename);
+    if (! PAK_OpenRead(filename))
+    {
+      Main_FatalError("SHIT");
+    }
+
+    std::vector<int> maps;
+
+    PAK_FindMaps(maps);
+
+    for (unsigned int m = 0; m < maps.size(); m++)
+    {
+fprintf(stderr, "Doing map %d/%d\n", m+1, (int)maps.size());
+      ExtractMipTex(tex_db, maps[m]);
+    }
+
+    PAK_CloseRead();
+
+    StringFree(filename);
+  }
 
   WAD2_CloseWrite();
 }
+
+
+//------------------------------------------------------------------------
+
+bool Q1_AddTextureFromWad(const char *name)
+{
+  int lump = WAD2_FindEntry(name);
+
+  if (! lump)
+  { }
+}
+
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
