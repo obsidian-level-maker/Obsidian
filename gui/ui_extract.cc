@@ -200,7 +200,7 @@ void DLG_ExtractStuff(extract_info_t *info)
   else
   {
     sprintf(bottom,
-        "Oblige dit not find any existing %s installation. "
+        "Oblige did not find any existing %s installation. "
         "Please locate it by clicking "
         "on the Find Manually button.",
         info->game);
