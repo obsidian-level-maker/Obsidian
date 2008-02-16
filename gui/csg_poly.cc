@@ -23,10 +23,8 @@
 #include <algorithm>
 
 #include "csg_poly.h"
-#include "g_doom.h"
 #include "g_lua.h"
 #include "lib_util.h"
-
 #include "main.h"
 #include "ui_dialog.h"
 

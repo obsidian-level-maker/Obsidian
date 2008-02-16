@@ -25,7 +25,6 @@
 #include "lib_util.h"
 
 #include "csg_poly.h"
-#include "csg_doom.h"
 #include "csg_quake.h"
 
 #include "g_image.h"

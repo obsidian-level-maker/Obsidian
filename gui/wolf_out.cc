@@ -24,7 +24,7 @@
 #include "lib_file.h"
 #include "lib_util.h"
 
-#include "g_wolf.h"
+#include "wolf_out.h"
 #include "g_lua.h"
 #include "main.h"
 

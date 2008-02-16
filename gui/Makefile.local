@@ -47,16 +47,17 @@ OBJS=	main.o      \
 	sys_assert.o \
 	sys_debug.o \
 	csg_poly.o  \
-	csg_doom.o  \
 	csg_quake.o \
+	dm_level.o  \
+	dm_wad.o    \
+	dm_glbsp.o   \
 	g_cookie.o  \
-	g_doom.o    \
-	g_glbsp.o   \
 	g_image.o   \
 	g_lua.o     \
-	g_wolf.o    \
 	q1_bsp.o    \
 	q1_main.o   \
+	q1_pakfile.o \
+	q1_tex.o    \
 	twister.o   \
 	ui_build.o  \
 	ui_chooser.o \
@@ -69,7 +70,8 @@ OBJS=	main.o      \
 	ui_optlist.o \
 	ui_rchoice.o \
 	ui_play.o \
-	ui_window.o
+	ui_window.o \
+	wolf_out.o
 
 
 #--- Targets and Rules ------------------------------------------

@@ -28,14 +28,14 @@
 
 #include "main.h"
 
-#include "g_cookie.h"
-#include "g_doom.h"
-#include "g_lua.h"
-#include "g_wolf.h"
-
-#include "q1_main.h"
-
 #include "ui_chooser.h"
+
+#include "g_cookie.h"
+#include "g_lua.h"
+
+#include "dm_wad.h"
+#include "q1_main.h"
+#include "wolf_out.h"
 
 
 #define TICKER_TIME  20 /* ms */
@@ -376,6 +376,12 @@ int main(int argc, char **argv)
 
   // load config after creating window (set widget values)
 //!!!!!!  Cookie_Load(CONFIG_FILENAME);
+
+#if 0
+Quake1_ExtractTextures();
+Main_Shutdown();
+return 0;
+#endif
 
   try
   {

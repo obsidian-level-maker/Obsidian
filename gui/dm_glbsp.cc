@@ -20,7 +20,7 @@
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 
-#include "g_glbsp.h"
+#include "dm_glbsp.h"
 #include "lib_util.h"
 #include "main.h"
 
