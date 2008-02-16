@@ -34,10 +34,10 @@ static void DialogCallback(Fl_Widget *w, void *data)
 #define ICON_W  40
 #define ICON_H  40
 
-#define FONT_SIZE  16
+#define FONT_SIZE  18
 
 static void
-DialogShowAndRun(const char *message, const char *title)
+DialogShowAndRun(const char *message, const char *title, bool detected)
 {
   dialog_done = false;
 
@@ -89,14 +89,37 @@ DialogShowAndRun(const char *message, const char *title)
 
   dialog->add(box);
 
-  // create button...
-  Fl_Button *button =
-    new Fl_Button(total_W - BTN_W - 20, total_H - BTN_H - 12,
-               BTN_W, BTN_H, "Close");
+  // create buttons...
+  int cx = total_W - BTN_W - 20;
+
+  Fl_Button *button;
+
+  if (detected)
+  {
+    button = new Fl_Button(cx, total_H - BTN_H - 12, BTN_W, BTN_H, "Use Detected");
+
+    button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    button->callback((Fl_Callback *) DialogCallback);
+
+    dialog->add(button);
+
+    cx -= 120;
+  }
+
+  button = new Fl_Button(cx, total_H - BTN_H - 12, BTN_W, BTN_H, "Find Manually");
 
   button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
   button->callback((Fl_Callback *) DialogCallback);
-//  button->labelsize(FONT_SIZE - 2);
+
+  dialog->add(button);
+
+  cx -= 120;
+
+  button = new Fl_Button(cx, total_H - BTN_H - 12, BTN_W, BTN_H, "Abort");
+
+  button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+  button->callback((Fl_Callback *) DialogCallback);
+//button->labelcolor(FL_RED);
 
   dialog->add(button);
 
@@ -157,10 +180,10 @@ void DLG_ExtractStuff(extract_info_t *info)
       "Oblige needs to extract %s from the game's "
       "data files in order to make %s levels.\n"
       "\n"
-      "The game data is usually stored in a file called \"%s\"%s "
+      "The game data is normally stored in a file called \"%s\"%s "
       "where %s is installed\n"
       "\n",
-      info->game, info->type, info->file, loc_str, info->game);
+      info->type, info->game, info->file, loc_str, info->game);
 
   if (info->detected)
   {
@@ -177,7 +200,7 @@ void DLG_ExtractStuff(extract_info_t *info)
   else
   {
     sprintf(bottom,
-        "Oblige has looked for an existing %s installation "
+        "Oblige has checked for an existing %s installation "
         "but did not find it.  Please find it yourself by clicking "
         "on the Find Manually button.",
         info->game);
@@ -187,7 +210,7 @@ void DLG_ExtractStuff(extract_info_t *info)
 
   sprintf(title, "Oblige - %s Setup", info->game);
 
-  DialogShowAndRun(top, title);
+  DialogShowAndRun(top, title, info->detected ? true : false);
 }
 
 //--- editor settings ---

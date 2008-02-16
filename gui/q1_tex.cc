@@ -148,9 +148,9 @@ fprintf(stderr, "    name:%s size:%dx%d\n", mip.name, mip.width, mip.height);
 }
 
 
-void Quake1_ExtractTextures(void)
+void Do_ExtractTextures(void)
 {
-  if (! WAD2_OpenWrite("data/quake_tex.wad"))
+  if (! WAD2_OpenWrite("data/fake_tex.wad"))
   {
     Main_FatalError("FUCK");
   }
@@ -188,12 +188,19 @@ fprintf(stderr, "Doing map %d/%d\n", m+1, (int)maps.size());
 
 //------------------------------------------------------------------------
 
-bool Q1_AddTextureFromWad(const char *name)
-{
-  int lump = WAD2_FindEntry(name);
 
-  if (! lump)
-  { }
+void Quake1_ExtractTextures(void)
+{
+  static extract_info_t info =
+  {
+    "Quake1",
+    "the textures",
+    "pak0.pak",
+    "id1",
+NULL //  "C:\\Program Files\\Quake 1.23b\\ID1\\PAK0.PAK"
+  };
+
+  DLG_ExtractStuff(&info);
 }
 
 
