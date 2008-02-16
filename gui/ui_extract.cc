@@ -114,21 +114,80 @@ DialogShowAndRun(const char *message, const char *title)
   delete dialog;
 }
 
-void DLG_ExtractStuff(const char *title, const char *msg, ...)
+
+#if 0
+static const char * extract_Text =
+  Oblige needs to extract $(DATATYPE) from the game's
+  data files in order to make $(GAME) levels.
+
+  The game data is usually stored in a file called
+  $(FILE)
+  "pak0.pak" in a folder called "id1"
+  where $(GAME) is installed.
+
+  Oblige has detected an existing $(GAME) installation
+  on your computer in the following location:
+  [C:\QUAKE\ID1\PAK0.PAK]
+
+  Do you want to use this location?
+OR
+  Oblige has looked for an existing $(GAME) installation
+  but did not find it.  Please find it yourself by clicking
+  on the Find Manually button.
+
+  
+  (ABORT)  (USE DETECTED)  (FIND MANUALLY)
+;
+#endif
+
+
+void DLG_ExtractStuff(extract_info_t *info)
 {
-  static char buffer[MSG_BUF_LEN];
+  static char top[2000];
+  static char bottom[1000];
+  static char loc_str[200];
+  static char title[200];
 
-  va_list arg_pt;
+  if (info->dir)
+    sprintf(loc_str, " in a folder called \"%s\"", info->dir);
+  else
+    loc_str[0] = 0;
 
-  va_start (arg_pt, msg);
-  vsnprintf (buffer, MSG_BUF_LEN-1, msg, arg_pt);
-  va_end (arg_pt);
+  sprintf(top,
+      "Oblige needs to extract %s from the game's "
+      "data files in order to make %s levels.\n"
+      "\n"
+      "The game data is usually stored in a file called \"%s\"%s "
+      "where %s is installed\n"
+      "\n",
+      info->game, info->type, info->file, loc_str, info->game);
 
-  buffer[MSG_BUF_LEN-2] = 0;
+  if (info->detected)
+  {
+    sprintf(bottom,
 
-  LogPrintf("\n%s\n", buffer);
+        "Oblige has detected an existing %s installation "
+        "on your computer in the following location:\n"
+        "\n"
+        "%s\n"
+        "\n"
+        "Do you want to use this location?",
+        info->game, info->detected);
+  }
+  else
+  {
+    sprintf(bottom,
+        "Oblige has looked for an existing %s installation "
+        "but did not find it.  Please find it yourself by clicking "
+        "on the Find Manually button.",
+        info->game);
+  }
 
-  DialogShowAndRun(buffer, title);
+  strcat(top, bottom);
+
+  sprintf(title, "Oblige - %s Setup", info->game);
+
+  DialogShowAndRun(top, title);
 }
 
 //--- editor settings ---

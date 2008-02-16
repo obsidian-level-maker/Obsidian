@@ -19,7 +19,18 @@
 #ifndef __UI_EXTRACT_H__
 #define __UI_EXTRACT_H__
 
-void DLG_ExtractStuff(const char *title, const char *msg, ...);
+typedef struct extract_info_s
+{
+  const char *game;   // e.g. "Quake1"
+  const char *type;   // e.g. "the textures"
+  const char *file;   // e.g. "pak0.pak"
+  const char *dir;    // e.g. "id1", or NULL
+
+  const char *detected;  // detected filename or NULL
+}
+extract_info_t;
+
+void DLG_ExtractStuff(extract_info_t *info);
 
 #endif // __UI_EXTRACT_H__
 
