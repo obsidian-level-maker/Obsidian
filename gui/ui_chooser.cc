@@ -193,5 +193,99 @@ char *Select_Output_File(void)
 }
 
 
+//------------------------------------------------------------------------
+
+char *Select_Input_File(void)
+{
+#ifdef WIN32
+  // remember current directory and restore it after the call to
+  // GetSaveFileName(), which might change it.
+  char *cur_dir = StringNew(MAX_PATH);
+
+  DWORD gcd_res = ::GetCurrentDirectory(MAX_PATH, cur_dir);
+
+  if (0 == gcd_res || gcd_res > MAX_PATH)
+    Main_FatalError("GetCurrentDirectory failed!");
+
+  DebugPrintf("Select_Input_File: cur_dir=[%s]\n", cur_dir);
+  
+  // --- call the bitch ---
+
+  char *name = StringNew(FL_PATH_MAX);
+  name[0] = 0;
+
+  OPENFILENAME ofn;
+  memset(&ofn, 0, sizeof(ofn));
+
+  ofn.lStructSize = sizeof(OPENFILENAME); 
+  ofn.hwndOwner = fl_xid(main_win);
+  ofn.lpstrFilter = "Pak Files\0*.pak\0\0";
+  ofn.lpstrFile = name;
+  ofn.nMaxFile  = FL_PATH_MAX;
+  ofn.lpstrInitialDir = (LPSTR)NULL; 
+  ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_NONETWORKBUTTON;
+  ofn.lpstrTitle = "Select input file"; 
+ 
+  BOOL result = ::GetOpenFileName(&ofn);
+
+  if (result == 0)
+  {
+    DWORD err = ::CommDlgExtendedError();
+
+    DebugPrintf("Select_Input_File: failed, err=0x%08x\n", err);
+
+    // user cancelled, or error occurred
+    ::SetCurrentDirectory(cur_dir);
+    return NULL;
+  }
+
+  if (ofn.lpstrFile != name)
+  {
+    SYS_ASSERT(ofn.lpstrFile);
+
+    // NOTE: memory leak.  I cannot be sure what the GetOpenFileName()
+    // call has placed into lpstrFile field, maybe a subset of our
+    // existing buffer, maybe something entirely different.
+
+    name = StringDup(ofn.lpstrFile);
+  }
+
+  if (name[0] != '\\' && ! (name[0] && name[1] == ':'))
+  {
+    // name was relative.  Since I'm assuming the GetOpenFileName()
+    // call might modify the current directory, we need to make the
+    // filename absolute _BEFORE_ we restore the original dir.
+
+    char *copy = StringNew(FL_PATH_MAX);
+
+    fl_filename_absolute(copy, FL_PATH_MAX, name);
+
+    StringFree(name);
+    name = copy;
+  }
+
+  ::SetCurrentDirectory(cur_dir);
+
+#else  // Linux and MacOSX
+
+  char *name = fl_file_chooser("Select input file", "*.pak", NULL);
+  if (! name)
+    return NULL;
+
+  name = StringDup(name);
+#endif
+
+  if (! HasExtension(name))
+  {
+    char *new_name = ReplaceExtension(name, "pak");
+    StringFree(name);
+    name = new_name;
+  }
+  
+  DebugPrintf("Select_Input_File: OK, name=[%s]\n", name);
+
+  return name;
+}
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

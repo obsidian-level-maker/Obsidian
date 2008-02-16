@@ -22,6 +22,7 @@
 void Default_Location(void);
 
 char *Select_Output_File(void);
+char *Select_Input_File(void);
 
 // for config file...
 bool UI_SetLastFile(const char *filename);
