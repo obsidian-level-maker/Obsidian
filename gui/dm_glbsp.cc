@@ -37,6 +37,9 @@ static int display_mode = DIS_INVALID;
 static char message_buf[MSG_BUF_LEN];
 
 
+#define GLBSP_PROGRESS_FG  fl_color_cube(1,4,2)
+
+
 static const char *GetErrorString(glbsp_ret_e ret)
 {
   switch (ret)
@@ -134,7 +137,7 @@ void GB_DisplaySetBarLimit(int barnum, int limit)
 {
   if (display_mode == DIS_BUILDPROGRESS && barnum == 2)
   {
-    main_win->build_box->ProgBegin(2, limit);
+    main_win->build_box->ProgBegin(2, limit, GLBSP_PROGRESS_FG);
   }
 }
 

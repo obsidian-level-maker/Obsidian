@@ -103,6 +103,7 @@ void Determine_WorkingPath(const char *argv0)
     working_path = StringDup(".");
 }
 
+
 void Determine_InstallPath(const char *argv0)
 {
   // secondly find the "Install directory", and store the
@@ -144,6 +145,7 @@ install_path, filename)
     Main_FatalError("Unable to find LUA script folder!\n");
 }
 
+
 void Main_Ticker()
 {
   // This function is called very frequently.
@@ -176,6 +178,7 @@ void Main_Shutdown()
   LogClose();
   ArgvClose();
 }
+
 
 void Main_FatalError(const char *msg, ...)
 {
@@ -238,7 +241,7 @@ void Build_Cool_Shit()
   if (was_ok)
   {
     bb_area->ProgStatus("Making levels");
-    bb_area->ProgBegin(1, 100);
+    bb_area->ProgBegin(1, 100, BUILD_PROGRESS_FG);
 
     was_ok = Script_Build();
 
@@ -377,10 +380,8 @@ int main(int argc, char **argv)
   // load config after creating window (set widget values)
 //!!!!!!  Cookie_Load(CONFIG_FILENAME);
 
-#if 0
+#if 1
 Quake1_ExtractTextures();
-Main_Shutdown();
-return 0;
 #endif
 
   try

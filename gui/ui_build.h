@@ -19,6 +19,8 @@
 #ifndef __UI_BUILD_H__
 #define __UI_BUILD_H__
 
+#define BUILD_PROGRESS_FG  fl_color_cube(3,3,0)
+
 class UI_Build : public Fl_Group
 {
 private:
@@ -43,7 +45,7 @@ public:
 
 public:
   void ProgInit(int num_pass);
-  void ProgBegin(int pass, float limit);
+  void ProgBegin(int pass, float limit, Fl_Color color);
   void ProgUpdate(float val);
   void ProgFinish();
   void ProgStatus(const char *msg);
