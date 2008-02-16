@@ -58,7 +58,7 @@ DialogShowAndRun(const char *message, const char *title)
   mesg_H += 8;
 
   int total_W = 10 + ICON_W + 10 + mesg_W + 10;
-  int total_H = 10 + mesg_H + 20 + BTN_H  + 10;
+  int total_H = 10 + mesg_H + 10 + BTN_H  + 10;
 
   // create window...
   Fl_Window *dialog = new Fl_Window(0, 0, total_W, total_H, title);
@@ -194,7 +194,7 @@ ExtractDialog_ShowAndRun(const char *message, const char *title, bool detected)
 
   box->align(FL_ALIGN_LEFT | FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_WRAP);
   box->labelfont(FL_HELVETICA);
-  box->labelsize(FONT_SIZE);
+  box->labelsize(EXT_FONT_SIZE);
 
   dialog->add(box);
 
@@ -202,18 +202,6 @@ ExtractDialog_ShowAndRun(const char *message, const char *title, bool detected)
   int cx = total_W - BTN_W - 20;
 
   Fl_Button *button;
-
-  if (detected)
-  {
-    button = new Fl_Button(cx, total_H - BTN_H - 12, BTN_W, BTN_H, "Use Detected");
-
-    button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
-    button->callback((Fl_Callback *) dialog_useit_CB);
-
-    dialog->add(button);
-
-    cx -= 120;
-  }
 
   button = new Fl_Button(cx, total_H - BTN_H - 12, BTN_W, BTN_H, "Find Manually");
 
@@ -223,6 +211,19 @@ ExtractDialog_ShowAndRun(const char *message, const char *title, bool detected)
   dialog->add(button);
 
   cx -= 120;
+
+  if (detected)
+  {
+    button = new Fl_Button(cx, total_H - BTN_H - 12, BTN_W, BTN_H, "Use Detected");
+
+    button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    button->labelfont(FL_HELVETICA_BOLD);
+    button->callback((Fl_Callback *) dialog_useit_CB);
+
+    dialog->add(button);
+
+    cx -= 120;
+  }
 
   button = new Fl_Button(cx, total_H - BTN_H - 12, BTN_W, BTN_H, "Abort");
 
@@ -312,9 +313,9 @@ int DLG_ExtractStuff(extract_info_t *info)
   {
     sprintf(bottom,
         "Oblige did not find any existing %s installation. "
-        "Please locate it by clicking "
+        "Please locate the \"%s\" file by clicking "
         "on the Find Manually button.",
-        info->game);
+        info->game, info->file);
   }
 
   strcat(top, bottom);
