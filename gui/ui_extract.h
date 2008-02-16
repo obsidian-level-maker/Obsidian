@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  UI INCLUDES
+//  EXTRACTION Wizard
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -16,24 +16,12 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OB_HDR_UI_H__
-#define __OB_HDR_UI_H__
+#ifndef __UI_EXTRACT_H__
+#define __UI_EXTRACT_H__
 
-#include "ui_dialog.h"
-#include "ui_menu.h"
-#include "ui_map.h"
-#include "ui_optlist.h"
-#include "ui_rchoice.h"
-#include "ui_extract.h"
+void DLG_ExtractStuff(const char *title, const char *msg, ...);
 
-#include "ui_build.h"
-#include "ui_game.h"
-#include "ui_level.h"
-#include "ui_mods.h"
-#include "ui_play.h"
-#include "ui_window.h"
-
-#endif /* __OB_HDR_UI_H__ */
+#endif // __UI_EXTRACT_H__
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
