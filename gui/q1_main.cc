@@ -686,10 +686,10 @@ static void BSP_CreateMipTex(void)
 {
   qLump_c *lump = Q1_NewLump(LUMP_TEXTURES);
 
-  if (! WAD2_OpenRead("data/quake_tex"))
+  if (! WAD2_OpenRead("data/quake_tex.wad"))
   {
     // this shouldn't happen, existence is checked earlier
-    Main_FatalError("No such file: data/quake_tex");
+    Main_FatalError("No such file: data/quake_tex.wad");
     return; /* NOT REACHED */
   }
 

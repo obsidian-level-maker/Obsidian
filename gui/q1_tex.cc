@@ -58,7 +58,7 @@ typedef std::map<std::string, int> miptex_database_t;
 
 #define EXTRACT_PROGRESS_FG  fl_color_cube(2,4,4)
 
-#define QUAKE1_TEX_WAD  "data/quake_tex"
+#define QUAKE1_TEX_WAD  "data/quake_tex.wad"
 
 
 static void ExtractMipTex(miptex_database_t& tex_db, int map_idx)
