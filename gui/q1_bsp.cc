@@ -1594,10 +1594,8 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
     qFace_c *F = leaf->faces[n];
 
     // should have been in a node already
-fprintf(stderr, "unseen face %p (leaf %p)\n", F, leaf);
     SYS_ASSERT(F->index >= 0);
 
-///    if (F->index < 0)
     MakeFace(F, &raw_lf);
   }
 
