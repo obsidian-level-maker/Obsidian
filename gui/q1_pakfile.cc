@@ -111,9 +111,7 @@ bool PAK_OpenRead(const char *filename)
       break;
     }
 
-    // make sure name is NUL terminated.  For the longest possible
-    // name, this will chop off the last character.  However for
-    // our purposes this should not matter much.
+    // make sure name is NUL terminated.
     E->name[55] = 0;
 
     E->offset = LE_U32(E->offset);
@@ -236,33 +234,145 @@ void PAK_FinishLump(void)
 
 static FILE *wad_R_fp;
 
+static raw_wad2_header_t  wad_R_header;
+static raw_wad2_lump_t * wad_R_dir;
+
 bool WAD2_OpenRead(const char *filename)
 {
-  // TODO: WAD2_OpenRead
-  return false;
+  wad_R_fp = fopen(filename, "rb");
+
+  if (! wad_R_fp)
+  {
+    LogPrintf("WAD2_OpenRead: cannot open file: %s\n", filename);
+    return false;
+  }
+
+  LogPrintf("Opened WAD2 file: %s\n", filename);
+
+  if (fread(&wad_R_header, sizeof(wad_R_header), 1, wad_R_fp) != 1)
+  {
+    LogPrintf("WAD2_OpenRead: failed reading header\n");
+    fclose(wad_R_fp);
+    return false;
+  }
+
+  if (memcmp(wad_R_header.magic, WAD2_MAGIC, 4) != 0)
+  {
+    LogPrintf("WAD2_OpenRead: not a WAD2 file!\n");
+    fclose(wad_R_fp);
+    return false;
+  }
+
+  wad_R_header.num_lumps = LE_U32(wad_R_header.num_lumps);
+  wad_R_header.dir_start = LE_U32(wad_R_header.dir_start);
+
+  /* read directory */
+
+  if (wad_R_header.num_lumps == 0)
+  {
+    LogPrintf("WAD2_OpenRead: empty PAK file!\n");
+    fclose(wad_R_fp);
+    return false;
+  }
+  if (wad_R_header.num_lumps >= 4000)  // sanity check
+  {
+    LogPrintf("WAD2_OpenRead: bad header (%d entries?)\n", wad_R_header.num_lumps);
+    fclose(wad_R_fp);
+    return false;
+  }
+
+  if (fseek(wad_R_fp, wad_R_header.dir_start, SEEK_SET) != 0)
+  {
+    LogPrintf("WAD2_OpenRead: cannot seek to directory (at 0x%08x)\n", wad_R_header.dir_start);
+    fclose(wad_R_fp);
+    return false;
+  }
+
+  wad_R_dir = new raw_wad2_lump_t[wad_R_header.num_lumps];
+
+  for (int i = 0; i < (int)wad_R_header.num_lumps; i++)
+  {
+    raw_wad2_lump_t *L = &wad_R_dir[i];
+
+    int res = fread(L, sizeof(raw_wad2_lump_t), 1, wad_R_fp);
+
+    if (res == EOF || res != 1 || ferror(wad_R_fp))
+    {
+      LogPrintf("WAD2_OpenRead: hit EOF reading dir-entry %d\n", i);
+
+      // truncate directory
+      wad_R_header.num_lumps = i;
+      break;
+    }
+
+    // make sure name is NUL terminated.
+    L->name[15] = 0;
+
+    L->start  = LE_U32(L->start);
+    L->length = LE_U32(L->length);
+    L->u_len  = LE_U32(L->u_len);
+
+    DebugPrintf(" %4d: %08x %08x : %s\n", i, L->start, L->length, L->name);
+  }
+
+  if (wad_R_header.num_lumps == 0)
+  {
+    LogPrintf("WAD2_OpenRead: could not read any dir-entries!\n");
+
+    delete[] wad_R_dir;
+    wad_R_dir = NULL;
+
+    fclose(wad_R_fp);
+    return false;
+  }
+
+  return true; // OK
 }
 
 void WAD2_CloseRead(void)
 {
-  // TODO
+  fclose(wad_R_fp);
+
+  LogPrintf("Closed WAD2 file\n");
+
+  delete[] wad_R_dir;
+  wad_R_dir = NULL;
 }
 
-int  WAD2_FindEntry(const char *name)
+int WAD2_FindEntry(const char *name)
 {
-  // TODO
-  return -1;
+  // FIXME: optimise this (with a cache)
+
+  for (unsigned int i = 0; i < wad_R_header.num_lumps; i++)
+  {
+    if (StringCaseCmp(name, wad_R_dir[i].name) == 0)
+      return i;
+  }
+
+  return -1; // not found
 }
 
-int  WAD2_EntryLen(int entry)
+int WAD2_EntryLen(int entry)
 {
-  // TODO
-  return 0;
+  SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
+
+  return wad_R_dir[entry].u_len;
 }
 
 bool WAD2_ReadData(int entry, int offset, int length, void *buffer)
 {
-  // TODO
-  return false;
+  SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
+  SYS_ASSERT(offset >= 0);
+  SYS_ASSERT(length > 0);
+
+  raw_wad2_lump_t *L = &wad_R_dir[entry];
+
+  if (fseek(wad_R_fp, L->start + offset, SEEK_SET) != 0)
+    return false;
+
+  int res = fread(buffer, length, 1, wad_R_fp);
+
+  return (res == 1);
 }
 
 
