@@ -43,6 +43,7 @@ u16_t Q1_AddPlane(double x, double y, double z,
                   double dx, double dy, double dz, bool *flipped);
 u16_t Q1_AddVertex(double x, double y, double z);
 s32_t Q1_AddEdge(u16_t start, u16_t end);
+u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4);
 
 
 // q1_bsp.cc

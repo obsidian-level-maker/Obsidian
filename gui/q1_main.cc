@@ -432,6 +432,8 @@ static void BSP_CreatePlanes(void)
 {
   qLump_c *lump = Q1_NewLump(LUMP_PLANES);
 
+  // FIXME: write separately, fix endianness as we go
+
   Q1_Append(lump, &q1_planes[0], q1_planes.size() * sizeof(dplane_t));
 }
 
@@ -559,7 +561,44 @@ static void BSP_CreateEdges(void)
 
 //------------------------------------------------------------------------
 
+static std::vector<std::string>   q1_miptexs;
+static std::map<std::string, int> q1_miptex_map;
+
+static void ClearMipTex(void)
+{
+  q1_miptexs.clear();
+  q1_miptex_map.clear();
+}
+
+s32_t Q1_AddMipTex(const char *name)
+{
+  // built-in textures
+  if (strcmp(name, "error") == 0)
+    return 0;
+  else if (strcmp(name, "missing") == 0)
+    return 1;
+  else if (strcmp(name, "oblige") == 0)
+    return 2;
+
+  if (q1_miptex_map.find(name) != q1_miptex_map.end())
+  {
+    return q1_miptex_map[name];
+  }
+
+  int index = 3 + (int)q1_miptexs.size();
+
+  q1_miptexs.push_back(name);
+  q1_miptex_map[name] = index;
+
+  return index;
+}
+
 static void BSP_CreateMipTex(void)
+{
+  // FIXME !!!!  BSP_CreateMipTex
+}
+
+static void DummyMipTex(void)
 {
   /* TEMP DUMMY STUFF */
 
@@ -624,7 +663,107 @@ static void BSP_CreateMipTex(void)
   }
 }
 
+//------------------------------------------------------------------------
+
+std::vector<texinfo_t> q1_texinfos;
+
+#define NUM_TEXINFO_HASH  32
+static std::vector<u16_t> * texinfo_hashtab[NUM_TEXINFO_HASH];
+
+
+static void ClearTexInfo(void)
+{
+  q1_texinfos.clear();
+
+  for (int h = 0; h < NUM_TEXINFO_HASH; h++)
+  {
+    delete texinfo_hashtab[h];
+    texinfo_hashtab[h] = NULL;
+  }
+}
+
+static bool MatchTexInfo(const texinfo_t *A, const texinfo_t *B)
+{
+  if (A->miptex != B->miptex)
+    return false;
+
+  if (A->flags != B->flags)
+    return false;
+
+  for (int k = 0; k < 4; k++)
+  {
+    if (fabs(A->s[k] - B->s[k]) > 0.01)
+      return false;
+
+    if (fabs(A->t[k] - B->t[k]) > 0.01)
+      return false;
+  }
+
+  return true; // yay!
+}
+
+u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4)
+{
+  // create texinfo structure
+  texinfo_t tin;
+
+  for (int k = 0; k < 4; k++)
+  {
+    tin.s[k] = s4[k];
+    tin.t[k] = t4[k];
+  }
+
+  tin.miptex = Q1_AddMipTex(texture);
+  tin.flags  = flags;
+
+
+  // find an existing texinfo.
+  // For speed we use a hash-table.
+  int hash = (int)tin.miptex % NUM_TEXINFO_HASH;
+
+  SYS_ASSERT(hash >= 0);
+
+  if (! texinfo_hashtab[hash])
+    texinfo_hashtab[hash] = new std::vector<u16_t>;
+
+  std::vector<u16_t> *hashtab = texinfo_hashtab[hash];
+
+  for (unsigned int i = 0; i < hashtab->size(); i++)
+  {
+    u16_t tin_idx = (*hashtab)[i];
+
+    SYS_ASSERT(tin_idx < q1_texinfos.size());
+
+    if (MatchTexInfo(&tin, &q1_texinfos[tin_idx]))
+      return tin_idx;  // found it
+  }
+
+
+  // not found, so add new one
+  u16_t tin_idx = q1_texinfos.size();
+
+  if (tin_idx >= MAX_MAP_TEXINFO)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d TEXINFOS\n",
+                    MAX_MAP_TEXINFO);
+
+  q1_texinfos.push_back(tin);
+
+  hashtab->push_back(tin_idx);
+
+  return tin_idx;
+}
+
 static void BSP_CreateTexInfo(void)
+{
+  qLump_c *lump = Q1_NewLump(LUMP_TEXINFO);
+
+  // FIXME: write separately, fix endianness as we go
+ 
+  Q1_Append(lump, &q1_texinfos[0], q1_texinfos.size() * sizeof(texinfo_t));
+}
+
+
+static void DummyTexInfo(void)
 {
   /* TEMP DUMMY STUFF */
 
@@ -672,30 +811,6 @@ static void BSP_CreateTexInfo(void)
     Q1_Append(lump, &tex, sizeof(tex));
   }
 }
-
-#if 0
-static void BSP_CreateClipNodes(void)
-{
-  /* TEMP DUMMY STUFF */
-
-  qLump_c *lump = Q1_NewLump(LUMP_CLIPNODES);
-
-  // a single node which makes everything passable
-
-  dclipnode_t cnode;
-
-  cnode.planenum = LE_S32(0);
-
-  cnode.children[0] = LE_S16(CONTENTS_EMPTY);
-  cnode.children[1] = LE_S16(CONTENTS_EMPTY);
-
-  // hull [1]
-  Q1_Append(lump, &cnode, sizeof(cnode));
-
-  // hull [2]
-  Q1_Append(lump, &cnode, sizeof(cnode));
-}
-#endif
 
 
 //------------------------------------------------------------------------
@@ -753,6 +868,8 @@ bool Quake1_Start(const char *target_file)
   ClearPlanes();
   ClearVertices();
   ClearEdges();
+  ClearMipTex();
+  ClearTexInfo();
 
   ClearLumps();
 
