@@ -380,7 +380,7 @@ int main(int argc, char **argv)
   // load config after creating window (set widget values)
 //!!!!!!  Cookie_Load(CONFIG_FILENAME);
 
-#if 1
+#if 0
 Quake1_ExtractTextures();
 #endif
 
