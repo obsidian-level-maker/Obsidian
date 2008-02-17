@@ -291,6 +291,16 @@ public:
   {
     return top->info->z1;
   }
+
+  inline const char *FloorTex() const
+  {
+    return bottom->info->t_tex.c_str();
+  }
+
+  inline const char *CeilTex() const
+  {
+    return top->info->b_tex.c_str();
+  }
 };
 
 
