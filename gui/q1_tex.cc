@@ -58,6 +58,8 @@ typedef std::map<std::string, int> miptex_database_t;
 
 #define EXTRACT_PROGRESS_FG  fl_color_cube(2,4,4)
 
+#define QUAKE1_TEX_WAD  "data/quake_tex"
+
 
 static void ExtractMipTex(miptex_database_t& tex_db, int map_idx)
 {
@@ -66,13 +68,21 @@ static void ExtractMipTex(miptex_database_t& tex_db, int map_idx)
   if (! PAK_ReadData(map_idx, 0, sizeof(bsp), &bsp))
     Main_FatalError("dheader_t");
 
-  // FIXME: check version in header (for sanity)
+  bsp.version = LE_S32(bsp.version);
 
   u32_t tex_start = LE_U32(bsp.lumps[LUMP_TEXTURES].start);
   u32_t tex_total = LE_U32(bsp.lumps[LUMP_TEXTURES].length);
 
   DebugPrintf("BSP: version:0x%08x tex:0x%08x len:0x%08x\n",
-                 LE_U32(bsp.version), tex_start, tex_total);
+              bsp.version, tex_start, tex_total);
+
+  // check version in header (for sanity)
+  if (bsp.version < 0x17 || bsp.version > 0x1F)
+    Main_FatalError("bad version in BSP");
+
+  // no textures?
+  if (tex_total == 0)
+    return;
 
   dmiptexlump_t header;
 
@@ -160,13 +170,13 @@ bool Do_ExtractTextures(const char *dest_file, std::vector<std::string>& src_fil
 
   if (! WAD2_OpenWrite(dest_file))
   {
-    Main_FatalError("FUCK");
+    Main_FatalError("Could not create file: %s", dest_file);
     return false; /* NOT REACHED */
   }
 
   miptex_database_t tex_db;
 
-  // assumes majority of the textures are in PAK1.PAK
+  // assumes majority of the textures are in PAK1
   int total = 100 * (int)src_files.size() + (src_files.size() >= 2 ? 300 : 0);
   int where = 0;
 
@@ -180,13 +190,14 @@ bool Do_ExtractTextures(const char *dest_file, std::vector<std::string>& src_fil
   {
     int pp_total = (pp == 1) ? 400 : 100;
 
-    const char *filename = StringPrintf("/home/aapted/quake/id1/pak%d.pak", pp);
+    const char *filename = src_files[pp].c_str();
 
     LogPrintf("Opening: %s\n", filename);
 
     if (! PAK_OpenRead(filename))
     {
-      Main_FatalError("SHIT");
+      // should not happen because we have checked that the files exist
+      Main_FatalError("Could not open file: %s", filename);
       return false; /* NOT REACHED */
     }
 
@@ -215,8 +226,6 @@ bool Do_ExtractTextures(const char *dest_file, std::vector<std::string>& src_fil
     where += pp_total;
 
     PAK_CloseRead();
-
-    StringFree(filename);
 
     if (aborted)
       break;
@@ -389,7 +398,7 @@ void Quake1_ExtractTextures(void)
   bb_area->ProgSetButton(true);
   bb_area->ProgStatus("Extracting Textures");
 
-  bool aborted = Do_ExtractTextures("data/out_tex.wad", pak_list);
+  bool aborted = Do_ExtractTextures(QUAKE1_TEX_WAD, pak_list);
 
   if (aborted)
     bb_area->ProgStatus("Aborted");
