@@ -225,7 +225,7 @@ ExtractDialog_ShowAndRun(const char *message, const char *title, bool detected)
     cx -= 120;
   }
 
-  button = new Fl_Button(cx, total_H - BTN_H - 12, BTN_W, BTN_H, "Abort");
+  button = new Fl_Button(cx, total_H - BTN_H - 12, BTN_W, BTN_H, "Cancel");
 
   button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
   button->callback((Fl_Callback *) dialog_close_CB);
