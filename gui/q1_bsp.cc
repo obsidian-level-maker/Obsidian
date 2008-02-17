@@ -1361,8 +1361,12 @@ static area_poly_c * PolyForSideTexture(merge_region_c *R, double z1, double z2)
   {
     area_poly_c *A = R->areas[j];
 
-    if (A->info->z1 > z1 - EPSILON &&
-        A->info->z2 < z2 + EPSILON)
+    if (A->info->z2 < z1 + EPSILON)
+      continue;
+
+    if (A->info->z1 > z2 - EPSILON)
+      continue;
+
     {
       double h = A->info->z2 - A->info->z1;
 
@@ -1469,6 +1473,7 @@ static void MakeWallFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
   const char *texture = "error";
 
   merge_region_c *BACK = (S->side == 0) ? S->seg->back : S->seg->front;
+fprintf(stderr, "BACK = %p\n", BACK);
   if (BACK)
   {
     area_poly_c *MID = PolyForSideTexture(BACK, z1, z2);
