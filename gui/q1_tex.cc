@@ -152,23 +152,40 @@ fprintf(stderr, "    name:%s size:%dx%d\n", mip.name, mip.width, mip.height);
 }
 
 
-void Do_ExtractTextures(void)
+bool Do_ExtractTextures(const char *dest_file, std::vector<std::string>& src_files)
 {
-  if (! WAD2_OpenWrite("data/fake_tex.wad"))
+  SYS_ASSERT(src_files.size() > 0);
+
+  if (! WAD2_OpenWrite(dest_file))
   {
     Main_FatalError("FUCK");
+    return false; /* NOT REACHED */
   }
 
   miptex_database_t tex_db;
 
-  for (int pp = 0; pp <= 1; pp++)
+  // assumes majority of the textures are in PAK1.PAK
+  int total = 100 * (int)src_files.size() + (src_files.size() >= 1 ? 300 : 0);
+  int where = 0;
+
+  UI_Build *bb_area = main_win->build_box;
+
+  bb_area->ProgBegin(0, total, EXTRACT_PROGRESS_FG);
+
+  bool aborted = false;
+
+  for (unsigned int pp = 0; pp < src_files.size(); pp++)
   {
+    int pp_total = (pp == 1) ? 400 : 100;
+
     const char *filename = StringPrintf("/home/aapted/quake/id1/pak%d.pak", pp);
 
-fprintf(stderr, "Opening: %s\n", filename);
+    LogPrintf("Opening: %s\n", filename);
+
     if (! PAK_OpenRead(filename))
     {
       Main_FatalError("SHIT");
+      return false; /* NOT REACHED */
     }
 
     std::vector<int> maps;
@@ -177,16 +194,35 @@ fprintf(stderr, "Opening: %s\n", filename);
 
     for (unsigned int m = 0; m < maps.size(); m++)
     {
-fprintf(stderr, "Doing map %d/%d\n", m+1, (int)maps.size());
+      DebugPrintf("Doing map %d/%d\n", m+1, (int)maps.size());
+
       ExtractMipTex(tex_db, maps[m]);
+
+      TimeDelay(100); //!! FIXME: TESTING ONLY !!!!
+
+      // this update function calls Main_Ticker() for us
+      bb_area->ProgUpdate(where + pp_total * m / (int)maps.size());
+
+      if (main_win->action >= UI_MainWin::ABORT)
+      {
+        aborted = true;
+        break;
+      }
     }
+
+    where += pp_total;
 
     PAK_CloseRead();
 
     StringFree(filename);
+
+    if (aborted)
+      break;
   }
 
   WAD2_CloseWrite();
+
+  return true; // ALL GOOD!
 }
 
 
@@ -265,6 +301,38 @@ static bool Q1_DetectInstallation(extract_info_t *info)
   return false;
 }
 
+static void Q1_AdditionalPAKs(const char *first_pak, std::vector<std::string>& out_files)
+{
+  out_files.push_back(first_pak);
+
+  const char *base = FindBaseName(first_pak);
+
+  if (StringCaseCmpPartial(base, "pak0.") != 0)
+    return;
+
+  // the 'base' pointer is always inside the given filename,
+  // hence this offset calculation is valid. 
+  int offset = base - first_pak;
+
+  char *next_pak = StringDup(first_pak);
+
+  for (int n = 1; n < 10; n++)
+  {
+    next_pak[offset+3] = ('0' + n);
+
+    DebugPrintf("Checking for additional pak: %s\n", next_pak);
+
+    if (! FileExists(next_pak))
+      break;
+
+    LogPrintf("Using additional pak: %s\n", next_pak);
+
+    out_files.push_back(next_pak);
+  }
+
+  StringFree(next_pak);
+}
+
 
 void Quake1_ExtractTextures(void)
 {
@@ -301,36 +369,23 @@ void Quake1_ExtractTextures(void)
   }
 
 
+  std::vector<std::string> pak_list;
+
+  Q1_AdditionalPAKs(filename, pak_list);
+
+
   UI_Build *bb_area = main_win->build_box;
 
   // lock most widgets of user interface
   main_win->Locked(true);
 
-  bb_area->ProgSetButton(true);
-
   bb_area->ProgInit(1);
-  bb_area->ProgBegin(0, 100, EXTRACT_PROGRESS_FG);
-
+  bb_area->ProgSetButton(true);
   bb_area->ProgStatus("Extracting Textures");
 
-  bool was_ok = true;
+  bool aborted = Do_ExtractTextures("data/out_tex.wad", pak_list);
 
-  // fake crap
-  for (int i = 0; i < 100; i++)
-  {
-    TimeDelay(50);
-
-    // this update function calls Main_Ticker() for us
-    bb_area->ProgUpdate(i);
-
-    if (main_win->action >= UI_MainWin::ABORT)
-    {
-      was_ok = false;
-      break;
-    }
-  }
-
-  if (! was_ok)
+  if (aborted)
     bb_area->ProgStatus("Aborted");
   else
   {
