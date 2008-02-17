@@ -1407,7 +1407,13 @@ fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
 
   face->side = flipped ? 1 : 0;
 
-  face->texinfo = 3+2;
+  const char *texture = (F->kind == qFace_c::CEIL) ? gap->CeilTex() : gap->FloorTex();
+  int flags = 0;
+
+  double s[4] = { 1.0, 0.0, 0.0, 0.0 };
+  double t[4] = { 0.0, 1.0, 0.0, 0.0 };
+
+  face->texinfo = Q1_AddTexInfo(texture, flags, s, t);
 
   face->styles[0] = 0xFF;  // no lightmap
   face->styles[1] = 0xFF;  // fairly bright
@@ -1448,6 +1454,9 @@ static void MakeWallFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
 
   merge_gap_c *gap  = R->gaps.at(F->gap);
 
+  double z1 = F->z1;
+  double z2 = F->z2;
+
 
   bool flipped;
 
@@ -1456,10 +1465,32 @@ static void MakeWallFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
                               &flipped);
 
   face->side = flipped ? 1 : 0;
+  
+  const char *texture = "error";
 
-  face->texinfo = 3+0;
+  merge_region_c *BACK = (S->side == 0) ? S->seg->back : S->seg->front;
+  if (BACK)
+  {
+    area_poly_c *MID = PolyForSideTexture(BACK, z1, z2);
+    if (MID)
+      texture = MID->info->w_tex.c_str();
+  }
+
+  int flags = 0;
+
+  double s[4] = { 0.0, 0.0, 0.0, 0.0 };
+  double t[4] = { 0.0, 0.0, 1.0, 0.0 };
+
   if (fabs(S->x1 - S->x2) > fabs(S->y1 - S->y2))
-    face->texinfo = 3+1;
+  {
+    s[0] = 1.0;
+  }
+  else
+  {
+    s[1] = 1.0;
+  }
+
+  face->texinfo = Q1_AddTexInfo(texture, flags, s, t);
 
   face->styles[0] = 0xFF;  // no lightmap
   face->styles[1] = 0xFF;  // fairly bright
@@ -1473,9 +1504,6 @@ static void MakeWallFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
 
   face->firstedge = total_surf_edges;
   face->numedges  = 0;
-
-  double z1 = F->z1;
-  double z2 = F->z2;
 
   if (true) // !flipped)
   {
