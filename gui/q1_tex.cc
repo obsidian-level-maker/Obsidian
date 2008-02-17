@@ -192,17 +192,92 @@ fprintf(stderr, "Doing map %d/%d\n", m+1, (int)maps.size());
 
 //------------------------------------------------------------------------
 
+static const char *quake1_game_folders[] =
+{
+#ifdef WIN32
+  "\\QUAKE",
+  "\\Program Files\\Quake",
+
+#else // LINUX or MACOSX
+  "$HOME/quake",
+  "$HOME/Quake",
+  "$HOME/QUAKE",
+
+  "$HOME/games/quake",
+  "$HOME/Games/quake",
+  "$HOME/Games/Quake",
+
+  "/usr/share/games/quake",
+  "/usr/games/quake",
+  "/usr/local/games/quake",
+  "/usr/local/share/games/quake",
+  "/opt/quake",
+#endif
+
+  NULL  // end of list
+};
+
+static void CatUpperLower(char *dest, const char *src, int upper)
+{
+  dest += strlen(dest);
+
+  for (; *src; src++)
+  {
+    *dest++ = upper ? toupper(*src) : tolower(*src);
+  }
+
+  *dest = 0;
+}
+
+static bool Q1_DetectInstallation(extract_info_t *info)
+{
+  char *name_buf = StringNew(FL_PATH_MAX);
+
+  for (int i = 0; quake1_game_folders[i]; i++)
+  {
+    for (int k = 0; k < 4; k++)
+    {
+      fl_filename_expand(name_buf, quake1_game_folders[i]);
+
+      strcat(name_buf, DIR_SEP_STR);
+
+      if (info->dir)
+      {
+        CatUpperLower(name_buf, info->dir, k & 2);
+        strcat(name_buf, DIR_SEP_STR);
+      }
+
+      CatUpperLower(name_buf, info->file, k & 1);
+
+      DebugPrintf("Checking Quake1 installation at: %s\n", name_buf);
+
+      if (FileExists(name_buf))
+      {
+        LogPrintf("Found Quake1 installation: %s\n", name_buf);
+        info->detected = name_buf;
+        return true;
+      }
+    }
+  }
+
+  LogPrintf("Quake1 installation not found\n");
+
+  return false;
+}
+
 
 void Quake1_ExtractTextures(void)
 {
-  static extract_info_t info =
+  extract_info_t info =
   {
     "Quake1",
     "the textures",
     "pak0.pak",
     "id1",
-NULL //  "C:\\Program Files\\Quake 1.23b\\ID1\\PAK0.PAK"
+    NULL
   };
+
+  Q1_DetectInstallation(&info);
 
   int res = DLG_ExtractStuff(&info);
 
