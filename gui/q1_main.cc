@@ -593,9 +593,93 @@ s32_t Q1_AddMipTex(const char *name)
   return index;
 }
 
+static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
+{
+  SYS_ASSERT(strlen(name) < 16);
+
+  miptex_t mm_tex;
+
+  strcpy(mm_tex.name, name);
+
+  int size = 64;
+
+  mm_tex.width  = LE_U32(size);
+  mm_tex.height = LE_U32(size);
+
+  int offset = sizeof(mm_tex);
+
+  for (int i = 0; i < MIP_LEVELS; i++)
+  {
+    mm_tex.offsets[i] = LE_U32(offset);
+
+    offset += (size * size);
+    size /= 2;
+  }
+
+  Q1_Append(lump, &mm_tex, sizeof(mm_tex));
+
+
+  u8_t pixels[2] = { pix1, pix2 };
+
+  size = 64;
+
+  for (int i = 0; i < MIP_LEVELS; i++)
+  {
+    for (int y = 0; y < size; y++)
+    for (int x = 0; x < size; x++)
+    {
+      Q1_Append(lump, pixels + (((x^y) & (size/4)) ? 1 : 0), 1);
+    }
+
+    size /= 2;
+  }
+}
+
 static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
 {
-  // TODO: TransferOneMipTex
+  if (strcmp(name, "error") == 0)
+  {
+    CreateDummyMip(lump, name, 210, 231);
+    return;
+  }
+  if (strcmp(name, "missing") == 0)
+  {
+    CreateDummyMip(lump, name, 4, 12);
+    return;
+  }
+
+  // TODO: "oblige"
+
+  int entry = WAD2_FindEntry(name);
+
+  if (entry >= 0)
+  {
+    int pos    = 0;
+    int length = WAD2_EntryLen(entry);
+
+    byte buffer[1024];
+
+    while (length > 0)
+    {
+      int actual = MIN(1024, length);
+
+      if (! WAD2_ReadData(entry, pos, actual, buffer))
+        Main_FatalError("Error reading texture data in wad!");
+
+      Q1_Append(lump, buffer, actual);
+
+      pos    += actual;
+      length -= actual;
+    }
+
+    // all good
+    return;
+  }
+
+  // not found!
+  LogPrintf("WARNING: texture '%s' not found in texture wad!\n", name);
+
+  CreateDummyMip(lump, name, 4, 12);
 }
 
 static void BSP_CreateMipTex(void)
