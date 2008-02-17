@@ -5,16 +5,15 @@ TODO
 
 Quake1 output:
 
->>> finish texture extractor:
-    (a) read from multiple paks
-        (i.e. if first is pak0, check for pak1 ... pak9)
-    (b) create a GUI for the user, with progress bar
-
 - find better place for OBLIGE_INFO
   (c) >> put info into worldspawn entity
          "_generated_by" "Oblige 3.03 (c) Andrew Apted"
          "_oblige_seed" "18234"
          yada yada
+
+- texture extractor:
+  (a) improve error messages
+  (b) code to check if data/quake_tex.wad exists
 
 + split faces larger than 240 units
   (a) split qSide_c with length > 240
@@ -23,6 +22,9 @@ Quake1 output:
 + create proper clipping hulls:
   (a) make the area_polys convex
   (b) make them bigger (16 in XY, 24/36 in Z)
+      add bevels where angle > 270 degrees
+      adjust ceiling slope to stay in new bbox [a kludge]
+      if floor is sloped, split into two polys (one with no slope)
   (c) perform new MergeAreas
   (d) perform Quake1_BuildBSP / RecursiveMakeClipNode
 
@@ -54,6 +56,8 @@ CSG Polygoniser:
 
 
 GUI:
+
++  ui_chooser code: remove hard-coded game bits (WAD, PAK)
 
 +  reading and writing the config file (via LUA code) 
  
