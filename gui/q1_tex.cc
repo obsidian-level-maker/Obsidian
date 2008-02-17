@@ -349,7 +349,7 @@ static void Q1_AdditionalPAKs(const char *first_pak, std::vector<std::string>& o
 }
 
 
-void Quake1_ExtractTextures(void)
+bool Quake1_ExtractTextures(void)
 {
   extract_info_t info =
   {
@@ -365,7 +365,7 @@ void Quake1_ExtractTextures(void)
   int res = DLG_ExtractStuff(&info);
 
   if (res == EXDLG_Abort)
-    return;
+    return false;
 
   const char *filename = info.detected;
 
@@ -374,13 +374,13 @@ void Quake1_ExtractTextures(void)
     filename = Select_Input_File();
 
     if (! filename)
-      return;
+      return false;
   }
 
   if (! FileExists(filename))
   {
     Main_FatalError("No such file: %s", filename);
-    return; /* NOT REACHED */
+    return false; /* NOT REACHED */
   }
 
 
@@ -402,18 +402,21 @@ void Quake1_ExtractTextures(void)
 
   if (aborted)
     bb_area->ProgStatus("Aborted");
-  else
-    bb_area->ProgStatus("Success");
 
   for (int pause = 0; pause < 6; pause++)
   {
     Main_Ticker(); TimeDelay(300);
   }
 
+  if (! aborted)
+    bb_area->ProgStatus("Success");
+
   bb_area->ProgFinish();
   bb_area->ProgSetButton(false);
 
   main_win->Locked(false);
+
+  return !aborted;
 }
 
 
