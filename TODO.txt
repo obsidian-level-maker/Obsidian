@@ -11,13 +11,17 @@ Quake1 output:
          "_oblige_seed" "18234"
          yada yada
 
++ split faces larger than 240 units
+  (a) split floors/ceilings using the node builder
+  (b) make multiple faces when height > 240
+  (c) split qSide_c when length > 240
+
 - texture extractor:
   (a) improve error messages
   (b) code to check if data/quake_tex.wad exists
 
-+ split faces larger than 240 units
-  (a) split qSide_c with length > 240
-  (b) make multiple faces when height > 240
+- create better "error" and "missing" miptex.
+- create "oblige" miptex using the built-in image.
 
 + create proper clipping hulls:
   (a) make the area_polys convex
