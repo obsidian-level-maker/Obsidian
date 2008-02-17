@@ -71,7 +71,7 @@ static void ExtractMipTex(miptex_database_t& tex_db, int map_idx)
   u32_t tex_start = LE_U32(bsp.lumps[LUMP_TEXTURES].start);
   u32_t tex_total = LE_U32(bsp.lumps[LUMP_TEXTURES].length);
 
-fprintf(stderr, "  BSP: version:0x%08x tex:0x%08x len:0x%08x\n",
+  DebugPrintf("BSP: version:0x%08x tex:0x%08x len:0x%08x\n",
                  LE_U32(bsp.version), tex_start, tex_total);
 
   dmiptexlump_t header;
@@ -83,14 +83,14 @@ fprintf(stderr, "  BSP: version:0x%08x tex:0x%08x len:0x%08x\n",
   
   for (int i = 0; i < num_miptex; i++)
   {
-fprintf(stderr, "  mip %d/%d\n", i+1, num_miptex);
+//fprintf(stderr, "  mip %d/%d\n", i+1, num_miptex);
     u32_t data_ofs;
 
     if (! PAK_ReadData(map_idx, tex_start + 4 + i*4, 4, &data_ofs))
       Main_FatalError("data_ofs");
 
     data_ofs = LE_U32(data_ofs);
-fprintf(stderr, "  data_ofs=%d\n", data_ofs);
+//fprintf(stderr, "  data_ofs=%d\n", data_ofs);
 
     // -1 means unused slot
     if (data_ofs & 0x8000000U)
@@ -105,7 +105,9 @@ fprintf(stderr, "  data_ofs=%d\n", data_ofs);
     mip.height = LE_U32(mip.height);
 
     mip.name[15] = 0;
-fprintf(stderr, "    name:%s size:%dx%d\n", mip.name, mip.width, mip.height);
+
+    DebugPrintf("    mip %2d/%d name:%s size:%dx%d\n",
+                i+1, num_miptex, mip.name, mip.width, mip.height);
 
     // already seen it?
     if (tex_db.find((const char *)mip.name) != tex_db.end())
@@ -165,7 +167,7 @@ bool Do_ExtractTextures(const char *dest_file, std::vector<std::string>& src_fil
   miptex_database_t tex_db;
 
   // assumes majority of the textures are in PAK1.PAK
-  int total = 100 * (int)src_files.size() + (src_files.size() >= 1 ? 300 : 0);
+  int total = 100 * (int)src_files.size() + (src_files.size() >= 2 ? 300 : 0);
   int where = 0;
 
   UI_Build *bb_area = main_win->build_box;
@@ -198,7 +200,7 @@ bool Do_ExtractTextures(const char *dest_file, std::vector<std::string>& src_fil
 
       ExtractMipTex(tex_db, maps[m]);
 
-      TimeDelay(100); //!! FIXME: TESTING ONLY !!!!
+      // TimeDelay(100); // TESTING ONLY !
 
       // this update function calls Main_Ticker() for us
       bb_area->ProgUpdate(where + pp_total * m / (int)maps.size());
@@ -222,7 +224,11 @@ bool Do_ExtractTextures(const char *dest_file, std::vector<std::string>& src_fil
 
   WAD2_CloseWrite();
 
-  return true; // ALL GOOD!
+  // show 100% complete unless aborted
+  if (! aborted)
+    bb_area->ProgUpdate(where);
+
+  return aborted;
 }
 
 
@@ -388,10 +394,7 @@ void Quake1_ExtractTextures(void)
   if (aborted)
     bb_area->ProgStatus("Aborted");
   else
-  {
     bb_area->ProgStatus("Success");
-    bb_area->ProgUpdate(100);
-  }
 
   for (int pause = 0; pause < 6; pause++)
   {
