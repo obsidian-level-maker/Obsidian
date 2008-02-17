@@ -55,7 +55,7 @@ void Quake1_BuildBSP(void);
 
 // q1_tex.cc
 
-void Quake1_ExtractTextures(void);
+bool Quake1_ExtractTextures(void);
 
 #endif /* __OBLIGE_QUAKE1_H__ */
 

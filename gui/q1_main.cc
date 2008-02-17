@@ -30,6 +30,7 @@
 #include "g_image.h"
 
 #include "q1_main.h"
+#include "q1_pakfile.h"
 #include "q1_structs.h"
 
 #include "main.h"
@@ -564,28 +565,27 @@ static void BSP_CreateEdges(void)
 static std::vector<std::string>   q1_miptexs;
 static std::map<std::string, int> q1_miptex_map;
 
+s32_t Q1_AddMipTex(const char *name);
+
 static void ClearMipTex(void)
 {
   q1_miptexs.clear();
   q1_miptex_map.clear();
+
+  // built-in textures
+  Q1_AddMipTex("error");   // #0
+  Q1_AddMipTex("missing"); // #1
+  Q1_AddMipTex("oblige");  // #2
 }
 
 s32_t Q1_AddMipTex(const char *name)
 {
-  // built-in textures
-  if (strcmp(name, "error") == 0)
-    return 0;
-  else if (strcmp(name, "missing") == 0)
-    return 1;
-  else if (strcmp(name, "oblige") == 0)
-    return 2;
-
   if (q1_miptex_map.find(name) != q1_miptex_map.end())
   {
     return q1_miptex_map[name];
   }
 
-  int index = 3 + (int)q1_miptexs.size();
+  int index = (int)q1_miptexs.size();
 
   q1_miptexs.push_back(name);
   q1_miptex_map[name] = index;
@@ -593,9 +593,43 @@ s32_t Q1_AddMipTex(const char *name)
   return index;
 }
 
+static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
+{
+  // TODO: TransferOneMipTex
+}
+
 static void BSP_CreateMipTex(void)
 {
-  // FIXME !!!!  BSP_CreateMipTex
+  qLump_c *lump = Q1_NewLump(LUMP_TEXTURES);
+
+  if (! WAD2_OpenRead("data/quake_tex"))
+  {
+    // this shouldn't happen, existence is checked earlier
+    Main_FatalError("No such file: data/quake_tex");
+    return; /* NOT REACHED */
+  }
+
+  u32_t num_miptex = q1_miptexs.size();
+  u32_t dir_size = 4 * num_miptex + 4;
+  SYS_ASSERT(num_miptex > 0);
+
+  u32_t *offsets = new u32_t[num_miptex];
+
+  for (unsigned int m = 0; m < q1_miptexs.size(); m++)
+  {
+    TransferOneMipTex(lump, m, q1_miptexs[m].c_str());
+
+    offsets[m] = dir_size + lump->size();
+  }
+
+  WAD2_CloseRead();
+
+  // create miptex directory
+  // FIXME: endianness
+  Q1_Prepend(lump, offsets, 4 * num_miptex);
+  Q1_Prepend(lump, &num_miptex, 4);
+
+  delete[] offsets;
 }
 
 static void DummyMipTex(void)
