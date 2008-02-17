@@ -701,9 +701,9 @@ static void BSP_CreateMipTex(void)
 
   for (unsigned int m = 0; m < q1_miptexs.size(); m++)
   {
-    TransferOneMipTex(lump, m, q1_miptexs[m].c_str());
-
     offsets[m] = dir_size + lump->size();
+
+    TransferOneMipTex(lump, m, q1_miptexs[m].c_str());
   }
 
   WAD2_CloseRead();
