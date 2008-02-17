@@ -1348,6 +1348,41 @@ fprintf(stderr, "___ (%+5.0f %+5.0f)\n", vert_x[m], vert_y[m]);
   return v_num;
 }
 
+
+static area_poly_c * PolyForSideTexture(merge_region_c *R, double z1, double z2)
+{
+  // find the brush which we will use for the side texture
+  // FIXME: duplicate code in dm_level : make one good function
+
+  area_poly_c *MID = NULL;
+  double best_h = 0;
+
+  for (unsigned int j = 0; j < R->areas.size(); j++)
+  {
+    area_poly_c *A = R->areas[j];
+
+    if (A->info->z1 > z1 - EPSILON &&
+        A->info->z2 < z2 + EPSILON)
+    {
+      double h = A->info->z2 - A->info->z1;
+
+      // TODO: priorities
+
+//      if (MID && fabs(h - best_h) < EPSILON)
+//      { /* same height, prioritise */ }
+
+      if (h > best_h)
+      {
+        best_h = h;
+        MID = A;
+      }
+    }
+  }
+
+  return MID;
+}
+
+
 static void MakeFloorFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
 {
   qLeaf_c *leaf = F->floor_leaf;
