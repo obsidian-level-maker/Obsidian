@@ -223,7 +223,7 @@ static int Grab_Heights(lua_State *L, int stack_pos, area_info_c *A)
 
   if (A->z2 <= A->z1 + EPSILON)
   {
-    return luaL_error(L, "add_solid: bad z1..z2 range given (%1.2f .. %1.2f)", A->z1, A->z2);
+    return luaL_error(L, "add_brush: bad z1..z2 range given (%1.2f .. %1.2f)", A->z1, A->z2);
   }
 
   // TODO: px1, py1, px2, py2,  tz1, tz2, bz1, bz2
@@ -317,34 +317,33 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 namespace csg2
 {
 
-// LUA: add_solid(info, loop, heights)
+// LUA: add_brush(info, loop, z1, z2)
 //
 // info is a table:
-//   t_tex, b_tex  : top and bottom textures
-//   w_tex         : default wall (side) texture
-//   peg, y_offset : default peg and y_offset for sides
-//   t_light, b_light
-//   sec_kind, sec_tag
-//   mark          : separating number
+//    t_face, b_face : top and bottom faces
+//    w_face         : default side face
+//    liquid         : usually nil, otherwise a face table
+//    clip           : usually nil, otherwise true
+//    mark           : separating number
+//    sec_kind, sec_tag (DOOM only)
 // 
-// heights is a table (can be nil)
-//    z1, z2             : height range (compulsory)
-//    px1, py1, px2, py2 : coordinates on 2D map for slope points
-//    tz1, tz2           : height values for top slope
-//    bz1, bz2           : height values for bottom slope
+// z1 & z2 are either a height (number) or a slope table:
+//    sx, sy, sz         : start point on slope
+//    ex, ey, ez         : end point on slope
 //
 // loop is an array of Vertices:
 //    x, y,
-//    side,
+//    w_face (can be nil)
 //    line_kind, line_tag,
 //    line_flags, line_args
+//    rail (DOOM only)
 //
-// side is a table (can be nil)
-//    w_tex,
-//    x_offset, y_offset,
-//    peg, rail (DOOM only)
+// face is a table:
+//    texture
+//    x_offset, y_offset
+//    peg (DOOM only)
 //
-int add_solid(lua_State *L)
+int add_brush(lua_State *L)
 {
   area_info_c *A = Grab_SectorInfo(L, 1);
 
@@ -359,10 +358,14 @@ int add_solid(lua_State *L)
   return 0;
 }
 
+
 // LUA: add_entity(name, x, y, z, info)
 //
 // info is a table:
-//   XXX 
+//   options (DOOM, HEXEN)
+//   args (HEXEN only)
+//   light : amount of light emitted
+//   ...
 //
 int add_entity(lua_State *L)
 {
@@ -1707,7 +1710,7 @@ void CSG2_MergeAreas(void)
 
 static const luaL_Reg csg2_funcs[] =
 {
-  { "add_solid",   csg2::add_solid  },
+  { "add_brush",   csg2::add_brush  },
   { "add_entity",  csg2::add_entity },
 
   { NULL, NULL } // the end
