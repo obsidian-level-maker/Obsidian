@@ -3409,6 +3409,7 @@ BRUSHES =
 
 TEXTURES =
 {
+--[[ DOOM
   caulk               = "STONE",
   nitesky             = "F_SKY1",
 
@@ -3427,13 +3428,35 @@ TEXTURES =
   ceil1_38            = "FLAT1",
   blocks17            = "FLAT1_2",
   beam_dusty2         = "SUPPORT3",
+--]]
+
+-- [[ QUAKE
+  caulk               = "bricka2_4",
+  nitesky             = "sky1",
+
+  streetbricks14      = "city1_4",
+  largerblock3b3      = "bricka2_6",
+  pitted_rust3_black  = "metal5_4",
+  bluemetal1b_chrome  = "metal6_4",
+  e7bmtrim2           = "metal1_4",
+  e7panelwood         = "wwood1_7",
+  deeprust            = "metal1_1",
+
+  pewter              = "stone1_5",
+  atech3_a            = "tech02_3",
+  q1metal7_99         = "tech02_1",
+  blocks17slime       = "city2_6",
+  ceil1_38            = "stone1_7",
+  blocks17            = "stone1_5",
+  beam_dusty2         = "afloor1_8",
+--]]
 }
 
 
 function get_texture(brush)
   for j = 4,#brush,4 do
     if brush[j] and brush[j] ~= "" and TEXTURES[brush[j]] then
-      return "e7/e7panelwood" ---!!!!!! TEXTURES[brush[j]]
+      return TEXTURES[brush[j]]
     end
   end
 end
@@ -3494,7 +3517,7 @@ end
 
 function test_csg()
 
-  csg2.add_entity("1", 448, -672, 160)
+  csg2.add_entity("info_player_start", 448, -672, 160)
 
   for i,brush in ipairs(BRUSHES) do
     local tex = get_texture(brush)
@@ -3503,9 +3526,11 @@ function test_csg()
       local good, x1,y1,z1, x2,y2,z2 = get_bounds(brush)
 
       if good then
-        csg2.add_solid(
+        csg2.add_brush(
         {
-          t_tex=tex, b_tex=tex, w_tex=tex,
+          t_face = { texture=tex },
+          b_face = { texture=tex },
+          w_face = { texture=tex },
         },
         {
           { x=x1, y=y1 },
@@ -3513,7 +3538,7 @@ function test_csg()
           { x=x2, y=y2 },
           { x=x2, y=y1 },
         },
-        { z1=z1, z2=z2 })
+        z1, z2)
       end
     end
   end
