@@ -74,6 +74,12 @@ typedef struct
 }
 raw_sector_t;
 
+#define SECTOR_F_PARALLAX    (1 << 0)
+#define SECTOR_F_SLOPED      (1 << 1)
+#define SECTOR_F_SWAP_XY     (1 << 2)
+#define SECTOR_F_FLIP_X      (1 << 4)
+#define SECTOR_F_FLIP_Y      (1 << 5)
+
 
 typedef struct
 {
@@ -97,6 +103,14 @@ typedef struct
   u16_t extra;
 }
 raw_wall_t;
+
+#define WALL_F_BLOCKING    (1 << 0)
+#define WALL_F_GUN_BLOCK   (1 << 6)
+#define WALL_F_PEG_BOTTOM  (1 << 2)
+#define WALL_F_MASKED      (1 << 4)
+#define WALL_F_ONE_WAY     (1 << 5)
+#define WALL_F_FLIP_X      (1 << 3)
+#define WALL_F_FLIP_Y      (1 << 8)
 
 
 typedef struct
@@ -124,6 +138,14 @@ typedef struct
   u16_t extra;
 }
 raw_sprite_t;
+
+#define SPRITE_F_BLOCKING    (1 << 0)
+#define SPRITE_F_GUN_BLOCK   (1 << 8)
+#define SPRITE_F_IS_WALL     (1 << 4)
+#define SPRITE_F_IS_FLOOR    (1 << 5)
+#define SPRITE_F_FLIP_X      (1 << 2)
+#define SPRITE_F_FLIP_Y      (1 << 3)
+#define SPRITE_F_INVISIBLE   (1 << 15)
 
 
 #endif /* __OBLIGE_DUKE3D_STRUCTS_H__ */
