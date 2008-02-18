@@ -16,8 +16,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_CSG_POLY_H__
-#define __OBLIGE_CSG_POLY_H__
+#ifndef __OBLIGE_CSG_MAIN_H__
+#define __OBLIGE_CSG_MAIN_H__
 
 #define EPSILON  0.005
 
@@ -36,17 +36,36 @@ class merge_segment_c;
 class merge_region_c;
 
 
-class slope_points_c
+class slope_plane_c
+{
+  // defines the planes used for sloped floors or ceiling.
+  // Gives two points in 3D space, from low to high (sz < ez).
+  // The plane is not tilted along that line, i.e. the vector
+  // at right-angles has constant Z.
+
+public:
+  double sx, sy, sz;
+  double ex, ey, ez;
+
+public:
+   slope_plane_c();
+  ~slope_plane_c();
+};
+
+
+class area_face_c
 {
 public:
-  double tz1, tz2;
-  double bz1, bz2;
+  std::string tex;
 
-  double x1, y1, x2, y2;
+  /// peg_mode_e peg;
+ 
+  double x_offset;
+  double y_offset;
 
 public:
-   slope_points_c();
-  ~slope_points_c();
+   area_face_c();
+  ~area_face_c();
 };
 
 
@@ -55,19 +74,18 @@ class area_info_c
 public:
   int time; // increases for each new solid area
 
-  std::string t_tex;
-  std::string b_tex;
-  std::string w_tex;  // default
+  area_face_c *t_face;
+  area_face_c *b_face;
+  area_face_c *side;  // default side face
 
-  ///  peg_mode_e  peg;  // default
-
-  /// double y_offset;  // default
-
+  // without slopes, z1 and z2 are just the heights of the bottom
+  // and top faces.  When slopes are present, they represent the
+  // bounding heights of the area_poly.
   double z1, z2;
 
-  slope_points_c slope;
-
-  int t_light, b_light;
+  // these are NULL when not sloped
+  slope_plane_c *t_slope;
+  slope_plane_c *b_slope;
 
   int sec_kind, sec_tag;
   int mark;
@@ -78,31 +96,12 @@ public:
 };
 
 
-class area_side_c
-{
-public:
-  std::string w_tex;
-  std::string t_rail;
-
-  /// peg_mode_e peg;
- 
-  double x_offset;
-  double y_offset;
-
-//??  merged_area_c *face;
-
-public:
-   area_side_c();
-  ~area_side_c();
-};
-
-
 class area_vert_c
 {
 public:
   double x, y;
 
-  area_side_c side;
+  area_face_c *face;
 
   int line_kind;
   int line_tag;
@@ -132,8 +131,6 @@ public:
 
   double min_x, min_y;
   double max_x, max_y;
-
-///---  std::vector<merge_region_c *> regions;
 
 public:
    area_poly_c(area_info_c *_info);
@@ -264,8 +261,8 @@ class merge_gap_c
 public:
   merge_region_c *parent;
 
-  area_poly_c *bottom;
-  area_poly_c *top;
+  area_poly_c *b_poly;
+  area_poly_c *t_poly;
 
   std::vector<merge_gap_c *> neighbours;
 
@@ -275,7 +272,7 @@ public:
 
 public:
   merge_gap_c(merge_region_c *R, area_poly_c *B, area_poly_c *T) :
-      parent(R), bottom(B), top(T),
+      parent(R), b_poly(B), t_poly(T),
       neighbours(), entities(), reachable(false)
   { }
 
@@ -284,22 +281,22 @@ public:
 
   inline double GetZ1() const
   {
-    return bottom->info->z2;
+    return b_poly->info->z2;
   }
 
   inline double GetZ2() const
   {
-    return top->info->z1;
+    return t_poly->info->z1;
   }
 
   inline const char *FloorTex() const
   {
-    return bottom->info->t_tex.c_str();
+    return b_poly->info->t_face->tex.c_str();
   }
 
   inline const char *CeilTex() const
   {
-    return top->info->b_tex.c_str();
+    return t_poly->info->b_face->tex.c_str();
   }
 };
 
@@ -354,7 +351,7 @@ void CSG2_EndLevel(void);
 
 void CSG2_MergeAreas(void);
 
-#endif /* __OBLIGE_CSG_POLY_H__ */
+#endif /* __OBLIGE_CSG_MAIN_H__ */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
