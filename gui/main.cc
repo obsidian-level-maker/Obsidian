@@ -48,7 +48,7 @@ const char *working_path = NULL;
 const char *install_path = NULL;
 
 
-// skip inclusion of the large csg_poly.h header
+// skip inclusion of the large csg_main.h header
 extern void CSG2_Init(void);
 
 

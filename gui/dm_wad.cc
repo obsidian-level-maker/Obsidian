@@ -28,7 +28,7 @@
 #include "g_image.h"
 #include "g_lua.h"
 
-#include "csg_poly.h"
+#include "csg_main.h"
 #include "csg_quake.h"
 
 #include "dm_level.h"

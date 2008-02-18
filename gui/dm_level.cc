@@ -25,7 +25,7 @@
 #include "main.h"
 #include "lib_util.h"
 
-#include "csg_poly.h"
+#include "csg_main.h"
 #include "dm_level.h"
 #include "dm_wad.h"
 

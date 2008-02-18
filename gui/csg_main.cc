@@ -22,7 +22,7 @@
 
 #include <algorithm>
 
-#include "csg_poly.h"
+#include "csg_main.h"
 #include "g_lua.h"
 #include "lib_util.h"
 #include "main.h"
