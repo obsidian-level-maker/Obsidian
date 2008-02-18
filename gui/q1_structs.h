@@ -211,7 +211,9 @@ typedef struct texinfo_s
 }
 texinfo_t;
 
-#define TEX_SPECIAL   1 // sky or slime, no lightmap or 256 subdivision
+// sky or slime: no lightmap, no 256 subdivision
+// -AJA- only disables a check on extents, otherwise not used by quake engine
+#define TEX_SPECIAL  1
 
 // note that edge 0 is never used, because negative edge nums are used for
 // counterclockwise use of the edge in a face
