@@ -65,15 +65,20 @@ function test_csg()
 
   ---===| Entities |===---
 
-  csg2.add_entity(ENTITY, 0, 0, 65)
+  csg2.add_entity(ENTITY, 0, 0, 90)
+  csg2.add_entity("light", -200, 128, 128)
+  csg2.add_entity("light",  100, 256, 208)
+  csg2.add_entity("light",  20,  640, 96)
 
 
   ---===| Starting Area |===---
 
   -- floor
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=START_F, b_tex=START_F, w_tex=START_W,
+    t_face = { texture=START_F },
+    b_face = { texture=START_F },
+    w_face = { texture=START_W },
   },
   {
     { x=-144, y=-72 },
@@ -81,12 +86,14 @@ function test_csg()
     { x= 144, y= 64 },
     { x= 144, y=-72 },
   },
-  { z1=MIN_Z, z2=64 })
+  MIN_Z, 64)
 
   -- ceiling
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=START_F, b_tex=START_F, w_tex=START_W,
+    t_face = { texture=START_F },
+    b_face = { texture=START_F },
+    w_face = { texture=START_W },
   },
   {
     { x=-144, y=-72 },
@@ -94,12 +101,14 @@ function test_csg()
     { x= 144, y= 64 },
     { x= 144, y=-72 },
   },
-  { z1=192, z2=MAX_Z })
+  192, MAX_Z)
 
   -- back wall
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=START_F, b_tex=START_F, w_tex=START_W,
+    t_face = { texture=START_F },
+    b_face = { texture=START_F },
+    w_face = { texture=START_W },
   },
   {
     { x=-144, y=-72 },
@@ -107,12 +116,14 @@ function test_csg()
     { x= 144, y=-64 },
     { x= 144, y=-72 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
   -- left wall
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=START_F, b_tex=START_F, w_tex=START_W,
+    t_face = { texture=START_F },
+    b_face = { texture=START_F },
+    w_face = { texture=START_W },
   },
   {
     { x=-144, y=-72 },
@@ -120,12 +131,14 @@ function test_csg()
     { x=-128, y= 64 },
     { x=-128, y=-72 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
   -- right wall
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=START_F, b_tex=START_F, w_tex=START_W,
+    t_face = { texture=START_F },
+    b_face = { texture=START_F },
+    w_face = { texture=START_W },
   },
   {
     { x= 128, y=-72 },
@@ -133,16 +146,18 @@ function test_csg()
     { x= 144, y= 64 },
     { x= 144, y=-72 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
 
 
   ---===| Main Room |===---
 
   -- floor
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=ROOM_F, b_tex=ROOM_F, w_tex=ROOM_W,
+    t_face = { texture=ROOM_F },
+    b_face = { texture=ROOM_F },
+    w_face = { texture=ROOM_W },
   },
   {
     { x=-320, y=  64 },
@@ -150,12 +165,14 @@ function test_csg()
     { x= 320, y= 512 },
     { x= 320, y=  64 },
   },
-  { z1=MIN_Z, z2=0 })
+  MIN_Z, 0)
 
   -- ceiling
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=ROOM_F, b_tex=ROOM_F, w_tex=ROOM_W,
+    t_face = { texture=ROOM_F },
+    b_face = { texture=ROOM_F },
+    w_face = { texture=ROOM_W },
   },
   {
     { x=-320, y=  64 },
@@ -163,12 +180,14 @@ function test_csg()
     { x= 320, y= 512 },
     { x= 320, y=  64 },
   },
-  { z1=256, z2=MAX_Z })
+  256, MAX_Z)
 
   -- south wall, left
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=ROOM_F, b_tex=ROOM_F, w_tex=ROOM_W,
+    t_face = { texture=ROOM_F },
+    b_face = { texture=ROOM_F },
+    w_face = { texture=ROOM_W },
   },
   {
     { x=-336, y= 56 },
@@ -176,12 +195,14 @@ function test_csg()
     { x=-144, y= 64 },
     { x=-144, y= 56 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
   -- south wall, right
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=ROOM_F, b_tex=ROOM_F, w_tex=ROOM_W,
+    t_face = { texture=ROOM_F },
+    b_face = { texture=ROOM_F },
+    w_face = { texture=ROOM_W },
   },
   {
     { x= 144, y= 56 },
@@ -189,12 +210,14 @@ function test_csg()
     { x= 336, y= 64 },
     { x= 336, y= 56 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
   -- north wall, left
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=ROOM_F, b_tex=ROOM_F, w_tex=ROOM_W,
+    t_face = { texture=ROOM_F },
+    b_face = { texture=ROOM_F },
+    w_face = { texture=ROOM_W },
   },
   {
     { x=-336, y= 512 },
@@ -202,12 +225,14 @@ function test_csg()
     { x= -80, y= 700 },
     { x= -80, y= 512 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
   -- north wall, right
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=ROOM_F, b_tex=ROOM_F, w_tex=ROOM_W,
+    t_face = { texture=ROOM_F },
+    b_face = { texture=ROOM_F },
+    w_face = { texture=ROOM_W },
   },
   {
     { x=  80, y= 512 },
@@ -215,12 +240,14 @@ function test_csg()
     { x= 336, y= 700 },
     { x= 336, y= 512 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
   -- west wall
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=ROOM_F, b_tex=ROOM_F, w_tex=ROOM_W,
+    t_face = { texture=ROOM_F },
+    b_face = { texture=ROOM_F },
+    w_face = { texture=ROOM_W },
   },
   {
     { x=-300, y=  64 },
@@ -228,12 +255,14 @@ function test_csg()
     { x=-320, y= 512 },
     { x=-300, y= 512 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
   -- east wall
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=ROOM_F, b_tex=ROOM_F, w_tex=ROOM_W,
+    t_face = { texture=ROOM_F },
+    b_face = { texture=ROOM_F },
+    w_face = { texture=ROOM_W },
   },
   {
     { x= 320, y=  64 },
@@ -241,16 +270,18 @@ function test_csg()
     { x= 300, y= 512 },
     { x= 320, y= 512 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
 
 
   ---===| Niche |===---
 
   -- floor
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=NICHE_F, b_tex=NICHE_F, w_tex=NICHE_W,
+    t_face = { texture=NICHE_F },
+    b_face = { texture=NICHE_F },
+    w_face = { texture=NICHE_W },
   },
   {
     { x= -80, y=512 },
@@ -258,12 +289,14 @@ function test_csg()
     { x=  80, y=704 },
     { x=  80, y=512 },
   },
-  { z1=MIN_Z, z2=64 })
+  MIN_Z, 64)
 
   -- ceiling
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=NICHE_F, b_tex=NICHE_F, w_tex=NICHE_W,
+    t_face = { texture=NICHE_F },
+    b_face = { texture=NICHE_F },
+    w_face = { texture=NICHE_W },
   },
   {
     { x= -80, y=512 },
@@ -271,12 +304,14 @@ function test_csg()
     { x=  80, y=704 },
     { x=  80, y=512 },
   },
-  { z1=144, z2=MAX_Z })
+  144, MAX_Z)
 
   -- north wall
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=NICHE_F, b_tex=NICHE_F, w_tex=NICHE_W,
+    t_face = { texture=NICHE_F },
+    b_face = { texture=NICHE_F },
+    w_face = { texture=NICHE_W },
   },
   {
     { x= -80, y=684 },
@@ -284,12 +319,14 @@ function test_csg()
     { x=  80, y=704 },
     { x=  80, y=684 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
   -- west wall
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=NICHE_F, b_tex=NICHE_F, w_tex=NICHE_W,
+    t_face = { texture=NICHE_F },
+    b_face = { texture=NICHE_F },
+    w_face = { texture=NICHE_W },
   },
   {
     { x= -80, y=512 },
@@ -297,12 +334,14 @@ function test_csg()
     { x= -64, y=704 },
     { x= -64, y=512 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
   -- east wall
-  csg2.add_solid(
+  csg2.add_brush(
   {
-    t_tex=NICHE_F, b_tex=NICHE_F, w_tex=NICHE_W,
+    t_face = { texture=NICHE_F },
+    b_face = { texture=NICHE_F },
+    w_face = { texture=NICHE_W },
   },
   {
     { x= 64, y=512 },
@@ -310,6 +349,6 @@ function test_csg()
     { x= 80, y=704 },
     { x= 80, y=512 },
   },
-  { z1=MIN_Z, z2=MAX_Z })
+  MIN_Z, MAX_Z)
 
 end
