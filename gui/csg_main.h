@@ -74,8 +74,8 @@ class area_info_c
 public:
   int time; // increases for each new solid area
 
-  area_face_c *t_face;
   area_face_c *b_face;
+  area_face_c *t_face;
   area_face_c *side;  // default side face
 
   // without slopes, z1 and z2 are just the heights of the bottom
@@ -84,8 +84,8 @@ public:
   double z1, z2;
 
   // these are NULL when not sloped
-  slope_plane_c *t_slope;
   slope_plane_c *b_slope;
+  slope_plane_c *t_slope;
 
   int sec_kind, sec_tag;
   int mark;

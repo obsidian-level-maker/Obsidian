@@ -42,20 +42,19 @@ std::vector<merge_region_c *>  mug_regions;
 static int cur_poly_time;
 
 
-slope_points_c::slope_points_c() :
-      tz1(FVAL_NONE), tz2(FVAL_NONE),
-      bz1(FVAL_NONE), bz2(FVAL_NONE),
-      x1(0), y1(0), x2(0), y2(0)
+slope_plane_c::slope_plane_c() :
+      sx(-1),sy(-1),sz(-1),
+      ex(-1),ey(-1),ez(-1)
 { }
 
-slope_points_c::~slope_points_c()
+slope_plane_c::~slope_plane_c()
 { }
 
 
 area_info_c::area_info_c() :
-      t_tex(), b_tex(), w_tex(),
-      z1(-1), z2(-1), slope(),
-      t_light(255), b_light(255),
+      b_face(NULL), t_face(NULL), side(NULL),
+      z1(-1), z2(-1), b_slope(NULL), t_slope(NULL),
+///-- t_light(255), b_light(255),
       sec_kind(0), sec_tag(0), mark(0)
 {
   time = cur_poly_time++;
@@ -65,16 +64,16 @@ area_info_c::~area_info_c()
 { }
 
 
-area_side_c::area_side_c() :
-      w_tex(), t_rail(), x_offset(0), y_offset(0)
+area_face_c::area_face_c() :
+      tex(), x_offset(0), y_offset(0)
 { }
 
-area_side_c::~area_side_c()
+area_face_c::~area_face_c()
 { }
 
 
 area_vert_c::area_vert_c() :
-      x(0), y(0), side(),
+      x(0), y(0), face(NULL),
       line_kind(0), line_tag(0), line_flags(0),
       partner(NULL)
 {
@@ -171,7 +170,79 @@ static void AddPoly_MakeConvex(area_poly_c *P)
 
 //------------------------------------------------------------------------
 
-static area_info_c * Grab_SectorInfo(lua_State *L, int stack_pos)
+static slope_plane_c * Grab_Slope(lua_State *L, int stack_pos)
+{
+  if (stack_pos < 0)
+    stack_pos += lua_gettop(L) + 1;
+
+  if (lua_type(L, stack_pos) != LUA_TTABLE)
+  {
+    luaL_argerror(L, stack_pos, "expected a table (slope info)");
+    return NULL; /* NOT REACHED */
+  }
+
+  slope_plane_c *P = new slope_plane_c();
+
+  lua_getfield(L, stack_pos, "sx");
+  lua_getfield(L, stack_pos, "sy");
+  lua_getfield(L, stack_pos, "sz");
+
+  P->sx = luaL_checknumber(L, -3);
+  P->sy = luaL_checknumber(L, -2);
+  P->sz = luaL_checknumber(L, -1);
+
+  lua_pop(L, 3);
+
+  lua_getfield(L, stack_pos, "ex");
+  lua_getfield(L, stack_pos, "ey");
+  lua_getfield(L, stack_pos, "ez");
+
+  P->sx = luaL_checknumber(L, -3);
+  P->sy = luaL_checknumber(L, -2);
+  P->sz = luaL_checknumber(L, -1);
+
+  lua_pop(L, 3);
+
+#if 0
+  if (A->z2 <= A->z1 + EPSILON)
+  {
+    return luaL_error(L, "add_brush: bad z1..z2 range given (%1.2f .. %1.2f)", A->z1, A->z2);
+  }
+#endif
+
+  return P;
+}
+
+
+static area_face_c * Grab_Face(lua_State *L, int stack_pos)
+{
+  if (stack_pos < 0)
+    stack_pos += lua_gettop(L) + 1;
+
+  if (lua_type(L, stack_pos) != LUA_TTABLE)
+  {
+    luaL_argerror(L, stack_pos, "expected a table (face info)");
+    return NULL; /* NOT REACHED */
+  }
+
+  area_face_c *F = new area_face_c();
+
+  lua_getfield(L, stack_pos, "tex");
+  lua_getfield(L, stack_pos, "x_offset");
+  lua_getfield(L, stack_pos, "y_offset");
+
+  F->tex = std::string(luaL_checkstring(L, -3));
+
+  F->x_offset = luaL_checknumber(L, -2);
+  F->y_offset = luaL_checknumber(L, -1);
+
+  lua_pop(L, 3);
+
+  return F;
+}
+
+
+static area_info_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 {
   if (stack_pos < 0)
     stack_pos += lua_gettop(L) + 1;
@@ -179,7 +250,7 @@ static area_info_c * Grab_SectorInfo(lua_State *L, int stack_pos)
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
     luaL_argerror(L, stack_pos, "expected a table (sector info)");
-    return 0; /* NOT REACHED */
+    return NULL; /* NOT REACHED */
   }
 
   area_info_c *A = new area_info_c();
@@ -188,9 +259,9 @@ static area_info_c * Grab_SectorInfo(lua_State *L, int stack_pos)
   lua_getfield(L, stack_pos, "b_tex");
   lua_getfield(L, stack_pos, "w_tex");
 
-  A->t_tex = std::string(luaL_checkstring(L, -3));
-  A->b_tex = std::string(luaL_checkstring(L, -2));
-  A->w_tex = std::string(luaL_checkstring(L, -1));
+  A->t_face = Grab_Face(L, -3);
+  A->b_face = Grab_Face(L, -2);
+  A->side   = Grab_Face(L, -1);
 
   lua_pop(L, 3);
 
@@ -200,49 +271,6 @@ static area_info_c * Grab_SectorInfo(lua_State *L, int stack_pos)
   // TODO: mark
 
   return A;
-}
-
-
-static int Grab_Heights(lua_State *L, int stack_pos, area_info_c *A)
-{
-  if (stack_pos < 0)
-    stack_pos += lua_gettop(L) + 1;
-
-  if (lua_type(L, stack_pos) != LUA_TTABLE)
-  {
-    return luaL_argerror(L, stack_pos, "expected a table (height info)");
-  }
-
-  lua_getfield(L, stack_pos, "z1");
-  lua_getfield(L, stack_pos, "z2");
-
-  A->z1 = luaL_checknumber(L, -2);
-  A->z2 = luaL_checknumber(L, -1);
-
-  lua_pop(L, 2);
-
-  if (A->z2 <= A->z1 + EPSILON)
-  {
-    return luaL_error(L, "add_brush: bad z1..z2 range given (%1.2f .. %1.2f)", A->z1, A->z2);
-  }
-
-  // TODO: px1, py1, px2, py2,  tz1, tz2, bz1, bz2
-
-  return 0;
-}
-
-
-static int Grab_Face(lua_State *L, int stack_pos, area_face_c *S)
-{
-  if (lua_type(L, stack_pos) != LUA_TTABLE)
-  {
-    return luaL_argerror(L, stack_pos, "expected a table (sidedef)");
-  }
-
-  // TODO
-
-  Main_FatalError("CSG2: sidedef info not yet supported!\n");
-  return 0; /* NOT REACHED */
 }
 
 
@@ -345,13 +373,20 @@ namespace csg2
 //
 int add_brush(lua_State *L)
 {
-  area_info_c *A = Grab_SectorInfo(L, 1);
+  area_info_c *A = Grab_AreaInfo(L, 1);
+  area_poly_c *P = Grab_LineLoop(L, 2, A);
+
+  if (lua_isnumber(L, 3))
+    A->z1 = lua_tonumber(L, 3);
+  else
+    A->b_slope = Grab_Slope(L, 3);
+
+  if (lua_isnumber(L, 4))
+    A->z2 = lua_tonumber(L, 4);
+  else
+    A->t_slope = Grab_Slope(L, 4);
 
   all_areas.push_back(A);
-
-  Grab_Heights(L, 3, A);
-
-  area_poly_c *P = Grab_LineLoop(L, 2, A);
 
   AddPoly_MakeConvex(P);
 
