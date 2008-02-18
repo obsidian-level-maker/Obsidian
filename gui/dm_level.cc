@@ -165,13 +165,13 @@ void CSG2_Doom_TestAreas(void)
     
     int sec_idx = wad::num_sectors();
 
-    wad::add_sector(I_ROUND(A->z1), A->b_tex.c_str(),
-                    I_ROUND(A->z2), A->t_tex.c_str(),
+    wad::add_sector(I_ROUND(A->z1), A->b_face->tex.c_str(),
+                    I_ROUND(A->z2), A->t_face->tex.c_str(),
                     192, 0, 0);
 
     int side_idx = wad::num_sidedefs();
 
-    wad::add_sidedef(sec_idx, "-", A->w_tex.c_str(), "-", 0, 0);
+    wad::add_sidedef(sec_idx, "-", A->side->tex.c_str(), "-", 0, 0);
 
     int vert_base = wad::num_vertexes();
 
@@ -330,8 +330,8 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   {
     area_poly_c *A = R->areas[j];
 
-    if (A->info->z1 > B->top->info->z1 - EPSILON &&
-        A->info->z2 < T->bottom->info->z2 + EPSILON)
+    if (A->info->z1 > B->t_poly->info->z1 - EPSILON &&
+        A->info->z2 < T->b_poly->info->z2 + EPSILON)
     {
       double h = A->info->z2 - A->info->z1;
 
@@ -353,18 +353,18 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 
   extrafloor_c *EF = new extrafloor_c();
 
-  EF->w_tex = MID->info->w_tex;
+  EF->w_tex = MID->info->side->tex;
 
   EF->users.push_back(sec);
 
 
   EF->sec = new sector_info_c();
 
-  EF->sec->f_h = I_ROUND(B->top->info->z1);
-  EF->sec->c_h = I_ROUND(T->bottom->info->z2);
+  EF->sec->f_h = I_ROUND(B->t_poly->info->z1);
+  EF->sec->c_h = I_ROUND(T->b_poly->info->z2);
 
-  EF->sec->f_tex = B->top->info->b_tex.c_str();
-  EF->sec->c_tex = T->bottom->info->t_tex.c_str();
+  EF->sec->f_tex = B->t_poly->info->b_face->tex.c_str();
+  EF->sec->c_tex = T->b_poly->info->t_face->tex.c_str();
 
   // FIXME !!!! light, special
 
@@ -385,8 +385,8 @@ static void CreateOneSector(merge_region_c *R)
   }
 
 
-  area_poly_c *B = R->gaps[0]->bottom;
-  area_poly_c *T = R->gaps[R->gaps.size()-1]->top;
+  area_poly_c *B = R->gaps[0]->b_poly;
+  area_poly_c *T = R->gaps[R->gaps.size()-1]->t_poly;
 
   sector_info_c *sec = new sector_info_c;
 
@@ -396,10 +396,10 @@ static void CreateOneSector(merge_region_c *R)
   if (sec->c_h < sec->f_h)
       sec->c_h = sec->f_h;
 
-  sec->f_tex = B->info->t_tex;
-  sec->c_tex = T->info->b_tex;
+  sec->f_tex = B->info->t_face->tex;
+  sec->c_tex = T->info->b_face->tex;
 
-  sec->light = MAX(B->info->t_light, T->info->b_light);
+  sec->light = 255; //!!!! MAX(B->info->t_light, T->info->b_light);
   sec->mark  = MAX(B->info->mark,    T->info->mark);
 
   if (B->info->sec_kind > 0)
@@ -739,7 +739,7 @@ static std::string FindSideTexture(double z, merge_segment_c *G,
     area_poly_c *A = B->areas[k];
 
     if ((z > A->info->z1 - EPSILON) && (z < A->info->z2 + EPSILON))
-      return A->info->w_tex;
+      return A->info->side->tex;
   }
 
   // none found ???  FIXME use closest area

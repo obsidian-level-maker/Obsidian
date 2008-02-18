@@ -232,7 +232,7 @@ static int Grab_Heights(lua_State *L, int stack_pos, area_info_c *A)
 }
 
 
-static int Grab_SideDef(lua_State *L, int stack_pos, area_side_c *S)
+static int Grab_Face(lua_State *L, int stack_pos, area_face_c *S)
 {
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {

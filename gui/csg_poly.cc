@@ -1021,11 +1021,11 @@ static void Mug_GapNeighbours(void)
       merge_gap_c *B = S->back ->gaps[b_idx];
       merge_gap_c *F = S->front->gaps[f_idx];
 
-      double B_z1 = B->bottom->info->z2;
-      double B_z2 = B->top->info->z1;
+      double B_z1 = B->b_poly->info->z2;
+      double B_z2 = B->t_poly->info->z1;
 
-      double F_z1 = F->bottom->info->z2;
-      double F_z2 = F->top->info->z1;
+      double F_z1 = F->b_poly->info->z2;
+      double F_z2 = F->t_poly->info->z1;
 
       if (B_z2 < F_z1 + EPSILON)
       {
@@ -1181,8 +1181,8 @@ static merge_gap_c *FindGapForPoint(merge_region_c *R, double x, double y, doubl
     merge_gap_c *gap = R->gaps[k];
 
     // allow some leeway
-    double z1 = (gap->bottom->info->z1 + gap->bottom->info->z2) / 2.0;
-    double z2 = (gap->top   ->info->z1 + gap->top   ->info->z2) / 2.0;
+    double z1 = (gap->b_poly->info->z1 + gap->b_poly->info->z2) / 2.0;
+    double z2 = (gap->t_poly->info->z1 + gap->t_poly->info->z2) / 2.0;
 
     if (z1 < z && z < z2)
       return gap;

@@ -1478,7 +1478,7 @@ fprintf(stderr, "BACK = %p\n", BACK);
   {
     area_poly_c *MID = PolyForSideTexture(BACK, z1, z2);
     if (MID)
-      texture = MID->info->w_tex.c_str();
+      texture = MID->info->side->tex.c_str();
   }
 
   int flags = 1; //!!!!

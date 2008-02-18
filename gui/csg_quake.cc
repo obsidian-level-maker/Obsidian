@@ -58,14 +58,14 @@ static void Q_WriteBrush(area_poly_c *P)
       0.0, 0.0, P->info->z2,
       0.0, 1.0, P->info->z2,
       1.0, 0.0, P->info->z2,
-      P->info->t_tex.c_str());
+      P->info->t_face->tex.c_str());
 
   // Bottom
   fprintf(map_fp, "    ( %1.1f %1.1f %1.1f ) ( %1.1f %1.1f %1.1f ) ( %1.1f %1.1f %1.1f ) %s 0 0 0 1 1\n",
       0.0, 0.0, P->info->z1,
       1.0, 0.0, P->info->z1,
       0.0, 1.0, P->info->z1,
-      P->info->b_tex.c_str());
+      P->info->b_face->tex.c_str());
 
   // Sides
   for (int j1 = 0; j1 < (int)P->verts.size(); j1++)
@@ -77,11 +77,10 @@ static void Q_WriteBrush(area_poly_c *P)
 
     SYS_ASSERT(v1 && v2);
 
-    const char *tex = v1->side.w_tex.c_str();
-    if (strlen(tex) == 0)
-      tex = P->info->w_tex.c_str();
+    const char *tex = v1->face ? v1->face->tex.c_str() : P->info->side->tex.c_str();
 
     SYS_ASSERT(tex);
+    SYS_ASSERT(strlen(tex) > 0);
 
     fprintf(map_fp, "    ( %1.1f %1.1f %1.1f ) ( %1.1f %1.1f %1.1f ) ( %1.1f %1.1f %1.1f ) %s 0 0 0 1 1\n",
         v1->x, v1->y, P->info->z1,
