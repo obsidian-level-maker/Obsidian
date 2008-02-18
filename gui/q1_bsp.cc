@@ -1412,7 +1412,7 @@ fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
   face->side = flipped ? 1 : 0;
 
   const char *texture = (F->kind == qFace_c::CEIL) ? gap->CeilTex() : gap->FloorTex();
-  int flags = 0;
+  int flags = 1; //!!!!
 
   double s[4] = { 1.0, 0.0, 0.0, 0.0 };
   double t[4] = { 0.0, 1.0, 0.0, 0.0 };
@@ -1481,7 +1481,7 @@ fprintf(stderr, "BACK = %p\n", BACK);
       texture = MID->info->w_tex.c_str();
   }
 
-  int flags = 0;
+  int flags = 1; //!!!!
 
   double s[4] = { 0.0, 0.0, 0.0, 0.0 };
   double t[4] = { 0.0, 0.0, 1.0, 0.0 };
