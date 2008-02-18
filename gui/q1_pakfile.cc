@@ -201,30 +201,120 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer)
 
 static FILE *w_pak_fp;
 
+static std::list<raw_pak_entry_t> w_pak_dir;
+
+static raw_pak_entry_t w_pak_entry;
+
+
 bool PAK_OpenWrite(const char *filename)
 {
-  // TODO: PAK_OpenWrite
-  return false;
+  w_pak_fp = fopen(filename, "wb");
+
+  if (! w_pak_fp)
+  {
+    LogPrintf("PAK_OpenWrite: cannot create file: %s\n", filename);
+    return false;
+  }
+
+  LogPrintf("Created PAK file: %s\n", filename);
+
+  // write out a dummy header
+  raw_pak_header_t header;
+  memset(&header, 0, sizeof(header));
+
+  fwrite(&header, sizeof(raw_pak_header_t), 1, w_pak_fp);
+  fflush(w_pak_fp);
+
+  return true;
 }
 
 void PAK_CloseWrite(void)
 {
-  // TODO
+  fflush(w_pak_fp);
+
+  // write the directory
+
+  raw_pak_header_t header;
+
+  memcpy(header.magic, PAK_MAGIC, 4);
+
+  header.dir_start = (int)ftell(w_pak_fp);
+  header.entry_num = 0;
+
+  std::list<raw_pak_entry_t>::iterator PDI;
+
+  for (PDI = w_pak_dir.begin(); PDI != w_pak_dir.end(); PDI++)
+  {
+    raw_pak_entry_t *E = & (*PDI);
+
+    fwrite(E, sizeof(raw_pak_entry_t), 1, w_pak_fp);
+
+    header.entry_num++;
+  }
+
+  fflush(w_pak_fp);
+
+  // finally write the _real_ PAK header
+  header.entry_num *= sizeof(raw_pak_entry_t);
+
+  header.dir_start = LE_U32(header.dir_start);
+  header.entry_num = LE_U32(header.entry_num);
+
+  fseek(w_pak_fp, 0, SEEK_SET);
+
+  fwrite(&header, sizeof(header), 1, w_pak_fp);
+
+  fflush(w_pak_fp);
+  fclose(w_pak_fp);
+
+  LogPrintf("Closed PAK file\n");
+
+  w_pak_dir.clear();
 }
 
 void PAK_NewLump(const char *name)
 {
-  // TODO
+  SYS_ASSERT(strlen(name) <= 55);
+
+  memset(&w_pak_entry, 0, sizeof(w_pak_entry));
+
+  strcpy(w_pak_entry.name, name);
+
+  w_pak_entry.offset = (u32_t)ftell(w_pak_fp);
 }
 
 void PAK_AppendData(const void *data, int length)
 {
-  // TODO
+  SYS_ASSERT(length >= 0);
+
+  if (length > 0)
+  {
+    if (fwrite(data, length, 1, w_pak_fp) != 1)
+    {
+      //TODO : write_errors++
+    }
+  }
 }
 
 void PAK_FinishLump(void)
 {
-  // TODO
+  int len = (int)ftell(w_pak_fp) - (int)w_pak_entry.offset;
+
+  // pad lumps to a multiple of four bytes
+  int padding = AlignLen(len) - len;
+
+  if (padding > 0)
+  {
+    static u8_t zeros[4] = { 0,0,0,0 };
+
+    fwrite(zeros, padding, 1, w_pak_fp);
+  }
+
+  // fix endianness
+  w_pak_entry.offset = LE_U32(w_pak_entry.offset);
+  w_pak_entry.length = LE_U32(len);
+
+  w_pak_dir.push_back(w_pak_entry);
 }
 
 
@@ -270,7 +360,7 @@ bool WAD2_OpenRead(const char *filename)
 
   if (wad_R_header.num_lumps == 0)
   {
-    LogPrintf("WAD2_OpenRead: empty PAK file!\n");
+    LogPrintf("WAD2_OpenRead: empty WAD2 file!\n");
     fclose(wad_R_fp);
     return false;
   }
@@ -404,6 +494,7 @@ bool WAD2_OpenWrite(const char *filename)
   memset(&header, 0, sizeof(header));
 
   fwrite(&header, sizeof(raw_wad2_header_t), 1, wad_W_fp);
+  fflush(wad_W_fp);
 
   return true;
 }
@@ -426,9 +517,9 @@ void WAD2_CloseWrite(void)
 
   for (WDI = wad_W_directory.begin(); WDI != wad_W_directory.end(); WDI++)
   {
-    raw_wad2_lump_t *E = & (*WDI);
+    raw_wad2_lump_t *L = & (*WDI);
 
-    fwrite(E, sizeof(raw_wad2_lump_t), 1, wad_W_fp);
+    fwrite(L, sizeof(raw_wad2_lump_t), 1, wad_W_fp);
 
     header.num_lumps++;
   }
