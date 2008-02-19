@@ -19,6 +19,7 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
+#include "hdr_ui.h"   // map stuff
 
 #include <algorithm>
 
@@ -122,8 +123,8 @@ public:
 static std::vector<sector_info_c *> dm_sectors;
 static std::vector<extrafloor_c *>  dm_exfloors;
 
-static int bounds_x1, bounds_y1;
-static int bounds_x2, bounds_y2;
+int bounds_x1, bounds_y1;
+int bounds_x2, bounds_y2;
 
 
 bool extrafloor_c::Match(const extrafloor_c *other) const
@@ -267,7 +268,8 @@ static area_poly_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
 }
 #endif
 
-static void DetermineMapBounds(void)
+// TODO: move into CSG code (csg_main)
+void DetermineMapBounds(void)
 {
   bounds_x1 = bounds_y1 = +99999;
   bounds_x2 = bounds_y2 = -99999;
@@ -872,6 +874,49 @@ void CSG2_WriteDoom(void)
   // FIXME: things !!!!
 
   // FIXME: Free everything
+}
+
+
+void CSG2_MakeMiniMap(void)
+{
+  DetermineMapBounds();
+
+  main_win->build_box->mini_map->MapBegin();
+
+  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  {
+    merge_segment_c *S = mug_segments[i];
+
+    int x1 = I_ROUND(S->start->x - bounds_x1) / 24;
+    int y1 = I_ROUND(S->start->y - bounds_y1) / 24;
+    int x2 = I_ROUND(S->end  ->x - bounds_x1) / 24;
+    int y2 = I_ROUND(S->end  ->y - bounds_y1) / 24;
+
+    u8_t r = 176;
+    u8_t g = 176;
+    u8_t b = 176;
+
+    int sides = 0;
+
+    if (S->front && S->front->gaps.size() > 0)
+      sides++;
+
+    if (S->back && S->back->gaps.size() > 0)
+      sides++;
+
+    if (sides == 0)
+    {
+      r = 255; g = 0; b = 0;
+    }
+    else if (sides == 1)
+    {
+      r = g = b = 255;
+    }
+
+    main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
+  }
+
+  main_win->build_box->mini_map->MapFinish();
 }
 
 

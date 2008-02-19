@@ -29,6 +29,9 @@
 #include "ui_dialog.h"
 
 
+extern void CSG2_MakeMiniMap(void); //!!!!!! FIXME
+
+
 void merge_vertex_c::AddSeg(merge_segment_c *seg)
 {
   for (int j=0; j < (int)segs.size(); j++)
@@ -1342,6 +1345,8 @@ void CSG2_MergeAreas(void)
 
   Mug_PlaceEntities();
   Mug_FillUnusedGaps();
+
+  CSG2_MakeMiniMap();
 }
 
 

@@ -23,11 +23,7 @@ class UI_MiniMap : public Fl_Box
 {
 private:
 
-  int map_X, map_Y;
   int map_W, map_H;
-
-  // the real size of the pixel data
-  int real_W, real_H;
 
   u8_t *pixels;
 
@@ -40,14 +36,14 @@ public:
 public:
   void EmptyMap();
 
-  void MapBegin(int pixel_W, int pixel_H);
-  void MapPixel(int kind);
+  void MapBegin();
   void MapFinish();
 
   void MapClear();
   void MapCorner(int x, int y, int dx, int dy);
 
   void DrawPixel(int x, int y, u8_t r, u8_t g, u8_t b);
+  void DrawLine (int x1, int y1, int x2, int y2, u8_t r, u8_t g, u8_t b, bool end = true);
 };
 
 #endif /* __UI_MAP_H__ */
