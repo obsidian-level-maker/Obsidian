@@ -578,6 +578,11 @@ const char * W_Editor::keywords[] =
     "O:con.ticker",
     "O:con.abort",
 
+    "O:csg2.begin_level",
+    "O:csg2.end_level",
+    "O:csg2.add_brush",
+    "O:csg2.add_entity",
+
     NULL // end of list
 };
 
