@@ -1387,6 +1387,17 @@ static area_poly_c * PolyForSideTexture(merge_region_c *R, double z1, double z2)
 }
 
 
+static int CalcTextureFlag(const char *tex_name)
+{
+  if (tex_name[0] == '*')
+    return TEX_SPECIAL;
+
+  if (strncmp(tex_name, "sky", 3) == 0)
+    return TEX_SPECIAL;
+
+  return 0;
+}
+
 static void MakeFloorFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
 {
   qLeaf_c *leaf = F->floor_leaf;
@@ -1412,7 +1423,8 @@ fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
   face->side = flipped ? 1 : 0;
 
   const char *texture = (F->kind == qFace_c::CEIL) ? gap->CeilTex() : gap->FloorTex();
-  int flags = 1; //!!!!
+
+  int flags = CalcTextureFlag(texture);
 
   double s[4] = { 1.0, 0.0, 0.0, 0.0 };
   double t[4] = { 0.0, 1.0, 0.0, 0.0 };
@@ -1481,7 +1493,7 @@ fprintf(stderr, "BACK = %p\n", BACK);
       texture = MID->info->side->tex.c_str();
   }
 
-  int flags = 1; //!!!!
+  int flags = CalcTextureFlag(texture);
 
   double s[4] = { 0.0, 0.0, 0.0, 0.0 };
   double t[4] = { 0.0, 0.0, 1.0, 0.0 };
