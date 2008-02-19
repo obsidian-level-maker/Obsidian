@@ -21,7 +21,7 @@ Quake1 output:
   (b) code to check if data/quake_tex.wad exists
 
 - create better "error" and "missing" miptex.
-- create "oblige" miptex using the built-in image.
+- create "oblige" and "oblige_neon" miptex using the built-in image.
 
 + create proper clipping hulls:
   (a) make the area_polys convex
@@ -32,8 +32,8 @@ Quake1 output:
   (c) perform new MergeAreas
   (d) perform Quake1_BuildBSP / RecursiveMakeClipNode
 
-- use hash table for Q1_AddEdge:
-      (v1 * 223 + v2) & 255
+- use std::map for Q1_AddEdge
+    ///---  (v1 * 223 + v2) & 255
 
 - use hash table for Q1_AddVertex:
       x = (x + 1.4) / 128.0
@@ -41,11 +41,11 @@ Quake1 output:
       IntHash(hash ^ I_ROUND(x)) 
       IntHash(hash ^ I_ROUND(y)) 
 
-?? convert portal sides into portal faces
+++ perform lighting
 
-+ perform lighting
+++ perform visibility
 
-+ perform visibility
+  ?? convert portal sides into portal faces
 
 
 CSG Polygoniser:
@@ -60,6 +60,8 @@ CSG Polygoniser:
 
 
 GUI:
+
++  pass 'failure' flag to Quake_Finish() etc..
 
 +  ui_chooser code: remove hard-coded game bits (WAD, PAK)
 
