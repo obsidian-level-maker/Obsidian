@@ -38,7 +38,7 @@ static bool has_loaded = false;
 static bool has_added_buttons = false;
 
 
-namespace con
+namespace obcon
 {
 
 // random number generator (Mersenne Twister)
@@ -235,40 +235,40 @@ int abort(lua_State *L)
 }
 
 
-// LUA: map_begin(pixel_W, pixel_H)
-//
-int map_begin(lua_State *L)
-{
-  int pixel_W = luaL_checkint(L, 1);
-  int pixel_H = luaL_checkint(L, 2);
-
-  SYS_ASSERT(1 <= pixel_W && pixel_W < 1000);
-  SYS_ASSERT(1 <= pixel_H && pixel_H < 1000);
-
-  main_win->build_box->mini_map->MapBegin(pixel_W, pixel_H);
-
-  return 0;
-}
-
-// LUA: map_end()
-//
-int map_end(lua_State *L)
-{
-  main_win->build_box->mini_map->MapFinish();
-
-  return 0;
-}
-
-// LUA: map_pixel(kind)
-//
-int map_pixel(lua_State *L)
-{
-  int kind = luaL_checkint(L, 1);
-
-  main_win->build_box->mini_map->MapPixel(kind);
-
-  return 0;
-}
+///-- // LUA: map_begin(pixel_W, pixel_H)
+///-- //
+///-- int map_begin(lua_State *L)
+///-- {
+///--   int pixel_W = luaL_checkint(L, 1);
+///--   int pixel_H = luaL_checkint(L, 2);
+///-- 
+///--   SYS_ASSERT(1 <= pixel_W && pixel_W < 1000);
+///--   SYS_ASSERT(1 <= pixel_H && pixel_H < 1000);
+///-- 
+///--   main_win->build_box->mini_map->MapBegin(pixel_W, pixel_H);
+///-- 
+///--   return 0;
+///-- }
+///-- 
+///-- // LUA: map_end()
+///-- //
+///-- int map_end(lua_State *L)
+///-- {
+///--   main_win->build_box->mini_map->MapFinish();
+///-- 
+///--   return 0;
+///-- }
+///-- 
+///-- // LUA: map_pixel(kind)
+///-- //
+///-- int map_pixel(lua_State *L)
+///-- {
+///--   int kind = luaL_checkint(L, 1);
+///-- 
+///--   main_win->build_box->mini_map->MapPixel(kind);
+///-- 
+///--   return 0;
+///-- }
 
 // LUA: rand_seed(seed)
 //
@@ -299,24 +299,20 @@ int random(lua_State *L)
 
 static const luaL_Reg console_lib[] =
 {
-  { "raw_log_print",   con::raw_log_print },
-  { "raw_debug_print", con::raw_debug_print },
+  { "raw_log_print",   obcon::raw_log_print },
+  { "raw_debug_print", obcon::raw_debug_print },
 
-  { "add_button",    con::add_button },
-  { "show_button",   con::show_button },
-  { "change_button", con::change_button },
+  { "add_button",    obcon::add_button },
+  { "show_button",   obcon::show_button },
+  { "change_button", obcon::change_button },
 
-  { "at_level",   con::at_level },
-  { "progress",   con::progress },
-  { "ticker",     con::ticker },
-  { "abort",      con::abort },
+  { "at_level",   obcon::at_level },
+  { "progress",   obcon::progress },
+  { "ticker",     obcon::ticker },
+  { "abort",      obcon::abort },
  
-  { "rand_seed",  con::rand_seed },
-  { "random",     con::random },
-
-  { "map_begin",  con::map_begin },  // REMOVE!
-  { "map_pixel",  con::map_pixel },
-  { "map_end",    con::map_end },
+  { "rand_seed",  obcon::rand_seed },
+  { "random",     obcon::random },
 
   { NULL, NULL } // the end
 };
@@ -348,7 +344,7 @@ static int p_init_lua(lua_State *L)
   {
     luaL_openlibs(L);  /* open libraries */
 
-    Script_RegisterLib("con", console_lib);
+    Script_RegisterLib("obcon", console_lib);
   }
   lua_gc(L, LUA_GCRESTART, 0);
 
