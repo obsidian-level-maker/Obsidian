@@ -391,64 +391,6 @@ int end_level(lua_State *L)
 }
 
 
-// LUA: add_thing(x, y, h, type, angle, flags, tid, special, args)
-//
-int add_thing(lua_State *L)
-{
-  if (! wad_hexen)
-  {
-    raw_thing_t thing;
-
-    thing.x = LE_S16(luaL_checkint(L,1));
-    thing.y = LE_S16(luaL_checkint(L,2));
-
-    thing.type    = LE_U16(luaL_checkint(L,4));
-    thing.angle   = LE_S16(luaL_checkint(L,5));
-    thing.options = LE_U16(luaL_checkint(L,6));
-
-    WAD_Append(thing_lump, &thing, sizeof(thing));
-  }
-  else  // Hexen format
-  {
-    raw_hexen_thing_t thing;
-
-    // clear unused fields (tid, specials)
-    memset(&thing, 0, sizeof(thing));
-
-    thing.x = LE_S16(luaL_checkint(L,1));
-    thing.y = LE_S16(luaL_checkint(L,2));
-
-    thing.height  = LE_S16(luaL_checkint(L,3));
-    thing.type    = LE_U16(luaL_checkint(L,4));
-    thing.angle   = LE_S16(luaL_checkint(L,5));
-    thing.options = LE_U16(luaL_checkint(L,6));
-
-    thing.tid     = LE_S16(luaL_checkint(L,7));
-    thing.special = luaL_checkint(L,8);  // 8 bits
-
-    Hexen_GrabArgs(L, thing.args, 9);
-
-    WAD_Append(thing_lump, &thing, sizeof(thing));
-  }
-
-  return 0;
-}
-
-// LUA: add_vertex(x, y)
-//
-int add_vertex(lua_State *L)
-{
-  raw_vertex_t vert;
-
-  vert.x = LE_S16(luaL_checkint(L,1));
-  vert.y = LE_S16(luaL_checkint(L,2));
-
-  WAD_Append(vertex_lump, &vert, sizeof(vert));
-
-  return 0;
-}
-
-// C++ version
 void add_vertex(int x, int y)
 {
   raw_vertex_t vert;
@@ -460,28 +402,6 @@ void add_vertex(int x, int y)
 }
 
 
-// LUA: add_sector(f_h, c_h, f_tex, c_tex, light, type, tag)
-//   
-int add_sector(lua_State *L)
-{
-  raw_sector_t sec;
-
-  sec.floor_h = LE_S16(luaL_checkint(L,1));
-  sec.ceil_h  = LE_S16(luaL_checkint(L,2));
-
-  strncpy(sec.floor_tex, luaL_checkstring(L,3), 8);
-  strncpy(sec.ceil_tex,  luaL_checkstring(L,4), 8);
-
-  sec.light   = LE_U16(luaL_checkint(L,5));
-  sec.special = LE_U16(luaL_checkint(L,6));
-  sec.tag     = LE_S16(luaL_checkint(L,7));
-
-  WAD_Append(sector_lump, &sec, sizeof(sec));
-
-  return 0;
-}
-
-// C++ version
 void add_sector(int f_h, const char * f_tex, 
                 int c_h, const char * c_tex,
                 int light, int special, int tag)
@@ -502,27 +422,6 @@ void add_sector(int f_h, const char * f_tex,
 }
 
 
-// LUA: add_sidedef(sec, lower, mid, upper, x, y)
-//   
-int add_sidedef(lua_State *L)
-{
-  raw_sidedef_t side;
-
-  side.sector = LE_S16(luaL_checkint(L,1));
-
-  strncpy(side.lower_tex, luaL_checkstring(L,2), 8);
-  strncpy(side.mid_tex,   luaL_checkstring(L,3), 8);
-  strncpy(side.upper_tex, luaL_checkstring(L,4), 8);
-
-  side.x_offset = LE_S16(luaL_checkint(L,5));
-  side.y_offset = LE_S16(luaL_checkint(L,6));
-
-  WAD_Append(sidedef_lump, &side, sizeof(side));
-
-  return 0;
-}
-
-// C++ version
 void add_sidedef(int sector, const char *l_tex,
                  const char *m_tex, const char *u_tex,
                  int x_offset, int y_offset)
@@ -542,59 +441,6 @@ void add_sidedef(int sector, const char *l_tex,
 }
 
 
-// LUA: add_linedef(vert1, vert2, side1, side2, type, flags, tag, args)
-//
-int add_linedef(lua_State *L)
-{
-  if (! wad_hexen)
-  {
-    raw_linedef_t line;
-
-    line.start = LE_U16(luaL_checkint(L,1));
-    line.end   = LE_U16(luaL_checkint(L,2));
-
-    int side1 = luaL_checkint(L,3);
-    int side2 = luaL_checkint(L,4);
-    
-    line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-    line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
-
-    line.type  = LE_U16(luaL_checkint(L,5));
-    line.flags = LE_U16(luaL_checkint(L,6));
-    line.tag   = LE_S16(luaL_checkint(L,7));
-
-    WAD_Append(linedef_lump, &line, sizeof(line));
-  }
-  else  // Hexen format
-  {
-    raw_hexen_linedef_t line;
-
-    // clear unused fields (specials)
-    memset(&line, 0, sizeof(line));
-
-    line.start = LE_U16(luaL_checkint(L,1));
-    line.end   = LE_U16(luaL_checkint(L,2));
-
-    int side1 = luaL_checkint(L,3);
-    int side2 = luaL_checkint(L,4);
-      
-    line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-    line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
-
-    line.special = luaL_checkint(L,5); // 8 bits
-    line.flags = LE_U16(luaL_checkint(L,6));
-
-    // tag value is UNUSED
-
-    Hexen_GrabArgs(L, line.args, 8);
-
-    WAD_Append(linedef_lump, &line, sizeof(line));
-  }
-
-  return 0;
-}
-
-// C++ version
 void add_linedef(int vert1, int vert2, int side1, int side2,
                  int type,  int flags, int tag,
                  const byte *args)
@@ -663,12 +509,6 @@ static const luaL_Reg wad_funcs[] =
 {
   { "begin_level", Q1_begin_level },  //!!!!! FIXME TEST CRUD
   { "end_level",   Q1_end_level   },
-
-  { "add_thing",   wad::add_thing   },
-  { "add_vertex",  wad::add_vertex  },
-  { "add_sector",  wad::add_sector  },
-  { "add_sidedef", wad::add_sidedef },
-  { "add_linedef", wad::add_linedef },
 
   { NULL, NULL } // the end
 };
