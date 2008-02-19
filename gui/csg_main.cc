@@ -29,6 +29,11 @@
 #include "ui_dialog.h"
 
 
+//!!!!! TEMP HACK
+extern int Q1_begin_level(lua_State *L);
+extern int Q1_end_level(lua_State *L);
+
+
 std::vector<area_info_c *> all_areas;
 std::vector<area_poly_c *> all_polys;
 
@@ -342,7 +347,7 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 }
 
 
-namespace obmap
+namespace csg2
 {
 
 // LUA: add_brush(info, loop, z1, z2)
@@ -419,15 +424,18 @@ int add_entity(lua_State *L)
   return 0;
 }
 
-} // namespace obmap
+} // namespace csg2
 
 
 //------------------------------------------------------------------------
 
-static const luaL_Reg map_lib[] =
+static const luaL_Reg csg_lib[] =
 {
-  { "add_brush",   obmap::add_brush  },
-  { "add_entity",  obmap::add_entity },
+  { "begin_level", Q1_begin_level },  //!!!!! FIXME TEST CRUD
+  { "end_level",   Q1_end_level   },
+
+  { "add_brush",   csg2::add_brush  },
+  { "add_entity",  csg2::add_entity },
 
   { NULL, NULL } // the end
 };
@@ -435,7 +443,7 @@ static const luaL_Reg map_lib[] =
 
 void CSG2_Init(void)
 {
-  Script_RegisterLib("obmap", map_lib);
+  Script_RegisterLib("csg2", csg_lib);
 }
 
 void CSG2_BeginLevel(void)
