@@ -177,7 +177,7 @@ static slope_plane_c * Grab_Slope(lua_State *L, int stack_pos)
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table (slope info)");
+    luaL_argerror(L, stack_pos, "expected a table: slope info");
     return NULL; /* NOT REACHED */
   }
 
@@ -221,22 +221,22 @@ static area_face_c * Grab_Face(lua_State *L, int stack_pos)
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table (face info)");
+    luaL_argerror(L, stack_pos, "expected a table: face info");
     return NULL; /* NOT REACHED */
   }
 
   area_face_c *F = new area_face_c();
 
-  lua_getfield(L, stack_pos, "tex");
-  lua_getfield(L, stack_pos, "x_offset");
-  lua_getfield(L, stack_pos, "y_offset");
+  lua_getfield(L, stack_pos, "texture");
+//  lua_getfield(L, stack_pos, "x_offset");
+//  lua_getfield(L, stack_pos, "y_offset");
 
-  F->tex = std::string(luaL_checkstring(L, -3));
+  F->tex = std::string(luaL_checkstring(L, -1));
 
-  F->x_offset = luaL_checknumber(L, -2);
-  F->y_offset = luaL_checknumber(L, -1);
+//  F->x_offset = luaL_checknumber(L, -2);
+//  F->y_offset = luaL_checknumber(L, -1);
 
-  lua_pop(L, 3);
+  lua_pop(L, 1);
 
   return F;
 }
@@ -249,15 +249,15 @@ static area_info_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table (sector info)");
+    luaL_argerror(L, stack_pos, "expected a table: area info");
     return NULL; /* NOT REACHED */
   }
 
   area_info_c *A = new area_info_c();
 
-  lua_getfield(L, stack_pos, "t_tex");
-  lua_getfield(L, stack_pos, "b_tex");
-  lua_getfield(L, stack_pos, "w_tex");
+  lua_getfield(L, stack_pos, "t_face");
+  lua_getfield(L, stack_pos, "b_face");
+  lua_getfield(L, stack_pos, "w_face");
 
   A->t_face = Grab_Face(L, -3);
   A->b_face = Grab_Face(L, -2);
@@ -281,7 +281,7 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table (vertex)");
+    luaL_argerror(L, stack_pos, "expected a table: vertex");
     return NULL; /* NOT REACHED */
   }
 
@@ -295,7 +295,7 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
 
   lua_pop(L, 2);
 
-  // TODO: side
+  // TODO: w_face
 
   // TODO: kind, tag, flags, args
 
@@ -307,7 +307,7 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 {
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table (line loop)");
+    luaL_argerror(L, stack_pos, "expected a table: line loop");
     return NULL; /* NOT REACHED */
   }
 
@@ -342,7 +342,7 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 }
 
 
-namespace csg2
+namespace obmap
 {
 
 // LUA: add_brush(info, loop, z1, z2)
@@ -419,15 +419,15 @@ int add_entity(lua_State *L)
   return 0;
 }
 
-} // namespace csg2
+} // namespace obmap
 
 
 //------------------------------------------------------------------------
 
-static const luaL_Reg csg2_funcs[] =
+static const luaL_Reg map_lib[] =
 {
-  { "add_brush",   csg2::add_brush  },
-  { "add_entity",  csg2::add_entity },
+  { "add_brush",   obmap::add_brush  },
+  { "add_entity",  obmap::add_entity },
 
   { NULL, NULL } // the end
 };
@@ -435,7 +435,7 @@ static const luaL_Reg csg2_funcs[] =
 
 void CSG2_Init(void)
 {
-  Script_RegisterLib("csg2", csg2_funcs);
+  Script_RegisterLib("obmap", map_lib);
 }
 
 void CSG2_BeginLevel(void)
