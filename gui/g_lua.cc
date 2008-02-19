@@ -38,7 +38,7 @@ static bool has_loaded = false;
 static bool has_added_buttons = false;
 
 
-namespace obcon
+namespace con
 {
 
 // random number generator (Mersenne Twister)
@@ -299,20 +299,20 @@ int random(lua_State *L)
 
 static const luaL_Reg console_lib[] =
 {
-  { "raw_log_print",   obcon::raw_log_print },
-  { "raw_debug_print", obcon::raw_debug_print },
+  { "raw_log_print",   con::raw_log_print },
+  { "raw_debug_print", con::raw_debug_print },
 
-  { "add_button",    obcon::add_button },
-  { "show_button",   obcon::show_button },
-  { "change_button", obcon::change_button },
+  { "add_button",    con::add_button },
+  { "show_button",   con::show_button },
+  { "change_button", con::change_button },
 
-  { "at_level",   obcon::at_level },
-  { "progress",   obcon::progress },
-  { "ticker",     obcon::ticker },
-  { "abort",      obcon::abort },
+  { "at_level",   con::at_level },
+  { "progress",   con::progress },
+  { "ticker",     con::ticker },
+  { "abort",      con::abort },
  
-  { "rand_seed",  obcon::rand_seed },
-  { "random",     obcon::random },
+  { "rand_seed",  con::rand_seed },
+  { "random",     con::random },
 
   { NULL, NULL } // the end
 };
@@ -344,7 +344,7 @@ static int p_init_lua(lua_State *L)
   {
     luaL_openlibs(L);  /* open libraries */
 
-    Script_RegisterLib("obcon", console_lib);
+    Script_RegisterLib("con", console_lib);
   }
   lua_gc(L, LUA_GCRESTART, 0);
 
