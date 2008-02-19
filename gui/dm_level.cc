@@ -887,10 +887,10 @@ void CSG2_MakeMiniMap(void)
   {
     merge_segment_c *S = mug_segments[i];
 
-    int x1 = I_ROUND(S->start->x - bounds_x1) / 24;
-    int y1 = I_ROUND(S->start->y - bounds_y1) / 24;
-    int x2 = I_ROUND(S->end  ->x - bounds_x1) / 24;
-    int y2 = I_ROUND(S->end  ->y - bounds_y1) / 24;
+    int x1 = I_ROUND(S->start->x - bounds_x1) / 20;
+    int y1 = I_ROUND(S->start->y - bounds_y1) / 20;
+    int x2 = I_ROUND(S->end  ->x - bounds_x1) / 20;
+    int y2 = I_ROUND(S->end  ->y - bounds_y1) / 20;
 
     u8_t r = 176;
     u8_t g = 176;
@@ -906,7 +906,8 @@ void CSG2_MakeMiniMap(void)
 
     if (sides == 0)
     {
-      r = 255; g = 0; b = 0;
+      //????  r = 255; g = 0; b = 0;
+      continue;
     }
     else if (sides == 1)
     {
