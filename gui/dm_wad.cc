@@ -323,10 +323,6 @@ int Hexen_GrabArgs(lua_State *L, u8_t *args, int stack_pos)
 
 //------------------------------------------------------------------------
 
-//!!!!! TEMP HACK
-extern int Q1_begin_level(lua_State *L);
-extern int Q1_end_level(lua_State *L);
-
 
 namespace wad
 {
@@ -505,19 +501,9 @@ int num_sidedefs(void)
 
 //------------------------------------------------------------------------
 
-static const luaL_Reg wad_funcs[] =
-{
-  { "begin_level", Q1_begin_level },  //!!!!! FIXME TEST CRUD
-  { "end_level",   Q1_end_level   },
-
-  { NULL, NULL } // the end
-};
-
 
 void Doom_Init(void)
 {
-  Script_RegisterLib("wad", wad_funcs);
-
   Image_Setup();
 }
 
