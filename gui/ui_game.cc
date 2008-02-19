@@ -155,7 +155,9 @@ void UI_Game::BumpSeed()
 {
   u32_t old_val = atoi(seed->value());
 
-  u32_t bump = 100 + (IntHash(old_val) & 255);
+  u32_t bump = TimeGetMillies();
+
+  bump = 100 + (IntHash(bump) & 127);
 
   SetSeed(old_val + bump);
 }
