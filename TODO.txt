@@ -5,10 +5,7 @@ TODO
 
 Quake1 output:
 
-+ split faces larger than 240 units
-  (a) split floors/ceilings using the node builder
-  (b) make multiple faces when height > 240
-  (c) split qSide_c when length > 240
++ fix bounding boxes for everything (especially Leafs)
 
 - texture extractor:
   (a) improve error messages
