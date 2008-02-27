@@ -36,6 +36,9 @@
 #include "main.h"
 
 
+#define FACE_MAX_SIZE  240
+
+
 extern bool CSG2_PointInSolid(double x, double y);
 
 
@@ -543,14 +546,7 @@ static qSide_c * FindPartition(qLeaf_c *leaf)
 
     count++;
 
-///---    // Optimisation: skip the back sides of segments, since there
-///---    // is always a corresponding front side (except when they've
-///---    // been separated by a partition line, and in that case it
-///---    // can never be a valid partition candidate).
-///---#if 1
-///---    if (part->side != 0)
-///---      continue;
-///---#endif
+    // TODO: Optimise for two-sided segments by skipping the back one
 
     // TODO: skip sides that lie on the same vertical plane
 
@@ -1026,9 +1022,28 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
   if (! best_p)
   {
     // current leaf is convex
-
 fprintf(stderr, "LEAF %p IS CONVEX\n", leaf);
-    if (! is_root)
+
+    leaf->ComputeBBox();
+    
+    bool too_big = false;
+    
+    // faces must not be too large because of the way the Quake
+    // texture mapping works.  Here we are abusing the node
+    // builder to ensure floor and ceiling faces are OK.
+    double l_width  = leaf->max_x - leaf->min_x;
+    double l_height = leaf->max_y - leaf->min_y;
+
+    if (l_width > FACE_MAX_SIZE || l_height > FACE_MAX_SIZE)
+    {
+fprintf(stderr, "__ BUT TOO BIG: %1.0f x %1.0f\n", l_width , l_height);
+
+      too_big = true;
+    }
+
+    // we need a root node, even on the simplest possible map.
+
+    if (! is_root && ! too_big)
     {
       leaf->numgap = (int) leaf->GetRegion()->gaps.size();
       SYS_ASSERT(leaf->numgap > 0);
@@ -1037,18 +1052,25 @@ fprintf(stderr, "LEAF %p IS CONVEX\n", leaf);
       return;
     }
 
-    // we need a root node, even on the simplest possible map.
-    // This one is fairly arbitrary.
-
-    leaf->ComputeBBox();
-
     node = new qNode_c(false /* z_splitter */);
 
-    node->x = (leaf->min_x + leaf->max_x) / 2.0;
-    node->y = leaf->min_y;
+    if (l_width > l_height)
+    {
+      // vertical divider
+      node->x = (leaf->min_x + leaf->max_x) / 2.0;
+      node->y = leaf->min_y;
 
-    node->dx = 0;
-    node->dy = leaf->max_y - leaf->min_y;
+      node->dx = 0;
+      node->dy = leaf->max_y - leaf->min_y;
+    }
+    else // horizontal divider
+    {
+      node->x = leaf->min_x;
+      node->y = (leaf->min_y + leaf->max_y) / 2.0;
+
+      node->dx = leaf->max_x - leaf->min_x;
+      node->dy = 0;
+    }
   }
   else
   {
