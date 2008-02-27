@@ -462,6 +462,8 @@ static void BSP_CreateVertexes(void)
 
 std::vector<dedge_t> q1_edges;
 
+std::map<u32_t, s32_t> q1_edge_map;
+
 
 static void ClearEdges(void)
 {
@@ -473,6 +475,8 @@ static void ClearEdges(void)
   dummy.v[0] = dummy.v[1] = 0;
 
   q1_edges.push_back(dummy);
+
+  q1_edge_map.clear();
 }
 
 
@@ -491,17 +495,12 @@ s32_t Q1_AddEdge(u16_t start, u16_t end)
   edge.v[0] = start;
   edge.v[1] = end;
 
+  u32_t key = (u32_t)start + (u32_t)(end << 16);
+
 
   // find existing edge
-  // FIXME: OPTIMISE THIS !!!!
-
-  for (int i = 1; i < (int)q1_edges.size(); i++)
-  {
-    dedge_t *test = &q1_edges[i];
-
-    if (test->v[0] == start && test->v[1] == end)
-      return flipped ? -i : i;
-  }
+  if (q1_edge_map.find(key) != q1_edge_map.end())
+    return q1_edge_map[key] * (flipped ? -1 : 1);
 
 
   // not found, so add new one
@@ -512,6 +511,8 @@ s32_t Q1_AddEdge(u16_t start, u16_t end)
                     MAX_MAP_EDGES);
 
   q1_edges.push_back(edge);
+
+  q1_edge_map[key] = edge_idx;
 
   return flipped ? -edge_idx : edge_idx;
 }
