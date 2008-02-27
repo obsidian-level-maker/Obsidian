@@ -222,7 +222,9 @@ void BSP_CreateEntities(void)
 
   Q1_Printf(lump,0, "{\n");
 
-  //FIXME !!!! Oblige Information
+  ENT_KeyPair(lump,  "_generated_by", OBLIGE_TITLE " " OBLIGE_VERSION " (c) Andrew Apted");
+  ENT_KeyPair(lump,  "_oblige_seed",  main_win->game_box->get_Seed());
+  // TODO: more oblige config stuff...
 
   ENT_KeyPair(lump,  "message",   "level created by Oblige");
   ENT_KeyPair(lump,  "worldtype", "0");
