@@ -5,12 +5,6 @@ TODO
 
 Quake1 output:
 
-- find better place for OBLIGE_INFO
-  (c) >> put info into worldspawn entity
-         "_generated_by" "Oblige 3.03 (c) Andrew Apted"
-         "_oblige_seed" "18234"
-         yada yada
-
 + split faces larger than 240 units
   (a) split floors/ceilings using the node builder
   (b) make multiple faces when height > 240
@@ -72,6 +66,9 @@ GUI:
 
 
 General:
+
++  get the 'Unixy' type of installation working, and
+   write a INSTALL.txt with some useful information.
 
 +  create special BOSS levels (e.g. E1M8, MAP30)
 
