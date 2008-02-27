@@ -23,7 +23,7 @@ require 'a_star'
 require 'engines'
 
 require 'grower'
-require 'test_csg'
+require 'oa_dm7'
 
 
 OB_THEMES["mixed"] =
@@ -516,22 +516,22 @@ function ob_build_cool_shit()
   con.rand_seed(OB_CONFIG.seed * 100)
 
 
--- [[ Quake 3D TEST
-  wad.begin_level("MAP01");
+--[[ Quake 3D TEST
+  csg2.begin_level("MAP01");
 
   test_grow_3D();
 
-  wad.end_level();
+  csg2.end_level();
 
   do return "ok" end
 --]]
 
---[[  CSG TEST CODE
-  wad.begin_level("MAP01");
+-- [[  CSG TEST CODE
+  csg2.begin_level("MAP01");
   
   test_csg();
 
-  wad.end_level();
+  csg2.end_level();
 
   do return "ok" end
 --]]
