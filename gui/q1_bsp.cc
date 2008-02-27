@@ -127,16 +127,7 @@ private:
           seg(other->seg), side(other->side),
           x1(new_x), y1(new_y), x2(other->x2), y2(other->y2),
           faces(), original(false), on_node(other->on_node)
-  {
-    // duplicate the faces
-    for (unsigned int i = 0; i < other->faces.size(); i++)
-    {
-      faces.push_back(new qFace_c(other->faces[i], this));
-    }
-
-    if (on_node)
-      DoAssignFaces(on_node, this);
-  }
+  { }
 
   // for NewPortal
   qSide_c(double px1, double py1, double px2, double py2, int _side) :
@@ -156,6 +147,14 @@ private:
   }
 
 public:
+  double Length() const
+  {
+    double dx = (x2 - x1);
+    double dy = (y2 - y1);
+
+    return sqrt(dx*dx + dy*dy);
+  }
+
   merge_region_c *GetRegion() const
   {
     SYS_ASSERT(seg);
@@ -168,6 +167,15 @@ public:
 
     x2 = new_x;
     y2 = new_y;
+
+    // duplicate the faces
+    for (unsigned int i = 0; i < faces.size(); i++)
+    {
+      T->faces.push_back(new qFace_c(faces[i], T));
+    }
+
+    if (on_node)
+      DoAssignFaces(on_node, T);
 
     return T;
   }
@@ -567,6 +575,43 @@ fprintf(stderr, "ALL DONE : best_c=%1.0f best_p=%p\n",
         best_p ? best_c : -9999, best_p);
 
   return best_p;
+}
+
+static void SplitDiagonalSides(qLeaf_c *L)
+{
+  // leafs are already split to be small than 240 units in width
+  // and height.  If diagonal sides (the faces on them) are texture
+  // mapped by an axis aligned plane, then we don't need to split
+  // them.  Otherwise it is possible that the side is too long and
+  // must be split.
+
+  std::list<qSide_c *> new_bits;
+
+  std::list<qSide_c *>::iterator SI;
+
+  for (SI = L->sides.begin(); SI != L->sides.end(); SI++)
+  {
+    qSide_c *S = *SI;
+
+    if (S->Length() > FACE_MAX_SIZE)
+    {
+fprintf(stderr, "Splitting DIAGONAL side %p length:%1.0f\n", S, S->Length());
+
+      double ix = (S->x1 + S->x2) / 2.0;
+      double iy = (S->y1 + S->y2) / 2.0;
+
+      qSide_c *T = S->SplitAt(ix, iy);
+
+      new_bits.push_back(T);
+    }
+  }
+
+  while (! new_bits.empty())
+  {
+    L->sides.push_back(new_bits.back());
+
+    new_bits.pop_back();
+  }
 }
 
 
@@ -1047,6 +1092,8 @@ fprintf(stderr, "__ BUT TOO BIG: %1.0f x %1.0f\n", l_width , l_height);
     {
       leaf->numgap = (int) leaf->GetRegion()->gaps.size();
       SYS_ASSERT(leaf->numgap > 0);
+
+      SplitDiagonalSides(leaf);
 
       Partition_Z(leaf, out_n, out_l);
       return;
