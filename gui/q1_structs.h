@@ -108,7 +108,7 @@ dmodel_t;
 typedef struct
 {
   s32_t version;
-  lump_t lumps[HEADER_LUMPS+1];   /* AJA: fake extra lump */
+  lump_t lumps[HEADER_LUMPS];
 }
 dheader_t;
 

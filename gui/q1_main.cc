@@ -39,11 +39,8 @@
 
 static FILE *bsp_fp;
 
-static qLump_c * bsp_directory[HEADER_LUMPS + 1];
-// NB: the extra lump (+1) stores the Oblige information
+static qLump_c * bsp_directory[HEADER_LUMPS];
 
-
-#define LUMP_OBLIGE_INFO  HEADER_LUMPS
 
 
 static int write_errors_seen;
@@ -127,7 +124,7 @@ static void BSP_WriteLump(int entry, lump_t *info)
 
 qLump_c *Q1_NewLump(int entry)
 {
-  SYS_ASSERT(0 <= entry && entry < HEADER_LUMPS+1);
+  SYS_ASSERT(0 <= entry && entry < HEADER_LUMPS);
 
   if (bsp_directory[entry] != NULL)
     Main_FatalError("INTERNAL ERROR: Q1_NewLump: already created entry [%d]\n", entry);
@@ -222,9 +219,10 @@ void BSP_CreateEntities(void)
 
   Q1_Printf(lump,0, "{\n");
 
-  ENT_KeyPair(lump,  "_generated_by", OBLIGE_TITLE " " OBLIGE_VERSION " (c) Andrew Apted");
+  ENT_KeyPair(lump,  "_generated_by", OBLIGE_TITLE " (c) Andrew Apted");
+  ENT_KeyPair(lump,  "_oblige_home",  "http://oblige.sourceforge.net");
+  ENT_KeyPair(lump,  "_oblige_version", OBLIGE_VERSION);
   ENT_KeyPair(lump,  "_oblige_seed",  main_win->game_box->get_Seed());
-  // TODO: more oblige config stuff...
 
   ENT_KeyPair(lump,  "message",   "level created by Oblige");
   ENT_KeyPair(lump,  "worldtype", "0");
@@ -260,42 +258,6 @@ void BSP_CreateEntities(void)
   Q1_Append(lump, &zero, 1);
 }
 
-
-void BSP_CreateInfoLump()
-{
-  // fake 16th lump in file
-  qLump_c *lump = Q1_NewLump(LUMP_OBLIGE_INFO);
-
-  Q1_Printf(lump,1, "\n\n\n\n");
-
-  Q1_Printf(lump,1, "-- Map created by OBLIGE %s\n", OBLIGE_VERSION);
-  Q1_Printf(lump,1, "-- " OBLIGE_TITLE " (C) 2006-2008 Andrew Apted\n");
-  Q1_Printf(lump,1, "-- http://oblige.sourceforge.net/\n");
-  Q1_Printf(lump,1, "\n");
-
- 
-  Q1_Printf(lump,1, "-- Game Settings --\n");
-  Q1_Printf(lump,1, "%s\n", main_win->game_box->GetAllValues());
-
-  Q1_Printf(lump,1, "-- Level Architecture --\n");
-  Q1_Printf(lump,1, "%s\n", main_win->level_box->GetAllValues());
-
-  Q1_Printf(lump,1, "-- Playing Style --\n");
-  Q1_Printf(lump,1, "%s\n", main_win->play_box->GetAllValues());
-
-//Q1_Printf(lump,1, "-- Custom Mods --\n");
-//Q1_Printf(lump,1, "%s\n", main_win->mod_box->GetAllValues());
-
-//Q1_Printf(lump,1, "-- Custom Options --\n");
-//Q1_Printf(lump,1, "%s\n", main_win->option_box->GetAllValues());
-
-  Q1_Printf(lump,1, "\n\n\n\n\n\n");
-
-  // terminate lump with ^Z and a NUL character
-  static const byte terminator[2] = { 26, 0 };
-
-  Q1_Append(lump, terminator, 2);
-}
 
 
 //------------------------------------------------------------------------
@@ -937,7 +899,7 @@ static void DummyTexInfo(void)
 
 static void ClearLumps(void)
 {
-  for (int i = 0; i < HEADER_LUMPS+1; i++)
+  for (int i = 0; i < HEADER_LUMPS; i++)
   {
     if (bsp_directory[i])
     {
@@ -1010,7 +972,6 @@ bool Quake1_Finish(void)
   // yada yada
 
   BSP_CreateEntities();
-  BSP_CreateInfoLump();
 
   BSP_CreateModel();
 
@@ -1031,8 +992,6 @@ bool Quake1_Finish(void)
   // WRITE ALL LUMPS
 
   header.version = LE_U32(0x1D); 
-
-  BSP_WriteLump(LUMP_OBLIGE_INFO, &header.lumps[LUMP_OBLIGE_INFO]);
 
   for (int L = 0; L < HEADER_LUMPS; L++)
   {
