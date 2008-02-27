@@ -364,7 +364,7 @@ u16_t Q1_AddPlane(double x, double y, double z,
     dplane_t *test_p = &q1_planes[plane_idx];
 
     // Note: ignore the 'type' field because it was generated
-    //       from (completely depends on) the plane normal.
+    //       from (and completely depends on) the plane normal.
     if (fabs(test_p->dist - dist) > Q_EPSILON ||
         fabs(test_p->normal[0] - dp.normal[0]) > EPSILON ||
         fabs(test_p->normal[1] - dp.normal[1]) > EPSILON ||
@@ -407,10 +407,19 @@ static void BSP_CreatePlanes(void)
 
 std::vector<dvertex_t> q1_vertices;
 
+#define NUM_VERTEX_HASH  512
+static std::vector<u16_t> * vert_hashtab[NUM_VERTEX_HASH];
+
 
 static void ClearVertices(void)
 {
   q1_vertices.clear();
+
+  for (int h = 0; h < NUM_VERTEX_HASH; h++)
+  {
+    delete vert_hashtab[h];
+    vert_hashtab[h] = NULL;
+  }
 }
 
 u16_t Q1_AddVertex(double x, double y, double z)
@@ -422,18 +431,31 @@ u16_t Q1_AddVertex(double x, double y, double z)
   vert.z = z;
 
 
-  // find existing vertex
-  // FIXME: OPTIMISE THIS
+  // find existing vertex.
+  // For speed we use a hash-table
+  int hash;
+  hash = IntHash(       I_ROUND((x+1.4) / 128.0));
+  hash = IntHash(hash ^ I_ROUND((y+1.4) / 128.0));
 
-  for (u16_t i = 0; i < q1_vertices.size(); i++)
+  hash = hash & (NUM_VERTEX_HASH-1);
+  SYS_ASSERT(hash >= 0);
+
+  if (! vert_hashtab[hash])
+    vert_hashtab[hash] = new std::vector<u16_t>;
+
+  std::vector<u16_t> *hashtab = vert_hashtab[hash];
+
+  for (unsigned int i = 0; i < hashtab->size(); i++)
   {
-    dvertex_t *test = &q1_vertices[i];
+    u16_t vert_idx = (*hashtab)[i];
+ 
+    dvertex_t *test = &q1_vertices[vert_idx];
 
     if (fabs(test->x - x) < Q_EPSILON &&
         fabs(test->y - y) < Q_EPSILON &&
         fabs(test->z - z) < Q_EPSILON)
     {
-      return i;  // found it
+      return vert_idx; // found it
     }
   }
 
@@ -446,6 +468,8 @@ u16_t Q1_AddVertex(double x, double y, double z)
                     MAX_MAP_VERTS);
 
   q1_vertices.push_back(vert);
+
+  hashtab->push_back(vert_idx);
 
   return vert_idx;
 }
