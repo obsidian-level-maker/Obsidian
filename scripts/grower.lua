@@ -766,16 +766,18 @@ function render_seed(S)
   
   if S.kind == "solid" then return end
 
-  local tex = "STARTAN3" -- "rock1_2"
+  local tex = "rock1_2" -- "STARTAN3"
 
----  if S.z1 > 100 then tex = "tech01_1"  end
----  if S.z1 > 200 then tex = "ground1_1" end
+  if S.z1 > 100 then tex = "tech01_1"  end
+  if S.z1 > 200 then tex = "ground1_1" end
 
   -- floor
   if S.kind == "walkway" then
-    csg2.add_solid(
+    csg2.add_brush(
     {
-      t_tex = tex, b_tex = tex, w_tex = tex
+      t_face = { texture=tex },
+      b_face = { texture=tex },
+      w_face = { texture=tex },
     },
     {
       { x = S.x1, y = S.y1 },
@@ -783,9 +785,7 @@ function render_seed(S)
       { x = S.x2, y = S.y2 },
       { x = S.x2, y = S.y1 },
     },
-    {
-      z1 = S.z1-PAD, z2 = S.z1+16
-    })
+    S.z1-PAD, S.z1+16)
   end
 
   -- ceiling
@@ -794,9 +794,11 @@ function render_seed(S)
      (S.link[9].dest == S and S.link[9].src.kind == "solid")
   then
     
-    csg2.add_solid(
+    csg2.add_brush(
     {
-      t_tex = tex, b_tex = tex, w_tex = tex
+      t_face = { texture=tex },
+      b_face = { texture=tex },
+      w_face = { texture=tex },
     },
     {
       { x = S.x1, y = S.y1 },
@@ -804,9 +806,7 @@ function render_seed(S)
       { x = S.x2, y = S.y2 },
       { x = S.x2, y = S.y1 },
     },
-    {
-      z1 = S.z2-16, z2 = S.z2+PAD
-    })
+    S.z2-16, S.z2+PAD)
   end
 
   -- walls
@@ -817,14 +817,14 @@ function render_seed(S)
     
     if not L or other.kind == "solid" then
     
-      csg2.add_solid(
+      csg2.add_brush(
       {
-        t_tex = tex, b_tex = tex, w_tex = tex
+        t_face = { texture=tex },
+        b_face = { texture=tex },
+        w_face = { texture=tex },
       },
       get_seed_wall(S, side),
-      {
-        z1 = S.z1-PAD, z2 = S.z2+PAD
-      })
+      S.z1-PAD, S.z2+PAD)
     end
   end
 end
@@ -1012,7 +1012,8 @@ function test_grow_3D()
     render_seed(S)
   end
 
-  csg2.add_entity("1", 800, 800, 260)
+  csg2.add_entity("info_player_start", 800, 800, 260)
+---!!!  csg2.add_entity("1", 800, 800, 260)
 end
 
 
