@@ -75,6 +75,11 @@ public:
    qFace_c(int _kind = WALL) : kind(_kind), side(NULL), floor_leaf(NULL), index(-1) { }
   ~qFace_c() { }
 
+   qFace_c(int _kind, int _gap, double _z1, double _z2) :
+           kind(_kind), z1(_z1), z2(_z2), gap(_gap),
+           side(NULL), floor_leaf(NULL), index(-1)
+   { }
+
    qFace_c(const qFace_c *other, qSide_c *new_side) :
            kind(other->kind), z1(other->z1), z2(other->z2),
            gap(other->gap), side(new_side),
@@ -1149,6 +1154,35 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
 }
 
 
+static void DoAddFace(qSide_c *S, int gap, double z1, double z2)
+{
+  SYS_ASSERT(z2 > z1);
+
+  // make sure face height does not exceed the limit
+  if (z2 - z1 > FACE_MAX_SIZE)
+  {
+    int num = 1 + (int)floor((z2 - z1) / (double)FACE_MAX_SIZE);
+
+fprintf(stderr, "Splitting tall face (%1.0f .. %1.0f) into %d pieces\n", z1, z2, num);
+
+    SYS_ASSERT(num >= 2);
+
+    for (int i = 0; i < num; i++)
+    {
+      double nz1 = z1 + (z2 - z1) *  i    / (double)num;
+      double nz2 = z1 + (z2 - z1) * (i+1) / (double)num;
+
+      DoAddFace(S, gap, nz1, nz2);
+    }
+
+    return;
+  }
+
+  qFace_c *F = new qFace_c(qFace_c::WALL, gap, z1, z2);
+
+  S->AddFace(F);
+}
+
 static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
 {
   qSide_c *S = leaf->AddSide(seg, side);
@@ -1167,15 +1201,10 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
     // simple case: other side is completely solid
     if (RX == NULL || RX->gaps.size() == 0)
     {
-      qFace_c *F = new qFace_c();
+      DoAddFace(S, k, gz1, gz2);
 
-      F->gap = k;
-      F->z1  = gz1;
-      F->z2  = gz2;
-
-      S->AddFace(F);
 fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f) - (%1.0f,%1.0f)\n",
-        F->z1, F->z2, F->gap, S->x1, S->y1, S->x2, S->y2);
+        gz1, gz2, k, S->x1, S->y1, S->x2, S->y2);
       continue;
     }
 
@@ -1191,15 +1220,10 @@ fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f)
 
       if (sz2 > sz1 + 0.99)  // don't create tiny faces
       {
-        qFace_c *F = new qFace_c();
+        DoAddFace(S, k, sz1, sz2);
 
-        F->gap = k;
-        F->z1  = sz1;
-        F->z2  = sz2;
-
-        S->AddFace(F);
 fprintf(stderr, "Making face %1.0f..%1.0f gap:%u neighbour:%u (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
-        F->z1, F->z2, F->gap, m, S->x1, S->y1, S->x2, S->y2, side);
+        sz1, sz2, k, m, S->x1, S->y1, S->x2, S->y2, side);
       }
     }
   }
