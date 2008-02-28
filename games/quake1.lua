@@ -28,22 +28,53 @@ Q1_THINGS =
   dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 },
 
   -- enemies
-  dog     = { id="monster_dog", kind="monster", r=32, h=80, },
+  dog      = { id="monster_dog",      kind="monster", r=32, h=80, },
+  grunt    = { id="monster_army",     kind="monster", r=32, h=80, },
+  enforcer = { id="monster_enforcer", kind="monster", r=32, h=80, },
+  fiend    = { id="monster_demon1",   kind="monster", r=32, h=80, },
 
-  grunt   = { id="monster_army", kind="monster", r=32, h=80, },
+  knight   = { id="monster_knight",   kind="monster", r=32, h=80, },
+  knight2  = { id="monster_hell_knight", kind="monster", r=32, h=80, },
+  ogre     = { id="monster_ogre",     kind="monster", r=32, h=80, },
+  rotfish  = { id="monster_fish",     kind="monster", r=32, h=80, },
+  scragg   = { id="monster_wizard",   kind="monster", r=32, h=80, },
 
+  shambler = { id="monster_shambler", kind="monster", r=32, h=80, },
+  spawn    = { id="monster_tarbaby",  kind="monster", r=32, h=80, },
+  vore     = { id="monster_shalrath", kind="monster", r=32, h=80, },
+  zombie   = { id="monster_zombie",   kind="monster", r=32, h=80, },
 
   -- bosses
+  chthon   = { id="monster_boss",   kind="monster", r=32, h=80, },
+  shub     = { id="monster_oldone", kind="monster", r=32, h=80, },
 
   -- pickups
-  k_silver = { id="item_key1", kind="pickup", r=30, h=60, pass=true },
-  k_gold   = { id="item_key2", kind="pickup", r=30, h=60, pass=true },
+  k_silver = { id="item_key1", kind="pickup", r=30, h=30, pass=true },
+  k_gold   = { id="item_key2", kind="pickup", r=30, h=30, pass=true },
 
+  ssg      = { id="weapon_supershotgun",    kind="pickup", r=30, h=30, pass=true },
+  grenade  = { id="weapon_grenadelauncher", kind="pickup", r=30, h=30, pass=true },
+  rocket   = { id="weapon_rocketlauncher",  kind="pickup", r=30, h=30, pass=true },
+  nailgun  = { id="weapon_nailgun",         kind="pickup", r=30, h=30, pass=true },
+  nailgun2 = { id="weapon_supernailgun",    kind="pickup", r=30, h=30, pass=true },
+  zapper   = { id="weapon_lightning",       kind="pickup", r=30, h=30, pass=true },
+
+  health       = { id="item_health",   kind="pickup", r=30, h=30, pass=true },
+  green_armor  = { id="item_armor1",   kind="pickup", r=30, h=30, pass=true },
+  yellow_armor = { id="item_armor2",   kind="pickup", r=30, h=30, pass=true },
+  red_armor    = { id="item_armorInv", kind="pickup", r=30, h=30, pass=true },
+
+  cell_box   = { id="item_cells",   kind="pickup", r=30, h=30, pass=true },
+  shell_box  = { id="item_shells",  kind="pickup", r=30, h=30, pass=true },
+  nail_box   = { id="item_spikes",  kind="pickup", r=30, h=30, pass=true },
+  rocket_box = { id="item_rockets", kind="pickup", r=30, h=30, pass=true },
 
   -- scenery
+  torch     = { id="light_torch_small_walltorch", kind="scenery", r=30, h=60, pass=true },
 
   -- special
 
+  -- ambient sounds
 }
 
 ----------------------------------------------------------------
