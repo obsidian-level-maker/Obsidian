@@ -503,7 +503,7 @@ function ob_init()
 end
 
 
-function ob_build_cool_shit()
+function build_cool_shit()
  
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
@@ -516,7 +516,7 @@ function ob_build_cool_shit()
   con.rand_seed(OB_CONFIG.seed * 100)
 
 
---[[ Quake 3D TEST
+-- [[ Quake 3D TEST
   csg2.begin_level("MAP01");
 
   test_grow_3D();
@@ -526,7 +526,7 @@ function ob_build_cool_shit()
   do return "ok" end
 --]]
 
--- [[  CSG TEST CODE
+--[[  CSG TEST CODE
   csg2.begin_level("MAP01");
   
   test_csg();
