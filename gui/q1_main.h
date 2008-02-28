@@ -57,6 +57,13 @@ void Quake1_BuildBSP(void);
 
 bool Quake1_ExtractTextures(void);
 
+
+// q1_light.cc
+
+void Quake1_LightAddFace(int FOO, int BAR);
+
+void Quake1_LightUpLevel(void);
+
 #endif /* __OBLIGE_QUAKE1_H__ */
 
 //--- editor settings ---
