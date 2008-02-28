@@ -60,9 +60,9 @@ bool Quake1_ExtractTextures(void);
 
 // q1_light.cc
 
-void Quake1_LightAddFace(int FOO, int BAR);
+void Quake1_BeginLightmap(void);
 
-void Quake1_LightUpLevel(void);
+s32_t Quake1_LightAddBlock(int w, int h, u8_t level);
 
 #endif /* __OBLIGE_QUAKE1_H__ */
 

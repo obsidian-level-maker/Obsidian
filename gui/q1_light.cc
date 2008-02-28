@@ -37,20 +37,48 @@ class qLightmap_c
 public:
   int w, h;
 
+  float *samples;
 
 public:
-   qLightmap_c() { }
-  ~qLightmap_c() { }
+  qLightmap_c(int width, int height) : w(width), h(height)
+  {
+    samples = new float[w * h];
+  }
 
+  ~qLightmap_c()
+  {
+    delete[] samples;
+  }
+
+  void Clear()
+  {
+    for (int i = 0; i < w*h; i++)
+      samples[i] = 0.0f;
+  }
 };
 
 
-void Quake1_LightAddFace(int FOO, int BAR)
+static qLump_c *q1_lightmap;
+
+
+void Quake1_BeginLightmap(void)
 {
+  q1_lightmap = Q1_NewLump(LUMP_LIGHTING);
+
+  const char *info = OBLIGE_TITLE " " OBLIGE_VERSION;
+
+  Q1_Append(q1_lightmap, info, strlen(info));
 }
 
-void Quake1_LightUpLevel(void)
+
+s32_t Quake1_LightAddBlock(int w, int h, u8_t level)
 {
+  s32_t offset = (s32_t) q1_lightmap->size();
+
+  for (int i = 0; i < w*h; i++)
+    Q1_Append(q1_lightmap, &level, 1);
+
+  return offset;
 }
 
 //--- editor settings ---

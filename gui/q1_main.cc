@@ -996,6 +996,8 @@ bool Quake1_Finish(void)
 {
   // yada yada
 
+  Quake1_BeginLightmap();
+
   BSP_CreateEntities();
 
   BSP_CreateModel();

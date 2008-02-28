@@ -56,6 +56,7 @@ OBJS=	main.o      \
 	g_image.o   \
 	g_lua.o     \
 	q1_bsp.o    \
+	q1_level.o  \
 	q1_main.o   \
 	q1_pakfile.o \
 	q1_tex.o    \
