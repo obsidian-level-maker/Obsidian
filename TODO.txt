@@ -7,13 +7,6 @@ Quake1 output:
 
 + fix bounding boxes for everything (especially Leafs)
 
-- texture extractor:
-  (a) improve error messages
-  (b) code to check if data/quake_tex.wad exists
-
-- create better "error" and "missing" miptex.
-- create "oblige" and "oblige_neon" miptex using the built-in image.
-
 + create proper clipping hulls:
   (a) make the area_polys convex
   (b) make them bigger (16 in XY, 24/36 in Z)
@@ -23,14 +16,13 @@ Quake1 output:
   (c) perform new MergeAreas
   (d) perform Quake1_BuildBSP / RecursiveMakeClipNode
 
-- use std::map for Q1_AddEdge
-    ///---  (v1 * 223 + v2) & 255
++ create faces from stacked brushes behind a gap (cf. oa_dm7)
 
-- use hash table for Q1_AddVertex:
-      x = (x + 1.4) / 128.0
-      y = (y + 1.4) / 128.0
-      IntHash(hash ^ I_ROUND(x)) 
-      IntHash(hash ^ I_ROUND(y)) 
+- texture extractor:
+  (a) improve error messages
+  (b) code to check if data/quake_tex.wad exists
+
+- create "oblige" and "oblige_neon" miptex using the built-in image.
 
 ++ perform lighting
 
