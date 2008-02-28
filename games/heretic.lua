@@ -3,6 +3,7 @@
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006-2008 Andrew Apted
+--                     (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -13,6 +14,11 @@
 --  but WITHOUT ANY WARRANTY; without even the implied warranty of
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
+--
+----------------------------------------------------------------
+--
+--  Big thanks to Sam Trenholme who greatly improved the
+--  Heretic theme (including lots of new COMBOs).
 --
 ----------------------------------------------------------------
 
@@ -171,7 +177,7 @@ HC_COMBOS =
 
   GOLD =
   {
-    theme_probs = { CITY=20 },
+    theme_probs = { CITY=20, EGYPT=20 },
     mat_pri = 6,
 
     wall  = "SANDSQ2",
@@ -204,7 +210,7 @@ HC_COMBOS =
 
   MOSSY =
   {
-    theme_probs = { CITY=20 },
+    theme_probs = { CITY=20, DOME=20 },
     mat_pri = 2,
 
     wall  = "MOSSRCK1",
@@ -219,7 +225,7 @@ HC_COMBOS =
 
   WOOD =
   {
-    theme_probs = { CITY=20 },
+    theme_probs = { CITY=20, EGYPT=20 },
     mat_pri = 2,
 
     wall  = "WOODWL",
@@ -234,7 +240,7 @@ HC_COMBOS =
 
   HUT =
   {
-    theme_probs = { CITY=20 },
+    theme_probs = { CITY=20, DOME=20 },
     mat_pri = 1,
     
     wall  = "CTYSTUC3",
@@ -247,8 +253,354 @@ HC_COMBOS =
 
   },
 
+  DISCO1 = 
+  {
+    theme_probs = { EGYPT=20 },
+    mat_pri = 1,
+    
+    wall  = "SPINE2",
+    floor = "FLAT522",
+    ceil  = "FLOOR06",
+    step  = "SNDBLCKS",
+
+--  void = "CTYSTUC4",
+
+  },
+ 
+  --- Grey-walls, pink/brown floors 
+  DISCO2 = 
+  {
+    theme_probs = { DOME=20 },
+    mat_pri = 1,
+    
+    wall  = "SQPEB1",
+    floor = "FLAT522",
+    ceil  = "FLOOR06",
+    step  = "SPINE2",
+
+--  void = "CTYSTUC4",
+
+  },
+  
+  PYRAMID =
+  {
+    theme_probs = { EGYPT=20 },
+    mat_pri = 1,
+    
+    wall  = "SNDPLAIN",
+    floor = "FLOOR27",
+    ceil  = "FLOOR10",
+    step  = "SPINE2",
+
+--  void = "CTYSTUC4",
+
+  },
+
+  PHAROAH =
+  {
+    theme_probs = { EGYPT=15 },
+    mat_pri = 1,
+    
+    wall  = "TRISTON2",
+    floor = "FLAT522",
+    ceil  = "FLOOR20",
+    step  = "SQPEB2",
+
+--  void = "CTYSTUC4",
+
+  },
+
+  PARLOR =
+  {
+    theme_probs = { EGYPT=15 },
+    mat_pri = 1,
+    
+    wall  = "SQPEB2",
+    floor = "FLOOR06",
+    ceil  = "FLOOR06",
+    step  = "SQPEB2",
+
+--  void = "CTYSTUC4",
+
+    scenery = "wall_torch",
+  },
+
+  SBLOCK =
+  {
+    theme_probs = { EGYPT=20 },
+    mat_pri = 1,
+    
+    wall  = "SNDBLCKS",
+    floor = "FLOOR27",
+    ceil  = "FLOOR10",
+    step  = "SPINE2",
+
+--  void = "CTYSTUC4",
+
+  },
+
+
+  CAVE1 = 
+  {
+    theme_probs = { CAVE=20 },
+    mat_pri = 1,
+    wall = "LOOSERCK",
+    floor = "FLAT516",
+    ceil = "FLOOR01",
+
+    scenery = "stal_big_C",
+ 
+  }, 
+
+  CAVE2 = 
+  {
+    theme_probs = { CAVE=20 },
+    mat_pri = 1,
+    wall = "LAVA1",
+    floor = "FLAT516",
+    ceil = "FLAT506",
+
+    scenery = "stal_small_C",
+ 
+  }, 
+
+  CAVE3 =  -- Muddy walls, but one of the few outdoor textures
+  {
+    theme_probs = { CAVE=20, EGYPT=10 },
+    mat_pri = 1,
+    wall = "BRWNRCKS",
+    floor = "FLOOR01",
+    ceil = "FLAT516",
+
+    scenery = "stal_small_C",
+ 
+  }, 
+
+  PURPLE =
+  {
+    theme_probs = { GARISH=20 },
+    mat_pri = 1,
+
+    wall  = "BLUEFRAG",
+    floor = "FLOOR07",
+    ceil  = "FLOOR07",
+
+--  void = "CTYSTCI4",
+
+  },
+
+  BLUE =
+  {
+    theme_probs = { GARISH=20 },
+    mat_pri = 1,
+
+    wall  = "MOSAIC1",
+    floor = "FLAT502",
+    ceil  = "FLOOR16",
+
+--  void = "CTYSTCI4",
+
+  },
+
+--- The greens don't look that great in Heretic
+  GREEN =
+  {
+    theme_probs = { UNUSED=20 },
+    mat_pri = 1,
+
+    wall  = "GRNBLOK1",
+    floor = "FLAT513",
+    ceil  = "FLOOR18",
+
+--  void = "CTYSTCI4",
+
+  },
+
+  ICE =
+  {
+    theme_probs = { GARISH=20 },
+    mat_pri = 1,
+
+    wall  = "STNGLS1",
+    floor = "FLAT502",
+    ceil  = "FLAT517",
+
+--  void = "CTYSTCI4",
+
+  },
+
+  ROOT =
+  {
+    theme_probs = { CAVE=15 },
+    mat_pri = 1,
+
+    wall  = "ROOTWALL",
+    floor = "FLAT506",
+    ceil  = "FLAT506",
+
+--  void = "CTYSTCI4",
+
+  },
 
   ---- OUTDOOR ------------
+
+  CAVEO1 = 
+  {
+    theme_probs = { CAVE=20 },
+    mat_pri = 2,
+    outdoor = true,
+    wall = "LOOSERCK",
+    floor = "FLAT516",
+    ceil = "FLOOR01",
+
+    scenery = "stal_big_F",
+ 
+  }, 
+
+  CAVEO2 = 
+  {
+    theme_probs = { CAVE=20 },
+    mat_pri = 2,
+    outdoor = true,
+    wall = "LAVA1",
+    floor = "FLAT516",
+    ceil = "FLAT506",
+
+    scenery = "stal_small_F",
+ 
+  }, 
+
+  CAVEMUD = 
+  {
+    theme_probs = { CAVE=15 },
+    mat_pri = 2,
+    outdoor = true,
+    wall = "RCKSNMUD",
+    floor = "FLAT510",
+    ceil = "FLAT510",
+
+    scenery = "stal_small_F",
+ 
+  }, 
+
+  --- Looks obnoxious outdoors; disabled
+  ROOTO =
+  {
+    theme_probs = { UNUSED=15 },
+    mat_pri = 2,
+    outdoor = true,
+
+    wall  = "ROOTWALL",
+    floor = "FLAT506",
+    ceil  = "FLAT506",
+
+--  void = "CTYSTCI4",
+
+  },
+
+
+  ODISCO1 = 
+  {
+    theme_probs = { EGYPT=20 },
+    mat_pri = 1,
+    outdoor = true,
+    
+    wall  = "SPINE2",
+    floor = "FLAT522",
+    ceil  = "FLOOR06",
+    step  = "SNDBLCKS",
+
+--  void = "CTYSTUC4",
+
+  },
+  
+  ODISCO2 = 
+  {
+    theme_probs = { DOME=20 },
+    mat_pri = 1,
+    outdoor = true,
+    
+    wall  = "SQPEB1",
+    floor = "FLAT522",
+    ceil  = "FLOOR06",
+    step  = "SPINE2",
+
+--  void = "CTYSTUC4",
+
+  },
+
+  PYRAMIDO =
+  {
+    theme_probs = { EGYPT=20 },
+    mat_pri = 1,
+    outdoor = true,
+    
+    wall  = "SNDPLAIN",
+    floor = "FLOOR27",
+    ceil  = "FLOOR27",
+    step  = "SPINE2",
+
+--  void = "CTYSTUC4",
+
+  },
+
+  PHAROAHO =
+  {
+    theme_probs = { EGYPT=15 },
+    mat_pri = 1,
+    outdoor = true,
+    
+    wall  = "TRISTON2",
+    floor = "FLAT521",
+    ceil  = "FLAT503",
+    step  = "SQPEB2",
+
+--  void = "CTYSTUC4",
+
+  },
+  
+  WATER =
+  {
+    theme_probs = { GARISH=20 },
+    outdoor = true,
+    mat_pri = 1,
+
+    wall  = "WATRWAL1",
+    floor = "FLTWAWA1",
+    ceil  = "FLTWAWA1",
+
+--  void = "CTYSTCI4",
+
+    liquid_prob = 0,
+  },
+
+  PURPLEO =
+  {
+    theme_probs = { GARISH=20 },
+    outdoor = true,
+    mat_pri = 1,
+
+    wall  = "REDWALL",
+    floor = "FLOOR07",
+    ceil  = "FLOOR07",
+
+--  void = "CTYSTCI4",
+
+  },
+
+  GREENO =
+  {
+    theme_probs = { UNUSED=20 },
+    outdoor = true,
+    mat_pri = 1,
+
+    wall  = "GRNBLOK1",
+    floor = "FLOOR18",
+    ceil  = "FLOOR18",
+
+--  void = "CTYSTCI4",
+
+  },
 
   STONY =
   {
@@ -266,7 +618,7 @@ HC_COMBOS =
 
   MUDDY =
   {
-    theme_probs = { CITY=20 },
+    theme_probs = { CITY=20, DOME=20 },
     outdoor = true,
     mat_pri = 3,
 
@@ -281,14 +633,14 @@ HC_COMBOS =
 
   },
   
-  WATERY =
+  SANDZ =
   {
-    theme_probs = { CITY=20 },
+    theme_probs = { EGYPT=20 },
     outdoor = true,
     mat_pri = 1,
 
     wall  = "SNDBLCKS",
-    floor = "FLTWAWA1",
+    floor = "FLOOR27",
     ceil  = "FLOOR27",
 
 --  void = "CTYSTCI4",
@@ -298,7 +650,7 @@ HC_COMBOS =
 
   SANDY =
   {
-    theme_probs = { CITY=20 },
+    theme_probs = { CITY=20, DOME=20 },
     outdoor = true,
     mat_pri = 2,
     
@@ -338,11 +690,123 @@ HC_EXITS =
       }
     },
   },
+  BLOODY = -- name hardcoded in planner.lua for secret exit
+  {
+    secret_exit = true,
+    mat_pri = 9,
+
+    wall  = "METL2",
+    floor = "FLOOR03",
+    ceil  = "FLOOR19",
+
+    switch =
+    {
+      prefab="SWITCH_NICHE_TINY_DEEP",
+      add_mode="wall",
+      skin =
+      {
+        switch_w="SW1OFF", wall="METL2",
+--      switch_f="FLOOR28",
+
+        switch_h=32, x_offset=16, y_offset=48,
+        kind=51, tag=0,
+      }
+    },
+  },
 }
 
 HC_HALLWAYS =
 {
-  -- FIXME !!! hallway themes
+ 
+  -- Hall with set stone walls 
+  RCKHALL = {
+        mat_pri = 0,
+	theme_probs = { CITY=20, DOME=20 },
+    	wall = "GRSTNPB",
+	void = "GRSTNPB",
+    	step  = "GRSTNPB",
+	pillar = "WOODWL",
+	
+    floor = "FLOOR03",
+    ceil  = "FLOOR03",
+	trim_mode = "guillotine",	
+	
+  },
+
+  -- Hall with natural stone walls
+  STHALL = {
+        mat_pri = 0,
+	theme_probs = { CITY=20, CAVE=20 },
+    	wall = "LOOSERCK",
+	void = "LOOSERCK",
+    	step  = "GRSTNPB",
+	pillar = "GRSTNPB",
+	
+    floor = "FLOOR00",
+    ceil  = "FLOOR00",
+	trim_mode = "guillotine",	
+	
+  },
+
+  -- Hall with roots on the walls
+  RTHALL = {
+        mat_pri = 0,
+	theme_probs = { CAVE=20 },
+    	wall = "ROOTWALL",
+	void = "ROOTWALL",
+    	step  = "ROOTWALL",
+	pillar = "ROOTWALL",
+	
+    floor = "FLAT506",
+    ceil  = "FLAT506",
+	trim_mode = "guillotine",	
+	
+  },
+
+  -- Hall with sandy walls
+  SDHALL = {
+        mat_pri = 0,
+	theme_probs = { EGYPT=20 },
+    	wall = "SNDPLAIN",
+	void = "SNDPLAIN",
+    	step  = "SPINE2",
+	pillar = "SPINE2",
+	
+    floor = "FLOOR27",
+    ceil  = "FLOOR10",
+	trim_mode = "guillotine",	
+	
+  },
+
+  -- Hall with wooden walls
+  WDHALL = {
+        mat_pri = 0,
+	theme_probs = { CITY=20, EGYPT=20 },
+    	wall = "SQPEB2",
+	void = "SQPEB2",
+    	step  = "SQPEB2",
+	pillar = "SQPEB2",
+	
+    floor = "FLOOR06",
+    ceil  = "FLOOR06",
+	trim_mode = "guillotine",	
+	
+  },
+
+  -- Garish blue watery hall
+  WHALL = {
+        mat_pri = 0,
+	theme_probs = { GARISH=20, DOME=20 },
+    	wall = "MOSAIC1",
+	void = "MOSAIC1",
+    	step  = "WATRWAL1",
+	pillar = "WATRWAL1",
+	
+    floor = "FLTWAWA1",
+    ceil  = "FLAT502",
+	trim_mode = "guillotine",	
+	
+  }
 }
 
 
@@ -536,7 +1000,7 @@ HC_DOORS =
                }
              },
   
-  d_wood   = { wall="DOORWOOD", w=64,  h=128, ceil="FLOOR10" },
+ d_wood   = { wall="DOORWOOD", w=64,  h=128, ceil="FLOOR10" },
   
 --  d_stone  = { wall="DOORSTON", w=64,  h=128 },
 }
@@ -613,11 +1077,12 @@ HC_DOOR_PREFABS =
     {
       door_w="DOORWOOD", door_c="FLOOR10",
       track_w="METL2",
+      frame_f="FLOOR04",
       door_h=128,
       door_kind=1, tag=0,
     },
 
-    theme_probs = { CITY=20 },
+  theme_probs = { CITY=20 },
   },
 }
 
@@ -788,13 +1253,53 @@ HC_ROOMS =
 
 HC_THEMES =
 {
+  --- City (E1 Castle) is both indoors and outdoors
   CITY =
   {
     room_probs=
     {
       PLAIN=50,
     },
+    has_outdoors = true,
   },
+  --- Cave (used in Hell) is both outdoors and indoors
+  CAVE =
+  {
+    room_probs=
+    {
+      PLAIN=50,
+    },
+    has_outdoors = true,
+  },
+  --- Dome is a variation on City used in E3
+  DOME =
+  {
+    room_probs=
+    {
+      PLAIN=50,
+    },
+    has_outdoors = true,
+  },
+  --- Egypt is a sandy-looking theme used in E4
+  EGYPT =
+  {
+    room_probs=
+    {
+      PLAIN=50,
+    },
+    has_outdoors = true,
+  },
+  --- Garish is a surrealistic very garish theme of blue and some red;
+  --- used in E5
+  GARISH =
+  {
+    room_probs=
+    {
+      PLAIN=50,
+    },
+    has_outdoors = true,
+  },
+
 }
 
 HC_QUEST_LEN_PROBS =
@@ -946,11 +1451,12 @@ HC_INITIAL_MODEL =
 HC_EPISODE_THEMES =
 {
   { CITY=5 },
-  { CITY=5 },
-  { CITY=5 },
+  { CAVE=5 },
+  { DOME=5 },
 
-  { CITY=5 },
-  { CITY=5 },
+  { EGYPT=5 },
+  { GARISH=5 },
+  { CITY=5, EGYPT=5 },
 }
 
 HC_SECRET_EXITS =
@@ -971,6 +1477,7 @@ HC_EPISODE_BOSSES =
 
   "ironlich",
   "maulotaur",
+  "maulotaur",
 }
 
 HC_SKY_INFO =
@@ -981,6 +1488,7 @@ HC_SKY_INFO =
 
   { color="gray",  light=176 },
   { color="blue",  light=176 },
+  { color="gray",  light=176 },
 }
 
 function heretic_get_levels(episode)
@@ -988,8 +1496,10 @@ function heretic_get_levels(episode)
   local level_list = {}
 
   local theme_probs = HC_EPISODE_THEMES[episode]
+
+  -- If we only make a single map or episode, use the castle or hell theme
   if OB_CONFIG.length ~= "full" then
-    theme_probs = HC_EPISODE_THEMES[rand_irange(1,5)]
+    theme_probs = HC_EPISODE_THEMES[rand_irange(1,4)]
   end
 
   for map = 1,9 do
@@ -1039,6 +1549,7 @@ function heretic_factory()
   return
   {
     doom_format = true,
+    noblaze_door = true,
 
     plan_size = 10,
     cell_size = 9,
@@ -1116,6 +1627,8 @@ function heretic_factory()
     bump_probs = { [0]=30, [16]=30, [32]=20, [64]=5 },
     
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
+    ---
+    hallway_probs = { 20, 30, 41, 53, 66 },
     window_probs = { out_diff=80, combo_diff=50, normal=30 },
   }
 end
