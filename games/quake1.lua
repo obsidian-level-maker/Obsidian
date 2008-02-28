@@ -64,17 +64,34 @@ Q1_THINGS =
   yellow_armor = { id="item_armor2",   kind="pickup", r=30, h=30, pass=true },
   red_armor    = { id="item_armorInv", kind="pickup", r=30, h=30, pass=true },
 
+  -- TODO: health amount is controlled by 'spawnflags' entity field
+
   cell_box   = { id="item_cells",   kind="pickup", r=30, h=30, pass=true },
   shell_box  = { id="item_shells",  kind="pickup", r=30, h=30, pass=true },
   nail_box   = { id="item_spikes",  kind="pickup", r=30, h=30, pass=true },
   rocket_box = { id="item_rockets", kind="pickup", r=30, h=30, pass=true },
 
+  suit   = { id="item_artifact_envirosuit",      kind="pickup", r=30, h=30, pass=true },
+  invis  = { id="item_artifact_invisibility",    kind="pickup", r=30, h=30, pass=true },
+  invuln = { id="item_artifact_invulnerability", kind="pickup", r=30, h=30, pass=true },
+  quad   = { id="item_artifact_super_damage",    kind="pickup", r=30, h=30, pass=true },
+
   -- scenery
-  torch     = { id="light_torch_small_walltorch", kind="scenery", r=30, h=60, pass=true },
+  explode_sm = { id="misc_explobox2", kind="scenery", r=30, h=80, },
+  explode_bg = { id="misc_explobox2", kind="scenery", r=30, h=40, },
+
+  torch      = { id="light_torch_small_walltorch", kind="scenery", r=30, h=60, pass=true },
+
+  -- ambient sounds
+  snd_computer = { id="ambient_comp_hum",  kind="scenery", r=30, h=30, pass=true },
+  snd_drip     = { id="ambient_drip",      kind="scenery", r=30, h=30, pass=true },
+  snd_drone    = { id="ambient_drone",     kind="scenery", r=30, h=30, pass=true },
+  snd_wind     = { id="ambient_suck_wind", kind="scenery", r=30, h=30, pass=true },
+  snd_swamp1   = { id="ambient_swamp1",    kind="scenery", r=30, h=30, pass=true },
+  snd_swamp2   = { id="ambient_swamp2",    kind="scenery", r=30, h=30, pass=true },
 
   -- special
 
-  -- ambient sounds
 }
 
 ----------------------------------------------------------------
