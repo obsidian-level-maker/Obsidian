@@ -1491,6 +1491,26 @@ static int CalcTextureFlag(const char *tex_name)
   return 0;
 }
 
+static double DotProduct3(const double *A, const double *B)
+{
+  return A[0] * B[0] + A[1] * B[1] + A[2] * B[2];
+}
+
+static void GetExtents(double min_s, double min_t, double max_s, double max_t,
+                       int *ext_W, int *ext_H)
+{
+  // -AJA- this matches the logic in the Quake1 engine.
+
+  int bmin_s = (int)floor(min_s / 16.0);
+  int bmin_t = (int)floor(min_t / 16.0);
+
+  int bmax_s = (int)ceil(max_s / 16.0);
+  int bmax_t = (int)ceil(max_t / 16.0);
+
+  *ext_W = bmax_s - bmin_s + 1;
+  *ext_H = bmax_t - bmin_t + 1;
+}
+
 static void MakeFloorFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
 {
   qLeaf_c *leaf = F->floor_leaf;
@@ -1563,14 +1583,9 @@ fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
 
   if (! (flags & TEX_SPECIAL))
   {
-    int bmin_x = (int)floor(min_x / 16.0);
-    int bmin_y = (int)floor(min_y / 16.0);
+    int ext_W, ext_H;
 
-    int bmax_x = (int)ceil(max_x / 16.0);
-    int bmax_y = (int)ceil(max_y / 16.0);
-
-    int ext_W = bmax_x - bmin_x + 1;
-    int ext_H = bmax_y - bmin_y + 1;
+    GetExtents(min_x, min_y, max_x, max_y, &ext_W, &ext_H);
 
     static int foo; foo++;
     face->styles[0] = (foo & 3); //!!!!!
@@ -1655,16 +1670,36 @@ fprintf(stderr, "BACK = %p\n", BACK);
   }
 
 
-#if 0 // FIXME
   if (! (flags & TEX_SPECIAL))
   {
-    static int foo = 0; foo++;
+    double coord[4][3];
 
+    coord[0][0] = S->x1; coord[0][1] = S->y1; coord[0][2] = z1;
+    coord[1][0] = S->x1; coord[1][1] = S->y1; coord[1][2] = z2;
+    coord[2][0] = S->x2; coord[2][1] = S->y2; coord[2][2] = z1;
+    coord[3][0] = S->x2; coord[3][1] = S->y2; coord[3][2] = z2;
+
+    double min_s = +9e9; double max_s = -9e9;
+    double min_t = +9e9; double max_t = -9e9;
+
+    for (int k = 0; k < 4; k++)
+    {
+      double ss = DotProduct3(s, coord[k]);
+      double tt = DotProduct3(t, coord[k]);
+
+      min_s = MIN(min_s, ss); max_s = MAX(max_s, ss);
+      min_t = MIN(min_t, tt); max_t = MAX(max_t, tt);
+    }
+
+    int ext_W, ext_H;
+
+    GetExtents(min_s, min_t, max_s, max_t, &ext_W, &ext_H);
+
+    static int foo = 0; foo++;
     face->styles[0] = (foo & 3); //!!!!!
 
     face->lightofs = Quake1_LightAddBlock(ext_W, ext_H, 0x80|(rand()&0x7F));
   }
-#endif
 }
 
 static void MakeFace(qFace_c *F, dleaf_t *raw_lf)
