@@ -1531,13 +1531,15 @@ fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
 
   face->lightofs = -1;  // no lightmap
 
-
   // collect the vertices and sort in clockwise order
 
   float vert_x[256];
   float vert_y[256];
 
   int v_num = CollectClockwiseVerts(vert_x, vert_y, leaf, flipped);
+
+  double min_x = +9e9; double max_x = -9e9;
+  double min_y = +9e9; double max_y = -9e9;
 
 
   // add the edges
@@ -1551,6 +1553,29 @@ fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
 
     DoAddEdge(vert_x[pos], vert_y[pos], z,
               vert_x[p2 ], vert_y[p2 ], z, face, raw_lf);
+
+    min_x = MIN(min_x, vert_x[pos]);
+    min_y = MIN(min_y, vert_y[pos]);
+    max_x = MAX(max_x, vert_x[pos]);
+    max_y = MAX(max_y, vert_y[pos]);
+  }
+
+
+  if (! (flags & TEX_SPECIAL))
+  {
+    int bmin_x = (int)floor(min_x / 16.0);
+    int bmin_y = (int)floor(min_y / 16.0);
+
+    int bmax_x = (int)ceil(max_x / 16.0);
+    int bmax_y = (int)ceil(max_y / 16.0);
+
+    int ext_W = bmax_x - bmin_x + 1;
+    int ext_H = bmax_y - bmin_y + 1;
+
+    static int foo; foo++;
+    face->styles[0] = (foo & 3); //!!!!!
+
+    face->lightofs = Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
   }
 }
 
@@ -1609,7 +1634,6 @@ fprintf(stderr, "BACK = %p\n", BACK);
 
   face->lightofs = -1;  // no lightmap
 
-
   // add the edges
 
   face->firstedge = total_surf_edges;
@@ -1629,6 +1653,18 @@ fprintf(stderr, "BACK = %p\n", BACK);
     DoAddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  face, raw_lf);
     DoAddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  face, raw_lf);
   }
+
+
+#if 0 // FIXME
+  if (! (flags & TEX_SPECIAL))
+  {
+    static int foo = 0; foo++;
+
+    face->styles[0] = (foo & 3); //!!!!!
+
+    face->lightofs = Quake1_LightAddBlock(ext_W, ext_H, 0x80|(rand()&0x7F));
+  }
+#endif
 }
 
 static void MakeFace(qFace_c *F, dleaf_t *raw_lf)
