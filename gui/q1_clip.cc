@@ -51,7 +51,7 @@ public:
 
   bool original;  // false for split-off pieces
 
-  cpNode_c * on_node;  // non-null if has been on a partition line
+  bool on_node;  // true if has been on a partition line
 
 public:
   cpSide_c(merge_segment_c * _seg, int _side) :
@@ -108,107 +108,6 @@ public:
 typedef std::list<cpSide_c *> cpSideList_c;
 
 
-class cpLeaf_c
-{
-public:
-  int contents;
-
-  cpSideList_c sides;
-
-  // Note: cpSide_c objects are shared when gap > 0
-
-  int gap;
-  int numgap;
-
-  double min_x, min_y;
-  double max_x, max_y;
-
-  bool floor_on_node;
-  bool ceil_on_node;
-
-public:
-  cpLeaf_c() : contents(CONTENTS_EMPTY), sides(),
-              gap(0), numgap(0),
-              min_x(0), min_y(0), max_x(0), max_y(0),
-              floor_on_node(false), ceil_on_node(false)
-  { }
-
-  ~cpLeaf_c()
-  { }
-
-  cpLeaf_c(cpLeaf_c& other, int _gap) :
-          contents(other.contents), sides(), gap(_gap),
-          min_x(other.min_x), min_y(other.min_y),
-          max_x(other.max_x), max_y(other.max_y),
-          floor_on_node(false), ceil_on_node(false)
-  {
-    // copy the side pointers
-    cpSideList_c::iterator SI;
-
-    for (SI = other.sides.begin(); SI != other.sides.end(); SI++)
-      sides.push_back(*SI);
-  }
-
-  cpSide_c * AddSide(merge_segment_c *_seg, int _side)
-  {
-    cpSide_c *S = new cpSide_c(_seg, _side); 
-
-    sides.push_back(S);
-
-    return S;
-  }
-
-
-  bool HasSide(cpSide_c *side)
-  {
-    for (cpSideList_c::iterator SI = sides.begin();
-         SI != sides.end();
-         SI++)
-    {
-      if ((*SI) == side)
-        return true;
-    }
-
-    return false;
-  }
-
-  merge_gap_c *GetGap()
-  {
-    SYS_ASSERT(numgap == 1);
-
-    merge_region_c *R = GetRegion();
-
-    SYS_ASSERT(R);
-    SYS_ASSERT(gap >= 0 && gap < R->gaps.size());
-
-    return R->gaps[gap];
-  }
-
-  void ComputeBBox()
-  {
-    min_x = min_y = +9e9;
-    max_x = max_y = -9e9;
-
-    cpSideList_c::iterator SI;
-
-    for (SI = sides.begin(); SI != sides.end(); SI++)
-    {
-      cpSide_c *S = (*SI);
-
-      if (S->x1 < min_x) min_x = S->x1;
-      if (S->x2 < min_x) min_x = S->x2;
-      if (S->y1 < min_y) min_y = S->y1;
-      if (S->y2 < min_y) min_y = S->y2;
-
-      if (S->x1 > max_x) max_x = S->x1;
-      if (S->x2 > max_x) max_x = S->x2;
-      if (S->y1 > max_y) max_y = S->y1;
-      if (S->y2 > max_y) max_y = S->y2;
-    }
-  }
-};
-
-
 class cpNode_c
 {
 public:
@@ -259,16 +158,17 @@ public:
 };
 
 
-
 static merge_region_c * GetLeafRegion(cpSideList_c& LEAF)
 {
   // NOTE: assumes a convex leaf (in XY) !!
   cpSideList_c::iterator SI;
 
-  for (SI = sides.begin(); SI != sides.end(); SI++)
+  for (SI = LEAF.begin(); SI != LEAF.end(); SI++)
   {
-    if ((*SI)->seg)
-      return (*SI)->GetRegion();
+    cpSide_c *S = *SI;
+
+    if (S->seg)
+      return S->GetRegion();
   }
 
   Main_FatalError("INTERNAL ERROR: Clip Leaf has no solid side!");
@@ -276,11 +176,33 @@ static merge_region_c * GetLeafRegion(cpSideList_c& LEAF)
 }
 
 
+static void MarkColinearSides(cpSideList_c& LEAF,
+                              double px1, double py1, double px2, double py2)
+{
+  // find _ALL_ sides that lie on the partition
+  cpSideList_c::iterator TI;
+
+  for (TI = LEAF.begin(); TI != LEAF.end(); TI++)
+  {
+    cpSide_c *T = *TI;
+
+    if (T->on_node)
+      continue;
+
+    double a = PerpDist(T->x1, T->y1,  px1, py1, px2, py2);
+    double b = PerpDist(T->x2, T->y2,  px1, py1, px2, py2);
+
+    if (! (fabs(a) <= Q_EPSILON && fabs(b) <= Q_EPSILON))
+      continue;
+
+    T->on_node = true;
+  }
+}
+
 //------------------------------------------------------------------------
 
 static double EvaluatePartition(cpSideList_c& LEAF,
-                                double px1, double py1,
-                                double px2, double py2)
+                                double px1, double py1, double px2, double py2)
 {
   double pdx = px2 - px1;
   double pdy = py2 - py1;
@@ -453,7 +375,7 @@ static void Split_XY(cpNode_c *part, cpSideList_c& front_l, cpSideList_c& back_l
         front_l.push_back(S);
       }
 
-      S->on_node = part;
+      S->on_node = true;
       continue;
     }
 
@@ -507,86 +429,42 @@ static void Split_XY(cpNode_c *part, cpSideList_c& front_l, cpSideList_c& back_l
 }
 
 
-static cpNode_c * Partition_Sides(cpSideList_c& LEAF, merge_region_c *R, int gap)
+static cpNode_c * Partition_Gap(cpSideList_c& LEAF, merge_region_c *R, int gap)
 {
-  // handle sides first
+  cpNode_c * result = NULL;
 
-  cpSideList_c::iterator SI;
-
-  for (SI = LEAF.begin(); SI != LEAF.end(); SI++)
+  while (! LEAF.empty())
   {
-    cpSide_c *S = *SI;
+    cpSide_c *S = LEAF.front();
+    LEAF.pop_front();
 
-    if (S->seg && ! S->on_node)
-    {
-      cpNode_c * node = new cpNode_c(false /* z_splitter */);
+    if (S->on_node)
+      continue;
 
-      node->x = S->x1;
-      node->y = S->y1;
+    MarkColinearSides(LEAF, S->x1, S->y1, S->x2, S->y2);
 
-      node->dx = S->x2 - S->x1;
-      node->dy = S->y2 - S->y1;
+    cpNode_c *node = new cpNode_c(false /* z_splitter */);
 
-      // find _ALL_ sides that lie on the partition
-      cpSideList_c::iterator TI;
+    node->x = S->x1;
+    node->y = S->y1;
 
-      for (TI = leaf->sides.begin(); TI != leaf->sides.end(); TI++)
-      {
-        cpSide_c *T = *TI;
+    node->dx = S->x2 - S->x1;
+    node->dy = S->y2 - S->y1;
 
-        if (! T->seg || T->on_node)
-          continue;
+    node->back_l = CONTENTS_SOLID;
 
-        double a = PerpDist(T->x1, T->y1,  S->x1, S->y1, S->x2, S->y2);
-        double b = PerpDist(T->x2, T->y2,  S->x1, S->y1, S->x2, S->y2);
-
-        if (! (fabs(a) <= Q_EPSILON && fabs(b) <= Q_EPSILON))
-          continue;
-
-        T->on_node = node;
-      }
-
-      node->back_l = CONTENTS_SOLID;
-
-      return Partition_Sides(leaf, &node->front_n, &node->front_l);
-    }
-  }
-
-
-  merge_gap_c *gap = leaf->GetGap();
-
-  if (! leaf->ceil_on_node)
-  {
-      leaf->ceil_on_node = true;
-
-      cpNode_c * node = new cpNode_c(true /* z_splitter */);
-
-      node->z = gap->GetZ2();
-
-      SYS_ASSERT(leaf->ceil);
-
-      node->front_l = CONTENTS_SOLID;
-
-      return Partition_Sides(leaf, &node->back_n, &node->back_l);
-  }
-
-
-  SYS_ASSERT(! leaf->floor_on_node);
-  {
-      leaf->floor_on_node = true;
-  
-      cpNode_c * node = new cpNode_c(true /* z_splitter */);
-
-      node->z = gap->GetZ1();
-
-      SYS_ASSERT(leaf->floor);
-
-      // End of the road, folks!
+    if (result)
+      node->front_n = result;
+    else
       node->front_l = CONTENTS_EMPTY;
-      node-> back_l = CONTENTS_SOLID;
 
-      return node;
+    result = node;
   }
+
+  if (! result)
+    Main_FatalError("INTERNAL ERROR: Partition_Gap: no usable sides!!\n");
+
+  return result;
 }
 
 
@@ -608,7 +486,7 @@ static cpNode_c * Partition_Z(cpSideList_c& LEAF, merge_region_c *R,
     }
     else
     {
-      n2 = Partition_Sides(LEAF, R, p2/2);
+      n2 = Partition_Gap(LEAF, R, p2/2);
     }
 
     if (p2 & 1)
@@ -640,59 +518,6 @@ static cpNode_c * Partition_Z(cpSideList_c& LEAF, merge_region_c *R,
   node->back_n  = Partition_Z(LEAF, R, min_plane, p2-1);
 
   return node;
-
-#if 0  
-  if (p2 & 1)
-  {
-      node->z = R->gaps[p2/2]->GetZ2();
-
-      if (p2 == max_plane)
-        node->front_l = CONTENTS_SOLID;
-      else
-    }
-    else
-    {
-      node->z = R->gaps[p2/2]->GetZ1();
-
-      node->front_n = Partition_Z(LEAF, R, p2+1, max_plane);
-
-      if (p2 == min_plane)
-        node->back_l = CONTENTS_SOLID;
-      else
-        node->back_n = Partition_Z(LEAF, R, min_plane, p2-1);
-    }
-
-    return node;
-  }
-
-
-  if (leaf->numgap > 1)
-  {
-    int new_g = leaf->gap + leaf->numgap / 2;
-
-    cpLeaf_c *top_leaf = new cpLeaf_c(*leaf, new_g);
-
-    // TODO: OPTIMISE THIS : too many nodes!  Use top of gaps[new_g-1] as
-    //       the splitting plane.
-
-    cpNode_c *node = new cpNode_c(true /* z_splitter */);
-
-    // choose height halfway between the two gaps (in the solid)
-
-    top_leaf->numgap = leaf->gap + leaf->numgap - new_g;
-        leaf->numgap = new_g - leaf->gap;
-
-    node->front_n = Partition_Z(TOP_LEAF);
-    node->back_n  = Partition_Z(    LEAF);
-
-    return node;
-  }
-
-  SYS_ASSERT(leaf->numgap == 1);
-
-
-  return Partition_Solid(LEAF);
-#endif
 }
 
 
@@ -704,7 +529,7 @@ static cpNode_c * Partition_XY(cpSideList_c& LEAF)
   {
     merge_region_c *R = GetLeafRegion(LEAF);
 
-    SYS_ASSERT(R->gaps.size() > 0);
+    SYS_ASSERT(! R->gaps.empty());
 
     return Partition_Z(LEAF, R, 0, (int)R->gaps.size()*2 - 1);
   }
@@ -831,10 +656,10 @@ s32_t Quake1_CreateClipHull(int which, qLump_c *q1_clip)
   {
     merge_segment_c *S = mug_segments[i];
 
-    if (S->front && S->front->gaps.size() > 0)
+    if (S->front && S->front->HasGap())
       MakeClipSide(C_LEAF, S, 0);
 
-    if (S->back && S->back->gaps.size() > 0)
+    if (S->back && S->back->HasGap())
       MakeClipSide(C_LEAF, S, 1);
   }
 
