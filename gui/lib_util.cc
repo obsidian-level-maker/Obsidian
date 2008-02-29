@@ -209,6 +209,17 @@ double CalcAngle(double sx, double sy, double ex, double ey)
   return angle;
 }
 
+double ComputeDist(double sx, double sy, double ex, double ey)
+{
+  return sqrt((ex-sx)*(ex-sx) + (ey-sy)*(ey-sy));
+}
+
+double ComputeDist(double sx, double sy, double sz,
+                   double ex, double ey, double ez)
+{
+  return sqrt((ex-sx)*(ex-sx) + (ey-sy)*(ey-sy) + (ez-sz)*(ez-sz));
+}
+
 
 //------------------------------------------------------------------------
 

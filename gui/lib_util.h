@@ -49,6 +49,10 @@ double AlongDist(double x, double y,
                  double x1, double y1, double x2, double y2);
 double CalcAngle(double sx, double sy, double ex, double ey);
 
+double ComputeDist(double sx, double sy, double ex, double ey);
+double ComputeDist(double sx, double sy, double sz,
+                   double ex, double ey, double ez);
+
 #endif /* __LIB_UTIL_H__ */
 
 //--- editor settings ---
