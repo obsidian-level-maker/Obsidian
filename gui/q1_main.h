@@ -58,6 +58,11 @@ void Quake1_BuildBSP(void);
 bool Quake1_ExtractTextures(void);
 
 
+// q1_clip.cc
+
+s32_t Quake1_CreateClipHull(int which, qLump_c *q1_clip);
+
+
 // q1_light.cc
 
 void Quake1_BeginLightmap(void);
