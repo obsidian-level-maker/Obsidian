@@ -107,7 +107,7 @@ public:
 
 public:
   qSide_c(merge_segment_c * _seg, int _side) :
-      seg(_seg), side(_side), faces(), original(true), on_node(false)
+      seg(_seg), side(_side), faces(), original(true), on_node(NULL)
   {
     if (side == 0)
     {
@@ -1287,7 +1287,6 @@ static qLump_c *q_clip_nodes;
 static int total_nodes;
 static int total_mark_surfs;
 static int total_surf_edges;
-static int total_clip_nodes;
 
 
 static void DoAddEdge(double x1, double y1, double z1,
@@ -1893,79 +1892,79 @@ fprintf(stderr, "node face: %p kind:%d (node %1.4f,%1.4f += %1.4f,%1.4f)\n",
 }
 
 
-static s32_t RecursiveMakeClipNodes(qNode_c *node, bool is_root)
-{
-  dclipnode_t clip;
-
-  double x, y, z;
-  double dx, dy, dz;
-
-  if (node->z_splitter)
-  {
-    x  = 0;  y = 0;  z = node->z;
-    dx = 0; dy = 0; dz = +1;
-
-    // hackish: assumes the floor node always has the leaf
-    if (node->front_l && true) //!!!! leaf's gap >= 26 high
-      z += 24;
-  }
-  else
-  {
-    x = node->x;
-    y = node->y;
-    z = 0;
-
-    dx =  node->dy;
-    dy = -node->dx;
-    dz = 0;
-  }
-
-  bool flipped;
-
-  clip.planenum = Q1_AddPlane(x,y,z, dx,dy,dz, &flipped);
-
-SYS_ASSERT(node);
-
-SYS_ASSERT(node->front_n || node->front_l);
-SYS_ASSERT(node->back_n  || node->back_l);
-
-  if (node->front_n)
-    clip.children[0] = RecursiveMakeClipNodes(node->front_n, false);
-  else
-    clip.children[0] = (u16_t) node->front_l->contents;
-
-
-  if (node->back_n)
-    clip.children[1] = RecursiveMakeClipNodes(node->back_n, false);
-  else
-    clip.children[1] = (u16_t) node->back_l->contents;
-
-
-  // TEMP HACK: we have made the wall planes before, hence node
-  //            should already have been Flip()ed.
-  SYS_ASSERT(! flipped);
-
-
-  // TODO: fix endianness in 'clip'
-
-  if (is_root)
-  {
-fprintf(stderr, "ROOT CLIPPER: %d %d\n", clip.children[0], clip.children[1]);
-    Q1_Prepend(q_clip_nodes, &clip, sizeof(clip));
-
-    return 0;
-  }
-
-  s32_t index = total_clip_nodes++;
-
-  if (index >= MAX_MAP_CLIPNODES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d CLIPNODES\n",
-                    MAX_MAP_CLIPNODES);
-
-  Q1_Append(q_clip_nodes, &clip, sizeof(clip));
-
-  return index;
-}
+///---static s32_t RecursiveMakeClipNodes(qNode_c *node, bool is_root)
+///---{
+///---  dclipnode_t clip;
+///---
+///---  double x, y, z;
+///---  double dx, dy, dz;
+///---
+///---  if (node->z_splitter)
+///---  {
+///---    x  = 0;  y = 0;  z = node->z;
+///---    dx = 0; dy = 0; dz = +1;
+///---
+///---    // hackish: assumes the floor node always has the leaf
+///---    if (node->front_l && true) //!!!! leaf's gap >= 26 high
+///---      z += 24;
+///---  }
+///---  else
+///---  {
+///---    x = node->x;
+///---    y = node->y;
+///---    z = 0;
+///---
+///---    dx =  node->dy;
+///---    dy = -node->dx;
+///---    dz = 0;
+///---  }
+///---
+///---  bool flipped;
+///---
+///---  clip.planenum = Q1_AddPlane(x,y,z, dx,dy,dz, &flipped);
+///---
+///---SYS_ASSERT(node);
+///---
+///---SYS_ASSERT(node->front_n || node->front_l);
+///---SYS_ASSERT(node->back_n  || node->back_l);
+///---
+///---  if (node->front_n)
+///---    clip.children[0] = RecursiveMakeClipNodes(node->front_n, false);
+///---  else
+///---    clip.children[0] = (u16_t) node->front_l->contents;
+///---
+///---
+///---  if (node->back_n)
+///---    clip.children[1] = RecursiveMakeClipNodes(node->back_n, false);
+///---  else
+///---    clip.children[1] = (u16_t) node->back_l->contents;
+///---
+///---
+///---  // TEMP HACK: we have made the wall planes before, hence node
+///---  //            should already have been Flip()ed.
+///---  SYS_ASSERT(! flipped);
+///---
+///---
+///---  // TODO: fix endianness in 'clip'
+///---
+///---  if (is_root)
+///---  {
+///---fprintf(stderr, "ROOT CLIPPER: %d %d\n", clip.children[0], clip.children[1]);
+///---    Q1_Prepend(q_clip_nodes, &clip, sizeof(clip));
+///---
+///---    return 0;
+///---  }
+///---
+///---  s32_t index = total_clip_nodes++;
+///---
+///---  if (index >= MAX_MAP_CLIPNODES)
+///---    Main_FatalError("Quake1 build failure: exceeded limit of %d CLIPNODES\n",
+///---                    MAX_MAP_CLIPNODES);
+///---
+///---  Q1_Append(q_clip_nodes, &clip, sizeof(clip));
+///---
+///---  return index;
+///---}
 
 
 static void CreateSolidLeaf(void)
@@ -2005,29 +2004,6 @@ void BSP_CreateModel(void)
   RecursiveMakeNodes(Q_ROOT, NULL /* parent */);
 
 
-  total_clip_nodes = 1;  // root clip node is first
-
-  q_clip_nodes = Q1_NewLump(LUMP_CLIPNODES);
-
-  RecursiveMakeClipNodes(Q_ROOT, true);
-
-  // FIXME: create proper 3rd hull for monsters
-  dclipnode_t clip;
-
-  clip.planenum = LE_S32(0);
-
-  clip.children[0] = LE_S16(CONTENTS_SOLID);
-  clip.children[1] = LE_S16(CONTENTS_SOLID);
-
-  Q1_Append(q_clip_nodes, &clip, sizeof(clip));
-
-
-  model.headnode[0] = 0;                 // root of drawing BSP
-  model.headnode[1] = 0;                 // clipper #1
-  model.headnode[2] = total_clip_nodes;  // clipper #2 (dummy)
-  model.headnode[3] = 0;                 // unused
-
-
   // set model bounding box
   double min_x, min_y, min_z;
   double max_x, max_y, max_z;
@@ -2041,6 +2017,16 @@ void BSP_CreateModel(void)
   model.origin[0] = 0;
   model.origin[1] = 0;
   model.origin[2] = 0;
+
+
+  // clipping hulls
+  q_clip_nodes = Q1_NewLump(LUMP_CLIPNODES);
+
+  model.headnode[0] = 0; // root of drawing BSP
+  model.headnode[1] = Quake1_CreateClipHull(1, q_clip_nodes);
+  model.headnode[2] = Quake1_CreateClipHull(2, q_clip_nodes);
+  model.headnode[3] = Quake1_CreateClipHull(3, q_clip_nodes);
+
 
   // FIXME: fix endianness in model
 
