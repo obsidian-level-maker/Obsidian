@@ -153,14 +153,14 @@ public:
 
   void CheckValid() const
   {
-    if (! node->front_n)
+    if (! front_n)
     {
-      SYS_ASSERT(node->front_l < 0);
+      SYS_ASSERT(front_l < 0);
     }
 
-    if (! node->back_n)
+    if (! back_n)
     {
-      SYS_ASSERT(node->back_l < 0);
+      SYS_ASSERT(back_l < 0);
     }
   }
 };
