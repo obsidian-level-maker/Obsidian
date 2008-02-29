@@ -230,6 +230,8 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
 
 void CSG2_MakeMiniMap(void)
 {
+  int scale = 20;
+
   double min_x, min_y, min_z;
   double max_x, max_y, max_z;
 
@@ -244,19 +246,25 @@ void CSG2_MakeMiniMap(void)
     if (! S->HasGap())
       continue;
 
-    int x1 = (int)ceil(S->start->x - min_x) / 20 + 1;
-    int y1 = (int)ceil(S->start->y - min_y) / 20 + 1;
-    int x2 = (int)ceil(S->end  ->x - min_x) / 20 + 1;
-    int y2 = (int)ceil(S->end  ->y - min_y) / 20 + 1;
-
-    // TODO: more colors ( water/lava/sky ?? )
+    int x1 = (int)ceil(S->start->x - min_x) / scale + 1;
+    int y1 = (int)ceil(S->start->y - min_y) / scale + 1;
+    int x2 = (int)ceil(S->end  ->x - min_x) / scale + 1;
+    int y2 = (int)ceil(S->end  ->y - min_y) / scale + 1;
 
     bool two_sided = (S->front && S->front->gaps.size() > 0) &&
                      (S->back  && S->back ->gaps.size() > 0);
 
     u8_t r, g, b;
 
-    r = g = b = two_sided ? 176 : 255;
+    // show drop-offs as green
+    if (two_sided && fabs(S->front->gaps[0]->GetZ1() - S->back->gaps[0]->GetZ1()) > 24.5)
+    {
+      r = 128; g = 224; b = 72;
+    }
+    else
+    {
+      r = g = b = two_sided ? 176 : 255;
+    }
 
     main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
   }
