@@ -36,9 +36,6 @@
 #include "main.h"
 
 
-class cpNode_c;
-
-
 class cpSide_c
 {
 public:
@@ -49,13 +46,11 @@ public:
   double x1, y1;
   double x2, y2;
 
-  bool original;  // false for split-off pieces
-
   bool on_node;  // true if has been on a partition line
 
 public:
   cpSide_c(merge_segment_c * _seg, int _side) :
-      seg(_seg), side(_side), original(true), on_node(false)
+      seg(_seg), side(_side), on_node(false)
   {
     if (side == 0)
     {
@@ -75,9 +70,9 @@ public:
 private:
   // copy constructor, used when splitting
   cpSide_c(const cpSide_c *other, double new_x, double new_y) :
-          seg(other->seg), side(other->side),
-          x1(new_x), y1(new_y), x2(other->x2), y2(other->y2),
-          original(false), on_node(other->on_node)
+           seg(other->seg), side(other->side),
+           x1(new_x), y1(new_y), x2(other->x2), y2(other->y2),
+           on_node(other->on_node)
   { }
 
 public:
@@ -154,6 +149,19 @@ public:
 
     dx = -dx;
     dy = -dy;
+  }
+
+  void CheckValid() const
+  {
+    if (! node->front_n)
+    {
+      SYS_ASSERT(node->front_l < 0);
+    }
+
+    if (! node->back_n)
+    {
+      SYS_ASSERT(node->back_l < 0);
+    }
   }
 };
 
@@ -303,10 +311,6 @@ static cpSide_c * FindPartition(cpSideList_c& LEAF)
   for (SI = LEAF.begin(); SI != LEAF.end(); SI++)
   {
     cpSide_c *part = *SI;
-
-    // ignore portal sides
-    if (! part->seg)
-      continue;
 
     count++;
 
@@ -604,6 +608,8 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
     node->Flip();
 
 
+  node->CheckValid();
+
   if (node->front_n)
     clip.children[0] = (u16_t) node->front_n->index;
   else
@@ -620,7 +626,7 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
   Q1_Append(L, &clip, sizeof(clip));
 
 
-  // recurse now (after adding the current node)
+  // recurse now, AFTER adding the current node
 
   if (node->front_n)
     WriteClipNodes(L, node->front_n);
