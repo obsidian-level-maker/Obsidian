@@ -1275,8 +1275,6 @@ fprintf(stderr, "Quake1_BuildBSP BEGUN\n");
 
 //------------------------------------------------------------------------
 
-#define Q_SIDESPACE  24
-
 static dmodel_t model;
 
 static qLump_c *q_nodes;
@@ -1334,12 +1332,6 @@ static void DoAddEdge(double x1, double y1, double z1,
       raw_lf->mins[b] = MIN(raw_lf->mins[b], low);
       raw_lf->maxs[b] = MAX(raw_lf->maxs[b], high);
     }
-
-    double m_low  =  lows[b] - Q_SIDESPACE;
-    double m_high = highs[b] + Q_SIDESPACE;
-
-    model.mins[b] = MIN(model.mins[b], m_low);
-    model.maxs[b] = MAX(model.maxs[b], m_high);
   }
 }
 
@@ -1995,14 +1987,6 @@ void BSP_CreateModel(void)
 
 ///  dmodel_t model;
 
-  for (int b = 0; b < 3; b++)
-  {
-    model.mins[b] = +9e6;
-    model.maxs[b] = -9e6;
-
-    model.origin[b] = 0;
-  }
-
   model.visleafs  = 0;
   model.firstface = 0;
   model.numfaces  = 0;
@@ -2043,6 +2027,20 @@ void BSP_CreateModel(void)
   model.headnode[2] = total_clip_nodes;  // clipper #2 (dummy)
   model.headnode[3] = 0;                 // unused
 
+
+  // set model bounding box
+  double min_x, min_y, min_z;
+  double max_x, max_y, max_z;
+
+  CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
+
+  model.mins[0] = min_x;  model.maxs[0] = max_x;
+  model.mins[1] = min_y;  model.maxs[1] = max_y;
+  model.mins[2] = min_z;  model.maxs[2] = max_z;
+
+  model.origin[0] = 0;
+  model.origin[1] = 0;
+  model.origin[2] = 0;
 
   // FIXME: fix endianness in model
 
