@@ -333,7 +333,7 @@ public:
 
   inline bool HasGap() const
   {
-    return gaps.size() > 0;
+    return ! gaps.empty();
   }
 
   double MinGapZ() const;
