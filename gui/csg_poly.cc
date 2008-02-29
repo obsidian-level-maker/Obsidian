@@ -29,9 +29,6 @@
 #include "ui_dialog.h"
 
 
-extern void CSG2_MakeMiniMap(void); //!!!!!! FIXME
-
-
 void merge_vertex_c::AddSeg(merge_segment_c *seg)
 {
   for (int j=0; j < (int)segs.size(); j++)
@@ -63,7 +60,13 @@ void merge_vertex_c::ReplaceSeg(merge_segment_c *old_seg, merge_segment_c *new_s
 }
 
 
-void merge_segment_c::Kill(void)
+bool merge_segment_c::HasGap() const
+{
+  return (front && front->gaps.size() > 0) ||
+         (back  &&  back->gaps.size() > 0);
+}
+
+void merge_segment_c::Kill()
 {
   start->RemoveSeg(this);
   end  ->RemoveSeg(this);
@@ -71,11 +74,26 @@ void merge_segment_c::Kill(void)
   start = end = NULL;
 }
 
-void merge_segment_c::Flip(void)
+void merge_segment_c::Flip()
 {
   merge_vertex_c *tmp_V = start; start = end; end = tmp_V;
 
   merge_region_c *tmp_R = front; front = back; back = tmp_R;
+}
+
+
+double merge_region_c::MinGapZ() const
+{
+  SYS_ASSERT(gaps.size() > 0);
+
+  return gaps[0]->GetZ1();
+}
+
+double merge_region_c::MaxGapZ() const
+{
+  SYS_ASSERT(gaps.size() > 0);
+
+  return gaps[gaps.size() - 1]->GetZ2();
 }
 
 

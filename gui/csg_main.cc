@@ -19,6 +19,7 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
+#include "hdr_ui.h"   // for mini map
 
 #include <algorithm>
 
@@ -178,6 +179,91 @@ static void AddPoly_MakeConvex(area_poly_c *P)
 
   all_polys.push_back(P);
 }
+
+
+void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
+                    double& max_x, double& max_y, double& max_z)
+{
+  min_x = min_y = min_z = +9e9;
+  max_x = max_y = max_z = -9e9;
+
+  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  {
+    merge_segment_c *S = mug_segments[i];
+
+    // ignore lines "in the solid"
+    if (! S->HasGap())
+      continue;
+
+    double x1 = MIN(S->start->x, S->end->x);
+    double y1 = MIN(S->start->y, S->end->y);
+
+    double x2 = MAX(S->start->x, S->end->x);
+    double y2 = MAX(S->start->y, S->end->y);
+
+    min_x = MIN(min_x, x1);
+    min_y = MIN(min_y, y1);
+
+    max_x = MAX(max_x, x2);
+    max_y = MAX(max_y, y2);
+
+    if (S->front->HasGap())
+    {
+      min_z = MIN(min_z, S->front->MinGapZ());
+      max_z = MAX(max_z, S->front->MaxGapZ());
+    }
+
+    if (S->back->HasGap())
+    {
+      min_z = MIN(min_z, S->back->MinGapZ());
+      max_z = MAX(max_z, S->back->MaxGapZ());
+    }
+  }
+
+  if (min_x > max_x)
+    Main_FatalError("CSG2_GetBounds: map is completely solid!\n");
+
+  // add some leeyway
+  min_x -= 24; min_x -= 24; min_z -= 64;
+  max_x += 24; max_x += 24; max_z += 64;
+}
+
+void CSG2_MakeMiniMap(void)
+{
+  double min_x, min_y, min_z;
+  double max_x, max_y, max_z;
+
+  CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
+
+  main_win->build_box->mini_map->MapBegin();
+
+  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  {
+    merge_segment_c *S = mug_segments[i];
+
+    if (! S->HasGap())
+      continue;
+
+    int x1 = (int)ceil(S->start->x - min_x) / 20 + 1;
+    int y1 = (int)ceil(S->start->y - min_y) / 20 + 1;
+    int x2 = (int)ceil(S->end  ->x - min_x) / 20 + 1;
+    int y2 = (int)ceil(S->end  ->y - min_y) / 20 + 1;
+
+    // TODO: more colors ( water/lava/sky ?? )
+
+    bool two_sided = (S->front && S->front->gaps.size() > 0) &&
+                     (S->back  && S->back ->gaps.size() > 0);
+
+    u8_t r, g, b;
+
+    r = g = b = two_sided ? 176 : 255;
+
+    main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
+  }
+
+  main_win->build_box->mini_map->MapFinish();
+}
+
 
 
 //------------------------------------------------------------------------

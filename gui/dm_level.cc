@@ -19,7 +19,6 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
-#include "hdr_ui.h"   // map stuff
 
 #include <algorithm>
 
@@ -268,30 +267,20 @@ static area_poly_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
 }
 #endif
 
-// TODO: move into CSG code (csg_main)
+
 void DetermineMapBounds(void)
 {
-  bounds_x1 = bounds_y1 = +99999;
-  bounds_x2 = bounds_y2 = -99999;
+  double min_x, min_y, min_z;
+  double max_x, max_y, max_z;
 
-  for (unsigned int i = 0; i < mug_vertices.size(); i++)
-  {
-    int x = (int)floor(mug_vertices[i]->x);
-    int y = (int)floor(mug_vertices[i]->y);
+  CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
 
-    bounds_x1 = MIN(x, bounds_x1);
-    bounds_y1 = MIN(y, bounds_y1);
+  // rounding is OK since the bounds have been padded
+  bounds_x1 = I_ROUND(min_x);
+  bounds_y1 = I_ROUND(min_y);
 
-    bounds_x2 = MAX(x+1, bounds_x2);
-    bounds_y2 = MAX(y+1, bounds_y2);
-  }
-
-  // add some leeyway
-  bounds_x1 -= 16; bounds_y1 -= 16;
-  bounds_x2 += 16; bounds_y2 += 16;
-
-  SYS_ASSERT(bounds_x1 < bounds_x2);
-  SYS_ASSERT(bounds_y1 < bounds_y2);
+  bounds_x2 = I_ROUND(max_x);
+  bounds_y2 = I_ROUND(max_y);
 }
 
 
@@ -874,50 +863,6 @@ void CSG2_WriteDoom(void)
   // FIXME: things !!!!
 
   // FIXME: Free everything
-}
-
-
-void CSG2_MakeMiniMap(void)
-{
-  DetermineMapBounds();
-
-  main_win->build_box->mini_map->MapBegin();
-
-  for (unsigned int i = 0; i < mug_segments.size(); i++)
-  {
-    merge_segment_c *S = mug_segments[i];
-
-    int x1 = I_ROUND(S->start->x - bounds_x1) / 20;
-    int y1 = I_ROUND(S->start->y - bounds_y1) / 20;
-    int x2 = I_ROUND(S->end  ->x - bounds_x1) / 20;
-    int y2 = I_ROUND(S->end  ->y - bounds_y1) / 20;
-
-    u8_t r = 176;
-    u8_t g = 176;
-    u8_t b = 176;
-
-    int sides = 0;
-
-    if (S->front && S->front->gaps.size() > 0)
-      sides++;
-
-    if (S->back && S->back->gaps.size() > 0)
-      sides++;
-
-    if (sides == 0)
-    {
-      //????  r = 255; g = 0; b = 0;
-      continue;
-    }
-    else if (sides == 1)
-    {
-      r = g = b = 255;
-    }
-
-    main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
-  }
-
-  main_win->build_box->mini_map->MapFinish();
 }
 
 

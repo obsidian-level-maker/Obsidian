@@ -253,8 +253,10 @@ public:
     return start;
   }
 
-  void Kill(void);
-  void Flip(void);
+  void Kill();
+  void Flip();
+
+  bool HasGap() const;
 };
 
 
@@ -328,6 +330,16 @@ public:
 
   ~merge_region_c()
   { }
+
+  inline bool HasGap() const
+  {
+    return gaps.size() > 0;
+  }
+
+  double MinGapZ() const;
+  double MaxGapZ() const;
+  // compute vertical bounds of all gaps in this region.
+  // requires at least one gap!
 };
 
 
@@ -352,6 +364,11 @@ void CSG2_BeginLevel(void);
 void CSG2_EndLevel(void);
 
 void CSG2_MergeAreas(void);
+
+void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
+                    double& max_x, double& max_y, double& max_z);
+
+void CSG2_MakeMiniMap(void);
 
 #endif /* __OBLIGE_CSG_MAIN_H__ */
 
