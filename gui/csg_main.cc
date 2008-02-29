@@ -55,6 +55,13 @@ slope_plane_c::slope_plane_c() :
 slope_plane_c::~slope_plane_c()
 { }
 
+double slope_plane_c::GetAngle() const
+{
+  double xy_dist = ComputeDist(sx, sy, ex, ey);
+
+  return CalcAngle(0, sz, xy_dist, ez);
+}
+
 
 area_info_c::area_info_c() :
       b_face(NULL), t_face(NULL), side(NULL),

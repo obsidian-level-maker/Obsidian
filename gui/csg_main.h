@@ -50,6 +50,8 @@ public:
 public:
    slope_plane_c();
   ~slope_plane_c();
+
+  double GetAngle() const;
 };
 
 
