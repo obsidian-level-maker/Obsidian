@@ -154,10 +154,7 @@ private:
 public:
   double Length() const
   {
-    double dx = (x2 - x1);
-    double dy = (y2 - y1);
-
-    return sqrt(dx*dx + dy*dy);
+    return ComputeDist(x1,y1, x2,y2);
   }
 
   merge_region_c *GetRegion() const
