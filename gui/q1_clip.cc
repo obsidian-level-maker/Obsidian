@@ -36,7 +36,6 @@
 #include "main.h"
 
 
-class cpLeaf_c;
 class cpNode_c;
 
 
@@ -56,7 +55,7 @@ public:
 
 public:
   cpSide_c(merge_segment_c * _seg, int _side) :
-      seg(_seg), side(_side), faces(), original(true), on_node(false)
+      seg(_seg), side(_side), original(true), on_node(false)
   {
     if (side == 0)
     {
@@ -71,16 +70,14 @@ public:
   }
 
   ~cpSide_c()
-  {
-      // TODO: delete the faces
-  }
+  { }
 
 private:
   // copy constructor, used when splitting
   cpSide_c(const cpSide_c *other, double new_x, double new_y) :
           seg(other->seg), side(other->side),
           x1(new_x), y1(new_y), x2(other->x2), y2(other->y2),
-          faces(), original(false), on_node(other->on_node)
+          original(false), on_node(other->on_node)
   { }
 
 public:
@@ -137,9 +134,7 @@ public:
   { }
 
   ~cpLeaf_c()
-  {
-    // TODO: delete faces and sides
-  }
+  { }
 
   cpLeaf_c(cpLeaf_c& other, int _gap) :
           contents(other.contents), sides(), gap(_gap),
@@ -396,7 +391,7 @@ static cpSide_c * FindPartition(cpSideList_c& LEAF)
 
     // TODO: skip sides that lie on the same vertical plane
 
-    double cost = EvaluatePartition(LEAF, part);
+    double cost = EvaluatePartition(LEAF, part->x1, part->y1, part->x2, part->y2);
 
 fprintf(stderr, "--> COST:%1.2f for %p\n", cost, part);
 
@@ -511,13 +506,13 @@ static void Split_XY(cpNode_c *part, cpSideList_c& front_l, cpSideList_c& back_l
 }
 
 
-static void Partition_Solid(cpSideList_c& LEAF, cpNode_c ** out_n, cpLeaf_c ** out_l)
+static cpNode_c * Partition_Solid(cpSideList_c& LEAF)
 {
   // handle sides first
 
   cpSideList_c::iterator SI;
 
-  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++)
+  for (SI = LEAF.begin(); SI != LEAF.end(); SI++)
   {
     cpSide_c *S = *SI;
 
@@ -552,10 +547,7 @@ static void Partition_Solid(cpSideList_c& LEAF, cpNode_c ** out_n, cpLeaf_c ** o
 
       node->back_l = CONTENTS_SOLID;
 
-      Partition_Solid(leaf, &node->front_n, &node->front_l);
-
-      (*out_n) = node;
-      return;
+      return Partition_Solid(leaf, &node->front_n, &node->front_l);
     }
   }
 
@@ -574,10 +566,7 @@ static void Partition_Solid(cpSideList_c& LEAF, cpNode_c ** out_n, cpLeaf_c ** o
 
       node->front_l = CONTENTS_SOLID;
 
-      Partition_Solid(leaf, &node->back_n, &node->back_l);
-
-      (*out_n) = node;
-      return;
+      return Partition_Solid(leaf, &node->back_n, &node->back_l);
   }
 
 
@@ -595,13 +584,12 @@ static void Partition_Solid(cpSideList_c& LEAF, cpNode_c ** out_n, cpLeaf_c ** o
       node->front_l = CONTENTS_EMPTY;
       node-> back_l = CONTENTS_SOLID;
 
-      (*out_n) = node;
-      return;
+      return node;
   }
 }
 
 
-static void Partition_Z(cpSideList_c& LEAF, cpNode_c ** out_n, cpLeaf_c ** out_l)
+static cpNode_c * Partition_Z(cpSideList_c& LEAF)
 {
   merge_region_c *R = leaf->GetRegion();
 
@@ -622,32 +610,26 @@ static void Partition_Z(cpSideList_c& LEAF, cpNode_c ** out_n, cpLeaf_c ** out_l
     top_leaf->numgap = leaf->gap + leaf->numgap - new_g;
         leaf->numgap = new_g - leaf->gap;
 
-    Partition_Z(top_leaf, &node->front_n, &node->front_l);
-    Partition_Z(    leaf, &node->back_n,  &node->back_l);
+    node->front_n = Partition_Z(TOP_LEAF);
+    node->back_n  = Partition_Z(    LEAF);
 
-    *out_n = node;
-    return;
+    return node;
   }
 
   SYS_ASSERT(leaf->numgap == 1);
 
 
-  Partition_Solid(LEAF, out_n, out_l);
+  return Partition_Solid(LEAF);
 }
 
 
-static void Partition_XY(cpSideList_c& LEAF, cpNode_c **out_n, cpLeaf_c **out_l)
+static cpNode_c * Partition_XY(cpSideList_c& LEAF)
 {
-  bool is_root = (out_l == NULL);
-
-  SYS_ASSERT(out_n);
-
   cpSide_c *best_p = FindPartition(LEAF);
 
   if (! best_p)
   {
-    Partition_Z(LEAF, out_n, out_l);
-    return;
+    return Partition_Z(LEAF);
   }
 
 
@@ -665,16 +647,19 @@ fprintf(stderr, "Using clip partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
                  node->x, node->y,
                  node->x + node->dx, node->y + node->dy);
 
-  cpLeaf_c *front_l = leaf;
-  cpLeaf_c *back_l  = new cpLeaf_c;
+  
+  cpSideList_c BACK;
 
-  Split_XY(node, leaf, back_l);
+  Split_XY(node, LEAF, BACK);
 
 
-  Partition_XY(front_l, &node->front_n, &node->front_l);
-  Partition_XY( back_l, &node-> back_n, &node-> back_l);
+  node->front_n = Partition_XY(LEAF);
+  node->back_n  = Partition_XY(BACK);
 
-  *out_n = node;
+
+  // free stuff in BACK ???
+
+  return node;
 }
 
 
@@ -777,9 +762,9 @@ s32_t Quake1_CreateClipHull(int which, qLump_c *q1_clip)
   }
 
 
-  cpNode_c *C_ROOT;
+  cpNode_c *C_ROOT = Partition_XY(C_LEAF);
 
-  Partition_XY(C_LEAF, &C_ROOT, NULL);
+  SYS_ASSERT(C_LEAF.size() == 0);
 
 
   int start_idx = q1_clip->size() / sizeof(dclipnode_t);
