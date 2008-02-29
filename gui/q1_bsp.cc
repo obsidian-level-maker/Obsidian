@@ -530,7 +530,7 @@ fprintf(stderr, "PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits
                 (double)(front + back);
 
   // slight preference for axis-aligned planes
-  if (fabs(pdx) < EPSILON || fabs(pdy) < EPSILON)
+  if (! (fabs(pdx) < EPSILON || fabs(pdy) < EPSILON))
     cost += 1.0;
 
   return cost;
