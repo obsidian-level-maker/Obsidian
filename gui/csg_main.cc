@@ -224,8 +224,8 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
     Main_FatalError("CSG2_GetBounds: map is completely solid!\n");
 
   // add some leeyway
-  min_x -= 24; min_x -= 24; min_z -= 64;
-  max_x += 24; max_x += 24; max_z += 64;
+  min_x -= 24; min_y -= 24; min_z -= 64;
+  max_x += 24; max_y += 24; max_z += 64;
 }
 
 void CSG2_MakeMiniMap(void)
