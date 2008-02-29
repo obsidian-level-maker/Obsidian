@@ -65,7 +65,7 @@ void Quake1_BeginLightmap(void)
 {
   q1_lightmap = Q1_NewLump(LUMP_LIGHTING);
 
-  const char *info = OBLIGE_TITLE " " OBLIGE_VERSION;
+  const char *info = "Lit by " OBLIGE_TITLE " " OBLIGE_VERSION;
 
   Q1_Append(q1_lightmap, info, strlen(info));
 }
