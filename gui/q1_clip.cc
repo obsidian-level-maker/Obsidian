@@ -158,20 +158,6 @@ public:
     return S;
   }
 
-  merge_region_c *GetRegion() // const
-  {
-    // NOTE: assumes a convex leaf (in XY) !!
-    for (cpSideList_c::iterator SI = sides.begin();
-         SI != sides.end();
-         SI++)
-    {
-      if ((*SI)->seg)
-        return (*SI)->GetRegion();
-    }
-
-    Main_FatalError("INTERNAL ERROR: Leaf %p has no solid side!", this);
-    return NULL; /* NOT REACHED */
-  }
 
   bool HasSide(cpSide_c *side)
   {
@@ -274,8 +260,23 @@ public:
 
 
 
-//------------------------------------------------------------------------
+static merge_region_c * GetLeafRegion(cpSideList_c& LEAF)
+{
+  // NOTE: assumes a convex leaf (in XY) !!
+  cpSideList_c::iterator SI;
 
+  for (SI = sides.begin(); SI != sides.end(); SI++)
+  {
+    if ((*SI)->seg)
+      return (*SI)->GetRegion();
+  }
+
+  Main_FatalError("INTERNAL ERROR: Clip Leaf has no solid side!");
+  return NULL; /* NOT REACHED */
+}
+
+
+//------------------------------------------------------------------------
 
 static double EvaluatePartition(cpSideList_c& LEAF,
                                 double px1, double py1,
@@ -506,7 +507,7 @@ static void Split_XY(cpNode_c *part, cpSideList_c& front_l, cpSideList_c& back_l
 }
 
 
-static cpNode_c * Partition_Solid(cpSideList_c& LEAF)
+static cpNode_c * Partition_Sides(cpSideList_c& LEAF, merge_region_c *R, int gap)
 {
   // handle sides first
 
@@ -547,7 +548,7 @@ static cpNode_c * Partition_Solid(cpSideList_c& LEAF)
 
       node->back_l = CONTENTS_SOLID;
 
-      return Partition_Solid(leaf, &node->front_n, &node->front_l);
+      return Partition_Sides(leaf, &node->front_n, &node->front_l);
     }
   }
 
@@ -566,7 +567,7 @@ static cpNode_c * Partition_Solid(cpSideList_c& LEAF)
 
       node->front_l = CONTENTS_SOLID;
 
-      return Partition_Solid(leaf, &node->back_n, &node->back_l);
+      return Partition_Sides(leaf, &node->back_n, &node->back_l);
   }
 
 
@@ -589,9 +590,81 @@ static cpNode_c * Partition_Solid(cpSideList_c& LEAF)
 }
 
 
-static cpNode_c * Partition_Z(cpSideList_c& LEAF)
+static cpNode_c * Partition_Z(cpSideList_c& LEAF, merge_region_c *R,
+                              int min_plane, int max_plane)
 {
-  merge_region_c *R = leaf->GetRegion();
+  SYS_ASSERT(min_plane <= max_plane);
+
+  if (max_plane - min_plane < 2)
+  {
+    int p2 = max_plane;
+
+    cpNode_c *node = new cpNode_c(true /* z_splitter */);
+    cpNode_c *n2;
+
+    if (p2 != min_plane)
+    {
+      n2 = Partition_Z(LEAF, R, min_plane, min_plane);
+    }
+    else
+    {
+      n2 = Partition_Sides(LEAF, R, p2/2);
+    }
+
+    if (p2 & 1)
+    {
+      node->z = R->gaps[p2/2]->GetZ2();
+
+      node->front_l = CONTENTS_SOLID;
+      node->back_n  = n2;
+    }
+    else
+    {
+      node->z = R->gaps[p2/2]->GetZ1();
+
+      node->front_n = n2;
+      node->back_l  = CONTENTS_SOLID;
+    }
+
+    return node;
+  }
+
+
+  int p2 = (min_plane + max_plane + 1) / 2;
+
+  cpNode_c *node = new cpNode_c(true /* z_splitter */);
+
+  node->z = (p2 & 1) ? R->gaps[p2/2]->GetZ2() : R->gaps[p2/2]->GetZ1();
+
+  node->front_n = Partition_Z(LEAF, R, p2+1, max_plane);
+  node->back_n  = Partition_Z(LEAF, R, min_plane, p2-1);
+
+  return node;
+
+#if 0  
+  if (p2 & 1)
+  {
+      node->z = R->gaps[p2/2]->GetZ2();
+
+      if (p2 == max_plane)
+        node->front_l = CONTENTS_SOLID;
+      else
+    }
+    else
+    {
+      node->z = R->gaps[p2/2]->GetZ1();
+
+      node->front_n = Partition_Z(LEAF, R, p2+1, max_plane);
+
+      if (p2 == min_plane)
+        node->back_l = CONTENTS_SOLID;
+      else
+        node->back_n = Partition_Z(LEAF, R, min_plane, p2-1);
+    }
+
+    return node;
+  }
+
 
   if (leaf->numgap > 1)
   {
@@ -605,7 +678,6 @@ static cpNode_c * Partition_Z(cpSideList_c& LEAF)
     cpNode_c *node = new cpNode_c(true /* z_splitter */);
 
     // choose height halfway between the two gaps (in the solid)
-    node->z = (R->gaps[new_g-1]->GetZ2() + R->gaps[new_g]->GetZ1()) / 2.0;
 
     top_leaf->numgap = leaf->gap + leaf->numgap - new_g;
         leaf->numgap = new_g - leaf->gap;
@@ -620,6 +692,7 @@ static cpNode_c * Partition_Z(cpSideList_c& LEAF)
 
 
   return Partition_Solid(LEAF);
+#endif
 }
 
 
@@ -629,7 +702,11 @@ static cpNode_c * Partition_XY(cpSideList_c& LEAF)
 
   if (! best_p)
   {
-    return Partition_Z(LEAF);
+    merge_region_c *R = GetLeafRegion(LEAF);
+
+    SYS_ASSERT(R->gaps.size() > 0);
+
+    return Partition_Z(LEAF, R, 0, (int)R->gaps.size()*2 - 1);
   }
 
 
