@@ -34,6 +34,9 @@
 extern int Q1_begin_level(lua_State *L);
 extern int Q1_end_level(lua_State *L);
 
+extern int DM_begin_level(lua_State *L);
+extern int DM_end_level(lua_State *L);
+
 
 std::vector<area_info_c *> all_areas;
 std::vector<area_poly_c *> all_polys;

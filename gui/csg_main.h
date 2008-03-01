@@ -105,7 +105,7 @@ class area_vert_c
 public:
   double x, y;
 
-  area_face_c *face;
+  area_face_c *face; // optional
 
   int line_kind;
   int line_tag;
