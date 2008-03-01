@@ -284,7 +284,8 @@ fprintf(stderr, "CLIP PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d s
   // calculate heuristic
   int diff = ABS(front - back);
 
-  double cost = (diff * 100.0) / (double)(front + back);
+  double cost = (splits * (splits+1) * 365.0 + diff * 100.0) /
+                (double)(front + back);
 
   // preference for axis-aligned planes
   if (! (fabs(pdx) < EPSILON || fabs(pdy) < EPSILON))
