@@ -67,7 +67,41 @@ static void RestoreAreaPolys(void)
 }
 
 
-static void FattenVertex(const area_poly_c *P, unsigned int k, area_poly_c *P2)
+static void CalcNormal(double x1, double y1, double x2, double y2,
+                       double *nx, double *ny)
+{
+  *nx = (y2 - y1);
+  *ny = (x1 - x2);
+
+  double n_len = ComputeDist(x1, y1, x2, y2);
+  SYS_ASSERT(n_len > EPSILON);
+
+  *nx /= n_len;
+  *ny /= n_len;
+}
+
+static void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
+                             double px1, double py1, double px2, double py2,
+                             double *x, double *y)
+{
+  // NOTE: lines are extended to infinity to find the intersection
+
+  double a = PerpDist(nx1, ny1,  px1, py1, px2, py2);
+  double b = PerpDist(nx2, ny2,  px1, py1, px2, py2);
+
+  // BIG ASSUMPTION: lines are not parallel or colinear
+  SYS_ASSERT(fabs(a - b) > EPSILON);
+
+  // determine the intersection point
+  double along = a / (a - b);
+
+  *x = nx1 + along * (nx2 - nx1);
+  *y = ny1 + along * (ny2 - ny1);
+}
+
+
+static void FattenVertex(const area_poly_c *P, unsigned int k,
+                         area_poly_c *P2, double wd)
 {
   unsigned int total = P->verts.size();
 
@@ -87,8 +121,24 @@ static void FattenVertex(const area_poly_c *P, unsigned int k, area_poly_c *P2)
 
 fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
 
-  if (diff > 180.0 + ANGLE_EPSILON)
+  if (diff > 180.1)
     Main_FatalError("Area poly not convex!\n");
+
+  double p_nx, p_ny;
+  double n_nx, n_ny;
+
+  CalcNormal(pv->x, pv->y, kv->x, kv->y, &p_nx, &p_ny);
+  CalcNormal(nv->x, nv->y, kv->x, kv->y, &n_nx, &n_ny);
+
+  double px1 = pv->x + p_nx * wd;
+  double py1 = pv->y + p_ny * wd;
+  double px2 = kv->x + p_nx * wd;
+  double py2 = kv->y + p_ny * wd;
+
+  double nx1 = nv->x + n_nx * wd;
+  double ny1 = nv->y + n_ny * wd;
+  double nx2 = kv->x + n_nx * wd;
+  double ny2 = kv->y + n_ny * wd;
 
   // There are THREE cases we need to cover:
   // -  angles equal or close to 180 degrees, e.g. colinear lines.
@@ -103,9 +153,55 @@ fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
   //    the line intersection test.  These vertices need a "bevel",
   //    hence they become TWO new vertices sitting on the bevel line.
   //
-  //    The actual test angle is a fair bit less than 90, otherwise
-  //    we would create very short bevels.
+  //    The actual test angle is a fair bit less than 90, to prevent
+  //    creating very short bevels.
   //
+
+  if (diff > 178.0)
+  {
+    double x = kv->x + (p_nx + n_nx) / 2.0 * wd;
+    double y = kv->y + (p_ny + n_ny) / 2.0 * wd;
+
+//    ...
+  }
+  else if (diff > 81.0)
+  {
+    double x, y;
+
+    CalcIntersection(nx1, ny1, nx2, ny2,
+                     px1, py1, px2, py2,  &x, &y);
+
+//    ...
+  }
+  else
+  {
+    // compute vector to bevel line (the bevel normal)
+    double b_nx = p_nx + n_nx;
+    double b_ny = p_ny + n_ny;
+
+    double b_len = ComputeDist(0, 0, b_nx, b_ny);
+    SYS_ASSERT(b_len > 0.01);
+
+    b_nx /= b_len;
+    b_ny /= b_len;
+
+    double bx1 = kv->x + b_nx * wd;
+    double by1 = kv->y + b_ny * wd;
+
+    double bx2 = bx1 + b_ny;
+    double by2 = by1 - b_nx;
+
+    double pp_x, pp_y;
+    double nn_x, nn_y;
+
+    CalcIntersection(bx1, by1, bx2, by2,
+                     px1, py1, px2, py2, &pp_x, &pp_y);
+
+    CalcIntersection(bx1, by1, bx2, by2,
+                     nx1, ny1, nx2, ny2, &nn_x, &nn_y);
+
+//    ...
+  }
 }
 
 static void FattenAreaPolys(double wd, double fh, double ch)
@@ -135,7 +231,7 @@ static void FattenAreaPolys(double wd, double fh, double ch)
 
     for (unsigned int k = 0; k < P->verts.size(); k++)
     {
-      FattenVertex(P, k, P2);
+      FattenVertex(P, k, P2, wd);
     }
 
     P2->ComputeBBox();
