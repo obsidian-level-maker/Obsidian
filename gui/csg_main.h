@@ -95,6 +95,8 @@ public:
 public:
    area_info_c();
   ~area_info_c();
+
+   area_info_c(const area_info_c *other);
 };
 
 

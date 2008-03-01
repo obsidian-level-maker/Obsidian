@@ -76,6 +76,18 @@ area_info_c::area_info_c() :
 area_info_c::~area_info_c()
 { }
 
+area_info_c::area_info_c(const area_info_c *other) :
+      b_face(other->b_face), t_face(other->t_face), side(other->side),
+      z1(other->z1), z2(other->z2),
+      b_slope(NULL), t_slope(NULL),
+      sec_kind(other->sec_kind), sec_tag(other->sec_tag),
+      mark(other->mark)
+{
+  time = other->time;  
+
+  // FIXME: duplicate slopes
+}
+
 
 area_face_c::area_face_c() :
       tex(), x_offset(0), y_offset(0)
