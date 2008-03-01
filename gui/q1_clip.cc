@@ -162,7 +162,7 @@ fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
     double x = kv->x + (p_nx + n_nx) / 2.0 * wd;
     double y = kv->y + (p_ny + n_ny) / 2.0 * wd;
 
-//    ...
+    P2->verts.push_back(new area_vert_c(x, y));
   }
   else if (diff > 81.0)
   {
@@ -171,7 +171,7 @@ fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
     CalcIntersection(nx1, ny1, nx2, ny2,
                      px1, py1, px2, py2,  &x, &y);
 
-//    ...
+    P2->verts.push_back(new area_vert_c(x, y));
   }
   else
   {
@@ -191,16 +191,17 @@ fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
     double bx2 = bx1 + b_ny;
     double by2 = by1 - b_nx;
 
-    double pp_x, pp_y;
-    double nn_x, nn_y;
+    double x, y;
 
     CalcIntersection(bx1, by1, bx2, by2,
-                     px1, py1, px2, py2, &pp_x, &pp_y);
+                     px1, py1, px2, py2, &x, &y);
+
+    P2->verts.push_back(new area_vert_c(x, y));
 
     CalcIntersection(bx1, by1, bx2, by2,
-                     nx1, ny1, nx2, ny2, &nn_x, &nn_y);
+                     nx1, ny1, nx2, ny2, &x, &y);
 
-//    ...
+    P2->verts.push_back(new area_vert_c(x, y));
   }
 }
 
