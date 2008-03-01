@@ -76,15 +76,36 @@ static void FattenVertex(const area_poly_c *P, unsigned int k, area_poly_c *P2)
   area_vert_c *pv = P->verts[(k + total - 1) % total];
   area_vert_c *nv = P->verts[(k + 1        ) % total];
 
-  // determine outside angle
-  double p_angle = CalcAngle(pv->x, pv->y, kv->x, kv->y);
+  // determine internal angle
+  double p_angle = CalcAngle(kv->x, kv->y, pv->x, pv->y);
   double n_angle = CalcAngle(kv->x, kv->y, nv->x, nv->y);
 
-  double diff = p_angle - n_angle;
+  double diff = n_angle - p_angle;
 
-  if (diff < 0) diff += 360.0;
+  if (diff < 0)    diff += 360.0;
+  if (diff >= 360) diff -= 360.0;
 
 fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
+
+  if (diff > 180.0 + ANGLE_EPSILON)
+    Main_FatalError("Area poly not convex!\n");
+
+  // There are THREE cases we need to cover:
+  // -  angles equal or close to 180 degrees, e.g. colinear lines.
+  //    The parallel-ness means we cannot use the normal intersection
+  //    test to find the new point.  Instead we use the midpoint of
+  //    the two fattened vertices (one from each line).
+  //
+  // -  angles over 90 degrees simply use line intersection to find
+  //    the new fattened vertex.
+  //
+  // -  angles under 90 degrees would stick out too much if we used
+  //    the line intersection test.  These vertices need a "bevel",
+  //    hence they become TWO new vertices sitting on the bevel line.
+  //
+  //    The actual test angle is a fair bit less than 90, otherwise
+  //    we would create very short bevels.
+  //
 }
 
 static void FattenAreaPolys(double wd, double fh, double ch)
@@ -118,7 +139,7 @@ static void FattenAreaPolys(double wd, double fh, double ch)
     }
 
     P2->ComputeBBox();
-    P2->Validate();
+//!!!!!    P2->Validate();
 
     all_polys.push_back(P2);
   }
