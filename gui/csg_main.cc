@@ -572,5 +572,44 @@ void CSG2_EndLevel(void)
 }
 
 
+void CSG2_FreeMerges(void)
+{
+  unsigned int k;
+
+  for (k = 0; k < mug_vertices.size(); k++)
+    delete mug_vertices[k];
+
+  for (k = 0; k < mug_segments.size(); k++)
+    delete mug_segments[k];
+
+  for (k = 0; k < mug_regions.size(); k++)
+    delete mug_regions[k];
+
+  mug_vertices.clear();
+  mug_segments.clear();
+  mug_regions .clear();
+}
+
+void CSG2_FreeAll(void)
+{
+  CSG2_FreeMerges();
+
+  unsigned int k;
+
+  for (k = 0; k < all_areas.size(); k++)
+    delete all_areas[k];
+
+  for (k = 0; k < all_polys.size(); k++)
+    delete all_polys[k];
+
+  for (k = 0; k < all_entities.size(); k++)
+    delete all_entities[k];
+
+  all_areas.clear();
+  all_polys.clear();
+  all_entities.clear();
+}
+
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

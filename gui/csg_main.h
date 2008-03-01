@@ -370,6 +370,9 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
 
 void CSG2_MakeMiniMap(void);
 
+void CSG2_FreeMerges(void);
+void CSG2_FreeAll(void);
+
 #endif /* __OBLIGE_CSG_MAIN_H__ */
 
 //--- editor settings ---

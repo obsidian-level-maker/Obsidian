@@ -1344,6 +1344,8 @@ void CSG2_MergeAreas(void)
   //   (6) place every entity into a gap
   //   (7) remove gaps which no entity can reach
 
+  mug_new_segs.clear(); // should be empty, but just in case
+
   for (unsigned int j=0; j < all_polys.size(); j++)
   {
     area_poly_c *P = all_polys[j];
@@ -1366,6 +1368,7 @@ void CSG2_MergeAreas(void)
 
   CSG2_MakeMiniMap();
 }
+
 
 
 //--- editor settings ---
