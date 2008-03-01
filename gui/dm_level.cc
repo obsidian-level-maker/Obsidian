@@ -846,6 +846,8 @@ void CSG2_WriteDoom(void)
 
   CSG2_MergeAreas();
 
+  CSG2_MakeMiniMap();
+
 //CSG2_Doom_TestRegions();
 //return;
  

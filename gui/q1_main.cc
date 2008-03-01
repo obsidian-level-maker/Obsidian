@@ -952,6 +952,8 @@ fprintf(stderr, "Q1_end_level\n");
 
   CSG2_MergeAreas();
 
+  CSG2_MakeMiniMap();
+
   Quake1_BuildBSP();
 
 ///???  CSG2_EndLevel();

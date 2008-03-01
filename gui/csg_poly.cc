@@ -1365,8 +1365,6 @@ void CSG2_MergeAreas(void)
 
   Mug_PlaceEntities();
   Mug_FillUnusedGaps();
-
-  CSG2_MakeMiniMap();
 }
 
 
