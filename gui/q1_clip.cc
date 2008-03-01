@@ -110,6 +110,9 @@ static void FattenVertex(const area_poly_c *P, unsigned int k,
   area_vert_c *pv = P->verts[(k + total - 1) % total];
   area_vert_c *nv = P->verts[(k + 1        ) % total];
 
+fprintf(stderr, "ORIGINAL VERT[%d] @ (%1.0f %1.0f)  < (%1.0f %1.0f) > (%1.0f %1.0f)\n",
+k, kv->x, kv->y, pv->x, pv->y, nv->x, nv->y);
+
   // determine internal angle
   double p_angle = CalcAngle(kv->x, kv->y, pv->x, pv->y);
   double n_angle = CalcAngle(kv->x, kv->y, nv->x, nv->y);
@@ -124,10 +127,11 @@ fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
   if (diff > 180.1)
     Main_FatalError("Area poly not convex!\n");
 
+  // NOTE: these normals face OUTWARDS (anti-normals?)
   double p_nx, p_ny;
   double n_nx, n_ny;
 
-  CalcNormal(pv->x, pv->y, kv->x, kv->y, &p_nx, &p_ny);
+  CalcNormal(kv->x, kv->y, pv->x, pv->y, &p_nx, &p_ny);
   CalcNormal(nv->x, nv->y, kv->x, kv->y, &n_nx, &n_ny);
 
   double px1 = pv->x + p_nx * wd;
@@ -163,6 +167,7 @@ fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
     double y = kv->y + (p_ny + n_ny) / 2.0 * wd;
 
     P2->verts.push_back(new area_vert_c(x, y));
+fprintf(stderr, "... HIG VERT --> (%1.4f %1.4f)\n", x, y);
   }
   else if (diff > 81.0)
   {
@@ -172,6 +177,7 @@ fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
                      px1, py1, px2, py2,  &x, &y);
 
     P2->verts.push_back(new area_vert_c(x, y));
+fprintf(stderr, "... MID VERT --> (%1.4f %1.4f)\n", x, y);
   }
   else
   {
@@ -197,11 +203,13 @@ fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
                      px1, py1, px2, py2, &x, &y);
 
     P2->verts.push_back(new area_vert_c(x, y));
+fprintf(stderr, "... LOW VERT1 --> (%1.4f %1.4f)\n", x, y);
 
     CalcIntersection(bx1, by1, bx2, by2,
                      nx1, ny1, nx2, ny2, &x, &y);
 
     P2->verts.push_back(new area_vert_c(x, y));
+fprintf(stderr, "... LOW VERT2 --> (%1.4f %1.4f)\n", x, y);
   }
 }
 
@@ -236,12 +244,11 @@ static void FattenAreaPolys(double wd, double fh, double ch)
     }
 
     P2->ComputeBBox();
-//!!!!!    P2->Validate();
+    P2->Validate();
 
     all_polys.push_back(P2);
   }
 
-  exit(9); //!!!!!!!
 }
 
 
@@ -881,10 +888,13 @@ fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
     { 32, 24, 64 },
   };
 
+CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
+
   SaveAreaPolys();
   FattenAreaPolys(pads[which][0], pads[which][1], pads[which][2]);
 
   CSG2_MergeAreas();
+
 
   cpSideList_c C_LEAF;
 

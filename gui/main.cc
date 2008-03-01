@@ -205,7 +205,7 @@ void Main_FatalError(const char *msg, ...)
 void Build_Cool_Shit()
 {
   bool is_wolf  = false;
-  bool is_quake = true;
+  bool is_quake = true; //!!!!! FIXME
 
   bool is_hexen = (strcmp(main_win->game_box->game->GetID(), "hexen")  == 0);
 

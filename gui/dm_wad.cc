@@ -36,6 +36,15 @@
 #include "dm_glbsp.h"
 
 
+//!!!!!!!
+#include "q1_main.h"
+extern int Q1_end_level(lua_State *L);
+extern s32_t Quake1_CreateClipHull(int which, qLump_c *q1_clip);
+
+extern void CSG2_Doom_TestAreas(void);
+extern void CSG2_Doom_TestRegions(void);
+
+
 #define TEMP_FILENAME    "TEMP.wad"
 
 typedef std::vector<u8_t> lump_c;
@@ -324,12 +333,9 @@ int Hexen_GrabArgs(lua_State *L, u8_t *args, int stack_pos)
 //------------------------------------------------------------------------
 
 
-namespace wad
-{
-
 // LUA: begin_level(name)
 //
-int begin_level(lua_State *L)
+int DM_begin_level(lua_State *L)
 {
   const char *name = luaL_checkstring(L,1);
 
@@ -348,13 +354,18 @@ int begin_level(lua_State *L)
 
 // LUA: end_level()
 //
-int end_level(lua_State *L)
+int DM_end_level(lua_State *L)
 {
 //  CSG2_TestQuake();
 
-  CSG2_WriteDoom();
+// Q1_end_level(L);
 
-  CSG2_EndLevel();
+Quake1_CreateClipHull(1, NULL);
+CSG2_Doom_TestRegions();
+
+///!!!  CSG2_WriteDoom();
+
+///!!!  CSG2_EndLevel();
 
 
   SYS_ASSERT(level_name);
@@ -386,6 +397,9 @@ int end_level(lua_State *L)
   return 0;
 }
 
+
+namespace wad
+{
 
 void add_vertex(int x, int y)
 {

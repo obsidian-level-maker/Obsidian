@@ -954,7 +954,7 @@ fprintf(stderr, "Q1_end_level\n");
 
   Quake1_BuildBSP();
 
-  CSG2_EndLevel();
+///???  CSG2_EndLevel();
 
   return 0;
 }

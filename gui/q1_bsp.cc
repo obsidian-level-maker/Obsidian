@@ -1576,7 +1576,7 @@ fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
     GetExtents(min_x, min_y, max_x, max_y, &ext_W, &ext_H);
 
     static int foo; foo++;
-    face->styles[0] = (foo & 3); //!!!!!
+    face->styles[0] = 0; // (foo & 3); //!!!!!
 
     face->lightofs = Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
   }
@@ -1684,7 +1684,7 @@ fprintf(stderr, "BACK = %p\n", BACK);
     GetExtents(min_s, min_t, max_s, max_t, &ext_W, &ext_H);
 
     static int foo = 0; foo++;
-    face->styles[0] = (foo & 3); //!!!!!
+    face->styles[0] = 0; // (foo & 3); //!!!!!
 
     face->lightofs = Quake1_LightAddBlock(ext_W, ext_H, 0x80|(rand()&0x7F));
   }
