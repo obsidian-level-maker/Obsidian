@@ -36,47 +36,68 @@
 #include "main.h"
 
 
-std::vector<area_poly_c *> saved_area_polys;
+std::vector<area_poly_c *> saved_all_polys;
 
 
 static void SaveAreaPolys(void)
 {
-  SYS_ASSERT(area_polys.size() > 0);
-  SYS_ASSERT(saved_area_polys.empty());
+  SYS_ASSERT(all_polys.size() > 0);
+  SYS_ASSERT(saved_all_polys.empty());
 
-  std::swap(area_polys, saved_area_polys);
+  std::swap(all_polys, saved_all_polys);
 }
 
 static void RestoreAreaPolys(void)
 {
   // free our modified ones
-  for (unsigned int i = 0; i < area_polys.size(); i++)
+  for (unsigned int i = 0; i < all_polys.size(); i++)
   {
-    area_poly_c *P2 = area_polys[i];
+    area_poly_c *P2 = all_polys[i];
 
     delete P2->info;
     delete P2;
   }
 
-  area_polys.clear();
+  all_polys.clear();
 
-  std::swap(area_polys, saved_area_polys);
+  std::swap(all_polys, saved_all_polys);
 
-  SYS_ASSERT(area_polys.size() > 0);
-  SYS_ASSERT(saved_area_polys.empty());
+  SYS_ASSERT(all_polys.size() > 0);
+  SYS_ASSERT(saved_all_polys.empty());
+}
+
+
+static void FattenVertex(const area_poly_c *P, unsigned int k, area_poly_c *P2)
+{
+  unsigned int total = P->verts.size();
+
+  area_vert_c *kv = P->verts[k];
+
+  area_vert_c *pv = P->verts[(k + total - 1) % total];
+  area_vert_c *nv = P->verts[(k + 1        ) % total];
+
+  // determine outside angle
+  double p_angle = CalcAngle(pv->x, pv->y, kv->x, kv->y);
+  double n_angle = CalcAngle(kv->x, kv->y, nv->x, nv->y);
+
+  double diff = p_angle - n_angle;
+
+  if (diff < 0) diff += 360.0;
+
+fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
 }
 
 static void FattenAreaPolys(double wd, double fh, double ch)
 {
-  for (unsigned int i = 0; i < saved_area_polys.size(); i++)
+  for (unsigned int i = 0; i < saved_all_polys.size(); i++)
   {
-    area_poly_c *P = saved_area_polys[i];
+    area_poly_c *P = saved_all_polys[i];
     area_info_c *A = P->info;
 
     area_info_c *A2 = new area_info_c(A);
 
     // !!!! TODO: if floor is sloped, split this poly into two halves
-    //            at the point where the (slope + fh) intersects (z2 + fh)
+    //            at the point where the (slope + fh) exceeds (z2 + fh)
 
     SYS_ASSERT(! A2->t_slope);
 
@@ -91,8 +112,18 @@ static void FattenAreaPolys(double wd, double fh, double ch)
 
     area_poly_c *P2 = new area_poly_c(A2);
 
-    area_polys.push_back(P2);
+    for (unsigned int k = 0; k < P->verts.size(); k++)
+    {
+      FattenVertex(P, k, P2);
+    }
+
+    P2->ComputeBBox();
+    P2->Validate();
+
+    all_polys.push_back(P2);
   }
+
+  exit(9); //!!!!!!!
 }
 
 
@@ -724,8 +755,16 @@ fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
   if (which == 3)
     return 0;
 
+  which--;
+
+  static double pads[2][3] =
+  {
+    { 16, 24, 32 },
+    { 32, 24, 64 },
+  };
+
   SaveAreaPolys();
-  FattenAreaPolys();
+  FattenAreaPolys(pads[which][0], pads[which][1], pads[which][2]);
 
   CSG2_MergeAreas();
 
