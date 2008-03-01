@@ -207,13 +207,13 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
     max_x = MAX(max_x, x2);
     max_y = MAX(max_y, y2);
 
-    if (S->front->HasGap())
+    if (S->front && S->front->HasGap())
     {
       min_z = MIN(min_z, S->front->MinGapZ());
       max_z = MAX(max_z, S->front->MaxGapZ());
     }
 
-    if (S->back->HasGap())
+    if (S->back && S->back->HasGap())
     {
       min_z = MIN(min_z, S->back->MinGapZ());
       max_z = MAX(max_z, S->back->MaxGapZ());
@@ -267,6 +267,18 @@ void CSG2_MakeMiniMap(void)
     }
 
     main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
+  }
+
+  // entities
+  for (unsigned k = 0; k < all_entities.size(); k++)
+  {
+    entity_info_c *E = all_entities[k];
+
+    int x = (int)ceil(E->x - min_x) / scale + 1;
+    int y = (int)ceil(E->y - min_y) / scale + 1;
+
+    main_win->build_box->mini_map->DrawLine(x-1,y, x+1,y, 255,255,96);
+    main_win->build_box->mini_map->DrawLine(x,y-1, x,y+1, 255,255,96);
   }
 
   main_win->build_box->mini_map->MapFinish();
