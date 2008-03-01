@@ -36,6 +36,68 @@
 #include "main.h"
 
 
+std::vector<area_poly_c *> saved_area_polys;
+
+
+static void SaveAreaPolys(void)
+{
+  SYS_ASSERT(area_polys.size() > 0);
+  SYS_ASSERT(saved_area_polys.empty());
+
+  std::swap(area_polys, saved_area_polys);
+}
+
+static void RestoreAreaPolys(void)
+{
+  // free our modified ones
+  for (unsigned int i = 0; i < area_polys.size(); i++)
+  {
+    area_poly_c *P2 = area_polys[i];
+
+    delete P2->info;
+    delete P2;
+  }
+
+  area_polys.clear();
+
+  std::swap(area_polys, saved_area_polys);
+
+  SYS_ASSERT(area_polys.size() > 0);
+  SYS_ASSERT(saved_area_polys.empty());
+}
+
+static void FattenAreaPolys(double wd, double fh, double ch)
+{
+  for (unsigned int i = 0; i < saved_area_polys.size(); i++)
+  {
+    area_poly_c *P = saved_area_polys[i];
+    area_info_c *A = P->info;
+
+    area_info_c *A2 = new area_info_c(A);
+
+    // !!!! TODO: if floor is sloped, split this poly into two halves
+    //            at the point where the (slope + fh) intersects (z2 + fh)
+
+    SYS_ASSERT(! A2->t_slope);
+
+    // TODO: if ceiling is sloped, adjust slope to keep it in new bbox
+    //       (this is a kludge.  Floors are a lot more important to get
+    //        right because players and monsters walk on them).
+
+    SYS_ASSERT(! A2->b_slope);
+
+    A2->z2 += fh;
+    A2->z1 -= ch;
+
+    area_poly_c *P2 = new area_poly_c(A2);
+
+    area_polys.push_back(P2);
+  }
+}
+
+
+//------------------------------------------------------------------------
+
 class cpSide_c
 {
 public:
@@ -662,15 +724,11 @@ fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
   if (which == 3)
     return 0;
 
-  // ALGORITHM:
-  //   1. create a Side list from every segment
-  //   2. while list is not yet convex:
-  //      (a) find a splitter side --> create Node
-  //      (b) split list into front and back
-  //      (c) recursively handle front/back lists
-  //   3. perform Z splitting (the gaps)
-  //   4. perform solid splitting
-  
+  SaveAreaPolys();
+  FattenAreaPolys();
+
+  CSG2_MergeAreas();
+
   cpSideList_c C_LEAF;
 
   for (unsigned int i = 0; i < mug_segments.size(); i++)
@@ -702,6 +760,9 @@ fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
   WriteClipNodes(q1_clip, C_ROOT);
 
   delete C_ROOT;
+
+  CSG2_FreeMerges();
+  RestoreAreaPolys();
 
   return start_idx;
 }
