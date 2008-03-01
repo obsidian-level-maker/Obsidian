@@ -97,8 +97,8 @@ area_face_c::~area_face_c()
 { }
 
 
-area_vert_c::area_vert_c() :
-      x(0), y(0), face(NULL),
+area_vert_c::area_vert_c(double _x, double _y) :
+      x(_x), y(_y), face(NULL),
       line_kind(0), line_tag(0), line_flags(0),
       partner(NULL)
 {

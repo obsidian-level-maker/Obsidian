@@ -116,7 +116,7 @@ public:
   merge_vertex_c *partner;
 
 public:
-   area_vert_c();
+   area_vert_c(double _x = 0, double _y = 0);
   ~area_vert_c();
 };
 
