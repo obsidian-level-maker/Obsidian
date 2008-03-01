@@ -153,15 +153,10 @@ public:
 
   void CheckValid() const
   {
-    if (! front_n)
-    {
-      SYS_ASSERT(front_l < 0);
-    }
+    SYS_ASSERT(index >= 0);
 
-    if (! back_n)
-    {
-      SYS_ASSERT(back_l < 0);
-    }
+    SYS_ASSERT(front_n || front_l < 0);
+    SYS_ASSERT( back_n ||  back_l < 0);
   }
 };
 
@@ -331,7 +326,7 @@ fprintf(stderr, "--> COST:%1.2f for %p\n", cost, part);
       best_p = part;
     }
   }
-fprintf(stderr, "ALL DONE : best_c=%1.0f best_p=%p\n",
+fprintf(stderr, "FIND DONE : best_c=%1.0f best_p=%p\n",
         best_p ? best_c : -9999, best_p);
 
   return best_p;
@@ -465,10 +460,24 @@ static cpNode_c * Partition_Gap(cpSideList_c& LEAF, merge_region_c *R, int gap)
     result = node;
   }
 
-  if (! result)
-    Main_FatalError("INTERNAL ERROR: Partition_Gap: no usable sides!!\n");
+  if (result)
+    return result;
 
-  return result;
+  {
+    // make dummy node (FIXME HOW CAN THIS HAPPEN ???? )
+
+    cpNode_c *node = new cpNode_c(false /* z_splitter */);
+
+    node->x  = node->y = node->dx = 0;
+    node->dy = 1;
+
+    node->front_l = CONTENTS_EMPTY;
+    node->back_l  = CONTENTS_EMPTY;
+
+    fprintf(stderr, "INTERNAL ERROR: Partition_Gap: no usable sides!!\n");
+
+    return node;
+  }
 }
 
 
@@ -569,7 +578,7 @@ fprintf(stderr, "Using clip partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
 }
 
 
-static void MakeClipSide(cpSideList_c LEAF, merge_segment_c *seg, int side)
+static void MakeClipSide(cpSideList_c& LEAF, merge_segment_c *seg, int side)
 {
   cpSide_c *S = new cpSide_c(seg, side); 
 
@@ -604,8 +613,6 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
   else
     clip.planenum = Q1_AddPlane(node->x, node->y, 0,
                                 node->dy, -node->dx, 0, &flipped);
-  if (flipped)
-    node->Flip();
 
 
   node->CheckValid();
@@ -620,6 +627,13 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
   else
     clip.children[1] = (u16_t) node->back_l;
 
+  if (flipped)
+  {
+    u16_t tmp = clip.children[0];
+    clip.children[0] = clip.children[1];
+    clip.children[1] = tmp;
+  }
+
 
   // TODO: fix endianness in 'clip'
 
@@ -633,14 +647,14 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
 
   if (node->back_n)
     WriteClipNodes(L, node->back_n);
-
-
-  delete node;
 }
 
 
 s32_t Quake1_CreateClipHull(int which, qLump_c *q1_clip)
 {
+fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
+                  "-----------------------\n\n", which);
+
   SYS_ASSERT(1 <= which && which <= 3);
 
   // 3rd hull is not used in Quake 1
@@ -684,8 +698,9 @@ s32_t Quake1_CreateClipHull(int which, qLump_c *q1_clip)
     Main_FatalError("Quake1 build failure: exceeded limit of %d CLIPNODES\n",
                     MAX_MAP_CLIPNODES);
 
-  // this also frees everything
   WriteClipNodes(q1_clip, C_ROOT);
+
+  delete C_ROOT;
 
   return start_idx;
 }
