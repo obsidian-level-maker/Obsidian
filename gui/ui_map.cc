@@ -118,7 +118,7 @@ void UI_MiniMap::MapCorner(int x, int y, int dx, int dy)
 }
 
 
-void UI_MiniMap::DrawPixel(int x, int y, u8_t r, u8_t g, u8_t b)
+void UI_MiniMap::DrawPixel(int x, int y, byte r, byte g, byte b)
 {
   if (x < 0 || x >= map_W || y < 0 || y >= map_H)
     return;
@@ -132,7 +132,7 @@ void UI_MiniMap::DrawPixel(int x, int y, u8_t r, u8_t g, u8_t b)
 
 
 void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
-                          u8_t r, u8_t g, u8_t b, bool end)
+                          byte r, byte g, byte b, bool end)
 {
   // FIXME: proper clipped line drawer please!
 
@@ -154,6 +154,21 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
 
   DrawLine(x1,y1, mx,my, r,g,b, false);
   DrawLine(mx,my, x2,y2, r,g,b, end);
+}
+
+
+void UI_MiniMap::DrawEntity(int x, int y, byte r, byte g, byte b)
+{
+  DrawPixel(x, y, r, g, b);
+
+  r = (r / 4) * 3;
+  g = (g / 4) * 3;
+  b = (b / 4) * 3;
+
+  DrawPixel(x-1, y, r, g, b);
+  DrawPixel(x+1, y, r, g, b);
+  DrawPixel(x, y-1, r, g, b);
+  DrawPixel(x, y+1, r, g, b);
 }
 
 

@@ -243,6 +243,7 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
   max_x += 24; max_y += 24; max_z += 64;
 }
 
+
 void CSG2_MakeMiniMap(void)
 {
   int scale = 20;
@@ -271,14 +272,18 @@ void CSG2_MakeMiniMap(void)
 
     u8_t r, g, b;
 
-    // show drop-offs as green
     if (two_sided && fabs(S->front->gaps[0]->GetZ1() - S->back->gaps[0]->GetZ1()) > 24.5)
     {
-      r = 128; g = 224; b = 72;
+      r = 0; g = 192; b = 250;
+//    r = 104; g = 176; b = 240;
+    }
+    else if (two_sided)
+    {
+      r = 160; g = 160; b = 160;
     }
     else
     {
-      r = g = b = two_sided ? 176 : 255;
+      r = 255; g = 255; b = 255;
     }
 
     main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
@@ -292,8 +297,7 @@ void CSG2_MakeMiniMap(void)
     int x = (int)ceil(E->x - min_x) / scale + 1;
     int y = (int)ceil(E->y - min_y) / scale + 1;
 
-    main_win->build_box->mini_map->DrawLine(x-1,y, x+1,y, 255,255,96);
-    main_win->build_box->mini_map->DrawLine(x,y-1, x,y+1, 255,255,96);
+    main_win->build_box->mini_map->DrawEntity(x,y, 255,255,0);
   }
 
   main_win->build_box->mini_map->MapFinish();

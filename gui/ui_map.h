@@ -42,8 +42,9 @@ public:
   void MapClear();
   void MapCorner(int x, int y, int dx, int dy);
 
-  void DrawPixel(int x, int y, u8_t r, u8_t g, u8_t b);
-  void DrawLine (int x1, int y1, int x2, int y2, u8_t r, u8_t g, u8_t b, bool end = true);
+  void DrawPixel(int x, int y, byte r, byte g, byte b);
+  void DrawLine (int x1, int y1, int x2, int y2, byte r, byte g, byte b, bool end = true);
+  void DrawEntity(int x, int y, byte r, byte g, byte b);
 };
 
 #endif /* __UI_MAP_H__ */
