@@ -25,7 +25,7 @@ require 'util'
 
 class RLINK  -- Room Link
 [
-  rooms : table(ROOM)  -- table has two entries ]1] and [2]
+  rooms : table(ROOM)  -- table has two entries [1] and [2]
 
   kind  : string  -- "neighbour" (the two rooms touch)
                   -- "contain"   (rooms[2] is inside rooms[1])
@@ -94,25 +94,97 @@ function temp_decide_quests()
 end
 
 
+-- FIXME: z dimension
+SEED_MAP = array_2D(30, 30);
+
+
+function show_room_allocation(R)
+  
+  print("room_allocation", R.s_size.y, "by", R.s_size.x, ":-")
+
+  for y = R.s_size.y, 1, -1 do
+
+    local line = ""
+
+    for x = 1, R.s_size.x do
+
+      local N = SEED_MAP[R.s_low.x + x - 1][R.s_low.y + y - 1]
+
+      if not N then
+        line = line .. "."
+
+      elseif not N.quest then
+        line = line .. "?"
+
+      else
+        line = line .. N.quest.level
+      end
+    end
+
+    print(">", line)
+  end
+end
+
+
 function plan_rooms_sp()
 
   print("plan_rooms_sp...")
 
+
   
+  local function spot_is_free(x,y,z, w,h,t)
+ 
+    for xx = x,x+w-1 do
+      for yy = y,y+h-1 do
+        if SEED_MAP[xx][yy] then
+          return false;
+        end
+      end
+    end
+
+    return true;
+  end
+
+  local function assign_spot(x,y,z, w,h,t, room)
+    assert(room)
+    for xx = x,x+w-1 do
+      for yy = y,y+h-1 do
+        if not SEED_MAP[xx][yy] then
+          SEED_MAP[xx][yy] = room
+        end
+      end
+    end
+  end
+
   local function find_spot_for_room(parent, R, conn_Q)
     --> RETURN: room we branched off from (when conn_Q ~= nil)
 
-    for loop = 1,999 do
+    -- FIXME !!!  does not find rooms connected to previous quest (conn_Q)
 
-      local sx = parent.s_low.x + rand_irange(0, parent.s_size.x - R.s_size.x - 1);
-      local sy = parent.s_low.y + rand_irange(0, parent.s_size.y - R.s_size.y - 1);
-      local sz = parent.s_low.z + rand_irange(0, parent.s_size.z - R.s_size.z - 1);
+    local w = R.s_size.x
+    local h = R.s_size.y
+    local t = R.s_size.z
 
-      -- GEE WHIZ ....
+    for loop = 1,9999 do
 
+      local sx = parent.s_low.x + rand_irange(0, parent.s_size.x - w);
+      local sy = parent.s_low.y + rand_irange(0, parent.s_size.y - h);
+      local sz = parent.s_low.z + rand_irange(0, parent.s_size.z - t);
+
+      if spot_is_free(sx,sy,sz, w,h,t) then
+
+        R.s_low  = { x=sx, y=sy, z=sz }
+        R.s_high = { x=sx+w-1, y=sy+h-1, z=sz+t-1 }
+        R.s_size = { x=w, y=h, z=t }
+
+        return nil
+      end
+print("spot not free!", string.format("(%d %d %d)", sx, sy, sz),
+       string.format("(%d %d %d)", w, h, t))
     end
 
-    error("find_spot_for_room: FAILED!")
+show_room_allocation(parent);
+    error("find_spot_for_room: FAILED! " .. w .. "x" .. h)
   end
 
 
@@ -139,16 +211,16 @@ function plan_rooms_sp()
     R.s_size.y = R.s_size.x
     R.s_size.z = 1
 
-    if rand_odds(50) and parent.s_size.x > 7 and parent.s_size.y > 7
+    if rand_odds(50) and parent.s_size.x >= 12 and parent.s_size.y >= 12
     then
       R.container_type = "walk"
-      R.s_size.x = rand_irange(8, parent.s_size.x)
-      R.s_size.y = rand_irange(8, parent.s_size.y)
+      R.s_size.x = rand_irange(6, int(parent.s_size.x/2))
+      R.s_size.y = rand_irange(6, int(parent.s_size.y/2))
     end
 
     local conn_R = find_spot_for_room(parent, R, conn_Q)
 
-    if conn_Q then
+    if false then  --- FIXME  if conn_Q then
       assert(conn_R);
 
       RLINK =
@@ -166,6 +238,10 @@ function plan_rooms_sp()
       add_room(R, Q, nil);
       add_room(R, Q, nil);
     end
+
+    assign_spot(R.s_low.x, R.s_low.y, R.s_low.z,
+                R.s_size.x, R.s_size.y, R.s_size.z, R)
+      
   end
 
 
@@ -191,18 +267,20 @@ function plan_rooms_sp()
 
     container_type = "solid",
 
-    s_low  = { 1,     1,     1 },
-    s_high = { max_W, max_H, 5 },
-    s_size = { max_W, max_H, 5 },
+    s_low  = { x=1,     y=1,     z=1 },
+    s_high = { x=max_W, y=max_H, z=5 },
+    s_size = { x=max_W, y=max_H, z=5 },
   }
 
 
   -- start room
-  add_room(head_room, QUESTS]1], nil)
+  add_room(head_room, QUESTS[1], nil)
 
   for i = 2,#QUESTS do
     add_room(head_room, QUESTS[i], QUESTS[i-1])
   end
+
+  show_room_allocation(head_room)
 
   return head_room
 end
