@@ -23,7 +23,8 @@ require 'a_star'
 require 'engines'
 
 require 'grower'
-require 'oa_dm7'
+require 'test_csg'
+require 'plan3'
 
 
 OB_THEMES["mixed"] =
@@ -516,7 +517,7 @@ function build_cool_shit()
   con.rand_seed(OB_CONFIG.seed * 100)
 
 
--- [[ Quake 3D TEST
+--[[ Quake 3D TEST
   csg2.begin_level("MAP01");
 
   test_grow_3D();
@@ -535,6 +536,10 @@ function build_cool_shit()
 
   do return "ok" end
 --]]
+
+
+  plan_rooms_sp();
+  error("TEST DONE");
 
 
   create_GAME()
