@@ -20,7 +20,9 @@
 function test_csg()
 
 --[[ DOOM
-  local ENTITY   = "1"
+  local PLAYER_E  = "1"
+  local MONSTER_E = "3001"
+  local ITEM_E    = "2003"
 
   local START_F  = "FLAT22"
   local START_W  = "COMPBLUE"
@@ -42,7 +44,9 @@ function test_csg()
 --]]
 
 -- [[ QUAKE 1
-  local ENTITY   = "info_player_start"
+  local PLAYER_E  = "info_player_start"
+  local MONSTER_E = "monster_zombie"
+  local ITEM_E    = "weapon_grenadelauncher"
 
   local START_F  = "tech01_1"
   local START_W  = "tech01_1"
@@ -64,7 +68,9 @@ function test_csg()
 --]]
 
 --[[ OPEN ARENA
-  local ENTITY   = "info_player_deathmatch"
+  local PLAYER_E  = "info_player_deathmatch"
+  local MONSTER_E = "item_armor_combat"
+  local ITEM_E    = "weapon_lightning"
 
   local START_F  = "e7/e7sbrickfloor"
   local START_W  = "e7/e7sbrickfloor"
@@ -92,7 +98,12 @@ function test_csg()
 
   ---===| Entities |===---
 
-  csg2.add_entity(ENTITY, 0, 0, 90)
+  csg2.add_entity(PLAYER_E, 0, 0, 64+25)
+
+  csg2.add_entity(MONSTER_E, -130, 400, 64+25)
+  csg2.add_entity(MONSTER_E,  130, 400, 64+25)
+
+  csg2.add_entity(ITEM_E, 0, 600, 64+25)
 
 
   ---===| Starting Area |===---
@@ -107,6 +118,7 @@ function test_csg()
   {
     { x=-136, y=-72 },
     { x=-136, y= 64 },
+    { x=   0, y= 64 },
     { x= 136, y= 64 },
     { x= 136, y=-72 },
   },
