@@ -21,10 +21,7 @@
 
 void Wolf_Init(void);
 
-bool Wolf_Start(void);
-bool Wolf_Finish(void);
-bool Wolf_Rename(void);
-void Wolf_Tidy(void);
+game_interface_c * Wolf_GameObject(void);
 
 /* ----- File structures ---------------------- */
 

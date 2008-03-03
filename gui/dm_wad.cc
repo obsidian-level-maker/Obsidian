@@ -516,11 +516,6 @@ int num_sidedefs(void)
 //------------------------------------------------------------------------
 
 
-void Doom_Init(void)
-{
-  Image_Setup();
-}
-
 bool Doom_Start(bool is_hexen)
 {
   wad_fp = fopen(TEMP_FILENAME, "wb");
@@ -548,6 +543,8 @@ bool Doom_Start(bool is_hexen)
   WAD_RawWrite(&header, sizeof(header));
 
   WAD_CreateInfoLump();
+
+  Image_Setup();
 
   return true; //OK
 }

@@ -21,11 +21,15 @@
 
 void Doom_Init(void);
 
-bool Doom_Start(bool is_hexen);
-bool Doom_Finish(void);
+typedef enum
+{
+  DMSUB_Doom = 0,
+  DMSUB_Heretic = 1,
+  DMSUB_Hexen = 2
+}
+doom_subtype_e;
 
-bool Doom_Nodes(const char *target_file);
-void Doom_Tidy(void);
+game_interface_c * Doom_GameObject(int subtype = DMSUB_Doom);
 
 
 /* ---- API for the CSG code to use ---- */

@@ -19,14 +19,8 @@
 #ifndef __OBLIGE_QUAKE1_H__
 #define __OBLIGE_QUAKE1_H__
 
-void Quake1_Init(void);
 
-bool Quake1_Start(const char *target_file);
-bool Quake1_Finish(void);
-
-/// bool Quake1_Nodes();
-void Quake1_Tidy(void);
-
+game_interface_c * Quake1_GameObject(void);
 
 
 // internal API

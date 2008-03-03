@@ -207,12 +207,68 @@ void Main_FatalError(const char *msg, ...)
 
 void Build_Cool_Shit()
 {
+  const char *format = Script_GameFormat();
+
+  if (! format || strlen(format) == 0)
+    Main_FatalError("ERROR: missing 'format' for game?!?\n");
+
+  // create game object
+  {
+    if (StringCaseCmp(format, "doom") == 0)
+      game_object = Doom_GameObject();
+
+    else if (StringCaseCmp(format, "heretic") == 0)
+      game_object = Doom_GameObject(DMSUB_Heretic);
+
+    else if (StringCaseCmp(format, "hexen") == 0)
+      game_object = Doom_GameObject(DMSUB_Hexen);
+
+    else if (StringCaseCmp(format, "wolf3d") == 0)
+      game_object = Wolf_GameObject();
+
+    else if (StringCaseCmp(format, "quake1") == 0)
+      game_object = Quake1_GameObject();
+
+    else
+      Main_FatalError("ERROR: unknown format: '%s'\n", format);
+  }
+
+
+  UI_Build *bb_area = main_win->build_box;
+
+  bool was_ok = game_object->Start();
+
+  if (was_ok)
+  {
+    was_ok = Script_Build();
+
+    game_object->Finish(was_ok);
+  }
+
+
+  if (was_ok)
+    bb_area->ProgStatus("Success");
+
+  bb_area->ProgSetButton(false);
+
+  main_win->Locked(false);
+
+  if (main_win->action == UI_MainWin::ABORT)
+    main_win->action = UI_MainWin::NONE;
+
+  game_object = NULL;
+
+
+
+
+  // OLD CODE, REMOVE SOON
+#if (0 == 1)
+
   bool is_wolf  = false;
   bool is_quake = true; //!!!!! FIXME
 
   bool is_hexen = (strcmp(main_win->game_box->game->GetID(), "hexen")  == 0);
 
-  UI_Build *bb_area = main_win->build_box;
 
   char *filename = NULL;
 
@@ -303,6 +359,8 @@ void Build_Cool_Shit()
 
   if (main_win->action == UI_MainWin::ABORT)
     main_win->action = UI_MainWin::NONE;
+
+#endif
 }
 
 
@@ -341,16 +399,17 @@ int main(int argc, char **argv)
   LogPrintf("working_path: [%s]\n",   working_path);
   LogPrintf("install_path: [%s]\n\n", install_path);
 
+  // create directory for temporary files
+  FileMakeDir("temp");
+
   // load icons for file chooser
 #ifndef WIN32
   Fl_File_Icon::load_system_icons();
 #endif
 
   Script_Init();
-  Doom_Init();
   CSG2_Init();
   Wolf_Init();
-  Quake1_Init();
 
   Default_Location();
 
