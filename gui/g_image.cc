@@ -281,6 +281,7 @@ static int slime_to_blood_pairs[] =
 static byte pixel_to_doom[256];
 static byte pixel_to_heretic[256];
 static byte pixel_to_hexen[256];
+static byte pixel_to_quake1[256];
 
 static int FindColor(const byte *palette, const byte *col)
 {
@@ -334,6 +335,7 @@ static void CreateMappingTables(void)
     pixel_to_doom   [i] = i; // already in DOOM palette
     pixel_to_heretic[i] = FindColor(heretic_palette, doom_palette + i*3);
     pixel_to_hexen  [i] = FindColor(  hexen_palette, doom_palette + i*3);
+    pixel_to_quake1 [i] = FindColor( quake1_palette, doom_palette + i*3);
   }
 }
 
