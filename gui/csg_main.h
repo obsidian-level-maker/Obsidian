@@ -362,11 +362,6 @@ extern std::vector<merge_gap_c *>     mug_gaps;
 
 void CSG2_Init(void);
 
-void CSG2_SetGame(csg2_game_interface_c *gm_ifc);
-
-void CSG2_BeginLevel(void);
-void CSG2_EndLevel(void);
-
 void CSG2_MergeAreas(void);
 
 void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
@@ -375,7 +370,6 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
 void CSG2_MakeMiniMap(void);
 
 void CSG2_FreeMerges(void);
-void CSG2_FreeAll(void);
 
 #endif /* __OBLIGE_CSG_MAIN_H__ */
 

@@ -48,11 +48,10 @@ std::vector<merge_segment_c *> mug_segments;
 std::vector<merge_region_c *>  mug_regions;
 
 
-static csg2_game_interface_c *game_interface;
-
-
 static int cur_poly_time;
 
+static void CSG2_BeginLevel(void);
+static void CSG2_EndLevel(void);
 
 
 
@@ -491,9 +490,12 @@ namespace csg2
 //
 int begin_level(lua_State *L)
 {
-  SYS_ASSERT(game_interface);
+  // call our own initialisation function first
+  CSG2_BeginLevel();
 
-  game_interface->BeginLevel();
+  SYS_ASSERT(game_object);
+
+  game_object->BeginLevel();
 
   return 0;
 }
@@ -503,9 +505,12 @@ int begin_level(lua_State *L)
 //
 int end_level(lua_State *L)
 {
-  SYS_ASSERT(game_interface);
+  SYS_ASSERT(game_object);
 
-  game_interface->EndLevel();
+  game_object->EndLevel();
+
+  // call our own termination function afterwards
+  CSG2_EndLevel();
 
   return 0;
 }
@@ -518,9 +523,9 @@ int level_prop(lua_State *L)
   const char *key   = luaL_checkstring(L,1);
   const char *value = luaL_checkstring(L,2);
 
-  SYS_ASSERT(game_interface);
+  SYS_ASSERT(game_object);
 
-  game_interface->LevelProp(key, value);
+  game_object->LevelProp(key, value);
 
   return 0;
 }
@@ -624,25 +629,6 @@ void CSG2_Init(void)
 }
 
 
-void CSG2_SetGame(csg2_game_interface_c *gm_ifc)
-{
-  game_interface = gm_ifc;
-}
-
-
-void CSG2_BeginLevel(void)
-{
-  cur_poly_time = 0;
-}
-
-void CSG2_EndLevel(void)
-{
-  // FIXME: free all_polys
-
-  // FIXME: free all_merges
-}
-
-
 void CSG2_FreeMerges(void)
 {
   unsigned int k;
@@ -680,6 +666,18 @@ void CSG2_FreeAll(void)
   all_polys.clear();
   all_entities.clear();
 }
+
+
+void CSG2_BeginLevel(void)
+{
+  cur_poly_time = 0;
+}
+
+void CSG2_EndLevel(void)
+{
+  CSG2_FreeAll();
+}
+
 
 
 //--- editor settings ---
