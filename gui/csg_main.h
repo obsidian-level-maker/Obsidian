@@ -356,9 +356,24 @@ public:
   virtual ~csg2_game_interface_c()
   { }
 
+  /** MAIN **/
+
+  virtual bool Start() = 0;
+  // this selects an output filename or directory and prepares
+  // for building a set of levels.  Returns false if an error
+  // occurs (or the user simply Cancel'd).
+
+  virtual bool Finish(bool build_ok) = 0;
+  // this is called after all levels are done.  The 'build_ok'
+  // value is the result from the LUA script, and is false if
+  // an error occurred or the user clicked Abort.  For DOOM
+  // this will run glBSP node builder, for QUAKE it will put
+  // all the BSP files into the final PAK file.
+
+  /** CSG2 **/
+
   virtual void BeginLevel() = 0;
   virtual void EndLevel()   = 0;
-
   virtual void LevelProp(const char *key, const char *value) = 0;
 };
 
