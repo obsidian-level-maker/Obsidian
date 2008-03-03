@@ -471,6 +471,7 @@ void Script_LoadFromDir(const char *subdir)
   LogPrintf("\n");
 }
 
+
 void Script_Load(void)
 {
   int status = luaL_loadstring(LUA_ST, "require 'oblige'");
@@ -591,6 +592,22 @@ static bool Script_DoRun(const char *func_name, int nresult, const char **params
   return (status == 0) ? true : false;
 }
 
+
+const char * Script_GameFormat(void)
+{
+  if (! Script_DoRun("ob_game_format", 1))
+    return NULL;
+
+  const char *res = lua_tolstring(LUA_ST, -1, NULL);
+
+  if (res)
+    res = StringDup(res);
+
+  // remove result from lua stack
+  lua_pop(LUA_ST, 1);
+
+  return res;
+}
 
 
 bool Script_Build(void)

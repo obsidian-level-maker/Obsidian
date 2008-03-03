@@ -504,6 +504,15 @@ function ob_init()
 end
 
 
+function ob_game_format()
+
+  assert(OB_CONFIG)
+  assert(OB_CONFIG.game)
+
+  return OB_GAMES[OB_CONFIG.game]["format"]
+end
+
+
 function build_cool_shit()
  
   assert(OB_CONFIG)

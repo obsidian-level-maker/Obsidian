@@ -31,6 +31,8 @@ int Script_RegisterLib(const char *name, const luaL_Reg *reg);
 const char * Script_GetConfig(const char *key);
 void         Script_SetConfig(const char *key, const char *value);
 
+const char * Script_GameFormat(void);
+
 bool Script_Build(void);
 
 ///---void Script_UpdateGame(void);
