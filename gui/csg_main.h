@@ -345,6 +345,24 @@ public:
 };
 
 
+class csg2_game_interface_c
+{
+  /* this is an abstract base class */
+
+public:
+  csg2_game_interface_c()
+  { }
+
+  virtual ~csg2_game_interface_c()
+  { }
+
+  virtual void BeginLevel() = 0;
+  virtual void EndLevel()   = 0;
+
+  virtual void LevelProp(const char *key, const char *value) = 0;
+};
+
+
 /* ----- VARIABLES ----- */
 
 extern std::vector<area_info_c *> all_areas;
@@ -361,6 +379,8 @@ extern std::vector<merge_gap_c *>     mug_gaps;
 /* ----- FUNCTIONS ----- */
 
 void CSG2_Init(void);
+
+void CSG2_SetGame(csg2_game_interface_c *gm_ifc);
 
 void CSG2_BeginLevel(void);
 void CSG2_EndLevel(void);

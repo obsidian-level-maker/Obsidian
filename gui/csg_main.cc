@@ -48,7 +48,12 @@ std::vector<merge_segment_c *> mug_segments;
 std::vector<merge_region_c *>  mug_regions;
 
 
+static csg2_game_interface_c *game_interface;
+
+
 static int cur_poly_time;
+
+
 
 
 slope_plane_c::slope_plane_c() :
@@ -482,6 +487,45 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 namespace csg2
 {
 
+// LUA: begin_level(name)
+//
+int begin_level(lua_State *L)
+{
+  SYS_ASSERT(game_interface);
+
+  game_interface->BeginLevel();
+
+  return 0;
+}
+
+
+// LUA: end_level()
+//
+int end_level(lua_State *L)
+{
+  SYS_ASSERT(game_interface);
+
+  game_interface->EndLevel();
+
+  return 0;
+}
+
+
+// LUA: level_prop()
+//
+int level_prop(lua_State *L)
+{
+  const char *key   = luaL_checkstring(L,1);
+  const char *value = luaL_checkstring(L,2);
+
+  SYS_ASSERT(game_interface);
+
+  game_interface->LevelProp(key, value);
+
+  return 0;
+}
+
+
 // LUA: add_brush(info, loop, z1, z2)
 //
 // info is a table:
@@ -563,8 +607,9 @@ int add_entity(lua_State *L)
 
 static const luaL_Reg csg_lib[] =
 {
-  { "begin_level", Q1_begin_level },  //!!!!! FIXME TEST CRUD
-  { "end_level",   Q1_end_level   },
+  { "begin_level", csg2::begin_level },
+  { "end_level",   csg2::end_level   },
+  { "level_prop",  csg2::level_prop  },
 
   { "add_brush",   csg2::add_brush  },
   { "add_entity",  csg2::add_entity },
@@ -577,6 +622,13 @@ void CSG2_Init(void)
 {
   Script_RegisterLib("csg2", csg_lib);
 }
+
+
+void CSG2_SetGame(csg2_game_interface_c *gm_ifc)
+{
+  game_interface = gm_ifc;
+}
+
 
 void CSG2_BeginLevel(void)
 {
