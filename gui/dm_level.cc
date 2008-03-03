@@ -22,8 +22,8 @@
 
 #include <algorithm>
 
-#include "main.h"
 #include "lib_util.h"
+#include "main.h"
 
 #include "csg_main.h"
 #include "dm_level.h"

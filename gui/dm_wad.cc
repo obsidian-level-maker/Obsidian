@@ -23,8 +23,8 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
-
 #include "main.h"
+
 #include "g_image.h"
 #include "g_lua.h"
 
@@ -335,7 +335,7 @@ int Hexen_GrabArgs(lua_State *L, u8_t *args, int stack_pos)
 
 // LUA: begin_level(name)
 //
-int DM_begin_level(lua_State *L)
+int DM_begin_level(lua_State *L)   // FIXME: doom_game_interface_c::BeginLevel
 {
   const char *name = luaL_checkstring(L,1);
 
@@ -346,8 +346,6 @@ int DM_begin_level(lua_State *L)
   sector_lump  = new lump_c();
   linedef_lump = new lump_c();
   sidedef_lump = new lump_c();
-
-  CSG2_BeginLevel();
 
   return 0;
 }

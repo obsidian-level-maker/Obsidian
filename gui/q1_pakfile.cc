@@ -23,10 +23,9 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+#include "main.h"
 
 #include "q1_pakfile.h"
-
-#include "main.h"
 
 
 //------------------------------------------------------------------------

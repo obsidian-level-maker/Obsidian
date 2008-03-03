@@ -23,6 +23,7 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+#include "main.h"
 
 #include "csg_main.h"
 #include "csg_quake.h"
@@ -32,8 +33,6 @@
 #include "q1_main.h"
 #include "q1_pakfile.h"
 #include "q1_structs.h"
-
-#include "main.h"
 
 
 
@@ -935,10 +934,8 @@ static void ClearLumps(void)
   }
 }
 
-int Q1_begin_level(lua_State *L)
+int Q1_begin_level(lua_State *L)  // FIXME !!!! quake1_game_interface_c::BeginLevel
 {
-  CSG2_BeginLevel();
-
   return 0;
 }
 
@@ -956,7 +953,6 @@ fprintf(stderr, "Q1_end_level\n");
 
   Quake1_BuildBSP();
 
-///???  CSG2_EndLevel();
 
   return 0;
 }

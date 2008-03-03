@@ -19,10 +19,10 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 
-#include "g_image.h"
-
 #include "lib_util.h"
 #include "main.h"
+
+#include "g_image.h"
 
 
 // include the raw image data

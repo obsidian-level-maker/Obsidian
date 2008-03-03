@@ -24,9 +24,10 @@
 #include "lib_file.h"
 #include "lib_util.h"
 
+#include "main.h"
+
 #include "wolf_out.h"
 #include "g_lua.h"
-#include "main.h"
 
 
 #define TEMP_GAMEFILE  "GAMEMAPS.tmp"

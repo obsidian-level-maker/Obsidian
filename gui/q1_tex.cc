@@ -25,6 +25,8 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+#include "main.h"
+
 #include "ui_chooser.h"
 
 #include "g_image.h"
@@ -32,8 +34,6 @@
 #include "q1_main.h"
 #include "q1_structs.h"
 #include "q1_pakfile.h"
-
-#include "main.h"
 
 
 // WAD2_OpenWrite

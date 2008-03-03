@@ -23,13 +23,12 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+#include "main.h"
 
 #include "csg_main.h"
 
 #include "q1_main.h"
 #include "q1_structs.h"
-
-#include "main.h"
 
 
 class qLightmap_c

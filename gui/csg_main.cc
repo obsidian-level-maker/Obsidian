@@ -23,10 +23,11 @@
 
 #include <algorithm>
 
-#include "csg_main.h"
-#include "g_lua.h"
 #include "lib_util.h"
 #include "main.h"
+
+#include "csg_main.h"
+#include "g_lua.h"
 #include "ui_dialog.h"
 
 

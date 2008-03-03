@@ -20,9 +20,10 @@
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 
-#include "dm_glbsp.h"
 #include "lib_util.h"
 #include "main.h"
+
+#include "dm_glbsp.h"
 
 
 // GLBSP interface header
