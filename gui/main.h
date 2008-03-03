@@ -42,7 +42,7 @@ public:
   virtual ~game_interface_c()
   { }
 
-  /** MAIN **/
+  /*** MAIN ***/
 
   virtual bool Start() = 0;
   // this selects an output filename or directory and prepares
@@ -55,8 +55,11 @@ public:
   // an error occurred or the user clicked Abort.  For DOOM
   // this will run glBSP node builder, for QUAKE it will put
   // all the BSP files into the final PAK file.
+  //
+  // Returns false on error.  Note that Finish() is never
+  // called if Start() fails.
 
-  /** CSG2 **/
+  /*** CSG2 ***/
 
   virtual void BeginLevel() = 0;
   // this will set things up in preparation for the next level

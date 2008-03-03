@@ -242,7 +242,8 @@ void Build_Cool_Shit()
   {
     was_ok = Script_Build();
 
-    game_object->Finish(was_ok);
+    if (! game_object->Finish(was_ok))
+      was_ok = false;
   }
 
 

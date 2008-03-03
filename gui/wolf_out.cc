@@ -448,5 +448,50 @@ void Wolf_Tidy(void)
   FileDelete(TEMP_HEADFILE);
 }
 
+
+
+class wolf_game_interface_c : public game_interface_c
+{
+private:
+
+
+public:
+  wolf_game_interface_c()
+  { }
+
+  ~wolf_game_interface_c()
+  { }
+
+  bool Start()
+  {
+    return false;
+  }
+
+  bool Finish(bool build_ok)
+  {
+    return false;
+  }
+
+  /** CSG2 **/
+
+  void BeginLevel()
+  {
+  }
+
+  void LevelProp(const char *key, const char *value)
+  {
+  }
+
+  void EndLevel()
+  {
+  }
+};
+
+
+game_interface_c * Wolf_GameObject(void)
+{
+  return new wolf_game_interface_c();
+}
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

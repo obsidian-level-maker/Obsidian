@@ -609,5 +609,50 @@ void Doom_Tidy(void)
   FileDelete(TEMP_FILENAME);
 }
 
+
+
+class doom_game_interface_c : public game_interface_c
+{
+private:
+
+
+public:
+  doom_game_interface_c()
+  { }
+
+  ~doom_game_interface_c()
+  { }
+
+  bool Start()
+  {
+    return false;
+  }
+
+  bool Finish(bool build_ok)
+  {
+    return false;
+  }
+
+  /** CSG2 **/
+
+  void BeginLevel()
+  {
+  }
+
+  void LevelProp(const char *key, const char *value)
+  {
+  }
+
+  void EndLevel()
+  {
+  }
+};
+
+
+game_interface_c * Doom_GameObject(int subtype)
+{
+  return new doom_game_interface_c();
+}
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

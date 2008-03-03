@@ -1067,5 +1067,52 @@ void Quake1_Tidy(void)
 {
 }
 
+
+
+
+class quake1_game_interface_c : public game_interface_c
+{
+private:
+
+
+public:
+  quake1_game_interface_c()
+  { }
+
+  ~quake1_game_interface_c()
+  { }
+
+  bool Start()
+  {
+    return false;
+  }
+
+  bool Finish(bool build_ok)
+  {
+    return false;
+  }
+
+  /** CSG2 **/
+
+  void BeginLevel()
+  {
+  }
+
+  void LevelProp(const char *key, const char *value)
+  {
+  }
+
+  void EndLevel()
+  {
+  }
+};
+
+
+game_interface_c * Quake1_GameObject(void)
+{
+  return new quake1_game_interface_c();
+}
+
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
