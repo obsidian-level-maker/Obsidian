@@ -48,6 +48,9 @@ const char *working_path = NULL;
 const char *install_path = NULL;
 
 
+game_interface_c * game_object = NULL;
+
+
 // skip inclusion of the large csg_main.h header
 extern void CSG2_Init(void);
 

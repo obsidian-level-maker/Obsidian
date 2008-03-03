@@ -75,8 +75,9 @@ public:
   // but before the CSG2 performs a cleanup.  Typically the
   // game-specific code will call CSG2_MergeAreas() and convert
   // the result to the game-specific level format.
-
 };
+
+extern game_interface_c * game_object;
 
 
 #endif /* __OBLIGE_MAIN_H__ */
