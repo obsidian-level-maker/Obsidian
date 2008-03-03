@@ -30,6 +30,55 @@ void Main_FatalError(const char *msg, ...);
 
 void Main_Ticker();
 
+
+class game_interface_c
+{
+  /* this is an abstract base class */
+
+public:
+  game_interface_c()
+  { }
+
+  virtual ~game_interface_c()
+  { }
+
+  /** MAIN **/
+
+  virtual bool Start() = 0;
+  // this selects an output filename or directory and prepares
+  // for building a set of levels.  Returns false if an error
+  // occurs (or the user simply Cancel'd).
+
+  virtual bool Finish(bool build_ok) = 0;
+  // this is called after all levels are done.  The 'build_ok'
+  // value is the result from the LUA script, and is false if
+  // an error occurred or the user clicked Abort.  For DOOM
+  // this will run glBSP node builder, for QUAKE it will put
+  // all the BSP files into the final PAK file.
+
+  /** CSG2 **/
+
+  virtual void BeginLevel() = 0;
+  // this will set things up in preparation for the next level
+  // being built.  It is called after the CSG2 code sets itself
+  // up and hence could alter some CSG2 parameters, other than
+  // that there is lttle need to do anything here.
+
+  virtual void LevelProp(const char *key, const char *value) = 0;
+  // called before any level building to set a level-specific
+  // property, especially the "level_name" property which is
+  // required by most games (like DOOM and QUAKE).  Unknown
+  // properties are ignored.
+
+  virtual void EndLevel() = 0;
+  // called when all the brushes and entities have been added
+  // but before the CSG2 performs a cleanup.  Typically the
+  // game-specific code will call CSG2_MergeAreas() and convert
+  // the result to the game-specific level format.
+
+};
+
+
 #endif /* __OBLIGE_MAIN_H__ */
 
 //--- editor settings ---
