@@ -50,6 +50,9 @@ namespace wad
                    int type,  int flags, int tag,
                    const byte *args);
 
+  void add_thing(int x, int y, int h, int type, int angle, int options,
+                 int tid, byte special, const byte *args);
+
   int num_vertexes(void);
   int num_sectors(void);
   int num_sidedefs(void);

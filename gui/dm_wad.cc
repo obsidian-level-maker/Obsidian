@@ -434,6 +434,48 @@ void add_linedef(int vert1, int vert2, int side1, int side2,
 }
 
 
+void add_thing(int x, int y, int h, int type, int angle, int options,
+               int tid, byte special, const byte *args)
+{
+  if (! wad_hexen)
+  {
+    raw_thing_t thing;
+
+    thing.x = LE_S16(x);
+    thing.y = LE_S16(y);
+
+    thing.type    = LE_U16(type);
+    thing.angle   = LE_S16(angle);
+    thing.options = LE_U16(options);
+
+    WAD_Append(thing_lump, &thing, sizeof(thing));
+  }
+  else  // Hexen format
+  {
+    raw_hexen_thing_t thing;
+
+    // clear unused fields (tid, specials)
+    memset(&thing, 0, sizeof(thing));
+
+    thing.x = LE_S16(x);
+    thing.y = LE_S16(y);
+
+    thing.height  = LE_S16(h);
+    thing.type    = LE_U16(type);
+    thing.angle   = LE_S16(angle);
+    thing.options = LE_U16(options);
+
+    thing.tid     = LE_S16(tid);
+    thing.special = special;
+
+    if (args)
+      memcpy(thing.args, args, 5);
+
+    WAD_Append(thing_lump, &thing, sizeof(thing));
+  }
+}
+
+
 int num_vertexes(void)
 {
   return vertex_lump->size() / sizeof(raw_vertex_t);
