@@ -547,8 +547,8 @@ function build_cool_shit()
 --]]
 
 
-  plan_rooms_sp();
-  error("TEST DONE");
+plan_rooms_sp();
+do return "ok" end
 
 
   create_GAME()
