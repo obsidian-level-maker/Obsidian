@@ -345,8 +345,11 @@ function dummy_builder(Z)
 
     if not R.zone_type then return R, x, y end
 
-    return zone_content(R, x - R.gx + 1, y - R.gy + 1)
+    local CH = zone_content(R, x - R.gx + 1, y - R.gy + 1)
+
+    return CH or R
   end
+
 
   local function get_wall_coords(dir, x1,y1, x2,y2)
   
@@ -514,6 +517,8 @@ function dummy_builder(Z)
 
     if R.is_start then
       csg2.add_entity("1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+    else
+      csg2.add_entity("2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
   end
 
@@ -527,6 +532,8 @@ function dummy_builder(Z)
       end
     end
   end
+
+  csg2.end_level()
 end
 
 
@@ -579,7 +586,6 @@ function plan_rooms_sp()
 
     for xx = x, x+W-1 do
       for yy = y, y+H-1 do
-print(parent, parent.grid, xx, yy)
         parent.grid[xx][yy] = Z
       end
     end
