@@ -624,6 +624,8 @@ void doom_game_interface_c::LevelProp(const char *key, const char *value)
 
 void doom_game_interface_c::EndLevel()
 {
+  CSG2_WriteDoom();
+
   SYS_ASSERT(level_name);
 
   WAD_WriteLump(level_name, NULL, 0);
