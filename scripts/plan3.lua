@@ -343,11 +343,14 @@ function dummy_builder(Z)
 
     if not R then return nil end
 
-    if not R.zone_type then return R, x, y end
+    if R.zone_type then
 
-    local CH = zone_content(R, x - R.gx + 1, y - R.gy + 1)
+      local CH, lx, ly = zone_content(R, x - R.gx + 1, y - R.gy + 1)
 
-    return CH or R
+      if CH then return CH, lx, ly end
+    end
+
+    return R, x, y
   end
 
 
@@ -432,17 +435,21 @@ function dummy_builder(Z)
       for dir = 2,8,2 do
         local dx,dy = dir_to_delta(dir)
 
-        local nx = R.gx + dx
-        local ny = R.gy + dy
+        local nx = lx - R.gx + 1 + dx
+        local ny = ly - R.gy + 1 + dy
 
-        if nx < 1 or nx > R.parent.grid.w or
-           ny < 1 or ny > R.parent.grid.h
+
+        if nx < 1 or nx > R.grid.w or
+           ny < 1 or ny > R.grid.h
         then
-          if not R.parent then
+          if R.parent.zone_type == "solid" or
+             (lx+dx) < 1 or (lx+dx) > R.parent.grid.w or
+             (ly+dy) < 1 or (ly+dy) > R.parent.grid.h
+          then
             walls[dir] = "solid"
           end
         else
-          local N = R.parent.grid[nx][ny]
+          local N = R.grid[nx][ny]
 
           -- do nothing (if N is a normal room, his responsibility to make the wall)
         end
@@ -459,8 +466,8 @@ function dummy_builder(Z)
       for dir = 2,8,2 do
         local dx,dy = dir_to_delta(dir)
 
-        local nx = R.gx + dx
-        local ny = R.gy + dy
+        local nx = lx + dx
+        local ny = ly + dy
 
         if nx < 1 or nx > R.parent.grid.w or
            ny < 1 or ny > R.parent.grid.h
@@ -471,7 +478,9 @@ function dummy_builder(Z)
           if N and (N.prev == R or R.prev == N) then
             walls[dir] = "arch"
           else
-            walls[dir] = "solid"
+            if (R.parent.zone_type == "solid") or rand_odds(75) then
+              walls[dir] = "solid"
+            end
           end
         end
       end
