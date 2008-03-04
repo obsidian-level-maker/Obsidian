@@ -23,7 +23,9 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+
 #include "main.h"
+#include "ui_chooser.h"
 
 #include "g_image.h"
 #include "g_lua.h"
@@ -333,69 +335,6 @@ int Hexen_GrabArgs(lua_State *L, u8_t *args, int stack_pos)
 //------------------------------------------------------------------------
 
 
-// LUA: begin_level(name)
-//
-int DM_begin_level(lua_State *L)   // FIXME: doom_game_interface_c::BeginLevel
-{
-  const char *name = luaL_checkstring(L,1);
-
-  level_name = strdup(name);
-
-  thing_lump   = new lump_c();
-  vertex_lump  = new lump_c();
-  sector_lump  = new lump_c();
-  linedef_lump = new lump_c();
-  sidedef_lump = new lump_c();
-
-  return 0;
-}
-
-// LUA: end_level()
-//
-int DM_end_level(lua_State *L)
-{
-//  CSG2_TestQuake();
-
-// Q1_end_level(L);
-
-Quake1_CreateClipHull(1, NULL);
-CSG2_Doom_TestRegions();
-
-///!!!  CSG2_WriteDoom();
-
-///!!!  CSG2_EndLevel();
-
-
-  SYS_ASSERT(level_name);
-
-  WAD_WriteLump(level_name, NULL, 0);
-
-  WAD_WriteLump("THINGS",   thing_lump);
-  WAD_WriteLump("LINEDEFS", linedef_lump);
-  WAD_WriteLump("SIDEDEFS", sidedef_lump);
-  WAD_WriteLump("VERTEXES", vertex_lump);
-
-  WAD_WriteLump("SEGS",     NULL, 0);
-  WAD_WriteLump("SSECTORS", NULL, 0);
-  WAD_WriteLump("NODES",    NULL, 0);
-  WAD_WriteLump("SECTORS",  sector_lump);
-
-  if (wad_hexen)
-    WAD_WriteBehavior();
-
-  // free data
-  delete thing_lump;   thing_lump   = NULL;
-  delete sector_lump;  sector_lump  = NULL;
-  delete vertex_lump;  vertex_lump  = NULL;
-  delete sidedef_lump; sidedef_lump = NULL;
-  delete linedef_lump; linedef_lump = NULL;
-
-  delete level_name; level_name = NULL;
-
-  return 0;
-}
-
-
 namespace wad
 {
 
@@ -614,44 +553,109 @@ void Doom_Tidy(void)
 class doom_game_interface_c : public game_interface_c
 {
 private:
+  int sub_type;
 
+  const char *filename;
 
 public:
-  doom_game_interface_c()
+  doom_game_interface_c(int _st) : sub_type(_st), filename(NULL)
   { }
 
   ~doom_game_interface_c()
-  { }
-
-  bool Start()
   {
-    return false;
+    StringFree(filename);
   }
 
-  bool Finish(bool build_ok)
-  {
-    return false;
-  }
+  bool Start();
+  bool Finish(bool build_ok);
 
-  /** CSG2 **/
-
-  void BeginLevel()
-  {
-  }
-
-  void LevelProp(const char *key, const char *value)
-  {
-  }
-
-  void EndLevel()
-  {
-  }
+  void BeginLevel();
+  void LevelProp(const char *key, const char *value);
+  void EndLevel();
 };
+
+
+bool doom_game_interface_c::Start()
+{
+  filename = Select_Output_File();
+
+  if (! filename)  // cancelled
+    return false;
+
+  return Doom_Start(sub_type == DMSUB_Hexen);
+}
+
+bool doom_game_interface_c::Finish(bool build_ok)
+{
+  if (! build_ok)
+    return false;
+
+  if (! Doom_Finish())
+    return false;
+
+  if (! Doom_Nodes(filename))
+    return false;
+
+  Doom_Tidy();
+
+  return true;
+}
+
+void doom_game_interface_c::BeginLevel()
+{
+  thing_lump   = new lump_c();
+  vertex_lump  = new lump_c();
+  sector_lump  = new lump_c();
+  linedef_lump = new lump_c();
+  sidedef_lump = new lump_c();
+}
+
+void doom_game_interface_c::LevelProp(const char *key, const char *value)
+{
+  if (StringCaseCmp(key, "level_name") == 0)
+  {
+    level_name = StringDup(value);
+  }
+  else
+  {
+    fprintf(stderr, "WARNING: Doom: unknown level prop: %s=%s\n", key, value);
+  }
+}
+
+void doom_game_interface_c::EndLevel()
+{
+  SYS_ASSERT(level_name);
+
+  WAD_WriteLump(level_name, NULL, 0);
+
+  WAD_WriteLump("THINGS",   thing_lump);
+  WAD_WriteLump("LINEDEFS", linedef_lump);
+  WAD_WriteLump("SIDEDEFS", sidedef_lump);
+  WAD_WriteLump("VERTEXES", vertex_lump);
+
+  WAD_WriteLump("SEGS",     NULL, 0);
+  WAD_WriteLump("SSECTORS", NULL, 0);
+  WAD_WriteLump("NODES",    NULL, 0);
+  WAD_WriteLump("SECTORS",  sector_lump);
+
+  if (sub_type == DMSUB_Hexen)
+    WAD_WriteBehavior();
+
+  // free data
+  delete thing_lump;   thing_lump   = NULL;
+  delete sector_lump;  sector_lump  = NULL;
+  delete vertex_lump;  vertex_lump  = NULL;
+  delete sidedef_lump; sidedef_lump = NULL;
+  delete linedef_lump; linedef_lump = NULL;
+
+  StringFree(level_name);
+  level_name = NULL;
+}
 
 
 game_interface_c * Doom_GameObject(int subtype)
 {
-  return new doom_game_interface_c();
+  return new doom_game_interface_c(subtype);
 }
 
 //--- editor settings ---
