@@ -289,7 +289,7 @@ end
 
 ----------------------------------------------------------------
 
-function dump_zone(Z)
+function print_zone(Z)
 
   print("zone:", Z.grid.w, "by", Z.grid.h)
 
@@ -328,6 +328,204 @@ function dump_zone(Z)
 
     print("> " .. line)
 --  print("------")
+  end
+end
+
+
+function dummy_builder(Z)
+
+  csg2.begin_level()
+  csg2.level_prop("level_name", "MAP01");
+
+
+  local function zone_content(ZZ, x, y)
+    local R = ZZ.grid[x][y]
+
+    if not R then return nil end
+
+    if not R.zone_type then return R, x, y end
+
+    return zone_content(R, x - R.gx + 1, y - R.gy + 1)
+  end
+
+  local function get_wall_coords(dir, x1,y1, x2,y2)
+  
+    if dir == 4 then
+      return
+      {
+        { x = x1   ,  y = y1 },
+        { x = x1   ,  y = y2 },
+        { x = x1+16,  y = y2 },
+        { x = x1+16,  y = y1 },
+      }
+    end
+
+    if dir == 6 then
+      return
+      {
+        { x = x2   ,  y = y2 },
+        { x = x2   ,  y = y1 },
+        { x = x2-16,  y = y1 },
+        { x = x2-16,  y = y2 },
+      }
+    end
+
+    if dir == 2 then
+      return
+      {
+        { x = x2, y = y1 },
+        { x = x1, y = y1 },
+        { x = x1, y = y1+16 },
+        { x = x2, y = y1+16 },
+      }
+    end
+
+    if dir == 8 then
+      return
+      {
+        { x = x1, y = y2    },
+        { x = x2, y = y2    },
+        { x = x2, y = y2-16 },
+        { x = x1, y = y2-16 },
+      }
+    end
+
+    error("BAD SIDE for get_seed_wall: " .. tostring(side))
+  end
+
+
+  local function build_room(R, x, y, lx, ly)
+    
+    local x1 = x * 256
+    local y1 = y * 256
+    local x2 = x1 + 256
+    local y2 = y1 + 256
+
+    local z1, z2
+    local f_tex, c_tex, w_tex
+
+    local walls = {}
+
+    if R.zone_type then
+
+      if R.zone_type == "walk" then
+        z1 = 0
+        z2 = 256
+        f_tex = "GRASS1"
+        c_tex = "F_SKY1"
+        w_tex = "ZIMMER8"
+
+      elseif R.zone_type == "view" then
+        z1 = -128
+        z2 = 256
+        f_tex = "LAVA1"
+        c_tex = "F_SKY1"
+        w_tex = "ASHWALL3"
+
+      else
+        error("UNKNOWN ZONE TYPE: " .. tostring(R.zone_type))
+      end
+
+      for dir = 2,8,2 do
+        local dx,dy = dir_to_delta(dir)
+
+        local nx = R.gx + dx
+        local ny = R.gy + dy
+
+        if nx < 1 or nx > R.parent.grid.w or
+           ny < 1 or ny > R.parent.grid.h
+        then
+          if not R.parent then
+            walls[dir] = "solid"
+          end
+        else
+          local N = R.parent.grid[nx][ny]
+
+          -- do nothing (if N is a normal room, his responsibility to make the wall)
+        end
+      end
+
+    else  -- normal room
+
+      z1 = 24
+      z2 = 160
+      f_tex = "FLAT1"
+      c_tex = "TLITE6_6"
+      w_tex = "METAL2"
+
+      for dir = 2,8,2 do
+        local dx,dy = dir_to_delta(dir)
+
+        local nx = R.gx + dx
+        local ny = R.gy + dy
+
+        if nx < 1 or nx > R.parent.grid.w or
+           ny < 1 or ny > R.parent.grid.h
+        then
+          walls[dir] = "solid"
+        else
+          local N = R.parent.grid[nx][ny]
+          if N and (N.prev == R or R.prev == N) then
+            walls[dir] = "arch"
+          else
+            walls[dir] = "solid"
+          end
+        end
+      end
+    end
+
+        
+    csg2.add_brush(
+    {
+      t_face = { texture=f_tex },
+      b_face = { texture=f_tex },
+      w_face = { texture=f_tex },
+    },
+    {
+      { x=x1, y=y1 }, { x=x1, y=y2 },
+      { x=x2, y=y2 }, { x=x2, y=y1 },
+    },
+    -2000, z1);
+      
+    csg2.add_brush(
+    {
+      t_face = { texture=c_tex },
+      b_face = { texture=c_tex },
+      w_face = { texture=c_tex },
+    },
+    {
+      { x=x1, y=y1 }, { x=x1, y=y2 },
+      { x=x2, y=y2 }, { x=x2, y=y1 },
+    },
+    z2, 2000)
+      
+    for dir = 2,8,2 do
+      if walls[dir] == "solid" then
+        csg2.add_brush(
+        {
+          t_face = { texture=w_tex },
+          b_face = { texture=w_tex },
+          w_face = { texture=w_tex },
+        },
+        get_wall_coords(dir, x1,y1, x2,y2),
+        -2000, 2000)
+      end
+    end
+
+    if R.is_start then
+      csg2.add_entity("1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+    end
+  end
+
+
+  for y = 1, Z.grid.h do
+    for x = 1, Z.grid.w do
+      local R, lx, ly = zone_content(Z, x, y)
+
+      if R then
+        build_room(R, x, y, lx, ly)
+      end
+    end
   end
 end
 
@@ -516,6 +714,8 @@ print("NO BRANCH POSSIBLE @ ", R.gx, R.gy)
 
   local start = create_room(MAP_ZONE, QUESTS[1])
 
+  start.is_start = true
+
 
   for zzz,Q in ipairs(QUESTS) do
 
@@ -531,6 +731,8 @@ print("NO BRANCH POSSIBLE @ ", R.gx, R.gy)
     end
   end
 
-  dump_zone(MAP_ZONE)
+  print_zone(MAP_ZONE)
+
+  dummy_builder(MAP_ZONE)
 end
 
