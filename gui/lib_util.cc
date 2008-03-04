@@ -130,7 +130,10 @@ char *StringPrintf(const char *str, ...)
 
 void StringFree(const char *str)
 {
-  free((void*) str);
+  if (str)
+  {
+    free((void*) str);
+  }
 }
 
 
