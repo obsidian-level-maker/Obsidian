@@ -827,6 +827,30 @@ static void WriteLinedefs(void)
 }
 
 
+static void WriteThings(void)
+{
+  for (unsigned int j = 0; j < all_entities.size(); j++)
+  {
+    entity_info_c *E = all_entities[j];
+
+    int type = atoi(E->name.c_str());
+
+    if (type <= 0)
+      continue; // FIXME: WARNING
+
+    // FIXME!!!! thing height
+    double h = 0;
+
+    wad::add_thing(I_ROUND(E->x), I_ROUND(E->y), I_ROUND(h), type,
+                   0, /* FIXME: angle */
+                   7, /* FIXME: options */
+                   0, /* FIXME: tid */
+                   0, /* FIXME: special */
+                   NULL /* args */);
+  }
+}
+
+
 void CSG2_WriteDoom(void)
 {
   // converts the Merged list into the sectors, linedefs (etc)
@@ -862,7 +886,7 @@ void CSG2_WriteDoom(void)
 
   WriteLinedefs();
 
-  // FIXME: things !!!!
+  WriteThings();
 
   // FIXME: Free everything
 }
