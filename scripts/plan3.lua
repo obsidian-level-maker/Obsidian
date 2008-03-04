@@ -211,7 +211,7 @@ show_room_allocation(parent);
     R.s_size.y = R.s_size.x
     R.s_size.z = 1
 
-    if rand_odds(50) and parent.s_size.x >= 12 and parent.s_size.y >= 12
+    if rand_odds(70) and parent.s_size.x >= 12 and parent.s_size.y >= 12
     then
       R.container_type = "walk"
       R.s_size.x = rand_irange(6, int(parent.s_size.x/2))
@@ -298,7 +298,7 @@ function dump_zone(Z)
     
     local R = ZZ.grid[x][y]
 
-    local C1 = "#"
+    local C1 = " "
     if ZZ.zone_type == "walk" then
       C1 = "/"
     elseif ZZ.zone_type == "view" then
@@ -386,6 +386,8 @@ print(parent, parent.grid, xx, yy)
       end
     end
 
+    table.insert(ALL_ROOMS, Z)
+
     return Z
   end
 
@@ -407,17 +409,87 @@ print(parent, parent.grid, xx, yy)
       gy = rand_irange(1, parent.grid.h),
     }
 
-    parent.grid[R.gx][R.gy] = R
+    R.parent.grid[R.gx][R.gy] = R
+
+    table.insert(ALL_ROOMS, R)
 
     return R
   end
 
 
-  local function branch_room(R)
+  local function branch_room(R, Q)
+    --> RETURNS: new room in branch
+    
+    local b_dirs  = {}
+--  local b_probs = {}
+
+    local nx, ny
+
+    for dir = 2,8,2 do
+      local dx, dy = dir_to_delta(dir)
+      local nx = R.gx + dx
+      local ny = R.gy + dy
+
+      if nx < 1 or nx > R.parent.grid.w or
+         ny < 1 or ny > R.parent.grid.h
+      then
+        -- cannot go here
+      else
+        if R.parent.grid[nx][ny] == nil then
+          table.insert(b_dirs, dir)
+        end
+      end
+    end
+
+
+    if #b_dirs == 0 then
+print("NO BRANCH POSSIBLE @ ", R.gx, R.gy)
+      return nil -- BRANCH NOT POSSIBLE !!!
+    end
+
+    local dir = rand_element(b_dirs)
+    local dx, dy = dir_to_delta(dir)
+
+    local nx = R.gx + dx
+    local ny = R.gy + dy
+
+
+    local N =
+    {
+      parent = R.parent,
+      quest  = Q,
+
+      gx = nx ,
+      gy = ny ,
+
+      prev = R,
+    }
+
+    N.parent.grid[N.gx][N.gy] = N
+
+    table.insert(ALL_ROOMS, N)
+
+    return N
   end
 
 
   local function find_branch_spot(Q)
+
+    local rooms = {}
+    local probs = {}
+
+    for zzz,R in ipairs(ALL_ROOMS) do
+      if (R.quest == Q or true) --!!!???
+         and (not R.zone_type or R.zone_type == "walk")
+      then
+        table.insert(rooms, R)
+        table.insert(probs, sel(R.zone_type, 10, 70))
+      end
+    end
+
+    assert(#rooms >= 1)
+
+    return rooms[rand_index_by_probs(probs)]
   end
 
 
@@ -439,13 +511,16 @@ print(parent, parent.grid, xx, yy)
     grid = array_2D(16, 16),
   }
 
+  ALL_ROOMS = { }
+
 
   local start = create_room(MAP_ZONE, QUESTS[1])
 
 
   for zzz,Q in ipairs(QUESTS) do
-    
-    local X = find_branch_spot(Q)
+
+    local X = start
+    if zzz > 1 then X = find_branch_spot(Q) end
 
     if not X then break; end
 
