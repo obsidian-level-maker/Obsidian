@@ -47,11 +47,11 @@ class ROOM
 
   quest : Quest
 
-  container_type : string  -- nil     : cannot contain rooms
-                           -- "solid" : nothing is between rooms
-                           -- "view"  : area between rooms is viewable
-                           --           but not traversable
-                           -- "walk"  : area between rooms is traversable
+  zone_type : string  -- nil     : cannot contain rooms (not a Zone)
+                      -- "solid" : nothing is between rooms
+                      -- "view"  : area between rooms is viewable
+                      --           but not traversable
+                      -- "walk"  : area between rooms is traversable
 
   s_low, s_high, s_size : Vector3  -- coverage over SEED map
 }
@@ -126,7 +126,7 @@ function show_room_allocation(R)
 end
 
 
-function plan_rooms_sp()
+function plan_rooms_sp_0()
 
   print("plan_rooms_sp...")
 
@@ -283,5 +283,179 @@ show_room_allocation(parent);
   show_room_allocation(head_room)
 
   return head_room
+end
+
+
+
+----------------------------------------------------------------
+
+function dump_zone(Z)
+
+  print("zone:", Z.grid.w, "by", Z.grid.h)
+
+
+  local function zone_content(ZZ, x, y)
+    
+    local R = ZZ.grid[x][y]
+
+    local C1 = "#"
+    if ZZ.zone_type == "walk" then
+      C1 = "/"
+    elseif ZZ.zone_type == "view" then
+      C1 = "="
+    end
+    
+    local C2 = C1
+
+    if R then
+      if R.zone_type then
+        return zone_content(R, x - R.gx + 1, y - R.gy + 1)
+      end
+
+      C2 = tostring(R.quest.level)
+    end
+
+    return C1 .. C2
+  end
+
+
+  for y = Z.grid.h, 1, -1 do
+    local line = ""
+
+    for x = 1, Z.grid.w do
+      line = line .. zone_content(Z, x, y) .. " "
+    end
+
+    print("> " .. line)
+--  print("------")
+  end
+end
+
+
+function plan_rooms_sp()
+
+  -- NOTE WELL !!  This is just testing code which treats each room
+  -- as a single seed.  An experiment in "zones" (rooms that contain
+  -- other rooms).
+
+
+  local function create_zone(parent, Q)
+
+    local min_W = 3 -- int(parent.grid.w * 4 / 10)
+    local min_H = 3 -- int(parent.grid.h * 4 / 10)
+
+    local max_W = int(parent.grid.w * 7 / 10)
+    local max_H = int(parent.grid.h * 7 / 10)
+
+    local W = rand_irange(min_W, max_W)
+    local H = rand_irange(min_H, max_H)
+
+    local dir = rand_element { 1,2,3,4, 6,7,8,9 }
+
+    local x = 1
+    local y = 1
+    
+    if dir == 2 or dir == 5 or dir == 8 then
+      x = 1 + int((parent.grid.w - W) / 2)
+    elseif dir == 3 or dir == 6 or dir == 9 then
+      x = 1 + parent.grid.w - W
+    end
+
+    if dir == 4 or dir == 5 or dir == 6 then
+      y = 1 + int((parent.grid.h - W) / 2)
+    elseif dir == 7 or dir == 8 or dir == 9 then
+      y = 1 + parent.grid.h - H
+    end
+
+    local Z =
+    {
+      parent = parent,
+      quest  = Q,
+
+      zone_type = sel(parent.zone_type == "walk", "view", "walk"),
+
+      gx = x, gy = y,  -- index into parent's grid
+
+      grid = array_2D(W, H)
+    }
+
+    for xx = x, x+W-1 do
+      for yy = y, y+H-1 do
+print(parent, parent.grid, xx, yy)
+        parent.grid[xx][yy] = Z
+      end
+    end
+
+    return Z
+  end
+
+
+  local function create_room(parent, Q)
+
+    if rand_odds(50) and parent.grid.w > 5 and parent.grid.h >= 5 then
+      Z = create_zone(parent, Q)
+
+      return create_room(Z, Q)
+    end
+
+    local R =
+    {
+      parent = parent,
+      quest  = Q,
+
+      gx = rand_irange(1, parent.grid.w),
+      gy = rand_irange(1, parent.grid.h),
+    }
+
+    parent.grid[R.gx][R.gy] = R
+
+    return R
+  end
+
+
+  local function branch_room(R)
+  end
+
+
+  local function find_branch_spot(Q)
+  end
+
+
+  ---===| plan_rooms_sp |===---
+
+  print("EXPERIMENTAL plan_rooms_sp")
+
+  temp_decide_quests()  -- FIXME: pass quest list as input to here
+
+
+  MAP_ZONE =
+  {
+    zone_type = "solid",
+
+    quest = { level = 0 },
+
+    gx = 1, gy = 1,
+
+    grid = array_2D(16, 16),
+  }
+
+
+  local start = create_room(MAP_ZONE, QUESTS[1])
+
+
+  for zzz,Q in ipairs(QUESTS) do
+    
+    local X = find_branch_spot(Q)
+
+    if not X then break; end
+
+    for i = 1, 4 do
+      X = branch_room(X, Q)
+
+      if not X then break; end
+    end
+  end
+
+  dump_zone(MAP_ZONE)
 end
 
