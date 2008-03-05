@@ -139,6 +139,7 @@ void GB_DisplaySetBarLimit(int barnum, int limit)
   if (display_mode == DIS_BUILDPROGRESS && barnum == 2)
   {
     main_win->build_box->ProgBegin(2, limit, GLBSP_PROGRESS_FG);
+    main_win->build_box->ProgStatus("Building nodes");
   }
 }
 

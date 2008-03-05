@@ -624,7 +624,15 @@ bool doom_game_interface_c::Start()
   if (! filename)  // cancelled
     return false;
 
-  return Doom_Start(sub_type == DMSUB_Hexen);
+  main_win->build_box->ProgInit(2);
+
+  if (! Doom_Start(sub_type == DMSUB_Hexen))
+    return false;
+
+  main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
+  main_win->build_box->ProgStatus("Making levels");
+
+  return true;
 }
 
 bool doom_game_interface_c::Finish(bool build_ok)

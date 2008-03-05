@@ -38,7 +38,7 @@
 #include "wolf_out.h"
 
 
-#define TICKER_TIME  20 /* ms */
+#define TICKER_TIME  40 /* ms */
 
 #define CONFIG_FILENAME  "CONFIG.cfg"
 #define LOG_FILENAME     "LOGS.txt"
@@ -238,6 +238,10 @@ void Build_Cool_Shit()
 
   bool was_ok = game_object->Start();
 
+  // lock most widgets of user interface
+  main_win->Locked(true);
+  bb_area->ProgSetButton(true);
+
   if (was_ok)
   {
     was_ok = Script_Build();
@@ -246,10 +250,14 @@ void Build_Cool_Shit()
       was_ok = false;
   }
 
-
   if (was_ok)
     bb_area->ProgStatus("Success");
+  else if (main_win->action >= UI_MainWin::ABORT)
+    bb_area->ProgStatus("Aborted");
+  else
+    bb_area->ProgStatus("Error");  // TODO: more info
 
+  bb_area->ProgFinish();
   bb_area->ProgSetButton(false);
 
   main_win->Locked(false);
@@ -258,7 +266,6 @@ void Build_Cool_Shit()
     main_win->action = UI_MainWin::NONE;
 
   game_object = NULL;
-
 
 
 
