@@ -251,7 +251,7 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
 
 void CSG2_MakeMiniMap(void)
 {
-  int scale = 20;
+  int scale = 24;
 
   double min_x, min_y, min_z;
   double max_x, max_y, max_z;
@@ -275,20 +275,33 @@ void CSG2_MakeMiniMap(void)
     bool two_sided = (S->front && S->front->gaps.size() > 0) &&
                      (S->back  && S->back ->gaps.size() > 0);
 
-    u8_t r, g, b;
+    u8_t r = 255;
+    u8_t g = 255;
+    u8_t b = 255;
 
-    if (two_sided && fabs(S->front->gaps[0]->GetZ1() - S->back->gaps[0]->GetZ1()) > 24.5)
+    if (two_sided)
     {
-      r = 0; g = 192; b = 250;
-//    r = 104; g = 176; b = 240;
-    }
-    else if (two_sided)
-    {
-      r = 160; g = 160; b = 160;
-    }
-    else
-    {
-      r = 255; g = 255; b = 255;
+      double f1 = S->front->MinGapZ();
+      double f2 = S->back ->MinGapZ();
+
+      double c1 = S->front->MaxGapZ();
+      double c2 = S->back ->MaxGapZ();
+
+      if (fabs(f1 - f2) < 0.1 && fabs(c1 - c2) < 0.1)
+        continue;
+
+      if (MIN(c1, c2) < MAX(f1, f2) + 52.5)
+      {
+        r = 255; g = 0; b = 0;
+      }
+      else if (fabs(f1 - f2) > 24.5)
+      {
+        r = 0; g = 255; b = 192;
+      }
+      else
+      {
+        r = g = b = 160;
+      }
     }
 
     main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
