@@ -159,9 +159,9 @@ void UI_Build::ProgUpdate(float val)
   if (prog_num_pass == 1)
     val = val * 100.0;
   else if (prog_pass == 1)
-    val = val * 75.0;
+    val = val * 50.0;
   else
-    val = 75.0 + (val * 25.0);
+    val = 50.0 + (val * 50.0);
 
   sprintf(prog_msg, "%d%%", int(val));
 
