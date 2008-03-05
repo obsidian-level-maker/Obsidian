@@ -131,8 +131,10 @@ void UI_MiniMap::DrawPixel(int x, int y, byte r, byte g, byte b)
 void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
                           byte r, byte g, byte b)
 {
-  if (MAX(x1, x2) < 0 || MIN(x1, x2) >= map_W ||
-      MAX(y1, y2) < 0 || MIN(y1, y2) >= map_H)
+  int out1 = Calc_Outcode(x1, y1);
+  int out2 = Calc_Outcode(x2, y2);
+
+  if (out1 & out2)
     return;
 
   // handle simple (but common) cases of horiz/vert lines
@@ -173,10 +175,7 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
   // clip diagonal line to the map
   // (this is the Cohen-Sutherland clipping algorithm)
 
-  int out1 = Calc_Outcode(x1, y1);
-  int out2 = Calc_Outcode(x2, y2);
-
-  while ((out1 & out2) == 0 && (out1 | out2) != 0)
+  while (out1 | out2)
   {
     // may be partially inside box, find an outside point
     int outside = (out1 ? out1 : out2);
@@ -184,8 +183,10 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
     int dx = x2 - x1;
     int dy = y2 - y1;
 
+    // this almost certainly cannot happen, but for the sake of
+    // robustness we check anyway (just in case)
     if (dx == 0 && dy == 0)
-      break;
+      return;
 
     int new_x, new_y;
 
@@ -205,7 +206,7 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
       new_x = 0;
       new_y = y1 + dy * (new_x - x1) / dx;
     }
-    else  /* outside & O_RIGHT */
+    else
     {
       SYS_ASSERT(outside & O_RIGHT);
 
@@ -229,15 +230,67 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
 
       out2 = Calc_Outcode(x2, y2);
     }
+
+    if (out1 & out2)
+      return;
   }
 
-  if (out1 & out2)
-    return;
-  
 
   // this is the Bresenham line drawing algorithm
+  // (based on code from am_map.c in the GPL DOOM source)
 
-  // TODO !!!!
+  int dx = x2 - x1;
+  int dy = y2 - y1;
+
+  int ax = 2 * (dx<0 ? -dx : dx);
+  int ay = 2 * (dy<0 ? -dy : dy);
+
+  int sx = dx<0 ? -1 : 1;
+  int sy = dy<0 ? -1 : 1;
+
+  int x = x1;
+  int y = y1;
+
+  if (ax > ay)  // horizontal stepping
+  {
+    int d = ay - ax/2;
+
+    RawPixel(x, y, r, g, b);
+
+    while (x != x2)
+    {
+      if (d>=0)
+      {
+        y += sy;
+        d -= ax;
+      }
+
+      x += sx;
+      d += ay;
+
+      RawPixel(x, y, r, g, b);
+    }
+  }
+  else   // vertical stepping
+  {
+    int d = ax - ay/2;
+
+    RawPixel(x, y, r, g, b);
+
+    while (y != y2)
+    {
+      if (d >= 0)
+      {
+        x += sx;
+        d -= ay;
+      }
+
+      y += sy;
+      d += ax;
+
+      RawPixel(x, y, r, g, b);
+    }
+  }
 }
 
 
