@@ -19,15 +19,26 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
+#include "hdr_ui.h"  // ui_build.h
 
 #include <algorithm>
 
+#include "lib_file.h"
 #include "lib_util.h"
 #include "main.h"
 
+#include "g_image.h"
+#include "ui_chooser.h"
+
 #include "csg_main.h"
+#include "dm_glbsp.h"
 #include "dm_level.h"
 #include "dm_wad.h"
+
+
+#define TEMP_FILENAME    "temp/out.wad"
+
+static char *level_name;
 
 
 #define VOID_INDEX  -2
@@ -891,6 +902,137 @@ void CSG2_WriteDoom(void)
   // FIXME: Free everything
 }
 
+
+//------------------------------------------------------------------------
+
+
+class doom_game_interface_c : public game_interface_c
+{
+private:
+  int sub_type;
+
+  const char *filename;
+
+public:
+  doom_game_interface_c(int _st) : sub_type(_st), filename(NULL)
+  { }
+
+  ~doom_game_interface_c()
+  {
+    StringFree(filename);
+  }
+
+  bool Start();
+  bool Finish(bool build_ok);
+
+  void BeginLevel();
+  void LevelProp(const char *key, const char *value);
+  void EndLevel();
+
+private:
+  bool BuildNodes(const char *target_file);
+};
+
+
+bool doom_game_interface_c::Start()
+{
+  Image_Setup();
+
+  filename = Select_Output_File();
+
+  if (! filename)  // cancelled
+    return false;
+
+  if (! WAD_OpenWrite(filename, sub_type == DMSUB_Hexen))
+    return false;
+
+  main_win->build_box->ProgInit(2);
+
+  main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
+  main_win->build_box->ProgStatus("Making levels");
+
+  return true;
+}
+
+
+bool doom_game_interface_c::BuildNodes(const char *target_file)
+{
+  DebugPrintf("TARGET FILENAME: [%s]\n", target_file);
+
+  // backup any existing wad
+
+  if (FileExists(target_file))
+  {
+    LogPrintf("Backing up existing file: %s\n", target_file);
+
+    char *backup_name = ReplaceExtension(target_file, "bak");
+
+    if (! FileCopy(target_file, backup_name))
+      LogPrintf("WARNING: unable to create backup: %s\n", backup_name);
+
+    StringFree(backup_name);
+  }
+
+  return GB_BuildNodes(TEMP_FILENAME, target_file);
+}
+
+
+bool doom_game_interface_c::Finish(bool build_ok)
+{
+  WAD_CloseWrite();
+// check return??
+
+  if (build_ok)
+  {
+    build_ok = BuildNodes(filename);
+  }
+
+  // tidy up
+  FileDelete(TEMP_FILENAME);
+
+  return build_ok;
+}
+
+
+void doom_game_interface_c::BeginLevel()
+{
+  // nothing needed
+}
+
+
+void doom_game_interface_c::LevelProp(const char *key, const char *value)
+{
+  if (StringCaseCmp(key, "level_name") == 0)
+  {
+    level_name = StringDup(value);
+  }
+  else
+  {
+    LogPrintf("WARNING: DOOM: unknown level prop: %s=%s\n", key, value);
+  }
+}
+
+
+void doom_game_interface_c::EndLevel()
+{
+  if (! level_name)
+    Main_FatalError("Script problem: did not set level name!\n");
+
+  WAD_BeginLevel();
+
+  CSG2_WriteDoom();
+
+  WAD_EndLevel(level_name);
+
+  StringFree(level_name);
+  level_name = NULL;
+}
+
+
+game_interface_c * Doom_GameObject(int subtype)
+{
+  return new doom_game_interface_c(subtype);
+}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

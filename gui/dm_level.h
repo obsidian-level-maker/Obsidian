@@ -16,12 +16,20 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_CSG_DOOM_H__
-#define __OBLIGE_CSG_DOOM_H__
+#ifndef __OBLIGE_DOOM_LEVEL_H__
+#define __OBLIGE_DOOM_LEVEL_H__
 
-void CSG2_WriteDoom(void);
+typedef enum
+{
+  DMSUB_Doom = 0,
+  DMSUB_Heretic = 1,
+  DMSUB_Hexen = 2
+}
+doom_subtype_e;
 
-#endif /* __OBLIGE_CSG_DOOM_H__ */
+game_interface_c * Doom_GameObject(int subtype = DMSUB_Doom);
+
+#endif /* __OBLIGE_DOOM_LEVEL_H__ */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

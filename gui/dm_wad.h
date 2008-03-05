@@ -19,17 +19,12 @@
 #ifndef __OBLIGE_LDOOM_H__
 #define __OBLIGE_LDOOM_H__
 
-void Doom_Init(void);
 
-typedef enum
-{
-  DMSUB_Doom = 0,
-  DMSUB_Heretic = 1,
-  DMSUB_Hexen = 2
-}
-doom_subtype_e;
+bool WAD_OpenWrite(const char *filename, bool is_hexen);
+bool WAD_CloseWrite(void);
 
-game_interface_c * Doom_GameObject(int subtype = DMSUB_Doom);
+void WAD_BeginLevel(void);
+void WAD_EndLevel(const char *level_name);
 
 
 /* ---- API for the CSG code to use ---- */

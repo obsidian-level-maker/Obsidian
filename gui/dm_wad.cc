@@ -25,17 +25,13 @@
 #include "lib_util.h"
 
 #include "main.h"
-#include "ui_chooser.h"
-
 #include "g_image.h"
-#include "g_lua.h"
 
 #include "csg_main.h"
 #include "csg_quake.h"
 
 #include "dm_level.h"
 #include "dm_wad.h"
-#include "dm_glbsp.h"
 
 
 //!!!!!!!
@@ -47,8 +43,6 @@ extern void CSG2_Doom_TestAreas(void);
 extern void CSG2_Doom_TestRegions(void);
 
 
-#define TEMP_FILENAME    "TEMP.wad"
-
 typedef std::vector<u8_t> lump_c;
 
 typedef std::vector<raw_dir_entry_t> directory_c;
@@ -58,8 +52,6 @@ static FILE *wad_fp;
 
 static directory_c wad_dir;
 static bool wad_hexen;
-
-static char *level_name;
 
 static lump_c *thing_lump;
 static lump_c *vertex_lump;
@@ -303,32 +295,105 @@ void WAD_CreateInfoLump()
   delete L;
 }
 
-int Hexen_GrabArgs(lua_State *L, u8_t *args, int stack_pos)
+
+bool WAD_OpenWrite(const char *filename, bool is_hexen)
 {
-  memset(args, 0, 5);
+  wad_fp = fopen(filename, "wb");
 
-  int what = lua_type(L, stack_pos);
-
-  if (what == LUA_TNONE || what == LUA_TNIL)
-    return 0;
-
-  if (what != LUA_TTABLE)
-    return luaL_argerror(L, stack_pos, "expected a table");
-
-  for (int i = 0; i < 5; i++)
+  if (! wad_fp)
   {
-    lua_pushinteger(L, i+1);
-    lua_gettable(L, stack_pos);
-
-    if (lua_isnumber(L, -1))
-    {
-      args[i] = lua_tointeger(L, -1);
-    }
-
-    lua_pop(L, 1);
+    DLG_ShowError("Unable to create wad file:\n%s", strerror(errno));
+    return false;
   }
 
-  return 0;
+  write_errors_seen = 0;
+  seek_errors_seen  = 0;
+
+  wad_dir.clear();
+  wad_hexen = is_hexen;
+
+  // dummy header
+  raw_wad_header_t header;
+
+  strncpy(header.type, "XWAD", 4);
+
+  header.dir_start   = 0;
+  header.num_entries = 0;
+
+  WAD_RawWrite(&header, sizeof(header));
+
+  WAD_CreateInfoLump();  // FIXME: move out ??
+
+  return true; //OK
+}
+
+
+bool WAD_CloseWrite(void)
+{
+  WAD_WritePatches();  // FIXME: move out ??
+ 
+  // compute *real* header 
+  raw_wad_header_t header;
+
+  strncpy(header.type, "PWAD", 4);
+
+  header.dir_start   = LE_U32((u32_t)ftell(wad_fp));
+  header.num_entries = LE_U32(wad_dir.size());
+
+
+  // WRITE DIRECTORY
+  directory_c::iterator D;
+
+  for (D = wad_dir.begin(); D != wad_dir.end(); D++)
+  {
+    WAD_RawWrite(& *D, sizeof(raw_dir_entry_t));
+  }
+
+  // FSEEK, WRITE HEADER
+
+  WAD_RawSeek(0);
+  WAD_RawWrite(&header, sizeof(header));
+
+  fclose(wad_fp);
+  wad_fp = NULL;
+
+  return (write_errors_seen == 0) && (seek_errors_seen == 0);
+}
+
+
+void WAD_BeginLevel(void)
+{
+  thing_lump   = new lump_c();
+  vertex_lump  = new lump_c();
+  sector_lump  = new lump_c();
+  linedef_lump = new lump_c();
+  sidedef_lump = new lump_c();
+}
+
+
+void WAD_EndLevel(const char *level_name)
+{
+  WAD_WriteLump(level_name, NULL, 0);
+
+  WAD_WriteLump("THINGS",   thing_lump);
+  WAD_WriteLump("LINEDEFS", linedef_lump);
+  WAD_WriteLump("SIDEDEFS", sidedef_lump);
+  WAD_WriteLump("VERTEXES", vertex_lump);
+
+  WAD_WriteLump("SEGS",     NULL, 0);
+  WAD_WriteLump("SSECTORS", NULL, 0);
+  WAD_WriteLump("NODES",    NULL, 0);
+  WAD_WriteLump("SECTORS",  sector_lump);
+
+  if (wad_hexen)
+    WAD_WriteBehavior();
+
+  // free data
+  delete thing_lump;   thing_lump   = NULL;
+  delete sector_lump;  sector_lump  = NULL;
+  delete vertex_lump;  vertex_lump  = NULL;
+  delete sidedef_lump; sidedef_lump = NULL;
+  delete linedef_lump; linedef_lump = NULL;
 }
 
 
@@ -480,10 +545,12 @@ int num_vertexes(void)
 {
   return vertex_lump->size() / sizeof(raw_vertex_t);
 }
+
 int num_sectors(void)
 {
   return sector_lump->size() / sizeof(raw_sector_t);
 }
+
 int num_sidedefs(void)
 {
   return sidedef_lump->size() / sizeof(raw_sidedef_t);
@@ -491,224 +558,6 @@ int num_sidedefs(void)
 
 } // namespace wad
 
-
-//------------------------------------------------------------------------
-
-
-bool Doom_Start(bool is_hexen)
-{
-  wad_fp = fopen(TEMP_FILENAME, "wb");
-
-  if (! wad_fp)
-  {
-    DLG_ShowError("Unable to create wad file:\n%s", strerror(errno));
-    return false;
-  }
-
-  write_errors_seen = 0;
-  seek_errors_seen  = 0;
-
-  wad_dir.clear();
-  wad_hexen = is_hexen;
-
-  // dummy header
-  raw_wad_header_t header;
-
-  strncpy(header.type, "XWAD", 4);
-
-  header.dir_start   = 0;
-  header.num_entries = 0;
-
-  WAD_RawWrite(&header, sizeof(header));
-
-  WAD_CreateInfoLump();
-
-  Image_Setup();
-
-  return true; //OK
-}
-
-bool Doom_Finish(void)
-{
-  WAD_WritePatches();
- 
-  // compute *real* header 
-  raw_wad_header_t header;
-
-  strncpy(header.type, "PWAD", 4);
-
-  header.dir_start   = LE_U32((u32_t)ftell(wad_fp));
-  header.num_entries = LE_U32(wad_dir.size());
-
-
-  // WRITE DIRECTORY
-  directory_c::iterator D;
-
-  for (D = wad_dir.begin(); D != wad_dir.end(); D++)
-  {
-    WAD_RawWrite(& *D, sizeof(raw_dir_entry_t));
-  }
-
-  // FSEEK, WRITE HEADER
-
-  WAD_RawSeek(0);
-  WAD_RawWrite(&header, sizeof(header));
-
-  fclose(wad_fp);
-  wad_fp = NULL;
-
-  return (write_errors_seen == 0) && (seek_errors_seen == 0);
-}
-
-
-static void Doom_Backup(const char *filename)
-{
-  if (FileExists(filename))
-  {
-    LogPrintf("Backing up existing file: %s\n", filename);
-
-    char *backup_name = ReplaceExtension(filename, "bak");
-
-    if (! FileCopy(filename, backup_name))
-      LogPrintf("WARNING: unable to create backup: %s\n", backup_name);
-
-    StringFree(backup_name);
-  }
-}
-
-bool Doom_Nodes(const char *target_file)
-{
-  DebugPrintf("TARGET FILENAME: [%s]\n", target_file);
-
-  Doom_Backup(target_file);
-
-  return GB_BuildNodes(TEMP_FILENAME, target_file);
-}
-
-void Doom_Tidy(void)
-{
-  FileDelete(TEMP_FILENAME);
-}
-
-
-
-class doom_game_interface_c : public game_interface_c
-{
-private:
-  int sub_type;
-
-  const char *filename;
-
-public:
-  doom_game_interface_c(int _st) : sub_type(_st), filename(NULL)
-  { }
-
-  ~doom_game_interface_c()
-  {
-    StringFree(filename);
-  }
-
-  bool Start();
-  bool Finish(bool build_ok);
-
-  void BeginLevel();
-  void LevelProp(const char *key, const char *value);
-  void EndLevel();
-};
-
-
-bool doom_game_interface_c::Start()
-{
-  filename = Select_Output_File();
-
-  if (! filename)  // cancelled
-    return false;
-
-  main_win->build_box->ProgInit(2);
-
-  if (! Doom_Start(sub_type == DMSUB_Hexen))
-    return false;
-
-  main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
-  main_win->build_box->ProgStatus("Making levels");
-
-  return true;
-}
-
-bool doom_game_interface_c::Finish(bool build_ok)
-{
-  if (! build_ok)
-    return false;
-
-  if (! Doom_Finish())
-    return false;
-
-  if (! Doom_Nodes(filename))
-    return false;
-
-  Doom_Tidy();
-
-  return true;
-}
-
-void doom_game_interface_c::BeginLevel()
-{
-  thing_lump   = new lump_c();
-  vertex_lump  = new lump_c();
-  sector_lump  = new lump_c();
-  linedef_lump = new lump_c();
-  sidedef_lump = new lump_c();
-}
-
-void doom_game_interface_c::LevelProp(const char *key, const char *value)
-{
-  if (StringCaseCmp(key, "level_name") == 0)
-  {
-    level_name = StringDup(value);
-  }
-  else
-  {
-    fprintf(stderr, "WARNING: Doom: unknown level prop: %s=%s\n", key, value);
-  }
-}
-
-void doom_game_interface_c::EndLevel()
-{
-  CSG2_WriteDoom();
-
-  SYS_ASSERT(level_name);
-
-  WAD_WriteLump(level_name, NULL, 0);
-
-  WAD_WriteLump("THINGS",   thing_lump);
-  WAD_WriteLump("LINEDEFS", linedef_lump);
-  WAD_WriteLump("SIDEDEFS", sidedef_lump);
-  WAD_WriteLump("VERTEXES", vertex_lump);
-
-  WAD_WriteLump("SEGS",     NULL, 0);
-  WAD_WriteLump("SSECTORS", NULL, 0);
-  WAD_WriteLump("NODES",    NULL, 0);
-  WAD_WriteLump("SECTORS",  sector_lump);
-
-  if (sub_type == DMSUB_Hexen)
-    WAD_WriteBehavior();
-
-  // free data
-  delete thing_lump;   thing_lump   = NULL;
-  delete sector_lump;  sector_lump  = NULL;
-  delete vertex_lump;  vertex_lump  = NULL;
-  delete sidedef_lump; sidedef_lump = NULL;
-  delete linedef_lump; linedef_lump = NULL;
-
-  StringFree(level_name);
-  level_name = NULL;
-}
-
-
-game_interface_c * Doom_GameObject(int subtype)
-{
-  return new doom_game_interface_c(subtype);
-}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
