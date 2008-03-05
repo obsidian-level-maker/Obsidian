@@ -106,15 +106,16 @@ void UI_MiniMap::MapFinish()
   redraw();
 }
 
+
 void UI_MiniMap::MapCorner(int x, int y, int dx, int dy)
 {
   u8_t r, g, b;
 
   Fl::get_color(BUILD_BG, r, g, b);
 
-  DrawPixel(x+dx*0, y+dy*0, r, g, b);
-  DrawPixel(x+dx*1, y+dy*0, r, g, b);
-  DrawPixel(x+dx*0, y+dy*1, r, g, b);
+  RawPixel(x+dx*0, y+dy*0, r, g, b);
+  RawPixel(x+dx*1, y+dy*0, r, g, b);
+  RawPixel(x+dx*0, y+dy*1, r, g, b);
 }
 
 
@@ -123,52 +124,138 @@ void UI_MiniMap::DrawPixel(int x, int y, byte r, byte g, byte b)
   if (x < 0 || x >= map_W || y < 0 || y >= map_H)
     return;
 
-  u8_t *pos = pixels + ((map_H-1-y)*map_W + x)*3;
-
-  pos[0] = r;
-  pos[1] = g;
-  pos[2] = b;
+  RawPixel(x, y, r, g, b);
 }
 
 
 void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
-                          byte r, byte g, byte b, bool end)
+                          byte r, byte g, byte b)
 {
-  // FIXME: proper clipped line drawer please!
-
   if (MAX(x1, x2) < 0 || MIN(x1, x2) >= map_W ||
       MAX(y1, y2) < 0 || MIN(y1, y2) >= map_H)
     return;
 
-  if (abs(x1-x2) <= 1 && abs(y1 - y2) <= 1)
-  {
-    if (end)
-      DrawPixel(x2, y2, r, g, b);
+  // handle simple (but common) cases of horiz/vert lines
 
-    DrawPixel(x1, y1, r, g, b);
+  if (y1 == y2)
+  {
+    if (x1 > x2)
+    {
+      int tmp = x1; x1 = x2; x2 = tmp;
+    }
+
+    x1 = MAX(0, x1);
+    x2 = MIN(map_W-1, x2);
+
+    for (; x1 <= x2; x1++)
+      RawPixel(x1, y1, r, g, b);
+
     return;
   }
 
-  int mx = (x1 + x2) / 2;
-  int my = (y1 + y2) / 2;
+  if (x1 == x2)
+  {
+    if (y1 > y2)
+    {
+      int tmp = y1; y1 = y2; y2 = tmp;
+    }
 
-  DrawLine(x1,y1, mx,my, r,g,b, false);
-  DrawLine(mx,my, x2,y2, r,g,b, end);
+    y1 = MAX(0, y1);
+    y2 = MIN(map_H-1, y2);
+
+    for (; y1 <= y2; y1++)
+      RawPixel(x1, y1, r, g, b);
+
+    return;
+  }
+
+
+  // clip diagonal line to the map
+  // (this is the Cohen-Sutherland clipping algorithm)
+
+  int out1 = Calc_Outcode(x1, y1);
+  int out2 = Calc_Outcode(x2, y2);
+
+  while ((out1 & out2) == 0 && (out1 | out2) != 0)
+  {
+    // may be partially inside box, find an outside point
+    int outside = (out1 ? out1 : out2);
+
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+
+    if (dx == 0 && dy == 0)
+      break;
+
+    int new_x, new_y;
+
+    // clip to each side
+    if (outside & O_BOTTOM)
+    {
+      new_y = 0;
+      new_x = x1 + dx * (new_y - y1) / dy;
+    }
+    else if (outside & O_TOP)
+    {
+      new_y = map_H-1;
+      new_x = x1 + dx * (new_y - y1) / dy;
+    }
+    else if (outside & O_LEFT)
+    {
+      new_x = 0;
+      new_y = y1 + dy * (new_x - x1) / dx;
+    }
+    else  /* outside & O_RIGHT */
+    {
+      SYS_ASSERT(outside & O_RIGHT);
+
+      new_x = map_W-1;
+      new_y = y1 + dy * (new_x - x1) / dx;
+    }
+
+    if (out1)
+    {
+      x1 = new_x;
+      y1 = new_y;
+
+      out1 = Calc_Outcode(x1, y1);
+    }
+    else
+    {
+      SYS_ASSERT(out2);
+
+      x2 = new_x;
+      y2 = new_y;
+
+      out2 = Calc_Outcode(x2, y2);
+    }
+  }
+
+  if (out1 & out2)
+    return;
+  
+
+  // this is the Bresenham line drawing algorithm
+
+  // TODO !!!!
 }
 
 
 void UI_MiniMap::DrawEntity(int x, int y, byte r, byte g, byte b)
 {
-  DrawPixel(x, y, r, g, b);
+  if (x < 1 || x >= map_W-1 || y < 1 || y >= map_H-1)
+    return;
+
+  RawPixel(x, y, r, g, b);
 
   r = (r / 4) * 3;
   g = (g / 4) * 3;
   b = (b / 4) * 3;
 
-  DrawPixel(x-1, y, r, g, b);
-  DrawPixel(x+1, y, r, g, b);
-  DrawPixel(x, y-1, r, g, b);
-  DrawPixel(x, y+1, r, g, b);
+  RawPixel(x-1, y, r, g, b);
+  RawPixel(x+1, y, r, g, b);
+  RawPixel(x, y-1, r, g, b);
+  RawPixel(x, y+1, r, g, b);
 }
 
 
