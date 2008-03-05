@@ -918,9 +918,6 @@ static void DummyTexInfo(void)
   }
 }
 
-
-//------------------------------------------------------------------------
-
 static void ClearLumps(void)
 {
   for (int i = 0; i < HEADER_LUMPS; i++)
@@ -934,38 +931,10 @@ static void ClearLumps(void)
   }
 }
 
-int Q1_begin_level(lua_State *L)  // FIXME !!!! quake1_game_interface_c::BeginLevel
-{
-  return 0;
-}
-
-int Q1_end_level(lua_State *L)
-{
-fprintf(stderr, "Q1_end_level\n");
-
-//  CSG2_TestQuake();
-
-//!!!!! FIXME  SYS_ASSERT(level_name);
-
-  CSG2_MergeAreas();
-
-  CSG2_MakeMiniMap();
-
-  Quake1_BuildBSP();
-
-
-  return 0;
-}
-
 
 //------------------------------------------------------------------------
 
-void Quake1_Init(void)
-{
-
-}
-
-bool Quake1_Start(const char *target_file)
+static bool BSP_OpenWrite(const char *target_file)
 {
   write_errors_seen = 0;
   seek_errors_seen  = 0;
@@ -990,7 +959,7 @@ bool Quake1_Start(const char *target_file)
 }
 
 
-bool Quake1_Finish(void)
+static bool BSP_CloseWrite(void)
 {
   // yada yada
 
@@ -1036,7 +1005,7 @@ bool Quake1_Finish(void)
 }
 
 
-static void Quake1_Backup(const char *filename)
+static void BSP_Backup(const char *filename)
 {
   if (FileExists(filename))
   {
@@ -1051,24 +1020,6 @@ static void Quake1_Backup(const char *filename)
   }
 }
 
-bool Quake1_Nodes(const char *target_file)
-{
-  DebugPrintf("TARGET FILENAME: [%s]\n", target_file);
-
-  Quake1_Backup(target_file);
-
-  // ... TODO
-
-  return true;
-}
-
-
-void Quake1_Tidy(void)
-{
-}
-
-
-
 
 class quake1_game_interface_c : public game_interface_c
 {
@@ -1082,37 +1033,68 @@ public:
   ~quake1_game_interface_c()
   { }
 
-  bool Start()
-  {
-    return false;
-  }
+  bool Start();
+  bool Finish(bool build_ok);
 
-  bool Finish(bool build_ok)
-  {
-    return false;
-  }
-
-  /** CSG2 **/
-
-  void BeginLevel()
-  {
-  }
-
-  void LevelProp(const char *key, const char *value)
-  {
-  }
-
-  void EndLevel()
-  {
-  }
+  void BeginLevel();
+  void LevelProp(const char *key, const char *value);
+  void EndLevel();
 };
+
+
+bool quake1_game_interface_c::Start()
+{
+  // TODO
+  return true;
+}
+
+
+bool quake1_game_interface_c::Finish(bool build_ok)
+{
+  // TODO
+  return true;
+}
+
+
+void quake1_game_interface_c::BeginLevel()
+{
+  // nothing needed
+}
+
+
+void quake1_game_interface_c::LevelProp(const char *key, const char *value)
+{
+  // FIXME: get level name, validate it
+}
+
+
+void quake1_game_interface_c::EndLevel()
+{
+fprintf(stderr, "Q1_end_level\n");
+
+  if (! BSP_OpenWrite("temp/out.bsp"))
+    return; //!!!!!! FUCK
+
+//  CSG2_TestQuake();
+
+//!!!!! FIXME  SYS_ASSERT(level_name);
+
+  CSG2_MergeAreas();
+
+  CSG2_MakeMiniMap();
+
+  Quake1_BuildBSP();
+
+  BSP_CloseWrite();
+
+  // FREE STUFF
+}
 
 
 game_interface_c * Quake1_GameObject(void)
 {
   return new quake1_game_interface_c();
 }
-
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
