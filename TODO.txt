@@ -26,7 +26,7 @@ Zone Algorithm:
    walk count = { 30 90 70 15 3 }
    view count = { 70 70 10 2 }
 
-   and also the group spread pattern:
+   and also the group spread pattern (mainly for walk zones)
 
    1.2  1.2  .1.  1..
    .5.  .5.  253  .52
@@ -35,7 +35,31 @@ Zone Algorithm:
 5. figure out maximum # of rooms (or seeds) would should make in
    each zone and for each group.
 
-6. @@@
+6. PLOT QUESTS:
+
+   (a) create start room (possibly a whole zone if "walk").
+       If quest[1] has some zones, usually create start room
+       in one of them (i.e. assign a group to it),
+       but occasionaly create it "near" one (in solid)
+       and connect to it (directly or with a another room or two).
+
+   (b) create chain of rooms for current quest.
+       Each "walk" zone of the quest will have an "along" value,
+       showing when the player gets the big walkable area
+       (so if along = 1, player starts there, and player ending
+       there is possible too).
+
+       The branch-off room may leave a zone or may enter other
+       zones (rare if the zone doesn't belong to quest, also
+       depending on how many groups are available).
+
+       Sometimes the branch-off can be via two-way teleport
+       (especially from one group to another in a "view" zone).
+
+   (c) each new quest (except for teleports between top-level
+       zones) will branch off an existing quest, often using a
+       free group of an earlier quest's walk/view zone.
+
 
 
 Quake1 output:
