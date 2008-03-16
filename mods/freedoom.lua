@@ -30,7 +30,6 @@ FD_MONSTER_LIST =
   "baron",  -- not yet coloured
   "gunner",
   "ss_dude", 
-  "vile",
 
   ---| missing sprites |---
   
@@ -39,6 +38,7 @@ FD_MONSTER_LIST =
 
   -- "cyber",   
   -- "spider",  
+  -- "vile",
 }
 
 FD_LIQUIDS =
