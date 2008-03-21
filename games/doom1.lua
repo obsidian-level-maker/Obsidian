@@ -2657,7 +2657,8 @@ DM_PICKUPS =
 
   -- BERSERK and MEGA are quest items
 
-  helmet      = { stat="armor", give=   1, limit=200 },
+  helmet = { stat="health", give=1, prob=7 }, -- FIXME
+
   green_armor = { stat="armor", give= 100, limit=100, clu_max=1 },
   blue_armor  = { stat="armor", give= 200, limit=200, clu_max=1 },
 
