@@ -28,9 +28,9 @@ Zone Algorithm:
 
    and also the group spread pattern (mainly for walk zones)
 
-   1.2  1.2  .1.  1..
-   .5.  .5.  253  .52
-   3.4  .3.  .4.  .3.
+   1.2  1.2  .1.  1..  ...
+   .5.  .5.  253  .52  .5.
+   3.4  .3.  .4.  .3.  ...
  
 5. figure out maximum # of rooms (or seeds) would should make in
    each zone and for each group.
@@ -134,7 +134,11 @@ General:
 
 +  get traps (closets / depots) working again.
 
+-  Levels in an episode get progressively bigger.
+
 -  Deathmatch: initial starting weapon (None,Basic,Heavy) : "Equip"
+
+-  FreeDoom: some scenery items (hanging gore) not present
 
 
 GUI:
@@ -160,6 +164,8 @@ Heretic:
 Hexen:
 
 -  put 'fighter only' bit on fighter's weapons, etc..
+
++  bug report: some doors close and never open.
 
 +  rework teleporter gates (make them bi-directional).
 
@@ -197,7 +203,7 @@ Theme system:
 
 Monsters:
 
-+  put in some Cyberdemons or Spider Masterminds
+++  put in some Cyberdemons or Spider Masterminds
 
 -  at each room, pick 2-3 (rarer: 1,4) monster types
    then decide how many of each one (for each skill).
@@ -230,6 +236,9 @@ Miscellaneous:
    wide pillar at the far end.
 
 -  plot_quests: if cannot get want_len, try again AND/OR backtrack
+
+-  WINDOW_CROSS and WINDOW_CROSS_BIG: do a height check
+   (prevent windows you can walk through).
 
 -  optimise A* algorithm
 -  optimise find_fab_loc
