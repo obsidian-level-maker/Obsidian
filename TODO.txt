@@ -160,6 +160,8 @@ Heretic:
 
 -  don't build Blaze doors into maps.
 
+-  monsters: not mixed enough (too repetitive), no bosses.
+
 
 Hexen:
 
@@ -268,6 +270,8 @@ Pipe Dreams:
 -  exit via teleporter pad or holes in floor
 
 -  improved use of liquids.
+
+-  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
 
 -  a mod for Eternal III
 
