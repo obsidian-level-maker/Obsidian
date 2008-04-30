@@ -97,6 +97,18 @@ typedef struct
 }
 raw_linedef_t;
 
+typedef enum
+{
+  MLF_BlockAll      = 0x0001,
+  MLF_BlockMonsters = 0x0002,
+  MLF_TwoSided      = 0x0004,
+  MLF_UpperUnpeg    = 0x0008,
+  MLF_LowerUnpeg    = 0x0010,
+  MLF_Secret        = 0x0020,
+  MLF_SoundBlock    = 0x0040,
+}
+doom_lineflag_e;
+
 
 typedef struct
 {
@@ -148,6 +160,24 @@ typedef struct
   u16_t options;   // when appears, deaf, etc..
 }
 raw_thing_t;
+
+typedef enum
+{
+   MTF_Easy    = 1,
+   MTF_Normal  = 2,
+   MTF_Hard    = 4,
+   MTF_Ambush  = 8,
+
+   MTF_NotSP   = 16,
+   MTF_NotDM   = 32,
+   MTF_NotCOOP = 64,
+
+   MTF_BOOM_Reserved = 256,
+}
+doom_thingflag_e;
+
+#define MTF_EDGE_EXFLOOR_MASK    0x3C00
+#define MTF_EDGE_EXFLOOR_SHIFT   10
 
 
 typedef struct
