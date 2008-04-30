@@ -826,8 +826,12 @@ static void WriteLinedefs(void)
     }
 
     int flags = 0;
+
     if (back_idx < 0)
-      flags = 1; /* impassible */
+      flags |= MLF_BlockAll;
+
+    if (back_idx >= 0 && front_idx >= 0)
+      flags |= MLF_TwoSided;
 
     wad::add_linedef(v1, v2, front_idx, back_idx,
                      0 /* type */, flags,
