@@ -402,10 +402,10 @@ function dummy_builder(Z)
 
   local function build_room(R, x, y, lx, ly)
     
-    local x1 = x * 256
-    local y1 = y * 256
-    local x2 = x1 + 256
-    local y2 = y1 + 256
+    local x1 = x * 200
+    local y1 = y * 200
+    local x2 = x1 + 200
+    local y2 = y1 + 200
 
     local z1, z2
     local f_tex, c_tex, w_tex
@@ -525,9 +525,9 @@ function dummy_builder(Z)
     end
 
     if R.is_start then
-      csg2.add_entity("1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      csg2.add_entity(--[[ "info_player_start" ]] "1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     else
-      csg2.add_entity("2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      csg2.add_entity(--[[ "item_health" ]] "2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
   end
 
@@ -540,6 +540,7 @@ function dummy_builder(Z)
         build_room(R, x, y, lx, ly)
       end
     end
+    con.progress(100 * y / Z.grid.h)
   end
 
   csg2.end_level()
@@ -747,6 +748,8 @@ print("NO BRANCH POSSIBLE @ ", R.gx, R.gy)
   end
 
   print_zone(MAP_ZONE)
+
+  con.at_level("1", 1, 1)
 
   dummy_builder(MAP_ZONE)
 end
