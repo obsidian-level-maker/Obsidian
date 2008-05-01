@@ -26,6 +26,8 @@ require 'plan_sp'
 require 'quests'
 require 'builder'
 
+-- require 'monsters'
+
 
 OB_THEMES["mixed"] =
 {
@@ -503,7 +505,10 @@ function build_cool_shit()
 
 
 -- [[ PLANNING TEST CODE
-plan_rooms_sp();
+Plan_rooms_sp();
+Quest_assign();
+Seed_grow()
+dummy_builder();
 do return "ok" end
 --]]
 

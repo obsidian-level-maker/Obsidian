@@ -20,7 +20,7 @@ require 'defs'
 require 'util'
 
 
-function assign_quests()
-  -- TODO: assign_quests
+function Quest_assign() -- TODO !!!
+
 end
 

@@ -58,15 +58,6 @@ class ROOM
 }
 
 
-class SEED    -- FIXME: seed management probably wants own file
-{
-  zone : ROOM
-
-  room : ROOM
-
-}
-
-
 --]]
 
 
@@ -313,7 +304,7 @@ function populate_zone(Z)
 end
 
 
-function plan_rooms_sp()
+function Plan_rooms_sp()
 
 
   function create_zone(parent, Q)

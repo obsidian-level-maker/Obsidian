@@ -18,6 +18,7 @@
 
 require 'defs'
 require 'util'
+require 'seeds'
 
 
 function dummy_builder(Z)
