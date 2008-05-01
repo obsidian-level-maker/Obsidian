@@ -31,6 +31,8 @@ SKILLS = { "easy", "medium", "hard" }
 PLAN = {}
 GAME = {}
 
+SEEDS = {}
+
 
 -- tables which interface with GUI code --
 

@@ -16,35 +16,86 @@
 --
 ----------------------------------------------------------------
 
-
--- TODO:  2. implement symmetry preservation
-
-
 require 'defs'
+require 'util'
 
---[[
--- FIXME: temp stuff for util module
-con = { }
-function con.ticker() end
-function con.abort() return false end
-function con.rand_seed(value) math.randomseed(value) end
-function con.random() return math.random() end
 
-csg2 = {}
-function csg2.add_solid() end
+--[[ CLASS INFORMATION
+----------------------
+
+class SEED
+{
+  sz, sx, sy : location in seed map
+
+  zone : ROOM
+
+  room : ROOM
+
+}
+
 --]]
 
 
-require 'util'
+function Seed_init(T, W, H, zone)
 
-SEEDS = {}
+  SEEDS = {}
 
-function valid_seed(sx, sy)
-  return sx >= 1 and sx <= SEEDS.w and sy >= 1 and sy <= SEEDS.h
+  SEED_T = T
+  SEED_W = W
+  SEED_H = H
+
+  for z = 1,T do
+    SEEDS[z] = array_2D(W, H)
+
+    for y = 1,H do for x = 1,W do
+      SEEDS[z][x][y] = { sz=z, sx=x, sy=y, zone=zone }
+    end end
+  end
 end
 
-function get_seed_safe(sx, sy)
-  return valid_seed(sx, sy) and SEEDS[sx][sy]
+
+function Seed_close()
+  SEEDS = nil
+
+  SEED_T = nil
+  SEED_W = nil
+  SEED_H = nil
+end
+
+
+function Seed_valid(z, x, y)
+  return (z >= 1 and z <= SEED_T) and
+         (x >= 1 and x <= SEED_W) and
+         (y >= 1 and y <= SEED_H)
+end
+
+
+function Seed_safe_get(z, x, y)
+  return Seed_valid(z, x, y) and SEEDS[z][x][y]
+end
+
+
+function Seed_is_free(z, x, y, zone)
+  assert(Seed_valid(z, x, y))
+
+  return SEEDS[z][x][y].zone == zone
+end
+
+
+function Seed_are_free(z1, x1, y1, z2, x2, y2, zone)
+
+  assert(Seed_valid(z1,x1,y1))
+  assert(Seed_valid(z2,x2,y2))
+  assert(z1 <= z2 and x1 <= x2 and y1 <= y2)
+
+  for z = z1,z2 do for x = x1,x2 do for y = y1,y2 do
+    local S = SEEDS[z][x][y]
+    if S.zone ~= zone then
+      return false
+    end
+  end end end
+
+  return true
 end
 
 
@@ -122,7 +173,12 @@ end
 --]]
 
 
-function grow_all()
+function Seed_grow()
+
+do return end  --- FIXME: grow_seeds
+
+
+-- TODO:  2. implement symmetry preservation
 
   local DIR
   local CHANGED
@@ -562,7 +618,7 @@ function grow_all()
   end
 
 
-  ----===| grow_all |===----
+  ----===| grow_seeds |===----
 
 
   initialise_seeds()
@@ -585,7 +641,7 @@ function grow_all()
 
   adjust_coordinates();
 
-end -- grow_all
+end -- grow_seeds
 
 
 function test_grow_all()
@@ -706,7 +762,7 @@ function test_grow_all()
   add_link(7,6, 6,6)
 
 
-  grow_all()
+  grow_seeds()
 end
 
 
