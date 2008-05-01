@@ -508,8 +508,8 @@ function build_cool_shit()
 Plan_rooms_sp();
 Quest_assign();
 Seed_grow()
-dummy_builder();
-do return "ok" end
+-- dummy_builder();
+do return "abort" end
 --]]
 
 

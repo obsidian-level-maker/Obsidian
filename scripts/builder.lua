@@ -221,15 +221,15 @@ function dummy_builder(Z)
   end
 
 
-  for y = 1, Z.grid.h do
-    for x = 1, Z.grid.w do
-      local R, lx, ly = zone_content(Z, x, y)
+  for y = 1, SEED_H do
+    for x = 1, SEED_W do
+      local R, lx, ly = zone_content(x, y)
 
       if R then
         build_room(R, x, y, lx, ly)
       end
     end
-    con.progress(100 * y / Z.grid.h)
+    con.progress(100 * y / SEED_H)
   end
 
   csg2.end_level()
