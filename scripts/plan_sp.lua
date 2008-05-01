@@ -315,35 +315,73 @@ function populate_zone(ZN)
 
 
   local function allocate_sub_zone(div_map, zone_id)
-    -- FIXME
+
+    -- FIXME !!!!! FIND SPOT FOR ZONE (OR FAIL)
+
+
+    local Z_New = { --[[ stuff ]] }
+
+    --!!!!! FIXME: ACTUALLY CREATE THE ZONE
+
+    for xx = x1,x2 do for yy = y1,y2 do
+      div_map[xx][yy] = { kind="zone", id=zone_id, zone=Z_New }
+    end end
+
+    num_subzones = num_subzones + 1
+
+    -- recursively populate it
+    populate_zone(Z_New)
   end
 
 
   local function allocate_hub(div_map, hub_id)
-    -- FIXME
+
+    local hub_list = {}
+
+    for axis2 = 1,math.min(div_map.w, div_map.h) do
+
+      local xx, yy
+      if div_map.w >= div_map.h then
+        xx, yy = hub_id, axis2
+      else
+        xx, yy = axis2, hub_id
+      end
+
+      if not div_map[xx][yy] then
+        local H = { kind="hub", id=hub_id, x=xx, y=yy }
+        table.insert(hub_list, H)
+      end
+    end
+
+    if #hub_list == 0 then return end
+
+    local H = rand_element(hub_list)
+
+    div_map[H.x][H.y] = H
+
+    num_hubs = num_hubs + 1
+
+    --!!!!! FIXME: ACTUALLY CREATE THE ROOM
   end
 
 
   local function allocate_normal(div_map, xx, yy)
     -- something already there?
-    if div_map[xx][yy] then
-      return
-    end
+    if div_map[xx][yy] then return end
 
     -- don't fill every spot
     if rand_odds(30) then return end
 
     div_map[xx][yy] = { kind="normal", id=yy*100+xx }
 
-    --!!!!! MORE STUFF
-
     num_normal = num_normal + 1
+
+    --!!!!! FIXME: ACTUALLY CREATE THE ROOM
   end
 
 
   ---| populate_zone |---
 
-  -- decide number of sub-zones, hubs and corners
 
   local W, H = Room_W(ZN), Room_H(ZN)
 
@@ -360,6 +398,7 @@ function populate_zone(ZN)
 
   local div_map = array_2D(div_W, div_H)
 
+  -- add sub-zones
   local max_SUBZONE = int((div_W + div_H + 1) / 2)
 
   for i = 2,max_SUBZONE do
@@ -368,6 +407,7 @@ function populate_zone(ZN)
     end
   end
 
+  -- add hubs
   if div_W == 1 and div_H == 1 then
     local HUB_chance = (space_W + space_H - 10) * 6
     if rand_odds(HUB_chance) then
@@ -381,12 +421,15 @@ function populate_zone(ZN)
     end
   end -- div_W == 1
 
-
+  -- add normal rooms
   repeat
     for xx = 1,div_W do for yy = 1,div_H do
       allocate_normal(div_map, xx, yy)
     end end  
   until (num_hubs + num_normal) > 0
+
+
+  -- !!!! FIXME grow everything until all is good
 end
 
 
