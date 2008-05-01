@@ -19,12 +19,12 @@
 require 'defs'
 require 'util'
 require 'a_star'
-
 require 'engines'
 
-require 'grower'
-require 'test_csg'
-require 'plan3'
+require 'seeds'
+require 'plan_sp'
+require 'quests'
+require 'builder'
 
 
 OB_THEMES["mixed"] =
@@ -278,30 +278,6 @@ function ob_update_all()
 end
 
 
-----  function ob_default_config()
-----    -- Note: game, engine & theme are set up elsewhere
-----  
-----    --| Game Settings |--
-----    OB_CONFIG.mode   = "sp"
-----    OB_CONFIG.length = "episode"
-----  
-----    --| Level Adjustments |--
-----    OB_CONFIG.size    = "mixed"
-----    OB_CONFIG.detail  = "normal"
-----    OB_CONFIG.heights = "mixed"
-----    OB_CONFIG.light   = "mixed"
-----   
-----    --| Playing Style |--
-----    OB_CONFIG.mons    = "mixed"
-----    OB_CONFIG.puzzles = "mixed"
-----    OB_CONFIG.traps   = "low"
-----    OB_CONFIG.health  = "normal"
-----    OB_CONFIG.ammo    = "normal"
-----  
-----    -- modules and options default to disabled
-----  end
-
-
 function ob_parse_config(name, value)
   assert(name and value and type(value) == "string")
 
@@ -526,29 +502,10 @@ function build_cool_shit()
   con.rand_seed(OB_CONFIG.seed * 100)
 
 
---[[ Quake 3D TEST
-  csg2.begin_level("MAP01");
-
-  test_grow_3D();
-
-  csg2.end_level();
-
-  do return "ok" end
---]]
-
---[[  CSG TEST CODE
-  csg2.begin_level("MAP01");
-  
-  test_csg();
-
-  csg2.end_level();
-
-  do return "ok" end
---]]
-
-
+-- [[ PLANNING TEST CODE
 plan_rooms_sp();
 do return "ok" end
+--]]
 
 
   create_GAME()
