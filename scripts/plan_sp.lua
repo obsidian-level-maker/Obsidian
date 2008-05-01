@@ -311,6 +311,8 @@ function populate_zone(ZN)
   assert(ZN)
   assert(ZN.zone_type)
 
+  local zone_W, zone_H = Room_W(ZN), Room_H(ZN)
+
   local num_subzones = 0
   local num_hubs = 0
   local num_normal = 0
@@ -332,8 +334,8 @@ function populate_zone(ZN)
           return "Z??"
         end
       end
-      if M.kind == "hub"  then return string.format("H%02d", M.id); end
-      return string.format("R%02d", M.id) end
+      if M.kind == "hub"  then return string.format("Hu%d", M.id % 10); end
+      return string.format("R%02d", M.id)
     end
 
     for y = div_map.h,1,-1 do
@@ -343,8 +345,24 @@ function populate_zone(ZN)
         line = line .. div_content(x, y) .. " "
       end
 
-      con.printf("> " .. line)
+      con.printf("> %s\n", line)
     end
+  end
+
+
+  local function div_to_seed_range(R, div_map, x1,y1, x2,y2)
+    
+    local sx1 = 1 + int((x1 - 1) * zone_W / div_map.w)
+    local sy1 = 1 + int((y1 - 1) * zone_H / div_map.h)
+
+    local sx2 = int(x2 * zone_W / div_map.w)
+    local sy2 = int(y2 * zone_H / div_map.h)
+
+    assert(0 <= sx1 and sx1 <= sx2 and sx2 <= zone_W)
+    assert(0 <= sy1 and sy1 <= sy2 and sy2 <= zone_H)
+
+    R.s1 = { z=ZN.s1.z, x=sx1, y=sy1 }
+    R.s2 = { z=ZN.s1.z, x=sx2, y=sy2 }
   end
 
 
@@ -356,8 +374,8 @@ function populate_zone(ZN)
     local function touches_a_zone(x, y)
       for dx = -1,1 do for dy = -1,1 do
         if not (dx==0 and dy==0) and
-           (x+dx >= 1 && x+dx <= div_map.w) and
-           (y+dy >= 1 && y+dy <= div_map.h) and
+           (x+dx >= 1 and x+dx <= div_map.w) and
+           (y+dy >= 1 and y+dy <= div_map.h) and
            div_map[x][y] and
            div_map[x][y].kind == "zone"
         then
@@ -392,6 +410,8 @@ function populate_zone(ZN)
 
       parent_zone = ZN
     }
+
+    div_to_seed_range(Z_New, div_map, x1,y1, x2,y2)
 
     repeat
       Z_New.zone_type = rand_key_by_probs { walk=70, view=50, solid=15 }
@@ -459,25 +479,23 @@ function populate_zone(ZN)
   ---| populate_zone |---
 
 
-  local W, H = Room_W(ZN), Room_H(ZN)
-
   local space_W = rand_irange(6,10)
   local space_H = rand_irange(6,10)
 
-  space_W = math.min(space_W, W)
-  space_H = math.min(space_H, H)
+  space_W = math.min(space_W, zone_W)
+  space_H = math.min(space_H, zone_H)
 
-  local div_W = int(W / space_W)
-  local div_H = int(H / space_H)
+  local div_W = int(zone_W / space_W)
+  local div_H = int(zone_H / space_H)
 
   assert(div_W >= 1 and div_H >= 1)
 
   local div_map = array_2D(div_W, div_H)
 
   -- add sub-zones
-  local max_SUBZONE = int((div_W + div_H + 1) / 2)
+  local max_SUBZONE = int((div_W + div_H + 1) / 2) - 1
 
-  for i = 2,max_SUBZONE do
+  for i = 1,max_SUBZONE do
     if rand_odds(50) then
       local Z2 = allocate_sub_zone(div_map, i)
     end
@@ -487,11 +505,11 @@ function populate_zone(ZN)
   if div_W == 1 and div_H == 1 then
     local HUB_chance = (space_W + space_H - 10) * 6
     if rand_odds(HUB_chance) then
-      allocate_hub(div_map, i)
+      allocate_hub(div_map, 1)
     end
   else
     for i = 1,math.max(div_W, div_H) do
-      if rand_odds(60) then
+      if rand_odds(50) then
         allocate_hub(div_map, i)
       end
     end
@@ -611,12 +629,12 @@ function Plan_rooms_sp()
     {
       zone_type = "solid",
 
-      s1 = { 1, 1, 1 },
-      s2 = { 1, map_size, map_size },
+      s1 = { z=1, x=1, y=1 },
+      s2 = { z=1, x=map_size, y=map_size },
     }
   }
 
-  populate_zone(MAP.top_zone)
+  populate_zone(PLAN.top_zone)
 
 end
 
