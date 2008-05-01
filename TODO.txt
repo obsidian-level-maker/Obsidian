@@ -162,6 +162,8 @@ Heretic:
 
 -  monsters: not mixed enough (too repetitive), no bosses.
 
+-  weapons: firemace no good for SP/COOP ??
+
 
 Hexen:
 
