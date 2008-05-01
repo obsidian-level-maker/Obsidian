@@ -61,7 +61,14 @@ class ROOM
 --]]
 
 
-MAP = {}
+function Room_W(R)
+  return R.s2.x - R.s1.x + 1
+end
+
+function Room_H(R)
+  return R.s2.y - R.s1.y + 1
+end
+
 
 
 function show_room_allocation(R)
@@ -298,9 +305,88 @@ function print_zone(Z)
 end
 
 
-function populate_zone(Z)
-  assert(Z)
-  assert(Z.zone_type)
+function populate_zone(ZN)
+  assert(ZN)
+  assert(ZN.zone_type)
+
+  local num_subzones = 0
+  local num_hubs = 0
+  local num_normal = 0
+
+
+  local function allocate_sub_zone(div_map, zone_id)
+    -- FIXME
+  end
+
+
+  local function allocate_hub(div_map, hub_id)
+    -- FIXME
+  end
+
+
+  local function allocate_normal(div_map, xx, yy)
+    -- something already there?
+    if div_map[xx][yy] then
+      return
+    end
+
+    -- don't fill every spot
+    if rand_odds(30) then return end
+
+    div_map[xx][yy] = { kind="normal", id=yy*100+xx }
+
+    --!!!!! MORE STUFF
+
+    num_normal = num_normal + 1
+  end
+
+
+  ---| populate_zone |---
+
+  -- decide number of sub-zones, hubs and corners
+
+  local W, H = Room_W(ZN), Room_H(ZN)
+
+  local space_W = rand_irange(6,10)
+  local space_H = rand_irange(6,10)
+
+  space_W = math.min(space_W, W)
+  space_H = math.min(space_H, H)
+
+  local div_W = int(W / space_W)
+  local div_H = int(H / space_H)
+
+  assert(div_W >= 1 and div_H >= 1)
+
+  local div_map = array_2D(div_W, div_H)
+
+  local max_SUBZONE = int((div_W + div_H + 1) / 2)
+
+  for i = 2,max_SUBZONE do
+    if rand_odds(50) then
+      local Z2 = allocate_sub_zone(div_map, i)
+    end
+  end
+
+  if div_W == 1 and div_H == 1 then
+    local HUB_chance = (space_W + space_H - 10) * 6
+    if rand_odds(HUB_chance) then
+      allocate_hub(div_map, i)
+    end
+  else
+    for i = 1,math.max(div_W, div_H) do
+      if rand_odds(60) then
+        allocate_hub(div_map, i)
+      end
+    end
+  end -- div_W == 1
+
+
+  repeat
+    for xx = 1,div_W do for yy = 1,div_H do
+      allocate_normal(div_map, xx, yy)
+    end end  
+  until (num_hubs + num_normal) > 0
 end
 
 
@@ -384,28 +470,25 @@ function Plan_rooms_sp()
   end
 
 
-
-
   ---===| plan_rooms_sp |===---
 
   print("EXPERIMENTAL plan_rooms_sp")
 
 
+  local map_size = 32   -- FIXME: depends on GAME and LEVEL_SIZE_SETTING
 
-  local map_size = 32   -- FIXME: depends on GAME
+  Seed_init(1, map_size, map_size)
 
-  MAP =
+  PLAN =
   {
-    seeds = array_2D(map_size, map_size), -- FIXME: Z dimension!!
-
     rooms = {},
 
     top_zone = 
     {
       zone_type = "solid",
 
-      s1 = { 1,1,1 },
-      s2 = { map_size,map_size,1 },
+      s1 = { 1, 1, 1 },
+      s2 = { 1, map_size, map_size },
     }
   }
 
