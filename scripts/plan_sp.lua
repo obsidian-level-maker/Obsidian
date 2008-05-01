@@ -52,7 +52,9 @@ class ROOM
                       --           but not traversable
                       -- "walk"  : area between rooms is traversable
 
-  quest : Quest
+  parent_zone : ROOM
+
+  quest : QUEST
 
   s1, s2 : Vector3  -- coverage over SEED map
 }
@@ -314,14 +316,88 @@ function populate_zone(ZN)
   local num_normal = 0
 
 
+  local function dump_div_map(div_map)
+    
+    local function div_content(x, y)
+      local M = div_map[x][y]
+      if not M then return "---" end
+      if M.kind == "zone" then
+        if M.zone.zone_type == "walk" then
+          return string.format("//%d", M.id % 10);
+        elseif M.zone.zone_type == "view" then
+          return string.format("::%d", M.id % 10);
+        elseif M.zone.zone_type == "solid" then
+          return string.format("##%d", M.id % 10);
+        else
+          return "Z??"
+        end
+      end
+      if M.kind == "hub"  then return string.format("H%02d", M.id); end
+      return string.format("R%02d", M.id) end
+    end
+
+    for y = div_map.h,1,-1 do
+      local line = ""
+
+      for x = 1,div_map.w do
+        line = line .. div_content(x, y) .. " "
+      end
+
+      con.printf("> " .. line)
+    end
+  end
+
+
   local function allocate_sub_zone(div_map, zone_id)
 
-    -- FIXME !!!!! FIND SPOT FOR ZONE (OR FAIL)
+    -- find usable spot
+    local x1,y1, x2,y2
+
+    local function touches_a_zone(x, y)
+      for dx = -1,1 do for dy = -1,1 do
+        if not (dx==0 and dy==0) and
+           (x+dx >= 1 && x+dx <= div_map.w) and
+           (y+dy >= 1 && y+dy <= div_map.h) and
+           div_map[x][y] and
+           div_map[x][y].kind == "zone"
+        then
+          return true;
+        end
+      end end
+      return false
+    end
+
+    for loop = 100,1,-1 do
+
+      -- unable to find a spot
+      if loop == 1 then return end
+
+      local x = rand_irange(1, div_map.w)
+      local y = rand_irange(1, div_map.h)
+
+      if not div_map[x][y] and not touches_a_zone(x,y) then
+
+        x1,y1, x2,y2 = x,y, x,y
+
+        -- FIXME!!!  try to expand
+
+        break;
+      end
+    end
 
 
-    local Z_New = { --[[ stuff ]] }
+    local Z_New =
+    {
+      -- FIXME: zone info
 
-    --!!!!! FIXME: ACTUALLY CREATE THE ZONE
+      parent_zone = ZN
+    }
+
+    repeat
+      Z_New.zone_type = rand_key_by_probs { walk=70, view=50, solid=15 }
+    until Z_New.zone_type ~= ZN.zone_type
+
+    --!!!!! FIXME: PLACE THE ROOM IN SEED MAP
 
     for xx = x1,x2 do for yy = y1,y2 do
       div_map[xx][yy] = { kind="zone", id=zone_id, zone=Z_New }
@@ -372,7 +448,7 @@ function populate_zone(ZN)
     -- don't fill every spot
     if rand_odds(30) then return end
 
-    div_map[xx][yy] = { kind="normal", id=yy*100+xx }
+    div_map[xx][yy] = { kind="normal", id=yy*10+xx }
 
     num_normal = num_normal + 1
 
@@ -430,12 +506,17 @@ function populate_zone(ZN)
 
 
   -- !!!! FIXME grow everything until all is good
+
+  if not ZN.parent_zone then
+    dump_div_map(div_map)
+  end
 end
 
 
 function Plan_rooms_sp()
 
 
+--[[
   function create_zone(parent, Q)
 
     local min_W = 3 -- int(parent.grid.w * 4 / 10)
@@ -511,7 +592,7 @@ function Plan_rooms_sp()
 
     return R
   end
-
+--]]
 
   ---===| plan_rooms_sp |===---
 
