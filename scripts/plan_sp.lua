@@ -371,11 +371,22 @@ function populate_zone(ZN)
     -- find usable spot
     local x1,y1, x2,y2
 
-    local function touches_a_zone(x, y)
-      for dx = -1,1 do for dy = -1,1 do
-        if not (dx==0 and dy==0) and
-           (x+dx >= 1 and x+dx <= div_map.w) and
-           (y+dy >= 1 and y+dy <= div_map.h) and
+    local function area_free(x1,y1, x2,y2)
+      assert(1 <= x1 and x1 <= x2 and x2 <= div_map.w)
+      assert(1 <= y1 and y1 <= y2 and y2 <= div_map.h)
+
+      for x = x1,x2 do for y = y1,y2 do
+        if div_map[x][y] then
+          return false;
+        end
+      end end
+      return true
+    end
+
+    local function touches_a_zone(x1,y1, x2,y2)
+      for x = x1-1,x2+1 do for y = y1-1,y2+1 do
+        if (x >= 1 and x <= div_map.w) and
+           (y >= 1 and y <= div_map.h) and
            div_map[x][y] and
            div_map[x][y].kind == "zone"
         then
@@ -383,6 +394,57 @@ function populate_zone(ZN)
         end
       end end
       return false
+    end
+
+    local function expand_zone(x, y)
+      x1,y1 = x,y
+      x2,y2 = x,y
+
+      -- decide maximum size of zone
+      local SIZE_MAP = { 1,1,2,3,3,4,5,5,6 }
+
+      local max_w = SIZE_MAP[math.min(9,div_map.w)]
+      local max_h = SIZE_MAP[math.min(9,div_map.h)]
+
+--    con.printf("div_map %dx%d  prelim %dx%d  ", div_map.w, div_map.h, max_w, max_h)
+
+      local REDUCE_MAP1 = { 0, 25, 33, 50 }
+      local REDUCE_MAP2 = { 0,  0, 10, 20, 40 }
+
+      if rand_odds(REDUCE_MAP1[math.min(4,max_w)]) then max_w = max_w - 1 end
+      if rand_odds(REDUCE_MAP1[math.min(4,max_h)]) then max_h = max_h - 1 end
+
+      if rand_odds(REDUCE_MAP2[math.min(5,max_w)]) then max_w = max_w - 1 end
+      if rand_odds(REDUCE_MAP2[math.min(5,max_h)]) then max_h = max_h - 1 end
+
+--    con.printf("final %dx%d\n", max_w, max_h)
+
+      for loop = 1,20 do
+        local dir = rand_irange(1,4) * 2
+
+        local tx1,ty1 = x1,y1
+        local tx2,ty2 = x2,y2
+
+            if dir == 2 then ty1 = ty1 - 1
+        elseif dir == 4 then tx1 = tx1 - 1
+        elseif dir == 6 then tx2 = tx2 + 1
+        elseif dir == 8 then ty2 = ty2 + 1
+        end
+
+        if (tx1 < 1 or ty1 < 1 or tx2 > div_map.w or ty2 > div_map.h) or
+           (tx2 - tx1 + 1) > max_w or
+           (ty2 - ty1 + 1) > max_h or
+           not area_free(tx1,ty1, tx2,ty2) or
+           touches_a_zone(tx1,ty1, tx2,ty2)
+        then
+          -- not valid, skip it
+        else
+          -- OK!
+con.printf("SUB-ZONE: expanded\n")
+          x1,y1 = tx1,ty1
+          x2,y2 = tx2,ty2
+        end
+      end -- for loop
     end
 
     for loop = 100,1,-1 do
@@ -393,12 +455,8 @@ function populate_zone(ZN)
       local x = rand_irange(1, div_map.w)
       local y = rand_irange(1, div_map.h)
 
-      if not div_map[x][y] and not touches_a_zone(x,y) then
-
-        x1,y1, x2,y2 = x,y, x,y
-
-        -- FIXME!!!  try to expand
-
+      if not div_map[x][y] and not touches_a_zone(x,y, x,y) then
+        expand_zone(x, y)
         break;
       end
     end
@@ -479,6 +537,7 @@ function populate_zone(ZN)
   ---| populate_zone |---
 
 
+con.printf("BEGIN populate_zone\n")
   local space_W = rand_irange(6,10)
   local space_H = rand_irange(6,10)
 
@@ -493,6 +552,9 @@ function populate_zone(ZN)
   local div_map = array_2D(div_W, div_H)
 
   -- add sub-zones
+con.printf("  SUB-ZONES...\n")
+dump_div_map(div_map)
+con.printf("\n")
   local max_SUBZONE = int((div_W + div_H + 1) / 2) - 1
 
   for i = 1,max_SUBZONE do
@@ -502,6 +564,9 @@ function populate_zone(ZN)
   end
 
   -- add hubs
+con.printf("  HUBS...\n")
+dump_div_map(div_map)
+con.printf("\n")
   if div_W == 1 and div_H == 1 then
     local HUB_chance = (space_W + space_H - 10) * 6
     if rand_odds(HUB_chance) then
@@ -516,6 +581,9 @@ function populate_zone(ZN)
   end -- div_W == 1
 
   -- add normal rooms
+con.printf("  NORMAL ROOMS...\n")
+dump_div_map(div_map)
+con.printf("\n")
   repeat
     for xx = 1,div_W do for yy = 1,div_H do
       allocate_normal(div_map, xx, yy)
@@ -525,9 +593,10 @@ function populate_zone(ZN)
 
   -- !!!! FIXME grow everything until all is good
 
-  if not ZN.parent_zone then
+  if true or not ZN.parent_zone then
     dump_div_map(div_map)
   end
+con.printf("END populate_zone\n")
 end
 
 
