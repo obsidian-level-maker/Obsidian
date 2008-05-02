@@ -347,6 +347,8 @@ function populate_zone(ZN)
 
       con.printf("> %s\n", line)
     end
+
+    con.printf("\n")
   end
 
 
@@ -440,7 +442,6 @@ function populate_zone(ZN)
           -- not valid, skip it
         else
           -- OK!
-con.printf("SUB-ZONE: expanded\n")
           x1,y1 = tx1,ty1
           x2,y2 = tx2,ty2
         end
@@ -524,7 +525,7 @@ con.printf("SUB-ZONE: expanded\n")
     if div_map[xx][yy] then return end
 
     -- don't fill every spot
-    if rand_odds(30) then return end
+    if rand_odds(50) then return end
 
     div_map[xx][yy] = { kind="normal", id=yy*10+xx }
 
@@ -537,7 +538,6 @@ con.printf("SUB-ZONE: expanded\n")
   ---| populate_zone |---
 
 
-con.printf("BEGIN populate_zone\n")
   local space_W = rand_irange(6,10)
   local space_H = rand_irange(6,10)
 
@@ -552,9 +552,6 @@ con.printf("BEGIN populate_zone\n")
   local div_map = array_2D(div_W, div_H)
 
   -- add sub-zones
-con.printf("  SUB-ZONES...\n")
-dump_div_map(div_map)
-con.printf("\n")
   local max_SUBZONE = int((div_W + div_H + 1) / 2) - 1
 
   for i = 1,max_SUBZONE do
@@ -564,9 +561,6 @@ con.printf("\n")
   end
 
   -- add hubs
-con.printf("  HUBS...\n")
-dump_div_map(div_map)
-con.printf("\n")
   if div_W == 1 and div_H == 1 then
     local HUB_chance = (space_W + space_H - 10) * 6
     if rand_odds(HUB_chance) then
@@ -581,9 +575,6 @@ con.printf("\n")
   end -- div_W == 1
 
   -- add normal rooms
-con.printf("  NORMAL ROOMS...\n")
-dump_div_map(div_map)
-con.printf("\n")
   repeat
     for xx = 1,div_W do for yy = 1,div_H do
       allocate_normal(div_map, xx, yy)
@@ -593,10 +584,9 @@ con.printf("\n")
 
   -- !!!! FIXME grow everything until all is good
 
-  if true or not ZN.parent_zone then
+  if true then --- not ZN.parent_zone then
     dump_div_map(div_map)
   end
-con.printf("END populate_zone\n")
 end
 
 
