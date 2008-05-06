@@ -18,6 +18,14 @@
 
 --[[ *** CLASS INFORMATION ***
 
+class PLAN
+{
+  all_rooms : array(ROOM) 
+
+  head_zone : ZONE
+}
+
+
 class ROOM
 {
   sx1, sy1, sx2, sy2 : coverage over SEED map
@@ -58,14 +66,6 @@ class RLINK  -- Room Link
   lock : string  -- optional, for keyed/switched doors
 }
 
-
-class PLAN
-{
-  all_rooms : array(ROOM) 
-
-  head_zone : ZONE
-
-}
 
 --------------------------------------------------------------]]
 
