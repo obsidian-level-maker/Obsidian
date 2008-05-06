@@ -136,17 +136,17 @@ function populate_zone(ZN)
       if not M then return "---" end
       if M.kind == "zone" then
         if M.zone.zone_kind == "walk" then
-          return string.format("//%d", M.id % 10);
+          return string.format("//%d", M.div_id % 10);
         elseif M.zone.zone_kind == "view" then
-          return string.format("::%d", M.id % 10);
+          return string.format("::%d", M.div_id % 10);
         elseif M.zone.zone_kind == "solid" then
-          return string.format("##%d", M.id % 10);
+          return string.format("##%d", M.div_id % 10);
         else
           return "Z??"
         end
       end
-      if M.kind == "hub"  then return string.format("Hu%d", M.id % 10); end
-      return string.format("R%02d", M.id)
+      if M.kind == "hub"  then return string.format("Hu%d", M.div_id % 10); end
+      return string.format("R%02d", M.div_id % 100)
     end
 
     for y = div_H,1,-1 do
@@ -163,7 +163,7 @@ function populate_zone(ZN)
   end
 
 
-  local function div_to_seed_range(R, div_map, x1,y1, x2,y2)
+  local function div_to_seed_range(R, x1,y1, x2,y2)
     
     R.sx1 = 1 + int((x1 - 1) * zone_W / div_W)
     R.sy1 = 1 + int((y1 - 1) * zone_H / div_H)
@@ -278,7 +278,7 @@ function populate_zone(ZN)
       parent = ZN
     }
 
-    div_to_seed_range(SUB_ZONE, div_map, x1,y1, x2,y2)
+    div_to_seed_range(SUB_ZONE, x1,y1, x2,y2)
 
     repeat
       SUB_ZONE.zone_kind = rand_key_by_probs { walk=70, view=50, solid=15 }
@@ -287,7 +287,7 @@ function populate_zone(ZN)
     --!!!!! FIXME: PLACE THE ROOM IN SEED MAP
 
     for xx = x1,x2 do for yy = y1,y2 do
-      div_map[xx][yy] = { kind="zone", id=zone_id, zone=SUB_ZONE }
+      div_map[xx][yy] = { kind="zone", div_id=zone_id, zone=SUB_ZONE }
     end end
 
     num_subzones = num_subzones + 1
@@ -311,7 +311,7 @@ function populate_zone(ZN)
       end
 
       if not div_map[xx][yy] then
-        local H = { kind="hub", id=hub_id, x=xx, y=yy }
+        local H = { x=xx, y=yy, kind="hub", div_id=hub_id }
         table.insert(hub_list, H)
       end
     end
@@ -322,10 +322,20 @@ function populate_zone(ZN)
 
     div_map[H.x][H.y] = H
 
+    local HUB = Room_create(ZN, "hub")
+
+    div_to_seed_range(HUB, H.x,H.y, H.x,H.y)
+
+    -- FIXME: choose good size and spot for hub
+    HUB.sx1 = HUB.sx1 + 2
+    HUB.sy1 = HUB.sy1 + 2
+    HUB.sx2 = HUB.sx2 - 2
+    HUB.sy2 = HUB.sy2 - 2
+
+    Room_assign_seeds(HUB)
+
     num_hubs  = num_hubs  + 1
     num_rooms = num_rooms + 1
-
-    --!!!!! FIXME: ACTUALLY CREATE THE ROOM
   end
 
 
@@ -333,11 +343,21 @@ function populate_zone(ZN)
     -- something already there?
     if div_map[xx][yy] then return end
 
-    div_map[xx][yy] = { kind="normal", id=yy*10+xx }
+    div_map[xx][yy] = { x=xx, y=yy, kind="room", div_id=xx*10+yy }
+
+    local ROOM = Room_create(ZN, "normal")
+
+    div_to_seed_range(ROOM, xx,yy, xx,yy)
+
+    -- FIXME: choose good size and spot for room
+    ROOM.sx1 = ROOM.sx1 + 2
+    ROOM.sy1 = ROOM.sy1 + 2
+    ROOM.sx2 = ROOM.sx2 - 3
+    ROOM.sy2 = ROOM.sy2 - 3
+
+    Room_assign_seeds(ROOM)
 
     num_rooms = num_rooms + 1
-
-    --!!!!! FIXME: ACTUALLY CREATE THE ROOM
   end
 
 
@@ -347,8 +367,8 @@ function populate_zone(ZN)
   local space_W = rand_irange(7,11)
   local space_H = rand_irange(7,11)
 
-  if (space_W < zone_W) space_W = zone_W
-  if (space_H < zone_H) space_H = zone_H
+  if space_W < zone_W then space_W = zone_W end
+  if space_H < zone_H then space_H = zone_H end
 
   div_W = int(zone_W / space_W)
   div_H = int(zone_H / space_H)
@@ -392,6 +412,8 @@ function populate_zone(ZN)
 -- [[
     dump_div_map(div_map)
 -- ]]
+
+  div_map = nil
 end
 
 
