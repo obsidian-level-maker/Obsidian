@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- PLANNER 4
+--  PLANNER : Single Player / Co-Op
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -16,13 +16,7 @@
 --
 ----------------------------------------------------------------
 
-require 'defs'
-require 'util'
-require 'seeds'
-
-
---[[ CLASS INFORMATION
-----------------------
+--[[ *** CLASS INFORMATION ***
 
 class ROOM
 {
@@ -73,8 +67,11 @@ class PLAN
 
 }
 
+--------------------------------------------------------------]]
 
---]]
+require 'defs'
+require 'util'
+require 'seeds'
 
 
 function Room_W(R)
