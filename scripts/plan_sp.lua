@@ -24,9 +24,31 @@ require 'seeds'
 --[[ CLASS INFORMATION
 ----------------------
 
+class ROOM
+{
+  sx1, sy1, sx2, sy2 : coverage over SEED map
+
+  links : array(RLINK) -- all connections with other rooms
+
+  parent : ZONE -- zone this room is directly contained in
+
+  quest : QUEST
+}
+
+
+class ZONE extends ROOM
+{
+  zone_type : string  -- "solid" : nothing is between rooms
+                      -- "view"  : area between rooms is viewable
+                      --           but not traversable
+                      -- "walk"  : area between rooms is traversable
+
+}
+
+
 class RLINK  -- Room Link
 [
-  rooms : table(ROOM)  -- table has two entries [1] and [2]
+  rooms : array(ROOM) -- two entries for the linked rooms
 
   kind  : string  -- "neighbour" (the two rooms touch)
                   -- "contain"   (rooms[2] is inside rooms[1])
@@ -39,24 +61,6 @@ class RLINK  -- Room Link
   door : string  -- "arch", "door" etc..
 
   lock : string  -- optional, for keyed/switched doors
-}
-
-
-class ROOM
-{
-  links : table(RLINK) -- all connections with other rooms
-
-  zone_type : string  -- nil     : cannot contain rooms (not a Zone)
-                      -- "solid" : nothing is between rooms
-                      -- "view"  : area between rooms is viewable
-                      --           but not traversable
-                      -- "walk"  : area between rooms is traversable
-
-  parent_zone : ROOM
-
-  quest : QUEST
-
-  s1, s2 : Vector3  -- coverage over SEED map
 }
 
 
@@ -678,7 +682,7 @@ function Plan_rooms_sp()
 
   local map_size = 32   -- FIXME: depends on GAME and LEVEL_SIZE_SETTING
 
-  Seed_init(1, map_size, map_size)
+  Seed_init(map_size, map_size, 1)
 
   PLAN =
   {
