@@ -36,64 +36,64 @@ class SEED
 --]]
 
 
-function Seed_init(T, W, H, zone)
+function Seed_init(W, H, D, zone)
 
-  SEEDS = {}
-
-  SEED_T = T
   SEED_W = W
   SEED_H = H
+  SEED_D = D
 
-  for z = 1,T do
-    SEEDS[z] = array_2D(W, H)
+  SEEDS = array_2D(W, H)
 
-    for y = 1,H do for x = 1,W do
-      SEEDS[z][x][y] = { sz=z, sx=x, sy=y, zone=zone }
-    end end
-  end
+  for x = 1,W do for y = 1,H do
+    SEEDS[x][y] = {}
+
+    for z = 1,D do
+      SEEDS[x][y][z] = { sx=x, sy=y, sz=z, zone=zone }
+    end
+  end end -- x,y
 end
 
 
 function Seed_close()
   SEEDS = nil
 
-  SEED_T = nil
   SEED_W = nil
   SEED_H = nil
+  SEED_D = nil
 end
 
 
-function Seed_valid(z, x, y)
-  return (z >= 1 and z <= SEED_T) and
-         (x >= 1 and x <= SEED_W) and
-         (y >= 1 and y <= SEED_H)
+function Seed_valid(x, y, z)
+  return (x >= 1 and x <= SEED_W) and
+         (y >= 1 and y <= SEED_H) and
+         (z >= 1 and z <= SEED_D)
 end
 
 
-function Seed_safe_get(z, x, y)
-  return Seed_valid(z, x, y) and SEEDS[z][x][y]
+function Seed_get_safe(x, y, z)
+  return Seed_valid(x, y, z) and SEEDS[x][y][z]
 end
 
 
-function Seed_is_free(z, x, y, zone)
-  assert(Seed_valid(z, x, y))
+function Seed_is_free(x, y, z, zone)
+  assert(Seed_valid(x, y, z))
 
-  return SEEDS[z][x][y].zone == zone
+  return SEEDS[x][y][z].zone == zone
 end
 
 
-function Seed_are_free(z1, x1, y1, z2, x2, y2, zone)
+function Seed_are_free(x1,y1,z1, x2,y2,z2, zone)
 
   assert(Seed_valid(z1,x1,y1))
   assert(Seed_valid(z2,x2,y2))
-  assert(z1 <= z2 and x1 <= x2 and y1 <= y2)
+  assert(x1 <= x2 and y1 <= y2 and z1 <= z2)
 
-  for z = z1,z2 do for x = x1,x2 do for y = y1,y2 do
-    local S = SEEDS[z][x][y]
+  for x = x1,x2 do for y = y1,y2 do for z = z1,z2 do
+    local S = SEEDS[x][y][z]
     if S.zone ~= zone then
       return false
     end
-  end end end
+  end end end -- x, y, z
 
   return true
 end
