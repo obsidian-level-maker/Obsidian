@@ -53,13 +53,11 @@ class RLINK  -- Room Link
 [
   rooms : array(ROOM) -- two entries for the linked rooms
 
-  kind  : string  -- "nb"        (the two rooms touch)
-                  -- "contain"   (rooms[2] is inside rooms[1])
-                  -- "teleport"
+  kind : string  -- "view" (windows, railings)
+                 -- "fall" (one-way, fall-off from [1] into [2])
+                 -- "walk" (two-way, typically an arch or door)
 
-  connect : string  -- "view" (windows, railings)
-                    -- "fall" (one-way, fall-off from [1] into [2])
-                    -- "walk" (two-way, typically an arch or door)
+  teleport : true (for teleport links)
 
   door : string  -- "arch", "door" etc..
 
@@ -88,61 +86,33 @@ function Room_assign_seeds(R)
   end end
 end
 
-function Room_create(parent, Q, conn_Q)
+function Room_create(zone)
 
-  local R =  -- new ROOM
+  local ROOM =
   {
-    links = {},
-    quest = Q,
-    s_low = {}, s_high = {}, s_size = {}
+    parent = zone,
+    links  = {},
   }
+
+  table.insert(PLAN.all_rooms, ROOM)
+    
+  return ROOM
+end
+
+function Room_link(R1, R2, kind)
 
   local RLINK =
   {
-    rooms = { parent, R },
-    kind  = "contain",
-    connect = "walk",
+    rooms = { R1, R2 },
+    kind  = kind,
   }
 
-  table.insert(parent.links, RLINK);
-  table.insert(R.links, RLINK)
+  table.insert(R1.links, RLINK)
+  table.insert(R2.links, RLINK)
 
-  R.s_size.x = rand_irange(1,4)
-  R.s_size.y = R.s_size.x
-  R.s_size.z = 1
-
-  if rand_odds(70) and parent.s_size.x >= 12 and parent.s_size.y >= 12
-  then
-    R.container_type = "walk"
-    R.s_size.x = rand_irange(6, int(parent.s_size.x/2))
-    R.s_size.y = rand_irange(6, int(parent.s_size.y/2))
-  end
-
-  local conn_R = find_spot_for_room(parent, R, conn_Q)
-
-  if false then  --- FIXME  if conn_Q then
-    assert(conn_R);
-
-    RLINK =
-    {
-      rooms = { conn_R, R },
-      kind  = "neighbour",
-      connect = "walk",
-    }
-
-    table.insert(conn_R.links, RLINK);
-    table.insert(R.links, RLINK)
-  end
-
-  if R.container_type then
-    add_room(R, Q, nil);
-    add_room(R, Q, nil);
-  end
-
-  assign_spot(R.s_low.x, R.s_low.y, R.s_low.z,
-              R.s_size.x, R.s_size.y, R.s_size.z, R)
-    
+  return RLINK
 end
+
 
 
 function populate_zone(ZN)
@@ -153,10 +123,13 @@ function populate_zone(ZN)
 
   local num_subzones = 0
   local num_hubs = 0
-  local num_normal = 0
+  local num_rooms = 0
+
+  local div_map = array_2D(9, 9)
+  local div_W, div_H
 
 
-  local function dump_div_map(div_map)
+  local function dump_div_map()
     
     local function div_content(x, y)
       local M = div_map[x][y]
@@ -176,10 +149,10 @@ function populate_zone(ZN)
       return string.format("R%02d", M.id)
     end
 
-    for y = div_map.h,1,-1 do
+    for y = div_H,1,-1 do
       local line = ""
 
-      for x = 1,div_map.w do
+      for x = 1,div_W do
         line = line .. div_content(x, y) .. " "
       end
 
@@ -192,11 +165,11 @@ function populate_zone(ZN)
 
   local function div_to_seed_range(R, div_map, x1,y1, x2,y2)
     
-    R.sx1 = 1 + int((x1 - 1) * zone_W / div_map.w)
-    R.sy1 = 1 + int((y1 - 1) * zone_H / div_map.h)
+    R.sx1 = 1 + int((x1 - 1) * zone_W / div_W)
+    R.sy1 = 1 + int((y1 - 1) * zone_H / div_H)
 
-    R.sx2 = int(x2 * zone_W / div_map.w)
-    R.sy2 = int(y2 * zone_H / div_map.h)
+    R.sx2 = int(x2 * zone_W / div_W)
+    R.sy2 = int(y2 * zone_H / div_H)
 
     assert(0 <= R.sx1 and R.sx1 <= R.sx2 and R.sx2 <= zone_W)
     assert(0 <= R.sy1 and R.sy1 <= R.sy2 and R.sy2 <= zone_H)
@@ -209,8 +182,8 @@ function populate_zone(ZN)
     local x1,y1, x2,y2
 
     local function area_free(x1,y1, x2,y2)
-      assert(1 <= x1 and x1 <= x2 and x2 <= div_map.w)
-      assert(1 <= y1 and y1 <= y2 and y2 <= div_map.h)
+      assert(1 <= x1 and x1 <= x2 and x2 <= div_W)
+      assert(1 <= y1 and y1 <= y2 and y2 <= div_H)
 
       for x = x1,x2 do for y = y1,y2 do
         if div_map[x][y] then
@@ -222,8 +195,8 @@ function populate_zone(ZN)
 
     local function touches_a_zone(x1,y1, x2,y2)
       for x = x1-1,x2+1 do for y = y1-1,y2+1 do
-        if (x >= 1 and x <= div_map.w) and
-           (y >= 1 and y <= div_map.h) and
+        if (x >= 1 and x <= div_W) and
+           (y >= 1 and y <= div_H) and
            div_map[x][y] and
            div_map[x][y].kind == "zone"
         then
@@ -240,10 +213,10 @@ function populate_zone(ZN)
       -- decide maximum size of zone
       local SIZE_MAP = { 1,1,2,3,3,4,5,5,6 }
 
-      local max_w = SIZE_MAP[math.min(9,div_map.w)]
-      local max_h = SIZE_MAP[math.min(9,div_map.h)]
+      local max_w = SIZE_MAP[math.min(9,div_W)]
+      local max_h = SIZE_MAP[math.min(9,div_H)]
 
---    con.printf("div_map %dx%d  prelim %dx%d  ", div_map.w, div_map.h, max_w, max_h)
+--    con.printf("div_map %dx%d  prelim %dx%d  ", div_W, div_H, max_w, max_h)
 
       local REDUCE_MAP1 = { 0, 25, 33, 50 }
       local REDUCE_MAP2 = { 0,  0, 10, 20, 40 }
@@ -268,7 +241,7 @@ function populate_zone(ZN)
         elseif dir == 8 then ty2 = ty2 + 1
         end
 
-        if (tx1 < 1 or ty1 < 1 or tx2 > div_map.w or ty2 > div_map.h) or
+        if (tx1 < 1 or ty1 < 1 or tx2 > div_W or ty2 > div_H) or
            (tx2 - tx1 + 1) > max_w or
            (ty2 - ty1 + 1) > max_h or
            not area_free(tx1,ty1, tx2,ty2) or
@@ -288,8 +261,8 @@ function populate_zone(ZN)
       -- unable to find a spot
       if loop == 1 then return end
 
-      local x = rand_irange(1, div_map.w)
-      local y = rand_irange(1, div_map.h)
+      local x = rand_irange(1, div_W)
+      local y = rand_irange(1, div_H)
 
       if not div_map[x][y] and not touches_a_zone(x,y, x,y) then
         expand_zone(x, y)
@@ -298,29 +271,29 @@ function populate_zone(ZN)
     end
 
 
-    local Z_New =
+    local SUB_ZONE =
     {
       -- FIXME: zone info
 
-      parent_zone = ZN
+      parent = ZN
     }
 
-    div_to_seed_range(Z_New, div_map, x1,y1, x2,y2)
+    div_to_seed_range(SUB_ZONE, div_map, x1,y1, x2,y2)
 
     repeat
-      Z_New.zone_kind = rand_key_by_probs { walk=70, view=50, solid=15 }
-    until Z_New.zone_kind ~= ZN.zone_kind
+      SUB_ZONE.zone_kind = rand_key_by_probs { walk=70, view=50, solid=15 }
+    until SUB_ZONE.zone_kind ~= ZN.zone_kind
 
     --!!!!! FIXME: PLACE THE ROOM IN SEED MAP
 
     for xx = x1,x2 do for yy = y1,y2 do
-      div_map[xx][yy] = { kind="zone", id=zone_id, zone=Z_New }
+      div_map[xx][yy] = { kind="zone", id=zone_id, zone=SUB_ZONE }
     end end
 
     num_subzones = num_subzones + 1
 
     -- recursively populate it
-    populate_zone(Z_New)
+    populate_zone(SUB_ZONE)
   end
 
 
@@ -328,10 +301,10 @@ function populate_zone(ZN)
 
     local hub_list = {}
 
-    for axis2 = 1,math.min(div_map.w, div_map.h) do
+    for axis2 = 1,math.min(div_W, div_H) do
 
       local xx, yy
-      if div_map.w >= div_map.h then
+      if div_W >= div_H then
         xx, yy = hub_id, axis2
       else
         xx, yy = axis2, hub_id
@@ -349,22 +322,20 @@ function populate_zone(ZN)
 
     div_map[H.x][H.y] = H
 
-    num_hubs = num_hubs + 1
+    num_hubs  = num_hubs  + 1
+    num_rooms = num_rooms + 1
 
     --!!!!! FIXME: ACTUALLY CREATE THE ROOM
   end
 
 
-  local function allocate_normal(div_map, xx, yy)
+  local function allocate_room(div_map, xx, yy)
     -- something already there?
     if div_map[xx][yy] then return end
 
-    -- don't fill every spot
-    if rand_odds(50) then return end
-
     div_map[xx][yy] = { kind="normal", id=yy*10+xx }
 
-    num_normal = num_normal + 1
+    num_rooms = num_rooms + 1
 
     --!!!!! FIXME: ACTUALLY CREATE THE ROOM
   end
@@ -373,25 +344,25 @@ function populate_zone(ZN)
   ---| populate_zone |---
 
 
-  local space_W = rand_irange(6,10)
-  local space_H = rand_irange(6,10)
+  local space_W = rand_irange(7,11)
+  local space_H = rand_irange(7,11)
 
-  space_W = math.min(space_W, zone_W)
-  space_H = math.min(space_H, zone_H)
+  if (space_W < zone_W) space_W = zone_W
+  if (space_H < zone_H) space_H = zone_H
 
-  local div_W = int(zone_W / space_W)
-  local div_H = int(zone_H / space_H)
+  div_W = int(zone_W / space_W)
+  div_H = int(zone_H / space_H)
 
-  assert(div_W >= 1 and div_H >= 1)
+  assert(div_W >= 1 and div_W <= div_map.w)
+  assert(div_H >= 1 and div_H <= div_map.h)
 
-  local div_map = array_2D(div_W, div_H)
 
   -- add sub-zones
   local max_SUBZONE = int((div_W + div_H + 1) / 2) - 1
 
   for i = 1,max_SUBZONE do
     if rand_odds(50) then
-      local Z2 = allocate_sub_zone(div_map, i)
+      allocate_sub_zone(div_map, i)
     end
   end
 
@@ -412,14 +383,15 @@ function populate_zone(ZN)
   -- add normal rooms
   repeat
     for xx = 1,div_W do for yy = 1,div_H do
-      allocate_normal(div_map, xx, yy)
+      if rand_odds(50) then
+        allocate_room(div_map, xx, yy)
+      end
     end end  
-  until (num_hubs + num_normal) > 0
+  until num_rooms > 0
 
-  if true then --- not ZN.parent_zone then
+-- [[
     dump_div_map(div_map)
-  end
-
+-- ]]
 end
 
 
