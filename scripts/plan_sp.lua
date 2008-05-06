@@ -38,11 +38,12 @@ class ROOM
 
 class ZONE extends ROOM
 {
-  zone_type : string  -- "solid" : nothing is between rooms
+  zone_kind : string  -- "solid" : nothing is between rooms
                       -- "view"  : area between rooms is viewable
                       --           but not traversable
                       -- "walk"  : area between rooms is traversable
 
+  children : array(ROOM)
 }
 
 
@@ -50,7 +51,7 @@ class RLINK  -- Room Link
 [
   rooms : array(ROOM) -- two entries for the linked rooms
 
-  kind  : string  -- "neighbour" (the two rooms touch)
+  kind  : string  -- "nb"        (the two rooms touch)
                   -- "contain"   (rooms[2] is inside rooms[1])
                   -- "teleport"
 
@@ -64,256 +65,92 @@ class RLINK  -- Room Link
 }
 
 
+class PLAN
+{
+  all_rooms : array(ROOM) 
+
+  head_zone : ZONE
+
+}
+
+
 --]]
 
 
 function Room_W(R)
-  return R.s2.x - R.s1.x + 1
+  return R.sx2 - R.sx1 + 1
 end
 
 function Room_H(R)
-  return R.s2.y - R.s1.y + 1
+  return R.sy2 - R.sy1 + 1
 end
 
-
-
-function show_room_allocation(R)
-  
-  print("room_allocation", R.s_size.y, "by", R.s_size.x, ":-")
-
-  for y = R.s_size.y, 1, -1 do
-
-    local line = ""
-
-    for x = 1, R.s_size.x do
-
-      local N = SEED_MAP[R.s_low.x + x - 1][R.s_low.y + y - 1]
-
-      if not N then
-        line = line .. "."
-
-      elseif not N.quest then
-        line = line .. "?"
-
-      else
-        line = line .. N.quest.level
-      end
-    end
-
-    print(">", line)
-  end
+function Room_assign_seeds(R)
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    SEEDS[x][y][1].room = R
+  end end
 end
 
+function Room_create(parent, Q, conn_Q)
 
-function plan_rooms_sp_0()
+  local R =  -- new ROOM
+  {
+    links = {},
+    quest = Q,
+    s_low = {}, s_high = {}, s_size = {}
+  }
 
-  print("plan_rooms_sp...")
+  local RLINK =
+  {
+    rooms = { parent, R },
+    kind  = "contain",
+    connect = "walk",
+  }
 
+  table.insert(parent.links, RLINK);
+  table.insert(R.links, RLINK)
 
-  
-  local function spot_is_free(x,y,z, w,h,t)
- 
-    for xx = x,x+w-1 do
-      for yy = y,y+h-1 do
-        if SEED_MAP[xx][yy] then
-          return false;
-        end
-      end
-    end
+  R.s_size.x = rand_irange(1,4)
+  R.s_size.y = R.s_size.x
+  R.s_size.z = 1
 
-    return true;
+  if rand_odds(70) and parent.s_size.x >= 12 and parent.s_size.y >= 12
+  then
+    R.container_type = "walk"
+    R.s_size.x = rand_irange(6, int(parent.s_size.x/2))
+    R.s_size.y = rand_irange(6, int(parent.s_size.y/2))
   end
 
-  local function assign_spot(x,y,z, w,h,t, room)
-    assert(room)
-    for xx = x,x+w-1 do
-      for yy = y,y+h-1 do
-        if not SEED_MAP[xx][yy] then
-          SEED_MAP[xx][yy] = room
-        end
-      end
-    end
-  end
+  local conn_R = find_spot_for_room(parent, R, conn_Q)
 
-  local function find_spot_for_room(parent, R, conn_Q)
-    --> RETURN: room we branched off from (when conn_Q ~= nil)
+  if false then  --- FIXME  if conn_Q then
+    assert(conn_R);
 
-    -- FIXME !!!  does not find rooms connected to previous quest (conn_Q)
-
-    local w = R.s_size.x
-    local h = R.s_size.y
-    local t = R.s_size.z
-
-    for loop = 1,9999 do
-
-      local sx = parent.s_low.x + rand_irange(0, parent.s_size.x - w);
-      local sy = parent.s_low.y + rand_irange(0, parent.s_size.y - h);
-      local sz = parent.s_low.z + rand_irange(0, parent.s_size.z - t);
-
-      if spot_is_free(sx,sy,sz, w,h,t) then
-
-        R.s_low  = { x=sx, y=sy, z=sz }
-        R.s_high = { x=sx+w-1, y=sy+h-1, z=sz+t-1 }
-        R.s_size = { x=w, y=h, z=t }
-
-        return nil
-      end
-print("spot not free!", string.format("(%d %d %d)", sx, sy, sz),
-       string.format("(%d %d %d)", w, h, t))
-    end
-
-show_room_allocation(parent);
-    error("find_spot_for_room: FAILED! " .. w .. "x" .. h)
-  end
-
-
-  local function add_room(parent, Q, conn_Q)
-
-    local R =  -- new ROOM
+    RLINK =
     {
-      links = {},
-      quest = Q,
-      s_low = {}, s_high = {}, s_size = {}
-    }
-
-    local RLINK =
-    {
-      rooms = { parent, R },
-      kind  = "contain",
+      rooms = { conn_R, R },
+      kind  = "neighbour",
       connect = "walk",
     }
 
-    table.insert(parent.links, RLINK);
+    table.insert(conn_R.links, RLINK);
     table.insert(R.links, RLINK)
-
-    R.s_size.x = rand_irange(1,4)
-    R.s_size.y = R.s_size.x
-    R.s_size.z = 1
-
-    if rand_odds(70) and parent.s_size.x >= 12 and parent.s_size.y >= 12
-    then
-      R.container_type = "walk"
-      R.s_size.x = rand_irange(6, int(parent.s_size.x/2))
-      R.s_size.y = rand_irange(6, int(parent.s_size.y/2))
-    end
-
-    local conn_R = find_spot_for_room(parent, R, conn_Q)
-
-    if false then  --- FIXME  if conn_Q then
-      assert(conn_R);
-
-      RLINK =
-      {
-        rooms = { conn_R, R },
-        kind  = "neighbour",
-        connect = "walk",
-      }
-
-      table.insert(conn_R.links, RLINK);
-      table.insert(R.links, RLINK)
-    end
-
-    if R.container_type then
-      add_room(R, Q, nil);
-      add_room(R, Q, nil);
-    end
-
-    assign_spot(R.s_low.x, R.s_low.y, R.s_low.z,
-                R.s_size.x, R.s_size.y, R.s_size.z, R)
-      
   end
 
-
-  ---===| plan_rooms_sp |===---
-
-
-  temp_decide_quests()  -- FIXME: pass quest list as input to here
-  
-  
----###  -- make an initial room.  This is not explicitly the start room or
----###  -- the exit room, but will become some room along the first quest
----###  -- (and could become the start or exit room).
-
-  -- create the ROOM which will contains the whole map
-
-  local max_W = 30  -- TODO: base it on OB_CONFIG parameters
-  local max_H = 30
-
-  local head_room =
-  {
-    links = {},
---  quest = QUESTS[1],
-
-    container_type = "solid",
-
-    s_low  = { x=1,     y=1,     z=1 },
-    s_high = { x=max_W, y=max_H, z=5 },
-    s_size = { x=max_W, y=max_H, z=5 },
-  }
-
-
-  -- start room
-  add_room(head_room, QUESTS[1], nil)
-
-  for i = 2,#QUESTS do
-    add_room(head_room, QUESTS[i], QUESTS[i-1])
+  if R.container_type then
+    add_room(R, Q, nil);
+    add_room(R, Q, nil);
   end
 
-  show_room_allocation(head_room)
-
-  return head_room
-end
-
-
-
-----------------------------------------------------------------
-
-function print_zone(Z)
-
-  print("zone:", Z.grid.w, "by", Z.grid.h)
-
-
-  local function zone_content(ZZ, x, y)
+  assign_spot(R.s_low.x, R.s_low.y, R.s_low.z,
+              R.s_size.x, R.s_size.y, R.s_size.z, R)
     
-    local R = ZZ.grid[x][y]
-
-    local C1 = " "
-    if ZZ.zone_type == "walk" then
-      C1 = "/"
-    elseif ZZ.zone_type == "view" then
-      C1 = "="
-    end
-    
-    local C2 = C1
-
-    if R then
-      if R.zone_type then
-        return zone_content(R, x - R.gx + 1, y - R.gy + 1)
-      end
-
-      C2 = tostring(R.quest.level)
-    end
-
-    return C1 .. C2
-  end
-
-
-  for y = Z.grid.h, 1, -1 do
-    local line = ""
-
-    for x = 1, Z.grid.w do
-      line = line .. zone_content(Z, x, y) .. " "
-    end
-
-    print("> " .. line)
---  print("------")
-  end
 end
 
 
 function populate_zone(ZN)
   assert(ZN)
-  assert(ZN.zone_type)
+  assert(ZN.zone_kind)
 
   local zone_W, zone_H = Room_W(ZN), Room_H(ZN)
 
@@ -328,11 +165,11 @@ function populate_zone(ZN)
       local M = div_map[x][y]
       if not M then return "---" end
       if M.kind == "zone" then
-        if M.zone.zone_type == "walk" then
+        if M.zone.zone_kind == "walk" then
           return string.format("//%d", M.id % 10);
-        elseif M.zone.zone_type == "view" then
+        elseif M.zone.zone_kind == "view" then
           return string.format("::%d", M.id % 10);
-        elseif M.zone.zone_type == "solid" then
+        elseif M.zone.zone_kind == "solid" then
           return string.format("##%d", M.id % 10);
         else
           return "Z??"
@@ -358,17 +195,14 @@ function populate_zone(ZN)
 
   local function div_to_seed_range(R, div_map, x1,y1, x2,y2)
     
-    local sx1 = 1 + int((x1 - 1) * zone_W / div_map.w)
-    local sy1 = 1 + int((y1 - 1) * zone_H / div_map.h)
+    R.sx1 = 1 + int((x1 - 1) * zone_W / div_map.w)
+    R.sy1 = 1 + int((y1 - 1) * zone_H / div_map.h)
 
-    local sx2 = int(x2 * zone_W / div_map.w)
-    local sy2 = int(y2 * zone_H / div_map.h)
+    R.sx2 = int(x2 * zone_W / div_map.w)
+    R.sy2 = int(y2 * zone_H / div_map.h)
 
-    assert(0 <= sx1 and sx1 <= sx2 and sx2 <= zone_W)
-    assert(0 <= sy1 and sy1 <= sy2 and sy2 <= zone_H)
-
-    R.s1 = { z=ZN.s1.z, x=sx1, y=sy1 }
-    R.s2 = { z=ZN.s1.z, x=sx2, y=sy2 }
+    assert(0 <= R.sx1 and R.sx1 <= R.sx2 and R.sx2 <= zone_W)
+    assert(0 <= R.sy1 and R.sy1 <= R.sy2 and R.sy2 <= zone_H)
   end
 
 
@@ -477,8 +311,8 @@ function populate_zone(ZN)
     div_to_seed_range(Z_New, div_map, x1,y1, x2,y2)
 
     repeat
-      Z_New.zone_type = rand_key_by_probs { walk=70, view=50, solid=15 }
-    until Z_New.zone_type ~= ZN.zone_type
+      Z_New.zone_kind = rand_key_by_probs { walk=70, view=50, solid=15 }
+    until Z_New.zone_kind ~= ZN.zone_kind
 
     --!!!!! FIXME: PLACE THE ROOM IN SEED MAP
 
@@ -585,99 +419,19 @@ function populate_zone(ZN)
     end end  
   until (num_hubs + num_normal) > 0
 
-
-  -- !!!! FIXME grow everything until all is good
-
   if true then --- not ZN.parent_zone then
     dump_div_map(div_map)
   end
+
 end
 
 
 function Plan_rooms_sp()
 
 
---[[
-  function create_zone(parent, Q)
+  ---===| Plan_rooms_sp |===---
 
-    local min_W = 3 -- int(parent.grid.w * 4 / 10)
-    local min_H = 3 -- int(parent.grid.h * 4 / 10)
-
-    local max_W = int(parent.grid.w * 7 / 10)
-    local max_H = int(parent.grid.h * 7 / 10)
-
-    local W = rand_irange(min_W, max_W)
-    local H = rand_irange(min_H, max_H)
-
-    local dir = rand_element { 1,2,3,4, 6,7,8,9 }
-
-    local x = 1
-    local y = 1
-    
-    if dir == 2 or dir == 5 or dir == 8 then
-      x = 1 + int((parent.grid.w - W) / 2)
-    elseif dir == 3 or dir == 6 or dir == 9 then
-      x = 1 + parent.grid.w - W
-    end
-
-    if dir == 4 or dir == 5 or dir == 6 then
-      y = 1 + int((parent.grid.h - W) / 2)
-    elseif dir == 7 or dir == 8 or dir == 9 then
-      y = 1 + parent.grid.h - H
-    end
-
-    local Z =
-    {
-      parent = parent,
-      quest  = Q,
-
-      zone_type = sel(parent.zone_type == "walk", "view", "walk"),
-
-      gx = x, gy = y,  -- index into parent's grid
-
-      grid = array_2D(W, H)
-    }
-
-    for xx = x, x+W-1 do
-      for yy = y, y+H-1 do
-        parent.grid[xx][yy] = Z
-      end
-    end
-
-    table.insert(ALL_ROOMS, Z)
-
-    return Z
-  end
-
-
-  local function create_room(parent, Q)
-
-    if rand_odds(50) and parent.grid.w > 5 and parent.grid.h >= 5 then
-      Z = create_zone(parent, Q)
-
-      return create_room(Z, Q)
-    end
-
-    local R =
-    {
-      parent = parent,
-      quest  = Q,
-
-      gx = rand_irange(1, parent.grid.w),
-      gy = rand_irange(1, parent.grid.h),
-    }
-
-    R.parent.grid[R.gx][R.gy] = R
-
-    table.insert(ALL_ROOMS, R)
-
-    return R
-  end
---]]
-
-  ---===| plan_rooms_sp |===---
-
-  print("EXPERIMENTAL plan_rooms_sp")
+  print("EXPERIMENTAL Plan_rooms_sp")
 
 
   local map_size = 32   -- FIXME: depends on GAME and LEVEL_SIZE_SETTING
@@ -686,18 +440,24 @@ function Plan_rooms_sp()
 
   PLAN =
   {
-    rooms = {},
+    all_rooms = {},
 
-    top_zone = 
+    head_zone = 
     {
-      zone_type = "solid",
+      zone_kind = "solid",
 
-      s1 = { z=1, x=1, y=1 },
-      s2 = { z=1, x=map_size, y=map_size },
+      children = {},
+
+      sx1 = 1, sx2 = map_size,
+      sy1 = 1, sy2 = map_size,
+
+      links = {},
     }
   }
 
-  populate_zone(PLAN.top_zone)
+  populate_zone(PLAN.head_zone)
+
+  -- !!!!!! FIXME grow everything until all is good
 
 end
 
