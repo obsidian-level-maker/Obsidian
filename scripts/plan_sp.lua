@@ -135,11 +135,11 @@ function populate_zone(ZN)
       local M = div_map[x][y]
       if not M then return "---" end
       if M.kind == "zone" then
-        if M.zone.zone_kind == "walk" then
+        if M.mode == "walk" then
           return string.format("//%d", M.div_id % 10);
-        elseif M.zone.zone_kind == "view" then
+        elseif M.mode == "view" then
           return string.format("::%d", M.div_id % 10);
-        elseif M.zone.zone_kind == "solid" then
+        elseif M.mode == "solid" then
           return string.format("##%d", M.div_id % 10);
         else
           return "Z??"
@@ -292,12 +292,6 @@ function populate_zone(ZN)
 
     expand_zone(xx, yy)
 
-    local DZ = { kind="zone", div_id=zone_id }
-
-    for xx = x1,x2 do for yy = y1,y2 do
-      div_map[xx][yy] = DZ
-    end end
-
 
     local SUB_ZONE =
     {
@@ -308,9 +302,22 @@ function populate_zone(ZN)
       links  = {},
     }
 
-    div_to_seed_range(SUB_ZONE, x1,y1, x2,y2)
-    
+    -- update division map
+    local DZ = { kind="zone", div_id=zone_id, mode=SUB_ZONE.zone_kind }
+
+    for xx = x1,x2 do for yy = y1,y2 do
+      div_map[xx][yy] = DZ
+    end end
+
     -- place zone in seed map
+    div_to_seed_range(SUB_ZONE, x1,y1, x2,y2)
+
+    -- FIXME: make these a bit random
+    SUB_ZONE.sx1 = SUB_ZONE.sx1 + 1
+    SUB_ZONE.sy1 = SUB_ZONE.sy1 + 1
+    SUB_ZONE.sx2 = SUB_ZONE.sx2 - 1
+    SUB_ZONE.sy2 = SUB_ZONE.sy2 - 1
+
     for sx = SUB_ZONE.sx1, SUB_ZONE.sx2 do
       for sy = SUB_ZONE.sy1, SUB_ZONE.sy2 do
         SEEDS[sx][sy][1].zone = SUB_ZONE
@@ -395,8 +402,8 @@ function populate_zone(ZN)
   local space_W = rand_irange(7,11)
   local space_H = rand_irange(7,11)
 
-  if space_W < zone_W then space_W = zone_W end
-  if space_H < zone_H then space_H = zone_H end
+  if space_W > zone_W then space_W = zone_W end
+  if space_H > zone_H then space_H = zone_H end
 
   div_W = int(zone_W / space_W)
   div_H = int(zone_H / space_H)
@@ -426,7 +433,7 @@ function populate_zone(ZN)
         allocate_hub(i)
       end
     end
-  end -- div_W == 1
+  end
 
   -- add normal rooms
   repeat
