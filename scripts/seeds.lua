@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- GROWER
+--  SEED MANAGEMENT / GROWING
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -16,18 +16,13 @@
 --
 ----------------------------------------------------------------
 
-require 'defs'
-require 'util'
-
-
---[[ CLASS INFORMATION
-----------------------
+--[[ *** CLASS INFORMATION ***
 
 class SEED
 {
   sx, sy, sz : location in seed map
 
-  zone : ZONE (same as ROOM), never nil!
+  zone : ZONE, never nil!
 
   room : ROOM
 
@@ -39,7 +34,10 @@ class SEED
   grow, shrink : map size to grow/shrink along current axis
 }
 
---]]
+--------------------------------------------------------------]]
+
+require 'defs'
+require 'util'
 
 
 function Seed_init(W, H, D, zone)
