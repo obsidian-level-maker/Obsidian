@@ -176,7 +176,7 @@ function populate_zone(ZN)
   end
 
 
-  local function allocate_sub_zone(div_map, zone_id)
+  local function allocate_subzone(zone_id)
 
     -- find usable spot
     local x1,y1, x2,y2
@@ -187,9 +187,10 @@ function populate_zone(ZN)
 
       for x = x1,x2 do for y = y1,y2 do
         if div_map[x][y] then
-          return false;
+          return false
         end
-      end end
+      end end -- x,y
+
       return true
     end
 
@@ -200,10 +201,25 @@ function populate_zone(ZN)
            div_map[x][y] and
            div_map[x][y].kind == "zone"
         then
-          return true;
+          return true
         end
       end end
+
       return false
+    end
+
+    local function find_usable_spot()
+      for loop = 1,100 do
+
+        local x = rand_irange(1, div_W)
+        local y = rand_irange(1, div_H)
+
+        if not div_map[x][y] and not touches_a_zone(x,y, x,y) then
+          return x, y
+        end
+      end
+
+      return nil -- not found
     end
 
     local function expand_zone(x, y)
@@ -229,7 +245,7 @@ function populate_zone(ZN)
 
 --    con.printf("final %dx%d\n", max_w, max_h)
 
-      for loop = 1,20 do
+      for loop = 1,24 do
         local dir = rand_irange(1,4) * 2
 
         local tx1,ty1 = x1,y1
@@ -256,39 +272,50 @@ function populate_zone(ZN)
       end -- for loop
     end
 
-    for loop = 100,1,-1 do
+    local function new_zone_kind()
+      local result
 
-      -- unable to find a spot
-      if loop == 1 then return end
+      -- type of zone must be different to parent
+      repeat
+        result = rand_key_by_probs { walk=70, view=50, solid=30 }
+      until result ~= ZN.zone_kind
 
-      local x = rand_irange(1, div_W)
-      local y = rand_irange(1, div_H)
-
-      if not div_map[x][y] and not touches_a_zone(x,y, x,y) then
-        expand_zone(x, y)
-        break;
-      end
+      return result
     end
+
+
+    --| allocate_subzone |--
+
+    local xx, yy = find_usable_spot()
+
+    if not xx then return end
+
+    expand_zone(xx, yy)
+
+    local DZ = { kind="zone", div_id=zone_id }
+
+    for xx = x1,x2 do for yy = y1,y2 do
+      div_map[xx][yy] = DZ
+    end end
 
 
     local SUB_ZONE =
     {
-      -- FIXME: zone info
+      zone_kind = new_zone_kind(),
+      children  = {},
 
-      parent = ZN
+      parent = ZN,
+      links  = {},
     }
 
     div_to_seed_range(SUB_ZONE, x1,y1, x2,y2)
-
-    repeat
-      SUB_ZONE.zone_kind = rand_key_by_probs { walk=70, view=50, solid=15 }
-    until SUB_ZONE.zone_kind ~= ZN.zone_kind
-
-    --!!!!! FIXME: PLACE THE ROOM IN SEED MAP
-
-    for xx = x1,x2 do for yy = y1,y2 do
-      div_map[xx][yy] = { kind="zone", div_id=zone_id, zone=SUB_ZONE }
-    end end
+    
+    -- place zone in seed map
+    for sx = SUB_ZONE.sx1, SUB_ZONE.sx2 do
+      for sy = SUB_ZONE.sy1, SUB_ZONE.sy2 do
+        SEEDS[sx][sy][1].zone = SUB_ZONE
+      end
+    end
 
     num_subzones = num_subzones + 1
 
@@ -297,7 +324,7 @@ function populate_zone(ZN)
   end
 
 
-  local function allocate_hub(div_map, hub_id)
+  local function allocate_hub(hub_id)
 
     local hub_list = {}
 
@@ -311,11 +338,12 @@ function populate_zone(ZN)
       end
 
       if not div_map[xx][yy] then
-        local H = { x=xx, y=yy, kind="hub", div_id=hub_id }
+        local H = { kind="hub", div_id=hub_id, x=xx, y=yy }
         table.insert(hub_list, H)
       end
     end
 
+    -- nothing we can do when the row/column is completely full
     if #hub_list == 0 then return end
 
     local H = rand_element(hub_list)
@@ -339,11 +367,11 @@ function populate_zone(ZN)
   end
 
 
-  local function allocate_room(div_map, xx, yy)
+  local function allocate_room(xx, yy)
     -- something already there?
     if div_map[xx][yy] then return end
 
-    div_map[xx][yy] = { x=xx, y=yy, kind="room", div_id=xx*10+yy }
+    div_map[xx][yy] = { kind="room", div_id=xx*10+yy }
 
     local ROOM = Room_create(ZN, "normal")
 
@@ -361,7 +389,7 @@ function populate_zone(ZN)
   end
 
 
-  ---| populate_zone |---
+  --==| populate_zone |==--
 
 
   local space_W = rand_irange(7,11)
@@ -382,7 +410,7 @@ function populate_zone(ZN)
 
   for i = 1,max_SUBZONE do
     if rand_odds(50) then
-      allocate_sub_zone(div_map, i)
+      allocate_subzone(i)
     end
   end
 
@@ -390,12 +418,12 @@ function populate_zone(ZN)
   if div_W == 1 and div_H == 1 then
     local HUB_chance = (space_W + space_H - 10) * 6
     if rand_odds(HUB_chance) then
-      allocate_hub(div_map, 1)
+      allocate_hub(1)
     end
   else
     for i = 1,math.max(div_W, div_H) do
       if rand_odds(50) then
-        allocate_hub(div_map, i)
+        allocate_hub(i)
       end
     end
   end -- div_W == 1
@@ -404,13 +432,13 @@ function populate_zone(ZN)
   repeat
     for xx = 1,div_W do for yy = 1,div_H do
       if rand_odds(50) then
-        allocate_room(div_map, xx, yy)
+        allocate_room(xx, yy)
       end
     end end  
   until num_rooms > 0
 
 -- [[
-    dump_div_map(div_map)
+    dump_div_map()
 -- ]]
 
   div_map = nil
@@ -425,7 +453,7 @@ function Plan_rooms_sp()
   print("EXPERIMENTAL Plan_rooms_sp")
 
 
-  local map_size = 32   -- FIXME: depends on GAME and LEVEL_SIZE_SETTING
+  local map_size = 30   -- FIXME: depends on GAME and LEVEL_SIZE_SETTING
 
   Seed_init(map_size, map_size, 1)
 
