@@ -25,12 +25,18 @@ require 'util'
 
 class SEED
 {
-  sz, sx, sy : location in seed map
+  sx, sy, sz : location in seed map
 
-  zone : ROOM
+  zone : ZONE (same as ROOM), never nil!
 
   room : ROOM
 
+  target_w, target_h : map size we want to be (bigger is OK)
+
+  x1, y1, z1, x2, y2, z2 : map coordinates for 3D bbox 
+
+  -- grow phase only:
+  grow, shrink : map size to grow/shrink along current axis
 }
 
 --]]
@@ -175,8 +181,25 @@ end
 
 function Seed_grow()
 
-do return end  --- FIXME: grow_seeds
+  -- FIXME: ULTRA BASIC VERSION OF SEED_GROW
 
+  for x = 1,SEED_W do for y = 1,SEED_H do for z = 1,SEED_D do
+
+    local S = SEEDS[x][y][z]
+
+    S.x1 = x * 200
+    S.y1 = y * 200
+
+    S.x2 = (x+1) * 200
+    S.y2 = (y+1) * 200
+
+  end end end --- x, y, z
+
+  return
+end
+
+
+function TODO_REAL_Seed_grow()
 
 -- TODO:  2. implement symmetry preservation
 
