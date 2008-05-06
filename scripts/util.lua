@@ -39,6 +39,15 @@ function low_high(a, b)
   return a, b
 end
 
+function eq_multi(val, a, b, c, d, guard)
+  if guard then
+    error("eq_multi only supports 4 test values.")
+  end
+  return (a and val == a) or (b and val == b) or
+         (c and val == c) or (d and val == d) or
+         false
+end
+
 
 ----====| TABLE UTILITIES |====----
 
