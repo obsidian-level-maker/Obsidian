@@ -16,10 +16,9 @@
 --
 ----------------------------------------------------------------
 
-BW = 9; BH = BW  -- blocks in a cell
-FW = 4; FH = FW  -- fragments in a block
-
-BORDER_BLK = 3  -- number of spare blocks around plan
+GAME  = {}
+PLAN  = {}
+SEEDS = {}
 
 MIN_FLOOR = 0
 MAX_CEIL  = 640
@@ -27,12 +26,6 @@ MAX_CEIL  = 640
 MAX_STEP = 16
 
 SKILLS = { "easy", "medium", "hard" }
-
-PLAN = {}
-GAME = {}
-
-SEEDS = {}
-
 
 -- tables which interface with GUI code --
 
