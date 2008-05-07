@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- BUILDER
+--  BUILDER
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -23,24 +23,20 @@ require 'seeds'
 
 function dummy_builder(Z)
 
-  csg2.begin_level()
-  csg2.level_prop("level_name", "MAP01");
-
-
-  local function zone_content(ZZ, x, y)
-    local R = ZZ.grid[x][y]
-
-    if not R then return nil end
-
-    if R.zone_type then
-
-      local CH, lx, ly = zone_content(R, x - R.gx + 1, y - R.gy + 1)
-
-      if CH then return CH, lx, ly end
-    end
-
-    return R, x, y
-  end
+---##  local function zone_content(ZZ, x, y)
+---##    local R = ZZ.grid[x][y]
+---##
+---##    if not R then return nil end
+---##
+---##    if R.zone_type then
+---##
+---##      local CH, lx, ly = zone_content(R, x - R.gx + 1, y - R.gy + 1)
+---##
+---##      if CH then return CH, lx, ly end
+---##    end
+---##
+---##    return R, x, y
+---##  end
 
 
   local function get_wall_coords(dir, x1,y1, x2,y2)
@@ -89,16 +85,8 @@ function dummy_builder(Z)
   end
 
 
-  local function build_room(R, x, y, lx, ly)
-    
-    local x1 = x * 200
-    local y1 = y * 200
-    local x2 = x1 + 200
-    local y2 = y1 + 200
-
-    local z1, z2
-    local f_tex, c_tex, w_tex
-
+  local function OLD_build_room()
+--[[
     local walls = {}
 
     if R.zone_type then
@@ -199,7 +187,7 @@ function dummy_builder(Z)
       { x=x2, y=y2 }, { x=x2, y=y1 },
     },
     z2, 2000)
-      
+
     for dir = 2,8,2 do
       if walls[dir] == "solid" then
         csg2.add_brush(
@@ -212,8 +200,152 @@ function dummy_builder(Z)
         -2000, 2000)
       end
     end
+--]]
+  end
 
-    if R.is_start then
+
+  local function build_seed(S)
+
+    if not S.room and S.zone.zone_kind == "solid" then
+      return
+    end
+
+    local x1 = S.x1
+    local y1 = S.y1
+    local x2 = S.x2
+    local y2 = S.y2
+
+    local z1, z2
+    local f_tex, c_tex, w_tex
+
+    if S.room then
+
+      z1 = 24
+      z2 = 160
+      f_tex = "FLAT1"
+      c_tex = "TLITE6_6"
+      w_tex = "METAL2"
+
+      csg2.add_brush(
+      {
+        t_face = { texture=w_tex },
+        b_face = { texture=w_tex },
+        w_face = { texture=w_tex },
+      },
+      {
+        { x=x1,    y=y1 },
+        { x=x1,    y=y1+24 },
+        { x=x1+24, y=y1+24 },
+        { x=x1+24, y=y1 },
+      },
+      -2000, 2000)
+
+      csg2.add_brush(
+      {
+        t_face = { texture=w_tex },
+        b_face = { texture=w_tex },
+        w_face = { texture=w_tex },
+      },
+      {
+        { x=x1,    y=y2-24 },
+        { x=x1,    y=y2 },
+        { x=x1+24, y=y2 },
+        { x=x1+24, y=y2-24 },
+      },
+      -2000, 2000)
+
+      csg2.add_brush(
+      {
+        t_face = { texture=w_tex },
+        b_face = { texture=w_tex },
+        w_face = { texture=w_tex },
+      },
+      {
+        { x=x1-24, y=y1 },
+        { x=x1-24, y=y1+24 },
+        { x=x1,    y=y1+24 },
+        { x=x1,    y=y1 },
+      },
+      -2000, 2000)
+
+      csg2.add_brush(
+      {
+        t_face = { texture=w_tex },
+        b_face = { texture=w_tex },
+        w_face = { texture=w_tex },
+      },
+      {
+        { x=x2-24, y=y2-24 },
+        { x=x2-24, y=y2 },
+        { x=x2,    y=y2 },
+        { x=x2,    y=y2-24 },
+      },
+      -2000, 2000)
+
+    else -- ZONE ONLY
+
+      if S.zone.zone_kind == "walk" then
+        z1 = 0
+        z2 = 256
+        f_tex = "GRASS1"
+        c_tex = "F_SKY1"
+        w_tex = "ZIMMER8"
+
+      elseif S.zone.zone_kind == "view" then
+        z1 = -128
+        z2 = 256
+        f_tex = "LAVA1"
+        c_tex = "F_SKY1"
+        w_tex = "ASHWALL3"
+
+      else
+        error("UNKNOWN ZONE KIND: " .. tostring(S.zone.zone_kind))
+      end
+    end
+
+
+    -- floor and ceiling brushes
+
+    csg2.add_brush(
+    {
+      t_face = { texture=f_tex },
+      b_face = { texture=f_tex },
+      w_face = { texture=f_tex },
+    },
+    {
+      { x=x1, y=y1 }, { x=x1, y=y2 },
+      { x=x2, y=y2 }, { x=x2, y=y1 },
+    },
+    -2000, z1);
+      
+    csg2.add_brush(
+    {
+      t_face = { texture=c_tex },
+      b_face = { texture=c_tex },
+      w_face = { texture=c_tex },
+    },
+    {
+      { x=x1, y=y1 }, { x=x1, y=y2 },
+      { x=x2, y=y2 }, { x=x2, y=y1 },
+    },
+    z2, 2000)
+
+    --[[
+    for dir = 2,8,2 do
+      if walls[dir] == "solid" then
+        csg2.add_brush(
+        {
+          t_face = { texture=w_tex },
+          b_face = { texture=w_tex },
+          w_face = { texture=w_tex },
+        },
+        get_wall_coords(dir, x1,y1, x2,y2),
+        -2000, 2000)
+      end
+    end
+    --]]
+
+    if S.is_start then
       csg2.add_entity(--[[ "info_player_start" ]] "1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     else
       csg2.add_entity(--[[ "item_health" ]] "2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
@@ -221,14 +353,18 @@ function dummy_builder(Z)
   end
 
 
+  --==| dummy_builder |==--
+
+  csg2.begin_level()
+  csg2.level_prop("level_name", "MAP01");
+
   for y = 1, SEED_H do
     for x = 1, SEED_W do
-      local R, lx, ly = zone_content(x, y)
-
-      if R then
-        build_room(R, x, y, lx, ly)
+      for z = 1, SEED_D do
+        build_seed(SEEDS[x][y][z])
       end
     end
+
     con.progress(100 * y / SEED_H)
   end
 
