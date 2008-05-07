@@ -173,6 +173,12 @@ function populate_zone(ZN)
 
     assert(0 <= R.sx1 and R.sx1 <= R.sx2 and R.sx2 <= zone_W)
     assert(0 <= R.sy1 and R.sy1 <= R.sy2 and R.sy2 <= zone_H)
+
+    R.sx1 = R.sx1 + (ZN.sx1 - 1)
+    R.sy1 = R.sy1 + (ZN.sy1 - 1)
+
+    R.sx2 = R.sx2 + (ZN.sx1 - 1)
+    R.sy2 = R.sy2 + (ZN.sy1 - 1)
   end
 
 

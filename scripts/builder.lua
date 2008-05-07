@@ -263,10 +263,10 @@ function dummy_builder(Z)
         w_face = { texture=w_tex },
       },
       {
-        { x=x1-24, y=y1 },
-        { x=x1-24, y=y1+24 },
-        { x=x1,    y=y1+24 },
-        { x=x1,    y=y1 },
+        { x=x2-24, y=y1 },
+        { x=x2-24, y=y1+24 },
+        { x=x2,    y=y1+24 },
+        { x=x2,    y=y1 },
       },
       -2000, 2000)
 
