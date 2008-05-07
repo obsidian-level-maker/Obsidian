@@ -28,7 +28,27 @@ require 'defs'
 require 'util'
 
 
-function Quest_assign() -- TODO !!!
+function Quest_assign()
 
+  -- FIXME proper Quest_assign() function
+
+  -- make a random room the start room (TEMP CRUD)
+
+  local start_R
+
+  repeat
+    start_R = rand_element(PLAN.all_rooms)
+  until not start_R.zone_kind
+
+  start_R.is_start = true
+
+  local sx, sy
+
+  repeat
+    sx = rand_irange(start_R.sx1, start_R.sx2)
+    sy = rand_irange(start_R.sy1, start_R.sy2)
+  until SEEDS[sx][sy][1].room == start_R
+
+  SEEDS[sx][sy][1].is_start = true
 end
 
