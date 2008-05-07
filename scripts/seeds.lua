@@ -42,6 +42,8 @@ require 'util'
 
 function Seed_init(W, H, D, zone)
 
+  assert(zone)
+
   SEED_W = W
   SEED_H = H
   SEED_D = D
@@ -88,6 +90,7 @@ end
 
 function Seed_are_free(x1,y1,z1, x2,y2,z2, zone)
 
+  assert(zone)
   assert(Seed_valid(z1,x1,y1))
   assert(Seed_valid(z2,x2,y2))
   assert(x1 <= x2 and y1 <= y2 and z1 <= z2)

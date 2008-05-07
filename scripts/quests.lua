@@ -34,6 +34,8 @@ function Quest_assign()
 
   -- make a random room the start room (TEMP CRUD)
 
+  con.printf("\n--==| Quest_assign |==--\n\n")
+
   local start_R
 
   repeat
@@ -50,5 +52,8 @@ function Quest_assign()
   until SEEDS[sx][sy][1].room == start_R
 
   SEEDS[sx][sy][1].is_start = true
+
+  con.printf("Start seed @ (%d,%d)\n", sx, sy)
+
 end
 

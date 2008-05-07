@@ -457,12 +457,10 @@ function Plan_rooms_sp()
 
   ---===| Plan_rooms_sp |===---
 
-  print("EXPERIMENTAL Plan_rooms_sp")
+  con.printf("\n--==| Plan_rooms_sp |==--n\n")
 
 
   local map_size = 30   -- FIXME: depends on GAME and LEVEL_SIZE_SETTING
-
-  Seed_init(map_size, map_size, 1)
 
   PLAN =
   {
@@ -480,6 +478,8 @@ function Plan_rooms_sp()
       links = {},
     }
   }
+
+  Seed_init(map_size, map_size, 1, PLAN.head_zone)
 
   populate_zone(PLAN.head_zone)
 

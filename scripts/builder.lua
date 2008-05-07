@@ -205,6 +205,8 @@ function dummy_builder(Z)
 
 
   local function build_seed(S)
+    assert(S)
+    assert(S.zone)
 
     if not S.room and S.zone.zone_kind == "solid" then
       return
@@ -355,6 +357,8 @@ function dummy_builder(Z)
 
   --==| dummy_builder |==--
 
+  con.printf("\n--==| dummy_builder |==--n\n")
+
   csg2.begin_level()
   csg2.level_prop("level_name", "MAP01");
 
@@ -365,7 +369,7 @@ function dummy_builder(Z)
       end
     end
 
-    con.progress(100 * y / SEED_H)
+--    con.progress(100 * y / SEED_H)
   end
 
   csg2.end_level()
