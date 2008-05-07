@@ -947,7 +947,7 @@ bool doom_game_interface_c::Start()
   if (! filename)  // cancelled
     return false;
 
-  if (! WAD_OpenWrite(filename, sub_type == DMSUB_Hexen))
+  if (! WAD_OpenWrite(TEMP_FILENAME, sub_type == DMSUB_Hexen))
     return false;
 
   main_win->build_box->ProgInit(2);
