@@ -350,7 +350,8 @@ function dummy_builder(Z)
     if S.is_start then
       csg2.add_entity(--[[ "info_player_start" ]] "1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     else
---    csg2.add_entity(--[[ "item_health" ]] "2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
+      csg2.add_entity(--[[ "item_health" ]] "2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
   end
 
