@@ -378,16 +378,19 @@ function populate_zone(ZN)
     -- determine size of hub
     local hub_W, hub_H
 
-    assert(sp_W >= 7 and sp_H >= 7)
+    assert(sp_W >= 8 and sp_H >= 8)
 
     repeat
       hub_W = rand_irange(3,8)
       hub_H = rand_irange(3,8)
-    until (hub_W <= sp_W-4) and (hub_H < sp_H-4) and
+    until (hub_W <= sp_W-5) and (hub_H <= sp_H-5) and
           (hub_W * hub_H <= 36)
 
-    HUB.sx1 = sx1 + rand_irange(1,3)
-    HUB.sy1 = sy1 + rand_irange(1,3)
+    HUB.sx1 = sx1 + int((sp_W - hub_W) / 2)
+    HUB.sy1 = sy1 + int((sp_H - hub_H) / 2)
+
+    HUB.sx1 = HUB.sx1 + rand_index_by_probs { 10, 30, 50, 30, 10 } - 3
+    HUB.sy1 = HUB.sy1 + rand_index_by_probs { 10, 30, 50, 30, 10 } - 3
 
     HUB.sx2 = HUB.sx1 + hub_W - 1
     HUB.sy2 = HUB.sy1 + hub_H - 1
@@ -445,8 +448,8 @@ function populate_zone(ZN)
   --==| populate_zone |==--
 
 
-  local space_W = rand_irange(9,13)
-  local space_H = rand_irange(9,13)
+  local space_W = rand_irange(9,14)
+  local space_H = rand_irange(9,14)
 
   if space_W > zone_W then space_W = zone_W end
   if space_H > zone_H then space_H = zone_H end
