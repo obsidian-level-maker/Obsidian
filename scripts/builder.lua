@@ -350,14 +350,14 @@ function dummy_builder(Z)
     if S.is_start then
       csg2.add_entity(--[[ "info_player_start" ]] "1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     else
-      csg2.add_entity(--[[ "item_health" ]] "2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+--    csg2.add_entity(--[[ "item_health" ]] "2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
   end
 
 
   --==| dummy_builder |==--
 
-  con.printf("\n--==| dummy_builder |==--n\n")
+  con.printf("\n--==| dummy_builder |==--\n\n")
 
   csg2.begin_level()
   csg2.level_prop("level_name", "MAP01");

@@ -463,7 +463,7 @@ function Plan_rooms_sp()
 
   ---===| Plan_rooms_sp |===---
 
-  con.printf("\n--==| Plan_rooms_sp |==--n\n")
+  con.printf("\n--==| Plan_rooms_sp |==--\n\n")
 
 
   local map_size = 30   -- FIXME: depends on GAME and LEVEL_SIZE_SETTING
