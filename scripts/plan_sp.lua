@@ -30,6 +30,8 @@ class ROOM
 {
   sx1, sy1, sx2, sy2 : coverage over SEED map
 
+  kind  : "zone" | "hub" | "room" | "hallway"
+
   links : array(RLINK) -- all connections with other rooms
 
   parent : ZONE -- zone this room is directly contained in
@@ -86,10 +88,11 @@ function Room_assign_seeds(R)
   end end
 end
 
-function Room_create(zone)
+function Room_create(zone, kind)
 
   local ROOM =
   {
+    kind = kind,
     parent = zone,
     links  = {},
   }
@@ -163,22 +166,24 @@ function populate_zone(ZN)
   end
 
 
-  local function div_to_seed_range(R, x1,y1, x2,y2)
+  local function div_to_seed_range(x1,y1, x2,y2)
     
-    R.sx1 = 1 + int((x1 - 1) * zone_W / div_W)
-    R.sy1 = 1 + int((y1 - 1) * zone_H / div_H)
+    local sx1 = 1 + int((x1 - 1) * zone_W / div_W)
+    local sy1 = 1 + int((y1 - 1) * zone_H / div_H)
 
-    R.sx2 = int(x2 * zone_W / div_W)
-    R.sy2 = int(y2 * zone_H / div_H)
+    local sx2 = int(x2 * zone_W / div_W)
+    local sy2 = int(y2 * zone_H / div_H)
 
-    assert(0 <= R.sx1 and R.sx1 <= R.sx2 and R.sx2 <= zone_W)
-    assert(0 <= R.sy1 and R.sy1 <= R.sy2 and R.sy2 <= zone_H)
+    assert(0 <= sx1 and sx1 <= sx2 and sx2 <= zone_W)
+    assert(0 <= sy1 and sy1 <= sy2 and sy2 <= zone_H)
 
-    R.sx1 = R.sx1 + (ZN.sx1 - 1)
-    R.sy1 = R.sy1 + (ZN.sy1 - 1)
+    sx1 = sx1 + (ZN.sx1 - 1)
+    sy1 = sy1 + (ZN.sy1 - 1)
 
-    R.sx2 = R.sx2 + (ZN.sx1 - 1)
-    R.sy2 = R.sy2 + (ZN.sy1 - 1)
+    sx2 = sx2 + (ZN.sx1 - 1)
+    sy2 = sy2 + (ZN.sy1 - 1)
+
+    return sx1, sy1, sx2, sy2
   end
 
 
@@ -316,9 +321,9 @@ function populate_zone(ZN)
     end end
 
     -- place zone in seed map
-    div_to_seed_range(SUB_ZONE, x1,y1, x2,y2)
+    SUB_ZONE.sx1, SUB_ZONE.sy1,
+    SUB_ZONE.sx2, SUB_ZONE.sy2 = div_to_seed_range(x1,y1, x2,y2)
 
-    -- FIXME: make these a bit random
     SUB_ZONE.sx1 = SUB_ZONE.sx1 + 1
     SUB_ZONE.sy1 = SUB_ZONE.sy1 + 1
     SUB_ZONE.sx2 = SUB_ZONE.sx2 - 1
@@ -365,13 +370,32 @@ function populate_zone(ZN)
 
     local HUB = Room_create(ZN, "hub")
 
-    div_to_seed_range(HUB, H.x,H.y, H.x,H.y)
+    local sx1, sy1, sx2, sy2 = div_to_seed_range(H.x,H.y, H.x,H.y)
 
-    -- FIXME: choose good size and spot for hub
-    HUB.sx1 = HUB.sx1 + 2
-    HUB.sy1 = HUB.sy1 + 2
-    HUB.sx2 = HUB.sx2 - 2
-    HUB.sy2 = HUB.sy2 - 2
+    local sp_W = sx2 - sx1 + 1
+    local sp_H = sy2 - sy1 + 1
+
+    -- determine size of hub
+    local hub_W, hub_H
+
+    assert(sp_W >= 7 and sp_H >= 7)
+
+    repeat
+      hub_W = rand_irange(3,8)
+      hub_H = rand_irange(3,8)
+    until (hub_W <= sp_W-4) and (hub_H < sp_H-4) and
+          (hub_W * hub_H <= 36)
+
+    HUB.sx1 = sx1 + rand_irange(1,3)
+    HUB.sy1 = sy1 + rand_irange(1,3)
+
+    HUB.sx2 = HUB.sx1 + hub_W - 1
+    HUB.sy2 = HUB.sy1 + hub_H - 1
+
+    assert(HUB.sx2 < sx2)
+    assert(HUB.sy2 < sy2)
+
+    con.printf("Hub size %dx%d\n", hub_W, hub_H)
 
     Room_assign_seeds(HUB)
 
@@ -388,13 +412,29 @@ function populate_zone(ZN)
 
     local ROOM = Room_create(ZN, "normal")
 
-    div_to_seed_range(ROOM, xx,yy, xx,yy)
+    local sx1, sy1, sx2, sy2 = div_to_seed_range(xx,yy, xx,yy)
 
-    -- FIXME: choose good size and spot for room
-    ROOM.sx1 = ROOM.sx1 + 2
-    ROOM.sy1 = ROOM.sy1 + 2
-    ROOM.sx2 = ROOM.sx2 - 3
-    ROOM.sy2 = ROOM.sy2 - 3
+    local sp_W = sx2 - sx1 + 1
+    local sp_H = sy2 - sy1 + 1
+
+    -- determine size of hub
+    local room_W, room_H
+
+    assert(sp_W >= 7 and sp_H >= 7)
+
+    room_W = rand_index_by_probs { 8, 32, 80, 16, 2 }
+    room_H = rand_index_by_probs { 8, 32, 80, 16, 2 }
+
+    con.printf("Room size %dx%d\n", room_W, room_H)
+
+    ROOM.sx1 = sx1 + rand_irange(0, sp_W - room_W)
+    ROOM.sy1 = sy1 + rand_irange(0, sp_H - room_H)
+
+    ROOM.sx2 = ROOM.sx1 + room_W - 1
+    ROOM.sy2 = ROOM.sy1 + room_H - 1
+
+    assert(ROOM.sx2 <= sx2)
+    assert(ROOM.sy2 <= sy2)
 
     Room_assign_seeds(ROOM)
 
@@ -405,8 +445,8 @@ function populate_zone(ZN)
   --==| populate_zone |==--
 
 
-  local space_W = rand_irange(7,11)
-  local space_H = rand_irange(7,11)
+  local space_W = rand_irange(9,13)
+  local space_H = rand_irange(9,13)
 
   if space_W > zone_W then space_W = zone_W end
   if space_H > zone_H then space_H = zone_H end
