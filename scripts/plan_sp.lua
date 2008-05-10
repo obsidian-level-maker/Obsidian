@@ -432,7 +432,7 @@ function populate_zone(ZN)
 
     div_map[xx][yy] = { kind="room", div_id=xx*10+yy }
 
-    local ROOM = Room_create(ZN, "normal")
+    local ROOM = Room_create(ZN, "room")
 
     ROOM.is_initial = true
 
@@ -527,8 +527,46 @@ function weave_tangled_web()
   -- out from the initial rooms / hubs.
 
 
-  function sprouts_for_room(R)
-    -- FIXME
+  function sprouts_for_room(R, skip_side)
+
+    -- normal rooms are quite simple: basically 0-1 branch points
+    -- on each side (T,B,L,R), occasionally have 2 on long sides.
+
+    local want_sp = rand_index_by_probs { 30, 90, 50, 5 }
+
+    if skip_side then
+      want_sp = rand_index_by_probs { 90, 30, 5 }
+    end
+
+    local W, H = Room_W(R), Room_H(R)
+
+    local n = {}
+
+    repeat
+      n[2] = rand_index_by_probs { 50, 50, 3 } - 1
+      n[8] = rand_index_by_probs { 50, 50, 3 } - 1
+      n[4] = rand_index_by_probs { 50, 50, 3 } - 1
+      n[6] = rand_index_by_probs { 50, 50, 3 } - 1
+
+      if (n[2] == 2) and (W < 3) then n[2] = 1 end
+      if (n[8] == 2) and (W < 3) then n[8] = 1 end
+      if (n[4] == 2) and (H < 3) then n[4] = 1 end
+      if (n[6] == 2) and (H < 3) then n[6] = 1 end
+
+      if skip_side then n[skip_side] = 0 end
+
+    until (n[2] + n[8] + n[4] + n[6]) == want_sp
+
+    con.debugf("Room %dx%d sprouts : %s%s %s%s %s%s %s%s\n", W, H,
+           sel(n[8]>=1, "T", ""), sel(n[8]>=2, "T", ""),
+           sel(n[2]>=1, "B", ""), sel(n[2]>=2, "B", ""),
+           sel(n[4]>=1, "L", ""), sel(n[4]>=2, "L", ""),
+           sel(n[6]>=1, "R", ""), sel(n[6]>=2, "R", "") )
+
+    for side = 2,8,2 do
+      -- FIXME : add sprouts
+    end
+
   end
 
 
@@ -596,8 +634,6 @@ function weave_tangled_web()
     end
 
     local function dump_hub_sprouts()
-      con.printf("Hub: %dx%d  A1=%d B1=%d  C=%d  B2=%d A2=%d\n",
-                 long, deep, A1, B1, C, B2, A2)
       for y = 0,deep+1 do
         for x = 0,long+1 do
           local ch = " "
@@ -638,7 +674,9 @@ function weave_tangled_web()
       C  = rand_index_by_probs { 50, 35 } - 1
     until is_acceptable()
 
---    ... blah ...
+    con.debugf("Hub %dx%d sprouts : A1=%d B1=%d  C=%d  B2=%d A2=%d\n",
+               long, deep, A1, B1, C, B2, A2)
+--    !!!! add sprouts
   end
 
 
