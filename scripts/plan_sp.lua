@@ -323,6 +323,7 @@ function populate_zone(ZN)
     {
       zone_kind = new_zone_kind(),
       children  = {},
+      sub_zones = {},
 
       parent = ZN,
       links  = {},
@@ -715,6 +716,7 @@ function Plan_rooms_sp()
       zone_kind = "solid",
 
       children = {},
+      sub_zones = {},
 
       sx1 = 1, sx2 = map_size,
       sy1 = 1, sy2 = map_size,
