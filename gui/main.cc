@@ -450,6 +450,17 @@ int main(int argc, char **argv)
   // load config after creating window (set widget values)
 //!!!!!!  Cookie_Load(CONFIG_FILENAME);
 
+  // handle -seed option
+  {
+    int num_par = 0;
+    int index = ArgvFind('s', "seed", &num_par);
+
+    if (index >= 0 && num_par > 0)
+    {
+      main_win->game_box->SetSeed(atoi(arg_list[index+1]));
+    }
+  }
+ 
 #if 0
 Quake1_ExtractTextures();
 #endif
