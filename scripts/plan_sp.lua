@@ -586,6 +586,7 @@ function weave_tangled_web()
       if long < 5 and (A1 == 1) and (B1 == 1) then return false end
       if long < 5 and (A2 == 1) and (B2 == 1) then return false end
 
+      if long < 5 and (B1 == 2 or B2 == 2) then return false end
       if long < 7 and (A1 == 2 or A2 == 2) then return false end
 
       if long < 7 and (A1 == 1) and (B1 == 2) then return false end
@@ -594,22 +595,48 @@ function weave_tangled_web()
       return true --OK--
     end
 
-for i = 1,300 do
+    local function dump_hub_sprouts()
+      con.printf("Hub: %dx%d  A1=%d B1=%d  C=%d  B2=%d A2=%d\n",
+                 long, deep, A1, B1, C, B2, A2)
+      for y = 0,deep+1 do
+        for x = 0,long+1 do
+          local ch = " "
+          local cx = (x >= 1 and x <= long)
+          local cy = (y >= 1 and y <= deep)
+          if cx and cy then
+            ch = "#"
+          elseif cy then
+            if y == int((deep+1)/2) and C==1 then ch = "C" end
+            if y == 1 and B1 == 3 then ch = "B" end
+            if y == deep and B2 == 3 then ch = "B" end
+          elseif cx and (y == 0) then
+            if (x == 1 or x == long) and B1 == 1 then ch = "B" end
+            if (x == 2 or x == long-1) and B1 == 2 then ch = "B" end
+            if (x == int((long+1)/2)) and A1 == 1 then ch = "A" end
+            if (math.abs(x - int((long+1)/2)) == 1) and A1 == 2 then ch = "A" end
+          elseif cx and (y == deep+1) then
+            if (x == 1 or x == long) and B2 == 1 then ch = "B" end
+            if (x == 2 or x == long-1) and B2 == 2 then ch = "B" end
+            if (x == int((long+1)/2)) and A2 == 1 then ch = "A" end
+            if (math.abs(x - int((long+1)/2)) == 1) and A2 == 2 then ch = "A" end
+          end
+          con.printf(ch)
+        end
+        con.printf("\n")
+      end
+      con.printf("\n")
+    end
+
 
     repeat
-      A1 = rand_index_by_probs { 50, 50, 5 } - 1
-      A2 = rand_index_by_probs { 50, 50, 5 } - 1
+      A1 = rand_index_by_probs { 50, 65, 15 } - 1
+      A2 = rand_index_by_probs { 50, 65, 15 } - 1
 
-      B1 = rand_index_by_probs { 50, 33, 15, 20 } - 1
-      B2 = rand_index_by_probs { 50, 33, 15, 20 } - 1
+      B1 = rand_index_by_probs { 50, 33, 20, 25 } - 1
+      B2 = rand_index_by_probs { 50, 33, 20, 25 } - 1
 
-      C  = rand_index_by_probs { 50, 50 } - 1
+      C  = rand_index_by_probs { 50, 35 } - 1
     until is_acceptable()
-
-con.printf("Hub: %dx%d  A1:%d B1:%d  C:%d  B2:%d A2:%d\n",
-           long, deep, A1, B1, C, B2, A2)
-end
-error("WTF")
 
 --    ... blah ...
   end
@@ -618,7 +645,7 @@ error("WTF")
   --==| weave_tangled_web |==--
 
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _, R in ipairs(PLAN.all_rooms) do
     if R.kind == "hub" then
       sprouts_for_hub(R)
     elseif R.kind == "room" then
