@@ -166,7 +166,7 @@ end
 function reverse_array(t)
   if not t then return nil end
   local result = {}
-  for zzz,val in ipairs(t) do
+  for _,val in ipairs(t) do
     table.insert(result, 1, val)
   end
   return result
@@ -288,7 +288,7 @@ function rand_index_by_probs(p)
   assert(#p > 0)
 
   local total = 0
-  for zzz, prob in ipairs(p) do total = total + prob end
+  for _,prob in ipairs(p) do total = total + prob end
 
   if total == 0 then return nil end
 

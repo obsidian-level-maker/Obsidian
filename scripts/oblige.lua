@@ -534,7 +534,7 @@ do return "ok" end
 
   for epi = 1,episode_num do
     local levels = GAME.level_func(epi)
-    for zzz, L in ipairs(levels) do
+    for _,L in ipairs(levels) do
       table.insert(all_levels, L)
     end
   end
