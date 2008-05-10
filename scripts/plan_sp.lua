@@ -36,6 +36,8 @@ class ROOM
 
   parent : ZONE -- zone this room is directly contained in
 
+  sprouts : array(SPROUT_POS) -- imminent branch points from this room
+
   quest : QUEST
 }
 
@@ -48,6 +50,8 @@ class ZONE extends ROOM
                       -- "walk"  : area between rooms is traversable
 
   children : array(ROOM)
+
+  sub_zones : array(ZONE)
 }
 
 
@@ -64,6 +68,16 @@ class RLINK  -- Room Link
   door : string  -- "arch", "door" etc..
 
   lock : string  -- optional, for keyed/switched doors
+}
+
+
+class SPROUT_POS
+{
+  sx, sy : seed coordinate
+
+  dir    : direction (2 4 6 8)
+
+  basic_dir : general overall direction (1 - 9)
 }
 
 
@@ -97,8 +111,9 @@ function Room_create(zone, kind)
     links  = {},
   }
 
+  table.insert(zone.children,  ROOM)
   table.insert(PLAN.all_rooms, ROOM)
-    
+
   return ROOM
 end
 
@@ -335,6 +350,8 @@ function populate_zone(ZN)
       end
     end
 
+    table.insert(ZN.sub_zones, SUB_ZONE)
+
     num_subzones = num_subzones + 1
 
     -- recursively populate it
@@ -370,6 +387,8 @@ function populate_zone(ZN)
 
     local HUB = Room_create(ZN, "hub")
 
+    HUB.is_initial = true
+
     local sx1, sy1, sx2, sy2 = div_to_seed_range(H.x,H.y, H.x,H.y)
 
     local sp_W = sx2 - sx1 + 1
@@ -381,10 +400,12 @@ function populate_zone(ZN)
     assert(sp_W >= 8 and sp_H >= 8)
 
     repeat
-      hub_W = rand_irange(3,8)
-      hub_H = rand_irange(3,8)
+      hub_W = 1 + 2 * rand_index_by_probs { 50, 90, 17, 2 }
+      hub_H = 1 + 2 * rand_index_by_probs { 50, 90, 17, 2 }
     until (hub_W <= sp_W-5) and (hub_H <= sp_H-5) and
-          (hub_W * hub_H <= 36)
+          (hub_W * hub_H <= 45)
+
+    con.printf("Hub size %dx%d\n", hub_W, hub_H)
 
     HUB.sx1 = sx1 + int((sp_W - hub_W) / 2)
     HUB.sy1 = sy1 + int((sp_H - hub_H) / 2)
@@ -397,8 +418,6 @@ function populate_zone(ZN)
 
     assert(HUB.sx2 < sx2)
     assert(HUB.sy2 < sy2)
-
-    con.printf("Hub size %dx%d\n", hub_W, hub_H)
 
     Room_assign_seeds(HUB)
 
@@ -415,6 +434,8 @@ function populate_zone(ZN)
 
     local ROOM = Room_create(ZN, "normal")
 
+    ROOM.is_initial = true
+
     local sx1, sy1, sx2, sy2 = div_to_seed_range(xx,yy, xx,yy)
 
     local sp_W = sx2 - sx1 + 1
@@ -425,8 +446,8 @@ function populate_zone(ZN)
 
     assert(sp_W >= 7 and sp_H >= 7)
 
-    room_W = rand_index_by_probs { 8, 32, 80, 16, 2 }
-    room_H = rand_index_by_probs { 8, 32, 80, 16, 2 }
+    room_W = rand_index_by_probs { 0, 32, 80, 16, 4 }
+    room_H = rand_index_by_probs { 0, 32, 80, 16, 4 }
 
     con.printf("Room size %dx%d\n", room_W, room_H)
 
@@ -501,6 +522,115 @@ function populate_zone(ZN)
 end
 
 
+function weave_tangled_web()
+  -- creates a sprawling mess of hallways and rooms that branch
+  -- out from the initial rooms / hubs.
+
+
+  function sprouts_for_room(R)
+    -- FIXME
+  end
+
+
+  function sprouts_for_hub(R)
+
+    -- there are three main branch points for the top of the hub
+    -- (assuming a hub wider than it is high), as in the following
+    -- diagram:
+    --             B  A  B
+    --             #######
+    --            C#######C
+    --             #######
+    --
+    -- and the same logic applies to the bottom half (C is shared
+    -- with the top half, only A2 and B2 are distinct).
+    --
+    -- The branch points are symmetrical along the wider axis
+    -- (e.g. we either create C on both sides or neither side).
+    --
+    -- Point A can be 0 (not used), 1 (middle seed), or 2 which
+    -- actually means TWO branch points (one each side of the
+    -- middle seed).
+    --
+    -- Point B can be 0 (not used), 1 for the usual position
+    -- above the corner, 2 for one seed towards A, or 3 for
+    -- for being on the side of the corner (instead of the top).
+    --
+    -- Point C can be 0 (not used) or 1 (present).
+    --
+    -- We require the following relationships to be upheld:
+    --   + two branch points are not adjacent (e.g. C=1 and B=3)
+    --   + total number of branch points is sane (4 - 8)
+    
+    local long, deep = Room_W(R), Room_H(R)
+    local vertical = false
+
+    if (long < deep) or (long == deep and rand_odds(50)) then
+      long, deep = deep, long
+      vertical = true
+    end
+
+
+    local A1, A2, B1, B2, C
+
+    local function is_acceptable()
+      local total = A1 + A2 + C*2 + sel(B1>0, 2, 0) + sel(B2>0, 2, 0)
+
+      if total < 4 or total > 8 then return false end
+
+      if (C == 1) and (B1 == 3 or B2 == 3) then return false end
+
+      if (A1 == 2) and (B1 == 1 or B1 == 2) then return false end
+      if (A2 == 2) and (B2 == 1 or B2 == 2) then return false end
+
+      if long < 5 and (A1 == 1) and (B1 == 1) then return false end
+      if long < 5 and (A2 == 1) and (B2 == 1) then return false end
+
+      if long < 7 and (A1 == 2 or A2 == 2) then return false end
+
+      if long < 7 and (A1 == 1) and (B1 == 2) then return false end
+      if long < 7 and (A2 == 1) and (B2 == 2) then return false end
+
+      return true --OK--
+    end
+
+for i = 1,300 do
+
+    repeat
+      A1 = rand_index_by_probs { 50, 50, 5 } - 1
+      A2 = rand_index_by_probs { 50, 50, 5 } - 1
+
+      B1 = rand_index_by_probs { 50, 33, 15, 20 } - 1
+      B2 = rand_index_by_probs { 50, 33, 15, 20 } - 1
+
+      C  = rand_index_by_probs { 50, 50 } - 1
+    until is_acceptable()
+
+con.printf("Hub: %dx%d  A1:%d B1:%d  C:%d  B2:%d A2:%d\n",
+           long, deep, A1, B1, C, B2, A2)
+end
+error("WTF")
+
+--    ... blah ...
+  end
+
+
+  --==| weave_tangled_web |==--
+
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.kind == "hub" then
+      sprouts_for_hub(R)
+    elseif R.kind == "room" then
+      sprouts_for_room(R)
+    end
+  end
+
+
+  -- !!!!! grow the sprouts !!!!!
+end
+
+
 function Plan_rooms_sp()
 
 
@@ -532,7 +662,7 @@ function Plan_rooms_sp()
 
   populate_zone(PLAN.head_zone)
 
-  -- !!!!!! FIXME grow everything until all is good
+  weave_tangled_web()
 
 end
 
