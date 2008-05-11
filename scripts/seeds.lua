@@ -26,12 +26,24 @@ class SEED
 
   room : ROOM
 
+  borders : table(DIR -> BORDER)  -- DIR can be (2 4 6 8)
+
   target_w, target_h : map size we want to be (bigger is OK)
 
   x1, y1, z1, x2, y2, z2 : map coordinates for 3D bbox 
 
   -- grow phase only:
   grow, shrink : map size to grow/shrink along current axis
+}
+
+
+class BORDER
+{
+  kind  : "solid" | "view" | "walk"
+
+  other : SEED  -- seed we are connected to, or nil 
+
+  rlink : RLINK
 }
 
 --------------------------------------------------------------]]
