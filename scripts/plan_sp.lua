@@ -30,13 +30,18 @@ class ROOM
 {
   sx1, sy1, sx2, sy2 : coverage over SEED map
 
-  kind  : "zone" | "hub" | "room" | "hallway"
+  kind  : "zone" | "hub" | "room" | "hall"
 
   links : array(RLINK) -- all connections with other rooms
 
   parent : ZONE -- zone this room is directly contained in
 
-  sprouts : array(SPROUT_POS) -- imminent branch points from this room
+  sprouts : array(SPROUT) -- imminent branch points from this room
+
+  branch_dist : integer -- increases by 1 as we get further away
+                           from the starting room.
+
+  branch_room : ROOM -- nil for the starting room
 
   quest : QUEST
 }
@@ -71,11 +76,11 @@ class RLINK  -- Room Link
 }
 
 
-class SPROUT_POS
+class SPROUT
 {
   sx, sy : seed coordinate
 
-  dir    : direction (2 4 6 8)
+  dir : direction (2 4 6 8)
 
   basic_dir : general overall direction (1 - 9)
 }
@@ -96,11 +101,6 @@ function Room_H(R)
   return R.sy2 - R.sy1 + 1
 end
 
-function Room_assign_seeds(R)
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    SEEDS[x][y][1].room = R
-  end end
-end
 
 function Room_create(zone, kind)
 
@@ -117,6 +117,14 @@ function Room_create(zone, kind)
   return ROOM
 end
 
+
+function Room_assign_seeds(R)
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    SEEDS[x][y][1].room = R
+  end end
+end
+
+
 function Room_link(R1, R2, kind)
 
   local RLINK =
@@ -129,6 +137,66 @@ function Room_link(R1, R2, kind)
   table.insert(R2.links, RLINK)
 
   return RLINK
+end
+
+
+function Room_side_pos(R, side, along)
+
+  -- the 'along' value ranges from 0.0 to 1.0
+  if along < 0.02 then along = 0.02 end
+  if along > 0.98 then along = 0.98 end
+
+  local W = Room_W(R)
+  local H = Room_H(R)
+
+  local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
+
+  local sx = x1 + int((x2-x1+1) * along)
+  local sy = y1 + int((y2-y1+1) * along)
+
+  assert(x1 <= sx and sx <= x2)
+  assert(y1 <= sy and sy <= y2)
+
+  return sx, sy
+end
+
+
+function Room_add_sprout(R, side, sx, sy)
+
+  if SEEDS[sx][sy][1].room ~= R then
+    error("Room_add_sprout: invalid spot!")
+  end
+
+  local SPROUT =
+  {
+    sx = sx, sy = sy,
+    dir = side,
+    basic_dir = side
+  }
+
+  -- sprouts at corner seeds often move diagonally
+  if R.kind == "hub" or rand_odds(60) then
+    if (sx == R.sx1) and (sy == R.sy1) then
+      SPROUT.basic_dir = 1
+    elseif  (sx == R.sx2) and (sy == R.sy1) then
+      SPROUT.basic_dir = 3
+    elseif  (sx == R.sx1) and (sy == R.sy2) then
+      SPROUT.basic_dir = 7
+    elseif  (sx == R.sx2) and (sy == R.sy2) then
+      SPROUT.basic_dir = 9
+    end
+  end
+
+  if not R.sprouts then
+    R.sprouts = {}
+  end
+
+  table.insert(R.sprouts, SPROUT)
+
+con.debugf("Added sprout @ [%d,%d] dir:%d room:%s %dx%d\n",
+           sx, sy, dir, R.kind, Room_W(R), Room_H(R))
+
+  return SPROUT
 end
 
 
@@ -388,8 +456,6 @@ function populate_zone(ZN)
 
     local HUB = Room_create(ZN, "hub")
 
-    HUB.is_initial = true
-
     local sx1, sy1, sx2, sy2 = div_to_seed_range(H.x,H.y, H.x,H.y)
 
     local sp_W = sx2 - sx1 + 1
@@ -434,8 +500,6 @@ function populate_zone(ZN)
     div_map[xx][yy] = { kind="room", div_id=xx*10+yy }
 
     local ROOM = Room_create(ZN, "room")
-
-    ROOM.is_initial = true
 
     local sx1, sy1, sx2, sy2 = div_to_seed_range(xx,yy, xx,yy)
 
@@ -524,6 +588,7 @@ end
 
 
 function weave_tangled_web()
+
   -- creates a sprawling mess of hallways and rooms that branch
   -- out from the initial rooms / hubs.
 
@@ -564,11 +629,19 @@ function weave_tangled_web()
            sel(n[4]>=1, "L", ""), sel(n[4]>=2, "L", ""),
            sel(n[6]>=1, "R", ""), sel(n[6]>=2, "R", "") )
 
+    -- NOTE: seed coordinate calcs assume room is a rectangle
+
     for side = 2,8,2 do
-      -- FIXME : add sprouts
+      if n[side] == 1 then
+        Room_add_sprout(R, side, Room_side_pos(R, side, con.random()) )
+
+      elseif n[side] == 2 then
+        Room_add_sprout(R, side, Room_side_pos(R, side, 0.0) )
+        Room_add_sprout(R, side, Room_side_pos(R, side, 1.0) )
+      end
     end
 
-  end
+  end -- sprouts_for_room
 
 
   function sprouts_for_hub(R)
@@ -664,7 +737,7 @@ function weave_tangled_web()
       con.printf("\n")
     end
 
-
+    -- choose the branch pattern
     repeat
       A1 = rand_index_by_probs { 50, 65, 15 } - 1
       A2 = rand_index_by_probs { 50, 65, 15 } - 1
@@ -678,13 +751,14 @@ function weave_tangled_web()
     con.debugf("Hub %dx%d sprouts : A1=%d B1=%d  C=%d  B2=%d A2=%d\n",
                long, deep, A1, B1, C, B2, A2)
 --    !!!! add sprouts
-  end
+
+  end -- sprouts_for_hub
 
 
   --==| weave_tangled_web |==--
 
 
-  for _, R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hub" then
       sprouts_for_hub(R)
     elseif R.kind == "room" then
@@ -705,7 +779,7 @@ function Plan_rooms_sp()
   con.printf("\n--==| Plan_rooms_sp |==--\n\n")
 
 
-  local map_size = 30   -- FIXME: depends on GAME and LEVEL_SIZE_SETTING
+  local map_size = 32   -- FIXME: depends on GAME and LEVEL_SIZE_SETTING
 
   PLAN =
   {
