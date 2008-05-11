@@ -193,8 +193,8 @@ function Room_add_sprout(R, side, sx, sy)
 
   table.insert(R.sprouts, SPROUT)
 
-con.debugf("Added sprout @ [%d,%d] dir:%d room:%s %dx%d\n",
-           sx, sy, dir, R.kind, Room_W(R), Room_H(R))
+con.debugf("Added sprout @ [%d,%d] dir:%d %s:%dx%d\n",
+           sx, sy, side, R.kind or "???", Room_W(R), Room_H(R))
 
   return SPROUT
 end
@@ -584,7 +584,8 @@ function populate_zone(ZN)
 -- ]]
 
   div_map = nil
-end
+
+end -- populate_zone
 
 
 function weave_tangled_web()
@@ -593,7 +594,7 @@ function weave_tangled_web()
   -- out from the initial rooms / hubs.
 
 
-  function sprouts_for_room(R, skip_side)
+  function put_sprouts_in_room(R, skip_side)
 
     -- normal rooms are quite simple: basically 0-1 branch points
     -- on each side (T,B,L,R), occasionally have 2 on long sides.
@@ -641,10 +642,10 @@ function weave_tangled_web()
       end
     end
 
-  end -- sprouts_for_room
+  end -- put_sprouts_in_room
 
 
-  function sprouts_for_hub(R)
+  function put_sprouts_in_hub(R)
 
     -- there are three main branch points for the top of the hub
     -- (assuming a hub wider than it is high), as in the following
@@ -750,9 +751,36 @@ function weave_tangled_web()
 
     con.debugf("Hub %dx%d sprouts : A1=%d B1=%d  C=%d  B2=%d A2=%d\n",
                long, deep, A1, B1, C, B2, A2)
---    !!!! add sprouts
 
-  end -- sprouts_for_hub
+    -- FIXME !!!! add sprouts
+
+  end -- put_sprouts_in_hub
+
+
+  local function create_offshoot(R, SP)
+    -- TODO: create_offshoot
+  end
+
+
+  local function sprout_rooms(list)
+
+    -- TODO: growth rates (e.g. grow_chance for each sprout)
+
+    local count = 0
+
+    for _,R in ipairs(list) do
+      if R.sprouts and #R.sprouts > 0 then
+        count = count + 1
+        for _,SP in ipairs(R.sprouts) do
+          create_offshoot(R, SP)
+        end
+        -- we grew every sprout for this room, hence clear them
+        R.sprouts = nil
+      end
+    end
+
+    return count
+  end
 
 
   --==| weave_tangled_web |==--
@@ -760,15 +788,21 @@ function weave_tangled_web()
 
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hub" then
-      sprouts_for_hub(R)
+      put_sprouts_in_hub(R)
     elseif R.kind == "room" then
-      sprouts_for_room(R)
+      put_sprouts_in_room(R)
     end
   end
 
+  -- sprouts away !!
+  repeat
+    local list = copy_table(PLAN.all_rooms)
+    rand_shuffle(list)
+    local count = sprout_rooms(list)
+    con.printf("Sprouted %d rooms\n", count)
+  until count == 0
 
-  -- !!!!! grow the sprouts !!!!!
-end
+end -- weave_tangled_web
 
 
 function Plan_rooms_sp()
@@ -805,5 +839,5 @@ function Plan_rooms_sp()
 
   weave_tangled_web()
 
-end
+end -- Plan_rooms_sp
 
