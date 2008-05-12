@@ -224,7 +224,7 @@ function populate_zone(ZN)
         if M.mode == "walk" then
           return string.format("//%d", M.div_id % 10);
         elseif M.mode == "view" then
-          return string.format("::%d", M.div_id % 10);
+          return string.format("%%%%%d", M.div_id % 10);
         elseif M.mode == "solid" then
           return string.format("##%d", M.div_id % 10);
         else
@@ -758,7 +758,50 @@ function weave_tangled_web()
 
 
   local function create_offshoot(R, SP)
-    -- TODO: create_offshoot
+
+    -- FIXME: THIS IS TEMPORARY JUNK
+
+    local sx, sy = SP.sx, SP.sy
+    local dx, dy = dir_to_delta(SP.dir)
+
+    sx, sy = sx+dx, sy+dy
+
+    -- nowhere to go?
+    if not Seed_valid(sx, sy, 1) then return end
+
+    local S = SEEDS[sx][sy][1]
+
+    -- cannot escape the zone
+    if S.zone ~= R.parent then return end
+
+    -- already occupied?
+    if S.room then return end
+
+    local ROOM = Room_create(R.parent, "hall")
+
+    ROOM.sx1 = sx
+    ROOM.sy1 = sy
+
+    ROOM.sx2 = ROOM.sx1 -- + room_W - 1
+    ROOM.sy2 = ROOM.sy1 -- + room_H - 1
+
+    Room_assign_seeds(ROOM)
+
+    -- FIXME: RLINK !!!!
+
+    -- FIXME: branch_room / dist
+
+    local used_sides = {}
+    used_sides[10 - SP.dir] = 1
+
+    for i = 1,3 do
+      local side = rand_irange(1,4) * 2
+
+      if not used_sides[side] then
+        Room_add_sprout(ROOM, side, Room_side_pos(ROOM, side, 0.5) )
+        used_sides[side] = 1
+      end
+    end
   end
 
 
@@ -837,7 +880,11 @@ function Plan_rooms_sp()
 
   populate_zone(PLAN.head_zone)
 
+Seed_dump_rooms()
+
   weave_tangled_web()
+
+Seed_dump_rooms()
 
 end -- Plan_rooms_sp
 
