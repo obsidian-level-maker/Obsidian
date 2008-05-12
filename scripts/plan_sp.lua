@@ -147,19 +147,37 @@ function Room_link(R1, R2, kind)
 end
 
 
-function Room_side_pos(R, side, along)
+function Room_side_pos(R, side, frac)
 
-  -- the 'along' value ranges from 0.0 to 1.0
-  if along < 0.02 then along = 0.02 end
-  if along > 0.98 then along = 0.98 end
+  -- the 'frac' value ranges from 0.0 to 1.0
+  if frac < 0.02 then frac = 0.02 end
+  if frac > 0.98 then frac = 0.98 end
 
   local W = Room_W(R)
   local H = Room_H(R)
 
   local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
 
-  local sx = x1 + int((x2-x1+1) * along)
-  local sy = y1 + int((y2-y1+1) * along)
+  local sx = x1 + int((x2-x1+1) * frac)
+  local sy = y1 + int((y2-y1+1) * frac)
+
+  assert(x1 <= sx and sx <= x2)
+  assert(y1 <= sy and sy <= y2)
+
+  return sx, sy
+end
+
+
+function Room_side_pos2(R, side, along)
+
+  local W = Room_W(R)
+  local H = Room_H(R)
+con.printf("side:%d along:%d SIZE:%dx%d\n", side, along, W, H)
+  local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
+  local dx,dy = dir_to_across(side)
+
+  local sx = x1 + dx * (along-1)
+  local sy = y1 + dy * (along-1)
 
   assert(x1 <= sx and sx <= x2)
   assert(y1 <= sy and sy <= y2)
@@ -690,6 +708,9 @@ function weave_tangled_web()
       vertical = true
     end
 
+    local mid_L = int((long+1) / 2)
+    local mid_D = int((deep+1) / 2)
+
 
     local A1, A2, B1, B2, C
 
@@ -724,19 +745,19 @@ function weave_tangled_web()
           if cx and cy then
             ch = "#"
           elseif cy then
-            if y == int((deep+1)/2) and C==1 then ch = "C" end
+            if y == mid_D and C==1 then ch = "C" end
             if y == 1 and B1 == 3 then ch = "B" end
             if y == deep and B2 == 3 then ch = "B" end
           elseif cx and (y == 0) then
+            if x == mid_L and A1 == 1 then ch = "A" end
+            if (math.abs(x - mid_L) == 1) and A1 == 2 then ch = "A" end
             if (x == 1 or x == long) and B1 == 1 then ch = "B" end
             if (x == 2 or x == long-1) and B1 == 2 then ch = "B" end
-            if (x == int((long+1)/2)) and A1 == 1 then ch = "A" end
-            if (math.abs(x - int((long+1)/2)) == 1) and A1 == 2 then ch = "A" end
           elseif cx and (y == deep+1) then
+            if x == mid_L and A2 == 1 then ch = "A" end
+            if (math.abs(x - mid_L) == 1) and A2 == 2 then ch = "A" end
             if (x == 1 or x == long) and B2 == 1 then ch = "B" end
             if (x == 2 or x == long-1) and B2 == 2 then ch = "B" end
-            if (x == int((long+1)/2)) and A2 == 1 then ch = "A" end
-            if (math.abs(x - int((long+1)/2)) == 1) and A2 == 2 then ch = "A" end
           end
           con.printf(ch)
         end
@@ -759,7 +780,50 @@ function weave_tangled_web()
     con.debugf("Hub %dx%d sprouts : A1=%d B1=%d  C=%d  B2=%d A2=%d\n",
                long, deep, A1, B1, C, B2, A2)
 
-    -- FIXME !!!! add sprouts
+    --- add the sprouts ---
+
+    local T_side, B_side = 8, 2
+    local L_side, R_side = 4, 6
+
+    if vertical then
+      T_side, B_side = 6, 4
+      L_side, R_side = 8, 2
+    end
+
+    if A1 == 1 then
+      Room_add_sprout(R, T_side, Room_side_pos2(R, T_side, mid_L))
+    elseif A1 == 2 then
+      Room_add_sprout(R, T_side, Room_side_pos2(R, T_side, mid_L-1))
+      Room_add_sprout(R, T_side, Room_side_pos2(R, T_side, mid_L+1))
+    end
+
+    if A2 == 1 then
+      Room_add_sprout(R, B_side, Room_side_pos2(R, B_side, mid_L))
+    elseif A2 == 2 then
+      Room_add_sprout(R, B_side, Room_side_pos2(R, B_side, mid_L-1))
+      Room_add_sprout(R, B_side, Room_side_pos2(R, B_side, mid_L+1))
+    end
+
+    if B1 == 1 or B1 == 2 then
+      Room_add_sprout(R, T_side, Room_side_pos2(R, T_side, B1))
+      Room_add_sprout(R, T_side, Room_side_pos2(R, T_side, long+1-B1))
+    elseif  B1 == 3 then
+      Room_add_sprout(R, L_side, Room_side_pos2(R, L_side, deep))
+      Room_add_sprout(R, R_side, Room_side_pos2(R, R_side, deep))
+    end
+
+    if B2 == 1 or B2 == 2 then
+      Room_add_sprout(R, B_side, Room_side_pos2(R, B_side, B2))
+      Room_add_sprout(R, B_side, Room_side_pos2(R, B_side, long+1-B2))
+    elseif  B2 == 3 then
+      Room_add_sprout(R, L_side, Room_side_pos2(R, L_side, 1))
+      Room_add_sprout(R, R_side, Room_side_pos2(R, R_side, 1))
+    end
+
+    if C == 1 then
+      Room_add_sprout(R, L_side, Room_side_pos2(R, L_side, mid_D))
+      Room_add_sprout(R, R_side, Room_side_pos2(R, R_side, mid_D))
+    end 
 
   end -- put_sprouts_in_hub
 
