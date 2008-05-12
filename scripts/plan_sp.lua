@@ -120,7 +120,14 @@ end
 
 function Room_assign_seeds(R)
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    SEEDS[x][y][1].room = R
+    local S = SEEDS[x][y][1]
+    S.room = R
+    S.borders = {}
+
+    if x == R.sx1 then S.borders[4] = { kind="solid" } end
+    if x == R.sx2 then S.borders[6] = { kind="solid" } end
+    if y == R.sy1 then S.borders[2] = { kind="solid" } end
+    if y == R.sy2 then S.borders[8] = { kind="solid" } end
   end end
 end
 
@@ -764,6 +771,11 @@ function weave_tangled_web()
     local sx, sy = SP.sx, SP.sy
     local dx, dy = dir_to_delta(SP.dir)
 
+    local T = SEEDS[sx][sy][1]
+    assert(T)
+    assert(T.room == R)
+    assert(T.borders)
+
     sx, sy = sx+dx, sy+dy
 
     -- nowhere to go?
@@ -777,7 +789,7 @@ function weave_tangled_web()
     -- already occupied?
     if S.room then return end
 
-    local ROOM = Room_create(R.parent, "hall")
+    local ROOM = Room_create(R.parent, rand_sel(90,"hall","room") )
 
     ROOM.sx1 = sx
     ROOM.sy1 = sy
@@ -789,13 +801,25 @@ function weave_tangled_web()
 
     -- FIXME: RLINK !!!!
 
-    -- FIXME: branch_room / dist
+    -- FIXME: BORDER !!!!
+
+    T.borders[SP.dir].kind = "walk"
+    S.borders[10 - SP.dir].kind = "walk"
+
+    ROOM.branch_room = R.branch_room or R
+    ROOM.branch_dist = 1 + (R.branch_dist or 0)
+
+    if ROOM.branch_dist >= 11 then
+      ROOM.kind = "room"
+      return -- no more branching
+    end
 
     local used_sides = {}
     used_sides[10 - SP.dir] = 1
 
     for i = 1,3 do
       local side = rand_irange(1,4) * 2
+      if ROOM.kind == "hall" and rand_odds(50) then side = SP.dir end
 
       if not used_sides[side] then
         Room_add_sprout(ROOM, side, Room_side_pos(ROOM, side, 0.5) )
