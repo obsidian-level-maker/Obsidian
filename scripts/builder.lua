@@ -208,7 +208,7 @@ function dummy_builder(Z)
     assert(S)
     assert(S.zone)
 
-    if not S.room and S.zone.zone_kind == "solid" then
+    if S.zone.zone_kind == "solid" and not S.room then
       return
     end
 
@@ -222,11 +222,21 @@ function dummy_builder(Z)
 
     if S.room then
 
-      z1 = 24
-      z2 = 160
-      f_tex = "FLAT1"
-      c_tex = "TLITE6_6"
-      w_tex = "METAL2"
+      if S.room.kind == "hall" then
+        z1 = 32
+        z2 = z1 + 96
+
+        f_tex = "FLAT14"
+        c_tex = f_tex
+        w_tex = "GRAY7"
+      else
+        z1 = 24
+        z2 = z1+192
+      
+        f_tex = "FLOOR4_8"
+        c_tex = "TLITE6_6"
+        w_tex = "METAL2"
+      end
 
       csg2.add_brush(
       {
@@ -312,7 +322,7 @@ function dummy_builder(Z)
     {
       t_face = { texture=f_tex },
       b_face = { texture=f_tex },
-      w_face = { texture=f_tex },
+      w_face = { texture=w_tex },
     },
     {
       { x=x1, y=y1 }, { x=x1, y=y2 },
@@ -324,7 +334,7 @@ function dummy_builder(Z)
     {
       t_face = { texture=c_tex },
       b_face = { texture=c_tex },
-      w_face = { texture=c_tex },
+      w_face = { texture=w_tex },
     },
     {
       { x=x1, y=y1 }, { x=x1, y=y2 },
@@ -332,20 +342,18 @@ function dummy_builder(Z)
     },
     z2, 2000)
 
-    --[[
-    for dir = 2,8,2 do
-      if walls[dir] == "solid" then
+    for side = 2,8,2 do
+      if S.borders and S.borders[side] and S.borders[side].kind == "solid" then
         csg2.add_brush(
         {
-          t_face = { texture=w_tex },
-          b_face = { texture=w_tex },
+          t_face = { texture=f_tex },
+          b_face = { texture=f_tex },
           w_face = { texture=w_tex },
         },
-        get_wall_coords(dir, x1,y1, x2,y2),
+        get_wall_coords(side, x1,y1, x2,y2),
         -2000, 2000)
       end
     end
-    --]]
 
     if S.is_start then
       csg2.add_entity(--[[ "info_player_start" ]] "1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
