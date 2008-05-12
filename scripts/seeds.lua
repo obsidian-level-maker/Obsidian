@@ -118,6 +118,49 @@ function Seed_are_free(x1,y1,z1, x2,y2,z2, zone)
 end
 
 
+function Seed_dump_rooms()
+  con.printf("Seed room map:\n")
+
+  local ROOM_IDX = 0
+  local HALL_IDX = 0
+
+  local ROOMS = "BFGHIDKLPTQJY"
+  local HALLS = "acmunorvsewxz"
+
+  local function seed_to_char(S)
+    if not S or not S.zone then return "!" end
+
+    if not S.room then
+      if S.zone.zone_kind == "walk" then return "/" end
+      if S.zone.zone_kind == "view" then return "%" end
+      if S.zone.parent then return "#" end
+      return "."
+    end
+
+    if not S.room.dump_char then
+      if S.room.kind == "hall" then
+        S.room.dump_char = string.sub(HALLS, 1+HALL_IDX, 1+HALL_IDX)
+        HALL_IDX = (HALL_IDX + 1) % string.len(HALLS)
+      else
+        S.room.dump_char = string.sub(ROOMS, 1+ROOM_IDX, 1+ROOM_IDX)
+        ROOM_IDX = (ROOM_IDX + 1) % string.len(ROOMS)
+      end
+    end
+
+    return S.room.dump_char
+  end
+
+  for y = SEED_H,1,-1 do
+    for x = 1,SEED_W do
+      con.printf("%s", seed_to_char(SEEDS[x][y][1]))
+    end
+    con.printf("\n")
+  end
+
+  con.printf("\n")
+end
+
+
 --[[
 require 'gd'
 
