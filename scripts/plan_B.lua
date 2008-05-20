@@ -125,8 +125,8 @@ function build_fab(r)
 
   for y = 1,r.h do for x = 1,r.w do
     
-    local sx = r.rx + x - 1
-    local sy = r.ry + y - 1
+    local sx = r.x + x - 1
+    local sy = r.y + y - 1
 
     assert(SEEDS[sx][sy] == nil)
 
@@ -156,7 +156,7 @@ end
 
 function try_branch_off(r)
   
-  @@@
+  -- TODO !!!!
 end
 
 
@@ -204,13 +204,13 @@ function Plan_rooms_sp()
     w = rand_irange(SW/4, SW/2),
     h = rand_irange(SH/4, SH/2),
 
-    x = rand_irange(3, SW-rw-2),
-    h = rand_irange(3, SH-rh-2),
-
     dir = rand_dir(),
   }
 
-  select_room_fab(r),
+  r.x = rand_irange(3, SW-r.w-2)
+  r.y = rand_irange(3, SH-r.h-2)
+
+  select_room_fab(r)
 
 
   table.insert(FABS, r)
@@ -227,7 +227,7 @@ function Plan_rooms_sp()
   for y = SH,1,-1 do
     
     for x = 1,SW do
-      con.printf("%c", char_for_seed(SEEDS[x][y]))
+      con.printf("%s", char_for_seed(SEEDS[x][y]))
     end
 
     con.printf("\n")
