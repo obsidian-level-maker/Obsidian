@@ -221,6 +221,10 @@ function rand_skew()
   return con.random() - con.random()
 end
 
+function rand_dir()
+  return rand_irange(1,4) * 2
+end
+
 function rand_odds(chance)
   return (con.random() * 100) <= chance
 end
