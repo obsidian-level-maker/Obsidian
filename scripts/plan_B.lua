@@ -67,9 +67,90 @@ function select_room_fab(r)
 end
 
 
-function built_fab(r)
+function build_fab(r)
   
-  @@@
+  local F = assert(r.fab)
+
+  local fw = string.len(F.structure[1])
+  local fh = # F.structure
+
+  local col_map = {}
+  local row_map = {}
+
+
+  local function create_mapping(map, fx, rx, grow)
+
+    assert(fx <= rx)
+
+    if fx == rx then
+      for i = 1,rx do map[i] = i end
+      return
+    end
+
+    assert(grow)
+    assert(#grow >= 1)
+
+    -- determine how large each column/row will be
+    local sizes = {}
+    for i = 1,fx do sizes[i] = 1 end
+
+    local g_idx = 1
+    local g_tot = fx
+
+    while g_tot < rx do
+      local ax = grow[g_idx]
+      sizes[ax] = sizes[ax] + 1
+      g_tot = g_tot + 1
+      g_idx = g_idx + 1
+      if g_idx > #grow then g_idx = 1 end
+    end
+
+    local idx = 1
+    for i = 1,fx do
+      for n = 1,sizes[i] do
+        map[idx] = i
+        idx = idx + 1
+      end
+    end
+
+    assert(#map == rx)
+  end
+
+
+  --- build_fab ---
+
+  create_mapping(col_map, fw, r.w, F.grow_columns)
+  create_mapping(row_map, fh, r.h, F.grow_rows)
+
+
+  for y = 1,r.h do for x = 1,r.w do
+    
+    local sx = r.rx + x - 1
+    local sy = r.ry + y - 1
+
+    assert(SEEDS[sx][sy] == nil)
+
+    local mx = col_map[x]
+    local my = row_map[y]
+
+    assert(1 <= mx and mx <= fw)
+    assert(1 <= my and my <= fh)
+
+    local ch = string.sub(F.structure[my], mx, mx)
+
+    local e = F.elements[ch]
+
+    if e == nil then
+      error("Unknown element '" .. ch .. "' in room fab")
+    end
+
+    assert(e.kind)
+
+    SEEDS[sx][sy] =
+    {
+      kind = e.kind,
+    }
+  end end
 end
 
 
@@ -85,6 +166,7 @@ function process_fabs()
     
     if not r.built then
       build_fab(r)
+      r.built = true
     end
 
     for dir = 2,8,2 do
