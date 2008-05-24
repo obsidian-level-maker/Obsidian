@@ -22,7 +22,8 @@ require 'a_star'
 require 'engines'
 
 require 'seeds'
-require 'plan_sp'
+require 'plan_B'
+-- require 'plan_sp'
 require 'quests'
 require 'builder'
 

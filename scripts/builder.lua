@@ -208,7 +208,7 @@ function dummy_builder(Z)
     assert(S)
     assert(S.zone)
 
-    if S.zone.zone_kind == "solid" and not S.room then
+    if not S.room --[[ and S.zone.zone_kind == "solid" ]] then
       return
     end
 
@@ -229,9 +229,24 @@ function dummy_builder(Z)
         f_tex = "FLAT14"
         c_tex = f_tex
         w_tex = "GRAY7"
-      else
+
+      elseif S.room.kind == "ground" then
+        z1 = 0
+        z2 = 256
+        f_tex = "GRASS1"
+        c_tex = "F_SKY1"
+        w_tex = "ZIMMER8"
+
+      elseif S.room.kind == "liquid" then
+        z1 = -24
+        z2 = 256
+        f_tex = "FWATER1"
+        c_tex = "F_SKY1"
+        w_tex = "ASHWALL3"
+
+      else -- building
         z1 = 24
-        z2 = z1+192
+        z2 = z1+128
       
         f_tex = "FLOOR4_8"
         c_tex = "TLITE6_6"
@@ -296,21 +311,7 @@ function dummy_builder(Z)
 
     else -- ZONE ONLY
 
-      if S.zone.zone_kind == "walk" then
-        z1 = 0
-        z2 = 256
-        f_tex = "GRASS1"
-        c_tex = "F_SKY1"
-        w_tex = "ZIMMER8"
-
-      elseif S.zone.zone_kind == "view" then
-        z1 = -128
-        z2 = 256
-        f_tex = "LAVA1"
-        c_tex = "F_SKY1"
-        w_tex = "ASHWALL3"
-
-      else
+      do
         error("UNKNOWN ZONE KIND: " .. tostring(S.zone.zone_kind))
       end
     end

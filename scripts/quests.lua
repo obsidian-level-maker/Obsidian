@@ -36,6 +36,17 @@ function Quest_assign()
 
   con.printf("\n--==| Quest_assign |==--\n\n")
 
+
+  local sx, sy
+
+  repeat
+    sx = rand_irange(1, SEED_W)
+    sy = rand_irange(1, SEED_H)
+  until SEEDS[sx][sy][1].room
+
+
+--[[ older method
+
   local start_R
 
   repeat
@@ -51,6 +62,7 @@ function Quest_assign()
     sy = rand_irange(start_R.sy1, start_R.sy2)
   until SEEDS[sx][sy][1].room == start_R
 
+--]]
   SEEDS[sx][sy][1].is_start = true
 
   con.printf("Start seed @ (%d,%d)\n", sx, sy)

@@ -24,8 +24,6 @@ require 'room_fabs'
 SW = 32
 SH = 32
 
-SEEDS = array_2D(SW, SH)
-
 FABS = {}
 
 
@@ -60,6 +58,7 @@ function select_room_fab(r)
   end
 
   if #list == 0 then
+    con.printf("Needed size: %dx%d\n", r.w, r.h)
     error("No usable room fab could be found!!!")
   end
 
@@ -122,13 +121,15 @@ function build_fab(r)
   create_mapping(col_map, fw, r.w, F.grow_columns)
   create_mapping(row_map, fh, r.h, F.grow_rows)
 
+  local sub_dims = {}
+
 
   for y = 1,r.h do for x = 1,r.w do
     
     local sx = r.x + x - 1
     local sy = r.y + y - 1
 
-    assert(SEEDS[sx][sy] == nil)
+    assert(SEEDS[sx][sy][1].room == nil)
 
     local mx = col_map[x]
     local my = row_map[y]
@@ -138,19 +139,62 @@ function build_fab(r)
 
     local ch = string.sub(F.structure[my], mx, mx)
 
-    local e = F.elements[ch]
+    if ch == '.' then
+      -- nothing
+    else
 
-    if e == nil then
-      error("Unknown element '" .. ch .. "' in room fab")
-    end
+      local e = F.elements[ch]
 
-    assert(e.kind)
+      if e == nil then
+        error("Unknown element '" .. ch .. "' in room fab")
+      end
 
-    SEEDS[sx][sy] =
-    {
-      kind = e.kind,
-    }
+      assert(e.kind)
+
+      if e.kind == "sub" then
+
+        if not sub_dims[ch] then
+          sub_dims[ch] = { x1=99,y1=99,x2=1,y2=1, ch=ch, e=e }
+        end
+
+        local D = sub_dims[ch]
+
+        if sx < D.x1 then D.x1 = sx end
+        if sx > D.x2 then D.x2 = sx end
+
+        if sy < D.y1 then D.y1 = sy end
+        if sy > D.y2 then D.y2 = sy end
+
+      else
+        SEEDS[sx][sy][1].room =
+        {
+          kind = e.kind,
+        }
+      end
+
+    end -- if ch == '.'
   end end
+
+
+  -- handle sub areas
+
+  for _,D in pairs(sub_dims) do
+    
+    local n =
+    {
+      x = D.x1,
+      y = D.y1,
+
+      w = D.x2 - D.x1 + 1,
+      h = D.y2 - D.y1 + 1,
+
+      dir = rand_dir(),
+    }
+
+    select_room_fab(n)
+
+    table.insert(FABS, n)
+  end
 end
 
 
@@ -198,6 +242,8 @@ function Plan_rooms_sp()
 
   con.printf("\n--==| Plan_rooms_sp |==--\n\n")
 
+  Seed_init(SW, SH, 1, { zone_kind="solid"})
+
   -- initial room
   local r =
   {
@@ -227,13 +273,11 @@ function Plan_rooms_sp()
   for y = SH,1,-1 do
     
     for x = 1,SW do
-      con.printf("%s", char_for_seed(SEEDS[x][y]))
+      con.printf("%s", char_for_seed(SEEDS[x][y][1].room))
     end
 
     con.printf("\n")
   end
-
-  exit(9)
 
 end -- Plan_rooms_sp
 
