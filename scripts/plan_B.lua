@@ -26,14 +26,16 @@ SH = 32
 
 FABS = {}
 
+CONNS = {}
+
 
 function select_room_fab(r)
 
   local function usable(F)
-    if r.w < F.width_range[1] or
-       r.w > F.width_range[2] or
-       r.h < F.height_range[1] or
-       r.h > F.height_range[2]
+    if r.w < F.x_size[1] or
+       r.w > F.x_size[2] or
+       r.h < F.y_size[1] or
+       r.h > F.y_size[2]
     then
       return false
     end
@@ -118,8 +120,8 @@ function build_fab(r)
 
   --- build_fab ---
 
-  create_mapping(col_map, fw, r.w, F.grow_columns)
-  create_mapping(row_map, fh, r.h, F.grow_rows)
+  create_mapping(col_map, fw, r.w, F.x_grow)
+  create_mapping(row_map, fh, r.h, F.y_grow)
 
   local sub_dims = {}
 
@@ -204,21 +206,242 @@ function try_branch_off(r)
 end
 
 
-function process_fabs()
+function install_room_fab(TEST, F, @@@ )
+ 
+  local F = assert(r.fab)
 
-  for _,r in ipairs(FABS) do
-    
-    if not r.built then
-      build_fab(r)
-      r.built = true
+  local fw = string.len(F.structure[1])
+  local fh = # F.structure
+
+  local col_map = {}
+  local row_map = {}
+
+
+  local function create_mapping(map, fx, rx, grow)
+
+    assert(fx <= rx)
+
+    if fx == rx then
+      for i = 1,rx do map[i] = i end
+      return
     end
 
-    for dir = 2,8,2 do
-      if rand_odds(25) then
-        try_branch_off(r, dir)
+    assert(grow)
+    assert(#grow >= 1)
+
+    -- determine how large each column/row will be
+    local sizes = {}
+    for i = 1,fx do sizes[i] = 1 end
+
+    local g_idx = 1
+    local g_tot = fx
+
+    while g_tot < rx do
+      local ax = grow[g_idx]
+      sizes[ax] = sizes[ax] + 1
+      g_tot = g_tot + 1
+      g_idx = g_idx + 1
+      if g_idx > #grow then g_idx = 1 end
+    end
+
+    local idx = 1
+    for i = 1,fx do
+      for n = 1,sizes[i] do
+        map[idx] = i
+        idx = idx + 1
       end
     end
+
+    assert(#map == rx)
   end
+
+
+  --- build_fab ---
+
+  create_mapping(col_map, fw, r.w, F.x_grow)
+  create_mapping(row_map, fh, r.h, F.y_grow)
+
+  local sub_dims = {}
+
+
+  for y = 1,r.h do for x = 1,r.w do
+    
+    local sx = r.x + x - 1
+    local sy = r.y + y - 1
+
+    assert(SEEDS[sx][sy][1].room == nil)
+
+    local mx = col_map[x]
+    local my = row_map[y]
+
+    assert(1 <= mx and mx <= fw)
+    assert(1 <= my and my <= fh)
+
+    local ch = string.sub(F.structure[my], mx, mx)
+
+    if ch == '.' then
+      -- nothing
+    else
+
+      local e = F.elements[ch]
+
+      if e == nil then
+        error("Unknown element '" .. ch .. "' in room fab")
+      end
+
+      assert(e.kind)
+
+      if e.kind == "sub" then
+
+        if not sub_dims[ch] then
+          sub_dims[ch] = { x1=99,y1=99,x2=1,y2=1, ch=ch, e=e }
+        end
+
+        local D = sub_dims[ch]
+
+        if sx < D.x1 then D.x1 = sx end
+        if sx > D.x2 then D.x2 = sx end
+
+        if sy < D.y1 then D.y1 = sy end
+        if sy > D.y2 then D.y2 = sy end
+
+      else
+        SEEDS[sx][sy][1].room =
+        {
+          kind = e.kind,
+        }
+      end
+
+    end -- if ch == '.'
+  end end
+
+
+  -- handle sub areas
+
+  for _,D in pairs(sub_dims) do
+    
+    local n =
+    {
+      x = D.x1,
+      y = D.y1,
+
+      w = D.x2 - D.x1 + 1,
+      h = D.y2 - D.y1 + 1,
+
+      dir = rand_dir(),
+    }
+
+    select_room_fab(n)
+
+    table.insert(FABS, n)
+  end
+end
+
+
+function choose_room_fab(p, x, y, out_n, a_n, b_n)
+
+  local W = math.min(a_n, b_n)
+  local H = out_n
+
+  if math.max(a_n, b_n) == 2 then W = 2 end
+
+
+  local function usable(F)
+    if F.x_size[1] > W   then return false end
+    if F.y_size[1] > H-1 then return false end
+
+    -- FIXME !!!!
+
+    return true
+  end
+
+
+  local fabs  = { }
+  local probs = { }
+
+  for _,F in pairs(ROOM_FABS) do
+    if usable(F) and install_room_fab(true, F, @@@ ) then
+      table.insert(fabs, F)
+      table.insert(probs, F.prob or 50)
+    end
+  end
+
+  if #fabs == 0 then
+    con.debugf("No usable room fab found!\n")
+    return nil
+  end
+
+  local F = fabs[rand_index_by_probs(probs)]
+  
+  return F
+end
+
+
+function process_conns()
+
+  assert(#CONNS > 0)
+
+  -- TODO: sort in priority order
+  local p = table.remove(CONNS, 1)
+
+  con.debugf("Branching at point (%d,%d) dir:%d\n", p.x, p.y, p.dir)
+
+  local dx, dy = dir_to_delta(p.dir)
+
+  local x, y = p.x + dx, p.y + dy
+
+  -- determine number of free seeds near the branch point
+
+  local out_n  = 0
+
+  for n = 0,100 do
+    local sx = x + dx * n
+    local sy = y + dy * n
+
+    if not Seed_valid_and_free(sx, sy, 1) then break; end
+
+    out_n = n + 1
+  end
+
+  if out_n == 0 then
+    con.debugf("--> Cut off!\n")
+    return
+  end
+
+
+  local a_n = 1
+  local b_n = 1
+
+  for n = 1,100 do
+    local sx = x - dy * n
+    local sy = y + dx * n
+
+    if not Seed_valid_and_free(sx, sy, 1) then break; end
+
+    a_n = n + 1
+  end
+
+  for n = 1,100 do
+    local sx = x + dy * n
+    local sy = y - dx * n
+
+    if not Seed_valid_and_free(sx, sy, 1) then break; end
+
+    b_n = n + 1
+  end
+
+  con.debugf("--> out_n:%d a_n:%d b_n:%d\n", out_n, a_n, b_n)
+
+
+  local fab = choose_room_fab(p, x, y, out_n, a_n, b_n)
+
+  if not fab then
+    con.debugf("--> UNABLE TO SELECT ANY ROOM FAB\n")
+    return
+  end
+
+  
+  install_room_fab(false, fab, @@@ )
 end
 
 
@@ -244,25 +467,24 @@ function Plan_rooms_sp()
 
   Seed_init(SW, SH, 1, { zone_kind="solid"})
 
-  -- initial room
-  local r =
+  -- initial connection point
+  local p =
   {
-    w = rand_irange(SW/4, SW/2),
-    h = rand_irange(SH/4, SH/2),
-
-    dir = rand_dir(),
+    x = rand_irange(int(SW/4), int(SW*3/4)),
+    y = rand_irange(int(SH/5), int(SH/2)),
+    dir = 8,
+    hall = true
   }
 
-  r.x = rand_irange(3, SW-r.w-2)
-  r.y = rand_irange(3, SH-r.h-2)
-
-  select_room_fab(r)
+  table.insert(CONNS, p)
 
 
-  table.insert(FABS, r)
+  -- branch stuff out from connections
 
   for loop = 1,100 do
-    process_fabs()
+    process_conns()
+
+    if #CONNS == 0 then break; end
   end
 
 
