@@ -376,6 +376,8 @@ HALL_CROSS =
 
 ----------------------------------------------------------------
 
+--[[
+
 SURROUND_GROUND =
 {
   kind = "ground",
@@ -439,5 +441,26 @@ SURROUND_LIQUID =
   }
 },
 
+--]]
 
 } -- end of ROOM_FABS 
+
+
+----------------------------------------------------------------
+
+function expand_room_fabs()
+
+  name_it_up(ROOM_FABS)
+
+  expand_copies(ROOM_FABS)
+
+  name_it_up(ROOM_FABS)
+
+  for _,F in pairs(ROOM_FABS) do
+    expand_copies(F.elements)
+  
+    if not F.x_size then F.x_size = { #P.structure[1] } end
+    if not F.y_size then F.y_size = { #P.structure }    end
+  end
+end
+
