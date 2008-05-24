@@ -399,6 +399,12 @@ SURROUND_GROUND =
     g = { kind="ground" },
     A = { kind="sub" },
   },
+
+  connections =
+  {
+    { x=2, y=1, dir=2 }, 
+    { x=2, y=1, dir=8 }, 
+  }
 },
 
 SURROUND_LIQUID =
@@ -410,20 +416,27 @@ SURROUND_LIQUID =
   {
     "lll",
     "lAl",
-    "lll",
+    "lgl",
   },
 
   x_size = { 6, 16 },
   y_size = { 6, 16 },
 
-  x_grow = { 1,3, 2,2,2,2 },
-  y_grow = { 1,3, 2,2,2,2 },
+  x_grow = { 3,1, 2,2,2,2 },
+  y_grow = { 3,1, 2,2,2,2 },
 
   elements =
   {
     l = { kind="liquid" },
+    g = { kind="ground" },
     A = { kind="sub" },
   },
+
+  connections =
+  {
+    { x=2, y=1, dir=2 }, 
+    { x=2, y=1, dir=8 }, 
+  }
 },
 
 
