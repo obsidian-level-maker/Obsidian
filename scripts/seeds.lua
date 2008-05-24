@@ -96,7 +96,16 @@ end
 function Seed_is_free(x, y, z, zone)
   assert(Seed_valid(x, y, z))
 
-  return SEEDS[x][y][z].zone == zone
+  return not SEEDS[x][y][z].room
+end
+
+
+function Seed_valid_and_free(x, y, z, zone)
+  if not Seed_valid(x, y, z) then
+    return false
+  end
+
+  return not SEEDS[x][y][z].room
 end
 
 
@@ -109,7 +118,7 @@ function Seed_are_free(x1,y1,z1, x2,y2,z2, zone)
 
   for x = x1,x2 do for y = y1,y2 do for z = z1,z2 do
     local S = SEEDS[x][y][z]
-    if S.zone ~= zone then
+    if S.room then ---### S.zone ~= zone then
       return false
     end
   end end end -- x, y, z
