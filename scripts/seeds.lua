@@ -243,11 +243,11 @@ function Seed_grow()
 
     local S = SEEDS[x][y][z]
 
-    S.x1 = x * 200
-    S.y1 = y * 200
+    S.x1 = x * 224
+    S.y1 = y * 224
 
-    S.x2 = (x+1) * 200
-    S.y2 = (y+1) * 200
+    S.x2 = (x+1) * 224
+    S.y2 = (y+1) * 224
 
   end end end --- x, y, z
 
