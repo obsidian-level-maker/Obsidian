@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  ROOM FABS
+--  ROOM FABS II
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -20,32 +20,366 @@ ROOM_FABS =
 {
 
 
-BUILDING_BASIC =
+BUILDING_TINY =
 {
-  basic_kind = "room",
+  kind = "building",
+  prob = 20,
 
-  width_range  = { 2, 5 },
-  height_range = { 2, 5 },
-  area_range   = { 4, 16 },
-
-  structure = { "B" },
-
-  grow_columns = { 1 },
-  grow_rows    = { 1 },
+  structure =
+  {
+    "BB",
+    "BB",
+  },
 
   elements =
   {
     B = { kind="building" },
   },
+
+  connections =
+  {
+    { x=1, y=1, dir=2 },
+    { x=2, y=2, dir=8, prob=50 },
+  }
+},
+
+BUILDING_TINY_B =
+{
+  copy = "BUILDING_TINY",
+
+  connections =
+  {
+    { x=1, y=1, dir=2 },
+    { x=2, y=2, dir=6 },
+  }
+},
+
+BUILDING_TINY_4_WAY =
+{
+  copy = "BUILDING_TINY",
+  prob = 1,
+
+  connections =
+  {
+    { x=1, y=1, dir=2 },
+    { x=2, y=1, dir=6 },
+    { x=1, y=2, dir=4 },
+    { x=2, y=2, dir=8 },
+  }
 },
 
 
+BUILDING_SMALL =
+{
+  kind = "building",
+  prob = 50,
+
+  structure =
+  {
+    "BBB",
+    "BBB",
+  },
+
+  x_size = { 3, 5 },
+  y_size = { 2, 3 },
+
+  x_grow = { 2 },
+  y_grow = { 2 },
+
+  elements =
+  {
+    B = { kind="building" },
+  },
+
+  connections =
+  {
+    { x=2, y=1, dir=2 },
+    { x=2, y=2, dir=8, prob=50 },
+  }
+},
+
+BUILDING_SMALL_B =
+{
+  copy = "BUILDING_SMALL",
+
+  connections =
+  {
+    { x=2, y=1, dir=2 },
+    { x=1, y=2, dir=8 },
+    { x=3, y=2, dir=8 },
+  }
+},
+
+BUILDING_SMALL_C =
+{
+  copy = "BUILDING_SMALL",
+  prob = 20,
+
+  connections =
+  {
+    { x=2, y=1, dir=2 },
+    { x=1, y=1, dir=4 },
+    { x=3, y=1, dir=6 },
+    { x=2, y=2, dir=8, prob=50 },
+  }
+},
+
+BUILDING_SMALL_D =
+{
+  copy = "BUILDING_SMALL",
+  prob = 20,
+
+  connections =
+  {
+    { x=2, y=1, dir=2 },
+    { x=1, y=2, dir=4 },
+    { x=3, y=2, dir=6 },
+    { x=2, y=2, dir=8, prob=50 },
+  }
+},
+
+
+BUILDING_LARGE =
+{
+  kind = "building",
+  prob = 33,
+
+  structure =
+  {
+    "BBBBB",
+    "BBBBB",
+    "BBBBB",
+  },
+
+  x_size = { 5, 7, 9 },
+  y_size = { 3, 5 },
+
+  x_grow = { 2, 4 },
+  y_grow = { 2 },
+
+  elements =
+  {
+    B = { kind="building" },
+  },
+
+  connections =
+  {
+    { x=3, y=1, dir=2 },
+    { x=3, y=3, dir=8 },
+    { x=1, y=2, dir=4 },
+    { x=5, y=2, dir=6 },
+  }
+},
+
+BUILDING_LARGE_B =
+{
+  copy = "BUILDING_SMALL",
+
+  connections =
+  {
+    { x=3, y=1, dir=2 },
+    { x=1, y=3, dir=8 },
+    { x=5, y=3, dir=8 },
+  }
+},
+
+BUILDING_LARGE_C =
+{
+  copy = "BUILDING_SMALL",
+
+  connections =
+  {
+    { x=3, y=1, dir=2 },
+    { x=1, y=3, dir=8 },
+    { x=3, y=3, dir=8 },
+    { x=5, y=3, dir=8 },
+  }
+},
+
+BUILDING_LARGE_D =
+{
+  copy = "BUILDING_SMALL",
+
+  connections =
+  {
+    { x=3, y=1, dir=2 },
+    { x=2, y=3, dir=8 },
+    { x=4, y=3, dir=8 },
+    { x=1, y=2, dir=4 },
+    { x=5, y=2, dir=6 },
+  }
+},
+
+BUILDING_LARGE_E =
+{
+  copy = "BUILDING_SMALL",
+
+  connections =
+  {
+    { x=3, y=1, dir=2 },
+    { x=3, y=3, dir=8, prob=50 },
+    { x=1, y=3, dir=4 },
+    { x=5, y=3, dir=6 },
+  }
+},
+
+
+----------------------------------------------------------------
+
+HALL_TINY =
+{
+  kind = "hall",
+  prob = 2,
+
+  structure =
+  {
+    "H",
+  },
+
+  elements =
+  {
+    H = { kind="hall" },
+  },
+
+  connections =
+  {
+    { x=1, y=1, dir=2 },
+    { x=1, y=1, dir=8 },
+  }
+},
+
+
+HALL_SHORT =
+{
+  kind = "hall",
+  prob = 40,
+
+  structure =
+  {
+    "H",
+    "H",
+  },
+
+  y_size = { 2, 4 },
+  y_grow = { 1, 2 },
+
+  elements =
+  {
+    H = { kind="hall" },
+  },
+
+  connections =
+  {
+    { x=1, y=1, dir=2 },
+    { x=1, y=2, dir=8 },
+  }
+},
+
+HALL_SHORT_B =
+{
+  copy = "HALL_SHORT",
+
+  connections =
+  {
+    { x=1, y=1, dir=2 },
+    { x=1, y=2, dir=6 },
+  }
+},
+
+HALL_HUG =
+{
+  kind = "hall",
+  prob = 40,
+
+  structure =
+  {
+    "HHH",
+  },
+
+  x_size = { 3, 6 },
+  x_grow = { 2 },
+
+  elements =
+  {
+    H = { kind="hall" },
+  },
+
+  connections =
+  {
+    { x=1, y=1, dir=2 },
+    { x=3, y=1, dir=8 },
+  }
+},
+
+HALL_T_SHAPE =
+{
+  kind = "hall",
+  prob = 60,
+
+  structure =
+  {
+    "HHH",
+    ".H.",
+  },
+
+  x_size = { 3, 5 },
+  y_size = { 2, 3, 4 },
+
+  x_grow = { 1, 3 },
+  y_grow = { 1 },
+
+  elements =
+  {
+    H = { kind="hall" },
+  },
+
+  connections =
+  {
+    { x=1, y=1, dir=2 },
+    { x=1, y=2, dir=4 },
+    { x=3, y=2, dir=6 },
+  }
+},
+
+HALL_CROSS =
+{
+  kind = "hall",
+  prob = 60,
+
+  structure =
+  {
+    ".H.",
+    "HHH",
+    ".H.",
+  },
+
+  x_size = { 3, 5, 7 },
+  y_size = { 3, 5, 7 },
+
+  x_grow = { 1, 3 },
+  y_grow = { 1, 3 },
+
+  elements =
+  {
+    H = { kind="hall" },
+  },
+
+  connections =
+  {
+    { x=1, y=1, dir=2 },
+    { x=1, y=2, dir=4 },
+    { x=3, y=2, dir=6 },
+    { x=2, y=3, dir=8 },
+  }
+},
+
+
+----------------------------------------------------------------
+
 SURROUND_GROUND =
 {
-  basic_kind = "ground",
-
-  width_range  = { 4, 16 },
-  height_range = { 4, 16 },
+  kind = "ground",
+  prob = 15,
 
   structure =
   {
@@ -54,8 +388,11 @@ SURROUND_GROUND =
     "ggg",
   },
 
-  grow_columns = { 2 },
-  grow_rows    = { 2 },
+  x_size = { 6, 16 },
+  y_size = { 6, 16 },
+
+  x_grow = { 1,3, 2,2,2,2 },
+  y_grow = { 1,3, 2,2,2,2 },
 
   elements =
   {
@@ -67,9 +404,7 @@ SURROUND_GROUND =
 SURROUND_LIQUID =
 {
   basic_kind = "liquid",
-
-  width_range  = { 4, 16 },
-  height_range = { 4, 16 },
+  prob = 10,
 
   structure =
   {
@@ -78,8 +413,11 @@ SURROUND_LIQUID =
     "lll",
   },
 
-  grow_columns = { 2 },
-  grow_rows    = { 2 },
+  x_size = { 6, 16 },
+  y_size = { 6, 16 },
+
+  x_grow = { 1,3, 2,2,2,2 },
+  y_grow = { 1,3, 2,2,2,2 },
 
   elements =
   {
@@ -87,158 +425,6 @@ SURROUND_LIQUID =
     A = { kind="sub" },
   },
 },
-
-
-U_SHAPE_GROUND =
-{
-  basic_kind = "ground",
-
-  width_range  = { 4, 16 },
-  height_range = { 4, 16 },
-
-  structure =
-  {
-    "ggg",
-    "gAg",
-  },
-
-  grow_columns = { 2 },
-  grow_rows    = { 2 },
-
-  elements =
-  {
-    g = { kind="ground" },
-    A = { kind="sub" },
-  },
-},
-
-U_SHAPE_LIQUID =
-{
-  basic_kind = "liquid",
-
-  width_range  = { 4, 16 },
-  height_range = { 4, 16 },
-
-  structure =
-  {
-    "lll",
-    "lAl",
-  },
-
-  grow_columns = { 2 },
-  grow_rows    = { 2 },
-
-  elements =
-  {
-    l = { kind="liquid" },
-    A = { kind="sub" },
-  },
-},
-
-
-L_SHAPE_GROUND =
-{
-  basic_kind = "ground",
-
-  width_range  = { 4, 16 },
-  height_range = { 4, 16 },
-
-  structure =
-  {
-    "gg",
-    "gA",
-  },
-
-  grow_columns = { 2 },
-  grow_rows    = { 2 },
-
-  elements =
-  {
-    g = { kind="ground" },
-    A = { kind="sub" },
-  },
-},
-
-L_SHAPE_LIQUID =
-{
-  basic_kind = "liquid",
-
-  width_range  = { 4, 16 },
-  height_range = { 4, 16 },
-
-  structure =
-  {
-    "ll",
-    "lA",
-  },
-
-  grow_columns = { 2 },
-  grow_rows    = { 2 },
-
-  elements =
-  {
-    l = { kind="liquid" },
-    A = { kind="sub" },
-  },
-},
-
-
-CROSS_GROUND =
-{
-  basic_kind = "ground",
-
-  width_range  = { 5, 19 },
-  height_range = { 5, 19 },
-
-  structure =
-  {
-    "AgB",
-    "ggg",
-    "CgD",
-  },
-
-  grow_columns = { 1, 3 },
-  grow_rows    = { 1, 3 },
-
-  elements =
-  {
-    g = { kind="ground" },
-
-    A = { kind="sub" },
-    B = { kind="sub" },
-    C = { kind="sub" },
-    D = { kind="sub" },
-  },
-},
-
-CROSS_HALL =
-{
-  basic_kind = "hall",
-
-  width_range  = { 5, 19 },
-  height_range = { 5, 19 },
-
-  structure =
-  {
-    "AhB",
-    "hhh",
-    "ChD",
-  },
-
-  grow_columns = { 1, 3 },
-  grow_rows    = { 1, 3 },
-
-  elements =
-  {
-    h = { kind="hall" },
-
-    A = { kind="sub" },
-    B = { kind="sub" },
-    C = { kind="sub" },
-    D = { kind="sub" },
-  },
-},
-
 
 
 } -- end of ROOM_FABS 
