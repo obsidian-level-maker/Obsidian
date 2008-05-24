@@ -163,6 +163,13 @@ function expand_copies(LIST)
   end
 end
 
+function in_array(t, V)
+  for _,val in ipairs(t) do
+    if val == V then return true end
+  end
+  return false
+end
+
 function reverse_array(t)
   if not t then return nil end
   local result = {}
