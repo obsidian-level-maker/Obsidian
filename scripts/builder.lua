@@ -46,8 +46,8 @@ function dummy_builder(Z)
       {
         { x = x1   ,  y = y1 },
         { x = x1   ,  y = y2 },
-        { x = x1+16,  y = y2 },
-        { x = x1+16,  y = y1 },
+        { x = x1+24,  y = y2 },
+        { x = x1+24,  y = y1 },
       }
     end
 
@@ -56,8 +56,8 @@ function dummy_builder(Z)
       {
         { x = x2   ,  y = y2 },
         { x = x2   ,  y = y1 },
-        { x = x2-16,  y = y1 },
-        { x = x2-16,  y = y2 },
+        { x = x2-24,  y = y1 },
+        { x = x2-24,  y = y2 },
       }
     end
 
@@ -66,8 +66,8 @@ function dummy_builder(Z)
       {
         { x = x2, y = y1 },
         { x = x1, y = y1 },
-        { x = x1, y = y1+16 },
-        { x = x2, y = y1+16 },
+        { x = x1, y = y1+24 },
+        { x = x2, y = y1+24 },
       }
     end
 
@@ -76,8 +76,8 @@ function dummy_builder(Z)
       {
         { x = x1, y = y2    },
         { x = x2, y = y2    },
-        { x = x2, y = y2-16 },
-        { x = x1, y = y2-16 },
+        { x = x2, y = y2-24 },
+        { x = x1, y = y2-24 },
       }
     end
 
@@ -246,7 +246,7 @@ function dummy_builder(Z)
 
       else -- building
         z1 = 24
-        z2 = z1+128
+        z2 = z1+192
       
         f_tex = "FLOOR4_8"
         c_tex = "TLITE6_6"
