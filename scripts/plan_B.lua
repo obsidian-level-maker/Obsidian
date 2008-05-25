@@ -235,81 +235,42 @@ function install_loc(F, x, y, dir)
 end
 
 
-function install_room_fab(F, @@@ )
+function install_room_fab(F, x, y, dir)
  
-  local F = assert(r.fab)
+  local conn = F.connections[1]
 
-  local fw = string.len(F.structure[1])
-  local fh = # F.structure
-
-  local col_map = {}
-  local row_map = {}
+  local fw = F.x_size[1]
+  local fh = F.y_size[1]
 
 
-  local function create_mapping(map, fx, rx, grow)
+  --- install_room_fab ---
 
-    assert(fx <= rx)
+  con.debugf("Installing room fab '%s' %dx%d at (%d,%d) dir:%d\n",
+             F.name, fw,fh, x, y, dir)
 
-    if fx == rx then
-      for i = 1,rx do map[i] = i end
-      return
-    end
-
-    assert(grow)
-    assert(#grow >= 1)
-
-    -- determine how large each column/row will be
-    local sizes = {}
-    for i = 1,fx do sizes[i] = 1 end
-
-    local g_idx = 1
-    local g_tot = fx
-
-    while g_tot < rx do
-      local ax = grow[g_idx]
-      sizes[ax] = sizes[ax] + 1
-      g_tot = g_tot + 1
-      g_idx = g_idx + 1
-      if g_idx > #grow then g_idx = 1 end
-    end
-
-    local idx = 1
-    for i = 1,fx do
-      for n = 1,sizes[i] do
-        map[idx] = i
-        idx = idx + 1
-      end
-    end
-
-    assert(#map == rx)
-  end
-
-
-  --- build_fab ---
-
-  create_mapping(col_map, fw, r.w, F.x_grow)
-  create_mapping(row_map, fh, r.h, F.y_grow)
-
-  local sub_dims = {}
-
-
-  for y = 1,r.h do for x = 1,r.w do
+  for fy = 1,fh do for fx = 1,fw do
     
-    local sx = r.x + x - 1
-    local sy = r.y + y - 1
+    local sx, sy
 
-    assert(SEEDS[sx][sy][1].room == nil)
+    if dir == 8 then
+      sx, sy = x + (fx - conn.x), y + (fy-1)
 
-    local mx = col_map[x]
-    local my = row_map[y]
+    elseif dir == 2 then
+      sx, sy = x - (fx - conn.x), y - (fy-1)
 
-    assert(1 <= mx and mx <= fw)
-    assert(1 <= my and my <= fh)
+    elseif dir == 4 then
+      sx, sy = x - (fy-1), y + (fx - conn.x)
 
-    local ch = string.sub(F.structure[my], mx, mx)
+    else assert(dir == 6)
+      sx, sy = x + (fy-1), y - (fx - conn.x)
+    end
+
+    assert(Seed_valid_and_free(sx, sy, 1))
+
+    local ch = string.sub(F.structure[fh-fy+1], fx, fx)
 
     if ch == '.' then
-      -- nothing
+      -- do nothing
     else
 
       local e = F.elements[ch]
@@ -322,6 +283,7 @@ function install_room_fab(F, @@@ )
 
       if e.kind == "sub" then
 
+        error("SUB ???")
         if not sub_dims[ch] then
           sub_dims[ch] = { x1=99,y1=99,x2=1,y2=1, ch=ch, e=e }
         end
@@ -342,28 +304,15 @@ function install_room_fab(F, @@@ )
       end
 
     end -- if ch == '.'
-  end end
+
+  end end -- fx, fy
 
 
-  -- handle sub areas
+  -- TODO: handle sub areas
 
-  for _,D in pairs(sub_dims) do
-    
-    local n =
-    {
-      x = D.x1,
-      y = D.y1,
 
-      w = D.x2 - D.x1 + 1,
-      h = D.y2 - D.y1 + 1,
+  -- FIXME: connection points!!!
 
-      dir = rand_dir(),
-    }
-
-    select_room_fab(n)
-
-    table.insert(FABS, n)
-  end
 end
 
 
@@ -379,7 +328,14 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
     if F.x_size[1] > W   then return false end
     if F.y_size[1] > H-1 then return false end
 
-    -- FIXME !!!!
+    local x1,y1, x2,y2 = install_loc(F, p.x, p.y, p.dir)
+
+    if not Seed_block_valid_and_free(x1,y1,1, x2,y2,1) then
+      return false
+    end
+
+    -- FIXME: make sure seeds at each connection point are
+    --        valid and free
 
     return true
   end
@@ -470,7 +426,7 @@ function process_conns()
   end
 
   
-  install_room_fab(false, fab, @@@ )
+  install_room_fab(fab, p.x, p.y, p.dir)
 end
 
 
