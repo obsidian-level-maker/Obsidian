@@ -399,6 +399,12 @@ function dir_to_across(dir)
   error ("dir_to_across: bad dir " .. dir)
 end
 
+function dir_nudge(x, y, dir, dist)
+  if not dist then dist = 1 end
+  local dx, dy = dir_to_delta(dir)
+  return x + dx*dist, y + dy * dist
+end
+
 function is_parallel(dir1, dir2)
   return (dir1 == 2 or dir1 == 8) == (dir2 == 2 or dir2 == 8)
 end
