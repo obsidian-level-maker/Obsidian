@@ -172,6 +172,7 @@ function build_fab(r)
         {
           kind = e.kind,
         }
+
       end
 
     end -- if ch == '.'
@@ -297,10 +298,20 @@ function install_room_fab(F, x, y, dir)
         if sy > D.y2 then D.y2 = sy end
 
       else
-        SEEDS[sx][sy][1].room =
+        local S = SEEDS[sx][sy][1]
+
+        --FIXME: make proper room objects
+        S.room =
         {
           kind = e.kind,
         }
+
+        S.borders = {}
+
+        if fx == 1  then S.borders[rotate_dir(4,dir)] = { kind="solid" } end
+        if fx == fw then S.borders[rotate_dir(6,dir)] = { kind="solid" } end
+        if fy == 1  then S.borders[rotate_dir(2,dir)] = { kind="solid" } end
+        if fy == fh then S.borders[rotate_dir(8,dir)] = { kind="solid" } end
       end
 
     end -- if ch == '.'
@@ -311,12 +322,14 @@ function install_room_fab(F, x, y, dir)
       if idx >= 2 and fx == conn.x and fy == conn.y then
         local p =
         {
-          x = sx, y = sy, dir = rotate_dir(conn.dir, dir),
+          dir = rotate_dir(conn.dir, dir),
         }
         local dx, dy = dir_to_delta(p.dir)
-        p.x = p.x + dx
-        p.y = p.y + dy
+        p.x = sx + dx
+        p.y = sy + dy
+
         table.insert(CONNS, p)
+
       end
     end
 
@@ -439,6 +452,21 @@ function process_conns()
 
   
   install_room_fab(fab, p.x, p.y, p.dir)
+
+
+  -- create connections
+  local S1 = SEEDS[p.x][p.y][1]
+
+  local sx2, sy2 = dir_nudge(p.x, p.y, p.dir, -1)
+  local S2 = SEEDS[sx2][sy2][1]
+
+  if S1 and S1.borders then
+    S1.borders[10 - p.dir] = { kind="walk" }
+  end
+
+  if S2 and S2.borders then
+    S2.borders[p.dir] = { kind="walk" }
+  end
 end
 
 
