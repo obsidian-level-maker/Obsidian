@@ -100,25 +100,29 @@ function Seed_is_free(x, y, z, zone)
 end
 
 
-function Seed_valid_and_free(x, y, z, zone)
+function Seed_valid_and_free(x, y, z)
   if not Seed_valid(x, y, z) then
     return false
   end
 
-  return not SEEDS[x][y][z].room
+  if SEEDS[x][y][z].room then
+    return false
+  end
+
+  return true
 end
 
 
-function Seed_are_free(x1,y1,z1, x2,y2,z2, zone)
+function Seed_block_valid_and_free(x1,y1,z1, x2,y2,z2)
 
-  assert(zone)
-  assert(Seed_valid(z1,x1,y1))
-  assert(Seed_valid(z2,x2,y2))
   assert(x1 <= x2 and y1 <= y2 and z1 <= z2)
+
+  if not Seed_valid(x1, y1, z1) then return false end
+  if not Seed_valid(x2, y2, z2) then return false end
 
   for x = x1,x2 do for y = y1,y2 do for z = z1,z2 do
     local S = SEEDS[x][y][z]
-    if S.room then ---### S.zone ~= zone then
+    if S.room then
       return false
     end
   end end end -- x, y, z
