@@ -226,11 +226,11 @@ function install_loc(F, x, y, dir)
 
   elseif dir == 4 then
     y = y - (conn.x - 1)
-    return x-fw+1, y, x, y+fh-1
+    return x-fh+1, y, x, y+fw-1
 
   else assert(dir == 6)
     y = y - (fw - conn.x)
-    return x, y, x+fw-1, y+fh-1
+    return x, y, x+fh-1, y+fw-1
   end
 end
 
@@ -305,13 +305,25 @@ function install_room_fab(F, x, y, dir)
 
     end -- if ch == '.'
 
+    -- handle connection points
+
+    for idx,conn in ipairs(F.connections) do
+      if idx >= 2 and fx == conn.x and fy == conn.y then
+        local p =
+        {
+          x = sx, y = sy, dir = rotate_dir(conn.dir, dir),
+        }
+        local dx, dy = dir_to_delta(p.dir)
+        p.x = p.x + dx
+        p.y = p.y + dy
+        table.insert(CONNS, p)
+      end
+    end
+
   end end -- fx, fy
 
 
   -- TODO: handle sub areas
-
-
-  -- FIXME: connection points!!!
 
 end
 
