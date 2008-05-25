@@ -206,7 +206,36 @@ function try_branch_off(r)
 end
 
 
-function install_room_fab(TEST, F, @@@ )
+function install_loc(F, x, y, dir)
+
+  local conn = F.connections[1]
+
+  local fw = F.x_size[1]
+  local fh = F.y_size[1]
+
+  assert(conn.y == 1)
+  assert(conn.dir == 2)
+
+  if dir == 8 then
+    x = x - (conn.x - 1)
+    return x, y, x+fw-1, y+fh-1
+
+  elseif dir == 2 then
+    x = x - (fw - conn.x)
+    return x, y-fh+1, x+fw-1, y
+
+  elseif dir == 4 then
+    y = y - (conn.x - 1)
+    return x-fw+1, y, x, y+fh-1
+
+  else assert(dir == 6)
+    y = y - (fw - conn.x)
+    return x, y, x+fw-1, y+fh-1
+  end
+end
+
+
+function install_room_fab(F, @@@ )
  
   local F = assert(r.fab)
 
@@ -360,7 +389,7 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
   local probs = { }
 
   for _,F in pairs(ROOM_FABS) do
-    if usable(F) and install_room_fab(true, F, @@@ ) then
+    if usable(F) then
       table.insert(fabs, F)
       table.insert(probs, F.prob or 50)
     end
@@ -388,7 +417,7 @@ function process_conns()
 
   local dx, dy = dir_to_delta(p.dir)
 
-  local x, y = p.x + dx, p.y + dy
+  local x, y = p.x, p.y
 
   -- determine number of free seeds near the branch point
 
@@ -467,16 +496,23 @@ function Plan_rooms_sp()
 
   Seed_init(SW, SH, 1, { zone_kind="solid"})
 
-  -- initial connection point
-  local p =
+  -- initial connection points
+  -- (TWO of them, to create something on each side)
+  local p1 =
   {
     x = rand_irange(int(SW/4), int(SW*3/4)),
-    y = rand_irange(int(SH/5), int(SH/2)),
+    y = rand_irange(int(SH/4), int(SH/2)),
     dir = 8,
     hall = true
   }
 
-  table.insert(CONNS, p)
+  local p2 =
+  {
+    x = p1.x, y = p1.y - 1, dir = 2,
+  }
+
+  table.insert(CONNS, p1)
+  table.insert(CONNS, p2)
 
 
   -- branch stuff out from connections
