@@ -173,7 +173,7 @@ BUILDING_LARGE =
 
 BUILDING_LARGE_B =
 {
-  copy = "BUILDING_SMALL",
+  copy = "BUILDING_LARGE",
 
   connections =
   {
@@ -185,7 +185,7 @@ BUILDING_LARGE_B =
 
 BUILDING_LARGE_C =
 {
-  copy = "BUILDING_SMALL",
+  copy = "BUILDING_LARGE",
 
   connections =
   {
@@ -198,7 +198,7 @@ BUILDING_LARGE_C =
 
 BUILDING_LARGE_D =
 {
-  copy = "BUILDING_SMALL",
+  copy = "BUILDING_LARGE",
 
   connections =
   {
@@ -212,7 +212,7 @@ BUILDING_LARGE_D =
 
 BUILDING_LARGE_E =
 {
-  copy = "BUILDING_SMALL",
+  copy = "BUILDING_LARGE",
 
   connections =
   {
@@ -335,7 +335,7 @@ HALL_T_SHAPE =
 
   connections =
   {
-    { x=1, y=1, dir=2 },
+    { x=2, y=1, dir=2 },
     { x=1, y=2, dir=4 },
     { x=3, y=2, dir=6 },
   }
@@ -366,7 +366,7 @@ HALL_CROSS =
 
   connections =
   {
-    { x=1, y=1, dir=2 },
+    { x=2, y=1, dir=2 },
     { x=1, y=2, dir=4 },
     { x=3, y=2, dir=6 },
     { x=2, y=3, dir=8 },
@@ -459,8 +459,8 @@ function expand_room_fabs()
   for _,F in pairs(ROOM_FABS) do
     expand_copies(F.elements)
   
-    if not F.x_size then F.x_size = { #P.structure[1] } end
-    if not F.y_size then F.y_size = { #P.structure }    end
+    if not F.x_size then F.x_size = { #F.structure[1] } end
+    if not F.y_size then F.y_size = { #F.structure }    end
   end
 end
 
