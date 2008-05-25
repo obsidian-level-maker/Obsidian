@@ -429,6 +429,28 @@ function rotate_ccw90(dir)
   return CCW_90_ROTATES[dir]
 end
 
+DIR_ROTATE_TAB =
+{
+  1 = { 6,9,8, 3,5,7, 2,1,4 },
+  2 = { 9,8,7, 6,5,4, 3,2,1 },
+  3 = { 8,7,4, 9,5,1, 6,3,2 },
+  4 = { 3,6,9, 2,5,8, 1,4,7 },
+
+  6 = { 7,4,1, 8,5,2, 9,6,3 },
+  7 = { 2,3,6, 1,5,9, 4,7,8 },
+  8 = { 1,2,3, 4,5,6, 7,8,9 },
+  9 = { 4,1,2, 7,5,3, 8,9,6 },
+}
+
+function rotate_dir(dir, up_dir)
+  -- when up_dir is 8, there is no change
+  -- when up_dir is 6 --> 90 degrees clockwise, etc..
+
+  assert(DIR_ROTATE_TAB[up_dir])
+
+  return assert(DIR_ROTATE_TAB[up_dir][dir])
+end
+
 DIR_ANGLES = { 225,270,315, 180,0,0, 135,90,45 }
 
 function dir_to_angle(dir)
