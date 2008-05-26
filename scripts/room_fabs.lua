@@ -145,7 +145,7 @@ BUILDING_SMALL_A =
   {
     { w=3, h=2, prob=90 },
     { w=5, h=2, prob=20 },
-  }
+  },
 
   x_grow = { 2 },
   y_grow = { 2 },
@@ -211,7 +211,7 @@ BUILDING_MEDIUM_A =
   {
     { w=3, h=3, prob=90 },
     { w=3, h=4, prob=10 },
-  }
+  },
 
   y_grow = { 2 },
 
@@ -285,13 +285,13 @@ BUILDING_LARGE_A =
 
   sizes =
   {
-    { w=5, h=3, prob=90 },
-    { w=5, h=4, prob=10 },
-    { w=5, h=5, prob=40 },
+    { w=5, h=3, prob=150 },
+    { w=5, h=4, prob=20 },
+    { w=5, h=5, prob=60 },
 
     { w=7, h=3, prob=10 },
     { w=7, h=5, prob=40 },
-    { w=7, h=7, prob=10 },
+    { w=7, h=7, prob=20 },
 
     { w=9, h=3, prob= 1 },
     { w=9, h=5, prob= 3 },
@@ -302,9 +302,9 @@ BUILDING_LARGE_A =
 
   connections =
   {
-    { x=3, y=3, dir=8 },
     { x=1, y=2, dir=4 },
     { x=5, y=2, dir=6 },
+    { x=3, y=3, dir=8, optional=true },
   }
 },
 
@@ -314,10 +314,12 @@ BUILDING_LARGE_B =
 
   connections =
   {
-    { x=1, y=3, dir=8 },
-    { x=5, y=3, dir=8 },
+    { x=1, y=3, dir=4 },
+    { x=5, y=3, dir=6 },
+    { x=3, y=3, dir=8, optional=true },
   }
 },
+
 
 BUILDING_LARGE_C =
 {
@@ -325,9 +327,8 @@ BUILDING_LARGE_C =
 
   connections =
   {
-    { x=1, y=3, dir=8 },
-    { x=3, y=3, dir=8 },
-    { x=5, y=3, dir=8 },
+    { x=2, y=3, dir=8 },
+    { x=4, y=3, dir=8 },
   }
 },
 
@@ -351,9 +352,23 @@ BUILDING_LARGE_E =
 
   connections =
   {
-    { x=1, y=3, dir=4 },
-    { x=5, y=3, dir=6 },
-    { x=3, y=3, dir=8, optional=true },
+    { x=1, y=3, dir=8 },
+    { x=3, y=3, dir=8 },
+    { x=5, y=3, dir=8 },
+  }
+},
+
+BUILDING_LARGE_F =
+{
+  copy = "BUILDING_LARGE_A",
+  prob = 10,
+
+  connections =
+  {
+    { x=1, y=3, dir=8 },
+    { x=5, y=3, dir=8 },
+    { x=1, y=1, dir=4 },
+    { x=5, y=1, dir=6 },
   }
 },
 
