@@ -34,10 +34,9 @@ ROOM_ELEMENTS =
 ROOM_FABS =
 {
 
-BUILDING_TINY =
+BUILDING_TINY_A1 =
 {
-  kind = "building",
-  prob = 20,
+  prob = 10,
 
   structure =
   {
@@ -45,48 +44,96 @@ BUILDING_TINY =
     "BB",
   },
 
-  elements =
-  {
-    B = { kind="building" },
-  },
+  entry_x = 1,
 
   connections =
   {
-    { x=1, y=1, dir=2 },
-    { x=2, y=2, dir=8, prob=50 },
+    { x=2, y=2, dir=8, optional=true },
   }
 },
 
-BUILDING_TINY_B =
+BUILDING_TINY_A2 =
 {
-  copy = "BUILDING_TINY",
+  copy = "BUILDING_TINY_A1",
+
+  entry_x = 2,
 
   connections =
   {
-    { x=1, y=1, dir=2 },
+    { x=1, y=2, dir=8, optional=true },
+  }
+},
+
+BUILDING_TINY_B1 =
+{
+  prob = 15,
+
+  structure =
+  {
+    "BB",
+    "BB",
+  },
+
+  entry_x = 1,
+
+  connections =
+  {
     { x=2, y=2, dir=6 },
   }
 },
 
-BUILDING_TINY_4_WAY =
+BUILDING_TINY_B2 =
 {
-  copy = "BUILDING_TINY",
-  prob = 1,
+  copy = "BUILDING_TINY_B1",
+
+  entry_x = 2,
 
   connections =
   {
-    { x=1, y=1, dir=2 },
+    { x=2, y=2, dir=6 },
+  }
+},
+
+BUILDING_TINY_C1 =
+{
+  prob = 2,
+
+  structure =
+  {
+    "BB",
+    "BB",
+  },
+
+  entry_x = 1,
+
+  connections =
+  {
     { x=2, y=1, dir=6 },
     { x=1, y=2, dir=4 },
     { x=2, y=2, dir=8 },
   }
 },
 
-
-BUILDING_SMALL =
+BUILDING_TINY_C2 =
 {
-  kind = "building",
-  prob = 50,
+  copy = "BUILDING_TINY_C1",
+
+  entry_x = 2,
+
+  connections =
+  {
+    { x=1, y=1, dir=4 },
+    { x=2, y=2, dir=6 },
+    { x=1, y=2, dir=8 },
+  }
+},
+
+
+--->
+
+BUILDING_SMALL_A =
+{
+  prob = 60,
 
   structure =
   {
@@ -97,36 +144,24 @@ BUILDING_SMALL =
   sizes =
   {
     { w=3, h=2, prob=90 },
-    { w=3, h=3, prob=70 },
-    { w=5, h=3, prob=30 },
-    { w=5, h=2, prob=15 },
+    { w=5, h=2, prob=20 },
   }
-
-  x_size = { 3, 5 },
-  y_size = { 2, 3 },
 
   x_grow = { 2 },
   y_grow = { 2 },
 
-  elements =
-  {
-    B = { kind="building" },
-  },
-
   connections =
   {
-    { x=2, y=1, dir=2 },
-    { x=2, y=2, dir=8, prob=50 },
+    { x=2, y=2, dir=8, optional=true },
   }
 },
 
 BUILDING_SMALL_B =
 {
-  copy = "BUILDING_SMALL",
+  copy = "BUILDING_SMALL_A",
 
   connections =
   {
-    { x=2, y=1, dir=2 },
     { x=1, y=2, dir=8 },
     { x=3, y=2, dir=8 },
   }
@@ -134,37 +169,112 @@ BUILDING_SMALL_B =
 
 BUILDING_SMALL_C =
 {
-  copy = "BUILDING_SMALL",
+  copy = "BUILDING_SMALL_A",
   prob = 20,
 
   connections =
   {
-    { x=2, y=1, dir=2 },
-    { x=1, y=1, dir=4 },
-    { x=3, y=1, dir=6 },
-    { x=2, y=2, dir=8, prob=50 },
+    { x=1, y=2, dir=4 },
+    { x=3, y=2, dir=6 },
+    { x=2, y=2, dir=8, optional=true },
   }
 },
 
 BUILDING_SMALL_D =
 {
-  copy = "BUILDING_SMALL",
-  prob = 20,
+  copy = "BUILDING_SMALL_A",
+  prob = 10,
 
   connections =
   {
-    { x=2, y=1, dir=2 },
-    { x=1, y=2, dir=4 },
-    { x=3, y=2, dir=6 },
-    { x=2, y=2, dir=8, prob=50 },
+    { x=1, y=1, dir=4 },
+    { x=3, y=1, dir=6 },
+    { x=2, y=2, dir=8, optional=true },
   }
 },
 
 
-BUILDING_LARGE =
+--->
+
+BUILDING_MEDIUM_A =
 {
-  kind = "building",
-  prob = 33,
+  prob = 60,
+
+  structure =
+  {
+    "BBB",
+    "BBB",
+    "BBB",
+  },
+
+  sizes =
+  {
+    { w=3, h=3, prob=90 },
+    { w=3, h=4, prob=10 },
+  }
+
+  y_grow = { 2 },
+
+  connections =
+  {
+    { x=2, y=2, dir=8, optional=true },
+  }
+},
+
+BUILDING_MEDIUM_B =
+{
+  copy = "BUILDING_MEDIUM_A",
+  prob = 20,
+
+  connections =
+  {
+    { x=1, y=3, dir=8 },
+    { x=3, y=3, dir=8 },
+  }
+},
+
+BUILDING_MEDIUM_C =
+{
+  copy = "BUILDING_MEDIUM_A",
+
+  connections =
+  {
+    { x=1, y=2, dir=4 },
+    { x=3, y=2, dir=6 },
+  }
+},
+
+BUILDING_MEDIUM_D =
+{
+  copy = "BUILDING_MEDIUM_A",
+  prob = 10,
+
+  connections =
+  {
+    { x=1, y=2, dir=4 },
+    { x=3, y=2, dir=6 },
+    { x=3, y=3, dir=8 },
+  }
+},
+
+BUILDING_MEDIUM_E =
+{
+  copy = "BUILDING_MEDIUM_A",
+
+  connections =
+  {
+    { x=1, y=3, dir=4 },
+    { x=3, y=3, dir=6 },
+  }
+},
+
+
+
+--->
+
+BUILDING_LARGE_A =
+{
+  prob = 40,
 
   structure =
   {
@@ -173,20 +283,25 @@ BUILDING_LARGE =
     "BBBBB",
   },
 
-  x_size = { 5, 7, 9 },
-  y_size = { 3, 5 },
+  sizes =
+  {
+    { w=5, h=3, prob=90 },
+    { w=5, h=4, prob=10 },
+    { w=5, h=5, prob=40 },
+
+    { w=7, h=3, prob=10 },
+    { w=7, h=5, prob=40 },
+    { w=7, h=7, prob=10 },
+
+    { w=9, h=3, prob= 1 },
+    { w=9, h=5, prob= 3 },
+  },
 
   x_grow = { 2, 4 },
   y_grow = { 2 },
 
-  elements =
-  {
-    B = { kind="building" },
-  },
-
   connections =
   {
-    { x=3, y=1, dir=2 },
     { x=3, y=3, dir=8 },
     { x=1, y=2, dir=4 },
     { x=5, y=2, dir=6 },
@@ -195,11 +310,10 @@ BUILDING_LARGE =
 
 BUILDING_LARGE_B =
 {
-  copy = "BUILDING_LARGE",
+  copy = "BUILDING_LARGE_A",
 
   connections =
   {
-    { x=3, y=1, dir=2 },
     { x=1, y=3, dir=8 },
     { x=5, y=3, dir=8 },
   }
@@ -207,11 +321,10 @@ BUILDING_LARGE_B =
 
 BUILDING_LARGE_C =
 {
-  copy = "BUILDING_LARGE",
+  copy = "BUILDING_LARGE_A",
 
   connections =
   {
-    { x=3, y=1, dir=2 },
     { x=1, y=3, dir=8 },
     { x=3, y=3, dir=8 },
     { x=5, y=3, dir=8 },
@@ -220,11 +333,11 @@ BUILDING_LARGE_C =
 
 BUILDING_LARGE_D =
 {
-  copy = "BUILDING_LARGE",
+  copy = "BUILDING_LARGE_A",
+  prob = 20,
 
   connections =
   {
-    { x=3, y=1, dir=2 },
     { x=2, y=3, dir=8 },
     { x=4, y=3, dir=8 },
     { x=1, y=2, dir=4 },
@@ -234,14 +347,13 @@ BUILDING_LARGE_D =
 
 BUILDING_LARGE_E =
 {
-  copy = "BUILDING_LARGE",
+  copy = "BUILDING_LARGE_A",
 
   connections =
   {
-    { x=3, y=1, dir=2 },
-    { x=3, y=3, dir=8, prob=50 },
     { x=1, y=3, dir=4 },
     { x=5, y=3, dir=6 },
+    { x=3, y=3, dir=8, optional=true },
   }
 },
 
@@ -250,22 +362,12 @@ BUILDING_LARGE_E =
 
 HALL_TINY =
 {
-  kind = "hall",
-  prob = 2,
+  prob = 10,
 
-  structure =
-  {
-    "H",
-  },
-
-  elements =
-  {
-    H = { kind="hall" },
-  },
+  structure = { "H" },
 
   connections =
   {
-    { x=1, y=1, dir=2 },
     { x=1, y=1, dir=8 },
   }
 },
@@ -488,7 +590,7 @@ function expand_room_fabs(list)
     if not F.sizes then
       F.sizes =
       {
-        { x = #F.structure[1], y = #F.structure, prob = 50 }
+        { w = #F.structure[1], h = #F.structure, prob = 50 }
       }
     end
 
@@ -509,7 +611,7 @@ function expand_room_fabs(list)
     end
 
     if not F.entry_x then
-      F.entry_x = "mid"
+      F.entry_x = 1 + int(F.sizes[1].w / 2)
     end
   end
 end
