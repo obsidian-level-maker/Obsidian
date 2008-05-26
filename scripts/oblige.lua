@@ -443,7 +443,7 @@ function ob_init()
   name_it_up(OB_MODULES)
   name_it_up(OB_OPTIONS)
 
-  expand_room_fabs()
+  expand_room_fabs(ROOM_FABS)
 
   local function button_sorter(A, B)
     if A.priority or B.priority then
