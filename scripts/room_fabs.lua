@@ -16,9 +16,23 @@
 --
 ----------------------------------------------------------------
 
+ROOM_ELEMENTS =
+{
+  B = { kind="building" },
+  H = { kind="hall" },
+  C = { kind="cave" },
+
+  S = { kind="sub" },
+
+  g = { kind="ground" },
+  w = { kind="liquid" },
+}
+
+
+----------------------------------------------------------------
+
 ROOM_FABS =
 {
-
 
 BUILDING_TINY =
 {
@@ -79,6 +93,14 @@ BUILDING_SMALL =
     "BBB",
     "BBB",
   },
+
+  sizes =
+  {
+    { w=3, h=2, prob=90 },
+    { w=3, h=3, prob=70 },
+    { w=5, h=3, prob=30 },
+    { w=5, h=2, prob=15 },
+  }
 
   x_size = { 3, 5 },
   y_size = { 2, 3 },
@@ -378,7 +400,7 @@ HALL_CROSS =
 
 --[[
 
-SURROUND_GROUND =
+GROUND_SURROUND =
 {
   kind = "ground",
   prob = 15,
@@ -409,16 +431,16 @@ SURROUND_GROUND =
   }
 },
 
-SURROUND_LIQUID =
+LIQUID_SURROUND =
 {
   basic_kind = "liquid",
   prob = 10,
 
   structure =
   {
-    "lll",
-    "lAl",
-    "lgl",
+    "www",
+    "wSw",
+    "wgw",
   },
 
   x_size = { 6, 16 },
@@ -448,19 +470,47 @@ SURROUND_LIQUID =
 
 ----------------------------------------------------------------
 
-function expand_room_fabs()
+function expand_room_fabs(list)
 
-  name_it_up(ROOM_FABS)
+  name_it_up(list)
 
-  expand_copies(ROOM_FABS)
+  expand_copies(list)
 
-  name_it_up(ROOM_FABS)
+  name_it_up(list)
 
-  for _,F in pairs(ROOM_FABS) do
-    expand_copies(F.elements)
-  
-    if not F.x_size then F.x_size = { #F.structure[1] } end
-    if not F.y_size then F.y_size = { #F.structure }    end
+  for _,F in pairs(list) do
+    if F.elements then
+      expand_copies(F.elements)
+    else
+      F.elements = ROOM_ELEMENTS
+    end
+
+    if not F.sizes then
+      F.sizes =
+      {
+        { x = #F.structure[1], y = #F.structure, prob = 50 }
+      }
+    end
+
+    if not F.kind then
+      if string.match(F.name, "^BUILDING") then
+        F.kind = "building"
+      elseif string.match(F.name, "^HALL") then
+        F.kind = "hall"
+      elseif string.match(F.name, "^GROUND") then
+        F.kind = "ground"
+      elseif string.match(F.name, "^LIQUID") then
+        F.kind = "liquid"
+      elseif string.match(F.name, "^CAVE") then
+        F.kind = "cave"
+      else
+        F.kind = "mixed"
+      end
+    end
+
+    if not F.entry_x then
+      F.entry_x = "mid"
+    end
   end
 end
 
