@@ -21,6 +21,9 @@ require 'util'
 require 'seeds'
 
 
+TK = 16  -- wall thickness
+
+
 function dummy_builder(Z)
 
 ---##  local function zone_content(ZZ, x, y)
@@ -46,8 +49,8 @@ function dummy_builder(Z)
       {
         { x = x1   ,  y = y1 },
         { x = x1   ,  y = y2 },
-        { x = x1+24,  y = y2 },
-        { x = x1+24,  y = y1 },
+        { x = x1+TK,  y = y2 },
+        { x = x1+TK,  y = y1 },
       }
     end
 
@@ -56,8 +59,8 @@ function dummy_builder(Z)
       {
         { x = x2   ,  y = y2 },
         { x = x2   ,  y = y1 },
-        { x = x2-24,  y = y1 },
-        { x = x2-24,  y = y2 },
+        { x = x2-TK,  y = y1 },
+        { x = x2-TK,  y = y2 },
       }
     end
 
@@ -66,8 +69,8 @@ function dummy_builder(Z)
       {
         { x = x2, y = y1 },
         { x = x1, y = y1 },
-        { x = x1, y = y1+24 },
-        { x = x2, y = y1+24 },
+        { x = x1, y = y1+TK },
+        { x = x2, y = y1+TK },
       }
     end
 
@@ -76,8 +79,8 @@ function dummy_builder(Z)
       {
         { x = x1, y = y2    },
         { x = x2, y = y2    },
-        { x = x2, y = y2-24 },
-        { x = x1, y = y2-24 },
+        { x = x2, y = y2-TK },
+        { x = x1, y = y2-TK },
       }
     end
 
@@ -261,9 +264,9 @@ function dummy_builder(Z)
       },
       {
         { x=x1,    y=y1 },
-        { x=x1,    y=y1+24 },
-        { x=x1+24, y=y1+24 },
-        { x=x1+24, y=y1 },
+        { x=x1,    y=y1+TK },
+        { x=x1+TK, y=y1+TK },
+        { x=x1+TK, y=y1 },
       },
       -2000, 2000)
 
@@ -274,10 +277,10 @@ function dummy_builder(Z)
         w_face = { texture=w_tex },
       },
       {
-        { x=x1,    y=y2-24 },
+        { x=x1,    y=y2-TK },
         { x=x1,    y=y2 },
-        { x=x1+24, y=y2 },
-        { x=x1+24, y=y2-24 },
+        { x=x1+TK, y=y2 },
+        { x=x1+TK, y=y2-TK },
       },
       -2000, 2000)
 
@@ -288,9 +291,9 @@ function dummy_builder(Z)
         w_face = { texture=w_tex },
       },
       {
-        { x=x2-24, y=y1 },
-        { x=x2-24, y=y1+24 },
-        { x=x2,    y=y1+24 },
+        { x=x2-TK, y=y1 },
+        { x=x2-TK, y=y1+TK },
+        { x=x2,    y=y1+TK },
         { x=x2,    y=y1 },
       },
       -2000, 2000)
@@ -302,10 +305,10 @@ function dummy_builder(Z)
         w_face = { texture=w_tex },
       },
       {
-        { x=x2-24, y=y2-24 },
-        { x=x2-24, y=y2 },
+        { x=x2-TK, y=y2-TK },
+        { x=x2-TK, y=y2 },
         { x=x2,    y=y2 },
-        { x=x2,    y=y2-24 },
+        { x=x2,    y=y2-TK },
       },
       -2000, 2000)
 

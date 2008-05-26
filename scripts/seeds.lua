@@ -52,6 +52,9 @@ require 'defs'
 require 'util'
 
 
+SEED_SIZE = 240
+
+
 function Seed_init(W, H, D, zone)
 
   assert(zone)
@@ -256,11 +259,11 @@ function Seed_grow()
 
     local S = SEEDS[x][y][z]
 
-    S.x1 = x * 224
-    S.y1 = y * 224
+    S.x1 = x * SEED_SIZE
+    S.y1 = y * SEED_SIZE
 
-    S.x2 = (x+1) * 224
-    S.y2 = (y+1) * 224
+    S.x2 = (x+1) * SEED_SIZE
+    S.y2 = (y+1) * SEED_SIZE
 
   end end end --- x, y, z
 
