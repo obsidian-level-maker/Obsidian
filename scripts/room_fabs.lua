@@ -447,10 +447,10 @@ HALL_HUG_RIGHT =
 
   sizes =
   {
-    { w=3, y=1, prob=30 },
-    { w=4, y=1, prob=50 },
-    { w=5, y=1, prob=20 },
-    { w=6, y=1, prob=5  },
+    { w=3, h=1, prob=30 },
+    { w=4, h=1, prob=50 },
+    { w=5, h=1, prob=20 },
+    { w=6, h=1, prob=5  },
   },
 
   x_grow = { 2 },
