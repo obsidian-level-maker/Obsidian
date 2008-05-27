@@ -375,11 +375,22 @@ BUILDING_LARGE_F =
 
 ----------------------------------------------------------------
 
-HALL_TINY =
+HALL_STRAIGHT =
 {
-  prob = 10,
+  prob = 60,
 
   structure = { "H" },
+
+  sizes =
+  {
+    { w=1, h=1, prob=70 },
+    { w=1, h=2, prob=90 },
+    { w=1, h=3, prob=70 },
+    { w=1, h=4, prob=10 },
+    { w=1, h=5, prob=2  },
+  },
+
+  y_grow = { 1 },
 
   connections =
   {
@@ -388,10 +399,9 @@ HALL_TINY =
 },
 
 
-HALL_SHORT =
+HALL_RIGHT =
 {
-  kind = "hall",
-  prob = 40,
+  prob = 30,
 
   structure =
   {
@@ -399,60 +409,75 @@ HALL_SHORT =
     "H",
   },
 
-  y_size = { 2, 4 },
-  y_grow = { 1, 2 },
-
-  elements =
+  sizes =
   {
-    H = { kind="hall" },
+    { w=1, h=2, prob=40 },
+    { w=1, h=3, prob=90 },
+    { w=1, h=4, prob=60 },
+    { w=1, h=5, prob=5 },
   },
 
-  connections =
-  {
-    { x=1, y=1, dir=2 },
-    { x=1, y=2, dir=8 },
-  }
-},
-
-HALL_SHORT_B =
-{
-  copy = "HALL_SHORT",
+  y_grow = { 1 },
 
   connections =
   {
-    { x=1, y=1, dir=2 },
     { x=1, y=2, dir=6 },
   }
 },
 
-HALL_HUG =
+HALL_LEFT =
 {
-  kind = "hall",
-  prob = 40,
+  copy = "HALL_RIGHT",
+
+  connections =
+  {
+    { x=1, y=2, dir=4 },
+  }
+},
+
+
+HALL_HUG_RIGHT =
+{
+  prob = 20,
 
   structure =
   {
     "HHH",
   },
 
-  x_size = { 3, 6 },
+  sizes =
+  {
+    { w=3, y=1, prob=30 },
+    { w=4, y=1, prob=50 },
+    { w=5, y=1, prob=20 },
+    { w=6, y=1, prob=5  },
+  },
+
   x_grow = { 2 },
 
-  elements =
-  {
-    H = { kind="hall" },
-  },
+  enter_x = 1,
 
   connections =
   {
-    { x=1, y=1, dir=2 },
     { x=3, y=1, dir=8 },
   }
 },
 
+HALL_HUG_LEFT =
+{
+  copy = "HALL_HUG_RIGHT",
+
+  enter_x = 3,
+
+  connections =
+  {
+    { x=1, y=1, dir=8 },
+  }
+},
+
+
 HALL_T_SHAPE =
 {
-  kind = "hall",
   prob = 60,
 
   structure =
@@ -461,29 +486,35 @@ HALL_T_SHAPE =
     ".H.",
   },
 
-  x_size = { 3, 5 },
-  y_size = { 2, 3, 4 },
+  sizes =
+  {
+    { w=3, h=2, prob=20 },
+    { w=3, h=3, prob=80 },
+    { w=3, h=4, prob=40 },
+    { w=3, h=5, prob=5  },
+
+    { w=5, h=2, prob=5  },
+    { w=5, h=3, prob=10 },
+    { w=5, h=4, prob=40 },
+    { w=5, h=5, prob=20 },
+
+    { w=7, h=7, prob=1 },
+  },
 
   x_grow = { 1, 3 },
   y_grow = { 1 },
 
-  elements =
-  {
-    H = { kind="hall" },
-  },
-
   connections =
   {
-    { x=2, y=1, dir=2 },
     { x=1, y=2, dir=4 },
     { x=3, y=2, dir=6 },
   }
 },
 
+
 HALL_CROSS =
 {
-  kind = "hall",
-  prob = 60,
+  prob = 25,
 
   structure =
   {
@@ -492,23 +523,64 @@ HALL_CROSS =
     ".H.",
   },
 
-  x_size = { 3, 5, 7 },
-  y_size = { 3, 5, 7 },
+  sizes =
+  {
+    { w=3, h=3, prob=10 },
+    { w=3, h=4, prob=10 },
+    { w=3, h=5, prob=80 },
+    { w=3, h=7, prob=40 },
+
+    { w=5, h=3, prob=2  },
+    { w=5, h=4, prob=2  },
+    { w=5, h=5, prob=10 },
+    { w=5, h=7, prob=10 },
+
+    { w=7, h=7, prob=5 },
+    { w=9, h=9, prob=1 },
+  },
 
   x_grow = { 1, 3 },
   y_grow = { 1, 3 },
 
-  elements =
-  {
-    H = { kind="hall" },
-  },
-
   connections =
   {
-    { x=2, y=1, dir=2 },
     { x=1, y=2, dir=4 },
     { x=3, y=2, dir=6 },
     { x=2, y=3, dir=8 },
+  }
+},
+
+
+HALL_FANCY_T =
+{
+  prob = 5,
+
+  structure =
+  {
+    "HHH.HHH",
+    "..H.H..",
+    "..HHH..",
+  },
+
+  sizes =
+  {
+    { w=7, h=3, prob=80 },
+    { w=7, h=4, prob=80 },
+    { w=7, h=5, prob=60 },
+    { w=7, h=6, prob=40 },
+
+    { w=9, h=3, prob=1  },
+    { w=9, h=5, prob=4  },
+    { w=9, h=7, prob=12 },
+  },
+
+  x_grow = { 4 },
+  y_grow = { 2 },
+
+  connections =
+  {
+    { x=1, y=3, dir=8 },
+    { x=7, y=3, dir=8 },
   }
 },
 
