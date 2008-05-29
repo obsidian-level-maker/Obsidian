@@ -17,7 +17,7 @@
 
 <h1>OBLIGE Level Maker</h1>
 
-by Andrew Apted. &nbsp; March 2008
+by Andrew Apted. &nbsp; June 2008
 
 
 <h2>INTRODUCTION</h2>
@@ -46,28 +46,26 @@ from existing programs (like the famous
 
 <h2>NEWS</h2>
 
-<b>13th March 2008</b>:
+<b>29-May-2008</b>:
+Released Oblige 0.97, a small update to 0.94.
+
+<p>
+<b>13-Mar-2008</b>:
 Added a summary of recent development:
 <a href="http://oblige.sourceforge.net/update.html">Devel Notes</a>
+
+<p>
+<b>5-Jul-2007</b>:
+Oblige 0.94 was released.
 
 
 <h2>STATUS</h2>
 
 <p>
-OBLIGE 0.94 is the current version.
+OBLIGE 0.97 is the current version.
 The GUI interface is simple but very usable.
 The battle simulator produces reasonable
 ammo and health to fight the monsters in the map.
-
-<p>
-<b>NOTE WELL:</b>The 0.94 release does have some problems.
-I am releasing it so that I can begin rewriting
-the level-building code to fix these problems
-(and also to generate better architecture).
-For example, you might get an error message saying
-that some stairs or a switch could not be added into
-a room.  The only workaround is to try a different
-SEED value.
 
 <p>
 <i>See below for the status of each game</i>
@@ -79,6 +77,22 @@ end-of-episode levels of DOOM&nbsp;1 and the end-of-game level (MAP30)
 of DOOM&nbsp;2.
 Other desirable features are: nicer (non-square) architecture,
 player teleporters, and better lighting.
+
+
+<h2>CHANGES IN 0.97</h2>
+
+<PRE>
++  greatly improved Heretic themes (Sam Trenholme)
++  fixed the stair-building error (Sam)
++  add some Cyberdemons into DOOM maps
+
+-  don't put monsters or things on crates
+-  don't put blaze doors in Heretic maps (Sam)
+-  add a few armor helmets in DOOM maps (Enhas)
+-  removed the Archvile from FreeDoom maps (Enhas)
+-  prevent cross windows being passable (Enhas)
+-  don't use shiny Wolf-3d door in Nature theme
+</PRE>
 
 
 <h2>CHANGES IN 0.94</h2>
@@ -232,8 +246,15 @@ levels with too many actors or static objects.
 
 
 <h2>ACKNOWLEDGEMENTS</h2>
+Thanks to Sam Trenholme for much expanded the Heretic themes
+and various fixes.  Check out his "ObHack" modification for
+even more interesting stuff.
 
-Thanks to Derek "Dittohead" Braun for making a whole swag of
+<p>
+Thanks to Enhas for his improvements.
+
+<p>
+Big thanks to Derek "Dittohead" Braun for making a whole swag of
 Prefab structures, which kicked off some big improvements to the
 way OBLIGE builds stuff.
 
@@ -260,7 +281,7 @@ OBLIGE uses the cool FLTK widget library
 OBLIGE Level Maker
 
 <p>
-Copyright (C) 2006-2007 Andrew Apted
+Copyright (C) 2006-2008 Andrew Apted
 
 <p>
 OBLIGE is free software; you can redistribute it and/or
