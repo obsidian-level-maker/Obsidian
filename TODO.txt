@@ -2,6 +2,37 @@
 TODO
 ====
 
+Room Fab System:
+
+- prob modifiers for X -> Y connections
+
+       { "hall", "hall", 0.8 },
+       { "building", "building", 0.4 },
+       { "ground", "ground", 3.0 },
+       { "liquid", "liquid", 3.0 },
+       { "cave", "cave", 2.0 },
+
+       { "ground", "liquid", 2.5 },
+       { "ground", "cave",   2.5 },
+
+       { "hall", "ground", 0.1 },
+       { "hall", "liquid", 0.1 },
+       { "hall", "cave",   0.3 },
+
++ properly choose connection set
+
+- test exits points when trying to place the room
+  (in particular: halls should have at least 2 seeds at each exit)
+  PERHAPS: if fail try a different set of exits
+
++ support making larger room fabs (i.e. try the different sizes)
+
+- support mirroring the room fab (50% chance)
+
+- hall backtracking: if no exit can be made, delete the hall and
+  try something new.  When tried too many times, mark as fail
+  (which may then cause the previous hall to be deleted).
+
 
 Quake1 output:
 
