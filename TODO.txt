@@ -3,65 +3,6 @@ TODO
 ====
 
 
-Zone Algorithm:
-
-1. divide main map into N "solid" zones.  These zones require
-   teleporters to travel between them (never any doors or falloffs
-   from one to the other, though windows would be possible).
-
-   count = { 90 20 5 1 }
-
-   [divide main quests between these top-level zones]
-
-2. assign "walk" and "view" zones into each top-level solid zone.
-   Sometimes make zones-in-a-zone.
-   When multiple second-level zones, create them near each other
-   and branch to the side (i.e. we know how to connect them).
-
-3. assign main quests to each sub-level zone (possibly multiple
-   zones for a single quest).
-
-4. figure out number of groups in each "walk" and "view" zone:
-
-   walk count = { 30 90 70 15 3 }
-   view count = { 70 70 10 2 }
-
-   and also the group spread pattern (mainly for walk zones)
-
-   1.2  1.2  .1.  1..  ...
-   .5.  .5.  253  .52  .5.
-   3.4  .3.  .4.  .3.  ...
- 
-5. figure out maximum # of rooms (or seeds) would should make in
-   each zone and for each group.
-
-6. PLOT QUESTS:
-
-   (a) create start room (possibly a whole zone if "walk").
-       If quest[1] has some zones, usually create start room
-       in one of them (i.e. assign a group to it),
-       but occasionaly create it "near" one (in solid)
-       and connect to it (directly or with a another room or two).
-
-   (b) create chain of rooms for current quest.
-       Each "walk" zone of the quest will have an "along" value,
-       showing when the player gets the big walkable area
-       (so if along = 1, player starts there, and player ending
-       there is possible too).
-
-       The branch-off room may leave a zone or may enter other
-       zones (rare if the zone doesn't belong to quest, also
-       depending on how many groups are available).
-
-       Sometimes the branch-off can be via two-way teleport
-       (especially from one group to another in a "view" zone).
-
-   (c) each new quest (except for teleports between top-level
-       zones) will branch off an existing quest, often using a
-       free group of an earlier quest's walk/view zone.
-
-
-
 Quake1 output:
 
 + fix bounding boxes for everything (especially Leafs)
@@ -136,9 +77,11 @@ General:
 
 -  Levels in an episode get progressively bigger.
 
+-  make the EASY skill much easier (less monsters)
+
 -  Deathmatch: initial starting weapon (None,Basic,Heavy) : "Equip"
 
--  FreeDoom: some scenery items (hanging gore) not present
+-  FreeDoom: some scenery items (hanging gore) have no sprites
 
 
 GUI:
@@ -233,6 +176,8 @@ Miscellaneous:
 
 +  prefabs: improve "kind" fields, allow "x_offset" fields
    default to 0.
+
+-  make key doors open-and-stay-open.
 
 -  support keycards
 
