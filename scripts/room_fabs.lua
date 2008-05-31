@@ -34,7 +34,7 @@ ROOM_ELEMENTS =
 ROOM_FABS =
 {
 
-BUILDING_TINY_A1 =
+BUILDING_TINY =
 {
   prob = 10,
 
@@ -48,90 +48,34 @@ BUILDING_TINY_A1 =
 
   connections =
   {
-    { x=2, y=2, dir=8, optional=true },
-  }
-},
+    {
+      exits =
+      {
+        { x=2, y=2, dir=8, optional=true },
+      }
+    },
 
-BUILDING_TINY_A2 =
-{
-  copy = "BUILDING_TINY_A1",
+    {
+      exits =
+      {
+        { x=2, y=2, dir=6, optional=true },
+      }
+    },
 
-  entry_x = 2,
-
-  connections =
-  {
-    { x=1, y=2, dir=8, optional=true },
-  }
-},
-
-BUILDING_TINY_B1 =
-{
-  prob = 15,
-
-  structure =
-  {
-    "BB",
-    "BB",
-  },
-
-  entry_x = 1,
-
-  connections =
-  {
-    { x=2, y=2, dir=6 },
-  }
-},
-
-BUILDING_TINY_B2 =
-{
-  copy = "BUILDING_TINY_B1",
-
-  entry_x = 2,
-
-  connections =
-  {
-    { x=2, y=2, dir=6 },
-  }
-},
-
-BUILDING_TINY_C1 =
-{
-  prob = 2,
-
-  structure =
-  {
-    "BB",
-    "BB",
-  },
-
-  entry_x = 1,
-
-  connections =
-  {
-    { x=2, y=1, dir=6 },
-    { x=1, y=2, dir=4 },
-    { x=2, y=2, dir=8 },
-  }
-},
-
-BUILDING_TINY_C2 =
-{
-  copy = "BUILDING_TINY_C1",
-
-  entry_x = 2,
-
-  connections =
-  {
-    { x=1, y=1, dir=4 },
-    { x=2, y=2, dir=6 },
-    { x=1, y=2, dir=8 },
-  }
+    {
+      prob = 5,
+      exits =
+      {
+        { x=2, y=1, dir=6 },
+        { x=1, y=2, dir=4 },
+        { x=2, y=2, dir=8 },
+      }
+    },
+  } -- connections
 },
 
 
---->
-
-BUILDING_SMALL_A =
+BUILDING_SMALL =
 {
   prob = 60,
 
@@ -152,51 +96,47 @@ BUILDING_SMALL_A =
 
   connections =
   {
-    { x=2, y=2, dir=8, optional=true },
-  }
-},
+    {
+      exits =
+      {
+        { x=2, y=2, dir=8, optional=true },
+      }
+    },
 
-BUILDING_SMALL_B =
-{
-  copy = "BUILDING_SMALL_A",
+    {
+      prob = 35,
+      exits =
+      {
+        { x=1, y=2, dir=8 },
+        { x=3, y=2, dir=8 },
+      }
+    },
 
-  connections =
-  {
-    { x=1, y=2, dir=8 },
-    { x=3, y=2, dir=8 },
-  }
-},
+    {
+      prob = 20,
+      exits =
+      {
+        { x=1, y=2, dir=4 },
+        { x=3, y=2, dir=6 },
+        { x=2, y=2, dir=8, optional=true },
+      }
+    },
 
-BUILDING_SMALL_C =
-{
-  copy = "BUILDING_SMALL_A",
-  prob = 20,
-
-  connections =
-  {
-    { x=1, y=2, dir=4 },
-    { x=3, y=2, dir=6 },
-    { x=2, y=2, dir=8, optional=true },
-  }
-},
-
-BUILDING_SMALL_D =
-{
-  copy = "BUILDING_SMALL_A",
-  prob = 10,
-
-  connections =
-  {
-    { x=1, y=1, dir=4 },
-    { x=3, y=1, dir=6 },
-    { x=2, y=2, dir=8, optional=true },
-  }
+    {
+      prob = 10,
+      exits =
+      {
+        { x=1, y=1, dir=4 },
+        { x=3, y=1, dir=6 },
+        { x=2, y=2, dir=8, optional=true },
+      }
+    },
+  } -- connections
 },
 
 
---->
 
-BUILDING_MEDIUM_A =
+BUILDING_MEDIUM =
 {
   prob = 60,
 
@@ -217,62 +157,53 @@ BUILDING_MEDIUM_A =
 
   connections =
   {
-    { x=2, y=2, dir=8, optional=true },
-  }
-},
+    {
+      exits =
+      {
+        { x=2, y=2, dir=8, optional=true },
+      }
+    },
 
-BUILDING_MEDIUM_B =
-{
-  copy = "BUILDING_MEDIUM_A",
-  prob = 20,
+    {
+      exits =
+      {
+        { x=1, y=2, dir=4 },
+        { x=3, y=2, dir=6 },
+      }
+    },
 
-  connections =
-  {
-    { x=1, y=3, dir=8 },
-    { x=3, y=3, dir=8 },
-  }
-},
+    {
+      prob = 35,
+      exits =
+      {
+        { x=1, y=3, dir=4 },
+        { x=3, y=3, dir=6 },
+      }
+    },
 
-BUILDING_MEDIUM_C =
-{
-  copy = "BUILDING_MEDIUM_A",
+    {
+      prob = 20,
+      exits =
+      {
+        { x=1, y=3, dir=8 },
+        { x=3, y=3, dir=8 },
+      }
+    },
 
-  connections =
-  {
-    { x=1, y=2, dir=4 },
-    { x=3, y=2, dir=6 },
-  }
-},
-
-BUILDING_MEDIUM_D =
-{
-  copy = "BUILDING_MEDIUM_A",
-  prob = 10,
-
-  connections =
-  {
-    { x=1, y=2, dir=4 },
-    { x=3, y=2, dir=6 },
-    { x=3, y=3, dir=8 },
-  }
-},
-
-BUILDING_MEDIUM_E =
-{
-  copy = "BUILDING_MEDIUM_A",
-
-  connections =
-  {
-    { x=1, y=3, dir=4 },
-    { x=3, y=3, dir=6 },
-  }
+    {
+      prob = 10,
+      exits =
+      {
+        { x=1, y=2, dir=4 },
+        { x=3, y=2, dir=6 },
+        { x=3, y=3, dir=8 },
+      }
+    },
+  } -- connections
 },
 
 
-
---->
-
-BUILDING_LARGE_A =
+BUILDING_LARGE =
 {
   prob = 40,
 
@@ -302,74 +233,63 @@ BUILDING_LARGE_A =
 
   connections =
   {
-    { x=1, y=2, dir=4 },
-    { x=5, y=2, dir=6 },
-    { x=3, y=3, dir=8, optional=true },
-  }
-},
+    {
+      exits =
+      {
+        { x=2, y=3, dir=8 },
+        { x=4, y=3, dir=8 },
+      }
+    },
 
-BUILDING_LARGE_B =
-{
-  copy = "BUILDING_LARGE_A",
+    {
+      exits =
+      {
+        { x=1, y=2, dir=4 },
+        { x=5, y=2, dir=6 },
+        { x=3, y=3, dir=8, optional=true },
+      }
+    },
 
-  connections =
-  {
-    { x=1, y=3, dir=4 },
-    { x=5, y=3, dir=6 },
-    { x=3, y=3, dir=8, optional=true },
-  }
-},
+    {
+      exits =
+      {
+        { x=1, y=3, dir=4 },
+        { x=5, y=3, dir=6 },
+        { x=3, y=3, dir=8, optional=true },
+      }
+    },
 
+    {
+      exits =
+      {
+        { x=1, y=3, dir=8 },
+        { x=3, y=3, dir=8 },
+        { x=5, y=3, dir=8 },
+      }
+    },
 
-BUILDING_LARGE_C =
-{
-  copy = "BUILDING_LARGE_A",
+    {
+      prob = 20,
+      exits =
+      {
+        { x=2, y=3, dir=8 },
+        { x=4, y=3, dir=8 },
+        { x=1, y=2, dir=4 },
+        { x=5, y=2, dir=6 },
+      }
+    },
 
-  connections =
-  {
-    { x=2, y=3, dir=8 },
-    { x=4, y=3, dir=8 },
-  }
-},
-
-BUILDING_LARGE_D =
-{
-  copy = "BUILDING_LARGE_A",
-  prob = 20,
-
-  connections =
-  {
-    { x=2, y=3, dir=8 },
-    { x=4, y=3, dir=8 },
-    { x=1, y=2, dir=4 },
-    { x=5, y=2, dir=6 },
-  }
-},
-
-BUILDING_LARGE_E =
-{
-  copy = "BUILDING_LARGE_A",
-
-  connections =
-  {
-    { x=1, y=3, dir=8 },
-    { x=3, y=3, dir=8 },
-    { x=5, y=3, dir=8 },
-  }
-},
-
-BUILDING_LARGE_F =
-{
-  copy = "BUILDING_LARGE_A",
-  prob = 10,
-
-  connections =
-  {
-    { x=1, y=3, dir=8 },
-    { x=5, y=3, dir=8 },
-    { x=1, y=1, dir=4 },
-    { x=5, y=1, dir=6 },
-  }
+    {
+      prob = 10,
+      exits =
+      {
+        { x=1, y=3, dir=8 },
+        { x=5, y=3, dir=8 },
+        { x=1, y=1, dir=4 },
+        { x=5, y=1, dir=6 },
+      }
+    },
+  } -- connections
 },
 
 
@@ -677,7 +597,7 @@ function expand_room_fabs(list)
     if not F.sizes then
       F.sizes =
       {
-        { w = #F.structure[1], h = #F.structure, prob = 50 }
+        { w = #F.structure[1], h = #F.structure, prob = 100 }
       }
     end
 
