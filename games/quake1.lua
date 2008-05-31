@@ -64,7 +64,7 @@ Q1_THINGS =
   yellow_armor = { id="item_armor2",   kind="pickup", r=30, h=30, pass=true },
   red_armor    = { id="item_armorInv", kind="pickup", r=30, h=30, pass=true },
 
-  -- TODO: health amount is controlled by 'spawnflags' entity field
+  -- TODO: health and ammo quantity is controlled by 'spawnflags'
 
   cell_box   = { id="item_cells",   kind="pickup", r=30, h=30, pass=true },
   shell_box  = { id="item_shells",  kind="pickup", r=30, h=30, pass=true },
