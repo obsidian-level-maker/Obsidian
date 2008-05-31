@@ -44,7 +44,7 @@ BUILDING_TINY =
     "BB",
   },
 
-  entry_x = 1,
+  enter_x = 1,
 
   connections =
   {
@@ -633,8 +633,8 @@ function expand_room_fabs(list)
       end
     end
 
-    if not F.entry_x then
-      F.entry_x = 1 + int(F.sizes[1].w / 2)
+    if not F.enter_x then
+      F.enter_x = 1 + int(F.sizes[1].w / 2)
     end
   end
 end

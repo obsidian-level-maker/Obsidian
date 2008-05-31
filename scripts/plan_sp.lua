@@ -163,10 +163,6 @@ function OLD_OLD_build_fab(r)
 end
 
 
-function try_branch_off(r)
-  
-  -- TODO !!!!
-end
 
 
 function install_loc(F, x, y, dir)
@@ -174,30 +170,32 @@ function install_loc(F, x, y, dir)
   local fw = F.sizes[1].w
   local fh = F.sizes[1].h
 
-  local entry_x = F.entry_x
+  local enter_x = F.enter_x
 
   if dir == 8 then
-    x = x - (entry_x - 1)
+    x = x - (enter_x - 1)
     return x, y, x+fw-1, y+fh-1
 
   elseif dir == 2 then
-    x = x - (fw - entry_x)
+    x = x - (fw - enter_x)
     return x, y-fh+1, x+fw-1, y
 
   elseif dir == 4 then
-    y = y - (entry_x - 1)
+    y = y - (enter_x - 1)
     return x-fh+1, y, x, y+fw-1
 
   else assert(dir == 6)
-    y = y - (fw - entry_x)
+    y = y - (fw - enter_x)
     return x, y, x+fh-1, y+fw-1
   end
 end
 
 
-function install_room_fab(F, x, y, dir)
+function install_room_fab(F, r)
  
-  local conn = F.connections[1]
+  local x = r.x
+  local y = r.y
+  local dir = r.dir
 
   local fw = F.sizes[1].w
   local fh = F.sizes[1].h
@@ -213,16 +211,16 @@ function install_room_fab(F, x, y, dir)
     local sx, sy
 
     if dir == 8 then
-      sx, sy = x + (fx - F.entry_x), y + (fy-1)
+      sx, sy = x + (fx - F.enter_x), y + (fy-1)
 
     elseif dir == 2 then
-      sx, sy = x - (fx - F.entry_x), y - (fy-1)
+      sx, sy = x - (fx - F.enter_x), y - (fy-1)
 
     elseif dir == 4 then
-      sx, sy = x - (fy-1), y + (fx - F.entry_x)
+      sx, sy = x - (fy-1), y + (fx - F.enter_x)
 
     else assert(dir == 6)
-      sx, sy = x + (fy-1), y - (fx - F.entry_x)
+      sx, sy = x + (fy-1), y - (fx - F.enter_x)
     end
 
     assert(Seed_valid_and_free(sx, sy, 1))
@@ -277,19 +275,16 @@ function install_room_fab(F, x, y, dir)
 
     -- handle connection points
 
-    for idx,conn in ipairs(F.connections) do
-      if fx == conn.x and fy == conn.y then
+    for _,exit in ipairs(r.connections.exits) do
+      if fx == exit.x and fy == exit.y then
         local p =
         {
-          dir = rotate_dir(conn.dir, dir),
+          dir = rotate_dir(exit.dir, dir),
         }
 
-        local dx, dy = dir_to_delta(p.dir)
-        p.x = sx + dx
-        p.y = sy + dy
+        p.x, p.y = nudge_coord(sx, sy, p.dir)
 
         table.insert(CONNS, p)
-
       end
     end
 
@@ -310,7 +305,6 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
 
 
   local function usable(F)
-con.debugf("%s\n", F.name)
     if F.sizes[1].w > W   then return false end
     if F.sizes[1].h > H-1 then return false end
 
@@ -411,14 +405,18 @@ function process_conns()
     return
   end
 
-  
-  install_room_fab(fab, p.x, p.y, p.dir)
+
+  -- FIXME properly choose connection from set
+  p.connections = rand_element(fab.connections)
+
+
+  install_room_fab(fab, p)
 
 
   -- create connections
   local S1 = SEEDS[p.x][p.y][1]
 
-  local sx2, sy2 = dir_nudge(p.x, p.y, p.dir, -1)
+  local sx2, sy2 = nudge_coord(p.x, p.y, p.dir, -1)
   local S2 = SEEDS[sx2][sy2][1]
 
   if S1 and S1.borders then
