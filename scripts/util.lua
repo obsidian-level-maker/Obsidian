@@ -399,7 +399,7 @@ function dir_to_across(dir)
   error ("dir_to_across: bad dir " .. dir)
 end
 
-function dir_nudge(x, y, dir, dist)
+function nudge_coord(x, y, dir, dist)
   if not dist then dist = 1 end
   local dx, dy = dir_to_delta(dir)
   return x + dx*dist, y + dy * dist
