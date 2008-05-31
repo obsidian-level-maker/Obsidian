@@ -49,6 +49,7 @@ BUILDING_TINY =
   connections =
   {
     {
+      prob = 50,
       exits =
       {
         { x=2, y=2, dir=8, optional=true },
@@ -56,6 +57,7 @@ BUILDING_TINY =
     },
 
     {
+      prob = 50,
       exits =
       {
         { x=2, y=2, dir=6, optional=true },
@@ -97,6 +99,7 @@ BUILDING_SMALL =
   connections =
   {
     {
+      prob = 50,
       exits =
       {
         { x=2, y=2, dir=8, optional=true },
@@ -158,6 +161,7 @@ BUILDING_MEDIUM =
   connections =
   {
     {
+      prob = 50,
       exits =
       {
         { x=2, y=2, dir=8, optional=true },
@@ -165,9 +169,18 @@ BUILDING_MEDIUM =
     },
 
     {
+      prob = 50,
       exits =
       {
         { x=1, y=2, dir=4 },
+        { x=3, y=2, dir=6 },
+      }
+    },
+
+    {
+      prob = 10,
+      exits =
+      {
         { x=3, y=2, dir=6 },
       }
     },
@@ -234,6 +247,7 @@ BUILDING_LARGE =
   connections =
   {
     {
+      prob = 50,
       exits =
       {
         { x=2, y=3, dir=8 },
@@ -242,6 +256,7 @@ BUILDING_LARGE =
     },
 
     {
+      prob = 50,
       exits =
       {
         { x=1, y=2, dir=4 },
@@ -251,6 +266,7 @@ BUILDING_LARGE =
     },
 
     {
+      prob = 50,
       exits =
       {
         { x=1, y=3, dir=4 },
@@ -260,6 +276,7 @@ BUILDING_LARGE =
     },
 
     {
+      prob = 50,
       exits =
       {
         { x=1, y=3, dir=8 },
@@ -314,12 +331,14 @@ HALL_STRAIGHT =
 
   connections =
   {
-    { x=1, y=1, dir=8 },
+    {
+      exits = {{ x=1, y=1, dir=8 }}
+    }
   }
 },
 
 
-HALL_RIGHT =
+HALL_TURN =
 {
   prob = 30,
 
@@ -341,22 +360,14 @@ HALL_RIGHT =
 
   connections =
   {
-    { x=1, y=2, dir=6 },
-  }
-},
-
-HALL_LEFT =
-{
-  copy = "HALL_RIGHT",
-
-  connections =
-  {
-    { x=1, y=2, dir=4 },
+    {
+      exits = {{ x=1, y=2, dir=6 }}
+    }
   }
 },
 
 
-HALL_HUG_RIGHT =
+HALL_HUG =
 {
   prob = 20,
 
@@ -379,19 +390,9 @@ HALL_HUG_RIGHT =
 
   connections =
   {
-    { x=3, y=1, dir=8 },
-  }
-},
-
-HALL_HUG_LEFT =
-{
-  copy = "HALL_HUG_RIGHT",
-
-  enter_x = 3,
-
-  connections =
-  {
-    { x=1, y=1, dir=8 },
+    {
+      exits = {{ x=3, y=1, dir=8 }}
+    }
   }
 },
 
@@ -426,8 +427,13 @@ HALL_T_SHAPE =
 
   connections =
   {
-    { x=1, y=2, dir=4 },
-    { x=3, y=2, dir=6 },
+    {
+      exits =
+      {
+        { x=1, y=2, dir=4 },
+        { x=3, y=2, dir=6 },
+      }
+    }
   }
 },
 
@@ -464,9 +470,14 @@ HALL_CROSS =
 
   connections =
   {
-    { x=1, y=2, dir=4 },
-    { x=3, y=2, dir=6 },
-    { x=2, y=3, dir=8 },
+    {
+      exits =
+      {
+        { x=1, y=2, dir=4 },
+        { x=3, y=2, dir=6 },
+        { x=2, y=3, dir=8 },
+      }
+    }
   }
 },
 
@@ -499,8 +510,13 @@ HALL_FANCY_T =
 
   connections =
   {
-    { x=1, y=3, dir=8 },
-    { x=7, y=3, dir=8 },
+    {
+      exits =
+      {
+        { x=1, y=3, dir=8 },
+        { x=7, y=3, dir=8 },
+      }
+    }
   }
 },
 
