@@ -553,7 +553,7 @@ HALL_CROSS =
 
 HALL_FANCY_T =
 {
-  prob = 5,
+  prob = 11,
 
   structure =
   {

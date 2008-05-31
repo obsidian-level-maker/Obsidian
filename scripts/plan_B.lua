@@ -1,4 +1,4 @@
-----------------------------------------------------------------
+---------------------------------------------------------------
 --  PLANNER : EXPERIMENTAL SHIT
 ----------------------------------------------------------------
 --
@@ -21,54 +21,16 @@ require 'util'
 require 'room_fabs'
 
 
-SW = 32
-SH = 32
+SW = 22
+SH = 22
 
 FABS = {}
 
 CONNS = {}
 
 
-function select_room_fab(r)
 
-  local function usable(F)
-    if r.w < F.x_size[1] or
-       r.w > F.x_size[2] or
-       r.h < F.y_size[1] or
-       r.h > F.y_size[2]
-    then
-      return false
-    end
-
-    if F.area_range then
-      if (r.w * r.h) < F.area_range[1] or
-         (r.w * r.h) > F.area_range[2]
-      then
-        return false
-      end
-    end
-
-    return true
-  end
-
-  local list = { }
-
-  for _,F in pairs(ROOM_FABS) do
-    if usable(F) then
-      table.insert(list, F)
-    end
-  end
-
-  if #list == 0 then
-    con.printf("Needed size: %dx%d\n", r.w, r.h)
-    error("No usable room fab could be found!!!")
-  end
-
-  r.fab = rand_element(list)
-end
-
-
-function build_fab(r)
+function OLD_OLD_build_fab(r)
   
   local F = assert(r.fab)
 
@@ -209,28 +171,25 @@ end
 
 function install_loc(F, x, y, dir)
 
-  local conn = F.connections[1]
+  local fw = F.sizes[1].w
+  local fh = F.sizes[1].h
 
-  local fw = F.x_size[1]
-  local fh = F.y_size[1]
-
-  assert(conn.y == 1)
-  assert(conn.dir == 2)
+  local entry_x = F.entry_x
 
   if dir == 8 then
-    x = x - (conn.x - 1)
+    x = x - (entry_x - 1)
     return x, y, x+fw-1, y+fh-1
 
   elseif dir == 2 then
-    x = x - (fw - conn.x)
+    x = x - (fw - entry_x)
     return x, y-fh+1, x+fw-1, y
 
   elseif dir == 4 then
-    y = y - (conn.x - 1)
+    y = y - (entry_x - 1)
     return x-fh+1, y, x, y+fw-1
 
   else assert(dir == 6)
-    y = y - (fw - conn.x)
+    y = y - (fw - entry_x)
     return x, y, x+fh-1, y+fw-1
   end
 end
@@ -240,8 +199,8 @@ function install_room_fab(F, x, y, dir)
  
   local conn = F.connections[1]
 
-  local fw = F.x_size[1]
-  local fh = F.y_size[1]
+  local fw = F.sizes[1].w
+  local fh = F.sizes[1].h
 
 
   --- install_room_fab ---
@@ -254,16 +213,16 @@ function install_room_fab(F, x, y, dir)
     local sx, sy
 
     if dir == 8 then
-      sx, sy = x + (fx - conn.x), y + (fy-1)
+      sx, sy = x + (fx - F.entry_x), y + (fy-1)
 
     elseif dir == 2 then
-      sx, sy = x - (fx - conn.x), y - (fy-1)
+      sx, sy = x - (fx - F.entry_x), y - (fy-1)
 
     elseif dir == 4 then
-      sx, sy = x - (fy-1), y + (fx - conn.x)
+      sx, sy = x - (fy-1), y + (fx - F.entry_x)
 
     else assert(dir == 6)
-      sx, sy = x + (fy-1), y - (fx - conn.x)
+      sx, sy = x + (fy-1), y - (fx - F.entry_x)
     end
 
     assert(Seed_valid_and_free(sx, sy, 1))
@@ -319,11 +278,12 @@ function install_room_fab(F, x, y, dir)
     -- handle connection points
 
     for idx,conn in ipairs(F.connections) do
-      if idx >= 2 and fx == conn.x and fy == conn.y then
+      if fx == conn.x and fy == conn.y then
         local p =
         {
           dir = rotate_dir(conn.dir, dir),
         }
+
         local dx, dy = dir_to_delta(p.dir)
         p.x = sx + dx
         p.y = sy + dy
@@ -350,8 +310,9 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
 
 
   local function usable(F)
-    if F.x_size[1] > W   then return false end
-    if F.y_size[1] > H-1 then return false end
+con.debugf("%s\n", F.name)
+    if F.sizes[1].w > W   then return false end
+    if F.sizes[1].h > H-1 then return false end
 
     local x1,y1, x2,y2 = install_loc(F, p.x, p.y, p.dir)
 
@@ -513,7 +474,7 @@ function Plan_rooms_sp()
 
   -- branch stuff out from connections
 
-  for loop = 1,100 do
+  for loop = 1,999 do
     process_conns()
 
     if #CONNS == 0 then break; end
