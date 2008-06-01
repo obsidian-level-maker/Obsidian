@@ -33,6 +33,10 @@ Room Fab System:
   try something new.  When tried too many times, mark as fail
   (which may then cause the previous hall to be deleted).
 
+- "wide" connections, especially ground -> ground, where the
+  seeds either side of the connection seed also connect if they
+  are the same type.
+
 
 Quake1 output:
 
