@@ -225,6 +225,8 @@ function dummy_builder(Z)
 
     if S.room then
 
+      local corners = true
+
       if S.room.kind == "hall" then
         z1 = 32
         z2 = z1 + 96
@@ -239,6 +241,7 @@ function dummy_builder(Z)
         f_tex = "GRASS1"
         c_tex = "F_SKY1"
         w_tex = "ZIMMER8"
+        corners = false
 
       elseif S.room.kind == "liquid" then
         z1 = -24
@@ -246,6 +249,7 @@ function dummy_builder(Z)
         f_tex = "FWATER1"
         c_tex = "F_SKY1"
         w_tex = "ASHWALL3"
+        corners = false
 
       else -- building
         z1 = 24
@@ -256,6 +260,7 @@ function dummy_builder(Z)
         w_tex = "METAL2"
       end
 
+      if corners then
       csg2.add_brush(
       {
         t_face = { texture=w_tex },
@@ -311,6 +316,7 @@ function dummy_builder(Z)
         { x=x2,    y=y2-TK },
       },
       -2000, 2000)
+      end -- corners
 
     else -- ZONE ONLY
 
