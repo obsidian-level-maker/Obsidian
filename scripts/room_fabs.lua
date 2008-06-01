@@ -529,6 +529,9 @@ HALL_FANCY_T =
     "..HHH..",
   },
 
+  x_grow = { 4 },
+  y_grow = { 2 },
+
   sizes =
   {
     { w=7, h=3, prob=80 },
@@ -540,9 +543,6 @@ HALL_FANCY_T =
     { w=9, h=5, prob=4  },
     { w=9, h=7, prob=12 },
   },
-
-  x_grow = { 4 },
-  y_grow = { 2 },
 
   connections =
   {
@@ -558,6 +558,61 @@ HALL_FANCY_T =
 
 
 ----------------------------------------------------------------
+
+--[[
+GROUND_BRIDGE =
+{
+  prob = 51,
+
+  structure =
+  {
+    "ggggg",
+    "wwgww",
+    "ggggg",
+  },
+
+  x_grow = { 1,5 },
+  y_grow = { 1,3, 2,2 },
+
+  enter_x = 2,
+
+  sizes =
+  {
+    { w=5, h=3, prob=10 },
+    { w=5, h=5, prob=20 },
+    { w=5, h=7, prob=20 },
+    { w=5, h=9, prob=10 },
+
+    { w=7, h=3, prob=10 },
+    { w=7, h=5, prob=20 },
+    { w=7, h=7, prob=20 },
+    { w=7, h=9, prob=10 },
+
+    { w=9, h=5,  prob=10 },
+    { w=9, h=7,  prob=30 },
+    { w=9, h=9,  prob=30 },
+    { w=9, h=11, prob=10 },
+
+    { w=11, h=5,  prob=10 },
+    { w=11, h=7,  prob=30 },
+    { w=11, h=9,  prob=30 },
+    { w=11, h=11, prob=10 },
+  },
+
+  connections =
+  {
+    {
+      exits =
+      {
+        { x=5, y=3, dir=6 },
+        { x=1, y=3, dir=4, optional=true },
+      }
+    }
+  }
+},
+
+--]]
+
 
 --[[
 
