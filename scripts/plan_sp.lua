@@ -163,70 +163,143 @@ function OLD_OLD_build_fab(r)
 end
 
 
+function pos_adjust(old_w, new_w, x)
+  
+  if x == 1     then return 1 end
+  if x == old_w then return new_w end
+
+  if (old_w % 2) == 1 and (new_w % 2) == 1 then
+    if x == (old_w + 1) / 2 then
+      return (new_w + 1) / 2
+    end
+  end
+ 
+  -- lerp it
+  return int(1 + (new_w-1)*(x-1)/(old_w-1))
+end
 
 
-function install_loc(F, x, y, dir)
+function install_loc(F, SZ_IDX, x, y, dir)
 
-  local fw = F.sizes[1].w
-  local fh = F.sizes[1].h
+  local ow = F.sizes[1].w
+  local oh = F.sizes[1].h
 
-  local enter_x = F.enter_x
+  local nw = F.sizes[SZ_IDX].w
+  local nh = F.sizes[SZ_IDX].h
+
+  local enter_x = pos_adjust(ow, nw, F.enter_x)
+
 
   if dir == 8 then
     x = x - (enter_x - 1)
-    return x, y, x+fw-1, y+fh-1
+    return x, y, x+nw-1, y+nh-1
 
   elseif dir == 2 then
-    x = x - (fw - enter_x)
-    return x, y-fh+1, x+fw-1, y
+    x = x - (nw - enter_x)
+    return x, y-nh+1, x+nw-1, y
 
   elseif dir == 4 then
     y = y - (enter_x - 1)
-    return x-fh+1, y, x, y+fw-1
+    return x-nh+1, y, x, y+nw-1
 
   else assert(dir == 6)
-    y = y - (fw - enter_x)
-    return x, y, x+fh-1, y+fw-1
+    y = y - (nw - enter_x)
+    return x, y, x+nh-1, y+nw-1
   end
 end
 
 
-function install_room_fab(r)
+function install_room_fab(p)
  
-  local F = r.fab
-  local x = r.x
-  local y = r.y
-  local dir = r.dir
+  local F = p.fab
+  local x = p.x
+  local y = p.y
+  local dir = p.dir
 
-  local fw = F.sizes[1].w
-  local fh = F.sizes[1].h
+  local ow = F.sizes[1].w
+  local oh = F.sizes[1].h
+
+  local nw = F.sizes[p.SZ_IDX].w
+  local nh = F.sizes[p.SZ_IDX].h
+
+  local enter_x = pos_adjust(ow, nw, F.enter_x)
+
+
+  local col_map = {}
+  local row_map = {}
+
+  local function create_mapping(map, fx, rx, grow)
+    assert(fx <= rx)
+
+    if fx == rx then
+      for i = 1,rx do map[i] = i end
+      return
+    end
+
+    assert(grow)
+    assert(#grow >= 1)
+
+    -- determine how large each column/row will be
+    local sizes = {}
+    for i = 1,fx do sizes[i] = 1 end
+
+    local g_idx = 1
+    local g_tot = fx
+
+    while g_tot < rx do
+      local ax = grow[g_idx]
+      sizes[ax] = sizes[ax] + 1
+      g_tot = g_tot + 1
+      g_idx = g_idx + 1
+      if g_idx > #grow then g_idx = 1 end
+    end
+
+    local idx = 1
+    for i = 1,fx do
+      for n = 1,sizes[i] do
+        map[idx] = i
+        idx = idx + 1
+      end
+    end
+
+    assert(#map == rx)
+  end
 
 
   --- install_room_fab ---
 
   con.debugf("Installing room fab '%s' %dx%d at (%d,%d) dir:%d\n",
-             F.name, fw,fh, x, y, dir)
+             F.name, nw,nh, x, y, dir)
 
-  for fy = 1,fh do for fx = 1,fw do
-    
+  create_mapping(col_map, ow, nw, F.x_grow)
+  create_mapping(row_map, oh, nh, F.y_grow)
+
+  for ny = 1,nh do for nx = 1,nw do
+
     local sx, sy
 
     if dir == 8 then
-      sx, sy = x + (fx - F.enter_x), y + (fy-1)
+      sx, sy = x + (nx - enter_x), y + (ny-1)
 
     elseif dir == 2 then
-      sx, sy = x - (fx - F.enter_x), y - (fy-1)
+      sx, sy = x - (nx - enter_x), y - (ny-1)
 
     elseif dir == 4 then
-      sx, sy = x - (fy-1), y + (fx - F.enter_x)
+      sx, sy = x - (ny-1), y + (nx - enter_x)
 
     else assert(dir == 6)
-      sx, sy = x + (fy-1), y - (fx - F.enter_x)
+      sx, sy = x + (ny-1), y - (nx - enter_x)
     end
 
     assert(Seed_valid_and_free(sx, sy, 1))
 
-    local ch = string.sub(F.structure[fh-fy+1], fx, fx)
+    local ox = col_map[nx]
+    local oy = row_map[ny]
+
+    assert(1 <= ox and ox <= ow)
+    assert(1 <= oy and oy <= oh)
+
+    local ch = string.sub(F.structure[oh-oy+1], ox, ox)
 
     if ch == '.' then
       -- do nothing
@@ -266,32 +339,34 @@ function install_room_fab(r)
 
         S.borders = {}
 
-        if fx == 1  then S.borders[rotate_dir(4,dir)] = { kind="solid" } end
-        if fx == fw then S.borders[rotate_dir(6,dir)] = { kind="solid" } end
-        if fy == 1  then S.borders[rotate_dir(2,dir)] = { kind="solid" } end
-        if fy == fh then S.borders[rotate_dir(8,dir)] = { kind="solid" } end
+        if nx == 1  then S.borders[rotate_dir(4,dir)] = { kind="solid" } end
+        if nx == nw then S.borders[rotate_dir(6,dir)] = { kind="solid" } end
+        if ny == 1  then S.borders[rotate_dir(2,dir)] = { kind="solid" } end
+        if ny == nh then S.borders[rotate_dir(8,dir)] = { kind="solid" } end
       end
 
     end -- if ch == '.'
 
     -- handle connection points
 
-    for _,exit in ipairs(r.connections.exits) do
-      if fx == exit.x and fy == exit.y then
-        local p =
+    for _,exit in ipairs(p.connections.exits) do
+      local n_ex = pos_adjust(ow, nw, exit.x)
+      local n_ey = pos_adjust(oh, nh, exit.y)
+      if nx == n_ex and ny == n_ey then
+        local p2 =
         {
-          dir = rotate_dir(exit.dir, dir),
+          dir = rotate_dir(exit.dir, p.dir),
 
-          from_fab = F,
+          last_fab = F,
         }
 
-        p.x, p.y = nudge_coord(sx, sy, p.dir)
+        p2.x, p2.y = nudge_coord(sx, sy, p2.dir)
 
-        table.insert(CONNS, p)
+        table.insert(CONNS, p2)
       end
     end
 
-  end end -- fx, fy
+  end end -- nx, ny
 
 
   -- TODO: handle sub areas
@@ -308,10 +383,12 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
 
 
   local function usable(F)
-    if F.sizes[1].w > W   then return false end
-    if F.sizes[1].h > H-1 then return false end
+    local SZ_IDX = #F.sizes
 
-    local x1,y1, x2,y2 = install_loc(F, p.x, p.y, p.dir)
+    if F.sizes[SZ_IDX].w > W   then return false end
+    if F.sizes[SZ_IDX].h > H-1 then return false end
+
+    local x1,y1, x2,y2 = install_loc(F, SZ_IDX, p.x, p.y, p.dir)
 
     if not Seed_block_valid_and_free(x1,y1,1, x2,y2,1) then
       return false
@@ -332,9 +409,9 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
 
       local prob = F.prob or 50
 
-      if p.from_fab then
-        local n1 = p.from_fab.kind .. "/" .. F.kind
-        local n2 = F.kind .. "/" .. p.from_fab.kind
+      if p.last_fab then
+        local n1 = p.last_fab.kind .. "/" .. F.kind
+        local n2 = F.kind .. "/" .. p.last_fab.kind
 
         local mul = ROOM_CONN_MODIFIERS[n1] or
                     ROOM_CONN_MODIFIERS[n2] or 1.0
@@ -353,6 +430,8 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
   end
 
   p.fab = fabs[rand_index_by_probs(probs)]
+
+  p.SZ_IDX = #p.fab.sizes  -- FIXME: UGH!!!!
 
 
   -- connections !
