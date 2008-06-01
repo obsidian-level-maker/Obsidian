@@ -31,20 +31,19 @@ ROOM_ELEMENTS =
 
 ROOM_CONN_MODIFIERS =
 {
-  { "hall",    "hall",    0.8 },
-  { "building","building",0.4 },
-  { "ground",  "ground",  3.0 },
-  { "liquid",  "liquid",  3.0 },
-  { "cave",    "cave",    2.0 },
+  ["building/building"] = 0.4,
+  ["ground/ground"]     = 4.0,
+  ["liquid/liquid"]     = 3.0,
 
-  { "ground",  "liquid",  1.6 },
-  { "ground",  "cave",    1.5 },
-  { "liquid",  "cave",    1.4 },
+  ["cave/cave"]   = 2.5,
+  ["cave/ground"] = 2.0,
+  ["cave/liquid"] = 1.5,
 
   -- halls should mainly be between buildings
-  { "hall",    "ground",  0.2 },
-  { "hall",    "liquid",  0.2 },
-  { "hall",    "cave",    0.3 },
+  ["hall/hall"]   = 0.2,
+  ["hall/cave"]   = 0.2,
+  ["hall/ground"] = 0.1,
+  ["hall/liquid"] = 0.1,
 }
 
 

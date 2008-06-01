@@ -21,8 +21,8 @@ require 'util'
 require 'room_fabs'
 
 
-SW = 22
-SH = 22
+SW = 24
+SH = 24
 
 FABS = {}
 
@@ -191,8 +191,9 @@ function install_loc(F, x, y, dir)
 end
 
 
-function install_room_fab(F, r)
+function install_room_fab(r)
  
+  local F = r.fab
   local x = r.x
   local y = r.y
   local dir = r.dir
@@ -280,6 +281,8 @@ function install_room_fab(F, r)
         local p =
         {
           dir = rotate_dir(exit.dir, dir),
+
+          from_fab = F,
         }
 
         p.x, p.y = nudge_coord(sx, sy, p.dir)
@@ -326,19 +329,50 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
 
   for _,F in pairs(ROOM_FABS) do
     if usable(F) then
+
+      local prob = F.prob or 50
+
+      if p.from_fab then
+        local n1 = p.from_fab.kind .. "/" .. F.kind
+        local n2 = F.kind .. "/" .. p.from_fab.kind
+
+        local mul = ROOM_CONN_MODIFIERS[n1] or
+                    ROOM_CONN_MODIFIERS[n2] or 1.0
+
+        prob = prob * mul
+      end
+
       table.insert(fabs, F)
-      table.insert(probs, F.prob or 50)
+      table.insert(probs, prob)
     end
   end
 
   if #fabs == 0 then
     con.debugf("No usable room fab found!\n")
-    return nil
+    return
   end
 
-  local F = fabs[rand_index_by_probs(probs)]
-  
-  return F
+  p.fab = fabs[rand_index_by_probs(probs)]
+
+
+  -- connections !
+  -- FIXME: integrate choice with usable() test
+
+  assert(#p.fab.connections > 0)
+
+  if #p.fab.connections == 1 then
+    p.connections = p.fab.connections[1]
+  else
+    local conns = {}
+    local probs = {}
+
+    for _,C in ipairs(p.fab.connections) do
+      table.insert(conns, C)
+      table.insert(probs, C.prob or 50)
+    end
+
+    p.connections = p.fab.connections[rand_index_by_probs(probs)]
+  end
 end
 
 
@@ -398,19 +432,15 @@ function process_conns()
   con.debugf("--> out_n:%d a_n:%d b_n:%d\n", out_n, a_n, b_n)
 
 
-  local fab = choose_room_fab(p, x, y, out_n, a_n, b_n)
+  choose_room_fab(p, x, y, out_n, a_n, b_n)
 
-  if not fab then
+  if not p.fab then
     con.debugf("--> UNABLE TO SELECT ANY ROOM FAB\n")
     return
   end
 
 
-  -- FIXME properly choose connection from set
-  p.connections = rand_element(fab.connections)
-
-
-  install_room_fab(fab, p)
+  install_room_fab(p)
 
 
   -- create connections
