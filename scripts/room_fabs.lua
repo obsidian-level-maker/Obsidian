@@ -330,19 +330,37 @@ BUILDING_LARGE =
 
 ----------------------------------------------------------------
 
+HALL_SHORT =
+{
+  prob = 40,
+
+  structure = { "H" },
+
+  connections =
+  {
+    {
+      exits = {{ x=1, y=1, dir=8 }}
+    }
+  }
+},
+
+
 HALL_STRAIGHT =
 {
   prob = 60,
 
-  structure = { "H" },
+  structure =
+  {
+    "H",
+    "H",
+  },
 
   sizes =
   {
-    { w=1, h=1, prob=70 },
     { w=1, h=2, prob=90 },
-    { w=1, h=3, prob=70 },
-    { w=1, h=4, prob=10 },
-    { w=1, h=5, prob=2  },
+    { w=1, h=3, prob=66 },
+    { w=1, h=4, prob=15 },
+    { w=1, h=5, prob=3  },
   },
 
   y_grow = { 1 },
@@ -350,7 +368,7 @@ HALL_STRAIGHT =
   connections =
   {
     {
-      exits = {{ x=1, y=1, dir=8 }}
+      exits = {{ x=1, y=2, dir=8 }}
     }
   }
 },
