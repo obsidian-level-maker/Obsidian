@@ -7,7 +7,14 @@ Room Fab System:
 - SOLVE THIS PROBLEM: connection not syncing with seed, when
   room-fab is made larger.
 
-- properly choose connection set
+  >>> build inverse mapping from col_map/row_map, e.g.:
+      {
+        { low=1,mid=2,high=3 },
+        { low=4,mid=4,high=4 },
+        { low=5,mid=6,high=7 },
+      }
+
+- properly choose exit group
 
 - test exits points when trying to place the room
   (in particular: halls should have at least 2 seeds at each exit)
@@ -22,11 +29,17 @@ Room Fab System:
   (which may then cause the previous hall to be deleted).
 
 - "wide" connections, especially ground -> ground, where the
-  seeds either side of the connection seed also connect if they
-  are the same type.
+  seeds either side of the connection seed will also connect if
+  they are the same type.
 
 ? connection limitation areas (prevent an exit off one side
   from clobbering another exit off the same side).
+  
+
+(1) fab selection
+(2) size selection
+(3) mirror or not
+(4) exit group selection
 
 
 Quake1 output:
