@@ -4,22 +4,10 @@ TODO
 
 Room Fab System:
 
-- prob modifiers for X -> Y connections
+- SOLVE THIS PROBLEM: connection not syncing with seed, when
+  room-fab is made larger.
 
-       { "hall", "hall", 0.8 },
-       { "building", "building", 0.4 },
-       { "ground", "ground", 3.0 },
-       { "liquid", "liquid", 3.0 },
-       { "cave", "cave", 2.0 },
-
-       { "ground", "liquid", 2.5 },
-       { "ground", "cave",   2.5 },
-
-       { "hall", "ground", 0.1 },
-       { "hall", "liquid", 0.1 },
-       { "hall", "cave",   0.3 },
-
-+ properly choose connection set
+- properly choose connection set
 
 - test exits points when trying to place the room
   (in particular: halls should have at least 2 seeds at each exit)
@@ -36,6 +24,9 @@ Room Fab System:
 - "wide" connections, especially ground -> ground, where the
   seeds either side of the connection seed also connect if they
   are the same type.
+
+? connection limitation areas (prevent an exit off one side
+  from clobbering another exit off the same side).
 
 
 Quake1 output:
@@ -74,7 +65,6 @@ QUAKE1 ENTITY PROPS:
   targetname
   speed
   next stop
-
 
 
 
