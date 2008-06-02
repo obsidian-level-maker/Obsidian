@@ -21,146 +21,13 @@ require 'util'
 require 'room_fabs'
 
 
-SW = 24
-SH = 24
+SW = 34
+SH = 34
 
 FABS = {}
 
 CONNS = {}
 
-
-
-function OLD_OLD_build_fab(r)
-  
-  local F = assert(r.fab)
-
-  local fw = string.len(F.structure[1])
-  local fh = # F.structure
-
-  local col_map = {}
-  local row_map = {}
-
-
-  local function create_mapping(map, fx, rx, grow)
-
-    assert(fx <= rx)
-
-    if fx == rx then
-      for i = 1,rx do map[i] = i end
-      return
-    end
-
-    assert(grow)
-    assert(#grow >= 1)
-
-    -- determine how large each column/row will be
-    local sizes = {}
-    for i = 1,fx do sizes[i] = 1 end
-
-    local g_idx = 1
-    local g_tot = fx
-
-    while g_tot < rx do
-      local ax = grow[g_idx]
-      sizes[ax] = sizes[ax] + 1
-      g_tot = g_tot + 1
-      g_idx = g_idx + 1
-      if g_idx > #grow then g_idx = 1 end
-    end
-
-    local idx = 1
-    for i = 1,fx do
-      for n = 1,sizes[i] do
-        map[idx] = i
-        idx = idx + 1
-      end
-    end
-
-    assert(#map == rx)
-  end
-
-
-  --- build_fab ---
-
-  create_mapping(col_map, fw, r.w, F.x_grow)
-  create_mapping(row_map, fh, r.h, F.y_grow)
-
-  local sub_dims = {}
-
-
-  for y = 1,r.h do for x = 1,r.w do
-    
-    local sx = r.x + x - 1
-    local sy = r.y + y - 1
-
-    assert(SEEDS[sx][sy][1].room == nil)
-
-    local mx = col_map[x]
-    local my = row_map[y]
-
-    assert(1 <= mx and mx <= fw)
-    assert(1 <= my and my <= fh)
-
-    local ch = string.sub(F.structure[my], mx, mx)
-
-    if ch == '.' then
-      -- nothing
-    else
-
-      local e = F.elements[ch]
-
-      if e == nil then
-        error("Unknown element '" .. ch .. "' in room fab")
-      end
-
-      assert(e.kind)
-
-      if e.kind == "sub" then
-
-        if not sub_dims[ch] then
-          sub_dims[ch] = { x1=99,y1=99,x2=1,y2=1, ch=ch, e=e }
-        end
-
-        local D = sub_dims[ch]
-
-        if sx < D.x1 then D.x1 = sx end
-        if sx > D.x2 then D.x2 = sx end
-
-        if sy < D.y1 then D.y1 = sy end
-        if sy > D.y2 then D.y2 = sy end
-
-      else
-        SEEDS[sx][sy][1].room =
-        {
-          kind = e.kind,
-        }
-
-      end
-
-    end -- if ch == '.'
-  end end
-
-
-  -- handle sub areas
-
-  for _,D in pairs(sub_dims) do
-    
-    local n =
-    {
-      x = D.x1,
-      y = D.y1,
-
-      w = D.x2 - D.x1 + 1,
-      h = D.y2 - D.y1 + 1,
-
-      dir = rand_dir(),
-    }
-
-    select_room_fab(n)
-
-    table.insert(FABS, n)
-  end
-end
 
 
 function pos_adjust(old_w, new_w, x)
@@ -228,11 +95,17 @@ function install_room_fab(p)
   local col_map = {}
   local row_map = {}
 
-  local function create_mapping(map, fx, rx, grow)
-    assert(fx <= rx)
+  local col_inv = {}
+  local row_inv = {}
 
-    if fx == rx then
-      for i = 1,rx do map[i] = i end
+  local function create_mapping(map, inv, fx, nx, grow)
+    assert(fx <= nx)
+
+    if fx == nx then
+      for i = 1,nx do
+        map[i] = i
+        inv[i] = { i,i }
+      end
       return
     end
 
@@ -246,7 +119,7 @@ function install_room_fab(p)
     local g_idx = 1
     local g_tot = fx
 
-    while g_tot < rx do
+    while g_tot < nx do
       local ax = grow[g_idx]
       sizes[ax] = sizes[ax] + 1
       g_tot = g_tot + 1
@@ -262,7 +135,14 @@ function install_room_fab(p)
       end
     end
 
-    assert(#map == rx)
+    assert(#map == nx)
+
+    -- inverse mapping
+    local pos = 1
+    for i = 1,fx do
+      inv[i] = { pos, pos+sizes[i]-1 }
+      pos = pos + sizes[i]
+    end
   end
 
 
@@ -271,8 +151,8 @@ function install_room_fab(p)
   con.debugf("Installing room fab '%s' %dx%d at (%d,%d) dir:%d\n",
              F.name, nw,nh, x, y, dir)
 
-  create_mapping(col_map, ow, nw, F.x_grow)
-  create_mapping(row_map, oh, nh, F.y_grow)
+  create_mapping(col_map, col_inv, ow, nw, F.x_grow)
+  create_mapping(row_map, row_inv, oh, nh, F.y_grow)
 
   for ny = 1,nh do for nx = 1,nw do
 
@@ -350,8 +230,24 @@ function install_room_fab(p)
     -- handle connection points
 
     for _,exit in ipairs(p.connections.exits) do
-      local n_ex = pos_adjust(ow, nw, exit.x)
-      local n_ey = pos_adjust(oh, nh, exit.y)
+
+      local k_x = col_inv[exit.x]
+      local k_y = row_inv[exit.y]
+      assert(k_x and k_y)
+
+      local k_midx = int((k_x[1] + k_x[2]) / 2)
+      local k_midy = int((k_y[1] + k_y[2]) / 2)
+
+      local n_ex, n_ey
+
+          if exit.dir == 2 then   n_ex,n_ey = k_midx, k_y[1]
+      elseif exit.dir == 8 then   n_ex,n_ey = k_midx, k_y[2]
+      elseif exit.dir == 4 then   n_ex,n_ey = k_x[1], k_midy
+      else assert(exit.dir == 6); n_ex,n_ey = k_x[2], k_midy
+      end
+
+      assert(n_ex and n_ey)
+
       if nx == n_ex and ny == n_ey then
         local p2 =
         {
@@ -383,7 +279,7 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
 
 
   local function usable(F)
-    local SZ_IDX = #F.sizes
+    local SZ_IDX = int(1 + #F.sizes / 2)
 
     if F.sizes[SZ_IDX].w > W   then return false end
     if F.sizes[SZ_IDX].h > H-1 then return false end
@@ -431,7 +327,7 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
 
   p.fab = fabs[rand_index_by_probs(probs)]
 
-  p.SZ_IDX = #p.fab.sizes  -- FIXME: UGH!!!!
+  p.SZ_IDX = int(1 + #p.fab.sizes/2)  -- FIXME: UGH!!!!
 
 
   -- connections !
