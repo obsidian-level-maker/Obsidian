@@ -22,7 +22,7 @@ require 'room_fabs'
 
 
 SIZE_LIST = { tiny=16, small=20, regular=24, big=30, xlarge=36 }
-WANT_SIZE = "xlarge"
+WANT_SIZE = "tiny"
 
 FABS = {}
 
@@ -50,13 +50,13 @@ function pos_adjust(old_w, new_w, x)
 end
 
 
-function install_loc(F, SZ_IDX, x, y, dir)
+function install_loc(F, size, x, y, dir)
 
   local ow = F.sizes[1].w
   local oh = F.sizes[1].h
 
-  local nw = F.sizes[SZ_IDX].w
-  local nh = F.sizes[SZ_IDX].h
+  local nw = size.w
+  local nh = size.h
 
   local enter_x = pos_adjust(ow, nw, F.enter_x)
 
@@ -90,10 +90,14 @@ function install_room_fab(p)
   local ow = F.sizes[1].w
   local oh = F.sizes[1].h
 
-  local nw = F.sizes[p.SZ_IDX].w
-  local nh = F.sizes[p.SZ_IDX].h
+  local nw = p.size.w
+  local nh = p.size.h
 
-  local enter_x = pos_adjust(ow, nw, F.enter_x)
+  local enter_x = p.fab.enter_x
+  if p.mirror then
+    enter_x = ow - (enter_x-1)
+  end
+  enter_x = pos_adjust(ow, nw, enter_x)
 
 
   local col_map = {}
@@ -180,6 +184,8 @@ function install_room_fab(p)
     local ox = col_map[nx]
     local oy = row_map[ny]
 
+    if p.mirror then ox = ow - (ox-1) end
+
     assert(1 <= ox and ox <= ow)
     assert(1 <= oy and oy <= oh)
 
@@ -233,7 +239,7 @@ function install_room_fab(p)
 
     -- handle connection points
 
-    for _,exit in ipairs(p.connections.exits) do
+    for _,exit in ipairs(p.exit.exits) do
 
       local inv_x = col_inv[exit.x]
       local inv_y = row_inv[exit.y]
@@ -428,9 +434,41 @@ function space_at_point(x, y, dir)
 end
 
 
+function try_install_room_fab(p)
+  local F = assert(p.fab)
+
+  -- check if all seeds are free
+  local x1,y1, x2,y2 = install_loc(F, p.size, p.x, p.y, p.dir)
+
+  assert(Seed_valid(x1,y1,1))
+  assert(Seed_valid(x2,y2,1))
+
+  if not Seed_block_valid_and_free(x1,y1,1, x2,y2,1) then
+    return false
+  end
+
+  -- check whether new fab cuts off a connection point
+  for _,CP in ipairs(CONNS) do
+    if not CP.optional then
+      if box_contains_point(x1,y1, x2,y2, CP.x, CP.y) then
+        return false
+      end
+    end
+  end
+
+  -- FIXME: make sure seeds at each connection point are
+  --        valid and free
+
+  install_room_fab(p)
+end
+
+
 function try_room_fab_sizes(p)
 
   local function room_fab_fits(p)
+
+    -- this is only a very basic test designed to weed out many
+    -- unsuitable candidates early on.
 
     if p.size.h > p.up then return false end
 
@@ -497,14 +535,24 @@ function process_conn()
 ---###  local dx, dy = dir_to_delta(p.dir)
 ---###  local x, y = p.x, p.y
 
-  local p.up, p.left, p.right = space_at_point(p.x, p.y, p.dir)
+  p.up, p.left, p.right = space_at_point(p.x, p.y, p.dir)
 
   con.debugf("--> up:%d left:%d right:%d\n", p.up, p.left, p.right)
 
 
   local avail_fabs = {}
   for _,R in pairs(ROOM_FABS) do
-    avail_fabs[R] = R.prob or 50
+    local prob = R.prob or 50
+      if p.last_fab then
+        local n1 = p.last_fab.kind .. "/" .. R.kind
+        local n2 = R.kind .. "/" .. p.last_fab.kind
+
+        local mul = ROOM_CONN_MODIFIERS[n1] or
+                    ROOM_CONN_MODIFIERS[n2] or 1.0
+
+        prob = prob * mul
+      end
+    avail_fabs[R] = prob
   end
 
   -- FIXME: modify probs here (EG: ROOM_CONN_MODIFIERS)
@@ -519,7 +567,7 @@ function process_conn()
 
     local m_start = rand_irange(0,1)
 
-    for mirror = m_start,m_start+1 do
+    for mirror = 0,0 do -- FIXME!!!! m_start,m_start+1 do
       p.mirror = (mirror == 1)
 
       if try_room_fab_sizes(p) then
