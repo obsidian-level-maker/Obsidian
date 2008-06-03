@@ -4,18 +4,6 @@ TODO
 
 Room Fab System:
 
-+ SOLVE THIS PROBLEM: connection not syncing with seed, when
-  room-fab is made larger.
-
-  >>> build inverse mapping from col_map/row_map, e.g.:
-      {
-        { low=1,mid=2,high=3 },
-        { low=4,mid=4,high=4 },
-        { low=5,mid=6,high=7 },
-      }
-
-      -seed 20 for an example
-
 + COMPLETE TEST for room fab placement:
   (1) fab selection
   (2) size selection
@@ -28,7 +16,9 @@ Room Fab System:
   If no size can be made, select a new room-fab.
   Lastly if no room-fab can be made, fail.
 
-- properly choose exits group 
+  - support making larger room fabs (i.e. try the different sizes)
+  - support mirroring the room fab (50% chance)
+  - properly choose exits group 
 
 ? check diagonals too for space measuring
 
@@ -36,26 +26,19 @@ Room Fab System:
   (in particular: halls should have at least 2 seeds at each exit)
   PERHAPS: if fail try a different set of exits
 
-+ support making larger room fabs (i.e. try the different sizes)
-
-- support mirroring the room fab (50% chance)
-
 - hall backtracking: if no exit can be made, delete the hall and
   try something new.  When tried too many times, mark as fail
   (which may then cause the previous hall to be deleted).
 
+- require a certain amount of seeds to be filled, build a new
+  map if that threshhold is not reached.
+
++ "Level Fabs" used to kick off the whole level.
+  Good for boss levels!
+
 - "wide" connections, especially ground -> ground, where the
   seeds either side of the connection seed will also connect if
   they are the same type.
-
-- make sure new fab doesn't cut-off any non-optional CONN points.
-
-? connection limitation areas (prevent an exit off one side
-  from clobbering another exit off the same side).  Probably
-  not needed due to the item above this one.
-
-. require a certain amount of seeds to be filled, build a new
-  map if that threshhold is not reached.
 
 
 Quake1 output:
