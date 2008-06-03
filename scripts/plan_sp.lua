@@ -147,10 +147,10 @@ function install_room_fab(p)
       inv[i] = { pos, pos+sizes[i]-1 }
       pos = pos + sizes[i]
     end
-  end
+  end -- create_mapping
 
 
-  --- install_room_fab ---
+  ---| install_room_fab |---
 
   con.debugf("Installing room fab '%s' %dx%d at (%d,%d) dir:%d\n",
              F.name, nw,nh, x, y, dir)
@@ -273,6 +273,20 @@ function install_room_fab(p)
 
   -- TODO: handle sub areas
 
+
+  -- fix the two adjacent seeds to allow walking between them
+  local S1 = SEEDS[p.x][p.y][1]
+
+  local sx2, sy2 = nudge_coord(p.x, p.y, p.dir, -1)
+  local S2 = SEEDS[sx2][sy2][1]
+
+  if S1 and S1.borders then
+    S1.borders[10 - p.dir] = { kind="walk" }
+  end
+
+  if S2 and S2.borders then
+    S2.borders[p.dir] = { kind="walk" }
+  end
 end
 
 
@@ -366,22 +380,13 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
 end
 
 
-function process_conns()
+function space_at_point(x, y, dir)
 
-  assert(#CONNS > 0)
+  -- determines number of free seeds near the branch point
 
-  -- TODO: sort in priority order
-  local p = table.remove(CONNS, 1)
+  local dx, dy = dir_to_delta(dir)
 
-  con.debugf("Branching at point (%d,%d) dir:%d\n", p.x, p.y, p.dir)
-
-  local dx, dy = dir_to_delta(p.dir)
-
-  local x, y = p.x, p.y
-
-  -- determine number of free seeds near the branch point
-
-  local out_n  = 0
+  local out_n = 0
 
   for n = 0,100 do
     local sx = x + dx * n
@@ -393,8 +398,8 @@ function process_conns()
   end
 
   if out_n == 0 then
-    con.debugf("--> Cut off!\n")
-    return
+    con.debugf("--> Connection at (%d,%d) cut off!\n", x, y)
+    return 0,0,0
   end
 
 
@@ -419,32 +424,34 @@ function process_conns()
     b_n = n + 1
   end
 
+  return out_n, a_n, b_n
+end
+
+
+function process_conn()
+
+  assert(#CONNS > 0)
+
+  -- TODO: sort in priority order
+  local p = table.remove(CONNS, 1)
+
+  con.debugf("Branching at point (%d,%d) dir:%d\n", p.x, p.y, p.dir)
+
+  local dx, dy = dir_to_delta(p.dir)
+
+  local x, y = p.x, p.y
+
+  local out_n, a_n, b_n = space_at_point(p.x, p.y, p.dir)
+
   con.debugf("--> out_n:%d a_n:%d b_n:%d\n", out_n, a_n, b_n)
 
 
   choose_room_fab(p, x, y, out_n, a_n, b_n)
 
-  if not p.fab then
+  if p.fab then
+    install_room_fab(p)
+  else
     con.debugf("--> UNABLE TO SELECT ANY ROOM FAB\n")
-    return
-  end
-
-
-  install_room_fab(p)
-
-
-  -- create connections
-  local S1 = SEEDS[p.x][p.y][1]
-
-  local sx2, sy2 = nudge_coord(p.x, p.y, p.dir, -1)
-  local S2 = SEEDS[sx2][sy2][1]
-
-  if S1 and S1.borders then
-    S1.borders[10 - p.dir] = { kind="walk" }
-  end
-
-  if S2 and S2.borders then
-    S2.borders[p.dir] = { kind="walk" }
   end
 end
 
@@ -492,7 +499,7 @@ function Plan_rooms_sp()
   -- branch stuff out from connections
 
   for loop = 1,999 do
-    process_conns()
+    process_conn()
 
     if #CONNS == 0 then break; end
   end
