@@ -22,7 +22,7 @@ require 'room_fabs'
 
 
 SIZE_LIST = { tiny=16, small=20, regular=24, big=30, xlarge=36 }
-WANT_SIZE = "regular"
+WANT_SIZE = "xlarge"
 
 FABS = {}
 
@@ -42,7 +42,11 @@ function pos_adjust(old_w, new_w, x)
   end
  
   -- lerp it
-  return int(1 + (new_w-1)*(x-1)/(old_w-1))
+  if (x-1) < (old_w-1)/2 then
+    return 1 + int((new_w-1)*(x-1)/(old_w-1))
+  else
+    return new_w - int((new_w-1)*(old_w-x)/(old_w-1))
+  end
 end
 
 
@@ -235,8 +239,8 @@ function install_room_fab(p)
       local inv_y = row_inv[exit.y]
       assert(inv_x and inv_y)
 
-      local inv_midx = int((inv_x[1] + inv_x[2]) / 2)
-      local inv_midy = int((inv_y[1] + inv_y[2]) / 2)
+      local inv_midx = int((inv_x[1] + inv_x[2] + sel(ox>ow/2,1,0)) / 2)
+      local inv_midy = int((inv_y[1] + inv_y[2] + sel(oy>oh/2,1,0)) / 2)
 
       local n_ex, n_ey
 
@@ -254,6 +258,8 @@ function install_room_fab(p)
           dir = rotate_dir(exit.dir, p.dir),
 
           last_fab = F,
+
+          optional = exit.optional,
         }
 
         p2.x, p2.y = nudge_coord(sx, sy, p2.dir)
@@ -292,6 +298,15 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
 
     -- FIXME: make sure seeds at each connection point are
     --        valid and free
+
+    -- check whether new fab cuts off a connection point
+    for _,CP in ipairs(CONNS) do
+      if not CP.optional then
+        if box_contains_point(x1,y1, x2,y2, CP.x, CP.y) then
+          return false
+        end
+      end
+    end
 
     return true
   end
