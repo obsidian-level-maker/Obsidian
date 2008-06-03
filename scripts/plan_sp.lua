@@ -441,10 +441,70 @@ function process_conn()
 
   local x, y = p.x, p.y
 
-  local out_n, a_n, b_n = space_at_point(p.x, p.y, p.dir)
+  local p.up, p.left, p.right = space_at_point(p.x, p.y, p.dir)
 
-  con.debugf("--> out_n:%d a_n:%d b_n:%d\n", out_n, a_n, b_n)
+  con.debugf("--> up:%d left:%d right:%d\n", p.up, p.left, p.right)
 
+
+  local avail_fabs = {}
+
+  for _,R in pairs(ROOM_FABS) do
+    avail_fabs[R] = R.prob or 50
+  end
+
+  -- FIXME: modify probs here (EG: ROOM_CONN_MODIFIERS)
+
+  while not table_empty(avail_fabs) do
+    
+    p.fab = rand_key_by_probs(avail_fabs)
+    assert(p.fab)
+
+    local mirror = rand_sel(50,0,1)
+
+    for m = mirror,mirror+1 do
+      p.mirror = m % 2
+
+      local avail_sizes = {}
+      for _,SZ in ipairs(p.fab.sizes) do
+        avail_sizes[SZ] = SZ.prob or 50
+      end
+
+      while not table_empty(avail_sizes) do
+
+        p.size = rand_key_by_probs(avail_sizes)
+        assert(p.size)
+
+        if room_fab_fits(p) then
+
+          local avail_exits = {}
+          for _,EX in ipairs(p.fab.connections) do
+            avail_exits[EX] = EX.prob or 50
+          end
+
+          while not table_empty(avail_exits) do
+            p.exit = rand_key_by_probs(avail_exits)
+            assert(p.exit)
+
+            if try_install_room_fab(p) then
+              return --== SUCCESS! ==--
+            end
+
+            avail_exits[p.exit] = nil
+          end -- exit
+
+        end -- if room_fab_fits()
+
+        avail_sizes[p.size] = nil
+      end -- size
+
+    end -- mirror
+
+    avail_fabs[p.fab.name] = nil
+  end -- room_fab
+
+  -- Failed!
+
+--]]
 
   choose_room_fab(p, x, y, out_n, a_n, b_n)
 
