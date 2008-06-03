@@ -382,7 +382,7 @@ end
 
 function space_at_point(x, y, dir)
 
-  -- determines number of free seeds near the branch point
+  -- determines number of free seeds at the branch point
 
   local dx, dy = dir_to_delta(dir)
 
@@ -428,6 +428,63 @@ function space_at_point(x, y, dir)
 end
 
 
+function try_room_fab_sizes(p)
+
+  local function room_fab_fits(p)
+
+    if p.size.h > p.up then return false end
+
+    local ex = p.fab.enter_x
+    local ow = p.fab.sizes[1].w
+    local nw = p.size.w
+
+    if p.mirror then
+      ex = ow - (ex-1)
+    end
+
+    ex = pos_adjust(ow, nw, ex)
+
+    return (p.left >= ex) and (p.right >= nw-(ex-1))
+  end
+
+  -- try_room_fab_sizes --
+
+  local avail_sizes = {}
+  for _,SZ in ipairs(p.fab.sizes) do
+    avail_sizes[SZ] = SZ.prob or 50
+  end
+
+  while not table_empty(avail_sizes) do
+    p.size = rand_key_by_probs(avail_sizes)
+    assert(p.size)
+
+    if room_fab_fits(p) then
+
+      local avail_exits = {}
+      for _,EX in ipairs(p.fab.connections) do
+        avail_exits[EX] = EX.prob or 50
+      end
+
+      while not table_empty(avail_exits) do
+        p.exit = rand_key_by_probs(avail_exits)
+        assert(p.exit)
+
+        if try_install_room_fab(p) then
+          return true -- SUCCESS
+        end
+
+        avail_exits[p.exit] = nil
+      end -- while
+
+    end -- if
+
+    avail_sizes[p.size] = nil
+  end -- while
+
+  return false -- FAILED
+end
+
+
 function process_conn()
 
   assert(#CONNS > 0)
@@ -437,9 +494,8 @@ function process_conn()
 
   con.debugf("Branching at point (%d,%d) dir:%d\n", p.x, p.y, p.dir)
 
-  local dx, dy = dir_to_delta(p.dir)
-
-  local x, y = p.x, p.y
+---###  local dx, dy = dir_to_delta(p.dir)
+---###  local x, y = p.x, p.y
 
   local p.up, p.left, p.right = space_at_point(p.x, p.y, p.dir)
 
@@ -447,65 +503,52 @@ function process_conn()
 
 
   local avail_fabs = {}
-
   for _,R in pairs(ROOM_FABS) do
     avail_fabs[R] = R.prob or 50
   end
 
   -- FIXME: modify probs here (EG: ROOM_CONN_MODIFIERS)
 
-  while not table_empty(avail_fabs) do
-    
+  for loop = 1,50 do
+    if table_empty(avail_fabs) then
+      break;
+    end
+
     p.fab = rand_key_by_probs(avail_fabs)
     assert(p.fab)
 
-    local mirror = rand_sel(50,0,1)
+    local m_start = rand_irange(0,1)
 
-    for m = mirror,mirror+1 do
-      p.mirror = m % 2
+    for mirror = m_start,m_start+1 do
+      p.mirror = (mirror == 1)
 
-      local avail_sizes = {}
-      for _,SZ in ipairs(p.fab.sizes) do
-        avail_sizes[SZ] = SZ.prob or 50
+      if try_room_fab_sizes(p) then
+        return -- SUCCESS
       end
+    end
 
-      while not table_empty(avail_sizes) do
-
-        p.size = rand_key_by_probs(avail_sizes)
-        assert(p.size)
-
-        if room_fab_fits(p) then
-
-          local avail_exits = {}
-          for _,EX in ipairs(p.fab.connections) do
-            avail_exits[EX] = EX.prob or 50
-          end
-
-          while not table_empty(avail_exits) do
-            p.exit = rand_key_by_probs(avail_exits)
-            assert(p.exit)
-
-            if try_install_room_fab(p) then
-              return --== SUCCESS! ==--
-            end
-
-            avail_exits[p.exit] = nil
-          end -- exit
-
-        end -- if room_fab_fits()
-
-        avail_sizes[p.size] = nil
-      end -- size
-
-    end -- mirror
-
-    avail_fabs[p.fab.name] = nil
-  end -- room_fab
+    avail_fabs[p.fab] = nil
+  end
 
   -- Failed!
 
---]]
+  con.debugf("--> UNABLE TO SELECT ANY ROOM FAB\n")
 
+
+  --TODO: function handle_hall_failure(p)
+  -- if p.source.kind == "hall" then
+  --   p.hall_fails = p.hall_fails + 1
+  --   if p.hall_fails == p.hall_exit_num then
+  --     DELETE HALL
+  --     RE-ACTIVATE PREVIOUS CONNECTION
+  --     IF prev.source.kind == "hall" and TOO_MANY_REACTIVATIONS then
+  --       handle_hall_failure(prev)
+  --     END
+  --   end
+  -- end
+
+
+--[[ OLD CODE
   choose_room_fab(p, x, y, out_n, a_n, b_n)
 
   if p.fab then
@@ -513,6 +556,7 @@ function process_conn()
   else
     con.debugf("--> UNABLE TO SELECT ANY ROOM FAB\n")
   end
+--]]
 end
 
 
