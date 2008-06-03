@@ -611,41 +611,84 @@ GROUND_BRIDGE =
   }
 },
 
---]]
 
-
---[[
-
-GROUND_SURROUND =
+GROUND_SURROUND_FIXED =
 {
-  kind = "ground",
-  prob = 15,
+  prob = 3,
 
   structure =
   {
-    "ggg",
-    "gAg",
-    "ggg",
-  },
-
-  x_size = { 6, 16 },
-  y_size = { 6, 16 },
-
-  x_grow = { 1,3, 2,2,2,2 },
-  y_grow = { 1,3, 2,2,2,2 },
-
-  elements =
-  {
-    g = { kind="ground" },
-    A = { kind="sub" },
+    "ggggggggggggg",
+    "gg.........gg",
+    "gg.........gg",
+    "gg.........gg",
+    "gg.........gg",
+    "gg.........gg",
+    "gg.........gg",
+    "gg.........gg",
+    "ggggggggggggg",
   },
 
   connections =
   {
-    { x=2, y=1, dir=2 }, 
-    { x=2, y=1, dir=8 }, 
+    {
+      exits =
+      {
+        { x=2, y=5, dir=6 },
+      }
+    }
   }
 },
+
+
+GROUND_SURROUND =
+{
+  prob = 300,
+
+  structure =
+  {
+    "ggg",
+    "g.g",
+    "ggg",
+  },
+
+  x_grow = { 2,2, 1,3, 2,2,2, 1,3, 2,2 },
+  y_grow = { 2,2, 1,3, 2,2,2, 1,3, 2,2 },
+
+  sizes =
+  {
+    { w=3, h=3, prob=0.01 },  -- FIXME: do not require sizes[1] to match 'structure' field
+
+    { w=5, h=5, prob=10 },
+
+    { w=7, h=5, prob=20 },
+    { w=7, h=7, prob=20 },
+
+    { w=9, h=5, prob=30 },
+    { w=9, h=7, prob=30 },
+    { w=9, h=9, prob=30 },
+
+    { w=11, h=7,  prob=20 },
+    { w=11, h=9,  prob=20 },
+    { w=11, h=11, prob=20 },
+
+    { w=13, h=7,  prob=10 },
+    { w=13, h=9,  prob=10 },
+    { w=13, h=11, prob=10 },
+    { w=13, h=13, prob=10 },
+  },
+
+  connections =
+  {
+    {
+      exits =
+      {
+        { x=1, y=1, dir=8 },
+      }
+    }
+  }
+},
+
 
 LIQUID_SURROUND =
 {
