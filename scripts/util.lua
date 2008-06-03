@@ -482,6 +482,11 @@ function box_size(x1, y1, x2, y2)
   return (x2-x1+1), (y2-y1+1)
 end
 
+function box_contains_point(x1,y1,x2,y2, tx,ty)
+  return (x1 <= tx) and (tx <= x2) and
+         (y1 <= ty) and (ty <= y2)
+end
+
 function boxes_overlap(x1,y1,x2,y2,  x3,y3,x4,y4)
   assert(x2 >= x1 and y2 >= y1)
   assert(x4 >= x3 and y4 >= y3)
