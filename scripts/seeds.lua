@@ -177,6 +177,35 @@ function Seed_dump_rooms()
 end
 
 
+function Seed_dump_fabs()
+  local function char_for_seed(S)
+
+    if not S or not S.kind then return "." end
+
+    if S.kind == "ground" then return "/" end
+    if S.kind == "liquid" then return "~" end
+    if S.kind == "cave" then return "%" end
+    if S.kind == "building" then return "#" end
+    if S.kind == "hall" then return "+" end
+
+    return "?"
+  end
+
+  con.printf("Room Fabs:\n")
+
+  for y = SEED_H,1,-1 do
+    
+    for x = 1,SEED_W do
+      con.printf("%s", char_for_seed(SEEDS[x][y][1].room))
+    end
+
+    con.printf("\n")
+  end
+
+  con.printf("\n")
+end
+
+
 --[[
 require 'gd'
 
