@@ -21,8 +21,8 @@ require 'util'
 require 'room_fabs'
 
 
-SW = 34
-SH = 34
+SIZE_LIST = { tiny=16, small=20, regular=24, big=30, xlarge=36 }
+WANT_SIZE = "regular"
 
 FABS = {}
 
@@ -231,19 +231,19 @@ function install_room_fab(p)
 
     for _,exit in ipairs(p.connections.exits) do
 
-      local k_x = col_inv[exit.x]
-      local k_y = row_inv[exit.y]
-      assert(k_x and k_y)
+      local inv_x = col_inv[exit.x]
+      local inv_y = row_inv[exit.y]
+      assert(inv_x and inv_y)
 
-      local k_midx = int((k_x[1] + k_x[2]) / 2)
-      local k_midy = int((k_y[1] + k_y[2]) / 2)
+      local inv_midx = int((inv_x[1] + inv_x[2]) / 2)
+      local inv_midy = int((inv_y[1] + inv_y[2]) / 2)
 
       local n_ex, n_ey
 
-          if exit.dir == 2 then   n_ex,n_ey = k_midx, k_y[1]
-      elseif exit.dir == 8 then   n_ex,n_ey = k_midx, k_y[2]
-      elseif exit.dir == 4 then   n_ex,n_ey = k_x[1], k_midy
-      else assert(exit.dir == 6); n_ex,n_ey = k_x[2], k_midy
+          if exit.dir == 2 then   n_ex,n_ey = inv_midx, inv_y[1]
+      elseif exit.dir == 8 then   n_ex,n_ey = inv_midx, inv_y[2]
+      elseif exit.dir == 4 then   n_ex,n_ey = inv_x[1], inv_midy
+      else assert(exit.dir == 6); n_ex,n_ey = inv_x[2], inv_midy
       end
 
       assert(n_ex and n_ey)
@@ -281,8 +281,8 @@ function choose_room_fab(p, x, y, out_n, a_n, b_n)
   local function usable(F)
     local SZ_IDX = int(1 + #F.sizes / 2)
 
-    if F.sizes[SZ_IDX].w > W   then return false end
-    if F.sizes[SZ_IDX].h > H-1 then return false end
+    if F.sizes[SZ_IDX].w > W then return false end
+    if F.sizes[SZ_IDX].h > H then return false end
 
     local x1,y1, x2,y2 = install_loc(F, SZ_IDX, p.x, p.y, p.dir)
 
@@ -436,23 +436,22 @@ end
 
 function Plan_rooms_sp()
 
-  local function char_for_seed(S)
-
-    if not S or not S.kind then return "." end
-
-    if S.kind == "ground" then return "/" end
-    if S.kind == "liquid" then return "~" end
-    if S.kind == "cave" then return "%" end
-    if S.kind == "building" then return "#" end
-    if S.kind == "hall" then return "+" end
-
-    return "?"
-  end
-
 
   ---===| Plan_rooms_sp |===---
 
   con.printf("\n--==| Plan_rooms_sp |==--\n\n")
+
+  local SW = assert(SIZE_LIST[WANT_SIZE])
+  local SH = SW
+
+  local adjust = rand_irange(0, int(SW / 4))
+
+  if rand_odds(50) then adjust = -adjust end
+
+  SW = SW + adjust
+  SH = SH - adjust
+
+  con.printf("Map size: %dx%d\n", SW, SH)
 
   Seed_init(SW, SH, 1, { zone_kind="solid"})
 
@@ -486,16 +485,7 @@ function Plan_rooms_sp()
 
   -- dump the results
 
-  con.printf("FAB MAP:\n")
-
-  for y = SH,1,-1 do
-    
-    for x = 1,SW do
-      con.printf("%s", char_for_seed(SEEDS[x][y][1].room))
-    end
-
-    con.printf("\n")
-  end
+  Seed_dump_fabs()
 
 end -- Plan_rooms_sp
 
