@@ -727,7 +727,6 @@ GROUND_SURROUND =
 
 LIQUID_SURROUND =
 {
-  basic_kind = "liquid",
   prob = 10,
 
   structure =
@@ -760,6 +759,54 @@ LIQUID_SURROUND =
 --]]
 
 } -- end of ROOM_FABS 
+
+
+
+----------------------------------------------------------------
+
+LEVEL_FABS =
+{
+
+BUILDING_3x3 =
+{
+  kind = "normal",  -- boss / secret
+
+  prob = 100,
+
+  structure =
+  {
+    ".....",
+    ".BBB.",
+    ".BBB.",
+    ".BBB.",
+    ".....",
+  },
+
+  x_grow = { 1,5 },
+  y_grow = { 1,5,5,5 },
+
+  sizes =
+  {
+    { w=10, h=10 },
+    { w=90, h=90 },
+  },
+
+  connections =
+  {
+    {
+      exits =
+      {
+        { x=3, y=4, dir=8 },
+        { x=2, y=3, dir=4 },
+        { x=4, y=3, dir=6 },
+        { x=3, y=2, dir=2, optional=true },
+      }
+    }
+  }
+},
+
+
+} -- end of LEVEL_FABS
 
 
 ----------------------------------------------------------------
