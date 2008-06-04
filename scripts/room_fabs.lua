@@ -782,14 +782,8 @@ BUILDING_3x3 =
     ".....",
   },
 
-  x_grow = { 1,5 },
-  y_grow = { 1,5,5,5 },
-
-  sizes =
-  {
-    { w=10, h=10 },
-    { w=90, h=90 },
-  },
+  x_grow = { 5,1 },
+  y_grow = { 5,1,5,5 },
 
   connections =
   {
@@ -800,6 +794,16 @@ BUILDING_3x3 =
         { x=2, y=3, dir=4 },
         { x=4, y=3, dir=6 },
         { x=3, y=2, dir=2, optional=true },
+      }
+    },
+
+    {
+      exits =
+      {
+        { x=3, y=4, dir=8 },
+        { x=2, y=3, dir=4, optional=true },
+        { x=4, y=3, dir=6, optional=true },
+        { x=3, y=2, dir=2 },
       }
     }
   }
