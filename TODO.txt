@@ -6,8 +6,8 @@ Room Fab System:
 
 + COMPLETE TEST for room fab placement:
   (1) fab selection
-  (2) size selection
-  (3) mirror or not
+  (2) mirror or not
+  (3) size selection
   (4) exit group selection
 
   For example, if first exit group not possible, try next and so on.
@@ -20,15 +20,15 @@ Room Fab System:
   - support mirroring the room fab (50% chance)
   - properly choose exits group 
 
++ Hall pruning: after first process_conn() pass, remove all halls
+  that lead nowhere (repeat a few times to catch halls off halls),
+  re-instate their connection points and perform second process_conn()
+  pass.  Finally do another hall prune.
+
 ? check diagonals too for space measuring
 
 - test exits points when trying to place the room
   (in particular: halls should have at least 2 seeds at each exit)
-  PERHAPS: if fail try a different set of exits
-
-- hall backtracking: if no exit can be made, delete the hall and
-  try something new.  When tried too many times, mark as fail
-  (which may then cause the previous hall to be deleted).
 
 - require a certain amount of seeds to be filled, build a new
   map if that threshhold is not reached.
@@ -39,6 +39,7 @@ Room Fab System:
 - "wide" connections, especially ground -> ground, where the
   seeds either side of the connection seed will also connect if
   they are the same type.
+
 
 
 Quake1 output:
