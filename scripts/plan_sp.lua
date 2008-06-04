@@ -22,7 +22,7 @@ require 'room_fabs'
 
 
 SIZE_LIST = { tiny=16, small=20, regular=24, big=30, xlarge=36 }
-WANT_SIZE = "tiny"
+WANT_SIZE = "regular"
 
 FABS = {}
 
@@ -296,96 +296,6 @@ function install_room_fab(p)
 end
 
 
-function choose_room_fab(p, x, y, out_n, a_n, b_n)
-
-  local W = math.min(a_n, b_n)
-  local H = out_n
-
-  if math.max(a_n, b_n) == 2 then W = 2 end
-
-
-  local function usable(F)
-    local SZ_IDX = int(1 + #F.sizes / 2)
-
-    if F.sizes[SZ_IDX].w > W then return false end
-    if F.sizes[SZ_IDX].h > H then return false end
-
-    local x1,y1, x2,y2 = install_loc(F, SZ_IDX, p.x, p.y, p.dir)
-
-    if not Seed_block_valid_and_free(x1,y1,1, x2,y2,1) then
-      return false
-    end
-
-    -- FIXME: make sure seeds at each connection point are
-    --        valid and free
-
-    -- check whether new fab cuts off a connection point
-    for _,CP in ipairs(CONNS) do
-      if not CP.optional then
-        if box_contains_point(x1,y1, x2,y2, CP.x, CP.y) then
-          return false
-        end
-      end
-    end
-
-    return true
-  end
-
-
-  local fabs  = { }
-  local probs = { }
-
-  for _,F in pairs(ROOM_FABS) do
-    if usable(F) then
-
-      local prob = F.prob or 50
-
-      if p.last_fab then
-        local n1 = p.last_fab.kind .. "/" .. F.kind
-        local n2 = F.kind .. "/" .. p.last_fab.kind
-
-        local mul = ROOM_CONN_MODIFIERS[n1] or
-                    ROOM_CONN_MODIFIERS[n2] or 1.0
-
-        prob = prob * mul
-      end
-
-      table.insert(fabs, F)
-      table.insert(probs, prob)
-    end
-  end
-
-  if #fabs == 0 then
-    con.debugf("No usable room fab found!\n")
-    return
-  end
-
-  p.fab = fabs[rand_index_by_probs(probs)]
-
-  p.SZ_IDX = int(1 + #p.fab.sizes/2)  -- FIXME: UGH!!!!
-
-
-  -- connections !
-  -- FIXME: integrate choice with usable() test
-
-  assert(#p.fab.connections > 0)
-
-  if #p.fab.connections == 1 then
-    p.connections = p.fab.connections[1]
-  else
-    local conns = {}
-    local probs = {}
-
-    for _,C in ipairs(p.fab.connections) do
-      table.insert(conns, C)
-      table.insert(probs, C.prob or 50)
-    end
-
-    p.connections = p.fab.connections[rand_index_by_probs(probs)]
-  end
-end
-
-
 function space_at_point(x, y, dir)
 
   -- determines number of free seeds at the branch point
@@ -595,16 +505,6 @@ function process_conn()
   --   end
   -- end
 
-
---[[ OLD CODE
-  choose_room_fab(p, x, y, out_n, a_n, b_n)
-
-  if p.fab then
-    install_room_fab(p)
-  else
-    con.debugf("--> UNABLE TO SELECT ANY ROOM FAB\n")
-  end
---]]
 end
 
 
