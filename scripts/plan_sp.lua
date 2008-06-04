@@ -16,6 +16,24 @@
 --
 ----------------------------------------------------------------
 
+--[[ *** CLASS INFORMATION ***
+
+class PLAN
+{
+}
+
+
+class CONN
+{
+  x, y : location of the entry seed
+
+  dir  : direction room fab faces (the "up" vector)
+
+}
+
+
+--------------------------------------------------------------]]
+
 require 'defs'
 require 'util'
 require 'room_fabs'
@@ -52,8 +70,8 @@ end
 
 function install_loc(F, size, x, y, dir)
 
-  local ow = F.sizes[1].w
-  local oh = F.sizes[1].h
+  local ow = F.long
+  local oh = F.deep
 
   local nw = size.w
   local nh = size.h
@@ -87,8 +105,8 @@ function install_room_fab(p)
   local y = p.y
   local dir = p.dir
 
-  local ow = F.sizes[1].w
-  local oh = F.sizes[1].h
+  local ow = F.long
+  local oh = F.deep
 
   local nw = p.size.w
   local nh = p.size.h
@@ -383,7 +401,7 @@ function try_room_fab_sizes(p)
     if p.size.h > p.up then return false end
 
     local ex = p.fab.enter_x
-    local ow = p.fab.sizes[1].w
+    local ow = p.fab.long
     local nw = p.size.w
 
     if p.mirror then
@@ -556,8 +574,6 @@ function Plan_rooms_sp()
     if #CONNS == 0 then break; end
   end
 
-
-  -- dump the results
 
   Seed_dump_fabs()
 
