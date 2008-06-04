@@ -31,7 +31,7 @@ ROOM_ELEMENTS =
 
 ROOM_CONN_MODIFIERS =
 {
-  ["building/building"] = 0.4,
+  ["building/building"] = 0.7,
   ["ground/ground"]     = 4.0,
   ["liquid/liquid"]     = 3.0,
 
@@ -40,8 +40,8 @@ ROOM_CONN_MODIFIERS =
   ["cave/liquid"] = 1.5,
 
   -- halls should mainly be between buildings
-  ["hall/hall"]   = 0.2,
-  ["hall/cave"]   = 0.2,
+  ["hall/hall"]   = 0.1,
+  ["hall/cave"]   = 0.1,
   ["hall/ground"] = 0.1,
   ["hall/liquid"] = 0.1,
 }
@@ -332,7 +332,7 @@ BUILDING_LARGE =
 
 HALL_SHORT =
 {
-  prob = 40,
+  prob = 150,
 
   structure = { "H" },
 
@@ -428,6 +428,41 @@ HALL_HUG =
   {
     {
       exits = {{ x=3, y=1, dir=8 }}
+    }
+  }
+},
+
+
+HALL_L_SHAPE =
+{
+  prob = 40,
+
+  structure =
+  {
+    "HH",
+    "H.",
+  },
+
+  sizes =
+  {
+    { w=2, h=2, prob=90 },
+    { w=2, h=3, prob=50 },
+    { w=3, h=2, prob=50 },
+    { w=3, h=3, prob=30 },
+
+    { w=4, h=4, prob=15 },
+    { w=5, h=5, prob=10 },
+  },
+
+  x_grow = { 2 },
+  y_grow = { 1 },
+
+  enter_x = 1,
+
+  connections =
+  {
+    {
+      exits = {{ x=2, y=2, dir=6 }}
     }
   }
 },
@@ -744,11 +779,11 @@ function expand_room_fabs(list)
       F.elements = ROOM_ELEMENTS
     end
 
+    F.long = #F.structure[1]
+    F.deep = #F.structure
+
     if not F.sizes then
-      F.sizes =
-      {
-        { w = #F.structure[1], h = #F.structure, prob = 100 }
-      }
+      F.sizes = {{ w = F.long, h = F.deep, prob = 100 }}
     end
 
     if not F.kind then
@@ -768,7 +803,7 @@ function expand_room_fabs(list)
     end
 
     if not F.enter_x then
-      F.enter_x = 1 + int(F.sizes[1].w / 2)
+      F.enter_x = 1 + int(F.long / 2)
     end
   end
 end
