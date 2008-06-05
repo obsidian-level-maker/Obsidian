@@ -402,7 +402,7 @@ end
 function nudge_coord(x, y, dir, dist)
   if not dist then dist = 1 end
   local dx, dy = dir_to_delta(dir)
-  return x + dx*dist, y + dy * dist
+  return x + dx * dist, y + dy * dist
 end
 
 function is_parallel(dir1, dir2)
