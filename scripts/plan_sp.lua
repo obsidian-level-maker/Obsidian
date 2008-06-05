@@ -40,7 +40,7 @@ require 'room_fabs'
 
 
 SIZE_LIST = { tiny=16, small=20, regular=24, big=30, xlarge=36 }
-WANT_SIZE = "regular"
+WANT_SIZE = "small"
 
 FABS = {}
 
@@ -68,7 +68,7 @@ function pos_adjust(old_w, new_w, x)
 end
 
 
-function install_loc(F, size, x, y, dir)
+function install_loc(F, size, x, y, dir, mirror)
 
   local ow = F.long
   local oh = F.deep
@@ -76,7 +76,11 @@ function install_loc(F, size, x, y, dir)
   local nw = size.w
   local nh = size.h
 
-  local enter_x = pos_adjust(ow, nw, F.enter_x)
+  local enter_x = F.enter_x
+  if mirror then
+    enter_x = ow - (enter_x-1)
+  end
+  enter_x = pos_adjust(ow, nw, enter_x)
 
 
   if dir == 8 then
@@ -299,17 +303,19 @@ function install_room_fab(p)
 
 
   -- fix the two adjacent seeds to allow walking between them
-  local S1 = SEEDS[p.x][p.y][1]
+  if not p.level_fab then
+    local S1 = SEEDS[p.x][p.y][1]
 
-  local sx2, sy2 = nudge_coord(p.x, p.y, p.dir, -1)
-  local S2 = SEEDS[sx2][sy2][1]
+    local sx2, sy2 = nudge_coord(p.x, p.y, p.dir, -1)
+    local S2 = SEEDS[sx2][sy2][1]
 
-  if S1 and S1.borders then
-    S1.borders[10 - p.dir] = { kind="walk" }
-  end
+    if S1 and S1.borders then
+      S1.borders[10 - p.dir] = { kind="walk" }
+    end
 
-  if S2 and S2.borders then
-    S2.borders[p.dir] = { kind="walk" }
+    if S2 and S2.borders then
+      S2.borders[p.dir] = { kind="walk" }
+    end
   end
 end
 
@@ -368,6 +374,8 @@ function try_install_room_fab(p)
   -- check if all seeds are free
   local x1,y1, x2,y2 = install_loc(F, p.size, p.x, p.y, p.dir)
 
+  con.debugf("BLOCK RANGE: (%d,%d) .. (%d,%d)\n", x1,y1, x2,y2)
+
   assert(Seed_valid(x1,y1,1))
   assert(Seed_valid(x2,y2,1))
 
@@ -388,6 +396,8 @@ function try_install_room_fab(p)
   --        valid and free
 
   install_room_fab(p)
+
+  return true
 end
 
 
@@ -547,6 +557,40 @@ function Plan_rooms_sp()
 
   Seed_init(SW, SH, 1, { zone_kind="solid"})
 
+  
+  -- select Level fab
+
+  local lev_fabs = {}
+  for _,F in pairs(LEVEL_FABS) do
+    -- FIXME size check
+    lev_fabs[F] = F.prob or 50
+  end
+
+  if table_empty(lev_fabs) then
+    error("NO USABLE LEVEL FAB FOUND!")
+  end
+
+  local fab = rand_key_by_probs(lev_fabs)
+
+  fab.enter_x = 1
+
+  local p =
+  {
+    level_fab = true,
+    x = 1, y = 1,
+    dir = 8,
+    fab = fab,
+    mirror = false,
+    size = { w=SW, h=SH },
+    exit = rand_element(fab.connections),
+  }
+
+  if not try_install_room_fab(p) then
+    error("FAILURE INSTALLING LEVEL FAB: " .. fab.name)
+  end
+
+--[[ OLD CODE
+
   -- initial connection points
   -- (TWO of them, to create something on each side)
   local p1 =
@@ -565,6 +609,8 @@ function Plan_rooms_sp()
   table.insert(CONNS, p1)
   table.insert(CONNS, p2)
 
+--]]
+
 
   -- branch stuff out from connections
 
@@ -573,7 +619,6 @@ function Plan_rooms_sp()
 
     if #CONNS == 0 then break; end
   end
-
 
   Seed_dump_fabs()
 
