@@ -212,6 +212,7 @@ function dummy_builder(Z)
     assert(S.zone)
 
     if not S.room --[[ and S.zone.zone_kind == "solid" ]] then
+--    S.room = { kind = "liquid" }
       return
     end
 
@@ -222,16 +223,20 @@ function dummy_builder(Z)
 
     local z1, z2
     local f_tex, c_tex, w_tex
+    local do_sides = true
 
     if S.room then
 
-      local corners = true
+      local do_corners = true
+
+--!!!!!!
+-- if S.room.kind == "building" then S.room.kind = "ground" end
 
       if S.room.kind == "hall" then
         z1 = 32
         z2 = z1 + 96
 
-        f_tex = "FLAT14"
+        f_tex = "FLAT1"
         c_tex = f_tex
         w_tex = "GRAY7"
 
@@ -241,15 +246,17 @@ function dummy_builder(Z)
         f_tex = "GRASS1"
         c_tex = "F_SKY1"
         w_tex = "ZIMMER8"
-        corners = false
+        do_corners = false
+        do_sides = false --!!!
 
       elseif S.room.kind == "liquid" then
         z1 = -24
         z2 = 256
-        f_tex = "FWATER1"
+        f_tex = "LAVA1"
         c_tex = "F_SKY1"
         w_tex = "ASHWALL3"
-        corners = false
+        do_corners = false
+        do_sides = false --!!!
 
       else -- building
         z1 = 24
@@ -258,9 +265,10 @@ function dummy_builder(Z)
         f_tex = "FLOOR4_8"
         c_tex = "TLITE6_6"
         w_tex = "METAL2"
+
       end
 
-      if corners then
+      if do_corners then
       csg2.add_brush(
       {
         t_face = { texture=w_tex },
@@ -273,7 +281,7 @@ function dummy_builder(Z)
         { x=x1+TK, y=y1+TK },
         { x=x1+TK, y=y1 },
       },
-      -2000, 2000)
+      -2000, 4000)
 
       csg2.add_brush(
       {
@@ -287,7 +295,7 @@ function dummy_builder(Z)
         { x=x1+TK, y=y2 },
         { x=x1+TK, y=y2-TK },
       },
-      -2000, 2000)
+      -2000, 4000)
 
       csg2.add_brush(
       {
@@ -301,7 +309,7 @@ function dummy_builder(Z)
         { x=x2,    y=y1+TK },
         { x=x2,    y=y1 },
       },
-      -2000, 2000)
+      -2000, 4000)
 
       csg2.add_brush(
       {
@@ -315,8 +323,8 @@ function dummy_builder(Z)
         { x=x2,    y=y2 },
         { x=x2,    y=y2-TK },
       },
-      -2000, 2000)
-      end -- corners
+      -2000, 4000)
+      end -- do_corners
 
     else -- ZONE ONLY
 
@@ -350,8 +358,9 @@ function dummy_builder(Z)
       { x=x1, y=y1 }, { x=x1, y=y2 },
       { x=x2, y=y2 }, { x=x2, y=y1 },
     },
-    z2, 2000)
+    z2, 4000)
 
+if do_sides then
     for side = 2,8,2 do
       if S.borders and S.borders[side] and S.borders[side].kind == "solid" then
         csg2.add_brush(
@@ -361,9 +370,10 @@ function dummy_builder(Z)
           w_face = { texture=w_tex },
         },
         get_wall_coords(side, x1,y1, x2,y2),
-        -2000, 2000)
+        -2000, 4000)
       end
     end
+end -- do_sides
 
     if S.is_start then
       csg2.add_entity(--[[ "info_player_start" ]] "1", (x1+x2)/2, (y1+y2)/2, z1 + 25)

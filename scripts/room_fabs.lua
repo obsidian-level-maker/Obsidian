@@ -40,10 +40,10 @@ ROOM_CONN_MODIFIERS =
   ["cave/liquid"] = 1.5,
 
   -- halls should mainly be between buildings
-  ["hall/hall"]   = 0.1,
+  ["hall/hall"]   = 0.01,
   ["hall/cave"]   = 0.1,
   ["hall/ground"] = 0.1,
-  ["hall/liquid"] = 0.1,
+  ["hall/liquid"] = 0.01,
 }
 
 
@@ -804,6 +804,43 @@ BUILDING_3x3 =
         { x=2, y=3, dir=4, optional=true },
         { x=4, y=3, dir=6, optional=true },
         { x=3, y=2, dir=2 },
+      }
+    }
+  }
+},
+
+
+ISLAND_A =
+{
+  kind = "normal",  -- boss / secret
+
+  prob = 9,
+
+  structure =
+  {
+    ".........",
+    "..wwwww..",
+    ".wwwwwww.",
+    ".w.....w.",
+    ".w.BBB.w.",
+    ".w.BBB.w.",
+    ".w.BBB.w.",
+    ".wwwwwww.",
+    "..wwwww..",
+    ".........",
+  },
+
+  x_grow = { 7,3 },
+  y_grow = { 7 },
+
+  connections =
+  {
+    {
+      exits =
+      {
+        { x=5, y=6, dir=8 },
+        { x=4, y=5, dir=4, optional=true },
+        { x=6, y=5, dir=6, optional=true },
       }
     }
   }

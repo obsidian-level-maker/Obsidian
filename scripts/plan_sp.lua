@@ -40,7 +40,7 @@ require 'room_fabs'
 
 
 SIZE_LIST = { tiny=16, small=20, regular=24, big=30, xlarge=36 }
-WANT_SIZE = "small"
+WANT_SIZE = "regular"
 
 FABS = {}
 
@@ -184,6 +184,12 @@ function install_room_fab(p)
   create_mapping(col_map, col_inv, ow, nw, F.x_grow)
   create_mapping(row_map, row_inv, oh, nh, F.y_grow)
 
+  --[[
+  if not p.level_fab then
+    FOO_KIND = rand_sel(25, "ground", "building")
+  end
+  --]]
+
   for ny = 1,nh do for nx = 1,nw do
 
     local sx, sy
@@ -246,7 +252,7 @@ function install_room_fab(p)
         --FIXME: make proper room objects
         S.room =
         {
-          kind = e.kind,
+          kind = FOO_KIND or e.kind,
         }
 
         S.borders = {}
