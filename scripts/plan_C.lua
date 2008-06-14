@@ -99,6 +99,8 @@ function Landmap_DoLiquid()
   end
 
 
+  --- Landmap_DoLiquid ---
+
   local what = rand_key_by_probs
   {
     none = 1,
@@ -120,6 +122,78 @@ end
 
 
 function Landmap_DoGround()
+
+  local function plant_seedlings()
+    for x = 1,LW do
+      local poss_y = {}
+
+      for y = 1,LH do
+        if not LAND_MAP[x][y].kind then
+          table.insert(poss_y, y)
+        end
+      end
+
+      if #poss_y > 0 then
+        local y = rand_element(poss_y)
+        LAND_MAP[x][y].kind = rand_key_by_probs
+        {
+          valley = 30, ground = 80, hill = 50,
+          cave   = 40
+        }
+      end
+    end
+  end
+
+  local GROW_PROBS =
+  {
+    valley = 50, ground = 70, hill = 40, cave = 40
+  }
+
+  local function grow_spot(x, y, dir)
+
+    local nx, ny = nudge_coord(x, y, dir)
+    if nx < 1 or nx > LW or ny < 1 or ny > LH then return false end
+
+    if not LAND_MAP[x][y].kind then return false end
+    if LAND_MAP[nx][ny].kind   then return false end
+
+    local prob = GROW_PROBS[LAND_MAP[x][y].kind]
+
+    if not prob then return false end
+    if not rand_odds(prob) then return false end
+
+    LAND_MAP[nx][ny].kind = LAND_MAP[x][y].kind
+    return true
+  end
+
+  local function grow_seedlings()
+    local x_order = {}
+    local y_order = {}
+    local d_order = {}
+
+    rand_shuffle(x_order, LW)
+    for _,x in ipairs(x_order) do
+
+      rand_shuffle(y_order, LH)
+      for _,y in ipairs(y_order) do
+
+        rand_shuffle(d_order, 4)
+        for _,d in ipairs(d_order) do
+          if grow_spot(x, y, d*2) then break; end
+        end
+      end
+    end
+  end
+
+
+  --- Landmap_DoGround ---
+
+  for loop = 1,2 do
+    plant_seedlings()
+    for grow_loop = 1,math.max(LW,LH)*2 do
+      grow_seedlings()
+    end
+  end
 end
 
 
@@ -135,7 +209,7 @@ function Landmap_Fill()
   local half_LW = int((LW+1)/2)
   local half_LH = int((LH+1)/2)
 
-  if LW >= 5 and rand_odds(30) then
+  if LW >= 5 and rand_odds(25) then
 
 con.debugf("(mirroring horizontally LW=%d)\n", LW)
     LW = half_LW ; Landmap_Fill() ; LW = old_LW
@@ -148,7 +222,7 @@ con.debugf("(mirroring horizontally LW=%d)\n", LW)
 
     return -- NO MORE
 
-  elseif LH >= 5 and rand_odds(30) then
+  elseif LH >= 5 and rand_odds(25) then
 
 con.debugf("(mirroring vertically LH=%d)\n", LW)
     LH = half_LH ; Landmap_Fill() ; LH = old_LH
