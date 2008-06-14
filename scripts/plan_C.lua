@@ -280,15 +280,23 @@ function Plan_rooms_sp()
   con.printf("\n--==| Plan_rooms_sp |==--\n\n")
 
 
-for i = 1,300 do
+for i = 1,1 do
   Landmap_Init()
   Landmap_Fill()
   Landmap_Dump()
 end
-error("TEST OVER")
+-- error("TEST OVER")
 
 
   Seed_init(LW*3, LH*3, 1, { zone_kind="solid"})
+
+  for lx = 1,LW do for ly = 1,LH do
+    local L = LAND_MAP[lx][ly]
+    for sx = lx*3-2,lx*3 do for sy = ly*3-2,ly*3 do
+      local S = SEEDS[sx][sy][1]
+      S.room = { kind = L.kind }
+    end end
+  end end
   
   Seed_dump_fabs()
 

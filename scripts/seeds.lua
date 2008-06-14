@@ -182,7 +182,10 @@ function Seed_dump_fabs()
 
     if not S or not S.kind then return "." end
 
-    if S.kind == "ground" then return "/" end
+    if S.kind == "ground" then return "2" end
+    if S.kind == "valley" then return "1" end
+    if S.kind == "hill"   then return "3" end
+
     if S.kind == "liquid" then return "~" end
     if S.kind == "cave" then return "%" end
     if S.kind == "building" then return "#" end

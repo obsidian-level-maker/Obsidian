@@ -233,39 +233,64 @@ function dummy_builder(Z)
 -- if S.room.kind == "building" then S.room.kind = "ground" end
 
       if S.room.kind == "hall" then
-        z1 = 32
+        z1 = 256+24
         z2 = z1 + 96
 
         f_tex = "FLAT1"
         c_tex = f_tex
         w_tex = "GRAY7"
 
-      elseif S.room.kind == "ground" then
+      elseif S.room.kind == "valley" then
         z1 = 0
-        z2 = 256
+        z2 = 512
         f_tex = "GRASS1"
         c_tex = "F_SKY1"
         w_tex = "ZIMMER8"
         do_corners = false
         do_sides = false --!!!
 
-      elseif S.room.kind == "liquid" then
-        z1 = -24
-        z2 = 256
-        f_tex = "LAVA1"
+      elseif S.room.kind == "ground" then
+        z1 = 128
+        z2 = 512
+        f_tex = "RROCK11"
         c_tex = "F_SKY1"
-        w_tex = "ASHWALL3"
+        w_tex = "ROCK4"
         do_corners = false
         do_sides = false --!!!
 
+      elseif S.room.kind == "hill" then
+        z1 = 256
+        z2 = 512
+        f_tex = "MFLR8_4"
+        c_tex = "F_SKY1"
+        w_tex = "ASHWALL2"
+        do_corners = false
+        do_sides = false --!!!
+
+      elseif S.room.kind == "liquid" then
+        z1 = -24
+        z2 = 512
+        f_tex = "LAVA1"
+        c_tex = "F_SKY1"
+        w_tex = "COMPBLUE"
+        do_corners = false
+        do_sides = false --!!!
+
+      elseif S.room.kind == "cave" then
+        z1 = 128+16
+        z2 = z1+192+128
+      
+        f_tex = "FLAT10"
+        c_tex = "FLAT10"
+        w_tex = "ASHWALL4"
+
       else -- building
-        z1 = 24
+        z1 = 256+16
         z2 = z1+192
       
         f_tex = "FLOOR4_8"
         c_tex = "TLITE6_6"
         w_tex = "METAL2"
-
       end
 
       if do_corners then
