@@ -50,11 +50,7 @@ function Landmap_DoLiquid()
   --   1. completely surrounded
   --   2. partially surrounded (U shape)
   --   3. river down the middle
-  --   4. cross shape
-  --   5. H shape
-  --   6. S shape
-  --   7. blob in the middle
-  --   8. checkerboard
+  --   4. pool in the middle
 
   local extra = rand_irange(0,255)
 
@@ -62,6 +58,17 @@ function Landmap_DoLiquid()
     if (x == 1) or (x == LW) or (y == 1) or (y == LH) then
       LAND_MAP[x][y].kind = "liquid"
     end
+  end
+
+  function ushape_mode(x, y)
+    if (x == 1  and (extra % 4) == 0) or
+       (x == LW and (extra % 4) == 1) or
+       (y == 1  and (extra % 4) == 2) or
+       (y == LH and (extra % 4) == 3)
+    then
+      return
+    end
+    surround_mode(x, y)
   end
 
   function river_mode(x, y)
@@ -76,26 +83,38 @@ function Landmap_DoLiquid()
     end
   end
 
+  function pool_mode(x, y)
+    local pw = 1
+    local ph = 1
+
+    if LW >= 7 then pw = 2 end
+    if LH >= 7 then ph = 2 end
+
+    local dx = math.abs(x - int((LW+1)/2))
+    local dy = math.abs(y - int((LH+1)/2))
+
+    if dx < pw and dy < ph then
+      LAND_MAP[x][y].kind = "liquid"
+    end
+  end
+
+
   local what = rand_key_by_probs
   {
-    none = 9,
+    none = 1,
 
     surround = 90,
     river    = 90,
-    u_shape  = 9,
-    l_shape  = 2,
-    s_shape  = 2,
-    pool     = 5,
+    u_shape  = 90,
+    pool     = 90,
   }
-
-  if what == "none" then
-    return
-  end
 
 con.debugf("(what: %s)\n", what)
   for x = 1,LW do for y = 1,LH do
     if what == "surround" then surround_mode(x, y) end
     if what == "river"    then river_mode(x, y) end
+    if what == "u_shape"  then ushape_mode(x, y) end
+    if what == "pool"     then pool_mode(x, y) end
   end end
 end
 
@@ -116,7 +135,7 @@ function Landmap_Fill()
   local half_LW = int((LW+1)/2)
   local half_LH = int((LH+1)/2)
 
-  if LW >= 4 and rand_odds(30) then
+  if LW >= 5 and rand_odds(30) then
 
 con.debugf("(mirroring horizontally LW=%d)\n", LW)
     LW = half_LW ; Landmap_Fill() ; LW = old_LW
@@ -129,7 +148,7 @@ con.debugf("(mirroring horizontally LW=%d)\n", LW)
 
     return -- NO MORE
 
-  elseif LH >= 4 and rand_odds(30) then
+  elseif LH >= 5 and rand_odds(30) then
 
 con.debugf("(mirroring vertically LH=%d)\n", LW)
     LH = half_LH ; Landmap_Fill() ; LH = old_LH
