@@ -42,6 +42,18 @@ function Landmap_Init()
 end
 
 
+function Landmap_valid(x, y)
+  return (x >= 1) and (x <= LW) and
+         (y >= 1) and (y <= LH)
+end
+
+
+function Landmap_at_edge(x, y)
+  return (x == 1) or (x == LW) or
+         (y == 1) or (y == LH)
+end
+
+
 function Landmap_DoLiquid()
  
   if LW <= 2 or LH <= 2 then return end
@@ -55,7 +67,7 @@ function Landmap_DoLiquid()
   local extra = rand_irange(0,255)
 
   function surround_mode(x, y)
-    if (x == 1) or (x == LW) or (y == 1) or (y == LH) then
+    if Landmap_at_edge(x, y) then
       LAND_MAP[x][y].kind = "liquid"
     end
   end
@@ -66,9 +78,10 @@ function Landmap_DoLiquid()
        (y == 1  and (extra % 4) == 2) or
        (y == LH and (extra % 4) == 3)
     then
-      return
+      -- skip that side
+    else
+      surround_mode(x, y)
     end
-    surround_mode(x, y)
   end
 
   function river_mode(x, y)
@@ -103,12 +116,12 @@ function Landmap_DoLiquid()
 
   local what = rand_key_by_probs
   {
-    none = 1,
+    none = 160,
 
-    surround = 90,
-    river    = 90,
-    u_shape  = 90,
-    pool     = 90,
+    river    = 80,
+    pool     = 40,
+    u_shape  = 40,
+    surround = 20,
   }
 
 con.debugf("(what: %s)\n", what)
@@ -123,6 +136,37 @@ end
 
 function Landmap_DoGround()
 
+  local function fill_spot(x, y)
+    local FILLERS =
+    {
+      none = 40, valley = 20, ground = 70, hill = 50,
+    }
+
+---###    if false --[[USE_CAVE]] then
+---###      FILLERS.cave = sel(Landmap_at_edge(x,y), 60, 5)
+---###    end
+
+    local near_lava = false
+    for dx = -1,1 do for dy = -1,1 do
+      if Landmap_valid(x+dx, y+dy) then
+        local L = LAND_MAP[x+dx][y+dy]
+        if L.kind == "liquid" then
+          near_lava = true
+        end
+      end
+    end end -- dx, dy
+
+    if near_lava then
+      FILLERS.valley = 400
+    end
+
+    local what = rand_key_by_probs(FILLERS)
+
+    if what ~= "none" then
+      LAND_MAP[x][y].kind = what
+    end
+  end
+
   local function plant_seedlings()
     for x = 1,LW do
       local poss_y = {}
@@ -135,31 +179,42 @@ function Landmap_DoGround()
 
       if #poss_y > 0 then
         local y = rand_element(poss_y)
-        LAND_MAP[x][y].kind = rand_key_by_probs
-        {
-          valley = 30, ground = 80, hill = 50,
-          cave   = 40
-        }
+        fill_spot(x, y)
       end
     end
   end
 
-  local GROW_PROBS =
+  local NOLI_TANGERE =
   {
-    valley = 50, ground = 70, hill = 40, cave = 40
+    valley = true, ground = true, hill = true
   }
 
-  local function grow_spot(x, y, dir)
+  local GROW_PROBS =
+  {
+    valley = 30, ground = 50, hill = 40,
+    cave = 70, building = 70
+  }
+
+  local function try_grow_spot(x, y, dir)
 
     local nx, ny = nudge_coord(x, y, dir)
-    if nx < 1 or nx > LW or ny < 1 or ny > LH then return false end
+    if not Landmap_valid(nx, ny) then return false end
+     
+    local kind = LAND_MAP[x][y].kind
+    if not kind then return false end
 
-    if not LAND_MAP[x][y].kind then return false end
-    if LAND_MAP[nx][ny].kind   then return false end
+    if LAND_MAP[nx][ny].kind then return false end
 
-    local prob = GROW_PROBS[LAND_MAP[x][y].kind]
+    if NOLI_TANGERE[kind] then
+      local ax, ay = nudge_coord(nx, ny, rotate_cw90(dir))
+      local bx, by = nudge_coord(nx, ny, rotate_ccw90(dir))
 
-    if not prob then return false end
+      if Landmap_valid(ax, ay) and LAND_MAP[ax][ay].kind == kind then return false end
+      if Landmap_valid(bx, by) and LAND_MAP[bx][by].kind == kind then return false end
+    end
+
+    local prob = GROW_PROBS[LAND_MAP[x][y].kind] or 0
+
     if not rand_odds(prob) then return false end
 
     LAND_MAP[nx][ny].kind = LAND_MAP[x][y].kind
@@ -179,7 +234,7 @@ function Landmap_DoGround()
 
         rand_shuffle(d_order, 4)
         for _,d in ipairs(d_order) do
-          if grow_spot(x, y, d*2) then break; end
+          if try_grow_spot(x, y, d*2) then break; end
         end
       end
     end
@@ -188,16 +243,25 @@ function Landmap_DoGround()
 
   --- Landmap_DoGround ---
 
-  for loop = 1,2 do
-    plant_seedlings()
-    for grow_loop = 1,math.max(LW,LH)*2 do
-      grow_seedlings()
-    end
+  plant_seedlings()
+  for grow_loop = 1,4 do
+    grow_seedlings()
   end
 end
 
 
 function Landmap_DoIndoors()
+  local what = rand_key_by_probs
+  {
+    building = 90, cave = 20
+  }
+
+  for x = 1,LW do for y = 1,LH do
+    local L = LAND_MAP[x][y]
+    if not L.kind then
+      L.kind = what
+    end
+  end end -- x,y
 end
 
 
@@ -209,20 +273,36 @@ function Landmap_Fill()
   local half_LW = int((LW+1)/2)
   local half_LH = int((LH+1)/2)
 
-  if LW >= 5 and rand_odds(25) then
+  if LW >= 5 and rand_odds(12) then
 
 con.debugf("(mirroring horizontally LW=%d)\n", LW)
     LW = half_LW ; Landmap_Fill() ; LW = old_LW
 
+    local swap_cave = rand_odds(25)
+    local swap_hill = rand_odds(25)
+
     for x = half_LW+1, LW do
       for y = 1,LH do
-        LAND_MAP[x][y] = copy_table(LAND_MAP[LW-x+1][y])
+        local L = copy_table(LAND_MAP[LW-x+1][y])
+        LAND_MAP[x][y] = L
+
+        if swap_cave then
+          if L.kind == "building" then L.kind = "cave"
+          elseif L.kind == "cave" then L.kind = "building"
+          end
+        end
+
+        if swap_hill then
+          if L.kind == "ground"   then L.kind = "hill"
+          elseif L.kind == "hill" then L.kind = "ground"
+          end
+        end
       end
     end
 
     return -- NO MORE
 
-  elseif LH >= 5 and rand_odds(25) then
+  elseif LH >= 5 and rand_odds(3) then
 
 con.debugf("(mirroring vertically LH=%d)\n", LW)
     LH = half_LH ; Landmap_Fill() ; LH = old_LH
