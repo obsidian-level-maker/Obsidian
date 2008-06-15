@@ -39,6 +39,7 @@
 #define TEMP_FILENAME    "temp/out.wad"
 
 static char *level_name;
+static char *error_tex;
 
 
 #define VOID_INDEX  -2
@@ -727,7 +728,7 @@ static std::string FindSideTexture(double z, merge_segment_c *G,
                                    merge_region_c *F, merge_region_c *B)
 {
   if (! B)
-    return std::string("FIREBLU1");  // FIXME: ERROR_TEX
+    return std::string(error_tex ? error_tex : "FIREBLU1");  // FIXME
 
   // TODO: find texture in line loops using segment 'G'
 
@@ -1010,6 +1011,10 @@ void doom_game_interface_c::LevelProp(const char *key, const char *value)
   {
     level_name = StringDup(value);
   }
+  else if (StringCaseCmp(key, "error_tex") == 0)
+  {
+    error_tex = StringDup(value);
+  }
   else
   {
     LogPrintf("WARNING: DOOM: unknown level prop: %s=%s\n", key, value);
@@ -1030,6 +1035,12 @@ void doom_game_interface_c::EndLevel()
 
   StringFree(level_name);
   level_name = NULL;
+
+  if (error_tex)
+  {
+    StringFree(error_tex);
+    error_tex = NULL;
+  }
 }
 
 
