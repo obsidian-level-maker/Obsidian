@@ -370,6 +370,76 @@ function Landmap_GroupRooms()
     return true
   end
 
+  local function block_same(x1,y1, x2,y2)
+    if x1 > x2 then x1,x2 = x2,x1 end
+    if y1 > y2 then y1,y2 = y2,y1 end
+
+    if not Landmap_valid(x1,y1) then return false end
+    if not Landmap_valid(x2,y2) then return false end
+
+    local kind = LAND_MAP[x1][y1].kind
+
+    for x = x1,x2 do for y = y1,y2 do
+      if LAND_MAP[x][y].room then return false end
+      if LAND_MAP[x][y].kind ~= kind then return false end
+    end end -- x, y
+
+    return true
+  end
+
+  local BIG_BUILDING_PROBS = { 30, 5, 0.4, 0.01, 0, 0, 0, 0 }
+
+  local function prob_for_big_room(kind, w, h)
+    if kind == "building" or kind == "cave" then
+      local n = w + h - 2
+      assert(n >= 1 and n <= 8)
+      return BIG_BUILDING_PROBS[n]
+    else -- ground
+      return 100 * (w * h)
+    end
+  end
+
+  local function check_expansion(exps, kind, x,y, dx,dy)
+    for w = 1,4 do
+      for h = sel(w==1,2,1),4 do
+        -- prevent duplicate entries for pure vertical / horizontal
+        if (w==1 and dx<0) or (h==1 and dy<0) then
+          -- nop
+        elseif block_same(x, y, x + (w-1)*dx, y + (h-1)*dy) then
+
+          local INFO =
+          {
+            x=x, y=y, dx=dx, dy=dy, w=w, h=h
+          }
+
+          exps[INFO] = prob_for_big_room(kind, w, h)
+  con.debugf("  (%d,%d) w:%d h:%d dx:%d dy:%d\n", x, y, w, h, dx, dy)
+        end
+      end -- h
+    end -- w
+  end
+
+  local function expand_room(ROOM, exp)
+    local x1, y1 = exp.x, exp.y
+
+    local x2 = x1 + (exp.w - 1)*exp.dx
+    local y2 = y1 + (exp.h - 1)*exp.dy
+
+    if x1 > x2 then x1,x2 = x2,x1 end
+    if y1 > y2 then y1,y2 = y2,y1 end
+
+con.debugf("Big room kind:%s at (%d,%d) .. (%d,%d)\n", ROOM.kind, x1,y1, x2,y2)
+
+    ROOM.sx1 = x1
+    ROOM.sy1 = y1
+    ROOM.sx2 = x2
+    ROOM.sy2 = y2
+
+    for x = x1,x2 do for y = y1,y2 do
+      LAND_MAP[x][y].room = ROOM
+    end end
+  end
+
   local function create_room(L, x, y)
     local ROOM =
     {
@@ -382,9 +452,21 @@ function Landmap_GroupRooms()
 
     table.insert(PLAN.all_rooms, ROOM)
 
-    L.room = ROOM
+    local expansions = { none=50 }
+con.debugf("Check expansions:\n{\n")
 
-    --FIXME !!!!!! make bigger rooms
+    for dx = -1,1,2 do for dy = -1,1,2 do
+      check_expansion(expansions, ROOM.kind, x, y, dx, dy)
+    end end -- dx, dy
+con.debugf("}\n")
+
+    local what = rand_key_by_probs(expansions)
+
+    if what == "none" then
+      L.room = ROOM
+    else
+      expand_room(ROOM, what)
+    end
   end
 
   local function room_char(L)
@@ -434,13 +516,13 @@ function Plan_rooms_sp()
   }
 
 
-for i = 1,1 do
+for i = 1,20 do
   Landmap_Init()
   Landmap_Fill()
   Landmap_Dump()
   Landmap_GroupRooms()
 end
--- error("TEST OVER")
+   error("TEST OVER")
 
 
 
