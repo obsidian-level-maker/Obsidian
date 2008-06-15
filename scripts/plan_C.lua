@@ -360,6 +360,67 @@ function Landmap_Dump()
 end
 
 
+function Landmap_GroupRooms()
+  
+  -- creates rooms out of contiguous areas.
+
+  local function walkable(L)
+    if L.kind == "liquid" then return false end
+    if L.kind == "void"   then return false end
+    return true
+  end
+
+  local function create_room(L, x, y)
+    local ROOM =
+    {
+      kind = L.kind,
+      ident = 1 + #PLAN.all_rooms,
+
+      sx1 = x, sy1 = y,
+      sx2 = x, sy2 = y,
+    }
+
+    table.insert(PLAN.all_rooms, ROOM)
+
+    L.room = ROOM
+
+    --FIXME !!!!!! make bigger rooms
+  end
+
+  local function room_char(L)
+    if not L.room then return "." end
+    local n = 1 + (L.room.ident % 62)
+    return string.sub("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+  end
+
+  local function dump_rooms()
+    con.debugf("Room Map\n")
+    for y = LH,1,-1 do
+      local line = "  "
+      for x = 1,LW do
+        line = line .. room_char(LAND_MAP[x][y])
+      end
+      con.debugf("%s", line)
+    end
+    con.debugf("\n")
+  end
+
+
+  ---| Landmap_GroupRooms |---
+
+  for pass = 1,3 do for x = 1,LW do for y = 1,LH do
+    local L = LAND_MAP[x][y]
+    if L.kind and walkable(L) and not L.room and
+       (pass == 3 or rand_odds(22))
+    then
+      create_room(L, x, y) 
+    end
+  end end end -- pass, x, y
+
+  dump_rooms()
+end
+
+
 function Plan_rooms_sp()
 
 
@@ -367,13 +428,20 @@ function Plan_rooms_sp()
 
   con.printf("\n--==| Plan_rooms_sp |==--\n\n")
 
+  PLAN =
+  {
+    all_rooms = {},
+  }
+
 
 for i = 1,1 do
   Landmap_Init()
   Landmap_Fill()
   Landmap_Dump()
+  Landmap_GroupRooms()
 end
 -- error("TEST OVER")
+
 
 
   Seed_init(LW*3, LH*3, 1, { zone_kind="solid"})
