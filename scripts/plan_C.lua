@@ -139,7 +139,7 @@ function Landmap_DoGround()
   local function fill_spot(x, y)
     local FILLERS =
     {
-      none = 40, valley = 20, ground = 70, hill = 50,
+      none = 60, valley = 20, ground = 70, hill = 50,
     }
 
 ---###    if false --[[USE_CAVE]] then
@@ -243,8 +243,10 @@ function Landmap_DoGround()
 
   --- Landmap_DoGround ---
 
+  local SPURTS = 3   -- 0 to 5
+
   plant_seedlings()
-  for grow_loop = 1,4 do
+  for loop = 1,SPURTS do
     grow_seedlings()
   end
 end
