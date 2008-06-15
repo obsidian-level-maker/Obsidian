@@ -116,7 +116,7 @@ function Landmap_DoLiquid()
 
   local what = rand_key_by_probs
   {
-    none = 160,
+    none = 200,
 
     river    = 80,
     pool     = 40,
@@ -139,7 +139,7 @@ function Landmap_DoGround()
   local function fill_spot(x, y)
     local FILLERS =
     {
-      none = 60, valley = 20, ground = 70, hill = 50,
+      none = 70, valley = 20, ground = 70, hill = 70,
     }
 
 ---###    if false --[[USE_CAVE]] then
@@ -186,13 +186,14 @@ function Landmap_DoGround()
 
   local NOLI_TANGERE =
   {
+    liquid = true,
     valley = true, ground = true, hill = true
   }
 
   local GROW_PROBS =
   {
     valley = 30, ground = 50, hill = 40,
-    cave = 70, building = 70
+    cave = 70, building = 70, liquid = 2
   }
 
   local function try_grow_spot(x, y, dir)
@@ -215,9 +216,14 @@ function Landmap_DoGround()
 
     local prob = GROW_PROBS[LAND_MAP[x][y].kind] or 0
 
-    if not rand_odds(prob) then return false end
+    if not prob then return false end
 
-    LAND_MAP[nx][ny].kind = LAND_MAP[x][y].kind
+    if rand_odds(prob) then
+      LAND_MAP[nx][ny].kind = LAND_MAP[x][y].kind
+    end
+
+    -- NOTE: return true here even if did not install anything,
+    --       because we have "used up" our growing turn.
     return true
   end
 
@@ -243,7 +249,7 @@ function Landmap_DoGround()
 
   --- Landmap_DoGround ---
 
-  local SPURTS = 3   -- 0 to 5
+  local SPURTS = 4   -- 0 to 12
 
   plant_seedlings()
   for loop = 1,SPURTS do

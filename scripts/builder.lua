@@ -270,7 +270,7 @@ function dummy_builder(Z)
       elseif S.room.kind == "liquid" then
         z1 = -24
         z2 = 512
-        f_tex = "LAVA1"
+        f_tex = "NUKAGE1"
         c_tex = "F_SKY1"
         w_tex = "COMPBLUE"
         do_corners = false
@@ -372,7 +372,9 @@ function dummy_builder(Z)
       { x=x2, y=y2 }, { x=x2, y=y1 },
     },
     -2000, z1);
-      
+
+-- if c_tex=="F_SKY1" then c_tex = "MFLR8_4" end --!!!!!!
+
     csg2.add_brush(
     {
       t_face = { texture=c_tex },
@@ -415,6 +417,7 @@ end -- do_sides
 
   csg2.begin_level()
   csg2.level_prop("level_name", "MAP01");
+  csg2.level_prop("error_tex",  "CRACKLE2");
 
   for y = 1, SEED_H do
     for x = 1, SEED_W do
