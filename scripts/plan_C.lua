@@ -30,8 +30,8 @@ require 'defs'
 require 'util'
 
 
-LW = 7
-LH = 7
+LW = 5
+LH = 5
 LAND_MAP = array_2D(LW, LH)
 
 
@@ -503,6 +503,17 @@ con.debugf("}\n")
 end
 
 
+function Rooms_connect()
+
+  -- Guidelines:
+  -- 1. prefer big rooms to have 3 or more connections.
+  -- 2. prefer small isolated rooms to be leafs (1 connection).
+  -- 3. prefer a "tight" bond between ground areas of same kind.
+  -- 4. prefer not to connect ground areas of different kinds.
+  -- 5. prefer ground areas not to be leafs.
+end
+
+
 function Plan_rooms_sp()
 
 
@@ -516,13 +527,13 @@ function Plan_rooms_sp()
   }
 
 
-for i = 1,20 do
+for i = 1,1 do
   Landmap_Init()
   Landmap_Fill()
   Landmap_Dump()
   Landmap_GroupRooms()
 end
-   error("TEST OVER")
+-- error("TEST OVER")
 
 
 
