@@ -52,7 +52,7 @@ require 'defs'
 require 'util'
 
 
-SEED_SIZE = 240
+SEED_SIZE = 224
 
 
 function Seed_init(W, H, D, zone)
