@@ -37,7 +37,7 @@ LAND_MAP = array_2D(LW, LH)
 
 function Landmap_Init()
   for x = 1,LW do for y = 1,LH do
-    LAND_MAP[x][y] = { }
+    LAND_MAP[x][y] = { x=x, y=y }
   end end
 end
 
@@ -51,6 +51,16 @@ end
 function Landmap_at_edge(x, y)
   return (x == 1) or (x == LW) or
          (y == 1) or (y == LH)
+end
+
+
+function Landmap_rand_visits()
+  local visits = {}
+  for x = 1,LW do for y = 1,LH do
+    table.insert(visits, { x=x, y=y })
+  end end -- x,y
+  rand_shuffle(visits)
+  return visits
 end
 
 
@@ -387,7 +397,7 @@ function Landmap_GroupRooms()
     return true
   end
 
-  local BIG_BUILDING_PROBS = { 30, 5, 0.4, 0.01, 0, 0, 0, 0 }
+  local BIG_BUILDING_PROBS = { 40, 15, 2, 0.05, 0, 0, 0, 0 }
 
   local function prob_for_big_room(kind, w, h)
     if kind == "building" or kind == "cave" then
@@ -395,7 +405,7 @@ function Landmap_GroupRooms()
       assert(n >= 1 and n <= 8)
       return BIG_BUILDING_PROBS[n]
     else -- ground
-      return 100 * (w * h)
+      return 100 * (w * h) * (w * h)
     end
   end
 
@@ -444,7 +454,7 @@ con.debugf("Big room kind:%s at (%d,%d) .. (%d,%d)\n", ROOM.kind, x1,y1, x2,y2)
     local ROOM =
     {
       kind = L.kind,
-      ident = 1 + #PLAN.all_rooms,
+      group_id = 1 + #PLAN.all_rooms,
 
       sx1 = x, sy1 = y,
       sx2 = x, sy2 = y,
@@ -452,7 +462,7 @@ con.debugf("Big room kind:%s at (%d,%d) .. (%d,%d)\n", ROOM.kind, x1,y1, x2,y2)
 
     table.insert(PLAN.all_rooms, ROOM)
 
-    local expansions = { none=50 }
+    local expansions = { none = 50 }
 con.debugf("Check expansions:\n{\n")
 
     for dx = -1,1,2 do for dy = -1,1,2 do
@@ -471,7 +481,7 @@ con.debugf("}\n")
 
   local function room_char(L)
     if not L.room then return "." end
-    local n = 1 + (L.room.ident % 62)
+    local n = 1 + (L.room.group_id % 62)
     return string.sub("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
   end
 
@@ -490,14 +500,15 @@ con.debugf("}\n")
 
   ---| Landmap_GroupRooms |---
 
-  for pass = 1,3 do for x = 1,LW do for y = 1,LH do
-    local L = LAND_MAP[x][y]
-    if L.kind and walkable(L) and not L.room and
-       (pass == 3 or rand_odds(22))
-    then
-      create_room(L, x, y) 
+  local visits = Landmap_rand_visits()
+
+  for _,V in ipairs(visits) do
+con.printf("VISIT (%d,%d)\n", V.x, V.y)
+    local L = LAND_MAP[V.x][V.y]
+    if L.kind and walkable(L) and not L.room then
+      create_room(L, V.x, V.y) 
     end
-  end end end -- pass, x, y
+  end
 
   dump_rooms()
 end
@@ -506,11 +517,71 @@ end
 function Rooms_connect()
 
   -- Guidelines:
-  -- 1. prefer big rooms to have 3 or more connections.
-  -- 2. prefer small isolated rooms to be leafs (1 connection).
-  -- 3. prefer a "tight" bond between ground areas of same kind.
-  -- 4. prefer not to connect ground areas of different kinds.
-  -- 5. prefer ground areas not to be leafs.
+  -- 1. prefer a "tight" bond between ground areas of same kind.
+  -- 2. prefer not to connect ground areas of different kinds.
+  -- 3. prefer ground areas not to be leafs
+  -- 4. prefer big rooms to have 3 or more connections.
+  -- 5. prefer small isolated rooms to be leafs (1 connection).
+
+  local function merge(id1, id2)
+    if id1 > id2 then id1,id2 = id2,id1 end
+
+    for x = 1,LW do for y = 1,LH do
+      local L = LAND_MAP[x][y]
+      if L.room and L.room.group_id == id2 then
+        L.room.group_id = id1
+      end
+    end end -- x,y
+  end
+
+  local function connect(L, N, dir, c_kind)
+    -- FIXME!!!!!
+
+    merge(L.room.group_id, N.room.group_id)
+  end
+
+  local function is_ground(L)
+    return (L.kind == "valley") or (L.kind == "ground") or
+           (L.kind == "hill")
+  end
+
+  local function bind_ground()
+    local visits = Landmap_rand_visits()
+    for _,V in ipairs(visits) do
+      local L = LAND_MAP[V.x][V.y]
+      if is_ground(L) then
+        for dir = 2,8,2 do
+          local nx, ny = nudge_coord(V.x, V.y, dir)
+          local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
+          if N and N.kind == L.kind and N.room.group_id ~= L.room.group_id then
+            connect(L, N, dir, "tight")
+          end
+        end -- for dir
+      end
+    end -- for V in visits
+  end
+
+  local function branch_big_rooms()
+    
+  end
+
+  local function branch_the_rest()
+    
+  end
+
+  local function add_bridges()
+    
+  end
+
+
+  ---| Rooms_connect |---
+
+  bind_ground()
+
+  branch_big_rooms()
+  branch_the_rest()
+
+  add_bridges()
 end
 
 
