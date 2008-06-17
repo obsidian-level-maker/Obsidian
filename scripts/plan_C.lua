@@ -397,13 +397,17 @@ function Landmap_GroupRooms()
     return true
   end
 
-  local BIG_BUILDING_PROBS = { 40, 15, 2, 0.05, 0, 0, 0, 0 }
+  local BIG_BUILDING_PROBS =
+  {
+    {  0.0, 20.0, 3.0 },
+    { 20.0, 10.0, 1.5 },
+    {  3.0,  1.5, 0.5 },
+  }
 
   local function prob_for_big_room(kind, w, h)
     if kind == "building" or kind == "cave" then
-      local n = w + h - 2
-      assert(n >= 1 and n <= 8)
-      return BIG_BUILDING_PROBS[n]
+      if w >= 4 or h >= 4 then return 0 end
+      return BIG_BUILDING_PROBS[w][h]
     else -- ground
       return 100 * (w * h) * (w * h)
     end
