@@ -42,7 +42,7 @@ function Quest_assign()
   repeat
     sx = rand_irange(1, SEED_W)
     sy = rand_irange(1, SEED_H)
-  until SEEDS[sx][sy][1].room
+  until SEEDS[sx][sy][1].room and not SEEDS[sx][sy][1].room.nowalk
 
 
 --[[ older method

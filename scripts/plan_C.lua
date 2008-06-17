@@ -30,14 +30,14 @@ require 'defs'
 require 'util'
 
 
-LW = 5
-LH = 5
+LW = 7
+LH = 7
 LAND_MAP = array_2D(LW, LH)
 
 
 function Landmap_Init()
   for x = 1,LW do for y = 1,LH do
-    LAND_MAP[x][y] = { x=x, y=y }
+    LAND_MAP[x][y] = { lx=x, ly=y }
   end end
 end
 
@@ -203,7 +203,7 @@ function Landmap_DoGround()
   local GROW_PROBS =
   {
     valley = 30, ground = 50, hill = 40,
-    cave = 70, building = 70, liquid = 2
+    cave = 70, building = 70,
   }
 
   local function try_grow_spot(x, y, dir)
@@ -440,10 +440,10 @@ function Landmap_GroupRooms()
 
 con.debugf("Big room kind:%s at (%d,%d) .. (%d,%d)\n", ROOM.kind, x1,y1, x2,y2)
 
-    ROOM.sx1 = x1
-    ROOM.sy1 = y1
-    ROOM.sx2 = x2
-    ROOM.sy2 = y2
+    ROOM.sx1 = x1*3-2
+    ROOM.sy1 = y1*3-2
+    ROOM.sx2 = x2*3
+    ROOM.sy2 = y2*3
 
     for x = x1,x2 do for y = y1,y2 do
       LAND_MAP[x][y].room = ROOM
@@ -456,8 +456,8 @@ con.debugf("Big room kind:%s at (%d,%d) .. (%d,%d)\n", ROOM.kind, x1,y1, x2,y2)
       kind = L.kind,
       group_id = 1 + #PLAN.all_rooms,
 
-      sx1 = x, sy1 = y,
-      sx2 = x, sy2 = y,
+      sx1 = x*3-2, sy1 = y*3-2,
+      sx2 = x*3,   sy2 = y*3,
     }
 
     table.insert(PLAN.all_rooms, ROOM)
@@ -514,7 +514,25 @@ con.printf("VISIT (%d,%d)\n", V.x, V.y)
 end
 
 
-function Rooms_connect()
+function Rooms_border_up(R)
+  for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+    local S = SEEDS[x][y][1]
+    S.borders = {}
+    for dir = 2,8,2 do
+      local nx, ny = nudge_coord(x, y, dir)
+      if not Seed_valid(nx, ny, 1) then
+        S.borders[dir] = { kind="solid" }
+      elseif R.kind == "building" or R.kind == "cave" then
+        if x == R.sx1 then S.borders[4] = { kind="solid" } end
+        if x == R.sx2 then S.borders[6] = { kind="solid" } end
+        if y == R.sy1 then S.borders[2] = { kind="solid" } end
+        if y == R.sy2 then S.borders[8] = { kind="solid" } end
+      end
+    end
+  end end -- x, y
+end
+
+function Rooms_Connect()
 
   -- Guidelines:
   -- 1. prefer a "tight" bond between ground areas of same kind.
@@ -534,8 +552,29 @@ function Rooms_connect()
     end end -- x,y
   end
 
+  local function seed_for_land_side(L, side)
+    -- FIXME: this will fuck up after Nudging!!!
+    local x1,y1, x2,y2 = side_coords(side, L.lx*3-2,L.ly*3-2, L.lx*3,L.ly*3)
+
+    local sx = int((x1+x2) / 2)
+    local sy = int((y1+y2) / 2)
+
+    assert(Seed_valid(sx, sy, 1))
+
+    return SEEDS[sx][sy][1]
+  end
+
   local function connect(L, N, dir, c_kind)
-    -- FIXME!!!!!
+    
+    local S = seed_for_land_side(L, dir)
+    local T = seed_for_land_side(N, 10-dir)
+
+--  print("S", S.sx,S.sy)
+--  print("T", T.sx,T.sy)
+    assert(T.sx == S.sx or T.sy == S.sy)
+
+    S.borders[dir]    = { kind="open" }
+    T.borders[10-dir] = { kind="open" }
 
     merge(L.room.group_id, N.room.group_id)
   end
@@ -566,7 +605,24 @@ function Rooms_connect()
   end
 
   local function branch_the_rest()
-    
+    for loop = 1,4 do  -- FIXME: HACK
+
+    local visits = Landmap_rand_visits()
+    local dirs = { 2,4,6,8 }
+    for _,V in ipairs(visits) do
+      local L = LAND_MAP[V.x][V.y]
+      rand_shuffle(dirs)
+      for _,dir in ipairs(dirs) do
+        local nx, ny = nudge_coord(V.x, V.y, dir)
+        local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
+        if N and L.room and N.room and L.room.group_id ~= N.room.group_id then
+          connect(L, N, dir, "normal")
+          break;
+        end
+      end
+    end
+
+    end -- loop
   end
 
   local function add_bridges()
@@ -574,7 +630,7 @@ function Rooms_connect()
   end
 
 
-  ---| Rooms_connect |---
+  ---| Rooms_Connect |---
 
   bind_ground()
 
@@ -607,6 +663,8 @@ end
 -- error("TEST OVER")
 
 
+  -- NUDGE PASS!
+
 
   Seed_init(LW*3, LH*3, 1, { zone_kind="solid"})
 
@@ -614,11 +672,20 @@ end
     local L = LAND_MAP[lx][ly]
     for sx = lx*3-2,lx*3 do for sy = ly*3-2,ly*3 do
       local S = SEEDS[sx][sy][1]
-      S.room = { kind = L.kind }
+      S.room = L.room or { kind = L.kind, nowalk=true }
+      S.borders = {}
     end end
   end end
-  
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    Rooms_border_up(R)
+  end
+
   Seed_dump_fabs()
+
+
+  Rooms_Connect()
+
 
 end -- Plan_rooms_sp
 

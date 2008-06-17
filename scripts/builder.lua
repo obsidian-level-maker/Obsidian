@@ -270,7 +270,7 @@ function dummy_builder(Z)
       elseif S.room.kind == "liquid" then
         z1 = -24
         z2 = 512
-        f_tex = "NUKAGE1"
+        f_tex = "LAVA1"
         c_tex = "F_SKY1"
         w_tex = "COMPBLUE"
         do_corners = false
@@ -387,7 +387,7 @@ function dummy_builder(Z)
     },
     z2, 4000)
 
-if do_sides then
+if true then -- if do_sides then
     for side = 2,8,2 do
       if S.borders and S.borders[side] and S.borders[side].kind == "solid" then
         csg2.add_brush(
