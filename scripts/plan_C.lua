@@ -149,8 +149,10 @@ function Landmap_DoGround()
   local function fill_spot(x, y)
     local FILLERS =
     {
-      none = 70, valley = 20, ground = 70, hill = 70,
+      ground = 70, valley = 50, hill = 35,
     }
+
+    FILLERS.none = 60  -- variable?
 
 ---###    if false --[[USE_CAVE]] then
 ---###      FILLERS.cave = sel(Landmap_at_edge(x,y), 60, 5)
@@ -202,7 +204,7 @@ function Landmap_DoGround()
 
   local GROW_PROBS =
   {
-    valley = 30, ground = 50, hill = 40,
+    valley = 40, ground = 50, hill = 30,
     cave = 70, building = 70,
   }
 
@@ -301,18 +303,20 @@ con.debugf("(mirroring horizontally LW=%d)\n", LW)
 
     for x = half_LW+1, LW do
       for y = 1,LH do
-        local L = copy_table(LAND_MAP[LW-x+1][y])
-        LAND_MAP[x][y] = L
+        local L = LAND_MAP[LW-x+1][y]
+        local N = LAND_MAP[x][y]
+
+        N.kind = L.kind
 
         if swap_cave then
-          if L.kind == "building" then L.kind = "cave"
-          elseif L.kind == "cave" then L.kind = "building"
+          if N.kind == "building" then N.kind = "cave"
+          elseif N.kind == "cave" then N.kind = "building"
           end
         end
 
         if swap_hill then
-          if L.kind == "ground"   then L.kind = "hill"
-          elseif L.kind == "hill" then L.kind = "ground"
+          if N.kind == "ground"   then N.kind = "hill"
+          elseif N.kind == "hill" then N.kind = "ground"
           end
         end
       end
@@ -327,7 +331,7 @@ con.debugf("(mirroring vertically LH=%d)\n", LW)
 
     for y = half_LH+1, LH do
       for x = 1,LW do
-        LAND_MAP[x][y] = copy_table(LAND_MAP[x][LH-y+1])
+        LAND_MAP[x][y].kind = LAND_MAP[x][LH-y+1].kind
       end
     end
 
@@ -442,8 +446,6 @@ function Landmap_GroupRooms()
     if x1 > x2 then x1,x2 = x2,x1 end
     if y1 > y2 then y1,y2 = y2,y1 end
 
-con.debugf("Big room kind:%s at (%d,%d) .. (%d,%d)\n", ROOM.kind, x1,y1, x2,y2)
-
     ROOM.sx1 = x1*3-2
     ROOM.sy1 = y1*3-2
     ROOM.sx2 = x2*3
@@ -507,7 +509,6 @@ con.debugf("}\n")
   local visits = Landmap_rand_visits()
 
   for _,V in ipairs(visits) do
-con.printf("VISIT (%d,%d)\n", V.x, V.y)
     local L = LAND_MAP[V.x][V.y]
     if L.kind and walkable(L) and not L.room then
       create_room(L, V.x, V.y) 
@@ -573,8 +574,6 @@ function Rooms_Connect()
     local S = seed_for_land_side(L, dir)
     local T = seed_for_land_side(N, 10-dir)
 
---  print("S", S.sx,S.sy)
---  print("T", T.sx,T.sy)
     assert(T.sx == S.sx or T.sy == S.sy)
 
     S.borders[dir]    = { kind="open" }
@@ -596,7 +595,9 @@ function Rooms_Connect()
         for dir = 2,8,2 do
           local nx, ny = nudge_coord(V.x, V.y, dir)
           local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
-          if N and N.kind == L.kind and N.room.group_id ~= L.room.group_id then
+          if N and N.kind == L.kind and N.room and
+             N.room.group_id ~= L.room.group_id
+          then
             connect(L, N, dir, "tight")
           end
         end -- for dir
@@ -662,10 +663,10 @@ for i = 1,1 do
   Landmap_Init()
   Landmap_Fill()
   Landmap_Dump()
-  Landmap_GroupRooms()
 end
 -- error("TEST OVER")
 
+  Landmap_GroupRooms()
 
   -- NUDGE PASS!
 
