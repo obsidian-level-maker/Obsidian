@@ -376,7 +376,7 @@ end
 
 function Landmap_GroupRooms()
   
-  -- creates rooms out of contiguous areas.
+  -- creates rooms out of contiguous areas on the land-map
 
   local function walkable(L)
     if L.kind == "liquid" then return false end
@@ -446,6 +446,11 @@ function Landmap_GroupRooms()
     if x1 > x2 then x1,x2 = x2,x1 end
     if y1 > y2 then y1,y2 = y2,y1 end
 
+    ROOM.lx1 = x1
+    ROOM.ly1 = y1
+    ROOM.lx2 = x2
+    ROOM.ly2 = y2
+
     ROOM.sx1 = x1*3-2
     ROOM.sy1 = y1*3-2
     ROOM.sx2 = x2*3
@@ -461,6 +466,9 @@ function Landmap_GroupRooms()
     {
       kind = L.kind,
       group_id = 1 + #PLAN.all_rooms,
+
+      lx1 = x, ly1 = y,
+      lx2 = x, ly2 = y,
 
       sx1 = x*3-2, sy1 = y*3-2,
       sx2 = x*3,   sy2 = y*3,
@@ -537,6 +545,27 @@ function Rooms_border_up(R)
   end end -- x, y
 end
 
+
+function Rooms_MakeSeeds()
+  Seed_init(LW*3, LH*3, 1, { zone_kind="solid"})
+
+  for lx = 1,LW do for ly = 1,LH do
+    local L = LAND_MAP[lx][ly]
+    for sx = lx*3-2,lx*3 do for sy = ly*3-2,ly*3 do
+      local S = SEEDS[sx][sy][1]
+      S.room = L.room or { kind = L.kind, nowalk=true }
+      S.borders = {}
+    end end
+  end end
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    Rooms_border_up(R)
+  end
+
+  Seed_dump_fabs()
+end
+
+
 function Rooms_Connect()
 
   -- Guidelines:
@@ -605,8 +634,47 @@ function Rooms_Connect()
     end -- for V in visits
   end
 
+  local BIG_BRANCH_PATTERNS =
+  {
+    -- each triplet is: x, y, dir
+    -- where x is 1 for left, 2 for middle, 3 for right side
+    -- where y is 1 for bottom, 2 for middle, 3 for top side
+
+    { {2,1,2},{1,3,4},{3,3,6} },  -- T shape
+    { {2,1,2},{1,3,8},{3,3,8} },  -- U shape
+
+    { {2,1,2},{1,2,4},{3,2,6},{2,3,8 } },  -- plus shape
+    { {2,1,2},{1,3,4},{3,3,6},{2,3,8 } },
+    { {1,1,2},{1,3,2},{1,3,4},{3,3,6 } },  -- H shape
+    { {1,1,2},{1,3,6},{3,1,4},{3,3,8 } },  -- swastika
+
+    { {2,1,2},{1,2,4},{3,2,6},{1,3,8},{3,3,8} },
+    { {1,1,2},{3,1,2},{1,3,8},{2,3,8},{3,3,8} },
+    { {1,1,4},{3,1,6},{1,3,8},{2,3,8},{3,3,8} },
+
+    { {2,1,2},{2,3,8},{1,1,4},{1,3,4},{3,1,6},{3,3,6} },
+    { {2,1,2},{1,2,4},{3,2,6},{1,3,8},{2,3,8},{3,3,8} },
+  }
+
   local function branch_big_rooms()
-    
+    local rooms = {}
+
+    for _,R in ipairs(PLAN.all_rooms) do
+      -- add some randomness to area to break deadlocks
+      R.l_area = (R.lx2 - R.lx1 + 1) * (R.ly2 - R.ly1 + 1) + con.random() / 9.0
+
+      if R.l_area >= 2 then
+        table.insert(rooms, R)
+      end
+    end
+
+    if #rooms == 0 then return end
+
+    table.sort(rooms, function(A, B) return A.l_area > B.l_area end)
+
+    for _,R in ipairs(rooms) do
+      con.debugf("Room at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.l_area)
+    end
   end
 
   local function branch_the_rest()
@@ -670,27 +738,9 @@ end
 
   -- NUDGE PASS!
 
-
-  Seed_init(LW*3, LH*3, 1, { zone_kind="solid"})
-
-  for lx = 1,LW do for ly = 1,LH do
-    local L = LAND_MAP[lx][ly]
-    for sx = lx*3-2,lx*3 do for sy = ly*3-2,ly*3 do
-      local S = SEEDS[sx][sy][1]
-      S.room = L.room or { kind = L.kind, nowalk=true }
-      S.borders = {}
-    end end
-  end end
-
-  for _,R in ipairs(PLAN.all_rooms) do
-    Rooms_border_up(R)
-  end
-
-  Seed_dump_fabs()
-
+  Rooms_MakeSeeds()
 
   Rooms_Connect()
-
 
 end -- Plan_rooms_sp
 
