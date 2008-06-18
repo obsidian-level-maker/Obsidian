@@ -30,8 +30,8 @@ require 'defs'
 require 'util'
 
 
-LW = 7
-LH = 7
+LW = 11
+LH = 11
 LAND_MAP = array_2D(LW, LH)
 
 
@@ -145,6 +145,8 @@ end
 
 
 function Landmap_DoGround()
+
+do return end --!!!!!!
 
   local function fill_spot(x, y)
     local FILLERS =
@@ -466,6 +468,7 @@ function Landmap_GroupRooms()
     {
       kind = L.kind,
       group_id = 1 + #PLAN.all_rooms,
+      num_conn = 0,
 
       lx1 = x, ly1 = y,
       lx2 = x, ly2 = y,
@@ -598,17 +601,24 @@ function Rooms_Connect()
     return SEEDS[sx][sy][1]
   end
 
+  local function connect2(S, T, dir, c_kind)
+    S.borders[dir]    = { kind="open" }
+    T.borders[10-dir] = { kind="open" }
+
+    merge(S.room.group_id, T.room.group_id)
+
+    S.room.num_conn = S.room.num_conn + 1
+    T.room.num_conn = T.room.num_conn + 1
+  end
+
   local function connect(L, N, dir, c_kind)
-    
     local S = seed_for_land_side(L, dir)
     local T = seed_for_land_side(N, 10-dir)
 
     assert(T.sx == S.sx or T.sy == S.sy)
+    assert(L.room ~= N.room)
 
-    S.borders[dir]    = { kind="open" }
-    T.borders[10-dir] = { kind="open" }
-
-    merge(L.room.group_id, N.room.group_id)
+    connect2(S, T, dir, c_kind)
   end
 
   local function is_ground(L)
@@ -634,6 +644,13 @@ function Rooms_Connect()
     end -- for V in visits
   end
 
+  local BIG_NUM_BRANCH_PROBS =
+  {
+    { 0, 0, 50, 30,  2, 0  },  -- 2 for max(W,H)
+    { 0, 0, 30, 50, 10, 1  },  -- 3
+    { 0, 0,  5, 50, 30, 10 },  -- 4
+  }
+
   local BIG_BRANCH_PATTERNS =
   {
     -- each triplet is: x, y, dir
@@ -656,14 +673,133 @@ function Rooms_Connect()
     { {2,1,2},{1,2,4},{3,2,6},{1,3,8},{2,3,8},{3,3,8} },
   }
 
+  local function morph_triplet(R, T, MORPH)
+    local x = T[1]
+    local y = T[2]
+    local dir = T[3]
+
+    if (MORPH % 2) >= 1 then
+      x = 4-x
+      if (dir == 4) or (dir == 6) then dir = 10-dir end
+    end
+
+    if (MORPH % 4) >= 2 then
+      y = 4-y
+      if (dir == 2) or (dir == 8) then dir = 10-dir end
+    end
+
+    if (MORPH % 8) >= 4 then
+      x, y = y, 4-x
+      dir = rotate_cw90(dir)
+      if (MORPH == 5) or (MORPH == 6) then MORPH = 11-MORPH end
+    end
+
+
+    local lx, ly
+
+        if x == 1 then lx = 0
+    elseif x == 3 then lx = R.lw - 1
+    else
+      lx = int(R.lw / 2 - 0.25)
+      if (MORPH % 2) >= 1 and (R.lw % 2) == 0 then lx = lx + 1 end
+    end
+
+        if y == 1 then ly = 0
+    elseif y == 3 then ly = R.lh - 1
+    else
+      ly = int(R.lh / 2 - 0.25)
+      if (MORPH % 4) >= 2 and (R.lh % 2) == 0 then ly = ly + 1 end
+    end
+
+con.debugf("ROOM LAND POS: L(%d,%d) .. L(%d,%d) = %dx%d\n", R.lx1,R.ly1, R.lx2,R.ly2, R.lw,R.lh)
+con.debugf("MORPH %d: {%d,%d,%d} --> x:%d,y:%d --> +%d,+%d dir:%d\n", MORPH, T[1],T[2],T[3], x,y, lx,ly, dir)
+
+    lx = lx + R.lx1
+    ly = ly + R.ly1
+
+    assert(Landmap_valid(lx, ly))
+    assert(LAND_MAP[lx][ly].room == R)
+
+
+    local S = seed_for_land_side(LAND_MAP[lx][ly], dir)
+
+    return S.sx, S.sy, dir
+  end
+
+  local function try_big_pattern(R, PAT, MORPH)
+    local groups_seen = {}
+
+    groups_seen[R.group_id] = 1
+con.debugf("TRYINH BIG PATTERN: %s\n", table_to_str(PAT[1]))
+
+    for _,T in ipairs(PAT) do
+      local sx, sy, dir = morph_triplet(R, T, MORPH)
+      local nx, ny = nudge_coord(sx, sy, dir)
+
+      if not Seed_valid(nx, ny, 1) then return false end
+
+      local S = SEEDS[sx][sy][1]
+      local N = SEEDS[nx][ny][1]
+
+      assert(S.room == R)
+      if not N.room or not N.room.group_id then return false end
+
+      if groups_seen[N.room.group_id] then return false end
+
+      groups_seen[N.room.group_id] = 1
+    end
+
+con.debugf("USING BIG PATTERN: %s\n", table_to_str(PAT,2))
+
+    -- OK, all points were possible, do it for real
+    for _,T in ipairs(PAT) do
+      local sx, sy, dir = morph_triplet(R, T, MORPH)
+      local nx, ny = nudge_coord(sx, sy, dir)
+
+      local S = SEEDS[sx][sy][1]
+      local N = SEEDS[nx][ny][1]
+
+      connect2(S, N, dir, "normal")
+    end
+
+    return true
+  end
+
+  local function try_branch_big_room(R, num)
+    -- we don't bother with patterns if room already has 1 or more connections
+    if R.num_conn > 0 then return false end
+con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
+
+    -- There are THREE morph steps, done in this order:
+    -- 1. either flip the pattern horizontally or not
+    -- 2. either flip the pattern vertically or not
+    -- 3. either rotate the pattern clockwise or not
+    local morphs = { 0,1,2,3, 4,5,6,7 }
+
+    for _,PAT in ipairs(BIG_BRANCH_PATTERNS) do if #PAT == num then
+      rand_shuffle(morphs)
+      
+      for _,MORPH in ipairs(morphs) do
+        if try_big_pattern(R, PAT, MORPH) then
+          return true -- SUCCESS
+        end
+      end
+    end end -- PAT, size check
+
+    return false
+  end
+
   local function branch_big_rooms()
     local rooms = {}
 
     for _,R in ipairs(PLAN.all_rooms) do
-      -- add some randomness to area to break deadlocks
-      R.l_area = (R.lx2 - R.lx1 + 1) * (R.ly2 - R.ly1 + 1) + con.random() / 9.0
+      
+      R.lw, R.lh = box_size(R.lx1, R.ly1, R.lx2, R.ly2)
 
-      if R.l_area >= 2 then
+      -- add some randomness to area to break deadlocks
+      R.l_area = R.lw * R.lh + con.random() / 3.0
+
+      if R.l_area >= 2 and (R.kind == "building" or R.kind == "cave") then
         table.insert(rooms, R)
       end
     end
@@ -673,7 +809,24 @@ function Rooms_Connect()
     table.sort(rooms, function(A, B) return A.l_area > B.l_area end)
 
     for _,R in ipairs(rooms) do
-      con.debugf("Room at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.l_area)
+      con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.l_area)
+
+      local lw, lh = box_size(R.lx1, R.ly1, R.lx2, R.ly2)
+      local ln = math.max(lw, lh)
+      if ln > 4 then ln = 4 end
+      assert(ln >= 2)
+
+      local try1 = rand_index_by_probs(BIG_NUM_BRANCH_PROBS[ln])
+
+      if not try_branch_big_room(R, try1) then
+        local try2
+
+        repeat
+          try2 = rand_index_by_probs(BIG_NUM_BRANCH_PROBS[ln])
+        until try2 ~= try1
+
+        try_branch_big_room(R, try2)
+      end
     end
   end
 
