@@ -22,8 +22,8 @@ require 'a_star'
 require 'engines'
 
 require 'seeds'
-require 'room_fabs'
-require 'plan_C'   --## plan_sp
+-- require 'room_fabs'
+require 'plan_sp'
 require 'quests'
 require 'builder'
 
@@ -442,8 +442,8 @@ function ob_init()
   name_it_up(OB_MODULES)
   name_it_up(OB_OPTIONS)
 
-  expand_room_fabs(ROOM_FABS)
-  expand_room_fabs(LEVEL_FABS)
+---##  expand_room_fabs(ROOM_FABS)
+---##  expand_room_fabs(LEVEL_FABS)
 
   local function button_sorter(A, B)
     if A.priority or B.priority then
