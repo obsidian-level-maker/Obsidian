@@ -369,9 +369,21 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
     if (fdata.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN)
       flags |= SCAN_F_Hidden;
 
-    (* func)(fdata.cFileName, flags, priv_dat);
+    // minor kludge for consistency with Unix
+    if (fdata.cFileName[0] == '.' && isalpha(fdata.cFileName[1]))
+      flags |= SCAN_F_Hidden;
 
-    count++;
+    if (strcmp(fdata.cFileName, ".")  == 0 ||
+        strcmp(fdata.cFileName, "..") == 0)
+    {
+      // skip the funky "." and ".." dirs 
+    }
+    else
+    {
+      (* func)(fdata.cFileName, flags, priv_dat);
+
+      count++;
+    }
   }
   while (FindNextFile(handle, &fdata) != FALSE);
 
@@ -395,6 +407,11 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
     if (strlen(fdata->d_name) == 0)
       continue;
 
+    // skip the funky "." and ".." dirs 
+    if (strcmp(fdata->d_name, ".")  == 0 ||
+        strcmp(fdata->d_name, "..") == 0)
+      continue;
+
 
     const char *full_name = StringPrintf("%s/%s", path, fdata->d_name);
  
@@ -409,7 +426,7 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
 
     StringFree(full_name);
 
-    
+
     int flags = 0;
 
     if (S_ISDIR(finfo.st_mode))
