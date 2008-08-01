@@ -227,7 +227,7 @@ function dummy_builder(Z)
 
     if S.room then
 
-      local do_corners = true
+      local do_corners = false --!!
 
 --!!!!!!
 -- if S.room.kind == "building" then S.room.kind = "ground" end
@@ -398,6 +398,16 @@ if true then -- if do_sides then
         },
         get_wall_coords(side, x1,y1, x2,y2),
         -2000, 4000)
+      end
+      if S.borders and S.borders[side] and S.borders[side].kind == "fence" then
+        csg2.add_brush(
+        {
+          t_face = { texture=f_tex },
+          b_face = { texture=f_tex },
+          w_face = { texture=w_tex },
+        },
+        get_wall_coords(side, x1,y1, x2,y2),
+        -2000, z1+36)
       end
     end
 end -- do_sides

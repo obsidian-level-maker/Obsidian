@@ -531,16 +531,24 @@ end
 function Rooms_border_up(R)
   for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y][1]
-    S.borders = {}
     for dir = 2,8,2 do
       local nx, ny = nudge_coord(x, y, dir)
-      if not Seed_valid(nx, ny, 1) then
+      local N
+      if Seed_valid(nx, ny, 1) then
+        N = SEEDS[nx][ny][1]
+      end
+
+      if not N then
         S.borders[dir] = { kind="solid" }
+
+      elseif N.room == R then
+        -- same room, do nothing
+        
       elseif R.kind == "building" or R.kind == "cave" then
-        if x == R.sx1 then S.borders[4] = { kind="solid" } end
-        if x == R.sx2 then S.borders[6] = { kind="solid" } end
-        if y == R.sy1 then S.borders[2] = { kind="solid" } end
-        if y == R.sy2 then S.borders[8] = { kind="solid" } end
+        S.borders[dir] = { kind="solid" }
+
+      else
+        S.borders[dir] = { kind="fence" }
       end
     end
   end end -- x, y
