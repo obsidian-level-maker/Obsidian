@@ -30,8 +30,8 @@ require 'defs'
 require 'util'
 
 
-LW = 11
-LH = 11
+LW = 9
+LH = 9
 LAND_MAP = array_2D(LW, LH)
 
 
@@ -145,8 +145,6 @@ end
 
 
 function Landmap_DoGround()
-
-do return end --!!!!!!
 
   local function fill_spot(x, y)
     local FILLERS =
@@ -263,7 +261,7 @@ do return end --!!!!!!
 
   --- Landmap_DoGround ---
 
-  local SPURTS = 4   -- 0 to 12
+  local SPURTS = 12   -- 0 to 12
 
   plant_seedlings()
   for loop = 1,SPURTS do
