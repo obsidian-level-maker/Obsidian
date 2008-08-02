@@ -411,7 +411,7 @@ function Landmap_GroupRooms()
   local function prob_for_big_room(kind, w, h)
     if kind == "building" or kind == "cave" then
       if w >= 4 or h >= 4 then return 0 end
-      return BIG_BUILDING_PROBS[w][h]
+      return BIG_BUILDING_PROBS[w][h] * 5
     else -- ground
       return 100 * (w * h) * (w * h)
     end
@@ -602,19 +602,19 @@ function Rooms_Connect()
     end end -- x,y
   end
 
-  local function seed_for_land_side(L, side)
-    -- FIXME: this will fuck up after Nudging!!!
-    local x1,y1, x2,y2 = side_coords(side, L.lx*3-2,L.ly*3-2, L.lx*3,L.ly*3)
+---##  local function seed_for_land_side(L, side)
+---##    -- FIXME: this will fuck up after Nudging!!!
+---##    local x1,y1, x2,y2 = side_coords(side, L.lx*3-2,L.ly*3-2, L.lx*3,L.ly*3)
+---##
+---##    local sx = int((x1+x2) / 2)
+---##    local sy = int((y1+y2) / 2)
+---##
+---##    assert(Seed_valid(sx, sy, 1))
+---##
+---##    return SEEDS[sx][sy][1]
+---##  end
 
-    local sx = int((x1+x2) / 2)
-    local sy = int((y1+y2) / 2)
-
-    assert(Seed_valid(sx, sy, 1))
-
-    return SEEDS[sx][sy][1]
-  end
-
-  local function connect2(S, T, dir, c_kind)
+  local function connect_seeds(S, T, dir, c_kind)
     S.borders[dir]    = { kind="open" }
     T.borders[10-dir] = { kind="open" }
 
@@ -624,14 +624,54 @@ function Rooms_Connect()
     T.room.num_conn = T.room.num_conn + 1
   end
 
-  local function connect(L, N, dir, c_kind)
-    local S = seed_for_land_side(L, dir)
-    local T = seed_for_land_side(N, 10-dir)
+  local function connect_land(L, N, dir, c_kind)
 
-    assert(T.sx == S.sx or T.sy == S.sy)
     assert(L.room ~= N.room)
 
-    connect2(S, T, dir, c_kind)
+    -- the middle seed of a 3x3 land block is always valid
+    -- (since we never nudge more than 1 seed in any direction).
+    -- So start there and find the border....
+
+    local sx = L.lx * 3 - 1
+    local sy = L.ly * 3 - 1
+
+    local R = SEEDS[sx][sy][1].room
+    assert(R)
+
+    while true do
+      local tx, ty = nudge_coord(sx, sy, dir)
+      assert(Seed_valid(tx, ty, 1))
+
+      if SEEDS[tx][ty][1].room ~= R then
+        break;
+      end
+
+      sx, sy = tx, ty
+    end
+
+    local tx, ty = nudge_coord(sx, sy, dir)
+
+    -- try moving to the side sometimes
+    if rand_odds(20) then
+      local ax, ay = dir_to_across(dir)
+      if rand_odds(50) then ax, ay = -ax, -ay end
+
+      if Seed_valid(sx+ax, sy+ay, 1) and
+         Seed_valid(tx+ax, ty+ay, 1) and
+         SEEDS[sx+ax][sy+ay][1].room == SEEDS[sx][sy][1].room and
+         SEEDS[tx+ax][ty+ay][1].room == SEEDS[tx][ty][1].room
+      then
+        sx, sy = sx+ax, sy+ay
+        tx, ty = tx+ax, ty+ay
+      end
+    end
+
+    local S = SEEDS[sx][sy][1]
+    local T = SEEDS[tx][ty][1]
+
+    assert(T.sx == S.sx or T.sy == S.sy)
+
+    connect_seeds(S, T, dir, c_kind)
   end
 
   local function is_ground(L)
@@ -649,7 +689,7 @@ function Rooms_Connect()
           if N and N.kind == L.kind and N.room and
              N.room.group_id ~= L.room.group_id
           then
-            connect(L, N, dir, "tight")
+            connect_land(L, N, dir, "tight")
           end
         end -- for dir
       end
@@ -768,7 +808,7 @@ con.debugf("USING BIG PATTERN: %s\n", table_to_str(PAT,2))
       local S = SEEDS[sx][sy][1]
       local N = SEEDS[nx][ny][1]
 
-      connect2(S, N, dir, "normal")
+      connect_seeds(S, N, dir, "normal")
     end
 
     return true
@@ -854,7 +894,7 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
           local nx, ny = nudge_coord(V.x, V.y, dir)
           local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
           if N and L.room and N.room and L.room.group_id ~= N.room.group_id then
-            connect(L, N, dir, "normal")
+            connect_land(L, N, dir, "normal")
             break;
           end
         end
