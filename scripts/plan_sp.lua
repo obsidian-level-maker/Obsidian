@@ -515,9 +515,7 @@ con.debugf("}\n")
 
   ---| Landmap_GroupRooms |---
 
-  local visits = Landmap_rand_visits()
-
-  for _,V in ipairs(visits) do
+  for _,V in ipairs(Landmap_rand_visits()) do
     local L = LAND_MAP[V.x][V.y]
     if L.kind and walkable(L) and not L.room then
       create_room(L, V.x, V.y) 
@@ -558,16 +556,25 @@ end
 function Rooms_MakeSeeds()
   Seed_init(LW*3, LH*3, 1, { zone_kind="solid"})
 
+  -- firstly handle non-room stuff (Lava)
   for lx = 1,LW do for ly = 1,LH do
     local L = LAND_MAP[lx][ly]
-    for sx = lx*3-2,lx*3 do for sy = ly*3-2,ly*3 do
-      local S = SEEDS[sx][sy][1]
-      S.room = L.room or { kind = L.kind, nowalk=true }
-      S.borders = {}
-    end end
+    if not L.room then
+      for sx = lx*3-2,lx*3 do for sy = ly*3-2,ly*3 do
+        local S = SEEDS[sx][sy][1]
+        S.room = { kind = L.kind, nowalk=true }
+        S.borders = {}
+      end end
+    end -- L.room
   end end
 
   for _,R in ipairs(PLAN.all_rooms) do
+    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      local S = SEEDS[sx][sy][1]
+      S.room = R
+      S.borders = {}
+    end end
+
     Rooms_border_up(R)
   end
 
@@ -632,9 +639,8 @@ function Rooms_Connect()
            (L.kind == "hill")
   end
 
-  local function bind_ground()
-    local visits = Landmap_rand_visits()
-    for _,V in ipairs(visits) do
+  local function join_ground()
+    for _,V in ipairs(Landmap_rand_visits()) do
       local L = LAND_MAP[V.x][V.y]
       if is_ground(L) then
         for dir = 2,8,2 do
@@ -701,35 +707,29 @@ function Rooms_Connect()
     end
 
 
-    local lx, ly
+    local sx, sy
 
-        if x == 1 then lx = 0
-    elseif x == 3 then lx = R.lw - 1
+        if x == 1 then sx = R.sx1
+    elseif x == 3 then sx = R.sx2
     else
-      lx = int(R.lw / 2 - 0.25)
-      if (MORPH % 2) >= 1 and (R.lw % 2) == 0 then lx = lx + 1 end
+      sx = R.sx1 + int((R.sx2 - R.sx1) / 2);
+      if (MORPH % 2) >= 1 and ((R.sx2 - R.sx1) % 2) == 0 then sx = sx + 1 end
     end
 
-        if y == 1 then ly = 0
-    elseif y == 3 then ly = R.lh - 1
+        if y == 1 then sy = R.sy1
+    elseif y == 3 then sy = R.sy2
     else
-      ly = int(R.lh / 2 - 0.25)
-      if (MORPH % 4) >= 2 and (R.lh % 2) == 0 then ly = ly + 1 end
+      sy = R.sy1 + int((R.sy2 - R.sy1) / 2);
+      if (MORPH % 4) >= 2 and ((R.sy2 - R.sy1) % 2) == 0 then sy = sy + 1 end
     end
 
-con.debugf("ROOM LAND POS: L(%d,%d) .. L(%d,%d) = %dx%d\n", R.lx1,R.ly1, R.lx2,R.ly2, R.lw,R.lh)
-con.debugf("MORPH %d: {%d,%d,%d} --> x:%d,y:%d --> +%d,+%d dir:%d\n", MORPH, T[1],T[2],T[3], x,y, lx,ly, dir)
+--- con.debugf("ROOM LAND POS: L(%d,%d) .. L(%d,%d) = %dx%d\n", R.lx1,R.ly1, R.lx2,R.ly2, R.lw,R.lh)
+--- con.debugf("MORPH %d: {%d,%d,%d} --> x:%d,y:%d --> +%d,+%d dir:%d\n", MORPH, T[1],T[2],T[3], x,y, lx,ly, dir)
 
-    lx = lx + R.lx1
-    ly = ly + R.ly1
+    assert(Seed_valid(sx, sy, 1))
+    assert(SEEDS[sx][sy][1].room == R)
 
-    assert(Landmap_valid(lx, ly))
-    assert(LAND_MAP[lx][ly].room == R)
-
-
-    local S = seed_for_land_side(LAND_MAP[lx][ly], dir)
-
-    return S.sx, S.sy, dir
+    return sx, sy, dir
   end
 
   local function try_big_pattern(R, PAT, MORPH)
@@ -737,6 +737,9 @@ con.debugf("MORPH %d: {%d,%d,%d} --> x:%d,y:%d --> +%d,+%d dir:%d\n", MORPH, T[1
 
     groups_seen[R.group_id] = 1
 con.debugf("TRYINH BIG PATTERN: %s\n", table_to_str(PAT[1]))
+
+    -- see if the pattern can be used on this room
+    -- (e.g. all exits go somewhere and are different groups)
 
     for _,T in ipairs(PAT) do
       local sx, sy, dir = morph_triplet(R, T, MORPH)
@@ -837,34 +840,40 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
   end
 
   local function branch_the_rest()
-    for loop = 1,4 do  -- FIXME: HACK
+    -- Make sure all contiguous rooms are connected.
 
-    local visits = Landmap_rand_visits()
-    local dirs = { 2,4,6,8 }
-    for _,V in ipairs(visits) do
-      local L = LAND_MAP[V.x][V.y]
-      rand_shuffle(dirs)
-      for _,dir in ipairs(dirs) do
-        local nx, ny = nudge_coord(V.x, V.y, dir)
-        local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
-        if N and L.room and N.room and L.room.group_id ~= N.room.group_id then
-          connect(L, N, dir, "normal")
-          break;
+    -- need to repeat this a few times since we only branch off a
+    -- room once in each pass (the break; after connect).  Hackish.
+    for loop = 1,4 do
+
+      local dirs = { 2,4,6,8 }
+      for _,V in ipairs(Landmap_rand_visits()) do
+        local L = LAND_MAP[V.x][V.y]
+        rand_shuffle(dirs)
+        for _,dir in ipairs(dirs) do
+          local nx, ny = nudge_coord(V.x, V.y, dir)
+          local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
+          if N and L.room and N.room and L.room.group_id ~= N.room.group_id then
+            connect(L, N, dir, "normal")
+            break;
+          end
         end
       end
-    end
 
     end -- loop
   end
 
   local function add_bridges()
+    -- Makes sure any non-contiguous groups of rooms become connected
+    -- (either by an actual bridge or by a teleporter).
     
+    -- FIXME !!!!
   end
 
 
   ---| Rooms_Connect |---
 
-  bind_ground()
+  join_ground()
 
   branch_big_rooms()
   branch_the_rest()
