@@ -526,6 +526,121 @@ con.debugf("}\n")
 end
 
 
+function Rooms_Nudge()
+  
+  -- This resizes rooms by moving certain borders either one seed
+  -- outward or one seed inward.  There are various constraints,
+  -- in particular each room must remain a rectangle shape (so we
+  -- disallow nudges that would create an L shaped room).
+  --
+  -- Big rooms must be handled first, because small rooms are
+  -- never able to nudge a big border (one which touches three or
+  -- more rooms).
+  --
+  -- We also give priority to "bad corners", which have two indoor
+  -- areas diagonally opposite, and two outdoor areas diagonally
+  -- opposite (like a chess-board).
+
+  local function try_nudge_room(R, side, grow)
+    -- grow is >0 to nudge outward, <0 to nudge inward
+    if not grow then grow = rand_sel(50,1,-1) end
+
+    if R.no_nudge then return false end
+
+    -- already moved this edge?
+    if R.nudges[side] then return false end
+
+    -- FIXME
+    return false
+  end
+
+  local function nudge_big_rooms()
+    local rooms = {}
+    for _,R in ipairs(PLAN.all_rooms) do
+      if R.l_area and R.l_area >= 2 then
+        table.insert(rooms, R)
+      end
+    end
+
+    if #rooms == 0 then return end
+
+    table.sort(rooms, function(A, B) return A.l_area > B.l_area end)
+
+    local sides = { 2,4,6,8 }
+
+    for _,R in ipairs(rooms) do
+      rand_shuffle(sides)
+      for _,side in ipairs(sides) do
+        if rand_odds(30) then
+          try_nudge_room(R, side, rand_sel(75,1,-1))
+        end
+      end
+    end
+  end
+
+  local function get_NE_corner(R)
+    local x = R.sx2 + 1
+    local y = R.sy2 + 1
+
+    print(x,y)
+    return Seed_valid(x, y, 1) and SEEDS[x][y][1].room
+  end
+
+  local function is_corner_bad(R, NE)
+    -- FIXME
+  end
+
+  local function nudge_bad_corners()
+    for _,R in ipairs(PLAN.all_rooms) do
+      local NE = get_NE_corner(R)
+      if NE and is_corner_bad(R, NE) then
+        if rand_odds(50) then
+          local a = try_nudge_room(R,  8) or try_nudge_room(R,  6) or
+                    try_nudge_room(NE, 2) or try_nudge_room(NE, 4)
+        else
+          local a = try_nudge_room(R,  6) or try_nudge_room(R,  8) or
+                    try_nudge_room(NE, 4) or try_nudge_room(NE, 2)
+        end
+      end
+    end -- R in all_rooms
+  end
+
+  local function nudge_the_rest()
+    local rooms = {}
+    for _,R in ipairs(PLAN.all_rooms) do
+      if not (R.l_area and R.l_area >= 2) then
+        table.insert(rooms, R)
+      end
+    end
+
+    local sides = { 2,4,6,8 }
+
+    for pass = 1,2 do
+      rand_shuffle(rooms)
+      for _,R in ipairs(rooms) do
+        rand_shuffle(sides)
+        for _,side in ipairs(sides) do
+          if rand_odds(20) then
+            try_nudge_room(R, side)
+          end
+        end
+      end -- R in all_rooms
+    end -- pass
+  end
+
+
+  ---| Rooms_Nudge |---
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    R.nudges = {}
+  end
+
+  nudge_big_rooms()
+  nudge_bad_corners()
+  nudge_the_rest()
+end
+
+
 function Rooms_border_up(R)
   for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y][1]
@@ -652,7 +767,7 @@ function Rooms_Connect()
     local tx, ty = nudge_coord(sx, sy, dir)
 
     -- try moving to the side sometimes
-    if rand_odds(20) then
+    if rand_odds(14) then
       local ax, ay = dir_to_across(dir)
       if rand_odds(50) then ax, ay = -ax, -ay end
 
@@ -747,20 +862,27 @@ function Rooms_Connect()
     end
 
 
+    local rw = R.sx2 - R.sx1 + 1
+    local rh = R.sy2 - R.sy1 + 1
+
     local sx, sy
+
+    -- TODO: ability to use sx=R.sx1+1 (etc) sometimes.
+    --       We shouldn't use random here, hence probably need to
+    --       use extra MORPH bits (maybe two: for X and Y).
 
         if x == 1 then sx = R.sx1
     elseif x == 3 then sx = R.sx2
     else
-      sx = R.sx1 + int((R.sx2 - R.sx1) / 2);
-      if (MORPH % 2) >= 1 and ((R.sx2 - R.sx1) % 2) == 0 then sx = sx + 1 end
+      sx = R.sx1 + int((rw-1) / 2);
+      if (MORPH % 2) >= 1 and (rw % 2) == 1 then sx = sx + 1 end
     end
 
         if y == 1 then sy = R.sy1
     elseif y == 3 then sy = R.sy2
     else
-      sy = R.sy1 + int((R.sy2 - R.sy1) / 2);
-      if (MORPH % 4) >= 2 and ((R.sy2 - R.sy1) % 2) == 0 then sy = sy + 1 end
+      sy = R.sy1 + int((rh-1) / 2);
+      if (MORPH % 4) >= 2 and (rh % 2) == 1 then sy = sy + 1 end
     end
 
 --- con.debugf("ROOM LAND POS: L(%d,%d) .. L(%d,%d) = %dx%d\n", R.lx1,R.ly1, R.lx2,R.ly2, R.lw,R.lh)
@@ -842,7 +964,7 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
     local rooms = {}
 
     for _,R in ipairs(PLAN.all_rooms) do
-      
+
       R.lw, R.lh = box_size(R.lx1, R.ly1, R.lx2, R.ly2)
 
       -- add some randomness to area to break deadlocks
@@ -944,7 +1066,7 @@ end
 
   Landmap_GroupRooms()
 
-  -- NUDGE PASS!
+  Rooms_Nudge()
 
   Rooms_MakeSeeds()
 
