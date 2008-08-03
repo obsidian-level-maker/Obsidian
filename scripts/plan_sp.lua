@@ -1083,22 +1083,18 @@ function Rooms_Connect()
 
     local sx, sy
 
-    -- TODO: ability to use sx=R.sx1+1 (etc) sometimes.
-    --       We shouldn't use random here, hence probably need to
-    --       use extra MORPH bits (maybe two: for X and Y).
-
-        if x == 1 then sx = R.sx1
-    elseif x == 3 then sx = R.sx2
+        if x == 1 then sx = R.sx1 + sel(rw >= 7, 1, 0)
+    elseif x == 3 then sx = R.sx2 - sel(rw >= 7, 1, 0)
     else
       sx = R.sx1 + int((rw-1) / 2);
-      if (MORPH % 2) >= 1 and rw >= 3 and (rw % 2) == 1 then sx = sx + 1 end
+      if (MORPH % 2) >= 1 and rw >= 4 and (rw % 2) == 0 then sx = sx + 1 end
     end
 
-        if y == 1 then sy = R.sy1
-    elseif y == 3 then sy = R.sy2
+        if y == 1 then sy = R.sy1 + sel(rh >= 9, 1, 0)
+    elseif y == 3 then sy = R.sy2 - sel(rh >= 9, 1, 0)
     else
       sy = R.sy1 + int((rh-1) / 2);
-      if (MORPH % 4) >= 2 and rh >= 3 and (rh % 2) == 1 then sy = sy + 1 end
+      if (MORPH % 4) >= 2 and rh >= 4 and (rh % 2) == 0 then sy = sy + 1 end
     end
 
 --- con.debugf("ROOM LAND POS: L(%d,%d) .. L(%d,%d) = %dx%d\n", R.lx1,R.ly1, R.lx2,R.ly2, R.lw,R.lh)
