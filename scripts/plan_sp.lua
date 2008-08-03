@@ -83,9 +83,9 @@ function Landmap_DoLiquid()
   end
 
   function ushape_mode(x, y)
-    if (x == 1  and (extra % 4) == 0) or
+    if (x == 1      and (extra % 4) == 0) or
        (x == LAND_W and (extra % 4) == 1) or
-       (y == 1  and (extra % 4) == 2) or
+       (y == 1      and (extra % 4) == 2) or
        (y == LAND_H and (extra % 4) == 3)
     then
       -- skip that side
@@ -131,7 +131,7 @@ function Landmap_DoLiquid()
     river    = 80,
     pool     = 40,
     u_shape  = 40,
-    surround = 20,
+    surround = 20*50, --!!!!!!!!
   }
 
 con.debugf("(what: %s)\n", what)
@@ -293,7 +293,7 @@ function Landmap_Fill()
   local half_LW = int((LAND_W+1)/2)
   local half_LH = int((LAND_H+1)/2)
 
-  if LAND_W >= 5 and rand_odds(12) then
+  if LAND_W >= 5 and rand_odds(12*8) then --!!!!!!
 
 con.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
     LAND_W = half_LW ; Landmap_Fill() ; LAND_W = old_LW
@@ -324,7 +324,7 @@ con.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
 
     return -- NO MORE
 
-  elseif LAND_H >= 5 and rand_odds(3) then
+  elseif LAND_H >= 5 and rand_odds(3*33) then --!!!!!!
 
 con.debugf("(mirroring vertically LAND_H=%d)\n", LAND_W)
     LAND_H = half_LH ; Landmap_Fill() ; LAND_H = old_LH
@@ -371,6 +371,21 @@ function Landmap_Dump()
     con.debugf("%s", line)
   end
   con.debugf("\n")
+end
+
+
+function Landmap_AddBridges()
+--[[
+    local x_visit = {}
+    rand_shuffle(x_visit, LAND_W)
+
+    for _,lx in ipairs(x_visit) do
+      local group
+      for ly = 1,LAND_H do
+        local L = LAND_MAP[lx][ly]
+        if L.room and L.room.group_id then
+    end -- lx
+--]]
 end
 
 
@@ -914,6 +929,10 @@ function Rooms_MakeSeeds()
     end -- L.room
   end end
 
+  for _,R in ipairs(PLAN.all_rooms) do
+    Rooms_border_up(R)
+  end
+
   Seed_dump_fabs()
 end
 
@@ -1249,11 +1268,53 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
     end -- loop
   end
 
-  local function add_bridges()
+  local function add_teleporters()
     -- Makes sure any non-contiguous groups of rooms become connected
     -- (either by an actual bridge or by a teleporter).
     
-    -- FIXME !!!!
+    -- FIXME: MAKE PHYSIC BRIDGES EARLIER (only do teleporters here)  
+
+    local rooms = copy_table(PLAN.all_rooms)
+
+    local function do_teleport(R)
+      -- find a room for the teleporter
+      for _,N in ipairs(rooms) do
+        if N.group_id == 1 then
+          if not R.teleports then R.teleports = {} end
+          if not N.teleports then N.teleports = {} end
+
+          local TELEP = { src=N, dest=R }
+
+          table.insert(R.teleports, TELEP)
+          table.insert(N.teleports, TELEP)
+
+          merge(R.group_id, N.group_id)
+
+          -- ensure we have space for the teleporter(s)
+          R.no_shrink = true
+          N.no_shrink = true
+
+          con.debugf("ADDED TELEPORT (%d,%d) --> (%d,%d)\n", N.lx1,N.ly1, R.lx1,R.ly1)
+          return;
+        end
+      end
+
+      error("do_teleport: no group#1 rooms!")
+    end
+
+    repeat
+      local did_merge = false
+
+      rand_shuffle(rooms)
+      for _,R in ipairs(rooms) do
+        if R.group_id >= 2 then
+          do_teleport(R)
+          did_merge = true
+          break;
+        end
+      end
+
+    until not did_merge
   end
 
 
@@ -1264,12 +1325,11 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
   branch_big_rooms()
   branch_the_rest()
 
-  add_bridges()
+  add_teleporters()
 end
 
 
 function Plan_rooms_sp()
-
 
   ---===| Plan_rooms_sp |===---
 
@@ -1280,24 +1340,15 @@ function Plan_rooms_sp()
     all_rooms = {},
   }
 
-
-for i = 1,1 do
   Landmap_Init()
   Landmap_Fill()
   Landmap_Dump()
-end
--- error("TEST OVER")
 
   Landmap_GroupRooms()
+  Landmap_AddBridges()
 
   Rooms_Nudge()
-
   Rooms_MakeSeeds()
-
-  for _,R in ipairs(PLAN.all_rooms) do
-    Rooms_border_up(R)
-  end
-
   Rooms_Connect()
 
 end -- Plan_rooms_sp
