@@ -614,42 +614,13 @@ function Rooms_Nudge()
     end end -- lx, ly
   end
 
-  local function do_shrink_room(R, side, is_big)
-    for i = 1,Room_side_len(R, side) do
-      local sx, sy = Room_side_coord(R, side, i)
-      local nx, ny = nudge_coord(sx, sy, side)
+  local function volume_after_nudge(R, side, grow)
+    local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
 
-      local S = SEEDS[sx][sy][1]
-
-      if not Seed_valid(nx, ny, 1) then
-        S.room = nil
-      else
-        S.room = SEEDS[nx][ny][1].room
-      end 
-    end -- i = 1,side_len
-
-        if side == 2 then R.sy1 = R.sy1 + 1
-    elseif side == 8 then R.sy2 = R.sy2 - 1
-    elseif side == 4 then R.sx1 = R.sx1 + 1
-    elseif side == 6 then R.sx2 = R.sx2 - 1
-    else error("Bad side: do_shrink_room")
-    end
-  end
-
-  local function do_grow_room(R, side, is_big, grow)
-    for i = 1,Room_side_len(R, side) do
-      local sx, sy = Room_side_coord(R, side, i)
-      local nx, ny = nudge_coord(sx, sy, side)
-      assert(Seed_valid(nx, ny, 1))
-
-      SEEDS[nx][ny][1].room = R
-    end
-
-        if side == 2 then R.sy1 = R.sy1 - 1
-    elseif side == 8 then R.sy2 = R.sy2 + 1
-    elseif side == 4 then R.sx1 = R.sx1 - 1
-    elseif side == 6 then R.sx2 = R.sx2 + 1
-    else error("Bad side: do_grow_room")
+    if (side == 6 or side == 4) then
+      return (rw + grow) * rh
+    else
+      return rw * (rh + grow)
     end
   end
 
@@ -678,6 +649,8 @@ function Rooms_Nudge()
 
     -- the nudge is possible (pushing the neighbour also)
 
+    if volume_after_nudge(N, 10-side, -grow) < 3 then return false end
+
     if side == 6 then assert(N.sx1 == R.sx2+1) end
     if side == 4 then assert(N.sx2 == R.sx1-1) end
     if side == 8 then assert(N.sy1 == R.sy2+1) end
@@ -690,7 +663,7 @@ function Rooms_Nudge()
 
   local function try_nudge_room(R, side, is_big, grow)
     -- 'grow' is positive to nudge outward, negative to nudge inward
-    if not grow then grow = rand_sel(50,1,-1) end
+    if not grow then grow = rand_sel(65,1,-1) end
 
     if R.no_grow   and grow > 0 then return false end
     if R.no_shrink and grow < 0 then return false end
@@ -698,13 +671,16 @@ function Rooms_Nudge()
     -- already moved this border?
     if R.nudges[side] then return false end
 
-    -- growth is add edge of map [generally not allowed]
+    -- would get too small?
+    if volume_after_nudge(R, side, grow) < 3 then return false end
+
+    -- growth is add edge of map
     if (side == 2 and R.ly1 == 1) or
        (side == 4 and R.lx1 == 1) or
        (side == 6 and R.lx2 == LAND_W) or
        (side == 8 and R.ly2 == LAND_H)
     then
-      if grow > 0 then  --?????
+      if grow > 0 then  -- TODO: probably too simple
         return false
       end
     end
@@ -751,7 +727,7 @@ function Rooms_Nudge()
       rand_shuffle(sides)
       for _,side in ipairs(sides) do
         if rand_odds(30) then
-          try_nudge_room(R, side, true, rand_sel(75,1,-1))
+          try_nudge_room(R, side, true, rand_sel(80,1,-1))
         end
       end
     end
@@ -1279,10 +1255,7 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
     local function do_teleport(R)
       -- find a room for the teleporter
       for _,N in ipairs(rooms) do
-        if N.group_id == 1 then
-          if not R.teleports then R.teleports = {} end
-          if not N.teleports then N.teleports = {} end
-
+        if (N.group_id == 1) and (#N.teleports < 2) then
           local TELEP = { src=N, dest=R }
 
           table.insert(R.teleports, TELEP)
@@ -1291,8 +1264,8 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
           merge(R.group_id, N.group_id)
 
           -- ensure we have space for the teleporter(s)
-          R.no_shrink = true
-          N.no_shrink = true
+---!!!          R.no_shrink = true
+---!!!          N.no_shrink = true
 
           con.debugf("ADDED TELEPORT (%d,%d) --> (%d,%d)\n", N.lx1,N.ly1, R.lx1,R.ly1)
           return;
@@ -1302,12 +1275,16 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
       error("do_teleport: no group#1 rooms!")
     end
 
+    for _,R in ipairs(rooms) do
+      R.teleports = {}
+    end
+
     repeat
       local did_merge = false
 
       rand_shuffle(rooms)
       for _,R in ipairs(rooms) do
-        if R.group_id >= 2 then
+        if (R.group_id >= 2) and (#R.teleports < 2) then
           do_teleport(R)
           did_merge = true
           break;
@@ -1315,6 +1292,12 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
       end
 
     until not did_merge
+
+    for _,R in ipairs(rooms) do
+      if R.group_id ~= 1 then
+        error("add_teleporters: unable to connect all rooms!")
+      end
+    end
   end
 
 
