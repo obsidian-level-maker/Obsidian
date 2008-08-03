@@ -30,33 +30,33 @@ require 'defs'
 require 'util'
 
 
-LW = 9
-LH = 9
-LAND_MAP = array_2D(LW, LH)
+LAND_W = 9
+LAND_H = 9
+LAND_MAP = array_2D(LAND_W, LAND_H)
 
 
 function Landmap_Init()
-  for x = 1,LW do for y = 1,LH do
+  for x = 1,LAND_W do for y = 1,LAND_H do
     LAND_MAP[x][y] = { lx=x, ly=y }
   end end
 end
 
 
 function Landmap_valid(x, y)
-  return (x >= 1) and (x <= LW) and
-         (y >= 1) and (y <= LH)
+  return (x >= 1) and (x <= LAND_W) and
+         (y >= 1) and (y <= LAND_H)
 end
 
 
 function Landmap_at_edge(x, y)
-  return (x == 1) or (x == LW) or
-         (y == 1) or (y == LH)
+  return (x == 1) or (x == LAND_W) or
+         (y == 1) or (y == LAND_H)
 end
 
 
 function Landmap_rand_visits()
   local visits = {}
-  for x = 1,LW do for y = 1,LH do
+  for x = 1,LAND_W do for y = 1,LAND_H do
     table.insert(visits, { x=x, y=y })
   end end -- x,y
   rand_shuffle(visits)
@@ -66,7 +66,7 @@ end
 
 function Landmap_DoLiquid()
  
-  if LW <= 2 or LH <= 2 then return end
+  if LAND_W <= 2 or LAND_H <= 2 then return end
 
   -- Possible liquid patterns:
   --   1. completely surrounded
@@ -84,9 +84,9 @@ function Landmap_DoLiquid()
 
   function ushape_mode(x, y)
     if (x == 1  and (extra % 4) == 0) or
-       (x == LW and (extra % 4) == 1) or
+       (x == LAND_W and (extra % 4) == 1) or
        (y == 1  and (extra % 4) == 2) or
-       (y == LH and (extra % 4) == 3)
+       (y == LAND_H and (extra % 4) == 3)
     then
       -- skip that side
     else
@@ -96,11 +96,11 @@ function Landmap_DoLiquid()
 
   function river_mode(x, y)
     if (extra % 2) == 0 then
-      if x == int((LW+1)/2) then
+      if x == int((LAND_W+1)/2) then
         LAND_MAP[x][y].kind = "liquid"
       end
     else
-      if y == int((LH+1)/2) then
+      if y == int((LAND_H+1)/2) then
         LAND_MAP[x][y].kind = "liquid"
       end
     end
@@ -110,11 +110,11 @@ function Landmap_DoLiquid()
     local pw = 1
     local ph = 1
 
-    if LW >= 7 then pw = 2 end
-    if LH >= 7 then ph = 2 end
+    if LAND_W >= 7 then pw = 2 end
+    if LAND_H >= 7 then ph = 2 end
 
-    local dx = math.abs(x - int((LW+1)/2))
-    local dy = math.abs(y - int((LH+1)/2))
+    local dx = math.abs(x - int((LAND_W+1)/2))
+    local dy = math.abs(y - int((LAND_H+1)/2))
 
     if dx < pw and dy < ph then
       LAND_MAP[x][y].kind = "liquid"
@@ -135,7 +135,7 @@ function Landmap_DoLiquid()
   }
 
 con.debugf("(what: %s)\n", what)
-  for x = 1,LW do for y = 1,LH do
+  for x = 1,LAND_W do for y = 1,LAND_H do
     if what == "surround" then surround_mode(x, y) end
     if what == "river"    then river_mode(x, y) end
     if what == "u_shape"  then ushape_mode(x, y) end
@@ -152,7 +152,7 @@ function Landmap_DoGround()
       ground = 70, valley = 50, hill = 35,
     }
 
-    FILLERS.none = 60  -- variable?
+    FILLERS.none = 60*5  -- variable?  --!!!!!!!!
 
 ---###    if false --[[USE_CAVE]] then
 ---###      FILLERS.cave = sel(Landmap_at_edge(x,y), 60, 5)
@@ -180,10 +180,10 @@ function Landmap_DoGround()
   end
 
   local function plant_seedlings()
-    for x = 1,LW do
+    for x = 1,LAND_W do
       local poss_y = {}
 
-      for y = 1,LH do
+      for y = 1,LAND_H do
         if not LAND_MAP[x][y].kind then
           table.insert(poss_y, y)
         end
@@ -204,8 +204,8 @@ function Landmap_DoGround()
 
   local GROW_PROBS =
   {
-    valley = 40, ground = 50, hill = 30,
-    cave = 70, building = 70,
+    valley = 40/2, ground = 50/2, hill = 30/2, --!!!!!!
+    cave = 70, building = 70, --<< these two have no effect
   }
 
   local function try_grow_spot(x, y, dir)
@@ -244,10 +244,10 @@ function Landmap_DoGround()
     local y_order = {}
     local d_order = {}
 
-    rand_shuffle(x_order, LW)
+    rand_shuffle(x_order, LAND_W)
     for _,x in ipairs(x_order) do
 
-      rand_shuffle(y_order, LH)
+      rand_shuffle(y_order, LAND_H)
       for _,y in ipairs(y_order) do
 
         rand_shuffle(d_order, 4)
@@ -276,7 +276,7 @@ function Landmap_DoIndoors()
     building = 90, cave = 20
   }
 
-  for x = 1,LW do for y = 1,LH do
+  for x = 1,LAND_W do for y = 1,LAND_H do
     local L = LAND_MAP[x][y]
     if not L.kind then
       L.kind = what
@@ -287,23 +287,23 @@ end
 
 function Landmap_Fill()
 
-  local old_LW = LW
-  local old_LH = LH
+  local old_LW = LAND_W
+  local old_LH = LAND_H
 
-  local half_LW = int((LW+1)/2)
-  local half_LH = int((LH+1)/2)
+  local half_LW = int((LAND_W+1)/2)
+  local half_LH = int((LAND_H+1)/2)
 
-  if LW >= 5 and rand_odds(12) then
+  if LAND_W >= 5 and rand_odds(12) then
 
-con.debugf("(mirroring horizontally LW=%d)\n", LW)
-    LW = half_LW ; Landmap_Fill() ; LW = old_LW
+con.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
+    LAND_W = half_LW ; Landmap_Fill() ; LAND_W = old_LW
 
     local swap_cave = rand_odds(25)
     local swap_hill = rand_odds(25)
 
-    for x = half_LW+1, LW do
-      for y = 1,LH do
-        local L = LAND_MAP[LW-x+1][y]
+    for x = half_LW+1, LAND_W do
+      for y = 1,LAND_H do
+        local L = LAND_MAP[LAND_W-x+1][y]
         local N = LAND_MAP[x][y]
 
         N.kind = L.kind
@@ -324,14 +324,14 @@ con.debugf("(mirroring horizontally LW=%d)\n", LW)
 
     return -- NO MORE
 
-  elseif LH >= 5 and rand_odds(3) then
+  elseif LAND_H >= 5 and rand_odds(3) then
 
-con.debugf("(mirroring vertically LH=%d)\n", LW)
-    LH = half_LH ; Landmap_Fill() ; LH = old_LH
+con.debugf("(mirroring vertically LAND_H=%d)\n", LAND_W)
+    LAND_H = half_LH ; Landmap_Fill() ; LAND_H = old_LH
 
-    for y = half_LH+1, LH do
-      for x = 1,LW do
-        LAND_MAP[x][y].kind = LAND_MAP[x][LH-y+1].kind
+    for y = half_LH+1, LAND_H do
+      for x = 1,LAND_W do
+        LAND_MAP[x][y].kind = LAND_MAP[x][LAND_H-y+1].kind
       end
     end
 
@@ -363,9 +363,9 @@ function Landmap_Dump()
   end
 
   con.debugf("Land Map\n")
-  for y = LH,1,-1 do
+  for y = LAND_H,1,-1 do
     local line = "  "
-    for x = 1,LW do
+    for x = 1,LAND_W do
       line = line .. land_char(LAND_MAP[x][y])
     end
     con.debugf("%s", line)
@@ -502,9 +502,9 @@ con.debugf("}\n")
 
   local function dump_rooms()
     con.debugf("Room Map\n")
-    for y = LH,1,-1 do
+    for y = LAND_H,1,-1 do
       local line = "  "
-      for x = 1,LW do
+      for x = 1,LAND_W do
         line = line .. room_char(LAND_MAP[x][y])
       end
       con.debugf("%s", line)
@@ -526,6 +526,32 @@ con.debugf("}\n")
 end
 
 
+------------------------------------------------------------------------
+
+
+function Room_side_len(R, side)
+  if (side == 2 or side == 8) then
+    return R.sx2 + 1 - R.sx1
+  else
+    return R.sy2 + 1 - R.sy1
+  end
+end
+
+function Room_side_coord(R, side, i)
+  local x, y
+
+      if side == 2 then x, y = R.sx1 + (i-1), R.sy1
+  elseif side == 8 then x, y = R.sx1 + (i-1), R.sy2
+  elseif side == 4 then x, y = R.sx1, R.sy1 + (i-1)
+  elseif side == 6 then x, y = R.sx2, R.sy1 + (i-1)
+  else
+    error("Bad side for Room_side_coord!")
+  end
+
+  return x, y
+end
+
+
 function Rooms_Nudge()
   
   -- This resizes rooms by moving certain borders either one seed
@@ -537,21 +563,159 @@ function Rooms_Nudge()
   -- never able to nudge a big border (one which touches three or
   -- more rooms).
   --
-  -- We also give priority to "bad corners", which have two indoor
+  -- We also give priority to "nasty corners", which have two indoor
   -- areas diagonally opposite, and two outdoor areas diagonally
   -- opposite (like a chess-board).
 
-  local function try_nudge_room(R, side, grow)
-    -- grow is >0 to nudge outward, <0 to nudge inward
+  local function collect_neighbours()
+    -- Determines neighbouring rooms of each room.
+    -- Big rooms can have multiple neighbours on some sides.
+    
+    for _,R in ipairs(PLAN.all_rooms) do
+      R.neighbours = { }
+    end
+
+    local function add_neighbour(R, side, N)
+      -- check if already there
+      for _,O in ipairs(R.neighbours) do
+        if O == N then return end
+      end
+
+      table.insert(R.neighbours, N)
+    end
+
+    for lx = 1,LAND_W do for ly = 1,LAND_H do
+      local L = LAND_MAP[lx][ly]
+      for side = 1,9 do if side ~= 5 then
+        local nx, ny = nudge_coord(lx, ly, side)
+        if Landmap_valid(nx, ny) then
+          local N = LAND_MAP[nx][ny]
+
+          if L.room and N.room and L.room ~= N.room then
+            add_neighbour(L.room, side, N.room)
+          end
+        end
+      end end -- side 1-9 except 5
+    end end -- lx, ly
+  end
+
+  local function do_shrink_room(R, side, is_big)
+    for i = 1,Room_side_len(R, side) do
+      local sx, sy = Room_side_coord(R, side, i)
+      local nx, ny = nudge_coord(sx, sy, side)
+
+      local S = SEEDS[sx][sy][1]
+
+      if not Seed_valid(nx, ny, 1) then
+        S.room = nil
+      else
+        S.room = SEEDS[nx][ny][1].room
+      end 
+    end -- i = 1,side_len
+
+        if side == 2 then R.sy1 = R.sy1 + 1
+    elseif side == 8 then R.sy2 = R.sy2 - 1
+    elseif side == 4 then R.sx1 = R.sx1 + 1
+    elseif side == 6 then R.sx2 = R.sx2 - 1
+    else error("Bad side: do_shrink_room")
+    end
+  end
+
+  local function do_grow_room(R, side, is_big, grow)
+    for i = 1,Room_side_len(R, side) do
+      local sx, sy = Room_side_coord(R, side, i)
+      local nx, ny = nudge_coord(sx, sy, side)
+      assert(Seed_valid(nx, ny, 1))
+
+      SEEDS[nx][ny][1].room = R
+    end
+
+        if side == 2 then R.sy1 = R.sy1 - 1
+    elseif side == 8 then R.sy2 = R.sy2 + 1
+    elseif side == 4 then R.sx1 = R.sx1 - 1
+    elseif side == 6 then R.sx2 = R.sx2 + 1
+    else error("Bad side: do_grow_room")
+    end
+  end
+
+  local function allow_nudge(R, side, grow, N, list)
+
+    -- above or below a sidewards nudge?
+    if (side == 6 or side == 4) then
+      if N.sy1 > R.sy2 then return true end
+      if R.sy1 > N.sy2 then return true end
+    else
+      if N.sx1 > R.sx2 then return true end
+      if R.sx1 > N.sx2 then return true end
+    end
+
+    -- opposite side?
+    if side == 6 and (N.sx2 < R.sx2) then return true end
+    if side == 4 and (N.sx1 > R.sx1) then return true end
+    if side == 8 and (N.sy2 < R.sy2) then return true end
+    if side == 2 and (N.sy1 > R.sy1) then return true end
+
+    if (side == 6 or side == 4) then
+      if (N.sy1 < R.sy1) or (N.sy2 > R.sy2) then return false end
+    else
+      if (N.sx1 < R.sx1) or (N.sx2 > R.sx2) then return false end
+    end
+
+    -- the nudge is possible (pushing the neighbour also)
+
+    if side == 6 then assert(N.sx1 == R.sx2+1) end
+    if side == 4 then assert(N.sx2 == R.sx1-1) end
+    if side == 8 then assert(N.sy1 == R.sy2+1) end
+    if side == 2 then assert(N.sy2 == R.sy1-1) end
+
+    table.insert(list, { room=N, side=10-side, grow=-grow })
+
+    return true
+  end
+
+  local function try_nudge_room(R, side, is_big, grow)
+    -- 'grow' is positive to nudge outward, negative to nudge inward
     if not grow then grow = rand_sel(50,1,-1) end
 
-    if R.no_nudge then return false end
+    if R.no_grow   and grow > 0 then return false end
+    if R.no_shrink and grow < 0 then return false end
 
-    -- already moved this edge?
+    -- already moved this border?
     if R.nudges[side] then return false end
 
-    -- FIXME
-    return false
+    -- growth is add edge of map [generally not allowed]
+    if (side == 2 and R.ly1 == 1) or
+       (side == 4 and R.lx1 == 1) or
+       (side == 6 and R.lx2 == LAND_W) or
+       (side == 8 and R.ly2 == LAND_H)
+    then
+      if grow > 0 then  --?????
+        return false
+      end
+    end
+
+    local push_list = {}
+
+    for _,K in ipairs(R.neighbours) do
+      if not allow_nudge(R, side, grow, K, push_list) then return false end
+    end
+
+    -- Nudge is OK!
+    con.printf("Nudging Room (%d,%d) side:%d grow:%d\n", R.lx1, R.ly1, side, grow)
+
+    table.insert(push_list, { room=R, side=side, grow=grow })
+
+    for _,PU in ipairs(push_list) do
+          if PU.side == 2 then PU.room.sy1 = PU.room.sy1 - PU.grow
+      elseif PU.side == 8 then PU.room.sy2 = PU.room.sy2 + PU.grow
+      elseif PU.side == 4 then PU.room.sx1 = PU.room.sx1 - PU.grow
+      elseif PU.side == 6 then PU.room.sx2 = PU.room.sx2 + PU.grow
+      end
+      assert(not PU.room.nudges[PU.side])
+      PU.room.nudges[PU.side] = true
+    end
+
+    return true
   end
 
   local function nudge_big_rooms()
@@ -572,34 +736,84 @@ function Rooms_Nudge()
       rand_shuffle(sides)
       for _,side in ipairs(sides) do
         if rand_odds(30) then
-          try_nudge_room(R, side, rand_sel(75,1,-1))
+          try_nudge_room(R, side, true, rand_sel(75,1,-1))
         end
       end
     end
   end
 
-  local function get_NE_corner(R)
-    local x = R.sx2 + 1
-    local y = R.sy2 + 1
+  local function get_NE_corner_rooms(R)
 
-    print(x,y)
-    return Seed_valid(x, y, 1) and SEEDS[x][y][1].room
+    local E, N, NE -- East, North, NorthEast
+
+    for _,K in ipairs(R.neighbours) do
+
+      if K.sx2 == R.sx2 and K.sy1 > R.sy2 then N = K end
+      if K.sy2 == R.sy2 and K.sx1 > R.sx2 then E = K end
+
+      if K.sx1 > R.sx2 and K.sy1 > R.sy2 then NE = K end
+    end
+
+    return E, N, NE
+
+---##    for _,K in ipairs(R.neighbours[6]) do
+---##      if not E or (K.sx1 > E.sx2) then E = K end
+---##    end
+---##
+---##    for _,K in ipairs(R.neighbours[8]) do
+---##      if not N or (K.sy1 > N.sy2) then N = K end
+---##    end
+---##
+---##    local A, B
+---##
+---##    if N then
+---##      for _,K in ipairs(N.neighbours[6]) do
+---##        if not A or (K.sy2 < A.sy1) then A = K end
+---##      end
+---##    end
+---##
+---##    if E then
+---##      for _,K in ipairs(E.neighbours[8]) do
+---##        if not B or (K.sy2 < B.sy1) then B = K end
+---##      end
+---##    end
+---##
+---##    if A and (A.sx1 == R.sx2+1) and (A.sy1 == R.sy2+1) then return E,N,A end
+---##    if B and (B.sx1 == R.sx2+1) and (B.sy1 == R.sy2+1) then return E,N,B end
+---##
+---##    return nil, nil, nil
   end
 
-  local function is_corner_bad(R, NE)
-    -- FIXME
+  local function is_corner_nasty(R, E, N, NE)
+    assert(E and N)
+
+    -- has the corner already been nudged?
+    if R.nudges[8] or E.nudges[8] or R.nudges[6] or N.nudges[6] then
+      return false
+    end
+
+    -- TODO: this check may be too simple....
+    if (R.kind == (NE and NE.kind) or N.kind ==  E.kind) and
+       (R.kind ~=  E.kind         and N.kind ~= (NE and NE.kind))
+    then
+      con.printf("Nasty Corner @ (%d,%d) : %s %s | %s %s\n",
+                 R.sx2, R.sy2, R.kind, E.kind, N.kind, (NE and NE.kind) or "NIL")
+      return true
+    end
+
+    return false
   end
 
-  local function nudge_bad_corners()
+  local function nudge_nasty_corners()
     for _,R in ipairs(PLAN.all_rooms) do
-      local NE = get_NE_corner(R)
-      if NE and is_corner_bad(R, NE) then
+      local E, N, NE = get_NE_corner_rooms(R)
+      if N and E and NE and is_corner_nasty(R, E, N, NE) then
         if rand_odds(50) then
-          local a = try_nudge_room(R,  8) or try_nudge_room(R,  6) or
-                    try_nudge_room(NE, 2) or try_nudge_room(NE, 4)
+          local a = try_nudge_room(R, 8) or try_nudge_room(R, 6) or
+                    try_nudge_room(E, 8) or try_nudge_room(N, 6)
         else
-          local a = try_nudge_room(R,  6) or try_nudge_room(R,  8) or
-                    try_nudge_room(NE, 4) or try_nudge_room(NE, 2)
+          local a = try_nudge_room(R, 6) or try_nudge_room(R, 8) or
+                    try_nudge_room(N, 6) or try_nudge_room(E, 8)
         end
       end
     end -- R in all_rooms
@@ -620,7 +834,7 @@ function Rooms_Nudge()
       for _,R in ipairs(rooms) do
         rand_shuffle(sides)
         for _,side in ipairs(sides) do
-          if rand_odds(20) then
+          if rand_odds(20*2) then  --!!!!!!!
             try_nudge_room(R, side)
           end
         end
@@ -631,12 +845,17 @@ function Rooms_Nudge()
 
   ---| Rooms_Nudge |---
 
+  collect_neighbours()
+
   for _,R in ipairs(PLAN.all_rooms) do
     R.nudges = {}
   end
 
+  nudge_nasty_corners()
+
+--[[
+--]]
   nudge_big_rooms()
-  nudge_bad_corners()
   nudge_the_rest()
 end
 
@@ -669,29 +888,31 @@ end
 
 
 function Rooms_MakeSeeds()
-  Seed_init(LW*3, LH*3, 1, { zone_kind="solid"})
+  Seed_init(LAND_W*3, LAND_H*3, 1, { zone_kind="solid"})
 
-  -- firstly handle non-room stuff (Lava)
-  for lx = 1,LW do for ly = 1,LH do
+  for _,R in ipairs(PLAN.all_rooms) do
+    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      assert(Seed_valid(sx, sy, 1))
+      local S = SEEDS[sx][sy][1]
+      assert(not S.room) -- no overlaps please!
+      S.room = R
+      S.borders = {}
+    end end
+  end
+
+  -- secondly handle non-room stuff (Lava)
+  for lx = 1,LAND_W do for ly = 1,LAND_H do
     local L = LAND_MAP[lx][ly]
     if not L.room then
       for sx = lx*3-2,lx*3 do for sy = ly*3-2,ly*3 do
         local S = SEEDS[sx][sy][1]
-        S.room = { kind = L.kind, nowalk=true }
-        S.borders = {}
-      end end
+        if not S.room then
+          S.room = { kind = L.kind, nowalk=true }
+          S.borders = {}
+        end
+      end end -- sx, sy
     end -- L.room
   end end
-
-  for _,R in ipairs(PLAN.all_rooms) do
-    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-      local S = SEEDS[sx][sy][1]
-      S.room = R
-      S.borders = {}
-    end end
-
-    Rooms_border_up(R)
-  end
 
   Seed_dump_fabs()
 end
@@ -709,7 +930,7 @@ function Rooms_Connect()
   local function merge(id1, id2)
     if id1 > id2 then id1,id2 = id2,id1 end
 
-    for x = 1,LW do for y = 1,LH do
+    for x = 1,LAND_W do for y = 1,LAND_H do
       local L = LAND_MAP[x][y]
       if L.room and L.room.group_id == id2 then
         L.room.group_id = id1
@@ -875,18 +1096,21 @@ function Rooms_Connect()
     elseif x == 3 then sx = R.sx2
     else
       sx = R.sx1 + int((rw-1) / 2);
-      if (MORPH % 2) >= 1 and (rw % 2) == 1 then sx = sx + 1 end
+      if (MORPH % 2) >= 1 and rw >= 3 and (rw % 2) == 1 then sx = sx + 1 end
     end
 
         if y == 1 then sy = R.sy1
     elseif y == 3 then sy = R.sy2
     else
       sy = R.sy1 + int((rh-1) / 2);
-      if (MORPH % 4) >= 2 and (rh % 2) == 1 then sy = sy + 1 end
+      if (MORPH % 4) >= 2 and rh >= 3 and (rh % 2) == 1 then sy = sy + 1 end
     end
 
 --- con.debugf("ROOM LAND POS: L(%d,%d) .. L(%d,%d) = %dx%d\n", R.lx1,R.ly1, R.lx2,R.ly2, R.lw,R.lh)
 --- con.debugf("MORPH %d: {%d,%d,%d} --> x:%d,y:%d --> +%d,+%d dir:%d\n", MORPH, T[1],T[2],T[3], x,y, lx,ly, dir)
+
+    assert(R.sx1 <= sx and sx <= R.sx2)
+    assert(R.sy1 <= sy and sy <= R.sy2)
 
     assert(Seed_valid(sx, sy, 1))
     assert(SEEDS[sx][sy][1].room == R)
@@ -898,7 +1122,7 @@ function Rooms_Connect()
     local groups_seen = {}
 
     groups_seen[R.group_id] = 1
-con.debugf("TRYINH BIG PATTERN: %s\n", table_to_str(PAT[1]))
+con.debugf("TRYING BIG PATTERN: %s\n", table_to_str(PAT[1]))
 
     -- see if the pattern can be used on this room
     -- (e.g. all exits go somewhere and are different groups)
@@ -1069,6 +1293,10 @@ end
   Rooms_Nudge()
 
   Rooms_MakeSeeds()
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    Rooms_border_up(R)
+  end
 
   Rooms_Connect()
 
