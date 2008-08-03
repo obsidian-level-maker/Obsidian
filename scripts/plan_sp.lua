@@ -128,10 +128,10 @@ function Landmap_DoLiquid()
   {
     none = 200,
 
-    river    = 80,
-    pool     = 40,
-    u_shape  = 40,
-    surround = 20*50, --!!!!!!!!
+    river    = 50,
+    pool     = 50,
+    u_shape  = 50,
+    surround = 50,
   }
 
 con.debugf("(what: %s)\n", what)
@@ -293,7 +293,7 @@ function Landmap_Fill()
   local half_LW = int((LAND_W+1)/2)
   local half_LH = int((LAND_H+1)/2)
 
-  if LAND_W >= 5 and rand_odds(12*8) then --!!!!!!
+  if LAND_W >= 5 and rand_odds(10) then
 
 con.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
     LAND_W = half_LW ; Landmap_Fill() ; LAND_W = old_LW
@@ -324,7 +324,7 @@ con.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
 
     return -- NO MORE
 
-  elseif LAND_H >= 5 and rand_odds(3*33) then --!!!!!!
+  elseif LAND_H >= 5 and rand_odds(5) then
 
 con.debugf("(mirroring vertically LAND_H=%d)\n", LAND_W)
     LAND_H = half_LH ; Landmap_Fill() ; LAND_H = old_LH
@@ -932,18 +932,6 @@ function Rooms_Connect()
       end
     end end -- x,y
   end
-
----##  local function seed_for_land_side(L, side)
----##    -- FIXME: this will fuck up after Nudging!!!
----##    local x1,y1, x2,y2 = side_coords(side, L.lx*3-2,L.ly*3-2, L.lx*3,L.ly*3)
----##
----##    local sx = int((x1+x2) / 2)
----##    local sy = int((y1+y2) / 2)
----##
----##    assert(Seed_valid(sx, sy, 1))
----##
----##    return SEEDS[sx][sy][1]
----##  end
 
   local function connect_seeds(S, T, dir, c_kind)
     S.borders[dir]    = { kind="open" }
