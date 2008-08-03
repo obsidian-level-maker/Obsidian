@@ -2,49 +2,23 @@
 TODO
 ====
 
-Land Map system:
+REWRITE:
 
->> Rooms_Connect()
+- physical bridges to connect some/most areas cut-off from
+  each other by Lava.
 
++ quest assignment !!
+  - create a ROOM tree
+  - select "significant" branch points
+  - pick rooms for BOSS monsters
+  - decide what keys/switches to use (and rooms to contain them)
+  - decide minor quests
 
+  ? allocate seeds for teleporters,bosses,switches,items
 
-Room Fab System:  [PROBABLY WONT KEEP]
++ room heights
 
-+ COMPLETE TEST for room fab placement:
-  (1) fab selection
-  (2) mirror or not
-  (3) size selection
-  (4) exit group selection
-
-  For example, if first exit group not possible, try next and so on.
-  Then if none of the exit groups can be made, flip mirror mode.
-  If no mirror mode can be made, select a new size.
-  If no size can be made, select a new room-fab.
-  Lastly if no room-fab can be made, fail.
-
-  - support making larger room fabs (i.e. try the different sizes)
-  - support mirroring the room fab (50% chance)
-  - properly choose exits group 
-
-+ Hall pruning: after first process_conn() pass, remove all halls
-  that lead nowhere (repeat a few times to catch halls off halls),
-  re-instate their connection points and perform second process_conn()
-  pass.  Finally do another hall prune.
-
-? check diagonals too for space measuring
-
-- test exits points when trying to place the room
-  (in particular: halls should have at least 2 seeds at each exit)
-
-- require a certain amount of seeds to be filled, build a new
-  map if that threshhold is not reached.
-
-+ "Level Fabs" used to kick off the whole level.
-  Good for boss levels!
-
-- "wide" connections, especially ground -> ground, where the
-  seeds either side of the connection seed will also connect if
-  they are the same type.
+- create doors, stairs/lifts
 
 
 
