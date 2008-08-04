@@ -481,7 +481,8 @@ function Landmap_GroupRooms()
     {
       kind = L.kind,
       group_id = 1 + #PLAN.all_rooms,
-      num_conn = 0,
+      conns = {},
+      teleports = {},
 
       lx1 = x, ly1 = y,
       lx2 = x, ly2 = y,
@@ -939,8 +940,12 @@ function Rooms_Connect()
 
     merge(S.room.group_id, T.room.group_id)
 
-    S.room.num_conn = S.room.num_conn + 1
-    T.room.num_conn = T.room.num_conn + 1
+    local CONN = { src=S.room, dest=T.room }
+
+    table.insert(PLAN.all_conns, CONN)
+
+    table.insert(S.room.conns, CONN)
+    table.insert(T.room.conns, CONN)
   end
 
   local function connect_land(L, N, dir, c_kind)
@@ -1141,7 +1146,7 @@ con.debugf("USING BIG PATTERN: %s\n", table_to_str(PAT,2))
 
   local function try_branch_big_room(R, num)
     -- we don't bother with patterns if room already has 1 or more connections
-    if R.num_conn > 0 then return false end
+    if #R.conns > 0 then return false end
 con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
 
     -- There are THREE morph steps, done in this order:
@@ -1259,9 +1264,7 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
       error("do_teleport: no group#1 rooms!")
     end
 
-    for _,R in ipairs(rooms) do
-      R.teleports = {}
-    end
+    --| add_teleporters |--
 
     repeat
       local did_merge = false
@@ -1305,6 +1308,7 @@ function Plan_rooms_sp()
   PLAN =
   {
     all_rooms = {},
+    all_conns = {},
   }
 
   Landmap_Init()
