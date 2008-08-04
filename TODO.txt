@@ -4,6 +4,8 @@ TODO
 
 REWRITE:
 
+!! DESYNCH PROBLEM !!
+
 - physical bridges to connect some/most areas cut-off from
   each other by Lava.
 
@@ -19,6 +21,8 @@ REWRITE:
 + room heights
 
 - create doors, stairs/lifts
+
+- document classes (PLAN, SEED, ROOM, QUEST)
 
 
 
