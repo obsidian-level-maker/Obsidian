@@ -507,12 +507,15 @@ function build_cool_shit()
 
   con.rand_seed(OB_CONFIG.seed * 100)
 
+  con.ticker()
+
 
 -- [[ PLANNING TEST CODE
 Plan_rooms_sp();
 Quest_assign();
 Seed_grow()
 dummy_builder();
+
 do return "ok" end
 --]]
 

@@ -429,6 +429,8 @@ end -- do_sides
   csg2.level_prop("level_name", "MAP01");
   csg2.level_prop("error_tex",  "CRACKLE2");
 
+  con.ticker()
+
   for y = 1, SEED_H do
     for x = 1, SEED_W do
       for z = 1, SEED_D do
