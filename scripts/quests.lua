@@ -38,7 +38,7 @@ function Quest_leafiness()
 
   local function determine_leaf_dist(R)
 
-    if R.branch_num == 1 then
+    if R.num_branch == 1 then
       return 0
     end
 
@@ -138,8 +138,10 @@ function Quest_update_trav_diff()
 
     C.trav_diff = math.abs(C.trav_src - C.trav_dest)
 
-con.debugf("Room (%d,%d) <--> (%d,%d) trav_diff:%d\n",
+--[[
+ con.debugf("Room (%d,%d) <--> (%d,%d) trav_diff:%d\n",
         C.src.lx1, C.src.ly1, C.dest.lx1, C.dest.ly1, C.trav_diff)
+--]]
   end -- C
 end
 
@@ -150,6 +152,16 @@ function Quest_divide_group(parent)
   -- rooms in the list which can be locked (by a key or switch).
 
   -- FIXME : more detail of algorithm.....
+
+  local function free_branches(R)
+    local count = 0
+    for _,C in ipairs(R.conns) do
+      if C and not C.lock then
+        count = count + 1
+      end
+    end
+    return count
+  end
 
   local function room_group_contains(start_R, R, exclude_set)
     if start_R == R then return true end
@@ -170,25 +182,52 @@ function Quest_divide_group(parent)
     return false
   end
 
-  local function find_good_candidate(group)
-    if table_size(group.conns) < 3 then
+  local function find_lockable_conn(group)
+    if #group.rooms < 5 or #group.conns < 4 then
       return nil
     end
 
     table.sort(group.conns, function(A,B) return A.trav_diff < B.trav_diff end)
 
-    local C = group.conns[1]
+    for _,C in ipairs(group.conns) do
 
-    -- generally we require the pivot room to be in the front group.
-    -- Hence swap 'src' and 'dest' to satisfy that condition.
-    if group.pivot and not group.need_start then 
-      if room_group_contains(C.dest, group.pivot, { [C.src]=true }) then
-con.debugf("(Pivot was in back group)\n")
-        C.src, C.dest = C.dest, C.src
+      -- generally we require the pivot room to be in the front group.
+      -- Hence swap 'src' and 'dest' to satisfy that condition.
+
+      local s_free = free_branches(C.src)
+      local d_free = free_branches(C.dest)
+
+      local can_swap = true
+
+      if group.pivot and not group.need_start then 
+        can_swap  = false
+        if room_group_contains(C.dest, group.pivot, { [C.src]=true }) then
+  con.debugf("(Pivot was in back group)\n")
+          C.src,  C.dest = C.dest, C.src
+          s_free, d_free = d_free, s_free
+        end
+      end
+
+      -- also require the source room to have >= 3 branches
+      -- (entry branch, key branch and branch through locked door).
+      -- 
+      -- Need to check for locked connections ????
+      --
+      -- For need_start groups, 2 branches is OK (one for key and
+      -- one for exit), and we'll put the start in the same room.
+      -- FIXME: IMPLEMENT THAT!
+
+      if can_swap and s_free < d_free then
+        C.src,  C.dest = C.dest, C.src
+        s_free, d_free = d_free, s_free
+      end
+
+      if s_free >= 3 then
+        return C -- FOUND ONE
       end
     end
 
-    return C
+    return nil -- failed
   end
 
 ---##  local function split_do_move(S, D, front, back)
@@ -280,6 +319,9 @@ con.debugf("(Pivot was in back group)\n")
 
   local function split_group(C)
     assert(C.lock)
+    
+    Quest_update_trav_diff()
+
     return collect_group_at(nil, C.src,  { [C.dest]=true }, {}) ,
            collect_group_at(nil, C.dest, { [C.src]=true },  {})
   end
@@ -288,16 +330,17 @@ con.debugf("(Pivot was in back group)\n")
   ---| Quest_divide_group |---
 
 
-  -- find_good_candidate may swap 'src' and 'dest'
+  -- find_lockable_conn may swap 'src' and 'dest'
   -- Hence here: C.src is earlier and C.dest is later (quest progression)
 
-  C = find_good_candidate(parent)
+  C = find_lockable_conn(parent)
 
   if not C then
-con.debugf("No good candidate\n")
-    if parent.key then
+con.debugf("No lockable connections : %d\n", #parent.rooms)
+
+    if parent.need_key then
 --!!!!      store parent.key somewhere.... (far from pivot)
-con.debugf("store %s somewhere....\n", parent.key)
+con.debugf("store %s somewhere....\n", parent.need_key.id)
     end
     if parent.need_start then
 --!!!!      store "START" somewhere.... (far from pivot and key)
@@ -311,12 +354,21 @@ con.debugf("store EXIT somewhere....\n")
     return
   end
 
-  C.lock = "KEY_" .. tostring(C)
 
-con.debugf("Candidate: (%d,%d) --> (%d,%d) lock:%s\n",
-C.src.lx1, C.src.ly1, C.dest.lx1, C.dest.ly1, C.lock)
+  -- create lock information
+  local LOCK =
+  {
+    id = 1 + #PLAN.all_locks,
+    conn = C,
+    trav_sum = C.trav_src + C.trav_dest,
+  }
 
-  Quest_update_trav_diff()
+  table.insert(PLAN.all_locks, LOCK)
+
+  C.lock = LOCK
+
+con.debugf("Candidate: (%d,%d) --> (%d,%d) diff:%d lock:%s sum:%d\n",
+C.src.lx1, C.src.ly1, C.dest.lx1, C.dest.ly1, C.trav_diff, C.lock.id, C.lock.trav_sum)
 
 
   local front, back = split_group(C)
@@ -327,11 +379,11 @@ con.debugf("  Front (%d rooms, %d conns)\n", # front.rooms, # front.conns)
 con.debugf("  Back  (%d rooms, %d conns)\n", #  back.rooms, #  back.conns)
 
   front.pivot = C.src
-  front.key = C.lock
+  front.need_key = C.lock
   front.need_start = parent.need_start
 
   back.pivot = C.dest
-  back.key = parent.key
+  back.need_key = parent.need_key
   back.need_exit = parent.need_exit
  
   Quest_divide_group(front)
@@ -376,11 +428,11 @@ function Quest_assign()
 
   -- count branches in each room
   for _,R in ipairs(PLAN.all_rooms) do
-    R.branch_num = #R.conns + #R.teleports
-    if R.branch_num == 0 then
+    R.num_branch = #R.conns + #R.teleports
+    if R.num_branch == 0 then
       error("Room exists with no connections!")
     end
-con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.branch_num)
+con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
 
 ---??  Quest_leafiness()
@@ -396,19 +448,9 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.branch_num)
     need_exit  = true,
   }
 
+  PLAN.all_locks = {}
+
   Quest_divide_group(group)
-
---[[
-  local conn_list = copy_table(PLAN.all_conns)
-
-  table.sort(conn_list, function(A,B) return A.trav_diff < B.trav_diff end)
-
-  local C = conn_list[1]
-  con.debugf("Lowest conn: %d -- LOCKED\n", C.trav_diff)
-
-  C.locked = true
-  Quest_update_trav_diff()
---]]
 
 
   local sx, sy
@@ -419,24 +461,6 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.branch_num)
   until SEEDS[sx][sy][1].room and not SEEDS[sx][sy][1].room.nowalk
 
 
---[[ older method
-
-  local start_R
-
-  repeat
-    start_R = rand_element(PLAN.all_rooms)
-  until not start_R.zone_kind
-
-  start_R.is_start = true
-
-  local sx, sy
-
-  repeat
-    sx = rand_irange(start_R.sx1, start_R.sx2)
-    sy = rand_irange(start_R.sy1, start_R.sy2)
-  until SEEDS[sx][sy][1].room == start_R
-
---]]
   SEEDS[sx][sy][1].is_start = true
 
   con.printf("Start seed @ (%d,%d)\n", sx, sy)
