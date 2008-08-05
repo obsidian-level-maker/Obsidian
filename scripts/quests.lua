@@ -28,6 +28,7 @@ require 'defs'
 require 'util'
 
 
+--[[ OLD CRUD
 function Quest_leafiness()
 
   -- This determines distance of the room to a leaf:
@@ -89,6 +90,7 @@ con.debugf("Quest_leafiness: loop %d, changes %d\n", loop, changes)
     end
   end
 end
+--]]
 
 
 function Quest_travel_volume(R, exclude_set)
@@ -131,10 +133,10 @@ function Quest_update_trav_diff()
   -- Note: we don't do teleporters, as they are never lockable
 
   for _,C in ipairs(PLAN.all_conns) do
-    local t1 = Quest_travel_volume(C.src,  { [C.dest]=true })
-    local t2 = Quest_travel_volume(C.dest, { [C.src] =true })
+    C.trav_src  = Quest_travel_volume(C.src,  { [C.dest]=true })
+    C.trav_dest = Quest_travel_volume(C.dest, { [C.src] =true })
 
-    C.trav_diff = math.abs(t1 - t2)
+    C.trav_diff = math.abs(C.trav_src - C.trav_dest)
 
 con.debugf("Room (%d,%d) <--> (%d,%d) trav_diff:%d\n",
         C.src.lx1, C.src.ly1, C.dest.lx1, C.dest.ly1, C.trav_diff)
@@ -146,9 +148,144 @@ function Quest_divide_group(parent)
 
   -- Primary function is to find a suitable connection amongst the
   -- rooms in the list which can be locked (by a key or switch).
-  --
-  -- One side of the connection needs >= 2 other branches (one is
-  -- the START and
+
+  -- FIXME : more detail of algorithm.....
+
+  local function room_group_contains(start_R, R, exclude_set)
+    if start_R == R then return true end
+    if exclude_set[start_R] then return false end
+
+    exclude_set[start_R] = true
+
+    for _,C in ipairs(start_R.conns) do
+      local N = sel(C.src == start_R, C.dest, C.src)
+      if room_group_contains(N, R, exclude_set) then return true end
+    end
+
+    for _,T in ipairs(start_R.teleports) do
+      local N = sel(T.src == start_R, T.dest, T.src)
+      if room_group_contains(N, R, exclude_set) then return true end
+    end
+
+    return false
+  end
+
+  local function find_good_candidate(group)
+    if table_size(group.conns) < 3 then
+      return nil
+    end
+
+    table.sort(group.conns, function(A,B) return A.trav_diff < B.trav_diff end)
+
+    local C = group.conns[1]
+
+    -- generally we require the pivot room to be in the front group.
+    -- Hence swap 'src' and 'dest' to satisfy that condition.
+    if group.pivot and not group.need_start then 
+      if room_group_contains(C.dest, group.pivot, { [C.src]=true }) then
+con.debugf("(Pivot was in back group)\n")
+        C.src, C.dest = C.dest, C.src
+      end
+    end
+
+    return C
+  end
+
+---##  local function split_do_move(S, D, front, back)
+---##    assert(not S.split_n or not D.split_n)
+---##    if not S.split_n then
+---##      S.split_n = D.split_n
+---##      table.insert(sel(S.split_n==1, front.rooms, back.rooms), S)
+---##    else
+---##      D.split_n = S.split_n
+---##      table.insert(sel(D.split_n==1, front.rooms, back.rooms), D)
+---##    end
+---##  end
+---##
+---##  local function split_group(group, join_C)
+---##    local front = { rooms={}, conns={} }
+---##    local back  = { rooms={}, conns={} }
+---##
+---##    table.insert(front.rooms, join_C.src)
+---##    table.insert( back.rooms, join_C.dest)
+---##
+---##    join_C. src.split_n = 1
+---##    join_C.dest.split_n = 2
+---##
+---##    for loop = 1,999 do
+---##      for _,C in ipairs(group.conns) do if not C.lock then
+---##        if C.src.split_n ~= C.dest.split_n then
+---##          split_do_move(C.src, C.dest, front, back)
+---##          table.insert(sel(C.src.split_n==1, front.conns, back.conns), C)
+---##        end
+---##      end end -- C
+---##
+---##---!!!      for _,T in ipairs(group.conns) do
+---##---!!!        if T.src.split_n ~= T.dest.split_n then
+---##---!!!          split_do_move(T.src, T.dest, front, back)
+---##---!!!        end
+---##---!!!      end -- T
+---##
+---##      local R_done = #front.rooms + #back.rooms
+---##      local C_done = #front.conns + #back.conns
+---##
+---##con.debugf("Loop %d:  R_done:%d (of %d)  C_done:%d (of %d)\n",
+---##loop, R_done, #group.rooms, C_done, #group.conns)
+---##
+---##      if (R_done == #group.rooms) and (C_done == #group.conns-1) then
+---##        break;
+---##      end
+---##    end -- loop
+---##
+---##    for _,R in ipairs(PLAN.all_rooms) do
+---##      R.split_n = nil
+---##    end
+---##
+---##    return front, back
+---##  end
+
+
+  local function collect_group_at(child, R, seen_rooms, seen_conns)
+    if not child then
+      child = { rooms={}, conns={} }
+    end
+
+    if seen_rooms[R] then
+      return child
+    end
+
+    seen_rooms[R] = true
+    table.insert(child.rooms, R)
+
+    for _,C in ipairs(R.conns) do
+      if not C.lock and not seen_conns[C] then
+        seen_conns[C] = true
+        table.insert(child.conns, C)
+        local N = sel(R == C.src, C.dest, C.src)
+        collect_group_at(child, N, seen_rooms, seen_conns)
+      end
+    end
+
+    for _,T in ipairs(R.teleports) do
+      if not seen_conns[T] then
+        seen_conns[T] = true
+        table.insert(child.conns, T)
+        local N = sel(R == T.src, T.dest, T.src)
+        collect_group_at(child, N, seen_rooms, seen_conns)
+      end
+    end
+
+    return child
+  end
+
+  local function split_group(C)
+    assert(C.lock)
+    return collect_group_at(nil, C.src,  { [C.dest]=true }, {}) ,
+           collect_group_at(nil, C.dest, { [C.src]=true },  {})
+  end
+
+
+  ---| Quest_divide_group |---
 
 
   -- find_good_candidate may swap 'src' and 'dest'
@@ -157,14 +294,18 @@ function Quest_divide_group(parent)
   C = find_good_candidate(parent)
 
   if not C then
+con.debugf("No good candidate\n")
     if parent.key then
-      store parent.key somewhere.... (far from pivot)
+--!!!!      store parent.key somewhere.... (far from pivot)
+con.debugf("store %s somewhere....\n", parent.key)
     end
     if parent.need_start then
-      store "START" somewhere.... (far from pivot and key)
+--!!!!      store "START" somewhere.... (far from pivot and key)
+con.debugf("store START somewhere....\n")
     end
     if parent.need_exit then
-      store "EXIT" somewhere.... (far from pivot)
+--!!!!      store "EXIT" somewhere.... (far from pivot)
+con.debugf("store EXIT somewhere....\n")
     end
 
     return
@@ -172,10 +313,18 @@ function Quest_divide_group(parent)
 
   C.lock = "KEY_" .. tostring(C)
 
+con.debugf("Candidate: (%d,%d) --> (%d,%d) lock:%s\n",
+C.src.lx1, C.src.ly1, C.dest.lx1, C.dest.ly1, C.lock)
+
   Quest_update_trav_diff()
 
-  local front, back = split_group(parent, C)
+
+  local front, back = split_group(C)
   -- now we have two separate groups of rooms
+
+con.debugf("Group (%d rooms, %d conns) split:\n", #parent.rooms, #parent.conns)
+con.debugf("  Front (%d rooms, %d conns)\n", # front.rooms, # front.conns)
+con.debugf("  Back  (%d rooms, %d conns)\n", #  back.rooms, #  back.conns)
 
   front.pivot = C.src
   front.key = C.lock
