@@ -32,7 +32,7 @@ require 'defs'
 require 'util'
 
 
-LAND_W = 7
+LAND_W = 5
 LAND_H = 5
 LAND_MAP = array_2D(LAND_W, LAND_H)
 
@@ -1146,6 +1146,11 @@ con.debugf("USING BIG PATTERN: %s\n", table_to_str(PAT,2))
       local N = SEEDS[nx][ny][1]
 
       connect_seeds(S, N, dir, "normal")
+
+      if T[1] == 2 and T[2] == 1 and T[3] == 2 then
+        R.big_orientation = dir
+con.debugf("Room (%d,%d) : big_orientation:%d\n", R.lx1,R.ly1, R.big_orientation)
+      end
     end
 
     return true
