@@ -100,6 +100,84 @@ end
 --]]
 
 
+function Quest_decide_start_room()
+
+  local GROUND_COSTS =
+  {
+    ["valley/ground"] = -100,
+    ["valley/hill"]   = -237,
+    ["ground/hill"]   = -100,
+
+    ["hill/ground"]   =  100,
+    ["hill/valley"]   =  237,
+    ["ground/valley"] =  100,
+  }
+
+  local function eval_connection(C)
+    if C.cost then return end
+
+    local A = C.src
+    local B = C.dest
+
+    local kind_AB = A.kind .. "/" .. B.kind
+
+    local cost = GROUND_COSTS[kind_AB] or 0
+
+    cost = cost + (#A.conns     - #B.conns)     * 23
+    cost = cost + (#A.teleports - #B.teleports) * 144
+
+    cost = cost + rand_range(-1, 1)
+
+    C.cost = cost
+
+con.debugf("Connection cost: %1.2f\n", C.cost)
+  end
+
+  local function eval_area(R, visited)
+    visited[R] = true
+
+    local cost = 0
+
+    for _,C in ipairs(R.conns) do
+      eval_connection(C)
+      local N = sel(R == C.src, C.dest, C.src)
+      if not visited[N] then
+        cost = cost + eval_area(N, visited) + C.cost * sel(R == C.src,1,-1)
+      end
+    end
+
+    for _,T in ipairs(R.teleports) do
+      eval_connection(T)
+      local N = sel(R == T.src, T.dest, T.src)
+      if not visited[N] then
+        cost = cost + eval_area(N, visited) + T.cost * sel(R == T.src,1,-1)
+      end
+    end
+
+    return cost
+  end
+
+
+  ---| Quest_decide_start_room |---
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    R.start_cost = eval_area(R, {}) -- + rand_range(-5, 5)
+    con.debugf("Room (%d,%d) : START COST : %1.4f\n", R.lx1,R.ly1, R.start_cost)
+  end
+
+
+  -- sort rooms by cost and select lowest one
+
+  local list = copy_table(PLAN.all_rooms)
+
+  table.sort(list, function(A, B) return A.start_cost < B.start_cost end)
+
+  con.debugf("LIST=%s\n",table_to_str(list,2))
+
+  PLAN.start_room = list[1]
+end
+
+
 function Quest_travel_volume(R, exclude_set)
   -- Determine number of rooms that are reachable from the
   -- given room, including itself, but excluding connections
@@ -391,7 +469,7 @@ con.debugf("No lockable connections : %d  pivot=%s\n", #parent.rooms, sel(parent
       local START_R = find_unused_leaf(parent.pivot or parent.rooms[1])
       if not START_R then error("Cannot find room for START!!") end
       START_R.purpose = "start"
-      PLAN.start_room = START_R
+---      PLAN.start_room = START_R
     end
 
     return
@@ -477,6 +555,8 @@ function Quest_assign()
 con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
 
+  Quest_decide_start_room()
+
   Quest_update_trav_diff()
 
   local group =
@@ -507,7 +587,7 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
 
   local EXIT_R = PLAN.exit_room
   assert(EXIT_R)
-  assert(EXIT_R ~= START_R)
+--!!!!  assert(EXIT_R ~= START_R)
 
   local ex = int((EXIT_R.sx1 + EXIT_R.sx2) / 2.0)
   local ey = int((EXIT_R.sy1 + EXIT_R.sy2) / 2.0)
