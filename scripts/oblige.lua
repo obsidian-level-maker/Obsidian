@@ -511,10 +511,24 @@ function build_cool_shit()
 
 
 -- [[ PLANNING TEST CODE
-Plan_rooms_sp();
-Quest_assign();
-Seed_grow()
-dummy_builder();
+for level = 1,10 do
+
+  local level_name = string.format("MAP%02d", level)
+
+  con.at_level(level_name, level, 10)
+
+  Plan_rooms_sp();
+  Quest_assign();
+  Seed_grow()
+  
+  if con.abort() then return "abort" end
+
+  dummy_builder(level_name);
+
+  if con.abort() then return "abort" end
+
+  con.progress(100)
+end
 
 do return "ok" end
 --]]

@@ -24,7 +24,7 @@ require 'seeds'
 TK = 16  -- wall thickness
 
 
-function dummy_builder(Z)
+function dummy_builder(level_name)
 
 ---##  local function zone_content(ZZ, x, y)
 ---##    local R = ZZ.grid[x][y]
@@ -426,8 +426,8 @@ end -- do_sides
   con.printf("\n--==| dummy_builder |==--\n\n")
 
   csg2.begin_level()
-  csg2.level_prop("level_name", "MAP01");
-  csg2.level_prop("error_tex",  "CRACKLE2");
+  csg2.level_prop("level_name", level_name);
+  csg2.level_prop("error_tex",  "BLAKWAL1");
 
   con.ticker()
 
