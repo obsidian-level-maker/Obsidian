@@ -20,6 +20,8 @@
 
 class PLAN
 {
+  all_rooms : array(ROOM) 
+  all_conns : array(CONN)
 }
 
 
@@ -30,8 +32,8 @@ require 'defs'
 require 'util'
 
 
-LAND_W = 9
-LAND_H = 9
+LAND_W = 7
+LAND_H = 5
 LAND_MAP = array_2D(LAND_W, LAND_H)
 
 
@@ -432,7 +434,7 @@ function Landmap_GroupRooms()
     end
   end
 
-  local function check_expansion(exps, kind, x,y, dx,dy)
+  local function check_expansion(e_infos, e_probs, kind, x,y, dx,dy)
     for w = 1,4 do
       for h = sel(w==1,2,1),4 do
         -- prevent duplicate entries for pure vertical / horizontal
@@ -445,7 +447,8 @@ function Landmap_GroupRooms()
             x=x, y=y, dx=dx, dy=dy, w=w, h=h
           }
 
-          exps[INFO] = prob_for_big_room(kind, w, h)
+          table.insert(e_infos, INFO)
+          table.insert(e_probs, prob_for_big_room(kind, w, h))
   con.debugf("  (%d,%d) w:%d h:%d dx:%d dy:%d\n", x, y, w, h, dx, dy)
         end
       end -- h
@@ -477,6 +480,7 @@ function Landmap_GroupRooms()
   end
 
   local function create_room(L, x, y)
+
     local ROOM =
     {
       kind = L.kind,
@@ -493,15 +497,18 @@ function Landmap_GroupRooms()
 
     table.insert(PLAN.all_rooms, ROOM)
 
-    local expansions = { none = 50 }
+    local e_infos = { "none" }
+    local e_probs = { 50 }
 con.debugf("Check expansions:\n{\n")
 
     for dx = -1,1,2 do for dy = -1,1,2 do
-      check_expansion(expansions, ROOM.kind, x, y, dx, dy)
+      check_expansion(e_infos, e_probs, ROOM.kind, x, y, dx, dy)
     end end -- dx, dy
 con.debugf("}\n")
 
-    local what = rand_key_by_probs(expansions)
+    local idx = rand_index_by_probs(e_probs)
+
+    local what = e_infos[idx]
 
     if what == "none" then
       L.room = ROOM
