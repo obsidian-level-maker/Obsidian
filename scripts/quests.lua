@@ -22,6 +22,13 @@ class Quest
 {
 }
 
+
+class Lock
+{
+  conn : CONN
+}
+
+
 --------------------------------------------------------------]]
 
 require 'defs'
@@ -325,6 +332,35 @@ function Quest_divide_group(parent)
            collect_group_at(nil, C.dest, { [C.src]=true },  {})
   end
 
+  local function find_unused_leaf(R, exclude_set)
+    
+    if not exclude_set then exclude_set = {} end
+
+    if exclude_set[R] then return nil end
+
+    exclude_set[R] = true
+
+    if free_branches(R) <= 1 and not R.purpose then
+      return R
+    end
+
+    for _,C in ipairs(R.conns) do
+      if not C.lock then
+        local N = sel(C.src == R, C.dest, C.src)
+        local L = find_unused_leaf(N, exclude_set)
+        if L then return L end
+      end
+    end -- C
+
+    for _,T in ipairs(R.conns) do
+      local N = sel(T.src == R, T.dest, T.src)
+      local L = find_unused_leaf(N, exclude_set)
+      if L then return L end
+    end -- T
+
+    return nil
+  end
+
 
   ---| Quest_divide_group |---
 
@@ -335,19 +371,27 @@ function Quest_divide_group(parent)
   C = find_lockable_conn(parent)
 
   if not C then
-con.debugf("No lockable connections : %d\n", #parent.rooms)
+con.debugf("No lockable connections : %d  pivot=%s\n", #parent.rooms, sel(parent.pivot, "yes", "NO"))
 
-    if parent.need_key then
---!!!!      store parent.key somewhere.... (far from pivot)
-con.debugf("store %s somewhere....\n", parent.need_key.id)
+    if parent.lock_item then
+      -- The lock item is not placed now, but later on when we have
+      -- decided exactly which locks we shall implement.
+
+      parent.lock_item.pivot = parent.pivot or parent.rooms[1]
     end
-    if parent.need_start then
---!!!!      store "START" somewhere.... (far from pivot and key)
-con.debugf("store START somewhere....\n")
-    end
+
     if parent.need_exit then
---!!!!      store "EXIT" somewhere.... (far from pivot)
-con.debugf("store EXIT somewhere....\n")
+      local EXIT_R = find_unused_leaf(parent.pivot or parent.rooms[1])
+      if not EXIT_R then error("Cannot find room for EXIT!!") end
+      EXIT_R.purpose = "exit"
+      PLAN.exit_room = EXIT_R
+    end
+
+    if parent.need_start then
+      local START_R = find_unused_leaf(parent.pivot or parent.rooms[1])
+      if not START_R then error("Cannot find room for START!!") end
+      START_R.purpose = "start"
+      PLAN.start_room = START_R
     end
 
     return
@@ -378,11 +422,11 @@ con.debugf("  Front (%d rooms, %d conns)\n", # front.rooms, # front.conns)
 con.debugf("  Back  (%d rooms, %d conns)\n", #  back.rooms, #  back.conns)
 
   front.pivot = C.src
-  front.need_key = C.lock
+  front.lock_item = C.lock
   front.need_start = parent.need_start
 
   back.pivot = C.dest
-  back.need_key = parent.need_key
+  back.lock_item = parent.lock_item
   back.need_exit = parent.need_exit
  
   Quest_divide_group(front)
@@ -419,11 +463,10 @@ end
 
 function Quest_assign()
 
-  -- FIXME proper Quest_assign() function
-
-  -- make a random room the start room (TEMP CRUD)
-
   con.printf("\n--==| Quest_assign |==--\n\n")
+
+  -- need at least a START room and an EXIT room
+  assert(#PLAN.all_rooms >= 2)
 
   -- count branches in each room
   for _,R in ipairs(PLAN.all_rooms) do
@@ -433,8 +476,6 @@ function Quest_assign()
     end
 con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
-
----??  Quest_leafiness()
 
   Quest_update_trav_diff()
 
@@ -452,17 +493,28 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   Quest_divide_group(group)
 
 
-  local sx, sy
+  local START_R = PLAN.start_room
+  assert(START_R)
 
-  repeat
-    sx = rand_irange(1, SEED_W)
-    sy = rand_irange(1, SEED_H)
-  until SEEDS[sx][sy][1].room and not SEEDS[sx][sy][1].room.nowalk
+  local sx = int((START_R.sx1 + START_R.sx2) / 2.0)
+  local sy = int((START_R.sy1 + START_R.sy2) / 2.0)
 
 
   SEEDS[sx][sy][1].is_start = true
 
   con.printf("Start seed @ (%d,%d)\n", sx, sy)
 
+
+  local EXIT_R = PLAN.exit_room
+  assert(EXIT_R)
+  assert(EXIT_R ~= START_R)
+
+  local ex = int((EXIT_R.sx1 + EXIT_R.sx2) / 2.0)
+  local ey = int((EXIT_R.sy1 + EXIT_R.sy2) / 2.0)
+
+
+  SEEDS[ex][ey][1].is_exit = true
+
+  con.printf("Exit seed @ (%d,%d)\n", ex, ey)
 end
 

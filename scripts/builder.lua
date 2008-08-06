@@ -414,7 +414,9 @@ end -- do_sides
 
     if S.is_start then
       csg2.add_entity(--[[ "info_player_start" ]] "1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
-    else
+    elseif S.is_exit then
+      csg2.add_entity(--[[ "info_player_start" ]] "41", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+    elseif S.room and (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
       csg2.add_entity(--[[ "item_health" ]] "2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
