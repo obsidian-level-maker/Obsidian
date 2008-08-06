@@ -308,7 +308,6 @@ function Quest_divide_group(parent)
     for _,T in ipairs(R.teleports) do
       if not seen_conns[T] then
         seen_conns[T] = true
-        table.insert(child.conns, T)
         local N = sel(R == T.src, T.dest, T.src)
         collect_group_at(child, N, seen_rooms, seen_conns)
       end
