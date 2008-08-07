@@ -126,6 +126,10 @@ function Quest_decide_start_room()
     cost = cost + (#A.conns     - #B.conns)     * 23
     cost = cost + (#A.teleports - #B.teleports) * 144
 
+    if C.big_entrance then
+      cost = cost + sel(C.dest == C.big_entrance, -1, 1) * 60
+    end
+
     cost = cost + rand_range(-1, 1)
 
     C.cost = cost

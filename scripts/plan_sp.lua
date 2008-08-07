@@ -953,6 +953,8 @@ function Rooms_Connect()
 
     table.insert(S.room.conns, CONN)
     table.insert(T.room.conns, CONN)
+
+    return CONN
   end
 
   local function connect_land(L, N, dir, c_kind)
@@ -1145,10 +1147,11 @@ con.debugf("USING BIG PATTERN: %s\n", table_to_str(PAT,2))
       local S = SEEDS[sx][sy][1]
       local N = SEEDS[nx][ny][1]
 
-      connect_seeds(S, N, dir, "normal")
+      local CONN = connect_seeds(S, N, dir, "normal")
 
-      if T[1] == 2 and T[2] == 1 and T[3] == 2 then
-        R.big_orientation = dir
+      if T[1] == 2 and T[2] == 1 then
+        R.big_orientation = 10-dir
+        CONN.big_entrance = R
 con.debugf("Room (%d,%d) : big_orientation:%d\n", R.lx1,R.ly1, R.big_orientation)
       end
     end
