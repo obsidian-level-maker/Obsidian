@@ -460,7 +460,17 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
 
   // TODO: w_face
 
-  // TODO: kind, tag, flags, args
+  lua_getfield(L, stack_pos, "line_kind");
+  lua_getfield(L, stack_pos, "line_tag");
+  lua_getfield(L, stack_pos, "line_flags");
+
+  if (lua_isnumber(L, -3)) V->line_kind  = lua_tointeger(L, -3);
+  if (lua_isnumber(L, -2)) V->line_tag   = lua_tointeger(L, -2);
+  if (lua_isnumber(L, -1)) V->line_flags = lua_tointeger(L, -1);
+
+  lua_pop(L, 3);
+
+  // TODO: args (hexen)
 
   return V;
 }

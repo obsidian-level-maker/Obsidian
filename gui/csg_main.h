@@ -309,7 +309,7 @@ public:
 
 class merge_region_c
 {
-  // This represents an a region on the 2D map, bounded by a set
+  // This represents a region on the 2D map, bounded by a group
   // of segments (not explicitly stored here, but implicit in the
   // merge_segment_c::front and back fields).  Each region lists
   // all the area_polys ("brushes") contained, as well as the gaps
