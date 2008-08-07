@@ -550,8 +550,8 @@ function Quest_hallways()
   --   - no purpose (not a start room, exit room, key room)
   --   - no teleporters
 
-  local HALL_SIZE_PROBS = { 99, 75, 50, 33 }
-  local REVERT_PROBS    = {  0, 50, 75, 99 }
+  local HALL_SIZE_PROBS = { 99, 75, 50, 25 }
+  local REVERT_PROBS    = {  0, 50, 84, 99 }
 
   local function eval_hallway(R)
     if not (R.kind == "building" or R.kind == "cave") then
@@ -578,6 +578,16 @@ function Quest_hallways()
     return rand_odds(HALL_SIZE_PROBS[rw])
   end
 
+  local function surrounded_by_halls(R)
+    local hall_nb = 0
+    for _,C in ipairs(R.conns) do
+      local N = sel(C.src == R, C.dest, C.src)
+      if N.hallway then hall_nb = hall_nb + 1 end
+    end
+
+    return (hall_nb == #R.conns) or (hall_nb >= 3)
+  end
+
   ---| Quest_hallways |---
   
   for _,R in ipairs(PLAN.all_rooms) do
@@ -586,12 +596,27 @@ function Quest_hallways()
     end
   end
 
+  -- large rooms which are surrounded by hallways are wasted,
+  -- hence look for them and revert them back to normal.
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.hallway and surrounded_by_halls(R) then
+      local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
+      rw = math.min(rw, rh)
+      assert(rw <= 4)
+
+      if rand_odds(REVERT_PROBS[rw]) then
+        R.hallway = nil
+con.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
+      end
+    end
+  end
+
   -- !!!! TEMP CRUD
   for _,R in ipairs(PLAN.all_rooms) do
     if R.hallway then
       local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
 
-      if math.min(rw,rh) >= 3 then
+      if math.min(rw,rh) >= 3 and #R.conns >= 3 then
         for x = R.sx1+1, R.sx2-1 do for y = R.sy1+1, R.sy2-1 do
           SEEDS[x][y][1].room = nil
         end end -- x, y
