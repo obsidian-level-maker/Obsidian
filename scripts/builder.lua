@@ -207,6 +207,51 @@ function dummy_builder(level_name)
   end
 
 
+  local function do_teleporter(S)
+    -- TEMP HACK SHIT
+
+    local idx = S.sx - S.room.sx1 + 1
+    assert(idx >= 1)
+    if idx > #S.room.teleports then return end
+
+    local TELEP = S.room.teleports[idx]
+
+
+    local mx = int((S.x1 + S.x2)/2)
+    local my = int((S.y1 + S.y2)/2)
+
+    local x1 = mx - 32
+    local y1 = my - 32
+    local x2 = mx + 32
+    local y2 = my + 32
+
+    local z1 = S.z1 + 16
+
+    local tag = sel(TELEP.src == S.room, TELEP.src_tag, TELEP.dest_tag)
+    assert(tag)
+
+
+con.printf("do_teleport\n")
+    csg2.add_brush(
+    {
+      t_face = { texture="GATE3" },
+      b_face = { texture="GATE3" },
+      w_face = { texture="METAL" },
+
+      sec_tag = tag,
+    },
+    {
+      { x=x1, y=y1 },
+      { x=x1, y=y2 },
+      { x=x2, y=y2 },
+      { x=x2, y=y1 },
+    },
+    -2000, z1)
+
+    csg2.add_entity("14", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+  end
+
+
   local function build_seed(S)
     assert(S)
     assert(S.zone)
@@ -292,6 +337,8 @@ function dummy_builder(level_name)
         c_tex = "TLITE6_6"
         w_tex = "METAL2"
       end
+
+      S.z1 = z1 --!!!!!! REMOVE CRAP
 
       if do_corners then
       csg2.add_brush(
@@ -419,6 +466,11 @@ end -- do_sides
     elseif S.room and (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
       csg2.add_entity(--[[ "item_health" ]] "2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+    end
+
+
+    if S.sy == S.room.sy2 then
+      do_teleporter(S)
     end
   end
 

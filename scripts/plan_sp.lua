@@ -22,6 +22,9 @@ class PLAN
 {
   all_rooms : array(ROOM) 
   all_conns : array(CONN)
+
+  free_tag  : number
+  free_mark : number
 }
 
 
@@ -32,9 +35,24 @@ require 'defs'
 require 'util'
 
 
-LAND_W = 5
-LAND_H = 5
+LAND_W = 7
+LAND_H = 7
 LAND_MAP = array_2D(LAND_W, LAND_H)
+
+
+function Plan_alloc_tag()
+  local result = PLAN.free_tag
+  PLAN.free_tag = PLAN.free_tag + 1
+
+  return result
+end
+
+function Plan_alloc_mark()
+  local result = PLAN.free_mark
+  PLAN.free_mark = PLAN.free_mark + 1
+
+  return result
+end
 
 
 function Landmap_Init()
@@ -1262,6 +1280,9 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
         if (N.group_id == 1) and (#N.teleports < 2) then
           local TELEP = { src=N, dest=R }
 
+          TELEP.src_tag  = Plan_alloc_tag()
+          TELEP.dest_tag = Plan_alloc_tag()
+
           table.insert(R.teleports, TELEP)
           table.insert(N.teleports, TELEP)
 
@@ -1324,6 +1345,9 @@ function Plan_rooms_sp()
   {
     all_rooms = {},
     all_conns = {},
+
+    free_tag  = 1,
+    free_mark = 1,
   }
 
   Landmap_Init()
