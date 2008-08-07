@@ -21,15 +21,16 @@ REWRITE:
 
   ? allocate seeds for teleporters,bosses,switches,items
 
-+ assign Hallways: 
-  - indoor rooms with MIN(w,h) == 1 (especially) or 2
-  - all neighbours are indoor
-  - no teleporters
-  - no purpose (not a start room, exit room, key room)
-
 + room heights
 
 - create doors, stairs/lifts
+
++ build Hallways:
+  - for two exits, create optimal path (L or /\/ shape)
+  - for three exits (where two are opposite), optimal path (T shape)
+  - for rooms >= 3x3 and 3+ exits, properly create O or U shape path
+  - occasionaly: height diff, spaced steps (two exit only)
+  - rarely: make a maze (large room only)
 
 - document classes (PLAN, SEED, ROOM, QUEST)
 
