@@ -4,12 +4,15 @@ TODO
 
 REWRITE:
 
-!! DESYNCH PROBLEM !!
-
 - physical bridges to connect some/most areas cut-off from
   each other by Lava.
 
 + quest assignment !!
+
+  + replace all_locks with a binary tree of locks
+
+  - determine start room: swap all src/dest in connections based on natural flow
+
   - create a ROOM tree
   - select "significant" branch points
   - pick rooms for BOSS monsters
@@ -17,6 +20,12 @@ REWRITE:
   - decide minor quests
 
   ? allocate seeds for teleporters,bosses,switches,items
+
++ assign Hallways: 
+  - indoor rooms with MIN(w,h) == 1 (especially) or 2
+  - all neighbours are indoor
+  - no teleporters
+  - no purpose (not a start room, exit room, key room)
 
 + room heights
 
