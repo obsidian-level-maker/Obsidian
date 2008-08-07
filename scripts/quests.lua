@@ -177,6 +177,7 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
   table.sort(list, function(A, B) return A.start_cost < B.start_cost end)
 
   PLAN.start_room = list[1]
+  PLAN.start_room.purpose = "START"
 end
 
 
@@ -541,6 +542,65 @@ con.debugf("  Back  (%d rooms, %d conns)\n", #  back.rooms, #  back.conns)
 end
 
 
+function Quest_hallways()
+  -- Marks certain rooms to be hallways, using the following criteria:
+  --   - indoor non-leaf room
+  --   - MIN(w,h) == 1 (sometimes 2)
+  --   - all neighbours are indoor
+  --   - no purpose (not a start room, exit room, key room)
+  --   - no teleporters
+
+  local HALL_SIZE_PROBS = { 99, 75, 50, 33 }
+  local REVERT_PROBS    = {  0, 50, 75, 99 }
+
+  local function eval_hallway(R)
+    if not (R.kind == "building" or R.kind == "cave") then
+      return false
+    end
+
+    if R.purpose then return false end
+    if #R.teleports > 0 then return false end
+    if R.num_branch < 2 then return false end
+    if R.num_branch > 5 then return false end
+
+    for _,C in ipairs(R.conns) do
+      local N = sel(C.src == R, C.dest, C.src)
+      if not (N.kind == "building" or N.kind == "cave") then
+        return false
+      end
+    end
+
+    local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
+    rw = math.min(rw, rh)
+
+    if rw > 4 then return false end
+
+    return rand_odds(HALL_SIZE_PROBS[rw])
+  end
+
+  ---| Quest_hallways |---
+  
+  for _,R in ipairs(PLAN.all_rooms) do
+    if eval_hallway(R) then
+      R.hallway = true
+    end
+  end
+
+  -- !!!! TEMP CRUD
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.hallway then
+      local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
+
+      if math.min(rw,rh) >= 3 then
+        for x = R.sx1+1, R.sx2-1 do for y = R.sy1+1, R.sy2-1 do
+          SEEDS[x][y][1].room = nil
+        end end -- x, y
+      end
+    end
+  end
+end
+
+
 function Quest_assign()
 
   con.printf("\n--==| Quest_assign |==--\n\n")
@@ -573,6 +633,8 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   PLAN.all_locks = {}
 
   Quest_divide_group(group)
+
+  Quest_hallways()
 
 
   local START_R = PLAN.start_room

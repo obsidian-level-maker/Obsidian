@@ -232,7 +232,7 @@ function dummy_builder(level_name)
 --!!!!!!
 -- if S.room.kind == "building" then S.room.kind = "ground" end
 
-      if S.room.kind == "hall" then
+      if S.room.hallway then
         z1 = 256+24
         z2 = z1 + 96
 
