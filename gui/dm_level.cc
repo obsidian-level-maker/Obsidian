@@ -419,6 +419,11 @@ static void CreateOneSector(merge_region_c *R)
   {
     sec->special = 0;
     sec->tag     = 0;
+
+    if (B->info->sec_tag > 0)
+      sec->tag = B->info->sec_tag;
+    else if (T->info->sec_tag > 0)
+      sec->tag = T->info->sec_tag;
   }
 
 
@@ -746,7 +751,7 @@ static std::string FindSideTexture(double z, merge_segment_c *G,
   }
 
   // none found ???  FIXME use closest area
-  return std::string("CRACKLE2");
+  return std::string("FIREBLU1");
 }
 
 static int WriteSidedef(merge_segment_c *G, merge_region_c *F, merge_region_c *B)

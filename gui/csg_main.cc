@@ -420,10 +420,18 @@ static area_info_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 
   lua_pop(L, 3);
 
-  // TODO: sec_kind, sec_tag   !!!!!
+  lua_getfield(L, stack_pos, "sec_kind");
+  lua_getfield(L, stack_pos, "sec_tag");
+  lua_getfield(L, stack_pos, "mark");
+
+  if (lua_isnumber(L, -3)) A->sec_kind = lua_tointeger(L, -3);
+  if (lua_isnumber(L, -2)) A->sec_tag  = lua_tointeger(L, -2);
+  if (lua_isnumber(L, -1)) A->mark     = lua_tointeger(L, -1);
+
+  lua_pop(L, 3);
+
   // TODO: t_light, b_light
   // TODO: y_offset, peg
-  // TODO: mark
 
   return A;
 }
