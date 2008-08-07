@@ -127,7 +127,7 @@ function Quest_decide_start_room()
     cost = cost + (#A.teleports - #B.teleports) * 144
 
     if C.big_entrance then
-      cost = cost + sel(C.dest == C.big_entrance, -1, 1) * 60
+      cost = cost + sel(C.dest == C.big_entrance, -1, 1) * 80
     end
 
     cost = cost + rand_range(-1, 1)
@@ -175,8 +175,6 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
   local list = copy_table(PLAN.all_rooms)
 
   table.sort(list, function(A, B) return A.start_cost < B.start_cost end)
-
-  con.debugf("LIST=%s\n",table_to_str(list,2))
 
   PLAN.start_room = list[1]
 end
@@ -591,7 +589,7 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
 
   local EXIT_R = PLAN.exit_room
   assert(EXIT_R)
---!!!!  assert(EXIT_R ~= START_R)
+--!!  assert(EXIT_R ~= START_R)
 
   local ex = int((EXIT_R.sx1 + EXIT_R.sx2) / 2.0)
   local ey = int((EXIT_R.sy1 + EXIT_R.sy2) / 2.0)
