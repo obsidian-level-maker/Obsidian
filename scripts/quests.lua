@@ -195,6 +195,30 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
     return cost + rand_range(-2, 2)
   end
 
+  local function natural_flow(R, visited)
+    visited[R] = true
+
+    for _,C in ipairs(R.conns) do
+      if R == C.dest then
+        C.src, C.dest = C.dest, C.src
+      end
+      if not visited[C.dest] then
+        natural_flow(C.dest, visited)
+      end
+    end
+
+    for _,T in ipairs(R.teleports) do
+      if R == T.dest then
+        T.src, T.dest = T.dest, T.src
+      end
+      if not visited[T.dest] then
+        natural_flow(T.dest, visited)
+      end
+    end
+
+    return cost
+  end
+
 
   ---| Quest_decide_start_room |---
 
@@ -208,6 +232,10 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
 con.debugf("Start room COST=%1.4f\n", arena.start.start_cost)
   arena.start.purpose = "START"
 
+  -- update connections so that 'src' and 'dest' follow the natural
+  -- flow of the level, i.e. player always walks src -> dest (except
+  -- when backtracking).
+  natural_flow(arena.start, {})
 end
 
 
