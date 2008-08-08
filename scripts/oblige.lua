@@ -511,11 +511,14 @@ function build_cool_shit()
 
 
 -- [[ PLANNING TEST CODE
-for level = 1,10 do
+local NUM = 11
+for level = 1,NUM do
 
   local level_name = string.format("MAP%02d", level)
 
-  con.at_level(level_name, level, 10)
+  con.printf("\n\n~~~~~~| %s |~~~~~~\n", level_name)
+
+  con.at_level(level_name, level, NUM)
 
   Plan_rooms_sp();
   Quest_assign();
