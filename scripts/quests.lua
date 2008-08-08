@@ -18,14 +18,40 @@
 
 --[[ *** CLASS INFORMATION ***
 
-class Quest
+class ARENA
 {
+  -- an Arena is a group of rooms, generally with a locked door
+  -- to a different arena (requiring the player to find the key
+  -- or switch).
+
+  rooms : array(ROOM)  -- all the rooms in this arena
+
+  conns : array(CONN)  -- all the direct connections between rooms
+                       -- in this arena.  Note that teleporters always
+                       -- go between rooms in the same arena
+
+  start : ROOM  -- room which player enters this arena
+                -- (map's start room for the very first arena)
+                -- Never nil.
+
+  exit : ROOM   -- room which player exits this arena
+                -- (map's exit room for the very last arena)
+                -- Never nil.
+
+  lock : LOCK   -- lock which leads to next arena, or nil for last
+
+  target : ROOM -- room containing the key/switch, or nil
+
 }
 
 
-class Lock
+class LOCK
 {
-  conn : CONN
+  conn : CONN   -- connection between two rooms (and two arenas)
+                -- which is locked (keyed door, lowering bars, etc)
+
+  front, back : LOCK  -- binary tree of locks
+                      -- front for 'src' side, back for 'dest' side
 }
 
 
