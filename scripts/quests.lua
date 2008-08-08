@@ -126,7 +126,7 @@ end
 --]]
 
 
-function Quest_decide_start_room()
+function Quest_decide_start_room(arena)
 
   local GROUND_COSTS =
   {
@@ -153,17 +153,15 @@ function Quest_decide_start_room()
     cost = cost + (#A.teleports - #B.teleports) * 144
 
     if C.big_entrance then
-      cost = cost + sel(C.dest == C.big_entrance, -1, 1) * 80
+      cost = cost + sel(C.dest == C.big_entrance, -1, 1) * 70
     end
-
-    cost = cost + rand_range(-1, 1)
 
     C.cost = cost
 
 con.debugf("Connection cost: %1.2f\n", C.cost)
   end
 
-  local function eval_area(R, visited)
+  local function eval_recursive(R, visited)
     visited[R] = true
 
     local cost = 0
@@ -172,7 +170,7 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
       eval_connection(C)
       local N = sel(R == C.src, C.dest, C.src)
       if not visited[N] then
-        cost = cost + eval_area(N, visited) + C.cost * sel(R == C.src,1,-1)
+        cost = cost + eval_recursive(N, visited) + C.cost * sel(R == C.src,1,-1)
       end
     end
 
@@ -180,30 +178,36 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
       eval_connection(T)
       local N = sel(R == T.src, T.dest, T.src)
       if not visited[N] then
-        cost = cost + eval_area(N, visited) + T.cost * sel(R == T.src,1,-1)
+        cost = cost + eval_recursive(N, visited) + T.cost * sel(R == T.src,1,-1)
       end
     end
 
     return cost
   end
 
+  local function eval_room(R)
+    local cost = eval_recursive(R, {})
 
-  ---| Quest_decide_start_room |---
+    -- really big rooms are wasted for the starting room
+    cost = cost + R.sw * R.sh * 7
 
-  for _,R in ipairs(PLAN.all_rooms) do
-    R.start_cost = eval_area(R, {}) -- + rand_range(-5, 5)
-    con.debugf("Room (%d,%d) : START COST : %1.4f\n", R.lx1,R.ly1, R.start_cost)
+    -- add a touch of randomness
+    return cost + rand_range(-2, 2)
   end
 
 
-  -- sort rooms by cost and select lowest one
+  ---| Quest_decide_start_room |---
 
-  local list = copy_table(PLAN.all_rooms)
+  for _,R in ipairs(arena.rooms) do
+    R.start_cost = eval_room(R)
+    con.debugf("Room (%d,%d) : START COST : %1.4f\n", R.lx1,R.ly1, R.start_cost)
+  end
 
-  table.sort(list, function(A, B) return A.start_cost < B.start_cost end)
+  arena.start = table_sorted_first(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
 
-  PLAN.start_room = list[1]
-  PLAN.start_room.purpose = "START"
+con.debugf("Start room COST=%1.4f\n", arena.start.start_cost)
+  arena.start.purpose = "START"
+
 end
 
 
@@ -344,59 +348,6 @@ function Quest_divide_group(parent)
     return nil -- failed
   end
 
----##  local function split_do_move(S, D, front, back)
----##    assert(not S.split_n or not D.split_n)
----##    if not S.split_n then
----##      S.split_n = D.split_n
----##      table.insert(sel(S.split_n==1, front.rooms, back.rooms), S)
----##    else
----##      D.split_n = S.split_n
----##      table.insert(sel(D.split_n==1, front.rooms, back.rooms), D)
----##    end
----##  end
----##
----##  local function split_group(group, join_C)
----##    local front = { rooms={}, conns={} }
----##    local back  = { rooms={}, conns={} }
----##
----##    table.insert(front.rooms, join_C.src)
----##    table.insert( back.rooms, join_C.dest)
----##
----##    join_C. src.split_n = 1
----##    join_C.dest.split_n = 2
----##
----##    for loop = 1,999 do
----##      for _,C in ipairs(group.conns) do if not C.lock then
----##        if C.src.split_n ~= C.dest.split_n then
----##          split_do_move(C.src, C.dest, front, back)
----##          table.insert(sel(C.src.split_n==1, front.conns, back.conns), C)
----##        end
----##      end end -- C
----##
----##---!!!      for _,T in ipairs(group.conns) do
----##---!!!        if T.src.split_n ~= T.dest.split_n then
----##---!!!          split_do_move(T.src, T.dest, front, back)
----##---!!!        end
----##---!!!      end -- T
----##
----##      local R_done = #front.rooms + #back.rooms
----##      local C_done = #front.conns + #back.conns
----##
----##con.debugf("Loop %d:  R_done:%d (of %d)  C_done:%d (of %d)\n",
----##loop, R_done, #group.rooms, C_done, #group.conns)
----##
----##      if (R_done == #group.rooms) and (C_done == #group.conns-1) then
----##        break;
----##      end
----##    end -- loop
----##
----##    for _,R in ipairs(PLAN.all_rooms) do
----##      R.split_n = nil
----##    end
----##
----##    return front, back
----##  end
-
 
   local function collect_group_at(child, R, seen_rooms, seen_conns)
     if not child then
@@ -497,7 +448,7 @@ con.debugf("No lockable connections : %d  pivot=%s\n", #parent.rooms, sel(parent
     if parent.need_start then
       local START_R = find_unused_leaf(parent.pivot or parent.rooms[1])
       if not START_R then error("Cannot find room for START!!") end
-      START_R.purpose = "start"
+---      START_R.purpose = "start"
 ---      PLAN.start_room = START_R
     end
 
@@ -595,8 +546,7 @@ function Quest_hallways()
       end
     end
 
-    local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
-    rw = math.min(rw, rh)
+    local rw = math.min(R.sw, R.sh)
 
     if rw > 4 then return false end
 
@@ -625,8 +575,7 @@ function Quest_hallways()
   -- hence look for them and revert them back to normal.
   for _,R in ipairs(PLAN.all_rooms) do
     if R.hallway and surrounded_by_halls(R) then
-      local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
-      rw = math.min(rw, rh)
+      local rw = math.min(R.sw, R.sh)
       assert(rw <= 4)
 
       if rand_odds(REVERT_PROBS[rw]) then
@@ -639,7 +588,7 @@ con.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
   -- !!!! TEMP CRUD
   for _,R in ipairs(PLAN.all_rooms) do
     if R.hallway then
-      local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
+      local rw, rh = R.sw, R.sh
 
       if math.min(rw,rh) >= 3 and #R.conns >= 3 then
         for x = R.sx1+1, R.sx2-1 do for y = R.sy1+1, R.sy2-1 do
@@ -660,6 +609,7 @@ function Quest_assign()
 
   -- count branches in each room
   for _,R in ipairs(PLAN.all_rooms) do
+    R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
     R.num_branch = #R.conns + #R.teleports
     if R.num_branch == 0 then
       error("Room exists with no connections!")
@@ -667,25 +617,31 @@ function Quest_assign()
 con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
 
-  Quest_decide_start_room()
-
-  Quest_update_trav_diff()
-
-  local group =
+  local arena =
   {
-    rooms = PLAN.all_rooms,
-    conns = PLAN.all_conns,
+    rooms = copy_table(PLAN.all_rooms),
+    conns = copy_table(PLAN.all_conns),
 
     need_start = true,
     need_exit  = true,
   }
 
-  PLAN.lock_head = Quest_divide_group(group)
+  PLAN.all_arenas = { arena }
+
+  Quest_decide_start_room(arena)
+
+
+  Quest_update_trav_diff()
+
+  local lock, a_back = Quest_divide_group(arena)
+
+  PLAN.root_lock = lock
+
 
   Quest_hallways()
 
 
-  local START_R = PLAN.start_room
+  local START_R = arena.start
   assert(START_R)
 
   local sx = int((START_R.sx1 + START_R.sx2) / 2.0)
