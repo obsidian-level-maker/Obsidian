@@ -482,17 +482,14 @@ con.debugf("No lockable connections : %d  pivot=%s\n", #parent.rooms, sel(parent
   -- create lock information
   local LOCK =
   {
-    id = 1 + #PLAN.all_locks,
     conn = C,
     trav_sum = C.trav_src + C.trav_dest,
   }
 
-  table.insert(PLAN.all_locks, LOCK)
-
   C.lock = LOCK
 
 con.debugf("Candidate: (%d,%d) --> (%d,%d) diff:%d lock:%s sum:%d\n",
-C.src.lx1, C.src.ly1, C.dest.lx1, C.dest.ly1, C.trav_diff, C.lock.id, C.lock.trav_sum)
+C.src.lx1, C.src.ly1, C.dest.lx1, C.dest.ly1, C.trav_diff, tostring(C.lock), C.lock.trav_sum)
 
 
   local front, back = split_group(C)
@@ -510,8 +507,10 @@ con.debugf("  Back  (%d rooms, %d conns)\n", #  back.rooms, #  back.conns)
   back.lock_item = parent.lock_item
   back.need_exit = parent.need_exit
  
-  Quest_divide_group(front)
-  Quest_divide_group(back)
+  LOCK.front = Quest_divide_group(front)
+  LOCK.back  = Quest_divide_group(back)
+
+  return LOCK
 
 --[[
   if Quest_divide_group(front) then
@@ -655,9 +654,7 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
     need_exit  = true,
   }
 
-  PLAN.all_locks = {}
-
-  Quest_divide_group(group)
+  PLAN.lock_head = Quest_divide_group(group)
 
   Quest_hallways()
 
