@@ -1,0 +1,45 @@
+[quote=KAISER]
+
+This is usually how levels are designed, especially for modern games.
+The purpose of these stages is to iterate the level step by step and
+reduce the time being spent to do major reworks.  Nothing is more
+frustrating than having to create one half of the level with full
+detail, sectoring, lighting, the works, and only to find out that,
+gameplay wise, it’s not working out and most of the content ends up
+being scrapped. Time is pretty much wasted. This is why gameplay comes
+first, and then detail last.
+
+The way I typically create levels for Doom (since during D64TC and CIF3)
+I would build the levels through the following stages:
+
+* Layout - Nothing fancy, no sector heights, lighting, texturing etc.
+           Layout is blocked out in editor and major events, areas,
+           sequences or other highlights are identified and the level
+           layout and scope is iterated. This stage shouldn't take no
+           more than one or two days. Bear in mind that the layout is
+           not set in stone. Don't become married to this layout as some
+           parts usually gets modified or changed for your gameplay or
+           whatever.
+
+* Prototype - Sector heights, no texturing, basic thinker placement
+              (doors, lifts etc). Designer runs through the level to get
+              the time length to run from start to end and to test out
+              the flow for combat, traps etc. If using ACS, then basic
+              scripts are implemented, just so something is there as a
+              placeholder, again nothing fancy. This shouldn't take up
+              much time either.
+
+* Gameplay - Any gameplay related things are added (monsters, ammo,
+             objects used to block paths etc). Scripting should be
+             polished and be at its full potential. At this point, level
+             authors should provide the prototype level to others to get
+             feedback on the gameplay, which can be quickly tweaked,
+             changed, updated etc without spending too much time.
+
+* Pretty - Texturing, sector work, lighting, detailing, thing details
+           etc. Go nuts; beautify the shit out of your level.
+
+* Polish - Level is polished, scripting polish, gameplay polished etc.
+           Address any minor glitches, or texture flaws and whatnot.
+
+[/quote]

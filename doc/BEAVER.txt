@@ -1,0 +1,165 @@
+[quote=Huy Pham]
+
+Random thoughts on mapping
+--------------------------
+
++ Make sure to communicate ideas explicitly with the player,
+  for example, when expressing a laboratory, make sure
+  computers, lasers, and biological tanks are present. Like
+  writing and other media of communication, better to show it
+  than to declare it on your textfile!
+
++ A dominant color theme will turn an otherwise good looking map 
+  beautiful.
+
++ The music has got to match the environment, it shows good taste
+  and once again reinforces the communication of the level's theme
+  to the player. Example: AV Map30: Point Dreadful.
+
++ If one's eyes were nuanced enough to see the subtle tone and shading of
+  Fredrik's tech, one would recognize that Vrack3's art direction is genius.
+
++ WTF is green marble doing with redrock? They need to stop designing
+  levels like that. There is no Christmas theme in hell. 
+  RED or BLACK marble goes with REDROCK.
+
++ In Hell, you cannot run out of black and red.
+
++ With black textures and flats, you can get away with many mapping crimes, 
+  like flat ceilings for example. If you don't believe me, check out the
+  Minas Morgul map.
+
++ The secret to making a good hell map? Absorbing Alien Vendetta's Map29, 
+  remember its lighting, monster placement, and most importantly, its shape.
+
++ Yes, the looks of the level do affect gameplay, because the ingame
+  atmosphere is a part of gameplay... how much a part of the gameplay is the
+  atmosphere? How much do you feel it should be?
+
++ Windows are multipliers of details.
+
++ Altitude, whether at the top of a mountain or under the basement of a
+  tomb, is a good indicator of level progression. Use it liberally.
+
++ Skyboxes? No no, fully-scaled, 360-degree backgrounds are better!
+
++ Why would I want to go through rooms connected by a bunch of hallways? 
+  I don't get it.
+
++ There is a difference between level progression and leading the player
+  through a maze. Level progression happens when you tell a story with
+  architecture, leading the player through a maze is when the story gets
+  boring with nonsense... I hope you can tell a good story.
+
++ It's not so hard to close off the levels with four walls that has nothing
+  behind them, but the mapper who has done so has missed his chance of
+  showing the player a beautiful vista that reinforces the atmosphere
+  of the level.
+
++ Easy it is to make a level difficult, but could I trick someone else into 
+  playing it?
+
++ I don't care what anyone else thinks, the default Doom/Doom2 pistol isn't
+  fun to use in the slightest bit, not even if had a different look, not
+  even when it had a different sound, not in ANY fight, not under any 
+  circumstance.
+
++ Having the player start off with the default Doom/Doom2 pistol and asking
+  them to kill enemies with it... pisses me off.
+
++ Good traps must not only surprise the player, they must be logical
+  as well. Don't just trap the player, trap him in with a tomb and a 
+  skeleton to boot.
+
++ The best placement of the exploding barrel, ever, is located at the start
+  of Ander Johnsen's AV Map02: Rusty Rage. [I'd have to agree with Mike 
+  on this]
+
++ Enemies popping out of walls and coffins are far scarier, thus more
+  effective, than teleporting peeps.
+
++ Cyberdemons are only scary when you don't give the player enough
+  ammo and space to deal with them. Not enough space is scarier though.
+
++ You can beat an archvile to death with your bare fist, all the funner
+  with beserk.
+
++ The megasphere isn't there for you to grab like supermarket grocery,
+  it belongs to the monsters and they want it back. Did I mention that the 
+  monsters have sharp claws and hurl fireballs?
+
++ Finding a secret gives me that same feeling when I find an extra coin
+  in the phone booth.
+
++ What makes or break gameplay? Movement of the player. When the player 
+  feels good moving about in his virtual environment without even fighting
+  the enemies, that builds a foundation towards good gameplay. A strong 
+  example of this concept in action is Super Mario 64, where the player's 
+  movement feels good no matter where they are or what they're doing; Mario
+  could be romping around the castle courtyard doing triple jumps and that
+  in itself is already entertaining.
+
++ Proportions in a level is very important to player's movement and enemy
+  contact. If a given space is too big, enemy contact will feel loose and
+  sloppy; the baron of hell can be rendered harmless as a lampost with too
+  much open spaces. If a given space is too cramped, the player's movement
+  is restricted, and he will continually bump into things, making player 
+  movement an exercise in frustration rather than smooth play. Like all 
+  aspects of map design, moderation here is key. Good examples of level 
+  proportions include John Romero's maps, Anders Johnsen's maps, Kim Malde's
+  maps, Erik Alm's maps, Kama Sutra, vrack3, and even ChordG.
+
++ The above statement still holds true in the face of some supposedly 
+  open maps, like Epic Map05, where extremely large open areas are 
+  moderated by islands of fights in smaller spaces.
+
++ PV = nRT... where P = Pressure of Opposition                
+                    V = Area of a given space
+                    n = Number of monsters
+                    R = Mean monster movement speed
+                    T = Average area controlled per monsters
+
++ One of the biggest violators of player movement are 8-unit posts that
+  sticks out the wall... or even eight-unit posts... Period. 
+  Get rid of them; they are hurting gameplay.
+
++ If details get in the way of player's movement, put them on the ceiling,
+  like vrack2b.
+
++ Spending lots of time detailing that chapel room is nice, but that won't 
+  determine the optimal number of revenants to insert into that area.
+
++ What is dynamic space? A room, hallway, area, etc. that drastically 
+  alters the general vector and elevation of the player's movement.
+
++ What is beautiful space? A room, hallway, area, etc. in which the player 
+  feels good moving about.
+
++ What is beautiful dynamic space? Good map design.
+
++ Exhaustive playtesting is the only theoretically sound way to 
+  ensure that your map is fun. Game Law.
+
++ A bad gametester will tell you that "your map stinks."
+
++ A good gametester will tell you that "your map stinks, and here's why..."
+
++ A good gametester will never deem your map flawless.
+
++ Belial's, Brian's, and Mike's bitchings are worth their weight in mapping 
+  gold.
+
++ If your testers tell you that a particular fight isn't fun, quit being 
+  defensive and remove the perpetrating monster(s).
+
++ If your testers tell you that a particular fight is too easy, you know
+  what to do...
+
++ There is no fucking way I can vertically align those fucking BRIK_06J 
+  textures in the fucking Suzzallo Library, Belial... JUST BE QUIET 
+  ALREADY! =p
+
++ Listen to your gametesters, they are the canaries to your mapping
+  mine shaft.
+
+[/quote]
