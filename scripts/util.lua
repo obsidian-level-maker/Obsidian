@@ -93,6 +93,28 @@ function table_to_str(t, depth, prefix)
   return result
 end
 
+function table_sorted_first(list, comp)
+  assert(list)
+
+  if not comp then
+    comp = function(A,B) return (A < B) end
+  end
+
+  if #list == 0 then
+    return nil
+  end
+
+  local cur = list[1]
+
+  for idx = 2,#list do
+    if not comp(cur, list[idx]) then
+      cur = list[idx]
+    end
+  end
+
+  return cur
+end
+
 function merge_table(dest, src)
   for k,v in pairs(src) do
     dest[k] = v
