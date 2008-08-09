@@ -35,9 +35,9 @@ require 'defs'
 require 'util'
 
 
-LAND_W = 7
-LAND_H = 7
-LAND_MAP = array_2D(LAND_W, LAND_H)
+LAND_W = 0
+LAND_H = 0
+LAND_MAP = {}
 
 
 function Plan_alloc_tag()
@@ -1278,7 +1278,7 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
       -- find a room for the teleporter
       for _,N in ipairs(rooms) do
         if (N.group_id == 1) and (#N.teleports < 2) then
-          local TELEP = { src=N, dest=R }
+          local TELEP = { src=N, dest=R, teleport=true }
 
           TELEP.src_tag  = Plan_alloc_tag()
           TELEP.dest_tag = Plan_alloc_tag()
@@ -1349,6 +1349,32 @@ function Plan_rooms_sp()
     free_tag  = 1,
     free_mark = 1,
   }
+
+
+  if OB_CONFIG.size == "mixed" then
+    
+    LAND_W = 3 + rand_index_by_probs { 1,2,3,5,3,2,1 }
+    LAND_H = 3 + rand_index_by_probs { 1,2,3,5,3,2,1 }
+  else
+    local LAND_SIZES = { small=5, normal=7, large=10, xlarge=13 }
+
+    LAND_W = LAND_SIZES[OB_CONFIG.size]
+    LAND_H = LAND_W
+    assert(LAND_W)
+
+    if rand_odds(40) then LAND_W = LAND_W - 1 end
+    if rand_odds(50) then LAND_H = LAND_H - 1 end
+    if rand_odds(30) then LAND_H = LAND_H - 1 end
+  end
+
+  if LAND_W < LAND_H then
+    LAND_W, LAND_H = LAND_H, LAND_W
+  end
+
+  con.printf("Land size: %dx%d\n", LAND_W, LAND_H)
+
+  LAND_MAP = array_2D(LAND_W, LAND_H)
+
 
   Landmap_Init()
   Landmap_Fill()
