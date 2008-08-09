@@ -279,6 +279,76 @@ function Quest_decide_end_room(arena)
     return cost + con.random()
   end
 
+  local function room_conn_dist(R, C)
+    local x1 = (R.sx1 + R.sx2) / 2
+    local y1 = (R.sy1 + R.sy2) / 2
+
+    local x2 = (C.src_S.sx + C.dest_S.sx) / 2
+    local y2 = (C.src_S.sy + C.dest_S.sy) / 2
+
+    return math.abs(x2 - x1) + math.abs(y2 - y1)
+  end
+
+  local function conn_conn_dist(B, C)
+    local x1 = (B.src_S.sx + B.dest_S.sx) / 2
+    local y1 = (B.src_S.sy + B.dest_S.sy) / 2
+
+    local x2 = (C.src_S.sx + C.dest_S.sx) / 2
+    local y2 = (C.src_S.sy + C.dest_S.sy) / 2
+
+    return math.abs(x2 - x1) + math.abs(y2 - y1)
+  end
+
+  local function iterate_exit_dists(R, dist, via_C)
+----    if C0 and C1 then
+----      dist = dist + math.abs(conn.src_S.sx - conn.dest_S.sx)
+----      dist = dist + math.abs(conn.src_S.sy - conn.dest_S.sy)
+----con.debugf("CONN DIST: %d+%d\n",
+----      math.abs(conn.src_S.sx - conn.dest_S.sx) ,
+----      math.abs(conn.src_S.sy - conn.dest_S.sy) )
+----    end
+
+    for _,C in ipairs(R.conns) do
+      if R == C.src then
+        local new_dist = dist
+        if via_C then
+          new_dist = new_dist + conn_conn_dist(via_C, C)
+        else
+          new_dist = new_dist + room_conn_dist(R, C)
+        end
+
+        iterate_exit_dists(C.dest, new_dist, C)
+      end
+    end
+
+    for _,T in ipairs(R.teleports) do
+      if R == T.src then
+        iterate_exit_dists(T.dest, dist + 2)
+      end
+    end
+
+    -- TODO take height differences into account
+
+    if via_C then
+      dist = dist + room_conn_dist(R, via_C)
+    end
+
+    -- penalty for start room
+    if R == arena.start then
+      dist = dist - 1000
+    end
+
+    -- penalty for non-leafs
+    if R.num_branch > 1 then
+      dist = dist - 100
+    end
+
+    -- penalty for large rooms
+    dist = dist - math.min(95, R.sw * R.sh)
+
+    R.exit_dist = dist + con.random()
+  end
+
   local function main_path_to(R, E)
     if R == E then return {} end
 
@@ -314,14 +384,24 @@ function Quest_decide_end_room(arena)
 
   ---| Quest_decide_start_room |---
 
-  -- FIXME: when no keys/switches : find room furthest from start
+  if PLAN.num_puzz == 0 then
+    -- when no keys/switches : find room furthest from start
 
-  for _,R in ipairs(arena.rooms) do
-    R.end_cost = eval_room(R)
-    con.debugf("Room (%d,%d) : END COST : %1.4f\n", R.lx1,R.ly1, R.end_cost)
+    iterate_exit_dists(arena.start, 0)
+
+    for _,R in ipairs(arena.rooms) do
+      con.debugf("Room (%d,%d) : EXIT DIST : %1.4f\n", R.lx1,R.ly1, R.exit_dist)
+    end
+
+    arena.exit = table_sorted_first(arena.rooms, function(A,B) return A.exit_dist > B.exit_dist end)
+  else
+    for _,R in ipairs(arena.rooms) do
+      R.exit_cost = eval_room(R)
+      con.debugf("Room (%d,%d) : EXIT COST : %1.4f\n", R.lx1,R.ly1, R.exit_cost)
+    end
+
+    arena.exit = table_sorted_first(arena.rooms, function(A,B) return A.exit_cost < B.exit_cost end)
   end
-
-  arena.exit = table_sorted_first(arena.rooms, function(A,B) return A.end_cost < B.end_cost end)
 
   arena.exit.purpose = "EXIT"
 
@@ -732,6 +812,7 @@ local function Quest_num_puzzles(arena)
 
   if not PUZZLE_MINS[OB_CONFIG.puzzles] then
     con.printf("Puzzles disabled\n")
+    return
   end
 
   local p_min = #arena.rooms / PUZZLE_MINS[OB_CONFIG.puzzles]
