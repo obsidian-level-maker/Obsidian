@@ -38,6 +38,10 @@ class ARENA
                 -- (map's exit room for the very last arena)
                 -- Never nil.
 
+  path : array(ROOM)   -- full path of rooms from 'start' to 'exit'
+
+  path_set : set(ROOM) -- set for each room in the above path
+
   lock : LOCK   -- lock which leads to next arena, or nil for last
 
   target : ROOM -- room containing the key/switch, or nil
@@ -310,7 +314,7 @@ function Quest_decide_end_room(arena)
 
   ---| Quest_decide_start_room |---
 
-  -- TODO: when no keys/switches : find room furthest from start
+  -- FIXME: when no keys/switches : find room furthest from start
 
   for _,R in ipairs(arena.rooms) do
     R.end_cost = eval_room(R)
@@ -720,26 +724,52 @@ local function Quest_add_final_lock(arena)
 end
 
 
-local function Quest_add_puzzles(arena)
-  local num_puzz = 0
+local function Quest_num_puzzles(arena)
+  PLAN.num_puzz = 0
 
   local PUZZLE_MINS = { less=18, normal=12, more=8, mixed=16 }
   local PUZZLE_MAXS = { less=10, normal= 8, more=4, mixed=6  }
 
   if not PUZZLE_MINS[OB_CONFIG.puzzles] then
-    con.debugf("Puzzles disabled")
+    con.printf("Puzzles disabled\n")
   end
 
   local p_min = #arena.rooms / PUZZLE_MINS[OB_CONFIG.puzzles]
   local p_max = #arena.rooms / PUZZLE_MAXS[OB_CONFIG.puzzles]
 
-  num_puzz = int(0.25 + rand_range(p_min, p_max))
+  PLAN.num_puzz = int(0.25 + rand_range(p_min, p_max))
 
-  con.debugf("Number of puzzles: %d  (%1.2f-%1.2f) rooms=%d\n", num_puzz, p_min, p_max, #arena.rooms)
+  con.printf("Number of puzzles: %d  (%1.2f-%1.2f) rooms=%d\n", PLAN.num_puzz, p_min, p_max, #arena.rooms)
+end
 
-  if num_puzz == 0 then return end
 
-  -- FIXME !!!!
+local function Quest_add_puzzle()
+
+  -- Algorithm:
+  --
+  -- The first puzzle is special, it will lock a connection that
+  -- leads to the EXIT room of the map.  Any connection is possible,
+  -- including one from the start room or one leading to the exit
+  -- room itself, as long as the source contains a "free" branch
+  -- (which will lead to the key or switch).
+  --
+  -- After we create the first puzzle (splitting the arena), we'd
+  -- rather not process the second arena (containing the exit) again,
+  -- because the only thing we can do with it is what we did before:
+  -- lock a connection that leads to the exit.  Hence how we choose
+  -- the first puzzle connection, its the distance to the exit room,
+  -- is quite important.  Too close is bad for big maps with only a
+  -- few puzzles, too far is bad for maps with many puzzles.
+  --
+  -- For subsequent puzzles (in non-EXIT arenas) there are two types
+  -- of locks, either a connection along the start->exit path (as
+  -- for EXIT arenas) or alternatively one of the branches OFF the
+  -- main path.
+  --
+  -- Locking a branch OFF the arena's path (including the start)
+  -- means that the key that was placed for the original locked
+  -- door is replaced with a key for the new lock, and the old key
+  -- must be placed somewhere beyond the new locked door.
 end
 
 
@@ -773,19 +803,24 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
 
   PLAN.all_arenas = { arena }
 
+
+  Quest_num_puzzles(arena)
+
   Quest_decide_start_room(arena)
   Quest_decide_end_room(arena)
 
-  Quest_add_puzzles(arena)
+  for i = 1,PLAN.num_puzz do
+    Quest_add_puzzle()
+  end
 
 
-
+--[[
 Quest_update_trav_diff()
 
 local lock, a_back = Quest_divide_group(arena)
 
 PLAN.root_lock = lock
-
+--]]
 
 
   local START_R = arena.start
