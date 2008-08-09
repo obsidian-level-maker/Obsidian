@@ -965,7 +965,7 @@ function Rooms_Connect()
 
     merge(S.room.group_id, T.room.group_id)
 
-    local CONN = { src=S.room, dest=T.room }
+    local CONN = { src=S.room, dest=T.room, src_S=S, dest_S=T }
 
     table.insert(PLAN.all_conns, CONN)
 
