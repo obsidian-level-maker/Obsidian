@@ -191,6 +191,9 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
     -- really big rooms are wasted for the starting room
     cost = cost + R.sw * R.sh * 7
 
+    -- should not start in a hallway!
+    if R.hallway then cost = cost + 666 end
+
     -- add a touch of randomness
     return cost + rand_range(-2, 2)
   end
@@ -562,7 +565,7 @@ function Quest_hallways()
       return false
     end
 
-    if R.purpose then return false end
+--  if R.purpose then return false end
     if #R.teleports > 0 then return false end
     if R.num_branch < 2 then return false end
     if R.num_branch > 5 then return false end
@@ -645,6 +648,8 @@ function Quest_assign()
 con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
 
+  Quest_hallways()
+
   local arena =
   {
     rooms = copy_table(PLAN.all_rooms),
@@ -666,7 +671,6 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   PLAN.root_lock = lock
 
 
-  Quest_hallways()
 
 
   local START_R = arena.start
