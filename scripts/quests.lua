@@ -202,24 +202,22 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
     visited[R] = true
 
     for _,C in ipairs(R.conns) do
-      if R == C.dest then
+      if R == C.dest and not visited[C.src] then
         C.src, C.dest = C.dest, C.src
       end
-      if not visited[C.dest] then
+      if R == C.src and not visited[C.dest] then
         natural_flow(C.dest, visited)
       end
     end
 
     for _,T in ipairs(R.teleports) do
-      if R == T.dest then
+      if R == T.dest and not visited[T.src] then
         T.src, T.dest = T.dest, T.src
       end
-      if not visited[T.dest] then
+      if R == T.src and not visited[T.dest] then
         natural_flow(T.dest, visited)
       end
     end
-
-    return cost
   end
 
 
@@ -277,8 +275,42 @@ function Quest_decide_end_room(arena)
     return cost + con.random()
   end
 
+  local function main_path_to(R, E)
+    if R == E then return {} end
+
+    for _,C in ipairs(R.conns) do
+      if R == C.src then
+        local path = main_path_to(C.dest, E)
+        if path then table.insert(C, 1, path); return path end
+      end
+    end
+
+    for _,T in ipairs(R.teleports) do
+      if R == T.src then
+        local path = main_path_to(T.dest, E)
+        if path then table.insert(T, 1, path); return path end
+      end
+    end
+
+    return nil -- NOT FOUND --
+  end
+
+  local function mark_main_path()
+    local path = main_path_to(arena.start, arena.exit)
+
+    if not path then error("cannot find main path!!") end
+
+    for _,C in ipairs(path) do
+      C.     main_path = true
+      C. src.main_path = true
+      C.dest.main_path = true
+    end
+  end
+
 
   ---| Quest_decide_start_room |---
+
+  -- TODO: when no keys/switches : find room furthest from start
 
   for _,R in ipairs(arena.rooms) do
     R.end_cost = eval_room(R)
@@ -290,6 +322,8 @@ function Quest_decide_end_room(arena)
   arena.exit.purpose = "EXIT"
 
   con.debugf("Exit room (%d,%d)\n", arena.exit.lx1, arena.exit.ly1)
+
+  mark_main_path()
 end
 
 
