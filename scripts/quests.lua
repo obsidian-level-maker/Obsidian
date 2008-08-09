@@ -555,15 +555,15 @@ con.debugf("No lockable connections : %d  pivot=%s\n", #parent.rooms, sel(parent
     end
 
     if parent.need_exit then
-      local EXIT_R = find_unused_leaf(parent.pivot or parent.rooms[1])
-      if not EXIT_R then error("Cannot find room for EXIT!!") end
-      EXIT_R.purpose = "exit"
-      PLAN.exit_room = EXIT_R
+----      local EXIT_R = find_unused_leaf(parent.pivot or parent.rooms[1])
+----      if not EXIT_R then error("Cannot find room for EXIT!!") end
+----      EXIT_R.purpose = "exit"
+----      PLAN.exit_room = EXIT_R
     end
 
     if parent.need_start then
-      local START_R = find_unused_leaf(parent.pivot or parent.rooms[1])
-      if not START_R then error("Cannot find room for START!!") end
+---      local START_R = find_unused_leaf(parent.pivot or parent.rooms[1])
+---      if not START_R then error("Cannot find room for START!!") end
 ---      START_R.purpose = "start"
 ---      PLAN.start_room = START_R
     end
@@ -716,6 +716,33 @@ con.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
 end
 
 
+local function Quest_add_final_lock(arena)
+end
+
+
+local function Quest_add_puzzles(arena)
+  local num_puzz = 0
+
+  local PUZZLE_MINS = { less=18, normal=12, more=8, mixed=16 }
+  local PUZZLE_MAXS = { less=10, normal= 8, more=4, mixed=6  }
+
+  if not PUZZLE_MINS[OB_CONFIG.puzzles] then
+    con.debugf("Puzzles disabled")
+  end
+
+  local p_min = #arena.rooms / PUZZLE_MINS[OB_CONFIG.puzzles]
+  local p_max = #arena.rooms / PUZZLE_MAXS[OB_CONFIG.puzzles]
+
+  num_puzz = int(0.25 + rand_range(p_min, p_max))
+
+  con.debugf("Number of puzzles: %d  (%1.2f-%1.2f) rooms=%d\n", num_puzz, p_min, p_max, #arena.rooms)
+
+  if num_puzz == 0 then return end
+
+  -- FIXME !!!!
+end
+
+
 function Quest_assign()
 
   con.printf("\n--==| Quest_assign |==--\n\n")
@@ -749,13 +776,15 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   Quest_decide_start_room(arena)
   Quest_decide_end_room(arena)
 
+  Quest_add_puzzles(arena)
 
-  Quest_update_trav_diff()
 
-  local lock, a_back = Quest_divide_group(arena)
 
-  PLAN.root_lock = lock
+Quest_update_trav_diff()
 
+local lock, a_back = Quest_divide_group(arena)
+
+PLAN.root_lock = lock
 
 
 
