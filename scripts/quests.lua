@@ -232,13 +232,64 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
 
   arena.start = table_sorted_first(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
 
-con.debugf("Start room COST=%1.4f\n", arena.start.start_cost)
   arena.start.purpose = "START"
+
+  con.debugf("Start room (%d,%d)\n", arena.start.lx1, arena.start.ly1)
 
   -- update connections so that 'src' and 'dest' follow the natural
   -- flow of the level, i.e. player always walks src -> dest (except
   -- when backtracking).
   natural_flow(arena.start, {})
+end
+
+
+function Quest_decide_end_room(arena)
+
+  local function eval_room(R)
+    local cost = 0
+
+    -- checks for being near the start room
+    for _,C in ipairs(R.conns) do
+      local N = sel(R == C.src, C.dest, C.src)
+      if N == arena.start then cost = 1000 end
+    end
+
+    for _,T in ipairs(R.teleports) do
+      local N = sel(R == T.src, T.dest, T.src)
+      if N == arena.start then cost = 2000 end
+    end
+
+    if R == arena.start then cost = 4000 end
+
+    -- should be a leaf
+    if #R.teleports > 0 then cost = cost + 500 end
+    if #R.conns > 1 then cost = cost + 200 end
+    if #R.conns > 2 then cost = cost + 100 end
+
+    -- prefer an indoor room
+    if not (R.kind == "building" or R.kind == "cave") then
+      cost = cost + 50
+    end
+
+    -- should be small
+    cost = cost + math.min(95, R.sw * R.sh)
+
+    return cost + con.random()
+  end
+
+
+  ---| Quest_decide_start_room |---
+
+  for _,R in ipairs(arena.rooms) do
+    R.end_cost = eval_room(R)
+    con.debugf("Room (%d,%d) : END COST : %1.4f\n", R.lx1,R.ly1, R.end_cost)
+  end
+
+  arena.exit = table_sorted_first(arena.rooms, function(A,B) return A.end_cost < B.end_cost end)
+
+  arena.exit.purpose = "EXIT"
+
+  con.debugf("Exit room (%d,%d)\n", arena.exit.lx1, arena.exit.ly1)
 end
 
 
@@ -662,6 +713,7 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   PLAN.all_arenas = { arena }
 
   Quest_decide_start_room(arena)
+  Quest_decide_end_room(arena)
 
 
   Quest_update_trav_diff()
@@ -685,9 +737,9 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   con.printf("Start seed @ (%d,%d)\n", sx, sy)
 
 
-  local EXIT_R = PLAN.exit_room
+  local EXIT_R = arena.exit
   assert(EXIT_R)
---!!  assert(EXIT_R ~= START_R)
+  assert(EXIT_R ~= START_R)
 
   local ex = int((EXIT_R.sx1 + EXIT_R.sx2) / 2.0)
   local ey = int((EXIT_R.sy1 + EXIT_R.sy2) / 2.0)
