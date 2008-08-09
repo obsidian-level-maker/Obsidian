@@ -217,7 +217,7 @@ void UI_Play::callback_Ammo(Fl_Widget *w, void *data)
 void UI_Play::Defaults()
 {
   mons   ->SetID("mixed");
-  puzzles->SetID("mixed");
+  puzzles->SetID("normal");
   traps  ->SetID("mixed");
   health ->SetID("normal");
   ammo   ->SetID("normal");
@@ -272,13 +272,28 @@ bool UI_Play::ParseValue(const char *key, const char *value)
 
 const char * UI_Play::monster_syms[] =
 {
-  // also used for: Puzzles, Weapons and Players
+  // also used for: Weapons
 
   "mixed",  "Mix It Up",
-  "low",    "Scarce",
+  "kein",   "None",
+  "scarce", "Scarce",
   "less",   "Less",
   "normal", "Normal",
-  "high",   "Hordes",
+  "more",   "More",
+  "heaps",  "Hordes",
+
+  NULL, NULL
+};
+
+const char * UI_Play::puzzle_syms[] =
+{
+  // also used for: Players
+
+  "mixed",  "Mix It Up",
+  "kein",   "None",
+  "less",   "Less",
+  "normal", "Normal",
+  "more",   "More",
 
   NULL, NULL
 };
@@ -288,7 +303,7 @@ const char * UI_Play::trap_syms[] =
   //_________Traps________Equip________
 
   "mixed",  "Mix It Up", "Mix It Up",
-  "low",    "None",      "None",
+  "kein",   "None",      "None",
   "less",   "Less",      "Small",
   "normal", "Normal",    "Medium",
   "high",   "Heaps",     "Large",
@@ -300,11 +315,12 @@ const char * UI_Play::health_syms[] =
 {
   // also used for: Ammo
 
-  "low",    "Scarce",
+  "kein",   "None",
+  "scarce", "Scarce",
   "less",   "Less",
   "normal", "Normal",
   "more",   "More",
-  "high",   "Heaps",
+  "heaps",  "Heaps",
 
   NULL, NULL
 };
@@ -319,8 +335,8 @@ void UI_Play::setup_Monsters()
 
 void UI_Play::setup_Puzzles()
 {
-  for (int i = 0; monster_syms[i]; i += 2)
-    puzzles->AddPair(monster_syms[i], monster_syms[i+1]);
+  for (int i = 0; puzzle_syms[i]; i += 2)
+    puzzles->AddPair(puzzle_syms[i], puzzle_syms[i+1]);
 
   puzzles->Recreate();
 }
@@ -328,7 +344,7 @@ void UI_Play::setup_Puzzles()
 void UI_Play::setup_Traps()
 {
   for (int i = 0; trap_syms[i]; i += 3)
-    traps->AddPair(trap_syms[i], trap_syms[i+2]);
+    traps->AddPair(trap_syms[i], trap_syms[i+1]);
 
   traps->Recreate();
 }

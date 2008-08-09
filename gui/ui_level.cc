@@ -50,18 +50,6 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += heading->h() + 6;
 
 
-  theme = new UI_RChoice(x+ 82, cy, 112, 24, "Theme: ");
-  theme->align(FL_ALIGN_LEFT);
-  theme->selection_color(MY_GREEN);
-  theme->callback(callback_Theme, this);
-
-  add(theme);
-
-  cy += theme->h() + 6;
-
-  cy += 10;
-
-
   size = new UI_RChoice(x+ 82, cy, 112, 24, "Size: ");
   size->align(FL_ALIGN_LEFT);
   size->selection_color(MY_GREEN);
@@ -72,6 +60,18 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   add(size);
 
   cy += size->h() + 6;
+
+  cy += 10;
+
+
+  theme = new UI_RChoice(x+ 82, cy, 112, 24, "Theme: ");
+  theme->align(FL_ALIGN_LEFT);
+  theme->selection_color(MY_GREEN);
+  theme->callback(callback_Theme, this);
+
+  add(theme);
+
+  cy += theme->h() + 6;
 
 
   detail = new UI_RChoice(x+ 82, cy, 112, 24, "Detail: ");
@@ -187,7 +187,7 @@ void UI_Level::Defaults()
 {
   // Note: theme handled by LUA code (ob_init)
 
-  size   ->SetID("mixed");
+  size   ->SetID("prog");
   detail ->SetID("normal");
   heights->SetID("mixed");
   light  ->SetID("mixed");
@@ -240,21 +240,23 @@ bool UI_Level::ParseValue(const char *key, const char *value)
 const char * UI_Level::size_syms[] =
 {
   "mixed",  "Mix It Up",
+  "prog",   "Progressive",
 
-  "low",    "Tiny",
-  "less",   "Small",
+  "tiny",   "Tiny",
+  "small",  "Small",
   "normal", "Regular",
-  "more",   "X-Large",
+  "large",  "Large",
+  "xlarge", "X-Large",
 
   NULL, NULL
 };
 
 const char * UI_Level::detail_syms[] =
 {
-  "low",    "None",
-  "less",   "Low",
+  "kein",   "None",
+  "low",    "Low",
   "normal", "Medium",
-  "more",   "High",
+  "high",   "High",
 
   NULL, NULL
 };
@@ -263,10 +265,9 @@ const char * UI_Level::height_syms[] =
 {
   "mixed",  "Mix It Up",
 
-  "low",    "Flat",
-  "less",   "Gentle",
+  "gentle", "Gentle",
   "normal", "Normal",
-  "more",   "Wild",
+  "wild",   "Wild",
 
   NULL, NULL
 };
@@ -275,10 +276,10 @@ const char * UI_Level::light_syms[] =
 {
   "mixed",  "Mix It Up",
 
-  "low",    "None",
-  "less",   "Dark",
+  "kein",   "None",
+  "dark",   "Dark",
   "normal", "Normal",
-  "more",   "Bright",
+  "bright", "Bright",
 
   NULL, NULL
 };

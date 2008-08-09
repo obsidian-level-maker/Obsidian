@@ -69,6 +69,7 @@ private:
   static void callback_Ammo    (Fl_Widget *, void*);
 
   static const char * monster_syms[];
+  static const char * puzzle_syms[];
   static const char * trap_syms[];
   static const char * health_syms[];
 };
