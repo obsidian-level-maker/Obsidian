@@ -274,13 +274,14 @@ const char * UI_Play::monster_syms[] =
 {
   // also used for: Weapons
 
-  "mixed",  "Mix It Up",
-  "kein",   "None",
+  "kein",   "NONE",
   "scarce", "Scarce",
   "less",   "Less",
   "normal", "Normal",
   "more",   "More",
   "heaps",  "Hordes",
+
+  "mixed",  "Mix It Up",
 
   NULL, NULL
 };
@@ -289,11 +290,12 @@ const char * UI_Play::puzzle_syms[] =
 {
   // also used for: Players
 
-  "mixed",  "Mix It Up",
-  "kein",   "None",
+  "kein",   "NONE",
   "less",   "Less",
   "normal", "Normal",
   "more",   "More",
+
+  "mixed",  "Mix It Up",
 
   NULL, NULL
 };
@@ -302,11 +304,12 @@ const char * UI_Play::trap_syms[] =
 {
   //_________Traps________Equip________
 
-  "mixed",  "Mix It Up", "Mix It Up",
-  "kein",   "None",      "None",
+  "kein",   "NONE",      "None",
   "less",   "Less",      "Small",
   "normal", "Normal",    "Medium",
   "high",   "Heaps",     "Large",
+
+  "mixed",  "Mix It Up", "Mix It Up",
 
   NULL, NULL
 };
@@ -315,7 +318,7 @@ const char * UI_Play::health_syms[] =
 {
   // also used for: Ammo
 
-  "kein",   "None",
+  "kein",   "NONE",
   "scarce", "Scarce",
   "less",   "Less",
   "normal", "Normal",
