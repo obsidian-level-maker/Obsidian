@@ -33,7 +33,7 @@ require 'builder'
 OB_THEMES["mixed"] =
 {
   label = "Mix It Up",
-  priority = 95,
+  priority = -99,
 }
 
 
