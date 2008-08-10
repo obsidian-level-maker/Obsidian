@@ -327,8 +327,6 @@ function Quest_decide_end_room(arena)
       end
     end
 
-    -- TODO take height differences into account
-
     if via_C then
       dist = dist + room_conn_dist(R, via_C)
     end
@@ -340,11 +338,16 @@ function Quest_decide_end_room(arena)
 
     -- penalty for non-leafs
     if R.num_branch > 1 then
-      dist = dist - 100
+      dist = dist - 200
     end
 
     -- penalty for large rooms
     dist = dist - math.min(95, R.sw * R.sh)
+
+    -- bonus for indoor room
+    if (R.kind == "building" or R.kind == "cave") then
+      dist = dist + 50
+    end
 
     R.exit_dist = dist + con.random()
   end
