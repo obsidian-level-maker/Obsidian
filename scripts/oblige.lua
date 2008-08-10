@@ -511,7 +511,12 @@ function build_cool_shit()
 
 
 -- [[ PLANNING TEST CODE
-local NUM = 11
+local NUM = 1
+  if OB_CONFIG.length == "episode" then
+    NUM = 10
+  elseif OB_CONFIG.length == "full" then
+    NUM = 30
+  end
 for level = 1,NUM do
 
   local level_name = string.format("MAP%02d", level)
