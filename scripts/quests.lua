@@ -22,7 +22,7 @@ class ARENA
 {
   -- an Arena is a group of rooms, generally with a locked door
   -- to a different arena (requiring the player to find the key
-  -- or switch).
+  -- or switch).  There is a start room and a target room.
 
   rooms : array(ROOM)  -- all the rooms in this arena
 
@@ -34,17 +34,17 @@ class ARENA
                 -- (map's start room for the very first arena)
                 -- Never nil.
 
-  exit : ROOM   -- room which player exits this arena
-                -- (map's exit room for the very last arena)
+  target : ROOM -- room containing the key/switch to exit this
+                -- arena, _OR_ the level's exit room itself.
                 -- Never nil.
 
-  path : array(ROOM)   -- full path of rooms from 'start' to 'exit'
-
-  path_set : set(ROOM) -- set for each room in the above path
-
-  lock : LOCK   -- lock which leads to next arena, or nil for last
-
-  target : ROOM -- room containing the key/switch, or nil
+  lock : LOCK   -- what kind of key/switch will be in the 'target'
+                -- room, or the string "EXIT" if this arena leads
+                -- to the exit room.
+                -- Never nil
+  
+  path : array(ROOM)  -- full path of rooms from 'start' to 'target'
+                      -- NOTE: may contain teleporters.
 
 }
 
@@ -54,8 +54,16 @@ class LOCK
   conn : CONN   -- connection between two rooms (and two arenas)
                 -- which is locked (keyed door, lowering bars, etc)
 
-  front, back : LOCK  -- binary tree of locks
-                      -- front for 'src' side, back for 'dest' side
+  kind : keyword  -- "KEY" or "SWITCH"
+
+  item : string   -- denotes specific kind of key or switch
+
+  -- used while decided what locks to add:
+
+  branch_mode : keyword  -- "ON" or "OFF"
+
+---###  before, after : ARENA  -- the arenas on each side
+
 }
 
 
@@ -193,7 +201,7 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
     local cost = eval_recursive(R, {})
 
     -- really big rooms are wasted for the starting room
-    cost = cost + R.sw * R.sh * 7
+    cost = cost + R.svolume * 6
 
     -- should not start in a hallway!
     if R.hallway then cost = cost + 666 end
@@ -236,6 +244,8 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
 
   arena.start.purpose = "START"
 
+  PLAN.start_room = arena.start
+
   con.debugf("Start room (%d,%d)\n", arena.start.lx1, arena.start.ly1)
 
   -- update connections so that 'src' and 'dest' follow the natural
@@ -245,7 +255,7 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
 end
 
 
-function Quest_decide_end_room(arena)
+function Quest_decide_exit_room(arena)
 
   local function eval_room(R)
     local cost = 0
@@ -274,7 +284,7 @@ function Quest_decide_end_room(arena)
     end
 
     -- should be small
-    cost = cost + math.min(95, R.sw * R.sh)
+    cost = cost + math.min(95, R.svolume * 1.5)
 
     return cost + con.random()
   end
@@ -342,7 +352,7 @@ function Quest_decide_end_room(arena)
     end
 
     -- penalty for large rooms
-    dist = dist - math.min(95, R.sw * R.sh)
+    dist = dist - math.min(95, R.svolume * 1.5)
 
     -- bonus for indoor room
     if (R.kind == "building" or R.kind == "cave") then
@@ -358,14 +368,14 @@ function Quest_decide_end_room(arena)
     for _,C in ipairs(R.conns) do
       if R == C.src then
         local path = main_path_to(C.dest, E)
-        if path then table.insert(C, 1, path); return path end
+        if path then table.insert(path, 1, C); return path end
       end
     end
 
     for _,T in ipairs(R.teleports) do
       if R == T.src then
         local path = main_path_to(T.dest, E)
-        if path then table.insert(T, 1, path); return path end
+        if path then table.insert(path, 1, T); return path end
       end
     end
 
@@ -373,19 +383,21 @@ function Quest_decide_end_room(arena)
   end
 
   local function mark_main_path()
-    local path = main_path_to(arena.start, arena.exit)
+    arena.path = main_path_to(arena.start, arena.target)
 
-    if not path then error("cannot find main path!!") end
-
-    for _,C in ipairs(path) do
-      C.     main_path = true
-      C. src.main_path = true
-      C.dest.main_path = true
+    if not arena.path then
+      error("cannot find main path!!")
     end
+
+---###    for _,C in ipairs(path) do
+---###      C.     main_path = true
+---###      C. src.main_path = true
+---###      C.dest.main_path = true
+---###    end
   end
 
 
-  ---| Quest_decide_start_room |---
+  ---| Quest_decide_exit_room |---
 
   if PLAN.num_puzz == 0 then
     -- when no keys/switches : find room furthest from start
@@ -396,19 +408,21 @@ function Quest_decide_end_room(arena)
       con.debugf("Room (%d,%d) : EXIT DIST : %1.4f\n", R.lx1,R.ly1, R.exit_dist)
     end
 
-    arena.exit = table_sorted_first(arena.rooms, function(A,B) return A.exit_dist > B.exit_dist end)
+    arena.target = table_sorted_first(arena.rooms, function(A,B) return A.exit_dist > B.exit_dist end)
   else
     for _,R in ipairs(arena.rooms) do
       R.exit_cost = eval_room(R)
       con.debugf("Room (%d,%d) : EXIT COST : %1.4f\n", R.lx1,R.ly1, R.exit_cost)
     end
 
-    arena.exit = table_sorted_first(arena.rooms, function(A,B) return A.exit_cost < B.exit_cost end)
+    arena.target = table_sorted_first(arena.rooms, function(A,B) return A.exit_cost < B.exit_cost end)
   end
 
-  arena.exit.purpose = "EXIT"
+  arena.target.purpose = "EXIT"
 
-  con.debugf("Exit room (%d,%d)\n", arena.exit.lx1, arena.exit.ly1)
+  PLAN.exit_room = arena.target
+
+  con.debugf("Exit room (%d,%d)\n", arena.target.lx1, arena.target.ly1)
 
   mark_main_path()
 end
@@ -867,6 +881,7 @@ function Quest_assign()
   -- count branches in each room
   for _,R in ipairs(PLAN.all_rooms) do
     R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
+    R.svolume  = (R.sw+1) * (R.sh+1) / 2
     R.num_branch = #R.conns + #R.teleports
     if R.num_branch == 0 then
       error("Room exists with no connections!")
@@ -881,17 +896,17 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
     rooms = copy_table(PLAN.all_rooms),
     conns = copy_table(PLAN.all_conns),
 
-    need_start = true,
-    need_exit  = true,
+    lock  = "EXIT",
   }
-
-  PLAN.all_arenas = { arena }
 
 
   Quest_num_puzzles(arena)
 
   Quest_decide_start_room(arena)
-  Quest_decide_end_room(arena)
+  Quest_decide_exit_room(arena)
+
+
+  PLAN.all_arenas = { arena }
 
   for i = 1,PLAN.num_puzz do
     Quest_add_puzzle()
@@ -907,7 +922,7 @@ PLAN.root_lock = lock
 --]]
 
 
-  local START_R = arena.start
+  local START_R = PLAN.start_room
   assert(START_R)
 
   local sx = int((START_R.sx1 + START_R.sx2) / 2.0)
@@ -919,7 +934,7 @@ PLAN.root_lock = lock
   con.printf("Start seed @ (%d,%d)\n", sx, sy)
 
 
-  local EXIT_R = arena.exit
+  local EXIT_R = PLAN.exit_room
   assert(EXIT_R)
   assert(EXIT_R ~= START_R)
 
