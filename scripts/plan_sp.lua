@@ -877,62 +877,98 @@ function Rooms_Nudge()
 end
 
 
-function Rooms_border_up(R)
-  for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-    local S = SEEDS[x][y][1]
-    for dir = 2,8,2 do
-      local nx, ny = nudge_coord(x, y, dir)
-      local N
-      if Seed_valid(nx, ny, 1) then
-        N = SEEDS[nx][ny][1]
-      end
 
-      if not N then
-        S.borders[dir] = { kind="solid" }
 
-      elseif N.room == R then
-        -- same room, do nothing
-        
-      elseif R.kind == "building" or R.kind == "cave" then
-        S.borders[dir] = { kind="solid" }
+function Rooms_Make_Seeds()
 
-      else
-        S.borders[dir] = { kind="fence" }
-      end
+  local function Plant_Rooms()
+    for _,R in ipairs(PLAN.all_rooms) do
+      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+        assert(Seed_valid(sx, sy, 1))
+        local S = SEEDS[sx][sy][1]
+        assert(not S.room) -- no overlaps please!
+        S.room = R
+        S.borders = {}
+      end end
     end
-  end end -- x, y
-end
+  end
 
-
-function Rooms_MakeSeeds()
-  Seed_init(LAND_W*3, LAND_H*3, 1, { zone_kind="solid"})
-
-  for _,R in ipairs(PLAN.all_rooms) do
-    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-      assert(Seed_valid(sx, sy, 1))
-      local S = SEEDS[sx][sy][1]
-      assert(not S.room) -- no overlaps please!
-      S.room = R
-      S.borders = {}
+  local function Flow_Liquid()
+    for lx = 1,LAND_W do for ly = 1,LAND_H do
+      local L = LAND_MAP[lx][ly]
+      if not L.room then
+        for sx = lx*3-2,lx*3 do for sy = ly*3-2,ly*3 do
+          local S = SEEDS[sx][sy][1]
+          if not S.room then
+            S.room = { kind = L.kind, nowalk=true }
+            S.borders = {}
+          end
+        end end -- sx, sy
+      end -- L.room
     end end
   end
 
-  -- secondly handle non-room stuff (Lava)
-  for lx = 1,LAND_W do for ly = 1,LAND_H do
-    local L = LAND_MAP[lx][ly]
-    if not L.room then
-      for sx = lx*3-2,lx*3 do for sy = ly*3-2,ly*3 do
-        local S = SEEDS[sx][sy][1]
+  local function Fill_Holes()
+    repeat
+      local changed = false
+
+      for x = 1,SEED_W do for y = 1,SEED_H do
+        local S = SEEDS[x][y][1]
         if not S.room then
-          S.room = { kind = L.kind, nowalk=true }
-          S.borders = {}
+          for dir = 2,8,2 do
+            local nx, ny = nudge_coord(x, y, dir)
+            local N = Seed_valid(nx, ny, 1) and SEEDS[nx][ny][1]
+
+            if N and N.room and N.room.nowalk then  -- FIXME: UGH!!!
+              S.room = N.room
+              changed = true
+            end
+          end
         end
-      end end -- sx, sy
-    end -- L.room
-  end end
+      end end -- x, y
+
+    until not changed
+  end
+
+  local function Border_Up(R)
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y][1]
+      for dir = 2,8,2 do
+        local nx, ny = nudge_coord(x, y, dir)
+        local N
+        if Seed_valid(nx, ny, 1) then
+          N = SEEDS[nx][ny][1]
+        end
+
+        if not N then
+          S.borders[dir] = { kind="solid" }
+
+        elseif N.room == R then
+          -- same room, do nothing
+          
+        elseif R.kind == "building" or R.kind == "cave" then
+          S.borders[dir] = { kind="solid" }
+
+---#    elseif N.room and N.room.nowalk then
+---#      -- deadly lava, nothing needed
+
+        else
+          S.borders[dir] = { kind="fence" }
+        end
+      end
+    end end -- x, y
+  end
+
+  ---| Rooms_MakeSeeds |---
+
+  Seed_init(LAND_W*3, LAND_H*3, 1, { zone_kind="solid"})
+
+  Plant_Rooms()
+  Flow_Liquid()
+  Fill_Holes()
 
   for _,R in ipairs(PLAN.all_rooms) do
-    Rooms_border_up(R)
+    Border_Up(R)
   end
 
   Seed_dump_fabs()
@@ -1384,7 +1420,7 @@ function Plan_rooms_sp()
   Landmap_AddBridges()
 
   Rooms_Nudge()
-  Rooms_MakeSeeds()
+  Rooms_Make_Seeds()
   Rooms_Connect()
 
 end -- Plan_rooms_sp
