@@ -43,7 +43,7 @@ class ARENA
                 -- to the exit room.
                 -- Never nil
   
-  path : array(ROOM)  -- full path of rooms from 'start' to 'target'
+  path : array(CONN)  -- full path of rooms from 'start' to 'target'
                       -- NOTE: may contain teleporters.
 
 }
@@ -817,31 +817,27 @@ con.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
 end
 
 
-local function Quest_add_final_lock(arena)
-end
-
-
-local function Quest_num_puzzles(arena)
-  PLAN.num_puzz = 0
-
+function Quest_num_puzzles(num_rooms)
   local PUZZLE_MINS = { less=18, normal=12, more=8, mixed=16 }
   local PUZZLE_MAXS = { less=10, normal= 8, more=4, mixed=6  }
 
   if not PUZZLE_MINS[OB_CONFIG.puzzles] then
     con.printf("Puzzles disabled\n")
-    return
+    return 0
   end
 
-  local p_min = #arena.rooms / PUZZLE_MINS[OB_CONFIG.puzzles]
-  local p_max = #arena.rooms / PUZZLE_MAXS[OB_CONFIG.puzzles]
+  local p_min = num_rooms / PUZZLE_MINS[OB_CONFIG.puzzles]
+  local p_max = num_rooms / PUZZLE_MAXS[OB_CONFIG.puzzles]
 
-  PLAN.num_puzz = int(0.25 + rand_range(p_min, p_max))
+  local result = int(0.25 + rand_range(p_min, p_max))
 
-  con.printf("Number of puzzles: %d  (%1.2f-%1.2f) rooms=%d\n", PLAN.num_puzz, p_min, p_max, #arena.rooms)
+  con.printf("Number of puzzles: %d  (%1.2f-%1.2f) rooms=%d\n", result, p_min, p_max, num_rooms)
+
+  return result
 end
 
 
-local function Quest_add_puzzle()
+function Quest_add_puzzle()
 
   -- Algorithm:
   --
@@ -868,6 +864,83 @@ local function Quest_add_puzzle()
   -- means that the key that was placed for the original locked
   -- door is replaced with a key for the new lock, and the old key
   -- must be placed somewhere beyond the new locked door.
+
+  local function free_branches(R)
+    local count = 0
+    for _,C in ipairs(R.conns) do
+      if C and not C.lock then
+        count = count + 1
+      end
+    end
+    return count
+  end
+
+  local function eval_arena(A)
+    local score = -1
+
+    for _,C in ipairs(A.path) do
+      if free_branches(C.src) >= 3 then
+        score = score + 1.6
+      end
+    end
+
+    if score < 0 then return -1 end
+
+    score = score + math.min(90, #A.rooms)
+
+    if A.lock ~= "EXIT" then
+      score = score + 20
+    end
+
+    return score
+  end
+
+  local function eval_branch(C, mode)
+  end
+
+
+  ---| Quest_add_puzzle |---
+
+  for _,A in ipairs(PLAN.all_arenas) do
+    if not A.split_score then
+      A.split_score = eval_arena(A)
+con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
+    end
+  end
+
+  local arena = table_sorted_first(PLAN.all_arenas, function(X,Y) return X.split_score > Y.split_score end)
+
+  if arena.split_score < 0 then
+    con.debugf("No more puzzles could be made!\n")
+    return
+  end
+
+
+  local branches = {}
+
+  for _,C in ipairs(arena.path) do
+    C.branch_score = nil
+
+    if free_branches(C.src) >= 3 then
+      C.branch_score = eval_branch(C, "ON")
+      table.insert(branches, C)
+
+      for _,D in ipairs(C.src.conns) do
+        D.branch_score = nil
+
+        if D.src == C.src and D.dest ~= C.dest then
+          D.branch_score = eval_branch(D, "OFF")
+          table.insert(branches, D)
+        end
+      end -- D
+    end
+  end -- C
+
+
+  local branch = table_sorted_first(branches, function(X,Y) return X.branch_score > Y.branch_score end)
+  assert(branch)
+
+  -- FIXME: do split
 end
 
 
@@ -889,6 +962,8 @@ function Quest_assign()
 con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
 
+  PLAN.num_puzz = Quest_num_puzzles(#PLAN.all_rooms)
+
   Quest_hallways()
 
   local arena =
@@ -896,11 +971,8 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
     rooms = copy_table(PLAN.all_rooms),
     conns = copy_table(PLAN.all_conns),
 
-    lock  = "EXIT",
+    lock = "EXIT",
   }
-
-
-  Quest_num_puzzles(arena)
 
   Quest_decide_start_room(arena)
   Quest_decide_exit_room(arena)
