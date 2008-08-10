@@ -210,12 +210,17 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
     return cost + rand_range(-2, 2)
   end
 
+  local function swap_conn(C)
+    C.src, C.dest = C.dest, C.src
+    C.src_S, C.dest_S = C.dest_S, C.src_S
+  end
+
   local function natural_flow(R, visited)
     visited[R] = true
 
     for _,C in ipairs(R.conns) do
       if R == C.dest and not visited[C.src] then
-        C.src, C.dest = C.dest, C.src
+        swap_conn(C)
       end
       if R == C.src and not visited[C.dest] then
         natural_flow(C.dest, visited)
@@ -224,7 +229,7 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
 
     for _,T in ipairs(R.teleports) do
       if R == T.dest and not visited[T.src] then
-        T.src, T.dest = T.dest, T.src
+        swap_conn(T)
       end
       if R == T.src and not visited[T.dest] then
         natural_flow(T.dest, visited)
@@ -433,7 +438,7 @@ function Quest_travel_volume(R, exclude_set)
   -- given room, including itself, but excluding connections
   -- that have been "locked" and rooms in the exclude_set.
 
-  local count = 1
+  local total = assert(R.svolume)
 
   exclude_set[R] = true
 
@@ -442,7 +447,7 @@ function Quest_travel_volume(R, exclude_set)
       local N = sel(C.src == R, C.dest, C.src)
       if not exclude_set[N] then
         exclude_set[N] = true
-        count = count + Quest_travel_volume(N, copy_table(exclude_set))
+        total = total + Quest_travel_volume(N, copy_table(exclude_set))
       end
     end
   end
@@ -452,26 +457,26 @@ function Quest_travel_volume(R, exclude_set)
     local N = sel(T.src == R, T.dest, T.src)
     if not exclude_set[N] then
       exclude_set[N] = true
-      count = count + Quest_travel_volume(N, copy_table(exclude_set))
+      total = total + Quest_travel_volume(N, copy_table(exclude_set))
     end
   end
 
-  return count
+  return total
 end
 
 
-function Quest_update_trav_diff()
+function Quest_update_tvols(arena)
   -- The 'trav_diff' value of a connection between two rooms is the
   -- difference in the number of travelable rooms on either side of
   -- the connection.
 
   -- Note: we don't do teleporters, as they are never lockable
 
-  for _,C in ipairs(PLAN.all_conns) do
-    C.trav_src  = Quest_travel_volume(C.src,  { [C.dest]=true })
-    C.trav_dest = Quest_travel_volume(C.dest, { [C.src] =true })
+  for _,C in ipairs(arena.conns) do
+    C.src_tvol  = Quest_travel_volume(C.src,  { [C.dest]=true })
+    C.dest_tvol = Quest_travel_volume(C.dest, { [C.src] =true })
 
-    C.trav_diff = math.abs(C.trav_src - C.trav_dest)
+    local trav_diff = math.abs(C.src_tvol - C.dest_tvol)
 
 --[[
  con.debugf("Room (%d,%d) <--> (%d,%d) trav_diff:%d\n",
@@ -601,7 +606,7 @@ function Quest_divide_group(parent)
   local function split_group(C)
     assert(C.lock)
     
-    Quest_update_trav_diff()
+    Quest_update_tvols()
 
     return collect_group_at(nil, C.src,  { [C.dest]=true }, {}) ,
            collect_group_at(nil, C.dest, { [C.src]=true },  {})
@@ -677,7 +682,6 @@ con.debugf("No lockable connections : %d  pivot=%s\n", #parent.rooms, sel(parent
   local LOCK =
   {
     conn = C,
-    trav_sum = C.trav_src + C.trav_dest,
   }
 
   C.lock = LOCK
@@ -895,7 +899,42 @@ function Quest_add_puzzle()
     return score
   end
 
-  local function eval_branch(C, mode)
+  local function eval_lock(C, mode, back_mul)
+    -- Factors to consider:
+    --
+    -- 1) primary factor is how well this connection breaks up the
+    --    arena: a perfectly 50% split is normally ideal (for the
+    --    EXIT arena a higher ratio is better).
+    --
+    -- 2) distance to the new target room is also important, need
+    --    to give the player some challenge to get that key.
+    --
+    -- 3) entering a big room through its main entrance is nice
+    --    
+    -- 4) entering a hallway is anti-climactic.
+    --
+    -- 5) try to avoid Outside-->Outside connections, since we
+    --    cannot use keyed doors in DOOM (or if we do, then they
+    --    create an ugly tall door-frame).  Worse is when there
+    --    is a height difference (though going UP has potential to
+    --    use a raising stair for the puzzle).
+    --
+    -- 6) prefer no teleporters in source room
+
+    local cost = math.abs(C.src_tvol - C.dest_tvol * back_mul)
+
+    if C.dest.hallway then cost = cost + 10 end
+    if C.dest.big_entrance == C.src then cost = cost - 20 end
+
+    if #C.src.teleports > 0 then cost = cost + 4 end
+
+    if not (C.src.kind == "building" or C.src.kind == "cave") and
+       not (C.dest.kind == "building" or C.dest.kind == "cave")
+    then
+      cost = cost + 32
+    end
+
+    return cost + con.random()
   end
 
 
@@ -916,29 +955,53 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
   end
 
 
-  local branches = {}
+  Quest_update_tvols(arena)
+
+  local poss_locks = {}
+
+  for _,C in ipairs(arena.conns) do
+    C.lock_cost = nil
+  end
+
+
+  local back_mul = 1
+  
+  if (arena.lock == "EXIT") and (PLAN.num_puzz > 1) then
+    back_mul = math.max(3, PLAN.num_puzz)
+  end
 
   for _,C in ipairs(arena.path) do
-    C.branch_score = nil
-
     if free_branches(C.src) >= 3 then
-      C.branch_score = eval_branch(C, "ON")
-      table.insert(branches, C)
+      C.lock_cost = eval_lock(C, "ON", back_mul)
+      table.insert(poss_locks, C)
 
-      for _,D in ipairs(C.src.conns) do
-        D.branch_score = nil
-
-        if D.src == C.src and D.dest ~= C.dest then
-          D.branch_score = eval_branch(D, "OFF")
-          table.insert(branches, D)
-        end
-      end -- D
+      if arena.lock ~= "EXIT" then
+        for _,D in ipairs(C.src.conns) do
+          if D.src == C.src and D.dest ~= C.dest then
+            D.lock_cost = eval_lock(D, "OFF", back_mul)
+            table.insert(poss_locks, D)
+          end
+        end -- D
+      end
     end
   end -- C
 
 
-  local branch = table_sorted_first(branches, function(X,Y) return X.branch_score > Y.branch_score end)
-  assert(branch)
+  assert(#poss_locks > 0)
+
+  for _,C in ipairs(arena.conns) do
+    if C.lock_cost then
+      con.debugf("Lock (%d,%d) --> (%d,%d) cost=%1.2f\n",
+                 C.src.lx1,C.src.ly1, C.dest.lx1,C.dest.ly1, C.lock_cost)
+    end
+  end
+
+
+  local lock_C = table_sorted_first(poss_locks, function(X,Y) return X.lock_cost < Y.lock_cost end)
+  assert(lock_C)
+
+  con.debugf("Lock conn has COST:%1.2f\n", lock_C.lock_cost)
+
 
   -- FIXME: do split
 end
@@ -962,7 +1025,7 @@ function Quest_assign()
 con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
 
-  PLAN.num_puzz = Quest_num_puzzles(#PLAN.all_rooms)
+  PLAN.num_puzz = 1 --!!!!! Quest_num_puzzles(#PLAN.all_rooms)
 
   Quest_hallways()
 
