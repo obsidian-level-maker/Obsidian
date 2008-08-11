@@ -463,6 +463,7 @@ if true then -- if do_sides then
         local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
                             "DOORRED2","DOORYEL2","DOORBLU2","MARBFAC2" }
         local w_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
+con.printf("ADDING LOCK DOOR %s\n", w_tex)
         csg2.add_brush(
         {
           t_face = { texture=f_tex },
@@ -491,7 +492,7 @@ end -- do_sides
 
     if S.room and S.room.key_item and S.sx == S.room.sx2 and S.sy == S.room.sy2 then
       local KEYS = { 13,6,5,7015, 38,39,40,7017 }
-con.printf("ADDING KEY !!!!!!!!!!! %d", KEYS[S.room.key_item])
+con.printf("ADDING KEY %d\n", KEYS[S.room.key_item])
       csg2.add_entity(tostring(KEYS[S.room.key_item] or 2014), (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
   end

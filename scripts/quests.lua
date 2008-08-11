@@ -1181,7 +1181,10 @@ con.debugf("Collecting BACK:\n")
 
   local T_path, T_end = find_target(T_start, visited)
   assert(T_end)
-  assert(T_end ~= T_start)
+
+  if lock_C.lock_mode == "ON" then
+    assert(T_end ~= T_start)
+  end
 
   con.debugf("New Target Room (%d,%d).  Path:\n", T_end.lx1, T_end.ly1)
 
