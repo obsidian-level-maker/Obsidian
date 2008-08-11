@@ -678,13 +678,6 @@ con.debugf("No lockable connections : %d  pivot=%s\n", #parent.rooms, sel(parent
   end
 
 
-  -- create lock information
-  local LOCK =
-  {
-    conn = C,
-  }
-
-  C.lock = LOCK
 
 con.debugf("Candidate: (%d,%d) --> (%d,%d) diff:%d lock:%s sum:%d\n",
 C.src.lx1, C.src.ly1, C.dest.lx1, C.dest.ly1, C.trav_diff, tostring(C.lock), C.lock.trav_sum)
@@ -883,7 +876,7 @@ function Quest_add_puzzle()
     local score = -1
 
     for _,C in ipairs(A.path) do
-      if free_branches(C.src) >= 3 then
+      if free_branches(C.src) >= sel(C.src == A.start, 2, 3) then
         score = score + 1.6
       end
     end
@@ -922,6 +915,9 @@ function Quest_add_puzzle()
     -- 6) prefer no teleporters in source room
 
     local cost = math.abs(C.src_tvol - C.dest_tvol * back_mul)
+
+--!!!!!
+con.debugf("src_tvol = %d  dest_tvol = %d\n", C.src_tvol, C.dest_tvol)
 
     if C.dest.hallway then cost = cost + 10 end
     if C.dest.big_entrance == C.src then cost = cost - 20 end
@@ -971,14 +967,16 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
   end
 
   for _,C in ipairs(arena.path) do
-    if free_branches(C.src) >= 3 then
+    if free_branches(C.src) >= sel(C.src == arena.start, 2, 3) then
       C.lock_cost = eval_lock(C, "ON", back_mul)
+      C.lock_mode = "ON"
       table.insert(poss_locks, C)
 
       if arena.lock ~= "EXIT" then
         for _,D in ipairs(C.src.conns) do
           if D.src == C.src and D.dest ~= C.dest then
             D.lock_cost = eval_lock(D, "OFF", back_mul)
+            D.lock_mode = "OFF"
             table.insert(poss_locks, D)
           end
         end -- D
@@ -991,8 +989,9 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
 
   for _,C in ipairs(arena.conns) do
     if C.lock_cost then
-      con.debugf("Lock (%d,%d) --> (%d,%d) cost=%1.2f\n",
-                 C.src.lx1,C.src.ly1, C.dest.lx1,C.dest.ly1, C.lock_cost)
+      con.debugf("Lock (%d,%d) --> (%d,%d) cost=%1.2f mode=%s\n",
+                 C.src.lx1,C.src.ly1, C.dest.lx1,C.dest.ly1,
+                 C.lock_cost, C.lock_mode or "???")
     end
   end
 
@@ -1003,7 +1002,71 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
   con.debugf("Lock conn has COST:%1.2f\n", lock_C.lock_cost)
 
 
-  -- FIXME: do split
+  local LOCK =
+  {
+    conn = lock_C,
+    kind = "key",
+    item = #PLAN.all_arenas  -- HACK !!!!
+  }
+
+  lock_C.lock = LOCK
+
+
+
+  --- perform split ---
+
+  con.debugf("Splitting arena, old sizes: %d+%d", #arena.rooms, #arena.conns)
+
+  local new_A =
+  {
+    rooms = {},
+    conns = {},
+  }
+
+  local old_A = copy_table(arena)
+
+  arena.rooms = {}
+  arena.conns = {}
+
+  arena.start  = nil
+  arena.target = nil
+  arena.path   = nil
+  arena.lock   = nil
+  arena.split_score = nil
+
+
+
+  local function collect_arena(A, R, visited)
+    visited[R] = true
+
+    table.insert(A.rooms, R)
+
+    for _,C in ipairs(R.conns) do
+      if not C.lock then
+        local N = sel(R == C.src, C.dest, C.src)
+        if not visited[N] then
+          table.insert(A.conns, C)
+          collect_arena(A, N, visited)
+        end
+      end
+    end
+
+    for _,T in ipairs(R.teleports) do
+      local N = sel(R == T.src, T.dest, T.src)
+      if not visited[N] then
+        collect_arena(A, N, visited)
+      end
+    end
+  end
+
+
+  collect_arena(arena, lock_C.src,  {})
+  collect_arena(new_A, lock_C.dest, {})
+
+  con.debugf("New arena sizes: %d+%d | %d+%d\n", #arena.rooms, #arena.conns,
+             #new_A.rooms, #new_A.conns)
+
+  table.insert(PLAN.all_arenas, new_A)
 end
 
 
