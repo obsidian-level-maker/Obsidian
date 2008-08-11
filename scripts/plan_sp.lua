@@ -1314,7 +1314,7 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
       -- find a room for the teleporter
       for _,N in ipairs(rooms) do
         if (N.group_id == 1) and (#N.teleports < 2) then
-          local TELEP = { src=N, dest=R, teleport=true }
+          local TELEP = { src=N, dest=R, is_teleport=true }
 
           TELEP.src_tag  = Plan_alloc_tag()
           TELEP.dest_tag = Plan_alloc_tag()
