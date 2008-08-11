@@ -1012,6 +1012,13 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
   lock_C.lock = LOCK
 
 
+local KS = lock_C.dest_S
+local dir = delta_to_dir(lock_C.src_S.sx - KS.sx, lock_C.src_S.sy - KS.sy)
+KS.borders[dir].kind = "lock_door"
+KS.borders[dir].key_item = LOCK.item
+
+
+
   --- perform split ---
 
   con.debugf("Splitting arena, old sizes: %d+%d", #arena.rooms, #arena.conns)
@@ -1202,6 +1209,13 @@ con.debugf(" -- (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
            C.dest.lx1, C.dest.ly1)
 end
 
+
+  assert(arena.lock ~= "EXIT")
+  arena.target.key_item = arena.lock.item
+
+  if back_A.lock ~= "EXIT" then
+    back_A.target.key_item = back_A.lock.item
+  end
 
 
   -- DONE!  link in the newbie...

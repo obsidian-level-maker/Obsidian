@@ -269,6 +269,7 @@ con.printf("do_teleport\n")
     local z1, z2
     local f_tex, c_tex, w_tex
     local do_sides = true
+    local sec_kind
 
     if S.room then
 
@@ -318,6 +319,7 @@ con.printf("do_teleport\n")
         f_tex = "LAVA1"
         c_tex = "F_SKY1"
         w_tex = "COMPBLUE"
+        sec_kind = 16
         do_corners = false
         do_sides = false --!!!
 
@@ -333,9 +335,9 @@ con.printf("do_teleport\n")
         z1 = 256+16
         z2 = z1+192
       
-        f_tex = "FLOOR4_8"
-        c_tex = "TLITE6_6"
-        w_tex = "METAL2"
+        f_tex = "FLAT14"
+        c_tex = "CEIL3_3"
+        w_tex = "STARTAN3"
       end
 
       S.z1 = z1 --!!!!!! REMOVE CRAP
@@ -413,6 +415,7 @@ con.printf("do_teleport\n")
       t_face = { texture=f_tex },
       b_face = { texture=f_tex },
       w_face = { texture=w_tex },
+      sec_kind = sec_kind,
     },
     {
       { x=x1, y=y1 }, { x=x1, y=y2 },
@@ -456,6 +459,19 @@ if true then -- if do_sides then
         get_wall_coords(side, x1,y1, x2,y2),
         -2000, z1+36)
       end
+      if S.borders and S.borders[side] and S.borders[side].kind == "lock_door" then
+        local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
+                            "DOORRED2","DOORYEL2","DOORBLU2","MARBFAC2" }
+        local w_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
+        csg2.add_brush(
+        {
+          t_face = { texture=f_tex },
+          b_face = { texture=f_tex },
+          w_face = { texture=w_tex },
+        },
+        get_wall_coords(side, x1,y1, x2,y2),
+        z1 + 36, 4000)
+      end
     end
 end -- do_sides
 
@@ -463,14 +479,20 @@ end -- do_sides
       csg2.add_entity(--[[ "info_player_start" ]] "1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     elseif S.is_exit then
       csg2.add_entity(--[[ "info_player_start" ]] "41", (x1+x2)/2, (y1+y2)/2, z1 + 25)
-    elseif S.room and (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
+    elseif S.room and not S.room.hallway and
+           (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
       csg2.add_entity(--[[ "item_health" ]] "2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
 
-
-    if S.sy == S.room.sy2 then
+    if S.room and S.sy == S.room.sy2 then
       do_teleporter(S)
+    end
+
+    if S.room and S.room.key_item and S.sx == S.room.sx2 and S.sy == S.room.sy2 then
+      local KEYS = { 13,6,5,7015, 38,39,40,7017 }
+con.printf("ADDING KEY !!!!!!!!!!! %d", KEYS[S.room.key_item])
+      csg2.add_entity(tostring(KEYS[S.room.key_item] or 2014), (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
   end
 
