@@ -1023,10 +1023,13 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
 
     start  = lock_C.dest,
     target = arena.target,
+    lock   = arena.lock,
   }
 
   arena.rooms = {}
   arena.conns = {}
+  arena.lock  = LOCK
+
 
   -- arena.start remains the same
   -- arena.target / path are handled below
@@ -1066,17 +1069,13 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
 
   if lock_C.lock_mode == "OFF" then
     
-    -- arena.target and arena.path remain the same
+    -- arena.target / path remain the same
 
-    -- FIXME: back_A.target / path
+    -- FIXME: find back_A.target / path  [ from back_A.start ]
 
   else  -- "ON" --
 
-    back_A.lock = arena.lock
-     arena.lock = LOCK
-
-    back_A.path = arena.path
-     arena.path = {}
+    back_A.path = arena.path ; arena.path = {}
 
     while true do
       if #back_A.path == 0 then
@@ -1092,7 +1091,7 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
       table.insert(arena.path, C)
     end 
 
-    -- FIXME: back_A : target & rest of path
+    -- FIXME: find arena.target & __rest__ of path  [ from lock_C.src ]
   end
 
 
