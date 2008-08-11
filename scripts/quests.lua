@@ -1012,28 +1012,26 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
   lock_C.lock = LOCK
 
 
-
   --- perform split ---
 
   con.debugf("Splitting arena, old sizes: %d+%d", #arena.rooms, #arena.conns)
 
-  local new_A =
+  local back_A =
   {
     rooms = {},
     conns = {},
-  }
 
-  local old_A = copy_table(arena)
+    start  = lock_C.dest,
+    target = arena.target,
+  }
 
   arena.rooms = {}
   arena.conns = {}
 
-  arena.start  = nil
-  arena.target = nil
-  arena.path   = nil
-  arena.lock   = nil
-  arena.split_score = nil
+  -- arena.start remains the same
+  -- arena.target / path are handled below
 
+  arena.split_score = nil
 
 
   local function collect_arena(A, R, visited)
@@ -1059,14 +1057,46 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
     end
   end
 
-
-  collect_arena(arena, lock_C.src,  {})
-  collect_arena(new_A, lock_C.dest, {})
+  collect_arena(arena,  lock_C.src,  {})
+  collect_arena(back_A, lock_C.dest, {})
 
   con.debugf("New arena sizes: %d+%d | %d+%d\n", #arena.rooms, #arena.conns,
-             #new_A.rooms, #new_A.conns)
+             #back_A.rooms, #back_A.conns)
 
-  table.insert(PLAN.all_arenas, new_A)
+
+  if lock_C.lock_mode == "OFF" then
+    
+    -- arena.target and arena.path remain the same
+
+    -- FIXME: back_A.target / path
+
+  else  -- "ON" --
+
+    back_A.lock = arena.lock
+     arena.lock = LOCK
+
+    back_A.path = arena.path
+     arena.path = {}
+
+    while true do
+      if #back_A.path == 0 then
+        error("Failed truncating back path!")
+      end
+
+      local C = table.remove(back_A.path, 1)
+
+      if C == lock_C then
+        break;
+      end
+
+      table.insert(arena.path, C)
+    end 
+
+    -- FIXME: back_A : target & rest of path
+  end
+
+
+  table.insert(PLAN.all_arenas, back_A)
 end
 
 
