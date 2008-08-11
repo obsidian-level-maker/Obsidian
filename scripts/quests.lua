@@ -1067,11 +1067,15 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
              #back_A.rooms, #back_A.conns)
 
 
+  local T_start = lock_C.dest
+  local visited = { [lock_C.src]=true }
+
+
   if lock_C.lock_mode == "OFF" then
     
     -- arena.target / path remain the same
 
-    -- FIXME: find back_A.target / path  [ from back_A.start ]
+    -- SEE BELOW: find back_A.target / path  [ from back_A.start ]
 
   else  -- "ON" --
 
@@ -1091,11 +1095,119 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
       table.insert(arena.path, C)
     end 
 
-    -- FIXME: find arena.target & __rest__ of path  [ from lock_C.src ]
+    T_start = lock_C.src
+
+    local prev_R
+    if #arena.path > 0 then
+      prev_R = arena.path[#arena.path].src
+      visited[prev_R] = true
+    end
+
+--[[
+    T_start = nil
+    local best_vol = -9999
+
+    for _,C in ipairs(lock_C.src.conns) do
+      if not C.lock then
+        local N = sel(lock_C.src == C.src, C.dest, C.src)
+        local VOL = sel(lock_C.src == C.src, C.dest_tvol, C.src_tvol)
+        if N ~= prev_R then
+          if not T_start or (VOL > best_vol) then
+            T_start, best_vol = N, VOL
+          end
+        end
+      end
+    end -- C
+
+    if not T_start then
+      error("Mucked up selecting alternative branch!")
+    end
+--]]
+    -- SEE BELOW: find arena.target & __rest__ of path  [ from lock_C.src ]
+  end
+
+  assert(T_start)
+
+
+  -- find new target room
+  -- FIXME: BORKED FOR TELEPORTERS !!!
+
+  local function find_target(R, visited)
+    
+    visited[R] = true
+
+    local best
+    local best_vol = -9999
+
+    for _,C in ipairs(R.conns) do
+      if not C.lock then
+        local N = sel(R == C.src, C.dest, C.src)
+        assert(N)
+        local VOL = sel(R == C.src, C.dest_tvol, C.src_tvol)
+        if not visited[N] then
+          if not best or (VOL > best_vol) then
+            best, best_vol = C, VOL
+          end
+        end
+      end
+    end -- C
+
+    if best then
+      local N = sel(R == best.src, best.dest, best.src)
+      assert(N)
+      local path, t_end = find_target(N, visited)
+      table.insert(path, 1, best)
+      return path, t_end
+    end
+
+    return {}, R
   end
 
 
+  local T_path, T_end = find_target(T_start, visited)
+  assert(T_end)
+  assert(T_end ~= T_start)
+
+  con.debugf("New Target Room (%d,%d).  Path:\n", T_end.lx1, T_end.ly1)
+
+  for _,C in ipairs(T_path) do
+    con.debugf(" -- (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
+               C.dest.lx1, C.dest.ly1)
+  end
+
+
+  if lock_C.lock_mode == "OFF" then
+
+    back_A.target = T_end
+    back_A.path   = T_path
+  
+  else -- "ON" --
+
+    arena.target = T_end
+
+    while #T_path > 0 do
+      table.insert(arena.path, table.remove(T_path, 1))
+    end
+  end
+
+con.debugf("Front Path:\n")
+for _,C in ipairs(arena.path) do
+con.debugf(" -- (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
+           C.dest.lx1, C.dest.ly1)
+end
+
+con.debugf("Back Path:\n")
+for _,C in ipairs(back_A.path) do
+con.debugf(" -- (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
+           C.dest.lx1, C.dest.ly1)
+end
+
+
+
+  -- DONE!  link in the newbie...
   table.insert(PLAN.all_arenas, back_A)
+
+  con.debugf("Successful split\n")
 end
 
 
