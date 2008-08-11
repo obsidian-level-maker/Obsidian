@@ -974,10 +974,12 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
 
       if arena.lock ~= "EXIT" then
         for _,D in ipairs(C.src.conns) do
-          if D.src == C.src and D.dest ~= C.dest then
-            D.lock_cost = eval_lock(D, "OFF", back_mul)
-            D.lock_mode = "OFF"
-            table.insert(poss_locks, D)
+          if not D.lock then
+            if D.src == C.src and D.dest ~= C.dest then
+              D.lock_cost = eval_lock(D, "OFF", back_mul)
+              D.lock_mode = "OFF"
+              table.insert(poss_locks, D)
+            end
           end
         end -- D
       end
@@ -1047,12 +1049,15 @@ KS.borders[dir].key_item = LOCK.item
   local function collect_arena(A, R, visited)
     visited[R] = true
 
+con.debugf(" -- Room (%d,%d)\n", R.lx1, R.ly1)
     table.insert(A.rooms, R)
 
     for _,C in ipairs(R.conns) do
       if not C.lock then
         local N = sel(R == C.src, C.dest, C.src)
         if not visited[N] then
+con.debugf(" -- Conn (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
+           C.dest.lx1, C.dest.ly1)
           table.insert(A.conns, C)
           collect_arena(A, N, visited)
         end
@@ -1067,7 +1072,10 @@ KS.borders[dir].key_item = LOCK.item
     end
   end
 
+con.debugf("Collecting FRONT:\n")
   collect_arena(arena,  lock_C.src,  {})
+
+con.debugf("Collecting BACK:\n")
   collect_arena(back_A, lock_C.dest, {})
 
   con.debugf("New arena sizes: %d+%d | %d+%d\n", #arena.rooms, #arena.conns,
@@ -1243,7 +1251,7 @@ function Quest_assign()
 con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
 
-  PLAN.num_puzz = 1 --!!!!! Quest_num_puzzles(#PLAN.all_rooms)
+  PLAN.num_puzz = 8 --!!!!! Quest_num_puzzles(#PLAN.all_rooms)
 
   Quest_hallways()
 
