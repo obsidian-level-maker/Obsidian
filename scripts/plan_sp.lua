@@ -1389,8 +1389,8 @@ function Plan_rooms_sp(epi_along)
 
   if OB_CONFIG.size == "mixed" then
     
-    LAND_W = 3 + rand_index_by_probs { 2,4,6,9,6,4,2,0,1 }
-    LAND_H = 3 + rand_index_by_probs { 2,4,6,9,6,4,2 }
+    LAND_W = 3 + rand_index_by_probs { 2,4,6,10,6,4,2,0,1 }
+    LAND_H = 3 + rand_index_by_probs { 2,4,6,10,6,4,2 }
   else
     if OB_CONFIG.size == "prog" then
       LAND_W = int(5.5 + epi_along * 6)
