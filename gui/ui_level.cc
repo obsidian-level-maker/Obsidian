@@ -187,7 +187,7 @@ void UI_Level::Defaults()
 {
   // Note: theme handled by LUA code (ob_init)
 
-  size   ->SetID("normal");
+  size   ->SetID("prog");
   detail ->SetID("normal");
   heights->SetID("mixed");
   light  ->SetID("mixed");
@@ -244,6 +244,7 @@ const char * UI_Level::size_syms[] =
   "large",  "Large",
   "xlarge", "X-Large",
 
+  "prog",   "Progressive",
   "mixed",  "Mix It Up",
 
   NULL, NULL
