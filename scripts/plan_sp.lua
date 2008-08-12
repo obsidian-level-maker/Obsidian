@@ -1371,7 +1371,7 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
 end
 
 
-function Plan_rooms_sp()
+function Plan_rooms_sp(epi_along)
 
   ---===| Plan_rooms_sp |===---
 
@@ -1389,22 +1389,33 @@ function Plan_rooms_sp()
 
   if OB_CONFIG.size == "mixed" then
     
-    LAND_W = 3 + rand_index_by_probs { 1,2,3,5,3,2,1 }
-    LAND_H = 3 + rand_index_by_probs { 1,2,3,5,3,2,1 }
+    LAND_W = 3 + rand_index_by_probs { 2,4,6,9,6,4,2,0,1 }
+    LAND_H = 3 + rand_index_by_probs { 2,4,6,9,6,4,2 }
   else
-    local LAND_SIZES = { small=5, normal=7, large=10, xlarge=13 }
+    if OB_CONFIG.size == "prog" then
+      LAND_W = int(5.5 + epi_along * 6)
+    else
+      local LAND_SIZES = { small=5, normal=7, large=10, xlarge=13 }
 
-    LAND_W = LAND_SIZES[OB_CONFIG.size]
+      LAND_W = LAND_SIZES[OB_CONFIG.size]
+
+      if not LAND_W then
+        error("Unknown level size keyword: " .. tostring(OB_CONFIG.size))
+      end
+    end
+
     LAND_H = LAND_W
-    assert(LAND_W)
+
+    while LAND_H > math.max(4, LAND_W/2) and rand_odds(50) do
+      LAND_H = LAND_H - 1
+    end
 
     if rand_odds(40) then LAND_W = LAND_W - 1 end
-    if rand_odds(50) then LAND_H = LAND_H - 1 end
     if rand_odds(30) then LAND_H = LAND_H - 1 end
-  end
 
-  if LAND_W < LAND_H then
-    LAND_W, LAND_H = LAND_H, LAND_W
+    if rand_odds(50) then -- LAND_W < LAND_H then
+      LAND_W, LAND_H = LAND_H, LAND_W
+    end
   end
 
   con.printf("Land size: %dx%d\n", LAND_W, LAND_H)
