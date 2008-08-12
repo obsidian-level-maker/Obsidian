@@ -56,6 +56,8 @@ end
 
 
 function Landmap_Init()
+  LAND_MAP = array_2D(LAND_W, LAND_H)
+
   for x = 1,LAND_W do for y = 1,LAND_H do
     LAND_MAP[x][y] = { lx=x, ly=y }
   end end
@@ -1371,22 +1373,7 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
 end
 
 
-function Plan_rooms_sp(epi_along)
-
-  ---===| Plan_rooms_sp |===---
-
-  con.printf("\n--==| Plan_rooms_sp |==--\n\n")
-
-  PLAN =
-  {
-    all_rooms = {},
-    all_conns = {},
-
-    free_tag  = 1,
-    free_mark = 1,
-  }
-
-
+function Plan_determine_size(epi_along)
   local ob_size = OB_CONFIG.size
 
   -- there is no real "progression" when making a single level
@@ -1427,9 +1414,24 @@ function Plan_rooms_sp(epi_along)
   end
 
   con.printf("Land size: %dx%d\n", LAND_W, LAND_H)
+end
 
-  LAND_MAP = array_2D(LAND_W, LAND_H)
 
+function Plan_rooms_sp(epi_along)
+
+  con.printf("\n--==| Plan_rooms_sp |==--\n\n")
+
+  PLAN =
+  {
+    all_rooms = {},
+    all_conns = {},
+
+    free_tag  = 1,
+    free_mark = 1,
+  }
+
+
+  Plan_determine_size(epi_along)
 
   Landmap_Init()
   Landmap_Fill()
