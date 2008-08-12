@@ -517,6 +517,7 @@ local NUM = 1
   elseif OB_CONFIG.length == "full" then
     NUM = 30
   end
+
 for level = 1,NUM do
 
   local level_name = string.format("MAP%02d", level)
@@ -525,17 +526,21 @@ for level = 1,NUM do
 
   con.at_level(level_name, level, NUM)
 
-  Plan_rooms_sp();
-  Quest_assign();
+  local epi_along = ((level - 1) % 10) / 9
+
+  Plan_rooms_sp(epi_along)
+    if con.abort() then return "abort" end
+    con.progress(25)
+
+  Quest_assign()
+    if con.abort() then return "abort" end
+    con.progress(50)
+
   Seed_grow()
-  
-  if con.abort() then return "abort" end
 
-  dummy_builder(level_name);
-
-  if con.abort() then return "abort" end
-
-  con.progress(100)
+  dummy_builder(level_name)
+    if con.abort() then return "abort" end
+    con.progress(100)
 end
 
 do return "ok" end

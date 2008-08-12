@@ -1254,7 +1254,7 @@ function Quest_assign()
 con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
 
-  PLAN.num_puzz = 8 --!!!!! Quest_num_puzzles(#PLAN.all_rooms)
+  PLAN.num_puzz = Quest_num_puzzles(#PLAN.all_rooms)
 
   Quest_hallways()
 
