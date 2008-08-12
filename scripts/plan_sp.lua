@@ -1387,20 +1387,28 @@ function Plan_rooms_sp(epi_along)
   }
 
 
-  if OB_CONFIG.size == "mixed" then
-    
+  local ob_size = OB_CONFIG.size
+
+  -- there is no real "progression" when making a single level
+  -- so used mixed mode instead.
+  if ob_size == "prog" and OB_CONFIG.length == "single" then
+    ob_size = "mixed"
+  end
+
+  if ob_size == "mixed" then
     LAND_W = 3 + rand_index_by_probs { 2,4,6,10,6,4,2,0,1 }
     LAND_H = 3 + rand_index_by_probs { 2,4,6,10,6,4,2 }
+
   else
-    if OB_CONFIG.size == "prog" then
+    if ob_size == "prog" then
       LAND_W = int(5.5 + epi_along * 6)
     else
       local LAND_SIZES = { small=5, normal=7, large=10, xlarge=13 }
 
-      LAND_W = LAND_SIZES[OB_CONFIG.size]
+      LAND_W = LAND_SIZES[ob_size]
 
       if not LAND_W then
-        error("Unknown level size keyword: " .. tostring(OB_CONFIG.size))
+        error("Unknown size keyword: " .. tostring(ob_size))
       end
     end
 
