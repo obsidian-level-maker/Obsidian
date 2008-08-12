@@ -2,7 +2,13 @@
 TODO
 ====
 
+>>> Theme button out-of-sync (won't change to "mixed")
+    the Recreate() function resets previous SetID() -- IMPROVE CRAPPY CODE
+
+
 REWRITE:
+
++ plan_sp BUG: possible to create only a single room.
 
 - physical bridges to connect some/most areas cut-off from
   each other by Lava.
@@ -22,6 +28,14 @@ REWRITE:
   ? allocate seeds for teleporters,bosses,switches,items
 
 + room heights
+  - outdoor rooms generally stay fixed (+/- 32 variation)
+  - if indoor room touches outdoor, room has same height
+    (choose lowest height if touches multiple outdoor rooms)
+  - indoor rooms connected by lock: prefer same height
+  - for each locked area (Quest), pick a room without any
+    neighbour with a height, assign a random height to it (0,128,256)
+  - "flood fill" indoor, generally +/- 64 of neighbour height
+    (preference for src-->dest to go higher)
 
 - create doors, stairs/lifts
 
@@ -87,6 +101,8 @@ CSG Polygoniser:
 
 
 GUI:
+
+-  in deathmatch mode, fix labels on the "Equip" button.
 
 +  pass 'failure' flag to Quake_Finish() etc..
 
