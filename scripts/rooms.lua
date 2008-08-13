@@ -32,16 +32,22 @@ require 'util'
 
 function Rooms_select_heights()
 
-  local function spread()
+  local function spread(everything)
+    local changed = false
+
     for _,C in ipairs(PLAN.all_conns) do
-      if C.lock or C.dest.hallway then
+      if C.lock or C.dest.hallway or everything then
         if C.src.floor_h and not C.dest.floor_h then
           C.dest.floor_h = C.src.floor_h
+          changed = true
         elseif C.dest.floor_h and not C.src.floor_h then
           C.src.floor_h = C.dest.floor_h
+          changed = true
         end
       end
     end
+
+    return changed
   end
 
   local function dump_along(list, prefix)
@@ -193,14 +199,15 @@ function Rooms_select_heights()
     floor_along_path(A.target, A.path)
   end
 
+  while spread() do end
+  
   --!!!!!! TEMP CRUD
   for _,R in ipairs(PLAN.all_rooms) do
     if not R.floor_h then
-      R.floor_h = 128 * (-1 + rand_index_by_probs {5,3,1} )
-      R.f_unset = true
+      R.floor_h = 128
     end
     if not R.ceil_h then
-      R.ceil_h  = 320
+      R.ceil_h  = math.min(512-32, R.floor_h + sel(R.hallway, 96, 256))
     end
   end
 
