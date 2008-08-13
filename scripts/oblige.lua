@@ -22,9 +22,9 @@ require 'a_star'
 require 'engines'
 
 require 'seeds'
--- require 'room_fabs'
 require 'plan_sp'
 require 'quests'
+require 'rooms'
 require 'builder'
 
 -- require 'monsters'
@@ -236,7 +236,7 @@ function ob_update_themes()
     -- TODO: if same label exists, use that one
 
     OB_CONFIG.theme = "mixed"
-    con.change_button("theme", "", OB_CONFIG.theme)
+    con.change_button("theme", OB_CONFIG.theme)
   end
 end
 
@@ -530,11 +530,15 @@ for level = 1,NUM do
 
   Plan_rooms_sp(epi_along)
     if con.abort() then return "abort" end
-    con.progress(25)
+    con.progress(20)
 
   Quest_assign()
     if con.abort() then return "abort" end
-    con.progress(50)
+    con.progress(40)
+
+  Rooms_fit_out()
+    if con.abort() then return "abort" end
+    con.progress(60)
 
   Seed_grow()
 
