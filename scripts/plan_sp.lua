@@ -954,6 +954,13 @@ function Rooms_Make_Seeds()
 ---#    elseif N.room and N.room.nowalk then
 ---#      -- deadly lava, nothing needed
 
+--[[
+        elseif N.room and (N.room.kind == R.kind) and
+               (R.kind == "ground" or R.kind == "valley" or R.kind == "hill")
+        then
+          -- same outdoor area, do nothing
+          -- FIXME: ONLY DO IT FOR C.src/C.dest and not C.lock
+--]]
         else
           S.borders[dir] = { kind="fence" }
         end
