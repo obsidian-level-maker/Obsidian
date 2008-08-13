@@ -266,12 +266,15 @@ con.printf("do_teleport\n")
     local x2 = S.x2
     local y2 = S.y2
 
-    local z1, z2
+    local z1 = S.floor_h
+    local z2 = S.ceil_h
     local f_tex, c_tex, w_tex
     local do_sides = true
     local sec_kind
 
     if S.room then
+
+      assert(z1 and z2)
 
       local do_corners = false --!!
 
@@ -279,16 +282,12 @@ con.printf("do_teleport\n")
 -- if S.room.kind == "building" then S.room.kind = "ground" end
 
       if S.room.hallway then
-        z1 = 256+24
-        z2 = z1 + 96
 
         f_tex = "FLAT1"
         c_tex = f_tex
         w_tex = "GRAY7"
 
       elseif S.room.kind == "valley" then
-        z1 = 0
-        z2 = 512
         f_tex = "GRASS1"
         c_tex = "F_SKY1"
         w_tex = "ZIMMER8"
@@ -296,8 +295,6 @@ con.printf("do_teleport\n")
         do_sides = false --!!!
 
       elseif S.room.kind == "ground" then
-        z1 = 128
-        z2 = 512
         f_tex = "RROCK11"
         c_tex = "F_SKY1"
         w_tex = "ROCK4"
@@ -305,8 +302,6 @@ con.printf("do_teleport\n")
         do_sides = false --!!!
 
       elseif S.room.kind == "hill" then
-        z1 = 256
-        z2 = 512
         f_tex = "MFLR8_4"
         c_tex = "F_SKY1"
         w_tex = "ASHWALL2"
@@ -314,8 +309,6 @@ con.printf("do_teleport\n")
         do_sides = false --!!!
 
       elseif S.room.kind == "liquid" then
-        z1 = -24
-        z2 = 512
         f_tex = "LAVA1"
         c_tex = "F_SKY1"
         w_tex = "COMPBLUE"
@@ -324,16 +317,12 @@ con.printf("do_teleport\n")
         do_sides = false --!!!
 
       elseif S.room.kind == "cave" then
-        z1 = 128+16
-        z2 = z1+192+128
       
         f_tex = "FLAT10"
         c_tex = "FLAT10"
         w_tex = "ASHWALL4"
 
       else -- building
-        z1 = 256+16
-        z2 = z1+192
       
         f_tex = "FLAT14"
         c_tex = "CEIL3_3"

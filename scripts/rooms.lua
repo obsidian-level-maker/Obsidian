@@ -31,6 +31,55 @@ require 'util'
 
 
 function Rooms_select_heights()
+
+
+  ---| Rooms_select_heights |---
+
+  -- handle non-room stuff (liquids)
+  for x = 1,SEED_W do for y = 1,SEED_H do
+    local S = SEEDS[x][y][1]
+    if S.room and S.room.kind == "liquid" and not S.room.floor_h then
+      S.room.floor_h = -40
+      S.room.ceil_h  = 512
+      S.room.is_sky  = true
+    end
+  end end -- x, y
+
+  -- handle outdoor rooms
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.kind == "valley" then
+      R.floor_h = 0
+      R.ceil_h  = 512
+      R.is_sky  = true
+    elseif R.kind == "ground" then
+      R.floor_h = 128
+      R.ceil_h  = 512
+      R.is_sky  = true
+    elseif R.kind == "hill" then
+      R.floor_h = 256
+      R.ceil_h  = 512
+      R.is_sky  = true
+    end
+  end
+
+  --!!!!!! TEMP CRUD
+  for _,R in ipairs(PLAN.all_rooms) do
+    if not R.floor_h then
+      R.floor_h = 128 * (-1 + rand_index_by_probs {5,3,1} )
+      R.ceil_h  = 320
+    end
+  end
+
+  -- update seeds
+  for x = 1,SEED_W do for y = 1,SEED_H do
+    local S = SEEDS[x][y][1]
+    if S.room then
+      assert(S.room.floor_h)
+      S.floor_h = S.room.floor_h
+      S.ceil_h  = S.room.ceil_h
+      S.is_sky  = S.room.is_sky
+    end
+  end end -- x, y
 end
 
 
