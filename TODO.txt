@@ -8,21 +8,15 @@ TODO
 
 REWRITE:
 
-+ plan_sp BUG: possible to create only a single room.
+!!! plan_sp BUG: possible to create only a single room.
 
 - physical bridges to connect some/most areas cut-off from
   each other by Lava.
 
 + quest assignment !!
 
-  + replace all_locks with a binary tree of locks
-
-  - determine start room: swap all src/dest in connections based on natural flow
-
-  - create a ROOM tree
-  - select "significant" branch points
   - pick rooms for BOSS monsters
-  - decide what keys/switches to use (and rooms to contain them)
+
   - decide minor quests
 
   ? allocate seeds for teleporters,bosses,switches,items
@@ -30,12 +24,18 @@ REWRITE:
 + room heights
   - outdoor rooms generally stay fixed (+/- 32 variation)
   - if indoor room touches outdoor, room has same height
-    (choose lowest height if touches multiple outdoor rooms)
-  - indoor rooms connected by lock: prefer same height
-  - for each locked area (Quest), pick a room without any
-    neighbour with a height, assign a random height to it (0,128,256)
-  - "flood fill" indoor, generally +/- 64 of neighbour height
-    (preference for src-->dest to go higher)
+    [especially src.outdoor --> dest.indoor]
+  - for indoor target rooms choose random height
+  - if start room is indoor, choose random height
+  - select heights along each path
+
+  - several "gap fill" passes: unset rooms in-between two set rooms
+    will get a height in-between (depending on height diff and
+    randomness).  2-branch Hallways in between two set rooms become
+    stairwells.  3+-branch hallways get same height as entry room.
+  - one "flood fill" pass then two "gap fills", rinse repeat.
+    indoor rooms connected by lock: use same height
+    3+Hallways 
 
 - create doors, stairs/lifts
 
