@@ -8,8 +8,6 @@ TODO
 
 REWRITE:
 
-!!! plan_sp BUG: possible to create only a single room.
-
 - physical bridges to connect some/most areas cut-off from
   each other by Lava.
 
