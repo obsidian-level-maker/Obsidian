@@ -131,6 +131,14 @@ General:
 
 -  FreeDoom: some scenery items (hanging gore) have no sprites
 
+-  Batch mode:
+   .  -b(atch) builds then quits
+   .  -o(utput) for output filename
+   .  set parameters via command-line : xxx=aaa yyy=bbb (non-options)
+   .  option to read a different config file: -c(onfig)
+   .  never writes the config file
+   ?? what to do on error ??
+
 
 GUI:
 
@@ -237,7 +245,6 @@ Miscellaneous:
 -  WINDOW_CROSS and WINDOW_CROSS_BIG: do a height check
    (prevent windows you can walk through).
 
--  optimise A* algorithm
 -  optimise find_fab_loc
 
 -  GUI: Advanced button.
