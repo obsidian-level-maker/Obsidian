@@ -430,9 +430,17 @@ function Landmap_GroupRooms()
 
     local kind = LAND_MAP[x1][y1].kind
 
+    local corner
+
     for x = x1,x2 do for y = y1,y2 do
       if LAND_MAP[x][y].room then return false end
       if LAND_MAP[x][y].kind ~= kind then return false end
+
+      -- this logic prevents creating only 1 room on the map
+      if LAND_MAP[x][y].corner then
+        if corner then return false end
+        corner = LAND_MAP[x][y].corner
+      end
     end end -- x, y
 
     return true
@@ -440,9 +448,9 @@ function Landmap_GroupRooms()
 
   local BIG_BUILDING_PROBS =
   {
-    {  0.0, 20.0, 3.0 },
-    { 20.0, 10.0, 1.5 },
-    {  3.0,  1.5, 0.5 },
+    {  0.0, 20.0, 4.0 },
+    { 20.0, 20.0, 2.0 },
+    {  4.0,  2.0, 2.0 },
   }
 
   local function prob_for_big_room(kind, w, h)
@@ -537,6 +545,38 @@ con.debugf("}\n")
     end
   end
 
+  local function assign_corners()
+    -- give top/left room and bottom/right room a 'corner' field to
+    -- prevent rooms in a small map from glomming into one big room.
+
+    local function top_left()
+      for y = LAND_H,1,-1 do for x = 1,LAND_W do
+        local L = LAND_MAP[x][y]
+        if L.kind and walkable(L) and not L.corner then
+          L.corner = 1
+          return;
+        end
+      end end -- y, x
+      error("No top-left corner!")
+    end
+
+    local function bottom_right()
+      for y = 1,LAND_H do for x = LAND_W,1,-1 do
+        local L = LAND_MAP[x][y]
+        if L.kind and walkable(L) and not L.corner then
+          L.corner = 2
+          return;
+        end
+      end end -- y, x
+      error("No bottom-right corner!")
+    end
+
+    --| assign_corners |--
+
+    top_left()
+    bottom_right()
+  end
+
   local function room_char(L)
     if not L.room then return "." end
     local n = 1 + (L.room.group_id % 62)
@@ -557,6 +597,8 @@ con.debugf("}\n")
 
 
   ---| Landmap_GroupRooms |---
+
+  assign_corners()
 
   for _,V in ipairs(Landmap_rand_visits()) do
     local L = LAND_MAP[V.x][V.y]
