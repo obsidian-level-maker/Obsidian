@@ -450,16 +450,19 @@ function Landmap_CreateRooms()
 
   local BIG_BUILDING_PROBS =
   {
-    {  0.0, 20.0, 4.0 },
-    { 20.0, 20.0, 2.0 },
-    {  4.0,  2.0, 2.0 },
+    { 40, 90, 20, 1 },
+    { 90, 90, 10, 1 },
+    { 20, 10, 10, 0 },
+    {  1,  1,  0, 0 },
   }
 
   local function prob_for_big_room(kind, w, h)
     if kind == "building" or kind == "cave" then
-      if w >= 4 or h >= 4 then return 0 end
-      return BIG_BUILDING_PROBS[w][h] * 5
+      if w >= 5 or h >= 5 then return 0 end
+      if w * h >= 10 then return 0 end
+      return BIG_BUILDING_PROBS[w][h]
     else -- ground
+      if w * h >= 8 then return 0 end
       return 100 * (w * h) * (w * h)
     end
   end
@@ -520,7 +523,7 @@ function Landmap_CreateRooms()
     table.insert(PLAN.all_rooms, ROOM)
 
     local e_infos = { "none" }
-    local e_probs = { 50 }
+    local e_probs = { BIG_BUILDING_PROBS[1][1] }
 con.debugf("Check expansions:\n{\n")
 
     for dx = -1,1,2 do for dy = -1,1,2 do
@@ -939,7 +942,6 @@ end
 
 
 
-
 function Rooms_Make_Seeds()
 
   local function Plant_Rooms()
@@ -1027,6 +1029,7 @@ function Rooms_Make_Seeds()
     end end -- x, y
   end
 
+
   ---| Rooms_MakeSeeds |---
 
   Seed_init(LAND_W*3, LAND_H*3, 1, { zone_kind="solid"})
@@ -1041,6 +1044,69 @@ function Rooms_Make_Seeds()
 
   Seed_dump_fabs()
 end
+
+
+------------------------------------------------------------------------
+
+ROOM_EXITS_2x1 =
+{
+  { prob=40, exits={ 1,1,4, 2,1,6 }},
+  { prob=20, exits={ 1,1,4, 2,1,8 }},
+  { prob=60, exits={ 1,1,2, 2,1,8 }},
+  { prob=10, exits={ 1,1,2, 2,1,2 }},
+  { prob=70, exits={ 1,1,4, 2,1,2, 2,1,8 }},
+  { prob=20, exits={ 1,1,4, 2,1,2, 2,1,8, 2,1,6 }},
+  { prob=10, exits={ 1,1,2, 1,1,8, 2,1,2, 2,1,8 }},
+  { prob=10, exits={ 1,1,2, 1,1,4, 2,1,6, 2,1,8 }},
+  { prob=10, exits={ 1,1,2, 1,1,4, 2,1,2, 2,1,8 }},
+}
+
+ROOM_EXITS_2x2 =
+{
+  { prob=xx, exits={  }},
+}
+
+ROOM_EXITS_3x1 =
+{
+  { prob=xx, exits={  }},
+  { prob=xx, exits={  }},
+  { prob=xx, exits={  }},
+  { prob=xx, exits={  }},
+  { prob=xx, exits={  }},
+  { prob=xx, exits={  }},
+  { prob=xx, exits={  }},
+  { prob=xx, exits={  }},
+  { prob=xx, exits={  }},
+  { prob=xx, exits={  }},
+}
+
+ROOM_EXITS_4x1 =
+{
+  { prob=xx, exits={  }},
+}
+
+ROOM_EXITS_3x2 =
+{
+  { prob=xx, exits={  }},
+}
+
+ROOM_EXITS_4x2 =
+{
+  { prob=xx, exits={  }},
+}
+
+ROOM_EXITS_3x3 =
+{
+  { prob=xx, exits={  }},
+}
+
+ROOM_EXIT_PATTERNS =
+{
+  { nil, ROOM_EXITS_2x1, ROOM_EXITS_3x1, ROOM_EXITS_4x1 },
+  { nil, ROOM_EXITS_2x2, ROOM_EXITS_3x2, ROOM_EXITS_4x2 },
+  { nil, nil,            ROOM_EXITS_3x3, nil },
+  { nil, nil,            nil,            nil },
+}
 
 
 function Rooms_Connect()
