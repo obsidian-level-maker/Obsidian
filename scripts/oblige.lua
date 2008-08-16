@@ -505,8 +505,6 @@ function build_cool_shit()
   con.printf("SEED = %d\n\n", OB_CONFIG.seed)
   con.printf("Settings =\n%s\n", table_to_str(OB_CONFIG))
 
-  con.rand_seed(OB_CONFIG.seed * 100)
-
   con.ticker()
 
 
@@ -519,6 +517,8 @@ local NUM = 1
   end
 
 for level = 1,NUM do
+
+  con.rand_seed(OB_CONFIG.seed * 100 + level)
 
   local level_name = string.format("MAP%02d", level)
 
