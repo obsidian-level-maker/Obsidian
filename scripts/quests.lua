@@ -1277,6 +1277,12 @@ con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
 
 
+  for _,A in ipairs(PLAN.all_arenas) do
+    for _,R in ipairs(A.rooms) do
+      R.arena = A
+    end
+  end
+
 --[[
 Quest_update_trav_diff()
 

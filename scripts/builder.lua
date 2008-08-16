@@ -329,6 +329,8 @@ con.printf("do_teleport\n")
         w_tex = "STARTAN3"
       end
 
+      if S.room.f_unset then f_tex = "RROCK01" end
+
       S.z1 = z1 --!!!!!! REMOVE CRAP
 
       if do_corners then
@@ -428,7 +430,17 @@ con.printf("do_teleport\n")
 
 if true then -- if do_sides then
     for side = 2,8,2 do
-      if S.borders and S.borders[side] and S.borders[side].kind == "solid" then
+      local nx, ny = nudge_coord(S.sx, S.sy, side)
+      local N
+      if Seed_valid(nx,ny,1) then N = SEEDS[nx][ny][1] end
+
+      if S.borders and S.borders[side] and S.borders[side].kind == "solid"
+         and not (N and S.room and N.room and
+                  S.room.arena == N.room.arena and
+                  S.room.kind == N.room.kind and
+                  not (S.room.hallway or N.room.hallway) and
+                  false)
+      then
         csg2.add_brush(
         {
           t_face = { texture=f_tex },
@@ -438,7 +450,9 @@ if true then -- if do_sides then
         get_wall_coords(side, x1,y1, x2,y2),
         -2000, 4000)
       end
-      if S.borders and S.borders[side] and S.borders[side].kind == "fence" then
+      if S.borders and S.borders[side] and S.borders[side].kind == "fence"
+         and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
+      then
         csg2.add_brush(
         {
           t_face = { texture=f_tex },
@@ -481,7 +495,7 @@ end -- do_sides
 
     if S.room and S.room.key_item and S.sx == S.room.sx2 and S.sy == S.room.sy2 then
       local KEYS = { 13,6,5,7015, 38,39,40,7017 }
-con.printf("ADDING KEY %d\n", KEYS[S.room.key_item])
+con.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
       csg2.add_entity(tostring(KEYS[S.room.key_item] or 2014), (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
   end
