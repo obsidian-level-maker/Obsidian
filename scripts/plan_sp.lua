@@ -150,7 +150,9 @@ function Landmap_DoLiquid()
   {
     none = 200,
 
-    river    = 50,
+--!!!!!    river    = 50,
+--(disabled until teleporter logic is sorted out)
+
     pool     = 50,
     u_shape  = 50,
     surround = 50,
@@ -411,7 +413,7 @@ function Landmap_AddBridges()
 end
 
 
-function Landmap_GroupRooms()
+function Landmap_CreateRooms()
   
   -- creates rooms out of contiguous areas on the land-map
 
@@ -497,11 +499,6 @@ function Landmap_GroupRooms()
     ROOM.lx2 = x2
     ROOM.ly2 = y2
 
-    ROOM.sx1 = x1*3-2
-    ROOM.sy1 = y1*3-2
-    ROOM.sx2 = x2*3
-    ROOM.sy2 = y2*3
-
     for x = x1,x2 do for y = y1,y2 do
       LAND_MAP[x][y].room = ROOM
     end end
@@ -518,9 +515,6 @@ function Landmap_GroupRooms()
 
       lx1 = x, ly1 = y,
       lx2 = x, ly2 = y,
-
-      sx1 = x*3-2, sy1 = y*3-2,
-      sx2 = x*3,   sy2 = y*3,
     }
 
     table.insert(PLAN.all_rooms, ROOM)
@@ -543,6 +537,16 @@ con.debugf("}\n")
     else
       expand_room(ROOM, what)
     end
+
+    ROOM.sx1 = ROOM.lx1*3-2
+    ROOM.sy1 = ROOM.ly1*3-2
+    ROOM.sx2 = ROOM.lx2*3
+    ROOM.sy2 = ROOM.ly2*3
+
+    ROOM.sw, ROOM.sh = box_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
+    ROOM.lw, ROOM.lh = box_size(ROOM.lx1, ROOM.ly1, ROOM.lx2, ROOM.ly2)
+
+    ROOM.lvol = ROOM.lw * ROOM.lh
   end
 
   local function assign_corners()
@@ -596,7 +600,7 @@ con.debugf("}\n")
   end
 
 
-  ---| Landmap_GroupRooms |---
+  ---| Landmap_CreateRooms |---
 
   assign_corners()
 
@@ -766,14 +770,20 @@ function Rooms_Nudge()
 
     table.insert(push_list, { room=R, side=side, grow=grow })
 
-    for _,PU in ipairs(push_list) do
-          if PU.side == 2 then PU.room.sy1 = PU.room.sy1 - PU.grow
-      elseif PU.side == 8 then PU.room.sy2 = PU.room.sy2 + PU.grow
-      elseif PU.side == 4 then PU.room.sx1 = PU.room.sx1 - PU.grow
-      elseif PU.side == 6 then PU.room.sx2 = PU.room.sx2 + PU.grow
+    for _,push in ipairs(push_list) do
+      local R = push.room
+
+          if push.side == 2 then R.sy1 = R.sy1 - push.grow
+      elseif push.side == 8 then R.sy2 = R.sy2 + push.grow
+      elseif push.side == 4 then R.sx1 = R.sx1 - push.grow
+      elseif push.side == 6 then R.sx2 = R.sx2 + push.grow
       end
-      assert(not PU.room.nudges[PU.side])
-      PU.room.nudges[PU.side] = true
+
+      -- fix up seed size
+      R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
+
+      assert(not R.nudges[push.side])
+      R.nudges[push.side] = true
     end
 
     return true
@@ -782,14 +792,14 @@ function Rooms_Nudge()
   local function nudge_big_rooms()
     local rooms = {}
     for _,R in ipairs(PLAN.all_rooms) do
-      if R.l_area and R.l_area >= 2 then
+      if R.lvol >= 2 then
         table.insert(rooms, R)
       end
     end
 
     if #rooms == 0 then return end
 
-    table.sort(rooms, function(A, B) return A.l_area > B.l_area end)
+    table.sort(rooms, function(A, B) return A.lvol > B.lvol end)
 
     local sides = { 2,4,6,8 }
 
@@ -883,7 +893,7 @@ function Rooms_Nudge()
   local function nudge_the_rest()
     local rooms = {}
     for _,R in ipairs(PLAN.all_rooms) do
-      if not (R.l_area and R.l_area >= 2) then
+      if R.lvol < 2 then
         table.insert(rooms, R)
       end
     end
@@ -913,9 +923,6 @@ function Rooms_Nudge()
   end
 
   nudge_nasty_corners()
-
---[[
---]]
   nudge_big_rooms()
   nudge_the_rest()
 end
@@ -1293,24 +1300,22 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
 
     for _,R in ipairs(PLAN.all_rooms) do
 
-      R.lw, R.lh = box_size(R.lx1, R.ly1, R.lx2, R.ly2)
+      if R.lvol >= 2 and (R.kind == "building" or R.kind == "cave") then
+        -- add some randomness to area to break deadlocks
+        R.big_vol = R.lvol + con.random() / 3.0
 
-      -- add some randomness to area to break deadlocks
-      R.l_area = R.lw * R.lh + con.random() / 3.0
-
-      if R.l_area >= 2 and (R.kind == "building" or R.kind == "cave") then
         table.insert(rooms, R)
       end
     end
 
     if #rooms == 0 then return end
 
-    table.sort(rooms, function(A, B) return A.l_area > B.l_area end)
+    table.sort(rooms, function(A, B) return A.big_vol > B.big_vol end)
 
     for _,R in ipairs(rooms) do
-      con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.l_area)
+      con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.big_vol)
 
-      local lw, lh = box_size(R.lx1, R.ly1, R.lx2, R.ly2)
+      local lw, lh = R.lw, R.lh
       local ln = math.max(lw, lh)
       if ln > 4 then ln = 4 end
       assert(ln >= 2)
@@ -1486,7 +1491,7 @@ function Plan_rooms_sp(epi_along)
   Landmap_Fill()
   Landmap_Dump()
 
-  Landmap_GroupRooms()
+  Landmap_CreateRooms()
   Landmap_AddBridges()
 
   Rooms_Nudge()
