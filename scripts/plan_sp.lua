@@ -1054,6 +1054,7 @@ ROOM_EXITS_2x1 =
   { prob=20, exits={ 1,1,4, 2,1,8 }},
   { prob=60, exits={ 1,1,2, 2,1,8 }},
   { prob=10, exits={ 1,1,2, 2,1,2 }},
+
   { prob=70, exits={ 1,1,4, 2,1,2, 2,1,8 }},
   { prob=20, exits={ 1,1,4, 2,1,2, 2,1,8, 2,1,6 }},
   { prob=10, exits={ 1,1,2, 1,1,8, 2,1,2, 2,1,8 }},
@@ -1063,34 +1064,39 @@ ROOM_EXITS_2x1 =
 
 ROOM_EXITS_2x2 =
 {
-  { prob=xx, exits={  }},
+  { prob=70, exits={ 1,1,4, 2,2,6 }},
+  { prob=70, exits={ 1,1,4, 2,2,8 }},
+
+  { prob=10, exits={ 1,1,4, 2,2,6, 2,1,2 }},
+  { prob=10, exits={ 1,1,4, 2,2,8, 2,1,2 }},
+  { prob=30, exits={ 1,1,4, 1,2,8, 2,2,8 }},
+
+  { prob=50, exits={ 1,1,4, 2,2,6, 2,1,2, 1,2,8 }},
+  { prob=10, exits={ 1,1,4, 1,2,4, 2,1,6, 2,2,6 }},
+  { prob=30, exits={ 1,1,4, 1,2,8, 2,2,8, 2,1,6 }},
 }
 
 ROOM_EXITS_3x1 =
 {
-  { prob=xx, exits={  }},
-  { prob=xx, exits={  }},
-  { prob=xx, exits={  }},
-  { prob=xx, exits={  }},
-  { prob=xx, exits={  }},
-  { prob=xx, exits={  }},
-  { prob=xx, exits={  }},
-  { prob=xx, exits={  }},
-  { prob=xx, exits={  }},
-  { prob=xx, exits={  }},
-}
+  { prob=20, exits={ 1,1,4, 3,1,6 }},
+  { prob=10, exits={ 1,1,4, 3,1,8 }},
+  { prob=30, exits={ 1,1,2, 3,1,8 }},
+  { prob=10, exits={ 1,1,2, 3,1,2 }},
 
-ROOM_EXITS_4x1 =
-{
-  { prob=xx, exits={  }},
+  { prob=10, exits={ 1,1,4, 2,1,8, 3,1,8 }},
+  { prob=20, exits={ 1,1,4, 3,1,2, 3,1,8 }},
+  { prob=70, exits={ 1,1,8, 2,1,2, 3,1,8 }},
+  { prob=70, exits={ 1,1,4, 2,1,2, 3,1,6 }},
+
+  { prob=90, exits={ 1,1,4, 2,1,2, 2,1,8, 3,1,6 }},
+  { prob=15, exits={ 1,1,4, 1,1,8, 3,1,8, 3,1,6 }},
+  { prob=10, exits={ 1,1,4, 1,1,8, 3,1,2, 3,1,6 }},
+  { prob=10, exits={ 1,1,2, 1,1,8, 3,1,8, 3,1,2 }},
+
+  { prob= 2, exits={ 1,1,4, 1,1,8, 2,1,2, 3,1,8, 3,1,6 }},
 }
 
 ROOM_EXITS_3x2 =
-{
-  { prob=xx, exits={  }},
-}
-
-ROOM_EXITS_4x2 =
 {
   { prob=xx, exits={  }},
 }
@@ -1099,6 +1105,22 @@ ROOM_EXITS_3x3 =
 {
   { prob=xx, exits={  }},
 }
+
+ROOM_EXITS_4x1 =
+{
+  { prob=xx, exits={ 1,1,4, 4,1,6 }},
+  { prob=xx, exits={ 1,1,4, 4,1,8 }},
+  { prob=xx, exits={ 1,1,2, 4,1,8 }},
+  { prob=xx, exits={ 1,1,2, 4,1,2 }},
+
+  { prob=xx, exits={  }},
+}
+
+ROOM_EXITS_4x2 =
+{
+  { prob=xx, exits={  }},
+}
+
 
 ROOM_EXIT_PATTERNS =
 {
