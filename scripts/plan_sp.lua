@@ -806,7 +806,13 @@ function Rooms_Nudge()
     for _,R in ipairs(rooms) do
       rand_shuffle(sides)
       for _,side in ipairs(sides) do
-        if rand_odds(30) then
+        local mod_two
+        if side==4 or side==6 then
+          mod_two = (R.sw % 2)
+        else
+          mod_two = (R.sh % 2)
+        end
+        if (mod_two == 0) then --- rand_odds(30) then
           try_nudge_room(R, side, true, rand_sel(80,1,-1))
         end
       end
@@ -925,6 +931,10 @@ function Rooms_Nudge()
   nudge_nasty_corners()
   nudge_big_rooms()
   nudge_the_rest()
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    con.printf("Room (%d,%d)  seed size: %dx%d\n", R.lx1,R.ly1, R.sw,R.sh)
+  end
 end
 
 
