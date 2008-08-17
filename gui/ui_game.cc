@@ -208,7 +208,7 @@ void UI_Game::Defaults()
   FreshSeed();
 
   mode  ->SetID("sp");
-  length->SetID("episode");
+  length->SetID("single");
   
   Script_SetConfig("mode",   mode->GetID());
   Script_SetConfig("length", length->GetID());
