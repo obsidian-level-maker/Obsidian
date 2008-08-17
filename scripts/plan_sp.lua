@@ -450,19 +450,17 @@ function Landmap_CreateRooms()
 
   local BIG_BUILDING_PROBS =
   {
-    { 40, 90, 20, 1 },
-    { 90, 90, 10, 1 },
-    { 20, 10, 10, 0 },
-    {  1,  1,  0, 0 },
+    { 40, 70, 15 },
+    { 70, 90,  5 },
+    { 15,  5,  1 },
   }
 
   local function prob_for_big_room(kind, w, h)
     if kind == "building" or kind == "cave" then
-      if w >= 5 or h >= 5 then return 0 end
-      if w * h >= 10 then return 0 end
+      if w >= 4 or h >= 4 then return 0 end
       return BIG_BUILDING_PROBS[w][h]
     else -- ground
-      if w * h >= 8 then return 0 end
+      if w * h >= 4 then return 0 end
       return 100 * (w * h) * (w * h)
     end
   end
@@ -692,12 +690,12 @@ function Rooms_Nudge()
   end
 
   local function volume_after_nudge(R, side, grow)
-    local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
+---###    local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
 
     if (side == 6 or side == 4) then
-      return (rw + grow) * rh
+      return (R.sw + grow) * R.sh
     else
-      return rw * (rh + grow)
+      return R.sw * (R.sh + grow)
     end
   end
 
@@ -718,6 +716,11 @@ function Rooms_Nudge()
     if side == 8 and (N.sy2 < R.sy2) then return true end
     if side == 2 and (N.sy1 > R.sy1) then return true end
 
+--!!!! experiment
+if grow < 0 and not (R.kind == N.kind and
+(R.kind == "ground" or R.kind == "valley" or R.kind == "hill"))
+then return true end
+
     if (side == 6 or side == 4) then
       if (N.sy1 < R.sy1) or (N.sy2 > R.sy2) then return false end
     else
@@ -726,24 +729,32 @@ function Rooms_Nudge()
 
     -- the nudge is possible (pushing the neighbour also)
 
+    if N.no_nudge or N.nudges[10-side] then return false end
+
     if volume_after_nudge(N, 10-side, -grow) < 3 then return false end
 
-    if side == 6 then assert(N.sx1 == R.sx2+1) end
-    if side == 4 then assert(N.sx2 == R.sx1-1) end
-    if side == 8 then assert(N.sy1 == R.sy2+1) end
-    if side == 2 then assert(N.sy2 == R.sy1-1) end
+--!!!!!!    if side == 6 then assert(N.sx1 == R.sx2+1) end
+--!!!!!!    if side == 4 then assert(N.sx2 == R.sx1-1) end
+--!!!!!!    if side == 8 then assert(N.sy1 == R.sy2+1) end
+--!!!!!!    if side == 2 then assert(N.sy2 == R.sy1-1) end
 
     table.insert(list, { room=N, side=10-side, grow=-grow })
 
     return true
   end
 
-  local function try_nudge_room(R, side, is_big, grow)
+  local function try_nudge_room(R, side, grow)
     -- 'grow' is positive to nudge outward, negative to nudge inward
-    if not grow then grow = rand_sel(65,1,-1) end
+    if not grow then grow = rand_sel(75,1,-1) end
 
+con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, grow)
+
+    if R.no_nudge then return false end
+
+--[[
     if R.no_grow   and grow > 0 then return false end
     if R.no_shrink and grow < 0 then return false end
+--]]
 
     -- already moved this border?
     if R.nudges[side] then return false end
@@ -794,6 +805,7 @@ function Rooms_Nudge()
 
   local function nudge_big_rooms()
     local rooms = {}
+
     for _,R in ipairs(PLAN.all_rooms) do
       if R.lvol >= 2 then
         table.insert(rooms, R)
@@ -809,16 +821,14 @@ function Rooms_Nudge()
     for _,R in ipairs(rooms) do
       rand_shuffle(sides)
       for _,side in ipairs(sides) do
-        local mod_two
-        if side==4 or side==6 then
-          mod_two = (R.sw % 2)
-        else
-          mod_two = (R.sh % 2)
-        end
-        if (mod_two == 0) then --- rand_odds(30) then
-          try_nudge_room(R, side, true, rand_sel(80,1,-1))
+        local depth = sel(side==4 or side==6, R.sw, R.sh)
+        if (depth % 2) == 0 then
+          if not (rand_odds(30) and try_nudge_room(R, side, 1)) then
+            try_nudge_room(R, side, -1)
+          end
         end
       end
+      R.no_nudge = true
     end
   end
 
@@ -868,9 +878,12 @@ function Rooms_Nudge()
     assert(E and N)
 
     -- has the corner already been nudged?
+
+--[[ THIS CHECK TOO SIMPLE
     if R.nudges[8] or E.nudges[8] or R.nudges[6] or N.nudges[6] then
       return false
     end
+--]]
 
     -- TODO: this check may be too simple....
     if (R.kind == (NE and NE.kind) or N.kind ==  E.kind) and
@@ -885,15 +898,22 @@ function Rooms_Nudge()
   end
 
   local function nudge_nasty_corners()
+    local success
+
     for _,R in ipairs(PLAN.all_rooms) do
       local E, N, NE = get_NE_corner_rooms(R)
       if N and E and NE and is_corner_nasty(R, E, N, NE) then
         if rand_odds(50) then
-          local a = try_nudge_room(R, 8) or try_nudge_room(R, 6) or
+          success = try_nudge_room(R, 8) or try_nudge_room(R, 6) or
                     try_nudge_room(E, 8) or try_nudge_room(N, 6)
         else
-          local a = try_nudge_room(R, 6) or try_nudge_room(R, 8) or
+          success = try_nudge_room(R, 6) or try_nudge_room(R, 8) or
                     try_nudge_room(N, 6) or try_nudge_room(E, 8)
+        end
+
+        if success then
+          R.nudges[6] = true; NE.nudges[4] = true
+          R.nudges[8] = true; NE.nudges[2] = true
         end
       end
     end -- R in all_rooms
@@ -1420,6 +1440,8 @@ con.debugf("TRYING BIG PATTERN: %s\n", table_to_str(PAT[1]))
 
 con.debugf("USING BIG PATTERN: %s\n", table_to_str(PAT,2))
 
+    R.is_big = true
+
     -- OK, all points were possible, do it for real
     for _,T in ipairs(PAT) do
       local sx, sy, dir = morph_triplet(R, T, MORPH)
@@ -1549,10 +1571,6 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
 
           merge(R.group_id, N.group_id)
 
-          -- ensure we have space for the teleporter(s)
----!!!          R.no_shrink = true
----!!!          N.no_shrink = true
-
           con.debugf("ADDED TELEPORT (%d,%d) --> (%d,%d)\n", N.lx1,N.ly1, R.lx1,R.ly1)
           return;
         end
@@ -1665,7 +1683,7 @@ function Plan_rooms_sp(epi_along)
 
   Rooms_Nudge()
   Rooms_Make_Seeds()
-  Rooms_Connect()
+--!!!!!!  Rooms_Connect()
 
 end -- Plan_rooms_sp
 
