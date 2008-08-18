@@ -1230,10 +1230,12 @@ BIG_BRANCH_KINDS =
 {
   T1 = 70, -- T shape, centred main stem, leeway for side stems
   T2 = 70, -- like T1 but exits are parallel with entry
+
   X  = 50, -- Cross shape, centred main stem, leeyway for side stems
   H1 = 25, -- H shape, parallel entries/exits at the four corners
   H2 = 25, -- like H1 but exits are perpendicular to entry dir
   S  = 10, -- Swastika shape
+
   K1 = 10, -- 5-way double T shape (side stems are perpendicular)
   K2 = 10, -- like K1 but furthest exits are parallel to entry
 }
@@ -1477,7 +1479,7 @@ con.debugf("Room (%d,%d) : big_orientation:%d\n", R.lx1,R.ly1, R.big_orientation
     return true
   end
 
-  local function try_branch_big_room(R, num)
+  local function OLD_try_branch_big_room(R, num)
     -- we don't bother with patterns if room already has 1 or more connections
     if #R.conns > 0 then return false end
 con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
@@ -1501,15 +1503,12 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
     return false
   end
 
-  local function branch_big_rooms()
+  local function OLD_branch_big_rooms()
     local rooms = {}
-
     for _,R in ipairs(PLAN.all_rooms) do
-
       if R.lvol >= 2 and (R.kind == "building" or R.kind == "cave") then
         -- add some randomness to area to break deadlocks
         R.big_vol = R.lvol + con.random() / 3.0
-
         table.insert(rooms, R)
       end
     end
@@ -1536,6 +1535,44 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
         until try2 ~= try1
 
         try_branch_big_room(R, try2)
+      end
+    end
+  end
+
+  local function try_branch_big_room(R, K)
+    --FIXME !!!!!!
+    return false
+  end
+
+  local function branch_big_rooms()
+    local rooms = {}
+
+    for _,R in ipairs(PLAN.all_rooms) do
+      if R.lvol >= 2 and (R.kind == "building" or R.kind == "cave") then
+        -- add some randomness to area to break deadlocks
+        R.big_vol = R.lvol + con.random() / 3.0
+        table.insert(rooms, R)
+      end
+    end
+
+    if #rooms == 0 then return end
+    table.sort(rooms, function(A, B) return A.big_vol > B.big_vol end)
+
+    for _,R in ipairs(rooms) do
+      if #R.conns == 0 then
+        con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.big_vol)
+
+        local kinds = copy_table(BIG_BRANCH_KINDS)
+
+        while not table_empty(kinds) do
+          local K = assert(rand_key_by_probs(kinds))
+
+          kinds[K] = nil  -- don't try this kind again
+
+          if try_branch_big_room(R, K) then
+            break; -- was successful
+          end
+        end
       end
     end
   end
