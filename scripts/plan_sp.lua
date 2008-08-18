@@ -1226,18 +1226,169 @@ ROOM_EXIT_PATTERNS =
 }
 
 
+
+function branch_gen_func_T1(long, deep)
+  if long < 3 or deep < 2 or (long % 2) == 0 then
+    return nil
+  end
+
+  local coords = {}
+  local mx, my = int((long+1)/2), int((deep+1)/2)
+
+  local lee = int((deep-2)/2)
+
+  for y = 0,lee do
+    table.insert(coords, { mx,1,2, 1,deep-y,4, long,deep-y,6 })
+  end
+
+  rand_shuffle(coords)
+
+  return coords
+end
+
+function branch_gen_func_T2(long, deep)
+  if long < 3 or deep < 2 or (long % 2) == 0 then
+    return nil
+  end
+
+  local coords = {}
+  local mx, my = int((long+1)/2), int((deep+1)/2)
+
+  local lee = int((long-2)/3)
+
+  for x = 0,lee do
+    table.insert(coords, { mx,1,2, 1+x,deep,4, long-x,deep,6 })
+  end
+
+  rand_shuffle(coords)
+
+  return coords
+end
+
+function branch_gen_func_CROSS(long, deep)
+  if long < 3 or deep < 3 or (long % 2) == 0 then
+    return nil
+  end
+
+  local mx, my = int((long+1)/2), int((deep+1)/2)
+  local coords =
+  {
+    { mx,1,2, mx,deep,8, 1,my,4, long,my,6 }
+  }
+
+  local lee = int((deep-1)/2)
+
+  for y = 1,lee do
+    table.insert(coords, { mx,1,2, mx,deep,8, 1,my-y,4, long,my-y,6 })
+    table.insert(coords, { mx,1,2, mx,deep,8, 1,my+y,4, long,my+y,6 })
+  end
+
+  -- NOTE: no random shuffle
+
+  return coords
+end
+
+function branch_gen_func_SWASTIKA(long, deep)
+  if long < 3 or deep < 3 then
+    return nil
+  end
+
+  local coords = {}
+
+  local lee = int((math.min(long,deep)-2)/3)
+
+  for x = 0,lee do
+    table.insert(coords, { 1+x,1,2, long,1+x,6, long-x,deep,8, 1,deep-x,4 })
+  end
+
+  rand_shuffle(coords)
+
+  return coords
+end
+
+function branch_gen_func_H1(long, deep)
+  if long < 3 or deep < 3 then
+    return nil
+  end
+
+  local coords = {}
+
+  local b_lee = int((long-2)/3)
+  local t_lee = int((long-2)/5)
+  
+  for b = 0,b_lee do for t = 0,t_lee do
+    table.insert(coords, { 1+b,1,2, long-b,1,2, 1+t,deep,8, long-t,deep,8 })
+  end end
+
+  rand_shuffle(coords)
+
+  return coords
+end
+
+function branch_gen_func_H2(long, deep)
+  if long < 3 or deep < 3 then
+    return nil
+  end
+
+  local coords = {}
+
+  local x_lee = int((long-2)/3)
+  local y_lee = int((deep-1)/3)
+  
+  for x = 0,x_lee do for y = 0,y_lee do
+    table.insert(coords, { 1+x,1,2, long-x,1,2, 1,deep-y,4, long,deep-y,6 })
+  end end
+
+  rand_shuffle(coords)
+
+  return coords
+end
+
+function branch_gen_func_STAR(long, deep)
+  if long < 3 or deep < 5 then
+    return nil
+  end
+
+  local mx, my = int((long+1)/2), int((deep+1)/2)
+  local coords = {}
+
+  local x_lee = int((long-2)/3)
+  local y_lee = int((deep-3)/2)
+  
+  for x = 0,x_lee do for y = -y_lee,y_lee do
+    table.insert(coords, { mx,1,2, 1,my+y,4, long,my+y,6, 1+x,deep,8, long-x,deep,8 })
+  end end
+
+  rand_shuffle(coords)
+
+  return coords
+end
+
+
 BIG_BRANCH_KINDS =
 {
   T1 = 70, -- T shape, centred main stem, leeway for side stems
   T2 = 70, -- like T1 but exits are parallel with entry
 
   X  = 50, -- Cross shape, centred main stem, leeyway for side stems
-  H1 = 25, -- H shape, parallel entries/exits at the four corners
-  H2 = 25, -- like H1 but exits are perpendicular to entry dir
-  S  = 10, -- Swastika shape
+  H1 = 20, -- H shape, parallel entries/exits at the four corners
+  H2 = 20, -- like H1 but exits are perpendicular to entry dir
 
-  K1 = 10, -- 5-way double T shape (side stems are perpendicular)
-  K2 = 10, -- like K1 but furthest exits are parallel to entry
+  S  = 10, -- Swastika shape
+  K  = 25, -- 5-way star shape
+}
+
+BIG_BRANCH_GEN_FUNCS =
+{
+  T1 = branch_gen_func_T1,
+  T2 = branch_gen_func_T2,
+
+  X  = branch_gen_func_CROSS,
+  H1 = branch_gen_func_H1,
+  H2 = branch_gen_func_H2,
+
+  S  = branch_gen_func_SWASTIKA,
+  K  = branch_gen_func_STAR,
 }
 
 
