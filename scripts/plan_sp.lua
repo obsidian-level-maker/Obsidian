@@ -503,6 +503,8 @@ function Landmap_CreateRooms()
     for x = x1,x2 do for y = y1,y2 do
       LAND_MAP[x][y].room = ROOM
     end end
+
+    ROOM.is_big = true
   end
 
   local function create_room(L, x, y)
@@ -699,7 +701,7 @@ function Rooms_Nudge()
     end
   end
 
-  local function allow_nudge(R, side, grow, N, list)
+  local function allow_nudge(R, side, pull, grow, N, list)
 
     -- above or below a sidewards nudge?
     if (side == 6 or side == 4) then
@@ -717,7 +719,7 @@ function Rooms_Nudge()
     if side == 2 and (N.sy1 > R.sy1) then return true end
 
 --!!!! experiment
-if grow < 0 and not (R.kind == N.kind and
+if grow < 0 and not pull and not (R.kind == N.kind and
 (R.kind == "ground" or R.kind == "valley" or R.kind == "hill"))
 then return true end
 
@@ -743,8 +745,10 @@ then return true end
     return true
   end
 
-  local function try_nudge_room(R, side, grow)
+  local function try_nudge_room(R, side, pull, grow)
+    -- 'pull' means that shrinkage must pull neighbours too
     -- 'grow' is positive to nudge outward, negative to nudge inward
+
     if not grow then grow = rand_sel(75,1,-1) end
 
 con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, grow)
@@ -776,7 +780,7 @@ con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     local push_list = {}
 
     for _,K in ipairs(R.neighbours) do
-      if not allow_nudge(R, side, grow, K, push_list) then return false end
+      if not allow_nudge(R, side, pull, grow, K, push_list) then return false end
     end
 
     -- Nudge is OK!
@@ -823,8 +827,8 @@ con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
       for _,side in ipairs(sides) do
         local depth = sel(side==4 or side==6, R.sw, R.sh)
         if (depth % 2) == 0 then
-          if not (rand_odds(30) and try_nudge_room(R, side, 1)) then
-            try_nudge_room(R, side, -1)
+          if not (rand_odds(30) and try_nudge_room(R, side, false, 1)) then
+            try_nudge_room(R, side, false, -1)
           end
         end
       end
@@ -904,11 +908,11 @@ con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
       local E, N, NE = get_NE_corner_rooms(R)
       if N and E and NE and is_corner_nasty(R, E, N, NE) then
         if rand_odds(50) then
-          success = try_nudge_room(R, 8) or try_nudge_room(R, 6) or
-                    try_nudge_room(E, 8) or try_nudge_room(N, 6)
+          success = try_nudge_room(R, 8, true) or try_nudge_room(R, 6, true) or
+                    try_nudge_room(E, 8, true) or try_nudge_room(N, 6, true)
         else
-          success = try_nudge_room(R, 6) or try_nudge_room(R, 8) or
-                    try_nudge_room(N, 6) or try_nudge_room(E, 8)
+          success = try_nudge_room(R, 6, true) or try_nudge_room(R, 8, true) or
+                    try_nudge_room(N, 6, true) or try_nudge_room(E, 8, true)
         end
 
         if success then
@@ -1222,10 +1226,23 @@ ROOM_EXIT_PATTERNS =
 }
 
 
+BIG_BRANCH_KINDS =
+{
+  T1 = 70, -- T shape, centred main stem, leeway for side stems
+  T2 = 70, -- like T1 but exits are parallel with entry
+  X  = 50, -- Cross shape, centred main stem, leeyway for side stems
+  H1 = 25, -- H shape, parallel entries/exits at the four corners
+  H2 = 25, -- like H1 but exits are perpendicular to entry dir
+  S  = 10, -- Swastika shape
+  K1 = 10, -- 5-way double T shape (side stems are perpendicular)
+  K2 = 10, -- like K1 but furthest exits are parallel to entry
+}
+
+
 function Rooms_Connect()
 
   -- Guidelines:
-  -- 1. prefer a "tight" bond between ground areas of same kind.
+  -- 1. prefer a "wide" bond between ground areas of same kind.
   -- 2. prefer not to connect ground areas of different kinds.
   -- 3. prefer ground areas not to be leafs
   -- 4. prefer big rooms to have 3 or more connections.
@@ -1439,8 +1456,6 @@ con.debugf("TRYING BIG PATTERN: %s\n", table_to_str(PAT[1]))
     end
 
 con.debugf("USING BIG PATTERN: %s\n", table_to_str(PAT,2))
-
-    R.is_big = true
 
     -- OK, all points were possible, do it for real
     for _,T in ipairs(PAT) do
