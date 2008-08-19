@@ -1265,28 +1265,38 @@ function branch_gen_func_T2(long, deep)
   return coords
 end
 
-function branch_gen_func_CROSS(long, deep)
-  if long < 3 or deep < 3 or (long % 2) == 0 then
+function branch_gen_func_X1(long, deep)
+  if long < 3 or (long % 2) == 0 or
+     deep < 3 or (deep % 2) == 0
+  then
+     return nil
+  end
+
+  local mx = int((long+1)/2)
+  local my = int((deep+1)/2)
+
+  return {{ mx,1,2, mx,deep,8, 1,my,4, long,my,6 }}
+end
+
+function branch_gen_func_X2(long, deep)
+  if long < 3 or deep < 4 or (long % 2) == 0 then
     return nil
   end
 
-  local mx, my = int((long+1)/2), int((deep+1)/2)
-  local coords =
-  {
-    { mx,1,2, mx,deep,8, 1,my,4, long,my,6 }
-  }
+  local mx     = int((long+1)/2)
+  local coords = {}
 
-  local lee = int((deep-1)/2)
-
-  for y = 1,lee do
-    table.insert(coords, { mx,1,2, mx,deep,8, 1,my-y,4, long,my-y,6 })
-    table.insert(coords, { mx,1,2, mx,deep,8, 1,my+y,4, long,my+y,6 })
+  for y = 1,deep do
+    if y ~= (deep+1)/2 then
+      table.insert(coords, { mx,1,2, mx,deep,8, 1,y,4, long,y,6 })
+    end
   end
 
-  -- NOTE: no random shuffle
+  rand_shuffle(coords)
 
   return coords
 end
+
 
 function branch_gen_func_SWASTIKA(long, deep)
   if long < 3 or deep < 3 then
@@ -1406,10 +1416,12 @@ end
 
 BIG_BRANCH_KINDS =
 {
-  T1 = 60, -- T shape, centred main stem, leeway for side stems
-  T2 = 60, -- like T1 but exits are parallel with entry
+  T1 = 40, -- T shape, centred main stem, leeway for side stems
+  T2 = 40, -- like T1 but exits are parallel with entry
 
-  X  = 75, -- Cross shape, centred main stem, leeyway for side stems
+  X1 = 97, -- Cross shape, all stems perfectly centred
+  X2 = 50, -- Cross shape, centred main stem, leeyway for side stems
+
   H1 = 20, -- H shape, parallel entries/exits at the four corners
   H2 = 20, -- like H1 but exits are perpendicular to entry dir
 
@@ -1425,12 +1437,15 @@ BIG_BRANCH_GEN_FUNCS =
   T1 = branch_gen_func_T1,
   T2 = branch_gen_func_T2,
 
-  X  = branch_gen_func_CROSS,
+  X1 = branch_gen_func_X1,
+  X2 = branch_gen_func_X2,
+
   H1 = branch_gen_func_H1,
   H2 = branch_gen_func_H2,
 
   S  = branch_gen_func_SWASTIKA,
   K  = branch_gen_func_STAR,
+
   L1 = branch_gen_func_L1,
   L2 = branch_gen_func_L2,
 }
@@ -1975,7 +1990,7 @@ function Plan_rooms_sp(epi_along)
   }
 
 
-Test_BranchGen("L1")
+Test_BranchGen("X2")
 
 
   Plan_determine_size(epi_along)
