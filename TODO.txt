@@ -137,6 +137,8 @@ General:
    .  never writes the config file
    ?? what to do on error ??
 
+?  put all important constants/tables into defs.lua
+
 
 GUI:
 
@@ -249,10 +251,6 @@ Miscellaneous:
 -  GUI: create menus based on the lua scripts present.
 -  GUI: make sure target dir is writable _before_ making levels.
    (have a "CheckDirWritable" function?)
-
--  idea: LOCK POSTPONING: making a locked door not at the branch
-         point but somewhere else along the new path (could even
-         be the door of last cell).
 
 
 Pipe Dreams:
