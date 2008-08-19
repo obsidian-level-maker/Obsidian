@@ -1241,8 +1241,6 @@ function branch_gen_func_T1(long, deep)
     table.insert(coords, { mx,1,2, 1,deep-y,4, long,deep-y,6 })
   end
 
-  rand_shuffle(coords)
-
   return coords
 end
 
@@ -1259,8 +1257,6 @@ function branch_gen_func_T2(long, deep)
   for x = 0,lee do
     table.insert(coords, { mx,1,2, 1+x,deep,8, long-x,deep,8 })
   end
-
-  rand_shuffle(coords)
 
   return coords
 end
@@ -1291,8 +1287,6 @@ function branch_gen_func_X2(long, deep)
     table.insert(coords, { mx,1,2, mx,deep,8, 1,y,4, long,y,6 })
   end
 
-  rand_shuffle(coords)
-
   return coords
 end
 
@@ -1310,8 +1304,6 @@ function branch_gen_func_SWASTIKA(long, deep)
   for x = 0,x_lee do for y = 0,y_lee do
     table.insert(coords, { 1+x,1,2, long,1+y,6, long-x,deep,8, 1,deep-y,4 })
   end end
-
-  rand_shuffle(coords)
 
   return coords
 end
@@ -1332,8 +1324,6 @@ function branch_gen_func_H1(long, deep)
     end
   end end
 
-  rand_shuffle(coords)
-
   return coords
 end
 
@@ -1350,8 +1340,6 @@ function branch_gen_func_H2(long, deep)
   for x = 0,x_lee do for y = 0,y_lee do
     table.insert(coords, { 1+x,1,2, long-x,1,2, 1,deep-y,4, long,deep-y,6 })
   end end
-
-  rand_shuffle(coords)
 
   return coords
 end
@@ -1370,8 +1358,6 @@ function branch_gen_func_STAR(long, deep)
     table.insert(coords, { mx,1,2, 1,y,4, long,y,6, 1+x,deep,8, long-x,deep,8 })
   end end
 
-  rand_shuffle(coords)
-
   return coords
 end
 
@@ -1388,8 +1374,6 @@ function branch_gen_func_L1(long, deep)
   for x = 0,x_lee do for y = 0,y_lee do
     table.insert(coords, { 1,1+y,4, 1+x,deep,8, long-x,deep,8 })
   end end
-
-  rand_shuffle(coords)
 
   return coords
 end
@@ -1408,8 +1392,6 @@ function branch_gen_func_L2(long, deep)
   for x = 0,x_lee do for y = 0,y_lee do
     table.insert(coords, { 1,1+y,4, 1,deep-y,4, mx-x,deep,8, long-x,deep,8 })
   end end
-
-  rand_shuffle(coords)
 
   return coords
 end
