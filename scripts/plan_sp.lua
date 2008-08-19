@@ -1364,18 +1364,60 @@ function branch_gen_func_STAR(long, deep)
   return coords
 end
 
+function branch_gen_func_L1(long, deep)
+  if long < 3 or deep < 3 then
+    return nil
+  end
+
+  local coords = {}
+
+  local x_lee = int((long-2)/3)
+  local y_lee = int((deep-1)/2)
+
+  for x = 0,x_lee do for y = 0,y_lee do
+    table.insert(coords, { 1,1+y,4, 1+x,deep,8, long-x,deep,8 })
+  end end
+
+  rand_shuffle(coords)
+
+  return coords
+end
+
+function branch_gen_func_L2(long, deep)
+  if long < 5 or deep < 3 then
+    return nil
+  end
+
+  local mx     = int((long+2)/2)
+  local coords = {}
+
+  local x_lee = int((long-3)/3)
+  local y_lee = int((deep-2)/3)
+
+  for x = 0,x_lee do for y = 0,y_lee do
+    table.insert(coords, { 1,1+y,4, 1,deep-y,4, mx-x,deep,8, long-x,deep,8 })
+  end end
+
+  rand_shuffle(coords)
+
+  return coords
+end
+
 
 BIG_BRANCH_KINDS =
 {
-  T1 = 70, -- T shape, centred main stem, leeway for side stems
-  T2 = 70, -- like T1 but exits are parallel with entry
+  T1 = 60, -- T shape, centred main stem, leeway for side stems
+  T2 = 60, -- like T1 but exits are parallel with entry
 
-  X  = 50, -- Cross shape, centred main stem, leeyway for side stems
+  X  = 75, -- Cross shape, centred main stem, leeyway for side stems
   H1 = 20, -- H shape, parallel entries/exits at the four corners
   H2 = 20, -- like H1 but exits are perpendicular to entry dir
 
   S  = 10, -- Swastika shape
   K  = 25, -- 5-way star shape
+
+  L1 =  2, -- L shape with 3 exits (fallback for rooms at a corner)
+  L2 =  6, -- like L1 but four exits
 }
 
 BIG_BRANCH_GEN_FUNCS =
@@ -1389,7 +1431,65 @@ BIG_BRANCH_GEN_FUNCS =
 
   S  = branch_gen_func_SWASTIKA,
   K  = branch_gen_func_STAR,
+  L1 = branch_gen_func_L1,
+  L2 = branch_gen_func_L2,
 }
+
+
+function Test_BranchGen(name)
+  local func = BIG_BRANCH_GEN_FUNCS[name]
+  assert(func)
+
+  local function dump_exits(C, W, H)
+    local DIR_CHARS = { [2]="|", [8]="|", [4]=">", [6]="<" }
+
+    local P = array_2D(W+2, H+2)
+
+    for y = 0,H+1 do for x = 0,W+1 do
+      P[x+1][y+1] = sel(box_contains_point(1,1,W,H, x,y), "#", " ")
+    end end
+
+    for idx = 1,#C,3 do
+      local x = C[idx+0]
+      local y = C[idx+1]
+      local dir = C[idx+2]
+
+      assert(x, y, dir)
+      assert(box_contains_point(1,1,W,H, x,y))
+
+      local nx, ny = nudge_coord(x, y, dir)
+      assert(nx==0 or nx==W+1 or ny==0 or ny==H+1)
+
+      if P[nx+1][ny+1] ~= " " then
+        con.printf("spot: (%d,%d):%d to (%d,%d)\n", x,y,dir, nx,ny)
+        error("Bad branch!")
+      end
+
+      P[nx+1][ny+1] = DIR_CHARS[dir] or "?"
+    end
+
+    for y = H+1,0,-1 do
+      for x = 0,W+1 do
+        con.printf("%s", P[x+1][y+1])
+      end
+      con.printf("\n")
+    end
+    con.printf("\n")
+  end
+
+  for deep = 2,9 do for long = 2,9 do
+    con.printf("==== %s %dx%d ==================\n\n", name, long, deep)
+
+    local coords = func(long, deep)
+    if not coords then
+      con.printf("Unsupported size\n\n")
+    else
+      for _,C in ipairs(coords) do
+        dump_exits(C, long, deep)
+      end
+    end
+  end end -- deep, long
+end
 
 
 function Rooms_Connect()
@@ -1873,6 +1973,9 @@ function Plan_rooms_sp(epi_along)
     free_tag  = 1,
     free_mark = 1,
   }
+
+
+Test_BranchGen("L1")
 
 
   Plan_determine_size(epi_along)
