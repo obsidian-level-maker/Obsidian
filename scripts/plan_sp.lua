@@ -1233,9 +1233,9 @@ function branch_gen_func_T1(long, deep)
   end
 
   local coords = {}
-  local mx, my = int((long+1)/2), int((deep+1)/2)
 
-  local lee = int((deep-2)/2)
+  local mx  = int((long+1)/2)
+  local lee = int((deep-1)/2)
 
   for y = 0,lee do
     table.insert(coords, { mx,1,2, 1,deep-y,4, long,deep-y,6 })
@@ -1252,12 +1252,12 @@ function branch_gen_func_T2(long, deep)
   end
 
   local coords = {}
-  local mx, my = int((long+1)/2), int((deep+1)/2)
 
+  local mx  = int((long+1)/2)
   local lee = int((long-2)/3)
 
   for x = 0,lee do
-    table.insert(coords, { mx,1,2, 1+x,deep,4, long-x,deep,6 })
+    table.insert(coords, { mx,1,2, 1+x,deep,8, long-x,deep,8 })
   end
 
   rand_shuffle(coords)
@@ -1279,12 +1279,13 @@ function branch_gen_func_X1(long, deep)
 end
 
 function branch_gen_func_X2(long, deep)
-  if long < 3 or deep < 4 or (long % 2) == 0 then
+  if long < 3 or deep < 3 or (long % 2) == 0 then
     return nil
   end
 
-  local mx, my = int((long+1)/2), int(long/2)
   local coords = {}
+  local mx = int((long+1)/2)
+  local my = int(deep/2)
 
   for y = 1,my do
     table.insert(coords, { mx,1,2, mx,deep,8, 1,y,4, long,y,6 })
@@ -1303,11 +1304,12 @@ function branch_gen_func_SWASTIKA(long, deep)
 
   local coords = {}
 
-  local lee = int((math.min(long,deep)-2)/3)
+  local x_lee = int((long-1)/4)
+  local y_lee = int((deep-1)/4)
 
-  for x = 0,lee do
-    table.insert(coords, { 1+x,1,2, long,1+x,6, long-x,deep,8, 1,deep-x,4 })
-  end
+  for x = 0,x_lee do for y = 0,y_lee do
+    table.insert(coords, { 1+x,1,2, long,1+y,6, long-x,deep,8, 1,deep-y,4 })
+  end end
 
   rand_shuffle(coords)
 
@@ -1315,7 +1317,7 @@ function branch_gen_func_SWASTIKA(long, deep)
 end
 
 function branch_gen_func_H1(long, deep)
-  if long < 3 or deep < 3 then
+  if long < 3 or deep < 2 then
     return nil
   end
 
@@ -1325,7 +1327,9 @@ function branch_gen_func_H1(long, deep)
   local t_lee = int((long-2)/5)
   
   for b = 0,b_lee do for t = 0,t_lee do
-    table.insert(coords, { 1+b,1,2, long-b,1,2, 1+t,deep,8, long-t,deep,8 })
+    if b >= t then
+      table.insert(coords, { 1+b,1,2, long-b,1,2, 1+t,deep,8, long-t,deep,8 })
+    end
   end end
 
   rand_shuffle(coords)
@@ -1334,14 +1338,14 @@ function branch_gen_func_H1(long, deep)
 end
 
 function branch_gen_func_H2(long, deep)
-  if long < 3 or deep < 3 then
+  if long < 3 or deep < 2 then
     return nil
   end
 
   local coords = {}
 
   local x_lee = int((long-2)/3)
-  local y_lee = int((deep-1)/3)
+  local y_lee = int((deep-1)/2)
   
   for x = 0,x_lee do for y = 0,y_lee do
     table.insert(coords, { 1+x,1,2, long-x,1,2, 1,deep-y,4, long,deep-y,6 })
@@ -1357,14 +1361,13 @@ function branch_gen_func_STAR(long, deep)
     return nil
   end
 
-  local mx, my = int((long+1)/2), int((deep+1)/2)
   local coords = {}
 
+  local mx    = int((long+1)/2)
   local x_lee = int((long-2)/3)
-  local y_lee = int((deep-3)/2)
   
-  for x = 0,x_lee do for y = -y_lee,y_lee do
-    table.insert(coords, { mx,1,2, 1,my+y,4, long,my+y,6, 1+x,deep,8, long-x,deep,8 })
+  for x = 0,x_lee do for y = 1,deep-1 do
+    table.insert(coords, { mx,1,2, 1,y,4, long,y,6, 1+x,deep,8, long-x,deep,8 })
   end end
 
   rand_shuffle(coords)
@@ -1439,10 +1442,10 @@ BIG_BRANCH_KINDS =
   L2 = { prob=6, func=branch_gen_func_L2 },
 
   -- Swastika shape
-  S  = { prob=10, func=branch_gen_func_S },
+  S  = { prob=10, func=branch_gen_func_SWASTIKA },
 
   -- 5-way star shape
-  K  = { prob=25, func=branch_gen_func_K, symmetry=2 },
+  K  = { prob=25, func=branch_gen_func_STAR, symmetry=2 },
 }
 
 
