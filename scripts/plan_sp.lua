@@ -749,8 +749,6 @@ then return true end
     -- 'pull' true => any shrinkage must pull neighbours too
     -- 'grow' is positive to nudge outward, negative to nudge inward
 
-pull=true --!!!!!
-
     if not grow then grow = rand_sel(75,1,-1) end
 
 con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, grow)
@@ -998,7 +996,7 @@ function Rooms_Make_Seeds()
   end
 
   local function Fill_Holes()
-    repeat
+    for loop = 1,3 do
       local changed = false
 
       for x = 1,SEED_W do for y = 1,SEED_H do
@@ -1016,7 +1014,7 @@ function Rooms_Make_Seeds()
         end
       end end -- x, y
 
-    until not changed
+    end ---- until not changed
   end
 
   local function Border_Up(R)
@@ -1228,7 +1226,7 @@ function branch_gen_func_STAR(long, deep)
   return configs
 end
 
-function branch_gen_func_L1(long, deep)
+function branch_gen_func_F1(long, deep)
   if long < 3 or deep < 3 then
     return nil
   end
@@ -1245,7 +1243,7 @@ function branch_gen_func_L1(long, deep)
   return configs
 end
 
-function branch_gen_func_L2(long, deep)
+function branch_gen_func_F2(long, deep)
   if long < 5 or deep < 3 then
     return nil
   end
@@ -1273,7 +1271,7 @@ BIG_BRANCH_KINDS =
   T2 = { prob=40, func=branch_gen_func_T2, symmetry=2 },
 
   -- Cross shape, all stems perfectly centred
-  X1 = { prob=140, func=branch_gen_func_X1, symmetry=5 },
+  X1 = { prob=940, func=branch_gen_func_X1, symmetry=5 },
 
   -- Cross shape, centred main stem, leeway for side stems
   X2 = { prob=90, func=branch_gen_func_X2, symmetry=2 },
@@ -1284,17 +1282,19 @@ BIG_BRANCH_KINDS =
   -- like H1 but exits are perpendicular to entry dir
   H2 = { prob=20, func=branch_gen_func_H2, symmetry=2 },
 
-  -- L shape with three exits (mainly for rooms at corner of map)
-  L1 = { prob=1, func=branch_gen_func_L1 },
-
-  -- like L1 but four exits
-  L2 = { prob=5, func=branch_gen_func_L2 },
-
   -- Swastika shape
   S  = { prob=10, func=branch_gen_func_SWASTIKA },
 
+  -- F shape with three exits (mainly for rooms at corner of map)
+  F1 = { prob=1, func=branch_gen_func_F1 },
+
+  -- like F1 but four exits
+  F2 = { prob=5, func=branch_gen_func_F2 },
+
   -- 5-way star shape
   K  = { prob=30, func=branch_gen_func_STAR, symmetry=2 },
+
+  -- TODO:  L shapes  |  side-to-side
 }
 
 
@@ -1535,6 +1535,16 @@ function Rooms_Connect()
 
       if S.room ~= R then return false end
 
+      local gap
+
+      -- handle rooms separated by a nudge gap
+      if not N.room then
+        gap = N
+        nx, ny = nudge_coord(nx, ny, dir)
+        if not Seed_valid(nx, ny, 1) then return false end
+        N = SEEDS[nx][ny][1]
+      end
+
       if not N.room or not N.room.group_id then return false end
       if N.room.branch_kind then return false end
 
@@ -1542,10 +1552,7 @@ function Rooms_Connect()
 
       groups_seen[N.room.group_id] = true
 
-      table.insert(conns,
-      {
-        S=S, N=N, dir=dir
-      })
+      table.insert(conns, { S=S, N=N, dir=dir, gap=gap })
     end
 
 con.debugf("USING CONFIGURATION: %s\n", K)
@@ -1560,6 +1567,10 @@ con.debugf("USING CONFIGURATION: %s\n", K)
 ---!!!        CONN.big_entrance = R
 ---!!!con.debugf("Room (%d,%d) : big_orientation:%d\n", R.lx1,R.ly1, R.big_orientation)
 ---!!!      end
+
+      if C.gap then
+        con.debugf("Bridged the GAP!!!\n")
+        C.gap.room = R end  --!!!!!!!!! FIXME FIXME FIXME
     end
 
     R.branch_kind = K
@@ -1585,21 +1596,24 @@ con.debugf("USING CONFIGURATION: %s\n", K)
 
     for _,ROT in ipairs(rotates) do
       local long, deep = morph_size(ROT, R)
-      local configs = info.func(long, deep) or {}
+      local configs = info.func(long, deep)
 
-      for _,CONF in ipairs(configs) do
-        rand_shuffle(morphs)
+      if configs then
+        rand_shuffle(configs)
+        for _,CONF in ipairs(configs) do
+          rand_shuffle(morphs)
 
-        for _,SUB in ipairs(morphs) do
-          local MORPH = ROT + SUB  -- the full morph
+          for _,SUB in ipairs(morphs) do
+            local MORPH = ROT + SUB  -- the full morph
 
-          if try_configuration(MORPH, R, K, CONF, long, deep) then
-            con.debugf("Config %s (MORPH:%d) successful @ Room (%d,%d)\n",
-                       K, MORPH, R.lx1, R.ly1)
-            return true -- SUCCESS
-          end
-        end -- SUB
-      end -- CONF
+            if try_configuration(MORPH, R, K, CONF, long, deep) then
+              con.debugf("Config %s (MORPH:%d) successful @ Room (%d,%d)\n",
+                         K, MORPH, R.lx1, R.ly1)
+              return true -- SUCCESS
+            end
+          end -- SUB
+        end -- CONF
+      end
     end -- ROT
 
 con.debugf("Failed\n")
@@ -1633,7 +1647,6 @@ con.debugf("Failed\n")
           kinds[N] = assert(info.prob)
         end
 
-        for nnn = 1,1 do K = "X1"
         while not table_empty(kinds) do
           local K = assert(rand_key_by_probs(kinds))
 
@@ -1734,7 +1747,7 @@ con.debugf("Failed\n")
   join_ground()
 
   branch_big_rooms()
-  branch_the_rest()
+--!!!!!  branch_the_rest()
 
   add_teleporters()
 end
