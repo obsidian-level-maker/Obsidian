@@ -363,7 +363,7 @@ con.debugf("(mirroring vertically LAND_H=%d)\n", LAND_W)
   end 
  
   Landmap_DoLiquid()
-  Landmap_DoGround()
+---!!!!!!!  Landmap_DoGround()
   Landmap_DoIndoors()
 end
 
@@ -1273,28 +1273,28 @@ BIG_BRANCH_KINDS =
   T2 = { prob=40, func=branch_gen_func_T2, symmetry=2 },
 
   -- Cross shape, all stems perfectly centred
-  X1 = { prob=97, func=branch_gen_func_X1, symmetry=5 },
+  X1 = { prob=140, func=branch_gen_func_X1, symmetry=5 },
 
   -- Cross shape, centred main stem, leeway for side stems
-  X2 = { prob=50, func=branch_gen_func_X2, symmetry=2 },
+  X2 = { prob=90, func=branch_gen_func_X2, symmetry=2 },
 
   -- H shape, parallel entries/exits at the four corners
-  H1 = { prob=20, func=branch_gen_func_H1, symmetry=2 },
+  H1 = { prob=15, func=branch_gen_func_H1, symmetry=2 },
 
   -- like H1 but exits are perpendicular to entry dir
   H2 = { prob=20, func=branch_gen_func_H2, symmetry=2 },
 
   -- L shape with three exits (mainly for rooms at corner of map)
-  L1 = { prob=2, func=branch_gen_func_L1 },
+  L1 = { prob=1, func=branch_gen_func_L1 },
 
   -- like L1 but four exits
-  L2 = { prob=6, func=branch_gen_func_L2 },
+  L2 = { prob=5, func=branch_gen_func_L2 },
 
   -- Swastika shape
   S  = { prob=10, func=branch_gen_func_SWASTIKA },
 
   -- 5-way star shape
-  K  = { prob=25, func=branch_gen_func_STAR, symmetry=2 },
+  K  = { prob=30, func=branch_gen_func_STAR, symmetry=2 },
 }
 
 
@@ -1461,195 +1461,6 @@ function Rooms_Connect()
     end -- for V in visits
   end
 
-  local BIG_NUM_BRANCH_PROBS =
-  {
-    { 0, 0, 50, 30,  2, 0  },  -- 2 for max(W,H)
-    { 0, 0, 30, 50, 10, 1  },  -- 3
-    { 0, 0,  5, 50, 30, 10 },  -- 4
-  }
-
-  local BIG_BRANCH_PATTERNS =
-  {
-    -- each triplet is: x, y, dir
-    -- where x is 1 for left, 2 for middle, 3 for right side
-    -- where y is 1 for bottom, 2 for middle, 3 for top side
-
-    { {2,1,2},{1,3,4},{3,3,6} },  -- T shape
-    { {2,1,2},{1,3,8},{3,3,8} },  -- U shape
-
-    { {2,1,2},{1,2,4},{3,2,6},{2,3,8 } },  -- plus shape
-    { {2,1,2},{1,3,4},{3,3,6},{2,3,8 } },
-    { {1,1,2},{1,3,2},{1,3,4},{3,3,6 } },  -- H shape
-    { {1,1,2},{1,3,6},{3,1,4},{3,3,8 } },  -- swastika
-
-    { {2,1,2},{1,2,4},{3,2,6},{1,3,8},{3,3,8} },
-    { {1,1,2},{3,1,2},{1,3,8},{2,3,8},{3,3,8} },
-    { {1,1,4},{3,1,6},{1,3,8},{2,3,8},{3,3,8} },
-
-    { {2,1,2},{2,3,8},{1,1,4},{1,3,4},{3,1,6},{3,3,6} },
-    { {2,1,2},{1,2,4},{3,2,6},{1,3,8},{2,3,8},{3,3,8} },
-  }
-
-  local function morph_triplet(R, T, MORPH)
-    local x = T[1]
-    local y = T[2]
-    local dir = T[3]
-
-    if (MORPH % 2) >= 1 then
-      x = 4-x
-      if (dir == 4) or (dir == 6) then dir = 10-dir end
-    end
-
-    if (MORPH % 4) >= 2 then
-      y = 4-y
-      if (dir == 2) or (dir == 8) then dir = 10-dir end
-    end
-
-    if (MORPH % 8) >= 4 then
-      x, y = y, 4-x
-      dir = rotate_cw90(dir)
-      if (MORPH == 5) or (MORPH == 6) then MORPH = 11-MORPH end
-    end
-
-
-    local rw = R.sx2 - R.sx1 + 1
-    local rh = R.sy2 - R.sy1 + 1
-
-    local sx, sy
-
-        if x == 1 then sx = R.sx1 + sel(rw >= 7, 1, 0)
-    elseif x == 3 then sx = R.sx2 - sel(rw >= 7, 1, 0)
-    else
-      sx = R.sx1 + int((rw-1) / 2);
-      if (MORPH % 2) >= 1 and rw >= 4 and (rw % 2) == 0 then sx = sx + 1 end
-    end
-
-        if y == 1 then sy = R.sy1 + sel(rh >= 9, 1, 0)
-    elseif y == 3 then sy = R.sy2 - sel(rh >= 9, 1, 0)
-    else
-      sy = R.sy1 + int((rh-1) / 2);
-      if (MORPH % 4) >= 2 and rh >= 4 and (rh % 2) == 0 then sy = sy + 1 end
-    end
-
---- con.debugf("ROOM LAND POS: L(%d,%d) .. L(%d,%d) = %dx%d\n", R.lx1,R.ly1, R.lx2,R.ly2, R.lw,R.lh)
---- con.debugf("MORPH %d: {%d,%d,%d} --> x:%d,y:%d --> +%d,+%d dir:%d\n", MORPH, T[1],T[2],T[3], x,y, lx,ly, dir)
-
-    assert(R.sx1 <= sx and sx <= R.sx2)
-    assert(R.sy1 <= sy and sy <= R.sy2)
-
-    assert(Seed_valid(sx, sy, 1))
-    assert(SEEDS[sx][sy][1].room == R)
-
-    return sx, sy, dir
-  end
-
-  local function try_big_pattern(R, PAT, MORPH)
-    local groups_seen = {}
-
-    groups_seen[R.group_id] = 1
-con.debugf("TRYING BIG PATTERN: %s\n", table_to_str(PAT[1]))
-
-    -- see if the pattern can be used on this room
-    -- (e.g. all exits go somewhere and are different groups)
-
-    for _,T in ipairs(PAT) do
-      local sx, sy, dir = morph_triplet(R, T, MORPH)
-      local nx, ny = nudge_coord(sx, sy, dir)
-
-      if not Seed_valid(nx, ny, 1) then return false end
-
-      local S = SEEDS[sx][sy][1]
-      local N = SEEDS[nx][ny][1]
-
-      assert(S.room == R)
-      if not N.room or not N.room.group_id then return false end
-
-      if groups_seen[N.room.group_id] then return false end
-
-      groups_seen[N.room.group_id] = 1
-    end
-
-con.debugf("USING BIG PATTERN: %s\n", table_to_str(PAT,2))
-
-    -- OK, all points were possible, do it for real
-    for _,T in ipairs(PAT) do
-      local sx, sy, dir = morph_triplet(R, T, MORPH)
-      local nx, ny = nudge_coord(sx, sy, dir)
-
-      local S = SEEDS[sx][sy][1]
-      local N = SEEDS[nx][ny][1]
-
-      local CONN = connect_seeds(S, N, dir, "normal")
-
-      if T[1] == 2 and T[2] == 1 then
-        R.big_orientation = 10-dir
-        CONN.big_entrance = R
-con.debugf("Room (%d,%d) : big_orientation:%d\n", R.lx1,R.ly1, R.big_orientation)
-      end
-    end
-
-    return true
-  end
-
-  local function OLD_try_branch_big_room(R, num)
-    -- we don't bother with patterns if room already has 1 or more connections
-    if #R.conns > 0 then return false end
-con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
-
-    -- There are THREE morph steps, done in this order:
-    -- 1. either flip the pattern horizontally or not
-    -- 2. either flip the pattern vertically or not
-    -- 3. either rotate the pattern clockwise or not
-    local morphs = { 0,1,2,3, 4,5,6,7 }
-
-    for _,PAT in ipairs(BIG_BRANCH_PATTERNS) do if #PAT == num then
-      rand_shuffle(morphs)
-      
-      for _,MORPH in ipairs(morphs) do
-        if try_big_pattern(R, PAT, MORPH) then
-          return true -- SUCCESS
-        end
-      end
-    end end -- PAT, size check
-
-    return false
-  end
-
-  local function OLD_branch_big_rooms()
-    local rooms = {}
-    for _,R in ipairs(PLAN.all_rooms) do
-      if R.lvol >= 2 and (R.kind == "building" or R.kind == "cave") then
-        -- add some randomness to area to break deadlocks
-        R.big_vol = R.lvol + con.random() / 3.0
-        table.insert(rooms, R)
-      end
-    end
-
-    if #rooms == 0 then return end
-
-    table.sort(rooms, function(A, B) return A.big_vol > B.big_vol end)
-
-    for _,R in ipairs(rooms) do
-      con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.big_vol)
-
-      local lw, lh = R.lw, R.lh
-      local ln = math.max(lw, lh)
-      if ln > 4 then ln = 4 end
-      assert(ln >= 2)
-
-      local try1 = rand_index_by_probs(BIG_NUM_BRANCH_PROBS[ln])
-
-      if not try_branch_big_room(R, try1) then
-        local try2
-
-        repeat
-          try2 = rand_index_by_probs(BIG_NUM_BRANCH_PROBS[ln])
-        until try2 ~= try1
-
-        try_branch_big_room(R, try2)
-      end
-    end
-  end
 
   local function morph_size(MORPH, R)
     if MORPH >= 4 then
@@ -1702,7 +1513,7 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
 
     groups_seen[R.group_id] = true
 
-con.debugf("TRYING CONFIGURATION: %s\n", table_to_str(config))
+-- con.debugf("TRY configuration: %s\n", table_to_str(config))
 
     -- see if the pattern can be used on this room
     -- (e.g. all exits go somewhere and are different groups)
@@ -1719,12 +1530,13 @@ con.debugf("TRYING CONFIGURATION: %s\n", table_to_str(config))
 
       if not Seed_valid(nx, ny, 1) then return false end
 
-      local S = SEEDS[sx][sy][1]
+      local S = SEEDS[ x][ y][1]
       local N = SEEDS[nx][ny][1]
 
       if S.room ~= R then return false end
 
       if not N.room or not N.room.group_id then return false end
+      if N.room.branch_kind then return false end
 
       if groups_seen[N.room.group_id] then return false end
 
@@ -1736,7 +1548,7 @@ con.debugf("TRYING CONFIGURATION: %s\n", table_to_str(config))
       })
     end
 
-con.debugf("USING CONFIGURATION!\n")
+con.debugf("USING CONFIGURATION: %s\n", K)
 
     -- OK, all points were possible, do it for real
     for _,C in ipairs(conns) do
@@ -1756,6 +1568,8 @@ con.debugf("USING CONFIGURATION!\n")
   end
 
   local function try_branch_big_room(R, K)
+
+    con.debugf("TRYING CONFIGURATION: %s\n", K)
 
     -- There are THREE morph steps, done in this order:
     -- 1. either rotate the pattern clockwise or not
@@ -1788,6 +1602,7 @@ con.debugf("USING CONFIGURATION!\n")
       end -- CONF
     end -- ROT
 
+con.debugf("Failed\n")
     return false
   end
 
@@ -1811,13 +1626,14 @@ con.debugf("USING CONFIGURATION!\n")
 
     for _,R in ipairs(rooms) do
       if (#R.conns == 0) and rand_odds(90) then
-        con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.big_vol)
+        con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.svol)
 
         local kinds = {}
         for N,info in pairs(BIG_BRANCH_KINDS) do
           kinds[N] = assert(info.prob)
         end
 
+        for nnn = 1,1 do K = "X1"
         while not table_empty(kinds) do
           local K = assert(rand_key_by_probs(kinds))
 
@@ -1845,7 +1661,9 @@ con.debugf("USING CONFIGURATION!\n")
         for _,dir in ipairs(dirs) do
           local nx, ny = nudge_coord(V.x, V.y, dir)
           local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
-          if N and L.room and N.room and L.room.group_id ~= N.room.group_id then
+          if N and L.room and N.room and L.room.group_id ~= N.room.group_id and
+             not (L.room.branch_kind or N.room.branch_kind)
+          then
             connect_land(L, N, dir, "normal")
             break;
           end
