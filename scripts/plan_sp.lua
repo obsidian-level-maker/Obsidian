@@ -746,8 +746,10 @@ then return true end
   end
 
   local function try_nudge_room(R, side, pull, grow)
-    -- 'pull' means that shrinkage must pull neighbours too
+    -- 'pull' true => any shrinkage must pull neighbours too
     -- 'grow' is positive to nudge outward, negative to nudge inward
+
+pull=true --!!!!!
 
     if not grow then grow = rand_sel(75,1,-1) end
 
@@ -938,7 +940,7 @@ con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
       for _,R in ipairs(rooms) do
         rand_shuffle(sides)
         for _,side in ipairs(sides) do
-          if rand_odds(20*2) then  --!!!!!!!
+          if rand_odds(30) then
             try_nudge_room(R, side)
           end
         end
@@ -1299,7 +1301,7 @@ BIG_BRANCH_KINDS =
 function Test_Branch_Gen(name)
   local info = assert(BIG_BRANCH_KINDS[name])
 
-  local function dump_exits(C, W, H)
+  local function dump_exits(config, W, H)
     local DIR_CHARS = { [2]="|", [8]="|", [4]=">", [6]="<" }
 
     local P = array_2D(W+2, H+2)
@@ -1308,10 +1310,10 @@ function Test_Branch_Gen(name)
       P[x+1][y+1] = sel(box_contains_point(1,1,W,H, x,y), "#", " ")
     end end
 
-    for idx = 1,#C,3 do
-      local x = C[idx+0]
-      local y = C[idx+1]
-      local dir = C[idx+2]
+    for idx = 1,#config,3 do
+      local x   = config[idx+0]
+      local y   = config[idx+1]
+      local dir = config[idx+2]
 
       assert(x, y, dir)
       assert(box_contains_point(1,1,W,H, x,y))
@@ -1343,8 +1345,8 @@ function Test_Branch_Gen(name)
     if not configs then
       con.printf("Unsupported size\n\n")
     else
-      for _,C in ipairs(configs) do
-        dump_exits(C, long, deep)
+      for _,CONF in ipairs(configs) do
+        dump_exits(CONF, long, deep)
       end
     end
   end end -- deep, long
@@ -1649,8 +1651,143 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
     end
   end
 
+  local function morph_size(MORPH, R)
+    if MORPH >= 4 then
+      return R.sh, R.sw
+    else
+      return R.sw, R.sh
+    end
+  end
+
+  local function morph_dir(MORPH, dir)
+    if (MORPH % 2) >= 1 then
+      if (dir == 4) or (dir == 6) then dir = 10-dir end
+    end
+
+    if (MORPH % 4) >= 2 then
+      if (dir == 2) or (dir == 8) then dir = 10-dir end
+    end
+
+    if MORPH >= 4 then
+      dir = rotate_cw90(dir)
+    end
+
+    return dir
+  end
+
+  local function morph_coord(MORPH, R, x, y, long, deep)
+    assert(1 <= x and x <= long)
+    assert(1 <= y and y <= deep)
+
+    if (MORPH % 2) >= 1 then
+      x = long+1 - x
+    end
+
+    if (MORPH % 4) >= 2 then
+      y = deep+1 - y
+    end
+
+    if MORPH >= 4 then
+      x, y = y, long+1-x
+    end
+
+    return R.sx1 + (x-1), R.sy1 + (y-1)
+  end
+
+  local function try_configuration(MORPH, R, K, config, long, deep)
+    assert(R.group_id)
+
+    local groups_seen = {}
+    local conns = {}
+
+    groups_seen[R.group_id] = true
+
+con.debugf("TRYING CONFIGURATION: %s\n", table_to_str(config))
+
+    -- see if the pattern can be used on this room
+    -- (e.g. all exits go somewhere and are different groups)
+
+    for idx = 1,#config,3 do
+      local x   = config[idx+0]
+      local y   = config[idx+1]
+      local dir = config[idx+2]
+
+      x, y = morph_coord(MORPH, R, x, y, long, deep)
+      dir  = morph_dir(MORPH, dir)
+
+      local nx, ny = nudge_coord(x, y, dir)
+
+      if not Seed_valid(nx, ny, 1) then return false end
+
+      local S = SEEDS[sx][sy][1]
+      local N = SEEDS[nx][ny][1]
+
+      if S.room ~= R then return false end
+
+      if not N.room or not N.room.group_id then return false end
+
+      if groups_seen[N.room.group_id] then return false end
+
+      groups_seen[N.room.group_id] = true
+
+      table.insert(conns,
+      {
+        S=S, N=N, dir=dir
+      })
+    end
+
+con.debugf("USING CONFIGURATION!\n")
+
+    -- OK, all points were possible, do it for real
+    for _,C in ipairs(conns) do
+
+      local CONN = connect_seeds(C.S, C.N, C.dir, "normal")
+
+---!!!      if T[1] == 2 and T[2] == 1 then
+---!!!        R.big_orientation = 10-dir
+---!!!        CONN.big_entrance = R
+---!!!con.debugf("Room (%d,%d) : big_orientation:%d\n", R.lx1,R.ly1, R.big_orientation)
+---!!!      end
+    end
+
+    R.branch_kind = K
+
+    return true
+  end
+
   local function try_branch_big_room(R, K)
-    --FIXME !!!!!!
+
+    -- There are THREE morph steps, done in this order:
+    -- 1. either rotate the pattern clockwise or not
+    -- 2. either flip the pattern horizontally or not
+    -- 3. either flip the pattern vertically or not
+
+    local info = assert(BIG_BRANCH_KINDS[K])
+
+    local rotates = { 0, 4 }
+    local morphs  = { 0, 1, 2, 3 }
+
+    rand_shuffle(rotates)
+
+    for _,ROT in ipairs(rotates) do
+      local long, deep = morph_size(ROT, R)
+      local configs = info.func(long, deep) or {}
+
+      for _,CONF in ipairs(configs) do
+        rand_shuffle(morphs)
+
+        for _,SUB in ipairs(morphs) do
+          local MORPH = ROT + SUB  -- the full morph
+
+          if try_configuration(MORPH, R, K, CONF, long, deep) then
+            con.debugf("Config %s (MORPH:%d) successful @ Room (%d,%d)\n",
+                       K, MORPH, R.lx1, R.ly1)
+            return true -- SUCCESS
+          end
+        end -- SUB
+      end -- CONF
+    end -- ROT
+
     return false
   end
 
@@ -1658,18 +1795,22 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
     local rooms = {}
 
     for _,R in ipairs(PLAN.all_rooms) do
-      if R.lvol >= 2 and (R.kind == "building" or R.kind == "cave") then
-        -- add some randomness to area to break deadlocks
-        R.big_vol = R.lvol + con.random() / 3.0
+      R.svol = R.sw * R.sh -- FIXME !!!!!! OUT OF HERE
+
+      if R.svol >= 1 and (R.kind == "building" or R.kind == "cave") then
         table.insert(rooms, R)
       end
     end
 
     if #rooms == 0 then return end
-    table.sort(rooms, function(A, B) return A.big_vol > B.big_vol end)
+
+    -- add some randomness (break deadlocks)
+    rand_shuffle(rooms)
+
+    table.sort(rooms, function(A, B) return A.svol > B.svol end)
 
     for _,R in ipairs(rooms) do
-      if #R.conns == 0 then
+      if (#R.conns == 0) and rand_odds(90) then
         con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.big_vol)
 
         local kinds = {}
@@ -1680,14 +1821,14 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
         while not table_empty(kinds) do
           local K = assert(rand_key_by_probs(kinds))
 
-          kinds[K] = nil  -- don't try this kind again
+          kinds[K] = nil  -- don't try this branch kind again
 
           if try_branch_big_room(R, K) then
-            break; -- was successful
+            break; -- SUCCESS
           end
-        end
+        end -- while kinds
       end
-    end
+    end -- for R in rooms
   end
 
   local function branch_the_rest()
@@ -1715,6 +1856,8 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
   end
 
   local function add_teleporters()
+    -- FIXME !!!!! DO TELEPORTERS WITH QUEST STUFF
+
     -- Makes sure any non-contiguous groups of rooms become connected
     -- (either by an actual bridge or by a teleporter).
     
@@ -1848,7 +1991,7 @@ function Plan_rooms_sp(epi_along)
 
   Rooms_Nudge()
   Rooms_Make_Seeds()
---!!!!!!  Rooms_Connect()
+  Rooms_Connect()
 
 end -- Plan_rooms_sp
 
