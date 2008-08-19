@@ -1072,159 +1072,24 @@ end
 
 ------------------------------------------------------------------------
 
-ROOM_EXITS_2x1 =
-{
-  { sym=5, prob=30, exits={ 1,1,4, 2,1,6 }},
-  {        prob=15, exits={ 1,1,4, 2,1,8 }},
-  {        prob=50, exits={ 1,1,2, 2,1,8 }},
-  { sym=2, prob= 5, exits={ 1,1,2, 2,1,2 }},
 
-  { sym=6, prob=70, exits={ 1,1,4, 2,1,2, 2,1,8 }},
-  { sym=6, prob=50, exits={ 1,1,4, 2,1,2, 2,1,8, 2,1,6 }},
-  { sym=5, prob=30, exits={ 1,1,2, 1,1,8, 2,1,2, 2,1,8 }},
-  {        prob=20, exits={ 1,1,2, 1,1,4, 2,1,6, 2,1,8 }},
-  { sym=2, prob=20, exits={ 1,1,2, 1,1,4, 2,1,2, 2,1,8 }},
-  { sym=2, prob=20, exits={ 1,1,4, 1,1,8, 2,1,8, 2,1,6 }},
-}
-
-ROOM_EXITS_2x2 =
-{
-  {        prob=10, exits={ 1,1,4, 2,2,6 }},
-  {        prob=10, exits={ 1,1,4, 2,2,8 }},
-  { sym=2, prob= 1, exits={ 1,1,2, 2,1,2 }},
-
-  {        prob=20, exits={ 1,1,4, 2,2,6, 2,1,2 }},
-  {        prob=20, exits={ 1,1,4, 2,2,8, 2,1,2 }},
-  {        prob=30, exits={ 1,1,4, 1,2,8, 2,2,8 }},
-
-  {        prob=80, exits={ 1,1,4, 2,2,6, 2,1,2, 1,2,8 }},
-  { sym=5, prob=40, exits={ 1,1,4, 1,2,4, 2,1,6, 2,2,6 }},
-  { sym=2, prob=60, exits={ 1,1,4, 1,2,8, 2,2,8, 2,1,6 }},
-}
-
-ROOM_EXITS_3x1 =
-{
-  { sym=6, prob=10, exits={ 1,1,4, 3,1,6 }},
-  {        prob= 7, exits={ 1,1,4, 3,1,8 }},
-  {        prob=14, exits={ 1,1,2, 3,1,8 }},
-  { sym=2, prob= 4, exits={ 1,1,2, 3,1,2 }},
-
-  {        prob=20, exits={ 1,1,4, 2,1,8, 3,1,8 }},
-  { sym=6, prob=40, exits={ 1,1,4, 3,1,2, 3,1,8 }},
-  { sym=2, prob=70, exits={ 2,1,2, 1,1,8, 3,1,8 }},
-  { sym=2, prob=70, exits={ 2,1,2, 1,1,4, 3,1,6 }},
-
-  { sym=2, prob=90, exits={ 2,1,2, 2,1,8, 1,1,4, 3,1,6 }},
-  { sym=2, prob=30, exits={ 1,1,4, 1,1,8, 3,1,8, 3,1,6 }},
-  {        prob=30, exits={ 1,1,4, 1,1,8, 3,1,2, 3,1,6 }},
-  { sym=5, prob=30, exits={ 1,1,2, 1,1,8, 3,1,8, 3,1,2 }},
-
-  { sym=2, prob= 2, exits={ 2,1,2, 1,1,4, 1,1,8, 3,1,8, 3,1,6 }},
-}
-
-ROOM_EXITS_3x2 =
-{
-  {        prob= 4, exits={ 1,1,4, 3,2,6 }},
-  {        prob= 4, exits={ 1,1,4, 3,2,8 }},
-  {        prob= 7, exits={ 1,1,2, 3,2,8 }},
-  { sym=2, prob= 1, exits={ 1,1,2, 3,1,2 }},
-  { sym=5, prob= 2, exits={ 2,1,2, 2,2,8 }},
-
-  { sym=2, prob=80, exits={ 2,1,2, 1,2,8, 3,2,8 }},
-  { sym=2, prob=80, exits={ 2,1,2, 1,2,4, 3,2,6 }},
-  {        prob=10, exits={ 1,1,4, 1,2,8, 3,2,8 }},
-  {        prob=15, exits={ 1,1,4, 2,2,8, 3,2,8 }},
-  {        prob=10, exits={ 1,1,2, 2,2,8, 3,2,8 }},
-
-  { sym=2, prob=90, exits={ 2,1,2, 2,2,8, 1,2,4, 3,2,6 }},
-  {        prob= 5, exits={ 2,1,2, 2,2,8, 1,1,4, 3,2,6 }},
-  { sym=2, prob=20, exits={ 2,1,2, 2,2,8, 1,2,8, 3,2,8 }},
-
-  { sym=5, prob=20, exits={ 1,1,2, 1,2,8, 3,1,2, 3,2,8 }},
-  { sym=2, prob=50, exits={ 1,1,2, 1,2,4, 3,1,2, 3,2,6 }},
-  { sym=5, prob= 5, exits={ 1,1,4, 1,2,4, 3,1,6, 3,2,6 }},
-  {        prob=20, exits={ 1,1,4, 3,1,2, 3,2,6, 1,2,8 }},
-
-  { sym=2, prob= 6, exits={ 2,1,2, 1,1,4, 1,2,8, 3,2,8, 3,1,6 }},
-  { sym=5, prob= 2, exits={ 2,1,2, 2,2,8, 1,1,4, 1,2,4, 3,1,6, 3,2,6 }},
-}
-
-ROOM_EXITS_3x3 =
-{
-  -- these first six are emergency fallbacks
-  {        prob= 2, exits={ 1,1,4, 3,3,6 }},
-  {        prob= 2, exits={ 1,1,4, 3,3,8 }},
-  { sym=2, prob= 1, exits={ 1,1,2, 3,1,2 }},
-  { sym=2, prob= 1, exits={ 2,1,2, 2,3,8 }},
-  { sym=2, prob= 3, exits={ 2,1,2, 1,3,8, 3,3,8 }},
-  { sym=2, prob= 3, exits={ 2,1,2, 1,3,4, 3,3,6 }},
-
-  { sym=5, prob=99, exits={ 2,1,2, 1,2,4, 3,2,6, 2,3,8 }},
-  { sym=2, prob=10, exits={ 2,1,2, 1,3,4, 3,3,6, 2,3,8 }},
-  {        prob= 5, exits={ 2,1,2, 1,1,4, 3,3,6, 2,3,8 }},
-  {        prob=15, exits={ 1,1,4, 3,1,2, 1,3,8, 3,3,6 }},
-  { sym=5, prob=20, exits={ 1,1,2, 3,1,2, 1,3,8, 3,3,8 }},
-
-  { sym=2, prob=70, exits={ 2,1,2, 1,2,4, 3,2,6, 1,3,8, 3,3,8 }},
-  { sym=2, prob=30, exits={ 2,1,2, 1,1,4, 3,1,6, 1,3,8, 3,3,8 }},
-  { sym=2, prob=10, exits={ 1,1,4, 3,1,6, 1,3,8, 2,3,8, 3,3,8 }},
-  { sym=2, prob= 5, exits={ 1,1,2, 3,1,2, 1,3,8, 2,3,8, 3,3,8 }},
-
-  { sym=2, prob= 4, exits={ 2,1,2, 2,3,8, 1,1,4, 1,3,4, 3,1,6, 3,3,6 }},
-  { sym=5, prob= 1, exits={ 1,1,2, 2,1,2, 3,1,2, 1,3,8, 2,3,8, 3,3,8 }},
-}
-
-ROOM_EXITS_4x1 =
-{
-  { sym=6, prob=10, exits={ 1,1,4, 4,1,6 }},
-  {        prob= 5, exits={ 1,1,4, 4,1,8 }},
-  {        prob=15, exits={ 1,1,2, 4,1,8 }},
-  { sym=2, prob= 5, exits={ 1,1,2, 4,1,2 }},
-
-  { sym=6, prob=25, exits={ 1,1,4, 4,1,2, 4,1,8 }},
-  { sym=6, prob= 5, exits={ 1,1,4, 3,1,2, 3,1,8 }},
-  {        prob=15, exits={ 1,1,4, 2,1,8, 4,1,8 }},
-
-  {        prob=80, exits={ 1,1,4, 2,1,2, 3,1,8, 4,1,6 }},
-  { sym=2, prob=30, exits={ 1,1,4, 2,1,2, 3,1,2, 4,1,6 }},
-  {        prob=70, exits={ 1,1,2, 2,1,8, 3,1,2, 4,1,8 }},
-  { sym=2, prob=30, exits={ 1,1,2, 2,1,8, 3,1,8, 4,1,2 }},
-  {        prob=20, exits={ 1,1,4, 2,1,8, 3,1,2, 4,1,8 }},
-  { sym=5, prob= 4, exits={ 1,1,2, 1,1,8, 4,1,2, 4,1,8 }},
-
-  { sym=5, prob= 3, exits={ 1,1,4, 2,1,2, 2,1,8, 3,1,2, 3,1,8, 4,1,6 }},
-}
-
-ROOM_EXITS_4x2 =
-{
-  {        prob= 3, exits={ 1,1,4, 4,2,6 }},
-  {        prob= 3, exits={ 1,1,4, 4,2,8 }},
-  {        prob= 7, exits={ 1,1,2, 4,2,8 }},
-  { sym=2, prob= 1, exits={ 1,1,2, 4,1,2 }},
-
-  {        prob=10, exits={ 1,1,4, 2,2,8, 4,2,8 }},
-  {        prob= 6, exits={ 1,1,4, 2,2,8, 4,1,6 }},
-  {        prob= 6, exits={ 1,1,4, 2,2,8, 4,1,2 }},
-
-  {        prob=80, exits={ 1,1,4, 2,2,8, 3,1,2, 4,2,6 }},
-  {        prob=60, exits={ 1,1,2, 2,2,8, 3,1,2, 4,2,8 }},
-  { sym=2, prob=40, exits={ 1,1,2, 2,2,8, 3,2,8, 4,1,2 }},
-  { sym=2, prob=40, exits={ 1,1,4, 2,2,8, 3,2,8, 4,1,6 }},
-  {        prob=40, exits={ 1,1,4, 2,1,2, 3,2,8, 4,2,6 }},
-  { sym=5, prob=10, exits={ 1,1,2, 1,2,8, 4,1,2, 4,2,8 }},
-
-  {        prob= 4, exits={ 1,1,4, 1,2,8, 2,1,2, 3,2,8, 4,1,2, 4,2,6 }},
-}
-
-
-ROOM_EXIT_PATTERNS =
-{
-  { nil, ROOM_EXITS_2x1, ROOM_EXITS_3x1, ROOM_EXITS_4x1 },
-  { nil, ROOM_EXITS_2x2, ROOM_EXITS_3x2, ROOM_EXITS_4x2 },
-  { nil, nil,            ROOM_EXITS_3x3, nil },
-  { nil, nil,            nil,            nil },
-}
-
+-- Generator functions for "big branches" (mostly for large rooms
+-- which deserve 3/4/5 exits).
+-- 
+-- Each function generates a list of configurations.  Each config
+-- describes the exits for a single room, and is a list of tuples
+-- in the form (x, y, dir) but unpacked.  NIL returned means that
+-- the given size was not suitable for that pattern (e.g. a pure
+-- cross requires an odd width and an odd height).
+--
+-- It is assumed that the caller will try all the four possible
+-- mirrorings (none/X/Y/XY) of each configuration, and these
+-- generator functions are optimised with that in mind.
+--
+-- The 'symmetry' field, when set, is a direction (1-9) of the
+-- axis of symmetry.  Hence "2" means the pattern will be the same
+-- when flipped horizontally.  The value "5" is used for four-way
+-- symmetry (pattern is mirrored both horizontally or vertically).
 
 
 function branch_gen_func_T1(long, deep)
@@ -1232,16 +1097,16 @@ function branch_gen_func_T1(long, deep)
     return nil
   end
 
-  local coords = {}
+  local configs = {}
 
   local mx  = int((long+1)/2)
   local lee = int((deep-1)/2)
 
   for y = 0,lee do
-    table.insert(coords, { mx,1,2, 1,deep-y,4, long,deep-y,6 })
+    table.insert(configs, { mx,1,2, 1,deep-y,4, long,deep-y,6 })
   end
 
-  return coords
+  return configs
 end
 
 function branch_gen_func_T2(long, deep)
@@ -1249,16 +1114,16 @@ function branch_gen_func_T2(long, deep)
     return nil
   end
 
-  local coords = {}
+  local configs = {}
 
   local mx  = int((long+1)/2)
   local lee = int((long-2)/3)
 
   for x = 0,lee do
-    table.insert(coords, { mx,1,2, 1+x,deep,8, long-x,deep,8 })
+    table.insert(configs, { mx,1,2, 1+x,deep,8, long-x,deep,8 })
   end
 
-  return coords
+  return configs
 end
 
 function branch_gen_func_X1(long, deep)
@@ -1279,15 +1144,15 @@ function branch_gen_func_X2(long, deep)
     return nil
   end
 
-  local coords = {}
+  local configs = {}
   local mx = int((long+1)/2)
   local my = int(deep/2)
 
   for y = 1,my do
-    table.insert(coords, { mx,1,2, mx,deep,8, 1,y,4, long,y,6 })
+    table.insert(configs, { mx,1,2, mx,deep,8, 1,y,4, long,y,6 })
   end
 
-  return coords
+  return configs
 end
 
 
@@ -1296,16 +1161,16 @@ function branch_gen_func_SWASTIKA(long, deep)
     return nil
   end
 
-  local coords = {}
+  local configs = {}
 
   local x_lee = int((long-1)/4)
   local y_lee = int((deep-1)/4)
 
   for x = 0,x_lee do for y = 0,y_lee do
-    table.insert(coords, { 1+x,1,2, long,1+y,6, long-x,deep,8, 1,deep-y,4 })
+    table.insert(configs, { 1+x,1,2, long,1+y,6, long-x,deep,8, 1,deep-y,4 })
   end end
 
-  return coords
+  return configs
 end
 
 function branch_gen_func_H1(long, deep)
@@ -1313,18 +1178,18 @@ function branch_gen_func_H1(long, deep)
     return nil
   end
 
-  local coords = {}
+  local configs = {}
 
   local b_lee = int((long-2)/3)
   local t_lee = int((long-2)/5)
   
   for b = 0,b_lee do for t = 0,t_lee do
     if b >= t then
-      table.insert(coords, { 1+b,1,2, long-b,1,2, 1+t,deep,8, long-t,deep,8 })
+      table.insert(configs, { 1+b,1,2, long-b,1,2, 1+t,deep,8, long-t,deep,8 })
     end
   end end
 
-  return coords
+  return configs
 end
 
 function branch_gen_func_H2(long, deep)
@@ -1332,16 +1197,16 @@ function branch_gen_func_H2(long, deep)
     return nil
   end
 
-  local coords = {}
+  local configs = {}
 
   local x_lee = int((long-2)/3)
   local y_lee = int((deep-1)/2)
   
   for x = 0,x_lee do for y = 0,y_lee do
-    table.insert(coords, { 1+x,1,2, long-x,1,2, 1,deep-y,4, long,deep-y,6 })
+    table.insert(configs, { 1+x,1,2, long-x,1,2, 1,deep-y,4, long,deep-y,6 })
   end end
 
-  return coords
+  return configs
 end
 
 function branch_gen_func_STAR(long, deep)
@@ -1349,16 +1214,16 @@ function branch_gen_func_STAR(long, deep)
     return nil
   end
 
-  local coords = {}
+  local configs = {}
 
   local mx    = int((long+1)/2)
   local x_lee = int((long-2)/3)
   
   for x = 0,x_lee do for y = 1,deep-1 do
-    table.insert(coords, { mx,1,2, 1,y,4, long,y,6, 1+x,deep,8, long-x,deep,8 })
+    table.insert(configs, { mx,1,2, 1,y,4, long,y,6, 1+x,deep,8, long-x,deep,8 })
   end end
 
-  return coords
+  return configs
 end
 
 function branch_gen_func_L1(long, deep)
@@ -1366,16 +1231,16 @@ function branch_gen_func_L1(long, deep)
     return nil
   end
 
-  local coords = {}
+  local configs = {}
 
   local x_lee = int((long-2)/3)
   local y_lee = int((deep-1)/2)
 
   for x = 0,x_lee do for y = 0,y_lee do
-    table.insert(coords, { 1,1+y,4, 1+x,deep,8, long-x,deep,8 })
+    table.insert(configs, { 1,1+y,4, 1+x,deep,8, long-x,deep,8 })
   end end
 
-  return coords
+  return configs
 end
 
 function branch_gen_func_L2(long, deep)
@@ -1383,17 +1248,17 @@ function branch_gen_func_L2(long, deep)
     return nil
   end
 
-  local mx     = int((long+2)/2)
-  local coords = {}
+  local configs = {}
+  local mx = int((long+2)/2)
 
   local x_lee = int((long-3)/3)
   local y_lee = int((deep-2)/3)
 
   for x = 0,x_lee do for y = 0,y_lee do
-    table.insert(coords, { 1,1+y,4, 1,deep-y,4, mx-x,deep,8, long-x,deep,8 })
+    table.insert(configs, { 1,1+y,4, 1,deep-y,4, mx-x,deep,8, long-x,deep,8 })
   end end
 
-  return coords
+  return configs
 end
 
 
@@ -1408,7 +1273,7 @@ BIG_BRANCH_KINDS =
   -- Cross shape, all stems perfectly centred
   X1 = { prob=97, func=branch_gen_func_X1, symmetry=5 },
 
-  -- Cross shape, centred main stem, leeyway for side stems
+  -- Cross shape, centred main stem, leeway for side stems
   X2 = { prob=50, func=branch_gen_func_X2, symmetry=2 },
 
   -- H shape, parallel entries/exits at the four corners
@@ -1431,7 +1296,7 @@ BIG_BRANCH_KINDS =
 }
 
 
-function Test_BranchGen(name)
+function Test_Branch_Gen(name)
   local info = assert(BIG_BRANCH_KINDS[name])
 
   local function dump_exits(C, W, H)
@@ -1474,11 +1339,11 @@ function Test_BranchGen(name)
   for deep = 2,9 do for long = 2,9 do
     con.printf("==== %s %dx%d ==================\n\n", name, long, deep)
 
-    local coords = info.func(long, deep)
-    if not coords then
+    local configs = info.func(long, deep)
+    if not configs then
       con.printf("Unsupported size\n\n")
     else
-      for _,C in ipairs(coords) do
+      for _,C in ipairs(configs) do
         dump_exits(C, long, deep)
       end
     end
@@ -1970,9 +1835,6 @@ function Plan_rooms_sp(epi_along)
     free_tag  = 1,
     free_mark = 1,
   }
-
-
-Test_BranchGen("X2")
 
 
   Plan_determine_size(epi_along)
