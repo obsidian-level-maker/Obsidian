@@ -1283,13 +1283,11 @@ function branch_gen_func_X2(long, deep)
     return nil
   end
 
-  local mx     = int((long+1)/2)
+  local mx, my = int((long+1)/2), int(long/2)
   local coords = {}
 
-  for y = 1,deep do
-    if y ~= (deep+1)/2 then
-      table.insert(coords, { mx,1,2, mx,deep,8, 1,y,4, long,y,6 })
-    end
+  for y = 1,my do
+    table.insert(coords, { mx,1,2, mx,deep,8, 1,y,4, long,y,6 })
   end
 
   rand_shuffle(coords)
@@ -1416,44 +1414,40 @@ end
 
 BIG_BRANCH_KINDS =
 {
-  T1 = 40, -- T shape, centred main stem, leeway for side stems
-  T2 = 40, -- like T1 but exits are parallel with entry
+  -- T shape, centred main stem, leeway for side stems
+  T1 = { prob=40, func=branch_gen_func_T1, symmetry=2 },
 
-  X1 = 97, -- Cross shape, all stems perfectly centred
-  X2 = 50, -- Cross shape, centred main stem, leeyway for side stems
+  -- like T1 but exits are parallel with entry
+  T2 = { prob=40, func=branch_gen_func_T2, symmetry=2 },
 
-  H1 = 20, -- H shape, parallel entries/exits at the four corners
-  H2 = 20, -- like H1 but exits are perpendicular to entry dir
+  -- Cross shape, all stems perfectly centred
+  X1 = { prob=97, func=branch_gen_func_X1, symmetry=5 },
 
-  S  = 10, -- Swastika shape
-  K  = 25, -- 5-way star shape
+  -- Cross shape, centred main stem, leeyway for side stems
+  X2 = { prob=50, func=branch_gen_func_X2, symmetry=2 },
 
-  L1 =  2, -- L shape with 3 exits (fallback for rooms at a corner)
-  L2 =  6, -- like L1 but four exits
-}
+  -- H shape, parallel entries/exits at the four corners
+  H1 = { prob=20, func=branch_gen_func_H1, symmetry=2 },
 
-BIG_BRANCH_GEN_FUNCS =
-{
-  T1 = branch_gen_func_T1,
-  T2 = branch_gen_func_T2,
+  -- like H1 but exits are perpendicular to entry dir
+  H2 = { prob=20, func=branch_gen_func_H2, symmetry=2 },
 
-  X1 = branch_gen_func_X1,
-  X2 = branch_gen_func_X2,
+  -- L shape with three exits (mainly for rooms at corner of map)
+  L1 = { prob=2, func=branch_gen_func_L1 },
 
-  H1 = branch_gen_func_H1,
-  H2 = branch_gen_func_H2,
+  -- like L1 but four exits
+  L2 = { prob=6, func=branch_gen_func_L2 },
 
-  S  = branch_gen_func_SWASTIKA,
-  K  = branch_gen_func_STAR,
+  -- Swastika shape
+  S  = { prob=10, func=branch_gen_func_S },
 
-  L1 = branch_gen_func_L1,
-  L2 = branch_gen_func_L2,
+  -- 5-way star shape
+  K  = { prob=25, func=branch_gen_func_K, symmetry=2 },
 }
 
 
 function Test_BranchGen(name)
-  local func = BIG_BRANCH_GEN_FUNCS[name]
-  assert(func)
+  local info = assert(BIG_BRANCH_KINDS[name])
 
   local function dump_exits(C, W, H)
     local DIR_CHARS = { [2]="|", [8]="|", [4]=">", [6]="<" }
@@ -1495,7 +1489,7 @@ function Test_BranchGen(name)
   for deep = 2,9 do for long = 2,9 do
     con.printf("==== %s %dx%d ==================\n\n", name, long, deep)
 
-    local coords = func(long, deep)
+    local coords = info.func(long, deep)
     if not coords then
       con.printf("Unsupported size\n\n")
     else
@@ -1828,7 +1822,10 @@ con.debugf("Try branch big room L(%d,%d) : conns = %d\n", R.lx1,R.ly1, num)
       if #R.conns == 0 then
         con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.big_vol)
 
-        local kinds = copy_table(BIG_BRANCH_KINDS)
+        local kinds = {}
+        for N,info in pairs(BIG_BRANCH_KINDS) do
+          kinds[N] = assert(info.prob)
+        end
 
         while not table_empty(kinds) do
           local K = assert(rand_key_by_probs(kinds))
