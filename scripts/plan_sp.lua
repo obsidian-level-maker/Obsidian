@@ -1268,6 +1268,22 @@ function branch_gen_XT(long, deep)
   return configs
 end
 
+function branch_gen_XX(long, deep)
+  if long < 5 or deep < 3 or (long*deep) >= 50 then
+    return nil
+  end
+
+  local configs = {}
+  local mx = int(long/2)
+  local my = int(deep/2)
+
+  for x = 2,mx do for y = 1,my do
+    table.insert(configs, { x,1,2, x,deep,8, 1,y,4, long,y,6 })
+  end end
+
+  return configs
+end
+
 function branch_gen_SW(long, deep)
   if long < 3 or deep < 3 then
     return nil
@@ -1305,7 +1321,7 @@ function branch_gen_HP(long, deep)
 end
 
 function branch_gen_HT(long, deep)
-  if long < 3 or deep < 2 then
+  if long < 3 or deep < 2 or (long*deep) >= 50 then
     return nil
   end
 
@@ -1322,18 +1338,20 @@ function branch_gen_HT(long, deep)
 end
 
 function branch_gen_F4(long, deep)
-  if long < 5 or deep < 3 then
+  if long < 4 or deep < 4 then
     return nil
   end
 
   local configs = {}
-  local mx = int((long+2)/2)
 
-  local x_lee = int((long-3)/3)
-  local y_lee = int((deep-2)/3)
+  local x_dist = int((long)/2)
+  local y_dist = int((deep)/2)
+
+  local x_lee = int((long-1)/4)
+  local y_lee = int((deep-1)/4)
 
   for x = 0,x_lee do for y = 0,y_lee do
-    table.insert(configs, { 1,1+y,4, 1,deep-y,4, mx-x,deep,8, long-x,deep,8 })
+    table.insert(configs, { 1,1+y,4, 1,1+y+y_dist,4, long-x,deep,8, long-x-x_dist,deep,8 })
   end end
 
   return configs
@@ -2029,7 +2047,14 @@ function Plan_rooms_sp(epi_along)
   }
 
 
-Test_Branch_Gen("GG")
+name_it_up(BIG_BRANCH_KINDS)
+Test_Branch_Gen("XC")
+Test_Branch_Gen("XT")
+Test_Branch_Gen("XX")
+Test_Branch_Gen("HP")
+Test_Branch_Gen("HT")
+Test_Branch_Gen("SW")
+Test_Branch_Gen("F4")
 error("OK")
 
 
