@@ -1144,8 +1144,8 @@ function branch_gen_PX(long, deep)
   return configs
 end
 
-function branch_gen_T1(long, deep)
-  if long < 3 or deep < 2 or (long % 2) == 0 then
+function branch_gen_TC(long, deep)
+  if long < 3 or deep < 1 or deep > 7 or (long % 2) == 0 or (long*deep) >= 42 then
     return nil
   end
 
@@ -1161,8 +1161,25 @@ function branch_gen_T1(long, deep)
   return configs
 end
 
-function branch_gen_T2(long, deep)
-  if long < 3 or deep < 2 or (long % 2) == 0 then
+function branch_gen_TX(long, deep)
+  if long < 4 or deep < 1 or deep > 7 or (long*deep) >= 42 then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx    = int((long  )/2)
+  local y_lee = int((deep-1)/2)
+
+  for x = 2,mx do for y = 0,y_lee do
+    table.insert(configs, { x,1,2, 1,deep-y,4, long,deep-y,6 })
+  end end
+
+  return configs
+end
+
+function branch_gen_YP(long, deep)
+  if long < 3 or deep < 1 or deep > 5 or (long % 2) == 0 then
     return nil
   end
 
@@ -1178,7 +1195,7 @@ function branch_gen_T2(long, deep)
   return configs
 end
 
-function branch_gen_X1(long, deep)
+function branch_gen_XC(long, deep)
   if long < 3 or (long % 2) == 0 or
      deep < 3 or (deep % 2) == 0
   then
@@ -1339,13 +1356,13 @@ BIG_BRANCH_KINDS =
 
 
   -- T shape, centered main stem, leeway for side stems
-  T1 = { conn=3, prob=200, func=branch_gen_T1, symmetry=2 },
+  TC = { conn=3, prob=200, func=branch_gen_TC, symmetry=2 },
 
-  -- like T1 but exits are parallel with entry
-  T2 = { conn=3, prob=120, func=branch_gen_T2, symmetry=2 },
+  -- like TC but main stem not centered
+  TX = { conn=3, prob= 50, func=branch_gen_TX },
 
-  -- like T1 but main stem not centered
-  TT = { conn=3, prob= 20, func=branch_gen_TT },
+  -- Y shape, two exits parallel to single centered entry
+  YP = { conn=3, prob=120, func=branch_gen_YP, symmetry=2 },
 
   -- F shape with three exits (mainly for rooms at corner of map)
   F3 = { conn=3, prob=  2, func=branch_gen_F3 },
@@ -1355,7 +1372,7 @@ BIG_BRANCH_KINDS =
 
 
   -- Cross shape, all stems perfectly centered
-  X1 = { conn=4, prob=900, func=branch_gen_X1, symmetry=5 },
+  XC = { conn=4, prob=900, func=branch_gen_XC, symmetry=5 },
 
   -- Cross shape, centered main stem, leeway for side stems
   X2 = { conn=4, prob=300, func=branch_gen_X2, symmetry=2 },
@@ -1930,7 +1947,7 @@ function Plan_rooms_sp(epi_along)
   }
 
 
-Test_Branch_Gen("PR")
+Test_Branch_Gen("YP")
 error("OK")
 
 
