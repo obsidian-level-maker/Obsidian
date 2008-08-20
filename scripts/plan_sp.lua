@@ -1092,7 +1092,7 @@ end
 -- symmetry (pattern is mirrored both horizontally or vertically).
 
 
-function branch_gen_func_T1(long, deep)
+function branch_gen_T1(long, deep)
   if long < 3 or deep < 2 or (long % 2) == 0 then
     return nil
   end
@@ -1109,7 +1109,7 @@ function branch_gen_func_T1(long, deep)
   return configs
 end
 
-function branch_gen_func_T2(long, deep)
+function branch_gen_T2(long, deep)
   if long < 3 or deep < 2 or (long % 2) == 0 then
     return nil
   end
@@ -1126,7 +1126,7 @@ function branch_gen_func_T2(long, deep)
   return configs
 end
 
-function branch_gen_func_X1(long, deep)
+function branch_gen_X1(long, deep)
   if long < 3 or (long % 2) == 0 or
      deep < 3 or (deep % 2) == 0
   then
@@ -1139,7 +1139,7 @@ function branch_gen_func_X1(long, deep)
   return {{ mx,1,2, mx,deep,8, 1,my,4, long,my,6 }}
 end
 
-function branch_gen_func_X2(long, deep)
+function branch_gen_X2(long, deep)
   if long < 3 or deep < 3 or (long % 2) == 0 then
     return nil
   end
@@ -1156,7 +1156,7 @@ function branch_gen_func_X2(long, deep)
 end
 
 
-function branch_gen_func_SWASTIKA(long, deep)
+function branch_gen_SWASTIKA(long, deep)
   if long < 3 or deep < 3 then
     return nil
   end
@@ -1173,7 +1173,7 @@ function branch_gen_func_SWASTIKA(long, deep)
   return configs
 end
 
-function branch_gen_func_H1(long, deep)
+function branch_gen_H1(long, deep)
   if long < 3 or deep < 2 then
     return nil
   end
@@ -1192,7 +1192,7 @@ function branch_gen_func_H1(long, deep)
   return configs
 end
 
-function branch_gen_func_H2(long, deep)
+function branch_gen_H2(long, deep)
   if long < 3 or deep < 2 then
     return nil
   end
@@ -1209,7 +1209,7 @@ function branch_gen_func_H2(long, deep)
   return configs
 end
 
-function branch_gen_func_STAR(long, deep)
+function branch_gen_K1(long, deep)
   if long < 3 or deep < 5 then
     return nil
   end
@@ -1226,7 +1226,7 @@ function branch_gen_func_STAR(long, deep)
   return configs
 end
 
-function branch_gen_func_F1(long, deep)
+function branch_gen_F1(long, deep)
   if long < 3 or deep < 3 then
     return nil
   end
@@ -1243,7 +1243,7 @@ function branch_gen_func_F1(long, deep)
   return configs
 end
 
-function branch_gen_func_F2(long, deep)
+function branch_gen_F2(long, deep)
   if long < 5 or deep < 3 then
     return nil
   end
@@ -1264,37 +1264,73 @@ end
 
 BIG_BRANCH_KINDS =
 {
-  -- T shape, centred main stem, leeway for side stems
-  T1 = { prob=20, func=branch_gen_func_T1, symmetry=2 },
+  -- pass through (one side to the other), perfectly centered
+  P1 = { conn=2, prob=40, func=branch_gen_P1, symmetry=2 },
+
+  -- pass through, rotation symmetry
+  P2 = { conn=2, prob=20, func=branch_gen_P2 },
+
+  -- pass through, garden variety
+  PP = { conn=2, prob= 5, func=branch_gen_P3 },
+
+  -- L shape for square room (transpose symmetrical)
+  L1 = { conn=2, prob=10, func=branch_gen_L1 },
+
+  -- L shape, garden variety
+  LL = { conn=2, prob= 2, func=branch_gen_L2 },
+
+  -- U shape, both exits on a single wall
+  U2 = { conn=2, prob= 1, func=branch_gen_U2, symmetrical=2 },
+
+
+  -- T shape, centered main stem, leeway for side stems
+  T1 = { conn=3, prob=200, func=branch_gen_T1, symmetry=2 },
 
   -- like T1 but exits are parallel with entry
-  T2 = { prob=20, func=branch_gen_func_T2, symmetry=2 },
+  T2 = { conn=3, prob=120, func=branch_gen_T2, symmetry=2 },
 
-  -- Cross shape, all stems perfectly centred
-  X1 = { prob=300, func=branch_gen_func_X1, symmetry=5 },
-
-  -- Cross shape, centred main stem, leeway for side stems
-  X2 = { prob=150, func=branch_gen_func_X2, symmetry=2 },
-
-  -- H shape, parallel entries/exits at the four corners
-  H1 = { prob=45, func=branch_gen_func_H1, symmetry=2 },
-
-  -- like H1 but exits are perpendicular to entry dir
-  H2 = { prob=40, func=branch_gen_func_H2, symmetry=2 },
-
-  -- Swastika shape
-  S  = { prob=10, func=branch_gen_func_SWASTIKA },
+  -- like T1 but main stem not centered
+  TT = { conn=3, prob=20, func=branch_gen_T2 },
 
   -- F shape with three exits (mainly for rooms at corner of map)
-  F1 = { prob=1, func=branch_gen_func_F1 },
+  F3 = { conn=3, prob=1, func=branch_gen_F1 },
 
-  -- like F1 but four exits
-  F2 = { prob=15, func=branch_gen_func_F2 },
+  -- three exits along one wall, middle is centered
+  U3 = { conn=3, prob=5, func=branch_gen_U3, symmetry=2 },
 
-  -- 5-way star shape
-  K  = { prob=130, func=branch_gen_func_STAR, symmetry=2 },
 
-  -- TODO:  L shapes  |  side-to-side
+  -- Cross shape, all stems perfectly centered
+  X1 = { conn=4, prob=900, func=branch_gen_X1, symmetry=5 },
+
+  -- Cross shape, centered main stem, leeway for side stems
+  X2 = { conn=4, prob=300, func=branch_gen_X2, symmetry=2 },
+
+  -- Cross shape, no stems are centered
+  XX = { conn=4, prob=100, func=branch_gen_X2 },
+
+  -- H shape, parallel entries/exits at the four corners
+  H1 = { conn=4, prob=45, func=branch_gen_H1, symmetry=2 },
+
+  -- like H1 but exits are perpendicular to entry dir
+  H2 = { conn=4, prob=40, func=branch_gen_H2, symmetry=2 },
+
+  -- Swastika shape
+  SW = { conn=4, prob= 5, func=branch_gen_SWASTIKA },
+
+  -- F shape with two exits on each wall
+  F4 = { conn=4, prob= 5, func=branch_gen_L4 },
+
+
+  -- five-way star shapes
+  K1 = { conn=5, prob=150, func=branch_gen_K1, symmetry=2 },
+  K2 = { conn=5, prob=150, func=branch_gen_K2, symmetry=2 },
+
+  W5 = { conn=5, prob=60, func=branch_gen_W5, symmetry=2 },
+
+
+  -- gigantic six-way shapes
+  G1 = { conn=6, prob=250, func=branch_gen_G1, symmetry=2 },
+  G2 = { conn=6, prob=250, func=branch_gen_G2 },
 }
 
 
