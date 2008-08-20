@@ -751,6 +751,8 @@ then return true end
 
     if not grow then grow = rand_sel(75,1,-1) end
 
+pull=true; --!!!!!!
+
 con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, grow)
 
     if R.no_nudge then return false end
@@ -1162,7 +1164,7 @@ function branch_gen_LS(long, deep)
   return configs
 end
 
-function branch_gen_LL(long, deep)
+function branch_gen_LX(long, deep)
   if long < 3 or deep < 1 or long==deep or (long*deep) >= 30 then
     return nil
   end
@@ -1232,7 +1234,7 @@ function branch_gen_TX(long, deep)
   return configs
 end
 
-function branch_gen_YP(long, deep)
+function branch_gen_TY(long, deep)
   if long < 3 or deep < 1 or deep > 5 or (long % 2) == 0 then
     return nil
   end
@@ -1498,7 +1500,7 @@ BIG_BRANCH_KINDS =
   LS = { conn=2, prob=20, func=branch_gen_LS },
 
   -- L shape, garden variety
-  LL = { conn=2, prob= 3, func=branch_gen_LL },
+  LX = { conn=2, prob= 3, func=branch_gen_LX },
 
   -- U shape, both exits on a single wall
   U2 = { conn=2, prob= 1, func=branch_gen_U2, symmetrical=2 },
@@ -1511,7 +1513,7 @@ BIG_BRANCH_KINDS =
   TX = { conn=3, prob= 50, func=branch_gen_TX },
 
   -- Y shape, two exits parallel to single centered entry
-  YP = { conn=3, prob=120, func=branch_gen_YP, symmetry=2 },
+  TY = { conn=3, prob=120, func=branch_gen_TY, symmetry=2 },
 
   -- F shape with three exits (mainly for rooms at corner of map)
   F3 = { conn=3, prob=  2, func=branch_gen_F3 },
@@ -2109,6 +2111,14 @@ function Plan_rooms_sp(epi_along)
   Rooms_Nudge()
   Rooms_Make_Seeds()
   Rooms_Connect()
+
+
+--!!!!!
+for _,R in ipairs(PLAN.all_rooms) do
+  if #R.conns > 1 and not R.branch_kind then
+    R.hallway = true
+  end
+end
 
 end -- Plan_rooms_sp
 
