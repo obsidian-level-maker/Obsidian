@@ -1092,6 +1092,8 @@ end
 -- symmetry (pattern is mirrored both horizontally or vertically).
 
 
+--- 2 way --->
+
 function branch_gen_PC(long, deep)
   if long < 3 or long > 7 or (long % 2) == 0 or
      deep < 2 or deep > 7 or (long / deep) >= 3
@@ -1144,6 +1146,9 @@ function branch_gen_PX(long, deep)
   return configs
 end
 
+
+--- 3 way --->
+
 function branch_gen_TC(long, deep)
   if long < 3 or deep < 1 or deep > 7 or (long % 2) == 0 or (long*deep) >= 42 then
     return nil
@@ -1194,6 +1199,45 @@ function branch_gen_YP(long, deep)
 
   return configs
 end
+
+function branch_gen_F3(long, deep)
+  if long < 4 or deep < 1 or (long/deep) < 2 then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx    = int((long  )/2)
+  local y_lee = int((deep-1)/2)
+
+  for x = mx,long-2 do for y = 0,y_lee do
+    table.insert(configs, { 1,1+y,4, x,deep,8, long,deep,8 })
+  end end
+
+  return configs
+end
+
+function branch_gen_M3(long, deep)
+  if long < 5 or (long % 2) == 0 or long < deep or
+     deep < 1 or deep > 5
+  then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx    = int((long+1)/2)
+  local x_lee = int((long-3)/4)
+
+  for x = 0,x_lee do
+    table.insert(configs, { 1+x,1,2, mx,1,2, long-x,1,2 })
+  end
+
+  return configs
+end
+
+
+--- 4 way --->
 
 function branch_gen_XC(long, deep)
   if long < 3 or (long % 2) == 0 or
@@ -1278,6 +1322,9 @@ function branch_gen_H2(long, deep)
   return configs
 end
 
+
+--- 5,6 way --->
+
 function branch_gen_K1(long, deep)
   if long < 3 or deep < 5 then
     return nil
@@ -1290,23 +1337,6 @@ function branch_gen_K1(long, deep)
   
   for x = 0,x_lee do for y = 1,deep-1 do
     table.insert(configs, { mx,1,2, 1,y,4, long,y,6, 1+x,deep,8, long-x,deep,8 })
-  end end
-
-  return configs
-end
-
-function branch_gen_F3(long, deep)
-  if long < 3 or deep < 3 then
-    return nil
-  end
-
-  local configs = {}
-
-  local x_lee = int((long-2)/3)
-  local y_lee = int((deep-1)/2)
-
-  for x = 0,x_lee do for y = 0,y_lee do
-    table.insert(configs, { 1,1+y,4, 1+x,deep,8, long-x,deep,8 })
   end end
 
   return configs
@@ -1368,7 +1398,7 @@ BIG_BRANCH_KINDS =
   F3 = { conn=3, prob=  2, func=branch_gen_F3 },
 
   -- three exits along one wall, middle is centered
-  U3 = { conn=3, prob=  5, func=branch_gen_U3, symmetry=2 },
+  M3 = { conn=3, prob=  5, func=branch_gen_M3, symmetry=2 },
 
 
   -- Cross shape, all stems perfectly centered
@@ -1397,7 +1427,7 @@ BIG_BRANCH_KINDS =
   K1 = { conn=5, prob=150, func=branch_gen_K1, symmetry=2 },
   K2 = { conn=5, prob=150, func=branch_gen_K2, symmetry=2 },
 
-  W5 = { conn=5, prob= 60, func=branch_gen_W5, symmetry=2 },
+  M5 = { conn=5, prob= 60, func=branch_gen_M5, symmetry=2 },
 
 
   -- gigantic six-way shapes
@@ -1947,7 +1977,7 @@ function Plan_rooms_sp(epi_along)
   }
 
 
-Test_Branch_Gen("YP")
+Test_Branch_Gen("F3")
 error("OK")
 
 
