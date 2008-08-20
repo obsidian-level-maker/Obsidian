@@ -1092,6 +1092,58 @@ end
 -- symmetry (pattern is mirrored both horizontally or vertically).
 
 
+function branch_gen_PC(long, deep)
+  if long < 3 or long > 7 or (long % 2) == 0 or
+     deep < 2 or deep > 7 or (long / deep) >= 3
+  then
+    return nil
+  end
+
+  local mx  = int((long+1)/2)
+
+  return {{ mx,1,2, mx,deep,8 }}
+end
+
+function branch_gen_PA(long, deep)
+  if long < 2 or long > 4 or deep > 5 then
+    return nil
+  end
+
+  return {{ 1,1,2, 1,deep,8 }}
+end
+
+function branch_gen_PR(long, deep)
+  if long < 2 or deep < 1 or deep > 5 or
+     (long*deep) >= 30 or (deep/long) > 2.1
+  then
+    return nil
+  end
+
+  local configs = {}
+  local lee = int((long-2)/4)
+
+  for x = 0,lee do
+    table.insert(configs, { 1+x,1,2, long-x,deep,8 })
+  end
+
+  return configs
+end
+
+function branch_gen_PX(long, deep)
+  if long < 3 or long > 5 or deep < 1 or deep > 5 then
+    return nil
+  end
+
+  local configs = {}
+  local mx = int(long/2)
+
+  for b = 1,mx do for t = 2,long-1 do
+    table.insert(configs, { b,1,2, t,deep,8 })
+  end end
+
+  return configs
+end
+
 function branch_gen_T1(long, deep)
   if long < 3 or deep < 2 or (long % 2) == 0 then
     return nil
@@ -1156,7 +1208,7 @@ function branch_gen_X2(long, deep)
 end
 
 
-function branch_gen_SWASTIKA(long, deep)
+function branch_gen_SW(long, deep)
   if long < 3 or deep < 3 then
     return nil
   end
@@ -1226,7 +1278,7 @@ function branch_gen_K1(long, deep)
   return configs
 end
 
-function branch_gen_F1(long, deep)
+function branch_gen_F3(long, deep)
   if long < 3 or deep < 3 then
     return nil
   end
@@ -1265,19 +1317,22 @@ end
 BIG_BRANCH_KINDS =
 {
   -- pass through (one side to the other), perfectly centered
-  P1 = { conn=2, prob=40, func=branch_gen_P1, symmetry=2 },
+  PC = { conn=2, prob=40, func=branch_gen_PC, symmetry=5 },
+
+  -- pass through, along one side
+  PA = { conn=2, prob= 8, func=branch_gen_PA, symmetry=6 },
 
   -- pass through, rotation symmetry
-  P2 = { conn=2, prob=20, func=branch_gen_P2 },
+  PR = { conn=2, prob=20, func=branch_gen_PR },
 
   -- pass through, garden variety
-  PP = { conn=2, prob= 5, func=branch_gen_P3 },
+  PX = { conn=2, prob= 2, func=branch_gen_PX },
 
   -- L shape for square room (transpose symmetrical)
   L1 = { conn=2, prob=10, func=branch_gen_L1 },
 
   -- L shape, garden variety
-  LL = { conn=2, prob= 2, func=branch_gen_L2 },
+  LL = { conn=2, prob= 2, func=branch_gen_LL },
 
   -- U shape, both exits on a single wall
   U2 = { conn=2, prob= 1, func=branch_gen_U2, symmetrical=2 },
@@ -1290,13 +1345,13 @@ BIG_BRANCH_KINDS =
   T2 = { conn=3, prob=120, func=branch_gen_T2, symmetry=2 },
 
   -- like T1 but main stem not centered
-  TT = { conn=3, prob=20, func=branch_gen_T2 },
+  TT = { conn=3, prob= 20, func=branch_gen_TT },
 
   -- F shape with three exits (mainly for rooms at corner of map)
-  F3 = { conn=3, prob=1, func=branch_gen_F1 },
+  F3 = { conn=3, prob=  2, func=branch_gen_F3 },
 
   -- three exits along one wall, middle is centered
-  U3 = { conn=3, prob=5, func=branch_gen_U3, symmetry=2 },
+  U3 = { conn=3, prob=  5, func=branch_gen_U3, symmetry=2 },
 
 
   -- Cross shape, all stems perfectly centered
@@ -1306,26 +1361,26 @@ BIG_BRANCH_KINDS =
   X2 = { conn=4, prob=300, func=branch_gen_X2, symmetry=2 },
 
   -- Cross shape, no stems are centered
-  XX = { conn=4, prob=100, func=branch_gen_X2 },
+  XX = { conn=4, prob=100, func=branch_gen_XX },
 
   -- H shape, parallel entries/exits at the four corners
-  H1 = { conn=4, prob=45, func=branch_gen_H1, symmetry=2 },
+  H1 = { conn=4, prob= 60, func=branch_gen_H1, symmetry=2 },
 
   -- like H1 but exits are perpendicular to entry dir
-  H2 = { conn=4, prob=40, func=branch_gen_H2, symmetry=2 },
+  H2 = { conn=4, prob= 60, func=branch_gen_H2, symmetry=2 },
 
   -- Swastika shape
-  SW = { conn=4, prob= 5, func=branch_gen_SWASTIKA },
+  SW = { conn=4, prob=  5, func=branch_gen_SW },
 
   -- F shape with two exits on each wall
-  F4 = { conn=4, prob= 5, func=branch_gen_L4 },
+  F4 = { conn=4, prob=  5, func=branch_gen_F4 },
 
 
   -- five-way star shapes
   K1 = { conn=5, prob=150, func=branch_gen_K1, symmetry=2 },
   K2 = { conn=5, prob=150, func=branch_gen_K2, symmetry=2 },
 
-  W5 = { conn=5, prob=60, func=branch_gen_W5, symmetry=2 },
+  W5 = { conn=5, prob= 60, func=branch_gen_W5, symmetry=2 },
 
 
   -- gigantic six-way shapes
@@ -1374,7 +1429,7 @@ function Test_Branch_Gen(name)
     con.printf("\n")
   end
 
-  for deep = 2,9 do for long = 2,9 do
+  for deep = 1,9 do for long = 1,9 do
     con.printf("==== %s %dx%d ==================\n\n", name, long, deep)
 
     local configs = info.func(long, deep)
@@ -1873,6 +1928,10 @@ function Plan_rooms_sp(epi_along)
     free_tag  = 1,
     free_mark = 1,
   }
+
+
+Test_Branch_Gen("PR")
+error("OK")
 
 
   Plan_determine_size(epi_along)
