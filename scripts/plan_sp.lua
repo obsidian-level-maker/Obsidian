@@ -1265,22 +1265,22 @@ end
 BIG_BRANCH_KINDS =
 {
   -- T shape, centred main stem, leeway for side stems
-  T1 = { prob=40, func=branch_gen_func_T1, symmetry=2 },
+  T1 = { prob=20, func=branch_gen_func_T1, symmetry=2 },
 
   -- like T1 but exits are parallel with entry
-  T2 = { prob=40, func=branch_gen_func_T2, symmetry=2 },
+  T2 = { prob=20, func=branch_gen_func_T2, symmetry=2 },
 
   -- Cross shape, all stems perfectly centred
-  X1 = { prob=940, func=branch_gen_func_X1, symmetry=5 },
+  X1 = { prob=300, func=branch_gen_func_X1, symmetry=5 },
 
   -- Cross shape, centred main stem, leeway for side stems
-  X2 = { prob=90, func=branch_gen_func_X2, symmetry=2 },
+  X2 = { prob=150, func=branch_gen_func_X2, symmetry=2 },
 
   -- H shape, parallel entries/exits at the four corners
-  H1 = { prob=15, func=branch_gen_func_H1, symmetry=2 },
+  H1 = { prob=45, func=branch_gen_func_H1, symmetry=2 },
 
   -- like H1 but exits are perpendicular to entry dir
-  H2 = { prob=20, func=branch_gen_func_H2, symmetry=2 },
+  H2 = { prob=40, func=branch_gen_func_H2, symmetry=2 },
 
   -- Swastika shape
   S  = { prob=10, func=branch_gen_func_SWASTIKA },
@@ -1289,10 +1289,10 @@ BIG_BRANCH_KINDS =
   F1 = { prob=1, func=branch_gen_func_F1 },
 
   -- like F1 but four exits
-  F2 = { prob=5, func=branch_gen_func_F2 },
+  F2 = { prob=15, func=branch_gen_func_F2 },
 
   -- 5-way star shape
-  K  = { prob=30, func=branch_gen_func_STAR, symmetry=2 },
+  K  = { prob=130, func=branch_gen_func_STAR, symmetry=2 },
 
   -- TODO:  L shapes  |  side-to-side
 }
@@ -1379,7 +1379,7 @@ function Rooms_Connect()
 
     merge(S.room.group_id, T.room.group_id)
 
-    local CONN = { src=S.room, dest=T.room, src_S=S, dest_S=T }
+    local CONN = { dir=dir, src=S.room, dest=T.room, src_S=S, dest_S=T }
 
     table.insert(PLAN.all_conns, CONN)
 
@@ -1518,6 +1518,8 @@ function Rooms_Connect()
     -- see if the pattern can be used on this room
     -- (e.g. all exits go somewhere and are different groups)
 
+    local hit_conns = 0
+
     for idx = 1,#config,3 do
       local x   = config[idx+0]
       local y   = config[idx+1]
@@ -1535,27 +1537,51 @@ function Rooms_Connect()
 
       if S.room ~= R then return false end
 
-      local gap
+      -- handle hits on existing connections
+      local existing = false
 
-      -- handle rooms separated by a nudge gap
-      if not N.room then
-        gap = N
-        nx, ny = nudge_coord(nx, ny, dir)
-        if not Seed_valid(nx, ny, 1) then return false end
-        N = SEEDS[nx][ny][1]
+      for _,C in ipairs(R.conns) do
+        if (C.src  == R and C.src_S  == S and C.dir == dir) or
+           (C.dest == R and C.dest_S == S and C.dir == 10-dir)
+        then
+          existing = true; break;
+        end
       end
 
-      if not N.room or not N.room.group_id then return false end
-      if N.room.branch_kind then return false end
+      if existing then
+        hit_conns = hit_conns + 1
+      else
+        local gap
 
-      if groups_seen[N.room.group_id] then return false end
+        -- handle rooms separated by a nudge gap
+        if not N.room then
+          gap = N
+          nx, ny = nudge_coord(nx, ny, dir)
+          if not Seed_valid(nx, ny, 1) then return false end
+          N = SEEDS[nx][ny][1]
+        end
 
-      groups_seen[N.room.group_id] = true
+        if not N.room or not N.room.group_id then return false end
+        if N.room.branch_kind then return false end
 
-      table.insert(conns, { S=S, N=N, dir=dir, gap=gap })
+        if N.bridged_dir and (N.bridged_dir ~= dir) and (N.bridged_dir ~= 10-dir) then return false end
+
+        if groups_seen[N.room.group_id] then return false end
+
+        -- OK --
+
+        groups_seen[N.room.group_id] = true
+
+        table.insert(conns, { S=S, N=N, dir=dir, gap=gap })
+      end
+    end
+
+    if hit_conns ~= #R.conns then
+      return false
     end
 
 con.debugf("USING CONFIGURATION: %s\n", K)
+con.debugf("hit_conns = %d\n", hit_conns)
 
     -- OK, all points were possible, do it for real
     for _,C in ipairs(conns) do
@@ -1570,7 +1596,9 @@ con.debugf("USING CONFIGURATION: %s\n", K)
 
       if C.gap then
         con.debugf("Bridged the GAP!!!\n")
-        C.gap.room = R end  --!!!!!!!!! FIXME FIXME FIXME
+        C.gap.room = R --!!!!!!!!! FIXME FIXME FIXME
+        C.gap.bridged_dir = C.dir
+      end
     end
 
     R.branch_kind = K
@@ -1639,7 +1667,7 @@ con.debugf("Failed\n")
     table.sort(rooms, function(A, B) return A.svol > B.svol end)
 
     for _,R in ipairs(rooms) do
-      if (#R.conns == 0) and rand_odds(90) then
+      if (#R.conns <= 2) and rand_odds(99) then
         con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.svol)
 
         local kinds = {}
