@@ -1146,6 +1146,55 @@ function branch_gen_PX(long, deep)
   return configs
 end
 
+function branch_gen_LS(long, deep)
+  if long < 2 or long > 6 or deep ~= long then
+    return nil
+  end
+
+  local configs = {}
+
+  local lee = int((long-1)/2)
+
+  for x = 0,lee do
+    table.insert(configs, { 1,1+x,4, long-x,deep,8 })
+  end
+
+  return configs
+end
+
+function branch_gen_LL(long, deep)
+  if long < 3 or deep < 1 or long==deep or (long*deep) >= 30 then
+    return nil
+  end
+
+  local configs = {}
+
+  local x_lee = int((long-2)/3)
+  local y_lee = int((deep-1)/2)
+
+  for x = 0,x_lee do for y = 0,y_lee do
+    table.insert(configs, { 1,1+y,4, long-x-1,deep,8 })
+  end end
+
+  return configs
+end
+
+function branch_gen_U2(long, deep)
+  if long < 3 or deep < 1 or long < deep or deep > 4 then
+    return nil
+  end
+
+  local configs = {}
+
+  local x_lee = int((long-2)/4)
+
+  for x = 0,x_lee do
+    table.insert(configs, { 1+x,deep,8, long-x,deep,8 })
+  end
+
+  return configs
+end
+
 
 --- 3 way --->
 
@@ -1443,13 +1492,13 @@ BIG_BRANCH_KINDS =
   PR = { conn=2, prob=20, func=branch_gen_PR },
 
   -- pass through, garden variety
-  PX = { conn=2, prob= 2, func=branch_gen_PX },
+  PX = { conn=2, prob= 3, func=branch_gen_PX },
 
   -- L shape for square room (transpose symmetrical)
-  L1 = { conn=2, prob=10, func=branch_gen_L1 },
+  LS = { conn=2, prob=20, func=branch_gen_LS },
 
   -- L shape, garden variety
-  LL = { conn=2, prob= 2, func=branch_gen_LL },
+  LL = { conn=2, prob= 3, func=branch_gen_LL },
 
   -- U shape, both exits on a single wall
   U2 = { conn=2, prob= 1, func=branch_gen_U2, symmetrical=2 },
@@ -2046,16 +2095,6 @@ function Plan_rooms_sp(epi_along)
     free_mark = 1,
   }
 
-
-name_it_up(BIG_BRANCH_KINDS)
-Test_Branch_Gen("XC")
-Test_Branch_Gen("XT")
-Test_Branch_Gen("XX")
-Test_Branch_Gen("HP")
-Test_Branch_Gen("HT")
-Test_Branch_Gen("SW")
-Test_Branch_Gen("F4")
-error("OK")
 
 
   Plan_determine_size(epi_along)
