@@ -26,7 +26,6 @@
 #include "main.h"
 
 #include "csg_main.h"
-#include "csg_quake.h"
 
 #include "g_image.h"
 
@@ -219,9 +218,9 @@ void BSP_CreateEntities(void)
   Q1_Printf(lump,0, "{\n");
 
   ENT_KeyPair(lump,  "_generated_by", OBLIGE_TITLE " (c) Andrew Apted");
-  ENT_KeyPair(lump,  "_oblige_home",  "http://oblige.sourceforge.net");
   ENT_KeyPair(lump,  "_oblige_version", OBLIGE_VERSION);
-  ENT_KeyPair(lump,  "_oblige_seed",  main_win->game_box->get_Seed());
+  ENT_KeyPair(lump,  "_oblige_home",  "http://oblige.sourceforge.net");
+  ENT_KeyPair(lump,  "_random_seed",  main_win->game_box->get_Seed());
 
   ENT_KeyPair(lump,  "message",   "level created by Oblige");
   ENT_KeyPair(lump,  "worldtype", "0");

@@ -48,7 +48,6 @@ OBJS=	main.o      \
 	sys_debug.o \
 	csg_main.o  \
 	csg_poly.o  \
-	csg_quake.o \
 	dm_level.o  \
 	dm_wad.o    \
 	dm_glbsp.o   \

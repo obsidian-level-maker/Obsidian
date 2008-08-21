@@ -46,7 +46,6 @@ OBJS=	main.o      \
 	sys_debug.o \
 	csg_poly.o  \
 	csg_doom.o  \
-	csg_quake.o \
 	g_cookie.o  \
 	g_doom.o    \
 	g_glbsp.o   \

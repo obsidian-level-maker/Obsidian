@@ -273,7 +273,7 @@ void Build_Cool_Shit()
 #if (0 == 1)
 
   bool is_wolf  = false;
-  bool is_quake = true; //!!!!! FIXME
+  bool is_quake = false;
 
   bool is_hexen = (strcmp(main_win->game_box->game->GetID(), "hexen")  == 0);
 
