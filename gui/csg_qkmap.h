@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  2.5D CSG : QUAKE-1 output
+//  2.5D CSG : Quake .MAP format
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -16,12 +16,12 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_CSG_QUAKE_H__
-#define __OBLIGE_CSG_QUAKE_H__
+#ifndef __OBLIGE_CSG_QKMAP_H__
+#define __OBLIGE_CSG_QKMAP_H__
 
 void CSG2_TestQuake(void);
 
-#endif /* __OBLIGE_CSG_QUAKE_H__ */
+#endif /* __OBLIGE_CSG_QKMAP_H__ */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

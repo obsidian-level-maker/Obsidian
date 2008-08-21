@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  2.5D CSG : QUAKE-1 output
+//  2.5D CSG : Quake .MAP format
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -26,7 +26,7 @@
 #include "main.h"
 
 #include "csg_main.h"
-#include "csg_quake.h"
+#include "csg_qkmap.h"
 
 
 static FILE *map_fp;
@@ -90,7 +90,7 @@ static void Q_WriteBrush(area_poly_c *P)
   fprintf(map_fp, "  }\n");
 }
 
-void CSG2_TestQuake(void)
+void CSG2_TestMapOut(void)
 {
   // converts the area_poly list into a QUAKE ".map" file.
 
