@@ -2,14 +2,15 @@
 TODO
 ====
 
->>> Theme button out-of-sync (won't change to "mixed")
-    the Recreate() function resets previous SetID() -- IMPROVE CRAPPY CODE
-
 
 REWRITE:
 
-- physical bridges to connect some/most areas cut-off from
-  each other by Lava.
+>>> NEW BRANCH SYSTEM
+
+  - emergency connections ???
+
+  - physical bridges to connect some/most areas cut-off from
+    each other by Lava.
 
 + quest assignment !!
 
@@ -100,7 +101,8 @@ CSG Polygoniser:
 
 GUI:
 
--  in deathmatch mode, fix labels on the "Equip" button.
+-  in deathmatch mode, fix labels on the "Equip" button
+   (Watch for the "mode" signal).
 
 +  pass 'failure' flag to Quake_Finish() etc..
 
@@ -150,9 +152,9 @@ GUI:
    -  Secrets   (would be useless for DM)
    -  Powerups
    -  Outdoor-iness
-   +  Lighting adjustment
+   -  Lighting adjustment
    -  Big monster adjustment
-   -  Linearity
+   +  Linearity
 
 
 Heretic:
