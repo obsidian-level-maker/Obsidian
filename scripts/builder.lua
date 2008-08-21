@@ -24,6 +24,21 @@ require 'seeds'
 TK = 16  -- wall thickness
 
 
+-- TEMPORARY CRUD
+
+ENT_PLAYER  = "1"
+ENT_MONSTER = "9"
+ENT_EXIT    = "41"
+
+--[[ QUAKE
+ENT_PLAYER  = "info_player_start"
+ENT_MONSTER = "monster_army"
+ENT_EXIT    = "item_artifact_super_damage"
+--]]
+
+
+
+
 function dummy_builder(level_name)
 
 ---##  local function zone_content(ZZ, x, y)
@@ -211,7 +226,9 @@ function dummy_builder(level_name)
     -- TEMP HACK SHIT
 
     local idx = S.sx - S.room.sx1 + 1
-    assert(idx >= 1)
+
+if idx < 1 then return end
+
     if idx > #S.room.teleports then return end
 
     local TELEP = S.room.teleports[idx]
@@ -274,6 +291,7 @@ con.printf("do_teleport\n")
 
     if S.room then
 
+      z1 = 0; z2 = 256 --!!!!!!!
       assert(z1 and z2)
 
       local do_corners = false --!!
@@ -327,9 +345,16 @@ con.printf("do_teleport\n")
         f_tex = "FLAT14"
         c_tex = "CEIL3_3"
         w_tex = "STARTAN3"
+
       end
 
-      if S.room.f_unset then f_tex = "RROCK01" end
+      if S.room.branch_kind then f_tex = "CEIL5_1" end
+
+--[[ QUAKE
+f_tex = "wood1_1"
+c_tex = "metal1_1"
+w_tex = "tech01_1"
+--]]
 
       S.z1 = z1 --!!!!!! REMOVE CRAP
 
@@ -480,13 +505,13 @@ con.printf("ADDING LOCK DOOR %s\n", w_tex)
 end -- do_sides
 
     if S.is_start then
-      csg2.add_entity(--[[ "info_player_start" ]] "1", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      csg2.add_entity(ENT_PLAYER, (x1+x2)/2, (y1+y2)/2, z1 + 25)
     elseif S.is_exit then
-      csg2.add_entity(--[[ "info_player_start" ]] "41", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      csg2.add_entity(ENT_EXIT, (x1+x2)/2, (y1+y2)/2, z1 + 25)
     elseif S.room and not S.room.hallway and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
-      csg2.add_entity(--[[ "item_health" ]] "2014", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      csg2.add_entity(ENT_MONSTER, (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
 
     if S.room and S.sy == S.room.sy2 then
@@ -496,7 +521,7 @@ end -- do_sides
     if S.room and S.room.key_item and S.sx == S.room.sx2 and S.sy == S.room.sy2 then
       local KEYS = { 13,6,5,7015, 38,39,40,7017 }
 con.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
-      csg2.add_entity(tostring(KEYS[S.room.key_item] or 2014), (x1+x2)/2, (y1+y2)/2, z1 + 25)
+--      csg2.add_entity(tostring(KEYS[S.room.key_item] or 2014), (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
   end
 
