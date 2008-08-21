@@ -31,7 +31,7 @@
 
 
 option_data_c::option_data_c(const char *_id, const char *_label, int _val) :
-    shown(1), value(_val), widget(NULL), mapped(-1)
+    shown(0), value(_val), widget(NULL), mapped(-1)
 {
   id    = StringDup(_id);
   label = StringDup(_label);
@@ -96,7 +96,7 @@ DebugPrintf("UI_OptionList::AddPair(%s,%s) %s\n", id, label, opt ? "EXIST" : "ne
     StringFree(opt->label);
     opt->label = StringDup(label);
 
-    opt->shown = 1;  //!!!!!!
+    opt->shown = 0;
     opt->value = val;
 
     opt->widget->label(opt->label);
@@ -148,18 +148,23 @@ bool UI_OptionList::ShowOrHide(const char *id, int shown)
 
 void UI_OptionList::IterateOptions(option_iter_f func, void *data)
 {
+  bool changed = false;
+
   for (unsigned int i = 0; i < opt_list.size(); i++)
   {
     option_data_c *opt = opt_list[i];
 
-    (* func)(opt, data);
+    if ((* func)(opt, data))
+      changed = true;
   }
+
+  if (changed)
+    Recreate();
 }
+
 
 void UI_OptionList::Recreate()
 {
-  // FIXME: visit in correct order (shown)
-
   int cy = y();
 
 DebugPrintf("UI_OptionList::Recreate begun\n");
@@ -202,7 +207,7 @@ DebugPrintf("Button %s value %d\n", opt->id, opt->value);
     button->value(opt->value);
   }
 
-  this->redraw();
+  redraw();
 }
 
 option_data_c *UI_OptionList::FindOption(const char *id)

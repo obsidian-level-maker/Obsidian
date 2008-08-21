@@ -98,6 +98,8 @@ int add_button(lua_State *L)
   if (has_added_buttons)
     Main_FatalError("LUA script problem: con.add_button called late.\n");
 
+DebugPrintf("add_button: %s id:%s\n", what, id);
+
   if (StringCaseCmp(what, "game") == 0)
     main_win->game_box->game->AddPair(id, label);
 
@@ -130,6 +132,8 @@ int show_button(lua_State *L)
 
   SYS_ASSERT(what && id);
 
+DebugPrintf("show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
+
   if (StringCaseCmp(what, "game") == 0)
     main_win->game_box->game->ShowOrHide(id, shown);
 
@@ -161,6 +165,8 @@ int change_button(lua_State *L)
   int opt_val = lua_toboolean(L,3) ? 1 : 0;
 
   SYS_ASSERT(what && id);
+
+DebugPrintf("change_button: %s --> %s\n", what, id);
 
   if (StringCaseCmp(what, "game") == 0)
     main_win->game_box->game->SetID(id);
@@ -496,13 +502,13 @@ void Script_Load(void)
 
   has_added_buttons = true;
   
-  // IDEA: perhaps should watch for "loaded" Signal ??
-  main_win->game_box->game->Recreate();
-  main_win->game_box->engine->Recreate();
-  main_win->level_box->theme->Recreate();
-
-  main_win->mod_box->opts->Recreate();
-  main_win->option_box->opts->Recreate();
+///---  // IDEA: perhaps should watch for "loaded" Signal ??
+///---  main_win->game_box->game->Recreate();
+///---  main_win->game_box->engine->Recreate();
+///---  main_win->level_box->theme->Recreate();
+///---
+///---  main_win->mod_box->opts->Recreate();
+///---  main_win->option_box->opts->Recreate();
 
 }
 

@@ -69,7 +69,9 @@ public:
 
 class UI_OptionList;
 
-typedef void (* option_iter_f)(option_data_c *opt, void *data);
+// must return true if modified the option
+typedef bool (* option_iter_f)(option_data_c *opt, void *data);
+
 
 typedef void (* option_callback_f)(option_data_c *opt, void *data);
 
@@ -94,22 +96,16 @@ public:
   void AddPair(const char *id, const char *label, int val = 0);
   // add a new option to the list.  If an option with the same 'id'
   // already exists, that option is replaced instead.
-  // The option will begin as not shown (shown == 0).
-
-  bool ShowOrHide(const char *id, int value);
-
+  // The option will begin as hidden (shown == 0).
 
   bool SetOption(const char *id, int value);
 
-//  bool ShowOption(const char *id, int shown);
+  bool ShowOrHide(const char *id, int shown);
 
   void IterateOptions(option_iter_f func, void *data);
 
-  void Recreate();
-  // this must be called after any changes to the option list
-  // have been made.
-
 private:
+  void Recreate();
   
   option_data_c *FindOption(const char *id);
 

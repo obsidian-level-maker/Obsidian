@@ -286,33 +286,37 @@ const char * UI_Level::light_syms[] =
 void UI_Level::setup_Size()
 {
   for (int i = 0; size_syms[i]; i += 2)
+  {
     size->AddPair(size_syms[i], size_syms[i+1]);
-
-  size->Recreate();
+    size->ShowOrHide(size_syms[i], 1);
+  }
 }
 
 void UI_Level::setup_Detail()
 {
   for (int i = 0; detail_syms[i]; i += 2)
+  {
     detail->AddPair(detail_syms[i], detail_syms[i+1]);
-
-  detail->Recreate();
+    detail->ShowOrHide(detail_syms[i], 1);
+  }
 }
 
 void UI_Level::setup_Heights()
 {
   for (int i = 0; height_syms[i]; i += 2)
+  {
     heights->AddPair(height_syms[i], height_syms[i+1]);
-
-  heights->Recreate();
+    heights->ShowOrHide(height_syms[i], 1);
+  }
 }
 
 void UI_Level::setup_Light()
 {
   for (int i = 0; light_syms[i]; i += 2)
+  {
     light->AddPair(light_syms[i], light_syms[i+1]);
-
-  light->Recreate();
+    light->ShowOrHide(light_syms[i], 1);
+  }
 }
 
 

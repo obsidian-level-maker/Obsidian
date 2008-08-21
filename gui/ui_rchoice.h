@@ -30,7 +30,6 @@
 class UI_RChoice : public Fl_Choice
 {
 private:
-
   std::vector<option_data_c *> opt_list;
 
 public:
@@ -42,13 +41,6 @@ public:
   // add a new option to the list.  If an option with the same 'id'
   // already exists, that option is replaced instead.
   // The option will begin with shown == 0.
-
-  void Recreate(option_data_c *LAST = NULL);
-  // The available choices will be updated to reflect the
-  // 'shown' values.  If the previous selected item is still
-  // valid, it remains set, otherwise we try and find a shown
-  // value with the same label, and failing that: select the
-  // first entry.
 
   bool ShowOrHide(const char *id, int new_shown);
   // finds the option with the given ID, and update the shown
@@ -64,18 +56,21 @@ public:
   // such exists, returns false and nothing was changed.
 
 private:
-  const char *GetLabel() const;
-  bool SetLabel(const char *lab);
-  
   option_data_c * FindID(const char *id) const;
-  option_data_c * FindLabel(const char *lab) const;
-
   option_data_c * FindMapped() const;
+
+  void Recreate(); ///--- option_data_c *LAST = NULL);
+  // The available choices will be updated to reflect the
+  // 'shown' values.  If the previous selected item is still
+  // valid, it remains set, otherwise we try and find a shown
+  // value with the same label, and failing that: select the
+  // first entry.
 
   bool ListsEqual() const;
   // returns true if the old and new lists are identical.
 
-//???  void KillList(std::vector<remember_pair_c *> &list);
+  const char *GetLabel() const;  // ????
+
 };
 
 

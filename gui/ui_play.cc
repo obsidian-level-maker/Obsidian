@@ -268,6 +268,7 @@ bool UI_Play::ParseValue(const char *key, const char *value)
   return false;
 }
 
+
 //----------------------------------------------------------------
 
 const char * UI_Play::monster_syms[] =
@@ -331,41 +332,48 @@ const char * UI_Play::health_syms[] =
 void UI_Play::setup_Monsters()
 {
   for (int i = 0; monster_syms[i]; i += 2)
+  {
     mons->AddPair(monster_syms[i], monster_syms[i+1]);
-
-  mons->Recreate();
+    mons->ShowOrHide(monster_syms[i], 1);
+  }
 }
 
 void UI_Play::setup_Puzzles()
 {
   for (int i = 0; puzzle_syms[i]; i += 2)
+  {
     puzzles->AddPair(puzzle_syms[i], puzzle_syms[i+1]);
-
-  puzzles->Recreate();
+    puzzles->ShowOrHide(puzzle_syms[i], 1);
+  }
 }
 
 void UI_Play::setup_Traps()
 {
   for (int i = 0; trap_syms[i]; i += 3)
+  {
     traps->AddPair(trap_syms[i], trap_syms[i+1]);
+    traps->ShowOrHide(trap_syms[i], 1);
+  }
 
-  traps->Recreate();
 }
 
 void UI_Play::setup_Health()
 {
   for (int i = 0; health_syms[i]; i += 2)
+  {
     health->AddPair(health_syms[i], health_syms[i+1]);
+    health->ShowOrHide(health_syms[i], 1);
+  }
 
-  health->Recreate();
 }
 
 void UI_Play::setup_Ammo()
 {
   for (int i = 0; health_syms[i]; i += 2)
+  {
     ammo->AddPair(health_syms[i], health_syms[i+1]);
-
-  ammo->Recreate();
+    ammo->ShowOrHide(health_syms[i], 1);
+  }
 }
 
 

@@ -220,21 +220,31 @@ end
 
 
 function ob_update_themes()
-  local need_new = false
+  local new_label
 
   for name,def in pairs(OB_THEMES) do
     local shown = ob_match_conf(def)
-    
+
     if not shown and (OB_CONFIG.theme == name) then
-      need_new = true
+      new_label = def.label
     end
 
     con.show_button("theme", name, shown)
   end
 
-  if need_new then
-    -- TODO: if same label exists, use that one
+  -- try to keep the same GUI label
+  if new_label then
+    for name,def in pairs(OB_THEMES) do
+      local shown = ob_match_conf(def)
 
+      if shown and def.label == new_label then
+        OB_CONFIG.theme = name
+        con.change_button("theme", OB_CONFIG.theme)
+        return
+      end
+    end
+
+    -- otherwise revert to Mix It Up
     OB_CONFIG.theme = "mixed"
     con.change_button("theme", OB_CONFIG.theme)
   end
@@ -250,14 +260,14 @@ function ob_update_modules()
     local changed = false
 
     for name,def in pairs(OB_MODULES) do
-      local old_shown = def.shown
-      def.shown = ob_match_conf(def)
+      local shown = ob_match_conf(def)
 
-      con.show_button("module", name, def.shown)
-
-      if old_shown ~= def.shown then
+      if shown ~= def.shown then
         changes = true
       end
+
+      def.shown = shown
+      con.show_button("module", name, def.shown)
     end
 
     if not changed then break; end
@@ -453,7 +463,7 @@ function ob_init()
     return A.label < B.label
   end
 
-  local function create_buttons(what, DEFS)
+  local function create_buttons(what, DEFS, show_em)
     assert(DEFS)
   
     local list = {}
@@ -467,13 +477,17 @@ function ob_init()
 
     for xxx,def in ipairs(list) do
       con.add_button(what, def.name, def.label)
+
+      if what == "game" then
+        con.show_button(what, def.name, true)
+      end
     end
 
     return list[1] and list[1].name
   end
 
   OB_CONFIG.seed = 0
-  OB_CONFIG.mode = "sp"
+  OB_CONFIG.mode = "sp" -- GUI code sets the real default
 
   OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
   OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
@@ -483,6 +497,9 @@ function ob_init()
   create_buttons("option", OB_OPTIONS)
 
   ob_update_all()
+
+  con.change_button("game",   OB_CONFIG.game)
+  con.change_button("engine", OB_CONFIG.engine)
 end
 
 
@@ -536,7 +553,7 @@ for level = 1,NUM do
     if con.abort() then return "abort" end
     con.progress(40)
 
-  Rooms_fit_out()
+--!!!!!!  Rooms_fit_out()
     if con.abort() then return "abort" end
     con.progress(60)
 

@@ -318,17 +318,19 @@ const char * UI_Game::length_syms[] =
 void UI_Game::setup_Mode()
 {
   for (int i = 0; mode_syms[i]; i += 2)
+  {
     mode->AddPair(mode_syms[i], mode_syms[i+1]);
-
-  mode->Recreate();
+    mode->ShowOrHide(mode_syms[i], 1);
+  }
 }
 
 void UI_Game::setup_Length()
 {
   for (int i = 0; length_syms[i]; i += 2)
+  {
     length->AddPair(length_syms[i], length_syms[i+1]);
-
-  length->Recreate();
+    length->ShowOrHide(length_syms[i], 1);
+  }
 }
 
 const char *UI_Game::get_Seed()
