@@ -56,7 +56,8 @@ void UI_RChoice::AddPair(const char *id, const char *label)
 
     opt_list.push_back(opt);
 
-    // No need to Recreate() since new pairs are always hidden (shown == 0)
+    // no need to call Recreate() here since new pairs are always
+    // hidden (shown == 0)
   }
 }
 
@@ -70,7 +71,6 @@ bool UI_RChoice::ShowOrHide(const char *id, int new_shown)
   if (! P)
     return false;
 
-DebugPrintf("    show_or_hide(%s %s : %d\n", P->id, P->label, new_shown);
   if (P->shown != new_shown)
   {
     P->shown = new_shown;
@@ -100,16 +100,11 @@ bool UI_RChoice::SetID(const char *id)
 {
   SYS_ASSERT(id);
 
-DebugPrintf("  label: %s\n", label() ? label() : "NONE");
-DebugPrintf("  UI_RChoice::SetID --> '%s'\n", id);
-
   option_data_c *P = FindID(id);
 
-DebugPrintf("  UI_RChoice::SetID --> %p (%d)\n", P, P ? P->mapped : -1);
   if (! P || P->mapped < 0)
     return false;
 
-DebugPrintf("  Changing it (old value: %d)\n", value());
   value(P->mapped);
 
   return true;
@@ -125,16 +120,8 @@ void UI_RChoice::Recreate()
 
   option_data_c *LAST = FindMapped();
 
-DebugPrintf("RECREATE: begun\n");
-DebugPrintf("Current value: %d\n", value());
-
-if (LAST)
-DebugPrintf("LAST mapped: %d = %s %s\n", LAST->mapped, LAST->id, LAST->label);
-
   clear();
 
-  int map_index = 0;
-  
   for (unsigned int j = 0; j < opt_list.size(); j++)
   {
     option_data_c *P = opt_list[j];
@@ -146,39 +133,16 @@ DebugPrintf("LAST mapped: %d = %s %s\n", LAST->mapped, LAST->id, LAST->label);
     }
 
     P->mapped = add(P->label, 0, 0, 0, 0);
-DebugPrintf("added: %s %s @ %d\n", P->id, P->label, P->mapped);
   }
 
   // update the currently selected choice
 
-  if (LAST)
+  if (LAST && LAST->mapped >= 0)
   {
-    if (LAST->mapped >= 0)
-    {
-      // OK it is still shown, but index may have changed
-      value(LAST->mapped);
-DebugPrintf("Still shown @ %d %d\n\n", value(), LAST->mapped);
-      return;
-    }
-
-///---    for (unsigned int j = 0; j < opt_list.size(); j++)
-///---    {
-///---      option_data_c *P = opt_list[j];
-///---
-///---      if (P->mapped < 0)
-///---        continue;
-///---
-///---      if (StringCaseCmp(P->label, LAST->label) == 0)
-///---      {
-///---        // found equivalent entry
-///---        value(P->mapped);
-///---DebugPrintf("Found equivalent entry @ %d\n\n", value());
-///---        return;
-///---      }
-///---    }
+    value(LAST->mapped);
+    return;
   }
 
-DebugPrintf("LAST not found, resetting\n\n");
   value(0);
 }
 
@@ -209,14 +173,6 @@ option_data_c * UI_RChoice::FindMapped() const
 
   return NULL;
 }
-
-#if 0  // TODO: dump function
-for (unsigned int j = 0; j < opt_list.size(); j++)
-{
-option_data_c *P = opt_list[j];
-DebugPrintf("[ %d = %s : map=%d %s\n", j, P->id, P->mapped, P->shown ? "Shown" : "Hidden");
-}
-#endif
 
 
 //--- editor settings ---

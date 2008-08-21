@@ -42,7 +42,7 @@ option_data_c::~option_data_c()
   if (id)    StringFree(id);
   if (label) StringFree(label);
 
-  // ignore 'widget' field when shown, assuming it exists in
+  // ignore 'widget' field when shown, we assume it exists in
   // an Fl_Group and hence FLTK will take care to delete it.
   if (shown == 0)
     delete widget;
@@ -90,7 +90,6 @@ void UI_OptionList::AddPair(const char *id, const char *label, int val)
 {
   option_data_c *opt = FindOption(id);
 
-DebugPrintf("UI_OptionList::AddPair(%s,%s) %s\n", id, label, opt ? "EXIST" : "new");
   if (opt)
   {
     StringFree(opt->label);
@@ -112,6 +111,7 @@ DebugPrintf("UI_OptionList::AddPair(%s,%s) %s\n", id, label, opt ? "EXIST" : "ne
     opt_list.push_back(opt);
   }
 }
+
 
 bool UI_OptionList::SetOption(const char *id, int value)
 {
@@ -167,7 +167,6 @@ void UI_OptionList::Recreate()
 {
   int cy = y();
 
-DebugPrintf("UI_OptionList::Recreate begun\n");
   for (unsigned int i = 0; i < opt_list.size(); i++)
   {
     option_data_c *opt = opt_list[i];
@@ -175,12 +174,8 @@ DebugPrintf("UI_OptionList::Recreate begun\n");
     Fl_Check_Button *button = opt->widget;
     SYS_ASSERT(button);
 
-DebugPrintf("UI_OptionList::Recreate [%d] shown:%d inside:%d\n",
-i, (opt->shown ? 1 : 0), (button->inside(this) ? 1 : 0));
-
     if ((opt->shown ? 1 : 0) != (button->inside(this) ? 1 : 0))
     {
-DebugPrintf("UI_OptionList::Recreate changing [%d]\n", i);
       if (opt->shown > 0)
         this->add(button);
       else
@@ -203,12 +198,12 @@ DebugPrintf("UI_OptionList::Recreate changing [%d]\n", i);
         button->deactivate();
     }
 
-DebugPrintf("Button %s value %d\n", opt->id, opt->value);
     button->value(opt->value);
   }
 
   redraw();
 }
+
 
 option_data_c *UI_OptionList::FindOption(const char *id)
 {

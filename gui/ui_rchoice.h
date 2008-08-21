@@ -66,11 +66,7 @@ private:
   // value with the same label, and failing that: select the
   // first entry.
 
-  bool ListsEqual() const;
-  // returns true if the old and new lists are identical.
-
   const char *GetLabel() const;  // ????
-
 };
 
 
