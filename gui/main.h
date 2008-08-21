@@ -52,9 +52,10 @@ public:
   virtual bool Finish(bool build_ok) = 0;
   // this is called after all levels are done.  The 'build_ok'
   // value is the result from the LUA script, and is false if
-  // an error occurred or the user clicked Abort.  For DOOM
-  // this will run glBSP node builder, for QUAKE it will put
-  // all the BSP files into the final PAK file.
+  // an error occurred or the user clicked Abort.
+  //
+  // For DOOM this will run glBSP node builder, for QUAKE it will
+  // put all the BSP files into the final PAK file.
   //
   // Returns false on error.  Note that Finish() is never
   // called if Start() fails.
