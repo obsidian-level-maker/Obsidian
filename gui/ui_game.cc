@@ -144,22 +144,18 @@ void UI_Game::SetSeed(u32_t new_val)
 
 void UI_Game::FreshSeed()
 {
-  u32_t bump = TimeGetMillies();
+  u32_t val = (u32_t)time(NULL);
 
-  bump = IntHash(bump);
-  
-  SetSeed(bump);
+  SetSeed((val/86400)*1000 + (val % 500));
 }
 
 void UI_Game::BumpSeed()
 {
-  u32_t old_val = atoi(seed->value());
+  u32_t val = atoi(seed->value());
 
-  u32_t bump = TimeGetMillies();
+  val += 7 + (IntHash(TimeGetMillies()) % 25);
 
-  bump = 10 + (IntHash(bump) & 31);
-
-  SetSeed(old_val + bump);
+  SetSeed(val);
 }
 
 void UI_Game::callback_Bump(Fl_Widget *w, void *data)
