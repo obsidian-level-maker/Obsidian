@@ -49,6 +49,9 @@ const char *GetExecutablePath(const char *argv0);
 
 //------------------------------------------------------------------------
 
+// directory functions
+bool PathIsDirectory(const char *path);
+
 typedef enum
 {
   SCAN_F_IsDir    = (1 << 0),

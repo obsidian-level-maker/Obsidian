@@ -308,6 +308,9 @@ u8_t *FileLoad(const char *filename, int *length)
   if (! data)
     AssertFail("Out of memory (%d bytes for FileLoad)\n", *length);
 
+  // ensure buffer is NUL-terminated
+  data[*length] = 0;
+
   if (1 != fread(data, *length, 1, fp))
   {
     FileFree(data);
@@ -323,6 +326,35 @@ u8_t *FileLoad(const char *filename, int *length)
 void FileFree(u8_t *mem)
 {
   free((void*) mem);
+}
+
+
+//
+// Note: returns false when the path doesn't exist.
+//
+bool PathIsDirectory(const char *path)
+{
+#ifdef WIN32
+  char old_dir[MAX_PATH+1];
+
+  if (GetCurrentDirectory(MAX_PATH, (LPSTR)old_dir) == FALSE)
+      return false;
+
+  bool result = SetCurrentDirectory(path);
+
+  SetCurrentDirectory(old_dir);
+
+  return result;
+
+#else // UNIX or MACOSX
+
+  struct stat finfo;
+
+  if (stat(path, &finfo) != 0)
+    return false;
+
+  return (S_ISDIR(finfo.st_mode)) ? true : false;
+#endif
 }
 
 
