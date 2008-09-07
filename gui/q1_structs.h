@@ -27,9 +27,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __QUAKE1_BSPFILE_H__
 #define __QUAKE1_BSPFILE_H__
 
-///--- #include <stdint.h>
-
-///--- #include "qtypes.h"
 
 // upper design bounds
 
@@ -266,3 +263,6 @@ typedef struct
 dleaf_t;
 
 #endif /* __QUAKE1_BSPFILE_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab
