@@ -17,15 +17,15 @@
 //------------------------------------------------------------------------
 
 #include "headers.h"
-#include "hdr_fltk.h"
-#include "hdr_lua.h"
-#include "hdr_ui.h"
-
-#include "lib_file.h"
-#include "lib_util.h"
 #include "main.h"
 
+#include <list>
+
+#include "lib_util.h"
 #include "q1_pakfile.h"
+
+
+// #define LogPrintf  printf
 
 
 //------------------------------------------------------------------------
@@ -45,7 +45,7 @@ bool PAK_OpenRead(const char *filename)
 
   if (! r_pak_fp)
   {
-    LogPrintf("PAK_OpenRead: cannot open file: %s\n", filename);
+    LogPrintf("PAK_OpenRead: no such file: %s\n", filename);
     return false;
   }
 
@@ -73,13 +73,7 @@ bool PAK_OpenRead(const char *filename)
 
   /* read directory */
 
-  if (r_header.entry_num == 0)
-  {
-    LogPrintf("PAK_OpenRead: empty PAK file!\n");
-    fclose(r_pak_fp);
-    return false;
-  }
-  if (r_header.entry_num >= 4000)  // sanity check
+  if (r_header.entry_num >= 5000)  // sanity check
   {
     LogPrintf("PAK_OpenRead: bad header (%d entries?)\n", r_header.entry_num);
     fclose(r_pak_fp);
@@ -93,7 +87,7 @@ bool PAK_OpenRead(const char *filename)
     return false;
   }
 
-  r_directory = new raw_pak_entry_t[r_header.entry_num];
+  r_directory = new raw_pak_entry_t[r_header.entry_num + 1];
 
   for (int i = 0; i < (int)r_header.entry_num; i++)
   {
@@ -103,6 +97,17 @@ bool PAK_OpenRead(const char *filename)
 
     if (res == EOF || res != 1 || ferror(r_pak_fp))
     {
+      if (i == 0)
+      {
+        LogPrintf("PAK_OpenRead: could not read any dir-entries!\n");
+
+        delete[] r_directory;
+        r_directory = NULL;
+
+        fclose(r_pak_fp);
+        return false;
+      }
+
       LogPrintf("PAK_OpenRead: hit EOF reading dir-entry %d\n", i);
 
       // truncate directory
@@ -116,18 +121,7 @@ bool PAK_OpenRead(const char *filename)
     E->offset = LE_U32(E->offset);
     E->length = LE_U32(E->length);
 
-    DebugPrintf(" %4d: %08x %08x : %s\n", i, E->offset, E->length, E->name);
-  }
-
-  if (r_header.entry_num == 0)
-  {
-    LogPrintf("PAK_OpenRead: could not read any dir-entries!\n");
-
-    delete[] r_directory;
-    r_directory = NULL;
-
-    fclose(r_pak_fp);
-    return false;
+//  DebugPrintf(" %4d: %08x %08x : %s\n", i, E->offset, E->length, E->name);
   }
 
   return true; // OK
@@ -144,10 +138,39 @@ void PAK_CloseRead(void)
 }
 
 
+int PAK_NumEntries(void)
+{
+  return (int)r_header.entry_num;
+}
+
+int PAK_FindEntry(const char *name)
+{
+  for (unsigned int i = 0; i < r_header.entry_num; i++)
+  {
+    if (StringCaseCmp(name, r_directory[i].name) == 0)
+      return i;
+  }
+
+  return -1; // not found
+}
+
+int PAK_EntryLen(int entry)
+{
+  SYS_ASSERT(entry >= 0 && entry < (int)r_header.entry_num);
+
+  return r_directory[entry].length;
+}
+
+const char * PAK_EntryName(int entry)
+{
+  SYS_ASSERT(entry >= 0 && entry < (int)r_header.entry_num);
+
+  return r_directory[entry].name;
+}
+
 void PAK_FindMaps(std::vector<int>& entries)
 {
   entries.resize(0);
-  entries.reserve(r_header.entry_num);
 
   for (int i = 0; i < (int)r_header.entry_num; i++)
   {
@@ -171,7 +194,7 @@ void PAK_FindMaps(std::vector<int>& entries)
     {
       entries.push_back(i);
 
-      DebugPrintf("Found map [%d] : '%s'\n", i, E->name);
+//    DebugPrintf("Found map [%d] : '%s'\n", i, E->name);
     }
   }
 }
@@ -191,6 +214,28 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer)
   int res = fread(buffer, length, 1, r_pak_fp);
 
   return (res == 1);
+}
+
+
+void PAK_ListEntries(void)
+{
+  printf("--------------------------------------------------\n");
+
+  if (r_header.entry_num == 0)
+  {
+    printf("PAK file is empty\n");
+  }
+  else
+  {
+    for (int i = 0; i < (int)r_header.entry_num; i++)
+    {
+      raw_pak_entry_t *E = &r_directory[i];
+
+      printf("%4d: +%08x %08x : %s\n", i+1, E->offset, E->length, E->name);
+    }
+  }
+
+  printf("--------------------------------------------------\n");
 }
 
 
@@ -232,6 +277,8 @@ void PAK_CloseWrite(void)
   fflush(w_pak_fp);
 
   // write the directory
+
+  LogPrintf("Writing PAK directory\n");
 
   raw_pak_header_t header;
 
@@ -290,7 +337,7 @@ void PAK_AppendData(const void *data, int length)
   {
     if (fwrite(data, length, 1, w_pak_fp) != 1)
     {
-      //TODO : write_errors++
+      /// write_errors++
     }
   }
 }
@@ -332,7 +379,7 @@ bool WAD2_OpenRead(const char *filename)
 
   if (! wad_R_fp)
   {
-    LogPrintf("WAD2_OpenRead: cannot open file: %s\n", filename);
+    LogPrintf("WAD2_OpenRead: no such file: %s\n", filename);
     return false;
   }
 
@@ -357,13 +404,7 @@ bool WAD2_OpenRead(const char *filename)
 
   /* read directory */
 
-  if (wad_R_header.num_lumps == 0)
-  {
-    LogPrintf("WAD2_OpenRead: empty WAD2 file!\n");
-    fclose(wad_R_fp);
-    return false;
-  }
-  if (wad_R_header.num_lumps >= 4000)  // sanity check
+  if (wad_R_header.num_lumps >= 5000)  // sanity check
   {
     LogPrintf("WAD2_OpenRead: bad header (%d entries?)\n", wad_R_header.num_lumps);
     fclose(wad_R_fp);
@@ -377,7 +418,7 @@ bool WAD2_OpenRead(const char *filename)
     return false;
   }
 
-  wad_R_dir = new raw_wad2_lump_t[wad_R_header.num_lumps];
+  wad_R_dir = new raw_wad2_lump_t[wad_R_header.num_lumps + 1];
 
   for (int i = 0; i < (int)wad_R_header.num_lumps; i++)
   {
@@ -387,6 +428,17 @@ bool WAD2_OpenRead(const char *filename)
 
     if (res == EOF || res != 1 || ferror(wad_R_fp))
     {
+      if (i == 0)
+      {
+        LogPrintf("WAD2_OpenRead: could not read any dir-entries!\n");
+
+        delete[] wad_R_dir;
+        wad_R_dir = NULL;
+
+        fclose(wad_R_fp);
+        return false;
+      }
+
       LogPrintf("WAD2_OpenRead: hit EOF reading dir-entry %d\n", i);
 
       // truncate directory
@@ -401,18 +453,7 @@ bool WAD2_OpenRead(const char *filename)
     L->length = LE_U32(L->length);
     L->u_len  = LE_U32(L->u_len);
 
-    DebugPrintf(" %4d: %08x %08x : %s\n", i, L->start, L->length, L->name);
-  }
-
-  if (wad_R_header.num_lumps == 0)
-  {
-    LogPrintf("WAD2_OpenRead: could not read any dir-entries!\n");
-
-    delete[] wad_R_dir;
-    wad_R_dir = NULL;
-
-    fclose(wad_R_fp);
-    return false;
+//  DebugPrintf(" %4d: %08x %08x : %s\n", i, L->start, L->length, L->name);
   }
 
   return true; // OK
@@ -428,10 +469,15 @@ void WAD2_CloseRead(void)
   wad_R_dir = NULL;
 }
 
+
+int WAD2_NumEntries(void)
+{
+  return (int)wad_R_header.num_lumps;
+}
+
+
 int WAD2_FindEntry(const char *name)
 {
-  // FIXME: optimise this (with a cache)
-
   for (unsigned int i = 0; i < wad_R_header.num_lumps; i++)
   {
     if (StringCaseCmp(name, wad_R_dir[i].name) == 0)
@@ -446,6 +492,23 @@ int WAD2_EntryLen(int entry)
   SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
 
   return wad_R_dir[entry].u_len;
+}
+
+const char * WAD2_EntryName(int entry)
+{
+  SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
+
+  return wad_R_dir[entry].name;
+}
+
+int WAD2_EntryType(int entry)
+{
+  SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
+
+  if (wad_R_dir[entry].compression != 0)
+    return TYP_COMPRESSED;
+
+  return wad_R_dir[entry].type;
 }
 
 bool WAD2_ReadData(int entry, int offset, int length, void *buffer)
@@ -463,6 +526,46 @@ bool WAD2_ReadData(int entry, int offset, int length, void *buffer)
 
   return (res == 1);
 }
+
+
+static char LetterForType(u8_t type)
+{
+  switch (type)
+  {
+    case TYP_NONE:    return 'x';
+    case TYP_LABEL:   return 'L';
+    case TYP_PALETTE: return 'C';
+    case TYP_QTEX:    return 'T';
+    case TYP_QPIC:    return 'P';
+    case TYP_SOUND:   return 'S';
+    case TYP_MIPTEX:  return 'M';
+
+    default: return '?';
+  }
+}
+
+void WAD2_ListEntries(void)
+{
+  printf("--------------------------------------------------\n");
+
+  if (wad_R_header.num_lumps == 0)
+  {
+    printf("WAD2 file is empty\n");
+  }
+  else
+  {
+    for (int i = 0; i < (int)wad_R_header.num_lumps; i++)
+    {
+      raw_wad2_lump_t *L = &wad_R_dir[i];
+
+      printf("%4d: +%08x %08x %c : %s\n", i+1, L->start, L->length,
+             LetterForType(L->type), L->name);
+    }
+  }
+
+  printf("--------------------------------------------------\n");
+}
+
 
 
 //------------------------------------------------------------------------
@@ -505,6 +608,8 @@ void WAD2_CloseWrite(void)
 
   // write the directory
 
+  LogPrintf("Writing WAD2 directory\n");
+
   raw_wad2_header_t header;
 
   memcpy(header.magic, WAD2_MAGIC, 4);
@@ -543,7 +648,7 @@ void WAD2_CloseWrite(void)
 }
 
 
-void WAD2_NewLump(const char *name)
+void WAD2_NewLump(const char *name, int type)
 {
   SYS_ASSERT(strlen(name) <= 15);
 
@@ -551,6 +656,7 @@ void WAD2_NewLump(const char *name)
 
   strcpy(wad_W_lump.name, name);
 
+  wad_W_lump.type  = type;
   wad_W_lump.start = (u32_t)ftell(wad_W_fp);
 }
 
@@ -563,7 +669,7 @@ void WAD2_AppendData(const void *data, int length)
   {
     if (fwrite(data, length, 1, wad_W_fp) != 1)
     {
-      //TODO : write_errors++
+      /// write_errors++
     }
   }
 }

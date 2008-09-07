@@ -25,11 +25,16 @@
 bool PAK_OpenRead(const char *filename);
 void PAK_CloseRead(void);
 
+int  PAK_NumEntries(void);
 int  PAK_FindEntry(const char *name);
 void PAK_FindMaps(std::vector<int>& entries);
 
 int  PAK_EntryLen(int entry);
+const char * PAK_EntryName(int entry);
+
 bool PAK_ReadData(int entry, int offset, int length, void *buffer);
+
+void PAK_ListEntries(void);
 
 
 /* PAK writing */
@@ -47,9 +52,15 @@ void PAK_FinishLump(void);
 bool WAD2_OpenRead(const char *filename);
 void WAD2_CloseRead(void);
 
+int  WAD2_NumEntries(void);
 int  WAD2_FindEntry(const char *name);
 int  WAD2_EntryLen(int entry);
+int  WAD2_EntryType(int entry);
+const char * WAD2_EntryName(int entry);
+
 bool WAD2_ReadData(int entry, int offset, int length, void *buffer);
+
+void WAD2_ListEntries(void);
 
 
 /* WAD2 writing */
@@ -57,7 +68,7 @@ bool WAD2_ReadData(int entry, int offset, int length, void *buffer);
 bool WAD2_OpenWrite(const char *filename);
 void WAD2_CloseWrite(void);
 
-void WAD2_NewLump(const char *name);
+void WAD2_NewLump(const char *name, int type = 0);
 void WAD2_AppendData(const void *data, int length);
 void WAD2_FinishLump(void);
 
@@ -113,6 +124,22 @@ typedef struct
   char  name[16];  // must be null terminated
 }
 raw_wad2_lump_t;
+
+// compression method (from Quake1 source)
+#define CMP_NONE  0
+#define CMP_LZSS  1
+
+// lump types (from Quake1 source)
+#define TYP_NONE      0
+#define TYP_LABEL     1
+#define TYP_PALETTE  64
+#define TYP_QTEX     65
+#define TYP_QPIC     66
+#define TYP_SOUND    67
+#define TYP_MIPTEX   68
+
+// this value is only returned from WAD2_EntryType()
+#define TYP_COMPRESSED  256
 
 
 #endif /* __OBLIGE_PAK_FILES_H__ */
