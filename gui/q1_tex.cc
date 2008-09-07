@@ -33,7 +33,7 @@
 
 #include "q1_main.h"
 #include "q1_structs.h"
-#include "q1_pakfile.h"
+#include "q_pakfile.h"
 
 
 // WAD2_OpenWrite

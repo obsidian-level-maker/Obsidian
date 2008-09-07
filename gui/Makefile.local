@@ -58,8 +58,8 @@ OBJS=	main.o      \
 	q1_clip.o   \
 	q1_light.o  \
 	q1_main.o   \
-	q1_pakfile.o \
 	q1_tex.o    \
+	q_pakfile.o \
 	twister.o   \
 	ui_build.o  \
 	ui_chooser.o \
