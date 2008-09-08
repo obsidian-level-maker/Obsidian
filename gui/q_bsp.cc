@@ -38,6 +38,134 @@ static int seek_errors_seen;
 
 
 
+qLump_c::qLump_c() : buffer(), crlf(false), offset(0)
+{ }
+
+qLump_c::~qLump_c()
+{ }
+
+
+int qLump_c::GetSize() const
+{
+  return (int)buffer.size();
+}
+
+
+void qLump_c::Append(const void *data, u32_t len)
+{
+  if (len == 0)
+    return;
+
+  u32_t old_size = buffer.size();
+  u32_t new_size = old_size + len;
+
+  buffer.resize(new_size);
+
+  memcpy(& buffer[old_size], data, len);
+}
+
+
+void qLump_c::Prepend(const void *data, u32_t len)
+{
+  if (len == 0)
+    return;
+
+  u32_t old_size = buffer.size();
+  u32_t new_size = old_size + len;
+
+  buffer.resize(new_size);
+
+  if (old_size > 0)
+  {
+    memmove(& buffer[len], & buffer[0], old_size);
+  }
+  memcpy(& buffer[0], data, len);
+}
+
+
+void qLump_c::RawPrintf(const char *str)
+{
+  if (! crlf)
+  {
+    Append(str, strlen(str));
+    return;
+  }
+
+  // convert each newline into CR/LF pair
+  while (*str)
+  {
+    char *next = strchr(str, '\n');
+
+    Append(str, next ? (next - str) : strlen(str));
+
+    if (! next)
+      break;
+
+    Append("\r\n", 2);
+
+    str = next+1;
+  }
+}
+
+
+void qLump_c::Printf(const char *str, ...)
+{
+  static char msg_buf[MSG_BUF_LEN];
+
+  va_list args;
+
+  va_start(args, str);
+  vsnprintf(msg_buf, MSG_BUF_LEN-1, str, args);
+  va_end(args);
+
+  msg_buf[MSG_BUF_LEN-2] = 0;
+
+  RawPrintf(msg_buf);
+}
+
+
+void qLump_c::KeyPair(const char *key, const char *val, ...)
+{
+  static char v_buffer[MSG_BUF_LEN];
+
+  va_list args;
+
+  va_start(args, val);
+  vsnprintf(v_buffer, MSG_BUF_LEN-1, val, args);
+  va_end(args);
+
+  v_buffer[MSG_BUF_LEN-2] = 0;
+
+  RawPrintf("\"");
+  RawPrintf(key);
+  RawPrintf("\" \"");
+  RawPrintf(v_buffer);
+  RawPrintf("\"\n");
+}
+
+
+void qLump_c::SetCRLF(bool enable)
+{
+  crlf = enable;
+}
+
+
+//------------------------------------------------------------------------
+
+
+qLump_c *Q1_NewLump(int entry)
+{
+  SYS_ASSERT(0 <= entry && entry < HEADER_LUMPS);
+
+  if (bsp_directory[entry] != NULL)
+    Main_FatalError("INTERNAL ERROR: Q1_NewLump: already created entry [%d]\n", entry);
+
+  bsp_directory[entry] = new qLump_c;
+
+  return bsp_directory[entry];
+}
+
+
 static void BSP_RawSeek(u32_t pos)
 {
   fflush(bsp_fp);
@@ -81,7 +209,7 @@ static void BSP_WriteLump(int entry, lump_t *info)
   }
 
 
-  int len = (int)lump->size();
+  int len = lump->GetSize();
 
   info->start  = LE_S32((u32_t)ftell(bsp_fp));
   info->length = LE_S32(len);
@@ -104,98 +232,6 @@ static void BSP_WriteLump(int entry, lump_t *info)
     }
   }
 }
-
-
-qLump_c *Q1_NewLump(int entry)
-{
-  SYS_ASSERT(0 <= entry && entry < HEADER_LUMPS);
-
-  if (bsp_directory[entry] != NULL)
-    Main_FatalError("INTERNAL ERROR: Q1_NewLump: already created entry [%d]\n", entry);
-
-  bsp_directory[entry] = new qLump_c;
-
-  return bsp_directory[entry];
-}
-
-
-void Q1_Append(qLump_c *lump, const void *data, u32_t len)
-{
-  if (len > 0)
-  {
-    u32_t old_size = lump->size();
-    u32_t new_size = old_size + len;
-
-    lump->resize(new_size);
-
-    memcpy(& (*lump)[old_size], data, len);
-  }
-}
-
-void Q1_Prepend(qLump_c *lump, const void *data, u32_t len)
-{
-  if (len > 0)
-  {
-    u32_t old_size = lump->size();
-    u32_t new_size = old_size + len;
-
-    lump->resize(new_size);
-
-    if (old_size > 0)
-    {
-      memmove(& (*lump)[len], & (*lump)[0], old_size);
-    }
-    memcpy(& (*lump)[0], data, len);
-  }
-}
-
-
-void Q1_Printf(qLump_c *lump, int crlf, const char *str, ...)
-{
-  static char buffer[MSG_BUF_LEN];
-
-  va_list args;
-
-  va_start(args, str);
-  vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
-  va_end(args);
-
-  buffer[MSG_BUF_LEN-2] = 0;
-
-  if (! crlf)
-  {
-    Q1_Append(lump, buffer, strlen(buffer));
-    return;
-  }
-
-  // convert each newline into CR/LF pair
-
-  char *pos = buffer;
-  char *next;
-
-  while (*pos)
-  {
-    next = strchr(pos, '\n');
-
-    Q1_Append(lump, pos, next ? (next - pos) : strlen(pos));
-
-    if (! next)
-      break;
-
-    Q1_Append(lump, "\r\n", 2);
-
-    pos = next+1;
-  }
-}
-
-
-void BSP_KeyPair(qLump_c *lump, const char *key, const char *val)
-{
-  Q1_Printf(lump,0, "\"%s\" \"%s\"\n", key, val);
-}
-
-
-//------------------------------------------------------------------------
 
 static void ClearLumps(void)
 {
