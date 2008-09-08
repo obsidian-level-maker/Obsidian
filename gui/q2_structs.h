@@ -100,14 +100,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define HEADER_LUMPS      19
 
-typedef struct
-{
-  char   ident[4];
-  s32_t  version;  
-
-  lump_t lumps[HEADER_LUMPS];
-}
-dheader2_t;
+// AJA: moved dheader_t to q_bsp.h
 
 typedef struct
 {
