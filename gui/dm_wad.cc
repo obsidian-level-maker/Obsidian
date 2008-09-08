@@ -33,15 +33,6 @@
 #include "dm_wad.h"
 
 
-//!!!!!!!
-#include "q1_main.h"
-extern int Q1_end_level(lua_State *L);
-extern s32_t Quake1_CreateClipHull(int which, qLump_c *q1_clip);
-
-extern void CSG2_Doom_TestAreas(void);
-extern void CSG2_Doom_TestRegions(void);
-
-
 typedef std::vector<u8_t> lump_c;
 
 typedef std::vector<raw_dir_entry_t> directory_c;
