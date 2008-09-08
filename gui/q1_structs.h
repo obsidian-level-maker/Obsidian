@@ -65,13 +65,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define BSPVERSION  29
 
-typedef struct
-{
-  s32_t start;
-  s32_t length;
-}
-lump_t;
-
 #define LUMP_ENTITIES       0
 #define LUMP_PLANES         1
 #define LUMP_TEXTURES       2
@@ -93,6 +86,20 @@ lump_t;
 
 typedef struct
 {
+  s32_t start;
+  s32_t length;
+}
+lump_t;
+
+typedef struct
+{
+  s32_t version;
+  lump_t lumps[HEADER_LUMPS];
+}
+dheader_t;
+
+typedef struct
+{
   float mins[3], maxs[3];
   float origin[3];
 
@@ -101,13 +108,6 @@ typedef struct
   s32_t firstface, numfaces;
 }
 dmodel_t;
-
-typedef struct
-{
-  s32_t version;
-  lump_t lumps[HEADER_LUMPS];
-}
-dheader_t;
 
 typedef struct
 {
@@ -172,8 +172,10 @@ typedef struct
 {
   s32_t planenum;
   s16_t children[2];  // negative numbers are -(leafs+1), not nodes
+
   s16_t mins[3];    // for sphere culling
   s16_t maxs[3];
+
   u16_t firstface;
   u16_t numfaces; // counting both sides
 }
