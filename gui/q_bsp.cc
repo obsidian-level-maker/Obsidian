@@ -27,18 +27,7 @@
 
 
 
-static FILE *bsp_fp;
-
-static qLump_c * bsp_directory[HEADER_LUMPS];
-
-
-
-static int write_errors_seen;
-static int seek_errors_seen;
-
-
-
-qLump_c::qLump_c() : buffer(), crlf(false), offset(0)
+qLump_c::qLump_c() : buffer(), crlf(false)
 { }
 
 qLump_c::~qLump_c()
@@ -153,19 +142,16 @@ void qLump_c::SetCRLF(bool enable)
 //------------------------------------------------------------------------
 
 
-qLump_c *Q1_NewLump(int entry)
-{
-  SYS_ASSERT(0 <= entry && entry < HEADER_LUMPS);
+#define HEADER_LUMP_MAX  32
 
-  if (bsp_directory[entry] != NULL)
-    Main_FatalError("INTERNAL ERROR: Q1_NewLump: already created entry [%d]\n", entry);
+static int bsp_game;  // 1 for Quake1, 2 for Quake2  [make enum if more!]
+static int bsp_numlumps;
+static int bsp_version;
 
-  bsp_directory[entry] = new qLump_c;
-
-  return bsp_directory[entry];
-}
+static qLump_c * bsp_directory[HEADER_LUMP_MAX];
 
 
+#if 0  // OLD STUFF (writing to a FILE)
 static void BSP_RawSeek(u32_t pos)
 {
   fflush(bsp_fp);
@@ -195,76 +181,49 @@ static void BSP_RawWrite(const void *data, u32_t len)
     }
   }
 }
+#endif
 
-static void BSP_WriteLump(int entry, lump_t *info)
+
+
+static void BSP_ClearLumps(void)
 {
-  qLump_c *lump = bsp_directory[entry];
-
-  if (! lump)
-  {
-    info->start  = 0;
-    info->length = 0;
-
-    return;
-  }
-
-
-  int len = lump->GetSize();
-
-  info->start  = LE_S32((u32_t)ftell(bsp_fp));
-  info->length = LE_S32(len);
-
-
-  if (len > 0)
-  {
-    BSP_RawWrite(& (*lump)[0], len);
-
-    // pad lumps to a multiple of four bytes
-    u32_t padding = AlignLen(len) - len;
-
-    SYS_ASSERT(0 <= padding && padding <= 3);
-
-    if (padding > 0)
-    {
-      static u8_t zeros[4] = { 0,0,0,0 };
-
-      BSP_RawWrite(zeros, padding);
-    }
-  }
-}
-
-static void ClearLumps(void)
-{
-  for (int i = 0; i < HEADER_LUMPS; i++)
+  for (int i = 0; i < bsp_numlumps; i++)
   {
     if (bsp_directory[i])
     {
       delete bsp_directory[i];
-
       bsp_directory[i] = NULL;
     }
   }
 }
 
-bool BSP_OpenWrite(const char *target_file)
+
+static void BSP_WriteLump(qLump_c *lump)
 {
-  write_errors_seen = 0;
-  seek_errors_seen  = 0;
+  SYS_ASSERT(lump);
 
-  ClearLumps();
+  int len = lump->GetSize();
 
-  bsp_fp = fopen(target_file, "wb");
+  if (len == 0)
+    return;
 
-  if (! bsp_fp)
+  PAK_AppendData(& lump->buffer[0], len);
+
+  // pad lumps to a multiple of four bytes
+  u32_t padding = AlignLen(len) - len;
+
+  SYS_ASSERT(0 <= padding && padding <= 3);
+
+  if (padding > 0)
   {
-    DLG_ShowError("Unable to create bsp file:\n%s", strerror(errno));
-    return false;
-  }
+    static u8_t zeros[4] = { 0,0,0,0 };
 
-  return true; //OK
+    PAK_AppendData(zeros, padding);
+  }
 }
 
 
+#if 0  // OLD CODE
 bool BSP_CloseWrite(void)
 {
 
@@ -279,7 +238,7 @@ bool BSP_CloseWrite(void)
 
   header.version = LE_U32(0x1D); 
 
-  for (int L = 0; L < HEADER_LUMPS; L++)
+  for (int L = 0; L < bsp_numlumps; L++)
   {
     BSP_WriteLump(L, &header.lumps[L]);
   }
@@ -295,32 +254,112 @@ bool BSP_CloseWrite(void)
 
   return (write_errors_seen == 0) && (seek_errors_seen == 0);
 }
+#endif
 
 
-bool BSP_BeginLevel(const char *entry_in_pak, int bsp_ver)
+bool BSP_OpenLevel(const char *entry_in_pak, int game)
 {
-  // FIXME 
+  // assumes that PAK_OpenWrite() has already been called.
+
+  // FIXME: ASSERT(!already opened)
+
+  PAK_NewLump(entry_in_pak);
+
+  bsp_game = game;
+
+  switch (game)
+  {
+    case 1:
+      bsp_version  = Q1_BSP_VERSION;
+      bsp_numlumps = Q1_HEADER_LUMPS;
+      break;
+
+    case 2:
+      bsp_version  = Q2_BSP_VERSION;
+      bsp_numlumps = Q2_HEADER_LUMPS;
+      break;
+
+    default:
+      Main_FatalError("INTERNAL ERROR: BSP_OpenLevel: unknown game %d\n", game);
+      return false; // NOT REACHED
+  }
+
+  BSP_ClearLumps();
+
+  return true;
 }
 
-bool BSP_WriteLevel()
+
+static void BSP_WriteHeader()
 {
-  // FIXME
+  u32_t offset = 0;
+
+  if (bsp_game == 2)
+  {
+    PAK_AppendData(Q2_IDENT_MAGIC, 4);
+    offset += 4;
+  }
+
+  s32_t raw_version = LE_S32(bsp_version);
+  PAK_AppendData(&raw_version, 4);
+  offset += 4;
+
+  offset += sizeof(lump_t) * bsp_numlumps;
+
+  for (int L = 0; L < bsp_numlumps; L++)
+  {
+    lump_t raw_info;
+
+    // handle missing lumps : create an empty one
+    if (! bsp_directory[L])
+      bsp_directory[L] = new qLump_c();
+
+    u32_t length = bsp_directory[L]->buffer.size();
+
+    raw_info.start  = LE_U32(offset);
+    raw_info.length = LE_U32(length);
+
+    PAK_AppendData(&raw_info, sizeof(raw_info));
+
+    offset += (u32_t)AlignLen(length);
+  }
 }
 
 
-
-bool BSP_OpenPAK(const char *target_file)
+bool BSP_CloseLevel()
 {
-  // FIXME
+  // FIXME: ASSERT(opened)
+
+  BSP_WriteHeader();
+
+  for (int L = 0; L < bsp_numlumps; L++)
+  {
+    BSP_WriteLump(bsp_directory[L]);
+  }
+
+  PAK_FinishLump();
+
+  // free all the memory
+  BSP_ClearLumps();
+
+  return true;
 }
 
-bool BSP_ClosePAK()
+
+qLump_c *BSP_NewLump(int entry)
 {
-  // FIXME
+  SYS_ASSERT(0 <= entry && entry < bsp_numlumps);
+
+  if (bsp_directory[entry] != NULL)
+    Main_FatalError("INTERNAL ERROR: BSP_NewLump: already created entry [%d]\n", entry);
+
+  bsp_directory[entry] = new qLump_c;
+
+  return bsp_directory[entry];
 }
 
 
-void BSP_Backup(const char *filename)
+void BSP_BackupPAK(const char *filename)
 {
   if (FileExists(filename))
   {
