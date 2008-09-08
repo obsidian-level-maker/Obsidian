@@ -27,6 +27,7 @@
 
 #include "csg_main.h"
 
+#include "q_bsp.h"
 #include "q1_main.h"
 #include "q1_structs.h"
 
@@ -62,20 +63,20 @@ static qLump_c *q1_lightmap;
 
 void Quake1_BeginLightmap(void)
 {
-  q1_lightmap = Q1_NewLump(LUMP_LIGHTING);
+  q1_lightmap = BSP_NewLump(LUMP_LIGHTING);
 
   const char *info = "Lit by " OBLIGE_TITLE " " OBLIGE_VERSION;
 
-  Q1_Append(q1_lightmap, info, strlen(info));
+  q1_lightmap->Append(info, strlen(info));
 }
 
 
 s32_t Quake1_LightAddBlock(int w, int h, u8_t level)
 {
-  s32_t offset = (s32_t) q1_lightmap->size();
+  s32_t offset = q1_lightmap->GetSize();
 
   for (int i = 0; i < w*h; i++)
-    Q1_Append(q1_lightmap, &level, 1);
+    q1_lightmap->Append(&level, 1);
 
   return offset;
 }

@@ -30,6 +30,7 @@
 #include "g_image.h"
 #include "g_lua.h"
 
+#include "q_bsp.h"
 #include "q1_main.h"
 #include "q1_structs.h"
 
@@ -854,7 +855,7 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
 
   // TODO: fix endianness in 'clip'
 
-  Q1_Append(L, &clip, sizeof(clip));
+  L->Append(&clip, sizeof(clip));
 
 
   // recurse now, AFTER adding the current node
@@ -913,7 +914,7 @@ CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
   SYS_ASSERT(C_LEAF.size() == 0);
 
 
-  int start_idx = q1_clip->size() / sizeof(dclipnode_t);
+  int start_idx = q1_clip->GetSize() / sizeof(dclipnode_t);
   int cur_index = start_idx;
 
   AssignIndexes(C_ROOT, &cur_index);

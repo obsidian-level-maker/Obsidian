@@ -184,7 +184,6 @@ static void BSP_RawWrite(const void *data, u32_t len)
 #endif
 
 
-
 static void BSP_ClearLumps(void)
 {
   for (int i = 0; i < bsp_numlumps; i++)
@@ -365,7 +364,7 @@ void BSP_BackupPAK(const char *filename)
   {
     LogPrintf("Backing up existing file: %s\n", filename);
 
-    char *backup_name = ReplaceExtension(filename, "bak");
+    char *backup_name = ReplaceExtension(filename, "old");
 
     if (! FileCopy(filename, backup_name))
       LogPrintf("WARNING: unable to create backup: %s\n", backup_name);

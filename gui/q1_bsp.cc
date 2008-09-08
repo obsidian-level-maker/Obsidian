@@ -30,6 +30,7 @@
 #include "g_image.h"
 #include "g_lua.h"
 
+#include "q_bsp.h"
 #include "q1_main.h"
 #include "q1_structs.h"
 
@@ -1305,7 +1306,7 @@ static void DoAddEdge(double x1, double y1, double z1,
 
   edge_idx = LE_S32(edge_idx);
 
-  Q1_Append(q_surf_edges, &edge_idx, 4);
+  q_surf_edges->Append(&edge_idx, 4);
 
   total_surf_edges += 1;
 
@@ -1337,7 +1338,7 @@ static void DoAddSurf(u16_t index, dleaf_t *raw_lf )
 {
     index = LE_U16(index);
 
-    Q1_Append(q_mark_surfs, &index, 2);
+    q_mark_surfs->Append(&index, 2);
 
     total_mark_surfs += 1;
 
@@ -1716,7 +1717,7 @@ static void MakeFace(qFace_c *F, dleaf_t *raw_lf)
 
   F->index = (int)index;
 
-  Q1_Append(q_faces, &face, sizeof(face));
+  q_faces->Append(&face, sizeof(face));
 
 
   // add it into the mark_surfs lump
@@ -1789,7 +1790,7 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
     Main_FatalError("Quake1 build failure: exceeded limit of %d LEAFS\n",
                     MAX_MAP_LEAFS);
 
-  Q1_Append(q_leafs, &raw_lf, sizeof(raw_lf));
+  q_leafs->Append(&raw_lf, sizeof(raw_lf));
 
   return -(index+2);
 }
@@ -1869,11 +1870,11 @@ fprintf(stderr, "node face: %p kind:%d (node %1.4f,%1.4f += %1.4f,%1.4f)\n",
   // -AJA- NOTE WELL: the Quake1 code assumes the root node is the
   //       very first one.  The following is a hack to achieve that.
   //       (Hopefully no other assumptions about node ordering exist
-  //        in the Quake1 code!).
+  //       in the Quake1 code!).
 
   if (! parent) // is_root
   {
-    Q1_Prepend(q_nodes, &raw_nd, sizeof(raw_nd));
+    q_nodes->Prepend(&raw_nd, sizeof(raw_nd));
 
     return 0;
   }
@@ -1884,7 +1885,7 @@ fprintf(stderr, "node face: %p kind:%d (node %1.4f,%1.4f += %1.4f,%1.4f)\n",
     Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
                     MAX_MAP_NODES);
 
-  Q1_Append(q_nodes, &raw_nd, sizeof(raw_nd));
+  q_nodes->Append(&raw_nd, sizeof(raw_nd));
 
   return index;
 }
@@ -1974,13 +1975,13 @@ static void CreateSolidLeaf(void)
   raw_lf.contents = CONTENTS_SOLID;
   raw_lf.visofs   = -1;  // no visibility info
 
-  Q1_Append(q_leafs, &raw_lf, sizeof(raw_lf));
+  q_leafs->Append(&raw_lf, sizeof(raw_lf));
 }
 
 
-void BSP_CreateModel(void)
+void Q1_CreateModel(void)
 {
-  qLump_c *lump = Q1_NewLump(LUMP_MODELS);
+  qLump_c *lump = BSP_NewLump(LUMP_MODELS);
 
 ///  dmodel_t model;
 
@@ -1990,12 +1991,12 @@ void BSP_CreateModel(void)
 
   total_nodes = 1;  // root node is always first
 
-  q_nodes = Q1_NewLump(LUMP_NODES);
-  q_leafs = Q1_NewLump(LUMP_LEAFS);
-  q_faces = Q1_NewLump(LUMP_FACES);
+  q_nodes = BSP_NewLump(LUMP_NODES);
+  q_leafs = BSP_NewLump(LUMP_LEAFS);
+  q_faces = BSP_NewLump(LUMP_FACES);
 
-  q_mark_surfs = Q1_NewLump(LUMP_MARKSURFACES);
-  q_surf_edges = Q1_NewLump(LUMP_SURFEDGES);
+  q_mark_surfs = BSP_NewLump(LUMP_MARKSURFACES);
+  q_surf_edges = BSP_NewLump(LUMP_SURFEDGES);
 
   CreateSolidLeaf();
 
@@ -2018,7 +2019,7 @@ void BSP_CreateModel(void)
 
 
   // clipping hulls
-  q_clip_nodes = Q1_NewLump(LUMP_CLIPNODES);
+  q_clip_nodes = BSP_NewLump(LUMP_CLIPNODES);
 
   model.headnode[0] = 0; // root of drawing BSP
   model.headnode[1] = Quake1_CreateClipHull(1, q_clip_nodes);
@@ -2028,7 +2029,7 @@ void BSP_CreateModel(void)
 
   // FIXME: fix endianness in model
 
-  Q1_Append(lump, &model, sizeof(model));
+  lump->Append(&model, sizeof(model));
 }
 
 //--- editor settings ---

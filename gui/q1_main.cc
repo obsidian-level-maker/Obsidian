@@ -28,206 +28,38 @@
 #include "csg_main.h"
 
 #include "g_image.h"
+#include "ui_chooser.h"
 
+#include "q_bsp.h"
+#include "q_pakfile.h"
 #include "q1_main.h"
 #include "q1_structs.h"
-#include "q_pakfile.h"
 
 
+#define TEMP_FILENAME    "temp/out.pak"
 
-static FILE *bsp_fp;
-
-static qLump_c * bsp_directory[HEADER_LUMPS];
-
+static char *level_name;
 
 
-static int write_errors_seen;
-static int seek_errors_seen;
-
-
-extern void BSP_CreateModel(void);
-
-
-//------------------------------------------------------------------------
-//  BSP-FILE OUTPUT
-//------------------------------------------------------------------------
-
-static void BSP_RawSeek(u32_t pos)
+void Q1_CreateEntities(void)
 {
-  fflush(bsp_fp);
-
-  if (fseek(bsp_fp, pos, SEEK_SET) < 0)
-  {
-    if (seek_errors_seen < 10)
-    {
-      LogPrintf("Failure seeking in bsp file! (offset %u)\n", pos);
-
-      seek_errors_seen += 1;
-    }
-  }
-}
-
-static void BSP_RawWrite(const void *data, u32_t len)
-{
-  SYS_ASSERT(bsp_fp);
-
-  if (1 != fwrite(data, len, 1, bsp_fp))
-  {
-    if (write_errors_seen < 10)
-    {
-      LogPrintf("Failure writing to bsp file! (%u bytes)\n", len);
-
-      write_errors_seen += 1;
-    }
-  }
-}
-
-static void BSP_WriteLump(int entry, lump_t *info)
-{
-  qLump_c *lump = bsp_directory[entry];
-
-  if (! lump)
-  {
-    info->start  = 0;
-    info->length = 0;
-
-    return;
-  }
-
-
-  int len = (int)lump->size();
-
-  info->start  = LE_S32((u32_t)ftell(bsp_fp));
-  info->length = LE_S32(len);
-
-
-  if (len > 0)
-  {
-    BSP_RawWrite(& (*lump)[0], len);
-
-    // pad lumps to a multiple of four bytes
-    u32_t padding = AlignLen(len) - len;
-
-    SYS_ASSERT(0 <= padding && padding <= 3);
-
-    if (padding > 0)
-    {
-      static u8_t zeros[4] = { 0,0,0,0 };
-
-      BSP_RawWrite(zeros, padding);
-    }
-  }
-}
-
-
-qLump_c *Q1_NewLump(int entry)
-{
-  SYS_ASSERT(0 <= entry && entry < HEADER_LUMPS);
-
-  if (bsp_directory[entry] != NULL)
-    Main_FatalError("INTERNAL ERROR: Q1_NewLump: already created entry [%d]\n", entry);
-
-  bsp_directory[entry] = new qLump_c;
-
-  return bsp_directory[entry];
-}
-
-
-void Q1_Append(qLump_c *lump, const void *data, u32_t len)
-{
-  if (len > 0)
-  {
-    u32_t old_size = lump->size();
-    u32_t new_size = old_size + len;
-
-    lump->resize(new_size);
-
-    memcpy(& (*lump)[old_size], data, len);
-  }
-}
-
-void Q1_Prepend(qLump_c *lump, const void *data, u32_t len)
-{
-  if (len > 0)
-  {
-    u32_t old_size = lump->size();
-    u32_t new_size = old_size + len;
-
-    lump->resize(new_size);
-
-    if (old_size > 0)
-    {
-      memmove(& (*lump)[len], & (*lump)[0], old_size);
-    }
-    memcpy(& (*lump)[0], data, len);
-  }
-}
-
-
-void Q1_Printf(qLump_c *lump, int crlf, const char *str, ...)
-{
-  static char buffer[MSG_BUF_LEN];
-
-  va_list args;
-
-  va_start(args, str);
-  vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
-  va_end(args);
-
-  buffer[MSG_BUF_LEN-2] = 0;
-
-  if (! crlf)
-  {
-    Q1_Append(lump, buffer, strlen(buffer));
-    return;
-  }
-
-  // convert each newline into CR/LF pair
-
-  char *pos = buffer;
-  char *next;
-
-  while (*pos)
-  {
-    next = strchr(pos, '\n');
-
-    Q1_Append(lump, pos, next ? (next - pos) : strlen(pos));
-
-    if (! next)
-      break;
-
-    Q1_Append(lump, "\r\n", 2);
-
-    pos = next+1;
-  }
-}
-
-
-void ENT_KeyPair(qLump_c *lump, const char *key, const char *val)
-{
-  Q1_Printf(lump,0, "\"%s\" \"%s\"\n", key, val);
-}
-
-
-void BSP_CreateEntities(void)
-{
-  qLump_c *lump = Q1_NewLump(LUMP_ENTITIES);
+  qLump_c *lump = BSP_NewLump(LUMP_ENTITIES);
 
   /* add the worldspawn entity */
 
-  Q1_Printf(lump,0, "{\n");
+  lump->Printf("{\n");
 
-  ENT_KeyPair(lump,  "_generated_by", OBLIGE_TITLE " (c) Andrew Apted");
-  ENT_KeyPair(lump,  "_oblige_version", OBLIGE_VERSION);
-  ENT_KeyPair(lump,  "_oblige_home",  "http://oblige.sourceforge.net");
-  ENT_KeyPair(lump,  "_random_seed",  main_win->game_box->get_Seed());
+  lump->KeyPair("_generated_by", OBLIGE_TITLE " (c) Andrew Apted");
+  lump->KeyPair("_oblige_version", OBLIGE_VERSION);
+  lump->KeyPair("_oblige_home",  "http://oblige.sourceforge.net");
+  lump->KeyPair("_random_seed",  main_win->game_box->get_Seed());
 
-  ENT_KeyPair(lump,  "message",   "level created by Oblige");
-  ENT_KeyPair(lump,  "worldtype", "0");
-//ENT_KeyPair(lump,  "origin",    "0 0 0");
-  ENT_KeyPair(lump,  "classname", "worldspawn");
+  lump->KeyPair("message",   "level created by Oblige");
+  lump->KeyPair("worldtype", "0");
+//lump->KeyPair("origin",    "0 0 0");
+  lump->KeyPair("classname", "worldspawn");
 
-  Q1_Printf(lump,0, "}\n");
+  lump->Printf("}\n");
 
   // add everything else
 
@@ -235,27 +67,23 @@ void BSP_CreateEntities(void)
   {
     entity_info_c *E = all_entities[j];
 
-    char orig_buf[80];
-    sprintf(orig_buf, "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
-
-    Q1_Printf(lump,0, "{\n");
+    lump->Printf("{\n");
 
     // TODO: other models (doors etc) --> "model" "*45"
 
     // FIXME: other entity properties
 
-    ENT_KeyPair(lump,  "origin",    orig_buf);
-    ENT_KeyPair(lump,  "classname", E->name.c_str());
+    lump->KeyPair("origin", "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
+    lump->KeyPair("classname", E->name.c_str());
 
-    Q1_Printf(lump,0, "}\n");
+    lump->Printf("}\n");
   }
 
   // add a trailing nul
   u8_t zero = 0;
 
-  Q1_Append(lump, &zero, 1);
+  lump->Append(&zero, 1);
 }
-
 
 
 //------------------------------------------------------------------------
@@ -391,13 +219,13 @@ fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
   return plane_idx;
 }
 
-static void BSP_CreatePlanes(void)
+static void Q1_CreatePlanes(void)
 {
-  qLump_c *lump = Q1_NewLump(LUMP_PLANES);
+  qLump_c *lump = BSP_NewLump(LUMP_PLANES);
 
   // FIXME: write separately, fix endianness as we go
 
-  Q1_Append(lump, &q1_planes[0], q1_planes.size() * sizeof(dplane_t));
+  lump->Append(&q1_planes[0], q1_planes.size() * sizeof(dplane_t));
 }
 
 
@@ -472,11 +300,11 @@ u16_t Q1_AddVertex(double x, double y, double z)
   return vert_idx;
 }
 
-static void BSP_CreateVertexes(void)
+static void Q1_CreateVertexes(void)
 {
-  qLump_c *lump = Q1_NewLump(LUMP_VERTEXES);
+  qLump_c *lump = BSP_NewLump(LUMP_VERTEXES);
 
-  Q1_Append(lump, &q1_vertices[0], q1_vertices.size() * sizeof(dvertex_t));
+  lump->Append(&q1_vertices[0], q1_vertices.size() * sizeof(dvertex_t));
 }
 
 
@@ -539,11 +367,11 @@ s32_t Q1_AddEdge(u16_t start, u16_t end)
   return flipped ? -edge_idx : edge_idx;
 }
 
-static void BSP_CreateEdges(void)
+static void Q1_CreateEdges(void)
 {
-  qLump_c *lump = Q1_NewLump(LUMP_EDGES);
+  qLump_c *lump = BSP_NewLump(LUMP_EDGES);
 
-  Q1_Append(lump, &q1_edges[0], q1_edges.size() * sizeof(dedge_t));
+  lump->Append(&q1_edges[0], q1_edges.size() * sizeof(dedge_t));
 }
 
 
@@ -603,7 +431,7 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
     size /= 2;
   }
 
-  Q1_Append(lump, &mm_tex, sizeof(mm_tex));
+  lump->Append(&mm_tex, sizeof(mm_tex));
 
 
   u8_t pixels[2] = { pix1, pix2 };
@@ -615,7 +443,7 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
     for (int y = 0; y < size; y++)
     for (int x = 0; x < size; x++)
     {
-      Q1_Append(lump, pixels + (((x^y) & (size/4)) ? 1 : 0), 1);
+      lump->Append(pixels + (((x^y) & (size/4)) ? 1 : 0), 1);
     }
 
     size /= 2;
@@ -653,7 +481,7 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
       if (! WAD2_ReadData(entry, pos, actual, buffer))
         Main_FatalError("Error reading texture data in wad!");
 
-      Q1_Append(lump, buffer, actual);
+      lump->Append(buffer, actual);
 
       pos    += actual;
       length -= actual;
@@ -669,9 +497,9 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
   CreateDummyMip(lump, name, 4, 12);
 }
 
-static void BSP_CreateMipTex(void)
+static void Q1_CreateMipTex(void)
 {
-  qLump_c *lump = Q1_NewLump(LUMP_TEXTURES);
+  qLump_c *lump = BSP_NewLump(LUMP_TEXTURES);
 
   if (! WAD2_OpenRead("data/quake_tex.wad"))
   {
@@ -688,7 +516,7 @@ static void BSP_CreateMipTex(void)
 
   for (unsigned int m = 0; m < q1_miptexs.size(); m++)
   {
-    offsets[m] = dir_size + lump->size();
+    offsets[m] = dir_size + (u32_t)lump->GetSize();
 
     TransferOneMipTex(lump, m, q1_miptexs[m].c_str());
   }
@@ -697,8 +525,8 @@ static void BSP_CreateMipTex(void)
 
   // create miptex directory
   // FIXME: endianness
-  Q1_Prepend(lump, offsets, 4 * num_miptex);
-  Q1_Prepend(lump, &num_miptex, 4);
+  lump->Prepend(offsets, 4 * num_miptex);
+  lump->Prepend(&num_miptex, 4);
 
   delete[] offsets;
 }
@@ -710,7 +538,7 @@ static void DummyMipTex(void)
   // 0 = "error"
   // 1 = "gray"
 
-  qLump_c *lump = Q1_NewLump(LUMP_TEXTURES);
+  qLump_c *lump = BSP_NewLump(LUMP_TEXTURES);
 
 
   dmiptexlump_t mm_dir;
@@ -720,7 +548,7 @@ static void DummyMipTex(void)
   mm_dir.data_ofs[0] = LE_S32(sizeof(mm_dir));
   mm_dir.data_ofs[1] = LE_S32(sizeof(mm_dir) + sizeof(miptex_t) + 85*4);
 
-  Q1_Append(lump, &mm_dir, sizeof(mm_dir));
+  lump->Append(&mm_dir, sizeof(mm_dir));
 
 
   for (int mt = 0; mt < 2; mt++)
@@ -745,7 +573,7 @@ static void DummyMipTex(void)
       size = size / 2;
     }
 
-    Q1_Append(lump, &mm_tex, sizeof(mm_tex));
+    lump->Append(&mm_tex, sizeof(mm_tex));
 
 
     u8_t pixels[2];
@@ -760,7 +588,7 @@ static void DummyMipTex(void)
       for (int y = 0; y < size; y++)
       for (int x = 0; x < size; x++)
       {
-        Q1_Append(lump, pixels + (((x^y) & 2)/2), 1);
+        lump->Append(pixels + (((x^y) & 2)/2), 1);
       }
 
       size = size / 2;
@@ -858,13 +686,13 @@ u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4)
   return tin_idx;
 }
 
-static void BSP_CreateTexInfo(void)
+static void Q1_CreateTexInfo(void)
 {
-  qLump_c *lump = Q1_NewLump(LUMP_TEXINFO);
+  qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
 
   // FIXME: write separately, fix endianness as we go
  
-  Q1_Append(lump, &q1_texinfos[0], q1_texinfos.size() * sizeof(texinfo_t));
+  lump->Append(&q1_texinfos[0], q1_texinfos.size() * sizeof(texinfo_t));
 }
 
 
@@ -880,7 +708,7 @@ static void DummyTexInfo(void)
   // 4 = "gray"  on PLANE_Y / PLANE_ANYY
   // 5 = "gray"  on PLANE_Z / PLANE_ANYZ
 
-  qLump_c *lump = Q1_NewLump(LUMP_TEXINFO);
+  qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
 
   float scale = 8.0;
 
@@ -913,111 +741,12 @@ static void DummyTexInfo(void)
     tex.miptex = LE_S32(T / 3);
     tex.flags  = LE_S32(flags);
 
-    Q1_Append(lump, &tex, sizeof(tex));
-  }
-}
-
-static void ClearLumps(void)
-{
-  for (int i = 0; i < HEADER_LUMPS; i++)
-  {
-    if (bsp_directory[i])
-    {
-      delete bsp_directory[i];
-
-      bsp_directory[i] = NULL;
-    }
+    lump->Append(&tex, sizeof(tex));
   }
 }
 
 
 //------------------------------------------------------------------------
-
-static bool BSP_OpenWrite(const char *target_file)
-{
-  write_errors_seen = 0;
-  seek_errors_seen  = 0;
-
-  ClearPlanes();
-  ClearVertices();
-  ClearEdges();
-  ClearMipTex();
-  ClearTexInfo();
-
-  ClearLumps();
-
-  bsp_fp = fopen(target_file, "wb");
-
-  if (! bsp_fp)
-  {
-    DLG_ShowError("Unable to create bsp file:\n%s", strerror(errno));
-    return false;
-  }
-
-  return true; //OK
-}
-
-
-static bool BSP_CloseWrite(void)
-{
-  // yada yada
-
-  Quake1_BeginLightmap();
-
-  BSP_CreateEntities();
-
-  BSP_CreateModel();
-
-  BSP_CreatePlanes();
-  BSP_CreateVertexes();
-  BSP_CreateEdges();
-  BSP_CreateMipTex();
-  BSP_CreateTexInfo();
-
-
-  // WRITE FAKE HEADER
-  dheader_t header;
-  memset(&header, 0, sizeof(header));
-
-  BSP_RawWrite(&header, sizeof(header));
-
-
-  // WRITE ALL LUMPS
-
-  header.version = LE_U32(0x1D); 
-
-  for (int L = 0; L < HEADER_LUMPS; L++)
-  {
-    BSP_WriteLump(L, &header.lumps[L]);
-  }
-
-
-  // FSEEK, WRITE REAL HEADER
-
-  BSP_RawSeek(0);
-  BSP_RawWrite(&header, sizeof(header));
-
-  fclose(bsp_fp);
-  bsp_fp = NULL;
-
-  return (write_errors_seen == 0) && (seek_errors_seen == 0);
-}
-
-
-static void BSP_Backup(const char *filename)
-{
-  if (FileExists(filename))
-  {
-    LogPrintf("Backing up existing file: %s\n", filename);
-
-    char *backup_name = ReplaceExtension(filename, "bak");
-
-    if (! FileCopy(filename, backup_name))
-      LogPrintf("WARNING: unable to create backup: %s\n", backup_name);
-
-    StringFree(backup_name);
-  }
-}
 
 
 class quake1_game_interface_c : public game_interface_c
@@ -1043,15 +772,31 @@ public:
 
 bool quake1_game_interface_c::Start()
 {
-  // TODO
+  const char *filename = Select_Output_File();
+
+  if (! filename)  // cancelled
+    return false;
+
+  if (! PAK_OpenWrite(TEMP_FILENAME))
+    return false;
+
+  main_win->build_box->ProgInit(1);
+
+  main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
+  main_win->build_box->ProgStatus("Making levels");
+
   return true;
 }
 
 
 bool quake1_game_interface_c::Finish(bool build_ok)
 {
-  // TODO
-  return true;
+  PAK_CloseWrite();
+
+  // tidy up
+/////  FileDelete(TEMP_FILENAME);
+
+  return build_ok;
 }
 
 
@@ -1063,30 +808,54 @@ void quake1_game_interface_c::BeginLevel()
 
 void quake1_game_interface_c::LevelProp(const char *key, const char *value)
 {
-  // FIXME: get level name, validate it
+  if (StringCaseCmp(key, "level_name") == 0)
+  {
+    level_name = StringDup(value);
+  }
+  else
+  {
+    LogPrintf("WARNING: QUAKE1: unknown level prop: %s=%s\n", key, value);
+  }
 }
 
 
 void quake1_game_interface_c::EndLevel()
 {
-fprintf(stderr, "Q1_end_level\n");
+  if (! level_name)
+    Main_FatalError("Script problem: did not set level name!\n");
 
-  if (! BSP_OpenWrite("temp/out.bsp"))
+  if (strlen(level_name) >= 32)
+    Main_FatalError("Script problem: level name too long: %s\n", level_name);
+
+  char entry_in_pak[64];
+  sprintf(entry_in_pak, "maps/%s.bsp", level_name);
+
+  if (! BSP_OpenLevel(entry_in_pak, 1))
     return; //!!!!!! FUCK
 
-//  CSG2_TestQuake();
-
-//!!!!! FIXME  SYS_ASSERT(level_name);
+  ClearPlanes();
+  ClearVertices();
+  ClearEdges();
+  ClearMipTex();
+  ClearTexInfo();
 
   CSG2_MergeAreas();
-
   CSG2_MakeMiniMap();
 
   Quake1_BuildBSP();
+  Quake1_BeginLightmap();
 
-  BSP_CloseWrite();
+  Q1_CreateEntities();
+  Q1_CreateModel();
+  Q1_CreatePlanes();
+  Q1_CreateVertexes();
+  Q1_CreateEdges();
+  Q1_CreateMipTex();
+  Q1_CreateTexInfo();
 
-  // FREE STUFF
+  BSP_CloseLevel();
+
+  // FREE STUFF !!!!
 }
 
 

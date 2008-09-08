@@ -62,7 +62,7 @@ bool BSP_CloseLevel();
 qLump_c *BSP_NewLump(int entry);
 
 
-/* ----- BSP structures -------------------------- */
+/* ----- BSP lump directory ------------------------- */
 
 #define Q1_HEADER_LUMPS  15
 #define Q1_BSP_VERSION   29
@@ -93,7 +93,6 @@ typedef struct
   lump_t lumps[Q2_HEADER_LUMPS];
 }
 dheader2_t;
-
 
 #endif /* __OBLIGE_BSPOUT_H__ */
 

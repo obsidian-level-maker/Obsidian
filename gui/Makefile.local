@@ -54,6 +54,7 @@ OBJS=	main.o      \
 	g_cookie.o  \
 	g_image.o   \
 	g_lua.o     \
+	q_bsp.o     \
 	q1_bsp.o    \
 	q1_clip.o   \
 	q1_light.o  \

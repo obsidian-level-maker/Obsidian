@@ -24,16 +24,10 @@ game_interface_c * Quake1_GameObject(void);
 
 
 //------------------------------------------------------------------------
-// Internal API
+// INTERNAL API
 //------------------------------------------------------------------------
 
-typedef std::vector<u8_t> qLump_c;
-
-qLump_c *Q1_NewLump(int entry);
-
-void Q1_Append (qLump_c *lump, const void *data, u32_t len);
-void Q1_Prepend(qLump_c *lump, const void *data, u32_t len);
-void Q1_Printf (qLump_c *lump, int crlf, const char *str, ...);
+class qLump_c;
 
 u16_t Q1_AddPlane(double x, double y, double z,
                   double dx, double dy, double dz, bool *flipped);
@@ -41,23 +35,19 @@ u16_t Q1_AddVertex(double x, double y, double z);
 s32_t Q1_AddEdge(u16_t start, u16_t end);
 u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4);
 
-
 // q1_bsp.cc
-
-#define Q_EPSILON  0.02
 
 void Quake1_BuildBSP(void);
 
+void Q1_CreateModel(void);
 
 // q1_tex.cc
 
 bool Quake1_ExtractTextures(void);
 
-
 // q1_clip.cc
 
 s32_t Quake1_CreateClipHull(int which, qLump_c *q1_clip);
-
 
 // q1_light.cc
 
