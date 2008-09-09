@@ -33,14 +33,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 /*
 ==============================================================================
-
   .BSP file format
-
 ==============================================================================
 */
 
 #define IDBSPHEADER  (('P'<<24)+('S'<<16)+('B'<<8)+'I')
-  // little-endian "IBSP"
 
 #define BSPVERSION  38
 
@@ -131,7 +128,8 @@ dvertex_t;
 #define PLANE_ANYZ    5
 
 // planes (x&~1) and (x&~1)+1 are always opposites
-
+// AJA: the pair is also ordered, first plane should have a normal
+//      whose greatest axis is positive.
 typedef struct
 {
   float normal[3];
@@ -148,39 +146,35 @@ dplane_t;
 // these definitions also need to be in q_shared.h!
 
 // lower bits are stronger, and will eat weaker brushes completely
-#define CONTENTS_SOLID      1    // an eye is never valid in a solid
-#define CONTENTS_WINDOW      2    // translucent, but not watery
-#define CONTENTS_AUX      4
+#define CONTENTS_SOLID     1   // an eye is never valid in a solid
+#define CONTENTS_WINDOW    2   // translucent, but not watery
+#define CONTENTS_AUX       4
 #define CONTENTS_LAVA      8
-#define CONTENTS_SLIME      16
-#define CONTENTS_WATER      32
-#define CONTENTS_MIST      64
-#define LAST_VISIBLE_CONTENTS  64
+#define CONTENTS_SLIME    16
+#define CONTENTS_WATER    32
+#define CONTENTS_MIST     64
 
 // remaining contents are non-visible, and don't eat brushes
+#define LAST_VISIBLE_CONTENTS  64
 
-#define CONTENTS_AREAPORTAL    0x8000
-
-#define CONTENTS_PLAYERCLIP    0x10000
-#define CONTENTS_MONSTERCLIP  0x20000
+#define CONTENTS_AREAPORTAL       0x8000
+#define CONTENTS_PLAYERCLIP      0x10000
+#define CONTENTS_MONSTERCLIP     0x20000
 
 // currents can be added to any other contents, and may be mixed
-#define CONTENTS_CURRENT_0    0x40000
-#define CONTENTS_CURRENT_90    0x80000
-#define CONTENTS_CURRENT_180  0x100000
-#define CONTENTS_CURRENT_270  0x200000
-#define CONTENTS_CURRENT_UP    0x400000
-#define CONTENTS_CURRENT_DOWN  0x800000
+#define CONTENTS_CURRENT_EAST    0x40000
+#define CONTENTS_CURRENT_NORTH   0x80000
+#define CONTENTS_CURRENT_WEST   0x100000
+#define CONTENTS_CURRENT_SOUTH  0x200000
+#define CONTENTS_CURRENT_UP     0x400000
+#define CONTENTS_CURRENT_DOWN   0x800000
 
-#define CONTENTS_ORIGIN      0x1000000  // removed before bsping an entity
-
-#define CONTENTS_MONSTER    0x2000000  // should never be on a brush, only in game
-#define CONTENTS_DEADMONSTER  0x4000000
-#define CONTENTS_DETAIL      0x8000000  // brushes to be added after vis leafs
-#define CONTENTS_TRANSLUCENT  0x10000000  // auto set if any surface has trans
-#define CONTENTS_LADDER      0x20000000
-
-
+#define CONTENTS_ORIGIN         0x1000000  // removed before bsping an entity
+#define CONTENTS_MONSTER        0x2000000  // should never be on a brush, only in game
+#define CONTENTS_DEADMONSTER    0x4000000
+#define CONTENTS_DETAIL         0x8000000  // brushes to be added after vis leafs
+#define CONTENTS_TRANSLUCENT   0x10000000  // auto set if any surface has trans
+#define CONTENTS_LADDER        0x20000000
 
 
 typedef struct
@@ -230,6 +224,7 @@ typedef struct
 dedge_t;
 
 #define MAXLIGHTMAPS  4
+
 typedef struct
 {
   s16_t planenum;
@@ -279,7 +274,9 @@ typedef struct
 }
 dbrush_t;
 
-#define ANGLE_UP  -1
+
+// special yaw angles which orient entities up or down
+#define ANGLE_UP    -1
 #define ANGLE_DOWN  -2
 
 
@@ -288,10 +285,11 @@ dbrush_t;
 // compressed bit vectors
 #define DVIS_PVS  0
 #define DVIS_PHS  1
+
 typedef struct
 {
-  int      numclusters;
-  int      bitofs[8][2];  // bitofs[numclusters][2]
+  s32_t numclusters;
+  s32_t offsets[1][2];   // [NUMCLUSTERS][2]
 }
 dvis_t;
 
@@ -300,15 +298,15 @@ dvis_t;
 // hearable even if the vis info says that it could be.
 typedef struct
 {
-  int    portalnum;
-  int    otherarea;
+  s32_t portal_id;
+  s32_t otherarea;
 }
 dareaportal_t;
 
 typedef struct
 {
-  int    numareaportals;
-  int    firstareaportal;
+  s32_t num_portals;
+  s32_t first_portal;
 }
 darea_t;
 
