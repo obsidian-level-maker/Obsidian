@@ -146,7 +146,7 @@ void UI_Game::FreshSeed()
 {
   u32_t val = (u32_t)time(NULL);
 
-  SetSeed((val/86400)*1000 + (val % 500));
+  SetSeed((val/86400)*1000 + (val/11)%500);
 }
 
 void UI_Game::BumpSeed()
