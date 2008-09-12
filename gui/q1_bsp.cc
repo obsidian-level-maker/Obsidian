@@ -1291,7 +1291,7 @@ static int total_surf_edges;
 
 static void DoAddEdge(double x1, double y1, double z1,
                       double x2, double y2, double z2,
-                      dface_t *face, dleaf_t *raw_lf)
+                      dface_t *face, dleaf_t *raw_lf = NULL)
 {
   u16_t v1 = Q1_AddVertex(x1, y1, z1);
   u16_t v2 = Q1_AddVertex(x2, y2, z2);
@@ -1499,7 +1499,7 @@ static void GetExtents(double min_s, double min_t, double max_s, double max_t,
   *ext_H = bmax_t - bmin_t + 1;
 }
 
-static void MakeFloorFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
+static void MakeFloorFace(qFace_c *F, dface_t *face)
 {
   qLeaf_c *leaf = F->floor_leaf;
   SYS_ASSERT(leaf);
@@ -1561,7 +1561,7 @@ static void MakeFloorFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
     int p2 = (pos + 1) % v_num;
 
     DoAddEdge(vert_x[pos], vert_y[pos], z,
-              vert_x[p2 ], vert_y[p2 ], z, face, raw_lf);
+              vert_x[p2 ], vert_y[p2 ], z, face);
 
     min_x = MIN(min_x, vert_x[pos]);
     min_y = MIN(min_y, vert_y[pos]);
@@ -1583,7 +1583,7 @@ static void MakeFloorFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
   }
 }
 
-static void MakeWallFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
+static void MakeWallFace(qFace_c *F, dface_t *face)
 {
   qSide_c *S = F->side;
 
@@ -1645,17 +1645,17 @@ static void MakeWallFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
 
   if (true)
   {
-    DoAddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  face, raw_lf);
-    DoAddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  face, raw_lf);
-    DoAddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  face, raw_lf);
-    DoAddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  face, raw_lf);
+    DoAddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  face);
+    DoAddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  face);
+    DoAddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  face);
+    DoAddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  face);
   }
   else
   {
-    DoAddEdge(S->x1, S->y1, z1,  S->x2, S->y2, z1,  face, raw_lf);
-    DoAddEdge(S->x2, S->y2, z1,  S->x2, S->y2, z2,  face, raw_lf);
-    DoAddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  face, raw_lf);
-    DoAddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  face, raw_lf);
+    DoAddEdge(S->x1, S->y1, z1,  S->x2, S->y2, z1,  face);
+    DoAddEdge(S->x2, S->y2, z1,  S->x2, S->y2, z2,  face);
+    DoAddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  face);
+    DoAddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  face);
   }
 
 
@@ -1691,22 +1691,17 @@ static void MakeWallFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
   }
 }
 
-static void MakeFace(qFace_c *F, dleaf_t *raw_lf)
+static void MakeFace(qFace_c *F, qNode_c *N)
 {
   SYS_ASSERT(F->index < 0);
-///---  {
-///---    if (raw_lf)
-///---      DoAddSurf(F->index, raw_lf);
-///---    return;
-///---  }
 
 
   dface_t face;
 
   if (F->kind == qFace_c::WALL)
-    MakeWallFace(F, &face, raw_lf);
+    MakeWallFace(F, &face);
   else
-    MakeFloorFace(F, &face, raw_lf);
+    MakeFloorFace(F, &face);
 
 
   // FIXME: fix endianness in face
@@ -1720,11 +1715,6 @@ static void MakeFace(qFace_c *F, dleaf_t *raw_lf)
   F->index = (int)index;
 
   q_faces->Append(&face, sizeof(face));
-
-
-  // add it into the mark_surfs lump
-  if (raw_lf)
-    DoAddSurf(F->index, raw_lf);
 }
 
 
@@ -1834,7 +1824,7 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
 
     SYS_ASSERT(F->index < 0);
 
-    MakeFace(F, NULL);
+    MakeFace(F, node);
 
     SYS_ASSERT(F->index >= 0);
 
