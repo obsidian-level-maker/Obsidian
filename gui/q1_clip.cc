@@ -109,8 +109,8 @@ static void FattenVertex(const area_poly_c *P, unsigned int k,
   area_vert_c *pv = P->verts[(k + total - 1) % total];
   area_vert_c *nv = P->verts[(k + 1        ) % total];
 
-fprintf(stderr, "ORIGINAL VERT[%d] @ (%1.0f %1.0f)  < (%1.0f %1.0f) > (%1.0f %1.0f)\n",
-k, kv->x, kv->y, pv->x, pv->y, nv->x, nv->y);
+///fprintf(stderr, "ORIGINAL VERT[%d] @ (%1.0f %1.0f)  < (%1.0f %1.0f) > (%1.0f %1.0f)\n",
+///k, kv->x, kv->y, pv->x, pv->y, nv->x, nv->y);
 
   // determine internal angle
   double p_angle = CalcAngle(kv->x, kv->y, pv->x, pv->y);
@@ -121,7 +121,7 @@ k, kv->x, kv->y, pv->x, pv->y, nv->x, nv->y);
   if (diff < 0)    diff += 360.0;
   if (diff >= 360) diff -= 360.0;
 
-fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
+///fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
 
   if (diff > 180.1)
     Main_FatalError("Area poly not convex!\n");
@@ -166,7 +166,7 @@ fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
     double y = kv->y + (p_ny + n_ny) / 2.0 * wd;
 
     P2->verts.push_back(new area_vert_c(x, y));
-fprintf(stderr, "... HIG VERT --> (%1.4f %1.4f)\n", x, y);
+///fprintf(stderr, "... HIG VERT --> (%1.4f %1.4f)\n", x, y);
   }
   else if (diff > 81.0)
   {
@@ -176,7 +176,7 @@ fprintf(stderr, "... HIG VERT --> (%1.4f %1.4f)\n", x, y);
                      px1, py1, px2, py2,  &x, &y);
 
     P2->verts.push_back(new area_vert_c(x, y));
-fprintf(stderr, "... MID VERT --> (%1.4f %1.4f)\n", x, y);
+///fprintf(stderr, "... MID VERT --> (%1.4f %1.4f)\n", x, y);
   }
   else
   {
@@ -202,13 +202,13 @@ fprintf(stderr, "... MID VERT --> (%1.4f %1.4f)\n", x, y);
                      px1, py1, px2, py2, &x, &y);
 
     P2->verts.push_back(new area_vert_c(x, y));
-fprintf(stderr, "... LOW VERT1 --> (%1.4f %1.4f)\n", x, y);
+///fprintf(stderr, "... LOW VERT1 --> (%1.4f %1.4f)\n", x, y);
 
     CalcIntersection(bx1, by1, bx2, by2,
                      nx1, ny1, nx2, ny2, &x, &y);
 
     P2->verts.push_back(new area_vert_c(x, y));
-fprintf(stderr, "... LOW VERT2 --> (%1.4f %1.4f)\n", x, y);
+///fprintf(stderr, "... LOW VERT2 --> (%1.4f %1.4f)\n", x, y);
   }
 }
 
@@ -491,8 +491,8 @@ static double EvaluatePartition(cpSideList_c& LEAF,
     front++;
   }
 
-fprintf(stderr, "CLIP PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits:%d\n",
-        px1, py1, px2, py2, back, front, splits);
+///fprintf(stderr, "CLIP PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits:%d\n",
+///        px1, py1, px2, py2, back, front, splits);
 
 
   if (front == 0 || back == 0)
@@ -533,7 +533,7 @@ static cpSide_c * FindPartition(cpSideList_c& LEAF)
 
     double cost = EvaluatePartition(LEAF, part->x1, part->y1, part->x2, part->y2);
 
-fprintf(stderr, "--> COST:%1.2f for %p\n", cost, part);
+///fprintf(stderr, "--> COST:%1.2f for %p\n", cost, part);
 
     if (cost < 0)  // not a potential candidate
       continue;
