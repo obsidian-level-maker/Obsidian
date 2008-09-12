@@ -83,6 +83,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define LUMP_TEXINFO      5
 #define LUMP_FACES        6
 #define LUMP_LIGHTING     7
+
 #define LUMP_LEAFS        8
 #define LUMP_LEAFFACES    9
 #define LUMP_LEAFBRUSHES  10
