@@ -366,7 +366,7 @@ class qNode_c
 public:
   // true if this node splits the tree by Z
   // (with a horizontal upward-facing plane, i.e. dz = 1).
-  bool z_splitter;
+  int z_splitter;
 
   double z;
 
@@ -385,7 +385,7 @@ public:
   std::vector<qFace_c *> faces;
 
 public:
-  qNode_c(bool _Zsplit) : z_splitter(_Zsplit), z(0),
+  qNode_c(int _Zsplit) : z_splitter(_Zsplit), z(0),
                           x(0), y(0), dx(0), dy(0),
                           front_l(NULL), front_n(NULL),
                           back_l(NULL),  back_n(NULL),
@@ -403,7 +403,8 @@ public:
 
   void Flip()
   {
-    SYS_ASSERT(! z_splitter);
+    if (z_splitter)
+      z_splitter = 3 - z_splitter;
 
     qLeaf_c *tmp_l = front_l; front_l = back_l; back_l = tmp_l;
     qNode_c *tmp_n = front_n; front_n = back_n; back_n = tmp_n;
@@ -514,9 +515,9 @@ static double EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
     front++;
   }
 
-fprintf(stderr, "PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits:%d\n",
-        part->x1, part->y1, part->x2, part->y2,
-        back, front, splits);
+///fprintf(stderr, "PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits:%d\n",
+///        part->x1, part->y1, part->x2, part->y2,
+///        back, front, splits);
 
 
   if (front == 0 || back == 0)
@@ -561,7 +562,7 @@ static qSide_c * FindPartition(qLeaf_c *leaf)
 
     double cost = EvaluatePartition(leaf, part);
 
-fprintf(stderr, "--> COST:%1.2f for %p\n", cost, part);
+///fprintf(stderr, "--> COST:%1.2f for %p\n", cost, part);
 
     if (cost < 0)  // not a potential candidate
       continue;
@@ -926,7 +927,7 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
     if (S->seg && ! S->on_node)
     {
-      qNode_c * node = new qNode_c(false /* z_splitter */);
+      qNode_c * node = new qNode_c(0 /* z_splitter */);
 
       node->x = S->x1;
       node->y = S->y1;
@@ -971,16 +972,16 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
   {
       leaf->ceil_on_node = true;
 
-      qNode_c * node = new qNode_c(true /* z_splitter */);
+      qNode_c * node = new qNode_c(2 /* z_splitter */);
 
       node->z = gap->GetZ2();
 
       SYS_ASSERT(leaf->ceil);
       node->faces.push_back(leaf->ceil);
 
-      node->front_l = SOLID_LEAF;
+      node->back_l = SOLID_LEAF;
 
-      Partition_Solid(leaf, &node->back_n, &node->back_l);
+      Partition_Solid(leaf, &node->front_n, &node->front_l);
 
       (*out_n) = node;
       return;
@@ -991,7 +992,7 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
   {
       leaf->floor_on_node = true;
   
-      qNode_c * node = new qNode_c(true /* z_splitter */);
+      qNode_c * node = new qNode_c(1 /* z_splitter */);
 
       node->z = gap->GetZ1();
 
@@ -1020,7 +1021,7 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
     // TODO: OPTIMISE THIS : too many nodes!  Use top of gaps[new_g-1] as
     //       the splitting plane.
 
-    qNode_c *node = new qNode_c(true /* z_splitter */);
+    qNode_c *node = new qNode_c(1 /* z_splitter */);
 
     // choose height halfway between the two gaps (in the solid)
     node->z = (R->gaps[new_g-1]->GetZ2() + R->gaps[new_g]->GetZ1()) / 2.0;
@@ -1068,7 +1069,7 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
   if (! best_p)
   {
     // current leaf is convex
-fprintf(stderr, "LEAF %p IS CONVEX\n", leaf);
+///fprintf(stderr, "LEAF %p IS CONVEX\n", leaf);
 
     leaf->ComputeBBox();
     
@@ -1082,7 +1083,7 @@ fprintf(stderr, "LEAF %p IS CONVEX\n", leaf);
 
     if (l_width > FACE_MAX_SIZE || l_height > FACE_MAX_SIZE)
     {
-fprintf(stderr, "__ BUT TOO BIG: %1.0f x %1.0f\n", l_width , l_height);
+///fprintf(stderr, "__ BUT TOO BIG: %1.0f x %1.0f\n", l_width , l_height);
 
       too_big = true;
     }
@@ -1100,7 +1101,7 @@ fprintf(stderr, "__ BUT TOO BIG: %1.0f x %1.0f\n", l_width , l_height);
       return;
     }
 
-    node = new qNode_c(false /* z_splitter */);
+    node = new qNode_c(0 /* z_splitter */);
 
     if (l_width > l_height)
     {
@@ -1123,7 +1124,7 @@ fprintf(stderr, "__ BUT TOO BIG: %1.0f x %1.0f\n", l_width , l_height);
   else
   {
 // fprintf(stderr, "LEAF HAS SPLITTER %p \n", best_p);
-    node = new qNode_c(false /* z_splitter */);
+    node = new qNode_c(0 /* z_splitter */);
 
     node->x = best_p->x1;
     node->y = best_p->y1;
@@ -1159,7 +1160,7 @@ static void DoAddFace(qSide_c *S, int gap, double z1, double z2)
   {
     int num = 1 + (int)floor((z2 - z1) / (double)FACE_MAX_SIZE);
 
-fprintf(stderr, "Splitting tall face (%1.0f .. %1.0f) into %d pieces\n", z1, z2, num);
+///fprintf(stderr, "Splitting tall face (%1.0f .. %1.0f) into %d pieces\n", z1, z2, num);
 
     SYS_ASSERT(num >= 2);
 
@@ -1199,8 +1200,8 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
     {
       DoAddFace(S, k, gz1, gz2);
 
-fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f) - (%1.0f,%1.0f)\n",
-        gz1, gz2, k, S->x1, S->y1, S->x2, S->y2);
+///fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f) - (%1.0f,%1.0f)\n",
+///        gz1, gz2, k, S->x1, S->y1, S->x2, S->y2);
       continue;
     }
 
@@ -1218,8 +1219,8 @@ fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f)
       {
         DoAddFace(S, k, sz1, sz2);
 
-fprintf(stderr, "Making face %1.0f..%1.0f gap:%u neighbour:%u (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
-        sz1, sz2, k, m, S->x1, S->y1, S->x2, S->y2, side);
+///fprintf(stderr, "Making face %1.0f..%1.0f gap:%u neighbour:%u (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
+///        sz1, sz2, k, m, S->x1, S->y1, S->x2, S->y2, side);
       }
     }
   }
@@ -1416,13 +1417,13 @@ static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf, bo
     old_y[k] = vert_y[k];
   }
 
-fprintf(stderr, "\nMIDDLE @ (%1.2f %1.2f) COUNT:%d\n", mid_x, mid_y, v_num);
+///fprintf(stderr, "\nMIDDLE @ (%1.2f %1.2f) COUNT:%d\n", mid_x, mid_y, v_num);
   for (int m = 0; m < v_num; m++)
   {
     vert_x[m] = old_x[mapping[m]];
     vert_y[m] = old_y[mapping[m]];
 
-fprintf(stderr, "___ (%+5.0f %+5.0f)\n", vert_x[m], vert_y[m]);
+///fprintf(stderr, "___ (%+5.0f %+5.0f)\n", vert_x[m], vert_y[m]);
   }
 
   return v_num;
@@ -1512,17 +1513,18 @@ static void MakeFloorFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
   double z2 = gap->GetZ2();
 
   double z = (F->kind == qFace_c::CEIL) ? z2 : z1;
-fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
+///fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
 
 
+  bool is_ceil = (F->kind == qFace_c::CEIL) ? true : false;
   bool flipped;
 
   face->planenum = Q1_AddPlane(0, 0, z,
-                               0, 0, (F->kind == qFace_c::CEIL) ? -1 : +1, &flipped);
+                               0, 0, is_ceil ? -1 : +1, &flipped);
 
   face->side = flipped ? 1 : 0;
 
-  const char *texture = (F->kind == qFace_c::CEIL) ? gap->CeilTex() : gap->FloorTex();
+  const char *texture = is_ceil ? gap->CeilTex() : gap->FloorTex();
 
   int flags = CalcTextureFlag(texture);
 
@@ -1605,7 +1607,7 @@ static void MakeWallFace(qFace_c *F, dface_t *face, dleaf_t *raw_lf)
   const char *texture = "error";
 
   merge_region_c *BACK = (S->side == 0) ? S->seg->back : S->seg->front;
-fprintf(stderr, "BACK = %p\n", BACK);
+///fprintf(stderr, "BACK = %p\n", BACK);
   if (BACK)
   {
     area_poly_c *MID = PolyForSideTexture(BACK, z1, z2);
@@ -1641,7 +1643,7 @@ fprintf(stderr, "BACK = %p\n", BACK);
   face->firstedge = total_surf_edges;
   face->numedges  = 0;
 
-  if (true) // !flipped)
+  if (true)
   {
     DoAddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  face, raw_lf);
     DoAddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  face, raw_lf);
@@ -1691,12 +1693,12 @@ fprintf(stderr, "BACK = %p\n", BACK);
 
 static void MakeFace(qFace_c *F, dleaf_t *raw_lf)
 {
-  if (F->index >= 0)
-  {
-    if (raw_lf)
-      DoAddSurf(F->index, raw_lf);
-    return;
-  }
+  SYS_ASSERT(F->index < 0);
+///---  {
+///---    if (raw_lf)
+///---      DoAddSurf(F->index, raw_lf);
+///---    return;
+///---  }
 
 
   dface_t face;
@@ -1764,15 +1766,15 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
     // should have been in a node already
     SYS_ASSERT(F->index >= 0);
 
-    MakeFace(F, &raw_lf);
+    DoAddSurf(F->index, &raw_lf);
   }
 
   // ???  probably should just put into leaf->faces array 
   SYS_ASSERT(leaf->floor->index >= 0);
   SYS_ASSERT(leaf-> ceil->index >= 0);
 
-  MakeFace(leaf->floor, &raw_lf);
-  MakeFace(leaf-> ceil, &raw_lf);
+  DoAddSurf(leaf->floor->index, &raw_lf);
+  DoAddSurf(leaf-> ceil->index, &raw_lf);
 
 
   for (b = 0; b < 3; b++)
@@ -1804,7 +1806,7 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   bool flipped;
 
   if (node->z_splitter)
-    raw_nd.planenum = Q1_AddPlane(0, 0, node->z, 0, 0, 1, &flipped);
+    raw_nd.planenum = Q1_AddPlane(0, 0, node->z, 0, 0, (node->z_splitter==2) ? -1 : +1, &flipped);
   else
     raw_nd.planenum = Q1_AddPlane(node->x, node->y, 0,
                                   node->dy, -node->dx, 0, &flipped);
@@ -1827,8 +1829,8 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   {
     qFace_c *F = node->faces[j];
 
-fprintf(stderr, "node face: %p kind:%d (node %1.4f,%1.4f += %1.4f,%1.4f)\n",
-        F, F->kind, node->x, node->y, node->dx, node->dy);
+///fprintf(stderr, "node face: %p kind:%d (node %1.4f,%1.4f += %1.4f,%1.4f)\n",
+///        F, F->kind, node->x, node->y, node->dx, node->dy);
 
     SYS_ASSERT(F->index < 0);
 
@@ -1864,7 +1866,6 @@ fprintf(stderr, "node face: %p kind:%d (node %1.4f,%1.4f += %1.4f,%1.4f)\n",
   }
 
 
-
   // FIXME: fix endianness in raw_nd
 
   // -AJA- NOTE WELL: the Quake1 code assumes the root node is the
@@ -1889,81 +1890,6 @@ fprintf(stderr, "node face: %p kind:%d (node %1.4f,%1.4f += %1.4f,%1.4f)\n",
 
   return index;
 }
-
-
-///---static s32_t RecursiveMakeClipNodes(qNode_c *node, bool is_root)
-///---{
-///---  dclipnode_t clip;
-///---
-///---  double x, y, z;
-///---  double dx, dy, dz;
-///---
-///---  if (node->z_splitter)
-///---  {
-///---    x  = 0;  y = 0;  z = node->z;
-///---    dx = 0; dy = 0; dz = +1;
-///---
-///---    // hackish: assumes the floor node always has the leaf
-///---    if (node->front_l && true) //!!!! leaf's gap >= 26 high
-///---      z += 24;
-///---  }
-///---  else
-///---  {
-///---    x = node->x;
-///---    y = node->y;
-///---    z = 0;
-///---
-///---    dx =  node->dy;
-///---    dy = -node->dx;
-///---    dz = 0;
-///---  }
-///---
-///---  bool flipped;
-///---
-///---  clip.planenum = Q1_AddPlane(x,y,z, dx,dy,dz, &flipped);
-///---
-///---SYS_ASSERT(node);
-///---
-///---SYS_ASSERT(node->front_n || node->front_l);
-///---SYS_ASSERT(node->back_n  || node->back_l);
-///---
-///---  if (node->front_n)
-///---    clip.children[0] = RecursiveMakeClipNodes(node->front_n, false);
-///---  else
-///---    clip.children[0] = (u16_t) node->front_l->contents;
-///---
-///---
-///---  if (node->back_n)
-///---    clip.children[1] = RecursiveMakeClipNodes(node->back_n, false);
-///---  else
-///---    clip.children[1] = (u16_t) node->back_l->contents;
-///---
-///---
-///---  // TEMP HACK: we have made the wall planes before, hence node
-///---  //            should already have been Flip()ed.
-///---  SYS_ASSERT(! flipped);
-///---
-///---
-///---  // TODO: fix endianness in 'clip'
-///---
-///---  if (is_root)
-///---  {
-///---fprintf(stderr, "ROOT CLIPPER: %d %d\n", clip.children[0], clip.children[1]);
-///---    Q1_Prepend(q_clip_nodes, &clip, sizeof(clip));
-///---
-///---    return 0;
-///---  }
-///---
-///---  s32_t index = total_clip_nodes++;
-///---
-///---  if (index >= MAX_MAP_CLIPNODES)
-///---    Main_FatalError("Quake1 build failure: exceeded limit of %d CLIPNODES\n",
-///---                    MAX_MAP_CLIPNODES);
-///---
-///---  Q1_Append(q_clip_nodes, &clip, sizeof(clip));
-///---
-///---  return index;
-///---}
 
 
 static void CreateSolidLeaf(void)
