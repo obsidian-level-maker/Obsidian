@@ -1230,7 +1230,7 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
 //------------------------------------------------------------------------
 
 
-void Quake1_BuildBSP( void )
+void Q1_BuildBSP( void )
 {
   // INPUTS:
   //   all the stuff created by CSG_MergeAreas
@@ -1293,8 +1293,8 @@ static void DoAddEdge(double x1, double y1, double z1,
                       double x2, double y2, double z2,
                       dface_t *face, dleaf_t *raw_lf = NULL)
 {
-  u16_t v1 = Q1_AddVertex(x1, y1, z1);
-  u16_t v2 = Q1_AddVertex(x2, y2, z2);
+  u16_t v1 = BSP_AddVertex(x1, y1, z1);
+  u16_t v2 = BSP_AddVertex(x2, y2, z2);
 
   if (v1 == v2)
   {
@@ -1302,7 +1302,7 @@ static void DoAddEdge(double x1, double y1, double z1,
                     "coordinate (%1.2f %1.2f %1.2f)\n", x1, y1, z1);
   }
 
-  s32_t edge_idx = Q1_AddEdge(v1, v2);
+  s32_t edge_idx = BSP_AddEdge(v1, v2);
 
 
   edge_idx = LE_S32(edge_idx);
@@ -1577,9 +1577,9 @@ static void MakeFloorFace(qFace_c *F, dface_t *face)
     GetExtents(min_x, min_y, max_x, max_y, &ext_W, &ext_H);
 
     static int foo; foo++;
-    face->styles[0] = 0; // (foo & 3); //!!!!!
+    face->styles[0] = (foo & 3); //!!!!!
 
-    face->lightofs = Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
+    face->lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
   }
 }
 
@@ -1687,7 +1687,7 @@ static void MakeWallFace(qFace_c *F, dface_t *face)
     static int foo = 0; foo++;
     face->styles[0] = 0; // (foo & 3); //!!!!!
 
-    face->lightofs = Quake1_LightAddBlock(ext_W, ext_H, 0x80|(rand()&0x7F));
+    face->lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, 0x80|(rand()&0x7F));
   }
 }
 
@@ -1938,9 +1938,9 @@ void Q1_CreateModel(void)
   q_clip_nodes = BSP_NewLump(LUMP_CLIPNODES);
 
   model.headnode[0] = 0; // root of drawing BSP
-  model.headnode[1] = Quake1_CreateClipHull(1, q_clip_nodes);
-  model.headnode[2] = Quake1_CreateClipHull(2, q_clip_nodes);
-  model.headnode[3] = Quake1_CreateClipHull(3, q_clip_nodes);
+  model.headnode[1] = Q1_CreateClipHull(1, q_clip_nodes);
+  model.headnode[2] = Q1_CreateClipHull(2, q_clip_nodes);
+  model.headnode[3] = Q1_CreateClipHull(3, q_clip_nodes);
 
 
   // FIXME: fix endianness in model

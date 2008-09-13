@@ -152,11 +152,11 @@ u16_t Q1_AddPlane(double x, double y, double z,
 
   dp.dist = dist;
 
-  if (dx > 1.0 - EPSILON)
+  if (ax > 1.0 - EPSILON)
     dp.type = PLANE_X;
-  else if (dy > 1.0 - EPSILON)
+  else if (ay > 1.0 - EPSILON)
     dp.type = PLANE_Y;
-  else if (dz > 1.0 - EPSILON)
+  else if (az > 1.0 - EPSILON)
     dp.type = PLANE_Z;
   else if (ax >= MAX(ay, az))
     dp.type = PLANE_ANYX;
@@ -191,15 +191,13 @@ u16_t Q1_AddPlane(double x, double y, double z,
 
     // Note: ignore the 'type' field because it was generated
     //       from (and completely depends on) the plane normal.
-    if (fabs(test_p->dist - dist) > Q_EPSILON ||
-        fabs(test_p->normal[0] - dp.normal[0]) > EPSILON ||
-        fabs(test_p->normal[1] - dp.normal[1]) > EPSILON ||
-        fabs(test_p->normal[2] - dp.normal[2]) > EPSILON)
+    if (fabs(test_p->dist - dist)  <= Q_EPSILON &&
+        fabs(test_p->normal[0] - dx) <= EPSILON &&
+        fabs(test_p->normal[1] - dy) <= EPSILON &&
+        fabs(test_p->normal[2] - dz) <= EPSILON)
     {
-      continue;
+      return plane_idx; // found it
     }
-
-    return plane_idx; // found it
   }
 
 
@@ -226,152 +224,6 @@ static void Q1_CreatePlanes(void)
   // FIXME: write separately, fix endianness as we go
 
   lump->Append(&q1_planes[0], q1_planes.size() * sizeof(dplane_t));
-}
-
-
-//------------------------------------------------------------------------
-
-std::vector<dvertex_t> q1_vertices;
-
-#define NUM_VERTEX_HASH  512
-static std::vector<u16_t> * vert_hashtab[NUM_VERTEX_HASH];
-
-
-static void ClearVertices(void)
-{
-  q1_vertices.clear();
-
-  for (int h = 0; h < NUM_VERTEX_HASH; h++)
-  {
-    delete vert_hashtab[h];
-    vert_hashtab[h] = NULL;
-  }
-}
-
-u16_t Q1_AddVertex(double x, double y, double z)
-{
-  dvertex_t vert;
-
-  vert.x = x;
-  vert.y = y;
-  vert.z = z;
-
-
-  // find existing vertex.
-  // For speed we use a hash-table
-  int hash;
-  hash = IntHash(       I_ROUND((x+1.4) / 128.0));
-  hash = IntHash(hash ^ I_ROUND((y+1.4) / 128.0));
-
-  hash = hash & (NUM_VERTEX_HASH-1);
-  SYS_ASSERT(hash >= 0);
-
-  if (! vert_hashtab[hash])
-    vert_hashtab[hash] = new std::vector<u16_t>;
-
-  std::vector<u16_t> *hashtab = vert_hashtab[hash];
-
-  for (unsigned int i = 0; i < hashtab->size(); i++)
-  {
-    u16_t vert_idx = (*hashtab)[i];
- 
-    dvertex_t *test = &q1_vertices[vert_idx];
-
-    if (fabs(test->x - x) < Q_EPSILON &&
-        fabs(test->y - y) < Q_EPSILON &&
-        fabs(test->z - z) < Q_EPSILON)
-    {
-      return vert_idx; // found it
-    }
-  }
-
-
-  // not found, so add new one
-  u16_t vert_idx = q1_vertices.size();
-
-  if (vert_idx >= MAX_MAP_VERTS)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d VERTEXES\n",
-                    MAX_MAP_VERTS);
-
-  q1_vertices.push_back(vert);
-
-  hashtab->push_back(vert_idx);
-
-  return vert_idx;
-}
-
-static void Q1_CreateVertexes(void)
-{
-  qLump_c *lump = BSP_NewLump(LUMP_VERTEXES);
-
-  lump->Append(&q1_vertices[0], q1_vertices.size() * sizeof(dvertex_t));
-}
-
-
-//------------------------------------------------------------------------
-
-std::vector<dedge_t> q1_edges;
-
-std::map<u32_t, s32_t> q1_edge_map;
-
-
-static void ClearEdges(void)
-{
-  q1_edges.clear();
-
-  // insert dummy edge #0
-  dedge_t dummy;
-
-  dummy.v[0] = dummy.v[1] = 0;
-
-  q1_edges.push_back(dummy);
-
-  q1_edge_map.clear();
-}
-
-
-s32_t Q1_AddEdge(u16_t start, u16_t end)
-{
-  bool flipped = false;
-
-  if (start > end)
-  {
-    flipped = true;
-    u16_t tmp = start; start = end; end = tmp;
-  }
-
-  dedge_t edge;
-
-  edge.v[0] = start;
-  edge.v[1] = end;
-
-  u32_t key = (u32_t)start + (u32_t)(end << 16);
-
-
-  // find existing edge
-  if (q1_edge_map.find(key) != q1_edge_map.end())
-    return q1_edge_map[key] * (flipped ? -1 : 1);
-
-
-  // not found, so add new one
-  int edge_idx = q1_edges.size();
-
-  if (edge_idx >= MAX_MAP_EDGES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d EDGES\n",
-                    MAX_MAP_EDGES);
-
-  q1_edges.push_back(edge);
-
-  q1_edge_map[key] = edge_idx;
-
-  return flipped ? -edge_idx : edge_idx;
-}
-
-static void Q1_CreateEdges(void)
-{
-  qLump_c *lump = BSP_NewLump(LUMP_EDGES);
-
-  lump->Append(&q1_edges[0], q1_edges.size() * sizeof(dedge_t));
 }
 
 
@@ -834,24 +686,32 @@ void quake1_game_interface_c::EndLevel()
     return; //!!!!!! FUCK
 
   ClearPlanes();
-  ClearVertices();
-  ClearEdges();
   ClearMipTex();
   ClearTexInfo();
+
+  BSP_ClearVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
+  BSP_ClearEdges(LUMP_EDGES, MAX_MAP_EDGES);
+  BSP_ClearLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
+
+//!!!! TEMP CRUD
+byte solid_light[512];
+for (int L=0; L < 512; L++) solid_light[L] = 64;
+BSP_AddLightBlock(16, 32, solid_light);
+
 
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
 
-  Quake1_BuildBSP();
-  Quake1_BeginLightmap();
+  Q1_BuildBSP();
 
   Q1_CreateEntities();
   Q1_CreateModel();
   Q1_CreatePlanes();
-  Q1_CreateVertexes();
-  Q1_CreateEdges();
   Q1_CreateMipTex();
   Q1_CreateTexInfo();
+
+  BSP_WriteVertices();
+  BSP_WriteEdges();
 
   BSP_CloseLevel();
 

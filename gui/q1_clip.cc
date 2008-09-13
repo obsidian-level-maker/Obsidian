@@ -868,7 +868,7 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
 }
 
 
-s32_t Quake1_CreateClipHull(int which, qLump_c *q1_clip)
+s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 {
 fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
                   "-----------------------\n\n", which);

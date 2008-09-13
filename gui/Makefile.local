@@ -54,12 +54,13 @@ OBJS=	main.o      \
 	g_cookie.o  \
 	g_image.o   \
 	g_lua.o     \
-	q_bsp.o     \
-	q1_bsp.o    \
 	q1_clip.o   \
-	q1_light.o  \
 	q1_main.o   \
+	q1_nodes.o  \
 	q1_tex.o    \
+	q2_main.o   \
+	q2_nodes.o  \
+	q_bsp.o     \
 	q_pakfile.o \
 	twister.o   \
 	ui_build.o  \

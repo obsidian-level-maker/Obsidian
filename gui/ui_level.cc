@@ -187,7 +187,7 @@ void UI_Level::Defaults()
 {
   // Note: theme handled by LUA code (ob_init)
 
-  size   ->SetID("prog");
+  size   ->SetID("small");
   detail ->SetID("normal");
   heights->SetID("mixed");
   light  ->SetID("mixed");

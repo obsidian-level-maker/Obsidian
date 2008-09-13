@@ -113,12 +113,6 @@ typedef struct miptex_s
 }
 miptex_t;
 
-typedef struct
-{
-  float x, y, z;
-}
-dvertex_t;
-
 
 // 0-2 are axial planes
 #define PLANE_X   0
@@ -188,7 +182,7 @@ dclipnode_t;
 #define CLIP_SPECIAL  0xFFF0
 
 
-typedef struct texinfo_s
+typedef struct
 {
   float s[4];   // x/y/z/offset
   float t[4];
@@ -202,13 +196,9 @@ texinfo_t;
 // -AJA- only disables a check on extents, otherwise not used by quake engine
 #define TEX_SPECIAL  1
 
-// note that edge 0 is never used, because negative edge nums are used for
-// counterclockwise use of the edge in a face
-typedef struct
-{
-  u16_t v[2]; // vertex numbers
-}
-dedge_t;
+
+// AJA: dvertex_t and dedge_t moved into q_bsp.h
+
 
 #define MAXLIGHTMAPS  4
 

@@ -31,13 +31,11 @@ class qLump_c;
 
 u16_t Q1_AddPlane(double x, double y, double z,
                   double dx, double dy, double dz, bool *flipped);
-u16_t Q1_AddVertex(double x, double y, double z);
-s32_t Q1_AddEdge(u16_t start, u16_t end);
 u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4);
 
 // q1_bsp.cc
 
-void Quake1_BuildBSP(void);
+void Q1_BuildBSP(void);
 
 void Q1_CreateModel(void);
 
@@ -47,13 +45,8 @@ bool Quake1_ExtractTextures(void);
 
 // q1_clip.cc
 
-s32_t Quake1_CreateClipHull(int which, qLump_c *q1_clip);
+s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip);
 
-// q1_light.cc
-
-void Quake1_BeginLightmap(void);
-
-s32_t Quake1_LightAddBlock(int w, int h, u8_t level);
 
 #endif /* __OBLIGE_QUAKE1_H__ */
 

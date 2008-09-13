@@ -49,7 +49,7 @@ class qLeaf_c;
 class qNode_c;
 
 
-void DoAssignFaces(qNode_c *N, qSide_c *S);
+static void DoAssignFaces(qNode_c *N, qSide_c *S);
 
 
 class qFace_c
@@ -428,7 +428,7 @@ public:
 };
 
 
-void DoAssignFaces(qNode_c *N, qSide_c *S)
+static void DoAssignFaces(qNode_c *N, qSide_c *S)
 {
   N->AssignFaces(S);
 }
@@ -1233,7 +1233,7 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
 //------------------------------------------------------------------------
 
 
-void Quake2_BuildBSP( void )
+void Q2_BuildBSP(void)
 {
   // INPUTS:
   //   all the stuff created by CSG_MergeAreas
@@ -1271,14 +1271,14 @@ void Quake2_BuildBSP( void )
   //            convex space (no partitions are needed) so in that
   //            case we use an arbitrary splitter plane.
 
-fprintf(stderr, "Quake1_BuildBSP BEGUN\n");
+fprintf(stderr, "Q2_BuildBSP BEGUN\n");
   Partition_XY(begin, &Q_ROOT, NULL);
 }
 
 
 //------------------------------------------------------------------------
 
-static dmodel_t model;
+static dmodel2_t model;
 
 static qLump_c *q_nodes;
 static qLump_c *q_leafs;
@@ -1294,10 +1294,10 @@ static int total_surf_edges;
 
 static void DoAddEdge(double x1, double y1, double z1,
                       double x2, double y2, double z2,
-                      dface_t *face, dleaf_t *raw_lf = NULL)
+                      dface2_t *face, dleaf2_t *raw_lf = NULL)
 {
-  u16_t v1 = Q2_AddVertex(x1, y1, z1);
-  u16_t v2 = Q2_AddVertex(x2, y2, z2);
+  u16_t v1 = BSP_AddVertex(x1, y1, z1);
+  u16_t v2 = BSP_AddVertex(x2, y2, z2);
 
   if (v1 == v2)
   {
@@ -1305,7 +1305,7 @@ static void DoAddEdge(double x1, double y1, double z1,
                     "coordinate (%1.2f %1.2f %1.2f)\n", x1, y1, z1);
   }
 
-  s32_t edge_idx = Q2_AddEdge(v1, v2);
+  s32_t edge_idx = BSP_AddEdge(v1, v2);
 
 
   edge_idx = LE_S32(edge_idx);
@@ -1338,7 +1338,7 @@ static void DoAddEdge(double x1, double y1, double z1,
 }
 
 
-static void DoAddSurf(u16_t index, dleaf_t *raw_lf )
+static void DoAddSurf(u16_t index, dleaf2_t *raw_lf )
 {
     index = LE_U16(index);
 
@@ -1502,7 +1502,7 @@ static void GetExtents(double min_s, double min_t, double max_s, double max_t,
   *ext_H = MIN(2, bmax_t - bmin_t + 1);
 }
 
-static void MakeFloorFace(qFace_c *F, qNode_c *N, dface_t *face)
+static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
 {
   bool is_ceil = (F->kind == qFace_c::CEIL) ? true : false;
 
@@ -1579,13 +1579,13 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface_t *face)
     GetExtents(min_x, min_y, max_x, max_y, &ext_W, &ext_H);
 
     static int foo; foo++;
-    face->styles[0] = (foo & 255); //!!!!!
+    face->styles[0] = 0; //!!!!!
 
-    face->lightofs = Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
+    face->lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
   }
 }
 
-static void MakeWallFace(qFace_c *F, qNode_c *N, dface_t *face)
+static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
 {
   qSide_c *S = F->side;
 
@@ -1692,13 +1692,13 @@ static void MakeWallFace(qFace_c *F, qNode_c *N, dface_t *face)
     static int foo = 0; foo++;
     face->styles[0] = 0; // (foo & 3); //!!!!!
 
-    face->lightofs = Quake1_LightAddBlock(ext_W, ext_H, 0x00|(rand()&0xFF));
+    face->lightofs = 100; //!!!!! Quake1_LightAddBlock(ext_W, ext_H, 0x00|(rand()&0xFF));
   }
 }
 
 static void MakeFace(qFace_c *F, qNode_c *N)
 {
-  dface_t face;
+  dface2_t face;
 
   if (F->kind == qFace_c::WALL)
     MakeWallFace(F, N, &face);
@@ -1711,7 +1711,7 @@ static void MakeFace(qFace_c *F, qNode_c *N)
   u16_t index = model.numfaces++;
 
   if (index == MAX_MAP_FACES-1)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
+    Main_FatalError("Quake2 build failure: exceeded limit of %d FACES\n",
                     MAX_MAP_FACES);
 
   F->index = (int)index;
@@ -1720,13 +1720,13 @@ static void MakeFace(qFace_c *F, qNode_c *N)
 }
 
 
-static s32_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
+static s32_t MakeLeaf(qLeaf_c *leaf, dnode2_t *parent)
 {
   if (leaf == SOLID_LEAF)
     return -1;
 
 
-  dleaf_t raw_lf;
+  dleaf2_t raw_lf;
 
   raw_lf.contents = leaf->contents;
   raw_lf.cluster  = 0;
@@ -1783,7 +1783,7 @@ static s32_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
   s32_t index = total_leafs++;
 
   if (index >= MAX_MAP_LEAFS)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d LEAFS\n",
+    Main_FatalError("Quake2 build failure: exceeded limit of %d LEAFS\n",
                     MAX_MAP_LEAFS);
 
   q_leafs->Append(&raw_lf, sizeof(raw_lf));
@@ -1792,9 +1792,9 @@ static s32_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 }
 
 
-static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
+static s32_t RecursiveMakeNodes(qNode_c *node, dnode2_t *parent)
 {
-  dnode_t raw_nd;
+  dnode2_t raw_nd;
 
   int b;
 
@@ -1869,6 +1869,8 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   //       very first one.  The following is a hack to achieve that.
   //       (Hopefully no other assumptions about node ordering exist
   //       in the Quake1 code!).
+  //
+  //       FIXME: true for QuakeII too ??????
 
   if (! parent) // is_root
   {
@@ -1880,7 +1882,7 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   s32_t index = total_nodes++;
 
   if (index >= MAX_MAP_NODES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
+    Main_FatalError("Quake2 build failure: exceeded limit of %d NODES\n",
                     MAX_MAP_NODES);
 
   q_nodes->Append(&raw_nd, sizeof(raw_nd));
@@ -1891,7 +1893,7 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
 
 static void CreateSolidLeaf(void)
 {
-  dleaf_t raw_lf;
+  dleaf2_t raw_lf;
 
   memset(&raw_lf, 0, sizeof(raw_lf));
 

@@ -379,7 +379,7 @@ void BSP_BackupPAK(const char *filename)
 static int bsp_vert_lump;
 static int bsp_max_verts;
 
-std::vector<dvertex_t> bsp_vertices;
+static std::vector<dvertex_t> bsp_vertices;
 
 #define NUM_VERTEX_HASH  512
 static std::vector<u16_t> * vert_hashtab[NUM_VERTEX_HASH];
@@ -414,10 +414,11 @@ u16_t BSP_AddVertex(double x, double y, double z)
   vert.y = y;
   vert.z = z;
 
-  // find existing vertex.  For speed we use a hash-table.
+  // find existing vertex
+  // for speed we use a hash-table
   int hash;
-  hash = IntHash(       I_ROUND((x+1.4) / 128.0));
-  hash = IntHash(hash ^ I_ROUND((y+1.4) / 128.0));
+  hash = IntHash(       (I_ROUND(x+1.4) >> 7));
+  hash = IntHash(hash ^ (I_ROUND(y+1.4) >> 7));
 
   hash = hash & (NUM_VERTEX_HASH-1);
   SYS_ASSERT(hash >= 0);
@@ -437,7 +438,7 @@ u16_t BSP_AddVertex(double x, double y, double z)
         fabs(test->y - y) < Q_EPSILON &&
         fabs(test->z - z) < Q_EPSILON)
     {
-      return vert_idx; // found it
+      return vert_idx; // found it!
     }
   }
 
@@ -479,13 +480,16 @@ void BSP_WriteVertices(void)
 static int bsp_edge_lump;
 static int bsp_max_edges;
 
-std::vector<dedge_t> bsp_edges;
+static std::vector<dedge_t> bsp_edges;
 
-std::map<u32_t, s32_t> bsp_edge_map;
+static std::map<u32_t, s32_t> bsp_edge_map;
 
 
 void BSP_ClearEdges(int lump, int max_edges)
 {
+  bsp_edge_lump = lump;
+  bsp_max_edges = max_edges;
+
   bsp_edges.clear();
   bsp_edge_map.clear();
 
@@ -565,7 +569,7 @@ void BSP_ClearLightmap(int lump, int max_lightmap)
   bsp_light_lump = lump;
   bsp_max_lightmap = max_lightmap;
 
-  bsp_lightmap = BSP_NewLump(lump);
+  bsp_lightmap = BSP_NewLump(bsp_light_lump);
 
   // tis the season to be jolly
   const char *info = "Lightmap created by " OBLIGE_TITLE " " OBLIGE_VERSION;
@@ -590,15 +594,14 @@ s32_t BSP_AddLightBlock(int w, int h, u8_t *levels)
     // QuakeII has RGB lightmaps (but this is just greyscale)
     for (int i = 0; i < w*h; i++)
     {
-      bsp_lightmap->Append(&levels, 1);
-      bsp_lightmap->Append(&levels, 1);
-      bsp_lightmap->Append(&levels, 1);
+      bsp_lightmap->Append(& levels[i], 1);
+      bsp_lightmap->Append(& levels[i], 1);
+      bsp_lightmap->Append(& levels[i], 1);
     }
   }
   else
   {
-    for (int i = 0; i < w*h; i++)
-      bsp_lightmap->Append(&levels, 1);
+    bsp_lightmap->Append(levels, w * h);
   }
 
   if ((int)bsp_lightmap->GetSize() >= bsp_max_lightmap)

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  LEVEL building - QUAKE 1 format
+//  LEVEL building - QUAKE II format
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -88,15 +88,15 @@ void Q2_CreateEntities(void)
 
 //------------------------------------------------------------------------
 
-std::vector<dplane_t> q1_planes;
+std::vector<dplane2_t> q2_planes;
 
-#define NUM_PLANE_HASH  128
+#define NUM_PLANE_HASH  64
 static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
 
 
 static void ClearPlanes(void)
 {
-  q1_planes.clear();
+  q2_planes.clear();
 
   for (int h = 0; h < NUM_PLANE_HASH; h++)
   {
@@ -104,6 +104,7 @@ static void ClearPlanes(void)
     plane_hashtab[h] = NULL;
   }
 }
+
 
 u16_t Q2_AddPlane(double x, double y, double z,
                   double dx, double dy, double dz)
@@ -144,7 +145,7 @@ u16_t Q2_AddPlane(double x, double y, double z,
 
   // create plane structures
   // Quake II stores them in pairs
-  dplane_t dp[2];
+  dplane2_t dp[2];
 
   dp[0].normal[0] = dx; dp[1].normal[0] = -dx;
   dp[0].normal[1] = dy; dp[1].normal[1] = -dy;
@@ -188,37 +189,35 @@ u16_t Q2_AddPlane(double x, double y, double z,
   {
     u16_t plane_idx = (*hashtab)[i];
 
-    SYS_ASSERT(plane_idx < q1_planes.size());
+    SYS_ASSERT(plane_idx < q2_planes.size());
 
-    dplane_t *test_p = &q1_planes[plane_idx];
+    dplane2_t *test_p = &q2_planes[plane_idx];
 
     // Note: ignore the 'type' field because it was generated
     //       from (and completely depends on) the plane normal.
-    if (fabs(test_p->dist - dist) > Q_EPSILON ||
-        fabs(test_p->normal[0] - dx) > EPSILON ||
-        fabs(test_p->normal[1] - dy) > EPSILON ||
-        fabs(test_p->normal[2] - dz) > EPSILON)
+    if (fabs(test_p->dist - dist)  <= Q_EPSILON &&
+        fabs(test_p->normal[0] - dx) <= EPSILON &&
+        fabs(test_p->normal[1] - dy) <= EPSILON &&
+        fabs(test_p->normal[2] - dz) <= EPSILON)
     {
-      continue;
+      // found it
+      return plane_idx | (flipped ? 1 : 0);
     }
-
-    // found it
-    return plane_idx | (flipped ? 1 : 0);
   }
 
 
   // not found, so add new one  [We only store dp[0] in the hash-tab]
-  u16_t plane_idx = q1_planes.size();
+  u16_t plane_idx = q2_planes.size();
 
   if (plane_idx >= MAX_MAP_PLANES-2)
     Main_FatalError("Quake2 build failure: exceeded limit of %d PLANES\n",
                     MAX_MAP_PLANES);
 
-  q1_planes.push_back(dp[0]);
-  q1_planes.push_back(dp[1]);
+  q2_planes.push_back(dp[0]);
+  q2_planes.push_back(dp[1]);
 
 fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
-                 (int)plane_idx, (int)q1_planes.size());
+                 (int)plane_idx, (int)q2_planes.size());
 
   hashtab->push_back(plane_idx);
 
@@ -233,164 +232,13 @@ static void Q2_CreatePlanes(void)
 
   // FIXME: write separately, fix endianness as we go
 
-  lump->Append(&q1_planes[0], q1_planes.size() * sizeof(dplane_t));
+  lump->Append(&q2_planes[0], q2_planes.size() * sizeof(dplane2_t));
 }
 
 
 //------------------------------------------------------------------------
 
-std::vector<dvertex_t> q1_vertices;
-
-#define NUM_VERTEX_HASH  512
-static std::vector<u16_t> * vert_hashtab[NUM_VERTEX_HASH];
-
-
-static void ClearVertices(void)
-{
-  q1_vertices.clear();
-
-  for (int h = 0; h < NUM_VERTEX_HASH; h++)
-  {
-    delete vert_hashtab[h];
-    vert_hashtab[h] = NULL;
-  }
-
-  // insert dummy vertex #0
-  dvertex_t dummy;
-  memset(&dummy, 0, sizeof(dummy));
-
-  q1_vertices.push_back(dummy);
-}
-
-u16_t Q2_AddVertex(double x, double y, double z)
-{
-  dvertex_t vert;
-
-  vert.x = x;
-  vert.y = y;
-  vert.z = z;
-
-
-  // find existing vertex.
-  // For speed we use a hash-table
-  int hash;
-  hash = IntHash(       I_ROUND((x+1.4) / 128.0));
-  hash = IntHash(hash ^ I_ROUND((y+1.4) / 128.0));
-
-  hash = hash & (NUM_VERTEX_HASH-1);
-  SYS_ASSERT(hash >= 0);
-
-  if (! vert_hashtab[hash])
-    vert_hashtab[hash] = new std::vector<u16_t>;
-
-  std::vector<u16_t> *hashtab = vert_hashtab[hash];
-
-  for (unsigned int i = 0; i < hashtab->size(); i++)
-  {
-    u16_t vert_idx = (*hashtab)[i];
- 
-    dvertex_t *test = &q1_vertices[vert_idx];
-
-    if (fabs(test->x - x) < Q_EPSILON &&
-        fabs(test->y - y) < Q_EPSILON &&
-        fabs(test->z - z) < Q_EPSILON)
-    {
-      return vert_idx; // found it
-    }
-  }
-
-
-  // not found, so add new one
-  u16_t vert_idx = q1_vertices.size();
-
-  if (vert_idx == MAX_MAP_VERTS-1)
-    Main_FatalError("Quake2 build failure: exceeded limit of %d VERTEXES\n",
-                    MAX_MAP_VERTS);
-
-  q1_vertices.push_back(vert);
-
-  hashtab->push_back(vert_idx);
-
-  return vert_idx;
-}
-
-static void Q2_CreateVertexes(void)
-{
-  qLump_c *lump = BSP_NewLump(LUMP_VERTEXES);
-
-  lump->Append(&q1_vertices[0], q1_vertices.size() * sizeof(dvertex_t));
-}
-
-
-//------------------------------------------------------------------------
-
-std::vector<dedge_t> q1_edges;
-
-std::map<u32_t, s32_t> q1_edge_map;
-
-
-static void ClearEdges(void)
-{
-  q1_edges.clear();
-  q1_edge_map.clear();
-
-  // insert dummy edge #0
-  dedge_t dummy;
-
-  dummy.v[0] = dummy.v[1] = 0;
-
-  q1_edges.push_back(dummy);
-}
-
-
-s32_t Q2_AddEdge(u16_t start, u16_t end)
-{
-  bool flipped = false;
-
-  if (start > end)
-  {
-    flipped = true;
-    u16_t tmp = start; start = end; end = tmp;
-  }
-
-  dedge_t edge;
-
-  edge.v[0] = start;
-  edge.v[1] = end;
-
-  u32_t key = (u32_t)start + (u32_t)(end << 16);
-
-
-  // find existing edge
-  if (q1_edge_map.find(key) != q1_edge_map.end())
-    return q1_edge_map[key] * (flipped ? -1 : 1);
-
-
-  // not found, so add new one
-  int edge_idx = q1_edges.size();
-
-  if (edge_idx >= MAX_MAP_EDGES)
-    Main_FatalError("Quake2 build failure: exceeded limit of %d EDGES\n",
-                    MAX_MAP_EDGES);
-
-  q1_edges.push_back(edge);
-
-  q1_edge_map[key] = edge_idx;
-
-  return flipped ? -edge_idx : edge_idx;
-}
-
-static void Q2_CreateEdges(void)
-{
-  qLump_c *lump = BSP_NewLump(LUMP_EDGES);
-
-  lump->Append(&q1_edges[0], q1_edges.size() * sizeof(dedge_t));
-}
-
-
-//------------------------------------------------------------------------
-
-std::vector<texinfo_t> q1_texinfos;
+std::vector<texinfo2_t> q2_texinfos;
 
 #define NUM_TEXINFO_HASH  64
 static std::vector<u16_t> * texinfo_hashtab[NUM_TEXINFO_HASH];
@@ -398,16 +246,18 @@ static std::vector<u16_t> * texinfo_hashtab[NUM_TEXINFO_HASH];
 
 static void ClearTexInfo(void)
 {
-  q1_texinfos.clear();
+  q2_texinfos.clear();
 
   for (int h = 0; h < NUM_TEXINFO_HASH; h++)
   {
     delete texinfo_hashtab[h];
     texinfo_hashtab[h] = NULL;
   }
+
+fprintf(stderr, "CLEAR TEX INFO: size now %d\n", (int)q2_texinfos.size());
 }
 
-static bool MatchTexInfo(const texinfo_t *A, const texinfo_t *B)
+static bool MatchTexInfo(const texinfo2_t *A, const texinfo2_t *B)
 {
   if (strcmp(A->texture, B->texture) != 0)
     return false;
@@ -429,8 +279,10 @@ static bool MatchTexInfo(const texinfo_t *A, const texinfo_t *B)
 
 u16_t Q2_AddTexInfo(const char *texture, int flags, double *s4, double *t4)
 {
+fprintf(stderr, "1 ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
+
   // create texinfo structure
-  texinfo_t tin;
+  texinfo2_t tin;
 
   for (int k = 0; k < 4; k++)
   {
@@ -438,7 +290,7 @@ u16_t Q2_AddTexInfo(const char *texture, int flags, double *s4, double *t4)
     tin.t[k] = t4[k];
   }
 
-  if (strlen(texture) >= sizeof(tin.texture))
+  if (strlen(texture)+1 >= sizeof(tin.texture))
     Main_FatalError("TEXTURE NAME TOO LONG: '%s'\n", texture);
 
   strcpy(tin.texture, texture);
@@ -447,6 +299,7 @@ u16_t Q2_AddTexInfo(const char *texture, int flags, double *s4, double *t4)
   tin.value  = 0;
   tin.anim_next = -1;
 
+fprintf(stderr, "D ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
 
   // find an existing texinfo.
   // For speed we use a hash-table.
@@ -460,27 +313,43 @@ u16_t Q2_AddTexInfo(const char *texture, int flags, double *s4, double *t4)
 
   std::vector<u16_t> *hashtab = texinfo_hashtab[hash];
 
+fprintf(stderr, "Hash Tab: %p  q2_texinfos: %p", hashtab, &q2_texinfos);
+fprintf(stderr, "W ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
+
   for (unsigned int i = 0; i < hashtab->size(); i++)
   {
     u16_t tin_idx = (*hashtab)[i];
 
-    SYS_ASSERT(tin_idx < q1_texinfos.size());
+    SYS_ASSERT(tin_idx < q2_texinfos.size());
 
-    if (MatchTexInfo(&tin, &q1_texinfos[tin_idx]))
+fprintf(stderr, "X ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
+    if (MatchTexInfo(&tin, &q2_texinfos[tin_idx]))
+{ fprintf(stderr, "  MATCHED IN HASH\n");
       return tin_idx;  // found it
+}
   }
 
 
   // not found, so add new one
-  u16_t tin_idx = q1_texinfos.size();
+  u16_t tin_idx = q2_texinfos.size();
+
+fprintf(stderr, "TexInfo %d --> %d '%s' (%1.1f %1.1f %1.1f %1.1f) "
+        "(%1.1f %1.1f %1.1f %1.1f)\n",
+        tin_idx, flags, texture,
+        s4[0], s4[1], s4[2], s4[3],
+        t4[0], t4[1], t4[2], t4[3]);
+
 
   if (tin_idx >= MAX_MAP_TEXINFO)
     Main_FatalError("Quake2 build failure: exceeded limit of %d TEXINFOS\n",
                     MAX_MAP_TEXINFO);
 
-  q1_texinfos.push_back(tin);
+fprintf(stderr, "Y ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
+  q2_texinfos.push_back(tin);
 
+fprintf(stderr, "JOO ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
   hashtab->push_back(tin_idx);
+fprintf(stderr, "Z ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
 
   return tin_idx;
 }
@@ -491,58 +360,8 @@ static void Q2_CreateTexInfo(void)
 
   // FIXME: write separately, fix endianness as we go
  
-  lump->Append(&q1_texinfos[0], q1_texinfos.size() * sizeof(texinfo_t));
+  lump->Append(&q2_texinfos[0], q2_texinfos.size() * sizeof(texinfo2_t));
 }
-
-
-///---static void DummyTexInfo(void)
-///---{
-///---  /* TEMP DUMMY STUFF */
-///---
-///---  // 0 = "error" on PLANE_X / PLANE_ANYX
-///---  // 1 = "error" on PLANE_Y / PLANE_ANYY
-///---  // 2 = "error" on PLANE_Z / PLANE_ANYZ
-///---  //
-///---  // 3 = "gray"  on PLANE_X / PLANE_ANYX
-///---  // 4 = "gray"  on PLANE_Y / PLANE_ANYY
-///---  // 5 = "gray"  on PLANE_Z / PLANE_ANYZ
-///---
-///---  qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
-///---
-///---  float scale = 8.0;
-///---
-///---  for (int T = 0; T < 6; T++)
-///---  {
-///---    int P = T % 3;
-///---
-///---    texinfo_t tex;
-///---
-///---    tex.s[0] = (P == PLANE_X) ? 0 : 1;
-///---    tex.s[1] = (P == PLANE_X) ? 1 : 0;
-///---    tex.s[2] = 0;
-///---    tex.s[3] = 0;
-///---
-///---    tex.t[0] = 0;
-///---    tex.t[1] = (P == PLANE_Z) ? 1 : 0;
-///---    tex.t[2] = (P == PLANE_Z) ? 0 : 1;
-///---    tex.t[3] = 0;
-///---
-///---    for (int k = 0; k < 3; k++)
-///---    {
-///---      tex.s[k] /= scale;
-///---      tex.t[k] /= scale;
-///---
-///---      // FIXME: endianness swap!
-///---    }
-///---
-///---    int flags = 0;
-///---
-///---    tex.miptex = LE_S32(T / 3);
-///---    tex.flags  = LE_S32(flags);
-///---
-///---    lump->Append(&tex, sizeof(tex));
-///---  }
-///---}
 
 
 //------------------------------------------------------------------------
@@ -690,7 +509,7 @@ void quake2_game_interface_c::LevelProp(const char *key, const char *value)
   }
   else
   {
-    LogPrintf("WARNING: QUAKE1: unknown level prop: %s=%s\n", key, value);
+    LogPrintf("WARNING: QUAKE2: unknown level prop: %s=%s\n", key, value);
   }
 }
 
@@ -710,26 +529,34 @@ void quake2_game_interface_c::EndLevel()
     return; //!!!!!! FUCK
 
   ClearPlanes();
-  ClearVertices();
-  ClearEdges();
   ClearTexInfo();
+
+  BSP_ClearVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
+  BSP_ClearEdges(LUMP_EDGES, MAX_MAP_EDGES);
+  BSP_ClearLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
+
+//!!!! TEMP CRUD
+byte solid_light[512];
+for (int L=0; L < 512; L++) solid_light[L] = 64;
+BSP_AddLightBlock(16, 32, solid_light);
+
 
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
 
-  Quake2_BuildBSP();
-  Quake1_BeginLightmap();
+  Q2_BuildBSP();
 
   Q2_CreateEntities();
   Q2_CreateModel();
   Q2_CreatePlanes();
-  Q2_CreateVertexes();
-  Q2_CreateEdges();
   Q2_CreateTexInfo();
 
   DummyArea();
   DummyVis();
   DummyLeafBrush();
+
+  BSP_WriteVertices();
+  BSP_WriteEdges();
 
   BSP_CloseLevel();
 

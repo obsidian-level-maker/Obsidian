@@ -109,13 +109,7 @@ typedef struct
   s32_t firstface, numfaces;  // submodels just draw faces
                               // without walking the bsp tree
 }
-dmodel_t;
-
-typedef struct
-{
-  float x, y, z;
-}
-dvertex_t;
+dmodel2_t;
 
 
 // 0-2 are axial planes
@@ -137,7 +131,7 @@ typedef struct
   float dist;
   s32_t type;    // PLANE_X - PLANE_ANYZ
 }
-dplane_t;
+dplane2_t;
 
 
 // contents flags are seperate bits
@@ -189,7 +183,7 @@ typedef struct
   u16_t firstface;
   u16_t numfaces;  // counting both sides
 }
-dnode_t;
+dnode2_t;
 
 
 #define SURF_LIGHT     0x1   // value will hold the light strength
@@ -202,7 +196,7 @@ dnode_t;
 #define SURF_NODRAW   0x80   // don't bother referencing the texture
 
 
-typedef struct texinfo_s
+typedef struct
 {
   float s[4];   // x/y/z/offset
   float t[4];
@@ -213,16 +207,11 @@ typedef struct texinfo_s
   char  texture[32];  // texture name (textures/*.wal)
   s32_t anim_next;    // for animations, -1 = end of chain
 }
-texinfo_t;
+texinfo2_t;
 
 
-// note that edge 0 is never used, because negative edge nums are used for
-// counterclockwise use of the edge in a face
-typedef struct
-{
-  u16_t v[2];    // vertex numbers
-}
-dedge_t;
+// AJA: dvertex_t and dedge_t moved to q_bsp.h
+
 
 #define MAXLIGHTMAPS  4
 
@@ -239,7 +228,8 @@ typedef struct
   u8_t  styles[MAXLIGHTMAPS];
   s32_t lightofs;   // start of [numstyles*surfsize] samples
 }
-dface_t;
+dface2_t;
+
 
 typedef struct
 {
@@ -257,7 +247,8 @@ typedef struct
   u16_t first_leafbrush;
   u16_t num_leafbrushes;
 }
-dleaf_t;
+dleaf2_t;
+
 
 typedef struct
 {
