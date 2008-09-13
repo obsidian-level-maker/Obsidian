@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  LEVEL building - QUAKE 1 BSP
+//  LEVEL building - QUAKE II NODES
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -1301,7 +1301,7 @@ static void DoAddEdge(double x1, double y1, double z1,
 
   if (v1 == v2)
   {
-    Main_FatalError("INTERNAL ERROR (Q1 AddEdge): zero length!\n"
+    Main_FatalError("INTERNAL ERROR (Q2 AddEdge): zero length!\n"
                     "coordinate (%1.2f %1.2f %1.2f)\n", x1, y1, z1);
   }
 
@@ -1490,7 +1490,7 @@ static double DotProduct3(const double *A, const double *B)
 static void GetExtents(double min_s, double min_t, double max_s, double max_t,
                        int *ext_W, int *ext_H)
 {
-  // -AJA- this matches the logic in the Quake1 engine.
+  // -AJA- this matches the logic in the QuakeII engine.
 
   int bmin_s = (int)floor(min_s / 16.0);
   int bmin_t = (int)floor(min_t / 16.0);
@@ -1498,8 +1498,8 @@ static void GetExtents(double min_s, double min_t, double max_s, double max_t,
   int bmax_s = (int)ceil(max_s / 16.0);
   int bmax_t = (int)ceil(max_t / 16.0);
 
-  *ext_W = bmax_s - bmin_s + 1;
-  *ext_H = bmax_t - bmin_t + 1;
+  *ext_W = MIN(2, bmax_s - bmin_s + 1);
+  *ext_H = MIN(2, bmax_t - bmin_t + 1);
 }
 
 static void MakeFloorFace(qFace_c *F, qNode_c *N, dface_t *face)
