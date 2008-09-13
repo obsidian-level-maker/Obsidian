@@ -120,6 +120,25 @@ static inline u32_t UT_Swap32(u32_t x) {
 #define BE_S32(X)  ((s32_t) BE_U32((u32_t) (X)))
 
 
+// ---- floating point ----
+
+static inline float UT_SwapFloat(float x)
+{
+  union { float f; u32_t u; } in, out;
+  in.f = x;
+  out.u = UT_Swap32(in.u);
+  return out.f;
+}
+
+#if (UT_BYTEORDER == UT_LIL_ENDIAN)
+#define LE_Float32(X)  (X)
+#define BE_Float32(X)  UT_SwapFloat(X)
+#else
+#define LE_Float32(X)  UT_SwapFloat(X)
+#define BE_Float32(X)  (X)
+#endif
+
+
 #endif // __UTIL_ENDIAN_H__
 
 //--- editor settings ---
