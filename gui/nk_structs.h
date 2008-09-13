@@ -33,7 +33,7 @@ typedef struct
   u16_t angle;
   u16_t sector;
 }
-raw_map_header_t;
+raw_nukem_map_t;
 
 #define DUKE_MAP_VERSION  7
 
@@ -72,7 +72,7 @@ typedef struct
   u16_t hi_tag;
   u16_t extra;
 }
-raw_sector_t;
+raw_nukem_sector_t;
 
 #define SECTOR_F_PARALLAX    (1 << 0)
 #define SECTOR_F_SLOPED      (1 << 1)
@@ -102,7 +102,7 @@ typedef struct
   u16_t lo_tag, hi_tag;
   u16_t extra;
 }
-raw_wall_t;
+raw_nukem_wall_t;
 
 #define WALL_F_BLOCKING    (1 << 0)
 #define WALL_F_GUN_BLOCK   (1 << 6)
@@ -137,7 +137,7 @@ typedef struct
   u16_t lo_tag, hi_tag;
   u16_t extra;
 }
-raw_sprite_t;
+raw_nukem_sprite_t;
 
 #define SPRITE_F_BLOCKING    (1 << 0)
 #define SPRITE_F_GUN_BLOCK   (1 << 8)
