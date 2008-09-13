@@ -253,14 +253,14 @@ dleaf2_t;
 typedef struct
 {
   u16_t planenum;    // facing out of the leaf
-  u16_t texinfo;
+  s16_t texinfo;
 }
 dbrushside_t;
 
 typedef struct
 {
-  u16_t firstside;
-  u16_t numsides;
+  s32_t firstside;
+  s32_t numsides;
 
   u32_t contents;
 }
