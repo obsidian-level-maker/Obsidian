@@ -374,5 +374,240 @@ void BSP_BackupPAK(const char *filename)
 }
 
 
+//------------------------------------------------------------------------
+
+static int bsp_vert_lump;
+static int bsp_max_verts;
+
+std::vector<dvertex_t> bsp_vertices;
+
+#define NUM_VERTEX_HASH  512
+static std::vector<u16_t> * vert_hashtab[NUM_VERTEX_HASH];
+
+
+void BSP_ClearVertices(int lump, int max_verts)
+{
+  bsp_vert_lump = lump;
+  bsp_max_verts = max_verts;
+
+  bsp_vertices.clear();
+
+  for (int h = 0; h < NUM_VERTEX_HASH; h++)
+  {
+    delete vert_hashtab[h];
+    vert_hashtab[h] = NULL;
+  }
+
+  // insert dummy vertex #0
+  dvertex_t dummy;
+  memset(&dummy, 0, sizeof(dummy));
+
+  bsp_vertices.push_back(dummy);
+}
+
+
+u16_t BSP_AddVertex(double x, double y, double z)
+{
+  dvertex_t vert;
+
+  vert.x = x;
+  vert.y = y;
+  vert.z = z;
+
+  // find existing vertex.  For speed we use a hash-table.
+  int hash;
+  hash = IntHash(       I_ROUND((x+1.4) / 128.0));
+  hash = IntHash(hash ^ I_ROUND((y+1.4) / 128.0));
+
+  hash = hash & (NUM_VERTEX_HASH-1);
+  SYS_ASSERT(hash >= 0);
+
+  if (! vert_hashtab[hash])
+    vert_hashtab[hash] = new std::vector<u16_t>;
+
+  std::vector<u16_t> *hashtab = vert_hashtab[hash];
+
+  for (unsigned int i = 0; i < hashtab->size(); i++)
+  {
+    u16_t vert_idx = (*hashtab)[i];
+ 
+    dvertex_t *test = &bsp_vertices[vert_idx];
+
+    if (fabs(test->x - x) < Q_EPSILON &&
+        fabs(test->y - y) < Q_EPSILON &&
+        fabs(test->z - z) < Q_EPSILON)
+    {
+      return vert_idx; // found it
+    }
+  }
+
+  // not found, so add new one
+  u16_t vert_idx = bsp_vertices.size();
+
+  if (vert_idx >= bsp_max_verts)
+    Main_FatalError("Quake build failure: exceeded limit of %d VERTEXES\n",
+                    bsp_max_verts);
+
+  bsp_vertices.push_back(vert);
+
+  hashtab->push_back(vert_idx);
+
+  return vert_idx;
+}
+
+
+void BSP_WriteVertices(void)
+{
+  // fix endianness
+  for (unsigned int i = 0; i < bsp_vertices.size(); i++)
+  {
+    dvertex_t& v = bsp_vertices[i];
+
+    v.x = LE_Float32(v.x);
+    v.y = LE_Float32(v.y);
+    v.z = LE_Float32(v.z);
+  }
+
+  qLump_c *lump = BSP_NewLump(bsp_vert_lump);
+
+  lump->Append(&bsp_vertices[0], bsp_vertices.size() * sizeof(dvertex_t));
+}
+
+
+//------------------------------------------------------------------------
+
+static int bsp_edge_lump;
+static int bsp_max_edges;
+
+std::vector<dedge_t> bsp_edges;
+
+std::map<u32_t, s32_t> bsp_edge_map;
+
+
+void BSP_ClearEdges(int lump, int max_edges)
+{
+  bsp_edges.clear();
+  bsp_edge_map.clear();
+
+  // insert dummy edge #0
+  dedge_t dummy;
+  memset(&dummy, 0, sizeof(dummy));
+
+  bsp_edges.push_back(dummy);
+}
+
+
+s32_t BSP_AddEdge(u16_t start, u16_t end)
+{
+  bool flipped = false;
+
+  if (start > end)
+  {
+    flipped = true;
+    u16_t tmp = start; start = end; end = tmp;
+  }
+
+  dedge_t edge;
+
+  edge.v[0] = start;
+  edge.v[1] = end;
+
+  u32_t key = (u32_t)start + (u32_t)(end << 16);
+
+
+  // find existing edge
+  if (bsp_edge_map.find(key) != bsp_edge_map.end())
+    return bsp_edge_map[key] * (flipped ? -1 : 1);
+
+
+  // not found, so add new one
+  int edge_idx = bsp_edges.size();
+
+  if (edge_idx >= bsp_max_edges)
+    Main_FatalError("Quake build failure: exceeded limit of %d EDGES\n",
+                    bsp_max_edges);
+
+  bsp_edges.push_back(edge);
+
+  bsp_edge_map[key] = edge_idx;
+
+  return flipped ? -edge_idx : edge_idx;
+}
+
+
+void BSP_WriteEdges(void)
+{
+  // fix endianness
+  for (unsigned int i = 0; i < bsp_edges.size(); i++)
+  {
+    dedge_t& e = bsp_edges[i];
+
+    e.v[0] = LE_U16(e.v[0]);
+    e.v[1] = LE_U16(e.v[1]);
+  }
+
+  qLump_c *lump = BSP_NewLump(bsp_edge_lump);
+
+  lump->Append(&bsp_edges[0], bsp_edges.size() * sizeof(dedge_t));
+}
+
+
+//------------------------------------------------------------------------
+
+static int bsp_light_lump;
+static int bsp_max_lightmap;
+
+static qLump_c *bsp_lightmap;
+
+
+void BSP_ClearLightmap(int lump, int max_lightmap)
+{
+  bsp_light_lump = lump;
+  bsp_max_lightmap = max_lightmap;
+
+  bsp_lightmap = BSP_NewLump(lump);
+
+  // tis the season to be jolly
+  const char *info = "Lightmap created by " OBLIGE_TITLE " " OBLIGE_VERSION;
+
+  bsp_lightmap->Append(info, strlen(info));
+
+  // quake II needs all offsets to be divisible by 3
+  const byte zeros[4] = { 0,0,0,0 };
+
+  int count = 3 - (bsp_lightmap->GetSize() % 3);
+
+  bsp_lightmap->Append(zeros, count);
+}
+
+
+s32_t BSP_AddLightBlock(int w, int h, u8_t *levels)
+{
+  s32_t offset = bsp_lightmap->GetSize();
+
+  if (bsp_game == 2)
+  {
+    // QuakeII has RGB lightmaps (but this is just greyscale)
+    for (int i = 0; i < w*h; i++)
+    {
+      bsp_lightmap->Append(&levels, 1);
+      bsp_lightmap->Append(&levels, 1);
+      bsp_lightmap->Append(&levels, 1);
+    }
+  }
+  else
+  {
+    for (int i = 0; i < w*h; i++)
+      bsp_lightmap->Append(&levels, 1);
+  }
+
+  if ((int)bsp_lightmap->GetSize() >= bsp_max_lightmap)
+    Main_FatalError("Quake build failure: exceeded lightmap limit of %d\n",
+                    bsp_max_lightmap);
+
+  return offset;
+}
+
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

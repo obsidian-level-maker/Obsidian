@@ -62,6 +62,18 @@ bool BSP_CloseLevel();
 qLump_c *BSP_NewLump(int entry);
 
 
+void BSP_ClearVertices(int lump, int max_verts);
+void BSP_ClearEdges(int lump, int max_edges);
+void BSP_ClearLightmap(int lump, int max_lightmap);
+
+u16_t BSP_AddVertex(double x, double y, double z);
+s32_t BSP_AddEdge(u16_t start, u16_t end);
+s32_t BSP_AddLightBlock(int w, int h, u8_t *levels);
+
+void BSP_WriteVertices(void);
+void BSP_WriteEdges(void);
+
+
 /* ----- BSP lump directory ------------------------- */
 
 #define Q1_HEADER_LUMPS  15
@@ -93,6 +105,22 @@ typedef struct
   lump_t lumps[Q2_HEADER_LUMPS];
 }
 dheader2_t;
+
+
+typedef struct
+{
+  float x, y, z;
+}
+dvertex_t;
+
+// note that edge 0 is never used, because negative edge nums are used for
+// counterclockwise use of the edge in a face
+typedef struct
+{
+  u16_t v[2]; // vertex numbers
+}
+dedge_t;
+
 
 #endif /* __OBLIGE_BSPOUT_H__ */
 
