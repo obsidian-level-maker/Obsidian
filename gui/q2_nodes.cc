@@ -69,23 +69,32 @@ public:
   int gap;
 
   qSide_c *side;
-  qLeaf_c *floor_leaf;
+  qLeaf_c *leaf;
 
   int index;  // final index into Faces lump
 
+  area_poly_c *from_poly;  // ????
+
 public:
-   qFace_c(int _kind = WALL) : kind(_kind), side(NULL), floor_leaf(NULL), index(-1) { }
-  ~qFace_c() { }
+   qFace_c(int _kind = WALL) :
+          kind(_kind), side(NULL), leaf(NULL),
+          index(-1), from_poly(NULL)
+   { }
+
+  ~qFace_c()
+   { }
 
    qFace_c(int _kind, int _gap, double _z1, double _z2) :
            kind(_kind), z1(_z1), z2(_z2), gap(_gap),
-           side(NULL), floor_leaf(NULL), index(-1)
+           side(NULL), leaf(NULL), index(-1),
+           from_poly(NULL)
    { }
 
    qFace_c(const qFace_c *other, qSide_c *new_side) :
            kind(other->kind), z1(other->z1), z2(other->z2),
            gap(other->gap), side(new_side),
-           floor_leaf(NULL), index(-1)
+           leaf(other->leaf), index(-1),
+           from_poly(other->from_poly)
    { }
 };
 
@@ -220,9 +229,6 @@ public:
   // NB: faces are managed by qSide_c, we only store ptr-copies here
   std::vector<qFace_c *> faces;
 
-  qFace_c *floor;
-  qFace_c *ceil;
-
   bool floor_on_node;
   bool ceil_on_node;
 
@@ -230,8 +236,7 @@ public:
   qLeaf_c() : contents(CONTENTS_EMPTY), /* faces(), */ sides(),
               gap(0), numgap(0),
               min_x(0), min_y(0), max_x(0), max_y(0),
-              faces(), floor(NULL), ceil(NULL),
-              floor_on_node(false), ceil_on_node(false)
+              faces(), floor_on_node(false), ceil_on_node(false)
   { }
 
   ~qLeaf_c()
@@ -243,8 +248,7 @@ public:
           contents(other.contents), sides(), gap(_gap),
           min_x(other.min_x), min_y(other.min_y),
           max_x(other.max_x), max_y(other.max_y),
-          faces(), floor(NULL), ceil(NULL),
-          floor_on_node(false), ceil_on_node(false)
+          faces(), floor_on_node(false), ceil_on_node(false)
   {
     // copy the side pointers
     std::list<qSide_c *>::iterator SI;
@@ -332,6 +336,32 @@ public:
     }
   }
 
+  qFace_c *GetFloor() const
+  {
+    for (unsigned int k = 0; k < faces.size(); k++)
+    {
+      qFace_c *F = faces[k];
+
+      if (F->kind == qFace_c::FLOOR)
+        return F;
+    }
+
+    return NULL; // not found
+  }
+
+  qFace_c *GetCeil() const
+  {
+    for (unsigned int k = 0; k < faces.size(); k++)
+    {
+      qFace_c *F = faces[k];
+
+      if (F->kind == qFace_c::CEIL)
+        return F;
+    }
+
+    return NULL; // not found
+  }
+
   void AssignFaces()
   {
     SYS_ASSERT(numgap == 1);
@@ -349,15 +379,17 @@ public:
       {
         qFace_c *F = S->faces[k];
 
+        if (F->gap != gap)
+          continue;
+
         // check if already there
-        bool already = false;
         for (unsigned int m=0; m < faces.size(); m++)
         {
-          SYS_ASSERT(faces[m] != F); // { already = true; break; }
+          SYS_ASSERT(faces[m] != F);
         }
 
-        if (F->gap == gap && !already)
-          faces.push_back(F);
+        faces.push_back(F);
+        F->leaf = this;
       }
     }
   }
@@ -979,8 +1011,9 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
       node->z = gap->GetZ2();
 
-      SYS_ASSERT(leaf->ceil);
-      node->faces.push_back(leaf->ceil);
+      qFace_c *ceil = leaf->GetCeil();
+      SYS_ASSERT(ceil);
+      node->faces.push_back(ceil);
 
       node->back_l = SOLID_LEAF;
 
@@ -999,8 +1032,9 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
       node->z = gap->GetZ1();
 
-      SYS_ASSERT(leaf->floor);
-      node->faces.push_back(leaf->floor);
+      qFace_c *floor = leaf->GetFloor();
+      SYS_ASSERT(floor);
+      node->faces.push_back(floor);
 
       // End of the road, folks!
       node->front_l = leaf;
@@ -1046,14 +1080,17 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
 
   // create floor and ceiling faces here
-  leaf->floor = new qFace_c(qFace_c::FLOOR);
-  leaf->ceil  = new qFace_c(qFace_c::CEIL);
+  qFace_c * floor = new qFace_c(qFace_c::FLOOR);
+  qFace_c * ceil  = new qFace_c(qFace_c::CEIL);
 
-  leaf->floor->gap = leaf->gap;
-  leaf-> ceil->gap = leaf->gap;
+  floor->gap = leaf->gap;
+   ceil->gap = leaf->gap;
 
-  leaf->floor->floor_leaf = leaf;
-  leaf-> ceil->floor_leaf = leaf;
+  floor->leaf = leaf;
+   ceil->leaf = leaf;
+
+  leaf->faces.push_back(floor);
+  leaf->faces.push_back(ceil);
 
 
   Partition_Solid(leaf, out_n, out_l);
@@ -1284,11 +1321,13 @@ static qLump_c *q_nodes;
 static qLump_c *q_leafs;
 static qLump_c *q_faces;
 static qLump_c *q_leaf_faces;
+static qLump_c *q_leaf_brushes;
 static qLump_c *q_surf_edges;
 
 static int total_nodes;
 static int total_leafs;
 static int total_leaf_faces;
+static int total_leaf_brushes;
 static int total_surf_edges;
 
 
@@ -1347,6 +1386,17 @@ static void DoAddSurf(u16_t index, dleaf2_t *raw_lf )
     total_leaf_faces += 1;
 
     raw_lf->num_leaffaces += 1;
+}
+
+static void DoCollisionBrush(area_poly_c *A, dleaf2_t *raw_lf)
+{
+  u16_t index = LE_U16(Q2_AddBrush(A));
+
+  q_leaf_brushes->Append(&index, 2);
+
+  total_leaf_brushes += 1;
+
+  raw_lf->num_leafbrushes += 1;
 }
 
 
@@ -1506,7 +1556,7 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
 {
   bool is_ceil = (F->kind == qFace_c::CEIL) ? true : false;
 
-  qLeaf_c *leaf = F->floor_leaf;
+  qLeaf_c *leaf = F->leaf;
   SYS_ASSERT(leaf);
 
   merge_region_c *R = leaf->GetRegion();
@@ -1517,7 +1567,7 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
   double z1 = gap->GetZ1();
   double z2 = gap->GetZ2();
 
-  double z = (F->kind == qFace_c::CEIL) ? z2 : z1;
+  double z = is_ceil ? z2 : z1;
 ///fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
 
 
@@ -1526,7 +1576,7 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
 
   face->side = 0;
 
-  const char *texture = (F->kind == qFace_c::CEIL) ? gap->CeilTex() : gap->FloorTex();
+  const char *texture = is_ceil ? gap->CeilTex() : gap->FloorTex();
 
   int flags = CalcTextureFlag(texture);
 
@@ -1572,6 +1622,8 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
   }
 
 
+  // lighting
+
   if (1) ///### ! (flags & TEX_SPECIAL))
   {
     int ext_W, ext_H;
@@ -1583,6 +1635,11 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
 
     face->lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
   }
+
+
+  // collision brushes
+
+  F->from_poly = is_ceil ? gap->t_poly : gap->b_poly;
 }
 
 static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
@@ -1592,7 +1649,10 @@ static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
   merge_region_c *R = S->GetRegion();
   SYS_ASSERT(R);
 
-  merge_gap_c *gap  = R->gaps.at(F->gap);
+  qLeaf_c *leaf = F->leaf;
+  SYS_ASSERT(leaf);
+
+  merge_gap_c *gap = R->gaps.at(F->gap);
 
   double z1 = F->z1;
   double z2 = F->z2;
@@ -1617,7 +1677,11 @@ static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
   {
     area_poly_c *MID = PolyForSideTexture(BACK, z1, z2);
     if (MID)
+    {
       texture = MID->info->side->tex.c_str();
+
+      F->from_poly = MID;
+    }
   }
 
   int flags = CalcTextureFlag(texture);
@@ -1743,13 +1807,8 @@ static s32_t MakeLeaf(qLeaf_c *leaf, dnode2_t *parent)
   raw_lf.first_leafface = total_leaf_faces;
   raw_lf.num_leaffaces  = 0;
 
-  raw_lf.first_leafbrush  = 0;
+  raw_lf.first_leafbrush  = total_leaf_brushes;
   raw_lf.num_leafbrushes  = 0;
-
-
-///---  // make faces for floor and ceiling
-///---  Floor_to_Face(leaf, &raw_lf, 0);
-///---  Floor_to_Face(leaf, &raw_lf, 1);
 
 
   // make faces
@@ -1761,14 +1820,10 @@ static s32_t MakeLeaf(qLeaf_c *leaf, dnode2_t *parent)
     SYS_ASSERT(F->index >= 0);
 
     DoAddSurf(F->index, &raw_lf);
+
+    if (F->from_poly)
+      DoCollisionBrush(F->from_poly, &raw_lf);
   }
-
-  // ???  probably should just put into leaf->faces array 
-  SYS_ASSERT(leaf->floor->index >= 0);
-  SYS_ASSERT(leaf-> ceil->index >= 0);
-
-  DoAddSurf(leaf->floor->index, &raw_lf);
-  DoAddSurf(leaf-> ceil->index, &raw_lf);
 
 
   for (b = 0; b < 3; b++)
@@ -1917,12 +1972,16 @@ void Q2_CreateModel(void)
   total_leafs = 0;
   total_nodes = 1;  // root node is always first
 
+  total_leaf_faces = 0;
+  total_leaf_brushes = 0;
+
   q_nodes = BSP_NewLump(LUMP_NODES);
   q_leafs = BSP_NewLump(LUMP_LEAFS);
   q_faces = BSP_NewLump(LUMP_FACES);
 
-  q_leaf_faces = BSP_NewLump(LUMP_LEAFFACES);
-  q_surf_edges = BSP_NewLump(LUMP_SURFEDGES);
+  q_leaf_faces   = BSP_NewLump(LUMP_LEAFFACES);
+  q_leaf_brushes = BSP_NewLump(LUMP_LEAFBRUSHES);
+  q_surf_edges   = BSP_NewLump(LUMP_SURFEDGES);
 
   CreateSolidLeaf();
 

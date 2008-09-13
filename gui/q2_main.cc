@@ -88,7 +88,7 @@ void Q2_CreateEntities(void)
 
 //------------------------------------------------------------------------
 
-std::vector<dplane2_t> q2_planes;
+static std::vector<dplane2_t> q2_planes;
 
 #define NUM_PLANE_HASH  64
 static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
@@ -238,7 +238,94 @@ static void Q2_CreatePlanes(void)
 
 //------------------------------------------------------------------------
 
-std::vector<texinfo2_t> q2_texinfos;
+
+static std::vector<dbrush_t> q2_brushes;
+static std::vector<dbrushside_t> q2_brush_sides;
+
+static std::map<const area_poly_c *, u16_t> brush_map;
+
+
+static void ClearBrushes()
+{
+  q2_brushes.clear();
+  q2_brush_sides.clear();
+
+  brush_map.clear();
+}
+
+u16_t Q2_AddBrush(const area_poly_c *A)
+{
+  // find existing brush
+  if (brush_map.find(A) != brush_map.end())
+    return brush_map[A];
+
+
+  const area_info_c *info = A->info;
+
+  dbrush_t brush;
+  dbrushside_t side;
+
+  brush.firstside = q2_brush_sides.size();
+  brush.numsides  = 0;
+  brush.contents  = CONTENTS_SOLID;
+
+  side.texinfo = 1; // FIXME !!!!!
+
+
+  // top
+  side.planenum = Q2_AddPlane(0, 0, info->z2,  0, 0, +1);
+  
+  q2_brush_sides.push_back(side);
+  brush.numsides++;
+  
+
+  // bottom
+  side.planenum = Q2_AddPlane(0, 0, info->z1,  0, 0, -1);
+  
+  q2_brush_sides.push_back(side);
+  brush.numsides++;
+
+
+  for (unsigned int k = 0; k < A->verts.size(); k++)
+  {
+    area_vert_c *v1 = A->verts[k];
+    area_vert_c *v2 = A->verts[(k+1) % A->verts.size()];
+
+    side.planenum = Q2_AddPlane(v1->x, v1->y, 0,
+                                (v2->y - v1->y), (v1->x - v2->x), 0);
+
+    q2_brush_sides.push_back(side);
+    brush.numsides++;
+  }
+
+  int index = (int)q2_brushes.size();
+
+fprintf(stderr, "BRUSH %d ---> SIDES %d\n", index, brush.numsides);
+
+  q2_brushes.push_back(brush);
+
+  brush_map[A] = (u16_t)index;
+
+  return (u16_t) index;
+}
+
+static void WriteBrushes()
+{
+  qLump_c *lump  = BSP_NewLump(LUMP_BRUSHES);
+
+  // FIXME: write separately, fix endianness as we go
+
+  lump->Append(&q2_brushes[0], q2_brushes.size() * sizeof(dbrush_t));
+
+  qLump_c *sides = BSP_NewLump(LUMP_BRUSHSIDES);
+
+  sides->Append(&q2_brush_sides[0], q2_brush_sides.size() * sizeof(dbrushside_t));
+}
+
+
+//------------------------------------------------------------------------
+
+static std::vector<texinfo2_t> q2_texinfos;
 
 #define NUM_TEXINFO_HASH  64
 static std::vector<u16_t> * texinfo_hashtab[NUM_TEXINFO_HASH];
@@ -529,6 +616,7 @@ void quake2_game_interface_c::EndLevel()
     return; //!!!!!! FUCK
 
   ClearPlanes();
+  ClearBrushes();
   ClearTexInfo();
 
   BSP_ClearVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
@@ -553,7 +641,7 @@ BSP_AddLightBlock(16, 32, solid_light);
 
   DummyArea();
   DummyVis();
-  DummyLeafBrush();
+  WriteBrushes();
 
   BSP_WriteVertices();
   BSP_WriteEdges();

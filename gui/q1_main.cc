@@ -88,7 +88,7 @@ void Q1_CreateEntities(void)
 
 //------------------------------------------------------------------------
 
-std::vector<dplane_t> q1_planes;
+static std::vector<dplane_t> q1_planes;
 
 #define NUM_PLANE_HASH  128
 static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
@@ -450,7 +450,7 @@ static void DummyMipTex(void)
 
 //------------------------------------------------------------------------
 
-std::vector<texinfo_t> q1_texinfos;
+static std::vector<texinfo_t> q1_texinfos;
 
 #define NUM_TEXINFO_HASH  32
 static std::vector<u16_t> * texinfo_hashtab[NUM_TEXINFO_HASH];
