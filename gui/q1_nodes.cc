@@ -1784,7 +1784,7 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
   q_leafs->Append(&raw_lf, sizeof(raw_lf));
 
-  return -(index+2);
+  return -(index+2);  // index+2 because the first leaf is SOLID
 }
 
 
