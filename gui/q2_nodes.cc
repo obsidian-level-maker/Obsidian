@@ -1843,7 +1843,7 @@ static s32_t MakeLeaf(qLeaf_c *leaf, dnode2_t *parent)
 
   q_leafs->Append(&raw_lf, sizeof(raw_lf));
 
-  return -(index+2);
+  return -(index+1);
 }
 
 
@@ -1946,17 +1946,19 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode2_t *parent)
 }
 
 
-static void CreateSolidLeaf(void)
+static void CreateDummyLeaf(void)
 {
   dleaf2_t raw_lf;
 
   memset(&raw_lf, 0, sizeof(raw_lf));
 
   raw_lf.contents = CONTENTS_SOLID;
-  raw_lf.cluster  = 0;
+  raw_lf.cluster  = -1;
   raw_lf.area     = 0;
 
   q_leafs->Append(&raw_lf, sizeof(raw_lf));
+
+  total_leafs++;
 }
 
 
@@ -1983,7 +1985,7 @@ void Q2_CreateModel(void)
   q_leaf_brushes = BSP_NewLump(LUMP_LEAFBRUSHES);
   q_surf_edges   = BSP_NewLump(LUMP_SURFEDGES);
 
-  CreateSolidLeaf();
+  CreateDummyLeaf();
 
   RecursiveMakeNodes(Q_ROOT, NULL /* parent */);
 
