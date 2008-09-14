@@ -478,7 +478,7 @@ public:
   {
   }
 
-  void LevelProp(const char *key, const char *value)
+  void Property(const char *key, const char *value)
   {
   }
 

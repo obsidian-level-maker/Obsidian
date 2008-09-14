@@ -935,8 +935,8 @@ public:
   bool Finish(bool build_ok);
 
   void BeginLevel();
-  void LevelProp(const char *key, const char *value);
   void EndLevel();
+  void Property(const char *key, const char *value);
 
 private:
   bool BuildNodes(const char *target_file);
@@ -1009,7 +1009,7 @@ void doom_game_interface_c::BeginLevel()
 }
 
 
-void doom_game_interface_c::LevelProp(const char *key, const char *value)
+void doom_game_interface_c::Property(const char *key, const char *value)
 {
   if (StringCaseCmp(key, "level_name") == 0)
   {

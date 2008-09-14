@@ -547,9 +547,11 @@ int level_prop(lua_State *L)
   const char *key   = luaL_checkstring(L,1);
   const char *value = luaL_checkstring(L,2);
 
+  // TODO: eat propertities intented for CSG2
+
   SYS_ASSERT(game_object);
 
-  game_object->LevelProp(key, value);
+  game_object->Property(key, value);
 
   return 0;
 }
@@ -560,17 +562,18 @@ int level_prop(lua_State *L)
 // info is a table:
 //    t_face, b_face : top and bottom faces
 //    w_face         : default side face
-//    liquid         : usually nil, otherwise a face table
+//    liquid         : usually nil, otherwise name (e.g. "lava")
 //    clip           : usually nil, otherwise true
-//    mark           : separating number
-//    sec_kind, sec_tag (DOOM only)
+//    special        : usually nil, otherwise name (e.g. "damage20")
+//    mark           : separating number (DOOM: sector tag if > 0)
+//    misc           : integer for CSG flags (e.g. NOFILL)
 // 
 // z1 & z2 are either a height (number) or a slope table:
-//    sx, sy, sz         : start point on slope
-//    ex, ey, ez         : end point on slope
+//    sx, sy, sz     : start point on slope
+//    ex, ey, ez     : end point on slope
 //
 // loop is an array of Vertices:
-//    x, y,
+//    x, y
 //    w_face (can be nil)
 //    line_kind, line_tag,
 //    line_flags, line_args
@@ -604,7 +607,9 @@ int add_brush(lua_State *L)
 }
 
 
-// LUA: add_entity(name, x, y, z, info)
+// LUA: add_entity(name, x, y, z, misc, info)
+//
+// misc is a integer of CSG flags
 //
 // info is a table:
 //   options (DOOM, HEXEN)

@@ -68,17 +68,16 @@ public:
   // up and hence could alter some CSG2 parameters, other than
   // that there is lttle need to do anything here.
 
-  virtual void LevelProp(const char *key, const char *value) = 0;
-  // called before any level building to set a level-specific
-  // property, especially the "level_name" property which is
-  // required by most games (like DOOM and QUAKE).  Unknown
-  // properties are ignored.
-
   virtual void EndLevel() = 0;
   // called when all the brushes and entities have been added
   // but before the CSG2 performs a cleanup.  Typically the
   // game-specific code will call CSG2_MergeAreas() and convert
   // the result to the game-specific level format.
+
+  virtual void Property(const char *key, const char *value) = 0;
+  // sets a certain property, especially "level_name" which is
+  // required by most games (like DOOM and QUAKE).  Unknown
+  // properties are ignored.
 };
 
 extern game_interface_c * game_object;
