@@ -292,7 +292,7 @@ u16_t Q2_AddBrush(const area_poly_c *A)
     area_vert_c *v2 = A->verts[(k+1) % A->verts.size()];
 
     side.planenum = Q2_AddPlane(v1->x, v1->y, 0,
-                                (v2->y - v1->y), (v1->x - v2->x), 0);
+                                (v1->y - v2->y), (v2->x - v1->x), 0);
 
     q2_brush_sides.push_back(side);
     brush.numsides++;
