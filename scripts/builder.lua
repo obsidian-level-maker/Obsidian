@@ -36,6 +36,11 @@ ENT_MONSTER = "monster_army"
 ENT_EXIT    = "item_artifact_super_damage"
 --]]
 
+--[[ QUAKE2
+ENT_PLAYER  = "info_player_start"
+ENT_MONSTER = "monster_soldier_light"
+ENT_EXIT    = "item_quad"
+--]]
 
 
 
@@ -351,9 +356,15 @@ con.printf("do_teleport\n")
       if S.room.branch_kind then f_tex = "CEIL5_1" end
 
 --[[ QUAKE
-f_tex = "wood1_1"
-c_tex = "metal1_1"
+f_tex = sel(c_tex == "F_SKY1", "ground1_6", "wood1_1")
+c_tex = sel(c_tex == "F_SKY1", "sky1", "metal1_1")
 w_tex = "tech01_1"
+--]]
+
+--[[ QUAKE2
+c_tex = "e1u1/grnx2_3"
+f_tex = "e1u1/floor3_3"
+w_tex = "e1u1/exitdr01_2"
 --]]
 
       S.z1 = z1 --!!!!!! REMOVE CRAP
