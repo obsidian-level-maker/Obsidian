@@ -44,6 +44,7 @@ OBJS=	main.o      \
 	lib_file.o  \
 	lib_signal.o \
 	lib_util.o  \
+	lib_wad.o   \
 	sys_assert.o \
 	sys_debug.o \
 	csg_main.o  \
