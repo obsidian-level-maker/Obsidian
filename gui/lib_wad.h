@@ -75,7 +75,7 @@ void GRP_FinishLump(void);
 
 typedef struct
 {
-  char type[4];
+  char magic[4];
 
   u32_t num_lumps;
   u32_t dir_start;
