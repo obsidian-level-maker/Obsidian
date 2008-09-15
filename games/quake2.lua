@@ -455,7 +455,7 @@ function wolf3d_get_levels(episode)
 
   local function dump_levels()
     for idx,L in ipairs(level_list) do
-      con.printf("Wolf3d episode [%d] map [%d] : %s\n", episode, idx, L.name)
+      gui.printf("Wolf3d episode [%d] map [%d] : %s\n", episode, idx, L.name)
       show_quests(L.quests)
     end
   end

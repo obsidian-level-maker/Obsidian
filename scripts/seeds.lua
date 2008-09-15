@@ -135,7 +135,7 @@ end
 
 
 function Seed_dump_rooms()
-  con.printf("Seed room map:\n")
+  gui.printf("Seed room map:\n")
 
   local ROOM_IDX = 0
   local HALL_IDX = 0
@@ -168,12 +168,12 @@ function Seed_dump_rooms()
 
   for y = SEED_H,1,-1 do
     for x = 1,SEED_W do
-      con.printf("%s", seed_to_char(SEEDS[x][y][1]))
+      gui.printf("%s", seed_to_char(SEEDS[x][y][1]))
     end
-    con.printf("\n")
+    gui.printf("\n")
   end
 
-  con.printf("\n")
+  gui.printf("\n")
 end
 
 
@@ -194,18 +194,18 @@ function Seed_dump_fabs()
     return "?"
   end
 
-  con.printf("Room Fabs:\n")
+  gui.printf("Room Fabs:\n")
 
   for y = SEED_H,1,-1 do
     
     for x = 1,SEED_W do
-      con.printf("%s", char_for_seed(SEEDS[x][y][1].room))
+      gui.printf("%s", char_for_seed(SEEDS[x][y][1].room))
     end
 
-    con.printf("\n")
+    gui.printf("\n")
   end
 
-  con.printf("\n")
+  gui.printf("\n")
 end
 
 
@@ -956,7 +956,7 @@ function render_seed(S)
 
   -- floor
   if S.kind == "walkway" then
-    csg2.add_brush(
+    gui.add_brush(
     {
       t_face = { texture=tex },
       b_face = { texture=tex },
@@ -977,7 +977,7 @@ function render_seed(S)
      (S.link[9].dest == S and S.link[9].src.kind == "solid")
   then
     
-    csg2.add_brush(
+    gui.add_brush(
     {
       t_face = { texture=tex },
       b_face = { texture=tex },
@@ -1000,7 +1000,7 @@ function render_seed(S)
     
     if not L or other.kind == "solid" then
     
-      csg2.add_brush(
+      gui.add_brush(
       {
         t_face = { texture=tex },
         b_face = { texture=tex },
@@ -1195,8 +1195,8 @@ function test_grow_3D()
     render_seed(S)
   end
 
-  csg2.add_entity("info_player_start", 800, 800, 260)
----!!!  csg2.add_entity("1", 800, 800, 260)
+  gui.add_entity("info_player_start", 800, 800, 260)
+---!!!  gui.add_entity("1", 800, 800, 260)
 end
 
 

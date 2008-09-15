@@ -60,7 +60,7 @@ function compute_pow_factors()
   for name,info in pairs(GAME.monsters) do
     info.pow = pow_factor(info)
 
-    con.debugf("Monster %s : power %d\n", name, info.pow)
+    gui.debugf("Monster %s : power %d\n", name, info.pow)
 
     local def = GAME.things[name]
     if not def then
@@ -111,7 +111,7 @@ end
 ----------------------------------------------------------------
 
 function get_rand_theme()
---con.debugf("level =\n%s\n", table_to_str(PLAN.level,2))
+--gui.debugf("level =\n%s\n", table_to_str(PLAN.level,2))
   assert(PLAN.level.theme_probs)
 
   local name = rand_key_by_probs(PLAN.level.theme_probs)

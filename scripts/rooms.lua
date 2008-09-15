@@ -52,7 +52,7 @@ function Rooms_select_heights()
 
   local function dump_along(list, prefix)
     for idx,L in ipairs(list) do
-      con.debugf("%sfloor_along_path: %d/%d = %s\n", prefix,
+      gui.debugf("%sfloor_along_path: %d/%d = %s\n", prefix,
                  idx, #list, L.h or "UNSET")
     end
   end
@@ -105,7 +105,7 @@ function Rooms_select_heights()
       end
     end
 
-    con.debugf("Before:\n"); dump_along(list, "  ")
+    gui.debugf("Before:\n"); dump_along(list, "  ")
 
     -- start
     if not list[1].h then
@@ -129,7 +129,7 @@ function Rooms_select_heights()
     repeat
       local S, E = find_stretch(list, 5)
       if S then
-        con.debugf("Splitting stretch %d..%d\n", S, E)
+        gui.debugf("Splitting stretch %d..%d\n", S, E)
         list[int((S+E)/2)].h = rand_height()
       end
     until not S
@@ -154,8 +154,8 @@ function Rooms_select_heights()
 ---###      end
 ---###    end
 
-    con.debugf("After:\n"); dump_along(list, "> ")
-    con.debugf("\n")
+    gui.debugf("After:\n"); dump_along(list, "> ")
+    gui.debugf("\n")
 
     for _,L in ipairs(list) do
       L.room.floor_h = L.h
@@ -225,7 +225,7 @@ end
 
 function Rooms_fit_out()
 
-  con.printf("\n--==| Rooms_fit_out |==--\n\n")
+  gui.printf("\n--==| Rooms_fit_out |==--\n\n")
 
   Rooms_select_heights()
 end

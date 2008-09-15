@@ -178,7 +178,7 @@ function install_room_fab(p)
 
   ---| install_room_fab |---
 
-  con.debugf("Installing room fab '%s' %dx%d at (%d,%d) dir:%d\n",
+  gui.debugf("Installing room fab '%s' %dx%d at (%d,%d) dir:%d\n",
              F.name, nw,nh, x, y, dir)
 
   create_mapping(col_map, col_inv, ow, nw, F.x_grow)
@@ -344,7 +344,7 @@ function space_at_point(x, y, dir)
   end
 
   if out_n == 0 then
-    con.debugf("--> Connection at (%d,%d) cut off!\n", x, y)
+    gui.debugf("--> Connection at (%d,%d) cut off!\n", x, y)
     return 0,0,0
   end
 
@@ -380,7 +380,7 @@ function try_install_room_fab(p)
   -- check if all seeds are free
   local x1,y1, x2,y2 = install_loc(F, p.size, p.x, p.y, p.dir)
 
-  con.debugf("BLOCK RANGE: (%d,%d) .. (%d,%d)\n", x1,y1, x2,y2)
+  gui.debugf("BLOCK RANGE: (%d,%d) .. (%d,%d)\n", x1,y1, x2,y2)
 
   assert(Seed_valid(x1,y1,1))
   assert(Seed_valid(x2,y2,1))
@@ -474,14 +474,14 @@ function process_conn()
   -- TODO: sort in priority order
   local p = table.remove(CONNS, 1)
 
-  con.debugf("Branching at point (%d,%d) dir:%d\n", p.x, p.y, p.dir)
+  gui.debugf("Branching at point (%d,%d) dir:%d\n", p.x, p.y, p.dir)
 
 ---###  local dx, dy = dir_to_delta(p.dir)
 ---###  local x, y = p.x, p.y
 
   p.up, p.left, p.right = space_at_point(p.x, p.y, p.dir)
 
-  con.debugf("--> up:%d left:%d right:%d\n", p.up, p.left, p.right)
+  gui.debugf("--> up:%d left:%d right:%d\n", p.up, p.left, p.right)
 
 
   local avail_fabs = {}
@@ -524,7 +524,7 @@ function process_conn()
 
   -- Failed!
 
-  con.debugf("--> UNABLE TO SELECT ANY ROOM FAB\n")
+  gui.debugf("--> UNABLE TO SELECT ANY ROOM FAB\n")
 
 
   --TODO: function handle_hall_failure(p)
@@ -547,7 +547,7 @@ function Plan_rooms_sp()
 
   ---===| Plan_rooms_sp |===---
 
-  con.printf("\n--==| Plan_rooms_sp |==--\n\n")
+  gui.printf("\n--==| Plan_rooms_sp |==--\n\n")
 
   local SW = assert(SIZE_LIST[WANT_SIZE])
   local SH = SW
@@ -559,7 +559,7 @@ function Plan_rooms_sp()
   SW = SW + adjust
   SH = SH - adjust
 
-  con.printf("Map size: %dx%d\n", SW, SH)
+  gui.printf("Map size: %dx%d\n", SW, SH)
 
   Seed_init(SW, SH, 1, { zone_kind="solid"})
 

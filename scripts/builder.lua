@@ -187,7 +187,7 @@ function dummy_builder(level_name)
     end
 
         
-    csg2.add_brush(
+    gui.add_brush(
     {
       t_face = { texture=f_tex },
       b_face = { texture=f_tex },
@@ -199,7 +199,7 @@ function dummy_builder(level_name)
     },
     -2000, z1);
       
-    csg2.add_brush(
+    gui.add_brush(
     {
       t_face = { texture=c_tex },
       b_face = { texture=c_tex },
@@ -213,7 +213,7 @@ function dummy_builder(level_name)
 
     for dir = 2,8,2 do
       if walls[dir] == "solid" then
-        csg2.add_brush(
+        gui.add_brush(
         {
           t_face = { texture=w_tex },
           b_face = { texture=w_tex },
@@ -253,8 +253,8 @@ if idx < 1 then return end
     assert(tag)
 
 
-con.printf("do_teleport\n")
-    csg2.add_brush(
+gui.printf("do_teleport\n")
+    gui.add_brush(
     {
       t_face = { texture="GATE3" },
       b_face = { texture="GATE3" },
@@ -270,7 +270,7 @@ con.printf("do_teleport\n")
     },
     -2000, z1)
 
-    csg2.add_entity("14", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+    gui.add_entity("14", (x1+x2)/2, (y1+y2)/2, z1 + 25)
   end
 
 
@@ -370,7 +370,7 @@ w_tex = "e1u1/exitdr01_2"
       S.z1 = z1 --!!!!!! REMOVE CRAP
 
       if do_corners then
-      csg2.add_brush(
+      gui.add_brush(
       {
         t_face = { texture=w_tex },
         b_face = { texture=w_tex },
@@ -384,7 +384,7 @@ w_tex = "e1u1/exitdr01_2"
       },
       -2000, 4000)
 
-      csg2.add_brush(
+      gui.add_brush(
       {
         t_face = { texture=w_tex },
         b_face = { texture=w_tex },
@@ -398,7 +398,7 @@ w_tex = "e1u1/exitdr01_2"
       },
       -2000, 4000)
 
-      csg2.add_brush(
+      gui.add_brush(
       {
         t_face = { texture=w_tex },
         b_face = { texture=w_tex },
@@ -412,7 +412,7 @@ w_tex = "e1u1/exitdr01_2"
       },
       -2000, 4000)
 
-      csg2.add_brush(
+      gui.add_brush(
       {
         t_face = { texture=w_tex },
         b_face = { texture=w_tex },
@@ -437,7 +437,7 @@ w_tex = "e1u1/exitdr01_2"
 
     -- floor and ceiling brushes
 
-    csg2.add_brush(
+    gui.add_brush(
     {
       t_face = { texture=f_tex },
       b_face = { texture=f_tex },
@@ -452,7 +452,7 @@ w_tex = "e1u1/exitdr01_2"
 
 -- if c_tex=="F_SKY1" then c_tex = "MFLR8_4" end --!!!!!!
 
-    csg2.add_brush(
+    gui.add_brush(
     {
       t_face = { texture=c_tex },
       b_face = { texture=c_tex },
@@ -477,7 +477,7 @@ if true then -- if do_sides then
                   not (S.room.hallway or N.room.hallway) and
                   false)
       then
-        csg2.add_brush(
+        gui.add_brush(
         {
           t_face = { texture=f_tex },
           b_face = { texture=f_tex },
@@ -489,7 +489,7 @@ if true then -- if do_sides then
       if S.borders and S.borders[side] and S.borders[side].kind == "fence"
          and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
       then
-        csg2.add_brush(
+        gui.add_brush(
         {
           t_face = { texture=f_tex },
           b_face = { texture=f_tex },
@@ -502,8 +502,8 @@ if true then -- if do_sides then
         local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
                             "DOORRED2","DOORYEL2","DOORBLU2","MARBFAC2" }
         local w_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
-con.printf("ADDING LOCK DOOR %s\n", w_tex)
-        csg2.add_brush(
+gui.printf("ADDING LOCK DOOR %s\n", w_tex)
+        gui.add_brush(
         {
           t_face = { texture=f_tex },
           b_face = { texture=f_tex },
@@ -516,13 +516,13 @@ con.printf("ADDING LOCK DOOR %s\n", w_tex)
 end -- do_sides
 
     if S.is_start then
-      csg2.add_entity(ENT_PLAYER, (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      gui.add_entity(ENT_PLAYER, (x1+x2)/2, (y1+y2)/2, z1 + 25)
     elseif S.is_exit then
-      csg2.add_entity(ENT_EXIT, (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      gui.add_entity(ENT_EXIT, (x1+x2)/2, (y1+y2)/2, z1 + 25)
     elseif S.room and not S.room.hallway and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
-      csg2.add_entity(ENT_MONSTER, (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      gui.add_entity(ENT_MONSTER, (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
 
     if S.room and S.sy == S.room.sy2 then
@@ -531,21 +531,21 @@ end -- do_sides
 
     if S.room and S.room.key_item and S.sx == S.room.sx2 and S.sy == S.room.sy2 then
       local KEYS = { 13,6,5,7015, 38,39,40,7017 }
-con.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
---      csg2.add_entity(tostring(KEYS[S.room.key_item] or 2014), (x1+x2)/2, (y1+y2)/2, z1 + 25)
+gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
+--      gui.add_entity(tostring(KEYS[S.room.key_item] or 2014), (x1+x2)/2, (y1+y2)/2, z1 + 25)
     end
   end
 
 
   --==| dummy_builder |==--
 
-  con.printf("\n--==| dummy_builder |==--\n\n")
+  gui.printf("\n--==| dummy_builder |==--\n\n")
 
-  csg2.begin_level()
-  csg2.level_prop("level_name", level_name);
-  csg2.level_prop("error_tex",  "BLAKWAL1");
+  gui.begin_level()
+  gui.property("level_name", level_name);
+  gui.property("error_tex",  "BLAKWAL1");
 
-  con.ticker()
+  gui.ticker()
 
   for y = 1, SEED_H do
     for x = 1, SEED_W do
@@ -554,9 +554,9 @@ con.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
       end
     end
 
---    con.progress(100 * y / SEED_H)
+--    gui.progress(100 * y / SEED_H)
   end
 
-  csg2.end_level()
+  gui.end_level()
 end
 

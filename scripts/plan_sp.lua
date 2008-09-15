@@ -158,7 +158,7 @@ function Landmap_DoLiquid()
     surround = 50,
   }
 
-con.debugf("(what: %s)\n", what)
+gui.debugf("(what: %s)\n", what)
   for x = 1,LAND_W do for y = 1,LAND_H do
     if what == "surround" then surround_mode(x, y) end
     if what == "river"    then river_mode(x, y) end
@@ -319,7 +319,7 @@ function Landmap_Fill()
 
   if LAND_W >= 5 and rand_odds(10) then
 
-con.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
+gui.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
     LAND_W = half_LW ; Landmap_Fill() ; LAND_W = old_LW
 
     local swap_cave = rand_odds(25)
@@ -350,7 +350,7 @@ con.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
 
   elseif LAND_H >= 5 and rand_odds(5) then
 
-con.debugf("(mirroring vertically LAND_H=%d)\n", LAND_W)
+gui.debugf("(mirroring vertically LAND_H=%d)\n", LAND_W)
     LAND_H = half_LH ; Landmap_Fill() ; LAND_H = old_LH
 
     for y = half_LH+1, LAND_H do
@@ -386,15 +386,15 @@ function Landmap_Dump()
     return (L.kind and CHARS[L.kind]) or "."
   end
 
-  con.debugf("Land Map\n")
+  gui.debugf("Land Map\n")
   for y = LAND_H,1,-1 do
     local line = "  "
     for x = 1,LAND_W do
       line = line .. land_char(LAND_MAP[x][y])
     end
-    con.debugf("%s", line)
+    gui.debugf("%s", line)
   end
-  con.debugf("\n")
+  gui.debugf("\n")
 end
 
 
@@ -480,7 +480,7 @@ function Landmap_CreateRooms()
 
           table.insert(e_infos, INFO)
           table.insert(e_probs, prob_for_big_room(kind, w, h))
-  con.debugf("  (%d,%d) w:%d h:%d dx:%d dy:%d\n", x, y, w, h, dx, dy)
+  gui.debugf("  (%d,%d) w:%d h:%d dx:%d dy:%d\n", x, y, w, h, dx, dy)
         end
       end -- h
     end -- w
@@ -524,12 +524,12 @@ function Landmap_CreateRooms()
 
     local e_infos = { "none" }
     local e_probs = { BIG_BUILDING_PROBS[1][1] }
-con.debugf("Check expansions:\n{\n")
+gui.debugf("Check expansions:\n{\n")
 
     for dx = -1,1,2 do for dy = -1,1,2 do
       check_expansion(e_infos, e_probs, ROOM.kind, x, y, dx, dy)
     end end -- dx, dy
-con.debugf("}\n")
+gui.debugf("}\n")
 
     local idx = rand_index_by_probs(e_probs)
 
@@ -591,15 +591,15 @@ con.debugf("}\n")
   end
 
   local function dump_rooms()
-    con.debugf("Room Map\n")
+    gui.debugf("Room Map\n")
     for y = LAND_H,1,-1 do
       local line = "  "
       for x = 1,LAND_W do
         line = line .. room_char(LAND_MAP[x][y])
       end
-      con.debugf("%s", line)
+      gui.debugf("%s", line)
     end
-    con.debugf("\n")
+    gui.debugf("\n")
   end
 
 
@@ -753,7 +753,7 @@ then return true end
 
 pull=true; --!!!!!!
 
-con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, grow)
+gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, grow)
 
     if R.no_nudge then return false end
 
@@ -786,7 +786,7 @@ con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     end
 
     -- Nudge is OK!
-    con.printf("Nudging Room (%d,%d) side:%d grow:%d\n", R.lx1, R.ly1, side, grow)
+    gui.printf("Nudging Room (%d,%d) side:%d grow:%d\n", R.lx1, R.ly1, side, grow)
 
     table.insert(push_list, { room=R, side=side, grow=grow })
 
@@ -895,7 +895,7 @@ con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     if (R.kind == (NE and NE.kind) or N.kind ==  E.kind) and
        (R.kind ~=  E.kind         and N.kind ~= (NE and NE.kind))
     then
-      con.printf("Nasty Corner @ (%d,%d) : %s %s | %s %s\n",
+      gui.printf("Nasty Corner @ (%d,%d) : %s %s | %s %s\n",
                  R.sx2, R.sy2, R.kind, E.kind, N.kind, (NE and NE.kind) or "NIL")
       return true
     end
@@ -962,7 +962,7 @@ con.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   nudge_the_rest()
 
   for _,R in ipairs(PLAN.all_rooms) do
-    con.printf("Room (%d,%d)  seed size: %dx%d\n", R.lx1,R.ly1, R.sw,R.sh)
+    gui.printf("Room (%d,%d)  seed size: %dx%d\n", R.lx1,R.ly1, R.sw,R.sh)
   end
 end
 
@@ -1584,7 +1584,7 @@ function Test_Branch_Gen(name)
       assert(nx==0 or nx==W+1 or ny==0 or ny==H+1)
 
       if P[nx+1][ny+1] ~= " " then
-        con.printf("spot: (%d,%d):%d to (%d,%d)\n", x,y,dir, nx,ny)
+        gui.printf("spot: (%d,%d):%d to (%d,%d)\n", x,y,dir, nx,ny)
         error("Bad branch!")
       end
 
@@ -1593,19 +1593,19 @@ function Test_Branch_Gen(name)
 
     for y = H+1,0,-1 do
       for x = 0,W+1 do
-        con.printf("%s", P[x+1][y+1])
+        gui.printf("%s", P[x+1][y+1])
       end
-      con.printf("\n")
+      gui.printf("\n")
     end
-    con.printf("\n")
+    gui.printf("\n")
   end
 
   for deep = 1,9 do for long = 1,9 do
-    con.printf("==== %s %dx%d ==================\n\n", name, long, deep)
+    gui.printf("==== %s %dx%d ==================\n\n", name, long, deep)
 
     local configs = info.func(long, deep)
     if not configs then
-      con.printf("Unsupported size\n\n")
+      gui.printf("Unsupported size\n\n")
     else
       for _,CONF in ipairs(configs) do
         dump_exits(CONF, long, deep)
@@ -1775,7 +1775,7 @@ function Rooms_Connect()
 
     groups_seen[R.group_id] = true
 
--- con.debugf("TRY configuration: %s\n", table_to_str(config))
+-- gui.debugf("TRY configuration: %s\n", table_to_str(config))
 
     -- see if the pattern can be used on this room
     -- (e.g. all exits go somewhere and are different groups)
@@ -1842,8 +1842,8 @@ function Rooms_Connect()
       return false
     end
 
-con.debugf("USING CONFIGURATION: %s\n", K)
-con.debugf("hit_conns = %d\n", hit_conns)
+gui.debugf("USING CONFIGURATION: %s\n", K)
+gui.debugf("hit_conns = %d\n", hit_conns)
 
     -- OK, all points were possible, do it for real
     for _,C in ipairs(conns) do
@@ -1853,11 +1853,11 @@ con.debugf("hit_conns = %d\n", hit_conns)
 ---!!!      if T[1] == 2 and T[2] == 1 then
 ---!!!        R.big_orientation = 10-dir
 ---!!!        CONN.big_entrance = R
----!!!con.debugf("Room (%d,%d) : big_orientation:%d\n", R.lx1,R.ly1, R.big_orientation)
+---!!!gui.debugf("Room (%d,%d) : big_orientation:%d\n", R.lx1,R.ly1, R.big_orientation)
 ---!!!      end
 
       if C.gap then
-        con.debugf("Bridged the GAP!!!\n")
+        gui.debugf("Bridged the GAP!!!\n")
         C.gap.room = R --!!!!!!!!! FIXME FIXME FIXME
         C.gap.bridged_dir = C.dir
       end
@@ -1870,7 +1870,7 @@ con.debugf("hit_conns = %d\n", hit_conns)
 
   local function try_branch_big_room(R, K)
 
-    con.debugf("TRYING CONFIGURATION: %s\n", K)
+    gui.debugf("TRYING CONFIGURATION: %s\n", K)
 
     -- There are THREE morph steps, done in this order:
     -- 1. either rotate the pattern clockwise or not
@@ -1897,7 +1897,7 @@ con.debugf("hit_conns = %d\n", hit_conns)
             local MORPH = ROT + SUB  -- the full morph
 
             if try_configuration(MORPH, R, K, CONF, long, deep) then
-              con.debugf("Config %s (MORPH:%d) successful @ Room (%d,%d)\n",
+              gui.debugf("Config %s (MORPH:%d) successful @ Room (%d,%d)\n",
                          K, MORPH, R.lx1, R.ly1)
               return true -- SUCCESS
             end
@@ -1906,7 +1906,7 @@ con.debugf("hit_conns = %d\n", hit_conns)
       end
     end -- ROT
 
-con.debugf("Failed\n")
+gui.debugf("Failed\n")
     return false
   end
 
@@ -1930,7 +1930,7 @@ con.debugf("Failed\n")
 
     for _,R in ipairs(rooms) do
       if (#R.conns <= 2) and rand_odds(99) then
-        con.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.svol)
+        gui.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.svol)
 
         local kinds = {}
         for N,info in pairs(BIG_BRANCH_KINDS) do
@@ -2000,7 +2000,7 @@ con.debugf("Failed\n")
 
           merge(R.group_id, N.group_id)
 
-          con.debugf("ADDED TELEPORT (%d,%d) --> (%d,%d)\n", N.lx1,N.ly1, R.lx1,R.ly1)
+          gui.debugf("ADDED TELEPORT (%d,%d) --> (%d,%d)\n", N.lx1,N.ly1, R.lx1,R.ly1)
           return;
         end
       end
@@ -2083,13 +2083,13 @@ function Plan_determine_size(epi_along)
     end
   end
 
-  con.printf("Land size: %dx%d\n", LAND_W, LAND_H)
+  gui.printf("Land size: %dx%d\n", LAND_W, LAND_H)
 end
 
 
 function Plan_rooms_sp(epi_along)
 
-  con.printf("\n--==| Plan_rooms_sp |==--\n\n")
+  gui.printf("\n--==| Plan_rooms_sp |==--\n\n")
 
   PLAN =
   {

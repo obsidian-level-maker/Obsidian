@@ -172,7 +172,7 @@ function Room_side_pos2(R, side, along)
 
   local W = Room_W(R)
   local H = Room_H(R)
-con.printf("side:%d along:%d SIZE:%dx%d\n", side, along, W, H)
+gui.printf("side:%d along:%d SIZE:%dx%d\n", side, along, W, H)
   local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
   local dx,dy = dir_to_across(side)
 
@@ -218,7 +218,7 @@ function Room_add_sprout(R, side, sx, sy)
 
   table.insert(R.sprouts, SPROUT)
 
-con.debugf("Added sprout @ [%d,%d] dir:%d %s:%dx%d\n",
+gui.debugf("Added sprout @ [%d,%d] dir:%d %s:%dx%d\n",
            sx, sy, side, R.kind or "???", Room_W(R), Room_H(R))
 
   return SPROUT
@@ -267,10 +267,10 @@ function populate_zone(ZN)
         line = line .. div_content(x, y) .. " "
       end
 
-      con.printf("> %s\n", line)
+      gui.printf("> %s\n", line)
     end
 
-    con.printf("\n")
+    gui.printf("\n")
   end
 
 
@@ -351,7 +351,7 @@ function populate_zone(ZN)
       local max_w = SIZE_MAP[math.min(9,div_W)]
       local max_h = SIZE_MAP[math.min(9,div_H)]
 
---    con.printf("div_map %dx%d  prelim %dx%d  ", div_W, div_H, max_w, max_h)
+--    gui.printf("div_map %dx%d  prelim %dx%d  ", div_W, div_H, max_w, max_h)
 
       local REDUCE_MAP1 = { 0, 25, 33, 50 }
       local REDUCE_MAP2 = { 0,  0, 10, 20, 40 }
@@ -362,7 +362,7 @@ function populate_zone(ZN)
       if rand_odds(REDUCE_MAP2[math.min(5,max_w)]) then max_w = max_w - 1 end
       if rand_odds(REDUCE_MAP2[math.min(5,max_h)]) then max_h = max_h - 1 end
 
---    con.printf("final %dx%d\n", max_w, max_h)
+--    gui.printf("final %dx%d\n", max_w, max_h)
 
       for loop = 1,24 do
         local dir = rand_irange(1,4) * 2
@@ -497,7 +497,7 @@ function populate_zone(ZN)
     until (hub_W <= sp_W-5) and (hub_H <= sp_H-5) and
           (hub_W * hub_H <= 45)
 
-    con.printf("Hub size %dx%d\n", hub_W, hub_H)
+    gui.printf("Hub size %dx%d\n", hub_W, hub_H)
 
     HUB.sx1 = sx1 + int((sp_W - hub_W) / 2)
     HUB.sy1 = sy1 + int((sp_H - hub_H) / 2)
@@ -539,7 +539,7 @@ function populate_zone(ZN)
     room_W = rand_index_by_probs { 0, 32, 80, 16, 4 }
     room_H = rand_index_by_probs { 0, 32, 80, 16, 4 }
 
-    con.printf("Room size %dx%d\n", room_W, room_H)
+    gui.printf("Room size %dx%d\n", room_W, room_H)
 
     ROOM.sx1 = sx1 + rand_irange(0, sp_W - room_W)
     ROOM.sy1 = sy1 + rand_irange(0, sp_H - room_H)
@@ -649,7 +649,7 @@ function weave_tangled_web()
 
     until (n[2] + n[8] + n[4] + n[6]) == want_sp
 
-    con.debugf("Room %dx%d sprouts : %s%s %s%s %s%s %s%s\n", W, H,
+    gui.debugf("Room %dx%d sprouts : %s%s %s%s %s%s %s%s\n", W, H,
            sel(n[8]>=1, "T", ""), sel(n[8]>=2, "T", ""),
            sel(n[2]>=1, "B", ""), sel(n[2]>=2, "B", ""),
            sel(n[4]>=1, "L", ""), sel(n[4]>=2, "L", ""),
@@ -659,7 +659,7 @@ function weave_tangled_web()
 
     for side = 2,8,2 do
       if n[side] == 1 then
-        Room_add_sprout(R, side, Room_side_pos(R, side, con.random()) )
+        Room_add_sprout(R, side, Room_side_pos(R, side, gui.random()) )
 
       elseif n[side] == 2 then
         Room_add_sprout(R, side, Room_side_pos(R, side, 0.0) )
@@ -759,11 +759,11 @@ function weave_tangled_web()
             if (x == 1 or x == long) and B2 == 1 then ch = "B" end
             if (x == 2 or x == long-1) and B2 == 2 then ch = "B" end
           end
-          con.printf(ch)
+          gui.printf(ch)
         end
-        con.printf("\n")
+        gui.printf("\n")
       end
-      con.printf("\n")
+      gui.printf("\n")
     end
 
     -- choose the branch pattern
@@ -777,7 +777,7 @@ function weave_tangled_web()
       C  = rand_index_by_probs { 50, 35 } - 1
     until is_acceptable()
 
-    con.debugf("Hub %dx%d sprouts : A1=%d B1=%d  C=%d  B2=%d A2=%d\n",
+    gui.debugf("Hub %dx%d sprouts : A1=%d B1=%d  C=%d  B2=%d A2=%d\n",
                long, deep, A1, B1, C, B2, A2)
 
     --- add the sprouts ---
@@ -930,7 +930,7 @@ function weave_tangled_web()
     local list = copy_table(PLAN.all_rooms)
     rand_shuffle(list)
     local count = sprout_rooms(list)
-    con.printf("Sprouted %d rooms\n", count)
+    gui.printf("Sprouted %d rooms\n", count)
   until count == 0
 
 end -- weave_tangled_web
@@ -941,7 +941,7 @@ function Plan_rooms_sp()
 
   ---===| Plan_rooms_sp |===---
 
-  con.printf("\n--==| Plan_rooms_sp |==--\n\n")
+  gui.printf("\n--==| Plan_rooms_sp |==--\n\n")
 
 
   local map_size = 32   -- FIXME: depends on GAME and LEVEL_SIZE_SETTING

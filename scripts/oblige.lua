@@ -55,11 +55,11 @@ end
 
 function create_LEVEL(level, index, total)
 
-  con.at_level(level, index, total)
+  gui.at_level(level, index, total)
 
-  con.rand_seed(OB_CONFIG.seed * 100 + index)
+  gui.rand_seed(OB_CONFIG.seed * 100 + index)
 
-  con.printf("\n======| %s |======\n\n", level.name)
+  gui.printf("\n======| %s |======\n\n", level.name)
 
   if OB_CONFIG.mode == "dm" then
     plan_dm_arena(level)
@@ -67,18 +67,18 @@ function create_LEVEL(level, index, total)
     plan_sp_level(level, OB_CONFIG.mode == "coop")
   end
 
-  if con.abort() then return "abort" end
+  if gui.abort() then return "abort" end
 
   if OB_CONFIG.mode == "dm" then
     show_dm_links()
   else
     show_path()
   end
-  con.printf("\n")
+  gui.printf("\n")
 
   build_level()
 
-  if con.abort() then return "abort" end
+  if gui.abort() then return "abort" end
 
   if GAME.wolf_format then
     write_wolf_level()
@@ -86,7 +86,7 @@ function create_LEVEL(level, index, total)
     write_level(level.name)
   end
 
-  if con.abort() then return "abort" end
+  if gui.abort() then return "abort" end
 
   make_mini_map()
 
@@ -103,11 +103,11 @@ end
 function ob_traceback(msg)
 
   -- guard against very early errors
-  if not con or not con.printf then
+  if not gui or not gui.printf then
     return msg
   end
  
-  con.printf("\nStack Trace:\n")
+  gui.printf("\nStack Trace:\n")
 
   local stack_limit = 40
 
@@ -126,7 +126,7 @@ function ob_traceback(msg)
     if not info then break end
 
     if i == stack_limit then
-      con.printf("(remaining stack trace omitted)\n")
+      gui.printf("(remaining stack trace omitted)\n")
       break;
     end
 
@@ -148,20 +148,20 @@ function ob_traceback(msg)
         end
       end
 
-      con.printf("  %d: %s() %s\n", i, func_name, format_source(info))
+      gui.printf("  %d: %s() %s\n", i, func_name, format_source(info))
 
     elseif info.what == "main" then
 
-      con.printf("  %d: main body %s\n", i, format_source(info))
+      gui.printf("  %d: main body %s\n", i, format_source(info))
 
     elseif info.what == "tail" then
 
-      con.printf("  %d: tail call\n", i)
+      gui.printf("  %d: tail call\n", i)
 
     elseif info.what == "C" then
 
       if info.namewhat and info.namewhat ~= "" then
-        con.printf("  %d: c-function %s()\n", i, info.name or "???")
+        gui.printf("  %d: c-function %s()\n", i, info.name or "???")
       end
     end
   end
@@ -209,12 +209,12 @@ function ob_update_engines()
       need_new = true
     end
 
-    con.show_button("engine", name, shown)
+    gui.show_button("engine", name, shown)
   end
 
   if need_new then
     OB_CONFIG.engine = "nolimit"
-    con.change_button("engine", OB_CONFIG.engine)
+    gui.change_button("engine", OB_CONFIG.engine)
   end
 end
 
@@ -229,7 +229,7 @@ function ob_update_themes()
       new_label = def.label
     end
 
-    con.show_button("theme", name, shown)
+    gui.show_button("theme", name, shown)
   end
 
   -- try to keep the same GUI label
@@ -239,14 +239,14 @@ function ob_update_themes()
 
       if shown and def.label == new_label then
         OB_CONFIG.theme = name
-        con.change_button("theme", OB_CONFIG.theme)
+        gui.change_button("theme", OB_CONFIG.theme)
         return
       end
     end
 
     -- otherwise revert to Mix It Up
     OB_CONFIG.theme = "mixed"
-    con.change_button("theme", OB_CONFIG.theme)
+    gui.change_button("theme", OB_CONFIG.theme)
   end
 end
 
@@ -267,7 +267,7 @@ function ob_update_modules()
       end
 
       def.shown = shown
-      con.show_button("module", name, def.shown)
+      gui.show_button("module", name, def.shown)
     end
 
     if not changed then break; end
@@ -278,7 +278,7 @@ end
 function ob_update_options()
   for name,def in pairs(OB_OPTIONS) do
     def.shown = ob_match_conf(def)
-    con.show_button("option", name, def.shown)
+    gui.show_button("option", name, def.shown)
   end
 end
 
@@ -318,7 +318,7 @@ function ob_parse_config(name, value)
            (odef.conflict_mods and odef.conflict_mods[name] )
         then
           odef.enabled = false
-          con.change_button("module", other, odef.enabled)
+          gui.change_button("module", other, odef.enabled)
         end
       end
     end
@@ -346,7 +346,7 @@ function ob_parse_config(name, value)
            (odef.conflict_opts and odef.conflict_opts[name] )
         then
           odef.enabled = false
-          con.change_button("option", other, odef.enabled)
+          gui.change_button("option", other, odef.enabled)
         end
       end
     end
@@ -365,19 +365,19 @@ function ob_parse_config(name, value)
   if name == "game" then
     assert(OB_CONFIG.game)
     if not OB_GAMES[value] then
-      con.printf("Ignoring unknown game: %s\n", value)
+      gui.printf("Ignoring unknown game: %s\n", value)
       return
     end
   elseif name == "engine" then
     assert(OB_CONFIG.engine)
     if not OB_ENGINES[value] then
-      con.printf("Ignoring unknown engine: %s\n", value)
+      gui.printf("Ignoring unknown engine: %s\n", value)
       return
     end
   elseif name == "theme" then
     assert(OB_CONFIG.theme)
     if not OB_THEMES[value] then
-      con.printf("Ignoring unknown theme: %s\n", value)
+      gui.printf("Ignoring unknown theme: %s\n", value)
       return
     end
   end
@@ -393,7 +393,7 @@ end
 function ob_write_config()
 
   local function do_line(fmt, ...)
-    con.config_line(string.format(fmt, ...))
+    gui.config_line(string.format(fmt, ...))
   end
 
   do_line("-- Game Settings --\n");
@@ -438,12 +438,12 @@ end
 function ob_init()
 
   -- the missing console functions
-  con.printf = function (fmt, ...)
-    if fmt then con.raw_log_print(string.format(fmt, ...)) end
+  gui.printf = function (fmt, ...)
+    if fmt then gui.raw_log_print(string.format(fmt, ...)) end
   end
 
-  con.debugf = function (fmt, ...)
-    if fmt then con.raw_debug_print(string.format(fmt, ...)) end
+  gui.debugf = function (fmt, ...)
+    if fmt then gui.raw_debug_print(string.format(fmt, ...)) end
   end
 
   name_it_up(OB_GAMES)
@@ -476,10 +476,10 @@ function ob_init()
     table.sort(list, button_sorter)
 
     for xxx,def in ipairs(list) do
-      con.add_button(what, def.name, def.label)
+      gui.add_button(what, def.name, def.label)
 
       if what == "game" then
-        con.show_button(what, def.name, true)
+        gui.show_button(what, def.name, true)
       end
     end
 
@@ -498,8 +498,8 @@ function ob_init()
 
   ob_update_all()
 
-  con.change_button("game",   OB_CONFIG.game)
-  con.change_button("engine", OB_CONFIG.engine)
+  gui.change_button("game",   OB_CONFIG.game)
+  gui.change_button("engine", OB_CONFIG.engine)
 end
 
 
@@ -517,12 +517,12 @@ function build_cool_shit()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
-  con.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
+  gui.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
 
-  con.printf("SEED = %d\n\n", OB_CONFIG.seed)
-  con.printf("Settings =\n%s\n", table_to_str(OB_CONFIG))
+  gui.printf("SEED = %d\n\n", OB_CONFIG.seed)
+  gui.printf("Settings =\n%s\n", table_to_str(OB_CONFIG))
 
-  con.ticker()
+  gui.ticker()
 
 
 -- [[ PLANNING TEST CODE
@@ -535,33 +535,33 @@ local NUM = 1
 
 for level = 1,NUM do
 
-  con.rand_seed(OB_CONFIG.seed * 100 + level)
+  gui.rand_seed(OB_CONFIG.seed * 100 + level)
 
   local level_name = string.format("MAP%02d", level)
 
-  con.printf("\n\n~~~~~~| %s |~~~~~~\n", level_name)
+  gui.printf("\n\n~~~~~~| %s |~~~~~~\n", level_name)
 
-  con.at_level(level_name, level, NUM)
+  gui.at_level(level_name, level, NUM)
 
   local epi_along = ((level - 1) % 10) / 9
 
   Plan_rooms_sp(epi_along)
-    if con.abort() then return "abort" end
-    con.progress(20)
+    if gui.abort() then return "abort" end
+    gui.progress(20)
 
   Quest_assign()
-    if con.abort() then return "abort" end
-    con.progress(40)
+    if gui.abort() then return "abort" end
+    gui.progress(40)
 
 --!!!!!!  Rooms_fit_out()
-    if con.abort() then return "abort" end
-    con.progress(60)
+    if gui.abort() then return "abort" end
+    gui.progress(60)
 
   Seed_grow()
 
   dummy_builder(level_name)
-    if con.abort() then return "abort" end
-    con.progress(100)
+    if gui.abort() then return "abort" end
+    gui.progress(100)
 end
 
 do return "ok" end
@@ -611,11 +611,11 @@ do return "ok" end
   end
 
   if aborted then
-    con.printf("\n~~~~~~~ Build Aborted! ~~~~~~~\n\n")
+    gui.printf("\n~~~~~~~ Build Aborted! ~~~~~~~\n\n")
     return "abort"
   end
 
-  con.printf("\n~~~~~~ Finished Making Levels ~~~~~~\n\n")
+  gui.printf("\n~~~~~~ Finished Making Levels ~~~~~~\n\n")
 
   return "ok"
 end

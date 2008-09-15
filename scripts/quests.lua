@@ -120,10 +120,10 @@ function Quest_leafiness()
       if dist ~= R.leaf_dist then
          R.leaf_dist = dist
          changes = changes + 1
-con.debugf("Room (%d,%d) : leaf_dist:%d\n", R.lx1,R.ly1, R.leaf_dist or -1)
+gui.debugf("Room (%d,%d) : leaf_dist:%d\n", R.lx1,R.ly1, R.leaf_dist or -1)
       end
     end
-con.debugf("Quest_leafiness: loop %d, changes %d\n", loop, changes)
+gui.debugf("Quest_leafiness: loop %d, changes %d\n", loop, changes)
 
     if changes == 0 then break; end
   end -- loop
@@ -170,7 +170,7 @@ function Quest_decide_start_room(arena)
 
     C.cost = cost
 
-con.debugf("Connection cost: %1.2f\n", C.cost)
+gui.debugf("Connection cost: %1.2f\n", C.cost)
   end
 
   local function eval_recursive(R, visited)
@@ -242,7 +242,7 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
 
   for _,R in ipairs(arena.rooms) do
     R.start_cost = eval_room(R)
-    con.debugf("Room (%d,%d) : START COST : %1.4f\n", R.lx1,R.ly1, R.start_cost)
+    gui.debugf("Room (%d,%d) : START COST : %1.4f\n", R.lx1,R.ly1, R.start_cost)
   end
 
   arena.start = table_sorted_first(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
@@ -251,7 +251,7 @@ con.debugf("Connection cost: %1.2f\n", C.cost)
 
   PLAN.start_room = arena.start
 
-  con.debugf("Start room (%d,%d)\n", arena.start.lx1, arena.start.ly1)
+  gui.debugf("Start room (%d,%d)\n", arena.start.lx1, arena.start.ly1)
 
   -- update connections so that 'src' and 'dest' follow the natural
   -- flow of the level, i.e. player always walks src -> dest (except
@@ -291,7 +291,7 @@ function Quest_decide_exit_room(arena)
     -- should be small
     cost = cost + math.min(95, R.svolume * 1.5)
 
-    return cost + con.random()
+    return cost + gui.random()
   end
 
   local function room_conn_dist(R, C)
@@ -318,7 +318,7 @@ function Quest_decide_exit_room(arena)
 ----    if C0 and C1 then
 ----      dist = dist + math.abs(conn.src_S.sx - conn.dest_S.sx)
 ----      dist = dist + math.abs(conn.src_S.sy - conn.dest_S.sy)
-----con.debugf("CONN DIST: %d+%d\n",
+----gui.debugf("CONN DIST: %d+%d\n",
 ----      math.abs(conn.src_S.sx - conn.dest_S.sx) ,
 ----      math.abs(conn.src_S.sy - conn.dest_S.sy) )
 ----    end
@@ -364,7 +364,7 @@ function Quest_decide_exit_room(arena)
       dist = dist + 50
     end
 
-    R.exit_dist = dist + con.random()
+    R.exit_dist = dist + gui.random()
   end
 
   local function main_path_to(R, E)
@@ -410,14 +410,14 @@ function Quest_decide_exit_room(arena)
     iterate_exit_dists(arena.start, 0)
 
     for _,R in ipairs(arena.rooms) do
-      con.debugf("Room (%d,%d) : EXIT DIST : %1.4f\n", R.lx1,R.ly1, R.exit_dist)
+      gui.debugf("Room (%d,%d) : EXIT DIST : %1.4f\n", R.lx1,R.ly1, R.exit_dist)
     end
 
     arena.target = table_sorted_first(arena.rooms, function(A,B) return A.exit_dist > B.exit_dist end)
   else
     for _,R in ipairs(arena.rooms) do
       R.exit_cost = eval_room(R)
-      con.debugf("Room (%d,%d) : EXIT COST : %1.4f\n", R.lx1,R.ly1, R.exit_cost)
+      gui.debugf("Room (%d,%d) : EXIT COST : %1.4f\n", R.lx1,R.ly1, R.exit_cost)
     end
 
     arena.target = table_sorted_first(arena.rooms, function(A,B) return A.exit_cost < B.exit_cost end)
@@ -427,7 +427,7 @@ function Quest_decide_exit_room(arena)
 
   PLAN.exit_room = arena.target
 
-  con.debugf("Exit room (%d,%d)\n", arena.target.lx1, arena.target.ly1)
+  gui.debugf("Exit room (%d,%d)\n", arena.target.lx1, arena.target.ly1)
 
   mark_main_path()
 end
@@ -479,7 +479,7 @@ function Quest_update_tvols(arena)
     local trav_diff = math.abs(C.src_tvol - C.dest_tvol)
 
 --[[
- con.debugf("Room (%d,%d) <--> (%d,%d) trav_diff:%d\n",
+ gui.debugf("Room (%d,%d) <--> (%d,%d) trav_diff:%d\n",
         C.src.lx1, C.src.ly1, C.dest.lx1, C.dest.ly1, C.trav_diff)
 --]]
   end -- C
@@ -542,7 +542,7 @@ function Quest_divide_group(parent)
       if group.pivot and not group.need_start then 
         can_swap  = false
         if room_group_contains(C.dest, group.pivot, { [C.src]=true }) then
-  con.debugf("(Pivot was in back group)\n")
+  gui.debugf("(Pivot was in back group)\n")
           C.src,  C.dest = C.dest, C.src
           s_free, d_free = d_free, s_free
         end
@@ -651,7 +651,7 @@ function Quest_divide_group(parent)
   C = find_lockable_conn(parent)
 
   if not C then
-con.debugf("No lockable connections : %d  pivot=%s\n", #parent.rooms, sel(parent.pivot, "yes", "NO"))
+gui.debugf("No lockable connections : %d  pivot=%s\n", #parent.rooms, sel(parent.pivot, "yes", "NO"))
 
     if parent.lock_item then
       -- The lock item is not placed now, but later on when we have
@@ -679,16 +679,16 @@ con.debugf("No lockable connections : %d  pivot=%s\n", #parent.rooms, sel(parent
 
 
 
-con.debugf("Candidate: (%d,%d) --> (%d,%d) diff:%d lock:%s sum:%d\n",
+gui.debugf("Candidate: (%d,%d) --> (%d,%d) diff:%d lock:%s sum:%d\n",
 C.src.lx1, C.src.ly1, C.dest.lx1, C.dest.ly1, C.trav_diff, tostring(C.lock), C.lock.trav_sum)
 
 
   local front, back = split_group(C)
   -- now we have two separate groups of rooms
 
-con.debugf("Group (%d rooms, %d conns) split:\n", #parent.rooms, #parent.conns)
-con.debugf("  Front (%d rooms, %d conns)\n", # front.rooms, # front.conns)
-con.debugf("  Back  (%d rooms, %d conns)\n", #  back.rooms, #  back.conns)
+gui.debugf("Group (%d rooms, %d conns) split:\n", #parent.rooms, #parent.conns)
+gui.debugf("  Front (%d rooms, %d conns)\n", # front.rooms, # front.conns)
+gui.debugf("  Back  (%d rooms, %d conns)\n", #  back.rooms, #  back.conns)
 
   front.pivot = C.src
   front.lock_item = C.lock
@@ -794,7 +794,7 @@ function Quest_hallways()
 
       if rand_odds(REVERT_PROBS[rw]) then
         R.hallway = nil
-con.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
+gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
       end
     end
   end
@@ -819,7 +819,7 @@ function Quest_num_puzzles(num_rooms)
   local PUZZLE_MAXS = { less=10, normal= 8, more=4, mixed=6  }
 
   if not PUZZLE_MINS[OB_CONFIG.puzzles] then
-    con.printf("Puzzles disabled\n")
+    gui.printf("Puzzles disabled\n")
     return 0
   end
 
@@ -828,7 +828,7 @@ function Quest_num_puzzles(num_rooms)
 
   local result = int(0.25 + rand_range(p_min, p_max))
 
-  con.printf("Number of puzzles: %d  (%1.2f-%1.2f) rooms=%d\n", result, p_min, p_max, num_rooms)
+  gui.printf("Number of puzzles: %d  (%1.2f-%1.2f) rooms=%d\n", result, p_min, p_max, num_rooms)
 
   return result
 end
@@ -917,7 +917,7 @@ function Quest_add_puzzle()
     local cost = math.abs(C.src_tvol - C.dest_tvol * back_mul)
 
 --!!!!!
-con.debugf("src_tvol = %d  dest_tvol = %d\n", C.src_tvol, C.dest_tvol)
+gui.debugf("src_tvol = %d  dest_tvol = %d\n", C.src_tvol, C.dest_tvol)
 
     if C.dest.hallway then cost = cost + 10 end
     if C.dest.big_entrance == C.src then cost = cost - 20 end
@@ -930,7 +930,7 @@ con.debugf("src_tvol = %d  dest_tvol = %d\n", C.src_tvol, C.dest_tvol)
       cost = cost + 32
     end
 
-    return cost + con.random()
+    return cost + gui.random()
   end
 
 
@@ -939,14 +939,14 @@ con.debugf("src_tvol = %d  dest_tvol = %d\n", C.src_tvol, C.dest_tvol)
   for _,A in ipairs(PLAN.all_arenas) do
     if not A.split_score then
       A.split_score = eval_arena(A)
-con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
+gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
     end
   end
 
   local arena = table_sorted_first(PLAN.all_arenas, function(X,Y) return X.split_score > Y.split_score end)
 
   if arena.split_score < 0 then
-    con.debugf("No more puzzles could be made!\n")
+    gui.debugf("No more puzzles could be made!\n")
     return
   end
 
@@ -991,7 +991,7 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
 
   for _,C in ipairs(arena.conns) do
     if C.lock_cost then
-      con.debugf("Lock (%d,%d) --> (%d,%d) cost=%1.2f mode=%s\n",
+      gui.debugf("Lock (%d,%d) --> (%d,%d) cost=%1.2f mode=%s\n",
                  C.src.lx1,C.src.ly1, C.dest.lx1,C.dest.ly1,
                  C.lock_cost, C.lock_mode or "???")
     end
@@ -1001,7 +1001,7 @@ con.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
   local lock_C = table_sorted_first(poss_locks, function(X,Y) return X.lock_cost < Y.lock_cost end)
   assert(lock_C)
 
-  con.debugf("Lock conn has COST:%1.2f\n", lock_C.lock_cost)
+  gui.debugf("Lock conn has COST:%1.2f\n", lock_C.lock_cost)
 
 
   local LOCK =
@@ -1023,7 +1023,7 @@ KS.borders[dir].key_item = LOCK.item
 
   --- perform split ---
 
-  con.debugf("Splitting arena, old sizes: %d+%d", #arena.rooms, #arena.conns)
+  gui.debugf("Splitting arena, old sizes: %d+%d", #arena.rooms, #arena.conns)
 
   local back_A =
   {
@@ -1049,14 +1049,14 @@ KS.borders[dir].key_item = LOCK.item
   local function collect_arena(A, R, visited)
     visited[R] = true
 
-con.debugf(" -- Room (%d,%d)\n", R.lx1, R.ly1)
+gui.debugf(" -- Room (%d,%d)\n", R.lx1, R.ly1)
     table.insert(A.rooms, R)
 
     for _,C in ipairs(R.conns) do
       if not C.lock then
         local N = sel(R == C.src, C.dest, C.src)
         if not visited[N] then
-con.debugf(" -- Conn (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
+gui.debugf(" -- Conn (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
            C.dest.lx1, C.dest.ly1)
           table.insert(A.conns, C)
           collect_arena(A, N, visited)
@@ -1072,13 +1072,13 @@ con.debugf(" -- Conn (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
     end
   end
 
-con.debugf("Collecting FRONT:\n")
+gui.debugf("Collecting FRONT:\n")
   collect_arena(arena,  lock_C.src,  {})
 
-con.debugf("Collecting BACK:\n")
+gui.debugf("Collecting BACK:\n")
   collect_arena(back_A, lock_C.dest, {})
 
-  con.debugf("New arena sizes: %d+%d | %d+%d\n", #arena.rooms, #arena.conns,
+  gui.debugf("New arena sizes: %d+%d | %d+%d\n", #arena.rooms, #arena.conns,
              #back_A.rooms, #back_A.conns)
 
 
@@ -1186,10 +1186,10 @@ con.debugf("Collecting BACK:\n")
     assert(T_end ~= T_start)
   end
 
-  con.debugf("New Target Room (%d,%d).  Path:\n", T_end.lx1, T_end.ly1)
+  gui.debugf("New Target Room (%d,%d).  Path:\n", T_end.lx1, T_end.ly1)
 
   for _,C in ipairs(T_path) do
-    con.debugf(" -- (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
+    gui.debugf(" -- (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
                C.dest.lx1, C.dest.ly1)
   end
 
@@ -1208,15 +1208,15 @@ con.debugf("Collecting BACK:\n")
     end
   end
 
-con.debugf("Front Path:\n")
+gui.debugf("Front Path:\n")
 for _,C in ipairs(arena.path) do
-con.debugf(" -- (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
+gui.debugf(" -- (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
            C.dest.lx1, C.dest.ly1)
 end
 
-con.debugf("Back Path:\n")
+gui.debugf("Back Path:\n")
 for _,C in ipairs(back_A.path) do
-con.debugf(" -- (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
+gui.debugf(" -- (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
            C.dest.lx1, C.dest.ly1)
 end
 
@@ -1232,13 +1232,13 @@ end
   -- DONE!  link in the newbie...
   table.insert(PLAN.all_arenas, back_A)
 
-  con.debugf("Successful split\n")
+  gui.debugf("Successful split\n")
 end
 
 
 function Quest_assign()
 
-  con.printf("\n--==| Quest_assign |==--\n\n")
+  gui.printf("\n--==| Quest_assign |==--\n\n")
 
   -- need at least a START room and an EXIT room
   assert(#PLAN.all_rooms >= 2)
@@ -1251,7 +1251,7 @@ function Quest_assign()
     if R.num_branch == 0 then
       error("Room exists with no connections!")
     end
-con.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
+gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   end
 
   PLAN.num_puzz = Quest_num_puzzles(#PLAN.all_rooms)
@@ -1301,7 +1301,7 @@ PLAN.root_lock = lock
 
   SEEDS[sx][sy][1].is_start = true
 
-  con.printf("Start seed @ (%d,%d)\n", sx, sy)
+  gui.printf("Start seed @ (%d,%d)\n", sx, sy)
 
 
   local EXIT_R = PLAN.exit_room
@@ -1314,6 +1314,6 @@ PLAN.root_lock = lock
 
   SEEDS[ex][ey][1].is_exit = true
 
-  con.printf("Exit seed @ (%d,%d)\n", ex, ey)
+  gui.printf("Exit seed @ (%d,%d)\n", ex, ey)
 end
 

@@ -239,15 +239,15 @@ end
 ----====| RANDOM NUMBERS |====----
 
 function rand_range(L,H)
-  return L + con.random() * (H-L)
+  return L + gui.random() * (H-L)
 end
 
 function rand_irange(L,H)
-  return math.floor(L + con.random() * (H-L+0.9999))
+  return math.floor(L + gui.random() * (H-L+0.9999))
 end
 
 function rand_skew()
-  return con.random() - con.random()
+  return gui.random() - gui.random()
 end
 
 function rand_dir()
@@ -255,11 +255,11 @@ function rand_dir()
 end
 
 function rand_odds(chance)
-  return (con.random() * 100) <= chance
+  return (gui.random() * 100) <= chance
 end
 
 function rand_sel(chance, yes_val, no_val)
-  if (con.random() * 100) <= chance then
+  if (gui.random() * 100) <= chance then
     return yes_val
   else
     return no_val
@@ -325,7 +325,7 @@ function rand_index_by_probs(p)
 
   if total == 0 then return nil end
 
-  local value = con.random() * total
+  local value = gui.random() * total
 
   for idx, prob in ipairs(p) do
     value = value - prob

@@ -1864,7 +1864,7 @@ function hexen_get_levels(episode)
 
     gate_idx = gate_idx + 2
 
---  con.debugf("Connect %d -> %d\n", src, dest)
+--  gui.debugf("Connect %d -> %d\n", src, dest)
 
     local fwd_mode  = "sub"
     local back_mode = "end"
@@ -1893,7 +1893,7 @@ function hexen_get_levels(episode)
 
   local function dump_levels()
     for idx,L in ipairs(level_list) do
-      con.printf("Hexen episode [%d] map [%d] : %s\n", episode, idx, L.name)
+      gui.printf("Hexen episode [%d] map [%d] : %s\n", episode, idx, L.name)
       show_quests(L.quests)
     end
   end
