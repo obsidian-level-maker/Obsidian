@@ -37,18 +37,22 @@
 
 #define TEMP_FILENAME    "temp/out.wad"
 
+
+// Properties
 static char *level_name;
 static char *error_tex;
+
+static int solid_exfloor;    // disabled if <= 0
+static int liquid_exfloor;
+
+extern bool wad_hexen;  // FIXME
 
 
 #define VOID_INDEX  -2
 
-
 static int extrafloor_tag;
 static int extrafloor_slot;
 
-
-extern bool wad_hexen;  // FIXME
 
 
 class sector_info_c;
@@ -441,13 +445,17 @@ static void CreateOneSector(merge_region_c *R)
   // remains the same and the lower part gets the new properties
   // (lighting/special) from the extrafloor.
 
-  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
+  if (solid_exfloor > 0)
   {
-    merge_gap_c *T = R->gaps[g];
-    merge_gap_c *B = R->gaps[g-1];
+    for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
+    {
+      merge_gap_c *T = R->gaps[g];
+      merge_gap_c *B = R->gaps[g-1];
 
-    MakeExtraFloor(R, sec, T, B);
+      MakeExtraFloor(R, sec, T, B);
+    }
   }
+  // FIXME: else ????
 
 
 #if 0  // OLD CODE
@@ -665,8 +673,6 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
   wad::add_sidedef(EF->sec->index, "-", EF->w_tex.c_str(), "-", 0, 0);
 
 
-  // FIXME: 400 is EDGE extrafloor (don't hard-code it)
-
   int vert_num = morev ? 8 : 4;
 
   for (int n = 0; n < vert_num; n++)
@@ -676,7 +682,7 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
 
     if (n < (int)EF->users.size())
     {
-      type = 400;
+      type = solid_exfloor;
       tag  = EF->users[n]->tag;
 
       SYS_ASSERT(tag > 0);
@@ -1027,9 +1033,17 @@ void doom_game_interface_c::Property(const char *key, const char *value)
   {
     error_tex = StringDup(value);
   }
+  else if (StringCaseCmp(key, "solid_exfloor") == 0)
+  {
+    solid_exfloor = atoi(value);
+  }
+  else if (StringCaseCmp(key, "liquid_exfloor") == 0)
+  {
+    liquid_exfloor = atoi(value);
+  }
   else
   {
-    LogPrintf("WARNING: DOOM: unknown level prop: %s=%s\n", key, value);
+    LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key, value);
   }
 }
 
