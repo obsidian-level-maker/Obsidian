@@ -26,8 +26,8 @@
 
 #include "main.h"
 
-#include "wolf_out.h"
 #include "g_lua.h"
+#include "wolf_map.h"
 
 
 #define TEMP_GAMEFILE  "temp/gamemaps.tmp"
@@ -320,10 +320,10 @@ int Wolf_add_block(lua_State *L)
 class wolf_game_interface_c : public game_interface_c
 {
 private:
-  int sub_type;
+  std::string extension;
 
 public:
-  wolf_game_interface_c(int _st) : sub_type(_st)
+  wolf_game_interface_c() : extension("WL6")
   { }
 
   ~wolf_game_interface_c()
@@ -392,7 +392,8 @@ bool wolf_game_interface_c::Finish(bool build_ok)
   delete solid_plane;  solid_plane = NULL;
   delete thing_plane;  thing_plane = NULL;
 
-  if (write_errors_seen > 0 || ! build_ok)
+
+  if (! build_ok || write_errors_seen > 0)
   {
     Tidy();
     return false;
@@ -404,22 +405,17 @@ bool wolf_game_interface_c::Finish(bool build_ok)
     return false;
   }
 
-  return true;
+  return true; // OK!
 }
 
 
 bool wolf_game_interface_c::Rename()
 {
-  const char *ext = "WL6";
-
-  if (sub_type == WFSUB_Spear)
-    ext = "SOD";
-
   char gamemaps[40];
   char maphead[40];
 
-  sprintf(gamemaps, "GAMEMAPS.%s", ext);
-  sprintf(maphead,  "MAPHEAD.%s",  ext);
+  sprintf(gamemaps, "GAMEMAPS.%s", extension.c_str());
+  sprintf(maphead,  "MAPHEAD.%s",  extension.c_str());
 
   FileDelete(gamemaps);
   FileDelete(maphead);
@@ -467,15 +463,21 @@ void wolf_game_interface_c::Property(const char *key, const char *value)
 //    level_name = StringDup(value);
 //  }
 //  else
+
+  if (StringCaseCmp(key, "extension") == 0)
   {
-    LogPrintf("WARNING: WOLF: unknown level prop: %s=%s\n", key, value);
+    extension = std::string(value);
+  }
+  else
+  {
+    LogPrintf("WARNING: WOLF3D: unknown property: %s=%s\n", key, value);
   }
 }
 
 
-game_interface_c * Wolf_GameObject(int subtype)
+game_interface_c * Wolf_GameObject()
 {
-  return new wolf_game_interface_c(subtype);
+  return new wolf_game_interface_c();
 }
 
 //--- editor settings ---

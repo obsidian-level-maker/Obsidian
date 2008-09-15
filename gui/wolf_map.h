@@ -19,15 +19,7 @@
 #ifndef __OBLIGE_LWOLF_H__
 #define __OBLIGE_LWOLF_H__
 
-typedef enum
-{
-  WFSUB_Wolf3d = 0,
-  WFSUB_Spear  = 1,
-  WFSUB_Blake  = 2
-}
-wolf_subtype_e;
-
-game_interface_c * Wolf_GameObject(int subtype = WFSUB_Wolf3d);
+game_interface_c * Wolf_GameObject();
 
 #endif /* __OBLIGE_LWOLF_H__ */
 
