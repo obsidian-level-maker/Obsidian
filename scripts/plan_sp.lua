@@ -363,7 +363,7 @@ con.debugf("(mirroring vertically LAND_H=%d)\n", LAND_W)
   end 
  
   Landmap_DoLiquid()
----!!!!!!!  Landmap_DoGround()
+  Landmap_DoGround()
   Landmap_DoIndoors()
 end
 
@@ -999,24 +999,27 @@ function Rooms_Make_Seeds()
 
   local function Fill_Holes()
     for loop = 1,3 do
-      local changed = false
-
       for x = 1,SEED_W do for y = 1,SEED_H do
+
         local S = SEEDS[x][y][1]
         if not S.room then
           for dir = 2,8,2 do
             local nx, ny = nudge_coord(x, y, dir)
             local N = Seed_valid(nx, ny, 1) and SEEDS[nx][ny][1]
 
-            if N and N.room and N.room.nowalk then  -- FIXME: UGH!!!
-              S.room = N.room
-              changed = true
-            end
-          end
-        end
-      end end -- x, y
+            -- the 'fill_loop' check prevents run-away filling
 
-    end ---- until not changed
+            if N and N.room and N.room.nowalk -- FIXME: UGH!!!
+               and not (N.fill_loop and N.fill_loop == loop)
+            then
+              S.room = N.room
+              S.fill_loop = loop
+            end
+          end -- dir
+        end
+
+      end end -- x, y
+    end
   end
 
   local function Border_Up(R)
