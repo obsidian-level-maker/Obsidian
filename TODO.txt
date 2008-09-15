@@ -3,6 +3,24 @@ TODO
 ====
 
 
+>>>> lib_wad
+
+HEXEN lua: csg2.property("hexen_format", "true")
+
+SPEAR lua: csg2.property("extension", "SOD")
+
+
+q1_nodes:
+  -  floor_leaf --> leaf
+  ?? move floor/ceiling faces into leaf.faces (instead of leaf.floor)
+
+q2_nodes:
+   use cluster=-1 for SOLID leafs
+
+   create a solid leaf for each area_poly
+   (can sometimes have 2+ area_polys per solid leaf, walls with stacked brushes)
+
+
 REWRITE:
 
 >>> NEW BRANCH SYSTEM
@@ -104,7 +122,7 @@ GUI:
 -  in deathmatch mode, fix labels on the "Equip" button
    (Watch for the "mode" signal).
 
-+  pass 'failure' flag to Quake_Finish() etc..
+   >>>  make it a separate widget
 
 +  ui_chooser code: remove hard-coded game bits (WAD, PAK)
 
