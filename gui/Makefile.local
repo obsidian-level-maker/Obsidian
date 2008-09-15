@@ -44,6 +44,7 @@ OBJS=	main.o      \
 	lib_file.o  \
 	lib_signal.o \
 	lib_util.o  \
+	lib_pak.o   \
 	lib_wad.o   \
 	sys_assert.o \
 	sys_debug.o \
@@ -63,7 +64,6 @@ OBJS=	main.o      \
 	q2_main.o   \
 	q2_nodes.o  \
 	q_bsp.o     \
-	q_pakfile.o \
 	wolf_map.o  \
 	\
 	twister.o   \

@@ -20,9 +20,9 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+#include "lib_pak.h"
 #include "main.h"
 
-#include "q_pakfile.h"
 #include "q_bsp.h"
 
 

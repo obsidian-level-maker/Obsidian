@@ -23,6 +23,7 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+#include "lib_pak.h"
 #include "main.h"
 
 #include "csg_main.h"
@@ -31,7 +32,6 @@
 #include "ui_chooser.h"
 
 #include "q_bsp.h"
-#include "q_pakfile.h"
 #include "q1_main.h"
 #include "q1_structs.h"
 
