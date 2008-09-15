@@ -2128,7 +2128,7 @@ OB_GAMES["hexen"] =
 {
   label = "Hexen",
 
-  format = "hexen",
+  format = "doom",
 
   game_func = hexen_factory,
 }
