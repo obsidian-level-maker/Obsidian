@@ -21,6 +21,9 @@
 
 void Wolf_Init(void);
 
+int Wolf_add_block(lua_State *L);
+
+
 game_interface_c * Wolf_GameObject(void);
 
 /* ----- File structures ---------------------- */

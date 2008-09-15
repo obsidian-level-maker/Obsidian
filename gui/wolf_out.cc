@@ -269,12 +269,9 @@ static void WriteHead(void)
 
 //------------------------------------------------------------------------
 
-namespace wolf
-{
-
 // LUA: begin_level()
 //
-int begin_level(lua_State *L)
+int WWWWW_begin_level(lua_State *L)   // FIXME
 {
   // clear the planes before use
 
@@ -289,7 +286,7 @@ int begin_level(lua_State *L)
 
 // LUA: end_level()
 //
-int end_level(lua_State *L)
+int WWWWW_end_level(lua_State *L)
 {
   DumpMap();
 
@@ -302,15 +299,23 @@ int end_level(lua_State *L)
 }
 
 
-// LUA: add_block(x, y, tile, obj)
+// LUA: wolf_block(x, y, plane, data, [wflags])
 //
-int add_block(lua_State *L)
+int Wolf_add_block(lua_State *L)
 {
+  int nargs = lua_gettop(L);
+
   int x = luaL_checkint(L,1);
   int y = luaL_checkint(L,2);
 
-  int tile = luaL_checkint(L,3);
-  int obj  = luaL_checkint(L,4);
+  int plane = luaL_checkint(L,3);
+  int data  = luaL_checkint(L,4);
+
+  int wflags = 0;
+
+  if (nargs >= 5)
+    wflags = luaL_checkint(L,5);
+
 
   // adjust and validate coords
   x = x-1;
@@ -319,32 +324,33 @@ int add_block(lua_State *L)
   SYS_ASSERT(0 <= x && x <= 63);
   SYS_ASSERT(0 <= y && y <= 63);
 
-  solid_plane[PL_START+y*64+x] = tile;
-  thing_plane[PL_START+y*64+x] = obj;
+  switch (plane)
+  {
+    case 1:
+      solid_plane[PL_START+y*64+x] = data;
+      break;
+
+    case 2:
+      thing_plane[PL_START+y*64+x] = data;
+      break;
+
+    default:
+      Main_FatalError("Script problem: wolf_block: bad plane %d\n", plane);
+      break; /* NOT REACHED */
+  }
 
   return 0;
 }
-
-} // namespace wolf
 
 
 //------------------------------------------------------------------------
 //  PUBLIC INTERFACE
 //------------------------------------------------------------------------
 
-static const luaL_Reg wolf_funcs[] =
-{
-  { "begin_level", wolf::begin_level },
-  { "add_block",   wolf::add_block   },
-  { "end_level",   wolf::end_level   },
-
-  { NULL, NULL } // the end
-};
-
 
 void Wolf_Init(void)
 {
-  Script_RegisterLib("wolf", wolf_funcs);
+  // nothing to do (yet)
 }
 
 bool Wolf_Start(void)

@@ -29,6 +29,7 @@
 #include "csg_main.h"
 #include "g_lua.h"
 #include "ui_dialog.h"
+#include "wolf_out.h"
 
 
 std::vector<area_info_c *> all_areas;
@@ -647,6 +648,8 @@ static const luaL_Reg csg_lib[] =
 
   { "add_brush",   csg2::add_brush  },
   { "add_entity",  csg2::add_entity },
+
+  { "wolf_block",  Wolf_add_block },
 
   { NULL, NULL } // the end
 };
