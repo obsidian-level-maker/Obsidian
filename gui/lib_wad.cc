@@ -1,0 +1,672 @@
+//------------------------------------------------------------------------
+//  LEVEL building - WAD and GRP files
+//------------------------------------------------------------------------
+//
+//  Oblige Level Maker (C) 2006-2008 Andrew Apted
+//
+//  This program is free software; you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License
+//  as published by the Free Software Foundation; either version 2
+//  of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//------------------------------------------------------------------------
+
+#include "headers.h"
+#include "main.h"
+
+#include <list>
+
+#include "lib_util.h"
+#include "lib_wad.h"
+
+
+// #define LogPrintf  printf
+
+
+//------------------------------------------------------------------------
+//  WAD READING
+//------------------------------------------------------------------------
+
+static FILE *wad_R_fp;
+
+static raw_wad_header_t  wad_R_header;
+static raw_wad_lump_t * wad_R_dir;
+
+bool WAD_OpenRead(const char *filename)
+{
+  wad_R_fp = fopen(filename, "rb");
+
+  if (! wad_R_fp)
+  {
+    LogPrintf("WAD_OpenRead: no such file: %s\n", filename);
+    return false;
+  }
+
+  LogPrintf("Opened WAD file: %s\n", filename);
+
+  if (fread(&wad_R_header, sizeof(wad_R_header), 1, wad_R_fp) != 1)
+  {
+    LogPrintf("WAD_OpenRead: failed reading header\n");
+    fclose(wad_R_fp);
+    return false;
+  }
+
+  if (memcmp(wad_R_header.magic+1, "WAD", 3) != 0)
+  {
+    LogPrintf("WAD_OpenRead: not a WAD file!\n");
+    fclose(wad_R_fp);
+    return false;
+  }
+
+  wad_R_header.num_lumps = LE_U32(wad_R_header.num_lumps);
+  wad_R_header.dir_start = LE_U32(wad_R_header.dir_start);
+
+  /* read directory */
+
+  if (wad_R_header.num_lumps >= 5000)  // sanity check
+  {
+    LogPrintf("WAD_OpenRead: bad header (%d entries?)\n", wad_R_header.num_lumps);
+    fclose(wad_R_fp);
+    return false;
+  }
+
+  if (fseek(wad_R_fp, wad_R_header.dir_start, SEEK_SET) != 0)
+  {
+    LogPrintf("WAD_OpenRead: cannot seek to directory (at 0x%08x)\n", wad_R_header.dir_start);
+    fclose(wad_R_fp);
+    return false;
+  }
+
+  wad_R_dir = new raw_wad_lump_t[wad_R_header.num_lumps + 1];
+
+  for (int i = 0; i < (int)wad_R_header.num_lumps; i++)
+  {
+    raw_wad_lump_t *L = &wad_R_dir[i];
+
+    int res = fread(L, sizeof(raw_wad_lump_t), 1, wad_R_fp);
+
+    if (res == EOF || res != 1 || ferror(wad_R_fp))
+    {
+      if (i == 0)
+      {
+        LogPrintf("WAD_OpenRead: could not read any dir-entries!\n");
+
+        delete[] wad_R_dir;
+        wad_R_dir = NULL;
+
+        fclose(wad_R_fp);
+        return false;
+      }
+
+      LogPrintf("WAD_OpenRead: hit EOF reading dir-entry %d\n", i);
+
+      // truncate directory
+      wad_R_header.num_lumps = i;
+      break;
+    }
+
+    L->start  = LE_U32(L->start);
+    L->length = LE_U32(L->length);
+
+//  DebugPrintf(" %4d: %08x %08x : %s\n", i, L->start, L->length, L->name);
+  }
+
+  return true; // OK
+}
+
+void WAD_CloseRead(void)
+{
+  fclose(wad_R_fp);
+
+  LogPrintf("Closed WAD file\n");
+
+  delete[] wad_R_dir;
+  wad_R_dir = NULL;
+}
+
+
+int WAD_NumEntries(void)
+{
+  return (int)wad_R_header.num_lumps;
+}
+
+
+int WAD_FindEntry(const char *name)
+{
+  for (unsigned int i = 0; i < wad_R_header.num_lumps; i++)
+  {
+    char buffer[16];
+    strncpy(buffer, wad_R_dir[entry].name, 8);
+    buffer[8] = 0;
+
+    if (StringCaseCmp(name, buffer) == 0)
+      return i;
+  }
+
+  return -1; // not found
+}
+
+int WAD_EntryLen(int entry)
+{
+  SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
+
+  return wad_R_dir[entry].length;
+}
+
+const char * WAD_EntryName(int entry)
+{
+  static char name_buf[16];
+
+  SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
+
+  // entries are often not NUL terminated, hence return a static copy
+  strncpy(name_buf, wad_R_dir[entry].name, 8);
+  name_buf[8] = 0;
+
+  return name_buf;
+}
+
+
+bool WAD_ReadData(int entry, int offset, int length, void *buffer)
+{
+  SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
+  SYS_ASSERT(offset >= 0);
+  SYS_ASSERT(length > 0);
+
+  raw_wad_lump_t *L = &wad_R_dir[entry];
+
+  if (fseek(wad_R_fp, L->start + offset, SEEK_SET) != 0)
+    return false;
+
+  int res = fread(buffer, length, 1, wad_R_fp);
+  return (res == 1);
+}
+
+
+void WAD_ListEntries(void)
+{
+  printf("--------------------------------------------------\n");
+
+  if (wad_R_header.num_lumps == 0)
+  {
+    printf("WAD file is empty\n");
+  }
+  else
+  {
+    for (int i = 0; i < (int)wad_R_header.num_lumps; i++)
+    {
+      raw_wad_lump_t *L = &wad_R_dir[i];
+
+      printf("%4d: +%08x %08x %c : %s\n", i+1, L->start, L->length, L->name);
+    }
+  }
+
+  printf("--------------------------------------------------\n");
+}
+
+
+
+//------------------------------------------------------------------------
+//  WAD WRITING
+//------------------------------------------------------------------------
+
+static FILE *wad_W_fp;
+
+static std::list<raw_wad_lump_t> wad_W_directory;
+
+static raw_wad_lump_t wad_W_lump;
+
+
+bool WAD_OpenWrite(const char *filename)
+{
+  wad_W_fp = fopen(filename, "wb");
+
+  if (! wad_W_fp)
+  {
+    LogPrintf("WAD_OpenWrite: cannot create file: %s\n", filename);
+    return false;
+  }
+
+  LogPrintf("Created WAD file: %s\n", filename);
+
+  // write out a dummy header
+  raw_wad_header_t header;
+  memset(&header, 0, sizeof(header));
+
+  fwrite(&header, sizeof(raw_wad_header_t), 1, wad_W_fp);
+  fflush(wad_W_fp);
+
+  return true;
+}
+
+
+void WAD_CloseWrite(void)
+{
+  fflush(wad_W_fp);
+
+  // write the directory
+
+  LogPrintf("Writing WAD directory\n");
+
+  raw_wad_header_t header;
+
+  memcpy(header.magic, WAD_MAGIC, 4);
+
+  header.dir_start = (int)ftell(wad_W_fp);
+  header.num_lumps = 0;
+
+  std::list<raw_wad_lump_t>::iterator WDI;
+
+  for (WDI = wad_W_directory.begin(); WDI != wad_W_directory.end(); WDI++)
+  {
+    raw_wad_lump_t *L = & (*WDI);
+
+    fwrite(L, sizeof(raw_wad_lump_t), 1, wad_W_fp);
+
+    header.num_lumps++;
+  }
+
+  fflush(wad_W_fp);
+
+  // finally write the _real_ WAD header
+
+  header.dir_start = LE_U32(header.dir_start);
+  header.num_lumps = LE_U32(header.num_lumps);
+
+  fseek(wad_W_fp, 0, SEEK_SET);
+
+  fwrite(&header, sizeof(header), 1, wad_W_fp);
+
+  fflush(wad_W_fp);
+  fclose(wad_W_fp);
+
+  LogPrintf("Closed WAD file\n");
+
+  wad_W_directory.clear();
+}
+
+
+void WAD_NewLump(const char *name, int type)
+{
+  SYS_ASSERT(strlen(name) <= 15);
+
+  memset(&wad_W_lump, 0, sizeof(wad_W_lump));
+
+  strcpy(wad_W_lump.name, name);
+
+  wad_W_lump.type  = type;
+  wad_W_lump.start = (u32_t)ftell(wad_W_fp);
+}
+
+
+void WAD_AppendData(const void *data, int length)
+{
+  SYS_ASSERT(length >= 0);
+
+  if (length > 0)
+  {
+    if (fwrite(data, length, 1, wad_W_fp) != 1)
+    {
+      /// write_errors++
+    }
+  }
+}
+
+
+void WAD_FinishLump(void)
+{
+  int len = (int)ftell(wad_W_fp) - (int)wad_W_lump.start;
+
+  // pad lumps to a multiple of four bytes
+  int padding = AlignLen(len) - len;
+
+  if (padding > 0)
+  {
+    static u8_t zeros[4] = { 0,0,0,0 };
+
+    fwrite(zeros, padding, 1, wad_W_fp);
+  }
+
+  // fix endianness
+  wad_W_lump.start  = LE_U32(wad_W_lump.start);
+  wad_W_lump.length = LE_U32(len);
+
+  wad_W_directory.push_back(wad_W_lump);
+}
+
+
+//------------------------------------------------------------------------
+//  GRP READING
+//------------------------------------------------------------------------
+
+static FILE *grp_R_fp;
+
+static raw_grp_header_t  grp_R_header;
+static raw_grp_lump_t * grp_R_dir;
+static u32_t * grp_R_starts;
+
+bool GRP_OpenRead(const char *filename)
+{
+  grp_R_fp = fopen(filename, "rb");
+
+  if (! grp_R_fp)
+  {
+    LogPrintf("GRP_OpenRead: no such file: %s\n", filename);
+    return false;
+  }
+
+  LogPrintf("Opened GRP file: %s\n", filename);
+
+  if (fread(&grp_R_header, sizeof(grp_R_header), 1, grp_R_fp) != 1)
+  {
+    LogPrintf("GRP_OpenRead: failed reading header\n");
+    fclose(grp_R_fp);
+    return false;
+  }
+
+  if (memcmp(grp_R_header.magic, GRP_MAGIC, 4) != 0)
+  {
+    LogPrintf("GRP_OpenRead: not a GRP file!\n");
+    fclose(grp_R_fp);
+    return false;
+  }
+
+  grp_R_header.num_lumps = LE_U32(grp_R_header.num_lumps);
+  grp_R_header.dir_start = LE_U32(grp_R_header.dir_start);
+
+  /* read directory */
+
+  if (grp_R_header.num_lumps >= 5000)  // sanity check
+  {
+    LogPrintf("GRP_OpenRead: bad header (%d entries?)\n", grp_R_header.num_lumps);
+    fclose(grp_R_fp);
+    return false;
+  }
+
+  if (fseek(grp_R_fp, grp_R_header.dir_start, SEEK_SET) != 0)
+  {
+    LogPrintf("GRP_OpenRead: cannot seek to directory (at 0x%08x)\n", grp_R_header.dir_start);
+    fclose(grp_R_fp);
+    return false;
+  }
+
+  grp_R_dir = new raw_grp_lump_t[grp_R_header.num_lumps + 1];
+  grp_R_starts = new u32_t[grp_R_header.num_lumps + 1];
+
+  u32_t L_start = sizeof(raw_grp_header_t) +
+                  sizeof(raw_grp_lump_t) * grp_R_header.num_lumps;
+
+  for (int i = 0; i < (int)grp_R_header.num_lumps; i++)
+  {
+    raw_grp_lump_t *L = &grp_R_dir[i];
+
+    int res = fread(L, sizeof(raw_grp_lump_t), 1, grp_R_fp);
+
+    if (res == EOF || res != 1 || ferror(grp_R_fp))
+    {
+      if (i == 0)
+      {
+        LogPrintf("GRP_OpenRead: could not read any dir-entries!\n");
+
+        delete[] grp_R_dir;
+        grp_R_dir = NULL;
+
+        fclose(grp_R_fp);
+        return false;
+      }
+
+      LogPrintf("GRP_OpenRead: hit EOF reading dir-entry %d\n", i);
+
+      // truncate directory
+      grp_R_header.num_lumps = i;
+      break;
+    }
+
+    L->length = LE_U32(L->length);
+
+    grp_R_starts[i] = L_start;
+    L_start += L->length;
+
+//  DebugPrintf(" %4d: %08x %08x : %s\n", i, L->start, L->length, L->name);
+  }
+
+  return true; // OK
+}
+
+void GRP_CloseRead(void)
+{
+  fclose(grp_R_fp);
+
+  LogPrintf("Closed GRP file\n");
+
+  delete[] grp_R_dir;
+  delete[] grp_R_starts;
+
+  grp_R_dir = NULL;
+  grp_R_starts = NULL;
+}
+
+int GRP_NumEntries(void)
+{
+  return (int)grp_R_header.num_lumps;
+}
+
+int GRP_FindEntry(const char *name)
+{
+  for (unsigned int i = 0; i < grp_R_header.num_lumps; i++)
+  {
+    char buffer[16];
+    strncpy(buffer, grp_R_dir[entry].name, 12);
+    buffer[12] = 0;
+
+    if (StringCaseCmp(name, buffer) == 0)
+      return i;
+  }
+
+  return -1; // not found
+}
+
+int GRP_EntryLen(int entry)
+{
+  SYS_ASSERT(entry >= 0 && entry < (int)grp_R_header.num_lumps);
+
+  return grp_R_dir[entry].length;
+}
+
+const char * GRP_EntryName(int entry)
+{
+  static char name_buf[16];
+
+  SYS_ASSERT(entry >= 0 && entry < (int)grp_R_header.num_lumps);
+
+  // entries are often not NUL terminated, hence return a static copy
+  strncpy(name_buf, grp_R_dir[entry].name, 12);
+  name_buf[12] = 0;
+
+  return name_buf;
+}
+
+
+bool GRP_ReadData(int entry, int offset, int length, void *buffer)
+{
+  SYS_ASSERT(entry >= 0 && entry < (int)grp_R_header.num_lumps);
+  SYS_ASSERT(offset >= 0);
+  SYS_ASSERT(length > 0);
+
+  int L_start = grp_R_starts[entry];
+
+  if (fseek(grp_R_fp, L_start + offset, SEEK_SET) != 0)
+    return false;
+
+  int res = fread(buffer, length, 1, grp_R_fp);
+  return (res == 1);
+}
+
+
+void GRP_ListEntries(void)
+{
+  printf("--------------------------------------------------\n");
+
+  if (grp_R_header.num_lumps == 0)
+  {
+    printf("GRP file is empty\n");
+  }
+  else
+  {
+    for (int i = 0; i < (int)grp_R_header.num_lumps; i++)
+    {
+      raw_grp_lump_t *L = &grp_R_dir[i];
+
+      int L_start = grp_R_starts[i];
+
+      printf("%4d: +%08x %08x : %s\n", i+1, L_start, L->length, L->name);
+    }
+  }
+
+  printf("--------------------------------------------------\n");
+}
+
+
+//------------------------------------------------------------------------
+//  GRP WRITING
+//------------------------------------------------------------------------
+
+static FILE *grp_W_fp;
+
+static std::list<raw_grp_lump_t> grp_W_directory;
+
+static raw_grp_lump_t grp_W_lump;
+
+static const byte grp_magic_data[12] =
+{
+  0x4b, 0x65, 0x6e, 0x53, 0x69, 0x6c,
+  0x76, 0x65, 0x72, 0x6d, 0x61, 0x6e
+};
+
+// hackish workaround for the GRP format which places the
+// directory before all the data files.
+#define MAX_GRP_WRITE_ENTRIES  96
+
+bool GRP_OpenWrite(const char *filename)
+{
+  grp_W_fp = fopen(filename, "wb");
+
+  if (! grp_W_fp)
+  {
+    LogPrintf("GRP_OpenWrite: cannot create file: %s\n", filename);
+    return false;
+  }
+
+  LogPrintf("Created GRP file: %s\n", filename);
+
+  // write out a dummy header
+  raw_grp_header_t header;
+  memset(&header, 0, sizeof(header));
+
+  fwrite(&header, sizeof(raw_grp_header_t), 1, grp_W_fp);
+  fflush(grp_W_fp);
+
+  // write out a dummy directory
+  raw_grp_lump_t entry;
+  memset(&entry, 0, sizeof(entry));
+
+  for (int i = 0; i < MAX_GRP_WRITE_ENTRIES)
+    fwrite(&entry, sizeof(raw_grp_lump_t), 1, grp_W_fp);
+
+  fflush(grp_W_fp);
+
+  return true;
+}
+
+
+void GRP_CloseWrite(void)
+{
+  fflush(grp_W_fp);
+
+  // write the directory
+
+  LogPrintf("Writing GRP directory\n");
+
+  raw_grp_header_t header;
+
+  memcpy(header.magic, GRP_MAGIC, 4);
+
+  header.dir_start = (int)ftell(grp_W_fp);
+  header.num_lumps = 0;
+
+  std::list<raw_grp_lump_t>::iterator WDI;
+
+  for (WDI = grp_W_directory.begin(); WDI != grp_W_directory.end(); WDI++)
+  {
+    raw_grp_lump_t *L = & (*WDI);
+
+    fwrite(L, sizeof(raw_grp_lump_t), 1, grp_W_fp);
+
+    header.num_lumps++;
+  }
+
+  fflush(grp_W_fp);
+
+  // finally write the _real_ GRP header
+
+  header.dir_start = LE_U32(header.dir_start);
+  header.num_lumps = LE_U32(header.num_lumps);
+
+  fseek(grp_W_fp, 0, SEEK_SET);
+
+  fwrite(&header, sizeof(header), 1, grp_W_fp);
+
+  fflush(grp_W_fp);
+  fclose(grp_W_fp);
+
+  LogPrintf("Closed GRP file\n");
+
+  grp_W_directory.clear();
+}
+
+
+void GRP_NewLump(const char *name, int type)
+{
+  SYS_ASSERT(strlen(name) <= 15);
+
+  memset(&grp_W_lump, 0, sizeof(grp_W_lump));
+
+  strcpy(grp_W_lump.name, name);
+
+  grp_W_lump.type  = type;
+  grp_W_lump.start = (u32_t)ftell(grp_W_fp);
+}
+
+
+void GRP_AppendData(const void *data, int length)
+{
+  SYS_ASSERT(length >= 0);
+
+  if (length > 0)
+  {
+    if (fwrite(data, length, 1, grp_W_fp) != 1)
+    {
+      /// write_errors++
+    }
+  }
+}
+
+
+void GRP_FinishLump(void)
+{
+  int len = (int)ftell(grp_W_fp) - (int)grp_W_lump.start;
+
+  // fix endianness
+  grp_W_lump.length = LE_U32(len);
+
+  grp_W_directory.push_back(grp_W_lump);
+}
+
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

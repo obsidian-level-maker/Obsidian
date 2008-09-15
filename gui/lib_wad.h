@@ -77,7 +77,7 @@ typedef struct
 {
   char type[4];
 
-  u32_t num_entries;
+  u32_t num_lumps;
   u32_t dir_start;
 }
 raw_wad_header_t;
@@ -90,7 +90,7 @@ typedef struct
 
   char name[8];
 }
-raw_dir_entry_t;
+raw_wad_lump_t;
 
 
 /* ----- GRP structure ---------------------- */
@@ -98,7 +98,7 @@ raw_dir_entry_t;
 typedef struct
 {
   char magic[12];
-  u32_t num_entries;
+  u32_t num_lumps;
 }
 raw_grp_header_t;
 
@@ -108,7 +108,7 @@ typedef struct
   char name[12];
   u32_t length;
 }
-raw_grp_entry_t;
+raw_grp_lump_t;
 
 
 #endif /* __OBLIGE_LIB_WAD_H__ */
