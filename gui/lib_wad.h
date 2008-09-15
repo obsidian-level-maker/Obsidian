@@ -41,7 +41,7 @@ bool WAD_OpenWrite(const char *filename);
 void WAD_CloseWrite(void);
 
 void WAD_NewLump(const char *name);
-void WAD_AppendData(const void *data, int length);
+bool WAD_AppendData(const void *data, int length);
 void WAD_FinishLump(void);
 
 
@@ -66,7 +66,7 @@ bool GRP_OpenWrite(const char *filename);
 void GRP_CloseWrite(void);
 
 void GRP_NewLump(const char *name);
-void GRP_AppendData(const void *data, int length);
+bool GRP_AppendData(const void *data, int length);
 void GRP_FinishLump(void);
 
 

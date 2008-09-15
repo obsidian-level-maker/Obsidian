@@ -304,17 +304,14 @@ void WAD_NewLump(const char *name)
 }
 
 
-void WAD_AppendData(const void *data, int length)
+bool WAD_AppendData(const void *data, int length)
 {
-  SYS_ASSERT(length >= 0);
+  if (length == 0)
+    return true;
 
-  if (length > 0)
-  {
-    if (fwrite(data, length, 1, wad_W_fp) != 1)
-    {
-      /// write_errors++
-    }
-  }
+  SYS_ASSERT(length > 0);
+
+  return (fwrite(data, length, 1, wad_W_fp) == 1);
 }
 
 
@@ -571,7 +568,7 @@ bool GRP_OpenWrite(const char *filename)
   {
     raw_grp_lump_t entry;
 
-    sprintf(entry.name, "_%d.ZZZ", i);
+    sprintf(entry.name, "_%03d.ZZZ", i);
     entry.length = LE_U32(1);
 
     fwrite(&entry, sizeof(raw_grp_lump_t), 1, grp_W_fp);
@@ -633,19 +630,18 @@ void GRP_NewLump(const char *name)
 }
 
 
-void GRP_AppendData(const void *data, int length)
+bool GRP_AppendData(const void *data, int length)
 {
-  SYS_ASSERT(length >= 0);
+  if (length == 0)
+    return true;
 
-  if (length > 0)
-  {
-    if (fwrite(data, length, 1, grp_W_fp) != 1)
-    {
-      /// write_errors++
-    }
+  SYS_ASSERT(length > 0);
 
-    grp_W_lump.length += (u32_t)length;
-  }
+  if (fwrite(data, length, 1, grp_W_fp) != 1)
+    return false;
+
+  grp_W_lump.length += (u32_t)length;
+  return true; // OK
 }
 
 

@@ -318,6 +318,7 @@ void PAK_CloseWrite(void)
   w_pak_dir.clear();
 }
 
+
 void PAK_NewLump(const char *name)
 {
   SYS_ASSERT(strlen(name) <= 55);
@@ -329,18 +330,17 @@ void PAK_NewLump(const char *name)
   w_pak_entry.offset = (u32_t)ftell(w_pak_fp);
 }
 
-void PAK_AppendData(const void *data, int length)
-{
-  SYS_ASSERT(length >= 0);
 
-  if (length > 0)
-  {
-    if (fwrite(data, length, 1, w_pak_fp) != 1)
-    {
-      /// write_errors++
-    }
-  }
+bool PAK_AppendData(const void *data, int length)
+{
+  if (length == 0)
+    return true;
+
+  SYS_ASSERT(length > 0);
+
+  return (fwrite(data, length, 1, w_pak_fp) == 1);
 }
+
 
 void PAK_FinishLump(void)
 {
@@ -661,17 +661,14 @@ void WAD2_NewLump(const char *name, int type)
 }
 
 
-void WAD2_AppendData(const void *data, int length)
+bool WAD2_AppendData(const void *data, int length)
 {
-  SYS_ASSERT(length >= 0);
+  if (length == 0)
+    return true;
 
-  if (length > 0)
-  {
-    if (fwrite(data, length, 1, wad_W_fp) != 1)
-    {
-      /// write_errors++
-    }
-  }
+  SYS_ASSERT(length > 0);
+
+  return (fwrite(data, length, 1, wad_W_fp) == 1);
 }
 
 

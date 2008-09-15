@@ -43,7 +43,7 @@ bool PAK_OpenWrite(const char *filename);
 void PAK_CloseWrite(void);
 
 void PAK_NewLump(const char *name);
-void PAK_AppendData(const void *data, int length);
+bool PAK_AppendData(const void *data, int length);
 void PAK_FinishLump(void);
 
 
@@ -69,7 +69,7 @@ bool WAD2_OpenWrite(const char *filename);
 void WAD2_CloseWrite(void);
 
 void WAD2_NewLump(const char *name, int type = 0);
-void WAD2_AppendData(const void *data, int length);
+bool WAD2_AppendData(const void *data, int length);
 void WAD2_FinishLump(void);
 
 
