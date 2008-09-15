@@ -753,7 +753,7 @@ end
 
 ----------------------------------------------------------------
 
-GAME_FACTORIES["wolf3d"] = function()
+function wolf3d_factory()
 
   return
   {
@@ -812,4 +812,14 @@ GAME_FACTORIES["wolf3d"] = function()
     window_probs = { out_diff=0, combo_diff=0, normal=0 },
   }
 end
+
+
+OB_GAMES["wolf3d"] =
+{
+  label = "Wolfenstein 3D",
+
+  format = "wolf3d",
+
+  game_func = wolf3d_factory,
+}
 
