@@ -48,12 +48,13 @@ OBJS=	main.o      \
 	sys_debug.o \
 	csg_main.o  \
 	csg_poly.o  \
-	dm_level.o  \
-	dm_wad.o    \
-	dm_glbsp.o   \
 	g_cookie.o  \
 	g_image.o   \
 	g_lua.o     \
+	\
+	dm_glbsp.o  \
+	dm_level.o  \
+	dm_wad.o    \
 	q1_clip.o   \
 	q1_main.o   \
 	q1_nodes.o  \
@@ -62,20 +63,21 @@ OBJS=	main.o      \
 	q2_nodes.o  \
 	q_bsp.o     \
 	q_pakfile.o \
+	wolf_map.o  \
+	\
 	twister.o   \
 	ui_build.o  \
 	ui_chooser.o \
 	ui_dialog.o \
-	ui_game.o  \
-	ui_level.o \
+	ui_game.o   \
+	ui_level.o  \
 	ui_map.o    \
 	ui_menu.o   \
 	ui_mods.o   \
 	ui_optlist.o \
 	ui_rchoice.o \
-	ui_play.o \
-	ui_window.o \
-	wolf_out.o
+	ui_play.o   \
+	ui_window.o
 
 
 #--- Targets and Rules ------------------------------------------

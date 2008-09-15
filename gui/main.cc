@@ -33,7 +33,7 @@
 #include "g_cookie.h"
 #include "g_lua.h"
 
-#include "wolf_out.h"
+#include "wolf_map.h"
 #include "dm_level.h"
 #include "q1_main.h"
 #include "q2_main.h"
