@@ -30,8 +30,8 @@
 #include "g_lua.h"
 
 
-#define TEMP_GAMEFILE  "GAMEMAPS.tmp"
-#define TEMP_HEADFILE  "MAPHEAD.tmp"
+#define TEMP_GAMEFILE  "temp/gamemaps.tmp"
+#define TEMP_HEADFILE  "temp/maphead.tmp"
 
 
 #define RLEW_TAG  0xABCD
@@ -140,7 +140,7 @@ int rle_compress_plane(u16_t *plane, int src_len)
 
 //------------------------------------------------------------------------
 
-static void DumpMap(void)
+static void WF_DumpMap(void)
 {
   static char *turning_points = ">/^\\</v\\";
 //static char *player_angles  = "^>v<";
@@ -193,7 +193,7 @@ static void DumpMap(void)
   }
 }
 
-static void WritePlane(u16_t *plane, int *offset, int *length)
+static void WF_WritePlane(u16_t *plane, int *offset, int *length)
 {
   *offset = (int)ftell(map_fp);
 
@@ -212,7 +212,7 @@ static void WritePlane(u16_t *plane, int *offset, int *length)
 //  int wrote_length = (int)ftell(map_fp) - *offset;
 }
 
-static void WriteBlankPlane(int *offset, int *length)
+static void WF_WriteBlankPlane(int *offset, int *length)
 {
   *offset = (int)ftell(map_fp);
 
@@ -227,7 +227,7 @@ static void WriteBlankPlane(int *offset, int *length)
   *length -= *offset;
 }
 
-static void WriteMap(void)
+static void WF_WriteMap(void)
 {
   const char *message = OBLIGE_TITLE " " OBLIGE_VERSION;
 
@@ -236,9 +236,9 @@ static void WriteMap(void)
   int plane_offsets[3];
   int plane_lengths[3];
 
-  WritePlane(solid_plane, plane_offsets+0, plane_lengths+0);
-  WritePlane(thing_plane, plane_offsets+1, plane_lengths+1);
-  WriteBlankPlane(        plane_offsets+2, plane_lengths+2);
+  WF_WritePlane(solid_plane, plane_offsets+0, plane_lengths+0);
+  WF_WritePlane(thing_plane, plane_offsets+1, plane_lengths+1);
+  WF_WriteBlankPlane(        plane_offsets+2, plane_lengths+2);
 
   current_offset = (int)ftell(map_fp);
   // TODO: validate (error check)
@@ -260,7 +260,7 @@ static void WriteMap(void)
   WF_PutNString("!ID!", 4, map_fp);
 }
 
-static void WriteHead(void)
+static void WF_WriteHead(void)
 {
   // offset to map data (info struct)
   WF_PutU32(current_offset, head_fp);
@@ -268,36 +268,6 @@ static void WriteHead(void)
 
 
 //------------------------------------------------------------------------
-
-// LUA: begin_level()
-//
-int WWWWW_begin_level(lua_State *L)   // FIXME
-{
-  // clear the planes before use
-
-  for (int i = 0; i < 64*64; i++)
-  {
-    solid_plane[PL_START+i] = NO_TILE;
-    thing_plane[PL_START+i] = NO_OBJ;
-  }
-
-  return 0;
-}
-
-// LUA: end_level()
-//
-int WWWWW_end_level(lua_State *L)
-{
-  DumpMap();
-
-  WriteMap();
-  WriteHead();
-
-  current_map += 1;
-
-  return 0;
-}
-
 
 // LUA: wolf_block(x, y, plane, data, [wflags])
 //
@@ -318,11 +288,11 @@ int Wolf_add_block(lua_State *L)
 
 
   // adjust and validate coords
+  SYS_ASSERT(1 <= x && x <= 64);
+  SYS_ASSERT(1 <= y && y <= 64);
+
   x = x-1;
   y = 64-y;
-
-  SYS_ASSERT(0 <= x && x <= 63);
-  SYS_ASSERT(0 <= y && y <= 63);
 
   switch (plane)
   {
@@ -347,13 +317,32 @@ int Wolf_add_block(lua_State *L)
 //  PUBLIC INTERFACE
 //------------------------------------------------------------------------
 
-
-void Wolf_Init(void)
+class wolf_game_interface_c : public game_interface_c
 {
-  // nothing to do (yet)
-}
+private:
+  int sub_type;
 
-bool Wolf_Start(void)
+public:
+  wolf_game_interface_c(int _st) : sub_type(_st)
+  { }
+
+  ~wolf_game_interface_c()
+  { }
+
+  bool Start();
+  bool Finish(bool build_ok);
+
+  void BeginLevel();
+  void EndLevel();
+  void Property(const char *key, const char *value);
+
+private:
+  bool Rename();
+  void Tidy();
+};
+
+
+bool wolf_game_interface_c::Start()
 {
   map_fp = fopen(TEMP_GAMEFILE, "wb");
 
@@ -386,7 +375,8 @@ bool Wolf_Start(void)
   return true;
 }
 
-bool Wolf_Finish(void)
+
+bool wolf_game_interface_c::Finish(bool build_ok)
 {
   // set remaining offsets to zero (=> no map)
   for (; current_map <= 100; current_map++)
@@ -402,31 +392,27 @@ bool Wolf_Finish(void)
   delete solid_plane;  solid_plane = NULL;
   delete thing_plane;  thing_plane = NULL;
 
-  return (write_errors_seen == 0);
-}
-
-/* ???
-static void Wolf_Backup(const char *filename)
-{
-  if (FileExists(filename))
+  if (write_errors_seen > 0 || ! build_ok)
   {
-    LogPrintf("Backing up existing file: %s\n", filename);
-
-    char *backup_name = ReplaceExtension(filename, "bak");
-
-    if (FileCopy(filename, backup_name))
-      LogPrintf("WARNING: unable to create backup: %s\n", backup_name);
-
-    StringFree(backup_name);
+    Tidy();
+    return false;
   }
-}
-*/
 
-bool Wolf_Rename(void)
+  if (! Rename())
+  {
+    Tidy();
+    return false;
+  }
+
+  return true;
+}
+
+
+bool wolf_game_interface_c::Rename()
 {
   const char *ext = "WL6";
 
-  if (strcmp(main_win->game_box->game->GetID(), "spear")  == 0)
+  if (sub_type == WFSUB_Spear)
     ext = "SOD";
 
   char gamemaps[40];
@@ -435,68 +421,61 @@ bool Wolf_Rename(void)
   sprintf(gamemaps, "GAMEMAPS.%s", ext);
   sprintf(maphead,  "MAPHEAD.%s",  ext);
 
-  //???  Wolf_Backup(gamemaps);
-  //???  Wolf_Backup(maphead);
-
   FileDelete(gamemaps);
   FileDelete(maphead);
 
-  // FIXME !!!! check for errors
-  FileRename(TEMP_GAMEFILE, gamemaps);
-  FileRename(TEMP_HEADFILE, maphead);
-
-  return true;
+  return FileRename(TEMP_GAMEFILE, gamemaps) &&
+         FileRename(TEMP_HEADFILE, maphead);
 }
 
-void Wolf_Tidy(void)
+
+void wolf_game_interface_c::Tidy()
 {
   FileDelete(TEMP_GAMEFILE);
   FileDelete(TEMP_HEADFILE);
 }
 
 
-
-class wolf_game_interface_c : public game_interface_c
+void wolf_game_interface_c::BeginLevel()
 {
-private:
-
-
-public:
-  wolf_game_interface_c()
-  { }
-
-  ~wolf_game_interface_c()
-  { }
-
-  bool Start()
+  // clear the planes before use
+  for (int i = 0; i < 64*64; i++)
   {
-    return false;
+    solid_plane[PL_START+i] = NO_TILE;
+    thing_plane[PL_START+i] = NO_OBJ;
   }
 
-  bool Finish(bool build_ok)
-  {
-    return false;
-  }
+  current_map += 1;
 
-  /** CSG2 **/
-
-  void BeginLevel()
-  {
-  }
-
-  void Property(const char *key, const char *value)
-  {
-  }
-
-  void EndLevel()
-  {
-  }
-};
+  SYS_ASSERT(current_map < 100);
+}
 
 
-game_interface_c * Wolf_GameObject(void)
+void wolf_game_interface_c::EndLevel()
 {
-  return new wolf_game_interface_c();
+  WF_DumpMap();
+
+  WF_WriteMap();
+  WF_WriteHead();
+}
+
+
+void wolf_game_interface_c::Property(const char *key, const char *value)
+{
+//  if (StringCaseCmp(key, "level_name") == 0)
+//  {
+//    level_name = StringDup(value);
+//  }
+//  else
+  {
+    LogPrintf("WARNING: WOLF: unknown level prop: %s=%s\n", key, value);
+  }
+}
+
+
+game_interface_c * Wolf_GameObject(int subtype)
+{
+  return new wolf_game_interface_c(subtype);
 }
 
 //--- editor settings ---

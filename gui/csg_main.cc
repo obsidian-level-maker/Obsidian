@@ -29,7 +29,9 @@
 #include "csg_main.h"
 #include "g_lua.h"
 #include "ui_dialog.h"
-#include "wolf_out.h"
+
+
+extern int Wolf_add_block(lua_State *L);
 
 
 std::vector<area_info_c *> all_areas;

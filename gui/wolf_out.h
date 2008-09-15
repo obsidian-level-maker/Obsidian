@@ -19,14 +19,15 @@
 #ifndef __OBLIGE_LWOLF_H__
 #define __OBLIGE_LWOLF_H__
 
-void Wolf_Init(void);
+typedef enum
+{
+  WFSUB_Wolf3d = 0,
+  WFSUB_Spear  = 1,
+  WFSUB_Blake  = 2
+}
+wolf_subtype_e;
 
-int Wolf_add_block(lua_State *L);
-
-
-game_interface_c * Wolf_GameObject(void);
-
-/* ----- File structures ---------------------- */
+game_interface_c * Wolf_GameObject(int subtype = WFSUB_Wolf3d);
 
 #endif /* __OBLIGE_LWOLF_H__ */
 

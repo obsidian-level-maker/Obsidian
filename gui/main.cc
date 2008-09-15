@@ -225,7 +225,10 @@ void Build_Cool_Shit()
       game_object = Doom_GameObject(DMSUB_Hexen);
 
     else if (StringCaseCmp(format, "wolf3d") == 0)
-      game_object = Wolf_GameObject();
+      game_object = Wolf_GameObject(WFSUB_Wolf3d);
+
+    else if (StringCaseCmp(format, "spear") == 0)
+      game_object = Wolf_GameObject(WFSUB_Spear);
 
     else if (StringCaseCmp(format, "quake1") == 0)
       game_object = Quake1_GameObject();
@@ -420,8 +423,8 @@ int main(int argc, char **argv)
 #endif
 
   Script_Init();
+
   CSG2_Init();
-  Wolf_Init();
 
   Default_Location();
 
