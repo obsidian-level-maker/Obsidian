@@ -22,7 +22,7 @@
 #include <list>
 
 #include "lib_util.h"
-#include "q_pakfile.h"
+#include "lib_pak.h"
 
 
 // #define LogPrintf  printf

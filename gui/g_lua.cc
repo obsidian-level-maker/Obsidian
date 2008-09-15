@@ -303,7 +303,17 @@ int random(lua_State *L)
 } // namespace con
 
 
-static const luaL_Reg console_lib[] =
+// FIXME: header file?
+extern int CSG2_begin_level(lua_State *L);
+extern int CSG2_end_level(lua_State *L);
+extern int CSG2_property(lua_State *L);
+extern int CSG2_add_brush(lua_State *L);
+extern int CSG2_add_entity(lua_State *L);
+
+extern int Wolf_add_block(lua_State *L);
+
+
+static const luaL_Reg gui_script_funcs[] =
 {
   { "raw_log_print",   con::raw_log_print },
   { "raw_debug_print", con::raw_debug_print },
@@ -319,6 +329,15 @@ static const luaL_Reg console_lib[] =
  
   { "rand_seed",  con::rand_seed },
   { "random",     con::random },
+
+  { "begin_level", CSG2_begin_level },
+  { "end_level",   CSG2_end_level   },
+  { "property",    CSG2_property    },
+
+  { "add_brush",   CSG2_add_brush  },
+  { "add_entity",  CSG2_add_entity },
+
+  { "wolf_block",  Wolf_add_block },
 
   { NULL, NULL } // the end
 };
@@ -350,7 +369,7 @@ static int p_init_lua(lua_State *L)
   {
     luaL_openlibs(L);  /* open libraries */
 
-    Script_RegisterLib("con", console_lib);
+    Script_RegisterLib("gui", gui_script_funcs);
   }
   lua_gc(L, LUA_GCRESTART, 0);
 

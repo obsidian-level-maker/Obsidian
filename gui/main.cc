@@ -52,10 +52,6 @@ const char *install_path = NULL;
 game_interface_c * game_object = NULL;
 
 
-// skip inclusion of the large csg_main.h header
-extern void CSG2_Init(void);
-
-
 /* ----- user information ----------------------------- */
 
 static void ShowInfo(void)
@@ -414,8 +410,6 @@ int main(int argc, char **argv)
 #endif
 
   Script_Init();
-
-  CSG2_Init();
 
   Default_Location();
 

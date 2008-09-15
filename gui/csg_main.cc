@@ -31,8 +31,6 @@
 #include "ui_dialog.h"
 
 
-extern int Wolf_add_block(lua_State *L);
-
 
 std::vector<area_info_c *> all_areas;
 std::vector<area_poly_c *> all_polys;
@@ -510,12 +508,9 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 }
 
 
-namespace csg2
-{
-
-// LUA: begin_level(name)
+// LUA: begin_level()
 //
-int begin_level(lua_State *L)
+int CSG2_begin_level(lua_State *L)
 {
   // call our own initialisation function first
   CSG2_BeginLevel();
@@ -530,7 +525,7 @@ int begin_level(lua_State *L)
 
 // LUA: end_level()
 //
-int end_level(lua_State *L)
+int CSG2_end_level(lua_State *L)
 {
   SYS_ASSERT(game_object);
 
@@ -543,14 +538,14 @@ int end_level(lua_State *L)
 }
 
 
-// LUA: level_prop()
+// LUA: property(key, value)
 //
-int level_prop(lua_State *L)
+int CSG2_property(lua_State *L)
 {
   const char *key   = luaL_checkstring(L,1);
   const char *value = luaL_checkstring(L,2);
 
-  // TODO: eat propertities intented for CSG2
+  // TODO: eat propertities intended for CSG2
 
   SYS_ASSERT(game_object);
 
@@ -587,7 +582,7 @@ int level_prop(lua_State *L)
 //    x_offset, y_offset
 //    peg (DOOM only)
 //
-int add_brush(lua_State *L)
+int CSG2_add_brush(lua_State *L)
 {
   area_info_c *A = Grab_AreaInfo(L, 1);
   area_poly_c *P = Grab_LineLoop(L, 2, A);
@@ -620,7 +615,7 @@ int add_brush(lua_State *L)
 //   light : amount of light emitted
 //   ...
 //
-int add_entity(lua_State *L)
+int CSG2_add_entity(lua_State *L)
 {
   const char *name = luaL_checkstring(L,1);
 
@@ -637,30 +632,8 @@ int add_entity(lua_State *L)
   return 0;
 }
 
-} // namespace csg2
-
 
 //------------------------------------------------------------------------
-
-static const luaL_Reg csg_lib[] =
-{
-  { "begin_level", csg2::begin_level },
-  { "end_level",   csg2::end_level   },
-  { "level_prop",  csg2::level_prop  },
-
-  { "add_brush",   csg2::add_brush  },
-  { "add_entity",  csg2::add_entity },
-
-  { "wolf_block",  Wolf_add_block },
-
-  { NULL, NULL } // the end
-};
-
-
-void CSG2_Init(void)
-{
-  Script_RegisterLib("csg2", csg_lib);
-}
 
 
 void CSG2_FreeMerges(void)

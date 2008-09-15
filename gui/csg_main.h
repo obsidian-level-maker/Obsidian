@@ -360,8 +360,6 @@ extern std::vector<merge_gap_c *>     mug_gaps;
 
 /* ----- FUNCTIONS ----- */
 
-void CSG2_Init(void);
-
 void CSG2_MergeAreas(void);
 
 void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
