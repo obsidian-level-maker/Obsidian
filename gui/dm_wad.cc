@@ -40,7 +40,8 @@ typedef std::vector<raw_dir_entry_t> directory_c;
 static FILE *wad_fp;
 
 static directory_c wad_dir;
-static bool wad_hexen;
+
+bool wad_hexen;  // FIXME: not global
 
 static lump_c *thing_lump;
 static lump_c *vertex_lump;
@@ -285,7 +286,7 @@ void WAD_CreateInfoLump()
 }
 
 
-bool WAD_OpenWrite(const char *filename, bool is_hexen)
+bool WAD_OpenWrite(const char *filename)
 {
   wad_fp = fopen(filename, "wb");
 
@@ -299,7 +300,8 @@ bool WAD_OpenWrite(const char *filename, bool is_hexen)
   seek_errors_seen  = 0;
 
   wad_dir.clear();
-  wad_hexen = is_hexen;
+
+  wad_hexen = false;
 
   // dummy header
   raw_wad_header_t header;

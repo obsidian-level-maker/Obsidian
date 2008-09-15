@@ -218,12 +218,6 @@ void Build_Cool_Shit()
     if (StringCaseCmp(format, "doom") == 0)
       game_object = Doom_GameObject();
 
-    else if (StringCaseCmp(format, "heretic") == 0)
-      game_object = Doom_GameObject(DMSUB_Heretic);
-
-    else if (StringCaseCmp(format, "hexen") == 0)
-      game_object = Doom_GameObject(DMSUB_Hexen);
-
     else if (StringCaseCmp(format, "wolf3d") == 0)
       game_object = Wolf_GameObject();
 

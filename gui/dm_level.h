@@ -19,15 +19,7 @@
 #ifndef __OBLIGE_DOOM_LEVEL_H__
 #define __OBLIGE_DOOM_LEVEL_H__
 
-typedef enum
-{
-  DMSUB_Doom = 0,
-  DMSUB_Heretic = 1,
-  DMSUB_Hexen = 2
-}
-doom_subtype_e;
-
-game_interface_c * Doom_GameObject(int subtype = DMSUB_Doom);
+game_interface_c * Doom_GameObject();
 
 #endif /* __OBLIGE_DOOM_LEVEL_H__ */
 

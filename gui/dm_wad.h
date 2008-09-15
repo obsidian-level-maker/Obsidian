@@ -20,7 +20,7 @@
 #define __OBLIGE_LDOOM_H__
 
 
-bool WAD_OpenWrite(const char *filename, bool is_hexen);
+bool WAD_OpenWrite(const char *filename);
 bool WAD_CloseWrite(void);
 
 void WAD_BeginLevel(void);

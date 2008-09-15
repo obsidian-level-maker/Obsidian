@@ -48,6 +48,9 @@ static int extrafloor_tag;
 static int extrafloor_slot;
 
 
+extern bool wad_hexen;  // FIXME
+
+
 class sector_info_c;
 
 
@@ -918,12 +921,10 @@ void CSG2_WriteDoom(void)
 class doom_game_interface_c : public game_interface_c
 {
 private:
-  int sub_type;
-
   const char *filename;
 
 public:
-  doom_game_interface_c(int _st) : sub_type(_st), filename(NULL)
+  doom_game_interface_c() : filename(NULL)
   { }
 
   ~doom_game_interface_c()
@@ -952,7 +953,7 @@ bool doom_game_interface_c::Start()
   if (! filename)  // cancelled
     return false;
 
-  if (! WAD_OpenWrite(TEMP_FILENAME, sub_type == DMSUB_Hexen))
+  if (! WAD_OpenWrite(TEMP_FILENAME))
     return false;
 
   main_win->build_box->ProgInit(2);
@@ -1015,6 +1016,13 @@ void doom_game_interface_c::Property(const char *key, const char *value)
   {
     level_name = StringDup(value);
   }
+  else if (StringCaseCmp(key, "hexen_format") == 0)
+  {
+    if (value[0] == '0' || tolower(value[0]) == 'f')
+      wad_hexen = false;
+    else
+      wad_hexen = true;
+  }
   else if (StringCaseCmp(key, "error_tex") == 0)
   {
     error_tex = StringDup(value);
@@ -1048,9 +1056,9 @@ void doom_game_interface_c::EndLevel()
 }
 
 
-game_interface_c * Doom_GameObject(int subtype)
+game_interface_c * Doom_GameObject()
 {
-  return new doom_game_interface_c(subtype);
+  return new doom_game_interface_c();
 }
 
 //--- editor settings ---
