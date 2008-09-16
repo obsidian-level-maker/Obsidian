@@ -45,15 +45,15 @@ WF_THINGS =
               id={ easy=216, medium=234, hard=252, dirs=true, patrol=4 },
             },
 
-  -- bosses
-  fake_hitler   = { kind="monster", id=160, r=30, h=60 },
-  fat_face      = { kind="monster", id=179, r=30, h=60 },
-  gretel_grosse = { kind="monster", id=197, r=30, h=60 },
-  hans_grosse   = { kind="monster", id=214, r=30, h=60 },
+  fake_hitler = { kind="monster", id=160, r=30, h=60 },
 
-  schabbs       = { kind="monster", id=196, r=30, h=60 },
-  giftmacher    = { kind="monster", id=215, r=30, h=60 },
-  hitler        = { kind="monster", id=178, r=30, h=60 },
+  -- bosses
+  Fatface    = { kind="monster", id=179, r=30, h=60 },
+  Gretel     = { kind="monster", id=197, r=30, h=60 },
+  Hans       = { kind="monster", id=214, r=30, h=60 },
+  Schabbs    = { kind="monster", id=196, r=30, h=60 },
+  Giftmacher = { kind="monster", id=215, r=30, h=60 },
+  Hitler     = { kind="monster", id=178, r=30, h=60 },
 
   -- ghosts (red, yellow, pink, blue)
   blinky = { kind="monster", id=224, r=30, h=60 },
@@ -497,25 +497,26 @@ WF_MONSTERS =
   officer = { prob=30, hp=50,  dm=20, fp=1.7, hitscan=true, },
   mutant  = { prob=10, hp=55,  dm=35, fp=1.9, hitscan=true, },
   ss_dude = { prob=60, hp=100, dm=30, fp=1.4, hitscan=true, },
+
+  -- this guy is only added in special places
+  fake_hitler = { prob=0, hp=350, dm=50 },
 }
 
 WF_BOSSES =
 {
   -- FIXME: hit-points are just averages of skill 2 and 3
  
-  -- FIXME: dm values are crap!
+  -- Note: dm values are crap, but it doesn't matter much because
+  --       these guys are the last thing you fight in the episode.
 
-  hans_grosse   = { hp=1000, dm=30, hitscan=true, give_key="k_gold" },
-  gretel_grosse = { hp=1000, dm=50, hitscan=true, give_key="k_gold" },
-
-  fat_face      = { hp=1000, dm=50, hitscan=true },
-  giftmacher    = { hp=1000, dm=50 },
-
-  fake_hitler   = { hp=350,  dm=50 },  -- not a boss, move out????
-  schabbs       = { hp=1250, dm=70 },
+  Hans       = { hp=1000, dm=40, hitscan=true, give_key="k_gold" },
+  Gretel     = { hp=1000, dm=50, hitscan=true, give_key="k_gold" },
+  Fatface    = { hp=1000, dm=50, hitscan=true },
+  Giftmacher = { hp=1000, dm=50 },
+  Schabbs    = { hp=1250, dm=60 },
 
   -- this includes both Hitlers (in and out of the armor suit)
-  hitler        = { hp=1100, dm=90, hitscan=true },
+  Hitler     = { hp=1100, dm=60, hitscan=true },
 }
 
 WF_MONSTER_GIVE =
@@ -536,9 +537,9 @@ WF_WEAPONS =
   gatling_gun = { fp=3, ammo="bullet", give=6, per=1, rate=16.0, dm=17, freq=90, },
 
   -- Note: machine_gun actually gives _6_ bullets.
-  -- However: we don't model the fact that the SS_DUDE only
+  -- However we don't model the fact that the SS_DUDE only
   -- drops a 4-bullet clip if you already have the machine gun.
-  -- Therefore: this hack should maintain ammo balance.
+  -- Therefore this hack should maintain ammo balance.
 }
 
 WF_PICKUPS =
@@ -588,13 +589,12 @@ WF_SECRET_EXITS =
 
 WF_EPISODE_BOSSES =
 {
-  "hans_grosse",
-  "schabbs",
-  "hitler",
-
-  "giftmacher",
-  "gretel_grosse",
-  "fat_face",
+  "Hans",
+  "Schabbs",
+  "Hitler",
+  "Giftmacher",
+  "Gretel",
+  "Fatface",
 }
 
 WF_KEY_NUM_PROBS =

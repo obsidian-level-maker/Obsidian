@@ -48,10 +48,12 @@ DM_THINGS =
   spectre   = { id=58,  kind="monster", r=30,h=56 },
   skull     = { id=3006,kind="monster", r=16,h=56 },
 
-  spider    = { id=7,  kind="monster", r=128,h=100 },
-  cyber     = { id=16, kind="monster", r=40, h=110 },
   ss_dude   = { id=84, kind="monster", r=20, h=56 },
   keen      = { id=72, kind="monster", r=16, h=72, ceil=true },
+
+  -- bosses
+  Mastermind = { id=7,  kind="monster", r=128,h=100 },
+  Cyberdemon = { id=16, kind="monster", r=40, h=110 },
 
   --- PICKUPS ---
 
@@ -1819,7 +1821,7 @@ D2_SECRET_EXITS =
 D2_LEVEL_BOSSES =
 {
   MAP07 = "mancubus",
-  MAP20 = "spider",
+  MAP20 = "Mastermind",
   MAP30 = "boss_brain",
   MAP32 = "keen",
 }

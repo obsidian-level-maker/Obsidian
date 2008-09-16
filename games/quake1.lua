@@ -45,8 +45,8 @@ Q1_THINGS =
   zombie   = { id="monster_zombie",   kind="monster", r=32, h=80, },
 
   -- bosses
-  chthon   = { id="monster_boss",   kind="monster", r=32, h=80, },
-  shub     = { id="monster_oldone", kind="monster", r=32, h=80, },
+  Chthon   = { id="monster_boss",   kind="monster", r=32, h=80, },
+  Shub     = { id="monster_oldone", kind="monster", r=32, h=80, },
 
   -- pickups
   k_silver = { id="item_key1", kind="pickup", r=30, h=30, pass=true },

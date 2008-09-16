@@ -44,13 +44,14 @@ XN_THINGS =
   bishop    = { id=114,  kind="monster", r=24,h=64 },
   reiver    = { id=34,   kind="monster", r=24,h=64 },
   reiver_bd = { id=10011,kind="monster", r=24,h=64 },
-  wyvern    = { id=254,  kind="monster", r=20,h=66 },
 
-  heresiarch   = { id=10080, kind="monster", r=40,h=120 },
-  fighter_boss = { id=10100, kind="monster", r=16,h=64  },
-  cleric_boss  = { id=10101, kind="monster", r=16,h=64  },
-  mage_boss    = { id=10102, kind="monster", r=16,h=64  },
-  korax        = { id=10200, kind="monster", r=66,h=120 },
+  -- bosses
+  Fighter_boss = { id=10100, kind="monster", r=16,h=64  },
+  Cleric_boss  = { id=10101, kind="monster", r=16,h=64  },
+  Mage_boss    = { id=10102, kind="monster", r=16,h=64  },
+  Wyvern       = { id=254,   kind="monster", r=20,h=66  },
+  Heresiarch   = { id=10080, kind="monster", r=40,h=120 },
+  Korax        = { id=10200, kind="monster", r=66,h=120 },
 
   --- PICKUPS ---
 
@@ -1557,9 +1558,9 @@ XN_MONSTERS =
 
 XN_BOSSES =
 {
-  wyvern     = { hp=640, dm=60, fp=3.0, float=true },
-  heresiarch = { hp=5000,dm=70, fp=3.0 },
-  korax      = { hp=5000,dm=90, fp=3.0 },
+  Wyvern     = { hp=640, dm=60, fp=3.0, float=true },
+  Heresiarch = { hp=5000,dm=70, fp=3.0 },
+  Korax      = { hp=5000,dm=90, fp=3.0 },
 }
 
 XN_WEAPONS =
@@ -1700,7 +1701,7 @@ XN_LEVELS =
     { map= 9, sky_info=XN_SKY_INFO[1] },
     { map=10, sky_info=XN_SKY_INFO[1] },
     { map=11, sky_info=XN_SKY_INFO[5] },
-    { map=12, sky_info=XN_SKY_INFO[1], boss_kind="wyvern" },
+    { map=12, sky_info=XN_SKY_INFO[1], boss_kind="Wyvern" },
   },
 
   --- Cluster 3 ---
@@ -1712,7 +1713,7 @@ XN_LEVELS =
     { map=31, sky_info=XN_SKY_INFO[4] },
     { map=32, sky_info=XN_SKY_INFO[5] },
     { map=33, sky_info=XN_SKY_INFO[4] },
-    { map=34, sky_info=XN_SKY_INFO[4], boss_kind="heresiarch" },
+    { map=34, sky_info=XN_SKY_INFO[4], boss_kind="Heresiarch" },
   },
 
   --- Cluster 4 ---
@@ -1722,7 +1723,7 @@ XN_LEVELS =
     { map=23, sky_info=XN_SKY_INFO[3] }, 
     { map=24, sky_info=XN_SKY_INFO[3] }, 
     { map=25, sky_info=XN_SKY_INFO[3] }, 
-    { map=26, sky_info=XN_SKY_INFO[3], boss_kind="heresiarch" },
+    { map=26, sky_info=XN_SKY_INFO[3], boss_kind="Heresiarch" },
   },
 
   --- Cluster 5 ---
@@ -1732,7 +1733,7 @@ XN_LEVELS =
     { map=37, sky_info=XN_SKY_INFO[4] },
     { map=38, sky_info=XN_SKY_INFO[3] },
     { map=39, sky_info=XN_SKY_INFO[3] },
-    { map=40, sky_info=XN_SKY_INFO[4], boss_kind="korax" },
+    { map=40, sky_info=XN_SKY_INFO[4], boss_kind="Korax" },
   },
 }
 

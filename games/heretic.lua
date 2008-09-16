@@ -49,9 +49,10 @@ HC_THINGS =
   weredragon = { id=70, kind="monster", r=34,h=80 },
   ophidian   = { id=92, kind="monster", r=22,h=72 },
 
-  ironlich   = { id=6,  kind="monster", r=40,h=72 },
-  maulotaur  = { id=9,  kind="monster", r=28,h=104 },
-  d_sparil   = { id=7,  kind="monster", r=28,h=104 },
+  -- bosses
+  Ironlich   = { id=6,  kind="monster", r=40,h=72 },
+  Maulotaur  = { id=9,  kind="monster", r=28,h=104 },
+  D_Sparil   = { id=7,  kind="monster", r=28,h=104 },
 
   --- pickups ---
   k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true },
@@ -1341,9 +1342,9 @@ HC_MONSTERS =
 
 HC_BOSSES =
 {
-  ironlich    = { prob= 4, hp=700,  dm=99, fp=3.0, float=true },
-  maulotaur   = { prob= 1, hp=3000, dm=99, fp=3.0, },
-  d_sparil    = { prob= 1, hp=2000, dm=99, fp=3.0, },
+  Ironlich    = { prob= 4, hp=700,  dm=99, fp=3.0, float=true },
+  Maulotaur   = { prob= 1, hp=3000, dm=99, fp=3.0, },
+  D_Sparil    = { prob= 1, hp=2000, dm=99, fp=3.0, },
 }
 
 HC_WEAPONS =
@@ -1471,13 +1472,12 @@ HC_SECRET_EXITS =
 
 HC_EPISODE_BOSSES =
 {
-  "ironlich",
-  "maulotaur",
-  "d_sparil",
-
-  "ironlich",
-  "maulotaur",
-  "maulotaur",
+  "Ironlich",
+  "Maulotaur",
+  "D_sparil",
+  "Ironlich",
+  "Maulotaur",
+  "Maulotaur",
 }
 
 HC_SKY_INFO =

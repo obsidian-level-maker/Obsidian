@@ -2556,8 +2556,8 @@ DM_MONSTERS =
 DM_BOSSES =
 {
   -- special monsters (only for boss levels)
-  cyber     = { hp=4000,dm=150, fp=4.0 },
-  spider    = { hp=3000,dm=200, fp=4.0, hitscan=true },
+  Cyberdemon = { hp=4000,dm=150, fp=4.0 },
+  Mastermind = { hp=3000,dm=200, fp=4.0, hitscan=true },
 
   -- FIXME: added just for kicks
   keen = { hp=300, dm=1, fp=2.0 },
@@ -2630,8 +2630,8 @@ DM_MONSTER_WEAPON_PREFS =
   pain    = { launch=0.1 },
   skull   = { launch=0.1 },
 
-  cyber   = { launch=3.0, bfg=6.0 },
-  spider  = { launch=3.0, bfg=9.0 },
+  Cyberdemon = { launch=3.0, bfg=6.0 },
+  Mastermind = { launch=3.0, bfg=9.0 },
 }
 
 
@@ -2973,9 +2973,9 @@ D1_SECRET_EXITS =
 D1_EPISODE_BOSSES =
 {
   "baron", -- the Bruiser Brothers
-  "cyber",
-  "spider",
-  "spider",
+  "Cyberdemon",
+  "Mastermind",
+  "Mastermind",
 }
 
 D1_SKY_INFO =
