@@ -959,7 +959,7 @@ bool doom_game_interface_c::Start()
   if (! filename)  // cancelled
     return false;
 
-  if (! WAD_StartIt(TEMP_FILENAME))
+  if (! DM_Start(TEMP_FILENAME))
     return false;
 
   main_win->build_box->ProgInit(2);
@@ -989,13 +989,13 @@ bool doom_game_interface_c::BuildNodes(const char *target_file)
     StringFree(backup_name);
   }
 
-  return GB_BuildNodes(TEMP_FILENAME, target_file);
+  return DM_BuildNodes(TEMP_FILENAME, target_file);
 }
 
 
 bool doom_game_interface_c::Finish(bool build_ok)
 {
-  WAD_EndIt(); // FIXME:check return??
+  DM_End(); // FIXME:check return??
 
   if (build_ok)
   {
@@ -1052,11 +1052,11 @@ void doom_game_interface_c::EndLevel()
   if (! level_name)
     Main_FatalError("Script problem: did not set level name!\n");
 
-  WAD_BeginLevel();
+  DM_BeginLevel();
 
   CSG2_WriteDoom();
 
-  WAD_EndLevel(level_name);
+  DM_EndLevel(level_name);
 
   StringFree(level_name);
   level_name = NULL;

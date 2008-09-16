@@ -19,9 +19,7 @@
 #ifndef __G_GLBSP_H__
 #define __G_GLBSP_H__
 
-void GB_Ticker(void);
-
-bool GB_BuildNodes(const char *filename, const char *out_name);
+bool DM_BuildNodes(const char *filename, const char *out_name);
 
 #endif /* __G_GLBSP_H__ */
 

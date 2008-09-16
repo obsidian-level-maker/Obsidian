@@ -171,7 +171,7 @@ const nodebuildfuncs_t edge_build_funcs =
 };
 
 
-bool GB_BuildNodes(const char *filename, const char *out_name)
+bool DM_BuildNodes(const char *filename, const char *out_name)
 {
   LogPrintf("\n");
       

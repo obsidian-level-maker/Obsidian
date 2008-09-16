@@ -16,15 +16,15 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_LDOOM_H__
-#define __OBLIGE_LDOOM_H__
+#ifndef __OBLIGE_DOOM_OUT_H__
+#define __OBLIGE_DOOM_OUT_H__
 
 
-bool WAD_StartIt(const char *filename);
-bool WAD_EndIt(void);
+bool DM_Start(const char *filename);
+bool DM_End(void);
 
-void WAD_BeginLevel(void);
-void WAD_EndLevel(const char *level_name);
+void DM_BeginLevel(void);
+void DM_EndLevel(const char *level_name);
 
 
 /* ---- API for the CSG code to use ---- */
@@ -185,7 +185,7 @@ typedef struct
 raw_behavior_header_t;
 
 
-#endif /* __OBLIGE_LDOOM_H__ */
+#endif /* __OBLIGE_DOOM_OUT_H__ */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

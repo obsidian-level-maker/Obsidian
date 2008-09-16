@@ -191,7 +191,7 @@ void WAD_CreateInfoLump()
 }
 
 
-bool WAD_StartIt(const char *filename)
+bool DM_Start(const char *filename)
 {
   if (! WAD_OpenWrite(filename))
   {
@@ -210,7 +210,7 @@ bool WAD_StartIt(const char *filename)
 }
 
 
-bool WAD_EndIt(void)
+bool DM_End(void)
 {
   WAD_WritePatches();  // FIXME: move out ??
  
@@ -221,7 +221,7 @@ bool WAD_EndIt(void)
 }
 
 
-void WAD_BeginLevel(void)
+void DM_BeginLevel(void)
 {
   thing_lump   = new qLump_c();
   vertex_lump  = new qLump_c();
@@ -237,7 +237,7 @@ void WAD_BeginLevel(void)
 }
 
 
-void WAD_EndLevel(const char *level_name)
+void DM_EndLevel(const char *level_name)
 {
   WAD_WriteLump(level_name, NULL, 0);
 
