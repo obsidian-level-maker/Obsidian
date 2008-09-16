@@ -50,15 +50,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MAX_MAP_ENTITIES   2048
 #define MAX_MAP_TEXINFO    8192
 
-#define MAX_MAP_PLANES        65536
-#define MAX_MAP_NODES         65536
-#define MAX_MAP_BRUSHSIDES    65536
-#define MAX_MAP_LEAFS         65536
-#define MAX_MAP_VERTS         65536
-#define MAX_MAP_FACES         65536
-#define MAX_MAP_LEAFFACES     65536
-#define MAX_MAP_LEAFBRUSHES   65536
-#define MAX_MAP_PORTALS       65536
+#define MAX_MAP_PLANES        65535
+#define MAX_MAP_NODES         65535
+#define MAX_MAP_BRUSHSIDES    65535
+#define MAX_MAP_LEAFS         65535
+#define MAX_MAP_VERTS         65535
+#define MAX_MAP_FACES         65535
+#define MAX_MAP_LEAFFACES     65535
+#define MAX_MAP_LEAFBRUSHES   65535
+#define MAX_MAP_PORTALS       65535
 
 #define MAX_MAP_AREAS           256
 #define MAX_MAP_AREAPORTALS    1024
