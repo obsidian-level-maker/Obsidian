@@ -30,16 +30,16 @@ Q2_THINGS =
   -- enemies
   guard      = { id="monster_solider_light", kind="monster", r=16, h=56, },
   guard_sg   = { id="monster_solider", kind="monster", r=16, h=56, },
-  guard_mg   = { id="monster_solider_ss", kind="monster", r=16, h=56, },
+  guard_mg   = { id="monster_solider_ss",kind="monster", r=16, h=56, },
   enforcer   = { id="monster_infantry",kind="monster", r=16, h=56, },
   beserker   = { id="monster_beserk",  kind="monster", r=16, h=56, },
   grenader   = { id="monster_gunner",  kind="monster", r=16, h=56, },
 
   tank       = { id="monster_tank",    kind="monster", r=16, h=56, },
-  gladiator  = { id="monster_gladiator",      kind="monster", r=32, h=88, },
+  gladiator  = { id="monster_gladiator",kind="monster", r=32, h=88, },
   medic      = { id="monster_medic",   kind="monster", r=16, h=56, },
   maiden     = { id="monster_chick",   kind="monster", r=16, h=56, },
-  tank_cmdr  = { id="monster_tank_commander",      kind="monster", r=32, h=88, },
+  tank_cmdr  = { id="monster_tank_commander",kind="monster", r=32, h=88, },
 
   flyer      = { id="monster_flyer",   kind="monster", r=16, h=56, },
   technician = { id="monster_floater", kind="monster", r=16, h=56, },
@@ -55,57 +55,55 @@ Q2_THINGS =
   ---?? monster_supertank
 
   -- pickups
-  k_cd    = { id="key_data_cd",  kind="pickup", r=30, h=30, pass=true },
-  k_blue  = { id="key_blue_key", kind="pickup", r=30, h=30, pass=true },
-  k_red   = { id="key_red_key",  kind="pickup", r=30, h=30, pass=true },
-  k_pass  = { id="key_pass",     kind="pickup", r=30, h=30, pass=true },
+  k_blue  = { id="key_blue_key",  kind="pickup", r=16, h=32, pass=true },
+  k_red   = { id="key_red_key",   kind="pickup", r=16, h=32, pass=true },
+  k_cd    = { id="key_data_cd",   kind="pickup", r=16, h=32, pass=true },
+  k_pass  = { id="key_pass",      kind="pickup", r=16, h=32, pass=true },
+  k_cube  = { id="key_power_cube",kind="pickup", r=16, h=32, pass=true },
+  k_pyr   = { id="key_pyramid",   kind="pickup", r=16, h=32, pass=true },
 
-  shotty   = { id="weapon_shotgun",         kind="pickup", r=30, h=30, pass=true },
-  ssg      = { id="weapon_supershotgun",    kind="pickup", r=30, h=30, pass=true },
-  machine  = { id="weapon_machinegun",      kind="pickup", r=30, h=30, pass=true },
-  chain    = { id="weapon_chaingun",        kind="pickup", r=30, h=30, pass=true },
-  grenade  = { id="weapon_grenadelauncher", kind="pickup", r=30, h=30, pass=true },
-  rocket   = { id="weapon_rocketlauncher",  kind="pickup", r=30, h=30, pass=true },
-  hyper    = { id="weapon_hyperblaster",    kind="pickup", r=30, h=30, pass=true },
-  railgun  = { id="weapon_railgun",         kind="pickup", r=30, h=30, pass=true },
-  bfg      = { id="weapon_bfg",             kind="pickup", r=30, h=30, pass=true },
+  shotty   = { id="weapon_shotgun",         kind="pickup", r=16, h=32, pass=true },
+  ssg      = { id="weapon_supershotgun",    kind="pickup", r=16, h=32, pass=true },
+  machine  = { id="weapon_machinegun",      kind="pickup", r=16, h=32, pass=true },
+  chain    = { id="weapon_chaingun",        kind="pickup", r=16, h=32, pass=true },
+  grenade  = { id="weapon_grenadelauncher", kind="pickup", r=16, h=32, pass=true },
+  rocket   = { id="weapon_rocketlauncher",  kind="pickup", r=16, h=32, pass=true },
+  hyper    = { id="weapon_hyperblaster",    kind="pickup", r=16, h=32, pass=true },
+  railgun  = { id="weapon_railgun",         kind="pickup", r=16, h=32, pass=true },
+  bfg      = { id="weapon_bfg",             kind="pickup", r=16, h=32, pass=true },
 
-health       = { id="item_health",   kind="pickup", r=30, h=30, pass=true },
-green_armor  = { id="item_armor1",   kind="pickup", r=30, h=30, pass=true },
-yellow_armor = { id="item_armor2",   kind="pickup", r=30, h=30, pass=true },
-red_armor    = { id="item_armorInv", kind="pickup", r=30, h=30, pass=true },
+  heal_2     = { id="item_health_small", kind="pickup", r=16, h=32, pass=true },
+  heal_10    = { id="item_health",       kind="pickup", r=16, h=32, pass=true },
+  heal_25    = { id="item_health_large", kind="pickup", r=16, h=32, pass=true },
+  heal_100   = { id="item_health_mega",  kind="pickup", r=16, h=32, pass=true },
+  adrenaline = { id="item_adrenaline",   kind="pickup", r=16, h=32, pass=true },
 
-  -- TODO: health and ammo quantity is controlled by 'spawnflags'
+  armor_2    = { id="item_armor_shard",  kind="pickup", r=16, h=32, pass=true },
+  armor_25   = { id="item_armor_jacket", kind="pickup", r=16, h=32, pass=true },
+  armor_50   = { id="item_armor_combat", kind="pickup", r=16, h=32, pass=true },
+  armor_100  = { id="item_armor_body",   kind="pickup", r=16, h=32, pass=true },
 
-  bullet_box  = { id="item_bullets", kind="pickup", r=30, h=30, pass=true },
-  cell_box    = { id="item_cells",   kind="pickup", r=30, h=30, pass=true },
-  shell_box   = { id="item_shells",  kind="pickup", r=30, h=30, pass=true },
-  grenade_box = { id="item_grenades",kind="pickup", r=30, h=30, pass=true },
-  slug_box    = { id="item_slugs",   kind="pickup", r=30, h=30, pass=true },
-  rocket_box  = { id="item_rockets", kind="pickup", r=30, h=30, pass=true },
-  quad_box    = { id="item_quad",    kind="pickup", r=30, h=30, pass=true },
+  am_bullet  = { id="ammo_bullets", kind="pickup", r=16, h=32, pass=true },
+  am_cell    = { id="ammo_cells",   kind="pickup", r=16, h=32, pass=true },
+  am_shell   = { id="ammo_shells",  kind="pickup", r=16, h=32, pass=true },
+  am_grenade = { id="ammo_grenades",kind="pickup", r=16, h=32, pass=true },
+  am_slug    = { id="ammo_slugs",   kind="pickup", r=16, h=32, pass=true },
+  am_rocket  = { id="ammo_rockets", kind="pickup", r=16, h=32, pass=true },
 
-suit   = { id="item_artifact_envirosuit",      kind="pickup", r=30, h=30, pass=true },
-invis  = { id="item_artifact_invisibility",    kind="pickup", r=30, h=30, pass=true },
-invuln = { id="item_artifact_invulnerability", kind="pickup", r=30, h=30, pass=true },
-quad   = { id="item_artifact_super_damage",    kind="pickup", r=30, h=30, pass=true },
+  bandolier  = { id="item_bandolier", kind="pickup", r=16, h=32, pass=true },
+  breather   = { id="item_breather",  kind="pickup", r=16, h=32, pass=true },
+  enviro     = { id="item_enviro",    kind="pickup", r=16, h=32, pass=true },
+  invuln     = { id="item_invulnerability", kind="pickup", r=16, h=32, pass=true },
+  quad       = { id="item_quad",      kind="pickup", r=16, h=32, pass=true },
 
   -- scenery
-  explode_sm = { id="misc_explobox2", kind="scenery", r=30, h=80, },
-  explode_bg = { id="misc_explobox2", kind="scenery", r=30, h=40, },
-
-  torch      = { id="light_torch_small_walltorch", kind="scenery", r=30, h=60, pass=true },
-
-  -- ambient sounds
-  snd_computer = { id="ambient_comp_hum",  kind="scenery", r=30, h=30, pass=true },
-  snd_drip     = { id="ambient_drip",      kind="scenery", r=30, h=30, pass=true },
-  snd_drone    = { id="ambient_drone",     kind="scenery", r=30, h=30, pass=true },
-  snd_wind     = { id="ambient_suck_wind", kind="scenery", r=30, h=30, pass=true },
-  snd_swamp1   = { id="ambient_swamp1",    kind="scenery", r=30, h=30, pass=true },
-  snd_swamp2   = { id="ambient_swamp2",    kind="scenery", r=30, h=30, pass=true },
+  barrel      = { id="misc_explobox", kind="scenery", r=20, h=40, pass=true },
+  dead_dude   = { id="misc_deadsoldier", kind="scenery", r=20, h=60, pass=true },
+  insane_dude = { id="misc_insane",  kind="scenery", r=20, h=60, pass=true },
 
   -- special
 
+  -- TODO
 }
 
 ----------------------------------------------------------------
