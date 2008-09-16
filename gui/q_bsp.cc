@@ -376,6 +376,205 @@ void BSP_BackupPAK(const char *filename)
 
 //------------------------------------------------------------------------
 
+static int bsp_plane_lump;
+static int bsp_max_planes;
+
+static std::vector<dplane_t> bsp_planes;
+
+#define NUM_PLANE_HASH  128
+static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
+
+#define PLANE_NOT_FOUND  0xFFFF
+
+#define NORMAL_EPSILON  0.01
+
+
+static void BSP_ClearPlanes()
+{
+  bsp_planes.clear();
+
+  for (int h = 0; h < NUM_PLANE_HASH; h++)
+  {
+    delete plane_hashtab[h];
+    plane_hashtab[h] = NULL;
+  }
+}
+
+void BSP_PreparePlanes(int lump, int max_planes)
+{
+  bsp_plane_lump = lump;
+  bsp_max_planes = max_planes;
+
+  BSP_ClearPlanes();
+}
+
+
+u16_t BSP_AddPlane(double x, double y, double z,
+                   double nx, double ny, double nz,
+                   bool *flipped)
+{
+  // NOTE: the 'flipped' parameter should only be provided for Quake1,
+  //       and should be omitted for Quake2/3.
+
+  bool did_flip = false;
+
+  double len = sqrt(nx*nx + ny*ny + nz*nz);
+
+  SYS_ASSERT(len > 0);
+
+  nx /= len;
+  ny /= len;
+  nz /= len;
+
+  double ax = fabs(nx);
+  double ay = fabs(ny);
+  double az = fabs(nz);
+
+  // flip plane to make major axis positive
+  if ( (-nx >= MAX(ay, az)) ||
+       (-ny >= MAX(ax, az)) ||
+       (-nz >= MAX(ax, ay)) )
+  {
+    did_flip = true;
+
+    nx = -nx;
+    ny = -ny;
+    nz = -nz;
+  }
+
+  // distance to the origin (0,0,0)
+  double dist = (x*nx + y*ny + z*nz);
+
+
+  // create plane structure
+  dplane_t dp;
+
+  dp.normal[0] = nx;
+  dp.normal[1] = ny;
+  dp.normal[2] = nz;
+
+  dp.dist = dist;
+
+  if (ax > 1.0 - NORMAL_EPSILON)
+    dp.type = PLANE_X;
+  else if (ay > 1.0 - NORMAL_EPSILON)
+    dp.type = PLANE_Y;
+  else if (az > 1.0 - NORMAL_EPSILON)
+    dp.type = PLANE_Z;
+  else if (ax >= MAX(ay, az))
+    dp.type = PLANE_ANYX;
+  else if (ay >= MAX(ax, az))
+    dp.type = PLANE_ANYY;
+  else
+    dp.type = PLANE_ANYZ;
+
+
+  // find an existing matching plane.
+  // For speed we use a hash-table based on nx/ny/nz/dist
+  int hash = I_ROUND(dist / 8.0 + 0.333);
+  hash = IntHash(hash ^ I_ROUND((nx+1.0) * 8));
+  hash = IntHash(hash ^ I_ROUND((ny+1.0) * 8));
+  hash = IntHash(hash ^ I_ROUND((nz+1.0) * 8));
+
+  hash = hash & (NUM_PLANE_HASH-1);
+  SYS_ASSERT(hash >= 0);
+
+  if (! plane_hashtab[hash])
+    plane_hashtab[hash] = new std::vector<u16_t>;
+    
+  std::vector<u16_t> *hashtab = plane_hashtab[hash];
+
+
+  u16_t plane_idx = PLANE_NOT_FOUND;
+
+  for (unsigned int i = 0; i < hashtab->size(); i++)
+  {
+    u16_t index = (*hashtab)[i];
+
+    SYS_ASSERT(index < bsp_planes.size());
+
+    dplane_t *test_p = &bsp_planes[index];
+
+    // Note: we ignore the redundant 'type' field
+    if (fabs(test_p->dist - dist)  <= Q_EPSILON &&
+        fabs(test_p->normal[0] - nx) <= NORMAL_EPSILON &&
+        fabs(test_p->normal[1] - ny) <= NORMAL_EPSILON &&
+        fabs(test_p->normal[2] - nz) <= NORMAL_EPSILON)
+    {
+      plane_idx = index; // found it
+      break;
+    }
+  }
+
+
+  if (plane_idx == PLANE_NOT_FOUND)
+  {
+    // not found, so add new one
+    plane_idx = bsp_planes.size();
+
+    if (plane_idx >= bsp_max_planes)
+      Main_FatalError("Quake1 build failure: exceeded limit of %d PLANES\n",
+                      bsp_max_planes);
+
+    bsp_planes.push_back(dp);
+
+    // Quake2/3 have pairs of planes (opposite directions)
+    if (! flipped)
+    {
+      dp.normal[0] = -nx;
+      dp.normal[1] = -ny;
+      dp.normal[2] = -nz;
+
+      dp.dist = -dist;
+
+      bsp_planes.push_back(dp);
+    }
+
+  fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
+                   (int)plane_idx, (int)bsp_planes.size());
+
+    hashtab->push_back(plane_idx);
+  }
+
+
+  if (flipped)
+  {
+    // Quake1
+    *flipped = did_flip;
+    return plane_idx;
+  }
+  else
+  {
+    // Quake2/3
+    return plane_idx + (did_flip ? 1 : 0);
+  }
+}
+
+
+void BSP_WritePlanes(void)
+{
+  // fix endianness
+  for (unsigned int i = 0; i < bsp_planes.size(); i++)
+  {
+    dplane_t& dp = bsp_planes[i];
+
+    dp.normal[0] = LE_Float32(dp.normal[0]);
+    dp.normal[1] = LE_Float32(dp.normal[1]);
+    dp.normal[2] = LE_Float32(dp.normal[2]);
+
+    dp.dist = LE_Float32(dp.dist);
+  }
+
+  qLump_c *lump = BSP_NewLump(bsp_plane_lump);
+
+  lump->Append(&bsp_planes[0], bsp_planes.size() * sizeof(dplane_t));
+
+  BSP_ClearPlanes();
+}
+
+
+//------------------------------------------------------------------------
+
 static int bsp_vert_lump;
 static int bsp_max_verts;
 
@@ -385,11 +584,8 @@ static std::vector<dvertex_t> bsp_vertices;
 static std::vector<u16_t> * vert_hashtab[NUM_VERTEX_HASH];
 
 
-void BSP_ClearVertices(int lump, int max_verts)
+static void BSP_ClearVertices()
 {
-  bsp_vert_lump = lump;
-  bsp_max_verts = max_verts;
-
   bsp_vertices.clear();
 
   for (int h = 0; h < NUM_VERTEX_HASH; h++)
@@ -397,6 +593,14 @@ void BSP_ClearVertices(int lump, int max_verts)
     delete vert_hashtab[h];
     vert_hashtab[h] = NULL;
   }
+}
+
+void BSP_PrepareVertices(int lump, int max_verts)
+{
+  bsp_vert_lump = lump;
+  bsp_max_verts = max_verts;
+
+  BSP_ClearVertices();
 
   // insert dummy vertex #0
   dvertex_t dummy;
@@ -472,6 +676,8 @@ void BSP_WriteVertices(void)
   qLump_c *lump = BSP_NewLump(bsp_vert_lump);
 
   lump->Append(&bsp_vertices[0], bsp_vertices.size() * sizeof(dvertex_t));
+
+  BSP_ClearVertices();
 }
 
 
@@ -485,13 +691,18 @@ static std::vector<dedge_t> bsp_edges;
 static std::map<u32_t, s32_t> bsp_edge_map;
 
 
-void BSP_ClearEdges(int lump, int max_edges)
+static void BSP_ClearEdges()
+{
+  bsp_edges.clear();
+  bsp_edge_map.clear();
+}
+
+void BSP_PrepareEdges(int lump, int max_edges)
 {
   bsp_edge_lump = lump;
   bsp_max_edges = max_edges;
 
-  bsp_edges.clear();
-  bsp_edge_map.clear();
+  BSP_ClearEdges();
 
   // insert dummy edge #0
   dedge_t dummy;
@@ -553,6 +764,8 @@ void BSP_WriteEdges(void)
   qLump_c *lump = BSP_NewLump(bsp_edge_lump);
 
   lump->Append(&bsp_edges[0], bsp_edges.size() * sizeof(dedge_t));
+
+  BSP_ClearEdges();
 }
 
 
@@ -564,15 +777,23 @@ static int bsp_max_lightmap;
 static qLump_c *bsp_lightmap;
 
 
-void BSP_ClearLightmap(int lump, int max_lightmap)
+void BSP_ClearLightmap()
+{
+  delete bsp_lightmap;
+  bsp_lightmap = NULL;
+}
+
+void BSP_PrepareLightmap(int lump, int max_lightmap)
 {
   bsp_light_lump = lump;
   bsp_max_lightmap = max_lightmap;
 
+  BSP_ClearLightmap();
+
   bsp_lightmap = BSP_NewLump(bsp_light_lump);
 
   // tis the season to be jolly
-  const char *info = "Lightmap created by " OBLIGE_TITLE " " OBLIGE_VERSION;
+  const char *info = "Lightmap created by OBLIGE.";
 
   bsp_lightmap->Append(info, strlen(info));
 

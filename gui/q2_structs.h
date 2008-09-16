@@ -112,26 +112,11 @@ typedef struct
 dmodel2_t;
 
 
-// 0-2 are axial planes
-#define PLANE_X      0
-#define PLANE_Y      1
-#define PLANE_Z      2
-
-// 3-5 are non-axial planes snapped to the nearest
-#define PLANE_ANYX    3
-#define PLANE_ANYY    4
-#define PLANE_ANYZ    5
-
 // planes (x&~1) and (x&~1)+1 are always opposites
 // AJA: the pair is also ordered, first plane should have a normal
 //      whose greatest axis is positive.
-typedef struct
-{
-  float normal[3];
-  float dist;
-  s32_t type;    // PLANE_X - PLANE_ANYZ
-}
-dplane2_t;
+
+// AJA: moved dplane_t to q_bsp.h (common stuff)
 
 
 // contents flags are seperate bits

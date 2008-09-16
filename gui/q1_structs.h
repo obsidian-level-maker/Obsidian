@@ -114,23 +114,7 @@ typedef struct miptex_s
 miptex_t;
 
 
-// 0-2 are axial planes
-#define PLANE_X   0
-#define PLANE_Y   1
-#define PLANE_Z   2
-
-// 3-5 are non-axial planes snapped to the nearest
-#define PLANE_ANYX  3
-#define PLANE_ANYY  4
-#define PLANE_ANYZ  5
-
-typedef struct
-{
-  float normal[3];
-  float dist;
-  s32_t type; // PLANE_X - PLANE_ANYZ 
-}
-dplane_t;
+// AJA: moved dplane_t to q_bsp.h (common stuff)
 
 
 #define CONTENTS_EMPTY  -1
@@ -168,9 +152,6 @@ dnode_t;
  * handle > 32k clipnodes. Values > 0xFFF0 can be assumed to be CONTENTS
  * values and can be read as the signed value to be compatible with the above
  * (i.e. simply subtract 65536).
- *
- * I should probably change the type here to u16_t eventaully and fix up
- * the rest of the code.
  */
 typedef struct dclipnode_s
 {

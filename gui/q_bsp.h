@@ -62,14 +62,18 @@ bool BSP_CloseLevel();
 qLump_c *BSP_NewLump(int entry);
 
 
-void BSP_ClearVertices(int lump, int max_verts);
-void BSP_ClearEdges(int lump, int max_edges);
-void BSP_ClearLightmap(int lump, int max_lightmap);
+void BSP_PreparePlanes(int lump, int max_planes);
+void BSP_PrepareVertices(int lump, int max_verts);
+void BSP_PrepareEdges(int lump, int max_edges);
+void BSP_PrepareLightmap(int lump, int max_lightmap);
 
+u16_t BSP_AddPlane(double x, double y, double z,
+                   double nx, double ny, double nz, bool *flipped);
 u16_t BSP_AddVertex(double x, double y, double z);
 s32_t BSP_AddEdge(u16_t start, u16_t end);
 s32_t BSP_AddLightBlock(int w, int h, u8_t *levels);
 
+void BSP_WritePlanes(void);
 void BSP_WriteVertices(void);
 void BSP_WriteEdges(void);
 
@@ -120,6 +124,24 @@ typedef struct
   u16_t v[2]; // vertex numbers
 }
 dedge_t;
+
+typedef struct
+{
+  float normal[3];
+  float dist;
+  s32_t type; // PLANE_X - PLANE_ANYZ 
+}
+dplane_t;
+
+// 0-2 are axial planes
+#define PLANE_X      0
+#define PLANE_Y      1
+#define PLANE_Z      2
+
+// 3-5 are non-axial planes snapped to the nearest
+#define PLANE_ANYX   3
+#define PLANE_ANYY   4
+#define PLANE_ANYZ   5
 
 
 #endif /* __OBLIGE_BSPOUT_H__ */
