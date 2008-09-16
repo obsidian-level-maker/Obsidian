@@ -29,8 +29,6 @@ game_interface_c * Quake1_GameObject(void);
 
 class qLump_c;
 
-u16_t Q1_AddPlane(double x, double y, double z,
-                  double dx, double dy, double dz, bool *flipped);
 u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4);
 
 // q1_bsp.cc

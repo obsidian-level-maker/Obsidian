@@ -1519,8 +1519,8 @@ static void MakeFloorFace(qFace_c *F, dface_t *face)
   bool is_ceil = (F->kind == qFace_c::CEIL) ? true : false;
   bool flipped;
 
-  face->planenum = Q1_AddPlane(0, 0, z,
-                               0, 0, is_ceil ? -1 : +1, &flipped);
+  face->planenum = BSP_AddPlane(0, 0, z,
+                                0, 0, is_ceil ? -1 : +1, &flipped);
 
   face->side = flipped ? 1 : 0;
 
@@ -1598,9 +1598,9 @@ static void MakeWallFace(qFace_c *F, dface_t *face)
 
   bool flipped;
 
-  face->planenum = Q1_AddPlane(S->x1, S->y1, 0,
-                              -(S->y1 - S->y2), -(S->x2 - S->x1), 0,
-                              &flipped);
+  face->planenum = BSP_AddPlane(S->x1, S->y1, 0,
+                                (S->y2 - S->y1), (S->x1 - S->x2), 0,
+                                &flipped);
 
   face->side = flipped ? 1 : 0;
   
@@ -1796,14 +1796,15 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   bool flipped;
 
   if (node->z_splitter)
-    raw_nd.planenum = Q1_AddPlane(0, 0, node->z, 0, 0, (node->z_splitter==2) ? -1 : +1, &flipped);
+    raw_nd.planenum = BSP_AddPlane(0, 0, node->z,
+                                   0, 0, (node->z_splitter==2) ? -1 : +1, &flipped);
   else
-    raw_nd.planenum = Q1_AddPlane(node->x, node->y, 0,
-                                  node->dy, -node->dx, 0, &flipped);
+    raw_nd.planenum = BSP_AddPlane(node->x, node->y, 0,
+                                   node->dy, -node->dx, 0, &flipped);
   if (flipped)
     node->Flip();
 
-  
+
   raw_nd.firstface = 0;
   raw_nd.numfaces  = 0;
 

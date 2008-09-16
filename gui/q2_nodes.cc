@@ -1571,8 +1571,8 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
 ///fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
 
 
-  face->planenum = Q2_AddPlane(0, 0, z,
-                               0, 0, is_ceil ? -1 : +1);
+  face->planenum = BSP_AddPlane(0, 0, z,
+                                0, 0, is_ceil ? -1 : +1);
 
   face->side = 0;
 
@@ -1658,8 +1658,7 @@ static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
   double z2 = F->z2;
 
   // use same plane as node  (FIXME: transfer actual value in)
-  face->planenum = Q2_AddPlane(N->x, N->y, 0, N->dy, -N->dx, 0);
-////  face->planenum = Q2_AddPlane(S->x1, S->y1, 0,  pnx,pny,0);
+  face->planenum = BSP_AddPlane(N->x, N->y, 0, N->dy, -N->dx, 0);
 
   face->side = 0;
 
@@ -1854,11 +1853,11 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode2_t *parent)
   int b;
 
   if (node->z_splitter)
-    raw_nd.planenum = Q2_AddPlane(0, 0, node->z, 0, 0, (node->z_splitter==2) ? -1 : +1);
+    raw_nd.planenum = BSP_AddPlane(0, 0, node->z, 0, 0, (node->z_splitter==2) ? -1 : +1);
   else
   {
-    raw_nd.planenum = Q2_AddPlane(node->x, node->y, 0,
-                                  node->dy, -node->dx, 0);
+    raw_nd.planenum = BSP_AddPlane(node->x, node->y, 0,
+                                   node->dy, -node->dx, 0);
 
     // IMPORTANT!! Quake II assumes axis-aligned node planes are positive
     if (raw_nd.planenum & 1)

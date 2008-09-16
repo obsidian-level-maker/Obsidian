@@ -827,10 +827,10 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
   bool flipped;
 
   if (node->z_splitter)
-    clip.planenum = Q1_AddPlane(0, 0, node->z, 0, 0, 1, &flipped);
+    clip.planenum = BSP_AddPlane(0, 0, node->z, 0, 0, 1, &flipped);
   else
-    clip.planenum = Q1_AddPlane(node->x, node->y, 0,
-                                node->dy, -node->dx, 0, &flipped);
+    clip.planenum = BSP_AddPlane(node->x, node->y, 0,
+                                 node->dy, -node->dx, 0, &flipped);
 
 
   node->CheckValid();

@@ -88,156 +88,6 @@ void Q2_CreateEntities(void)
 
 //------------------------------------------------------------------------
 
-static std::vector<dplane2_t> q2_planes;
-
-#define NUM_PLANE_HASH  64
-static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
-
-
-static void ClearPlanes(void)
-{
-  q2_planes.clear();
-
-  for (int h = 0; h < NUM_PLANE_HASH; h++)
-  {
-    delete plane_hashtab[h];
-    plane_hashtab[h] = NULL;
-  }
-}
-
-
-u16_t Q2_AddPlane(double x, double y, double z,
-                  double dx, double dy, double dz)
-{
-  bool flipped = false;
-
-  double len = sqrt(dx*dx + dy*dy + dz*dz);
-
-  SYS_ASSERT(len > 0);
-
-  dx /= len;
-  dy /= len;
-  dz /= len;
-
-  double ax = fabs(dx);
-  double ay = fabs(dy);
-  double az = fabs(dz);
-
-  // flip plane to make major axis positive
-  if ( (-dx >= MAX(ay, az)) ||
-       (-dy >= MAX(ax, az)) ||
-       (-dz >= MAX(ax, ay)) )
-  {
-    flipped = true;
-
-    dx = -dx;
-    dy = -dy;
-    dz = -dz;
-  }
-
-  SYS_ASSERT(! (dx < -1.0 + EPSILON));
-  SYS_ASSERT(! (dy < -1.0 + EPSILON));
-  SYS_ASSERT(! (dz < -1.0 + EPSILON));
-
-  // distance to the origin (0,0,0)
-  double dist = (x*dx + y*dy + z*dz);
-
-
-  // create plane structures
-  // Quake II stores them in pairs
-  dplane2_t dp[2];
-
-  dp[0].normal[0] = dx; dp[1].normal[0] = -dx;
-  dp[0].normal[1] = dy; dp[1].normal[1] = -dy;
-  dp[0].normal[2] = dz; dp[1].normal[2] = -dz;
-
-  dp[0].dist =  dist;
-  dp[1].dist = -dist;
-
-  if (ax > 1.0 - EPSILON)
-    dp[0].type = PLANE_X;
-  else if (ay > 1.0 - EPSILON)
-    dp[0].type = PLANE_Y;
-  else if (az > 1.0 - EPSILON)
-    dp[0].type = PLANE_Z;
-  else if (ax >= MAX(ay, az))
-    dp[0].type = PLANE_ANYX;
-  else if (ay >= MAX(ax, az))
-    dp[0].type = PLANE_ANYY;
-  else
-    dp[0].type = PLANE_ANYZ;
-
-  dp[1].type = dp[0].type;
-
-
-  // find an existing matching plane.
-  // For speed we use a hash-table based on dx/dy/dz/dist
-  int hash = I_ROUND(dist / 8.0);
-  hash = IntHash(hash ^ I_ROUND((dx+1.0) * 8));
-  hash = IntHash(hash ^ I_ROUND((dy+1.0) * 8));
-  hash = IntHash(hash ^ I_ROUND((dz+1.0) * 8));
-
-  hash = hash & (NUM_PLANE_HASH-1);
-  SYS_ASSERT(hash >= 0);
-
-  if (! plane_hashtab[hash])
-    plane_hashtab[hash] = new std::vector<u16_t>;
-    
-  std::vector<u16_t> *hashtab = plane_hashtab[hash];
-
-  for (unsigned int i = 0; i < hashtab->size(); i++)
-  {
-    u16_t plane_idx = (*hashtab)[i];
-
-    SYS_ASSERT(plane_idx < q2_planes.size());
-
-    dplane2_t *test_p = &q2_planes[plane_idx];
-
-    // Note: ignore the 'type' field because it was generated
-    //       from (and completely depends on) the plane normal.
-    if (fabs(test_p->dist - dist)  <= Q_EPSILON &&
-        fabs(test_p->normal[0] - dx) <= EPSILON &&
-        fabs(test_p->normal[1] - dy) <= EPSILON &&
-        fabs(test_p->normal[2] - dz) <= EPSILON)
-    {
-      // found it
-      return plane_idx | (flipped ? 1 : 0);
-    }
-  }
-
-
-  // not found, so add new one  [We only store dp[0] in the hash-tab]
-  u16_t plane_idx = q2_planes.size();
-
-  if (plane_idx >= MAX_MAP_PLANES-2)
-    Main_FatalError("Quake2 build failure: exceeded limit of %d PLANES\n",
-                    MAX_MAP_PLANES);
-
-  q2_planes.push_back(dp[0]);
-  q2_planes.push_back(dp[1]);
-
-fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
-                 (int)plane_idx, (int)q2_planes.size());
-
-  hashtab->push_back(plane_idx);
-
-
-  return plane_idx | (flipped ? 1 : 0);
-}
-
-
-static void Q2_CreatePlanes(void)
-{
-  qLump_c *lump = BSP_NewLump(LUMP_PLANES);
-
-  // FIXME: write separately, fix endianness as we go
-
-  lump->Append(&q2_planes[0], q2_planes.size() * sizeof(dplane2_t));
-}
-
-
-//------------------------------------------------------------------------
-
 
 static std::vector<dbrush_t> q2_brushes;
 static std::vector<dbrushside_t> q2_brush_sides;
@@ -273,14 +123,14 @@ u16_t Q2_AddBrush(const area_poly_c *A)
 
 
   // top
-  side.planenum = Q2_AddPlane(0, 0, info->z2,  0, 0, +1);
+  side.planenum = BSP_AddPlane(0, 0, info->z2,  0, 0, +1);
   
   q2_brush_sides.push_back(side);
   brush.numsides++;
   
 
   // bottom
-  side.planenum = Q2_AddPlane(0, 0, info->z1,  0, 0, -1);
+  side.planenum = BSP_AddPlane(0, 0, info->z1,  0, 0, -1);
   
   q2_brush_sides.push_back(side);
   brush.numsides++;
@@ -291,7 +141,7 @@ u16_t Q2_AddBrush(const area_poly_c *A)
     area_vert_c *v1 = A->verts[k];
     area_vert_c *v2 = A->verts[(k+1) % A->verts.size()];
 
-    side.planenum = Q2_AddPlane(v1->x, v1->y, 0,
+    side.planenum = BSP_AddPlane(v1->x, v1->y, 0,
                                 (v1->y - v2->y), (v2->x - v1->x), 0);
 
     q2_brush_sides.push_back(side);
@@ -615,13 +465,13 @@ void quake2_game_interface_c::EndLevel()
   if (! BSP_OpenLevel("maps/base1.bsp", 2))
     return; //!!!!!! FUCK
 
-  ClearPlanes();
   ClearBrushes();
   ClearTexInfo();
 
-  BSP_ClearVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
-  BSP_ClearEdges(LUMP_EDGES, MAX_MAP_EDGES);
-  BSP_ClearLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
+  BSP_PreparePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
+  BSP_PrepareVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
+  BSP_PrepareEdges   (LUMP_EDGES,    MAX_MAP_EDGES);
+  BSP_PrepareLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
 
 //!!!! TEMP CRUD
 byte solid_light[512];
@@ -636,13 +486,13 @@ BSP_AddLightBlock(16, 32, solid_light);
 
   Q2_CreateEntities();
   Q2_CreateModel();
-  Q2_CreatePlanes();
   Q2_CreateTexInfo();
 
   DummyArea();
   DummyVis();
   WriteBrushes();
 
+  BSP_WritePlanes();
   BSP_WriteVertices();
   BSP_WriteEdges();
 

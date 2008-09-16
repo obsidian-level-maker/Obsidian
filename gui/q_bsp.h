@@ -68,7 +68,7 @@ void BSP_PrepareEdges(int lump, int max_edges);
 void BSP_PrepareLightmap(int lump, int max_lightmap);
 
 u16_t BSP_AddPlane(double x, double y, double z,
-                   double nx, double ny, double nz, bool *flipped);
+                   double nx, double ny, double nz, bool *flipped = NULL);
 u16_t BSP_AddVertex(double x, double y, double z);
 s32_t BSP_AddEdge(u16_t start, u16_t end);
 s32_t BSP_AddLightBlock(int w, int h, u8_t *levels);

@@ -30,8 +30,6 @@ game_interface_c * Quake2_GameObject(void);
 class qLump_c;
 class area_poly_c;
 
-u16_t Q2_AddPlane(double x, double y, double z,
-                  double dx, double dy, double dz);
 u16_t Q2_AddTexInfo(const char *texture, int flags, double *s4, double *t4);
 u16_t Q2_AddBrush(const area_poly_c *A);
 

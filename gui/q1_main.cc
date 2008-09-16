@@ -88,147 +88,6 @@ void Q1_CreateEntities(void)
 
 //------------------------------------------------------------------------
 
-static std::vector<dplane_t> q1_planes;
-
-#define NUM_PLANE_HASH  128
-static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
-
-
-static void ClearPlanes(void)
-{
-  q1_planes.clear();
-
-  for (int h = 0; h < NUM_PLANE_HASH; h++)
-  {
-    delete plane_hashtab[h];
-    plane_hashtab[h] = NULL;
-  }
-}
-
-u16_t Q1_AddPlane(double x, double y, double z,
-                  double dx, double dy, double dz,
-                  bool *flipped)
-{
-  *flipped = false;
-
-  double len = sqrt(dx*dx + dy*dy + dz*dz);
-
-  SYS_ASSERT(len > 0);
-
-  dx /= len;
-  dy /= len;
-  dz /= len;
-
-  double ax = fabs(dx);
-  double ay = fabs(dy);
-  double az = fabs(dz);
-
-  // flip plane to make major axis positive
-  if ( (-dx >= MAX(ay, az)) ||
-       (-dy >= MAX(ax, az)) ||
-       (-dz >= MAX(ax, ay)) )
-  {
-    *flipped = true;
-
-    dx = -dx;
-    dy = -dy;
-    dz = -dz;
-  }
-
-  SYS_ASSERT(! (dx < -1.0 + EPSILON));
-  SYS_ASSERT(! (dy < -1.0 + EPSILON));
-  SYS_ASSERT(! (dz < -1.0 + EPSILON));
-
-  // distance to the origin (0,0,0)
-  double dist = (x*dx + y*dy + z*dz);
-
-
-  // create plane structure
-  dplane_t dp;
-
-  dp.normal[0] = dx;
-  dp.normal[1] = dy;
-  dp.normal[2] = dz;
-
-  dp.dist = dist;
-
-  if (ax > 1.0 - EPSILON)
-    dp.type = PLANE_X;
-  else if (ay > 1.0 - EPSILON)
-    dp.type = PLANE_Y;
-  else if (az > 1.0 - EPSILON)
-    dp.type = PLANE_Z;
-  else if (ax >= MAX(ay, az))
-    dp.type = PLANE_ANYX;
-  else if (ay >= MAX(ax, az))
-    dp.type = PLANE_ANYY;
-  else
-    dp.type = PLANE_ANYZ;
-
-
-  // find an existing matching plane.
-  // For speed we use a hash-table based on dx/dy/dz/dist
-  int hash = I_ROUND(dist / 8.0);
-  hash = IntHash(hash ^ I_ROUND((dx+1.0) * 8));
-  hash = IntHash(hash ^ I_ROUND((dy+1.0) * 8));
-  hash = IntHash(hash ^ I_ROUND((dz+1.0) * 8));
-
-  hash = hash & (NUM_PLANE_HASH-1);
-  SYS_ASSERT(hash >= 0);
-
-  if (! plane_hashtab[hash])
-    plane_hashtab[hash] = new std::vector<u16_t>;
-    
-  std::vector<u16_t> *hashtab = plane_hashtab[hash];
-
-  for (unsigned int i = 0; i < hashtab->size(); i++)
-  {
-    u16_t plane_idx = (*hashtab)[i];
-
-    SYS_ASSERT(plane_idx < q1_planes.size());
-
-    dplane_t *test_p = &q1_planes[plane_idx];
-
-    // Note: ignore the 'type' field because it was generated
-    //       from (and completely depends on) the plane normal.
-    if (fabs(test_p->dist - dist)  <= Q_EPSILON &&
-        fabs(test_p->normal[0] - dx) <= EPSILON &&
-        fabs(test_p->normal[1] - dy) <= EPSILON &&
-        fabs(test_p->normal[2] - dz) <= EPSILON)
-    {
-      return plane_idx; // found it
-    }
-  }
-
-
-  // not found, so add new one
-  u16_t plane_idx = q1_planes.size();
-
-  if (plane_idx >= MAX_MAP_PLANES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d PLANES\n",
-                    MAX_MAP_PLANES);
-
-  q1_planes.push_back(dp);
-fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
-                 (int)plane_idx, (int)q1_planes.size());
-
-  hashtab->push_back(plane_idx);
-
-  return plane_idx;
-}
-
-static void Q1_CreatePlanes(void)
-{
-  qLump_c *lump = BSP_NewLump(LUMP_PLANES);
-
-  // FIXME: write separately, fix endianness as we go
-
-  lump->Append(&q1_planes[0], q1_planes.size() * sizeof(dplane_t));
-}
-
-
-//------------------------------------------------------------------------
-
 static std::vector<std::string>   q1_miptexs;
 static std::map<std::string, int> q1_miptex_map;
 
@@ -685,13 +544,13 @@ void quake1_game_interface_c::EndLevel()
   if (! BSP_OpenLevel(entry_in_pak, 1))
     return; //!!!!!! FUCK
 
-  ClearPlanes();
   ClearMipTex();
   ClearTexInfo();
 
-  BSP_ClearVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
-  BSP_ClearEdges(LUMP_EDGES, MAX_MAP_EDGES);
-  BSP_ClearLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
+  BSP_PreparePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
+  BSP_PrepareVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
+  BSP_PrepareEdges   (LUMP_EDGES,    MAX_MAP_EDGES);
+  BSP_PrepareLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
 
 //!!!! TEMP CRUD
 byte solid_light[512];
@@ -706,10 +565,10 @@ BSP_AddLightBlock(16, 32, solid_light);
 
   Q1_CreateEntities();
   Q1_CreateModel();
-  Q1_CreatePlanes();
   Q1_CreateMipTex();
   Q1_CreateTexInfo();
 
+  BSP_WritePlanes();
   BSP_WriteVertices();
   BSP_WriteEdges();
 
