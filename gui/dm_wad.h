@@ -20,8 +20,8 @@
 #define __OBLIGE_LDOOM_H__
 
 
-bool WAD_OpenWrite(const char *filename);
-bool WAD_CloseWrite(void);
+bool WAD_StartIt(const char *filename);
+bool WAD_EndIt(void);
 
 void WAD_BeginLevel(void);
 void WAD_EndLevel(const char *level_name);
@@ -52,28 +52,6 @@ namespace wad
   int num_sectors(void);
   int num_sidedefs(void);
 }
-
-
-/* ----- WAD structures ---------------------- */
-
-typedef struct
-{
-  char type[4];
-
-  u32_t num_entries;
-  u32_t dir_start;
-}
-raw_wad_header_t;
-
-
-typedef struct
-{
-  u32_t start;
-  u32_t length;
-
-  char name[8];
-}
-raw_dir_entry_t;
 
 
 /* ----- Level structures ---------------------- */

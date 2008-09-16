@@ -959,7 +959,7 @@ bool doom_game_interface_c::Start()
   if (! filename)  // cancelled
     return false;
 
-  if (! WAD_OpenWrite(TEMP_FILENAME))
+  if (! WAD_StartIt(TEMP_FILENAME))
     return false;
 
   main_win->build_box->ProgInit(2);
@@ -995,8 +995,7 @@ bool doom_game_interface_c::BuildNodes(const char *target_file)
 
 bool doom_game_interface_c::Finish(bool build_ok)
 {
-  WAD_CloseWrite();
-// check return??
+  WAD_EndIt(); // FIXME:check return??
 
   if (build_ok)
   {
