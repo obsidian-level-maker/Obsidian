@@ -581,9 +581,17 @@ bool GRP_OpenWrite(const char *filename)
 
 void GRP_CloseWrite(void)
 {
+  // add dummy data for the dummy entries
+  byte zero_buf[MAX_GRP_WRITE_ENTRIES];
+  memset(zero_buf, 0, sizeof(zero_buf));
+
+  fwrite(zero_buf, sizeof(zero_buf), 1, grp_W_fp);
+
   fflush(grp_W_fp);
 
   // write the _real_ GRP header
+
+  fseek(grp_W_fp, 0, SEEK_SET);
 
   raw_grp_header_t header;
 
@@ -591,8 +599,6 @@ void GRP_CloseWrite(void)
     header.magic[i] = ~grp_magic_data[i];
 
   header.num_lumps = LE_U32(grp_W_directory.size());
-
-  fseek(grp_W_fp, 0, SEEK_SET);
 
   fwrite(&header, sizeof(header), 1, grp_W_fp);
   fflush(grp_W_fp);
