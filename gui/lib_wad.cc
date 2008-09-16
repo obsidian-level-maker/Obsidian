@@ -349,8 +349,8 @@ static u32_t * grp_R_starts;
 
 static const byte grp_magic_data[12] =
 {
-  0x4b, 0x65, 0x6e, 0x53, 0x69, 0x6c,
-  0x76, 0x65, 0x72, 0x6d, 0x61, 0x6e
+  0xb4, 0x9a, 0x91, 0xac, 0x96, 0x93,
+  0x89, 0x9a, 0x8d, 0x92, 0x9e, 0x91
 };
 
 
@@ -373,11 +373,11 @@ bool GRP_OpenRead(const char *filename)
     return false;
   }
 
-  if (0 != memcmp(grp_R_header.magic, grp_magic_data, sizeof(grp_R_header.magic)))
+  if (grp_R_header.magic[0] != 'K')
   {
     LogPrintf("GRP_OpenRead: not a GRP file!\n");
-//    fclose(grp_R_fp);
-//    return false;
+    fclose(grp_R_fp);
+    return false;
   }
 
   grp_R_header.num_lumps = LE_U32(grp_R_header.num_lumps);
@@ -587,7 +587,9 @@ void GRP_CloseWrite(void)
 
   raw_grp_header_t header;
 
-  memcpy(header.magic, grp_magic_data, sizeof(header.magic));
+  for (unsigned int i = 0; i < sizeof(header.magic); i++)
+    header.magic[i] = ~grp_magic_data[i];
+
   header.num_lumps = LE_U32(grp_W_directory.size());
 
   fseek(grp_W_fp, 0, SEEK_SET);
