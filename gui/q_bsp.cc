@@ -17,11 +17,14 @@
 //------------------------------------------------------------------------
 
 #include "headers.h"
+#include "hdr_lua.h"
 
 #include "lib_file.h"
 #include "lib_util.h"
 #include "lib_pak.h"
+
 #include "main.h"
+#include "g_lua.h"
 
 #include "q_bsp.h"
 
@@ -222,40 +225,6 @@ static void BSP_WriteLump(qLump_c *lump)
 }
 
 
-#if 0  // OLD CODE
-bool BSP_CloseWrite(void)
-{
-
-  // WRITE FAKE HEADER
-  dheader_t header;
-  memset(&header, 0, sizeof(header));
-
-  BSP_RawWrite(&header, sizeof(header));
-
-
-  // WRITE ALL LUMPS
-
-  header.version = LE_U32(0x1D); 
-
-  for (int L = 0; L < bsp_numlumps; L++)
-  {
-    BSP_WriteLump(L, &header.lumps[L]);
-  }
-
-
-  // FSEEK, WRITE REAL HEADER
-
-  BSP_RawSeek(0);
-  BSP_RawWrite(&header, sizeof(header));
-
-  fclose(bsp_fp);
-  bsp_fp = NULL;
-
-  return (write_errors_seen == 0) && (seek_errors_seen == 0);
-}
-#endif
-
-
 bool BSP_OpenLevel(const char *entry_in_pak, int game)
 {
   // assumes that PAK_OpenWrite() has already been called.
@@ -372,6 +341,41 @@ void BSP_BackupPAK(const char *filename)
     StringFree(backup_name);
   }
 }
+
+
+void BSP_CreateInfoFile()
+{
+  qLump_c *L = new qLump_c();
+
+  L->SetCRLF(true);
+
+  L->Printf("\n");
+  L->Printf("-- Levels created by OBLIGE %s\n", OBLIGE_VERSION);
+  L->Printf("-- " OBLIGE_TITLE " (C) 2006-2008 Andrew Apted\n");
+  L->Printf("-- http://oblige.sourceforge.net/\n");
+  L->Printf("\n");
+
+  std::vector<std::string> lines;
+
+  Script_ReadAllConfig(&lines);
+
+  for (unsigned int i = 0; i < lines.size(); i++)
+    L->Printf("%s\n", lines[i].c_str());
+ 
+  L->Printf("\n\n\n");
+
+  // terminate lump with ^Z and a NUL character
+  static const byte terminator[2] = { 26, 0 };
+
+  L->Append(terminator, 2);
+
+  PAK_NewLump("oblige_conf.txt");
+  BSP_WriteLump(L);
+  PAK_FinishLump();
+
+  delete L;
+}
+
 
 
 //------------------------------------------------------------------------
@@ -793,7 +797,7 @@ void BSP_PrepareLightmap(int lump, int max_lightmap)
   bsp_lightmap = BSP_NewLump(bsp_light_lump);
 
   // tis the season to be jolly
-  const char *info = "Lightmap created by OBLIGE.";
+  const char *info = "Lightmap created by OBLIGE!";
 
   bsp_lightmap->Append(info, strlen(info));
 

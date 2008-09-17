@@ -49,10 +49,8 @@ void Q2_CreateEntities(void)
 
   lump->Printf("{\n");
 
-  lump->KeyPair("_generated_by", OBLIGE_TITLE " (c) Andrew Apted");
-  lump->KeyPair("_oblige_version", OBLIGE_VERSION);
-  lump->KeyPair("_oblige_home",  "http://oblige.sourceforge.net");
-  lump->KeyPair("_random_seed",  main_win->game_box->get_Seed());
+  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
+  lump->KeyPair("_website", "http://oblige.sourceforge.net");
 
   lump->KeyPair("message",   "level created by Oblige");
   lump->KeyPair("worldtype", "0");
@@ -411,6 +409,8 @@ bool quake2_game_interface_c::Start()
 
   if (! PAK_OpenWrite(TEMP_FILENAME))
     return false;
+
+  BSP_CreateInfoFile();
 
   main_win->build_box->ProgInit(1);
 
