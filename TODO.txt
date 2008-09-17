@@ -3,11 +3,18 @@ TODO
 ====
 
 
->>>> lib_wad
+Q1/Q2 : create an 'oblige.txt' in the PAK
 
-HEXEN lua: csg2.property("hexen_format", "true")
+HEXEN lua: gui.property("hexen_format", "true")
 
-SPEAR lua: csg2.property("extension", "SOD")
+SPEAR lua: gui.property("extension", "SOD")
+
+EDGE: gui.property("solid_exfloor", 400)
+      gui.property("liquid_exfloor", 406)
+      gui.property("thing_exfloor_flags", "true")
+
+LEGACY: gui.property("solid_exfloor", 281)
+        gui.property("liquid_exfloor", 280)
 
 
 q1_nodes:
@@ -67,7 +74,7 @@ REWRITE:
 
 
 
-Quake1 output:
+QUAKE:
 
 + fix bounding boxes for everything (especially Leafs)
 
@@ -75,11 +82,12 @@ Quake1 output:
 
 - clipping hulls:
 
-- texture extractor:
-  (a) improve error messages
-  (b) code to check if data/quake_tex.wad exists
++ grab Q1 textures directly from PAK files
+  ??? code to check if data/quake_tex.wad exists
+  ? gui.property("texture_wad", "data/oq_tex.wad")
+  ? gui.property("needed_pak",  "pak0.pak")
 
-- create "oblige" and "oblige_neon" miptex using the built-in image.
+- create "oblige" logo miptex [.wal for QuakeII]
 
 ++ perform lighting
 
@@ -106,25 +114,12 @@ QUAKE1 ENTITY PROPS:
 
 
 
-CSG Polygoniser:
-
--  stuff.... 
-  
--  DOOM: remove (comment out) no longer needed LUA funcs:
-         add_sector, add_linedef etc...
-         
-   >> integrate begin_level() and end_level() properly
-      (part of "(ob)con" or "csg2" or module).
-
-
 GUI:
 
 -  in deathmatch mode, fix labels on the "Equip" button
    (Watch for the "mode" signal).
 
    >>>  make it a separate widget
-
-+  ui_chooser code: remove hard-coded game bits (WAD, PAK)
 
 +  reading and writing the config file (via LUA code) 
  
@@ -164,6 +159,8 @@ GUI:
 
 -  remember save path in config file (Win32).
 
+-  ui_chooser: support last_file in WIN32
+
 -  make an icon for Win32 executable.
 
 -  ideas for remaining button (YYY) :
@@ -175,7 +172,12 @@ GUI:
    +  Linearity
 
 
-Heretic:
+DOOM
+
+-  support keycards
+
+
+HERETIC:
 
 -  don't build Blaze doors into maps.
 
@@ -184,7 +186,7 @@ Heretic:
 -  weapons: firemace no good for SP/COOP ??
 
 
-Hexen:
+HEXEN:
 
 -  put 'fighter only' bit on fighter's weapons, etc..
 
@@ -193,6 +195,28 @@ Hexen:
 +  rework teleporter gates (make them bi-directional).
 
 +  fix key usage (REQUIRE both to get to boss level).
+
+
+WOLF3d:
+
+   + push-walls for secret quests!
+   + secret elevators
+   + bosses!
+
+   - decide_monster : skills are "tiered"
+   - health/ammo : no skills! -- use medium one
+   - place_items : never where monsters are!
+   - create rooms with 'endgame' object.
+
+   + ensure limits are enforced:
+     - MAXACTORS = 150  (remove actors at random)
+     - MAXSTATS  = 400  (remove statics at random)
+     - MAXDOORS  = 64   (remove unneeded doors at random)
+
+   - patrolling monsters (need to create path with arrows).
+   - secret levels (full of treasure)
+   - something interesting in middle of big rooms.
+   - elevator "entry" in first room.
 
 
 Docs:
@@ -255,17 +279,8 @@ Miscellaneous:
 
 -  make key doors open-and-stay-open.
 
--  support keycards
-
--  put switches on Vistas, eat the special spot or use a
-   wide pillar at the far end.
-
--  plot_quests: if cannot get want_len, try again AND/OR backtrack
-
 -  WINDOW_CROSS and WINDOW_CROSS_BIG: do a height check
    (prevent windows you can walk through).
-
--  optimise find_fab_loc
 
 -  GUI: Advanced button.
 -  GUI: create menus based on the lua scripts present.
