@@ -269,23 +269,19 @@ static void WF_WriteHead(void)
 
 //------------------------------------------------------------------------
 
-// LUA: wolf_block(x, y, plane, data, [wflags])
+// LUA: wolf_block(x, y, plane, data)
 //
 int Wolf_add_block(lua_State *L)
 {
-  int nargs = lua_gettop(L);
-
   int x = luaL_checkint(L,1);
   int y = luaL_checkint(L,2);
 
   int plane = luaL_checkint(L,3);
   int data  = luaL_checkint(L,4);
 
-  int wflags = 0;
-
-  if (nargs >= 5)
-    wflags = luaL_checkint(L,5);
-
+#if 0
+  int wflags = luaL_optint(L,5, 0);
+#endif
 
   // adjust and validate coords
   SYS_ASSERT(1 <= x && x <= 64);
