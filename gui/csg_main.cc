@@ -110,8 +110,9 @@ area_vert_c::~area_vert_c()
 { }
 
 
-area_poly_c::area_poly_c(area_info_c *_info) :
-     info(_info), verts()
+area_poly_c::area_poly_c(area_info_c *_info, int _flags) :
+     info(_info), verts(),
+     bflags(_flags)
 { }
 
 area_poly_c::~area_poly_c()
@@ -173,8 +174,12 @@ void area_poly_c::ComputeBBox()
   }
 }
 
-entity_info_c::entity_info_c(const char *_name, double xpos, double ypos, double zpos) :
-    name(_name), x(xpos), y(ypos), z(zpos)
+entity_info_c::entity_info_c(const char *_name, double xpos, double ypos,
+                             double zpos, int _flags) :
+    name(_name),
+    x(xpos), y(ypos), z(zpos),
+    eflags(_flags),
+    props()
 { }
 
 entity_info_c::~entity_info_c()
@@ -182,17 +187,6 @@ entity_info_c::~entity_info_c()
 
 
 //------------------------------------------------------------------------
-
-static void AddPoly_MakeConvex(area_poly_c *P)
-{
-  // splits this area_poly into convex pieces (if needed) and
-  // add each separate piece (sharing the same sector info).
-
-  // TODO: Make convex  -  needed ???
-
-  all_polys.push_back(P);
-}
-
 
 void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
                     double& max_x, double& max_y, double& max_z)
@@ -561,10 +555,10 @@ int CSG2_property(lua_State *L)
 //    t_face, b_face : top and bottom faces
 //    w_face         : default side face
 //    liquid         : usually nil, otherwise name (e.g. "lava")
-//    clip           : usually nil, otherwise true
 //    special        : usually nil, otherwise name (e.g. "damage20")
 //    mark           : separating number (DOOM: sector tag if > 0)
-//    misc           : integer for CSG flags (e.g. NOFILL)
+//
+//    flag_xxx       : various CSG flags (e.g. Liquid)
 // 
 // z1 & z2 are either a height (number) or a slope table:
 //    sx, sy, sz     : start point on slope
@@ -598,34 +592,61 @@ int CSG2_add_brush(lua_State *L)
     A->t_slope = Grab_Slope(L, 4);
 
   all_areas.push_back(A);
-
-  AddPoly_MakeConvex(P);
+  all_polys.push_back(P);
 
   return 0;
 }
 
 
-// LUA: add_entity(name, x, y, z, misc, info)
-//
-// misc is a integer of CSG flags
+// LUA: add_entity(x, y, z, info)
 //
 // info is a table:
+//   name   : entity type name
+//   light  : amount of light emitted
+//   flag_xxx : various CSG flags
+//
 //   options (DOOM, HEXEN)
 //   args (HEXEN only)
-//   light : amount of light emitted
 //   ...
 //
 int CSG2_add_entity(lua_State *L)
 {
-  const char *name = luaL_checkstring(L,1);
+  double x = luaL_checknumber(L,1);
+  double y = luaL_checknumber(L,2);
+  double z = luaL_checknumber(L,3);
 
-  double x = luaL_checknumber(L,2);
-  double y = luaL_checknumber(L,3);
-  double z = luaL_checknumber(L,4);
+  if (lua_type(L, 4) != LUA_TTABLE)
+  {
+    luaL_argerror(L, 4, "expected a table: entity info");
+    return 0; /* NOT REACHED */
+  }
 
-  entity_info_c *E = new entity_info_c(name, x, y, z);
+  const char *name;
 
-  // TODO: extra info
+  lua_getfield(L, 4, "name");
+  name = luaL_checkstring(L,-1);
+  lua_pop(L, 1);
+
+
+  int eflags = 0;
+
+  // FIXME: grab some flags
+
+  entity_info_c *E = new entity_info_c(name, x, y, z, eflags);
+
+
+  // grab properties
+
+  for (lua_pushnil(L) ; lua_next(L, 4) != 0 ; lua_pop(L,1))
+  {
+    if (lua_type(L, -2) != LUA_TSTRING)
+      continue; // skip keys which are not strings
+
+    const char *p_key   = lua_tostring(L, -2);
+    const char *p_value = lua_tostring(L, -1);
+
+    E->props[p_key] = std::string(p_value);
+  }
 
   all_entities.push_back(E);
 

@@ -121,23 +121,36 @@ public:
 };
 
 
+typedef enum
+{
+  BRU_F_Liquid   = (1 << 0),
+  BRU_F_Detail   = (1 << 1),  // skipped when vis-ing
+  BRU_F_NoClip   = (1 << 2),  // objects/shots can pass through
+  BRU_F_Keep     = (1 << 3),  // never fill away a gap above/below this
+
+  //??? BRU_F_Sky
+}
+brush_flags_e;
+
+
 class area_poly_c
 {
   // This represents a "brush" in Quake terms, a solid area
   // on the map with out-facing sides and top/bottom.
   // Unlike quake brushes, area_polys don't have to be convex
-  // (FIXME: actually must be convex when output is .map format).
 
 public:
   area_info_c *info;
 
   std::vector<area_vert_c *> verts;
 
+  int bflags;
+
   double min_x, min_y;
   double max_x, max_y;
 
 public:
-   area_poly_c(area_info_c *_info);
+   area_poly_c(area_info_c *_info, int _flags = 0);
   ~area_poly_c();
 
   void ComputeBBox();
@@ -148,6 +161,16 @@ public:
 };
 
 
+typedef enum
+{
+  ENT_F_Player    = (1 << 0),
+  ENT_F_Monster   = (1 << 1),
+  ENT_F_Light     = (1 << 2),
+  EMT_F_Temp      = (1 << 3),  // temporary, don't store in the map
+}
+entity_flags_e;
+
+
 class entity_info_c
 {
 public:
@@ -155,8 +178,13 @@ public:
 
   double x, y, z;
 
+  int eflags;
+
+  std::map<std::string, std::string> props;
+
 public:
-   entity_info_c(const char *_name, double xpos, double ypos, double zpos);
+   entity_info_c(const char *_name, double xpos, double ypos, double zpos,
+                 int _flags = 0);
   ~entity_info_c();
 };
 
