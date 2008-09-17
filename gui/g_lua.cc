@@ -589,9 +589,9 @@ bool Script_SetConfig(const char *key, const char *value)
   params[1] = value;
   params[2] = NULL; // end of list
 
-  if (! Script_DoRun("ob_parse_config", 0, params))
+  if (! Script_DoRun("ob_set_config", 0, params))
   {
-    DebugPrintf("Failed trying to call 'ob_parse_config'\n");
+    DebugPrintf("Failed trying to call 'ob_set_config'\n");
     return false;
   }
 
@@ -608,12 +608,12 @@ bool Script_ReadAllConfig(std::vector<std::string> * lines)
 
   conf_line_buffer = lines;
  
-  bool result = Script_DoRun("ob_write_config", 0, NULL);
+  bool result = Script_DoRun("ob_read_all_config", 0, NULL);
 
   conf_line_buffer = NULL;
 
   if (! result)
-    DebugPrintf("Failed trying to call 'ob_write_config'\n");
+    DebugPrintf("Failed trying to call 'ob_read_all_config'\n");
 
   return result;
 }

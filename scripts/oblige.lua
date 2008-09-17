@@ -291,7 +291,7 @@ function ob_update_all()
 end
 
 
-function ob_parse_config(name, value)
+function ob_set_config(name, value)
   assert(name and value and type(value) == "string")
 
   if name == "seed" then
@@ -361,6 +361,7 @@ function ob_parse_config(name, value)
     return
   end
 
+
   -- validate some important variables
   if name == "game" then
     assert(OB_CONFIG.game)
@@ -390,7 +391,7 @@ function ob_parse_config(name, value)
 end
 
 
-function ob_write_config()
+function ob_read_all_config()
 
   local function do_line(fmt, ...)
     gui.config_line(string.format(fmt, ...))
@@ -452,8 +453,6 @@ function ob_init()
   name_it_up(OB_MODULES)
   name_it_up(OB_OPTIONS)
 
----##  expand_room_fabs(ROOM_FABS)
----##  expand_room_fabs(LEVEL_FABS)
 
   local function button_sorter(A, B)
     if A.priority or B.priority then
