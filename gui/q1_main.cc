@@ -36,8 +36,6 @@
 #include "q1_structs.h"
 
 
-#define TEMP_FILENAME    "temp/out.pak"
-
 static char *level_name;
 
 
@@ -49,8 +47,8 @@ void Q1_CreateEntities(void)
 
   lump->Printf("{\n");
 
-  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
-  lump->KeyPair("_website", "http://oblige.sourceforge.net");
+  lump->KeyPair("_generated_by", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
+  lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
 
   lump->KeyPair("message",   "level created by Oblige");
   lump->KeyPair("worldtype", "0");
@@ -461,10 +459,10 @@ static void DummyTexInfo(void)
 class quake1_game_interface_c : public game_interface_c
 {
 private:
-
+  const char *filename;
 
 public:
-  quake1_game_interface_c()
+  quake1_game_interface_c() : filename(NULL)
   { }
 
   ~quake1_game_interface_c()
@@ -481,12 +479,14 @@ public:
 
 bool quake1_game_interface_c::Start()
 {
-  const char *filename = Select_Output_File("pak");
+  filename = Select_Output_File("pak");
 
   if (! filename)  // cancelled
     return false;
 
-  if (! PAK_OpenWrite(TEMP_FILENAME))
+  BSP_BackupPAK(filename);
+
+  if (! PAK_OpenWrite(filename))
     return false;
 
   BSP_CreateInfoFile();
@@ -563,10 +563,10 @@ BSP_AddLightBlock(16, 32, solid_light);
 
   Q1_BuildBSP();
 
-  Q1_CreateEntities();
   Q1_CreateModel();
   Q1_CreateMipTex();
   Q1_CreateTexInfo();
+  Q1_CreateEntities();
 
   BSP_WritePlanes();
   BSP_WriteVertices();

@@ -36,8 +36,6 @@
 #include "q2_structs.h"
 
 
-#define TEMP_FILENAME    "temp/out.pak"
-
 static char *level_name;
 
 
@@ -49,8 +47,8 @@ void Q2_CreateEntities(void)
 
   lump->Printf("{\n");
 
-  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
-  lump->KeyPair("_website", "http://oblige.sourceforge.net");
+  lump->KeyPair("_generated_by", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
+  lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
 
   lump->KeyPair("message",   "level created by Oblige");
   lump->KeyPair("worldtype", "0");
@@ -382,10 +380,10 @@ const byte oblige_pop[256] =
 class quake2_game_interface_c : public game_interface_c
 {
 private:
-
+  const char *filename;
 
 public:
-  quake2_game_interface_c()
+  quake2_game_interface_c() : filename(NULL)
   { }
 
   ~quake2_game_interface_c()
@@ -402,12 +400,14 @@ public:
 
 bool quake2_game_interface_c::Start()
 {
-  const char *filename = Select_Output_File("pak");
+  filename = Select_Output_File("pak");
 
   if (! filename)  // cancelled
     return false;
 
-  if (! PAK_OpenWrite(TEMP_FILENAME))
+  BSP_BackupPAK(filename);
+
+  if (! PAK_OpenWrite(filename))
     return false;
 
   BSP_CreateInfoFile();
@@ -484,9 +484,9 @@ BSP_AddLightBlock(16, 32, solid_light);
 
   Q2_BuildBSP();
 
-  Q2_CreateEntities();
   Q2_CreateModel();
   Q2_CreateTexInfo();
+  Q2_CreateEntities();
 
   DummyArea();
   DummyVis();
