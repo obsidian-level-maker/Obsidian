@@ -173,21 +173,6 @@ bool Cookie_Save(const char *filename)
     fprintf(cookie_fp, "%s\n", lines[i].c_str());
   }
 
-///---  fprintf(cookie_fp, "-- Game Settings --\n");
-///---  fprintf(cookie_fp, "%s\n", main_win->game_box->GetAllValues());
-///---
-///---  fprintf(cookie_fp, "-- Level Architecture --\n");
-///---  fprintf(cookie_fp, "%s\n", main_win->level_box->GetAllValues());
-///---
-///---  fprintf(cookie_fp, "-- Playing Style --\n");
-///---  fprintf(cookie_fp, "%s\n", main_win->play_box->GetAllValues());
-///---
-///---//fprintf(cookie_fp, "-- Custom Mods --\n");
-///---//fprintf(cookie_fp, "%s\n", main_win->mod_box->GetAllValues());
-///---
-///---//fprintf(cookie_fp, "-- Custom Options --\n");
-///---//fprintf(cookie_fp, "%s\n", main_win->option_box->GetAllValues());
-
   fprintf(cookie_fp, "-- Miscellaneous --\n");
   fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());
   fprintf(cookie_fp, "\n");
