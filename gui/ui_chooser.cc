@@ -51,7 +51,7 @@ void Default_Location(void)
   }
 #endif
 
-  strcat(last_file, "TEST.wad"); //FIXME !!!! game dependent
+  strcat(last_file, "TEST");
 
   DebugPrintf("Default_Location: [%s]\n", last_file);
 }
