@@ -28,18 +28,15 @@ void Script_Load(void);
 
 int Script_RegisterLib(const char *name, const luaL_Reg *reg);
 
-const char * Script_GetConfig(const char *key);
-void         Script_SetConfig(const char *key, const char *value);
+//?? const char * Script_GetConfig(const char *key);
+bool Script_SetConfig(const char *key, const char *value);
+bool Script_ReadAllConfig(std::vector<std::string> * lines);
 
 const char * Script_GameFormat(void);
 
 bool Script_Build(void);
 
-///---void Script_UpdateGame(void);
-///---void Script_UpdateEngine(void);
-///---void Script_UpdateTheme(void);
-
-#endif // __SCRIPTING_HEADER__
+#endif /* __SCRIPTING_HEADER__ */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

@@ -37,6 +37,8 @@ static const char *script_path;
 static bool has_loaded = false;
 static bool has_added_buttons = false;
 
+static std::vector<std::string> * conf_line_buffer;
+
 
 namespace con
 {
@@ -79,6 +81,19 @@ int raw_debug_print(lua_State *L)
 
     DebugPrintf("%s", res);
   }
+
+  return 0;
+}
+
+// LUA: config_line(str)
+//
+int config_line(lua_State *L)
+{
+  const char *res = luaL_checkstring(L,1);
+
+  SYS_ASSERT(conf_line_buffer);
+
+  conf_line_buffer->push_back(res);
 
   return 0;
 }
@@ -327,6 +342,7 @@ static const luaL_Reg gui_script_funcs[] =
 {
   { "raw_log_print",   con::raw_log_print },
   { "raw_debug_print", con::raw_debug_print },
+  { "config_line",     con::config_line },
 
   { "add_button",    con::add_button },
   { "show_button",   con::show_button },
@@ -547,6 +563,7 @@ void Script_Load(void)
 }
 
 
+#if 0 // NOT USED RIGHT NOW
 const char * Script_GetConfig(const char *key)
 {
   static const char *last_val = NULL;
@@ -573,16 +590,17 @@ const char * Script_GetConfig(const char *key)
  
   return last_val;
 }
+#endif
 
-void Script_SetConfig(const char *key, const char *value)
+bool Script_SetConfig(const char *key, const char *value)
 {
   SYS_NULL_CHECK(key);
   SYS_NULL_CHECK(value);
 
   if (! has_loaded)
   {
-    DebugPrintf("Script_SetConfig(%s) called before loaded.\n", key);
-    return;
+    DebugPrintf("Script_SetConfig(%s) called before loaded!\n", key);
+    return false;
   }
  
   const char *params[3];
@@ -593,9 +611,31 @@ void Script_SetConfig(const char *key, const char *value)
 
   if (! Script_DoRun("ob_parse_config", 0, params))
   {
-    /* DO WHAT ?? */
     DebugPrintf("Failed trying to call 'ob_parse_config'\n");
+    return false;
   }
+
+  return true;
+}
+
+bool Script_ReadAllConfig(std::vector<std::string> * lines)
+{
+  if (! has_loaded)
+  {
+    DebugPrintf("Script_GetAllConfig called before loaded!\n");
+    return false;
+  }
+
+  conf_line_buffer = lines;
+ 
+  bool result = Script_DoRun("ob_write_config", 0, NULL);
+
+  conf_line_buffer = NULL;
+
+  if (! result)
+    DebugPrintf("Failed trying to call 'ob_write_config'\n");
+
+  return result;
 }
 
 
