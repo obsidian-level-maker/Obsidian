@@ -369,7 +369,7 @@ void BSP_CreateInfoFile()
 
   L->Append(terminator, 2);
 
-  PAK_NewLump("oblige_conf.txt");
+  PAK_NewLump("oblige_dat.txt");
   BSP_WriteLump(L);
   PAK_FinishLump();
 
