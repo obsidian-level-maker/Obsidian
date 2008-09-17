@@ -550,45 +550,27 @@ void Script_Load(void)
 
   has_added_buttons = true;
   
-///---  // IDEA: perhaps should watch for "loaded" Signal ??
-///---  main_win->game_box->game->Recreate();
-///---  main_win->game_box->engine->Recreate();
-///---  main_win->level_box->theme->Recreate();
-///---
-///---  main_win->mod_box->opts->Recreate();
-///---  main_win->option_box->opts->Recreate();
-
 }
 
 
-#if 0 // NOT USED RIGHT NOW
-const char * Script_GetConfig(const char *key)
-{
-  static const char *last_val = NULL;
-    
-  SYS_NULL_CHECK(key);
-
-  SYS_ASSERT(has_loaded);
-
-  lua_getglobal(LUA_ST, "OB_CONFIG");
-  lua_getfield(LUA_ST, -1, key);
-
-  if (last_val)
-    StringFree(last_val);
-
-  last_val = lua_tostring(LUA_ST, -1);
-
-  if (! last_val)
-    last_val = "";
-
-  // make a copy of the result
-  last_val = StringDup(last_val);
-
-  lua_pop(LUA_ST, 1);
- 
-  return last_val;
-}
-#endif
+// ========================
+// NOTES ABOUT CONFIG STATE
+// ========================
+//
+// By "config state" I mean all the things in the GUI which
+// the user can change (game, mode, engine, theme, etc...).
+//
+// THE MASTER STATE IS STORED IN LUA
+//
+// Most of it is in the OB_CONFIG[] table, but some bits are
+// stored in the modules in OB_MODULES[] and the options in
+// OB_OPTIONS[].
+//
+// Hence the GUI state is merely a reflection of the config
+// stored by the script.  The script manages most of the
+// inter-dependencies (e.g. the engines and themes which can
+// be used for the currently selected game).
+// 
 
 bool Script_SetConfig(const char *key, const char *value)
 {

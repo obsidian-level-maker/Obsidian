@@ -28,7 +28,6 @@ void Script_Load(void);
 
 int Script_RegisterLib(const char *name, const luaL_Reg *reg);
 
-//?? const char * Script_GetConfig(const char *key);
 bool Script_SetConfig(const char *key, const char *value);
 bool Script_ReadAllConfig(std::vector<std::string> * lines);
 
