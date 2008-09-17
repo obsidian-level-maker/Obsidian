@@ -241,41 +241,6 @@ int abort(lua_State *L)
 }
 
 
-///-- // LUA: map_begin(pixel_W, pixel_H)
-///-- //
-///-- int map_begin(lua_State *L)
-///-- {
-///--   int pixel_W = luaL_checkint(L, 1);
-///--   int pixel_H = luaL_checkint(L, 2);
-///-- 
-///--   SYS_ASSERT(1 <= pixel_W && pixel_W < 1000);
-///--   SYS_ASSERT(1 <= pixel_H && pixel_H < 1000);
-///-- 
-///--   main_win->build_box->mini_map->MapBegin(pixel_W, pixel_H);
-///-- 
-///--   return 0;
-///-- }
-///-- 
-///-- // LUA: map_end()
-///-- //
-///-- int map_end(lua_State *L)
-///-- {
-///--   main_win->build_box->mini_map->MapFinish();
-///-- 
-///--   return 0;
-///-- }
-///-- 
-///-- // LUA: map_pixel(kind)
-///-- //
-///-- int map_pixel(lua_State *L)
-///-- {
-///--   int kind = luaL_checkint(L, 1);
-///-- 
-///--   main_win->build_box->mini_map->MapPixel(kind);
-///-- 
-///--   return 0;
-///-- }
-
 // LUA: rand_seed(seed)
 //
 int rand_seed(lua_State *L)
@@ -297,6 +262,51 @@ int random(lua_State *L)
   lua_Number value = (lua_Number)raw / 2147483648.0;
 
   lua_pushnumber(L, value);
+  return 1;
+}
+
+
+// LUA: bit_and(A, B)
+//
+int bit_and(lua_State *L)
+{
+  int A = luaL_checkint(L, 1);
+  int B = luaL_checkint(L, 2);
+
+  lua_pushinteger(L, A & B);
+  return 1;
+}
+
+// LUA: bit_or(A, B)
+//
+int bit_or(lua_State *L)
+{
+  int A = luaL_checkint(L, 1);
+  int B = luaL_checkint(L, 2);
+
+  lua_pushinteger(L, A | B);
+  return 1;
+}
+
+// LUA: bit_xor(A, B)
+//
+int bit_xor(lua_State *L)
+{
+  int A = luaL_checkint(L, 1);
+  int B = luaL_checkint(L, 2);
+
+  lua_pushinteger(L, A ^ B);
+  return 1;
+}
+
+// LUA: bit_not(val)
+//
+int bit_not(lua_State *L)
+{
+  int A = luaL_checkint(L, 1);
+
+  // do not make the result negative
+  lua_pushinteger(L, (~A) & 0x7FFFFFFF);
   return 1;
 }
 
@@ -329,6 +339,11 @@ static const luaL_Reg gui_script_funcs[] =
  
   { "rand_seed",  con::rand_seed },
   { "random",     con::random },
+
+  { "bit_and",    con::bit_and },
+  { "bit_or",     con::bit_or  },
+  { "bit_xor",    con::bit_xor },
+  { "bit_not",    con::bit_not },
 
   { "begin_level", CSG2_begin_level },
   { "end_level",   CSG2_end_level   },
