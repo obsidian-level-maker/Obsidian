@@ -300,10 +300,11 @@ bool BSP_CloseLevel()
 
   BSP_WriteHeader();
 
-  for (int L = 0; L < bsp_numlumps; L++)
-  {
+  for (int L = 1; L < bsp_numlumps; L++)
     BSP_WriteLump(bsp_directory[L]);
-  }
+
+  // put entities last
+  BSP_WriteLump(bsp_directory[0]);
 
   PAK_FinishLump();
 
@@ -331,12 +332,14 @@ void BSP_BackupPAK(const char *filename)
 {
   if (FileExists(filename))
   {
-    LogPrintf("Backing up existing file: %s\n", filename);
-
     char *backup_name = ReplaceExtension(filename, "old");
 
-    if (! FileCopy(filename, backup_name))
-      LogPrintf("WARNING: unable to create backup: %s\n", backup_name);
+    LogPrintf("Backing up existing file to %s\n", backup_name);
+
+    if (FileCopy(filename, backup_name))
+      FileDelete(filename);
+    else
+      LogPrintf("WARNING: unable to create backup!\n");
 
     StringFree(backup_name);
   }

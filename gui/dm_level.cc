@@ -979,12 +979,12 @@ bool doom_game_interface_c::BuildNodes(const char *target_file)
 
   if (FileExists(target_file))
   {
-    LogPrintf("Backing up existing file: %s\n", target_file);
-
     char *backup_name = ReplaceExtension(target_file, "bak");
 
+    LogPrintf("Backing up existing file to %s\n", backup_name);
+
     if (! FileCopy(target_file, backup_name))
-      LogPrintf("WARNING: unable to create backup: %s\n", backup_name);
+      LogPrintf("WARNING: unable to create backup!\n");
 
     StringFree(backup_name);
   }
