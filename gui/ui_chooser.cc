@@ -92,7 +92,10 @@ const char *UI_GetLastFile(void)
   return StringPrintf("\"%s\"", last_file);
 }
 
-char *Select_Output_File(void)
+
+//------------------------------------------------------------------------
+
+char *Select_Output_File(const char *ext)
 {
   SYS_ASSERT(last_file);
 
@@ -108,6 +111,10 @@ char *Select_Output_File(void)
 
   DebugPrintf("Select_Output_File: cur_dir=[%s]\n", cur_dir);
   
+  char pattern_buf[128];
+  pattern_buf[0] = toupper(ext[0]);
+  sprintf(pattern_buf+1, "%s Files%c*.%s%c%c", ext+1, 0, ext, 0, 0);
+
   // --- call the bitch ---
 
   char *name = StringNew(FL_PATH_MAX);
@@ -119,7 +126,7 @@ char *Select_Output_File(void)
 
   ofn.lStructSize = sizeof(OPENFILENAME); 
   ofn.hwndOwner = fl_xid(main_win);
-  ofn.lpstrFilter = "Wad Files\0*.wad\0\0";
+  ofn.lpstrFilter = pattern_buf;
   ofn.lpstrFile = name;
   ofn.nMaxFile  = FL_PATH_MAX;
   ofn.lpstrInitialDir = (LPSTR)NULL; 
@@ -170,7 +177,10 @@ char *Select_Output_File(void)
 
 #else  // Linux and MacOSX
 
-  char *name = fl_file_chooser("Select output file", "*.wad", last_file);
+  char pattern_buf[64];
+  sprintf(pattern_buf, "*.%s", ext);
+
+  char *name = fl_file_chooser("Select output file", pattern_buf, last_file);
   if (! name)
     return NULL;
 
@@ -179,7 +189,7 @@ char *Select_Output_File(void)
 
   if (! HasExtension(name))
   {
-    char *new_name = ReplaceExtension(name, "wad");
+    char *new_name = ReplaceExtension(name, ext);
     StringFree(name);
     name = new_name;
   }
@@ -195,7 +205,7 @@ char *Select_Output_File(void)
 
 //------------------------------------------------------------------------
 
-char *Select_Input_File(void)
+char *Select_Input_File(const char *ext)
 {
 #ifdef WIN32
   // remember current directory and restore it after the call to
@@ -208,6 +218,10 @@ char *Select_Input_File(void)
     Main_FatalError("GetCurrentDirectory failed!");
 
   DebugPrintf("Select_Input_File: cur_dir=[%s]\n", cur_dir);
+
+  char pattern_buf[128];
+  pattern_buf[0] = toupper(ext[0]);
+  sprintf(pattern_buf+1, "%s Files%c*.%s%c%c", ext+1, 0, ext, 0, 0);
   
   // --- call the bitch ---
 
@@ -219,7 +233,7 @@ char *Select_Input_File(void)
 
   ofn.lStructSize = sizeof(OPENFILENAME); 
   ofn.hwndOwner = fl_xid(main_win);
-  ofn.lpstrFilter = "Pak Files\0*.pak\0\0";
+  ofn.lpstrFilter = pattern_buf;
   ofn.lpstrFile = name;
   ofn.nMaxFile  = FL_PATH_MAX;
   ofn.lpstrInitialDir = (LPSTR)NULL; 

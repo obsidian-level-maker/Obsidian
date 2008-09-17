@@ -372,7 +372,7 @@ bool Quake1_ExtractTextures(void)
 
   if (! (filename && res == EXDLG_UseDetected))
   {
-    filename = Select_Input_File();
+    filename = Select_Input_File("pak");
 
     if (! filename)
       return false;

@@ -483,7 +483,7 @@ public:
 
 bool quake1_game_interface_c::Start()
 {
-  const char *filename = Select_Output_File();
+  const char *filename = Select_Output_File("pak");
 
   if (! filename)  // cancelled
     return false;
