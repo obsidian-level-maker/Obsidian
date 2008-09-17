@@ -396,42 +396,42 @@ function ob_write_config()
     gui.config_line(string.format(fmt, ...))
   end
 
-  do_line("-- Game Settings --\n");
+  do_line("-- Game Settings --");
 
-  do_line("seed = %d\n",   OB_CONFIG.seed or 0)
-  do_line("game = %s\n",   OB_CONFIG.game)
-  do_line("mode = %s\n",   OB_CONFIG.mode)
-  do_line("engine = %s\n", OB_CONFIG.engine)
-  do_line("length = %s\n", OB_CONFIG.length)
-  do_line("\n")
+  do_line("seed = %d",   OB_CONFIG.seed or 0)
+  do_line("game = %s",   OB_CONFIG.game)
+  do_line("mode = %s",   OB_CONFIG.mode)
+  do_line("engine = %s", OB_CONFIG.engine)
+  do_line("length = %s", OB_CONFIG.length)
+  do_line("")
 
-  do_line("-- Level Architecture --\n");
-  do_line("theme = %s\n",   OB_CONFIG.theme)
-  do_line("size = %s\n",    OB_CONFIG.size)
-  do_line("detail = %s\n",  OB_CONFIG.detail)
-  do_line("heights = %s\n", OB_CONFIG.heights)
-  do_line("light = %s\n",   OB_CONFIG.light)
-  do_line("\n")
+  do_line("-- Level Architecture --");
+  do_line("theme = %s",   OB_CONFIG.theme)
+  do_line("size = %s",    OB_CONFIG.size)
+  do_line("detail = %s",  OB_CONFIG.detail)
+  do_line("heights = %s", OB_CONFIG.heights)
+  do_line("light = %s",   OB_CONFIG.light)
+  do_line("")
 
-  do_line("-- Playing Style --\n");
-  do_line("mons = %s\n",    OB_CONFIG.mons)
-  do_line("puzzles = %s\n", OB_CONFIG.puzzles)
-  do_line("traps = %s\n",   OB_CONFIG.traps)
-  do_line("health = %s\n",  OB_CONFIG.health)
-  do_line("ammo = %s\n",    OB_CONFIG.ammo)
-  do_line("\n")
+  do_line("-- Playing Style --");
+  do_line("mons = %s",    OB_CONFIG.mons)
+  do_line("puzzles = %s", OB_CONFIG.puzzles)
+  do_line("traps = %s",   OB_CONFIG.traps)
+  do_line("health = %s",  OB_CONFIG.health)
+  do_line("ammo = %s",    OB_CONFIG.ammo)
+  do_line("")
 
-  do_line("-- Custom Mods --\n");
+  do_line("-- Custom Mods --");
   for name,def in pairs(OB_MODULES) do
-    do_line("%s = %s\n", name, sel(def.enabled, "true", "false"))
+    do_line("%s = %s", name, sel(def.enabled, "true", "false"))
   end
-  do_line("\n")
+  do_line("")
 
-  do_line("-- Custom Options --\n");
+  do_line("-- Custom Options --");
   for name,def in pairs(OB_OPTIONS) do
-    do_line("%s = %s\n", name, sel(def.enabled, "true", "false"))
+    do_line("%s = %s", name, sel(def.enabled, "true", "false"))
   end
-  do_line("\n")
+  do_line("")
 end
 
 
