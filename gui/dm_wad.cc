@@ -18,6 +18,7 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
+#include "hdr_lua.h"
 #include "hdr_ui.h"
 
 #include "lib_file.h"
@@ -26,6 +27,7 @@
 
 #include "main.h"
 #include "g_image.h"
+#include "g_lua.h"
 
 #include "csg_main.h"
 
@@ -162,23 +164,14 @@ void WAD_CreateInfoLump()
   L->Printf("-- http://oblige.sourceforge.net/\n");
   L->Printf("\n");
 
+  std::vector<std::string> lines;
+
+  Script_ReadAllConfig(&lines);
+
+  for (unsigned int i = 0; i < lines.size(); i++)
+    L->Printf("%s\n", lines[i].c_str());
  
-  L->Printf("-- Game Settings --\n");
-  L->Printf("%s\n", main_win->game_box->GetAllValues());
-
-  L->Printf("-- Level Architecture --\n");
-  L->Printf("%s\n", main_win->level_box->GetAllValues());
-
-  L->Printf("-- Playing Style --\n");
-  L->Printf("%s\n", main_win->play_box->GetAllValues());
-
-//L->Printf("-- Custom Mods --\n");
-//L->Printf("%s\n", main_win->mod_box->GetAllValues());
-
-//L->Printf("-- Custom Options --\n");
-//L->Printf("%s\n", main_win->option_box->GetAllValues());
-
-  L->Printf("\n\n\n\n\n\n");
+  L->Printf("\n\n\n");
 
   // terminate lump with ^Z and a NUL character
   static const byte terminator[2] = { 26, 0 };
