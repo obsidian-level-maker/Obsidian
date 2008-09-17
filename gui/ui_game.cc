@@ -78,6 +78,18 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   cy += game->h() + 6;
 
 
+  engine = new UI_RChoice(x+68, cy, 130, 24, "Engine: ");
+  engine->align(FL_ALIGN_LEFT);
+  engine->selection_color(FL_BLUE);
+  engine->callback(callback_Engine, this);
+
+  add(engine);
+
+  cy += engine->h() + 6;
+
+  cy += 10;
+
+
   mode = new UI_RChoice(x+68, cy, 130, 24, "Mode: ");
   mode->align(FL_ALIGN_LEFT);
   mode->selection_color(FL_BLUE);
@@ -90,18 +102,6 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   add(mode);
 
   cy += mode->h() + 6;
-
-  cy += 10;
-
-
-  engine = new UI_RChoice(x+68, cy, 130, 24, "Engine: ");
-  engine->align(FL_ALIGN_LEFT);
-  engine->selection_color(FL_BLUE);
-  engine->callback(callback_Engine, this);
-
-  add(engine);
-
-  cy += engine->h() + 6;
 
 
   length = new UI_RChoice(x +68, cy, 130, 24, "Length: ");
