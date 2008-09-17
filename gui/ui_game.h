@@ -66,6 +66,7 @@ private:
   void setup_Mode();
   void setup_Length();
 
+  static void callback_Seed(Fl_Widget *, void*);
   static void callback_Bump(Fl_Widget *, void*);
 
   static void callback_Game  (Fl_Widget *, void*);

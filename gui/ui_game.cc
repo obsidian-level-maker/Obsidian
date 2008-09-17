@@ -53,6 +53,7 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   seed->align(FL_ALIGN_LEFT);
   seed->selection_color(FL_BLUE);
   seed->maximum_size(5);
+  seed->callback(callback_Seed, this);
   seed->value("1");
 
   add(seed);
@@ -140,6 +141,8 @@ void UI_Game::SetSeed(u32_t new_val)
   sprintf(num_buf, "%05d", new_val % 100000);
 
   seed->value(num_buf);
+
+  Script_SetConfig("seed", seed->value());
 }
 
 void UI_Game::FreshSeed()
@@ -156,6 +159,13 @@ void UI_Game::BumpSeed()
   val += 7 + (IntHash(TimeGetMillies()) % 25);
 
   SetSeed(val);
+}
+
+void UI_Game::callback_Seed(Fl_Widget *w, void *data)
+{
+  UI_Game *that = (UI_Game *)data;
+
+  Script_SetConfig("seed", that->seed->value());
 }
 
 void UI_Game::callback_Bump(Fl_Widget *w, void *data)

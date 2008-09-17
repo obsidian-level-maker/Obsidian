@@ -672,8 +672,6 @@ const char * Script_GameFormat(void)
 
 bool Script_Build(void)
 {
-  Script_SetConfig("seed", main_win->game_box->get_Seed());
-
   if (! Script_DoRun("build_cool_shit", 1))
     return false;
 
