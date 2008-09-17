@@ -164,11 +164,14 @@ void Main_Ticker()
   }
 }
 
-void Main_Shutdown()
+void Main_Shutdown(bool error)
 {
   if (main_win)
   {
-//!!!!!!    Cookie_Save(CONFIG_FILENAME);
+    // on fatal error we cannot risk calling into the Lua runtime
+    // (it's state may be compromised by a script error).
+    if (! error)
+      Cookie_Save(CONFIG_FILENAME);
 
     delete main_win;
     main_win = NULL;
@@ -194,7 +197,7 @@ void Main_FatalError(const char *msg, ...)
 
   DLG_ShowError("%s", buffer);
 
-  Main_Shutdown();
+  Main_Shutdown(true);
 
   exit(9);
 }
@@ -337,7 +340,7 @@ int main(int argc, char **argv)
   main_win->play_box ->Defaults();
 
   // load config after creating window (set widget values)
-//!!!!!!  Cookie_Load(CONFIG_FILENAME);
+  Cookie_Load(CONFIG_FILENAME);
 
   // handle -seed option
   {
@@ -368,6 +371,9 @@ Quake1_ExtractTextures();
       {
         main_win->action = UI_MainWin::NONE;
 
+        // save config in case everything blows up
+        Cookie_Save(CONFIG_FILENAME);
+
         Build_Cool_Shit();
       }
     }
@@ -381,7 +387,7 @@ Quake1_ExtractTextures();
     Main_FatalError("An unknown problem occurred (UI code)");
   }
 
-  Main_Shutdown();
+  Main_Shutdown(false);
 
   return 0;
 }

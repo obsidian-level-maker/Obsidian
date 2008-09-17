@@ -441,11 +441,9 @@ void Script_Init(void)
 void Script_Close(void)
 {
   if (LUA_ST)
-  {
     lua_close(LUA_ST);
 
-    LUA_ST = NULL;
-  }
+  LUA_ST = NULL;
 }
 
 

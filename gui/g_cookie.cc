@@ -32,33 +32,25 @@
 static FILE *cookie_fp;
 
 
-static bool Cookie_SetValue(const char *name, const char *value)
+static void Cookie_SetValue(const char *name, const char *value)
 {
   DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
 
   // ignore the seed value
   if (StringCaseCmp(name, "seed") == 0)
-    return true;
-
-  // -- Game Settings --
-  if (main_win->game_box->ParseValue(name, value))
-    return true;
-
-  // -- Level Architecture --
-  if (main_win->level_box->ParseValue(name, value))
-    return true;
-
-  // -- Playing Style --
-  if (main_win->play_box->ParseValue(name, value))
-    return true;
+    return;
 
   // -- Miscellaneous --
   if (StringCaseCmp(name, "last_file") == 0)
-    return UI_SetLastFile(value);
+  {
+    UI_SetLastFile(value);
+    return;
+  }
 
-  LogPrintf("CONFIG: Ignoring unknown setting: %s = %s\n", name, value);
-  return false;
+  // everything else goes to the script
+  Script_SetConfig(name, value);
 }
+
 
 static bool Cookie_ParseLine(char *buf)
 {
@@ -113,7 +105,8 @@ static bool Cookie_ParseLine(char *buf)
     return false;
   }
 
-  return Cookie_SetValue(name, buf);
+  Cookie_SetValue(name, buf);
+  return true;
 }
 
 
@@ -151,6 +144,7 @@ bool Cookie_Load(const char *filename)
   return true;
 }
 
+
 bool Cookie_Save(const char *filename)
 {
   cookie_fp = fopen(filename, "w");
@@ -169,20 +163,30 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2008 Andrew Apted\n");
   fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
-  fprintf(cookie_fp, "-- Game Settings --\n");
-  fprintf(cookie_fp, "%s\n", main_win->game_box->GetAllValues());
+  std::vector<std::string> lines;
 
-  fprintf(cookie_fp, "-- Level Architecture --\n");
-  fprintf(cookie_fp, "%s\n", main_win->level_box->GetAllValues());
+  // FIXME: check for error
+  Script_ReadAllConfig(&lines);
 
-  fprintf(cookie_fp, "-- Playing Style --\n");
-  fprintf(cookie_fp, "%s\n", main_win->play_box->GetAllValues());
+  for (unsigned int i = 0; i < lines.size(); i++)
+  {
+    fprintf(cookie_fp, "%s\n", lines[i].c_str());
+  }
 
-//fprintf(cookie_fp, "-- Custom Mods --\n");
-//fprintf(cookie_fp, "%s\n", main_win->mod_box->GetAllValues());
-
-//fprintf(cookie_fp, "-- Custom Options --\n");
-//fprintf(cookie_fp, "%s\n", main_win->option_box->GetAllValues());
+///---  fprintf(cookie_fp, "-- Game Settings --\n");
+///---  fprintf(cookie_fp, "%s\n", main_win->game_box->GetAllValues());
+///---
+///---  fprintf(cookie_fp, "-- Level Architecture --\n");
+///---  fprintf(cookie_fp, "%s\n", main_win->level_box->GetAllValues());
+///---
+///---  fprintf(cookie_fp, "-- Playing Style --\n");
+///---  fprintf(cookie_fp, "%s\n", main_win->play_box->GetAllValues());
+///---
+///---//fprintf(cookie_fp, "-- Custom Mods --\n");
+///---//fprintf(cookie_fp, "%s\n", main_win->mod_box->GetAllValues());
+///---
+///---//fprintf(cookie_fp, "-- Custom Options --\n");
+///---//fprintf(cookie_fp, "%s\n", main_win->option_box->GetAllValues());
 
   fprintf(cookie_fp, "-- Miscellaneous --\n");
   fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());

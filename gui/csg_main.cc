@@ -598,9 +598,9 @@ int CSG2_add_brush(lua_State *L)
 }
 
 
-// LUA: add_entity(x, y, z, info)
+// LUA: add_entity(x, y, z, props)
 //
-// info is a table:
+// props is a table:
 //   name   : entity type name
 //   light  : amount of light emitted
 //   flag_xxx : various CSG flags
