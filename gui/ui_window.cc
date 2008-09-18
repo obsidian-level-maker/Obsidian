@@ -104,13 +104,8 @@ UI_MainWin::UI_MainWin(const char *title) :
   add(play_box);
 
 
-  mod_box = new UI_Module(LW+4, GAME_H+4, w()-LW-4, h()-GAME_H-4);
+  mod_box = new UI_ModBox(LW+4, GAME_H+4, w()-LW-4, h()-GAME_H-4);
   add(mod_box);
-
-  option_box = new UI_ModOptions(LW+MW+4, MOD_H+4, RW-4, h()-MOD_H-4);
-  add(option_box);
-
-option_box->hide();
 
 
   resizable(mod_box);
@@ -131,7 +126,6 @@ void UI_MainWin::Locked(bool value)
   play_box ->Locked(value);
 
 //!!!!  mod_box   ->Locked(value);
-//!!!!  option_box->Locked(value);
 }
 
 //--- editor settings ---

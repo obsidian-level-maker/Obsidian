@@ -42,8 +42,7 @@ public:
   UI_Level  *level_box;
   UI_Play   *play_box;
 
-  UI_Module *mod_box;
-  UI_ModOptions *option_box;
+  UI_ModBox *mod_box;
 
   enum  // actions
   {

@@ -19,15 +19,32 @@
 #ifndef __UI_MODS_H__
 #define __UI_MODS_H__
 
-class UI_Mods : public Fl_Group
+
+#if 0
+class UI_Module : public Fl_Group
+{
+private:
+
+
+public:
+  UI_Module(int x, int y, int w, int h, const char *label = NULL);
+  virtual ~UI_Module();
+
+public:
+
+};
+#endif
+
+
+class UI_ModBox : public Fl_Group
 {
 public: /// private:
 
   UI_OptionList *opts;
 
 public:
-  UI_Mods(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_Mods();
+  UI_ModBox(int x, int y, int w, int h, const char *label = NULL);
+  virtual ~UI_ModBox();
 
 public:
 
@@ -39,26 +56,6 @@ private:
 
 };
 
-
-class UI_ModOptions : public Fl_Group
-{
-public: /// private:
-
-  UI_OptionList *opts;
-
-public:
-  UI_ModOptions(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_ModOptions();
-
-public:
-
-  void Locked(bool value);
-
-  
-private:
-  static void callback_Option(option_data_c *, void *);
-
-};
 
 #endif /* __UI_MODS_H__ */
 

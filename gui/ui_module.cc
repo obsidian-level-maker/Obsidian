@@ -26,7 +26,7 @@
 #include "g_lua.h"
 
 
-UI_Mods::UI_Mods(int x, int y, int w, int h, const char *label) :
+UI_ModBox::UI_ModBox(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label)
 {
   end(); // cancel begin() in Fl_Group constructor
@@ -55,23 +55,23 @@ UI_Mods::UI_Mods(int x, int y, int w, int h, const char *label) :
 }
 
 
-UI_Mods::~UI_Mods()
+UI_ModBox::~UI_ModBox()
 {
 }
 
 
-void UI_Mods::callback_Module(option_data_c *opt, void *data)
+void UI_ModBox::callback_Module(option_data_c *opt, void *data)
 {
-//  UI_Mods *that = (UI_Mods *)data;
+//  UI_ModBox *that = (UI_ModBox *)data;
 
-  DebugPrintf("UI_Mods: callback for %s\n", opt->id);
+  DebugPrintf("UI_ModBox: callback for %s\n", opt->id);
 
   // TODO: make a method in option_data_c
   Script_SetConfig(opt->id, opt->widget->value() ? "true" : "false");
 }
 
 
-void UI_Mods::Locked(bool value)
+void UI_ModBox::Locked(bool value)
 {
   if (value)
   {
@@ -87,7 +87,8 @@ void UI_Mods::Locked(bool value)
 //----------------------------------------------------------------
 
 
-UI_ModOptions::UI_ModOptions(int x, int y, int w, int h, const char *label) :
+#if 0
+UI_Module::UI_Module(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label)
 {
   end(); // cancel begin() in Fl_Group constructor
@@ -119,29 +120,8 @@ UI_ModOptions::UI_ModOptions(int x, int y, int w, int h, const char *label) :
 UI_ModOptions::~UI_ModOptions()
 {
 }
+#endif
 
-
-void UI_ModOptions::callback_Option(option_data_c *opt, void *data)
-{
-//  UI_ModOptions *that = (UI_ModOptions *)data;
- 
-  DebugPrintf("UI_ModOptions: callback for %s\n", opt->id);
-
-  Script_SetConfig(opt->id, opt->widget->value() ? "true" : "false");
-}
-
-
-void UI_ModOptions::Locked(bool value)
-{
-  if (value)
-  {
-    opts->deactivate();
-  }
-  else
-  {
-    opts->activate();
-  }
-}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
