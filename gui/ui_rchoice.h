@@ -26,11 +26,31 @@
 //   these ids and labels to be updated at any time.
 //
 
+class choice_data_c
+{
+friend class UI_RChoice;
+
+public:
+  const char *id;     // terse identifier
+  const char *label;  // description (for the UI)
+ 
+  bool shown;
+
+  // the index in the current list, or -1 if not present
+  int mapped;
+ 
+  Fl_Check_Button *widget;
+
+public:
+   choice_data_c(const char *_id = NULL, const char *_label = NULL);
+  ~choice_data_c();
+};
+
 
 class UI_RChoice : public Fl_Choice
 {
 private:
-  std::vector<option_data_c *> opt_list;
+  std::vector<choice_data_c *> opt_list;
 
 public:
   UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
@@ -56,10 +76,10 @@ public:
   // such exists, returns false and nothing was changed.
 
 private:
-  option_data_c * FindID(const char *id) const;
-  option_data_c * FindMapped() const;
+  choice_data_c * FindID(const char *id) const;
+  choice_data_c * FindMapped() const;
 
-  void Recreate(); ///--- option_data_c *LAST = NULL);
+  void Recreate();
   // The available choices will be updated to reflect the
   // 'shown' values.  If the previous selected item is still
   // valid, it remains set, otherwise we try and find a shown
