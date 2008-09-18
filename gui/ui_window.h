@@ -36,13 +36,13 @@ public:
   Fl_Menu_Bar *menu_bar;
 #endif
 
-  UI_Game  *game_box;
-  UI_Build *build_box;
+  UI_Game   *game_box;
+  UI_Build  *build_box;
 
-  UI_Level *level_box;
-  UI_Play  *play_box;
+  UI_Level  *level_box;
+  UI_Play   *play_box;
 
-  UI_Mods       *mod_box;
+  UI_Module *mod_box;
   UI_ModOptions *option_box;
 
   enum  // actions

@@ -28,7 +28,7 @@
 #include "ui_build.h"
 #include "ui_game.h"
 #include "ui_level.h"
-#include "ui_mods.h"
+#include "ui_module.h"
 #include "ui_play.h"
 #include "ui_window.h"
 
