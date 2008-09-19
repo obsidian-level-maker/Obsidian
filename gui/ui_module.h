@@ -20,33 +20,38 @@
 #define __UI_MODS_H__
 
 
-#if 0
 class UI_Module : public Fl_Group
 {
 private:
+  std::string mod_id;
 
+  Fl_Check_Button *enabler;  
+
+  std::map<std::string, UI_RChoice *> choice_map;
 
 public:
-  UI_Module(int x, int y, int w, int h, const char *label = NULL);
+  UI_Module(int x, int y, int w, int h, const char *id, const char *label);
   virtual ~UI_Module();
+
+  void AddOption(const char *id, const char *label, const char *choices);
 
 public:
 
 };
-#endif
 
 
 class UI_ModBox : public Fl_Group
 {
-public: /// private:
-
-  UI_OptionList *opts;
+private:
+  Fl_Pack   *mods;
+  Fl_Scroll *scroller;
 
 public:
   UI_ModBox(int x, int y, int w, int h, const char *label = NULL);
   virtual ~UI_ModBox();
 
 public:
+  void AddModule(const char *id, const char *label);
 
   void Locked(bool value);
 

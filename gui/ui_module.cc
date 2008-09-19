@@ -26,6 +26,82 @@
 #include "g_lua.h"
 
 
+#define MY_PURPLE  fl_rgb_color(208,0,208)
+
+
+UI_Module::UI_Module(int x, int y, int w, int h,
+                     const char *id, const char *label) :
+    Fl_Group(x, y, w, h),
+    mod_id(id),
+    choice_map()
+{
+  end(); // cancel begin() in Fl_Group constructor
+ 
+  box(FL_SHADOW_BOX);
+
+  resizable(NULL);
+
+
+  enabler = new Fl_Check_Button(x, y+4, w, 24, label);
+
+  add(enabler);
+
+  // enabler->hide()
+
+
+#if 0
+
+  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Custom Options");
+  heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+  heading->labeltype(FL_NORMAL_LABEL);
+  heading->labelfont(FL_HELVETICA_BOLD);
+
+  add(heading);
+
+#endif
+}
+
+
+UI_Module::~UI_Module()
+{
+}
+
+
+void UI_Module::AddOption(const char *id, const char *label, const char *choices)
+{
+  int nh = 28;
+  int ny = y() + children() * nh;
+
+  // FIXME: make label with ': ' suffixed
+
+fprintf(stderr, "AddOption: x, y = %d,%d\n", x(), y());
+  UI_RChoice *rch = new UI_RChoice(x() + 140, ny, 120, 24, label);
+
+  rch->align(FL_ALIGN_LEFT);
+  rch->selection_color(MY_PURPLE);
+
+  add(rch);
+
+  choice_map[id] = rch;
+  
+
+  rch->AddPair("foo", "Foo");
+  rch->AddPair("bar", "Bar");
+  rch->AddPair("jim", "Jimmy");
+
+  rch->ShowOrHide("foo", 1);
+  rch->ShowOrHide("bar", 1);
+  rch->ShowOrHide("jim", 1);
+
+  rch->redraw();
+
+  redraw();
+}
+
+
+//----------------------------------------------------------------
+
+
 UI_ModBox::UI_ModBox(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label)
 {
@@ -46,12 +122,27 @@ UI_ModBox::UI_ModBox(int x, int y, int w, int h, const char *label) :
   cy += 28;
 
 
-  opts = new UI_OptionList(x+4, cy, w-4, y+h-4 - cy);
-  opts->callback2(callback_Module, this);
+  scroller = new Fl_Scroll(x+4, cy, w-4, y+h - cy);
+  scroller->end();
+  scroller->type(Fl_Scroll::VERTICAL_ALWAYS);
+  scroller->color(BUILD_BG);
+///---  scroller->scrollbar.align(FL_ALIGN_LEFT | FL_ALIGN_BOTTOM);
 
-  add(opts);
+///!!!  opts->callback2(callback_Module, this);
 
-  resizable(opts);
+  add(scroller);
+
+  
+  mods = new Fl_Pack(scroller->x(), scroller->y(), scroller->w()-20, scroller->h());
+  mods->end();
+  mods->spacing(2);
+
+//scroller->color(FL_BLACK);
+
+  scroller->add(mods);
+
+
+//  resizable(scroller);
 }
 
 
@@ -71,56 +162,36 @@ void UI_ModBox::callback_Module(option_data_c *opt, void *data)
 }
 
 
+void UI_ModBox::AddModule(const char *id, const char *label)
+{
+  UI_Module *new_mod = new UI_Module(x(), y(), 260, 120, id, label);
+
+  mods->add(new_mod);
+
+
+  new_mod->AddOption("a", "One: ", "Bleh");
+  new_mod->AddOption("b", "Two: ", "Bleh");
+  new_mod->AddOption("c", "Three: ", "Bleh");
+//  new_mod->AddOption("d", "Foundation: ", "Bleh");
+
+
+  new_mod->redraw();
+  mods->redraw();
+  scroller->redraw();
+}
+
+
 void UI_ModBox::Locked(bool value)
 {
   if (value)
   {
-    opts->deactivate();
+    mods->deactivate();
   }
   else
   {
-    opts->activate();
+    mods->activate();
   }
 }
-
-
-//----------------------------------------------------------------
-
-
-#if 0
-UI_Module::UI_Module(int x, int y, int w, int h, const char *label) :
-    Fl_Group(x, y, w, h, label)
-{
-  end(); // cancel begin() in Fl_Group constructor
- 
-  box(FL_THIN_UP_BOX);
-
-
-  int cy = y + 8;
-
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Custom Options");
-  heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-  heading->labeltype(FL_NORMAL_LABEL);
-  heading->labelfont(FL_HELVETICA_BOLD);
-
-  add(heading);
-
-  cy += 28;
-
-
-  opts = new UI_OptionList(x+4, cy, w-4, y+h-4 - cy);
-  opts->callback2(callback_Option, this);
-
-  add(opts);
-
-  resizable(opts);
-}
-
-
-UI_ModOptions::~UI_ModOptions()
-{
-}
-#endif
 
 
 //--- editor settings ---

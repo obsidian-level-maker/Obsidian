@@ -125,13 +125,13 @@ DebugPrintf("add_button: %s id:%s\n", what, id);
     main_win->level_box->theme->AddPair(id, label);
 
   else if (StringCaseCmp(what, "module") == 0)
-    main_win->mod_box->opts->AddPair(id, label);
+    main_win->mod_box->AddModule(id, label);
 
 ///!!!  else if (StringCaseCmp(what, "option") == 0)
 ///!!!    main_win->option_box->opts->AddPair(id, label);
 
-  else
-    Main_FatalError("add_button: unknown what value '%s'\n", what);
+///!!!  else
+///!!!    Main_FatalError("add_button: unknown what value '%s'\n", what);
 
   return 0;
 }
@@ -158,14 +158,14 @@ DebugPrintf("show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->ShowOrHide(id, shown);
 
-  else if (StringCaseCmp(what, "module") == 0)
-    main_win->mod_box->opts->ShowOrHide(id, shown);
+//!!!!  else if (StringCaseCmp(what, "module") == 0)
+//!!!!    main_win->mod_box->opts->ShowOrHide(id, shown);
 
 ///!!!  else if (StringCaseCmp(what, "option") == 0)
 ///!!!    main_win->option_box->opts->ShowOrHide(id, shown);
 
-  else
-    Main_FatalError("show_button: unknown what value '%s'\n", what);
+///!!!  else
+///!!!    Main_FatalError("show_button: unknown what value '%s'\n", what);
 
   return 0;
 }
@@ -192,14 +192,14 @@ DebugPrintf("change_button: %s --> %s\n", what, id);
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->SetID(id);
 
-  else if (StringCaseCmp(what, "module") == 0)
-    main_win->mod_box->opts->SetOption(id, opt_val);
+//!!!!  else if (StringCaseCmp(what, "module") == 0)
+//!!!!    main_win->mod_box->opts->SetOption(id, opt_val);
 
 ///!!!  else if (StringCaseCmp(what, "option") == 0)
 ///!!!    main_win->option_box->opts->SetOption(id, opt_val);
 
-  else
-    Main_FatalError("change_button: unknown what value '%s'\n", what);
+///!!!  else
+///!!!    Main_FatalError("change_button: unknown what value '%s'\n", what);
 
   return 0;
 }
