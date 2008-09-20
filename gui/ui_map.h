@@ -34,19 +34,22 @@ public:
   virtual ~UI_MiniMap();
 
 public:
+  int GetWidth()  const { return map_W; }
+  int GetHeight() const { return map_H; }
+
   void EmptyMap();
 
   void MapBegin();
   void MapFinish();
-
-  void MapClear();
-  void MapCorner(int x, int y, int dx, int dy);
 
   void DrawPixel(int x, int y, byte r, byte g, byte b);
   void DrawLine (int x1, int y1, int x2, int y2, byte r, byte g, byte b);
   void DrawEntity(int x, int y, byte r, byte g, byte b);
 
 private:
+  void MapClear();
+  void MapCorner(int x, int y, int dx, int dy);
+
   inline void RawPixel(int x, int y, byte r, byte g, byte b)
   {
     u8_t *pos = pixels + ((map_H-1 - y)*map_W + x) * 3;

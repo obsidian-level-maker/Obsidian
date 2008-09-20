@@ -296,7 +296,7 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
 
 void UI_MiniMap::DrawEntity(int x, int y, byte r, byte g, byte b)
 {
-  if (x < 1 || x >= map_W-1 || y < 1 || y >= map_H-1)
+  if (x < 1 || x > map_W-2 || y < 1 || y > map_H-2)
     return;
 
   RawPixel(x, y, r, g, b);

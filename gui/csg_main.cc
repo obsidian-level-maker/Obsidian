@@ -238,12 +238,18 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
 
 void CSG2_MakeMiniMap(void)
 {
-  int scale = 60;
+  int scale = 48;
 
   double min_x, min_y, min_z;
   double max_x, max_y, max_z;
 
   CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
+
+  double cent_x = (min_x + max_x) / 2.0;
+  double cent_y = (min_y + max_y) / 2.0;
+
+  int map_W = main_win->build_box->mini_map->GetWidth();
+  int map_H = main_win->build_box->mini_map->GetHeight();
 
   main_win->build_box->mini_map->MapBegin();
 
@@ -254,10 +260,11 @@ void CSG2_MakeMiniMap(void)
     if (! S->HasGap())
       continue;
 
-    int x1 = (int)ceil(S->start->x - min_x) / scale + 1;
-    int y1 = (int)ceil(S->start->y - min_y) / scale + 1;
-    int x2 = (int)ceil(S->end  ->x - min_x) / scale + 1;
-    int y2 = (int)ceil(S->end  ->y - min_y) / scale + 1;
+    int x1 = (int)ceil(S->start->x - cent_x) / scale + map_W/2;
+    int y1 = (int)ceil(S->start->y - cent_y) / scale + map_H/2;
+
+    int x2 = (int)ceil(S->end  ->x - cent_x) / scale + map_W/2;
+    int y2 = (int)ceil(S->end  ->y - cent_y) / scale + map_H/2;
 
     bool two_sided = (S->front && S->front->gaps.size() > 0) &&
                      (S->back  && S->back ->gaps.size() > 0);
@@ -299,8 +306,8 @@ void CSG2_MakeMiniMap(void)
   {
     entity_info_c *E = all_entities[k];
 
-    int x = (int)ceil(E->x - min_x) / scale + 1;
-    int y = (int)ceil(E->y - min_y) / scale + 1;
+    int x = (int)ceil(E->x - cent_x) / scale + map_W/2;
+    int y = (int)ceil(E->y - cent_y) / scale + map_H/2;
 
     main_win->build_box->mini_map->DrawEntity(x,y, 255,255,0);
   }
