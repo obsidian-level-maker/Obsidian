@@ -38,10 +38,13 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
  
   box(FL_THIN_UP_BOX);
 
+//  box(FL_FLAT_BOX); //!!!!
+  color(BUILD_BG, BUILD_BG); //!!!!
+
 
   int cy = y + 8;
 
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Level Architecture");
+  Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Level Architecture");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);

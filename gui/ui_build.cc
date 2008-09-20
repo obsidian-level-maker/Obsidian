@@ -39,6 +39,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   end(); // cancel begin() in Fl_Group constructor
  
   box(FL_FLAT_BOX);
+  box(FL_THIN_UP_BOX); //???
   color(BUILD_BG, BUILD_BG);
 
 
