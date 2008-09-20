@@ -22,7 +22,6 @@
 #include "ui_dialog.h"
 #include "ui_menu.h"
 #include "ui_map.h"
-#include "ui_optlist.h"
 #include "ui_rchoice.h"
 
 #include "ui_build.h"
