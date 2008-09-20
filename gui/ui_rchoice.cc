@@ -85,7 +85,7 @@ void UI_RChoice::AddPair(const char *id, const char *label)
 }
 
 
-bool UI_RChoice::ShowOrHide(const char *id, int new_shown)
+bool UI_RChoice::ShowOrHide(const char *id, bool new_shown)
 {
   SYS_ASSERT(id);
 
@@ -94,9 +94,9 @@ bool UI_RChoice::ShowOrHide(const char *id, int new_shown)
   if (! P)
     return false;
 
-  if (P->shown != bool(new_shown))
+  if (P->shown != new_shown)
   {
-    P->shown = bool(new_shown);
+    P->shown = new_shown;
     Recreate();
   }
 

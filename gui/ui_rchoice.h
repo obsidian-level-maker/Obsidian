@@ -60,9 +60,9 @@ public:
   void AddPair(const char *id, const char *label);
   // add a new option to the list.  If an option with the same 'id'
   // already exists, that option is replaced instead.
-  // The option will begin with shown == 0.
+  // The option will begin with shown == false.
 
-  bool ShowOrHide(const char *id, int new_shown);
+  bool ShowOrHide(const char *id, bool new_shown);
   // finds the option with the given ID, and update the shown
   // value.  Returns true if successful, or false if no such
   // option exists.  Any change will call Recreate().
