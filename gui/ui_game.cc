@@ -107,8 +107,6 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   length = new UI_RChoice(x +68, cy, 130, 24, "Length: ");
   length->align(FL_ALIGN_LEFT);
   length->selection_color(FL_BLUE);
-///---  length->add("Single Level|One Episode|Full Game");
-///---  length->value(1);
   length->callback(callback_Length, this);
 
   setup_Length();
@@ -204,20 +202,6 @@ void UI_Game::callback_Length(Fl_Widget *w, void *data)
   UI_Game *that = (UI_Game *)data;
 
   Script_SetConfig("length", that->length->GetID());
-  Signal_Raise("length");
-}
-
-void UI_Game::Defaults()
-{
-  // Note: game, engine are handled by LUA code (ob_init)
-
-  FreshSeed();
-
-  mode  ->SetID("sp");
-  length->SetID("single");
-  
-  Script_SetConfig("mode",   mode->GetID());
-  Script_SetConfig("length", length->GetID());
 }
 
 void UI_Game::Locked(bool value)
@@ -248,25 +232,32 @@ void UI_Game::Locked(bool value)
 }
 
 
-//----------------------------------------------------------------
+void UI_Game::Defaults()
+{
+  // Note: game, engine are handled by LUA code (ob_init)
 
+  FreshSeed();
+
+  ParseValue("mode", "sp");
+  ParseValue("length", "single");
+}
 
 bool UI_Game::ParseValue(const char *key, const char *value)
 {
-///  if (StringCaseCmp(key, "seed") == 0)
-///    return set_Seed(value);
-///
-///  if (StringCaseCmp(key, "game") == 0)
-///    return set_Game(value);
-///
-///  if (StringCaseCmp(key, "mode") == 0)
-///    return set_Mode(value);
-///
-///  if (StringCaseCmp(key, "engine") == 0)
-///    return set_Engine(value);
-///
-///  if (StringCaseCmp(key, "length") == 0)
-///    return set_Length(value);
+  // Note: game, engine are handled by LUA code
+ 
+  if (StringCaseCmp(key, "mode") == 0)
+  {
+    mode->SetID(value);
+    callback_Mode(NULL, this);
+    return true;
+  }
+
+  if (StringCaseCmp(key, "length") == 0)
+  {
+    length->SetID(value);
+    callback_Length(NULL, this);
+  }
 
   return false;
 }

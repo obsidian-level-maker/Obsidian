@@ -342,7 +342,7 @@ int main(int argc, char **argv)
   main_win->level_box->Defaults();
   main_win->play_box ->Defaults();
 
-  // load config after creating window (set widget values)
+  // load config after creating window (will set widget values)
   Cookie_Load(CONFIG_FILENAME);
 
   // handle -seed option

@@ -188,31 +188,43 @@ void UI_Level::Defaults()
 {
   // Note: theme handled by LUA code (ob_init)
 
-  size   ->SetID("small");
-  detail ->SetID("normal");
-  heights->SetID("mixed");
-  light  ->SetID("mixed");
-
-  Script_SetConfig("size",    this->size->GetID());
-  Script_SetConfig("detail",  this->detail->GetID());
-  Script_SetConfig("heights", this->heights->GetID());
-  Script_SetConfig("light",   this->light->GetID());
+  ParseValue("size",    "small");
+  ParseValue("detail",  "normal");
+  ParseValue("heights", "mixed");
+  ParseValue("light",   "mixed");
 }
  
-
 bool UI_Level::ParseValue(const char *key, const char *value)
 {
-///  if (StringCaseCmp(key, "theme") == 0)
-///    return set_Theme(value);
-///
-///  if (StringCaseCmp(key, "size") == 0)
-///    return set_Size(value);
-///
-///  if (StringCaseCmp(key, "detail") == 0)
-///    return set_Detail(value);
-///
-///  if (StringCaseCmp(key, "heights") == 0)
-///    return set_Heights(value);
+  // Note: theme handled by LUA code
+
+  if (StringCaseCmp(key, "size") == 0)
+  {
+    size->SetID(value);
+    callback_Size(NULL, this);
+    return true;
+  }
+
+  if (StringCaseCmp(key, "detail") == 0)
+  {
+    detail->SetID(value);
+    callback_Detail(NULL, this);
+    return true;
+  }
+
+  if (StringCaseCmp(key, "heights") == 0)
+  {
+    heights->SetID(value);
+    callback_Heights(NULL, this);
+    return true;
+  }
+
+  if (StringCaseCmp(key, "light") == 0)
+  {
+    light->SetID(value);
+    callback_Light(NULL, this);
+    return true;
+  }
 
   return false;
 }

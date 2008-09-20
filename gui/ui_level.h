@@ -37,15 +37,15 @@ public:
   virtual ~UI_Level();
 
 public:
+  void Locked(bool value);
 
   void Defaults();
 
-  bool ParseValue(const char *key, const char *value);
+  // this is only for reading the CONFIG.CFG file.
   // parse the name and store the value in the appropriate
-  // widget.  Returns false if the key was unknown or the
-  // value was invalid.
-
-  void Locked(bool value);
+  // widget, also sending it to the Lua code.
+  // Returns false if the key was unknown.
+  bool ParseValue(const char *key, const char *value);
 
 private:
 

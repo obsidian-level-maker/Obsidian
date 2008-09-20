@@ -218,36 +218,49 @@ void UI_Play::callback_Ammo(Fl_Widget *w, void *data)
 
 void UI_Play::Defaults()
 {
-  mons   ->SetID("mixed");
-  puzzles->SetID("normal");
-  traps  ->SetID("mixed");
-  health ->SetID("normal");
-  ammo   ->SetID("normal");
-
-  Script_SetConfig("mons",    this->mons->GetID());
-  Script_SetConfig("puzzles", this->puzzles->GetID());
-  Script_SetConfig("traps",   this->traps->GetID());
-  Script_SetConfig("health",  this->health->GetID());
-  Script_SetConfig("ammo",    this->ammo->GetID());
+  ParseValue("mons",    "mixed");
+  ParseValue("puzzles", "normal");
+  ParseValue("traps",   "mixed");
+  ParseValue("health",  "normal");
+  ParseValue("ammo",    "normal");
 }
-
  
 bool UI_Play::ParseValue(const char *key, const char *value)
 {
-///  if (StringCaseCmp(key, "mons") == 0)
-///    return set_Monsters(value);
-///
-///  if (StringCaseCmp(key, "puzzles") == 0)
-///    return set_Puzzles(value);
-///
-///  if (StringCaseCmp(key, "traps") == 0)
-///    return set_Traps(value);
-///
-///  if (StringCaseCmp(key, "health") == 0)
-///    return set_Health(value);
-///
-///  if (StringCaseCmp(key, "ammo") == 0)
-///    return set_Ammo(value);
+  if (StringCaseCmp(key, "mons") == 0)
+  {
+    mons->SetID(value);
+    callback_Monsters(NULL, this);
+    return true;
+  }
+
+  if (StringCaseCmp(key, "puzzles") == 0)
+  {
+    puzzles->SetID(value);
+    callback_Puzzles(NULL, this);
+    return true;
+  }
+
+  if (StringCaseCmp(key, "traps") == 0)
+  {
+    traps->SetID(value);
+    callback_Traps(NULL, this);
+    return true;
+  }
+
+  if (StringCaseCmp(key, "health") == 0)
+  {
+    health->SetID(value);
+    callback_Health(NULL, this);
+    return true;
+  }
+
+  if (StringCaseCmp(key, "ammo") == 0)
+  {
+    ammo->SetID(value);
+    callback_Ammo(NULL, this);
+    return true;
+  }
 
   return false;
 }

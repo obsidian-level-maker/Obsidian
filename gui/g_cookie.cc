@@ -40,6 +40,18 @@ static void Cookie_SetValue(const char *name, const char *value)
   if (StringCaseCmp(name, "seed") == 0)
     return;
 
+  // -- Game Settings --
+  if (main_win->game_box->ParseValue(name, value))
+    return;
+  
+  // -- Level Architecture --
+  if (main_win->level_box->ParseValue(name, value))
+    return;
+  
+  // -- Playing Style --
+  if (main_win->play_box->ParseValue(name, value))
+    return;
+
   // -- Miscellaneous --
   if (StringCaseCmp(name, "last_file") == 0)
   {

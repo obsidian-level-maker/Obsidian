@@ -388,6 +388,12 @@ function ob_set_config(name, value)
   if (name == "game") or (name == "mode") or (name == "engine") then
     ob_update_all()
   end
+
+  -- this is required for parsing the CONFIG.CFG file
+  -- [but redundant when the user merely changed the widget]
+  if (name == "game") or (name == "engine") or (name == "theme") then
+    gui.change_button(name, OB_CONFIG[name])
+  end
 end
 
 
