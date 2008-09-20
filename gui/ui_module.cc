@@ -54,17 +54,17 @@ UI_Module::UI_Module(int x, int y, int w, int h,
 {
   end(); // cancel begin() in Fl_Group constructor
  
-//  box(FL_SHADOW_BOX);
 //  box(FL_BORDER_BOX);
-  box(FL_FLAT_BOX);
-  color(FL_RED);
+  box(FL_THIN_UP_BOX);
+
+  color(BUILD_BG, BUILD_BG);
+
   resizable(NULL);
 
 
-  enabler = new Fl_Check_Button(x, y+4, w, 24, label);
+  enabler = new Fl_Check_Button(x+5, y+4, w-20, 24, label);
 
   add(enabler);
-
  
 
 //!!!!!!  hide();
@@ -78,12 +78,12 @@ UI_Module::~UI_Module()
 
 void UI_Module::AddOption(const char *id, const char *label, const char *choices)
 {
-return; //!!!!!
+//return; //!!!!!
 
   int nw = 120;
   int nh = 28;
 
-  int nx = x() + parent()->w()/2;
+  int nx = x() + 192;
   int ny = y() + children() * nh;
 
   // FIXME: make label with ': ' suffixed
@@ -122,42 +122,55 @@ UI_ModBox::UI_ModBox(int x, int y, int w, int h, const char *label) :
 {
   end(); // cancel begin() in Fl_Group constructor
  
-  box(FL_THIN_UP_BOX);
+//  box(FL_THIN_UP_BOX);
+  box(FL_FLAT_BOX);
+  color(WINDOW_BG, WINDOW_BG);
 
 
+  int cy = y; // + 8;
 
-  int cy = y + 8;
-
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Custom Mods");
+#if 0
+  Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6+w/4, cy, w/2-12, 24, "Custom Mods");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
+  heading->labelcolor(FL_WHITE);
+//  heading->color(BUILD_BG, BUILD_BG);
 
   add(heading);
+#endif
 
-  cy += 28;
-
+//  cy += 28;
 
 
   // area for module list
-  mx = x+4;
+  mx = x+0;
   my = cy;
-  mw = w-4 - Fl::scrollbar_size();
+  mw = w-0 - Fl::scrollbar_size();
   mh = y+h-cy;
+
+  offset_y = 0;
+  total_h  = 0;
 
 fprintf(stderr, "MLIST AREA: (%d,%d)  %dx%d\n", mx, my, mw, mh);
 
   sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
-//!!!  sbar->callback(callback_Scroll);
+  sbar->callback(callback_Scroll, this);
 
   add(sbar);
 
 
-  mod_pack = new My_ClipGroup(mx, my, mw, mh);
+  mod_pack = new My_ClipGroup(mx, my, mw, mh, "Custom Modules");
   mod_pack->end();
 
+  mod_pack->align(FL_ALIGN_INSIDE);
+  mod_pack->labeltype(FL_NORMAL_LABEL);
+//  mod_pack->labelfont(FL_HELVETICA_BOLD);
+  mod_pack->labelsize(20);
+//  mod_pack->labelcolor(FL_DARK2);
+
   mod_pack->box(FL_FLAT_BOX);
-  mod_pack->color(FL_BLUE);
+  mod_pack->color(WINDOW_BG);  
   mod_pack->resizable(NULL);
 
 
@@ -170,22 +183,9 @@ UI_ModBox::~UI_ModBox()
 }
 
 
-#if 0
-void UI_ModBox::callback_Module(option_data_c *opt, void *data)
-{
-//  UI_ModBox *that = (UI_ModBox *)data;
-
-  DebugPrintf("UI_ModBox: callback for %s\n", opt->id);
-
-  // TODO: make a method in option_data_c
-  Script_SetConfig(opt->id, opt->widget->value() ? "true" : "false");
-}
-#endif
-
-
 void UI_ModBox::AddModule(const char *id, const char *label)
 {
-  UI_Module *M = new UI_Module(mx, my, mw, 130, id, label);
+  UI_Module *M = new UI_Module(mx, my, mw-4, 130, id, label);
 
   mod_pack->add(M);
 
@@ -196,7 +196,8 @@ void UI_ModBox::AddModule(const char *id, const char *label)
 //  M->AddOption("d", "Foundation: ", "Bleh");
 
 
-  PositionAll(my);
+  total_h = PositionAll(my - offset_y);
+  sbar->value(0, mh, 0, total_h);
 
   M->redraw();
   mod_pack->redraw();
@@ -219,7 +220,8 @@ bool UI_ModBox::ShowOrHide(const char *id, bool new_shown)
     else
       M->hide();
 
-    PositionAll(my);
+    total_h = PositionAll(my - offset_y);
+    sbar->value(0, mh, 0, total_h);
 
     M->redraw();
     mod_pack->redraw();
@@ -231,6 +233,7 @@ bool UI_ModBox::ShowOrHide(const char *id, bool new_shown)
 
 int UI_ModBox::PositionAll(int start_y)
 {
+  int cur_y = start_y;
 fprintf(stderr, "PositionAll:\n");
 
   for (int j = 0; j < mod_pack->children(); j++)
@@ -238,27 +241,48 @@ fprintf(stderr, "PositionAll:\n");
     UI_Module *M = (UI_Module *) mod_pack->child(j);
     SYS_ASSERT(M);
 
-    int ny = start_y;
-    int nh = M->visible() ? 30 : 0; //!!!!!!!
+    int ny = cur_y;
+    int nh = M->visible() ? 136 : 0; //!!!!!!!
   
     if (ny != M->y() || nh != M->h())
     {
 fprintf(stderr, "  SETTING WIDGET TO: (%d,%d) %dx%d\n", M->x(), ny, M->w(), MAX(1, nh));
       M->resize(M->x(), ny, M->w(), MAX(1, nh));
 
-
-///      M->redraw();
+//      if (M->y() <= my+mh && M->y()+M->h() >= my)
+//        M->redraw();
     }
 fprintf(stderr, "  %p : %s (%d,%d) %dx%d\n", M, M->visible() ? "SHOW" : "hide", M->x(), M->y(), M->w(), M->h());
 
-    start_y += nh + (nh ? 4 : 0);
+    cur_y += nh + (nh ? 4 : 0);
   }
 
-  mod_pack->init_sizes();
+//  mod_pack->init_sizes();
+  mod_pack->redraw();
 
-fprintf(stderr, "  end_y = %d\n", start_y);
-  return start_y; // end_y now
+  return cur_y - start_y;
 }
+
+
+void UI_ModBox::callback_Scroll(Fl_Widget *w, void *data)
+{
+  Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
+
+  UI_ModBox *that = (UI_ModBox *)data;
+
+
+fprintf(stderr, "scrollbar pos: %d\n", sbar->value());
+  
+  that->offset_y = sbar->value();
+
+#if 1
+  int new_total_h = that->PositionAll(that->my - that->offset_y);
+
+  if (new_total_h != that->total_h)
+    fprintf(stderr, "WARNING: total_h CHANGED!!!\n");
+#endif
+}
+
 
 
 UI_Module * UI_ModBox::FindID(const char *id) const

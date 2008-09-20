@@ -52,6 +52,12 @@ private:
   // area occupied by module list
   int mx, my, mw, mh;
 
+  // number of pixels "lost" above the top of the module area
+  int offset_y;
+
+  // total height of all shown modules
+  int total_h;
+
 public:
   UI_ModBox(int x, int y, int w, int h, const char *label = NULL);
   virtual ~UI_ModBox();
@@ -70,8 +76,7 @@ private:
   int PositionAll(int start_y);
 
 
-  // FIXME
-//  static void callback_Module(option_data_c *, void *);
+  static void callback_Scroll(Fl_Widget *w, void *data);
 
   
 };
