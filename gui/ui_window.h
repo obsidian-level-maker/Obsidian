@@ -37,11 +37,10 @@ public:
 #endif
 
   UI_Game   *game_box;
-  UI_Build  *build_box;
-
   UI_Level  *level_box;
   UI_Play   *play_box;
 
+  UI_Build  *build_box;
   UI_ModBox *mod_box;
 
   enum  // actions
