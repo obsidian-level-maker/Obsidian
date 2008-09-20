@@ -33,7 +33,7 @@
 
 UI_MainWin *main_win;
 
-#define MAIN_WINDOW_W  620
+#define MAIN_WINDOW_W  628
 #define MAIN_WINDOW_H  432
 
 #if 0
@@ -68,45 +68,31 @@ UI_MainWin::UI_MainWin(const char *title) :
   color(WINDOW_BG, WINDOW_BG);
 
 
-#if 0  // EXPERIMENT: Do we NEED the menu bar ?
+  int GAME_W = 212;
+  int LEV_W  = 204;
+  int PLAY_W = 204;
+  
+  int BUILD_W = 256;
+  int MOD_W   = w() - BUILD_W - 4;
 
-  /* ---- Menu bar ---- */
-  {
-    menu_bar = MenuCreate(0, 0, w(), 28);
-    add(menu_bar);
+  int TOP_H = 220;
+  int BOT_H = h() - TOP_H - 4;
 
-#ifndef MACOSX
-    cy += menu_bar->h();
-///   cy += 8;
-#endif
-  }
-#endif
-
-  int LW = 212;
-  int MW = 200;
-  int RW = 200;
-
-  int GAME_H  = 220;
-  int ADJ_H   = GAME_H;
-  int MOD_H   = GAME_H;
-
-  game_box = new UI_Game(0, 0, LW, GAME_H);
+  game_box = new UI_Game(0, 0, GAME_W, TOP_H);
   add(game_box);
 
-  build_box = new UI_Build(0, GAME_H+4, LW, h()-GAME_H-4);
-  add(build_box);
-
-
-  level_box = new UI_Level(LW+4, 0, MW, ADJ_H);
+  level_box = new UI_Level(GAME_W+4, 0, LEV_W, TOP_H);
   add(level_box);
 
-  play_box = new UI_Play(LW+MW+8, 0, RW, ADJ_H);
+  play_box = new UI_Play(w() - PLAY_W, 0, PLAY_W, TOP_H);
   add(play_box);
 
 
-  mod_box = new UI_ModBox(LW+4, GAME_H+4, w()-LW-4, h()-GAME_H-4);
-  add(mod_box);
+  build_box = new UI_Build(0, h() - BOT_H, BUILD_W, BOT_H);
+  add(build_box);
 
+  mod_box = new UI_ModBox(w() - MOD_W, h() - BOT_H, MOD_W, BOT_H);
+  add(mod_box);
 
   resizable(mod_box);
 }
