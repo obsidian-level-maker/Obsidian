@@ -69,13 +69,17 @@ UI_Module::~UI_Module()
 
 void UI_Module::AddOption(const char *id, const char *label, const char *choices)
 {
+
+  int nw = 120;
   int nh = 28;
+
+  int nx = x() + parent()->w()/2;
   int ny = y() + children() * nh;
 
   // FIXME: make label with ': ' suffixed
 
 fprintf(stderr, "AddOption: x, y = %d,%d\n", x(), y());
-  UI_RChoice *rch = new UI_RChoice(x() + 140, ny, 120, 24, label);
+  UI_RChoice *rch = new UI_RChoice(nx, ny, nw, nh-4, label);
 
   rch->align(FL_ALIGN_LEFT);
   rch->selection_color(MY_PURPLE);
@@ -133,7 +137,7 @@ UI_ModBox::UI_ModBox(int x, int y, int w, int h, const char *label) :
   add(scroller);
 
   
-  mods = new Fl_Pack(scroller->x(), scroller->y(), scroller->w()-20, scroller->h());
+  mods = new Fl_Pack(scroller->x(), scroller->y(), scroller->w()-16, scroller->h());
   mods->end();
   mods->spacing(2);
 
@@ -164,14 +168,15 @@ void UI_ModBox::callback_Module(option_data_c *opt, void *data)
 
 void UI_ModBox::AddModule(const char *id, const char *label)
 {
-  UI_Module *new_mod = new UI_Module(x(), y(), 260, 120, id, label);
+
+  UI_Module *new_mod = new UI_Module(x(), y(), 220, 130, id, label);
 
   mods->add(new_mod);
 
 
-  new_mod->AddOption("a", "One: ", "Bleh");
-  new_mod->AddOption("b", "Two: ", "Bleh");
-  new_mod->AddOption("c", "Three: ", "Bleh");
+  new_mod->AddOption("a", "Dead Cacodemons: ", "Bleh");
+  new_mod->AddOption("b", "Lots of Cyberdemons: ", "Bleh");
+  new_mod->AddOption("c", "Do not add crates: ", "Bleh");
 //  new_mod->AddOption("d", "Foundation: ", "Bleh");
 
 
