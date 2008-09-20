@@ -40,11 +40,6 @@ public:
   
   void Defaults();
 
-  const char *GetAllValues();
-  // return a string containing all the values from this panel,
-  // in a form suitable for the Config file.
-  // The string should NOT be freed.
-
   bool ParseValue(const char *key, const char *value);
   // parse the name and store the value in the appropriate
   // widget.  Returns false if the key was unknown or the

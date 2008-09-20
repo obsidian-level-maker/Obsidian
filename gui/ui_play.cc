@@ -230,26 +230,8 @@ void UI_Play::Defaults()
   Script_SetConfig("health",  this->health->GetID());
   Script_SetConfig("ammo",    this->ammo->GetID());
 }
+
  
-const char * UI_Play::GetAllValues()
-{
-  static const char *last_str = NULL;
-
-  if (last_str)
-    StringFree(last_str);
-
-//!!!!  last_str = StringPrintf(
-//!!!!      "mons = %s\n"  "puzzles = %s\n"
-//!!!!      "traps = %s\n" "health = %s\n"
-//!!!!      "ammo = %s\n",
-//!!!!      get_Monsters(), get_Puzzles(),
-//!!!!      get_Traps(),    get_Health(),
-//!!!!      get_Ammo()
-//!!!!  );
-
-  return last_str;
-}
-
 bool UI_Play::ParseValue(const char *key, const char *value)
 {
 ///  if (StringCaseCmp(key, "mons") == 0)

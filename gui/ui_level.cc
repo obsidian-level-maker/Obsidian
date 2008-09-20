@@ -200,24 +200,6 @@ void UI_Level::Defaults()
 }
  
 
-const char * UI_Level::GetAllValues()
-{
-  static const char *last_str = NULL;
-
-  if (last_str)
-    StringFree(last_str);
-
-//!!!!  last_str = StringPrintf(
-//!!!!      "size = %s\n"    "theme = %s\n"
-//!!!!      "detail = %s\n"  "heights = %s\n",
-//!!!!      //!!! light
-//!!!!      get_Size(),   get_Theme(),
-//!!!!      get_Detail(), get_Heights()
-//!!!!  );
-
-  return last_str;
-}
-
 bool UI_Level::ParseValue(const char *key, const char *value)
 {
 ///  if (StringCaseCmp(key, "theme") == 0)

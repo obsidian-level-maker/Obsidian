@@ -250,35 +250,6 @@ void UI_Game::Locked(bool value)
 
 //----------------------------------------------------------------
 
-void UI_Game::TransferToLUA()
-{
-#if 0
-  Script_SetConfig("seed",   get_Seed());
-  Script_SetConfig("game",   get_Game());
-  Script_SetConfig("mode",   get_Mode());
-  Script_SetConfig("engine", get_Engine());
-  Script_SetConfig("length", get_Length());
-#endif
-}
- 
-const char * UI_Game::GetAllValues()
-{
-  static const char *last_str = NULL;
-
-  if (last_str)
-    StringFree(last_str);
-
-//!!!!  last_str = StringPrintf(
-//!!!!      "seed = %s\n"  "game = %s\n"
-//!!!!      "mode = %s\n"  "engine = %s\n"
-//!!!!      "length = %s\n",
-//!!!!      get_Seed(), get_Game(),
-//!!!!      get_Mode(), get_Engine(),
-//!!!!      get_Length()
-//!!!!  );
-
-  return last_str;
-}
 
 bool UI_Game::ParseValue(const char *key, const char *value)
 {
@@ -308,6 +279,7 @@ const char * UI_Game::mode_syms[] =
   "sp",   "Single Player",
   "coop", "Co-op",
   "dm",   "Deathmatch",
+// "ctf",  "Capture Flag",
 
   NULL, NULL
 };
