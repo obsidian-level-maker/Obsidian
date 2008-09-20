@@ -38,6 +38,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
  
   box(FL_THIN_UP_BOX);
 
+
   int cy = y + 8;
 
   Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Level Architecture");
@@ -50,7 +51,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += heading->h() + 6;
 
 
-  size = new UI_RChoice(x+ 82, cy, 112, 24, "Size: ");
+  size = new UI_RChoice(x+ 78, cy, 114, 24, "Size: ");
   size->align(FL_ALIGN_LEFT);
   size->selection_color(MY_GREEN);
   size->callback(callback_Size, this);
@@ -64,7 +65,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  theme = new UI_RChoice(x+ 82, cy, 112, 24, "Theme: ");
+  theme = new UI_RChoice(x+ 78, cy, 114, 24, "Theme: ");
   theme->align(FL_ALIGN_LEFT);
   theme->selection_color(MY_GREEN);
   theme->callback(callback_Theme, this);
@@ -74,7 +75,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += theme->h() + 6;
 
 
-  detail = new UI_RChoice(x+ 82, cy, 112, 24, "Detail: ");
+  detail = new UI_RChoice(x+ 78, cy, 114, 24, "Detail: ");
   detail->align(FL_ALIGN_LEFT);
   detail->selection_color(MY_GREEN);
   detail->callback(callback_Detail, this);
@@ -88,7 +89,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  heights = new UI_RChoice(x+ 82, cy, 112, 24, "Heights: ");
+  heights = new UI_RChoice(x+ 78, cy, 114, 24, "Heights: ");
   heights->align(FL_ALIGN_LEFT);
   heights->selection_color(MY_GREEN);
   heights->callback(callback_Heights, this);
@@ -100,7 +101,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += heights->h() + 6;
 
 
-  light = new UI_RChoice(x+ 82, cy, 112, 24, "Lighting: ");
+  light = new UI_RChoice(x+ 78, cy, 114, 24, "Lighting: ");
   light->align(FL_ALIGN_LEFT);
   light->selection_color(MY_GREEN);
   light->callback(callback_Light, this);

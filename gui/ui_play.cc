@@ -49,10 +49,10 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   add(heading);
 
-  cy += 28;
+  cy += heading->h() + 6;
 
 
-  mons = new UI_RChoice(x+ 82, cy, 112, 24, "Monsters: ");
+  mons = new UI_RChoice(x+ 82, cy, 110, 24, "Monsters: ");
   mons->align(FL_ALIGN_LEFT);
   mons->selection_color(MY_RED);
   mons->callback(callback_Monsters, this);
@@ -63,8 +63,10 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   cy += mons->h() + 6;
 
+  cy += 10;
 
-  puzzles = new UI_RChoice(x+ 82, cy, 112, 24, "Puzzles: ");
+
+  puzzles = new UI_RChoice(x+ 82, cy, 110, 24, "Puzzles: ");
   puzzles->align(FL_ALIGN_LEFT);
   puzzles->selection_color(MY_RED);
   puzzles->callback(callback_Puzzles, this);
@@ -76,7 +78,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += puzzles->h() + 6;
 
 
-  traps = new UI_RChoice(x+ 82, cy, 112, 24, "Traps: ");
+  traps = new UI_RChoice(x+ 82, cy, 110, 24, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
   traps->selection_color(MY_RED);
   traps->callback(callback_Traps, this);
@@ -90,7 +92,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  health = new UI_RChoice(x+82, cy, 112, 24, "Health: ");
+  health = new UI_RChoice(x+82, cy, 110, 24, "Health: ");
   health->align(FL_ALIGN_LEFT);
   health->selection_color(MY_RED);
   health->callback(callback_Health, this);
@@ -102,7 +104,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += health->h() + 6;
 
 
-  ammo = new UI_RChoice(x+82, cy, 112, 24, "Ammo: ");
+  ammo = new UI_RChoice(x+82, cy, 110, 24, "Ammo: ");
   ammo->align(FL_ALIGN_LEFT);
   ammo->selection_color(MY_RED);
   ammo->callback(callback_Ammo, this);
