@@ -44,31 +44,33 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 16;
 
-  mini_map = new UI_MiniMap(x+12, cy + 6, 100, 100);
+  mini_map = new UI_MiniMap(x+20, cy + 6, 124, 104);
 
   add(mini_map);
 
-//  cy += mini_map->h() + 8;
-//  DebugPrintf("UI_Build: mini map h2 = %d\n", cy - y);
-
-
-///  cy = y + h - 120;
 
   build = new Fl_Button(x+w - 88, cy, 74, 30, "Build...");
   build->labelfont(FL_HELVETICA_BOLD);
   build->callback(build_callback, this);
 
-  add(build);  cy += 42;
+  add(build);
+
+  cy += 42;
 
   Fl_Button *about = new Fl_Button(x+w - 88, cy, 74, 30, "About");
   about->callback(menu_do_about, this);
 
-  add(about);  cy += 42;
+  add(about);
+
+  cy += 42;
 
   quit = new Fl_Button(x+w - 88, cy, 74, 32, "Quit");
   quit->callback(quit_callback, this);
 
-  add(quit);  cy += 42;
+  add(quit);
+
+  cy += 42;
+  
 
   DebugPrintf("UI_Build: button h2 = %d\n", cy - y);
 
@@ -190,7 +192,7 @@ void UI_Build::ProgSetButton(bool abort)
   if (abort)
   {
     build->callback(stop_callback, this);
-    build->label("Abort");
+    build->label("Cancel");
     build->labelcolor(ABORT_COLOR);
   }
   else

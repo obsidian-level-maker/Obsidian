@@ -207,6 +207,9 @@ void Main_FatalError(const char *msg, ...)
 
 void Build_Cool_Shit()
 {
+  // clear the map
+  main_win->build_box->mini_map->EmptyMap();
+
   const char *format = Script_GameFormat();
 
   if (! format || strlen(format) == 0)
@@ -250,9 +253,9 @@ void Build_Cool_Shit()
   if (was_ok)
     bb_area->ProgStatus("Success");
   else if (main_win->action >= UI_MainWin::ABORT)
-    bb_area->ProgStatus("Aborted");
+    bb_area->ProgStatus("Cancelled");
   else
-    bb_area->ProgStatus("Error");  // TODO: more info
+    bb_area->ProgStatus("Error");  // !!! FIXME: more info
 
   bb_area->ProgFinish();
   bb_area->ProgSetButton(false);
