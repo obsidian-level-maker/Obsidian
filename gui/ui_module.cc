@@ -29,16 +29,35 @@
 #define MY_PURPLE  fl_rgb_color(208,0,208)
 
 
+class My_ClipGroup : public Fl_Group
+{
+public:
+  My_ClipGroup(int X, int Y, int W, int H, const char *L = NULL) :
+      Fl_Group(X, Y, W, H, L)
+  {
+    clip_children(1);
+  }
+
+  virtual ~My_ClipGroup()
+  { }
+};
+
+
+//-----------------------------------------------------------------
+
+
 UI_Module::UI_Module(int x, int y, int w, int h,
                      const char *id, const char *label) :
     Fl_Group(x, y, w, h),
-    mod_id(id),
+    id_name(id),
     choice_map()
 {
   end(); // cancel begin() in Fl_Group constructor
  
-  box(FL_SHADOW_BOX);
-
+//  box(FL_SHADOW_BOX);
+//  box(FL_BORDER_BOX);
+  box(FL_FLAT_BOX);
+  color(FL_RED);
   resizable(NULL);
 
 
@@ -46,19 +65,9 @@ UI_Module::UI_Module(int x, int y, int w, int h,
 
   add(enabler);
 
-  // enabler->hide()
+ 
 
-
-#if 0
-
-  Fl_Box *heading = new Fl_Box(FL_FLAT_BOX, x+6, cy, w-12, 24, "Custom Options");
-  heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-  heading->labeltype(FL_NORMAL_LABEL);
-  heading->labelfont(FL_HELVETICA_BOLD);
-
-  add(heading);
-
-#endif
+//!!!!!!  hide();
 }
 
 
@@ -69,6 +78,7 @@ UI_Module::~UI_Module()
 
 void UI_Module::AddOption(const char *id, const char *label, const char *choices)
 {
+return; //!!!!!
 
   int nw = 120;
   int nh = 28;
@@ -103,6 +113,7 @@ fprintf(stderr, "AddOption: x, y = %d,%d\n", x(), y());
 }
 
 
+
 //----------------------------------------------------------------
 
 
@@ -112,6 +123,7 @@ UI_ModBox::UI_ModBox(int x, int y, int w, int h, const char *label) :
   end(); // cancel begin() in Fl_Group constructor
  
   box(FL_THIN_UP_BOX);
+
 
 
   int cy = y + 8;
@@ -126,27 +138,30 @@ UI_ModBox::UI_ModBox(int x, int y, int w, int h, const char *label) :
   cy += 28;
 
 
-  scroller = new Fl_Scroll(x+4, cy, w-4, y+h - cy);
-  scroller->end();
-  scroller->type(Fl_Scroll::VERTICAL_ALWAYS);
-  scroller->color(BUILD_BG);
-///---  scroller->scrollbar.align(FL_ALIGN_LEFT | FL_ALIGN_BOTTOM);
 
-///!!!  opts->callback2(callback_Module, this);
+  // area for module list
+  mx = x+4;
+  my = cy;
+  mw = w-4 - Fl::scrollbar_size();
+  mh = y+h-cy;
 
-  add(scroller);
+fprintf(stderr, "MLIST AREA: (%d,%d)  %dx%d\n", mx, my, mw, mh);
 
-  
-  mods = new Fl_Pack(scroller->x(), scroller->y(), scroller->w()-16, scroller->h());
-  mods->end();
-  mods->spacing(2);
+  sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
+//!!!  sbar->callback(callback_Scroll);
 
-//scroller->color(FL_BLACK);
-
-  scroller->add(mods);
+  add(sbar);
 
 
-//  resizable(scroller);
+  mod_pack = new My_ClipGroup(mx, my, mw, mh);
+  mod_pack->end();
+
+  mod_pack->box(FL_FLAT_BOX);
+  mod_pack->color(FL_BLUE);
+  mod_pack->resizable(NULL);
+
+
+  add(mod_pack);
 }
 
 
@@ -155,6 +170,7 @@ UI_ModBox::~UI_ModBox()
 }
 
 
+#if 0
 void UI_ModBox::callback_Module(option_data_c *opt, void *data)
 {
 //  UI_ModBox *that = (UI_ModBox *)data;
@@ -164,25 +180,100 @@ void UI_ModBox::callback_Module(option_data_c *opt, void *data)
   // TODO: make a method in option_data_c
   Script_SetConfig(opt->id, opt->widget->value() ? "true" : "false");
 }
+#endif
 
 
 void UI_ModBox::AddModule(const char *id, const char *label)
 {
+  UI_Module *M = new UI_Module(mx, my, mw, 130, id, label);
 
-  UI_Module *new_mod = new UI_Module(x(), y(), 220, 130, id, label);
-
-  mods->add(new_mod);
-
-
-  new_mod->AddOption("a", "Dead Cacodemons: ", "Bleh");
-  new_mod->AddOption("b", "Lots of Cyberdemons: ", "Bleh");
-  new_mod->AddOption("c", "Do not add crates: ", "Bleh");
-//  new_mod->AddOption("d", "Foundation: ", "Bleh");
+  mod_pack->add(M);
 
 
-  new_mod->redraw();
-  mods->redraw();
-  scroller->redraw();
+  M->AddOption("a", "Dead Cacodemons: ", "Bleh");
+  M->AddOption("b", "Lots of Cyberdemons: ", "Bleh");
+  M->AddOption("c", "Do not add crates: ", "Bleh");
+//  M->AddOption("d", "Foundation: ", "Bleh");
+
+
+  PositionAll(my);
+
+  M->redraw();
+  mod_pack->redraw();
+}
+
+
+bool UI_ModBox::ShowOrHide(const char *id, bool new_shown)
+{
+  SYS_ASSERT(id);
+
+  UI_Module *M = FindID(id);
+
+  if (! M)
+    return false;
+
+  if (1) //!!!! M->visible() != (new_shown ? 1:0))
+  {
+    if (new_shown)
+      M->show();
+    else
+      M->hide();
+
+    PositionAll(my);
+
+    M->redraw();
+    mod_pack->redraw();
+  }
+
+  return true;
+}
+
+
+int UI_ModBox::PositionAll(int start_y)
+{
+fprintf(stderr, "PositionAll:\n");
+
+  for (int j = 0; j < mod_pack->children(); j++)
+  {
+    UI_Module *M = (UI_Module *) mod_pack->child(j);
+    SYS_ASSERT(M);
+
+    int ny = start_y;
+    int nh = M->visible() ? 30 : 0; //!!!!!!!
+  
+    if (ny != M->y() || nh != M->h())
+    {
+fprintf(stderr, "  SETTING WIDGET TO: (%d,%d) %dx%d\n", M->x(), ny, M->w(), MAX(1, nh));
+      M->resize(M->x(), ny, M->w(), MAX(1, nh));
+
+
+///      M->redraw();
+    }
+fprintf(stderr, "  %p : %s (%d,%d) %dx%d\n", M, M->visible() ? "SHOW" : "hide", M->x(), M->y(), M->w(), M->h());
+
+    start_y += nh + (nh ? 4 : 0);
+  }
+
+  mod_pack->init_sizes();
+
+fprintf(stderr, "  end_y = %d\n", start_y);
+  return start_y; // end_y now
+}
+
+
+UI_Module * UI_ModBox::FindID(const char *id) const
+{
+  // this is awful
+  for (int j = 0; j < mod_pack->children(); j++)
+  {
+    UI_Module *M = (UI_Module *) mod_pack->child(j);
+    SYS_ASSERT(M);
+
+    if (strcmp(M->id_name.c_str(), id) == 0)
+      return M;
+  }
+
+  return NULL;
 }
 
 
@@ -190,11 +281,11 @@ void UI_ModBox::Locked(bool value)
 {
   if (value)
   {
-    mods->deactivate();
+    mod_pack->deactivate();
   }
   else
   {
-    mods->activate();
+    mod_pack->activate();
   }
 }
 

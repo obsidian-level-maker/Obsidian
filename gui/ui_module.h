@@ -22,8 +22,10 @@
 
 class UI_Module : public Fl_Group
 {
+friend class UI_ModBox;
+
 private:
-  std::string mod_id;
+  std::string id_name;
 
   Fl_Check_Button *enabler;  
 
@@ -43,8 +45,12 @@ public:
 class UI_ModBox : public Fl_Group
 {
 private:
-  Fl_Pack   *mods;
-  Fl_Scroll *scroller;
+  Fl_Group *mod_pack;
+
+  Fl_Scrollbar *sbar;
+
+  // area occupied by module list
+  int mx, my, mw, mh;
 
 public:
   UI_ModBox(int x, int y, int w, int h, const char *label = NULL);
@@ -53,12 +59,21 @@ public:
 public:
   void AddModule(const char *id, const char *label);
 
+  bool ShowOrHide(const char *id, bool new_shown);
+
   void Locked(bool value);
 
   
 private:
-  static void callback_Module(option_data_c *, void *);
+  UI_Module *FindID(const char *id) const;
 
+  int PositionAll(int start_y);
+
+
+  // FIXME
+//  static void callback_Module(option_data_c *, void *);
+
+  
 };
 
 

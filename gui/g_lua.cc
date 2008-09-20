@@ -158,8 +158,8 @@ DebugPrintf("show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->ShowOrHide(id, shown);
 
-//!!!!  else if (StringCaseCmp(what, "module") == 0)
-//!!!!    main_win->mod_box->opts->ShowOrHide(id, shown);
+  else if (StringCaseCmp(what, "module") == 0)
+    main_win->mod_box->ShowOrHide(id, shown);
 
 ///!!!  else if (StringCaseCmp(what, "option") == 0)
 ///!!!    main_win->option_box->opts->ShowOrHide(id, shown);
