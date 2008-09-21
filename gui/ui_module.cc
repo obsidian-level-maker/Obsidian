@@ -67,7 +67,7 @@ UI_Module::UI_Module(int x, int y, int w, int h,
   add(enabled);
  
 
-//!!!!!!  hide();
+  hide();
 }
 
 
@@ -76,10 +76,8 @@ UI_Module::~UI_Module()
 }
 
 
-void UI_Module::AddOption(const char *id, const char *label, const char *choices)
+void UI_Module::AddOption(const char *opt, const char *label)
 {
-//return; //!!!!!
-
   int nw = 120;
   int nh = 28;
 
@@ -88,7 +86,7 @@ void UI_Module::AddOption(const char *id, const char *label, const char *choices
 
   // FIXME: make label with ': ' suffixed
 
-fprintf(stderr, "AddOption: x, y = %d,%d\n", x(), y());
+fprintf(stderr, "AddOption %s: x, y = %d,%d\n", opt, x(), y());
   UI_RChoice *rch = new UI_RChoice(nx, ny, nw, 24, label);
 
   rch->align(FL_ALIGN_LEFT);
@@ -96,16 +94,16 @@ fprintf(stderr, "AddOption: x, y = %d,%d\n", x(), y());
 
   add(rch);
 
-  choice_map[id] = rch;
+  choice_map[opt] = rch;
   
 
-  rch->AddPair("foo", "Foo");
-  rch->AddPair("bar", "Bar");
-  rch->AddPair("jim", "Jimmy");
-
-  rch->ShowOrHide("foo", 1);
-  rch->ShowOrHide("bar", 1);
-  rch->ShowOrHide("jim", 1);
+///---  rch->AddPair("foo", "Foo");
+///---  rch->AddPair("bar", "Bar");
+///---  rch->AddPair("jim", "Jimmy");
+///---
+///---  rch->ShowOrHide("foo", 1);
+///---  rch->ShowOrHide("bar", 1);
+///---  rch->ShowOrHide("jim", 1);
 
 ///  rch->redraw();
 
@@ -140,6 +138,28 @@ void UI_Module::update_Enable()
     else
       M->hide();
   }
+}
+
+
+void UI_Module::OptionPair(const char *option, const char *id, const char *label)
+{
+  UI_RChoice *rch = FindOpt(option);
+fprintf(stderr, "Looking for '%s'\n", option);
+  if (! rch)
+    return; // false;
+
+fprintf(stderr, "OPTION PAIR : %s --> %s\n", id, label);
+  rch->AddPair(id, label);
+  rch->ShowOrHide(id, 1);
+}
+
+
+UI_RChoice * UI_Module::FindOpt(const char *opt)
+{
+  if (choice_map.find(opt) == choice_map.end())
+    return NULL;
+
+  return choice_map[opt];
 }
 
 
@@ -214,17 +234,11 @@ UI_CustomMods::~UI_CustomMods()
 
 void UI_CustomMods::AddModule(const char *id, const char *label)
 {
-  UI_Module *M = new UI_Module(mx, my, mw-4, 130, id, label);
+  UI_Module *M = new UI_Module(mx, my, mw-4, 30, id, label);
 
   M->enabled->callback(callback_ModEnable, M);
 
   mod_pack->add(M);
-
-
-  M->AddOption("a", "Dead Cacodemons: ", "Bleh");
-  M->AddOption("b", "Lots of Cyberdemons: ", "Bleh");
-  M->AddOption("c", "Do not add crates: ", "Bleh");
-//  M->AddOption("d", "Foundation: ", "Bleh");
 
 
   total_h = PositionAll(my - offset_y);
@@ -232,6 +246,34 @@ void UI_CustomMods::AddModule(const char *id, const char *label)
 
   M->redraw();
   mod_pack->redraw();
+}
+
+
+void UI_CustomMods::AddOption(const char *module, const char *option,
+                              const char *label)
+{
+  UI_Module *M = FindID(module);
+  if (! M)
+    return; // false;
+
+  M->AddOption(option, label);
+
+
+  total_h = PositionAll(my - offset_y);
+
+  M->redraw();
+  mod_pack->redraw();
+}
+
+void UI_CustomMods::OptionPair(const char *module, const char *option,
+                               const char *id, const char *label)
+{
+  UI_Module *M = FindID(module);
+fprintf(stderr, "Looking for module '%s' : %p\n", module, M);
+  if (! M)
+    return; // false;
+
+  M->OptionPair(option, id, label);
 }
 
 
@@ -292,17 +334,16 @@ fprintf(stderr, "PositionAll:\n");
     SYS_ASSERT(M);
 
     int ny = cur_y;
-    int nh = M->visible() ? M->CalcHeight() : 0; //!!!!!!!
+    int nh = M->visible() ? M->CalcHeight() : 0;
   
     if (ny != M->y() || nh != M->h())
     {
-fprintf(stderr, "  SETTING WIDGET TO: (%d,%d) %dx%d\n", M->x(), ny, M->w(), MAX(1, nh));
-      M->resize(M->x(), ny, M->w(), MAX(1, nh));
+//fprintf(stderr, "  SETTING WIDGET TO: (%d,%d) %dx%d\n", M->x(), ny, M->w(), MAX(1, nh));
 
-//      if (M->y() <= my+mh && M->y()+M->h() >= my)
-//        M->redraw();
+      M->resize(M->x(), ny, M->w(), MAX(1, nh));
     }
-fprintf(stderr, "  %p : %s (%d,%d) %dx%d\n", M, M->visible() ? "SHOW" : "hide", M->x(), M->y(), M->w(), M->h());
+
+//fprintf(stderr, "  %p : %s (%d,%d) %dx%d\n", M, M->visible() ? "SHOW" : "hide", M->x(), M->y(), M->w(), M->h());
 
     cur_y += nh + (nh ? 4 : 0);
   }
@@ -320,7 +361,7 @@ void UI_CustomMods::callback_Scroll(Fl_Widget *w, void *data)
   UI_CustomMods *that = (UI_CustomMods *)data;
 
 
-fprintf(stderr, "scrollbar pos: %d\n", sbar->value());
+// fprintf(stderr, "scrollbar pos: %d\n", sbar->value());
   
   that->offset_y = sbar->value();
 

@@ -35,13 +35,17 @@ public:
   UI_Module(int x, int y, int w, int h, const char *id, const char *label);
   virtual ~UI_Module();
 
-  void AddOption(const char *id, const char *label, const char *choices);
+  void AddOption(const char *opt, const char *label);
+
+  void OptionPair(const char *opt, const char *id, const char *label);
 
 public:
   int CalcHeight() const;
 
   void update_Enable();
 
+protected:
+  UI_RChoice *FindOpt(const char *opt); // const;
 };
 
 
@@ -71,6 +75,11 @@ public:
   bool ShowOrHide(const char *id, bool new_shown);
 
   void ChangeValue(const char *id, bool enable);
+
+  void AddOption (const char *module, const char *option, const char *label);
+
+  void OptionPair(const char *module, const char *option,
+                  const char *id, const char *label);
 
   void Locked(bool value);
 

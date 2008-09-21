@@ -111,7 +111,7 @@ int add_button(lua_State *L)
 
   // only allowed during startup
   if (has_added_buttons)
-    Main_FatalError("LUA script problem: con.add_button called late.\n");
+    Main_FatalError("LUA script problem: gui.add_button called late.\n");
 
 DebugPrintf("add_button: %s id:%s\n", what, id);
 
@@ -127,14 +127,50 @@ DebugPrintf("add_button: %s id:%s\n", what, id);
   else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->AddModule(id, label);
 
-///!!!  else if (StringCaseCmp(what, "option") == 0)
-///!!!    main_win->option_box->opts->AddPair(id, label);
-
-///!!!  else
-///!!!    Main_FatalError("add_button: unknown what value '%s'\n", what);
+  else
+    Main_FatalError("add_button: unknown what value '%s'\n", what);
 
   return 0;
 }
+
+// LUA: add_mod_option (module, option, [id,] label)
+//
+// When the 'id' string is omitted, it indicates mere creation of
+// a new button widget for the module.  OTHERWISE we are adding a
+// choice to the existing button (a la add_button).
+//
+int add_mod_option(lua_State *L)
+{
+  int nargs = lua_gettop(L);
+
+  const char *module = luaL_checkstring(L,1);
+  const char *option = luaL_checkstring(L,2);
+
+  const char *id    = NULL;
+  const char *label = NULL;
+
+  if (nargs >= 4)
+  {
+    id    = luaL_checkstring(L,3);
+    label = luaL_checkstring(L,4);
+  }
+  else
+    label = luaL_checkstring(L,3);
+
+  SYS_ASSERT(module && option);
+
+  // only allowed during startup
+  if (has_added_buttons)
+    Main_FatalError("LUA script problem: gui.add_mod_option called late.\n");
+
+  if (! id)
+    main_win->mod_box->AddOption(module, option, label);
+  else
+    main_win->mod_box->OptionPair(module, option, id, label);
+
+  return 0;
+}
+
 
 // LUA: show_button(what, id, shown)
 //
@@ -161,11 +197,8 @@ DebugPrintf("show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
   else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->ShowOrHide(id, shown);
 
-///!!!  else if (StringCaseCmp(what, "option") == 0)
-///!!!    main_win->option_box->opts->ShowOrHide(id, shown);
-
-///!!!  else
-///!!!    Main_FatalError("show_button: unknown what value '%s'\n", what);
+  else
+    Main_FatalError("show_button: unknown what value '%s'\n", what);
 
   return 0;
 }
@@ -195,11 +228,8 @@ DebugPrintf("change_button: %s --> %s\n", what, id);
   else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->ChangeValue(id, opt_val);
 
-///!!!  else if (StringCaseCmp(what, "option") == 0)
-///!!!    main_win->option_box->opts->SetOption(id, opt_val);
-
-///!!!  else
-///!!!    Main_FatalError("change_button: unknown what value '%s'\n", what);
+  else
+    Main_FatalError("change_button: unknown what value '%s'\n", what);
 
   return 0;
 }
@@ -344,9 +374,10 @@ static const luaL_Reg gui_script_funcs[] =
   { "raw_debug_print", con::raw_debug_print },
   { "config_line",     con::config_line },
 
-  { "add_button",    con::add_button },
-  { "show_button",   con::show_button },
-  { "change_button", con::change_button },
+  { "add_button",     con::add_button },
+  { "add_mod_option", con::add_mod_option },
+  { "show_button",    con::show_button },
+  { "change_button",  con::change_button },
 
   { "at_level",   con::at_level },
   { "progress",   con::progress },
