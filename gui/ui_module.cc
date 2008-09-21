@@ -89,23 +89,12 @@ void UI_Module::AddOption(const char *opt, const char *label)
 fprintf(stderr, "AddOption %s: x, y = %d,%d\n", opt, x(), y());
   UI_RChoice *rch = new UI_RChoice(nx, ny, nw, 24, label);
 
+  choice_map[opt] = rch;
+
   rch->align(FL_ALIGN_LEFT);
   rch->selection_color(MY_PURPLE);
 
   add(rch);
-
-  choice_map[opt] = rch;
-  
-
-///---  rch->AddPair("foo", "Foo");
-///---  rch->AddPair("bar", "Bar");
-///---  rch->AddPair("jim", "Jimmy");
-///---
-///---  rch->ShowOrHide("foo", 1);
-///---  rch->ShowOrHide("bar", 1);
-///---  rch->ShowOrHide("jim", 1);
-
-///  rch->redraw();
 
   rch->hide();
 
