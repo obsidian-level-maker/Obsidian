@@ -34,7 +34,7 @@
 UI_MainWin *main_win;
 
 #define MIN_WINDOW_W  (640-12)
-#define MIN_WINDOW_H  (480-48)
+#define MIN_WINDOW_H  (480-56)
 
 // not resizable!
 #define MAX_WINDOW_W  MIN_WINDOW_W
@@ -71,7 +71,7 @@ UI_MainWin::UI_MainWin(const char *title) :
   int BUILD_W = 256;
   int MOD_W   = w() - BUILD_W - 4;
 
-  int TOP_H = 220;
+  int TOP_H = 214;
   int BOT_H = h() - TOP_H - 4;
 
   game_box = new UI_Game(0, 0, GAME_W, TOP_H);

@@ -43,7 +43,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   color(BUILD_BG, BUILD_BG);
 
 
-  int cy = y + 16;
+  int cy = y + 13;
 
   mini_map = new UI_MiniMap(x+20, cy + 6, 124, 104);
 
@@ -76,11 +76,14 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   DebugPrintf("UI_Build: button h2 = %d\n", cy - y);
 
 
-  cy = y + h - 70;
+  cy = y + h - 72;
 
   status = new Fl_Box(FL_FLAT_BOX, x+12, cy, 136, 24, "Ready to go!");
   status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
-  status->color(BUILD_BG, BUILD_BG);
+  if (1) // plastic
+    status->color(FL_DARK2, FL_DARK2);
+  else
+    status->color(BUILD_BG, BUILD_BG);
   add(status);
 
   cy += status->h() + 12;

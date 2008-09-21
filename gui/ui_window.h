@@ -20,9 +20,9 @@
 #define __UI_WINDOW_H__
 
 
-#define WINDOW_BG  fl_gray_ramp(5)
+#define WINDOW_BG  fl_gray_ramp(3)
 
-#define BUILD_BG   fl_gray_ramp(10)
+#define BUILD_BG   fl_gray_ramp(8)
 
 
 class UI_MainWin : public Fl_Double_Window

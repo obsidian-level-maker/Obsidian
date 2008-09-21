@@ -282,7 +282,7 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  if (0)
+  if (1)
     Fl::scheme("plastic");
 
   fl_message_font(FL_HELVETICA /* _BOLD */, 18);

@@ -42,7 +42,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   color(BUILD_BG, BUILD_BG); //!!!!
 
 
-  int cy = y + 8;
+  int cy = y + 6;
 
   Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Level Architecture");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
