@@ -275,18 +275,9 @@ function ob_update_modules()
 end
 
 
-function ob_update_options()
-  for name,def in pairs(OB_OPTIONS) do
-    def.shown = ob_match_conf(def)
-    gui.show_button("option", name, def.shown)
-  end
-end
-
-
 function ob_update_all()
   ob_update_engines()
   ob_update_modules()
-  ob_update_options()
   ob_update_themes()
 end
 
@@ -304,7 +295,7 @@ function ob_set_config(name, value)
     value = not (value == "false" or value == "0")
 
     if OB_MODULES[name].enabled == value then
-      return
+      return -- no change
     end
 
     local def = OB_MODULES[name]
@@ -323,9 +314,47 @@ function ob_set_config(name, value)
       end
     end
 
+    -- this is required for parsing the CONFIG.CFG file
+    -- [but redundant when the user merely changed the widget]
+    gui.change_button("module", name, def.enabled)
+
     ob_update_all()
     return
   end
+
+
+  -- handle OPTIONS
+  if string.find(name, ".", 1, true) then
+    
+    local mod, opt = string.match(name, "([%w_]*).([%w_]*)")
+    assert(mod and opt)
+
+    local mod_def = OB_MODULES[mod]
+    if not mod_def then
+      return
+    end
+
+    local def = mod_def.options and mod_def.options[opt]
+    if not def then
+      return
+    end
+
+    if def.value == value then
+      return -- no change
+    end
+
+    -- make sure value is valid
+    if not def.choices[value] then
+      return
+    end
+
+    def.value = value
+
+    -- FIXME : need to call GUI ??
+    return
+  end
+
+--[[ REMOVE DEAD CODE
 
   if OB_OPTIONS[name] then
     -- convert 'value' from string to a boolean
@@ -355,7 +384,7 @@ function ob_set_config(name, value)
     -- (nothing in the GUI depends on custom options)
     return
   end
-
+--]]
 
   if OB_CONFIG[name] and OB_CONFIG[name] == value then
     return
@@ -397,7 +426,8 @@ function ob_set_config(name, value)
 end
 
 
-function ob_read_all_config()
+function ob_read_all_config(all_options)
+all_options = true --!!!!
 
   local function do_line(fmt, ...)
     gui.config_line(string.format(fmt, ...))
@@ -435,8 +465,12 @@ function ob_read_all_config()
   do_line("")
 
   do_line("-- Custom Options --");
-  for name,def in pairs(OB_OPTIONS) do
-    do_line("%s = %s", name, sel(def.enabled, "true", "false"))
+  for name,def in pairs(OB_MODULES) do
+    if def.options and (all_options or def.enabled) then
+      for o_name,opt in pairs(def.options) do
+        do_line("%s.%s = %s", name, o_name, opt.value or "XXX")
+      end
+    end
   end
   do_line("")
 end
@@ -457,7 +491,6 @@ function ob_init()
   name_it_up(OB_THEMES)
   name_it_up(OB_ENGINES)
   name_it_up(OB_MODULES)
-  name_it_up(OB_OPTIONS)
 
 
   local function button_sorter(A, B)
@@ -485,6 +518,16 @@ function ob_init()
 
       if what == "game" then
         gui.show_button(what, def.name, true)
+
+      elseif what == "module" and def.options then
+        name_it_up(def.options)
+        for _,opt in pairs(def.options) do
+          gui.add_mod_option(def.name, opt.name, opt.label or "?????")
+          assert(opt.choices)
+          for id,label in pairs(opt.choices) do
+            gui.add_mod_option(def.name, opt.name, id, label)
+          end
+        end
       end
     end
 
@@ -499,7 +542,6 @@ function ob_init()
   OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
 
   create_buttons("module", OB_MODULES)
-  create_buttons("option", OB_OPTIONS)
 
   ob_update_all()
 

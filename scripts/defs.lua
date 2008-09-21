@@ -34,7 +34,5 @@ OB_CONFIG = {}
 OB_GAMES   = {}
 OB_THEMES  = {}
 OB_ENGINES = {}
-
 OB_MODULES = {}
-OB_OPTIONS = {}
 
