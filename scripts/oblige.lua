@@ -290,6 +290,7 @@ function ob_set_config(name, value)
     return
   end
 
+
   if OB_MODULES[name] then
     -- convert 'value' from string to a boolean
     value = not (value == "false" or value == "0")
@@ -331,60 +332,29 @@ function ob_set_config(name, value)
 
     local mod_def = OB_MODULES[mod]
     if not mod_def then
+      gui.printf("Ignoring unknown module: %s (for option)\n", mod)
       return
     end
 
     local def = mod_def.options and mod_def.options[opt]
     if not def then
+      gui.printf("Ignoring unknown option: %s.%s\n", mod, opt)
       return
     end
 
-    if def.value == value then
-      return -- no change
-    end
-
-    -- make sure value is valid
     if not def.choices[value] then
+      gui.printf("Ignoring invalid choice: %s (for %s.%s)\n",
+                 value, mod, opt)
       return
     end
 
     def.value = value
 
-    -- FIXME : need to call GUI ??
-    return
-  end
-
---[[ REMOVE DEAD CODE
-
-  if OB_OPTIONS[name] then
-    -- convert 'value' from string to a boolean
-    value = not (value == "false" or value == "0")
-
-    if OB_OPTIONS[name].enabled == value then
-      return
-    end
-
-    local def = OB_OPTIONS[name]
-
-    def.enabled = value
-
-    -- handle conflicting options (like Radio buttons)
-    if value then
-      for other,odef in pairs(OB_OPTIONS) do
-        if ( def.conflict_opts and  def.conflict_opts[other]) or
-           (odef.conflict_opts and odef.conflict_opts[name] )
-        then
-          odef.enabled = false
-          gui.change_button("option", other, odef.enabled)
-        end
-      end
-    end
-
     -- no need to call ob_update_all
-    -- (nothing in the GUI depends on custom options)
+    -- (nothing ever depends on custom options)
     return
   end
---]]
+
 
   if OB_CONFIG[name] and OB_CONFIG[name] == value then
     return
