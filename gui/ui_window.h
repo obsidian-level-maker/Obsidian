@@ -30,18 +30,12 @@ class UI_MainWin : public Fl_Double_Window
 public:
   // main child widgets
 
-#ifdef MACOSX
-  Fl_Sys_Menu_Bar *menu_bar;
-#else
-  Fl_Menu_Bar *menu_bar;
-#endif
-
   UI_Game   *game_box;
   UI_Level  *level_box;
   UI_Play   *play_box;
 
   UI_Build  *build_box;
-  UI_ModBox *mod_box;
+  UI_CustomMods *mod_box;
 
   enum  // actions
   {

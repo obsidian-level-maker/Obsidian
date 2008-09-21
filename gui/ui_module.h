@@ -22,12 +22,12 @@
 
 class UI_Module : public Fl_Group
 {
-friend class UI_ModBox;
+friend class UI_CustomMods;
 
 private:
   std::string id_name;
 
-  Fl_Check_Button *enabler;  
+  Fl_Check_Button *enabled;  
 
   std::map<std::string, UI_RChoice *> choice_map;
 
@@ -38,11 +38,14 @@ public:
   void AddOption(const char *id, const char *label, const char *choices);
 
 public:
+  int CalcHeight() const;
+
+  void update_Enable();
 
 };
 
 
-class UI_ModBox : public Fl_Group
+class UI_CustomMods : public Fl_Group
 {
 private:
   Fl_Group *mod_pack;
@@ -59,8 +62,8 @@ private:
   int total_h;
 
 public:
-  UI_ModBox(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_ModBox();
+  UI_CustomMods(int x, int y, int w, int h, const char *label = NULL);
+  virtual ~UI_CustomMods();
 
 public:
   void AddModule(const char *id, const char *label);
@@ -77,6 +80,7 @@ private:
 
 
   static void callback_Scroll(Fl_Widget *w, void *data);
+  static void callback_ModEnable(Fl_Widget *w, void *data);
 
   
 };
