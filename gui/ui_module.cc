@@ -263,6 +263,23 @@ bool UI_CustomMods::ShowOrHide(const char *id, bool new_shown)
   return true;
 }
 
+void UI_CustomMods::ChangeValue(const char *id, bool enable)
+{
+  SYS_ASSERT(id);
+
+  UI_Module *M = FindID(id);
+
+  if (! M)
+    return;
+
+  if ( (M->enabled->value()?1:0) == (enable ? 1:0) )
+    return;
+
+  M->enabled->value(enable ? 1 : 0);
+
+  callback_ModEnable(NULL, M);
+}
+
 
 int UI_CustomMods::PositionAll(int start_y)
 {
@@ -333,6 +350,9 @@ that->offset_y=0;
   that->sbar->value(0, that->mh, 0, that->total_h);
 
   fprintf(stderr, "HEIGHT CHANGE: %d --> %d\n", old_total_h, new_total_h);
+
+  if (w)
+    Script_SetConfig(M->id_name.c_str(), M->enabled->value() ? "true" : "false");
 }
 
 

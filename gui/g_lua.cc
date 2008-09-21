@@ -192,8 +192,8 @@ DebugPrintf("change_button: %s --> %s\n", what, id);
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->SetID(id);
 
-//!!!!  else if (StringCaseCmp(what, "module") == 0)
-//!!!!    main_win->mod_box->opts->SetOption(id, opt_val);
+  else if (StringCaseCmp(what, "module") == 0)
+    main_win->mod_box->ChangeValue(id, opt_val);
 
 ///!!!  else if (StringCaseCmp(what, "option") == 0)
 ///!!!    main_win->option_box->opts->SetOption(id, opt_val);

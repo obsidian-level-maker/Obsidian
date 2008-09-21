@@ -70,9 +70,10 @@ public:
 
   bool ShowOrHide(const char *id, bool new_shown);
 
+  void ChangeValue(const char *id, bool enable);
+
   void Locked(bool value);
 
-  
 private:
   UI_Module *FindID(const char *id) const;
 
@@ -82,7 +83,6 @@ private:
   static void callback_Scroll(Fl_Widget *w, void *data);
   static void callback_ModEnable(Fl_Widget *w, void *data);
 
-  
 };
 
 
