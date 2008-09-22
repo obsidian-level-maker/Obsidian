@@ -187,8 +187,7 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data)
 
   UI_Module *M = cb_data->M;
 
-  Script_SetModOption(M->id_name.c_str(), cb_data->opt_name, rch->GetID());
-
+  ob_set_mod_option(M->id_name.c_str(), cb_data->opt_name, rch->GetID());
 }
 
 
@@ -337,7 +336,7 @@ bool UI_CustomMods::ShowOrHide(const char *id, bool new_shown)
 bool UI_CustomMods::ParseOptValue(const char *module, const char *option,
                                   const char *value)
 {
-  Script_SetModOption(module, option, value);
+  ob_set_mod_option(module, option, value);
 
   UI_Module *M = FindID(module);
 
@@ -435,7 +434,7 @@ that->offset_y=0;
   fprintf(stderr, "HEIGHT CHANGE: %d --> %d\n", old_total_h, new_total_h);
 
   if (w)
-    Script_SetModOption(M->id_name.c_str(), "self", M->enabled->value() ? "true" : "false");
+    ob_set_mod_option(M->id_name.c_str(), "self", M->enabled->value() ? "true" : "false");
 }
 
 

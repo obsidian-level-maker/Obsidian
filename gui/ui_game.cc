@@ -141,7 +141,7 @@ void UI_Game::SetSeed(u32_t new_val)
 
   seed->value(num_buf);
 
-  Script_SetConfig("seed", seed->value());
+  ob_set_config("seed", seed->value());
 }
 
 void UI_Game::FreshSeed()
@@ -164,7 +164,7 @@ void UI_Game::callback_Seed(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_SetConfig("seed", that->seed->value());
+  ob_set_config("seed", that->seed->value());
 }
 
 void UI_Game::callback_Bump(Fl_Widget *w, void *data)
@@ -178,7 +178,7 @@ void UI_Game::callback_Game(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_SetConfig("game", that->game->GetID());
+  ob_set_config("game", that->game->GetID());
   Signal_Raise("game");
 }
 
@@ -186,7 +186,7 @@ void UI_Game::callback_Mode(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_SetConfig("mode", that->mode->GetID());
+  ob_set_config("mode", that->mode->GetID());
   Signal_Raise("mode");
 }
 
@@ -194,7 +194,7 @@ void UI_Game::callback_Engine(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_SetConfig("engine", that->engine->GetID());
+  ob_set_config("engine", that->engine->GetID());
   Signal_Raise("engine");
 }
 
@@ -202,7 +202,7 @@ void UI_Game::callback_Length(Fl_Widget *w, void *data)
 {
   UI_Game *that = (UI_Game *)data;
 
-  Script_SetConfig("length", that->length->GetID());
+  ob_set_config("length", that->length->GetID());
 }
 
 void UI_Game::Locked(bool value)

@@ -187,35 +187,35 @@ void UI_Play::callback_Monsters(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  Script_SetConfig("mons", that->mons->GetID());
+  ob_set_config("mons", that->mons->GetID());
 }
 
 void UI_Play::callback_Puzzles(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  Script_SetConfig("puzzles", that->puzzles->GetID());
+  ob_set_config("puzzles", that->puzzles->GetID());
 }
 
 void UI_Play::callback_Traps(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  Script_SetConfig("traps", that->traps->GetID());
+  ob_set_config("traps", that->traps->GetID());
 }
 
 void UI_Play::callback_Health(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  Script_SetConfig("health", that->health->GetID());
+  ob_set_config("health", that->health->GetID());
 }
 
 void UI_Play::callback_Ammo(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  Script_SetConfig("ammo", that->ammo->GetID());
+  ob_set_config("ammo", that->ammo->GetID());
 }
 
 void UI_Play::Defaults()

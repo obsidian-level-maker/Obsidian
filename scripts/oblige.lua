@@ -390,8 +390,7 @@ function ob_set_config(name, value)
 end
 
 
-function ob_read_all_config(all_options)
-all_options = true --!!!!
+function ob_read_all_config(all_opts)
 
   local function do_line(fmt, ...)
     gui.config_line(string.format(fmt, ...))
@@ -422,15 +421,15 @@ all_options = true --!!!!
   do_line("ammo = %s",    OB_CONFIG.ammo)
   do_line("")
 
-  do_line("-- Custom Mods --");
+  do_line("-- Custom Modules --");
   for name,def in pairs(OB_MODULES) do
     do_line("%s.self = %s", name, sel(def.enabled, "true", "false"))
   end
   do_line("")
 
-  do_line("-- Custom Options --");
+  do_line("-- Module Options --");
   for name,def in pairs(OB_MODULES) do
-    if def.options and (all_options or def.enabled) then
+    if def.options and (all_opts or def.enabled) then
       for o_name,opt in pairs(def.options) do
         do_line("%s.%s = %s", name, o_name, opt.value or "XXX")
       end
@@ -548,7 +547,7 @@ function ob_game_format()
 end
 
 
-function build_cool_shit()
+function ob_build_cool_shit()
  
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)

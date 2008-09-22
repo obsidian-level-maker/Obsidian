@@ -156,35 +156,35 @@ void UI_Level::callback_Theme(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  Script_SetConfig("theme", that->theme->GetID());
+  ob_set_config("theme", that->theme->GetID());
 }
  
 void UI_Level::callback_Size(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  Script_SetConfig("size", that->size->GetID());
+  ob_set_config("size", that->size->GetID());
 }
  
 void UI_Level::callback_Detail(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  Script_SetConfig("detail", that->detail->GetID());
+  ob_set_config("detail", that->detail->GetID());
 }
  
 void UI_Level::callback_Heights(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  Script_SetConfig("heights", that->heights->GetID());
+  ob_set_config("heights", that->heights->GetID());
 }
  
 void UI_Level::callback_Light(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  Script_SetConfig("light", that->light->GetID());
+  ob_set_config("light", that->light->GetID());
 }
 
 void UI_Level::Defaults()

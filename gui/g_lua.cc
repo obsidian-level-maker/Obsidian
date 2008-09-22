@@ -658,8 +658,8 @@ bool ob_set_config(const char *key, const char *value)
 }
 
 
-bool ob_set_mod_opt(const char *module, const char *option,
-                    const char *value)
+bool ob_set_mod_option(const char *module, const char *option,
+                       const char *value)
 {
   if (! has_loaded)
   {

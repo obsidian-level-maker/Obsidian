@@ -360,7 +360,7 @@ void BSP_CreateInfoFile()
 
   std::vector<std::string> lines;
 
-  Script_ReadAllConfig(&lines);
+  ob_read_all_config(&lines, false /* all_opts */);
 
   for (unsigned int i = 0; i < lines.size(); i++)
     L->Printf("%s\n", lines[i].c_str());

@@ -210,7 +210,7 @@ void Build_Cool_Shit()
   // clear the map
   main_win->build_box->mini_map->EmptyMap();
 
-  const char *format = Script_GameFormat();
+  const char *format = ob_game_format();
 
   if (! format || strlen(format) == 0)
     Main_FatalError("ERROR: missing 'format' for game?!?\n");
@@ -244,7 +244,8 @@ void Build_Cool_Shit()
 
   if (was_ok)
   {
-    was_ok = Script_Build();
+    // run the scripts Scotty!
+    was_ok = ob_build_cool_shit();
 
     if (! game_object->Finish(was_ok))
       was_ok = false;
