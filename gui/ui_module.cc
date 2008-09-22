@@ -76,6 +76,14 @@ UI_Module::~UI_Module()
 }
 
 
+typedef struct
+{
+  UI_Module *M;
+  const char *opt_name;
+}
+opt_callback_data_t;
+
+
 void UI_Module::AddOption(const char *opt, const char *label)
 {
   int nw = 120;
@@ -91,8 +99,13 @@ fprintf(stderr, "AddOption %s: x, y = %d,%d\n", opt, x(), y());
 
   choice_map[opt] = rch;
 
+  opt_callback_data_t *cb_data = new opt_callback_data_t;
+  cb_data->M = this;
+  cb_data->opt_name = StringDup(opt);
+
   rch->align(FL_ALIGN_LEFT);
   rch->selection_color(MY_PURPLE);
+  rch->callback(callback_OptChange, cb_data);
 
   add(rch);
 
@@ -160,6 +173,22 @@ UI_RChoice * UI_Module::FindOpt(const char *option)
     return NULL;
 
   return choice_map[option];
+}
+
+
+void UI_Module::callback_OptChange(Fl_Widget *w, void *data)
+{
+  UI_RChoice *rch = (UI_RChoice*) w;
+
+  opt_callback_data_t *cb_data = (opt_callback_data_t*) data;
+
+  SYS_ASSERT(rch);
+  SYS_ASSERT(cb_data);
+
+  UI_Module *M = cb_data->M;
+
+  Script_SetModOption(M->id_name.c_str(), cb_data->opt_name, rch->GetID());
+
 }
 
 

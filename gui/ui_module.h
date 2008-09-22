@@ -48,6 +48,9 @@ public:
 
 protected:
   UI_RChoice *FindOpt(const char *opt); // const;
+
+private:
+  static void callback_OptChange(Fl_Widget *w, void *data);
 };
 
 
@@ -96,7 +99,6 @@ private:
 
   static void callback_Scroll(Fl_Widget *w, void *data);
   static void callback_ModEnable(Fl_Widget *w, void *data);
-
 };
 
 
