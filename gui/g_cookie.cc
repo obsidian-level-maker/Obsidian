@@ -73,7 +73,7 @@ static void Cookie_SetValue(const char *name, const char *value)
   }
 
   // everything else goes to the script
-  Script_SetConfig(name, value);
+  ob_set_config(name, value);
 }
 
 
@@ -190,8 +190,8 @@ bool Cookie_Save(const char *filename)
 
   std::vector<std::string> lines;
 
-  // FIXME: check for error
-  Script_ReadAllConfig(&lines);
+
+  ob_read_all_config(&lines, true /* all_opts */);
 
   for (unsigned int i = 0; i < lines.size(); i++)
   {
