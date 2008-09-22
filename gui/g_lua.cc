@@ -407,10 +407,6 @@ static const luaL_Reg gui_script_funcs[] =
 
 //------------------------------------------------------------------------
 
-// forward decl
-static bool Script_DoRun(const char *func_name, int nresult=0,
-                         const char **params = NULL);
-
 
 int Script_RegisterLib(const char *name, const luaL_Reg *reg)
 {
@@ -476,6 +472,42 @@ void Script_Close(void)
 
   LUA_ST = NULL;
 }
+
+
+static bool Script_DoRun(const char *func_name, int nresult = 0, const char **params = NULL)
+{
+  lua_getglobal(LUA_ST, "ob_traceback");
+ 
+  if (lua_type(LUA_ST, -1) == LUA_TNIL)
+    Main_FatalError("LUA script problem: missing function '%s'", "ob_traceback");
+
+  lua_getglobal(LUA_ST, func_name);
+
+  if (lua_type(LUA_ST, -1) == LUA_TNIL)
+    Main_FatalError("LUA script problem: missing function '%s'", func_name);
+
+  int nargs = 0;
+  if (params)
+  {
+    for (; *params; params++, nargs++)
+      lua_pushstring(LUA_ST, *params);
+  }
+
+  int status = lua_pcall(LUA_ST, nargs, nresult, -2-nargs);
+  if (status != 0)
+  {
+    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+
+    DLG_ShowError("LUA script error:\n%s", msg);
+  }
+ 
+  // remove the traceback function
+  lua_remove(LUA_ST, -1-nresult);
+
+  return (status == 0) ? true : false;
+}
+
+
 
 
 static void add_extra_script(const char *name, int flags, void *priv_dat)
@@ -584,6 +616,10 @@ void Script_Load(void)
 }
 
 
+//------------------------------------------------------------------------
+
+
+
 // ========================
 // NOTES ABOUT CONFIG STATE
 // ========================
@@ -672,40 +708,6 @@ bool Script_ReadAllConfig(std::vector<std::string> * lines)
     DebugPrintf("Failed trying to call 'ob_read_all_config'\n");
 
   return result;
-}
-
-
-static bool Script_DoRun(const char *func_name, int nresult, const char **params)
-{
-  lua_getglobal(LUA_ST, "ob_traceback");
- 
-  if (lua_type(LUA_ST, -1) == LUA_TNIL)
-    Main_FatalError("LUA script problem: missing function '%s'", "ob_traceback");
-
-  lua_getglobal(LUA_ST, func_name);
-
-  if (lua_type(LUA_ST, -1) == LUA_TNIL)
-    Main_FatalError("LUA script problem: missing function '%s'", func_name);
-
-  int nargs = 0;
-  if (params)
-  {
-    for (; *params; params++, nargs++)
-      lua_pushstring(LUA_ST, *params);
-  }
-
-  int status = lua_pcall(LUA_ST, nargs, nresult, -2-nargs);
-  if (status != 0)
-  {
-    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-
-    DLG_ShowError("LUA script error:\n%s", msg);
-  }
- 
-  // remove the traceback function
-  lua_remove(LUA_ST, -1-nresult);
-
-  return (status == 0) ? true : false;
 }
 
 
