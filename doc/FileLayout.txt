@@ -13,8 +13,8 @@ Oblige-0.90/    <<< working & install directory (chdir to it)
   CONFIG.cfg
   LOGS.txt
 
-  TEMP.wad
-  GAMEMAPS.tmp
+  temp/
+    TEMP.wad
 
   scripts/
     oblige.lua
