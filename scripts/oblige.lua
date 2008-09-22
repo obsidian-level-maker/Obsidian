@@ -488,20 +488,36 @@ function ob_init()
 
       if what == "game" then
         gui.show_button(what, def.name, true)
-
-      elseif what == "module" and def.options then
-        name_it_up(def.options)
-        for _,opt in pairs(def.options) do
-          gui.add_mod_option(def.name, opt.name, opt.label or "?????")
-          assert(opt.choices)
-          for id,label in pairs(opt.choices) do
-            gui.add_mod_option(def.name, opt.name, id, label)
-          end
-        end
       end
     end
 
     return list[1] and list[1].name
+  end
+
+  local function create_mod_options()
+    for _,mod in pairs(OB_MODULES) do
+      if not mod.options then
+        mod.options = {}
+      end
+
+      name_it_up(mod.options)
+
+      for _,opt in pairs(mod.options) do
+        assert(opt.label)
+        assert(opt.choices)
+
+        gui.add_mod_option(mod.name, opt.name, opt.label)
+
+        -- default value is always the first choice
+        opt.value = opt.choices[1].id
+
+        for N = 1,#opt.choices do
+          gui.add_mod_option(mod.name, opt.name,
+                             opt.choices[N].id,
+                             opt.choices[N].label)
+        end
+      end -- for opt
+    end -- for mod
   end
 
   OB_CONFIG.seed = 0
@@ -512,6 +528,7 @@ function ob_init()
   OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
 
   create_buttons("module", OB_MODULES)
+  create_mod_options()
 
   ob_update_all()
 
