@@ -22,20 +22,20 @@
 typedef struct lua_State lua_State;
 
 void Script_Init(void);
+void Script_Load(void);
 void Script_Close(void);
 
-void Script_Load(void);
+// Wrappers which call Lua functions:
 
-int Script_RegisterLib(const char *name, const luaL_Reg *reg);
+bool ob_set_config(const char *key, const char *value);
+bool ob_set_mod_option(const char *module, const char *option,
+                       const char *value);
 
-bool Script_SetConfig(const char *key, const char *value);
-bool Script_SetModOption(const char *module, const char *option,
-                         const char *value);
-bool Script_ReadAllConfig(std::vector<std::string> * lines);
+bool ob_read_all_config(std::vector<std::string> * lines, bool all_opts);
 
-const char * Script_GameFormat(void);
+const char * ob_game_format(void);
 
-bool Script_Build(void);
+bool ob_build_cool_shit(void);
 
 #endif /* __SCRIPTING_HEADER__ */
 

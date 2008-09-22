@@ -498,7 +498,9 @@ static bool Script_DoRun(const char *func_name, int nresult = 0, const char **pa
   {
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-    DLG_ShowError("LUA script error:\n%s", msg);
+    DLG_ShowError("LUA script error (in %s function):\n%s", func_name, msg);
+
+    LogPrintf("LUA script error (in %s function):\n%s", func_name, msg);
   }
  
   // remove the traceback function
@@ -506,8 +508,6 @@ static bool Script_DoRun(const char *func_name, int nresult = 0, const char **pa
 
   return (status == 0) ? true : false;
 }
-
-
 
 
 static void add_extra_script(const char *name, int flags, void *priv_dat)
@@ -612,12 +612,10 @@ void Script_Load(void)
     Main_FatalError("The ob_init script failed.\n");
 
   has_added_buttons = true;
-  
 }
 
 
 //------------------------------------------------------------------------
-
 
 
 // ========================
@@ -639,14 +637,14 @@ void Script_Load(void)
 // be used for the currently selected game).
 // 
 
-bool Script_SetConfig(const char *key, const char *value)
+bool ob_set_config(const char *key, const char *value)
 {
   SYS_NULL_CHECK(key);
   SYS_NULL_CHECK(value);
 
   if (! has_loaded)
   {
-    DebugPrintf("Script_SetConfig(%s) called before loaded!\n", key);
+    DebugPrintf("ob_set_config(%s) called before loaded!\n", key);
     return false;
   }
  
@@ -656,17 +654,12 @@ bool Script_SetConfig(const char *key, const char *value)
   params[1] = value;
   params[2] = NULL; // end of list
 
-  if (! Script_DoRun("ob_set_config", 0, params))
-  {
-    DebugPrintf("Failed trying to call 'ob_set_config'\n");
-    return false;
-  }
-
-  return true;
+  return Script_DoRun("ob_set_config", 0, params);
 }
 
-bool Script_SetModOption(const char *module, const char *option,
-                         const char *value)
+
+bool ob_set_mod_opt(const char *module, const char *option,
+                    const char *value)
 {
   if (! has_loaded)
   {
@@ -681,16 +674,11 @@ bool Script_SetModOption(const char *module, const char *option,
   params[2] = value;
   params[3] = NULL;
 
-  if (! Script_DoRun("ob_set_mod_option", 0, params))
-  {
-    DebugPrintf("Failed trying to call 'ob_set_mod_option'\n");
-    return false;
-  }
-
-  return true;
+  return Script_DoRun("ob_set_mod_option", 0, params);
 }
 
-bool Script_ReadAllConfig(std::vector<std::string> * lines)
+
+bool ob_read_all_config(std::vector<std::string> * lines, bool all_opts)
 {
   if (! has_loaded)
   {
@@ -698,20 +686,22 @@ bool Script_ReadAllConfig(std::vector<std::string> * lines)
     return false;
   }
 
+  const char *params[1];
+
+  params[1] = "true";
+
   conf_line_buffer = lines;
  
-  bool result = Script_DoRun("ob_read_all_config", 0, NULL);
-
+  bool result = Script_DoRun("ob_read_all_config",
+                             all_opts ? 1 : 0,
+                             all_opts ? params : NULL);
   conf_line_buffer = NULL;
-
-  if (! result)
-    DebugPrintf("Failed trying to call 'ob_read_all_config'\n");
 
   return result;
 }
 
 
-const char * Script_GameFormat(void)
+const char * ob_game_format(void)
 {
   if (! Script_DoRun("ob_game_format", 1))
     return NULL;
@@ -728,9 +718,9 @@ const char * Script_GameFormat(void)
 }
 
 
-bool Script_Build(void)
+bool ob_build_cool_shit(void)
 {
-  if (! Script_DoRun("build_cool_shit", 1))
+  if (! Script_DoRun("ob_build_cool_shit", 1))
     return false;
 
   const char *res = lua_tolstring(LUA_ST, -1, NULL);
