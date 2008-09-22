@@ -3,7 +3,14 @@ TODO
 ====
 
 
-Q1/Q2 : create an 'oblige.txt' in the PAK
+Custom Mods:
+  - clean up dirty code in ui_module
+
+  + fix all the expand/shrink/scroll issues
+
+
+merge area_info + area_poly --> csg_brush_c
+
 
 HEXEN lua: gui.property("hexen_format", "true")
 
@@ -26,6 +33,10 @@ q2_nodes:
 
    create a solid leaf for each area_poly
    (can sometimes have 2+ area_polys per solid leaf, walls with stacked brushes)
+   NOTE: need CONVEX brush sides : if not convex, find closest
+         concave point to face and "chop" there
+         _OR_: use bsp to chop em up
+   ALSO: handle co-planer sides (allowed by Oblige, maybe ok for Q2, not sure)
 
 
 REWRITE:
@@ -160,6 +171,9 @@ GUI:
 -  remember save path in config file (Win32).
 
 -  ui_chooser: support last_file in WIN32
+      maybe this: lpstrFile contains _base_ of file (FOO.EXT)
+              and lpstrInitialDir contains _path_ of last file.
+      probably only set it once (first call).
 
 -  make an icon for Win32 executable.
 
