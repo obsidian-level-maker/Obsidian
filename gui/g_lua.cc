@@ -616,6 +616,8 @@ void Script_Load(void)
 
 
 //------------------------------------------------------------------------
+// WRAPPERS TO LUA FUNCTIONS
+//------------------------------------------------------------------------
 
 
 // ========================
@@ -686,15 +688,15 @@ bool ob_read_all_config(std::vector<std::string> * lines, bool all_opts)
     return false;
   }
 
-  const char *params[1];
+  const char *params[2];
 
-  params[1] = "true";
+  params[0] = all_opts ? "true" : NULL;
+  params[1] = NULL;
 
   conf_line_buffer = lines;
  
-  bool result = Script_DoRun("ob_read_all_config",
-                             all_opts ? 1 : 0,
-                             all_opts ? params : NULL);
+  bool result = Script_DoRun("ob_read_all_config", 0, params);
+
   conf_line_buffer = NULL;
 
   return result;
