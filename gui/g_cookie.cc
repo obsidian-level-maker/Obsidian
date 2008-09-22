@@ -52,6 +52,19 @@ static void Cookie_SetValue(const char *name, const char *value)
   if (main_win->play_box->ParseValue(name, value))
     return;
 
+  // -- Custom Modules/Options --
+  const char *dot = strchr(name, '.');
+  if (dot)
+  {
+    char *module = StringDup(name);
+    module[dot - name] = 0;
+
+    main_win->mod_box->ParseOptValue(module, dot+1 /* option */, value);
+
+    StringFree(module);
+    return;
+  }
+
   // -- Miscellaneous --
   if (StringCaseCmp(name, "last_file") == 0)
   {
@@ -94,7 +107,7 @@ static bool Cookie_ParseLine(char *buf)
 
   const char *name = buf;
 
-  for (buf++; isalpha(*buf) || *buf == '_'; buf++)
+  for (buf++; isalpha(*buf) || *buf == '_' || *buf == '.'; buf++)
   { /* nothing here */ }
 
   while (isspace(*buf))

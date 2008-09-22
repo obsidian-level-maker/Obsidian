@@ -35,9 +35,11 @@ public:
   UI_Module(int x, int y, int w, int h, const char *id, const char *label);
   virtual ~UI_Module();
 
-  void AddOption(const char *opt, const char *label);
+  void AddOption(const char *option, const char *label);
 
-  void OptionPair(const char *opt, const char *id, const char *label);
+  void OptionPair(const char *option, const char *id, const char *label);
+
+  bool ParseValue(const char *option, const char *value);
 
 public:
   int CalcHeight() const;
@@ -80,6 +82,9 @@ public:
 
   void OptionPair(const char *module, const char *option,
                   const char *id, const char *label);
+
+  bool ParseOptValue(const char *module, const char *option,
+                     const char *value);
 
   void Locked(bool value);
 

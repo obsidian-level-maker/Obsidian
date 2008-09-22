@@ -143,12 +143,23 @@ fprintf(stderr, "OPTION PAIR : %s --> %s\n", id, label);
 }
 
 
-UI_RChoice * UI_Module::FindOpt(const char *opt)
+bool UI_Module::ParseValue(const char *option, const char *value)
 {
-  if (choice_map.find(opt) == choice_map.end())
+  UI_RChoice *rch = FindOpt(option);
+
+  if (! rch)
+    return false;  // FIXME: warning
+
+  return rch->SetID(value);
+}
+
+
+UI_RChoice * UI_Module::FindOpt(const char *option)
+{
+  if (choice_map.find(option) == choice_map.end())
     return NULL;
 
-  return choice_map[opt];
+  return choice_map[option];
 }
 
 
@@ -294,6 +305,19 @@ bool UI_CustomMods::ShowOrHide(const char *id, bool new_shown)
   return true;
 }
 
+bool UI_CustomMods::ParseOptValue(const char *module, const char *option,
+                                  const char *value)
+{
+  Script_SetModOption(module, option, value);
+
+  UI_Module *M = FindID(module);
+
+  if (! M)
+    return false;
+
+  return M->ParseValue(option, value);
+}
+
 void UI_CustomMods::ChangeValue(const char *id, bool enable)
 {
   SYS_ASSERT(id);
@@ -382,7 +406,7 @@ that->offset_y=0;
   fprintf(stderr, "HEIGHT CHANGE: %d --> %d\n", old_total_h, new_total_h);
 
   if (w)
-    Script_SetConfig(M->id_name.c_str(), M->enabled->value() ? "true" : "false");
+    Script_SetModOption(M->id_name.c_str(), "self", M->enabled->value() ? "true" : "false");
 }
 
 
