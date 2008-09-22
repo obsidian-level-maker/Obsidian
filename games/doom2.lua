@@ -1966,7 +1966,7 @@ OB_GAMES["doom2"] =
 
   format = "doom",
 
-  priority = 99,
+--  priority = 99,
 
   game_func = doom2_factory,
 }
