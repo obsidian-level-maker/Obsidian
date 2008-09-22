@@ -29,6 +29,8 @@ void Script_Load(void);
 int Script_RegisterLib(const char *name, const luaL_Reg *reg);
 
 bool Script_SetConfig(const char *key, const char *value);
+bool Script_SetModOption(const char *module, const char *option,
+                         const char *value);
 bool Script_ReadAllConfig(std::vector<std::string> * lines);
 
 const char * Script_GameFormat(void);

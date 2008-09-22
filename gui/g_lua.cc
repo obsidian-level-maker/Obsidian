@@ -629,6 +629,31 @@ bool Script_SetConfig(const char *key, const char *value)
   return true;
 }
 
+bool Script_SetModOption(const char *module, const char *option,
+                         const char *value)
+{
+  if (! has_loaded)
+  {
+    DebugPrintf("Script_SetModOption called before loaded!\n");
+    return false;
+  }
+ 
+  const char *params[4];
+
+  params[0] = module;
+  params[1] = option;
+  params[2] = value;
+  params[3] = NULL;
+
+  if (! Script_DoRun("ob_set_mod_option", 0, params))
+  {
+    DebugPrintf("Failed trying to call 'ob_set_mod_option'\n");
+    return false;
+  }
+
+  return true;
+}
+
 bool Script_ReadAllConfig(std::vector<std::string> * lines)
 {
   if (! has_loaded)

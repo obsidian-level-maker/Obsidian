@@ -282,31 +282,27 @@ function ob_update_all()
 end
 
 
-function ob_set_config(name, value)
-  assert(name and value and type(value) == "string")
-
-  if name == "seed" then
-    OB_CONFIG[name] = tonumber(value) or 0
+function ob_set_mod_option(name, option, value)
+  local mod = OB_MODULES[name]
+  if not mod then
+    gui.printf("Ignoring unknown module: %s\n", mod)
     return
   end
-
-
-  if OB_MODULES[name] then
+    
+  if option == "self" then
     -- convert 'value' from string to a boolean
     value = not (value == "false" or value == "0")
 
-    if OB_MODULES[name].enabled == value then
+    if mod.enabled == value then
       return -- no change
     end
 
-    local def = OB_MODULES[name]
-
-    def.enabled = value
+    mod.enabled = value
 
     -- handle conflicting modules (like Radio buttons)
     if value then
       for other,odef in pairs(OB_MODULES) do
-        if ( def.conflict_mods and  def.conflict_mods[other]) or
+        if ( mod.conflict_mods and  mod.conflict_mods[other]) or
            (odef.conflict_mods and odef.conflict_mods[name] )
         then
           odef.enabled = false
@@ -317,47 +313,45 @@ function ob_set_config(name, value)
 
     -- this is required for parsing the CONFIG.CFG file
     -- [but redundant when the user merely changed the widget]
-    gui.change_button("module", name, def.enabled)
+    gui.change_button("module", name, mod.enabled)
 
     ob_update_all()
     return
   end
 
 
-  -- handle OPTIONS
-  if string.find(name, ".", 1, true) then
-    
-    local mod, opt = string.match(name, "([%w_]*).([%w_]*)")
-    assert(mod and opt)
+  local def = mod.options and mod.options[option]
+  if not def then
+    gui.printf("Ignoring unknown option: %s.%s\n", name, option)
+    return
+  end
 
-    local mod_def = OB_MODULES[mod]
-    if not mod_def then
-      gui.printf("Ignoring unknown module: %s (for option)\n", mod)
-      return
-    end
+  -- this can only happen while parsing the CONFIG.CFG file
+  -- (containing some old no-longer-used value).
+  if not def.avail_choices[value] then
+    gui.printf("WARNING: invalid choice: %s (for option %s.%s)\n",
+               value, name, option)
+    return
+  end
 
-    local def = mod_def.options and mod_def.options[opt]
-    if not def then
-      gui.printf("Ignoring unknown option: %s.%s\n", mod, opt)
-      return
-    end
+  def.value = value
 
-    if not def.choices[value] then
-      gui.printf("Ignoring invalid choice: %s (for %s.%s)\n",
-                 value, mod, opt)
-      return
-    end
+  -- no need to call ob_update_all
+  -- (nothing ever depends on custom options)
+end
 
-    def.value = value
 
-    -- no need to call ob_update_all
-    -- (nothing ever depends on custom options)
+function ob_set_config(name, value)
+  assert(name and value and type(value) == "string")
+
+  if name == "seed" then
+    OB_CONFIG[name] = tonumber(value) or 0
     return
   end
 
 
   if OB_CONFIG[name] and OB_CONFIG[name] == value then
-    return
+    return -- no change
   end
 
 
@@ -430,7 +424,7 @@ all_options = true --!!!!
 
   do_line("-- Custom Mods --");
   for name,def in pairs(OB_MODULES) do
-    do_line("%s = %s", name, sel(def.enabled, "true", "false"))
+    do_line("%s.self = %s", name, sel(def.enabled, "true", "false"))
   end
   do_line("")
 
@@ -517,8 +511,11 @@ function ob_init()
           -- default value is always the first choice
           opt.value = opt.choices[1].id
 
+          opt.avail_choices = {}
+
           for _,C in ipairs(opt.choices) do
             gui.add_mod_option(mod.name, opt.name, C.id, C.label)
+            opt.avail_choices[C.id] = 1
           end
         end -- for opt
       end
