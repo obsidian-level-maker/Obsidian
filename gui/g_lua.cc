@@ -620,27 +620,12 @@ void Script_Load(void)
 //------------------------------------------------------------------------
 
 
-// ========================
-// NOTES ABOUT CONFIG STATE
-// ========================
-//
-// By "config state" I mean all the things in the GUI which
-// the user can change (game, mode, engine, theme, etc...).
-//
-// THE MASTER STATE IS STORED IN LUA
-//
-// Most of it is in the OB_CONFIG[] table, but some bits are
-// stored in the modules in OB_MODULES[] and the options in
-// OB_OPTIONS[].
-//
-// Hence the GUI state is merely a reflection of the config
-// stored by the script.  The script manages most of the
-// inter-dependencies (e.g. the engines and themes which can
-// be used for the currently selected game).
-// 
-
 bool ob_set_config(const char *key, const char *value)
 {
+  // See the document 'doc/Config_Flow.txt' for a good
+  // description of the flow of configuration values
+  // between the C++ GUI and the Lua scripts.
+
   SYS_NULL_CHECK(key);
   SYS_NULL_CHECK(value);
 

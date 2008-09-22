@@ -342,6 +342,10 @@ end
 
 
 function ob_set_config(name, value)
+  -- See the document 'doc/Config_Flow.txt' for a good
+  -- description of the flow of configuration values
+  -- between the C++ GUI and the Lua scripts.
+
   assert(name and value and type(value) == "string")
 
   if name == "seed" then
