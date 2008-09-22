@@ -54,19 +54,15 @@ UI_Module::UI_Module(int x, int y, int w, int h,
 {
   end(); // cancel begin() in Fl_Group constructor
  
-//  box(FL_BORDER_BOX);
-  box(FL_THIN_UP_BOX);
-
-  color(BUILD_BG, BUILD_BG);
-
   resizable(NULL);
 
+  box(FL_THIN_UP_BOX);
+  color(BUILD_BG, BUILD_BG);
 
-  enabled = new Fl_Check_Button(x+5, y+4, w-20, 24, label);
+  mod_button = new Fl_Check_Button(x+5, y+4, w-20, 24, label);
 
-  add(enabled);
+  add(mod_button);
  
-
   hide();
 }
 
@@ -111,16 +107,17 @@ fprintf(stderr, "AddOption %s: x, y = %d,%d\n", opt, x(), y());
 
   rch->hide();
 
+  resize(x(), y(), w(), CalcHeight());
   redraw();
 }
 
 
 int UI_Module::CalcHeight() const
 {
-  int h = 4 + 24 + 4;  // check button
+  int h = 4 + 24 + 6;  // check button
 
-  if (enabled->value())
-    h += (children() - 1) * 28;
+  if (mod_button->value())
+    h += (children() - 1) * 28 + 4;
 
   return h;
 }
@@ -129,13 +126,13 @@ void UI_Module::update_Enable()
 {
   for (int j = 0; j < children(); j++)
   {
-    if (child(j) == enabled)
+    if (child(j) == mod_button)
       continue;
 
     // this is awful
     UI_RChoice *M = (UI_RChoice *)child(j);
 
-    if (enabled->value())
+    if (mod_button->value())
       M->show();
     else
       M->hide();
@@ -262,18 +259,18 @@ UI_CustomMods::~UI_CustomMods()
 
 void UI_CustomMods::AddModule(const char *id, const char *label)
 {
-  UI_Module *M = new UI_Module(mx, my, mw-4, 30, id, label);
+  UI_Module *M = new UI_Module(mx, my, mw-4, 34, id, label);
 
-  M->enabled->callback(callback_ModEnable, M);
+  M->mod_button->callback(callback_ModEnable, M);
 
   mod_pack->add(M);
 
 
-  total_h = PositionAll(my - offset_y);
+  PositionAll();
+
   sbar->value(0, mh, 0, total_h);
 
-  M->redraw();
-  mod_pack->redraw();
+///???  M->redraw();
 }
 
 
@@ -287,10 +284,9 @@ void UI_CustomMods::AddOption(const char *module, const char *option,
   M->AddOption(option, label);
 
 
-  total_h = PositionAll(my - offset_y);
+  PositionAll();
 
-  M->redraw();
-  mod_pack->redraw();
+//???  M->redraw();
 }
 
 void UI_CustomMods::OptionPair(const char *module, const char *option,
@@ -324,11 +320,11 @@ bool UI_CustomMods::ShowOrHide(const char *id, bool new_shown)
   else
     M->hide();
 
-  total_h = PositionAll(my - offset_y);
+  PositionAll();
+
   sbar->value(0, mh, 0, total_h);
 
-  M->redraw();
-  mod_pack->redraw();
+///???  M->redraw();
 
   return true;
 }
@@ -355,63 +351,146 @@ void UI_CustomMods::ChangeValue(const char *id, bool enable)
   if (! M)
     return;
 
-  if ( (M->enabled->value()?1:0) == (enable ? 1:0) )
+  if ( (M->mod_button->value()?1:0) == (enable ? 1:0) )
     return;
 
-  M->enabled->value(enable ? 1 : 0);
+  M->mod_button->value(enable ? 1 : 0);
 
-  callback_ModEnable(NULL, M);
+  callback_ModEnable(NULL, M);  // FIXME: dirty hack
 }
 
 
-int UI_CustomMods::PositionAll(int start_y)
+void UI_CustomMods::PositionAll(UI_Module *focus)
 {
-  int cur_y = start_y;
 fprintf(stderr, "PositionAll:\n");
+  
+  // determine focus [closest to top without going past it]
+  if (! focus)
+  {
+    int best_dist = 9999;
+
+    for (int j = 0; j < mod_pack->children(); j++)
+    {
+      UI_Module *M = (UI_Module *) mod_pack->child(j);
+      SYS_ASSERT(M);
+
+      if (!M->visible() || M->y() < my || M->y() >= my+mh)
+        continue;
+
+      int dist = M->y() - my;
+
+      if (dist < best_dist)
+      {
+        focus = M;
+        best_dist = dist;
+      }
+    }
+  }
+
+
+  // calculate new total height
+  int new_height = 0;
+  int spacing = 4;
+
+  for (int k = 0; k < mod_pack->children(); k++)
+  {
+    UI_Module *M = (UI_Module *) mod_pack->child(k);
+    SYS_ASSERT(M);
+
+    if (M->visible())
+      new_height += M->CalcHeight() + spacing;
+  }
+
+
+  // determine new offset_y
+  if (new_height <= mh)
+  {
+    offset_y = 0;
+  }
+  else if (focus)
+  {
+    int focus_oy = focus->y() - my;
+    SYS_ASSERT(focus_oy >= 0);
+
+    int above_h = 0;
+    for (int k = 0; k < mod_pack->children(); k++)
+    {
+      UI_Module *M = (UI_Module *) mod_pack->child(k);
+      if (M->visible() && M->y() < focus->y())
+      {
+        above_h += M->CalcHeight() + spacing;
+      }
+    }
+
+    offset_y = above_h - focus_oy;
+
+    offset_y = MAX(offset_y, 0);
+    offset_y = MIN(offset_y, new_height - mh);
+  }
+  else
+  {
+    // when not shrinking, offset_y will remain valid
+    if (new_height < total_h)
+      offset_y = 0;
+  }
+
+  total_h = new_height;
+
+  SYS_ASSERT(offset_y >= 0);
+  SYS_ASSERT(offset_y <= total_h);
+
+
+  // reposition all the modules
+  int ny = my - offset_y;
 
   for (int j = 0; j < mod_pack->children(); j++)
   {
     UI_Module *M = (UI_Module *) mod_pack->child(j);
     SYS_ASSERT(M);
 
-    int ny = cur_y;
-    int nh = M->visible() ? M->CalcHeight() : 0;
+    int nh = M->visible() ? M->CalcHeight() : 1;
   
     if (ny != M->y() || nh != M->h())
     {
-//fprintf(stderr, "  SETTING WIDGET TO: (%d,%d) %dx%d\n", M->x(), ny, M->w(), MAX(1, nh));
-
-      M->resize(M->x(), ny, M->w(), MAX(1, nh));
+      M->resize(M->x(), ny, M->w(), nh);
     }
 
-//fprintf(stderr, "  %p : %s (%d,%d) %dx%d\n", M, M->visible() ? "SHOW" : "hide", M->x(), M->y(), M->w(), M->h());
-
-    cur_y += nh + (nh ? 4 : 0);
+    if (M->visible())
+      ny += M->CalcHeight() + spacing;
   }
 
-  mod_pack->redraw();
 
-  return cur_y - start_y;
+  // p = position, first line displayed
+  // w = window, number of lines displayed
+  // t = top, number of first line
+  // l = length, total number of lines
+  sbar->value(offset_y, mh, 0, total_h);
+
+  mod_pack->redraw();
 }
 
 
 void UI_CustomMods::callback_Scroll(Fl_Widget *w, void *data)
 {
   Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
+  UI_CustomMods *that = main_win->mod_box;
 
-  UI_CustomMods *that = (UI_CustomMods *)data;
+  int previous_y = that->offset_y;
 
-
-// fprintf(stderr, "scrollbar pos: %d\n", sbar->value());
-  
   that->offset_y = sbar->value();
 
-#if 1
-  int new_total_h = that->PositionAll(that->my - that->offset_y);
+  int dy = that->offset_y - previous_y;
 
-  if (new_total_h != that->total_h)
-    fprintf(stderr, "WARNING: total_h CHANGED!!!\n");
-#endif
+  // simply reposition all the UI_Module widgets
+  for (int j = 0; j < that->mod_pack->children(); j++)
+  {
+    Fl_Widget *F = that->mod_pack->child(j);
+    SYS_ASSERT(F);
+
+    F->resize(F->x(), F->y() - dy, F->w(), F->h());
+  }
+
+  that->mod_pack->redraw();
 }
 
 
@@ -423,18 +502,22 @@ void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data)
 
   UI_CustomMods *that = main_win->mod_box;
 
-that->offset_y=0;
+  // no height change if no options
+  if (M->choice_map.size() > 0)
+  {
+    that->offset_y=0;
 
-  int old_total_h = that->total_h;
-  int new_total_h = that->PositionAll(that->my - that->offset_y);
+    int old_total_h = that->total_h;
 
-  that->total_h = new_total_h;
-  that->sbar->value(0, that->mh, 0, that->total_h);
+    that->PositionAll(M);
 
-  fprintf(stderr, "HEIGHT CHANGE: %d --> %d\n", old_total_h, new_total_h);
+    that->sbar->value(0, that->mh, 0, that->total_h);
+
+    fprintf(stderr, "HEIGHT CHANGE: %d --> %d\n", old_total_h, that->total_h);
+  }
 
   if (w)
-    ob_set_mod_option(M->id_name.c_str(), "self", M->enabled->value() ? "true" : "false");
+    ob_set_mod_option(M->id_name.c_str(), "self", M->mod_button->value() ? "true" : "false");
 }
 
 

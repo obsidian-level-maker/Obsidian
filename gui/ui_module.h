@@ -27,7 +27,7 @@ friend class UI_CustomMods;
 private:
   std::string id_name;
 
-  Fl_Check_Button *enabled;  
+  Fl_Check_Button *mod_button;  
 
   std::map<std::string, UI_RChoice *> choice_map;
 
@@ -94,8 +94,7 @@ public:
 private:
   UI_Module *FindID(const char *id) const;
 
-  int PositionAll(int start_y);
-
+  void PositionAll(UI_Module *focus = NULL);
 
   static void callback_Scroll(Fl_Widget *w, void *data);
   static void callback_ModEnable(Fl_Widget *w, void *data);
