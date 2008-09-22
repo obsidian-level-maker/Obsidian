@@ -471,7 +471,7 @@ function ob_init()
     return A.label < B.label
   end
 
-  local function create_buttons(what, DEFS, show_em)
+  local function create_buttons(what, DEFS)
     assert(DEFS)
   
     local list = {}
@@ -483,7 +483,7 @@ function ob_init()
 
     table.sort(list, button_sorter)
 
-    for xxx,def in ipairs(list) do
+    for _,def in ipairs(list) do
       gui.add_button(what, def.name, def.label)
 
       if what == "game" then
@@ -498,25 +498,30 @@ function ob_init()
     for _,mod in pairs(OB_MODULES) do
       if not mod.options then
         mod.options = {}
-      end
+      else
+        local list = {}
 
-      name_it_up(mod.options)
-
-      for _,opt in pairs(mod.options) do
-        assert(opt.label)
-        assert(opt.choices)
-
-        gui.add_mod_option(mod.name, opt.name, opt.label)
-
-        -- default value is always the first choice
-        opt.value = opt.choices[1].id
-
-        for N = 1,#opt.choices do
-          gui.add_mod_option(mod.name, opt.name,
-                             opt.choices[N].id,
-                             opt.choices[N].label)
+        for name,opt in pairs(mod.options) do
+          opt.name = name
+          table.insert(list, opt)
         end
-      end -- for opt
+
+        table.sort(list, button_sorter)
+
+        for _,opt in ipairs(list) do
+          assert(opt.label)
+          assert(opt.choices)
+
+          gui.add_mod_option(mod.name, opt.name, opt.label)
+
+          -- default value is always the first choice
+          opt.value = opt.choices[1].id
+
+          for _,C in ipairs(opt.choices) do
+            gui.add_mod_option(mod.name, opt.name, C.id, C.label)
+          end
+        end -- for opt
+      end
     end -- for mod
   end
 
