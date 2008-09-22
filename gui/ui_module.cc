@@ -89,8 +89,6 @@ void UI_Module::AddOption(const char *opt, const char *label)
   int ny = y() + children() * nh;
 
   // FIXME: make label with ': ' suffixed
-
-fprintf(stderr, "AddOption %s: x, y = %d,%d\n", opt, x(), y());
   UI_RChoice *rch = new UI_RChoice(nx, ny, nw, 24, label);
 
   choice_map[opt] = rch;
@@ -143,11 +141,14 @@ void UI_Module::update_Enable()
 void UI_Module::OptionPair(const char *option, const char *id, const char *label)
 {
   UI_RChoice *rch = FindOpt(option);
-fprintf(stderr, "Looking for '%s'\n", option);
-  if (! rch)
-    return; // false;
 
-fprintf(stderr, "OPTION PAIR : %s --> %s\n", id, label);
+  if (! rch)
+  {
+    LogPrintf("Warning: module '%s' lacks option '%s' (for choice '%s')\n",
+              id_name.c_str(), option, id);
+    return;
+  }
+
   rch->AddPair(id, label);
   rch->ShowOrHide(id, 1);
 }
@@ -158,7 +159,11 @@ bool UI_Module::ParseValue(const char *option, const char *value)
   UI_RChoice *rch = FindOpt(option);
 
   if (! rch)
-    return false;  // FIXME: warning
+  {
+    LogPrintf("Warning: module '%s' lacks option '%s' (config parse)\n",
+              id_name.c_str(), option);
+    return false;
+  }
 
   return rch->SetID(value);
 }
@@ -196,25 +201,11 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
 {
   end(); // cancel begin() in Fl_Group constructor
  
-//  box(FL_THIN_UP_BOX);
   box(FL_FLAT_BOX);
   color(WINDOW_BG, WINDOW_BG);
 
 
-  int cy = y; // + 8;
-
-#if 0
-  Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6+w/4, cy, w/2-12, 24, "Custom Mods");
-  heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-  heading->labeltype(FL_NORMAL_LABEL);
-  heading->labelfont(FL_HELVETICA_BOLD);
-  heading->labelcolor(FL_WHITE);
-//  heading->color(BUILD_BG, BUILD_BG);
-
-  add(heading);
-#endif
-
-//  cy += 28;
+  int cy = y;
 
 
   // area for module list
@@ -226,7 +217,6 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
   offset_y = 0;
   total_h  = 0;
 
-fprintf(stderr, "MLIST AREA: (%d,%d)  %dx%d\n", mx, my, mw, mh);
 
   sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
   sbar->callback(callback_Scroll, this);
@@ -239,14 +229,12 @@ fprintf(stderr, "MLIST AREA: (%d,%d)  %dx%d\n", mx, my, mw, mh);
 
   mod_pack->align(FL_ALIGN_INSIDE);
   mod_pack->labeltype(FL_NORMAL_LABEL);
-//  mod_pack->labelfont(FL_HELVETICA_BOLD);
   mod_pack->labelsize(20);
 //  mod_pack->labelcolor(FL_DARK2);
 
   mod_pack->box(FL_FLAT_BOX);
   mod_pack->color(WINDOW_BG);  
   mod_pack->resizable(NULL);
-
 
   add(mod_pack);
 }
@@ -268,8 +256,6 @@ void UI_CustomMods::AddModule(const char *id, const char *label)
 
   PositionAll();
 
-  sbar->value(0, mh, 0, total_h);
-
 ///???  M->redraw();
 }
 
@@ -278,11 +264,15 @@ void UI_CustomMods::AddOption(const char *module, const char *option,
                               const char *label)
 {
   UI_Module *M = FindID(module);
+
   if (! M)
-    return; // false;
+  {
+    LogPrintf("Warning: no such module '%s' (add option '%s')\n",
+              module, option);
+    return;
+  }
 
   M->AddOption(option, label);
-
 
   PositionAll();
 
@@ -293,9 +283,9 @@ void UI_CustomMods::OptionPair(const char *module, const char *option,
                                const char *id, const char *label)
 {
   UI_Module *M = FindID(module);
-fprintf(stderr, "Looking for module '%s' : %p\n", module, M);
+
   if (! M)
-    return; // false;
+    return;
 
   M->OptionPair(option, id, label);
 }
@@ -322,8 +312,6 @@ bool UI_CustomMods::ShowOrHide(const char *id, bool new_shown)
 
   PositionAll();
 
-  sbar->value(0, mh, 0, total_h);
-
 ///???  M->redraw();
 
   return true;
@@ -337,7 +325,10 @@ bool UI_CustomMods::ParseOptValue(const char *module, const char *option,
   UI_Module *M = FindID(module);
 
   if (! M)
+  {
+    LogPrintf("Warning: no such module '%s' (config parse)\n", module);
     return false;
+  }
 
   return M->ParseValue(option, value);
 }
@@ -352,7 +343,7 @@ void UI_CustomMods::ChangeValue(const char *id, bool enable)
     return;
 
   if ( (M->mod_button->value()?1:0) == (enable ? 1:0) )
-    return;
+    return; // no change
 
   M->mod_button->value(enable ? 1 : 0);
 
@@ -362,8 +353,6 @@ void UI_CustomMods::ChangeValue(const char *id, bool enable)
 
 void UI_CustomMods::PositionAll(UI_Module *focus)
 {
-fprintf(stderr, "PositionAll:\n");
-  
   // determine focus [closest to top without going past it]
   if (! focus)
   {
@@ -410,7 +399,6 @@ fprintf(stderr, "PositionAll:\n");
   else if (focus)
   {
     int focus_oy = focus->y() - my;
-    SYS_ASSERT(focus_oy >= 0);
 
     int above_h = 0;
     for (int k = 0; k < mod_pack->children(); k++)
@@ -502,18 +490,10 @@ void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data)
 
   UI_CustomMods *that = main_win->mod_box;
 
-  // no height change if no options
+  // no options => no height change => no need to reposition
   if (M->choice_map.size() > 0)
   {
-    that->offset_y=0;
-
-    int old_total_h = that->total_h;
-
     that->PositionAll(M);
-
-    that->sbar->value(0, that->mh, 0, that->total_h);
-
-    fprintf(stderr, "HEIGHT CHANGE: %d --> %d\n", old_total_h, that->total_h);
   }
 
   if (w)
