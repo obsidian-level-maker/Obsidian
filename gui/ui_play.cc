@@ -166,9 +166,9 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
 
   if (strcmp(mode, "dm") == 0)
   {
-    play->mons->label   ("Weapons: ");
-    play->puzzles->label("Players: ");
-    play->traps->label  ("Equip: ");
+    play->mons->label   ("Players: ");
+    play->puzzles->label("Weapons: ");
+    play->traps->label  ("Powerups: ");
   }
   else
   {
@@ -272,7 +272,7 @@ bool UI_Play::ParseValue(const char *key, const char *value)
 
 const char * UI_Play::monster_syms[] =
 {
-  // also used for: Weapons
+  // also used for: Players (DM)
 
   "kein",   "NONE",
   "scarce", "Scarce",
@@ -288,7 +288,7 @@ const char * UI_Play::monster_syms[] =
 
 const char * UI_Play::puzzle_syms[] =
 {
-  // also used for: Players
+  // also used for: Weapons (DM)
 
   "kein",   "NONE",
   "less",   "Less",
@@ -302,14 +302,14 @@ const char * UI_Play::puzzle_syms[] =
 
 const char * UI_Play::trap_syms[] =
 {
-  //_________Traps________Equip________
+  // also used for: Powerups (DM)
 
-  "kein",   "NONE",      "None",
-  "less",   "Less",      "Small",
-  "normal", "Normal",    "Medium",
-  "high",   "Heaps",     "Large",
+  "kein",   "NONE",  
+  "less",   "Less",  
+  "normal", "Normal",
+  "high",   "Heaps", 
 
-  "mixed",  "Mix It Up", "Mix It Up",
+  "mixed",  "Mix It Up",
 
   NULL, NULL
 };
@@ -348,7 +348,7 @@ void UI_Play::setup_Puzzles()
 
 void UI_Play::setup_Traps()
 {
-  for (int i = 0; trap_syms[i]; i += 3)
+  for (int i = 0; trap_syms[i]; i += 2)
   {
     traps->AddPair(trap_syms[i], trap_syms[i+1]);
     traps->ShowOrHide(trap_syms[i], 1);
