@@ -285,7 +285,7 @@ end
 function ob_set_mod_option(name, option, value)
   local mod = OB_MODULES[name]
   if not mod then
-    gui.printf("Ignoring unknown module: %s\n", mod)
+    gui.printf("Ignoring unknown module: %s\n", name)
     return
   end
     
