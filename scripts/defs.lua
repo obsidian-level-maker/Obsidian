@@ -26,6 +26,18 @@ MAX_CEIL  = 640
 MAX_STEP = 16
 
 SKILLS = { "easy", "medium", "hard" }
+   
+MODES =
+{
+  { "sp",   "Single Player" },
+  { "coop", "Co-op" },
+  { "dm",   "Deathmatch" },
+  { "ctf",  "Capture Flag" },
+}
+
+-- a place for unfinished stuff
+UNFINISHED = {}
+
 
 -- tables which interface with GUI code --
 

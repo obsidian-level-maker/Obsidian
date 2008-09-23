@@ -814,7 +814,7 @@ function wolf3d_factory()
 end
 
 
-OB_GAMES["wolf3d"] =
+UNFINISHED["wolf3d"] =
 {
   label = "Wolfenstein 3D",
 

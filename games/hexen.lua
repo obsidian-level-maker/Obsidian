@@ -2125,7 +2125,7 @@ function hexen_factory()
 end
 
 
-OB_GAMES["hexen"] =
+UNFINISHED["hexen"] =
 {
   label = "Hexen",
 

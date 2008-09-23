@@ -526,7 +526,7 @@ function quake1_factory()
 end
 
 
-OB_GAMES["quake1"] =
+UNFINISHED["quake1"] =
 {
   label = "Quake 1",
 
