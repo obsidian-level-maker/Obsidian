@@ -273,18 +273,9 @@ OB_MODULES["tnt"] =
 }
 
 
----- TEST STUFF ----
-
 OB_THEMES["tnt_egypt"] =
 {
   label = "Egyptian",
-
-  for_module = "tnt",
-}
-
-OB_OPTIONS["tnt_funk"] =
-{
-  label = "Funk It Up",
 
   for_module = "tnt",
 }
