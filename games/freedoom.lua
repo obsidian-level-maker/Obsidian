@@ -56,7 +56,9 @@ FD_SKY_INFO =
 
 ----------------------------------------------------------------
 
-function freedoom_modifier(T)
+function freedoom_factory()
+
+  local T = doom2_factory()
 
   -- the FreeDOOM IWAD contains both Doom 1 and Doom 2 textures
 
@@ -86,15 +88,12 @@ function freedoom_modifier(T)
 end
 
 
-OB_MODULES["freedoom"] =
+OB_GAMES["freedoom"] =
 {
   label = "FreeDoom 0.5",
-  priority = 90,
 
-  for_games = { doom2=1 },
+  format = "doom",
 
-  conflict_mods = { tnt=1, plut=1 },
-
-  mod_func = freedoom_modifier,
+  game_func = freedoom_factory,
 }
 
