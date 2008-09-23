@@ -82,31 +82,35 @@ opt_callback_data_t;
 
 void UI_Module::AddOption(const char *opt, const char *label)
 {
-  int nw = 120;
+  int nw = 126;
   int nh = 28;
 
   int nx = x() + 192;
   int ny = y() + children() * nh;
 
-  // FIXME: make label with ': ' suffixed
-  UI_RChoice *rch = new UI_RChoice(nx, ny, nw, 24, label);
+  // make label with ': ' suffixed
+  int len = strlen(label);
+  char *new_label = StringNew(len + 4);
+  strcpy(new_label, label);
+  strcat(new_label, ": ");
 
-  choice_map[opt] = rch;
+  UI_RChoice *rch = new UI_RChoice(nx, ny, nw, 24, new_label);
+  rch->align(FL_ALIGN_LEFT);
+  rch->selection_color(MY_PURPLE);
 
   opt_callback_data_t *cb_data = new opt_callback_data_t;
   cb_data->M = this;
   cb_data->opt_name = StringDup(opt);
 
-  rch->align(FL_ALIGN_LEFT);
-  rch->selection_color(MY_PURPLE);
   rch->callback(callback_OptChange, cb_data);
+  rch->hide();
 
   add(rch);
 
-  rch->hide();
-
   resize(x(), y(), w(), CalcHeight());
   redraw();
+
+  choice_map[opt] = rch;
 }
 
 
@@ -114,7 +118,7 @@ int UI_Module::CalcHeight() const
 {
   int h = 4 + 24 + 6;  // check button
 
-  if (mod_button->value())
+  if (mod_button->value() && children() > 1)
     h += (children() - 1) * 28 + 4;
 
   return h;
@@ -321,6 +325,10 @@ bool UI_CustomMods::ParseOptValue(const char *module, const char *option,
                                   const char *value)
 {
   ob_set_mod_option(module, option, value);
+
+  // the script takes care of the module itself
+  if (StringCaseCmp(option, "self") == 0)
+    return true;
 
   UI_Module *M = FindID(module);
 
