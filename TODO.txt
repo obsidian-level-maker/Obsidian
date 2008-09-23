@@ -3,12 +3,6 @@ TODO
 ====
 
 
-Custom Mods:
-  - clean up dirty code in ui_module
-
-  + fix all the expand/shrink/scroll issues
-
-
 merge area_info + area_poly --> csg_brush_c
 
 
@@ -93,10 +87,10 @@ QUAKE:
 
 - clipping hulls:
 
-+ grab Q1 textures directly from PAK files
-  ??? code to check if data/quake_tex.wad exists
-  ? gui.property("texture_wad", "data/oq_tex.wad")
-  ? gui.property("needed_pak",  "pak0.pak")
+++ grab Q1 textures directly from PAK files
+   ??? code to check if data/quake_tex.wad exists
+   ? gui.property("texture_wad", "data/oq_tex.wad")
+   ? gui.property("needed_pak",  "pak0.pak")
 
 - create "oblige" logo miptex [.wal for QuakeII]
 
@@ -125,35 +119,33 @@ QUAKE1 ENTITY PROPS:
 
 
 
-GUI:
-
--  in deathmatch mode, fix labels on the "Equip" button
-   (Watch for the "mode" signal).
-
-   >>>  make it a separate widget
-
-+  reading and writing the config file (via LUA code) 
- 
-   -  on serious script errors: remember it, so that we
-      don't try calling into LUA to write the config.
-
-
 General:
-
-+  get the 'Unixy' type of installation working, and
-   write a INSTALL.txt with some useful information.
 
 +  create special BOSS levels (e.g. E1M8, MAP30)
 
 +  get traps (closets / depots) working again.
 
--  Levels in an episode get progressively bigger.
-
 -  make the EASY skill much easier (less monsters)
 
--  Deathmatch: initial starting weapon (None,Basic,Heavy) : "Equip"
+-  Deathmatch: implement DM-Equipment module
 
 -  FreeDoom: some scenery items (hanging gore) have no sprites
+
+?  put all important constants/tables into defs.lua
+
+
+GUI / C++:
+
+-  ui_chooser: support last_file in WIN32
+      maybe this: lpstrFile contains _base_ of file (FOO.EXT)
+              and lpstrInitialDir contains _path_ of last file.
+      probably only set it once (first call).
+
++  get the 'Unixy' type of installation working, and
+   write a INSTALL.txt with some useful information.
+
+-  on serious script errors: remember it, so that we
+   don't try calling into LUA to write the config.
 
 -  Batch mode:
    .  -b(atch) builds then quits
@@ -163,19 +155,7 @@ General:
    .  never writes the config file
    ?? what to do on error ??
 
-?  put all important constants/tables into defs.lua
-
-
-GUI:
-
--  remember save path in config file (Win32).
-
--  ui_chooser: support last_file in WIN32
-      maybe this: lpstrFile contains _base_ of file (FOO.EXT)
-              and lpstrInitialDir contains _path_ of last file.
-      probably only set it once (first call).
-
--  make an icon for Win32 executable.
+-  improve icon for Win32 executable.
 
 -  ideas for remaining button (YYY) :
    -  Secrets   (would be useless for DM)
@@ -184,6 +164,9 @@ GUI:
    -  Lighting adjustment
    -  Big monster adjustment
    +  Linearity
+
+-  make sure target dir is writable _before_ making levels.
+   (have a "CheckDirWritable" function?)
 
 
 DOOM
@@ -295,11 +278,6 @@ Miscellaneous:
 
 -  WINDOW_CROSS and WINDOW_CROSS_BIG: do a height check
    (prevent windows you can walk through).
-
--  GUI: Advanced button.
--  GUI: create menus based on the lua scripts present.
--  GUI: make sure target dir is writable _before_ making levels.
-   (have a "CheckDirWritable" function?)
 
 
 Pipe Dreams:
