@@ -592,7 +592,7 @@ for level = 1,NUM do
     if gui.abort() then return "abort" end
     gui.progress(40)
 
---!!!!!!  Rooms_fit_out()
+  Rooms_fit_out()
     if gui.abort() then return "abort" end
     gui.progress(60)
 
