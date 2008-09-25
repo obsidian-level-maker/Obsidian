@@ -178,10 +178,6 @@ function Landmap_DoGround()
 
     FILLERS.none = 60*5  -- variable?  --!!!!!!!!
 
----###    if false --[[USE_CAVE]] then
----###      FILLERS.cave = sel(Landmap_at_edge(x,y), 60, 5)
----###    end
-
     local near_lava = false
     for dx = -1,1 do for dy = -1,1 do
       if Landmap_valid(x+dx, y+dy) then
@@ -229,7 +225,6 @@ function Landmap_DoGround()
   local GROW_PROBS =
   {
     valley = 40/2, ground = 50/2, hill = 30/2, --!!!!!!
-    cave = 70, building = 70, --<< these two have no effect
   }
 
   local function try_grow_spot(x, y, dir)
@@ -295,15 +290,10 @@ end
 
 
 function Landmap_DoIndoors()
-  local what = rand_key_by_probs
-  {
-    building = 90, cave = 20
-  }
-
   for x = 1,LAND_W do for y = 1,LAND_H do
     local L = LAND_MAP[x][y]
     if not L.kind then
-      L.kind = what
+      L.kind = "indoor"
     end
   end end -- x,y
 end
@@ -322,27 +312,20 @@ function Landmap_Fill()
 gui.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
     LAND_W = half_LW ; Landmap_Fill() ; LAND_W = old_LW
 
-    local swap_cave = rand_odds(25)
-    local swap_hill = rand_odds(25)
+    local swappers = {}
+
+    if rand_odds(20) then
+      swappers = { ground="valley", valley="hill", hill="ground" }
+    elseif rand_odds(20) then
+      swappers = { ground="hill", valley="group", hill="valley" }
+    end
 
     for x = half_LW+1, LAND_W do
       for y = 1,LAND_H do
         local L = LAND_MAP[LAND_W-x+1][y]
         local N = LAND_MAP[x][y]
 
-        N.kind = L.kind
-
-        if swap_cave then
-          if N.kind == "building" then N.kind = "cave"
-          elseif N.kind == "cave" then N.kind = "building"
-          end
-        end
-
-        if swap_hill then
-          if N.kind == "ground"   then N.kind = "hill"
-          elseif N.kind == "hill" then N.kind = "ground"
-          end
-        end
+        N.kind = swappers[L.kind] or L.kind
       end
     end
 
@@ -376,8 +359,7 @@ function Landmap_Dump()
     ground = "2",
     hill   = "3",
 
-    building = "r",
-    cave     = "c",
+    indoor   = "r",
     liquid   = "~",
     void     = "#",
   }
@@ -456,10 +438,10 @@ function Landmap_CreateRooms()
   }
 
   local function prob_for_big_room(kind, w, h)
-    if kind == "building" or kind == "cave" then
+    if kind == "indoor" then
       if w >= 4 or h >= 4 then return 0 end
       return BIG_BUILDING_PROBS[w][h]
-    else -- ground
+    else -- outdoor
       if w * h >= 4 then return 0 end
       return 100 * (w * h) * (w * h)
     end
@@ -1038,7 +1020,7 @@ function Rooms_Make_Seeds()
         elseif N.room == R then
           -- same room, do nothing
           
-        elseif R.kind == "building" or R.kind == "cave" then
+        elseif R.kind == "indoor" then
           S.borders[dir] = { kind="solid" }
 
 ---#    elseif N.room and N.room.nowalk then
@@ -1916,7 +1898,7 @@ gui.debugf("Failed\n")
     for _,R in ipairs(PLAN.all_rooms) do
       R.svol = R.sw * R.sh -- FIXME !!!!!! OUT OF HERE
 
-      if R.svol >= 1 and (R.kind == "building" or R.kind == "cave") then
+      if R.svol >= 1 and (R.kind == "indoor") then
         table.insert(rooms, R)
       end
     end

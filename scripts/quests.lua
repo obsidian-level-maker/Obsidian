@@ -284,7 +284,7 @@ function Quest_decide_exit_room(arena)
     if #R.conns > 2 then cost = cost + 100 end
 
     -- prefer an indoor room
-    if not (R.kind == "building" or R.kind == "cave") then
+    if R.kind ~= "indoor" then
       cost = cost + 50
     end
 
@@ -360,7 +360,7 @@ function Quest_decide_exit_room(arena)
     dist = dist - math.min(95, R.svolume * 1.5)
 
     -- bonus for indoor room
-    if (R.kind == "building" or R.kind == "cave") then
+    if (R.kind == "indor") then
       dist = dist + 50
     end
 
@@ -847,9 +847,7 @@ gui.debugf("src_tvol = %d  dest_tvol = %d\n", C.src_tvol, C.dest_tvol)
 
     if #C.src.teleports > 0 then cost = cost + 4 end
 
-    if not (C.src.kind == "building" or C.src.kind == "cave") and
-       not (C.dest.kind == "building" or C.dest.kind == "cave")
-    then
+    if (C.src.kind ~= "indoor") and (C.dest.kind ~= "indoore") then
       cost = cost + 32
     end
 

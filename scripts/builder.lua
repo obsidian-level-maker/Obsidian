@@ -302,8 +302,6 @@ z1 = z1 or 0; z2 = z2 or 256 --!!!!!!!
 
       local do_corners = false --!!
 
---!!!!!!
--- if S.room.kind == "building" then S.room.kind = "ground" end
 
       if S.room.hallway then
 
@@ -312,23 +310,23 @@ z1 = z1 or 0; z2 = z2 or 256 --!!!!!!!
         w_tex = "GRAY7"
 
       elseif S.room.kind == "valley" then
-        f_tex = "GRASS1"
+        f_tex = "FLOOR7_1"
         c_tex = "F_SKY1"
-        w_tex = "ZIMMER8"
+        w_tex = "BROWN144"
         do_corners = false
         do_sides = false --!!!
 
       elseif S.room.kind == "ground" then
-        f_tex = "RROCK11"
+        f_tex = "MFLR8_4"
         c_tex = "F_SKY1"
-        w_tex = "ROCK4"
+        w_tex = "ASHWALL2"
         do_corners = false
         do_sides = false --!!!
 
       elseif S.room.kind == "hill" then
-        f_tex = "MFLR8_4"
+        f_tex = "FLOOR7_1"
         c_tex = "F_SKY1"
-        w_tex = "ASHWALL2"
+        w_tex = "BROWN144"
         do_corners = false
         do_sides = false --!!!
 
@@ -340,21 +338,15 @@ z1 = z1 or 0; z2 = z2 or 256 --!!!!!!!
         do_corners = false
         do_sides = false --!!!
 
-      elseif S.room.kind == "cave" then
-      
-        f_tex = "FLAT10"
-        c_tex = "FLAT10"
-        w_tex = "ASHWALL4"
-
       else -- building
       
-        f_tex = "FLAT14"
+        f_tex = "FLOOR4_8"
         c_tex = "CEIL3_3"
         w_tex = "STARTAN3"
 
       end
 
-      if S.room.branch_kind then f_tex = "CEIL5_1" end
+      if S.room.branch_kind then f_tex = "FLAT14" end
 
 --[[ QUAKE
 f_tex = sel(c_tex == "F_SKY1", "ground1_6", "wood1_1")

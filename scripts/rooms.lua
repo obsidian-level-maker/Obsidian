@@ -43,7 +43,7 @@ function Rooms_hallways()
 
   local function eval_hallway(R)
 gui.debugf("Testing Hallway at (%d,%d)\n", R.lx1,R.ly1)
-    if not (R.kind == "building" or R.kind == "cave") then
+    if (R.kind ~= "indoor") then
       return false
     end
 
@@ -56,7 +56,7 @@ gui.debugf("Testing Hallway at (%d,%d)\n", R.lx1,R.ly1)
     for _,C in ipairs(R.conns) do
       local N = sel(C.src == R, C.dest, C.src)
 gui.debugf("Hallway at (%d,%d) : CONN kind %s\n", R.lx1,R.ly1, N.kind or "????")
-      if not (N.kind == "building" or N.kind == "cave") then
+      if (N.kind ~= "indoor") then
         return false
       end
     end
@@ -275,7 +275,7 @@ function Rooms_select_heights()
     end
 
     for _,C in ipairs(R.conns) do
-      if (R == C.src) and (C.dest.kind == "building" or C.dest.kind == "cave") then
+      if (R == C.src) and (C.dest.kind == "indoor") then
         C.dest.floor_h = R.floor_h
       end
     end

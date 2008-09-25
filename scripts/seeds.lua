@@ -186,10 +186,9 @@ function Seed_dump_fabs()
     if S.kind == "valley" then return "1" end
     if S.kind == "hill"   then return "3" end
 
+    if S.kind == "indoor" then return "#" end
+    if S.kind == "hall"   then return "+" end
     if S.kind == "liquid" then return "~" end
-    if S.kind == "cave" then return "%" end
-    if S.kind == "building" then return "#" end
-    if S.kind == "hall" then return "+" end
 
     return "?"
   end
