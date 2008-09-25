@@ -302,14 +302,8 @@ z1 = z1 or 0; z2 = z2 or 256 --!!!!!!!
 
       local do_corners = false --!!
 
-
-      if S.room.hallway then
-
-        f_tex = "FLAT1"
-        c_tex = f_tex
-        w_tex = "GRAY7"
-
-      elseif S.room.kind == "valley" then
+      
+      if S.room.kind == "valley" then
         f_tex = "FLOOR7_1"
         c_tex = "F_SKY1"
         w_tex = "BROWN144"
@@ -331,12 +325,24 @@ z1 = z1 or 0; z2 = z2 or 256 --!!!!!!!
         do_sides = false --!!!
 
       elseif S.room.kind == "liquid" then
-        f_tex = "LAVA1"
+        f_tex = "NUKAGE1"
         c_tex = "F_SKY1"
         w_tex = "COMPBLUE"
         sec_kind = 16
         do_corners = false
         do_sides = false --!!!
+
+      elseif S.room.kind == "hallway" then
+
+        f_tex = "FLAT1"
+        c_tex = f_tex
+        w_tex = "GRAY7"
+
+      elseif S.room.kind == "stairwell" then
+
+        f_tex = "FLAT5_3"
+        c_tex = "FLAT1"
+        w_tex = "BROWN1"
 
       else -- building
       
@@ -346,7 +352,8 @@ z1 = z1 or 0; z2 = z2 or 256 --!!!!!!!
 
       end
 
-      if S.room.branch_kind then f_tex = "FLAT14" end
+--      if S.room.branch_kind then f_tex = "CEIL5_2" end
+
 
 --[[ QUAKE
 f_tex = sel(c_tex == "F_SKY1", "ground1_6", "wood1_1")
@@ -518,7 +525,7 @@ end -- do_sides
       {
         name = ENT_EXIT
       })
-    elseif S.room and not S.room.hallway and
+    elseif S.room and S.room.kind ~= "hallway" and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
       gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25,

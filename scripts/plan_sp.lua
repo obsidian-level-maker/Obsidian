@@ -502,6 +502,10 @@ function Landmap_CreateRooms()
       lx2 = x, ly2 = y,
     }
 
+    if ROOM.kind ~= "indoor" then
+      ROOM.outdoor = true
+    end
+
     table.insert(PLAN.all_rooms, ROOM)
 
     local e_infos = { "none" }
@@ -1070,8 +1074,9 @@ end
 -- cross requires an odd width and an odd height).
 --
 -- It is assumed that the caller will try all the four possible
--- mirrorings (none/X/Y/XY) of each configuration, and these
--- generator functions are optimised with that in mind.
+-- mirrorings (none/X/Y/XY) and rotations (none/90) of each
+-- configuration, and these generator functions are optimised
+-- with that in mind.
 --
 -- The 'symmetry' field, when set, is a direction (1-9) of the
 -- axis of symmetry.  Hence "2" means the pattern will be the same
@@ -1488,7 +1493,7 @@ BIG_BRANCH_KINDS =
   LX = { conn=2, prob= 3, func=branch_gen_LX },
 
   -- U shape, both exits on a single wall
-  U2 = { conn=2, prob= 1, func=branch_gen_U2, symmetrical=2 },
+  U2 = { conn=2, prob= 1, func=branch_gen_U2, symmetry=2 },
 
 
   -- T shape, centered main stem, leeway for side stems
@@ -1824,10 +1829,17 @@ function Rooms_Connect()
       return false
     end
 
+    -- OK, all points were possible, do it for real
+
 gui.debugf("USING CONFIGURATION: %s\n", K)
 gui.debugf("hit_conns = %d\n", hit_conns)
 
-    -- OK, all points were possible, do it for real
+    R.branch_kind = K
+
+    if BIG_BRANCH_KINDS[K].symmetry then
+      R.symmetry = morph_dir(MORPH, BIG_BRANCH_KINDS[K].symmetry)
+    end
+
     for _,C in ipairs(conns) do
 
       local CONN = connect_seeds(C.S, C.N, C.dir, "normal")
@@ -1844,8 +1856,6 @@ gui.debugf("hit_conns = %d\n", hit_conns)
         C.gap.bridged_dir = C.dir
       end
     end
-
-    R.branch_kind = K
 
     return true
   end
