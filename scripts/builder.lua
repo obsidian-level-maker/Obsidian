@@ -270,7 +270,7 @@ gui.printf("do_teleport\n")
     },
     -2000, z1)
 
-    gui.add_entity("14", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+    gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25, { name="14" })
   end
 
 
@@ -296,7 +296,8 @@ gui.printf("do_teleport\n")
 
     if S.room then
 
-      z1 = 0; z2 = 256 --!!!!!!!
+z1 = z1 or 0; z2 = z2 or 256 --!!!!!!!
+
       assert(z1 and z2)
 
       local do_corners = false --!!
@@ -516,13 +517,22 @@ gui.printf("ADDING LOCK DOOR %s\n", w_tex)
 end -- do_sides
 
     if S.is_start then
-      gui.add_entity(ENT_PLAYER, (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25,
+      {
+        name = ENT_PLAYER
+      })
     elseif S.is_exit then
-      gui.add_entity(ENT_EXIT, (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25,
+      {
+        name = ENT_EXIT
+      })
     elseif S.room and not S.room.hallway and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
-      gui.add_entity(ENT_MONSTER, (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25,
+      {
+        name = ENT_MONSTER
+      })
     end
 
     if S.room and S.sy == S.room.sy2 then

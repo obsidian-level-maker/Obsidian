@@ -914,6 +914,10 @@ function Quest_add_puzzle()
     --
     -- 6) prefer no teleporters in source room
 
+--!!!!!!!!!
+if not C.src_tvol then C.src_tvol = 99 end
+if not C.dest_tvol then C.dest_tvol = 99 end
+
     local cost = math.abs(C.src_tvol - C.dest_tvol * back_mul)
 
 --!!!!!
@@ -1015,10 +1019,11 @@ gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
 
 
 local KS = lock_C.dest_S
+if KS and lock_C.src_S then
 local dir = delta_to_dir(lock_C.src_S.sx - KS.sx, lock_C.src_S.sy - KS.sy)
 KS.borders[dir].kind = "lock_door"
 KS.borders[dir].key_item = LOCK.item
-
+end
 
 
   --- perform split ---
