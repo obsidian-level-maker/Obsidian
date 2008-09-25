@@ -2091,6 +2091,7 @@ function Plan_rooms_sp(epi_along)
 
   gui.printf("\n--==| Plan_rooms_sp |==--\n\n")
 
+  -- create the global 'PLAN' object
   PLAN =
   {
     all_rooms = {},
@@ -2114,14 +2115,6 @@ function Plan_rooms_sp(epi_along)
   Rooms_Nudge()
   Rooms_Make_Seeds()
   Rooms_Connect()
-
-
---!!!!!
-for _,R in ipairs(PLAN.all_rooms) do
-  if #R.conns > 1 and not R.branch_kind then
-    R.hallway = true
-  end
-end
 
 end -- Plan_rooms_sp
 

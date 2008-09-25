@@ -203,8 +203,8 @@ gui.debugf("Connection cost: %1.2f\n", C.cost)
     -- really big rooms are wasted for the starting room
     cost = cost + R.svolume * 6
 
-    -- should not start in a hallway!
-    if R.hallway then cost = cost + 666 end
+---##    -- should not start in a hallway!
+---##    if R.hallway then cost = cost + 666 end
 
     -- add a touch of randomness
     return cost + rand_range(-2, 2)
@@ -732,88 +732,6 @@ gui.debugf("  Back  (%d rooms, %d conns)\n", #  back.rooms, #  back.conns)
 end
 
 
-function Quest_hallways()
-  -- Marks certain rooms to be hallways, using the following criteria:
-  --   - indoor non-leaf room
-  --   - MIN(w,h) == 1 (sometimes 2)
-  --   - all neighbours are indoor
-  --   - no purpose (not a start room, exit room, key room)
-  --   - no teleporters
-
-  local HALL_SIZE_PROBS = { 99, 75, 50, 25 }
-  local REVERT_PROBS    = {  0, 50, 84, 99 }
-
-  local function eval_hallway(R)
-    if not (R.kind == "building" or R.kind == "cave") then
-      return false
-    end
-
---  if R.purpose then return false end
-    if #R.teleports > 0 then return false end
-    if R.num_branch < 2 then return false end
-    if R.num_branch > 5 then return false end
-
-    for _,C in ipairs(R.conns) do
-      local N = sel(C.src == R, C.dest, C.src)
-      if not (N.kind == "building" or N.kind == "cave") then
-        return false
-      end
-    end
-
-    local rw = math.min(R.sw, R.sh)
-
-    if rw > 4 then return false end
-
-    return rand_odds(HALL_SIZE_PROBS[rw])
-  end
-
-  local function surrounded_by_halls(R)
-    local hall_nb = 0
-    for _,C in ipairs(R.conns) do
-      local N = sel(C.src == R, C.dest, C.src)
-      if N.hallway then hall_nb = hall_nb + 1 end
-    end
-
-    return (hall_nb == #R.conns) or (hall_nb >= 3)
-  end
-
-  ---| Quest_hallways |---
-  
-  for _,R in ipairs(PLAN.all_rooms) do
-    if eval_hallway(R) then
-      R.hallway = true
-    end
-  end
-
-  -- large rooms which are surrounded by hallways are wasted,
-  -- hence look for them and revert them back to normal.
-  for _,R in ipairs(PLAN.all_rooms) do
-    if R.hallway and surrounded_by_halls(R) then
-      local rw = math.min(R.sw, R.sh)
-      assert(rw <= 4)
-
-      if rand_odds(REVERT_PROBS[rw]) then
-        R.hallway = nil
-gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
-      end
-    end
-  end
-
-  -- !!!! TEMP CRUD
-  for _,R in ipairs(PLAN.all_rooms) do
-    if R.hallway then
-      local rw, rh = R.sw, R.sh
-
-      if math.min(rw,rh) >= 3 and #R.conns >= 3 then
-        for x = R.sx1+1, R.sx2-1 do for y = R.sy1+1, R.sy2-1 do
-          SEEDS[x][y][1].room = nil
-        end end -- x, y
-      end
-    end
-  end
-end
-
-
 function Quest_num_puzzles(num_rooms)
   local PUZZLE_MINS = { less=18, normal=12, more=8, mixed=16 }
   local PUZZLE_MAXS = { less=10, normal= 8, more=4, mixed=6  }
@@ -923,7 +841,8 @@ if not C.dest_tvol then C.dest_tvol = 99 end
 --!!!!!
 gui.debugf("src_tvol = %d  dest_tvol = %d\n", C.src_tvol, C.dest_tvol)
 
-    if C.dest.hallway then cost = cost + 10 end
+---##    if C.dest.hallway then cost = cost + 10 end
+
     if C.dest.big_entrance == C.src then cost = cost - 20 end
 
     if #C.src.teleports > 0 then cost = cost + 4 end
@@ -1261,7 +1180,7 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
 
   PLAN.num_puzz = Quest_num_puzzles(#PLAN.all_rooms)
 
-  Quest_hallways()
+---##  Quest_hallways()
 
   local arena =
   {

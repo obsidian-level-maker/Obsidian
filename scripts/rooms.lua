@@ -29,6 +29,93 @@ require 'defs'
 require 'util'
 
 
+function Rooms_hallways()
+  -- Marks certain rooms to be hallways, using the following criteria:
+  --   - indoor non-leaf room
+  --   - MIN(w,h) == 1 (sometimes 2)
+  --   - all neighbours are indoor
+  --   - no purpose (not a start room, exit room, key room)
+  --   - no teleporters
+  --   - not the destination of a locked door
+
+  local HALL_SIZE_PROBS = { 99, 75, 50, 25 }
+  local REVERT_PROBS    = {  0, 50, 84, 99 }
+
+  local function eval_hallway(R)
+gui.debugf("Testing Hallway at (%d,%d)\n", R.lx1,R.ly1)
+    if not (R.kind == "building" or R.kind == "cave") then
+      return false
+    end
+
+    if R.purpose then return false end
+
+    if #R.teleports > 0 then return false end
+    if R.num_branch < 2 then return false end
+    if R.num_branch > 5 then return false end
+
+    for _,C in ipairs(R.conns) do
+      local N = sel(C.src == R, C.dest, C.src)
+gui.debugf("Hallway at (%d,%d) : CONN kind %s\n", R.lx1,R.ly1, N.kind or "????")
+      if not (N.kind == "building" or N.kind == "cave") then
+        return false
+      end
+    end
+
+    local rw = math.min(R.sw, R.sh)
+
+    if rw > 4 then return false end
+
+    return rand_odds(HALL_SIZE_PROBS[rw])
+  end
+
+  local function surrounded_by_halls(R)
+    local hall_nb = 0
+    for _,C in ipairs(R.conns) do
+      local N = sel(C.src == R, C.dest, C.src)
+      if N.hallway then hall_nb = hall_nb + 1 end
+    end
+
+    return (hall_nb == #R.conns) or (hall_nb >= 3)
+  end
+
+  ---| Quest_hallways |---
+  
+  for _,R in ipairs(PLAN.all_rooms) do
+    if eval_hallway(R) then
+gui.debugf("  Made Hallway at (%d,%d)\n", R.lx1,R.ly1)
+      R.hallway = true
+    end
+  end
+
+  -- large rooms which are surrounded by hallways are wasted,
+  -- hence look for them and revert them back to normal.
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.hallway and surrounded_by_halls(R) then
+      local rw = math.min(R.sw, R.sh)
+      assert(rw <= 4)
+
+      if rand_odds(REVERT_PROBS[rw]) then
+        R.hallway = nil
+gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
+      end
+    end
+  end
+
+  -- !!!! TEMP CRUD
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.hallway then
+      local rw, rh = R.sw, R.sh
+
+      if math.min(rw,rh) >= 3 and #R.conns >= 3 then
+        for x = R.sx1+1, R.sx2-1 do for y = R.sy1+1, R.sy2-1 do
+          SEEDS[x][y][1].room = nil
+        end end -- x, y
+      end
+    end
+  end
+end
+
+
 
 function Rooms_select_heights()
 
@@ -226,6 +313,8 @@ end
 function Rooms_fit_out()
 
   gui.printf("\n--==| Rooms_fit_out |==--\n\n")
+
+  Rooms_hallways()
 
   Rooms_select_heights()
 end
