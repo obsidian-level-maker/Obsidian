@@ -48,3 +48,11 @@ OB_THEMES  = {}
 OB_ENGINES = {}
 OB_MODULES = {}
 
+
+OB_THEMES["mixed"] =
+{
+  label = "Mix It Up",
+
+  priority = -99,  -- bottom-most
+}
+

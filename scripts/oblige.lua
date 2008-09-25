@@ -30,12 +30,6 @@ require 'builder'
 -- require 'monsters'
 
 
-OB_THEMES["mixed"] =
-{
-  label = "Mix It Up",
-  priority = -99,
-}
-
 
 function create_GAME()
 
