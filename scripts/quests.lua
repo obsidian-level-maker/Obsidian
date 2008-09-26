@@ -822,15 +822,13 @@ function Quest_add_puzzle()
     --
     -- 3) entering a big room through its main entrance is nice
     --    
-    -- 4) entering a hallway is anti-climactic.
-    --
-    -- 5) try to avoid Outside-->Outside connections, since we
+    -- 4) try to avoid Outside-->Outside connections, since we
     --    cannot use keyed doors in DOOM (or if we do, then they
     --    create an ugly tall door-frame).  Worse is when there
     --    is a height difference (though going UP has potential to
     --    use a raising stair for the puzzle).
     --
-    -- 6) prefer no teleporters in source room
+    -- 5) prefer no teleporters in source room
 
 --!!!!!!!!!
 if not C.src_tvol then C.src_tvol = 99 end

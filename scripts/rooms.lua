@@ -32,17 +32,17 @@ require 'util'
 function Rooms_decide_hallways()
   -- Marks certain rooms to be hallways, using the following criteria:
   --   - indoor non-leaf room
-  --   - MIN(w,h) == 1 (sometimes 2)
+  --   - prefer small rooms
   --   - all neighbours are indoor
   --   - no purpose (not a start room, exit room, key room)
   --   - no teleporters
-  --   - not the destination of a locked door
+  --   - not the destination of a locked door (anti-climactic)
 
-  local HALL_SIZE_PROBS = { 99, 75, 50, 25 }
-  local REVERT_PROBS    = {  0, 50, 84, 99 }
+  local HALL_SIZE_PROBS = { 99, 90, 70, 50, 30 }
+  local REVERT_PROBS    = {  0, 33, 70, 90, 99 }
 
   local function eval_hallway(R)
-    if (R.kind ~= "indoor") then
+    if R.outdoor then
       return false
     end
 
@@ -54,18 +54,18 @@ function Rooms_decide_hallways()
 
     for _,C in ipairs(R.conns) do
       local N = sel(C.src == R, C.dest, C.src)
-      if (N.kind ~= "indoor") then
+      if N.outdoor then
         return false
       end
 
-      if C.dest == R and C.lock then
+      if C.dest == R and C.lock and rand_odds(80) then
         return false
       end
     end
 
     local rw = math.min(R.sw, R.sh)
 
-    if rw > 4 then return false end
+    if rw > 5 then return false end
 
     return rand_odds(HALL_SIZE_PROBS[rw])
   end
@@ -110,7 +110,7 @@ gui.debugf("  Made Hallway at (%d,%d)\n", R.lx1,R.ly1)
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hallway" and surrounded_by_halls(R) then
       local rw = math.min(R.sw, R.sh)
-      assert(rw <= 4)
+      assert(rw <= 5)
 
       if rand_odds(REVERT_PROBS[rw]) then
         R.kind = "indoor"
@@ -122,13 +122,18 @@ gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
   -- decide stairwells
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hallway" and R.num_branch == 2 and
-       #R.teleports == 0 and hallway_neighbours(R) <= 1  -- FIXME: hall_nb = chance modifier
-       and stairwell_neighbours(R) == 0
-       and rand_odds(90)
+       stairwell_neighbours(R) == 0
     then
-      R.kind = "stairwell"
+      local chance = 60
+      if hallway_neighbours(R) > 0 then
+        chance = 20
+      end
+
+      if rand_odds(chance) then
+        R.kind = "stairwell"
+      end
     end
-  end
+  end -- for R
 end
 
 
@@ -385,9 +390,9 @@ function Rooms_choose_heights()
     end
 
     if other_h < 128 then
-      other_h += 128
+      other_h = other_h + 128
     elseif other_h > 128 then
-      other_h -= 128
+      other_h = other_h - 128
     else
       other_h = sel(rand_odds(50), 0, 256)
     end
@@ -456,7 +461,22 @@ function Rooms_choose_heights()
       end
     end
   end -- for R
- 
+
+  -- decide tallness of indoor rooms
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.kind == "indoor" then
+      local approx_size = (2 * math.min(R.sw, R.sh) + math.max(R.sw, R.sh)) / 3.0
+      local tallness = (approx_size + rand_range(-0.5,1.5)) * 64.0
+
+      R.tallness = int(tallness / 32.0) * 32
+
+      if R.tallness < 128 then R.tallness = 128 end
+      if R.tallness > 480 then R.tallness = 480 end
+
+      gui.debugf("Room %dx%d --> tallness %d\n", R.sw, R.sh, R.tallness)
+    end
+  end -- for R
+
   -- handle hallway groups
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hallway" and not R.floor_h then
@@ -499,9 +519,15 @@ function Rooms_choose_heights()
 
     for _,R in ipairs(rooms) do
       -- !!!!!! FIXME
-      R.floor_h = 1
+      R.floor_h = 0
     end
   end 
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if not R.ceil_h then
+      R.ceil_h = R.floor_h + (R.tallness or 128)
+    end
+  end
 end
 
 

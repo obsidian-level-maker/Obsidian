@@ -296,7 +296,8 @@ gui.printf("do_teleport\n")
 
     if S.room then
 
-z1 = z1 or 0; z2 = z2 or 256 --!!!!!!!
+      z1 = z1 or S.room.floor_h --!!! or 0
+      z2 = z2 or S.room.ceil_h  --!!! or 256
 
       assert(z1 and z2)
 
@@ -335,7 +336,7 @@ z1 = z1 or 0; z2 = z2 or 256 --!!!!!!!
       elseif S.room.kind == "hallway" then
 
         f_tex = "FLAT1"
-        c_tex = f_tex
+        c_tex = "CEIL3_5"
         w_tex = "GRAY7"
 
       elseif S.room.kind == "stairwell" then
@@ -347,7 +348,7 @@ z1 = z1 or 0; z2 = z2 or 256 --!!!!!!!
       else -- building
       
         f_tex = "FLOOR4_8"
-        c_tex = "CEIL3_3"
+        c_tex = "TLITE6_6"
         w_tex = "STARTAN3"
 
       end
@@ -525,7 +526,7 @@ end -- do_sides
       {
         name = ENT_EXIT
       })
-    elseif S.room and S.room.kind ~= "hallway" and
+    elseif S.room and --- S.room.kind ~= "hallway" and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
       gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25,
