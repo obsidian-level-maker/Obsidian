@@ -156,6 +156,7 @@ function Rooms_choose_heights()
     assert(not R.floor_h)
 
     R.floor_h = h
+    R.ceil_h  = h + 128
 
     for _,C in ipairs(R.conns) do
       if not seen_conns[C] then
@@ -216,6 +217,7 @@ function Rooms_choose_heights()
     R.floor_h = math.min(A.conn_h, B.conn_h)
   end
 
+--[[
   local function do_special_room(R)
     assert(not R.floor_h)
 
@@ -235,6 +237,7 @@ function Rooms_choose_heights()
       end
     end
   end
+--]]
 
   local function dump_along(list, prefix)
     for idx,C in ipairs(list) do
@@ -383,9 +386,45 @@ function Rooms_choose_heights()
   end
 
   local function try_flood_height(R)
-    -- FIXME !!!!
-    R.floor_h = rand_height()
-    return true
+    if #R.conns == 0 then  -- UGH!
+      R.floor_h = rand_height()
+      R.ceil_h  = R.floor_h + 256
+      return
+    end
+
+    local min_h =  999
+    local max_h = -999
+
+    for _,C in ipairs(R.conns) do
+      if C.conn_h then
+        min_h = math.min(min_h, C.conn_h)
+        max_h = math.max(max_h, C.conn_h)
+      end
+    end
+
+    -- no connections have been set?
+    if min_h > max_h then
+      return -- try again later!
+    end
+
+    assert(R.tallness)
+
+    if max_h + R.tallness >= 512 then
+      R.floor_h = min_h
+    elseif (max_h - min_h) > 160 then
+      R.floor_h = min_h + rand_sel(40, 128, 0)
+    else
+      R.floor_h = rand_sel(60, max_h, min_h)
+    end
+
+    R.ceil_h = R.floor_h + (R.tallness or 128)
+
+    -- update unset connections
+    for _,C in ipairs(R.conns) do
+      if not C.conn_h then
+        C.conn_h = R.floor_h
+      end
+    end
   end
 
   ---| Rooms_choose_heights |---
@@ -448,6 +487,7 @@ function Rooms_choose_heights()
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "stairwell" then
       do_stairwell(R)
+      R.ceil_h = R.floor_h + 128
     end
   end
 
@@ -469,30 +509,31 @@ function Rooms_choose_heights()
 --]]
 
 
-  -- final phase: flood heights into all remaining rooms
+  -- handle all remaining rooms [side quests]
+  -- Also sets floor_h for rooms along main path
 
   for loop = 1,99 do
     local changed = false
 
+    -- go from smallest room to largest
+    local list = {}
+
     for _,R in ipairs(PLAN.all_rooms) do
       if not R.floor_h then
-        if try_flood_height(R) then
-          changed = true
-        end
+        table.insert(list, R)
       end
     end
 
-    if not changed then
-      break;
+    if #list == 0 then
+      break; -- all done
+    end
+
+    table.sort(list, function(A,B) return A.svol < B.svol end)
+
+    for _,R in ipairs(list) do
+      try_flood_height(R)
     end
   end 
-
-  -- TEMP CRUD
-  for _,R in ipairs(PLAN.all_rooms) do
-    if not R.ceil_h then
-      R.ceil_h = R.floor_h + (R.tallness or 128)
-    end
-  end
 end
 
 
