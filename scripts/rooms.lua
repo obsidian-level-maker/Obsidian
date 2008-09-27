@@ -182,8 +182,8 @@ function Rooms_setup_symmetry()
       if R.symmetry == 4 then R.symmetry = 6 end
       if R.symmetry == 8 then R.symmetry = 2 end
 
-      -- true four-way symmetry should be quite rare
-      if R.symmetry == 5 and rand_odds(50) then
+      -- true four-way symmetry should be rare
+      if R.symmetry == 5 and rand_odds(20) then
         R.symmetry = rand_sel(50, 2, 6)
       end
 
@@ -309,7 +309,7 @@ function Rooms_choose_heights()
   end
 
   local function rand_height()
-    return 64 * (-1 + rand_index_by_probs { 5,1,6,1,4 })
+    return 64 * (-1 + rand_index_by_probs { 5,1,6,1,3 })
   end
 
   local function rand_delta(h)
@@ -317,7 +317,7 @@ function Rooms_choose_heights()
     if h > 256 then return 256 end
 
     while true do
-      local d = (rand_index_by_probs { 2,1,8,1,2 } - 3) * 64
+      local d = (rand_index_by_probs { 2,1,8,1,1 } - 3) * 64
       if (h+d) >= 0 and (h+d) <= 256 then
         return h+d
       end
@@ -346,57 +346,73 @@ function Rooms_choose_heights()
     return nil, nil
   end
 
+
   local function poke_stretch(path, S, E)
-    local s_h = path[S].conn_h
-    local e_h = path[E].conn_h
+    local s_h = path[S-1].conn_h
+    local e_h = path[E+1].conn_h
 
     assert(s_h and e_h)
 
-    local diff = math.abs(s_h - e_h)
+    -- small gap with large height difference
+    if (E-S+1) >= 3 and math.abs(s_h - e_h) > 160 then
+      local P = int((S+E)/2)
+      
+      path[P].conn_h = int((s_h + e_h) / 2)
+      return
+    end
 
-    -- for large stretches of unset floors, split them
+    -- very large gap of unset floors, split them
     if (E-S+1) >= 5 then
       local P = int((S+E)/2)
 
-      if math.min(s_h, e_h) > 160 then
-        path[P].conn_h = rand_sel(50, 64, 0)
-        return
-      end 
-
-      if math.max(s_h, e_h) < 96 then
-        path[P].conn_h = rand_sel(50, 192, 256)
-        return
-      end 
-
-      path[P].conn_h = rand_sel(50, 0, 256)
+      path[P].conn_h = (rand_index_by_probs({7,3,1,7,3}) - 1) * 64
       return
+
     end
+    
+    assert((E-S+1) <= 2)
 
-    -- mitigate a big change
-    if (E-S+1) == 3 and diff > 160 then
-      path[S+1].conn_h = s_h + sel(s_h < e_h, 128, -128)
-      return
-    end
-
-    -- roughly iterpolate between S and E, in 64 chunks
-    while (E-S+1) >= 3 do
-      diff = math.abs(s_h - e_h)
-
-      local bump = 0
-      if diff >= 64 and rand_odds(75) then
-        bump = 64
-      end
-
-      if rand_odds(50) then
-        S = S + 1
-        s_h = s_h + sel(s_h < e_h, bump, -bump)
+    while S <= E do
+      if s_h == e_h then
         path[S].conn_h = s_h
-      else
-        E = E - 1
-        e_h = e_h + sel(e_h < s_h, bump, -bump)
+        S = S + 1
+
+      -- try and maintain symmetry
+      elseif (path[S-1].dest_S.x_peer == path[S].src_S) or
+         (path[S-1].dest_S.y_peer == path[S].src_S)
+      then
+        path[S].conn_h = s_h
+        S = S + 1
+
+      elseif (path[E].dest_S.x_peer == path[E+1].src_S) or
+             (path[E].dest_S.y_peer == path[E+1].src_S)
+      then
         path[E].conn_h = e_h
-      end
-    end
+        E = E - 1
+
+      -- choose common height for pair
+      elseif (E-S+1) == 2 and math.min(s_h - e_h) > 100 and rand_odds(90) then
+
+        path[S].conn_h = int((s_h + e_h) / 2)
+        path[E].conn_h = path[S].conn_h
+        break;
+
+      elseif (E-S+1) == 1 and math.min(s_h - e_h) > 100 and rand_odds(90) then
+
+        path[S].conn_h = int((s_h + e_h) / 2)
+        break;
+
+      elseif (E-S+1) == 2 then
+        path[S].conn_h = s_h
+        path[E].conn_h = e_h
+        break;
+
+      else
+        path[S].conn_h = rand_sel(50, s_h, e_h)
+        break;
+
+      end -- if
+    end -- while
   end
 
   local function floor_along_path(target, path)
@@ -423,22 +439,12 @@ function Rooms_choose_heights()
       end
     end
 
---[[
-    repeat
-      local S, E = find_stretch(list, 5)
-      if S then
-        gui.debugf("Splitting stretch %d..%d\n", S, E)
-        path[int((S+E)/2)].conn_h = rand_height()
-      end
-    until not S
---]]
-
     -- fill all remaining gaps
     repeat
       local S, E = find_stretch(path, 1)
       if S then
         assert(S > 1 and E < N)
-        poke_stretch(path, S-1, E+1)
+        poke_stretch(path, S, E)
       end
     until not S
 
@@ -447,7 +453,32 @@ function Rooms_choose_heights()
 
   end
 
+  local function flood_room_conns(R)
+    -- assign unset conn_h for the room
+
+    for _,C in ipairs(R.conns) do
+      local S = sel(R == C.src, C.dest_S, C.src_S)
+
+      -- try to preserve symmetry
+      if not C.conn_h then
+        C.conn_h = S.x_peer and S.x_peer.conn and S.x_peer.conn.conn_h
+      end
+      if not C.conn_h then
+        C.conn_h = S.y_peer and S.y_peer.conn and S.y_peer.conn.conn_h
+      end
+      if not C.conn_h then
+        C.conn_h = rand_delta(R.floor_h)
+      end
+    end
+  end
+
   local function try_flood_height(R)
+    assert(R.tallness)
+    assert(R.kind ~= "hallway")
+
+    local absolute_max_h = 512 - R.tallness
+    absolute_max_h = math.max(0, absolute_max_h)
+
     if #R.conns == 0 then  -- UGH!
       R.floor_h = rand_height()
       R.ceil_h  = R.floor_h + 256
@@ -469,30 +500,61 @@ function Rooms_choose_heights()
       return -- try again later!
     end
 
-    -- try to maintain symmetry
-    --!!!!!!!! FIXME
+    -- if room connects to stairwell, use that as floor_h
+    for _,C in ipairs(R.conns) do
+      local N = sel(C.src == R, C.dest, C.src)
+      if N.kind == "stairwell" then
+        R.floor_h = math.min(absolute_max_h, C.conn_h)
+        if R.floor_h < C.conn_h then
+          C.conn_h = R.floor_h
+        end
+      end
+    end
+
+    -- if room is destination of locked door, try that height
+    if not R.floor_h then
+      for _,C in ipairs(R.conns) do
+        if C.lock and C.conn_h then
+          R.floor_h = C.conn_h
+        end
+      end
+    end
 
     local is_small = math.min(R.sw, R.sh) <= 2
 
-    assert(R.tallness)
-
-    if max_h + R.tallness >= 512 then
-      R.floor_h = min_h
-    elseif (max_h - min_h) > 160 then
-      R.floor_h = min_h + rand_sel(40, 128, 0)
-    else
-      R.floor_h = rand_sel(60, max_h, min_h)
+    if not R.floor_h and is_small then
+      R.floor_h = rand_sel(70, min_h, max_h)
     end
 
-    R.ceil_h = R.floor_h + (R.tallness or 128)
+    if not R.floor_h then
+      local probs = {}
 
-    -- update unset connections
-    for _,C in ipairs(R.conns) do
-      if not C.conn_h then
-        C.conn_h = R.floor_h
+      for i = 1,5 do
+        local h = (i-1)*64
+        probs[i] = 1
+        if h > absolute_max_h then
+          -- no change
+        elseif h == min_h then
+          probs[i] = 70
+        elseif h == max_h then
+          probs[i] = 30
+        elseif h > min_h and h < max_h then
+          probs[i] = sel(i==3, 70, 30)
+        end
       end
+
+      R.floor_h = (rand_index_by_probs(probs) - 1) * 64
     end
+
+    if R.floor_h > absolute_max_h then
+       R.floor_h = absolute_max_h
+    end
+
+    R.ceil_h = R.floor_h + R.tallness
+
+    flood_room_conns(R)
   end
+
 
   ---| Rooms_choose_heights |---
   
@@ -545,7 +607,7 @@ function Rooms_choose_heights()
   -- handle hallway groups
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hallway" and not R.floor_h then
-      local h = rand_irange(0,2) * 128
+      local h = (rand_index_by_probs({4,2,6,2,1}) - 1) * 64
       spread_hallway_height(R, {}, h)
     end
   end
@@ -582,7 +644,7 @@ function Rooms_choose_heights()
   for loop = 1,99 do
     local changed = false
 
-    -- go from smallest room to largest
+    -- go from biggest room to smallest
     local list = {}
 
     for _,R in ipairs(PLAN.all_rooms) do
@@ -591,11 +653,12 @@ function Rooms_choose_heights()
       end
     end
 
+gui.debugf("Rooms_choose_heights: LOOP %d, UNSET %d\n", loop, #list)
     if #list == 0 then
       break; -- all done
     end
 
-    table.sort(list, function(A,B) return A.svol < B.svol end)
+    table.sort(list, function(A,B) return A.svol > B.svol end)
 
     for _,R in ipairs(list) do
       try_flood_height(R)
