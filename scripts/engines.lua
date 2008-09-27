@@ -17,11 +17,25 @@
 ----------------------------------------------------------------
 
 
+--*** Catch-all ***--
+
 OB_ENGINES["nolimit"] =
 {
   label = "Limit Removing",
   priority = 95,
 }
+
+
+--*** Wolf3d ***--
+
+OB_ENGINES["wolf4sdl"] =
+{
+  label = "Wolf4SDL",
+  for_games = { wolf3d=1 },
+}
+
+
+--*** DOOM, Heretic and HeXeN ***--
 
 OB_ENGINES["boom"] =
 {
@@ -49,11 +63,13 @@ OB_ENGINES["legacy"] =
   for_games = { doom1=1, doom2=1, freedoom=1 },
 }
 
+--[[ deathmatch ports disabled until Oblige can make DM maps again
 OB_ENGINES["skulltag"] =
 {
   label = "Skulltag",
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
 }
+--]]
 
 OB_ENGINES["vavoom"] =
 {
@@ -66,4 +82,24 @@ OB_ENGINES["zdoom"] =
   label = "ZDoom",
   for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
 }
+
+
+--*** Quake I ***--
+
+OB_ENGINES["darky"] =
+{
+  label = "DarkPlaces",
+  for_games = { quake1=1 },
+}
+
+OB_ENGINES["fitz"] =
+{
+  label = "FitzQuake",
+  for_games = { quake1=1 },
+}
+
+
+--*** Quake II ***--
+
+-- q2pro??
 
