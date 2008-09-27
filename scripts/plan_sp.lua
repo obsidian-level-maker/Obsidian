@@ -1630,6 +1630,18 @@ function Rooms_Connect()
 
     local CONN = { dir=dir, src=S.room, dest=T.room, src_S=S, dest_S=T }
 
+    assert(not S.conn and not S.conn_dir)
+    assert(not T.conn and not T.conn_dir)
+
+    S.conn = CONN
+    T.conn = CONN
+
+    S.conn_dir = dir
+    T.conn_dir = 10-dir
+
+    S.conn_peer = T
+    T.conn_peer = S
+
     table.insert(PLAN.all_conns, CONN)
 
     table.insert(S.room.conns, CONN)
@@ -1720,6 +1732,10 @@ function Rooms_Connect()
   end
 
   local function morph_dir(MORPH, dir)
+    if dir == 5 then
+      return 5
+    end
+
     if (MORPH % 2) >= 1 then
       if (dir == 4) or (dir == 6) then dir = 10-dir end
     end
@@ -1789,6 +1805,14 @@ function Rooms_Connect()
       -- handle hits on existing connections
       local existing = false
 
+      if S.conn then
+        if S.conn_dir == dir then
+          existing = true
+        else
+          return false -- only one connection per seed!
+        end
+      end
+      --[[ OLD METHOD
       for _,C in ipairs(R.conns) do
         if (C.src  == R and C.src_S  == S and C.dir == dir) or
            (C.dest == R and C.dest_S == S and C.dir == 10-dir)
@@ -1796,6 +1820,7 @@ function Rooms_Connect()
           existing = true; break;
         end
       end
+      --]]
 
       if existing then
         hit_conns = hit_conns + 1
@@ -1812,6 +1837,8 @@ function Rooms_Connect()
 
         if not N.room or not N.room.group_id then return false end
         if N.room.branch_kind then return false end
+
+        if N.conn then return false end -- only one connection per seed!
 
         if N.bridged_dir and (N.bridged_dir ~= dir) and (N.bridged_dir ~= 10-dir) then return false end
 
@@ -1942,7 +1969,9 @@ gui.debugf("Failed\n")
     end -- for R in rooms
   end
 
-  local function branch_the_rest()
+  local function OLD_branch_the_rest() -- FIXME different algo
+
+
     -- Make sure all contiguous rooms are connected.
 
     -- need to repeat this a few times since we only branch off a
@@ -2029,7 +2058,7 @@ gui.debugf("Failed\n")
   join_ground()
 
   branch_big_rooms()
---!!!!!  branch_the_rest()
+---??  branch_the_rest()
 
   add_teleporters()
 end
