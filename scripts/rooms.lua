@@ -147,9 +147,9 @@ function Rooms_setup_symmetry()
     end
 
     for y = R.sy1, R.sy2 do
-      for dx = 0, int((R.sw-1) / 2) do
-        local L = SEEDS[R.sx1+dx][y][1]
-        local R = SEEDS[R.sx2-dx][y][1]
+      for dx = 0, int((R.sw-2) / 2) do
+        local L = SEEDS[R.sx1 + dx][y][1]
+        local R = SEEDS[R.sx2 - dx][y][1]
 
         L.x_peer = R
         R.x_peer = L
@@ -165,9 +165,9 @@ function Rooms_setup_symmetry()
     end
 
     for x = R.sx1, R.sx2 do
-      for dy = 0, int((R.sh-1) / 2) do
-        local B = SEEDS[x][R.sy1+dy][1]
-        local T = SEEDS[x][R.sy2-dy][1]
+      for dy = 0, int((R.sh-2) / 2) do
+        local B = SEEDS[x][R.sy1 + dy][1]
+        local T = SEEDS[x][R.sy2 - dy][1]
 
         B.y_peer = T
         T.y_peer = B
@@ -179,19 +179,19 @@ function Rooms_setup_symmetry()
 
   for _,R in ipairs(PLAN.all_rooms) do
     if R.symmetry then
-      if R.symmetry == 4 then R.symmetry = 6 end
+      if R.symmetry == 6 then R.symmetry = 4 end
       if R.symmetry == 8 then R.symmetry = 2 end
 
-      -- true four-way symmetry should be rare
-      if R.symmetry == 5 and rand_odds(20) then
-        R.symmetry = rand_sel(50, 2, 6)
-      end
+--      -- true four-way symmetry should be rare
+--      if R.symmetry == 5 and rand_odds(50) then
+--        R.symmetry = rand_sel(50, 2, 4)
+--      end
 
       if R.symmetry == 2 or R.symmetry == 5 then
         mirror_horizontally(R)
       end
 
-      if R.symmetry == 6 or R.symmetry == 5 then
+      if R.symmetry == 4 or R.symmetry == 5 then
         mirror_vertically(R)
       end
     end
@@ -354,12 +354,14 @@ function Rooms_choose_heights()
     assert(s_h and e_h)
 
     -- small gap with large height difference
+--[[ ?????
     if (E-S+1) >= 3 and math.abs(s_h - e_h) > 160 then
       local P = int((S+E)/2)
       
       path[P].conn_h = int((s_h + e_h) / 2)
       return
     end
+--]]
 
     -- very large gap of unset floors, split them
     if (E-S+1) >= 5 then
@@ -370,7 +372,7 @@ function Rooms_choose_heights()
 
     end
     
-    assert((E-S+1) <= 2)
+---### assert((E-S+1) <= 2)
 
     while S <= E do
       if s_h == e_h then
@@ -402,14 +404,13 @@ function Rooms_choose_heights()
         path[S].conn_h = int((s_h + e_h) / 2)
         break;
 
-      elseif (E-S+1) == 2 then
+      elseif rand_odds(50) then
         path[S].conn_h = s_h
-        path[E].conn_h = e_h
-        break;
+        S = S + 1
 
       else
-        path[S].conn_h = rand_sel(50, s_h, e_h)
-        break;
+        path[E].conn_h = e_h
+        E = E - 1
 
       end -- if
     end -- while
@@ -457,7 +458,7 @@ function Rooms_choose_heights()
     -- assign unset conn_h for the room
 
     for _,C in ipairs(R.conns) do
-      local S = sel(R == C.src, C.dest_S, C.src_S)
+      local S = sel(R == C.src, C.src_S, C.dest_S)
 
       -- try to preserve symmetry
       if not C.conn_h then
@@ -472,12 +473,29 @@ function Rooms_choose_heights()
     end
   end
 
+  local function get_absolute_max_h(R)
+    assert(not R.outdoor)
+
+    -- for rooms close to sky, prevent ceiling from being higher than sky
+    for x = R.sx1-2, R.sx2+2 do
+      for y = R.sy1-2, R.sy2+2 do
+        if not box_contains_point(R.sx1,R.sy1, R.sx2,R.sy2, x,y) and
+           Seed_valid(x, y, 1)
+        then
+          local S = SEEDS[x][y][1]
+          if S.room and (S.room.outdoor or S.room.kind == "liquid") then
+            return math.max(0, 512 - R.tallness)
+          end
+        end
+      end
+    end
+
+    return 256
+  end
+
   local function try_flood_height(R)
     assert(R.tallness)
     assert(R.kind ~= "hallway")
-
-    local absolute_max_h = 512 - R.tallness
-    absolute_max_h = math.max(0, absolute_max_h)
 
     if #R.conns == 0 then  -- UGH!
       R.floor_h = rand_height()
@@ -499,6 +517,8 @@ function Rooms_choose_heights()
     if min_h > max_h then
       return -- try again later!
     end
+
+    local absolute_max_h = get_absolute_max_h(R)
 
     -- if room connects to stairwell, use that as floor_h
     for _,C in ipairs(R.conns) do
@@ -658,7 +678,11 @@ gui.debugf("Rooms_choose_heights: LOOP %d, UNSET %d\n", loop, #list)
       break; -- all done
     end
 
-    table.sort(list, function(A,B) return A.svol > B.svol end)
+    table.sort(list,
+      function(A,B)
+        return (A.svol + (A.symmetry or 0) * 200) >
+               (B.svol + (B.symmetry or 0) * 200)
+      end)
 
     for _,R in ipairs(list) do
       try_flood_height(R)
