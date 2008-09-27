@@ -38,8 +38,8 @@ function Rooms_decide_hallways()
   --   - no teleporters
   --   - not the destination of a locked door (anti-climactic)
 
-  local HALL_SIZE_PROBS = { 99, 90, 70, 50, 30 }
-  local REVERT_PROBS    = {  0, 33, 70, 90, 99 }
+  local HALL_SIZE_PROBS = { 99, 90, 75, 50,  2 }
+  local REVERT_PROBS    = {  0, 10, 45, 75, 99 }
 
   local function eval_hallway(R)
     if R.outdoor then
@@ -134,6 +134,68 @@ gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
       end
     end
   end -- for R
+end
+
+
+function Rooms_setup_symmetry()
+
+  local function mirror_horizontally(R)
+    if R.sw < 2 then
+      -- room is too narrow
+      R.symmetry = nil
+      return
+    end
+
+    for y = R.sy1, R.sy2 do
+      for dx = 0, int((R.sw-1) / 2) do
+        local L = SEEDS[R.sx1+dx][y][1]
+        local R = SEEDS[R.sx2-dx][y][1]
+
+        L.x_peer = R
+        R.x_peer = L
+      end
+    end
+  end
+
+  local function mirror_vertically(R)
+    if R.sh < 2 then
+      -- room is not deep enough
+      R.symmetry = nil
+      return
+    end
+
+    for x = R.sx1, R.sx2 do
+      for dy = 0, int((R.sh-1) / 2) do
+        local B = SEEDS[x][R.sy1+dy][1]
+        local T = SEEDS[x][R.sy2-dy][1]
+
+        B.y_peer = T
+        T.y_peer = B
+      end
+    end
+  end
+
+  --| Rooms_setup_symmetry |--
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.symmetry then
+      if R.symmetry == 4 then R.symmetry = 6 end
+      if R.symmetry == 8 then R.symmetry = 2 end
+
+      -- true four-way symmetry should be quite rare
+      if R.symmetry == 5 and rand_odds(50) then
+        R.symmetry = rand_sel(50, 2, 6)
+      end
+
+      if R.symmetry == 2 or R.symmetry == 5 then
+        mirror_horizontally(R)
+      end
+
+      if R.symmetry == 6 or R.symmetry == 5 then
+        mirror_vertically(R)
+      end
+    end
+  end
 end
 
 
@@ -407,6 +469,11 @@ function Rooms_choose_heights()
       return -- try again later!
     end
 
+    -- try to maintain symmetry
+    --!!!!!!!! FIXME
+
+    local is_small = math.min(R.sw, R.sh) <= 2
+
     assert(R.tallness)
 
     if max_h + R.tallness >= 512 then
@@ -542,6 +609,8 @@ function Rooms_fit_out()
   gui.printf("\n--==| Rooms_fit_out |==--\n\n")
 
   Rooms_decide_hallways()
+  
+  Rooms_setup_symmetry()
 
   Rooms_choose_heights()
 end
