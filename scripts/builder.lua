@@ -43,6 +43,28 @@ ENT_EXIT    = "item_quad"
 --]]
 
 
+function make_arrow(S, dir, f_h, tex)
+  
+  local mx = int((S.x1 + S.x2)/2)
+  local my = int((S.y1 + S.y2)/2)
+
+  local dx, dy = dir_to_delta(dir)
+  local ax, ay = dir_to_delta(rotate_cw90(dir))
+
+  gui.add_brush(
+  {
+    t_face = { texture=tex },
+    b_face = { texture=tex },
+    w_face = { texture=tex },
+  },
+  {
+    { x = mx + dx*100, y = my + dy * 100 },
+    { x = mx + ax*20,  y = my + ay * 20  },
+    { x = mx - ax*20,  y = my - ay * 20  },
+  },
+  -2000, f_h + 8)
+end
+
 
 function dummy_builder(level_name)
 
@@ -516,24 +538,53 @@ gui.printf("ADDING LOCK DOOR %s\n", w_tex)
     end
 end -- do_sides
 
+    local mx = int((x1+x2) / 2)
+    local my = int((y1+y2) / 2)
+
     if S.is_start then
-      gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25,
+      gui.add_entity(mx, my, z1 + 25,
       {
         name = ENT_PLAYER
       })
     elseif S.is_exit then
-      gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25,
+      gui.add_entity(mx, my, z1 + 25,
       {
         name = ENT_EXIT
       })
-    elseif S.room and --- S.room.kind ~= "hallway" and
+    elseif S.room and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
-      gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25,
+      gui.add_entity(mx, my, z1 + 25,
       {
         name = ENT_MONSTER
       })
     end
+
+if S.conn_dir then
+  make_arrow(S, S.conn_dir, z1, "FWATER1")
+end
+
+-- symmetry tester
+if S.x_peer and S.sx < S.x_peer.sx then
+  local dx = rand_irange(-70,70)
+  local dy = rand_irange(-70,70)
+  local mx2 = int((S.x_peer.x1 + S.x_peer.x2) / 2)
+  local my2 = int((S.x_peer.y1 + S.x_peer.y2) / 2)
+
+  gui.add_entity(mx+dx, my+dy, z1 + 25,   { name="35" })
+  gui.add_entity(mx2-dx, my2+dy, z1 + 25, { name="35" })
+end
+
+if S.y_peer and S.sy < S.y_peer.sy then
+  
+  local dx = rand_irange(-70,70)
+  local dy = rand_irange(-70,70)
+  local mx2 = int((S.y_peer.x1 + S.y_peer.x2) / 2)
+  local my2 = int((S.y_peer.y1 + S.y_peer.y2) / 2)
+
+  gui.add_entity(mx+dx, my+dy, z1 + 25,   { name="43" })
+  gui.add_entity(mx2+dx, my2-dy, z1 + 25, { name="43" })
+end
 
     if S.room and S.sy == S.room.sy2 then
       do_teleporter(S)
