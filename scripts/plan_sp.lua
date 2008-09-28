@@ -2040,7 +2040,14 @@ gui.debugf("Failed\n")
   branch_big_rooms()
   branch_the_rest()
 
-  add_teleporters()
+  -- add_teleporters()
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.group_id >= 2 then
+      R.scenic_kind = R.kind
+      R.kind = "scenic"
+    end
+  end
 end
 
 

@@ -1167,11 +1167,14 @@ function Quest_assign()
   for _,R in ipairs(PLAN.all_rooms) do
     R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
     R.svolume  = (R.sw+1) * (R.sh+1) / 2
-    R.num_branch = #R.conns + #R.teleports
-    if R.num_branch == 0 then
-      error("Room exists with no connections!")
-    end
+
+    if R.kind ~= "scenic" then
+      R.num_branch = #R.conns + #R.teleports
+      if R.num_branch == 0 then
+        error("Room exists with no connections!")
+      end
 gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
+    end
   end
 
   PLAN.num_puzz = Quest_num_puzzles(#PLAN.all_rooms)
@@ -1180,11 +1183,17 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
 
   local arena =
   {
-    rooms = copy_table(PLAN.all_rooms),
+    rooms = {},
     conns = copy_table(PLAN.all_conns),
 
     lock = "EXIT",
   }
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.kind ~= "scenic" then
+      table.insert(arena.rooms, R)
+    end
+  end
 
   Quest_decide_start_room(arena)
   Quest_decide_exit_room(arena)
