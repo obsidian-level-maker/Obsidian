@@ -224,7 +224,7 @@ function Landmap_DoGround()
 
   local GROW_PROBS =
   {
-    valley = 40/2, ground = 50/2, hill = 30/2, --!!!!!!
+    valley = 30, ground = 40, hill = 20,
   }
 
   local function try_grow_spot(x, y, dir)
@@ -280,7 +280,7 @@ function Landmap_DoGround()
 
   --- Landmap_DoGround ---
 
-  local SPURTS = 12   -- 0 to 12
+  local SPURTS = 2   -- 0 to 12
 
   plant_seedlings()
   for loop = 1,SPURTS do
@@ -1695,6 +1695,8 @@ function Rooms_Connect()
     local S = SEEDS[sx][sy][1]
     local T = SEEDS[tx][ty][1]
 
+    if S.conn or T.conn then return false end
+
     assert(T.sx == S.sx or T.sy == S.sy)
 
     connect_seeds(S, T, dir, c_kind)
@@ -1969,32 +1971,10 @@ gui.debugf("Failed\n")
     end -- for R in rooms
   end
 
-  local function OLD_branch_the_rest() -- FIXME different algo
+  local function branch_the_rest()
+  
+    -- FIXME different algo
 
-
-    -- Make sure all contiguous rooms are connected.
-
-    -- need to repeat this a few times since we only branch off a
-    -- room once in each pass (the break; after connect).  Hackish.
-    for loop = 1,4 do
-
-      local dirs = { 2,4,6,8 }
-      for _,V in ipairs(Landmap_rand_visits()) do
-        local L = LAND_MAP[V.x][V.y]
-        rand_shuffle(dirs)
-        for _,dir in ipairs(dirs) do
-          local nx, ny = nudge_coord(V.x, V.y, dir)
-          local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
-          if N and L.room and N.room and L.room.group_id ~= N.room.group_id and
-             not (L.room.branch_kind or N.room.branch_kind)
-          then
-            connect_land(L, N, dir, "normal")
-            break;
-          end
-        end
-      end
-
-    end -- loop
   end
 
   local function add_teleporters()
@@ -2058,7 +2038,7 @@ gui.debugf("Failed\n")
   join_ground()
 
   branch_big_rooms()
----??  branch_the_rest()
+  branch_the_rest()
 
   add_teleporters()
 end
