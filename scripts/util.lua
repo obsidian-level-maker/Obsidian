@@ -230,9 +230,9 @@ INHERIT_META =
   end
 }
 
-function inherit(child, parent)
+function set_class(child, parent)
   child.__parent = parent
-  return setmetatable(child, INHERIT_META)
+  setmetatable(child, INHERIT_META)
 end
 
 
