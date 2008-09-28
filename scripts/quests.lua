@@ -180,7 +180,7 @@ gui.debugf("Connection cost: %1.2f\n", C.cost)
 
     for _,C in ipairs(R.conns) do
       eval_connection(C)
-      local N = sel(R == C.src, C.dest, C.src)
+      local N = C:neighbor(R)
       if not visited[N] then
         cost = cost + eval_recursive(N, visited) + C.cost * sel(R == C.src,1,-1)
       end
@@ -188,7 +188,7 @@ gui.debugf("Connection cost: %1.2f\n", C.cost)
 
     for _,T in ipairs(R.teleports) do
       eval_connection(T)
-      local N = sel(R == T.src, T.dest, T.src)
+      local N = T:neighbor(R)
       if not visited[N] then
         cost = cost + eval_recursive(N, visited) + T.cost * sel(R == T.src,1,-1)
       end
@@ -267,12 +267,12 @@ function Quest_decide_exit_room(arena)
 
     -- checks for being near the start room
     for _,C in ipairs(R.conns) do
-      local N = sel(R == C.src, C.dest, C.src)
+      local N = C:neighbor(R)
       if N == arena.start then cost = 1000 end
     end
 
     for _,T in ipairs(R.teleports) do
-      local N = sel(R == T.src, T.dest, T.src)
+      local N = T:neighbor(R)
       if N == arena.start then cost = 2000 end
     end
 
@@ -444,7 +444,7 @@ function Quest_travel_volume(R, exclude_set)
 
   for _,C in ipairs(R.conns) do
     if not C.lock then
-      local N = sel(C.src == R, C.dest, C.src)
+      local N = C:neighbor(R)
       if not exclude_set[N] then
         exclude_set[N] = true
         total = total + Quest_travel_volume(N, copy_table(exclude_set))
@@ -454,7 +454,7 @@ function Quest_travel_volume(R, exclude_set)
 
   for _,T in ipairs(R.teleports) do
     -- (teleport connections are never locked)
-    local N = sel(T.src == R, T.dest, T.src)
+    local N = T:neighbor(R)
     if not exclude_set[N] then
       exclude_set[N] = true
       total = total + Quest_travel_volume(N, copy_table(exclude_set))
@@ -510,12 +510,12 @@ function Quest_divide_group(parent)
     exclude_set[start_R] = true
 
     for _,C in ipairs(start_R.conns) do
-      local N = sel(C.src == start_R, C.dest, C.src)
+      local N = C:neighbor(start_R)
       if room_group_contains(N, R, exclude_set) then return true end
     end
 
     for _,T in ipairs(start_R.teleports) do
-      local N = sel(T.src == start_R, T.dest, T.src)
+      local N = T:neighbor(start_R)
       if room_group_contains(N, R, exclude_set) then return true end
     end
 
@@ -587,7 +587,7 @@ function Quest_divide_group(parent)
       if not C.lock and not seen_conns[C] then
         seen_conns[C] = true
         table.insert(child.conns, C)
-        local N = sel(R == C.src, C.dest, C.src)
+        local N = C:neighbor(R)
         collect_group_at(child, N, seen_rooms, seen_conns)
       end
     end
@@ -595,7 +595,7 @@ function Quest_divide_group(parent)
     for _,T in ipairs(R.teleports) do
       if not seen_conns[T] then
         seen_conns[T] = true
-        local N = sel(R == T.src, T.dest, T.src)
+        local N = T:neighbor(R)
         collect_group_at(child, N, seen_rooms, seen_conns)
       end
     end
@@ -626,14 +626,14 @@ function Quest_divide_group(parent)
 
     for _,C in ipairs(R.conns) do
       if not C.lock then
-        local N = sel(C.src == R, C.dest, C.src)
+        local N = C:neighbor(R)
         local L = find_unused_leaf(N, exclude_set)
         if L then return L end
       end
     end -- C
 
     for _,T in ipairs(R.conns) do
-      local N = sel(T.src == R, T.dest, T.src)
+      local N = T:neighbor(R)
       local L = find_unused_leaf(N, exclude_set)
       if L then return L end
     end -- T
@@ -974,7 +974,7 @@ gui.debugf(" -- Room (%d,%d)\n", R.lx1, R.ly1)
 
     for _,C in ipairs(R.conns) do
       if not C.lock then
-        local N = sel(R == C.src, C.dest, C.src)
+        local N = C:neighbor(R)
         if not visited[N] then
 gui.debugf(" -- Conn (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
            C.dest.lx1, C.dest.ly1)
@@ -985,7 +985,7 @@ gui.debugf(" -- Conn (%d,%d) / (%d,%d)\n", C.src.lx1, C.src.ly1,
     end
 
     for _,T in ipairs(R.teleports) do
-      local N = sel(R == T.src, T.dest, T.src)
+      local N = T:neighbor(R)
       if not visited[N] then
         collect_arena(A, N, visited)
       end
@@ -1076,7 +1076,7 @@ gui.debugf("Collecting BACK:\n")
 
     for _,C in ipairs(R.conns) do
       if not C.lock then
-        local N = sel(R == C.src, C.dest, C.src)
+        local N = C:neighbor(R)
         assert(N)
         local VOL = sel(R == C.src, C.dest_tvol, C.src_tvol)
         if not visited[N] then
@@ -1088,7 +1088,7 @@ gui.debugf("Collecting BACK:\n")
     end -- C
 
     if best then
-      local N = sel(R == best.src, best.dest, best.src)
+      local N = best:neighbor(R)
       assert(N)
       local path, t_end = find_target(N, visited)
       table.insert(path, 1, best)

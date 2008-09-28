@@ -25,6 +25,14 @@ class PLAN
 
   free_tag  : number
   free_mark : number
+
+  ....
+}
+
+
+class CONN
+{
+  .....
 }
 
 
@@ -40,7 +48,6 @@ LAND_H = 0
 LAND_MAP = {}
 
 
-
 PLAN_CLASS =
 {
   alloc_tag = function(self)
@@ -54,6 +61,19 @@ PLAN_CLASS =
     self.free_mark = self.free_mark + 1
     return result
   end,
+}
+
+
+CONN_CLASS =
+{
+  neighbor = function(self, R)
+    if R == self.src then
+      return self.dest
+    else
+      return self.src
+    end
+  end,
+
 }
 
 
@@ -1632,6 +1652,8 @@ function Rooms_Connect()
 
     local CONN = { dir=dir, src=S.room, dest=T.room, src_S=S, dest_S=T }
 
+    set_class(CONN, CONN_CLASS)
+
     assert(not S.conn and not S.conn_dir)
     assert(not T.conn and not T.conn_dir)
 
@@ -1994,6 +2016,8 @@ gui.debugf("Failed\n")
       for _,N in ipairs(rooms) do
         if (N.group_id == 1) and (#N.teleports < 2) then
           local TELEP = { src=N, dest=R, is_teleport=true }
+
+          set_class(TELEP, CONN_CLASS)
 
           TELEP.src_tag  = PLAN:alloc_tag()
           TELEP.dest_tag = PLAN:alloc_tag()

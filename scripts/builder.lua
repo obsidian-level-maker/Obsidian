@@ -159,6 +159,7 @@ function dummy_builder(level_name)
 gui.printf("A @ (%d,%d/%d)  B @ (%d/%d,%d)\n",
            ax,ay1,ay2, bx1,bx2,by)
 if by > ay2 then return end
+if ax < bx2 then return end
 
 
     -- no room for inner circle
