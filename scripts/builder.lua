@@ -68,21 +68,6 @@ end
 
 function dummy_builder(level_name)
 
----##  local function zone_content(ZZ, x, y)
----##    local R = ZZ.grid[x][y]
----##
----##    if not R then return nil end
----##
----##    if R.zone_type then
----##
----##      local CH, lx, ly = zone_content(R, x - R.gx + 1, y - R.gy + 1)
----##
----##      if CH then return CH, lx, ly end
----##    end
----##
----##    return R, x, y
----##  end
-
 
   local function get_wall_coords(dir, x1,y1, x2,y2)
   
@@ -130,122 +115,140 @@ function dummy_builder(level_name)
   end
 
 
-  local function OLD_build_room()
---[[
-    local walls = {}
+  local function build_stairwell(R)
+    assert(R.conns)
 
-    if R.zone_type then
+    local A = R.conns[1]
+    local B = R.conns[2]
 
-      if R.zone_type == "walk" then
-        z1 = 0
-        z2 = 256
-        f_tex = "GRASS1"
-        c_tex = "F_SKY1"
-        w_tex = "ZIMMER8"
+    assert(A and B)
 
-      elseif R.zone_type == "view" then
-        z1 = -128
-        z2 = 256
-        f_tex = "LAVA1"
-        c_tex = "F_SKY1"
-        w_tex = "ASHWALL3"
-
-      else
-        error("UNKNOWN ZONE TYPE: " .. tostring(R.zone_type))
-      end
-
-      for dir = 2,8,2 do
-        local dx,dy = dir_to_delta(dir)
-
-        local nx = lx - R.gx + 1 + dx
-        local ny = ly - R.gy + 1 + dy
-
-
-        if nx < 1 or nx > R.grid.w or
-           ny < 1 or ny > R.grid.h
-        then
-          if R.parent.zone_type == "solid" or
-             (lx+dx) < 1 or (lx+dx) > R.parent.grid.w or
-             (ly+dy) < 1 or (ly+dy) > R.parent.grid.h
-          then
-            walls[dir] = "solid"
-          end
-        else
-          local N = R.grid[nx][ny]
-
-          -- do nothing (if N is a normal room, his responsibility to make the wall)
-        end
-      end
-
-    else  -- normal room
-
-      z1 = 24
-      z2 = 160
-      f_tex = "FLAT1"
-      c_tex = "TLITE6_6"
-      w_tex = "METAL2"
-
-      for dir = 2,8,2 do
-        local dx,dy = dir_to_delta(dir)
-
-        local nx = lx + dx
-        local ny = ly + dy
-
-        if nx < 1 or nx > R.parent.grid.w or
-           ny < 1 or ny > R.parent.grid.h
-        then
-          walls[dir] = "solid"
-        else
-          local N = R.parent.grid[nx][ny]
-          if N and (N.prev == R or R.prev == N) then
-            walls[dir] = "arch"
-          else
-            if (R.parent.zone_type == "solid") or rand_odds(75) then
-              walls[dir] = "solid"
-            end
-          end
-        end
-      end
+    if not is_perpendicular(A.dir, B.dir) then
+      return
     end
 
-        
-    gui.add_brush(
-    {
-      t_face = { texture=f_tex },
-      b_face = { texture=f_tex },
-      w_face = { texture=f_tex },
-    },
-    {
-      { x=x1, y=y1 }, { x=x1, y=y2 },
-      { x=x2, y=y2 }, { x=x2, y=y1 },
-    },
-    -2000, z1);
-      
-    gui.add_brush(
-    {
-      t_face = { texture=c_tex },
-      b_face = { texture=c_tex },
-      w_face = { texture=c_tex },
-    },
-    {
-      { x=x1, y=y1 }, { x=x1, y=y2 },
-      { x=x2, y=y2 }, { x=x2, y=y1 },
-    },
-    z2, 2000)
-
-    for dir = 2,8,2 do
-      if walls[dir] == "solid" then
-        gui.add_brush(
-        {
-          t_face = { texture=w_tex },
-          b_face = { texture=w_tex },
-          w_face = { texture=w_tex },
-        },
-        get_wall_coords(dir, x1,y1, x2,y2),
-        -2000, 2000)
-      end
+    if A.dir == 2 or A.dir == 8 then
+      B, A = A, B
     end
---]]
+
+    assert(A.dir == 4 or A.dir == 6)
+    assert(B.dir == 2 or B.dir == 8)
+
+    if A.src_S.room ~= R then
+      A.src_S, A.dest_S = A.dest_S, A.src_S
+    end
+
+    if B.src_S.room ~= R then
+      B.src_S, B.dest_S = B.dest_S, B.src_S
+    end
+
+    assert(A.src_S.room == R)
+    assert(B.src_S.room == R)
+
+    local BL = SEEDS[R.sx1][R.sy1][1]
+    local TR = SEEDS[R.sx2][R.sy2][1]
+
+    local ax  = sel(A.src_S.conn_dir == 4, BL.x1, TR.x2)
+    local ay1 = A.src_S.y1
+    local ay2 = A.src_S.y2
+
+    local by  = sel(B.src_S.conn_dir == 2, BL.y1, TR.y2)
+    local bx1 = B.src_S.x1
+    local bx2 = B.src_S.x2
+
+gui.printf("A @ (%d,%d/%d)  B @ (%d/%d,%d)\n",
+           ax,ay1,ay2, bx1,bx2,by)
+if by > ay2 then return end
+
+
+    -- no room for inner circle
+    if math.abs(ax - bx1) < 32 or math.abs(ax - bx2) < 32 or
+       math.abs(by - ay1) < 32 or math.abs(by - ay2) < 32
+    then return end
+
+    -- mark all seeds as done
+    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      SEEDS[sx][sy][1].already_built = true
+    end end
+
+    local steps = int(math.abs(A.conn_h - B.conn_h) / 16)
+    if steps < 4 then steps = 4 end
+
+    local function get_arc_coords(p0, p1)
+      px0 = math.cos(math.pi * p0 / 2.0)
+      py0 = math.sin(math.pi * p0 / 2.0)
+
+      px1 = math.cos(math.pi * p1 / 2.0)
+      py1 = math.sin(math.pi * p1 / 2.0)
+
+      cx0 = ax + (bx2 - ax) * px0
+      cy0 = by + (ay1 - by) * py0
+      cx1 = ax + (bx2 - ax) * px1
+      cy1 = by + (ay1 - by) * py1
+
+      fx0 = ax + (bx1 - ax) * px0
+      fy0 = by + (ay2 - by) * py0
+      fx1 = ax + (bx1 - ax) * px1
+      fy1 = by + (ay2 - by) * py1
+
+gui.printf("Line loop: %d,%d  %d,%d  %d,%d  %d,%d\n",
+           int(cx0),int(cy0),
+           int(fx0),int(fy0),
+           int(fx1),int(fy1),
+           int(cx1),int(cy1))
+
+      return
+      {
+        { x = int(cx0), y = int(cy0) },
+        { x = int(fx0), y = int(fy0) },
+        { x = int(fx1), y = int(fy1) },
+        { x = int(cx1), y = int(cy1) },
+      }
+    end
+
+    for i = 1,steps do
+      local z1 = B.conn_h + (A.conn_h - B.conn_h) * (i-1) / steps
+      local z2 = B.conn_h + (A.conn_h - B.conn_h) * (i  ) / steps
+
+gui.printf("step %d  range %d..%d\n", i, int(z1), int(z2))
+      gui.add_brush(
+      {
+        t_face = { texture="FLOOR0_7" },
+        b_face = { texture="FLOOR0_7" },
+        w_face = { texture="STARGR1" },
+      },
+      get_arc_coords((i-1)/steps, i/steps, 1, 1),
+      -2000, z1)
+
+      gui.add_brush(
+      {
+        t_face = { texture="FLOOR0_7" },
+        b_face = { texture="FLOOR0_7" },
+        w_face = { texture="STARGR1" },
+      },
+      get_arc_coords((i-1)/steps, i/steps, 1, 1),
+      z2 + 128, 2000)
+
+      --[[
+      gui.add_brush(
+      {
+        t_face = { texture="FLOOR0_7" },
+        b_face = { texture="FLOOR0_7" },
+        w_face = { texture="STARGR1" },
+      },
+      get_arc_coords((i-1)/steps, i/steps, 1, 0.5),
+      -2000, 2000)
+
+      gui.add_brush(
+      {
+        t_face = { texture="FLOOR0_7" },
+        b_face = { texture="FLOOR0_7" },
+        w_face = { texture="STARGR1" },
+      },
+      get_arc_coords((i-1)/steps, i/steps, , 1),
+      -2000, 2000)
+      --]]
+    end
   end
 
 
@@ -305,6 +308,10 @@ gui.printf("do_teleport\n")
       return
     end
 
+    if S.already_built then
+      return
+    end
+
     local x1 = S.x1
     local y1 = S.y1
     local x2 = S.x2
@@ -318,7 +325,7 @@ gui.printf("do_teleport\n")
 
     if S.room then
 
-      z1 = z1 or S.room.floor_h --!!! or 0
+      z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h --!!! or 0
       z2 = z2 or S.room.ceil_h  --!!! or 256
 
       assert(z1 and z2)
@@ -370,8 +377,8 @@ gui.printf("do_teleport\n")
       else -- building
       
         f_tex = "FLOOR4_8"
-        c_tex = "TLITE6_6"
-        w_tex = "STARTAN3"
+        c_tex = "TLITE6_4"
+        w_tex = "STARG3"
 
       end
 
@@ -607,6 +614,12 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
   gui.property("error_tex",  "BLAKWAL1");
 
   gui.ticker()
+
+  for _,R in ipairs(PLAN.all_rooms or {}) do
+    if R.kind == "stairwell" then
+      build_stairwell(R)
+    end
+  end
 
   for y = 1, SEED_H do
     for x = 1, SEED_W do
