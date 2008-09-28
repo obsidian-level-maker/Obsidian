@@ -40,19 +40,21 @@ LAND_H = 0
 LAND_MAP = {}
 
 
-function Plan_alloc_tag()
-  local result = PLAN.free_tag
-  PLAN.free_tag = PLAN.free_tag + 1
 
-  return result
-end
-
-function Plan_alloc_mark()
-  local result = PLAN.free_mark
-  PLAN.free_mark = PLAN.free_mark + 1
-
-  return result
-end
+PLAN_CLASS =
+{
+  alloc_tag = function(self)
+    local result = self.free_tag
+    self.free_tag = self.free_tag + 1
+    return result
+  end,
+  
+  alloc_mark = function(self)
+    local result = self.free_mark
+    self.free_mark = self.free_mark + 1
+    return result
+  end,
+}
 
 
 function Landmap_Init()
@@ -1993,8 +1995,8 @@ gui.debugf("Failed\n")
         if (N.group_id == 1) and (#N.teleports < 2) then
           local TELEP = { src=N, dest=R, is_teleport=true }
 
-          TELEP.src_tag  = Plan_alloc_tag()
-          TELEP.dest_tag = Plan_alloc_tag()
+          TELEP.src_tag  = PLAN:alloc_tag()
+          TELEP.dest_tag = PLAN:alloc_tag()
 
           table.insert(R.teleports, TELEP)
           table.insert(N.teleports, TELEP)
@@ -2109,6 +2111,7 @@ function Plan_rooms_sp(epi_along)
     free_mark = 1,
   }
 
+  set_class(PLAN, PLAN_CLASS)
 
 
   Plan_determine_size(epi_along)
