@@ -498,9 +498,9 @@ static bool Script_DoRun(const char *func_name, int nresult = 0, const char **pa
   {
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-    DLG_ShowError("LUA script error (in %s function):\n%s", func_name, msg);
+    DLG_ShowError("LUA script error (in '%s'):\n%s", func_name, msg);
 
-    LogPrintf("LUA script error (in %s function):\n%s", func_name, msg);
+    LogPrintf("LUA script error (in '%s'):\n%s", func_name, msg);
   }
  
   // remove the traceback function

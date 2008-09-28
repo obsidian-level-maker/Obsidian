@@ -219,7 +219,7 @@ public:
     return (fabs(_xx - x) <= EPSILON) &&
            (fabs(_yy - y) <= EPSILON);
   }
-    
+
   inline bool Match(const merge_vertex_c *other) const
   {
     return (fabs(other->x - x) <= EPSILON) &&

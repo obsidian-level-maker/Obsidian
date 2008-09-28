@@ -122,7 +122,9 @@ static merge_segment_c *Mug_AddSegment(merge_vertex_c *start, merge_vertex_c *en
 {
   // check if already present (FIXME: OPTIMISE !!)
 
-  SYS_ASSERT(start != end);
+  if (start == end)
+    Main_FatalError("Loop contains a zero-length line! (%1.1f,%1.1f)\n",
+           start->x, start->y);
 
   for (int i=0; i < (int)mug_segments.size(); i++)
     if (mug_segments[i]->Match(start, end))
@@ -134,7 +136,7 @@ static merge_segment_c *Mug_AddSegment(merge_vertex_c *start, merge_vertex_c *en
   double dist = MAX(fabs(start->x - end->x), fabs(start->y - end->y));
 
   if (dist < EPSILON*2)
-      Main_FatalError("line loop contains a zero-length line! (%1.1f,%1.1f)\n",
+      Main_FatalError("Line loop contains zero-length line! (%1.1f,%1.1f)\n",
              start->x, start->y);
  
   mug_segments.push_back(S);
