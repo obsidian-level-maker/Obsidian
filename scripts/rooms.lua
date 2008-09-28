@@ -124,9 +124,9 @@ gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
     if R.kind == "hallway" and R.num_branch == 2 and
        stairwell_neighbours(R) == 0
     then
-      local chance = 60
+      local chance = 70
       if hallway_neighbours(R) > 0 then
-        chance = 20
+        chance = 30
       end
 
       if rand_odds(chance) then
@@ -418,7 +418,8 @@ function Rooms_choose_heights()
 
   local function floor_along_path(target, path)
     local N = #path
-    assert(N >= 1)
+    
+    if (N == 0) then return end
 
     gui.debugf("Before:\n"); dump_along(path, "  ")
 
