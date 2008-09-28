@@ -19,6 +19,7 @@ release (JULY 2007).
 public release 0.81  :  2007-01-21
 public release 0.85  :  2007-02-19
 public release 0.94  :  2007-07-05
+public release 0.97  :  2008-05-30
 
 
 Release 0.85 Changes:
@@ -40,6 +41,13 @@ Release 0.94 Changes:
 -  secret areas and levels.
 -  balconies.
 
+Release 0.97 Changes:
+-  improved Heretic themes (Sam Trenholme)
+-  fixed the stair-building error (Sam)
+-  add some Cyberdemons into DOOM maps
+-  don't put monsters or things on crates
+-  don't put blaze doors in Heretic maps (Sam)
+-  various small enhancements (Enhas)
 
 
 
