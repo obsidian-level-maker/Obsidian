@@ -42,7 +42,7 @@ function Rooms_decide_hallways()
   local REVERT_PROBS    = {  0, 10, 45, 75, 99 }
 
   local function eval_hallway(R)
-    if R.outdoor then
+    if R.outdoor or R.kind == "scenic" then
       return false
     end
 
@@ -381,7 +381,7 @@ function Rooms_choose_heights()
 
       -- try and maintain symmetry
       elseif (path[S-1].dest_S.x_peer == path[S].src_S) or
-         (path[S-1].dest_S.y_peer == path[S].src_S)
+             (path[S-1].dest_S.y_peer == path[S].src_S)
       then
         path[S].conn_h = s_h
         S = S + 1
@@ -599,6 +599,9 @@ function Rooms_choose_heights()
     elseif R.kind == "hill" then
       R.floor_h = 256
       R.ceil_h  = 512
+    elseif R.kind == "scenic" then
+      R.floor_h = 128
+      R.ceil_h  = 256
     end
 
     if R.floor_h then
@@ -692,14 +695,72 @@ gui.debugf("Rooms_choose_heights: LOOP %d, UNSET %d\n", loop, #list)
 end
 
 
+function Rooms_find_broken_symmetry()
+  -- after the heights have been assigned (to rooms and
+  -- connections), sometimes the symmetry in a room becomes
+  -- broken because two opposite exits get different heights.
+  -- This cannot be totally avoided.
+  --
+  -- Here we find the broken symmetry and remove it [since
+  -- it's probably not possible to build rooms that are
+  -- only partially symmetrical].
+
+  local function broken_symmetry(R)
+    if not R.symmetry then return nil end
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      local T = S.x_peer
+      local V = S.y_peer
+
+      if S.conn then
+        if T and not T.conn then return "x" end
+        if V and not V.conn then return "y" end
+
+        if T and (S.conn.conn_h ~= T.conn.conn_h) then return "x" end
+        if V and (S.conn.conn_h ~= V.conn.conn_h) then return "y" end
+      end
+    end end -- for x,y
+  end
+
+  local function remove_symmetry(R, break_dir)
+    gui.debugf("Symmetry broken in Room S(%d,%d) %s dir\n", R.sx1, R.sy1, break_dir)
+
+    if R.symmetry == 5 then
+      R.symmetry = sel(break_dir == "x", 2, 4) 
+    else
+      R.symmetry = nil
+    end
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+
+      if break_dir == "x" then S.x_peer = nil end
+      if break_dir == "y" then S.y_peer = nil end
+    end end -- for x,y
+  end
+
+  --| Rooms_find_broken_symmetry |--
+  
+  for _,R in ipairs(PLAN.all_rooms) do
+    -- need two passes to handle four-way symmetrical rooms
+    for pass = 1,2 do
+      local break_dir = broken_symmetry(R)
+      if break_dir then
+        remove_symmetry(R, break_dir)
+      end
+    end
+  end
+end
+
+
 function Rooms_fit_out()
 
   gui.printf("\n--==| Rooms_fit_out |==--\n\n")
 
   Rooms_decide_hallways()
-  
   Rooms_setup_symmetry()
-
   Rooms_choose_heights()
+  Rooms_find_broken_symmetry()
 end
 
