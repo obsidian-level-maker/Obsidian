@@ -77,7 +77,7 @@ function make_curved_hall(steps, corn_x, corn_y,
     flipped = true
   end
 
-  local function arc_brush(p0, p1, dx0,dx1, dy0,dy1)
+  local function arc_coords(p0, p1, dx0,dx1, dy0,dy1)
     local px0 = math.cos(math.pi * p0 / 2.0)
     local py0 = math.sin(math.pi * p0 / 2.0)
 
@@ -97,18 +97,18 @@ function make_curved_hall(steps, corn_x, corn_y,
     if flipped then
       return
       {
-        { x = int(cx1), y = int(cy1) },
-        { x = int(fx1), y = int(fy1) },
-        { x = int(fx0), y = int(fy0) },
-        { x = int(cx0), y = int(cy0) },
+        { x = cx1, y = cy1 },
+        { x = fx1, y = fy1 },
+        { x = fx0, y = fy0 },
+        { x = cx0, y = cy0 },
       }
     else
       return
       {
-        { x = int(cx0), y = int(cy0) },
-        { x = int(fx0), y = int(fy0) },
-        { x = int(fx1), y = int(fy1) },
-        { x = int(cx1), y = int(cy1) },
+        { x = cx0, y = cy0 },
+        { x = fx0, y = fy0 },
+        { x = fx1, y = fy1 },
+        { x = cx1, y = cy1 },
       }
     end
   end
@@ -124,10 +124,12 @@ function make_curved_hall(steps, corn_x, corn_y,
     local f_h = x_h + (y_h - x_h) * (i-1) / (steps-1)
     local c_h = f_h + gap_h
 
-    gui.add_brush(wall_info,  get_arc_coords(p0,p1, dx0,dx1, dy0,dy1), -2000,2000)
-    gui.add_brush(wall_info,  get_arc_coords(p0,p1, dx2,dx3, dy2,dy3), -2000,2000)
+          table_to_str(arc_coords(p0,p1, dx2,dx3, dy2,dy3), 2));
 
-    local coords = get_arc_coords(p0,p1, dx1,dx2, dy1,dy2)
+    gui.add_brush(wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -2000,2000)
+    gui.add_brush(wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -2000,2000)
+
+    local coords = arc_coords(p0,p1, dx1,dx2, dy1,dy2)
 
     gui.add_brush(floor_info, coords, -2000, f_h)
     gui.add_brush(ceil_info,  coords, c_h, 2000)
@@ -192,6 +194,7 @@ function dummy_builder(level_name)
 
     assert(A and B)
 
+    -- require 90 degrees
     if not is_perpendicular(A.dir, B.dir) then
       return
     end
@@ -217,34 +220,77 @@ function dummy_builder(level_name)
     local BL = SEEDS[R.sx1][R.sy1][1]
     local TR = SEEDS[R.sx2][R.sy2][1]
 
-    local ax  = sel(A.src_S.conn_dir == 4, BL.x1, TR.x2)
+    -- room size
+    local rx1, ry1 = BL.x1, BL.y1
+    local rx2, ry2 = TR.x2, TR.y2
+    local rw, rh   = rx2 - rx1, ry2 - ry1
+
+    local ax  = sel(A.src_S.conn_dir == 4, rx1, rx2)
     local ay1 = A.src_S.y1
     local ay2 = A.src_S.y2
 
-    local by  = sel(B.src_S.conn_dir == 2, BL.y1, TR.y2)
+    local by  = sel(B.src_S.conn_dir == 2, ry1, ry2)
     local bx1 = B.src_S.x1
     local bx2 = B.src_S.x2
 
-gui.printf("A @ (%d,%d/%d)  B @ (%d/%d,%d)\n",
-           ax,ay1,ay2, bx1,bx2,by)
-if by > ay2 then return end
-if ax < bx2 then return end
+    local dx1 = bx1 - ax
+    local dx2 = bx2 - ax
+
+    if dx2 < 4 then dx1,dx2 = dx2,dx1 end
+
+    local dy1 = ay1 - by
+    local dy2 = ay2 - by
+
+    if dy2 < 4 then dy1,dy2 = dy2,dy1 end
 
 
-    -- no room for inner circle
-    if math.abs(ax - bx1) < 32 or math.abs(ax - bx2) < 32 or
-       math.abs(by - ay1) < 32 or math.abs(by - ay2) < 32
-    then return end
+    -- when space is tight, need to narrow the hallway
+    -- (so there is space for the wall brushes)
+    local MARG = 64
+    if math.abs(dx1) < MARG then dx1 = sel(dx1 < 4, -MARG, MARG) end
+    if math.abs(dy1) < MARG then dy1 = sel(dy1 < 4, -MARG, MARG) end
+
+    if math.abs(dx2) > rw-MARG then dx2 = sel(dx2 < 4, -(rw-MARG), rw-MARG) end
+    if math.abs(dy2) > rh-MARG then dy2 = sel(dy2 < 4, -(rh-MARG), rh-MARG) end
+
+    assert(math.abs(dx1) < math.abs(dx2))
+    assert(math.abs(dy1) < math.abs(dy2))
+
+    local dx0 = sel(dx1 < 4, -32, 32)
+    local dy0 = sel(dy1 < 4, -32, 32)
+
+    local dx3 = dx2 + sel(dx1 < 4, -32, 32)
+    local dy3 = dy2 + sel(dy1 < 4, -32, 32)
+
+
+    -- FIXME: need brushes to fill space at sides of each doorway
+
+    local x_h = B.conn_h  -- FIXME: if steep, offset both by 16
+    local y_h = A.conn_h
+
+    local steps = int(math.abs(x_h - y_h) / 16)
+    if steps < 4 then steps = 4 end
+
+    local info =
+    {
+      t_face = { texture="FLAT14" },
+      b_face = { texture="FLAT10" },
+      w_face = { texture="BROWN1" },
+    }
+
+gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
+           ax,by, dx0,dx1,dx2,dx3, dy0,dy1,dy2,dy3);
+
+    make_curved_hall(steps, ax, by,
+                     dx0, dx1, dx2, dx3,
+                     dy0, dy1, dy2, dy3,
+                     x_h, y_h, 128,
+                     info, info, info)
 
     -- mark all seeds as done
     for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
       SEEDS[sx][sy][1].already_built = true
     end end
-
-    local steps = int(math.abs(A.conn_h - B.conn_h) / 16)
-    if steps < 4 then steps = 4 end
-
-    make_curved_hall( XXX )
 
   end
 
