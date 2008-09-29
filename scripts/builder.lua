@@ -124,8 +124,6 @@ function make_curved_hall(steps, corn_x, corn_y,
     local f_h = x_h + (y_h - x_h) * (i-1) / (steps-1)
     local c_h = f_h + gap_h
 
-          table_to_str(arc_coords(p0,p1, dx2,dx3, dy2,dy3), 2));
-
     gui.add_brush(wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -2000,2000)
     gui.add_brush(wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -2000,2000)
 
@@ -186,7 +184,7 @@ function dummy_builder(level_name)
   end
 
 
-  local function build_stairwell(R)
+  local function build_stairwell_90(R)
     assert(R.conns)
 
     local A = R.conns[1]
@@ -217,10 +215,10 @@ function dummy_builder(level_name)
     assert(A.src_S.room == R)
     assert(B.src_S.room == R)
 
+    -- room size
     local BL = SEEDS[R.sx1][R.sy1][1]
     local TR = SEEDS[R.sx2][R.sy2][1]
 
-    -- room size
     local rx1, ry1 = BL.x1, BL.y1
     local rx2, ry2 = TR.x2, TR.y2
     local rw, rh   = rx2 - rx1, ry2 - ry1
@@ -273,7 +271,7 @@ function dummy_builder(level_name)
 
     local info =
     {
-      t_face = { texture="FLAT14" },
+      t_face = { texture="FLAT10" },
       b_face = { texture="FLAT10" },
       w_face = { texture="BROWN1" },
     }
@@ -292,6 +290,104 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
       SEEDS[sx][sy][1].already_built = true
     end end
 
+  end
+
+  local function build_stairwell_180(R)
+    local A = R.conns[1]
+    local B = R.conns[2]
+
+    -- require 180 degrees
+    local AS = A:seed(R)
+    local BS = B:seed(R)
+
+    if AS.conn_dir ~= BS.conn_dir then
+      return
+    end
+
+    -- swap so that A has lowest coords
+    if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.x1 < AS.x1) or
+       ((AS.conn_dir == 4 or AS.conn_dir == 6) and BS.y1 < AS.y1)
+    then
+      A,  B  = B,  A
+      AS, BS = BS, AS
+    end
+
+    -- room size
+    local BL = SEEDS[R.sx1][R.sy1][1]
+    local TR = SEEDS[R.sx2][R.sy2][1]
+
+    local rx1, ry1 = BL.x1, BL.y1
+    local rx2, ry2 = TR.x2, TR.y2
+    local rw, rh   = rx2 - rx1, ry2 - ry1
+
+    local corn_x, corn_y
+    local dx1, dx2
+
+    corn_x = (AS.x2 + BS.x1) / 2
+    corn_y = (AS.y2 + BS.y1) / 2
+
+        if AS.conn_dir == 2 then corn_y = ry1
+    elseif AS.conn_dir == 8 then corn_y = ry2
+    elseif AS.conn_dir == 4 then corn_x = rx1
+    elseif AS.conn_dir == 6 then corn_x = rx2
+    else
+      error("Bad/missing conn_dir for stairwell!")
+    end
+
+    local info =
+    {
+      t_face = { texture="FLOOR0_1" },
+      b_face = { texture="FLOOR0_1" },
+      w_face = { texture="STARGR1" },
+    }
+
+    local h1 = A.conn_h
+    local h3 = B.conn_h
+    local h2 = (h1 + h3) / 2
+
+    local steps = int((h2 - h1) / 16)
+    if steps < 6 then steps = 6 end
+
+    if AS.conn_dir == 2 or AS.conn_dir == 8 then
+
+      local dx0 = corn_x - AS.x2
+      local dx3 = corn_x - AS.x1
+      local dx1 = dx0 + 40
+      local dx2 = dx3 - 40
+
+      local dy0 = 24
+      local dy3 = ry2 - ry1 - 24
+      local dy2 = dy3 - 24
+      local dy1 = dy2 - 136
+
+      if AS.conn_dir == 8 then
+        dy0 = -dy0
+        dy1 = -dy1
+        dy2 = -dy2
+        dy3 = -dy3
+      end
+
+      -- left side
+      make_curved_hall(steps, corn_x, corn_y,
+                       -dx0, -dx1, -dx2, -dx3,
+                       dy0, dy1, dy2, dy3,
+                       h1, h2, 128,
+                       info, info, info)
+
+      -- right side
+      make_curved_hall(steps, corn_x, corn_y,
+                       dx0, dx1, dx2, dx3,
+                       dy0, dy1, dy2, dy3,
+                       h3, h2, 128,
+                       info, info, info)
+    else
+      -- FIXME
+    end
+
+    -- mark all seeds as done
+    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      SEEDS[sx][sy][1].already_built = true
+    end end
   end
 
 
@@ -660,7 +756,8 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
 
   for _,R in ipairs(PLAN.all_rooms or {}) do
     if R.kind == "stairwell" then
-      build_stairwell(R)
+      build_stairwell_90(R)
+      build_stairwell_180(R)
     end
   end
 
