@@ -72,6 +72,15 @@ function make_curved_hall(steps, corn_x, corn_y,
                           x_h, y_h, gap_h,
                           wall_info, floor_info, ceil_info)
 
+gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
+           corn_x,corn_y, dx0,dx1,dx2,dx3, dy0,dy1,dy2,dy3);
+
+  assert((0 < dx0 and dx0 < dx1 and dx1 < dx2 and dx2 < dx3) or
+         (0 > dx0 and dx0 > dx1 and dx1 > dx2 and dx2 > dx3))
+
+  assert((0 < dy0 and dy0 < dy1 and dy1 < dy2 and dy2 < dy3) or
+         (0 > dy0 and dy0 > dy1 and dy1 > dy2 and dy2 > dy3))
+
   local flipped = false
   if sel(dx3 < 0, 1, 0) == sel(dy3 < 0, 1, 0) then
     flipped = true
@@ -114,9 +123,6 @@ function make_curved_hall(steps, corn_x, corn_y,
   end
 
   --| make_curved_hall |--
-
-gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
-           corn_x,corn_y, dx0,dx1,dx2,dx3, dy0,dy1,dy2,dy3);
 
   assert(steps >= 2)
 
@@ -207,16 +213,8 @@ function dummy_builder(level_name)
     assert(A.dir == 4 or A.dir == 6)
     assert(B.dir == 2 or B.dir == 8)
 
-    if A.src_S.room ~= R then
-      A.src_S, A.dest_S = A.dest_S, A.src_S
-    end
-
-    if B.src_S.room ~= R then
-      B.src_S, B.dest_S = B.dest_S, B.src_S
-    end
-
-    assert(A.src_S.room == R)
-    assert(B.src_S.room == R)
+    local AS = A:seed(R)
+    local BS = B:seed(R)
 
     -- room size
     local BL = SEEDS[R.sx1][R.sy1][1]
@@ -226,42 +224,52 @@ function dummy_builder(level_name)
     local rx2, ry2 = TR.x2, TR.y2
     local rw, rh   = rx2 - rx1, ry2 - ry1
 
-    local ax  = sel(A.src_S.conn_dir == 4, rx1, rx2)
-    local ay1 = A.src_S.y1
-    local ay2 = A.src_S.y2
+    local ax  = sel(AS.conn_dir == 4, rx1, rx2)
+    local ay1 = AS.y1
+    local ay2 = AS.y2
 
-    local by  = sel(B.src_S.conn_dir == 2, ry1, ry2)
-    local bx1 = B.src_S.x1
-    local bx2 = B.src_S.x2
+    local by  = sel(BS.conn_dir == 2, ry1, ry2)
+    local bx1 = BS.x1
+    local bx2 = BS.x2
 
-    local dx1 = bx1 - ax
-    local dx2 = bx2 - ax
+    local dx1, dx2
+    local dy1, dy2
 
-    if dx2 < 4 then dx1,dx2 = dx2,dx1 end
+    if AS.conn_dir == 4 then
+      dx1, dx2 = bx1 - ax, bx2 - ax
+---## if dx1 < MARG then dx1 = MARG end
+    else
+      dx1, dx2 = bx2 - ax, bx1 - ax
+    end
 
-    local dy1 = ay1 - by
-    local dy2 = ay2 - by
+    if BS.conn_dir == 2 then
+      dy1, dy2 = ay1 - by, ay2 - by
+    else
+      dy1, dy2 = ay2 - by, ay1 - by
+    end
 
-    if dy2 < 4 then dy1,dy2 = dy2,dy1 end
+gui.printf("A @ (%d,%d/%d)  B @ (%d/%d,%d)\n", ax,ay1,ay2, bx1,bx2,by)
+gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
 
 
     -- when space is tight, need to narrow the hallway
     -- (so there is space for the wall brushes)
     local MARG = 64
-    if math.abs(dx1) < MARG then dx1 = sel(dx1 < 4, -MARG, MARG) end
-    if math.abs(dy1) < MARG then dy1 = sel(dy1 < 4, -MARG, MARG) end
 
-    if math.abs(dx2) > rw-MARG then dx2 = sel(dx2 < 4, -(rw-MARG), rw-MARG) end
-    if math.abs(dy2) > rh-MARG then dy2 = sel(dy2 < 4, -(rh-MARG), rh-MARG) end
+    if math.abs(dx1) < MARG then dx1 = sel(dx2 < 0, -MARG, MARG) end
+    if math.abs(dy1) < MARG then dy1 = sel(dy2 < 0, -MARG, MARG) end
+
+    if math.abs(dx2) > rw-MARG then dx2 = sel(dx2 < 0, -(rw-MARG), rw-MARG) end
+    if math.abs(dy2) > rh-MARG then dy2 = sel(dy2 < 0, -(rh-MARG), rh-MARG) end
 
     assert(math.abs(dx1) < math.abs(dx2))
     assert(math.abs(dy1) < math.abs(dy2))
 
-    local dx0 = sel(dx1 < 4, -32, 32)
-    local dy0 = sel(dy1 < 4, -32, 32)
+    local dx0 = sel(dx2 < 0, -32, 32)
+    local dy0 = sel(dy2 < 0, -32, 32)
 
-    local dx3 = dx2 + sel(dx1 < 4, -32, 32)
-    local dy3 = dy2 + sel(dy1 < 4, -32, 32)
+    local dx3 = dx2 + sel(dx2 < 0, -32, 32)
+    local dy3 = dy2 + sel(dy2 < 0, -32, 32)
 
 
     -- FIXME: need brushes to fill space at sides of each doorway
@@ -533,9 +541,9 @@ function dummy_builder(level_name)
 
       -- bottom section
       make_curved_hall(steps, corn_x, corn_y,
-                       dx0, dx1, -x2, dx3,
+                       dx0, dx1, dx2, dx3,
                        -dy0, -dy1, -dy2, -dy3,
-                       h1, h2, 128,
+                       h2, h1, 128,
                        info, info, info)
 
       -- top section
@@ -549,7 +557,7 @@ function dummy_builder(level_name)
       make_curved_hall(steps, corn_x, corn_y,
                        -dx0, -dx1, -dx2, -dx3,
                        dy0, dy1, dy2, dy3,
-                       h3, h2, 128,
+                       h2, h3, 128,
                        info, info, info)
     end
 
