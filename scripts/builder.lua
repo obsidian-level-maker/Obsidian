@@ -66,6 +66,75 @@ function make_arrow(S, dir, f_h, tex)
 end
 
 
+function make_curved_hall(steps, corn_x, corn_y,
+                          dx0, dx1, dx2, dx3,
+                          dy0, dy1, dy2, dy3,
+                          x_h, y_h, gap_h,
+                          wall_info, floor_info, ceil_info)
+
+  local flipped = false
+  if sel(dx3 < 0, 1, 0) == sel(dy3 < 0, 1, 0) then
+    flipped = true
+  end
+
+  local function arc_brush(p0, p1, dx0,dx1, dy0,dy1)
+    local px0 = math.cos(math.pi * p0 / 2.0)
+    local py0 = math.sin(math.pi * p0 / 2.0)
+
+    local px1 = math.cos(math.pi * p1 / 2.0)
+    local py1 = math.sin(math.pi * p1 / 2.0)
+
+    local cx0 = int(corn_x + 0.5 + dx0 * px0)
+    local cy0 = int(corn_y + 0.5 + dy0 * py0)
+    local fx0 = int(corn_x + 0.5 + dx1 * px0)
+    local fy0 = int(corn_y + 0.5 + dy1 * py0)
+
+    local cx1 = int(corn_x + 0.5 + dx0 * px1)
+    local cy1 = int(corn_y + 0.5 + dy0 * py1)
+    local fx1 = int(corn_x + 0.5 + dx1 * px1)
+    local fy1 = int(corn_y + 0.5 + dy1 * py1)
+
+    if flipped then
+      return
+      {
+        { x = int(cx1), y = int(cy1) },
+        { x = int(fx1), y = int(fy1) },
+        { x = int(fx0), y = int(fy0) },
+        { x = int(cx0), y = int(cy0) },
+      }
+    else
+      return
+      {
+        { x = int(cx0), y = int(cy0) },
+        { x = int(fx0), y = int(fy0) },
+        { x = int(fx1), y = int(fy1) },
+        { x = int(cx1), y = int(cy1) },
+      }
+    end
+  end
+
+  --| make_curved_hall |--
+
+  assert(steps >= 2)
+
+  for i = 1,steps do
+    local p0 = (i-1)/steps
+    local p1 = (i  )/steps
+
+    local f_h = x_h + (y_h - x_h) * (i-1) / (steps-1)
+    local c_h = f_h + gap_h
+
+    gui.add_brush(wall_info,  get_arc_coords(p0,p1, dx0,dx1, dy0,dy1), -2000,2000)
+    gui.add_brush(wall_info,  get_arc_coords(p0,p1, dx2,dx3, dy2,dy3), -2000,2000)
+
+    local coords = get_arc_coords(p0,p1, dx1,dx2, dy1,dy2)
+
+    gui.add_brush(floor_info, coords, -2000, f_h)
+    gui.add_brush(ceil_info,  coords, c_h, 2000)
+  end
+end
+
+
 function dummy_builder(level_name)
 
 
@@ -175,81 +244,8 @@ if ax < bx2 then return end
     local steps = int(math.abs(A.conn_h - B.conn_h) / 16)
     if steps < 4 then steps = 4 end
 
-    local function get_arc_coords(p0, p1)
-      px0 = math.cos(math.pi * p0 / 2.0)
-      py0 = math.sin(math.pi * p0 / 2.0)
+    make_curved_hall( XXX )
 
-      px1 = math.cos(math.pi * p1 / 2.0)
-      py1 = math.sin(math.pi * p1 / 2.0)
-
-      cx0 = ax + (bx2 - ax) * px0
-      cy0 = by + (ay1 - by) * py0
-      cx1 = ax + (bx2 - ax) * px1
-      cy1 = by + (ay1 - by) * py1
-
-      fx0 = ax + (bx1 - ax) * px0
-      fy0 = by + (ay2 - by) * py0
-      fx1 = ax + (bx1 - ax) * px1
-      fy1 = by + (ay2 - by) * py1
-
-gui.printf("Line loop: %d,%d  %d,%d  %d,%d  %d,%d\n",
-           int(cx0),int(cy0),
-           int(fx0),int(fy0),
-           int(fx1),int(fy1),
-           int(cx1),int(cy1))
-
-      return
-      {
-        { x = int(cx0), y = int(cy0) },
-        { x = int(fx0), y = int(fy0) },
-        { x = int(fx1), y = int(fy1) },
-        { x = int(cx1), y = int(cy1) },
-      }
-    end
-
-    for i = 1,steps do
-      local z1 = B.conn_h + (A.conn_h - B.conn_h) * (i-1) / steps
-      local z2 = B.conn_h + (A.conn_h - B.conn_h) * (i  ) / steps
-
-gui.printf("step %d  range %d..%d\n", i, int(z1), int(z2))
-      gui.add_brush(
-      {
-        t_face = { texture="FLOOR0_7" },
-        b_face = { texture="FLOOR0_7" },
-        w_face = { texture="STARGR1" },
-      },
-      get_arc_coords((i-1)/steps, i/steps, 1, 1),
-      -2000, z1)
-
-      gui.add_brush(
-      {
-        t_face = { texture="FLOOR0_7" },
-        b_face = { texture="FLOOR0_7" },
-        w_face = { texture="STARGR1" },
-      },
-      get_arc_coords((i-1)/steps, i/steps, 1, 1),
-      z2 + 128, 2000)
-
-      --[[
-      gui.add_brush(
-      {
-        t_face = { texture="FLOOR0_7" },
-        b_face = { texture="FLOOR0_7" },
-        w_face = { texture="STARGR1" },
-      },
-      get_arc_coords((i-1)/steps, i/steps, 1, 0.5),
-      -2000, 2000)
-
-      gui.add_brush(
-      {
-        t_face = { texture="FLOOR0_7" },
-        b_face = { texture="FLOOR0_7" },
-        w_face = { texture="STARGR1" },
-      },
-      get_arc_coords((i-1)/steps, i/steps, , 1),
-      -2000, 2000)
-      --]]
-    end
   end
 
 
