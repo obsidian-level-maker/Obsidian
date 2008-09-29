@@ -74,6 +74,13 @@ CONN_CLASS =
     end
   end,
 
+  seed = function(self, R)
+    if R == self.src then
+      return self.src_S
+    else
+      return self.dest_S
+    end
+  end,
 }
 
 

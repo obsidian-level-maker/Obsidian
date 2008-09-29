@@ -53,7 +53,7 @@ function Rooms_decide_hallways()
     if R.num_branch > 5 then return false end
 
     for _,C in ipairs(R.conns) do
-      local N = sel(C.src == R, C.dest, C.src)
+      local N = C:neighbor(R)
       if N.outdoor then
         return false
       end
@@ -73,7 +73,7 @@ function Rooms_decide_hallways()
   local function hallway_neighbours(R)
     local hall_nb = 0
     for _,C in ipairs(R.conns) do
-      local N = sel(C.src == R, C.dest, C.src)
+      local N = C:neighbor(R)
       if N.kind == "hallway" then hall_nb = hall_nb + 1 end
     end
 
@@ -88,7 +88,7 @@ function Rooms_decide_hallways()
   local function stairwell_neighbours(R)
     local swell_nb = 0
     for _,C in ipairs(R.conns) do
-      local N = sel(C.src == R, C.dest, C.src)
+      local N = C:neighbor(R)
       if N.kind == "stairwell" then swell_nb = swell_nb + 1 end
     end
 
@@ -226,7 +226,7 @@ function Rooms_choose_heights()
 
         C.conn_h = h
 
-        local N = sel(C.src == R, C.dest, C.src)
+        local N = C:neighbor(R)
         if N.kind == "hallway" then
           spread_hallway_height(N, seen_conns, h)
         end
@@ -459,7 +459,7 @@ function Rooms_choose_heights()
     -- assign unset conn_h for the room
 
     for _,C in ipairs(R.conns) do
-      local S = sel(R == C.src, C.src_S, C.dest_S)
+      local S = C:seed(R)
 
       -- try to preserve symmetry
       if not C.conn_h then
@@ -523,7 +523,7 @@ function Rooms_choose_heights()
 
     -- if room connects to stairwell, use that as floor_h
     for _,C in ipairs(R.conns) do
-      local N = sel(C.src == R, C.dest, C.src)
+      local N = C:neighbor(R)
       if N.kind == "stairwell" then
         R.floor_h = math.min(absolute_max_h, C.conn_h)
         if R.floor_h < C.conn_h then
