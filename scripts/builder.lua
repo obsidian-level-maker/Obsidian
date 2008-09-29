@@ -115,6 +115,9 @@ function make_curved_hall(steps, corn_x, corn_y,
 
   --| make_curved_hall |--
 
+gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
+           corn_x,corn_y, dx0,dx1,dx2,dx3, dy0,dy1,dy2,dy3);
+
   assert(steps >= 2)
 
   for i = 1,steps do
@@ -276,9 +279,6 @@ function dummy_builder(level_name)
       w_face = { texture="BROWN1" },
     }
 
-gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
-           ax,by, dx0,dx1,dx2,dx3, dy0,dy1,dy2,dy3);
-
     make_curved_hall(steps, ax, by,
                      dx0, dx1, dx2, dx3,
                      dy0, dy1, dy2, dy3,
@@ -320,11 +320,8 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
     local rx2, ry2 = TR.x2, TR.y2
     local rw, rh   = rx2 - rx1, ry2 - ry1
 
-    local corn_x, corn_y
-    local dx1, dx2
-
-    corn_x = (AS.x2 + BS.x1) / 2
-    corn_y = (AS.y2 + BS.y1) / 2
+    local corn_x = (AS.x2 + BS.x1) / 2
+    local corn_y = (AS.y2 + BS.y1) / 2
 
         if AS.conn_dir == 2 then corn_y = ry1
     elseif AS.conn_dir == 8 then corn_y = ry2
@@ -350,10 +347,10 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
 
     if AS.conn_dir == 2 or AS.conn_dir == 8 then
 
-      local dx0 = corn_x - AS.x2
-      local dx3 = corn_x - AS.x1
-      local dx1 = dx0 + 40
-      local dx2 = dx3 - 40
+      local dx0 = corn_x - AS.x2 + 16
+      local dx3 = corn_x - AS.x1 - 16
+      local dx1 = dx0 + 32
+      local dx2 = dx3 - 32
 
       local dy0 = 24
       local dy3 = ry2 - ry1 - 24
@@ -381,7 +378,179 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
                        h3, h2, 128,
                        info, info, info)
     else
-      -- FIXME
+      local dy0 = corn_y - AS.y2 + 16
+      local dy3 = corn_y - AS.y1 - 16
+      local dy1 = dy0 + 32
+      local dy2 = dy3 - 32
+
+      local dx0 = 24
+      local dx3 = rx2 - rx1 - 24
+      local dx2 = dx3 - 24
+      local dx1 = dx2 - 136
+
+      if AS.conn_dir == 6 then
+        dx0 = -dx0
+        dx1 = -dx1
+        dx2 = -dx2
+        dx3 = -dx3
+      end
+
+      -- bottom section
+      make_curved_hall(steps, corn_x, corn_y,
+                       dx0, dx1, dx2, dx3,
+                       -dy0, -dy1, -dy2, -dy3,
+                       h1, h2, 128,
+                       info, info, info)
+
+      -- top section
+      make_curved_hall(steps, corn_x, corn_y,
+                       dx0, dx1, dx2, dx3,
+                       dy0, dy1, dy2, dy3,
+                       h3, h2, 128,
+                       info, info, info)
+
+    end
+
+    -- mark all seeds as done
+    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      SEEDS[sx][sy][1].already_built = true
+    end end
+  end
+
+  local function build_stairwell_0(R)
+    local A = R.conns[1]
+    local B = R.conns[2]
+
+    -- require opposite directions
+    local AS = A:seed(R)
+    local BS = B:seed(R)
+
+    if AS.conn_dir ~= 10-BS.conn_dir then
+      return
+    end
+
+    -- also require misalignment
+    if AS.conn_dir == 2 or AS.conn_dir == 8 then
+      if AS.sx == BS.sx then return end
+    else
+      if AS.sy == BS.sy then return end
+    end
+
+    -- swap so that A has lowest coords
+    if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.sx < AS.sx) or
+       ((AS.conn_dir == 4 or AS.conn_dir == 6) and BS.sy < AS.sy)
+    then
+      A,  B  = B,  A
+      AS, BS = BS, AS
+    end
+
+    -- room size
+    local BL = SEEDS[R.sx1][R.sy1][1]
+    local TR = SEEDS[R.sx2][R.sy2][1]
+
+    local rx1, ry1 = BL.x1, BL.y1
+    local rx2, ry2 = TR.x2, TR.y2
+    local rw, rh   = rx2 - rx1, ry2 - ry1
+
+
+    local h1 = A.conn_h
+    local h3 = B.conn_h
+    local h2 = (h1 + h3) / 2
+
+    local steps = int((h2 - h1) / 16)
+    if steps < 5 then steps = 5 end
+
+    local info =
+    {
+      t_face = { texture="FLOOR3_3" },
+      b_face = { texture="FLOOR3_3" },
+      w_face = { texture="STARBR2" },
+    }
+
+
+    if AS.conn_dir == 2 or AS.conn_dir == 8 then
+
+      local corn_x = (AS.x2 + BS.x1) / 2
+      local corn_y = sel(AS.conn_dir == 2, ry1, ry2)
+
+      local dy1 = (ry2 - ry1) / 2 - 80
+      local dy2 = (ry2 - ry1) / 2 + 80
+      local dy0 = dy1 - 24
+      local dy3 = dy2 + 24
+
+      local dx0 = corn_x - AS.x2 + 16
+      local dx3 = corn_x - AS.x1 - 16
+      local dx1 = dx0 + 32
+      local dx2 = dx3 - 32
+
+      if AS.conn_dir == 8 then
+        dy0 = -dy0
+        dy1 = -dy1
+        dy2 = -dy2
+        dy3 = -dy3
+      end
+
+      -- left side
+      make_curved_hall(steps, corn_x, corn_y,
+                       -dx0, -dx1, -dx2, -dx3,
+                       dy0, dy1, dy2, dy3,
+                       h1, h2, 128,
+                       info, info, info)
+
+      -- right side
+      corn_y = (ry1 + ry2) - corn_y
+
+      local dx0 = BS.x1 - corn_x + 16
+      local dx3 = BS.x2 - corn_x - 16
+      local dx1 = dx0 + 32
+      local dx2 = dx3 - 32
+
+      make_curved_hall(steps, corn_x, corn_y,
+                       dx0, dx1, dx2, dx3,
+                       -dy0, -dy1, -dy2, -dy3,
+                       h3, h2, 128,
+                       info, info, info)
+    else
+      local corn_y = (AS.y2 + BS.y1) / 2
+      local corn_x = sel(AS.conn_dir == 4, rx1, rx2)
+
+      local dx1 = (rx2 - rx1) / 2 - 80
+      local dx2 = (rx2 - rx1) / 2 + 80
+      local dx0 = dx1 - 24
+      local dx3 = dx2 + 24
+
+      local dy0 = corn_y - AS.y2 + 16
+      local dy3 = corn_y - AS.y1 - 16
+      local dy1 = dy0 + 32
+      local dy2 = dy3 - 32
+
+      if AS.conn_dir == 8 then
+        dx0 = -dx0
+        dx1 = -dx1
+        dx2 = -dx2
+        dx3 = -dx3
+      end
+
+      -- bottom section
+      make_curved_hall(steps, corn_x, corn_y,
+                       dx0, dx1, -x2, dx3,
+                       -dy0, -dy1, -dy2, -dy3,
+                       h1, h2, 128,
+                       info, info, info)
+
+      -- top section
+      corn_x = (rx1 + rx2) - corn_x
+
+      local dy0 = BS.y1 - corn_y + 16
+      local dy3 = BS.y2 - corn_y - 16
+      local dy1 = dy0 + 32
+      local dy2 = dy3 - 32
+
+      make_curved_hall(steps, corn_x, corn_y,
+                       -dx0, -dx1, -dx2, -dx3,
+                       dy0, dy1, dy2, dy3,
+                       h3, h2, 128,
+                       info, info, info)
     end
 
     -- mark all seeds as done
@@ -758,6 +927,7 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
     if R.kind == "stairwell" then
       build_stairwell_90(R)
       build_stairwell_180(R)
+      build_stairwell_0(R)
     end
   end
 
