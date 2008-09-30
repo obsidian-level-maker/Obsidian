@@ -200,13 +200,13 @@ function Quest_decide_start_room(arena)
 
   local function eval_room(R)
     -- small preference for indoor rooms
-    local cost = sel(R.outdoor, 15, 0)
+    local cost = sel(R.outdoor, 0, 15)
 
     -- preference for leaf rooms
-    cost = cost + 40 * (#R.conns ^ 0.6)
+    cost = cost + 40 * ((#R.conns) ^ 0.6)
 
     -- large amount of randomness
-    cost = cost + 100 * gui.random() * gui.random()
+    cost = cost + 100 * (1 - gui.random() * gui.random())
 
     return cost
   end
@@ -472,6 +472,8 @@ function Quest_num_puzzles(num_rooms)
     return 0
   end
 
+do return 8 end --!!!!!!!!
+
   local p_min = num_rooms / PUZZLE_MINS[OB_CONFIG.puzzles]
   local p_max = num_rooms / PUZZLE_MAXS[OB_CONFIG.puzzles]
 
@@ -484,36 +486,6 @@ end
 
 
 function Quest_lock_up_arena(arena)
-
-  local function free_branches(R)
-    local count = 0
-    for _,C in ipairs(R.conns) do
-      if C and not C.lock then
-        count = count + 1
-      end
-    end
-    return count
-  end
-
-  local function eval_arena(arena)
-    local junctions = 0
-
-    for _,R in ipairs(arena.rooms) do
-      local free_br = free_branches(R)
-      if free_br >= 2 then
-        junctions = junctions + 1
-      end
-    end
-
-    -- a lock is impossible without a junction
-    if junctions == 0 then
-      return -1
-    end
-
-    local score = junctions + gui.random() / 2.0
-
-    return score
-  end
 
   local function eval_lock(C)
     -- Factors to consider:
@@ -558,8 +530,7 @@ function Quest_lock_up_arena(arena)
   local poss_locks = {}
 
   for _,C in ipairs(arena.conns) do
-    local free_br = free_branches(C.src)
-    if free_br >= 2 then
+    if C.src.is_junction then
       C.lock_cost = eval_lock(C)
       table.insert(poss_locks, C)
     end
@@ -613,7 +584,7 @@ end
     rooms = {},
     conns = {},
 
-    start  = lock_C.dest,
+    start  = LC.dest,
     lock   = LOCK,
   }
 
@@ -622,10 +593,10 @@ end
 
     for _,C in ipairs(R.conns) do
       if C.src == R and C == LC then
-        visit(back_A, C.dest)
+        collect_arena(back_A, C.dest)
       elseif C.src == R and not C.lock then
         table.insert(A.conns, C)
-        visit(A, C.dest)
+        collect_arena(A, C.dest)
       end
     end
   end
@@ -679,6 +650,44 @@ function Quest_add_puzzle()
   -- door is replaced with a key for the new lock, and the old key
   -- must be placed somewhere beyond the new locked door.
 
+  local function free_branches(R)
+    local count = 0
+    for _,C in ipairs(R.conns) do
+      if C and not C.lock then
+        count = count + 1
+      end
+    end
+    return count
+  end
+
+  local function eval_arena(arena)
+    local junctions = 0
+
+    for _,R in ipairs(arena.rooms) do
+      if R.is_junction then
+        junctions = junctions + 1
+      end
+    end
+
+    -- a lock is impossible without a junction
+    if junctions == 0 then
+      return -1
+    end
+
+    local score = junctions + gui.random() / 2.0
+
+    return score
+  end
+
+
+  --| Quest_add_puzzle |--
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    R.is_junction = nil
+    if free_branches(R) >= 3 then
+      R.is_junction = true
+    end
+  end
 
   -- choose arena to add the locked door into
   for _,A in ipairs(PLAN.all_arenas) do
@@ -772,6 +781,7 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   gui.printf("Start seed @ (%d,%d)\n", sx, sy)
 
 
+--[[ !!!!!!!
   local EXIT_R = PLAN.exit_room
   assert(EXIT_R)
   assert(EXIT_R ~= START_R)
@@ -783,5 +793,6 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   SEEDS[ex][ey][1].is_exit = true
 
   gui.printf("Exit seed @ (%d,%d)\n", ex, ey)
+--]]
 end
 
