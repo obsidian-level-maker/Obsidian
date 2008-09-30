@@ -182,11 +182,6 @@ function Rooms_setup_symmetry()
       if R.symmetry == 6 then R.symmetry = 4 end
       if R.symmetry == 8 then R.symmetry = 2 end
 
---      -- true four-way symmetry should be rare
---      if R.symmetry == 5 and rand_odds(50) then
---        R.symmetry = rand_sel(50, 2, 4)
---      end
-
       if R.symmetry == 2 or R.symmetry == 5 then
         mirror_horizontally(R)
       end
@@ -754,12 +749,18 @@ function Rooms_find_broken_symmetry()
 end
 
 
+function NEW_Rooms_choose_heights()
+
+  
+end
+
+
 function Rooms_fit_out()
 
   gui.printf("\n--==| Rooms_fit_out |==--\n\n")
 
-  Rooms_decide_hallways()
   Rooms_setup_symmetry()
+  Rooms_decide_hallways()
   Rooms_choose_heights()
   Rooms_find_broken_symmetry()
 end
