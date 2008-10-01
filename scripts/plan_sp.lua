@@ -2051,9 +2051,7 @@ gui.debugf("Failed\n")
     end
 
     for _,R in ipairs(PLAN.all_rooms) do
-gui.printf("BRANCH DONE: Room S(%d,%d) kind:%s group_id:%d\n",
-           R.sx1,R.sy1, R.kind or "?????", R.group_id or -777)
-      if R.group_id >= 2 then
+      if R.group_id >= 2 and dual_odds(#R.conns == 0, 66, 95) then
         make_scenic(R)
       end
     end
@@ -2089,7 +2087,7 @@ gui.printf("BRANCH DONE: Room S(%d,%d) kind:%s group_id:%d\n",
   end
 
   local function force_room_branch(R)
-    gui.debugf("Emergency connectin from room S(%d,%d)\n", R.sx1, R.sy1)
+    gui.debugf("Emergency connection in room S(%d,%d)\n", R.sx1, R.sy1)
 
     local try_list = {}
 
@@ -2106,20 +2104,23 @@ gui.printf("BRANCH DONE: Room S(%d,%d) kind:%s group_id:%d\n",
 
     for _,L in ipairs(try_list) do
       if try_emergency_connect(R, L.x, L.y, L.dir) then
-        return -- OK
+        return true -- OK
       end
     end
 
     -- this is not necesarily bad, it could be a group of rooms
     -- where only one of them can make a connection.
     gui.debugf("FAILED!\n")
+    return false
   end
 
   local function emergency_branches()
     -- handle isolated rooms first
     for _,R in ipairs(PLAN.all_rooms) do
       if R.kind ~= "scenic" and #R.conns == 0 then
-        force_room_branch(R)
+        if not force_room_branch(R) then
+          make_scenic(R)
+        end
       end
     end
 
