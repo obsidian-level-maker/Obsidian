@@ -409,21 +409,6 @@ function Landmap_Dump()
 end
 
 
-function Landmap_AddBridges()
---[[
-    local x_visit = {}
-    rand_shuffle(x_visit, LAND_W)
-
-    for _,lx in ipairs(x_visit) do
-      local group
-      for ly = 1,LAND_H do
-        local L = LAND_MAP[lx][ly]
-        if L.room and L.room.group_id then
-    end -- lx
---]]
-end
-
-
 function Landmap_CreateRooms()
   
   -- creates rooms out of contiguous areas on the land-map
@@ -659,6 +644,39 @@ function Room_side_coord(R, side, i)
 end
 
 
+function Rooms_CollectNeighbors()
+  -- Determines neighboring rooms of each room.
+  -- Big rooms can have multiple neighbors on some sides.
+  
+  for _,R in ipairs(PLAN.all_rooms) do
+    R.neighbors = { }
+  end
+
+  local function add_neighbor(R, side, N)
+    -- check if already there
+    for _,O in ipairs(R.neighbors) do
+      if O == N then return end
+    end
+
+    table.insert(R.neighbors, N)
+  end
+
+  for lx = 1,LAND_W do for ly = 1,LAND_H do
+    local L = LAND_MAP[lx][ly]
+    for side = 1,9 do if side ~= 5 then
+      local nx, ny = nudge_coord(lx, ly, side)
+      if Landmap_valid(nx, ny) then
+        local N = LAND_MAP[nx][ny]
+
+        if L.room and N.room and L.room ~= N.room then
+          add_neighbor(L.room, side, N.room)
+        end
+      end
+    end end -- side 1-9 except 5
+  end end -- lx, ly
+end
+
+
 function Rooms_Nudge()
   
   -- This resizes rooms by moving certain borders either one seed
@@ -673,38 +691,6 @@ function Rooms_Nudge()
   -- We also give priority to "nasty corners", which have two indoor
   -- areas diagonally opposite, and two outdoor areas diagonally
   -- opposite (like a chess-board).
-
-  local function collect_neighbours()
-    -- Determines neighbouring rooms of each room.
-    -- Big rooms can have multiple neighbours on some sides.
-    
-    for _,R in ipairs(PLAN.all_rooms) do
-      R.neighbours = { }
-    end
-
-    local function add_neighbour(R, side, N)
-      -- check if already there
-      for _,O in ipairs(R.neighbours) do
-        if O == N then return end
-      end
-
-      table.insert(R.neighbours, N)
-    end
-
-    for lx = 1,LAND_W do for ly = 1,LAND_H do
-      local L = LAND_MAP[lx][ly]
-      for side = 1,9 do if side ~= 5 then
-        local nx, ny = nudge_coord(lx, ly, side)
-        if Landmap_valid(nx, ny) then
-          local N = LAND_MAP[nx][ny]
-
-          if L.room and N.room and L.room ~= N.room then
-            add_neighbour(L.room, side, N.room)
-          end
-        end
-      end end -- side 1-9 except 5
-    end end -- lx, ly
-  end
 
   local function volume_after_nudge(R, side, grow)
 ---###    local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
@@ -744,7 +730,7 @@ then return true end
       if (N.sx1 < R.sx1) or (N.sx2 > R.sx2) then return false end
     end
 
-    -- the nudge is possible (pushing the neighbour also)
+    -- the nudge is possible (pushing the neighbor also)
 
     if N.no_nudge or N.nudges[10-side] then return false end
 
@@ -761,7 +747,7 @@ then return true end
   end
 
   local function try_nudge_room(R, side, pull, grow)
-    -- 'pull' true => any shrinkage must pull neighbours too
+    -- 'pull' true => any shrinkage must pull neighbors too
     -- 'grow' is positive to nudge outward, negative to nudge inward
 
     if not grow then grow = rand_sel(75,1,-1) end
@@ -796,7 +782,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
 
     local push_list = {}
 
-    for _,K in ipairs(R.neighbours) do
+    for _,K in ipairs(R.neighbors) do
       if not allow_nudge(R, side, pull, grow, K, push_list) then return false end
     end
 
@@ -857,7 +843,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
 
     local E, N, NE -- East, North, NorthEast
 
-    for _,K in ipairs(R.neighbours) do
+    for _,K in ipairs(R.neighbors) do
 
       if K.sx2 == R.sx2 and K.sy1 > R.sy2 then N = K end
       if K.sy2 == R.sy2 and K.sx1 > R.sx2 then E = K end
@@ -866,33 +852,6 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     end
 
     return E, N, NE
-
----##    for _,K in ipairs(R.neighbours[6]) do
----##      if not E or (K.sx1 > E.sx2) then E = K end
----##    end
----##
----##    for _,K in ipairs(R.neighbours[8]) do
----##      if not N or (K.sy1 > N.sy2) then N = K end
----##    end
----##
----##    local A, B
----##
----##    if N then
----##      for _,K in ipairs(N.neighbours[6]) do
----##        if not A or (K.sy2 < A.sy1) then A = K end
----##      end
----##    end
----##
----##    if E then
----##      for _,K in ipairs(E.neighbours[8]) do
----##        if not B or (K.sy2 < B.sy1) then B = K end
----##      end
----##    end
----##
----##    if A and (A.sx1 == R.sx2+1) and (A.sy1 == R.sy2+1) then return E,N,A end
----##    if B and (B.sx1 == R.sx2+1) and (B.sy1 == R.sy2+1) then return E,N,B end
----##
----##    return nil, nil, nil
   end
 
   local function is_corner_nasty(R, E, N, NE)
@@ -965,8 +924,6 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
 
 
   ---| Rooms_Nudge |---
-
-  collect_neighbours()
 
   for _,R in ipairs(PLAN.all_rooms) do
     R.nudges = {}
@@ -1860,7 +1817,7 @@ function Rooms_Connect()
       else
         local gap
 
-        -- handle rooms separated by a nudge gap
+        -- handle rooms separated by a nudge gap  [FIXME: REMOVE]
         if not N.room then
           gap = N
           nx, ny = nudge_coord(nx, ny, dir)
@@ -2002,12 +1959,6 @@ gui.debugf("Failed\n")
     end -- for R in rooms
   end
 
-  local function branch_the_rest()
-  
-    -- FIXME different algo
-
-  end
-
   local function add_teleporters()
     -- FIXME !!!!! DO TELEPORTERS WITH QUEST STUFF
 
@@ -2065,22 +2016,130 @@ gui.debugf("Failed\n")
     end
   end
 
+  local function make_scenic(R)
+    gui.debugf("Making room S(%d,%d) SCENIC\n", R.sx1, R.sy1)
+    assert(R.kind ~= "scenic")
+
+    R.scenic_kind = R.kind
+    R.kind = "scenic"
+    R.group_id = -1
+  end
+
+  local function disable_isolates()
+    local total = #PLAN.all_rooms
+    local isolated = 0
+    local other_grp
+
+    if total <= 3 then return end
+
+    for _,R in ipairs(PLAN.all_rooms) do
+      if R.group_id >= 2 then
+        isolated = isolated + 1
+        other_grp = R.group_id
+      end
+    end
+
+    -- handle the case where group #1 is not the majority of the map
+    if isolated > total/2 then
+      for _,R in ipairs(PLAN.all_rooms) do
+        if R.group_id == 1 then
+          make_scenic(R)
+        end
+      end
+      assert(other_grp)
+      merge(1, other_grp)
+    end
+
+    for _,R in ipairs(PLAN.all_rooms) do
+gui.printf("BRANCH DONE: Room S(%d,%d) kind:%s group_id:%d\n",
+           R.sx1,R.sy1, R.kind or "?????", R.group_id or -777)
+      if R.group_id >= 2 then
+        make_scenic(R)
+      end
+    end
+  end
+
+  local function try_emergency_connect(R, x, y, dir)
+    local nx, ny = nudge_coord(x, y, dir)
+
+    if not Seed_valid(nx, ny, 1) then return false end
+
+    local S = SEEDS[ x][ y][1]
+    local N = SEEDS[nx][ny][1]
+
+    assert(S.room == R)
+    assert(N.room ~= R)
+
+    if not N.room or not N.room.group_id then return false end
+
+    if N.room.group_id == R.group_id then return false end
+
+    -- only one connection per seed!
+    if S.conn or N.conn  then return false end
+
+    connect_seeds(S, N, dir, "emergency")
+
+    R.branch_kind = "EM"
+    R.symmetry = nil
+
+    N.room.branch_kind = "EM"
+    N.room.symmetry = nil
+
+    return true
+  end
+
+  local function force_room_branch(R)
+    gui.debugf("Emergency connectin from room S(%d,%d)\n", R.sx1, R.sy1)
+
+    local try_list = {}
+
+    for x = R.sx1,R.sx2 do
+      table.insert(try_list, { x=x, y=R.sy1, dir=2 })
+      table.insert(try_list, { x=x, y=R.sy2, dir=8 })
+    end
+    for y = R.sy1,R.sy2 do
+      table.insert(try_list, { x=R.sx1, y=y, dir=4 })
+      table.insert(try_list, { x=R.sx2, y=y, dir=6 })
+    end
+
+    rand_shuffle(try_list)
+
+    for _,L in ipairs(try_list) do
+      if try_emergency_connect(R, L.x, L.y, L.dir) then
+        return -- OK
+      end
+    end
+
+    -- this is not necesarily bad, it could be a group of rooms
+    -- where only one of them can make a connection.
+    gui.debugf("FAILED!\n")
+  end
+
+  local function emergency_branches()
+    -- handle isolated rooms first
+    for _,R in ipairs(PLAN.all_rooms) do
+      if R.kind ~= "scenic" and #R.conns == 0 then
+        force_room_branch(R)
+      end
+    end
+
+    -- now handle isolated groups of rooms
+    for _,V in ipairs(Landmap_rand_visits()) do
+      local L = LAND_MAP[V.x][V.y]
+      local R = L.room
+      if R and R.group_id and R.group_id >= 2 then
+        force_room_branch(R)
+      end
+    end -- for V
+  end
+
 
   ---| Rooms_Connect |---
 
   join_ground()
-
   branch_big_rooms()
-  branch_the_rest()
-
-  -- add_teleporters()
-
-  for _,R in ipairs(PLAN.all_rooms) do
-    if R.group_id >= 2 then
-      R.scenic_kind = R.kind
-      R.kind = "scenic"
-    end
-  end
+  disable_isolates()
+  emergency_branches()
 end
 
 
@@ -2150,10 +2209,9 @@ function Plan_rooms_sp(epi_along)
   Landmap_Init()
   Landmap_Fill()
   Landmap_Dump()
-
   Landmap_CreateRooms()
-  Landmap_AddBridges()
 
+  Rooms_CollectNeighbors()
   Rooms_Nudge()
   Rooms_Make_Seeds()
   Rooms_Connect()
