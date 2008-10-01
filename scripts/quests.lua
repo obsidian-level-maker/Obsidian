@@ -523,6 +523,51 @@ function Quest_lock_up_arena(arena)
     end
   end
 
+  local function path_to_lock(R, LC)
+    if R == LC.src then
+      return {}
+    end
+
+    -- try each outward connection, one of them may succeed
+    for _,C in ipairs(R.conns) do
+      if C.src == R and not C.lock then
+        local path = path_to_lock(C:neighbor(R), LC)
+        if path then
+          table.insert(path, 1, C)
+          return path
+        end
+      end
+    end
+
+    return nil -- did not exist
+  end
+
+  local function select_target(R)
+    for loop = 1,50 do
+      local poss_bras = {}
+
+      for _,C in ipairs(R.conns) do
+        if C.src == R and not C.lock then
+          table.insert(poss_bras, C)
+        end
+      end
+
+      if #poss_bras == 0 then
+        break;
+      end
+
+      branch_C = table_sorted_first(poss_bras,
+          function(A,B) return A.dest_tvol > B.dest_tvol end)
+      assert(branch_C)
+
+      -- move into chosen room
+      table.insert(arena.path, branch_C)
+      R = branch_C.dest
+    end
+
+    return R
+  end
+
 
   ---| Quest_lock_up_arena |---
 
@@ -603,6 +648,15 @@ end
 
   collect_arena(front_A, arena.start)
 
+  arena.path = path_to_lock(arena.start, LC)
+  assert(arena.path)
+
+  arena.target = select_target(LC.src)
+
+
+-- TEMP CRUD
+arena.target.key_item = #PLAN.all_locks
+
 
   -- link in the newbies...
   table.insert(PLAN.all_arenas, front_A)
@@ -623,32 +677,6 @@ end
 
 
 function Quest_add_puzzle()
-
-  -- Algorithm:
-  --
-  -- The first puzzle is special, it will lock a connection that
-  -- leads to the EXIT room of the map.  Any connection is possible,
-  -- including one from the start room or one leading to the exit
-  -- room itself, as long as the source contains a "free" branch
-  -- (which will lead to the key or switch).
-  --
-  -- After we create the first puzzle (splitting the arena), we'd
-  -- rather not process the second arena (containing the exit) again,
-  -- because the only thing we can do with it is what we did before:
-  -- lock a connection that leads to the exit.  Hence how we choose
-  -- the first puzzle connection, its the distance to the exit room,
-  -- is quite important.  Too close is bad for big maps with only a
-  -- few puzzles, too far is bad for maps with many puzzles.
-  --
-  -- For subsequent puzzles (in non-EXIT arenas) there are two types
-  -- of locks, either a connection along the start->exit path (as
-  -- for EXIT arenas) or alternatively one of the branches OFF the
-  -- main path.
-  --
-  -- Locking a branch OFF the arena's path (including the start)
-  -- means that the key that was placed for the original locked
-  -- door is replaced with a key for the new lock, and the old key
-  -- must be placed somewhere beyond the new locked door.
 
   local function free_branches(R)
     local count = 0
@@ -757,7 +785,6 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   for i = 1,PLAN.num_puzz do
     Quest_add_puzzle()
   end
-
 
   for _,A in ipairs(PLAN.all_arenas) do
     for _,R in ipairs(A.rooms) do
