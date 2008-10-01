@@ -641,8 +641,8 @@ gui.printf("do_teleport\n")
 
     if S.room then
 
-      z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h --!!! or 0
-      z2 = z2 or S.room.ceil_h  --!!! or 256
+      z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h or 0
+      z2 = z2 or S.room.ceil_h or 256
 
       assert(z1 and z2)
 
@@ -693,8 +693,8 @@ gui.printf("do_teleport\n")
       else -- building
       
         f_tex = "FLOOR4_8"
-        c_tex = "TLITE6_4"
-        w_tex = "STARG3"
+        c_tex = "CEIL3_5"
+        w_tex = "STARTAN2"
 
       end
 
@@ -845,8 +845,9 @@ if true then -- if do_sides then
         -2000, z1+36)
       end
       if S.borders and S.borders[side] and S.borders[side].kind == "lock_door" then
-        local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
-                            "DOORRED2","DOORYEL2","DOORBLU2","MARBFAC2" }
+        local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU",
+                            "DOORRED2","DOORYEL2","DOORBLU2",
+                            "TEKGREN3", "MARBFAC2" }
         local w_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
 gui.printf("ADDING LOCK DOOR %s\n", w_tex)
         gui.add_brush(
@@ -874,7 +875,7 @@ end -- do_sides
       {
         name = ENT_EXIT
       })
-    elseif S.room and
+    elseif S.room and S.room.kind ~= "scenic" and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
       gui.add_entity(mx, my, z1 + 25,
@@ -899,7 +900,6 @@ if S.x_peer and S.sx < S.x_peer.sx then
 end
 
 if S.y_peer and S.sy < S.y_peer.sy then
-  
   local dx = rand_irange(-70,70)
   local dy = rand_irange(-70,70)
   local mx2 = int((S.y_peer.x1 + S.y_peer.x2) / 2)
@@ -914,9 +914,12 @@ end
     end
 
     if S.room and S.room.key_item and S.sx == S.room.sx2 and S.sy == S.room.sy2 then
-      local KEYS = { 13,6,5,7015, 38,39,40,7017 }
+      local KEYS = { 13,6,5, 38,39,40, 7015,7017 }
 gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
---      gui.add_entity(tostring(KEYS[S.room.key_item] or 2014), (x1+x2)/2, (y1+y2)/2, z1 + 25)
+      gui.add_entity(mx, my, z1+25,
+      {
+        name = tostring(KEYS[S.room.key_item] or 2014),
+      })
     end
   end
 
