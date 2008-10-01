@@ -72,130 +72,6 @@ require 'defs'
 require 'util'
 
 
---[[
-function OLD_Quest_decide_start_room(arena)
-
-  local GROUND_COSTS =
-  {
-    ["valley/ground"] = -100,
-    ["valley/hill"]   = -237,
-    ["ground/hill"]   = -100,
-
-    ["hill/ground"]   =  100,
-    ["hill/valley"]   =  237,
-    ["ground/valley"] =  100,
-  }
-
-  local function eval_connection(C)
-    if C.cost then return end
-
-    local A = C.src
-    local B = C.dest
-
-    local kind_AB = A.kind .. "/" .. B.kind
-
-    local cost = GROUND_COSTS[kind_AB] or 0
-
-    cost = cost + (#A.conns     - #B.conns)     * 23
-    cost = cost + (#A.teleports - #B.teleports) * 144
-
-    if C.big_entrance then
-      cost = cost + sel(C.dest == C.big_entrance, -1, 1) * 70
-    end
-
-    C.cost = cost
-
-gui.debugf("Connection cost: %1.2f\n", C.cost)
-  end
-
-  local function eval_recursive(R, visited)
-    visited[R] = true
-
-    local cost = 0
-
-    for _,C in ipairs(R.conns) do
-      eval_connection(C)
-      local N = C:neighbor(R)
-      if not visited[N] then
-        cost = cost + eval_recursive(N, visited) + C.cost * sel(R == C.src,1,-1)
-      end
-    end
-
-    for _,T in ipairs(R.teleports) do
-      eval_connection(T)
-      local N = T:neighbor(R)
-      if not visited[N] then
-        cost = cost + eval_recursive(N, visited) + T.cost * sel(R == T.src,1,-1)
-      end
-    end
-
-    return cost
-  end
-
-  local function eval_room(R)
-    local cost = eval_recursive(R, {})
-
-    -- really big rooms are wasted for the starting room
-    cost = cost + R.svolume * 6
-
----##    -- should not start in a hallway!
----##    if R.hallway then cost = cost + 666 end
-
-    -- add a touch of randomness
-    return cost + rand_range(-2, 2)
-  end
-
-  local function swap_conn(C)
-    C.src, C.dest = C.dest, C.src
-    C.src_S, C.dest_S = C.dest_S, C.src_S
-  end
-
-  local function natural_flow(R, visited)
-    visited[R] = true
-
-    for _,C in ipairs(R.conns) do
-      if R == C.dest and not visited[C.src] then
-        swap_conn(C)
-      end
-      if R == C.src and not visited[C.dest] then
-        natural_flow(C.dest, visited)
-      end
-    end
-
-    for _,T in ipairs(R.teleports) do
-      if R == T.dest and not visited[T.src] then
-        swap_conn(T)
-      end
-      if R == T.src and not visited[T.dest] then
-        natural_flow(T.dest, visited)
-      end
-    end
-  end
-
-
-  ---| Quest_decide_start_room |---
-
-  for _,R in ipairs(arena.rooms) do
-    R.start_cost = eval_room(R)
-    gui.debugf("Room (%d,%d) : START COST : %1.4f\n", R.lx1,R.ly1, R.start_cost)
-  end
-
-  arena.start = table_sorted_first(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
-
-  arena.start.purpose = "START"
-
-  PLAN.start_room = arena.start
-
-  gui.debugf("Start room (%d,%d)\n", arena.start.lx1, arena.start.ly1)
-
-  -- update connections so that 'src' and 'dest' follow the natural
-  -- flow of the level, i.e. player always walks src -> dest (except
-  -- when backtracking).
-  natural_flow(arena.start, {})
-end
---]]
-
-
 function Quest_decide_start_room(arena)
 
   local function eval_room(R)
@@ -255,182 +131,6 @@ function Quest_decide_start_room(arena)
   -- when backtracking).
   natural_flow(arena.start, {})
 end
-
-
---[[
-function Quest_decide_exit_room(arena)
-
-  local function eval_room(R)
-    local cost = 0
-
-    -- checks for being near the start room
-    for _,C in ipairs(R.conns) do
-      local N = C:neighbor(R)
-      if N == arena.start then cost = 1000 end
-    end
-
-    for _,T in ipairs(R.teleports) do
-      local N = T:neighbor(R)
-      if N == arena.start then cost = 2000 end
-    end
-
-    if R == arena.start then cost = 4000 end
-
-    -- should be a leaf
-    if #R.teleports > 0 then cost = cost + 500 end
-    if #R.conns > 1 then cost = cost + 200 end
-    if #R.conns > 2 then cost = cost + 100 end
-
-    -- prefer an indoor room
-    if R.kind ~= "indoor" then
-      cost = cost + 50
-    end
-
-    -- should be small
-    cost = cost + math.min(95, R.svolume * 1.5)
-
-    return cost + gui.random()
-  end
-
-  local function room_conn_dist(R, C)
-    local x1 = (R.sx1 + R.sx2) / 2
-    local y1 = (R.sy1 + R.sy2) / 2
-
-    local x2 = (C.src_S.sx + C.dest_S.sx) / 2
-    local y2 = (C.src_S.sy + C.dest_S.sy) / 2
-
-    return math.abs(x2 - x1) + math.abs(y2 - y1)
-  end
-
-  local function conn_conn_dist(B, C)
-    local x1 = (B.src_S.sx + B.dest_S.sx) / 2
-    local y1 = (B.src_S.sy + B.dest_S.sy) / 2
-
-    local x2 = (C.src_S.sx + C.dest_S.sx) / 2
-    local y2 = (C.src_S.sy + C.dest_S.sy) / 2
-
-    return math.abs(x2 - x1) + math.abs(y2 - y1)
-  end
-
-  local function iterate_exit_dists(R, dist, via_C)
-----    if C0 and C1 then
-----      dist = dist + math.abs(conn.src_S.sx - conn.dest_S.sx)
-----      dist = dist + math.abs(conn.src_S.sy - conn.dest_S.sy)
-----gui.debugf("CONN DIST: %d+%d\n",
-----      math.abs(conn.src_S.sx - conn.dest_S.sx) ,
-----      math.abs(conn.src_S.sy - conn.dest_S.sy) )
-----    end
-
-    for _,C in ipairs(R.conns) do
-      if R == C.src then
-        local new_dist = dist
-        if via_C then
-          new_dist = new_dist + conn_conn_dist(via_C, C)
-        else
-          new_dist = new_dist + room_conn_dist(R, C)
-        end
-
-        iterate_exit_dists(C.dest, new_dist, C)
-      end
-    end
-
-    for _,T in ipairs(R.teleports) do
-      if R == T.src then
-        iterate_exit_dists(T.dest, dist + 2)
-      end
-    end
-
-    if via_C then
-      dist = dist + room_conn_dist(R, via_C)
-    end
-
-    -- penalty for start room
-    if R == arena.start then
-      dist = dist - 1000
-    end
-
-    -- penalty for non-leafs
-    if R.num_branch > 1 then
-      dist = dist - 200
-    end
-
-    -- penalty for large rooms
-    dist = dist - math.min(95, R.svolume * 1.5)
-
-    -- bonus for indoor room
-    if (R.kind == "indor") then
-      dist = dist + 50
-    end
-
-    R.exit_dist = dist + gui.random()
-  end
-
-  local function main_path_to(R, E)
-    if R == E then return {} end
-
-    for _,C in ipairs(R.conns) do
-      if R == C.src then
-        local path = main_path_to(C.dest, E)
-        if path then table.insert(path, 1, C); return path end
-      end
-    end
-
-    for _,T in ipairs(R.teleports) do
-      if R == T.src then
-        local path = main_path_to(T.dest, E)
-        if path then table.insert(path, 1, T); return path end
-      end
-    end
-
-    return nil -- NOT FOUND --
-  end
-
-  local function mark_main_path()
-    arena.path = main_path_to(arena.start, arena.target)
-
-    if not arena.path then
-      error("cannot find main path!!")
-    end
-
----###    for _,C in ipairs(path) do
----###      C.     main_path = true
----###      C. src.main_path = true
----###      C.dest.main_path = true
----###    end
-  end
-
-
-  ---| Quest_decide_exit_room |---
-
-  if PLAN.num_puzz == 0 then
-    -- when no keys/switches : find room furthest from start
-
-    iterate_exit_dists(arena.start, 0)
-
-    for _,R in ipairs(arena.rooms) do
-      gui.debugf("Room (%d,%d) : EXIT DIST : %1.4f\n", R.lx1,R.ly1, R.exit_dist)
-    end
-
-    arena.target = table_sorted_first(arena.rooms, function(A,B) return A.exit_dist > B.exit_dist end)
-  else
-    for _,R in ipairs(arena.rooms) do
-      R.exit_cost = eval_room(R)
-      gui.debugf("Room (%d,%d) : EXIT COST : %1.4f\n", R.lx1,R.ly1, R.exit_cost)
-    end
-
-    arena.target = table_sorted_first(arena.rooms, function(A,B) return A.exit_cost < B.exit_cost end)
-  end
-
-  arena.target.purpose = "EXIT"
-
-  PLAN.exit_room = arena.target
-
-  gui.debugf("Exit room (%d,%d)\n", arena.target.lx1, arena.target.ly1)
-
-  mark_main_path()
-end
---]]
-
 
 
 function Quest_update_tvols(arena)
@@ -542,32 +242,6 @@ function Quest_lock_up_arena(arena)
     return nil -- did not exist
   end
 
-  local function select_target(R)
-    for loop = 1,50 do
-      local poss_bras = {}
-
-      for _,C in ipairs(R.conns) do
-        if C.src == R and not C.lock then
-          table.insert(poss_bras, C)
-        end
-      end
-
-      if #poss_bras == 0 then
-        break;
-      end
-
-      branch_C = table_sorted_first(poss_bras,
-          function(A,B) return A.dest_tvol > B.dest_tvol end)
-      assert(branch_C)
-
-      -- move into chosen room
-      table.insert(arena.path, branch_C)
-      R = branch_C.dest
-    end
-
-    return R
-  end
-
 
   ---| Quest_lock_up_arena |---
 
@@ -594,10 +268,12 @@ function Quest_lock_up_arena(arena)
   {
     conn = LC,
     tag  = PLAN:alloc_tag(),
+
+    -- TEMP CRUD
+    key_item = 1 + #PLAN.all_locks,
   }
 
   LC.lock = LOCK
-  arena.lock = LOCK
 
   table.insert(PLAN.all_locks, LOCK)
 
@@ -607,7 +283,7 @@ local KS = LC.dest_S
 if KS and LC.src_S then
 local dir = delta_to_dir(LC.src_S.sx - KS.sx, LC.src_S.sy - KS.sy)
 KS.borders[dir].kind = "lock_door"
-KS.borders[dir].key_item = #PLAN.all_locks
+KS.borders[dir].key_item = LOCK.key_item
 end
 
 
@@ -629,8 +305,7 @@ end
     rooms = {},
     conns = {},
 
-    start  = LC.dest,
-    lock   = LOCK,
+    start = LC.dest,
   }
 
   local function collect_arena(A, R)
@@ -648,14 +323,9 @@ end
 
   collect_arena(front_A, arena.start)
 
-  arena.path = path_to_lock(arena.start, LC)
-  assert(arena.path)
+  front_A.path = path_to_lock(arena.start, LC)
+  assert(front_A.path)
 
-  arena.target = select_target(LC.src)
-
-
--- TEMP CRUD
-arena.target.key_item = #PLAN.all_locks
 
 
   -- link in the newbies...
@@ -736,6 +406,64 @@ gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
 end
 
 
+function Quest_solve_puzzle(arena)
+
+  local function select_target(R)
+    for loop = 1,50 do
+      local poss_bras = {}
+
+      for _,C in ipairs(R.conns) do
+        if C.src == R and not C.lock then
+          table.insert(poss_bras, C)
+        end
+      end
+
+      if #poss_bras == 0 then
+        break;
+      end
+
+      branch_C = table_sorted_first(poss_bras,
+          function(A,B) return A.dest_tvol > B.dest_tvol end)
+      assert(branch_C)
+
+      -- move into chosen room
+      table.insert(arena.path, branch_C)
+      R = branch_C.dest
+    end
+
+    return R
+  end
+
+
+  --| Quest_solve_puzzle |--
+ 
+  Quest_update_tvols(arena)
+
+  if arena.lock then
+    local LOCK = arena.lock
+assert(arena.path)
+
+    arena.target = select_target(LOCK.conn.src)
+
+-- TEMP CRUD
+arena.target.key_item = LOCK.key_item
+
+  else
+    -- the EXIT room
+    arena.path = {}
+    arena.target = select_target(arena.start)
+
+    arena.target.purpose = "EXIT"
+    PLAN.exit_room = arena.target
+
+local ex = int((arena.target.sx1 + arena.target.sx2) / 2.0)
+local ey = int((arena.target.sy1 + arena.target.sy2) / 2.0)
+SEEDS[ex][ey][1].is_exit = true
+
+  end 
+end
+
+
 function Quest_assign()
 
   gui.printf("\n--==| Quest_assign |==--\n\n")
@@ -790,7 +518,10 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
     for _,R in ipairs(A.rooms) do
       R.arena = A
     end
+
+    Quest_solve_puzzle(A)
   end
+
 
 
   -- TEMP CRUD FOR BUILDER....
@@ -808,7 +539,7 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   gui.printf("Start seed @ (%d,%d)\n", sx, sy)
 
 
---[[ !!!!!!!
+--[[ !!!!
   local EXIT_R = PLAN.exit_room
   assert(EXIT_R)
   assert(EXIT_R ~= START_R)
