@@ -210,23 +210,20 @@ function Quest_initial_path(arena)
 end
 
 
-function Quest_num_puzzles(num_rooms)
-  local PUZZLE_MINS = { less=18, normal=12, more=8, mixed=16 }
-  local PUZZLE_MAXS = { less=10, normal= 8, more=4, mixed=6  }
+function Quest_num_keys(num_rooms)
+  local PUZZLE_NUMS = { less=16, normal=10, more=5, mixed=10  }
 
-  if not PUZZLE_MINS[OB_CONFIG.puzzles] then
+  if not PUZZLE_NUMS[OB_CONFIG.puzzles] then
     gui.printf("Puzzles disabled\n")
     return 0
   end
 
-do return 8 end --!!!!!!!!
+  local approx = num_rooms / PUZZLE_NUMS[OB_CONFIG.puzzles] +
+                 gui.random() * gui.random() * 4
 
-  local p_min = num_rooms / PUZZLE_MINS[OB_CONFIG.puzzles]
-  local p_max = num_rooms / PUZZLE_MAXS[OB_CONFIG.puzzles]
+  local result = int(approx)
 
-  local result = int(0.25 + rand_range(p_min, p_max))
-
-  gui.printf("Number of puzzles: %d  (%1.2f-%1.2f) rooms=%d\n", result, p_min, p_max, num_rooms)
+  gui.printf("Number of keys: %1.2f -> %d  rooms=%d\n", approx, result, num_rooms)
 
   return result
 end
@@ -261,7 +258,7 @@ function Quest_lock_up_arena(arena)
     end
 
     if not C.on_path then
-      cost = cost + 30
+      cost = cost + 10
     end
 
     return cost + gui.random() * 5
@@ -547,9 +544,6 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
     end
   end
 
-  PLAN.max_keys = Quest_num_puzzles(#PLAN.all_rooms)
-
-
   local ARENA =
   {
     rooms = {},
@@ -571,6 +565,8 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
 
   PLAN.start_room = PLAN.all_arenas[1].start
   PLAN.start_room.purpose = "START"
+
+  PLAN.max_keys = Quest_num_keys(#ARENA.rooms)
 
 
   Quest_initial_path(ARENA)
