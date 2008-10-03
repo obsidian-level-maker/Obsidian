@@ -95,5 +95,13 @@ OB_GAMES["freedoom"] =
   format = "doom",
 
   game_func = freedoom_factory,
+
+  caps =
+  {
+    rails = true,
+    switches = true,
+    liquids = true,
+    teleporters = true,
+  },
 }
 

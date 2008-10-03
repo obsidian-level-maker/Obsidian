@@ -475,11 +475,6 @@ function quake1_factory()
     cell_size = 7,
     cell_min_size = 3,
 
-    caps = { blocky_items=true, blocky_doors=true,
-             tiered_skills=true, elevator_exits=true,
-             four_dirs=true, sealed_start=true,
-           },
-
     ERROR_TEX  = Q1_NO_TILE,
     ERROR_FLAT = 99, -- dummy
     SKY_TEX    = 77, -- dummy
@@ -533,5 +528,10 @@ UNFINISHED["quake1"] =
   format = "quake1",
 
   game_func = quake1_factory,
+
+  caps =
+  {
+    -- TODO
+  },
 }
 

@@ -1555,14 +1555,6 @@ function heretic_factory()
     cell_size = 9,
     cell_min_size = 6,
 
-    caps = { heights=true, sky=true, 
-             fragments=true, move_frag=true, rails=true,
-             closets=true,   depots=true,
-             switches=true,  liquids=true,
-             teleporters=true,
-             prefer_stairs=true,
-           },
-
     SKY_TEX    = "F_SKY1",
     ERROR_TEX  = "DRIPWALL",
     ERROR_FLAT = "FLOOR09",
@@ -1641,5 +1633,14 @@ UNFINISHED["heretic"] =
   format = "doom",
 
   game_func = heretic_factory,
+
+  caps =
+  {
+    rails=true,
+    switches=true,
+    liquids=true,
+    teleporters=true,
+    prefer_stairs=true,
+  },
 }
 

@@ -3066,13 +3066,6 @@ function doom_common_factory()
     cell_size = 9,
     cell_min_size = 6,
 
-    caps = { heights=true, sky=true, 
-             fragments=true, move_frag=true, rails=true,
-             closets=true,   depots=true,
-             switches=true,  liquids=true,
-             teleporters=true,
-           },
-
     SKY_TEX    = "F_SKY1",
     ERROR_TEX  = "FIREBLU1",
     ERROR_FLAT = "SFLR6_4",
@@ -3185,5 +3178,13 @@ OB_GAMES["doom1"] =
   format = "doom",
 
   game_func = doom1_factory,
+
+  caps =
+  {
+    rails = true,
+    switches = true,
+    liquids = true,
+    teleporters = true,
+  },
 }
 

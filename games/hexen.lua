@@ -2049,18 +2049,6 @@ function hexen_factory()
     cell_size = 9,
     cell_min_size = 6,
 
-    caps = { heights=true,   sky=true, 
-             fragments=true, move_frag=true, rails=true,
-             closets=true,   depots=true,
-             switches=true,  liquids=true,
-             teleporters=true,
-             
-             -- Hexen unique stuff
-             polyobjs=true,  three_part_weapons=true,
-             hubs=true,      action_script=true,
-                             prefer_stairs=true,
-           },
-
     SKY_TEX    = "F_SKY",
     ERROR_TEX  = "ABADONE",
     ERROR_FLAT = "F_033",
@@ -2132,5 +2120,19 @@ UNFINISHED["hexen"] =
   format = "doom",
 
   game_func = hexen_factory,
+
+  caps =
+  {
+     rails=true,
+     switches=true,
+     liquids=true,
+     teleporters=true,
+     prefer_stairs=true,
+     
+     hubs=true,
+     polyobjs=true,
+     three_part_weapons=true,
+     ACS_script=true,
+   },
 }
 

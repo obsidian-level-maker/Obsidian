@@ -1969,5 +1969,13 @@ OB_GAMES["doom2"] =
 --  priority = 99,
 
   game_func = doom2_factory,
+
+  caps =
+  {
+    rails = true,
+    switches = true,
+    liquids = true,
+    teleporters = true,
+  },
 }
 
