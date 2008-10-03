@@ -1,0 +1,9 @@
+
+Capability Flags
+================
+
+no_height      The game or engine does not support floor height
+               differences.  Wolfenstein-3D is such a game.  This
+               flag disables the height-generating logic, instead
+               it assigns some dummy values (floor=0, ceil=128).
+
