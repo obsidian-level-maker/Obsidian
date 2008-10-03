@@ -694,7 +694,7 @@ gui.printf("do_teleport\n")
       
         f_tex = "FLOOR4_8"
         c_tex = "CEIL3_5"
-        w_tex = "STARTAN2"
+        w_tex = "STARG2"
 
       end
 
@@ -845,9 +845,8 @@ if true then -- if do_sides then
         -2000, z1+36)
       end
       if S.borders and S.borders[side] and S.borders[side].kind == "lock_door" then
-        local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU",
-                            "DOORRED2","DOORYEL2","DOORBLU2",
-                            "TEKGREN3", "MARBFAC2" }
+        local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
+                            "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
         local w_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
 gui.printf("ADDING LOCK DOOR %s\n", w_tex)
         gui.add_brush(
@@ -914,7 +913,7 @@ end
     end
 
     if S.room and S.room.key_item and S.sx == S.room.sx2 and S.sy == S.room.sy2 then
-      local KEYS = { 13,6,5, 38,39,40, 7015,7017 }
+      local KEYS = { 13,6,5,7015, 38,39,40, 7017 }
 gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
       gui.add_entity(mx, my, z1+25,
       {
