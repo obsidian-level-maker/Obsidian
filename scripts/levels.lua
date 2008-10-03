@@ -26,6 +26,7 @@ require 'util'
 
 require 'seeds'
 require 'plan_sp'
+require 'connect'
 require 'quests'
 require 'rooms'
 require 'builder'
@@ -120,6 +121,10 @@ function Level_Make(level, NUM)
   Plan_rooms_sp(epi_along)
     if gui.abort() then return "abort" end
     gui.progress(20)
+
+  Connect_Rooms(epi_along)
+    if gui.abort() then return "abort" end
+    gui.progress(30)
 
   Quest_assign()
     if gui.abort() then return "abort" end
