@@ -62,8 +62,41 @@ class LOCK
 
   branch_mode : keyword  -- "ON" or "OFF"
 
-
 }
+
+
+ALGORITHM NOTES
+~~~~~~~~~~~~~~~
+
+The fundamental requirement of a locked door is that the player
+needs to reach the door _before_ he/she reaches the key.  Then
+the player knows what they are looking for.  Without this, the
+player can just stumble on the key before finding the door and
+says to themselves "what the hell is this key for ???".
+
+Hence we cannot add locked doors just anywhere into the level.
+This algorithm assumes that in each group of rooms (an ARENA)
+there is a path from the start to the target room (that's the
+room which holds either a key or is the EXIT room of the map).
+So a locked door can be added somewhere along that path.
+
+It can either block the target room (an "ON" type) or branch
+"OFF" the path.  The room where it is added must be a "junction",
+i.e. must have a free branch where the player travels along to
+find the key to that locked door.
+
+The "ON" type creates more linear progression (see door A,
+find key A, see door B, find key B, etc...).  The "OFF" type
+creates more memory strain (see door A, then see door B, then
+see door C, finally find C key, then find key B, then key A)
+and the level requires more back-tracking.
+
+Once we have found the connection to lock, the arena is split
+into two new arenas: FRONT (which always contains the same
+start room) and BACK.  The two types (ON vs OFF) require
+different logic for splitting the arenas.  After the split,
+the new arenas will have their own start room, target room
+and path, and they might get split again in the future.
 
 
 --------------------------------------------------------------]]
