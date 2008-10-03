@@ -73,6 +73,8 @@ OB_ENGINES["edge"] =
 
     extra_floors = true,
     liquid_floors = true,
+    thing_exfloor_flags = true,
+
     mirrors = true,
   },
 }
@@ -109,6 +111,9 @@ OB_ENGINES["legacy"] =
 
   caps =
   {
+    boom_lines = true,
+    boom_sectors = true,
+
     extra_floors = true,
     liquid_floors = true,
   },
