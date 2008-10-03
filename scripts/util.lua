@@ -61,6 +61,23 @@ function table_empty(t)
   return not next(t)
 end
 
+function table_contains(t, v)
+  for _,value in ipairs(t) do
+    if v == value then return true end
+  end
+  return false
+end
+
+function table_reverse(t)
+  if not t then return nil end
+
+  for x = 1, int(#t / 2) do
+    local y = #t - (x-1)
+    -- swap 'em
+    t[x], t[y] = t[y], t[x]
+  end
+end
+
 function table_to_str(t, depth, prefix)
   if not t then return "NIL" end
   if table_empty(t) then return "{}" end
@@ -183,22 +200,6 @@ function expand_copies(LIST)
   for name,sub in pairs(LIST) do
     expand_it(name, sub)
   end
-end
-
-function in_array(t, V)
-  for _,val in ipairs(t) do
-    if val == V then return true end
-  end
-  return false
-end
-
-function reverse_array(t)
-  if not t then return nil end
-  local result = {}
-  for _,val in ipairs(t) do
-    table.insert(result, 1, val)
-  end
-  return result
 end
 
 function array_2D(w, h)
