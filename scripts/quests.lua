@@ -232,27 +232,6 @@ do return 8 end --!!!!!!!!
 end
 
 
-function PREVIOUS_Quest_lock_up_arena(arena)
-
-
-  local function collect_arena(A, R)
-    table.insert(A.rooms, R)
-
-    for _,C in ipairs(R.conns) do
-      if C.src == R and C == LC then
-        collect_arena(back_A, C.dest)
-      elseif C.src == R and not C.lock then
-        table.insert(A.conns, C)
-        collect_arena(A, C.dest)
-      end
-    end
-  end
-
-  collect_arena(front_A, arena.start)
-
-end
-
-
 function Quest_lock_up_arena(arena)
 
   local function eval_lock(C)
@@ -523,188 +502,6 @@ gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
 end
 
 
-function PREVIOUS_Quest_solve_puzzles()
-
-  local function mark_locked_paths(R)
-    -- each free connection will be marked if it leads to a
-    -- room which contains a locked door.
-
-    local has_lock = false
-
-    for _,C in ipairs(R) do
-      if C.lock then
-        table.insert(lock_list, C)
-        C.leading = nil
-        has_lock = true
-
-      elseif C.src == R then
-        if mark_locked_paths(C.dest, lock_list) then
-          C.leading = true
-          has_lock = true
-        end
-      end
-    end -- for C
-
-    return has_lock
-  end
-
-  local function collect_locks(R, path, lock_list)
-    for index = 0,#path do
-      if index > 0 then
-        R = path[index].dest
-      end
-
-      for _,C in ipairs(R) do
-        if C.lock then
-          table.insert(lock_list, C)
-        end
-      end
-    end
-  end
-
-  local function path_to_lock(R, LC)
-    if R == LC.src then
-      return {}
-    end
-
-    -- try each outward connection, one of them may succeed
-    for _,C in ipairs(R.conns) do
-      if C.src == R and not C.lock then
-        local path = path_to_lock(C:neighbor(R), LC)
-        if path then
-          table.insert(path, 1, C)
-          return path
-        end
-      end
-    end
-
-    return nil -- did not exist
-  end
-
---[[  local function select_target(R)
-    for loop = 1,50 do
-      local poss_bras = {}
-
-      for _,C in ipairs(R.conns) do
-        if C.src == R and not C.lock then
-          table.insert(poss_bras, C)
-        end
-      end
-
-      if #poss_bras == 0 then
-        break;
-      end
-
-      branch_C = table_sorted_first(poss_bras,
-          function(A,B) return A.dest_tvol > B.dest_tvol end)
-      assert(branch_C)
-
-      -- move into chosen room
-      table.insert(arena.path, branch_C)
-      R = branch_C.dest
-    end
-
-    return R
-  end --]]
-
-  local function find_target(R, path)
-    while true do
-      local poss_bras = {}
-
-      for _,C in ipairs(R.conns) do
-        if C.src == R and not C.lock then
-          table.insert(poss_bras, C)
-        end
-      end
-
-      if #poss_bras == 0 then
-        break;
-      end
-
-      branch_C = table_sorted_first(poss_bras,
-          function(A,B)
-            if A.leading ~= B.leading then
-              return sel(A.leading,1,0) > sel(B.leading,1,0)
-            end
-            return A.dest_tvol > B.dest_tvol
-          end)
-
-      -- move into chosen room
-      table.insert(path, branch_C)
-      R = branch_C.dest
-    end
-
-    return R
-  end
-
-
-  --| Quest_solve_puzzle |--
- 
-  Quest_update_tvols(arena)
-
----  for _,A in ipairs(PLAN.all_arenas) do
----    A.path = {}
----    A.target = select_target(A.start)
----  end
-
-
-  local arena = PLAN.all_arenas[1]
-  assert(arena)
-
-  local lock_list = {}
-
-
-  while true do
-    local has_lock = mark_locked_paths(arena.start, lock_list)
-
-    arena.path = {}
-    arena.target = find_target(arena.start, arena.path)
-
-    if has_lock then
-      collect_locks(arena.start, arena.path, lock_list)
-    end
-
-    -- no more locked doors anywhere?
-    if #lock_list == 0 then
-      arena.target.purpose = "EXIT"
-      PLAN.exit_room = arena.target
-
--- TEMP CRUD
-local ex = int((arena.target.sx1 + arena.target.sx2) / 2.0)
-local ey = int((arena.target.sy1 + arena.target.sy2) / 2.0)
-SEEDS[ex][ey][1].is_exit = true
-
-      break;
-    end
-
-    local idx = rand_irange(1,#lock_list) --FIXME !!!!
-
-    local LC = table.remove(lock_list, idx)
-
-    
-
-
-  end -- while true
-
-
-
-  front_A.path = path_to_lock(arena.start, LC)
-  assert(front_A.path)
-    
-
-  if arena.lock then
-    local LOCK = arena.lock
-assert(arena.path)
-
-    arena.target = select_target(LOCK.conn.src)
-  else
-    -- the EXIT room
-    arena.path = {}
-    arena.target = select_target(arena.start)
-  end 
-end
-
-
 function Quest_add_keys()
 
   for _,arena in ipairs(PLAN.all_arenas) do
@@ -750,7 +547,7 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
     end
   end
 
-  PLAN.num_puzz = Quest_num_puzzles(#PLAN.all_rooms)
+  PLAN.max_keys = Quest_num_puzzles(#PLAN.all_rooms)
 
 
   local ARENA =
@@ -778,7 +575,7 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
 
   Quest_initial_path(ARENA)
 
-  for i = 1,PLAN.num_puzz do
+  for i = 1,PLAN.max_keys do
     Quest_add_lock()
   end
 
