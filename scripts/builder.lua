@@ -278,7 +278,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local y_h = A.conn_h
 
     local steps = int(math.abs(x_h - y_h) / 16)
-    if steps < 4 then steps = 4 end
+    if steps < 5 then steps = 5 end
 
     local info =
     {

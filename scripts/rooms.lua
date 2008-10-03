@@ -207,7 +207,7 @@ function UPDATE_SEEDS(R) --!!!!
 end
 
 
-function Rooms_choose_heights()
+function OLD_rooms_choose_heights()
 
   local function spread_hallway_height(R, seen_conns, h)
     assert(not R.floor_h)
@@ -469,26 +469,6 @@ function Rooms_choose_heights()
     end
   end
 
-  local function get_absolute_max_h(R)
-    assert(not R.outdoor)
-
-    -- for rooms close to sky, prevent ceiling from being higher than sky
-    for x = R.sx1-2, R.sx2+2 do
-      for y = R.sy1-2, R.sy2+2 do
-        if not box_contains_point(R.sx1,R.sy1, R.sx2,R.sy2, x,y) and
-           Seed_valid(x, y, 1)
-        then
-          local S = SEEDS[x][y][1]
-          if S.room and (S.room.outdoor or S.room.kind == "liquid") then
-            return math.max(0, 512 - R.tallness)
-          end
-        end
-      end
-    end
-
-    return 256
-  end
-
   local function try_flood_height(R)
     assert(R.tallness)
     assert(R.kind ~= "hallway")
@@ -572,56 +552,8 @@ function Rooms_choose_heights()
   end
 
 
-  ---| Rooms_choose_heights |---
+  ---| OLD_rooms_choose_heights |---
   
-  -- handle non-room stuff (liquids)
-  for x = 1,SEED_W do for y = 1,SEED_H do
-    local S = SEEDS[x][y][1]
-    if S.room and S.room.kind == "liquid" and not S.room.floor_h then
-      S.room.floor_h = -40
-      S.room.ceil_h  = 512
-    end
-  end end -- for x, y
-
-  -- handle outdoor rooms
-  for _,R in ipairs(PLAN.all_rooms) do
-    if R.kind == "valley" then
-      R.floor_h = 0
-      R.ceil_h  = 512
-    elseif R.kind == "ground" then
-      R.floor_h = 128
-      R.ceil_h  = 512
-    elseif R.kind == "hill" then
-      R.floor_h = 256
-      R.ceil_h  = 512
-    elseif R.kind == "scenic" then
-      R.floor_h = 128
-      R.ceil_h  = 256
-    end
-
-    if R.floor_h then
-      for _,C in ipairs(R.conns) do
-        if not C.conn_h then
-          C.conn_h = R.floor_h
-        end
-      end
-    end
-  end -- for R
-
-  -- decide tallness of indoor rooms
-  for _,R in ipairs(PLAN.all_rooms) do
-    if R.kind == "indoor" then
-      local approx_size = (2 * math.min(R.sw, R.sh) + math.max(R.sw, R.sh)) / 3.0
-      local tallness = (approx_size + rand_range(-0.5,1.5)) * 64.0
-
-      R.tallness = int(tallness / 32.0) * 32
-
-      if R.tallness < 128 then R.tallness = 128 end
-      if R.tallness > 480 then R.tallness = 480 end
-
-      gui.debugf("Room %dx%d --> tallness %d\n", R.sw, R.sh, R.tallness)
-    end
-  end -- for R
 
   -- handle hallway groups
   for _,R in ipairs(PLAN.all_rooms) do
@@ -749,9 +681,190 @@ function Rooms_find_broken_symmetry()
 end
 
 
-function NEW_Rooms_choose_heights()
+function Rooms_choose_heights()
 
-  
+  local function rand_height()
+    return 64 * (-1 + rand_index_by_probs { 3,1,4,1,2 })
+  end
+
+  local function set_outdoor_heights(R)
+    if R.kind == "valley" then
+      R.floor_h = 0
+      R.ceil_h  = 512
+    elseif R.kind == "ground" then
+      R.floor_h = 128
+      R.ceil_h  = 512
+    elseif R.kind == "hill" then
+      R.floor_h = 256
+      R.ceil_h  = 512
+    elseif R.kind == "scenic" then
+      R.floor_h = 128
+      R.ceil_h  = 256
+    end
+  end
+
+  local function set_tallness(R)
+    if R.kind == "hallway" or R.kind == "stairwell" then
+      R.tallness = 128
+      return
+    end
+
+    local approx_size = (2 * math.min(R.sw, R.sh) + math.max(R.sw, R.sh)) / 3.0
+    local tallness = (approx_size + rand_range(-0.5,1.5)) * 64.0
+
+    R.tallness = int(tallness / 32.0) * 32
+
+    if R.tallness < 128 then R.tallness = 128 end
+    if R.tallness > 480 then R.tallness = 480 end
+
+    gui.debugf("Room %dx%d --> tallness %d\n", R.sw, R.sh, R.tallness)
+  end
+
+  local function set_max_floor_h(R)
+    assert(not R.outdoor)
+
+    -- for rooms close to sky, prevent ceiling from being higher than sky
+    for x = R.sx1-2, R.sx2+2 do
+      for y = R.sy1-2, R.sy2+2 do
+        if not box_contains_point(R.sx1,R.sy1, R.sx2,R.sy2, x,y) and
+           Seed_valid(x, y, 1)
+        then
+          local S = SEEDS[x][y][1]
+          if S.room and (S.room.outdoor or S.room.kind == "liquid") then
+            R.max_floor_h = math.max(0, 512 - R.tallness)
+            return
+          end
+        end
+      end
+    end
+
+    R.max_floor_h = 384
+  end
+
+  local function determine_floor_h(R, last_hs, E)
+    assert(#last_hs >= 1)
+
+gui.debugf("Visiting room: S(%d,%d) kind:%s tallness:%d\n", R.sx1, R.sy1, R.kind, R.tallness)
+hnums = ""
+for _,H in ipairs(last_hs) do hnums = hnums .. tostring(int(H)) .. " "; end
+gui.debugf("  Last heights: { %s}\n", hnums)
+
+    if R.kind == "stairwell" then
+      
+      local old_h = (E and E.conn_h) or last_hs[1]
+
+      local bump = (rand_index_by_probs { 1,6,9 } - 1) * 64
+
+      R.floor_h = old_h + rand_sel(50,bump,-bump)
+
+      for _,C in ipairs(R.conns) do
+        if C.src == R then
+          C.conn_h = R.floor_h
+        elseif not C.conn_h then
+          C.conn_h = old_h
+        end
+      end
+
+    elseif E and E.dest.conn_h then
+      
+      R.floor_h = E.dest.conn_h
+
+    elseif R.kind == "hallway" and E and E.src.kind == "hallway" then
+
+      R.floor_h = last_hs[1]
+
+    elseif R.kind == "hallway" then
+
+      local bump = (rand_index_by_probs { 5,3,1 } - 1) * 64
+      
+      R.floor_h = last_hs[1] + rand_sel(50,bump,-bump)
+
+    else
+      local out_min =  999
+      local out_max = -999
+
+      for _,C in ipairs(R.conns) do
+        local N = C:neighbor(R)
+        gui.debugf("  Neighbour floor_h:%s kind:%s\n", sel(N.floor_h, N.floor_h, "NONE"), N.kind)
+
+        if N.outdoor then
+          out_min = math.min(out_min, N.floor_h)
+          out_max = math.max(out_max, N.floor_h)
+        end
+      end
+
+      local bump = (rand_index_by_probs { 5,3,1 } - 1) * 64
+
+      if out_min == out_max then
+        R.floor_h = out_min + rand_sel(50,bump,-bump)
+      elseif out_min < out_max then
+        R.floor_h = rand_sel(50,
+                      out_min + rand_odds(80,0,64),
+                      out_max - rand_odds(80,0,64))
+      else 
+        R.floor_h = last_hs[1] + 16
+      end
+    end
+
+gui.debugf("RESULT --> %d\n", R.floor_h)
+  end
+
+  local function visit(R, last_hs, E)
+    if not R.floor_h then
+      determine_floor_h(R, last_hs, E)
+    end
+
+    if not R.ceil_h then
+      R.ceil_h = R.floor_h + R.tallness
+    end
+
+    table.insert(last_hs, 1, R.floor_h)
+
+    for _,C in pairs(R.conns) do
+      if C.src == R then
+        visit(C.dest, last_hs, C)
+      end
+    end
+
+    table.remove(last_hs, 1)
+  end
+
+
+  --| Rooms_choose_heights |--
+
+  -- handle non-room stuff (liquids)
+  for x = 1,SEED_W do for y = 1,SEED_H do
+    local S = SEEDS[x][y][1]
+    if S.room and S.room.kind == "liquid" and not S.room.floor_h then
+      S.room.floor_h = -40
+      S.room.ceil_h  = 512
+    end
+  end end -- for x, y
+
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.outdoor or R.kind == "scenic" then
+      set_outdoor_heights(R)
+    else
+      set_tallness(R)
+      set_max_floor_h(R)
+    end
+  end
+
+
+  -- MAIN ALGORITHM: iterate through level
+  local last_hs = { rand_height() }
+
+  visit(PLAN.start_room, last_hs)
+
+
+  -- FIXME now determine connection heights
+  -- !!!!!!!
+  for _,C in ipairs(PLAN.all_conns) do
+    if not C.conn_h then
+      C.conn_h = (C.src.floor_h + C.dest.floor_h) / 2.0
+    end
+  end
 end
 
 
