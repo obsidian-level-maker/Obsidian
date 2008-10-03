@@ -23,6 +23,8 @@ OB_ENGINES["nolimit"] =
 {
   label = "Limit Removing",
   priority = 95,
+
+  -- 'caps' is purely what the game definition provides
 }
 
 
@@ -31,7 +33,13 @@ OB_ENGINES["nolimit"] =
 OB_ENGINES["wolf4sdl"] =
 {
   label = "Wolf4SDL",
+
   for_games = { wolf3d=1 },
+
+  caps =
+  {
+    -- TODO
+  },
 }
 
 
@@ -41,46 +49,93 @@ OB_ENGINES["boom"] =
 {
   label = "BOOM Compat",
   priority = 92,
+
   for_games = { doom1=1, doom2=1, freedoom=1 },
+
+  caps =
+  {
+    boom_lines = true,
+    boom_sectors = true,
+  },
 }
 
 OB_ENGINES["edge"] =
 {
   label = "EDGE",
   priority = 90,
+
   for_games = { doom1=1, doom2=1, freedoom=1 },
+
+  caps =
+  {
+    boom_lines = true,
+    boom_sectors = true,
+
+    extra_floors = true,
+    liquid_floors = true,
+    mirrors = true,
+  },
 }
 
 OB_ENGINES["doomsday"] =
 {
   label = "Doomsday",
+
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
+
+  caps =
+  {
+    -- TODO
+  },
+}
+
+OB_ENGINES["eternity"] =
+{
+  label = "Eternity",
+
+  for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
+
+  caps =
+  {
+    -- TODO
+  },
 }
 
 OB_ENGINES["legacy"] =
 {
   label = "Legacy",
-  for_games = { doom1=1, doom2=1, freedoom=1 },
-}
 
---[[ deathmatch ports disabled until Oblige can make DM maps again
-OB_ENGINES["skulltag"] =
-{
-  label = "Skulltag",
-  for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
+  for_games = { doom1=1, doom2=1, freedoom=1 },
+
+  caps =
+  {
+    extra_floors = true,
+    liquid_floors = true,
+  },
 }
---]]
 
 OB_ENGINES["vavoom"] =
 {
   label = "Vavoom",
+
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1, strife=1 },
+
+  caps =
+  {
+    -- TODO
+  },
 }
 
 OB_ENGINES["zdoom"] =
 {
   label = "ZDoom",
+
   for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
+
+  caps =
+  {
+    -- TODO
+  },
 }
 
 
@@ -89,17 +144,33 @@ OB_ENGINES["zdoom"] =
 OB_ENGINES["darky"] =
 {
   label = "DarkPlaces",
+
   for_games = { quake1=1 },
+
+  caps =
+  {
+    -- TODO
+  },
 }
 
 OB_ENGINES["fitz"] =
 {
   label = "FitzQuake",
+
   for_games = { quake1=1 },
+
+  caps =
+  {
+    colored_lighting = true,
+    global_fog = true,
+    sky_box = true,
+  },
 }
+
+
+--*** Hexen II ***--
 
 
 --*** Quake II ***--
 
--- q2pro??
 
