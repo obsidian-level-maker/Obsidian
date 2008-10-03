@@ -763,11 +763,6 @@ function wolf3d_factory()
     cell_size = 7,
     cell_min_size = 3,
 
-    caps = { blocky_items=true, blocky_doors=true,
-             tiered_skills=true, elevator_exits=true,
-             four_dirs=true, sealed_start=true,
-           },
-
     ERROR_TEX  = WF_NO_TILE,
     ERROR_FLAT = 99, -- dummy
     SKY_TEX    = 77, -- dummy
@@ -821,5 +816,15 @@ UNFINISHED["wolf3d"] =
   format = "wolf3d",
 
   game_func = wolf3d_factory,
+
+  caps = { no_height = true,
+           no_sky = true,
+           blocky_items = true,
+           blocky_doors = true,
+           tiered_skills = true,
+           elevator_exits = true,
+           four_dirs = true,
+           sealed_start = true,
+         },
 }
 
