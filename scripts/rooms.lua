@@ -95,6 +95,15 @@ function Rooms_decide_hallways()
     return swell_nb
   end
 
+  local function locked_neighbours(R)
+    local count = 0
+    for _,C in ipairs(R.conns) do
+      if C.lock then count = count + 1 end
+    end
+
+    return count
+  end
+
 
   ---| Room_decide_hallways |---
   
@@ -122,7 +131,8 @@ gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
   -- decide stairwells
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hallway" and R.num_branch == 2 and
-       stairwell_neighbours(R) == 0
+       stairwell_neighbours(R) == 0 and
+       locked_neighbours(R) == 0
     then
       local chance = 70
       if hallway_neighbours(R) > 0 then
@@ -799,8 +809,8 @@ gui.debugf("  Last heights: { %s}\n", hnums)
         R.floor_h = out_min + rand_sel(50,bump,-bump)
       elseif out_min < out_max then
         R.floor_h = rand_sel(50,
-                      out_min + rand_odds(80,0,64),
-                      out_max - rand_odds(80,0,64))
+                      out_min + rand_sel(80,0,64),
+                      out_max - rand_sel(80,0,64))
       else 
         R.floor_h = last_hs[1] + 16
       end
