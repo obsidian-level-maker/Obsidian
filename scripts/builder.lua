@@ -500,7 +500,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local dy1 = dy0 + 32
       local dy2 = dy3 - 32
 
-      if AS.conn_dir == 8 then
+      if AS.conn_dir == 6 then
         dx0 = -dx0
         dx1 = -dx1
         dx2 = -dx2
@@ -537,16 +537,12 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local AS = A:seed(R)
     local BS = B:seed(R)
 
-    if AS.conn_dir == 2 or AS.conn_dir == 8 then
-      if AS.sy > BS.sy then
-        A,  B  = B,  A
-        AS, BS = BS, AS
-      end
-    else
-      if AS.sx > BS.sx then
-        A,  B  = B,  A
-        AS, BS = BS, AS
-      end
+    -- swap so that A has lowest coords
+    if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.sx < AS.sx) or
+       ((AS.conn_dir == 4 or AS.conn_dir == 6) and BS.sy < AS.sy)
+    then
+      A,  B  = B,  A
+      AS, BS = BS, AS
     end
 
     local x1 = math.min(AS.x1, BS.x1)
