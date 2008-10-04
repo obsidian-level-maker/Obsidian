@@ -201,11 +201,6 @@ function dummy_builder(level_name)
 
     assert(A and B)
 
-    -- require 90 degrees
-    if not is_perpendicular(A.dir, B.dir) then
-      return
-    end
-
     if A.dir == 2 or A.dir == 8 then
       B, A = A, B
     end
@@ -292,12 +287,6 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                      dy0, dy1, dy2, dy3,
                      x_h, y_h, 128,
                      info, info, info)
-
-    -- mark all seeds as done
-    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-      SEEDS[sx][sy][1].already_built = true
-    end end
-
   end
 
   local function build_stairwell_180(R)
@@ -307,10 +296,6 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     -- require 180 degrees
     local AS = A:seed(R)
     local BS = B:seed(R)
-
-    if AS.conn_dir ~= BS.conn_dir then
-      return
-    end
 
     -- swap so that A has lowest coords
     if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.x1 < AS.x1) or
@@ -418,31 +403,14 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                        info, info, info)
 
     end
-
-    -- mark all seeds as done
-    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-      SEEDS[sx][sy][1].already_built = true
-    end end
   end
 
   local function build_stairwell_0(R)
     local A = R.conns[1]
     local B = R.conns[2]
 
-    -- require opposite directions
     local AS = A:seed(R)
     local BS = B:seed(R)
-
-    if AS.conn_dir ~= 10-BS.conn_dir then
-      return
-    end
-
-    -- also require misalignment
-    if AS.conn_dir == 2 or AS.conn_dir == 8 then
-      if AS.sx == BS.sx then return end
-    else
-      if AS.sy == BS.sy then return end
-    end
 
     -- swap so that A has lowest coords
     if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.sx < AS.sx) or
@@ -560,13 +528,130 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                        h2, h3, 128,
                        info, info, info)
     end
+  end
+
+  local function build_stairwell_straight(R)
+    local A = R.conns[1]
+    local B = R.conns[2]
+
+    local AS = A:seed(R)
+    local BS = B:seed(R)
+
+    if AS.conn_dir == 2 or AS.conn_dir == 8 then
+      if AS.sy > BS.sy then
+        A,  B  = B,  A
+        AS, BS = BS, AS
+      end
+    else
+      if AS.sx > BS.sx then
+        A,  B  = B,  A
+        AS, BS = BS, AS
+      end
+    end
+
+    local x1 = math.min(AS.x1, BS.x1)
+    local x2 = math.max(AS.x2, BS.x2)
+
+    local y1 = math.min(AS.y1, BS.y1)
+    local y2 = math.max(AS.y2, BS.y2)
+
+    local x_diff = x2 - x1
+    local y_diff = y2 - y1
+
+    local function step_coords(p0, p1, side0, side1)
+      local cx, cy, fx, fy
+
+      if AS.conn_dir == 2 or AS.conn_dir == 8 then
+        cx = int(x1 + x_diff * side0)
+        fx = int(x1 + x_diff * side1)
+        cy = int(y1 + y_diff * p0)
+        fy = int(y1 + y_diff * p1)
+      else
+        cx = int(x1 + x_diff * p0)
+        fx = int(x1 + x_diff * p1)
+        cy = int(y1 + y_diff * side0)
+        fy = int(y1 + y_diff * side1)
+      end
+
+      return
+      {
+        { x=cx, y=cy }, { x=cx, y=fy },
+        { x=fx, y=fy }, { x=fx, y=cy },
+      }
+    end
+
+    local info =
+    {
+      t_face = { texture="FLOOR0_6" },
+      b_face = { texture="FLOOR0_1" },
+      w_face = { texture="STARGR1" },
+    }
+
+    local h1 = A.conn_h
+    local h2 = B.conn_h
+
+    local gap_h = 128
+
+    local steps = int((h2 - h1) / 16)
+    if steps < 5 then steps = 5 end
+
+    for i = 1,steps do
+      local p0 = (i-1)/steps
+      local p1 = (i  )/steps
+
+      local f_h = h1 + (h2 - h1) * (i-1) / (steps-1)
+      local c_h = f_h + gap_h
+
+      gui.add_brush(info, step_coords(p0,p1, 0/6, 1/6), -2000,2000)
+      gui.add_brush(info, step_coords(p0,p1, 5/6, 6/6), -2000,2000)
+
+      local coords = step_coords(p0,p1, 1/6, 5/6)
+
+      gui.add_brush(info, coords, -2000,f_h)
+      gui.add_brush(info, coords,  c_h,2000)
+    end
+  end
+
+  local function build_stairwell(R)
+    assert(R.conns)
+
+    local A = R.conns[1]
+    local B = R.conns[2]
+    assert(A and B)
+
+    local AS = A:seed(R)
+    local BS = B:seed(R)
+    assert(AS and BS)
+
+    if is_perpendicular(AS.conn_dir, BS.conn_dir) then
+      build_stairwell_90(R)
+
+    elseif AS.conn_dir == BS.conn_dir then
+      build_stairwell_180(R)
+
+    else
+      assert(AS.conn_dir == 10-BS.conn_dir)
+
+      -- check for misalignment
+      local aligned = false
+      if AS.conn_dir == 2 or AS.conn_dir == 8 then
+        if AS.sx == BS.sx then aligned = true end
+      else
+        if AS.sy == BS.sy then aligned = true end
+      end
+
+      if aligned then
+        build_stairwell_straight(R)
+      else
+        build_stairwell_0(R)
+      end
+    end
 
     -- mark all seeds as done
     for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
       SEEDS[sx][sy][1].already_built = true
     end end
   end
-
 
   local function do_teleporter(S)
     -- TEMP HACK SHIT
@@ -935,9 +1020,7 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
 
   for _,R in ipairs(PLAN.all_rooms or {}) do
     if R.kind == "stairwell" then
-      build_stairwell_90(R)
-      build_stairwell_180(R)
-      build_stairwell_0(R)
+      build_stairwell(R)
     end
   end
 
