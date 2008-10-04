@@ -335,7 +335,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local h3 = B.conn_h
     local h2 = (h1 + h3) / 2
 
-    local steps = int((h2 - h1) / 16)
+    local steps = int(math.abs(h2 - h1) / 16)
     if steps < 6 then steps = 6 end
 
     if AS.conn_dir == 2 or AS.conn_dir == 8 then
@@ -433,7 +433,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local h3 = B.conn_h
     local h2 = (h1 + h3) / 2
 
-    local steps = int((h2 - h1) / 16)
+    local steps = int(math.abs(h2 - h1) / 16)
     if steps < 5 then steps = 5 end
 
     local info =
@@ -592,7 +592,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
 
     local gap_h = 128
 
-    local steps = int((h2 - h1) / 16)
+    local steps = int(math.abs(h2 - h1) / 16)
     if steps < 5 then steps = 5 end
 
     for i = 1,steps do
