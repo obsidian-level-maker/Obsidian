@@ -392,14 +392,14 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       make_curved_hall(steps, corn_x, corn_y,
                        dx0, dx1, dx2, dx3,
                        -dy0, -dy1, -dy2, -dy3,
-                       h1, h2, 128,
+                       h2, h1, 128,
                        info, info, info)
 
       -- top section
       make_curved_hall(steps, corn_x, corn_y,
                        dx0, dx1, dx2, dx3,
                        dy0, dy1, dy2, dy3,
-                       h3, h2, 128,
+                       h2, h3, 128,
                        info, info, info)
 
     end
