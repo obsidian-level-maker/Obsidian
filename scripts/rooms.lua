@@ -757,94 +757,171 @@ function Rooms_choose_heights()
     R.max_floor_h = 384
   end
 
-  local function stairwell_floor_h(R, E)
-    local old_h = BLAH
-    local new_h = BLAH
-
-    R.floor_h = math.min(old_h, new_h)
-
-    R.conn_h = old_h
+  local function neighbors_min_max(R, backwards)
+    local min_h =  9999
+    local max_h = -9999
 
     for _,C in ipairs(R.conns) do
-      if C.src == R then
-        C.conn_h = new_h
+      local N = C:neighbor(R)
+--    gui.debugf("  Neighbour floor_h:%s kind:%s\n", sel(N.floor_h, N.floor_h, "NONE"), N.kind)
+
+      if N.floor_h and (backwards or C.src == R) then
+        min_h = math.min(min_h, N.floor_h)
+        max_h = math.max(max_h, N.floor_h)
       end
     end
+
+    return min_h, max_h
   end
 
-  local function hallway_floor_h(R, E)
+  local function stairwell_floor_h(R, z_mom, E)
+    -- find next connection
+    local N
+    for _,C in ipairs(R.conns) do
+      if C.src == R then
+        N = C; break;
+      end
+    end
+    assert(N)
+
+    local old_h = E.src.floor_h
+    local new_h = old_h
+
+    -- FIXME !!!!!
+    -- TODO: bigger bump for 180 degree stairwells
+    new_h = new_h + rand_sel(50, -64, 64)
+
+    N.dest.floor_h = new_h
+
+    R.floor_h = math.min(old_h, new_h)
+    R.ceil_h  = math.max(old_h, new_h) + 128
+
+    E.conn_h = old_h
+    N.conn_h = new_h
   end
 
   local function determine_floor_h(R, last_hs, E)
     assert(#last_hs >= 1)
 
+    -- get a feel for the general vertical momentum
+    local z_mom = 0
+
+    if last_hs[2] and last_hs[1] ~= last_hs[2] then
+      z_mom = sel(last_hs[1] > last_hs[2], 1, -1)
+    elseif last_hs[3] and last_hs[1] ~= last_hs[3] then
+      z_mom = sel(last_hs[1] > last_hs[3], 1, -1)
+    end
+
 gui.debugf("Visiting room: S(%d,%d) kind:%s tallness:%d\n", R.sx1, R.sy1, R.kind, R.tallness)
 hnums = ""
 for _,H in ipairs(last_hs) do hnums = hnums .. tostring(int(H)) .. " "; end
-gui.debugf("  Last heights: { %s}\n", hnums)
+gui.debugf("  Z_Mom: %d  Last heights: { %s}\n", z_mom, hnums)
+
+
+    -- simplest case: connected hallways 
+    if R.kind == "hallway" and E and E.src.kind == "hallway" then
+      R.floor_h = E.src.floor_h
+gui.debugf("HALL-CONN RESULT --> %d\n", R.floor_h)
+      return
+    end
 
     if R.kind == "stairwell" then
-      stairwell_floor_h(R, E)
-      
-      local old_h = (E and E.conn_h) or last_hs[1]
+      stairwell_floor_h(R, z_mom, E)
+gui.debugf("STAIRWELL RESULT --> %d\n", R.floor_h)
+      return
+    end      
 
-      local bump = (rand_index_by_probs { 1,6,9 } - 1) * 64
 
-      R.floor_h = old_h + rand_sel(50,bump,-bump)
+    local min_h, max_h = neighbors_min_max(R, false)
 
-      for _,C in ipairs(R.conns) do
-        if C.src == R then
-          C.conn_h = R.floor_h
-        elseif not C.conn_h then
-          C.conn_h = old_h
-        end
+    if max_h >= min_h + 192 then
+      R.floor_h = math.min(R.max_floor_h, (min_h + max_h) / 2)
+gui.debugf("SQUISH RESULT --> %d\n", R.floor_h)
+      return
+    end
+
+    -- ignore min/max when the range is small
+    if max_h <= min_h + 96 then
+      min_h, max_h = 999, -999
+    end
+
+
+    -- symmetry
+    local prefer_h
+    if E and E.src.x_peer and E.src.x_peer.conn and E.src.x_peer.conn.dest.floor_h then
+      prefer_h = E.src.x_peer.conn.dest.floor_h
+    end
+    if E and E.src.y_peer and E.src.y_peer.conn and E.src.y_peer.conn.dest.floor_h then
+      prefer_h = E.src.y_peer.conn.dest.floor_h
+    end
+
+
+    if not prefer_h and rand_odds(5) then
+      prefer_h = last_hs[1]
+    end
+
+ 
+    if prefer_h and (min_h > max_h or (min_h <= prefer_h and prefer_h <= max_h)) and
+       prefer_h >= R.max_floor_h
+    then
+      R.floor_h = prefer_h
+gui.debugf("PREFER RESULT --> %d\n", R.floor_h)
+      return
+    end
+
+
+    -- Heights:    -64,0, 64,128,192, 256,320,384
+    local probs = { 20,40, 90,90,90, 40,20,10 }
+
+    for i = 1,8 do   -- -64,0,64,128,192,256,320,384
+
+      local h = (i - 2) * 64
+
+      -- some leeway here for max_floor_h
+      if h > R.max_floor_h+32 then
+        probs[i] = 0
       end
 
-    elseif E and E.dest.conn_h then
-      
-      R.floor_h = E.dest.conn_h
+      if min_h <= max_h and not (min_h <= h and h <= max_h) then
+        probs[i] = probs[i] / 6
+      end
+--[[
+      if prefer_h then
+        local diff = math.abs(prefer_h - h)
+        probs[i] = probs[i] / (1 + diff/96)
+      end
+--]]
+      local bump = h - last_hs[1]
+      local new_z_mom
 
-    elseif R.kind == "hallway" and E and E.src.kind == "hallway" then
-
-      R.floor_h = last_hs[1]
-
-    elseif R.kind == "hallway" then
-
-      local bump = (rand_index_by_probs { 5,3,1 } - 1) * 64
-      
-      R.floor_h = last_hs[1] + rand_sel(50,bump,-bump)
-
-    else
-      local out_min =  999
-      local out_max = -999
-
-      for _,C in ipairs(R.conns) do
-        local N = C:neighbor(R)
-        gui.debugf("  Neighbour floor_h:%s kind:%s\n", sel(N.floor_h, N.floor_h, "NONE"), N.kind)
-
-        if N.outdoor then
-          out_min = math.min(out_min, N.floor_h)
-          out_max = math.max(out_max, N.floor_h)
-        end
+      if math.abs(bump) < 32 then
+        new_z_mom = 0
+      else
+        new_z_mom = sel(bump > 0, 1, -1)
       end
 
-      local bump = (rand_index_by_probs { 5,3,1 } - 1) * 64
-
-      if out_min == out_max then
-        R.floor_h = out_min + rand_sel(50,bump,-bump)
-      elseif out_min < out_max then
-        R.floor_h = rand_sel(50,
-                      out_min + rand_sel(80,0,64),
-                      out_max - rand_sel(80,0,64))
-      else 
-        R.floor_h = last_hs[1] + 16
+      if (new_z_mom * z_mom) < 0 then
+        probs[i] = probs[i] / 10
+      elseif new_z_mom ~= z_mom then
+        probs[i] = probs[i] / 3
       end
     end
 
-gui.debugf("RESULT --> %d\n", R.floor_h)
+    R.floor_h = (rand_index_by_probs(probs) - 2) * 64
+
+    -- we allowed some leeway above with max_floor_h, deal with it now
+    if R.floor_h > R.max_floor_h then
+      R.ceil_h = R.max_floor_h + R.tallness
+      assert(R.ceil_h >= R.floor_h + 96)
+    end
+
+gui.debugf("RAND RESULT --> %d\n", R.floor_h)
   end
 
   local function determine_conn_h(C)
+    assert(C.src.floor_h)
+    assert(C.dest.floor_h)
+
     -- hallways
     if C.src.kind == "hallway" then
       C.conn_h = C.src.floor_h
@@ -886,7 +963,7 @@ gui.debugf("RESULT --> %d\n", R.floor_h)
     elseif dest_small and not src_small then
       C.conn_h = C.dest.floor_h
     else
-      C.conn_h = rand_sel(50, C.src.floor_h, C.dest_floor_h)
+      C.conn_h = rand_sel(50, C.src.floor_h, C.dest.floor_h)
     end
   end
 
