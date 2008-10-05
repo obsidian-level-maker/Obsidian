@@ -757,6 +757,24 @@ function Rooms_choose_heights()
     R.max_floor_h = 384
   end
 
+  local function stairwell_floor_h(R, E)
+    local old_h = BLAH
+    local new_h = BLAH
+
+    R.floor_h = math.min(old_h, new_h)
+
+    R.conn_h = old_h
+
+    for _,C in ipairs(R.conns) do
+      if C.src == R then
+        C.conn_h = new_h
+      end
+    end
+  end
+
+  local function hallway_floor_h(R, E)
+  end
+
   local function determine_floor_h(R, last_hs, E)
     assert(#last_hs >= 1)
 
@@ -766,6 +784,7 @@ for _,H in ipairs(last_hs) do hnums = hnums .. tostring(int(H)) .. " "; end
 gui.debugf("  Last heights: { %s}\n", hnums)
 
     if R.kind == "stairwell" then
+      stairwell_floor_h(R, E)
       
       local old_h = (E and E.conn_h) or last_hs[1]
 
@@ -825,6 +844,52 @@ gui.debugf("  Last heights: { %s}\n", hnums)
 gui.debugf("RESULT --> %d\n", R.floor_h)
   end
 
+  local function determine_conn_h(C)
+    -- hallways
+    if C.src.kind == "hallway" then
+      C.conn_h = C.src.floor_h
+      return
+    end
+
+    if C.dest.kind == "hallway" then
+      C.conn_h = C.dest.floor_h
+      return
+    end
+
+    -- stairwells : ALREADY SET
+    assert(C.src.kind  ~= "stairwell")
+    assert(C.dest.kind ~= "stairwell")
+
+    -- symmetry
+    if C.x_peer and C.x_peer.conn_h then
+      C.conn_h = C.x_peer.conn_h
+      return
+    end 
+
+    if C.y_peer and C.y_peer.conn_h then
+      C.conn_h = C.y_peer.conn_h
+      return
+    end 
+
+    local src_small  = (math.min(C.src.sw,  C.src.sh)  <= 2)
+    local dest_small = (math.min(C.dest.sw, C.dest.sh) <= 2)
+
+    if not src_small and not dest_small and
+       math.abs(C.src.floor_h - C.dest.floor_h) >= 192
+    then
+      C.conn_h = (C.src.floor_h + C.dest.floor_h) / 2.0
+      return
+    end
+
+    if src_small and not dest_small then
+      C.conn_h = C.src.floor_h
+    elseif dest_small and not src_small then
+      C.conn_h = C.dest.floor_h
+    else
+      C.conn_h = rand_sel(50, C.src.floor_h, C.dest_floor_h)
+    end
+  end
+
   local function visit(R, last_hs, E)
     if not R.floor_h then
       determine_floor_h(R, last_hs, E)
@@ -842,11 +907,15 @@ gui.debugf("RESULT --> %d\n", R.floor_h)
       end
     end
 
+    if E and not E.conn_h then
+      determine_conn_h(E)
+    end
+
     table.remove(last_hs, 1)
   end
 
 
-  --| Rooms_choose_heights |--
+  ---| Rooms_choose_heights |---
 
   -- dummy heights for Wolf3d
   if CAPS.no_height then
@@ -891,12 +960,13 @@ gui.debugf("RESULT --> %d\n", R.floor_h)
   visit(PLAN.start_room, last_hs)
 
 
-  -- FIXME now determine connection heights
-  -- !!!!!!!
+  -- validation
+  for _,R in ipairs(PLAN.all_rooms) do
+    assert(R.floor_h)
+  end
+
   for _,C in ipairs(PLAN.all_conns) do
-    if not C.conn_h then
-      C.conn_h = (C.src.floor_h + C.dest.floor_h) / 2.0
-    end
+    assert(C.conn_h)
   end
 end
 
