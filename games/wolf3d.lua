@@ -819,10 +819,11 @@ UNFINISHED["wolf3d"] =
 
   caps = { no_height = true,
            no_sky = true,
+           one_lock_tex = true,
+           elevator_exit = true,
            blocky_items = true,
            blocky_doors = true,
            tiered_skills = true,
-           elevator_exits = true,
            four_dirs = true,
            sealed_start = true,
          },

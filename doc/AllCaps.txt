@@ -10,6 +10,14 @@ no_height	The game does not support floor or ceiling height
 no_sky		The game does not support sky ceilings, and hence
 		outdoor areas are not possible.
 
+one_lock_tex	There is only one locked door texture, and the
+		only variation is between N/S and E/W directions,
+		hence this flag causes a strong preference for
+		two locked doors in the level to have perpendicular
+		directions (and hence look different).
+
+elevator_exit	The exit room is always a small elevator, and
+		ideally the entry connection is E/W direction.
 
 
 #--- editor settings ------
