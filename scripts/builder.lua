@@ -538,8 +538,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local BS = B:seed(R)
 
     -- swap so that A has lowest coords
-    if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.sx < AS.sx) or
-       ((AS.conn_dir == 4 or AS.conn_dir == 6) and BS.sy < AS.sy)
+    if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.sy < AS.sy) or
+       ((AS.conn_dir == 4 or AS.conn_dir == 6) and BS.sx < AS.sx)
     then
       A,  B  = B,  A
       AS, BS = BS, AS
