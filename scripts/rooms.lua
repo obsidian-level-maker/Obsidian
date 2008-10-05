@@ -42,6 +42,11 @@ function Rooms_decide_hallways()
   local REVERT_PROBS    = {  0, 10, 45, 75, 99 }
 
   local function eval_hallway(R)
+    -- Wolf3D: the outdoor areas become hallways
+    if CAPS.no_sky then
+      return (R.outdoor and R.num_branch >= 2)
+    end
+
     if R.outdoor or R.kind == "scenic" then
       return false
     end
@@ -111,6 +116,7 @@ function Rooms_decide_hallways()
     if eval_hallway(R) then
 gui.debugf("  Made Hallway at (%d,%d)\n", R.lx1,R.ly1)
       R.kind = "hallway"
+      R.outdoor = nil
     end
   end
 
@@ -842,6 +848,19 @@ gui.debugf("RESULT --> %d\n", R.floor_h)
 
   --| Rooms_choose_heights |--
 
+  -- dummy heights for Wolf3d
+  if CAPS.no_height then
+    for _,R in ipairs(PLAN.all_rooms) do
+      R.floor_h = 0
+      R.ceil_h  = 128
+    end
+    for _,C in ipairs(PLAN.all_conns) do
+      if not C.conn_h then
+        C.conn_h = (C.src.floor_h + C.dest.floor_h) / 2.0
+      end
+    end
+  end
+
   -- handle non-room stuff (liquids)
   for x = 1,SEED_W do for y = 1,SEED_H do
     local S = SEEDS[x][y][1]
@@ -850,6 +869,10 @@ gui.debugf("RESULT --> %d\n", R.floor_h)
       S.room.ceil_h  = 512
     end
   end end -- for x, y
+
+  if CAPS.no_height then
+    return
+  end
 
 
   for _,R in ipairs(PLAN.all_rooms) do
@@ -884,6 +907,7 @@ function Rooms_fit_out()
 
   Rooms_setup_symmetry()
   Rooms_decide_hallways()
+
   Rooms_choose_heights()
   Rooms_find_broken_symmetry()
 end
