@@ -256,6 +256,10 @@ function Quest_num_keys(num_rooms)
 
   local result = int(approx)
 
+  if CAPS.one_lock_tex then -- FIXME !!!! TEMP CRUD
+    result = math.min(2, result)
+  end
+
   gui.printf("Number of keys: %1.2f -> %d  rooms=%d\n", approx, result, num_rooms)
 
   return result
@@ -308,7 +312,7 @@ function Quest_lock_up_arena(arena)
   local function locks_for_room(R, list)
     if R.is_junction then
       for _,C in ipairs(R.conns) do
-        if C.src == R and not C.lock then
+        if C.src == R and C.can_lock then
           add_lock(list, C)
         end
       end
@@ -356,7 +360,10 @@ function Quest_lock_up_arena(arena)
     locks_for_room(C.dest, poss_locks)
   end
  
+  -- should always have at least one possible lock, otherwise the
+  -- Quest_lock_up_arena() function should never have been called.
   assert(#poss_locks > 0)
+
   dump_locks(poss_locks)
 
   local LC = table_sorted_first(poss_locks, function(X,Y) return X.lock_cost < Y.lock_cost end)
@@ -473,16 +480,41 @@ end
 
 function Quest_add_lock()
 
-  local function room_is_junction(R)
-    local count = 0
+  local function conn_is_lockable(C)
+    if C.lock then
+      return false
+    end
 
-    for _,C in ipairs(R.conns) do
-      if C.src == R and not C.lock then
-        count = count + 1
+    -- Wolf3d: ensure two locked doors have perpendicular dirs
+    if CAPS.one_lock_tex and #PLAN.all_locks == 1 then
+      local old_dir = PLAN.all_locks[1].conn.dir
+      assert(old_dir and C.dir)
+
+      if not is_perpendicular(old_dir, C.dir) then
+        return false
       end
     end
 
-    return (count >= 2)
+    return true
+  end
+
+  local function room_is_junction(R)
+    local has_lockable = false
+    local traversable = 0
+
+    for _,C in ipairs(R.conns) do
+      if C.src == R then
+        if C.can_lock then
+          has_lockable = true
+        end
+
+        if not C.lock then
+          traversable = traversable + 1
+        end
+      end
+    end
+
+    return has_lockable and (traversable >= 2)
   end
 
   local function eval_arena(arena)
@@ -508,6 +540,10 @@ function Quest_add_lock()
 
 
   --| Quest_add_lock |--
+
+  for _,C in ipairs(PLAN.all_conns) do
+    C.can_lock = conn_is_lockable(C)
+  end
 
   for _,R in ipairs(PLAN.all_rooms) do
     R.is_junction = room_is_junction(R)
