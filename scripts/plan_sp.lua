@@ -283,7 +283,7 @@ function Landmap_DoGround()
 
   --- Landmap_DoGround ---
 
-  local SPURTS = 2   -- 0 to 12
+  local SPURTS = 6   -- 0 to 12
 
   plant_seedlings()
   for loop = 1,SPURTS do
