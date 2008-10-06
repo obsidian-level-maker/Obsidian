@@ -166,6 +166,8 @@ bool Cookie_Load(const char *filename)
   else
     LogPrintf("DONE.\n\n");
 
+  fclose(cookie_fp);
+
   return true;
 }
 
@@ -203,6 +205,8 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "\n");
 
   LogPrintf("DONE.\n\n");
+
+  fclose(cookie_fp);
 
   return true;
 }
