@@ -51,7 +51,7 @@ function Rooms_decide_hallways()
   -- Marks certain rooms to be hallways, using the following criteria:
   --   - indoor non-leaf room
   --   - prefer small rooms
-  --   - all neighbours are indoor
+  --   - all neighbors are indoor
   --   - no purpose (not a start room, exit room, key room)
   --   - no teleporters
   --   - not the destination of a locked door (anti-climactic)
@@ -93,7 +93,7 @@ function Rooms_decide_hallways()
     return rand_odds(HALL_SIZE_PROBS[rw])
   end
 
-  local function hallway_neighbours(R)
+  local function hallway_neighbors(R)
     local hall_nb = 0
     for _,C in ipairs(R.conns) do
       local N = C:neighbor(R)
@@ -104,11 +104,11 @@ function Rooms_decide_hallways()
   end
 
   local function surrounded_by_halls(R)
-    local hall_nb = hallway_neighbours(R)
+    local hall_nb = hallway_neighbors(R)
     return (hall_nb == #R.conns) or (hall_nb >= 3)
   end
 
-  local function stairwell_neighbours(R)
+  local function stairwell_neighbors(R)
     local swell_nb = 0
     for _,C in ipairs(R.conns) do
       local N = C:neighbor(R)
@@ -118,7 +118,7 @@ function Rooms_decide_hallways()
     return swell_nb
   end
 
-  local function locked_neighbours(R)
+  local function locked_neighbors(R)
     local count = 0
     for _,C in ipairs(R.conns) do
       if C.lock then count = count + 1 end
@@ -155,11 +155,11 @@ gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
   -- decide stairwells
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hallway" and R.num_branch == 2 and
-       stairwell_neighbours(R) == 0 and
-       locked_neighbours(R) == 0
+       stairwell_neighbors(R) == 0 and
+       locked_neighbors(R) == 0
     then
       local chance = 70
-      if hallway_neighbours(R) > 0 then
+      if hallway_neighbors(R) > 0 then
         chance = 30
       end
 
@@ -781,7 +781,7 @@ function Rooms_choose_heights()
 
     for _,C in ipairs(R.conns) do
       local N = C:neighbor(R)
---    gui.debugf("  Neighbour floor_h:%s kind:%s\n", sel(N.floor_h, N.floor_h, "NONE"), N.kind)
+--    gui.debugf("  Neighbor floor_h:%s kind:%s\n", sel(N.floor_h, N.floor_h, "NONE"), N.kind)
 
       if N.floor_h and (backwards or C.src == R) then
         min_h = math.min(min_h, N.floor_h)
@@ -792,31 +792,31 @@ function Rooms_choose_heights()
     return min_h, max_h
   end
 
-  local function stairwell_floor_h(R, z_mom, E)
-    -- find next connection
-    local N
-    for _,C in ipairs(R.conns) do
-      if C.src == R then
-        N = C; break;
-      end
-    end
-    assert(N)
-
-    local old_h = E.src.floor_h
-    local new_h = old_h
-
-    -- FIXME !!!!!
-    -- TODO: bigger bump for 180 degree stairwells
-    new_h = new_h + rand_sel(50, -64, 64)
-
-    N.dest.floor_h = new_h
-
-    R.floor_h = math.min(old_h, new_h)
-    R.ceil_h  = math.max(old_h, new_h) + 128
-
-    E.conn_h = old_h
-    N.conn_h = new_h
-  end
+---##   local function stairwell_floor_h(R, z_mom, E)
+---##     -- find next connection
+---##     local N
+---##     for _,C in ipairs(R.conns) do
+---##       if C.src == R then
+---##         N = C; break;
+---##       end
+---##     end
+---##     assert(N)
+---## 
+---##     local old_h = E.src.floor_h
+---##     local new_h = old_h
+---## 
+---##     -- FIXME !!!!!
+---##     -- TODO: bigger bump for 180 degree stairwells
+---##     new_h = new_h + rand_sel(50, -64, 64)
+---## 
+---##     N.dest.floor_h = new_h
+---## 
+---##     R.floor_h = math.min(old_h, new_h)
+---##     R.ceil_h  = math.max(old_h, new_h) + 128
+---## 
+---##     E.conn_h = old_h
+---##     N.conn_h = new_h
+---##   end
 
   local function determine_floor_h(R, last_hs, E)
     assert(#last_hs >= 1)
@@ -836,35 +836,64 @@ for _,H in ipairs(last_hs) do hnums = hnums .. tostring(int(H)) .. " "; end
 gui.debugf("  Z_Mom: %d  Last heights: { %s}\n", z_mom, hnums)
 
 
-    -- simplest case: connected hallways 
     if R.kind == "hallway" and E and E.src.kind == "hallway" then
-      R.floor_h = E.src.floor_h
+      R.floor_h = last_hs[1]
 gui.debugf("HALL-CONN RESULT --> %d\n", R.floor_h)
       return
     end
 
     if R.kind == "stairwell" then
-      stairwell_floor_h(R, z_mom, E)
+      R.floor_h = last_hs[1]
+      E.conn_h  = last_hs[1]
 gui.debugf("STAIRWELL RESULT --> %d\n", R.floor_h)
       return
-    end      
+    end
+
+    local avoid_h
+
+    if E and E.src.kind == "stairwell" then
+      avoid_h = last_hs[1]
+    end
+
 
 
     local min_h, max_h = neighbors_min_max(R, false)
 
-    if max_h >= min_h + 192 then
-      R.floor_h = math.min(R.max_floor_h, (min_h + max_h) / 2)
+    if max_h < min_h then
+      min_h = -64
+      max_h = 320
+    else
+      while max_h - min_h >= 192 do
+        min_h = min_h + 24
+        max_h = max_h - 24
+      end
+    end
+
+    if min_h >= R.max_floor_h then
+      R.floor_h = R.max_floor_h
+
+      if avoid_h and math.abs(R.floor_h - avoid_h) < 48 then
+        R.floor_h = R.floor_h - 48
+gui.debugf("SQUISH-AVOID RESULT --> %d\n", R.floor_h)
+        return
+      end
 gui.debugf("SQUISH RESULT --> %d\n", R.floor_h)
       return
     end
 
-    -- ignore min/max when the range is small
-    if max_h <= min_h + 96 then
-      min_h, max_h = 999, -999
+    max_h = math.min(max_h, R.max_floor_h)
+
+    -- increase min/max when the range is small
+    while max_h - min_h <= 96 do
+      min_h = min_h - 24
+      max_h = max_h + 24
     end
+
+    assert(min_h < max_h)
 
 
     -- symmetry
+--[[
     local function peer_neighbor_h(E, peer)
       if not E then return end
       if not E.src_S[peer] then return end
@@ -884,60 +913,123 @@ gui.debugf("SQUISH RESULT --> %d\n", R.floor_h)
     if not prefer_h and rand_odds(10) then
       prefer_h = last_hs[1]
     end
-
+--]]
  
-    if prefer_h --!!! and (min_h > max_h or (min_h <= prefer_h and prefer_h <= max_h)) and prefer_h >= R.max_floor_h
-    then
+    if prefer_h and min_h <= prefer_h and prefer_h <= max_h then
       R.floor_h = prefer_h
 gui.debugf("PREFER RESULT --> %d\n", R.floor_h)
       return
     end
 
 
-    -- Heights:    -64,0, 64,128,192, 256,320,384
-    local probs = { 20,40, 90,90,90, 40,20,10 }
+    if avoid_h and prefer_h and math.abs(avoid_h - prefer_h) <= 32 then
+      prefer_h = nil
+    end
 
-    for i = 1,8 do   -- -64,0,64,128,192,256,320,384
 
-      local h = (i - 2) * 64
+    local new_min = last_hs[1] - 96
+    local new_max = last_hs[1] + 96
 
-      -- some leeway here for max_floor_h
-      if h > R.max_floor_h+32 then
-        probs[i] = 0
-      end
+    if new_min >= max_h then
+      R.floor_h = max_h
+gui.debugf("MAXED OUT RESULT --> %d\n", R.floor_h)
+      return
+    elseif new_max <= min_h then
+      R.floor_h = min_h
+gui.debugf("MINNED OUT RESULT --> %d\n", R.floor_h)
+      return
+    end
 
-      if min_h <= max_h and not (min_h <= h and h <= max_h) then
-        probs[i] = probs[i] / 2
-      end
+    min_h = math.max(min_h, new_min)
+    max_h = math.min(max_h, new_max)
+
+    assert(min_h <= max_h)
+
+
 --[[
-      if prefer_h then
-        local diff = math.abs(prefer_h - h)
-        probs[i] = probs[i] / (1 + diff/96)
+    if avoid_h then
+      local d1 = math.abs(min_h - avoid_h)
+      local d2 = math.abs(max_h - avoid_h)
+
+      if math.max(d1, d2) > 32 then
+        R.floor_h = sel(d1 > d2, min_h, max_h)
       end
+gui.debugf("AVOID RESULT --> %d\n", R.floor_h)
+      return
+    end
 --]]
+
+
+    local steps = int((max_h - min_h) / 32)
+
+    if steps <= 1 then
+      R.floor_h = rand_sel(50, min_h, max_h)
+gui.debugf("NOSTEP RESULT --> %d\n", R.floor_h)
+      return
+    end
+
+    if steps >= 5 then
+      steps = 5
+    end
+
+
+    local probs = {}
+
+    local best_avoid
+    local bav_dist = 999
+
+    local best_prefer
+    local bpr_dist = 999
+
+    for i = 1,steps do
+      local h = min_h + (max_h - min_h) * (i-1) / (steps-1)
+
+      if prefer_h then
+        local d = math.abs(prefer_h - h)
+        if d < bpr_dist then
+          bpr_dist = d
+          best_prefer = i
+        end
+      end
+
+      if avoid_h then
+        local d = math.abs(avoid_h - h)
+        if d < bav_dist then
+          bav_dist = d
+          best_avoid = i
+        end
+      end
+
+      probs[i] = 90
+
+      -- heavy penalty for changing vertical momentum
       local bump = h - last_hs[1]
       local new_z_mom
 
-      if math.abs(bump) < 32 then
+      if math.abs(bump) <= 32 then
         new_z_mom = 0
       else
         new_z_mom = sel(bump > 0, 1, -1)
       end
 
       if (new_z_mom * z_mom) < 0 then
-        probs[i] = probs[i] / 100
-      elseif new_z_mom ~= z_mom then
-        probs[i] = probs[i] / 10
+        probs[i] = probs[i] / 90
+      elseif math.abs(bump) >= 72 then
+        probs[i] = probs[i] / 4
       end
     end
 
-    R.floor_h = (rand_index_by_probs(probs) - 2) * 64
-
-    -- we allowed some leeway above with max_floor_h, deal with it now
-    if R.floor_h > R.max_floor_h then
-      R.ceil_h = R.max_floor_h + R.tallness
-      assert(R.ceil_h >= R.floor_h + 96)
+    if best_prefer then
+      probs[best_prefer] = probs[best_prefer] * 3
     end
+
+    if best_avoid then
+      probs[best_avoid] = 0
+    end
+
+    local idx = rand_index_by_probs(probs)
+
+    R.floor_h = min_h + (max_h - min_h) * (idx-1) / (steps-1)
 
 gui.debugf("RAND RESULT --> %d\n", R.floor_h)
   end
@@ -951,16 +1043,16 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
       R.ceil_h = R.floor_h + R.tallness
     end
 
+    if E and E.src.kind == "stairwell" then
+      E.conn_h = R.floor_h
+    end
+
     table.insert(last_hs, 1, R.floor_h)
 
     for _,C in pairs(R.conns) do
       if C.src == R then
         visit(C.dest, last_hs, C)
       end
-    end
-
-    if E and not E.conn_h then
-      determine_conn_h(E)
     end
 
     table.remove(last_hs, 1)
@@ -1013,7 +1105,7 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
     local h_list = {}
 
     table.insert(h_list, R.floor_h)
-    table.insert(h_list, C:neigbour(R).floor_h)
+    table.insert(h_list, C:neighbor(R).floor_h)
 
     if XC then
       table.insert(h_list, XC:neighbor(R).floor_h)
