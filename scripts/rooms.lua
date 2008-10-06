@@ -847,22 +847,28 @@ gui.debugf("SQUISH RESULT --> %d\n", R.floor_h)
 
 
     -- symmetry
+    local function peer_neighbor_h(E, peer)
+      if not E then return end
+      if not E.src_S[peer] then return end
+
+      local F = E.src_S[peer].conn
+      if not F then return end
+      
+      local N = F:neighbor(E.src)
+      return N.floor_h
+    end
+
     local prefer_h
-    if E and E.src.x_peer and E.src.x_peer.conn and E.src.x_peer.conn.dest.floor_h then
-      prefer_h = E.src.x_peer.conn.dest.floor_h
-    end
-    if E and E.src.y_peer and E.src.y_peer.conn and E.src.y_peer.conn.dest.floor_h then
-      prefer_h = E.src.y_peer.conn.dest.floor_h
-    end
 
+    prefer_h = peer_neighbor_h(E, "x_peer") or
+               peer_neighbor_h(E, "y_peer")
 
-    if not prefer_h and rand_odds(5) then
+    if not prefer_h and rand_odds(10) then
       prefer_h = last_hs[1]
     end
 
  
-    if prefer_h and (min_h > max_h or (min_h <= prefer_h and prefer_h <= max_h)) and
-       prefer_h >= R.max_floor_h
+    if prefer_h --!!! and (min_h > max_h or (min_h <= prefer_h and prefer_h <= max_h)) and prefer_h >= R.max_floor_h
     then
       R.floor_h = prefer_h
 gui.debugf("PREFER RESULT --> %d\n", R.floor_h)
@@ -883,7 +889,7 @@ gui.debugf("PREFER RESULT --> %d\n", R.floor_h)
       end
 
       if min_h <= max_h and not (min_h <= h and h <= max_h) then
-        probs[i] = probs[i] / 6
+        probs[i] = probs[i] / 2
       end
 --[[
       if prefer_h then
@@ -901,9 +907,9 @@ gui.debugf("PREFER RESULT --> %d\n", R.floor_h)
       end
 
       if (new_z_mom * z_mom) < 0 then
-        probs[i] = probs[i] / 10
+        probs[i] = probs[i] / 100
       elseif new_z_mom ~= z_mom then
-        probs[i] = probs[i] / 3
+        probs[i] = probs[i] / 10
       end
     end
 
