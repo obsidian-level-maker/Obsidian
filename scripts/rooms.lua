@@ -23,6 +23,24 @@ class ROOM
 }
 
 
+ROOM HEIGHT NOTES
+~~~~~~~~~~~~~~~~~
+
+To determine room heights (floor_h and ceil_h), we iterate
+through the level and visit each room in turn, starting at
+the very first room.
+
+Some rooms already have a fixed height, currently these are
+all the outdoor rooms.
+
+Each connection also has a height (conn_h).  These values
+are computed after the floor_h on each side
+have been determined, and will try to maintain any
+symmetry in the room [two symmetrical exits need to have
+the same conn_h].  We prefer the conn_h to be equal one of
+the floors on each side, but it isn't compulsory.
+
+
 --------------------------------------------------------------]]
 
 require 'defs'
@@ -924,55 +942,6 @@ gui.debugf("PREFER RESULT --> %d\n", R.floor_h)
 gui.debugf("RAND RESULT --> %d\n", R.floor_h)
   end
 
-  local function determine_conn_h(C)
-    assert(C.src.floor_h)
-    assert(C.dest.floor_h)
-
-    -- hallways
-    if C.src.kind == "hallway" then
-      C.conn_h = C.src.floor_h
-      return
-    end
-
-    if C.dest.kind == "hallway" then
-      C.conn_h = C.dest.floor_h
-      return
-    end
-
-    -- stairwells : ALREADY SET
-    assert(C.src.kind  ~= "stairwell")
-    assert(C.dest.kind ~= "stairwell")
-
-    -- symmetry
-    if C.x_peer and C.x_peer.conn_h then
-      C.conn_h = C.x_peer.conn_h
-      return
-    end 
-
-    if C.y_peer and C.y_peer.conn_h then
-      C.conn_h = C.y_peer.conn_h
-      return
-    end 
-
-    local src_small  = (math.min(C.src.sw,  C.src.sh)  <= 2)
-    local dest_small = (math.min(C.dest.sw, C.dest.sh) <= 2)
-
-    if not src_small and not dest_small and
-       math.abs(C.src.floor_h - C.dest.floor_h) >= 192
-    then
-      C.conn_h = (C.src.floor_h + C.dest.floor_h) / 2.0
-      return
-    end
-
-    if src_small and not dest_small then
-      C.conn_h = C.src.floor_h
-    elseif dest_small and not src_small then
-      C.conn_h = C.dest.floor_h
-    else
-      C.conn_h = rand_sel(50, C.src.floor_h, C.dest.floor_h)
-    end
-  end
-
   local function visit(R, last_hs, E)
     if not R.floor_h then
       determine_floor_h(R, last_hs, E)
@@ -995,6 +964,91 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
     end
 
     table.remove(last_hs, 1)
+  end
+
+  local function hallway_conns(R)
+    for _,C in ipairs(R.conns) do
+      C.conn_h = assert(R.floor_h)
+    end
+  end
+
+  local function determine_conn_h(C)
+    assert(C.src.floor_h)
+    assert(C.dest.floor_h)
+
+    local src_small  = (math.min(C.src.sw,  C.src.sh)  <= 2)
+    local dest_small = (math.min(C.dest.sw, C.dest.sh) <= 2)
+
+    if not src_small and not dest_small and
+       math.abs(C.src.floor_h - C.dest.floor_h) >= 192
+    then
+      C.conn_h = (C.src.floor_h + C.dest.floor_h) / 2.0
+      return
+    end
+
+    if src_small and not dest_small then
+      C.conn_h = C.src.floor_h
+    elseif dest_small and not src_small then
+      C.conn_h = C.dest.floor_h
+    else
+      C.conn_h = rand_sel(50, C.src.floor_h, C.dest.floor_h)
+    end
+  end
+
+  local function symmetrical_conn_h(R, C, S)
+
+    XC = S.x_peer and S.x_peer.conn
+    YC = S.y_peer and S.y_peer.conn
+
+    if XC and XC.conn_h then
+      C.conn_h = XC.conn_h
+      return
+
+    elseif YC and YC.conn_h then
+      C.conn_h = YC.conn_h
+      return
+    end
+
+
+    local h_list = {}
+
+    table.insert(h_list, R.floor_h)
+    table.insert(h_list, C:neigbour(R).floor_h)
+
+    if XC then
+      table.insert(h_list, XC:neighbor(R).floor_h)
+    end
+    if YC then
+      table.insert(h_list, YC:neighbor(R).floor_h)
+    end
+
+    -- DO FREAKING MAGIC !!!
+
+    C.conn_h = rand_element(h_list)  -- FIXME
+  end
+
+  local function normal_conns(R)
+    -- TODO: should we visit conns in certain order??
+
+    for _,C in ipairs(R.conns) do
+      if not C.conn_h then
+        local S = C:seed(R)
+        local T = C:seed(C:neighbor(R))
+
+        if (S.x_peer and S.x_peer.conn) or
+           (S.y_peer and S.y_peer.conn)
+        then
+          symmetrical_conn_h(R, C, S)
+
+        elseif (T.x_peer and T.x_peer.conn) or
+               (T.y_peer and T.y_peer.conn)
+        then
+          -- let other room (with symmetry) determine the height
+        else
+          determine_conn_h(C)
+        end
+      end
+    end -- for C
   end
 
 
@@ -1043,7 +1097,31 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
   visit(PLAN.start_room, last_hs)
 
 
-  -- validation
+  -- SECONDARY ALGORITHM: connections
+  local big_rooms = copy_table(PLAN.all_rooms)
+
+  table.sort(big_rooms,
+      function(A,B)
+        return (A.svol + (A.symmetry or 0) * 200) >
+               (B.svol + (B.symmetry or 0) * 200)
+      end)
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.kind == "hallway" then
+      hallway_conns(R)
+    end
+  end
+
+  for _,R in ipairs(big_rooms) do
+    if R.kind ~= "hallway" and R.kind ~= "stairwell" and
+       R.kind ~= "scenic"
+    then
+      normal_conns(R)
+    end
+  end
+
+
+  -- VALIDATION
   for _,R in ipairs(PLAN.all_rooms) do
     assert(R.floor_h)
   end
