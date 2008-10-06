@@ -725,6 +725,8 @@ gui.printf("do_teleport\n")
       z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h or 0
       z2 = z2 or S.room.ceil_h or 256
 
+-- z2 = 512
+
       assert(z1 and z2)
 
       local do_corners = false --!!
@@ -775,7 +777,7 @@ gui.printf("do_teleport\n")
       
         f_tex = "FLOOR4_8"
         c_tex = "CEIL3_5"
-        w_tex = "STARG2"
+        w_tex = "STARTAN3"
 
       end
 
@@ -969,9 +971,9 @@ if S.conn_dir then
 end
 
 -- symmetry tester
-if S.x_peer and S.sx < S.x_peer.sx then
-  local dx = rand_irange(-70,70)
-  local dy = rand_irange(-70,70)
+if S.x_peer and S.sx == S.room.sx1 then
+  local dx = rand_irange(-20,20)
+  local dy = rand_irange(-20,20)
   local mx2 = int((S.x_peer.x1 + S.x_peer.x2) / 2)
   local my2 = int((S.x_peer.y1 + S.x_peer.y2) / 2)
 
@@ -979,9 +981,9 @@ if S.x_peer and S.sx < S.x_peer.sx then
   gui.add_entity(mx2-dx, my2+dy, z1 + 25, { name="35" })
 end
 
-if S.y_peer and S.sy < S.y_peer.sy then
-  local dx = rand_irange(-70,70)
-  local dy = rand_irange(-70,70)
+if S.y_peer and S.sy == S.room.sy1 then
+  local dx = rand_irange(-20,20)
+  local dy = rand_irange(-20,20)
   local mx2 = int((S.y_peer.x1 + S.y_peer.x2) / 2)
   local my2 = int((S.y_peer.y1 + S.y_peer.y2) / 2)
 
