@@ -205,6 +205,20 @@ function ob_update_all()
 end
 
 
+function ob_defs_conflict(def1, def2)
+  if not def1.conflicts then return false end
+  if not def2.conflicts then return false end
+
+  for K,_ in pairs(def1.conflicts) do
+    if def2.conflicts[K] then
+      return true
+    end
+  end
+
+  return false
+end
+
+
 function ob_set_mod_option(name, option, value)
   local mod = OB_MODULES[name]
   if not mod then
@@ -225,9 +239,7 @@ function ob_set_mod_option(name, option, value)
     -- handle conflicting modules (like Radio buttons)
     if value then
       for other,odef in pairs(OB_MODULES) do
-        if ( mod.conflict_mods and  mod.conflict_mods[other]) or
-           (odef.conflict_mods and odef.conflict_mods[name] )
-        then
+        if odef ~= mod and ob_defs_conflict(mod, odef) then
           odef.enabled = false
           gui.change_button("module", other, odef.enabled)
         end

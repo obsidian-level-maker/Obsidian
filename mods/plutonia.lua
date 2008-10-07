@@ -172,7 +172,7 @@ OB_MODULES["plut"] =
 
   for_games = { doom2=1 },
 
-  conflict_mods = { tnt=1 },
+  conflicts = { new_iwad=1 },
 
   mod_func = plut_modifier,
 }
