@@ -471,19 +471,16 @@ gui.debugf("SQUISH RESULT --> %d\n", R.floor_h)
                peer_neighbor_h(E, "y_peer")
 
 --]]
-    if not prefer_h and rand_odds(1) then
-      prefer_h = last_hs[1]
+
+    if avoid_h and prefer_h and math.abs(avoid_h - prefer_h) <= 32 then
+      prefer_h = nil
     end
  
+
     if prefer_h and min_h <= prefer_h and prefer_h <= max_h then
       R.floor_h = prefer_h
 gui.debugf("PREFER RESULT --> %d\n", R.floor_h)
       return
-    end
-
-
-    if avoid_h and prefer_h and math.abs(avoid_h - prefer_h) <= 32 then
-      prefer_h = nil
     end
 
 
@@ -591,6 +588,9 @@ gui.debugf("NOSTEP RESULT --> %d\n", R.floor_h)
 
     R.floor_h = min_h + (max_h - min_h) * (idx-1) / (steps-1)
 
+if avoid_h then
+  gui.debugf("[Tried to avoid %d] RESULT\n", avoid_h)
+end
 gui.debugf("RAND RESULT --> %d\n", R.floor_h)
   end
 
@@ -628,8 +628,8 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
     assert(C.src.floor_h)
     assert(C.dest.floor_h)
 
-    local src_small  = (math.min(C.src.sw,  C.src.sh)  <= 2)
-    local dest_small = (math.min(C.dest.sw, C.dest.sh) <= 2)
+    local src_small  = (C.src.svolume < 8)
+    local dest_small = (C.dest.svolume < 8)
 
     if not src_small and not dest_small and
        math.abs(C.src.floor_h - C.dest.floor_h) >= 192
@@ -649,19 +649,29 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
 
   local function symmetrical_conn_h(R, C, S)
 
+    local C_list = { C }
+
     XC = S.x_peer and S.x_peer.conn
     YC = S.y_peer and S.y_peer.conn
 
-    if XC and XC.conn_h then
-      C.conn_h = XC.conn_h
-      return
+    local peer_h = (XC and XC.conn_h) or (YC and YC.conn_h)
 
-    elseif YC and YC.conn_h then
-      C.conn_h = YC.conn_h
+    if peer_h then
+      -- some connections are so bad that symmetry should be broken
+      if math.abs(peer_h - R.floor_h) > (R.svolume * 6) then
+        gui.debugf("symmetrical_conn_h: Broke symmetry @ S(%d,%d)\n", R.sx1,R.sy1)
+        C.conn_h = R.floor_h
+        return
+      end
+      
+    gui.debugf("symmetrical_conn_h @ S(%d,%d) peer_h:%d floor_h:%d\n",
+               R.sx1,R.sy1, peer_h, R.floor_h)
+
+      C.conn_h = peer_h
       return
     end
 
-
+    
     local h_list = {}
 
     table.insert(h_list, R.floor_h)
@@ -674,9 +684,53 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
       table.insert(h_list, YC:neighbor(R).floor_h)
     end
 
-    -- DO FREAKING MAGIC !!!
+---###    local function eval_conn_h(C, h)
+---###      if not C then
+---###        return 0
+---###      end
+---###
+---###      local h1 = C.src.floor_h
+---###      local h2 = C.dest.floor_h
+---###
+---###      if h1 > h2 then
+---###        h1,h2 = h2,h1
+---###      end
+---###
+---###      local diff1 = math.abs(h - h1)
+---###      local diff2 = math.abs(h - h2)
+---###
+---###      if diff1 <= 16 or diff2 <= 16 then
+---###        return 0
+---###      end
+---###
+---###      if (h1 - 16) <= h and h <= (h2 + 16) then
+---###        return 16
+---###      end
+---###
+---###      return 5 * (diff1 + diff2)
+---###    end
+---###
+---###    local function eval_h(h)
+---###      return eval_conn_h(C, h) +
+---###             eval_conn_h(XC, h) +
+---###             eval_conn_h(XC, h) +
+---###             gui.random()
+---###    end
+---###
+---###    local best_cost = 999
+---###    local best_h
+---###
+---###    local costs = {}
+---###    for index,h in ipairs(h_list) do
+---###      costs[index] = eval_h(h)
+---###
+---###      if costs[index] < best_cost then
+---###        best_cost = costs[index]
+---###        best_h    = h
+---###      end
+---###    end
 
-    C.conn_h = rand_element(h_list)  -- FIXME
+    C.conn_h = R.floor_h
   end
 
   local function normal_conns(R)
@@ -754,8 +808,8 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
 
   table.sort(big_rooms,
       function(A,B)
-        return (A.svol + (A.symmetry or 0) * 200) >
-               (B.svol + (B.symmetry or 0) * 200)
+        return (A.svolume + (A.symmetry or 0) * 200) >
+               (B.svolume + (B.symmetry or 0) * 200)
       end)
 
   for _,R in ipairs(PLAN.all_rooms) do
