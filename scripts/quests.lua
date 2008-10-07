@@ -602,7 +602,7 @@ function Quest_assign()
   -- count branches in each room
   for _,R in ipairs(PLAN.all_rooms) do
     R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
-    R.svolume  = (R.sw+1) * (R.sh+1) / 2
+    R.svolume  = R.sw * R.sh
 
     if R.kind ~= "scenic" then
       R.num_branch = #R.conns + #R.teleports
