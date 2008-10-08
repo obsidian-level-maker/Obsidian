@@ -232,7 +232,13 @@ function Quest_initial_path(arena)
 
   local R = arena.start
 
-  while R do
+  for loop = 1,999 do
+    if loop == 999 then
+      error("Quest_initial_path infinite loop!")
+    end
+
+    if not R then break; end
+
     arena.target = R
     R = select_next_room(R, arena.path)
   end
