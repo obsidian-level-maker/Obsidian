@@ -307,7 +307,7 @@ const char * UI_Play::trap_syms[] =
   "kein",   "NONE",  
   "less",   "Less",  
   "normal", "Normal",
-  "high",   "Heaps", 
+  "more",   "More", 
 
   "mixed",  "Mix It Up",
 
