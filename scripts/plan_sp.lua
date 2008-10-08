@@ -101,10 +101,8 @@ function Landmap_rand_visits()
 end
 
 
-function Landmap_DoLiquid()
+function Landmap_DoLiquid(mirrored)
  
-  if LAND_W <= 2 or LAND_H <= 2 then return end
-
   -- Possible liquid patterns:
   --   1. completely surrounded
   --   2. partially surrounded (U shape)
@@ -173,7 +171,19 @@ function Landmap_DoLiquid()
     surround = 50,
   }
 
-gui.debugf("(what: %s)\n", what)
+  if LAND_W <= 3 or LAND_H <= 3 or mirrored then
+    what = "none"
+  end
+
+  if what == "u_shape" or what == "surround" then
+    LAND_W = LAND_W + 2
+    LAND_H = LAND_H + 2
+  end
+
+  Landmap_Init()
+
+gui.debugf("Landmap_DoLiquid: what=%s\n", what)
+
   for x = 1,LAND_W do for y = 1,LAND_H do
     if what == "surround" then surround_mode(x, y) end
     if what == "river"    then river_mode(x, y) end
@@ -314,7 +324,7 @@ function Landmap_DoIndoors()
 end
 
 
-function Landmap_Fill()
+function Landmap_Fill(mirrored)
 
   local old_LW = LAND_W
   local old_LH = LAND_H
@@ -322,16 +332,16 @@ function Landmap_Fill()
   local half_LW = int((LAND_W+1)/2)
   local half_LH = int((LAND_H+1)/2)
 
-  if LAND_W >= 5 and rand_odds(10) then
-
+  if LAND_W >= 4 and rand_odds(15) then
 gui.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
-    LAND_W = half_LW ; Landmap_Fill() ; LAND_W = old_LW
+
+    LAND_W = half_LW ; Landmap_Fill(true) ; LAND_W = old_LW
 
     local swappers = {}
 
-    if rand_odds(20) then
+    if rand_odds(25) then
       swappers = { ground="valley", valley="hill", hill="ground" }
-    elseif rand_odds(20) then
+    elseif rand_odds(25) then
       swappers = { ground="hill", valley="group", hill="valley" }
     end
 
@@ -344,23 +354,10 @@ gui.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
       end
     end
 
-    return -- NO MORE
-
-  elseif LAND_H >= 5 and rand_odds(5) then
-
-gui.debugf("(mirroring vertically LAND_H=%d)\n", LAND_W)
-    LAND_H = half_LH ; Landmap_Fill() ; LAND_H = old_LH
-
-    for y = half_LH+1, LAND_H do
-      for x = 1,LAND_W do
-        LAND_MAP[x][y].kind = LAND_MAP[x][LAND_H-y+1].kind
-      end
-    end
-
-    return -- NO MORE
+    return -- ALL DONE
   end 
  
-  Landmap_DoLiquid()
+  Landmap_DoLiquid(mirrored)
   Landmap_DoGround()
   Landmap_DoIndoors()
 end
@@ -1067,8 +1064,8 @@ function Plan_determine_size(epi_along)
       LAND_H = LAND_H - 1
     end
 
-    if rand_odds(40) then LAND_W = LAND_W - 1 end
-    if rand_odds(30) then LAND_H = LAND_H - 1 end
+    if rand_odds(33) then LAND_W = LAND_W - 1 end
+    if rand_odds(20) then LAND_H = LAND_H - 1 end
 
     if rand_odds(50) then -- LAND_W < LAND_H then
       LAND_W, LAND_H = LAND_H, LAND_W
@@ -1098,7 +1095,6 @@ function Plan_rooms_sp(epi_along)
 
   Plan_determine_size(epi_along)
 
-  Landmap_Init()
   Landmap_Fill()
   Landmap_Dump()
   Landmap_CreateRooms()
