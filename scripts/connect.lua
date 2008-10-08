@@ -43,6 +43,19 @@ CONN_CLASS =
       return self.dest_S
     end
   end,
+
+  tostr = function(self)
+    if self.conn_h then
+      return string.format("CONN%s[%d,%d -> %d,%d h:%s]",
+             sel(self.lock, "-LOCK", ""),
+             self.src.sx1, self.src.sy1, self.dest.sx1, self.dest.sy1,
+             self.conn_h)
+    else
+      return string.format("CONN%s[%d,%d -> %d,%d]",
+             sel(self.lock, "-LOCK", ""),
+             self.src.sx1, self.src.sy1, self.dest.sx1, self.dest.sy1)
+    end
+  end,
 }
 
 
@@ -609,6 +622,10 @@ function Connect_Rooms()
     S.borders[dir]    = { kind="open" }
     T.borders[10-dir] = { kind="open" }
 
+gui.debugf("connect_seeds R(%s,%s) S(%d,%d) grp:%d --> R(%s,%s) S(%d,%d) grp:%d\n",
+S.room.sx1,S.room.sy1, S.sx,S.sy, S.room.group_id,
+T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
+
     merge(S.room.group_id, T.room.group_id)
 
     local CONN = { dir=dir, src=S.room, dest=T.room, src_S=S, dest_S=T }
@@ -956,102 +973,41 @@ gui.debugf("Failed\n")
     end -- for R in rooms
   end
 
-  local function add_teleporters()
-    -- FIXME !!!!! DO TELEPORTERS WITH QUEST STUFF
-
-    -- Makes sure any non-contiguous groups of rooms become connected
-    -- (either by an actual bridge or by a teleporter).
+  local function min_group_id()
+    local result
     
-    -- FIXME: MAKE PHYSIC BRIDGES EARLIER (only do teleporters here)  
-
-    local rooms = copy_table(PLAN.all_rooms)
-
-    local function do_teleport(R)
-      -- find a room for the teleporter
-      for _,N in ipairs(rooms) do
-        if (N.group_id == 1) and (#N.teleports < 2) then
-          local TELEP = { src=N, dest=R, is_teleport=true }
-
-          set_class(TELEP, CONN_CLASS)
-
-          TELEP.src_tag  = PLAN:alloc_tag()
-          TELEP.dest_tag = PLAN:alloc_tag()
-
-          table.insert(R.teleports, TELEP)
-          table.insert(N.teleports, TELEP)
-
-          merge(R.group_id, N.group_id)
-
-          gui.debugf("ADDED TELEPORT (%d,%d) --> (%d,%d)\n", N.lx1,N.ly1, R.lx1,R.ly1)
-          return;
-        end
-      end
-
-      error("do_teleport: no group#1 rooms!")
-    end
-
-    --| add_teleporters |--
-
-    repeat
-      local did_merge = false
-
-      rand_shuffle(rooms)
-      for _,R in ipairs(rooms) do
-        if (R.group_id >= 2) and (#R.teleports < 2) then
-          do_teleport(R)
-          did_merge = true
-          break;
-        end
-      end
-
-    until not did_merge
-
-    for _,R in ipairs(rooms) do
-      if R.group_id ~= 1 then
-        error("add_teleporters: unable to connect all rooms!")
+    for _,R in ipairs(PLAN.all_rooms) do
+      if not result or result > R.group_id then
+        result = R.group_id
       end
     end
+
+    return assert(result)
   end
 
   local function make_scenic(R)
-    gui.debugf("Making room S(%d,%d) SCENIC\n", R.sx1, R.sy1)
+    -- we never make connected groups scenic
+    assert(#R.conns == 0)
+
+    gui.debugf("Making %s SCENIC\n", R:tostr())
     assert(R.kind ~= "scenic")
 
     R.scenic_kind = R.kind
     R.kind = "scenic"
-    R.group_id = -1
-  end
 
-  local function disable_isolates()
-    local total = #PLAN.all_rooms
-    local isolated = 0
-    local other_grp
+    -- move the room to the scenic list
 
-    if total <= 3 then return end
-
-    for _,R in ipairs(PLAN.all_rooms) do
-      if R.group_id >= 2 then
-        isolated = isolated + 1
-        other_grp = R.group_id
+    for index,N in ipairs(PLAN.all_rooms) do
+      if N == R then
+        table.remove(PLAN.all_rooms, index)
+        R.group_id = -1
+        break;
       end
     end
 
-    -- handle the case where group #1 is not the majority of the map
-    if isolated > total/2 then
-      for _,R in ipairs(PLAN.all_rooms) do
-        if R.group_id == 1 then
-          make_scenic(R)
-        end
-      end
-      assert(other_grp)
-      merge(1, other_grp)
-    end
-
-    for _,R in ipairs(PLAN.all_rooms) do
-      if R.group_id >= 2 and dual_odds(#R.conns == 0, 66, 95) then
-        make_scenic(R)
-      end
-    end
+    assert(R.group_id == -1)
+    
+    table.insert(PLAN.all_scenics, R)
   end
 
   local function try_emergency_connect(R, x, y, dir)
@@ -1065,19 +1021,23 @@ gui.debugf("Failed\n")
     assert(S.room == R)
     assert(N.room ~= R)
 
-    if not N.room or not N.room.group_id then return false end
-
-    if N.room.group_id == R.group_id then return false end
+    if not N.room or
+       not N.room.group_id or
+       N.room.kind == "scenic" or
+       N.room.group_id == R.group_id
+    then
+      return false
+    end
 
     -- only one connection per seed!
     if S.conn or N.conn  then return false end
 
     connect_seeds(S, N, dir, "emergency")
 
-    R.branch_kind = "EM"
+    R.branch_kind = "XX"
     R.symmetry = nil
 
-    N.room.branch_kind = "EM"
+    N.room.branch_kind = "XX"
     N.room.symmetry = nil
 
     return true
@@ -1111,24 +1071,98 @@ gui.debugf("Failed\n")
     return false
   end
 
-  local function emergency_branches()
-    -- handle isolated rooms first
-    for _,R in ipairs(PLAN.all_rooms) do
-      if R.kind ~= "scenic" and #R.conns == 0 then
-        if not force_room_branch(R) then
-          make_scenic(R)
-        end
+---##   local function disable_isolates()
+---##     local total = #PLAN.all_rooms
+---##     local isolated = 0
+---##     local other_grp
+---## 
+---##     local dud_list = {}
+---## 
+---##     if total <= 3 then return end
+---## 
+---##     for _,R in ipairs(PLAN.all_rooms) do
+---##       if R.group_id >= 2 then
+---##         isolated = isolated + 1
+---##         other_grp = R.group_id
+---## 
+---##         if #R.conns == 0 then
+---##           table.insert(dud_list, R)
+---##         end
+---##       end
+---##     end
+---## 
+---## 
+---##     for _,R in ipairs(dud_list) do
+---##       make_scenic(R)
+---##     end
+---##   end
+
+---##   local function emergency_branches()
+---##     -- handle isolated rooms first
+---##     for _,R in ipairs(PLAN.all_rooms) do
+---##       if R.kind ~= "scenic" and #R.conns == 0 then
+---##         if not force_room_branch(R) then
+---##           make_scenic(R)
+---##         end
+---##       end
+---##     end
+---## 
+---##     -- now handle isolated groups of rooms
+---##     for _,V in ipairs(Landmap_rand_visits()) do
+---##       local L = LAND_MAP[V.x][V.y]
+---##       local R = L.room
+---## if R then
+---## gui.debugf("emergency_branches  %s  grp:%d\n", R:tostr(), R.group_id or -77)
+---## end
+---##       if R and R.group_id and R.group_id >= 2 then
+---##         force_room_branch(R)
+---##       end
+---##     end -- for V
+---##   end
+
+  local function handle_isolate(R)
+    if rand_odds(33) then
+      if force_room_branch() then
+        return -- OK
       end
     end
 
-    -- now handle isolated groups of rooms
-    for _,V in ipairs(Landmap_rand_visits()) do
-      local L = LAND_MAP[V.x][V.y]
-      local R = L.room
-      if R and R.group_id and R.group_id >= 2 then
-        force_room_branch(R)
+    make_scenic(R)
+  end
+
+  local function handle_rebel_group(list, group_id)
+    local rebels = table_subset_w_field(list, "group_id", group_id)
+    assert(#rebels > 0)
+
+    -- FIXME: find best connect amonst the rooms !!!
+
+    rand_shuffle(rebels)
+    for _,R in ipairs(rebels) do
+      if force_room_branch(R) then
+        return -- OK
       end
-    end -- for V
+    end
+
+    error("Unable to connect isolated group of rooms!")
+  end
+
+  local function branch_the_rest()
+    local min_g = min_group_id()
+
+    -- use a copy of PLAN.all_rooms, since that list may be modified
+    local list = copy_table(PLAN.all_rooms)
+
+    for _,R in ipairs(list) do
+      if R.group_id ~= min_g then
+        if #R.conns == 0 then
+          handle_isolate(R)
+        else
+          handle_rebel_group(list, R.group_id)
+        end
+        -- minimum group_id may have changed
+        min_g = min_group_id()
+      end
+    end -- for R
   end
 
 
@@ -1136,9 +1170,10 @@ gui.debugf("Failed\n")
 
   gui.printf("\n--==| Connect_Rooms |==--\n\n")
 
+  PLAN.all_scenics = {}
+
   join_ground()
   branch_big_rooms()
-  disable_isolates()
-  emergency_branches()
+  branch_the_rest()
 end
 
