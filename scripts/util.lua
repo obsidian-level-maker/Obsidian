@@ -78,6 +78,34 @@ function table_reverse(t)
   end
 end
 
+function table_subset(t, predicate)
+  local new_t = {}
+
+  if t then
+    for _,e in ipairs(t) do
+      if predicate(e) then
+        table.insert(new_t, e)
+      end
+    end
+  end
+
+  return new_t
+end
+
+function table_subset_w_field(t, field, value)
+  local new_t = {}
+
+  if t then
+    for _,e in ipairs(t) do
+      if e[field] == value then
+        table.insert(new_t, e)
+      end
+    end
+  end
+
+  return new_t
+end
+
 function table_to_str(t, depth, prefix)
   if not t then return "NIL" end
   if table_empty(t) then return "{}" end
