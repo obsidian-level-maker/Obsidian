@@ -1122,7 +1122,7 @@ gui.debugf("Failed\n")
 
   local function handle_isolate(R)
     if rand_odds(33) then
-      if force_room_branch() then
+      if force_room_branch(R) then
         return -- OK
       end
     end
