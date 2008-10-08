@@ -2,6 +2,16 @@
 TODO
 ====
 
+>>> ensure floor_h and conn_h are multiples of 32
+
+Stairwells: more steps to ensure wall lengths <= 128 units
+            --> SEED_SIZE * max(sx_span, sy_span) / 128
+
+
+Quests
+  - sometimes lock another connection (ESP: symmetry)
+    with the same lock as one we just added
+    [ESP: when new lock goes to leaf or semi-leaf]
 
 merge area_info + area_poly --> csg_brush_c
 
@@ -15,7 +25,7 @@ EDGE: gui.property("solid_exfloor", 400)
       gui.property("thing_exfloor_flags", "true")
 
 LEGACY: gui.property("solid_exfloor", 281)
-        gui.property("liquid_exfloor", 280)
+        gui.property("liquid_exfloor", 280)  -- 301
 
 
 q1_nodes:
@@ -44,27 +54,13 @@ REWRITE:
 
 + quest assignment !!
 
-  - pick rooms for BOSS monsters
+  ? pick rooms for BOSS monsters
 
   - decide minor quests
 
   ? allocate seeds for teleporters,bosses,switches,items
 
 + room heights
-  - outdoor rooms generally stay fixed (+/- 32 variation)
-  - if indoor room touches outdoor, room has same height
-    [especially src.outdoor --> dest.indoor]
-  - for indoor target rooms choose random height
-  - if start room is indoor, choose random height
-  - select heights along each path
-
-  - several "gap fill" passes: unset rooms in-between two set rooms
-    will get a height in-between (depending on height diff and
-    randomness).  2-branch Hallways in between two set rooms become
-    stairwells.  3+-branch hallways get same height as entry room.
-  - one "flood fill" pass then two "gap fills", rinse repeat.
-    indoor rooms connected by lock: use same height
-    3+Hallways 
 
 - create doors, stairs/lifts
 
