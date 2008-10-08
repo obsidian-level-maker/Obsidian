@@ -180,7 +180,9 @@ function Landmap_DoLiquid(mirrored)
     LAND_H = LAND_H + 2
   end
 
-  Landmap_Init()
+  if not mirrored then
+    Landmap_Init()
+  end
 
 gui.debugf("Landmap_DoLiquid: what=%s\n", what)
 
@@ -332,8 +334,10 @@ function Landmap_Fill(mirrored)
   local half_LW = int((LAND_W+1)/2)
   local half_LH = int((LAND_H+1)/2)
 
-  if LAND_W >= 4 and rand_odds(15) then
+  if not mirrored and LAND_W >= 4 and rand_odds(15) then
 gui.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
+
+    Landmap_Init(LAND_W, LAND_H)
 
     LAND_W = half_LW ; Landmap_Fill(true) ; LAND_W = old_LW
 
@@ -342,7 +346,7 @@ gui.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
     if rand_odds(25) then
       swappers = { ground="valley", valley="hill", hill="ground" }
     elseif rand_odds(25) then
-      swappers = { ground="hill", valley="group", hill="valley" }
+      swappers = { ground="hill", valley="ground", hill="valley" }
     end
 
     for x = half_LW+1, LAND_W do
