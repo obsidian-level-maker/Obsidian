@@ -1071,55 +1071,6 @@ gui.debugf("Failed\n")
     return false
   end
 
----##   local function disable_isolates()
----##     local total = #PLAN.all_rooms
----##     local isolated = 0
----##     local other_grp
----## 
----##     local dud_list = {}
----## 
----##     if total <= 3 then return end
----## 
----##     for _,R in ipairs(PLAN.all_rooms) do
----##       if R.group_id >= 2 then
----##         isolated = isolated + 1
----##         other_grp = R.group_id
----## 
----##         if #R.conns == 0 then
----##           table.insert(dud_list, R)
----##         end
----##       end
----##     end
----## 
----## 
----##     for _,R in ipairs(dud_list) do
----##       make_scenic(R)
----##     end
----##   end
-
----##   local function emergency_branches()
----##     -- handle isolated rooms first
----##     for _,R in ipairs(PLAN.all_rooms) do
----##       if R.kind ~= "scenic" and #R.conns == 0 then
----##         if not force_room_branch(R) then
----##           make_scenic(R)
----##         end
----##       end
----##     end
----## 
----##     -- now handle isolated groups of rooms
----##     for _,V in ipairs(Landmap_rand_visits()) do
----##       local L = LAND_MAP[V.x][V.y]
----##       local R = L.room
----## if R then
----## gui.debugf("emergency_branches  %s  grp:%d\n", R:tostr(), R.group_id or -77)
----## end
----##       if R and R.group_id and R.group_id >= 2 then
----##         force_room_branch(R)
----##       end
----##     end -- for V
----##   end
-
   local function handle_isolate(R)
     if rand_odds(33) then
       if force_room_branch(R) then
@@ -1146,7 +1097,7 @@ gui.debugf("Failed\n")
     error("Unable to connect isolated group of rooms!")
   end
 
-  local function branch_the_rest()
+  local function emergency_branches()
     local min_g = min_group_id()
 
     -- use a copy of PLAN.all_rooms, since that list may be modified
@@ -1174,6 +1125,6 @@ gui.debugf("Failed\n")
 
   join_ground()
   branch_big_rooms()
-  branch_the_rest()
+  emergency_branches()
 end
 

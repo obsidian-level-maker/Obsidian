@@ -684,52 +684,6 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
       table.insert(h_list, YC:neighbor(R).floor_h)
     end
 
----###    local function eval_conn_h(C, h)
----###      if not C then
----###        return 0
----###      end
----###
----###      local h1 = C.src.floor_h
----###      local h2 = C.dest.floor_h
----###
----###      if h1 > h2 then
----###        h1,h2 = h2,h1
----###      end
----###
----###      local diff1 = math.abs(h - h1)
----###      local diff2 = math.abs(h - h2)
----###
----###      if diff1 <= 16 or diff2 <= 16 then
----###        return 0
----###      end
----###
----###      if (h1 - 16) <= h and h <= (h2 + 16) then
----###        return 16
----###      end
----###
----###      return 5 * (diff1 + diff2)
----###    end
----###
----###    local function eval_h(h)
----###      return eval_conn_h(C, h) +
----###             eval_conn_h(XC, h) +
----###             eval_conn_h(XC, h) +
----###             gui.random()
----###    end
----###
----###    local best_cost = 999
----###    local best_h
----###
----###    local costs = {}
----###    for index,h in ipairs(h_list) do
----###      costs[index] = eval_h(h)
----###
----###      if costs[index] < best_cost then
----###        best_cost = costs[index]
----###        best_h    = h
----###      end
----###    end
-
     C.conn_h = R.floor_h
   end
 
