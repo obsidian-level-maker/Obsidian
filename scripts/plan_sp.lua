@@ -58,6 +58,18 @@ PLAN_CLASS =
 }
 
 
+ROOM_CLASS =
+{
+  tostr = function(self)
+    if self.floor_h then
+      return string.format("ROOM[%d,%d %s h:%s]", self.sx1,self.sy1, self.kind, self.floor_h)
+    else
+      return string.format("ROOM[%d,%d %s]", self.sx1,self.sy1, self.kind)
+    end
+  end,
+}
+
+
 function Landmap_Init()
   LAND_MAP = array_2D(LAND_W, LAND_H)
 
@@ -489,6 +501,8 @@ function Landmap_CreateRooms()
       lx1 = x, ly1 = y,
       lx2 = x, ly2 = y,
     }
+
+    set_class(ROOM, ROOM_CLASS)
 
     if ROOM.kind ~= "indoor" then
       ROOM.outdoor = true
