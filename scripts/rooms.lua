@@ -331,10 +331,10 @@ function Rooms_choose_heights()
     local approx_size = (2 * math.min(R.sw, R.sh) + math.max(R.sw, R.sh)) / 3.0
     local tallness = (approx_size + rand_range(-0.5,1.5)) * 64.0
 
-    R.tallness = int(tallness / 32.0) * 32
+    if tallness < 128 then tallness = 128 end
+    if tallness > 480 then tallness = 480 end
 
-    if R.tallness < 128 then R.tallness = 128 end
-    if R.tallness > 480 then R.tallness = 480 end
+    R.tallness = int(tallness / 32.0) * 32
 
     gui.debugf("Room %dx%d --> tallness %d\n", R.sw, R.sh, R.tallness)
   end
@@ -416,7 +416,6 @@ gui.debugf("STAIRWELL RESULT --> %d\n", R.floor_h)
     end
 
 
-
     local min_h, max_h = neighbors_min_max(R, false)
 
     if max_h < min_h then
@@ -424,16 +423,16 @@ gui.debugf("STAIRWELL RESULT --> %d\n", R.floor_h)
       max_h = 320
     else
       while max_h - min_h >= 192 do
-        min_h = min_h + 24
-        max_h = max_h - 24
+        if rand_odds(50) then min_h = min_h + 32 end
+        if rand_odds(50) then max_h = max_h - 32 end
       end
     end
 
     if min_h >= R.max_floor_h then
       R.floor_h = R.max_floor_h
 
-      if avoid_h and math.abs(R.floor_h - avoid_h) < 48 then
-        R.floor_h = R.floor_h - 48
+      if avoid_h and math.abs(R.floor_h - avoid_h) < 64 then
+        R.floor_h = R.floor_h - 64
 gui.debugf("SQUISH-AVOID RESULT --> %d\n", R.floor_h)
         return
       end
@@ -444,45 +443,18 @@ gui.debugf("SQUISH RESULT --> %d\n", R.floor_h)
     max_h = math.min(max_h, R.max_floor_h)
 
     -- increase min/max when the range is small
-    while max_h - min_h <= 96 do
-      min_h = min_h - 24
-      max_h = max_h + 24
+    while max_h - min_h <= 80 do
+      if rand_odds(50) then min_h = min_h - 32 end
+      if rand_odds(50) then max_h = max_h + 32 end
     end
 
     assert(min_h < max_h)
 
 
-    -- symmetry
---[[
-    local function peer_neighbor_h(E, peer)
-      if not E then return end
-      if not E.src_S[peer] then return end
-
-      local F = E.src_S[peer].conn
-      if not F then return end
-      
-      local N = F:neighbor(E.src)
-      return N.floor_h
-    end
-
-    local prefer_h
-
-    prefer_h = peer_neighbor_h(E, "x_peer") or
-               peer_neighbor_h(E, "y_peer")
-
---]]
-
-    if avoid_h and prefer_h and math.abs(avoid_h - prefer_h) <= 32 then
+    if avoid_h and prefer_h and math.abs(avoid_h - prefer_h) <= 40 then
       prefer_h = nil
     end
  
-
-    if prefer_h and min_h <= prefer_h and prefer_h <= max_h then
-      R.floor_h = prefer_h
-gui.debugf("PREFER RESULT --> %d\n", R.floor_h)
-      return
-    end
-
 
     local new_min = last_hs[1] - 96
     local new_max = last_hs[1] + 96
@@ -491,6 +463,7 @@ gui.debugf("PREFER RESULT --> %d\n", R.floor_h)
       R.floor_h = max_h
 gui.debugf("MAXED OUT RESULT --> %d\n", R.floor_h)
       return
+
     elseif new_max <= min_h then
       R.floor_h = min_h
 gui.debugf("MINNED OUT RESULT --> %d\n", R.floor_h)
@@ -503,30 +476,16 @@ gui.debugf("MINNED OUT RESULT --> %d\n", R.floor_h)
     assert(min_h <= max_h)
 
 
---[[
-    if avoid_h then
-      local d1 = math.abs(min_h - avoid_h)
-      local d2 = math.abs(max_h - avoid_h)
+    local step_min = int((min_h + 31) / 32)
+    local step_max = int((max_h     ) / 32)
 
-      if math.max(d1, d2) > 32 then
-        R.floor_h = sel(d1 > d2, min_h, max_h)
-      end
-gui.debugf("AVOID RESULT --> %d\n", R.floor_h)
-      return
-    end
---]]
+    local steps = step_max - step_min + 1
 
-
-    local steps = int((max_h - min_h) / 32)
 
     if steps <= 1 then
       R.floor_h = rand_sel(50, min_h, max_h)
-gui.debugf("NOSTEP RESULT --> %d\n", R.floor_h)
+gui.debugf("NO_STEP RESULT --> %d\n", R.floor_h)
       return
-    end
-
-    if steps >= 5 then
-      steps = 5
     end
 
 
@@ -538,8 +497,22 @@ gui.debugf("NOSTEP RESULT --> %d\n", R.floor_h)
     local best_prefer
     local bpr_dist = 999
 
-    for i = 1,steps do
-      local h = min_h + (max_h - min_h) * (i-1) / (steps-1)
+    for i = 1, steps do
+      local h = (step_min + i - 1) * 32
+
+      probs[i] = 90
+
+      if avoid_h then
+        local d = math.abs(avoid_h - h)
+        if d < bav_dist then
+          bav_dist = d
+          best_avoid = i
+        end
+
+        if d < 64 then
+          probs[i] = probs[i] / 4
+        end
+      end
 
       if prefer_h then
         local d = math.abs(prefer_h - h)
@@ -549,21 +522,11 @@ gui.debugf("NOSTEP RESULT --> %d\n", R.floor_h)
         end
       end
 
-      if avoid_h then
-        local d = math.abs(avoid_h - h)
-        if d < bav_dist then
-          bav_dist = d
-          best_avoid = i
-        end
-      end
-
-      probs[i] = 90
-
-      -- heavy penalty for changing vertical momentum
+      -- heavy penalty for change in vertical momentum
       local bump = h - last_hs[1]
       local new_z_mom
 
-      if math.abs(bump) <= 32 then
+      if math.abs(bump) <= 40 then
         new_z_mom = 0
       else
         new_z_mom = sel(bump > 0, 1, -1)
@@ -571,8 +534,10 @@ gui.debugf("NOSTEP RESULT --> %d\n", R.floor_h)
 
       if (new_z_mom * z_mom) < 0 then
         probs[i] = probs[i] / 90
+      elseif math.abs(bump) >= 176 then
+        probs[i] = probs[i] / 12
       elseif math.abs(bump) >= 72 then
-        probs[i] = probs[i] / 4
+        probs[i] = probs[i] / 3
       end
     end
 
@@ -586,7 +551,7 @@ gui.debugf("NOSTEP RESULT --> %d\n", R.floor_h)
 
     local idx = rand_index_by_probs(probs)
 
-    R.floor_h = min_h + (max_h - min_h) * (idx-1) / (steps-1)
+    R.floor_h = (step_min + idx - 1) * 32
 
 if avoid_h then
   gui.debugf("[Tried to avoid %d] RESULT\n", avoid_h)
@@ -634,7 +599,9 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
     if not src_small and not dest_small and
        math.abs(C.src.floor_h - C.dest.floor_h) >= 192
     then
-      C.conn_h = (C.src.floor_h + C.dest.floor_h) / 2.0
+      local mid_h = (C.src.floor_h + C.dest.floor_h) / 2.0
+      -- ensure it is a multiple of 32
+      C.conn_h = int(mid_h / 32 + 0.5) * 32
       return
     end
 
@@ -721,9 +688,7 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
       R.ceil_h  = 128
     end
     for _,C in ipairs(PLAN.all_conns) do
-      if not C.conn_h then
-        C.conn_h = (C.src.floor_h + C.dest.floor_h) / 2.0
-      end
+      C.conn_h = 0
     end
   end
 
