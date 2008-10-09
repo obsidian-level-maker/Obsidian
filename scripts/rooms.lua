@@ -524,20 +524,26 @@ gui.debugf("NO_STEP RESULT --> %d\n", R.floor_h)
 
       -- heavy penalty for change in vertical momentum
       local bump = h - last_hs[1]
+      local bump_abs = math.abs(bump)
       local new_z_mom
 
-      if math.abs(bump) <= 40 then
+      if bump_abs <= 40 then
         new_z_mom = 0
+
+        if bump_abs > 1 then
+          probs[i] = probs[i] / 5
+        end
       else
         new_z_mom = sel(bump > 0, 1, -1)
-      end
 
-      if (new_z_mom * z_mom) < 0 then
-        probs[i] = probs[i] / 90
-      elseif math.abs(bump) >= 176 then
-        probs[i] = probs[i] / 12
-      elseif math.abs(bump) >= 72 then
-        probs[i] = probs[i] / 3
+        if (new_z_mom * z_mom) < 0 then
+          probs[i] = 0.2
+        end
+
+        if bump_abs >= 64 then
+          local factor = bump_abs / 64
+          probs[i] = probs[i] / factor
+        end
       end
     end
 
