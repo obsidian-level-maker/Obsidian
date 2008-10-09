@@ -28,9 +28,9 @@ Q2_THINGS =
   dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 },
 
   -- enemies
-  guard      = { id="monster_solider_light", kind="monster", r=16, h=56, },
-  guard_sg   = { id="monster_solider", kind="monster", r=16, h=56, },
-  guard_mg   = { id="monster_solider_ss",kind="monster", r=16, h=56, },
+  guard      = { id="monster_soldier_light", kind="monster", r=16, h=56, },
+  guard_sg   = { id="monster_soldier", kind="monster", r=16, h=56, },
+  guard_mg   = { id="monster_soldier_ss",kind="monster", r=16, h=56, },
   enforcer   = { id="monster_infantry",kind="monster", r=16, h=56, },
   beserker   = { id="monster_beserk",  kind="monster", r=16, h=56, },
   grenader   = { id="monster_gunner",  kind="monster", r=16, h=56, },
@@ -252,11 +252,28 @@ Q2_THEMES =
 
 Q2_MONSTERS =
 {
-  dog     = { prob=20, hp=1,   dm=5,  fp=1.0, melee=true, },
-  guard   = { prob=60, hp=25,  dm=10, fp=1.0, hitscan=true, cage_fallback=10 },
-  officer = { prob=30, hp=50,  dm=20, fp=1.7, hitscan=true, },
-  mutant  = { prob=10, hp=55,  dm=35, fp=1.9, hitscan=true, },
-  ss_dude = { prob=60, hp=100, dm=30, fp=1.4, hitscan=true, },
+  guard      = { prob=50, hp= 20, dm=99 },
+  guard_sg   = { prob=50, hp= 30, dm=99, hitscan=true },
+  guard_mg   = { prob=50, hp= 30, dm=99, hitscan=true },
+  enforcer   = { prob=50, hp=100, dm=99 },
+
+  flyer      = { prob=50, hp= 50, dm=99 },
+  shark      = { prob=50, hp= 50, dm=99, melee=true },
+  parasite   = { prob=50, hp=175, dm=99 },
+
+  maiden     = { prob=50, hp=175, dm=99 },
+  technician = { prob=50, hp=200, dm=99 },
+  beserker   = { prob=50, hp=240, dm=99 },
+  icarus     = { prob=50, hp=240, dm=99 },
+
+  medic      = { prob=50, hp=300, dm=99 },
+  mutant     = { prob=50, hp=300, dm=99 },
+  brain      = { prob=50, hp=300, dm=99, melee=true },
+  grenader   = { prob=50, hp=400, dm=99 },
+  gladiator  = { prob=50, hp=400, dm=99 },
+
+  tank       = { prob=50, hp=750, dm=99 },
+  tank_cmdr  = { prob=50, hp=1000,dm=99 },
 }
 
 Q2_BOSSES =
