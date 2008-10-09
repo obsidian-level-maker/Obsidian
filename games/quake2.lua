@@ -50,9 +50,10 @@ Q2_THINGS =
   brain      = { id="monster_brain",   kind="monster", r=16, h=56, },
 
   -- bosses
-  Makron   = { id="monster_makron",   kind="monster", r=30, h=90, },
-  ---?? monster_boss2
-  ---?? monster_supertank
+  Super_tank = { id="monster_supertank",kind="monster", r=64, h=112, },
+  Huge_flyer = { id="monster_boss2",    kind="monster", r=56, h=80,  },
+  Jorg       = { id="monster_jorg",     kind="monster", r=80, h=140, },
+  Makron     = { id="monster_makron",   kind="monster", r=30, h=90,  },
 
   -- pickups
   k_blue  = { id="key_blue_key",  kind="pickup", r=16, h=32, pass=true },
