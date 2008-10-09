@@ -34,10 +34,10 @@ Q1_THINGS =
   fiend    = { id="monster_demon1",   kind="monster", r=32, h=80, },
 
   knight   = { id="monster_knight",   kind="monster", r=32, h=80, },
-  knight2  = { id="monster_hell_knight", kind="monster", r=32, h=80, },
+  h_knight = { id="monster_hell_knight", kind="monster", r=32, h=80, },
   ogre     = { id="monster_ogre",     kind="monster", r=32, h=80, },
-  rotfish  = { id="monster_fish",     kind="monster", r=32, h=80, },
-  scragg   = { id="monster_wizard",   kind="monster", r=32, h=80, },
+  fish     = { id="monster_fish",     kind="monster", r=32, h=80, },
+  wizard   = { id="monster_wizard",   kind="monster", r=32, h=80, },
 
   shambler = { id="monster_shambler", kind="monster", r=32, h=80, },
   spawn    = { id="monster_tarbaby",  kind="monster", r=32, h=80, },
@@ -240,11 +240,21 @@ Q1_THEMES =
 
 Q1_MONSTERS =
 {
-  dog     = { prob=20, hp=1,   dm=5,  fp=1.0, melee=true, },
-  guard   = { prob=60, hp=25,  dm=10, fp=1.0, hitscan=true, cage_fallback=10 },
-  officer = { prob=30, hp=50,  dm=20, fp=1.7, hitscan=true, },
-  mutant  = { prob=10, hp=55,  dm=35, fp=1.9, hitscan=true, },
-  ss_dude = { prob=60, hp=100, dm=30, fp=1.4, hitscan=true, },
+  dog      = { prob=50, hp=25,  dm=99, melee=true },
+  fish     = { prob=50, hp=25,  dm=99, melee=true },
+  grunt    = { prob=50, hp=30,  dm=99, hitscan=true },
+  enforcer = { prob=50, hp=80,  dm=99 },
+
+  zombie   = { prob=50, hp=60,  dm=99, melee=true },
+  wizard   = { prob=50, hp=80,  dm=99 },
+  spawn    = { prob=50, hp=80,  dm=99, melee=true },
+  knight   = { prob=50, hp=75,  dm=99, melee=true },
+
+  h_knight = { prob=50, hp=250, dm=99 },
+  ogre     = { prob=50, hp=200, dm=99 },
+  fiend    = { prob=50, hp=300, dm=99, melee=true },
+  vore     = { prob=50, hp=400, dm=99 },
+  shambler = { prob=50, hp=600, dm=99, hitscan=true },
 }
 
 Q1_BOSSES =
@@ -260,24 +270,13 @@ Q1_WEAPONS =
   knife       = { fp=0, melee=true,           rate=3.0, dm= 7, freq= 2, held=true },
   pistol      = { fp=1, ammo="bullet", per=1, rate=3.0, dm=17, freq=10, held=true },
 
-  machine_gun = { fp=2, ammo="bullet", give=4, per=1, rate=8.0,  dm=17, freq=30, },
-  gatling_gun = { fp=3, ammo="bullet", give=6, per=1, rate=16.0, dm=17, freq=90, },
-
-  -- Note: machine_gun actually gives _6_ bullets.
-  -- However: we don't model the fact that the SS_DUDE only
-  -- drops a 4-bullet clip if you already have the machine gun.
-  -- Therefore: this hack should maintain ammo balance.
 }
 
 Q1_PICKUPS =
 {
   first_aid = { stat="health", give=25 },
   good_food = { stat="health", give=10 },
-  dog_food  = { stat="health", give=4  },
 
-  -- NOTE: no "gibs" here, they are fairly insignificant
-
-  clip_8  =   { stat="bullet", give=8 },
 }
 
 Q1_INITIAL_MODEL =
