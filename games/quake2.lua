@@ -70,7 +70,7 @@ Q2_THINGS =
   grenade  = { id="weapon_grenadelauncher", kind="pickup", r=16, h=32, pass=true },
   rocket   = { id="weapon_rocketlauncher",  kind="pickup", r=16, h=32, pass=true },
   hyper    = { id="weapon_hyperblaster",    kind="pickup", r=16, h=32, pass=true },
-  railgun  = { id="weapon_railgun",         kind="pickup", r=16, h=32, pass=true },
+  rail     = { id="weapon_railgun",         kind="pickup", r=16, h=32, pass=true },
   bfg      = { id="weapon_bfg",             kind="pickup", r=16, h=32, pass=true },
 
   heal_2     = { id="item_health_small", kind="pickup", r=16, h=32, pass=true },
@@ -287,16 +287,16 @@ Q2_MONSTER_GIVE =
 
 Q2_WEAPONS =
 {
-  knife       = { fp=0, melee=true,           rate=3.0, dm= 7, freq= 2, held=true },
-  pistol      = { fp=1, ammo="bullet", per=1, rate=3.0, dm=17, freq=10, held=true },
-
-  machine_gun = { fp=2, ammo="bullet", give=4, per=1, rate=8.0,  dm=17, freq=30, },
-  gatling_gun = { fp=3, ammo="bullet", give=6, per=1, rate=16.0, dm=17, freq=90, },
-
-  -- Note: machine_gun actually gives _6_ bullets.
-  -- However: we don't model the fact that the SS_DUDE only
-  -- drops a 4-bullet clip if you already have the machine gun.
-  -- Therefore: this hack should maintain ammo balance.
+  pistol   = { rate=XX, dm=10, freq= 1 },
+  shotty   = { rate=XX, dm=40, freq=40, ammo="shell",  per=1  },
+  ssg      = { rate=XX, dm=88, freq=60, ammo="shell",  per=2  },
+  machine  = { rate=XX, dm= 8, freq=30, ammo="bullet", per=1  },
+  chain    = { rate=XX, dm= 8, freq=60, ammo="bullet", per=1  },
+  grenade  = { rate=XX, dm=80, freq=20, ammo="grenade",per=1  },
+  rocket   = { rate=XX, dm=90, freq=30, ammo="rocket", per=1  },
+  hyper    = { rate=XX, dm=20, freq=60, ammo="slug",   per=1  },
+  rail     = { rate=XX, dm=140,freq=60, ammo="cell",   per=1  },
+  bfg      = { rate=XX, dm=200,freq=30, ammo="cell",   per=50 },
 }
 
 Q2_PICKUPS =
