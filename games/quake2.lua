@@ -287,16 +287,16 @@ Q2_MONSTER_GIVE =
 
 Q2_WEAPONS =
 {
-  pistol   = { rate=XX, dm=10, freq= 1 },
-  shotty   = { rate=XX, dm=40, freq=40, ammo="shell",  per=1  },
-  ssg      = { rate=XX, dm=88, freq=60, ammo="shell",  per=2  },
-  machine  = { rate=XX, dm= 8, freq=30, ammo="bullet", per=1  },
-  chain    = { rate=XX, dm= 8, freq=60, ammo="bullet", per=1  },
-  grenade  = { rate=XX, dm=80, freq=20, ammo="grenade",per=1  },
-  rocket   = { rate=XX, dm=90, freq=30, ammo="rocket", per=1  },
-  hyper    = { rate=XX, dm=20, freq=60, ammo="slug",   per=1  },
-  rail     = { rate=XX, dm=140,freq=60, ammo="cell",   per=1  },
-  bfg      = { rate=XX, dm=200,freq=30, ammo="cell",   per=50 },
+  pistol   = { rate=1.7, dm=10, freq= 1 },
+  shotty   = { rate=0.6, dm=40, freq=40, ammo="shell",  per=1  },
+  ssg      = { rate=0.8, dm=88, freq=60, ammo="shell",  per=2  },
+  machine  = { rate=6.0, dm= 8, freq=30, ammo="bullet", per=1  },
+  chain    = { rate=14,  dm= 8, freq=60, ammo="bullet", per=1  },
+  grenade  = { rate=0.7, dm=80, freq=20, ammo="grenade",per=1  },
+  rocket   = { rate=1.1, dm=90, freq=30, ammo="rocket", per=1  },
+  hyper    = { rate=5.0, dm=20, freq=60, ammo="slug",   per=1  },
+  rail     = { rate=0.6, dm=140,freq=60, ammo="cell",   per=1  },
+  bfg      = { rate=0.3, dm=200,freq=30, ammo="cell",   per=50 },
 }
 
 Q2_PICKUPS =
