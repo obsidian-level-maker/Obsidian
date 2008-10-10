@@ -18,6 +18,7 @@
 
 GAME  = {}
 CAPS  = {}
+HOOKS = {}
 LEVEL = {}
 PLAN  = {}
 SEEDS = {}
