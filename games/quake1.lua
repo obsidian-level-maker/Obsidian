@@ -37,7 +37,7 @@ Q1_THINGS =
   h_knight = { id="monster_hell_knight", kind="monster", r=32, h=80, },
   ogre     = { id="monster_ogre",     kind="monster", r=32, h=80, },
   fish     = { id="monster_fish",     kind="monster", r=32, h=80, },
-  wizard   = { id="monster_wizard",   kind="monster", r=32, h=80, },
+  scrag    = { id="monster_wizard",   kind="monster", r=32, h=80, },
 
   shambler = { id="monster_shambler", kind="monster", r=32, h=80, },
   spawn    = { id="monster_tarbaby",  kind="monster", r=32, h=80, },
@@ -246,7 +246,7 @@ Q1_MONSTERS =
   enforcer = { prob=50, hp=80,  dm=99 },
 
   zombie   = { prob=50, hp=60,  dm=99, melee=true },
-  wizard   = { prob=50, hp=80,  dm=99 },
+  scrag    = { prob=50, hp=80,  dm=99 },
   spawn    = { prob=50, hp=80,  dm=99, melee=true },
   knight   = { prob=50, hp=75,  dm=99, melee=true },
 
@@ -267,9 +267,14 @@ Q1_MONSTER_GIVE =
 
 Q1_WEAPONS =
 {
-  knife       = { fp=0, melee=true,           rate=3.0, dm= 7, freq= 2, held=true },
-  pistol      = { fp=1, ammo="bullet", per=1, rate=3.0, dm=17, freq=10, held=true },
-
+  axe      = { rate=2.0, dm=20, freq= 1, melee=true,           held=true },
+  pistol   = { rate=2.0, dm=20, freq=10, ammo="shell",  per=1, held=true },
+  ssg      = { rate=1.4, dm=45, freq=50, ammo="shell",  per=2 },
+  grenade  = { rate=1.5, dm=35, freq=20, ammo="rocket", per=1 },
+  rocket   = { rate=1.2, dm=70, freq=20, ammo="rocket", per=1 },
+  nailgun  = { rate=5.0, dm= 9, freq=50, ammo="nail",   per=1 },
+  nailgun2 = { rate=5.0, dm=18, freq=50, ammo="nail",   per=2 },
+  zapper   = { rate=10,  dm=30, freq=20, ammo="cell",   per=1 },
 }
 
 Q1_PICKUPS =
