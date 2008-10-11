@@ -2596,24 +2596,27 @@ DM_MONSTER_GIVE =
 
 DM_WEAPONS =
 {
-  fist    = { fp=0, melee=true, rate=1.5, dm=10, freq=0.1, held=true },
+  fist    = { rate=1.5, dm=10, freq=0.1, fp=0, melee=true, held=true },
+  saw     = { rate=8.7, dm=10, freq=3,   fp=1, melee=true, },
+  berserk = { rate=1.5, dm=50, freq=6,   fp=1, melee=true, },
 
-  saw     = { fp=1, melee=true, rate=8.7, dm=10, freq=3 },
-  berserk = { fp=1, melee=true, rate=1.5, dm=50, freq=6 },
+  pistol  = { rate=1.8, dm=10, freq=10, fp=1, ammo="bullet", per=1, held=true },
+  shotty  = { rate=0.9, dm=70, freq=81, fp=2, ammo="shell",  per=1, give=8  },
+  super   = { rate=0.6, dm=170,freq=50, fp=3, ammo="shell",  per=2, give=8  },
+  chain   = { rate=8.5, dm=10 ,freq=91, fp=3, ammo="bullet", per=1, give=20 },
+                                                                    
+  launch  = { rate=1.7, dm=90, freq=50, fp=4, ammo="rocket", per=1, give=2, dangerous=true },
+  plasma  = { rate=11,  dm=22, freq=80, fp=4, ammo="cell",   per=1, give=40 },
+  bfg     = { rate=0.8, dm=450,freq=30, fp=5, ammo="cell",   per=40,give=40 },
 
-  pistol  = { fp=1, ammo="bullet",         per=1, rate=1.8, dm=10 , freq=10, held=true },
-  shotty  = { fp=2, ammo="shell",  give=8, per=1, rate=0.9, dm=70 , freq=81 },
-
-  super   = { fp=3, ammo="shell",  give=8, per=2, rate=0.6, dm=170, freq=50 },
-  chain   = { fp=3, ammo="bullet", give=20,per=1, rate=8.5, dm=10 , freq=91 },
-
-  launch  = { fp=4, ammo="rocket", give=2, per=1, rate=1.7, dm=90,  freq=50, dangerous=true },
-  plasma  = { fp=4, ammo="cell",   give=40,per=1, rate=11,  dm=22 , freq=80 },
-  bfg     = { fp=5, ammo="cell",   give=40,per=40,rate=0.8, dm=450, freq=30 },
-
-  -- Note: Berserk is not really an extra weapon, but a powerup
+  -- Notes:
+  --
+  -- Berserk is not really an extra weapon, but a powerup
   -- which makes fist do much more damage.  The effect lasts till
   -- the end of the level, so a weapon is a pretty good fit.
+  --
+  -- Supershotgun is not present in Doom 1.  It is removed from
+  -- the weapon table by doom1_factory().
 }
 
 -- sometimes a certain weapon is preferred against a certain monster.

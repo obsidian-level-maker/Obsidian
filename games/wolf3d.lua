@@ -530,11 +530,10 @@ WF_MONSTER_GIVE =
 
 WF_WEAPONS =
 {
-  knife       = { fp=0, melee=true,           rate=3.0, dm= 7, freq= 2, held=true },
-  pistol      = { fp=1, ammo="bullet", per=1, rate=3.0, dm=17, freq=10, held=true },
-
-  machine_gun = { fp=2, ammo="bullet", give=4, per=1, rate=8.0,  dm=17, freq=30, },
-  gatling_gun = { fp=3, ammo="bullet", give=6, per=1, rate=16.0, dm=17, freq=90, },
+  knife       = { rate=3.0, dm= 7, freq= 2, fp=0, melee=true, held=true },
+  pistol      = { rate=3.0, dm=17, freq=10, fp=1, ammo="bullet", per=1, held=true },
+  machine_gun = { rate=8.0, dm=17, freq=30, fp=2, ammo="bullet", per=1, give=4, },
+  gatling_gun = { rate=16,  dm=17, freq=90, fp=3, ammo="bullet", per=1, give=6, },
 
   -- Note: machine_gun actually gives _6_ bullets.
   -- However we don't model the fact that the SS_DUDE only
