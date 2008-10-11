@@ -1565,21 +1565,34 @@ XN_BOSSES =
 
 XN_WEAPONS =
 {
-  -- FIXME: rate and dm values are CRAP!
-  c_mace    = { fp=1, held=true, melee=true,     rate=1.1, dm=12, freq=10, held=true, },
-  c_staff   = { fp=2, ammo="blue_mana",  per=1,  rate=1.1, dm= 6, freq=21, },
-  c_fire    = { fp=3, ammo="green_mana", per=4,  rate=1.1, dm=27, freq=42, },
-  c_wraith  = { fp=4, ammo="dual_mana",  per=18, rate=2.2, dm=200,freq=94, },
+  c_mace    = { rate=1.6, dm=32, freq=10, fp=1, held=true, melee=true,     held=true, },
+  c_staff   = { rate=3.5, dm=36, freq=30, fp=2, ammo="blue_mana",  per=1,  },
+  c_fire    = { rate=1.6, dm=64, freq=60, fp=3, ammo="green_mana", per=4,  },
+  c_wraith  = { rate=1.7, dm=200,freq=20, fp=4, ammo="dual_mana",  per=18, },
 
-  f_gaunt   = { fp=1, held=true, melee=true,     rate=1.1, dm=20, freq=10, held=true, },
-  f_axe     = { fp=2, ammo="blue_mana",  per=2,  rate=1.1, dm=60, freq=21, melee=true },
-  f_hammer  = { fp=3, ammo="green_mana", per=3,  rate=1.1, dm=27, freq=42, },
-  f_quietus = { fp=4, ammo="dual_mana",  per=14, rate=2.2, dm=200,freq=94, },
+  f_gaunt   = { rate=2.0, dm=47, freq=10, fp=1, held=true, melee=true,     held=true, },
+  f_axe     = { rate=1.6, dm=70, freq=30, fp=2, ammo="blue_mana",  per=2,  melee=true },
+  f_hammer  = { rate=1.1, dm=100,freq=60, fp=3, ammo="green_mana", per=3,  },
+  f_quietus = { rate=1.1, dm=200,freq=20, fp=4, ammo="dual_mana",  per=14, },
 
-  m_wand    = { fp=1, held=true,                 rate=1.1, dm= 8, freq=10, penetrates=true },
-  m_cone    = { fp=2, ammo="blue_mana",  per=3,  rate=1.1, dm=27, freq=21, },
-  m_blitz   = { fp=3, ammo="green_mana", per=5,  rate=1.1, dm=60, freq=42, },
-  m_scourge = { fp=4, ammo="dual_mana",  per=15, rate=2.2, dm=200,freq=94, },
+  m_wand    = { rate=2.3, dm=8,  freq=10, fp=1, held=true, penetrates=true },
+  m_cone    = { rate=1.1, dm=30, freq=30, fp=2, ammo="blue_mana",  per=3,  },
+  m_blitz   = { rate=1.0, dm=80, freq=60, fp=3, ammo="green_mana", per=5,  },
+  m_scourge = { rate=1.7, dm=200,freq=20, fp=4, ammo="dual_mana",  per=15, },
+
+  -- Notes:
+  --
+  -- Weapon change their behavior (and hence damage) based on which
+  -- types of Mana the player has.  This is not handled yet.
+  --
+  -- Some weapons have both melee and projectile modes (e.g. the
+  -- Fighter's hammer will throw a hammer when no monsters are in
+  -- melee range).  The 'dm' value then is somewhere in between
+  -- the projectile damage and melee damage.
+  --
+  -- Exactly how much damage the BIG weapons can do depends a lot
+  -- on how many monsters are in view.  The 'dm' values above are
+  -- nothing but guesses.
 }
 
 XN_WEAPON_NAMES =
