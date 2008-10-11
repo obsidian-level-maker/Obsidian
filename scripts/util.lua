@@ -191,6 +191,30 @@ function merge_missing(dest, src)
   return dest
 end
 
+function deep_merge(dest, src, _curdepth)
+  _curdepth = _curdepth or 1
+
+  for k,v in pairs(src) do
+    if type(v) == "table" then
+      if type(dest[k]) ~= "table" then
+        dest[k] = {}
+      end
+      if _curdepth > 10 then
+        error("deep_merge/copy failure: loop detected")
+      end
+      deep_merge(dest[k], v, _curdepth+1)
+    else
+      dest[k] = v
+    end
+  end
+
+  return dest
+end
+
+function deep_copy(t)
+  return t and deep_merge({}, t)
+end
+
 function name_it_up(LIST)
   for name,info in pairs(LIST) do
     info.name = name
