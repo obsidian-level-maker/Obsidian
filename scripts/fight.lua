@@ -33,7 +33,7 @@
 -- Notes:
 --
 -- *  Health result is stored in the 'ammos' table.  All the
---    values will be >= 0.
+--    values are >= 0 and can be partial (like 3.62 rockets).
 --
 -- *  Armor is not directly modelled.  Instead you can assume
 --    that some percentage of the returned 'health' would have
@@ -45,12 +45,13 @@
 --    by being stingy on health/ammo in the room containing
 --    the powerup (and subsequent rooms).
 --
--- *  Monsters are "fought" one by one, in order of distance
---    from the room's entrance (with some preference for
---    having the toughest monsters first, which is how the
---    real player would tackle them).  Your weapons can hurt
---    other monsters though, to model such things as rocket
---    splash damage, shotgun spread, etc..
+-- *  Monsters are "fought" one by one in the given list.
+--    Typically they should be in order of distance from the
+--    room's entrance (with some preference for having the
+--    toughest monsters first, which is how the real player
+--    would tackle them).  Your weapons can damage other
+--    monsters though, to model such things as rocket splash,
+--    shotgun spread, the BFG etc...
 --
 --    All of the monsters are fighting the player.  They are
 --    assumed to be linearly spread out (first one is closest
@@ -66,5 +67,21 @@
 --
 
 function fight_simulator(monsters, weapons, skill, ammos)
+
+  local function player_shoot()
+  end
+
+
+  local function monsters_shoot()
+  end
+
+  ---===| fight_simulator |===---
+
+  ammos.health = 0
+
+  while #monsters > 0 do
+    monsters_shoot()
+    player_shoot()
+  end
 end
 
