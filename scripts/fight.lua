@@ -17,3 +17,54 @@
 ----------------------------------------------------------------
 
 
+-- ===================
+--  BATTLE SIMULATION
+-- ===================
+--
+-- Inputs:
+--    monsters : list of monsters that the player must kill
+--    weapons  : list of weapons that player can use
+--    skill    : skill level
+--
+-- Output:
+--    health   : health that player needs to survive the battle
+--    ammos    : ammo quantities required by the player
+--
+-- Notes:
+--
+-- *  Health result is stored in the 'ammos' table.  All the
+--    values will be >= 0.
+--
+-- *  Armor is not directly modelled.  Instead you can assume
+--    that some percentage of the returned 'health' would have
+--    been saved if the player was wearing armor.
+--
+-- *  Powerups are not modelled.  The assumption here is that
+--    any powerups on the level are bonuses for the player
+--    and not a core part of gameplay.  It could be handled
+--    by being stingy on health/ammo in the room containing
+--    the powerup (and subsequent rooms).
+--
+-- *  Monsters are "fought" one by one, in order of distance
+--    from the room's entrance (with some preference for
+--    having the toughest monsters first, which is how the
+--    real player would tackle them).  Your weapons can hurt
+--    other monsters though, to model such things as rocket
+--    splash damage, shotgun spread, etc..
+--
+--    All of the monsters are fighting the player.  They are
+--    assumed to be linearly spread out (first one is closest
+--    and last one is far away), 2D layouts are not modelled.
+--    Further away monsters do less damage, we also assume
+--    that closer monsters get in the way (especially for
+--    missile attacks), and that melee monsters can only hurt
+--    you when they are first (at most second) in the list.
+--
+-- *  Infighting between monsters is modelled but is toned
+--    down, since the real layout will make a big difference
+--    to the results, so we aim for some kind of average.
+--
+
+function fight_simulator(monsters, weapons, skill, ammos)
+end
+
