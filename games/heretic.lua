@@ -34,15 +34,15 @@ HC_THINGS =
   teleport_spot = { id=14, kind="other", r=16,h=56 },
 
   --- monsters ---
-  gargoyle    = { id=66, kind="monster", r=16,h=36 },
-  fire_garg   = { id=5,  kind="monster", r=16,h=36 },
-  golem       = { id=68, kind="monster", r=22,h=64 },
-  golem_inv   = { id=69, kind="monster", r=22,h=64 },
+  gargoyle   = { id=66, kind="monster", r=16,h=36 },
+  fire_garg  = { id=5,  kind="monster", r=16,h=36 },
+  mummy      = { id=68, kind="monster", r=22,h=64 },
+  mummy_inv  = { id=69, kind="monster", r=22,h=64 },
 
-  nitro       = { id=45, kind="monster", r=22,h=64 },
-  nitro_inv   = { id=46, kind="monster", r=22,h=64 },
-  warrior     = { id=64, kind="monster", r=24,h=80 },
-  warrior_inv = { id=65, kind="monster", r=24,h=80 },
+  leader     = { id=45, kind="monster", r=22,h=64 },
+  leader_inv = { id=46, kind="monster", r=22,h=64 },
+  knight     = { id=64, kind="monster", r=24,h=80 },
+  knight_inv = { id=65, kind="monster", r=24,h=80 },
 
   disciple   = { id=15, kind="monster", r=16,h=72 },
   sabreclaw  = { id=90, kind="monster", r=20,h=64 },
@@ -1321,27 +1321,28 @@ HC_QUEST_LEN_PROBS =
 
 HC_MONSTERS =
 {
-  -- FIXME: dm and fp values are CRAP!
-  gargoyle    = { prob=30, hp=20,  dm= 7, fp=1.0, cage_fallback=10, float=true, melee=true },
-  fire_garg   = { prob=20, hp=80,  dm=21, fp=2.0, float=true },
-  golem       = { prob=60, hp=80,  dm= 7, fp=1.1, melee=true },
-  golem_inv   = { prob=20, hp=80,  dm= 7, fp=2.1, melee=true },
+  gargoyle   = { prob=30, hp=20,  dm= 5, fp=1.0, cage_fallback=10, float=true, melee=true },
+  fire_garg  = { prob=10, hp=80,  dm= 8, fp=1.0, float=true },
+  mummy      = { prob=60, hp=80,  dm= 8, fp=1.1, melee=true },
+  mummy_inv  = { prob=10, hp=80,  dm= 8, fp=1.1, melee=true },
+  sabreclaw  = { prob=25, hp=150, dm=12, fp=1.3, melee=true },
 
-  nitro       = { prob=70, hp=100, dm=21, fp=2.5, },
-  nitro_inv   = { prob=10, hp=100, dm=21, fp=2.7, },
-  warrior     = { prob=70, hp=200, dm=15, fp=2.5, },
-  warrior_inv = { prob=20, hp=200, dm=15, fp=2.7, },
+  knight     = { prob=70, hp=200, dm=12, fp=1.5, },
+  knight_inv = { prob=10, hp=200, dm=14, fp=1.5, },
+  leader     = { prob=70, hp=100, dm=16, fp=2.1, },
+  leader_inv = { prob=10, hp=100, dm=16, fp=2.1, },
 
-  disciple    = { prob=25, hp=180, dm=30, fp=3.0, float=true },
-  sabreclaw   = { prob=25, hp=150, dm=30, fp=2.3, melee=true },
-  weredragon  = { prob=20, hp=220, dm=50, fp=3.0, },
-  ophidian    = { prob=20, hp=280, dm=50, fp=3.0, },
+  disciple   = { prob=25, hp=180, dm=20, fp=2.5, float=true },
+  weredragon = { prob=30, hp=220, dm=25, fp=2.5, },
+  ophidian   = { prob=30, hp=280, dm=25, fp=2.5, },
 
+  -- FIXME: not really a monster [MOVE OUTTA HERE]
   pod = { prob=5, hp=45, dm=2, fp=1.0, melee=true, passive=true },
 }
 
 HC_BOSSES =
 {
+  -- dm values are crap
   Ironlich    = { prob= 4, hp=700,  dm=99, fp=3.0, float=true },
   Maulotaur   = { prob= 1, hp=3000, dm=99, fp=3.0, },
   D_Sparil    = { prob= 1, hp=2000, dm=99, fp=3.0, },
