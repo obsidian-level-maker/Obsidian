@@ -18,8 +18,7 @@
 
 XN_THINGS =
 {
-  --- PLAYERS ---
-
+  --- players
   player1 = { id=1, kind="other", r=16,h=64 },
   player2 = { id=2, kind="other", r=16,h=64 },
   player3 = { id=3, kind="other", r=16,h=64 },
@@ -28,22 +27,21 @@ XN_THINGS =
   dm_player     = { id=11, kind="other", r=16,h=64 },
   teleport_spot = { id=14, kind="other", r=16,h=64 },
   
-  --- MONSTERS ---
-
+  --- monsters
   ettin    = { id=10030,kind="monster", r=24,h=64 },
   afrit    = { id=10060,kind="monster", r=24,h=64 },
   demon1   = { id=31,   kind="monster", r=33,h=70 },
   demon2   = { id=8080, kind="monster", r=33,h=70 },
 
-  wendigo  = { id=8020, kind="monster", r=24,h=80 },
+  iceguy   = { id=8020, kind="monster", r=24,h=80 },
   centaur1 = { id=107,  kind="monster", r=20,h=64 },
   centaur2 = { id=115,  kind="monster", r=20,h=64 },
 
-  stalker1  = { id=121,  kind="monster", r=33,h=64 },
-  stalker2  = { id=120,  kind="monster", r=33,h=64 },
+  serpent1  = { id=121,  kind="monster", r=33,h=64 },
+  serpent2  = { id=120,  kind="monster", r=33,h=64 },
   bishop    = { id=114,  kind="monster", r=24,h=64 },
   reiver    = { id=34,   kind="monster", r=24,h=64 },
-  reiver_bd = { id=10011,kind="monster", r=24,h=64 },
+  reiver_b  = { id=10011,kind="monster", r=24,h=64 },
 
   -- bosses
   Fighter_boss = { id=10100, kind="monster", r=16,h=64  },
@@ -55,7 +53,7 @@ XN_THINGS =
 
   --- PICKUPS ---
 
-  -- keys --
+  -- keys
   k_steel   = { id=8030, kind="pickup", r=8,h=16 },
   k_cave    = { id=8031, kind="pickup", r=8,h=16 },
   k_axe     = { id=8032, kind="pickup", r=8,h=16 },
@@ -68,7 +66,7 @@ XN_THINGS =
   k_swamp   = { id=8039, kind="pickup", r=8,h=16 },
   k_castle  = { id=8200, kind="pickup", r=8,h=16 },
  
-  -- weapons --
+  -- weapons
   c_staff   = { id=10,  kind="pickup", r=20,h=16 },
   c_fire    = { id=8009,kind="pickup", r=20,h=16 },
   c1_shaft  = { id=20,  kind="pickup", r=20,h=16 },
@@ -87,7 +85,7 @@ XN_THINGS =
   m2_stub   = { id=22,  kind="pickup", r=20,h=16 },
   m3_skull  = { id=21,  kind="pickup", r=20,h=16 },
 
-  -- health/ammo/armor --
+  -- health/ammo/armor
   blue_mana  = { id=122, kind="pickup", r=20,h=16 },
   green_mana = { id=124, kind="pickup", r=20,h=16 },
   dual_mana  = { id=8004,kind="pickup", r=20,h=16 },
@@ -101,7 +99,7 @@ XN_THINGS =
   h_flask = { id=82, kind="pickup", r=20,h=16 },
   h_urn   = { id=32, kind="pickup", r=20,h=16 },
 
-  -- artifacts --
+  -- artifacts
   wings = { id=83, kind="pickup", r=20,h=16 },
   chaos = { id=36, kind="pickup", r=20,h=16 },
   torch = { id=33, kind="pickup", r=20,h=16 },
@@ -119,7 +117,7 @@ XN_THINGS =
 
   --- SCENERY ---
 
-  -- lights --
+  -- lights
   candles       = { id=119,  kind="scenery", r=20,h=20, light=255 },
   blue_candle   = { id=8066, kind="scenery", r=20,h=20, light=255 },
   fire_skull    = { id=8060, kind="scenery", r=12,h=12, light=255 },
@@ -137,7 +135,7 @@ XN_THINGS =
   fire_bull       = { id=8042,kind="scenery", r=24,h=80, light=255 },
   fire_bull_out   = { id=8043,kind="scenery", r=24,h=80 },
 
-  -- urbane --
+  -- urbane
   winged_statue1 = { id=5,   kind="scenery", r=12,h=64 },
   winged_statue2 = { id=9011,kind="scenery", r=12,h=64 },
   suit_of_armor  = { id=8064,kind="scenery", r=16,h=72 },
@@ -165,7 +163,7 @@ XN_THINGS =
 
   vase_pillar = { id=103, kind="scenery", r=12,h=56 },
 
-  -- natural --
+  -- nature
   tree1 = { id=25, kind="scenery", r=16,h=128 },
   tree2 = { id=26, kind="scenery", r=12,h=180 },
   tree3 = { id=27, kind="scenery", r=12,h=160 },
@@ -205,7 +203,7 @@ XN_THINGS =
   ice_stal_C_small  = { id=91, kind="scenery", r=12,h=36 },
   ice_stal_C_tiny   = { id=92, kind="scenery", r=12,h=16 },
 
-  -- gory --
+  -- gory
   impaled_corpse = { id=61,  kind="scenery", r=12, h=96 },
   laying_corpse  = { id=62,  kind="scenery", r=12, h=44 },
   hang_corpse_1  = { id=71,  kind="scenery", r=12, h=75, ceil=true },
@@ -215,11 +213,10 @@ XN_THINGS =
 
   iron_maiden    = { id=8067,kind="scenery", r=16,h=60 },
 
-  -- misc --
+  -- miscellaneous
   teleport_smoke = { id=140, kind="scenery", r=20,h=80, pass=true },
 
-  --- SOUNDS ---
-
+  -- ambient sounds
   snd_stone  = { id=1400, kind="other", r=16,h=16, pass=true },
   snd_heavy  = { id=1401, kind="other", r=16,h=16, pass=true },
   snd_metal1 = { id=1402, kind="other", r=16,h=16, pass=true },
@@ -1215,7 +1212,7 @@ XN_THEMES =
 
     monster_prefs =
     {
-      wendigo=500, afrit=0.2
+      iceguy =500, afrit=0.2
     },
   },
 
@@ -1229,7 +1226,7 @@ XN_THEMES =
     monster_prefs =
     {
       -- need high values just to make them appear
-      stalker1=5000, stalker2=3000
+      serpent1=5000, serpent2=3000
     },
   },
 
@@ -1539,25 +1536,24 @@ XN_INITIAL_MODEL =
 
 XN_MONSTERS =
 {
-  -- FIXME: dm stats are CRAP!
-  ettin      = { prob=60, hp=170, dm= 5, fp=1.0, melee=true },
+  ettin      = { prob=60, hp=170, dm= 6, fp=1.0, melee=true },
+  afrit      = { prob=40, hp=80,  dm=20, fp=1.1, float=true },
+  centaur1   = { prob=40, hp=200, dm=12, fp=1.1, melee=true },
+  centaur2   = { prob=20, hp=250, dm=20, fp=1.1, },
 
-  afrit      = { prob=30, hp=80,  dm=15, fp=1.2, float=true },
-  demon1     = { prob=20, hp=90,  dm=12, fp=1.0, cage_fallback=2 },
-  demon2     = { prob=15, hp=90,  dm=20, fp=1.4, },
+  serpent1   = { prob=0.1,hp=90,  dm=10, fp=1.1, melee=true },
+  serpent2   = { prob=0.1,hp=90,  dm=16, fp=1.5, },
+  iceguy     = { prob=1,  hp=120, dm=16, fp=1.1, },
 
-  wendigo    = { prob= 1, hp=120, dm=25, fp=1.2, },
-  centaur1   = { prob=30, hp=200, dm=10, fp=1.6, melee=true },
-  centaur2   = { prob=15, hp=250, dm=20, fp=2.1, },
-
-  stalker1   = { prob=0.1,hp=250, dm=40, fp=1.3, melee=true },
-  stalker2   = { prob=0.1,hp=250, dm=40, fp=2.3, },
-  bishop     = { prob= 9, hp=130, dm=50, fp=2.5, float=true },
-  reiver     = { prob= 4, hp=150, dm=60, fp=2.8, float=true },
+  demon1     = { prob=30, hp=250, dm=35, fp=1.7, cage_fallback=2 },
+  demon2     = { prob=20, hp=250, dm=35, fp=1.7, },
+  bishop     = { prob=20, hp=130, dm=24, fp=2.1, float=true },
+  reiver     = { prob= 5, hp=150, dm=50, fp=2.5, float=true },
 }
 
 XN_BOSSES =
 {
+  -- dm values are crap
   Wyvern     = { hp=640, dm=60, fp=3.0, float=true },
   Heresiarch = { hp=5000,dm=70, fp=3.0 },
   Korax      = { hp=5000,dm=90, fp=3.0 },
