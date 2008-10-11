@@ -1349,17 +1349,23 @@ HC_BOSSES =
 
 HC_WEAPONS =
 {
-  -- FIXME: all these stats are CRAP!
-  staff      = { fp=0, melee=true, rate=3.0, dm=10, freq= 2, held=true },
-  gauntlets  = { fp=1, melee=true, rate=6.0, dm=50, freq= 8 },
+  staff      = { rate=2.5, dm=12, freq= 2, fp=0, melee=true, held=true },
+  gauntlets  = { rate=5.2, dm= 8, freq= 8, fp=1, melee=true, },
 
-  wand       = { fp=1, ammo="crystal",           per=1, rate=1.1, dm=10, freq=15, held=true },
-  crossbow   = { fp=2, ammo="arrow",     give=4, per=1, rate=1.1, dm=30, freq=90 },
-  claw       = { fp=2, ammo="claw_orb",  give=4, per=1, rate=1.1, dm=50, freq=50 },
+  wand       = { rate=3.1, dm=10, freq=15, fp=1, ammo="crystal",   per=1, held=true },
+  crossbow   = { rate=1.3, dm=20, freq=90, fp=2, ammo="arrow",     per=1, give=4, },
+  claw       = { rate=2.9, dm=16, freq=50, fp=2, ammo="claw_orb",  per=1, give=4, },
 
-  hellstaff  = { fp=3, ammo="runes",     give=4, per=1, rate=1.1, dm=60, freq=50 },
-  phoenix    = { fp=3, ammo="flame_orb", give=4, per=1, rate=1.1, dm=70, freq=50 },
-  firemace   = { fp=4, ammo="mace_orb",  give=4, per=1, rate=1.1, dm=90, freq=25 },
+  hellstaff  = { rate=8.7, dm=12, freq=50, fp=3, ammo="runes",     per=1, give=4, },
+  phoenix    = { rate=1.7, dm=80, freq=50, fp=3, ammo="flame_orb", per=1, give=4, },
+  firemace   = { rate=8.7, dm= 8, freq=25, fp=4, ammo="mace_orb",  per=1, give=4, },
+
+  -- Notes:
+  --
+  -- No information here about weapons when the Tome-Of-Power is
+  -- being used (such as different firing rates and ammo usage).
+  -- Since that artifact can be used at any time by the player,
+  -- OBLIGE cannot properly model it.
 }
 
 HC_PICKUPS =
