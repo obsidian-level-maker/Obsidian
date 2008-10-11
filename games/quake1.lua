@@ -240,21 +240,21 @@ Q1_THEMES =
 
 Q1_MONSTERS =
 {
-  dog      = { prob=50, hp=25,  dm=99, melee=true },
-  fish     = { prob=50, hp=25,  dm=99, melee=true },
-  grunt    = { prob=50, hp=30,  dm=99, hitscan=true },
-  enforcer = { prob=50, hp=80,  dm=99 },
+  dog      = { prob=10, hp=25,  dm=5,  melee=true },
+  fish     = { prob= 0, hp=25,  dm=3,  melee=true },
+  grunt    = { prob=80, hp=30,  dm=14, hitscan=true },
+  enforcer = { prob=40, hp=80,  dm=18 },
 
-  zombie   = { prob=50, hp=60,  dm=99, melee=true },
-  scrag    = { prob=50, hp=80,  dm=99 },
-  spawn    = { prob=50, hp=80,  dm=99, melee=true },
-  knight   = { prob=50, hp=75,  dm=99, melee=true },
+  zombie   = { prob=10, hp=60,  dm=8,  melee=true },
+  scrag    = { prob=60, hp=80,  dm=18 },
+  spawn    = { prob=10, hp=80,  dm=10, melee=true },
+  knight   = { prob=60, hp=75,  dm=9,  melee=true },
 
-  h_knight = { prob=50, hp=250, dm=99 },
-  ogre     = { prob=50, hp=200, dm=99 },
-  fiend    = { prob=50, hp=300, dm=99, melee=true },
-  vore     = { prob=50, hp=400, dm=99 },
-  shambler = { prob=50, hp=600, dm=99, hitscan=true },
+  h_knight = { prob=30, hp=250, dm=30 },
+  ogre     = { prob=40, hp=200, dm=15 },
+  fiend    = { prob=10, hp=300, dm=20, melee=true },
+  vore     = { prob=10, hp=400, dm=25 },
+  shambler = { prob=10, hp=600, dm=30, hitscan=true },
 }
 
 Q1_BOSSES =
