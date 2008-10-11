@@ -253,28 +253,28 @@ Q2_THEMES =
 
 Q2_MONSTERS =
 {
-  guard      = { prob=50, hp= 20, dm=99 },
-  guard_sg   = { prob=50, hp= 30, dm=99, hitscan=true },
-  guard_mg   = { prob=50, hp= 30, dm=99, hitscan=true },
-  enforcer   = { prob=50, hp=100, dm=99 },
+  guard      = { prob=20, hp= 20, dm=4 },
+  guard_sg   = { prob=70, hp= 30, dm=10, hitscan=true },
+  guard_mg   = { prob=70, hp= 30, dm=10, hitscan=true },
+  enforcer   = { prob=50, hp=100, dm=10, hitscan=true },
 
-  flyer      = { prob=50, hp= 50, dm=99 },
-  shark      = { prob=50, hp= 50, dm=99, melee=true },
-  parasite   = { prob=50, hp=175, dm=99 },
+  flyer      = { prob=90, hp= 50, dm=5 },
+  shark      = { prob= 0, hp= 50, dm=5, melee=true },
+  parasite   = { prob=10, hp=175, dm=10 },
 
-  maiden     = { prob=50, hp=175, dm=99 },
-  technician = { prob=50, hp=200, dm=99 },
-  beserker   = { prob=50, hp=240, dm=99 },
-  icarus     = { prob=50, hp=240, dm=99 },
+  maiden     = { prob=50, hp=175, dm=30 },
+  technician = { prob=50, hp=200, dm=8 },
+  beserker   = { prob=50, hp=240, dm=18, melee=true },
+  icarus     = { prob=70, hp=240, dm=5 },
 
-  medic      = { prob=50, hp=300, dm=99 },
-  mutant     = { prob=50, hp=300, dm=99 },
-  brain      = { prob=50, hp=300, dm=99, melee=true },
-  grenader   = { prob=50, hp=400, dm=99 },
-  gladiator  = { prob=50, hp=400, dm=99 },
+  medic      = { prob=30, hp=300, dm=21 },
+  mutant     = { prob=30, hp=300, dm=24, melee=true },
+  brain      = { prob=20, hp=300, dm=17, melee=true },
+  grenader   = { prob=10, hp=400, dm=30 },
+  gladiator  = { prob=10, hp=400, dm=40 },
 
-  tank       = { prob=50, hp=750, dm=99 },
-  tank_cmdr  = { prob=50, hp=1000,dm=99 },
+  tank       = { prob= 3, hp=750, dm=160 },
+  tank_cmdr  = { prob= 2, hp=1000,dm=160 },
 }
 
 Q2_BOSSES =
