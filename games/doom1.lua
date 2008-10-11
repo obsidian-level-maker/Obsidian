@@ -2550,6 +2550,7 @@ DM_MONSTERS =
   spectre   = { prob=20, hp=150, dm=25, fp=2.3, cage_prob=40,melee=true },
   skull     = { prob=14, hp=100, dm=7,  fp=2.6, cage_prob= 2, melee=true, float=true },
  
+  -- FIXME: not really a monster [MOVE OUTTA HERE]
   barrel    = { prob=17, hp=10,  dm=2,  fp=1.0, melee=true, passive=true },
 }
 

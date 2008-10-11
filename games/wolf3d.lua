@@ -498,7 +498,7 @@ WF_MONSTERS =
   mutant  = { prob=10, hp=55,  dm=35, fp=1.9, hitscan=true, },
   ss_dude = { prob=60, hp=100, dm=30, fp=1.4, hitscan=true, },
 
-  -- this guy is only added in special places
+  -- [FIXME: MOVE OUTTA HERE]
   fake_hitler = { prob=0, hp=350, dm=50 },
 }
 
