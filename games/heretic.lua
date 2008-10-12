@@ -1321,31 +1321,31 @@ HC_QUEST_LEN_PROBS =
 
 HC_MONSTERS =
 {
-  gargoyle   = { prob=30, hp=20,  dm= 5, fp=1.0, cage_fallback=10, float=true, melee=true },
-  fire_garg  = { prob=10, hp=80,  dm= 8, fp=1.0, float=true },
-  mummy      = { prob=60, hp=80,  dm= 8, fp=1.1, melee=true },
-  mummy_inv  = { prob=10, hp=80,  dm= 8, fp=1.1, melee=true },
-  sabreclaw  = { prob=25, hp=150, dm=12, fp=1.3, melee=true },
+  gargoyle   = { prob=30, hp=20,  dm= 5, cage_fallback=10, float=true, melee=true },
+  fire_garg  = { prob=10, hp=80,  dm= 8, float=true },
+  mummy      = { prob=60, hp=80,  dm= 8, melee=true },
+  mummy_inv  = { prob=10, hp=80,  dm= 8, melee=true },
+  sabreclaw  = { prob=25, hp=150, dm=12, melee=true },
 
-  knight     = { prob=70, hp=200, dm=12, fp=1.5, },
-  knight_inv = { prob=10, hp=200, dm=14, fp=1.5, },
-  leader     = { prob=70, hp=100, dm=16, fp=2.1, },
-  leader_inv = { prob=10, hp=100, dm=16, fp=2.1, },
+  knight     = { prob=70, hp=200, dm=12, },
+  knight_inv = { prob=10, hp=200, dm=14, },
+  leader     = { prob=70, hp=100, dm=16, },
+  leader_inv = { prob=10, hp=100, dm=16, },
 
-  disciple   = { prob=25, hp=180, dm=20, fp=2.5, float=true },
-  weredragon = { prob=30, hp=220, dm=25, fp=2.5, },
-  ophidian   = { prob=30, hp=280, dm=25, fp=2.5, },
+  disciple   = { prob=25, hp=180, dm=20, float=true },
+  weredragon = { prob=30, hp=220, dm=25, },
+  ophidian   = { prob=30, hp=280, dm=25, },
 
   -- FIXME: not really a monster [MOVE OUTTA HERE]
-  pod = { prob=5, hp=45, dm=2, fp=1.0, melee=true, passive=true },
+  pod = { prob=5, hp=45, dm=2, melee=true, passive=true },
 }
 
 HC_BOSSES =
 {
   -- dm values are crap
-  Ironlich    = { prob= 4, hp=700,  dm=99, fp=3.0, float=true },
-  Maulotaur   = { prob= 1, hp=3000, dm=99, fp=3.0, },
-  D_Sparil    = { prob= 1, hp=2000, dm=99, fp=3.0, },
+  Ironlich    = { prob= 4, hp=700,  dm=99, float=true },
+  Maulotaur   = { prob= 1, hp=3000, dm=99, },
+  D_Sparil    = { prob= 1, hp=2000, dm=99, },
 }
 
 HC_WEAPONS =
@@ -1647,6 +1647,7 @@ UNFINISHED["heretic"] =
     switches=true,
     liquids=true,
     teleporters=true,
+    infighting = true,
     prefer_stairs=true,
   },
 }

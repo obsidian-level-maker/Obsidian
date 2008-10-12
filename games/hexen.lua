@@ -1536,27 +1536,27 @@ XN_INITIAL_MODEL =
 
 XN_MONSTERS =
 {
-  ettin      = { prob=60, hp=170, dm= 6, fp=1.0, melee=true },
-  afrit      = { prob=40, hp=80,  dm=20, fp=1.1, float=true },
-  centaur1   = { prob=40, hp=200, dm=12, fp=1.1, melee=true },
-  centaur2   = { prob=20, hp=250, dm=20, fp=1.1, },
+  ettin      = { prob=60, hp=170, dm= 6, melee=true },
+  afrit      = { prob=40, hp=80,  dm=20, float=true },
+  centaur1   = { prob=40, hp=200, dm=12, melee=true },
+  centaur2   = { prob=20, hp=250, dm=20, },
 
-  serpent1   = { prob=0.1,hp=90,  dm=10, fp=1.1, melee=true },
-  serpent2   = { prob=0.1,hp=90,  dm=16, fp=1.5, },
-  iceguy     = { prob=1,  hp=120, dm=16, fp=1.1, },
+  serpent1   = { prob=0.1,hp=90,  dm=10, melee=true },
+  serpent2   = { prob=0.1,hp=90,  dm=16, },
+  iceguy     = { prob=1,  hp=120, dm=16, },
 
-  demon1     = { prob=30, hp=250, dm=35, fp=1.7, cage_fallback=2 },
-  demon2     = { prob=20, hp=250, dm=35, fp=1.7, },
-  bishop     = { prob=20, hp=130, dm=24, fp=2.1, float=true },
-  reiver     = { prob= 5, hp=150, dm=50, fp=2.5, float=true },
+  demon1     = { prob=30, hp=250, dm=35, cage_fallback=2 },
+  demon2     = { prob=20, hp=250, dm=35, },
+  bishop     = { prob=20, hp=130, dm=24, float=true },
+  reiver     = { prob= 5, hp=150, dm=50, float=true },
 }
 
 XN_BOSSES =
 {
   -- dm values are crap
-  Wyvern     = { hp=640, dm=60, fp=3.0, float=true },
-  Heresiarch = { hp=5000,dm=70, fp=3.0 },
-  Korax      = { hp=5000,dm=90, fp=3.0 },
+  Wyvern     = { hp=640, dm=60, float=true },
+  Heresiarch = { hp=5000,dm=70, },
+  Korax      = { hp=5000,dm=90, },
 }
 
 XN_WEAPONS =
@@ -2132,16 +2132,17 @@ UNFINISHED["hexen"] =
 
   caps =
   {
-     rails=true,
-     switches=true,
-     liquids=true,
-     teleporters=true,
-     prefer_stairs=true,
+    rails=true,
+    switches=true,
+    liquids=true,
+    teleporters=true,
+    infighting = true,
+    prefer_stairs=true,
      
-     hubs=true,
-     polyobjs=true,
-     three_part_weapons=true,
-     ACS_script=true,
-   },
+    hubs=true,
+    polyobjs=true,
+    three_part_weapons=true,
+    ACS_script=true,
+  },
 }
 

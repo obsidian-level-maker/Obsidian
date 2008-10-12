@@ -2529,53 +2529,52 @@ DM_QUEST_LEN_PROBS =
 -- Monster list
 -- ============
 --
--- r  : radius
--- h  : height
--- hp : health-points
--- dm : damage can inflict per second (rough approx)
--- fp : firepower needed by player
+-- prob : usage probability (relative to other monsters)
+-- hp   : health points
+-- dm   : damage can inflict per second (rough approx)
+--
+-- float   : monster floats (flys)
+-- melee   : monster only has melee attack
+-- hitscan : monster uses a hitscan attack (e.g. shotgun)
 
 DM_MONSTERS =
 {
   -- FIXME: probs for CLOSET/DEPOT
-  zombie    = { prob=60, hp=20,  dm=4,  fp=1.0, cage_fallback=14, hitscan=true, },
-  shooter   = { prob=40, hp=30,  dm=10, fp=1.3, cage_prob= 8, hitscan=true, },
+  zombie    = { prob=60, hp=20,  dm=4,  cage_fallback=14, hitscan=true, },
+  shooter   = { prob=40, hp=30,  dm=10, cage_prob= 8, hitscan=true, },
 
-  imp       = { prob=80, hp=60,  dm=20, fp=1.6, cage_prob=50, },
-  caco      = { prob=80, hp=400, dm=45, fp=2.0, cage_prob=14, float=true },
-  baron     = { prob=50, hp=1000,dm=45, fp=3.8, cage_prob= 3, },
+  imp       = { prob=80, hp=60,  dm=20, cage_prob=50, },
+  caco      = { prob=80, hp=400, dm=45, cage_prob=14, float=true },
+  baron     = { prob=50, hp=1000,dm=45, cage_prob= 3, },
 
   -- MELEE only monsters
-  demon     = { prob=45, hp=150, dm=25, fp=2.3, cage_prob=66,melee=true },
-  spectre   = { prob=20, hp=150, dm=25, fp=2.3, cage_prob=40,melee=true },
-  skull     = { prob=14, hp=100, dm=7,  fp=2.6, cage_prob= 2, melee=true, float=true },
+  demon     = { prob=45, hp=150, dm=25, cage_prob=66,melee=true },
+  spectre   = { prob=20, hp=150, dm=25, cage_prob=40,melee=true },
+  skull     = { prob=14, hp=100, dm=7,  cage_prob= 2, melee=true, float=true },
  
   -- FIXME: not really a monster [MOVE OUTTA HERE]
-  barrel    = { prob=17, hp=10,  dm=2,  fp=1.0, melee=true, passive=true },
+  barrel    = { prob=17, hp=10,  dm=2,  melee=true, passive=true },
+}
+
+D2_MONSTERS =
+{
+  gunner    = { prob=17, hp=70,  dm=40, hitscan=true, cage_prob=70, },
+  ss_dude   = { prob=0.1,hp=50,  dm=15, hitscan=true, cage_prob=1 },
+
+  revenant  = { prob=70, hp=300, dm=55, cage_prob=50, },
+  knight    = { prob=70, hp=500, dm=45, cage_prob=50, },
+  mancubus  = { prob=95, hp=600, dm=80, cage_prob=88, },
+
+  arach     = { prob=36, hp=500, dm=70, cage_prob=95, },
+  vile      = { prob=20, hp=700, dm=50, cage_prob=12, hitscan=true },
+  pain      = { prob=14, hp=400, dm=88, float=true },
 }
 
 DM_BOSSES =
 {
   -- special monsters (only for boss levels)
-  Cyberdemon = { hp=4000,dm=150, fp=4.0 },
-  Mastermind = { hp=3000,dm=200, fp=4.0, hitscan=true },
-
-  -- FIXME: added just for kicks
-  keen = { hp=300, dm=1, fp=2.0 },
-}
-
-D2_MONSTERS =
-{
-  gunner    = { prob=17, hp=70,  dm=40, fp=2.5, hitscan=true, cage_prob=70, },
-  ss_dude   = { prob=0.1,hp=50,  dm=15, fp=2.4, hitscan=true, cage_prob=1 },
-
-  revenant  = { prob=70, hp=300, dm=55, fp=2.9, cage_prob=50, },
-  knight    = { prob=70, hp=500, dm=45, fp=2.9, cage_prob=50, },
-  mancubus  = { prob=95, hp=600, dm=80, fp=3.5, cage_prob=88, },
-
-  arach     = { prob=36, hp=500, dm=70, fp=2.5, cage_prob=95, },
-  vile      = { prob=20, hp=700, dm=50, fp=3.7, cage_prob=12, hitscan=true },
-  pain      = { prob=14, hp=400, dm=88, fp=3.0, float=true },
+  Cyberdemon = { hp=4000,dm=150, },
+  Mastermind = { hp=3000,dm=200, hitscan=true },
 }
 
 DM_MONSTER_GIVE =
@@ -3191,6 +3190,7 @@ OB_GAMES["doom1"] =
     switches = true,
     liquids = true,
     teleporters = true,
+    infighting = true,
   },
 }
 

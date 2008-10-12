@@ -1976,6 +1976,7 @@ OB_GAMES["doom2"] =
     switches = true,
     liquids = true,
     teleporters = true,
+    infighting = true,
   },
 }
 

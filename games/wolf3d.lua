@@ -492,11 +492,11 @@ WF_THEMES =
 
 WF_MONSTERS =
 {
-  dog     = { prob=20, hp=1,   dm=5,  fp=1.0, melee=true, },
-  guard   = { prob=60, hp=25,  dm=10, fp=1.0, hitscan=true, cage_fallback=10 },
-  officer = { prob=30, hp=50,  dm=20, fp=1.7, hitscan=true, },
-  mutant  = { prob=10, hp=55,  dm=35, fp=1.9, hitscan=true, },
-  ss_dude = { prob=60, hp=100, dm=30, fp=1.4, hitscan=true, },
+  dog     = { prob=20, hp=1,   dm=5,  melee=true, },
+  guard   = { prob=60, hp=25,  dm=10, hitscan=true, cage_fallback=10 },
+  officer = { prob=30, hp=50,  dm=20, hitscan=true, },
+  mutant  = { prob=10, hp=55,  dm=35, hitscan=true, },
+  ss_dude = { prob=60, hp=100, dm=30, hitscan=true, },
 
   -- [FIXME: MOVE OUTTA HERE]
   fake_hitler = { prob=0, hp=350, dm=50 },
