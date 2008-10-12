@@ -23,11 +23,6 @@ LEVEL = {}
 PLAN  = {}
 SEEDS = {}
 
-MIN_FLOOR = 0
-MAX_CEIL  = 640
-
-MAX_STEP = 16
-
 SKILLS = { "easy", "medium", "hard" }
    
 MODES =
