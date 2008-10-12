@@ -213,10 +213,6 @@ function fight_simulator(monsters, weapons, skill, ammos)
       if not HOOKS.check_infight(M.info, N.info) then
         return
       end
-    elseif GAME.check_infight then
-      if not GAME.check_infight(M.info, N.info) then
-        return
-      end
     else
       -- default -> only different species infight 
       if M.info == N.info then
@@ -228,7 +224,7 @@ function fight_simulator(monsters, weapons, skill, ammos)
     local dm1 = M.info.dm * (M.info.aggro or 0.5) * time
     local dm2 = N.info.dm * (N.info.aggro or 0.5) * time
 
-    local factor = 0.1 -- assume it happens rarely
+    local factor = 0.2 -- assume it happens rarely
 
     M.health = M.health - dm2 * factor
     N.health = N.health - dm1 * factor
