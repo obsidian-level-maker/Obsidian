@@ -929,7 +929,7 @@ end
 
 
 
-function Rooms_Make_Seeds()
+function Rooms_MakeSeeds()
 
   local function Plant_Rooms()
     for _,R in ipairs(PLAN.all_rooms) do
@@ -1030,6 +1030,9 @@ function Rooms_Make_Seeds()
 
   for _,R in ipairs(PLAN.all_rooms) do
     Border_Up(R)
+
+    R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
+    R.svolume  = R.sw * R.sh
   end
 
   Seed_dump_fabs()
@@ -1105,7 +1108,7 @@ function Plan_rooms_sp(epi_along)
 
   Rooms_CollectNeighbors()
   Rooms_Nudge()
-  Rooms_Make_Seeds()
+  Rooms_MakeSeeds()
 
 end -- Plan_rooms_sp
 
