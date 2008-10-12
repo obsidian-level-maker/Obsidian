@@ -135,7 +135,6 @@ function fight_simulator(monsters, weapons, skill, ammos)
   end
 
   local function player_shoot(W, time)
-
     hurt_mon(1, W.dm * time * shoot_accuracy)
 
     -- shotguns can hit multiple monsters
@@ -156,8 +155,67 @@ function fight_simulator(monsters, weapons, skill, ammos)
   end
 
 
-  local function monsters_shoot()
-    -- FIXME
+  local function monster_hit_player(M, idx, time)
+    -- how likely the monster is to hit the player
+    local dist_ratio
+    local info = M.info
+
+    if info.no_dist then
+      dist_ratio = 1.0
+    elseif info.melee then
+      dist_ratio = MELEE_RATIOS[idx]
+    elseif info.hitscan then
+      dist_ratio = HITSCAN_RATIOS[idx]
+    else
+      dist_ratio = MISSILE_RATIOS[idx]
+    end
+
+    -- monster is too far away to hurt player?
+    if not dist_ratio then return end
+
+    -- how often the monster fights the player (instead of running
+    -- around).
+    local active_ratio = info.aggression or 0.5
+
+    -- how well the player can dodge the monster's attack
+    -- TODO: take 'cover' and/or 'space' into account here
+    local dodge_ratio
+
+    if info.no_dist then
+      dodge_ratio = 1.0
+    elseif info.melee then
+      dodge_ratio = 1.0 - MELEE_DODGES[skill]
+    elseif info.hitscan then
+      dodge_ratio = 1.0 - HITSCAN_DODGES[idx]
+    else
+      dodge_ratio = 1.0 - MISSILE_DODGES[idx]
+    end
+
+    local damage = info.dm * time * dist_ratio * active_ratio * dodge_ratio
+
+    ammos.health = ammos.health + damage
+  end
+
+  local function monster_infight(M, N, time)
+    if not CAPS.infighting then
+      return
+    end
+    if N.health <= 0 then
+      return
+    end
+
+    -- TODO: good logic for monster infighting
+  end
+
+  local function monsters_shoot(time)
+    for idx,M in ipairs(active_mon) do
+      if M.health > 0 then
+        monster_hit_player(M, idx, time)
+        if idx >= 2 then
+          monster_infight(M, active_mons[idx-1], time)
+        end
+      end
+    end
   end
 
 
@@ -169,7 +227,8 @@ function fight_simulator(monsters, weapons, skill, ammos)
     table.insert(active_mon, { info=info, health=info.hp })
   end
 
-  -- let the monsters throw the first punch
+  -- let the monsters throw the first punch (albeit a weak one)
+  -- IDEA: can pass in a 'surprise_time' value
   monsters_shoot(0.5)
 
   while #active_mon > 0 do

@@ -64,3 +64,11 @@ OB_THEMES["mixed"] =
 
 PLAYER_ACCURACIES = { easy=0.50, medium=0.65, hard=0.80 }
 
+HITSCAN_RATIOS = { 1.0, 0.8, 0.6, 0.4, 0.2, 0.1 }
+MISSILE_RATIOS = { 1.0, 0.5, 0.2, 0.05 }
+MELEE_RATIOS   = { 1.0, 0.2 }
+
+HITSCAN_DODGES = { easy=0.05, medium=0.15, hard=0.30 }
+MISSILE_DODGES = { easy=0.50, medium=0.70, hard=0.85 }
+MELEE_DODGES   = { easy=0.50, medium=0.80, hard=0.98 }
+
