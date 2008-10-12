@@ -2588,27 +2588,29 @@ DM_MONSTER_GIVE =
 -- Weapon list
 -- ===========
 --
--- fp   : firepower level
--- per  : ammo per shot
--- rate : firing rate (shots per second)
--- dm   : damage can inflict per shot
--- freq : usage frequency (in the ideal)
--- held : already held at level start
+-- rate  : firing rate (shots per second)
+-- dm    : damage can inflict per shot
+-- ammo  : ammo type [nil for no ammo weapons]
+-- per   : ammo per shot
+-- give  : ammo given when weapon is picked up
+-- pref  : usage preference
+-- held  : true if already held at level start
+-- melee : true if weapon is melee-only
 
 DM_WEAPONS =
 {
-  fist    = { rate=1.5, dm=10, freq=0.1, fp=0, melee=true, held=true },
-  saw     = { rate=8.7, dm=10, freq=3,   fp=1, melee=true, },
-  berserk = { rate=1.5, dm=50, freq=6,   fp=1, melee=true, },
+  fist    = { rate=1.5, dm=10, pref=1,  melee=true, held=true },
+  saw     = { rate=8.7, dm=10, pref=5,  melee=true, },
+  berserk = { rate=1.5, dm=50, pref=8,  melee=true, },
 
-  pistol  = { rate=1.8, dm=10, freq=10, fp=1, ammo="bullet", per=1, held=true },
-  shotty  = { rate=0.9, dm=70, freq=81, fp=2, ammo="shell",  per=1, give=8  },
-  super   = { rate=0.6, dm=170,freq=50, fp=3, ammo="shell",  per=2, give=8  },
-  chain   = { rate=8.5, dm=10 ,freq=91, fp=3, ammo="bullet", per=1, give=20 },
+  pistol  = { rate=1.8, dm=10, pref=10, ammo="bullet", per=1, held=true },
+  shotty  = { rate=0.9, dm=70, pref=110,ammo="shell",  per=1, give=8  },
+  super   = { rate=0.6, dm=170,pref=70, ammo="shell",  per=2, give=8  },
+  chain   = { rate=8.5, dm=10 ,pref=80, ammo="bullet", per=1, give=20 },
                                                                     
-  launch  = { rate=1.7, dm=90, freq=50, fp=4, ammo="rocket", per=1, give=2, dangerous=true },
-  plasma  = { rate=11,  dm=22, freq=80, fp=4, ammo="cell",   per=1, give=40 },
-  bfg     = { rate=0.8, dm=450,freq=30, fp=5, ammo="cell",   per=40,give=40 },
+  launch  = { rate=1.7, dm=90, pref=60, ammo="rocket", per=1, give=2, dangerous=true },
+  plasma  = { rate=11,  dm=22, pref=80, ammo="cell",   per=1, give=40 },
+  bfg     = { rate=0.8, dm=450,pref=30, ammo="cell",   per=40,give=40 },
 
   -- Notes:
   --
@@ -2621,7 +2623,7 @@ DM_WEAPONS =
 }
 
 -- sometimes a certain weapon is preferred against a certain monster.
--- These values are multiplied with the weapon's "freq" field.
+-- These values are multiplied with the weapon's "pref" field.
 
 DM_MONSTER_WEAPON_PREFS =
 {

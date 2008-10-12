@@ -1561,20 +1561,20 @@ XN_BOSSES =
 
 XN_WEAPONS =
 {
-  c_mace    = { rate=1.6, dm=32, freq=10, fp=1, held=true, melee=true,     held=true, },
-  c_staff   = { rate=3.5, dm=36, freq=30, fp=2, ammo="blue_mana",  per=1,  },
-  c_fire    = { rate=1.6, dm=64, freq=60, fp=3, ammo="green_mana", per=4,  },
-  c_wraith  = { rate=1.7, dm=200,freq=20, fp=4, ammo="dual_mana",  per=18, },
+  c_mace    = { rate=1.6, dm=32, pref=10, held=true, melee=true,     held=true, },
+  c_staff   = { rate=3.5, dm=36, pref=30, ammo="blue_mana",  per=1,  },
+  c_fire    = { rate=1.6, dm=64, pref=60, ammo="green_mana", per=4,  },
+  c_wraith  = { rate=1.7, dm=200,pref=20, ammo="dual_mana",  per=18, },
 
-  f_gaunt   = { rate=2.0, dm=47, freq=10, fp=1, held=true, melee=true,     held=true, },
-  f_axe     = { rate=1.6, dm=70, freq=30, fp=2, ammo="blue_mana",  per=2,  melee=true },
-  f_hammer  = { rate=1.1, dm=100,freq=60, fp=3, ammo="green_mana", per=3,  },
-  f_quietus = { rate=1.1, dm=200,freq=20, fp=4, ammo="dual_mana",  per=14, },
+  f_gaunt   = { rate=2.0, dm=47, pref=10, held=true, melee=true,     held=true, },
+  f_axe     = { rate=1.6, dm=70, pref=30, ammo="blue_mana",  per=2,  melee=true },
+  f_hammer  = { rate=1.1, dm=100,pref=60, ammo="green_mana", per=3,  },
+  f_quietus = { rate=1.1, dm=200,pref=20, ammo="dual_mana",  per=14, },
 
-  m_wand    = { rate=2.3, dm=8,  freq=10, fp=1, held=true, penetrates=true },
-  m_cone    = { rate=1.1, dm=30, freq=30, fp=2, ammo="blue_mana",  per=3,  },
-  m_blitz   = { rate=1.0, dm=80, freq=60, fp=3, ammo="green_mana", per=5,  },
-  m_scourge = { rate=1.7, dm=200,freq=20, fp=4, ammo="dual_mana",  per=15, },
+  m_wand    = { rate=2.3, dm=8,  pref=10, held=true, penetrates=true },
+  m_cone    = { rate=1.1, dm=30, pref=30, ammo="blue_mana",  per=3,  },
+  m_blitz   = { rate=1.0, dm=80, pref=60, ammo="green_mana", per=5,  },
+  m_scourge = { rate=1.7, dm=200,pref=20, ammo="dual_mana",  per=15, },
 
   -- Notes:
   --

@@ -1350,16 +1350,16 @@ HC_BOSSES =
 
 HC_WEAPONS =
 {
-  staff      = { rate=2.5, dm=12, freq= 2, fp=0, melee=true, held=true },
-  gauntlets  = { rate=5.2, dm= 8, freq= 8, fp=1, melee=true, },
+  staff      = { rate=2.5, dm=12, pref= 1, melee=true, held=true },
+  gauntlets  = { rate=5.2, dm= 8, pref= 7, melee=true, },
 
-  wand       = { rate=3.1, dm=10, freq=15, fp=1, ammo="crystal",   per=1, held=true },
-  crossbow   = { rate=1.3, dm=20, freq=90, fp=2, ammo="arrow",     per=1, give=4, },
-  claw       = { rate=2.9, dm=16, freq=50, fp=2, ammo="claw_orb",  per=1, give=4, },
+  wand       = { rate=3.1, dm=10, pref=15, ammo="crystal",   per=1, held=true },
+  crossbow   = { rate=1.3, dm=20, pref=90, ammo="arrow",     per=1, give=4, },
+  claw       = { rate=2.9, dm=16, pref=60, ammo="claw_orb",  per=1, give=4, },
 
-  hellstaff  = { rate=8.7, dm=12, freq=50, fp=3, ammo="runes",     per=1, give=4, },
-  phoenix    = { rate=1.7, dm=80, freq=50, fp=3, ammo="flame_orb", per=1, give=4, },
-  firemace   = { rate=8.7, dm= 8, freq=25, fp=4, ammo="mace_orb",  per=1, give=4, },
+  hellstaff  = { rate=8.7, dm=12, pref=50, ammo="runes",     per=1, give=4, },
+  phoenix    = { rate=1.7, dm=80, pref=50, ammo="flame_orb", per=1, give=4, },
+  firemace   = { rate=8.7, dm= 8, pref=35, ammo="mace_orb",  per=1, give=4, },
 
   -- Notes:
   --
