@@ -175,7 +175,7 @@ function fight_simulator(monsters, weapons, skill, ammos)
 
     -- how often the monster fights the player (instead of running
     -- around).
-    local active_ratio = info.aggression or 0.5
+    local active_ratio = info.aggro or 0.5
 
     -- how well the player can dodge the monster's attack
     -- TODO: take 'cover' and/or 'space' into account here
@@ -197,14 +197,41 @@ function fight_simulator(monsters, weapons, skill, ammos)
   end
 
   local function monster_infight(M, N, time)
+    -- FIXME: properly model pseudo-infighting, where one monster
+    --        accidentally hits (and hurt) another, but the other
+    --        monster doesn't retaliate.
+
     if not CAPS.infighting then
       return
     end
+
     if N.health <= 0 then
       return
     end
 
-    -- TODO: good logic for monster infighting
+    if HOOKS.check_infight then
+      if not HOOKS.check_infight(M.info, N.info) then
+        return
+      end
+    elseif GAME.check_infight then
+      if not GAME.check_infight(M.info, N.info) then
+        return
+      end
+    else
+      -- default -> only different species infight 
+      if M.info == N.info then
+        return
+      end
+    end
+
+    -- monster on monster action!
+    local dm1 = M.info.dm * (M.info.aggro or 0.5) * time
+    local dm2 = N.info.dm * (N.info.aggro or 0.5) * time
+
+    local factor = 0.1 -- assume it happens rarely
+
+    M.health = M.health - dm2 * factor
+    N.health = N.health - dm1 * factor
   end
 
   local function monsters_shoot(time)
