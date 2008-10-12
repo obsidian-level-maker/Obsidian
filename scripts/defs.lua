@@ -59,3 +59,8 @@ OB_THEMES["mixed"] =
   priority = -99,  -- bottom-most
 }
 
+
+-- Fight Simulator constants and tables
+
+PLAYER_ACCURACIES = { easy=0.50, medium=0.65, hard=0.80 }
+
