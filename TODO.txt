@@ -2,11 +2,18 @@
 TODO
 ====
 
->>> ensure floor_h and conn_h are multiples of 32
+
+Fight Sim: handle weapons that do more damage when more monsters
+           are in view (Doom and Q2's BFG, Hexen's big weaps).
+
+           >>> new 'splash_dm' and 'splash_num' fields
+
+Fight Sim: reimplement monster-weapon preferences
+Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
+
 
 Stairwells: more steps to ensure wall lengths <= 128 units
             --> SEED_SIZE * max(sx_span, sy_span) / 128
-
 
 Quests
   - sometimes lock another connection (ESP: symmetry)
@@ -47,11 +54,6 @@ REWRITE:
 
 >>> NEW BRANCH SYSTEM
 
-  - emergency connections ???
-
-  - physical bridges to connect some/most areas cut-off from
-    each other by Lava.
-
 + quest assignment !!
 
   ? pick rooms for BOSS monsters
@@ -85,7 +87,7 @@ QUAKE:
 
 ++ grab Q1 textures directly from PAK files
    ??? code to check if data/quake_tex.wad exists
-   ? gui.property("texture_wad", "data/oq_tex.wad")
+   ? gui.property("extra_tex_wad", "data/oq_tex.wad")
    ? gui.property("needed_pak",  "pak0.pak")
 
 - create "oblige" logo miptex [.wal for QuakeII]
@@ -156,10 +158,10 @@ GUI / C++:
 -  ideas for remaining button (YYY) :
    -  Secrets   (would be useless for DM)
    -  Powerups
-   -  Outdoor-iness
+   +  Outdoor-iness
    -  Lighting adjustment
    -  Big monster adjustment
-   +  Linearity
+   -  Linearity
 
 -  make sure target dir is writable _before_ making levels.
    (have a "CheckDirWritable" function?)
