@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------
 
 // this includes everything we need
-#include "defs.h"
+#include "headers.h"
 
 
 static bool menu_want_to_quit;

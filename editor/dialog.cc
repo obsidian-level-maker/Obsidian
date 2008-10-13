@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------
 
 // this includes everything we need
-#include "defs.h"
+#include "headers.h"
 
 
 static Fl_Window *cur_diag;

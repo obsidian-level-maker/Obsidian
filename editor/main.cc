@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------
 
 // this includes everything we need
-#include "defs.h"
+#include "headers.h"
 
 
 #define GUI_PrintMsg  printf
