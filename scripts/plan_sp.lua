@@ -682,8 +682,6 @@ function Rooms_Nudge()
   -- opposite (like a chess-board).
 
   local function volume_after_nudge(R, side, grow)
----###    local rw, rh = box_size(R.sx1,R.sy1, R.sx2,R.sy2)
-
     if (side == 6 or side == 4) then
       return (R.sw + grow) * R.sh
     else
@@ -691,7 +689,7 @@ function Rooms_Nudge()
     end
   end
 
-  local function allow_nudge(R, side, pull, grow, N, list)
+  local function allow_nudge(R, side, grow, N, list)
 
     -- above or below a sidewards nudge?
     if (side == 6 or side == 4) then
@@ -708,11 +706,6 @@ function Rooms_Nudge()
     if side == 8 and (N.sy2 < R.sy2) then return true end
     if side == 2 and (N.sy1 > R.sy1) then return true end
 
---!!!! experiment
-if grow < 0 and not pull and not (R.kind == N.kind and
-(R.kind == "ground" or R.kind == "valley" or R.kind == "hill"))
-then return true end
-
     if (side == 6 or side == 4) then
       if (N.sy1 < R.sy1) or (N.sy2 > R.sy2) then return false end
     else
@@ -725,23 +718,24 @@ then return true end
 
     if volume_after_nudge(N, 10-side, -grow) < 3 then return false end
 
---!!!!!!    if side == 6 then assert(N.sx1 == R.sx2+1) end
---!!!!!!    if side == 4 then assert(N.sx2 == R.sx1-1) end
---!!!!!!    if side == 8 then assert(N.sy1 == R.sy2+1) end
---!!!!!!    if side == 2 then assert(N.sy2 == R.sy1-1) end
+--???    if side == 6 then assert(N.sx1 == R.sx2+1) end
+--???    if side == 4 then assert(N.sx2 == R.sx1-1) end
+--???    if side == 8 then assert(N.sy1 == R.sy2+1) end
+--???    if side == 2 then assert(N.sy2 == R.sy1-1) end
 
     table.insert(list, { room=N, side=10-side, grow=-grow })
 
     return true
   end
 
-  local function try_nudge_room(R, side, pull, grow)
-    -- 'pull' true => any shrinkage must pull neighbors too
+  local function try_nudge_room(R, side, grow)
     -- 'grow' is positive to nudge outward, negative to nudge inward
 
-    if not grow then grow = rand_sel(75,1,-1) end
+    -- Note: any shrinkage must pull neighbors too
 
-pull=true; --!!!!!!
+    if not grow then
+      grow = rand_sel(75,1,-1)
+    end
 
 gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, grow)
 
@@ -772,7 +766,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     local push_list = {}
 
     for _,K in ipairs(R.neighbors) do
-      if not allow_nudge(R, side, pull, grow, K, push_list) then return false end
+      if not allow_nudge(R, side, grow, K, push_list) then return false end
     end
 
     -- Nudge is OK!
@@ -819,8 +813,8 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
       for _,side in ipairs(sides) do
         local depth = sel(side==4 or side==6, R.sw, R.sh)
         if (depth % 2) == 0 then
-          if not (rand_odds(30) and try_nudge_room(R, side, false, 1)) then
-            try_nudge_room(R, side, false, -1)
+          if not (rand_odds(30) and try_nudge_room(R, side, 1)) then
+            try_nudge_room(R, side, -1)
           end
         end
       end
@@ -873,11 +867,11 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
       local E, N, NE = get_NE_corner_rooms(R)
       if N and E and NE and is_corner_nasty(R, E, N, NE) then
         if rand_odds(50) then
-          success = try_nudge_room(R, 8, true) or try_nudge_room(R, 6, true) or
-                    try_nudge_room(E, 8, true) or try_nudge_room(N, 6, true)
+          success = try_nudge_room(R, 8) or try_nudge_room(R, 6) or
+                    try_nudge_room(E, 8) or try_nudge_room(N, 6)
         else
-          success = try_nudge_room(R, 6, true) or try_nudge_room(R, 8, true) or
-                    try_nudge_room(N, 6, true) or try_nudge_room(E, 8, true)
+          success = try_nudge_room(R, 6) or try_nudge_room(R, 8) or
+                    try_nudge_room(N, 6) or try_nudge_room(E, 8)
         end
 
         if success then
