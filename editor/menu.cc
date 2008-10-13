@@ -92,7 +92,7 @@ static void menu_do_about(Fl_Widget *w, void * data)
     ab_win->show();
 
     // capture initial size
-    WindowSmallDelay();
+
     int init_x = ab_win->x();
     int init_y = ab_win->y();
 

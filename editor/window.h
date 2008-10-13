@@ -43,19 +43,6 @@ public:
     // user closed the window
     bool want_quit;
 
-    // routine to capture the current main window state into the
-    // guix_preferences_t structure.
-    // 
-    void WritePrefs();
-
-protected:
-  
-    // initial window size, read after the window manager has had a
-    // chance to move the window somewhere else.  If the window is still
-    // there when CaptureState() is called, we don't need to update the
-    // coords in the cookie file.
-    // 
-    int init_x, init_y, init_w, init_h;
 };
 
 extern Guix_MainWin * guix_win;

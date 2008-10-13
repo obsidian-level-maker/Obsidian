@@ -86,8 +86,6 @@ static void DialogRun()
     cur_diag->set_modal();
     cur_diag->show();
 
-    // read initial pos (same logic as in Guix_MainWin)
-    WindowSmallDelay();
     int init_x = cur_diag->x(); 
     int init_y = cur_diag->y();
 

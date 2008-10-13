@@ -139,6 +139,14 @@ int main(int argc, char **argv)
 
         guix_win = new Guix_MainWin(PROG_NAME);  // FIXME: version
 
+        // show window (pass some dummy arguments)
+        {
+            int argc = 1;
+            char *argv[] = { PROG_NAME ".exe", NULL };
+
+            guix_win->show(argc, argv);
+        }
+
         guix_win->ed->Load(arg_list[0]);
 
         // run the GUI until the user quits
