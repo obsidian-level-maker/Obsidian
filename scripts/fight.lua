@@ -120,32 +120,40 @@ function fight_simulator(monsters, weapons, skill, ammos)
   end
 
 
-  local function hurt_mon(idx, damage)
+  local function hurt_mon(idx, W, damage)
     local M = active_mon[idx]
-    if M then
-      M.health = M.health - damage
+
+    if not M then return end
+
+    if M.info.immunity and M.info.immunity[W.name] then
+      damage = damage * (1 - M.info.immunity[W.name])
     end
+
+    M.health = M.health - damage
   end
 
-  local function splash_mons(first, num, damage)
+  local function splash_mons(W, time)
+    local first = W.splash_first or 1
+    local num   = W.splash_num   or 3
+    local damage = W.splash_dm * time
+
     for i = 1,num do
-      local factor = (num-i+2) / (num+1)
-      hurt_mon(first+i-1, damage * factor)
+      local factor = (num-i+1) / num
+      hurt_mon(first+i-1, W, damage * factor)
     end
   end
 
   local function player_shoot(W, time)
-    hurt_mon(1, W.dm * time * shoot_accuracy)
+    hurt_mon(1, W, W.dm * time * shoot_accuracy)
 
     -- shotguns can hit multiple monsters
     if W.spread then
-      hurt_mon(2, W.dm * time * shoot_accuracy * W.spread)
+      hurt_mon(2, W, W.dm * time * shoot_accuracy * W.spread)
     end 
 
     -- simulate splash damage
     if W.splash_dm then
-      splash_mons(W.splash_first or 1, W.splash_num or 3,
-                  W.splash_dm * time)
+      splash_mons(W, time)
     end
 
     -- update ammo counter
