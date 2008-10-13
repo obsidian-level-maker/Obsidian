@@ -254,7 +254,7 @@ Q1_MONSTERS =
   ogre     = { prob=40, hp=200, dm=15 },
   fiend    = { prob=10, hp=300, dm=20, melee=true },
   vore     = { prob=10, hp=400, dm=25 },
-  shambler = { prob=10, hp=600, dm=30, hitscan=true },
+  shambler = { prob=10, hp=600, dm=30, hitscan=true, immunity={ rocket=0.5, grenade=0.5 } },
 }
 
 Q1_BOSSES =
@@ -269,12 +269,25 @@ Q1_WEAPONS =
 {
   axe      = { rate=2.0, dm=20, pref= 1, melee=true,           held=true },
   pistol   = { rate=2.0, dm=20, pref=10, ammo="shell",  per=1, held=true },
-  ssg      = { rate=1.4, dm=45, pref=50, ammo="shell",  per=2 },
-  grenade  = { rate=1.5, dm=35, pref=20, ammo="rocket", per=1, splash_dm=30, splash_first=2 },
-  rocket   = { rate=1.2, dm=70, pref=20, ammo="rocket", per=1, splash_dm=60, splash_first=2 },
-  nailgun  = { rate=5.0, dm= 9, pref=50, ammo="nail",   per=1 },
-  nailgun2 = { rate=5.0, dm=18, pref=50, ammo="nail",   per=2 },
-  zapper   = { rate=10,  dm=30, pref=20, ammo="cell",   per=1 },
+  ssg      = { rate=1.4, dm=45, pref=50, ammo="shell",  per=2, splash={0,3} },
+  grenade  = { rate=1.5, dm= 5, pref=10, ammo="rocket", per=1, splash={60,15,3} },
+  rocket   = { rate=1.2, dm=80, pref=30, ammo="rocket", per=1, splash={0,20,6,2} },
+  nailgun  = { rate=5.0, dm= 8, pref=50, ammo="nail",   per=1 },
+  nailgun2 = { rate=5.0, dm=18, pref=80, ammo="nail",   per=2 },
+  zapper   = { rate=10,  dm=30, pref=30, ammo="cell",   per=1, splash={0,4} },
+
+  -- Notes:
+  --
+  -- Grenade damage (for a direct hit) is really zero, and all
+  -- of the actual damage comes from splash.
+  --
+  -- Rocket splash damage does not hurt the monster that was
+  -- directly hit by the rocket.
+  --
+  -- Lightning bolt damage is done by three hitscan attacks
+  -- over the same range (16 units apart).  As I read it, you
+  -- can only hit two monsters if (a) the hitscan passes by
+  -- the first one, or (b) the first one is killed.
 }
 
 Q1_PICKUPS =
