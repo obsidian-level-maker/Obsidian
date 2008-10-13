@@ -132,28 +132,23 @@ function fight_simulator(monsters, weapons, skill, ammos)
     M.health = M.health - damage
   end
 
-  local function splash_mons(W, time)
-    local first = W.splash_first or 1
-    local num   = W.splash_num   or 3
-    local damage = W.splash_dm * time
-
-    for i = 1,num do
-      local factor = (num-i+1) / num
-      hurt_mon(first+i-1, W, damage * factor)
+  local function splash_mons(W, list, time)
+    for idx,damage in ipairs(list) do
+      hurt_mon(idx, W, damage * time)
     end
   end
 
   local function player_shoot(W, time)
     hurt_mon(1, W, W.dm * time * shoot_accuracy)
 
-    -- shotguns can hit multiple monsters
-    if W.spread then
-      hurt_mon(2, W, W.dm * time * shoot_accuracy * W.spread)
-    end 
+---##     -- shotguns can hit multiple monsters
+---##     if W.spread then
+---##       hurt_mon(2, W, W.dm * time * shoot_accuracy * W.spread)
+---##     end 
 
-    -- simulate splash damage
-    if W.splash_dm then
-      splash_mons(W, time)
+    -- simulate splash damage | shotgun spread
+    if W.splash then
+      splash_mons(W, W.splash, time)
     end
 
     -- update ammo counter
@@ -182,8 +177,8 @@ function fight_simulator(monsters, weapons, skill, ammos)
     if not dist_ratio then return end
 
     -- how often the monster fights the player (instead of running
-    -- around).
-    local active_ratio = info.aggro or 0.5
+    -- around or being in a pain state).
+    local active_ratio = info.active or 0.5
 
     -- how well the player can dodge the monster's attack
     -- TODO: take 'cover' and/or 'space' into account here
@@ -229,8 +224,8 @@ function fight_simulator(monsters, weapons, skill, ammos)
     end
 
     -- monster on monster action!
-    local dm1 = M.info.dm * (M.info.aggro or 0.5) * time
-    local dm2 = N.info.dm * (N.info.aggro or 0.5) * time
+    local dm1 = M.info.dm * (M.info.active or 0.5) * time
+    local dm2 = N.info.dm * (N.info.active or 0.5) * time
 
     local factor = 0.2 -- assume it happens rarely
 
