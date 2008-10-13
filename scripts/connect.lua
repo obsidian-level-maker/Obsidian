@@ -747,7 +747,7 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
   end
 
   local function join_ground()
-    local join_chance = rand_element { 10, 40, 90 } --!!!!!!
+    local join_chance = rand_element { 5, 30, 90 }
 
     for _,V in ipairs(Landmap_rand_visits()) do
       local L = LAND_MAP[V.x][V.y]
@@ -1091,8 +1091,8 @@ gui.debugf("Failed\n")
     return false
   end
 
-  local function handle_isolate(R)
-    if rand_odds(33) then
+  local function handle_isolate(R, join_chance)
+    if rand_odds(join_chance) then
       if force_room_branch(R) then
         return -- OK
       end
@@ -1150,13 +1150,15 @@ gui.debugf("Failed\n")
     -- use a copy since PLAN.all_rooms may be modified
     local list = copy_table(PLAN.all_rooms)
 
+    local join_chance = rand_element { 10, 50, 90 }
+
     repeat
       local changed = false
 
       for _,R in ipairs(list) do
         if R.group_id ~= min_g and R.kind ~= "scenic" then
           if #R.conns == 0 then
-            handle_isolate(R)
+            handle_isolate(R, join_chance)
           else
             handle_rebel_group(list, R.group_id, min_g)
           end
