@@ -289,19 +289,25 @@ Q2_WEAPONS =
 {
   pistol   = { rate=1.7, dm=10, pref= 1 },
   shotty   = { rate=0.6, dm=40, pref=20, ammo="shell",  per=1  },
-  ssg      = { rate=0.8, dm=88, pref=70, ammo="shell",  per=2  },
-  machine  = { rate=6.0, dm= 8, pref=20, ammo="bullet", per=1  },
-  chain    = { rate=14,  dm= 8, pref=90, ammo="bullet", per=1  },
-  grenade  = { rate=0.7, dm=80, pref=15, ammo="grenade",per=1, splash_dm=50 },
-  rocket   = { rate=1.1, dm=90, pref=30, ammo="rocket", per=1, splash_dm=60 },
+  ssg      = { rate=0.8, dm=88, pref=70, ammo="shell",  per=2, splash={0,8} },
+  machine  = { rate=6.0, dm=8,  pref=20, ammo="bullet", per=1  },
+  chain    = { rate=14,  dm=8,  pref=90, ammo="bullet", per=1  },
+  grenade  = { rate=0.7, dm=5,  pref=15, ammo="grenade",per=1, splash={60,15,3}  },
+  rocket   = { rate=1.1, dm=90, pref=30, ammo="rocket", per=1, splash={0,20,6,2} },
   hyper    = { rate=5.0, dm=20, pref=60, ammo="slug",   per=1  },
-  rail     = { rate=0.6, dm=140,pref=50, ammo="cell",   per=1  },
-  bfg      = { rate=0.3, dm=200,pref=20, ammo="cell",   per=50, splash_dm=60, splash_num=6 },
+  rail     = { rate=0.6, dm=140,pref=50, ammo="cell",   per=1, splash={0,25,5} },
+  bfg      = { rate=0.3, dm=200,pref=20, ammo="cell",   per=50, splash={0,50,40,30,20,10,10} },
 
   -- Notes:
   --
   -- The BFG can damage lots of 'in view' monsters at once.
-  -- This is not handled properly yet.
+  -- This is modelled with a splash damage table.
+  --
+  -- Railgun can pass through multiple enemies.  We assume
+  -- the player doesn't manage to do it very often.
+  --
+  -- Grenades don't do any direct damage when they hit a
+  -- monster, it's all in the splash baby.
 }
 
 Q2_PICKUPS =
