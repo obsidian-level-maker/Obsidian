@@ -95,7 +95,7 @@ function branch_gen_PC(long, deep)
 end
 
 function branch_gen_PA(long, deep)
-  if long < 2 or long > 4 or deep > 5 then
+  if long < 2 or long > 4 or deep < 2 or deep > 5 then
     return nil
   end
 
@@ -128,7 +128,9 @@ function branch_gen_PX(long, deep)
   local mx = int(long/2)
 
   for b = 1,mx do for t = 2,long-1 do
-    table.insert(configs, { b,1,2, t,deep,8 })
+    if not (deep == 1 and b == t) then
+      table.insert(configs, { b,1,2, t,deep,8 })
+    end
   end end
 
   return configs
@@ -471,7 +473,7 @@ end
 BIG_BRANCH_KINDS =
 {
   -- pass through (one side to the other), perfectly centered
-  PC = { conn=2, prob=40, func=branch_gen_PC, symmetry=5 },
+  PC = { conn=2, prob=40, func=branch_gen_PC, symmetry=2 },
 
   -- pass through, along one side
   PA = { conn=2, prob= 8, func=branch_gen_PA, symmetry=6 },
@@ -509,7 +511,7 @@ BIG_BRANCH_KINDS =
 
 
   -- Cross shape, all stems perfectly centered
-  XC = { conn=4, prob=900, func=branch_gen_XC, symmetry=5 },
+  XC = { conn=4, prob=2000, func=branch_gen_XC, symmetry=5 },
 
   -- Cross shape, centered main stem, leeway for side stems
   XT = { conn=4, prob=300, func=branch_gen_XT, symmetry=2 },
@@ -607,15 +609,50 @@ function Connect_Rooms()
   -- 4. prefer big rooms to have 3 or more connections.
   -- 5. prefer small isolated rooms to be leafs (1 connection).
 
-  local function merge(id1, id2)
+  local function merge_groups(id1, id2)
     if id1 > id2 then id1,id2 = id2,id1 end
 
-    for x = 1,LAND_W do for y = 1,LAND_H do
-      local L = LAND_MAP[x][y]
-      if L.room and L.room.group_id == id2 then
-        L.room.group_id = id1
+    for _,R in ipairs(PLAN.all_rooms) do
+      if R.group_id == id2 then
+        R.group_id = id1
       end
-    end end -- x,y
+    end
+  end
+
+  local function min_group_id()
+    local result
+    
+    for _,R in ipairs(PLAN.all_rooms) do
+      if not result or result > R.group_id then
+        result = R.group_id
+      end
+    end
+
+    return assert(result)
+  end
+
+  local function group_size(id)
+    local result = 0
+
+    for _,R in ipairs(PLAN.all_rooms) do
+      if R.group_id == id then
+        result = result + 1
+      end
+    end
+
+    return assert(result)
+  end
+
+  local function swap_groups(id1, id2)
+    assert(id1 ~= id2)
+
+    for _,R in ipairs(PLAN.all_rooms) do
+      if R.group_id == id1 then
+        R.group_id = id2
+      elseif R.group_id == id2 then
+        R.group_id = id1
+      end
+    end
   end
 
   local function connect_seeds(S, T, dir, c_kind)
@@ -626,7 +663,7 @@ gui.debugf("connect_seeds R(%s,%s) S(%d,%d) grp:%d --> R(%s,%s) S(%d,%d) grp:%d\
 S.room.sx1,S.room.sy1, S.sx,S.sy, S.room.group_id,
 T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
 
-    merge(S.room.group_id, T.room.group_id)
+    merge_groups(S.room.group_id, T.room.group_id)
 
     local CONN = { dir=dir, src=S.room, dest=T.room, src_S=S, dest_S=T }
 
@@ -710,6 +747,8 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
   end
 
   local function join_ground()
+    local join_chance = rand_element { 10, 40, 90 } --!!!!!!
+
     for _,V in ipairs(Landmap_rand_visits()) do
       local L = LAND_MAP[V.x][V.y]
       if is_ground(L) then
@@ -717,7 +756,8 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
           local nx, ny = nudge_coord(V.x, V.y, dir)
           local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
           if N and N.kind == L.kind and N.room and
-             N.room.group_id ~= L.room.group_id
+             N.room.group_id ~= L.room.group_id and
+             rand_odds(join_chance)
           then
             connect_land(L, N, dir, "tight")
           end
@@ -774,6 +814,13 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
     return R.sx1 + (x-1), R.sy1 + (y-1)
   end
 
+  local function dump_new_conns(conns)
+    gui.debugf("NEW CONNS:\n")
+    for _,C in ipairs(conns) do
+      gui.debugf("  S(%d,%d) --> S(%d,%d)  dir:%d\n", C.S.sx,C.S.sy, C.N.sx,C.N.sy, C.dir)
+    end
+  end
+
   local function try_configuration(MORPH, R, K, config, long, deep)
     assert(R.group_id)
 
@@ -816,43 +863,24 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
           return false -- only one connection per seed!
         end
       end
-      --[[ OLD METHOD
-      for _,C in ipairs(R.conns) do
-        if (C.src  == R and C.src_S  == S and C.dir == dir) or
-           (C.dest == R and C.dest_S == S and C.dir == 10-dir)
-        then
-          existing = true; break;
-        end
-      end
-      --]]
 
       if existing then
         hit_conns = hit_conns + 1
       else
-        local gap
-
-        -- handle rooms separated by a nudge gap  [FIXME: REMOVE]
-        if not N.room then
-          gap = N
-          nx, ny = nudge_coord(nx, ny, dir)
-          if not Seed_valid(nx, ny, 1) then return false end
-          N = SEEDS[nx][ny][1]
+        if not N.room or
+           not N.room.group_id or
+           N.room.branch_kind or
+           groups_seen[N.room.group_id] or
+           N.conn -- only one connection per seed!
+        then
+          return false
         end
-
-        if not N.room or not N.room.group_id then return false end
-        if N.room.branch_kind then return false end
-
-        if N.conn then return false end -- only one connection per seed!
-
-        if N.bridged_dir and (N.bridged_dir ~= dir) and (N.bridged_dir ~= 10-dir) then return false end
-
-        if groups_seen[N.room.group_id] then return false end
 
         -- OK --
 
         groups_seen[N.room.group_id] = true
 
-        table.insert(conns, { S=S, N=N, dir=dir, gap=gap })
+        table.insert(conns, { S=S, N=N, dir=dir })
       end
     end
 
@@ -871,21 +899,10 @@ gui.debugf("hit_conns = %d\n", hit_conns)
       R.symmetry = morph_dir(MORPH, BIG_BRANCH_KINDS[K].symmetry)
     end
 
+    dump_new_conns(conns)
+
     for _,C in ipairs(conns) do
-
-      local CONN = connect_seeds(C.S, C.N, C.dir, "normal")
-
----!!!      if T[1] == 2 and T[2] == 1 then
----!!!        R.big_orientation = 10-dir
----!!!        CONN.big_entrance = R
----!!!gui.debugf("Room (%d,%d) : big_orientation:%d\n", R.lx1,R.ly1, R.big_orientation)
----!!!      end
-
-      if C.gap then
-        gui.debugf("Bridged the GAP!!!\n")
-        C.gap.room = R --!!!!!!!!! FIXME FIXME FIXME
-        C.gap.bridged_dir = C.dir
-      end
+      connect_seeds(C.S, C.N, C.dir, "normal")
     end
 
     return true
@@ -937,23 +954,19 @@ gui.debugf("Failed\n")
     local rooms = {}
 
     for _,R in ipairs(PLAN.all_rooms) do
-      R.svol = R.sw * R.sh -- FIXME !!!!!! OUT OF HERE
-
-      if R.svol >= 1 and (R.kind == "indoor") then
+      if R.svolume >= 1 and (R.kind == "indoor") then
+        R.k_score = sel((R.sw%2)==1 and (R.sh%2)==1, 500, 0) + R.svolume + gui.random()
         table.insert(rooms, R)
       end
     end
 
     if #rooms == 0 then return end
 
-    -- add some randomness (break deadlocks)
-    rand_shuffle(rooms)
-
-    table.sort(rooms, function(A, B) return A.svol > B.svol end)
+    table.sort(rooms, function(A, B) return A.k_score > B.k_score end)
 
     for _,R in ipairs(rooms) do
       if (#R.conns <= 2) and rand_odds(99) then
-        gui.debugf("Branching BIG ROOM at L(%d,%d) area: %1.3f\n", R.lx1,R.ly1, R.svol)
+        gui.debugf("Branching BIG ROOM at L(%d,%d) k_score: %1.3f\n", R.lx1,R.ly1, R.k_score)
 
         local kinds = {}
         for N,info in pairs(BIG_BRANCH_KINDS) do
@@ -973,21 +986,8 @@ gui.debugf("Failed\n")
     end -- for R in rooms
   end
 
-  local function min_group_id()
-    local result
-    
-    for _,R in ipairs(PLAN.all_rooms) do
-      if not result or result > R.group_id then
-        result = R.group_id
-      end
-    end
-
-    return assert(result)
-  end
-
   local function make_scenic(R)
-    -- we never make connected groups scenic
-    assert(#R.conns == 0)
+    -- Note: connections must be handled elsewhere
 
     gui.debugf("Making %s SCENIC\n", R:tostr())
     assert(R.kind ~= "scenic")
@@ -1007,7 +1007,26 @@ gui.debugf("Failed\n")
 
     assert(R.group_id == -1)
     
-    table.insert(PLAN.all_scenics, R)
+    table.insert(PLAN.scenic_rooms, R)
+  end
+
+  local function make_conn_scenic(C)
+    local found
+
+    for index,N in ipairs(PLAN.all_conns) do
+      if N == C then
+        table.remove(PLAN.all_conns, index)
+        found = true
+        break;
+      end
+    end
+
+    assert(found)
+
+    table.insert(PLAN.scenic_conns, C)
+
+    ---## C.src_S.conn  = nil; C.src_S.conn_dir  = nil
+    ---## C.dest_S.conn = nil; C.dest_S.conn_dir = nil
   end
 
   local function try_emergency_connect(R, x, y, dir)
@@ -1034,10 +1053,10 @@ gui.debugf("Failed\n")
 
     connect_seeds(S, N, dir, "emergency")
 
-    R.branch_kind = "XX"
+    R.branch_kind = "EM"
     R.symmetry = nil
 
-    N.room.branch_kind = "XX"
+    N.room.branch_kind = "EM"
     N.room.symmetry = nil
 
     return true
@@ -1057,6 +1076,7 @@ gui.debugf("Failed\n")
       table.insert(try_list, { x=R.sx2, y=y, dir=6 })
     end
 
+    -- FIXME: find all possible, use best one
     rand_shuffle(try_list)
 
     for _,L in ipairs(try_list) do
@@ -1081,50 +1101,84 @@ gui.debugf("Failed\n")
     make_scenic(R)
   end
 
-  local function handle_rebel_group(list, group_id)
-    local rebels = table_subset_w_field(list, "group_id", group_id)
+  local function handle_rebel_group(list, rebel_id, min_g)
+
+    -- if this group is bigger than the main group, swap them
+    if group_size(rebel_id) > group_size(min_g) then
+      gui.debugf("Crowning rebel group %d -> %d\n", rebel_id, min_g)
+      swap_groups(rebel_id, min_g)
+      rebel_id, min_g = min_g, rebel_id
+    end
+
+    local rebels = table_subset_w_field(list, "group_id", rebel_id)
     assert(#rebels > 0)
 
-    -- FIXME: find best connect amonst the rooms !!!
+    -- try the least important rooms first
+    for _,R in ipairs(rebels) do
+      R.rebel_cost = sel(R.symmetry, 500, 0) + R.svolume + gui.random()
+    end
 
-    rand_shuffle(rebels)
+    table.sort(rebels, function(A,B) return A.rebel_cost < B.rebel_cost end)
+
     for _,R in ipairs(rebels) do
       if force_room_branch(R) then
         return -- OK
       end
     end
 
-    error("Unable to connect isolated group of rooms!")
+    -- make all of them scenic, need to kill the connections
+    gui.debugf("Killing rebel group %d (%d rooms)\n", rebel_id, #rebels)
+
+    -- use a copy since we modify the original list
+    local c_copy = copy_table(PLAN.all_conns)
+
+    for _,C in ipairs(c_copy) do
+      if C.src.group_id == rebel_id then
+        assert(C.dest.group_id == rebel_id)
+        make_conn_scenic(C)
+      end
+    end
+
+    for _,R in ipairs(rebels) do
+      make_scenic(R)
+    end
   end
 
-  local function emergency_branches()
+  local function branch_the_rest()
     local min_g = min_group_id()
 
-    -- use a copy of PLAN.all_rooms, since that list may be modified
+    -- use a copy since PLAN.all_rooms may be modified
     local list = copy_table(PLAN.all_rooms)
 
-    for _,R in ipairs(list) do
-      if R.group_id ~= min_g then
-        if #R.conns == 0 then
-          handle_isolate(R)
-        else
-          handle_rebel_group(list, R.group_id)
+    repeat
+      local changed = false
+
+      for _,R in ipairs(list) do
+        if R.group_id ~= min_g and R.kind ~= "scenic" then
+          if #R.conns == 0 then
+            handle_isolate(R)
+          else
+            handle_rebel_group(list, R.group_id, min_g)
+          end
+
+          -- minimum group_id may have changed
+          min_g = min_group_id()
+          changed = true
         end
-        -- minimum group_id may have changed
-        min_g = min_group_id()
-      end
-    end -- for R
+      end -- for R
+    until not changed
   end
 
 
-  ---| Connect_Rooms |---
+  --==| Connect_Rooms |==--
 
   gui.printf("\n--==| Connect_Rooms |==--\n\n")
 
-  PLAN.all_scenics = {}
+  PLAN.scenic_rooms = {}
+  PLAN.scenic_conns = {}
 
   join_ground()
   branch_big_rooms()
-  emergency_branches()
+  branch_the_rest()
 end
 
