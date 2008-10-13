@@ -85,6 +85,12 @@ static void DisplayError(const char *str, ...)
     main_result = 9;
 }
 
+void FatalError(...)
+{
+    exit(999); //!!!!!!! FIXME
+}
+
+
 //------------------------------------------------------------------------
 //  MAIN PROGRAM
 //------------------------------------------------------------------------
@@ -98,9 +104,6 @@ int main(int argc, char **argv)
 
         ArgvInit(argc, (const char **)argv);
      
-        InitDebug(ArgvFind(0, "debug") >= 0);
-        InitEndian();
-
         if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0)
         {
             ShowTitle();
@@ -156,8 +159,6 @@ int main(int argc, char **argv)
     }
 
     delete guix_win;
-
-    TermDebug();
 
     return main_result;
 }

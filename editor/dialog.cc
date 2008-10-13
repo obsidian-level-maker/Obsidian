@@ -327,9 +327,9 @@ int DialogQueryFilename(const char *message,
 
     if (cur_diag_result == 0)
     {
-        UtilFree((void *) *name_ptr);
+        StringFree(*name_ptr);
 
-        *name_ptr = UtilStrDup(inp_box->value());
+        *name_ptr = StringDup(inp_box->value());
     }
 
     // delete window (automatically deletes child widgets)

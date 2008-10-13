@@ -6,9 +6,9 @@ LuaModify TODO
 
 +  allow running without any file
 
--  use FLTK 1.1.x-r5989
-
 -  prevent ESCAPE from exiting.
 
 -  Open file, Save and SaveAs in menu.
+
++  EDIT menu
 

@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
-//  ASSERTIONS
+//  Assertions
 //----------------------------------------------------------------------------
 //
-//  Lua_Modify  Copyright (C) 2008  Andrew Apted
+//  Oblige Level Maker (C) 2006-2008 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -16,25 +16,25 @@
 //
 //----------------------------------------------------------------------------
 
-#ifndef __LM_ASSERT_H__
-#define __LM_ASSERT_H__
+#ifndef __SYS_ASSERT__
+#define __SYS_ASSERT__
 
 class assert_fail_c
 {
 public:
-    assert_fail_c(const char *_msg);
-    assert_fail_c(const assert_fail_c &other);
-    ~assert_fail_c();
-    
+  assert_fail_c(const char *_msg);
+  assert_fail_c(const assert_fail_c &other);
+  ~assert_fail_c();
+  
 private:
-    static const int MSG_MAX = 200;
+  static const int MSG_MAX = 200;
 
-    char message[MSG_MAX];
+  char message[MSG_MAX];
 
 public:
-    const char* GetMessage() const { return message; }
+  const char* GetMessage() const { return message; }
 
-    assert_fail_c& operator=(const assert_fail_c &other);
+  assert_fail_c& operator=(const assert_fail_c &other);
 };
 
 // -------- the macros --------
@@ -42,13 +42,13 @@ public:
 #ifdef NDEBUG
 #define SYS_ASSERT(cond)  ((void) 0)
 
-#elif 1  // FIXME: proper test for __func__
+#elif defined(__GNUC__)
 #define SYS_ASSERT(cond)  ((cond) ? (void)0 :  \
-    AssertFail("Assertion (%s) failed\nIn function %s (%s:%d)\n", #cond , __func__, __FILE__, __LINE__))
+        AssertFail("Assertion (%s) failed\nIn function %s (%s:%d)\n", #cond , __func__, __FILE__, __LINE__))
 
 #else
 #define SYS_ASSERT(cond)  ((cond) ? (void)0 :  \
-    AssertFail("Assertion (%s) failed\nIn file %s:%d\n", #cond , __FILE__, __LINE__))
+        AssertFail("Assertion (%s) failed\nIn file %s:%d\n", #cond , __FILE__, __LINE__))
 
 #endif  // NDEBUG
 
@@ -66,7 +66,7 @@ public:
 void AssertFail(const char *msg, ...);
 // throw an assertion exception with the given message.
 
-#endif  /* __LM_ASSERT_H__ */
+#endif  /* __SYS_ASSERT__ */
 
 //--- editor settings ---
-// vi:ts=4:sw=4:expandtab
+// vi:ts=2:sw=2:expandtab

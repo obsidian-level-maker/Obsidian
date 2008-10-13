@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
-//  ASSERTIONS
+//  Assertions
 //----------------------------------------------------------------------------
 //
-//  Lua_Modify  Copyright (C) 2008  Andrew Apted
+//  Oblige Level Maker (C) 2006-2008 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -16,52 +16,54 @@
 //
 //----------------------------------------------------------------------------
 
-#include "defs.h"
+#include "headers.h"
+
+
+#define MSG_BUF_LEN  1024
+
 
 assert_fail_c::assert_fail_c(const char *_msg)
 {
-    strncpy(message, _msg, sizeof(message));
+  strncpy(message, _msg, sizeof(message));
 
-    message[sizeof(message) - 1] = 0;
+  message[sizeof(message) - 1] = 0;
 }
 
 assert_fail_c::~assert_fail_c()
 {
-    /* nothing needed */
+  /* nothing needed */
 }
 
 assert_fail_c::assert_fail_c(const assert_fail_c &other)
 {
-    strcpy(message, other.message);
+  strcpy(message, other.message);
 }
 
 assert_fail_c& assert_fail_c::operator=(const assert_fail_c &other)
 {
-    if (this != &other)
-        strcpy(message, other.message);
-    
-    return *this;
+  if (this != &other)
+    strcpy(message, other.message);
+  
+  return *this;
 }
 
 //----------------------------------------------------------------------------
 
 void AssertFail(const char *msg, ...)
 {
-    char buffer[1024];
+  static char buffer[MSG_BUF_LEN];
 
-    va_list argptr;
+  va_list argptr;
 
-    va_start(argptr, msg);
-    vsprintf(buffer, msg, argptr);
-    va_end(argptr);
+  va_start(argptr, msg);
+  vsnprintf(buffer, MSG_BUF_LEN-1, msg, argptr);
+  va_end(argptr);
 
-    // assertion messages shouldn't overflow... (famous last words)
-    buffer[sizeof(buffer) - 1] = 0;
+  buffer[MSG_BUF_LEN-2] = 0;
 
-    PrintDebug("%s\n", buffer);
-    
-    throw assert_fail_c(buffer);
+  throw assert_fail_c(buffer);
 }
 
+
 //--- editor settings ---
-// vi:ts=4:sw=4:expandtab
+// vi:ts=2:sw=2:expandtab

@@ -16,10 +16,10 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __LM_DEFS_H__
-#define __LM_DEFS_H__
+#ifndef __LM_HEADERS_H__
+#define __LM_HEADERS_H__
 
-#define PROG_NAME  "Lua_Modify"
+#define PROG_NAME  "MuckUpLua"
 
 //
 //  SYSTEM INCLUDES
@@ -84,9 +84,13 @@
 //
 //  LOCAL INCLUDES
 //
-#include "system.h"
-#include "asserts.h"
-#include "util.h"
+#include "sys_type.h"
+#include "sys_macro.h"
+#include "sys_assert.h"
+
+#include "lib_argv.h"
+#include "lib_file.h"
+#include "lib_util.h"
 
 #include "dialog.h"
 #include "menu.h"
@@ -94,7 +98,7 @@
 #include "replace.h"
 #include "window.h"
 
-#endif /* __LM_DEFS_H__ */
+#endif /* __LM_HEADERS_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:expandtab
