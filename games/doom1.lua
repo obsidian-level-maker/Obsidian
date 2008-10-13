@@ -2603,13 +2603,13 @@ DM_WEAPONS =
   berserk = { rate=1.5, dm=50, pref=8,  melee=true, },
 
   pistol  = { rate=1.8, dm=10, pref=10, ammo="bullet", per=1, held=true },
-  shotty  = { rate=0.9, dm=70, pref=110,ammo="shell",  per=1, give=8  },
-  super   = { rate=0.6, dm=170,pref=70, ammo="shell",  per=2, give=8  },
+  shotty  = { rate=0.9, dm=70, pref=110,ammo="shell",  per=1, give=8, splash={ 0,10 } },
+  super   = { rate=0.6, dm=170,pref=70, ammo="shell",  per=2, give=8, splash={ 0,30 } },
   chain   = { rate=8.5, dm=10 ,pref=80, ammo="bullet", per=1, give=20 },
                                                                     
-  launch  = { rate=1.7, dm=90, pref=60, ammo="rocket", per=1, give=2, splash_dm=64 },
-  plasma  = { rate=11,  dm=22, pref=80, ammo="cell",   per=1, give=40 },
-  bfg     = { rate=0.8, dm=450,pref=30, ammo="cell",   per=40,give=40, splash_dm=50, splash_num=7 },
+  launch  = { rate=1.7, dm=80, pref=60, ammo="rocket", per=1, give=2, splash={50,20,5} },
+  plasma  = { rate=11,  dm=20, pref=80, ammo="cell",   per=1, give=40 },
+  bfg     = { rate=0.8, dm=400,pref=30, ammo="cell",   per=40,give=40, splash={60,45,30,30,20,10} },
 
   -- Notes:
   --
