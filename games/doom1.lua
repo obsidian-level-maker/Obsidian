@@ -2607,9 +2607,9 @@ DM_WEAPONS =
   super   = { rate=0.6, dm=170,pref=70, ammo="shell",  per=2, give=8  },
   chain   = { rate=8.5, dm=10 ,pref=80, ammo="bullet", per=1, give=20 },
                                                                     
-  launch  = { rate=1.7, dm=90, pref=60, ammo="rocket", per=1, give=2, dangerous=true },
+  launch  = { rate=1.7, dm=90, pref=60, ammo="rocket", per=1, give=2, splash_dm=64 },
   plasma  = { rate=11,  dm=22, pref=80, ammo="cell",   per=1, give=40 },
-  bfg     = { rate=0.8, dm=450,pref=30, ammo="cell",   per=40,give=40 },
+  bfg     = { rate=0.8, dm=450,pref=30, ammo="cell",   per=40,give=40, splash_dm=50, splash_num=7 },
 
   -- Notes:
   --
