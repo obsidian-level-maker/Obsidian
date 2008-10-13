@@ -1354,7 +1354,7 @@ HC_WEAPONS =
   gauntlets  = { rate=5.2, dm= 8, pref= 7, melee=true, },
 
   wand       = { rate=3.1, dm=10, pref=15, ammo="crystal",   per=1, held=true },
-  crossbow   = { rate=1.3, dm=20, pref=90, ammo="arrow",     per=1, give=4, },
+  crossbow   = { rate=1.3, dm=20, pref=90, ammo="arrow",     per=1, give=4, splash={0,5} },
   claw       = { rate=2.9, dm=16, pref=60, ammo="claw_orb",  per=1, give=4, },
 
   hellstaff  = { rate=8.7, dm=12, pref=50, ammo="runes",     per=1, give=4, },
