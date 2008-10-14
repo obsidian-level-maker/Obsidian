@@ -1,8 +1,8 @@
 //------------------------------------------------------------------------
-//  DEFINITIONS
+//  HEADERS and DEFS
 //------------------------------------------------------------------------
 //
-//  Lua_Modify  Copyright (C) 2008  Andrew Apted
+//  Tailor Lua Editor  Copyright (C) 2008  Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -18,8 +18,6 @@
 
 #ifndef __LM_HEADERS_H__
 #define __LM_HEADERS_H__
-
-#define PROG_NAME  "MuckUpLua"
 
 //
 //  SYSTEM INCLUDES
@@ -96,6 +94,15 @@
 #include "e_editor.h"
 #include "e_menu.h"
 #include "e_window.h"
+
+// 
+// GLOBAL DEFS
+//
+#define PROG_NAME      "Tailor"
+#define PROG_NAME_FULL "Tailor Lua Editor"
+
+#define VERSION_STR  "0.30"
+#define VERSION_HEX  0x030
 
 #endif /* __LM_HEADERS_H__ */
 

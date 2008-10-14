@@ -2,7 +2,7 @@
 //  MAIN Program
 //------------------------------------------------------------------------
 //
-//  Lua_Modify  Copyright (C) 2008  Andrew Apted
+//  Tailor Lua Editor  Copyright (C) 2008  Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -32,7 +32,7 @@ static void ShowTitle(void)
 {
     GUI_PrintMsg(
         "\n"
-        "**** " PROG_NAME "  (C) 2005 The EDGE Team ****\n\n"
+        "**** " PROG_NAME_FULL " (C) 2008 Andrew Apted ****\n\n"
     );
 }
 
@@ -137,7 +137,7 @@ int main(int argc, char **argv)
             FatalError("Main file must be a DDF file.\n");
 #endif
 
-        guix_win = new Guix_MainWin(PROG_NAME);  // FIXME: version
+        guix_win = new Guix_MainWin(PROG_NAME_FULL);
 
         // show window (pass some dummy arguments)
         {

@@ -1,10 +1,10 @@
 #
-#  Simple Lua Editor
+#  Tailor Lua Editor
 #
 #  Makefile for Unix/FLTK
 #
 
-PROGRAM=MuckUpLua
+PROGRAM=Tailor
 
 FLTK_DIR=../lib/fltk-1.1.9
 
