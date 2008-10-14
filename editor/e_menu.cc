@@ -32,27 +32,97 @@ static void menu_quit_CB(Fl_Widget *w, void *data)
 
 
 #ifndef MACOSX
-static void menu_do_exit(Fl_Widget *w, void * data)
+void M_File_Quit(Fl_Widget *w, void * data)
 {
     guix_win->want_quit = true;
 }
 #endif
 
 
-//------------------------------------------------------------------------
-
-static void menu_do_prefs(Fl_Widget *w, void * data)
+void M_File_New(Fl_Widget *w, void * data)
 {
+    // FIXME
+}
+
+
+void M_File_Open(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
+
+
+void M_File_Save(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
+
+
+void M_File_SaveAs(Fl_Widget *w, void * data)
+{
+    // FIXME
 }
 
 
 //------------------------------------------------------------------------
 
-static const char *about_Info =
-    "By the EDGE Team (C) 2005";
+void M_Edit_Undo(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
 
 
-static void menu_do_about(Fl_Widget *w, void * data)
+void M_Edit_Redo(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
+
+
+void M_Edit_Cut(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
+
+
+void M_Edit_Copy(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
+
+
+void M_Edit_Paste(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
+
+
+void M_Edit_Delete(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
+
+
+void M_Edit_Find(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
+
+
+void M_Edit_FindAgain(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
+
+
+void M_Edit_SelectAll(Fl_Widget *w, void * data)
+{
+    // FIXME
+}
+
+
+//------------------------------------------------------------------------
+
+
+void M_Help_About(Fl_Widget *w, void * data)
 {
 #if 0
     menu_want_to_quit = false;
@@ -115,47 +185,40 @@ static void menu_do_about(Fl_Widget *w, void * data)
 
 //------------------------------------------------------------------------
 
-static void menu_do_manual(Fl_Widget *w, void * data)
-{
-}
-
-
-//------------------------------------------------------------------------
-
-static void menu_do_license(Fl_Widget *w, void * data)
-{
-}
-
-
-//------------------------------------------------------------------------
-
-static void menu_do_save_log(Fl_Widget *w, void * data)
-{
-}
-
-
-//------------------------------------------------------------------------
-
 #undef FCAL
 #define FCAL  (Fl_Callback *)
 
 static Fl_Menu_Item menu_items[] = 
 {
-    { "&File", 0, 0, 0, FL_SUBMENU },
-        { "&Preferences...",    0, FCAL menu_do_prefs },
-        { "&Save Log...",       0, FCAL menu_do_save_log },
+  { "&File", 0, 0, 0, FL_SUBMENU },
+    { "&New...",   FL_COMMAND + 'n', FCAL M_File_New },
+    { "&Open...",  FL_COMMAND + 'o', FCAL M_File_Open },
+    { "&Save",     FL_COMMAND + 's', FCAL M_File_Save },
+    { "Save &As...", 0,              FCAL M_File_SaveAs, 0, FL_MENU_DIVIDER },
 #ifndef MACOSX
-        { "E&xit",   FL_ALT + 'q', FCAL menu_do_exit },
+    { "&Quit",     FL_COMMAND + 'q', FCAL M_File_Quit },
 #endif
-        { 0 },
+    { 0 },
 
-    { "&Help", 0, 0, 0, FL_SUBMENU },
-        { "&About...",         0,  FCAL menu_do_about },
-        { "&License...",       0,  FCAL menu_do_license },
-        { "&Manual...",   FL_F+1,  FCAL menu_do_manual },
-        { 0 },
+  { "&Edit", 0, 0, 0, FL_SUBMENU },
+    { "&Undo",   FL_COMMAND + 'z',  FCAL M_Edit_Undo },
+    { "&Redo",   FL_COMMAND + 'r',  FCAL M_Edit_Redo, 0, FL_MENU_DIVIDER },
 
-    { 0 }
+    { "Cu&t",    FL_COMMAND + 'x',  FCAL M_Edit_Cut },
+    { "&Copy",   FL_COMMAND + 'c',  FCAL M_Edit_Copy },
+    { "&Paste",  FL_COMMAND + 'v',  FCAL M_Edit_Paste },
+    { "&Delete",        FL_Delete,  FCAL M_Edit_Delete, 0, FL_MENU_DIVIDER },
+
+    { "&Find...",     FL_COMMAND + 'f', FCAL M_Edit_Find },
+    { "F&ind Again",  FL_COMMAND + 'g', FCAL M_Edit_FindAgain },
+    { "Select &All",  FL_COMMAND + 'a', FCAL M_Edit_SelectAll },
+    { 0 },
+
+  { "&Help", 0, 0, 0, FL_SUBMENU },
+    { "&About...",         0,  FCAL M_Help_About },
+    { 0 },
+
+  { 0 } // END OF MENU
 };
 
 
@@ -406,4 +469,4 @@ Fl_Menu_Item menuitems[] = {
 #endif
 
 //--- editor settings ---
-// vi:ts=4:sw=4:expandtab
+// vi:ts=2:sw=2:expandtab
