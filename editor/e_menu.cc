@@ -68,33 +68,35 @@ void M_File_SaveAs(Fl_Widget *w, void * data)
 
 //------------------------------------------------------------------------
 
+#define main_win  guix_win
+
 void M_Edit_Undo(Fl_Widget *w, void * data)
 {
-    // FIXME
+    Fl_Text_Editor::kf_undo('z' & 0x1f, main_win->ed);
 }
 
 
 void M_Edit_Cut(Fl_Widget *w, void * data)
 {
-    // FIXME
+    Fl_Text_Editor::kf_cut('x' & 0x1f, main_win->ed);
 }
 
 
 void M_Edit_Copy(Fl_Widget *w, void * data)
 {
-    // FIXME
+    Fl_Text_Editor::kf_copy('c' & 0x1f, main_win->ed);
 }
 
 
 void M_Edit_Paste(Fl_Widget *w, void * data)
 {
-    // FIXME
+    Fl_Text_Editor::kf_paste('v' & 0x1f, main_win->ed);
 }
 
 
 void M_Edit_Delete(Fl_Widget *w, void * data)
 {
-    // FIXME
+    Fl_Text_Editor::kf_delete(FL_Delete, main_win->ed);
 }
 
 
@@ -139,12 +141,12 @@ void M_Edit_SelectAll(Fl_Widget *w, void * data)
 
 //------------------------------------------------------------------------
 
-void M_Font_LightScheme(Fl_Widget *w, void * data)
+void M_Font_LightTheme(Fl_Widget *w, void * data)
 {
   guix_win->ed->SetDark(false);
 }
 
-void M_Font_DarkScheme(Fl_Widget *w, void * data)
+void M_Font_DarkTheme(Fl_Widget *w, void * data)
 {
   guix_win->ed->SetDark(true);
 }
@@ -262,13 +264,12 @@ static Fl_Menu_Item menu_items[] =
     { 0 },
 
   { "&Edit", 0, 0, 0, FL_SUBMENU },
-    { "&Undo",   FL_COMMAND + 'z',  FCAL M_Edit_Undo, 0, FL_MENU_DIVIDER },
-//  { "&Redo",   FL_COMMAND + 'r',  FCAL M_Edit_Redo },
+    { "&Undo",   0,  FCAL M_Edit_Undo, 0, FL_MENU_DIVIDER },
 
-    { "Cu&t",    FL_COMMAND + 'x',  FCAL M_Edit_Cut },
-    { "&Copy",   FL_COMMAND + 'c',  FCAL M_Edit_Copy },
-    { "&Paste",  FL_COMMAND + 'v',  FCAL M_Edit_Paste },
-    { "&Delete",        FL_Delete,  FCAL M_Edit_Delete, 0, FL_MENU_DIVIDER },
+    { "Cu&t",    0, FCAL M_Edit_Cut },
+    { "&Copy",   0, FCAL M_Edit_Copy },
+    { "&Paste",  0, FCAL M_Edit_Paste },
+    { "&Delete", 0, FCAL M_Edit_Delete, 0, FL_MENU_DIVIDER },
 
     { "&Find...",      FL_COMMAND + 'f', FCAL M_Edit_Find },
     { "Find &Next",    FL_COMMAND + 'g', FCAL M_Edit_FindNext },
@@ -277,8 +278,8 @@ static Fl_Menu_Item menu_items[] =
     { 0 },
 
   { "&Font", 0, 0, 0, FL_SUBMENU },
-    { "&Light Scheme", 0,  FCAL M_Font_LightScheme },
-    { "&Dark Scheme", 0,   FCAL M_Font_DarkScheme, 0, FL_MENU_DIVIDER },
+    { "&Light Theme", 0, FCAL M_Font_LightTheme },
+    { "&Dark Theme",  0, FCAL M_Font_DarkTheme, 0, FL_MENU_DIVIDER },
 
     { "Size 10", 0, FCAL M_Font_Size10 },
     { "Size 12", 0, FCAL M_Font_Size12 },
