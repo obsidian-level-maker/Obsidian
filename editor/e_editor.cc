@@ -103,6 +103,20 @@ int W_Editor::handle(int event)
 
 //---------------------------------------------------------------------------
 
+bool W_Editor::GotoLine(int num)
+{
+    SYS_ASSERT(num >= 1);
+
+    int pos = textbuf->skip_lines(0, num-1);
+
+    insert_position(pos);
+    show_insert_position();
+
+    return true;
+}
+
+//---------------------------------------------------------------------------
+
 #define MY_FL_COLOR(R,G,B) \
           (Fl_Color) (((R) << 24) | ((G) << 16) | ((B) << 8))
 

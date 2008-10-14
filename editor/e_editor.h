@@ -54,11 +54,16 @@ public:
     
     void SetScheme(int kind, int font_h);
 
-    bool Load(const char *filename);
     // returns false if file not found.
+    bool Load(const char *filename);
 
-    void UpdateStyleRange(int start, int end);
     // called by buffer-update callback.
+    void UpdateStyleRange(int start, int end);
+
+    // goto a specified line.  Line numbers begin at 1.
+    // Returns false if does not exist (in which case the
+    // position was not changed).
+    bool GotoLine(int num);
 
 private:
     int cur_scheme;
