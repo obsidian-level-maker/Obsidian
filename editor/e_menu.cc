@@ -135,7 +135,7 @@ void M_Edit_GotoLine(Fl_Widget *w, void * data)
 
 void M_Edit_SelectAll(Fl_Widget *w, void * data)
 {
-    // FIXME
+    Fl_Text_Editor::kf_select_all('a' & 0x1f, main_win->ed);
 }
 
 
