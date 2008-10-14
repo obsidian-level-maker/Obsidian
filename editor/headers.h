@@ -90,6 +90,7 @@
 #include "lib_file.h"
 #include "lib_util.h"
 
+#include "e_chooser.h"
 #include "e_dialog.h"
 #include "e_editor.h"
 #include "e_menu.h"
