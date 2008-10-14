@@ -23,6 +23,9 @@
 static bool menu_want_to_quit;
 
 
+static int last_line_num = -1;
+
+
 #if 0
 static void menu_quit_CB(Fl_Widget *w, void *data)
 {
@@ -71,12 +74,6 @@ void M_Edit_Undo(Fl_Widget *w, void * data)
 }
 
 
-void M_Edit_Redo(Fl_Widget *w, void * data)
-{
-    // FIXME
-}
-
-
 void M_Edit_Cut(Fl_Widget *w, void * data)
 {
     // FIXME
@@ -107,9 +104,30 @@ void M_Edit_Find(Fl_Widget *w, void * data)
 }
 
 
-void M_Edit_FindAgain(Fl_Widget *w, void * data)
+void M_Edit_FindNext(Fl_Widget *w, void * data)
 {
     // FIXME
+}
+
+
+void M_Edit_GotoLine(Fl_Widget *w, void * data)
+{
+  static char num_buffer[64];
+
+  sprintf(num_buffer, "%d", last_line_num);
+
+  const char *val = fl_input("Goto Line Number:", (last_line_num <= 0) ? num_buffer : NULL);
+  if (! val)
+    return;
+
+  int num = atoi(val);
+  if (num <= 0)
+    return;
+
+  last_line_num = num;
+
+  if (! guix_win->ed->GotoLine(num))
+    fl_beep();
 }
 
 
@@ -201,17 +219,18 @@ static Fl_Menu_Item menu_items[] =
     { 0 },
 
   { "&Edit", 0, 0, 0, FL_SUBMENU },
-    { "&Undo",   FL_COMMAND + 'z',  FCAL M_Edit_Undo },
-    { "&Redo",   FL_COMMAND + 'r',  FCAL M_Edit_Redo, 0, FL_MENU_DIVIDER },
+    { "&Undo",   FL_COMMAND + 'z',  FCAL M_Edit_Undo, 0, FL_MENU_DIVIDER },
+//  { "&Redo",   FL_COMMAND + 'r',  FCAL M_Edit_Redo },
 
     { "Cu&t",    FL_COMMAND + 'x',  FCAL M_Edit_Cut },
     { "&Copy",   FL_COMMAND + 'c',  FCAL M_Edit_Copy },
     { "&Paste",  FL_COMMAND + 'v',  FCAL M_Edit_Paste },
     { "&Delete",        FL_Delete,  FCAL M_Edit_Delete, 0, FL_MENU_DIVIDER },
 
-    { "&Find...",     FL_COMMAND + 'f', FCAL M_Edit_Find },
-    { "F&ind Again",  FL_COMMAND + 'g', FCAL M_Edit_FindAgain },
-    { "Select &All",  FL_COMMAND + 'a', FCAL M_Edit_SelectAll },
+    { "&Find...",      FL_COMMAND + 'f', FCAL M_Edit_Find },
+    { "Find &Next",    FL_COMMAND + 'g', FCAL M_Edit_FindNext },
+    { "&Goto Line...", FL_COMMAND + 'l', FCAL M_Edit_GotoLine },
+    { "Select &All",   FL_COMMAND + 'a', FCAL M_Edit_SelectAll },
     { 0 },
 
   { "&Help", 0, 0, 0, FL_SUBMENU },
@@ -436,35 +455,6 @@ void saveas_cb()
     if (newfile != NULL)
         save_file(newfile);
 }
-
->>>>>>>>>>>>>>>>>>>>
-
-Fl_Menu_Item menuitems[] = {
-  { "&File",              0, 0, 0, FL_SUBMENU },
-    { "&New File",        0, (Fl_Callback *)new_cb },
-    { "&Open File...",    FL_CTRL + 'o', (Fl_Callback *)open_cb },
-    { "&Insert File...",  FL_CTRL + 'i', (Fl_Callback *)insert_cb, 0, FL_MENU_DIVIDER },
-    { "&Save File",       FL_CTRL + 's', (Fl_Callback *)save_cb },
-    { "Save File &As...", FL_CTRL + FL_SHIFT + 's', (Fl_Callback *)saveas_cb, 0, FL_MENU_DIVIDER },
-    { "E&xit", FL_CTRL + 'q', (Fl_Callback *)quit_cb, 0 },
-    { 0 },
-
-  { "&Edit", 0, 0, 0, FL_SUBMENU },
-    { "Cu&t",        FL_CTRL + 'x', (Fl_Callback *)cut_cb },
-    { "&Copy",       FL_CTRL + 'c', (Fl_Callback *)copy_cb },
-    { "&Paste",      FL_CTRL + 'v', (Fl_Callback *)paste_cb },
-    { "&Delete",     0, (Fl_Callback *)delete_cb },
-    { 0 },
-
-  { "&Search", 0, 0, 0, FL_SUBMENU },
-    { "&Find...",       FL_CTRL + 'f', (Fl_Callback *)find_cb },
-    { "F&ind Again",    FL_CTRL + 'g', find2_cb },
-    { "&Replace...",    FL_CTRL + 'r', replace_cb },
-    { "Re&place Again", FL_CTRL + 't', replace2_cb },
-    { 0 },
-
-  { 0 }
-};
 
 #endif
 
