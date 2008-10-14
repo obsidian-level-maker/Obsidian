@@ -1,14 +1,14 @@
 
-LuaModify TODO
+MuckUpLua TODO
 ==============
-
-+  remove CR chars from files (remember "DOS" mode, write them back).
-
-+  allow running without any file
 
 -  prevent ESCAPE from exiting.
 
--  Open file, Save and SaveAs in menu.
+-  FILE menu: Open, Save, SaveAs
 
-+  EDIT menu
++  EDIT menu: Undo, Redo, Cut Copy Paste  [See Eureka]
+
++  remove CR chars from files (remember "DOS" mode, write them back).
+
++  allow running without any file  --> scan for .lua files, show browser
 
