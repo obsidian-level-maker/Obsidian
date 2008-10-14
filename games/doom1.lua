@@ -2566,7 +2566,7 @@ D2_MONSTERS =
   mancubus  = { prob=95, hp=600, dm=80, cage_prob=88, },
 
   arach     = { prob=36, hp=500, dm=70, cage_prob=95, },
-  vile      = { prob=20, hp=700, dm=50, cage_prob=12, hitscan=true },
+  vile      = { prob=20, hp=700, dm=40, cage_prob=12, hitscan=true, no_dist=true },
   pain      = { prob=14, hp=400, dm=88, float=true },
 }
 
