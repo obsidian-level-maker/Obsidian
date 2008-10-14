@@ -139,6 +139,49 @@ void M_Edit_SelectAll(Fl_Widget *w, void * data)
 
 //------------------------------------------------------------------------
 
+void M_Font_LightScheme(Fl_Widget *w, void * data)
+{
+  guix_win->ed->SetDark(false);
+}
+
+void M_Font_DarkScheme(Fl_Widget *w, void * data)
+{
+  guix_win->ed->SetDark(true);
+}
+
+
+void M_Font_Size10(Fl_Widget *w, void * data)
+{
+  guix_win->ed->SetFont(10);
+}
+
+void M_Font_Size12(Fl_Widget *w, void * data)
+{
+  guix_win->ed->SetFont(12);
+}
+
+void M_Font_Size14(Fl_Widget *w, void * data)
+{
+  guix_win->ed->SetFont(14);
+}
+
+void M_Font_Size16(Fl_Widget *w, void * data)
+{
+  guix_win->ed->SetFont(16);
+}
+
+void M_Font_Size18(Fl_Widget *w, void * data)
+{
+  guix_win->ed->SetFont(18);
+}
+
+void M_Font_Size20(Fl_Widget *w, void * data)
+{
+  guix_win->ed->SetFont(20);
+}
+
+
+//------------------------------------------------------------------------
 
 void M_Help_About(Fl_Widget *w, void * data)
 {
@@ -231,6 +274,18 @@ static Fl_Menu_Item menu_items[] =
     { "Find &Next",    FL_COMMAND + 'g', FCAL M_Edit_FindNext },
     { "&Goto Line...", FL_COMMAND + 'l', FCAL M_Edit_GotoLine },
     { "Select &All",   FL_COMMAND + 'a', FCAL M_Edit_SelectAll },
+    { 0 },
+
+  { "&Font", 0, 0, 0, FL_SUBMENU },
+    { "&Light Scheme", 0,  FCAL M_Font_LightScheme },
+    { "&Dark Scheme", 0,   FCAL M_Font_DarkScheme, 0, FL_MENU_DIVIDER },
+
+    { "Size 10", 0, FCAL M_Font_Size10 },
+    { "Size 12", 0, FCAL M_Font_Size12 },
+    { "Size 14", 0, FCAL M_Font_Size14 },
+    { "Size 16", 0, FCAL M_Font_Size16 },
+    { "Size 18", 0, FCAL M_Font_Size18 },
+    { "Size 20", 0, FCAL M_Font_Size20 },
     { 0 },
 
   { "&Help", 0, 0, 0, FL_SUBMENU },

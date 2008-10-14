@@ -40,19 +40,9 @@ public:
     Fl_Text_Buffer *textbuf;
     Fl_Text_Buffer *stylebuf;
 
-private:
-    static const int TABLE_SIZE = 26;
-    static Fl_Text_Display::Style_Table_Entry table_dark [TABLE_SIZE];
-    // static Fl_Text_Display::Style_Table_Entry table_light[TABLE_SIZE];
-
 public:
-    enum
-    {
-        SCHEME_Dark,
-        SCHEME_Light
-    };
-    
-    void SetScheme(int kind, int font_h);
+    void SetDark(bool dark);
+    void SetFont(int font_h);
 
     // returns false if file not found.
     bool Load(const char *filename);
@@ -66,7 +56,8 @@ public:
     bool GotoLine(int num);
 
 private:
-    int cur_scheme;
+    bool cur_dark;
+    int  cur_font_h;
 
     void Parse(const char *text, const char *t_end, char *style, char context);
 
@@ -78,6 +69,12 @@ private:
     int ParseCommentBig(const char *text, const char *t_end, char *style, char& context);
 
     static const char *keywords[];
+
+private:
+    static const int TABLE_SIZE = 20;
+
+    static Fl_Text_Display::Style_Table_Entry table_dark [TABLE_SIZE];
+    static Fl_Text_Display::Style_Table_Entry table_light[TABLE_SIZE];
 };
 
 

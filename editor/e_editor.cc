@@ -28,6 +28,9 @@
 
 #define FLOWOVER_STYLE(ch)  ((ch) == 'S' || (ch) == 'T')
 
+#define MY_FONT  FL_COURIER_BOLD
+#define MY_SIZE  16
+
 
 void style_unfinished_cb(int, void *);
 void style_update_cb(int, int, int, int, const char *, void *);
@@ -35,14 +38,15 @@ void style_update_cb(int, int, int, int, const char *, void *);
 
 W_Editor::W_Editor(int X, int Y, int W, int H, const char *label) :
     Fl_Text_Editor(X, Y, W, H, label),
-    cur_scheme(-1)
+    cur_dark(true), cur_font_h(MY_SIZE)
 {
     textbuf  = new Fl_Text_Buffer;
     stylebuf = new Fl_Text_Buffer;
 
     buffer(textbuf);
 
-    SetScheme(SCHEME_Dark, 16);
+    SetFont(MY_SIZE);
+    SetDark(true);
 
     textbuf->add_modify_callback(style_update_cb, this);
 }
@@ -51,39 +55,6 @@ W_Editor::~W_Editor()
 {
     delete textbuf;
     delete stylebuf;
-}
-
-void W_Editor::SetScheme(int kind, int font_h)
-{
-    textfont(FL_COURIER);
-
-    if (true) // kind == SCHEME_Dark)
-    {
-        color(FL_BLACK /* background */, FL_WHITE /* selection */);
-        cursor_color(FL_WHITE);
-    }
-    else
-    {
-        color(FL_WHITE /* background */, FL_BLACK /* selection */);
-        cursor_color(FL_BLACK);
-    }
-
-    for (int i = 0; i < TABLE_SIZE; i++)
-    {
-        table_dark [i].size = font_h;
-        // table_light[i].size = font_h;
-
-    // if (table_dark[i].color == FL_YELLOW)
-    //  table_dark[i].color = fl_rgb_color(255,255,128);
-    }
-
-  // table_dark[2].color = fl_rgb_color(128,128,255);
-
-    highlight_data(stylebuf, table_dark,
-        // (kind == SCHEME_Dark) ? table_dark : table_dark,
-        TABLE_SIZE, 'Z', style_unfinished_cb, this);
-
-    cur_scheme = kind;
 }
 
 int W_Editor::handle(int event)
@@ -129,10 +100,6 @@ bool W_Editor::GotoLine(int num)
 #define COL_GRAY    MY_FL_COLOR(200,200,200)
 
 
-#define MY_FONT  FL_COURIER_BOLD
-#define MY_SIZE  12
-
-
 Fl_Text_Display::Style_Table_Entry W_Editor::table_dark[W_Editor::TABLE_SIZE] =
 {
     { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'A' - All else
@@ -155,13 +122,72 @@ Fl_Text_Display::Style_Table_Entry W_Editor::table_dark[W_Editor::TABLE_SIZE] =
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'R'
     { COL_RED,     MY_FONT,  MY_SIZE, 0 },  // 'S' - Strings ""
     { COL_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'T' - Table {}
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'U'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'V'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'W'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'X'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'Y'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 }   // 'Z'
 };
+
+
+Fl_Text_Display::Style_Table_Entry W_Editor::table_light[W_Editor::TABLE_SIZE] =
+{
+    { FL_BLACK,    MY_FONT,  MY_SIZE, 0 },  // 'A' - All else
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'B'
+    { COL_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'C' - Comments --
+    { COL_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'D' - Comments --[[ ]]
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'E'
+    { COL_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'F' - Function
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'G'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'H'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'I'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'J'
+    { COL_BROWN,   MY_FONT,  MY_SIZE, 0 },  // 'K' - Keyword
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'L'
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'M'
+    { COL_YELLOW,  MY_FONT,  MY_SIZE, 0 },  // 'N' - Numbers
+    { COL_CYAN,    MY_FONT,  MY_SIZE, 0 },  // 'O' - Oblige Stuff
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'P'
+    { COL_RED,     MY_FONT,  MY_SIZE, 0 },  // 'Q' - Strings ''
+    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'R'
+    { COL_RED,     MY_FONT,  MY_SIZE, 0 },  // 'S' - Strings ""
+    { COL_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'T' - Table {}
+};
+
+
+void W_Editor::SetDark(bool dark)
+{
+    cur_dark = dark;
+
+    if (cur_dark)
+    {
+        color(FL_BLACK /* background */, FL_WHITE /* selection */);
+        cursor_color(FL_WHITE);
+    }
+    else
+    {
+        color(FL_WHITE /* background */, FL_BLACK /* selection */);
+        cursor_color(FL_BLACK);
+    }
+
+    highlight_data(stylebuf, cur_dark ? table_dark : table_light,
+        TABLE_SIZE, 'A', style_unfinished_cb, this);
+
+    show_insert_position();
+}
+
+void W_Editor::SetFont(int font_h)
+{
+    cur_font_h = font_h;
+
+    textfont(FL_COURIER);
+
+    for (int i = 0; i < TABLE_SIZE; i++)
+    {
+        table_dark [i].size = font_h;
+        table_light[i].size = font_h;
+    }
+
+    highlight_data(stylebuf, cur_dark ? table_dark : table_light,
+        TABLE_SIZE, 'A', style_unfinished_cb, this);
+
+    show_insert_position();
+}
 
 
 //
@@ -293,9 +319,9 @@ bool W_Editor::Load(const char *filename)
 //!!!!! FIXME: Save method
 
 
-//---------------------------------------------------------------------------
+//===============================================================
 //  STYLE PARSING CODE
-//---------------------------------------------------------------------------
+//===============================================================
 
 void W_Editor::Parse(const char *text, const char *t_end, char *style, char context)
 {
