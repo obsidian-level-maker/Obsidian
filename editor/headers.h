@@ -92,11 +92,10 @@
 #include "lib_file.h"
 #include "lib_util.h"
 
-#include "dialog.h"
-#include "menu.h"
-#include "editor.h"
-#include "replace.h"
-#include "window.h"
+#include "e_dialog.h"
+#include "e_editor.h"
+#include "e_menu.h"
+#include "e_window.h"
 
 #endif /* __LM_HEADERS_H__ */
 

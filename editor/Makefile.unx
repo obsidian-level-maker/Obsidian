@@ -21,11 +21,10 @@ LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm $(FLTK_LIBS)
 
 OBJS=./main.o     \
-     ./dialog.o   \
-     ./editor.o   \
-     ./menu.o     \
-     ./replace.o  \
-     ./window.o   \
+     ./e_dialog.o   \
+     ./e_editor.o   \
+     ./e_menu.o     \
+     ./e_window.o   \
      ./lib_argv.o \
      ./lib_file.o \
      ./lib_util.o \
