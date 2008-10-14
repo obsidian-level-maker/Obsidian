@@ -17,12 +17,6 @@
 //------------------------------------------------------------------------
 
 #include "headers.h"
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-
-#include "lib_file.h"
-#include "lib_util.h"
-#include "main.h"
 
 #ifdef WIN32
 #include <commdlg.h>
@@ -53,14 +47,14 @@ void Default_Location(void)
 
   strcat(last_file, "TEST");
 
-  DebugPrintf("Default_Location: [%s]\n", last_file);
+//  DebugPrintf("Default_Location: [%s]\n", last_file);
 }
 
 bool UI_SetLastFile(const char *filename)
 {
   if (filename[0] != '\"')
   {
-    LogPrintf("Weird filename in config: [%s]\n", filename);
+//  LogPrintf("Weird filename in config: [%s]\n", filename);
     return false;
   }
 
@@ -68,7 +62,7 @@ bool UI_SetLastFile(const char *filename)
 
   if (filename[len-1] != '\"')
   {
-    LogPrintf("Unterminated filename in config: [%s]\n", filename);
+//  LogPrintf("Unterminated filename in config: [%s]\n", filename);
     return false;
   }
 
@@ -79,7 +73,7 @@ bool UI_SetLastFile(const char *filename)
   last_file = StringDup(filename);
   last_file[len] = 0;
 
-  DebugPrintf("Parsed last_file as: [%s]\n", last_file);
+//  DebugPrintf("Parsed last_file as: [%s]\n", last_file);
  
   return true;
 }
@@ -109,7 +103,7 @@ char *Select_Output_File(const char *ext)
   if (0 == gcd_res || gcd_res > MAX_PATH)
     Main_FatalError("GetCurrentDirectory failed!");
 
-  DebugPrintf("Select_Output_File: cur_dir=[%s]\n", cur_dir);
+//  DebugPrintf("Select_Output_File: cur_dir=[%s]\n", cur_dir);
   
   char pattern_buf[128];
   pattern_buf[0] = toupper(ext[0]);
@@ -141,7 +135,7 @@ char *Select_Output_File(const char *ext)
   {
     DWORD err = ::CommDlgExtendedError();
 
-    DebugPrintf("Select_Output_File: failed, err=0x%08x\n", err);
+//  DebugPrintf("Select_Output_File: failed, err=0x%08x\n", err);
 
     // user cancelled, or error occurred
     ::SetCurrentDirectory(cur_dir);
@@ -194,7 +188,7 @@ char *Select_Output_File(const char *ext)
     name = new_name;
   }
   
-  DebugPrintf("Select_Output_File: OK, name=[%s]\n", name);
+//  DebugPrintf("Select_Output_File: OK, name=[%s]\n", name);
 
   StringFree(last_file);
   last_file = StringDup(name);
@@ -217,7 +211,7 @@ char *Select_Input_File(const char *ext)
   if (0 == gcd_res || gcd_res > MAX_PATH)
     Main_FatalError("GetCurrentDirectory failed!");
 
-  DebugPrintf("Select_Input_File: cur_dir=[%s]\n", cur_dir);
+//  DebugPrintf("Select_Input_File: cur_dir=[%s]\n", cur_dir);
 
   char pattern_buf[128];
   pattern_buf[0] = toupper(ext[0]);
@@ -246,7 +240,7 @@ char *Select_Input_File(const char *ext)
   {
     DWORD err = ::CommDlgExtendedError();
 
-    DebugPrintf("Select_Input_File: failed, err=0x%08x\n", err);
+//  DebugPrintf("Select_Input_File: failed, err=0x%08x\n", err);
 
     // user cancelled, or error occurred
     ::SetCurrentDirectory(cur_dir);
@@ -296,7 +290,7 @@ char *Select_Input_File(const char *ext)
     name = new_name;
   }
   
-  DebugPrintf("Select_Input_File: OK, name=[%s]\n", name);
+//  DebugPrintf("Select_Input_File: OK, name=[%s]\n", name);
 
   return name;
 }
