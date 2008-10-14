@@ -8,7 +8,5 @@ Tailor TODO
 
 -  FILE menu: Open, Save, SaveAs
 
--  EDIT menu: Undo, Redo, Cut Copy Paste
-
 -  allow running without any file  --> scan for .lua files, show browser
 
