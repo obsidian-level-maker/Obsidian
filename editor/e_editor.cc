@@ -57,6 +57,7 @@ W_Editor::~W_Editor()
     delete stylebuf;
 }
 
+
 int W_Editor::handle(int event)
 {
     if (event == FL_KEYDOWN)
@@ -306,17 +307,84 @@ void W_Editor::UpdateStyleRange(int start, int end)
 
 bool W_Editor::Load(const char *filename)
 {
-    //!!!!! FIXME: remove <CR> characters
-    if (textbuf->insertfile(filename, 0) != 0)
+    FILE *fp = fopen(filename, "r");
+
+    if (! fp)
     {
         fl_alert("Loading file %s failed\n", filename);
-        exit(9); //!!!!
+        return false;
     }
 
+    char buffer[1024];
+
+    while (! feof(fp))
+    {
+        int len = fread(buffer, 1, sizeof(buffer)-4, fp);
+
+        if (len <= 0)
+            break;
+        
+        len = SanitizeInput(buffer, len);
+
+        if (len > 0)
+        {
+            buffer[len] = 0;
+            textbuf->append(buffer);
+        }
+    }
+
+    fclose(fp);
     return true;
 }
 
-//!!!!! FIXME: Save method
+bool W_Editor::Save(const char *filename)
+{
+    FILE *fp = fopen(filename, "w");
+
+    if (! fp)
+    {
+        fl_alert("Saving file %s failed\n", filename);
+        return false;
+    }
+
+    int pos = 0;
+    int total_len = textbuf->length();
+
+    if (total_len == 0)
+        fprintf(fp, "\n");
+
+    while (pos < total_len)
+    {
+        char *line = textbuf->line_text(pos);
+
+        fwrite(line, strlen(line), 1, fp);
+        fprintf(fp, "\n");
+
+        free(line);
+    }
+
+    fclose(fp);
+    return true;
+}
+
+int W_Editor::SanitizeInput(char *buffer, int len)
+{
+    char *src  = buffer;
+    char *dest = buffer;
+
+    while (src < buffer + len) 
+    {
+        if (*src == 0 || *src == '\r')
+        {
+            src++;
+            continue;
+        }
+
+        *dest++ = *src++;
+    }
+
+    return (int)(dest - buffer);
+}
 
 
 //===============================================================
@@ -329,40 +397,40 @@ void W_Editor::Parse(const char *text, const char *t_end, char *style, char cont
 
     while (text < t_end)
     {
-    if (context == 'S' || context == 'R')
-    {
-      int len = ParseString(text, t_end, style, context);
+        if (context == 'S' || context == 'R')
+        {
+            int len = ParseString(text, t_end, style, context);
             text  += len;
             style += len;
-            continue;
-    }
-
-    if (context == 'D')
-    {
-      int len = ParseCommentBig(text, t_end, style, context);
-            text  += len;
-            style += len;
-            continue;
-    }
- 
-    if (*text == '"' || *text == '\'')
-    {
-      context = (*text == '"') ? 'S' : 'R';
-
-      text++, *style++ = context;
             continue;
         }
 
-    if ((t_end - text) >= 4 && strncmp(text, "--[[", 4) == 0)
-    {
-      context = 'D';
+        if (context == 'D')
+        {
+            int len = ParseCommentBig(text, t_end, style, context);
+            text  += len;
+            style += len;
+            continue;
+        }
+ 
+        if (*text == '"' || *text == '\'')
+        {
+            context = (*text == '"') ? 'S' : 'R';
 
-      memset(style, context, 4);
+            text++, *style++ = context;
+            continue;
+        }
 
-      text += 4; 
-      style += 4;
-      continue;
-    }
+        if ((t_end - text) >= 4 && strncmp(text, "--[[", 4) == 0)
+        {
+            context = 'D';
+
+            memset(style, context, 4);
+
+            text += 4; 
+            style += 4;
+            continue;
+        }
 
         if (isdigit(*text))
         {
@@ -380,21 +448,21 @@ void W_Editor::Parse(const char *text, const char *t_end, char *style, char cont
             continue;
         }
 
-    if (text < t_end-1 && text[0] == '-' && text[1] == '-')
-    {
-            int len = ParseComment(text, t_end, style);
-            text  += len;
-            style += len;
-            continue;
-    }
+        if (text < t_end-1 && text[0] == '-' && text[1] == '-')
+        {
+                int len = ParseComment(text, t_end, style);
+                text  += len;
+                style += len;
+                continue;
+        }
 
-    if (*text == '{' || *text == '}')
-    {
-      text++, *style++ = 'T';
-      continue;
-    }
+        if (*text == '{' || *text == '}')
+        {
+          text++, *style++ = 'T';
+          continue;
+        }
 
-    text++, *style++ = 'A';
+        text++, *style++ = 'A';
     }
 }
 

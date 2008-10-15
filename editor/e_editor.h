@@ -29,35 +29,44 @@
 class W_Editor : public Fl_Text_Editor
 {
 public:
+    Fl_Text_Buffer *textbuf;
+    Fl_Text_Buffer *stylebuf;
+
+private:
+    bool cur_dark;
+    int  cur_font_h;
+
+///---    // original file used CRLF for line endings
+///---    bool crlf;
+
+public:
     W_Editor(int X, int Y, int W, int H, const char *label = 0);
     ~W_Editor();
 
 public:
-    int handle(int event);
     // FLTK virtual method for handling input events.
-
-public:
-    Fl_Text_Buffer *textbuf;
-    Fl_Text_Buffer *stylebuf;
+    int handle(int event);
 
 public:
     void SetDark(bool dark);
     void SetFont(int font_h);
 
-    // returns false if file not found.
+    // returns false if file could not be loaded/saved
+    // (in which case error dialog has been shown)
     bool Load(const char *filename);
+    bool Save(const char *filename);
 
-    // called by buffer-update callback.
-    void UpdateStyleRange(int start, int end);
+    // remove CR and other unwanted characters from the
+    // given buffer.  Returns the new length.
+    int SanitizeInput(char *buffer, int len);
 
     // goto a specified line.  Line numbers begin at 1.
     // Returns false if does not exist (in which case the
     // position was not changed).
     bool GotoLine(int num);
 
-private:
-    bool cur_dark;
-    int  cur_font_h;
+    // called by buffer-update callback.
+    void UpdateStyleRange(int start, int end);
 
     void Parse(const char *text, const char *t_end, char *style, char context);
 
