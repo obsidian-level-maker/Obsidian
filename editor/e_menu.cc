@@ -20,9 +20,6 @@
 #include "headers.h"
 
 
-static bool menu_want_to_quit;
-
-
 static int last_line_num = -1;
 
 
@@ -54,15 +51,22 @@ void M_File_Open(Fl_Widget *w, void * data)
 }
 
 
-void M_File_Save(Fl_Widget *w, void * data)
-{
-    // FIXME
-}
-
-
 void M_File_SaveAs(Fl_Widget *w, void * data)
 {
     // FIXME
+    // 
+    // Select_Output_File()
+    // guix_win->ed->SetFilename(filename)
+    // guix_win->ed->Save();
+}
+
+
+void M_File_Save(Fl_Widget *w, void * data)
+{
+    if (guix_win->ed->HasFilename())
+        guix_win->ed->Save();
+    else
+        M_File_SaveAs(w, data);
 }
 
 
@@ -114,22 +118,22 @@ void M_Edit_FindNext(Fl_Widget *w, void * data)
 
 void M_Edit_GotoLine(Fl_Widget *w, void * data)
 {
-  static char num_buffer[64];
+    static char num_buffer[64];
 
-  sprintf(num_buffer, "%d", last_line_num);
+    sprintf(num_buffer, "%d", last_line_num);
 
-  const char *val = fl_input("Goto Line Number:", (last_line_num <= 0) ? num_buffer : NULL);
-  if (! val)
-    return;
+    const char *val = fl_input("Goto Line Number:", (last_line_num <= 0) ? num_buffer : NULL);
+    if (! val)
+        return;
 
-  int num = atoi(val);
-  if (num <= 0)
-    return;
+    int num = atoi(val);
+    if (num <= 0)
+        return;
 
-  last_line_num = num;
+    last_line_num = num;
 
-  if (! guix_win->ed->GotoLine(num))
-    fl_beep();
+    if (! guix_win->ed->GotoLine(num))
+        fl_beep();
 }
 
 
@@ -143,43 +147,43 @@ void M_Edit_SelectAll(Fl_Widget *w, void * data)
 
 void M_Font_LightTheme(Fl_Widget *w, void * data)
 {
-  guix_win->ed->SetDark(false);
+    guix_win->ed->SetDark(false);
 }
 
 void M_Font_DarkTheme(Fl_Widget *w, void * data)
 {
-  guix_win->ed->SetDark(true);
+    guix_win->ed->SetDark(true);
 }
 
 
 void M_Font_Size10(Fl_Widget *w, void * data)
 {
-  guix_win->ed->SetFont(10);
+    guix_win->ed->SetFont(10);
 }
 
 void M_Font_Size12(Fl_Widget *w, void * data)
 {
-  guix_win->ed->SetFont(12);
+    guix_win->ed->SetFont(12);
 }
 
 void M_Font_Size14(Fl_Widget *w, void * data)
 {
-  guix_win->ed->SetFont(14);
+    guix_win->ed->SetFont(14);
 }
 
 void M_Font_Size16(Fl_Widget *w, void * data)
 {
-  guix_win->ed->SetFont(16);
+    guix_win->ed->SetFont(16);
 }
 
 void M_Font_Size18(Fl_Widget *w, void * data)
 {
-  guix_win->ed->SetFont(18);
+    guix_win->ed->SetFont(18);
 }
 
 void M_Font_Size20(Fl_Widget *w, void * data)
 {
-  guix_win->ed->SetFont(20);
+    guix_win->ed->SetFont(20);
 }
 
 
@@ -515,4 +519,4 @@ void saveas_cb()
 #endif
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:expandtab
