@@ -38,7 +38,8 @@ void style_update_cb(int, int, int, int, const char *, void *);
 
 W_Editor::W_Editor(int X, int Y, int W, int H, const char *label) :
     Fl_Text_Editor(X, Y, W, H, label),
-    cur_dark(true), cur_font_h(MY_SIZE)
+    cur_dark(true), cur_font_h(MY_SIZE),
+    cur_filename(NULL)
 {
     textbuf  = new Fl_Text_Buffer;
     stylebuf = new Fl_Text_Buffer;
@@ -315,6 +316,8 @@ bool W_Editor::Load(const char *filename)
         return false;
     }
 
+    SetFilename(filename);
+
     char buffer[1024];
 
     while (! feof(fp))
@@ -326,24 +329,23 @@ bool W_Editor::Load(const char *filename)
         
         len = SanitizeInput(buffer, len);
 
-        if (len > 0)
-        {
-            buffer[len] = 0;
-            textbuf->append(buffer);
-        }
+        buffer[len] = 0;
+        textbuf->append(buffer);
     }
 
     fclose(fp);
     return true;
 }
 
-bool W_Editor::Save(const char *filename)
+bool W_Editor::Save()
 {
-    FILE *fp = fopen(filename, "w");
+    SYS_ASSERT(cur_filename);
+
+    FILE *fp = fopen(cur_filename, "w");
 
     if (! fp)
     {
-        fl_alert("Saving file %s failed\n", filename);
+        fl_alert("Saving file %s failed\n", cur_filename);
         return false;
     }
 
@@ -357,6 +359,8 @@ bool W_Editor::Save(const char *filename)
     {
         char *line = textbuf->line_text(pos);
 
+        pos = textbuf->skip_lines(pos, 1);
+
         fwrite(line, strlen(line), 1, fp);
         fprintf(fp, "\n");
 
@@ -365,6 +369,19 @@ bool W_Editor::Save(const char *filename)
 
     fclose(fp);
     return true;
+}
+
+bool W_Editor::HasFilename() const
+{
+    return (cur_filename != NULL);
+}
+
+void W_Editor::SetFilename(const char *filename)
+{
+    if (cur_filename)
+        StringFree(cur_filename);
+
+    cur_filename = StringDup(filename);
 }
 
 int W_Editor::SanitizeInput(char *buffer, int len)

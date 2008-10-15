@@ -36,8 +36,7 @@ private:
     bool cur_dark;
     int  cur_font_h;
 
-///---    // original file used CRLF for line endings
-///---    bool crlf;
+    const char *cur_filename;
 
 public:
     W_Editor(int X, int Y, int W, int H, const char *label = 0);
@@ -54,7 +53,10 @@ public:
     // returns false if file could not be loaded/saved
     // (in which case error dialog has been shown)
     bool Load(const char *filename);
-    bool Save(const char *filename);
+    bool Save();
+
+    bool HasFilename() const;
+    void SetFilename(const char *filename);
 
     // remove CR and other unwanted characters from the
     // given buffer.  Returns the new length.
