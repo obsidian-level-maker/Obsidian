@@ -4,8 +4,6 @@ Tailor TODO
 
 -  prevent ESCAPE from exiting.
 
-+  remove CR chars from files (remember "DOS" mode, write them back).
-
 -  FILE menu: Open, Save, SaveAs
 
 -  allow running without any file  --> scan for .lua files, show browser
