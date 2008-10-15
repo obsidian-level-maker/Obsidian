@@ -307,11 +307,13 @@ function Landmap_DoGround()
 
   --- Landmap_DoGround ---
 
-  local SPURTS = 6   -- 0 to 12
+  local SPURTS = rand_element { 0,1,3,8 }
 
-  plant_seedlings()
-  for loop = 1,SPURTS do
-    grow_seedlings()
+  if SPURTS > 0 then
+    plant_seedlings()
+    for loop = 1,SPURTS do
+      grow_seedlings()
+    end
   end
 end
 
