@@ -34,7 +34,7 @@ static void menu_quit_CB(Fl_Widget *w, void *data)
 #ifndef MACOSX
 void M_File_Quit(Fl_Widget *w, void * data)
 {
-    guix_win->want_quit = true;
+    main_win->want_quit = true;
 }
 #endif
 
@@ -56,23 +56,21 @@ void M_File_SaveAs(Fl_Widget *w, void * data)
     // FIXME
     // 
     // Select_Output_File()
-    // guix_win->ed->SetFilename(filename)
-    // guix_win->ed->Save();
+    // main_win->ed->SetFilename(filename)
+    // main_win->ed->Save();
 }
 
 
 void M_File_Save(Fl_Widget *w, void * data)
 {
-    if (guix_win->ed->HasFilename())
-        guix_win->ed->Save();
+    if (main_win->ed->HasFilename())
+        main_win->ed->Save();
     else
         M_File_SaveAs(w, data);
 }
 
 
 //------------------------------------------------------------------------
-
-#define main_win  guix_win
 
 void M_Edit_Undo(Fl_Widget *w, void * data)
 {
@@ -132,7 +130,7 @@ void M_Edit_GotoLine(Fl_Widget *w, void * data)
 
     last_line_num = num;
 
-    if (! guix_win->ed->GotoLine(num))
+    if (! main_win->ed->GotoLine(num))
         fl_beep();
 }
 
@@ -147,43 +145,43 @@ void M_Edit_SelectAll(Fl_Widget *w, void * data)
 
 void M_Font_LightTheme(Fl_Widget *w, void * data)
 {
-    guix_win->ed->SetDark(false);
+    main_win->ed->SetDark(false);
 }
 
 void M_Font_DarkTheme(Fl_Widget *w, void * data)
 {
-    guix_win->ed->SetDark(true);
+    main_win->ed->SetDark(true);
 }
 
 
 void M_Font_Size10(Fl_Widget *w, void * data)
 {
-    guix_win->ed->SetFont(10);
+    main_win->ed->SetFont(10);
 }
 
 void M_Font_Size12(Fl_Widget *w, void * data)
 {
-    guix_win->ed->SetFont(12);
+    main_win->ed->SetFont(12);
 }
 
 void M_Font_Size14(Fl_Widget *w, void * data)
 {
-    guix_win->ed->SetFont(14);
+    main_win->ed->SetFont(14);
 }
 
 void M_Font_Size16(Fl_Widget *w, void * data)
 {
-    guix_win->ed->SetFont(16);
+    main_win->ed->SetFont(16);
 }
 
 void M_Font_Size18(Fl_Widget *w, void * data)
 {
-    guix_win->ed->SetFont(18);
+    main_win->ed->SetFont(18);
 }
 
 void M_Font_Size20(Fl_Widget *w, void * data)
 {
-    guix_win->ed->SetFont(20);
+    main_win->ed->SetFont(20);
 }
 
 

@@ -24,11 +24,11 @@
 #define MAIN_WINDOW_MIN_W  540
 #define MAIN_WINDOW_MIN_H  450
 
-class Guix_MainWin : public Fl_Double_Window
+class W_MainWindow : public Fl_Double_Window
 {
 public:
-    Guix_MainWin(const char *title);
-    virtual ~Guix_MainWin();
+    W_MainWindow(const char *title);
+    virtual ~W_MainWindow();
 
     // main child widgets
   
@@ -45,9 +45,7 @@ public:
 
 };
 
-extern Guix_MainWin * guix_win;
-
-void WindowSmallDelay(void);
+extern W_MainWindow * main_win;
 
 
 #endif /* __LM_WINDOW_H__ */

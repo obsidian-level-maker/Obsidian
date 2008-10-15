@@ -137,21 +137,20 @@ int main(int argc, char **argv)
             FatalError("Main file must be a DDF file.\n");
 #endif
 
-        guix_win = new Guix_MainWin(PROG_NAME_FULL);
+        main_win = new W_MainWindow(PROG_NAME_FULL);
 
         // show window (pass some dummy arguments)
         {
             int argc = 1;
             char *argv[] = { PROG_NAME ".exe", NULL };
 
-            guix_win->show(argc, argv);
+            main_win->show(argc, argv);
         }
 
-        guix_win->ed->Load(arg_list[0]);
-
-        // run the GUI until the user quits
-        while (! guix_win->want_quit)
-            Fl::wait();
+        if (main_win->ed->Load(arg_list[0]))
+            // run the GUI until the user quits
+            while (! main_win->want_quit)
+                Fl::wait();
     }
     catch (const char * err)
     {
@@ -166,7 +165,7 @@ int main(int argc, char **argv)
         DisplayError("An unknown problem occurred (UI code)");
     }
 
-    delete guix_win;
+    delete main_win;
 
     return main_result;
 }

@@ -24,20 +24,20 @@
 #endif
 
 
-Guix_MainWin *guix_win;
+W_MainWindow *main_win;
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
 {
-    if (guix_win)
-        guix_win->want_quit = true;
+    if (main_win)
+        main_win->want_quit = true;
 }
 
 
 //
 // MainWin Constructor
 //
-Guix_MainWin::Guix_MainWin(const char *title) :
+W_MainWindow::W_MainWindow(const char *title) :
      Fl_Double_Window(600, 420, title)
 {
     // turn off auto-add-widget mode
@@ -82,7 +82,7 @@ Guix_MainWin::Guix_MainWin(const char *title) :
 //
 // MainWin Destructor
 //
-Guix_MainWin::~Guix_MainWin()
+W_MainWindow::~W_MainWindow()
 {
 }
 
