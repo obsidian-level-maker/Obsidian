@@ -955,7 +955,7 @@ gui.debugf("Failed\n")
 
     for _,R in ipairs(PLAN.all_rooms) do
       if R.svolume >= 1 and (R.kind == "indoor") then
-        R.k_score = sel((R.sw%2)==1 and (R.sh%2)==1, 500, 0) + R.svolume + gui.random()
+        R.k_score = sel((R.sw%2)==1 and (R.sh%2)==1, 5, 0) + R.svolume + gui.random()
         table.insert(rooms, R)
       end
     end
