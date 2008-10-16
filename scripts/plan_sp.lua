@@ -200,7 +200,7 @@ function Landmap_DoGround()
   local function fill_spot(x, y)
     local FILLERS =
     {
-      ground = 70, valley = 50, hill = 35,
+      ground = 50, valley = 70, hill = 35,
     }
 
     FILLERS.none = 60*5  -- variable?  --!!!!!!!!
@@ -307,7 +307,7 @@ function Landmap_DoGround()
 
   --- Landmap_DoGround ---
 
-  local SPURTS = rand_element { 0,1,3,8 }
+  local SPURTS = rand_element { 0,2,5,12 }
 
   if SPURTS > 0 then
     plant_seedlings()
@@ -436,8 +436,8 @@ function Landmap_CreateRooms()
   local BIG_BUILDING_PROBS =
   {
     { 40, 70, 15 },
-    { 70, 90,  5 },
-    { 15,  5,  1 },
+    { 70, 70,  6 },
+    { 15,  6,  3 },
   }
 
   local function prob_for_big_room(kind, w, h)
