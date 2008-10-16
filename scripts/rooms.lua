@@ -56,8 +56,8 @@ function Rooms_decide_hallways()
   --   - no teleporters
   --   - not the destination of a locked door (anti-climactic)
 
-  local HALL_SIZE_PROBS = {  0, 90, 75, 50,  2 }
-  local REVERT_PROBS    = {  0, 10, 40, 80, 99 }
+  local HALL_SIZE_PROBS = { 99, 90, 60, 30,  2 }
+  local REVERT_PROBS    = {  0,  0, 50, 80, 99 }
 
   local function eval_hallway(R)
     -- Wolf3D: the outdoor areas become hallways
