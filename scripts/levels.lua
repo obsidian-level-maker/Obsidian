@@ -29,6 +29,7 @@ require 'plan_sp'
 require 'connect'
 require 'quests'
 require 'rooms'
+require 'r2'
 require 'builder'
 
 -- require 'monsters'
@@ -133,6 +134,10 @@ function Level_Make(level, NUM)
   Rooms_fit_out()
     if gui.abort() then return "abort" end
     gui.progress(60)
+
+  Rooms_II()
+    if gui.abort() then return "abort" end
+    gui.progress(70)
 
   Seed_grow()
 
