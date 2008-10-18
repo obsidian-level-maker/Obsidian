@@ -211,20 +211,77 @@ function Rooms_setup_symmetry()
     end
   end
 
+  local function mirror_rotation(R)
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy1 + int(R.sh/2) do
+      local nx = R.sx1 + R.sx2 - x
+      local ny = R.sy1 + R.sy2 - y
+
+      if (y ~= ny or x < nx) and x ~= nx then
+        local B = SEEDS[x][y][1]
+        local T = SEEDS[nx][ny][1]
+
+        B.x_peer = T
+        T.x_peer = B
+      end
+    end end
+  end
+
+  local function mirror_transpose(R)
+    assert(R.sw == R.sh and R.sw >= 2)
+    assert(#R.conns == 2)
+
+    local XC = R.conns[1]
+    local YC = R.conns[2]
+
+    assert(is_perpendicular(XC.conn_dir, YC.conn_dir))
+
+    if XC.conn_dir == 2 or XC.conn_dir == 8 then
+      XC, YC = YC, XC
+    end
+
+    -- FIXME: determine this when 'symmetry' field is set
+    local positive = true
+    if XC.conn_dir == 6 then positive = not positive end
+    if YC.conn_dir == 8 then positive = not positive end
+
+    if positive then
+      R.symmetry = "tp"
+    else
+      R.symmetry = "tn"
+    end
+
+    for a = 0,R.sw-1 do
+      for b = 0,R.sw-2-a do
+        local x1 = R.sx1 + a
+        local y1 = sel(positive, R.sy2 - b, R.sy1 + b)
+
+        local x2 = sel(positive, R.sx2 - b, R.sx1 + b)
+        local y2 = R.sy1 + a
+
+        local S1 = SEEDS[x1][y1][1]
+        local S2 = SEEDS[x2][y2][1]
+
+        S1.x_peer = S2
+        S2.x_peer = S1
+      end
+    end
+  end
+
+
   --| Rooms_setup_symmetry |--
 
   for _,R in ipairs(PLAN.all_rooms) do
-    if R.symmetry then
-      if R.symmetry == 6 then R.symmetry = 4 end
-      if R.symmetry == 8 then R.symmetry = 2 end
+    if R.symmetry == "x" or R.symmetry == "xy" then
+      mirror_horizontally(R)
 
-      if R.symmetry == 2 or R.symmetry == 5 then
-        mirror_horizontally(R)
-      end
+    elseif R.symmetry == "y" or R.symmetry == "xy" then
+      mirror_vertically(R)
 
-      if R.symmetry == 4 or R.symmetry == 5 then
-        mirror_vertically(R)
-      end
+    elseif R.symmetry == "r" then
+      mirror_rotation(R)
+
+    elseif R.symmetry == "t" then
+      mirror_transpose(R)
     end
   end
 end
@@ -271,20 +328,21 @@ function Rooms_find_broken_symmetry()
     end end -- for x,y
   end
 
-  local function remove_symmetry(R, break_dir)
-    gui.debugf("Symmetry broken in Room S(%d,%d) %s dir\n", R.sx1, R.sy1, break_dir)
+  local function remove_symmetry(R, break_peer)
+    gui.debugf("Symmetry broken in Room S(%d,%d) %s dir\n", R.sx1, R.sy1, break_peer)
 
-    if R.symmetry == 5 then
-      R.symmetry = sel(break_dir == "x", 2, 4) 
+    if R.symmetry == "xy" then
+      R.symmetry = sel(break_peer == "x", "y", "x") 
     else
-      R.symmetry = nil
+      R.symmetry = "none"
     end
 
+    -- remove all peers (they are setup again later)
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
 
-      if break_dir == "x" then S.x_peer = nil end
-      if break_dir == "y" then S.y_peer = nil end
+      S.x_peer = nil
+      S.y_peer = nil
     end end -- for x,y
   end
 
@@ -293,12 +351,14 @@ function Rooms_find_broken_symmetry()
   for _,R in ipairs(PLAN.all_rooms) do
     -- need two passes to handle four-way symmetrical rooms
     for pass = 1,2 do
-      local break_dir = broken_symmetry(R)
-      if break_dir then
-        remove_symmetry(R, break_dir)
+      local break_peer = broken_symmetry(R)
+      if break_peer then
+        remove_symmetry(R, break_peer)
       end
     end
   end
+
+  Rooms_setup_symmetry()
 end
 
 
@@ -735,8 +795,8 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
 
   table.sort(big_rooms,
       function(A,B)
-        return (A.svolume + (A.symmetry or 0) * 200) >
-               (B.svolume + (B.symmetry or 0) * 200)
+        return (A.svolume + sel(A.symmetry, 200, 0)) >
+               (B.svolume + sel(B.symmetry, 200, 0))
       end)
 
   for _,R in ipairs(PLAN.all_rooms) do

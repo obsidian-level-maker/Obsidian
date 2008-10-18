@@ -74,10 +74,13 @@ CONN_CLASS =
 -- configuration, and these generator functions are optimised
 -- with that in mind.
 --
--- The 'symmetry' field, when set, is a direction (1-9) of the
--- axis of symmetry.  Hence "2" means the pattern will be the same
--- when flipped horizontally.  The value "5" is used for four-way
--- symmetry (pattern is mirrored both horizontally or vertically).
+-- The symmetry field can have the following keywords:
+--   "x"  mirrored horizontally (i.e. left side = right side)
+--   "y"  mirrored vertically
+--   "xy" mirrored both horizontally and vertically
+--   "r"  rotation symmetry (180 degrees)
+--   "t"  transpose symmetry (square rooms only)
+--
 
 
 --- 2 way --->
@@ -473,75 +476,75 @@ end
 BIG_BRANCH_KINDS =
 {
   -- pass through (one side to the other), perfectly centered
-  PC = { conn=2, prob=40, func=branch_gen_PC, symmetry=2 },
+  PC = { conn=2, prob=40, func=branch_gen_PC, symmetry="x" },
 
   -- pass through, along one side
-  PA = { conn=2, prob= 8, func=branch_gen_PA, symmetry=6 },
+  PA = { conn=2, prob= 8, func=branch_gen_PA, symmetry="y" },
 
   -- pass through, rotation symmetry
-  PR = { conn=2, prob=20, func=branch_gen_PR },
+  PR = { conn=2, prob=20*50, func=branch_gen_PR, symmetry="r" },
 
   -- pass through, garden variety
   PX = { conn=2, prob= 3, func=branch_gen_PX },
 
   -- L shape for square room (transpose symmetrical)
-  LS = { conn=2, prob=20, func=branch_gen_LS },
+  LS = { conn=2, prob=20*100, func=branch_gen_LS, symmetry="t" },
 
   -- L shape, garden variety
   LX = { conn=2, prob= 3, func=branch_gen_LX },
 
   -- U shape, both exits on a single wall
-  U2 = { conn=2, prob= 1, func=branch_gen_U2, symmetry=2 },
+  U2 = { conn=2, prob= 1, func=branch_gen_U2, symmetry="x" },
 
 
   -- T shape, centered main stem, leeway for side stems
-  TC = { conn=3, prob=200, func=branch_gen_TC, symmetry=2 },
+  TC = { conn=3, prob=200, func=branch_gen_TC, symmetry="x" },
 
   -- like TC but main stem not centered
   TX = { conn=3, prob= 50, func=branch_gen_TX },
 
   -- Y shape, two exits parallel to single centered entry
-  TY = { conn=3, prob=120, func=branch_gen_TY, symmetry=2 },
+  TY = { conn=3, prob=120, func=branch_gen_TY, symmetry="x" },
 
   -- F shape with three exits (mainly for rooms at corner of map)
   F3 = { conn=3, prob=  2, func=branch_gen_F3 },
 
   -- three exits along one wall, middle is centered
-  M3 = { conn=3, prob=  5, func=branch_gen_M3, symmetry=2 },
+  M3 = { conn=3, prob=  5, func=branch_gen_M3, symmetry="x" },
 
 
   -- Cross shape, all stems perfectly centered
-  XC = { conn=4, prob=2000, func=branch_gen_XC, symmetry=5 },
+  XC = { conn=4, prob=2000, func=branch_gen_XC, symmetry="xy" },
 
   -- Cross shape, centered main stem, leeway for side stems
-  XT = { conn=4, prob=300, func=branch_gen_XT, symmetry=2 },
+  XT = { conn=4, prob=300, func=branch_gen_XT, symmetry="x" },
 
   -- Cross shape, no stems are centered
   XX = { conn=4, prob=100, func=branch_gen_XX },
 
   -- H shape, parallel entries/exits at the four corners
-  HP = { conn=4, prob= 60, func=branch_gen_HP, symmetry=2 },
+  HP = { conn=4, prob= 60, func=branch_gen_HP, symmetry="x" },
 
   -- like HP but exits are perpendicular to entry dir
-  HT = { conn=4, prob= 60, func=branch_gen_HT, symmetry=2 },
+  HT = { conn=4, prob= 60, func=branch_gen_HT, symmetry="x" },
 
   -- Swastika shape
-  SW = { conn=4, prob=  5, func=branch_gen_SW },
+  SW = { conn=4, prob=  5*100, func=branch_gen_SW, symmetry="r" },
 
   -- F shape with two exits on each wall
   F4 = { conn=4, prob=  5, func=branch_gen_F4 },
 
 
   -- five-way star shapes
-  KY = { conn=5, prob=150, func=branch_gen_KY, symmetry=2 },
-  KT = { conn=5, prob=150, func=branch_gen_KT, symmetry=2 },
+  KY = { conn=5, prob=150, func=branch_gen_KY, symmetry="x" },
+  KT = { conn=5, prob=150, func=branch_gen_KT, symmetry="x" },
 
   -- two exits at bottom and three at top, all parallel
-  M5 = { conn=5, prob= 40, func=branch_gen_M5, symmetry=2 },
+  M5 = { conn=5, prob= 40, func=branch_gen_M5, symmetry="x" },
 
 
   -- gigantic six-way shapes
-  GG = { conn=6, prob=350, func=branch_gen_GG, symmetry=2 },
+  GG = { conn=6, prob=350, func=branch_gen_GG, symmetry="x" },
 }
 
 
@@ -814,6 +817,19 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
     return R.sx1 + (x-1), R.sy1 + (y-1)
   end
 
+  local function morph_symmetry(MORPH, sym)
+    if sym == "x" then
+      return sel(MORPH >= 4, "y", "x")
+    end
+
+    if sym == "y" then
+      return sel(MORPH >= 4, "x", "y")
+    end
+
+    -- no change for XY, R and T kinds
+    return sym
+  end
+
   local function dump_new_conns(conns)
     gui.debugf("NEW CONNS:\n")
     for _,C in ipairs(conns) do
@@ -896,7 +912,7 @@ gui.debugf("hit_conns = %d\n", hit_conns)
     R.branch_kind = K
 
     if BIG_BRANCH_KINDS[K].symmetry then
-      R.symmetry = morph_dir(MORPH, BIG_BRANCH_KINDS[K].symmetry)
+      R.symmetry = morph_symmetry(MORPH, BIG_BRANCH_KINDS[K].symmetry)
     end
 
     dump_new_conns(conns)
@@ -1054,6 +1070,7 @@ gui.debugf("Failed\n")
     connect_seeds(S, N, dir, "emergency")
 
     R.branch_kind = "EM"
+--  R.old_sym  = R.symmetry
     R.symmetry = nil
 
     N.room.branch_kind = "EM"
