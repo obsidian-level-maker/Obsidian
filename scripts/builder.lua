@@ -775,9 +775,9 @@ gui.printf("do_teleport\n")
 
       else -- building
       
-        f_tex = "FLOOR4_8"
+        f_tex = "FLOOR0_1"
         c_tex = "CEIL3_5"
-        w_tex = "STARTAN3"
+        w_tex = "BRICK8"
 
       end
 
@@ -866,6 +866,21 @@ w_tex = "e1u1/exitdr01_2"
 
     -- floor and ceiling brushes
 
+if S.layout_char == "#" then
+
+    gui.add_brush(
+    {
+      t_face = { texture=f_tex },
+      b_face = { texture=f_tex },
+      w_face = { texture=w_tex },
+    },
+    {
+      { x=x1, y=y1 }, { x=x1, y=y2 },
+      { x=x2, y=y2 }, { x=x2, y=y1 },
+    },
+    -2000, 2000);
+else
+
     gui.add_brush(
     {
       t_face = { texture=f_tex },
@@ -943,6 +958,8 @@ gui.printf("ADDING LOCK DOOR %s\n", w_tex)
       end
     end
 end -- do_sides
+
+end -- layout_char ~= "#"
 
     local mx = int((x1+x2) / 2)
     local my = int((y1+y2) / 2)
