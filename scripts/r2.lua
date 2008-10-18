@@ -74,7 +74,7 @@ function dump_layout(R)
 
   --| dump_layout |--
 
-  gui.debugf("Room @ (%d,%d) Layout:\n", R.sx1, R.sy1)
+  gui.debugf("Room %s @ (%d,%d) Layout:\n", R.kind, R.sx1, R.sy1)
 
   for y = R.sh+1,0,-1 do
     line = ""
@@ -92,12 +92,148 @@ function dump_layout(R)
 end
 
 
+function Conn_area(R)
+  local lx, ly = 999,999
+  local hx, hy = 0,0
+
+  for _,C in ipairs(R.conns) do
+    local S = C:seed(R)
+    lx = math.min(lx, S.sx)
+    ly = math.min(ly, S.sy)
+    hx = math.max(hx, S.sx)
+    hy = math.max(hy, S.sy)
+  end
+
+  assert(lx <= hx and ly <= hy)
+
+  return lx,ly, hx,hy
+end
+
+
 function Layout_Hallway(R)
-  -- TODO
+  local lx,ly, hx,hy = Conn_area(R)
+
+  for y = R.sy1,R.sy2 do for x = R.sx1,R.sx2 do
+    if not box_contains_point(lx,ly, hx,hy, x,y) then
+      SEEDS[x][y][1].layout_char = "#"
+    end
+  end end -- for y, x
+
+  -- easy if only one seed wide/tall
+  if lx==hx or ly==hy then
+    return
+  end
+
+  -- block out seeds that don't "trace" from a connection
+  local used_x = {}
+  local used_y = {}
+
+  for _,C in ipairs(R.conns) do
+    local S = C:seed(R)
+    if S.conn_dir == 2 or S.conn_dir == 8 then
+      used_x[S.sx] = 1
+    else
+      used_y[S.sy] = 1
+    end
+  end
+
+  for y = ly,hy do for x = lx,hx do
+    if not (used_x[x] or used_y[y]) then
+      SEEDS[x][y][1].layout_char = "#"
+    end
+  end end -- for y,x
+
+  -- handle when all connections are parallel
+  if table_empty(used_x) then
+    local x = int((R.sx1 + R.sx2) / 2)
+    for y = ly,hy do
+      SEEDS[x][y][1].layout_char = nil
+    end
+
+  elseif table_empty(used_y) then
+    local y = int((R.sy1 + R.sy2) / 2)
+    for x = lx,hx do
+      SEEDS[x][y][1].layout_char = nil
+    end
+  end
+end
+
+
+function Ultra_Lame_Layouter(R)
+  -- purpose of this function is solely to make a functional
+  -- room layout with absolutely no regard (or very little)
+  -- to making a pleasing layout.  It's the last resort.
+
+  if #R.h_set == 1 then
+    -- easy: no height changes
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      S.layout_char = '0'
+    end end
+
+    return
+  end
+
+  -- add the room floor_h if wanted and necessary
+  local need_rf
+  for index,h in ipairs(R.h_set) do
+    if math.abs(h - R.floor_h) < 1 then
+      need_rf = string.sub("0123456789", index, index)
+      break;
+    end
+  end
+  for _,C in ipairs(R.conns) do
+    if math.abs(C.conn_h - R.floor_h) < 1 then
+      need_rf = nil
+    end
+  end
+
+  if need_rf then
+    local best_spot
+    local best_score = -1
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if not S.layout_char and (x == R.sx1 or x == R.sx2 or y == R.sy1 or y == R.sy2) then
+        local score = gui.random()
+        local has_nb = false
+        for dx = -1,1 do for dy = -1,1 do
+          local N = Seed_get_safe(x+dx, y+dy, 1)
+          if N and N ~= S and N.room == R then
+            if N.layout_char then
+              has_nb = true
+            else
+              score = score + sel(dx==0 or dy==0, 5, 1)
+            end
+          end
+        end end
+
+        if not has_nb then
+          score = score + 100
+        end
+
+        if score > best_score then
+          best_score = score
+          best_spot  = { x=x, y=y }
+        end
+      end
+    end end -- for x, y
+
+    assert(best_spot)  -- BAD !!!
+
+    local S = SEEDS[best_spot.x][best_spot.y][1]
+
+    S.layout_char = need_rf
+  end
+
+  if #R.conns == 1  then
+    
+  end
+  
 end
 
 function Layout_Outdoor(R)
-  -- TODO
+  -- FIXME
 end
 
 function Layout_Room(R)
@@ -107,7 +243,7 @@ function Layout_Room(R)
     for index,h2 in ipairs(R.h_set) do
       if math.abs(h - h2) < 1 then
         assert(index <= 10)
-        return string.sub("012345abcde", index, index)
+        return string.sub("0123456789", index, index)
       end
     end
     error("Height not found in set!!\n")
@@ -119,6 +255,7 @@ function Layout_Room(R)
 
   elseif R.kind == "hallway" then
     Layout_Hallway(R)
+    dump_layout(R)
     return
 
   elseif R.outdoor then
@@ -131,14 +268,9 @@ function Layout_Room(R)
     S.layout_char = char_for_height(C.conn_h)
   end
 
-  if #R.h_set == 1 then
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      S.layout_char = char_for_height(R.h_set[1])
-    end end
-  end
+  Ultra_Lame_Layouter(R)
 
-  dump_layout(R)
+--  dump_layout(R)
 end
 
 
