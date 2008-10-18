@@ -119,10 +119,33 @@ function Layout_Hallway(R)
     end
   end end -- for y, x
 
+  -- sometimes make "O" shape
+  if rand_odds(99) then
+    if (hx-lx) >= 2 and (hy-ly) >= 2 then
+      for x = lx+1,hx-1 do for y = ly+1,hy-1 do
+        SEEDS[x][y][1].layout_char = "#"
+      end end
+
+      return;
+    end
+
+    -- special check for central pass-through halls
+    if R.sw >= 3 and R.sh >= 3 and R.branch_kind == "PC" then
+      for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
+        SEEDS[x][y][1].layout_char = "#"
+      end end
+
+      return;
+    end
+  end
+
+  -- TODO: sometimes make "U" shape (for U2, TC, TY)
+
   -- easy if only one seed wide/tall
   if lx==hx or ly==hy then
     return
   end
+
 
   -- block out seeds that don't "trace" from a connection
   local used_x = {}
