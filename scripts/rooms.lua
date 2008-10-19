@@ -56,8 +56,8 @@ function Rooms_decide_hallways()
   --   - no teleporters
   --   - not the destination of a locked door (anti-climactic)
 
-  local HALL_SIZE_PROBS = { 99, 90, 60, 30,  2 }
-  local REVERT_PROBS    = {  0,  0, 50, 80, 99 }
+  local HALL_SIZE_PROBS = { 99, 90, 70, 50, 10 }
+  local REVERT_PROBS    = {  0,  0, 20, 70, 90 }
 
   local function eval_hallway(R)
     -- Wolf3D: the outdoor areas become hallways
@@ -75,15 +75,13 @@ function Rooms_decide_hallways()
     if R.num_branch < 2 then return false end
     if R.num_branch > 5 then return false end
 
-    if R.symmetry and rand_odds(40) then return false end
-
     for _,C in ipairs(R.conns) do
       local N = C:neighbor(R)
       if N.outdoor then
         return false
       end
 
-      if C.dest == R and C.lock and rand_odds(60) then
+      if C.dest == R and C.lock and rand_odds(35) then
         return false
       end
     end
@@ -145,6 +143,7 @@ gui.debugf("  Made Hallway at (%d,%d)\n", R.lx1,R.ly1)
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hallway" and surrounded_by_halls(R) then
       local rw = math.min(R.sw, R.sh)
+
       assert(rw <= 5)
 
       if rand_odds(REVERT_PROBS[rw]) then
@@ -160,12 +159,7 @@ gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
        stairwell_neighbors(R) == 0 and
        locked_neighbors(R) == 0
     then
-      local chance = 80
----##   if hallway_neighbors(R) > 0 then
----##     chance = 60
----##   end
-
-      if rand_odds(chance) then
+      if rand_odds(80) then
         R.kind = "stairwell"
       end
     end
