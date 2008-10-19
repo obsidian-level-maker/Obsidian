@@ -324,28 +324,116 @@ function Layout_Room(R)
   local n_sx2 = R.sx2
   local n_sy2 = R.sy2
 
-  --!!!!!
-  while jl >= 2 and rand_odds(99) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
-  while jr >= 2 and rand_odds(99) do jr = jr-1 ; n_sx2 = n_sx2 - 1 end
-  while jb >= 2 and rand_odds(99) do jb = jb-1 ; n_sy1 = n_sy1 + 1 end
-  while jt >= 2 and rand_odds(99) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
+  if not R.symmetry or R.symmetry == "y" then
+    while jl >= 2 and rand_odds(99) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
+    while jl >= 1 and rand_odds( 3) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
 
-  while jl >= 1 and rand_odds(3) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
-  while jr >= 1 and rand_odds(3) do jr = jr-1 ; n_sx2 = n_sx2 - 1 end
-  while jb >= 1 and rand_odds(3) do jb = jb-1 ; n_sy1 = n_sy1 + 1 end
-  while jt >= 1 and rand_odds(3) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
+    while jr >= 2 and rand_odds(99) do jr = jr-1 ; n_sx2 = n_sx2 - 1 end
+    while jr >= 1 and rand_odds( 3) do jr = jr-1 ; n_sx2 = n_sx2 - 1 end
+  end
+
+  if not R.symmetry or R.symmetry == "x" then
+    while jb >= 2 and rand_odds(99) do jb = jb-1 ; n_sy1 = n_sy1 + 1 end
+    while jb >= 1 and rand_odds( 3) do jb = jb-1 ; n_sy1 = n_sy1 + 1 end
+
+    while jt >= 2 and rand_odds(99) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
+    while jt >= 1 and rand_odds( 3) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
+  end
 
   Junk_fill_room(R, n_sx1, n_sy1, n_sx2, n_sy2)
 
 
   lx,ly, hx,hy = R.sx1,R.sy1, R.sx2,R.sy2
 
-  local function try_junk_side(R, side)
 
+  local function junk_side(side)
+    local dx,dy = dir_to_delta(10-side)
+    local x1,y1, x2,y2 = side_coords(side, lx,ly, hx,hy)
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+      if S.layout_char and S.layout_char ~= "#" then
+        SEEDS[x+dx][y+dy][1].layout_char = S.layout_char
+      end
+      if not S.layout_char then
+        S.layout_char = "#"
+      end
+    end end -- for x,y
+
+    if side == 2 then ly = ly + 1 end
+    if side == 8 then hy = hy - 1 end
+    if side == 4 then lx = lx + 1 end
+    if side == 6 then hx = hx - 1 end
   end
 
-  -- not (R.symmetry == "tp" or R.symmetry == "tn"
 
+  local function try_junk_side(side)
+    local long,deep = get_long_deep(side, hx-lx+1, hy-ly+1)
+
+    -- enough room?
+    if deep < sel(R.symmetry,5,4) then return end
+
+    local dx,dy = dir_to_delta(10-side)
+    local x1,y1, x2,y2 = side_coords(side, lx,ly, hx,hy)
+
+    -- side must have connection
+    local has_conn = false
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+      if S.layout_char then ---### and S.layout_char ~= "#" then
+        assert(S.layout_char ~= "#")
+        has_conn = true
+        break;
+      end
+    end end -- for x,y
+
+    if not has_conn then return end
+
+    -- must not be any connections in next row/column
+    for x = x1+dx,x2+dx do for y = y1+dy,y2+dy do
+      local S = SEEDS[x][y][1]
+      if S.layout_char then ---### and S.layout_char ~= "#" then
+        assert(S.layout_char ~= "#")
+        return
+      end
+    end end -- for x,y
+
+    -- OK !!
+    gui.debugf("JUNKED SIDE %d\n", side)
+
+    junk_side(side)
+
+    if side == 2 or side == 8 then
+      if R.symmetry == "y" or R.symmetry == "xy" then
+        junk_side(10 - side)
+      end
+    else -- side == 4 or side == 6
+      if R.symmetry == "x" or R.symmetry == "xy" then
+        junk_side(10 - side)
+      end
+    end
+
+    dump_layout(R)
+  end
+
+
+  for loop = 1,5 do
+    if not R.symmetry or R.symmetry == "x" or R.symmetry == "y"
+                      or R.symmetry == "xy"
+    then
+      try_junk_side(2)
+      try_junk_side(4)
+    end
+
+    if not R.symmetry or R.symmetry == "x" then
+      try_junk_side(8)
+    end
+
+    if not R.symmetry or R.symmetry == "y" then
+      try_junk_side(6)
+    end
+
+  end
 
 --  gui.debugf("JUNK SPACE W:%d L:%d R:%d  H:%d B:%d T:%d  @ %s\n",
 --             R.sw, jl, jr,  R.sh, jb, jt,  R:tostr())
