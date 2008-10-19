@@ -56,7 +56,7 @@ function Rooms_decide_hallways()
   --   - no teleporters
   --   - not the destination of a locked door (anti-climactic)
 
-  local HALL_SIZE_PROBS = { 99, 90, 70, 50, 10 }
+  local HALL_SIZE_PROBS = { 99, 90, 70, 40, 10 }
   local REVERT_PROBS    = {  0,  0, 20, 70, 90 }
 
   local function eval_hallway(R)
@@ -81,7 +81,7 @@ function Rooms_decide_hallways()
         return false
       end
 
-      if C.dest == R and C.lock and rand_odds(35) then
+      if C.dest == R and C.lock and rand_odds(40) then
         return false
       end
     end

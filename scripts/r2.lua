@@ -120,7 +120,7 @@ function Layout_Hallway(R)
   end end -- for y, x
 
   -- sometimes make "O" shape
-  if rand_odds(99) then
+  if rand_odds(20) then
     if (hx-lx) >= 2 and (hy-ly) >= 2 then
       for x = lx+1,hx-1 do for y = ly+1,hy-1 do
         SEEDS[x][y][1].layout_char = "#"
