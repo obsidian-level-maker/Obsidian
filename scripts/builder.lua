@@ -866,7 +866,9 @@ w_tex = "e1u1/exitdr01_2"
 
     -- floor and ceiling brushes
 
-if S.layout_char == "#" then
+if S.layout_char == "#" or S.layout_char == "%" then
+
+    if S.layout_char == "%" then w_tex = "BRWINDOW" end
 
     gui.add_brush(
     {

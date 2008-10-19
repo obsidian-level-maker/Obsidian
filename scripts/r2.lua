@@ -352,11 +352,11 @@ function Layout_Room(R)
 
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
-      if S.layout_char and S.layout_char ~= "#" then
+      if S.layout_char and S.layout_char ~= "%" then
         SEEDS[x+dx][y+dy][1].layout_char = S.layout_char
       end
       if not S.layout_char then
-        S.layout_char = "#"
+        S.layout_char = "%"
       end
     end end -- for x,y
 
@@ -380,8 +380,7 @@ function Layout_Room(R)
     local has_conn = false
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
-      if S.layout_char then ---### and S.layout_char ~= "#" then
-        assert(S.layout_char ~= "#")
+      if S.layout_char then
         has_conn = true
         break;
       end
@@ -392,8 +391,7 @@ function Layout_Room(R)
     -- must not be any connections in next row/column
     for x = x1+dx,x2+dx do for y = y1+dy,y2+dy do
       local S = SEEDS[x][y][1]
-      if S.layout_char then ---### and S.layout_char ~= "#" then
-        assert(S.layout_char ~= "#")
+      if S.layout_char then
         return
       end
     end end -- for x,y
