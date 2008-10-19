@@ -109,34 +109,51 @@ function Conn_area(R)
   return lx,ly, hx,hy
 end
 
-
-function Layout_Hallway(R)
-  local lx,ly, hx,hy = Conn_area(R)
-
+function Junk_fill_room(R, n_sx1, n_sy1, n_sx2, n_sy2)
   for y = R.sy1,R.sy2 do for x = R.sx1,R.sx2 do
-    if not box_contains_point(lx,ly, hx,hy, x,y) then
+    if not box_contains_point(n_sx1,n_sy1, n_sx2,n_sy2, x,y) then
       SEEDS[x][y][1].layout_char = "#"
     end
   end end -- for y, x
 
+  if R.kind ~= "hallway" then
+    dump_layout(R)
+  end
+
+  R.sx1, R.sy1 = n_sx1, n_sy1
+  R.sx2, R.sy2 = n_sx2, n_sy2
+
+  R.sw = R.sx2 - R.sx1 + 1
+  R.sh = R.sy2 - R.sy1 + 1
+
+  assert(R.sw >= 1 and R.sh >= 1)
+end
+
+
+function Layout_Hallway(R)
+  local lx,ly, hx,hy = Conn_area(R)
+
+  Junk_fill_room(R, lx,ly, hx,hy)
+
   -- sometimes make "O" shape
   if rand_odds(20) then
-    if (hx-lx) >= 2 and (hy-ly) >= 2 then
-      for x = lx+1,hx-1 do for y = ly+1,hy-1 do
-        SEEDS[x][y][1].layout_char = "#"
-      end end
-
-      return;
-    end
-
-    -- special check for central pass-through halls
-    if R.sw >= 3 and R.sh >= 3 and R.branch_kind == "PC" then
+    if R.sw >= 3 and R.sh >= 3 then
       for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
         SEEDS[x][y][1].layout_char = "#"
       end end
 
       return;
     end
+
+---##    -- special check for central pass-through halls
+---##    FIXME borken due to junk fill above
+---##    if R.sw >= 3 and R.sh >= 3 and R.branch_kind == "PC" then
+---##      for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
+---##        SEEDS[x][y][1].layout_char = "#"
+---##      end end
+---##
+---##      return;
+---##    end
   end
 
   -- TODO: sometimes make "U" shape (for U2, TC, TY)
@@ -160,7 +177,7 @@ function Layout_Hallway(R)
     end
   end
 
-  for y = ly,hy do for x = lx,hx do
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     if not (used_x[x] or used_y[y]) then
       SEEDS[x][y][1].layout_char = "#"
     end
@@ -169,13 +186,13 @@ function Layout_Hallway(R)
   -- handle when all connections are parallel
   if table_empty(used_x) then
     local x = int((R.sx1 + R.sx2) / 2)
-    for y = ly,hy do
+    for y = R.sy1,R.sy2 do
       SEEDS[x][y][1].layout_char = nil
     end
 
   elseif table_empty(used_y) then
     local y = int((R.sy1 + R.sy2) / 2)
-    for x = lx,hx do
+    for x = R.sx1,R.sx2 do
       SEEDS[x][y][1].layout_char = nil
     end
   end
@@ -249,6 +266,8 @@ function Ultra_Lame_Layouter(R)
     S.layout_char = need_rf
   end
 
+--  dump_layout(R)
+
   if #R.conns == 1  then
     
   end
@@ -278,7 +297,6 @@ function Layout_Room(R)
 
   elseif R.kind == "hallway" then
     Layout_Hallway(R)
-    dump_layout(R)
     return
 
   elseif R.outdoor then
@@ -291,9 +309,49 @@ function Layout_Room(R)
     S.layout_char = char_for_height(C.conn_h)
   end
 
+  
+  -- make rooms with lots of 'junk space' smaller sometimes
+
+  local lx,ly, hx,hy = Conn_area(R)
+
+  local jl = lx - R.sx1
+  local jr = R.sx2 - hx
+  local jb = ly - R.sy1
+  local jt = R.sy2 - hy
+
+  local n_sx1 = R.sx1
+  local n_sy1 = R.sy1
+  local n_sx2 = R.sx2
+  local n_sy2 = R.sy2
+
+  --!!!!!
+  while jl >= 2 and rand_odds(99) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
+  while jr >= 2 and rand_odds(99) do jr = jr-1 ; n_sx2 = n_sx2 - 1 end
+  while jb >= 2 and rand_odds(99) do jb = jb-1 ; n_sy1 = n_sy1 + 1 end
+  while jt >= 2 and rand_odds(99) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
+
+  while jl >= 1 and rand_odds(3) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
+  while jr >= 1 and rand_odds(3) do jr = jr-1 ; n_sx2 = n_sx2 - 1 end
+  while jb >= 1 and rand_odds(3) do jb = jb-1 ; n_sy1 = n_sy1 + 1 end
+  while jt >= 1 and rand_odds(3) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
+
+  Junk_fill_room(R, n_sx1, n_sy1, n_sx2, n_sy2)
+
+
+  lx,ly, hx,hy = R.sx1,R.sy1, R.sx2,R.sy2
+
+  local function try_junk_side(R, side)
+
+  end
+
+  -- not (R.symmetry == "tp" or R.symmetry == "tn"
+
+
+--  gui.debugf("JUNK SPACE W:%d L:%d R:%d  H:%d B:%d T:%d  @ %s\n",
+--             R.sw, jl, jr,  R.sh, jb, jt,  R:tostr())
+
   Ultra_Lame_Layouter(R)
 
---  dump_layout(R)
 end
 
 
