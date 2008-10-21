@@ -3,13 +3,109 @@ TODO
 ====
 
 
-Fight Sim: handle weapons that do more damage when more monsters
-           are in view (Doom and Q2's BFG, Hexen's big weaps).
+HEIGHTS: prevent any room from having more than 4 heights
+         [tiny rooms: no more than 2]
 
-           >>> new 'splash_dm' and 'splash_num' fields
+
+
+Room Fitting Out
+----------------
+
+DESCRIPTION OF PROBLEM:
++ Primary goal is to ensure all exit seeds in a room
+  are traversable, i.e. there exists a path from X to Y
+  such that each element is either a symbolic height ('0' .. '3')
+  or a staircase ('>', '<', 'v', '^', 'F', 'T', 'L', 'J').
+
+  Certain staircases are never usable on certain rows or
+  columns (e.g. cannot use 'F' on top row if vertically mirrored).
+
+  In emergencies we can mark certain seeds as "laddering"
+  onto an adjacent height-difference seed.  We must try hard
+  to (a) avoid this or (b) minimise its use and (c) pick
+  the best seed pair to ladder [not an exit seed, low diff, etc]
+
++ Secondary goal is "niceness" of the room layout:
+  (a) staircases are not used in two adjacent seeds
+
+  (b) F/T/L/J staircases only used in corners
+      (or "pseudo-corners" i.e. floor seeds at higher heights)
+
+  (c) height diff between staircases is '1' unit
+      [any is possible, the lower the better]
+
+  (d) small preference for staircases parallel to main direction
+      of room (esp. PC/PR/PX and TY types).
+
++ Tertiary goal is to assign diagonal corners and solid
+  seeds, as well as flood filling floor heights, in a
+  pleasing/interesting way.
+
+
+IDEA:
+  Primitive operations:
+
+  1) start at exit A, go (anti)clockwise around the edge of the
+     room until hit exit B, use suitable connections
+     (especially corner stairwells).
+
+  2) start at exit A, go inward until hit exit B.
+     If hit a blank wall instead, assume hit the R.floor_h
+     seed [if none: one closer to it] and put stairs
+     appropriately for that.
+
+  3) start at exit A, go inward a certain dist then turn left
+     or right and run towards exit B.
+
+  3) ?? void up edges [if not empty, replicated exit seeds into inner area]
+  4) ?? ledge up edges [need exits all at same height, or use R.floor_h]
+
+  Repeat the primitive operations for random exit seeds
+  until full traversibility is reached (or run out of
+  usable directions]
+
+  Add emergency "ladders" when no more traversifying can be done.
+
+  Score the final result.  Perform ### fillings for each room
+  and pick the one with the best result.
+
+  [Can fill holes and decide solid corners last]
+
+
+
+- height diffs:
+  - basic (if all else fails) algorithm:
+    flood fill heights from conn seeds to remaining seeds
+    [BUT: floor_h of room
+    add a stair seed at some meeting spots
+
+    if height diff is huge, deserves more seeds
+
+  - patterns:
+    (a) L shape is nice
+    (b) U shape is possible
+    (c) plain side fill (two deep if room is big)
+
+- no height diff
+  - sometimes make Walkway-Over-Nukage
+  - sometimes have a nukage pit
+  
+- ceilings:
+  - big room with no sky neighbours: have a huge sky hole
+
+- pillars are good (except when too close to exits)
+
+
+
+IDEA:  liquid patterns: chance of "beaching" it
+
 
 Fight Sim: reimplement monster-weapon preferences
 Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
+  
+  >>>  PREFS["shambler__rocket"] = 0.1
+       PREFS["skull__launch"] = 0.1
+       PREFS["imp__shotty"] = 3.0
 
 
 Stairwells: more steps to ensure wall lengths <= 128 units
@@ -19,6 +115,11 @@ Quests
   - sometimes lock another connection (ESP: symmetry)
     with the same lock as one we just added
     [ESP: when new lock goes to leaf or semi-leaf]
+
+CONNECT:  for TC (etc) patterns, make the ones that branch at
+          room corners less likely (i.e. prefer 1 or 2 seeds
+          away from corner, though it depends on room size).
+
 
 merge area_info + area_poly --> csg_brush_c
 
@@ -57,17 +158,12 @@ REWRITE:
 + quest assignment !!
 
   ? pick rooms for BOSS monsters
-
-  - decide minor quests
-
   ? allocate seeds for teleporters,bosses,switches,items
-
-+ room heights
 
 - create doors, stairs/lifts
 
 + build Hallways:
-  - for two exits, create optimal path (L or /\/ shape)
+  - for two exits, create optimal path (L shape)
   - for three exits (where two are opposite), optimal path (T shape)
   - for rooms >= 3x3 and 3+ exits, properly create O or U shape path
   - occasionaly: height diff, spaced steps (two exit only)
