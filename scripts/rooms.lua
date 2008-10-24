@@ -206,6 +206,10 @@ function Rooms_setup_symmetry()
   end
 
   local function mirror_rotation(R)
+    -- NOTE: currently disabled, punted for a future release
+    R.symmetry = nil
+
+    --[[
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy1 + int(R.sh/2) do
       local nx = R.sx1 + R.sx2 - x
       local ny = R.sy1 + R.sy2 - y
@@ -218,25 +222,34 @@ function Rooms_setup_symmetry()
         T.x_peer = B
       end
     end end
+    --]]
   end
 
   local function mirror_transpose(R)
+    -- NOTE: currently disabled, punted for a future release
+    R.symmetry = nil
+
+  --[[
     assert(R.sw == R.sh and R.sw >= 2)
     assert(#R.conns == 2)
 
     local XC = R.conns[1]
     local YC = R.conns[2]
 
-    assert(is_perpendicular(XC.conn_dir, YC.conn_dir))
+    local X_dir = assert(XC:seed(R).conn_dir)
+    local Y_dir = assert(YC:seed(R).conn_dir)
 
-    if XC.conn_dir == 2 or XC.conn_dir == 8 then
+    assert(is_perpendicular(X_dir, Y_dir))
+
+    if X_dir == 2 or X_dir == 8 then
       XC, YC = YC, XC
+      X_dir,Y_dir = Y_dir,X_dir
     end
 
     -- FIXME: determine this when 'symmetry' field is set
     local positive = true
-    if XC.conn_dir == 6 then positive = not positive end
-    if YC.conn_dir == 8 then positive = not positive end
+    if X_dir == 6 then positive = not positive end
+    if Y_dir == 8 then positive = not positive end
 
     if positive then
       R.symmetry = "tp"
@@ -244,6 +257,9 @@ function Rooms_setup_symmetry()
       R.symmetry = "tn"
     end
 
+gui.printf("XC %s dir:%d\n", XC:tostr(), X_dir)
+gui.printf("YC %s dir:%d\n", YC:tostr(), Y_dir)
+gui.printf("TRANSPOSE %s @ %s\n", R.symmetry, R:tostr())
     for a = 0,R.sw-1 do
       for b = 0,R.sw-2-a do
         local x1 = R.sx1 + a
@@ -259,6 +275,7 @@ function Rooms_setup_symmetry()
         S2.x_peer = S1
       end
     end
+    --]]
   end
 
 
