@@ -29,7 +29,7 @@ require 'plan_sp'
 require 'connect'
 require 'quests'
 require 'rooms'
-require 'r2'
+require 'layout'
 require 'builder'
 
 -- require 'monsters'
