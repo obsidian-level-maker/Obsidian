@@ -208,7 +208,9 @@ function Ultra_Lame_Layouter(R)
     -- easy: no height changes
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
-      S.layout_char = '0'
+      if not S.layout_char then
+        S.layout_char = '0'
+      end
     end end
 
     return
@@ -227,6 +229,8 @@ function Ultra_Lame_Layouter(R)
       need_rf = nil
     end
   end
+
+need_rf = false --!!!!
 
   if need_rf then
     local best_spot
@@ -324,6 +328,7 @@ function Layout_Room(R)
   local n_sx2 = R.sx2
   local n_sy2 = R.sy2
 
+--[[ !!!!
   if not R.symmetry or R.symmetry == "y" then
     while jl >= 2 and rand_odds(99) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
     while jl >= 1 and rand_odds( 3) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
@@ -339,6 +344,7 @@ function Layout_Room(R)
     while jt >= 2 and rand_odds(99) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
     while jt >= 1 and rand_odds( 3) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
   end
+--]]
 
   Junk_fill_room(R, n_sx1, n_sy1, n_sx2, n_sy2)
 
@@ -367,11 +373,12 @@ function Layout_Room(R)
   end
 
 
-  local function try_junk_side(side)
+  local function try_junk_side(side, opp_sym)
+
     local long,deep = get_long_deep(side, hx-lx+1, hy-ly+1)
 
     -- enough room?
-    if deep < sel(R.symmetry,5,4) then return end
+    if deep < sel(opp_sym,5,4) then return end
 
     local dx,dy = dir_to_delta(10-side)
     local x1,y1, x2,y2 = side_coords(side, lx,ly, hx,hy)
@@ -401,14 +408,26 @@ function Layout_Room(R)
 
     junk_side(side)
 
-    if side == 2 or side == 8 then
-      if R.symmetry == "y" or R.symmetry == "xy" then
-        junk_side(10 - side)
-      end
-    else -- side == 4 or side == 6
-      if R.symmetry == "x" or R.symmetry == "xy" then
-        junk_side(10 - side)
-      end
+    if opp_sym then
+      junk_side(10 - side)
+    end
+
+---###    if side == 2 or side == 8 then
+---###      if R.symmetry == "y" or R.symmetry == "xy" then
+---###        junk_side(10 - side)
+---###      end
+---###    else -- side == 4 or side == 6
+---###      if R.symmetry == "x" or R.symmetry == "xy" then
+---###        junk_side(10 - side)
+---###      end
+---###    end
+
+    if R.symmetry == "tp" then
+      local SIDE_MAP = { [2]=4, [4]=2, [6]=8, [8]=6 }
+      junk_side(SIDE_MAP[side])
+    elseif R.symmetry == "tn" then
+      local SIDE_MAP = { [2]=6, [6]=2, [4]=8, [8]=4 }
+      junk_side(SIDE_MAP[side])
     end
 
     dump_layout(R)
@@ -416,11 +435,17 @@ function Layout_Room(R)
 
 
   for loop = 1,5 do
+    -- TODO: randomise side ordering [make a list]
+    
     if not R.symmetry or R.symmetry == "x" or R.symmetry == "y"
                       or R.symmetry == "xy"
     then
+      try_junk_side(2, R.symmetry == "y" or R.symmetry == "xy")
+      try_junk_side(4, R.symmetry == "x" or R.symmetry == "xy")
+    
+    elseif R.symmetry == "tn" or R.symmetry == "tp" then
       try_junk_side(2)
-      try_junk_side(4)
+      try_junk_side(8)
     end
 
     if not R.symmetry or R.symmetry == "x" then
