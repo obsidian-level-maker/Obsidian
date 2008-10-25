@@ -39,6 +39,8 @@
 #include "lib_util.h"
 #include "main.h"
 
+#include "tx_forge.h"
+
 
 /* Definitions used to address real and imaginary parts in a two-dimensional
    array of complex numbers as stored by fourn(). */
@@ -80,24 +82,24 @@ static int screenysize = 256;         /* Screen Y size */
 
     Called with arguments:
 
-       data       A  one-dimensional  array  of  floats  (NOTE!!!   NOT
-              DOUBLES!!), indexed from one (NOTE!!!   NOT  ZERO!!),
+       data   A  one-dimensional  array  of  floats  (NOTE!!!  NOT
+              DOUBLES!!), indexed from one (NOTE!!! NOT  ZERO!!),
               containing  pairs of numbers representing the complex
               valued samples.  The Fourier transformed results  are
               returned in the same array.
 
-       nn         An  array specifying the edge size in each dimension.
+       nn     An  array specifying the edge size in each dimension.
               THIS ARRAY IS INDEXED FROM  ONE,  AND  ALL  THE  EDGE
               SIZES MUST BE POWERS OF TWO!!!
 
-       ndim       Number of dimensions of FFT to perform.  Set to 2 for
+       ndim   Number of dimensions of FFT to perform.  Set to 2 for
               two dimensional FFT.
 
-       isign      If 1, a Fourier transform is done; if -1 the  inverse
+       isign  If 1, a Fourier transform is done; if -1 the  inverse
               transformation is performed.
 
-        This  function  is essentially as given in Press et al., "Numerical
-        Recipes In C", Section 12.11, pp.  467-470.
+    This function is essentially as given in Press et al., "Numerical
+    Recipes In C", Section 12.11, pp. 467-470.
 */
 
 static void fourn(float data[], int nn[], int ndim, int isign)
@@ -210,7 +212,7 @@ static void spectralsynth( float **x, int n, double h)
 
     bl = ((((unsigned long) n) * n) + 1) * 2;
     a = new float [bl];
-    memset(a, 0, sizeof(float)*bl);
+    memset(a, 0, sizeof(float) * bl);
 
     *x = a;
 
@@ -250,6 +252,7 @@ static void spectralsynth( float **x, int n, double h)
 
     nsize[0] = 0;
     nsize[1] = nsize[2] = n;          /* Dimension of frequency domain array */
+
     fourn(a, nsize, 2, -1);       /* Take inverse 2D Fourier transform */
 }
 
@@ -351,3 +354,11 @@ void foo(int argc, char ** argv)
             scaleMesh_0to1(a, meshsize);
 
 }
+
+
+void TX_SpectralSynth(int seed, float *buf, int width,
+                      double fracdim, double powscale)
+{
+  // TODO
+}
+
