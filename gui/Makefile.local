@@ -67,6 +67,7 @@ OBJS=	main.o      \
 	wolf_map.o  \
 	\
 	twister.o   \
+	tx_forge.o  \
 	ui_build.o  \
 	ui_chooser.o \
 	ui_dialog.o \
