@@ -34,6 +34,11 @@
 /* Ripped apart to use in OBLIGE by Andrew Apted, October 2008 */
 
 
+#include "headers.h"
+
+#include "lib_util.h"
+#include "main.h"
+
 
 /* Definitions used to address real and imaginary parts in a two-dimensional
    array of complex numbers as stored by fourn(). */
@@ -53,7 +58,7 @@
 static void fourn (float data[], int nn[], int ndim, int isign);
 static void initgauss (unsigned int seed);
 static double gauss (void);
-static void spectralsynth (float **x, unsigned int n, double h);
+static void spectralsynth (float **x, int n, double h);
 
 /*  Local variables  */
 
@@ -61,19 +66,15 @@ static double arand, gaussadd, gaussfac; /* Gaussian random parameters */
 static double fracdim;            /* Fractal dimension */
 static double powscale;           /* Power law scaling exponent */
 static int meshsize = 256;        /* FFT mesh size */
-static unsigned int seedarg;        /* Seed specified by user */
-static bool seedspec = FALSE;      /* Did the user specify a seed ? */
-static bool clouds = FALSE;        /* Just generate clouds */
-static bool stars = FALSE;         /* Just generate stars */
+
+
+
 static int screenxsize = 256;         /* Screen X size */
 static int screenysize = 256;         /* Screen Y size */
-static double inclangle, hourangle;   /* Star position relative to planet */
-static bool inclspec = FALSE;      /* No inclination specified yet */
-static bool hourspec = FALSE;      /* No hour specified yet */
-static double icelevel;           /* Ice cap theshold */
-static double glaciers;           /* Glacier level */
-static int starfraction;          /* Star fraction */
-static int starcolor;            /* Star color saturation */
+
+
+
+
 
 /*  FOURN  --  Multi-dimensional fast Fourier transform
 
@@ -200,22 +201,17 @@ static double gauss()
                name   SpectralSynthesisFM2D  on  page  108  of
                Peitgen & Saupe. */
 
-static void spectralsynth(
-    float **x,
-    unsigned int n,
-    double h)
+static void spectralsynth( float **x, int n, double h)
 {
-    unsigned bl;
+    unsigned int bl;
     int i, j, i0, j0, nsize[3];
     double rad, phase, rcos, rsin;
     float *a;
 
-    bl = ((((unsigned long) n) * n) + 1) * 2 * sizeof(float);
-    a = (float *) calloc(bl, 1);
-    if (a == (float *) 0) {
-        pm_error("Cannot allocate %d x %d result array (% d bytes).",
-                 n, n, bl);
-    }
+    bl = ((((unsigned long) n) * n) + 1) * 2;
+    a = new float [bl];
+    memset(a, 0, sizeof(float)*bl);
+
     *x = a;
 
     for (i = 0; i <= n / 2; i++) {
@@ -278,9 +274,9 @@ applyPowerLawScaling(float * a,
 
     /* Apply power law scaling if non-unity scale is requested. */
 
-  unsigned int i;
+  int i;
+  int j;
   for (i = 0; i < meshsize; i++) {
-    unsigned int j;
     for (j = 0; j < meshsize; j++) {
       double r = Real(a, i, j);
       if (r > 0)
@@ -294,16 +290,12 @@ static void
 scaleMesh_0to1(float * a,
                   int     meshsize)
 {
-    double rmin, rmax;
-    double rmean, rrange;
-    unsigned int i;
+    /* compute extrema for autoscaling. */
+    double rmin =  1e30;
+    double rmax = -1e30;
 
-    /* Compute extrema for autoscaling. */
-    rmin =  1e30;
-    rmax = -1e30;
-
+    int i, j;
     for (i = 0; i < meshsize; i++) {
-        unsigned int j;
         for (j = 0; j < meshsize; j++) {
             double r = Real(a, i, j);
             
@@ -312,30 +304,18 @@ scaleMesh_0to1(float * a,
         }
     }
 
-//  rmean = (rmin + rmax) / 2;
-    rrange = (rmax - rmin);
+    double range = (rmax - rmin);
 
     for (i = 0; i < meshsize; i++) {
-        unsigned int j;
         for (j = 0; j < meshsize; j++) {
-            Real(a, i, j) = (Real(a, i, j) - rmin) / rrange;
+            Real(a, i, j) = (Real(a, i, j) - rmin) / range;
         }
     }
 }
 
 
-int main(int argc, char ** argv) {
-
-    bool success;
-    int i;
-    char * usage = "\n\
-[-width|-xsize <x>] [-height|-ysize <y>] [-mesh <n>]\n\
-[-clouds] [-dimension <f>] [-power <f>] [-seed <n>]\n\
-[-hour <f>] [-inclination|-tilt <f>] [-ice <f>] [-glaciers <f>]\n\
-[-night] [-stars <n>] [-saturation <n>]";
-    bool dimspec = FALSE, meshspec = FALSE, powerspec = FALSE,
-        widspec = FALSE, hgtspec = FALSE, icespec = FALSE,
-        glacspec = FALSE, starspec = FALSE, starcspec = FALSE;
+void foo(int argc, char ** argv)
+{
 
     int cols, rows;     /* Dimensions of our output image */
 
@@ -362,11 +342,12 @@ int main(int argc, char ** argv) {
     
     initgauss(rseed);
     
-        spectralsynth(&a, meshsize, 3.0 - fracdim);
+    float * a;
+      
+    spectralsynth(&a, meshsize, 3.0 - fracdim);
 
     //        applyPowerLawScaling(a, meshsize, powscale);
 
             scaleMesh_0to1(a, meshsize);
 
-    exit(success ? 0 : 1);
 }
