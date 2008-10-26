@@ -6,7 +6,7 @@
 #define __OBLIGE_TX_FORGE_H__
 
 void TX_SpectralSynth(int seed, float *buf, int width,
-                      double fracdim, double powscale);
+                      double fracdim = 2.4, double powscale = 1.2);
 
 #endif /* __OBLIGE_TX_FORGE_H__ */
 
