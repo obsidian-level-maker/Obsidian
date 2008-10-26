@@ -156,6 +156,43 @@ static void SkyTest1()
   delete[] buf;
 }
 
+extern const byte image_data_BOLT[128*32];
+
+static void LogoTest1()
+{
+  byte *pixels = new byte[128*128];
+
+  static byte bronze_mapping[13] =
+  {
+    0, 2,
+    191, 189, 187,
+    235, 233,
+    223, 221, 219, 216, 213, 210
+  };
+
+  static byte green_mapping[12] =
+  {
+    0, 7,
+    127, 126, 125, 124, 123, 122, 120, 118, 116, 113
+  };
+
+
+  for (int y = 0; y < 128; y++)
+  for (int x = 0; x < 128; x++)
+  {
+    byte ity = image_data_BOLT[(y&63)*64+(x&63)];
+
+    pixels[y*128+x] = green_mapping[(ity*12)/256];
+  }
+
+  qLump_c *lump = WAD_BlockToPatch(128, pixels, 128, 128);
+
+  WAD_WriteLump("WALL52_1", lump);
+
+  delete lump;
+  delete[] pixels;
+}
+
 
 //------------------------------------------------------------------------
 //  WAD OUTPUT
@@ -200,7 +237,7 @@ static void WAD_WritePatches()
 
   static const char *patch_names[3][2] =
   {
-    { "WALL52_1", "WALL53_1" },  // Doom    : CEMENT1,  CEMENT2
+/* !!!! */    { "WALL52_X", "WALL53_1" },  // Doom    : CEMENT1,  CEMENT2
     { "WALL00",   "WALL42"   },  // Heretic : GRSKULL2, CHAINSD
     { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
   };
@@ -256,7 +293,7 @@ static void WAD_WritePatches()
     }
   }
 
-  SkyTest1();
+  LogoTest1();
 
   WAD_WriteLump("PP_END", NULL, 0);
 }
