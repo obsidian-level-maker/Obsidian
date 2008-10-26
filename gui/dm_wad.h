@@ -189,11 +189,11 @@ raw_behavior_header_t;
 
 typedef struct
 {
-  u32_t width;
-  u32_t height;
+  u16_t width;
+  u16_t height;
 
-  s32_t x_offset;
-  s32_t y_offset;
+  s16_t x_offset;
+  s16_t y_offset;
 }
 raw_patch_header_t;
 

@@ -35,6 +35,8 @@
 #include "dm_wad.h"
 #include "q_bsp.h"  // qLump_c
 
+#include "tx_forge.h"
+
 
 bool wad_hexen;  // FIXME: not global
 
@@ -87,10 +89,10 @@ qLump_c * WAD_BlockToPatch(int new_W, const byte *pixels, int W, int H)
 
   raw_patch_header_t header;
 
-  header.width    = LE_U32(new_W);
-  header.height   = LE_U32(H);
-  header.x_offset = LE_U32(new_W / 2);
-  header.y_offset = LE_U32(H);
+  header.width    = LE_U16(new_W);
+  header.height   = LE_U16(H);
+  header.x_offset = LE_U16(new_W / 2);
+  header.y_offset = LE_U16(H);
 
   lump->Append(&header, sizeof(header));
 
@@ -100,7 +102,7 @@ qLump_c * WAD_BlockToPatch(int new_W, const byte *pixels, int W, int H)
   for (int k = 0; k < new_W; k++)
   {
     if (k < W)
-      offsets[k] = 8 + (new_W * 4) + k * (H + 5);
+      offsets[k] = sizeof(raw_patch_header_t) + (new_W * 4) + k * (H + 5);
     else
       offsets[k] = offsets[k % W];
 
@@ -117,6 +119,41 @@ qLump_c * WAD_BlockToPatch(int new_W, const byte *pixels, int W, int H)
   }
 
   return lump;
+}
+
+static void WAD_WriteLump(const char *name, qLump_c *lump);
+
+static void SkyTest1()
+{
+  float *buf = new float[256*256];
+
+  TX_SpectralSynth(1, buf, 256, 2.5, 1.0);
+
+  byte *pixels = new byte[256*128];
+
+  static byte mapping[15] =
+  {
+    245,244,243,242,241,
+    207,205,202,199,
+    196,195,194,193,192,192
+  };
+
+  for (int y = 0; y < 128; y++)
+  for (int x = 0; x < 256; x++)
+  {
+    float f = buf[y*256+x];
+
+    pixels[y*256+x] = mapping[int(f*14)];
+  }
+
+  qLump_c *lump = WAD_BlockToPatch(256, pixels, 256, 128);
+
+  WAD_WriteLump("RSKY1", lump);
+
+  delete lump;
+
+  delete[] pixels;
+  delete[] buf;
 }
 
 
@@ -218,6 +255,8 @@ static void WAD_WritePatches()
       FileFree(data);
     }
   }
+
+  SkyTest1();
 
   WAD_WriteLump("PP_END", NULL, 0);
 }
