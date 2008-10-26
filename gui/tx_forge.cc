@@ -208,58 +208,56 @@ static double rand_phase(void)
 */
 static void spectral_synth(int n, double h)
 {
-    int i, j, i0, j0, nsize[3];
-    double rad, phase, rcos, rsin;
+  int i, j;
 
-    for (i = 0; i <= n / 2; i++)
-    {
-        for (j = 0; j <= n / 2; j++)
-        {
-            phase = rand_phase();
+  for (i = 0; i <= n / 2; i++)
+  for (j = 0; j <= n / 2; j++)
+  {
+    double phase = rand_phase();
+    double rad;
 
-            if (i == 0 && j == 0)
-              rad = 0;
-            else
-              rad = pow((double) (i * i + j * j), -(h + 1) / 2) * rand_gauss();
+    if (i == 0 && j == 0)
+      rad = 0;
+    else
+      rad = pow((double) (i * i + j * j), -(h + 1) / 2) * rand_gauss();
 
-            rcos = rad * cos(phase);
-            rsin = rad * sin(phase);
+    double rcos = rad * cos(phase);
+    double rsin = rad * sin(phase);
 
-            i0 = (i == 0) ? 0 : n - i;
-            j0 = (j == 0) ? 0 : n - j;
+    int i0 = (i == 0) ? 0 : n - i;
+    int j0 = (j == 0) ? 0 : n - j;
 
-            Real(i, j) = rcos;
-            Imag(i, j) = rsin;
-            Real(i0, j0) = rcos;
-            Imag(i0, j0) = - rsin;
-        }
-    }
+    Real(i, j) = rcos;
+    Imag(i, j) = rsin;
+    Real(i0, j0) = rcos;
+    Imag(i0, j0) = - rsin;
+  }
     
-    Imag(n / 2, 0) = 0;
-    Imag(0, n / 2) = 0;
-    Imag(n / 2, n / 2) = 0;
+  Imag(n / 2, 0) = 0;
+  Imag(0, n / 2) = 0;
+  Imag(n / 2, n / 2) = 0;
 
-    for (i = 1; i <= n / 2 - 1; i++)
-    {
-        for (j = 1; j <= n / 2 - 1; j++)
-        {
-            phase = rand_phase();
-            rad = pow((double) (i * i + j * j), -(h + 1) / 2) * rand_gauss();
+  for (i = 1; i <= n / 2 - 1; i++)
+  for (j = 1; j <= n / 2 - 1; j++)
+  {
+    double phase = rand_phase();
+    double rad = pow((double) (i * i + j * j), -(h + 1) / 2) * rand_gauss();
 
-            rcos = rad * cos(phase);
-            rsin = rad * sin(phase);
+    double rcos = rad * cos(phase);
+    double rsin = rad * sin(phase);
 
-            Real(i, n - j) = rcos;
-            Imag(i, n - j) = rsin;
-            Real(n - i, j) = rcos;
-            Imag(n - i, j) = - rsin;
-        }
-    }
+    Real(i, n - j) = rcos;
+    Imag(i, n - j) = rsin;
+    Real(n - i, j) = rcos;
+    Imag(n - i, j) = - rsin;
+  }
 
-    nsize[0] = 0;
-    nsize[1] = nsize[2] = n;          /* Dimension of frequency domain array */
+  int nsize[3];
 
-    fourn(mesh_a, nsize, 2, -1);       /* Take inverse 2D Fourier transform */
+  nsize[0] = 0;
+  nsize[1] = nsize[2] = n;   /* Dimension of frequency domain array */
+
+  fourn(mesh_a, nsize, 2, -1);     /* Take inverse 2D Fourier transform */
 }
 
 
@@ -306,6 +304,7 @@ static void power_law_scale(float *buf, double powscale)
 void TX_SpectralSynth(int seed, float *buf, int width,
                       double fracdim, double powscale)
 {
+  SYS_ASSERT(width > 0 && (width & 1) == 0);
   SYS_ASSERT(0 < fracdim && fracdim <= 3.0);
   SYS_ASSERT(powscale > 0);
 
