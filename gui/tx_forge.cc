@@ -39,6 +39,7 @@
 #include "lib_util.h"
 #include "main.h"
 
+#include "twister.h"
 #include "tx_forge.h"
 
 
@@ -53,28 +54,15 @@
 
 /* Definition for obtaining random numbers. */
 
-#define nrand 4               /* Gauss() sample count */
-#define Cast(low, high) ((low)+(((high)-(low)) * ((rand() & 0x7FFF) / arand)))
+static MT_rand_c ss_twist(0);
 
-/* prototypes */
-static void fourn (float data[], int nn[], int ndim, int isign);
-static void initgauss (unsigned int seed);
-static double gauss (void);
-static void spectralsynth (float **x, int n, double h);
+
 
 /*  Local variables  */
 
-static double arand, gaussadd, gaussfac; /* Gaussian random parameters */
 static double fracdim;            /* Fractal dimension */
 static double powscale;           /* Power law scaling exponent */
 static int meshsize = 256;        /* FFT mesh size */
-
-
-
-static int screenxsize = 256;         /* Screen X size */
-static int screenysize = 256;         /* Screen Y size */
-
-
 
 
 
@@ -172,37 +160,44 @@ static void fourn(float data[], int nn[], int ndim, int isign)
 }
 #undef SWAP
 
-/*  INITGAUSS  --  Initialize random number generators.  As given in
-           Peitgen & Saupe, page 77. */
 
-static void initgauss(unsigned int seed)
+/*  INITGAUSS  --  Initialize random number generators.  As given in
+                   Peitgen & Saupe, page 77.
+*/
+#define NRAND  4 /* Gauss() sample count */
+
+static double gauss_add, gauss_mul; /* Gaussian random parameters */
+
+static void init_gauss(void)
 {
-    /* Range of random generator */
-    arand = pow(2.0, 15.0) - 1.0;
-    gaussadd = sqrt(3.0 * nrand);
-    gaussfac = 2 * gaussadd / (nrand * arand);
-    srand(seed);
+  /* Range of random generator */
+  gauss_add = sqrt(3.0 * NRAND);
+  gauss_mul = 2 * gauss_add / (NRAND * double(0xFFFF));
 }
 
 /*  GAUSS  --  Return a Gaussian random number.  As given in Peitgen
-           & Saupe, page 77. */
-
-static double gauss()
+               & Saupe, page 77. */
+static double rand_gauss(void)
 {
-    int i;
-    double sum = 0.0;
+  double sum = 0.0;
 
-    for (i = 1; i <= nrand; i++) {
-        sum += (rand() & 0x7FFF);
-    }
-    return gaussfac * sum - gaussadd;
+  for (int i = 0; i < NRAND; i++)
+    sum += (ss_twist.Rand() & 0xFFFF);
+
+  return sum * gauss_mul - gauss_add;
 }
 
-/*  SPECTRALSYNTH  --  Spectrally  synthesized  fractal  motion in two
-               dimensions.  This algorithm is given under  the
-               name   SpectralSynthesisFM2D  on  page  108  of
-               Peitgen & Saupe. */
+static double rand_phase(void)
+{
+  return 2 * M_PI * ((ss_twist.Rand() & 0xFFFF) / double(0xFFFF));
+}
 
+
+/*  SPECTRALSYNTH  --  Spectrally  synthesized  fractal  motion in two
+                       dimensions.  This algorithm is given under  the
+                       name   SpectralSynthesisFM2D  on  page  108  of
+                       Peitgen & Saupe.
+*/
 static void spectralsynth( float **x, int n, double h)
 {
     unsigned int bl;
@@ -216,33 +211,44 @@ static void spectralsynth( float **x, int n, double h)
 
     *x = a;
 
-    for (i = 0; i <= n / 2; i++) {
-        for (j = 0; j <= n / 2; j++) {
-            phase = 2 * M_PI * ((rand() & 0x7FFF) / arand);
-            if (i != 0 || j != 0) {
-                rad = pow((double) (i * i + j * j), -(h + 1) / 2) * gauss();
-            } else {
-                rad = 0;
-            }
+    for (i = 0; i <= n / 2; i++)
+    {
+        for (j = 0; j <= n / 2; j++)
+        {
+            phase = rand_phase();
+
+            if (i == 0 && j == 0)
+              rad = 0;
+            else
+              rad = pow((double) (i * i + j * j), -(h + 1) / 2) * rand_gauss();
+
             rcos = rad * cos(phase);
             rsin = rad * sin(phase);
-            Real(a, i, j) = rcos;
-            Imag(a, i, j) = rsin;
+
             i0 = (i == 0) ? 0 : n - i;
             j0 = (j == 0) ? 0 : n - j;
+
+            Real(a, i, j) = rcos;
+            Imag(a, i, j) = rsin;
             Real(a, i0, j0) = rcos;
             Imag(a, i0, j0) = - rsin;
         }
     }
+    
     Imag(a, n / 2, 0) = 0;
     Imag(a, 0, n / 2) = 0;
     Imag(a, n / 2, n / 2) = 0;
-    for (i = 1; i <= n / 2 - 1; i++) {
-        for (j = 1; j <= n / 2 - 1; j++) {
-            phase = 2 * M_PI * ((rand() & 0x7FFF) / arand);
-            rad = pow((double) (i * i + j * j), -(h + 1) / 2) * gauss();
+
+    for (i = 1; i <= n / 2 - 1; i++)
+    {
+        for (j = 1; j <= n / 2 - 1; j++)
+        {
+            phase = rand_phase();
+            rad = pow((double) (i * i + j * j), -(h + 1) / 2) * rand_gauss();
+
             rcos = rad * cos(phase);
             rsin = rad * sin(phase);
+
             Real(a, i, n - j) = rcos;
             Imag(a, i, n - j) = rsin;
             Real(a, n - i, j) = rcos;
@@ -255,19 +261,6 @@ static void spectralsynth( float **x, int n, double h)
 
     fourn(a, nsize, 2, -1);       /* Take inverse 2D Fourier transform */
 }
-
-
-static unsigned int initseed(void) {
-    /*  Generate initial random seed.  */
-
-    unsigned int i;
-
-    srand(1);
-    for (i = 0; i < 7; ++i)
-        rand();
-    return rand();
-}
-
 
 
 static void
@@ -320,7 +313,6 @@ scaleMesh_0to1(float * a,
 void foo(int argc, char ** argv)
 {
 
-    int cols, rows;     /* Dimensions of our output image */
 
 
     /* Set defaults when explicit specifications were not given.
@@ -334,16 +326,7 @@ void foo(int argc, char ** argv)
       powscale = 1.2;
 
 
-    cols = screenxsize;
-    rows = screenysize;
-
-
-    unsigned int rseed;        /* Current random seed */
     
-
-      rseed = initseed();
-    
-    initgauss(rseed);
     
     float * a;
       
@@ -359,6 +342,12 @@ void foo(int argc, char ** argv)
 void TX_SpectralSynth(int seed, float *buf, int width,
                       double fracdim, double powscale)
 {
+  ss_twist.Seed(seed);
+
+  init_gauss();
+
   // TODO
 }
 
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab
