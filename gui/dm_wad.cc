@@ -35,6 +35,7 @@
 #include "dm_wad.h"
 #include "q_bsp.h"  // qLump_c
 
+#include "img_all.h"
 #include "tx_forge.h"
 
 
@@ -156,8 +157,6 @@ static void SkyTest1()
   delete[] buf;
 }
 
-extern const byte image_data_BOLT[128*32];
-
 static void LogoTest1()
 {
   byte *pixels = new byte[128*128];
@@ -180,9 +179,9 @@ static void LogoTest1()
   for (int y = 0; y < 128; y++)
   for (int x = 0; x < 128; x++)
   {
-    byte ity = image_data_BOLT[(y&63)*64+(x&63)];
+    byte ity = logo_BOLT.data[(y&63)*64+(x&63)];
 
-    pixels[y*128+x] = green_mapping[(ity*12)/256];
+    pixels[y*128+x] = bronze_mapping[(ity*13)/256];
   }
 
   qLump_c *lump = WAD_BlockToPatch(128, pixels, 128, 128);
