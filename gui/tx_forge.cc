@@ -43,27 +43,35 @@
 #include "tx_forge.h"
 
 
-/* Definitions used to address real and imaginary parts in a two-dimensional
-   array of complex numbers as stored by fourn(). */
-
-#define Real(v, x, y)  v[1 + (((x) * meshsize) + (y)) * 2]
-#define Imag(v, x, y)  v[2 + (((x) * meshsize) + (y)) * 2]
-
-/* Co-ordinate indices within arrays. */
-
-
 /* Definition for obtaining random numbers. */
 
 static MT_rand_c ss_twist(0);
 
 
+/* Definitions used to address real and imaginary parts in a two-dimensional
+   array of complex numbers as stored by fourn(). */
 
-/*  Local variables  */
+static float *mesh_a;
+static int meshsize;
 
-static double fracdim;            /* Fractal dimension */
-static double powscale;           /* Power law scaling exponent */
-static int meshsize = 256;        /* FFT mesh size */
+#define Real(x, y)  mesh_a[1 + (((x) * meshsize) + (y)) * 2]
+#define Imag(x, y)  mesh_a[2 + (((x) * meshsize) + (y)) * 2]
 
+
+static void create_mesh(int width)
+{
+  int total_elem = (width * width + 1) * 2;
+
+  mesh_a = new float[total_elem];
+
+  // clear it to zeros
+  memset(mesh_a, 0, total_elem * sizeof(float));
+}
+
+static void free_mesh(void)
+{
+  delete[] mesh_a ; mesh_a = NULL;
+}
 
 
 /*  FOURN  --  Multi-dimensional fast Fourier transform
@@ -198,18 +206,10 @@ static double rand_phase(void)
                        name   SpectralSynthesisFM2D  on  page  108  of
                        Peitgen & Saupe.
 */
-static void spectralsynth( float **x, int n, double h)
+static void spectral_synth(int n, double h)
 {
-    unsigned int bl;
     int i, j, i0, j0, nsize[3];
     double rad, phase, rcos, rsin;
-    float *a;
-
-    bl = ((((unsigned long) n) * n) + 1) * 2;
-    a = new float [bl];
-    memset(a, 0, sizeof(float) * bl);
-
-    *x = a;
 
     for (i = 0; i <= n / 2; i++)
     {
@@ -228,16 +228,16 @@ static void spectralsynth( float **x, int n, double h)
             i0 = (i == 0) ? 0 : n - i;
             j0 = (j == 0) ? 0 : n - j;
 
-            Real(a, i, j) = rcos;
-            Imag(a, i, j) = rsin;
-            Real(a, i0, j0) = rcos;
-            Imag(a, i0, j0) = - rsin;
+            Real(i, j) = rcos;
+            Imag(i, j) = rsin;
+            Real(i0, j0) = rcos;
+            Imag(i0, j0) = - rsin;
         }
     }
     
-    Imag(a, n / 2, 0) = 0;
-    Imag(a, 0, n / 2) = 0;
-    Imag(a, n / 2, n / 2) = 0;
+    Imag(n / 2, 0) = 0;
+    Imag(0, n / 2) = 0;
+    Imag(n / 2, n / 2) = 0;
 
     for (i = 1; i <= n / 2 - 1; i++)
     {
@@ -249,104 +249,80 @@ static void spectralsynth( float **x, int n, double h)
             rcos = rad * cos(phase);
             rsin = rad * sin(phase);
 
-            Real(a, i, n - j) = rcos;
-            Imag(a, i, n - j) = rsin;
-            Real(a, n - i, j) = rcos;
-            Imag(a, n - i, j) = - rsin;
+            Real(i, n - j) = rcos;
+            Imag(i, n - j) = rsin;
+            Real(n - i, j) = rcos;
+            Imag(n - i, j) = - rsin;
         }
     }
 
     nsize[0] = 0;
     nsize[1] = nsize[2] = n;          /* Dimension of frequency domain array */
 
-    fourn(a, nsize, 2, -1);       /* Take inverse 2D Fourier transform */
+    fourn(mesh_a, nsize, 2, -1);       /* Take inverse 2D Fourier transform */
 }
 
 
-static void
-applyPowerLawScaling(float * a,
-                     int     meshsize,
-                     double  powscale) {
+static void copy_and_scale(float *buf)
+{
+  /* Compute extrema for autoscaling. */
+  double rmin =  1e30;
+  double rmax = -1e30;
 
-    /* Apply power law scaling if non-unity scale is requested. */
+  int i, j;
 
-  int i;
-  int j;
-  for (i = 0; i < meshsize; i++) {
-    for (j = 0; j < meshsize; j++) {
-      double r = Real(a, i, j);
-      if (r > 0)
-        Real(a, i, j) = pow(r, powscale);
-    }
+  for (i = 0; i < meshsize; i++)
+  for (j = 0; j < meshsize; j++)
+  {
+    double r = Real(i, j);
+
+    rmin = MIN(rmin, r);
+    rmax = MAX(rmax, r);
+  }
+
+  double range = (rmax - rmin);
+
+  for (i = 0; i < meshsize; i++)
+  for (j = 0; j < meshsize; j++)
+  {
+    buf[j*meshsize + i] = (Real(i, j) - rmin) / range;
   }
 }
 
 
-static void
-scaleMesh_0to1(float * a,
-                  int     meshsize)
+static void power_law_scale(float *buf, double powscale)
 {
-    /* compute extrema for autoscaling. */
-    double rmin =  1e30;
-    double rmax = -1e30;
+  /* Apply power law scaling if non-unity scale is requested. */
 
-    int i, j;
-    for (i = 0; i < meshsize; i++) {
-        for (j = 0; j < meshsize; j++) {
-            double r = Real(a, i, j);
-            
-            rmin = MIN(rmin, r);
-            rmax = MAX(rmax, r);
-        }
-    }
+  float *buf_end = buf + (meshsize * meshsize);
 
-    double range = (rmax - rmin);
-
-    for (i = 0; i < meshsize; i++) {
-        for (j = 0; j < meshsize; j++) {
-            Real(a, i, j) = (Real(a, i, j) - rmin) / range;
-        }
-    }
-}
-
-
-void foo(int argc, char ** argv)
-{
-
-
-
-    /* Set defaults when explicit specifications were not given.
-
-       The  default  fractal  dimension  and  power  scale depend upon
-       whether we are generating a planet or clouds. 
-    */
-    
-      fracdim = 2.4;
-
-      powscale = 1.2;
-
-
-    
-    
-    float * a;
-      
-    spectralsynth(&a, meshsize, 3.0 - fracdim);
-
-    //        applyPowerLawScaling(a, meshsize, powscale);
-
-            scaleMesh_0to1(a, meshsize);
-
+  for (; buf < buf_end; buf++)
+  {
+    *buf = pow(*buf, powscale);
+  }
 }
 
 
 void TX_SpectralSynth(int seed, float *buf, int width,
                       double fracdim, double powscale)
 {
+  SYS_ASSERT(0 < fracdim && fracdim <= 3.0);
+  SYS_ASSERT(powscale > 0);
+
   ss_twist.Seed(seed);
 
   init_gauss();
 
-  // TODO
+  create_mesh(width);
+
+  spectral_synth(width, 3.0 - fracdim);
+
+  copy_and_scale(buf);
+
+  if (fabs(powscale - 1.0) > 0.01)
+    power_law_scale(buf, powscale);
+
+  free_mesh();
 }
 
 //--- editor settings ---
