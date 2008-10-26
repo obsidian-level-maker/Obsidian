@@ -58,6 +58,9 @@ OBJS=	main.o      \
 	g_cookie.o  \
 	g_image.o   \
 	g_lua.o     \
+	img_bolt.o  \
+	img_carve.o \
+	img_round.o \
 	\
 	dm_glbsp.o  \
 	dm_level.o  \
