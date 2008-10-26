@@ -31,8 +31,9 @@ typedef struct
 logo_image_t;
 
 extern const logo_image_t logo_BOLT;
-extern const logo_image_t logo_CARVE;
 extern const logo_image_t logo_PILL;
+extern const logo_image_t logo_CARVE;
+extern const logo_image_t logo_RELIEF;
 
 #endif /* __OBLIGE_LOGOS_H__ */
 
