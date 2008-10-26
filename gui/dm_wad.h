@@ -185,6 +185,18 @@ typedef struct
 raw_behavior_header_t;
 
 
+/* ----- Other structures ---------------------- */
+
+typedef struct
+{
+  u32_t width;
+  u32_t height;
+
+  s32_t x_offset;
+  s32_t y_offset;
+}
+raw_patch_header_t;
+
 #endif /* __OBLIGE_DOOM_OUT_H__ */
 
 //--- editor settings ---

@@ -48,10 +48,81 @@ static int write_errors_seen;
 static int seek_errors_seen;
 
 
+static void AddPost(qLump_c *lump, int y, const byte *pixels, int W, int len)
+{
+  SYS_ASSERT(len > 0);
+
+  byte buffer[288];
+  byte *dest = buffer;
+
+  *dest++ = y;     // Y-OFFSET
+  *dest++ = len;   // # PIXELS
+
+  *dest++ = *pixels;  // TOP-PADDING
+
+  for (; len > 0; len--, pixels += W)
+    *dest++ = *pixels;
+
+  pixels -= W;
+
+  *dest++ = *pixels;  // BOTTOM-PADDING
+
+  lump->Append(buffer, dest - buffer);
+}
+
+static void EndOfPost(qLump_c *lump)
+{
+  byte datum = 255;
+
+  lump->Append(&datum, 1);
+}
+
+qLump_c * WAD_BlockToPatch(int new_W, const byte *pixels, int W, int H)
+{
+  // creates a DOOM patch image from a _SOLID_ block of pixels.
+
+  SYS_ASSERT(H <= 128);
+
+  qLump_c *lump = new qLump_c();
+
+  raw_patch_header_t header;
+
+  header.width    = LE_U32(new_W);
+  header.height   = LE_U32(H);
+  header.x_offset = LE_U32(new_W / 2);
+  header.y_offset = LE_U32(H);
+
+  lump->Append(&header, sizeof(header));
+
+
+  u32_t *offsets = new u32_t[new_W];
+
+  for (int k = 0; k < new_W; k++)
+  {
+    if (k < W)
+      offsets[k] = 8 + (new_W * 4) + k * (H + 5);
+    else
+      offsets[k] = offsets[k % W];
+
+    offsets[k] = LE_U32(offsets[k]);
+  }
+
+  lump->Append(offsets, new_W * sizeof(u32_t));
+
+
+  for (int x = 0; x < W; x++)
+  {
+    AddPost(lump, 0, pixels+x, W, H);
+    EndOfPost(lump);
+  }
+
+  return lump;
+}
+
+
 //------------------------------------------------------------------------
 //  WAD OUTPUT
 //------------------------------------------------------------------------
-
 
 static void WAD_WriteLump(const char *name, const void *data, u32_t len)
 {
