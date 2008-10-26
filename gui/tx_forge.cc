@@ -60,7 +60,9 @@ static int meshsize;
 
 static void create_mesh(int width)
 {
-  int total_elem = (width * width + 1) * 2;
+  meshsize = width;
+
+  int total_elem = (meshsize * meshsize + 1) * 2;
 
   mesh_a = new float[total_elem];
 
@@ -278,12 +280,17 @@ static void copy_and_scale(float *buf)
     rmax = MAX(rmax, r);
   }
 
+//  fprintf(stderr, "MESH RANGE : %1.5f .. %1.5f\n", rmin, rmax);
+
   double range = (rmax - rmin);
+
+  if (fabs(range) < 0.0001)
+    range = 0.0001;
 
   for (i = 0; i < meshsize; i++)
   for (j = 0; j < meshsize; j++)
   {
-    buf[j*meshsize + i] = (Real(i, j) - rmin) / range;
+    *buf++ = (Real(i, j) - rmin) / range;
   }
 }
 
@@ -305,7 +312,7 @@ void TX_SpectralSynth(int seed, float *buf, int width,
                       double fracdim, double powscale)
 {
   SYS_ASSERT(width > 0 && (width & 1) == 0);
-  SYS_ASSERT(0 < fracdim && fracdim <= 3.0);
+  SYS_ASSERT(0 < fracdim && fracdim < 4.0);
   SYS_ASSERT(powscale > 0);
 
   ss_twist.Seed(seed);
@@ -323,6 +330,36 @@ void TX_SpectralSynth(int seed, float *buf, int width,
 
   free_mesh();
 }
+
+
+void TX_TestSynth(void)
+{
+  float *buf = new float[128*128];
+
+  TX_SpectralSynth(2, buf, 128);
+
+  FILE *fp = fopen("testsynth.ppm", "wb");
+  SYS_ASSERT(fp);
+
+  fprintf(fp, "P6\n128 128 255\n");
+
+  for (int y = 0; y < 128; y++)
+  for (int x = 0; x < 128; x++)
+  {
+    float f = buf[y*128 + x];
+
+    int ity = (int)(1 + f*253);
+
+    fputc(ity, fp);
+    fputc(ity, fp);
+    fputc(ity, fp);
+  }
+
+  fclose(fp);
+
+  delete[] buf;
+}
+
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
