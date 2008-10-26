@@ -78,8 +78,6 @@ clean:
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
 
-g_image.o: img_data.h
-
 bin: all
 	strip --strip-unneeded $(PROGRAM)
 

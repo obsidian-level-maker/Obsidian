@@ -54,8 +54,9 @@ OBJS=	main.o      \
 	g_image.o   \
 	g_lua.o     \
 	img_bolt.o  \
+	img_pill.o  \
 	img_carve.o \
-	img_round.o \
+	img_relief.o \
 	\
 	dm_glbsp.o  \
 	dm_level.o  \
@@ -94,8 +95,6 @@ clean:
 
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
-
-g_image.o: img_data.h
 
 bin: all
 	strip --strip-unneeded $(PROGRAM)

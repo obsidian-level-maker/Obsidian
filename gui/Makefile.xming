@@ -59,8 +59,9 @@ OBJS=	main.o      \
 	g_image.o   \
 	g_lua.o     \
 	img_bolt.o  \
+	img_pill.o  \
 	img_carve.o \
-	img_round.o \
+	img_relief.o \
 	\
 	dm_glbsp.o  \
 	dm_level.o  \
@@ -95,8 +96,6 @@ all: $(PROGRAM)
 
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
-
-g_image.o: img_data.h
 
 oblige_res.o: oblige.rc
 	i586-mingw32msvc-windres $^ -o $@

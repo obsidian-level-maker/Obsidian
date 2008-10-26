@@ -25,10 +25,9 @@
 #include "g_image.h"
 
 
-// include the raw image data
-const byte raw_image_data[128*128+64*128] =
+// include the raw image data  FIXME: remove
+byte raw_image_data[128*128+64*128] =
 {
-#include "img_data.h"
 };
 
 const byte doom_palette[256*3] =
