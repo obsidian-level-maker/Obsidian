@@ -157,6 +157,52 @@ static void SkyTest1()
   delete[] buf;
 }
 
+static void SkyTest2()
+{
+  float *buf = new float[256*256];
+
+  TX_SpectralSynth(2, buf, 256, 1.9, 2.0);
+
+  byte *pixels = new byte[256*128];
+
+  memset(pixels, 188, 256*128);
+
+  static byte mapping[] =
+  {
+    0, 2, 1, 79, 77, 75, 73, 70, 67, 64,   64,64
+  };
+
+  for (int z = 0; z < 256; z++)
+  for (int x = 0; x < 256; x++)
+  {
+    float f = buf[z*256+x];
+
+    int h = int(f*96);
+    if (h < 0) h = 0;
+    if (h > 96) h = 96;
+
+    float ity = fabs( (160-abs(z - 128)) / 160.0);
+
+//    ity = ity + buf[x*229] / 9.0;
+
+    for (int y = 0; y < h; y++)
+    {
+      float i2 = ity*8 + (rand() & 0xFF) / 255.0;
+
+      pixels[(127-y)*256 + x] = mapping[int(i2)];
+    }
+  }
+
+  qLump_c *lump = WAD_BlockToPatch(256, pixels, 256, 128);
+
+  WAD_WriteLump("RSKY1", lump);
+
+  delete lump;
+
+  delete[] pixels;
+  delete[] buf;
+}
+
 static void LogoTest1()
 {
   byte *pixels = new byte[128*128];
@@ -292,7 +338,7 @@ static void WAD_WritePatches()
     }
   }
 
-  LogoTest1();
+  SkyTest2();
 
   WAD_WriteLump("PP_END", NULL, 0);
 }
