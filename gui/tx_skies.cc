@@ -17,14 +17,66 @@
 //------------------------------------------------------------------------
 
 #include "headers.h"
-#include "hdr_ui.h"
 
 #include "lib_util.h"
 #include "main.h"
 
+#include "twister.h"
 #include "tx_forge.h"
 #include "tx_skies.h"
 
+
+static MT_rand_c sky_twist(0);
+
+
+byte * SKY_GenGradient(int W, int H, std::vector<byte> & colors)
+{
+  // TODO
+}
+
+
+byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
+                     float squish, double fracdim, double powscale)
+{
+  // SYS_ASSERT(is_power_of_two(W))
+  // SYS_ASSERT(is_power_of_two(H))
+
+  SYS_ASSERT(W >= H);
+
+  int numcol = (int)colors.size();
+
+  SYS_ASSERT(numcol > 0);
+  SYS_ASSERT(squish > 0);
+
+  float * synth = new float[W * W];
+
+  TX_SpectralSynth(seed, synth, W, fracdim, powscale);
+
+  byte *pixels = new byte[W * H];
+
+  for (int y = 0; y < H; y++)
+  {
+    int sy = (int)(y * squish) & (H-1);
+
+    const float *src = & synth[sy * W];
+
+    byte *dest  = & pixels[y * W];
+    byte *d_end = dest + W;
+
+    while (dest < d_end)
+    {
+      int idx = (int)(*src++ * numcol);
+
+      idx = CLAMP(0, idx, numcol-1);
+
+      *dest++ = colors[idx];
+    }
+  }
+
+  delete[] synth;
+
+  return pixels;
+}
 
 
 //--- editor settings ---

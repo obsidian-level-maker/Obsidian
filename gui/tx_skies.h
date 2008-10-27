@@ -19,7 +19,10 @@
 #ifndef __OBLIGE_TX_SKIES_H__
 #define __OBLIGE_TX_SKIES_H__
 
-// TODO
+byte * SKY_GenGradient(int W, int H, std::vector<byte> & colors);
+
+byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
+                     float squish=1.0, double fracdim=2.4, double powscale=1.2);
 
 #endif /* __OBLIGE_TX_SKIES_H__ */
 
