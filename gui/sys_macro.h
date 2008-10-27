@@ -50,7 +50,7 @@
 #endif
 
 #ifndef CLAMP
-#define CLAMP(x,low,high)  \
+#define CLAMP(low,x,high)  \
     ((x) < (low) ? (low) : (x) > (high) ? (high) : (x))
 #endif
 
