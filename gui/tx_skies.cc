@@ -31,7 +31,29 @@ static MT_rand_c sky_twist(0);
 
 byte * SKY_GenGradient(int W, int H, std::vector<byte> & colors)
 {
-  // TODO
+  int numcol = (int)colors.size();
+
+  SYS_ASSERT(numcol > 0);
+
+  byte *pixels = new byte[W * H];
+
+  for (int y = 0; y < H; y++)
+  {
+    // we assume that (in general) top is light, bottom is dark
+    int idx = (H-1-y) * numcol / H;
+
+    byte color = colors[idx];
+
+    byte *dest  = & pixels[y * W];
+    byte *d_end = dest + W;
+
+    while (dest < d_end)
+    {
+      *dest++ = color;
+    }
+  }
+
+  return pixels;
 }
 
 
