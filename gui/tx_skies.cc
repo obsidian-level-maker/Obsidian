@@ -128,7 +128,10 @@ byte * SKY_GenStars(int seed, int W, int H, std::vector<byte> & colors,
       v = pow(v, powscale);
 
       if (v < cutoff)
+      {
+        dest++;
         continue;
+      }
 
       v = (v - cutoff) / (1.0 - cutoff);
 
