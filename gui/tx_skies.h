@@ -24,6 +24,9 @@ byte * SKY_GenGradient(int W, int H, std::vector<byte> & colors);
 byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
                      float squish=1.0, double fracdim=2.4, double powscale=1.2);
 
+byte * SKY_GenStars(int seed, int W, int H, std::vector<byte> & colors,
+                    double powscale=3.0, double cutoff=0.25);
+
 #endif /* __OBLIGE_TX_SKIES_H__ */
 
 //--- editor settings ---

@@ -26,9 +26,6 @@
 #include "tx_skies.h"
 
 
-static MT_rand_c sky_twist(0);
-
-
 byte * SKY_GenGradient(int W, int H, std::vector<byte> & colors)
 {
   int numcol = (int)colors.size();
@@ -69,6 +66,7 @@ byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
 
   SYS_ASSERT(numcol > 0);
   SYS_ASSERT(squish > 0);
+  SYS_ASSERT(powscale > 0);
 
   float * synth = new float[W * W];
 
@@ -96,6 +94,51 @@ byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
   }
 
   delete[] synth;
+
+  return pixels;
+}
+
+
+byte * SKY_GenStars(int seed, int W, int H, std::vector<byte> & colors,
+                    double powscale, double cutoff)
+{
+  int numcol = (int)colors.size();
+
+  SYS_ASSERT(numcol >= 2);
+  SYS_ASSERT(powscale > 0);
+  SYS_ASSERT(cutoff > 0);
+
+  MT_rand_c twist(seed);
+
+  byte *pixels = new byte[W * H];
+
+  memset(pixels, colors[0], W * H);
+
+  for (int y = 0; y < H; y++)
+  {
+    byte *dest  = & pixels[y * W];
+    byte *d_end = dest + W;
+
+    while (dest < d_end)
+    {
+      double v  = (twist.Rand() & 0xFFFF) / 65535.0;
+             v *= (twist.Rand() & 0xFFFF) / 65535.0;
+             v *= (twist.Rand() & 0xFFFF) / 65535.0;
+
+      v = pow(v, powscale);
+
+      if (v < cutoff)
+        continue;
+
+      v = (v - cutoff) / (1.0 - cutoff);
+
+      int idx = 1 + (int)(v * (numcol-1));
+
+      idx = CLAMP(1, idx, numcol-1);
+
+      *dest++ = colors[idx];
+    }
+  }
 
   return pixels;
 }
