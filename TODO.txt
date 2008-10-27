@@ -3,6 +3,21 @@ TODO
 ====
 
 
+
+SKY GENERATOR:
+
+-  background part: GRADIENT or CLOUDS or STARS
+
+   GRADIENT params:  colors
+   CLOUD param: fracdim, powscale, colors
+   STARS param: powscale, cutoff, colors
+
+-  foreground part: NONE or MOUNTAINS or BUILDINGS
+
+   MOUNTAINS params: min_h, max_h, fracdim, powscale, colors
+   BUILDINGS params: min_h, max_h, gap_size, colors, light_cols
+
+
 HEIGHTS: prevent any room from having more than 4 heights
          [tiny rooms: no more than 2]
 
