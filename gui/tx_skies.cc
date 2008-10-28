@@ -76,7 +76,7 @@ byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
 
   for (int y = 0; y < H; y++)
   {
-    int sy = (int)(y * squish) & (H-1);
+    int sy = (int)(y * squish) & (W-1);
 
     const float *src = & synth[sy * W];
 
