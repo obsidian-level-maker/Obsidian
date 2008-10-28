@@ -158,31 +158,35 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
   SYS_ASSERT(powscale > 0);
   SYS_ASSERT(max_h >= min_h);
 
-  float * synth = new float[W * W];
+  float * height_map = new float[W * W];
 
-  TX_SpectralSynth(seed, synth, W, fracdim, powscale);
+  TX_SpectralSynth(seed, height_map, W, fracdim, powscale);
 
 
   max_h = max_h - min_h;
 
   MT_rand_c twist(seed ^ 1);
 
+  // remember the highest span for each column
   int *spans = new int[W];
 
   memset(spans, 0, W * sizeof(int));
 
 
+  // draw a column of pixels for every point on the height map.
+  // optimised to only draw the visible parts.
+
   for (int x = 0; x < W; x++)
   {
     for (int z = 0; z < W; z++)
     {
-      float f = synth[z*W + x];
+      float f = height_map[z*W + x];
 
       f = min_h + f * max_h;
 
       int span = int(f*H);
 
-      // hidden?
+      // hidden by previous spans?
       if (span <= spans[x])
         continue;
 
@@ -208,7 +212,7 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
     }
   }
 
-  delete[] synth;
+  delete[] height_map;
   delete[] spans;
 }
 
