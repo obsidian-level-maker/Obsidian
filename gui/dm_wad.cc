@@ -216,9 +216,9 @@ static void LogoTest1()
   for (int y = 0; y < 128; y++)
   for (int x = 0; x < 128; x++)
   {
-    byte ity = logo_BOLT.data[(y&63)*64+(x&63)];
+    byte ity = logo_RELIEF.data[(y&63)*64+(x&63)];
 
-    pixels[y*128+x] = bronze_mapping[(ity*13)/256];
+    pixels[y*128+x] = green_mapping[(ity*12)/256];
   }
 
   qLump_c *lump = WAD_BlockToPatch(128, pixels, 128, 128);
@@ -329,7 +329,7 @@ static void WAD_WritePatches()
     }
   }
 
-  SkyTest2();
+  LogoTest1();
 
   WAD_WriteLump("PP_END", NULL, 0);
 }
