@@ -16,6 +16,93 @@
 --
 ----------------------------------------------------------------
 
+--[[
+
+Room Layouting Notes
+====================
+
+DESCRIPTION OF PROBLEM:
+
++ Primary goal is to ensure all exit seeds in a room
+  are traversable, i.e. there exists a path from X to Y
+  such that each element is either a symbolic height ('0' .. '3')
+  or a staircase ('>', '<', 'v', '^', 'F', 'T', 'L', 'J').
+
+  Certain staircases are never usable on certain rows or
+  columns (e.g. cannot use 'F' on top row if vertically mirrored).
+
+  In emergencies we can mark certain seeds as "laddering"
+  onto an adjacent height-difference seed.  We must try hard
+  to (a) avoid this or (b) minimise its use and (c) pick
+  the best seed pair to ladder [not an exit seed, low diff, etc]
+
++ Secondary goal is "niceness" of the room layout:
+  (a) staircases are not used in two adjacent seeds
+
+  (b) F/T/L/J staircases only used in corners
+      (or "pseudo-corners" i.e. floor seeds at higher heights)
+
+  (c) height diff between staircases is '1' unit
+      [any is possible, the lower the better]
+
+  (d) small preference for staircases parallel to main direction
+      of room (esp. PC/PR/PX and TY types).
+
++ Tertiary goal is to assign diagonal corners and solid
+  seeds, as well as flood filling floor heights, in a
+  pleasing/interesting way.
+
+
+IDEA:
+  Primitive operations:
+
+  1) start at exit A, go (anti)clockwise around the edge of the
+     room until hit exit B, use suitable connections
+     (especially corner stairwells).
+
+  2) start at exit A, go inward until hit exit B.
+     If hit a blank wall instead, assume hit the R.floor_h
+     seed [if none: one closer to it] and put stairs
+     appropriately for that.
+
+  3) start at exit A, go inward a certain dist then turn left
+     or right and run towards exit B.
+
+  3) ?? void up edges [if not empty, replicated exit seeds into inner area]
+  4) ?? ledge up edges [need exits all at same height, or use R.floor_h]
+
+  Repeat the primitive operations for random exit seeds
+  until full traversibility is reached (or run out of
+  usable directions]
+
+  Add emergency "ladders" when no more traversifying can be done.
+
+  Score the final result.  Perform ### fillings for each room
+  and pick the one with the best result.
+
+  [Can fill holes and decide solid corners last]
+
+--]]
+
+
+
+function calc_conn_area(R)
+  local lx, ly = 999,999
+  local hx, hy = 0,0
+
+  for _,C in ipairs(R.conns) do
+    local S = C:seed(R)
+    lx = math.min(lx, S.sx)
+    ly = math.min(ly, S.sy)
+    hx = math.max(hx, S.sx)
+    hy = math.max(hy, S.sy)
+  end
+
+  assert(lx <= hx and ly <= hy)
+
+  return lx,ly, hx,hy
+end
+
 
 function calc_height_set(R)
   local list = { }
@@ -34,7 +121,7 @@ function calc_height_set(R)
     add_height(C.conn_h)
   end
   
-  if #list < 3 then
+  if #list < 3 and math.min(R.sw, R.sh) >= 3 then
     add_height(R.floor_h)
   end
 
@@ -47,8 +134,6 @@ end
 function dump_layout(R)
 
   local function outside_seed(x, y)
-    x = R.sx1 + x - 1
-    y = R.sy1 + y - 1
     for _,C in ipairs(R.conns) do
       local S = C:seed(R)
       local ox, oy = nudge_coord(S.sx, S.sy, S.conn_dir)
@@ -61,7 +146,7 @@ function dump_layout(R)
   end
 
   local function inside_seed(x, y)
-    local S = SEEDS[R.sx1 + x-1][R.sy1 + y-1][1]
+    local S = SEEDS[x][y][1]
     assert(S and S.room == R)
 
     if S.layout_char then
@@ -76,13 +161,13 @@ function dump_layout(R)
 
   gui.debugf("Room %s @ (%d,%d) Layout:\n", R.kind, R.sx1, R.sy1)
 
-  for y = R.sh+1,0,-1 do
+  for y = R.ty2+1, R.ty1-1, -1 do
     line = ""
-    for x = 0,R.sw+1 do
-      if box_contains_point(1,1, R.sw,R.sh, x,y) then
-        line = line .. inside_seed(x, y)
-      else
+    for x = R.tx1-1, R.tx2+1 do
+      if x < R.tx1 or x > R.tx2 or y < R.ty1 or y > R.ty2 then
         line = line .. outside_seed(x, y)
+      else
+        line = line .. inside_seed(x, y)
       end
     end
     gui.debugf(" %s\n", line)
@@ -91,23 +176,6 @@ function dump_layout(R)
   gui.debugf("\n");
 end
 
-
-function Conn_area(R)
-  local lx, ly = 999,999
-  local hx, hy = 0,0
-
-  for _,C in ipairs(R.conns) do
-    local S = C:seed(R)
-    lx = math.min(lx, S.sx)
-    ly = math.min(ly, S.sy)
-    hx = math.max(hx, S.sx)
-    hy = math.max(hy, S.sy)
-  end
-
-  assert(lx <= hx and ly <= hy)
-
-  return lx,ly, hx,hy
-end
 
 function Junk_fill_room(R, n_sx1, n_sy1, n_sx2, n_sy2)
   for y = R.sy1,R.sy2 do for x = R.sx1,R.sx2 do
@@ -131,7 +199,7 @@ end
 
 
 function Layout_Hallway(R)
-  local lx,ly, hx,hy = Conn_area(R)
+  local lx,ly, hx,hy = calc_conn_area(R)
 
   Junk_fill_room(R, lx,ly, hx,hy)
 
@@ -158,7 +226,7 @@ function Layout_Hallway(R)
 
   -- TODO: sometimes make "U" shape (for U2, TC, TY)
 
-  -- easy if only one seed wide/tall
+  -- easy if only one seed wide or tall
   if lx==hx or ly==hy then
     return
   end
@@ -278,15 +346,18 @@ need_rf = false --!!!!
   
 end
 
+
 function Layout_Outdoor(R)
-  -- FIXME
+  -- FIXME !!!
 end
 
-function Layout_Room(R)
-  R.h_set = calc_height_set(R)
 
-  local function char_for_height(h)
-    for index,h2 in ipairs(R.h_set) do
+function Layout_Indoor(R)
+
+  local h_set = calc_height_set(R)
+
+  local function char_for_height(set, h)
+    for index,h2 in ipairs(set) do
       if math.abs(h - h2) < 1 then
         assert(index <= 10)
         return string.sub("0123456789", index, index)
@@ -295,8 +366,83 @@ function Layout_Room(R)
     error("Height not found in set!!\n")
   end
 
+  local function size_for_symmetry(kind)
+    local w, h = R.sw, R.sh
+
+    if kind == "x" or kind == "xy" then
+      w = int((w+1) / 2)
+    end
+
+    if kind == "y" or kind == "xy" then
+      h = int((h+1) / 2)
+    end
+    
+    return w*h, w, h
+  end
+
+  local function required_seeds(kind)
+    -- one seed for each connection
+    local count = #R.conns
+
+    -- one seed for each height difference
+    -- (with some redundancy, regions may be non-contiguous)
+    count = count + #h_set
+
+    if kind == "xy" then
+      count = count * 4  -- exaggeration
+    
+    elseif kind == "x" or kind == "y" then
+      count = count * 2
+    end
+
+    -- one seed for purpose (key/switch/etc)
+    if R.purpose or #R.conns == 0 then
+      count = count + 1
+    end
+
+    -- one seed for row/column, space for monsters or pillars
+    count = count + math.max(R.sw, R.sh)
+
+    return count
+  end
+
+  local function decide_layout_symmetry()
+
+    gui.debugf("Total seeds : %dx%d = %d\n", R.sw, R.sh, R.sw * R.sh)
+
+    local SY = { "none", "x", "y", "xy" }
+
+    for _,sym in ipairs(SY) do
+      gui.debugf("   Required for %s symmetry : %d\n", sym,
+                 required_seeds(sym) )
+    end
+  end
+
+
+  ---| Layout_Indoor |---
+
+  for _,C in ipairs(R.conns) do
+    C.layout_char = char_for_height(h_set, C.conn_h)
+  end
+
+
+  decide_layout_symmetry()
+
+  
+  -- ETC ETC....
+
+end
+
+
+function Room_Layout(R)
+
+  -- set seed range for layouting algorithms to whole room
+  R.tx1, R.ty1 = R.sx1, R.sy1
+  R.tx2, R.ty2 = R.sx2, R.sy2
+
+
   if R.kind == "stairwell" then
-    -- nothing to do
+    -- nothing to do (handled in builder.lua)
     return
 
   elseif R.kind == "hallway" then
@@ -307,16 +453,19 @@ function Layout_Room(R)
     Layout_Outdoor(R)
     return
   end
+  
+  -- TODO: decide 'special' rooms:
+  --       (A) pathway across nukage or lava pit
+  --       (B) hallway which surrounds an inner room
 
-  for _,C in ipairs(R.conns) do
-    local S = C:seed(R)
-    S.layout_char = char_for_height(C.conn_h)
-  end
+  Layout_Indoor(R);
 
+
+  --[[
   
   -- make rooms with lots of 'junk space' smaller sometimes
 
-  local lx,ly, hx,hy = Conn_area(R)
+  local lx,ly, hx,hy = calc_conn_area(R)
 
   local jl = lx - R.sx1
   local jr = R.sx2 - hx
@@ -328,23 +477,21 @@ function Layout_Room(R)
   local n_sx2 = R.sx2
   local n_sy2 = R.sy2
 
---[[ !!!!
-  if not R.symmetry or R.symmetry == "y" then
-    while jl >= 2 and rand_odds(99) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
-    while jl >= 1 and rand_odds( 3) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
-
-    while jr >= 2 and rand_odds(99) do jr = jr-1 ; n_sx2 = n_sx2 - 1 end
-    while jr >= 1 and rand_odds( 3) do jr = jr-1 ; n_sx2 = n_sx2 - 1 end
-  end
-
-  if not R.symmetry or R.symmetry == "x" then
-    while jb >= 2 and rand_odds(99) do jb = jb-1 ; n_sy1 = n_sy1 + 1 end
-    while jb >= 1 and rand_odds( 3) do jb = jb-1 ; n_sy1 = n_sy1 + 1 end
-
-    while jt >= 2 and rand_odds(99) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
-    while jt >= 1 and rand_odds( 3) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
-  end
---]]
+--!!!  if not R.symmetry or R.symmetry == "y" then
+--!!!    while jl >= 2 and rand_odds(99) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
+--!!!    while jl >= 1 and rand_odds( 3) do jl = jl-1 ; n_sx1 = n_sx1 + 1 end
+--!!!
+--!!!    while jr >= 2 and rand_odds(99) do jr = jr-1 ; n_sx2 = n_sx2 - 1 end
+--!!!    while jr >= 1 and rand_odds( 3) do jr = jr-1 ; n_sx2 = n_sx2 - 1 end
+--!!!  end
+--!!!
+--!!!  if not R.symmetry or R.symmetry == "x" then
+--!!!    while jb >= 2 and rand_odds(99) do jb = jb-1 ; n_sy1 = n_sy1 + 1 end
+--!!!    while jb >= 1 and rand_odds( 3) do jb = jb-1 ; n_sy1 = n_sy1 + 1 end
+--!!!
+--!!!    while jt >= 2 and rand_odds(99) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
+--!!!    while jt >= 1 and rand_odds( 3) do jt = jt-1 ; n_sy2 = n_sy2 - 1 end
+--!!!  end
 
   Junk_fill_room(R, n_sx1, n_sy1, n_sx2, n_sy2)
 
@@ -458,10 +605,10 @@ function Layout_Room(R)
 
   end
 
+  --]]
+
 --  gui.debugf("JUNK SPACE W:%d L:%d R:%d  H:%d B:%d T:%d  @ %s\n",
 --             R.sw, jl, jr,  R.sh, jb, jt,  R:tostr())
-
-  Ultra_Lame_Layouter(R)
 
 end
 
@@ -471,7 +618,7 @@ function Rooms_II()
   gui.printf("\n--==| Rooms_II |==--\n\n")
 
   for _,R in ipairs(PLAN.all_rooms) do
-    Layout_Room(R)
+    Room_Layout(R)
   end
 end
 
