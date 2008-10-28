@@ -37,6 +37,7 @@
 
 #include "img_all.h"
 #include "tx_forge.h"
+#include "tx_skies.h"
 
 
 bool wad_hexen;  // FIXME: not global
@@ -124,74 +125,65 @@ qLump_c * WAD_BlockToPatch(int new_W, const byte *pixels, int W, int H)
 
 static void WAD_WriteLump(const char *name, qLump_c *lump);
 
-static void SkyTest1()
-{
-  float *buf = new float[256*256];
-
-  TX_SpectralSynth(1, buf, 256, 2.5, 1.0);
-
-  byte *pixels = new byte[256*128];
-
-  static byte mapping[15] =
-  {
-    245,244,243,242,241,
-    207,205,202,199,
-    196,195,194,193,192,192
-  };
-
-  for (int y = 0; y < 128; y++)
-  for (int x = 0; x < 256; x++)
-  {
-    float f = buf[y*256+x];
-
-    pixels[y*256+x] = mapping[int(f*14)];
-  }
-
-  qLump_c *lump = WAD_BlockToPatch(256, pixels, 256, 128);
-
-  WAD_WriteLump("RSKY1", lump);
-
-  delete lump;
-
-  delete[] pixels;
-  delete[] buf;
-}
 
 static void SkyTest2()
 {
-  float *buf = new float[256*256];
+  std::vector<byte> star_cols;
 
-  TX_SpectralSynth(2, buf, 256, 1.9, 2.0);
-
-  byte *pixels = new byte[256*128];
-
-  memset(pixels, 188, 256*128);
-
-  static byte mapping[] =
+  static byte star_mapping[15] =
   {
-    0, 2, 1, 79, 77, 75, 73, 70, 67, 64,   64,64
+    8, 7, 6, 5,
+    111, 109, 107, 104, 101,
+    98, 95, 91, 87, 83,
+    4
   };
 
-  for (int z = 0; z < 256; z++)
-  for (int x = 0; x < 256; x++)
+  for (int k=0; k < 15; k++)
+    star_cols.push_back(star_mapping[k]);
+
+///  byte *pixels = SKY_GenStars(3, 256,128, star_cols, 2.0);
+
+
+  std::vector<byte> cloud_cols;
+
+  static byte cloud_mapping[14] =
   {
-    float f = buf[z*256+x];
+    106,104,102,100,
+    98,96,94,92,90,
+    88,86,84,82,80
+  };
 
-    int h = int(f*96);
-    if (h < 0) h = 0;
-    if (h > 96) h = 96;
+  static byte hell_mapping[14] =
+  {
+    188,185,184,183,182,181,180,
+    179,178,177,176,175,174,173
+  };
 
-    float ity = fabs( (160-abs(z - 128)) / 160.0);
+  for (int n=0; n < 14; n++)
+    cloud_cols.push_back(hell_mapping[n]);
 
-//    ity = ity + buf[x*229] / 9.0;
+  byte *pixels = SKY_GenClouds(5, 256,128, cloud_cols, 3.0, 2.6, 1.0);
 
-    for (int y = 0; y < h; y++)
-    {
-      float i2 = ity*8 + (rand() & 0xFF) / 255.0;
 
-      pixels[(127-y)*256 + x] = mapping[int(i2)];
-    }
-  }
+  static byte hill_mapping[10] =
+  {
+    0, 2, 1,
+    79, 77, 75, 73, 70, 67, 64,
+  };
+
+  static byte hill_of_hell[10] =
+  {
+    0, 6,
+    47, 45, 43, 41, 39, 37, 35, 33
+  };
+
+  std::vector<byte> hill_cols;
+
+  for (int i=0; i < 10; i++)
+    hill_cols.push_back(hill_of_hell[i]);
+
+  SKY_AddHills(5, pixels, 256,128, hill_cols, 0.2,0.9, 2.1,2.1);
+
 
   qLump_c *lump = WAD_BlockToPatch(256, pixels, 256, 128);
 
@@ -200,7 +192,6 @@ static void SkyTest2()
   delete lump;
 
   delete[] pixels;
-  delete[] buf;
 }
 
 static void LogoTest1()
