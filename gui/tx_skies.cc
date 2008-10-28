@@ -147,5 +147,71 @@ byte * SKY_GenStars(int seed, int W, int H, std::vector<byte> & colors,
 }
 
 
+void SKY_AddHills(int seed, byte *pixels, int W, int H,
+                  std::vector<byte> & colors,
+                  float min_h, float max_h,
+                  double fracdim, double powscale)
+{
+  int numcol = (int)colors.size();
+
+  SYS_ASSERT(numcol >= 2);
+  SYS_ASSERT(powscale > 0);
+  SYS_ASSERT(max_h >= min_h);
+
+  float * synth = new float[W * W];
+
+  TX_SpectralSynth(seed, synth, W, fracdim, powscale);
+
+
+  max_h = max_h - min_h;
+
+  MT_rand_c twist(seed ^ 1);
+
+  int *spans = new int[W];
+
+  memset(spans, 0, W * sizeof(int));
+
+
+  for (int x = 0; x < W; x++)
+  {
+    for (int z = 0; z < W; z++)
+    {
+      float f = synth[z*W + x];
+
+      f = min_h + f * max_h;
+
+      int span = int(f*H);
+
+      // hidden?
+      if (span <= spans[x])
+        continue;
+
+      if (span >= H)
+        span = H-1;
+
+      float ity = abs(z - W/2) / float(W/2);
+
+      ity = 1.0 - ity * 0.7;
+
+      for (int y = spans[x]; y < span; y++)
+      {
+        float i2 = ity - 0.3 * (twist.Rand() & 0xFFFF) / 65535.0;
+
+        int idx = (int)(i2 * numcol);
+
+        idx = CLAMP(0, idx, numcol-1);
+
+        pixels[(H-1-y)*W + x] = colors[idx];
+      }
+
+      spans[x] = span;
+    }
+  }
+
+  delete[] synth;
+  delete[] spans;
+}
+
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

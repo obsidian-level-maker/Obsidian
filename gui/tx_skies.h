@@ -27,6 +27,11 @@ byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
 byte * SKY_GenStars(int seed, int W, int H, std::vector<byte> & colors,
                     double powscale=3.0, double cutoff=0.25);
 
+void SKY_AddHills(int seed, byte *pixels, int W, int H,
+                  std::vector<byte> & colors,
+                  float min_h=0, float max_h=0.8,
+                  double fracdim=2.0, double powscale=0.8);
+
 #endif /* __OBLIGE_TX_SKIES_H__ */
 
 //--- editor settings ---
