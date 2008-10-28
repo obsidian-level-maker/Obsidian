@@ -199,7 +199,7 @@ static double rand_gauss(void)
 
 static double rand_phase(void)
 {
-  return 2 * M_PI * ((ss_twist.Rand() & 0xFFFF) / double(0xFFFF));
+  return 2 * M_PI * ss_twist.Rand_fp();
 }
 
 

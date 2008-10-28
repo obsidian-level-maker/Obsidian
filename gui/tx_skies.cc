@@ -121,9 +121,9 @@ byte * SKY_GenStars(int seed, int W, int H, std::vector<byte> & colors,
 
     while (dest < d_end)
     {
-      double v  = (twist.Rand() & 0xFFFF) / 65535.0;
-             v *= (twist.Rand() & 0xFFFF) / 65535.0;
-             v *= (twist.Rand() & 0xFFFF) / 65535.0;
+      double v  = twist.Rand_fp();
+             v *= twist.Rand_fp();
+             v *= twist.Rand_fp();
 
       v = pow(v, powscale);
 
@@ -195,7 +195,7 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 
       for (int y = spans[x]; y < span; y++)
       {
-        float i2 = ity - 0.3 * (twist.Rand() & 0xFFFF) / 65535.0;
+        float i2 = ity - 0.3 * twist.Rand_fp();
 
         int idx = (int)(i2 * numcol);
 

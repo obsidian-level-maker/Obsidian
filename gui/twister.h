@@ -94,6 +94,8 @@ public:
 	inline u32_t Rand();      // integer in [0..2^32-1]
 	u32_t Rand(u32_t n);      // integer in [0..n] for n < 2^32
 
+	double Rand_fp();   // floating point in [0..1) 
+
 	// Re-seeding functions (same behavior as constructor)
 	void Seed(u32_t the_seed);
 	void Seed(const u32_t *bigSeed, int seedLength);

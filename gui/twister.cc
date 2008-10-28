@@ -35,6 +35,17 @@ u32_t MT_rand_c::Rand(u32_t n)
 	return i;
 }
 
+double MT_rand_c::Rand_fp()
+{
+	// floating point in the range [0-1)
+	// i.e. exact 0 is possible, but exact 1 is not
+	// (though conversion to 'float' might round the value upto 1)
+
+	int raw = Rand() & 0x7FFFFFFF;
+
+	return (double)raw / 2147483648.0;
+}
+
 void MT_rand_c::Seed(u32_t the_seed)
 {
 	// Seed the generator with a simple u32_t

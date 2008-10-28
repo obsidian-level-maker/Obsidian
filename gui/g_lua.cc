@@ -301,10 +301,7 @@ int rand_seed(lua_State *L)
 //
 int random(lua_State *L)
 {
-  int raw = RNG.Rand() & 0x7FFFFFFF;
-
-  // target range is [0-1), including 0 but not including 1
-  lua_Number value = (lua_Number)raw / 2147483648.0;
+  lua_Number value = RNG.Rand_fp();
 
   lua_pushnumber(L, value);
   return 1;
