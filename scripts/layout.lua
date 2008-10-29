@@ -424,10 +424,8 @@ function Layout_Indoor(R)
 
       -- basic test: peer seed must be free or have same height
       local T = SEEDS[tx][ty][1]
-      if T ~= S and T.conn then
-        if math.abs(T.conn.conn_h - C.conn_h) > 1 then
-          return false
-        end
+      if T.conn and T.conn.layout_char ~= C.layout_char then
+        return false
       end
 
       -- strict test: don't put different heights next to each other
@@ -435,10 +433,8 @@ function Layout_Indoor(R)
         local nx, ny = nudge_coord(tx, ty, side)
         if R:contains_seed(nx, ny) then
           local N = SEEDS[nx][ny][1]
-          if N ~= S and N.conn then
-            if math.abs(N.conn.conn_h - C.conn_h) > 1 then
-              return false
-            end
+          if N.conn and N.conn.layout_char ~= C.layout_char then
+            return false
           end
         end
       end -- for side
@@ -466,7 +462,7 @@ function Layout_Indoor(R)
         elseif R.symmetry == "xy" then
           prob = 100
         elseif is_symmetry_possible(R, sym) then
-          prob = sel(sym == "xy", 10, 40)
+          prob = sel(sym == "xy", 10, 40)  -- TODO: take width/height into account
         end
 
         if prob > 0 then
@@ -486,6 +482,32 @@ function Layout_Indoor(R)
     --- FIXME: update layouting area
   end
 
+  local function clear_layout()
+    -- TODO
+  end
+
+  local function read_layout()
+    -- TODO
+  end
+
+  local function write_layout(layout)
+    -- TODO
+  end
+
+
+  local function make_layout()
+    -- FIXME
+  end
+
+  local function mirror_horizontally(old_w, new_w)
+    -- FIXME
+  end
+
+  local function mirror_vertically(old_h, new_h)
+    -- FIXME
+  end
+  
+
 
   ---| Layout_Indoor |---
 
@@ -493,12 +515,73 @@ function Layout_Indoor(R)
     C.layout_char = char_for_height(h_set, C.conn_h)
   end
 
+  dump_layout(R);
 
   decide_layout_symmetry()
 
-  
-  -- ETC ETC....
+  -- update layout area
+  local old_w, old_h = box_size(R.tx1, R.ty1, R.tx2, R.ty2)
+  local new_w, new_h = size_for_symmetry(R.layout_symmetry)
 
+  if new_w < old_w then
+    R.tx2 = R.tx1 + new_w - 1
+    if (old_w % 2) == 1 then
+      R.layout_shared_x = R.tx2
+    end
+  end
+
+  if new_h < old_h then
+    R.ty2 = R.ty1 + new_h - 1
+    if (old_h % 2) == 1 then
+      R.layout_shared_y = R.ty2
+    end
+  end
+
+  -- TODO: junk sides
+
+
+  local best_layout
+  local best_cost
+
+  for i = 1,1 do
+    clear_layout()
+
+    local cost = make_layout()
+
+    if not best_layout or cost < best_cost then
+      best_layout = read_layout()
+      best_cost   = cost
+    end
+  end
+
+  write_layout(best_layout)
+
+  dump_layout(R);
+
+
+  -- TODO: fill holes
+
+  -- TODO: boundary shape
+
+
+  if new_w < old_w then
+    mirror_horizontally(old_w, new_w)
+  end
+
+  if new_h < old_h then
+    mirror_vertically(old_h, new_h)
+  end
+
+
+  -- TEMP JUNK !!!
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if not S.layout_char then
+      S.layout_char = "%"
+    end
+  end end
+
+  dump_layout(R);
 end
 
 
