@@ -167,17 +167,15 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 
   MT_rand_c twist(seed ^ 1);
 
-  // remember the highest span for each column
-  int *spans = new int[W];
-
-  memset(spans, 0, W * sizeof(int));
-
 
   // draw a column of pixels for every point on the height map.
   // optimised to only draw the visible parts.
 
   for (int x = 0; x < W; x++)
   {
+    // remember the highest span for this column
+    int high_span = 0;
+
     for (int z = 0; z < W; z++)
     {
       float f = height_map[z*W + x];
@@ -187,7 +185,7 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
       int span = int(f*H);
 
       // hidden by previous spans?
-      if (span <= spans[x])
+      if (span <= high_span)
         continue;
 
       if (span >= H)
@@ -197,7 +195,7 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 
       ity = 1.0 - ity * 0.7;
 
-      for (int y = spans[x]; y < span; y++)
+      for (int y = high_span; y < span; y++)
       {
         float i2 = ity - 0.3 * twist.Rand_fp();
 
@@ -208,12 +206,11 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
         pixels[(H-1-y)*W + x] = colors[idx];
       }
 
-      spans[x] = span;
+      high_span = span;
     }
   }
 
   delete[] height_map;
-  delete[] spans;
 }
 
 
