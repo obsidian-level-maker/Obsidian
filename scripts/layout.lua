@@ -366,6 +366,13 @@ function Layout_Indoor(R)
     error("Height not found in set!!\n")
   end
 
+  local function valid_T(x, y)
+    if x < R.tx1 or x > R.tx2 or y < R.ty1 or y > R.ty2 then
+      return false
+    end
+    return true
+  end
+
   local function size_for_symmetry(kind)
     local w, h = R.sw, R.sh
 
@@ -498,7 +505,7 @@ function Layout_Indoor(R)
     end end
   end
 
-  local function add_one_conn(S, flip_x, flip_y)
+  local function try_add_conn(list, S, flip_x, flip_y)
     assert(S.conn and S.conn.layout_char)
 
     local tx, ty = S.sx, S.sy
@@ -506,53 +513,74 @@ function Layout_Indoor(R)
     if flip_x then tx = R.tx1 + R.otx2 - tx end
     if flip_y then ty = R.ty1 + R.oty2 - ty end
 
-    if tx < R.tx1 or tx > R.tx2 or ty < R.ty1 or ty > R.ty2 then
+    if not valid_T(tx, ty) then
       return
     end
 
-gui.debugf("  add_one_conn: S @ (%d,%d)  T @ (%d,%d)\n", S.sx,S.sy, tx,ty)
+-- gui.debugf("  try_add_conn: S @ (%d,%d)  T @ (%d,%d)\n", S.sx,S.sy, tx,ty)
     local T = SEEDS[tx][ty][1]
 
-    dump_layout(R)
+--  dump_layout(R)
+
+    local INFO =
+    {
+      group_id = 1 + #list,
+      conn  = S.conn,
+      T = T, tx = tx, ty = ty,
+      layout_char = T.layout_char,
+    }
 
     if T.layout_char then
       assert(T.layout_char == S.conn.layout_char)
     else
       T.layout_char = S.conn.layout_char
+      T.group_id    = INFO.group_id
     end
+
+    table.insert(list, INFO)
   end
 
   local function insert_conns()
 gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
+    local list = {}
+
     for _,C in ipairs(R.conns) do
       local S = C:seed(R)
       
-      add_one_conn(S, false, false)
+      try_add_conn(list, S, false, false)
 
       if R.layout_symmetry == "x" then
-        add_one_conn(S, true, false)
+        try_add_conn(list, S, true, false)
       elseif R.layout_symmetry == "y" then
-        add_one_conn(S, false, true)
+        try_add_conn(list, S, false, true)
       elseif R.layout_symmetry == "xy" then
-        add_one_conn(S, false, true)
-        add_one_conn(S, true,  false)
-        add_one_conn(S, true,  true)
+        try_add_conn(list, S, false, true)
+        try_add_conn(list, S, true,  false)
+        try_add_conn(list, S, true,  true)
       end
     end
+
+    return list
   end
 
   local function read_layout()
-    -- TODO
+    local L = {}
+
+    L.chars = array_2D(R.tx2 - R.tx1 + 1, R.ty2 - R.ty1 + 1)
+
+    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+      L.chars[x - R.tx1 + 1][y - R.ty1 + 1] = SEEDS[x][y][1].layout_char
+    end end
+
+    return L
   end
 
-  local function write_layout(layout)
-    -- TODO
+  local function write_layout(L)
+    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+      SEEDS[x][y][1].layout_char = L.chars[x - R.tx1 + 1][y - R.ty1 + 1]
+    end end
   end
 
-
-  local function make_layout()
-    -- FIXME
-  end
 
   local function mirror_horizontally(old_w, new_w)
     for y = R.ty1, R.ty2 do
@@ -603,6 +631,285 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
   end
   
 
+  local function is_fully_connected(EX)
+    local g
+
+    for _,E in ipairs(EX) do
+      if not g then
+        g = E.T.group_id
+
+      elseif g ~= E.T.group_id then
+        return false
+      end
+    end
+
+    return true
+  end
+
+  local function merge_groups(EX, id1, id2)
+    if id1 > id2 then
+      id1,id2 = id2,id1
+    end
+
+    for _,E in ipairs(EX) do
+      if E.group_id == id2 then
+         E.group_id = id1
+      end
+    end
+
+    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+      local S = SEEDS[x][y][1]
+      if S.group_id == id2 then
+         S.group_id = id1
+      end
+    end end
+  end
+
+  local function dist_to_something(x, y, dir)
+    local dx, dy = dir_to_delta(dir)
+    local dist = 0
+
+    while true do
+      x = x + dx
+      y = y + dy
+
+      if not valid_T(x, y) then
+        return nil
+      end
+
+      local T = SEEDS[x][y][1]
+
+      if T.layout_char then
+        return dist, T
+      end
+
+      dist = dist + 1
+    end
+  end
+
+  local function try_linear(E, EX, loop)
+    local poss_dirs = {}
+    local emer_dirs = {}
+
+    for dir = 2,8,2 do
+      local nx, ny = nudge_coord(E.tx, E.ty, dir)
+      if not valid_T(nx, ny) then
+        -- outside of area
+      else
+        local N = SEEDS[nx][ny][1]
+
+        if not N.layout_char then
+          table.insert(poss_dirs, dir)
+        elseif N.layout_char == E.T.layout_char and
+               assert(N.group_id) ~= E.T.group_id then
+
+          -- direct connection
+          merge_groups(EX, N.group_id, E.T.group_id)
+          return 0
+
+        elseif N.layout_char ~= E.T.layout_char then
+          table.insert(emer_dirs, dir)
+        end
+      end
+    end
+
+--!!!!    assert(#poss_dirs + #emerg_dirs > 0)
+
+
+    rand_shuffle(poss_dirs)
+
+    if #poss_dirs > 0 then
+
+      local dir = table.remove(poss_dirs, 1)
+
+      local dx, dy = dir_to_delta(dir)
+
+      local x, y = E.tx, E.ty
+      gui.debugf("Linear @ %d,%d in direction %d\n", x, y, dir)
+
+      local ds1, T1 = dist_to_something(x, y, dir)
+--    local ds2 = dist_to_something(x, y, rotate_cw90(dir))
+--    local ds3 = dist_to_something(x, y, rotate_ccw90(dir))
+
+      if T1 and T1.group_id ~= E.T.group_id then
+gui.debugf("  something dist=%d\n", ds1);
+        if ds1 >= 1 then
+          x = x + dx
+          y = y + dy
+
+          SEEDS[x][y][1].layout_char = sel(dir==4 or dir==6, ">", "^")
+          SEEDS[x][y][1].group_id = E.T.group_id
+
+          ds1 = ds1 - 1
+        end
+
+        while ds1 >= 1 do
+          x = x + dx
+          y = y + dy
+
+          SEEDS[x][y][1].layout_char = T1.layout_char
+          SEEDS[x][y][1].group_id    = T1.group_id
+
+          ds1 = ds1 - 1
+        end
+
+        merge_groups(EX, T1.group_id, E.T.group_id)
+
+        return 80;
+      end
+
+      while true do
+        x = x + dx
+        y = y + dy
+
+--gui.debugf("  next pos %d,%d\n", x, y);
+        if not valid_T(x, y) then
+--gui.debugf("  INVALID\n");
+          break;
+        end
+
+        local T = SEEDS[x][y][1]
+
+        if T.layout_char then
+-- gui.debugf("  ALREADY HAS LAYOUT CHAR: %s\n", T.layout_char)
+          break;
+        end
+
+        T.layout_char = E.T.layout_char
+        T.group_id    = E.T.group_id
+      end
+
+      return nil -- BLEH
+    end
+
+
+    -- emergency connect
+
+    if #emer_dirs == 0 then
+      return nil
+    end
+
+    local e_dir = rand_element(emer_dirs)
+
+    local nx, ny = nudge_coord(E.tx, E.ty, e_dir)
+    local N = SEEDS[nx][ny][1]
+
+    E.T.emer_stair = e_dir
+
+gui.debugf("Emergency connect\n");
+    merge_groups(EX, E.T.group_id, N.group_id)
+
+    return 1000
+  end
+
+  local function try_clockwise(E, EX, loop)
+    return nil -- FIXME
+  end
+
+  local function try_anticlockwise(E, EX, loop)
+    return nil -- FIXME
+  end
+
+  local function make_basic_layout(EX)
+    assert(#EX > 0)
+
+    local cost = 0
+    local loop = 0
+
+    EX[1].T.group_id = 1
+
+    while true do
+      loop = loop + 1
+
+      gui.debugf("MAKE BASIC LAYOUT loop=%d:\n", loop);
+      dump_layout(R)
+
+      if is_fully_connected(EX) then
+        break;  -- complete connected now
+      end
+
+      local E = rand_element(EX)
+
+
+      local METHODS =
+      {
+        CW = 50, ACW = 50, LIN = 200
+      }
+
+      local did_cost
+
+      while not table_empty(METHODS) do
+        local meth = rand_key_by_probs(METHODS)
+
+        METHODS[meth] = nil -- don't try again this loop
+
+        if meth == "CW" then
+          did_cost = try_clockwise(E, EX, loop)
+        elseif meth == "ACW" then
+          did_cost = try_anticlockwise(E, EX, loop)
+        else
+          did_cost = try_linear(E, EX, loop)
+        end
+      end
+
+      if did_cost then
+        cost = cost + did_cost
+      end
+    end
+
+    return cost
+  end
+
+  function ensure_mirror_x_traversible()
+    for y = R.ty1, R.ty2 do
+      if SEEDS[R.tx2][y][1].layout_char then
+        return; -- OK
+      end
+    end
+
+    for y = R.ty1, R.ty2 do
+      local did = false
+      for x = R.tx1, R.tx2-1 do
+        local S = SEEDS[x][y][1]
+        local D = SEEDS[x+1][y][1]
+
+        if S.layout_char and not D.layout_char then
+          D.layout_char = S.layout_char
+          did = true
+        end
+      end
+
+      if did then return; end
+    end
+
+    error("ensure_mirror_x_traversible FAILED!!")
+  end
+
+  function ensure_mirror_y_traversible()
+    for x = R.tx1, R.tx2 do
+      if SEEDS[x][R.ty2][1].layout_char then
+        return; -- OK
+      end
+    end
+
+    for x = R.tx1, R.tx2 do
+      local did = false
+      for y = R.ty1, R.ty2-1 do
+        local S = SEEDS[x][y][1]
+        local D = SEEDS[x][y+1][1]
+
+        if S.layout_char and not D.layout_char then
+          D.layout_char = S.layout_char
+          did = true
+        end
+      end
+
+      if did then return; end
+    end
+
+    error("ensure_mirror_y_traversible FAILED!!")
+  end
+
 
   ---| Layout_Indoor |---
 
@@ -640,13 +947,13 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
   local best_layout
   local best_cost
 
+  dump_layout(R)
+
   for i = 1,1 do
     clear_layout()
-    insert_conns()
+    local EX = insert_conns()
 
-    dump_layout(R)
-
-    local cost = make_layout()
+    local cost = make_basic_layout(EX)
 
     if not best_layout or cost < best_cost then
       best_layout = read_layout()
@@ -656,7 +963,20 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
 
   write_layout(best_layout)
 
+  gui.debugf("FINAL LAYOUT:\n")
   dump_layout(R);
+
+
+  if R.layout_symmetry == "x" or R.layout_symmetry == "xy" then
+    ensure_mirror_x_traversible()
+  dump_layout(R);
+  end
+
+  if R.layout_symmetry == "y" or R.layout_symmetry == "xy" then
+    ensure_mirror_y_traversible()
+  dump_layout(R);
+  end
+
 
 
   -- TODO: fill holes
@@ -665,7 +985,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
     local S = SEEDS[x][y][1]
     if not S.layout_char then
       local kkk = rand_irange(1,16)
-      S.layout_char = string.sub("abcdefghijklmnop", kkk,kkk)
+      S.layout_char = "%" -- string.sub("abcdefghijklmnop", kkk,kkk)
     end
   end end
 
