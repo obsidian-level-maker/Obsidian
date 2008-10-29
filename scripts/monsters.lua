@@ -17,9 +17,10 @@
 ----------------------------------------------------------------
 
 
+--[[
 
 MONSTER SELECTION
------------------
+=================
 
 Main usages:
 (a) free-range
@@ -34,7 +35,7 @@ of a map, on "small" setting --> 1 palette only, upto 2 on
 "regular", between 2-3 on "large" maps.
 
 [Palette probably needs to handle "families", e.g. Baron
-and Hellknight, Mummy and Leader, ]
+and Hellknight, Mummy and Leader]
 
 Trap and Surprise monsters can use any monster (actually
 better when different from palette and different from
@@ -44,6 +45,12 @@ Cages and Guarding monsters should have a smaller and
 longer-term palette, changing about 4 times less often
 than the free-range palette.  MORE PRECISELY: palette
 evolves about same rate IN TERMS OF # MONSTERS ADDED.
+
+Evolving a palette: replace some monsters with different
+ones.  Especially replace weaker with stronger (we assume
+the player will have better weapons).  Probably replace
+only 1 monster each time over the course of an EPISODE
+(faster and/or more palettes when making SINGLE maps).
 
 --------------------------------------------------------------]]
 
