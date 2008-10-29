@@ -282,10 +282,14 @@ gui.printf("TRANSPOSE %s @ %s\n", R.symmetry, R:tostr())
   --| Rooms_setup_symmetry |--
 
   for _,R in ipairs(PLAN.all_rooms) do
-    if R.symmetry == "x" or R.symmetry == "xy" then
+    if R.symmetry == "x" then
       mirror_horizontally(R)
 
-    elseif R.symmetry == "y" or R.symmetry == "xy" then
+    elseif R.symmetry == "y" then
+      mirror_vertically(R)
+
+    elseif R.symmetry == "xy" then
+      mirror_horizontally(R)
       mirror_vertically(R)
 
     elseif R.symmetry == "r" then
