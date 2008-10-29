@@ -377,7 +377,7 @@ function Layout_Indoor(R)
       h = int((h+1) / 2)
     end
     
-    return w*h, w, h
+    return w, h
   end
 
   local function required_seeds(kind)
@@ -406,16 +406,84 @@ function Layout_Indoor(R)
     return count
   end
 
+  local function is_symmetry_possible(R, sym)
+    if sym == "xy" then
+      return is_symmetry_possible(R, "x") and
+             is_symmetry_possible(R, "y")
+    end
+
+    for _,C in ipairs(R.conns) do
+      local S = C:seed(R)
+      local tx, ty = S.sx, S.sy
+
+      if sym == "x" then
+        tx = R.sx1 + R.sx2 - tx
+      else -- sym == "y"
+        ty = R.sy1 + R.sy2 - ty
+      end
+
+      -- basic test: peer seed must be free or have same height
+      local T = SEEDS[tx][ty][1]
+      if T ~= S and T.conn then
+        if math.abs(T.conn.conn_h - C.conn_h) > 1 then
+          return false
+        end
+      end
+
+      -- strict test: don't put different heights next to each other
+      for side = 2,8,2 do
+        local nx, ny = nudge_coord(tx, ty, side)
+        if R:contains_seed(nx, ny) then
+          local N = SEEDS[nx][ny][1]
+          if N ~= S and N.conn then
+            if math.abs(N.conn.conn_h - C.conn_h) > 1 then
+              return false
+            end
+          end
+        end
+      end -- for side
+
+      -- this connection is OK!
+    end
+
+    return true
+  end
+
   local function decide_layout_symmetry()
 
-    gui.debugf("Total seeds : %dx%d = %d\n", R.sw, R.sh, R.sw * R.sh)
+    local SYM_LIST = { "x", "y", "xy" }
 
-    local SY = { "none", "x", "y", "xy" }
+    local syms  = { "none" }
+    local probs = { 10 }
 
-    for _,sym in ipairs(SY) do
-      gui.debugf("   Required for %s symmetry : %d\n", sym,
-                 required_seeds(sym) )
+    for _,sym in ipairs(SYM_LIST) do
+      if required_seeds(sym) <= R.sw * R.sh then
+        local prob = 0
+
+        -- check if possible
+        if sym == R.symmetry then
+          prob = sel(sym == "xy", 6000, 400)
+        elseif R.symmetry == "xy" then
+          prob = 100
+        elseif is_symmetry_possible(R, sym) then
+          prob = sel(sym == "xy", 10, 40)
+        end
+
+        if prob > 0 then
+          table.insert(syms, sym)
+          table.insert(probs, prob)
+        end
+      end
     end
+
+    R.layout_symmetry = syms[rand_index_by_probs(probs)]
+
+-- dump_layout(R)
+
+    gui.debugf("Layout symmetry @ %s (%s) --> %s\n",
+               R:tostr(), R.symmetry or "none", R.layout_symmetry);
+
+    --- FIXME: update layouting area
   end
 
 
