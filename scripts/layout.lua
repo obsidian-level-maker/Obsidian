@@ -422,6 +422,7 @@ function Layout_Indoor(R)
         ty = R.sy1 + R.sy2 - ty
       end
 
+
       -- basic test: peer seed must be free or have same height
       local T = SEEDS[tx][ty][1]
       if T.conn and T.conn.layout_char ~= C.layout_char then
@@ -453,16 +454,25 @@ function Layout_Indoor(R)
     local probs = { 10 }
 
     for _,sym in ipairs(SYM_LIST) do
-      if required_seeds(sym) <= R.sw * R.sh then
+      if required_seeds(sym) <= R.sw * R.sh and
+         is_symmetry_possible(R, sym)
+      then
         local prob = 0
 
         -- check if possible
         if sym == R.symmetry then
           prob = sel(sym == "xy", 6000, 400)
         elseif R.symmetry == "xy" then
+          -- TODO: take width/height into account
           prob = 100
-        elseif is_symmetry_possible(R, sym) then
-          prob = sel(sym == "xy", 10, 40)  -- TODO: take width/height into account
+        elseif sym == "xy" and (R.symmetry ~= "x") and (R.symmetry ~= "y") then
+          -- never upgrade to XY symmetry from no symmetry
+          -- because is_symmetry_possible() does not fully test
+          -- the double folding of connections.
+          prob = 0
+        else
+          -- TODO: take width/height into account
+          prob = sel(sym == "xy", 20, 40)
         end
 
         if prob > 0 then
@@ -483,7 +493,52 @@ function Layout_Indoor(R)
   end
 
   local function clear_layout()
-    -- TODO
+    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+      SEEDS[x][y][1].layout_char = nil
+    end end
+  end
+
+  local function add_one_conn(S, flip_x, flip_y)
+    assert(S.conn and S.conn.layout_char)
+
+    local tx, ty = S.sx, S.sy
+
+    if flip_x then tx = R.tx1 + R.otx2 - tx end
+    if flip_y then ty = R.ty1 + R.oty2 - ty end
+
+    if tx < R.tx1 or tx > R.tx2 or ty < R.ty1 or ty > R.ty2 then
+      return
+    end
+
+gui.debugf("  add_one_conn: S @ (%d,%d)  T @ (%d,%d)\n", S.sx,S.sy, tx,ty)
+    local T = SEEDS[tx][ty][1]
+
+    dump_layout(R)
+
+    if T.layout_char then
+      assert(T.layout_char == S.conn.layout_char)
+    else
+      T.layout_char = S.conn.layout_char
+    end
+  end
+
+  local function insert_conns()
+gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
+    for _,C in ipairs(R.conns) do
+      local S = C:seed(R)
+      
+      add_one_conn(S, false, false)
+
+      if R.layout_symmetry == "x" then
+        add_one_conn(S, true, false)
+      elseif R.layout_symmetry == "y" then
+        add_one_conn(S, false, true)
+      elseif R.layout_symmetry == "xy" then
+        add_one_conn(S, false, true)
+        add_one_conn(S, true,  false)
+        add_one_conn(S, true,  true)
+      end
+    end
   end
 
   local function read_layout()
@@ -563,6 +618,8 @@ function Layout_Indoor(R)
   local old_w, old_h = box_size(R.tx1, R.ty1, R.tx2, R.ty2)
   local new_w, new_h = size_for_symmetry(R.layout_symmetry)
 
+  R.otx2, R.oty2 = R.tx2, R.ty2
+
   if new_w < old_w then
     R.tx2 = R.tx1 + new_w - 1
     if (old_w % 2) == 1 then
@@ -585,6 +642,9 @@ function Layout_Indoor(R)
 
   for i = 1,1 do
     clear_layout()
+    insert_conns()
+
+    dump_layout(R)
 
     local cost = make_layout()
 
