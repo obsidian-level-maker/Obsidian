@@ -2549,7 +2549,7 @@ DM_MONSTERS =
 
   -- MELEE only monsters
   demon     = { prob=45, hp=150, dm=25, cage_prob=66,melee=true },
-  spectre   = { prob=20, hp=150, dm=25, cage_prob=40,melee=true },
+  spectre   = { prob=20, hp=150, dm=25, cage_prob=40,melee=true, invis=true },
   skull     = { prob=14, hp=100, dm=7,  cage_prob= 2, melee=true, float=true },
  
   -- FIXME: not really a monster [MOVE OUTTA HERE]
@@ -3192,5 +3192,11 @@ OB_GAMES["doom1"] =
     teleporters = true,
     infighting = true,
   },
+
+  -- parameters --
+
+  palette_mons = 3,
+
+  -- tables --
 }
 

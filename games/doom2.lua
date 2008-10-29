@@ -1978,5 +1978,11 @@ OB_GAMES["doom2"] =
     teleporters = true,
     infighting = true,
   },
+
+  -- parameters --
+
+  palette_mons = 5,
+
+  -- tables --
 }
 

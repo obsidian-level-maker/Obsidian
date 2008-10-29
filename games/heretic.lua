@@ -1324,13 +1324,13 @@ HC_MONSTERS =
   gargoyle   = { prob=30, hp=20,  dm= 5, cage_fallback=10, float=true, melee=true },
   fire_garg  = { prob=10, hp=80,  dm= 8, float=true },
   mummy      = { prob=60, hp=80,  dm= 8, melee=true },
-  mummy_inv  = { prob=10, hp=80,  dm= 8, melee=true },
+  mummy_inv  = { prob=10, hp=80,  dm= 8, melee=true, invis=true },
   sabreclaw  = { prob=25, hp=150, dm=12, melee=true },
 
   knight     = { prob=70, hp=200, dm=12, },
-  knight_inv = { prob=10, hp=200, dm=14, },
+  knight_inv = { prob=10, hp=200, dm=14, invis=true },
   leader     = { prob=70, hp=100, dm=16, },
-  leader_inv = { prob=10, hp=100, dm=16, },
+  leader_inv = { prob=10, hp=100, dm=16, invis=true },
 
   disciple   = { prob=25, hp=180, dm=20, float=true },
   weredragon = { prob=30, hp=220, dm=25, },
@@ -1650,5 +1650,11 @@ UNFINISHED["heretic"] =
     infighting = true,
     prefer_stairs=true,
   },
+
+  -- parameters --
+
+  palette_mons = 3,
+
+  -- tables --
 }
 

@@ -550,5 +550,11 @@ UNFINISHED["quake1"] =
   {
     -- TODO
   },
+
+  -- parameters --
+
+  palette_mons = 4,
+
+  -- tables --
 }
 

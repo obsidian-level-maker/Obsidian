@@ -826,5 +826,11 @@ UNFINISHED["wolf3d"] =
            four_dirs = true,
            sealed_start = true,
          },
+
+  -- parameters --
+
+  palette_mons = 2,
+
+  -- tables --
 }
 
