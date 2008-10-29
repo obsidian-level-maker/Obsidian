@@ -500,11 +500,51 @@ function Layout_Indoor(R)
   end
 
   local function mirror_horizontally(old_w, new_w)
-    -- FIXME
+    for y = R.ty1, R.ty2 do
+      for x = new_w, old_w-1 do
+        local D = SEEDS[R.tx1 + x][y][1]
+        local S = SEEDS[R.tx1 + old_w - 1 - x][y][1]
+
+            if S.layout_char == "<" then D.layout_char = ">"
+        elseif S.layout_char == ">" then D.layout_char = "<"
+        elseif S.layout_char == "L" then D.layout_char = "J"
+        elseif S.layout_char == "J" then D.layout_char = "L"
+        elseif S.layout_char == "F" then D.layout_char = "T"
+        elseif S.layout_char == "T" then D.layout_char = "F"
+        elseif S.layout_char == "/" then D.layout_char = "\\"
+        elseif S.layout_char =="\\" then D.layout_char = "/"
+        else
+          D.layout_char = S.layout_char
+        end
+      end
+    end
+
+    -- restore old width
+    R.tx2 = R.tx1 + old_w - 1
   end
 
   local function mirror_vertically(old_h, new_h)
-    -- FIXME
+    for x = R.tx1, R.tx2 do
+      for y = new_h, old_h-1 do
+        local D = SEEDS[x][R.ty1 + y][1]
+        local S = SEEDS[x][R.ty1 + old_h - 1 - y][1]
+
+            if S.layout_char == "v" then D.layout_char = "^"
+        elseif S.layout_char == "^" then D.layout_char = "v"
+        elseif S.layout_char == "L" then D.layout_char = "F"
+        elseif S.layout_char == "F" then D.layout_char = "L"
+        elseif S.layout_char == "J" then D.layout_char = "T"
+        elseif S.layout_char == "T" then D.layout_char = "J"
+        elseif S.layout_char == "/" then D.layout_char = "\\"
+        elseif S.layout_char =="\\" then D.layout_char = "/"
+        else
+          D.layout_char = S.layout_char
+        end
+      end
+    end
+
+    -- restore old height
+    R.ty2 = R.ty1 + old_h - 1
   end
   
 
@@ -560,6 +600,15 @@ function Layout_Indoor(R)
 
 
   -- TODO: fill holes
+  -- TEMP JUNK !!!
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if not S.layout_char then
+      local kkk = rand_irange(1,16)
+      S.layout_char = string.sub("abcdefghijklmnop", kkk,kkk)
+    end
+  end end
+
 
   -- TODO: boundary shape
 
@@ -572,14 +621,6 @@ function Layout_Indoor(R)
     mirror_vertically(old_h, new_h)
   end
 
-
-  -- TEMP JUNK !!!
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
-    if not S.layout_char then
-      S.layout_char = "%"
-    end
-  end end
 
   dump_layout(R);
 end
