@@ -144,6 +144,84 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
 end
 
 
+function do_ramp_x(S, x1,y1, x2,y2)
+  
+  local az = SEEDS[S.sx-1][S.sy][1].floor_h
+  local bz = SEEDS[S.sx+1][S.sy][1].floor_h
+
+--[[ local R = S.room
+for y = R.sy1, R.sy2 do
+for x = R.sx1, R.sx2 do
+local T = SEEDS[x][y][1]
+gui.debugf("Seed (%d,%d) layout_char:%s floor_h:%s\n",
+           x, y, T.layout_char or "-", tostring(T.floor_h or "--"))
+end end --]]
+
+  assert(az and bz)
+
+  local steps = int(math.abs(az-bz) / 16 + 0.5)
+
+  if steps < 2 then steps = 2 end
+
+  for i = 0,steps-1 do 
+    local z = az + (bz - az) * i / (steps-1)
+
+    local x3 = x1 + (x2 - x1) * i / steps
+    local x4 = x1 + (x2 - x1) * (i+1) / steps
+
+    x3 = int(x3)
+    x4 = int(x4)
+
+    gui.add_brush(
+    {
+      t_face = { texture="STEP1" },
+      b_face = { texture="STEP1" },
+      w_face = { texture="STEP1" },
+    },
+    {
+      { x=x3, y=y1 }, { x=x3, y=y2 },
+      { x=x4, y=y2 }, { x=x4, y=y1 },
+    },
+    -2000, z);
+  end
+end
+
+
+function do_ramp_y(S, x1,y1, x2,y2)
+ 
+  local az = SEEDS[S.sx][S.sy-1][1].floor_h
+  local bz = SEEDS[S.sx][S.sy+1][1].floor_h
+
+  assert(az and bz)
+
+  local steps = int(math.abs(az-bz) / 16 + 0.5)
+
+  if steps < 2 then steps = 2 end
+
+  for i = 0,steps-1 do 
+    local z = az + (bz - az) * i / (steps-1)
+
+    local y3 = y1 + (y2 - y1) * i / steps
+    local y4 = y1 + (y2 - y1) * (i+1) / steps
+
+    y3 = int(y3)
+    y4 = int(y4)
+
+    gui.add_brush(
+    {
+      t_face = { texture="STEP2" },
+      b_face = { texture="STEP2" },
+      w_face = { texture="STEP2" },
+    },
+    {
+      { x=x1, y=y3 }, { x=x1, y=y4 },
+      { x=x2, y=y4 }, { x=x2, y=y3 },
+    },
+    -2000, z);
+  end
+end
+
+
 function dummy_builder(level_name)
 
 
@@ -883,6 +961,11 @@ if S.layout_char == "#" or S.layout_char == "%" then
     -2000, 2000);
 else
 
+if S.layout_char == ">" or S.layout_char == "<" then
+   do_ramp_x(S, x1,y1, x2,y2)
+elseif S.layout_char == "v" or S.layout_char == "^" then
+   do_ramp_y(S, x1,y1, x2,y2)
+else
     gui.add_brush(
     {
       t_face = { texture=f_tex },
@@ -895,6 +978,7 @@ else
       { x=x2, y=y2 }, { x=x2, y=y1 },
     },
     -2000, z1);
+end
 
 -- if c_tex=="F_SKY1" then c_tex = "MFLR8_4" end --!!!!!!
 
