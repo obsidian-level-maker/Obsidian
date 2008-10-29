@@ -418,9 +418,7 @@ function Rooms_choose_heights()
     -- for rooms close to sky, prevent ceiling from being higher than sky
     for x = R.sx1-2, R.sx2+2 do
       for y = R.sy1-2, R.sy2+2 do
-        if not box_contains_point(R.sx1,R.sy1, R.sx2,R.sy2, x,y) and
-           Seed_valid(x, y, 1)
-        then
+        if not R:contains_seed(x,y) and Seed_valid(x, y, 1) then
           local S = SEEDS[x][y][1]
           if S.room and (S.room.outdoor or S.room.kind == "liquid") then
             R.max_floor_h = math.max(0, 512 - R.tallness)

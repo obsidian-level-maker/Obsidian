@@ -67,6 +67,12 @@ ROOM_CLASS =
       return string.format("ROOM[%d,%d %s]", self.sx1,self.sy1, self.kind)
     end
   end,
+
+  contains_seed = function(self, x, y)
+    if x < self.sx1 or x > self.sx2 then return false end
+    if y < self.sy1 or y > self.sy2 then return false end
+    return true
+  end,
 }
 
 
