@@ -366,6 +366,21 @@ function Layout_Indoor(R)
     error("Height not found in set!!\n")
   end
 
+  local function height_for_char(set, ch)
+    if ch == "0" then return set[1] end
+    if ch == "1" then return set[2] end
+    if ch == "2" then return set[3] end
+    if ch == "3" then return set[4] end
+    if ch == "4" then return set[5] end
+    if ch == "5" then return set[6] end
+    if ch == "6" then return set[7] end
+    if ch == "7" then return set[8] end
+    if ch == "8" then return set[9] end
+    if ch == "9" then return set[10] end
+
+    return nil
+  end
+
   local function valid_T(x, y)
     if x < R.tx1 or x > R.tx2 or y < R.ty1 or y > R.ty2 then
       return false
@@ -577,7 +592,13 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
 
   local function write_layout(L)
     for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
-      SEEDS[x][y][1].layout_char = L.chars[x - R.tx1 + 1][y - R.ty1 + 1]
+      local S = SEEDS[x][y][1]
+
+      S.layout_char = L.chars[x - R.tx1 + 1][y - R.ty1 + 1]
+
+      local k = height_for_char(h_set, S.layout_char)
+
+      if k then S.floor_h = k end
     end end
   end
 
@@ -599,6 +620,8 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
         else
           D.layout_char = S.layout_char
         end
+
+        D.floor_h = S.floor_h
       end
     end
 
@@ -623,6 +646,8 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
         else
           D.layout_char = S.layout_char
         end
+
+        D.floor_h = S.floor_h
       end
     end
 
@@ -963,7 +988,6 @@ gui.debugf("Emergency connect\n");
 
   write_layout(best_layout)
 
-  gui.debugf("FINAL LAYOUT:\n")
   dump_layout(R);
 
 
@@ -1002,6 +1026,7 @@ gui.debugf("Emergency connect\n");
   end
 
 
+  gui.debugf("FINAL LAYOUT:\n")
   dump_layout(R);
 end
 
