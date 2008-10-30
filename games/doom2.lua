@@ -1677,11 +1677,15 @@ D2_EPISODE_INFO =
   { start=21, len=10 },
 }
 
-function doom2_get_levels(episode)
 
-  assert(GAME.sky_info)
+function Doom2_get_levels()
 
   local level_list = {}
+
+  -- FIXME: iterate over episodes !!!!
+  episode = 1
+
+  assert(GAME.sky_info)
 
   local theme_probs = D2_EPISODE_THEMES[episode]
   if OB_CONFIG.length ~= "full" then
@@ -1760,40 +1764,36 @@ OB_THEMES["d2_hell"] =
 
 ------------------------------------------------------------
 
-function doom2_factory()
+function Doom2_setup(game)
 
-  local T = doom_common_factory()
+  Doom_common_setup()
 
-  T.episodes   = 3
-  T.level_func = doom2_get_levels
+---  T.episodes   = 3
 
-  T.quests   = D2_QUESTS
-  T.sky_info = D2_SKY_INFO
+  GAME.quests   = D2_QUESTS
+  GAME.sky_info = D2_SKY_INFO
+  GAME.rails    = D2_RAILS
 
-  T.themes   = copy_and_merge(T.themes,   D2_THEMES)
-  T.rooms    = copy_and_merge(T.rooms,    D2_ROOMS)
-  T.monsters = copy_and_merge(T.monsters, D2_MONSTERS)
+  Game_merge_tab("themes",   D2_THEMES)
+  Game_merge_tab("rooms",    D2_ROOMS)
+  Game_merge_tab("monsters", D2_MONSTERS)
 
-  T.combos   = copy_and_merge(T.combos,   D2_COMBOS)
-  T.hallways = copy_and_merge(T.hallways, D2_HALLWAYS)
-  T.exits    = copy_and_merge(T.exits,    D2_EXITS)
+  Game_merge_tab("combos",   D2_COMBOS)
+  Game_merge_tab("hallways", D2_HALLWAYS)
+  Game_merge_tab("exits",    D2_EXITS)
 
-  T.rails = D2_RAILS
+  Game_merge_tab("hangs",    D2_OVERHANGS)
+  Game_merge_tab("crates",   D2_CRATES)
+  Game_merge_tab("mats",     D2_MATS)
+  Game_merge_tab("doors",    D2_DOORS)
+  Game_merge_tab("lights",   D2_LIGHTS)
+  Game_merge_tab("liquids",  D2_LIQUIDS)
 
-  T.hangs   = copy_and_merge(T.hangs,   D2_OVERHANGS)
-  T.crates  = copy_and_merge(T.crates,  D2_CRATES)
-  T.mats    = copy_and_merge(T.mats,    D2_MATS)
-  T.doors   = copy_and_merge(T.doors,   D2_DOORS)
-  T.lights  = copy_and_merge(T.lights,  D2_LIGHTS)
-  T.liquids = copy_and_merge(T.liquids, D2_LIQUIDS)
-
-  T.sc_fabs   = copy_and_merge(T.sc_fabs,   D2_SCENERY_PREFABS)
-  T.feat_fabs = copy_and_merge(T.feat_fabs, D2_FEATURE_PREFABS)
-  T.wall_fabs = copy_and_merge(T.wall_fabs, D2_WALL_PREFABS)
-  T.door_fabs = copy_and_merge(T.door_fabs, D2_DOOR_PREFABS)
-  T.misc_fabs = copy_and_merge(T.misc_fabs, D2_MISC_PREFABS)
-
-  return T
+  Game_merge_tab("sc_fabs",   D2_SCENERY_PREFABS)
+  Game_merge_tab("feat_fabs", D2_FEATURE_PREFABS)
+  Game_merge_tab("wall_fabs", D2_WALL_PREFABS)
+  Game_merge_tab("door_fabs", D2_DOOR_PREFABS)
+  Game_merge_tab("misc_fabs", D2_MISC_PREFABS)
 end
 
 
@@ -1820,11 +1820,18 @@ OB_GAMES["doom2"] =
   {
     seed_size = 256,
 
+    sky_tex    = "-",
+    sky_flat   = "F_SKY1",
+
+    error_tex  = "FIREBLU1",
+    error_flat = "SFLR6_4",
+
     palette_mons = 5,
   },
 
   hooks =
   {
+    get_levels = Doom2_get_levels,
   },
 }
 

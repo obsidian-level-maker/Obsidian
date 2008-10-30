@@ -3151,9 +3151,11 @@ D1_SKY_INFO =
   { color="orange", light=192 },
 }
 
-function doom1_get_levels(episode)
-
+function Doom1_get_levels()
   local level_list = {}
+
+  -- FIXME: iterate over episodes!!!!
+  episode = 1
 
   local theme_probs = D1_EPISODE_THEMES[episode]
   if OB_CONFIG.length ~= "full" then
@@ -3221,118 +3223,99 @@ OB_THEMES["d1_hell"] =
 
 ------------------------------------------------------------
 
-function doom_common_factory()
+function Doom_common_setup()
 
-  return
-  {
-    doom_format = true,
+  GAME.classes = { "doomguy" },
 
-    plan_size = 10,
-    cell_size = 9,
-    cell_min_size = 6,
+  Game_merge_tab("monsters", DM_MONSTERS)
+  Game_merge_tab("bosses",   DM_BOSSES)
+  Game_merge_tab("weapons",  DM_WEAPONS)
 
-    SKY_TEX    = "F_SKY1",
-    ERROR_TEX  = "FIREBLU1",
-    ERROR_FLAT = "SFLR6_4",
+  Game_merge_tab("things", DM_THINGS)
 
-    classes  = { "doomguy" },
+  Game_merge_tab("mon_give", DM_MONSTER_GIVE)
+  Game_merge_tab("mon_weap_prefs", DM_MONSTER_WEAPON_PREFS)
+  Game_merge_tab("initial_model", DM_INITIAL_MODEL)
 
-    monsters = DM_MONSTERS,
-    bosses   = DM_BOSSES,
-    weapons  = DM_WEAPONS,
+  Game_merge_tab("pickups", DM_PICKUPS)
+  Game_merge_tab("niceness", DM_NICENESS)
 
-    things = DM_THINGS,
+  GAME.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" },
 
-    mon_give       = DM_MONSTER_GIVE,
-    mon_weap_prefs = DM_MONSTER_WEAPON_PREFS,
-    initial_model  = DM_INITIAL_MODEL,
+  Game_merge_tab("dm", DM_DEATHMATCH)
+  Game_merge_tab("dm_exits", DM_DEATHMATCH_EXITS)
 
-    pickups = DM_PICKUPS,
-    pickup_stats = { "health", "bullet", "shell", "rocket", "cell" },
-    niceness = DM_NICENESS,
+  Game_merge_tab("combos", DM_COMBOS)
+  Game_merge_tab("exits", DM_EXITS)
+  Game_merge_tab("hallways", DM_HALLWAYS)
 
-    dm = DM_DEATHMATCH,
-    dm_exits = DM_DEATHMATCH_EXITS,
+  Game_merge_tab("hangs", DM_OVERHANGS)
+  Game_merge_tab("pedestals", DM_PEDESTALS)
+  Game_merge_tab("mats", DM_MATS)
+  Game_merge_tab("crates", DM_CRATES)
 
-    combos    = DM_COMBOS,
-    exits     = DM_EXITS,
-    hallways  = DM_HALLWAYS,
+  Game_merge_tab("liquids", DM_LIQUIDS)
+  Game_merge_tab("switches", DM_SWITCHES)
+  Game_merge_tab("doors", DM_DOORS)
+  Game_merge_tab("key_doors", DM_KEY_DOORS)
+  Game_merge_tab("lifts", DM_LIFTS)
 
-    hangs     = DM_OVERHANGS,
-    pedestals = DM_PEDESTALS,
-    mats      = DM_MATS,
-    crates    = DM_CRATES,
+  Game_merge_tab("images", DM_IMAGES)
+  Game_merge_tab("lights", DM_LIGHTS)
+  Game_merge_tab("rooms",  DM_ROOMS)
+  Game_merge_tab("themes", DM_THEMES)
 
-    liquids   = DM_LIQUIDS,
-    switches  = DM_SWITCHES,
-    doors     = DM_DOORS,
-    key_doors = DM_KEY_DOORS,
-    lifts     = DM_LIFTS,
+  Game_merge_tab("sc_fabs",   DM_SCENERY_PREFABS)
+  Game_merge_tab("feat_fabs", DM_FEATURE_PREFABS)
+  Game_merge_tab("wall_fabs", DM_WALL_PREFABS)
 
-    images    = DM_IMAGES,
-    lights    = DM_LIGHTS,
+  Game_merge_tab("door_fabs", DM_DOOR_PREFABS)
+  Game_merge_tab("arch_fabs", DM_ARCH_PREFABS)
+  Game_merge_tab("win_fabs",  DM_WINDOW_PREFABS)
+  Game_merge_tab("misc_fabs", DM_MISC_PREFABS)
 
-    rooms     = DM_ROOMS,
-    themes    = DM_THEMES,
+  GAME.toughness_factor = 1.00  -- FIXME PARAMS
 
-    sc_fabs   = DM_SCENERY_PREFABS,
-    feat_fabs = DM_FEATURE_PREFABS,
-    wall_fabs = DM_WALL_PREFABS,
+  GAME.depot_info = { teleport_kind=97 }
 
-    door_fabs = DM_DOOR_PREFABS,
-    arch_fabs = DM_ARCH_PREFABS,
-    win_fabs  = DM_WINDOW_PREFABS,
-    misc_fabs = DM_MISC_PREFABS,
+  GAME.room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 }
+  GAME.space_range  = { 20, 90 }
 
-    toughness_factor = 1.00,
-    
-    depot_info = { teleport_kind=97 },
+  GAME.diff_probs = { [0]=20, [16]=20, [32]=80, [64]=60, [96]=20 }
+  GAME.bump_probs = { [0]=40, [16]=20, [32]=20, [64]=10 }
 
-    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
-    space_range  = { 20, 90 },
+  GAME.door_probs   = { out_diff=75, combo_diff=50, normal=15 }
+  GAME.window_probs = { out_diff=75, combo_diff=60, normal=35 }
 
-    diff_probs = { [0]=20, [16]=20, [32]=80, [64]=60, [96]=20 },
-    bump_probs = { [0]=40, [16]=20, [32]=20, [64]=10 },
-
-    door_probs   = { out_diff=75, combo_diff=50, normal=15 },
-    window_probs = { out_diff=75, combo_diff=60, normal=35 },
-
-    hallway_probs = { 20, 30, 41, 53, 66 },
-    shack_prob    = 25,
-  }
+  GAME.hallway_probs = { 20, 30, 41, 53, 66 }
+  GAME.shack_prob    = 25
 end
 
 
-function doom1_factory()
+function Doom1_setup()
 
-  local T = doom_common_factory()
+  Doom_common_setup()
 
-  T.episodes   = 4
-  T.level_func = doom1_get_levels
+---  T.episodes   = 4
 
-  T.quests   = D1_QUESTS
+  GAME.quests = D1_QUESTS
 
-  T.rooms    = copy_and_merge(T.rooms,    D1_ROOMS)
-  T.combos   = copy_and_merge(T.combos,   D1_COMBOS)
-  T.exits    = copy_and_merge(T.exits,    D1_EXITS)
-  T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
-  T.crates   = copy_and_merge(T.crates,   D1_CRATES)
+  Game_merge_tab("rooms",     D1_ROOMS)
+  Game_merge_tab("combos",    D1_COMBOS)
+  Game_merge_tab("exits",     D1_EXITS)
+  Game_merge_tab("hallways",  D1_HALLWAYS)
+  Game_merge_tab("crates",    D1_CRATES)
 
-  T.sc_fabs   = copy_and_merge(T.sc_fabs,   D1_SCENERY_PREFABS)
-  T.wall_fabs = copy_and_merge(T.wall_fabs, D1_WALL_PREFABS)
+  Game_merge_tab("sc_fabs",   D1_SCENERY_PREFABS)
+  Game_merge_tab("wall_fabs", D1_WALL_PREFABS)
 
-  T.rails = D1_RAILS
+  GAME.rails = D1_RAILS
 
   -- remove DOOM2-only weapons and items --
 
-  T.weapons = copy_table(T.weapons)
-  T.weapons["super"] = nil
+  GAME.weapons["super"] = nil 
 
-  T.dm = copy_table(T.dm)
-  T.dm.weapons = copy_table(T.dm.weapons)
-  T.dm.weapons["super"] = nil
-
-  return T
+  GAME.dm.weapons["super"] = nil
 end
 
 
@@ -3359,11 +3342,18 @@ OB_GAMES["doom1"] =
   {
     seed_size = 256,
 
+    sky_tex    = "-",
+    sky_flat   = "F_SKY1",
+
+    error_tex  = "FIREBLU1",
+    error_flat = "SFLR6_4",
+
     palette_mons = 3,
   },
 
   hooks =
   {
+    get_levels = Doom1_get_levels,
   },
 }
 
