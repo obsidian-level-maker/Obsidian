@@ -43,6 +43,10 @@ require 'builder'
 
 
 function Game_merge_tab(name, t)
+  if not t then
+    error("Missing table for Game_merge_tab: " .. tostring(name))
+  end
+
   if not GAME[name] then
     GAME[name] = {}
   end

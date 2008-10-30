@@ -694,117 +694,104 @@ function wolfy_decide_quests(level_list, is_spear)
   end
 end
 
-function wolf3d_get_levels(episode)
+function Wolf3d_get_levels()
+  local list = {}
 
-  local level_list = {}
+  local EP_NUM  = sel(OB_CONFIG.length == "full", 6, 1)
+  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 10)
 
-  local theme_probs = WF_EPISODE_THEMES[episode]
+  for episode = 1,EP_NUM do
 
-  local boss_kind = WF_EPISODE_BOSSES[episode]
-  if SETTINGS.length ~= "full" then
-    boss_kind = WF_EPISODE_BOSSES[rand_irange(1,6)]
-  end
+    local theme_probs = WF_EPISODE_THEMES[episode]
 
-  local secret_kind = "pacman"
-
-  for map = 1,10 do
-    local Level =
-    {
-      name = string.format("E%dL%d", episode, map),
-
-      episode   = episode,
-      ep_along  = map,
-      ep_length = 10,
-
-      theme_probs = theme_probs,
-      sky_info = { color="blue", light=192 }, -- dummy
-
-      boss_kind   = (map == 9)  and boss_kind,
-      secret_kind = (map == 10) and secret_kind,
-
-      quests = {},
-
-      toughness_factor = sel(map==10, 1.1, 1 + (map-1) / 5),
-    }
-
-    if WF_SECRET_EXITS[Level.name] then
-      Level.secret_exit = true
+    local boss_kind = WF_EPISODE_BOSSES[episode]
+    if OB_CONFIG.length ~= "full" then
+      boss_kind = WF_EPISODE_BOSSES[rand_irange(1,6)]
     end
 
-    table.insert(level_list, Level)
-  end
+    local secret_kind = "pacman"
 
+    for map = 1,MAP_NUM do
+      local Level =
+      {
+        name = string.format("E%dL%d", episode, map),
 
-  local function dump_levels()
-    for idx,L in ipairs(level_list) do
-      gui.printf("Wolf3d episode [%d] map [%d] : %s\n", episode, idx, L.name)
-      show_quests(L.quests)
-    end
-  end
+        ep_along = ((map - 1) % 10) / 9,
 
-  wolfy_decide_quests(level_list)
+        theme_probs = theme_probs,
+        sky_info = { color="blue", light=192 }, -- dummy
+
+        boss_kind   = (map == 9)  and boss_kind,
+        secret_kind = (map == 10) and secret_kind,
+
+        quests = {},
+
+        toughness_factor = sel(map==10, 1.1, 1 + (map-1) / 5),
+      }
+
+      if WF_SECRET_EXITS[Level.name] then
+        Level.secret_exit = true
+      end
+
+      table.insert(list, Level)
+    end -- for map
+
+  end -- for episode
+
+--  local function dump_levels()
+--    for idx,L in ipairs(list) do
+--      gui.printf("Wolf3d episode [%d] map [%d] : %s\n", episode, idx, L.name)
+--      show_quests(L.quests)
+--    end
+--  end
+
+-- FIXME  wolfy_decide_quests(list)
 
 --  dump_levels()
 
-  return level_list
+  return list
 end
 
 
 ----------------------------------------------------------------
 
-function wolf3d_factory()
+function Wolf3d_setup()
 
-  return
-  {
-    wolf_format = true,
+  GAME.classes  = { "bj" }
+  GAME.dm = {}
 
-    plan_size = 7,
-    cell_size = 7,
-    cell_min_size = 3,
+  GAME.pickup_stats = { "health", "bullet" }
+  GAME.hallways  = nil
 
-    ERROR_TEX  = WF_NO_TILE,
-    ERROR_FLAT = 99, -- dummy
-    SKY_TEX    = 77, -- dummy
+  Game_merge_tab("things",   WF_THINGS)
+  Game_merge_tab("monsters", WF_MONSTERS)
+  Game_merge_tab("bosses",   WF_BOSSES)
+  Game_merge_tab("mon_give", WF_MONSTER_GIVE)
 
-    episodes = 6,
-    level_func = wolf3d_get_levels,
+  Game_merge_tab("weapons",  WF_WEAPONS)
+  Game_merge_tab("pickups", WF_PICKUPS)
 
-    classes  = { "bj" },
+  Game_merge_tab("initial_model", WF_INITIAL_MODEL)
 
-    things     = WF_THINGS,
-    monsters   = WF_MONSTERS,
-    bosses     = WF_BOSSES,
-    mon_give   = WF_MONSTER_GIVE,
-    weapons    = WF_WEAPONS,
+  Game_merge_tab("quests", WF_QUESTS)
 
-    pickups = WF_PICKUPS,
-    pickup_stats = { "health", "bullet" },
+  Game_merge_tab("combos", WF_COMBOS)
+  Game_merge_tab("exits",  WF_EXITS)
 
-    initial_model = WF_INITIAL_MODEL,
+--??  Game_merge_tab("doors", WF_DOORS)
+  Game_merge_tab("key_doors", WF_KEY_DOORS)
 
-    quests  = WF_QUESTS,
+  Game_merge_tab("rooms",  WF_ROOMS)
+  Game_merge_tab("themes", WF_THEMES)
 
-    dm = {},
+  Game_merge_tab("misc_fabs", WF_MISC_PREFABS)
 
-    combos    = WF_COMBOS,
-    exits     = WF_EXITS,
-    hallways  = nil,
+  GAME.toughness_factor = 0.40
 
-    doors     = WF_DOORS,
-    key_doors = WF_KEY_DOORS,
-
-    rooms     = WF_ROOMS,
-    themes    = WF_THEMES,
-
-    misc_fabs = WF_MISC_PREFABS,
-
-    toughness_factor = 0.40,
-
-    room_heights = { [128]=50 },
-    space_range  = { 50, 90 },
-    door_probs = { combo_diff=90, normal=20, out_diff=1 },
-    window_probs = { out_diff=0, combo_diff=0, normal=0 },
-  }
+  GAME.room_heights = { [128]=50 }
+  GAME.space_range  = { 50, 90 }
+  GAME.door_probs = { combo_diff=90, normal=20, out_diff=1 }
+  GAME.window_probs = { out_diff=0, combo_diff=0, normal=0 }
 end
 
 
@@ -838,6 +825,7 @@ UNFINISHED["wolf3d"] =
 
   hooks =
   {
+    get_levels = Wolf3d_get_levels,
   },
 }
 

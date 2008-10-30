@@ -3154,7 +3154,7 @@ D1_SKY_INFO =
 function Doom1_get_levels()
   local list = {}
 
-  local EP_NUM  = sel(OB_CONFIG.length == "full", 3, 1)
+  local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
 
   for episode = 1,EP_NUM do
@@ -3169,7 +3169,7 @@ function Doom1_get_levels()
       {
         name = string.format("E%dM%d", episode, map),
 
-        ep_along = (map - 1) / MAP_NUM,
+        ep_along = (map - 1) / 8,
 
         theme_probs = theme_probs,
         sky_info = D1_SKY_INFO[episode],
@@ -3182,6 +3182,7 @@ function Doom1_get_levels()
 
       if D1_SECRET_EXITS[Level.name] then
         Level.secret_exit = true
+        Level.ep_along = 0.5
       end
 
       table.insert(list, Level)

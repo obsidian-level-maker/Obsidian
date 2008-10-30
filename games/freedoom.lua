@@ -20,25 +20,31 @@ FD_MONSTER_LIST =
 {
   ---| fairly good |---
 
-  "zombie", "shooter", "imp",
-  "demon",  "spectre", "caco", 
-  "arach", "revenant", "mancubus",
+  zombie  = 2,
+  shooter = 2,
+  imp     = 2,
+  demon   = 2,
+  spectre = 2,
+  caco    = 2,
+  arach   = 2,
+
+  revenant = 2,
+  mancubus = 2,
 
   ---| crappy but playable |---
 
-  "skull",  -- missing death frames
-  "baron",  -- not yet coloured
-  "gunner",
-  "ss_dude", 
+  skull   = 1,  -- missing death frames
+  baron   = 1,  -- not yet coloured
+  gunner  = 1,
+  ss_dude = 1,
 
   ---| missing sprites |---
   
-  -- "knight",  
-  -- "pain",    
-
-  -- "cyber",   
-  -- "spider",  
-  -- "vile",
+  knight = 0,
+  pain   = 0,
+  vile   = 0,
+  cyber  = 0,
+  spider = 0,
 }
 
 FD_LIQUIDS =
@@ -56,35 +62,33 @@ FD_SKY_INFO =
 
 ----------------------------------------------------------------
 
-function freedoom_factory()
+function Freedoom_setup()
 
-  local T = doom2_factory()
+  Doom2_setup()
 
   -- the FreeDOOM IWAD contains both Doom 1 and Doom 2 textures
 
----!!!  T.combos   = copy_and_merge(T.combos,   D1_COMBOS)
----!!!  T.exits    = copy_and_merge(T.exits,    D1_EXITS)
----!!!  T.hallways = copy_and_merge(T.hallways, D1_HALLWAYS)
+---!!! Game_merge_tab(GAME.combos,   D1_COMBOS)
+---!!! Game_merge_tab(GAME.exits,    D1_EXITS)
+---!!! Game_merge_tab(GAME.hallways, D1_HALLWAYS)
 ---!!!
----!!!  T.rails = copy_and_merge(T.rails, D1_RAILS)
+---!!! Game_merge_tab(GAME.rails,   D1_RAILS)
 ---!!!
----!!!  T.hangs   = copy_and_merge(T.hangs,   D1_OVERHANGS)
----!!!  T.mats    = copy_and_merge(T.mats,    D1_MATS)
----!!!  T.crates  = copy_and_merge(T.crates,  D1_CRATES)
+---!!! Game_merge_tab(GAME.hangs,   D1_OVERHANGS)
+---!!! Game_merge_tab(GAME.mats,    D1_MATS)
+---!!! Game_merge_tab(GAME.crates,  D1_CRATES)
 ---!!!
----!!!  T.liquids = copy_and_merge(T.liquids, D1_LIQUIDS, FD_LIQUIDS)
+---!!! Game_merge_tab(GAME.liquids, D1_LIQUIDS, FD_LIQUIDS)
 
-  T.sky_info = FD_SKY_INFO
+  GAME.sky_info = FD_SKY_INFO
 
   -- FreeDOOM is lacking many monster sprites
 
-  T.monsters = {}
-  
-  for zzz,mon in ipairs(FD_MONSTER_LIST) do
-    T.monsters[mon] = DM_MONSTERS[mon] or D2_MONSTERS[mon]
+  for name,quality in pairs(FD_MONSTER_LIST) do
+    if quality < 1 then
+      GAME.monsters[name] = nil
+    end
   end
-
-  return T
 end
 
 
@@ -113,6 +117,7 @@ OB_GAMES["freedoom"] =
 
   hooks =
   {
+    get_levels = Doom2_get_levels,
   },
 }
 
