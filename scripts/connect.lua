@@ -20,7 +20,17 @@
 
 class CONN
 {
-  FIXME
+  src    : source ROOM
+  dest   : destination ROOM
+
+  src_S  : source SEED
+  dest_S : destination SEED
+
+  dir    : direction 2/4/6/8 (from src_S to dest_S)
+
+  conn_h : floor height for connection
+
+  lock   : LOCK
 }
 
 --------------------------------------------------------------]]
