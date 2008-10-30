@@ -814,23 +814,30 @@ UNFINISHED["wolf3d"] =
 
   format = "wolf3d",
 
-  game_func = wolf3d_factory,
+  setup_func = Wolf3d_setup,
 
-  caps = { no_height = true,
-           no_sky = true,
-           one_lock_tex = true,
-           elevator_exit = true,
-           blocky_items = true,
-           blocky_doors = true,
-           tiered_skills = true,
-           four_dirs = true,
-           sealed_start = true,
-         },
+  caps =
+  {
+     no_height = true,
+     no_sky = true,
+     one_lock_tex = true,
+     elevator_exit = true,
+     blocky_items = true,
+     blocky_doors = true,
+     tiered_skills = true,
+     four_dirs = true,
+     sealed_start = true,
+  },
 
-  -- parameters --
+  params =
+  {
+    seed_size = 192,  -- actually 3 blocks
 
-  palette_mons = 2,
+    palette_mons = 2,
+  },
 
-  -- tables --
+  hooks =
+  {
+  },
 }
 

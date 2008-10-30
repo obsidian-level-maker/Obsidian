@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- GAME DEF : Quake 1
+-- GAME DEF : Quake I
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -544,17 +544,22 @@ UNFINISHED["quake1"] =
 
   format = "quake1",
 
-  game_func = quake1_factory,
+  setup_func = Quake1_setup,
 
   caps =
   {
     -- TODO
   },
 
-  -- parameters --
+  params =
+  {
+    seed_size = 240,
 
-  palette_mons = 4,
+    palette_mons = 4,
+  },
 
-  -- tables --
+  hooks =
+  {
+  },
 }
 

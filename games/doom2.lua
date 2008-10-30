@@ -1803,9 +1803,9 @@ OB_GAMES["doom2"] =
 
   format = "doom",
 
---  priority = 99,
+  priority = 99, -- keep at top
 
-  game_func = doom2_factory,
+  setup_func = Doom2_setup,
 
   caps =
   {
@@ -1816,10 +1816,15 @@ OB_GAMES["doom2"] =
     infighting = true,
   },
 
-  -- parameters --
+  params =
+  {
+    seed_size = 256,
 
-  palette_mons = 5,
+    palette_mons = 5,
+  },
 
-  -- tables --
+  hooks =
+  {
+  },
 }
 

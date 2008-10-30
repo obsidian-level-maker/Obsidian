@@ -568,11 +568,22 @@ UNFINISHED["quake2"] =
 
   format = "quake2",
 
-  game_func = quake2_factory,
+  setup_func = Quake2_setup,
 
   caps =
   {
     -- TODO
+  },
+
+  params =
+  {
+    seed_size = 240,
+
+    palette_mons = 4,
+  },
+
+  hooks =
+  {
   },
 }
 

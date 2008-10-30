@@ -2129,21 +2129,32 @@ UNFINISHED["hexen"] =
 
   format = "doom",
 
-  game_func = hexen_factory,
+  setup_func = Hexen1_setup,
 
   caps =
   {
-    rails=true,
-    switches=true,
-    liquids=true,
-    teleporters=true,
-    infighting = true,
-    prefer_stairs=true,
+    rails = true,
+    switches = true,
+    liquids = true,
+    teleporters = true,
+    infighting  =  true,
+    prefer_stairs = true,
      
-    hubs=true,
-    polyobjs=true,
-    three_part_weapons=true,
-    ACS_script=true,
+    hubs = true,
+    polyobjs = true,
+    three_part_weapons = true,
+    ACS_script = true,
+  },
+
+  params =
+  {
+    seed_size = 256,
+
+    palette_mons = 3,
+  },
+
+  hooks =
+  {
   },
 }
 

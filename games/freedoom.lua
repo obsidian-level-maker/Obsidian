@@ -90,11 +90,11 @@ end
 
 OB_GAMES["freedoom"] =
 {
-  label = "FreeDoom 0.5",
+  label = "FreeDoom 0.6",
 
   format = "doom",
 
-  game_func = freedoom_factory,
+  setup_func = Freedoom_setup,
 
   caps =
   {
@@ -102,6 +102,17 @@ OB_GAMES["freedoom"] =
     switches = true,
     liquids = true,
     teleporters = true,
+  },
+
+  params =
+  {
+    seed_size = 256,
+
+    palette_mons = 4,
+  },
+
+  hooks =
+  {
   },
 }
 

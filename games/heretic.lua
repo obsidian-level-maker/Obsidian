@@ -1639,22 +1639,27 @@ UNFINISHED["heretic"] =
 
   format = "doom",
 
-  game_func = heretic_factory,
+  setup_func = Heretic1_setup,
 
   caps =
   {
-    rails=true,
-    switches=true,
-    liquids=true,
-    teleporters=true,
-    infighting = true,
-    prefer_stairs=true,
+    rails = true,
+    switches = true,
+    liquids = true,
+    teleporters = true,
+    infighting  =  true,
+    prefer_stairs = true,
   },
 
-  -- parameters --
+  params =
+  {
+    seed_size = 256,
 
-  palette_mons = 3,
+    palette_mons = 3,
+  },
 
-  -- tables --
+  hooks =
+  {
+  },
 }
 

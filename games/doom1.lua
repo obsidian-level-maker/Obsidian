@@ -3342,7 +3342,9 @@ OB_GAMES["doom1"] =
 
   format = "doom",
 
-  game_func = doom1_factory,
+  priority = 98, -- keep at second spot
+
+  setup_func = Doom1_setup,
 
   caps =
   {
@@ -3353,10 +3355,15 @@ OB_GAMES["doom1"] =
     infighting = true,
   },
 
-  -- parameters --
+  params =
+  {
+    seed_size = 256,
 
-  palette_mons = 3,
+    palette_mons = 3,
+  },
 
-  -- tables --
+  hooks =
+  {
+  },
 }
 
