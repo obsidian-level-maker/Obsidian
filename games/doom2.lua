@@ -1670,48 +1670,43 @@ D2_SKY_INFO =
   { color="red",    light=192 },
 }
 
-D2_EPISODE_INFO =
-{
-  { start=1,  len=11 },
-  { start=12, len=11 },  -- last two are MAP31, MAP32
-  { start=21, len=10 },
-}
-
 
 function Doom2_get_levels()
+  local list = {}
 
-  local level_list = {}
+  local MAP_NUM = 11
 
-  -- FIXME: iterate over episodes !!!!
-  episode = 1
+  if OB_CONFIG.length == "single" then MAP_NUM = 1  end
+  if OB_CONFIG.length == "full"   then MAP_NUM = 32 end
 
   assert(GAME.sky_info)
 
-  local theme_probs = D2_EPISODE_THEMES[episode]
-  if OB_CONFIG.length ~= "full" then
-    theme_probs = D2_EPISODE_THEMES[4]
-  end
-  assert(theme_probs)
+  for map = 1,MAP_NUM do
+    local episode = 1
 
-  local ep_start  = D2_EPISODE_INFO[episode].start
-  local ep_length = D2_EPISODE_INFO[episode].len
+    if map >= 12 then episode = 2 end
+    if map >= 21 then episode = 3 end
+    if map >= 31 then episode = 2 end
 
-  for map = 1,ep_length do
+    local theme_probs = D2_EPISODE_THEMES[episode]
+    if OB_CONFIG.length ~= "full" then
+      theme_probs = D2_EPISODE_THEMES[4]
+    end
+    assert(theme_probs)
+
     local Level =
     {
-      name = string.format("MAP%02d", ep_start + map-1),
+      name = string.format("MAP%02d", map),
 
-      episode   = episode,
-      ep_along  = map,
-      ep_length = ep_length,
+      ep_along = ((map - 1) % 10) / 9.0,
 
       theme_probs = theme_probs,
 
       -- allow TNT and Plutonia to override the sky stuff
       sky_info = GAME.sky_info[episode],
-
-      toughness_factor = 1 + 1.5 * (map-1) / (ep_length-1),
     }
+
+    Level.toughness_factor = 1 + 1.5 * Level.ep_along
 
     -- fixup for secret levels
     if episode == 2 and map >= 10 then
@@ -1725,12 +1720,10 @@ function Doom2_get_levels()
     Level.secret_kind = D2_SECRET_KINDS[Level.name]
     Level.secret_exit = D2_SECRET_EXITS[Level.name]
 
-    std_decide_quests(Level, D2_QUESTS, DM_QUEST_LEN_PROBS)
-
-    table.insert(level_list, Level)
+    table.insert(list, Level)
   end
 
-  return level_list
+  return list
 end
 
 

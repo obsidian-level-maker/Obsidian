@@ -172,7 +172,7 @@ function Level_MakeAll()
   local levels = HOOKS.get_levels()
   assert(#levels > 0)
 
-  for index,L in ipairs(level_list) do
+  for index,L in ipairs(levels) do
     if Level_Make(L, index, #levels) == "abort" then
       return "abort"
     end

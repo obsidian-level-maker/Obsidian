@@ -3152,44 +3152,44 @@ D1_SKY_INFO =
 }
 
 function Doom1_get_levels()
-  local level_list = {}
+  local list = {}
 
-  -- FIXME: iterate over episodes!!!!
-  episode = 1
+  local EP_NUM  = sel(OB_CONFIG.length == "full", 3, 1)
+  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
 
-  local theme_probs = D1_EPISODE_THEMES[episode]
-  if OB_CONFIG.length ~= "full" then
-    theme_probs = D1_EPISODE_THEMES[5]
-  end
+  for episode = 1,EP_NUM do
 
-  for map = 1,9 do
-    local Level =
-    {
-      name = string.format("E%dM%d", episode, map),
-
-      episode   = episode,
-      ep_along  = map,
-      ep_length = 9,
-
-      theme_probs = theme_probs,
-      sky_info = D1_SKY_INFO[episode],
-
-      boss_kind   = (map == 8) and D1_EPISODE_BOSSES[episode],
-      secret_kind = (map == 9) and "plain",
-
-      toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 5),
-    }
-
-    if D1_SECRET_EXITS[Level.name] then
-      Level.secret_exit = true
+    local theme_probs = D1_EPISODE_THEMES[episode]
+    if OB_CONFIG.length ~= "full" then
+      theme_probs = D1_EPISODE_THEMES[5]
     end
 
-    std_decide_quests(Level, D1_QUESTS, DM_QUEST_LEN_PROBS)
+    for map = 1,MAP_NUM do
+      local Level =
+      {
+        name = string.format("E%dM%d", episode, map),
 
-    table.insert(level_list, Level)
-  end
+        ep_along = (map - 1) / MAP_NUM,
 
-  return level_list
+        theme_probs = theme_probs,
+        sky_info = D1_SKY_INFO[episode],
+
+        boss_kind   = (map == 8) and D1_EPISODE_BOSSES[episode],
+        secret_kind = (map == 9) and "plain",
+
+        toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 5),
+      }
+
+      if D1_SECRET_EXITS[Level.name] then
+        Level.secret_exit = true
+      end
+
+      table.insert(list, Level)
+    end -- for map
+
+  end -- for episode
+
+  return list
 end
 
 
@@ -3305,8 +3305,6 @@ function Doom1_setup()
   Game_merge_tab("exits",     D1_EXITS)
   Game_merge_tab("hallways",  D1_HALLWAYS)
   Game_merge_tab("crates",    D1_CRATES)
-
-  Game_merge_tab("sc_fabs",   D1_SCENERY_PREFABS)
   Game_merge_tab("wall_fabs", D1_WALL_PREFABS)
 
   GAME.rails = D1_RAILS

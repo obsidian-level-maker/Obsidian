@@ -1056,7 +1056,7 @@ function Plan_determine_size()
 
   else
     if ob_size == "prog" then
-      LAND_W = int(5.5 + LEVEL.epi_along * 6)
+      LAND_W = int(5.5 + LEVEL.ep_along * 6)
     else
       local LAND_SIZES = { small=5, normal=7, large=10, xlarge=13 }
 
@@ -1089,7 +1089,7 @@ function Plan_rooms_sp()
 
   gui.printf("\n--==| Plan_rooms_sp |==--\n\n")
 
-  assert(LEVEL.epi_along)
+  assert(LEVEL.ep_along)
 
   -- create the global 'PLAN' object
   PLAN =
