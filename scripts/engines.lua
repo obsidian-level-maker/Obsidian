@@ -30,18 +30,6 @@ OB_ENGINES["nolimit"] =
 
 --*** Wolf3d ***--
 
-OB_ENGINES["wolf4sdl"] =
-{
-  label = "Wolf4SDL",
-
-  for_games = { wolf3d=1 },
-
-  caps =
-  {
-    -- TODO
-  },
-}
-
 
 --*** DOOM, Heretic and HeXeN ***--
 
