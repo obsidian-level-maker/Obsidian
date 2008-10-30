@@ -42,6 +42,15 @@ require 'builder'
 -- require 'monsters'
 
 
+function Game_merge_tab(name, t)
+  if not GAME[name] then
+    GAME[name] = {}
+  end
+
+  deep_merge(GAME[name], t)
+end
+
+
 function Level_CleanUp()
   GAME   = {}
   CAPS   = {}

@@ -196,7 +196,7 @@ function deep_merge(dest, src, _curdepth)
 
   for k,v in pairs(src) do
     if type(v) == "table" then
-      if type(dest[k]) ~= "table" then
+      if type(dest[k]) ~= "table" then  -- handles nil too
         dest[k] = {}
       end
       if _curdepth > 10 then
