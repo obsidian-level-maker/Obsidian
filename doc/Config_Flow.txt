@@ -30,7 +30,7 @@ The Lua code is responsible for these inter-dependencies.
 Modules and Module Options are always controlled by Lua.
 Each module is created by Lua code (add_button), and can
 be enabled or disabled with change_button().  Module options
-are created with ob_set_mod_option() function, the choices
+are created with add_mod_option() function, and the choices
 available are also setup by Lua, but there is no mechanism
 to change the current value shown by the widget.
 
@@ -39,7 +39,7 @@ When the user selects a different 'length', for example,
 the new value is simply propagated to the Lua script and
 stored in OB_CONFIG[].  The same is true for Module Options,
 new values are simply passed to Lua (via ob_set_mod_option)
-and stored in the option table.
+and stored in the option table within the module def.
 
 The CONFIG.CFG file, as well as the config stored in DOOM
 WADs and Quake PAKs, is created by Lua code and passed to
