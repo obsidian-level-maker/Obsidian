@@ -20,6 +20,9 @@
 
 class LEVEL
 {
+  name : string  -- engine name for this level, e.g. MAP01
+
+  epi_along : float  -- how far along the episode, 0.0 -> 1.0
 }
 
 
@@ -37,68 +40,6 @@ require 'layout'
 require 'builder'
 
 -- require 'monsters'
-
-
-
---- !!! OLD CRUD:
-function create_GAME()
-
-  local factory = GAME_FACTORIES[OB_CONFIG.game]
-
-  if not factory then
-    error("UNKNOWN GAME: " .. tostring(OB_CONFIG.game))
-  end
-
-  GAME = factory()
-
-  name_up_theme()
-  expand_prefabs(PREFABS)
-  compute_pow_factors()
-end
-
---- !!! OLD CRUD:
-function create_LEVEL(level, index, total)
-
-  gui.at_level(level, index, total)
-
-  gui.rand_seed(OB_CONFIG.seed * 100 + index)
-
-  gui.printf("\n======| %s |======\n\n", level.name)
-
-  if OB_CONFIG.mode == "dm" then
-    plan_dm_arena(level)
-  else
-    plan_sp_level(level, OB_CONFIG.mode == "coop")
-  end
-
-  if gui.abort() then return "abort" end
-
-  if OB_CONFIG.mode == "dm" then
-    show_dm_links()
-  else
-    show_path()
-  end
-  gui.printf("\n")
-
-  build_level()
-
-  if gui.abort() then return "abort" end
-
-  if GAME.wolf_format then
-    write_wolf_level()
-  else
-    write_level(level.name)
-  end
-
-  if gui.abort() then return "abort" end
-
-  make_mini_map()
-
-  PLAN = nil
-
-  collectgarbage("collect")
-end
-
 
 
 function Level_CleanUp()
@@ -164,23 +105,23 @@ function Level_Setup()
 end
 
 
-function Level_Make(level, NUM)
+function Level_Make(L, index, NUM)
+  LEVEL = L
 
-  gui.rand_seed(OB_CONFIG.seed * 100 + level)
+  assert(LEVEL)
+  assert(LEVEL.name)
 
-  local level_name = string.format("MAP%02d", level)
+  gui.rand_seed(OB_CONFIG.seed * 100 + index)
 
-  gui.printf("\n\n~~~~~~| %s |~~~~~~\n", level_name)
+  gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
 
-  gui.at_level(level_name, level, NUM)
+  gui.at_level(LEVEL.name, index, NUM)
 
-  local epi_along = ((level - 1) % 10) / 9
-
-  Plan_rooms_sp(epi_along)
+  Plan_rooms_sp()
     if gui.abort() then return "abort" end
     gui.progress(20)
 
-  Connect_Rooms(epi_along)
+  Connect_Rooms()
     if gui.abort() then return "abort" end
     gui.progress(30)
 
@@ -198,87 +139,36 @@ function Level_Make(level, NUM)
 
   Seed_grow()
 
-  dummy_builder(level_name)
+  dummy_builder()
     if gui.abort() then return "abort" end
     gui.progress(100)
 
   -- intra-level cleanup
-  LEVEL = nil
-  PLAN  = nil
-  SEEDS = nil
+  if index < NUM then
+    LEVEL = nil
+    PLAN  = nil
+    SEEDS = nil
 
-  collectgarbage("collect")
+    collectgarbage("collect")
+  end
+
+  return "ok"
 end
 
 
 function Level_MakeAll()
 
--- [[ TEST STUFF
-Level_Setup()
+  assert(HOOKS.get_levels)
 
-local NUM = 1
-  if OB_CONFIG.length == "episode" then
-    NUM = 10
-  elseif OB_CONFIG.length == "full" then
-    NUM = 30
-  end
+  local levels = HOOKS.get_levels()
+  assert(#levels > 0)
 
-for level = 1,NUM do
-
-  if Level_Make(level, NUM) == "abort" then
-    Level_CleanUp()
-    return "abort"
-  end
-end
-
-Level_CleanUp()
-
-do return "ok" end
---]]
-
-
---- !!! OLD STUFF:
-  create_GAME()
-
-  assert(GAME)
-  assert(GAME.level_func)
-
-  local aborted = false
-  local episode_num
-
-  if OB_CONFIG.length == "single" then
-    episode_num = 1
-  elseif OB_CONFIG.length == "episode" then
-    episode_num = GAME.min_episodes or 1
-  else -- OB_CONFIG.length == "full"
-    episode_num = GAME.episodes
-  end
-
-  -- build episode/level lists
-  local all_levels = {}
-
-  for epi = 1,episode_num do
-    local levels = GAME.level_func(epi)
-    for _,L in ipairs(levels) do
-      table.insert(all_levels, L)
+  for index,L in ipairs(level_list) do
+    if Level_Make(L, index, #levels) == "abort" then
+      return "abort"
     end
   end
 
-  local total = #all_levels
-
-  if OB_CONFIG.length == "single" then
-    total = 1
-  end
-
-  for index = 1,total do
-
-    local result = create_LEVEL(all_levels[index], index, total)
-
-    if result == "abort" then
-      aborted = true
-      break;
-    end
-  end
-
+  return "ok"
 end
 

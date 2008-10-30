@@ -222,7 +222,7 @@ function do_ramp_y(S, x1,y1, x2,y2)
 end
 
 
-function dummy_builder(level_name)
+function dummy_builder()
 
 
   local function get_wall_coords(dir, x1,y1, x2,y2)
@@ -1114,7 +1114,7 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
   gui.printf("\n--==| dummy_builder |==--\n\n")
 
   gui.begin_level()
-  gui.property("level_name", level_name);
+  gui.property("level_name", LEVEL.name);
   gui.property("error_tex",  "BLAKWAL1");
 
   gui.ticker()

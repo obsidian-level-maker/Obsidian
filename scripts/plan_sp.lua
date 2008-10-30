@@ -1041,7 +1041,7 @@ function Rooms_MakeSeeds()
 end
 
 
-function Plan_determine_size(epi_along)
+function Plan_determine_size()
   local ob_size = OB_CONFIG.size
 
   -- there is no real "progression" when making a single level
@@ -1056,7 +1056,7 @@ function Plan_determine_size(epi_along)
 
   else
     if ob_size == "prog" then
-      LAND_W = int(5.5 + epi_along * 6)
+      LAND_W = int(5.5 + LEVEL.epi_along * 6)
     else
       local LAND_SIZES = { small=5, normal=7, large=10, xlarge=13 }
 
@@ -1085,9 +1085,11 @@ function Plan_determine_size(epi_along)
 end
 
 
-function Plan_rooms_sp(epi_along)
+function Plan_rooms_sp()
 
   gui.printf("\n--==| Plan_rooms_sp |==--\n\n")
+
+  assert(LEVEL.epi_along)
 
   -- create the global 'PLAN' object
   PLAN =
@@ -1102,7 +1104,7 @@ function Plan_rooms_sp(epi_along)
   set_class(PLAN, PLAN_CLASS)
 
 
-  Plan_determine_size(epi_along)
+  Plan_determine_size()
 
   Landmap_Fill()
   Landmap_Dump()
