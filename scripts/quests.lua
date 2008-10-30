@@ -41,11 +41,11 @@ class ARENA
   lock : LOCK   -- what kind of key/switch will be in the 'target'
                 -- room, or the string "EXIT" if this arena leads
                 -- to the exit room.
-                -- Never nil
+                -- Never nil.
   
   path : array(CONN)  -- full path of rooms from 'start' to 'target'
-                      -- NOTE: may contain teleporters.
 
+  target_item : FIXME
 }
 
 
@@ -57,6 +57,8 @@ class LOCK
   kind : keyword  -- "KEY" or "SWITCH"
 
   item : string   -- denotes specific kind of key or switch
+
+  tag : number    -- tag number to use for a switched door
 
   -- used while decided what locks to add:
 
@@ -123,6 +125,7 @@ function Quest_decide_start_room(arena)
   local function swap_conn(C)
     C.src, C.dest = C.dest, C.src
     C.src_S, C.dest_S = C.dest_S, C.src_S
+    C.dir = 10 - C.dir
   end
 
   local function natural_flow(R, visited)
