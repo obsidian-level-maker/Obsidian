@@ -1498,45 +1498,46 @@ HC_SKY_INFO =
   { color="gray",  light=176 },
 }
 
-function heretic_get_levels(episode)
+function Heretic1_get_levels()
+  local list = {}
 
-  local level_list = {}
+  local EP_NUM  = sel(OB_CONFIG.length == "full", 5, 1)
+  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
 
-  local theme_probs = HC_EPISODE_THEMES[episode]
+  for episode = 1,EP_NUM do
+    local theme_probs = HC_EPISODE_THEMES[episode]
 
-  -- If we only make a single map or episode, use the castle or hell theme
-  if OB_CONFIG.length ~= "full" then
-    theme_probs = HC_EPISODE_THEMES[rand_irange(1,4)]
-  end
-
-  for map = 1,9 do
-    local Level =
-    {
-      name = string.format("E%dM%d", episode, map),
-
-      episode   = episode,
-      ep_along  = map,
-      ep_length = 9,
-
-      theme_probs = theme_probs,
-      sky_info = HC_SKY_INFO[episode],
-
-      boss_kind   = (map == 8) and HC_EPISODE_BOSSES[episode],
-      secret_kind = (map == 9) and "plain",
-
-      toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 7),
-    }
-
-    if HC_SECRET_EXITS[Level.name] then
-      Level.secret_exit = true
+    -- If we only make a single map or episode, use the castle or hell theme
+    if OB_CONFIG.length ~= "full" then
+      theme_probs = HC_EPISODE_THEMES[rand_irange(1,4)]
     end
 
-    std_decide_quests(Level, HC_QUESTS, HC_QUEST_LEN_PROBS)
+    for map = 1,MAP_NUM do
+      local Level =
+      {
+        name = string.format("E%dM%d", episode, map),
 
-    table.insert(level_list, Level)
-  end
+        ep_along = (map - 1) / MAP_NUM,
 
-  return level_list
+        theme_probs = theme_probs,
+        sky_info = HC_SKY_INFO[episode],
+
+        boss_kind   = (map == 8) and HC_EPISODE_BOSSES[episode],
+        secret_kind = (map == 9) and "plain",
+
+        toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 7),
+      }
+
+      if HC_SECRET_EXITS[Level.name] then
+        Level.secret_exit = true
+      end
+
+      table.insert(list, Level)
+    end -- for map
+
+  end -- for episode
+
+  return list
 end
 
 
@@ -1551,89 +1552,72 @@ OB_THEMES["hc_castle"] =
 
 ------------------------------------------------------------
 
-function heretic_factory()
+function Heretic1_setup()
 
-  return
-  {
-    doom_format = true,
-    noblaze_door = true,
+  GAME.classes  = { "cleric" },
 
-    plan_size = 10,
-    cell_size = 9,
-    cell_min_size = 6,
+  Game_merge_tab("things",   HC_THINGS)
+  Game_merge_tab("monsters", HC_MONSTERS)
+  Game_merge_tab("bosses",   HC_BOSSES)
 
-    SKY_TEX    = "F_SKY1",
-    ERROR_TEX  = "DRIPWALL",
-    ERROR_FLAT = "FLOOR09",
+  Game_merge_tab("weapons",  HC_WEAPONS)
+  Game_merge_tab("pickups",  HC_PICKUPS)
+  Game_merge_tab("niceness", HC_NICENESS)
 
-    episodes   = 5,
-    level_func = heretic_get_levels,
+  GAME.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
+                        "runes", "flame_orb", "mace_orb" },
 
-    classes  = { "cleric" },
+  Game_merge_tab("initial_model", HC_INITIAL_MODEL)
 
-    things     = HC_THINGS,
-    monsters   = HC_MONSTERS,
-    bosses     = HC_BOSSES,
-    weapons    = HC_WEAPONS,
+  Game_merge_tab("quests", HC_QUESTS)
 
-    pickups = HC_PICKUPS,
-    pickup_stats = { "health", "crystal", "arrow", "claw_orb",
-                     "runes", "flame_orb", "mace_orb" },
-    niceness = HC_NICENESS,
+  Game_merge_tab("dm", HC_DEATHMATCH)
+  Game_merge_tab("dm_exits", HC_DEATHMATCH_EXITS)
 
-    initial_model = HC_INITIAL_MODEL,
+  Game_merge_tab("combos", HC_COMBOS)
+  Game_merge_tab("exits", HC_EXITS)
+  Game_merge_tab("hallways", HC_HALLWAYS)
 
-    quests  = HC_QUESTS,
+  Game_merge_tab("rooms",  HC_ROOMS)
+  Game_merge_tab("themes", HC_THEMES)
 
-    dm = HC_DEATHMATCH,
-    dm_exits = HC_DEATHMATCH_EXITS,
+  Game_merge_tab("hangs", HC_OVERHANGS)
+  Game_merge_tab("pedestals", HC_PEDESTALS)
+  Game_merge_tab("mats",  HC_MATS)
+  Game_merge_tab("rails", HC_RAILS)
 
-    combos    = HC_COMBOS,
-    exits     = HC_EXITS,
-    hallways  = HC_HALLWAYS,
+  Game_merge_tab("liquids", HC_LIQUIDS)
+  Game_merge_tab("switches", HC_SWITCHES)
+  Game_merge_tab("doors", HC_DOORS)
+  Game_merge_tab("key_doors", HC_KEY_DOORS)
+  Game_merge_tab("lifts", HC_LIFTS)
 
-    rooms     = HC_ROOMS,
-    themes    = HC_THEMES,
+  Game_merge_tab("pics", HC_PICS)
+  Game_merge_tab("images", HC_IMAGES)
+  Game_merge_tab("lights", HC_LIGHTS)
+  Game_merge_tab("wall_lights", HC_WALL_LIGHTS)
 
-    hangs     = HC_OVERHANGS,
-    pedestals = HC_PEDESTALS,
-    mats      = HC_MATS,
-    rails     = HC_RAILS,
+  Game_merge_tab("door_fabs", HC_DOOR_PREFABS)
+  Game_merge_tab("wall_fabs", HC_WALL_PREFABS)
+  Game_merge_tab("misc_fabs", HC_MISC_PREFABS)
 
-    liquids   = HC_LIQUIDS,
-    switches  = HC_SWITCHES,
-    doors     = HC_DOORS,
-    key_doors = HC_KEY_DOORS,
-    lifts     = HC_LIFTS,
+  GAME.toughness_factor = 0.80  -- FIXME: PARAMS
 
-    pics      = HC_PICS,
-    images    = HC_IMAGES,
-    lights    = HC_LIGHTS,
-    wall_lights = HC_WALL_LIGHTS,
+  GAME.depot_info  = { teleport_kind=97 }
 
-    door_fabs   = HC_DOOR_PREFABS,
-    wall_fabs   = HC_WALL_PREFABS,
-    misc_fabs   = HC_MISC_PREFABS,
-
-    toughness_factor = 0.80,
-
-    depot_info  = { teleport_kind=97 },
-
-    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
-    space_range  = { 20, 90 },
+  GAME.room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 }
+  GAME.space_range  = { 20, 90 }
     
-    diff_probs = { [0]=20, [16]=40, [32]=80, [64]=30, [96]=5 },
-    bump_probs = { [0]=30, [16]=30, [32]=20, [64]=5 },
+  GAME.diff_probs = { [0]=20, [16]=40, [32]=80, [64]=30, [96]=5 }
+  GAME.bump_probs = { [0]=30, [16]=30, [32]=20, [64]=5 }
     
-    door_probs   = { out_diff=75, combo_diff=50, normal=15 },
-    ---
-    hallway_probs = { 20, 30, 41, 53, 66 },
-    window_probs = { out_diff=80, combo_diff=50, normal=30 },
-  }
+  GAME.door_probs   = { out_diff=75, combo_diff=50, normal=15 }
+  GAME.hallway_probs = { 20, 30, 41, 53, 66 }
+  GAME.window_probs = { out_diff=80, combo_diff=50, normal=30 }
 end
 
 
-UNFINISHED["heretic"] =
+OB_GAMES["heretic"] =
 {
   label = "Heretic",
 
@@ -1649,17 +1633,24 @@ UNFINISHED["heretic"] =
     teleporters = true,
     infighting  =  true,
     prefer_stairs = true,
+    noblaze_door = true,
   },
 
   params =
   {
     seed_size = 256,
 
+    sky_tex    = "-",
+    sky_flat   = "F_SKY1",
+    error_tex  = "DRIPWALL",
+    error_flat = "FLOOR09",
+
     palette_mons = 3,
   },
 
   hooks =
   {
+    get_levels = Heretic1_get_levels,
   },
 }
 
