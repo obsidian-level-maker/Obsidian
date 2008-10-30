@@ -20,6 +20,39 @@
 
 class ROOM
 {
+  kind : keyword  -- Indoor values: "room", "hallway", "stairwell"
+                  -- Outdoor values: "ground", "hill", "valley"
+
+  outdoor : bool  -- true for outdoor rooms
+
+  conns : array(CONN)  -- connections with neighbor rooms
+
+  branch_kind : keyword
+
+  symmetry : keyword   -- symmetry of connections, or NIL
+                       -- keywords are "x", "y", "xy", "r", "t"
+
+  sx1, sy1, sx2, sy2  -- \ Seed range
+  sw, sh, svolume     -- /
+
+  floor_h, ceil_h : number
+
+  purpose : keyword   -- usually NIL, can be "EXIT" etc... (FIXME)
+
+  arena : ARENA
+
+
+  --- plan_sp code only:
+
+  lx1, ly1, lx2, ly2  -- coverage on the Land Map
+
+  group_id : number  -- traversibility group
+
+  --- layout code only:
+
+  tx1, ty1, tx2, ty2, tw, th  -- Seed range for layouting
+
+  layout_symmetry : keyword  -- can be "none", "x", "y", "xy"
 }
 
 
@@ -34,11 +67,12 @@ Some rooms already have a fixed height, currently these are
 all the outdoor rooms.
 
 Each connection also has a height (conn_h).  These values
-are computed after the floor_h on each side
-have been determined, and will try to maintain any
-symmetry in the room [two symmetrical exits need to have
-the same conn_h].  We prefer the conn_h to be equal one of
-the floors on each side, but it isn't compulsory.
+are computed after the floor_h on each side has been
+determined, and will try to maintain any symmetry in the
+room [two symmetrical exits need to have the same conn_h].
+
+We prefer the conn_h to be equal one of the floors on each side,
+but it isn't compulsory.
 
 
 --------------------------------------------------------------]]
@@ -178,11 +212,11 @@ function Rooms_setup_symmetry()
 
     for y = R.sy1, R.sy2 do
       for dx = 0, int((R.sw-2) / 2) do
-        local L = SEEDS[R.sx1 + dx][y][1]
-        local R = SEEDS[R.sx2 - dx][y][1]
+        local LS = SEEDS[R.sx1 + dx][y][1]
+        local RS = SEEDS[R.sx2 - dx][y][1]
 
-        L.x_peer = R
-        R.x_peer = L
+        LS.x_peer = RS
+        RS.x_peer = LS
       end
     end
   end
@@ -196,11 +230,11 @@ function Rooms_setup_symmetry()
 
     for x = R.sx1, R.sx2 do
       for dy = 0, int((R.sh-2) / 2) do
-        local B = SEEDS[x][R.sy1 + dy][1]
-        local T = SEEDS[x][R.sy2 - dy][1]
+        local BS = SEEDS[x][R.sy1 + dy][1]
+        local TS = SEEDS[x][R.sy2 - dy][1]
 
-        B.y_peer = T
-        T.y_peer = B
+        BS.y_peer = TS
+        TS.y_peer = BS
       end
     end
   end
