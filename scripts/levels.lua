@@ -18,6 +18,10 @@
 
 --[[ *** CLASS INFORMATION ***
 
+class LEVEL
+{
+}
+
 
 --------------------------------------------------------------]]
 
@@ -42,7 +46,7 @@ function create_GAME()
   local factory = GAME_FACTORIES[OB_CONFIG.game]
 
   if not factory then
-    error("UNKNOWN GAME '" .. OB_CONFIG.game .. "'")
+    error("UNKNOWN GAME: " .. tostring(OB_CONFIG.game))
   end
 
   GAME = factory()
@@ -97,13 +101,66 @@ end
 
 
 
-function Level_Setup()
+function Level_CleanUp()
+  GAME   = {}
+  CAPS   = {}
+  PARAMS = {}
+  HOOKS  = {}
 
+  LEVEL = nil
+  PLAN  = nil
+  SEEDS = nil
+
+  collectgarbage("collect")
 end
 
 
-function Level_CleanUp()
+function Level_Setup()
 
+  Level_CleanUp()
+
+
+  local game = OB_GAMES[OB_CONFIG.game]
+  if not game then
+    error("UNKNOWN GAME: " .. tostring(OB_CONFIG.game))
+  end
+
+  if game.caps   then merge_table(CAPS,   game.caps) end
+  if game.params then merge_table(PARAMS, game.params) end
+  if game.hooks  then merge_table(HOOKS,  game.hooks) end
+
+  assert(game.setup_func)
+
+  game.setup_func(game)
+
+
+  local engine = OB_ENGINES[OB_CONFIG.engine]
+  if not engine then
+    error("UNKNOWN ENGINE: " .. tostring(OB_CONFIG.engine))
+  end
+
+  if engine.caps   then merge_table(CAPS,   engine.caps) end
+  if engine.params then merge_table(PARAMS, engine.params) end
+  if engine.hooks  then merge_table(HOOKS,  engine.hooks) end
+
+  if engine.setup_func then
+     engine.setup_func(engine)
+  end
+
+
+  -- FIXME: ordering of modules
+
+  for _,mod in pairs(OB_MODULES) do
+    if mod.enabled then
+      if mod.caps   then merge_table(CAPS,   mod.caps) end
+      if mod.params then merge_table(PARAMS, mod.params) end
+      if mod.hooks  then merge_table(HOOKS,  mod.hooks) end
+
+      if mod.setup_func then
+         mod.setup_func(mod)
+      end
+    end
+  end -- for mod
 end
 
 
@@ -145,12 +202,20 @@ function Level_Make(level, NUM)
     if gui.abort() then return "abort" end
     gui.progress(100)
 
+  -- intra-level cleanup
+  LEVEL = nil
+  PLAN  = nil
+  SEEDS = nil
+
+  collectgarbage("collect")
 end
 
 
 function Level_MakeAll()
 
 -- [[ TEST STUFF
+Level_Setup()
+
 local NUM = 1
   if OB_CONFIG.length == "episode" then
     NUM = 10
@@ -161,9 +226,12 @@ local NUM = 1
 for level = 1,NUM do
 
   if Level_Make(level, NUM) == "abort" then
+    Level_CleanUp()
     return "abort"
   end
 end
+
+Level_CleanUp()
 
 do return "ok" end
 --]]
