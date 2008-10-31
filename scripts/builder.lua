@@ -144,27 +144,19 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
 end
 
 
-function do_ramp_x(S, x1,y1, x2,y2)
-  
-  local az = SEEDS[S.sx-1][S.sy][1].floor_h
-  local bz = SEEDS[S.sx+1][S.sy][1].floor_h
-
---[[ local R = S.room
-for y = R.sy1, R.sy2 do
-for x = R.sx1, R.sx2 do
-local T = SEEDS[x][y][1]
-gui.debugf("Seed (%d,%d) layout_char:%s floor_h:%s\n",
-           x, y, T.layout_char or "-", tostring(T.floor_h or "--"))
-end end --]]
-
+function do_ramp_x(S, x1,y1, x2,y2, az,bz)
   assert(az and bz)
 
-  local steps = int(math.abs(az-bz) / 16 + 0.5)
+  if S.layout_char == "<" then
+    az,bz = bz,az
+  end
+
+  local steps = int(math.abs(az-bz) / 16 + 0.9)
 
   if steps < 2 then steps = 2 end
 
   for i = 0,steps-1 do 
-    local z = az + (bz - az) * i / (steps-1)
+    local z = az + (bz - az) * (i+1) / (steps+1)
 
     local x3 = x1 + (x2 - x1) * i / steps
     local x4 = x1 + (x2 - x1) * (i+1) / steps
@@ -187,19 +179,19 @@ end end --]]
 end
 
 
-function do_ramp_y(S, x1,y1, x2,y2)
- 
-  local az = SEEDS[S.sx][S.sy-1][1].floor_h
-  local bz = SEEDS[S.sx][S.sy+1][1].floor_h
-
+function do_ramp_y(S, x1,y1, x2,y2, az,bz)
   assert(az and bz)
 
-  local steps = int(math.abs(az-bz) / 16 + 0.5)
+  if S.layout_char == "v" then
+    az,bz = bz,az
+  end
+
+  local steps = int(math.abs(az-bz) / 16 + 0.9)
 
   if steps < 2 then steps = 2 end
 
   for i = 0,steps-1 do 
-    local z = az + (bz - az) * i / (steps-1)
+    local z = az + (bz - az) * (i+1) / (steps+1)
 
     local y3 = y1 + (y2 - y1) * i / steps
     local y4 = y1 + (y2 - y1) * (i+1) / steps
@@ -219,6 +211,51 @@ function do_ramp_y(S, x1,y1, x2,y2)
     },
     -2000, z);
   end
+end
+
+
+function do_corner_ramp(S, x1,y1, x2,y2, x_h,y_h)
+  assert(x_h and y_h)
+
+  local steps = int(math.abs(x_h-y_h) / 16 + 0.9)
+
+  if steps < 4 then
+    steps = 4
+  end
+
+  local w = x2 - x1 + 1
+  local h = y2 - y1 + 1
+
+  local corn_x = x1
+  local corn_y = y1
+
+  local dx0, dx1, dx2, dx3 = 8, 32, w-32, w
+  local dy0, dy1, dy2, dy3 = 8, 32, h-32, h
+
+  if S.layout_char == "L" or S.layout_char == "F" then
+    corn_x = x2
+    dx0 = -dx0 ; dx1 = -dx1
+    dx2 = -dx2 ; dx3 = -dx3
+  end
+
+  if S.layout_char == "L" or S.layout_char == "J" then
+    corn_y = y2
+    dy0 = -dy0 ; dy1 = -dy1
+    dy2 = -dy2 ; dy3 = -dy3
+  end
+
+  local info =
+  {
+    t_face = { texture="FLAT1" },
+    b_face = { texture="FLAT1" },
+    w_face = { texture="SLADWALL" },
+  }
+
+  make_curved_hall(steps, corn_x, corn_y,
+                   dx0, dx1, dx2, dx3,
+                   dy0, dy1, dy2, dy3,
+                   x_h, y_h, 256,
+                   info, info, info)
 end
 
 
@@ -854,7 +891,7 @@ gui.printf("do_teleport\n")
       
         f_tex = "FLOOR0_1"
         c_tex = "CEIL3_5"
-        w_tex = "BRICK8"
+        w_tex = "STARTAN3"
 
       end
 
@@ -936,9 +973,7 @@ w_tex = "e1u1/exitdr01_2"
 
     -- floor and ceiling brushes
 
-if S.layout_char == "#" or S.layout_char == "%" then
-
-    if S.layout_char == "%" then w_tex = "BRWINDOW" end
+if S.layout_char == "#" then
 
     gui.add_brush(
     {
@@ -951,12 +986,39 @@ if S.layout_char == "#" or S.layout_char == "%" then
       { x=x2, y=y2 }, { x=x2, y=y1 },
     },
     -2000, 2000);
+elseif S.layout_char == "%" then
+    gui.add_brush(
+    {
+      t_face = { texture="LAVA1" },
+      b_face = { texture=f_tex },
+      w_face = { texture="DBRAIN1" },
+    },
+    {
+      { x=x1, y=y1 }, { x=x1, y=y2 },
+      { x=x2, y=y2 }, { x=x2, y=y1 },
+    },
+    -2000, -64);
+
+    gui.add_brush(
+    {
+      t_face = { texture=f_tex },
+      b_face = { texture=f_tex },
+      w_face = { texture=w_tex },
+    },
+    {
+      { x=x1, y=y1 }, { x=x1, y=y2 },
+      { x=x2, y=y2 }, { x=x2, y=y1 },
+    },
+    256, 2000);
 else
 
 if S.layout_char == ">" or S.layout_char == "<" then
-   do_ramp_x(S, x1,y1, x2,y2)
+   do_ramp_x(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
 elseif S.layout_char == "v" or S.layout_char == "^" then
-   do_ramp_y(S, x1,y1, x2,y2)
+   do_ramp_y(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
+elseif S.layout_char == "L" or S.layout_char == "J" or
+       S.layout_char == "F" or S.layout_char == "T" then
+   do_corner_ramp(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
 else
     gui.add_brush(
     {
@@ -985,6 +1047,8 @@ end
       { x=x2, y=y2 }, { x=x2, y=y1 },
     },
     z2, 4000)
+
+end -- layout_char ~= "#"
 
 if true then -- if do_sides then
     for side = 2,8,2 do
@@ -1036,8 +1100,6 @@ gui.printf("ADDING LOCK DOOR %s\n", w_tex)
       end
     end
 end -- do_sides
-
-end -- layout_char ~= "#"
 
     local mx = int((x1+x2) / 2)
     local my = int((y1+y2) / 2)

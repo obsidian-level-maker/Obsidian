@@ -539,6 +539,8 @@ function Layout_Indoor(R)
         layout_char  = S.layout_char,
         floor_h      = S.floor_h,
         emerg_stairs = S.emerg_stairs,
+        stair_z1     = S.stair_z1,
+        stair_z2     = S.stair_z2,
       }
     end end
 
@@ -556,6 +558,8 @@ function Layout_Indoor(R)
       S.layout_char  = W.layout_char
       S.floor_h      = W.floor_h
       S.emerg_stairs = W.emerg_stairs
+      S.stair_z1     = W.stair_z1
+      S.stair_z2     = W.stair_z2
     end end
   end
 
@@ -645,7 +649,9 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
           D.layout_char = S.layout_char
         end
 
-        D.floor_h = S.floor_h
+        D.floor_h  = S.floor_h
+        D.stair_z1 = S.stair_z1
+        D.stair_z2 = S.stair_z2
       end
     end
 
@@ -672,7 +678,9 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
           D.layout_char = S.layout_char
         end
 
-        D.floor_h = S.floor_h
+        D.floor_h  = S.floor_h
+        D.stair_z1 = S.stair_z1
+        D.stair_z2 = S.stair_z2
       end
     end
 
@@ -1021,11 +1029,18 @@ gui.debugf("Emergency connect\n");
         N.layout_char = STAIR_CHARS[tostring(PM.dir) .. "/" .. tostring(ST.dir)]
         assert(N.layout_char)
 
+        N.stair_z1 = T.floor_h
+        N.stair_z2 = O.floor_h
+
+        if is_horiz(PM.dir) and is_vert(ST.dir) then
+          N.stair_z1, N.stair_z2 = N.stair_z2, N.stair_z1
+        end
+
         gui.debugf("Added stair @ (%d,%d) dir:%d/%d = '%s'\n", N.sx, N.sy, PM.dir, ST.dir, N.layout_char)
         merge_groups(EX, T.group_id, O.group_id)
 
-        N.group_id    = T.group_id
-        N.floor_h     = math.min(T.floor_h, O.floor_h)
+        N.group_id = T.group_id
+        N.floor_h  = math.max(T.floor_h, O.floor_h)
 
         return factor * (16 + math.abs(T.floor_h - N.floor_h))
       end
@@ -1096,6 +1111,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 
         if S.layout_char and not D.layout_char then
           D.layout_char = S.layout_char
+          D.floor_h     = S.floor_h
           did = true
         end
       end
@@ -1121,6 +1137,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 
         if S.layout_char and not D.layout_char then
           D.layout_char = S.layout_char
+          D.floor_h     = S.floor_h
           did = true
         end
       end
