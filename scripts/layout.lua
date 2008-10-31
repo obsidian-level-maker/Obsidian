@@ -534,7 +534,7 @@ function Layout_Indoor(R)
 
       local S = SEEDS[tx][ty][1]
 
-      L.seeds[cx][cy] =
+      L.seeds[x][y] =
       {
         layout_char  = S.layout_char,
         floor_h      = S.floor_h,
@@ -969,9 +969,73 @@ gui.debugf("Emergency connect\n");
       local T = SEEDS[PM.tx][PM.ty][1]
       local N = seed_neighbor(T, PM.dir)
 
-      @@@
+      local stairs = {}
 
-      return 1
+      -- check if new connection can link to something
+      for dir = 2,8,2 do if dir ~= 10 - PM.dir then
+        local ox, oy = nudge_coord(N.sx, N.sy, dir)
+        if valid_T(ox, oy) then
+          local O = SEEDS[ox][oy][1]
+
+          if O.layout_char and O.layout_char == T.layout_char and
+             O.group_id ~= T.group_id
+          then
+            -- direct connection!
+            gui.debugf("New direct linkage @ (%d,%d) dir:%d\n", N.sx, N.sy, dir)
+            merge_groups(EX, T.group_id, O.group_id)
+
+            N.layout_char = T.layout_char
+            N.floor_h     = assert(T.floor_h)
+            N.group_id    = T.group_id
+
+            return 10
+          end
+
+          if lc_is_digit(O.layout_char) and O.group_id ~= T.group_id then
+            table.insert(stairs, { O=O, dir=dir })
+          end
+        end
+      end end -- for dir, if
+
+      if #stairs > 0 then
+        -- FIXME: choose least h diff, preference for dir == PM.dir
+        local ST = rand_element(stairs)
+
+        local O = assert(ST.O)
+        local factor = 2.5
+
+        if is_parallel(ST.dir, PM.dir) then
+          factor = 1.0
+        end
+
+        local STAIR_CHARS =
+        {
+          ["2/2"] = "v", ["8/8"] = "^",
+          ["4/4"] = "<", ["6/6"] = ">",
+          ["2/4"] = "J", ["4/2"] = "F",
+          ["2/6"] = "L", ["6/2"] = "T",
+          ["8/4"] = "T", ["4/8"] = "L",
+          ["8/6"] = "F", ["6/8"] = "J",
+        }
+
+        N.layout_char = STAIR_CHARS[tostring(PM.dir) .. "/" .. tostring(ST.dir)]
+        assert(N.layout_char)
+
+        gui.debugf("Added stair @ (%d,%d) dir:%d/%d = '%s'\n", N.sx, N.sy, PM.dir, ST.dir, N.layout_char)
+        merge_groups(EX, T.group_id, O.group_id)
+
+        N.group_id    = T.group_id
+        N.floor_h     = math.min(T.floor_h, O.floor_h)
+
+        return factor * (16 + math.abs(T.floor_h - N.floor_h))
+      end
+
+      N.layout_char = T.layout_char
+      N.group_id    = T.group_id
+      N.floor_h     = assert(T.floor_h)
+      N.tdir        = PM.dir
+
+      return 10
     end
 
 
@@ -995,11 +1059,11 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 
     merge_groups(EX, T.group_id, N.group_id)
 
-    return 1000  -- FIXME adjust for height diff
+    return 30 * (16 + math.abs(T.floor_h - N.floor_h))
   end
 
   local function make_basic_layout_2(EX)
-    local cost = 0
+    local cost = gui.random()
 
     for loop = 1, R.tw * R.th * 4 do
       gui.debugf("MAKE BASIC LAYOUT loop=%d:\n", loop);
@@ -1012,7 +1076,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
       cost = cost + flood_fill_layout(EX)
     end
 
-    gui.debug("make_basic_layout_2: cost = %d\n", cost)
+    gui.debugf("make_basic_layout_2: cost = %1.2f\n", cost)
 
     return cost
   end
