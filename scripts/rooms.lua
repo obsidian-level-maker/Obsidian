@@ -90,8 +90,8 @@ function Rooms_decide_hallways()
   --   - no teleporters
   --   - not the destination of a locked door (anti-climactic)
 
-  local HALL_SIZE_PROBS = { 99, 90, 70, 40, 10 }
-  local REVERT_PROBS    = {  0,  0, 20, 70, 90 }
+  local HALL_SIZE_PROBS = { 99, 80, 55, 33, 10 }
+  local REVERT_PROBS    = {  0,  0, 25, 90, 90 }
 
   local function eval_hallway(R)
     -- Wolf3D: the outdoor areas become hallways
@@ -115,7 +115,7 @@ function Rooms_decide_hallways()
         return false
       end
 
-      if C.dest == R and C.lock and rand_odds(40) then
+      if C.dest == R and C.lock and rand_odds(50) then
         return false
       end
     end
@@ -193,7 +193,13 @@ gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
        stairwell_neighbors(R) == 0 and
        locked_neighbors(R) == 0
     then
-      if rand_odds(80) then
+      local hall_nb = hallway_neighbors(R) 
+
+      local prob = 70
+      if hall_nb >= 2 then prob = 2  end
+      if hall_nb == 1 then prob = 30 end
+
+      if rand_odds(prob) then
         R.kind = "stairwell"
       end
     end
