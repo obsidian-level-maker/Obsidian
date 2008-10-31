@@ -52,9 +52,6 @@ require 'defs'
 require 'util'
 
 
-SEED_SIZE = 256
-
-
 function Seed_init(W, H, D, zone)
 
   assert(zone)
@@ -210,15 +207,17 @@ end
 
 function Seed_grow()
 
+  assert(PARAMS.seed_size)
+
   for x = 1,SEED_W do for y = 1,SEED_H do for z = 1,SEED_D do
 
     local S = SEEDS[x][y][z]
 
-    S.x1 = x * SEED_SIZE
-    S.y1 = y * SEED_SIZE
+    S.x1 = x * PARAMS.seed_size
+    S.y1 = y * PARAMS.seed_size
 
-    S.x2 = (x+1) * SEED_SIZE
-    S.y2 = (y+1) * SEED_SIZE
+    S.x2 = (x+1) * PARAMS.seed_size
+    S.y2 = (y+1) * PARAMS.seed_size
 
   end end end --- x, y, z
 
