@@ -480,6 +480,14 @@ function nudge_coord(x, y, dir, dist)
   return x + dx * dist, y + dy * dist
 end
 
+function is_horiz(dir)
+  return (dir == 4) or (dir == 6)
+end
+
+function is_vert(dir)
+  return (dir == 2) or (dir == 8)
+end
+
 function is_parallel(dir1, dir2)
   return (dir1 == 2 or dir1 == 8) == (dir2 == 2 or dir2 == 8)
 end
