@@ -3165,13 +3165,14 @@ function Doom1_get_levels()
     end
 
     for map = 1,MAP_NUM do
-      local Level =
+      local LEV =
       {
         name = string.format("E%dM%d", episode, map),
 
         ep_along = (map - 1) / 8,
 
-        theme_probs = theme_probs,
+        theme = "TECH",
+
         sky_info = D1_SKY_INFO[episode],
 
         boss_kind   = (map == 8) and D1_EPISODE_BOSSES[episode],
@@ -3180,46 +3181,18 @@ function Doom1_get_levels()
         toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 5),
       }
 
-      if D1_SECRET_EXITS[Level.name] then
-        Level.secret_exit = true
-        Level.ep_along = 0.5
+      if D1_SECRET_EXITS[LEV.name] then
+        LEV.secret_exit = true
+        LEV.ep_along = 0.5
       end
 
-      table.insert(list, Level)
+      table.insert(list, LEV)
     end -- for map
 
   end -- for episode
 
   return list
 end
-
-
-------------------------------------------------------------
-
-
-OB_THEMES["d1_tech"] =
-{
-  label = "Tech",
-  for_games = { doom1=1 },
-}
-
-OB_THEMES["d1_indy"] =
-{
-  label = "Industrial",
-  for_games = { doom1=1 },
-}
-
-OB_THEMES["d1_cave"] =
-{
-  label = "Cave",
-  for_games = { doom1=1 },
-}
-
-OB_THEMES["d1_hell"] =
-{
-  label = "Hell",
-  for_games = { doom1=1 },
-}
 
 
 ------------------------------------------------------------
@@ -3318,6 +3291,8 @@ function Doom1_setup()
 end
 
 
+------------------------------------------------------------
+
 OB_GAMES["doom1"] =
 {
   label = "Doom 1",
@@ -3354,5 +3329,34 @@ OB_GAMES["doom1"] =
   {
     get_levels = Doom1_get_levels,
   },
+}
+
+
+OB_THEMES["dm_tech"] =
+{
+  ref = "TECH",
+  label = "Tech",
+  for_games = { doom1=1, doom2=1, freedoom=1 },
+}
+
+OB_THEMES["dm_indy"] =
+{
+  ref = "INDY",
+  label = "Industrial",
+  for_games = { doom1=1, doom2=1, freedoom=1 },
+}
+
+OB_THEMES["dm_cave"] =
+{
+  ref = "CAVE",
+  label = "Cave",
+  for_games = { doom1=1, doom2=1, freedoom=1 },
+}
+
+OB_THEMES["dm_hell"] =
+{
+  ref = "HELL",
+  label = "Hell",
+  for_games = { doom1=1, doom2=1, freedoom=1 },
 }
 

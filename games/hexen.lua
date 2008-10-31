@@ -2012,41 +2012,6 @@ function hexen_get_levels(episode)
 end
 
 
-------------------------------------------------------------
-
-OB_THEMES["xn_cave"] =
-{
-  label = "Cave",
-  for_games = { hexen=1 },
-}
-
-OB_THEMES["xn_dungeon"] =
-{
-  label = "Dungeon",
-  for_games = { hexen=1 },
-}
-
-OB_THEMES["xn_ice"] =
-{
-  label = "Ice",
-  for_games = { hexen=1 },
-}
-
-OB_THEMES["xn_swamp"] =
-{
-  label = "Swamp",
-  for_games = { hexen=1 },
-}
-
-OB_THEMES["xn_village"] =
-{
-  label = "Village",
-  for_games = { hexen=1 },
-}
-
-
-------------------------------------------------------------
-
 function hexen_factory()
 
   rand_shuffle(XN_KEY_PAIRS)
@@ -2123,6 +2088,8 @@ function hexen_factory()
 end
 
 
+------------------------------------------------------------
+
 UNFINISHED["hexen"] =
 {
   label = "Hexen",
@@ -2156,5 +2123,41 @@ UNFINISHED["hexen"] =
   hooks =
   {
   },
+}
+
+
+OB_THEMES["xn_cave"] =
+{
+  ref = "CAVE",
+  label = "Cave",
+  for_games = { hexen=1 },
+}
+
+OB_THEMES["xn_dungeon"] =
+{
+  ref = "DUNGEON",
+  label = "Dungeon",
+  for_games = { hexen=1 },
+}
+
+OB_THEMES["xn_ice"] =
+{
+  ref = "ICE",
+  label = "Ice",
+  for_games = { hexen=1 },
+}
+
+OB_THEMES["xn_swamp"] =
+{
+  ref = "SWAMP",
+  label = "Swamp",
+  for_games = { hexen=1 },
+}
+
+OB_THEMES["xn_village"] =
+{
+  ref = "VILLAGE",
+  label = "Village",
+  for_games = { hexen=1 },
 }
 

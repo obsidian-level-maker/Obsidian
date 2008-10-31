@@ -1694,65 +1694,37 @@ function Doom2_get_levels()
     end
     assert(theme_probs)
 
-    local Level =
+    local LEV =
     {
       name = string.format("MAP%02d", map),
 
       ep_along = ((map - 1) % 10) / 9.0,
 
-      theme_probs = theme_probs,
+      theme = "TECH",
 
       -- allow TNT and Plutonia to override the sky stuff
       sky_info = GAME.sky_info[episode],
     }
 
-    Level.toughness_factor = 1 + 1.5 * Level.ep_along
+    LEV.toughness_factor = 1 + 1.5 * LEV.ep_along
 
     -- fixup for secret levels
     if episode == 2 and map >= 10 then
-      Level.name = string.format("MAP%02d", 21+map)
-      Level.sky_info = D2_SKY_INFO[3]
-      Level.theme_probs = { WOLF=10 }
-      Level.toughness_factor = 1.2
+      LEV.name = string.format("MAP%02d", 21+map)
+      LEV.sky_info = D2_SKY_INFO[3]
+      LEV.theme_probs = { WOLF=10 }
+      LEV.toughness_factor = 1.2
     end
 
----!!! Level.boss_kind   = D2_LEVEL_BOSSES[Level.name]
-    Level.secret_kind = D2_SECRET_KINDS[Level.name]
-    Level.secret_exit = D2_SECRET_EXITS[Level.name]
+---!!! LEV.boss_kind   = D2_LEVEL_BOSSES[LEV.name]
+    LEV.secret_kind = D2_SECRET_KINDS[LEV.name]
+    LEV.secret_exit = D2_SECRET_EXITS[LEV.name]
 
-    table.insert(list, Level)
+    table.insert(list, LEV)
   end
 
   return list
 end
-
-
-------------------------------------------------------------
-
-
-OB_THEMES["d2_tech"] =
-{
-  label = "Tech",
-  for_games = { doom2=1, freedoom=1 },
-}
-
-OB_THEMES["d2_indy"] =
-{
-  label = "Industrial",
-  for_games = { doom2=1, freedoom=1 },
-}
-
-OB_THEMES["d2_nature"] =
-{
-  label = "Nature",
-  for_games = { doom2=1, freedoom=1 },
-}
-
-OB_THEMES["d2_hell"] =
-{
-  label = "Hell",
-  for_games = { doom2=1, freedoom=1 },
-}
 
 
 ------------------------------------------------------------
@@ -1790,6 +1762,8 @@ function Doom2_setup(game)
 end
 
 
+------------------------------------------------------------
+
 OB_GAMES["doom2"] =
 {
   label = "Doom 2",
@@ -1826,5 +1800,13 @@ OB_GAMES["doom2"] =
   {
     get_levels = Doom2_get_levels,
   },
+}
+
+
+OB_THEMES["d2_nature"] =
+{
+  ref = "NATURE",
+  label = "Nature",
+  for_games = { doom2=1, freedoom=1 },
 }
 

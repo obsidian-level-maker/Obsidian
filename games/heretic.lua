@@ -1498,6 +1498,9 @@ HC_SKY_INFO =
   { color="gray",  light=176 },
 }
 
+
+------------------------------------------------------------
+
 function Heretic1_get_levels()
   local list = {}
 
@@ -1513,7 +1516,7 @@ function Heretic1_get_levels()
     end
 
     for map = 1,MAP_NUM do
-      local Level =
+      local LEV =
       {
         name = string.format("E%dM%d", episode, map),
 
@@ -1528,11 +1531,11 @@ function Heretic1_get_levels()
         toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 7),
       }
 
-      if HC_SECRET_EXITS[Level.name] then
-        Level.secret_exit = true
+      if HC_SECRET_EXITS[LEV.name] then
+        LEV.secret_exit = true
       end
 
-      table.insert(list, Level)
+      table.insert(list, LEV)
     end -- for map
 
   end -- for episode
@@ -1540,17 +1543,6 @@ function Heretic1_get_levels()
   return list
 end
 
-
-------------------------------------------------------------
-
-OB_THEMES["hc_castle"] =
-{
-  label = "Castle",
-  for_games = { heretic=1 },
-}
-
-
-------------------------------------------------------------
 
 function Heretic1_setup()
 
@@ -1617,6 +1609,8 @@ function Heretic1_setup()
 end
 
 
+------------------------------------------------------------
+
 OB_GAMES["heretic"] =
 {
   label = "Heretic",
@@ -1652,5 +1646,41 @@ OB_GAMES["heretic"] =
   {
     get_levels = Heretic1_get_levels,
   },
+}
+
+
+OB_THEMES["hc_city"] =
+{
+  ref = "CITY",
+  label = "City",
+  for_games = { heretic=1 },
+}
+
+OB_THEMES["hc_cave"] =
+{
+  ref = "CAVE",
+  label = "Cave",
+  for_games = { heretic=1 },
+}
+
+OB_THEMES["hc_dome"] =
+{
+  ref = "DOME",
+  label = "Dome",
+  for_games = { heretic=1 },
+}
+
+OB_THEMES["hc_egypt"] =
+{
+  ref = "EGYPT",
+  label = "Egypt",
+  for_games = { heretic=1 },
+}
+
+OB_THEMES["hc_garish"] =
+{
+  ref = "GARISH",
+  label = "Garish",
+  for_games = { heretic=1 },
 }
 
