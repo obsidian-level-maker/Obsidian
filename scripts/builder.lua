@@ -776,9 +776,8 @@ gui.printf("do_teleport\n")
 
   local function build_seed(S)
     assert(S)
-    assert(S.zone)
 
-    if not S.room --[[ and S.zone.zone_kind == "solid" ]] then
+    if not S.room then
 --    S.room = { kind = "liquid" }
       return
     end
@@ -798,7 +797,7 @@ gui.printf("do_teleport\n")
     local do_sides = true
     local sec_kind
 
-    if S.room then
+
 
       z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h or 0
       z2 = z2 or S.room.ceil_h or 256
@@ -933,13 +932,6 @@ w_tex = "e1u1/exitdr01_2"
       },
       -2000, 4000)
       end -- do_corners
-
-    else -- ZONE ONLY
-
-      do
-        error("UNKNOWN ZONE KIND: " .. tostring(S.zone.zone_kind))
-      end
-    end
 
 
     -- floor and ceiling brushes

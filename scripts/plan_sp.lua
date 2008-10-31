@@ -1024,7 +1024,7 @@ function Rooms_MakeSeeds()
 
   ---| Rooms_MakeSeeds |---
 
-  Seed_init(LAND_W*3, LAND_H*3, 1, { zone_kind="solid"})
+  Seed_init(LAND_W*3, LAND_H*3, 1)
 
   Plant_Rooms()
   Flow_Liquid()

@@ -22,18 +22,11 @@ class SEED
 {
   sx, sy, sz : location in seed map
 
-  zone : ZONE, never nil!
-
   room : ROOM
 
   borders : table(DIR -> BORDER)  -- DIR can be (2 4 6 8)
 
-  target_w, target_h : map size we want to be (bigger is OK)
-
   x1, y1, z1, x2, y2, z2 : map coordinates for 3D bbox 
-
-  -- grow phase only:
-  grow, shrink : map size to grow/shrink along current axis
 }
 
 
@@ -52,10 +45,9 @@ require 'defs'
 require 'util'
 
 
-function Seed_init(W, H, D, zone)
+function Seed_init(W, H, D)
 
-  assert(zone)
-
+  -- setup globals 
   SEED_W = W
   SEED_H = H
   SEED_D = D
@@ -66,7 +58,7 @@ function Seed_init(W, H, D, zone)
     SEEDS[x][y] = {}
 
     for z = 1,D do
-      SEEDS[x][y][z] = { sx=x, sy=y, sz=z, zone=zone }
+      SEEDS[x][y][z] = { sx=x, sy=y, sz=z }
     end
   end end -- x,y
 end
@@ -93,7 +85,7 @@ function Seed_get_safe(x, y, z)
 end
 
 
-function Seed_is_free(x, y, z, zone)
+function Seed_is_free(x, y, z)
   assert(Seed_valid(x, y, z))
 
   return not SEEDS[x][y][z].room
@@ -141,12 +133,9 @@ function Seed_dump_rooms()
   local HALLS = "acmunorvsewxz"
 
   local function seed_to_char(S)
-    if not S or not S.zone then return "!" end
+    if not S then return "!" end
 
     if not S.room then
-      if S.zone.zone_kind == "walk" then return "/" end
-      if S.zone.zone_kind == "view" then return "%" end
-      if S.zone.parent then return "#" end
       return "."
     end
 
