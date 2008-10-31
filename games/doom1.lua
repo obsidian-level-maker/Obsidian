@@ -3332,10 +3332,10 @@ OB_GAMES["doom1"] =
 }
 
 
-OB_THEMES["dm_tech"] =
+OB_THEMES["dm_cave"] =
 {
-  ref = "TECH",
-  label = "Tech",
+  ref = "CAVE",
+  label = "Cave",
   for_games = { doom1=1, doom2=1, freedoom=1 },
 }
 
@@ -3346,10 +3346,17 @@ OB_THEMES["dm_indy"] =
   for_games = { doom1=1, doom2=1, freedoom=1 },
 }
 
-OB_THEMES["dm_cave"] =
+OB_THEMES["dm_tech"] =
 {
-  ref = "CAVE",
-  label = "Cave",
+  ref = "TECH",
+  label = "Tech",
+  for_games = { doom1=1, doom2=1, freedoom=1 },
+}
+
+OB_THEMES["dm_urban"] =
+{
+  ref = "URBAN",
+  label = "City",
   for_games = { doom1=1, doom2=1, freedoom=1 },
 }
 

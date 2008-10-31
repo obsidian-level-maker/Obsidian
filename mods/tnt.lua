@@ -20,7 +20,7 @@ TN_COMBOS =
 {
   URBAN_EGYPT =
   {
-    theme_probs = { URBAN=130 },
+    theme_probs = { EGYPT=90,URBAN=1 },
     mat_pri = 8,
 
     wall  = "BIGWALL",
@@ -275,8 +275,8 @@ OB_MODULES["tnt"] =
 
 OB_THEMES["tnt_egypt"] =
 {
-  label = "Egyptian",
-
+  ref = "EGYPT",
+  label = "Egypt",
   for_module = "tnt",
 }
 
