@@ -92,7 +92,7 @@ function Freedoom_setup()
 end
 
 
-OB_GAMES["freedoom"] =
+UNFINISHED["freedoom"] =
 {
   label = "FreeDoom 0.6",
 
