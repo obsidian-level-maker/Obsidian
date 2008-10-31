@@ -238,7 +238,7 @@ function Layout_Hallway(R)
 
   for _,C in ipairs(R.conns) do
     local S = C:seed(R)
-    if S.conn_dir == 2 or S.conn_dir == 8 then
+    if is_vert(S.conn_dir) then
       used_x[S.sx] = 1
     else
       used_y[S.sy] = 1
@@ -515,10 +515,50 @@ function Layout_Indoor(R)
   end
 
   local function clear_layout()
-    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
-      SEEDS[x][y][1].layout_char = nil
+    for tx = R.tx1, R.tx2 do for ty = R.ty1, R.ty2 do
+      local S = SEEDS[tx][ty][1]
+      S.layout_char = nil
+      S.floor_h = nil
+      S.emerg_stairs = {}
     end end
   end
+
+  local function read_layout()
+    local L = {}
+
+    L.seeds = array_2D(R.tw, R.th)
+
+    for tx = R.tx1, R.tx2 do for ty = R.ty1, R.ty2 do
+      local x = tx - R.tx1 + 1
+      local y = ty - R.ty1 + 1
+
+      local S = SEEDS[tx][ty][1]
+
+      L.seeds[cx][cy] =
+      {
+        layout_char  = S.layout_char,
+        floor_h      = S.floor_h,
+        emerg_stairs = S.emerg_stairs,
+      }
+    end end
+
+    return L
+  end
+
+  local function write_layout(L)
+    for tx = R.tx1, R.tx2 do for ty = R.ty1, R.ty2 do
+      local x = tx - R.tx1 + 1
+      local y = ty - R.ty1 + 1
+
+      local S = SEEDS[tx][ty][1]
+      local W = L.seeds[x][y]
+
+      S.layout_char  = W.layout_char
+      S.floor_h      = W.floor_h
+      S.emerg_stairs = W.emerg_stairs
+    end end
+  end
+
 
   local function try_add_conn(list, S, flip_x, flip_y)
     assert(S.conn and S.conn.layout_char)
@@ -531,6 +571,11 @@ function Layout_Indoor(R)
     if not valid_T(tx, ty) then
       return
     end
+
+    local tdir = 10 - S.conn_dir
+
+    if flip_x and is_horiz(tdir) then tdir = 10 - tdir end
+    if flip_y and is_vert(tdir)  then tdir = 10 - tdir end
 
 -- gui.debugf("  try_add_conn: S @ (%d,%d)  T @ (%d,%d)\n", S.sx,S.sy, tx,ty)
     local T = SEEDS[tx][ty][1]
@@ -550,6 +595,9 @@ function Layout_Indoor(R)
     else
       T.layout_char = S.conn.layout_char
       T.group_id    = INFO.group_id
+
+      T.tdir    = tdir
+      T.floor_h = INFO.conn.conn_h
     end
 
     table.insert(list, INFO)
@@ -578,30 +626,6 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
     return list
   end
 
-  local function read_layout()
-    local L = {}
-
-    L.chars = array_2D(R.tx2 - R.tx1 + 1, R.ty2 - R.ty1 + 1)
-
-    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
-      L.chars[x - R.tx1 + 1][y - R.ty1 + 1] = SEEDS[x][y][1].layout_char
-    end end
-
-    return L
-  end
-
-  local function write_layout(L)
-    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
-      local S = SEEDS[x][y][1]
-
-      S.layout_char = L.chars[x - R.tx1 + 1][y - R.ty1 + 1]
-
-      local k = height_for_char(h_set, S.layout_char)
-
-      if k then S.floor_h = k end
-    end end
-  end
-
 
   local function mirror_horizontally(old_w, new_w)
     for y = R.ty1, R.ty2 do
@@ -627,6 +651,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
 
     -- restore old width
     R.tx2 = R.tx1 + old_w - 1
+    R.tw, R.th = box_size(R.tx1, R.ty1, R.tx2, R.ty2)
   end
 
   local function mirror_vertically(old_h, new_h)
@@ -653,6 +678,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
 
     -- restore old height
     R.ty2 = R.ty1 + old_h - 1
+    R.tw, R.th = box_size(R.tx1, R.ty1, R.tx2, R.ty2)
   end
   
 
@@ -885,6 +911,112 @@ gui.debugf("Emergency connect\n");
     return cost
   end
 
+  local function lc_is_digit(lc)  -- UGH!!!!
+    return lc == "0" or lc == "1" or lc == "2" or
+           lc == "3" or lc == "4" or lc == "5" or
+           lc == "6" or lc == "7" or lc == "8"
+  end
+
+  local function seed_neighbor(S, dir)  -- FIXME: method of SEED
+    local nx, ny = nudge_coord(S.sx, S.sy, dir)
+    if not Seed_valid(nx, ny, 1) then
+      return nil
+    end
+    return SEEDS[nx][ny][1]
+  end
+
+  local function flood_fill_layout(EX)
+    local flood_group = rand_element(EX).group_id
+
+    local poss   = {}
+    local emergs = {}
+
+    -- find a seed we can "grow" into a vacant spot
+    for tx = R.tx1, R.tx2 do for ty = R.ty1, R.ty2 do
+      local T = SEEDS[tx][ty][1]
+      if lc_is_digit(T.layout_char) then 
+        for dir = 2,8,2 do
+          local nx, ny = nudge_coord(tx, ty, dir)
+          if valid_T(nx, ny) then
+            local N = SEEDS[nx][ny][1]
+
+            if N.layout_char and N.layout_char == T.layout_char and
+               N.group_id ~= T.group_id
+            then
+              -- direct connection!
+              gui.debugf("direction linkage @ (%d,%d) dir:%d\n", tx, ty, dir)
+              merge_groups(EX, T.group_id, N.group_id)
+              return 0
+            end
+
+            if not N.layout_char then
+              table.insert(poss, { tx=tx, ty=ty, dir=dir })
+            end
+
+            if lc_is_digit(N.layout_char) and N.group_id ~= T.group_id then
+              table.insert(emergs, { tx=tx, ty=ty, dir=dir })
+            end
+          end
+        end -- for side
+      end
+    end end -- for tx, ty
+
+
+    if #poss > 0 then
+      -- FIXME: prefer one with same 'tdir'
+      local PM = rand_element(poss)
+
+      local T = SEEDS[PM.tx][PM.ty][1]
+      local N = seed_neighbor(T, PM.dir)
+
+      @@@
+
+      return 1
+    end
+
+
+    -- Emergency linkage!
+
+    assert(#emergs > 0)
+
+    -- FIXME: choose one with least height diff
+    local EM = rand_element(emergs)
+
+gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
+
+    local T = SEEDS[EM.tx][EM.ty][1]
+    local N = seed_neighbor(T, EM.dir)
+
+    if T.floor_h < N.floor_h then
+      T.emerg_stairs[EM.dir] = true
+    else
+      N.emerg_stairs[10 - EM.dir] = true
+    end
+
+    merge_groups(EX, T.group_id, N.group_id)
+
+    return 1000  -- FIXME adjust for height diff
+  end
+
+  local function make_basic_layout_2(EX)
+    local cost = 0
+
+    for loop = 1, R.tw * R.th * 4 do
+      gui.debugf("MAKE BASIC LAYOUT loop=%d:\n", loop);
+      dump_layout(R)
+
+      if is_fully_connected(EX) then
+        break;  -- complete connected now
+      end
+
+      cost = cost + flood_fill_layout(EX)
+    end
+
+    gui.debug("make_basic_layout_2: cost = %d\n", cost)
+
+    return cost
+  end
+
   function ensure_mirror_x_traversible()
     for y = R.ty1, R.ty2 do
       if SEEDS[R.tx2][y][1].layout_char then
@@ -966,6 +1098,9 @@ gui.debugf("Emergency connect\n");
     end
   end
 
+  R.tw, R.th = box_size(R.tx1, R.ty1, R.tx2, R.ty2)
+
+
   -- TODO: junk sides
 
 
@@ -978,7 +1113,7 @@ gui.debugf("Emergency connect\n");
     clear_layout()
     local EX = insert_conns()
 
-    local cost = make_basic_layout(EX)
+    local cost = make_basic_layout_2(EX)
 
     if not best_layout or cost < best_cost then
       best_layout = read_layout()
@@ -1036,6 +1171,8 @@ function Room_Layout(R)
   -- set seed range for layouting algorithms to whole room
   R.tx1, R.ty1 = R.sx1, R.sy1
   R.tx2, R.ty2 = R.sx2, R.sy2
+
+  R.tw, R.th = box_size(R.tx1, R.ty1, R.tx2, R.ty2)
 
 
   if R.kind == "stairwell" then
