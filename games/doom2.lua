@@ -1810,3 +1810,10 @@ OB_THEMES["d2_nature"] =
   for_games = { doom2=1, freedoom=1 },
 }
 
+OB_THEMES["d2_wolf"] =
+{
+  ref = "WOLF",
+  label = "Wolfenstein",
+  for_games = { doom2=1, freedoom=1 },
+}
+
