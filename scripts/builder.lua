@@ -1084,7 +1084,7 @@ gui.printf("do_teleport\n")
       
         f_tex = "FLOOR0_1"
         c_tex = "CEIL3_5"
-        w_tex = "WOOD5"
+        w_tex = "STARTAN3"
 
       end
 
@@ -1182,15 +1182,15 @@ if S.layout_char == "#" then
 elseif S.layout_char == "%" then
     gui.add_brush(
     {
-      t_face = { texture="LAVA1" },
+      t_face = { texture="FWATER1" },
       b_face = { texture=f_tex },
-      w_face = { texture="DBRAIN1" },
+      w_face = { texture="FIREMAG1" },
     },
     {
       { x=x1, y=y1 }, { x=x1, y=y2 },
       { x=x2, y=y2 }, { x=x2, y=y1 },
     },
-    -2000, -64);
+    -2000, -32);
 
     gui.add_brush(
     {
@@ -1215,7 +1215,14 @@ elseif S.layout_char == "v" then
    do_ramp_y(S, x1,y1,y2, x2,y1,y2, S.stair_z2, S.stair_z1)
 elseif S.layout_char == "L" or S.layout_char == "J" or
        S.layout_char == "F" or S.layout_char == "T" then
-   do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
+
+   if (S.sx == S.room.sx1 or S.sx == S.room.sx2) and
+      (S.sy == S.room.sy1 or S.sy == S.room.sy2)
+   then
+     do_corner_ramp_CURVED(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
+   else
+     do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
+   end
 else
     gui.add_brush(
     {
