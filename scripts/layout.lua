@@ -746,178 +746,6 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
     end
   end
 
-  local function try_linear(E, EX, loop)
-    local poss_dirs = {}
-    local emer_dirs = {}
-
-    for dir = 2,8,2 do
-      local nx, ny = nudge_coord(E.tx, E.ty, dir)
-      if not valid_T(nx, ny) then
-        -- outside of area
-      else
-        local N = SEEDS[nx][ny][1]
-
-        if not N.layout_char then
-          table.insert(poss_dirs, dir)
-        elseif N.layout_char == E.T.layout_char and
-               assert(N.group_id) ~= E.T.group_id then
-
-          -- direct connection
-          merge_groups(EX, N.group_id, E.T.group_id)
-          return 0
-
-        elseif N.layout_char ~= E.T.layout_char then
-          table.insert(emer_dirs, dir)
-        end
-      end
-    end
-
---!!!!    assert(#poss_dirs + #emerg_dirs > 0)
-
-
-    rand_shuffle(poss_dirs)
-
-    if #poss_dirs > 0 then
-
-      local dir = table.remove(poss_dirs, 1)
-
-      local dx, dy = dir_to_delta(dir)
-
-      local x, y = E.tx, E.ty
-      gui.debugf("Linear @ %d,%d in direction %d\n", x, y, dir)
-
-      local ds1, T1 = dist_to_something(x, y, dir)
---    local ds2 = dist_to_something(x, y, rotate_cw90(dir))
---    local ds3 = dist_to_something(x, y, rotate_ccw90(dir))
-
-      if T1 and T1.group_id ~= E.T.group_id then
-gui.debugf("  something dist=%d\n", ds1);
-        if ds1 >= 1 then
-          x = x + dx
-          y = y + dy
-
-          SEEDS[x][y][1].layout_char = sel(dir==4 or dir==6, ">", "^")
-          SEEDS[x][y][1].group_id = E.T.group_id
-
-          ds1 = ds1 - 1
-        end
-
-        while ds1 >= 1 do
-          x = x + dx
-          y = y + dy
-
-          SEEDS[x][y][1].layout_char = T1.layout_char
-          SEEDS[x][y][1].group_id    = T1.group_id
-
-          ds1 = ds1 - 1
-        end
-
-        merge_groups(EX, T1.group_id, E.T.group_id)
-
-        return 80;
-      end
-
-      while true do
-        x = x + dx
-        y = y + dy
-
---gui.debugf("  next pos %d,%d\n", x, y);
-        if not valid_T(x, y) then
---gui.debugf("  INVALID\n");
-          break;
-        end
-
-        local T = SEEDS[x][y][1]
-
-        if T.layout_char then
--- gui.debugf("  ALREADY HAS LAYOUT CHAR: %s\n", T.layout_char)
-          break;
-        end
-
-        T.layout_char = E.T.layout_char
-        T.group_id    = E.T.group_id
-      end
-
-      return nil -- BLEH
-    end
-
-
-    -- emergency connect
-
-    if #emer_dirs == 0 then
-      return nil
-    end
-
-    local e_dir = rand_element(emer_dirs)
-
-    local nx, ny = nudge_coord(E.tx, E.ty, e_dir)
-    local N = SEEDS[nx][ny][1]
-
-    E.T.emer_stair = e_dir
-
-    merge_groups(EX, E.T.group_id, N.group_id)
-
-    return 1000
-  end
-
-  local function try_clockwise(E, EX, loop)
-    return nil -- FIXME
-  end
-
-  local function try_anticlockwise(E, EX, loop)
-    return nil -- FIXME
-  end
-
-  local function make_basic_layout(EX)
-    assert(#EX > 0)
-
-    local cost = 0
-    local loop = 0
-
-    EX[1].T.group_id = 1
-
-    while true do
-      loop = loop + 1
-
-      gui.debugf("MAKE BASIC LAYOUT loop=%d:\n", loop);
-      dump_layout(R)
-
-      if is_fully_connected(EX) then
-        break;  -- complete connected now
-      end
-
-      local E = rand_element(EX)
-
-
-      local METHODS =
-      {
-        CW = 50, ACW = 50, LIN = 200
-      }
-
-      local did_cost
-
-      while not table_empty(METHODS) do
-        local meth = rand_key_by_probs(METHODS)
-
-        METHODS[meth] = nil -- don't try again this loop
-
-        if meth == "CW" then
-          did_cost = try_clockwise(E, EX, loop)
-        elseif meth == "ACW" then
-          did_cost = try_anticlockwise(E, EX, loop)
-        else
-          did_cost = try_linear(E, EX, loop)
-        end
-      end
-
-      if did_cost then
-        cost = cost + did_cost
-      end
-    end
-
-    return cost
-  end
-
   local function lc_is_digit(lc)  -- UGH!!!!
     return lc == "0" or lc == "1" or lc == "2" or
            lc == "3" or lc == "4" or lc == "5" or
@@ -1016,6 +844,11 @@ gui.debugf("  something dist=%d\n", ds1);
 
         if is_parallel(ST.dir, PM.dir) then
           factor = 1.0
+
+        elseif (O.sx == R.tx1 or O.sx == R.tx2) and
+               (O.sy == R.ty1 or O.sy == R.ty2)
+        then
+          factor = 0.5  -- turn-90-degree stairs are perfect in a corner
         end
 
         local STAIR_CHARS =
@@ -1084,7 +917,6 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 
     for loop = 1, R.tw * R.th * 4 do
       gui.debugf("MAKE BASIC LAYOUT loop=%d:\n", loop);
-      dump_layout(R)
 
       if is_fully_connected(EX) then
         break;  -- complete connected now
@@ -1093,7 +925,8 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
       cost = cost + flood_fill_layout(EX)
     end
 
-    gui.debugf("make_basic_layout_2: cost = %1.2f\n", cost)
+    gui.debugf("make_basic_layout_2: cost = %1.2f  :-\n", cost)
+    dump_layout(R)
 
     return cost
   end
@@ -1157,6 +990,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
     C.layout_char = char_for_height(h_set, C.conn_h)
   end
 
+  gui.debugf("Initial unmirrored layout:\n")
   dump_layout(R);
 
   decide_layout_symmetry()
@@ -1190,9 +1024,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
   local best_layout
   local best_cost
 
-  dump_layout(R)
-
-  for i = 1,1 do
+  for loop = 1,16 do
     clear_layout()
     local EX = insert_conns()
 
@@ -1206,17 +1038,15 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 
   write_layout(best_layout)
 
-  dump_layout(R);
+  gui.debugf("Best cost was: %1.2f\n", best_cost)
 
 
   if R.layout_symmetry == "x" or R.layout_symmetry == "xy" then
     ensure_mirror_x_traversible()
-  dump_layout(R);
   end
 
   if R.layout_symmetry == "y" or R.layout_symmetry == "xy" then
     ensure_mirror_y_traversible()
-  dump_layout(R);
   end
 
 
