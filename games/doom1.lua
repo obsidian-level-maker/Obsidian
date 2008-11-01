@@ -3199,7 +3199,7 @@ end
 
 function Doom_common_setup()
 
-  GAME.classes = { "doomguy" },
+  GAME.classes = { "marine" },
 
   Game_merge_tab("monsters", DM_MONSTERS)
   Game_merge_tab("bosses",   DM_BOSSES)
