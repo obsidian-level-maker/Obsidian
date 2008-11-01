@@ -215,7 +215,7 @@ function do_ramp_y(S, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
     {
       t_face = { texture="STEP2" },
       b_face = { texture="STEP2" },
-      w_face = { texture="STEP2" },
+      w_face = { texture="STEP1" },
     },
     {
       { x=x1, y=ly3 }, { x=x1, y=ly4 },
@@ -270,7 +270,7 @@ function do_corner_ramp_CURVED(S, x1,y1, x2,y2, x_h,y_h)
                    info, info, info)
 end
 
-function do_corner_ramp(S, x1,y1, x2,y2, x_h,y_h)
+function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
   assert(x_h and y_h)
 
   local d_h = sel(x_h < y_h, 1, -1)
@@ -341,6 +341,115 @@ function do_corner_ramp(S, x1,y1, x2,y2, x_h,y_h)
   end
 
 end
+
+function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
+  assert(x_h and y_h)
+
+  local d_h = sel(x_h < y_h, 1, -1)
+  local m_h = int((x_h + y_h) / 2)
+
+  local pw = int((x2 - x1) * 0.35)
+  local ph = int((y2 - y1) * 0.35)
+  local pz = math.max(x_h, y_h)
+
+  local info =
+  {
+    t_face = { texture="FLAT10" },
+    b_face = { texture="FLAT10" },
+    w_face = { texture="ASHWALL4" },
+  }
+
+  local pilla, mezza
+
+  if S.layout_char == "L" then
+
+    do_ramp_y(S, x1,y2-ph,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    do_ramp_x(S, x2-pw,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
+
+    pilla =
+    {
+      { x=x2-pw, y=y2-ph },
+      { x=x2-pw, y=y2 },
+      { x=x2,    y=y2 },
+      { x=x2,    y=y2-ph },
+    }
+
+    mezza =
+    {
+      { x=x1,    y=y1 },
+      { x=x1,    y=y2-ph },
+      { x=x2-pw, y=y2-ph },
+      { x=x2-pw, y=y1 },
+    }
+
+  elseif S.layout_char == "J" then
+
+    do_ramp_y(S, x1+pw,y2-ph,y2, x2,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    do_ramp_x(S, x1,x1+pw,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
+
+    pilla =
+    {
+      { x=x1,    y=y2-ph },
+      { x=x1,    y=y2 },
+      { x=x1+pw, y=y2 },
+      { x=x1+pw, y=y2-ph },
+    }
+
+    mezza =
+    {
+      { x=x1+pw, y=y1 },
+      { x=x1+pw, y=y2-ph },
+      { x=x2   , y=y2-ph },
+      { x=x2   , y=y1 },
+    }
+
+  elseif S.layout_char == "F" then
+
+    do_ramp_y(S, x1,y1,y1+ph, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    do_ramp_x(S, x2-pw,x2,y1+ph, x2-pw,x2,y2, m_h+d_h*4, y_h, "exact")
+
+    pilla =
+    {
+      { x=x2-pw, y=y1 },
+      { x=x2-pw, y=y1+ph },
+      { x=x2,    y=y1+ph },
+      { x=x2,    y=y1 },
+    }
+
+    mezza =
+    {
+      { x=x1,    y=y1+ph },
+      { x=x1,    y=y2 },
+      { x=x2-pw, y=y2 },
+      { x=x2-pw, y=y1+ph },
+    }
+
+  elseif S.layout_char == "T" then
+
+    do_ramp_y(S, x1+pw,y1,y1+ph, x2,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    do_ramp_x(S, x1,x1+pw,y1+ph, x1,x1+pw,y2, y_h, m_h+d_h*4, "exact")
+
+    pilla =
+    {
+      { x=x1,    y=y1 },
+      { x=x1,    y=y1+ph },
+      { x=x1+pw, y=y1+ph },
+      { x=x1+pw, y=y1 },
+    }
+
+    mezza =
+    {
+      { x=x1+pw, y=y1+ph },
+      { x=x1+pw, y=y2    },
+      { x=x2   , y=y2 },
+      { x=x2   , y=y1+ph },
+    }
+  end
+
+  gui.add_brush(info, pilla, -2000, pz)
+  gui.add_brush(info, mezza, -2000, m_h)
+end
+
 
 
 function dummy_builder()
@@ -1106,7 +1215,7 @@ elseif S.layout_char == "v" then
    do_ramp_y(S, x1,y1,y2, x2,y1,y2, S.stair_z2, S.stair_z1)
 elseif S.layout_char == "L" or S.layout_char == "J" or
        S.layout_char == "F" or S.layout_char == "T" then
-   do_corner_ramp(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
+   do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
 else
     gui.add_brush(
     {
