@@ -998,7 +998,10 @@ gui.debugf("  something dist=%d\n", ds1);
             return 10
           end
 
-          if lc_is_digit(O.layout_char) and O.group_id ~= T.group_id then
+          if lc_is_digit(O.layout_char) and O.group_id ~= T.group_id and
+             not (is_perpendicular(PM.dir, dir) and
+                  (PM.tx == R.layout_shared_x or PM.ty == R.layout_shared_y))
+          then
             table.insert(stairs, { O=O, dir=dir })
           end
         end
@@ -1108,7 +1111,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
         local S = SEEDS[x][y][1]
         local D = SEEDS[x+1][y][1]
 
-        if S.layout_char and not D.layout_char then
+        if lc_is_digit(S.layout_char) and not D.layout_char then
           D.layout_char = S.layout_char
           D.floor_h     = S.floor_h
           did = true
@@ -1134,7 +1137,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
         local S = SEEDS[x][y][1]
         local D = SEEDS[x][y+1][1]
 
-        if S.layout_char and not D.layout_char then
+        if lc_is_digit(S.layout_char) and not D.layout_char then
           D.layout_char = S.layout_char
           D.floor_h     = S.floor_h
           did = true
