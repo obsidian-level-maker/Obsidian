@@ -300,11 +300,8 @@ bool BSP_CloseLevel()
 
   BSP_WriteHeader();
 
-  for (int L = 1; L < bsp_numlumps; L++)
+  for (int L = 0; L < bsp_numlumps; L++)
     BSP_WriteLump(bsp_directory[L]);
-
-  // put entities last
-  BSP_WriteLump(bsp_directory[0]);
 
   PAK_FinishLump();
 
