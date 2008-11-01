@@ -828,7 +828,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
 
           if lc_is_digit(O.layout_char) and O.group_id ~= T.group_id and
              not (is_perpendicular(PM.dir, dir) and
-                  (PM.tx == R.layout_shared_x or PM.ty == R.layout_shared_y))
+                  (N.sx == R.layout_shared_x or N.sy == R.layout_shared_y))
           then
             table.insert(stairs, { O=O, dir=dir })
           end
