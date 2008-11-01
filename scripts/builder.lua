@@ -144,25 +144,31 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
 end
 
 
-function do_ramp_x(S, x1,y1, x2,y2, az,bz)
+function do_ramp_x(S, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
   assert(az and bz)
 
-  if S.layout_char == "<" then
-    az,bz = bz,az
-  end
-
-  local steps = int(math.abs(az-bz) / 16 + 0.9)
+  local steps = int(math.abs(az-bz) / 14 + 0.9)
+  local z
 
   if steps < 2 then steps = 2 end
 
+  if exact then steps = steps + 1 end
+
   for i = 0,steps-1 do 
-    local z = az + (bz - az) * (i+1) / (steps+1)
+    if exact then
+      z = az + (bz - az) * (i  ) / (steps-1)
+    else
+      z = az + (bz - az) * (i+1) / (steps+1)
+    end
 
-    local x3 = x1 + (x2 - x1) * i / steps
-    local x4 = x1 + (x2 - x1) * (i+1) / steps
+    local bx3 = bx1 + (bx2 - bx1) * i / steps
+    local bx4 = bx1 + (bx2 - bx1) * (i+1) / steps
 
-    x3 = int(x3)
-    x4 = int(x4)
+    local tx3 = tx1 + (tx2 - tx1) * i / steps
+    local tx4 = tx1 + (tx2 - tx1) * (i+1) / steps
+
+    bx3 = int(bx3) ; tx3 = int(tx3)
+    bx4 = int(bx4) ; tx4 = int(tx4)
 
     gui.add_brush(
     {
@@ -171,33 +177,39 @@ function do_ramp_x(S, x1,y1, x2,y2, az,bz)
       w_face = { texture="STEP1" },
     },
     {
-      { x=x3, y=y1 }, { x=x3, y=y2 },
-      { x=x4, y=y2 }, { x=x4, y=y1 },
+      { x=bx3, y=y1 }, { x=tx3, y=y2 },
+      { x=tx4, y=y2 }, { x=bx4, y=y1 },
     },
     -2000, z);
   end
 end
 
 
-function do_ramp_y(S, x1,y1, x2,y2, az,bz)
+function do_ramp_y(S, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
   assert(az and bz)
 
-  if S.layout_char == "v" then
-    az,bz = bz,az
-  end
-
-  local steps = int(math.abs(az-bz) / 16 + 0.9)
+  local steps = int(math.abs(az-bz) / 14 + 0.9)
+  local z
 
   if steps < 2 then steps = 2 end
 
+  if exact then steps = steps + 1 end
+
   for i = 0,steps-1 do 
-    local z = az + (bz - az) * (i+1) / (steps+1)
+    if exact then
+      z = az + (bz - az) * (i  ) / (steps-1)
+    else
+      z = az + (bz - az) * (i+1) / (steps+1)
+    end
 
-    local y3 = y1 + (y2 - y1) * i / steps
-    local y4 = y1 + (y2 - y1) * (i+1) / steps
+    local ly3 = ly1 + (ly2 - ly1) * i / steps
+    local ly4 = ly1 + (ly2 - ly1) * (i+1) / steps
 
-    y3 = int(y3)
-    y4 = int(y4)
+    local ry3 = ry1 + (ry2 - ry1) * i / steps
+    local ry4 = ry1 + (ry2 - ry1) * (i+1) / steps
+
+    ly3 = int(ly3) ; ry3 = int(ry3)
+    ly4 = int(ly4) ; ry4 = int(ry4)
 
     gui.add_brush(
     {
@@ -206,18 +218,18 @@ function do_ramp_y(S, x1,y1, x2,y2, az,bz)
       w_face = { texture="STEP2" },
     },
     {
-      { x=x1, y=y3 }, { x=x1, y=y4 },
-      { x=x2, y=y4 }, { x=x2, y=y3 },
+      { x=x1, y=ly3 }, { x=x1, y=ly4 },
+      { x=x2, y=ry4 }, { x=x2, y=ry3 },
     },
     -2000, z);
   end
 end
 
 
-function do_corner_ramp(S, x1,y1, x2,y2, x_h,y_h)
+function do_corner_ramp_CURVED(S, x1,y1, x2,y2, x_h,y_h)
   assert(x_h and y_h)
 
-  local steps = int(math.abs(x_h-y_h) / 16 + 0.9)
+  local steps = int(math.abs(x_h-y_h) / 14 + 0.9)
 
   if steps < 4 then
     steps = 4
@@ -256,6 +268,78 @@ function do_corner_ramp(S, x1,y1, x2,y2, x_h,y_h)
                    dy0, dy1, dy2, dy3,
                    x_h, y_h, 256,
                    info, info, info)
+end
+
+function do_corner_ramp(S, x1,y1, x2,y2, x_h,y_h)
+  assert(x_h and y_h)
+
+  local d_h = sel(x_h < y_h, 1, -1)
+  local m_h = int((x_h + y_h) / 2)
+
+  local pw = (x2 - x1) / 4
+  local ph = (y2 - y1) / 4
+  local pz = math.max(x_h, y_h)
+
+  local info =
+  {
+    t_face = { texture="FLAT1" },
+    b_face = { texture="FLAT1" },
+    w_face = { texture="SLADWALL" },
+  }
+
+  if S.layout_char == "L" then
+
+    do_ramp_y(S, x1,y1,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    do_ramp_x(S, x1,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
+
+    gui.add_brush(info,
+    {
+      { x=x2-pw, y=y2-ph },
+      { x=x2-pw, y=y2 },
+      { x=x2,    y=y2 },
+      { x=x2,    y=y2-ph },
+    }, -2000, pz)
+
+  elseif S.layout_char == "J" then
+
+    do_ramp_y(S, x1+pw,y2-ph,y2, x2,y1,y2, m_h-d_h*4, x_h, "exact")
+    do_ramp_x(S, x1,x2,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
+
+    gui.add_brush(info,
+    {
+      { x=x1,    y=y2-ph },
+      { x=x1,    y=y2 },
+      { x=x1+pw, y=y2 },
+      { x=x1+pw, y=y2-ph },
+    }, -2000, pz)
+
+  elseif S.layout_char == "F" then
+
+    do_ramp_y(S, x1,y1,y2, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    do_ramp_x(S, x2-pw,x2,y1+ph, x1,x2,y2, m_h+d_h*4, y_h, "exact")
+
+    gui.add_brush(info,
+    {
+      { x=x2-pw, y=y1 },
+      { x=x2-pw, y=y1+ph },
+      { x=x2,    y=y1+ph },
+      { x=x2,    y=y1 },
+    }, -2000, pz)
+
+  elseif S.layout_char == "T" then
+
+    do_ramp_y(S, x1+pw,y1,y1+ph, x2,y1,y2, x_h, m_h-d_h*4, "exact")
+    do_ramp_x(S, x1,x1+pw,y1+ph, x1,x2,y2, y_h, m_h+d_h*4, "exact")
+
+    gui.add_brush(info,
+    {
+      { x=x1,    y=y1 },
+      { x=x1,    y=y1+ph },
+      { x=x1+pw, y=y1+ph },
+      { x=x1+pw, y=y1 },
+    }, -2000, pz)
+  end
+
 end
 
 
@@ -891,7 +975,7 @@ gui.printf("do_teleport\n")
       
         f_tex = "FLOOR0_1"
         c_tex = "CEIL3_5"
-        w_tex = "STARTAN3"
+        w_tex = "WOOD5"
 
       end
 
@@ -1012,10 +1096,14 @@ elseif S.layout_char == "%" then
     256, 2000);
 else
 
-if S.layout_char == ">" or S.layout_char == "<" then
-   do_ramp_x(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
-elseif S.layout_char == "v" or S.layout_char == "^" then
-   do_ramp_y(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
+if S.layout_char == ">" then
+   do_ramp_x(S, x1,x2,y1, x1,x2,y2, S.stair_z1, S.stair_z2)
+elseif S.layout_char == "<" then
+   do_ramp_x(S, x1,x2,y1, x1,x2,y2, S.stair_z2, S.stair_z1)
+elseif S.layout_char == "^" then
+   do_ramp_y(S, x1,y1,y2, x2,y1,y2, S.stair_z1, S.stair_z2)
+elseif S.layout_char == "v" then
+   do_ramp_y(S, x1,y1,y2, x2,y1,y2, S.stair_z2, S.stair_z1)
 elseif S.layout_char == "L" or S.layout_char == "J" or
        S.layout_char == "F" or S.layout_char == "T" then
    do_corner_ramp(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)

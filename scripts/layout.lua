@@ -855,7 +855,6 @@ gui.debugf("  something dist=%d\n", ds1);
 
     E.T.emer_stair = e_dir
 
-gui.debugf("Emergency connect\n");
     merge_groups(EX, E.T.group_id, N.group_id)
 
     return 1000
