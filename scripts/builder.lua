@@ -451,7 +451,7 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 end
 
 
-function do_outdoor_ramp_up(ST, f_tex, w_tex)
+function do_outdoor_ramp_down(ST, f_tex, w_tex)
   local conn_dir = assert(ST.S.conn_dir)
 
   local oh  = ST.outer_h
@@ -463,15 +463,17 @@ function do_outdoor_ramp_up(ST, f_tex, w_tex)
   local ox2 = SEEDS[ST.x2][ST.y2][1].x2
   local oy2 = SEEDS[ST.x2][ST.y2][1].y2
 
-gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
+  -- inner rectangle
+  local ix1 = ST.S.x1
+  local iy1 = ST.S.y1
+  local ix2 = ST.S.x2
+  local iy2 = ST.S.y2
+
+gui.debugf("do_outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 
   if conn_dir == 6 then
 
-    -- inner rectangle
-    local ix1 = ST.S.x2 - 96
-    local iy1 = ST.S.y1
-    local ix2 = ST.S.x2
-    local iy2 = ST.S.y2
+    ix1 = ST.S.x2 - 96
 
     do_ramp_x(ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
 
@@ -485,6 +487,74 @@ gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn
   end
 
   -- FIXME
+
+  ST.done = true
+end
+
+function do_outdoor_ramp_up(ST, f_tex, w_tex)
+  local conn_dir = assert(ST.S.conn_dir)
+
+  local oh  = ST.outer_h
+  local ih  = ST.inner_h
+
+  -- outer rectangle
+  local ox1 = SEEDS[ST.x1][ST.y1][1].x1
+  local oy1 = SEEDS[ST.x1][ST.y1][1].y1
+  local ox2 = SEEDS[ST.x2][ST.y2][1].x2
+  local oy2 = SEEDS[ST.x2][ST.y2][1].y2
+
+  -- inner rectangle
+  local ix1 = ST.S.x1
+  local iy1 = ST.S.y1
+  local ix2 = ST.S.x2
+  local iy2 = ST.S.y2
+
+gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
+
+  if conn_dir == 6 then
+
+    ix1 = ST.S.x2 - 64
+    ox1 = ox1 + 32
+  end
+  -- FIXME
+
+
+  assert(ih > oh)
+
+  local steps = int((ih - oh) / 12 + 0.9)
+  if steps < 4 then steps = 4 end
+
+  for i = 0,steps do
+
+    local z = ih + (oh - ih) * i / (steps+1)
+
+    local nx1 = ix1 + (ox1 - ix1) * i / (steps+0)
+    local ny1 = iy1 + (oy1 - iy1) * i / (steps+0)
+
+    local nx2 = ix2 + (ox2 - ix2) * i / (steps+0)
+    local ny2 = iy2 + (oy2 - iy2) * i / (steps+0)
+
+    if nx1 > nx2 then nx1,nx2 = nx2,nx1 end
+    if ny1 > ny2 then ny1,ny2 = ny2,ny1 end
+
+    nx1 = int(nx1) ; ny1 = int(ny1)
+    nx2 = int(nx2) ; ny2 = int(ny2)
+    z   = int(z)
+
+    gui.add_brush(
+    {
+      t_face = { texture=f_tex },
+      b_face = { texture=f_tex },
+      w_face = { texture=w_tex },
+    },
+      {
+        { x=nx1, y=ny1 },
+        { x=nx1, y=ny2 },
+        { x=nx2, y=ny2 },
+        { x=nx2, y=ny1 },
+      },
+    -2000, z)
+  end 
 
   ST.done = true
 end
@@ -1294,8 +1364,8 @@ end -- layout_char ~= "#"
 
 
 if S.assign_stair and not S.assign_stair.done then
-  if S.assign_stair.inner_h > S.assign_stair.outer_h then
---    do_outdoor_ramp_down(S.assign_stair, f_tex, w_tex)
+  if S.assign_stair.inner_h < S.assign_stair.outer_h then
+    do_outdoor_ramp_down(S.assign_stair, f_tex, w_tex)
   else
     do_outdoor_ramp_up(S.assign_stair, f_tex, w_tex)
   end
