@@ -472,21 +472,38 @@ function do_outdoor_ramp_down(ST, f_tex, w_tex)
 gui.debugf("do_outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 
   if conn_dir == 6 then
-
-    ix1 = ST.S.x2 - 96
-
+    ix1 = ix2-96
     do_ramp_x(ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
 
-    if iy2 < oy2-64 then
-      do_ramp_y(ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
-    end
+  elseif conn_dir == 4 then
+    ix2 = ix1 + 96
+    do_ramp_x(ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
 
-    if iy1 > oy1+64 then
-      do_ramp_y(ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
-    end
+  elseif conn_dir == 8 then
+    iy1 = iy2-96
+    do_ramp_y(ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+
+  elseif conn_dir == 2 then
+    iy2 = iy1 + 96
+    do_ramp_y(ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
   end
 
-  -- FIXME
+
+  if is_horiz(conn_dir) then
+    if iy2+64 < oy2 then
+      do_ramp_y(ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
+    end
+    if iy1-64 > oy1 then
+      do_ramp_y(ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+    end
+  else -- is_vert
+    if ix2+64 < ox2 then
+      do_ramp_x(ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
+    end
+    if ix1-64 > ox1 then
+      do_ramp_x(ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
+    end
+  end
 
   ST.done = true
 end
@@ -512,11 +529,21 @@ function do_outdoor_ramp_up(ST, f_tex, w_tex)
 gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 
   if conn_dir == 6 then
-
-    ix1 = ST.S.x2 - 64
+    ix1 = ix2 - 64
     ox1 = ox1 + 32
+
+  elseif conn_dir == 4 then
+    ix2 = ix1 + 64
+    ox2 = ox2 - 32
+
+  elseif conn_dir == 8 then
+    iy1 = iy2 - 64
+    oy1 = oy1 + 32
+
+  elseif conn_dir == 2 then
+    iy2 = iy1 + 64
+    oy2 = oy2 - 32
   end
-  -- FIXME
 
 
   assert(ih > oh)
