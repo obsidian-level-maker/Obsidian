@@ -153,6 +153,17 @@ function dump_layout(R)
       return S.layout_char
     end
 
+---##    if R.outdoor then --!!!!!!
+---##      for _,C in ipairs(R.conns) do
+---##        local T = C:seed(R)
+---##        if S == T and C.conn_h then
+---##          gui.debugf("OUTDOOR DIFF %d\n", C.conn_h - R.floor_h)
+---##          local kk = int((C.conn_h - R.floor_h) / 64) + 10
+---##          return string.sub("RSTUVWXYZ0123456789", kk, kk)
+---##        end
+---##      end
+---##    end
+
     return "."
   end
 
@@ -348,7 +359,119 @@ end
 
 
 function Layout_Outdoor(R)
-  -- FIXME !!!
+
+  local function try_expand_stair(ST, dir)
+    local x1, y1 = ST.x1, ST.y1
+    local x2, y2 = ST.x2, ST.y2
+
+        if dir == 2 then y1 = y1 - 1
+    elseif dir == 8 then y2 = y2 + 1
+    elseif dir == 4 then x1 = x1 - 1
+    elseif dir == 6 then x2 = x2 + 1
+    else error("WTF dir?")
+    end
+
+    -- don't take up too much space
+    if (x1 == R.sx1 and x2 == R.sx2 and R.sh <= 4) or
+       (y1 == R.sy1 and y2 == R.sy2 and R.sw <= 4)
+    then
+      return false
+    end
+
+    for x = x1,x2 do for y = y1,y2 do
+      if not R:contains_seed(x, y) then
+        return false
+      end
+
+      local N = SEEDS[x][y][1]
+
+      if N.layout_char and N.layout_char ~= "S" then
+        return false
+      end
+
+      if N.layout_char == "S" and N.assign_stair ~= ST then
+        return false
+      end
+    end end -- for x,y
+
+    -- OK !!
+    ST.x1, ST.y1 = x1, y1
+    ST.x2, ST.y2 = x2, y2
+
+    for x = x1,x2 do for y = y1,y2 do
+      local N = SEEDS[x][y][1]
+
+      N.layout_char  = "S"
+      N.assign_stair = ST
+    end end -- for x,y
+
+    return true
+  end
+
+
+  ---| Layout_Outdoor |---
+
+  -- FIXME: if room has purpose, assign a seed for it now
+  
+  local stairs = {}
+  local lifts  = {}
+
+  for _,C in ipairs(R.conns) do
+    local S = C:seed(R)
+
+    local diff = math.abs(C.conn_h - R.floor_h)
+
+    if diff <= 4 then
+      S.layout_char = '0'
+    elseif diff >= 144 or (diff >= 112 and rand_odds(50)) then
+      S.layout_char = 'L'  -- lift
+      table.insert(lifts, { S=S })
+    else
+      S.layout_char = 'S'  -- stair
+
+      local STAIR =
+      {
+        S=S, conn=C,
+
+        x1=S.sx, y1=S.sy,
+        x2=S.sx, y2=S.sy,
+      }
+
+      S.assign_stair = STAIR
+      table.insert(stairs, STAIR)
+    end
+  end
+
+
+  gui.debugf("OUTDOOR LAYOUT:\n")
+  dump_layout(R)
+
+
+  -- TODO !!!!
+  if #lifts > 0 then
+    error("Lifts are needed but cannot be made yet")
+  end
+
+
+  if #stairs == 0 then
+    -- nothing else to do
+    return
+  end
+
+
+  local sides = { 2,4,6,8 }
+  rand_shuffle(sides)
+
+
+  for loop = 1,4 do
+    rand_shuffle(stairs)
+    for _,ST in ipairs(stairs) do
+      try_expand_stair(ST, sides[loop])
+    end
+  end
+
+  gui.debugf("EXPANDED:\n")
+  dump_layout(R)
 end
 
 
@@ -1024,7 +1147,9 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
   local best_layout
   local best_cost
 
-  for loop = 1,16 do
+  local max_loop = R.sw + R.sh + 3
+
+  for loop = 1,max_loop do
     clear_layout()
     local EX = insert_conns()
 
