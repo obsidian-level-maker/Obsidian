@@ -213,6 +213,53 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
   delete[] height_map;
 }
 
+void SKY_AddBuilding(byte *pixels, int W, int H,
+                     std::vector<byte> & colors,
+                     int pos_x, int width, int base_h, int top_h,
+                     int win_w, int win_h)
+{
+  int numcol = (int)colors.size();
+
+  SYS_ASSERT(numcol >= 2);
+ 
+  int x, y;
+
+  for (y = 0; y < base_h + top_h; y++)
+  {
+    if (y >= H)
+      break;
+
+    int x1 = pos_x;
+    int x2 = pos_x + width - 1;
+
+    if (y >= base_h)
+    {
+      x1 = x1 + width / 8;
+      x2 = x2 - width / 8;
+    }
+
+    for (x = x1; x <= x2; x++)
+    {
+      int idx = 0;
+
+      // window?
+      if (x > x1+1 && x < x2-1 &&
+          y > 1 && y < top_h+base_h-1 &&
+          (y < base_h-1 || y > base_h) &&
+          (x % (win_w+1) > 0) &&
+          (y % (win_h+1) > 0))
+      {
+        idx = 1;
+        
+        if (win_w == 1 && (rand() & 0x80))
+          idx = 0;
+      }
+
+      pixels[(H-1-y)*W + (x % W)] = colors[idx];
+    }
+  }
+}
+
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
