@@ -403,6 +403,7 @@ function Layout_Outdoor(R)
 
       N.layout_char  = "S"
       N.assign_stair = ST
+      N.floor_h      = assert(ST.S.floor_h)
     end end -- for x,y
 
     return true
@@ -435,10 +436,15 @@ function Layout_Outdoor(R)
 
         x1=S.sx, y1=S.sy,
         x2=S.sx, y2=S.sy,
+
+        inner_h = C.conn_h,
+        outer_h = R.floor_h,
       }
 
-      S.assign_stair = STAIR
       table.insert(stairs, STAIR)
+
+      S.assign_stair = STAIR
+      S.floor_h = math.min(C.conn_h, R.floor_h)
     end
   end
 

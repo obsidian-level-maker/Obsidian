@@ -144,7 +144,7 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
 end
 
 
-function do_ramp_x(S, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
+function do_ramp_x(bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
   assert(az and bz)
 
   local steps = int(math.abs(az-bz) / 14 + 0.9)
@@ -185,7 +185,7 @@ function do_ramp_x(S, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
 end
 
 
-function do_ramp_y(S, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
+function do_ramp_y(x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
   assert(az and bz)
 
   local steps = int(math.abs(az-bz) / 14 + 0.9)
@@ -289,8 +289,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   if S.layout_char == "L" then
 
-    do_ramp_y(S, x1,y1,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
-    do_ramp_x(S, x1,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
+    do_ramp_y(x1,y1,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    do_ramp_x(x1,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
 
     gui.add_brush(info,
     {
@@ -302,8 +302,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout_char == "J" then
 
-    do_ramp_y(S, x1+pw,y2-ph,y2, x2,y1,y2, m_h-d_h*4, x_h, "exact")
-    do_ramp_x(S, x1,x2,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
+    do_ramp_y(x1+pw,y2-ph,y2, x2,y1,y2, m_h-d_h*4, x_h, "exact")
+    do_ramp_x(x1,x2,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
 
     gui.add_brush(info,
     {
@@ -315,8 +315,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout_char == "F" then
 
-    do_ramp_y(S, x1,y1,y2, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
-    do_ramp_x(S, x2-pw,x2,y1+ph, x1,x2,y2, m_h+d_h*4, y_h, "exact")
+    do_ramp_y(x1,y1,y2, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    do_ramp_x(x2-pw,x2,y1+ph, x1,x2,y2, m_h+d_h*4, y_h, "exact")
 
     gui.add_brush(info,
     {
@@ -328,8 +328,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout_char == "T" then
 
-    do_ramp_y(S, x1+pw,y1,y1+ph, x2,y1,y2, x_h, m_h-d_h*4, "exact")
-    do_ramp_x(S, x1,x1+pw,y1+ph, x1,x2,y2, y_h, m_h+d_h*4, "exact")
+    do_ramp_y(x1+pw,y1,y1+ph, x2,y1,y2, x_h, m_h-d_h*4, "exact")
+    do_ramp_x(x1,x1+pw,y1+ph, x1,x2,y2, y_h, m_h+d_h*4, "exact")
 
     gui.add_brush(info,
     {
@@ -363,8 +363,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   if S.layout_char == "L" then
 
-    do_ramp_y(S, x1,y2-ph,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
-    do_ramp_x(S, x2-pw,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
+    do_ramp_y(x1,y2-ph,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    do_ramp_x(x2-pw,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
 
     pilla =
     {
@@ -384,8 +384,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout_char == "J" then
 
-    do_ramp_y(S, x1+pw,y2-ph,y2, x2,y2-ph,y2, m_h-d_h*4, x_h, "exact")
-    do_ramp_x(S, x1,x1+pw,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
+    do_ramp_y(x1+pw,y2-ph,y2, x2,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    do_ramp_x(x1,x1+pw,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
 
     pilla =
     {
@@ -405,8 +405,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout_char == "F" then
 
-    do_ramp_y(S, x1,y1,y1+ph, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
-    do_ramp_x(S, x2-pw,x2,y1+ph, x2-pw,x2,y2, m_h+d_h*4, y_h, "exact")
+    do_ramp_y(x1,y1,y1+ph, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    do_ramp_x(x2-pw,x2,y1+ph, x2-pw,x2,y2, m_h+d_h*4, y_h, "exact")
 
     pilla =
     {
@@ -426,8 +426,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout_char == "T" then
 
-    do_ramp_y(S, x1+pw,y1,y1+ph, x2,y1,y1+ph, x_h, m_h-d_h*4, "exact")
-    do_ramp_x(S, x1,x1+pw,y1+ph, x1,x1+pw,y2, y_h, m_h+d_h*4, "exact")
+    do_ramp_y(x1+pw,y1,y1+ph, x2,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    do_ramp_x(x1,x1+pw,y1+ph, x1,x1+pw,y2, y_h, m_h+d_h*4, "exact")
 
     pilla =
     {
@@ -450,6 +450,44 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
   gui.add_brush(info, mezza, -2000, m_h)
 end
 
+
+function do_outdoor_ramp_up(ST, f_tex, w_tex)
+  local conn_dir = assert(ST.S.conn_dir)
+
+  local oh  = ST.outer_h
+  local ih  = ST.inner_h
+
+  -- outer rectangle
+  local ox1 = SEEDS[ST.x1][ST.y1][1].x1
+  local oy1 = SEEDS[ST.x1][ST.y1][1].y1
+  local ox2 = SEEDS[ST.x2][ST.y2][1].x2
+  local oy2 = SEEDS[ST.x2][ST.y2][1].y2
+
+gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
+
+  if conn_dir == 6 then
+
+    -- inner rectangle
+    local ix1 = ST.S.x2 - 96
+    local iy1 = ST.S.y1
+    local ix2 = ST.S.x2
+    local iy2 = ST.S.y2
+
+    do_ramp_x(ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
+
+    if iy2 < oy2-64 then
+      do_ramp_y(ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
+    end
+
+    if iy1 > oy1+64 then
+      do_ramp_y(ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+    end
+  end
+
+  -- FIXME
+
+  ST.done = true
+end
 
 
 function dummy_builder()
@@ -1206,13 +1244,13 @@ elseif S.layout_char == "%" then
 else
 
 if S.layout_char == ">" then
-   do_ramp_x(S, x1,x2,y1, x1,x2,y2, S.stair_z1, S.stair_z2)
+   do_ramp_x(x1,x2,y1, x1,x2,y2, S.stair_z1, S.stair_z2)
 elseif S.layout_char == "<" then
-   do_ramp_x(S, x1,x2,y1, x1,x2,y2, S.stair_z2, S.stair_z1)
+   do_ramp_x(x1,x2,y1, x1,x2,y2, S.stair_z2, S.stair_z1)
 elseif S.layout_char == "^" then
-   do_ramp_y(S, x1,y1,y2, x2,y1,y2, S.stair_z1, S.stair_z2)
+   do_ramp_y(x1,y1,y2, x2,y1,y2, S.stair_z1, S.stair_z2)
 elseif S.layout_char == "v" then
-   do_ramp_y(S, x1,y1,y2, x2,y1,y2, S.stair_z2, S.stair_z1)
+   do_ramp_y(x1,y1,y2, x2,y1,y2, S.stair_z2, S.stair_z1)
 elseif S.layout_char == "L" or S.layout_char == "J" or
        S.layout_char == "F" or S.layout_char == "T" then
 
@@ -1253,6 +1291,16 @@ end
     z2, 4000)
 
 end -- layout_char ~= "#"
+
+
+if S.assign_stair and not S.assign_stair.done then
+  if S.assign_stair.inner_h > S.assign_stair.outer_h then
+--    do_outdoor_ramp_down(S.assign_stair, f_tex, w_tex)
+  else
+    do_outdoor_ramp_up(S.assign_stair, f_tex, w_tex)
+  end
+end
+
 
 if true then -- if do_sides then
     for side = 2,8,2 do
@@ -1311,7 +1359,7 @@ end -- do_sides
     if S.is_start then
       gui.add_entity(mx, my, z1 + 25,
       {
-        name = ENT_PLAYER
+        name = tostring(GAME.things["player1"].id)
       })
     elseif S.is_exit then
       gui.add_entity(mx, my, z1 + 25,
