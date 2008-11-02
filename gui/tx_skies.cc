@@ -213,16 +213,25 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
   delete[] height_map;
 }
 
-void SKY_AddBuilding(byte *pixels, int W, int H,
+
+void SKY_AddBuilding(int seed, byte *pixels, int W, int H,
                      std::vector<byte> & colors,
                      int pos_x, int width, int base_h, int top_h,
-                     int win_w, int win_h)
+                     int win_prob, int win_w, int win_h, int antenna)
 {
   int numcol = (int)colors.size();
-
   SYS_ASSERT(numcol >= 2);
  
+  win_prob = win_prob * 65535 / 100;
+
+  MT_rand_c bu_twist(seed);
+
   int x, y;
+
+  int win_x;
+  int win_y = 1 + win_h;
+
+  byte bg = colors[0];
 
   for (y = 0; y < base_h + top_h; y++)
   {
@@ -240,22 +249,30 @@ void SKY_AddBuilding(byte *pixels, int W, int H,
 
     for (x = x1; x <= x2; x++)
     {
-      int idx = 0;
+      pixels[(H-1-y)*W + (x % W)] = bg;
+    }
 
-      // window?
-      if (x > x1+1 && x < x2-1 &&
-          y > 1 && y < top_h+base_h-1 &&
-          (y < base_h-1 || y > base_h) &&
-          (x % (win_w+1) > 0) &&
-          (y % (win_h+1) > 0))
+    // Windows
+    if (y == win_y && y < base_h+top_h-2)
+    {
+      for (win_x = x1+2; win_x+win_w <= x2-2; win_x += win_w+1)
       {
-        idx = 1;
-        
-        if (win_w == 1 && (rand() & 0x80))
-          idx = 0;
+        byte fg = colors[1];
+
+        if (bu_twist.Rand() & 0xFFFF > win_prob)
+          fg = (numcol >= 3) ? colors[2] : bg;
+
+        for (int dx = 0; dx < win_w; dx++)
+        for (int dy = 0; dy < win_h; dy++)
+        {
+          pixels[(H-1-win_y+dy)*W + ((win_x+dx) % W)] = fg;
+        }
       }
 
-      pixels[(H-1-y)*W + (x % W)] = colors[idx];
+      win_y += win_h + 1;
+
+      if (base_h <= win_y && win_y <= base_h + win_h)
+        win_y = base_h + win_h + 1;
     }
   }
 }

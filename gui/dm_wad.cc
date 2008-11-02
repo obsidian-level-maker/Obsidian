@@ -197,13 +197,13 @@ static void SkyTest2()
   build_cols.push_back(0);
   build_cols.push_back(3);
 
-  SKY_AddBuilding(pixels, 256, 128, build_cols,  4, 32, 61, 40, 2, 2);
-  SKY_AddBuilding(pixels, 256, 128, build_cols, 90, 40, 31, 30, 2, 2);
-  SKY_AddBuilding(pixels, 256, 128, build_cols, 200,48, 71, 50, 2, 2);
+  SKY_AddBuilding(1, pixels, 256, 128, build_cols,   4,32, 61,40,  90,2,2);
+  SKY_AddBuilding(2, pixels, 256, 128, build_cols,  90,40, 31,30,  50,2,2);
+  SKY_AddBuilding(3, pixels, 256, 128, build_cols, 200,48, 71,40,  70,2,2);
 
   build_cols[1] = 162;
-  SKY_AddBuilding(pixels, 256, 128, build_cols, 40, 20, 117, 0, 1, 1);
-  SKY_AddBuilding(pixels, 256, 128, build_cols, 150,32, 91,  0, 1, 1);
+  SKY_AddBuilding(4, pixels, 256, 128, build_cols,  40,20, 122,0,  30,1,1);
+  SKY_AddBuilding(5, pixels, 256, 128, build_cols, 150,32, 91, 0,  60,1,1);
 
 
   qLump_c *lump = WAD_BlockToPatch(256, pixels, 256, 128);
