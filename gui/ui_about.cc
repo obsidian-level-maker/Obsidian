@@ -23,22 +23,6 @@
 #include "main.h"
 
 
-static const char *about_Text =
-  "Oblige is a random level generator for\n"
-  "DOOM, Heretic & Hexen\n"
-  "\n"
-  "Copyright (C) 2006-2008 Andrew Apted\n"
-  "\n"
-  "This program is free software, and may be\n"
-  "distributed and modified under the terms of\n"
-  "the GNU General Public License\n"
-  "\n"
-  "There is ABSOLUTELY NO WARRANTY\n"
-  "Use at your OWN RISK";
-
-static const char *about_Web =
-  "http://oblige.sourceforge.net";
-
 #define TITLE_COLOR  FL_BLUE
 
 #define INFO_COLOR  fl_color_cube(0,6,4)
@@ -83,7 +67,24 @@ private:
 
     that->want_quit = true;
   }
+
+  static const char *Text;
 };
+
+
+const char *UI_About::Text =
+  "Oblige is a random level generator for\n"
+  "DOOM, Heretic & Hexen\n"
+  "\n"
+  "Copyright (C) 2006-2008 Andrew Apted\n"
+  "\n"
+  "This program is free software, and may be\n"
+  "distributed and modified under the terms of\n"
+  "the GNU General Public License\n"
+  "\n"
+  "There is ABSOLUTELY NO WARRANTY\n"
+  "Use at your OWN RISK";
+
 
 //
 // Constructor
@@ -113,7 +114,7 @@ UI_About::UI_About(int W, int H, const char *label) :
   cy += box->h() + 10;
   
   // the very informative text
-  box = new Fl_Box(10, cy, W-20, 192, about_Text);
+  box = new Fl_Box(10, cy, W-20, 192, Text);
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->box(FL_UP_BOX);
   box->color(INFO_COLOR);
@@ -123,7 +124,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 
   // website address
-  box = new Fl_Box(10, cy, W-20, 30, about_Web);
+  box = new Fl_Box(10, cy, W-20, 30, "http://oblige.sourceforge.net");
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->labelsize(20);
   add(box);
