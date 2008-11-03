@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  Menus
+//  About Window
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -117,65 +117,22 @@ void menu_do_about(Fl_Widget *w, void * data)
   button->callback((Fl_Callback *) menu_quit_CB);
   darkish->add(button);
 
-/// about->set_modal();
+}
+
+
+void DLG_AboutText(void)
+{
+  UI_About *about = new UI_About(340, 364, "About Oblige");
 
   about->show();
 
   // run the GUI until the user closes
-  while (! menu_want_to_quit)
+  while (! about->Quit())
     Fl::wait();
 
   // this deletes all the child widgets too...
   delete about;
 }
-
-static void menu_do_save_log(Fl_Widget *w, void * data)
-{
-  // TODO
-}
-
-//------------------------------------------------------------------------
-
-#undef FCAL
-#define FCAL  (Fl_Callback *)
-
-static Fl_Menu_Item menu_items[] = 
-{
-  { "&File", 0, 0, 0, FL_SUBMENU },
-#ifdef MACOSX
-    { "&Save Log",         0, FCAL menu_do_save_log },
-#else
-    { "&Save Log",         0, FCAL menu_do_save_log, 0, FL_MENU_DIVIDER },
-    { "&Quit",  0 /* FL_ALT + 'q' */, FCAL menu_do_exit },
-#endif
-    { 0 },
-
-  { "&Help", 0, 0, 0, FL_SUBMENU },
-    { "&About...",         0,  FCAL menu_do_about },
-    { 0 },
-
-  { 0 }
-};
-
-
-//
-// MenuCreate
-//
-#ifdef MACOSX
-Fl_Sys_Menu_Bar * MenuCreate(int x, int y, int w, int h)
-{
-  Fl_Sys_Menu_Bar *bar = new Fl_Sys_Menu_Bar(x, y, w, h);
-  bar->menu(menu_items);
-  return bar;
-}
-#else
-Fl_Menu_Bar * MenuCreate(int x, int y, int w, int h)
-{
-  Fl_Menu_Bar *bar = new Fl_Menu_Bar(x, y, w, h);
-  bar->menu(menu_items);
-  return bar;
-}
-#endif
 
 
 //--- editor settings ---

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  Menus
+//  About Window
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -16,17 +16,12 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_MENU_H__
-#define __UI_MENU_H__
+#ifndef __UI_ABOUT_H__
+#define __UI_ABOUT_H__
 
-#ifdef MACOSX
-Fl_Sys_Menu_Bar
-#else
-Fl_Menu_Bar
-#endif
-* MenuCreate(int x, int y, int w, int h);
+void DLG_AboutText(void);
 
-#endif /* __UI_MENU_H__ */
+#endif /* __UI_ABOUT_H__ */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

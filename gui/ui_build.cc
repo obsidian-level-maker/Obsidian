@@ -29,10 +29,6 @@
 #define ABORT_COLOR  fl_color_cube(3,1,1)
 
 
-/* extern */
-void menu_do_about(Fl_Widget *w, void * data);
-
-
 UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label)
 {
@@ -59,7 +55,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   cy += 42;
 
   Fl_Button *about = new Fl_Button(x+w - 88, cy, 74, 30, "About");
-  about->callback(menu_do_about, this);
+  about->callback(about_callback, this);
 
   add(about);
 
@@ -216,6 +212,11 @@ void UI_Build::build_callback(Fl_Widget *w, void *data)
   {
     main_win->action = UI_MainWin::BUILD;
   }
+}
+
+void UI_Build::about_callback(Fl_Widget *w, void *data)
+{
+  DLG_AboutText();
 }
 
 void UI_Build::stop_callback(Fl_Widget *w, void *data)
