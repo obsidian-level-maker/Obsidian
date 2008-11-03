@@ -131,7 +131,9 @@ void M_Edit_GotoLine(Fl_Widget *w, void * data)
     last_line_num = num;
 
     if (! main_win->ed->GotoLine(num))
-        fl_beep();
+    {
+        main_win->status->ShowError("No such line!");
+    }
 }
 
 

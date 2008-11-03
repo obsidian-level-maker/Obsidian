@@ -97,7 +97,7 @@ bool W_Editor::GotoLine(int num)
     insert_position(pos);
     show_insert_position();
 
-    return true;
+    return textbuf->count_lines(0, pos) == (num-1);
 }
 
 //---------------------------------------------------------------------------
@@ -832,4 +832,4 @@ int W_Editor::ParseCommentBig(const char *text, const char *t_end, char *style, 
 
 
 //--- editor settings ---
-// vi:ts=4:sw=4:expandtab
+// vi:ts=2:sw=2:expandtab
