@@ -111,6 +111,14 @@ bool W_Editor::GotoLine(int num)
 #define COL_GRAY    MY_FL_COLOR(200,200,200)
 
 
+#define DRK_RED     MY_FL_COLOR(216,0,0)
+#define DRK_GREEN   MY_FL_COLOR(0,176,0)
+#define DRK_YELLOW  MY_FL_COLOR(192,0,192)
+#define DRK_BLUE    MY_FL_COLOR(0,0,240)
+#define DRK_CYAN    MY_FL_COLOR(0,176,224)
+#define DRK_BROWN   MY_FL_COLOR(160,128,0)
+
+
 Fl_Text_Display::Style_Table_Entry W_Editor::table_dark[W_Editor::TABLE_SIZE] =
 {
     { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'A' - All else
@@ -140,24 +148,24 @@ Fl_Text_Display::Style_Table_Entry W_Editor::table_light[W_Editor::TABLE_SIZE] =
 {
     { FL_BLACK,    MY_FONT,  MY_SIZE, 0 },  // 'A' - All else
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'B'
-    { COL_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'C' - Comments --
-    { COL_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'D' - Comments --[[ ]]
+    { DRK_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'C' - Comments --
+    { DRK_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'D' - Comments --[[ ]]
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'E'
-    { COL_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'F' - Function
+    { DRK_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'F' - Function
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'G'
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'H'
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'I'
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'J'
-    { COL_BROWN,   MY_FONT,  MY_SIZE, 0 },  // 'K' - Keyword
+    { DRK_BROWN,   MY_FONT,  MY_SIZE, 0 },  // 'K' - Keyword
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'L'
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'M'
-    { COL_YELLOW,  MY_FONT,  MY_SIZE, 0 },  // 'N' - Numbers
-    { COL_CYAN,    MY_FONT,  MY_SIZE, 0 },  // 'O' - Oblige Stuff
+    { DRK_YELLOW,  MY_FONT,  MY_SIZE, 0 },  // 'N' - Numbers
+    { DRK_CYAN,    MY_FONT,  MY_SIZE, 0 },  // 'O' - Oblige Stuff
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'P'
-    { COL_RED,     MY_FONT,  MY_SIZE, 0 },  // 'Q' - Strings ''
+    { DRK_RED ,    MY_FONT,  MY_SIZE, 0 },  // 'Q' - Strings ''
     { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'R'
-    { COL_RED,     MY_FONT,  MY_SIZE, 0 },  // 'S' - Strings ""
-    { COL_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'T' - Table {}
+    { DRK_RED ,    MY_FONT,  MY_SIZE, 0 },  // 'S' - Strings ""
+    { DRK_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'T' - Table {}
 };
 
 
@@ -712,10 +720,11 @@ const char * W_Editor::keywords[] =
     "O:gui.ticker",
     "O:gui.abort",
 
-    "O:csg2.begin_level",  //!!!! FIXME
-    "O:csg2.end_level",
-    "O:csg2.add_brush",
-    "O:csg2.add_entity",
+    "O:gui.begin_level",
+    "O:gui.end_level",
+    "O:gui.property",
+    "O:gui.add_brush",
+    "O:gui.add_entity",
 
     NULL // end of list
 };
