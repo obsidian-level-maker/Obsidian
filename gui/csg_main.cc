@@ -120,10 +120,10 @@ area_poly_c::~area_poly_c()
   // FIXME: free verts
 }
 
-void area_poly_c::Validate()
+const char * area_poly_c::Validate()
 {
   if (verts.size() < 3)
-    Main_FatalError("Line loop contains less than 3 vertices!\n");
+    return "Line loop contains less than 3 vertices!";
 
   // make sure vertices are clockwise
 
@@ -134,6 +134,9 @@ void area_poly_c::Validate()
     area_vert_c *v1 = verts[k];
     area_vert_c *v2 = verts[(k+1) % (int)verts.size()];
     area_vert_c *v3 = verts[(k+2) % (int)verts.size()];
+
+    if (fabs(v2->x - v1->x) < EPSILON && fabs(v2->y - v1->y) < EPSILON)
+      return "Line loop contains a zero length line!";
 
     double ang1 = CalcAngle(v2->x, v2->y, v1->x, v1->y);
     double ang2 = CalcAngle(v2->x, v2->y, v3->x, v3->y);
@@ -152,7 +155,9 @@ void area_poly_c::Validate()
 // fprintf(stderr, "Average angle = %1.4f\n\n", average_ang);
 
   if (average_ang > 180.0)
-    Main_FatalError("Line loop is not clockwise!\n");
+    return "Line loop is not clockwise!";
+
+  return NULL; // OK
 }
 
 void area_poly_c::ComputeBBox()
@@ -502,7 +507,11 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
     index++;
   }
 
-  P->Validate();
+  const char *err_msg = P->Validate();
+
+  if (err_msg)
+    luaL_error(L, "%s", err_msg);
+
   P->ComputeBBox();
 
   return P;

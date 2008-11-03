@@ -155,9 +155,10 @@ public:
 
   void ComputeBBox();
 
-  void Validate();
+  const char * Validate();
   // makes sure there are enough vertices and they are in
-  // clockwise order
+  // clockwise order.  Returns NULL if OK, otherwise an
+  // error message string.
 };
 
 
