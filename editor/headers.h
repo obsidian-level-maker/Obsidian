@@ -94,6 +94,7 @@
 #include "e_dialog.h"
 #include "e_editor.h"
 #include "e_menu.h"
+#include "e_status.h"
 #include "e_window.h"
 
 // 

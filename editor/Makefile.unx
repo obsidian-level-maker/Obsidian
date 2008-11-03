@@ -25,6 +25,7 @@ OBJS=./main.o     \
      ./e_dialog.o   \
      ./e_editor.o   \
      ./e_menu.o     \
+     ./e_status.o   \
      ./e_window.o   \
      ./lib_argv.o \
      ./lib_file.o \
