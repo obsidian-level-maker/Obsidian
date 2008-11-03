@@ -82,6 +82,22 @@ IDEA:
 
   [Can fill holes and decide solid corners last]
 
+
+OTHER IDEAS:
+
+- height diffs:
+  - basic (if all else fails) algorithm:
+    flood fill heights from conn seeds to remaining seeds
+    [BUT: floor_h of room]
+    add a stair seed at some meeting spots
+
+    if height diff is huge, deserves more seeds
+
+  - patterns:
+    (a) L shape is nice
+    (b) U shape is possible
+    (c) plain side fill (two deep if room is big)
+
 --]]
 
 
