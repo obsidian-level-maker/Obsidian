@@ -23,23 +23,6 @@
 #include "main.h"
 
 
-static bool menu_want_to_quit;
-
-static void menu_quit_CB(Fl_Widget *w, void *data)
-{
-  menu_want_to_quit = true;
-}
-
-#ifndef MACOSX
-static void menu_do_exit(Fl_Widget *w, void * data)
-{
-  main_win->action = UI_MainWin::QUIT;
-}
-#endif
-
-
-//------------------------------------------------------------------------
-
 static const char *about_Text =
   "Oblige is a random level generator for\n"
   "DOOM, Heretic & Hexen\n"
@@ -59,64 +42,94 @@ static const char *about_Web =
 #define TITLE_COLOR  FL_BLUE
 
 #define INFO_COLOR  fl_color_cube(0,6,4)
-  
 
-void menu_do_about(Fl_Widget *w, void * data)
+
+class UI_About : public Fl_Window
 {
-  menu_want_to_quit = false;
+private:
+  bool want_quit;
 
-  Fl_Window *about = new Fl_Window(340, 364, "About Oblige");
-  about->end();
+public:
+  UI_About(int W, int H, const char *label = NULL);
+
+  virtual ~UI_About()
+  {
+    // nothing needed
+  }
+
+  bool WantQuit() const
+  {
+    return want_quit;
+  }
+
+private:
+  static void quit_callback(Fl_Widget *w, void *data)
+  {
+    UI_About *that = (UI_About *)data;
+
+    that->want_quit = true;
+  }
+};
+
+//
+// Constructor
+//
+UI_About::UI_About(int W, int H, const char *label) :
+    Fl_Window(W, H, label),
+    want_quit(false)
+{
+  // cancel Fl_Group's automatic add crap
+  end();
+
 
   // non-resizable
-  about->size_range(about->w(), about->h(), about->w(), about->h());
-  about->callback((Fl_Callback *) menu_quit_CB);
+  size_range(W, H, W, H);
+  callback(quit_callback, this);
 
   int cy = 0;
 
   // nice big logo text
-  Fl_Box *box = new Fl_Box(0, cy, about->w(), 50, OBLIGE_TITLE " " OBLIGE_VERSION);
+  Fl_Box *box = new Fl_Box(0, cy, W, 50, OBLIGE_TITLE " " OBLIGE_VERSION);
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->labelcolor(TITLE_COLOR);
   box->labelsize(24);
-  about->add(box);
+  add(box);
 
 
   cy += box->h() + 10;
   
   // the very informative text
-  box = new Fl_Box(10, cy, about->w()-20, 192, about_Text);
+  box = new Fl_Box(10, cy, W-20, 192, about_Text);
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->box(FL_UP_BOX);
   box->color(INFO_COLOR);
-  about->add(box);
+  add(box);
 
   cy += box->h() + 10;
 
 
   // website address
-  box = new Fl_Box(10, cy, about->w()-20, 30, about_Web);
+  box = new Fl_Box(10, cy, W-20, 30, about_Web);
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->labelsize(20);
-  about->add(box);
+  add(box);
 
   cy += box->h() + 10;
 
 
-  SYS_ASSERT(cy < about->h());
+  SYS_ASSERT(cy < H);
 
-  Fl_Group *darkish = new Fl_Group(0, cy, about->w(), about->h()-cy);
+  Fl_Group *darkish = new Fl_Group(0, cy, W, H-cy);
   darkish->end();
   darkish->box(FL_FLAT_BOX);
   darkish->color(BUILD_BG, BUILD_BG);
-  about->add(darkish);
+  add(darkish);
 
   // finally add an "OK" button
-  Fl_Button *button = new Fl_Button(about->w()-10-60, about->h()-10-30, 
+  Fl_Button *button = new Fl_Button(W-10-60, H-10-30, 
       60, 30, "OK");
-  button->callback((Fl_Callback *) menu_quit_CB);
+  button->callback(quit_callback, this);
   darkish->add(button);
-
 }
 
 
@@ -127,7 +140,7 @@ void DLG_AboutText(void)
   about->show();
 
   // run the GUI until the user closes
-  while (! about->Quit())
+  while (! about->WantQuit())
     Fl::wait();
 
   // this deletes all the child widgets too...
