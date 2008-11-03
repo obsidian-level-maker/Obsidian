@@ -86,6 +86,10 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
     flipped = true
   end
 
+  local function quantize(x)
+    return int(x * 8.0 + 0.5) / 8.0
+  end
+
   local function arc_coords(p0, p1, dx0,dx1, dy0,dy1)
     local px0 = math.cos(math.pi * p0 / 2.0)
     local py0 = math.sin(math.pi * p0 / 2.0)
@@ -93,15 +97,15 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
     local px1 = math.cos(math.pi * p1 / 2.0)
     local py1 = math.sin(math.pi * p1 / 2.0)
 
-    local cx0 = int(corn_x + 0.5 + dx0 * px0)
-    local cy0 = int(corn_y + 0.5 + dy0 * py0)
-    local fx0 = int(corn_x + 0.5 + dx1 * px0)
-    local fy0 = int(corn_y + 0.5 + dy1 * py0)
+    local cx0 = quantize(corn_x + dx0 * px0)
+    local cy0 = quantize(corn_y + dy0 * py0)
+    local fx0 = quantize(corn_x + dx1 * px0)
+    local fy0 = quantize(corn_y + dy1 * py0)
 
-    local cx1 = int(corn_x + 0.5 + dx0 * px1)
-    local cy1 = int(corn_y + 0.5 + dy0 * py1)
-    local fx1 = int(corn_x + 0.5 + dx1 * px1)
-    local fy1 = int(corn_y + 0.5 + dy1 * py1)
+    local cx1 = quantize(corn_x + dx0 * px1)
+    local cy1 = quantize(corn_y + dy0 * py1)
+    local fx1 = quantize(corn_x + dx1 * px1)
+    local fy1 = quantize(corn_y + dy1 * py1)
 
     if flipped then
       return
@@ -241,8 +245,8 @@ function do_corner_ramp_CURVED(S, x1,y1, x2,y2, x_h,y_h)
   local corn_x = x1
   local corn_y = y1
 
-  local dx0, dx1, dx2, dx3 = 8, 32, w-32, w
-  local dy0, dy1, dy2, dy3 = 8, 32, h-32, h
+  local dx0, dx1, dx2, dx3 = 16, 40, w-32, w
+  local dy0, dy1, dy2, dy3 = 16, 40, h-32, h
 
   if S.layout_char == "L" or S.layout_char == "F" then
     corn_x = x2
