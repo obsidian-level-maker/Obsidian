@@ -203,6 +203,25 @@ void Main_FatalError(const char *msg, ...)
 }
 
 
+static int escape_key_handler(int event)
+{
+  if (event != FL_SHORTCUT)
+    return 0;
+
+  if (Fl::event_key() != FL_Escape)
+    return 0;
+
+  // if building is in progress, cancel it, otherwise quit
+  if (game_object)
+    main_win->action = UI_MainWin::ABORT;
+  else
+    main_win->action = UI_MainWin::QUIT;
+
+  return 1;
+}
+
+
+
 //------------------------------------------------------------------------
 
 void Build_Cool_Shit()
@@ -266,6 +285,8 @@ void Build_Cool_Shit()
   if (main_win->action == UI_MainWin::ABORT)
     main_win->action = UI_MainWin::NONE;
 
+  // don't need game object anymore
+  delete game_object;
   game_object = NULL;
 }
 
@@ -333,6 +354,8 @@ int main(int argc, char **argv)
   Fl::scheme_bg_ = NULL;
 
   main_win->image(NULL);
+
+  Fl::add_handler(escape_key_handler);
 
   // draw an empty map (must be done after main window is
   // shown() because that is when FLTK finalises the colors).
