@@ -213,13 +213,15 @@ static int escape_key_handler(int event)
 
   // if building is in progress, cancel it, otherwise quit
   if (game_object)
+  {
     main_win->action = UI_MainWin::ABORT;
-  else
-    main_win->action = UI_MainWin::QUIT;
+    return 1;
+  }
 
-  return 1;
+  // let FLTK's default code kick in
+  // [we cannot mimic it since we don't have the 'window' ref]
+  return 0;
 }
-
 
 
 //------------------------------------------------------------------------
