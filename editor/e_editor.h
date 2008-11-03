@@ -62,6 +62,9 @@ public:
     // given buffer.  Returns the new length.
     int SanitizeInput(char *buffer, int len);
 
+    // return insert position in terms of lines and columns
+    void GetInsertPos(int *line, int *column);
+
     // goto a specified line.  Line numbers begin at 1.
     // Returns false if does not exist (in which case the
     // position was not changed).

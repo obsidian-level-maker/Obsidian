@@ -76,6 +76,15 @@ int W_Editor::handle(int event)
 
 //---------------------------------------------------------------------------
 
+void W_Editor::GetInsertPos(int *line, int *column)
+{
+    int i_pos = insert_position();
+
+    *line = 1 + textbuf->count_lines(0, i_pos);
+
+    *column = 1 + (i_pos - textbuf->line_start(i_pos));
+}
+
 bool W_Editor::GotoLine(int num)
 {
     SYS_ASSERT(num >= 1);
