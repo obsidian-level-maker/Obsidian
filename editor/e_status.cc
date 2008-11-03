@@ -46,6 +46,15 @@ W_Status::W_Status(int X, int Y, int W, int H, const char *label) :
   add(column_box);
 
 
+  error_box = new Fl_Box(FL_FLAT_BOX, X, Y, W, H, "");
+  error_box->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
+  error_box->color(FL_RED);
+  error_box->labelcolor(FL_WHITE);
+  add(error_box);
+
+  error_box->hide();
+
+
   resizable(NULL);
 }
 
@@ -79,12 +88,20 @@ void W_Status::SetPos(int line, int col)
 
 void W_Status::ShowError(const char *msg)
 {
-  // TODO
+  error_box->copy_label(msg);
+
+    line_box->hide();
+  column_box->hide();
+   error_box->show();
+
+  fl_beep();
 }
 
 void W_Status::ClearError()
 {
-  // TODO
+   error_box->hide();
+    line_box->show();
+  column_box->show();
 }
 
 
