@@ -48,6 +48,14 @@ void MainSetDefaults(void)
 {
 }
 
+static int ignore_escape_key(int event)
+{
+    if (event == FL_SHORTCUT && Fl::event_key() == FL_Escape)
+        return 1;
+
+    return 0;
+}
+
 void InitFLTK(void)
 {
     Fl::scheme(NULL);
@@ -55,6 +63,9 @@ void InitFLTK(void)
     fl_message_font(FL_HELVETICA, 18);
 
     Fl_File_Icon::load_system_icons();
+
+    // we don't want the ESCAPE key to automatically quit
+    Fl::add_handler(ignore_escape_key);
 
     inited_FLTK = true;
 }
@@ -180,4 +191,4 @@ int main(int argc, char **argv)
 
 
 //--- editor settings ---
-// vi:ts=4:sw=4:expandtab
+// vi:ts=2:sw=2:expandtab
