@@ -94,7 +94,7 @@ void W_Status::ShowError(const char *msg)
   column_box->hide();
    error_box->show();
 
-  fl_beep();
+  fl_beep(FL_BEEP_ERROR);
 }
 
 void W_Status::ClearError()

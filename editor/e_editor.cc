@@ -105,12 +105,12 @@ bool W_Editor::GotoLine(int num)
 #define MY_FL_COLOR(R,G,B) \
           (Fl_Color) (((R) << 24) | ((G) << 16) | ((B) << 8))
 
-#define COL_RED     MY_FL_COLOR(255,128,128)
+#define COL_RED     MY_FL_COLOR(255,112,112)
 #define COL_GREEN   MY_FL_COLOR(72,255,72)
 #define COL_YELLOW  MY_FL_COLOR(255,255,128)
 #define COL_BLUE    MY_FL_COLOR(128,128,255)
 #define COL_CYAN    MY_FL_COLOR(0,255,255)
-#define COL_BROWN   MY_FL_COLOR(200,100,50)
+#define COL_BROWN   MY_FL_COLOR(200,144,112)
 #define COL_GRAY    MY_FL_COLOR(200,200,200)
 
 
