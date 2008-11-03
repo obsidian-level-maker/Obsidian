@@ -62,6 +62,20 @@ public:
     return want_quit;
   }
 
+public:
+  // FLTK virtual method for handling input events.
+  int handle(int event)
+  {
+    if ((event == FL_KEYDOWN || event == FL_SHORTCUT) &&
+        Fl::event_key() == FL_Escape)
+    {
+      want_quit = true;
+      return 1;
+    }
+
+    return Fl_Window::handle(event);
+  }
+
 private:
   static void quit_callback(Fl_Widget *w, void *data)
   {
