@@ -61,6 +61,9 @@ W_Editor::~W_Editor()
 
 int W_Editor::handle(int event)
 {
+    if (event == FL_KEYDOWN || event == FL_PUSH)
+        main_win->status->ClearError();
+
     if (event == FL_KEYDOWN)
     {
         int key = Fl::event_key();
@@ -117,28 +120,29 @@ bool W_Editor::GotoLine(int num)
 #define DRK_BLUE    MY_FL_COLOR(0,0,240)
 #define DRK_CYAN    MY_FL_COLOR(0,176,224)
 #define DRK_BROWN   MY_FL_COLOR(160,128,0)
+#define DRK_GRAY    FL_BLACK
 
 
 Fl_Text_Display::Style_Table_Entry W_Editor::table_dark[W_Editor::TABLE_SIZE] =
 {
     { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'A' - All else
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'B'
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'B'
     { COL_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'C' - Comments --
     { COL_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'D' - Comments --[[ ]]
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'E'
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'E'
     { COL_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'F' - Function
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'G'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'H'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'I'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'J'
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'G'
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'H'
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'I'
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'J'
     { COL_BROWN,   MY_FONT,  MY_SIZE, 0 },  // 'K' - Keyword
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'L'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'M'
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'L'
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'M'
     { COL_YELLOW,  MY_FONT,  MY_SIZE, 0 },  // 'N' - Numbers
     { COL_CYAN,    MY_FONT,  MY_SIZE, 0 },  // 'O' - Oblige Stuff
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'P'
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'P'
     { COL_RED,     MY_FONT,  MY_SIZE, 0 },  // 'Q' - Strings ''
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'R'
+    { COL_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'R'
     { COL_RED,     MY_FONT,  MY_SIZE, 0 },  // 'S' - Strings ""
     { COL_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'T' - Table {}
 };
@@ -146,24 +150,24 @@ Fl_Text_Display::Style_Table_Entry W_Editor::table_dark[W_Editor::TABLE_SIZE] =
 
 Fl_Text_Display::Style_Table_Entry W_Editor::table_light[W_Editor::TABLE_SIZE] =
 {
-    { FL_BLACK,    MY_FONT,  MY_SIZE, 0 },  // 'A' - All else
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'B'
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'A' - All else
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'B'
     { DRK_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'C' - Comments --
     { DRK_BLUE,    MY_FONT,  MY_SIZE, 0 },  // 'D' - Comments --[[ ]]
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'E'
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'E'
     { DRK_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'F' - Function
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'G'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'H'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'I'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'J'
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'G'
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'H'
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'I'
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'J'
     { DRK_BROWN,   MY_FONT,  MY_SIZE, 0 },  // 'K' - Keyword
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'L'
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'M'
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'L'
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'M'
     { DRK_YELLOW,  MY_FONT,  MY_SIZE, 0 },  // 'N' - Numbers
     { DRK_CYAN,    MY_FONT,  MY_SIZE, 0 },  // 'O' - Oblige Stuff
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'P'
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'P'
     { DRK_RED ,    MY_FONT,  MY_SIZE, 0 },  // 'Q' - Strings ''
-    { FL_DARK2,    MY_FONT,  MY_SIZE, 0 },  // 'R'
+    { DRK_GRAY,    MY_FONT,  MY_SIZE, 0 },  // 'R'
     { DRK_RED ,    MY_FONT,  MY_SIZE, 0 },  // 'S' - Strings ""
     { DRK_GREEN,   MY_FONT,  MY_SIZE, 0 },  // 'T' - Table {}
 };
