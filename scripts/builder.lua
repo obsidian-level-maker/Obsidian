@@ -591,7 +591,7 @@ gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn
 end
 
 
-function dummy_builder()
+function Builder()
 
 
   local function get_wall_coords(dir, x1,y1, x2,y2)
@@ -1516,13 +1516,14 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
   end
 
 
-  --==| dummy_builder |==--
+  ---==| Builder |==---
 
-  gui.printf("\n--==| dummy_builder |==--\n\n")
+  gui.printf("\n---==| Builder |==---\n\n")
 
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
   gui.property("error_tex",  "BLAKWAL1");
+  --!!! error_flat
 
   gui.ticker()
 

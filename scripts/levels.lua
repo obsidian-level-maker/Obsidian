@@ -152,7 +152,7 @@ function Level_Make(L, index, NUM)
 
   Seed_grow()
 
-  dummy_builder()
+  Builder()
     if gui.abort() then return "abort" end
     gui.progress(100)
 
