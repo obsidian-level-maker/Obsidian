@@ -148,9 +148,17 @@ int main(int argc, char **argv)
         }
 
         if (main_win->ed->Load(arg_list[0]))
+        {
             // run the GUI until the user quits
             while (! main_win->want_quit)
-                Fl::wait();
+            {
+                Fl::wait(1.0);
+
+                int line, col;
+                main_win->ed->GetInsertPos(&line, &col);
+                main_win->status->SetPos(line, col);
+            }
+        }
     }
     catch (const char * err)
     {

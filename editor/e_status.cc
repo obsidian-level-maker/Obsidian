@@ -34,14 +34,14 @@ W_Status::W_Status(int X, int Y, int W, int H, const char *label) :
   int cx = X + 4;
 
 
-  line_box = new Fl_Box(FL_FLAT_BOX, cx, Y, 80, H, "Line:");
+  line_box = new Fl_Box(FL_FLAT_BOX, cx, Y, 70, H, "Line:");
   line_box->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
   add(line_box);
 
   cx = cx + line_box->w() + 8;
 
 
-  column_box = new Fl_Box(FL_FLAT_BOX, cx, Y, 80, H, "Col:");
+  column_box = new Fl_Box(FL_FLAT_BOX, cx, Y, 70, H, "Col:");
   column_box->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
   add(column_box);
 
@@ -67,11 +67,13 @@ void W_Status::SetPos(int line, int col)
   char line_buffer[60];
   char col_buffer[60];
 
-  sprintf(line_buffer, "Line:%d", line);
-  sprintf( col_buffer,  "Col:%d", col);
+  sprintf(line_buffer, "Line: %d", line);
+  sprintf( col_buffer,  "Col: %d", col);
 
-    line_box->label(line_buffer);
-  column_box->label( col_buffer);
+    line_box->copy_label(line_buffer);
+  column_box->copy_label( col_buffer);
+
+  redraw();
 }
 
 
