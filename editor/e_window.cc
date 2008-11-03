@@ -70,8 +70,15 @@ W_MainWindow::W_MainWindow(const char *title) :
     mh = 1;
 #endif
 
-    menu_bar = MenuCreate(0, 0, w(), 28);
+    int sb_w = 220;
+
+    menu_bar = MenuCreate(0, 0, w() - sb_w, 28);
     add(menu_bar);
+
+
+    status = new W_Status(w() - sb_w, 0, sb_w, 28);
+    add(status);
+
 
     ed = new W_Editor(0, mh, w(), h()-mh);
     add(ed);

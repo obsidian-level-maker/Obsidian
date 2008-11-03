@@ -23,53 +23,66 @@
 // Constructor
 //
 W_Status::W_Status(int X, int Y, int W, int H, const char *label) : 
-    Fl_Group(X, Y, W, H, label)
+    Fl_Group(X, Y, W, H, label),
+    cur_line(-1), cur_col(-1)
 {
   end();  // cancel begin() in Fl_Group constructor
 
   box(FL_FLAT_BOX);
 
-
-  line_pos = new Fl_Output(X+28,       Y+2, 64, H-4, "lin");
-   col_pos = new Fl_Output(X+28+72+10, Y+2, 64, H-4, "col");
-
-  line_pos->align(FL_ALIGN_LEFT);
-   col_pos->align(FL_ALIGN_LEFT);
-
-  add(line_pos);
-  add( col_pos);
-
-  X = col_pos->x() + col_pos->w() + 12;
+  
+  int cx = X + 4;
 
 
-  // ---- resizable ----
- 
+  line_box = new Fl_Box(FL_FLAT_BOX, cx, Y, 80, H, "Line:");
+  line_box->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
+  add(line_box);
 
+  cx = cx + line_box->w() + 8;
+
+
+  column_box = new Fl_Box(FL_FLAT_BOX, cx, Y, 80, H, "Col:");
+  column_box->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
+  add(column_box);
+
+
+  resizable(NULL);
 }
 
 //
 // Destructor
 //
 W_Status::~W_Status()
-{
-}
-
-int W_Status::handle(int event)
-{
-  return Fl_Group::handle(event);
-}
+{ }
 
 
 void W_Status::SetPos(int line, int col)
 {
+  if (line == cur_line && col == cur_col)
+    return;
+
+  cur_line = line;
+  cur_col  = col;
+
   char line_buffer[60];
   char col_buffer[60];
 
-  sprintf(line_buffer, "%d", line);
-  sprintf( col_buffer, "%d", col);
+  sprintf(line_buffer, "Line:%d", line);
+  sprintf( col_buffer,  "Col:%d", col);
 
-  line_pos->value(line_buffer);
-   col_pos->value( col_buffer);
+    line_box->label(line_buffer);
+  column_box->label( col_buffer);
+}
+
+
+void W_Status::ShowError(const char *msg)
+{
+  // TODO
+}
+
+void W_Status::ClearError()
+{
+  // TODO
 }
 
 

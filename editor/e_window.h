@@ -38,6 +38,8 @@ public:
     Fl_Menu_Bar *menu_bar;
 #endif
 
+    W_Status *status;
+
     W_Editor *ed;
 
     // user closed the window

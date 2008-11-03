@@ -27,25 +27,23 @@ public:
   virtual ~W_Status();
 
 public:
-  Fl_Output *line_pos;
-  Fl_Output * col_pos;
+  int cur_line;
+  int cur_col;
 
-  Fl_Box *foo;
-
-
-public:
-  int handle(int event);
-  // FLTK virtual method for handling input events.
+  Fl_Box *line_box;
+  Fl_Box *column_box;
+  Fl_Box *error_box;
 
 public:
-    void SetPos(int line, int col);
+  void SetPos(int line, int col);
 
+  void ShowError(const char *msg);
+  void ClearError();
 
 private:
-
 };
 
 #endif /* __E_STATUS_H__ */
 
 //--- editor settings ---
-// vi:ts=4:sw=4:expandtab
+// vi:ts=2:sw=2:expandtab
