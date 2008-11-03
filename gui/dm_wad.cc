@@ -169,7 +169,8 @@ static void SkyTest2()
   for (int n=0; n < 14; n++)
     cloud_cols.push_back(blue_mapping[n]);
 
-  byte *pixels = SKY_GenClouds(5, 256,128, cloud_cols, 3.0, 2.6, 1.0);
+//  byte *pixels = SKY_GenClouds(5, 256,128, cloud_cols, 3.0, 2.6, 1.0);
+  byte *pixels = SKY_GenGradient(256,128, cloud_cols);
 
 
   static byte hill_mapping[10] =
