@@ -3,9 +3,21 @@ TODO
 ====
 
 
-HEIGHTS: prevent any room from having more than 4 heights
-         [tiny rooms: no more than 2]
+>>>> document classes (PLAN, SEED, ROOM, QUEST)
 
+
+THEME SELECTION
+
+(a) Each level has a THEME, e.g. "Tech"
+
+(b) User can select what theme to use ---> case closed
+
+(c) For "mixed" select a random theme, bearing in mind:
+    (i) secret levels can choose something whacky
+    (ii) One-Episode: use 'epi_prob', group same themes together
+    (iii) Full-Game: prefer episodes to have whole theme
+                     (with one or two breakers), and prefer
+                     theme to match sky
 
 
 Room Fitting Out
@@ -103,9 +115,9 @@ IDEA:  liquid patterns: chance of "beaching" it
 Fight Sim: reimplement monster-weapon preferences
 Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
   
-  >>>  PREFS["shambler__rocket"] = 0.1
-       PREFS["skull__launch"] = 0.1
-       PREFS["imp__shotty"] = 3.0
+  >>>  PREFS["rocket@shambler"] = 0.1
+       PREFS["launch@skull"] = 0.1
+       PREFS["shotty@imp"] = 3.0
 
 
 Stairwells: more steps to ensure wall lengths <= 128 units
@@ -120,13 +132,16 @@ CONNECT:  for TC (etc) patterns, make the ones that branch at
           room corners less likely (i.e. prefer 1 or 2 seeds
           away from corner, though it depends on room size).
 
+HEIGHTS: prevent any room from having more than 4 heights
+         [tiny rooms: no more than 2]
 
-merge area_info + area_poly --> csg_brush_c
+
+GUI: merge structs: area_info + area_poly --> csg_brush_c
 
 
 HEXEN lua: gui.property("hexen_format", "true")
 
-SPEAR lua: gui.property("extension", "SOD")
+SPEAR lua: gui.property("file_ext", "SOD")
 
 EDGE: gui.property("solid_exfloor", 400)
       gui.property("liquid_exfloor", 406)
@@ -148,14 +163,13 @@ q2_nodes:
    NOTE: need CONVEX brush sides : if not convex, find closest
          concave point to face and "chop" there
          _OR_: use bsp to chop em up
+         _OR_: share a solid leaf for every empty leaf
    ALSO: handle co-planer sides (allowed by Oblige, maybe ok for Q2, not sure)
 
 
 REWRITE:
 
->>> NEW BRANCH SYSTEM
-
-+ quest assignment !!
+- quest assignment
 
   ? pick rooms for BOSS monsters
   ? allocate seeds for teleporters,bosses,switches,items
@@ -168,8 +182,6 @@ REWRITE:
   - for rooms >= 3x3 and 3+ exits, properly create O or U shape path
   - occasionaly: height diff, spaced steps (two exit only)
   - rarely: make a maze (large room only)
-
-- document classes (PLAN, SEED, ROOM, QUEST)
 
 
 
@@ -265,7 +277,7 @@ GUI / C++:
 
 SKY GENERATOR:
 
->>  provide an API to the Lua code
+>>>  provide an API to the Lua code
 
 -  background part: GRADIENT or CLOUDS or STARS
 
