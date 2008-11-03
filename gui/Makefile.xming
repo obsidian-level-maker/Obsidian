@@ -78,13 +78,13 @@ OBJS=	main.o      \
 	twister.o   \
 	tx_forge.o  \
 	tx_skies.o  \
+	ui_about.o  \
 	ui_build.o  \
 	ui_chooser.o \
 	ui_dialog.o \
 	ui_game.o  \
 	ui_level.o \
 	ui_map.o    \
-	ui_menu.o   \
 	ui_module.o \
 	ui_rchoice.o \
 	ui_play.o \

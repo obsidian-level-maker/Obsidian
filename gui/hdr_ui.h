@@ -20,7 +20,7 @@
 #define __OB_HDR_UI_H__
 
 #include "ui_dialog.h"
-#include "ui_menu.h"
+#include "ui_about.h"
 #include "ui_map.h"
 #include "ui_rchoice.h"
 
