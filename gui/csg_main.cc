@@ -420,8 +420,21 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 
   lua_pop(L, 3);
 
-  // TODO: t_light, b_light
-  // TODO: y_offset, peg
+  lua_getfield(L, stack_pos, "flag_liquid");
+  lua_getfield(L, stack_pos, "flag_detail");
+  lua_getfield(L, stack_pos, "flag_noclip");
+  lua_getfield(L, stack_pos, "flag_door");
+  lua_getfield(L, stack_pos, "flag_skyclose");
+
+  if (! lua_isnil(L, -5)) B->bflags |= BRU_F_Liquid;
+  if (! lua_isnil(L, -4)) B->bflags |= BRU_F_Detail;
+  if (! lua_isnil(L, -3)) B->bflags |= BRU_F_NoClip;
+  if (! lua_isnil(L, -2)) B->bflags |= BRU_F_Door;
+  if (! lua_isnil(L, -1)) B->bflags |= BRU_F_SkyClose;
+  
+  lua_pop(L, 5);
+
+  // TODO: y_offset, peg, lighting ???
 
   return B;
 }

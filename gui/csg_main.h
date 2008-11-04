@@ -98,7 +98,7 @@ typedef enum
   BRU_F_Detail   = (1 << 1),  // skipped when vis-ing
   BRU_F_NoClip   = (1 << 2),  // objects/shots can pass through
 
-  BRU_F_Close    = (1 << 4),  // (DOOM) close the created sector
+  BRU_F_Door     = (1 << 4),  // (DOOM) close the created sector
   BRU_F_SkyClose = (1 << 5),  // (DOOM) almost close the sector
 }
 brush_flags_e;
