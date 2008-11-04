@@ -240,7 +240,7 @@ struct Compare_SegmentMinX_pred
   }
 };
 
-struct Compare_PolyMinX_pred
+struct Compare_BrushMinX_pred
 {
   inline bool operator() (const csg_brush_c *A, const csg_brush_c *B) const
   {
@@ -248,7 +248,7 @@ struct Compare_PolyMinX_pred
   }
 };
 
-struct Compare_PolyZ1_pred
+struct Compare_BrushZ1_pred
 {
   inline bool operator() (const csg_brush_c *A, const csg_brush_c *B) const
   {
@@ -977,7 +977,7 @@ static void Mug_DiscoverGaps(void)
     merge_region_c *R = mug_regions[i];
 
     std::sort(R->areas.begin(), R->areas.end(),
-              Compare_PolyZ1_pred());
+              Compare_BrushZ1_pred());
 
     if (R->areas.size() <= 1)
       continue;
@@ -1045,11 +1045,11 @@ static void Mug_GapNeighbours(void)
       merge_gap_c *B = S->back ->gaps[b_idx];
       merge_gap_c *F = S->front->gaps[f_idx];
 
-      double B_z1 = B->b_poly->z2;
-      double B_z2 = B->t_poly->z1;
+      double B_z1 = B->b_brush->z2;
+      double B_z2 = B->t_brush->z1;
 
-      double F_z1 = F->b_poly->z2;
-      double F_z2 = F->t_poly->z1;
+      double F_z1 = F->b_brush->z2;
+      double F_z2 = F->t_brush->z1;
 
       if (B_z2 < F_z1 + EPSILON)
       {
@@ -1205,8 +1205,8 @@ static merge_gap_c *FindGapForPoint(merge_region_c *R, double x, double y, doubl
     merge_gap_c *gap = R->gaps[k];
 
     // allow some leeway
-    double z1 = (gap->b_poly->z1 + gap->b_poly->z2) / 2.0;
-    double z2 = (gap->t_poly->z1 + gap->t_poly->z2) / 2.0;
+    double z1 = (gap->b_brush->z1 + gap->b_brush->z2) / 2.0;
+    double z2 = (gap->t_brush->z1 + gap->t_brush->z2) / 2.0;
 
     if (z1 < z && z < z2)
       return gap;

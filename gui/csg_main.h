@@ -285,8 +285,8 @@ class merge_gap_c
 public:
   merge_region_c *parent;
 
-  csg_brush_c *b_poly;
-  csg_brush_c *t_poly;
+  csg_brush_c *b_brush;
+  csg_brush_c *t_brush;
 
   std::vector<merge_gap_c *> neighbours;
 
@@ -296,7 +296,7 @@ public:
 
 public:
   merge_gap_c(merge_region_c *R, csg_brush_c *B, csg_brush_c *T) :
-      parent(R), b_poly(B), t_poly(T),
+      parent(R), b_brush(B), t_brush(T),
       neighbours(), entities(), reachable(false)
   { }
 
@@ -305,22 +305,22 @@ public:
 
   inline double GetZ1() const
   {
-    return b_poly->z2;
+    return b_brush->z2;
   }
 
   inline double GetZ2() const
   {
-    return t_poly->z1;
+    return t_brush->z1;
   }
 
   inline const char *FloorTex() const
   {
-    return b_poly->t_face->tex.c_str();
+    return b_brush->t_face->tex.c_str();
   }
 
   inline const char *CeilTex() const
   {
-    return t_poly->b_face->tex.c_str();
+    return t_brush->b_face->tex.c_str();
   }
 };
 

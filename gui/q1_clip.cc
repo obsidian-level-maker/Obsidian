@@ -38,7 +38,7 @@
 std::vector<csg_brush_c *> saved_all_brushes;
 
 
-static void SaveAreaPolys(void)
+static void SaveBrushes(void)
 {
   SYS_ASSERT(all_brushes.size() > 0);
   SYS_ASSERT(saved_all_brushes.empty());
@@ -46,7 +46,7 @@ static void SaveAreaPolys(void)
   std::swap(all_brushes, saved_all_brushes);
 }
 
-static void RestoreAreaPolys(void)
+static void RestoreBrushes(void)
 {
   // free our modified ones
   for (unsigned int i = 0; i < all_brushes.size(); i++)
@@ -211,7 +211,7 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
   }
 }
 
-static void FattenAreaPolys(double wd, double fh, double ch)
+static void FattenBrushes(double wd, double fh, double ch)
 {
   for (unsigned int i = 0; i < saved_all_brushes.size(); i++)
   {
@@ -885,8 +885,8 @@ fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
 
 CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
 
-  SaveAreaPolys();
-  FattenAreaPolys(pads[which][0], pads[which][1], pads[which][2]);
+  SaveBrushes();
+  FattenBrushes(pads[which][0], pads[which][1], pads[which][2]);
 
   CSG2_MergeAreas();
 
@@ -924,7 +924,7 @@ CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
   delete C_ROOT;
 
   CSG2_FreeMerges();
-  RestoreAreaPolys();
+  RestoreBrushes();
 
   return start_idx;
 }

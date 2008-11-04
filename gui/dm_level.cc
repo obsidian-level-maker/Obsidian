@@ -338,8 +338,8 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   {
     csg_brush_c *A = R->areas[j];
 
-    if (A->z1 > B->t_poly->z1 - EPSILON &&
-        A->z2 < T->b_poly->z2 + EPSILON)
+    if (A->z1 > B->t_brush->z1 - EPSILON &&
+        A->z2 < T->b_brush->z2 + EPSILON)
     {
       double h = A->z2 - A->z1;
 
@@ -368,11 +368,11 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 
   EF->sec = new sector_info_c();
 
-  EF->sec->f_h = I_ROUND(B->t_poly->z1);
-  EF->sec->c_h = I_ROUND(T->b_poly->z2);
+  EF->sec->f_h = I_ROUND(B->t_brush->z1);
+  EF->sec->c_h = I_ROUND(T->b_brush->z2);
 
-  EF->sec->f_tex = B->t_poly->b_face->tex.c_str();
-  EF->sec->c_tex = T->b_poly->t_face->tex.c_str();
+  EF->sec->f_tex = B->t_brush->b_face->tex.c_str();
+  EF->sec->c_tex = T->b_brush->t_face->tex.c_str();
 
   // FIXME !!!! light, special
 
@@ -393,8 +393,8 @@ static void CreateOneSector(merge_region_c *R)
   }
 
 
-  csg_brush_c *B = R->gaps[0]->b_poly;
-  csg_brush_c *T = R->gaps[R->gaps.size()-1]->t_poly;
+  csg_brush_c *B = R->gaps[0]->b_brush;
+  csg_brush_c *T = R->gaps[R->gaps.size()-1]->t_brush;
 
   sector_info_c *sec = new sector_info_c;
 

@@ -73,12 +73,12 @@ public:
 
   int index;  // final index into Faces lump
 
-  csg_brush_c *from_poly;  // ????
+  csg_brush_c *from_brush;  // ????
 
 public:
    qFace_c(int _kind = WALL) :
           kind(_kind), side(NULL), leaf(NULL),
-          index(-1), from_poly(NULL)
+          index(-1), from_brush(NULL)
    { }
 
   ~qFace_c()
@@ -87,14 +87,14 @@ public:
    qFace_c(int _kind, int _gap, double _z1, double _z2) :
            kind(_kind), z1(_z1), z2(_z2), gap(_gap),
            side(NULL), leaf(NULL), index(-1),
-           from_poly(NULL)
+           from_brush(NULL)
    { }
 
    qFace_c(const qFace_c *other, qSide_c *new_side) :
            kind(other->kind), z1(other->z1), z2(other->z2),
            gap(other->gap), side(new_side),
            leaf(other->leaf), index(-1),
-           from_poly(other->from_poly)
+           from_brush(other->from_brush)
    { }
 };
 
@@ -1639,7 +1639,7 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
 
   // collision brushes
 
-  F->from_poly = is_ceil ? gap->t_poly : gap->b_poly;
+  F->from_brush = is_ceil ? gap->t_brush : gap->b_brush;
 }
 
 static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
@@ -1679,7 +1679,7 @@ static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
     {
       texture = MID->side->tex.c_str();
 
-      F->from_poly = MID;
+      F->from_brush = MID;
     }
   }
 
@@ -1820,8 +1820,8 @@ static s32_t MakeLeaf(qLeaf_c *leaf, dnode2_t *parent)
 
     DoAddSurf(F->index, &raw_lf);
 
-    if (F->from_poly)
-      DoCollisionBrush(F->from_poly, &raw_lf);
+    if (F->from_brush)
+      DoCollisionBrush(F->from_brush, &raw_lf);
   }
 
 
