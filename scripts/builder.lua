@@ -21,11 +21,7 @@ require 'util'
 require 'seeds'
 
 
-TK = 16  -- wall thickness
-
-
 -- TEMPORARY CRUD
-
 ENT_PLAYER  = "1"
 ENT_MONSTER = "9"
 ENT_EXIT    = "41"
@@ -41,6 +37,36 @@ ENT_PLAYER  = "info_player_start"
 ENT_MONSTER = "monster_soldier_light"
 ENT_EXIT    = "item_quad"
 --]]
+
+
+function get_wall_coords(S, side)
+  assert(side ~= 5)
+
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  if side == 4 or side == 1 or side == 7 then
+    x2 = x1 + S.thick[4]
+  end
+
+  if side == 6 or side == 3 or side == 9 then
+    x1 = x2 - S.thick[6]
+  end
+
+  if side == 2 or side == 1 or side == 3 then
+    y2 = y1 + S.thick[2]
+  end
+
+  if side == 8 or side == 7 or side == 9 then
+    y1 = y2 - S.thick[8]
+  end
+
+  return
+  {
+    { x=x1, y=y1 }, { x=x1, y=y2 },
+    { x=x2, y=y2 }, { x=x2, y=y1 }
+  }
+end
 
 
 function make_arrow(S, dir, f_h, tex)
@@ -594,50 +620,6 @@ end
 function Builder()
 
 
-  local function get_wall_coords(dir, x1,y1, x2,y2)
-  
-    if dir == 4 then
-      return
-      {
-        { x = x1   ,  y = y1 },
-        { x = x1   ,  y = y2 },
-        { x = x1+TK,  y = y2 },
-        { x = x1+TK,  y = y1 },
-      }
-    end
-
-    if dir == 6 then
-      return
-      {
-        { x = x2   ,  y = y2 },
-        { x = x2   ,  y = y1 },
-        { x = x2-TK,  y = y1 },
-        { x = x2-TK,  y = y2 },
-      }
-    end
-
-    if dir == 2 then
-      return
-      {
-        { x = x2, y = y1 },
-        { x = x1, y = y1 },
-        { x = x1, y = y1+TK },
-        { x = x2, y = y1+TK },
-      }
-    end
-
-    if dir == 8 then
-      return
-      {
-        { x = x1, y = y2    },
-        { x = x2, y = y2    },
-        { x = x2, y = y2-TK },
-        { x = x1, y = y2-TK },
-      }
-    end
-
-    error("BAD SIDE for get_seed_wall: " .. tostring(side))
-  end
 
 
   local function build_stairwell_90(R)
@@ -1244,7 +1226,7 @@ w_tex = "e1u1/exitdr01_2"
 
       S.z1 = z1 --!!!!!! REMOVE CRAP
 
-      if do_corners then
+--[[      if do_corners then
       gui.add_brush(
       {
         t_face = { texture=w_tex },
@@ -1300,7 +1282,7 @@ w_tex = "e1u1/exitdr01_2"
         { x=x2,    y=y2-TK },
       },
       -2000, 4000)
-      end -- do_corners
+      end -- do_corners --]]
 
 
     -- floor and ceiling brushes
@@ -1422,7 +1404,7 @@ if true then -- if do_sides then
           b_face = { texture=f_tex },
           w_face = { texture=w_tex },
         },
-        get_wall_coords(side, x1,y1, x2,y2),
+        get_wall_coords(S, side),
         -2000, 4000)
       end
       if S.borders and S.borders[side] and S.borders[side].kind == "fence"
@@ -1434,7 +1416,7 @@ if true then -- if do_sides then
           b_face = { texture=f_tex },
           w_face = { texture=w_tex },
         },
-        get_wall_coords(side, x1,y1, x2,y2),
+        get_wall_coords(S, side),
         -2000, z1+36)
       end
       if S.borders and S.borders[side] and S.borders[side].kind == "lock_door" then
@@ -1448,7 +1430,7 @@ gui.printf("ADDING LOCK DOOR %s\n", w_tex)
           b_face = { texture=f_tex },
           w_face = { texture=w_tex },
         },
-        get_wall_coords(side, x1,y1, x2,y2),
+        get_wall_coords(S, side),
         z1 + 36, 4000)
       end
     end

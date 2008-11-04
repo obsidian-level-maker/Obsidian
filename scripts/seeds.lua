@@ -26,12 +26,11 @@ class SEED
 
   borders[DIR] : BORDER
 
+  thick[DIR]  -- thickness of each border
+
   x1, y1, x2, y2  -- 2D map coordinates
 
   floor_h, ceil_h -- floor and ceiling heights
-
-  W[3]  -- widths  : left, middle, right
-  H[3]  -- heights : bottom, middle, top
 }
 
 
@@ -59,11 +58,26 @@ function Seed_init(W, H, D)
 
   SEEDS = array_2D(W, H)
 
+  local SIZE = assert(PARAMS.seed_size)
+
   for x = 1,W do for y = 1,H do
     SEEDS[x][y] = {}
 
     for z = 1,D do
-      SEEDS[x][y][z] = { sx=x, sy=y, sz=z }
+      local S =
+      {
+        sx=x, sy=y, sz=z,
+
+        x1 = x * SIZE, x2 = (x+1) * SIZE,
+        y1 = y * SIZE, y2 = (y+1) * SIZE,
+
+        thick   = {},
+        borders = {},
+      }
+
+      for side = 2,8,2 do S.thick[side] = 16 end
+
+      SEEDS[x][y][z] = S
     end
   end end -- x,y
 end
@@ -196,25 +210,5 @@ function Seed_dump_fabs()
   end
 
   gui.printf("\n")
-end
-
-
-function Seed_grow()
-
-  local SIZE = assert(PARAMS.seed_size)
-
-  for x = 1,SEED_W do for y = 1,SEED_H do for z = 1,SEED_D do
-
-    local S = SEEDS[x][y][z]
-
-    S.x1, S.x2 = x * SIZE, (x+1) * SIZE
-    S.y1, S.y2 = y * SIZE, (y+1) * SIZE
-
-    S.W = { 16, SIZE-32, 16 }
-    S.H = { 16, SIZE-32, 16 }
-
-  end end end --- x, y, z
-
-  return
 end
 

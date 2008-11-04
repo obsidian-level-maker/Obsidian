@@ -138,8 +138,6 @@ function Level_Make(L, index, NUM)
     if gui.abort() then return "abort" end
     gui.progress(15)
 
-  Seed_grow()
-
   Quest_assign()
     if gui.abort() then return "abort" end
     gui.progress(25)

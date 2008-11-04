@@ -993,6 +993,7 @@ function Rooms_MakeSeeds()
         local N
         if Seed_valid(nx, ny, 1) then
           N = SEEDS[nx][ny][1]
+          assert(N)
         end
 
         if not N then
