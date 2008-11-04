@@ -64,8 +64,75 @@ function get_wall_coords(S, side)
   return
   {
     { x=x1, y=y1 }, { x=x1, y=y2 },
-    { x=x2, y=y2 }, { x=x2, y=y1 }
+    { x=x2, y=y2 }, { x=x2, y=y1 },
   }
+end
+
+
+function make_sky_fence(S, side)
+  
+  local wall_info =
+  {
+    t_face = { texture="FLOOR7_1" },
+    b_face = { texture="FLOOR7_1" },
+    w_face = { texture="BROWN144" },
+  }
+
+  local sky_info =
+  {
+    t_face = { texture="F_SKY1" },
+    b_face = { texture="F_SKY1" },
+    w_face = { texture="-" },
+  }
+
+  local sky2_info = copy_table(sky_info)
+  sky2_info.flag_skyclose = true
+
+
+  local wx1, wy1 = S.x1, S.y1
+  local wx2, wy2 = S.x2, S.y2
+
+  local sx1, sy1 = S.x1, S.y1
+  local sx2, sy2 = S.x2, S.y2
+
+  if side == 4 then
+    wx2 = wx1 + S.thick[4]
+    sx2 = wx1 + 16
+    wx1 = sx2
+
+  elseif side == 6 then
+    wx1 = wx2 - S.thick[6]
+    sx1 = wx2 - 16
+    wx2 = sx1
+
+  elseif side == 2 then
+    wy2 = wy1 + S.thick[2]
+    sy2 = wy1 + 16
+    wy1 = sy2
+
+  elseif side == 8 then
+    wy1 = wy2 - S.thick[8]
+    sy1 = wy2 - 16
+    wy2 = sy1
+  end
+
+  local w_coords =
+  {
+    { x=wx1, y=wy1 }, { x=wx1, y=wy2 },
+    { x=wx2, y=wy2 }, { x=wx2, y=wy1 },
+  }
+
+  local s_coords =
+  {
+    { x=sx1, y=sy1 }, { x=sx1, y=sy2 },
+    { x=sx2, y=sy2 }, { x=sx2, y=sy1 },
+  }
+
+  gui.add_brush(wall_info, w_coords, -4000, PLAN.skyfence_h)
+  gui.add_brush(wall_info, s_coords, -4000, PLAN.skyfence_h - 64)
+
+  gui.add_brush(sky_info,  w_coords, 512, 4096)
+  gui.add_brush(sky2_info, s_coords, 510, 4096)
 end
 
 
@@ -1391,11 +1458,12 @@ if true then -- if do_sides then
       local N
       if Seed_valid(nx,ny,1) then N = SEEDS[nx][ny][1] end
 
-      if S.borders and S.borders[side] and S.borders[side].kind == "solid"
+      if S.borders[side] and S.borders[side].kind == "solid"
          and not (N and S.room and N.room and
                   S.room.arena == N.room.arena and
                   S.room.kind == N.room.kind and
                   not (S.room.hallway or N.room.hallway) and
+                  not (S.room.purpose or N.room.purpose) and
                   false)
       then
         gui.add_brush(
@@ -1407,7 +1475,8 @@ if true then -- if do_sides then
         get_wall_coords(S, side),
         -2000, 4000)
       end
-      if S.borders and S.borders[side] and S.borders[side].kind == "fence"
+
+      if S.borders[side] and S.borders[side].kind == "fence"
          and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
       then
         gui.add_brush(
@@ -1419,7 +1488,12 @@ if true then -- if do_sides then
         get_wall_coords(S, side),
         -2000, z1+36)
       end
-      if S.borders and S.borders[side] and S.borders[side].kind == "lock_door" then
+
+      if S.borders[side] and S.borders[side].kind == "skyfence" then
+        make_sky_fence(S, side)
+      end
+
+      if S.borders[side] and S.borders[side].kind == "lock_door" then
         local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
                             "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
         local w_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
@@ -1429,9 +1503,10 @@ gui.printf("ADDING LOCK DOOR %s\n", w_tex)
           t_face = { texture=f_tex },
           b_face = { texture=f_tex },
           w_face = { texture=w_tex },
+--        flag_door = true
         },
         get_wall_coords(S, side),
-        z1 + 36, 4000)
+        z1 + 64, 4000)
       end
     end
 end -- do_sides

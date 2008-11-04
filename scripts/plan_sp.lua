@@ -27,6 +27,8 @@ class PLAN
 
   free_tag  : number
   free_mark : number
+  
+  skyfence_h  -- height of fence at edge of map
 
   ....
 }
@@ -997,7 +999,12 @@ function Rooms_MakeSeeds()
         end
 
         if not N then
-          S.borders[dir] = { kind="solid" }
+          if S.room and not S.room.outdoor then
+            S.borders[dir] = { kind="solid" }
+          else
+            S.borders[dir] = { kind="skyfence" }
+            S.thick[dir] = 48
+          end
 
         elseif N.room == R then
           -- same room, do nothing
@@ -1114,6 +1121,8 @@ function Plan_rooms_sp()
   Rooms_CollectNeighbors()
   Rooms_Nudge()
   Rooms_MakeSeeds()
+
+  PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
 
 end -- Plan_rooms_sp
 
