@@ -766,9 +766,9 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
        (side == 6 and R.lx2 == LAND_W) or
        (side == 8 and R.ly2 == LAND_H)
     then
-      if grow > 0 then  -- TODO: probably too simple
+      -- if grow > 0 then  -- TODO: probably too simple
         return false
-      end
+      -- end
     end
 
     local push_list = {}
