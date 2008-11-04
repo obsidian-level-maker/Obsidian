@@ -74,8 +74,6 @@ public:
 class area_info_c
 {
 public:
-  int time; // increases for each new solid area
-
   area_face_c *b_face;
   area_face_c *t_face;
   area_face_c *side;  // default side face
@@ -126,9 +124,9 @@ typedef enum
   BRU_F_Liquid   = (1 << 0),
   BRU_F_Detail   = (1 << 1),  // skipped when vis-ing
   BRU_F_NoClip   = (1 << 2),  // objects/shots can pass through
-  BRU_F_Keep     = (1 << 3),  // never fill away a gap above/below this
 
-  //??? BRU_F_Sky
+  BRU_F_Close    = (1 << 4),  // (DOOM) close the created sector
+  BRU_F_SkyClose = (1 << 5),  // (DOOM) almost close the sector
 }
 brush_flags_e;
 

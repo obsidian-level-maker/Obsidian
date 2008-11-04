@@ -42,8 +42,6 @@ std::vector<merge_segment_c *> mug_segments;
 std::vector<merge_region_c *>  mug_regions;
 
 
-static int cur_poly_time;
-
 static void CSG2_BeginLevel(void);
 static void CSG2_EndLevel(void);
 
@@ -71,7 +69,6 @@ area_info_c::area_info_c() :
 ///-- t_light(255), b_light(255),
       sec_kind(0), sec_tag(0), mark(0)
 {
-  time = cur_poly_time++;
 }
 
 area_info_c::~area_info_c()
@@ -84,8 +81,6 @@ area_info_c::area_info_c(const area_info_c *other) :
       sec_kind(other->sec_kind), sec_tag(other->sec_tag),
       mark(other->mark)
 {
-  time = other->time;  
-
   // FIXME: duplicate slopes
 }
 
@@ -714,7 +709,6 @@ void CSG2_FreeAll(void)
 
 void CSG2_BeginLevel(void)
 {
-  cur_poly_time = 0;
 }
 
 void CSG2_EndLevel(void)
