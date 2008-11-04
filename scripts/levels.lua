@@ -132,25 +132,25 @@ function Level_Make(L, index, NUM)
 
   Plan_rooms_sp()
     if gui.abort() then return "abort" end
-    gui.progress(20)
+    gui.progress(10)
 
   Connect_Rooms()
     if gui.abort() then return "abort" end
-    gui.progress(30)
+    gui.progress(15)
+
+  Seed_grow()
 
   Quest_assign()
     if gui.abort() then return "abort" end
-    gui.progress(40)
+    gui.progress(25)
 
-  Rooms_fit_out()
+  Rooms_height_up()
+    if gui.abort() then return "abort" end
+    gui.progress(30)
+
+  Rooms_lay_out()
     if gui.abort() then return "abort" end
     gui.progress(60)
-
-  Rooms_II()
-    if gui.abort() then return "abort" end
-    gui.progress(70)
-
-  Seed_grow()
 
   Builder()
     if gui.abort() then return "abort" end

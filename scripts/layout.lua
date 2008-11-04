@@ -1226,7 +1226,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 end
 
 
-function Room_Layout(R)
+function Room_LayItOut(R)
 
   -- set seed range for layouting algorithms to whole room
   R.tx1, R.ty1 = R.sx1, R.sy1
@@ -1407,12 +1407,12 @@ function Room_Layout(R)
 end
 
 
-function Rooms_II()
+function Rooms_lay_out()
 
-  gui.printf("\n--==| Rooms_II |==--\n\n")
+  gui.printf("\n--==| Rooms_lay_out |==--\n\n")
 
   for _,R in ipairs(PLAN.all_rooms) do
-    Room_Layout(R)
+    Room_LayItOut(R)
   end
 end
 

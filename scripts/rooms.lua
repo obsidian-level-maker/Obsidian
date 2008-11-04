@@ -878,9 +878,9 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
 end
 
 
-function Rooms_fit_out()
+function Rooms_height_up()
 
-  gui.printf("\n--==| Rooms_fit_out |==--\n\n")
+  gui.printf("\n--==| Rooms_height_up |==--\n\n")
 
   Rooms_setup_symmetry()
   Rooms_decide_hallways()
