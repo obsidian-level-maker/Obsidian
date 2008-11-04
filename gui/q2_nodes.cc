@@ -1495,14 +1495,14 @@ static area_poly_c * PolyForSideTexture(merge_region_c *R, double z1, double z2)
   {
     area_poly_c *A = R->areas[j];
 
-    if (A->info->z2 < z1 + EPSILON)
+    if (A->z2 < z1 + EPSILON)
       continue;
 
-    if (A->info->z1 > z2 - EPSILON)
+    if (A->z1 > z2 - EPSILON)
       continue;
 
     {
-      double h = A->info->z2 - A->info->z1;
+      double h = A->z2 - A->z1;
 
       // TODO: priorities
 
@@ -1677,7 +1677,7 @@ static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
     area_poly_c *MID = PolyForSideTexture(BACK, z1, z2);
     if (MID)
     {
-      texture = MID->info->side->tex.c_str();
+      texture = MID->side->tex.c_str();
 
       F->from_poly = MID;
     }

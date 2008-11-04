@@ -32,7 +32,6 @@
 
 
 
-std::vector<area_info_c *> all_areas;
 std::vector<area_poly_c *> all_polys;
 
 std::vector<entity_info_c *> all_entities;
@@ -63,28 +62,6 @@ double slope_plane_c::GetAngle() const
 }
 
 
-area_info_c::area_info_c() :
-      b_face(NULL), t_face(NULL), side(NULL),
-      z1(-1), z2(-1), b_slope(NULL), t_slope(NULL),
-///-- t_light(255), b_light(255),
-      sec_kind(0), sec_tag(0), mark(0)
-{
-}
-
-area_info_c::~area_info_c()
-{ }
-
-area_info_c::area_info_c(const area_info_c *other) :
-      b_face(other->b_face), t_face(other->t_face), side(other->side),
-      z1(other->z1), z2(other->z2),
-      b_slope(NULL), t_slope(NULL),
-      sec_kind(other->sec_kind), sec_tag(other->sec_tag),
-      mark(other->mark)
-{
-  // FIXME: duplicate slopes
-}
-
-
 area_face_c::area_face_c() :
       tex(), x_offset(0), y_offset(0)
 { }
@@ -105,17 +82,36 @@ area_vert_c::~area_vert_c()
 { }
 
 
-area_poly_c::area_poly_c(area_info_c *_info, int _flags) :
-     info(_info), verts(),
-     bflags(_flags)
+csg_brush_c::csg_brush_c() :
+     verts(),
+     bflags(0),
+     b_face(NULL), t_face(NULL), side(NULL),
+     z1(-1), z2(-1), b_slope(NULL), t_slope(NULL),
+///-- t_light(255), b_light(255),
+     sec_kind(0), sec_tag(0), mark(0)
 { }
 
-area_poly_c::~area_poly_c()
+csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
+      verts(),
+      bflags(other->bflags),
+      b_face(other->b_face), t_face(other->t_face), side(other->side),
+      z1(other->z1), z2(other->z2),
+      b_slope(NULL), t_slope(NULL),
+      sec_kind(other->sec_kind), sec_tag(other->sec_tag),
+      mark(other->mark)
+{
+  // FIXME: do_verts
+
+  // FIXME: duplicate slopes
+}
+
+csg_brush_c::~csg_brush_c()
 {
   // FIXME: free verts
 }
 
-const char * area_poly_c::Validate()
+
+const char * csg_brush_c::Validate()
 {
   if (verts.size() < 3)
     return "Line loop contains less than 3 vertices!";
@@ -155,7 +151,7 @@ const char * area_poly_c::Validate()
   return NULL; // OK
 }
 
-void area_poly_c::ComputeBBox()
+void csg_brush_c::ComputeBBox()
 {
   min_x = +999999.9;
   min_y = +999999.9;
@@ -391,7 +387,7 @@ static area_face_c * Grab_Face(lua_State *L, int stack_pos)
 }
 
 
-static area_info_c * Grab_AreaInfo(lua_State *L, int stack_pos)
+static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 {
   if (stack_pos < 0)
     stack_pos += lua_gettop(L) + 1;
@@ -402,15 +398,15 @@ static area_info_c * Grab_AreaInfo(lua_State *L, int stack_pos)
     return NULL; /* NOT REACHED */
   }
 
-  area_info_c *A = new area_info_c();
+  csg_brush_c *B = new csg_brush_c();
 
   lua_getfield(L, stack_pos, "t_face");
   lua_getfield(L, stack_pos, "b_face");
   lua_getfield(L, stack_pos, "w_face");
 
-  A->t_face = Grab_Face(L, -3);
-  A->b_face = Grab_Face(L, -2);
-  A->side   = Grab_Face(L, -1);
+  B->t_face = Grab_Face(L, -3);
+  B->b_face = Grab_Face(L, -2);
+  B->side   = Grab_Face(L, -1);
 
   lua_pop(L, 3);
 
@@ -418,16 +414,16 @@ static area_info_c * Grab_AreaInfo(lua_State *L, int stack_pos)
   lua_getfield(L, stack_pos, "sec_tag");
   lua_getfield(L, stack_pos, "mark");
 
-  if (lua_isnumber(L, -3)) A->sec_kind = lua_tointeger(L, -3);
-  if (lua_isnumber(L, -2)) A->sec_tag  = lua_tointeger(L, -2);
-  if (lua_isnumber(L, -1)) A->mark     = lua_tointeger(L, -1);
+  if (lua_isnumber(L, -3)) B->sec_kind = lua_tointeger(L, -3);
+  if (lua_isnumber(L, -2)) B->sec_tag  = lua_tointeger(L, -2);
+  if (lua_isnumber(L, -1)) B->mark     = lua_tointeger(L, -1);
 
   lua_pop(L, 3);
 
   // TODO: t_light, b_light
   // TODO: y_offset, peg
 
-  return A;
+  return B;
 }
 
 
@@ -470,15 +466,13 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
 }
 
 
-static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
+static void Grab_LineLoop(lua_State *L, int stack_pos, csg_brush_c *B)
 {
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
     luaL_argerror(L, stack_pos, "expected a table: line loop");
-    return NULL; /* NOT REACHED */
+    return; /* NOT REACHED */
   }
-
-  area_poly_c *P = new area_poly_c(A);
 
   int index = 1;
 
@@ -495,21 +489,19 @@ static area_poly_c * Grab_LineLoop(lua_State *L, int stack_pos, area_info_c *A)
 
     area_vert_c *V = Grab_Vertex(L, -1);
 
-    P->verts.push_back(V);
+    B->verts.push_back(V);
 
     lua_pop(L, 1);
 
     index++;
   }
 
-  const char *err_msg = P->Validate();
+  const char *err_msg = B->Validate();
 
   if (err_msg)
     luaL_error(L, "%s", err_msg);
 
-  P->ComputeBBox();
-
-  return P;
+  B->ComputeBBox();
 }
 
 
@@ -589,21 +581,21 @@ int CSG2_property(lua_State *L)
 //
 int CSG2_add_brush(lua_State *L)
 {
-  area_info_c *A = Grab_AreaInfo(L, 1);
-  area_poly_c *P = Grab_LineLoop(L, 2, A);
+  csg_brush_c *B = Grab_AreaInfo(L, 1);
+
+  Grab_LineLoop(L, 2, B);
 
   if (lua_isnumber(L, 3))
-    A->z1 = lua_tonumber(L, 3);
+    B->z1 = lua_tonumber(L, 3);
   else
-    A->b_slope = Grab_Slope(L, 3);
+    B->b_slope = Grab_Slope(L, 3);
 
   if (lua_isnumber(L, 4))
-    A->z2 = lua_tonumber(L, 4);
+    B->z2 = lua_tonumber(L, 4);
   else
-    A->t_slope = Grab_Slope(L, 4);
+    B->t_slope = Grab_Slope(L, 4);
 
-  all_areas.push_back(A);
-  all_polys.push_back(P);
+  all_polys.push_back(B);
 
   return 0;
 }
@@ -692,16 +684,12 @@ void CSG2_FreeAll(void)
 
   unsigned int k;
 
-  for (k = 0; k < all_areas.size(); k++)
-    delete all_areas[k];
-
   for (k = 0; k < all_polys.size(); k++)
     delete all_polys[k];
 
   for (k = 0; k < all_entities.size(); k++)
     delete all_entities[k];
 
-  all_areas.clear();
   all_polys.clear();
   all_entities.clear();
 }

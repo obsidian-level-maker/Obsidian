@@ -53,7 +53,6 @@ static void RestoreAreaPolys(void)
   {
     area_poly_c *P2 = all_polys[i];
 
-    delete P2->info;
     delete P2;
   }
 
@@ -217,25 +216,22 @@ static void FattenAreaPolys(double wd, double fh, double ch)
   for (unsigned int i = 0; i < saved_all_polys.size(); i++)
   {
     area_poly_c *P = saved_all_polys[i];
-    area_info_c *A = P->info;
 
-    area_info_c *A2 = new area_info_c(A);
+    area_poly_c *P2 = new area_poly_c(P);  // clone it, except vertices
 
     // !!!! TODO: if floor is sloped, split this poly into two halves
     //            at the point where the (slope + fh) exceeds (z2 + fh)
 
-    SYS_ASSERT(! A2->t_slope);
+    SYS_ASSERT(! P2->t_slope);
 
     // TODO: if ceiling is sloped, adjust slope to keep it in new bbox
     //       (this is a kludge.  Floors are a lot more important to get
     //        right because players and monsters walk on them).
 
-    SYS_ASSERT(! A2->b_slope);
+    SYS_ASSERT(! P2->b_slope);
 
-    A2->z2 += fh;
-    A2->z1 -= ch;
-
-    area_poly_c *P2 = new area_poly_c(A2);
+    P2->z2 += fh;
+    P2->z1 -= ch;
 
     for (unsigned int k = 0; k < P->verts.size(); k++)
     {

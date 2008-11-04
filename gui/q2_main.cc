@@ -106,8 +106,6 @@ u16_t Q2_AddBrush(const area_poly_c *A)
     return brush_map[A];
 
 
-  const area_info_c *info = A->info;
-
   dbrush_t brush;
   dbrushside_t side;
 
@@ -119,14 +117,14 @@ u16_t Q2_AddBrush(const area_poly_c *A)
 
 
   // top
-  side.planenum = BSP_AddPlane(0, 0, info->z2,  0, 0, +1);
+  side.planenum = BSP_AddPlane(0, 0, A->z2,  0, 0, +1);
   
   q2_brush_sides.push_back(side);
   brush.numsides++;
   
 
   // bottom
-  side.planenum = BSP_AddPlane(0, 0, info->z1,  0, 0, -1);
+  side.planenum = BSP_AddPlane(0, 0, A->z1,  0, 0, -1);
   
   q2_brush_sides.push_back(side);
   brush.numsides++;

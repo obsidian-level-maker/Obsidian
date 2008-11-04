@@ -71,33 +71,6 @@ public:
 };
 
 
-class area_info_c
-{
-public:
-  area_face_c *b_face;
-  area_face_c *t_face;
-  area_face_c *side;  // default side face
-
-  // without slopes, z1 and z2 are just the heights of the bottom
-  // and top faces.  When slopes are present, they represent the
-  // bounding heights of the area_poly.
-  double z1, z2;
-
-  // these are NULL when not sloped
-  slope_plane_c *b_slope;
-  slope_plane_c *t_slope;
-
-  int sec_kind, sec_tag;
-  int mark;
-
-public:
-   area_info_c();
-  ~area_info_c();
-
-   area_info_c(const area_info_c *other);
-};
-
-
 class area_vert_c
 {
 public:
@@ -131,25 +104,47 @@ typedef enum
 brush_flags_e;
 
 
-class area_poly_c
+//!!!!
+#define area_poly_c  csg_brush_c
+#define all_polys    all_brushes
+
+class csg_brush_c
 {
   // This represents a "brush" in Quake terms, a solid area
   // on the map with out-facing sides and top/bottom.
-  // Unlike quake brushes, area_polys don't have to be convex
+  // Unlike quake brushes, these don't have to be convex
 
 public:
-  area_info_c *info;
-
   std::vector<area_vert_c *> verts;
-
-  int bflags;
 
   double min_x, min_y;
   double max_x, max_y;
 
+  // AREA INFO
+  int bflags;
+
+  area_face_c *b_face;
+  area_face_c *t_face;
+  area_face_c *side;  // default side face
+
+  // without slopes, z1 and z2 are just the heights of the bottom
+  // and top faces.  When slopes are present, they represent the
+  // bounding heights of the brush.
+  double z1, z2;
+
+  // these are NULL when not sloped
+  slope_plane_c *b_slope;
+  slope_plane_c *t_slope;
+
+  int sec_kind, sec_tag;
+  int mark;
+
 public:
-   area_poly_c(area_info_c *_info, int _flags = 0);
-  ~area_poly_c();
+   csg_brush_c();
+  ~csg_brush_c();
+
+  // copy constructor
+  csg_brush_c(const csg_brush_c *other, bool do_verts = false);
 
   void ComputeBBox();
 
@@ -245,9 +240,9 @@ public:
   merge_region_c *back;
 
   // temporary value that is only used by Mug_AssignAreas(),
-  // and refers to the current area_poly_c if this segment lies
+  // and refers to the current csg_brush_c if this segment lies
   // along it's border (just an efficient boolean test).
-  area_poly_c *border_of;
+  csg_brush_c *border_of;
 
   // this index is not used by the polygoniser code (csg_poly.cc),
   // only by the Doom conversion code.  -1 means "unused".
@@ -294,8 +289,8 @@ class merge_gap_c
 public:
   merge_region_c *parent;
 
-  area_poly_c *b_poly;
-  area_poly_c *t_poly;
+  csg_brush_c *b_poly;
+  csg_brush_c *t_poly;
 
   std::vector<merge_gap_c *> neighbours;
 
@@ -304,7 +299,7 @@ public:
   bool reachable;
 
 public:
-  merge_gap_c(merge_region_c *R, area_poly_c *B, area_poly_c *T) :
+  merge_gap_c(merge_region_c *R, csg_brush_c *B, csg_brush_c *T) :
       parent(R), b_poly(B), t_poly(T),
       neighbours(), entities(), reachable(false)
   { }
@@ -314,22 +309,22 @@ public:
 
   inline double GetZ1() const
   {
-    return b_poly->info->z2;
+    return b_poly->z2;
   }
 
   inline double GetZ2() const
   {
-    return t_poly->info->z1;
+    return t_poly->z1;
   }
 
   inline const char *FloorTex() const
   {
-    return b_poly->info->t_face->tex.c_str();
+    return b_poly->t_face->tex.c_str();
   }
 
   inline const char *CeilTex() const
   {
-    return t_poly->info->b_face->tex.c_str();
+    return t_poly->b_face->tex.c_str();
   }
 };
 
@@ -339,13 +334,13 @@ class merge_region_c
   // This represents a region on the 2D map, bounded by a group
   // of segments (not explicitly stored here, but implicit in the
   // merge_segment_c::front and back fields).  Each region lists
-  // all the area_polys ("brushes") contained, as well as the gaps
-  // (spaces between brushes where objects can go).
+  // all the brushes contained, as well as the gaps (spaces between
+  // brushes where objects can go).
 
 public:
   bool faces_out;
 
-  std::vector<area_poly_c *> areas;
+  std::vector<csg_brush_c *> areas;
 
   std::vector<merge_gap_c *> gaps;
 
@@ -374,8 +369,7 @@ public:
 
 /* ----- VARIABLES ----- */
 
-extern std::vector<area_info_c *> all_areas;
-extern std::vector<area_poly_c *> all_polys;
+extern std::vector<csg_brush_c *> all_brushes;
 
 extern std::vector<entity_info_c *> all_entities;
 

@@ -179,17 +179,16 @@ void CSG2_Doom_TestAreas(void)
   for (unsigned int k = 0; k < all_polys.size(); k++)
   {
     area_poly_c *P = all_polys[k];
-    area_info_c *A = P->info;
     
     int sec_idx = wad::num_sectors();
 
-    wad::add_sector(I_ROUND(A->z1), A->b_face->tex.c_str(),
-                    I_ROUND(A->z2), A->t_face->tex.c_str(),
+    wad::add_sector(I_ROUND(P->z1), P->b_face->tex.c_str(),
+                    I_ROUND(P->z2), P->t_face->tex.c_str(),
                     192, 0, 0);
 
     int side_idx = wad::num_sidedefs();
 
-    wad::add_sidedef(sec_idx, "-", A->side->tex.c_str(), "-", 0, 0);
+    wad::add_sidedef(sec_idx, "-", P->side->tex.c_str(), "-", 0, 0);
 
     int vert_base = wad::num_vertexes();
 
@@ -268,14 +267,14 @@ static area_poly_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
   {
     area_poly_c *E = R->areas[k];
 
-    if (! (E->info->z1 > z1 && E->info->z2 < z2))
+    if (! (E->z1 > z1 && E->z2 < z2))
       continue;
 
     // we prefer the one closest to the top (because when the engine
     // adds an extrafloor, the upper region stays the same and the
     // lower regions gets the lighting/special from the extrafloor).
 
-    if (! best || E->info->z2 > best->info->z2) 
+    if (! best || E->z2 > best->z2) 
     {
       best = E;
     }
@@ -318,9 +317,9 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
     {
       area_poly_c *A = R->areas[k];
 
-      if (A->info->z1 < B->info->z1 - EPSILON &&
-          A->info->z2 > B->info->z1 - EPSILON)
-///       A->info->z2 < T->info->z2 + EPSILON)
+      if (A->z1 < B->z1 - EPSILON &&
+          A->z2 > B->z1 - EPSILON)
+///       A->z2 < T->z2 + EPSILON)
       {
         B = A; changed = true;
       }
@@ -339,10 +338,10 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   {
     area_poly_c *A = R->areas[j];
 
-    if (A->info->z1 > B->t_poly->info->z1 - EPSILON &&
-        A->info->z2 < T->b_poly->info->z2 + EPSILON)
+    if (A->z1 > B->t_poly->z1 - EPSILON &&
+        A->z2 < T->b_poly->z2 + EPSILON)
     {
-      double h = A->info->z2 - A->info->z1;
+      double h = A->z2 - A->z1;
 
       // TODO: priorities
 
@@ -362,18 +361,18 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 
   extrafloor_c *EF = new extrafloor_c();
 
-  EF->w_tex = MID->info->side->tex;
+  EF->w_tex = MID->side->tex;
 
   EF->users.push_back(sec);
 
 
   EF->sec = new sector_info_c();
 
-  EF->sec->f_h = I_ROUND(B->t_poly->info->z1);
-  EF->sec->c_h = I_ROUND(T->b_poly->info->z2);
+  EF->sec->f_h = I_ROUND(B->t_poly->z1);
+  EF->sec->c_h = I_ROUND(T->b_poly->z2);
 
-  EF->sec->f_tex = B->t_poly->info->b_face->tex.c_str();
-  EF->sec->c_tex = T->b_poly->info->t_face->tex.c_str();
+  EF->sec->f_tex = B->t_poly->b_face->tex.c_str();
+  EF->sec->c_tex = T->b_poly->t_face->tex.c_str();
 
   // FIXME !!!! light, special
 
@@ -399,37 +398,37 @@ static void CreateOneSector(merge_region_c *R)
 
   sector_info_c *sec = new sector_info_c;
 
-  sec->f_h = I_ROUND(B->info->z2);
-  sec->c_h = I_ROUND(T->info->z1);
+  sec->f_h = I_ROUND(B->z2);
+  sec->c_h = I_ROUND(T->z1);
 
   if (sec->c_h < sec->f_h)
       sec->c_h = sec->f_h;
 
-  sec->f_tex = B->info->t_face->tex;
-  sec->c_tex = T->info->b_face->tex;
+  sec->f_tex = B->t_face->tex;
+  sec->c_tex = T->b_face->tex;
 
-  sec->light = 255; //!!!! MAX(B->info->t_light, T->info->b_light);
-  sec->mark  = MAX(B->info->mark,    T->info->mark);
+  sec->light = 255; //!!!! MAX(B->t_light, T->b_light);
+  sec->mark  = MAX(B->mark,    T->mark);
 
-  if (B->info->sec_kind > 0)
+  if (B->sec_kind > 0)
   {
-    sec->special = B->info->sec_kind;
-    sec->tag     = B->info->sec_tag;
+    sec->special = B->sec_kind;
+    sec->tag     = B->sec_tag;
   }
-  else if (T->info->sec_kind > 0)
+  else if (T->sec_kind > 0)
   {
-    sec->special = T->info->sec_kind;
-    sec->tag     = T->info->sec_tag;
+    sec->special = T->sec_kind;
+    sec->tag     = T->sec_tag;
   }
   else
   {
     sec->special = 0;
     sec->tag     = 0;
 
-    if (B->info->sec_tag > 0)
-      sec->tag = B->info->sec_tag;
-    else if (T->info->sec_tag > 0)
-      sec->tag = T->info->sec_tag;
+    if (B->sec_tag > 0)
+      sec->tag = B->sec_tag;
+    else if (T->sec_tag > 0)
+      sec->tag = T->sec_tag;
   }
 
 
@@ -459,8 +458,8 @@ static void CreateOneSector(merge_region_c *R)
 
 
 #if 0  // OLD CODE
-  double exfloor_z1 = B->info->z2 + 1;
-  double exfloor_z2 = T->info->z1 - 1;
+  double exfloor_z1 = B->z2 + 1;
+  double exfloor_z2 = T->z1 - 1;
 
   for (;;)
   {
@@ -754,8 +753,8 @@ static std::string FindSideTexture(double z, merge_segment_c *G,
   {
     area_poly_c *A = B->areas[k];
 
-    if ((z > A->info->z1 - EPSILON) && (z < A->info->z2 + EPSILON))
-      return A->info->side->tex;
+    if ((z > A->z1 - EPSILON) && (z < A->z2 + EPSILON))
+      return A->side->tex;
   }
 
   // none found ???  FIXME use closest area

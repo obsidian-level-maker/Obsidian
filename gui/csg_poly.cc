@@ -252,7 +252,7 @@ struct Compare_PolyZ1_pred
 {
   inline bool operator() (const area_poly_c *A, const area_poly_c *B) const
   {
-    return A->info->z1 < B->info->z1;
+    return A->z1 < B->z1;
   }
 };
 
@@ -988,7 +988,7 @@ static void Mug_DiscoverGaps(void)
     {
       area_poly_c *A = R->areas[k];
 
-      if (A->info->z1 > high->info->z2 + EPSILON)
+      if (A->z1 > high->z2 + EPSILON)
       {
         // found a gap
         merge_gap_c *gap = new merge_gap_c(R, high, A);
@@ -1002,7 +1002,7 @@ static void Mug_DiscoverGaps(void)
       // no gap implies that these two brushes touch/overlap,
       // hence update the highest one.
       
-      if (A->info->z2 > high->info->z2)
+      if (A->z2 > high->z2)
         high = A;
     }
   }
@@ -1045,11 +1045,11 @@ static void Mug_GapNeighbours(void)
       merge_gap_c *B = S->back ->gaps[b_idx];
       merge_gap_c *F = S->front->gaps[f_idx];
 
-      double B_z1 = B->b_poly->info->z2;
-      double B_z2 = B->t_poly->info->z1;
+      double B_z1 = B->b_poly->z2;
+      double B_z2 = B->t_poly->z1;
 
-      double F_z1 = F->b_poly->info->z2;
-      double F_z2 = F->t_poly->info->z1;
+      double F_z1 = F->b_poly->z2;
+      double F_z2 = F->t_poly->z1;
 
       if (B_z2 < F_z1 + EPSILON)
       {
@@ -1205,8 +1205,8 @@ static merge_gap_c *FindGapForPoint(merge_region_c *R, double x, double y, doubl
     merge_gap_c *gap = R->gaps[k];
 
     // allow some leeway
-    double z1 = (gap->b_poly->info->z1 + gap->b_poly->info->z2) / 2.0;
-    double z2 = (gap->t_poly->info->z1 + gap->t_poly->info->z2) / 2.0;
+    double z1 = (gap->b_poly->z1 + gap->b_poly->z2) / 2.0;
+    double z2 = (gap->t_poly->z1 + gap->t_poly->z2) / 2.0;
 
     if (z1 < z && z < z2)
       return gap;
