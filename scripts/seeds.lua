@@ -20,13 +20,18 @@
 
 class SEED
 {
-  sx, sy, sz : location in seed map
+  sx, sy, sz  -- location in seed map
 
   room : ROOM
 
-  borders : table(DIR -> BORDER)  -- DIR can be (2 4 6 8)
+  borders[DIR] : BORDER
 
-  x1, y1, z1, x2, y2, z2 : map coordinates for 3D bbox 
+  x1, y1, x2, y2  -- 2D map coordinates
+
+  floor_h, ceil_h -- floor and ceiling heights
+
+  W[3]  -- widths  : left, middle, right
+  H[3]  -- heights : bottom, middle, top
 }
 
 
@@ -196,17 +201,17 @@ end
 
 function Seed_grow()
 
-  assert(PARAMS.seed_size)
+  local SIZE = assert(PARAMS.seed_size)
 
   for x = 1,SEED_W do for y = 1,SEED_H do for z = 1,SEED_D do
 
     local S = SEEDS[x][y][z]
 
-    S.x1 = x * PARAMS.seed_size
-    S.y1 = y * PARAMS.seed_size
+    S.x1, S.x2 = x * SIZE, (x+1) * SIZE
+    S.y1, S.y2 = y * SIZE, (y+1) * SIZE
 
-    S.x2 = (x+1) * PARAMS.seed_size
-    S.y2 = (y+1) * PARAMS.seed_size
+    S.W = { 16, SIZE-32, 16 }
+    S.H = { 16, SIZE-32, 16 }
 
   end end end --- x, y, z
 
