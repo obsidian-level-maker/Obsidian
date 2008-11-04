@@ -147,7 +147,7 @@ static merge_segment_c *Mug_AddSegment(merge_vertex_c *start, merge_vertex_c *en
   return S;
 }
 
-static void Mug_MakeSegments(area_poly_c *P)
+static void Mug_MakeSegments(csg_brush_c *P)
 {
   for (int k=0; k < (int)P->verts.size(); k++)
   {
@@ -242,7 +242,7 @@ struct Compare_SegmentMinX_pred
 
 struct Compare_PolyMinX_pred
 {
-  inline bool operator() (const area_poly_c *A, const area_poly_c *B) const
+  inline bool operator() (const csg_brush_c *A, const csg_brush_c *B) const
   {
     return A->min_x < B->min_x;
   }
@@ -250,7 +250,7 @@ struct Compare_PolyMinX_pred
 
 struct Compare_PolyZ1_pred
 {
-  inline bool operator() (const area_poly_c *A, const area_poly_c *B) const
+  inline bool operator() (const csg_brush_c *A, const csg_brush_c *B) const
   {
     return A->z1 < B->z1;
   }
@@ -815,7 +815,7 @@ static void Mug_RemoveIslands(void)
 
 //------------------------------------------------------------------------
 
-static bool AreaHasRegion(area_poly_c *P, merge_region_c *R)
+static bool AreaHasRegion(csg_brush_c *P, merge_region_c *R)
 {
   for (unsigned int j = 0; j < R->areas.size(); j++)
   {
@@ -856,7 +856,7 @@ static merge_segment_c *FindAlongSeg(merge_vertex_c *v1, merge_vertex_c *v2)
   return NULL;  // not found
 }
 
-static void MarkBoundaryRegions(area_poly_c *P)
+static void MarkBoundaryRegions(csg_brush_c *P)
 {
   for (int k=0; k < (int)P->verts.size(); k++)
   {
@@ -896,7 +896,7 @@ static void MarkBoundaryRegions(area_poly_c *P)
   }
 }
 
-static void MarkInnerRegions(area_poly_c *P)
+static void MarkInnerRegions(csg_brush_c *P)
 {
   for (;;)
   {
@@ -936,24 +936,24 @@ static void Mug_AssignAreas(void)
 {
   // Algorithm:
 
-  // For each area poly, iterate over each line in the loop.
+  // For each brush, iterate over each line in the loop.
   // Since vertices are never removed (only added), we will
   // always be able to find the first vertex of each line.
   // Check each segment along the line and mark the merge_region_c
-  // on the correct side as belonging to our area_poly.
+  // on the correct side as belonging to our brush.
   // 
   // BUT WAIT, THERE'S MORE!
   //
   // The above logic will not find regions that are fully
-  // inside the area_poly_c (no vertices touching the outer
+  // inside the csg_brush_c (no vertices touching the outer
   // line loop).  However it is sufficient to simply "spread"
-  // the area_poly_c from each "infected" merge_region_c to every
+  // the csg_brush_c from each "infected" merge_region_c to every
   // neighbour as long as the crossing segment is not part of
-  // the area_poly_c boundary (no escaping!).
+  // the csg_brush_c boundary (no escaping!).
 
-  for (unsigned int j=0; j < all_polys.size(); j++)
+  for (unsigned int j=0; j < all_brushes.size(); j++)
   {
-    area_poly_c *P = all_polys[j];
+    csg_brush_c *P = all_brushes[j];
 
     MarkBoundaryRegions(P);
 
@@ -966,7 +966,7 @@ static void Mug_DiscoverGaps(void)
 {
   // Algorithm:
   // 
-  // sort the area_polys by ascending z1 values.
+  // sort the brushes by ascending z1 values.
   // Hence any gap must occur between two adjacent entries.
   // We also must check the gap is not covered by a previous
   // brush, done by maintaining a ref to the brush with the
@@ -982,11 +982,11 @@ static void Mug_DiscoverGaps(void)
     if (R->areas.size() <= 1)
       continue;
 
-    area_poly_c *high = R->areas[0];
+    csg_brush_c *high = R->areas[0];
 
     for (unsigned int k = 1; k < R->areas.size(); k++)
     {
-      area_poly_c *A = R->areas[k];
+      csg_brush_c *A = R->areas[k];
 
       if (A->z1 > high->z2 + EPSILON)
       {
@@ -1331,27 +1331,27 @@ fprintf(stderr, "Mug_FillUnusedGaps: changes = %d\n", changes);
 
 void CSG2_MergeAreas(void)
 {
-  // this takes all the area_polys, figures out what OVERLAPS
+  // this takes all the brushes, figures out what OVERLAPS
   // (on the 2D map), and performs the CSG operations to create
-  // new area_polys for the overlapping parts.
+  // new brushes for the overlapping parts [NOT REALLY NEW BRUSHES].
   //
-  // also figures out which area_polys are TOUCHING, and ensures
+  // also figures out which brushes are TOUCHING, and ensures
   // there are vertices where needed (at 'T' junctions).
 
   // Algorithm:
   //   (1) create segments and vertices for every line
   //   (2) check seg against every other seg for overlap/T-junction
   //   (3) create regions from segs, remove islands
-  //   (4) assign area_polys to the regions
+  //   (4) assign brushes to the regions
   //   (5) find the gaps and their neighbours
   //   (6) place every entity into a gap
   //   (7) remove gaps which no entity can reach
 
   mug_new_segs.clear(); // should be empty, but just in case
 
-  for (unsigned int j=0; j < all_polys.size(); j++)
+  for (unsigned int j=0; j < all_brushes.size(); j++)
   {
-    area_poly_c *P = all_polys[j];
+    csg_brush_c *P = all_brushes[j];
     SYS_ASSERT(P);
 
     Mug_MakeSegments(P);

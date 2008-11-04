@@ -32,7 +32,7 @@
 
 
 
-std::vector<area_poly_c *> all_polys;
+std::vector<csg_brush_c *> all_brushes;
 
 std::vector<entity_info_c *> all_entities;
 
@@ -595,7 +595,7 @@ int CSG2_add_brush(lua_State *L)
   else
     B->t_slope = Grab_Slope(L, 4);
 
-  all_polys.push_back(B);
+  all_brushes.push_back(B);
 
   return 0;
 }
@@ -684,13 +684,13 @@ void CSG2_FreeAll(void)
 
   unsigned int k;
 
-  for (k = 0; k < all_polys.size(); k++)
-    delete all_polys[k];
+  for (k = 0; k < all_brushes.size(); k++)
+    delete all_brushes[k];
 
   for (k = 0; k < all_entities.size(); k++)
     delete all_entities[k];
 
-  all_polys.clear();
+  all_brushes.clear();
   all_entities.clear();
 }
 

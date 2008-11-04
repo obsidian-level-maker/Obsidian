@@ -35,33 +35,33 @@
 #include "q1_structs.h"
 
 
-std::vector<area_poly_c *> saved_all_polys;
+std::vector<csg_brush_c *> saved_all_brushes;
 
 
 static void SaveAreaPolys(void)
 {
-  SYS_ASSERT(all_polys.size() > 0);
-  SYS_ASSERT(saved_all_polys.empty());
+  SYS_ASSERT(all_brushes.size() > 0);
+  SYS_ASSERT(saved_all_brushes.empty());
 
-  std::swap(all_polys, saved_all_polys);
+  std::swap(all_brushes, saved_all_brushes);
 }
 
 static void RestoreAreaPolys(void)
 {
   // free our modified ones
-  for (unsigned int i = 0; i < all_polys.size(); i++)
+  for (unsigned int i = 0; i < all_brushes.size(); i++)
   {
-    area_poly_c *P2 = all_polys[i];
+    csg_brush_c *P2 = all_brushes[i];
 
     delete P2;
   }
 
-  all_polys.clear();
+  all_brushes.clear();
 
-  std::swap(all_polys, saved_all_polys);
+  std::swap(all_brushes, saved_all_brushes);
 
-  SYS_ASSERT(all_polys.size() > 0);
-  SYS_ASSERT(saved_all_polys.empty());
+  SYS_ASSERT(all_brushes.size() > 0);
+  SYS_ASSERT(saved_all_brushes.empty());
 }
 
 
@@ -98,8 +98,8 @@ static void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
 }
 
 
-static void FattenVertex(const area_poly_c *P, unsigned int k,
-                         area_poly_c *P2, double wd)
+static void FattenVertex(const csg_brush_c *P, unsigned int k,
+                         csg_brush_c *P2, double wd)
 {
   unsigned int total = P->verts.size();
 
@@ -213,11 +213,11 @@ static void FattenVertex(const area_poly_c *P, unsigned int k,
 
 static void FattenAreaPolys(double wd, double fh, double ch)
 {
-  for (unsigned int i = 0; i < saved_all_polys.size(); i++)
+  for (unsigned int i = 0; i < saved_all_brushes.size(); i++)
   {
-    area_poly_c *P = saved_all_polys[i];
+    csg_brush_c *P = saved_all_brushes[i];
 
-    area_poly_c *P2 = new area_poly_c(P);  // clone it, except vertices
+    csg_brush_c *P2 = new csg_brush_c(P);  // clone it, except vertices
 
     // !!!! TODO: if floor is sloped, split this poly into two halves
     //            at the point where the (slope + fh) exceeds (z2 + fh)
@@ -241,7 +241,7 @@ static void FattenAreaPolys(double wd, double fh, double ch)
     P2->ComputeBBox();
     P2->Validate();
 
-    all_polys.push_back(P2);
+    all_brushes.push_back(P2);
   }
 
 }

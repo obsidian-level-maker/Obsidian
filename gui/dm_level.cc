@@ -173,12 +173,12 @@ public:
 
 void CSG2_Doom_TestAreas(void)
 {
-  // for debugging only: each area_poly_c becomes a single sector
+  // for debugging only: each csg_brush_c becomes a single sector
   // on the map.
  
-  for (unsigned int k = 0; k < all_polys.size(); k++)
+  for (unsigned int k = 0; k < all_brushes.size(); k++)
   {
-    area_poly_c *P = all_polys[k];
+    csg_brush_c *P = all_brushes[k];
     
     int sec_idx = wad::num_sectors();
 
@@ -259,13 +259,13 @@ void CSG2_Doom_TestRegions(void)
 //------------------------------------------------------------------------
 
 #if 0
-static area_poly_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
+static csg_brush_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
 {
-  area_poly_c *best = NULL;
+  csg_brush_c *best = NULL;
 
   for (unsigned int k=0; k < R->areas.size(); k++)
   {
-    area_poly_c *E = R->areas[k];
+    csg_brush_c *E = R->areas[k];
 
     if (! (E->z1 > z1 && E->z2 < z2))
       continue;
@@ -307,7 +307,7 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 #if 0 // OLD CODE
   // T is the top-most brush.  Find the bottom-most brush
   // which is connected to T (via intersecting brushes).
-  area_poly_c *B = T;
+  csg_brush_c *B = T;
 
   for (;;)
   {
@@ -315,7 +315,7 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 
     for (unsigned int k=0; k < R->areas.size(); k++)
     {
-      area_poly_c *A = R->areas[k];
+      csg_brush_c *A = R->areas[k];
 
       if (A->z1 < B->z1 - EPSILON &&
           A->z2 > B->z1 - EPSILON)
@@ -331,12 +331,12 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 #endif
 
   // find the brush which we will use for the side texture
-  area_poly_c *MID = NULL;
+  csg_brush_c *MID = NULL;
   double best_h = 0;
 
   for (unsigned int j = 0; j < R->areas.size(); j++)
   {
-    area_poly_c *A = R->areas[j];
+    csg_brush_c *A = R->areas[j];
 
     if (A->z1 > B->t_poly->z1 - EPSILON &&
         A->z2 < T->b_poly->z2 + EPSILON)
@@ -393,8 +393,8 @@ static void CreateOneSector(merge_region_c *R)
   }
 
 
-  area_poly_c *B = R->gaps[0]->b_poly;
-  area_poly_c *T = R->gaps[R->gaps.size()-1]->t_poly;
+  csg_brush_c *B = R->gaps[0]->b_poly;
+  csg_brush_c *T = R->gaps[R->gaps.size()-1]->t_poly;
 
   sector_info_c *sec = new sector_info_c;
 
@@ -463,7 +463,7 @@ static void CreateOneSector(merge_region_c *R)
 
   for (;;)
   {
-    area_poly_c *EF = FindExtraFloor(R, exfloor_z1, exfloor_z2);
+    csg_brush_c *EF = FindExtraFloor(R, exfloor_z1, exfloor_z2);
 
     if (! EF)
       break;
@@ -751,7 +751,7 @@ static std::string FindSideTexture(double z, merge_segment_c *G,
   // examine *back* region
   for (k = 0; k < B->areas.size(); k++)
   {
-    area_poly_c *A = B->areas[k];
+    csg_brush_c *A = B->areas[k];
 
     if ((z > A->z1 - EPSILON) && (z < A->z2 + EPSILON))
       return A->side->tex;

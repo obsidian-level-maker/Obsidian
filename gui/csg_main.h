@@ -104,10 +104,6 @@ typedef enum
 brush_flags_e;
 
 
-//!!!!
-#define area_poly_c  csg_brush_c
-#define all_polys    all_brushes
-
 class csg_brush_c
 {
   // This represents a "brush" in Quake terms, a solid area

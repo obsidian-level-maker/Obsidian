@@ -1430,17 +1430,17 @@ static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf, bo
 }
 
 
-static area_poly_c * PolyForSideTexture(merge_region_c *R, double z1, double z2)
+static csg_brush_c * PolyForSideTexture(merge_region_c *R, double z1, double z2)
 {
   // find the brush which we will use for the side texture
   // FIXME: duplicate code in dm_level : make one good function
 
-  area_poly_c *MID = NULL;
+  csg_brush_c *MID = NULL;
   double best_h = 0;
 
   for (unsigned int j = 0; j < R->areas.size(); j++)
   {
-    area_poly_c *A = R->areas[j];
+    csg_brush_c *A = R->areas[j];
 
     if (A->z2 < z1 + EPSILON)
       continue;
@@ -1610,7 +1610,7 @@ static void MakeWallFace(qFace_c *F, dface_t *face)
 ///fprintf(stderr, "BACK = %p\n", BACK);
   if (BACK)
   {
-    area_poly_c *MID = PolyForSideTexture(BACK, z1, z2);
+    csg_brush_c *MID = PolyForSideTexture(BACK, z1, z2);
     if (MID)
       texture = MID->side->tex.c_str();
   }

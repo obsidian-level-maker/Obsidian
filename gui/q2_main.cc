@@ -88,7 +88,7 @@ void Q2_CreateEntities(void)
 static std::vector<dbrush_t> q2_brushes;
 static std::vector<dbrushside_t> q2_brush_sides;
 
-static std::map<const area_poly_c *, u16_t> brush_map;
+static std::map<const csg_brush_c *, u16_t> brush_map;
 
 
 static void ClearBrushes()
@@ -99,7 +99,7 @@ static void ClearBrushes()
   brush_map.clear();
 }
 
-u16_t Q2_AddBrush(const area_poly_c *A)
+u16_t Q2_AddBrush(const csg_brush_c *A)
 {
   // find existing brush
   if (brush_map.find(A) != brush_map.end())
