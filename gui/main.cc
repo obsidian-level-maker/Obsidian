@@ -212,7 +212,7 @@ static int escape_key_handler(int event)
     return 0;
 
   // if building is in progress, cancel it, otherwise quit
-  if (game_object)
+  if (game_object && ! Fl::modal())
   {
     main_win->action = UI_MainWin::ABORT;
     return 1;
