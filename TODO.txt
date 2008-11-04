@@ -61,9 +61,6 @@ HEIGHTS: prevent any room from having more than 4 heights
          [tiny rooms: no more than 2]
 
 
-GUI: merge structs: area_info + area_poly --> csg_brush_c
-
-
 HEXEN lua: gui.property("hexen_format", "true")
 
 SPEAR lua: gui.property("file_ext", "SOD")
