@@ -988,7 +988,7 @@ end
 
 function Plan_MakeSeeds()
 
-  local function Plant_Rooms()
+  local function plant_rooms()
     for _,R in ipairs(PLAN.all_rooms) do
       for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
         assert(Seed_valid(sx, sy, 1))
@@ -1008,47 +1008,35 @@ function Plan_MakeSeeds()
     end -- for R
   end
 
-  local function Flow_Liquid()
-    for lx = 1,LAND_W do for ly = 1,LAND_H do
-      local L = LAND_MAP[lx][ly]
-      if not L.room then
-        for sx = lx*3-2,lx*3 do for sy = ly*3-2,ly*3 do
-          local S = SEEDS[sx][sy][1]
+  local function fill_holes()
+    local sc_list = copy_table(PLAN.scenic_rooms)
+    rand_shuffle(sc_list)
+
+    for _,R in ipairs(sc_list) do
+      local nx1,ny1 = R.sx1,R.sy1
+      local nx2,ny2 = R.sx2,R.sy2
+
+      for x = R.sx1-1, R.sx2+1 do for y = R.sy1-1, R.sy2+1 do
+        if Seed_valid(x, y, 1) and not R:contains_seed(x, y) then
+          local S = SEEDS[x][y][1]
           if not S.room then
-            S.room = { kind = L.kind, nowalk=true }
-            S.borders = {}
+            S.room = R
+            if x < R.sx1 then nx1 = x end
+            if y < R.sy1 then ny1 = y end
+            if x > R.sx2 then nx2 = x end
+            if y > R.sy2 then ny2 = y end
           end
-        end end -- sx, sy
-      end -- L.room
-    end end
-  end
-
-  local function Fill_Holes()
-    for loop = 1,3 do
-      for x = 1,SEED_W do for y = 1,SEED_H do
-
-        local S = SEEDS[x][y][1]
-        if not S.room then
-          for dir = 2,8,2 do
-            local nx, ny = nudge_coord(x, y, dir)
-            local N = Seed_valid(nx, ny, 1) and SEEDS[nx][ny][1]
-
-            -- the 'fill_loop' check prevents run-away filling
-
-            if N and N.room and N.room.nowalk -- FIXME: UGH!!!
-               and not (N.fill_loop and N.fill_loop == loop)
-            then
-              S.room = N.room
-              S.fill_loop = loop
-            end
-          end -- dir
         end
+      end end -- for x,y
 
-      end end -- x, y
-    end
+      R.sx1, R.sy1 = nx1, ny1
+      R.sx2, R.sy2 = nx2, ny2
+
+      R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
+    end -- for R
   end
 
-  local function Border_up(R)
+  local function border_up(R)
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y][1]
       for dir = 2,8,2 do
@@ -1090,7 +1078,7 @@ function Plan_MakeSeeds()
     end end -- for x, y
   end
 
-  local function Border_up_scenic(R)
+  local function border_up_scenic(R)
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y][1]
       if S.room ~= R then
@@ -1098,9 +1086,13 @@ function Plan_MakeSeeds()
       else
         for dir = 2,8,2 do
           local nx, ny = nudge_coord(x, y, dir)
-          if not Seed_valid(nx, ny, 1) and S.room.outdoor then
-            S.borders[dir] = { kind="skyfence" }
-            S.thick[dir] = 48
+          if not Seed_valid(nx, ny, 1) then
+            if S.room.outdoor then
+              S.borders[dir] = { kind="skyfence" }
+              S.thick[dir] = 48
+            else
+              S.borders[dir] = { kind="solid" }
+            end
           end
         end -- for dir
       end
@@ -1112,12 +1104,11 @@ function Plan_MakeSeeds()
 
   Seed_init(LAND_W*3, LAND_H*3, 1)
 
-  Plant_Rooms()
-  Flow_Liquid()
-  Fill_Holes()
+  plant_rooms()
+  fill_holes()
 
   for _,R in ipairs(PLAN.all_rooms) do
-    Border_up(R)
+    border_up(R)
 
     -- FIXME: should not be needed: maintain sw/sh along with sx1 etc
     R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
@@ -1126,7 +1117,7 @@ function Plan_MakeSeeds()
   end
 
   for _,R in ipairs(PLAN.scenic_rooms) do
-    Border_up_scenic(R)
+    border_up_scenic(R)
 
     R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
   end

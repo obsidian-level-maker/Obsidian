@@ -1203,6 +1203,8 @@ gui.printf("do_teleport\n")
       return
     end
 
+    local R = S.room
+
     if S.already_built then
       return
     end
@@ -1212,8 +1214,8 @@ gui.printf("do_teleport\n")
     local x2 = S.x2
     local y2 = S.y2
 
-    local z1 = S.floor_h
-    local z2 = S.ceil_h
+    local z1 = S.floor_h or R.floor_h
+    local z2 = S.ceil_h  or R.ceil_h
     local f_tex, c_tex, w_tex
     local do_sides = true
     local sec_kind
@@ -1230,28 +1232,28 @@ gui.printf("do_teleport\n")
       local do_corners = false --!!
 
       
-      if S.room.kind == "valley" then
+      if R.kind == "valley" or R.scenic_kind == "valley" then
         f_tex = "FLOOR7_1"
         c_tex = "F_SKY1"
         w_tex = "BROWN144"
         do_corners = false
         do_sides = false --!!!
 
-      elseif S.room.kind == "ground" then
+      elseif R.kind == "ground" or R.scenic_kind == "ground" then
         f_tex = "MFLR8_4"
         c_tex = "F_SKY1"
         w_tex = "ASHWALL2"
         do_corners = false
         do_sides = false --!!!
 
-      elseif S.room.kind == "hill" then
+      elseif R.kind == "hill" or R.scenic_kind == "hill" then
         f_tex = "FLOOR7_1"
         c_tex = "F_SKY1"
         w_tex = "BROWN144"
         do_corners = false
         do_sides = false --!!!
 
-      elseif S.room.scenic_kind == "liquid" then
+      elseif R.scenic_kind == "liquid" then
         f_tex = "NUKAGE1"
         c_tex = "F_SKY1"
         w_tex = "COMPBLUE"
@@ -1259,13 +1261,13 @@ gui.printf("do_teleport\n")
         do_corners = false
         do_sides = false --!!!
 
-      elseif S.room.kind == "hallway" then
+      elseif R.kind == "hallway" then
 
         f_tex = "FLAT1"
         c_tex = "CEIL3_5"
         w_tex = "GRAY7"
 
-      elseif S.room.kind == "stairwell" then
+      elseif R.kind == "stairwell" then
 
         f_tex = "FLAT5_3"
         c_tex = "FLAT1"
