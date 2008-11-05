@@ -33,6 +33,18 @@ class PLAN
   ....
 }
 
+
+class LAND
+{
+  lx, ly  -- coordinates in LAND_MAP
+
+  kind : keyword  -- "indoor", "ground", "hill", "valley", "liquid"
+                  -- can only be NIL while filling the LAND_MAP
+
+  room : ROOM  -- the room which covers this spot on the map.
+               -- Note: a single room can cover multiple spots.
+}
+
 --------------------------------------------------------------]]
 
 require 'defs'
@@ -551,6 +563,43 @@ gui.debugf("}\n")
     ROOM.lvol = ROOM.lw * ROOM.lh
   end
 
+  local function create_scenic(L, x, y)
+
+    local ROOM =
+    {
+      kind = "scenic",
+      scenic_kind = L.kind,
+      outdoor = true,
+      conns = {},
+      teleports = {},
+
+      lx1 = x, ly1 = y,
+      lx2 = x, ly2 = y,
+
+      floor_h = -32,
+      ceil_h  = 512,
+    }
+
+    set_class(ROOM, ROOM_CLASS)
+
+    if ROOM.scenic_kind ~= "indoor" then
+      ROOM.outdoor = true
+    end
+
+    table.insert(PLAN.scenic_rooms, ROOM)
+
+    ROOM.sx1 = ROOM.lx1*3-2
+    ROOM.sy1 = ROOM.ly1*3-2
+    ROOM.sx2 = ROOM.lx2*3
+    ROOM.sy2 = ROOM.ly2*3
+
+    ROOM.sw, ROOM.sh = box_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
+    ROOM.lw, ROOM.lh = box_size(ROOM.lx1, ROOM.ly1, ROOM.lx2, ROOM.ly2)
+
+    ROOM.lvol = ROOM.lw * ROOM.lh
+  end
+
+
   local function assign_corners()
     -- give top/left room and bottom/right room a 'corner' field to
     -- prevent rooms in a small map from glomming into one big room.
@@ -585,6 +634,7 @@ gui.debugf("}\n")
 
   local function room_char(L)
     if not L.room then return "." end
+    if L.room.kind == "scenic" then return "~" end
     local n = 1 + (L.room.group_id % 62)
     return string.sub("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
   end
@@ -608,8 +658,13 @@ gui.debugf("}\n")
 
   for _,V in ipairs(Landmap_rand_visits()) do
     local L = LAND_MAP[V.x][V.y]
-    if L.kind and walkable(L) and not L.room then
-      create_room(L, V.x, V.y) 
+    assert(L.kind)
+    if not L.room then
+      if walkable(L) then
+        create_room(L, V.x, V.y) 
+      else
+        create_scenic(L, V.x, V.y) 
+      end
     end
   end
 
@@ -643,7 +698,7 @@ function Room_side_coord(R, side, i)
 end
 
 
-function Rooms_CollectNeighbors()
+function Plan_CollectNeighbors()
   -- Determines neighboring rooms of each room.
   -- Big rooms can have multiple neighbors on some sides.
   
@@ -676,7 +731,7 @@ function Rooms_CollectNeighbors()
 end
 
 
-function Rooms_Nudge()
+function Plan_Nudge()
   
   -- This resizes rooms by moving certain borders either one seed
   -- outward or one seed inward.  There are various constraints,
@@ -762,15 +817,13 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     -- would get too small?
     if volume_after_nudge(R, side, grow) < 3 then return false end
 
-    -- growth is add edge of map
+    -- side sits on border of the map?
     if (side == 2 and R.ly1 == 1) or
        (side == 4 and R.lx1 == 1) or
        (side == 6 and R.lx2 == LAND_W) or
        (side == 8 and R.ly2 == LAND_H)
     then
-      -- if grow > 0 then  -- TODO: probably too simple
-        return false
-      -- end
+      return false
     end
 
     local push_list = {}
@@ -916,7 +969,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   end
 
 
-  ---| Rooms_Nudge |---
+  ---| Plan_Nudge |---
 
   for _,R in ipairs(PLAN.all_rooms) do
     R.nudges = {}
@@ -933,7 +986,7 @@ end
 
 
 
-function Rooms_MakeSeeds()
+function Plan_MakeSeeds()
 
   local function Plant_Rooms()
     for _,R in ipairs(PLAN.all_rooms) do
@@ -942,9 +995,17 @@ function Rooms_MakeSeeds()
         local S = SEEDS[sx][sy][1]
         assert(not S.room) -- no overlaps please!
         S.room = R
-        S.borders = {}
-      end end
-    end
+      end end -- for sx,sy
+    end -- for R
+
+    for _,R in ipairs(PLAN.scenic_rooms) do
+      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+        local S = SEEDS[sx][sy][1]
+        if not S.room then -- overlap is OK for scenics
+          S.room = R
+        end
+      end end -- for sx,sy
+    end -- for R
   end
 
   local function Flow_Liquid()
@@ -987,7 +1048,7 @@ function Rooms_MakeSeeds()
     end
   end
 
-  local function Border_Up(R)
+  local function Border_up(R)
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y][1]
       for dir = 2,8,2 do
@@ -1026,11 +1087,28 @@ function Rooms_MakeSeeds()
           S.borders[dir] = { kind="fence" }
         end
       end
-    end end -- x, y
+    end end -- for x, y
+  end
+
+  local function Border_up_scenic(R)
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room ~= R then
+        -- skip different room
+      else
+        for dir = 2,8,2 do
+          local nx, ny = nudge_coord(x, y, dir)
+          if not Seed_valid(nx, ny, 1) and S.room.outdoor then
+            S.borders[dir] = { kind="skyfence" }
+            S.thick[dir] = 48
+          end
+        end -- for dir
+      end
+    end end -- for x, y
   end
 
 
-  ---| Rooms_MakeSeeds |---
+  ---| Plan_MakeSeeds |---
 
   Seed_init(LAND_W*3, LAND_H*3, 1)
 
@@ -1039,10 +1117,18 @@ function Rooms_MakeSeeds()
   Fill_Holes()
 
   for _,R in ipairs(PLAN.all_rooms) do
-    Border_Up(R)
+    Border_up(R)
+
+    -- FIXME: should not be needed: maintain sw/sh along with sx1 etc
+    R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
+
+    R.svolume  = R.sw * R.sh
+  end
+
+  for _,R in ipairs(PLAN.scenic_rooms) do
+    Border_up_scenic(R)
 
     R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
-    R.svolume  = R.sw * R.sh
   end
 
   Seed_dump_fabs()
@@ -1105,6 +1191,9 @@ function Plan_rooms_sp()
     all_rooms = {},
     all_conns = {},
 
+    scenic_rooms = {},
+    scenic_conns = {},
+
     free_tag  = 1,
     free_mark = 1,
   }
@@ -1118,9 +1207,11 @@ function Plan_rooms_sp()
   Landmap_Dump()
   Landmap_CreateRooms()
 
-  Rooms_CollectNeighbors()
-  Rooms_Nudge()
-  Rooms_MakeSeeds()
+  Plan_CollectNeighbors()
+  Plan_Nudge()
+
+  -- must create the seeds _AFTER_ nudging
+  Plan_MakeSeeds()
 
   PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
 

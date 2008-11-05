@@ -1203,9 +1203,6 @@ gui.debugf("Failed\n")
 
   gui.printf("\n--==| Connect_Rooms |==--\n\n")
 
-  PLAN.scenic_rooms = {}
-  PLAN.scenic_conns = {}
-
   join_ground()
   branch_big_rooms()
   branch_the_rest()

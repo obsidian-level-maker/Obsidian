@@ -85,8 +85,11 @@ function make_sky_fence(S, side)
     w_face = { texture="-" },
   }
 
-  local sky2_info = copy_table(sky_info)
-  sky2_info.flag_skyclose = true
+  local wall2_info = copy_table(wall_info)
+  local  sky2_info = copy_table(sky_info)
+
+  wall2_info.flag_skyclose = true
+   sky2_info.flag_skyclose = true
 
 
   local wx1, wy1 = S.x1, S.y1
@@ -128,8 +131,8 @@ function make_sky_fence(S, side)
     { x=sx2, y=sy2 }, { x=sx2, y=sy1 },
   }
 
-  gui.add_brush(wall_info, w_coords, -4000, PLAN.skyfence_h)
-  gui.add_brush(wall_info, s_coords, -4000, PLAN.skyfence_h - 64)
+  gui.add_brush(wall_info,  w_coords, -4000, PLAN.skyfence_h)
+  gui.add_brush(wall2_info, s_coords, -4000, PLAN.skyfence_h - 64)
 
   gui.add_brush(sky_info,  w_coords, 512, 4096)
   gui.add_brush(sky2_info, s_coords, 510, 4096)
@@ -1248,7 +1251,7 @@ gui.printf("do_teleport\n")
         do_corners = false
         do_sides = false --!!!
 
-      elseif S.room.kind == "liquid" then
+      elseif S.room.scenic_kind == "liquid" then
         f_tex = "NUKAGE1"
         c_tex = "F_SKY1"
         w_tex = "COMPBLUE"
