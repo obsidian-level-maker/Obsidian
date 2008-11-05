@@ -116,6 +116,7 @@ QUAKE:
 - clipping hulls:
 
 ++ grab Q1 textures directly from PAK files
+   - read/modify FOLDERS.cfg file
    ??? code to check if data/quake_tex.wad exists
    ? gui.property("extra_tex_wad", "data/oq_tex.wad")
    ? gui.property("needed_pak",  "pak0.pak")
