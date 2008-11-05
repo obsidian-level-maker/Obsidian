@@ -424,19 +424,20 @@ function Rooms_choose_heights()
   end
 
   local function set_outdoor_heights(R)
-    if R.kind == "valley" then
+    if R.kind == "valley" or R.scenic_kind == "valley" then
       R.floor_h = 0
       R.ceil_h  = 512
-    elseif R.kind == "ground" then
-      R.floor_h = 128
-      R.ceil_h  = 512
-    elseif R.kind == "hill" then
+    elseif R.kind == "hill" or R.scenic_kind == "hill" then
       R.floor_h = 256
       R.ceil_h  = 512
-    elseif R.kind == "scenic" then
+    elseif R.scenic_kind == "liquid" then
+      R.floor_h = -32
+      R.ceil_h  = 512
+    else -- R.kind == "ground"
       R.floor_h = 128
-      R.ceil_h  = 256
+      R.ceil_h  = 512
     end
+gui.debugf("set_outdoor_heights @ %s --> %d..%d\n", R:tostr(), R.floor_h, R.ceil_h)
   end
 
   local function set_tallness(R)
@@ -828,11 +829,20 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
 
 
   for _,R in ipairs(PLAN.all_rooms) do
-    if R.outdoor or R.kind == "scenic" then
+    if R.outdoor then
       set_outdoor_heights(R)
     else
       set_tallness(R)
       set_max_floor_h(R)
+    end
+  end
+
+  for _,R in ipairs(PLAN.scenic_rooms) do
+    if R.outdoor then
+      set_outdoor_heights(R)
+    else
+      R.floor_h = 128  -- BLEH
+      R.ceil_h  = 384
     end
   end
 
