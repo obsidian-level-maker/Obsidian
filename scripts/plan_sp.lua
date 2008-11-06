@@ -75,11 +75,8 @@ PLAN_CLASS =
 ROOM_CLASS =
 {
   tostr = function(self)
-    if self.floor_h then
-      return string.format("ROOM[%d,%d %s h:%s]", self.sx1,self.sy1, self.kind, self.floor_h)
-    else
-      return string.format("ROOM[%d,%d %s]", self.sx1,self.sy1, self.kind)
-    end
+    return string.format("ROOM[%s %d,%d..%d,%d]",
+        self.kind, self.sx1,self.sy1, self.sx2,self.sy2)
   end,
 
   contains_seed = function(self, x, y)
