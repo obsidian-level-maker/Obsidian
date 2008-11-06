@@ -139,6 +139,51 @@ function make_sky_fence(S, side)
 end
 
 
+function make_diagonal(S, side, info, z1)
+
+  local lw = S.thick[4]
+  local rw = S.thick[6]
+
+  local bh = S.thick[2]
+  local th = S.thick[8]
+  
+  local coords
+
+  if side == 9 then
+    coords =
+    {
+      { x=S.x2,    y=S.y2 },
+      { x=S.x2   , y=S.y1+bh },
+      { x=S.x1+lw, y=S.y2    },
+    }
+  elseif side == 7 then
+    coords =
+    {
+      { x=S.x1,    y=S.y2 },
+      { x=S.x2-rw, y=S.y2    },
+      { x=S.x1   , y=S.y1+bh },
+    }
+  elseif side == 3 then
+    coords =
+    {
+      { x=S.x2,    y=S.y1 },
+      { x=S.x1+lw, y=S.y1    },
+      { x=S.x2   , y=S.y2-th },
+    }
+  elseif side == 1 then
+    coords =
+    {
+      { x=S.x1,    y=S.y1 },
+      { x=S.x1   , y=S.y2-th },
+      { x=S.x2-rw, y=S.y1    },
+    }
+  else error("WTF dir")
+  end
+
+  gui.add_brush(info, coords, z1 or -4000, 4000)
+end
+
+
 function make_arrow(S, dir, f_h, tex)
   
   local mx = int((S.x1 + S.x2)/2)
@@ -1277,7 +1322,7 @@ gui.printf("do_teleport\n")
       
         f_tex = "FLOOR0_1"
         c_tex = "CEIL3_5"
-        w_tex = "STARTAN3"
+        w_tex = "STARG2"
 
       end
 
@@ -1455,6 +1500,29 @@ if S.assign_stair and not S.assign_stair.done then
     do_outdoor_ramp_up(S.assign_stair, f_tex, w_tex)
   end
 end
+
+
+-- diagonal corners
+if not S.room.outdoor then
+  local z1
+  if S.conn then z1 = (S.conn.conn_h + 128) end
+  local diag_info =
+  {
+    t_face = { texture=f_tex },
+    b_face = { texture=c_tex },
+    w_face = { texture=w_tex },
+  }
+  if S.sx == S.room.sx1 and S.sy == S.room.sy1 then
+    make_diagonal(S, 1, diag_info, z1)
+  elseif S.sx == S.room.sx2 and S.sy == S.room.sy1 then
+    make_diagonal(S, 3, diag_info, z1)
+  elseif S.sx == S.room.sx1 and S.sy == S.room.sy2 then
+    make_diagonal(S, 7, diag_info, z1)
+  elseif S.sx == S.room.sx2 and S.sy == S.room.sy2 then
+    make_diagonal(S, 9, diag_info, z1)
+  end
+end
+
 
 
 if true then -- if do_sides then

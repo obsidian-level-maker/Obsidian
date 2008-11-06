@@ -1191,6 +1191,8 @@ function Plan_rooms_sp()
 
   Plan_determine_size()
 
+  PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
+
   Landmap_Fill()
   Landmap_Dump()
   Landmap_CreateRooms()
@@ -1200,8 +1202,6 @@ function Plan_rooms_sp()
 
   -- must create the seeds _AFTER_ nudging
   Plan_MakeSeeds()
-
-  PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
 
 end -- Plan_rooms_sp
 
