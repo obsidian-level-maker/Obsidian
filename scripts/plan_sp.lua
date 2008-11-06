@@ -1133,14 +1133,14 @@ function Plan_determine_size()
   end
 
   if ob_size == "mixed" then
-    LAND_W = 3 + rand_index_by_probs { 2,4,6,10,6,4,2,0,1 }
+    LAND_W = 3 + rand_index_by_probs { 2,4,6,10,6,4,2,1,1 }
     LAND_H = 3 + rand_index_by_probs { 2,4,6,10,6,4,2 }
 
   else
     if ob_size == "prog" then
-      LAND_W = int(5.5 + LEVEL.ep_along * 6)
+      LAND_W = int(5.1 + LEVEL.ep_along * 6)
     else
-      local LAND_SIZES = { small=5, normal=7, large=10, xlarge=13 }
+      local LAND_SIZES = { small=6, normal=8, large=11, xlarge=13 }
 
       LAND_W = LAND_SIZES[ob_size]
 
@@ -1151,16 +1151,18 @@ function Plan_determine_size()
 
     LAND_H = LAND_W
 
-    while LAND_H > math.max(4, LAND_W/2) and rand_odds(50) do
-      LAND_H = LAND_H - 1
-    end
+    if rand_odds(40) then LAND_W = LAND_W - 1 end
 
-    if rand_odds(33) then LAND_W = LAND_W - 1 end
-    if rand_odds(20) then LAND_H = LAND_H - 1 end
+    if rand_odds(60) then LAND_H = LAND_H - 1 end
+    if rand_odds(60) then LAND_H = LAND_H - 1 end
+    if rand_odds(60) then LAND_H = LAND_H - 1 end
 
-    if rand_odds(50) then -- LAND_W < LAND_H then
-      LAND_W, LAND_H = LAND_H, LAND_W
-    end
+---    if rand_odds(50) then -- LAND_W < LAND_H then
+---    end
+  end
+
+  if LAND_W < LAND_H then
+    LAND_W, LAND_H = LAND_H, LAND_W
   end
 
   gui.printf("Land size: %dx%d\n", LAND_W, LAND_H)
