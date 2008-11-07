@@ -53,6 +53,11 @@ static void RestoreBrushes(void)
   {
     csg_brush_c *P2 = all_brushes[i];
 
+    // FIXME DIRTY HACK (copy constructor does not duplicate these)
+    P2->t_face = NULL;
+    P2->b_face = NULL;
+    P2->w_face = NULL;
+
     delete P2;
   }
 
@@ -164,7 +169,7 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
     double x = kv->x + (p_nx + n_nx) / 2.0 * wd;
     double y = kv->y + (p_ny + n_ny) / 2.0 * wd;
 
-    P2->verts.push_back(new area_vert_c(x, y));
+    P2->verts.push_back(new area_vert_c(P2, x, y));
 ///fprintf(stderr, "... HIG VERT --> (%1.4f %1.4f)\n", x, y);
   }
   else if (diff > 81.0)
@@ -174,7 +179,7 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
     CalcIntersection(nx1, ny1, nx2, ny2,
                      px1, py1, px2, py2,  &x, &y);
 
-    P2->verts.push_back(new area_vert_c(x, y));
+    P2->verts.push_back(new area_vert_c(P2, x, y));
 ///fprintf(stderr, "... MID VERT --> (%1.4f %1.4f)\n", x, y);
   }
   else
@@ -200,13 +205,13 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
     CalcIntersection(bx1, by1, bx2, by2,
                      px1, py1, px2, py2, &x, &y);
 
-    P2->verts.push_back(new area_vert_c(x, y));
+    P2->verts.push_back(new area_vert_c(P2, x, y));
 ///fprintf(stderr, "... LOW VERT1 --> (%1.4f %1.4f)\n", x, y);
 
     CalcIntersection(bx1, by1, bx2, by2,
                      nx1, ny1, nx2, ny2, &x, &y);
 
-    P2->verts.push_back(new area_vert_c(x, y));
+    P2->verts.push_back(new area_vert_c(P2, x, y));
 ///fprintf(stderr, "... LOW VERT2 --> (%1.4f %1.4f)\n", x, y);
   }
 }

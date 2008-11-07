@@ -1612,7 +1612,7 @@ static void MakeWallFace(qFace_c *F, dface_t *face)
   {
     csg_brush_c *MID = PolyForSideTexture(BACK, z1, z2);
     if (MID)
-      texture = MID->side->tex.c_str();
+      texture = MID->w_face->tex.c_str();
   }
 
   int flags = CalcTextureFlag(texture);

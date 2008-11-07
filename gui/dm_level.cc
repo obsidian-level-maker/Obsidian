@@ -188,7 +188,7 @@ void CSG2_Doom_TestAreas(void)
 
     int side_idx = wad::num_sidedefs();
 
-    wad::add_sidedef(sec_idx, "-", P->side->tex.c_str(), "-", 0, 0);
+    wad::add_sidedef(sec_idx, "-", P->w_face->tex.c_str(), "-", 0, 0);
 
     int vert_base = wad::num_vertexes();
 
@@ -361,7 +361,7 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 
   extrafloor_c *EF = new extrafloor_c();
 
-  EF->w_tex = MID->side->tex;
+  EF->w_tex = MID->w_face->tex;
 
   EF->users.push_back(sec);
 
@@ -759,7 +759,7 @@ static std::string FindSideTexture(double z, merge_segment_c *G,
     csg_brush_c *A = B->areas[k];
 
     if ((z > A->z1 - EPSILON) && (z < A->z2 + EPSILON))
-      return A->side->tex;
+      return A->w_face->tex;
   }
 
   // none found ???  FIXME use closest area

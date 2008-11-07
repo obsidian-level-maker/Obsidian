@@ -35,6 +35,8 @@ class merge_vertex_c;
 class merge_segment_c;
 class merge_region_c;
 
+class csg_brush_c;
+
 
 class slope_plane_c
 {
@@ -74,6 +76,8 @@ public:
 class area_vert_c
 {
 public:
+  csg_brush_c *parent;
+
   double x, y;
 
   area_face_c *face; // optional
@@ -87,7 +91,7 @@ public:
   merge_vertex_c *partner;
 
 public:
-   area_vert_c(double _x = 0, double _y = 0);
+   area_vert_c(csg_brush_c *_parent, double _x = 0, double _y = 0);
   ~area_vert_c();
 };
 
@@ -121,7 +125,7 @@ public:
 
   area_face_c *b_face;
   area_face_c *t_face;
-  area_face_c *side;  // default side face
+  area_face_c *w_face;  // default side face
 
   // without slopes, z1 and z2 are just the heights of the bottom
   // and top faces.  When slopes are present, they represent the
@@ -235,6 +239,10 @@ public:
   merge_region_c *front;
   merge_region_c *back;
 
+  // line-loop section which lie along this segmen
+  std::vector<area_vert_c *> f_sides;
+  std::vector<area_vert_c *> b_sides;
+
   // temporary value that is only used by Mug_AssignAreas(),
   // and refers to the current csg_brush_c if this segment lies
   // along it's border (just an efficient boolean test).
@@ -246,7 +254,8 @@ public:
 
 public:
   merge_segment_c(merge_vertex_c *_v1, merge_vertex_c *_v2) :
-      start(_v1), end(_v2), front(NULL), back(NULL), border_of(NULL), index(-1)
+      start(_v1), end(_v2), front(NULL), back(NULL),
+      f_sides(), b_sides(), border_of(NULL), index(-1)
   { }
 
   ~merge_segment_c()

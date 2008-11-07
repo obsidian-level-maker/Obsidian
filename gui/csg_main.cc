@@ -63,15 +63,15 @@ double slope_plane_c::GetAngle() const
 
 
 area_face_c::area_face_c() :
-      tex(), x_offset(0), y_offset(0)
+      tex(), x_offset(FVAL_NONE), y_offset(FVAL_NONE)
 { }
 
 area_face_c::~area_face_c()
 { }
 
 
-area_vert_c::area_vert_c(double _x, double _y) :
-      x(_x), y(_y), face(NULL),
+area_vert_c::area_vert_c(csg_brush_c *_parent, double _x, double _y) :
+      parent(_parent), x(_x), y(_y), w_face(NULL),
       line_kind(0), line_tag(0), line_flags(0),
       partner(NULL)
 {
@@ -85,16 +85,16 @@ area_vert_c::~area_vert_c()
 csg_brush_c::csg_brush_c() :
      verts(),
      bflags(0),
-     b_face(NULL), t_face(NULL), side(NULL),
+     b_face(NULL), t_face(NULL), w_face(NULL),
      z1(-1), z2(-1), b_slope(NULL), t_slope(NULL),
-///-- t_light(255), b_light(255),
      sec_kind(0), sec_tag(0), mark(0)
 { }
 
 csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
       verts(),
       bflags(other->bflags),
-      b_face(other->b_face), t_face(other->t_face), side(other->side),
+      b_face(other->b_face), t_face(other->t_face),
+      w_face(other->w_face),
       z1(other->z1), z2(other->z2),
       b_slope(NULL), t_slope(NULL),
       sec_kind(other->sec_kind), sec_tag(other->sec_tag),
@@ -234,7 +234,7 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
 
 void CSG2_MakeMiniMap(void)
 {
-  int scale = 32;
+  int scale = 32*2;
 
   double min_x, min_y, min_z;
   double max_x, max_y, max_z;
@@ -373,15 +373,15 @@ static area_face_c * Grab_Face(lua_State *L, int stack_pos)
   area_face_c *F = new area_face_c();
 
   lua_getfield(L, stack_pos, "texture");
-//  lua_getfield(L, stack_pos, "x_offset");
-//  lua_getfield(L, stack_pos, "y_offset");
+  lua_getfield(L, stack_pos, "x_offset");
+  lua_getfield(L, stack_pos, "y_offset");
 
-  F->tex = std::string(luaL_checkstring(L, -1));
+  F->tex = std::string(luaL_checkstring(L, -3));
 
-//  F->x_offset = luaL_checknumber(L, -2);
-//  F->y_offset = luaL_checknumber(L, -1);
+  if (! lua_isnil(L, -2)) F->x_offset = luaL_checknumber(L, -2);
+  if (! lua_isnil(L, -1)) F->y_offset = luaL_checknumber(L, -1);
 
-  lua_pop(L, 1);
+  lua_pop(L, 3);
 
   return F;
 }
@@ -406,7 +406,7 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 
   B->t_face = Grab_Face(L, -3);
   B->b_face = Grab_Face(L, -2);
-  B->side   = Grab_Face(L, -1);
+  B->w_face = Grab_Face(L, -1);
 
   lua_pop(L, 3);
 
@@ -440,7 +440,7 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 }
 
 
-static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
+static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
 {
   if (stack_pos < 0)
     stack_pos += lua_gettop(L) + 1;
@@ -451,7 +451,7 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
     return NULL; /* NOT REACHED */
   }
 
-  area_vert_c *V = new area_vert_c();
+  area_vert_c *V = new area_vert_c(B);
 
   lua_getfield(L, stack_pos, "x");
   lua_getfield(L, stack_pos, "y");
@@ -461,7 +461,14 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
 
   lua_pop(L, 2);
 
-  // TODO: w_face
+  lua_getfield(L, stack_pos, "w_face");
+
+  if (! lua_isnil(L, -1))
+  {
+    V->w_face = Grab_Face(L, -1);
+  }
+
+  lua_pop(L, 1);
 
   lua_getfield(L, stack_pos, "line_kind");
   lua_getfield(L, stack_pos, "line_tag");
@@ -473,7 +480,7 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos)
 
   lua_pop(L, 3);
 
-  // TODO: args (hexen)
+  // TODO: line_args (hexen)
 
   return V;
 }
@@ -500,7 +507,7 @@ static void Grab_LineLoop(lua_State *L, int stack_pos, csg_brush_c *B)
       break;
     }
 
-    area_vert_c *V = Grab_Vertex(L, -1);
+    area_vert_c *V = Grab_Vertex(L, -1, B);
 
     B->verts.push_back(V);
 
@@ -570,12 +577,16 @@ int CSG2_property(lua_State *L)
 // info is a table:
 //    t_face, b_face : top and bottom faces
 //    w_face         : default side face
-//    liquid         : usually nil, otherwise name (e.g. "lava")
-//    special        : usually nil, otherwise name (e.g. "damage20")
-//    mark           : separating number (DOOM: sector tag if > 0)
 //
 //    flag_xxx       : various CSG flags (e.g. Liquid)
-// 
+//
+//    mark           : separating number
+//    sec_kind       : DOOM sector type
+//    sec_tag        : DOOM sector tag
+//
+// ?? liquid         : usually nil, otherwise name (e.g. "lava")
+// ?? special        : usually nil, otherwise name (e.g. "damage20")
+//
 // z1 & z2 are either a height (number) or a slope table:
 //    sx, sy, sz     : start point on slope
 //    ex, ey, ez     : end point on slope
@@ -583,9 +594,11 @@ int CSG2_property(lua_State *L)
 // loop is an array of Vertices:
 //    x, y
 //    w_face (can be nil)
-//    line_kind, line_tag,
+//
+//    line_kind,  line_tag
 //    line_flags, line_args
-//    rail (DOOM only)
+//
+// ?? rail
 //
 // face is a table:
 //    texture
@@ -619,8 +632,10 @@ int CSG2_add_brush(lua_State *L)
 // props is a table:
 //   name   : entity type name
 //   light  : amount of light emitted
+//
 //   flag_xxx : various CSG flags
 //
+//   angle
 //   options (DOOM, HEXEN)
 //   args (HEXEN only)
 //   ...
