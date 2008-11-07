@@ -367,10 +367,12 @@ public:
     return ! gaps.empty();
   }
 
-  double MinGapZ() const;
-  double MaxGapZ() const;
   // compute vertical bounds of all gaps in this region.
   // requires at least one gap!
+  double MinGapZ() const;
+  double MaxGapZ() const;
+
+  bool HasBrush(csg_brush_c *P) const;
 };
 
 

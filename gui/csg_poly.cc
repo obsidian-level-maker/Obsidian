@@ -80,6 +80,8 @@ void merge_segment_c::Flip()
   merge_vertex_c *tmp_V = start; start = end; end = tmp_V;
 
   merge_region_c *tmp_R = front; front = back; back = tmp_R;
+
+  std::swap(f_sides, b_sides);
 }
 
 
@@ -95,6 +97,17 @@ double merge_region_c::MaxGapZ() const
   SYS_ASSERT(gaps.size() > 0);
 
   return gaps[gaps.size() - 1]->GetZ2();
+}
+
+bool merge_region_c::HasBrush(csg_brush_c *P) const
+{
+  for (unsigned int j = 0; j < areas.size(); j++)
+  {
+    if (areas[j] == P)
+      return true;
+  }
+
+  return false; // nope
 }
 
 
@@ -815,17 +828,6 @@ static void Mug_RemoveIslands(void)
 
 //------------------------------------------------------------------------
 
-static bool AreaHasRegion(csg_brush_c *P, merge_region_c *R)
-{
-  for (unsigned int j = 0; j < R->areas.size(); j++)
-  {
-    if (P == R->areas[j])
-      return true;
-  }
-
-  return false; // nope
-}
-
 static merge_segment_c *FindAlongSeg(merge_vertex_c *v1, merge_vertex_c *v2)
 {
   double v_angle = CalcAngle(v1->x, v1->y, v2->x, v2->y);
@@ -876,18 +878,15 @@ static void MarkBoundaryRegions(csg_brush_c *P)
       if (! S)
         break;
 
+      if (S->start == V)
+        S->f_sides.push_back(v1);
+      else
+        S->b_sides.push_back(v1);
+
       merge_region_c *R = (S->start == V) ? S->front : S->back;
 
-      if (R)
-      {
-        if (! AreaHasRegion(P, R))
-          R->areas.push_back(P);
-      }
-      else
-      {
-        // DO WHAT ??
-        fprintf(stderr, "WARNING: missing region along line loop\n");
-      }
+      if (R && ! R->HasBrush(P))
+        R->areas.push_back(P);
 
       S->border_of = P;
 
@@ -913,8 +912,8 @@ static void MarkInnerRegions(csg_brush_c *P)
       if (S->border_of == P)
         continue;
 
-      bool got_back  = AreaHasRegion(P, S->back);
-      bool got_front = AreaHasRegion(P, S->front);
+      bool got_back  = S->back ->HasBrush(P);
+      bool got_front = S->front->HasBrush(P);
 
       if (got_back != got_front)
       {
@@ -944,12 +943,12 @@ static void Mug_AssignAreas(void)
   // 
   // BUT WAIT, THERE'S MORE!
   //
-  // The above logic will not find regions that are fully
-  // inside the csg_brush_c (no vertices touching the outer
-  // line loop).  However it is sufficient to simply "spread"
-  // the csg_brush_c from each "infected" merge_region_c to every
-  // neighbour as long as the crossing segment is not part of
-  // the csg_brush_c boundary (no escaping!).
+  // The above logic will not find regions that are fully inside
+  // the brush (no vertices touching the outer line loop).
+  // However it is sufficient to simply "spread" the brush
+  // from each "infected" merge_region_c to every neighbour as
+  // long as the crossing segment is not part of the csg_brush_c
+  // boundary (no escaping!).
 
   for (unsigned int j=0; j < all_brushes.size(); j++)
   {

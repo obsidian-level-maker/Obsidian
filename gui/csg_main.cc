@@ -633,8 +633,7 @@ int CSG2_property(lua_State *L)
 //
 //    line_kind,  line_tag
 //    line_flags, line_args
-//
-// ?? rail
+//    rail (= face table)
 //
 // face is a table:
 //    texture
