@@ -155,22 +155,6 @@ bool extrafloor_c::Match(const extrafloor_c *other) const
 }
 
 
-#if 0
-class open_space_c
-{
-public:
-  double z1, z2;
- 
-public:
-  open_space_c()
-  { }
-
-  ~open_space_c()
-  { }
-};
-#endif
-
-
 void CSG2_Doom_TestAreas(void)
 {
   // for debugging only: each csg_brush_c becomes a single sector
@@ -412,8 +396,8 @@ static void CreateOneSector(merge_region_c *R)
   sec->f_tex = B->t_face->tex;
   sec->c_tex = T->b_face->tex;
 
-  sec->light = 255; //!!!! MAX(B->t_light, T->b_light);
-  sec->mark  = MAX(B->mark,    T->mark);
+  sec->light = (sec->c_tex[1] == '_') ? 208 : 160;  // FIXME: TEMP HACK
+  sec->mark  = MAX(B->mark, T->mark);
 
   if (B->sec_kind > 0)
   {
@@ -428,12 +412,13 @@ static void CreateOneSector(merge_region_c *R)
   else
   {
     sec->special = 0;
-    sec->tag     = 0;
 
     if (B->sec_tag > 0)
       sec->tag = B->sec_tag;
     else if (T->sec_tag > 0)
       sec->tag = T->sec_tag;
+    else
+      sec->tag = 0;
   }
 
 
@@ -849,7 +834,11 @@ static void WriteLinedefs(void)
       flags |= MLF_BlockAll;
 
     if (back_idx >= 0 && front_idx >= 0)
+    {
       flags |= MLF_TwoSided;
+
+      flags |= MLF_LowerUnpeg | MLF_UpperUnpeg;
+    }
 
     wad::add_linedef(v1, v2, front_idx, back_idx,
                      0 /* type */, flags,
@@ -884,7 +873,7 @@ static void WriteThings(void)
 }
 
 
-void CSG2_WriteDoom(void)
+void DM_WriteDoom(void)
 {
   // converts the Merged list into the sectors, linedefs (etc)
   // required for a DOOM level.
@@ -1058,7 +1047,7 @@ void doom_game_interface_c::EndLevel()
 
   DM_BeginLevel();
 
-  CSG2_WriteDoom();
+  DM_WriteDoom();
 
   DM_EndLevel(level_name);
 
