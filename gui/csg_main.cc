@@ -31,6 +31,7 @@
 #include "ui_dialog.h"
 
 
+// FIXME std::vector<area_face_c *> all_faces;
 
 std::vector<csg_brush_c *> all_brushes;
 
@@ -63,7 +64,7 @@ double slope_plane_c::GetAngle() const
 
 
 area_face_c::area_face_c() :
-      tex(), x_offset(FVAL_NONE), y_offset(FVAL_NONE)
+      tex(), x_offset(FVAL_NONE), y_offset(FVAL_NONE), peg(false)
 { }
 
 area_face_c::~area_face_c()
@@ -108,6 +109,8 @@ csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
 csg_brush_c::~csg_brush_c()
 {
   // FIXME: free verts
+
+  // FIXME: free slopes
 }
 
 
@@ -375,13 +378,18 @@ static area_face_c * Grab_Face(lua_State *L, int stack_pos)
   lua_getfield(L, stack_pos, "texture");
   lua_getfield(L, stack_pos, "x_offset");
   lua_getfield(L, stack_pos, "y_offset");
+  lua_getfield(L, stack_pos, "peg");
 
-  F->tex = std::string(luaL_checkstring(L, -3));
+  F->tex = std::string(luaL_checkstring(L, -4));
 
-  if (! lua_isnil(L, -2)) F->x_offset = luaL_checknumber(L, -2);
-  if (! lua_isnil(L, -1)) F->y_offset = luaL_checknumber(L, -1);
+  if (! lua_isnil(L, -3)) F->x_offset = luaL_checknumber(L, -3);
+  if (! lua_isnil(L, -2)) F->y_offset = luaL_checknumber(L, -2);
 
-  lua_pop(L, 3);
+  if (lua_toboolean(L, -1)) F->peg = true;
+
+  lua_pop(L, 4);
+
+  // FIXME: store every face in the 'all_faces' list
 
   return F;
 }
@@ -434,9 +442,33 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
  
   lua_pop(L, 5);
 
-  // TODO: y_offset, peg, lighting ???
+  // TODO: peg, lighting ???
 
   return B;
+}
+
+
+static void Grab_HexenArgs(lua_State *L, byte *args)
+{
+  // NOTE: we assume table is on top of stack
+  if (lua_type(L, -1) != LUA_TTABLE)
+  {
+    luaL_argerror(L, -1, "expected a table: line_args");
+    return; /* NOT REACHED */
+  }
+ 
+  for (int i = 0; i < 5; i++)
+  {
+    lua_pushinteger(L, i+1);
+    lua_gettable(L, -2);
+
+    if (lua_isnumber(L, -1))
+    {
+      args[i] = lua_tointeger(L, -1);
+    }
+
+    lua_pop(L, 1);
+  }
 }
 
 
@@ -473,14 +505,18 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
   lua_getfield(L, stack_pos, "line_kind");
   lua_getfield(L, stack_pos, "line_tag");
   lua_getfield(L, stack_pos, "line_flags");
+  lua_getfield(L, stack_pos, "line_args");
 
-  if (lua_isnumber(L, -3)) V->line_kind  = lua_tointeger(L, -3);
-  if (lua_isnumber(L, -2)) V->line_tag   = lua_tointeger(L, -2);
-  if (lua_isnumber(L, -1)) V->line_flags = lua_tointeger(L, -1);
+  if (lua_isnumber(L, -4)) V->line_kind  = lua_tointeger(L, -4);
+  if (lua_isnumber(L, -3)) V->line_tag   = lua_tointeger(L, -3);
+  if (lua_isnumber(L, -2)) V->line_flags = lua_tointeger(L, -2);
 
-  lua_pop(L, 3);
+  if (! lua_isnil(L, -1))
+  {
+    Grab_HexenArgs(L, V->line_args);
+  }
 
-  // TODO: line_args (hexen)
+  lua_pop(L, 4);
 
   return V;
 }

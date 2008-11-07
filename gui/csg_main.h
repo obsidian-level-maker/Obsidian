@@ -62,10 +62,12 @@ class area_face_c
 public:
   std::string tex;
 
-  /// peg_mode_e peg;
- 
   double x_offset;
   double y_offset;
+
+  // this causes the Upper or Lower on a two-sided linedef to
+  // be PEGGED, which is useful for doors and steps.
+  bool peg;
 
 public:
    area_face_c();
@@ -80,7 +82,7 @@ public:
 
   double x, y;
 
-  area_face_c *face; // optional
+  area_face_c *w_face; // optional
 
   int line_kind;
   int line_tag;
