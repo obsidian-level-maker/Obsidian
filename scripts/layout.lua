@@ -239,16 +239,6 @@ function Layout_Hallway(R)
 
       return;
     end
-
----##    -- special check for central pass-through halls
----##    FIXME borken due to junk fill above
----##    if R.sw >= 3 and R.sh >= 3 and R.branch_kind == "PC" then
----##      for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
----##        SEEDS[x][y][1].layout_char = "#"
----##      end end
----##
----##      return;
----##    end
   end
 
   -- TODO: sometimes make "U" shape (for U2, TC, TY)
@@ -440,7 +430,7 @@ function Layout_Outdoor(R)
 
     if diff <= 4 then
       S.layout_char = '0'
-    elseif diff >= 144 or (diff >= 112 and rand_odds(50)) then
+    elseif diff >= 144 or (diff >= 112 and rand_odds(0)) then --!!!!
       S.layout_char = 'L'  -- lift
       table.insert(lifts, { S=S })
     else
@@ -1083,49 +1073,57 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
       end
     end
 
-    for y = R.ty1, R.ty2 do
-      local did = false
-      for x = R.tx1, R.tx2-1 do
-        local S = SEEDS[x][y][1]
-        local D = SEEDS[x+1][y][1]
+    local visit_y = {}
+    rand_shuffle(visit_y, R.th)
+
+    for _,dy in ipairs(visit_y) do
+      local y = R.ty1 + (dy-1)
+      for x = R.tx1+1, R.tx2 do
+        local D = SEEDS[x][y][1]
+        local S = SEEDS[x-1][y][1]
 
         if lc_is_digit(S.layout_char) and not D.layout_char then
           D.layout_char = S.layout_char
           D.floor_h     = S.floor_h
-          did = true
         end
       end
 
-      if did then return; end
+      if SEEDS[R.tx2][y][1].layout_char then
+        return -- did it
+      end
     end
 
-    error("ensure_mirror_x_traversible FAILED!!")
+   error("ensure_mirror_x_traversible FAILED!!")
   end
 
   function ensure_mirror_y_traversible()
     for x = R.tx1, R.tx2 do
       if SEEDS[x][R.ty2][1].layout_char then
-        return; -- OK
+       return; -- OK
       end
     end
 
-    for x = R.tx1, R.tx2 do
-      local did = false
-      for y = R.ty1, R.ty2-1 do
-        local S = SEEDS[x][y][1]
-        local D = SEEDS[x][y+1][1]
+    local visit_x = {}
+    rand_shuffle(visit_x, R.tw)
+
+    for _,dx in ipairs(visit_x) do
+      local x = R.tx1 + (dx-1)
+      for y = R.ty1+1, R.ty2 do
+        local D = SEEDS[x][y][1]
+        local S = SEEDS[x][y-1][1]
 
         if lc_is_digit(S.layout_char) and not D.layout_char then
           D.layout_char = S.layout_char
           D.floor_h     = S.floor_h
-          did = true
         end
       end
 
-      if did then return; end
+      if SEEDS[x][R.ty2][1].layout_char then
+        return -- did it
+      end
     end
 
-    error("ensure_mirror_y_traversible FAILED!!")
+   error("ensure_mirror_y_traversible FAILED!!")
   end
 
 
@@ -1199,14 +1197,29 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 
 
   -- TODO: fill holes
+
   -- TEMP JUNK !!!
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+  for loop = 1,6 do
+  for x = R.tx1,R.tx2 do for y = R.ty1,R.ty2 do
     local S = SEEDS[x][y][1]
     if not S.layout_char then
-      local kkk = rand_irange(1,16)
-      S.layout_char = "%" -- string.sub("abcdefghijklmnop", kkk,kkk)
+--    S.layout_char = "%"
+      local sides = { 2,4,6,8 }
+      rand_shuffle(sides)
+      for _,side in ipairs(sides) do
+        local nx, ny = nudge_coord(x, y, side)
+        if valid_T(nx, ny) then
+          local N = SEEDS[nx][ny][1]
+          if lc_is_digit(N.layout_char) then
+            S.layout_char = N.layout_char
+            S.floor_h     = N.floor_h - 16
+            break;
+          end
+        end
+      end -- for side
     end
-  end end
+  end end -- for x,y
+  end -- for loop
 
 
   -- TODO: boundary shape
