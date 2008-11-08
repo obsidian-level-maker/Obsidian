@@ -647,7 +647,7 @@ gui.debugf("NO_STEP RESULT --> %d\n", R.floor_h)
         new_z_mom = 0
 
         if bump_abs > 1 then
-          probs[i] = probs[i] / 5
+          probs[i] = probs[i] / 8
         end
       else
         new_z_mom = sel(bump > 0, 1, -1)
