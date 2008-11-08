@@ -101,6 +101,14 @@ OTHER IDEAS:
 --]]
 
 
+function Room_SetupTheme(R)
+  if R.outdoor then
+    R.combo = assert(GAME.combos["TECH_GROUND"])
+  else
+    R.combo = assert(GAME.combos["TECH_BASE"])
+  end
+end
+
 
 function calc_conn_area(R)
   local lx, ly = 999,999
@@ -1425,7 +1433,16 @@ function Rooms_lay_out()
   gui.printf("\n--==| Rooms_lay_out |==--\n\n")
 
   for _,R in ipairs(PLAN.all_rooms) do
+    Room_SetupTheme(R)
+  end
+  
+--  for _,R in ipairs(PLAN.scenic_rooms) do
+--    Room_SetupTheme_Scenic(R)
+--  end
+
+  for _,R in ipairs(PLAN.all_rooms) do
     Room_LayItOut(R)
   end
+
 end
 

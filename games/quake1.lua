@@ -98,15 +98,24 @@ Q1_THINGS =
 
 Q1_COMBOS =
 {
-  BASE =
+  TECH_BASE =
   {
-    mat_pri = 5,
-    wall = 12, void = 12, floor=0, ceil=0,
-    decorate = 10, door_side = 23,
+    theme_probs = { TECH=80 },
 
-    theme_probs = { BUNKER=120, CELLS=25  },
+    wall  = "tech05_2",
+    floor = "metflor2_1",
+    ceil  = "tlight09",
   },
 
+  TECH_GROUND =
+  {
+    theme_probs = { TECH=80 },
+    outdoor = true,
+
+    wall  = "ground1_6",
+    floor = "ground1_6",
+    ceil  = "ground1_6",
+  }
 }
 
 Q1_EXITS =
@@ -412,6 +421,9 @@ OB_GAMES["quake1"] =
     seed_size = 240,
 
     palette_mons = 4,
+
+    sky_tex  = "sky4",
+    sky_flat = "sky4",
   },
 
   hooks =

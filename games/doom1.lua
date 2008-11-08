@@ -283,6 +283,16 @@ DM_COMBOS =
     sc_fabs = { pillar_COMPWERD=50, other=30 },
   },
 
+  TECH_GROUND =
+  {
+    theme_probs = { TECH=80 },
+    outdoor = true,
+
+    wall  = "BROWN144",
+    floor = "FLOOR7_1",
+    ceil  = "FLOOR7_1",
+  },
+
   TECH_SILVER =
   {
     theme_probs = { TECH=40 },

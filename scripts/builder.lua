@@ -141,11 +141,11 @@ end
 
 function make_diagonal(S, side, info, z1)
 
-  local lw = S.thick[4]
-  local rw = S.thick[6]
+  local lw = S.thick[4] * 1
+  local rw = S.thick[6] * 1
 
-  local bh = S.thick[2]
-  local th = S.thick[8]
+  local bh = S.thick[2] * 1
+  local th = S.thick[8] * 1
   
   local coords
 
@@ -196,7 +196,7 @@ function make_arrow(S, dir, f_h, tex)
   {
     t_face = { texture=tex },
     b_face = { texture=tex },
-    w_face = { texture=tex },
+    w_face = { texture="COMPBLUE" },
   },
   {
     { x = mx + dx*100, y = my + dy * 100 },
@@ -1276,53 +1276,60 @@ gui.printf("do_teleport\n")
 
       local do_corners = false --!!
 
+
+      if R.combo then
+        f_tex = R.combo.floor
+        c_tex = sel(R.combo.outdoor, PARAMS.sky_flat, R.combo.ceil)
+        w_tex = R.combo.wall
+      else
+        f_tex = "DBRAIN1"
+        c_tex = f_tex
+        w_tex = "LAVA1"
+      end
+
       
       if R.kind == "valley" or R.scenic_kind == "valley" then
-        f_tex = "FLOOR7_1"
-        c_tex = "F_SKY1"
-        w_tex = "BROWN144"
-        do_corners = false
+--        f_tex = "FLOOR7_1"
+--        c_tex = "F_SKY1"
+--        w_tex = "BROWN144"
         do_sides = false --!!!
 
       elseif R.kind == "ground" or R.scenic_kind == "ground" then
-        f_tex = "MFLR8_4"
-        c_tex = "F_SKY1"
-        w_tex = "ASHWALL2"
-        do_corners = false
+--        f_tex = "MFLR8_4"
+--        c_tex = "F_SKY1"
+--        w_tex = "ASHWALL2"
         do_sides = false --!!!
 
       elseif R.kind == "hill" or R.scenic_kind == "hill" then
-        f_tex = "FLOOR7_1"
-        c_tex = "F_SKY1"
-        w_tex = "BROWN144"
-        do_corners = false
+--        f_tex = "FLOOR7_1"
+--        c_tex = "F_SKY1"
+--        w_tex = "BROWN144"
         do_sides = false --!!!
 
       elseif R.scenic_kind == "liquid" then
         f_tex = "NUKAGE1"
-        c_tex = "F_SKY1"
+        c_tex = PARAMS.sky_flat
         w_tex = "COMPBLUE"
         sec_kind = 16
-        do_corners = false
         do_sides = false --!!!
 
       elseif R.kind == "hallway" then
 
-        f_tex = "FLAT1"
-        c_tex = "CEIL3_5"
-        w_tex = "GRAY7"
+--        f_tex = "FLAT1"
+--        c_tex = "CEIL3_5"
+--        w_tex = "GRAY7"
 
       elseif R.kind == "stairwell" then
 
-        f_tex = "FLAT5_3"
-        c_tex = "FLAT1"
-        w_tex = "BROWN1"
+--        f_tex = "FLAT5_3"
+--        c_tex = "FLAT1"
+--        w_tex = "BROWN1"
 
       else -- building
       
-        f_tex = "FLOOR0_1"
-        c_tex = "CEIL3_5"
-        w_tex = "STARG2"
+--        f_tex = "FLOOR4_8"
+--        c_tex = "CEIL3_5"
+--        w_tex = "STARTAN3"
 
       end
 
@@ -1586,6 +1593,11 @@ end -- do_sides
 
     local mx = int((x1+x2) / 2)
     local my = int((y1+y2) / 2)
+
+    if S.sx == R.sx1 then mx = mx + 48 end
+    if S.sx == R.sx2 then mx = mx - 48 end
+    if S.sy == R.sy1 then my = my + 48 end
+    if S.sy == R.sy2 then my = my - 48 end
 
     if S.is_start then
       gui.add_entity(mx, my, z1 + 25,
