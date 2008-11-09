@@ -21,32 +21,56 @@ require 'util'
 
 NAME_PATTERNS =
 {
-  SIMPLE =
+  TECH_1 =
   {
-    pattern = "%4t%5a%5k%n",
+    pattern = "%5t%7a%6k%n",
     prob = 90,
 
     words =
     {
-      t = { The=90, A=5 },
+      t = { The=90, A=10 },
 
-      a = { Big=10, Large=10, Huge=10, Enormous=5, Gigantic=2,
-            Monstrous=10, Demonic=10,
+      a = { -- FIXME: sizes should reflect level size
+            Large=10, Huge=10, Gigantic=1,
             Small=10, Tiny=2,
-            Old=20, Ancient=20, Futuristic=20,
-            Decrepid=10, Run_Down=10,
+            
+            Old=10, Ancient=20, Futuristic=20,
+            Fantastic=1, Incredible=1,
+
+            Decrepid=10, Run_Down=10, Ravished=2,
+            Ruined=5, Broken=1, Dead=1, Deserted=3,
+            Rotten=1,
+
+            Monstrous=10, Demonic=10,
             Infested=10, Haunted=10, Ghostly=10,
-            Eerie=10, Strange=20,
-            Dark=30,
+            Satanic=1, Unholy=5,
+
+            Eerie=10, Strange=20, Weird=2, Creepy=1,
+            Dark=20, Gloomy=5, Awful=1, Horrible=1,
+            Dismal=2,
+
+            Underground=5, Subterranean=2,
+            Ethereal=5, Floating=2, Stellar=2,
+            Hidden=1, Secret=10, Experimental=1,
+            Central=5,
           },
 
-      k = { Power=10, Tech=5, Space=10, Hi_Tech=5,
-            Control=10, Military=10, Nukage=5,
+      k = { Power=10, Hi_Tech=8, Tech=2,
+            Space=10, Control=10, Military=10,
+            Machinery=5, Rocket=5, Research=10,
+            Nukage=5, Slime=1, Toxin=2, Plasma=2,
+            Bio_=10, Bionic=1, Processing=6,
+            Computer=4, Electronics=1, Refueling=3,
+            Industrial=2,
           },
 
-      n = { Generator=50, Plant=60, Base=50, 
+      n = { Generator=20, Plant=20, Base=30,
             Warehouse=20, Lab=20, Laboratory=2,
-            Station=30, Tower=20, Center=50,
+            Station=30, Tower=20, Center=30,
+            Complex=30, Refinery=20, Factory=20,
+            Depot=4, Storage=4, Anomaly=1, Area=4,
+            Tunnels=4, Zone=7, Sphere=1, Gateway=7,
+            Facility=5,
           },
     },
   },
@@ -105,8 +129,8 @@ end
 
 
 function Naming_test()
-  for i = 1,200 do
-    local pat = NAME_PATTERNS.SIMPLE
+  for i = 1,500 do
+    local pat = NAME_PATTERNS.TECH_1
     gui.debugf("Name %2d: %s\n", i, name_from_pattern(pat))
   end
 end
