@@ -38,7 +38,7 @@ NAME_PATTERNS =
             Fantastic=1, Incredible=1,
 
             Decrepid=10, Run_Down=10, Ravished=2,
-            Ruined=5, Broken=1, Dead=1, Deserted=3,
+            Ruined=5, Broken=1, Dead=1, Deserted=5,
             Rotten=1,
 
             Monstrous=10, Demonic=10,
@@ -70,14 +70,27 @@ NAME_PATTERNS =
             Complex=30, Refinery=20, Factory=20,
             Depot=4, Storage=4, Anomaly=1, Area=4,
             Tunnels=4, Zone=7, Sphere=1, Gateway=7,
-            Facility=5,
+            Facility=5, Works=1,
           },
     },
   },
 }
 
 
-function name_from_pattern(PAT)
+function Name_fixup(name)
+  -- convert "_" to "-"
+  name = string.gsub(name, "_ ", "-")
+  name = string.gsub(name, "_",  "-")
+
+  -- convert "A" to "AN" where necessary
+  name = string.gsub(name, "^[aA] ([aAeEiIoOuU])", "An %1")
+
+  return name
+end
+
+
+
+function Name_from_pattern(PAT)
   local name = ""
 
   local pos = 1
@@ -123,15 +136,15 @@ function name_from_pattern(PAT)
       end
     end
   end
-  
-  return name
+
+  return Name_fixup(name)
 end
 
 
 function Naming_test()
   for i = 1,500 do
     local pat = NAME_PATTERNS.TECH_1
-    gui.debugf("Name %2d: %s\n", i, name_from_pattern(pat))
+    gui.debugf("Name %2d: %s\n", i, Name_from_pattern(pat))
   end
 end
 
