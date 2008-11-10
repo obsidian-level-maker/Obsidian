@@ -112,8 +112,8 @@ NAME_PATTERNS =
 
     words =
     {
-      t = { The=90,
-            A=10,
+      t = { The=70,
+            A=5,
             ["The Devil's"]=10,
             ["Satan's"]=10,
           },
@@ -122,27 +122,26 @@ NAME_PATTERNS =
             Small=1, Endless=7,
 
             Old=10, Ancient=20, Eternal=1,
-
-            Decrepid=10,
+            Decrepid=10, Desolate=5,
             Ruined=5, Forgotten=7, Lost=10,
-            Ravished=2,
-            Broken=1, Deadly=3, Barren=4,
+            Ravished=2, Barren=4, Deadly=3,
             Dirty=2, Filthy=1,
             Stagnant=3, Rancid=5, Rotten=3,
-            Burning=15, Hot=1, Melting=1,
+            Burning=15, Scorching=3, Hot=1, Melting=1,
 
             Blood=20, Blood_filled=3, Bloody=1,
             Blood_stained=1, Blood_soaked=1,
-            Monstrous=15, Monster=4,
-            Demonic=10, Demon=2,
+            Monstrous=15, Monster=4, Zombie=5,
+            Demonic=10, Demon=2, Ghoulish=2,
             Haunted=10, Ghostly=15, Ghastly=2,
             Unholy=10, Godless=2, God_forsaken=1,
             Evil=30, Wicked=15, Cruel=5,
 
             Eerie=10, Strange=20, Weird=2, Creepy=5,
-            Dark=20, Gloomy=15, Awful=3, Horrible=5,
-            Dismal=8, Dreaded=8, Dank=2, Frightful=1,
-            Moan_filled=2, Spooky=10,
+            Gloomy=15, Awful=3, Horrible=5,
+            Dismal=10, Dreaded=8, Dank=1, Frightful=1,
+            Moan_filled=2, Spooky=10, Nightmare=4,
+            Screaming=2,
 
             Underground=5, Subterranean=1,
             Hidden=1, Secret=1,
@@ -175,11 +174,15 @@ NAME_PATTERNS =
             ["of the Dead"] = 10,
             ["of Souls"] = 10,
             ["of the Undead"] = 10,
+            ["of Darkness"] = 10,
             ["of Destruction"] = 3,
+            ["of Suffering"] = 3,
             ["of Whispers"] = 2,
             ["of Twilight"] = 2,
             ["of Torture"] = 5,
             ["of Flesh"] = 2,
+            ["of Corpses"] = 2,
+            ["of Midnight"] = 1,
             ["of Essel"] = 1,
             ["of Tears"] = 1,
           },
@@ -270,7 +273,7 @@ end
 
 function Naming_test()
   for i = 1,500 do
-    local pat = NAME_PATTERNS.TECH_1
+    local pat = NAME_PATTERNS.HELL_1
     gui.debugf("Name %2d: %s\n", i, Name_from_pattern(pat))
   end
 end
