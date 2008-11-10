@@ -6,6 +6,16 @@ TODO
 >>>> document classes (PLAN, SEED, ROOM, QUEST)
 
 
+NAME GENERATOR
+
+-  for multiple levels, prevent repetitions of nouns
+   and adjectives: provide a "word count" table to the
+   name generator, updated by words used, etc...
+
+-  need a mechanism to provide Game-specific and/or
+   Module-specific lexicons.
+
+
 THEME SELECTION
 
 (a) Each level has a THEME, e.g. "Tech"
