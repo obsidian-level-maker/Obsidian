@@ -30,18 +30,17 @@ NAME_PATTERNS =
     {
       t = { The=90, A=10 },
 
-      a = { -- FIXME: sizes should reflect level size
-            Large=10, Huge=10, Gigantic=1,
+      a = { Large=10, Huge=10, Gigantic=1,
             Small=10, Tiny=2,
-            
+
             Old=10, Ancient=20, Eternal=1,
             Advanced=7, Futuristic=3, Future=1,
             Fantastic=1, Incredible=1, Amazing=0.5,
 
             Decrepid=10, Run_Down=5,
-            Ruined=5, Forgotten=7, Failed=5,
+            Ruined=5, Forgotten=7, Lost=10, Failed=5,
             Ravished=2, Rotten=1,
-            Broken=1, Dead=1,
+            Broken=1, Dead=1, Deadly=3,
             Dirty=2, Filthy=1,
             Deserted=10, Abandoned=10,
 
@@ -64,7 +63,7 @@ NAME_PATTERNS =
       k = { Power=10, Hi_Tech=8, Tech=1,
             Star=2, Stellar=2, Solar=2, Lunar=4,
             Space=10, Control=10, Military=10,
-            Machinery=3, Rocket=2, Missile=2, Research=10,
+            Mechanical=3, Rocket=2, Missile=2, Research=10,
             Nukage=5, Slime=2, Toxin=2, Plasma=4,
             Bio_=10, Bionic=2, Nuclear=8, Chemical=6,
             Processing=6, Refueling=3, Metal=1,
@@ -73,6 +72,7 @@ NAME_PATTERNS =
             Teleport=2, Supply=2, Cryogenic=1, Chrono_=1,
             Worm_hole=1, Black_hole=1, Robotic=1,
             Magnetic=2, Electrical=2, Proto_=1,
+            Slige=1, Waste=1, Optic=1,
           },
 
       n = { Generator=15, Plant=20, Base=30,
@@ -83,6 +83,7 @@ NAME_PATTERNS =
             Tunnels=3, Zone=8, Sphere=1, Gateway=10,
             Facility=10, Works=1, Outpost=1, Site=1,
             Hanger=1, Portal=2, Installation=1,
+            Bunker=1, Device=2, Machine=1, Network=1,
           },
     },
   },
