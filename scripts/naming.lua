@@ -307,7 +307,7 @@ NAMING_THEMES =
     patterns =
     {
          ["%a %n"] = 50,
-      ["%t %a %n"] = 50,
+      ["%t %a %n"] = 25,
 
       [   "%n of %h"] = 5,
       ["%t %n of %h"] = 15,
@@ -325,97 +325,80 @@ NAMING_THEMES =
 
       a =
       {
-        Old=10, Ancient=20, Eternal=1,
+        Huge=1, Sprawling=1, Unending=5,
+
+        Old=10, Ancient=20, Eternal=4,
         Decrepid=10, Desolate=5,
-        Lost=10, Ruined=5, Forgotten=7,
+        Lost=10, Forgotten=7,
         Ravished=2, Barren=4, Deadly=3,
         Stagnant=3, Rancid=5, Rotten=3,
 
-        Monstrous=5, Demonic=3, Invaded=1, Overtaken=1,
-        Infested=10, Haunted=20, Ghostly=5,
+        Monstrous=10, Monster=1,
+        Demonic=10, Demon=1,
+        Invaded=3, Overtaken=3,
+        Infected=10, Infested=3, Haunted=20,
 
         Eerie=4, Strange=10, Weird=2, Creepy=1,
-        Dark=30, Horrible=2,
-        Dismal=2, Dreaded=4, Cold=4,
+        Dark=30, Horrible=5, Exotic=7,
+        Dismal=5, Dreaded=4, Cold=4,
 
         Ethereal=5, Floating=2,
         Hidden=2, Secret=10, Experimental=1,
         Northern=7, Southern=7, Eastern=7, Western=7,
-        Upper=5, Lower=5, Central=5,
-        Inner=5, Outer=5, Innermost=1, Outermost=1,
+        Upper=2, Lower=2, Central=2,
+        Inner=2, Outer=5, Innermost=1, Outermost=1,
 
-        Bleak=50,
+        Bleak=50, Abandoned=20, Forsaken=20,
+        Cursed=20, Corrupt=5, Forbidden=30,
 
-Abandoned=20,
-Forsaken=20,
-Bewitched=3,
-Corrupt=5,
-Cursed=20,
-Forbidden=30,
-Hostile=5,
-Industrial=1,
-Living=1,
-Mysterious=7,
-Obscure=5,
-Ominous=5,
-Perilous=10,
-Residential=1,
-Sinister=30,
-Vacant=20, Empty=10,
-Whispering=90,
+        Sinister=30, Bewitched=3, Hostile=5,
+        Industrial=1, Residential=1, Living=1,
+        Mysterious=7, Obscure=5,
+        Ominous=5, Perilous=10,
+        Vacant=20, Empty=10,
+        Whispering=90,
       },
 
       n =
       {
-Town=30, City=30, Village=20,
-Condominium=20, Plaza=20,
-Fortress=10, Fort=2, Stronghold=1,
-House=20,
-Courtyard=20, Court=5,
-Hallways=15, Hall=5,
-Gate=5,
-Prison=5,
+        Town=30, City=30, Village=20,
+        Condominium=20, Plaza=20,
+        Fortress=10, Fort=2, Stronghold=1,
+        Palace=10, Courtyard=20, Court=5, Kingdom=1,
+        Hallways=15, Hall=5, Corridors=7,
+        House=20, Refuge=1, Sanctuary=1,
+        Post=3, Keep=1, Slough=1,
+        Gate=5, Prison=5,
 
-District=10,
-Precinct=10,
-Dominion=10,
-Domain=1,
-Alleys=5,
-Docks=5,
-Towers=5,
-Warrens=1,
-Gardens=5,
-Crossroads=1,
-Zone=5,
-Region=1,
-Territory=5,
-Refuge=1,
+        World=7, Zone=15,
+        District=10, Precinct=10,
+        Dominion=5, Domain=1,
+        Region=1, Territory=3,
 
-Forest=3,
-Cliffs=3,
-Desert=10,
-Mountain=10, Mount=1,
-Canyon=10,
-Chasm=5,
-Valley=5,
-Bay=1,
-Beach=1,
-End=1,
-Slough=1,
+        Alleys=5, Docks=5,
+        Towers=7, Streets=4,
+        Gardens=5, Warrens=1,
+        Crossroads=1, Fields=10,
+        Suburbs=4, Quarters=4,
+
+        Forest=7, Cliffs=7, Desert=7,
+        Mountain=10, Mount=1,
+        Canyon=5, Chasm=5, Valley=5,
+        Bay=1, Beach=1,
       },
 
       h =
       {
-        Flames=7,
+        Doom=30, Gloom=20, Despair=10,
         Horror=10, Terror=10, Death=10,
-        Pain=15, Fear=5, Hate=5,
-        Souls=1, Doom=10,
+        Danger=20, Pain=15, Fear=5, Hate=5,
+        Ghosts=20, Spirits=2, Souls=1,
 
-        Gloom=10, Destruction=3,
-        Twilight=2, Midnight=1,
-        
-        Tears=1, Fate=1,
-        Menace=3,
+        Ruin=5, Flames=1, Destruction=3, Menace=3,
+        Twilight=2, Midnight=3,
+        Tears=1, Fate=1, Helplessness=2,
+
+        ["the Night"]=5,
       },
 
       s =
@@ -673,7 +656,6 @@ end
 
 
 function Naming_test()
-gui.random()
   local list = Naming_generate("URBAN", 299)
 
   for i,name in ipairs(list) do
