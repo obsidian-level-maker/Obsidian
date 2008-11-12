@@ -27,7 +27,7 @@ NAMING_THEMES =
     {
       ["%a %n"]    = 50, ["%t %a %n"]    = 15,
       ["%b %n"]    = 50, ["%t %b %n"]    = 15,
-      ["%a %b %n"] = 70, ["%t %a %b %n"] = 5,
+      ["%a %b %n"] = 50, ["%t %a %b %n"] = 5,
 
       ["%s"] = 5,
     },
@@ -36,7 +36,7 @@ NAMING_THEMES =
     {
       t =
       {
-        The=90, A=10
+        The=60, A=10
       },
 
       a =
@@ -123,10 +123,14 @@ NAMING_THEMES =
   {
     patterns =
     {
-      ["%a %n"] = 70, ["%t %a %n"] = 5,
-      ["%a %n of %h"] = 20,
+         ["%a %n"] = 50,
+      ["%t %a %n"] = 5,
 
-      ["%p's %a %n"] = 10,
+         ["%n of %h"] = 25,
+      ["%a %n of %h"] = 15,
+
+      ["%p's %n"]       = 7,
+      ["%p's %a %n"]    = 7,
       ["%p's %n of %h"] = 5,
 
       ["%s"] = 5,
@@ -136,7 +140,7 @@ NAMING_THEMES =
     {
       t =
       {
-        The=70, A=5
+        The=50, A=5
       },
 
       p =
@@ -435,7 +439,8 @@ end
 
 
 function Naming_test()
-  local list = Naming_generate("HELL", 1000)
+gui.random()
+  local list = Naming_generate("TECH", 100)
 
   for i,name in ipairs(list) do
     gui.debugf("Name %2d: %s\n", i, name)
