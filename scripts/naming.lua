@@ -15,6 +15,11 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
+--
+--  Thanks to "JohnnyRancid" who contributed most of the
+--  complete level names and a lot of cool words.
+--
+----------------------------------------------------------------
 
 require 'util'
 
@@ -29,7 +34,7 @@ NAMING_THEMES =
       ["%b %n"]    = 50, ["%t %b %n"]    = 15,
       ["%a %b %n"] = 50, ["%t %a %b %n"] = 5,
 
-      ["%s"] = 5,
+      ["%s"] = 2,
     },
 
     lexicon =
@@ -114,8 +119,8 @@ NAMING_THEMES =
     {
       a = 5,
       b = 3,
-      n = 30,
-      s = 10,
+      n = 20,
+      s = 20,
     },
   },
 
@@ -133,7 +138,7 @@ NAMING_THEMES =
       ["%p's %a %n"]    = 7,
       ["%p's %n of %h"] = 5,
 
-      ["%s"] = 5,
+      ["%s"] = 20,
     },
 
     lexicon =
@@ -145,7 +150,7 @@ NAMING_THEMES =
 
       p =
       {
-        Satan=10, ["The Devil"]=10,
+        Satan=10, ["The Devil"]=5, Lucifer=1,
       },
 
       a =
@@ -167,54 +172,119 @@ NAMING_THEMES =
         Demonic=10, Demon=2, Ghoulish=2,
         Haunted=10, Ghostly=15, Ghastly=2,
         Unholy=10, Godless=2, God_forsaken=1,
-        Evil=30, Wicked=15, Cruel=5,
+        Evil=30, Wicked=15, Cruel=5, Ungodly=1,
 
         Eerie=10, Strange=20, Weird=2, Creepy=5,
         Gloomy=15, Awful=3, Horrible=5,
         Dismal=10, Dreaded=8, Dank=1, Frightful=1,
         Moan_filled=2, Spooky=10, Nightmare=4,
-        Screaming=2,
+        Screaming=2, Silent=5,
 
         Underground=5, Subterranean=1,
         Hidden=1, Secret=1,
         Upper=5, Lower=5,
         Inner=5, Outer=5,
+        Deepest=5,
+
+        Abhorrent=2, Abominable=2,
+        Brutal=10, Bleeding=3, Bestial=1,
+        Catastrophic=1, Corrosive=1,
+        Darkening=1, Detested=2,
+        Direful=1, Disastrous=1,
+        Execrated=1, Fatal=10,
+        Final=2, Frail=2, Grisly=5,
+        Ill_fated=5, Immoral=1,
+        Immortal=3, Impure=3,
+        Loathsome=2, Merciless=5,
+        Morbid=5, Pestilent=1,
+        Profane=1, Raw=2,
+        Unsanctified=1,
+        Vicious=10, Violent=5,
       },
 
       n =
       {
-        Grotto=10, Tomb=10,
-        Crypt=20, Chapel=3, Church=1,
-        Graveyard=5, Cloister=1,
-        Pit=7, Cavern=5, Cave=1,
-        Wasteland=10, Fields=1,
-        Ghetto=2, City=0.5, Well=1,
-        Lair=5, Den=2, Domain=1, Gate=1,
-        Valley=4, River=1, Catacombs=1,
-        Palace=1, Cathedral=1, Chamber=4,
-        Labyrinth=1,
+        Grotto=20, Tomb=20,
+        Crypt=30, Chapel=6, Church=2, Mosque=1,
+        Graveyard=10, Cloister=2,
+        Pit=14, Cavern=10, Cave=2,
+        Wasteland=20, Fields=2,
+        Ghetto=4, City=1, Well=2, Realm=7,
+        Lair=10, Den=4, Domain=2, Hive=2,
+        Valley=8, River=2, Catacombs=1,
+        Palace=2, Cathedral=3, Chamber=8,
+        Labyrinth=2, Dungeon=10,
+        Temple=15, Shrine=7, Vault=7,
+
+        Gate=1, Circle=1, Altar=4,
+        Tower=2, Mountain=1, Prison=1,
+        Sanctuary=1, Monolith=1,
+
+        Excruciation=0.1, Abnormality=0.1,
+        Hallucination=0.1, Ache=0.1,
+        Ceremony=0.1, Threshold=0.1,
+        Basillica=0.1, Apocalypse=0.2,
       },
 
       h =
       {
-        Hell = 50, Fire = 30, Flames = 7,
-        Horror = 10, Terror = 10, Death = 10,
-        Pain = 15, Fear = 5, Hate = 5,
-        Limbo = 2, Souls = 10,
-        ["the Damned"] = 10,
-        ["the Dead"] = 10, ["the Undead"] = 10,
-        Darkness = 10, Destruction = 3,
-        Suffering = 3, Torment = 7, Torture = 5,
-        Twilight = 2, Midnight = 1,
-        Flesh = 2, Corpses = 2,
-        Whispers = 2, Tears = 1,
+        Hell=50, Fire=30, Flames=7,
+        Horror=10, Terror=10, Death=10,
+        Pain=15, Fear=5, Hate=5,
+        Limbo=2, Souls=10, Doom=10,
+        ["the Damned"]=10, Heathens=2,
+        ["the Dead"]=10, ["the Undead"]=10,
+        Darkness=10, Destruction=3,
+        Suffering=3, Torment=7, Torture=5,
+        Twilight=2, Midnight=1,
+        Flesh=2, Corpses=2,
+        Whispers=2, Tears=1, Fate=1,
+        Menace=3, Treachery=2,
       },
 
       s =
       {
-        ["Skin Graft"]=50,
-        ["Meltdown"]=50,
-        ["Bloodstains"]=50,
+        ["Absent Savior"] = 10,
+        ["Absolution Neglect"] = 10,
+        ["Atrophy of the Soul"] = 10,
+        ["A Vile Peace"] = 10,
+        ["Awaiting Evil"] = 10,
+        ["Baptised in Parasites"] = 10,
+        ["Blood Clot"] = 10,
+        ["Bloodless Unreality"] = 10,
+        ["Bloodstains"]=10,
+        ["Bonded by Blood"] = 10,
+        ["Born/Dead"] = 10,
+        ["Cocoon of Filth"] = 10,
+        ["Cries of Pain"] = 10,
+        ["Dead Inside"] = 10,
+        ["Disdain and Anguish"] = 10,
+        ["Disease"] = 10,
+        ["Extinction of Mankind"] = 10,
+        ["Falling Sky"] = 10,
+        ["Feign Sympathy"] = 10,
+        ["Guttural Breath"] = 10,
+        ["Human Landfill"] = 10,
+        ["Human Trafficking"] = 10,
+        ["Internal Darkness"] = 10,
+        ["Mandatory Suicide"] = 10,
+        ["Manifest Destination"] = 10,
+        ["Meltdown"]=10,
+        ["Necessary Death"] = 10,
+        ["Neural Butchery"] = 10,
+        ["Origin of Nausea"] = 10,
+        ["Paranoia"] = 10,
+        ["Punishment Defined"] = 10,
+        ["Purgatory"] = 10,
+        ["Putrid Serenity"] = 10,
+        ["Sealed Fate"] = 10,
+        ["Skinfeast"] = 10,
+        ["Skin Graft"]=10,
+        ["Soul Scars"] = 10,
+        ["Terminal Filth"] = 10,
+        ["The Second Coming"] = 10,
+        ["Thinning the Herd"] = 10,
+        ["Total Doom"] = 10,
       }
     },
 
@@ -223,8 +293,8 @@ NAMING_THEMES =
       p = 2,
       a = 5,
       h = 3,
-      n = 30,
-      s = 10,
+      n = 20,
+      s = 20,
     },
   },
 
@@ -439,8 +509,7 @@ end
 
 
 function Naming_test()
-gui.random()
-  local list = Naming_generate("TECH", 100)
+  local list = Naming_generate("HELL", 200)
 
   for i,name in ipairs(list) do
     gui.debugf("Name %2d: %s\n", i, name)
