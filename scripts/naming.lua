@@ -313,7 +313,7 @@ NAMING_THEMES =
       ["%t %n of %h"] = 15,
       ["%a %n of %h"] = 5,
 
---      ["%s"] = 10,
+      ["%s"] = 15,
     },
 
     lexicon =
@@ -328,9 +328,8 @@ NAMING_THEMES =
         Huge=1, Sprawling=1, Unending=5,
 
         Old=10, Ancient=20, Eternal=4,
-        Decrepid=10, Desolate=5,
-        Lost=10, Forgotten=7,
-        Ravished=2, Barren=4, Deadly=3,
+        Decrepid=10, Lost=10, Forgotten=7,
+        Ravished=7, Barren=10, Deadly=3,
         Stagnant=3, Rancid=5, Rotten=3,
 
         Monstrous=10, Monster=1,
@@ -342,21 +341,21 @@ NAMING_THEMES =
         Dark=30, Horrible=5, Exotic=7,
         Dismal=5, Dreaded=4, Cold=4,
 
-        Ethereal=5, Floating=2,
-        Hidden=2, Secret=10, Experimental=1,
+        Aethereal=5, Floating=2,
+        Hidden=2, Secret=5,
         Northern=7, Southern=7, Eastern=7, Western=7,
         Upper=2, Lower=2, Central=2,
         Inner=2, Outer=5, Innermost=1, Outermost=1,
 
         Bleak=50, Abandoned=20, Forsaken=20,
         Cursed=20, Corrupt=5, Forbidden=30,
-
         Sinister=30, Bewitched=3, Hostile=5,
         Industrial=1, Residential=1, Living=1,
         Mysterious=7, Obscure=5,
         Ominous=5, Perilous=10,
-        Vacant=20, Empty=10,
-        Whispering=90,
+        Murder=2, Killing=1,
+        Vacant=20, Empty=10, Isolated=3,
+        Whispering=30,
       },
 
       n =
@@ -381,8 +380,8 @@ NAMING_THEMES =
         Crossroads=1, Fields=10,
         Suburbs=4, Quarters=4,
 
-        Forest=7, Cliffs=7, Desert=7,
-        Mountain=10, Mount=1,
+        Forests=7, Deserts=7,
+        Mountain=10, Cliffs=7,
         Canyon=5, Chasm=5, Valley=5,
         Bay=1, Beach=1,
       },
@@ -392,11 +391,14 @@ NAMING_THEMES =
         Doom=30, Gloom=20, Despair=10,
         Horror=10, Terror=10, Death=10,
         Danger=20, Pain=15, Fear=5, Hate=5,
-        Ghosts=20, Spirits=2, Souls=1,
+        Desolation=3, Reparation=1,
 
-        Ruin=5, Flames=1, Destruction=3, Menace=3,
+        Ruin=5, Flames=1, Destruction=3,
         Twilight=2, Midnight=3,
-        Tears=1, Fate=1, Helplessness=2,
+        Tears=4, Fate=1, Helplessness=2,
+
+        Ghosts=20, Spirits=2, Souls=1,
+        Evil=1, Menace=3, Ghouls=5, Goblins=1,
 
         ["the Night"]=5,
       },
@@ -550,64 +552,6 @@ function Name_from_pattern(DEF)
 end
 
 
-function Name_cost(words, seen_words)
-  local cost = 2 + gui.random()
-
----##  -- check for duplicate words in the name
----##  for w, count in pairs(words) do
----##    if count > 1 then
----##      cost = cost * 3
----##    end
----##  end
-
-  for w, _ in pairs(words) do
-    if seen_words[w] then
-      cost = cost * (2 ^ seen_words[w])
-    end
-  end
-
-  return cost
-end
-
-
-function OLD_Name_choose_one(DEF, seen_words)
-
-  local candidates = {}
-
-  for i = 1,20 do
-    local name, words = Name_from_pattern(DEF)
-
-    local C =
-    {
-      name  = name,
-      words = words,
-      cost  = Name_cost(words, seen_words),
-    }
-
-    table.insert(candidates, C)
-  end
-
-  table.sort(candidates, function(A,B) return A.cost < B.cost end)
-
-  --[[
-  for _,c in ipairs(candidates) do
-    gui.debugf("candidate: %1.1f => %s\n", c.cost, c.name)
-    gui.debugf("%s\n", table_to_str(c.words, 2))
-  end --]]
-
-  local C = candidates[1]
-
----  gui.debugf("CHOOSEN ---> %s\n", C.name)
-
-  -- remember the words
-  for w,_ in pairs(C.words) do
-    seen_words[w] = (seen_words[w] or 0) + 1
-  end
-
-  return Name_fixup(C.name)
-end
-
-
 function Name_choose_one(DEF, seen_words)
 
 ---## do return Name_from_pattern(DEF) end
@@ -656,7 +600,7 @@ end
 
 
 function Naming_test()
-  local list = Naming_generate("URBAN", 299)
+  local list = Naming_generate("URBAN", 99)
 
   for i,name in ipairs(list) do
     gui.debugf("Name %2d: %s\n", i, name)
