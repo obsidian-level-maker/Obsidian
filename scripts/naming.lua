@@ -25,9 +25,9 @@ NAMING_THEMES =
   {
     patterns =
     {
-      ["%a %n"]    = 50, ["%t %a %n"]    = 10,
-      ["%b %n"]    = 50, ["%t %b %n"]    = 10,
-      ["%a %b %n"] = 50, ["%t %a %b %n"] = 5,
+      ["%a %n"]    = 50, ["%t %a %n"]    = 15,
+      ["%b %n"]    = 50, ["%t %b %n"]    = 15,
+      ["%a %b %n"] = 70, ["%t %a %b %n"] = 5,
 
       ["%s"] = 5,
     },
@@ -153,9 +153,9 @@ NAMING_THEMES =
         Decrepid=10, Desolate=5,
         Ruined=5, Forgotten=7, Lost=10,
         Ravished=2, Barren=4, Deadly=3,
-        Dirty=2, Filthy=1,
+        Dirty=2, Filthy=1, Essel=1,
         Stagnant=3, Rancid=5, Rotten=3,
-        Burning=15, Scorching=3, Hot=1, Melting=1,
+        Burning=30, Scorching=3, Hot=1, Melting=1,
 
         Blood=20, Blood_filled=3, Bloody=1,
         Blood_stained=1, Blood_soaked=1,
@@ -193,17 +193,17 @@ NAMING_THEMES =
 
       h =
       {
-        Hell = 40, Fire = 25, Flames = 3,
+        Hell = 50, Fire = 30, Flames = 7,
         Horror = 10, Terror = 10, Death = 10,
         Pain = 15, Fear = 5, Hate = 5,
         Limbo = 2, Souls = 10,
         ["the Damned"] = 10,
         ["the Dead"] = 10, ["the Undead"] = 10,
         Darkness = 10, Destruction = 3,
-        Suffering = 3, Torment = 5, Torture = 4,
+        Suffering = 3, Torment = 7, Torture = 5,
         Twilight = 2, Midnight = 1,
         Flesh = 2, Corpses = 2,
-        Whispers = 2, Essel = 1, Tears = 1,
+        Whispers = 2, Tears = 1,
       },
 
       s =
@@ -254,17 +254,37 @@ end
 
 function Naming_split_word(tab, word)
   for w in string.gmatch(word, "%a+") do
-    if NAMING_IGNORE_WORDS[string.lower(w)] then
-      -- ignore it
-    else
+    local low = string.lower(w)
+
+    if not NAMING_IGNORE_WORDS[low] then
       -- truncate to 4 letters
-      if #w > 4 then
-        w = string.sub(w, 1, 4)
+      if #low > 4 then
+        low = string.sub(low, 1, 4)
       end
 
-      tab[w] = (tab[w] or 0) + 1
+      tab[low] = (tab[low] or 0) + 1
     end
   end
+end
+
+
+function Naming_match_parts(word, parts)
+  for p,_ in pairs(parts) do
+    for w in string.gmatch(word, "%a+") do
+      local low = string.lower(w)
+
+      -- truncate to 4 letters
+      if #low > 4 then
+        low = string.sub(low, 1, 4)
+      end
+
+      if p == low then
+        return true
+      end
+    end
+  end
+
+  return false
 end
 
 
@@ -331,7 +351,7 @@ function Name_cost(words, seen_words)
 end
 
 
-function Name_choose_one(DEF, seen_words)
+function OLD_Name_choose_one(DEF, seen_words)
 
   local candidates = {}
 
@@ -369,6 +389,23 @@ function Name_choose_one(DEF, seen_words)
 end
 
 
+function Name_choose_one(DEF, seen_words)
+
+  local name, parts = Name_from_pattern(DEF)
+
+  -- adjust probabilities
+  for c,divisor in pairs(DEF.divisors) do
+    for w,prob in pairs(DEF.lexicon[c]) do
+      if Naming_match_parts(w, parts) then
+        DEF.lexicon[c][w] = prob / divisor
+      end
+    end
+  end
+
+  return Name_fixup(name)
+end
+
+
 function Naming_generate(theme, count)
  
   local defs = deep_copy(NAMING_THEMES)
@@ -398,7 +435,7 @@ end
 
 
 function Naming_test()
-  local list = Naming_generate("TECH", 1000)
+  local list = Naming_generate("HELL", 1000)
 
   for i,name in ipairs(list) do
     gui.debugf("Name %2d: %s\n", i, name)
