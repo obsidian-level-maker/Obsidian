@@ -8,12 +8,51 @@ TODO
 
 NAME GENERATOR
 
--  for multiple levels, prevent repetitions of nouns
-   and adjectives: provide a "word count" table to the
-   name generator, updated by words used, etc...
+-  GUI SIDE:
+   -  BOOM: DEHACKED lump   -- comments use '#'
+            [STRINGS] section
+            
+            gui.property("bex_string", "HUSTR_%d = %s")
+
+            (also: HUSTR_ExMy, PHUSTR_%d, THUSTR_%d)
+
+   -  EDGE: DDFLANG lump    -- comments use '//'
+            [ENGLISH] section
+
+            gui.property("ddf_string", "Map01Desc=\"%s\";")
+
+            (also: ExMyDesc="%s")
+
+   -  ZDOOM / HEXEN: MAPINFO lump   -- comments use ';' 
+
+             gui.property("mapinfo_map",  "%d")
+             gui.property("mapinfo_desc", "%s")
+             gui.property("mapinfo_prop", "cluster 1")
+
+             LIMIT = 31 letters
+
+   -  QUAKE 1/2: stored in 'worldspawn' entity
+
+             gui.property("level_desc", "%s") --> 'message' field
+
+             LIMIT = 39 letters
+
+   -  WOLF3d: stored in GAMEMAPS
+
+              gui.property("level_desc", "%s")
+
+              LIMIT = 15 letters !!!
 
 -  need a mechanism to provide Game-specific and/or
    Module-specific lexicons.
+
+-  Sorrow[ful]
+   of Inequity
+   Dens (URBAN)
+   Swath[s] (HELL or URBAN)
+   Perverse / Perverted (HELL)
+   Port (TECH)
+   Lands (URBAN)
 
 
 THEME SELECTION
@@ -32,6 +71,13 @@ THEME SELECTION
 
 Room Fitting Out
 ----------------
+
+>>> deciding PURPOSE seed
+    
+    for x symmetry, should be on right-most column
+    for y symmetry, should be on top-most column
+    for xy symmetry, either is good but top-right seed is ideal
+
 
 - no height diff
   - sometimes make Walkway-Over-Nukage
