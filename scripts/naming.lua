@@ -19,18 +19,29 @@
 require 'util'
 
 
-NAME_PATTERNS =
+NAMING_THEMES =
 {
-  TECH_1 =
+  TECH =
   {
-    pattern = "%4t%7a%7k%n",
-    prob = 90,
-
-    words =
+    patterns =
     {
-      t = { The=90, A=10 },
+      "%a%n"   = 50, "%t%a%n"   = 10,
+      "%b%n"   = 50, "%t%b%n"   = 10,
+      "%a%b%n" = 50, "%t%a%b%n" = 5,
 
-      a = { Large=10, Huge=10, Gigantic=1,
+      "%s" = 5,
+    },
+
+    lexicon =
+    {
+      t =
+      {
+        The=90, A=10
+      },
+
+      a =
+      {
+            Large=10, Huge=10, Gigantic=1,
             Small=10, Tiny=2,
 
             Old=10, Ancient=10, Eternal=2,
@@ -58,9 +69,11 @@ NAME_PATTERNS =
             Upper=5, Lower=5, Central=5,
             Northern=1, Southern=1, Eastern=1, Western=1,
             Inner=5, Outer=5, Innermost=1, Outermost=1,
-          },
+      },
 
-      k = { Power=10, Hi_Tech=8, Tech=1,
+      b =
+      {
+            Power=10, Hi_Tech=8, Tech=1,
             Star=2, Stellar=2, Solar=2, Lunar=4,
             Space=12, Control=10, Military=10, Security=3,
             Mechanical=3, Rocket=1, Missile=2, Research=10,
@@ -75,9 +88,11 @@ NAME_PATTERNS =
             Slige=1, Waste=1, Optic=1, Time=1, Chrono_=1,
             Alpha=3, Gamma=3, Photon=1, Jedi=1,
             Crystal=2,
-          },
+      },
 
-      n = { Generator=15, Plant=20, Base=30,
+      n =
+      {
+            Generator=15, Plant=20, Base=30,
             Warehouse=20, Lab=10, Laboratory=2,
             Station=30, Tower=20, Center=20,
             Complex=30, Refinery=20, Factory=20,
@@ -86,39 +101,44 @@ NAME_PATTERNS =
             Facility=10, Works=1, Outpost=1, Site=1,
             Hanger=1, Portal=2, Installation=1,
             Bunker=1, Device=2, Machine=1, Network=1,
-          },
-    },
-  },
+      },
 
-  TECH_2 =
-  {
-    pattern = "%n",
-    prob = 30,
-
-    words =
-    {
-      n =
+      s =
       {
         ["Power Surge"]=50,
         ["Steel Foundry"]=50,
-      }
+      },
     },
   },
 
-  HELL_1 =
+  HELL =
   {
-    pattern = "%4t%7a%n%4h",
-    prob = 90,
-
-    words =
+    patterns =
     {
-      t = { The=70,
-            A=5,
-            ["The Devil's"]=10,
-            ["Satan's"]=10,
-          },
+      "%a%n" = 70,
+      "%t%a%n" = 2,
+      "%p's %a%n" = 10,
+      "%a%n of %h" = 20,
+      "%p's %n of %h" = 5,
 
-      a = { Large=10, Massive=10, Sprawling=1,
+      "%s" = 5,
+    },
+
+    lexicon =
+    {
+      t =
+      {
+        The=70, A=5
+      },
+
+      p =
+      {
+        Satan=10, ["The Devil"]=10,
+      },
+
+      a =
+      {
+            Large=10, Massive=10, Sprawling=1,
             Small=1, Endless=7,
 
             Old=10, Ancient=20, Eternal=1,
@@ -146,9 +166,11 @@ NAME_PATTERNS =
             Underground=5, Subterranean=1,
             Hidden=1, Secret=1,
             Upper=5, Lower=5, Inner=5, Outer=5,
-          },
+      },
 
-      n = { Grotto=10, Tomb=10,
+      n =
+      {
+            Grotto=10, Tomb=10,
             Crypt=20, Chapel=3, Church=1,
             Graveyard=5, Cloister=1,
             Pit=7, Cavern=5, Cave=1,
@@ -158,52 +180,37 @@ NAME_PATTERNS =
             Valley=4, River=1, Catacombs=1,
             Palace=1, Cathedral=1, Chamber=4,
             Labyrinth=1,
-          },
+      },
 
-      h = { ["of Hell"] = 40,
-            ["of Fire"] = 25,
-            ["of Flames"] = 3,
-            ["of Horror"] = 10,
-            ["of Terror"] = 10,
-            ["of Death"] = 10,
-            ["of Pain"] = 15,
-            ["of Fear"] = 5,
-            ["of Hate"] = 5,
-            ["of Limbo"] = 2,
-            ["of the Damned"] = 10,
-            ["of the Dead"] = 10,
-            ["of Souls"] = 10,
-            ["of the Undead"] = 10,
-            ["of Darkness"] = 10,
-            ["of Destruction"] = 3,
-            ["of Suffering"] = 3,
-            ["of Whispers"] = 2,
-            ["of Twilight"] = 2,
-            ["of Torture"] = 5,
-            ["of Flesh"] = 2,
-            ["of Corpses"] = 2,
-            ["of Midnight"] = 1,
-            ["of Essel"] = 1,
-            ["of Tears"] = 1,
-          },
-    },
-  },
+      h =
+      {
+        Hell = 40, Fire = 25, Flames = 3,
+        Horror = 10, Terror = 10, Death = 10,
+        Pain = 15, Fear = 5, Hate = 5,
+        Limbo = 2, Souls = 10,
+        ["the Damned"] = 10,
+        ["the Dead"] = 10, ["the Undead"] = 10,
+        Darkness = 10, Destruction = 3,
+        Suffering = 3, Torment = 5, Torture = 4,
+        Twilight = 2, Midnight = 1,
+        Flesh = 2, Corpses = 2,
+        Whispers = 2, Essel = 1, Tears = 1,
+      },
 
-  HELL_2 =
-  {
-    pattern = "%n",
-    prob = 30,
-
-    words =
-    {
-      n =
+      s =
       {
         ["Skin Graft"]=50,
         ["Meltdown"]=50,
-        ["Blood_stains"]=50,
+        ["Bloodstains"]=50,
       }
-    },
+    }
   },
+
+--[[ TODO !!!
+  URBAN =
+  {
+  },
+--]]
 }
 
 
