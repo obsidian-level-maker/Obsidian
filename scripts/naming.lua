@@ -66,7 +66,7 @@ NAMING_THEMES =
         Dark=20, Gloomy=8, Horrible=1,
         Dismal=2, Dreaded=4, Cold=4,
 
-        Underground=5, Subterranean=2,
+        Underground=5, Sub_terran=2,
         Ethereal=5, Floating=2,
         Mars=5, Saturn=5, Jupiter=5,
 
@@ -123,6 +123,8 @@ NAMING_THEMES =
       s = 20,
     },
   },
+
+  ----------------------------------------
 
   HELL =
   {
@@ -244,47 +246,47 @@ NAMING_THEMES =
 
       s =
       {
-        ["Absent Savior"] = 10,
-        ["Absolution Neglect"] = 10,
-        ["Atrophy of the Soul"] = 10,
-        ["A Vile Peace"] = 10,
-        ["Awaiting Evil"] = 10,
-        ["Baptised in Parasites"] = 10,
-        ["Blood Clot"] = 10,
-        ["Bloodless Unreality"] = 10,
+        ["Absent Savior"]=10,
+        ["Absolution Neglect"]=10,
+        ["Atrophy of the Soul"]=10,
+        ["A Vile Peace"]=10,
+        ["Awaiting Evil"]=10,
+        ["Baptised in Parasites"]=10,
+        ["Blood Clot"]=10,
+        ["Bloodless Unreality"]=10,
         ["Bloodstains"]=10,
-        ["Bonded by Blood"] = 10,
-        ["Born/Dead"] = 10,
-        ["Cocoon of Filth"] = 10,
-        ["Cries of Pain"] = 10,
-        ["Dead Inside"] = 10,
-        ["Disdain and Anguish"] = 10,
-        ["Disease"] = 10,
-        ["Extinction of Mankind"] = 10,
-        ["Falling Sky"] = 10,
-        ["Feign Sympathy"] = 10,
-        ["Guttural Breath"] = 10,
-        ["Human Landfill"] = 10,
-        ["Human Trafficking"] = 10,
-        ["Internal Darkness"] = 10,
-        ["Mandatory Suicide"] = 10,
-        ["Manifest Destination"] = 10,
+        ["Bonded by Blood"]=10,
+        ["Born/Dead"]=10,
+        ["Cocoon of Filth"]=10,
+        ["Cries of Pain"]=10,
+        ["Dead Inside"]=10,
+        ["Disdain and Anguish"]=10,
+        ["Disease"]=10,
+        ["Extinction of Mankind"]=10,
+        ["Falling Sky"]=10,
+        ["Feign Sympathy"]=10,
+        ["Guttural Breath"]=10,
+        ["Human Landfill"]=10,
+        ["Human Trafficking"]=10,
+        ["Internal Darkness"]=10,
+        ["Mandatory Suicide"]=10,
+        ["Manifest Destination"]=10,
         ["Meltdown"]=10,
-        ["Necessary Death"] = 10,
-        ["Neural Butchery"] = 10,
-        ["Origin of Nausea"] = 10,
-        ["Paranoia"] = 10,
-        ["Punishment Defined"] = 10,
-        ["Purgatory"] = 10,
-        ["Putrid Serenity"] = 10,
-        ["Sealed Fate"] = 10,
-        ["Skinfeast"] = 10,
+        ["Necessary Death"]=10,
+        ["Neural Butchery"]=10,
+        ["Origin of Nausea"]=10,
+        ["Paranoia"]=10,
+        ["Punishment Defined"]=10,
+        ["Purgatory"]=10,
+        ["Putrid Serenity"]=10,
+        ["Sealed Fate"]=10,
+        ["Skinfeast"]=10,
         ["Skin Graft"]=10,
-        ["Soul Scars"] = 10,
-        ["Terminal Filth"] = 10,
-        ["The Second Coming"] = 10,
-        ["Thinning the Herd"] = 10,
-        ["Total Doom"] = 10,
+        ["Soul Scars"]=10,
+        ["Terminal Filth"]=10,
+        ["The Second Coming"]=10,
+        ["Thinning the Herd"]=10,
+        ["Total Doom"]=10,
       }
     },
 
@@ -298,11 +300,171 @@ NAMING_THEMES =
     },
   },
 
---[[ TODO !!!
+  ----------------------------------------
+
   URBAN =
   {
+    patterns =
+    {
+         ["%a %n"] = 50,
+      ["%t %a %n"] = 50,
+
+      [   "%n of %h"] = 5,
+      ["%t %n of %h"] = 15,
+      ["%a %n of %h"] = 5,
+
+--      ["%s"] = 10,
+    },
+
+    lexicon =
+    {
+      t =
+      {
+        The=50
+      },
+
+      a =
+      {
+        Old=10, Ancient=20, Eternal=1,
+        Decrepid=10, Desolate=5,
+        Lost=10, Ruined=5, Forgotten=7,
+        Ravished=2, Barren=4, Deadly=3,
+        Stagnant=3, Rancid=5, Rotten=3,
+
+        Monstrous=5, Demonic=3, Invaded=1, Overtaken=1,
+        Infested=10, Haunted=20, Ghostly=5,
+
+        Eerie=4, Strange=10, Weird=2, Creepy=1,
+        Dark=30, Horrible=2,
+        Dismal=2, Dreaded=4, Cold=4,
+
+        Ethereal=5, Floating=2,
+        Hidden=2, Secret=10, Experimental=1,
+        Northern=7, Southern=7, Eastern=7, Western=7,
+        Upper=5, Lower=5, Central=5,
+        Inner=5, Outer=5, Innermost=1, Outermost=1,
+
+        Bleak=50,
+
+Abandoned=20,
+Forsaken=20,
+Bewitched=3,
+Corrupt=5,
+Cursed=20,
+Forbidden=30,
+Hostile=5,
+Industrial=1,
+Living=1,
+Mysterious=7,
+Obscure=5,
+Ominous=5,
+Perilous=10,
+Residential=1,
+Sinister=30,
+Vacant=20, Empty=10,
+Whispering=90,
+      },
+
+      n =
+      {
+Town=30, City=30, Village=20,
+Condominium=20, Plaza=20,
+Fortress=10, Fort=2, Stronghold=1,
+House=20,
+Courtyard=20, Court=5,
+Hallways=15, Hall=5,
+Gate=5,
+Prison=5,
+
+District=10,
+Precinct=10,
+Dominion=10,
+Domain=1,
+Alleys=5,
+Docks=5,
+Towers=5,
+Warrens=1,
+Gardens=5,
+Crossroads=1,
+Zone=5,
+Region=1,
+Territory=5,
+Refuge=1,
+
+Forest=3,
+Cliffs=3,
+Desert=10,
+Mountain=10, Mount=1,
+Canyon=10,
+Chasm=5,
+Valley=5,
+Bay=1,
+Beach=1,
+End=1,
+Slough=1,
+      },
+
+      h =
+      {
+        Flames=7,
+        Horror=10, Terror=10, Death=10,
+        Pain=15, Fear=5, Hate=5,
+        Souls=1, Doom=10,
+
+        Gloom=10, Destruction=3,
+        Twilight=2, Midnight=1,
+        
+        Tears=1, Fate=1,
+        Menace=3,
+      },
+
+      s =
+      {
+        ["Aftermath"]=10,
+        ["Armed to the Teeth"]=10,
+        ["Bad Company"]=10,
+        ["Black and Grey"]=10,
+        ["Blind Salvation"]=10,
+        ["Blizzard of Glass"]=10,
+        ["Corpse of Decadence"]=10,
+        ["Darkness at Noon"]=10,
+        ["Days of Rage"]=10,
+        ["Dead End"]=10,
+        ["Deadly Visions"]=10,
+        ["Dead Silent"]=10,
+        ["Doomed Society"]=10,
+        ["Eight Floors Above"]=10,
+        ["Ground Zero"]=10,
+        ["Hidden Screams"]=10,
+        ["Left for Dead"]=10,
+        ["Left in the Cold"]=10,
+        ["Lights Out"]=10,
+        ["Lucid Illusion"]=10,
+        ["New Beginning"]=10,
+        ["No Exit"]=10,
+        ["Nothing's There"]=10,
+        ["Open Wound"]=10,
+        ["Point of No Return"]=10,
+        ["Poison Society"]=10,
+        ["Red Valley"]=10,
+        ["Retribution"]=10,
+        ["Roadkill"]=10,
+        ["The New Fury"]=10,
+        ["Voice of the Voiceless"]=10,
+        ["Watch it Burn"]=10,
+        ["Watch your Step"]=10,
+        ["When Ashes Rise"]=10,
+      },
+    },
+
+    divisors =
+    {
+      a = 5,
+      h = 3,
+      n = 20,
+      s = 20,
+    },
   },
---]]
 }
 
 
@@ -465,6 +627,8 @@ end
 
 function Name_choose_one(DEF, seen_words)
 
+---## do return Name_from_pattern(DEF) end
+
   local name, parts = Name_from_pattern(DEF)
 
   -- adjust probabilities
@@ -509,7 +673,8 @@ end
 
 
 function Naming_test()
-  local list = Naming_generate("HELL", 200)
+gui.random()
+  local list = Naming_generate("URBAN", 299)
 
   for i,name in ipairs(list) do
     gui.debugf("Name %2d: %s\n", i, name)
