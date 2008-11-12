@@ -25,9 +25,9 @@ NAMING_THEMES =
   {
     patterns =
     {
-      ["%a%n"]   = 50, ["%t%a%n"]   = 10,
-      ["%b%n"]   = 50, ["%t%b%n"]   = 10,
-      ["%a%b%n"] = 50, ["%t%a%b%n"] = 5,
+      ["%a %n"]    = 50, ["%t %a %n"]    = 10,
+      ["%b %n"]    = 50, ["%t %b %n"]    = 10,
+      ["%a %b %n"] = 50, ["%t %a %b %n"] = 5,
 
       ["%s"] = 5,
     },
@@ -109,17 +109,24 @@ NAMING_THEMES =
         ["Steel Foundry"]=50,
       },
     },
+
+    divisors =
+    {
+      a = 5,
+      b = 3,
+      n = 30,
+      s = 10,
+    },
   },
 
   HELL =
   {
     patterns =
     {
-      ["%a%n"] = 70,
-      ["%t%a%n"] = 5,
-      ["%a%n of %h"] = 20,
+      ["%a %n"] = 70, ["%t %a %n"] = 5,
+      ["%a %n of %h"] = 20,
 
-      ["%p's %a%n"] = 10,
+      ["%p's %a %n"] = 10,
       ["%p's %n of %h"] = 5,
 
       ["%s"] = 5,
@@ -205,7 +212,16 @@ NAMING_THEMES =
         ["Meltdown"]=50,
         ["Bloodstains"]=50,
       }
-    }
+    },
+
+    divisors =
+    {
+      p = 2,
+      a = 5,
+      h = 3,
+      n = 30,
+      s = 10,
+    },
   },
 
 --[[ TODO !!!
@@ -213,6 +229,14 @@ NAMING_THEMES =
   {
   },
 --]]
+}
+
+
+NAMING_IGNORE_WORDS =
+{
+  ["the"]=1, ["a"]=1, ["s"]=1, ["of"]=1,
+
+  ["in"]=1, ["on"]=1, ["to"]=1, ["for"]=1,
 }
 
 
@@ -228,9 +252,25 @@ function Name_fixup(name)
 end
 
 
+function Naming_split_word(tab, word)
+  for w in string.gmatch(word, "%a+") do
+    if NAMING_IGNORE_WORDS[string.lower(w)] then
+      -- ignore it
+    else
+      -- truncate to 4 letters
+      if #w > 4 then
+        w = string.sub(w, 1, 4)
+      end
+
+      tab[w] = (tab[w] or 0) + 1
+    end
+  end
+end
+
 
 function Name_from_pattern(DEF)
   local name = ""
+  local words = {}
 
   local pattern = rand_key_by_probs(DEF.patterns)
   local pos = 1
@@ -240,8 +280,6 @@ function Name_from_pattern(DEF)
     local c = string.sub(pattern, pos, pos)
     pos = pos + 1
 
----##  local chance = 100
-
     if c ~= "%" then
       name = name .. c
     else
@@ -249,40 +287,85 @@ function Name_from_pattern(DEF)
       c = string.sub(pattern, pos, pos)
       pos = pos + 1
 
----##   if string.match(c, "%d") then
----##     chance = (0 + c) * 10
----##
----##     assert(pos <= #pattern)
----##     c = string.sub(pattern, pos, pos)
----##     pos = pos + 1
----##   end
-
       if not string.match(c, "%a") then
         error("Bad naming pattern: expected letter after %")
       end
 
-        local words = DEF.lexicon[c]
-        if not words then
-          error("Naming theme is missing letter: " .. c)
-        end
+      local lex = DEF.lexicon[c]
+      if not lex then
+        error("Naming theme is missing letter: " .. c)
+      end
 
-        if #name > 0 and string.sub(name,#name,#name) ~= " " then
-          name = name .. " "
-        end
+      if #name > 0 and string.sub(name,#name,#name) ~= " " then
+        name = name .. " "
+      end
 
-        local w = rand_key_by_probs(words)
-        name = name .. w
+      local w = rand_key_by_probs(lex)
+      name = name .. w
+
+      Naming_split_word(words, w)
     end
   end
 
-  return name
+  return name, words
 end
 
 
-function Name_frobble_it(DEF)
+function Name_cost(words, seen_words)
+  local cost = 2 + gui.random()
+
+---##  -- check for duplicate words in the name
+---##  for w, count in pairs(words) do
+---##    if count > 1 then
+---##      cost = cost * 3
+---##    end
+---##  end
+
+  for w, _ in pairs(words) do
+    if seen_words[w] then
+      cost = cost * (2 ^ seen_words[w])
+    end
+  end
+
+  return cost
+end
 
 
-  return Name_fixup(name)
+function Name_choose_one(DEF, seen_words)
+
+  local candidates = {}
+
+  for i = 1,20 do
+    local name, words = Name_from_pattern(DEF)
+
+    local C =
+    {
+      name  = name,
+      words = words,
+      cost  = Name_cost(words, seen_words),
+    }
+
+    table.insert(candidates, C)
+  end
+
+  table.sort(candidates, function(A,B) return A.cost < B.cost end)
+
+  --[[
+  for _,c in ipairs(candidates) do
+    gui.debugf("candidate: %1.1f => %s\n", c.cost, c.name)
+    gui.debugf("%s\n", table_to_str(c.words, 2))
+  end --]]
+
+  local C = candidates[1]
+
+---  gui.debugf("CHOOSEN ---> %s\n", C.name)
+
+  -- remember the words
+  for w,_ in pairs(C.words) do
+    seen_words[w] = (seen_words[w] or 0) + 1
+  end
+
+  return Name_fixup(C.name)
 end
 
 
@@ -305,7 +388,7 @@ function Naming_generate(theme, count)
   local seen_words = {}
 
   for i = 1, count do
-    local name = Name_from_pattern(DEF)
+    local name = Name_choose_one(DEF, seen_words)
 
     table.insert(list, name)
   end
@@ -315,7 +398,7 @@ end
 
 
 function Naming_test()
-  local list = Naming_generate("HELL", 400)
+  local list = Naming_generate("TECH", 1000)
 
   for i,name in ipairs(list) do
     gui.debugf("Name %2d: %s\n", i, name)
