@@ -1708,12 +1708,9 @@ function Doom2_get_levels()
 
     LEV.toughness_factor = 1 + 1.5 * LEV.ep_along
 
-    -- fixup for secret levels
-    if episode == 2 and map >= 10 then
-      LEV.name = string.format("MAP%02d", 21+map)
-      LEV.sky_info = D2_SKY_INFO[3]
-      LEV.theme_probs = { WOLF=10 }
-      LEV.toughness_factor = 1.2
+    -- secret levels
+    if map == 31 or map == 32 then
+      LEV.theme = "WOLF"
     end
 
 ---!!! LEV.boss_kind   = D2_LEVEL_BOSSES[LEV.name]
