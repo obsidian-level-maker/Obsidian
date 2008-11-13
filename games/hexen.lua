@@ -2117,6 +2117,8 @@ UNFINISHED["hexen"] =
   {
     seed_size = 256,
 
+    max_level_desc = 31,
+
     palette_mons = 3,
   },
 

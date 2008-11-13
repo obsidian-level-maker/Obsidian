@@ -579,6 +579,8 @@ UNFINISHED["quake2"] =
   {
     seed_size = 240,
 
+    max_level_desc = 39,
+
     palette_mons = 4,
   },
 

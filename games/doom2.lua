@@ -1793,6 +1793,8 @@ OB_GAMES["doom2"] =
     error_tex  = "FIREBLU1",
     error_flat = "SFLR6_4",
 
+    max_level_desc = 39,
+
     palette_mons = 5,
   },
 

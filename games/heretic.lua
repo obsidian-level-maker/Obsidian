@@ -1639,6 +1639,8 @@ UNFINISHED["heretic"] =
     error_tex  = "DRIPWALL",
     error_flat = "FLOOR09",
 
+    max_level_desc = 31,
+
     palette_mons = 3,
   },
 
