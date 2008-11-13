@@ -483,6 +483,7 @@ OB_GAMES["quake1"] =
     sky_tex  = "sky4",
     sky_flat = "sky4",
 
+    -- this is limited by the name buffer in Quake
     max_level_desc = 39,
 
     palette_mons = 4,

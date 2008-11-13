@@ -1790,7 +1790,10 @@ OB_GAMES["doom2"] =
     error_tex  = "FIREBLU1",
     error_flat = "SFLR6_4",
 
-    max_level_desc = 39,
+    -- this is roughly how many characters can fit on the
+    -- intermission screens (the CWILVxx patches).  It does
+    -- not reflect any inherit limit in Doom ports.
+    max_level_desc = 31,
 
     palette_mons = 5,
   },
