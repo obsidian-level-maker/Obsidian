@@ -92,8 +92,9 @@ qLump_c * DM_BlockToPatch(int new_W, const byte *pixels, int W, int H)
 
   header.width    = LE_U16(new_W);
   header.height   = LE_U16(H);
-  header.x_offset = LE_U16(new_W / 2);
-  header.y_offset = LE_U16(H);
+
+  header.x_offset = 0; //!!! LE_U16(new_W / 2);
+  header.y_offset = 0; //!!! LE_U16(H);
 
   lump->Append(&header, sizeof(header));
 
@@ -250,6 +251,34 @@ static void LogoTest1()
   delete[] pixels;
 }
 
+static void FontTest3()
+{
+  byte *pixels = new byte[99*64];
+
+  static byte gold_mapping[12] =
+  {
+    0, 47, 44,
+    167, 166, 165, 164, 163, 162, 161, 160,
+    // 226,
+    225
+  };
+
+  for (int y = 0; y < 64; y++)
+  for (int x = 0; x < 99; x++)
+  {
+    byte ity = font_CWILV.data[(y&63)*99+(x%99)];
+
+    pixels[y*99+x] = gold_mapping[(ity*12)/256];
+  }
+
+  qLump_c *lump = DM_BlockToPatch(99*2, pixels, 99, 64);
+
+  DM_WriteLump("CWILV01", lump);
+
+  delete lump;
+  delete[] pixels;
+}
+
 
 //------------------------------------------------------------------------
 //  WAD OUTPUT
@@ -352,7 +381,7 @@ static void DM_WritePatches()
     }
   }
 
-//  SkyTest2();
+  FontTest3();
 
   DM_WriteLump("PP_END", NULL, 0);
 }
