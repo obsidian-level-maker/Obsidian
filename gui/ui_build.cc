@@ -184,7 +184,7 @@ void UI_Build::ProgFinish()
 
 void UI_Build::ProgStatus(const char *msg)
 {
-  status->label(msg);
+  status->copy_label(msg);
 }
 
 void UI_Build::ProgSetButton(bool abort)

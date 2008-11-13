@@ -491,9 +491,7 @@ bool quake1_game_interface_c::Start()
   BSP_CreateInfoFile();
 
   main_win->build_box->ProgInit(1);
-
   main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
-  main_win->build_box->ProgStatus("Making levels");
 
   return true;
 }

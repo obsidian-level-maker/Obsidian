@@ -239,10 +239,16 @@ DebugPrintf("change_button: %s --> %s\n", what, id);
 //
 int at_level(lua_State *L)
 {
-  // TODO: get name, show it
+  const char *name = luaL_checkstring(L,1);
  
-  lev_IDX = luaL_checkint(L, 2);
+  lev_IDX   = luaL_checkint(L, 2);
   lev_TOTAL = luaL_checkint(L, 3);
+
+  char buffer[200];
+
+  sprintf(buffer, "Making %s", name);
+
+  main_win->build_box->ProgStatus(buffer);
 
   return 0;
 }

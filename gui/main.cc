@@ -257,11 +257,12 @@ void Build_Cool_Shit()
 
   UI_Build *bb_area = main_win->build_box;
 
-  bool was_ok = game_object->Start();
-
   // lock most widgets of user interface
   main_win->Locked(true);
   bb_area->ProgSetButton(true);
+  bb_area->ProgStatus("Preparing...");
+
+  bool was_ok = game_object->Start();
 
   if (was_ok)
   {

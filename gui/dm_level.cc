@@ -953,9 +953,7 @@ bool doom_game_interface_c::Start()
     return false;
 
   main_win->build_box->ProgInit(2);
-
   main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
-  main_win->build_box->ProgStatus("Making levels");
 
   return true;
 }
