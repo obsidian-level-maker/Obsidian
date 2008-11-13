@@ -291,5 +291,78 @@ static void FontTest3()
 }
 
 
+//------------------------------------------------------------------------
+
+static qLump_c *bex_lump;
+
+void BEX_Start()
+{
+  if (bex_lump)
+    delete bex_lump;
+
+  bex_lump = new qLump_c();
+}
+
+void BEX_AddString(const char *str)
+{
+  // TODO: validate string
+
+  if (bex_lump->GetSize() == 0)
+  {
+    bex_lump->Printf("# BEX LUMP created by OBLIGE %s\n\n", OBLIGE_VERSION);
+    bex_lump->Printf("[STRINGS]\n");
+  }
+
+  bex_lump->Printf("%s\n", str);
+}
+
+void BEX_Finish()
+{
+  if (bex_lump->GetSize() > 0)
+  {
+    DM_WriteLump("DEHACKED", bex_lump);
+  }
+  delete bex_lump;
+}
+
+
+//------------------------------------------------------------------------
+
+static qLump_c *ddf_lump;
+
+void DDF_Start()
+{
+  if (ddf_lump)
+    delete ddf_lump;
+
+  ddf_lump = new qLump_c();
+}
+
+void DDF_AddString(const char *str)
+{
+  // TODO: validate string
+
+  if (ddf_lump->GetSize() == 0)
+  {
+    ddf_lump->Printf("//\n");
+    ddf_lump->Printf("// Language.ldf created by OBLIGE %s\n", OBLIGE_VERSION);
+    ddf_lump->Printf("//\n\n");
+    ddf_lump->Printf("<LANGUAGES>\n\n");
+    ddf_lump->Printf("[ENGLISH]\n");
+  }
+
+  ddf_lump->Printf("%s;\n", str);
+}
+
+void DDF_Finish()
+{
+  if (ddf_lump->GetSize() > 0)
+  {
+    DM_WriteLump("DDFLANG", ddf_lump);
+  }
+  delete ddf_lump;
+}
+
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

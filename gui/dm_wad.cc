@@ -67,7 +67,7 @@ void DM_WriteLump(const char *name, const void *data, u32_t len)
   WAD_FinishLump();
 }
 
-static void DM_WriteLump(const char *name, qLump_c *lump)
+void DM_WriteLump(const char *name, qLump_c *lump)
 {
   DM_WriteLump(name, &lump->buffer[0], lump->buffer.size());
 }
@@ -202,14 +202,20 @@ bool DM_StartWAD(const char *filename)
 
   DM_CreateInfoLump();  // FIXME: move out ??
 
+  BEX_Start();
+  DDF_Start();
+
   return true; //OK
 }
 
 
 bool DM_EndWAD(void)
 {
+  BEX_Finish();
+  DDF_Finish();
+
   DM_WritePatches();  // FIXME: move out ??
- 
+
   // FIXME: errors????
   WAD_CloseWrite();
 

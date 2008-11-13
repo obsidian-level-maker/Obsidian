@@ -29,6 +29,7 @@
 #include "ui_chooser.h"
 
 #include "csg_main.h"
+#include "dm_extra.h"
 #include "dm_glbsp.h"
 #include "dm_level.h"
 #include "dm_wad.h"
@@ -1027,6 +1028,14 @@ void doom_game_interface_c::Property(const char *key, const char *value)
   else if (StringCaseCmp(key, "liquid_exfloor") == 0)
   {
     liquid_exfloor = atoi(value);
+  }
+  else if (StringCaseCmp(key, "bex_string") == 0)
+  {
+    BEX_AddString(value);
+  }
+  else if (StringCaseCmp(key, "ddf_string") == 0)
+  {
+    DDF_AddString(value);
   }
   else
   {

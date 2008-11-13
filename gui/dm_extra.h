@@ -19,9 +19,13 @@
 #ifndef __OBLIGE_DM_EXTRA_H__
 #define __OBLIGE_DM_EXTRA_H__
 
+void BEX_Start();
+void BEX_AddString(const char *str);
+void BEX_Finish();
 
-void DM_Foobie(void);
-
+void DDF_Start();
+void DDF_AddString(const char *str);
+void DDF_Finish();
 
 #endif /* __OBLIGE_DM_EXTRA_H__ */
 
