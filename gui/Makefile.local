@@ -56,6 +56,7 @@ OBJS=	main.o      \
 	img_pill.o  \
 	img_carve.o \
 	img_relief.o \
+	img_font1.o  \
 	\
 	dm_glbsp.o  \
 	dm_level.o  \

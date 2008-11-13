@@ -35,6 +35,8 @@ extern const logo_image_t logo_PILL;
 extern const logo_image_t logo_CARVE;
 extern const logo_image_t logo_RELIEF;
 
+extern const logo_image_t font_CWILV;
+
 #endif /* __OBLIGE_LOGOS_H__ */
 
 //--- editor settings ---
