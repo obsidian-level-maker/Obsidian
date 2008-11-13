@@ -26,7 +26,6 @@
 #include "lib_wad.h"
 
 #include "main.h"
-#include "g_image.h"
 #include "g_lua.h"
 
 #include "csg_main.h"
@@ -167,10 +166,10 @@ static void SkyTest2()
 
 
   for (int n=0; n < 14; n++)
-    cloud_cols.push_back(blue_mapping[n]);
+    cloud_cols.push_back(hell_mapping[n]);
 
-//  byte *pixels = SKY_GenClouds(5, 256,128, cloud_cols, 3.0, 2.6, 1.0);
-  byte *pixels = SKY_GenGradient(256,128, cloud_cols);
+  byte *pixels = SKY_GenClouds(5, 256,128, cloud_cols, 3.0, 2.6, 1.0);
+//  byte *pixels = SKY_GenGradient(256,128, cloud_cols);
 
 
   static byte hill_mapping[10] =
@@ -190,7 +189,7 @@ static void SkyTest2()
   for (int i=0; i < 10; i++)
     hill_cols.push_back(hill_of_hell[i]);
 
-//  SKY_AddHills(5, pixels, 256,128, hill_cols, 0.2,0.9, 2.1,2.1);
+  SKY_AddHills(5, pixels, 256,128, hill_cols, 0.2,0.9, 2.1,2.1);
 
 
   std::vector<byte> build_cols;
@@ -198,13 +197,13 @@ static void SkyTest2()
   build_cols.push_back(0);
   build_cols.push_back(3);
 
-  SKY_AddBuilding(1, pixels, 256, 128, build_cols,   4,32, 61,40,  90,2,2);
-  SKY_AddBuilding(2, pixels, 256, 128, build_cols,  90,40, 31,30,  50,2,2);
-  SKY_AddBuilding(3, pixels, 256, 128, build_cols, 200,48, 71,40,  70,2,2);
+//  SKY_AddBuilding(1, pixels, 256, 128, build_cols,   4,32, 61,40,  90,2,2);
+//  SKY_AddBuilding(2, pixels, 256, 128, build_cols,  90,40, 31,30,  50,2,2);
+//  SKY_AddBuilding(3, pixels, 256, 128, build_cols, 200,48, 71,40,  70,2,2);
 
   build_cols[1] = 162;
-  SKY_AddBuilding(4, pixels, 256, 128, build_cols,  40,20, 122,0,  30,1,1);
-  SKY_AddBuilding(5, pixels, 256, 128, build_cols, 150,32, 91, 0,  60,1,1);
+//  SKY_AddBuilding(4, pixels, 256, 128, build_cols,  40,20, 122,0,  30,1,1);
+//  SKY_AddBuilding(5, pixels, 256, 128, build_cols, 150,32, 91, 0,  60,1,1);
 
 
   qLump_c *lump = WAD_BlockToPatch(256, pixels, 256, 128);
@@ -308,6 +307,7 @@ static void WAD_WritePatches()
   if (strcmp(game_str, "hexen") == 0)
     game = 2;
 
+#if 0  // FIXME: REPLACE OLD METHOD
   for (int what=0; what < 2; what++)
   {
     // Heretic's WALL42 patch is only 64 wide
@@ -320,6 +320,7 @@ static void WAD_WritePatches()
 
     Image_FreePatch(pat);
   }
+#endif
 
   // load some patches from external files (DOOM only)
   if (game == 0)
@@ -351,7 +352,7 @@ static void WAD_WritePatches()
     }
   }
 
-  SkyTest2();
+//  SkyTest2();
 
   WAD_WriteLump("PP_END", NULL, 0);
 }

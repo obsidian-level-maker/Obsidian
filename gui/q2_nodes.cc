@@ -27,7 +27,6 @@
 
 #include "csg_main.h"
 
-#include "g_image.h"
 #include "g_lua.h"
 
 #include "q_bsp.h"

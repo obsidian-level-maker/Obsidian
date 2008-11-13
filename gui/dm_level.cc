@@ -945,8 +945,6 @@ private:
 
 bool doom_game_interface_c::Start()
 {
-  Image_Setup();
-
   filename = Select_Output_File("wad");
 
   if (! filename)  // cancelled

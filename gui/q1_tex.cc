@@ -30,7 +30,6 @@
 
 #include "ui_chooser.h"
 
-#include "g_image.h"
 
 #include "q_bsp.h"
 #include "q1_main.h"

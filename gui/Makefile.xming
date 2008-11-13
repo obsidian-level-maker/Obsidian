@@ -56,7 +56,6 @@ OBJS=	main.o      \
 	csg_main.o  \
 	csg_poly.o  \
 	g_cookie.o  \
-	g_image.o   \
 	g_lua.o     \
 	img_bolt.o  \
 	img_pill.o  \

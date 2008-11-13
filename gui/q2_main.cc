@@ -28,7 +28,6 @@
 
 #include "csg_main.h"
 
-#include "g_image.h"
 #include "ui_chooser.h"
 
 #include "q_bsp.h"
