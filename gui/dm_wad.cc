@@ -51,24 +51,26 @@ static int write_errors_seen;
 static int seek_errors_seen;
 
 
-static void AddPost(qLump_c *lump, int y, const byte *pixels, int W, int len)
-{
-  SYS_ASSERT(len > 0);
+#define CUR_PIXEL(py)  (pixels[((py) % H) * W])
 
-  byte buffer[288];
+static void AddPost(qLump_c *lump, int y, int len,
+                    const byte *pixels, int W, int H)
+{
+  if (len <= 0)
+    return;
+
+  byte buffer[512];
   byte *dest = buffer;
 
   *dest++ = y;     // Y-OFFSET
   *dest++ = len;   // # PIXELS
 
-  *dest++ = *pixels;  // TOP-PADDING
+  *dest++ = CUR_PIXEL(y);  // TOP-PADDING
 
-  for (; len > 0; len--, pixels += W)
-    *dest++ = *pixels;
+  for (; len > 0; len--, y++)
+    *dest++ = CUR_PIXEL(y);
 
-  pixels -= W;
-
-  *dest++ = *pixels;  // BOTTOM-PADDING
+  *dest++ = CUR_PIXEL(y-1);  // BOTTOM-PADDING
 
   lump->Append(buffer, dest - buffer);
 }
@@ -80,48 +82,67 @@ static void EndOfPost(qLump_c *lump)
   lump->Append(&datum, 1);
 }
 
-qLump_c * DM_BlockToPatch(int new_W, const byte *pixels, int W, int H)
+qLump_c * DM_CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
+                         const byte *pixels, int W, int H,
+                         int trans_p = -1)
 {
-  // creates a DOOM patch image from a _SOLID_ block of pixels.
-
-  SYS_ASSERT(H <= 128);
-
   qLump_c *lump = new qLump_c();
+
+  int x, y;
+
+  u32_t *offsets  = new u32_t[new_W];
+  u32_t beginning = sizeof(raw_patch_header_t) + new_W * 4;
+
+  for (x = 0; x < W; x++, pixels++)
+  {
+    offsets[x] = beginning + (u32_t)lump->GetSize();
+
+    for (y = 0; y < new_H; )
+    {
+      if (trans_p >= 0 && CUR_PIXEL(y) == trans_p)
+      {
+        y++; continue;
+      }
+
+      int len = 1;
+
+      while ((y+len) < new_H && len < 240 &&
+             ! (trans_p >= 0 && CUR_PIXEL(y+len) == trans_p))
+      {
+        len++;
+      }
+
+      if (y <= 252)
+        AddPost(lump, y, len, pixels, W, H);
+
+      y = y + len;
+    }
+
+    EndOfPost(lump);
+  }
+
+  for (x = W; x < new_W; x++)
+    offsets[x] = offsets[x % W];
+
+  lump->Prepend(offsets, new_W * sizeof(u32_t));
+
+  delete[] offsets;
+
 
   raw_patch_header_t header;
 
   header.width    = LE_U16(new_W);
-  header.height   = LE_U16(H);
+  header.height   = LE_U16(new_H);
+  header.x_offset = LE_U16(ofs_X);
+  header.y_offset = LE_U16(ofs_Y);
 
-  header.x_offset = 0; //!!! LE_U16(new_W / 2);
-  header.y_offset = 0; //!!! LE_U16(H);
-
-  lump->Append(&header, sizeof(header));
-
-
-  u32_t *offsets = new u32_t[new_W];
-
-  for (int k = 0; k < new_W; k++)
-  {
-    if (k < W)
-      offsets[k] = sizeof(raw_patch_header_t) + (new_W * 4) + k * (H + 5);
-    else
-      offsets[k] = offsets[k % W];
-
-    offsets[k] = LE_U32(offsets[k]);
-  }
-
-  lump->Append(offsets, new_W * sizeof(u32_t));
-
-
-  for (int x = 0; x < W; x++)
-  {
-    AddPost(lump, 0, pixels+x, W, H);
-    EndOfPost(lump);
-  }
+  lump->Prepend(&header, sizeof(header));
 
   return lump;
 }
+
+#undef CUR_PIXEL
+
 
 static void DM_WriteLump(const char *name, qLump_c *lump);
 
@@ -207,7 +228,7 @@ static void SkyTest2()
 //  SKY_AddBuilding(5, pixels, 256, 128, build_cols, 150,32, 91, 0,  60,1,1);
 
 
-  qLump_c *lump = DM_BlockToPatch(256, pixels, 256, 128);
+  qLump_c *lump = DM_CreatePatch(256, 128, 0, 0, pixels, 256, 128);
 
   DM_WriteLump("RSKY1", lump);
 
@@ -243,7 +264,7 @@ static void LogoTest1()
     pixels[y*128+x] = green_mapping[(ity*12)/256];
   }
 
-  qLump_c *lump = DM_BlockToPatch(128, pixels, 128, 128);
+  qLump_c *lump = DM_CreatePatch(128, 128, 0,0, pixels, 128, 128);
 
   DM_WriteLump("WALL52_1", lump);
 
@@ -257,7 +278,7 @@ static void FontTest3()
 
   static byte gold_mapping[12] =
   {
-    0, 47, 44,
+    247, 47, 44,
     167, 166, 165, 164, 163, 162, 161, 160,
     // 226,
     225
@@ -268,12 +289,12 @@ static void FontTest3()
   {
     byte ity = font_CWILV.data[(y&63)*99+(x%99)];
 
-    pixels[y*99+x] = gold_mapping[(ity*12)/256];
+    pixels[y*99+x] = (ity == 0) ? 247 : gold_mapping[(ity*12)/256];
   }
 
-  qLump_c *lump = DM_BlockToPatch(99*2, pixels, 99, 64);
+  qLump_c *lump = DM_CreatePatch(99*3, 160, 0,0, pixels, 99, 64, 247);
 
-  DM_WriteLump("CWILV01", lump);
+  DM_WriteLump("CWILV02", lump);
 
   delete lump;
   delete[] pixels;
@@ -381,7 +402,7 @@ static void DM_WritePatches()
     }
   }
 
-  FontTest3();
+  SkyTest2();
 
   DM_WriteLump("PP_END", NULL, 0);
 }
