@@ -80,7 +80,7 @@ static void EndOfPost(qLump_c *lump)
   lump->Append(&datum, 1);
 }
 
-qLump_c * WAD_BlockToPatch(int new_W, const byte *pixels, int W, int H)
+qLump_c * DM_BlockToPatch(int new_W, const byte *pixels, int W, int H)
 {
   // creates a DOOM patch image from a _SOLID_ block of pixels.
 
@@ -122,7 +122,7 @@ qLump_c * WAD_BlockToPatch(int new_W, const byte *pixels, int W, int H)
   return lump;
 }
 
-static void WAD_WriteLump(const char *name, qLump_c *lump);
+static void DM_WriteLump(const char *name, qLump_c *lump);
 
 
 static void SkyTest2()
@@ -206,9 +206,9 @@ static void SkyTest2()
 //  SKY_AddBuilding(5, pixels, 256, 128, build_cols, 150,32, 91, 0,  60,1,1);
 
 
-  qLump_c *lump = WAD_BlockToPatch(256, pixels, 256, 128);
+  qLump_c *lump = DM_BlockToPatch(256, pixels, 256, 128);
 
-  WAD_WriteLump("RSKY1", lump);
+  DM_WriteLump("RSKY1", lump);
 
   delete lump;
 
@@ -242,9 +242,9 @@ static void LogoTest1()
     pixels[y*128+x] = green_mapping[(ity*12)/256];
   }
 
-  qLump_c *lump = WAD_BlockToPatch(128, pixels, 128, 128);
+  qLump_c *lump = DM_BlockToPatch(128, pixels, 128, 128);
 
-  WAD_WriteLump("WALL52_1", lump);
+  DM_WriteLump("WALL52_1", lump);
 
   delete lump;
   delete[] pixels;
@@ -255,7 +255,7 @@ static void LogoTest1()
 //  WAD OUTPUT
 //------------------------------------------------------------------------
 
-static void WAD_WriteLump(const char *name, const void *data, u32_t len)
+static void DM_WriteLump(const char *name, const void *data, u32_t len)
 {
   SYS_ASSERT(strlen(name) <= 8);
 
@@ -270,12 +270,12 @@ static void WAD_WriteLump(const char *name, const void *data, u32_t len)
   WAD_FinishLump();
 }
 
-static void WAD_WriteLump(const char *name, qLump_c *lump)
+static void DM_WriteLump(const char *name, qLump_c *lump)
 {
-  WAD_WriteLump(name, &lump->buffer[0], lump->buffer.size());
+  DM_WriteLump(name, &lump->buffer[0], lump->buffer.size());
 }
 
-static void WAD_WriteBehavior()
+static void DM_WriteBehavior()
 {
   raw_behavior_header_t behavior;
 
@@ -285,12 +285,12 @@ static void WAD_WriteBehavior()
   behavior.func_num = 0;
   behavior.str_num  = 0;
 
-  WAD_WriteLump("BEHAVIOR", &behavior, sizeof(behavior));
+  DM_WriteLump("BEHAVIOR", &behavior, sizeof(behavior));
 }
 
-static void WAD_WritePatches()
+static void DM_WritePatches()
 {
-  WAD_WriteLump("PP_START", NULL, 0);
+  DM_WriteLump("PP_START", NULL, 0);
 
   static const char *patch_names[3][2] =
   {
@@ -316,7 +316,7 @@ static void WAD_WritePatches()
     int length;
     const byte *pat = Image_MakePatch(what, &length, patch_w, game_str);
 
-    WAD_WriteLump(patch_names[game][what], pat, length);
+    DM_WriteLump(patch_names[game][what], pat, length);
 
     Image_FreePatch(pat);
   }
@@ -346,7 +346,7 @@ static void WAD_WritePatches()
       if (! data)
         Main_FatalError("Missing data file: %s.lmp", ext_patches[i]);
 
-      WAD_WriteLump(ext_patches[i], data, length);
+      DM_WriteLump(ext_patches[i], data, length);
 
       FileFree(data);
     }
@@ -354,11 +354,11 @@ static void WAD_WritePatches()
 
 //  SkyTest2();
 
-  WAD_WriteLump("PP_END", NULL, 0);
+  DM_WriteLump("PP_END", NULL, 0);
 }
 
 
-void WAD_CreateInfoLump()
+void DM_CreateInfoLump()
 {
   qLump_c *L = new qLump_c();
 
@@ -384,13 +384,13 @@ void WAD_CreateInfoLump()
 
   L->Append(terminator, 2);
 
-  WAD_WriteLump("OBLIGDAT", L);
+  DM_WriteLump("OBLIGDAT", L);
 
   delete L;
 }
 
 
-bool DM_Start(const char *filename)
+bool DM_StartWAD(const char *filename)
 {
   if (! WAD_OpenWrite(filename))
   {
@@ -403,15 +403,15 @@ bool DM_Start(const char *filename)
 
   wad_hexen = false;
 
-  WAD_CreateInfoLump();  // FIXME: move out ??
+  DM_CreateInfoLump();  // FIXME: move out ??
 
   return true; //OK
 }
 
 
-bool DM_End(void)
+bool DM_EndWAD(void)
 {
-  WAD_WritePatches();  // FIXME: move out ??
+  DM_WritePatches();  // FIXME: move out ??
  
   // FIXME: errors????
   WAD_CloseWrite();
@@ -438,20 +438,20 @@ void DM_BeginLevel(void)
 
 void DM_EndLevel(const char *level_name)
 {
-  WAD_WriteLump(level_name, NULL, 0);
+  DM_WriteLump(level_name, NULL, 0);
 
-  WAD_WriteLump("THINGS",   thing_lump);
-  WAD_WriteLump("LINEDEFS", linedef_lump);
-  WAD_WriteLump("SIDEDEFS", sidedef_lump);
-  WAD_WriteLump("VERTEXES", vertex_lump);
+  DM_WriteLump("THINGS",   thing_lump);
+  DM_WriteLump("LINEDEFS", linedef_lump);
+  DM_WriteLump("SIDEDEFS", sidedef_lump);
+  DM_WriteLump("VERTEXES", vertex_lump);
 
-  WAD_WriteLump("SEGS",     NULL, 0);
-  WAD_WriteLump("SSECTORS", NULL, 0);
-  WAD_WriteLump("NODES",    NULL, 0);
-  WAD_WriteLump("SECTORS",  sector_lump);
+  DM_WriteLump("SEGS",     NULL, 0);
+  DM_WriteLump("SSECTORS", NULL, 0);
+  DM_WriteLump("NODES",    NULL, 0);
+  DM_WriteLump("SECTORS",  sector_lump);
 
   if (wad_hexen)
-    WAD_WriteBehavior();
+    DM_WriteBehavior();
 
   // free data
   delete thing_lump;   thing_lump   = NULL;
@@ -464,11 +464,7 @@ void DM_EndLevel(const char *level_name)
 
 //------------------------------------------------------------------------
 
-
-namespace wad
-{
-
-void add_vertex(int x, int y)
+void DM_AddVertex(int x, int y)
 {
   raw_vertex_t vert;
 
@@ -479,9 +475,9 @@ void add_vertex(int x, int y)
 }
 
 
-void add_sector(int f_h, const char * f_tex, 
-                int c_h, const char * c_tex,
-                int light, int special, int tag)
+void DM_AddSector(int f_h, const char * f_tex, 
+                  int c_h, const char * c_tex,
+                  int light, int special, int tag)
 {
   raw_sector_t sec;
 
@@ -499,9 +495,9 @@ void add_sector(int f_h, const char * f_tex,
 }
 
 
-void add_sidedef(int sector, const char *l_tex,
-                 const char *m_tex, const char *u_tex,
-                 int x_offset, int y_offset)
+void DM_AddSidedef(int sector, const char *l_tex,
+                   const char *m_tex, const char *u_tex,
+                   int x_offset, int y_offset)
 {
   raw_sidedef_t side;
 
@@ -518,9 +514,9 @@ void add_sidedef(int sector, const char *l_tex,
 }
 
 
-void add_linedef(int vert1, int vert2, int side1, int side2,
-                 int type,  int flags, int tag,
-                 const byte *args)
+void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
+                   int type,  int flags, int tag,
+                   const byte *args)
 {
   if (! wad_hexen)
   {
@@ -564,8 +560,8 @@ void add_linedef(int vert1, int vert2, int side1, int side2,
 }
 
 
-void add_thing(int x, int y, int h, int type, int angle, int options,
-               int tid, byte special, const byte *args)
+void DM_AddThing(int x, int y, int h, int type, int angle, int options,
+                 int tid, byte special, const byte *args)
 {
   if (! wad_hexen)
   {
@@ -606,22 +602,20 @@ void add_thing(int x, int y, int h, int type, int angle, int options,
 }
 
 
-int num_vertexes(void)
+int DM_NumVertexes(void)
 {
   return vertex_lump->buffer.size() / sizeof(raw_vertex_t);
 }
 
-int num_sectors(void)
+int DM_NumSectors(void)
 {
   return sector_lump->buffer.size() / sizeof(raw_sector_t);
 }
 
-int num_sidedefs(void)
+int DM_NumSidedefs(void)
 {
   return sidedef_lump->buffer.size() / sizeof(raw_sidedef_t);
 }
-
-} // namespace wad
 
 
 //--- editor settings ---

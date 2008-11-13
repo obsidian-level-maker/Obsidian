@@ -20,38 +20,32 @@
 #define __OBLIGE_DOOM_OUT_H__
 
 
-bool DM_Start(const char *filename);
-bool DM_End(void);
+bool DM_StartWAD(const char *filename);
+bool DM_EndWAD(void);
 
 void DM_BeginLevel(void);
 void DM_EndLevel(const char *level_name);
 
+void DM_AddVertex(int x, int y);
 
-/* ---- API for the CSG code to use ---- */
-
-namespace wad
-{
-  void add_vertex(int x, int y);
-
-  void add_sector(int f_h, const char * f_tex, 
+void DM_AddSector(int f_h, const char * f_tex, 
                   int c_h, const char * c_tex,
                   int light, int special, int tag);
 
-  void add_sidedef(int sector, const char *l_tex,
+void DM_AddSidedef(int sector, const char *l_tex,
                    const char *m_tex, const char *u_tex,
                    int x_offset, int y_offset);
 
-  void add_linedef(int vert1, int vert2, int side1, int side2,
+void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
                    int type,  int flags, int tag,
                    const byte *args);
 
-  void add_thing(int x, int y, int h, int type, int angle, int options,
+void DM_AddThing(int x, int y, int h, int type, int angle, int options,
                  int tid, byte special, const byte *args);
 
-  int num_vertexes(void);
-  int num_sectors(void);
-  int num_sidedefs(void);
-}
+int DM_NumVertexes(void);
+int DM_NumSectors(void);
+int DM_NumSidedefs(void);
 
 
 /* ----- Level structures ---------------------- */

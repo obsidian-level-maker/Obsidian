@@ -26,7 +26,6 @@
 #include "lib_util.h"
 #include "main.h"
 
-#include "g_image.h"
 #include "ui_chooser.h"
 
 #include "csg_main.h"
@@ -164,17 +163,17 @@ void CSG2_Doom_TestAreas(void)
   {
     csg_brush_c *P = all_brushes[k];
     
-    int sec_idx = wad::num_sectors();
+    int sec_idx = DM_NumSectors();
 
-    wad::add_sector(I_ROUND(P->z1), P->b_face->tex.c_str(),
-                    I_ROUND(P->z2), P->t_face->tex.c_str(),
-                    192, 0, 0);
+    DM_AddSector(I_ROUND(P->z1), P->b_face->tex.c_str(),
+                 I_ROUND(P->z2), P->t_face->tex.c_str(),
+                 192, 0, 0);
 
-    int side_idx = wad::num_sidedefs();
+    int side_idx = DM_NumSidedefs();
 
-    wad::add_sidedef(sec_idx, "-", P->w_face->tex.c_str(), "-", 0, 0);
+    DM_AddSidedef(sec_idx, "-", P->w_face->tex.c_str(), "-", 0, 0);
 
-    int vert_base = wad::num_vertexes();
+    int vert_base = DM_NumVertexes();
 
     for (int j1 = 0; j1 < (int)P->verts.size(); j1++)
     {
@@ -183,10 +182,10 @@ void CSG2_Doom_TestAreas(void)
       area_vert_c *v1 = P->verts[j1];
    // area_vert_c *v2 = P->verts[j2];
 
-      wad::add_vertex(I_ROUND(v1->x), I_ROUND(v1->y));
+      DM_AddVertex(I_ROUND(v1->x), I_ROUND(v1->y));
 
-      wad::add_linedef(vert_base+j1, vert_base+j2, side_idx, -1,
-                       0, 1 /*impassible*/, 0, NULL /* args */);
+      DM_AddLinedef(vert_base+j1, vert_base+j2, side_idx, -1,
+                    0, 1 /*impassible*/, 0, NULL /* args */);
     }
   }
 }
@@ -204,7 +203,7 @@ void CSG2_Doom_TestRegions(void)
     
     V->index = (int)i;
 
-    wad::add_vertex(I_ROUND(V->x), I_ROUND(V->y));
+    DM_AddVertex(I_ROUND(V->x), I_ROUND(V->y));
   }
 
 
@@ -216,11 +215,11 @@ void CSG2_Doom_TestRegions(void)
 
     const char *flat = "FLAT1";
  
-    wad::add_sector(0,flat, 144,flat, 255,(int)R->areas.size(),(int)R->gaps.size());
+    DM_AddSector(0,flat, 144,flat, 255,(int)R->areas.size(),(int)R->gaps.size());
 
     const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
 
-    wad::add_sidedef(R->index, tex, "-", tex, 0, 0);
+    DM_AddSidedef(R->index, tex, "-", tex, 0, 0);
   }
 
 
@@ -231,11 +230,11 @@ void CSG2_Doom_TestRegions(void)
     SYS_ASSERT(S);
     SYS_ASSERT(S->start);
 
-    wad::add_linedef(S->start->index, S->end->index,
-                     S->front ? S->front->index : -1,
-                     S->back  ? S->back->index  : -1,
-                     0, 1 /*impassible*/, 0,
-                     NULL /* args */);
+    DM_AddLinedef(S->start->index, S->end->index,
+                  S->front ? S->front->index : -1,
+                  S->back  ? S->back->index  : -1,
+                  0, 1 /*impassible*/, 0,
+                  NULL /* args */);
   }
 }
 
@@ -615,11 +614,11 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
   if (EF->sec->index >= 0)
     return;
 
-  EF->sec->index = wad::num_sectors();
+  EF->sec->index = DM_NumSectors();
 
-  wad::add_sector(EF->sec->f_h, EF->sec->f_tex.c_str(),
-                  EF->sec->c_h, EF->sec->c_tex.c_str(),
-                  EF->sec->light, EF->sec->special, EF->sec->tag);
+  DM_AddSector(EF->sec->f_h, EF->sec->f_tex.c_str(),
+               EF->sec->c_h, EF->sec->c_tex.c_str(),
+               EF->sec->light, EF->sec->special, EF->sec->tag);
 
 
   extrafloor_slot++;
@@ -642,24 +641,24 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
 
   bool morev = (EF->users.size() > 4);
 
-  int vert_ref = wad::num_vertexes();
+  int vert_ref = DM_NumVertexes();
 
-  if (true)  wad::add_vertex(x1, y1);
-  if (morev) wad::add_vertex(x1, ym);
+  if (true)  DM_AddVertex(x1, y1);
+  if (morev) DM_AddVertex(x1, ym);
 
-  if (true)  wad::add_vertex(x1, y2);
-  if (morev) wad::add_vertex(xm, y2);
+  if (true)  DM_AddVertex(x1, y2);
+  if (morev) DM_AddVertex(xm, y2);
 
-  if (true)  wad::add_vertex(x2, y2);
-  if (morev) wad::add_vertex(x2, ym);
+  if (true)  DM_AddVertex(x2, y2);
+  if (morev) DM_AddVertex(x2, ym);
 
-  if (true)  wad::add_vertex(x2, y1);
-  if (morev) wad::add_vertex(xm, y1);
+  if (true)  DM_AddVertex(x2, y1);
+  if (morev) DM_AddVertex(xm, y1);
 
  
-  int side_ref = wad::num_sidedefs();
+  int side_ref = DM_NumSidedefs();
 
-  wad::add_sidedef(EF->sec->index, "-", EF->w_tex.c_str(), "-", 0, 0);
+  DM_AddSidedef(EF->sec->index, "-", EF->w_tex.c_str(), "-", 0, 0);
 
 
   int vert_num = morev ? 8 : 4;
@@ -677,19 +676,19 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
       SYS_ASSERT(tag > 0);
     }
 
-    wad::add_linedef(vert_ref + (n), vert_ref + ((n+1) % vert_num),
-                     side_ref, -1 /* side2 */,
-                     type, 1 /* impassible */,
-                     tag, NULL /* args */);
+    DM_AddLinedef(vert_ref + (n), vert_ref + ((n+1) % vert_num),
+                  side_ref, -1 /* side2 */,
+                  type, 1 /* impassible */,
+                  tag, NULL /* args */);
   }
 
-///---  wad::add_linedef(vert_ref+0, vert_ref+1, side_ref, -1,
-///---                   400 /* EDGE !! */,
-///---                   sec->tag,
+///---  DM_AddLinedef(vert_ref+0, vert_ref+1, side_ref, -1,
+///---                400 /* EDGE !! */,
+///---                sec->tag,
 ///---
-///---  wad::add_linedef(vert_ref+1, vert_ref+2, side_ref, -1, 0,1,0, NULL);
-///---  wad::add_linedef(vert_ref+2, vert_ref+3, side_ref, -1, 0,1,0, NULL);
-///---  wad::add_linedef(vert_ref+3, vert_ref+0, side_ref, -1, 0,1,0, NULL);
+///---  DM_AddLinedef(vert_ref+1, vert_ref+2, side_ref, -1, 0,1,0, NULL);
+///---  DM_AddLinedef(vert_ref+2, vert_ref+3, side_ref, -1, 0,1,0, NULL);
+///---  DM_AddLinedef(vert_ref+3, vert_ref+0, side_ref, -1, 0,1,0, NULL);
 }
 
 
@@ -697,9 +696,9 @@ static int WriteVertex(merge_vertex_c *V)
 {
   if (V->index < 0)
   {
-    V->index = wad::num_vertexes();
+    V->index = DM_NumVertexes();
 
-    wad::add_vertex(I_ROUND(V->x), I_ROUND(V->y));
+    DM_AddVertex(I_ROUND(V->x), I_ROUND(V->y));
   }
 
   return V->index;
@@ -715,11 +714,11 @@ static int WriteSector(sector_info_c *S)
       WriteExtraFloor(S, S->exfloors[k]);
     }
 
-    S->index = wad::num_sectors();
+    S->index = DM_NumSectors();
 
-    wad::add_sector(S->f_h, S->f_tex.c_str(),
-                    S->c_h, S->c_tex.c_str(),
-                    S->light, S->special, S->tag);
+    DM_AddSector(S->f_h, S->f_tex.c_str(),
+                 S->c_h, S->c_tex.c_str(),
+                 S->light, S->special, S->tag);
   }
 
   return S->index;
@@ -760,7 +759,7 @@ static int WriteSidedef(merge_segment_c *G, merge_region_c *F, merge_region_c *B
 
   int sec_num = WriteSector(S);
 
-  int side_ref = wad::num_sidedefs();
+  int side_ref = DM_NumSidedefs();
 
   if (B && B->index > 0)
   {
@@ -774,7 +773,7 @@ static int WriteSidedef(merge_segment_c *G, merge_region_c *F, merge_region_c *B
 
     std::string rail = "-"; // TODO = FindRailTexture( xxx )
 
-    wad::add_sidedef(sec_num, lower.c_str(), rail.c_str(), upper.c_str(), 0, 0);
+    DM_AddSidedef(sec_num, lower.c_str(), rail.c_str(), upper.c_str(), 0, 0);
   }
   else
   {
@@ -782,7 +781,7 @@ static int WriteSidedef(merge_segment_c *G, merge_region_c *F, merge_region_c *B
 
     std::string wall = FindSideTexture(z, G, F, B);
 
-    wad::add_sidedef(sec_num, "-", wall.c_str(), "-", 0, 0);
+    DM_AddSidedef(sec_num, "-", wall.c_str(), "-", 0, 0);
   }
 
   return side_ref;
@@ -840,12 +839,12 @@ static void WriteLinedefs(void)
       flags |= MLF_LowerUnpeg | MLF_UpperUnpeg;
     }
 
-    wad::add_linedef(v1, v2, front_idx, back_idx,
-                     0 /* type */, flags,
-                     0 /* tag */, NULL /* args */);
+    DM_AddLinedef(v1, v2, front_idx, back_idx,
+                  0 /* type */, flags,
+                  0 /* tag */, NULL /* args */);
   }
 
-  SYS_ASSERT(wad::num_vertexes() > 0);
+  SYS_ASSERT(DM_NumVertexes() > 0);
 }
 
 
@@ -863,7 +862,7 @@ static void WriteThings(void)
     // FIXME!!!! thing height
     double h = 0;
 
-    wad::add_thing(I_ROUND(E->x), I_ROUND(E->y), I_ROUND(h), type,
+    DM_AddThing(I_ROUND(E->x), I_ROUND(E->y), I_ROUND(h), type,
                    0, /* FIXME: angle */
                    7, /* FIXME: options */
                    0, /* FIXME: tid */
@@ -950,7 +949,7 @@ bool doom_game_interface_c::Start()
   if (! filename)  // cancelled
     return false;
 
-  if (! DM_Start(TEMP_FILENAME))
+  if (! DM_StartWAD(TEMP_FILENAME))
     return false;
 
   main_win->build_box->ProgInit(2);
@@ -986,7 +985,7 @@ bool doom_game_interface_c::BuildNodes(const char *target_file)
 
 bool doom_game_interface_c::Finish(bool build_ok)
 {
-  DM_End(); // FIXME:check return??
+  DM_EndWAD(); // FIXME:check return??
 
   if (build_ok)
   {
