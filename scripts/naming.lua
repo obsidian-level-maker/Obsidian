@@ -238,7 +238,7 @@ NAMING_THEMES =
         Gloomy=15, Awful=3, Horrible=5,
         Dismal=10, Dreaded=8, Dank=1, Frightful=1,
         Moan_filled=2, Spooky=10, Nightmare=4,
-        Screaming=2, Silent=5, Sullen=5,
+        Screaming=2, Silent=5, Sullen=5, Lava=1,
 
         Underground=5, Subterranean=1,
         Hidden=1, Secret=1,
@@ -380,12 +380,12 @@ NAMING_THEMES =
   {
     patterns =
     {
-         ["%a %n"] = 50,
+         ["%a %n"] = 60,
       ["%t %a %n"] = 20,
 
-      [   "%n of %h"] = 5,
+      [   "%n of %h"] = 10,
       ["%t %n of %h"] = 10,
-      ["%a %n of %h"] = 5,
+      ["%a %n of %h"] = 7,
 
       ["%s"] = 15,
     },
@@ -399,9 +399,10 @@ NAMING_THEMES =
 
       a =
       {
-        Huge=1, Sprawling=1, Unending=5,
+        Huge=1, Sprawling=2, Unending=5,
+        Serpentine=5, Hulking=1, Giant=2, Vast=2,
 
-        Old=10, Ancient=20, Eternal=4,
+        Old=10, Ancient=10, Eternal=4,
         Decrepid=10, Lost=10, Forgotten=7,
         Ravished=7, Barren=10, Deadly=3,
         Stagnant=3, Rancid=5, Rotten=3,
@@ -410,17 +411,18 @@ NAMING_THEMES =
         Monstrous=5, Monster=10,
         Demonic=5, Demon=10,
         Invaded=3, Overtaken=3,
-        Infected=10, Infested=3, Haunted=20,
+        Infected=7, Infested=5, Haunted=20,
         Corrupted=10, Corrupt=3,
 
-        Eerie=4, Strange=10, Weird=2, Creepy=1,
+        Eerie=2, Strange=10, Weird=2, Creepy=3,
         Dark=30, Horrible=5, Exotic=7,
-        Dismal=5, Dreaded=4, Cold=4, Ugly=0.2,
-        Lonely=7, Slaughter=2,
+        Dismal=5, Dreaded=3, Cold=5, Ugly=0.2,
+        Lonely=7, Slaughter=2, Desperate=5,
+        Unknown=2, Unexplored=1, Lupine=0.5,
 
-        Aethereal=5, Hidden=2, Secret=5,
-        Northern=7, Southern=7, Eastern=7, Western=7,
-        Upper=2, Lower=2, Central=2,
+        Hidden=2, Secret=5, Aethereal=2, Nether_=2,
+        Northern=6, Southern=6, Eastern=6, Western=6,
+        Upper=2, Lower=5, Central=2,
         Inner=2, Outer=5, Innermost=1, Outermost=1,
 
         Bleak=40, Abandoned=20, Forsaken=10,
@@ -436,30 +438,31 @@ NAMING_THEMES =
 
       n =
       {
-        Town=25, City=25, Village=15,
-        Condominium=12, Condo=3, Plaza=10,
-        Fortress=12, Fort=2, Stronghold=1,
-        Palace=12, Courtyard=10, Court=3, Kingdom=1,
-        Hallways=12, Hall=5, Corridors=7,
-        House=15, Refuge=1, Sanctuary=1,
-        Post=3, Keep=1, Slough=0.2,
+        City=25, Town=15, Village=15,
+        Condominium=7, Condo=2, Citadel=3,
+        Plaza=10, Square=2, Kingdom=3,
+        Fortress=10, Fort=2, Stronghold=1,
+        Palace=10, Courtyard=10, Court=3,
+        Hallways=10, Hall=5, Corridors=7,
+        House=12, Refuge=1, Sanctuary=1,
+        Outpost=2, Keep=1, Slough=1, Temple=1,
         Gate=5, Prison=5, Dens=1,
 
-        World=7, Zone=15, Lands=5,
+        World=8, Zone=2, Lands=10,
         District=10, Precinct=10,
-        Dominion=5, Domain=1,
-        Region=1, Territory=3,
+        Dominion=5, Domain=1, Trail=2,
+        Region=1, Territory=3, Path=1,
 
         Alleys=5, Docks=5,
-        Towers=7, Streets=5,
+        Towers=7, Streets=7, Roads=1,
         Gardens=5, Warrens=1,
         Crossroads=1, Fields=10,
-        Suburbs=5, Quarters=4,
+        Suburbs=7, Quarters=4,
 
-        Forests=7, Deserts=7,
-        Mountain=10, Cliffs=7,
-        Canyon=5, Chasm=5, Valley=5,
-        Bay=1, Beach=1,
+        Forests=7, Cliffs=7,
+        Desert=5, Mountain=3,
+        Canyon=5, Chasm=3, Valley=5,
+        Bay=1, Beach=1, Echo=0.5,
 
         Mines=5, Barracks=3,
         Camp=1, Compound=1,
@@ -470,18 +473,20 @@ NAMING_THEMES =
       h =
       {
         Doom=20, Gloom=15, Despair=10, Sorrow=15,
-        Horror=10, Terror=10, Death=10,
+        Horror=20, Terror=10, Death=10,
         Danger=10, Pain=15, Fear=5, Hate=5,
         Desolation=3, Reparation=1,
 
-        Ruin=5, Flames=1, Destruction=3,
+        Ruin=7, Flames=1, Destruction=3,
         Twilight=2, Midnight=2, Dreams=1,
         Tears=5, Fate=1, Helplessness=2,
 
-        Ghosts=10, Gods=10, Spirits=3, Souls=1,
-        Menace=5, Evil=1, Ghouls=5, Goblins=1,
-        Inequity=1,
+        Ghosts=10, Gods=10, Spirits=3, Souls=2,
+        Menace=5, Evil=2, Ghouls=5, Goblins=1,
+        Inequity=1, Blood=4,
+        Insanity=2, Madmen=0.5, Lunacy=1,
 
+        ["the Mad"]=2,
         ["the Night"]=5,
       },
 
@@ -493,7 +498,7 @@ NAMING_THEMES =
         ["Black and Grey"]=10,
         ["Blind Salvation"]=10,
         ["Blizzard of Glass"]=5,
-        ["Corpse of Decadence"]=10,
+        ["Course of Decadence"]=10,
         ["Darkness at Noon"]=10,
         ["Days of Rage"]=10,
         ["Dead End"]=10,
@@ -508,27 +513,31 @@ NAMING_THEMES =
         ["Lights Out!"]=10,
         ["Lucid Illusion"]=10,
         ["New Beginning"]=10,
-        ["No Exit"]=10,
-        ["Nothing's There"]=10,
+        ["No Exit!"]=10,
+        ["Nothing's There!"]=10,
         ["Open Wound"]=10,
         ["Point of No Return"]=10,
         ["Poison Society"]=10,
-        ["Red Valley"]=10,
+        ["Red Valhalla"]=10,
         ["Retribution"]=10,
         ["Roadkill"]=10,
         ["The New Fury"]=10,
         ["Voice of the Voiceless"]=10,
-        ["Watch it Burn"]=10,
+        ["Watch it Burn!"]=10,
         ["Watch your Step!"]=10,
         ["When Ashes Rise"]=10,
 
         ["Disestablishment"]=5,
         ["Eaten by the Furniture"]=5,
+        ["Escape is Futile"]=5,
         ["Mow 'em Down!"]=20,
         ["Nobody's Home"]=10,
         ["Passing Away"]=10,
         ["Stream of Unconsciousness"]=10,
+        ["Struggle No More"]=10,
+        ["Today You Die!"]=10,
         ["Ups and Downs"]=10,
+        ["You Don't Belong Here"]=10,
       },
     },
 
@@ -691,7 +700,7 @@ end
 function Naming_test()
   for set = 1,30 do
     gui.rand_seed(set)
-    local list = Naming_generate("GOTHIC", 30)
+    local list = Naming_generate("URBAN", 30)
 
     for i,name in ipairs(list) do
       gui.debugf("Set %d Name %2d: %s\n", set, i, name)
