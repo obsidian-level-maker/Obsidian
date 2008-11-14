@@ -293,6 +293,143 @@ static void FontTest3()
 
 //------------------------------------------------------------------------
 
+static int FontIndexForChar(char ch)
+{
+  ch = toupper(ch);
+
+  if (ch == ' ')
+    return 0;
+
+  if ('A' <= ch && ch <= 'Z')
+    return 12 + (ch - 'A');
+
+  if ('0' <= ch && ch <= '9')
+    return 1 + (ch - '0');
+
+  switch (ch)
+  {
+    case ':':
+    case ';':
+    case '=': return 11;
+
+    case '-':
+    case '_': return 38;
+
+    case '.':
+    case ',': return 39;
+
+    case '!': return 40;
+    case '?': return 41;
+
+    case '\'':
+    case '`':
+    case '"': return 42;
+
+    case '&': return 43;
+
+    case '\\':
+    case '/': return 44;
+
+    // does not exist
+    default: return -1;
+  }
+}
+
+static void BlastFontChar(int index, int x, int y,
+                          byte *pixels, int W, int H,
+                          const logo_image_t *font, int fw, int fh)
+{
+  SYS_ASSERT(0 <= index && index < 44);
+
+  int fx = fw * (index % 11);
+  int fy = fh * (index / 11);
+
+  SYS_ASSERT(0 <= fx && fx+fw <= font->width);
+  SYS_ASSERT(0 <= fy && fy+fh <= font->height);
+
+  SYS_ASSERT(0 <= x && x+fw <= W);
+  SYS_ASSERT(0 <= y && y+fh <= H);
+
+
+  // TODO: adjustable mappings and threshhold
+  int thresh = 16;
+
+  static byte gold_mapping[11] =
+  {
+    47, 44,
+    167, 166, 165, 164, 163, 162, 161, 160,
+    // 226,
+    225
+  };
+
+
+  for (int dx = 0; dx < fw; dx++)
+  for (int dy = 0; dy < fh; dy++)
+  {
+    byte pix = font->data[(fy+dy)*font->width + (fx+dx)];
+
+    if (pix >= thresh)
+    {
+      // map pixel
+      pix = gold_mapping[11 * (pix-thresh) / (256-thresh)];
+
+      pixels[(y+dy)*W + (x+dx)] = pix;
+    }
+  }
+}
+
+static void CreateNamePatch(const char *patch_name, const char *name,
+                            const logo_image_t *font)
+{
+  int font_w = font->width / 11;
+  int font_h = font->height / 4;
+
+  int buffer[64];
+  int length = 0;
+
+  // Convert string to font indexes (0 = space, 1+ = index)
+
+  for (; *name && length < 60; name++)
+  {
+    int idx = FontIndexForChar(*name);
+
+    if (idx >= 0)
+      buffer[length++] = idx;
+  }
+
+  if (length == 0)
+  {
+    buffer[length++] = 41;
+    buffer[length++] = 41;
+  }
+
+
+  int W = font_w * length;
+  int H = font_h;
+
+  byte *pixels = new byte[W * H];
+
+  memset(pixels, 255, W * H);
+
+  for (int p = 0; p < length; p++)
+  {
+    if (buffer[p] > 0)
+      BlastFontChar(buffer[p] - 1, p * font_w, 0,
+                    pixels, W, H,
+                    font, font_w, font_h);
+  }
+
+  qLump_c *lump = DM_CreatePatch(W, H, 0, 0, pixels, W, H, 255);
+
+  DM_WriteLump(patch_name, lump);
+
+  delete lump;
+  delete[] pixels;
+}
+
+
+//------------------------------------------------------------------------
+
 static qLump_c *bex_lump;
 
 void BEX_Start()
@@ -305,8 +442,6 @@ void BEX_Start()
 
 void BEX_AddString(const char *str)
 {
-  // TODO: validate string
-
   if (bex_lump->GetSize() == 0)
   {
     bex_lump->Printf("# BEX LUMP created by OBLIGE %s\n\n", OBLIGE_VERSION);
@@ -328,39 +463,39 @@ void BEX_Finish()
 
 //------------------------------------------------------------------------
 
-static qLump_c *ddf_lump;
+static qLump_c *ddf_lang;
 
 void DDF_Start()
 {
-  if (ddf_lump)
-    delete ddf_lump;
+  if (ddf_lang)
+    delete ddf_lang;
 
-  ddf_lump = new qLump_c();
+  ddf_lang = new qLump_c();
 }
 
 void DDF_AddString(const char *str)
 {
-  // TODO: validate string
-
-  if (ddf_lump->GetSize() == 0)
+  if (ddf_lang->GetSize() == 0)
   {
-    ddf_lump->Printf("//\n");
-    ddf_lump->Printf("// Language.ldf created by OBLIGE %s\n", OBLIGE_VERSION);
-    ddf_lump->Printf("//\n\n");
-    ddf_lump->Printf("<LANGUAGES>\n\n");
-    ddf_lump->Printf("[ENGLISH]\n");
+    ddf_lang->Printf("//\n");
+    ddf_lang->Printf("// Language.ldf created by OBLIGE %s\n", OBLIGE_VERSION);
+    ddf_lang->Printf("//\n\n");
+    ddf_lang->Printf("<LANGUAGES>\n\n");
+    ddf_lang->Printf("[ENGLISH]\n");
   }
 
-  ddf_lump->Printf("%s;\n", str);
+  ddf_lang->Printf("%s;\n", str);
 }
 
 void DDF_Finish()
 {
-  if (ddf_lump->GetSize() > 0)
+  if (ddf_lang->GetSize() > 0)
   {
-    DM_WriteLump("DDFLANG", ddf_lump);
+    DM_WriteLump("DDFLANG", ddf_lang);
   }
-  delete ddf_lump;
+  delete ddf_lang;
+
+  CreateNamePatch("CWILV02", "Furry Delight!", &font_CWILV);
 }
 
 
