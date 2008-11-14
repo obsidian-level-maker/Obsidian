@@ -34,7 +34,7 @@ NAMING_THEMES =
       ["%b %n"]    = 50, ["%t %b %n"]    = 15,
       ["%a %b %n"] = 50, ["%t %a %b %n"] = 5,
 
-      ["%s"] = 2,
+      ["%s"] = 20,
     },
 
     lexicon =
@@ -110,8 +110,45 @@ NAMING_THEMES =
 
       s =
       {
-        ["Power Surge"]=50,
-        ["Steel Foundry"]=50,
+        ["Assault!"]=10,
+        ["Bestial Experiment"]=10,
+        ["Breakdown"]=10,
+        ["Call to Arms"]=10,
+        ["Close Quarters"]=10,
+        ["Code Red"]=10,
+        ["Cold Science"]=10,
+        ["Deconstruction Site"]=10,
+        ["Emergency Situation"]=10,
+        ["Horrific Signal"]=10,
+        ["Ignition"]=10,
+        ["Launchpad"]=10,
+        ["Lockdown"]=10,
+        ["Mayday!"]=10,
+        ["Mission Improbable"]=10,
+        ["Motornerve"]=10,
+        ["Negative Reinforcement"]=10,
+        ["Network Collapse"]=10,
+        ["Neural Butchery"]=10,
+        ["Panic Attack"]=10,
+        ["Paying Ohmage"]=20,
+        ["Power Surge"]=10,
+        ["Pressure Point"]=10,
+        ["Revolution"]=10,
+        ["Shock-Drop"]=10,
+        ["Sickbay"]=10,
+        ["Steel Foundry"]=5,
+        ["Supernova"]=10,
+        ["Terminal Velocity"]=10,
+        ["The Disruption"]=10,
+        ["UAC Crisis"]=10,
+
+        ["Delusion Machine"]=10,
+        ["False Discharge"]=10,
+        ["Higher Voltage"]=10,
+        ["Hunger for Weapons"]=10,
+        ["Input-Output"]=5,
+        ["Mow 'em Down!"]=10,
+        ["Sudden Death"]=10,
       },
     },
 
@@ -126,7 +163,7 @@ NAMING_THEMES =
 
   ----------------------------------------
 
-  HELL =
+  GOTHIC =
   {
     patterns =
     {
@@ -273,7 +310,6 @@ NAMING_THEMES =
         ["Manifest Destination"]=10,
         ["Meltdown"]=10,
         ["Necessary Death"]=10,
-        ["Neural Butchery"]=10,
         ["Origin of Nausea"]=10,
         ["Paranoia"]=10,
         ["Punishment Defined"]=10,
@@ -287,6 +323,16 @@ NAMING_THEMES =
         ["The Second Coming"]=10,
         ["Thinning the Herd"]=10,
         ["Total Doom"]=10,
+
+        ["Can't Handle the Noose"]=10,
+        ["Kill Thy Neighbor"]=10,
+        ["No Salvation"]=10,
+        ["Rampage!"]=10,
+        ["Searching for Sanity"]=10,
+        ["Taste the Blade"]=10,
+        ["Slice 'em Twice!"]=10,
+        ["Vengeance Denied"]=10,
+        ["Where the Devils Spawn"]=10,
       }
     },
 
@@ -332,8 +378,8 @@ NAMING_THEMES =
         Ravished=7, Barren=10, Deadly=3,
         Stagnant=3, Rancid=5, Rotten=3,
 
-        Monstrous=10, Monster=1,
-        Demonic=10, Demon=1,
+        Monstrous=5, Monster=10,
+        Demonic=5, Demon=10,
         Invaded=3, Overtaken=3,
         Infected=10, Infested=3, Haunted=20,
 
@@ -419,11 +465,11 @@ NAMING_THEMES =
         ["Dead Silent"]=10,
         ["Doomed Society"]=10,
         ["Eight Floors Above"]=10,
-        ["Ground Zero"]=10,
+        ["Ground Zero"]=1,
         ["Hidden Screams"]=10,
         ["Left for Dead"]=10,
         ["Left in the Cold"]=10,
-        ["Lights Out"]=10,
+        ["Lights Out!"]=10,
         ["Lucid Illusion"]=10,
         ["New Beginning"]=10,
         ["No Exit"]=10,
@@ -437,8 +483,15 @@ NAMING_THEMES =
         ["The New Fury"]=10,
         ["Voice of the Voiceless"]=10,
         ["Watch it Burn"]=10,
-        ["Watch your Step"]=10,
+        ["Watch your Step!"]=10,
         ["When Ashes Rise"]=10,
+
+        ["Disestablishment"]=5,
+        ["Eaten by the Furniture"]=5,
+        ["Nobody's Home"]=10,
+        ["Passing Away"]=10,
+        ["Stream of Unconsciousness"]=10,
+        ["Ups and Downs"]=10,
       },
     },
 
