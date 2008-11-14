@@ -41,7 +41,7 @@ NAMING_THEMES =
     {
       t =
       {
-        The=60, A=10
+        The=50
       },
 
       a =
@@ -54,23 +54,24 @@ NAMING_THEMES =
         Fantastic=1, Incredible=1, Amazing=0.5,
 
         Decrepid=10, Run_Down=5,
-        Ruined=5, Forgotten=7, Lost=10, Failed=5,
+        Lost=10, Ruined=5, Forgotten=7, Failed=5,
         Ravished=2, Broken=2, Dead=2, Deadly=4,
         Dirty=2, Filthy=1,
         Deserted=10, Abandoned=10,
 
         Monstrous=5, Demonic=3, Invaded=1, Overtaken=1,
         Infested=10, Haunted=3, Ghostly=5, Hellish=1,
+        Subverted=10, Corrupted=1,
 
-        Eerie=4, Strange=16, Weird=2, Creepy=1,
+        Strange=16, Eerie=4, Weird=2, Creepy=1,
         Dark=20, Gloomy=8, Horrible=1,
         Dismal=2, Dreaded=4, Cold=4,
 
         Underground=5, Sub_terran=2,
         Ethereal=5, Floating=2,
-        Mars=5, Saturn=5, Jupiter=5,
+        Mars=5, Saturn=5, Jupiter=5, Io=1,
 
-        Hidden=2, Secret=10, Experimental=1,
+        Secret=10, Hidden=2, Experimental=1,
         Northern=1, Southern=1, Eastern=1, Western=1,
         Upper=5, Lower=5, Central=5,
         Inner=5, Outer=5, Innermost=1, Outermost=1,
@@ -78,7 +79,7 @@ NAMING_THEMES =
 
       b =
       {
-        Power=10, Hi_Tech=8, Tech=1,
+        Power=10, Hi_Tech=8, Tech=1, Energy=5,
         Star=2, Stellar=2, Solar=2, Lunar=4,
         Space=12, Control=10, Military=10, Security=3,
         Mechanical=3, Rocket=1, Missile=2, Research=10,
@@ -92,20 +93,28 @@ NAMING_THEMES =
         Magnetic=2, Electrical=2, Proto_=1,
         Slige=1, Waste=1, Optic=1, Time=1, Chrono_=1,
         Alpha=3, Gamma=3, Photon=1, Jedi=1,
-        Crystal=2,
+        Crystal=2, Defense=1, Manufacturing=1,
       },
 
       n =
       {
-        Generator=15, Plant=20, Base=30,
+        Generator=12, Plant=20, Base=30,
         Warehouse=20, Lab=10, Laboratory=2,
-        Station=30, Tower=20, Center=20,
-        Complex=30, Refinery=20, Factory=20,
-        Depot=7, Storage=4, Anomaly=1, Area=2,
-        Tunnels=3, Zone=8, Sphere=1, Gateway=10,
+        Station=30, Tower=15, Center=15,
+        Complex=30, Refinery=15, Factory=10,
+        Depot=7, Storage=3, Anomaly=2, Area=2,
+        Tunnels=5, Zone=8, Sphere=0.5, Gateway=10,
         Facility=10, Works=1, Outpost=1, Site=1,
         Hanger=1, Portal=2, Installation=1,
         Bunker=1, Device=2, Machine=1, Network=1,
+
+        Artifact=1, Beacon=2, Block=1,
+        Colony=5, Compound=1, Core=1, Foundry=1,
+        Headquarters=0.2, Observatory=0.2,
+        Nexus=2, Platform=1, Project=0.2,
+        Quadrant=1, Satellite=2, Sector=1,
+        Shaft=1, Silos=0.5, Substation=0.2,
+        Terminal=1,
       },
 
       s =
@@ -142,12 +151,16 @@ NAMING_THEMES =
         ["The Disruption"]=10,
         ["UAC Crisis"]=10,
 
+        ["Artificial Nonsense"]=5,
         ["Delusion Machine"]=10,
         ["False Discharge"]=10,
         ["Higher Voltage"]=10,
         ["Hunger for Weapons"]=10,
         ["Input-Output"]=5,
-        ["Mow 'em Down!"]=10,
+        ["Interstellar Starport"]=10,
+        ["Nebula Checkpoint"]=10,
+        ["Muon Collective"]=5,
+        ["Mow 'em Down!"]=20,
         ["Sudden Death"]=10,
       },
     },
@@ -184,7 +197,7 @@ NAMING_THEMES =
     {
       t =
       {
-        The=50, A=5
+        The=50
       },
 
       p =
@@ -211,7 +224,7 @@ NAMING_THEMES =
         Demonic=10, Demon=2, Ghoulish=2,
         Haunted=10, Ghostly=15, Ghastly=2,
         Unholy=10, Godless=2, God_forsaken=1,
-        Evil=30, Wicked=15, Cruel=5, Ungodly=1,
+        Evil=40, Wicked=15, Cruel=5, Ungodly=1,
 
         Eerie=10, Strange=20, Weird=2, Creepy=5,
         Gloomy=15, Awful=3, Horrible=5,
@@ -230,15 +243,15 @@ NAMING_THEMES =
         Catastrophic=1, Corrosive=1,
         Darkening=1, Detested=2,
         Direful=1, Disastrous=1,
-        Execrated=1, Fatal=10,
+        Execrated=1, Fatal=7,
         Final=2, Frail=2, Grisly=5,
         Ill_fated=5, Immoral=1,
         Immortal=3, Impure=3,
         Loathsome=2, Merciless=5,
-        Morbid=5, Pestilent=1,
+        Morbid=5, Pestilent=2,
         Profane=1, Raw=2,
         Unsanctified=1,
-        Vicious=10, Violent=5,
+        Vicious=7, Violent=5,
       },
 
       n =
@@ -247,17 +260,18 @@ NAMING_THEMES =
         Crypt=30, Chapel=6, Church=2, Mosque=1,
         Graveyard=10, Cloister=2,
         Pit=14, Cavern=10, Cave=2,
-        Wasteland=20, Fields=2,
+        Wasteland=20, Fields=4,
         Ghetto=4, City=1, Well=2, Realm=7,
-        Lair=10, Den=4, Domain=2, Hive=2,
+        Lair=10, Den=4, Domain=2, Hive=1,
         Valley=8, River=2, Catacombs=1,
         Palace=2, Cathedral=3, Chamber=8,
         Labyrinth=2, Dungeon=10,
         Temple=15, Shrine=7, Vault=7,
+        Spire=10, Arena=1,
 
         Gate=1, Circle=1, Altar=4,
         Tower=2, Mountain=1, Prison=1,
-        Sanctuary=1, Monolith=1,
+        Sanctuary=1, Monolith=1, Crucible=1,
 
         Excruciation=0.1, Abnormality=0.1,
         Hallucination=0.1, Ache=0.1,
@@ -271,14 +285,17 @@ NAMING_THEMES =
         Horror=10, Terror=10, Death=10,
         Pain=15, Fear=5, Hate=5,
         Limbo=2, Souls=10, Doom=10,
-        ["the Damned"]=10, Heathens=2,
-        ["the Dead"]=10, ["the Undead"]=10,
+        Heathens=1,
         Darkness=10, Destruction=3,
-        Suffering=3, Torment=7, Torture=5,
+        Suffering=3, Torment=9, Torture=5,
         Twilight=2, Midnight=1,
         Flesh=2, Corpses=2,
         Whispers=2, Tears=1, Fate=1,
-        Menace=3, Treachery=2,
+        Treachery=2,
+
+        ["the Dead"]=10,
+        ["the Damned"]=10,
+        ["the Undead"]=10,
       },
 
       s =
@@ -325,12 +342,15 @@ NAMING_THEMES =
         ["Total Doom"]=10,
 
         ["Can't Handle the Noose"]=10,
+        ["Infernal Directorate"]=10,
         ["Kill Thy Neighbor"]=10,
         ["No Salvation"]=10,
         ["Rampage!"]=10,
         ["Searching for Sanity"]=10,
         ["Taste the Blade"]=10,
         ["Slice 'em Twice!"]=10,
+        ["Sorrowful Faction"]=10,
+        ["Traces of Evil"]=10,
         ["Vengeance Denied"]=10,
         ["Where the Devils Spawn"]=10,
       }
@@ -382,19 +402,20 @@ NAMING_THEMES =
         Demonic=5, Demon=10,
         Invaded=3, Overtaken=3,
         Infected=10, Infested=3, Haunted=20,
+        Corrupted=10, Corrupt=3,
 
         Eerie=4, Strange=10, Weird=2, Creepy=1,
         Dark=30, Horrible=5, Exotic=7,
-        Dismal=5, Dreaded=4, Cold=4,
+        Dismal=5, Dreaded=4, Cold=4, Ugly=0.2,
+        Lonely=7,
 
-        Aethereal=5, Floating=2,
-        Hidden=2, Secret=5,
+        Aethereal=5, Hidden=2, Secret=5,
         Northern=7, Southern=7, Eastern=7, Western=7,
         Upper=2, Lower=2, Central=2,
         Inner=2, Outer=5, Innermost=1, Outermost=1,
 
-        Bleak=50, Abandoned=20, Forsaken=20,
-        Cursed=20, Corrupt=5, Forbidden=30,
+        Bleak=40, Abandoned=20, Forsaken=20,
+        Cursed=20, Forbidden=30,
         Sinister=30, Bewitched=3, Hostile=5,
         Industrial=1, Residential=1, Living=1,
         Mysterious=7, Obscure=5,
@@ -406,13 +427,13 @@ NAMING_THEMES =
 
       n =
       {
-        Town=30, City=30, Village=20,
-        Condominium=20, Plaza=20,
+        Town=20, City=20, Village=14,
+        Condominium=10, Condo=3, Plaza=10,
         Fortress=10, Fort=2, Stronghold=1,
-        Palace=10, Courtyard=20, Court=5, Kingdom=1,
-        Hallways=15, Hall=5, Corridors=7,
-        House=20, Refuge=1, Sanctuary=1,
-        Post=3, Keep=1, Slough=1,
+        Palace=10, Courtyard=10, Court=3, Kingdom=1,
+        Hallways=12, Hall=5, Corridors=7,
+        House=15, Refuge=1, Sanctuary=1,
+        Post=3, Keep=1, Slough=0.2,
         Gate=5, Prison=5,
 
         World=7, Zone=15,
@@ -430,21 +451,26 @@ NAMING_THEMES =
         Mountain=10, Cliffs=7,
         Canyon=5, Chasm=5, Valley=5,
         Bay=1, Beach=1,
+
+        Mines=5, Barracks=3,
+        Camp=1, Compound=1,
+        Harbor=2, Reserve=1,
+        Venue=1, Ward=1,
       },
 
       h =
       {
-        Doom=30, Gloom=20, Despair=10,
+        Doom=20, Gloom=15, Despair=10, Sorrow=15,
         Horror=10, Terror=10, Death=10,
-        Danger=20, Pain=15, Fear=5, Hate=5,
+        Danger=10, Pain=15, Fear=5, Hate=5,
         Desolation=3, Reparation=1,
 
         Ruin=5, Flames=1, Destruction=3,
-        Twilight=2, Midnight=3,
-        Tears=4, Fate=1, Helplessness=2,
+        Twilight=2, Midnight=2,
+        Tears=5, Fate=1, Helplessness=2,
 
-        Ghosts=20, Spirits=2, Souls=1,
-        Evil=1, Menace=3, Ghouls=5, Goblins=1,
+        Ghosts=10, Gods=10, Spirits=3, Souls=1,
+        Menace=5, Evil=1, Ghouls=5, Goblins=1,
 
         ["the Night"]=5,
       },
