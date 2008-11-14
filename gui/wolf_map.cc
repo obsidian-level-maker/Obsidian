@@ -53,6 +53,8 @@ static int current_offset;
 static u16_t *solid_plane;
 static u16_t *thing_plane;
 
+static char *level_name;
+
 #define PL_START  2
 
 
@@ -76,12 +78,9 @@ static void WF_PutU32(u32_t val, FILE *fp)
 
 static void WF_PutNString(const char *str, int max_len, FILE *fp)
 {
-  SYS_ASSERT((int)strlen(str) <= max_len);
-
-  while (*str)
+  for (; *str && max_len > 0; max_len--)
   {
     fputc(*str++, fp);
-    max_len--;
   }
 
   for (; max_len > 0; max_len--)
@@ -255,7 +254,7 @@ static void WF_WriteMap(void)
   WF_PutU16(64, map_fp);
   WF_PutU16(64, map_fp);
 
-  WF_PutNString("Custom Map", 16, map_fp);  // name (TODO: make one up)
+  WF_PutNString(level_name ? level_name : "Custom Map", 16, map_fp);
 
   WF_PutNString("!ID!", 4, map_fp);
 }
@@ -449,18 +448,22 @@ void wolf_game_interface_c::EndLevel()
 
   WF_WriteMap();
   WF_WriteHead();
+
+  if (level_name)
+  {
+    StringFree(level_name);
+    level_name = NULL;
+  }
 }
 
 
 void wolf_game_interface_c::Property(const char *key, const char *value)
 {
-//  if (StringCaseCmp(key, "level_name") == 0)
-//  {
-//    level_name = StringDup(value);
-//  }
-//  else
-
-  if (StringCaseCmp(key, "extension") == 0)
+  if (StringCaseCmp(key, "level_name") == 0)
+  {
+    level_name = StringDup(value);
+  }
+  else if (StringCaseCmp(key, "extension") == 0)
   {
     extension = std::string(value);
   }
