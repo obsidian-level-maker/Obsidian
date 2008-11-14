@@ -820,8 +820,6 @@ UNFINISHED["wolf3d"] =
   {
     seed_size = 192,  -- actually 3 blocks
 
-    max_level_desc = 15,
-
     palette_mons = 2,
   },
 
