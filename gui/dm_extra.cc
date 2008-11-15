@@ -369,6 +369,19 @@ static void BlastFontChar(int index, int x, int y,
     196, 195, 194, 193, 192, 4,
   };
 
+  static byte bronze_mapping[12] =
+  {
+    0, 2,  191, 188,  235, 232,
+    221, 218, 215, 213, 211, 209
+  };
+
+  static byte iron_mapping[13] =
+  {
+    0, 7, 5,
+    111, 109, 107, 104, 101, 98,
+     94,  90,  86,  81
+  };
+
 
   for (int dy = 0; dy < fh; dy++)
   for (int dx = 0; dx < fw; dx++)
@@ -378,7 +391,7 @@ static void BlastFontChar(int index, int x, int y,
     if (pix >= thresh)
     {
       // map pixel
-      pix = silver_mapping[sizeof(silver_mapping) * (pix-thresh) / (256-thresh)];
+      pix = iron_mapping[sizeof(iron_mapping) * (pix-thresh) / (256-thresh)];
 
       pixels[(y+dy)*W + (x+dx)] = pix;
     }
@@ -502,7 +515,7 @@ void DDF_Finish()
   }
   delete ddf_lang;
 
-  CreateNamePatch("CWILV02", "Over & Sick", &font_CWILV);
+  CreateNamePatch("CWILV02", "You Don't Belong Here/", &font_CWILV);
 }
 
 
