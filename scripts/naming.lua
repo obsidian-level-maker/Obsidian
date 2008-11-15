@@ -30,8 +30,8 @@ NAMING_THEMES =
   {
     patterns =
     {
-      ["%a %n"]    = 50, ["%t %a %n"]    = 15,
-      ["%b %n"]    = 50, ["%t %b %n"]    = 15,
+      ["%a %n"]    = 48, ["%t %a %n"]    = 17,
+      ["%b %n"]    = 48, ["%t %b %n"]    = 17,
       ["%a %b %n"] = 60, ["%t %a %b %n"] = 5,
 
       ["%s"] = 22,
@@ -78,7 +78,7 @@ NAMING_THEMES =
         Upper=5, Lower=5, Central=7,
         Inner=5, Outer=5, Innermost=1, Outermost=1,
         Auxiliary=5, Primary=5, Prime=1,
-        Exterior=3, Subsidiary=1,
+        Exterior=3, Subsidiary=1, Ultimate=1,
       },
 
       b =
@@ -122,8 +122,8 @@ NAMING_THEMES =
         Nexus=3, Platform=1, Project=0.5,
         Quadrant=1, Satellite=2, Sector=2,
         Shaft=1, Silos=1, Sub_station=2,
-        Reactor=7, Terminal=2, Port=1,
-        System=2, Dimension=1,
+        Reactor=7, Terminal=2, Port=1, Hub=2,
+        System=2, Dimension=1, Vortex=1,
       },
 
       s =
@@ -154,34 +154,39 @@ NAMING_THEMES =
         ["Revolution"]=10,
         ["Shock-Drop"]=10,
         ["Sickbay"]=10,
-        ["Steel Foundry"]=5,
+        ["Steel Forgery"]=10,
         ["Supernova"]=10,
         ["Terminal Velocity"]=10,
         ["The Disruption"]=10,
         ["UAC Crisis"]=10,
 
-        ["Artificial Apathy"]=5,
+        ["Artificial Apathy"]=10,
+        ["Blast Radius"]=10,
         ["Excessive Exposure"]=10,
         ["False Discharge"]=10,
+        ["Galaxy on Fire"]=10,
         ["Higher Voltage"]=10,
-        ["Hollow Dynamo"]=5,
+        ["Hollow Dynamo"]=10,
         ["Hunger for Weapons"]=10,
-        ["Input-Output"]=5,
+        ["Input-Output"]=10,
         ["Interstellar Starport"]=10,
         ["Nebula Checkpoint"]=10,
         ["Sudden Death"]=10,
         ["System Overload"]=10,
         ["The Delusion Machine"]=10,
-        ["The Muon Collective"]=5,
+        ["The Emerald Parallax"]=10,
+        ["The Mental Abyss"]=10,
+        ["The Muon Collective"]=10,
+        ["Transportation H.Q."]=10,
       },
     },
 
     divisors =
     {
       a = 5,
-      b = 3,
+      b = 5,
       n = 20,
-      s = 20,
+      s = 70,
     },
   },
 
@@ -246,6 +251,7 @@ NAMING_THEMES =
         Moan_filled=2, Spooky=10, Nightmare=4,
         Screaming=2, Silent=5, Sullen=5,
         Lava_filled=2, Lava=2,
+        Magical=1, Magic=1, Mystical=1,
 
         Underground=5, Subterranean=1,
         Hidden=1, Secret=1,
@@ -298,7 +304,7 @@ NAMING_THEMES =
         Horror=10, Terror=10, Death=10,
         Pain=15, Fear=5, Hate=5,
         Limbo=2, Souls=10, Doom=10,
-        Carnage=5, Gore=3,
+        Carnage=5, Gore=3, Shadows=7,
         Darkness=10, Destruction=3,
         Suffering=3, Torment=9, Torture=5,
         Twilight=2, Midnight=1,
@@ -355,18 +361,18 @@ NAMING_THEMES =
         ["Thinning the Herd"]=10,
         ["Total Doom"]=10,
 
-        ["Civil Disobedience"]=5,
         ["Infernal Directorate"]=10,
         ["Kill Thy Neighbor"]=10,
         ["No Salvation"]=10,
         ["Out for Revenge"]=10,
+        ["Pulse of Depravity"]=10,
         ["Rampage!"]=15,
         ["Searching for Sanity"]=10,
-        ["Taste the Blade"]=15,
         ["Slice 'em Twice!"]=15,
         ["Sorrowful Faction"]=10,
+        ["Taste the Blade"]=15,
         ["Traces of Evil"]=10,
-        ["Twists and Turns"]=5,
+        ["Twists and Turns"]=10,
         ["Vengeance Denied"]=10,
         ["Where the Devils Spawn"]=10,
         ["You Can't Handle the Noose"]=10,
@@ -377,9 +383,9 @@ NAMING_THEMES =
     {
       p = 2,
       a = 5,
-      h = 3,
+      h = 5,
       n = 20,
-      s = 20,
+      s = 70,
     },
   },
 
@@ -417,8 +423,8 @@ NAMING_THEMES =
         Stagnant=3, Rancid=5, Rotten=3,
         Flooded=1, Sunken=0.5, Far_flung=1,
 
-        Monstrous=5, Monster=10,
-        Demonic=5, Demon=10,
+        Monstrous=5, Monster=10, Wild=3,
+        Demonic=5, Demon=10, Polluted=5,
         Invaded=3, Overtaken=3, Stolen=1,
         Infected=7, Infested=5, Haunted=20,
         Corrupted=10, Corrupt=3, Fateful=3,
@@ -461,10 +467,11 @@ NAMING_THEMES =
         District=10, Precinct=10,
         Dominion=5, Domain=1, Trail=2,
         Region=1, Territory=3, Path=1,
+        Country=2, Environs=0.5, Neighborhood=1,
 
         Alleys=5, Docks=5,
         Towers=7, Streets=7, Roads=1,
-        Gardens=5, Warrens=1,
+        Gardens=5, Warrens=1, Quarry=1,
         Crossroads=1, Fields=10,
         Suburbs=7, Quarters=4, Dwelling=1,
 
@@ -488,7 +495,7 @@ NAMING_THEMES =
 
         Ruin=7, Flames=1, Destruction=3,
         Twilight=3, Midnight=2, Dreams=1,
-        Tears=5, Helplessness=2,
+        Tears=5, Helplessness=1, Misfortune=2,
 
         Ghosts=10, Gods=10, Spirits=3, Souls=2,
         Menace=5, Evil=2, Ghouls=5, Goblins=1,
@@ -536,11 +543,14 @@ NAMING_THEMES =
         ["Watch your Step!"]=10,
         ["When Ashes Rise"]=10,
 
-        ["Disestablishment"]=5,
+        ["Civil Disobedience"]=5,
+        ["Disestablishment"]=10,
         ["Eaten by the Furniture"]=5,
-        ["Escape is Futile"]=5,
-        ["Mow 'em Down!"]=20,
+        ["Escape is Futile"]=10,
+        ["Mindless Architecture"]=10,
+        ["Mow 'em Down!"]=15,
         ["Nobody's Home"]=10,
+        ["Out of Luck"]=10,
         ["Passing Away"]=10,
         ["Stream of Unconsciousness"]=10,
         ["Struggle No More"]=10,
@@ -553,9 +563,9 @@ NAMING_THEMES =
     divisors =
     {
       a = 5,
-      h = 3,
+      h = 5,
       n = 20,
-      s = 20,
+      s = 70,
     },
   },
 }
