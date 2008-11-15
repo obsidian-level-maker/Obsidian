@@ -62,7 +62,7 @@ NAMING_THEMES =
         Monstrous=5, Demonic=3, Invaded=1, Overtaken=1,
         Infested=10, Haunted=3, Ghostly=5, Hellish=1,
         Subverted=10, Corrupted=1, Contaminated=1,
-        Perverted=2,
+        Perverted=2, Doomed=3,
 
         Strange=16, Eerie=4, Weird=2, Creepy=1,
         Dark=20, Gloomy=8, Horrible=1,
@@ -71,6 +71,7 @@ NAMING_THEMES =
         Underground=5, Sub_terran=2,
         Ethereal=5, Floating=2,
         Mars=5, Saturn=5, Jupiter=5,
+        Deimos=2, Phobos=2,
 
         Secret=10, Hidden=2, Experimental=1,
         Northern=1, Southern=1, Eastern=1, Western=1,
@@ -97,8 +98,8 @@ NAMING_THEMES =
         Slige=1, Waste=1, Optic=1, Time=1, Chrono_=1,
         Alpha=3, Gamma=4, Photon=1, Jedi=0.2,
         Crystal=2, Defense=1, Manufacturing=1,
-        Beta=1, Delta=1, Omega=2,
-        Maintenance=1, Fusion=5,
+        Beta=1, Delta=1, Omega=2, Thermal=3,
+        Maintenance=1, Radiation=0.5, Fusion=7,
 
         ["I/O"]=2,
       },
@@ -122,6 +123,7 @@ NAMING_THEMES =
         Quadrant=1, Satellite=2, Sector=1,
         Shaft=1, Silos=1, Substation=0.5,
         Reactor=7, Terminal=2, Port=1,
+        System=2, Dimension=1,
       },
 
       s =
@@ -160,6 +162,7 @@ NAMING_THEMES =
 
         ["Artificial Apathy"]=5,
         ["Delusion Machine"]=10,
+        ["Excessive Exposure"]=10,
         ["False Discharge"]=10,
         ["Higher Voltage"]=10,
         ["Hollow Dynamo"]=5,
@@ -169,6 +172,7 @@ NAMING_THEMES =
         ["Nebula Checkpoint"]=10,
         ["Muon Collective"]=5,
         ["Sudden Death"]=10,
+        ["System Overload"]=10,
       },
     },
 
@@ -219,11 +223,12 @@ NAMING_THEMES =
 
         Old=10, Ancient=20, Eternal=1,
         Decrepid=10, Desolate=5,
-        Ruined=5, Forgotten=7, Lost=10,
+        Lost=10, Ruined=5, Forgotten=7,
         Ravished=2, Barren=4, Deadly=3,
         Dirty=2, Filthy=1, Essel=0.2,
         Stagnant=3, Rancid=5, Rotten=3,
-        Burning=30, Scorching=3, Hot=1, Melting=1,
+        Burning=27, Burnt=3, Scorching=3,
+        Hot=1, Melting=1,
 
         Blood=20, Blood_filled=3, Bloody=1,
         Blood_stained=1, Blood_soaked=1,
@@ -233,18 +238,19 @@ NAMING_THEMES =
         Unholy=10, Godless=2, God_forsaken=1,
         Evil=40, Wicked=15, Cruel=5, Ungodly=1,
         Perverse=5, Halloween=1, Oppressive=1,
+        Uncivilised=1,
 
         Eerie=10, Strange=20, Weird=2, Creepy=5,
         Gloomy=15, Awful=3, Horrible=5,
         Dismal=10, Dreaded=8, Dank=1, Frightful=1,
         Moan_filled=2, Spooky=10, Nightmare=4,
-        Screaming=2, Silent=5, Sullen=5, Lava=1,
+        Screaming=2, Silent=5, Sullen=5,
+        Lava_filled=2, Lava=1,
 
         Underground=5, Subterranean=1,
         Hidden=1, Secret=1,
         Upper=5, Lower=5,
-        Inner=5, Outer=5,
-        Deepest=5,
+        Inner=5, Outer=5, Deepest=8,
 
         Abhorrent=2, Abominable=2,
         Brutal=10, Bleeding=3, Bestial=1,
@@ -257,7 +263,7 @@ NAMING_THEMES =
         Immortal=3, Impure=3,
         Loathsome=2, Merciless=5,
         Morbid=5, Pestilent=2,
-        Profane=1, Raw=2,
+        Profane=2, Raw=1,
         Unsanctified=1,
         Vicious=7, Violent=5,
       },
@@ -273,9 +279,9 @@ NAMING_THEMES =
         Lair=10, Den=4, Domain=6, Hive=1,
         Valley=8, River=3, Catacombs=1,
         Palace=2, Cathedral=3, Chamber=8,
-        Labyrinth=2, Dungeon=10,
+        Labyrinth=2, Dungeon=10, Shores=2,
         Temple=10, Shrine=7, Vault=7,
-        Spire=7, Arena=1, Swaths=1,
+        Spire=7, Arena=1, Swaths=0.5,
 
         Gate=1, Circle=1, Altar=4,
         Tower=2, Mountains=1, Prison=1,
@@ -349,18 +355,21 @@ NAMING_THEMES =
         ["Thinning the Herd"]=10,
         ["Total Doom"]=10,
 
-        ["Can't Handle the Noose"]=10,
+        ["Civil Disobedience"]=5,
         ["Infernal Directorate"]=10,
         ["Kill Thy Neighbor"]=10,
         ["No Salvation"]=10,
-        ["Rampage!"]=10,
+        ["Out for Revenge"]=10,
+        ["Rampage!"]=15,
         ["Searching for Sanity"]=10,
         ["Taste the Blade"]=15,
         ["Slice 'em Twice!"]=15,
         ["Sorrowful Faction"]=10,
         ["Traces of Evil"]=10,
+        ["Twists and Turns"]=5,
         ["Vengeance Denied"]=10,
         ["Where the Devils Spawn"]=10,
+        ["You Can't Handle the Noose"]=10,
       }
     },
 
@@ -406,11 +415,11 @@ NAMING_THEMES =
         Decrepid=10, Lost=10, Forgotten=7,
         Ravished=7, Barren=10, Deadly=3,
         Stagnant=3, Rancid=5, Rotten=3,
-        Flooded=1, Sunken=0.5,
+        Flooded=1, Sunken=0.5, Far_flung=1,
 
         Monstrous=5, Monster=10,
         Demonic=5, Demon=10,
-        Invaded=3, Overtaken=3,
+        Invaded=3, Overtaken=3, Stolen=1,
         Infected=7, Infested=5, Haunted=20,
         Corrupted=10, Corrupt=3,
 
