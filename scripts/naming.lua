@@ -161,7 +161,6 @@ NAMING_THEMES =
         ["UAC Crisis"]=10,
 
         ["Artificial Apathy"]=5,
-        ["Delusion Machine"]=10,
         ["Excessive Exposure"]=10,
         ["False Discharge"]=10,
         ["Higher Voltage"]=10,
@@ -170,9 +169,10 @@ NAMING_THEMES =
         ["Input-Output"]=5,
         ["Interstellar Starport"]=10,
         ["Nebula Checkpoint"]=10,
-        ["Muon Collective"]=5,
         ["Sudden Death"]=10,
         ["System Overload"]=10,
+        ["The Delusion Machine"]=10,
+        ["The Muon Collective"]=5,
       },
     },
 
@@ -237,7 +237,7 @@ NAMING_THEMES =
         Haunted=10, Ghostly=12, Ghastly=2,
         Unholy=10, Godless=2, God_forsaken=1,
         Evil=40, Wicked=15, Cruel=7, Ungodly=1,
-        Perverse=5, Halloween=1, Oppressive=1,
+        Perverse=5, Hallowed=1, Oppressive=1,
         Uncivilised=1,
 
         Eerie=10, Strange=20, Weird=2, Creepy=5,
@@ -392,11 +392,11 @@ NAMING_THEMES =
          ["%a %n"] = 60,
       ["%t %a %n"] = 20,
 
-      [   "%n of %h"] = 10,
-      ["%t %n of %h"] = 10,
+      [   "%n of %h"] = 15,
+      ["%t %n of %h"] = 12,
       ["%a %n of %h"] = 7,
 
-      ["%s"] = 15,
+      ["%s"] = 16,
     },
 
     lexicon =
@@ -447,7 +447,7 @@ NAMING_THEMES =
 
       n =
       {
-        City=25, Town=15, Village=15,
+        City=20, Town=12, Village=12,
         Condominium=7, Condo=2, Citadel=3,
         Plaza=10, Square=2, Kingdom=3,
         Fortress=10, Fort=2, Stronghold=1,
@@ -707,15 +707,21 @@ end
 
 
 function Naming_test()
-  for set = 1,30 do
-    gui.rand_seed(set)
-    local list = Naming_generate("URBAN", 30)
+  local function test_theme(T)
+    for set = 1,9 do
+      gui.rand_seed(set)
+      local list = Naming_generate(T, 30)
 
-    for i,name in ipairs(list) do
-      gui.debugf("Set %d Name %2d: %s\n", set, i, name)
+      for i,name in ipairs(list) do
+        gui.debugf("%s Set %d Name %2d: %s\n", T, set, i, name)
+      end
+
+      gui.debugf("\n");
     end
-
-    gui.debugf("\n");
   end
+
+  test_theme("TECH")
+  test_theme("GOTHIC")
+  test_theme("URBAN")
 end
 
