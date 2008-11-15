@@ -354,24 +354,31 @@ static void BlastFontChar(int index, int x, int y,
   // TODO: adjustable mappings and threshhold
   int thresh = 16;
 
-  static byte gold_mapping[11] =
+  static byte gold_mapping[12] =
   {
-    47, 44,
+    0, 47, 44,
     167, 166, 165, 164, 163, 162, 161, 160,
     // 226,
     225
   };
 
+  static byte silver_mapping[14] =
+  {
+    0, 246, 243, 240,
+    205, 202, 200, 198,
+    196, 195, 194, 193, 192, 4,
+  };
 
-  for (int dx = 0; dx < fw; dx++)
+
   for (int dy = 0; dy < fh; dy++)
+  for (int dx = 0; dx < fw; dx++)
   {
     byte pix = font->data[(fy+dy)*font->width + (fx+dx)];
 
     if (pix >= thresh)
     {
       // map pixel
-      pix = gold_mapping[11 * (pix-thresh) / (256-thresh)];
+      pix = silver_mapping[sizeof(silver_mapping) * (pix-thresh) / (256-thresh)];
 
       pixels[(y+dy)*W + (x+dx)] = pix;
     }
@@ -495,7 +502,7 @@ void DDF_Finish()
   }
   delete ddf_lang;
 
-  CreateNamePatch("CWILV02", "Furry Delight!", &font_CWILV);
+  CreateNamePatch("CWILV02", "Over & Sick", &font_CWILV);
 }
 
 
