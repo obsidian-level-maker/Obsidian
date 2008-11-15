@@ -37,22 +37,12 @@ NAME GENERATOR
 
              LIMIT = 39 letters
 
-   -  WOLF3d: stored in GAMEMAPS
++  support the PARAMS.max_level_desc value
 
-              gui.property("level_desc", "%s")
+-  drop generated name if it matches one of previous 3 names
 
-              LIMIT = 15 letters !!!
+-  WILVxx and CWILVxx creation: need an API!
 
--  need a mechanism to provide Game-specific and/or
-   Module-specific lexicons.
-
--  Sorrow[ful]
-   of Inequity
-   Dens (URBAN)
-   Swath[s] (HELL or URBAN)
-   Perverse / Perverted (HELL)
-   Port (TECH)
-   Lands (URBAN)
 
 
 THEME SELECTION
