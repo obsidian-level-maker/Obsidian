@@ -34,7 +34,7 @@ NAMING_THEMES =
       ["%b %n"]    = 48, ["%t %b %n"]    = 17,
       ["%a %b %n"] = 60, ["%t %a %b %n"] = 5,
 
-      ["%s"] = 22,
+      ["%s"] = 24,
     },
 
     lexicon =
@@ -167,6 +167,7 @@ NAMING_THEMES =
         ["Excessive Exposure"]=10,
         ["False Discharge"]=10,
         ["Galaxy on Fire"]=10,
+        ["Gravity Well"]=10,
         ["Higher Voltage"]=10,
         ["Hollow Dynamo"]=10,
         ["Hunger for Weapons"]=10,
@@ -174,6 +175,7 @@ NAMING_THEMES =
         ["Input-Output"]=10,
         ["Interstellar Starport"]=10,
         ["Nebula Checkpoint"]=10,
+        ["Quantum Distortion"]=10,
         ["Sudden Death"]=10,
         ["System Overload"]=10,
         ["The Delusion Machine"]=10,
@@ -210,7 +212,7 @@ NAMING_THEMES =
       ["%p's %a %n"]    = 4,
       ["%p's %n of %h"] = 4,
 
-      ["%s"] = 15,
+      ["%s"] = 17,
     },
 
     lexicon =
@@ -237,7 +239,7 @@ NAMING_THEMES =
         Dirty=2, Filthy=1, Essel=0.2,
         Stagnant=3, Rancid=9, Rotten=3,
         Burning=25, Burnt=3, Scorching=3,
-        Melting=2, Red_Hot=1,
+        Melting=2, Red_Hot=1, Fractured=1,
 
         Blood=20, Blood_filled=3, Bloody=1,
         Blood_stained=1, Blood_soaked=1,
@@ -295,6 +297,7 @@ NAMING_THEMES =
         Gate=1, Circle=2, Altar=4,
         Tower=2, Mountains=1, Prison=1,
         Sanctuary=1, Monolith=1, Crucible=1,
+        Communion=2,
 
         Excruciation=0.5, Abnormality=0.5,
         Hallucination=0.5, Ache=0.5,
@@ -319,6 +322,7 @@ NAMING_THEMES =
         ["the Dead"]=10,
         ["the Damned"]=10,
         ["the Undead"]=10,
+        ["the Possessed"]=10,
         ["the Beast"]=5,
       },
 
@@ -362,7 +366,7 @@ NAMING_THEMES =
         ["Soul Scars"]=10,
         ["Terminal Filth"]=10,
         ["The Second Coming"]=10,
-        ["Thinning the Herd"]=10,
+        ["Thinning the Horde"]=10,
         ["Total Doom"]=10,
 
         ["Divine Intoxication"]=10,
@@ -373,6 +377,7 @@ NAMING_THEMES =
         ["Out for Revenge"]=10,
         ["Pulse of Depravity"]=10,
         ["Rampage!"]=15,
+        ["Reaper Unleashed"]=10,
         ["Searching for Sanity"]=10,
         ["Slice 'em Twice!"]=15,
         ["Sorrowful Faction"]=10,
@@ -409,7 +414,7 @@ NAMING_THEMES =
       ["%t %n of %h"] = 12,
       ["%a %n of %h"] = 7,
 
-      ["%s"] = 16,
+      ["%s"] = 17,
     },
 
     lexicon =
@@ -429,6 +434,7 @@ NAMING_THEMES =
         Ravished=7, Barren=10, Deadly=3,
         Stagnant=3, Rancid=5, Rotten=3,
         Flooded=1, Sunken=0.5, Far_flung=1,
+        Misty=1, Foggy=1, Rain_soaked=1,
 
         Monstrous=5, Monster=10, Wild=3,
         Demonic=5, Demon=10, Polluted=5,
@@ -468,6 +474,7 @@ NAMING_THEMES =
         Hallways=10, Hall=5, Corridors=7,
         House=12, Mansion=5, Castle=10,
         Refuge=1, Sanctuary=1,
+        Manor=2, Estate=0.5,
         Outpost=2, Keep=1, Slough=1, Temple=1,
         Gate=5, Prison=5, Dens=1, Asylum=2,
 
@@ -530,7 +537,7 @@ NAMING_THEMES =
         ["Dead Silent"]=10,
         ["Doomed Society"]=15,
         ["Eight Floors Above"]=10,
-        ["Ground Zero"]=1,
+        ["Ground Zero"]=5,
         ["Hidden Screams"]=10,
         ["Left for Dead"]=10,
         ["Left in the Cold"]=10,
@@ -551,13 +558,16 @@ NAMING_THEMES =
         ["Watch your Step!"]=10,
         ["When Ashes Rise"]=10,
 
+        ["Bullet Hole"]=10,
         ["Civil Disobedience"]=5,
         ["Disestablishment"]=10,
-        ["Eaten by the Furniture"]=5,
+        ["Eaten by the Furniture"]=10,
         ["Escape is Futile"]=10,
+        ["Fight That!"]=10,
         ["Mindless Architecture"]=10,
         ["Mow 'em Down!"]=15,
         ["Nobody's Home"]=10,
+        ["No Comfort"]=10,
         ["Out of Luck"]=10,
         ["Passing Away"]=10,
         ["Stream of Unconsciousness"]=10,
