@@ -1792,7 +1792,7 @@ OB_GAMES["doom2"] =
 
     -- this is roughly how many characters can fit on the
     -- intermission screens (the CWILVxx patches).  It does
-    -- not reflect any inherit limit in Doom ports.
+    -- not reflect any buffer limits in Doom ports.
     max_level_desc = 31,
 
     palette_mons = 5,

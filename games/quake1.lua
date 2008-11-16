@@ -483,8 +483,9 @@ OB_GAMES["quake1"] =
     sky_tex  = "sky4",
     sky_flat = "sky4",
 
-    -- this is limited by the name buffer in Quake
-    max_level_desc = 39,
+    -- the name buffer in Quake can fit 39 characters, however
+    -- the on-screen space for the name is much less.
+    max_level_desc = 20,
 
     palette_mons = 4,
 

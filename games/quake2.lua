@@ -639,8 +639,9 @@ UNFINISHED["quake2"] =
   {
     seed_size = 240,
 
-    -- this is limited by the name buffer in Quake II
-    max_level_desc = 39,
+    -- the name buffer in Quake II is huge, this value
+    -- reflects the on-screen space (in the computer panel)
+    max_level_desc = 24,
 
     palette_mons = 4,
   },
