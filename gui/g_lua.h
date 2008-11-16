@@ -25,6 +25,18 @@ void Script_Init(void);
 void Script_Load(void);
 void Script_Close(void);
 
+#define MAX_COLOR_MAPS  9  // 1 to 9 (from Lua)
+#define MAX_COLORS_PER_MAP  260
+
+typedef struct
+{
+  byte colors[MAX_COLORS_PER_MAP];
+  int  size;
+}
+color_mapping_t;
+
+extern color_mapping_t color_mappings[MAX_COLOR_MAPS];
+
 // Wrappers which call Lua functions:
 
 bool ob_set_config(const char *key, const char *value);

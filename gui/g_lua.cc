@@ -48,6 +48,9 @@ static MT_rand_c GUI_RNG(0);
 static int level_IDX = 0;
 static int level_TOTAL = 0;
 
+// color maps
+color_mapping_t color_mappings[MAX_COLOR_MAPS];
+
 
 // LUA: raw_log_print(str)
 //
@@ -83,6 +86,7 @@ int gui_raw_debug_print(lua_State *L)
   return 0;
 }
 
+
 // LUA: config_line(str)
 //
 int gui_config_line(lua_State *L)
@@ -92,6 +96,44 @@ int gui_config_line(lua_State *L)
   SYS_ASSERT(conf_line_buffer);
 
   conf_line_buffer->push_back(res);
+
+  return 0;
+}
+
+// LUA: set_colormap(map, colors)
+//
+int gui_set_colormap(lua_State *L)
+{
+  int index = luaL_checkint(L, 1);
+
+  if (index < 1 || index > MAX_COLOR_MAPS)
+    return luaL_argerror(L, 1, "map value out of range");
+
+  if (lua_type(L, 2) != LUA_TTABLE)
+  {
+    return luaL_argerror(L, 2, "expected a table: colors");
+  }
+
+  color_mapping_t *map = & color_mappings[index];
+
+  map->size = 0;
+
+  for (int i = 0; i < MAX_COLORS_PER_MAP; i++)
+  {
+    lua_pushinteger(L, i);
+    lua_gettable(L, 2);
+
+    if (lua_isnil(L, -1))
+    {
+      lua_pop(L, 1);
+      break;
+    }
+
+    map->colors[i] = luaL_checkinteger(L, -1);
+    map->size = i+1;
+
+    lua_pop(L, 1);
+  }
 
   return 0;
 }
@@ -371,7 +413,9 @@ static const luaL_Reg gui_script_funcs[] =
 {
   { "raw_log_print",   gui_raw_log_print },
   { "raw_debug_print", gui_raw_debug_print },
-  { "config_line",     gui_config_line },
+
+  { "config_line",    gui_config_line },
+  { "set_colormap",   gui_set_colormap },
 
   { "add_button",     gui_add_button },
   { "add_mod_option", gui_add_mod_option },
