@@ -40,20 +40,18 @@ static bool has_added_buttons = false;
 static std::vector<std::string> * conf_line_buffer;
 
 
-namespace con
-{
 
 // random number generator (Mersenne Twister)
-MT_rand_c RNG(0);
+static MT_rand_c GUI_RNG(0);
 
 // state needed for progress() call
-int lev_IDX = 0;
-int lev_TOTAL = 0;
+static int level_IDX = 0;
+static int level_TOTAL = 0;
 
 
 // LUA: raw_log_print(str)
 //
-int raw_log_print(lua_State *L)
+int gui_raw_log_print(lua_State *L)
 {
   int nargs = lua_gettop(L);
 
@@ -70,7 +68,7 @@ int raw_log_print(lua_State *L)
 
 // LUA: raw_debug_print(str)
 //
-int raw_debug_print(lua_State *L)
+int gui_raw_debug_print(lua_State *L)
 {
   int nargs = lua_gettop(L);
 
@@ -87,7 +85,7 @@ int raw_debug_print(lua_State *L)
 
 // LUA: config_line(str)
 //
-int config_line(lua_State *L)
+int gui_config_line(lua_State *L)
 {
   const char *res = luaL_checkstring(L,1);
 
@@ -101,7 +99,7 @@ int config_line(lua_State *L)
 
 // LUA: add_button (what, id, label)
 //
-int add_button(lua_State *L)
+int gui_add_button(lua_State *L)
 {
   const char *what  = luaL_checkstring(L,1);
   const char *id    = luaL_checkstring(L,2);
@@ -113,7 +111,7 @@ int add_button(lua_State *L)
   if (has_added_buttons)
     Main_FatalError("LUA script problem: gui.add_button called late.\n");
 
-DebugPrintf("add_button: %s id:%s\n", what, id);
+  // DebugPrintf("add_button: %s id:%s\n", what, id);
 
   if (StringCaseCmp(what, "game") == 0)
     main_win->game_box->game->AddPair(id, label);
@@ -139,7 +137,7 @@ DebugPrintf("add_button: %s id:%s\n", what, id);
 // a new button widget for the module.  OTHERWISE we are adding a
 // choice to the existing button (a la add_button).
 //
-int add_mod_option(lua_State *L)
+int gui_add_mod_option(lua_State *L)
 {
   int nargs = lua_gettop(L);
 
@@ -174,7 +172,7 @@ int add_mod_option(lua_State *L)
 
 // LUA: show_button(what, id, shown)
 //
-int show_button(lua_State *L)
+int gui_show_button(lua_State *L)
 {
   const char *what = luaL_checkstring(L,1);
   const char *id   = luaL_checkstring(L,2);
@@ -183,7 +181,7 @@ int show_button(lua_State *L)
 
   SYS_ASSERT(what && id);
 
-DebugPrintf("show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
+  // DebugPrintf("show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
 
   if (StringCaseCmp(what, "game") == 0)
     main_win->game_box->game->ShowOrHide(id, shown);
@@ -205,7 +203,7 @@ DebugPrintf("show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
 
 // LUA: change_button(what, id [, bool])
 //
-int change_button(lua_State *L)
+int gui_change_button(lua_State *L)
 {
   const char *what = luaL_checkstring(L,1);
   const char *id   = luaL_checkstring(L,2);
@@ -214,7 +212,7 @@ int change_button(lua_State *L)
 
   SYS_ASSERT(what && id);
 
-DebugPrintf("change_button: %s --> %s\n", what, id);
+  // DebugPrintf("change_button: %s --> %s\n", what, id);
 
   if (StringCaseCmp(what, "game") == 0)
     main_win->game_box->game->SetID(id);
@@ -237,12 +235,12 @@ DebugPrintf("change_button: %s --> %s\n", what, id);
 
 // LUA: at_level(name, idx, total)
 //
-int at_level(lua_State *L)
+int gui_at_level(lua_State *L)
 {
   const char *name = luaL_checkstring(L,1);
  
-  lev_IDX   = luaL_checkint(L, 2);
-  lev_TOTAL = luaL_checkint(L, 3);
+  level_IDX   = luaL_checkint(L, 2);
+  level_TOTAL = luaL_checkint(L, 3);
 
   char buffer[200];
 
@@ -255,13 +253,13 @@ int at_level(lua_State *L)
 
 // LUA: progress(percent)
 //
-int progress(lua_State *L)
+int gui_progress(lua_State *L)
 {
   lua_Number perc = luaL_checknumber(L, 1);
 
-  SYS_ASSERT(lev_TOTAL > 0);
+  SYS_ASSERT(level_TOTAL > 0);
 
-  perc = ((lev_IDX-1) * 100 + perc) / lev_TOTAL;
+  perc = ((level_IDX-1) * 100 + perc) / level_TOTAL;
 
   main_win->build_box->ProgUpdate(perc);
 
@@ -271,7 +269,7 @@ int progress(lua_State *L)
 
 // LUA: ticker()
 //
-int ticker(lua_State *L)
+int gui_ticker(lua_State *L)
 {
   Main_Ticker();
 
@@ -280,7 +278,7 @@ int ticker(lua_State *L)
 
 // LUA: abort() -> boolean
 //
-int abort(lua_State *L)
+int gui_abort(lua_State *L)
 {
   int value = 0;
 
@@ -294,20 +292,20 @@ int abort(lua_State *L)
 
 // LUA: rand_seed(seed)
 //
-int rand_seed(lua_State *L)
+int gui_rand_seed(lua_State *L)
 {
   int the_seed = luaL_checkint(L, 1) & 0x7FFFFFFF;
 
-  RNG.Seed(the_seed);
+  GUI_RNG.Seed(the_seed);
 
   return 0;
 }
 
 // LUA: random()
 //
-int random(lua_State *L)
+int gui_random(lua_State *L)
 {
-  lua_Number value = RNG.Rand_fp();
+  lua_Number value = GUI_RNG.Rand_fp();
 
   lua_pushnumber(L, value);
   return 1;
@@ -316,7 +314,7 @@ int random(lua_State *L)
 
 // LUA: bit_and(A, B)
 //
-int bit_and(lua_State *L)
+int gui_bit_and(lua_State *L)
 {
   int A = luaL_checkint(L, 1);
   int B = luaL_checkint(L, 2);
@@ -327,7 +325,7 @@ int bit_and(lua_State *L)
 
 // LUA: bit_or(A, B)
 //
-int bit_or(lua_State *L)
+int gui_bit_or(lua_State *L)
 {
   int A = luaL_checkint(L, 1);
   int B = luaL_checkint(L, 2);
@@ -338,7 +336,7 @@ int bit_or(lua_State *L)
 
 // LUA: bit_xor(A, B)
 //
-int bit_xor(lua_State *L)
+int gui_bit_xor(lua_State *L)
 {
   int A = luaL_checkint(L, 1);
   int B = luaL_checkint(L, 2);
@@ -349,7 +347,7 @@ int bit_xor(lua_State *L)
 
 // LUA: bit_not(val)
 //
-int bit_not(lua_State *L)
+int gui_bit_not(lua_State *L)
 {
   int A = luaL_checkint(L, 1);
 
@@ -357,8 +355,6 @@ int bit_not(lua_State *L)
   lua_pushinteger(L, (~A) & 0x7FFFFFFF);
   return 1;
 }
-
-} // namespace con
 
 
 // FIXME: header file?
@@ -373,27 +369,27 @@ extern int Wolf_add_block(lua_State *L);
 
 static const luaL_Reg gui_script_funcs[] =
 {
-  { "raw_log_print",   con::raw_log_print },
-  { "raw_debug_print", con::raw_debug_print },
-  { "config_line",     con::config_line },
+  { "raw_log_print",   gui_raw_log_print },
+  { "raw_debug_print", gui_raw_debug_print },
+  { "config_line",     gui_config_line },
 
-  { "add_button",     con::add_button },
-  { "add_mod_option", con::add_mod_option },
-  { "show_button",    con::show_button },
-  { "change_button",  con::change_button },
+  { "add_button",     gui_add_button },
+  { "add_mod_option", gui_add_mod_option },
+  { "show_button",    gui_show_button },
+  { "change_button",  gui_change_button },
 
-  { "at_level",   con::at_level },
-  { "progress",   con::progress },
-  { "ticker",     con::ticker },
-  { "abort",      con::abort },
+  { "at_level",   gui_at_level },
+  { "progress",   gui_progress },
+  { "ticker",     gui_ticker },
+  { "abort",      gui_abort },
  
-  { "rand_seed",  con::rand_seed },
-  { "random",     con::random },
+  { "rand_seed",  gui_rand_seed },
+  { "random",     gui_random },
 
-  { "bit_and",    con::bit_and },
-  { "bit_or",     con::bit_or  },
-  { "bit_xor",    con::bit_xor },
-  { "bit_not",    con::bit_not },
+  { "bit_and",    gui_bit_and },
+  { "bit_or",     gui_bit_or  },
+  { "bit_xor",    gui_bit_xor },
+  { "bit_not",    gui_bit_not },
 
   { "begin_level", CSG2_begin_level },
   { "end_level",   CSG2_end_level   },
