@@ -447,6 +447,14 @@ static void CreateNamePatch(const char *patch_name, const char *name,
   delete[] pixels;
 }
 
+// LUA: make_level_gfx(key, value)
+//
+int DM_make_level_gfx(lua_State *L)
+{
+  // FIXME
+  return 0;
+}
+
 
 //------------------------------------------------------------------------
 
@@ -460,7 +468,7 @@ void BEX_Start()
   bex_lump = new qLump_c();
 }
 
-void BEX_AddString(const char *str)
+void BEX_AddString(const char *key, const char *value)
 {
   if (bex_lump->GetSize() == 0)
   {
@@ -468,7 +476,19 @@ void BEX_AddString(const char *str)
     bex_lump->Printf("[STRINGS]\n");
   }
 
-  bex_lump->Printf("%s\n", str);
+  bex_lump->Printf("%s = %s\n", key, value);
+}
+
+// LUA: bex_add_string(key, value)
+//
+int DM_bex_add_string(lua_State *L)
+{
+  const char *key   = luaL_checkstring(L, 1);
+  const char *value = luaL_checkstring(L, 1);
+
+  BEX_AddString(key, value);
+
+  return 0;
 }
 
 void BEX_Finish()
@@ -493,7 +513,7 @@ void DDF_Start()
   ddf_lang = new qLump_c();
 }
 
-void DDF_AddString(const char *str)
+void DDF_AddString(const char *key, const char *value)
 {
   if (ddf_lang->GetSize() == 0)
   {
@@ -504,7 +524,19 @@ void DDF_AddString(const char *str)
     ddf_lang->Printf("[ENGLISH]\n");
   }
 
-  ddf_lang->Printf("%s;\n", str);
+  ddf_lang->Printf("%s = \"%s\";\n", key, value);
+}
+
+// LUA: ddf_add_string(key, value)
+//
+int DM_ddf_add_string(lua_State *L)
+{
+  const char *key   = luaL_checkstring(L, 1);
+  const char *value = luaL_checkstring(L, 1);
+
+  DDF_AddString(key, value);
+
+  return 0;
 }
 
 void DDF_Finish()
@@ -517,7 +549,6 @@ void DDF_Finish()
 
   CreateNamePatch("CWILV02", "You Don't Belong Here/", &font_CWILV);
 }
-
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

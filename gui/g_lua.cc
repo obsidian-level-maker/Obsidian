@@ -399,20 +399,26 @@ int gui_bit_not(lua_State *L)
 }
 
 
-// FIXME: header file?
+//------------------------------------------------------------------------
+
+
 extern int CSG2_begin_level(lua_State *L);
 extern int CSG2_end_level(lua_State *L);
 extern int CSG2_property(lua_State *L);
 extern int CSG2_add_brush(lua_State *L);
 extern int CSG2_add_entity(lua_State *L);
 
-extern int Wolf_add_block(lua_State *L);
+extern int WF_wolf_block(lua_State *L);
+
+extern int DM_make_level_gfx(lua_State *L);
+extern int DM_bex_add_string(lua_State *L);
+extern int DM_ddf_add_string(lua_State *L);
 
 
 static const luaL_Reg gui_script_funcs[] =
 {
-  { "raw_log_print",   gui_raw_log_print },
-  { "raw_debug_print", gui_raw_debug_print },
+  { "raw_log_print",  gui_raw_log_print },
+  { "raw_debug_print",gui_raw_debug_print },
 
   { "config_line",    gui_config_line },
   { "set_colormap",   gui_set_colormap },
@@ -422,19 +428,19 @@ static const luaL_Reg gui_script_funcs[] =
   { "show_button",    gui_show_button },
   { "change_button",  gui_change_button },
 
-  { "at_level",   gui_at_level },
-  { "progress",   gui_progress },
-  { "ticker",     gui_ticker },
-  { "abort",      gui_abort },
- 
-  { "rand_seed",  gui_rand_seed },
-  { "random",     gui_random },
+  { "at_level",    gui_at_level },
+  { "progress",    gui_progress },
+  { "ticker",      gui_ticker },
+  { "abort",       gui_abort },
+  { "rand_seed",   gui_rand_seed },
+  { "random",      gui_random },
 
-  { "bit_and",    gui_bit_and },
-  { "bit_or",     gui_bit_or  },
-  { "bit_xor",    gui_bit_xor },
-  { "bit_not",    gui_bit_not },
-
+  { "bit_and",     gui_bit_and },
+  { "bit_or",      gui_bit_or  },
+  { "bit_xor",     gui_bit_xor },
+  { "bit_not",     gui_bit_not },
+  
+  // CSG functions
   { "begin_level", CSG2_begin_level },
   { "end_level",   CSG2_end_level   },
   { "property",    CSG2_property    },
@@ -442,13 +448,18 @@ static const luaL_Reg gui_script_funcs[] =
   { "add_brush",   CSG2_add_brush  },
   { "add_entity",  CSG2_add_entity },
 
-  { "wolf_block",  Wolf_add_block },
+  // Wolf-3D functions
+  { "wolf_block",  WF_wolf_block },
 
+  // Doom/Heretic/Hexen functions
+  { "make_level_gfx",  DM_make_level_gfx },
+  { "bex_add_string",  DM_bex_add_string },
+  { "ddf_add_string",  DM_ddf_add_string },
+
+  // Quake functions
+ 
   { NULL, NULL } // the end
 };
-
-
-//------------------------------------------------------------------------
 
 
 int Script_RegisterLib(const char *name, const luaL_Reg *reg)

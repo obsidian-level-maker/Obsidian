@@ -1029,14 +1029,6 @@ void doom_game_interface_c::Property(const char *key, const char *value)
   {
     liquid_exfloor = atoi(value);
   }
-  else if (StringCaseCmp(key, "bex_string") == 0)
-  {
-    BEX_AddString(value);
-  }
-  else if (StringCaseCmp(key, "ddf_string") == 0)
-  {
-    DDF_AddString(value);
-  }
   else
   {
     LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key, value);

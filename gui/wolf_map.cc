@@ -270,7 +270,7 @@ static void WF_WriteHead(void)
 
 // LUA: wolf_block(x, y, plane, data)
 //
-int Wolf_add_block(lua_State *L)
+int WF_wolf_block(lua_State *L)
 {
   int x = luaL_checkint(L,1);
   int y = luaL_checkint(L,2);
@@ -315,10 +315,10 @@ int Wolf_add_block(lua_State *L)
 class wolf_game_interface_c : public game_interface_c
 {
 private:
-  std::string extension;
+  std::string file_ext;
 
 public:
-  wolf_game_interface_c() : extension("WL6")
+  wolf_game_interface_c() : file_ext("WL6")
   { }
 
   ~wolf_game_interface_c()
@@ -409,8 +409,8 @@ bool wolf_game_interface_c::Rename()
   char gamemaps[40];
   char maphead[40];
 
-  sprintf(gamemaps, "GAMEMAPS.%s", extension.c_str());
-  sprintf(maphead,  "MAPHEAD.%s",  extension.c_str());
+  sprintf(gamemaps, "GAMEMAPS.%s", file_ext.c_str());
+  sprintf(maphead,  "MAPHEAD.%s",  file_ext.c_str());
 
   FileDelete(gamemaps);
   FileDelete(maphead);
@@ -463,9 +463,9 @@ void wolf_game_interface_c::Property(const char *key, const char *value)
   {
     level_name = StringDup(value);
   }
-  else if (StringCaseCmp(key, "extension") == 0)
+  else if (StringCaseCmp(key, "file_ext") == 0)
   {
-    extension = std::string(value);
+    file_ext = std::string(value);
   }
   else
   {
