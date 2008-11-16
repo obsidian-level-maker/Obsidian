@@ -104,17 +104,17 @@ int gui_config_line(lua_State *L)
 //
 int gui_set_colormap(lua_State *L)
 {
-  int index = luaL_checkint(L, 1);
+  int map_id = luaL_checkint(L, 1);
 
-  if (index < 1 || index > MAX_COLOR_MAPS)
-    return luaL_argerror(L, 1, "map value out of range");
+  if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    return luaL_argerror(L, 1, "colmap value out of range");
 
   if (lua_type(L, 2) != LUA_TTABLE)
   {
     return luaL_argerror(L, 2, "expected a table: colors");
   }
 
-  color_mapping_t *map = & color_mappings[index];
+  color_mapping_t *map = & color_mappings[map_id-1];
 
   map->size = 0;
 
@@ -129,7 +129,7 @@ int gui_set_colormap(lua_State *L)
       break;
     }
 
-    map->colors[i] = luaL_checkinteger(L, -1);
+    map->colors[i] = luaL_checkint(L, -1);
     map->size = i+1;
 
     lua_pop(L, 1);
@@ -410,7 +410,7 @@ extern int CSG2_add_entity(lua_State *L);
 
 extern int WF_wolf_block(lua_State *L);
 
-extern int DM_make_level_gfx(lua_State *L);
+extern int DM_make_name_patch(lua_State *L);
 extern int DM_bex_add_string(lua_State *L);
 extern int DM_ddf_add_string(lua_State *L);
 
@@ -452,7 +452,7 @@ static const luaL_Reg gui_script_funcs[] =
   { "wolf_block",  WF_wolf_block },
 
   // Doom/Heretic/Hexen functions
-  { "make_level_gfx",  DM_make_level_gfx },
+  { "make_name_patch", DM_make_name_patch },
   { "bex_add_string",  DM_bex_add_string },
   { "ddf_add_string",  DM_ddf_add_string },
 

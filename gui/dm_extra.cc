@@ -337,7 +337,8 @@ static int FontIndexForChar(char ch)
 
 static void BlastFontChar(int index, int x, int y,
                           byte *pixels, int W, int H,
-                          const logo_image_t *font, int fw, int fh)
+                          const logo_image_t *font, int fw, int fh,
+                          const color_mapping_t *map, int thresh)
 {
   SYS_ASSERT(0 <= index && index < 44);
 
@@ -350,9 +351,6 @@ static void BlastFontChar(int index, int x, int y,
   SYS_ASSERT(0 <= x && x+fw <= W);
   SYS_ASSERT(0 <= y && y+fh <= H);
 
-
-  // TODO: adjustable mappings and threshhold
-  int thresh = 16;
 
   static byte gold_mapping[12] =
   {
@@ -388,19 +386,23 @@ static void BlastFontChar(int index, int x, int y,
   {
     byte pix = font->data[(fy+dy)*font->width + (fx+dx)];
 
-    if (pix >= thresh)
-    {
-      // map pixel
-      pix = iron_mapping[sizeof(iron_mapping) * (pix-thresh) / (256-thresh)];
+    if (pix < thresh)
+      continue;
 
-      pixels[(y+dy)*W + (x+dx)] = pix;
-    }
+    // map pixel
+    pix = map->colors[map->size * (pix-thresh) / (256-thresh)];
+
+    pixels[(y+dy)*W + (x+dx)] = pix;
   }
 }
 
-static void CreateNamePatch(const char *patch_name, const char *name,
-                            const logo_image_t *font)
+static void CreateNamePatch(const char *patch, const char *text,
+                            const logo_image_t *font,
+                            const color_mapping_t *map)
 {
+  // TODO: adjustable threshhold
+  int thresh = 16;
+
   int font_w = font->width / 11;
   int font_h = font->height / 4;
 
@@ -409,9 +411,9 @@ static void CreateNamePatch(const char *patch_name, const char *name,
 
   // Convert string to font indexes (0 = space, 1+ = index)
 
-  for (; *name && length < 60; name++)
+  for (; *text && length < 60; text++)
   {
-    int idx = FontIndexForChar(*name);
+    int idx = FontIndexForChar(*text);
 
     if (idx >= 0)
       buffer[length++] = idx;
@@ -433,25 +435,37 @@ static void CreateNamePatch(const char *patch_name, const char *name,
 
   for (int p = 0; p < length; p++)
   {
-    if (buffer[p] > 0)
-      BlastFontChar(buffer[p] - 1, p * font_w, 0,
-                    pixels, W, H,
-                    font, font_w, font_h);
+    if (buffer[p] <= 0)
+      continue;
+
+    BlastFontChar(buffer[p] - 1, p * font_w, 0,
+                  pixels, W, H,
+                  font, font_w, font_h,
+                  map, thresh);
   }
 
   qLump_c *lump = DM_CreatePatch(W, H, 0, 0, pixels, W, H, 255);
 
-  DM_WriteLump(patch_name, lump);
+//!!!! FIXME !!!! FIXME !!!!!  DM_AddPatch(patch, lump);
 
   delete lump;
   delete[] pixels;
 }
 
-// LUA: make_level_gfx(key, value)
-//
-int DM_make_level_gfx(lua_State *L)
+int DM_make_name_patch(lua_State *L)
 {
-  // FIXME
+  // LUA: make_name_patch(patch, text, colmap)
+
+  const char *patch = luaL_checkstring(L, 1);
+  const char *text  = luaL_checkstring(L, 2);
+
+  int map_id = luaL_checkint(L, 3);
+
+  if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    return luaL_argerror(L, 1, "colmap value out of range");
+
+  CreateNamePatch(patch, text, &font_CWILV, &color_mappings[map_id]);
+
   return 0;
 }
 
@@ -479,12 +493,12 @@ void BEX_AddString(const char *key, const char *value)
   bex_lump->Printf("%s = %s\n", key, value);
 }
 
-// LUA: bex_add_string(key, value)
-//
 int DM_bex_add_string(lua_State *L)
 {
+  // LUA: bex_add_string(key, value)
+
   const char *key   = luaL_checkstring(L, 1);
-  const char *value = luaL_checkstring(L, 1);
+  const char *value = luaL_checkstring(L, 2);
 
   BEX_AddString(key, value);
 
@@ -527,12 +541,12 @@ void DDF_AddString(const char *key, const char *value)
   ddf_lang->Printf("%s = \"%s\";\n", key, value);
 }
 
-// LUA: ddf_add_string(key, value)
-//
 int DM_ddf_add_string(lua_State *L)
 {
+  // LUA: ddf_add_string(key, value)
+
   const char *key   = luaL_checkstring(L, 1);
-  const char *value = luaL_checkstring(L, 1);
+  const char *value = luaL_checkstring(L, 2);
 
   DDF_AddString(key, value);
 
@@ -546,8 +560,6 @@ void DDF_Finish()
     DM_WriteLump("DDFLANG", ddf_lang);
   }
   delete ddf_lang;
-
-  CreateNamePatch("CWILV02", "You Don't Belong Here/", &font_CWILV);
 }
 
 //--- editor settings ---
