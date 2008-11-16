@@ -672,10 +672,6 @@ function Name_from_pattern(DEF)
         error("Naming theme is missing letter: " .. c)
       end
 
-      if #name > 0 and string.sub(name,#name,#name) ~= " " then
-        name = name .. " "
-      end
-
       local w = rand_key_by_probs(lex)
       name = name .. w
 
@@ -687,11 +683,13 @@ function Name_from_pattern(DEF)
 end
 
 
-function Name_choose_one(DEF, seen_words)
+function Name_choose_one(DEF, seen_words, max_len)
 
----## do return Name_from_pattern(DEF) end
+  local name, parts
 
-  local name, parts = Name_from_pattern(DEF)
+  repeat
+    name, parts = Name_from_pattern(DEF)
+  until #name <= max_len
 
   -- adjust probabilities
   for c,divisor in pairs(DEF.divisors) do
@@ -706,7 +704,7 @@ function Name_choose_one(DEF, seen_words)
 end
 
 
-function Naming_generate(theme, count)
+function Naming_generate(theme, count, max_len)
  
   local defs = deep_copy(NAMING_THEMES)
 
@@ -725,7 +723,7 @@ function Naming_generate(theme, count)
   local seen_words = {}
 
   for i = 1, count do
-    local name = Name_choose_one(DEF, seen_words)
+    local name = Name_choose_one(DEF, seen_words, max_len)
 
     table.insert(list, name)
   end
@@ -738,7 +736,7 @@ function Naming_test()
   local function test_theme(T)
     for set = 1,9 do
       gui.rand_seed(set)
-      local list = Naming_generate(T, 30)
+      local list = Naming_generate(T, 30, 24)
 
       for i,name in ipairs(list) do
         gui.debugf("%s Set %d Name %2d: %s\n", T, set, i, name)
