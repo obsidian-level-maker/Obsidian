@@ -98,7 +98,7 @@ NAMING_THEMES =
         Slige=1, Waste=1, Optic=1, Time=1, Chrono_=1,
         Alpha=3, Gamma=4, Photon=1, Jedi=0.2,
         Crystal=2, Defense=1, Manufacturing=1,
-        Beta=1, Delta=1, Omega=2, Thermal=3,
+        Beta=1, Delta=1, Omega=2, Thermal=3, Laser=1,
         Maintenance=1, Radiation=0.5, Fusion=7,
 
         ["I/O"]=2,
@@ -123,7 +123,8 @@ NAMING_THEMES =
         Quadrant=1, Satellite=2, Sector=2,
         Shaft=1, Silos=1, Sub_station=2,
         Reactor=7, Terminal=2, Port=1, Hub=2,
-        System=2, Dimension=1, Vortex=1,
+        System=2, Dimension=1,
+        Paradox=0.5, Vortex=1,
       },
 
       s =
@@ -162,12 +163,14 @@ NAMING_THEMES =
 
         ["Artificial Apathy"]=10,
         ["Blast Radius"]=10,
+        ["Celestial Crimes"]=10,
         ["Excessive Exposure"]=10,
         ["False Discharge"]=10,
         ["Galaxy on Fire"]=10,
         ["Higher Voltage"]=10,
         ["Hollow Dynamo"]=10,
         ["Hunger for Weapons"]=10,
+        ["In a Future World"]=10,
         ["Input-Output"]=10,
         ["Interstellar Starport"]=10,
         ["Nebula Checkpoint"]=10,
@@ -178,6 +181,7 @@ NAMING_THEMES =
         ["The Mental Abyss"]=10,
         ["The Muon Collective"]=10,
         ["Transportation H.Q."]=10,
+        ["Warp Factor 666"]=10,
       },
     },
 
@@ -285,7 +289,7 @@ NAMING_THEMES =
         Valley=8, River=3, Catacombs=1,
         Palace=2, Cathedral=3, Chamber=8,
         Labyrinth=2, Dungeon=10, Shores=2,
-        Temple=10, Shrine=7, Vault=7,
+        Temple=10, Shrine=7, Vault=7, Sanctum=3,
         Spire=7, Arena=1, Swaths=0.5,
 
         Gate=1, Circle=2, Altar=4,
@@ -361,7 +365,9 @@ NAMING_THEMES =
         ["Thinning the Herd"]=10,
         ["Total Doom"]=10,
 
+        ["Divine Intoxication"]=10,
         ["Infernal Directorate"]=10,
+        ["Gore Soup"]=10,
         ["Kill Thy Neighbor"]=10,
         ["No Salvation"]=10,
         ["Out for Revenge"]=10,
@@ -374,6 +380,7 @@ NAMING_THEMES =
         ["Traces of Evil"]=10,
         ["Twists and Turns"]=10,
         ["Vengeance Denied"]=10,
+        ["Welcome to the Coalface"]=10,
         ["Where the Devils Spawn"]=10,
         ["You Can't Handle the Noose"]=10,
       }
@@ -459,7 +466,8 @@ NAMING_THEMES =
         Fortress=10, Fort=2, Stronghold=1,
         Palace=10, Courtyard=10, Court=3,
         Hallways=10, Hall=5, Corridors=7,
-        House=12, Refuge=1, Sanctuary=1,
+        House=12, Mansion=5, Castle=10,
+        Refuge=1, Sanctuary=1,
         Outpost=2, Keep=1, Slough=1, Temple=1,
         Gate=5, Prison=5, Dens=1, Asylum=2,
 
@@ -495,12 +503,12 @@ NAMING_THEMES =
 
         Ruin=7, Flames=1, Destruction=3,
         Twilight=3, Midnight=2, Dreams=1,
-        Tears=5, Helplessness=1, Misfortune=2,
+        Tears=5, Helplessness=1, Misfortune=3,
 
         Ghosts=10, Gods=10, Spirits=3, Souls=2,
         Menace=5, Evil=2, Ghouls=5, Goblins=1,
         Inequity=1, Blood=4,
-        Insanity=2, Madmen=0.5,
+        Insanity=2, Madmen=0.5, Fools=4,
 
         ["the Mad"]=2,
         ["the Night"]=5,
