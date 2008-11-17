@@ -189,8 +189,8 @@ NAMING_THEMES =
 
     divisors =
     {
-      a = 5,
-      b = 5,
+      a = 6,
+      b = 6,
       n = 20,
       s = 70,
     },
@@ -396,8 +396,8 @@ NAMING_THEMES =
     divisors =
     {
       p = 2,
-      a = 5,
-      h = 5,
+      a = 6,
+      h = 6,
       n = 20,
       s = 70,
     },
@@ -585,8 +585,8 @@ NAMING_THEMES =
 
     divisors =
     {
-      a = 5,
-      h = 5,
+      a = 6,
+      h = 6,
       n = 20,
       s = 70,
     },
@@ -739,7 +739,7 @@ end
 
 function Naming_test()
   local function test_theme(T)
-    for set = 1,20 do
+    for set = 1,9 do
       gui.rand_seed(set)
       local list = Naming_generate(T, 20, 24)
 
