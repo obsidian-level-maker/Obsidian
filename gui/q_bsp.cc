@@ -42,6 +42,11 @@ int qLump_c::GetSize() const
   return (int)buffer.size();
 }
 
+const u8_t * qLump_c::GetBuffer() const
+{
+  return & buffer[0];
+}
+
 
 void qLump_c::Append(const void *data, u32_t len)
 {
@@ -142,6 +147,17 @@ void qLump_c::SetCRLF(bool enable)
 }
 
 
+void qLump_c::SetName(const char *_name)
+{
+  name = std::string(_name);
+}
+
+const char *qLump_c::GetName() const
+{
+  return name.c_str();
+}
+
+
 //------------------------------------------------------------------------
 
 
@@ -209,7 +225,7 @@ static void BSP_WriteLump(qLump_c *lump)
   if (len == 0)
     return;
 
-  PAK_AppendData(& lump->buffer[0], len);
+  PAK_AppendData(lump->GetBuffer(), len);
 
   // pad lumps to a multiple of four bytes
   u32_t padding = AlignLen(len) - len;
@@ -282,7 +298,7 @@ static void BSP_WriteHeader()
     if (! bsp_directory[L])
       bsp_directory[L] = new qLump_c();
 
-    u32_t length = bsp_directory[L]->buffer.size();
+    u32_t length = bsp_directory[L]->GetSize();
 
     raw_info.start  = LE_U32(offset);
     raw_info.length = LE_U32(length);

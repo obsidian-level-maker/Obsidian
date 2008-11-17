@@ -25,16 +25,13 @@
 
 class qLump_c
 {
-/* !!!! */
-public:
-
+private:
   std::vector<u8_t> buffer;
+
+  std::string name;
 
   // when true Printf() converts '\n' to CR/LF pair
   bool crlf;
-
-///--- public: // access only in q_bsp.cc!
-///---   u32_t offset;
 
 public:
    qLump_c();
@@ -48,6 +45,10 @@ public:
   void SetCRLF(bool enable);
 
   int GetSize() const;
+  const u8_t *GetBuffer() const;
+
+  void SetName(const char *_name);
+  const char *GetName() const;
 
 private:
   void RawPrintf(const char *str);
