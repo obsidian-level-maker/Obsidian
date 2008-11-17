@@ -442,15 +442,15 @@ static void CreateNamePatch(const char *patch, const char *text,
 
   qLump_c *lump = DM_CreatePatch(W, H, 0, 0, pixels, W, H, 255);
 
-  DM_AddPatch(patch, lump);
+  DM_WriteLump(patch, lump);
 
   delete lump;
   delete[] pixels;
 }
 
-int DM_make_name_patch(lua_State *L)
+int DM_make_name_gfx(lua_State *L)
 {
-  // LUA: make_name_patch(patch, text, colmap)
+  // LUA: make_name_gfx(patch, text, colmap)
 
   const char *patch = luaL_checkstring(L, 1);
   const char *text  = luaL_checkstring(L, 2);

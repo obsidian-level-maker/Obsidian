@@ -410,7 +410,7 @@ extern int CSG2_add_entity(lua_State *L);
 
 extern int WF_wolf_block(lua_State *L);
 
-extern int DM_make_name_patch(lua_State *L);
+extern int DM_make_name_gfx(lua_State *L);
 extern int DM_bex_add_string(lua_State *L);
 extern int DM_ddf_add_string(lua_State *L);
 
@@ -452,7 +452,7 @@ static const luaL_Reg gui_script_funcs[] =
   { "wolf_block",  WF_wolf_block },
 
   // Doom/Heretic/Hexen functions
-  { "make_name_patch", DM_make_name_patch },
+  { "make_name_gfx",   DM_make_name_gfx },
   { "bex_add_string",  DM_bex_add_string },
   { "ddf_add_string",  DM_ddf_add_string },
 
