@@ -34,7 +34,7 @@ NAMING_THEMES =
       ["%b %n"]    = 48, ["%t %b %n"]    = 17,
       ["%a %b %n"] = 60, ["%t %a %b %n"] = 5,
 
-      ["%s"] = 24,
+      ["%s"] = 25,
     },
 
     lexicon =
@@ -56,20 +56,20 @@ NAMING_THEMES =
         Decrepid=10, Run_Down=5,
         Lost=10, Ruined=5, Forgotten=7, Failed=5,
         Ravished=2, Broken=2, Dead=2, Deadly=4,
-        Dirty=2, Filthy=1, Faulty=1,
+        Dirty=2, Filthy=1, Faulty=2,
         Deserted=10, Abandoned=10,
 
         Monstrous=5, Demonic=3, Invaded=1, Overtaken=1,
         Infested=10, Haunted=3, Ghostly=5, Hellish=1,
-        Subverted=10, Corrupted=1, Contaminated=1,
-        Perverted=2, Doomed=3,
+        Subverted=10, Corrupted=2, Contaminated=1,
+        Perverted=3, Doomed=5,
 
         Strange=16, Eerie=4, Weird=2, Creepy=1,
         Dark=20, Gloomy=8, Horrible=1,
         Dismal=2, Dreaded=4, Cold=4,
 
         Underground=5, Sub_terran=2,
-        Ethereal=5, Floating=2,
+        Aethereal=5, Floating=2,
         Mars=5, Saturn=5, Jupiter=5,
         Deimos=2, Phobos=2,
 
@@ -77,7 +77,7 @@ NAMING_THEMES =
         Northern=1, Southern=1, Eastern=1, Western=1,
         Upper=5, Lower=5, Central=7,
         Inner=5, Outer=5, Innermost=1, Outermost=1,
-        Auxiliary=5, Primary=5, Prime=1,
+        Auxiliary=5, Primary=7, Prime=1,
         Exterior=3, Subsidiary=1, Ultimate=1,
       },
 
@@ -89,17 +89,17 @@ NAMING_THEMES =
         Mechanical=3, Rocket=1, Missile=3, Research=10,
         Nukage=3, Slime=1, Toxin=3, Plasma=6,
         Bio_=10, Bionic=2, Nuclear=10, Chemical=7,
-        Processing=6, Refueling=3, Supply=3,
+        Processing=6, Refueling=3, Supply=4,
         Computer=5, Electronics=1, Electro_=1,
         Industrial=2, Engineering=2, Logic=1,
         Teleport=1, Cryogenic=1, Metallic=2,
         Worm_hole=1, Black_hole=1, Robotic=1,
         Magnetic=4, Electrical=2, Proto_=1,
         Slige=1, Waste=1, Optic=1, Time=1, Chrono_=1,
-        Alpha=3, Gamma=4, Photon=1, Jedi=0.2,
+        Alpha=3, Gamma=4, Photon=2,
         Crystal=2, Defense=1, Manufacturing=1,
         Beta=1, Delta=1, Omega=2, Thermal=3, Laser=1,
-        Maintenance=1, Radiation=0.5, Fusion=7,
+        Maintenance=1, Radiation=1, Fusion=8,
 
         ["I/O"]=2,
       },
@@ -110,21 +110,21 @@ NAMING_THEMES =
         Warehouse=10, Lab=10, Laboratory=2,
         Station=20, Tower=15, Center=15,
         Complex=20, Refinery=15, Factory=10,
-        Depot=7, Storage=3, Anomaly=2, Area=2,
+        Depot=7, Storage=3, Anomaly=3, Area=2,
         Tunnels=5, Zone=8, Sphere=2, Gateway=10,
         Facility=10, Works=1, Outpost=2, Site=1,
-        Hanger=2, Portal=2, Installation=1,
+        Hanger=2, Portal=3, Installation=1,
         Bunker=2, Device=2, Machine=1, Network=1,
 
-        Artifact=1, Beacon=2, Block=0.2,
-        Colony=6, Compound=3, Core=2, Foundry=1,
+        Artifact=1, Beacon=2,
+        Colony=6, Compound=4, Core=2, Foundry=1,
         Headquarters=0.5, Observatory=1,
         Nexus=3, Platform=1, Project=0.5,
         Quadrant=1, Satellite=2, Sector=2,
         Shaft=1, Silos=1, Sub_station=2,
-        Reactor=7, Terminal=2, Port=1, Hub=2,
-        System=2, Dimension=1,
-        Paradox=0.5, Vortex=1,
+        Reactor=10, Terminal=2, Port=1, Hub=3,
+        System=4, Dimension=1,
+        Paradox=1, Vortex=1,
       },
 
       s =
@@ -212,7 +212,7 @@ NAMING_THEMES =
       ["%p's %a %n"]    = 4,
       ["%p's %n of %h"] = 4,
 
-      ["%s"] = 17,
+      ["%s"] = 18,
     },
 
     lexicon =
@@ -232,24 +232,25 @@ NAMING_THEMES =
         Large=10, Massive=10, Sprawling=1,
         Small=1, Endless=7,
 
-        Old=10, Ancient=20, Eternal=1,
+        Old=10, Ancient=15, Eternal=1,
         Decrepid=10, Desolate=5,
         Lost=10, Ruined=5, Forgotten=7,
         Ravished=2, Barren=4, Deadly=3,
-        Dirty=2, Filthy=1, Essel=0.2,
+        Dirty=2, Filthy=1, Stinking=1,
         Stagnant=3, Rancid=9, Rotten=3,
         Burning=25, Burnt=3, Scorching=3,
         Melting=2, Red_Hot=1, Fractured=1,
 
-        Blood=20, Blood_filled=3, Bloody=1,
+        Blood=20, Blood_filled=3, Bloody=2,
         Blood_stained=1, Blood_soaked=1,
         Monstrous=15, Monster=4, Zombie=6,
-        Demonic=10, Demon=2, Ghoulish=2,
+        Demonic=10, Demon=3, Ghoulish=2,
+        Ogre=2, Wizard=2, Warlock=1, Wiccan=1,
         Haunted=10, Ghostly=12, Ghastly=2,
         Unholy=10, Godless=2, God_forsaken=1,
-        Evil=40, Wicked=15, Cruel=7, Ungodly=1,
+        Evil=30, Wicked=15, Cruel=7, Ungodly=1,
         Perverse=5, Hallowed=1, Oppressive=1,
-        Uncivilised=1,
+        Uncivilised=1, Gothic=5,
 
         Eerie=10, Strange=20, Weird=2, Creepy=5,
         Gloomy=15, Awful=5, Horrible=5,
@@ -296,7 +297,7 @@ NAMING_THEMES =
 
         Gate=1, Circle=2, Altar=4,
         Tower=2, Mountains=1, Prison=1,
-        Sanctuary=1, Monolith=1, Crucible=1,
+        Sanctuary=1, Monolith=2, Crucible=1,
         Communion=2,
 
         Excruciation=0.5, Abnormality=0.5,
@@ -307,13 +308,13 @@ NAMING_THEMES =
 
       h =
       {
-        Hell=50, Fire=30, Flames=7,
-        Horror=10, Terror=10, Death=10,
+        Hell=40, Fire=25, Flames=7,
+        Horror=10, Terror=10, Death=15,
         Pain=15, Fear=5, Hate=5,
         Limbo=2, Souls=10, Doom=10,
-        Carnage=5, Gore=3, Shadows=7,
+        Carnage=5, Gore=5, Shadows=8,
         Darkness=10, Destruction=3,
-        Suffering=3, Torment=9, Torture=5,
+        Suffering=3, Torment=10, Torture=5,
         Twilight=2, Midnight=1,
         Flesh=2, Corpses=2,
         Whispers=2, Tears=1, Fate=1,
@@ -377,6 +378,7 @@ NAMING_THEMES =
         ["Out for Revenge"]=10,
         ["Pulse of Depravity"]=10,
         ["Rampage!"]=15,
+        ["Rip in Reality"]=10,
         ["Reaper Unleashed"]=10,
         ["Searching for Sanity"]=10,
         ["Slice 'em Twice!"]=15,
@@ -414,7 +416,7 @@ NAMING_THEMES =
       ["%t %n of %h"] = 12,
       ["%a %n of %h"] = 7,
 
-      ["%s"] = 17,
+      ["%s"] = 18,
     },
 
     lexicon =
@@ -428,13 +430,16 @@ NAMING_THEMES =
       {
         Huge=1, Sprawling=2, Unending=5,
         Serpentine=5, Hulking=1, Giant=2, Vast=2,
+        Lupine=1, Furthest=2,
 
         Old=10, Ancient=10, Eternal=4,
         Decrepid=10, Lost=10, Forgotten=7,
         Ravished=7, Barren=10, Deadly=3,
         Stagnant=3, Rancid=5, Rotten=3,
         Flooded=1, Sunken=0.5, Far_flung=1,
-        Misty=1, Foggy=1, Rain_soaked=1,
+        Misty=3, Foggy=1, Rain_soaked=1,
+        Windy=2, Hazy=1, Smoky=1, Smoke_filled=1,
+        Urban=2, Concrete=5,
 
         Monstrous=5, Monster=10, Wild=3,
         Demonic=5, Demon=10, Polluted=5,
@@ -443,17 +448,17 @@ NAMING_THEMES =
         Corrupted=10, Corrupt=3, Fateful=3,
 
         Eerie=2, Strange=10, Weird=2, Creepy=3,
-        Dark=30, Horrible=5, Exotic=7,
-        Dismal=5, Dreaded=3, Cold=5, Ugly=0.2,
+        Dark=30, Darkest=3, Horrible=5, Exotic=7,
+        Dismal=5, Dreaded=3, Cold=5, Ugly=0.5,
         Lonely=7, Slaughter=2, Desperate=5,
-        Unknown=2, Unexplored=1, Lupine=1,
+        Unknown=2, Unexplored=1,
 
-        Hidden=2, Secret=5, Aethereal=2, Nether_=2,
+        Hidden=2, Secret=5, Ethereal=2, Nether_=2,
         Northern=6, Southern=6, Eastern=6, Western=6,
         Upper=2, Lower=5, Central=2,
         Inner=2, Outer=5, Innermost=1, Outermost=1,
 
-        Bleak=40, Abandoned=15, Forsaken=10,
+        Bleak=30, Abandoned=15, Forsaken=10,
         Cursed=20, Forbidden=20,
         Sinister=20, Bewitched=3, Hostile=7,
         Industrial=1, Residential=1, Living=1,
@@ -480,8 +485,8 @@ NAMING_THEMES =
 
         World=8, Zone=2, Lands=10,
         District=10, Precinct=10,
-        Dominion=5, Domain=1, Trail=2,
-        Region=1, Territory=3, Path=1,
+        Dominion=5, Domain=1, Trail=1,
+        Region=1, Territory=3, Path=3,
         Country=2, Environs=0.5, Neighborhood=1,
 
         Alleys=5, Docks=5,
@@ -490,15 +495,13 @@ NAMING_THEMES =
         Crossroads=1, Fields=10,
         Suburbs=7, Quarters=4, Dwelling=1,
 
-        Forests=7, Cliffs=7,
-        Desert=5, Mountain=3,
+        Forests=7, Cliffs=7, Grove=5,
+        Desert=5, Mountain=3, Jungle=3,
         Canyon=5, Chasm=3, Valley=5,
         Bay=1, Beach=1, Echo=0.5,
 
-        Mines=5, Barracks=3,
-        Camp=1, Compound=1,
-        Harbor=4, Reserve=1,
-        Venue=1, Ward=1,
+        Mines=7, Barracks=3, Camp=2, Compound=1,
+        Harbor=4, Reserve=1, Venue=1, Ward=1,
       },
 
       h =
@@ -511,11 +514,12 @@ NAMING_THEMES =
         Ruin=7, Flames=1, Destruction=3,
         Twilight=3, Midnight=2, Dreams=1,
         Tears=5, Helplessness=1, Misfortune=3,
+        Turmoil=5, Misery=8, Decay=3,
 
-        Ghosts=10, Gods=10, Spirits=3, Souls=2,
-        Menace=5, Evil=2, Ghouls=5, Goblins=1,
-        Inequity=1, Blood=4,
-        Insanity=2, Madmen=0.5, Fools=4,
+        Ghosts=10, Gods=10, Spirits=3, Souls=3,
+        Menace=5, Evil=2, Ghouls=5,
+        Inequity=1, Blood=5,
+        Insanity=2, Madmen=0.5, Fools=5,
 
         ["the Mad"]=2,
         ["the Night"]=5,
@@ -558,6 +562,7 @@ NAMING_THEMES =
         ["Watch your Step!"]=10,
         ["When Ashes Rise"]=10,
 
+        ["Ambushed!"]=10,
         ["Bullet Hole"]=10,
         ["Civil Disobedience"]=5,
         ["Disestablishment"]=10,
@@ -734,9 +739,9 @@ end
 
 function Naming_test()
   local function test_theme(T)
-    for set = 1,9 do
+    for set = 1,20 do
       gui.rand_seed(set)
-      local list = Naming_generate(T, 30, 24)
+      local list = Naming_generate(T, 20, 24)
 
       for i,name in ipairs(list) do
         gui.debugf("%s Set %d Name %2d: %s\n", T, set, i, name)
