@@ -19,12 +19,18 @@
 #ifndef __OBLIGE_DOOM_OUT_H__
 #define __OBLIGE_DOOM_OUT_H__
 
+class qLump_c;
+
 
 bool DM_StartWAD(const char *filename);
 bool DM_EndWAD(void);
 
 void DM_BeginLevel(void);
 void DM_EndLevel(const char *level_name);
+
+void DM_WriteLump(const char *name, qLump_c *lump);
+void DM_AddPatch (const char *name, qLump_c *lump);
+
 
 void DM_AddVertex(int x, int y);
 

@@ -133,10 +133,6 @@ qLump_c * DM_CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
 #undef CUR_PIXEL
 
 
-// FIXME: header-file it??
-extern void DM_WriteLump(const char *name, qLump_c *lump);
-
-
 static void SkyTest2()
 {
   std::vector<byte> star_cols;
@@ -446,7 +442,7 @@ static void CreateNamePatch(const char *patch, const char *text,
 
   qLump_c *lump = DM_CreatePatch(W, H, 0, 0, pixels, W, H, 255);
 
-//!!!! FIXME !!!! FIXME !!!!!  DM_AddPatch(patch, lump);
+  DM_AddPatch(patch, lump);
 
   delete lump;
   delete[] pixels;

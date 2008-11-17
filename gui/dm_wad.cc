@@ -38,6 +38,8 @@
 
 bool wad_hexen;  // FIXME: not global
 
+static std::vector<qLump_c *> patch_lumps;
+
 static qLump_c *thing_lump;
 static qLump_c *vertex_lump;
 static qLump_c *sector_lump;
@@ -69,7 +71,7 @@ void DM_WriteLump(const char *name, const void *data, u32_t len)
 
 void DM_WriteLump(const char *name, qLump_c *lump)
 {
-  DM_WriteLump(name, &lump->buffer[0], lump->buffer.size());
+  DM_WriteLump(name, lump->GetBuffer(), lump->GetSize());
 }
 
 static void DM_WriteBehavior()
@@ -85,9 +87,52 @@ static void DM_WriteBehavior()
   DM_WriteLump("BEHAVIOR", &behavior, sizeof(behavior));
 }
 
-static void DM_WritePatches()
+
+static void ClearPatches()
+{
+  for (unsigned int i = 0; i < patch_lumps.size(); i++)
+  {
+    delete patch_lumps[i];
+    patch_lumps[i] = NULL;
+  }
+
+  patch_lumps.clear();
+}
+
+void DM_AddPatch(const char *name, qLump_c *lump)
+{
+  lump->SetName(name);
+
+  patch_lumps.push_back(lump);
+}
+
+static void WritePatches()
 {
   DM_WriteLump("PP_START", NULL, 0);
+
+  for (unsigned int i = 0; i < patch_lumps.size(); i++)
+  {
+    qLump_c *lump = patch_lumps[i];
+
+    DM_WriteLump(lump->GetName(), lump);
+  }
+
+  DM_WriteLump("PP_END", NULL, 0);
+
+  ClearPatches();
+}
+
+static void DM_OldWritePatches()
+{
+  // !!! TODO !!!
+  // ============
+  //
+  // Open a wad in the data/ folder containing some patches
+  // (and plain lumps), and add these into the current wad.
+  //
+  // Let Lua code specify name of data/ wad and lump/patch
+  // names to merge.  Have this code in dm_extra.cc
+
 
   static const char *patch_names[3][2] =
   {
@@ -149,13 +194,10 @@ static void DM_WritePatches()
     }
   }
 
-//  SkyTest2();
-
-  DM_WriteLump("PP_END", NULL, 0);
 }
 
 
-void DM_CreateInfoLump()
+static void CreateInfoLump()
 {
   qLump_c *L = new qLump_c();
 
@@ -200,7 +242,9 @@ bool DM_StartWAD(const char *filename)
 
   wad_hexen = false;
 
-  DM_CreateInfoLump();  // FIXME: move out ??
+  ClearPatches();
+
+  CreateInfoLump();
 
   BEX_Start();
   DDF_Start();
@@ -214,7 +258,7 @@ bool DM_EndWAD(void)
   BEX_Finish();
   DDF_Finish();
 
-  DM_WritePatches();  // FIXME: move out ??
+  WritePatches();
 
   // FIXME: errors????
   WAD_CloseWrite();
@@ -231,11 +275,11 @@ void DM_BeginLevel(void)
   linedef_lump = new qLump_c();
   sidedef_lump = new qLump_c();
 
-  thing_lump  ->SetCRLF(true);
-  vertex_lump ->SetCRLF(true);
-  sector_lump ->SetCRLF(true);
-  linedef_lump->SetCRLF(true);
-  sidedef_lump->SetCRLF(true);
+///---  thing_lump  ->SetCRLF(true);
+///---  vertex_lump ->SetCRLF(true);
+///---  sector_lump ->SetCRLF(true);
+///---  linedef_lump->SetCRLF(true);
+///---  sidedef_lump->SetCRLF(true);
 }
 
 
@@ -407,17 +451,17 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
 
 int DM_NumVertexes(void)
 {
-  return vertex_lump->buffer.size() / sizeof(raw_vertex_t);
+  return vertex_lump->GetSize() / sizeof(raw_vertex_t);
 }
 
 int DM_NumSectors(void)
 {
-  return sector_lump->buffer.size() / sizeof(raw_sector_t);
+  return sector_lump->GetSize() / sizeof(raw_sector_t);
 }
 
 int DM_NumSidedefs(void)
 {
-  return sidedef_lump->buffer.size() / sizeof(raw_sidedef_t);
+  return sidedef_lump->GetSize() / sizeof(raw_sidedef_t);
 }
 
 
