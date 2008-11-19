@@ -77,7 +77,7 @@ NAMING_THEMES =
 
         -- infestation
         Monstrous=10, Demonic=10, Invaded=3, Overtaken=3,
-        Infested=20, Haunted=10, Ghostly=10, Hellish=3,
+        Infested=20, Haunted=5, Ghostly=10, Hellish=3,
         Subverted=15, Corrupted=7, Contaminated=5,
 
         -- descriptive
@@ -110,7 +110,7 @@ NAMING_THEMES =
         Nukage=10, Slime=10, Toxin=10,
         Chemical=15, Slige=10, Waste=10,
         Plasma=15, Fusion=15, Thermal=10,
-        Crystal=10, Radiation=5,
+        Crystal=10, Radiation=5, Hydro=3,
         Optic=5, Laser=5, Photon=7,
         Logic=5, Time=3, Chrono_=3,
 
@@ -253,7 +253,7 @@ NAMING_THEMES =
 
       p =
       {
-        Satan=10, ["The Devil"]=5, Lucifer=1,
+        Satan=10, ["The Devil"]=5, Lucifer=2,
       },
 
       a =
@@ -296,7 +296,7 @@ NAMING_THEMES =
 
         Eerie=10, Strange=20, Weird=2, Creepy=5,
         Gloomy=15, Awful=5, Horrible=5,
-        Dismal=10, Dreaded=8, Dank=1, Frightful=1,
+        Dismal=10, Dank=1, Frightful=1,
         Moan_filled=2, Spooky=10, Nightmare=4,
         Screaming=2, Silent=5, Sullen=5,
         Magical=1, Magic=1, Mystical=1,
@@ -328,6 +328,7 @@ NAMING_THEMES =
         Lair=10, Den=4, Domain=6, Hive=1,
         Valley=8, River=3, Catacombs=1,
         Palace=2, Cathedral=3, Chamber=8,
+        Hall=5,
 
         Labyrinth=2, Dungeon=10, Shores=2,
         Temple=10, Shrine=7, Vault=7, Sanctum=3,
@@ -354,7 +355,7 @@ NAMING_THEMES =
         Darkness=10, Destruction=3,
         Suffering=3, Torment=10, Torture=5,
         Twilight=2, Midnight=1,
-        Flesh=2, Corpses=2,
+        Flesh=2, Corpses=2, Dread=5,
         Whispers=2, Tears=1, Fate=1,
         Treachery=2, Lunacy=1,
 
@@ -412,6 +413,7 @@ NAMING_THEMES =
 
         ["Divine Intoxication"]=10,
         ["Infernal Directorate"]=10,
+        ["Glutton for Punishment"]=10,
         ["Gore Soup"]=10,
         ["Kill Thy Neighbor"]=10,
         ["No Salvation"]=10,
@@ -469,116 +471,117 @@ NAMING_THEMES =
       a =
       {
         -- size
-        Huge=1, Sprawling=2, Unending=5,
-        Serpentine=5, Hulking=1, Giant=2, Vast=2,
-        Lupine=1,
-        
+        Huge=7, Sprawling=10, Unending=7,
+        Serpentine=10, Hulking=3, Giant=3, Vast=7,
+
         -- location
-        Furthest=2, Isolated=3,
-        Hidden=2, Secret=5, Ethereal=2, Nether_=2,
-        Northern=6, Southern=6, Eastern=6, Western=6,
-        Upper=2, Lower=5, Central=2,
-        Inner=2, Outer=5, Innermost=1, Outermost=1,
+        Secret=10, Hidden=5, Ethereal=5, Nether_=5,
+        Northern=10, Southern=10, Eastern=10, Western=10,
+        Upper=5, Lower=10, Central=5,
+        Inner=5, Innermost=3,
+        Outer=5, Outermost=3,
+        Furthest=5, Isolated=5,
 
         -- condition
-        Old=10, Ancient=10, Eternal=4,
-        Decrepid=10, Lost=10, Forgotten=7,
-        Ravished=7, Barren=10, Deadly=3,
-        Stagnant=3, Rancid=5, Rotten=3,
-        Flooded=1, Sunken=0.5, Far_flung=1,
-        Misty=3, Foggy=1, Rain_soaked=1,
-        Windy=2, Hazy=1, Smoky=1, Smoke_filled=1,
-        Urban=2, Concrete=5,
+        Old=10, Ancient=20, Eternal=7,
+        Decrepid=20, Lost=10, Forgotten=10,
+        Ravished=10, Barren=20, Deadly=5,
+        Stagnant=10, Rancid=15, Rotten=5,
+        Flooded=5, Sunken=3, Far_flung=5,
+        Misty=10, Foggy=5, Rain_soaked=2,
+        Windy=10, Hazy=3, Smoky=5, Smoke_filled=2,
+        Urban=10, Concrete=10,
 
         -- descriptive
-        Monstrous=5, Monster=10, Wild=3,
-        Demonic=5, Demon=10, Polluted=5,
-        Invaded=3, Overtaken=3, Stolen=1,
-        Infected=7, Infested=5, Haunted=20,
-        Corrupted=10, Corrupt=3, Fateful=3,
+        Monstrous=5, Monster=15, Wild=5,
+        Demonic=5, Demon=15, Polluted=10,
+        Invaded=5, Overtaken=5, Stolen=3,
+        Haunted=20, Infected=10, Infested=10,
+        Corrupted=15, Corrupt=5, Fateful=5,
 
-        Eerie=2, Strange=10, Weird=2, Creepy=3,
-        Dark=30, Darkest=3, Horrible=5, Exotic=7,
-        Dismal=5, Dreaded=3, Cold=5, Ugly=0.5,
-        Lonely=7, Slaughter=2, Desperate=5,
-        Unknown=2, Unexplored=1,
+        Strange=10, Eerie=5, Weird=5, Creepy=10,
+        Dark=30, Darkest=7, Horrible=10, Exotic=10,
+        Dismal=10, Dreadful=10, Cold=7, Ugly=2,
+        Vacant=15, Empty=7, Lonely=10, Desperate=5,
+        Unknown=5, Unexplored=7, Lupine=2,
+        Crowded=3,
 
         Bleak=30, Abandoned=15, Forsaken=10,
-        Cursed=20, Forbidden=20,
-        Sinister=20, Bewitched=3, Hostile=7,
-        Industrial=1, Residential=1, Living=1,
-        Mysterious=7, Obscure=5,
-        Ominous=5, Perilous=10,
-        Murder=2, Killing=1,
-        Vacant=10, Empty=6,
-        Whispering=16, Catastrophic=2, 
+        Cursed=20, Wretched=10, Bewitched=5, 
+        Forbidden=20, Sinister=10, Hostile=10,
+        Mysterious=10, Obscure=10, Living=3,
+        Ominous=10, Perilous=15,
+        Slaughter=5, Murder=5, Killing=5,
+        Catastrophic=5, Whispering=20,
       },
 
       n =
       {
-        City=20, Town=12, Village=12,
-        Condominium=7, Condo=2, Citadel=3,
-        Plaza=10, Square=2, Kingdom=3,
-        Fortress=10, Fort=2, Stronghold=1,
-        Palace=10, Courtyard=10, Court=3,
-        Hallways=10, Hall=5, Corridors=7,
-        House=12, Mansion=5, Castle=10,
-        Refuge=1, Sanctuary=1, Asylum=2,
-        Manor=2, Estate=0.5,
-        Outpost=2, Keep=1, Slough=1, Temple=1,
-        Gate=5, Prison=5, Dens=1,
-        Dwelling=1,
+        City=30, Town=20, Village=20,
+        Condominium=10, Condo=5, Citadel=10,
+        Plaza=10, Square=5, Kingdom=15,
+        Fortress=20, Fort=5, Stronghold=5,
+        Palace=20, Courtyard=10, Court=10,
+        Hallways=20, Halls=5, Corridors=7,
 
-        World=8, Zone=2,
+        Castle=20,
+        House=20, Mansion=10, Manor=10,
+        Refuge=5, Sanctuary=5, Asylum=10,
+        Dwelling=3, Estate=2,
+        Outpost=5, Keep=3, Slough=3, Temple=3,
+        Gate=10, Prison=15, Dens=5,
+
+        World=15, Country=10, Zone=5,
         District=10, Precinct=10,
-        Dominion=5, Domain=1, Trail=1,
-        Region=1, Territory=3, Path=3,
-        Country=2, Environs=0.5, Neighborhood=1,
+        Dominion=10, Domain=3, Trail=3,
+        Region=5, Territory=5, Path=5,
+        Neighborhood=3, Environs=1,
 
-        Camp=2, Compound=1,
-        Harbor=4, Reserve=1, Venue=1, Ward=1,
+        Camp=3, Compound=3, Venue=1,
+        Harbor=10, Reserve=3, Ward=3,
+        Junction=2,
 
         -- plurals
-        Lands=10, Fields=10,
-        Alleys=5, Docks=5,
-        Towers=7, Streets=7, Roads=1,
-        Gardens=5, Warrens=1, Quarry=1,
-        Crossroads=1,
-        Suburbs=7, Quarters=4,
-        Mines=7, Barracks=3,
+        Lands=20, Fields=20,
+        Alleys=10, Docks=10,
+        Towers=10, Streets=10, Roads=5,
+        Gardens=15, Warrens=5, Quarry=5,
+        Crossroads=5,
+        Suburbs=10, Quarters=10,
+        Mines=20, Barracks=5,
 
         -- geological
-        Forests=7, Cliffs=7, Grove=5,
-        Desert=5, Mountain=3, Jungle=3,
-        Canyon=5, Chasm=3, Valley=5,
-        Bay=1, Beach=1,
+        Forests=10, Cliffs=10, Grove=10,
+        Desert=7, Mountain=5, Jungle=5,
+        Canyon=10, Chasm=5, Valley=10,
+        Bay=2, Beach=2,
 
         -- weird ones
-        Echo=0.5,
+        Echo=1,
       },
 
       h =
       {
         Doom=20, Gloom=15, Despair=10, Sorrow=15,
         Horror=20, Terror=10, Death=10,
-        Danger=10, Pain=15, Fear=5, Hate=5,
-        Desolation=3, Reparation=1, Solace=2,
+        Danger=10, Pain=15, Fear=7, Hate=5,
+        Desolation=3, Reparation=3, Solace=10,
 
-        Ruin=7, Flames=1, Destruction=3,
-        Twilight=3, Midnight=2, Dreams=1,
-        Tears=5, Helplessness=1, Misfortune=3,
-        Turmoil=5, Misery=8, Decay=3,
-        Blood=5,
-        Insanity=2, Inequity=1,
+        Ruin=10, Flames=3, Destruction=5,
+        Twilight=5, Midnight=5, Dreams=2,
+        Tears=10, Helplessness=2, Misfortune=5,
+        Misery=10, Turmoil=5, Decay=5,
+        Blood=10, Insanity=5, Inequity=2,
 
         -- residents
-        Ghosts=10, Gods=10, Spirits=3, Souls=3,
-        Menace=5, Evil=2, Ghouls=5,
-        Ogres=3, Trolls=3,
-        Madmen=0.5, Fools=5,
+        Ghosts=15, Gods=10, Spirits=5,
+        Menace=15, Evil=5, Ghouls=5,
+        Ogres=5, Trolls=7, Souls=5,
+        Spiders=2, Snakes=5,
+        Madmen=2, Fools=10,
 
-        ["the Mad"]=2,
-        ["the Night"]=5,
+        ["the Mad"]=5,
+        ["the Night"]=10,
       },
 
       s =
