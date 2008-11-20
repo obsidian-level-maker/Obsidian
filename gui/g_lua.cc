@@ -120,7 +120,7 @@ int gui_set_colormap(lua_State *L)
 
   for (int i = 0; i < MAX_COLORS_PER_MAP; i++)
   {
-    lua_pushinteger(L, i);
+    lua_pushinteger(L, 1+i);
     lua_gettable(L, 2);
 
     if (lua_isnil(L, -1))

@@ -460,7 +460,7 @@ int DM_make_name_gfx(lua_State *L)
   if (map_id < 1 || map_id > MAX_COLOR_MAPS)
     return luaL_argerror(L, 1, "colmap value out of range");
 
-  CreateNamePatch(patch, text, &font_CWILV, &color_mappings[map_id]);
+  CreateNamePatch(patch, text, &font_CWILV, &color_mappings[map_id-1]);
 
   return 0;
 }
