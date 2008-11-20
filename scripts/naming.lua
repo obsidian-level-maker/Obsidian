@@ -34,7 +34,7 @@ NAMING_THEMES =
       ["%b %n"]    = 60, ["%t %b %n"]    = 17,
       ["%a %b %n"] = 40, ["%t %a %b %n"] = 5,
 
-      ["%s"] = 27,
+      ["%s"] = 29,
     },
 
     lexicon =
@@ -51,7 +51,7 @@ NAMING_THEMES =
         Small=10, Tiny=5, Sprawling=3,
 
         -- location
-        Underground=10, Sub_terran=5,
+        Underground=10, Sub_terra=5,
         Aethereal=10, Floating=5,
         Mars=10, Saturn=10, Jupiter=10,
         Deimos=5, Phobos=5,
@@ -198,12 +198,17 @@ NAMING_THEMES =
         ["Galaxy on Fire"]=10,
         ["Gravity Well"]=10,
         ["Higher Voltage"]=10,
-        ["Hollow Dynamo"]=10,
+        ["Hello Dynamo"]=10,
         ["Hunger for Weapons"]=10,
         ["In a Future World"]=10,
         ["Input-Output"]=10,
         ["Interstellar Starport"]=10,
         ["Nebula Checkpoint"]=10,
+        ["No Escape!"]=10,
+        ["No Solutions"]=10,
+        ["No Way Through!"]=10,
+        ["Nothing Works"]=10,
+        ["Out of Time"]=10,
         ["Quantum Distortion"]=10,
         ["Sudden Death"]=10,
         ["System Overload"]=10,
@@ -212,6 +217,7 @@ NAMING_THEMES =
         ["The Mental Abyss"]=10,
         ["The Muon Collective"]=10,
         ["Transportation H.Q."]=10,
+        ["Under an Alien Sky"]=10,
         ["Warp Factor 666"]=10,
       },
     },
@@ -220,8 +226,8 @@ NAMING_THEMES =
     {
       a = 10,
       b = 10,
-      n = 40,
-      s = 70,
+      n = 50,
+      s = 300,
     },
   },
 
@@ -373,6 +379,7 @@ NAMING_THEMES =
         ["Absent Savior"]=10,
         ["Absolution Neglect"]=10,
         ["Atrophy of the Soul"]=10,
+        ["A Putrid Serenity"]=10,
         ["A Vile Peace"]=10,
         ["Awaiting Evil"]=10,
         ["Baptised in Parasites"]=10,
@@ -401,7 +408,6 @@ NAMING_THEMES =
         ["Paranoia"]=10,
         ["Punishment Defined"]=10,
         ["Purgatory"]=10,
-        ["Putrid Serenity"]=10,
         ["Sealed Fate"]=10,
         ["Skinfeast"]=10,
         ["Skin Graft"]=10,
@@ -412,20 +418,25 @@ NAMING_THEMES =
         ["Total Doom"]=10,
 
         ["Divine Intoxication"]=10,
+        ["Dying for It"]=10,
         ["Infernal Directorate"]=10,
         ["Glutton for Punishment"]=10,
         ["Gore Soup"]=10,
         ["Kill Thy Neighbor"]=10,
+        ["Murderous Intent"]=10,
         ["No Salvation"]=10,
+        ["No Sanctuary"]=10,
         ["Out for Revenge"]=10,
         ["Pulse of Depravity"]=10,
         ["Rampage!"]=15,
         ["Rip in Reality"]=10,
         ["Reaper Unleashed"]=10,
+        ["Say Thy Prayers!"]=10,
         ["Searching for Sanity"]=10,
         ["Slice 'em Twice!"]=15,
         ["Sorrowful Faction"]=10,
         ["Taste the Blade"]=15,
+        ["Thou Art Doomed!"]=15,
         ["Traces of Evil"]=10,
         ["Twists and Turns"]=10,
         ["Vengeance Denied"]=10,
@@ -440,8 +451,8 @@ NAMING_THEMES =
       p = 3,
       a = 10,
       h = 10,
-      n = 40,
-      s = 70,
+      n = 50,
+      s = 300,
     },
   },
 
@@ -578,7 +589,7 @@ NAMING_THEMES =
         Menace=15, Evil=5, Ghouls=5,
         Ogres=5, Trolls=7, Souls=5,
         Spiders=2, Snakes=5, Vermin=5,
-        Madmen=2, Fools=10,
+        Madmen=2, Fools=10, Martyrs=5,
 
         ["the Mad"]=5,
         ["the Night"]=10,
@@ -630,12 +641,14 @@ NAMING_THEMES =
         ["Eaten by the Furniture"]=10,
         ["Escape is Futile"]=10,
         ["Fight That!"]=10,
+        ["Forboding Signs"]=10,
         ["Mindless Architecture"]=10,
         ["Mow 'em Down!"]=15,
         ["Nobody's Home"]=10,
         ["No Comfort"]=10,
         ["Out of Luck"]=10,
         ["Passing Away"]=10,
+        ["Route to Death"]=10,
         ["Stream of Unconsciousness"]=10,
         ["Struggle No More"]=10,
         ["Today You Die!"]=10,
@@ -648,8 +661,8 @@ NAMING_THEMES =
     {
       a = 10,
       h = 10,
-      n = 40,
-      s = 70,
+      n = 50,
+      s = 300,
     },
   },
 }
@@ -798,8 +811,8 @@ end
 
 function Naming_test()
   local function test_theme(T)
-    for set = 1,20 do
-      gui.rand_seed(set)
+    for set = 1,30 do
+      gui.rand_seed(50+set)
       local list = Naming_generate(T, 12, 28)
 
       for i,name in ipairs(list) do
