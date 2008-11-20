@@ -108,6 +108,9 @@ void DM_AddPatch(const char *name, qLump_c *lump)
 
 static void WritePatches()
 {
+  if (patch_lumps.size() == 0)
+    return;
+
   DM_WriteLump("PP_START", NULL, 0);
 
   for (unsigned int i = 0; i < patch_lumps.size(); i++)
