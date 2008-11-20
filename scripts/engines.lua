@@ -20,19 +20,35 @@
 function Boom_set_level_name()
   assert(LEVEL.description)
   
-  local index = 1  -- FIXME !!!!
+  local id
 
-  local name = string.format("HUSTR_%d", index)
+  if string.sub(LEVEL.name, 1, 1) == "E" then
 
-  gui.bex_add_string(name, LEVEL.description)
+    -- Doom I : HUSTR_ExMy
+    id = "HUSTR_" .. LEVEL.name
+
+  else
+    local pos = 4
+    if string.sub(LEVEL.name, pos, pos) == "0" then
+      pos = pos + 1
+    end
+
+    -- Doom II : HUSTR_%d
+    id = "HUSTR_" .. string.sub(LEVEL.name, pos)
+  end
+
+  local text = LEVEL.name .. ": " .. LEVEL.description;
+
+  gui.bex_add_string(id, text)
 end
 
 function Edge_set_level_name()
   assert(LEVEL.description)
   
-  local name = string.format("%sDesc", LEVEL.name)
+  local id = string.format("%sDesc", LEVEL.name)
+  local text = LEVEL.name .. ": " .. LEVEL.description;
 
-  gui.ddf_add_string(name, LEVEL.description)
+  gui.ddf_add_string(id, text)
 end
 
 
