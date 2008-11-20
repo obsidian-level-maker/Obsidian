@@ -3236,7 +3236,8 @@ function Doom1_get_levels()
     for map = 1,MAP_NUM do
       local LEV =
       {
-        name = string.format("E%dM%d", episode, map),
+        name  = string.format("E%dM%d", episode, map),
+        patch = string.format("WILV%d%d", episode-1, map-1),
 
         ep_along = (map - 1) / 8,
 
@@ -3261,6 +3262,48 @@ function Doom1_get_levels()
   end -- for episode
 
   return list
+end
+
+
+DM_LEVEL_GFX_COLORS =
+{
+  gold   = { 0,47,44, 167,166,165,164,163,162,161,160, 225 },
+  silver = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 },
+  bronze = { 0,2, 191,188, 235,232, 221,218,215,213,211,209 },
+  iron   = { 0,7,5, 111,109,107,104,101,98,94,90,86,81 },
+}
+
+function Doom_make_level_gfx()
+  assert(LEVEL.description)
+  assert(LEVEL.patch)
+
+  -- decide color set
+  if not GAME.level_gfx_colors then
+    local kind = rand_key_by_probs(
+    {
+      gold=50, silver=20, bronze=50, iron=30
+    })
+
+    GAME.level_gfx_colors = assert(DM_LEVEL_GFX_COLORS[kind])
+  end
+
+  gui.set_colormap(1, GAME.level_gfx_colors)
+
+  gui.make_name_gfx(LEVEL.patch, LEVEL.description, 1)
+
+
+  GAME.level_gfx_colors = nil  --!!!!!!
+end
+
+function Doom_describe_levels()
+
+  -- FIXME handle themes properly !!!
+
+  local desc_list = Naming_generate("TECH", #GAME.all_levels, PARAMS.max_level_desc)
+
+  for index,LEV in ipairs(GAME.all_levels) do
+    LEV.description = desc_list[index]
+  end
 end
 
 
@@ -3362,7 +3405,7 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["doom1"] =
+OB_GAMES["doom1"] =
 {
   label = "Doom 1",
 
@@ -3391,7 +3434,7 @@ UNFINISHED["doom1"] =
     error_tex  = "FIREBLU1",
     error_flat = "SFLR6_4",
 
-    max_level_desc = 31,
+    max_level_desc = 28,
 
     palette_mons = 3,
   },
@@ -3399,6 +3442,9 @@ UNFINISHED["doom1"] =
   hooks =
   {
     get_levels = Doom1_get_levels,
+
+    describe_levels = Doom_describe_levels,
+    make_level_gfx  = Doom_make_level_gfx,
   },
 }
 

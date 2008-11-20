@@ -38,6 +38,7 @@ require 'quests'
 require 'rooms'
 require 'layout'
 require 'builder'
+require 'naming'
 
 -- require 'monsters'
 
@@ -154,6 +155,16 @@ function Level_Make(L, index, NUM)
     if gui.abort() then return "abort" end
     gui.progress(100)
 
+  if LEVEL.description then
+    if HOOKS.set_level_name then
+       HOOKS.set_level_name()
+    end
+
+    if HOOKS.make_level_gfx then
+       HOOKS.make_level_gfx()
+    end
+  end
+
   -- intra-level cleanup
   if index < NUM then
     LEVEL = nil
@@ -171,11 +182,15 @@ function Level_MakeAll()
 
   assert(HOOKS.get_levels)
 
-  local levels = HOOKS.get_levels()
-  assert(#levels > 0)
+  GAME.all_levels = HOOKS.get_levels()
+  assert(#GAME.all_levels > 0)
 
-  for index,L in ipairs(levels) do
-    if Level_Make(L, index, #levels) == "abort" then
+  if HOOKS.describe_levels then
+     HOOKS.describe_levels()
+  end
+
+  for index,L in ipairs(GAME.all_levels) do
+    if Level_Make(L, index, #GAME.all_levels) == "abort" then
       return "abort"
     end
   end

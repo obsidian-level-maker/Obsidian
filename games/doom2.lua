@@ -1696,7 +1696,8 @@ function Doom2_get_levels()
 
     local LEV =
     {
-      name = string.format("MAP%02d", map),
+      name  = string.format("MAP%02d", map),
+      patch = string.format("CWILV%02d", map-1),
 
       ep_along = ((map - 1) % 10) / 9.0,
 
@@ -1793,7 +1794,7 @@ OB_GAMES["doom2"] =
     -- this is roughly how many characters can fit on the
     -- intermission screens (the CWILVxx patches).  It does
     -- not reflect any buffer limits in Doom ports.
-    max_level_desc = 31,
+    max_level_desc = 28,
 
     palette_mons = 5,
   },
@@ -1801,6 +1802,9 @@ OB_GAMES["doom2"] =
   hooks =
   {
     get_levels = Doom2_get_levels,
+
+    describe_levels = Doom_describe_levels,
+    make_level_gfx  = Doom_make_level_gfx,
   },
 }
 

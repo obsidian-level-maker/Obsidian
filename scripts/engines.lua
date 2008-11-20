@@ -2,7 +2,7 @@
 --  Engine (source port) list
 ----------------------------------------------------------------
 --
---  Oblige Level Maker (C) 2006-2008 Andrew Apted
+--  Oblige Level Maker (C) 2008 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -15,6 +15,28 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
+
+
+function Boom_set_level_name()
+  assert(LEVEL.description)
+  
+  local index = 1  -- FIXME !!!!
+
+  local name = string.format("HUSTR_%d", index)
+
+  gui.bex_add_string(name, LEVEL.description)
+end
+
+function Edge_set_level_name()
+  assert(LEVEL.description)
+  
+  local name = string.format("%sDesc", LEVEL.name)
+
+  gui.ddf_add_string(name, LEVEL.description)
+end
+
+
+--============================================================--
 
 
 --*** Catch-all ***--
@@ -45,6 +67,11 @@ OB_ENGINES["boom"] =
     boom_lines = true,
     boom_sectors = true,
   },
+
+  hooks =
+  {
+    set_level_name = Boom_set_level_name,
+  },
 }
 
 OB_ENGINES["edge"] =
@@ -64,6 +91,11 @@ OB_ENGINES["edge"] =
     thing_exfloor_flags = true,
 
     mirrors = true,
+  },
+
+  hooks =
+  {
+    set_level_name = Edge_set_level_name,
   },
 }
 
@@ -89,6 +121,11 @@ OB_ENGINES["eternity"] =
   {
     -- TODO
   },
+
+  hooks =
+  {
+    set_level_name = Boom_set_level_name,
+  },
 }
 
 OB_ENGINES["legacy"] =
@@ -104,6 +141,11 @@ OB_ENGINES["legacy"] =
 
     extra_floors = true,
     liquid_floors = true,
+  },
+
+  hooks =
+  {
+    set_level_name = Boom_set_level_name,
   },
 }
 
