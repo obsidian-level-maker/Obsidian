@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+  <meta name="robots" content="all">
+
+  <title> OBLIGE : Devel Notes II</title>
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" title="currentStyle">
+    @import "main.css";
+  </style>
+</head>
+
+<body>
+
+<h2>OBLIGE : Recent Development</h2>
+
+by Andrew Apted. &nbsp; 22nd November 2008
+
+<p>&nbsp;
+<p>&nbsp;
+
+<p>
+Progress on OBLIGE has been slow,
+some might say [i]glacial[/i],
+since the last update,
+but things are still happening.
+
+<p>
+There was several attempts at creating better
+whole-level designs for maps.  The first one was
+called a "Zone" system, big square areas that would
+be populated with rooms, or sub-divided into smaller
+zones.  Seemed promising but it didn't work out.
+Next I tried a "Room Fab" system, which connected
+pre-fabricated room shapes together to make a
+whole map.  It was great at making room/hallway
+mazes, but lousy when it came to outdoor areas.
+The final system is called the "Land Map", it
+involves making a crude representation which
+consists of building, ground or liquid areas.
+This one is working very nicely.
+
+<p>
+The GUI has changed again, especially the area for
+Custom Modules.  Getting the custom modules to work
+properly (including module-specific options) and
+getting CONFIG.CFG loading/saving again all took a
+long time, but is working fine now.
+
+<p>
+The Quest system, which is responsible for deciding
+where to put locked doors and what keys/switches to
+use for them, needed to be rewritten.  The old way
+decided all the quests first, and creating rooms to
+fulfil those quests.  That didn't work with the Land-Map
+system, hence the new way firstly connects all the rooms
+(including outdoor areas), then decides how to split the
+level into smaller quests and where the locked doors
+should go.  It's actually harder than it sounds.
+
+<p>
+
+</body>
+</html>
