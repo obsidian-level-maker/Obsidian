@@ -25,43 +25,72 @@ by Andrew Apted. &nbsp; 22nd November 2008
 <p>
 Progress on OBLIGE has been slow,
 some might say [i]glacial[/i],
-since the last update,
 but things are still happening.
 
 <p>
 There was several attempts at creating better
 whole-level designs for maps.  The first one was
 called a "Zone" system, big square areas that would
-be populated with rooms, or sub-divided into smaller
-zones.  Seemed promising but it didn't work out.
+be populated with rooms or sub-divided into smaller
+zones.  Seemed promising, but it didn't work out.
 Next I tried a "Room Fab" system, which connected
 pre-fabricated room shapes together to make a
 whole map.  It was great at making room/hallway
 mazes, but lousy when it came to outdoor areas.
 The final system is called the "Land Map", it
-involves making a crude representation which
-consists of building, ground or liquid areas.
-This one is working very nicely.
+involves making a crude representation of
+the map consisting of building, ground or liquid
+areas.  This one is working quite nicely.
 
 <p>
-The GUI has changed again, especially the area for
+The GUI has changed again, especially the section for
 Custom Modules.  Getting the custom modules to work
 properly (including module-specific options) and
-getting CONFIG.CFG loading/saving again all took a
-long time, but is working fine now.
+fixing CONFIG.CFG loading/saving all took a while,
+but is working fine now.
 
 <p>
 The Quest system, which is responsible for deciding
 where to put locked doors and what keys/switches to
 use for them, needed to be rewritten.  The old way
-decided all the quests first, and creating rooms to
-fulfil those quests.  That didn't work with the Land-Map
-system, hence the new way firstly connects all the rooms
+decided all the quests first, and creating rooms
+on-the-fly to fulfil those quests.
+That method didn't work with the Land-Map system,
+so the new way firstly connects all the rooms
 (including outdoor areas), then decides how to split the
 level into smaller quests and where the locked doors
 should go.  It's actually harder than it sounds.
 
 <p>
+The Fight simulator, which figures out how much ammo
+and health you need to fight each battle,
+was also rewritten.  It is simpler and more flexible,
+and the information it needs about monsters and weapons
+was greatly improved for each game
+(especially Heretic, Hexen, and Quake).
+
+<p>
+The previous update talked about Quake I support.
+Since then I played through Quake II, enjoyed the
+game and wanted to add support for it into OBLIGE.
+While there is a lot of commonality in the
+map formats of Quake I and II, there are also some
+big differences.  In particular, Quake II
+uses actual brushes for collision detection
+(as opposed to Quake's BSP hulls),
+and I haven't yet got collision detection working
+in Quake II maps yet, so everything (player included)
+just falls out of the world.
+
+<p>
+Some other side projects in OBLIGE have been
+fun to work on recently.  There is some code to
+randomly generate DOOM skies, either mountains and
+clouds, or starry nights.  There's also a
+random level name generator, which can pick some
+words out of various lists and string them together
+to make TECH, GOTHIC or URBAN level names.
+
 
 </body>
 </html>
