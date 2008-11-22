@@ -37,10 +37,6 @@ NAME GENERATOR
 
              LIMIT = 39 letters
 
-+  support the PARAMS.max_level_desc value
-
--  drop generated name if it matches one of previous 3 names
-
 -  WILVxx and CWILVxx creation: need an API!
 
 
@@ -398,6 +394,11 @@ Pipe Dreams:
 
       5080 = "Blue Start"      
       5081 = "Red Start"
+
+-  Surprise Lifts:
+   It is a hallway/room section that looks normal but when the player
+   crosses the Lift-Lower-Wait-Rise linedef, it lowers to surprise the
+   player with monsters on one or both sides of the lift.
 
 ?? one-way routes ??
    -  for example: at along:3 fall-off -> along:4
