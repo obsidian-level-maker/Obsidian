@@ -1605,10 +1605,20 @@ end -- do_sides
         name = tostring(GAME.things["player1"].id)
       })
     elseif S.is_exit then
-      gui.add_entity(mx, my, z1 + 25,
+      gui.add_brush(
       {
-        name = ENT_EXIT
-      })
+        t_face = { texture="STEP2" },
+        b_face = { texture="STEP2" },
+        w_face = { texture="SW1BLUE" },
+      },
+      {
+        { x=mx-32, y=my-32, line_kind=11 },
+        { x=mx-32, y=my+32, line_kind=11 },
+        { x=mx+32, y=my+32, line_kind=11 },
+        { x=mx+32, y=my-32, line_kind=11 },
+      },
+      -2000, 2000)
+
     elseif S.room and S.room.kind ~= "scenic" and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
