@@ -106,6 +106,7 @@ typedef enum
 
   BRU_F_Door     = (1 << 4),  // (DOOM) close the created sector
   BRU_F_SkyClose = (1 << 5),  // (DOOM) almost close the sector
+  BRU_F_RevDoor  = (1 << 6),  // (DOOM) 
 }
 brush_flags_e;
 

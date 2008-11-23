@@ -431,16 +431,22 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
   lua_getfield(L, stack_pos, "flag_liquid");
   lua_getfield(L, stack_pos, "flag_detail");
   lua_getfield(L, stack_pos, "flag_noclip");
+
+  if (lua_toboolean(L, -3)) B->bflags |= BRU_F_Liquid;
+  if (lua_toboolean(L, -2)) B->bflags |= BRU_F_Detail;
+  if (lua_toboolean(L, -1)) B->bflags |= BRU_F_NoClip;
+
+  lua_pop(L, 3);
+
   lua_getfield(L, stack_pos, "flag_door");
   lua_getfield(L, stack_pos, "flag_skyclose");
+  lua_getfield(L, stack_pos, "flag_revdoor");
 
-  if (lua_toboolean(L, -5)) B->bflags |= BRU_F_Liquid;
-  if (lua_toboolean(L, -4)) B->bflags |= BRU_F_Detail;
-  if (lua_toboolean(L, -3)) B->bflags |= BRU_F_NoClip;
-  if (lua_toboolean(L, -2)) B->bflags |= BRU_F_Door;
-  if (lua_toboolean(L, -1)) B->bflags |= BRU_F_SkyClose;
+  if (lua_toboolean(L, -3)) B->bflags |= BRU_F_Door;
+  if (lua_toboolean(L, -2)) B->bflags |= BRU_F_SkyClose;
+  if (lua_toboolean(L, -1)) B->bflags |= BRU_F_RevDoor;
  
-  lua_pop(L, 5);
+  lua_pop(L, 3);
 
   // TODO: peg, lighting ???
 
