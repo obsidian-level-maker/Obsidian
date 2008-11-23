@@ -171,24 +171,29 @@ Q2_PALETTE =
 
 Q2_COMBOS =
 {
-  BASE =
+  TECH_BASE =
   {
-    mat_pri = 5,
-    wall = 12, void = 12, floor=0, ceil=0,
-    decorate = 10, door_side = 23,
+    theme_probs = { TECH=50 },
 
-    theme_probs = { BUNKER=120, CELLS=25  },
+    wall  = "e1u1/exitdr01_2",
+    ceil  = "e1u1/grnx2_3",
+    floor = "e1u1/floor3_3",
   },
 
+  TECH_GROUND =
+  {
+    theme_probs = { TECH=50 },
+
+    outdoor = true,
+
+    wall  = "e1u1/grnx3_2",
+    ceil  = "e1u1/grnx3_2",
+    floor = "e1u1/grnx3_2",
+  },
 }
 
 Q2_EXITS =
 {
-  ELEVATOR =  -- FIXME: not needed, remove
-  {
-    mat_pri = 0,
-    wall = 21, void = 21, floor=0, ceil=0,
-  },
 }
 
 
@@ -200,13 +205,6 @@ Q2_KEY_DOORS =
 
 Q2_MISC_PREFABS =
 {
-  elevator =
-  {
-    prefab = "WOLF_ELEVATOR",
-    add_mode = "extend",
-
-    skin = { elevator=21, front=14, }
-  },
 }
 
 
@@ -639,7 +637,10 @@ UNFINISHED["quake2"] =
   {
     seed_size = 240,
 
-    -- the name buffer in Quake II is huge, this value
+    sky_tex  = "e1u1/sky1",
+    sky_flat = "e1u1/sky1",
+
+    -- the name buffer in Quake II is huge, but this value
     -- reflects the on-screen space (in the computer panel)
     max_level_desc = 24,
 
