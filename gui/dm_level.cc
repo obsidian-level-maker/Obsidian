@@ -842,7 +842,7 @@ for (unsigned int k=0; k < G->b_sides.size(); k++)
     if (front_idx < 0)
       should_flip = true;
 
-    if (G->front && G->back)
+    if (front_idx >= 0 && back_idx >= 0)
     {
       sector_info_c *FS = dm_sectors[G->front->index];
       sector_info_c *BS = dm_sectors[G-> back->index];
