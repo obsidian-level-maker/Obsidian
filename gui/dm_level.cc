@@ -837,12 +837,34 @@ for (unsigned int k=0; k < G->b_sides.size(); k++)
     int v1 = WriteVertex(G->start);
     int v2 = WriteVertex(G->end);
 
-    if (front_idx < 0)
-    {
-      front_idx = back_idx;
-      back_idx  = -1;
+    bool should_flip = false;
 
-      int TMP = v1; v1 = v2; v2 = TMP;
+    if (front_idx < 0)
+      should_flip = true;
+
+    if (G->front && G->back)
+    {
+      sector_info_c *FS = dm_sectors[G->front->index];
+      sector_info_c *BS = dm_sectors[G-> back->index];
+
+      if (FS->f_h != BS->f_h)
+      {
+        if (BS->f_h < FS->f_h)
+          should_flip = true;
+      }
+      else if (FS->c_h != BS->c_h)
+      {
+        if (BS->c_h > FS->c_h)
+          should_flip = true;
+      }
+    }
+
+    if (should_flip)
+    {
+      int TMP;
+
+      TMP = front_idx; front_idx = back_idx; back_idx = TMP;
+      TMP = v1; v1 = v2; v2 = TMP;
     }
 
     int flags = 0;
