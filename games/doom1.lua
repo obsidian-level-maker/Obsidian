@@ -3281,7 +3281,7 @@ function Doom_make_level_gfx()
   if not GAME.level_gfx_colors then
     local kind = rand_key_by_probs(
     {
-      gold=50, silver=20, bronze=50, iron=30
+      gold=12, silver=3, bronze=8, iron=10
     })
 
     GAME.level_gfx_colors = assert(DM_LEVEL_GFX_COLORS[kind])
@@ -3290,9 +3290,6 @@ function Doom_make_level_gfx()
   gui.set_colormap(1, GAME.level_gfx_colors)
 
   gui.make_name_gfx(LEVEL.patch, LEVEL.description, 1)
-
-
-  GAME.level_gfx_colors = nil  --!!!!!!
 end
 
 function Doom_describe_levels()
