@@ -736,18 +736,34 @@ function make_lift(S, x1,y1, x2,y2, z)
 
   local tag = PLAN:alloc_tag()
 
+  local kinds = {}
+
+  for dir = 2,8,2 do
+    local nx, ny = nudge_coord(S.sx, S.sy, dir)
+    if Seed_valid(nx, ny, 1) then
+      local N = SEEDS[nx][ny][1]
+      local nz = N.floor_h or N.room.floor_h or z
+
+      if nz < z-15 then
+        kinds[dir] = 62
+      else
+        kinds[dir] = 88
+      end
+    end
+  end
+
     gui.add_brush(
     {
       t_face = { texture="STEP2" },
       b_face = { texture="STEP2" },
-      w_face = { texture="SUPPORT3" },
+      w_face = { texture="SUPPORT2" },
       sec_tag = tag,
     },
     {
-      { x=x1, y=y1, line_kind=88, line_tag=tag },
-      { x=x1, y=y2, line_kind=88, line_tag=tag },
-      { x=x2, y=y2, line_kind=88, line_tag=tag },
-      { x=x2, y=y1, line_kind=88, line_tag=tag },
+      { x=x1, y=y1, line_kind = kinds[4], line_tag=tag },
+      { x=x1, y=y2, line_kind = kinds[8], line_tag=tag },
+      { x=x2, y=y2, line_kind = kinds[6], line_tag=tag },
+      { x=x2, y=y1, line_kind = kinds[2], line_tag=tag },
     },
     -2000, z);
 end
