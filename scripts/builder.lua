@@ -123,6 +123,175 @@ function make_sky_fence(S, side)
 end
 
 
+function make_hall_light(S, z2)
+
+  local mx = int((S.x1 + S.x2)/2)
+  local my = int((S.y1 + S.y2)/2)
+
+  gui.add_brush(
+  {
+    t_face = { texture="CEIL5_1" },
+    b_face = { texture="TLITE6_5" },
+    w_face = { texture="METAL" },
+  },
+  {
+    { x = mx-32, y = my-32 },
+    { x = mx-32, y = my+32 },
+    { x = mx+32, y = my+32 },
+    { x = mx+32, y = my-32 },
+  },
+  z2-12, 2000)
+
+
+  gui.add_brush(
+  {
+    t_face = { texture="CEIL5_1" },
+    b_face = { texture="CEIL5_1" },
+    w_face = { texture="METAL" },
+  },
+  {
+    { x = mx-40, y = my-40 },
+    { x = mx-40, y = my+40 },
+    { x = mx-32, y = my+40 },
+    { x = mx-32, y = my-40 },
+  },
+  z2-16, 2000)
+
+  gui.add_brush(
+  {
+    t_face = { texture="CEIL5_1" },
+    b_face = { texture="CEIL5_1" },
+    w_face = { texture="METAL" },
+  },
+  {
+    { x = mx+32, y = my-40 },
+    { x = mx+32, y = my+40 },
+    { x = mx+40, y = my+40 },
+    { x = mx+40, y = my-40 },
+  },
+  z2-16, 2000)
+
+
+  gui.add_brush(
+  {
+    t_face = { texture="CEIL5_1" },
+    b_face = { texture="CEIL5_1" },
+    w_face = { texture="METAL" },
+  },
+  {
+    { x = mx-40, y = my-40 },
+    { x = mx-40, y = my-32 },
+    { x = mx+40, y = my-32 },
+    { x = mx+40, y = my-40 },
+  },
+  z2-16, 2000)
+
+  gui.add_brush(
+  {
+    t_face = { texture="CEIL5_1" },
+    b_face = { texture="CEIL5_1" },
+    w_face = { texture="METAL" },
+  },
+  {
+    { x = mx-40, y = my+32 },
+    { x = mx-40, y = my+40 },
+    { x = mx+40, y = my+40 },
+    { x = mx+40, y = my+32 },
+  },
+  z2-16, 2000)
+ 
+end
+
+
+function make_detailed_hall(S, side, z1, z2)
+
+  local function get_hall_coords(thickness)
+
+    S.thick[side] = thickness
+
+    local ox1, oy1, ox2, oy2 = S.x1,S.y1, S.x2,S.y2
+
+    if (side == 4 or side == 6) then
+
+      if S:neighbor(2) and S:neighbor(2).room == S.room then
+        S.y1 = S.y1 - thickness
+      end
+
+      if S:neighbor(8) and S:neighbor(8).room == S.room then
+        S.y2 = S.y2 + thickness
+      end
+
+    else
+      if S:neighbor(4) and S:neighbor(4).room == S.room then
+        S.x1 = S.x1 - thickness
+      end
+
+      if S:neighbor(6) and S:neighbor(6).room == S.room then
+        S.x2 = S.x2 + thickness
+      end
+
+    end
+
+    local res = get_wall_coords(S, side)
+
+    S.x1,S.y1, S.x2,S.y2 = ox1, oy1, ox2, oy2
+    
+    return res
+  end
+
+
+  gui.add_brush(
+  {
+    t_face = { texture="CEIL5_1" },
+    b_face = { texture="CEIL5_1" },
+    w_face = { texture="METAL" },
+  },
+  get_hall_coords(32),
+  -2000, z1 + 32)
+
+  gui.add_brush(
+  {
+    t_face = { texture="CEIL5_1" },
+    b_face = { texture="CEIL5_1" },
+    w_face = { texture="METAL" },
+  },
+  get_hall_coords(32),
+  z2 - 32, 2000)
+
+
+  gui.add_brush(
+  {
+    t_face = { texture="FLAT1" },
+    b_face = { texture="FLAT1" },
+    w_face = { texture="GRAY7" },
+  },
+  get_hall_coords(64),
+  -2000, z1 + 6)
+
+  gui.add_brush(
+  {
+    t_face = { texture="FLAT1" },
+    b_face = { texture="FLAT1" },
+    w_face = { texture="GRAY7" },
+  },
+  get_hall_coords(64),
+  z2 - 6, 2000)
+
+
+  gui.add_brush(
+  {
+    t_face = { texture="FLAT1" },
+    b_face = { texture="FLAT1" },
+    w_face = { texture="GRAY7" },
+  },
+  get_hall_coords(24),
+  -2000, 2000)
+
+
+  -- TODO : corners
+end
+
+
 function make_diagonal(S, side, info, z1)
 
   local lw = S.thick[4] * 1
@@ -1353,7 +1522,12 @@ gui.printf("do_teleport\n")
 
       elseif R.kind == "hallway" then
 
-          w_tex = "GRAY7"
+        f_tex = "FLOOR0_2"
+        c_tex = "FLAT4"
+
+---     w_tex = "GRAY7"
+
+        make_hall_light(S, z2)
 
       elseif R.kind == "stairwell" then
 
@@ -1362,19 +1536,36 @@ gui.printf("do_teleport\n")
       end
 
 
+
     -- make sides
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
 
-      if S.borders[side] and S.borders[side].kind == "solid"
-         and not (N and S.room and N.room and
-                  S.room.arena == N.room.arena and
-                  S.room.kind == N.room.kind and
-                  not (S.room.hallway or N.room.hallway) and
-                  not (S.room.purpose or N.room.purpose) and
-                  false)
+      -- hallway hack
+      if R.kind == "hallway" and S.layout_char ~= '#' and
+         ( (S.borders[side] and S.borders[side].kind == "solid")
+          or
+           (S:neighbor(side) and S:neighbor(side).room == R and
+            S:neighbor(side).layout_char == '#')
+         )
       then
+        make_detailed_hall(S, side, z1, z2)
+
+        S.borders[side] = nil
+      end
+
+      local could_lose_wall =
+            N and S.room and N.room and
+            S.room.arena == N.room.arena and
+            S.room.kind == N.room.kind and
+            not (S.room.hallway or N.room.hallway) and
+            not (S.room.purpose or N.room.purpose)
+
+      if S.borders[side] and S.borders[side].kind == "solid"
+---      and not could_lose_wall
+      then
+
         gui.add_brush(
         {
           t_face = { texture=f_tex },
@@ -1388,6 +1579,7 @@ gui.printf("do_teleport\n")
       if S.borders[side] and S.borders[side].kind == "fence"
          and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
       then
+
         gui.add_brush(
         {
           t_face = { texture=f_tex },
@@ -1417,7 +1609,8 @@ gui.printf("ADDING LOCK DOOR %s\n", w_tex)
         get_wall_coords(S, side),
         z1 + 64, 4000)
       end
-    end
+        
+    end -- for side
 
 
     if S.sides_only then return end
@@ -1484,7 +1677,7 @@ gui.printf("ADDING LOCK DOOR %s\n", w_tex)
 
     -- floor and ceiling brushes
 
-if S.layout_char == "#" then
+if S.layout_char == '#' then
 
     gui.add_brush(
     {
@@ -1573,7 +1766,7 @@ end
     },
     z2, 4000)
 
-end -- layout_char ~= "#"
+end -- layout_char ~= '#'
 
 
 if S.assign_stair and not S.assign_stair.done then
