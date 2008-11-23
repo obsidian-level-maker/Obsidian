@@ -438,7 +438,9 @@ function Layout_Outdoor(R)
 
     if diff <= 4 then
       S.layout_char = '0'
-    elseif diff >= 44 or (diff >= 112 and rand_odds(99)) then --!!!!
+    elseif diff >= 144 or (diff >= 112 and rand_odds(40)) or
+                          (diff >= 80  and rand_odds(25))
+    then
       S.layout_char = '='  -- lift
       S.lift_h = math.max(C.conn_h, R.floor_h) + 4
       table.insert(lifts, { S=S })
