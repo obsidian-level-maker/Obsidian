@@ -812,7 +812,7 @@ end
 function Naming_test()
   local function test_theme(T)
     for set = 1,30 do
-      gui.rand_seed(50+set)
+      gui.rand_seed(set)
       local list = Naming_generate(T, 12, 28)
 
       for i,name in ipairs(list) do

@@ -22,14 +22,14 @@ function Boom_set_level_name()
   
   local id
 
-  if string.sub(LEVEL.name, 1, 1) == "E" then
+  if string.sub(LEVEL.name, 1, 1) == 'E' then
 
     -- Doom I : HUSTR_ExMy
     id = "HUSTR_" .. LEVEL.name
 
   else
     local pos = 4
-    if string.sub(LEVEL.name, pos, pos) == "0" then
+    if string.sub(LEVEL.name, pos, pos) == '0' then
       pos = pos + 1
     end
 
