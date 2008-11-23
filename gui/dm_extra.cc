@@ -507,7 +507,8 @@ void BEX_Finish()
   {
     DM_WriteLump("DEHACKED", bex_lump);
   }
-  delete bex_lump;
+
+  delete bex_lump; bex_lump = NULL;
 }
 
 
@@ -555,7 +556,8 @@ void DDF_Finish()
   {
     DM_WriteLump("DDFLANG", ddf_lang);
   }
-  delete ddf_lang;
+
+  delete ddf_lang; ddf_lang = NULL;
 }
 
 //--- editor settings ---
