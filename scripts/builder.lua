@@ -732,10 +732,28 @@ gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn
 end
 
 
-function Builder()
+function make_lift(S, x1,y1, x2,y2, z)
+
+  local tag = PLAN:alloc_tag()
+
+    gui.add_brush(
+    {
+      t_face = { texture="STEP2" },
+      b_face = { texture="STEP2" },
+      w_face = { texture="SUPPORT3" },
+      sec_tag = tag,
+    },
+    {
+      { x=x1, y=y1, line_kind=88, line_tag=tag },
+      { x=x1, y=y2, line_kind=88, line_tag=tag },
+      { x=x2, y=y2, line_kind=88, line_tag=tag },
+      { x=x2, y=y1, line_kind=88, line_tag=tag },
+    },
+    -2000, z);
+end
 
 
-
+function build_stairwell(R)
 
   local function build_stairwell_90(R)
     assert(R.conns)
@@ -1152,46 +1170,51 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     end
   end
 
-  local function build_stairwell(R)
-    assert(R.conns)
 
-    local A = R.conns[1]
-    local B = R.conns[2]
-    assert(A and B)
+  ---| build_stairwell |--
 
-    local AS = A:seed(R)
-    local BS = B:seed(R)
-    assert(AS and BS)
+  assert(R.conns)
 
-    if is_perpendicular(AS.conn_dir, BS.conn_dir) then
-      build_stairwell_90(R)
+  local A = R.conns[1]
+  local B = R.conns[2]
+  assert(A and B)
 
-    elseif AS.conn_dir == BS.conn_dir then
-      build_stairwell_180(R)
+  local AS = A:seed(R)
+  local BS = B:seed(R)
+  assert(AS and BS)
 
+  if is_perpendicular(AS.conn_dir, BS.conn_dir) then
+    build_stairwell_90(R)
+
+  elseif AS.conn_dir == BS.conn_dir then
+    build_stairwell_180(R)
+
+  else
+    assert(AS.conn_dir == 10-BS.conn_dir)
+
+    -- check for misalignment
+    local aligned = false
+    if AS.conn_dir == 2 or AS.conn_dir == 8 then
+      if AS.sx == BS.sx then aligned = true end
     else
-      assert(AS.conn_dir == 10-BS.conn_dir)
-
-      -- check for misalignment
-      local aligned = false
-      if AS.conn_dir == 2 or AS.conn_dir == 8 then
-        if AS.sx == BS.sx then aligned = true end
-      else
-        if AS.sy == BS.sy then aligned = true end
-      end
-
-      if aligned then
-        build_stairwell_straight(R)
-      else
-        build_stairwell_0(R)
-      end
+      if AS.sy == BS.sy then aligned = true end
     end
 
-    -- mark all seeds as done
-    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-      SEEDS[sx][sy][1].already_built = true
-    end end
+    if aligned then
+      build_stairwell_straight(R)
+    else
+      build_stairwell_0(R)
+    end
   end
+
+  -- mark all seeds as done
+  for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+    SEEDS[sx][sy][1].already_built = true
+  end end
+end
+
+
+function Builder()
 
   local function do_teleporter(S)
     -- TEMP HACK SHIT
@@ -1282,9 +1305,9 @@ gui.printf("do_teleport\n")
         c_tex = sel(R.combo.outdoor, PARAMS.sky_flat, R.combo.ceil)
         w_tex = R.combo.wall
       else
-        f_tex = "DBRAIN1"
+        w_tex = "DBRAIN1"
+        f_tex = "LAVA1"
         c_tex = f_tex
-        w_tex = "LAVA1"
       end
 
       
@@ -1468,6 +1491,10 @@ elseif S.layout_char == "L" or S.layout_char == "J" or
    else
      do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
    end
+
+elseif S.layout_char == '=' then
+  make_lift(S, x1,y1, x2,y2, assert(S.lift_h))
+
 else
     gui.add_brush(
     {

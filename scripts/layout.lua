@@ -438,8 +438,9 @@ function Layout_Outdoor(R)
 
     if diff <= 4 then
       S.layout_char = '0'
-    elseif diff >= 144 or (diff >= 112 and rand_odds(0)) then --!!!!
-      S.layout_char = 'L'  -- lift
+    elseif diff >= 44 or (diff >= 112 and rand_odds(99)) then --!!!!
+      S.layout_char = '='  -- lift
+      S.lift_h = math.max(C.conn_h, R.floor_h) + 4
       table.insert(lifts, { S=S })
     else
       S.layout_char = 'S'  -- stair
@@ -465,12 +466,6 @@ function Layout_Outdoor(R)
 
   gui.debugf("OUTDOOR LAYOUT:\n")
   dump_layout(R)
-
-
-  -- TODO !!!!
-  if #lifts > 0 then
-    error("Lifts are needed but cannot be made yet")
-  end
 
 
   if #stairs == 0 then
@@ -510,16 +505,16 @@ function Layout_Indoor(R)
   end
 
   local function height_for_char(set, ch)
-    if ch == "0" then return set[1] end
-    if ch == "1" then return set[2] end
-    if ch == "2" then return set[3] end
-    if ch == "3" then return set[4] end
-    if ch == "4" then return set[5] end
-    if ch == "5" then return set[6] end
-    if ch == "6" then return set[7] end
-    if ch == "7" then return set[8] end
-    if ch == "8" then return set[9] end
-    if ch == "9" then return set[10] end
+    if ch == '0' then return set[1] end
+    if ch == '1' then return set[2] end
+    if ch == '2' then return set[3] end
+    if ch == '3' then return set[4] end
+    if ch == '4' then return set[5] end
+    if ch == '5' then return set[6] end
+    if ch == '6' then return set[7] end
+    if ch == '7' then return set[8] end
+    if ch == '8' then return set[9] end
+    if ch == '9' then return set[10] end
 
     return nil
   end
@@ -780,14 +775,14 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
         local D = SEEDS[R.tx1 + x][y][1]
         local S = SEEDS[R.tx1 + old_w - 1 - x][y][1]
 
-            if S.layout_char == "<" then D.layout_char = ">"
-        elseif S.layout_char == ">" then D.layout_char = "<"
-        elseif S.layout_char == "L" then D.layout_char = "J"
-        elseif S.layout_char == "J" then D.layout_char = "L"
-        elseif S.layout_char == "F" then D.layout_char = "T"
-        elseif S.layout_char == "T" then D.layout_char = "F"
-        elseif S.layout_char == "/" then D.layout_char = "\\"
-        elseif S.layout_char =="\\" then D.layout_char = "/"
+            if S.layout_char == '<' then D.layout_char = '>'
+        elseif S.layout_char == '>' then D.layout_char = '<'
+        elseif S.layout_char == 'L' then D.layout_char = 'J'
+        elseif S.layout_char == 'J' then D.layout_char = 'L'
+        elseif S.layout_char == 'F' then D.layout_char = 'T'
+        elseif S.layout_char == 'T' then D.layout_char = 'F'
+        elseif S.layout_char == '/' then D.layout_char = '\\'
+        elseif S.layout_char =='\\' then D.layout_char = '/'
         else
           D.layout_char = S.layout_char
         end
@@ -809,14 +804,14 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
         local D = SEEDS[x][R.ty1 + y][1]
         local S = SEEDS[x][R.ty1 + old_h - 1 - y][1]
 
-            if S.layout_char == "v" then D.layout_char = "^"
-        elseif S.layout_char == "^" then D.layout_char = "v"
-        elseif S.layout_char == "L" then D.layout_char = "F"
-        elseif S.layout_char == "F" then D.layout_char = "L"
-        elseif S.layout_char == "J" then D.layout_char = "T"
-        elseif S.layout_char == "T" then D.layout_char = "J"
-        elseif S.layout_char == "/" then D.layout_char = "\\"
-        elseif S.layout_char =="\\" then D.layout_char = "/"
+            if S.layout_char == 'v' then D.layout_char = '^'
+        elseif S.layout_char == '^' then D.layout_char = 'v'
+        elseif S.layout_char == 'L' then D.layout_char = 'F'
+        elseif S.layout_char == 'F' then D.layout_char = 'L'
+        elseif S.layout_char == 'J' then D.layout_char = 'T'
+        elseif S.layout_char == 'T' then D.layout_char = 'J'
+        elseif S.layout_char == '/' then D.layout_char = '\\'
+        elseif S.layout_char =='\\' then D.layout_char = '/'
         else
           D.layout_char = S.layout_char
         end
@@ -996,12 +991,12 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
 
         local STAIR_CHARS =
         {
-          ["2/2"] = "v", ["8/8"] = "^",
-          ["4/4"] = "<", ["6/6"] = ">",
-          ["2/4"] = "J", ["4/2"] = "F",
-          ["2/6"] = "L", ["6/2"] = "T",
-          ["8/4"] = "T", ["4/8"] = "L",
-          ["8/6"] = "F", ["6/8"] = "J",
+          ["2/2"] = 'v', ["8/8"] = '^',
+          ["4/4"] = '<', ["6/6"] = '>',
+          ["2/4"] = 'J', ["4/2"] = 'F',
+          ["2/6"] = 'L', ["6/2"] = 'T',
+          ["8/4"] = 'T', ["4/8"] = 'L',
+          ["8/6"] = 'F', ["6/8"] = 'J',
         }
 
         N.layout_char = STAIR_CHARS[tostring(PM.dir) .. "/" .. tostring(ST.dir)]
