@@ -801,6 +801,23 @@ static void WriteLinedefs(void)
     if (! G->front && ! G->back)
       continue;
 
+// FIXME: TEMP HACK !!!
+int kind = 0;
+int tag = 0;
+for (unsigned int k=0; k < G->f_sides.size(); k++)
+  if (G->f_sides[k]->line_kind > 0)
+  {
+    kind = G->f_sides[k]->line_kind;
+    tag  = G->f_sides[k]->line_tag;
+  }
+for (unsigned int k=0; k < G->b_sides.size(); k++)
+  if (G->b_sides[k]->line_kind > 0)
+  {
+    kind = G->b_sides[k]->line_kind;
+    tag  = G->b_sides[k]->line_tag;
+  }
+
+
     // if same sector on both sides, skip the line, unless
     // we have a rail texture or a special line.
     if (G->front && G->back && G->front->index == G->back->index)
@@ -841,8 +858,7 @@ static void WriteLinedefs(void)
     }
 
     DM_AddLinedef(v1, v2, front_idx, back_idx,
-                  0 /* type */, flags,
-                  0 /* tag */, NULL /* args */);
+                  kind, flags, tag, NULL /* args */);
   }
 
   SYS_ASSERT(DM_NumVertexes() > 0);
