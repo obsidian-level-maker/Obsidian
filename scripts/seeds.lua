@@ -49,6 +49,24 @@ require 'defs'
 require 'util'
 
 
+SEED_W = 0
+SEED_H = 0
+SEED_D = 0
+
+
+SEED_CLASS =
+{
+  neighbor = function(self, dir)
+    local nx, ny = nudge_coord(self.sx, self.sy, dir)
+    if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
+      return nil
+    end
+    return SEEDS[nx][ny][1]
+  end,
+
+}
+
+
 function Seed_init(W, H, D)
 
   -- setup globals 
@@ -75,6 +93,8 @@ function Seed_init(W, H, D)
         borders = {},
       }
 
+      set_class(S, SEED_CLASS)
+
       for side = 2,8,2 do S.thick[side] = 32 end
 
       SEEDS[x][y][z] = S
@@ -86,9 +106,9 @@ end
 function Seed_close()
   SEEDS = nil
 
-  SEED_W = nil
-  SEED_H = nil
-  SEED_D = nil
+  SEED_W = 0
+  SEED_H = 0
+  SEED_D = 0
 end
 
 

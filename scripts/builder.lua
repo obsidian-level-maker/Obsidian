@@ -723,9 +723,8 @@ function make_lift(S, x1,y1, x2,y2, z)
   local kinds = {}
 
   for dir = 2,8,2 do
-    local nx, ny = nudge_coord(S.sx, S.sy, dir)
-    if Seed_valid(nx, ny, 1) then
-      local N = SEEDS[nx][ny][1]
+    local N = S:neighbor(dir)
+    if N then
       local nz = N.floor_h or N.room.floor_h or z
 
       if nz < z-15 then
@@ -758,7 +757,11 @@ function mark_room_as_done(R)
     local S = SEEDS[sx][sy][1]
     
     if S.room == R then
-      S.already_built = true
+      S.sides_only = true
+
+      for dir = 2,8,2 do
+        S.thick[dir] = 16
+      end
     end
   end end
 end
@@ -1218,7 +1221,24 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     end
   end
 
+
   mark_room_as_done(R)
+
+  -- create outer walls
+--[[   ???????
+  for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+    local S = SEEDS[sx][sy][1]
+
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if not N or N.room ~= R then
+        S.thick[dir] = 16
+        S.borders[dir] = { kind="solid" }
+      end
+    end
+  end end
+--]]
 end
 
 
@@ -1294,7 +1314,6 @@ gui.printf("do_teleport\n")
     local z1 = S.floor_h or R.floor_h
     local z2 = S.ceil_h  or R.ceil_h
     local f_tex, c_tex, w_tex
-    local do_sides = true
     local sec_kind
 
 
@@ -1321,20 +1340,16 @@ gui.printf("do_teleport\n")
 
       
       if R.kind == "valley" or R.scenic_kind == "valley" then
-        do_sides = false --!!!
 
       elseif R.kind == "ground" or R.scenic_kind == "ground" then
-        do_sides = false --!!!
 
       elseif R.kind == "hill" or R.scenic_kind == "hill" then
-        do_sides = false --!!!
 
       elseif R.scenic_kind == "liquid" then
         f_tex = "NUKAGE1"
         c_tex = PARAMS.sky_flat
         w_tex = "COMPBLUE"
         sec_kind = 16
-        do_sides = false --!!!
 
       elseif R.kind == "hallway" then
 
@@ -1345,6 +1360,67 @@ gui.printf("do_teleport\n")
       else -- building
       
       end
+
+
+    -- make sides
+
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+
+      if S.borders[side] and S.borders[side].kind == "solid"
+         and not (N and S.room and N.room and
+                  S.room.arena == N.room.arena and
+                  S.room.kind == N.room.kind and
+                  not (S.room.hallway or N.room.hallway) and
+                  not (S.room.purpose or N.room.purpose) and
+                  false)
+      then
+        gui.add_brush(
+        {
+          t_face = { texture=f_tex },
+          b_face = { texture=f_tex },
+          w_face = { texture=w_tex },
+        },
+        get_wall_coords(S, side),
+        -2000, 4000)
+      end
+
+      if S.borders[side] and S.borders[side].kind == "fence"
+         and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
+      then
+        gui.add_brush(
+        {
+          t_face = { texture=f_tex },
+          b_face = { texture=f_tex },
+          w_face = { texture=w_tex },
+        },
+        get_wall_coords(S, side),
+        -2000, z1+36)
+      end
+
+      if S.borders[side] and S.borders[side].kind == "skyfence" then
+        make_sky_fence(S, side)
+      end
+
+      if S.borders[side] and S.borders[side].kind == "lock_door" then
+        local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
+                            "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
+        local w_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
+gui.printf("ADDING LOCK DOOR %s\n", w_tex)
+        gui.add_brush(
+        {
+          t_face = { texture=f_tex },
+          b_face = { texture=f_tex },
+          w_face = { texture=w_tex },
+--        flag_door = true
+        },
+        get_wall_coords(S, side),
+        z1 + 64, 4000)
+      end
+    end
+
+
+    if S.sides_only then return end
 
 
 --[[      if do_corners then
@@ -1531,65 +1607,6 @@ if not S.room.outdoor then
 end
 
 
-
-if true then -- if do_sides then
-    for side = 2,8,2 do
-      local nx, ny = nudge_coord(S.sx, S.sy, side)
-      local N
-      if Seed_valid(nx,ny,1) then N = SEEDS[nx][ny][1] end
-
-      if S.borders[side] and S.borders[side].kind == "solid"
-         and not (N and S.room and N.room and
-                  S.room.arena == N.room.arena and
-                  S.room.kind == N.room.kind and
-                  not (S.room.hallway or N.room.hallway) and
-                  not (S.room.purpose or N.room.purpose) and
-                  false)
-      then
-        gui.add_brush(
-        {
-          t_face = { texture=f_tex },
-          b_face = { texture=f_tex },
-          w_face = { texture=w_tex },
-        },
-        get_wall_coords(S, side),
-        -2000, 4000)
-      end
-
-      if S.borders[side] and S.borders[side].kind == "fence"
-         and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
-      then
-        gui.add_brush(
-        {
-          t_face = { texture=f_tex },
-          b_face = { texture=f_tex },
-          w_face = { texture=w_tex },
-        },
-        get_wall_coords(S, side),
-        -2000, z1+36)
-      end
-
-      if S.borders[side] and S.borders[side].kind == "skyfence" then
-        make_sky_fence(S, side)
-      end
-
-      if S.borders[side] and S.borders[side].kind == "lock_door" then
-        local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
-                            "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
-        local w_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
-gui.printf("ADDING LOCK DOOR %s\n", w_tex)
-        gui.add_brush(
-        {
-          t_face = { texture=f_tex },
-          b_face = { texture=f_tex },
-          w_face = { texture=w_tex },
---        flag_door = true
-        },
-        get_wall_coords(S, side),
-        z1 + 64, 4000)
-      end
-    end
-end -- do_sides
 
     local mx = int((x1+x2) / 2)
     local my = int((y1+y2) / 2)
