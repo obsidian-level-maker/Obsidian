@@ -74,6 +74,9 @@ function Level_Setup()
 
   Level_CleanUp()
 
+  -- setup RNG for whole-game random choices
+  gui.rand_seed(OB_CONFIG.seed)
+
 
   local game = OB_GAMES[OB_CONFIG.game]
   if not game then
