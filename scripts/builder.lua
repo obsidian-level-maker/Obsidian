@@ -21,24 +21,6 @@ require 'util'
 require 'seeds'
 
 
--- TEMPORARY CRUD
-ENT_PLAYER  = "1"
-ENT_MONSTER = "9"
-ENT_EXIT    = "41"
-
---[[ QUAKE
-ENT_PLAYER  = "info_player_start"
-ENT_MONSTER = "monster_army"
-ENT_EXIT    = "item_artifact_super_damage"
---]]
-
---[[ QUAKE2
-ENT_PLAYER  = "info_player_start"
-ENT_MONSTER = "monster_soldier_light"
-ENT_EXIT    = "item_quad"
---]]
-
-
 function get_wall_coords(S, side)
   assert(side ~= 5)
 
@@ -771,6 +753,17 @@ function make_lift(S, x1,y1, x2,y2, z)
 end
 
 
+function mark_room_as_done(R)
+  for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+    local S = SEEDS[sx][sy][1]
+    
+    if S.room == R then
+      S.already_built = true
+    end
+  end end
+end
+
+
 function build_stairwell(R)
 
   local function build_stairwell_90(R)
@@ -1225,10 +1218,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     end
   end
 
-  -- mark all seeds as done
-  for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-    SEEDS[sx][sy][1].already_built = true
-  end end
+  mark_room_as_done(R)
 end
 
 
@@ -1254,7 +1244,7 @@ if idx < 1 then return end
     local x2 = mx + 32
     local y2 = my + 32
 
-    local z1 = S.z1 + 16
+    local z1 = (S.floor_h or S.room.floor_h) + 16
 
     local tag = sel(TELEP.src == S.room, TELEP.src_tag, TELEP.dest_tag)
     assert(tag)
@@ -1284,16 +1274,17 @@ gui.printf("do_teleport\n")
   local function build_seed(S)
     assert(S)
 
+    if S.already_built then
+      return
+    end
+
     if not S.room then
---    S.room = { kind = "liquid" }
       return
     end
 
     local R = S.room
 
-    if S.already_built then
-      return
-    end
+    --- assert(R.kind ~= "scenic")
 
     local x1 = S.x1
     local y1 = S.y1
@@ -1330,21 +1321,12 @@ gui.printf("do_teleport\n")
 
       
       if R.kind == "valley" or R.scenic_kind == "valley" then
---        f_tex = "FLOOR7_1"
---        c_tex = "F_SKY1"
---        w_tex = "BROWN144"
         do_sides = false --!!!
 
       elseif R.kind == "ground" or R.scenic_kind == "ground" then
---        f_tex = "MFLR8_4"
---        c_tex = "F_SKY1"
---        w_tex = "ASHWALL2"
         do_sides = false --!!!
 
       elseif R.kind == "hill" or R.scenic_kind == "hill" then
---        f_tex = "FLOOR7_1"
---        c_tex = "F_SKY1"
---        w_tex = "BROWN144"
         do_sides = false --!!!
 
       elseif R.scenic_kind == "liquid" then
@@ -1356,40 +1338,14 @@ gui.printf("do_teleport\n")
 
       elseif R.kind == "hallway" then
 
---        f_tex = "FLAT1"
---        c_tex = "CEIL3_5"
---        w_tex = "GRAY7"
+          w_tex = "GRAY7"
 
       elseif R.kind == "stairwell" then
 
---        f_tex = "FLAT5_3"
---        c_tex = "FLAT1"
---        w_tex = "BROWN1"
-
       else -- building
       
---        f_tex = "FLOOR4_8"
---        c_tex = "CEIL3_5"
---        w_tex = "STARTAN3"
-
       end
 
---      if S.room.branch_kind then f_tex = "CEIL5_2" end
-
-
---[[ QUAKE
-f_tex = sel(c_tex == "F_SKY1", "ground1_6", "wood1_1")
-c_tex = sel(c_tex == "F_SKY1", "sky1", "metal1_1")
-w_tex = "tech01_1"
---]]
-
---[[ QUAKE2
-c_tex = "e1u1/grnx2_3"
-f_tex = "e1u1/floor3_3"
-w_tex = "e1u1/exitdr01_2"
---]]
-
-      S.z1 = z1 --!!!!!! REMOVE CRAP
 
 --[[      if do_corners then
       gui.add_brush(
@@ -1528,7 +1484,6 @@ else
     -2000, z1);
 end
 
--- if c_tex=="F_SKY1" then c_tex = "MFLR8_4" end --!!!!!!
 
     gui.add_brush(
     {
@@ -1667,36 +1622,24 @@ end -- do_sides
     elseif S.room and S.room.kind ~= "scenic" and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
+
+      local MON = next(GAME.monsters)
+      assert(MON)
+      MON = GAME.things[MON]
+      assert(MON)
+      assert(MON.id)
+
       gui.add_entity(mx, my, z1 + 25,
       {
-        name = ENT_MONSTER
+        name = tostring(MON.id)
       })
     end
 
-if S.conn_dir then
-  make_arrow(S, S.conn_dir, z1, "FWATER1")
-end
-
--- symmetry tester
-if S.x_peer and S.sx == S.room.sx1 then
-  local dx = rand_irange(-20,20)
-  local dy = rand_irange(-20,20)
-  local mx2 = int((S.x_peer.x1 + S.x_peer.x2) / 2)
-  local my2 = int((S.x_peer.y1 + S.x_peer.y2) / 2)
-
-  gui.add_entity(mx+dx, my+dy, z1 + 25,   { name="35" })
-  gui.add_entity(mx2-dx, my2+dy, z1 + 25, { name="35" })
-end
-
-if S.y_peer and S.sy == S.room.sy1 then
-  local dx = rand_irange(-20,20)
-  local dy = rand_irange(-20,20)
-  local mx2 = int((S.y_peer.x1 + S.y_peer.x2) / 2)
-  local my2 = int((S.y_peer.y1 + S.y_peer.y2) / 2)
-
-  gui.add_entity(mx+dx, my+dy, z1 + 25,   { name="43" })
-  gui.add_entity(mx2+dx, my2-dy, z1 + 25, { name="43" })
-end
+--[[ connection tester
+    if S.conn_dir then
+      make_arrow(S, S.conn_dir, z1, "FWATER1")
+    end
+--]]
 
     if S.room and S.sy == S.room.sy2 then
       do_teleporter(S)
@@ -1719,8 +1662,11 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
 
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
-  gui.property("error_tex",  "BLAKWAL1");
-  --!!! error_flat
+
+  if PARAMS.error_tex then
+    gui.property("error_tex",  PARAMS.error_tex)
+    gui.property("error_flat", PARAMS.error_flat or PARAMS.error_tex)
+  end   
 
   gui.ticker()
 

@@ -1431,9 +1431,10 @@ function Rooms_lay_out()
     Room_SetupTheme(R)
   end
   
---  for _,R in ipairs(PLAN.scenic_rooms) do
---    Room_SetupTheme_Scenic(R)
---  end
+  for _,R in ipairs(PLAN.scenic_rooms) do
+    -- FIXME: Room_SetupTheme_Scenic(R)
+    Room_SetupTheme(R)
+  end
 
   for _,R in ipairs(PLAN.all_rooms) do
     Room_LayItOut(R)

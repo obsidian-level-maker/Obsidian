@@ -75,7 +75,7 @@ function Seed_init(W, H, D)
         borders = {},
       }
 
-      for side = 2,8,2 do S.thick[side] = 16 end
+      for side = 2,8,2 do S.thick[side] = 32 end
 
       SEEDS[x][y][z] = S
     end
