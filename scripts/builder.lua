@@ -131,7 +131,9 @@ function make_sky_fence(S, side)
     { x=sx2, y=sy2 }, { x=sx2, y=sy1 },
   }
 
-  gui.add_brush(wall_info,  w_coords, -4000, PLAN.skyfence_h)
+  local z = math.max(PLAN.skyfence_h, (S.floor_h or S.room.floor_h) + 64)
+
+  gui.add_brush(wall_info,  w_coords, -4000, z)
   gui.add_brush(wall2_info, s_coords, -4000, PLAN.skyfence_h - 64)
 
   gui.add_brush(sky_info,  w_coords, 512, 4096)
@@ -1660,7 +1662,7 @@ end -- do_sides
         { x=mx+32, y=my+32, line_kind=11 },
         { x=mx+32, y=my-32, line_kind=11 },
       },
-      -2000, 2000)
+      -2000, z1+128)
 
     elseif S.room and S.room.kind ~= "scenic" and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
