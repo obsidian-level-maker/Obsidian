@@ -21,6 +21,81 @@ require 'util'
 require 'seeds'
 
 
+--[[
+class TRANSFORM
+{
+  mirror_x : boolean  -- flip horizontally
+  mirror_y : boolean  -- flip vertically
+
+  rotate   : number   -- angle in degrees, counter-clockwise
+
+  dx : number   -- translation, i.e. new origin coords
+  dy : number   --
+}
+--]]
+
+function apply_transform(T, coords)
+
+  -- handle mirroring first
+  local reverse_it = false
+
+  if T.mirror_x then
+    for _,C in ipairs(coords) do
+      C.x = - C.x
+    end
+    reverse_it = not reverse_it
+  end
+
+  if T.mirror_y then
+    for _,C in ipairs(coords) do
+      C.x = - C.y
+    end
+    reverse_it = not reverse_it
+  end
+
+  if reverse_it then
+    table_reverse(coords)
+  end
+
+  -- handle rotation
+  if T.rotate and T.rotate ~= 0 then
+    local cos_R = math.cos(T.rotate * math.pi / 180.0)
+    local sin_R = math.sin(T.rotate * math.pi / 180.0)
+
+    for _,C in ipairs(coords) do
+      C.x, C.y = C.x * cos_R - C.y * sin_R, C.y * cos_R + C.x * sin_R
+    end
+  end
+
+  -- handle translation last
+  if T.dx or T.dy then
+    for _,C in ipairs(coords) do
+      C.x = C.x + (T.dx or 0)
+      C.y = C.y + (T.dy or 0)
+    end
+  end
+
+  return coords
+end
+
+
+function get_transform_for_seed_side(S, side)
+  
+  local T = { }
+
+  if side == 8 then T.rotate = 180 end
+  if side == 4 then T.rotate = 270 end
+  if side == 6 then T.rotate =  90 end
+
+  if side == 2 then T.dx, T.dy = S.x1, S.y1 end
+  if side == 4 then T.dx, T.dy = S.x1, S.y2 end
+  if side == 6 then T.dx, T.dy = S.x2, S.y1 end
+  if side == 8 then T.dx, T.dy = S.x2, S.y2 end
+
+  return T, PARAMS.seed_size, S.thick[side]
+end
+
+
 function get_wall_coords(S, side)
   assert(side ~= 5)
 
@@ -123,6 +198,71 @@ function make_sky_fence(S, side)
 end
 
 
+function make_door(S, side, z1, key_tex)
+
+  S.thick[side]=24+16+24
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local mx = int(long / 2)
+  local my = int(deep / 2)
+
+  local door_info =
+  {
+    t_face = { texture="FLAT1" },
+    b_face = { texture="FLAT1" },
+    w_face = { texture="BIGDOOR2" },
+    flag_door = true
+  }
+
+  local other_info =
+  {
+    t_face = { texture="FLAT18" },
+    b_face = { texture="FLAT18" },
+    w_face = { texture="COMPSPAN" },
+  }
+
+  local frame_coords = apply_transform(T,
+  {
+    { x=0,    y=0 },
+    { x=0,    y=deep },
+    { x=long, y=deep },
+    { x=long, y=0 },
+  })
+
+  gui.add_brush(other_info, frame_coords, -2000, z1+8)
+  gui.add_brush(other_info, frame_coords, z1+8+112, 2000)
+
+  gui.add_brush(other_info, apply_transform(T,
+  {
+    { x=0, y=0 },
+    { x=0, y=deep },
+    { x=mx-64, y=deep },
+    { x=mx-64, y=0 },
+  }), -2000, 2000)
+
+  gui.add_brush(other_info, apply_transform(T,
+  {
+    { x=mx+64, y=0 },
+    { x=mx+64, y=deep },
+    { x=long,  y=deep },
+    { x=long,  y=0 },
+  }), -2000, 2000)
+  
+
+  local KIND = 1
+
+  gui.add_brush(door_info, apply_transform(T,
+  {
+    { x=mx-64, y=my-8, line_kind=KIND },
+    { x=mx-64, y=my+8, line_kind=KIND },
+    { x=mx+64, y=my+8, line_kind=KIND },
+    { x=mx+64, y=my-8, line_kind=KIND },
+  }), z1+64, 2000)
+
+end
+
+
 function make_hall_light(S, z2)
 
   local mx = int((S.x1 + S.x2)/2)
@@ -222,8 +362,6 @@ function make_hall_light(S, z2)
     { x = S.x2 , y = my-4, },
   },
   z2-10, 2000)
- 
- 
  
 end
 
@@ -1608,7 +1746,7 @@ gui.printf("do_teleport\n")
         f_tex = "FLOOR0_2"
         c_tex = "FLAT4"
 
-        make_hall_light(S, z2)
+--!!!        make_hall_light(S, z2)
 
 ----        f_tex = "FLAT23" ; c_tex = "FLAT23"
 
@@ -1688,17 +1826,9 @@ gui.printf("do_teleport\n")
       if S.borders[side] and S.borders[side].kind == "lock_door" then
         local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
                             "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
-        local w_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
+        local key_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
 gui.printf("ADDING LOCK DOOR %s\n", w_tex)
-        gui.add_brush(
-        {
-          t_face = { texture=f_tex },
-          b_face = { texture=f_tex },
-          w_face = { texture=w_tex },
---        flag_door = true
-        },
-        get_wall_coords(S, side),
-        z1 + 64, 4000)
+        make_door(S, side, z1, key_tex)
       end
         
     end -- for side
