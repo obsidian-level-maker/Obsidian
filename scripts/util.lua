@@ -51,6 +51,9 @@ end
 
 ----====| TABLE UTILITIES |====----
 
+-- special value for deep_merge()
+REMOVE_TOKEN = "__REMOVE__"
+
 function table_size(t)
   local count = 0;
   for k,v in pairs(t) do count = count+1 end
@@ -203,6 +206,8 @@ function deep_merge(dest, src, _curdepth)
         error("deep_merge/copy failure: loop detected")
       end
       deep_merge(dest[k], v, _curdepth+1)
+    elseif v == REMOVE_TOKEN then
+      dest[k] = nil
     else
       dest[k] = v
     end
