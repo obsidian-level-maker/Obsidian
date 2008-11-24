@@ -54,6 +54,8 @@ function apply_transform(T, coords)
   end
 
   if reverse_it then
+    -- FIXME !!!!  does not handle side properties (w_face, line_kind, etc)
+    --             (they need to be moved to the other vertex)
     table_reverse(coords)
   end
 
@@ -338,7 +340,6 @@ function make_locked_door(S, side, z1, key_tex)
     -2000, 2000)
   end
 end
-
 
 
 function make_hall_light(S, z2)
@@ -1233,6 +1234,90 @@ function mark_room_as_done(R)
     end
   end end
 end
+
+
+function make_small_exit(R)
+
+  assert(#R.conns == 1)
+
+  local C = R.conns[1]
+  local S = C:seed(R)
+
+  local side = S.conn_dir
+  
+  local f_h = assert(C.conn_h)
+  local c_h = f_h + 128
+
+  local inner_info =
+  {
+    w_face = { texture="STARTAN2" },
+    t_face = { texture="FLOOR5_2" },
+    b_face = { texture="TLITE6_5" },
+  }
+
+
+  gui.add_brush(inner_info,
+  {
+    { x=S.x1, y=S.y1 },
+    { x=S.x1, y=S.y2 },
+    { x=S.x2, y=S.y2 },
+    { x=S.x2, y=S.y1 },
+  },
+  -2000, f_h)
+
+  gui.add_brush(inner_info,
+  {
+    { x=S.x1, y=S.y1 },
+    { x=S.x1, y=S.y2 },
+    { x=S.x2, y=S.y2 },
+    { x=S.x2, y=S.y1 },
+  },
+  c_h, 2000)
+
+
+  S.thick[side] = 80
+  S.thick[10 - side] = 32
+
+  S.thick[rotate_cw90(side)] = 16
+  S.thick[rotate_ccw90(side)] = 16
+
+
+  gui.add_brush(inner_info, get_wall_coords(S, rotate_cw90(side)),  -2000, 2000)
+  gui.add_brush(inner_info, get_wall_coords(S, rotate_ccw90(side)), -2000, 2000)
+
+
+  -- make door
+
+  local DT
+  DT, long = get_transform_for_seed_side(S, side)
+
+  -- ##### FIXME #####
+
+
+  -- make switch
+
+  local WT, long = get_transform_for_seed_side(S, 10-side)
+
+  local mx = int(long / 2)
+  local swit_W = 64
+
+inner_info.w_face={ texture="SW1STRTN"} --!!! TEST
+
+  gui.add_brush(inner_info, apply_transform(WT,
+  {
+    { x=0, y=0 },
+    { x=0, y=16 },
+    { x=mx-swit_W/2, y=16, w_face={ texture="SW1STRTN" }, line_kind=11 },
+    { x=mx+swit_W/2, y=16 },
+    { x=long, y=16 },
+    { x=long, y=0 },
+  }),
+  -2000, 2000)
+
+
+  mark_room_as_done(R)
+end
+
 
 
 function build_stairwell(R)
@@ -2187,6 +2272,11 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
     if R.kind == "stairwell" then
       build_stairwell(R)
     end
+  end
+
+  assert(PLAN.exit_room)
+  if not PLAN.exit_room.outdoor then
+    make_small_exit(PLAN.exit_room)
   end
 
   for y = 1, SEED_H do
