@@ -143,12 +143,14 @@ function make_hall_light(S, z2)
   z2-12, 2000)
 
 
-  gui.add_brush(
+  local metal_info =
   {
     t_face = { texture="CEIL5_1" },
     b_face = { texture="CEIL5_1" },
     w_face = { texture="METAL" },
-  },
+  }
+
+  gui.add_brush(metal_info,
   {
     { x = mx-40, y = my-40 },
     { x = mx-40, y = my+40 },
@@ -157,12 +159,7 @@ function make_hall_light(S, z2)
   },
   z2-16, 2000)
 
-  gui.add_brush(
-  {
-    t_face = { texture="CEIL5_1" },
-    b_face = { texture="CEIL5_1" },
-    w_face = { texture="METAL" },
-  },
+  gui.add_brush(metal_info,
   {
     { x = mx+32, y = my-40 },
     { x = mx+32, y = my+40 },
@@ -171,13 +168,7 @@ function make_hall_light(S, z2)
   },
   z2-16, 2000)
 
-
-  gui.add_brush(
-  {
-    t_face = { texture="CEIL5_1" },
-    b_face = { texture="CEIL5_1" },
-    w_face = { texture="METAL" },
-  },
+  gui.add_brush(metal_info,
   {
     { x = mx-40, y = my-40 },
     { x = mx-40, y = my-32 },
@@ -186,12 +177,7 @@ function make_hall_light(S, z2)
   },
   z2-16, 2000)
 
-  gui.add_brush(
-  {
-    t_face = { texture="CEIL5_1" },
-    b_face = { texture="CEIL5_1" },
-    w_face = { texture="METAL" },
-  },
+  gui.add_brush(metal_info,
   {
     { x = mx-40, y = my+32 },
     { x = mx-40, y = my+40 },
@@ -199,6 +185,45 @@ function make_hall_light(S, z2)
     { x = mx+40, y = my+32 },
   },
   z2-16, 2000)
+ 
+
+  gui.add_brush(metal_info,
+  {
+    { x = mx-4, y = my+40 },
+    { x = mx-4, y = S.y2  },
+    { x = mx+4, y = S.y2  },
+    { x = mx+4, y = my+40 },
+  },
+  z2-10, 2000)
+
+  gui.add_brush(metal_info,
+  {
+    { x = mx-4, y = S.y1  },
+    { x = mx-4, y = my-40 },
+    { x = mx+4, y = my-40 },
+    { x = mx+4, y = S.y1  },
+  },
+  z2-10, 2000)
+
+  gui.add_brush(metal_info,
+  {
+    { x = S.x1 , y = my-4, },
+    { x = S.x1 , y = my+4, },
+    { x = mx-40, y = my+4, },
+    { x = mx-40, y = my-4, },
+  },
+  z2-10, 2000)
+
+  gui.add_brush(metal_info,
+  {
+    { x = mx+40, y = my-4, },
+    { x = mx+40, y = my+4, },
+    { x = S.x2 , y = my+4, },
+    { x = S.x2 , y = my-4, },
+  },
+  z2-10, 2000)
+ 
+ 
  
 end
 
@@ -289,6 +314,64 @@ function make_detailed_hall(S, side, z1, z2)
 
 
   -- TODO : corners
+end
+
+
+function make_weird_hall(S, side, z1, z2)
+
+  local function get_hall_coords(thickness)
+
+    S.thick[side] = thickness
+
+    local ox1, oy1, ox2, oy2 = S.x1,S.y1, S.x2,S.y2
+
+    if (side == 4 or side == 6) then
+
+      if S:neighbor(2) and S:neighbor(2).room == S.room then
+        S.y1 = S.y1 - thickness
+      end
+
+      if S:neighbor(8) and S:neighbor(8).room == S.room then
+        S.y2 = S.y2 + thickness
+      end
+
+    else
+      if S:neighbor(4) and S:neighbor(4).room == S.room then
+        S.x1 = S.x1 - thickness
+      end
+
+      if S:neighbor(6) and S:neighbor(6).room == S.room then
+        S.x2 = S.x2 + thickness
+      end
+
+    end
+
+    local res = get_wall_coords(S, side)
+
+    S.x1,S.y1, S.x2,S.y2 = ox1, oy1, ox2, oy2
+    
+    return res
+  end
+
+
+  local metal = 
+  {
+    t_face = { texture="FLAT23" },
+    b_face = { texture="FLAT23" },
+    w_face = { texture="SHAWN2" },
+  }
+
+  gui.add_brush(metal, get_hall_coords(24), -2000, 2000)
+
+  gui.add_brush(metal, get_hall_coords(32), -2000, z1 + 32)
+  gui.add_brush(metal, get_hall_coords(32), z2 - 32, 2000)
+
+  gui.add_brush(metal, get_hall_coords(48), -2000, z1 + 18)
+  gui.add_brush(metal, get_hall_coords(48), z2 - 18, 2000)
+
+  gui.add_brush(metal, get_hall_coords(64), -2000, z1 + 6)
+  gui.add_brush(metal, get_hall_coords(64), z2 - 6, 2000)
+
 end
 
 
@@ -1507,7 +1590,7 @@ gui.printf("do_teleport\n")
         c_tex = f_tex
       end
 
-      
+
       if R.kind == "valley" or R.scenic_kind == "valley" then
 
       elseif R.kind == "ground" or R.scenic_kind == "ground" then
@@ -1525,15 +1608,23 @@ gui.printf("do_teleport\n")
         f_tex = "FLOOR0_2"
         c_tex = "FLAT4"
 
----     w_tex = "GRAY7"
-
         make_hall_light(S, z2)
+
+----        f_tex = "FLAT23" ; c_tex = "FLAT23"
+
+---     w_tex = "GRAY7"
 
       elseif R.kind == "stairwell" then
 
       else -- building
       
       end
+
+
+      if S.f_tex then f_tex = S.f_tex end
+      if S.c_tex then c_tex = S.c_tex end
+      if S.w_tex then w_tex = S.w_tex end
+
 
 
 
@@ -1779,7 +1870,7 @@ end
 
 
 -- diagonal corners
-if not S.room.outdoor then
+if not S.room.outdoor and not (S.room.kind == "hallway") then
   local z1
   if S.conn then z1 = (S.conn.conn_h + 128) end
   local diag_info =
