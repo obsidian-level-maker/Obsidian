@@ -123,7 +123,7 @@ OB_ENGINES["doomsday"] =
 
   caps =
   {
-    -- TODO
+    pack_sidedefs = false,
   },
 }
 

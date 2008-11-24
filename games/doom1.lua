@@ -302,7 +302,7 @@ DM_COMBOS =
 {
   ---- TECH ------------
 
-  TECH_BASE =
+  TECH_BASE0 =
   {
     theme_probs = { TECH=80 },
     mat_pri = 8,
@@ -324,12 +324,12 @@ DM_COMBOS =
     sc_fabs = { pillar_COMPWERD=50, other=30 },
   },
 
-  TECH_BASE2 =
+  TECH_BASE =
   {
     theme_probs = { TECH=40 }, 
     mat_pri = 8,
 
-    wall  = "STARG3",
+    wall  = "STARG2",
     floor = "FLOOR5_1",
     ceil  = "FLOOR4_5",
 
@@ -342,7 +342,7 @@ DM_COMBOS =
     sc_fabs = { pillar_COMPWERD=50, other=30 },
   },
 
-  TECH_GROUND =
+  TECH_GROUND0 =
   {
     theme_probs = { TECH=80 },
     outdoor = true,
@@ -449,7 +449,7 @@ DM_COMBOS =
 
   ---- URBAN --------
 
-  URBAN_STONE =
+  TECH_GROUND =  ---!!! URBAN_STONE
   {
     theme_probs = { URBAN=70 },
     outdoor = true,
@@ -3419,6 +3419,8 @@ UNFINISHED["doom1"] =
     liquids = true,
     teleporters = true,
     infighting = true,
+
+    pack_sidedefs = true,
   },
 
   params =
@@ -3428,8 +3430,8 @@ UNFINISHED["doom1"] =
     sky_tex    = "-",
     sky_flat   = "F_SKY1",
 
-    error_tex  = "FIREBLU1",
-    error_flat = "SFLR6_4",
+    error_tex  = "METAL"   or "FIREBLU1",
+    error_flat = "CEIL5_1" or "SFLR6_4",
 
     max_level_desc = 28,
 

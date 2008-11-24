@@ -1779,6 +1779,8 @@ OB_GAMES["doom2"] =
     liquids = true,
     teleporters = true,
     infighting = true,
+
+    pack_sidedefs = true,
   },
 
   params =
@@ -1788,8 +1790,8 @@ OB_GAMES["doom2"] =
     sky_tex    = "-",
     sky_flat   = "F_SKY1",
 
-    error_tex  = "FIREBLU1",
-    error_flat = "SFLR6_4",
+    error_tex  = "METAL"   or "FIREBLU1",
+    error_flat = "CEIL5_1" or "SFLR6_4",
 
     -- this is roughly how many characters can fit on the
     -- intermission screens (the CWILVxx patches).  It does
