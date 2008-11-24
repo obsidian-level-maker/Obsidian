@@ -101,7 +101,7 @@ NAMING_THEMES =
         Star=3, Stellar=7, Solar=10, Lunar=10,
         Space=20, Proto_=5,
         Alpha=10, Beta=5, Gamma=10,
-        Delta=10, Omega=5,
+        Delta=10, Omega=5, Sigma=3,
 
         -- materials / substances
         Power=20, Energy=15,
