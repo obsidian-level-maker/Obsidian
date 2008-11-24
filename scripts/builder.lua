@@ -24,8 +24,8 @@ require 'seeds'
 --[[
 class TRANSFORM
 {
-  mirror_x : boolean  -- flip horizontally
-  mirror_y : boolean  -- flip vertically
+  mirror_x : number  -- flip horizontally (about given X)
+  mirror_y : number  -- flip vertically (about given Y)
 
   rotate   : number   -- angle in degrees, counter-clockwise
 
@@ -41,14 +41,14 @@ function apply_transform(T, coords)
 
   if T.mirror_x then
     for _,C in ipairs(coords) do
-      C.x = - C.x
+      C.x = T.mirror_x * 2 - C.x
     end
     reverse_it = not reverse_it
   end
 
   if T.mirror_y then
     for _,C in ipairs(coords) do
-      C.x = - C.y
+      C.x = T.mirror_y * 2 - C.y
     end
     reverse_it = not reverse_it
   end
@@ -261,6 +261,84 @@ function make_door(S, side, z1, key_tex)
   }), z1+64, 2000)
 
 end
+
+
+function make_locked_door(S, side, z1, key_tex)
+
+  local DY = 24
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local mx = int(long / 2)
+  local my = 0
+
+  local door_info =
+  {
+    t_face = { texture="FLAT1" },
+    b_face = { texture="FLAT1" },
+    w_face = { texture="BIGDOOR2" },
+    flag_door = true
+  }
+
+  local other_info =
+  {
+    t_face = { texture="FLAT18" },
+    b_face = { texture="FLAT18" },
+    w_face = { texture="COMPSPAN" },
+  }
+
+  local key_info =
+  {
+    t_face = { texture="FLAT18" },
+    b_face = { texture="FLAT18" },
+    w_face = { texture=key_tex },
+  }
+
+  local frame_coords = apply_transform(T,
+  {
+    { x=0,    y=my-DY },
+    { x=0,    y=my+DY },
+    { x=long, y=my+DY },
+    { x=long, y=my-DY },
+  })
+
+  gui.add_brush(other_info, frame_coords, -2000, z1+8)
+  gui.add_brush(other_info, frame_coords, z1+8+112, 2000)
+
+  local KIND = 1
+
+  gui.add_brush(door_info, apply_transform(T,
+  {
+    { x=mx-64, y=my-8, line_kind=KIND },
+    { x=mx-64, y=my+8, line_kind=KIND },
+    { x=mx+64, y=my+8, line_kind=KIND },
+    { x=mx+64, y=my-8, line_kind=KIND },
+  }), z1+64, 2000)
+
+
+  for pass = 1,2 do
+    if pass == 2 then T.mirror_x = mx end
+
+    gui.add_brush(key_info, apply_transform(T,
+    {
+      { x=mx-64-18, y=my-DY },
+      { x=mx-64-18, y=my+DY },
+      { x=mx-64,    y=my+8, w_face={ texture="DOORTRAK" } },
+      { x=mx-64,    y=my-8 },
+    }),
+    -2000, 2000)
+
+    gui.add_brush(other_info, apply_transform(T,
+    {
+      { x=0,        y=my-DY },
+      { x=0,        y=my+DY },
+      { x=mx-64-18, y=my+DY },
+      { x=mx-64-18, y=my-DY },
+    }),
+    -2000, 2000)
+  end
+end
+
 
 
 function make_hall_light(S, z2)
@@ -1828,7 +1906,7 @@ gui.printf("do_teleport\n")
                             "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
         local key_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
 gui.printf("ADDING LOCK DOOR %s\n", w_tex)
-        make_door(S, side, z1, key_tex)
+        make_locked_door(S, side, z1, key_tex)
       end
         
     end -- for side
@@ -2117,8 +2195,6 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
         build_seed(SEEDS[x][y][z])
       end
     end
-
---    gui.progress(100 * y / SEED_H)
   end
 
   gui.end_level()
