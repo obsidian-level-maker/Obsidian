@@ -1288,17 +1288,72 @@ function make_small_exit(R)
 
   -- make door
 
-  local DT
-  DT, long = get_transform_for_seed_side(S, side)
+  local door_info =
+  {
+    w_face = { texture="EXITDOOR" },
+    t_face = { texture="FLAT1" },
+    b_face = { texture="FLAT1" },
+    flag_door = true,
+  }
 
-  -- ##### FIXME #####
+  local DT, long, deep = get_transform_for_seed_side(S, side)
+  local mx = int(long / 2)
+
+  gui.add_brush(door_info, apply_transform(DT,
+  {
+    { x=mx-32, y=48, line_kind=1 },
+    { x=mx-32, y=64, line_kind=1 },
+    { x=mx+32, y=64, line_kind=1 },
+    { x=mx+32, y=48, line_kind=1 },
+  }),
+  f_h+36, 2000)
+
+  gui.add_brush(inner_info, apply_transform(DT,
+  {
+    { x=mx-32, y=32 },
+    { x=mx-32, y=80 },
+    { x=mx+32, y=80 },
+    { x=mx+32, y=32 },
+  }),
+  f_h+72, 2000)
+
+  local exit_info =
+  {
+    w_face = { texture="EXITSIGN" },
+    t_face = { texture="FLAT23" },
+    b_face = { texture="FLAT23" },
+  }
+
+  for pass = 1,2 do
+    if pass == 2 then DT.mirror_x = mx end
+
+    gui.add_brush(inner_info, apply_transform(DT,
+    {
+      { x=0,     y=0 },
+      { x=0,     y=80 },
+      { x=mx-32, y=80 },
+      { x=mx-32, y=32 },
+      { x=mx-96, y=0 },
+    }),
+    -2000, 2000)
+
+    gui.add_brush(exit_info, apply_transform(DT,
+    {
+      { x=mx-32, y=16 },
+      { x=mx-60, y=0  },
+      { x=mx-68, y=8  },
+      { x=mx-40, y=24 },
+    }),
+    c_h-16, 2000)
+  end
 
 
   -- make switch
 
-  local WT, long = get_transform_for_seed_side(S, 10-side)
+  local WT
+  WT, long, deep = get_transform_for_seed_side(S, 10-side)
 
-  local mx = int(long / 2)
+  mx = int(long / 2)
   local swit_W = 64
 
 inner_info.w_face={ texture="SW1STRTN"} --!!! TEST
