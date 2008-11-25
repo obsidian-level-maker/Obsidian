@@ -54,8 +54,19 @@ function apply_transform(T, coords)
   end
 
   if reverse_it then
-    -- FIXME !!!!  does not handle side properties (w_face, line_kind, etc)
-    --             (they need to be moved to the other vertex)
+    -- make sure side properties (w_face, line_kind, etc)
+    -- are associated with the correct vertex
+    local x1 = coords[1].x
+    local y1 = coords[1].y
+
+    for i = 1, #coords-1 do
+      coords[i].x = coords[i+1].x
+      coords[i].y = coords[i+1].y
+    end
+
+    coords[#coords].x = x1
+    coords[#coords].y = y1
+
     table_reverse(coords)
   end
 
