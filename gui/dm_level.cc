@@ -656,7 +656,8 @@ static int WriteSector(sector_info_c *S)
 
 
 static int WriteSidedef(merge_segment_c *G, int side,
-                        merge_region_c *F, merge_region_c *B)
+                        merge_region_c *F, merge_region_c *B,
+                        bool *l_peg, bool *u_peg)
 {
   if (! (F && F->index > 0))
     return -1;
@@ -677,6 +678,9 @@ static int WriteSidedef(merge_segment_c *G, int side,
     area_face_c *lower_W = CSG2_FindSideFace(G, fz, side == 1);
     area_face_c *upper_W = CSG2_FindSideFace(G, cz, side == 1);
 
+    if (lower_W && lower_W->peg) *l_peg = true;
+    if (upper_W && upper_W->peg) *u_peg = true;
+
     const char *lower = lower_W ? lower_W->tex.c_str() : error_tex ? error_tex : NULL;
     const char *upper = upper_W ? upper_W->tex.c_str() : error_tex ? error_tex : NULL;
 
@@ -690,12 +694,81 @@ static int WriteSidedef(merge_segment_c *G, int side,
 
     area_face_c *mid_W = CSG2_FindSideFace(G, z, side == 1);
 
+    if (mid_W && mid_W->peg)
+      *l_peg = true;
+
     const char *wall = mid_W ? mid_W->tex.c_str() : error_tex ? error_tex : "-";
 
     DM_AddSidedef(sec_num, "-", wall, "-", 0, 0);
   }
 
   return side_ref;
+}
+
+
+static area_vert_c *FindSpecialVert(merge_segment_c *G)
+{
+  sector_info_c *FS = NULL;
+  sector_info_c *BS = NULL;
+
+  if (G->front && G->front->index > 0)
+    FS = dm_sectors[G->front->index];
+
+  if (G->back && G->back->index > 0)
+    BS = dm_sectors[G-> back->index];
+
+  if (!BS && !FS)
+    return NULL;
+
+  int min_f = +9999;
+  int max_c = -9999;
+
+  if (FS)
+  {
+    min_f = MIN(min_f, FS->f_h);
+    max_c = MAX(max_c, FS->c_h);
+  }
+
+  if (BS)
+  {
+    min_f = MIN(min_f, BS->f_h);
+    max_c = MAX(max_c, BS->c_h);
+  }
+
+  min_f -= 2;
+  max_c += 2;
+
+
+  for (int side = 0; side < 2; side++)
+  {
+    unsigned int count = (side == 0) ? G->f_sides.size() : G->b_sides.size();
+
+    for (unsigned int k=0; k < count; k++)
+    {
+      area_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
+
+      if (V->line_kind > 0 &&
+          V->parent->z1 < (double)max_c &&
+          V->parent->z2 > (double)min_f)
+      {
+/*
+DebugPrintf("SEGMENT (%1.0f,%1.0f) --> (%1.0f,%1.0f) SIDE:%d LINE_KIND:%d\n",
+            G->start->x, G->start->y, G->end  ->x, G->end  ->y,
+            side, V->line_kind);
+DebugPrintf("   BRUSH RANGE: %1.0f --> %1.0f  tex:%s\n",
+            V->parent->z1, V->parent->z2, V->parent->w_face->tex.c_str());
+DebugPrintf("   FS: %p  f_h:%d c_h:%d f_tex:%s\n",
+            FS, FS ? FS->f_h : -1, FS ? FS->c_h : -1, FS ? FS->f_tex.c_str() : "");
+DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
+            BS, BS ? BS->f_h : -1, BS ? BS->c_h : -1, BS ? BS->f_tex.c_str() : "");
+*/
+        return V;
+      }
+    }
+  }
+
+  return NULL;
+
 }
 
 
@@ -711,35 +784,23 @@ static void WriteLinedefs(void)
     if (! G->front && ! G->back)
       continue;
 
-// FIXME: TEMP HACK !!!
-int kind = 0;
-int tag = 0;
-for (unsigned int k=0; k < G->f_sides.size(); k++)
-  if (G->f_sides[k]->line_kind > 0)
-  {
-    kind = G->f_sides[k]->line_kind;
-    tag  = G->f_sides[k]->line_tag;
-  }
-for (unsigned int k=0; k < G->b_sides.size(); k++)
-  if (G->b_sides[k]->line_kind > 0)
-  {
-    kind = G->b_sides[k]->line_kind;
-    tag  = G->b_sides[k]->line_tag;
-  }
-
+    area_vert_c *spec = FindSpecialVert(G);
 
     // if same sector on both sides, skip the line, unless
     // we have a rail texture or a special line.
     if (G->front && G->back && G->front->index == G->back->index)
     {
-      // FIXME: check for a rail texture (on any line)
+      // FIXME: check for a rail texture
 
-      // FIXME: check for a special line-type (on any line)
-      continue;
+      if (! (spec && (spec->line_kind > 0 || spec->line_tag > 0)))
+        continue;
     }
 
-    int front_idx = WriteSidedef(G, 0, G->front, G->back);
-    int back_idx  = WriteSidedef(G, 1, G->back, G->front);
+    bool l_peg = false;
+    bool u_peg = false;
+
+    int front_idx = WriteSidedef(G, 0, G->front, G->back, &l_peg, &u_peg);
+    int back_idx  = WriteSidedef(G, 1, G->back, G->front, &l_peg, &u_peg);
 
     if (front_idx < 0 && back_idx < 0)
       continue;
@@ -784,8 +845,15 @@ for (unsigned int k=0; k < G->b_sides.size(); k++)
     else
       flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
 
-    DM_AddLinedef(v1, v2, front_idx, back_idx,
-                  kind, flags, tag, NULL /* args */);
+    if (l_peg) flags ^= MLF_LowerUnpeg;
+    if (u_peg) flags ^= MLF_UpperUnpeg;
+
+    if (spec)
+      DM_AddLinedef(v1, v2, front_idx, back_idx,
+                    spec->line_kind, spec->line_flags | flags,
+                    spec->line_tag,  spec->line_args);
+    else
+      DM_AddLinedef(v1, v2, front_idx, back_idx, 0, flags, 0, NULL);
   }
 
   SYS_ASSERT(DM_NumVertexes() > 0);
