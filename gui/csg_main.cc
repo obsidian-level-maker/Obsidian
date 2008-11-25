@@ -734,6 +734,7 @@ area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
 {
   area_vert_c *best = NULL;
   double best_dist = 1e9;
+  double dist;
 
   unsigned int count = is_front ? G->f_sides.size() : G->b_sides.size();
 
@@ -745,7 +746,10 @@ area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
     if ((z > V->parent->z1 - EPSILON) && (z < V->parent->z2 + EPSILON))
       return V;
 
-    double dist = fabs(z - (V->parent->z1 + V->parent->z2)/2.0);
+    if (z < V->parent->z1)
+      dist = V->parent->z1 - z;
+    else
+      dist = z - V->parent->z2;
 
     if (dist < best_dist)
     {
@@ -776,7 +780,7 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
     if ((z > A->z1 - EPSILON) && (z < A->z2 + EPSILON))
       return A;
 
-    double dist = fabs(z - (A->z1 + A->z2)/2.0);
+    double dist = (z < A->z1) ? (A->z1 - z) : (z - A->z2);
 
     if (dist < best_dist)
     {
@@ -790,7 +794,7 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
 
 area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front)
 {
-  area_vert_c *V = CSG2_FindSideVertex(G, z, is_front);
+  area_vert_c *V = CSG2_FindSideVertex(G, z, is_front, true);
 
   if (V)
   {
