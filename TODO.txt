@@ -6,6 +6,9 @@ TODO
 >>>> document classes (PLAN, SEED, ROOM, QUEST)
 
 
+SMALL EXITS: locked door
+
+
 NAME GENERATOR
 
 -  GUI SIDE:
@@ -23,11 +26,18 @@ NAME GENERATOR
 
             (also: ExMyDesc="%s")
 
+   -  Doomsday:  DD_DEFNS lump  -- comments use '#'
+              
+              Map Info
+              {
+                ID = "MAP01";
+                Name = "Blah Blah";
+              }
+
    -  ZDOOM / HEXEN: MAPINFO lump   -- comments use ';' 
 
-             gui.property("mapinfo_map",  "%d")
-             gui.property("mapinfo_desc", "%s")
-             gui.property("mapinfo_prop", "cluster 1")
+             gui.mapinfo_map(lump, description)
+             gui.mapinfo_property("cluster", "1")
 
              LIMIT = 31 letters
 
