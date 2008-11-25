@@ -224,7 +224,7 @@ function make_door(S, side, z1, key_tex)
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
-    w_face = { texture="BIGDOOR2" },
+    w_face = { texture="BIGDOOR2", peg=true },
     flag_door = true
   }
 
@@ -289,7 +289,7 @@ function make_locked_door(S, side, z1, key_tex)
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
-    w_face = { texture="BIGDOOR2" },
+    w_face = { texture="BIGDOOR2", peg=true },
     flag_door = true
   }
 
@@ -336,7 +336,7 @@ function make_locked_door(S, side, z1, key_tex)
     {
       { x=mx-64-18, y=my-DY },
       { x=mx-64-18, y=my+DY },
-      { x=mx-64,    y=my+8, w_face={ texture="DOORTRAK" } },
+      { x=mx-64,    y=my+8, w_face={ texture="DOORTRAK", peg=true } },
       { x=mx-64,    y=my-8 },
     }),
     -2000, 2000)
@@ -1219,7 +1219,7 @@ function make_lift(S, x1,y1, x2,y2, z)
     {
       t_face = { texture="STEP2" },
       b_face = { texture="STEP2" },
-      w_face = { texture="SUPPORT2" },
+      w_face = { texture="SUPPORT2", peg=true },
       sec_tag = tag,
     },
     {
