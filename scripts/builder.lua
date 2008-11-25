@@ -34,7 +34,11 @@ class TRANSFORM
 }
 --]]
 
-function apply_transform(T, coords)
+function transformed_brush(T, info, coords, z1, z2)
+
+  coords = deep_copy(coords)
+
+  -- TODO !!!  apply transforms to slopes (z1 or z2 == table)
 
   -- handle mirroring first
   local reverse_it = false
@@ -88,7 +92,7 @@ function apply_transform(T, coords)
     end
   end
 
-  return coords
+  gui.add_brush(info, coords, z1, z2)
 end
 
 
@@ -235,43 +239,46 @@ function make_door(S, side, z1, key_tex)
     w_face = { texture="COMPSPAN" },
   }
 
-  local frame_coords = apply_transform(T,
+  local frame_coords =
   {
     { x=0,    y=0 },
     { x=0,    y=deep },
     { x=long, y=deep },
     { x=long, y=0 },
-  })
+  }
 
-  gui.add_brush(other_info, frame_coords, -2000, z1+8)
-  gui.add_brush(other_info, frame_coords, z1+8+112, 2000)
+  transformed_brush(T, other_info, frame_coords, -2000, z1+8)
+  transformed_brush(T, other_info, frame_coords, z1+8+112, 2000)
 
-  gui.add_brush(other_info, apply_transform(T,
+  transformed_brush(T, other_info,
   {
     { x=0, y=0 },
     { x=0, y=deep },
     { x=mx-64, y=deep },
     { x=mx-64, y=0 },
-  }), -2000, 2000)
+  },
+  -2000, 2000)
 
-  gui.add_brush(other_info, apply_transform(T,
+  transformed_brush(T, other_info,
   {
     { x=mx+64, y=0 },
     { x=mx+64, y=deep },
     { x=long,  y=deep },
     { x=long,  y=0 },
-  }), -2000, 2000)
+  },
+  -2000, 2000)
   
 
   local KIND = 1
 
-  gui.add_brush(door_info, apply_transform(T,
+  transformed_brush(T, door_info,
   {
     { x=mx-64, y=my-8, line_kind=KIND },
     { x=mx-64, y=my+8, line_kind=KIND },
     { x=mx+64, y=my+8, line_kind=KIND },
     { x=mx+64, y=my-8, line_kind=KIND },
-  }), z1+64, 2000)
+  },
+  z1+64, 2000)
 
 end
 
@@ -307,47 +314,48 @@ function make_locked_door(S, side, z1, key_tex)
     w_face = { texture=key_tex },
   }
 
-  local frame_coords = apply_transform(T,
+  local frame_coords =
   {
     { x=0,    y=my-DY },
     { x=0,    y=my+DY },
     { x=long, y=my+DY },
     { x=long, y=my-DY },
-  })
+  }
 
-  gui.add_brush(other_info, frame_coords, -2000, z1+8)
-  gui.add_brush(other_info, frame_coords, z1+8+112, 2000)
+  transformed_brush(T, other_info, frame_coords, -2000, z1+8)
+  transformed_brush(T, other_info, frame_coords, z1+8+112, 2000)
 
   local KIND = 1
 
-  gui.add_brush(door_info, apply_transform(T,
+  transformed_brush(T, door_info,
   {
     { x=mx-64, y=my-8, line_kind=KIND },
     { x=mx-64, y=my+8, line_kind=KIND },
     { x=mx+64, y=my+8, line_kind=KIND },
     { x=mx+64, y=my-8, line_kind=KIND },
-  }), z1+64, 2000)
+  },
+  z1+64, 2000)
 
 
   for pass = 1,2 do
     if pass == 2 then T.mirror_x = mx end
 
-    gui.add_brush(key_info, apply_transform(T,
+    transformed_brush(T, key_info,
     {
       { x=mx-64-18, y=my-DY },
       { x=mx-64-18, y=my+DY },
       { x=mx-64,    y=my+8, w_face={ texture="DOORTRAK", peg=true } },
       { x=mx-64,    y=my-8 },
-    }),
+    },
     -2000, 2000)
 
-    gui.add_brush(other_info, apply_transform(T,
+    transformed_brush(T, other_info,
     {
       { x=0,        y=my-DY },
       { x=0,        y=my+DY },
       { x=mx-64-18, y=my+DY },
       { x=mx-64-18, y=my-DY },
-    }),
+    },
     -2000, 2000)
   end
 end
@@ -1310,22 +1318,22 @@ function make_small_exit(R)
   local DT, long, deep = get_transform_for_seed_side(S, side)
   local mx = int(long / 2)
 
-  gui.add_brush(door_info, apply_transform(DT,
+  transformed_brush(DT, door_info,
   {
     { x=mx-32, y=48, line_kind=1 },
     { x=mx-32, y=64, line_kind=1 },
     { x=mx+32, y=64, line_kind=1 },
     { x=mx+32, y=48, line_kind=1 },
-  }),
+  },
   f_h+36, 2000)
 
-  gui.add_brush(inner_info, apply_transform(DT,
+  transformed_brush(DT, inner_info,
   {
     { x=mx-32, y=32 },
     { x=mx-32, y=80 },
     { x=mx+32, y=80 },
     { x=mx+32, y=32 },
-  }),
+  },
   f_h+72, 2000)
 
   local exit_info =
@@ -1338,23 +1346,23 @@ function make_small_exit(R)
   for pass = 1,2 do
     if pass == 2 then DT.mirror_x = mx end
 
-    gui.add_brush(inner_info, apply_transform(DT,
+    transformed_brush(DT, inner_info,
     {
       { x=0,     y=0 },
       { x=0,     y=80 },
       { x=mx-32, y=80 },
       { x=mx-32, y=32 },
       { x=mx-96, y=0 },
-    }),
+    },
     -2000, 2000)
 
-    gui.add_brush(exit_info, apply_transform(DT,
+    transformed_brush(DT, exit_info,
     {
       { x=mx-32, y=16 },
       { x=mx-60, y=0  },
       { x=mx-68, y=8  },
       { x=mx-40, y=24 },
-    }),
+    },
     c_h-16, 2000)
   end
 
@@ -1368,7 +1376,7 @@ function make_small_exit(R)
   local swit_W = 64
 
 
-  gui.add_brush(inner_info, apply_transform(WT,
+  transformed_brush(WT, inner_info,
   {
     { x=0, y=0 },
     { x=0, y=16 },
@@ -1376,13 +1384,88 @@ function make_small_exit(R)
     { x=mx+swit_W/2, y=16 },
     { x=long, y=16 },
     { x=long, y=0 },
-  }),
+  },
   -2000, 2000)
 
 
   mark_room_as_done(R)
 end
 
+
+function make_wall(S, side, f_tex, w_tex)
+  gui.add_brush(
+  {
+    t_face = { texture=f_tex },
+    b_face = { texture=f_tex },
+    w_face = { texture=w_tex },
+  },
+  get_wall_coords(S, side),
+  -2000, 4000)
+end
+
+
+function make_fence(S, side, z1, f_tex, w_tex)
+  gui.add_brush(
+  {
+    t_face = { texture=f_tex },
+    b_face = { texture=f_tex },
+    w_face = { texture=w_tex },
+  },
+  get_wall_coords(S, side),
+  -2000, z1+36)
+end
+
+
+function make_window(S, side, width, z1, z2, f_tex, w_tex)
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local wall_info =
+  {
+    t_face = { texture=f_tex },
+    b_face = { texture=f_tex },
+    w_face = { texture=w_tex },
+  }
+
+  local mx = int(long/2)
+
+  transformed_brush(T, wall_info,
+  {
+    { x=0, y=0 },
+    { x=0, y=deep },
+    { x=mx-width/2, y=deep },
+    { x=mx-width/2, y=0 },
+  },
+  -2000, 2000)
+
+  transformed_brush(T, wall_info,
+  {
+    { x=mx+width/2, y=0 },
+    { x=mx+width/2, y=deep },
+    { x=long, y=deep },
+    { x=long, y=0 },
+  },
+  -2000, 2000)
+
+
+  transformed_brush(T, wall_info,
+  {
+    { x=mx-width/2, y=0 },
+    { x=mx-width/2, y=deep },
+    { x=mx+width/2, y=deep },
+    { x=mx+width/2, y=0 },
+  },
+  -2000, z1)
+
+  transformed_brush(T, wall_info,
+  {
+    { x=mx-width/2, y=0 },
+    { x=mx-width/2, y=deep },
+    { x=mx+width/2, y=deep },
+    { x=mx+width/2, y=0 },
+  },
+  z2, 2000)
+end
 
 
 function build_stairwell(R)
@@ -1993,7 +2076,6 @@ gui.printf("do_teleport\n")
 
 
 
-
     -- make sides
 
     for side = 2,8,2 do
@@ -2022,29 +2104,16 @@ gui.printf("do_teleport\n")
       if S.borders[side] and S.borders[side].kind == "solid"
 ---      and not could_lose_wall
       then
+        make_wall(S, side, f_tex, w_tex)
 
-        gui.add_brush(
-        {
-          t_face = { texture=f_tex },
-          b_face = { texture=f_tex },
-          w_face = { texture=w_tex },
-        },
-        get_wall_coords(S, side),
-        -2000, 4000)
+        --!!!! TEST: make_window(S, side, 128, z1+64, z2-32, f_tex, w_tex)
       end
 
       if S.borders[side] and S.borders[side].kind == "fence"
          and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
       then
 
-        gui.add_brush(
-        {
-          t_face = { texture=f_tex },
-          b_face = { texture=f_tex },
-          w_face = { texture=w_tex },
-        },
-        get_wall_coords(S, side),
-        -2000, z1+36)
+        make_fence(S, side, z1, f_tex, w_tex)
       end
 
       if S.borders[side] and S.borders[side].kind == "skyfence" then
