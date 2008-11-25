@@ -325,7 +325,7 @@ static slope_plane_c * Grab_Slope(lua_State *L, int stack_pos)
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table: slope info");
+    luaL_argerror(L, stack_pos, "missing table: slope info");
     return NULL; /* NOT REACHED */
   }
 
@@ -369,7 +369,7 @@ static area_face_c * Grab_Face(lua_State *L, int stack_pos)
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table: face info");
+    luaL_error(L, "gui.add_brush: missing face info");
     return NULL; /* NOT REACHED */
   }
 
@@ -402,7 +402,7 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table: area info");
+    luaL_argerror(L, stack_pos, "missing table: area info");
     return NULL; /* NOT REACHED */
   }
 
@@ -459,7 +459,7 @@ static void Grab_HexenArgs(lua_State *L, byte *args)
   // NOTE: we assume table is on top of stack
   if (lua_type(L, -1) != LUA_TTABLE)
   {
-    luaL_argerror(L, -1, "expected a table: line_args");
+    luaL_error(L, "gui.add_brush: missing line_args table");
     return; /* NOT REACHED */
   }
  
@@ -485,7 +485,7 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table: vertex");
+    luaL_error(L, "gui.add_brush: missing vertex info");
     return NULL; /* NOT REACHED */
   }
 
@@ -532,7 +532,7 @@ static void Grab_LineLoop(lua_State *L, int stack_pos, csg_brush_c *B)
 {
   if (lua_type(L, stack_pos) != LUA_TTABLE)
   {
-    luaL_argerror(L, stack_pos, "expected a table: line loop");
+    luaL_argerror(L, stack_pos, "missing table: line loop");
     return; /* NOT REACHED */
   }
 
@@ -689,7 +689,7 @@ int CSG2_add_entity(lua_State *L)
 
   if (lua_type(L, 4) != LUA_TTABLE)
   {
-    luaL_argerror(L, 4, "expected a table: entity info");
+    luaL_argerror(L, 4, "missing table: entity info");
     return 0; /* NOT REACHED */
   }
 
