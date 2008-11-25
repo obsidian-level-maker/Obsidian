@@ -61,6 +61,7 @@ class sector_info_c;
 class extrafloor_c
 {
 public:
+  // dummy sector
   sector_info_c * sec;
 
   std::string w_tex;
@@ -157,8 +158,8 @@ bool extrafloor_c::Match(const extrafloor_c *other) const
 
 void CSG2_Doom_TestAreas(void)
 {
-  // for debugging only: each csg_brush_c becomes a single sector
-  // on the map.
+  // for debugging only: each csg_brush_c becomes a single
+  // sector on the map.
  
   for (unsigned int k = 0; k < all_brushes.size(); k++)
   {
@@ -242,33 +243,6 @@ void CSG2_Doom_TestRegions(void)
 
 //------------------------------------------------------------------------
 
-#if 0
-static csg_brush_c * FindExtraFloor(merge_region_c *R, double z1, double z2)
-{
-  csg_brush_c *best = NULL;
-
-  for (unsigned int k=0; k < R->areas.size(); k++)
-  {
-    csg_brush_c *E = R->areas[k];
-
-    if (! (E->z1 > z1 && E->z2 < z2))
-      continue;
-
-    // we prefer the one closest to the top (because when the engine
-    // adds an extrafloor, the upper region stays the same and the
-    // lower regions gets the lighting/special from the extrafloor).
-
-    if (! best || E->z2 > best->z2) 
-    {
-      best = E;
-    }
-  }
-
-  return best;
-}
-#endif
-
-
 void DetermineMapBounds(void)
 {
   double min_x, min_y, min_z;
@@ -288,36 +262,11 @@ void DetermineMapBounds(void)
 static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
                            merge_gap_c *T, merge_gap_c *B)
 {
-#if 0 // OLD CODE
-  // T is the top-most brush.  Find the bottom-most brush
-  // which is connected to T (via intersecting brushes).
-  csg_brush_c *B = T;
-
-  for (;;)
-  {
-    bool changed = false;
-
-    for (unsigned int k=0; k < R->areas.size(); k++)
-    {
-      csg_brush_c *A = R->areas[k];
-
-      if (A->z1 < B->z1 - EPSILON &&
-          A->z2 > B->z1 - EPSILON)
-///       A->z2 < T->z2 + EPSILON)
-      {
-        B = A; changed = true;
-      }
-    }
-
-    if (! changed)
-      break;
-  }
-#endif
-
   // find the brush which we will use for the side texture
   csg_brush_c *MID = NULL;
   double best_h = 0;
 
+  // FIXME use f_sides/b_sides (FindSideFace)
   for (unsigned int j = 0; j < R->areas.size(); j++)
   {
     csg_brush_c *A = R->areas[j];
@@ -375,7 +324,6 @@ static void CreateOneSector(merge_region_c *R)
     R->index = 0;
     return;
   }
-
 
   csg_brush_c *B = R->gaps[0]->b_brush;
   csg_brush_c *T = R->gaps[R->gaps.size()-1]->t_brush;
@@ -446,23 +394,10 @@ static void CreateOneSector(merge_region_c *R)
       MakeExtraFloor(R, sec, T, B);
     }
   }
-  // FIXME: else ????
-
-
-#if 0  // OLD CODE
-  double exfloor_z1 = B->z2 + 1;
-  double exfloor_z2 = T->z1 - 1;
-
-  for (;;)
+  else
   {
-    csg_brush_c *EF = FindExtraFloor(R, exfloor_z1, exfloor_z2);
-
-    if (! EF)
-      break;
-
-    exfloor_z2 = MakeExtraFloor(R, sec, EF) - 1;
+    LogPrintf("WARNING: discarding extrafloor brush.\n");
   }
-#endif
 }
 
 static void CoalesceSectors(void)
@@ -612,6 +547,19 @@ static void CreateSectors(void)
 
 //------------------------------------------------------------------------
 
+static int WriteVertex(merge_vertex_c *V)
+{
+  if (V->index < 0)
+  {
+    V->index = DM_NumVertexes();
+
+    DM_AddVertex(I_ROUND(V->x), I_ROUND(V->y));
+  }
+
+  return V->index;
+}
+
+
 static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
 {
   if (EF->sec->index >= 0)
@@ -634,7 +582,7 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
   if (extrafloor_slot & 2048) y1 -= 2200;
 
   if (extrafloor_slot & 4096)
-    Main_FatalError("Too many extrafloors! (over %d)%d\n", extrafloor_slot);
+    Main_FatalError("Too many extrafloors! (over %d)\n", extrafloor_slot);
 
   int x2 = x1 + 32;
   int y2 = y1 + 32;
@@ -684,27 +632,6 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
                   type, 1 /* impassible */,
                   tag, NULL /* args */);
   }
-
-///---  DM_AddLinedef(vert_ref+0, vert_ref+1, side_ref, -1,
-///---                400 /* EDGE !! */,
-///---                sec->tag,
-///---
-///---  DM_AddLinedef(vert_ref+1, vert_ref+2, side_ref, -1, 0,1,0, NULL);
-///---  DM_AddLinedef(vert_ref+2, vert_ref+3, side_ref, -1, 0,1,0, NULL);
-///---  DM_AddLinedef(vert_ref+3, vert_ref+0, side_ref, -1, 0,1,0, NULL);
-}
-
-
-static int WriteVertex(merge_vertex_c *V)
-{
-  if (V->index < 0)
-  {
-    V->index = DM_NumVertexes();
-
-    DM_AddVertex(I_ROUND(V->x), I_ROUND(V->y));
-  }
-
-  return V->index;
 }
 
 
@@ -728,32 +655,8 @@ static int WriteSector(sector_info_c *S)
 }
 
 
-static std::string FindSideTexture(double z, merge_segment_c *G,
-                                   merge_region_c *F, merge_region_c *B)
-{
-  if (! B)
-    return std::string(error_tex ? error_tex : "FIREBLU1");  // FIXME
-
-  // TODO: find texture in line loops using segment 'G'
-
-  // TODO: check for multiple matches, prioritise
-
-  unsigned int k;
-
-  // examine *back* region
-  for (k = 0; k < B->areas.size(); k++)
-  {
-    csg_brush_c *A = B->areas[k];
-
-    if ((z > A->z1 - EPSILON) && (z < A->z2 + EPSILON))
-      return A->w_face->tex;
-  }
-
-  // none found ???  FIXME use closest area
-  return std::string("FIREBLU1");
-}
-
-static int WriteSidedef(merge_segment_c *G, merge_region_c *F, merge_region_c *B)
+static int WriteSidedef(merge_segment_c *G, int side,
+                        merge_region_c *F, merge_region_c *B)
 {
   if (! (F && F->index > 0))
     return -1;
@@ -771,20 +674,25 @@ static int WriteSidedef(merge_segment_c *G, merge_region_c *F, merge_region_c *B
     double fz = (S->f_h + BS->f_h) / 2.0;
     double cz = (S->c_h + BS->c_h) / 2.0;
 
-    std::string lower = FindSideTexture(fz, G, F, B);
-    std::string upper = FindSideTexture(cz, G, F, B);
+    area_face_c *lower_W = CSG2_FindSideFace(G, fz, side == 1);
+    area_face_c *upper_W = CSG2_FindSideFace(G, cz, side == 1);
 
-    std::string rail = "-"; // TODO = FindRailTexture( xxx )
+    const char *lower = lower_W ? lower_W->tex.c_str() : error_tex ? error_tex : NULL;
+    const char *upper = upper_W ? upper_W->tex.c_str() : error_tex ? error_tex : NULL;
 
-    DM_AddSidedef(sec_num, lower.c_str(), rail.c_str(), upper.c_str(), 0, 0);
+    const char * rail = "-"; // TODO
+
+    DM_AddSidedef(sec_num, lower, rail, upper, 0, 0);
   }
   else
   {
     double z = (S->f_h + S->c_h) / 2.0;
 
-    std::string wall = FindSideTexture(z, G, F, B);
+    area_face_c *mid_W = CSG2_FindSideFace(G, z, side == 1);
 
-    DM_AddSidedef(sec_num, "-", wall.c_str(), "-", 0, 0);
+    const char *wall = mid_W ? mid_W->tex.c_str() : error_tex ? error_tex : "-";
+
+    DM_AddSidedef(sec_num, "-", wall, "-", 0, 0);
   }
 
   return side_ref;
@@ -830,8 +738,8 @@ for (unsigned int k=0; k < G->b_sides.size(); k++)
       continue;
     }
 
-    int front_idx = WriteSidedef(G, G->front, G->back);
-    int back_idx  = WriteSidedef(G, G->back, G->front);
+    int front_idx = WriteSidedef(G, 0, G->front, G->back);
+    int back_idx  = WriteSidedef(G, 1, G->back, G->front);
 
     if (front_idx < 0 && back_idx < 0)
       continue;
@@ -873,13 +781,8 @@ for (unsigned int k=0; k < G->b_sides.size(); k++)
 
     if (back_idx < 0)
       flags |= MLF_BlockAll;
-
-    if (back_idx >= 0 && front_idx >= 0)
-    {
-      flags |= MLF_TwoSided;
-
-      flags |= MLF_LowerUnpeg | MLF_UpperUnpeg;
-    }
+    else
+      flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
 
     DM_AddLinedef(v1, v2, front_idx, back_idx,
                   kind, flags, tag, NULL /* args */);
@@ -891,6 +794,8 @@ for (unsigned int k=0; k < G->b_sides.size(); k++)
 
 static void WriteThings(void)
 {
+  // ??? first iterate over entity lists in merge_gaps
+
   for (unsigned int j = 0; j < all_entities.size(); j++)
   {
     entity_info_c *E = all_entities[j];
@@ -898,7 +803,10 @@ static void WriteThings(void)
     int type = atoi(E->name.c_str());
 
     if (type <= 0)
-      continue; // FIXME: WARNING
+    {
+      LogPrintf("WARNING: bad doom entity number: '%s'\n",  E->name.c_str());
+      continue;
+    }
 
     // FIXME!!!! thing height
     double h = 0;
@@ -908,7 +816,7 @@ static void WriteThings(void)
                    7, /* FIXME: options */
                    0, /* FIXME: tid */
                    0, /* FIXME: special */
-                   NULL /* args */);
+                   NULL /* FIXME: args */);
   }
 }
 
@@ -1060,6 +968,10 @@ void doom_game_interface_c::Property(const char *key, const char *value)
   else if (StringCaseCmp(key, "error_tex") == 0)
   {
     error_tex = StringDup(value);
+  }
+  else if (StringCaseCmp(key, "error_flat") == 0)
+  {
+    // silently accepted, but not used
   }
   else if (StringCaseCmp(key, "solid_exfloor") == 0)
   {

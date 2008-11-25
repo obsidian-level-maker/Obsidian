@@ -448,7 +448,7 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
  
   lua_pop(L, 3);
 
-  // TODO: peg, lighting ???
+  // TODO: lighting ???
 
   return B;
 }
@@ -727,6 +727,83 @@ int CSG2_add_entity(lua_State *L)
 
 
 //------------------------------------------------------------------------
+
+
+area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
+                                  bool is_front, bool exact)
+{
+  area_vert_c *best = NULL;
+  double best_dist = 1e9;
+
+  unsigned int count = is_front ? G->f_sides.size() : G->b_sides.size();
+
+  for (unsigned i = 0; i < count; i++)
+  {
+    area_vert_c *V = is_front ? G->f_sides[i]: G->b_sides[i];
+
+    // ideal match
+    if ((z > V->parent->z1 - EPSILON) && (z < V->parent->z2 + EPSILON))
+      return V;
+
+    double dist = fabs(z - (V->parent->z1 + V->parent->z2)/2.0);
+
+    if (dist < best_dist)
+    {
+      best = V;
+      best_dist = dist;
+    }
+  }
+
+  return exact ? NULL : best;
+}
+
+csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
+                                 bool is_front, bool exact)
+{
+  merge_region_c *R = is_front ? G->front : G->back;
+
+  if (! R)
+    return NULL;
+
+  csg_brush_c *best = NULL;
+  double best_dist = 1e9;
+
+  for (unsigned int k = 0; k < R->areas.size(); k++)
+  {
+    csg_brush_c *A = R->areas[k];
+
+    // ideal match
+    if ((z > A->z1 - EPSILON) && (z < A->z2 + EPSILON))
+      return A;
+
+    double dist = fabs(z - (A->z1 + A->z2)/2.0);
+
+    if (dist < best_dist)
+    {
+      best = A;
+      best_dist = dist;
+    }
+  }
+
+  return exact ? NULL : best;
+}
+
+area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front)
+{
+  area_vert_c *V = CSG2_FindSideVertex(G, z, is_front);
+
+  if (V)
+  {
+    return V->w_face ? V->w_face : V->parent->w_face;
+  }
+
+  csg_brush_c *B = CSG2_FindSideBrush(G, z, is_front);
+
+  if (B)
+    return B->w_face;
+
+  return NULL;
+}
 
 
 void CSG2_FreeMerges(void)

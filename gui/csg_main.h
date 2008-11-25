@@ -164,6 +164,7 @@ typedef enum
   ENT_F_Monster   = (1 << 1),
   ENT_F_Light     = (1 << 2),
   EMT_F_Temp      = (1 << 3),  // temporary, don't store in the map
+  ENT_F_Written   = (1 << 4),
 }
 entity_flags_e;
 
@@ -242,7 +243,7 @@ public:
   merge_region_c *front;
   merge_region_c *back;
 
-  // line-loop section which lie along this segmen
+  // line-loop parts which lie along this segment
   std::vector<area_vert_c *> f_sides;
   std::vector<area_vert_c *> b_sides;
 
@@ -350,6 +351,7 @@ public:
 
   std::vector<csg_brush_c *> areas;
 
+  // gaps are in order from lowest to highest
   std::vector<merge_gap_c *> gaps;
 
   // this index is not used by the polygoniser code (csg_poly.cc),
@@ -395,6 +397,12 @@ void CSG2_MergeAreas(void);
 
 void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
                     double& max_x, double& max_y, double& max_z);
+
+area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
+                                  bool is_front, bool exact = false);
+csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
+                                 bool is_front, bool exact = false);
+area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front);
 
 void CSG2_MakeMiniMap(void);
 

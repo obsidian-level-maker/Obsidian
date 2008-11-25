@@ -1356,7 +1356,6 @@ function make_small_exit(R)
   mx = int(long / 2)
   local swit_W = 64
 
-inner_info.w_face={ texture="SW1STRTN"} --!!! TEST
 
   gui.add_brush(inner_info, apply_transform(WT,
   {
