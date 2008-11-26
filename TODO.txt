@@ -6,11 +6,19 @@ TODO
 >>>> document classes (PLAN, SEED, ROOM, QUEST)
 
 
-+  dm_level : setup 'natural' x_offsets and y_offsets,
-              handle explicit ones
+SMALL EXITS: don't put behind a keyed-door (make exit door keyed)
 
 
-SMALL EXITS: locked door
+PILLAR PLACEMENT:
+  Not just anywhere!
+  Must maintain symmetry!
+  Along room mid-X or mid-Y line ("roof support"), 1 or 2
+  Or a bunch along the longest walls (2+)
+
+
+DOOM CSG: when x_offset is given, adjust it if the segment
+          does not match the whole area-vert extent.
+          [no need for 'natural' X offset]
 
 
 NAME GENERATOR
@@ -62,6 +70,25 @@ NAME GENERATOR
 
 -  WILVxx and CWILVxx creation: need an API!
 
+
+MUSIC RE-ORDERING
+
+   -  BOOM, Eternity: [MUSIC] section in BEX
+
+          [MUSIC]
+          ROMERO = RUNNIN
+          RUNNIN = STALKS
+          STALKS = ROMERO
+
+   -  Eternity native: 'music' setting in EMAPINFO
+
+   -  EDGE native:  DDFPLAY lump:
+   
+          <PLAYLISTS>
+          [01]
+          MUSICINFO=MUS:LUMP:"D_RUNNIN";
+
+   -  ZDoom : via MAPINFO: music D_RUNNING
 
 
 THEME SELECTION
@@ -378,11 +405,6 @@ Monsters:
 
 
 Miscellaneous:
-
-+  don't put monsters/pickups/scenery on normal Prefabs.
-
-+  prefabs: improve "kind" fields, allow "x_offset" fields
-   default to 0.
 
 -  make key doors open-and-stay-open.
 
