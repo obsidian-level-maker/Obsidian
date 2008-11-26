@@ -6,6 +6,10 @@ TODO
 >>>> document classes (PLAN, SEED, ROOM, QUEST)
 
 
++  dm_level : setup 'natural' x_offsets and y_offsets,
+              handle explicit ones
+
+
 SMALL EXITS: locked door
 
 
@@ -33,6 +37,15 @@ NAME GENERATOR
                 ID = "MAP01";
                 Name = "Blah Blah";
               }
+
+   -  Eternity:  EMAPINFO lump  -- comments use '#'
+
+              [MAP01]
+              levelname = Blah Blah
+              music = xxxx
+              creator = Oblige 3.xx
+              skyname = SKY3
+
 
    -  ZDOOM / HEXEN: MAPINFO lump   -- comments use ';' 
 
