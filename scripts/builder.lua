@@ -1463,8 +1463,10 @@ function make_small_exit(R)
   {
     { x=0, y=0 },
     { x=0, y=16 },
-    { x=mx-swit_W/2, y=16, w_face={ texture="SW1STRTN", x_offset=0 }, line_kind=11 },
-    { x=mx+swit_W/2, y=16 },
+    { x=mx-swit_W/2-8, y=16, w_face={ texture="DOORSTOP", x_offset=0 }, line_kind=11 },
+    { x=mx-swit_W/2,   y=16, w_face={ texture="SW1STRTN", x_offset=0, y_offset=0 }, line_kind=11 },
+    { x=mx+swit_W/2,   y=16, w_face={ texture="DOORSTOP", x_offset=0 }, line_kind=11 },
+    { x=mx+swit_W/2+8, y=16 },
     { x=long, y=16 },
     { x=long, y=0 },
   },
@@ -2518,6 +2520,7 @@ end
       })
     elseif S.room and not S.room.outdoor and
            (S.layout_char == '0' or S.layout_char == '1') and
+           not S.conn and
            rand_odds(20)
     then
       make_pillar(S, z1, z2, "TEKLITE")
