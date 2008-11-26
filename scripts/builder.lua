@@ -228,7 +228,7 @@ function make_door(S, side, z1, key_tex)
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
-    w_face = { texture="BIGDOOR2", peg=true },
+    w_face = { texture="BIGDOOR2", peg=true, x_offset=0, y_offset=0 },
     flag_door = true
   }
 
@@ -296,7 +296,7 @@ function make_locked_door(S, side, z1, key_tex)
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
-    w_face = { texture="BIGDOOR2", peg=true },
+    w_face = { texture="BIGDOOR2", peg=true, x_offset=0, y_offset=0 },
     flag_door = true
   }
 
@@ -311,7 +311,7 @@ function make_locked_door(S, side, z1, key_tex)
   {
     t_face = { texture="FLAT18" },
     b_face = { texture="FLAT18" },
-    w_face = { texture=key_tex },
+    w_face = { texture=key_tex, x_offset=0 },
   }
 
   local frame_coords =
@@ -1309,7 +1309,7 @@ function make_small_exit(R)
 
   local door_info =
   {
-    w_face = { texture="EXITDOOR" },
+    w_face = { texture="EXITDOOR", peg=true, x_offset=0, y_offset=0 },
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
     flag_door = true,
@@ -1338,7 +1338,7 @@ function make_small_exit(R)
 
   local exit_info =
   {
-    w_face = { texture="EXITSIGN" },
+    w_face = { texture="EXITSIGN", x_offset=0, y_offset=0 },
     t_face = { texture="FLAT23" },
     b_face = { texture="FLAT23" },
   }
@@ -1350,7 +1350,9 @@ function make_small_exit(R)
     {
       { x=0,     y=0 },
       { x=0,     y=80 },
-      { x=mx-32, y=80 },
+      { x=mx-32, y=80, w_face={ texture="LITE5", x_offset=0, y_offset=0 } },
+      { x=mx-32, y=64, w_face={ texture="DOORTRAK", peg=true } },
+      { x=mx-32, y=48, w_face={ texture="LITE5", x_offset=0, y_offset=0 } },
       { x=mx-32, y=32 },
       { x=mx-96, y=0 },
     },
@@ -1359,9 +1361,9 @@ function make_small_exit(R)
     transformed_brush(DT, exit_info,
     {
       { x=mx-32, y=16 },
-      { x=mx-60, y=0  },
+      { x=mx-60, y=0,  w_face={ texture="SHAWN2" } },
       { x=mx-68, y=8  },
-      { x=mx-40, y=24 },
+      { x=mx-40, y=24, w_face={ texture="SHAWN2" } },
     },
     c_h-16, 2000)
   end
@@ -1380,7 +1382,7 @@ function make_small_exit(R)
   {
     { x=0, y=0 },
     { x=0, y=16 },
-    { x=mx-swit_W/2, y=16, w_face={ texture="SW1STRTN" }, line_kind=11 },
+    { x=mx-swit_W/2, y=16, w_face={ texture="SW1STRTN", x_offset=0 }, line_kind=11 },
     { x=mx+swit_W/2, y=16 },
     { x=long, y=16 },
     { x=long, y=0 },
