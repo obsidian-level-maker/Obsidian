@@ -92,7 +92,7 @@ OB_ENGINES["boom"] =
 
 OB_ENGINES["edge"] =
 {
-  label = "EDGE",
+  label = "EDGE 1.31",
   priority = 90,
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
@@ -117,7 +117,7 @@ OB_ENGINES["edge"] =
 
 OB_ENGINES["doomsday"] =
 {
-  label = "Doomsday",
+  label = "Doomsday 1.8.6",
 
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
 
@@ -129,7 +129,7 @@ OB_ENGINES["doomsday"] =
 
 OB_ENGINES["eternity"] =
 {
-  label = "Eternity",
+  label = "Eternity 3.33",
 
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
 
@@ -146,7 +146,7 @@ OB_ENGINES["eternity"] =
 
 OB_ENGINES["legacy"] =
 {
-  label = "Legacy",
+  label = "Legacy 1.42",
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
 
@@ -167,7 +167,7 @@ OB_ENGINES["legacy"] =
 
 OB_ENGINES["vavoom"] =
 {
-  label = "Vavoom",
+  label = "Vavoom 1.29",
 
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1, strife=1 },
 
@@ -179,7 +179,7 @@ OB_ENGINES["vavoom"] =
 
 OB_ENGINES["zdoom"] =
 {
-  label = "ZDoom",
+  label = "ZDoom 2.20",
 
   for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
 
