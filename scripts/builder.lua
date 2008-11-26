@@ -1255,6 +1255,27 @@ function mark_room_as_done(R)
 end
 
 
+function make_exit_pillar(S, z1)
+
+  local mx = int((S.x1 + S.x2)/2)
+  local my = int((S.y1 + S.y2)/2)
+
+  gui.add_brush(
+  {
+    t_face = { texture="FLAT14" },
+    b_face = { texture="FLAT14" },
+    w_face = { texture="SW1BLUE", peg=true, x_offset=0, y_offset=0 },
+  },
+  {
+    { x=mx-32, y=my-32, line_kind=11 },
+    { x=mx-32, y=my+32, line_kind=11 },
+    { x=mx+32, y=my+32, line_kind=11 },
+    { x=mx+32, y=my-32, line_kind=11 },
+  },
+  -2000, z1+128)
+end
+
+
 function make_small_exit(R)
 
   assert(#R.conns == 1)
@@ -1465,6 +1486,87 @@ function make_window(S, side, width, z1, z2, f_tex, w_tex)
     { x=mx-width/2, y=deep },
     { x=mx+width/2, y=deep },
     { x=mx+width/2, y=0 },
+  },
+  z2, 2000)
+end
+
+
+function make_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local wall_info =
+  {
+    t_face = { texture=f_tex },
+    b_face = { texture=f_tex },
+    w_face = { texture=w_tex },
+  }
+
+  local pic_info =
+  {
+    t_face = { texture=f_tex },
+    b_face = { texture=f_tex },
+    w_face = { texture=pic, x_offset=0, y_offset=0 },
+  }
+
+
+  local mx = int(long/2)
+  local my = int(deep/2)
+
+  local y2 = my+4
+
+  transformed_brush(T, wall_info,
+  {
+    { x=0, y=0 },
+    { x=0, y=my-4 },
+    { x=long, y=my-4 },
+    { x=long, y=0 },
+  },
+  -2000, 2000)
+
+  transformed_brush(T, pic_info,
+  {
+    { x=4, y=my-4 },
+    { x=4, y=my+4 },
+    { x=long-4, y=my+4 },
+    { x=long-4, y=my-4 },
+  },
+  -2000, 2000)
+
+  transformed_brush(T, wall_info,
+  {
+    { x=0, y=y2 },
+    { x=0, y=deep },
+    { x=mx-width/2, y=deep },
+    { x=mx-width/2, y=y2 },
+  },
+  -2000, 2000)
+
+  transformed_brush(T, wall_info,
+  {
+    { x=mx+width/2, y=y2 },
+    { x=mx+width/2, y=deep },
+    { x=long, y=deep },
+    { x=long, y=y2 },
+  },
+  -2000, 2000)
+
+
+  transformed_brush(T, wall_info,
+  {
+    { x=mx-width/2, y=y2 },
+    { x=mx-width/2, y=deep },
+    { x=mx+width/2, y=deep },
+    { x=mx+width/2, y=y2 },
+  },
+  -2000, z1)
+
+  transformed_brush(T, wall_info,
+  {
+    { x=mx-width/2, y=y2 },
+    { x=mx-width/2, y=deep },
+    { x=mx+width/2, y=deep },
+    { x=mx+width/2, y=y2 },
   },
   z2, 2000)
 end
@@ -2106,8 +2208,9 @@ gui.printf("do_teleport\n")
       if S.borders[side] and S.borders[side].kind == "solid"
 ---      and not could_lose_wall
       then
-        make_wall(S, side, f_tex, w_tex)
+        -- make_wall(S, side, f_tex, w_tex)
 
+        make_picture(S, side, 128, z2-96, z2-32, f_tex, w_tex, "COMPSTA1")
         --!!!! TEST: make_window(S, side, 128, z1+64, z2-32, f_tex, w_tex)
       end
 
@@ -2335,19 +2438,8 @@ end
         name = tostring(GAME.things["player1"].id)
       })
     elseif S.is_exit then
-      gui.add_brush(
-      {
-        t_face = { texture="STEP2" },
-        b_face = { texture="STEP2" },
-        w_face = { texture="SW1BLUE" },
-      },
-      {
-        { x=mx-32, y=my-32, line_kind=11 },
-        { x=mx-32, y=my+32, line_kind=11 },
-        { x=mx+32, y=my+32, line_kind=11 },
-        { x=mx+32, y=my-32, line_kind=11 },
-      },
-      -2000, z1+128)
+
+      make_exit_pillar(S, z1)
 
     elseif S.room and S.room.kind ~= "scenic" and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
