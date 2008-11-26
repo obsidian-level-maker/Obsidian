@@ -655,10 +655,22 @@ static int WriteSector(sector_info_c *S)
 }
 
 
+static int NaturalXOffset(merge_segment_c *G, int side)
+{
+  double along;
+  
+  if (side == 0)
+    along = AlongDist(0, 0,  G->start->x, G->start->y, G->end->x, G->end->y);
+  else
+    along = AlongDist(0, 0,  G->end->x, G->end->y, G->start->x, G->start->y);
+
+  return I_ROUND(- along);
+}
+
+
 static int WriteSidedef(merge_segment_c *G, int side,
                         merge_region_c *F, merge_region_c *B,
-                        bool *l_peg, bool *u_peg,
-                        int x_offset)
+                        bool *l_peg, bool *u_peg)
 {
   if (! (F && F->index > 0))
     return -1;
@@ -671,7 +683,8 @@ static int WriteSidedef(merge_segment_c *G, int side,
   const char *upper = "-";
   const char *mid   = "-";
 
-  // the 'natural' Y offset
+  // the 'natural' X/Y offsets
+  int x_offset = NaturalXOffset(G, side);
   int y_offset = - S->c_h;
 
   if (B && B->index > 0)
@@ -719,6 +732,9 @@ static int WriteSidedef(merge_segment_c *G, int side,
     if (mid_W && mid_W->y_offset != FVAL_NONE)
       y_offset = (int)mid_W->y_offset;
   }
+
+  x_offset &= 1023;
+  y_offset &= 1023;
 
   int side_ref = DM_NumSidedefs();
 
@@ -794,17 +810,6 @@ DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
 }
 
 
-static int NaturalXOffset(merge_segment_c *G)
-{
-  // zero occurs at the point on line (extended to infinity)
-  // closest to the origin (0,0).  
-
-  double along = AlongDist(0, 0,  G->start->x, G->start->y, G->end->x, G->end->y);
-
-  return I_ROUND(along);
-}
-
-
 static void WriteLinedefs(void)
 {
   for (unsigned int i = 0; i < mug_segments.size(); i++)
@@ -859,10 +864,8 @@ static void WriteLinedefs(void)
     bool l_peg = false;
     bool u_peg = false;
 
-    int x_offset = NaturalXOffset(G);
-
-    int s1 = WriteSidedef(G, 0, G->front, G->back, &l_peg, &u_peg,  x_offset);
-    int s2 = WriteSidedef(G, 1, G->back, G->front, &l_peg, &u_peg, -x_offset);
+    int s1 = WriteSidedef(G, 0, G->front, G->back, &l_peg, &u_peg);
+    int s2 = WriteSidedef(G, 1, G->back, G->front, &l_peg, &u_peg);
 
     if (flipped)
     {
