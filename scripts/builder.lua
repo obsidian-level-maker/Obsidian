@@ -1255,6 +1255,66 @@ function mark_room_as_done(R)
 end
 
 
+function make_pillar(S, z1, z2, p_tex)
+  
+  local mx = int((S.x1 + S.x2)/2)
+  local my = int((S.y1 + S.y2)/2)
+  local mz = int((z1 + z2)/2)
+
+  gui.add_brush(
+  {
+    t_face = { texture="CEIL5_2" },
+    b_face = { texture="CEIL5_2" },
+    w_face = { texture=p_tex, x_offset=0, y_offset=0 },
+  },
+  {
+    { x=mx-32, y=my-32 },
+    { x=mx-32, y=my+32 },
+    { x=mx+32, y=my+32 },
+    { x=mx+32, y=my-32 },
+  },
+  -2000, 2000)
+
+  for pass = 1,2 do
+    gui.add_brush(
+    {
+      t_face = { texture="CEIL5_2" },
+      b_face = { texture="CEIL5_2" },
+      w_face = { texture="METAL" },
+    },
+    {
+      { x=mx-40, y=my-40 },
+      { x=mx-40, y=my+40 },
+      { x=mx+40, y=my+40 },
+      { x=mx+40, y=my-40 },
+    },
+    sel(pass == 1, -2000, z2-32),
+    sel(pass == 2,  2000, z1+32)
+    )
+
+    gui.add_brush(
+    {
+      t_face = { texture="FLAT1" },
+      b_face = { texture="FLAT1" },
+      w_face = { texture="GRAY7" },
+    },
+    {
+      { x=mx-56, y=my-40 },
+      { x=mx-56, y=my+40 },
+      { x=mx-40, y=my+56 },
+      { x=mx+40, y=my+56 },
+      { x=mx+56, y=my+40 },
+      { x=mx+56, y=my-40 },
+      { x=mx+40, y=my-56 },
+      { x=mx-40, y=my-56 },
+    },
+    sel(pass == 1, -2000, z2-6),
+    sel(pass == 2,  2000, z1+6)
+    )
+  end
+end
+
+
 function make_exit_pillar(S, z1)
 
   local mx = int((S.x1 + S.x2)/2)
@@ -2135,7 +2195,7 @@ gui.printf("do_teleport\n")
 
       if R.combo then
         f_tex = R.combo.floor
-        c_tex = sel(R.combo.outdoor, PARAMS.sky_flat, R.combo.ceil)
+        c_tex = sel(R.outdoor, PARAMS.sky_flat, R.combo.ceil)
         w_tex = R.combo.wall
       else
         w_tex = "DBRAIN1"
@@ -2208,9 +2268,10 @@ gui.printf("do_teleport\n")
       if S.borders[side] and S.borders[side].kind == "solid"
 ---      and not could_lose_wall
       then
-        -- make_wall(S, side, f_tex, w_tex)
+        make_wall(S, side, f_tex, w_tex)
 
-        make_picture(S, side, 128, z2-96, z2-32, f_tex, w_tex, "COMPSTA1")
+        --!!!! TEST: make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
+
         --!!!! TEST: make_window(S, side, 128, z1+64, z2-32, f_tex, w_tex)
       end
 
@@ -2455,6 +2516,11 @@ end
       {
         name = tostring(MON.id)
       })
+    elseif S.room and not S.room.outdoor and
+           (S.layout_char == '0' or S.layout_char == '1') and
+           rand_odds(20)
+    then
+      make_pillar(S, z1, z2, "TEKLITE")
     end
 
 --[[ connection tester
