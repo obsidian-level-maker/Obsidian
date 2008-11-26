@@ -657,7 +657,8 @@ static int WriteSector(sector_info_c *S)
 
 static int WriteSidedef(merge_segment_c *G, int side,
                         merge_region_c *F, merge_region_c *B,
-                        bool *l_peg, bool *u_peg)
+                        bool *l_peg, bool *u_peg,
+                        int x_offset)
 {
   if (! (F && F->index > 0))
     return -1;
@@ -666,7 +667,12 @@ static int WriteSidedef(merge_segment_c *G, int side,
 
   int sec_num = WriteSector(S);
 
-  int side_ref = DM_NumSidedefs();
+  const char *lower = "-";
+  const char *upper = "-";
+  const char *mid   = "-";
+
+  // the 'natural' Y offset
+  int y_offset = - S->c_h;
 
   if (B && B->index > 0)
   {
@@ -681,26 +687,42 @@ static int WriteSidedef(merge_segment_c *G, int side,
     if (lower_W && lower_W->peg) *l_peg = true;
     if (upper_W && upper_W->peg) *u_peg = true;
 
-    const char *lower = lower_W ? lower_W->tex.c_str() : error_tex ? error_tex : NULL;
-    const char *upper = upper_W ? upper_W->tex.c_str() : error_tex ? error_tex : NULL;
+    lower = lower_W ? lower_W->tex.c_str() : error_tex ? error_tex : "-";
+    upper = upper_W ? upper_W->tex.c_str() : error_tex ? error_tex : "-";
 
-    const char * rail = "-"; // TODO
+    // TODO rail texture
 
-    DM_AddSidedef(sec_num, lower, rail, upper, 0, 0);
+    if (lower_W && lower_W->x_offset != FVAL_NONE)
+      x_offset = (int)lower_W->x_offset;
+    else if (upper_W && upper_W->x_offset != FVAL_NONE)
+      x_offset = (int)upper_W->x_offset;
+
+    if (lower_W && lower_W->y_offset != FVAL_NONE)
+      y_offset = (int)lower_W->y_offset;
+    else if (upper_W && upper_W->y_offset != FVAL_NONE)
+      y_offset = (int)upper_W->y_offset;
   }
   else
   {
-    double z = (S->f_h + S->c_h) / 2.0;
+    double mz = (S->f_h + S->c_h) / 2.0;
 
-    area_face_c *mid_W = CSG2_FindSideFace(G, z, side == 1);
+    area_face_c *mid_W = CSG2_FindSideFace(G, mz, side == 1);
 
     if (mid_W && mid_W->peg)
       *l_peg = true;
 
-    const char *wall = mid_W ? mid_W->tex.c_str() : error_tex ? error_tex : "-";
+    mid = mid_W ? mid_W->tex.c_str() : error_tex ? error_tex : "-";
 
-    DM_AddSidedef(sec_num, "-", wall, "-", 0, 0);
+    if (mid_W && mid_W->x_offset != FVAL_NONE)
+      x_offset = (int)mid_W->x_offset;
+
+    if (mid_W && mid_W->y_offset != FVAL_NONE)
+      y_offset = (int)mid_W->y_offset;
   }
+
+  int side_ref = DM_NumSidedefs();
+
+  DM_AddSidedef(sec_num, lower, mid, upper, x_offset, y_offset);
 
   return side_ref;
 }
@@ -772,6 +794,17 @@ DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
 }
 
 
+static int NaturalXOffset(merge_segment_c *G)
+{
+  // zero occurs at the point on line (extended to infinity)
+  // closest to the origin (0,0).  
+
+  double along = AlongDist(0, 0,  G->start->x, G->start->y, G->end->x, G->end->y);
+
+  return I_ROUND(along);
+}
+
+
 static void WriteLinedefs(void)
 {
   for (unsigned int i = 0; i < mug_segments.size(); i++)
@@ -781,8 +814,32 @@ static void WriteLinedefs(void)
     SYS_ASSERT(G);
     SYS_ASSERT(G->start);
 
-    if (! G->front && ! G->back)
+    if (! (G->front && G->front->index > 0) &&
+        ! (G->back  && G-> back->index > 0))
       continue;
+
+    bool flipped = false;
+
+    if (! (G->front && G->front->index > 0))
+    {
+      flipped = true;
+    }
+    else if (G->back && G->back->index > 0)
+    {
+      sector_info_c *FS = dm_sectors[G->front->index];
+      sector_info_c *BS = dm_sectors[G-> back->index];
+
+      if (FS->f_h != BS->f_h)
+      {
+        if (BS->f_h < FS->f_h)
+          flipped = true;
+      }
+      else if (FS->c_h != BS->c_h)
+      {
+        if (BS->c_h > FS->c_h)
+          flipped = true;
+      }
+    }
 
     area_vert_c *spec = FindSpecialVert(G);
 
@@ -792,55 +849,35 @@ static void WriteLinedefs(void)
     {
       // FIXME: check for a rail texture
 
+      // FIXME: certain line flags are also significant
+
       if (! (spec && (spec->line_kind > 0 || spec->line_tag > 0)))
         continue;
     }
 
+
     bool l_peg = false;
     bool u_peg = false;
 
-    int front_idx = WriteSidedef(G, 0, G->front, G->back, &l_peg, &u_peg);
-    int back_idx  = WriteSidedef(G, 1, G->back, G->front, &l_peg, &u_peg);
+    int x_offset = NaturalXOffset(G);
 
-    if (front_idx < 0 && back_idx < 0)
-      continue;
+    int s1 = WriteSidedef(G, 0, G->front, G->back, &l_peg, &u_peg,  x_offset);
+    int s2 = WriteSidedef(G, 1, G->back, G->front, &l_peg, &u_peg, -x_offset);
 
-    int v1 = WriteVertex(G->start);
-    int v2 = WriteVertex(G->end);
-
-    bool should_flip = false;
-
-    if (front_idx < 0)
-      should_flip = true;
-
-    if (front_idx >= 0 && back_idx >= 0)
+    if (flipped)
     {
-      sector_info_c *FS = dm_sectors[G->front->index];
-      sector_info_c *BS = dm_sectors[G-> back->index];
-
-      if (FS->f_h != BS->f_h)
-      {
-        if (BS->f_h < FS->f_h)
-          should_flip = true;
-      }
-      else if (FS->c_h != BS->c_h)
-      {
-        if (BS->c_h > FS->c_h)
-          should_flip = true;
-      }
+      int TMP = s1; s1 = s2; s2 = TMP;
     }
 
-    if (should_flip)
-    {
-      int TMP;
+    SYS_ASSERT(s1 >= 0);
 
-      TMP = front_idx; front_idx = back_idx; back_idx = TMP;
-      TMP = v1; v1 = v2; v2 = TMP;
-    }
+
+    int v1 = WriteVertex(flipped ? G->end : G->start);
+    int v2 = WriteVertex(flipped ? G->start : G->end);
 
     int flags = 0;
 
-    if (back_idx < 0)
+    if (s2 < 0)
       flags |= MLF_BlockAll;
     else
       flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
@@ -849,11 +886,11 @@ static void WriteLinedefs(void)
     if (u_peg) flags ^= MLF_UpperUnpeg;
 
     if (spec)
-      DM_AddLinedef(v1, v2, front_idx, back_idx,
+      DM_AddLinedef(v1, v2, s1, s2,
                     spec->line_kind, spec->line_flags | flags,
                     spec->line_tag,  spec->line_args);
     else
-      DM_AddLinedef(v1, v2, front_idx, back_idx, 0, flags, 0, NULL);
+      DM_AddLinedef(v1, v2, s1, s2, 0, flags, 0, NULL);
   }
 
   SYS_ASSERT(DM_NumVertexes() > 0);
