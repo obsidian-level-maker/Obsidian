@@ -622,7 +622,7 @@ int DM_ddf_add_music(lua_State *L)
   const char *track = luaL_checkstring(L, 1);
   const char *spec  = luaL_checkstring(L, 2);
 
-  DDF_AddString(track, spec);
+  DDF_AddMusic(track, spec);
 
   return 0;
 }
