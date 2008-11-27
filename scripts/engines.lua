@@ -16,6 +16,8 @@
 --
 ----------------------------------------------------------------
 
+require 'util'
+
 
 function Boom_set_level_name()
   assert(LEVEL.description)
@@ -42,6 +44,7 @@ function Boom_set_level_name()
   gui.bex_add_string(id, text)
 end
 
+
 function Edge_set_level_name()
   assert(LEVEL.description)
   
@@ -49,6 +52,24 @@ function Edge_set_level_name()
   local text = LEVEL.name .. ": " .. LEVEL.description;
 
   gui.ddf_add_string(id, text)
+end
+
+function Edge_remap_music()
+  
+  -- FIXME: game specific!!!
+  local mus_list =
+  {
+    "RUNNIN", "STALKS", "COUNTD", "BETWEE", "DOOM",
+    "THE_DA", "SHAWN", "DDTBLU", "IN_CIT", "DEAD",
+  }
+
+  rand_shuffle(mus_list)
+
+  for i = 1,10 do
+    local track = string.format("%02d", i)
+
+    gui.ddf_add_music(track, "MUS:LUMP:D_" .. mus_list[i])
+  end
 end
 
 
