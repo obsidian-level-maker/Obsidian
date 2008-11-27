@@ -133,6 +133,7 @@ OB_ENGINES["edge"] =
   hooks =
   {
     set_level_name = Edge_set_level_name,
+    remap_music    = Edge_remap_music,
   },
 }
 

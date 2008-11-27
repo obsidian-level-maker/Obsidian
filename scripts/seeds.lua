@@ -31,6 +31,8 @@ class SEED
   x1, y1, x2, y2  -- 2D map coordinates
 
   floor_h, ceil_h -- floor and ceiling heights
+
+  layout : LAYOUT
 }
 
 
