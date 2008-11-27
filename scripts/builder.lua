@@ -861,13 +861,13 @@ function do_corner_ramp_CURVED(S, x1,y1, x2,y2, x_h,y_h)
   local dx0, dx1, dx2, dx3 = 16, 40, w-32, w
   local dy0, dy1, dy2, dy3 = 16, 40, h-32, h
 
-  if S.layout_char == "L" or S.layout_char == "F" then
+  if S.layout and (S.layout.char == "L" or S.layout.char == "F") then
     corn_x = x2
     dx0 = -dx0 ; dx1 = -dx1
     dx2 = -dx2 ; dx3 = -dx3
   end
 
-  if S.layout_char == "L" or S.layout_char == "J" then
+  if S.layout and (S.layout.char == "L" or S.layout.char == "J") then
     corn_y = y2
     dy0 = -dy0 ; dy1 = -dy1
     dy2 = -dy2 ; dy3 = -dy3
@@ -904,7 +904,7 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
     w_face = { texture="SLADWALL" },
   }
 
-  if S.layout_char == "L" then
+  if S.layout and S.layout.char == "L" then
 
     do_ramp_y(x1,y1,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
     do_ramp_x(x1,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
@@ -917,7 +917,7 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
       { x=x2,    y=y2-ph },
     }, -2000, pz)
 
-  elseif S.layout_char == "J" then
+  elseif S.layout and S.layout.char == "J" then
 
     do_ramp_y(x1+pw,y2-ph,y2, x2,y1,y2, m_h-d_h*4, x_h, "exact")
     do_ramp_x(x1,x2,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
@@ -930,7 +930,7 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
       { x=x1+pw, y=y2-ph },
     }, -2000, pz)
 
-  elseif S.layout_char == "F" then
+  elseif S.layout and S.layout.char == "F" then
 
     do_ramp_y(x1,y1,y2, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
     do_ramp_x(x2-pw,x2,y1+ph, x1,x2,y2, m_h+d_h*4, y_h, "exact")
@@ -943,7 +943,7 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
       { x=x2,    y=y1 },
     }, -2000, pz)
 
-  elseif S.layout_char == "T" then
+  elseif S.layout and S.layout.char == "T" then
 
     do_ramp_y(x1+pw,y1,y1+ph, x2,y1,y2, x_h, m_h-d_h*4, "exact")
     do_ramp_x(x1,x1+pw,y1+ph, x1,x2,y2, y_h, m_h+d_h*4, "exact")
@@ -978,7 +978,7 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   local pilla, mezza
 
-  if S.layout_char == "L" then
+  if S.layout and S.layout.char == "L" then
 
     do_ramp_y(x1,y2-ph,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
     do_ramp_x(x2-pw,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
@@ -999,7 +999,7 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
       { x=x2-pw, y=y1 },
     }
 
-  elseif S.layout_char == "J" then
+  elseif S.layout and S.layout.char == "J" then
 
     do_ramp_y(x1+pw,y2-ph,y2, x2,y2-ph,y2, m_h-d_h*4, x_h, "exact")
     do_ramp_x(x1,x1+pw,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
@@ -1020,7 +1020,7 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
       { x=x2   , y=y1 },
     }
 
-  elseif S.layout_char == "F" then
+  elseif S.layout and S.layout.char == "F" then
 
     do_ramp_y(x1,y1,y1+ph, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
     do_ramp_x(x2-pw,x2,y1+ph, x2-pw,x2,y2, m_h+d_h*4, y_h, "exact")
@@ -1041,7 +1041,7 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
       { x=x2-pw, y=y1+ph },
     }
 
-  elseif S.layout_char == "T" then
+  elseif S.layout and S.layout.char == "T" then
 
     do_ramp_y(x1+pw,y1,y1+ph, x2,y1,y1+ph, x_h, m_h-d_h*4, "exact")
     do_ramp_x(x1,x1+pw,y1+ph, x1,x1+pw,y2, y_h, m_h+d_h*4, "exact")
@@ -2178,6 +2178,11 @@ gui.printf("do_teleport\n")
     local x2 = S.x2
     local y2 = S.y2
 
+    -- FIXME CRUD GUNK SHIT POO !
+    if not S.floor_h and S.layout then
+      S.floor_h = S.layout.floor_h
+    end
+
     local z1 = S.floor_h or R.floor_h
     local z2 = S.ceil_h  or R.ceil_h
     local f_tex, c_tex, w_tex
@@ -2248,11 +2253,12 @@ gui.printf("do_teleport\n")
       local N = S:neighbor(side)
 
       -- hallway hack
-      if R.kind == "hallway" and S.layout_char ~= '#' and
+      if R.kind == "hallway" and not (S.layout and S.layout.char == '#') and
          ( (S.borders[side] and S.borders[side].kind == "solid")
           or
            (S:neighbor(side) and S:neighbor(side).room == R and
-            S:neighbor(side).layout_char == '#')
+            S:neighbor(side).layout and
+            S:neighbor(side).layout.char == '#')
          )
       then
         make_detailed_hall(S, side, z1, z2)
@@ -2363,7 +2369,7 @@ gui.printf("ADDING LOCK DOOR %s\n", w_tex)
 
     -- floor and ceiling brushes
 
-if S.layout_char == '#' then
+if S.layout and S.layout.char == '#' then
 
     gui.add_brush(
     {
@@ -2376,7 +2382,7 @@ if S.layout_char == '#' then
       { x=x2, y=y2 }, { x=x2, y=y1 },
     },
     -2000, 2000);
-elseif S.layout_char == "%" then
+elseif S.layout and S.layout.char == "%" then
     gui.add_brush(
     {
       t_face = { texture="FWATER1" },
@@ -2402,27 +2408,29 @@ elseif S.layout_char == "%" then
     256, 2000);
 else
 
-if S.layout_char == ">" then
-   do_ramp_x(x1,x2,y1, x1,x2,y2, S.stair_z1, S.stair_z2)
-elseif S.layout_char == "<" then
-   do_ramp_x(x1,x2,y1, x1,x2,y2, S.stair_z2, S.stair_z1)
-elseif S.layout_char == "^" then
-   do_ramp_y(x1,y1,y2, x2,y1,y2, S.stair_z1, S.stair_z2)
-elseif S.layout_char == "v" then
-   do_ramp_y(x1,y1,y2, x2,y1,y2, S.stair_z2, S.stair_z1)
-elseif S.layout_char == "L" or S.layout_char == "J" or
-       S.layout_char == "F" or S.layout_char == "T" then
+local CH = S.layout and S.layout.char
+
+if CH == ">" then
+   do_ramp_x(x1,x2,y1, x1,x2,y2, S.layout.stair_z1, S.layout.stair_z2)
+elseif CH == "<" then
+   do_ramp_x(x1,x2,y1, x1,x2,y2, S.layout.stair_z2, S.layout.stair_z1)
+elseif CH == "^" then
+   do_ramp_y(x1,y1,y2, x2,y1,y2, S.layout.stair_z1, S.layout.stair_z2)
+elseif CH == "v" then
+   do_ramp_y(x1,y1,y2, x2,y1,y2, S.layout.stair_z2, S.layout.stair_z1)
+elseif CH == "L" or CH == "J" or
+       CH == "F" or CH == "T" then
 
    if (S.sx == S.room.sx1 or S.sx == S.room.sx2) and
       (S.sy == S.room.sy1 or S.sy == S.room.sy2)
    then
-     do_corner_ramp_CURVED(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
+     do_corner_ramp_CURVED(S, x1,y1, x2,y2, S.layout.stair_z1, S.layout.stair_z2)
    else
-     do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, S.stair_z1, S.stair_z2)
+     do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, S.layout.stair_z1, S.layout.stair_z2)
    end
 
-elseif S.layout_char == '=' then
-  make_lift(S, x1,y1, x2,y2, assert(S.lift_h))
+elseif S.layout and S.layout.char == '=' then
+  make_lift(S, x1,y1, x2,y2, assert(S.layout.lift_h))
 
 else
     gui.add_brush(
@@ -2455,11 +2463,12 @@ end
 end -- layout_char ~= '#'
 
 
-if S.assign_stair and not S.assign_stair.done then
-  if S.assign_stair.inner_h < S.assign_stair.outer_h then
-    do_outdoor_ramp_down(S.assign_stair, f_tex, w_tex)
+if S.layout and S.layout.assign_stair and not S.layout.assign_stair.done then
+  local INFO = S.layout.assign_stair
+  if INFO.inner_h < INFO.outer_h then
+    do_outdoor_ramp_down(INFO, f_tex, w_tex)
   else
-    do_outdoor_ramp_up(S.assign_stair, f_tex, w_tex)
+    do_outdoor_ramp_up(INFO, f_tex, w_tex)
   end
 end
 
@@ -2518,8 +2527,8 @@ end
       {
         name = tostring(MON.id)
       })
-    elseif S.room and not S.room.outdoor and
-           (S.layout_char == '0' or S.layout_char == '1') and
+    elseif S.room and not S.room.outdoor and S.layout and
+           (S.layout.char == '0' or S.layout.char == '1') and
            not S.conn and
            rand_odds(20)
     then

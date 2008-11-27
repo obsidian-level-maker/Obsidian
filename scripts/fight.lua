@@ -73,6 +73,9 @@ TODO: this routine should accept some information
 
 ----------------------------------------------------------------]]
 
+require 'defs'
+require 'util'
+
 
 function fight_simulator(monsters, weapons, skill, ammos)
 

@@ -101,6 +101,41 @@ OTHER IDEAS:
 --]]
 
 
+--[[
+
+class LAYOUT
+{
+  char  -- single character summary
+           '0' '1' '2' '3' : flat fixed height
+           '<' '>' 'v' '^' : stair (straight)
+           'L' 'F' 'T' 'J' : stair (turning 90 degrees)
+           '/' '\'         : diagonal wall
+
+  on_conn  -- true if sitting on a connection.
+              Can be different from 'S.conn' due to mirroring.
+ 
+  group_id
+
+  floor_h : number  -- floor height
+
+  assign_stair
+
+  stair_z1, stair_z2  -- stair heights, z1 = source, z2 = dest
+                      -- (for L/F/T/J, z1 = top/bottom, z2 = left/right)
+
+  emerg_stairs ; table[DIR] -> boolean  : true for emergency connection
+
+  lift_h
+
+  tdir
+}
+
+--]]
+
+require 'defs'
+require 'util'
+
+
 function Room_SetupTheme(R)
   if R.outdoor then
     R.combo = assert(GAME.combos["TECH_GROUND"])
@@ -173,20 +208,9 @@ function dump_layout(R)
     local S = SEEDS[x][y][1]
     assert(S and S.room == R)
 
-    if S.layout_char then
-      return S.layout_char
+    if S.layout then
+      return S.layout.char
     end
-
----##    if R.outdoor then --!!!!!!
----##      for _,C in ipairs(R.conns) do
----##        local T = C:seed(R)
----##        if S == T and C.conn_h then
----##          gui.debugf("OUTDOOR DIFF %d\n", C.conn_h - R.floor_h)
----##          local kk = int((C.conn_h - R.floor_h) / 64) + 10
----##          return string.sub("RSTUVWXYZ0123456789", kk, kk)
----##        end
----##      end
----##    end
 
     return "."
   end
@@ -215,7 +239,7 @@ end
 function Junk_fill_room(R, n_sx1, n_sy1, n_sx2, n_sy2)
   for y = R.sy1,R.sy2 do for x = R.sx1,R.sx2 do
     if not box_contains_point(n_sx1,n_sy1, n_sx2,n_sy2, x,y) then
-      SEEDS[x][y][1].layout_char = "#"
+      SEEDS[x][y][1].layout = { char = "#" }
     end
   end end -- for y, x
 
@@ -242,7 +266,7 @@ function Layout_Hallway(R)
   if rand_odds(20) then
     if R.sw >= 3 and R.sh >= 3 then
       for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
-        SEEDS[x][y][1].layout_char = "#"
+        SEEDS[x][y][1].layout = { char = "#" }
       end end
 
       return;
@@ -272,7 +296,7 @@ function Layout_Hallway(R)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     if not (used_x[x] or used_y[y]) then
-      SEEDS[x][y][1].layout_char = "#"
+      SEEDS[x][y][1].layout = { char = "#" }
     end
   end end -- for y,x
 
@@ -280,95 +304,15 @@ function Layout_Hallway(R)
   if table_empty(used_x) then
     local x = int((R.sx1 + R.sx2) / 2)
     for y = R.sy1,R.sy2 do
-      SEEDS[x][y][1].layout_char = nil
+      SEEDS[x][y][1].layout = nil
     end
 
   elseif table_empty(used_y) then
     local y = int((R.sy1 + R.sy2) / 2)
     for x = R.sx1,R.sx2 do
-      SEEDS[x][y][1].layout_char = nil
+      SEEDS[x][y][1].layout = nil
     end
   end
-end
-
-
-function Ultra_Lame_Layouter(R)
-  -- purpose of this function is solely to make a functional
-  -- room layout with absolutely no regard (or very little)
-  -- to making a pleasing layout.  It's the last resort.
-
-  if #R.h_set == 1 then
-    -- easy: no height changes
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      if not S.layout_char then
-        S.layout_char = '0'
-      end
-    end end
-
-    return
-  end
-
-  -- add the room floor_h if wanted and necessary
-  local need_rf
-  for index,h in ipairs(R.h_set) do
-    if math.abs(h - R.floor_h) < 1 then
-      need_rf = string.sub("0123456789", index, index)
-      break;
-    end
-  end
-  for _,C in ipairs(R.conns) do
-    if math.abs(C.conn_h - R.floor_h) < 1 then
-      need_rf = nil
-    end
-  end
-
-need_rf = false --!!!!
-
-  if need_rf then
-    local best_spot
-    local best_score = -1
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      if not S.layout_char and (x == R.sx1 or x == R.sx2 or y == R.sy1 or y == R.sy2) then
-        local score = gui.random()
-        local has_nb = false
-        for dx = -1,1 do for dy = -1,1 do
-          local N = Seed_get_safe(x+dx, y+dy, 1)
-          if N and N ~= S and N.room == R then
-            if N.layout_char then
-              has_nb = true
-            else
-              score = score + sel(dx==0 or dy==0, 5, 1)
-            end
-          end
-        end end
-
-        if not has_nb then
-          score = score + 100
-        end
-
-        if score > best_score then
-          best_score = score
-          best_spot  = { x=x, y=y }
-        end
-      end
-    end end -- for x, y
-
-    assert(best_spot)  -- BAD !!!
-
-    local S = SEEDS[best_spot.x][best_spot.y][1]
-
-    S.layout_char = need_rf
-  end
-
---  dump_layout(R)
-
-  if #R.conns == 1  then
-    
-  end
-  
 end
 
 
@@ -399,11 +343,11 @@ function Layout_Outdoor(R)
 
       local N = SEEDS[x][y][1]
 
-      if N.layout_char and N.layout_char ~= "S" then
+      if N.layout and N.layout.char ~= "S" then
         return false
       end
 
-      if N.layout_char == "S" and N.assign_stair ~= ST then
+      if N.layout and N.layout.char == "S" and N.layout.assign_stair ~= ST then
         return false
       end
     end end -- for x,y
@@ -415,9 +359,11 @@ function Layout_Outdoor(R)
     for x = x1,x2 do for y = y1,y2 do
       local N = SEEDS[x][y][1]
 
-      N.layout_char  = "S"
-      N.assign_stair = ST
-      N.floor_h      = assert(ST.S.floor_h)
+      if not N.layout then
+        N.layout = { char = "S" }
+        N.layout.assign_stair = ST
+        N.layout.floor_h = assert(ST.S.layout.floor_h)
+      end
     end end -- for x,y
 
     return true
@@ -433,19 +379,20 @@ function Layout_Outdoor(R)
 
   for _,C in ipairs(R.conns) do
     local S = C:seed(R)
+    assert(not S.layout)
 
     local diff = math.abs(C.conn_h - R.floor_h)
 
     if diff <= 4 then
-      S.layout_char = '0'
+      S.layout = { char = '0', floor_h = R.floor_h }
     elseif diff >= 144 or (diff >= 112 and rand_odds(40)) or
                           (diff >= 80  and rand_odds(25))
     then
-      S.layout_char = '='  -- lift
-      S.lift_h = math.max(C.conn_h, R.floor_h) + 4
+      S.layout = { char = '=' }  -- lift
+      S.layout.lift_h = math.max(C.conn_h, R.floor_h) + 4
       table.insert(lifts, { S=S })
     else
-      S.layout_char = 'S'  -- stair
+      S.layout = { char = 'S' }  -- stair
 
       local STAIR =
       {
@@ -460,8 +407,8 @@ function Layout_Outdoor(R)
 
       table.insert(stairs, STAIR)
 
-      S.assign_stair = STAIR
-      S.floor_h = math.min(C.conn_h, R.floor_h)
+      S.layout.assign_stair = STAIR
+      S.layout.floor_h = math.min(C.conn_h, R.floor_h)
     end
   end
 
@@ -657,16 +604,14 @@ function Layout_Indoor(R)
   local function clear_layout()
     for tx = R.tx1, R.tx2 do for ty = R.ty1, R.ty2 do
       local S = SEEDS[tx][ty][1]
-      S.layout_char = nil
-      S.floor_h = nil
-      S.emerg_stairs = {}
+      S.layout = nil
     end end
   end
 
   local function read_layout()
     local L = {}
 
-    L.seeds = array_2D(R.tw, R.th)
+    L.layouts = array_2D(R.tw, R.th)
 
     for tx = R.tx1, R.tx2 do for ty = R.ty1, R.ty2 do
       local x = tx - R.tx1 + 1
@@ -674,14 +619,7 @@ function Layout_Indoor(R)
 
       local S = SEEDS[tx][ty][1]
 
-      L.seeds[x][y] =
-      {
-        layout_char  = S.layout_char,
-        floor_h      = S.floor_h,
-        emerg_stairs = S.emerg_stairs,
-        stair_z1     = S.stair_z1,
-        stair_z2     = S.stair_z2,
-      }
+      L.layouts[x][y] = S.layout
     end end
 
     return L
@@ -693,13 +631,8 @@ function Layout_Indoor(R)
       local y = ty - R.ty1 + 1
 
       local S = SEEDS[tx][ty][1]
-      local W = L.seeds[x][y]
 
-      S.layout_char  = W.layout_char
-      S.floor_h      = W.floor_h
-      S.emerg_stairs = W.emerg_stairs
-      S.stair_z1     = W.stair_z1
-      S.stair_z2     = W.stair_z2
+      S.layout = L.layouts[x][y]
     end end
   end
 
@@ -731,17 +664,17 @@ function Layout_Indoor(R)
       group_id = 1 + #list,
       conn  = S.conn,
       T = T, tx = tx, ty = ty,
-      layout_char = T.layout_char,
+      layout_char = T.layout and T.layout.char,
     }
 
-    if T.layout_char then
-      assert(T.layout_char == S.conn.layout_char)
+    if T.layout then
+      assert(T.layout.char == S.conn.layout_char)
     else
-      T.layout_char = S.conn.layout_char
-      T.group_id    = INFO.group_id
+      T.layout = { char = assert(S.conn.layout_char) }
+      T.layout.group_id = INFO.group_id
 
-      T.tdir    = tdir
-      T.floor_h = INFO.conn.conn_h
+      T.layout.tdir    = tdir
+      T.layout.floor_h = INFO.conn.conn_h
     end
 
     table.insert(list, INFO)
@@ -777,21 +710,21 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
         local D = SEEDS[R.tx1 + x][y][1]
         local S = SEEDS[R.tx1 + old_w - 1 - x][y][1]
 
-            if S.layout_char == '<' then D.layout_char = '>'
-        elseif S.layout_char == '>' then D.layout_char = '<'
-        elseif S.layout_char == 'L' then D.layout_char = 'J'
-        elseif S.layout_char == 'J' then D.layout_char = 'L'
-        elseif S.layout_char == 'F' then D.layout_char = 'T'
-        elseif S.layout_char == 'T' then D.layout_char = 'F'
-        elseif S.layout_char == '/' then D.layout_char = '\\'
-        elseif S.layout_char =='\\' then D.layout_char = '/'
-        else
-          D.layout_char = S.layout_char
-        end
+        D.layout = copy_table(S.layout)
 
-        D.floor_h  = S.floor_h
-        D.stair_z1 = S.stair_z1
-        D.stair_z2 = S.stair_z2
+        if D.layout then
+          local L = D.layout
+
+              if L.char == '<' then L.char = '>'
+          elseif L.char == '>' then L.char = '<'
+          elseif L.char == 'L' then L.char = 'J'
+          elseif L.char == 'J' then L.char = 'L'
+          elseif L.char == 'F' then L.char = 'T'
+          elseif L.char == 'T' then L.char = 'F'
+          elseif L.char == '/' then L.char = '\\'
+          elseif L.char =='\\' then L.char = '/'
+          end
+        end
       end
     end
 
@@ -806,21 +739,21 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
         local D = SEEDS[x][R.ty1 + y][1]
         local S = SEEDS[x][R.ty1 + old_h - 1 - y][1]
 
-            if S.layout_char == 'v' then D.layout_char = '^'
-        elseif S.layout_char == '^' then D.layout_char = 'v'
-        elseif S.layout_char == 'L' then D.layout_char = 'F'
-        elseif S.layout_char == 'F' then D.layout_char = 'L'
-        elseif S.layout_char == 'J' then D.layout_char = 'T'
-        elseif S.layout_char == 'T' then D.layout_char = 'J'
-        elseif S.layout_char == '/' then D.layout_char = '\\'
-        elseif S.layout_char =='\\' then D.layout_char = '/'
-        else
-          D.layout_char = S.layout_char
-        end
+        D.layout = copy_table(S.layout)
 
-        D.floor_h  = S.floor_h
-        D.stair_z1 = S.stair_z1
-        D.stair_z2 = S.stair_z2
+        if D.layout then
+          local L = D.layout
+
+              if L.char == 'v' then L.char = '^'
+          elseif L.char == '^' then L.char = 'v'
+          elseif L.char == 'L' then L.char = 'F'
+          elseif L.char == 'F' then L.char = 'L'
+          elseif L.char == 'J' then L.char = 'T'
+          elseif L.char == 'T' then L.char = 'J'
+          elseif L.char == '/' then L.char = '\\'
+          elseif L.char =='\\' then L.char = '/'
+          end
+        end
       end
     end
 
@@ -835,9 +768,9 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
 
     for _,E in ipairs(EX) do
       if not g then
-        g = E.T.group_id
+        g = E.T.layout.group_id
 
-      elseif g ~= E.T.group_id then
+      elseif g ~= E.T.layout.group_id then
         return false
       end
     end
@@ -858,8 +791,9 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
 
     for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
       local S = SEEDS[x][y][1]
-      if S.group_id == id2 then
-         S.group_id = id1
+      
+      if S.layout and S.layout.group_id == id2 then
+        S.layout.group_id = id1
       end
     end end
   end
@@ -878,7 +812,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
 
       local T = SEEDS[x][y][1]
 
-      if T.layout_char then
+      if T.layout and T.layout.char then
         return dist, T
       end
 
@@ -892,14 +826,6 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
            lc == "6" or lc == "7" or lc == "8"
   end
 
-  local function seed_neighbor(S, dir)  -- FIXME: method of SEED
-    local nx, ny = nudge_coord(S.sx, S.sy, dir)
-    if not Seed_valid(nx, ny, 1) then
-      return nil
-    end
-    return SEEDS[nx][ny][1]
-  end
-
   local function flood_fill_layout(EX)
     local flood_group = rand_element(EX).group_id
 
@@ -909,26 +835,26 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
     -- find a seed we can "grow" into a vacant spot
     for tx = R.tx1, R.tx2 do for ty = R.ty1, R.ty2 do
       local T = SEEDS[tx][ty][1]
-      if lc_is_digit(T.layout_char) then 
+      if lc_is_digit(T.layout and T.layout.char) then 
         for dir = 2,8,2 do
           local nx, ny = nudge_coord(tx, ty, dir)
           if valid_T(nx, ny) then
             local N = SEEDS[nx][ny][1]
 
-            if N.layout_char and N.layout_char == T.layout_char and
-               N.group_id ~= T.group_id
+            if N.layout and N.layout.char == T.layout.char and
+               N.layout.group_id ~= T.layout.group_id
             then
               -- direct connection!
               gui.debugf("direction linkage @ (%d,%d) dir:%d\n", tx, ty, dir)
-              merge_groups(EX, T.group_id, N.group_id)
+              merge_groups(EX, T.layout.group_id, N.layout.group_id)
               return 0
             end
 
-            if not N.layout_char then
+            if not N.layout then
               table.insert(poss, { tx=tx, ty=ty, dir=dir })
             end
 
-            if lc_is_digit(N.layout_char) and N.group_id ~= T.group_id then
+            if lc_is_digit(N.layout and N.layout.char) and N.layout.group_id ~= T.layout.group_id then
               table.insert(emergs, { tx=tx, ty=ty, dir=dir })
             end
           end
@@ -942,7 +868,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
       local PM = rand_element(poss)
 
       local T = SEEDS[PM.tx][PM.ty][1]
-      local N = seed_neighbor(T, PM.dir)
+      local N = T:neighbor(PM.dir)
 
       local stairs = {}
 
@@ -952,21 +878,21 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
         if valid_T(ox, oy) then
           local O = SEEDS[ox][oy][1]
 
-          if O.layout_char and O.layout_char == T.layout_char and
-             O.group_id ~= T.group_id
+          if O.layout and O.layout.char == T.layout.char and
+             O.layout.group_id ~= T.layout.group_id
           then
             -- direct connection!
             gui.debugf("New direct linkage @ (%d,%d) dir:%d\n", N.sx, N.sy, dir)
-            merge_groups(EX, T.group_id, O.group_id)
+            merge_groups(EX, T.layout.group_id, O.layout.group_id)
 
-            N.layout_char = T.layout_char
-            N.floor_h     = assert(T.floor_h)
-            N.group_id    = T.group_id
+            N.layout = { char = assert(T.layout.char) }
+            N.layout.floor_h  = assert(T.layout.floor_h)
+            N.layout.group_id    = T.layout.group_id
 
             return 10
           end
 
-          if lc_is_digit(O.layout_char) and O.group_id ~= T.group_id and
+          if lc_is_digit(O.layout and O.layout.char) and O.layout.group_id ~= T.layout.group_id and
              not (is_perpendicular(PM.dir, dir) and
                   (N.sx == R.layout_shared_x or N.sy == R.layout_shared_y))
           then
@@ -1001,29 +927,29 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
           ["8/6"] = 'F', ["6/8"] = 'J',
         }
 
-        N.layout_char = STAIR_CHARS[tostring(PM.dir) .. "/" .. tostring(ST.dir)]
-        assert(N.layout_char)
+        N.layout = { char = STAIR_CHARS[tostring(PM.dir) .. "/" .. tostring(ST.dir)] }
+        assert(N.layout.char)
 
-        N.stair_z1 = T.floor_h
-        N.stair_z2 = O.floor_h
+        N.layout.stair_z1 = T.layout.floor_h
+        N.layout.stair_z2 = O.layout.floor_h
 
         if is_horiz(PM.dir) and is_vert(ST.dir) then
-          N.stair_z1, N.stair_z2 = N.stair_z2, N.stair_z1
+          N.layout.stair_z1, N.layout.stair_z2 = N.layout.stair_z2, N.layout.stair_z1
         end
 
-        gui.debugf("Added stair @ (%d,%d) dir:%d/%d = '%s'\n", N.sx, N.sy, PM.dir, ST.dir, N.layout_char)
-        merge_groups(EX, T.group_id, O.group_id)
+        gui.debugf("Added stair @ (%d,%d) dir:%d/%d = '%s'\n", N.sx, N.sy, PM.dir, ST.dir, N.layout.char)
+        merge_groups(EX, T.layout.group_id, O.layout.group_id)
 
-        N.group_id = T.group_id
-        N.floor_h  = math.max(T.floor_h, O.floor_h)
+        N.layout.group_id = T.layout.group_id
+        N.layout.floor_h  = math.max(T.layout.floor_h, O.layout.floor_h)
 
-        return factor * (16 + math.abs(T.floor_h - N.floor_h))
+        return factor * (16 + math.abs(T.layout.floor_h - N.layout.floor_h))
       end
 
-      N.layout_char = T.layout_char
-      N.group_id    = T.group_id
-      N.floor_h     = assert(T.floor_h)
-      N.tdir        = PM.dir
+      N.layout = { char = assert(T.layout.char) }
+      N.layout.group_id = T.layout.group_id
+      N.layout.floor_h  = assert(T.layout.floor_h)
+      N.layout.tdir     = PM.dir
 
       return 10
     end
@@ -1039,17 +965,17 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
 gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 
     local T = SEEDS[EM.tx][EM.ty][1]
-    local N = seed_neighbor(T, EM.dir)
+    local N = T:neighbor(EM.dir)
 
-    if T.floor_h < N.floor_h then
+    if T.layout.floor_h < N.layout.floor_h then
       T.emerg_stairs[EM.dir] = true
     else
       N.emerg_stairs[10 - EM.dir] = true
     end
 
-    merge_groups(EX, T.group_id, N.group_id)
+    merge_groups(EX, T.layout.group_id, N.layout.group_id)
 
-    return 30 * (16 + math.abs(T.floor_h - N.floor_h))
+    return 30 * (16 + math.abs(T.layout.floor_h - N.layout.floor_h))
   end
 
   local function make_basic_layout_2(EX)
@@ -1073,7 +999,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 
   function ensure_mirror_x_traversible()
     for y = R.ty1, R.ty2 do
-      if SEEDS[R.tx2][y][1].layout_char then
+      if SEEDS[R.tx2][y][1].layout then
         return; -- OK
       end
     end
@@ -1087,13 +1013,14 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
         local D = SEEDS[x][y][1]
         local S = SEEDS[x-1][y][1]
 
-        if lc_is_digit(S.layout_char) and not D.layout_char then
-          D.layout_char = S.layout_char
-          D.floor_h     = S.floor_h
+        if lc_is_digit(S.layout and S.layout.char) and not D.layout then
+          D.layout = { char = S.layout.char }
+          D.layout.floor_h = S.layout.floor_h
+          assert(D.layout.char)
         end
       end
 
-      if SEEDS[R.tx2][y][1].layout_char then
+      if SEEDS[R.tx2][y][1].layout then
         return -- did it
       end
     end
@@ -1103,7 +1030,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 
   function ensure_mirror_y_traversible()
     for x = R.tx1, R.tx2 do
-      if SEEDS[x][R.ty2][1].layout_char then
+      if SEEDS[x][R.ty2][1].layout then
        return; -- OK
       end
     end
@@ -1117,13 +1044,14 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
         local D = SEEDS[x][y][1]
         local S = SEEDS[x][y-1][1]
 
-        if lc_is_digit(S.layout_char) and not D.layout_char then
-          D.layout_char = S.layout_char
-          D.floor_h     = S.floor_h
+        if lc_is_digit(S.layout and S.layout.char) and not D.layout then
+          D.layout = { char = S.layout.char }
+          D.layout.floor_h = S.layout.floor_h
+          assert(D.layout.char)
         end
       end
 
-      if SEEDS[x][R.ty2][1].layout_char then
+      if SEEDS[x][R.ty2][1].layout then
         return -- did it
       end
     end
@@ -1207,7 +1135,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
   for loop = 1,6 do
   for x = R.tx1,R.tx2 do for y = R.ty1,R.ty2 do
     local S = SEEDS[x][y][1]
-    if not S.layout_char then
+    if not S.layout then
 --    S.layout_char = "%"
       local sides = { 2,4,6,8 }
       rand_shuffle(sides)
@@ -1215,9 +1143,10 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
         local nx, ny = nudge_coord(x, y, side)
         if valid_T(nx, ny) then
           local N = SEEDS[nx][ny][1]
-          if lc_is_digit(N.layout_char) then
-            S.layout_char = N.layout_char
-            S.floor_h     = N.floor_h - 16
+          if lc_is_digit(N.layout and N.layout.char) then
+            S.layout = { char = N.layout.char }
+            S.layout.floor_h = assert(N.layout.floor_h) -- -16
+            assert(S.layout.char)
             break;
           end
         end
