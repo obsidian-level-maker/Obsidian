@@ -1068,6 +1068,113 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 end
 
 
+function make_low_curved_stair(S, x_h, y_h)
+
+  -- create transform
+  local T =
+  {
+    dx = S.x1, dy = S.y1,
+  }
+
+  local long = S.x2 - S.x1
+  local deep = S.y2 - S.y1
+
+  local bord_W = 16
+
+  local steps = 2 * int(math.abs(x_h-y_h) / 28 + 0.9)
+
+  if steps < 4 then
+    steps = 4
+  end
+
+  local step_info =
+  {
+    b_face = { texture="FLAT1" },
+    t_face = { texture="FLAT1" },
+    w_face = { texture="STEP1", peg=true, y_offset=0 },
+  }
+
+  local corn_coords =
+  {
+    { x=32, y=0 },
+    { x=0,  y=0 },
+    { x=0,  y=32 },
+    { x=32, y=32 },
+  }
+
+
+  for i = steps,1,-1 do
+    
+    local z = x_h + (y_h - x_h) * (i-1) / (steps-1)
+
+    local ang1 = (math.pi / 2.0) * (i-1) / steps
+    local ang2 = (math.pi / 2.0) * (i  ) / steps
+
+    local dx1, dy1 = math.cos(ang1), math.sin(ang1)
+    local dx2, dy2 = math.cos(ang2), math.sin(ang2)
+
+gui.debugf("DEL (%1.3f %1.3f)  (%1.3f %1.3f)\n", dx1, dy1, dx2,dy2)
+
+    local cx1 = 32 * dx1
+    local cy1 = 32 * dy1
+
+    local cx2 = 32 * dx2
+    local cy2 = 32 * dy2
+
+    local fx1 = (long - bord_W) * 1.42 * dx1
+    local fy1 = (deep - bord_W) * 1.42 * dy1
+
+    local fx2 = (long - bord_W) * 1.42 * dx2
+    local fy2 = (deep - bord_W) * 1.42 * dy2
+
+    fx1 = math.min(fx1, long - bord_W)
+    fy1 = math.min(fy1, deep - bord_W)
+
+    fx2 = math.min(fx2, long - bord_W)
+    fy2 = math.min(fy2, deep - bord_W)
+
+gui.debugf("(%d,%d) .. (%d,%d) .. (%d,%d) .. (%d,%d)\n",
+cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
+    transformed_brush(T, step_info,
+    {
+      { x=cx1, y=cy1 }, { x=cx2, y=cy2 },
+      { x=fx2, y=fy2 }, { x=fx1, y=fy1 },
+    },
+    -2000, z)
+  end
+
+
+  local mat_info =
+  {
+    b_face = { texture="CEIL5_2" },
+    t_face = { texture="CEIL5_2" },
+    w_face = { texture="METAL" },
+  }
+
+  local h3 = math.max(x_h, y_h)
+
+  transformed_brush(T, mat_info, corn_coords, -2000, h3)
+
+  transformed_brush(T, mat_info,
+  {
+    { x=0, y=deep-bord_W },
+    { x=0, y=deep    },
+    { x=long, y=deep },
+    { x=long, y=deep-bord_W },
+  },
+  -2000, h3)
+
+  transformed_brush(T, mat_info,
+  {
+    { x=long-bord_W, y=0 },
+    { x=long-bord_W, y=deep    },
+    { x=long, y=deep },
+    { x=long, y=0 },
+  },
+  -2000, h3)
+end
+
+
 function do_outdoor_ramp_down(ST, f_tex, w_tex)
   local conn_dir = assert(ST.S.conn_dir)
 
@@ -2426,7 +2533,8 @@ elseif CH == "L" or CH == "J" or
    then
      do_corner_ramp_CURVED(S, x1,y1, x2,y2, S.layout.stair_z1, S.layout.stair_z2)
    else
-     do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, S.layout.stair_z1, S.layout.stair_z2)
+     make_low_curved_stair(S, S.layout.stair_z1, S.layout.stair_z2)
+---###     do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, S.layout.stair_z1, S.layout.stair_z2)
    end
 
 elseif S.layout and S.layout.char == '=' then
