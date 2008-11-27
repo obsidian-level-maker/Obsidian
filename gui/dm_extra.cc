@@ -153,12 +153,14 @@ static void SkyTest2()
 
   std::vector<byte> cloud_cols;
 
+#if 0
   static byte cloud_mapping[14] =
   {
     106,104,102,100,
     98,96,94,92,90,
     88,86,84,82,80
   };
+#endif
 
   static byte hell_mapping[14] =
   {
@@ -166,12 +168,13 @@ static void SkyTest2()
     179,178,177,176,175,174,173
   };
 
+#if 0
   static byte blue_mapping[14] =
   {
     245,245,244,244,243,242,241,
     240,206,205,204,204,203,203
   };
-
+#endif
 
   for (int n=0; n < 14; n++)
     cloud_cols.push_back(hell_mapping[n]);
@@ -227,6 +230,7 @@ static void LogoTest1()
 {
   byte *pixels = new byte[128*128];
 
+#if 0
   static byte bronze_mapping[13] =
   {
     0, 2,
@@ -234,6 +238,7 @@ static void LogoTest1()
     235, 233,
     223, 221, 219, 216, 213, 210
   };
+#endif
 
   static byte green_mapping[12] =
   {
@@ -253,34 +258,6 @@ static void LogoTest1()
   qLump_c *lump = DM_CreatePatch(128, 128, 0,0, pixels, 128, 128);
 
   DM_WriteLump("WALL52_1", lump);
-
-  delete lump;
-  delete[] pixels;
-}
-
-static void FontTest3()
-{
-  byte *pixels = new byte[99*64];
-
-  static byte gold_mapping[12] =
-  {
-    247, 47, 44,
-    167, 166, 165, 164, 163, 162, 161, 160,
-    // 226,
-    225
-  };
-
-  for (int y = 0; y < 64; y++)
-  for (int x = 0; x < 99; x++)
-  {
-    byte ity = font_CWILV.data[(y&63)*99+(x%99)];
-
-    pixels[y*99+x] = (ity == 0) ? 247 : gold_mapping[(ity*12)/256];
-  }
-
-  qLump_c *lump = DM_CreatePatch(99*3, 160, 0,0, pixels, 99, 64, 247);
-
-  DM_WriteLump("CWILV02", lump);
 
   delete lump;
   delete[] pixels;
@@ -346,35 +323,6 @@ static void BlastFontChar(int index, int x, int y,
 
   SYS_ASSERT(0 <= x && x+fw <= W);
   SYS_ASSERT(0 <= y && y+fh <= H);
-
-
-  static byte gold_mapping[12] =
-  {
-    0, 47, 44,
-    167, 166, 165, 164, 163, 162, 161, 160,
-    // 226,
-    225
-  };
-
-  static byte silver_mapping[14] =
-  {
-    0, 246, 243, 240,
-    205, 202, 200, 198,
-    196, 195, 194, 193, 192, 4,
-  };
-
-  static byte bronze_mapping[12] =
-  {
-    0, 2,  191, 188,  235, 232,
-    221, 218, 215, 213, 211, 209
-  };
-
-  static byte iron_mapping[13] =
-  {
-    0, 7, 5,
-    111, 109, 107, 104, 101, 98,
-     94,  90,  86,  81
-  };
 
 
   for (int dy = 0; dy < fh; dy++)
@@ -625,6 +573,29 @@ int DM_ddf_add_music(lua_State *L)
   DDF_AddMusic(track, spec);
 
   return 0;
+}
+
+
+//------------------------------------------------------------------------
+
+static qLump_c *dd_defns;
+
+void DED_Start()
+{
+  if (dd_defns)
+    delete dd_defns;
+
+  dd_defns = new qLump_c();
+}
+
+void DED_Finish()
+{
+  if (dd_defns->GetSize() > 0)
+  {
+    DM_WriteLump("DD_DEFNS", dd_defns);
+  }
+
+  delete dd_defns; dd_defns = NULL;
 }
 
 

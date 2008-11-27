@@ -251,6 +251,7 @@ bool DM_StartWAD(const char *filename)
 
   BEX_Start();
   DDF_Start();
+  DED_Start();
 
   return true; //OK
 }
@@ -260,6 +261,7 @@ bool DM_EndWAD(void)
 {
   BEX_Finish();
   DDF_Finish();
+  DED_Finish();
 
   WritePatches();
 
@@ -277,12 +279,6 @@ void DM_BeginLevel(void)
   sector_lump  = new qLump_c();
   linedef_lump = new qLump_c();
   sidedef_lump = new qLump_c();
-
-///---  thing_lump  ->SetCRLF(true);
-///---  vertex_lump ->SetCRLF(true);
-///---  sector_lump ->SetCRLF(true);
-///---  linedef_lump->SetCRLF(true);
-///---  sidedef_lump->SetCRLF(true);
 }
 
 
