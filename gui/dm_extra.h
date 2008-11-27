@@ -20,11 +20,9 @@
 #define __OBLIGE_DM_EXTRA_H__
 
 void BEX_Start();
-void BEX_AddString(const char *key, const char *value);
 void BEX_Finish();
 
 void DDF_Start();
-void DDF_AddString(const char *key, const char *value);
 void DDF_Finish();
 
 #endif /* __OBLIGE_DM_EXTRA_H__ */

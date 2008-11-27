@@ -468,25 +468,47 @@ int DM_make_name_gfx(lua_State *L)
 
 //------------------------------------------------------------------------
 
-static qLump_c *bex_lump;
+static qLump_c *bex_strs;
+static qLump_c *bex_music;
 
 void BEX_Start()
 {
-  if (bex_lump)
-    delete bex_lump;
+  if (bex_strs)  delete bex_strs;
+  if (bex_music) delete bex_music;
 
-  bex_lump = new qLump_c();
+  bex_strs  = new qLump_c();
+  bex_music = new qLump_c();
 }
+
+void BEX_Finish()
+{
+  if (bex_strs->GetSize() > 0 || bex_music->GetSize() > 0)
+  {
+    qLump_c dehacked;
+
+    dehacked.Printf("#\n");
+    dehacked.Printf("# BEX LUMP created by OBLIGE %s\n", OBLIGE_VERSION);
+    dehacked.Printf("#\n\n");
+
+    dehacked.Append(bex_strs);
+    dehacked.Append(bex_music);
+
+    DM_WriteLump("DEHACKED", &dehacked);
+  }
+
+  delete bex_strs;  bex_strs  = NULL;
+  delete bex_music; bex_music = NULL;
+}
+
 
 void BEX_AddString(const char *key, const char *value)
 {
-  if (bex_lump->GetSize() == 0)
+  if (bex_strs->GetSize() == 0)
   {
-    bex_lump->Printf("# BEX LUMP created by OBLIGE %s\n\n", OBLIGE_VERSION);
-    bex_lump->Printf("[STRINGS]\n");
+    bex_strs->Printf("[STRINGS]\n");
   }
 
-  bex_lump->Printf("%s = %s\n", key, value);
+  bex_strs->Printf("%s = %s\n", key, value);
 }
 
 int DM_bex_add_string(lua_State *L)
@@ -501,28 +523,57 @@ int DM_bex_add_string(lua_State *L)
   return 0;
 }
 
-void BEX_Finish()
+
+void BEX_AddMusic(const char *track, const char *spec)
 {
-  if (bex_lump->GetSize() > 0)
+  if (bex_music->GetSize() == 0)
   {
-    DM_WriteLump("DEHACKED", bex_lump);
+    bex_music->Printf("[MUSIC]\n");
   }
 
-  delete bex_lump; bex_lump = NULL;
+  bex_music->Printf("%s = %s\n", track, spec);
+}
+
+int DM_bex_add_music(lua_State *L)
+{
+  // LUA: bex_add_music(track, spec)
+
+  const char *track = luaL_checkstring(L, 1);
+  const char *spec  = luaL_checkstring(L, 2);
+
+  BEX_AddMusic(track, spec);
+
+  return 0;
 }
 
 
 //------------------------------------------------------------------------
 
 static qLump_c *ddf_lang;
+static qLump_c *ddf_play;
+
 
 void DDF_Start()
 {
-  if (ddf_lang)
-    delete ddf_lang;
+  if (ddf_lang) delete ddf_lang;
+  if (ddf_play) delete ddf_play;
 
   ddf_lang = new qLump_c();
+  ddf_play = new qLump_c();
 }
+
+void DDF_Finish()
+{
+  if (ddf_lang->GetSize() > 0)
+    DM_WriteLump("DDFLANG", ddf_lang);
+
+  if (ddf_play->GetSize() > 0)
+    DM_WriteLump("DDFPLAY", ddf_play);
+
+  delete ddf_lang; ddf_lang = NULL;
+  delete ddf_play; ddf_play = NULL;
+}
+
 
 void DDF_AddString(const char *key, const char *value)
 {
@@ -550,15 +601,32 @@ int DM_ddf_add_string(lua_State *L)
   return 0;
 }
 
-void DDF_Finish()
+
+void DDF_AddMusic(const char *track, const char *spec)
 {
-  if (ddf_lang->GetSize() > 0)
+  if (ddf_play->GetSize() == 0)
   {
-    DM_WriteLump("DDFLANG", ddf_lang);
+    ddf_play->Printf("//\n");
+    ddf_play->Printf("// Playlist.ddf created by OBLIGE %s\n", OBLIGE_VERSION);
+    ddf_play->Printf("//\n\n");
+    ddf_play->Printf("<PLAYLISTS>\n\n");
   }
 
-  delete ddf_lang; ddf_lang = NULL;
+  ddf_play->Printf("[%s] MUSICINFO = %s;\n", track, spec);
 }
+
+int DM_ddf_add_music(lua_State *L)
+{
+  // LUA: ddf_add_music(track, spec)
+
+  const char *track = luaL_checkstring(L, 1);
+  const char *spec  = luaL_checkstring(L, 2);
+
+  DDF_AddString(track, spec);
+
+  return 0;
+}
+
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
