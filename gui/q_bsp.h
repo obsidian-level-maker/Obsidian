@@ -37,7 +37,9 @@ public:
    qLump_c();
   ~qLump_c();
 
-  void Append (const void *data, u32_t len);
+  void Append(const void *data, u32_t len);
+  void Append(qLump_c *other);
+
   void Prepend(const void *data, u32_t len);
 
   void Printf (const char *str, ...);

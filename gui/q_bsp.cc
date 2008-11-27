@@ -62,6 +62,15 @@ void qLump_c::Append(const void *data, u32_t len)
 }
 
 
+void qLump_c::Append(qLump_c *other)
+{
+  if (other->buffer.size() > 0)
+  {
+    Append(& other->buffer[0], other->buffer.size());
+  }
+}
+
+
 void qLump_c::Prepend(const void *data, u32_t len)
 {
   if (len == 0)
