@@ -52,7 +52,7 @@ function transformed_brush(T, info, coords, z1, z2)
 
   if T.mirror_y then
     for _,C in ipairs(coords) do
-      C.x = T.mirror_y * 2 - C.y
+      C.y = T.mirror_y * 2 - C.y
     end
     reverse_it = not reverse_it
   end
@@ -1078,6 +1078,14 @@ function make_low_curved_stair(S, x_h, y_h)
 
   local long = S.x2 - S.x1
   local deep = S.y2 - S.y1
+
+  if S.layout.char == 'F' or S.layout.char == 'L' then
+    T.mirror_x = long / 2
+  end
+
+  if S.layout.char == 'J' or S.layout.char == 'L' then
+    T.mirror_y = deep / 2
+  end
 
   local bord_W = 16
 
