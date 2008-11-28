@@ -504,6 +504,12 @@ function Quest_add_lock()
       end
     end
 
+    -- don't add locked door between two outdoor areas at
+    -- differing heights.
+    if C.src.outdoor and C.dest.outdoor and C.src.kind ~= C.dest.kind then
+      return false
+    end
+
     return true
   end
 
