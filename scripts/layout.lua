@@ -140,33 +140,76 @@ require 'util'
 
 function Room_SetupTheme(R)
   
-  R.theme = GAME.themes["TECH"] -- FIXME
-
   if not PLAN.outdoor_combos then
     PLAN.outdoor_combos = {}
   end
 
   if not PLAN.indoor_combos then
     PLAN.indoor_combos = {}
+
+    for num = 1,4 do
+      local name = rand_key_by_probs(PLAN.theme.building)
+      PLAN.indoor_combos[num] = assert(GAME.combos[name]) 
+    end
   end
 
-  if R.outdoor then
 
+  if R.outdoor then
     if not PLAN.outdoor_combos[R.kind] then
-      local name = rand_key_by_probs(R.theme.ground)
+      local name = rand_key_by_probs(PLAN.theme.ground)
       PLAN.outdoor_combos[R.kind] = assert(GAME.combos[name])
     end
 
     R.combo = PLAN.outdoor_combos[R.kind]
   else
-    local idx = 1 -- FIXME
+    assert(R.arena)
 
-    if not PLAN.indoor_combos[idx] then
-      local name = rand_key_by_probs(R.theme.building)
-      PLAN.indoor_combos[idx] = assert(GAME.combos[name])
+    if not R.arena.indoor_combo then
+      R.arena.indoor_combo = PLAN.indoor_combos[rand_irange(1,4)]
+      assert(R.arena.indoor_combo)
     end
 
-    R.combo = PLAN.indoor_combos[idx]
+    R.combo = R.arena.indoor_combo
+  end
+end
+
+function Room_SetupTheme_Scenic(R)
+  -- find closest
+  local mx = int((R.sx1 + R.sx2) / 2)
+  local my = int((R.sy1 + R.sy2) / 2)
+
+  for dist = -SEED_W,SEED_W do
+    if Seed_valid(mx + dist, my, 1) then
+      local S = SEEDS[mx + dist][my][1]
+      if S.room and S.room.kind ~= "scenic" and
+         (not S.room.outdoor) == (not R.outdoor) and
+         S.room.combo
+      then
+        R.combo = S.room.combo
+        return
+      end
+    end
+
+    if Seed_valid(mx, my + dist, 1) then
+      local S = SEEDS[mx][my + dist][1]
+      if S.room and S.room.kind ~= "scenic" and
+         (not S.room.outdoor) == (not R.outdoor) and
+         S.room.combo
+      then
+        R.combo = S.room.combo
+        return
+      end
+    end
+  end
+
+  -- fallback
+  local name
+
+  if R.outdoor then
+    name = rand_key_by_probs(PLAN.theme.ground)
+    R.combo = assert(GAME.combos[name])
+  else
+    R.combo = PLAN.indoor_combos[rand_irange(1,4)]
   end
 end
 
@@ -1395,13 +1438,14 @@ function Rooms_lay_out()
 
   gui.printf("\n--==| Rooms_lay_out |==--\n\n")
 
+  PLAN.theme = GAME.themes["TECH"] -- FIXME
+
   for _,R in ipairs(PLAN.all_rooms) do
     Room_SetupTheme(R)
   end
   
   for _,R in ipairs(PLAN.scenic_rooms) do
-    -- FIXME: Room_SetupTheme_Scenic(R)
-    Room_SetupTheme(R)
+    Room_SetupTheme_Scenic(R)
   end
 
   for _,R in ipairs(PLAN.all_rooms) do
