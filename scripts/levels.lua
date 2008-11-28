@@ -198,7 +198,7 @@ function Level_MakeAll()
     end
   end
 
-  if HOOKS.remap_music() then
+  if HOOKS.remap_music then
      HOOKS.remap_music()
   end
 
