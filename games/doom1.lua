@@ -302,11 +302,8 @@ DM_COMBOS =
 {
   ---- TECH ------------
 
-  TECH_BASE0 =
+  TECH_BASE =
   {
-    theme_probs = { TECH=80 },
-    mat_pri = 8,
-
     wall  = "STARTAN3",
     floor = "FLOOR4_8",
     ceil  = "CEIL3_6",
@@ -324,11 +321,8 @@ DM_COMBOS =
     sc_fabs = { pillar_COMPWERD=50, other=30 },
   },
 
-  TECH_BASE =
+  TECH_GREEN =
   {
-    theme_probs = { TECH=40 }, 
-    mat_pri = 8,
-
     wall  = "STARG2",
     floor = "FLOOR5_1",
     ceil  = "FLOOR4_5",
@@ -342,9 +336,8 @@ DM_COMBOS =
     sc_fabs = { pillar_COMPWERD=50, other=30 },
   },
 
-  TECH_GROUND0 =
+  TECH_GROUND =
   {
-    theme_probs = { TECH=80 },
     outdoor = true,
 
     wall  = "BROWN144",
@@ -354,9 +347,6 @@ DM_COMBOS =
 
   TECH_SILVER =
   {
-    theme_probs = { TECH=40 },
-    mat_pri = 8,
-
     wall  = "STARGR2",
     floor = "FLOOR0_1",
     ceil  = "FLAT3",
@@ -449,11 +439,9 @@ DM_COMBOS =
 
   ---- URBAN --------
 
-  TECH_GROUND =  ---!!! URBAN_STONE
+  URBAN_STONE =
   {
-    theme_probs = { URBAN=70 },
     outdoor = true,
-    mat_pri = 5,
 
     wall  = "STONE",
     floor = "MFLR8_1",
@@ -470,9 +458,7 @@ DM_COMBOS =
 
   URBAN_BROWN =
   {
-    theme_probs = { URBAN=50 },
     outdoor = true,
-    mat_pri = 3,
 
     wall  = "BROWN1",
     floor = "MFLR8_2",  -- "RROCK16" (not in doom 1)
@@ -530,9 +516,6 @@ DM_COMBOS =
 
   INDY_SLAD =
   {
-    theme_probs = { INDUSTRIAL=50, TECH=10 },
-    mat_pri = 4,
-
     wall  = "SLADWALL",
     floor = "FLOOR0_5",
     ceil  = "CEIL5_1",
@@ -2574,6 +2557,45 @@ DM_ROOMS =
 }
 
 DM_THEMES =
+{
+  TECH =
+  {
+    building =
+    {
+      TECH_BASE=50,
+      TECH_GREEN=50,
+      TECH_BROWN=25,
+      INDY_SLAD=25,
+      TECH_SILVER=10,
+    },
+
+    ground =
+    {
+      TECH_GROUND=50,
+      URBAN_STONE=30,
+      URBAN_BROWN=30,
+    },
+
+    hallway =
+    {
+      -- FIXME
+    },
+
+    exit =
+    {
+      -- FIXME
+    },
+
+    scenery =
+    {
+      -- FIXME
+    },
+  }, -- TECH
+
+  -- TODO: HELL
+}
+
+DM_THEMES_OLD =
 {
 --[[  
    (a) nature  (outdoor, grassy/rocky/muddy, water)

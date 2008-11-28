@@ -139,10 +139,34 @@ require 'util'
 
 
 function Room_SetupTheme(R)
+  
+  R.theme = GAME.themes["TECH"] -- FIXME
+
+  if not PLAN.outdoor_combos then
+    PLAN.outdoor_combos = {}
+  end
+
+  if not PLAN.indoor_combos then
+    PLAN.indoor_combos = {}
+  end
+
   if R.outdoor then
-    R.combo = assert(GAME.combos["TECH_GROUND"])
+
+    if not PLAN.outdoor_combos[R.kind] then
+      local name = rand_key_by_probs(R.theme.ground)
+      PLAN.outdoor_combos[R.kind] = assert(GAME.combos[name])
+    end
+
+    R.combo = PLAN.outdoor_combos[R.kind]
   else
-    R.combo = assert(GAME.combos["TECH_BASE"])
+    local idx = 1 -- FIXME
+
+    if not PLAN.indoor_combos[idx] then
+      local name = rand_key_by_probs(R.theme.building)
+      PLAN.indoor_combos[idx] = assert(GAME.combos[name])
+    end
+
+    R.combo = PLAN.indoor_combos[idx]
   end
 end
 
@@ -375,7 +399,7 @@ function Layout_Outdoor(R)
   ---| Layout_Outdoor |---
 
   -- FIXME: if room has purpose, assign a seed for it now
-  
+ 
   local stairs = {}
   local lifts  = {}
 
@@ -823,9 +847,9 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
   end
 
   local function lc_is_digit(lc)  -- UGH!!!!
-    return lc == "0" or lc == "1" or lc == "2" or
-           lc == "3" or lc == "4" or lc == "5" or
-           lc == "6" or lc == "7" or lc == "8"
+    return lc == '0' or lc == '1' or lc == '2' or
+           lc == '3' or lc == '4' or lc == '5' or
+           lc == '6' or lc == '7' or lc == '8'
   end
 
   local function flood_fill_layout(EX)
