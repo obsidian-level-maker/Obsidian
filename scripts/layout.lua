@@ -114,6 +114,8 @@ class LAYOUT
   on_conn  -- true if sitting on a connection.
               Can be different from 'S.conn' due to mirroring.
  
+  on_path  -- true if seed is part of main path(s) through room
+
   group_id
 
   floor_h : number  -- floor height
@@ -967,6 +969,9 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
     local T = SEEDS[EM.tx][EM.ty][1]
     local N = T:neighbor(EM.dir)
 
+    if not T.emerg_stairs then T.emerg_stairs = {} end
+    if not N.emerg_stairs then N.emerg_stairs = {} end
+
     if T.layout.floor_h < N.layout.floor_h then
       T.emerg_stairs[EM.dir] = true
     else
@@ -1128,6 +1133,13 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
   end
 
 
+  for x = R.tx1,R.tx2 do for y = R.ty1,R.ty2 do
+    local S = SEEDS[x][y][1]
+    if S.layout then
+      S.layout.on_path = true
+    end
+  end end -- for x,y
+
 
   -- TODO: fill holes
 
@@ -1147,6 +1159,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
             S.layout = { char = N.layout.char }
             S.layout.floor_h = assert(N.layout.floor_h) -- -16
             assert(S.layout.char)
+            if rand_odds(25) then S.layout.pillar = true end
             break;
           end
         end

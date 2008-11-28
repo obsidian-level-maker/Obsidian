@@ -2653,11 +2653,9 @@ end
       {
         name = tostring(MON.id)
       })
-    elseif S.room and not S.room.outdoor and S.layout and
-           (S.layout.char == '0' or S.layout.char == '1') and
-           not S.conn and
-           rand_odds(20)
-    then
+    end
+
+    if S.layout and S.layout.pillar then
       make_pillar(S, z1, z2, "TEKLITE")
     end
 
