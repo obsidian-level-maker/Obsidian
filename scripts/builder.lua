@@ -1539,6 +1539,12 @@ function make_small_exit(R)
     b_face = { texture="FLAT23" },
   }
 
+  local key_tex = "LITE5"
+
+  if C.lock then
+    key_tex = "DOORBLU" -- !!!!!! FIXME
+  end
+
   for pass = 1,2 do
     if pass == 2 then DT.mirror_x = mx end
 
@@ -1546,9 +1552,9 @@ function make_small_exit(R)
     {
       { x=0,     y=0 },
       { x=0,     y=80 },
-      { x=mx-32, y=80, w_face={ texture="LITE5", x_offset=0, y_offset=0 } },
+      { x=mx-32, y=80, w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
       { x=mx-32, y=64, w_face={ texture="DOORTRAK", peg=true } },
-      { x=mx-32, y=48, w_face={ texture="LITE5", x_offset=0, y_offset=0 } },
+      { x=mx-32, y=48, w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
       { x=mx-32, y=32 },
       { x=mx-96, y=0 },
     },
@@ -1587,6 +1593,8 @@ function make_small_exit(R)
   },
   -2000, 2000)
 
+
+  C.already_made_lock = true
 
   mark_room_as_done(R)
 end
@@ -2409,7 +2417,9 @@ gui.printf("do_teleport\n")
         make_sky_fence(S, side)
       end
 
-      if S.borders[side] and S.borders[side].kind == "lock_door" then
+      if S.borders[side] and S.borders[side].kind == "lock_door" and
+         not (S.conn and S.conn.already_made_lock)
+      then
         local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
                             "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
         local key_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
