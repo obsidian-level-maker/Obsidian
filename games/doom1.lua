@@ -360,12 +360,9 @@ DM_COMBOS =
 
   TECH_BROWN =
   {
-    theme_probs = { TECH=60 },
-    mat_pri = 8,
-
-    wall  = "STARBR2",
-    floor = "FLOOR5_1",
-    ceil  = "CEIL4_3",
+    wall  = "STARTAN2",  -- STARBR
+    floor = "CEIL4_3",
+    ceil  = "FLOOR5_1",
 
     lift = "PLAT1",
     step = "STEP1",
@@ -2563,17 +2560,17 @@ DM_THEMES =
     building =
     {
       TECH_BASE=50,
-      TECH_GREEN=50,
-      TECH_BROWN=25,
-      INDY_SLAD=25,
+      TECH_GREEN=30,
+      TECH_BROWN=30,
+      INDY_SLAD=20,
       TECH_SILVER=10,
     },
 
     ground =
     {
       TECH_GROUND=50,
-      URBAN_STONE=30,
-      URBAN_BROWN=30,
+      URBAN_STONE=40,
+      URBAN_BROWN=20,
     },
 
     hallway =
