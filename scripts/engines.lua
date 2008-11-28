@@ -63,12 +63,15 @@ function Edge_remap_music()
     "THE_DA", "SHAWN", "DDTBLU", "IN_CIT", "DEAD",
   }
 
+  local old_list = copy_table(mus_list)
+
   rand_shuffle(mus_list)
 
   for i = 1,10 do
     local track = string.format("%02d", i)
 
     gui.ddf_add_music(track, "MUS:LUMP:D_" .. mus_list[i])
+--  gui.bex_add_music(old_list[i], mus_list[i])
   end
 end
 
