@@ -2971,6 +2971,20 @@ DM_INITIAL_MODEL =
   }
 }
 
+DM_KEY_CARDS =
+{
+  red    = { pickup="kc_red",    tex="DOORRED", door_kind=33 },
+  blue   = { pickup="kc_blue",   tex="DOORBLU", door_kind=32 },
+  yellow = { pickup="kc_yellow", tex="DOORYEL", door_kind=34 },
+}
+
+DM_SKULL_KEYS =
+{
+  red    = { pickup="k_red",    tex="DOORRED2", door_kind=33 },
+  blue   = { pickup="k_blue",   tex="DOORBLU2", door_kind=32 },
+  yellow = { pickup="k_yellow", tex="DOORYEL2", door_kind=34 },
+}
+
 
 -----==============######################==============-----
 
@@ -3242,6 +3256,8 @@ function Doom1_get_levels()
         ep_along = (map - 1) / 8,
 
         theme = "TECH",
+
+        keys = DM_KEY_CARDS,
 
         sky_info = D1_SKY_INFO[episode],
 

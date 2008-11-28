@@ -1703,6 +1703,8 @@ function Doom2_get_levels()
 
       theme = "TECH",
 
+      keys = DM_KEY_CARDS,
+
       -- allow TNT and Plutonia to override the sky stuff
       sky_info = GAME.sky_info[episode],
     }
