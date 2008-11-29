@@ -2071,7 +2071,9 @@ function hexen_get_levels(episode)
 end
 
 
-function hexen_factory()
+function Hexen1_setup()
+
+  gui.property("hexen_format", "true")
 
   rand_shuffle(XN_KEY_PAIRS)
 
