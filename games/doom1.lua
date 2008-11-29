@@ -3483,20 +3483,6 @@ UNFINISHED["doom1"] =
 }
 
 
-OB_THEMES["dm_cave"] =
-{
-  ref = "CAVE",
-  label = "Cave",
-  for_games = { doom1=1, doom2=1, freedoom=1 },
-}
-
-OB_THEMES["dm_indy"] =
-{
-  ref = "INDY",
-  label = "Industrial",
-  for_games = { doom1=1, doom2=1, freedoom=1 },
-}
-
 OB_THEMES["dm_tech"] =
 {
   ref = "TECH",
@@ -3504,14 +3490,7 @@ OB_THEMES["dm_tech"] =
   for_games = { doom1=1, doom2=1, freedoom=1 },
 }
 
-OB_THEMES["dm_urban"] =
-{
-  ref = "URBAN",
-  label = "City",
-  for_games = { doom1=1, doom2=1, freedoom=1 },
-}
-
-OB_THEMES["dm_hell"] =
+UNFINISHED["dm_hell"] =
 {
   ref = "HELL",
   label = "Hell",

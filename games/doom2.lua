@@ -1813,14 +1813,14 @@ OB_GAMES["doom2"] =
 }
 
 
-OB_THEMES["d2_nature"] =
+UNFINISHED["d2_urban"] =
 {
-  ref = "NATURE",
-  label = "Nature",
+  ref = "URBAN",
+  label = "City",
   for_games = { doom2=1, freedoom=1 },
 }
 
-OB_THEMES["d2_wolf"] =
+UNFINISHED["d2_wolf"] =
 {
   ref = "WOLF",
   label = "Wolfenstein",
