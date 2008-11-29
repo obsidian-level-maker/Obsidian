@@ -3,10 +3,7 @@ TODO
 ====
 
 
->>>> document classes (PLAN, SEED, ROOM, QUEST)
-
-
-SMALL EXITS: don't put behind a keyed-door (make exit door keyed)
+DOORS (incl. small exit) : use proper lock type!
 
 
 PILLAR PLACEMENT:
@@ -18,7 +15,7 @@ PILLAR PLACEMENT:
 
 DOOM CSG: when x_offset is given, adjust it if the segment
           does not match the whole area-vert extent.
-          [no need for 'natural' X offset]
+          [not needed for 'natural' X offset]
 
 
 NAME GENERATOR
@@ -54,7 +51,6 @@ NAME GENERATOR
               creator = Oblige 3.xx
               skyname = SKY3
 
-
    -  ZDOOM / HEXEN: MAPINFO lump   -- comments use ';' 
 
              gui.mapinfo_map(lump, description)
@@ -72,6 +68,16 @@ NAME GENERATOR
 
 
 MUSIC RE-ORDERING
+
+   *  Doom 1: shuffle each episode
+
+   *  Doom 2: if one episode (or less), pick random tracks and
+              ensure that no two tracks have the same three-letter
+              prefix.
+
+   *  Doom 2, full game: shuffle tracks, loop a few times looking
+                         for repeats (same three-letter prefix in a
+                         row) and move one to random spot.
 
    -  BOOM, Eternity: [MUSIC] section in BEX
 
@@ -103,6 +109,9 @@ THEME SELECTION
     (iii) Full-Game: prefer episodes to have whole theme
                      (with one or two breakers), and prefer
                      theme to match sky
+
+
+>>>> document classes (PLAN, SEED, ROOM, QUEST)
 
 
 Room Fitting Out
@@ -197,6 +206,8 @@ REWRITE:
   - occasionaly: height diff, spaced steps (two exit only)
   - rarely: make a maze (large room only)
 
+
+????  make brushes go counter-clockwise  ????
 
 
 QUAKE:
