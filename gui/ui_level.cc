@@ -240,7 +240,8 @@ const char * UI_Level::size_syms[] =
   "small",  "Small",
   "normal", "Regular",
   "large",  "Large",
-  "xlarge", "X-Large",
+
+/// "xlarge", "X-Large",
 
   "prog",   "Progressive",
   "mixed",  "Mix It Up",
