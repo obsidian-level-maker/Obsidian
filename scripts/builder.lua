@@ -2693,10 +2693,6 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
     gui.property("error_flat", PARAMS.error_flat or PARAMS.error_tex)
   end   
 
-  if PARAMS.pack_sidedefs then
-    gui.property("pack_sidedefs", "1")
-  end
-
   gui.ticker()
 
   for _,R in ipairs(PLAN.all_rooms or {}) do

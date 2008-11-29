@@ -122,7 +122,7 @@ function Level_Setup()
 
 
   if CAPS.pack_sidedefs then
-    gui.property("pack_sidedefs", "true")
+    gui.property("pack_sidedefs", "1")
   end
 end
 
