@@ -49,11 +49,17 @@ OB_ENGINES = {}
 OB_MODULES = {}
 
 
+-- the catch-all engine
+OB_ENGINES["nolimit"] =
+{
+  label = "Limit Removing",
+  priority = 95,  -- top most
+}
+
 OB_THEMES["mixed"] =
 {
   label = "Mix It Up",
-
-  priority = -99,  -- bottom-most
+  priority = -99,  -- bottom most
 }
 
 

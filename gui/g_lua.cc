@@ -661,6 +661,7 @@ void Script_Load(void)
   }
 
   Script_LoadFromDir("games");
+  Script_LoadFromDir("engines");
   Script_LoadFromDir("mods");
 
   has_loaded = true;
