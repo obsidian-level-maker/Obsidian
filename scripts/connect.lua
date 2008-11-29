@@ -672,7 +672,7 @@ function Connect_Rooms()
   end
 
   local function connect_seeds(S, T, dir, c_kind)
-    S.borders[dir]    = { kind="open" }
+    S.borders[dir]    = { kind="arch" }
     T.borders[10-dir] = { kind="open" }
 
 gui.debugf("connect_seeds R(%s,%s) S(%d,%d) grp:%d --> R(%s,%s) S(%d,%d) grp:%d\n",

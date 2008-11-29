@@ -215,6 +215,52 @@ function make_sky_fence(S, side)
 end
 
 
+function make_archway(S, side, z1, z2, f_tex, w_tex)
+
+  local z_top = math.max(int((z1+z2) / 2), z1+128)
+  if z_top > z2-16 then z_top = z2-16 end
+
+  local DY = 32
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local mx = int(long / 2)
+  local my = 0
+
+  local arch_info =
+  {
+    t_face = { texture=f_tex },
+    b_face = { texture=f_tex },
+    w_face = { texture=w_tex },
+  }
+
+  local frame_coords =
+  {
+    { x=0,    y=my-DY },
+    { x=0,    y=my+DY },
+    { x=long, y=my+DY },
+    { x=long, y=my-DY },
+  }
+
+  transformed_brush(T, arch_info, frame_coords, z_top, 2000)
+
+  for pass = 1,2 do
+    if pass == 2 then T.mirror_x = mx end
+
+    transformed_brush(T, arch_info,
+    {
+      { x=0, y=my-DY },
+      { x=0, y=my+DY },
+      { x=24+16, y=my+DY },
+      { x=36+16, y=my+DY/2 },
+      { x=36+16, y=my-DY/2 },
+      { x=24+16, y=my-DY },
+    },
+    -2000, 2000)
+  end
+end
+
+
 function make_door(S, side, z1, key_tex)
 
   S.thick[side]=24+16+24
@@ -614,43 +660,44 @@ end
 
 function make_diagonal(S, side, info, z1)
 
-  local lw = S.thick[4] * 1
-  local rw = S.thick[6] * 1
+  local x1 = S.x1 + S.thick[4]
+  local y1 = S.y1 + S.thick[2]
 
-  local bh = S.thick[2] * 1
-  local th = S.thick[8] * 1
-  
+  local x2 = S.x2 - S.thick[6]
+  local y2 = S.y2 - S.thick[8]
+
   local coords
 
   if side == 9 then
     coords =
     {
-      { x=S.x2,    y=S.y2 },
-      { x=S.x2   , y=S.y1+bh },
-      { x=S.x1+lw, y=S.y2    },
+      { x=x2, y=y2 },
+      { x=x2, y=y1 },
+      { x=x1, y=y2 },
     }
   elseif side == 7 then
     coords =
     {
-      { x=S.x1,    y=S.y2 },
-      { x=S.x2-rw, y=S.y2    },
-      { x=S.x1   , y=S.y1+bh },
+      { x=x1, y=y2 },
+      { x=x2, y=y2 },
+      { x=x1, y=y1 },
     }
   elseif side == 3 then
     coords =
     {
-      { x=S.x2,    y=S.y1 },
-      { x=S.x1+lw, y=S.y1    },
-      { x=S.x2   , y=S.y2-th },
+      { x=x2, y=y1 },
+      { x=x1, y=y1 },
+      { x=x2, y=y2 },
     }
   elseif side == 1 then
     coords =
     {
-      { x=S.x1,    y=S.y1 },
-      { x=S.x1   , y=S.y2-th },
-      { x=S.x2-rw, y=S.y1    },
+      { x=x1, y=y1 },
+      { x=x1, y=y2 },
+      { x=x2, y=y1 },
     }
-  else error("WTF dir")
+  else
+    error("WTF dir")
   end
 
   gui.add_brush(info, coords, z1 or -4000, 4000)
@@ -2411,6 +2458,10 @@ gui.printf("do_teleport\n")
       then
 
         make_fence(S, side, R.floor_h, f_tex, w_tex)
+      end
+
+      if S.borders[side] and S.borders[side].kind == "arch" then
+        make_archway(S, side, z1, z2, f_tex, w_tex) 
       end
 
       if S.borders[side] and S.borders[side].kind == "skyfence" then
