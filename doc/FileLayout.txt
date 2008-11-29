@@ -2,7 +2,7 @@
 Win32 File Layout
 =================
 
-Oblige-0.90/    <<< working & install directory (chdir to it)
+Oblige-3.xx/    <<< working & install directory (chdir to it)
 
   Oblige.exe
 
@@ -23,9 +23,7 @@ Oblige-0.90/    <<< working & install directory (chdir to it)
     ...etc...
  
   games/
-    doom1.lua
-    ...etc...
-
+  engines/
   mods/
 
   data/
@@ -43,13 +41,17 @@ PREFIX = /usr  |  /usr/local  |  /opt
 
 $PREFIX/bin/Oblige
 
-$PREFIX/share/oblige-0.90/   <<< install directory
+$PREFIX/share/oblige-3.xx/   <<< install directory
 
    scripts/
      oblige.lua
      planner.lua
      ...
    
+   games/
+   engines/
+   mods/
+
    data/
      w74a_1.raw
      w74a_2.raw
