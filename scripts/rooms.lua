@@ -854,7 +854,7 @@ gui.debugf("RAND RESULT --> %d\n", R.floor_h)
 
 
   -- SECONDARY ALGORITHM: connections
-  local big_rooms = copy_table(PLAN.all_rooms)
+  local big_rooms = shallow_copy(PLAN.all_rooms)
 
   table.sort(big_rooms,
       function(A,B)

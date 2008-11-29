@@ -628,7 +628,7 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
   local ARENA =
   {
     rooms = {},
-    conns = copy_table(PLAN.all_conns),
+    conns = shallow_copy(PLAN.all_conns),
     target_item = "EXIT",
   }
 

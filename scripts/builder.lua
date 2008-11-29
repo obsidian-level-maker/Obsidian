@@ -159,8 +159,8 @@ function make_sky_fence(S, side)
     w_face = { texture="-" },
   }
 
-  local wall2_info = copy_table(wall_info)
-  local  sky2_info = copy_table(sky_info)
+  local wall2_info = shallow_copy(wall_info)
+  local  sky2_info = shallow_copy(sky_info)
 
   wall2_info.flag_skyclose = true
    sky2_info.flag_skyclose = true
@@ -297,6 +297,7 @@ function make_locked_door(S, side, z1, key_tex)
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
     w_face = { texture="BIGDOOR2", peg=true, x_offset=0, y_offset=0 },
+--  w_face = { texture="PIPES", peg=true, x_offset=0, y_offset=0 },
     flag_door = true
   }
 

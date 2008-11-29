@@ -1006,7 +1006,7 @@ function Plan_MakeSeeds()
   end
 
   local function fill_holes()
-    local sc_list = copy_table(PLAN.scenic_rooms)
+    local sc_list = shallow_copy(PLAN.scenic_rooms)
     rand_shuffle(sc_list)
 
     for _,R in ipairs(sc_list) do

@@ -83,9 +83,9 @@ function Level_Setup()
     error("UNKNOWN GAME: " .. tostring(OB_CONFIG.game))
   end
 
-  if game.caps   then merge_table(CAPS,   game.caps) end
-  if game.params then merge_table(PARAMS, game.params) end
-  if game.hooks  then merge_table(HOOKS,  game.hooks) end
+  if game.caps   then shallow_merge(CAPS,   game.caps) end
+  if game.params then shallow_merge(PARAMS, game.params) end
+  if game.hooks  then shallow_merge(HOOKS,  game.hooks) end
 
   assert(game.setup_func)
 
@@ -97,9 +97,9 @@ function Level_Setup()
     error("UNKNOWN ENGINE: " .. tostring(OB_CONFIG.engine))
   end
 
-  if engine.caps   then merge_table(CAPS,   engine.caps) end
-  if engine.params then merge_table(PARAMS, engine.params) end
-  if engine.hooks  then merge_table(HOOKS,  engine.hooks) end
+  if engine.caps   then shallow_merge(CAPS,   engine.caps) end
+  if engine.params then shallow_merge(PARAMS, engine.params) end
+  if engine.hooks  then shallow_merge(HOOKS,  engine.hooks) end
 
   if engine.setup_func then
      engine.setup_func(engine)
@@ -110,9 +110,9 @@ function Level_Setup()
 
   for _,mod in pairs(OB_MODULES) do
     if mod.enabled then
-      if mod.caps   then merge_table(CAPS,   mod.caps) end
-      if mod.params then merge_table(PARAMS, mod.params) end
-      if mod.hooks  then merge_table(HOOKS,  mod.hooks) end
+      if mod.caps   then shallow_merge(CAPS,   mod.caps) end
+      if mod.params then shallow_merge(PARAMS, mod.params) end
+      if mod.hooks  then shallow_merge(HOOKS,  mod.hooks) end
 
       if mod.setup_func then
          mod.setup_func(mod)

@@ -163,26 +163,25 @@ function table_sorted_first(list, comp)
   return cur
 end
 
-function merge_table(dest, src)
+function shallow_merge(dest, src)
   for k,v in pairs(src) do
     dest[k] = v
   end
   return dest
 end
 
--- Note: shallow copy
-function copy_table(t)
-  return t and merge_table({}, t)
+function shallow_copy(t)
+  return t and shallow_merge({}, t)
 end
 
 function copy_and_merge(orig, t1, t2, t3, t4)
   local result = {}
-  merge_table(result, orig)
+  shallow_merge(result, orig)
 
-  if t1 then merge_table(result, t1) end
-  if t2 then merge_table(result, t2) end
-  if t3 then merge_table(result, t3) end
-  if t4 then merge_table(result, t4) end
+  if t1 then shallow_merge(result, t1) end
+  if t2 then shallow_merge(result, t2) end
+  if t3 then shallow_merge(result, t3) end
+  if t4 then shallow_merge(result, t4) end
 
   return result
 end

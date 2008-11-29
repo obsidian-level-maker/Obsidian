@@ -779,7 +779,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
         local D = SEEDS[R.tx1 + x][y][1]
         local S = SEEDS[R.tx1 + old_w - 1 - x][y][1]
 
-        D.layout = copy_table(S.layout)
+        D.layout = shallow_copy(S.layout)
 
         if D.layout then
           local L = D.layout
@@ -808,7 +808,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
         local D = SEEDS[x][R.ty1 + y][1]
         local S = SEEDS[x][R.ty1 + old_h - 1 - y][1]
 
-        D.layout = copy_table(S.layout)
+        D.layout = shallow_copy(S.layout)
 
         if D.layout then
           local L = D.layout

@@ -34,7 +34,7 @@ function Edge_remap_music()
     "THE_DA", "SHAWN", "DDTBLU", "IN_CIT", "DEAD",
   }
 
-  local old_list = copy_table(mus_list)
+  local old_list = shallow_copy(mus_list)
 
   rand_shuffle(mus_list)
 

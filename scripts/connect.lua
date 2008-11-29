@@ -1160,7 +1160,7 @@ gui.debugf("Failed\n")
     gui.debugf("Killing rebel group %d (%d rooms)\n", rebel_id, #rebels)
 
     -- use a copy since we modify the original list
-    local c_copy = copy_table(PLAN.all_conns)
+    local c_copy = shallow_copy(PLAN.all_conns)
 
     for _,C in ipairs(c_copy) do
       if C.src.group_id == rebel_id then
@@ -1178,7 +1178,7 @@ gui.debugf("Failed\n")
     local min_g = min_group_id()
 
     -- use a copy since PLAN.all_rooms may be modified
-    local list = copy_table(PLAN.all_rooms)
+    local list = shallow_copy(PLAN.all_rooms)
 
     local join_chance = rand_element { 10, 50, 90 }
 
