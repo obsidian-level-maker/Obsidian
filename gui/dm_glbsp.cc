@@ -30,6 +30,8 @@
 #include "glbsp.h"
 
 
+bool pack_sidedefs = false;
+
 static nodebuildinfo_t nb_info;
 static volatile nodebuildcomms_t nb_comms;
 
@@ -184,10 +186,7 @@ bool DM_BuildNodes(const char *filename, const char *out_name)
   nb_info.output_file = GlbspStrDup(out_name);
 
   nb_info.quiet = true;
-
-#if 0  // this is not supported by the Doomsday engine
-  nb_info.pack_sides = true;
-#endif
+  nb_info.pack_sides = pack_sidedefs;
 
   glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
 

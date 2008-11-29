@@ -46,6 +46,7 @@ static int solid_exfloor;    // disabled if <= 0
 static int liquid_exfloor;
 
 extern bool wad_hexen;  // FIXME
+extern bool pack_sidedefs;
 
 
 #define VOID_INDEX  -2
@@ -384,19 +385,21 @@ static void CreateOneSector(merge_region_c *R)
   // remains the same and the lower part gets the new properties
   // (lighting/special) from the extrafloor.
 
-  if (solid_exfloor > 0)
+  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
   {
-    for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
-    {
-      merge_gap_c *T = R->gaps[g];
-      merge_gap_c *B = R->gaps[g-1];
+    merge_gap_c *T = R->gaps[g];
+    merge_gap_c *B = R->gaps[g-1];
 
+    if (solid_exfloor > 0)
+    {
       MakeExtraFloor(R, sec, T, B);
     }
-  }
-  else
-  {
-    LogPrintf("WARNING: discarding extrafloor brush.\n");
+    else
+    {
+      LogPrintf("WARNING: discarding extrafloor brush (top:%s side:%s)\n",
+                T->b_brush->t_face->tex.c_str(),
+                T->b_brush->w_face->tex.c_str());
+    }
   }
 }
 
@@ -1072,6 +1075,13 @@ void doom_game_interface_c::Property(const char *key, const char *value)
       wad_hexen = false;
     else
       wad_hexen = true;
+  }
+  else if (StringCaseCmp(key, "pack_sidedefs") == 0)
+  {
+    if (value[0] == '0' || tolower(value[0]) == 'f')
+      pack_sidedefs = false;
+    else
+      pack_sidedefs = true;
   }
   else if (StringCaseCmp(key, "error_tex") == 0)
   {

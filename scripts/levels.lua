@@ -119,6 +119,11 @@ function Level_Setup()
       end
     end
   end -- for mod
+
+
+  if CAPS.pack_sidedefs then
+    gui.property("pack_sidedefs", "true")
+  end
 end
 
 
