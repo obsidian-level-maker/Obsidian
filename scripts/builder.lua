@@ -762,7 +762,7 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
 end
 
 
-function do_ramp_x(bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
+function make_ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
   assert(az and bz)
 
   local steps = int(math.abs(az-bz) / 14 + 0.9)
@@ -788,12 +788,7 @@ function do_ramp_x(bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
     bx3 = int(bx3) ; tx3 = int(tx3)
     bx4 = int(bx4) ; tx4 = int(tx4)
 
-    gui.add_brush(
-    {
-      t_face = { texture="STEP1" },
-      b_face = { texture="STEP1" },
-      w_face = { texture="STEP1" },
-    },
+    gui.add_brush(skin,
     {
       { x=bx3, y=y1 }, { x=tx3, y=y2 },
       { x=tx4, y=y2 }, { x=bx4, y=y1 },
@@ -803,7 +798,7 @@ function do_ramp_x(bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
 end
 
 
-function do_ramp_y(x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
+function make_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
   assert(az and bz)
 
   local steps = int(math.abs(az-bz) / 14 + 0.9)
@@ -829,12 +824,7 @@ function do_ramp_y(x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
     ly3 = int(ly3) ; ry3 = int(ry3)
     ly4 = int(ly4) ; ry4 = int(ry4)
 
-    gui.add_brush(
-    {
-      t_face = { texture="STEP2" },
-      b_face = { texture="STEP2" },
-      w_face = { texture="STEP1" },
-    },
+    gui.add_brush(skin,
     {
       { x=x1, y=ly3 }, { x=x1, y=ly4 },
       { x=x2, y=ry4 }, { x=x2, y=ry3 },
@@ -907,8 +897,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   if S.layout and S.layout.char == "L" then
 
-    do_ramp_y(x1,y1,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
-    do_ramp_x(x1,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
+    make_ramp_y(info, x1,y1,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    make_ramp_x(info, x1,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
 
     gui.add_brush(info,
     {
@@ -920,8 +910,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "J" then
 
-    do_ramp_y(x1+pw,y2-ph,y2, x2,y1,y2, m_h-d_h*4, x_h, "exact")
-    do_ramp_x(x1,x2,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
+    make_ramp_y(info, x1+pw,y2-ph,y2, x2,y1,y2, m_h-d_h*4, x_h, "exact")
+    make_ramp_x(info, x1,x2,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
 
     gui.add_brush(info,
     {
@@ -933,8 +923,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "F" then
 
-    do_ramp_y(x1,y1,y2, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
-    do_ramp_x(x2-pw,x2,y1+ph, x1,x2,y2, m_h+d_h*4, y_h, "exact")
+    make_ramp_y(info, x1,y1,y2, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    make_ramp_x(info, x2-pw,x2,y1+ph, x1,x2,y2, m_h+d_h*4, y_h, "exact")
 
     gui.add_brush(info,
     {
@@ -946,8 +936,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "T" then
 
-    do_ramp_y(x1+pw,y1,y1+ph, x2,y1,y2, x_h, m_h-d_h*4, "exact")
-    do_ramp_x(x1,x1+pw,y1+ph, x1,x2,y2, y_h, m_h+d_h*4, "exact")
+    make_ramp_y(info, x1+pw,y1,y1+ph, x2,y1,y2, x_h, m_h-d_h*4, "exact")
+    make_ramp_x(info, x1,x1+pw,y1+ph, x1,x2,y2, y_h, m_h+d_h*4, "exact")
 
     gui.add_brush(info,
     {
@@ -981,8 +971,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   if S.layout and S.layout.char == "L" then
 
-    do_ramp_y(x1,y2-ph,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
-    do_ramp_x(x2-pw,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
+    make_ramp_y(info, x1,y2-ph,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    make_ramp_x(info, x2-pw,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
 
     pilla =
     {
@@ -1002,8 +992,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "J" then
 
-    do_ramp_y(x1+pw,y2-ph,y2, x2,y2-ph,y2, m_h-d_h*4, x_h, "exact")
-    do_ramp_x(x1,x1+pw,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
+    make_ramp_y(info, x1+pw,y2-ph,y2, x2,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    make_ramp_x(info, x1,x1+pw,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
 
     pilla =
     {
@@ -1023,8 +1013,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "F" then
 
-    do_ramp_y(x1,y1,y1+ph, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
-    do_ramp_x(x2-pw,x2,y1+ph, x2-pw,x2,y2, m_h+d_h*4, y_h, "exact")
+    make_ramp_y(info, x1,y1,y1+ph, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    make_ramp_x(info, x2-pw,x2,y1+ph, x2-pw,x2,y2, m_h+d_h*4, y_h, "exact")
 
     pilla =
     {
@@ -1044,8 +1034,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "T" then
 
-    do_ramp_y(x1+pw,y1,y1+ph, x2,y1,y1+ph, x_h, m_h-d_h*4, "exact")
-    do_ramp_x(x1,x1+pw,y1+ph, x1,x1+pw,y2, y_h, m_h+d_h*4, "exact")
+    make_ramp_y(info, x1+pw,y1,y1+ph, x2,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    make_ramp_x(info, x1,x1+pw,y1+ph, x1,x1+pw,y2, y_h, m_h+d_h*4, "exact")
 
     pilla =
     {
@@ -1202,39 +1192,46 @@ function do_outdoor_ramp_down(ST, f_tex, w_tex)
   local ix2 = ST.S.x2
   local iy2 = ST.S.y2
 
+  local info =
+  {
+    b_face = { texture=f_tex },
+    t_face = { texture=f_tex },
+    w_face = { texture=w_tex },
+  }
+
 gui.debugf("do_outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 
   if conn_dir == 6 then
     ix1 = ix2-96
-    do_ramp_x(ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
+    make_ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
 
   elseif conn_dir == 4 then
     ix2 = ix1 + 96
-    do_ramp_x(ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
+    make_ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
 
   elseif conn_dir == 8 then
     iy1 = iy2-96
-    do_ramp_y(ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+    make_ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
 
   elseif conn_dir == 2 then
     iy2 = iy1 + 96
-    do_ramp_y(ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
+    make_ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
   end
 
 
   if is_horiz(conn_dir) then
     if iy2+64 < oy2 then
-      do_ramp_y(ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
+      make_ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
     end
     if iy1-64 > oy1 then
-      do_ramp_y(ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+      make_ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
     end
   else -- is_vert
     if ix2+64 < ox2 then
-      do_ramp_x(ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
+      make_ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
     end
     if ix1-64 > ox1 then
-      do_ramp_x(ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
+      make_ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
     end
   end
 
@@ -1258,6 +1255,13 @@ function do_outdoor_ramp_up(ST, f_tex, w_tex)
   local iy1 = ST.S.y1
   local ix2 = ST.S.x2
   local iy2 = ST.S.y2
+
+  local info =
+  {
+    b_face = { texture=f_tex },
+    t_face = { texture=f_tex },
+    w_face = { texture=w_tex },
+  }
 
 gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 
@@ -1301,18 +1305,13 @@ gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn
     nx2 = int(nx2) ; ny2 = int(ny2)
     z   = int(z)
 
-    gui.add_brush(
+    gui.add_brush(info,
     {
-      t_face = { texture=f_tex },
-      b_face = { texture=f_tex },
-      w_face = { texture=w_tex },
+      { x=nx1, y=ny1 },
+      { x=nx1, y=ny2 },
+      { x=nx2, y=ny2 },
+      { x=nx2, y=ny1 },
     },
-      {
-        { x=nx1, y=ny1 },
-        { x=nx1, y=ny2 },
-        { x=nx2, y=ny2 },
-        { x=nx2, y=ny1 },
-      },
     -2000, z)
   end 
 
@@ -2536,14 +2535,21 @@ else
 
 local CH = S.layout and S.layout.char
 
+local stair_info =
+{
+  t_face = { texture="FLAT1" },
+  b_face = { texture="FLAT1" },
+  w_face = { texture="STEP2" },
+}
+
 if CH == ">" then
-   do_ramp_x(x1,x2,y1, x1,x2,y2, S.layout.stair_z1, S.layout.stair_z2)
+   make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z1, S.layout.stair_z2)
 elseif CH == "<" then
-   do_ramp_x(x1,x2,y1, x1,x2,y2, S.layout.stair_z2, S.layout.stair_z1)
+   make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z2, S.layout.stair_z1)
 elseif CH == "^" then
-   do_ramp_y(x1,y1,y2, x2,y1,y2, S.layout.stair_z1, S.layout.stair_z2)
+   make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z1, S.layout.stair_z2)
 elseif CH == "v" then
-   do_ramp_y(x1,y1,y2, x2,y1,y2, S.layout.stair_z2, S.layout.stair_z1)
+   make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z2, S.layout.stair_z1)
 elseif CH == "L" or CH == "J" or
        CH == "F" or CH == "T" then
 
