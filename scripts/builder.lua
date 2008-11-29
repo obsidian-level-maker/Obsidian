@@ -2410,7 +2410,7 @@ gui.printf("do_teleport\n")
          and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
       then
 
-        make_fence(S, side, z1, f_tex, w_tex)
+        make_fence(S, side, R.floor_h, f_tex, w_tex)
       end
 
       if S.borders[side] and S.borders[side].kind == "skyfence" then
@@ -2539,7 +2539,7 @@ local stair_info =
 {
   t_face = { texture="FLAT1" },
   b_face = { texture="FLAT1" },
-  w_face = { texture="STEP2" },
+  w_face = { texture="STEP4" },
 }
 
 if CH == ">" then
