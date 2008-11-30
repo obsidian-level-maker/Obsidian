@@ -451,6 +451,19 @@ Pipe Dreams:
       5080 = "Blue Start"      
       5081 = "Red Start"
 
+-  Pop-up Traps
+   you make a sector, lower it enough so monsters cannot see
+   the player but are facing him when it springs. The trap walls have
+   no lower texture and you set the trigger line to action 19 ( W1
+   floor lower to highest floor) and you set the trap monsters deaf so
+   they aren't awakened by player gunshots.
+
+   When the player trips the linedef, the floors instantly pop up to
+   the nearest floor height without the rising delay of some other
+   linedef actions. Another thing is to make sure the line that
+   triggers the trap can't be bypassed and thus the player can get
+   stuck in the hole if he falls in.
+
 -  Surprise Lifts:
    It is a hallway/room section that looks normal but when the player
    crosses the Lift-Lower-Wait-Rise linedef, it lowers to surprise the
