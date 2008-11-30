@@ -435,7 +435,7 @@ static void CoalesceSectors(void)
       }
     }
 
-fprintf(stderr, "CoalesceSectors: changes = %d\n", changes);
+// fprintf(stderr, "CoalesceSectors: changes = %d\n", changes);
 
     if (changes == 0)
       return;
@@ -501,7 +501,7 @@ static void CoalesceExtraFloors(void)
       }
     }
 
-fprintf(stderr, "CoalesceExtraFloors: changes = %d\n", changes);
+// fprintf(stderr, "CoalesceExtraFloors: changes = %d\n", changes);
 
     if (changes == 0)
       break;
