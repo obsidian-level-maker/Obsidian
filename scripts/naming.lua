@@ -305,7 +305,8 @@ NAMING_THEMES =
         Mystical=2, Magical=2, Magic=2,
 
         Eerie=10, Strange=20, Weird=5, Creepy=10,
-        Gloomy=15, Awful=10, Horrible=10,
+        Gloomy=15, Awful=10,
+        Horrible=10, Horrendous=10,
         Dismal=10, Dank=5, Frightful=5,
         Spooky=15, Nightmare=5,
         Screaming=5, Silent=5, Sullen=10,
@@ -509,6 +510,7 @@ NAMING_THEMES =
         Invaded=5, Overtaken=5, Stolen=3,
         Haunted=20, Infected=10, Infested=10,
         Corrupted=15, Corrupt=5, Fateful=5,
+        Besieged=10,
 
         Strange=10, Eerie=5, Weird=5, Creepy=10,
         Dark=30, Darkest=7, Horrible=10, Exotic=10,
