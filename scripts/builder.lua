@@ -34,6 +34,8 @@ class TRANSFORM
 }
 --]]
 
+REAL_ADD_BRUSH = gui.add_brush
+
 function transformed_brush(T, info, coords, z1, z2)
 
   coords = deep_copy(coords)
@@ -41,7 +43,7 @@ function transformed_brush(T, info, coords, z1, z2)
   -- TODO !!!  apply transforms to slopes (z1 or z2 == table)
 
   -- handle mirroring first
-  local reverse_it = false
+  local reverse_it = true --!!!!!! NO NO NO
 
   if T.mirror_x then
     for _,C in ipairs(coords) do
@@ -92,7 +94,13 @@ function transformed_brush(T, info, coords, z1, z2)
     end
   end
 
-  gui.add_brush(info, coords, z1, z2)
+  REAL_ADD_BRUSH(info, coords, z1, z2)
+end
+
+
+--!!!! FIXME TEMPORARY HACK
+function gui.add_brush(info, coords, z1, z2)
+  transformed_brush({}, info, coords, z1, z2)
 end
 
 
