@@ -170,7 +170,8 @@ static void Mug_MakeSegments(csg_brush_c *P)
     merge_vertex_c *new_v1 = Mug_AddVertex(v1->x, v1->y);
     merge_vertex_c *new_v2 = Mug_AddVertex(v2->x, v2->y);
 
-    Mug_AddSegment(new_v1, new_v2);
+    // swap vertices so that segment faces inward
+    Mug_AddSegment(new_v2, new_v1);
 
     // associate the new vertex with the area_vert
     v1->partner = new_v1;
@@ -440,8 +441,9 @@ static void Mug_FindOverlaps(void)
 
 static merge_segment_c *trace_seg;
 static merge_vertex_c  *trace_vert;
-static int        trace_side;
-static double     trace_angles;
+
+static int    trace_side;
+static double trace_angles;
 
 static void TraceNext(void)
 {
@@ -879,11 +881,11 @@ static void MarkBoundaryRegions(csg_brush_c *P)
         break;
 
       if (S->start == V)
-        S->f_sides.push_back(v1);
-      else
         S->b_sides.push_back(v1);
+      else
+        S->f_sides.push_back(v1);
 
-      merge_region_c *R = (S->start == V) ? S->front : S->back;
+      merge_region_c *R = (S->start == V) ? S->back : S->front;
 
       if (R && ! R->HasBrush(P))
         R->areas.push_back(P);
@@ -1287,7 +1289,6 @@ static void Mug_FillUnusedGaps(void)
         }
       }
     }
-fprintf(stderr, "Mug_FillUnusedGaps: changes = %d\n", changes);
   } while (changes > 0);
 
   // statistics

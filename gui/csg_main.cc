@@ -119,7 +119,7 @@ const char * csg_brush_c::Validate()
   if (verts.size() < 3)
     return "Line loop contains less than 3 vertices!";
 
-  // make sure vertices are clockwise
+  // make sure vertices are anti-clockwise
 
   double average_ang = 0;
 
@@ -135,7 +135,7 @@ const char * csg_brush_c::Validate()
     double ang1 = CalcAngle(v2->x, v2->y, v1->x, v1->y);
     double ang2 = CalcAngle(v2->x, v2->y, v3->x, v3->y);
 
-    double diff = ang2 - ang1;
+    double diff = ang1 - ang2;
 
     if (diff < 0) diff += 360.0;
 
@@ -149,7 +149,7 @@ const char * csg_brush_c::Validate()
 // fprintf(stderr, "Average angle = %1.4f\n\n", average_ang);
 
   if (average_ang > 180.0)
-    return "Line loop is not clockwise!";
+    return "Line loop is not anti-clockwise!";
 
   return NULL; // OK
 }
