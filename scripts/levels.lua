@@ -91,6 +91,8 @@ function Level_Setup()
 
   game.setup_func(game)
 
+  GAME.format = game.format
+
 
   local engine = OB_ENGINES[OB_CONFIG.engine]
   if not engine then
