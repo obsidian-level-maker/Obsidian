@@ -55,17 +55,15 @@ byte * SKY_GenGradient(int W, int H, std::vector<byte> & colors)
 }
 
 
-byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
-                     float squish, double fracdim, double powscale)
+void SKY_AddClouds(int seed, byte *pixels, int W, int H,
+                   color_mapping_t *map, double powscale, double thresh,
+                   double fracdim, double squish)
 {
   // SYS_ASSERT(is_power_of_two(W))
-  // SYS_ASSERT(is_power_of_two(H))
 
   SYS_ASSERT(W >= H);
 
-  int numcol = (int)colors.size();
-
-  SYS_ASSERT(numcol > 0);
+  SYS_ASSERT(map->size > 0);
   SYS_ASSERT(squish > 0);
   SYS_ASSERT(powscale > 0);
 
@@ -73,11 +71,9 @@ byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
 
   TX_SpectralSynth(seed, synth, W, fracdim, powscale);
 
-  byte *pixels = new byte[W * H];
-
   for (int y = 0; y < H; y++)
   {
-    int sy = (int)(y * squish) & (W-1);
+    int sy = (int)(y * squish) & (W-1);  // yes 'W'
 
     const float *src = & synth[sy * W];
 
@@ -86,17 +82,24 @@ byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
 
     while (dest < d_end)
     {
-      int idx = (int)(*src++ * numcol);
+      float v = *src++;
 
-      idx = CLAMP(0, idx, numcol-1);
+      if (v < thresh)
+      {
+        dest++;
+        continue;
+      }
 
-      *dest++ = colors[idx];
+      v = (v - thresh) / (1.0 - thresh);
+
+      int idx = (int)(v * map->size);
+      idx = CLAMP(0, idx, map->size-1);
+
+      *dest++ = map->colors[idx];
     }
   }
 
   delete[] synth;
-
-  return pixels;
 }
 
 
@@ -132,7 +135,6 @@ void SKY_AddStars(int seed, byte *pixels, int W, int H,
       v = (v - thresh) / (1.0 - thresh);
 
       int idx = (int)(v * map->size);
-
       idx = CLAMP(0, idx, map->size-1);
 
       *dest++ = map->colors[idx];

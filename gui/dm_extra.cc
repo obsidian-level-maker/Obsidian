@@ -185,7 +185,7 @@ static void SkyTest2()
   for (int n=0; n < 14; n++)
     cloud_cols.push_back(hell_mapping[n]);
 
-  byte *pixels = SKY_GenClouds(5, 256,128, cloud_cols, 3.0, 2.6, 1.0);
+//  byte *pixels = SKY_GenClouds(5, 256,128, cloud_cols, 3.0, 2.6, 1.0);
 //  byte *pixels = SKY_GenGradient(256,128, cloud_cols);
 
 
@@ -205,6 +205,9 @@ static void SkyTest2()
 
   for (int i=0; i < 10; i++)
     hill_cols.push_back(hill_of_hell[i]);
+
+//!!!!
+byte pixels[256*128];
 
   SKY_AddHills(5, pixels, 256,128, hill_cols, 0.2,0.9, 2.1,2.1);
 
@@ -228,8 +231,6 @@ static void SkyTest2()
   DM_WriteLump("RSKY1", lump);
 
   delete lump;
-
-  delete[] pixels;
 }
 
 static void LogoTest1()
@@ -269,6 +270,8 @@ static void LogoTest1()
   delete[] pixels;
 }
 
+
+//------------------------------------------------------------------------
 
 int DM_fsky_create(lua_State *L)
 {
@@ -352,7 +355,7 @@ int DM_fsky_add_stars(lua_State *L)
   // LUA: fsky_add_stars { seed=X, colmap=X, power=X, thresh=X }
 
   if (lua_type(L, 1) != LUA_TTABLE)
-    return luaL_argerror(L, 1, "missing table: stars info");
+    return luaL_argerror(L, 1, "missing table: star info");
 
   int seed = 1;
   int map_id = 1;
@@ -375,14 +378,14 @@ int DM_fsky_add_stars(lua_State *L)
   // validation... 
   SYS_ASSERT(sky_pixels);
 
+  if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    return luaL_error(L, "fsky_add_stars: colmap value out of range");
+
   if (powscale < 0.01)
-    return luaL_error(L, "gui.add_stars: bad power value");
+    return luaL_error(L, "fsky_add_stars: bad power value");
 
   if (thresh > 0.98)
-    return luaL_error(L, "gui.add_stars: bad thresh value");
-
-  if (map_id < 1 || map_id > MAX_COLOR_MAPS)
-    return luaL_error(L, "gui.add_stars: colmap value out of range");
+    return luaL_error(L, "fsky_add_stars: bad thresh value");
 
   SKY_AddStars(seed,  sky_pixels, sky_W, sky_H,
                &color_mappings[map_id-1], powscale, thresh);
@@ -390,6 +393,66 @@ int DM_fsky_add_stars(lua_State *L)
   return 0;
 }
 
+int DM_fsky_add_clouds(lua_State *L)
+{
+  // LUA: fsky_add_clouds { seed=X, colmap=X, power=X, thresh=X,
+  //                        fracdim=X, squish=X }
+
+  if (lua_type(L, 1) != LUA_TTABLE)
+    return luaL_argerror(L, 1, "missing table: cloud info");
+
+  int seed = 1;
+  int map_id = 1;
+
+  double powscale = 1.2;
+  double thresh   = 0.0;
+  double fracdim  = 2.4;
+  double squish   = 1.0;
+
+  lua_getfield(L, 1, "seed");
+  lua_getfield(L, 1, "colmap");
+
+  if (! lua_isnil(L, -2)) seed     = luaL_checkint(L, -2);
+  if (! lua_isnil(L, -1)) map_id   = luaL_checkint(L, -1);
+
+  lua_pop(L, 2);
+
+  lua_getfield(L, 1, "power");
+  lua_getfield(L, 1, "thresh");
+  lua_getfield(L, 1, "fracdim");
+  lua_getfield(L, 1, "squish");
+
+  if (! lua_isnil(L, -4)) powscale = luaL_checknumber(L, -4);
+  if (! lua_isnil(L, -3)) thresh   = luaL_checknumber(L, -3);
+  if (! lua_isnil(L, -2)) fracdim  = luaL_checknumber(L, -2);
+  if (! lua_isnil(L, -1)) squish   = luaL_checknumber(L, -1);
+
+  lua_pop(L, 4);
+
+  // validation... 
+  SYS_ASSERT(sky_pixels);
+
+  if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    return luaL_error(L, "fsky_add_clouds: colmap value out of range");
+
+  if (powscale < 0.01)
+    return luaL_error(L, "fsky_add_clouds: bad power value");
+
+  if (thresh > 0.98)
+    return luaL_error(L, "fsky_add_clouds: bad thresh value");
+
+  if (fracdim > 2.99 || fracdim < 0.2)
+    return luaL_error(L, "fsky_add_clouds: bad fracdim value");
+
+  if (squish > 4.1 || squish < 0.24)
+    return luaL_error(L, "fsky_add_clouds: bad squish value");
+
+  SKY_AddClouds(seed,  sky_pixels, sky_W, sky_H,
+               &color_mappings[map_id-1], powscale, thresh,
+               fracdim, squish);
+
+  return 0;
+}
 
 
 //------------------------------------------------------------------------

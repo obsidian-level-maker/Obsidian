@@ -37,7 +37,7 @@ function Doom_generate_skies()
 
   for _,sky in ipairs(sky_list) do
     gui.fsky_create(256, 128, sky.test)
-    gui.fsky_add_stars { seed=sky.test }
+    gui.fsky_add_clouds { seed=sky.test, thresh=0.2, squish=4.0 }
     gui.fsky_write(sky.patch)
   end
 end
