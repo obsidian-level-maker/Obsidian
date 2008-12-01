@@ -213,7 +213,7 @@ function make_sky_fence(S, side)
     { x=sx2, y=sy2 }, { x=sx2, y=sy1 },
   }
 
-  local z = math.max(PLAN.skyfence_h, (S.floor_h or S.room.floor_h) + 64)
+  local z = math.max(PLAN.skyfence_h, (S.room.floor_h) + 64)
 
   gui.add_brush(wall_info,  w_coords, -4000, z)
   gui.add_brush(wall2_info, s_coords, -4000, PLAN.skyfence_h - 64)
@@ -423,7 +423,7 @@ function make_hall_light(S, z2)
 
   gui.add_brush(
   {
-    t_face = { texture="CEIL5_1" },
+    t_face = { texture="CEIL5_2" },
     b_face = { texture="TLITE6_5" },
     w_face = { texture="METAL" },
   },
@@ -438,8 +438,8 @@ function make_hall_light(S, z2)
 
   local metal_info =
   {
-    t_face = { texture="CEIL5_1" },
-    b_face = { texture="CEIL5_1" },
+    t_face = { texture="CEIL5_2" },
+    b_face = { texture="CEIL5_2" },
     w_face = { texture="METAL" },
   }
 
@@ -480,6 +480,8 @@ function make_hall_light(S, z2)
   z2-16, 2000)
  
 
+--[[ connecting spokes....
+
   gui.add_brush(metal_info,
   {
     { x = mx-4, y = my+40 },
@@ -516,6 +518,7 @@ function make_hall_light(S, z2)
   },
   z2-10, 2000)
  
+--]]
 end
 
 
@@ -558,8 +561,8 @@ function make_detailed_hall(S, side, z1, z2)
 
   gui.add_brush(
   {
-    t_face = { texture="CEIL5_1" },
-    b_face = { texture="CEIL5_1" },
+    t_face = { texture="CEIL5_2" },
+    b_face = { texture="CEIL5_2" },
     w_face = { texture="METAL" },
   },
   get_hall_coords(32),
@@ -567,8 +570,8 @@ function make_detailed_hall(S, side, z1, z2)
 
   gui.add_brush(
   {
-    t_face = { texture="CEIL5_1" },
-    b_face = { texture="CEIL5_1" },
+    t_face = { texture="CEIL5_2" },
+    b_face = { texture="CEIL5_2" },
     w_face = { texture="METAL" },
   },
   get_hall_coords(32),
@@ -1723,7 +1726,7 @@ function make_small_exit(R)
     { x=0, y=0 },
     { x=0, y=16 },
     { x=mx-swit_W/2-8, y=16, w_face={ texture="DOORSTOP", x_offset=0 }, line_kind=11 },
-    { x=mx-swit_W/2,   y=16, w_face={ texture="SW1STRTN", x_offset=0, y_offset=0 }, line_kind=11 },
+    { x=mx-swit_W/2,   y=16, w_face={ texture="SW1METAL", x_offset=0, y_offset=0 }, line_kind=11 },
     { x=mx+swit_W/2,   y=16, w_face={ texture="DOORSTOP", x_offset=0 }, line_kind=11 },
     { x=mx+swit_W/2+8, y=16 },
     { x=long, y=16 },
