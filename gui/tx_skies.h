@@ -21,11 +21,11 @@
 
 byte * SKY_GenGradient(int W, int H, std::vector<byte> & colors);
 
+void SKY_AddStars(int seed, byte *pixels, int W, int H,
+                  color_mapping_t *map, double powscale, double thresh);
+
 byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
                      float squish=1.0, double fracdim=2.4, double powscale=1.2);
-
-byte * SKY_GenStars(int seed, int W, int H, std::vector<byte> & colors,
-                    double powscale=3.0, double cutoff=0.25);
 
 void SKY_AddHills(int seed, byte *pixels, int W, int H,
                   std::vector<byte> & colors,

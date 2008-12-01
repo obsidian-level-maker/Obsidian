@@ -20,14 +20,24 @@
 function Doom_generate_skies()
   local sky_list =  -- FIXME !!!! game specific
   {
-    { patch="RSKY1", test=4 },
+    { patch="RSKY1", test=0xc4 },
     { patch="RSKY2", test=0 },
     { patch="RSKY3", test=0xb8 },
   }
 
+  local STAR_COLS =
+  {
+    8, 7, 6, 5,
+    111, 109, 107, 104, 101,
+    98, 95, 91, 87, 83,
+    4
+  }
+
+  gui.set_colormap(1, STAR_COLS)
+
   for _,sky in ipairs(sky_list) do
     gui.fsky_create(256, 128, sky.test)
-    gui.fsky_solid_box(50, 50, 60, 30, 0x78)
+    gui.fsky_add_stars { seed=sky.test }
     gui.fsky_write(sky.patch)
   end
 end

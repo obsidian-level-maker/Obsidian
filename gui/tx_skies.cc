@@ -21,6 +21,7 @@
 #include "lib_util.h"
 #include "main.h"
 
+#include "g_lua.h"
 #include "twister.h"
 #include "tx_forge.h"
 #include "tx_skies.h"
@@ -99,20 +100,15 @@ byte * SKY_GenClouds(int seed, int W, int H, std::vector<byte> & colors,
 }
 
 
-byte * SKY_GenStars(int seed, int W, int H, std::vector<byte> & colors,
-                    double powscale, double cutoff)
+void SKY_AddStars(int seed, byte *pixels, int W, int H,
+                  color_mapping_t *map,
+                  double powscale, double thresh)
 {
-  int numcol = (int)colors.size();
-
-  SYS_ASSERT(numcol >= 2);
+  SYS_ASSERT(map->size >= 1);
   SYS_ASSERT(powscale > 0);
-  SYS_ASSERT(cutoff > 0);
+  SYS_ASSERT(thresh < 0.99);
 
   MT_rand_c twist(seed);
-
-  byte *pixels = new byte[W * H];
-
-  memset(pixels, colors[0], W * H);
 
   for (int y = 0; y < H; y++)
   {
@@ -127,23 +123,21 @@ byte * SKY_GenStars(int seed, int W, int H, std::vector<byte> & colors,
 
       v = pow(v, powscale);
 
-      if (v < cutoff)
+      if (v < thresh)
       {
         dest++;
         continue;
       }
 
-      v = (v - cutoff) / (1.0 - cutoff);
+      v = (v - thresh) / (1.0 - thresh);
 
-      int idx = 1 + (int)(v * (numcol-1));
+      int idx = (int)(v * map->size);
 
-      idx = CLAMP(1, idx, numcol-1);
+      idx = CLAMP(0, idx, map->size-1);
 
-      *dest++ = colors[idx];
+      *dest++ = map->colors[idx];
     }
   }
-
-  return pixels;
 }
 
 

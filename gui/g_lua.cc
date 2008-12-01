@@ -415,6 +415,7 @@ extern int DM_make_name_gfx(lua_State *L);
 extern int DM_fsky_create(lua_State *L);
 extern int DM_fsky_write(lua_State *L);
 extern int DM_fsky_solid_box(lua_State *L);
+extern int DM_fsky_add_stars(lua_State *L);
 
 extern int DM_bex_add_string(lua_State *L);
 extern int DM_bex_add_music (lua_State *L);
@@ -464,6 +465,7 @@ static const luaL_Reg gui_script_funcs[] =
   { "fsky_create",      DM_fsky_create },
   { "fsky_write",       DM_fsky_write },
   { "fsky_solid_box",   DM_fsky_solid_box },
+  { "fsky_add_stars",   DM_fsky_add_stars },
 
   { "bex_add_string",  DM_bex_add_string },
   { "bex_add_music",   DM_bex_add_music  },

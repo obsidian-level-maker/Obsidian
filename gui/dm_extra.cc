@@ -347,6 +347,50 @@ int DM_fsky_solid_box(lua_State *L)
   return 0;
 }
 
+int DM_fsky_add_stars(lua_State *L)
+{
+  // LUA: fsky_add_stars { seed=X, colmap=X, power=X, thresh=X }
+
+  if (lua_type(L, 1) != LUA_TTABLE)
+    return luaL_argerror(L, 1, "missing table: stars info");
+
+  int seed = 1;
+  int map_id = 1;
+
+  double powscale = 3.0;
+  double thresh = 0.25;
+
+  lua_getfield(L, 1, "seed");
+  lua_getfield(L, 1, "colmap");
+  lua_getfield(L, 1, "power");
+  lua_getfield(L, 1, "thresh");
+
+  if (! lua_isnil(L, -4)) seed     = luaL_checkint(L, -4);
+  if (! lua_isnil(L, -3)) map_id   = luaL_checkint(L, -3);
+  if (! lua_isnil(L, -2)) powscale = luaL_checknumber(L, -2);
+  if (! lua_isnil(L, -1)) thresh   = luaL_checknumber(L, -1);
+
+  lua_pop(L, 4);
+
+  // validation... 
+  SYS_ASSERT(sky_pixels);
+
+  if (powscale < 0.01)
+    return luaL_error(L, "gui.add_stars: bad power value");
+
+  if (thresh > 0.98)
+    return luaL_error(L, "gui.add_stars: bad thresh value");
+
+  if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    return luaL_error(L, "gui.add_stars: colmap value out of range");
+
+  SKY_AddStars(seed,  sky_pixels, sky_W, sky_H,
+               &color_mappings[map_id-1], powscale, thresh);
+
+  return 0;
+}
+
+
 
 //------------------------------------------------------------------------
 
