@@ -2,7 +2,7 @@
 //  EXTRA stuff for DOOM
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker (C) 2006-2008 Andrew Apted
+//  Oblige Level Maker (C) 2008 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -209,7 +209,7 @@ static void SkyTest2()
 //!!!!
 byte pixels[256*128];
 
-  SKY_AddHills(5, pixels, 256,128, hill_cols, 0.2,0.9, 2.1,2.1);
+///  SKY_AddHills(5, pixels, 256,128, hill_cols, 0.2,0.9, 2.1,2.1);
 
 
   std::vector<byte> build_cols;
@@ -450,6 +450,65 @@ int DM_fsky_add_clouds(lua_State *L)
   SKY_AddClouds(seed,  sky_pixels, sky_W, sky_H,
                &color_mappings[map_id-1], powscale, thresh,
                fracdim, squish);
+
+  return 0;
+}
+
+int DM_fsky_add_hills(lua_State *L)
+{
+  // LUA: fsky_add_hills { seed=X, colmap=X, power=X, fracdim=X,
+  //                       min_h=X, max_h=X }
+
+  if (lua_type(L, 1) != LUA_TTABLE)
+    return luaL_argerror(L, 1, "missing table: cloud info");
+
+  int seed = 1;
+  int map_id = 1;
+
+  double min_h = -0.20;
+  double max_h =  0.85;
+
+  double powscale = 0.8;
+  double fracdim  = 1.8;
+
+  lua_getfield(L, 1, "seed");
+  lua_getfield(L, 1, "colmap");
+
+  if (! lua_isnil(L, -2)) seed     = luaL_checkint(L, -2);
+  if (! lua_isnil(L, -1)) map_id   = luaL_checkint(L, -1);
+
+  lua_pop(L, 2);
+
+  lua_getfield(L, 1, "min_h");
+  lua_getfield(L, 1, "max_h");
+  lua_getfield(L, 1, "power");
+  lua_getfield(L, 1, "fracdim");
+
+  if (! lua_isnil(L, -4)) min_h    = luaL_checknumber(L, -4);
+  if (! lua_isnil(L, -3)) max_h    = luaL_checknumber(L, -3);
+  if (! lua_isnil(L, -2)) powscale = luaL_checknumber(L, -2);
+  if (! lua_isnil(L, -1)) fracdim  = luaL_checknumber(L, -1);
+
+  lua_pop(L, 4);
+
+  // validation... 
+  SYS_ASSERT(sky_pixels);
+
+  if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    return luaL_error(L, "fsky_add_hills: colmap value out of range");
+
+  if (min_h >= max_h || max_h <= 0.0)
+    return luaL_error(L, "fsky_add_hills: bad height range");
+
+  if (powscale < 0.01)
+    return luaL_error(L, "fsky_add_hills: bad power value");
+
+  if (fracdim > 2.99 || fracdim < 0.2)
+    return luaL_error(L, "fsky_add_hills: bad fracdim value");
+
+  SKY_AddHills(seed,  sky_pixels, sky_W, sky_H,
+              &color_mappings[map_id-1], min_h, max_h,
+              powscale, fracdim);
 
   return 0;
 }

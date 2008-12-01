@@ -144,15 +144,12 @@ void SKY_AddStars(int seed, byte *pixels, int W, int H,
 
 
 void SKY_AddHills(int seed, byte *pixels, int W, int H,
-                  std::vector<byte> & colors,
-                  float min_h, float max_h,
-                  double fracdim, double powscale)
+                  color_mapping_t *map, double min_h, double max_h,
+                  double powscale, double fracdim)
 {
-  int numcol = (int)colors.size();
-
-  SYS_ASSERT(numcol >= 2);
+  SYS_ASSERT(map->size >= 2);
+  SYS_ASSERT(min_h <= max_h);
   SYS_ASSERT(powscale > 0);
-  SYS_ASSERT(max_h >= min_h);
 
   float * height_map = new float[W * W];
 
@@ -195,11 +192,11 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
       {
         float i2 = ity - 0.3 * twist.Rand_fp();
 
-        int idx = (int)(i2 * numcol);
+        int idx = (int)(i2 * map->size);
 
-        idx = CLAMP(0, idx, numcol-1);
+        idx = CLAMP(0, idx, map->size-1);
 
-        pixels[(H-1-y)*W + x] = colors[idx];
+        pixels[(H-1-y)*W + x] = map->colors[idx];
       }
 
       high_span = span;

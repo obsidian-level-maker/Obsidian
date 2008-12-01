@@ -27,9 +27,8 @@ void SKY_AddClouds(int seed, byte *pixels, int W, int H,
                    double fracdim, double squish);
 
 void SKY_AddHills(int seed, byte *pixels, int W, int H,
-                  std::vector<byte> & colors,
-                  float min_h=0, float max_h=0.8,
-                  double fracdim=2.0, double powscale=0.8);
+                  color_mapping_t *map, double min_h, double max_h,
+                  double powscale, double fracdim);
 
 void SKY_AddBuilding(int seed, byte *pixels, int W, int H,
                      std::vector<byte> & colors,
