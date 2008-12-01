@@ -83,6 +83,7 @@ public:
   double x, y;
 
   area_face_c *w_face; // optional
+  area_face_c *rail;   //
 
   int line_kind;
   int line_tag;

@@ -72,7 +72,8 @@ area_face_c::~area_face_c()
 
 
 area_vert_c::area_vert_c(csg_brush_c *_parent, double _x, double _y) :
-      parent(_parent), x(_x), y(_y), w_face(NULL),
+      parent(_parent), x(_x), y(_y),
+      w_face(NULL), rail(),
       line_kind(0), line_tag(0), line_flags(0),
       partner(NULL)
 {
@@ -500,13 +501,12 @@ static area_vert_c * Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
   lua_pop(L, 2);
 
   lua_getfield(L, stack_pos, "w_face");
+  lua_getfield(L, stack_pos, "rail");
 
-  if (! lua_isnil(L, -1))
-  {
-    V->w_face = Grab_Face(L, -1);
-  }
+  if (! lua_isnil(L, -2)) V->w_face = Grab_Face(L, -2);
+  if (! lua_isnil(L, -1)) V->rail   = Grab_Face(L, -1);
 
-  lua_pop(L, 1);
+  lua_pop(L, 2);
 
   lua_getfield(L, stack_pos, "line_kind");
   lua_getfield(L, stack_pos, "line_tag");
