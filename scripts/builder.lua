@@ -280,8 +280,8 @@ function make_door(S, side, z1, key_tex)
 
   local door_info =
   {
-    t_face = { texture="FLAT1" },
-    b_face = { texture="FLAT1" },
+    t_face = { texture="FLAT23" },
+    b_face = { texture="FLAT23" },
     w_face = { texture="BIGDOOR2", peg=true, x_offset=0, y_offset=0 },
     flag_door = true
   }
@@ -1506,6 +1506,89 @@ function make_exit_pillar(S, z1)
 end
 
 
+function make_outdoor_exit_switch(S, dir, f_h)
+
+  local DT, long = get_transform_for_seed_side(S, 10-dir)
+  local deep = long
+
+  local mx = int(long / 2)
+  local my = int(deep / 2)
+
+
+  local podium =
+  {
+    w_face = { texture="COMPSPAN" },
+    t_face = { texture="CEIL5_1" },
+    b_face = { texture="CEIL5_1" },
+  }
+
+  transformed_brush(DT, podium,
+  {
+    { x=32, y=32 },
+    { x=32, y=deep-32 },
+    { x=long-32, y=deep-32 },
+    { x=long-32, y=32 },
+  },
+  -2000, f_h+12)
+
+
+  local switch_info =
+  {
+    w_face = { texture="SHAWN2" },
+    t_face = { texture="FLAT23" },
+    b_face = { texture="FLAT23" },
+  }
+
+  local switch_face = { texture="SW1COMM", peg=true, x_offset=0, y_offset=0 }
+
+  transformed_brush(DT, switch_info,
+  {
+    { x=mx-56, y=my-24 },
+    { x=mx-56, y=my+24 },
+    { x=mx-40, y=my+40 },
+    { x=mx+40, y=my+40 },
+    { x=mx+56, y=my+24 },
+    { x=mx+56, y=my-24 },
+    { x=mx+40, y=my-40 },
+    { x=mx-40, y=my-40 },
+  },
+  -2000, f_h+16)
+
+  transformed_brush(DT, switch_info,
+  {
+    { x=mx-32, y=my-8 },
+    { x=mx-32, y=my+8, w_face = switch_face, line_kind=11 },
+    { x=mx+32, y=my+8 },
+    { x=mx+32, y=my-8, w_face = switch_face, line_kind=11 },
+  },
+  -2000, f_h+16+64)
+
+
+  local exit_info =
+  {
+    w_face = { texture="SHAWN2" },
+    t_face = { texture="FLAT23" },
+    b_face = { texture="FLAT23" },
+  }
+
+  local exit_face = { texture="EXITSIGN", peg=true, x_offset=0, y_offset=0 }
+ 
+  for pass=1,4 do
+    local ex = sel(pass <= 2, 48, long-80)
+    local ey = sel((pass % 2) == 1, 48, deep-48-8)
+
+    transformed_brush(DT, exit_info,
+    {
+      { x=ex+32, y=ey,   w_face = exit_face },
+      { x=ex,    y=ey   },
+      { x=ex,    y=ey+8, w_face = exit_face },
+      { x=ex+32, y=ey+8 },
+    },
+    -2000, f_h+12+16)
+  end
+end
+
+
 function make_small_exit(R)
 
   assert(#R.conns == 1)
@@ -2706,7 +2789,11 @@ end
       })
     elseif S.is_exit then
 
-      make_exit_pillar(S, z1)
+      if R.outdoor then
+        make_outdoor_exit_switch(S, 4, z1)
+      else
+        make_exit_pillar(S, z1)
+      end
 
     elseif S.room and S.room.kind ~= "scenic" and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
