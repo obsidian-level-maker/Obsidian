@@ -2789,8 +2789,11 @@ end
       })
     elseif S.is_exit then
 
+      local CS = R.conns[1]:seed(R)
+      local dir = assert(CS.conn_dir)
+
       if R.outdoor then
-        make_outdoor_exit_switch(S, 4, z1)
+        make_outdoor_exit_switch(S, dir, z1)
       else
         make_exit_pillar(S, z1)
       end
