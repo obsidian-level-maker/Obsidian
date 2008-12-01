@@ -2287,6 +2287,9 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
 end
 
 
+---==========================================================---
+
+
 function Builder()
 
   local function do_teleporter(S)

@@ -19,9 +19,9 @@
 
 OB_MODULES["dm_equip_doom"] =
 {
-  label = "DM Equipment",
+  label = "DM Equipment (DOOM)",
 
-  for_games = { doom2=1, doom1=1 },
+  for_games = { doom2=1, doom1=1, freedoom=1 },
   for_modes = { dm=1, ctf=1 },
 
   -- TODO: hook functions !!!
