@@ -33,11 +33,50 @@ function Doom_generate_skies()
     4
   }
 
-  gui.set_colormap(1, STAR_COLS)
+  local GREY_CLOUDS =
+  {
+    106,104,102,100,
+    98,96,94,92,90,
+    88,86,84,82,80
+  }
 
-  for _,sky in ipairs(sky_list) do
+  local HELL_CLOUDS =
+  {
+    188,185,184,183,182,181,180,
+    179,178,177,176,175,174,173
+  }
+
+  local BLUE_CLOUDS =
+  {
+    245,245,244,244,243,242,241,
+    240,206,205,204,204,203,203
+  }
+
+  local BROWN_HILLS =
+  {
+    0, 2, 1,
+    79, 77, 75, 73, 70, 67, 64,
+  }
+
+  local GREEN_HILLS =
+  {
+    0, 7,
+    127, 126, 125, 124, 123, 122, 120, 118, 116, 113
+  }
+
+  local HELL_HILLS =
+  {
+    0, 6,
+    47, 45, 43, 41, 39, 37, 35, 33
+  }
+
+  gui.set_colormap(1, BLUE_CLOUDS)
+  gui.set_colormap(2, GREEN_HILLS)
+
+  for num,sky in ipairs(sky_list) do
     gui.fsky_create(256, 128, sky.test)
-    gui.fsky_add_hills { seed=sky.test, min_h=-0.2, fracdim=1.8 }
+    gui.fsky_add_clouds { seed=num+1, colmap=1, squish=2.0 }
+    gui.fsky_add_hills  { seed=num+5, colmap=2 }
     gui.fsky_write(sky.patch)
   end
 end
