@@ -40,6 +40,12 @@
 #include "tx_skies.h"
 
 
+static byte *sky_pixels;
+static int sky_W;
+static int sky_H;
+static int sky_final_W;
+
+
 #define CUR_PIXEL(py)  (pixels[((py) % H) * W])
 
 static void AddPost(qLump_c *lump, int y, int len,
@@ -261,6 +267,84 @@ static void LogoTest1()
 
   delete lump;
   delete[] pixels;
+}
+
+
+int DM_fsky_create(lua_State *L)
+{
+  // LUA: fsky_create(width, height, bg_col)
+
+  int W  = luaL_checkint(L, 1);
+  int H  = luaL_checkint(L, 2);
+  int bg = luaL_checkint(L, 3);
+
+  sky_final_W = W;
+
+  if (W != 256)
+    return luaL_argerror(L, 1, "bad width");
+
+  if (H < 128 || H > 256)
+    return luaL_argerror(L, 2, "bad height");
+
+  if (sky_pixels && ! (sky_W == W && sky_H == H))
+    delete[] sky_pixels;
+
+  if (! sky_pixels)
+  {
+    sky_W = W;
+    sky_H = H;
+
+    sky_pixels = new byte[sky_W * sky_H];
+  }
+
+  memset(sky_pixels, bg, sky_W * sky_H);
+
+  return 0;
+}
+
+int DM_fsky_write(lua_State *L)
+{
+  // LUA: fsky_write(patch)
+
+  const char *patch = luaL_checkstring(L, 1);
+ 
+  SYS_ASSERT(sky_pixels);
+
+  qLump_c *lump = DM_CreatePatch(sky_final_W, sky_H, 0, 0,
+                                 sky_pixels, sky_W, sky_H);
+
+  DM_AddPatch(patch, lump);
+
+  return 0;
+}
+
+int DM_fsky_solid_box(lua_State *L)
+{
+  // LUA: fsky_solid_box(x, y, w, h, col)
+
+  int x1 = luaL_checkint(L, 1);
+  int y1 = luaL_checkint(L, 2);
+  int x2 = x1 + luaL_checkint(L, 3);
+  int y2 = y1 + luaL_checkint(L, 4);
+
+  int col = luaL_checkint(L, 5);
+
+  SYS_ASSERT(sky_pixels);
+
+  // clip box to pixel rectangle
+  x1 = MAX(x1, 0);
+  y1 = MAX(y1, 0);
+
+  x2 = MIN(x2, sky_W);
+  y2 = MIN(y2, sky_H);
+  
+  for (int y = y1; y < y2; y++)
+  {
+    if (x2 > x1)
+      memset(& sky_pixels[y*sky_W + x1], col, (x2-x1));
+  }
+
+  return 0;
 }
 
 

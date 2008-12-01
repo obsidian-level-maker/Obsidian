@@ -209,6 +209,10 @@ function Level_MakeAll()
      HOOKS.remap_music()
   end
 
+  if HOOKS.generate_skies then
+     HOOKS.generate_skies()
+  end
+
   return "ok"
 end
 
