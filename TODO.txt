@@ -451,6 +451,10 @@ Pipe Dreams:
       5080 = "Blue Start"      
       5081 = "Red Start"
 
+-  Rooms that lock you in and you have to find the switch on
+   the other side of the room to get out.  All "normal" exits
+   would be closed off by a line trigger near the entry way.
+
 -  Pop-up Traps
    you make a sector, lower it enough so monsters cannot see
    the player but are facing him when it springs. The trap walls have
