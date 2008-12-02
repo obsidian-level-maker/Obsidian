@@ -39,6 +39,7 @@
 bool wad_hexen;  // FIXME: not global
 
 static std::vector<qLump_c *> patch_lumps;
+static std::vector<qLump_c *> flat_lumps;
 
 static qLump_c *thing_lump;
 static qLump_c *vertex_lump;
@@ -200,6 +201,47 @@ static void DM_OldWritePatches()
 }
 
 
+static void ClearFlats()
+{
+  for (unsigned int i = 0; i < flat_lumps.size(); i++)
+  {
+    delete flat_lumps[i];
+    flat_lumps[i] = NULL;
+  }
+
+  flat_lumps.clear();
+}
+
+void DM_AddFlat(const char *name, qLump_c *lump)
+{
+  lump->SetName(name);
+
+  flat_lumps.push_back(lump);
+}
+
+static void WriteFlats()
+{
+  if (flat_lumps.size() == 0)
+    return;
+
+  DM_WriteLump("FF_START", NULL, 0);
+
+  for (unsigned int i = 0; i < flat_lumps.size(); i++)
+  {
+    qLump_c *lump = flat_lumps[i];
+
+    DM_WriteLump(lump->GetName(), lump);
+  }
+
+  // must end with F_END (a single 'F') to be compatible
+  // with vanilla doom.
+  DM_WriteLump("F_END", NULL, 0);
+
+  ClearFlats();
+}
+
+
+
 static void CreateInfoLump()
 {
   qLump_c *L = new qLump_c();
@@ -246,6 +288,7 @@ bool DM_StartWAD(const char *filename)
   wad_hexen = false;
 
   ClearPatches();
+  ClearFlats();
 
   CreateInfoLump();
 
@@ -259,11 +302,12 @@ bool DM_StartWAD(const char *filename)
 
 bool DM_EndWAD(void)
 {
+  WriteFlats();
+  WritePatches();
+
   BEX_Finish();
   DDF_Finish();
   DED_Finish();
-
-  WritePatches();
 
   // FIXME: errors????
   WAD_CloseWrite();

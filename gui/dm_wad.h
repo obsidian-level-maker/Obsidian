@@ -30,6 +30,7 @@ void DM_EndLevel(const char *level_name);
 
 void DM_WriteLump(const char *name, qLump_c *lump);
 void DM_AddPatch (const char *name, qLump_c *lump);
+void DM_AddFlat  (const char *name, qLump_c *lump);
 
 
 void DM_AddVertex(int x, int y);

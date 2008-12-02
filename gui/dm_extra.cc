@@ -138,6 +138,22 @@ qLump_c * DM_CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
 
 #undef CUR_PIXEL
 
+qLump_c * DM_CreateFlat(int new_W, int new_H, const byte *pixels, int W, int H)
+{
+  qLump_c *lump = new qLump_c();
+ 
+  for (int y = 0; y < new_H; y++)
+  for (int x = 0; x < new_W; x += W)
+  {
+    int span = MIN(W, new_W - x);
+
+    SYS_ASSERT(span > 0);
+
+    lump->Append(& pixels[y*W + x], span);
+  }
+
+  return lump;
+}
 
 static void SkyTest2()
 {
@@ -268,6 +284,87 @@ static void LogoTest1()
 
   delete lump;
   delete[] pixels;
+}
+
+int DM_wad_logo_gfx(lua_State *L)
+{
+  // LUA: wad_logo_gfx(lump, kind, image, W, H, colmap)
+
+  const char *patch = luaL_checkstring(L, 1);
+  const char *kind  = luaL_checkstring(L, 2);
+  const char *image = luaL_checkstring(L, 3);
+
+  bool is_flat = false;
+
+  if (strchr(kind, 'p'))
+    {} /* patch */
+  else if (strchr(kind, 'f'))
+    is_flat = true;
+  else
+    return luaL_argerror(L, 2, "unknown kind");
+
+  int new_W  = luaL_checkint(L, 4);
+  int new_H  = luaL_checkint(L, 5);
+  int map_id = luaL_checkint(L, 6);
+
+  if (new_W < 1) return luaL_argerror(L, 4, "bad width");
+  if (new_H < 1) return luaL_argerror(L, 5, "bad height");
+
+  if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    return luaL_argerror(L, 6, "colmap value out of range");
+
+
+  // find the requested image (TODO: look in a table)
+  const logo_image_t *logo = NULL;
+
+  if (StringCaseCmp(image, logo_BOLT.name) == 0)
+    logo = &logo_BOLT;
+  else if (StringCaseCmp(image, logo_PILL.name) == 0)
+    logo = &logo_PILL;
+  else if (StringCaseCmp(image, logo_CARVE.name) == 0)
+    logo = &logo_CARVE;
+  else if (StringCaseCmp(image, logo_RELIEF.name) == 0)
+    logo = &logo_RELIEF;
+  else
+    return luaL_argerror(L, 3, "unknown image name");
+
+
+  // colorize logo
+  color_mapping_t *map = &color_mappings[map_id-1];
+
+  if (map->size < 2)
+    return luaL_error(L, "wad_logo_gfx: colormap too small");
+
+  byte *pixels = new byte[logo->width * logo->height];
+  byte *p_end = pixels + (logo->width * logo->height);
+
+  const byte *src = logo->data;
+
+  for (byte *dest = pixels; dest < p_end; dest++, src++)
+  {
+    int idx = ((*src) * map->size) >> 8;
+
+    *dest = map->colors[idx];
+  }
+  
+
+  // splosh it into the wad
+  if (is_flat)
+  {
+    qLump_c *lump = DM_CreateFlat(new_W, new_H,
+                       pixels, logo->width, logo->height);
+    DM_AddFlat(patch, lump);
+  }
+  else
+  {
+    qLump_c *lump = DM_CreatePatch(new_W, new_H, 0, 0,
+                       pixels, logo->width, logo->height);
+    DM_AddPatch(patch, lump);
+  }
+
+  delete[] pixels;
+
+  return 0;
 }
 
 
@@ -646,9 +743,9 @@ static void CreateNamePatch(const char *patch, const char *text,
   delete[] pixels;
 }
 
-int DM_make_name_gfx(lua_State *L)
+int DM_wad_name_gfx(lua_State *L)
 {
-  // LUA: make_name_gfx(patch, text, colmap)
+  // LUA: wad_name_gfx(patch, text, colmap)
 
   const char *patch = luaL_checkstring(L, 1);
   const char *text  = luaL_checkstring(L, 2);

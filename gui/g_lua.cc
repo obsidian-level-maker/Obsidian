@@ -410,7 +410,8 @@ extern int CSG2_add_entity(lua_State *L);
 
 extern int WF_wolf_block(lua_State *L);
 
-extern int DM_make_name_gfx(lua_State *L);
+extern int DM_wad_name_gfx(lua_State *L);
+extern int DM_wad_logo_gfx(lua_State *L);
 
 extern int DM_fsky_create(lua_State *L);
 extern int DM_fsky_write(lua_State *L);
@@ -462,7 +463,8 @@ static const luaL_Reg gui_script_funcs[] =
   { "wolf_block",  WF_wolf_block },
 
   // Doom/Heretic/Hexen functions
-  { "make_name_gfx",   DM_make_name_gfx  },
+  { "wad_name_gfx",   DM_wad_name_gfx  },
+  { "wad_logo_gfx",   DM_wad_logo_gfx  },
 
   { "fsky_create",      DM_fsky_create },
   { "fsky_write",       DM_fsky_write },
