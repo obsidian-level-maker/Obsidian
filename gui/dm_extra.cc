@@ -286,6 +286,23 @@ static void LogoTest1()
   delete[] pixels;
 }
 
+static byte * Flat_Realign(const byte *pixels, int W, int H, int dx=32, int dy=32)
+{
+  byte *new_pix = new byte[W * H];
+
+  for (int y = 0; y < H; y++)
+  for (int x = 0; x < W; x++)
+  {
+    int nx = (x + dx + W) % W;
+    int ny = (y + dy + H) % H;
+
+    new_pix[ny*W + nx] = pixels[y*W + x];
+  }
+
+  return new_pix;
+}
+
+
 int DM_wad_logo_gfx(lua_State *L)
 {
   // LUA: wad_logo_gfx(lump, kind, image, W, H, colmap)
@@ -295,13 +312,17 @@ int DM_wad_logo_gfx(lua_State *L)
   const char *image = luaL_checkstring(L, 3);
 
   bool is_flat = false;
+  bool realign = false;
 
   if (strchr(kind, 'p'))
-    {} /* patch */
+    is_flat = false;
   else if (strchr(kind, 'f'))
     is_flat = true;
   else
     return luaL_argerror(L, 2, "unknown kind");
+
+  if (strchr(kind, 'm'))
+    realign = true;
 
   int new_W  = luaL_checkint(L, 4);
   int new_H  = luaL_checkint(L, 5);
@@ -347,6 +368,14 @@ int DM_wad_logo_gfx(lua_State *L)
     *dest = map->colors[idx];
   }
   
+
+  if (realign)
+  {
+    byte *new_pix = Flat_Realign(pixels, logo->width, logo->height);
+
+    delete[] pixels;
+    pixels = new_pix;
+  }
 
   // splosh it into the wad
   if (is_flat)
