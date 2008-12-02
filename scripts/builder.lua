@@ -2786,10 +2786,25 @@ end
     if S.sy == R.sy2 then my = my - 48 end
 
     if S.is_start then
-      gui.add_entity(mx, my, z1 + 25,
+      gui.add_entity(mx, my, z1 + 35,
       {
         name = tostring(GAME.things["player1"].id)
       })
+
+      gui.add_brush(
+      {
+        t_face = { texture="O_BLT2EM" },
+        b_face = { texture="O_BLT2EM" },
+        w_face = { texture="BLAKWAL2", peg=true, y_offset=0 },
+      },
+      {
+        { x=mx-32, y=my-32 },
+        { x=mx-32, y=my+32 },
+        { x=mx+32, y=my+32 },
+        { x=mx+32, y=my-32 },
+      },
+      -2000, z1+8)
+
     elseif S.is_exit then
 
       local CS = R.conns[1]:seed(R)

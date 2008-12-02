@@ -97,7 +97,7 @@ function Seed_init(W, H, D)
 
       set_class(S, SEED_CLASS)
 
-      for side = 2,8,2 do S.thick[side] = 32 end
+      for side = 2,8,2 do S.thick[side] = 16 end
 
       SEEDS[x][y][z] = S
     end
