@@ -3324,7 +3324,11 @@ function Doom_make_level_gfx()
 
   gui.set_colormap(1, GAME.level_gfx_colors)
 
-  gui.make_name_gfx(LEVEL.patch, LEVEL.description, 1)
+  gui.wad_name_gfx(LEVEL.patch, LEVEL.description, 1)
+
+
+-- gui.set_colormap(1, DM_LEVEL_GFX_COLORS.silver)
+-- gui.wad_logo_gfx("OBL_LOG1", "f", "BOLT", 64,64, 1)
 end
 
 function Doom_describe_levels()
@@ -3456,6 +3460,7 @@ UNFINISHED["doom1"] =
     infighting = true,
 
     pack_sidedefs = true,
+    custom_flats = true,
   },
 
   params =

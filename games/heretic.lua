@@ -1687,6 +1687,8 @@ UNFINISHED["heretic"] =
     infighting  =  true,
     prefer_stairs = true,
     noblaze_door = true,
+
+    custom_flats = true,
   },
 
   params =

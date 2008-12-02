@@ -1783,6 +1783,7 @@ OB_GAMES["doom2"] =
     infighting = true,
 
     pack_sidedefs = true,
+    custom_flats = true,
   },
 
   params =
