@@ -111,8 +111,8 @@ class LAYOUT
            'L' 'F' 'T' 'J' : stair (turning 90 degrees)
            '/' '\'         : diagonal wall
 
-  on_conn  -- true if sitting on a connection.
-              Can be different from 'S.conn' due to mirroring.
+  conn_dirs[DIR]  -- true if sitting on a connection 
+                  -- (possibly mirrored) towards DIR
  
   on_path  -- true if seed is part of main path(s) through room
 
@@ -261,16 +261,33 @@ end
 
 function dump_layout(R)
 
+  local function valid_T(x, y)
+    if x < R.tx1 or x > R.tx2 or y < R.ty1 or y > R.ty2 then
+      return false
+    end
+    return true
+  end
+
   local function outside_seed(x, y)
+    for dir = 2,8,2 do
+      local sx, sy = nudge_coord(x, y, dir)
+      if valid_T(sx, sy) then
+        local T = SEEDS[sx][sy][1]
+        if T.conn_dirs and T.conn_dirs[10-dir] then
+          return '*'
+        end
+      end
+    end
+      
     for _,C in ipairs(R.conns) do
       local S = C:seed(R)
       local ox, oy = nudge_coord(S.sx, S.sy, S.conn_dir)
       if ox == x and oy == y then
-        return "+"
+        return '+'
       end
     end
 
-    return " "
+    return ' '
   end
 
   local function inside_seed(x, y)
@@ -281,7 +298,7 @@ function dump_layout(R)
       return S.layout.char
     end
 
-    return "."
+    return '.'
   end
 
 
@@ -718,13 +735,18 @@ function Layout_Indoor(R)
       return
     end
 
-    local tdir = 10 - S.conn_dir
+    local T = SEEDS[tx][ty][1]
+
+    local tdir = S.conn_dir
 
     if flip_x and is_horiz(tdir) then tdir = 10 - tdir end
     if flip_y and is_vert(tdir)  then tdir = 10 - tdir end
 
 -- gui.debugf("  try_add_conn: S @ (%d,%d)  T @ (%d,%d)\n", S.sx,S.sy, tx,ty)
-    local T = SEEDS[tx][ty][1]
+
+    if not T.conn_dirs then T.conn_dirs = {} end
+
+    T.conn_dirs[tdir] = true
 
 --  dump_layout(R)
 
@@ -1131,6 +1153,26 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
    error("ensure_mirror_y_traversible FAILED!!")
   end
 
+  local function try_junk_side(side)
+    local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+      if S.layout then
+        if S.layout.char ~= '#' then
+          return -- not possible
+        end
+      end
+    end end -- for x,y
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+      if not S.layout then
+        S.layout = { char='#' }
+      end
+    end end -- for x,y
+  end
+
 
   ---| Layout_Indoor |---
 
@@ -1208,12 +1250,33 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
   end end -- for x,y
 
 
+  gui.debugf("BARE LAYOUT:\n")
+  dump_layout(R);
+
+
+  if R.purpose then
+    -- TODO !!!!  select seed(s) for purpose
+  end
+
+
+  -- TODO: boundary shape
+  local j_sides = { 2,8, 4,6 }
+  if R.tw > R.th then j_sides = { 4,6, 2,8 } end
+
+  for _,side in ipairs(j_sides) do
+    try_junk_side(side)
+  end
+
+
   -- TODO: fill holes
 
   -- TEMP JUNK !!!
   for loop = 1,6 do
   for x = R.tx1,R.tx2 do for y = R.ty1,R.ty2 do
     local S = SEEDS[x][y][1]
+---#    if not S.layout then
+---#      S.layout = { char = '%' }
+---#    end
     if not S.layout then
 --    S.layout_char = "%"
       local sides = { 2,4,6,8 }
@@ -1236,7 +1299,11 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
   end -- for loop
 
 
-  -- TODO: boundary shape
+  -- kill the conn_dirs before expanding the layout
+  -- (merely to aid debugging)
+  for x = R.tx1,R.tx2 do for y = R.ty1,R.ty2 do
+    SEEDS[x][y][1].conn_dirs = nil
+  end end
 
 
   if new_w < old_w then
