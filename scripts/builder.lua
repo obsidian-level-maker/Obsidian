@@ -120,6 +120,19 @@ function get_transform_for_seed_side(S, side)
   return T, PARAMS.seed_size, S.thick[side]
 end
 
+function get_transform_for_seed_center(S)
+  
+  local T = { }
+
+  T.dx = S.x1 + S.thick[4]
+  T.dy = S.y1 + S.thick[8]
+
+  local long = S.x2 - S.thick[6] - T.dx
+  local deep = S.y2 - S.thick[8] - T.dy
+
+  return T, long, deep
+end
+
 
 function get_wall_coords(S, side)
   assert(side ~= 5)
@@ -1898,6 +1911,51 @@ function make_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
 end
 
 
+function make_popup_trap(S, z1, skin, combo)
+
+  local info =
+  {
+    t_face = { texture=combo.floor },
+    b_face = { texture=combo.floor },
+    w_face = { texture=combo.wall  },
+  }
+
+  for side = 2,8,2 do
+    S.thick[side] = S.thick[side] + 4
+
+    local T, long, deep = get_transform_for_seed_side(S, side)
+
+    transformed_brush(T, info,
+    {
+      { x=0,    y=0 },
+      { x=0,    y=deep, w_face={ texture="-" } },
+      { x=long, y=deep },
+      { x=long, y=0 },
+    },
+    -2000, z1)
+  end
+
+  z1 = z1 - 384
+
+  local tag = PLAN:alloc_tag()
+
+  local T, long, deep = get_transform_for_seed_center(S)
+
+  info.sec_tag = tag
+
+  transformed_brush(T, info,
+  {
+    { x=0,    y=0,    line_kind=19, line_tag=tag },
+    { x=0,    y=deep, line_kind=19, line_tag=tag },
+    { x=long, y=deep, line_kind=19, line_tag=tag },
+    { x=long, y=0,    line_kind=19, line_tag=tag },
+  },
+  -2000, z1)
+
+  gui.add_entity(T.dx + long/2, T.dy + deep/2, z1+25, { name="66" })
+end
+
+
 function build_stairwell(R)
 
   local function build_stairwell_90(R)
@@ -2543,11 +2601,11 @@ gui.printf("do_teleport\n")
       if S.borders[side] and S.borders[side].kind == "solid"
 ---      and not could_lose_wall
       then
-        make_wall(S, side, f_tex, w_tex)
+        -- make_wall(S, side, f_tex, w_tex)
 
         --!!!! TEST: make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
 
-        --!!!! TEST: make_window(S, side, 128, z1+64, z2-32, f_tex, w_tex)
+        make_window(S, side, 208, z1+64, z2-32, f_tex, w_tex)
       end
 
       if S.borders[side] and S.borders[side].kind == "fence"
@@ -2654,13 +2712,13 @@ if S.layout and S.layout.char == '#' then
       { x=x1, y=y1 }, { x=x1, y=y2 },
       { x=x2, y=y2 }, { x=x2, y=y1 },
     },
-    -2000, 2000);
-elseif S.layout and S.layout.char == "%" then
+    2000, 2000);
+elseif S.layout and S.layout.char == '%' then
     gui.add_brush(
     {
-      t_face = { texture="FWATER1" },
+      t_face = { texture="NUKAGE1" },
       b_face = { texture=f_tex },
-      w_face = { texture="FIREMAG1" },
+      w_face = { texture="SFALL1" },
     },
     {
       { x=x1, y=y1 }, { x=x1, y=y2 },
@@ -2679,6 +2737,7 @@ elseif S.layout and S.layout.char == "%" then
       { x=x2, y=y2 }, { x=x2, y=y1 },
     },
     256, 2000);
+
 else
 
 local CH = S.layout and S.layout.char
@@ -2710,8 +2769,11 @@ elseif CH == "L" or CH == "J" or
 ---###     do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, S.layout.stair_z1, S.layout.stair_z2)
    end
 
-elseif S.layout and S.layout.char == '=' then
+elseif CH == '=' then
   make_lift(S, x1,y1, x2,y2, assert(S.layout.lift_h))
+
+elseif CH == '!' then
+  make_popup_trap(S, z1, {}, S.room.combo)
 
 else
     gui.add_brush(

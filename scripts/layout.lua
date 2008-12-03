@@ -1168,7 +1168,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
       if not S.layout then
-        S.layout = { char='#' }
+        S.layout = { char='!' }  --!!!!
       end
     end end -- for x,y
   end
