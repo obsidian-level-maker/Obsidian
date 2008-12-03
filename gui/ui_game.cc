@@ -35,8 +35,8 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   end(); // cancel begin() in Fl_Group constructor
  
   box(FL_THIN_UP_BOX);
-//  align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
-  color(BUILD_BG, BUILD_BG); //!!!!
+
+  color(BUILD_BG, BUILD_BG);
 
   int cy = y + 6;
 

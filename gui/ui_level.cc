@@ -38,8 +38,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
  
   box(FL_THIN_UP_BOX);
 
-//  box(FL_FLAT_BOX); //!!!!
-  color(BUILD_BG, BUILD_BG); //!!!!
+  color(BUILD_BG, BUILD_BG);
 
 
   int cy = y + 6;

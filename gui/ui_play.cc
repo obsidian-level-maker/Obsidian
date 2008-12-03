@@ -39,7 +39,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
  
   box(FL_THIN_UP_BOX);
 
-  color(BUILD_BG, BUILD_BG); //!!!!
+  color(BUILD_BG, BUILD_BG);
 
 
   int cy = y + 6;
