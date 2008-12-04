@@ -241,6 +241,14 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
   local N = S:neighbor(side)
   assert(N)
 
+  local o_tex = w_tex
+  if not N.room.outdoor and N.room.kind ~= "hallway" then
+    o_tex = N.room.combo.wall
+  end
+  if S.room.kind == "hallway" then
+    w_tex = o_tex
+  end
+
   local N_deep = N.thick[10-side]
 
   local T, long, deep = get_transform_for_seed_side(S, side)
@@ -267,6 +275,9 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
 
   transformed_brush(T, arch_info, frame_coords, z_top, 2000)
 
+  local break_tex = w_tex
+  if o_tex ~= w_tex then break_tex = "LITE5" end
+
   for pass = 1,2 do
     if pass == 2 then T.mirror_x = mx end
 
@@ -275,9 +286,9 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
       { x=0,     y=-N_deep },
       { x=0,     y=deep },
       { x=24+16, y=deep },
-      { x=36+16, y=deep-16 },
-      { x=36+16, y=-N_deep+16 },
-      { x=24+16, y=-N_deep },
+      { x=36+16, y=deep-16,    w_face= {texture=break_tex} },
+      { x=36+16, y=-N_deep+16, w_face= {texture=o_tex} },
+      { x=24+16, y=-N_deep,    w_face= {texture=o_tex} },
     },
     -2000, 2000)
   end
