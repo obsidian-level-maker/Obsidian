@@ -1924,6 +1924,89 @@ function make_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
 end
 
 
+function make_pedestal(S, z1)
+  local mx = int((S.x1+S.x2) / 2)
+  local my = int((S.y1+S.y2) / 2)
+
+  gui.add_brush(
+  {
+    t_face = { texture="O_BLT2EM" },
+    b_face = { texture="O_BLT2EM" },
+    w_face = { texture="BLAKWAL2", peg=true, y_offset=0 },
+  },
+  {
+    { x=mx-32, y=my-32 },
+    { x=mx-32, y=my+32 },
+    { x=mx+32, y=my+32 },
+    { x=mx+32, y=my-32 },
+  },
+  -2000, z1+8)
+end
+
+function make_raising_start(S, face_dir, z1, combo)
+
+  local info =
+  {
+    t_face = { texture=combo.floor },
+    b_face = { texture=combo.floor },
+    w_face = { texture=combo.wall  },
+  }
+
+  local sw_tex = "SW1COMP"
+  local sw_face =
+  {
+    texture=sw_tex,
+    peg=true,
+    x_offset=0,
+    y_offset=0,
+  }
+
+  local tag = PLAN:alloc_tag()
+
+  for side = 2,8,2 do
+    S.thick[side] = S.thick[side] + 4
+
+    local T, long, deep = get_transform_for_seed_side(S, side)
+
+    local mx = int(long / 2)
+
+    if side == face_dir then
+      transformed_brush(T, info,
+      {
+        { x=0,     y=0 },
+        { x=0,     y=deep },
+        { x=mx-32, y=deep, w_face=sw_face, line_kind=18, line_tag=tag  },
+        { x=mx+32, y=deep },
+        { x=long,  y=deep },
+        { x=long,  y=0 },
+      },
+      -2000, z1)
+    
+    else
+      transformed_brush(T, info,
+      {
+        { x=0,    y=0 },    { x=0,    y=deep },
+        { x=long, y=deep }, { x=long, y=0 },
+      },
+      -2000, z1)
+    end
+  end
+
+  z1 = z1 - 128
+
+  local T, long, deep = get_transform_for_seed_center(S)
+
+  info.sec_tag = tag
+
+  transformed_brush(T, info,
+  {
+    { x=0,    y=0,   }, { x=0,    y=deep },
+    { x=long, y=deep }, { x=long, y=0,   },
+  },
+  -2000, z1)
+end
+
+
 function make_popup_trap(S, z1, skin, combo)
 
   local info =
@@ -2792,7 +2875,8 @@ elseif CH == '=' then
 elseif CH == '!' then
   make_popup_trap(S, z1, {}, S.room.combo)
 
-else
+elseif
+not S.is_start then --!!!!
     gui.add_brush(
     {
       t_face = { texture=f_tex },
@@ -2870,19 +2954,9 @@ end
         name = tostring(GAME.things["player1"].id)
       })
 
-      gui.add_brush(
-      {
-        t_face = { texture="O_BLT2EM" },
-        b_face = { texture="O_BLT2EM" },
-        w_face = { texture="BLAKWAL2", peg=true, y_offset=0 },
-      },
-      {
-        { x=mx-32, y=my-32 },
-        { x=mx-32, y=my+32 },
-        { x=mx+32, y=my+32 },
-        { x=mx+32, y=my-32 },
-      },
-      -2000, z1+8)
+      -- make_pedestal(S, z1)
+
+      make_raising_start(S, 6, z1, R.combo)
 
     elseif S.is_exit then
 
