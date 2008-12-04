@@ -204,6 +204,20 @@ gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
       end
     end
   end -- for R
+
+  -- we don't need archways where two hallways connect
+  for _,C in ipairs(PLAN.all_conns) do
+    if C.src.kind == "hallway" and C.dest.kind == "hallway" then
+      local S = C.src_S
+      local T = C.dest_S
+      local dir = S.conn_dir
+
+      if S.border[S.conn_dir].kind == "arch" then
+        S.border[S.conn_dir].kind = nil
+        T.border[10-S.conn_dir].kind = nil
+      end
+    end
+  end -- for C
 end
 
 

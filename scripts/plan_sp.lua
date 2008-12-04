@@ -1036,40 +1036,30 @@ function Plan_MakeSeeds()
   local function border_up(R)
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y][1]
+      assert(S.room == R)
       for dir = 2,8,2 do
-        local nx, ny = nudge_coord(x, y, dir)
-        local N
-        if Seed_valid(nx, ny, 1) then
-          N = SEEDS[nx][ny][1]
-          assert(N)
-        end
+        local N = S:neighbor(dir)
 
-        if not N then
-          if S.room and not S.room.outdoor then
-            S.borders[dir] = { kind="solid" }
-          else
-            S.borders[dir] = { kind="skyfence" }
+        if not N then  -- edge of map
+          if S.room.outdoor then
+            S.border[dir].kind = "skyfence"
             S.thick[dir] = 48
+          else
+            S.border[dir].kind = "wall"
+            S.border[dir].can_fake_sky = true
+            S.thick[dir] = 24
           end
 
         elseif N.room == R then
-          -- same room, do nothing
-          
-        elseif R.kind == "indoor" then
-          S.borders[dir] = { kind="solid" }
+          -- same room : do nothing
+         
+        elseif R.outdoor then
+          S.border[dir].kind = "fence"
 
----#    elseif N.room and N.room.nowalk then
----#      -- deadly lava, nothing needed
-
---[[
-        elseif N.room and (N.room.kind == R.kind) and
-               (R.kind == "ground" or R.kind == "valley" or R.kind == "hill")
-        then
-          -- same outdoor area, do nothing
-          -- FIXME: ONLY DO IT FOR C.src/C.dest and not C.lock
---]]
         else
-          S.borders[dir] = { kind="fence" }
+          -- Note: windows (etc) are decided later
+          S.border[dir].kind = "wall"
+          S.thick[dir] = 24
         end
       end
     end end -- for x, y
@@ -1082,13 +1072,14 @@ function Plan_MakeSeeds()
         -- skip different room
       else
         for dir = 2,8,2 do
-          local nx, ny = nudge_coord(x, y, dir)
-          if not Seed_valid(nx, ny, 1) then
+          local N = S:neighbor(dir)
+          if not N then
             if S.room.outdoor then
-              S.borders[dir] = { kind="skyfence" }
+              S.border[dir].kind = "skyfence"
               S.thick[dir] = 48
             else
-              S.borders[dir] = { kind="solid" }
+              S.border[dir].kind = "wall"
+              S.thick[dir] = 24
             end
           end
         end -- for dir

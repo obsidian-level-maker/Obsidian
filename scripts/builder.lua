@@ -238,15 +238,14 @@ end
 
 function make_archway(S, side, z1, z2, f_tex, w_tex)
 
-  local z_top = math.max(int((z1+z2) / 2), z1+128)
-  if z_top > z2-16 then z_top = z2-16 end
+  local N = S:neighbor(side)
+  assert(N)
 
-  local DY = 32
+  local N_deep = N.thick[10-side]
 
   local T, long, deep = get_transform_for_seed_side(S, side)
 
   local mx = int(long / 2)
-  local my = 0
 
   local arch_info =
   {
@@ -257,11 +256,14 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
 
   local frame_coords =
   {
-    { x=0,    y=my-DY },
-    { x=0,    y=my+DY },
-    { x=long, y=my+DY },
-    { x=long, y=my-DY },
+    { x=0,    y=-N_deep },
+    { x=0,    y=deep },
+    { x=long, y=deep },
+    { x=long, y=-N_deep },
   }
+
+  local z_top = math.max(int((z1+z2) / 2), z1+128)
+  if z_top > z2-16 then z_top = z2-16 end
 
   transformed_brush(T, arch_info, frame_coords, z_top, 2000)
 
@@ -270,12 +272,12 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
 
     transformed_brush(T, arch_info,
     {
-      { x=0, y=my-DY },
-      { x=0, y=my+DY },
-      { x=24+16, y=my+DY },
-      { x=36+16, y=my+DY/2 },
-      { x=36+16, y=my-DY/2 },
-      { x=24+16, y=my-DY },
+      { x=0,     y=-N_deep },
+      { x=0,     y=deep },
+      { x=24+16, y=deep },
+      { x=36+16, y=deep-16 },
+      { x=36+16, y=-N_deep+16 },
+      { x=24+16, y=-N_deep },
     },
     -2000, 2000)
   end
@@ -2577,9 +2579,11 @@ gui.printf("do_teleport\n")
     for side = 2,8,2 do
       local N = S:neighbor(side)
 
+      local B_kind = S.border[side].kind
+
       -- hallway hack
       if R.kind == "hallway" and not (S.layout and S.layout.char == '#') and
-         ( (S.borders[side] and S.borders[side].kind == "solid")
+         ( (B_kind == "wall")
           or
            (S:neighbor(side) and S:neighbor(side).room == R and
             S:neighbor(side).layout and
@@ -2588,7 +2592,8 @@ gui.printf("do_teleport\n")
       then
         make_detailed_hall(S, side, z1, z2)
 
-        S.borders[side] = nil
+        S.border[side].kind = nil
+        B_kind = nil
       end
 
       local could_lose_wall =
@@ -2598,7 +2603,7 @@ gui.printf("do_teleport\n")
             not (S.room.hallway or N.room.hallway) and
             not (S.room.purpose or N.room.purpose)
 
-      if S.borders[side] and S.borders[side].kind == "solid"
+      if B_kind == "wall"
 ---      and not could_lose_wall
       then
         -- make_wall(S, side, f_tex, w_tex)
@@ -2608,27 +2613,27 @@ gui.printf("do_teleport\n")
         make_window(S, side, 208, z1+64, z2-32, f_tex, w_tex)
       end
 
-      if S.borders[side] and S.borders[side].kind == "fence"
+      if B_kind == "fence"
          and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
       then
 
         make_fence(S, side, R.floor_h, f_tex, w_tex)
       end
 
-      if S.borders[side] and S.borders[side].kind == "arch" then
+      if B_kind == "arch" then
         make_archway(S, side, z1, z2, f_tex, w_tex) 
       end
 
-      if S.borders[side] and S.borders[side].kind == "skyfence" then
+      if B_kind == "skyfence" then
         make_sky_fence(S, side)
       end
 
-      if S.borders[side] and S.borders[side].kind == "lock_door" and
+      if B_kind == "lock_door" and
          not (S.conn and S.conn.already_made_lock)
       then
         local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
                             "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
-        local key_tex = LOCK_TEXS[S.borders[side].key_item] or "METAL"
+        local key_tex = LOCK_TEXS[S.border[side].key_item] or "METAL"
 gui.printf("ADDING LOCK DOOR %s\n", w_tex)
         make_locked_door(S, side, z1, key_tex)
       end

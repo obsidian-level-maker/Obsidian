@@ -24,7 +24,7 @@ class SEED
 
   room : ROOM
 
-  borders[DIR] : BORDER
+  border[DIR] : BORDER
 
   thick[DIR]  -- thickness of each border
 
@@ -42,7 +42,6 @@ class BORDER
 
   other : SEED  -- seed we are connected to, or nil 
 
-  rlink : RLINK
 }
 
 --------------------------------------------------------------]]
@@ -91,13 +90,16 @@ function Seed_init(W, H, D)
         x1 = x * SIZE, x2 = (x+1) * SIZE,
         y1 = y * SIZE, y2 = (y+1) * SIZE,
 
-        thick   = {},
-        borders = {},
+        thick  = {},
+        border = {},
       }
 
       set_class(S, SEED_CLASS)
 
-      for side = 2,8,2 do S.thick[side] = 16 end
+      for side = 2,8,2 do
+        S.border[side] = {}
+        S.thick[side] = 16
+      end
 
       SEEDS[x][y][z] = S
     end

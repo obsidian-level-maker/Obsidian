@@ -397,13 +397,14 @@ function Quest_lock_up_arena(arena)
 
 
 -- temp crud for debugging
+--[[ FIXME !!!!!!
 local KS = LC.dest_S
 if KS and LC.src_S then
 local dir = delta_to_dir(LC.src_S.sx - KS.sx, LC.src_S.sy - KS.sy)
 KS.borders[dir].kind = "lock_door"
 KS.borders[dir].key_item = LOCK.key_item
 end
-
+--]]
 
   --- perform split ---
 
@@ -591,8 +592,8 @@ function Quest_add_keys()
     assert(arena.target_item)
 
     if arena.target_item == "EXIT" then
-      PLAN.exit_room = R
       R.purpose = "EXIT"
+      PLAN.exit_room = R
 
 -- TEMP CRUD
 local ex = int((R.sx1 + R.sx2) / 2.0)
@@ -600,6 +601,7 @@ local ey = int((R.sy1 + R.sy2) / 2.0)
 SEEDS[ex][ey][1].is_exit = true
 
     else
+      R.purpose = "KEY"
 -- TEMP CRUD
 R.key_item = arena.target_item
     end

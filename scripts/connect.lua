@@ -671,9 +671,20 @@ function Connect_Rooms()
     end
   end
 
-  local function connect_seeds(S, T, dir, c_kind)
-    S.borders[dir]    = { kind="arch" }
-    T.borders[10-dir] = { kind="open" }
+  local function connect_seeds(S, T, dir)
+
+    if not (S.room.outdoor and T.room.outdoor) then
+      if S.room.outdoor then
+        S.border[dir].kind    = "STRADDLE"
+        T.border[10-dir].kind = "arch"
+      else
+        S.border[dir].kind    = "arch"
+        T.border[10-dir].kind = "STRADDLE"
+      end
+
+      S.thick[dir] = 24
+      T.thick[10-dir] = 24
+    end
 
 gui.debugf("connect_seeds R(%s,%s) S(%d,%d) grp:%d --> R(%s,%s) S(%d,%d) grp:%d\n",
 S.room.sx1,S.room.sy1, S.sx,S.sy, S.room.group_id,
@@ -705,7 +716,7 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
     return CONN
   end
 
-  local function connect_land(L, N, dir, c_kind)
+  local function connect_land(L, N, dir)
 
     assert(L.room ~= N.room)
 
@@ -754,7 +765,7 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
 
     assert(T.sx == S.sx or T.sy == S.sy)
 
-    connect_seeds(S, T, dir, c_kind)
+    connect_seeds(S, T, dir)
   end
 
   local function is_ground(L)
@@ -775,7 +786,7 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
              N.room.group_id ~= L.room.group_id and
              rand_odds(join_chance)
           then
-            connect_land(L, N, dir, "tight")
+            connect_land(L, N, dir)
           end
         end -- for dir
       end
@@ -931,7 +942,7 @@ gui.debugf("hit_conns = %d\n", hit_conns)
     dump_new_conns(conns)
 
     for _,C in ipairs(conns) do
-      connect_seeds(C.S, C.N, C.dir, "normal")
+      connect_seeds(C.S, C.N, C.dir)
     end
 
     return true
@@ -1080,7 +1091,7 @@ gui.debugf("Failed\n")
     -- only one connection per seed!
     if S.conn or N.conn  then return false end
 
-    connect_seeds(S, N, dir, "emergency")
+    connect_seeds(S, N, dir)
 
     R.branch_kind = "EM"
 --  R.old_sym  = R.symmetry
