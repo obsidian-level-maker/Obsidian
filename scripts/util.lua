@@ -48,6 +48,13 @@ function eq_multi(val, a, b, c, d, guard)
          false
 end
 
+function is_digit(lc)
+  return lc == '0' or lc == '1' or lc == '2' or
+         lc == '3' or lc == '4' or lc == '5' or
+         lc == '6' or lc == '7' or lc == '8' or
+         lc == '9'
+end
+
 
 ----====| TABLE UTILITIES |====----
 

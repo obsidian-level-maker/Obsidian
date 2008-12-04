@@ -2614,20 +2614,21 @@ gui.printf("do_teleport\n")
             not (S.room.hallway or N.room.hallway) and
             not (S.room.purpose or N.room.purpose)
 
-      if B_kind == "wall"
----      and not could_lose_wall
-      then
-        -- make_wall(S, side, f_tex, w_tex)
+      if B_kind == "wall" then --- and not could_lose_wall
+        make_wall(S, side, f_tex, w_tex)
+      end
 
-        --!!!! TEST: make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
+      if B_kind == "picture" then
+        make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
+      end
 
+      if B_kind == "window" then
         make_window(S, side, 208, z1+64, z2-32, f_tex, w_tex)
       end
 
       if B_kind == "fence"
          and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
       then
-
         make_fence(S, side, R.floor_h, f_tex, w_tex)
       end
 

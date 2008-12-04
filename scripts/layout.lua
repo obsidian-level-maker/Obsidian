@@ -122,14 +122,16 @@ class LAYOUT
 
   assign_stair
 
+  emergs[DIR]   -- true for emergency connections
+  windows[DIR]  -- true for windows
+
   stair_z1, stair_z2  -- stair heights, z1 = source, z2 = dest
                       -- (for L/F/T/J, z1 = top/bottom, z2 = left/right)
-
-  emerg_stairs ; table[DIR] -> boolean  : true for emergency connection
 
   lift_h
 
   tdir
+
 }
 
 --]]
@@ -795,6 +797,23 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
   end
 
 
+  local function mirror_x_dirtab(t)
+    if not t then return nil end
+    local u = {}
+    u[2] = t[2] ; u[4] = t[6]
+    u[8] = t[8] ; u[6] = t[4]
+    return u
+  end
+
+  local function mirror_y_dirtab(t)
+    if not t then return nil end
+    local u = {}
+    u[2] = t[8] ; u[4] = t[4]
+    u[8] = t[2] ; u[6] = t[6]
+    return u
+  end
+
+
   local function mirror_horizontally(old_w, new_w)
     for y = R.ty1, R.ty2 do
       for x = new_w, old_w-1 do
@@ -815,6 +834,9 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
           elseif L.char == '/' then L.char = '\\'
           elseif L.char =='\\' then L.char = '/'
           end
+
+          D.layout.emergs  = mirror_x_dirtab(S.layout.emergs)
+          D.layout.windows = mirror_x_dirtab(S.layout.windows)
         end
       end
     end
@@ -844,6 +866,9 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
           elseif L.char == '/' then L.char = '\\'
           elseif L.char =='\\' then L.char = '/'
           end
+
+          D.layout.emergs  = mirror_y_dirtab(S.layout.emergs)
+          D.layout.windows = mirror_y_dirtab(S.layout.windows)
         end
       end
     end
@@ -911,12 +936,6 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
     end
   end
 
-  local function lc_is_digit(lc)  -- UGH!!!!
-    return lc == '0' or lc == '1' or lc == '2' or
-           lc == '3' or lc == '4' or lc == '5' or
-           lc == '6' or lc == '7' or lc == '8'
-  end
-
   local function flood_fill_layout(EX)
     local flood_group = rand_element(EX).group_id
 
@@ -926,7 +945,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
     -- find a seed we can "grow" into a vacant spot
     for tx = R.tx1, R.tx2 do for ty = R.ty1, R.ty2 do
       local T = SEEDS[tx][ty][1]
-      if lc_is_digit(T.layout and T.layout.char) then 
+      if is_digit(T.layout and T.layout.char) then 
         for dir = 2,8,2 do
           local nx, ny = nudge_coord(tx, ty, dir)
           if valid_T(nx, ny) then
@@ -945,7 +964,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
               table.insert(poss, { tx=tx, ty=ty, dir=dir })
             end
 
-            if lc_is_digit(N.layout and N.layout.char) and N.layout.group_id ~= T.layout.group_id then
+            if is_digit(N.layout and N.layout.char) and N.layout.group_id ~= T.layout.group_id then
               table.insert(emergs, { tx=tx, ty=ty, dir=dir })
             end
           end
@@ -983,7 +1002,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
             return 10
           end
 
-          if lc_is_digit(O.layout and O.layout.char) and O.layout.group_id ~= T.layout.group_id and
+          if is_digit(O.layout and O.layout.char) and O.layout.group_id ~= T.layout.group_id and
              not (is_perpendicular(PM.dir, dir) and
                   (N.sx == R.layout_shared_x or N.sy == R.layout_shared_y))
           then
@@ -1058,13 +1077,13 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
     local T = SEEDS[EM.tx][EM.ty][1]
     local N = T:neighbor(EM.dir)
 
-    if not T.emerg_stairs then T.emerg_stairs = {} end
-    if not N.emerg_stairs then N.emerg_stairs = {} end
+    if not T.emergs then T.emergs = {} end
+    if not N.emergs then N.emergs = {} end
 
     if T.layout.floor_h < N.layout.floor_h then
-      T.emerg_stairs[EM.dir] = true
+      T.emergs[EM.dir] = true
     else
-      N.emerg_stairs[10 - EM.dir] = true
+      N.emergs[10 - EM.dir] = true
     end
 
     merge_groups(EX, T.layout.group_id, N.layout.group_id)
@@ -1107,7 +1126,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
         local D = SEEDS[x][y][1]
         local S = SEEDS[x-1][y][1]
 
-        if lc_is_digit(S.layout and S.layout.char) and not D.layout then
+        if is_digit(S.layout and S.layout.char) and not D.layout then
           D.layout = { char = S.layout.char }
           D.layout.floor_h = S.layout.floor_h
           assert(D.layout.char)
@@ -1138,7 +1157,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
         local D = SEEDS[x][y][1]
         local S = SEEDS[x][y-1][1]
 
-        if lc_is_digit(S.layout and S.layout.char) and not D.layout then
+        if is_digit(S.layout and S.layout.char) and not D.layout then
           D.layout = { char = S.layout.char }
           D.layout.floor_h = S.layout.floor_h
           assert(D.layout.char)
@@ -1169,6 +1188,48 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
       local S = SEEDS[x][y][1]
       if not S.layout then
         S.layout = { char='%' }  --!!!!
+      end
+    end end -- for x,y
+  end
+
+  local function decide_windows()
+    if R.outdoor then
+      return
+    end
+
+    for x = R.tx1,R.tx2 do for y = R.ty1,R.ty2 do
+      local S = SEEDS[x][y][1]
+      if (S.layout and S.layout.char) then
+--!!! if is_digit(S.layout and S.layout.char) then
+        if not S.layout.windows then S.layout.windows = {} end
+        for side = 2,8,2 do
+
+          local N = S:neighbor(side)
+          if N and N.room.outdoor
+             and not ((x==R.tx1 or x==R.tx2) and (y==R.ty1 or y==R.ty2))
+             and rand_odds(99)
+          then
+gui.debugf("DECIDED WINDOW @ (%d,%d) dir:%d\n", x, y, side)
+            S.layout.windows[side] = true
+          end
+        end  
+      end
+    end end -- for x,y
+  end
+
+  local function apply_windows()
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      local L = S.layout
+      for side = 2,8,2 do
+        local N = S:neighbor(side)
+        -- TODO: IN/IN WINDOWS: N.border[10-side].kind = "STRADDLE"
+        if L and L.windows and L.windows[side] and N
+           and S.border[side].kind == "wall"
+        then
+gui.debugf("APPLIED WINDOW @ (%d,%d) dir:%d N:%s\n", x, y, side, tostring(N))
+          S.border[side].kind = "window"
+        end
       end
     end end -- for x,y
   end
@@ -1285,7 +1346,7 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
         local nx, ny = nudge_coord(x, y, side)
         if valid_T(nx, ny) then
           local N = SEEDS[nx][ny][1]
-          if lc_is_digit(N.layout and N.layout.char) then
+          if is_digit(N.layout and N.layout.char) then
             S.layout = { char = N.layout.char }
             S.layout.floor_h = assert(N.layout.floor_h) -- -16
             assert(S.layout.char)
@@ -1306,6 +1367,9 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
   end end
 
 
+  decide_windows()
+
+
   if new_w < old_w then
     mirror_horizontally(old_w, new_w)
   end
@@ -1317,6 +1381,9 @@ gui.debugf("Emergency linkage (%d,%d) dir:%d\n", EM.tx, EM.ty, EM.dir);
 
   gui.debugf("FINAL LAYOUT:\n")
   dump_layout(R);
+
+
+  apply_windows()
 end
 
 
