@@ -669,31 +669,15 @@ gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
 
   -- TEMP CRUD FOR BUILDER....
 
-
   local START_R = PLAN.start_room
   assert(START_R)
 
   local sx = int((START_R.sx1 + START_R.sx2) / 2.0)
   local sy = int((START_R.sy1 + START_R.sy2) / 2.0)
 
-
   SEEDS[sx][sy][1].is_start = true
 
   gui.printf("Start seed @ (%d,%d)\n", sx, sy)
 
-
---[[ !!!!
-  local EXIT_R = PLAN.exit_room
-  assert(EXIT_R)
-  assert(EXIT_R ~= START_R)
-
-  local ex = int((EXIT_R.sx1 + EXIT_R.sx2) / 2.0)
-  local ey = int((EXIT_R.sy1 + EXIT_R.sy2) / 2.0)
-
-
-  SEEDS[ex][ey][1].is_exit = true
-
-  gui.printf("Exit seed @ (%d,%d)\n", ex, ey)
---]]
 end
 
