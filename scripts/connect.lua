@@ -673,7 +673,10 @@ function Connect_Rooms()
 
   local function connect_seeds(S, T, dir)
 
-    if not (S.room.outdoor and T.room.outdoor) then
+    if (S.room.outdoor and T.room.outdoor) then
+      S.border[dir].kind    = nil
+      T.border[10-dir].kind = nil
+    else
       if S.room.outdoor then
         S.border[dir].kind    = "STRADDLE"
         T.border[10-dir].kind = "arch"
