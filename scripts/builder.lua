@@ -442,6 +442,44 @@ function make_locked_door(S, side, z1, key_tex)
 end
 
 
+function make_lowering_bars(S, side, z1, f_tex, w_tex)
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local bar_w = 24
+  local bar_tw = 6+bar_w+6
+
+  local num_bars = int((long-16) / bar_tw)
+  local side_gap = int((long-16 - num_bars * bar_tw) / 2)
+
+  assert(num_bars >= 2)
+
+  local bar_info =
+  {
+    t_face = { texture=f_tex },
+    b_face = { texture=f_tex },
+    w_face = { texture=w_tex, peg=true, x_offset=0, y_offset=0 },
+  }
+
+  local mx1 = 8 + side_gap + bar_w/2
+  local mx2 = long - 8 - side_gap - bar_w/2
+
+  for i = 1,num_bars do
+    local mx = mx1 + (mx2 - mx1) * (i-1) / (num_bars-1)
+    local my = 0
+
+    transformed_brush(T, bar_info,
+    {
+      { x=mx-bar_w/2, y=my-bar_w/2 },
+      { x=mx-bar_w/2, y=my+bar_w/2 },
+      { x=mx+bar_w/2, y=my+bar_w/2 },
+      { x=mx+bar_w/2, y=my-bar_w/2 },
+    },
+    -2000, z1+64)
+  end
+end
+
+
 function make_hall_light(S, z2)
 
   local mx = int((S.x1 + S.x2)/2)
@@ -2731,8 +2769,16 @@ gui.printf("do_teleport\n")
         local key_tex = LOCK_TEXS[S.border[side].key_item] or "METAL"
 gui.printf("ADDING LOCK DOOR %s\n", w_tex)
         make_locked_door(S, side, z1, key_tex)
+        S.conn.already_made_lock = true
       end
-        
+
+      if B_kind == "bars" and
+         not (S.conn and S.conn.already_made_lock)
+      then
+---     make_lowering_bars(S, side, z1, "FLAT23", "SUPPORT2")
+        make_lowering_bars(S, side, z1, "CEIL5_2", "SUPPORT3")
+        S.conn.already_made_lock = true
+      end
     end -- for side
 
 
