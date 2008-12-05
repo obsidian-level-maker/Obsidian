@@ -1676,23 +1676,23 @@ function make_small_exit(R)
 
   local inner_info =
   {
-    w_face = { texture="STARTAN2" },
+--  w_face = { texture="STARTAN2" },
+    w_face = { texture="METAL2" },
     t_face = { texture="FLOOR5_2" },
-    b_face = { texture="TLITE6_5" },
+    b_face = { texture="TLITE6_6" },
   }
 
   local out_combo = T.room.combo
-  local out_face
 
   if T.room.outdoor then
     out_combo = R.combo
-  else
-    out_face = { texture=T.room.combo.wall }
   end
+
+  local out_face = { texture=out_combo.wall }
 
   local out_info =
   {
-    w_face = { texture=out_combo.wall },
+    w_face = out_face,
     t_face = { texture=T.room.combo.floor },
     b_face = { texture=out_combo.ceil },
   }
@@ -1747,8 +1747,8 @@ function make_small_exit(R)
   local door_info =
   {
     w_face = { texture="EXITDOOR", peg=true, x_offset=0, y_offset=0 },
-    t_face = { texture="FLAT1" },
-    b_face = { texture="FLAT1" },
+    t_face = { texture="FLAT5_5" },
+    b_face = { texture="FLAT5_5" },
     flag_door = true,
   }
 
@@ -1795,8 +1795,8 @@ function make_small_exit(R)
       { x=mx-32, y=80, w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
       { x=mx-32, y=64, w_face={ texture="DOORTRAK", peg=true } },
       { x=mx-32, y=48, w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
-      { x=mx-32, y=32, w_face=out_face },
-      { x=mx-96, y=-24,  w_face=out_face },
+      { x=mx-32, y=32,  w_face=out_face },
+      { x=mx-96, y=-24, w_face=out_face },
     },
     -2000, 2000)
 
@@ -3109,15 +3109,15 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
 
   gui.ticker()
 
+  assert(PLAN.exit_room)
+  if not PLAN.exit_room.outdoor then
+    make_small_exit(PLAN.exit_room)
+  end
+
   for _,R in ipairs(PLAN.all_rooms or {}) do
     if R.kind == "stairwell" then
       build_stairwell(R)
     end
-  end
-
-  assert(PLAN.exit_room)
-  if not PLAN.exit_room.outdoor then
-    make_small_exit(PLAN.exit_room)
   end
 
   for y = 1, SEED_H do
