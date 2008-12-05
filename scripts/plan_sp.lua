@@ -84,6 +84,12 @@ ROOM_CLASS =
     if y < self.sy1 or y > self.sy2 then return false end
     return true
   end,
+
+  valid_T = function(self, x, y)
+    if x < self.tx1 or x > self.tx2 then return false end
+    if y < self.ty1 or y > self.ty2 then return false end
+    return true
+  end,
 }
 
 

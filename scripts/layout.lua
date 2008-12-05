@@ -263,17 +263,10 @@ end
 
 function dump_layout(R)
 
-  local function valid_T(x, y)
-    if x < R.tx1 or x > R.tx2 or y < R.ty1 or y > R.ty2 then
-      return false
-    end
-    return true
-  end
-
   local function outside_seed(x, y)
     for dir = 2,8,2 do
       local sx, sy = nudge_coord(x, y, dir)
-      if valid_T(sx, sy) then
+      if R:valid_T(sx, sy) then
         local T = SEEDS[sx][sy][1]
         if T.conn_dirs and T.conn_dirs[10-dir] then
           return '*'
@@ -556,13 +549,6 @@ function Layout_Indoor(R)
     return nil
   end
 
-  local function valid_T(x, y)
-    if x < R.tx1 or x > R.tx2 or y < R.ty1 or y > R.ty2 then
-      return false
-    end
-    return true
-  end
-
   local function size_for_symmetry(kind)
     local w, h = R.sw, R.sh
 
@@ -733,7 +719,7 @@ function Layout_Indoor(R)
     if flip_x then tx = R.tx1 + R.otx2 - tx end
     if flip_y then ty = R.ty1 + R.oty2 - ty end
 
-    if not valid_T(tx, ty) then
+    if not R:valid_T(tx, ty) then
       return
     end
 
@@ -922,7 +908,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
       x = x + dx
       y = y + dy
 
-      if not valid_T(x, y) then
+      if not R:valid_T(x, y) then
         return nil
       end
 
@@ -948,7 +934,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
       if is_digit(T.layout and T.layout.char) then 
         for dir = 2,8,2 do
           local nx, ny = nudge_coord(tx, ty, dir)
-          if valid_T(nx, ny) then
+          if R:valid_T(nx, ny) then
             local N = SEEDS[nx][ny][1]
 
             if N.layout and N.layout.char == T.layout.char and
@@ -985,7 +971,7 @@ gui.debugf("LAYOUT AREA: (%d,%d) .. (%d,%d)\n", R.tx1,R.ty1, R.tx2,R.ty2)
       -- check if new connection can link to something
       for dir = 2,8,2 do if dir ~= 10 - PM.dir then
         local ox, oy = nudge_coord(N.sx, N.sy, dir)
-        if valid_T(ox, oy) then
+        if R:valid_T(ox, oy) then
           local O = SEEDS[ox][oy][1]
 
           if O.layout and O.layout.char == T.layout.char and
@@ -1344,7 +1330,7 @@ gui.debugf("APPLIED WINDOW @ (%d,%d) dir:%d N:%s\n", x, y, side, tostring(N))
       rand_shuffle(sides)
       for _,side in ipairs(sides) do
         local nx, ny = nudge_coord(x, y, side)
-        if valid_T(nx, ny) then
+        if R:valid_T(nx, ny) then
           local N = SEEDS[nx][ny][1]
           if is_digit(N.layout and N.layout.char) then
             S.layout = { char = N.layout.char }
