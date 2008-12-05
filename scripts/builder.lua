@@ -1662,9 +1662,15 @@ function make_small_exit(R)
 
   local C = R.conns[1]
   local S = C:seed(R)
+  local T = C:seed(C:neighbor(R))
 
   local side = S.conn_dir
-  
+
+  -- update border info
+  S.border[side].kind = nil
+  T.border[10-side].kind = nil
+  T.thick[10-side] = 24
+
   local f_h = assert(C.conn_h)
   local c_h = f_h + 128
 
@@ -1675,22 +1681,52 @@ function make_small_exit(R)
     b_face = { texture="TLITE6_5" },
   }
 
+  local out_combo = T.room.combo
+  local out_face
 
-  gui.add_brush(inner_info,
+  if T.room.outdoor then
+    out_combo = R.combo
+  else
+    out_face = { texture=T.room.combo.wall }
+  end
+
+  local out_info =
   {
-    { x=S.x1, y=S.y1 },
-    { x=S.x1, y=S.y2 },
-    { x=S.x2, y=S.y2 },
-    { x=S.x2, y=S.y1 },
+    w_face = { texture=out_combo.wall },
+    t_face = { texture=T.room.combo.floor },
+    b_face = { texture=out_combo.ceil },
+  }
+
+
+  local DT, long, deep = get_transform_for_seed_side(S, side)
+  local mx = int(long / 2)
+
+
+  transformed_brush(DT, out_info,
+  {
+    { x=0, y=0 }, { x=0, y=48 },
+    { x=long, y=48 }, {x=long, y=0 },
   },
   -2000, f_h)
 
-  gui.add_brush(inner_info,
+  transformed_brush(DT, out_info,
   {
-    { x=S.x1, y=S.y1 },
-    { x=S.x1, y=S.y2 },
-    { x=S.x2, y=S.y2 },
-    { x=S.x2, y=S.y1 },
+    { x=0, y=-24 }, { x=0, y=48 },
+    { x=long, y=48 }, {x=long, y=-24 },
+  },
+  c_h, 2000)
+
+  transformed_brush(DT, inner_info,
+  {
+    { x=0, y=48 }, { x=0, y=long },
+    { x=long, y=long }, { x=long, y=48 },
+  },
+  -2000, f_h)
+
+  transformed_brush(DT, inner_info,
+  {
+    { x=0, y=48 }, { x=0, y=long },
+    { x=long, y=long }, { x=long, y=48 },
   },
   c_h, 2000)
 
@@ -1716,9 +1752,6 @@ function make_small_exit(R)
     flag_door = true,
   }
 
-  local DT, long, deep = get_transform_for_seed_side(S, side)
-  local mx = int(long / 2)
-
   transformed_brush(DT, door_info,
   {
     { x=mx-32, y=48, line_kind=1 },
@@ -1728,12 +1761,14 @@ function make_small_exit(R)
   },
   f_h+36, 2000)
 
+  inner_info.b_face = { texture="FLAT1" }
+
   transformed_brush(DT, inner_info,
   {
     { x=mx-32, y=32 },
     { x=mx-32, y=80 },
     { x=mx+32, y=80 },
-    { x=mx+32, y=32 },
+    { x=mx+32, y=32, w_face=out_face },
   },
   f_h+72, 2000)
 
@@ -1755,22 +1790,22 @@ function make_small_exit(R)
 
     transformed_brush(DT, inner_info,
     {
-      { x=0,     y=0 },
+      { x=0,     y=-24 },
       { x=0,     y=80 },
       { x=mx-32, y=80, w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
       { x=mx-32, y=64, w_face={ texture="DOORTRAK", peg=true } },
       { x=mx-32, y=48, w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
-      { x=mx-32, y=32 },
-      { x=mx-96, y=0 },
+      { x=mx-32, y=32, w_face=out_face },
+      { x=mx-96, y=-24,  w_face=out_face },
     },
     -2000, 2000)
 
     transformed_brush(DT, exit_info,
     {
-      { x=mx-32, y=16 },
-      { x=mx-60, y=0,  w_face={ texture="SHAWN2" } },
-      { x=mx-68, y=8  },
-      { x=mx-40, y=24, w_face={ texture="SHAWN2" } },
+      { x=mx-32, y=  0 },
+      { x=mx-60, y=-16, w_face={ texture="SHAWN2" } },
+      { x=mx-68, y= -8 },
+      { x=mx-40, y=  8, w_face={ texture="SHAWN2" } },
     },
     c_h-16, 2000)
   end
@@ -2764,10 +2799,13 @@ gui.printf("do_teleport\n")
       if B_kind == "lock_door" and
          not (S.conn and S.conn.already_made_lock)
       then
+        local LOCK = assert(S.border[side].lock)
         local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
                             "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
-        local key_tex = LOCK_TEXS[S.border[side].key_item] or "METAL"
-gui.printf("ADDING LOCK DOOR %s\n", w_tex)
+        local key_tex = LOCK_TEXS[LOCK.key_item] or "METAL"
+gui.printf("ADDING LOCK DOOR %s\n", key_tex)
+gui.printf(">> side:%d of %s\n", side, R:tostr())
+
         make_locked_door(S, side, z1, key_tex)
         S.conn.already_made_lock = true
       end
