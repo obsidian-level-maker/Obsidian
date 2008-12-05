@@ -2776,7 +2776,8 @@ gui.printf("ADDING LOCK DOOR %s\n", w_tex)
          not (S.conn and S.conn.already_made_lock)
       then
 ---     make_lowering_bars(S, side, z1, "FLAT23", "SUPPORT2")
-        make_lowering_bars(S, side, z1, "CEIL5_2", "SUPPORT3")
+---     make_lowering_bars(S, side, z1, "CEIL5_2", "SUPPORT3")
+        make_lowering_bars(S, side, z1, "FLAT5_2", "WOOD9")
         S.conn.already_made_lock = true
       end
     end -- for side
