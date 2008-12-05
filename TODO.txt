@@ -473,6 +473,12 @@ Pipe Dreams:
    crosses the Lift-Lower-Wait-Rise linedef, it lowers to surprise the
    player with monsters on one or both sides of the lift.
 
+-  Dead/gibbed player corpses sprinkled around on each level (Just
+   like Doom episode 1) with the chance of a weapon near their
+   remains (Shotgun 35%, chaingun 30%, Supershot 15%, rocket
+   launcher 15% and plasmagun 5%?)? Of course the weapon placement
+   by the body is at a chance (15-20% chance?)
+
 ?? one-way routes ??
    -  for example: at along:3 fall-off -> along:4
       BUT... how to get back to along:3 ??
