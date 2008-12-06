@@ -134,20 +134,45 @@ void merge_region_c::AddBrush(csg_brush_c *P)
 
 static std::vector<merge_segment_c *> mug_new_segs;
 
+#define VERTEX_HASH  256
+static std::vector<merge_vertex_c *> * hashed_verts[VERTEX_HASH];
+
 static int mug_changes = 0;
 
 
+static void ClearVertexHash()
+{
+  for (int h = 0; h < VERTEX_HASH; h++)
+  {
+    delete hashed_verts[h];
+    hashed_verts[h] = NULL;
+  }
+}
+
 static merge_vertex_c *Mug_AddVertex(double x, double y)
 {
-  // check if already present (FIXME: OPTIMISE !!)
+  // check if already present.
+  // for speed we use a hash-table
+  int hash;
+  hash = IntHash(       (I_ROUND(x+1.4) >> 6));
+  hash = IntHash(hash ^ (I_ROUND(y+1.4) >> 6));
 
-  for (int i=0; i < (int)mug_vertices.size(); i++)
-    if (mug_vertices[i]->Match(x, y))
-      return mug_vertices[i];
+  hash = hash & (VERTEX_HASH-1);
+  SYS_ASSERT(hash >= 0);
+
+  if (! hashed_verts[hash])
+    hashed_verts[hash] = new std::vector<merge_vertex_c *>;
+
+  std::vector<merge_vertex_c *> * htable = hashed_verts[hash];
+
+  for (unsigned int i=0; i < htable->size(); i++)
+    if ((* htable)[i]->Match(x, y))
+      return (* htable)[i];
 
   merge_vertex_c * V = new merge_vertex_c(x, y);
 
   mug_vertices.push_back(V);
+  htable->push_back(V);
 
   return V;
 }
@@ -1403,6 +1428,8 @@ void CSG2_MergeAreas(void)
   //   (7) remove gaps which no entity can reach
 
   mug_new_segs.clear(); // should be empty, but just in case
+
+  ClearVertexHash();
 
   for (unsigned int j=0; j < all_brushes.size(); j++)
   {
