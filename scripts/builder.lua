@@ -33,7 +33,6 @@ class TRANSFORM
   dy : number   --
 }
 --]]
-REAL_ADD_BRUSH = gui.add_brush
 
 function transformed_brush2(T, info, coords, z1, z2)
 
@@ -95,12 +94,11 @@ function transformed_brush2(T, info, coords, z1, z2)
     end
   end
 
-  REAL_ADD_BRUSH(info, coords, z1, z2)
+  gui.add_brush(info, coords, z1, z2)
 end
 
 
 --!!!!!!
-function gui.add_brush(info, coords, z1, z2) end
 function transformed_brush() end --!!!!!!
 
 
@@ -216,23 +214,23 @@ function make_sky_fence(S, side)
 
   local w_coords =
   {
-    { x=wx1, y=wy1 }, { x=wx1, y=wy2 },
-    { x=wx2, y=wy2 }, { x=wx2, y=wy1 },
+    { x=wx2, y=wy1 }, { x=wx2, y=wy2 },
+    { x=wx1, y=wy2 }, { x=wx1, y=wy1 },
   }
 
   local s_coords =
   {
-    { x=sx1, y=sy1 }, { x=sx1, y=sy2 },
-    { x=sx2, y=sy2 }, { x=sx2, y=sy1 },
+    { x=sx2, y=sy1 }, { x=sx2, y=sy2 },
+    { x=sx1, y=sy2 }, { x=sx1, y=sy1 },
   }
 
   local z = math.max(PLAN.skyfence_h, (S.room.floor_h) + 64)
 
-  gui.add_brush(wall_info,  w_coords, -4000, z)
-  gui.add_brush(wall2_info, s_coords, -4000, PLAN.skyfence_h - 64)
+  transformed_brush2(nil, wall_info,  w_coords, -4000, z)
+  transformed_brush2(nil, wall2_info, s_coords, -4000, PLAN.skyfence_h - 64)
 
-  gui.add_brush(sky_info,  w_coords, 512, 4096)
-  gui.add_brush(sky2_info, s_coords, 510, 4096)
+  transformed_brush2(nil, sky_info,  w_coords, 512, 4096)
+  transformed_brush2(nil, sky2_info, s_coords, 510, 4096)
 end
 
 
@@ -485,17 +483,17 @@ function make_hall_light(S, z2)
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture="CEIL5_2" },
     b_face = { texture="TLITE6_5" },
     w_face = { texture="METAL" },
   },
   {
-    { x = mx-32, y = my-32 },
-    { x = mx-32, y = my+32 },
-    { x = mx+32, y = my+32 },
     { x = mx+32, y = my-32 },
+    { x = mx+32, y = my+32 },
+    { x = mx-32, y = my+32 },
+    { x = mx-32, y = my-32 },
   },
   z2-12, 2000)
 
@@ -507,78 +505,78 @@ function make_hall_light(S, z2)
     w_face = { texture="METAL" },
   }
 
-  gui.add_brush(metal_info,
+  transformed_brush2(nil, metal_info,
   {
-    { x = mx-40, y = my-40 },
-    { x = mx-40, y = my+40 },
-    { x = mx-32, y = my+40 },
     { x = mx-32, y = my-40 },
-  },
-  z2-16, 2000)
-
-  gui.add_brush(metal_info,
-  {
-    { x = mx+32, y = my-40 },
-    { x = mx+32, y = my+40 },
-    { x = mx+40, y = my+40 },
-    { x = mx+40, y = my-40 },
-  },
-  z2-16, 2000)
-
-  gui.add_brush(metal_info,
-  {
-    { x = mx-40, y = my-40 },
-    { x = mx-40, y = my-32 },
-    { x = mx+40, y = my-32 },
-    { x = mx+40, y = my-40 },
-  },
-  z2-16, 2000)
-
-  gui.add_brush(metal_info,
-  {
-    { x = mx-40, y = my+32 },
+    { x = mx-32, y = my+40 },
     { x = mx-40, y = my+40 },
+    { x = mx-40, y = my-40 },
+  },
+  z2-16, 2000)
+
+  transformed_brush2(nil, metal_info,
+  {
+    { x = mx+40, y = my-40 },
     { x = mx+40, y = my+40 },
+    { x = mx+32, y = my+40 },
+    { x = mx+32, y = my-40 },
+  },
+  z2-16, 2000)
+
+  transformed_brush2(nil, metal_info,
+  {
+    { x = mx+40, y = my-40 },
+    { x = mx+40, y = my-32 },
+    { x = mx-40, y = my-32 },
+    { x = mx-40, y = my-40 },
+  },
+  z2-16, 2000)
+
+  transformed_brush2(nil, metal_info,
+  {
     { x = mx+40, y = my+32 },
+    { x = mx+40, y = my+40 },
+    { x = mx-40, y = my+40 },
+    { x = mx-40, y = my+32 },
   },
   z2-16, 2000)
  
 
 --[[ connecting spokes....
 
-  gui.add_brush(metal_info,
+  transformed_brush2(nil, metal_info,
   {
-    { x = mx-4, y = my+40 },
-    { x = mx-4, y = S.y2  },
-    { x = mx+4, y = S.y2  },
     { x = mx+4, y = my+40 },
+    { x = mx+4, y = S.y2  },
+    { x = mx-4, y = S.y2  },
+    { x = mx-4, y = my+40 },
   },
   z2-10, 2000)
 
-  gui.add_brush(metal_info,
+  transformed_brush2(nil, metal_info,
   {
-    { x = mx-4, y = S.y1  },
-    { x = mx-4, y = my-40 },
-    { x = mx+4, y = my-40 },
     { x = mx+4, y = S.y1  },
+    { x = mx+4, y = my-40 },
+    { x = mx-4, y = my-40 },
+    { x = mx-4, y = S.y1  },
   },
   z2-10, 2000)
 
-  gui.add_brush(metal_info,
+  transformed_brush2(nil, metal_info,
   {
-    { x = S.x1 , y = my-4, },
-    { x = S.x1 , y = my+4, },
-    { x = mx-40, y = my+4, },
     { x = mx-40, y = my-4, },
+    { x = mx-40, y = my+4, },
+    { x = S.x1 , y = my+4, },
+    { x = S.x1 , y = my-4, },
   },
   z2-10, 2000)
 
-  gui.add_brush(metal_info,
+  transformed_brush2(nil, metal_info,
   {
-    { x = mx+40, y = my-4, },
-    { x = mx+40, y = my+4, },
-    { x = S.x2 , y = my+4, },
     { x = S.x2 , y = my-4, },
+    { x = S.x2 , y = my+4, },
+    { x = mx+40, y = my+4, },
+    { x = mx+40, y = my-4, },
   },
   z2-10, 2000)
  
@@ -714,16 +712,16 @@ function make_weird_hall(S, side, z1, z2)
     w_face = { texture="SHAWN2" },
   }
 
-  gui.add_brush(metal, get_hall_coords(24), -2000, 2000)
+  transformed_brush2(nil, metal, get_hall_coords(24), -2000, 2000)
 
-  gui.add_brush(metal, get_hall_coords(32), -2000, z1 + 32)
-  gui.add_brush(metal, get_hall_coords(32), z2 - 32, 2000)
+  transformed_brush2(nil, metal, get_hall_coords(32), -2000, z1 + 32)
+  transformed_brush2(nil, metal, get_hall_coords(32), z2 - 32, 2000)
 
-  gui.add_brush(metal, get_hall_coords(48), -2000, z1 + 18)
-  gui.add_brush(metal, get_hall_coords(48), z2 - 18, 2000)
+  transformed_brush2(nil, metal, get_hall_coords(48), -2000, z1 + 18)
+  transformed_brush2(nil, metal, get_hall_coords(48), z2 - 18, 2000)
 
-  gui.add_brush(metal, get_hall_coords(64), -2000, z1 + 6)
-  gui.add_brush(metal, get_hall_coords(64), z2 - 6, 2000)
+  transformed_brush2(nil, metal, get_hall_coords(64), -2000, z1 + 6)
+  transformed_brush2(nil, metal, get_hall_coords(64), z2 - 6, 2000)
 
 end
 
@@ -841,18 +839,18 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
     if flipped then
       return
       {
-        { x = cx1, y = cy1 },
-        { x = fx1, y = fy1 },
-        { x = fx0, y = fy0 },
         { x = cx0, y = cy0 },
+        { x = fx0, y = fy0 },
+        { x = fx1, y = fy1 },
+        { x = cx1, y = cy1 },
       }
     else
       return
       {
-        { x = cx0, y = cy0 },
-        { x = fx0, y = fy0 },
-        { x = fx1, y = fy1 },
         { x = cx1, y = cy1 },
+        { x = fx1, y = fy1 },
+        { x = fx0, y = fy0 },
+        { x = cx0, y = cy0 },
       }
     end
   end
@@ -868,13 +866,13 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
     local f_h = x_h + (y_h - x_h) * (i-1) / (steps-1)
     local c_h = f_h + gap_h
 
-    gui.add_brush(wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -2000,2000)
-    gui.add_brush(wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -2000,2000)
+    transformed_brush2(nil, wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -2000,2000)
+    transformed_brush2(nil, wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -2000,2000)
 
     local coords = arc_coords(p0,p1, dx1,dx2, dy1,dy2)
 
-    gui.add_brush(floor_info, coords, -2000, f_h)
-    gui.add_brush(ceil_info,  coords, c_h, 2000)
+    transformed_brush2(nil, floor_info, coords, -2000, f_h)
+    transformed_brush2(nil, ceil_info,  coords, c_h, 2000)
   end
 end
 
@@ -905,10 +903,12 @@ function make_ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
     bx3 = int(bx3) ; tx3 = int(tx3)
     bx4 = int(bx4) ; tx4 = int(tx4)
 
-    gui.add_brush(skin,
+    transformed_brush2(nil, skin,
     {
-      { x=bx3, y=y1 }, { x=tx3, y=y2 },
-      { x=tx4, y=y2 }, { x=bx4, y=y1 },
+      { x=bx4, y=y1 },
+      { x=tx4, y=y2 },
+      { x=tx3, y=y2 },
+      { x=bx3, y=y1 },
     },
     -2000, z);
   end
@@ -941,10 +941,12 @@ function make_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
     ly3 = int(ly3) ; ry3 = int(ry3)
     ly4 = int(ly4) ; ry4 = int(ry4)
 
-    gui.add_brush(skin,
+    transformed_brush2(nil, skin,
     {
-      { x=x1, y=ly3 }, { x=x1, y=ly4 },
-      { x=x2, y=ry4 }, { x=x2, y=ry3 },
+      { x=x2, y=ry3 },
+      { x=x2, y=ry4 },
+      { x=x1, y=ly4 },
+      { x=x1, y=ly3 },
     },
     -2000, z);
   end
@@ -1017,12 +1019,12 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
     make_ramp_y(info, x1,y1,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
     make_ramp_x(info, x1,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
 
-    gui.add_brush(info,
+    transformed_brush2(nil, info,
     {
-      { x=x2-pw, y=y2-ph },
-      { x=x2-pw, y=y2 },
-      { x=x2,    y=y2 },
       { x=x2,    y=y2-ph },
+      { x=x2,    y=y2 },
+      { x=x2-pw, y=y2 },
+      { x=x2-pw, y=y2-ph },
     }, -2000, pz)
 
   elseif S.layout and S.layout.char == "J" then
@@ -1030,12 +1032,12 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
     make_ramp_y(info, x1+pw,y2-ph,y2, x2,y1,y2, m_h-d_h*4, x_h, "exact")
     make_ramp_x(info, x1,x2,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
 
-    gui.add_brush(info,
+    transformed_brush2(nil, info,
     {
-      { x=x1,    y=y2-ph },
-      { x=x1,    y=y2 },
-      { x=x1+pw, y=y2 },
       { x=x1+pw, y=y2-ph },
+      { x=x1+pw, y=y2 },
+      { x=x1,    y=y2 },
+      { x=x1,    y=y2-ph },
     }, -2000, pz)
 
   elseif S.layout and S.layout.char == "F" then
@@ -1043,12 +1045,12 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
     make_ramp_y(info, x1,y1,y2, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
     make_ramp_x(info, x2-pw,x2,y1+ph, x1,x2,y2, m_h+d_h*4, y_h, "exact")
 
-    gui.add_brush(info,
+    transformed_brush2(nil, info,
     {
-      { x=x2-pw, y=y1 },
-      { x=x2-pw, y=y1+ph },
-      { x=x2,    y=y1+ph },
       { x=x2,    y=y1 },
+      { x=x2,    y=y1+ph },
+      { x=x2-pw, y=y1+ph },
+      { x=x2-pw, y=y1 },
     }, -2000, pz)
 
   elseif S.layout and S.layout.char == "T" then
@@ -1056,12 +1058,12 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
     make_ramp_y(info, x1+pw,y1,y1+ph, x2,y1,y2, x_h, m_h-d_h*4, "exact")
     make_ramp_x(info, x1,x1+pw,y1+ph, x1,x2,y2, y_h, m_h+d_h*4, "exact")
 
-    gui.add_brush(info,
+    transformed_brush2(nil, info,
     {
-      { x=x1,    y=y1 },
-      { x=x1,    y=y1+ph },
-      { x=x1+pw, y=y1+ph },
       { x=x1+pw, y=y1 },
+      { x=x1+pw, y=y1+ph },
+      { x=x1,    y=y1+ph },
+      { x=x1,    y=y1 },
     }, -2000, pz)
   end
 
@@ -1093,18 +1095,18 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
     pilla =
     {
-      { x=x2-pw, y=y2-ph },
-      { x=x2-pw, y=y2 },
-      { x=x2,    y=y2 },
       { x=x2,    y=y2-ph },
+      { x=x2,    y=y2 },
+      { x=x2-pw, y=y2 },
+      { x=x2-pw, y=y2-ph },
     }
 
     mezza =
     {
-      { x=x1,    y=y1 },
-      { x=x1,    y=y2-ph },
-      { x=x2-pw, y=y2-ph },
       { x=x2-pw, y=y1 },
+      { x=x2-pw, y=y2-ph },
+      { x=x1,    y=y2-ph },
+      { x=x1,    y=y1 },
     }
 
   elseif S.layout and S.layout.char == "J" then
@@ -1114,18 +1116,18 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
     pilla =
     {
-      { x=x1,    y=y2-ph },
-      { x=x1,    y=y2 },
-      { x=x1+pw, y=y2 },
       { x=x1+pw, y=y2-ph },
+      { x=x1+pw, y=y2 },
+      { x=x1,    y=y2 },
+      { x=x1,    y=y2-ph },
     }
 
     mezza =
     {
-      { x=x1+pw, y=y1 },
-      { x=x1+pw, y=y2-ph },
-      { x=x2   , y=y2-ph },
       { x=x2   , y=y1 },
+      { x=x2   , y=y2-ph },
+      { x=x1+pw, y=y2-ph },
+      { x=x1+pw, y=y1 },
     }
 
   elseif S.layout and S.layout.char == "F" then
@@ -1135,18 +1137,18 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
     pilla =
     {
-      { x=x2-pw, y=y1 },
-      { x=x2-pw, y=y1+ph },
-      { x=x2,    y=y1+ph },
       { x=x2,    y=y1 },
+      { x=x2,    y=y1+ph },
+      { x=x2-pw, y=y1+ph },
+      { x=x2-pw, y=y1 },
     }
 
     mezza =
     {
-      { x=x1,    y=y1+ph },
-      { x=x1,    y=y2 },
-      { x=x2-pw, y=y2 },
       { x=x2-pw, y=y1+ph },
+      { x=x2-pw, y=y2 },
+      { x=x1,    y=y2 },
+      { x=x1,    y=y1+ph },
     }
 
   elseif S.layout and S.layout.char == "T" then
@@ -1156,23 +1158,23 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
     pilla =
     {
-      { x=x1,    y=y1 },
-      { x=x1,    y=y1+ph },
-      { x=x1+pw, y=y1+ph },
       { x=x1+pw, y=y1 },
+      { x=x1+pw, y=y1+ph },
+      { x=x1,    y=y1+ph },
+      { x=x1,    y=y1 },
     }
 
     mezza =
     {
-      { x=x1+pw, y=y1+ph },
-      { x=x1+pw, y=y2    },
-      { x=x2   , y=y2 },
       { x=x2   , y=y1+ph },
+      { x=x2   , y=y2 },
+      { x=x1+pw, y=y2    },
+      { x=x1+pw, y=y1+ph },
     }
   end
 
-  gui.add_brush(info, pilla, -2000, pz)
-  gui.add_brush(info, mezza, -2000, m_h)
+  transformed_brush2(nil, info, pilla, -2000, pz)
+  transformed_brush2(nil, info, mezza, -2000, m_h)
 end
 
 
@@ -1422,12 +1424,12 @@ gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn
     nx2 = int(nx2) ; ny2 = int(ny2)
     z   = int(z)
 
-    gui.add_brush(info,
+    transformed_brush2(nil, info,
     {
-      { x=nx1, y=ny1 },
-      { x=nx1, y=ny2 },
-      { x=nx2, y=ny2 },
       { x=nx2, y=ny1 },
+      { x=nx2, y=ny2 },
+      { x=nx1, y=ny2 },
+      { x=nx1, y=ny1 },
     },
     -2000, z)
   end 
@@ -2521,8 +2523,10 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
 
       return
       {
-        { x=cx, y=cy }, { x=cx, y=fy },
-        { x=fx, y=fy }, { x=fx, y=cy },
+        { x=fx, y=cy },
+        { x=fx, y=fy },
+        { x=cx, y=fy },
+        { x=cx, y=cy },
       }
     end
 
@@ -2548,13 +2552,13 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local f_h = h1 + (h2 - h1) * (i-1) / (steps-1)
       local c_h = f_h + gap_h
 
-      gui.add_brush(info, step_coords(p0,p1, 0/6, 1/6), -2000,2000)
-      gui.add_brush(info, step_coords(p0,p1, 5/6, 6/6), -2000,2000)
+      transformed_brush2(nil, info, step_coords(p0,p1, 0/6, 1/6), -2000,2000)
+      transformed_brush2(nil, info, step_coords(p0,p1, 5/6, 6/6), -2000,2000)
 
       local coords = step_coords(p0,p1, 1/6, 5/6)
 
-      gui.add_brush(info, coords, -2000,f_h)
-      gui.add_brush(info, coords,  c_h,2000)
+      transformed_brush2(nil, info, coords, -2000,f_h)
+      transformed_brush2(nil, info, coords,  c_h,2000)
     end
   end
 
