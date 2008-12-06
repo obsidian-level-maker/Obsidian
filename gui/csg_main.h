@@ -227,10 +227,11 @@ public:
   }
     
   void AddSeg(merge_segment_c *seg);
-
   void RemoveSeg(merge_segment_c *seg);
 
   void ReplaceSeg(merge_segment_c *old_seg, merge_segment_c *new_seg);
+
+  merge_segment_c * FindSeg(merge_vertex_c *other);
 };
 
 

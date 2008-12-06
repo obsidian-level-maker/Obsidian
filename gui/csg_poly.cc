@@ -38,7 +38,7 @@ void merge_vertex_c::AddSeg(merge_segment_c *seg)
 
   segs.push_back(seg);
 }
- 
+
 void merge_vertex_c::RemoveSeg(merge_segment_c *seg)
 {
   std::vector<merge_segment_c *>::iterator ENDP;
@@ -50,7 +50,7 @@ void merge_vertex_c::RemoveSeg(merge_segment_c *seg)
 
 void merge_vertex_c::ReplaceSeg(merge_segment_c *old_seg, merge_segment_c *new_seg)
 {
-  for (int j=0; j < (int)segs.size(); j++)
+  for (unsigned int j=0; j < segs.size(); j++)
     if (segs[j] == old_seg)
     {
       segs[j] = new_seg;
@@ -60,6 +60,15 @@ void merge_vertex_c::ReplaceSeg(merge_segment_c *old_seg, merge_segment_c *new_s
   Main_FatalError("ReplaceSeg: does not exist!\n");
 }
 
+merge_segment_c * merge_vertex_c::FindSeg(merge_vertex_c *other)
+{
+  for (unsigned int j=0; j < segs.size(); j++)
+    if (segs[j]->Match(this, other))
+      return segs[j];
+
+  return NULL;  // not found
+}
+ 
 
 bool merge_segment_c::HasGap() const
 {
@@ -145,17 +154,24 @@ static merge_vertex_c *Mug_AddVertex(double x, double y)
 
 static merge_segment_c *Mug_AddSegment(merge_vertex_c *start, merge_vertex_c *end)
 {
-  // check if already present (FIXME: OPTIMISE !!)
+  SYS_ASSERT(start != end);
 
-  if (start == end)
-    Main_FatalError("Loop contains a zero-length line! (%1.1f,%1.1f)\n",
-           start->x, start->y);
+  // check if already present
+  merge_segment_c *S = start->FindSeg(end);
 
-  for (int i=0; i < (int)mug_segments.size(); i++)
-    if (mug_segments[i]->Match(start, end))
-      return mug_segments[i];
+  if (S)
+  {
+//  SYS_ASSERT(end->FindSeg(start) == S);
+    return S;
+  }
 
-  merge_segment_c * S = new merge_segment_c(start, end);
+// SYS_ASSERT(! end->FindSeg(start));
+
+///--- for (int i=0; i < (int)mug_segments.size(); i++)
+///--- if (mug_segments[i]->Match(start, end))
+///--- Main_FatalError("FUCK!!!!\n");
+
+  S = new merge_segment_c(start, end);
 
   // check for zero-length lines
   double dist = MAX(fabs(start->x - end->x), fabs(start->y - end->y));
