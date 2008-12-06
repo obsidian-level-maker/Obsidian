@@ -121,7 +121,6 @@ const char * csg_brush_c::Validate()
     return "Line loop contains less than 3 vertices!";
 
   // make sure vertices are anti-clockwise
-
   double average_ang = 0;
 
   for (unsigned int k = 0; k < verts.size(); k++)
@@ -138,9 +137,8 @@ const char * csg_brush_c::Validate()
 
     double diff = ang1 - ang2;
 
-    if (diff < 0) diff += 360.0;
-
-// fprintf(stderr, "... [%d] ang1=%1.5f  ang2=%1.5f diff=%1.5f\n", (int)k, ang1, ang2, diff);
+    if (diff < 0)
+      diff += 360.0;
 
     average_ang += diff;
   }
@@ -157,19 +155,19 @@ const char * csg_brush_c::Validate()
 
 void csg_brush_c::ComputeBBox()
 {
-  min_x = +999999.9;
-  min_y = +999999.9;
-  max_x = -999999.9;
-  max_y = -999999.9;
+  min_x = +9e7;
+  min_y = +9e7;
+  max_x = -9e7;
+  max_y = -9e7;
 
   for (unsigned int i = 0; i < verts.size(); i++)
   {
     area_vert_c *V = verts[i];
 
     if (V->x < min_x) min_x = V->x;
-    if (V->x > max_x) max_x = V->x;
-
     if (V->y < min_y) min_y = V->y;
+
+    if (V->x > max_x) max_x = V->x;
     if (V->y > max_y) max_y = V->y;
   }
 }
@@ -564,6 +562,11 @@ static void Grab_LineLoop(lua_State *L, int stack_pos, csg_brush_c *B)
     luaL_error(L, "%s", err_msg);
 
   B->ComputeBBox();
+
+  if ((B->max_x - B->min_x) < EPSILON)
+    luaL_error(L, "Line loop has zero width!");
+  else if ((B->max_y - B->min_y) < EPSILON)
+    luaL_error(L, "Line loop has zero height!");
 }
 
 
