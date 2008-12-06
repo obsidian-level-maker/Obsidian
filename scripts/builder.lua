@@ -33,17 +33,18 @@ class TRANSFORM
   dy : number   --
 }
 --]]
-
 REAL_ADD_BRUSH = gui.add_brush
 
-function transformed_brush(T, info, coords, z1, z2)
+function transformed_brush2(T, info, coords, z1, z2)
+
+  if not T then T = {} end
 
   coords = deep_copy(coords)
 
   -- TODO !!!  apply transforms to slopes (z1 or z2 == table)
 
   -- handle mirroring first
-  local reverse_it = true --!!!!!! NO NO NO
+  local reverse_it = false
 
   if T.mirror_x then
     for _,C in ipairs(coords) do
@@ -98,10 +99,9 @@ function transformed_brush(T, info, coords, z1, z2)
 end
 
 
---!!!! FIXME TEMPORARY HACK
-function gui.add_brush(info, coords, z1, z2)
-  transformed_brush({}, info, coords, z1, z2)
-end
+--!!!!!!
+function gui.add_brush(info, coords, z1, z2) end
+function transformed_brush() end --!!!!!!
 
 
 function get_transform_for_seed_side(S, side)
@@ -158,8 +158,8 @@ function get_wall_coords(S, side, thick)
 
   return
   {
-    { x=x1, y=y1 }, { x=x1, y=y2 },
-    { x=x2, y=y2 }, { x=x2, y=y1 },
+    { x=x2, y=y1 }, { x=x2, y=y2 },
+    { x=x1, y=y2 }, { x=x1, y=y1 },
   }
 end
 
@@ -590,7 +590,7 @@ function make_detailed_hall(S, side, z1, z2)
 
   local function get_hall_coords(thickness)
 
-    S.thick[side] = thickness
+    ---### S.thick[side] = thickness
 
     local ox1, oy1, ox2, oy2 = S.x1,S.y1, S.x2,S.y2
 
@@ -615,7 +615,7 @@ function make_detailed_hall(S, side, z1, z2)
 
     end
 
-    local res = get_wall_coords(S, side)
+    local res = get_wall_coords(S, side, thickness)
 
     S.x1,S.y1, S.x2,S.y2 = ox1, oy1, ox2, oy2
     
@@ -623,52 +623,47 @@ function make_detailed_hall(S, side, z1, z2)
   end
 
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture="CEIL5_2" },
     b_face = { texture="CEIL5_2" },
     w_face = { texture="METAL" },
   },
-  get_hall_coords(32),
-  -2000, z1 + 32)
+  get_hall_coords(32), -2000, z1 + 32)
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture="CEIL5_2" },
     b_face = { texture="CEIL5_2" },
     w_face = { texture="METAL" },
   },
-  get_hall_coords(32),
-  z2 - 32, 2000)
+  get_hall_coords(32), z2 - 32, 2000)
 
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
     w_face = { texture="GRAY7" },
   },
-  get_hall_coords(64),
-  -2000, z1 + 6)
+  get_hall_coords(64), -2000, z1 + 6)
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
     w_face = { texture="GRAY7" },
   },
-  get_hall_coords(64),
-  z2 - 6, 2000)
+  get_hall_coords(64), z2 - 6, 2000)
 
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
     w_face = { texture="GRAY7" },
   },
-  get_hall_coords(24),
-  -2000, 2000)
+  get_hall_coords(24), -2000, 2000)
 
 
   -- TODO : corners
@@ -746,57 +741,57 @@ function make_diagonal(S, side, info, z1)
   if side == 9 then
     coords =
     {
-      { x=x2, y=y2 },
-      { x=x2, y=y1 },
       { x=x1, y=y2 },
+      { x=x2, y=y1 },
+      { x=x2, y=y2 },
     }
   elseif side == 7 then
     coords =
     {
-      { x=x1, y=y2 },
-      { x=x2, y=y2 },
       { x=x1, y=y1 },
+      { x=x2, y=y2 },
+      { x=x1, y=y2 },
     }
   elseif side == 3 then
     coords =
     {
-      { x=x2, y=y1 },
-      { x=x1, y=y1 },
       { x=x2, y=y2 },
+      { x=x1, y=y1 },
+      { x=x2, y=y1 },
     }
   elseif side == 1 then
     coords =
     {
-      { x=x1, y=y1 },
-      { x=x1, y=y2 },
       { x=x2, y=y1 },
+      { x=x1, y=y2 },
+      { x=x1, y=y1 },
     }
   else
     error("WTF dir")
   end
 
-  gui.add_brush(info, coords, z1 or -4000, 4000)
+  transformed_brush2(nil, info, coords, z1 or -4000, 4000)
 end
 
 
-function make_arrow(S, dir, f_h, tex)
-  
+function make_arrow(S, dir, f_h)
+ 
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
 
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_delta(rotate_cw90(dir))
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
-    t_face = { texture=tex },
-    b_face = { texture=tex },
+    t_face = { texture="FWATER1" },
+    b_face = { texture="FWATER1" },
     w_face = { texture="COMPBLUE" },
   },
   {
-    { x = mx + dx*100, y = my + dy * 100 },
-    { x = mx + ax*20,  y = my + ay * 20  },
     { x = mx - ax*20,  y = my - ay * 20  },
+    { x = mx + ax*20,  y = my + ay * 20  },
+    { x = mx + dx*100, y = my + dy * 100 },
   },
   -2000, f_h + 8)
 end
@@ -1463,9 +1458,9 @@ function make_lift(S, side, lift_h)
 
   local lift_coords = get_wall_coords(S, side, 128)
 
-  lift_coords[1].line_kind = kinds[4]
+  lift_coords[1].line_kind = kinds[6]
   lift_coords[2].line_kind = kinds[8]
-  lift_coords[3].line_kind = kinds[6]
+  lift_coords[3].line_kind = kinds[4]
   lift_coords[4].line_kind = kinds[2]
 
   lift_coords[1].line_tag = tag
@@ -1473,7 +1468,7 @@ function make_lift(S, side, lift_h)
   lift_coords[3].line_tag = tag
   lift_coords[4].line_tag = tag
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture="STEP2" },
     b_face = { texture="STEP2" },
@@ -1484,7 +1479,7 @@ function make_lift(S, side, lift_h)
 
   local step_coords = get_wall_coords(S, 10-side, 128)
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture=S.room.combo.floor },
     b_face = { texture=S.room.combo.floor },
@@ -1515,52 +1510,48 @@ function make_pillar(S, z1, z2, p_tex)
   local my = int((S.y1 + S.y2)/2)
   local mz = int((z1 + z2)/2)
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture="CEIL5_2" },
     b_face = { texture="CEIL5_2" },
     w_face = { texture=p_tex, x_offset=0, y_offset=0 },
   },
   {
-    { x=mx-32, y=my-32 },
-    { x=mx-32, y=my+32 },
-    { x=mx+32, y=my+32 },
-    { x=mx+32, y=my-32 },
+    { x=mx+32, y=my-32 }, { x=mx+32, y=my+32 },
+    { x=mx-32, y=my+32 }, { x=mx-32, y=my-32 },
   },
   -2000, 2000)
 
   for pass = 1,2 do
-    gui.add_brush(
+    transformed_brush2(nil,
     {
       t_face = { texture="CEIL5_2" },
       b_face = { texture="CEIL5_2" },
       w_face = { texture="METAL" },
     },
     {
-      { x=mx-40, y=my-40 },
-      { x=mx-40, y=my+40 },
-      { x=mx+40, y=my+40 },
-      { x=mx+40, y=my-40 },
+      { x=mx+40, y=my-40 }, { x=mx+40, y=my+40 },
+      { x=mx-40, y=my+40 }, { x=mx-40, y=my-40 },
     },
     sel(pass == 1, -2000, z2-32),
     sel(pass == 2,  2000, z1+32)
     )
 
-    gui.add_brush(
+    transformed_brush2(nil,
     {
       t_face = { texture="FLAT1" },
       b_face = { texture="FLAT1" },
       w_face = { texture="GRAY7" },
     },
     {
-      { x=mx-56, y=my-40 },
-      { x=mx-56, y=my+40 },
-      { x=mx-40, y=my+56 },
-      { x=mx+40, y=my+56 },
-      { x=mx+56, y=my+40 },
-      { x=mx+56, y=my-40 },
-      { x=mx+40, y=my-56 },
       { x=mx-40, y=my-56 },
+      { x=mx+40, y=my-56 },
+      { x=mx+56, y=my-40 },
+      { x=mx+56, y=my+40 },
+      { x=mx+40, y=my+56 },
+      { x=mx-40, y=my+56 },
+      { x=mx-56, y=my+40 },
+      { x=mx-56, y=my-40 },
     },
     sel(pass == 1, -2000, z2-6),
     sel(pass == 2,  2000, z1+6)
@@ -1574,17 +1565,17 @@ function make_exit_pillar(S, z1)
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture="FLAT14" },
     b_face = { texture="FLAT14" },
     w_face = { texture="SW1BLUE", peg=true, x_offset=0, y_offset=0 },
   },
   {
-    { x=mx-32, y=my-32, line_kind=11 },
-    { x=mx-32, y=my+32, line_kind=11 },
     { x=mx+32, y=my+32, line_kind=11 },
     { x=mx+32, y=my-32, line_kind=11 },
+    { x=mx-32, y=my-32, line_kind=11 },
+    { x=mx-32, y=my+32, line_kind=11 },
   },
   -2000, z1+128)
 end
@@ -1755,8 +1746,8 @@ function make_small_exit(R)
   S.thick[rotate_ccw90(side)] = 16
 
 
-  gui.add_brush(inner_info, get_wall_coords(S, rotate_cw90(side)),  -2000, 2000)
-  gui.add_brush(inner_info, get_wall_coords(S, rotate_ccw90(side)), -2000, 2000)
+  transformed_brush2(nil, inner_info, get_wall_coords(S, rotate_cw90(side)),  -2000, 2000)
+  transformed_brush2(nil, inner_info, get_wall_coords(S, rotate_ccw90(side)), -2000, 2000)
 
 
   -- make door
@@ -1858,7 +1849,7 @@ end
 
 
 function make_wall(S, side, f_tex, w_tex)
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture=f_tex },
     b_face = { texture=f_tex },
@@ -1870,7 +1861,7 @@ end
 
 
 function make_fence(S, side, z1, f_tex, w_tex)
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture=f_tex },
     b_face = { texture=f_tex },
@@ -1894,40 +1885,40 @@ function make_window(S, side, width, z1, z2, f_tex, w_tex)
 
   local mx = int(long/2)
 
-  transformed_brush(T, wall_info,
+  transformed_brush2(T, wall_info,
   {
-    { x=0, y=0 },
+    { x=mx-width/2, y=0 },
+    { x=mx-width/2, y=deep },
     { x=0, y=deep },
-    { x=mx-width/2, y=deep },
-    { x=mx-width/2, y=0 },
+    { x=0, y=0 },
   },
   -2000, 2000)
 
-  transformed_brush(T, wall_info,
+  transformed_brush2(T, wall_info,
   {
-    { x=mx+width/2, y=0 },
-    { x=mx+width/2, y=deep },
-    { x=long, y=deep },
     { x=long, y=0 },
+    { x=long, y=deep },
+    { x=mx+width/2, y=deep },
+    { x=mx+width/2, y=0 },
   },
   -2000, 2000)
 
 
-  transformed_brush(T, wall_info,
+  transformed_brush2(T, wall_info,
   {
-    { x=mx-width/2, y=0 },
-    { x=mx-width/2, y=deep },
-    { x=mx+width/2, y=deep },
     { x=mx+width/2, y=0 },
+    { x=mx+width/2, y=deep },
+    { x=mx-width/2, y=deep },
+    { x=mx-width/2, y=0 },
   },
   -2000, z1)
 
-  transformed_brush(T, wall_info,
+  transformed_brush2(T, wall_info,
   {
-    { x=mx-width/2, y=0 },
-    { x=mx-width/2, y=deep },
-    { x=mx+width/2, y=deep },
     { x=mx+width/2, y=0 },
+    { x=mx+width/2, y=deep },
+    { x=mx-width/2, y=deep },
+    { x=mx-width/2, y=0 },
   },
   z2, 2000)
 end
@@ -2018,17 +2009,15 @@ function make_pedestal(S, z1)
   local mx = int((S.x1+S.x2) / 2)
   local my = int((S.y1+S.y2) / 2)
 
-  gui.add_brush(
+  transformed_brush2(nil,
   {
     t_face = { texture="O_BLT2EM" },
     b_face = { texture="O_BLT2EM" },
     w_face = { texture="BLAKWAL2", peg=true, y_offset=0 },
   },
   {
-    { x=mx-32, y=my-32 },
-    { x=mx-32, y=my+32 },
-    { x=mx+32, y=my+32 },
-    { x=mx+32, y=my-32 },
+    { x=mx+32, y=my-32 }, { x=mx+32, y=my+32 },
+    { x=mx-32, y=my+32 }, { x=mx-32, y=my-32 },
   },
   -2000, z1+8)
 end
@@ -2649,7 +2638,7 @@ if idx < 1 then return end
 
 
 gui.printf("do_teleport\n")
-    gui.add_brush(
+    transformed_brush2(nil,
     {
       t_face = { texture="GATE3" },
       b_face = { texture="GATE3" },
@@ -2658,10 +2647,8 @@ gui.printf("do_teleport\n")
       sec_tag = tag,
     },
     {
-      { x=x1, y=y1 },
-      { x=x1, y=y2 },
-      { x=x2, y=y2 },
-      { x=x2, y=y1 },
+      { x=x2, y=y1 }, { x=x2, y=y2 },
+      { x=x1, y=y2 }, { x=x1, y=y1 },
     },
     -2000, z1)
 
@@ -2707,8 +2694,6 @@ gui.printf("do_teleport\n")
 -- z2 = 512
 
       assert(z1 and z2)
-
-      local do_corners = false --!!
 
 
       if R.combo then
@@ -2841,102 +2826,45 @@ gui.printf(">> side:%d of %s\n", side, R:tostr())
     if S.sides_only then return end
 
 
---[[      if do_corners then
-      gui.add_brush(
-      {
-        t_face = { texture=w_tex },
-        b_face = { texture=w_tex },
-        w_face = { texture=w_tex },
-      },
-      {
-        { x=x1,    y=y1 },
-        { x=x1,    y=y1+TK },
-        { x=x1+TK, y=y1+TK },
-        { x=x1+TK, y=y1 },
-      },
-      -2000, 4000)
-
-      gui.add_brush(
-      {
-        t_face = { texture=w_tex },
-        b_face = { texture=w_tex },
-        w_face = { texture=w_tex },
-      },
-      {
-        { x=x1,    y=y2-TK },
-        { x=x1,    y=y2 },
-        { x=x1+TK, y=y2 },
-        { x=x1+TK, y=y2-TK },
-      },
-      -2000, 4000)
-
-      gui.add_brush(
-      {
-        t_face = { texture=w_tex },
-        b_face = { texture=w_tex },
-        w_face = { texture=w_tex },
-      },
-      {
-        { x=x2-TK, y=y1 },
-        { x=x2-TK, y=y1+TK },
-        { x=x2,    y=y1+TK },
-        { x=x2,    y=y1 },
-      },
-      -2000, 4000)
-
-      gui.add_brush(
-      {
-        t_face = { texture=w_tex },
-        b_face = { texture=w_tex },
-        w_face = { texture=w_tex },
-      },
-      {
-        { x=x2-TK, y=y2-TK },
-        { x=x2-TK, y=y2 },
-        { x=x2,    y=y2 },
-        { x=x2,    y=y2-TK },
-      },
-      -2000, 4000)
-      end -- do_corners --]]
-
-
     -- floor and ceiling brushes
 
 if S.layout and S.layout.char == '#' then
 
-    gui.add_brush(
+    transformed_brush2(nil,
     {
       t_face = { texture=f_tex },
       b_face = { texture=f_tex },
       w_face = { texture=w_tex },
     },
     {
-      { x=x1, y=y1 }, { x=x1, y=y2 },
-      { x=x2, y=y2 }, { x=x2, y=y1 },
+      { x=x2, y=y1 }, { x=x2, y=y2 },
+      { x=x1, y=y2 }, { x=x1, y=y1 },
     },
     2000, 2000);
+
 elseif S.layout and S.layout.char == '%' then
-    gui.add_brush(
+
+    transformed_brush2(nil,
     {
       t_face = { texture="NUKAGE1" },
       b_face = { texture=f_tex },
       w_face = { texture="SFALL1" },
     },
     {
-      { x=x1, y=y1 }, { x=x1, y=y2 },
-      { x=x2, y=y2 }, { x=x2, y=y1 },
+      { x=x2, y=y1 }, { x=x2, y=y2 },
+      { x=x1, y=y2 }, { x=x1, y=y1 },
     },
     -2000, -32);
 
-    gui.add_brush(
+    transformed_brush2(nil,
     {
       t_face = { texture=f_tex },
       b_face = { texture=f_tex },
       w_face = { texture=w_tex },
     },
     {
-      { x=x1, y=y1 }, { x=x1, y=y2 },
-      { x=x2, y=y2 }, { x=x2, y=y1 },
+      { x=x2, y=y1 }, { x=x2, y=y2 },
+      { x=x1, y=y2 }, { x=x1, y=y1 },
     },
     256, 2000);
 
@@ -2979,7 +2907,7 @@ elseif CH == '!' then
 
 elseif
 not S.is_start then --!!!!
-    gui.add_brush(
+    transformed_brush2(nil,
     {
       t_face = { texture=f_tex },
       b_face = { texture=f_tex },
@@ -2987,22 +2915,21 @@ not S.is_start then --!!!!
       sec_kind = sec_kind,
     },
     {
-      { x=x1, y=y1 }, { x=x1, y=y2 },
-      { x=x2, y=y2 }, { x=x2, y=y1 },
+      { x=x2, y=y1 }, { x=x2, y=y2 },
+      { x=x1, y=y2 }, { x=x1, y=y1 },
     },
     -2000, z1);
 end
 
-
-    gui.add_brush(
+    transformed_brush2(nil,
     {
       t_face = { texture=c_tex },
       b_face = { texture=c_tex },
       w_face = { texture=w_tex },
     },
     {
-      { x=x1, y=y1 }, { x=x1, y=y2 },
-      { x=x2, y=y2 }, { x=x2, y=y1 },
+      { x=x2, y=y1 }, { x=x2, y=y2 },
+      { x=x1, y=y2 }, { x=x1, y=y1 },
     },
     z2, 4000)
 
@@ -3093,7 +3020,7 @@ end
 
 --[[ connection tester
     if S.conn_dir then
-      make_arrow(S, S.conn_dir, z1, "FWATER1")
+      make_arrow(S, S.conn_dir, z1)
     end
 --]]
 
