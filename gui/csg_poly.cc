@@ -32,13 +32,13 @@
 
 void merge_vertex_c::AddSeg(merge_segment_c *seg)
 {
-  for (int j=0; j < (int)segs.size(); j++)
+  for (unsigned int j=0; j < segs.size(); j++)
     if (segs[j] == seg)
       return;
 
   segs.push_back(seg);
 }
-  
+ 
 void merge_vertex_c::RemoveSeg(merge_segment_c *seg)
 {
   std::vector<merge_segment_c *>::iterator ENDP;
@@ -99,6 +99,15 @@ double merge_region_c::MaxGapZ() const
   return gaps[gaps.size() - 1]->GetZ2();
 }
 
+void merge_region_c::AddSeg(merge_segment_c *seg)
+{
+  for (unsigned int j=0; j < segs.size(); j++)
+    if (segs[j] == seg)
+      return;
+
+  segs.push_back(seg);
+}
+ 
 bool merge_region_c::HasBrush(csg_brush_c *P) const
 {
   for (unsigned int j = 0; j < brushes.size(); j++)
@@ -547,11 +556,15 @@ fprintf(stderr, "  CUR VERT: %s\n",
       //       non-returning loop.  Make it a mere WARNING.
       SYS_ASSERT(! trace_seg->front);
       trace_seg->front = R;
+
+      R->AddSeg(trace_seg);
     }
     else
     {
       SYS_ASSERT(! trace_seg->back);
       trace_seg->back = R;
+
+      R->AddSeg(trace_seg);
     }
 
     count++;
@@ -786,9 +799,12 @@ static void ReplaceRegion(merge_region_c *R_old, merge_region_c *R_new)
 {
   // NOTE: R_new can be NULL
  
-  for (int i = 0; i < (int)mug_segments.size(); i++)
+  for (unsigned int i = 0; i < R_old->segs.size(); i++)
   {
-    merge_segment_c *S = mug_segments[i];
+    merge_segment_c *S = R_old->segs[i];
+
+    if (R_new)
+      R_new->AddSeg(S);
 
     if (S->front == R_old) S->front = R_new;
     if (S->back  == R_old) S->back  = R_new;
@@ -856,14 +872,16 @@ static merge_segment_c *FindAlongSeg(merge_vertex_c *v1, merge_vertex_c *v2)
       return S;
   }
 
-  // TODO: make this a WARNING instead of fatal error
+  // Note: we can't ignore this problem, otherwise the boundary
+  //       of the brush could remain open, and hence the brush
+  //       would be spread into every region -- NOT GOOD!
   Main_FatalError("CSG2: cannot find segment (angle:%1.1f @ %1.0f,%1.0f)!\n",
-        v_angle, v1->x, v1->y);
+                  v_angle, v1->x, v1->y);
 
   return NULL;  // not found
 }
 
-static void MarkBoundaryRegions(csg_brush_c *P)
+static void MarkBoundaryRegions(csg_brush_c *P, std::vector<merge_region_c *> & regions)
 {
   for (int k=0; k < (int)P->verts.size(); k++)
   {
@@ -891,7 +909,11 @@ static void MarkBoundaryRegions(csg_brush_c *P)
       merge_region_c *R = (S->start == V) ? S->back : S->front;
 
       if (R && ! R->HasBrush(P))
+      {
         R->AddBrush(P);
+
+        regions.push_back(R);
+      }
 
       S->border_of = P;
 
@@ -900,39 +922,52 @@ static void MarkBoundaryRegions(csg_brush_c *P)
   }
 }
 
-static void MarkInnerRegions(csg_brush_c *P)
+static void MarkInnerRegions(csg_brush_c *P, std::vector<merge_region_c *> & regions)
 {
+  int loops = 0;
+
   for (;;)
   {
-    int changes = 0;
+    SYS_ASSERT(loops < 100);
 
-    for (unsigned j = 0; j < mug_segments.size(); j++)
+    std::vector<merge_region_c *> new_regs;
+
+    for (unsigned k = 0; k < regions.size(); k++)
     {
-      merge_segment_c *S = mug_segments[j];
+      merge_region_c *R = regions[k];
 
-      if (! S->front || ! S->back)
-        continue;
-
-      // contain the virus
-      if (S->border_of == P)
-        continue;
-
-      bool got_back  = S->back ->HasBrush(P);
-      bool got_front = S->front->HasBrush(P);
-
-      if (got_back != got_front)
+      for (unsigned j = 0; j < R->segs.size(); j++)
       {
-        merge_region_c *R = got_back ? S->front : S->back;
+        merge_segment_c *S = R->segs[j];
 
-        R->AddBrush(P);
+        if (! (S->front && S->back))
+          continue;
 
-        changes++;
+        // contain the virus
+        if (S->border_of == P)
+          continue;
+
+        bool got_back  = S->back ->HasBrush(P);
+        bool got_front = S->front->HasBrush(P);
+
+        if (got_back != got_front)
+        {
+          merge_region_c *R = got_back ? S->front : S->back;
+
+          R->AddBrush(P);
+
+          new_regs.push_back(R);
+        }
       }
     }
 
     // stop when it cannot spread any further
-    if (changes == 0)
+    if (new_regs.size() == 0)
       return;
+
+    loops++;
+
+    std::swap(regions, new_regs);
   }
 }
 
@@ -953,15 +988,17 @@ static void Mug_AssignAreas(void)
   // However it is sufficient to simply "spread" the brush
   // from each "infected" merge_region_c to every neighbour as
   // long as the crossing segment is not part of the csg_brush_c
-  // boundary (no escaping!).
+  // boundary.
 
   for (unsigned int j=0; j < all_brushes.size(); j++)
   {
     csg_brush_c *P = all_brushes[j];
 
-    MarkBoundaryRegions(P);
+    std::vector<merge_region_c *> regions;
 
-    MarkInnerRegions(P);
+    MarkBoundaryRegions(P, regions);
+
+    MarkInnerRegions(P, regions);
   }
 }
 

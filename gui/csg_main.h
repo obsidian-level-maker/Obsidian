@@ -343,15 +343,16 @@ public:
 class merge_region_c
 {
   // This represents a region on the 2D map, bounded by a group
-  // of segments (not explicitly stored here, but implicit in the
-  // merge_segment_c::front and back fields).  Each region lists
-  // all the brushes contained, as well as the gaps (spaces between
-  // brushes where objects can go).
+  // of segments.  Each region lists all the brushes contained,
+  // as well as the gaps (vertical spaces between brushes where
+  // objects can go).
 
 public:
   bool faces_out;
 
   std::vector<csg_brush_c *> brushes;
+
+  std::vector<merge_segment_c *> segs;
 
   // gaps are in order from lowest to highest
   std::vector<merge_gap_c *> gaps;
@@ -361,7 +362,7 @@ public:
   int index;
 
 public:
-  merge_region_c() : faces_out(false), brushes(), gaps(), index(-1)
+  merge_region_c() : faces_out(false), brushes(), segs(), gaps(), index(-1)
   { }
 
   ~merge_region_c()
@@ -376,6 +377,8 @@ public:
   // requires at least one gap!
   double MinGapZ() const;
   double MaxGapZ() const;
+
+  void AddSeg(merge_segment_c *seg);
 
   bool HasBrush(csg_brush_c *P) const;
   void AddBrush(csg_brush_c *P);
