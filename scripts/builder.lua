@@ -134,26 +134,26 @@ function get_transform_for_seed_center(S)
 end
 
 
-function get_wall_coords(S, side)
+function get_wall_coords(S, side, thick)
   assert(side ~= 5)
 
   local x1, y1 = S.x1, S.y1
   local x2, y2 = S.x2, S.y2
 
   if side == 4 or side == 1 or side == 7 then
-    x2 = x1 + S.thick[4]
+    x2 = x1 + (thick or S.thick[4])
   end
 
   if side == 6 or side == 3 or side == 9 then
-    x1 = x2 - S.thick[6]
+    x1 = x2 - (thick or S.thick[6])
   end
 
   if side == 2 or side == 1 or side == 3 then
-    y2 = y1 + S.thick[2]
+    y2 = y1 + (thick or S.thick[2])
   end
 
   if side == 8 or side == 7 or side == 9 then
-    y1 = y2 - S.thick[8]
+    y1 = y2 - (thick or S.thick[8])
   end
 
   return
@@ -1441,7 +1441,7 @@ gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn
 end
 
 
-function make_lift(S, x1,y1, x2,y2, z)
+function make_lift(S, side, lift_h)
 
   local tag = PLAN:alloc_tag()
 
@@ -1450,9 +1450,10 @@ function make_lift(S, x1,y1, x2,y2, z)
   for dir = 2,8,2 do
     local N = S:neighbor(dir)
     if N then
-      local nz = N.floor_h or N.room.floor_h or z
+      local nz = N.floor_h or N.room.floor_h or lift_h
+      if dir == 10-side then nz = S.conn.conn_h end
 
-      if nz < z-15 then
+      if nz < lift_h-15 then
         kinds[dir] = 62
       else
         kinds[dir] = 88
@@ -1460,20 +1461,36 @@ function make_lift(S, x1,y1, x2,y2, z)
     end
   end
 
-    gui.add_brush(
-    {
-      t_face = { texture="STEP2" },
-      b_face = { texture="STEP2" },
-      w_face = { texture="SUPPORT2", peg=true },
-      sec_tag = tag,
-    },
-    {
-      { x=x1, y=y1, line_kind = kinds[4], line_tag=tag },
-      { x=x1, y=y2, line_kind = kinds[8], line_tag=tag },
-      { x=x2, y=y2, line_kind = kinds[6], line_tag=tag },
-      { x=x2, y=y1, line_kind = kinds[2], line_tag=tag },
-    },
-    -2000, z);
+  local lift_coords = get_wall_coords(S, side, 128)
+
+  lift_coords[1].line_kind = kinds[4]
+  lift_coords[2].line_kind = kinds[8]
+  lift_coords[3].line_kind = kinds[6]
+  lift_coords[4].line_kind = kinds[2]
+
+  lift_coords[1].line_tag = tag
+  lift_coords[2].line_tag = tag
+  lift_coords[3].line_tag = tag
+  lift_coords[4].line_tag = tag
+
+  gui.add_brush(
+  {
+    t_face = { texture="STEP2" },
+    b_face = { texture="STEP2" },
+    w_face = { texture="SUPPORT2", peg=true },
+    sec_tag = tag,
+  },
+  lift_coords, -2000, lift_h)
+
+  local step_coords = get_wall_coords(S, 10-side, 128)
+
+  gui.add_brush(
+  {
+    t_face = { texture=S.room.combo.floor },
+    b_face = { texture=S.room.combo.floor },
+    w_face = { texture=S.room.combo.wall },
+  },
+  step_coords, -2000, S.conn.conn_h);
 end
 
 
@@ -2955,7 +2972,7 @@ elseif CH == "L" or CH == "J" or
    end
 
 elseif CH == '=' then
-  make_lift(S, x1,y1, x2,y2, assert(S.layout.lift_h))
+  make_lift(S, 10-S.conn_dir, assert(S.layout.lift_h))
 
 elseif CH == '!' then
   make_popup_trap(S, z1, {}, S.room.combo)
