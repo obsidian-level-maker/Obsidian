@@ -264,16 +264,16 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
 
   local frame_coords =
   {
-    { x=0,    y=-N_deep },
-    { x=0,    y=deep },
-    { x=long, y=deep },
     { x=long, y=-N_deep },
+    { x=long, y=deep },
+    { x=0,    y=deep },
+    { x=0,    y=-N_deep },
   }
 
   local z_top = math.max(int((z1+z2) / 2), z1+128)
   if z_top > z2-16 then z_top = z2-16 end
 
-  transformed_brush(T, arch_info, frame_coords, z_top, 2000)
+  transformed_brush2(T, arch_info, frame_coords, z_top, 2000)
 
   local break_tex = w_tex
   if o_tex ~= w_tex then break_tex = "LITE5" end
@@ -281,14 +281,14 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
   for pass = 1,2 do
     if pass == 2 then T.mirror_x = mx end
 
-    transformed_brush(T, arch_info,
+    transformed_brush2(T, arch_info,
     {
-      { x=0,     y=-N_deep },
-      { x=0,     y=deep },
-      { x=24+16, y=deep },
-      { x=36+16, y=deep-16,    w_face= {texture=break_tex} },
-      { x=36+16, y=-N_deep+16, w_face= {texture=o_tex} },
+      { x=0,     y=-N_deep,    w_face= {texture=o_tex} },
       { x=24+16, y=-N_deep,    w_face= {texture=o_tex} },
+      { x=36+16, y=-N_deep+16, w_face= {texture=break_tex} },
+      { x=36+16, y=deep-16 },
+      { x=24+16, y=deep },
+      { x=0,     y=deep },
     },
     -2000, 2000)
   end
@@ -321,14 +321,14 @@ function make_door(S, side, z1, key_tex)
 
   local frame_coords =
   {
-    { x=0,    y=0 },
-    { x=0,    y=deep },
-    { x=long, y=deep },
     { x=long, y=0 },
+    { x=long, y=deep },
+    { x=0,    y=deep },
+    { x=0,    y=0 },
   }
 
-  transformed_brush(T, other_info, frame_coords, -2000, z1+8)
-  transformed_brush(T, other_info, frame_coords, z1+8+112, 2000)
+  transformed_brush2(T, other_info, frame_coords, -2000, z1+8)
+  transformed_brush2(T, other_info, frame_coords, z1+8+112, 2000)
 
   transformed_brush(T, other_info,
   {
@@ -397,14 +397,14 @@ function make_locked_door(S, side, z1, key_tex)
 
   local frame_coords =
   {
-    { x=0,    y=my-DY },
-    { x=0,    y=my+DY },
-    { x=long, y=my+DY },
     { x=long, y=my-DY },
+    { x=long, y=my+DY },
+    { x=0,    y=my+DY },
+    { x=0,    y=my-DY },
   }
 
-  transformed_brush(T, other_info, frame_coords, -2000, z1+8)
-  transformed_brush(T, other_info, frame_coords, z1+8+112, 2000)
+  transformed_brush2(T, other_info, frame_coords, -2000, z1+8)
+  transformed_brush2(T, other_info, frame_coords, z1+8+112, 2000)
 
   local KIND = 1
 
@@ -1597,12 +1597,12 @@ function make_outdoor_exit_switch(S, dir, f_h)
     b_face = { texture="CEIL5_1" },
   }
 
-  transformed_brush(DT, podium,
+  transformed_brush2(DT, podium,
   {
-    { x=32, y=32 },
-    { x=32, y=deep-32 },
-    { x=long-32, y=deep-32 },
     { x=long-32, y=32 },
+    { x=long-32, y=deep-32 },
+    { x=32, y=deep-32 },
+    { x=32, y=32 },
   },
   -2000, f_h+12)
 
@@ -1616,25 +1616,25 @@ function make_outdoor_exit_switch(S, dir, f_h)
 
   local switch_face = { texture="SW1COMM", peg=true, x_offset=0, y_offset=0 }
 
-  transformed_brush(DT, switch_info,
+  transformed_brush2(DT, switch_info,
   {
-    { x=mx-56, y=my-24 },
-    { x=mx-56, y=my+24 },
-    { x=mx-40, y=my+40 },
-    { x=mx+40, y=my+40 },
-    { x=mx+56, y=my+24 },
-    { x=mx+56, y=my-24 },
-    { x=mx+40, y=my-40 },
     { x=mx-40, y=my-40 },
+    { x=mx+40, y=my-40 },
+    { x=mx+56, y=my-24 },
+    { x=mx+56, y=my+24 },
+    { x=mx+40, y=my+40 },
+    { x=mx-40, y=my+40 },
+    { x=mx-56, y=my+24 },
+    { x=mx-56, y=my-24 },
   },
   -2000, f_h+16)
 
-  transformed_brush(DT, switch_info,
+  transformed_brush2(DT, switch_info,
   {
-    { x=mx-32, y=my-8 },
-    { x=mx-32, y=my+8, w_face = switch_face, line_kind=11 },
-    { x=mx+32, y=my+8 },
-    { x=mx+32, y=my-8, w_face = switch_face, line_kind=11 },
+    { x=mx+32, y=my-8 },
+    { x=mx+32, y=my+8, w_face = switch_face, line_kind=11 },
+    { x=mx-32, y=my+8 },
+    { x=mx-32, y=my-8, w_face = switch_face, line_kind=11 },
   },
   -2000, f_h+16+64)
 
@@ -1649,15 +1649,15 @@ function make_outdoor_exit_switch(S, dir, f_h)
   local exit_face = { texture="EXITSIGN", peg=true, x_offset=0, y_offset=0 }
  
   for pass=1,4 do
-    local ex = sel(pass <= 2, 48, long-80)
-    local ey = sel((pass % 2) == 1, 48, deep-48-8)
+    DT.mirror_x = sel((pass % 2)==1, nil, long/2)
+    DT.mirror_y = sel(pass >= 3,     nil, deep/2)
 
-    transformed_brush(DT, exit_info,
+    transformed_brush2(DT, exit_info,
     {
-      { x=ex+32, y=ey,   w_face = exit_face },
-      { x=ex,    y=ey   },
-      { x=ex,    y=ey+8, w_face = exit_face },
-      { x=ex+32, y=ey+8 },
+      { x=48+8,  y=48+24 },
+      { x=48+0,  y=48+16, w_face=exit_face },
+      { x=48+28, y=48+0  },
+      { x=48+36, y=48+8  },
     },
     -2000, f_h+12+16)
   end
@@ -1710,31 +1710,39 @@ function make_small_exit(R)
   local mx = int(long / 2)
 
 
-  transformed_brush(DT, out_info,
+  transformed_brush2(DT, out_info,
   {
-    { x=0, y=0 }, { x=0, y=48 },
-    { x=long, y=48 }, {x=long, y=0 },
+    { x=long, y=0 },
+    { x=long, y=48 },
+    { x=0, y=48 },
+    { x=0, y=0 },
   },
   -2000, f_h)
 
-  transformed_brush(DT, out_info,
+  transformed_brush2(DT, out_info,
   {
-    { x=0, y=-24 }, { x=0, y=48 },
-    { x=long, y=48 }, {x=long, y=-24 },
+    { x=long, y=-24 },
+    { x=long, y=48 },
+    { x=0, y=48 },
+    { x=0, y=-24 },
   },
   c_h, 2000)
 
-  transformed_brush(DT, inner_info,
+  transformed_brush2(DT, inner_info,
   {
-    { x=0, y=48 }, { x=0, y=long },
-    { x=long, y=long }, { x=long, y=48 },
+    { x=long, y=48 },
+    { x=long, y=long },
+    { x=0, y=long },
+    { x=0, y=48 },
   },
   -2000, f_h)
 
-  transformed_brush(DT, inner_info,
+  transformed_brush2(DT, inner_info,
   {
-    { x=0, y=48 }, { x=0, y=long },
-    { x=long, y=long }, { x=long, y=48 },
+    { x=long, y=48 },
+    { x=long, y=long },
+    { x=0, y=long },
+    { x=0, y=48 },
   },
   c_h, 2000)
 
@@ -1760,32 +1768,34 @@ function make_small_exit(R)
     flag_door = true,
   }
 
-  transformed_brush(DT, door_info,
+  transformed_brush2(DT, door_info,
   {
-    { x=mx-32, y=48, line_kind=1 },
-    { x=mx-32, y=64, line_kind=1 },
-    { x=mx+32, y=64, line_kind=1 },
     { x=mx+32, y=48, line_kind=1 },
+    { x=mx+32, y=64, line_kind=1 },
+    { x=mx-32, y=64, line_kind=1 },
+    { x=mx-32, y=48, line_kind=1 },
   },
   f_h+36, 2000)
 
   inner_info.b_face = { texture="FLAT1" }
 
-  transformed_brush(DT, inner_info,
+  transformed_brush2(DT, inner_info,
   {
-    { x=mx-32, y=32 },
-    { x=mx-32, y=80 },
+    { x=mx+32, y=32 },
     { x=mx+32, y=80 },
-    { x=mx+32, y=32, w_face=out_face },
+    { x=mx-32, y=80 },
+    { x=mx-32, y=32, w_face=out_face },
   },
   f_h+72, 2000)
 
   local exit_info =
   {
-    w_face = { texture="EXITSIGN", x_offset=0, y_offset=0 },
+    w_face = { texture="SHAWN2" },
     t_face = { texture="FLAT23" },
     b_face = { texture="FLAT23" },
   }
+
+  local exit_face = { texture="EXITSIGN", x_offset=0, y_offset=0 }
 
   local key_tex = "LITE5"
 
@@ -1796,24 +1806,24 @@ function make_small_exit(R)
   for pass = 1,2 do
     if pass == 2 then DT.mirror_x = mx end
 
-    transformed_brush(DT, inner_info,
+    transformed_brush2(DT, inner_info,
     {
-      { x=0,     y=-24 },
-      { x=0,     y=80 },
-      { x=mx-32, y=80, w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
-      { x=mx-32, y=64, w_face={ texture="DOORTRAK", peg=true } },
-      { x=mx-32, y=48, w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
-      { x=mx-32, y=32,  w_face=out_face },
+      { x=0,     y=-24, w_face=out_face },
       { x=mx-96, y=-24, w_face=out_face },
+      { x=mx-32, y=32,  w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
+      { x=mx-32, y=48,  w_face={ texture="DOORTRAK", peg=true } },
+      { x=mx-32, y=64,  w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
+      { x=mx-32, y=80  },
+      { x=0,     y=80  },
     },
     -2000, 2000)
 
-    transformed_brush(DT, exit_info,
+    transformed_brush2(DT, exit_info,
     {
-      { x=mx-32, y=  0 },
-      { x=mx-60, y=-16, w_face={ texture="SHAWN2" } },
       { x=mx-68, y= -8 },
-      { x=mx-40, y=  8, w_face={ texture="SHAWN2" } },
+      { x=mx-60, y=-16, w_face=exit_face },
+      { x=mx-32, y=  0 },
+      { x=mx-40, y=  8 },
     },
     c_h-16, 2000)
   end
@@ -1828,16 +1838,16 @@ function make_small_exit(R)
   local swit_W = 64
 
 
-  transformed_brush(WT, inner_info,
+  transformed_brush2(WT, inner_info,
   {
-    { x=0, y=0 },
-    { x=0, y=16 },
-    { x=mx-swit_W/2-8, y=16, w_face={ texture="DOORSTOP", x_offset=0 }, line_kind=11 },
-    { x=mx-swit_W/2,   y=16, w_face={ texture="SW1METAL", x_offset=0, y_offset=0 }, line_kind=11 },
-    { x=mx+swit_W/2,   y=16, w_face={ texture="DOORSTOP", x_offset=0 }, line_kind=11 },
-    { x=mx+swit_W/2+8, y=16 },
-    { x=long, y=16 },
     { x=long, y=0 },
+    { x=long, y=16 },
+    { x=mx+swit_W/2+8, y=16, w_face={ texture="DOORSTOP", x_offset=0 } },
+    { x=mx+swit_W/2,   y=16, w_face={ texture="SW1METAL", x_offset=0, y_offset=0 }, line_kind=11 },
+    { x=mx-swit_W/2,   y=16, w_face={ texture="DOORSTOP", x_offset=0 } },
+    { x=mx-swit_W/2-8, y=16 },
+    { x=0, y=16 },
+    { x=0, y=0 },
   },
   -2000, 2000)
 
