@@ -94,6 +94,10 @@ function transformed_brush2(T, info, coords, z1, z2)
     end
   end
 
+--for _,C in ipairs(coords) do
+--  C.x, C.y = C.y, 4000-C.x
+--end
+
   gui.add_brush(info, coords, z1, z2)
 end
 
@@ -1902,8 +1906,6 @@ end
 
 function make_window(S, side, width, z1, z2, f_tex, w_tex)
 
-  local T, long, deep = get_transform_for_seed_side(S, side)
-
   local wall_info =
   {
     t_face = { texture=f_tex },
@@ -1911,26 +1913,12 @@ function make_window(S, side, width, z1, z2, f_tex, w_tex)
     w_face = { texture=w_tex },
   }
 
+  local side_face = { texture="DOORSTOP" }
+
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
   local mx = int(long/2)
-
-  transformed_brush2(T, wall_info,
-  {
-    { x=mx-width/2, y=0 },
-    { x=mx-width/2, y=deep },
-    { x=0, y=deep },
-    { x=0, y=0 },
-  },
-  -2000, 2000)
-
-  transformed_brush2(T, wall_info,
-  {
-    { x=long, y=0 },
-    { x=long, y=deep },
-    { x=mx+width/2, y=deep },
-    { x=mx+width/2, y=0 },
-  },
-  -2000, 2000)
-
 
   transformed_brush2(T, wall_info,
   {
@@ -1949,6 +1937,20 @@ function make_window(S, side, width, z1, z2, f_tex, w_tex)
     { x=mx-width/2, y=0 },
   },
   z2, 2000)
+
+
+  for pass = 1,2 do
+    if pass == 2 then T.mirror_x = mx end
+
+    transformed_brush2(T, wall_info,
+    {
+      { x=mx-width/2, y=0, w_face = side_face },
+      { x=mx-width/2, y=deep },
+      { x=0, y=deep },
+      { x=0, y=0 },
+    },
+    -2000, 2000)
+  end
 end
 
 
@@ -2816,7 +2818,7 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "window" then
-        make_window(S, side, 208, z1+64, z2-32, f_tex, w_tex)
+        make_window(S, side, 192, z1+64, z2-32, f_tex, w_tex)
       end
 
       if B_kind == "fence"
