@@ -1437,9 +1437,9 @@ static csg_brush_c * PolyForSideTexture(merge_region_c *R, double z1, double z2)
   csg_brush_c *MID = NULL;
   double best_h = 0;
 
-  for (unsigned int j = 0; j < R->areas.size(); j++)
+  for (unsigned int j = 0; j < R->brushes.size(); j++)
   {
-    csg_brush_c *A = R->areas[j];
+    csg_brush_c *A = R->brushes[j];
 
     if (A->z2 < z1 + EPSILON)
       continue;

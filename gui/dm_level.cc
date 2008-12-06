@@ -218,7 +218,7 @@ void CSG2_Doom_TestRegions(void)
 
     const char *flat = "FLAT1";
  
-    DM_AddSector(0,flat, 144,flat, 255,(int)R->areas.size(),(int)R->gaps.size());
+    DM_AddSector(0,flat, 144,flat, 255,(int)R->brushes.size(),(int)R->gaps.size());
 
     const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
 
@@ -268,9 +268,9 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   double best_h = 0;
 
   // FIXME use f_sides/b_sides (FindSideFace)
-  for (unsigned int j = 0; j < R->areas.size(); j++)
+  for (unsigned int j = 0; j < R->brushes.size(); j++)
   {
-    csg_brush_c *A = R->areas[j];
+    csg_brush_c *A = R->brushes[j];
 
     if (A->z1 > B->t_brush->z1 - EPSILON &&
         A->z2 < T->b_brush->z2 + EPSILON)

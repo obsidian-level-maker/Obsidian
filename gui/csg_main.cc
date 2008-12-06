@@ -775,9 +775,9 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
   csg_brush_c *best = NULL;
   double best_dist = 1e9;
 
-  for (unsigned int k = 0; k < R->areas.size(); k++)
+  for (unsigned int k = 0; k < R->brushes.size(); k++)
   {
-    csg_brush_c *A = R->areas[k];
+    csg_brush_c *A = R->brushes[k];
 
     // ideal match
     if ((z > A->z1 - EPSILON) && (z < A->z2 + EPSILON))

@@ -101,13 +101,16 @@ double merge_region_c::MaxGapZ() const
 
 bool merge_region_c::HasBrush(csg_brush_c *P) const
 {
-  for (unsigned int j = 0; j < areas.size(); j++)
-  {
-    if (areas[j] == P)
+  for (unsigned int j = 0; j < brushes.size(); j++)
+    if (brushes[j] == P)
       return true;
-  }
 
   return false; // nope
+}
+
+void merge_region_c::AddBrush(csg_brush_c *P)
+{
+  brushes.push_back(P);
 }
 
 
@@ -888,7 +891,7 @@ static void MarkBoundaryRegions(csg_brush_c *P)
       merge_region_c *R = (S->start == V) ? S->back : S->front;
 
       if (R && ! R->HasBrush(P))
-        R->areas.push_back(P);
+        R->AddBrush(P);
 
       S->border_of = P;
 
@@ -921,7 +924,7 @@ static void MarkInnerRegions(csg_brush_c *P)
       {
         merge_region_c *R = got_back ? S->front : S->back;
 
-        R->areas.push_back(P);
+        R->AddBrush(P);
 
         changes++;
       }
@@ -977,17 +980,17 @@ static void Mug_DiscoverGaps(void)
   {
     merge_region_c *R = mug_regions[i];
 
-    std::sort(R->areas.begin(), R->areas.end(),
+    std::sort(R->brushes.begin(), R->brushes.end(),
               Compare_BrushZ1_pred());
 
-    if (R->areas.size() <= 1)
+    if (R->brushes.size() <= 1)
       continue;
 
-    csg_brush_c *high = R->areas[0];
+    csg_brush_c *high = R->brushes[0];
 
-    for (unsigned int k = 1; k < R->areas.size(); k++)
+    for (unsigned int k = 1; k < R->brushes.size(); k++)
     {
-      csg_brush_c *A = R->areas[k];
+      csg_brush_c *A = R->brushes[k];
 
       if (A->z1 > high->z2 + EPSILON)
       {
@@ -1126,16 +1129,15 @@ static merge_segment_c *ClosestSegmentToPoint(double x, double y, bool *hit_vert
 
   *hit_vertex = false;
 
-  if (! closest_up && ! closest_down)
-    return NULL;  // outside map?
-
-  if (fabs(x - closest_up->start->x) > EPSILON &&
+  if (closest_up &&
+      fabs(x - closest_up->start->x) > EPSILON &&
       fabs(x - closest_up->end  ->x) > EPSILON)
   {
     return closest_up;
   }
 
-  if (fabs(x - closest_down->start->x) > EPSILON &&
+  if (closest_down &&
+      fabs(x - closest_down->start->x) > EPSILON &&
       fabs(x - closest_down->end  ->x) > EPSILON)
   {
     return closest_down;
@@ -1143,7 +1145,7 @@ static merge_segment_c *ClosestSegmentToPoint(double x, double y, bool *hit_vert
 
   *hit_vertex = true;
 
-  return closest_up;
+  return closest_up ? closest_up : closest_down;
 }
 
 static merge_region_c *FindRegionForPoint(double x, double y)
@@ -1362,7 +1364,7 @@ void CSG2_MergeAreas(void)
   Mug_RemoveIslands();
 
   Mug_AssignAreas();
-    
+
   Mug_DiscoverGaps();
   Mug_GapNeighbours();
 

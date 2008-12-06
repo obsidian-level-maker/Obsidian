@@ -19,6 +19,7 @@
 #ifndef __OBLIGE_CSG_MAIN_H__
 #define __OBLIGE_CSG_MAIN_H__
 
+
 #define EPSILON  0.005
 
 #define ANGLE_EPSILON  0.0003
@@ -350,7 +351,7 @@ class merge_region_c
 public:
   bool faces_out;
 
-  std::vector<csg_brush_c *> areas;
+  std::vector<csg_brush_c *> brushes;
 
   // gaps are in order from lowest to highest
   std::vector<merge_gap_c *> gaps;
@@ -360,7 +361,7 @@ public:
   int index;
 
 public:
-  merge_region_c() : faces_out(false), areas(), gaps(), index(-1)
+  merge_region_c() : faces_out(false), brushes(), gaps(), index(-1)
   { }
 
   ~merge_region_c()
@@ -377,6 +378,7 @@ public:
   double MaxGapZ() const;
 
   bool HasBrush(csg_brush_c *P) const;
+  void AddBrush(csg_brush_c *P);
 };
 
 
