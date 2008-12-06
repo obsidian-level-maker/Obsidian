@@ -98,10 +98,6 @@ function transformed_brush2(T, info, coords, z1, z2)
 end
 
 
---!!!!!!
-function transformed_brush() end --!!!!!!
-
-
 function get_transform_for_seed_side(S, side)
   
   local T = { }
@@ -132,6 +128,28 @@ function get_transform_for_seed_center(S)
 end
 
 
+function rect_coords(x1, y1, x2, y2)
+  return
+  {
+    { x=x2, y=y1 },
+    { x=x2, y=y2 },
+    { x=x1, y=y2 },
+    { x=x1, y=y1 },
+  }
+end
+
+function boxwh_coords(x, y, w, h)
+  return
+  {
+    { x=x+w, y=y },
+    { x=x+w, y=y+h },
+    { x=x,   y=y+h },
+    { x=x,   y=y },
+  }
+end
+
+
+
 function get_wall_coords(S, side, thick)
   assert(side ~= 5)
 
@@ -154,11 +172,7 @@ function get_wall_coords(S, side, thick)
     y1 = y2 - (thick or S.thick[8])
   end
 
-  return
-  {
-    { x=x2, y=y1 }, { x=x2, y=y2 },
-    { x=x1, y=y2 }, { x=x1, y=y1 },
-  }
+  return rect_coords(x1,y1, x2,y2)
 end
 
 
@@ -328,33 +342,33 @@ function make_door(S, side, z1, key_tex)
   transformed_brush2(T, other_info, frame_coords, -2000, z1+8)
   transformed_brush2(T, other_info, frame_coords, z1+8+112, 2000)
 
-  transformed_brush(T, other_info,
+  transformed_brush2(T, other_info,
   {
-    { x=0, y=0 },
-    { x=0, y=deep },
-    { x=mx-64, y=deep },
     { x=mx-64, y=0 },
+    { x=mx-64, y=deep },
+    { x=0, y=deep },
+    { x=0, y=0 },
   },
   -2000, 2000)
 
-  transformed_brush(T, other_info,
+  transformed_brush2(T, other_info,
   {
-    { x=mx+64, y=0 },
-    { x=mx+64, y=deep },
-    { x=long,  y=deep },
     { x=long,  y=0 },
+    { x=long,  y=deep },
+    { x=mx+64, y=deep },
+    { x=mx+64, y=0 },
   },
   -2000, 2000)
   
 
   local KIND = 1
 
-  transformed_brush(T, door_info,
+  transformed_brush2(T, door_info,
   {
-    { x=mx-64, y=my-8, line_kind=KIND },
-    { x=mx-64, y=my+8, line_kind=KIND },
-    { x=mx+64, y=my+8, line_kind=KIND },
     { x=mx+64, y=my-8, line_kind=KIND },
+    { x=mx+64, y=my+8, line_kind=KIND },
+    { x=mx-64, y=my+8, line_kind=KIND },
+    { x=mx-64, y=my-8, line_kind=KIND },
   },
   z1+64, 2000)
 
@@ -406,12 +420,12 @@ function make_locked_door(S, side, z1, key_tex)
 
   local KIND = 1
 
-  transformed_brush(T, door_info,
+  transformed_brush2(T, door_info,
   {
-    { x=mx-64, y=my-8, line_kind=KIND },
-    { x=mx-64, y=my+8, line_kind=KIND },
-    { x=mx+64, y=my+8, line_kind=KIND },
     { x=mx+64, y=my-8, line_kind=KIND },
+    { x=mx+64, y=my+8, line_kind=KIND },
+    { x=mx-64, y=my+8, line_kind=KIND },
+    { x=mx-64, y=my-8, line_kind=KIND },
   },
   z1+64, 2000)
 
@@ -419,21 +433,21 @@ function make_locked_door(S, side, z1, key_tex)
   for pass = 1,2 do
     if pass == 2 then T.mirror_x = mx end
 
-    transformed_brush(T, key_info,
+    transformed_brush2(T, key_info,
     {
-      { x=mx-64-18, y=my-DY },
+      { x=mx-64,    y=my-8, w_face={ texture="DOORTRAK", peg=true } },
+      { x=mx-64,    y=my+8  },
       { x=mx-64-18, y=my+DY },
-      { x=mx-64,    y=my+8, w_face={ texture="DOORTRAK", peg=true } },
-      { x=mx-64,    y=my-8 },
+      { x=mx-64-18, y=my-DY },
     },
     -2000, 2000)
 
-    transformed_brush(T, other_info,
+    transformed_brush2(T, other_info,
     {
-      { x=0,        y=my-DY },
-      { x=0,        y=my+DY },
-      { x=mx-64-18, y=my+DY },
       { x=mx-64-18, y=my-DY },
+      { x=mx-64-18, y=my+DY },
+      { x=0,        y=my+DY },
+      { x=0,        y=my-DY },
     },
     -2000, 2000)
   end
@@ -466,12 +480,12 @@ function make_lowering_bars(S, side, z1, f_tex, w_tex)
     local mx = mx1 + (mx2 - mx1) * (i-1) / (num_bars-1)
     local my = 0
 
-    transformed_brush(T, bar_info,
+    transformed_brush2(T, bar_info,
     {
-      { x=mx-bar_w/2, y=my-bar_w/2 },
-      { x=mx-bar_w/2, y=my+bar_w/2 },
-      { x=mx+bar_w/2, y=my+bar_w/2 },
       { x=mx+bar_w/2, y=my-bar_w/2 },
+      { x=mx+bar_w/2, y=my+bar_w/2 },
+      { x=mx-bar_w/2, y=my+bar_w/2 },
+      { x=mx-bar_w/2, y=my-bar_w/2 },
     },
     -2000, z1+64)
   end
@@ -1214,10 +1228,10 @@ function make_low_curved_stair(S, x_h, y_h)
 
   local corn_coords =
   {
-    { x=32, y=0 },
-    { x=0,  y=0 },
-    { x=0,  y=32 },
     { x=32, y=32 },
+    { x=0,  y=32 },
+    { x=0,  y=0 },
+    { x=32, y=0 },
   }
 
 
@@ -1253,10 +1267,12 @@ gui.debugf("DEL (%1.3f %1.3f)  (%1.3f %1.3f)\n", dx1, dy1, dx2,dy2)
 
 gui.debugf("(%d,%d) .. (%d,%d) .. (%d,%d) .. (%d,%d)\n",
 cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
-    transformed_brush(T, step_info,
+    transformed_brush2(T, step_info,
     {
-      { x=cx1, y=cy1 }, { x=cx2, y=cy2 },
-      { x=fx2, y=fy2 }, { x=fx1, y=fy1 },
+      { x=fx1, y=fy1 },
+      { x=fx2, y=fy2 },
+      { x=cx2, y=cy2 },
+      { x=cx1, y=cy1 },
     },
     -2000, z)
   end
@@ -1271,23 +1287,23 @@ cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
 
   local h3 = math.max(x_h, y_h)
 
-  transformed_brush(T, mat_info, corn_coords, -2000, h3)
+  transformed_brush2(T, mat_info, corn_coords, -2000, h3)
 
-  transformed_brush(T, mat_info,
+  transformed_brush2(T, mat_info,
   {
-    { x=0, y=deep-bord_W },
-    { x=0, y=deep    },
-    { x=long, y=deep },
     { x=long, y=deep-bord_W },
+    { x=long, y=deep },
+    { x=0, y=deep    },
+    { x=0, y=deep-bord_W },
   },
   -2000, h3)
 
-  transformed_brush(T, mat_info,
+  transformed_brush2(T, mat_info,
   {
-    { x=long-bord_W, y=0 },
-    { x=long-bord_W, y=deep    },
-    { x=long, y=deep },
     { x=long, y=0 },
+    { x=long, y=deep },
+    { x=long-bord_W, y=deep },
+    { x=long-bord_W, y=0 },
   },
   -2000, h3)
 end
@@ -1960,58 +1976,58 @@ function make_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
 
   local y2 = my+4
 
-  transformed_brush(T, wall_info,
+  transformed_brush2(T, wall_info,
   {
-    { x=0, y=0 },
-    { x=0, y=my-4 },
-    { x=long, y=my-4 },
     { x=long, y=0 },
+    { x=long, y=my-4 },
+    { x=0, y=my-4 },
+    { x=0, y=0 },
   },
   -2000, 2000)
 
-  transformed_brush(T, pic_info,
+  transformed_brush2(T, pic_info,
   {
-    { x=4, y=my-4 },
-    { x=4, y=my+4 },
-    { x=long-4, y=my+4 },
     { x=long-4, y=my-4 },
+    { x=long-4, y=my+4 },
+    { x=4, y=my+4 },
+    { x=4, y=my-4 },
   },
   -2000, 2000)
 
-  transformed_brush(T, wall_info,
+  transformed_brush2(T, wall_info,
   {
-    { x=0, y=y2 },
+    { x=mx-width/2, y=y2 },
+    { x=mx-width/2, y=deep },
     { x=0, y=deep },
-    { x=mx-width/2, y=deep },
-    { x=mx-width/2, y=y2 },
+    { x=0, y=y2 },
   },
   -2000, 2000)
 
-  transformed_brush(T, wall_info,
+  transformed_brush2(T, wall_info,
   {
-    { x=mx+width/2, y=y2 },
-    { x=mx+width/2, y=deep },
-    { x=long, y=deep },
     { x=long, y=y2 },
+    { x=long, y=deep },
+    { x=mx+width/2, y=deep },
+    { x=mx+width/2, y=y2 },
   },
   -2000, 2000)
 
 
-  transformed_brush(T, wall_info,
+  transformed_brush2(T, wall_info,
   {
-    { x=mx-width/2, y=y2 },
-    { x=mx-width/2, y=deep },
-    { x=mx+width/2, y=deep },
     { x=mx+width/2, y=y2 },
+    { x=mx+width/2, y=deep },
+    { x=mx-width/2, y=deep },
+    { x=mx-width/2, y=y2 },
   },
   -2000, z1)
 
-  transformed_brush(T, wall_info,
+  transformed_brush2(T, wall_info,
   {
-    { x=mx-width/2, y=y2 },
-    { x=mx-width/2, y=deep },
-    { x=mx+width/2, y=deep },
     { x=mx+width/2, y=y2 },
+    { x=mx+width/2, y=deep },
+    { x=mx-width/2, y=deep },
+    { x=mx-width/2, y=y2 },
   },
   z2, 2000)
 end
@@ -2062,22 +2078,24 @@ function make_raising_start(S, face_dir, z1, combo)
     local mx = int(long / 2)
 
     if side == face_dir then
-      transformed_brush(T, info,
+      transformed_brush2(T, info,
       {
-        { x=0,     y=0 },
-        { x=0,     y=deep },
-        { x=mx-32, y=deep, w_face=sw_face, line_kind=18, line_tag=tag  },
-        { x=mx+32, y=deep },
-        { x=long,  y=deep },
         { x=long,  y=0 },
+        { x=long,  y=deep },
+        { x=mx+32, y=deep, w_face=sw_face, line_kind=18, line_tag=tag },
+        { x=mx-32, y=deep },
+        { x=0,     y=deep },
+        { x=0,     y=0 },
       },
       -2000, z1)
     
     else
-      transformed_brush(T, info,
+      transformed_brush2(T, info,
       {
-        { x=0,    y=0 },    { x=0,    y=deep },
-        { x=long, y=deep }, { x=long, y=0 },
+        { x=long, y=0 },
+        { x=long, y=deep },
+        { x=0,    y=deep },
+        { x=0,    y=0 },
       },
       -2000, z1)
     end
@@ -2089,10 +2107,12 @@ function make_raising_start(S, face_dir, z1, combo)
 
   info.sec_tag = tag
 
-  transformed_brush(T, info,
+  transformed_brush2(T, info,
   {
-    { x=0,    y=0,   }, { x=0,    y=deep },
-    { x=long, y=deep }, { x=long, y=0,   },
+    { x=long, y=0,   },
+    { x=long, y=deep },
+    { x=0,    y=deep },
+    { x=0,    y=0,   },
   },
   -2000, z1)
 end
@@ -2112,12 +2132,12 @@ function make_popup_trap(S, z1, skin, combo)
 
     local T, long, deep = get_transform_for_seed_side(S, side)
 
-    transformed_brush(T, info,
+    transformed_brush2(T, info,
     {
-      { x=0,    y=0 },
-      { x=0,    y=deep, w_face={ texture="-" } },
-      { x=long, y=deep },
       { x=long, y=0 },
+      { x=long, y=deep, w_face={ texture="-" } },
+      { x=0,    y=deep },
+      { x=0,    y=0 },
     },
     -2000, z1)
   end
@@ -2130,12 +2150,12 @@ function make_popup_trap(S, z1, skin, combo)
 
   info.sec_tag = tag
 
-  transformed_brush(T, info,
+  transformed_brush2(T, info,
   {
-    { x=0,    y=0,    line_kind=19, line_tag=tag },
-    { x=0,    y=deep, line_kind=19, line_tag=tag },
-    { x=long, y=deep, line_kind=19, line_tag=tag },
     { x=long, y=0,    line_kind=19, line_tag=tag },
+    { x=long, y=deep, line_kind=19, line_tag=tag },
+    { x=0,    y=deep, line_kind=19, line_tag=tag },
+    { x=0,    y=0,    line_kind=19, line_tag=tag },
   },
   -2000, z1)
 
@@ -2787,7 +2807,8 @@ gui.printf("do_teleport\n")
             not (S.room.purpose or N.room.purpose)
 
       if B_kind == "wall" then --- and not could_lose_wall
-        make_wall(S, side, f_tex, w_tex)
+---!!!!     make_wall(S, side, f_tex, w_tex)
+        make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
       end
 
       if B_kind == "picture" then
