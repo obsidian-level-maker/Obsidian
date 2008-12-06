@@ -212,9 +212,11 @@ gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
       local T = C.dest_S
       local dir = S.conn_dir
 
-      if S.border[S.conn_dir].kind == "arch" then
+      if S.border[S.conn_dir].kind == "arch" or
+         T.border[T.conn_dir].kind == "arch"
+      then
         S.border[S.conn_dir].kind = nil
-        T.border[10-S.conn_dir].kind = nil
+        T.border[T.conn_dir].kind = nil
       end
     end
   end -- for C
