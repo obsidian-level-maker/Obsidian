@@ -592,7 +592,7 @@ int DM_fsky_add_hills(lua_State *L)
   int map_id = 1;
 
   double min_h = -0.20;
-  double max_h =  0.85;
+  double max_h =  0.75;
 
   double powscale = 0.8;
   double fracdim  = 1.8;
