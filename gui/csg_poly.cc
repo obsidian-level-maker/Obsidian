@@ -916,7 +916,7 @@ static merge_segment_c *FindAlongSeg(merge_vertex_c *v1, merge_vertex_c *v2)
   // Note: we can't ignore this problem, otherwise the boundary
   //       of the brush could remain open, and hence the brush
   //       would be spread into every region -- NOT GOOD!
-  Main_FatalError("CSG2: cannot find segment (angle:%1.1f @ %1.0f,%1.0f)!\n",
+  Main_FatalError("CSG2: cannot find segment (angle:%1.1f at %1.0f,%1.0f)!\n",
                   v_angle, v1->x, v1->y);
 
   return NULL;  // not found
