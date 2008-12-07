@@ -397,12 +397,21 @@ function Quest_lock_up_arena(arena)
 
 
 -- temp crud for debugging
---[[ FIXME !!!!!!
-local KS = LC.dest_S
-if KS and LC.src_S then
-local dir = delta_to_dir(LC.src_S.sx - KS.sx, LC.src_S.sy - KS.sy)
-KS.borders[dir].kind = "lock_door"
-KS.borders[dir].key_item = LOCK.key_item
+-- [[ FIXME !!!!!!
+do
+ local AS = LC.src_S
+ local BS = LC.dest_S
+ if AS and AS.conn_dir and AS.border[AS.conn_dir].kind == "arch" then
+   AS.border[AS.conn_dir].kind = "lock_door"
+   AS.border[AS.conn_dir].lock = LOCK
+ elseif BS and BS.conn_dir and BS.border[BS.conn_dir].kind == "arch" then
+   BS.border[BS.conn_dir].kind = "lock_door"
+   BS.border[BS.conn_dir].lock = LOCK
+ else
+   AS.border[AS.conn_dir].kind = "bars"
+   AS.border[AS.conn_dir].lock = LOCK
+   BS.border[BS.conn_dir].kind = nil
+ end
 end
 --]]
 
