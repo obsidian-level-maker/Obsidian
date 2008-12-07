@@ -311,75 +311,16 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
 end
 
 
-function make_door(S, side, z1, key_tex)
+function make_locked_door(S, side, z1, w_tex, key_tex)
 
-  S.thick[side]=24+16+24
+  local N = S:neighbor(side)
+  assert(N)
 
-  local T, long, deep = get_transform_for_seed_side(S, side)
+  local o_tex = w_tex
+  if not N.room.outdoor then
+    o_tex = N.room.combo.wall
+  end
 
-  local mx = int(long / 2)
-  local my = int(deep / 2)
-
-  local door_info =
-  {
-    t_face = { texture="FLAT23" },
-    b_face = { texture="FLAT23" },
-    w_face = { texture="BIGDOOR2", peg=true, x_offset=0, y_offset=0 },
-    flag_door = true
-  }
-
-  local other_info =
-  {
-    t_face = { texture="FLAT18" },
-    b_face = { texture="FLAT18" },
-    w_face = { texture="COMPSPAN" },
-  }
-
-  local frame_coords =
-  {
-    { x=long, y=0 },
-    { x=long, y=deep },
-    { x=0,    y=deep },
-    { x=0,    y=0 },
-  }
-
-  transformed_brush2(T, other_info, frame_coords, -2000, z1+8)
-  transformed_brush2(T, other_info, frame_coords, z1+8+112, 2000)
-
-  transformed_brush2(T, other_info,
-  {
-    { x=mx-64, y=0 },
-    { x=mx-64, y=deep },
-    { x=0, y=deep },
-    { x=0, y=0 },
-  },
-  -2000, 2000)
-
-  transformed_brush2(T, other_info,
-  {
-    { x=long,  y=0 },
-    { x=long,  y=deep },
-    { x=mx+64, y=deep },
-    { x=mx+64, y=0 },
-  },
-  -2000, 2000)
-  
-
-  local KIND = 1
-
-  transformed_brush2(T, door_info,
-  {
-    { x=mx+64, y=my-8, line_kind=KIND },
-    { x=mx+64, y=my+8, line_kind=KIND },
-    { x=mx-64, y=my+8, line_kind=KIND },
-    { x=mx-64, y=my-8, line_kind=KIND },
-  },
-  z1+64, 2000)
-
-end
-
-
-function make_locked_door(S, side, z1, key_tex)
 
   local DY = 24
 
@@ -388,6 +329,7 @@ function make_locked_door(S, side, z1, key_tex)
   local mx = int(long / 2)
   local my = 0
 
+  local door_h = 112
   local door_info =
   {
     t_face = { texture="FLAT1" },
@@ -397,11 +339,18 @@ function make_locked_door(S, side, z1, key_tex)
     flag_door = true
   }
 
-  local other_info =
+  local frame_info =
   {
     t_face = { texture="FLAT18" },
     b_face = { texture="FLAT18" },
-    w_face = { texture="COMPSPAN" },
+    w_face = { texture=w_tex },
+  }
+
+  local step_info =
+  {
+    t_face = { texture="FLAT18" },
+    b_face = { texture="FLAT18" },
+    w_face = { texture="STEP4" },
   }
 
   local key_info =
@@ -411,16 +360,23 @@ function make_locked_door(S, side, z1, key_tex)
     w_face = { texture=key_tex, x_offset=0 },
   }
 
-  local frame_coords =
+  transformed_brush2(T, step_info,
   {
     { x=long, y=my-DY },
     { x=long, y=my+DY },
     { x=0,    y=my+DY },
     { x=0,    y=my-DY },
-  }
+  },
+  -2000, z1+8)
 
-  transformed_brush2(T, other_info, frame_coords, -2000, z1+8)
-  transformed_brush2(T, other_info, frame_coords, z1+8+112, 2000)
+  transformed_brush2(T, frame_info,
+  {
+    { x=long, y=my-DY },
+    { x=long, y=my+DY },
+    { x=0,    y=my+DY },
+    { x=0,    y=my-DY, w_face = {texture=o_tex} },
+  },
+  z1+8+door_h, 2000)
 
   local KIND = 1
 
@@ -446,12 +402,12 @@ function make_locked_door(S, side, z1, key_tex)
     },
     -2000, 2000)
 
-    transformed_brush2(T, other_info,
+    transformed_brush2(T, frame_info,
     {
       { x=mx-64-18, y=my-DY },
       { x=mx-64-18, y=my+DY },
       { x=0,        y=my+DY },
-      { x=0,        y=my-DY },
+      { x=0,        y=my-DY, w_face={ texture=o_tex } },
     },
     -2000, 2000)
   end
@@ -2845,7 +2801,7 @@ gui.printf("do_teleport\n")
 gui.printf("ADDING LOCK DOOR %s\n", key_tex)
 gui.printf(">> side:%d of %s\n", side, R:tostr())
 
-        make_locked_door(S, side, z1, key_tex)
+        make_locked_door(S, side, z1, w_tex, key_tex)
         S.conn.already_made_lock = true
       end
 
