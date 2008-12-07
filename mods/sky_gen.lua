@@ -70,14 +70,14 @@ function Doom_generate_skies()
     47, 45, 43, 41, 39, 37, 35, 33
   }
 
-  gui.set_colormap(1, BLUE_CLOUDS)
-  gui.set_colormap(2, GREEN_HILLS)
+  gui.set_colormap(1, GREY_CLOUDS)
+  gui.set_colormap(2, BROWN_HILLS)
 
   for num,sky in ipairs(sky_list) do
     gui.fsky_create(256, 128, sky.test)
 --  gui.fskt_add_stars  { seed=num+9, colmap=2 }
     gui.fsky_add_clouds { seed=num+1, colmap=1, squish=2.0 }
-    gui.fsky_add_hills  { seed=num+5, colmap=2 }
+    gui.fsky_add_hills  { seed=num+5, colmap=2, max_h=0.6 }
     gui.fsky_write(sky.patch)
   end
 end
