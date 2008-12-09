@@ -406,16 +406,21 @@ static void Mug_OverlapPass(void)
         double b1_along = AlongDist(bx1,by1, ax1,ay1, ax2,ay2);
         double b2_along = AlongDist(bx2,by2, ax1,ay1, ax2,ay2);
 
+        SYS_ASSERT(a2_along > a1_along);
+
+        double b_min = MIN(b1_along, b2_along);
+        double b_max = MAX(b1_along, b2_along);
+
         if (b1_along > a1_along+EPSILON && b1_along < a2_along-EPSILON)
           Mug_SplitSegment(A, B->start);
 
         else if (b2_along > a1_along+EPSILON && b2_along < a2_along-EPSILON)
           Mug_SplitSegment(A, B->end);
 
-        else if (a1_along > b1_along+EPSILON && a1_along < b2_along-EPSILON)
+        else if (a1_along > b_min+EPSILON && a1_along < b_max-EPSILON)
           Mug_SplitSegment(B, A->start);
 
-        else if (a2_along > b1_along+EPSILON && a2_along < b2_along-EPSILON)
+        else if (a2_along > b_min+EPSILON && a2_along < b_max-EPSILON)
           Mug_SplitSegment(B, A->end);
 
         continue;
