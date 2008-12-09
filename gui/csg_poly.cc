@@ -937,8 +937,6 @@ static void MarkBoundaryRegions(csg_brush_c *P, std::vector<merge_region_c *> & 
     SYS_ASSERT(v1->partner);
     SYS_ASSERT(v2->partner);
 
-    double along = 0;
-
     merge_vertex_c *V = v1->partner;
 
     while (V != v2->partner)
