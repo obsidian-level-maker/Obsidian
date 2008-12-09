@@ -3,6 +3,11 @@ TODO
 ====
 
 
+seed = 34  :  overlapping segment error
+
+seed = 33  :  cannot find segment error
+
+
 DOORS (incl. small exit) : use proper lock type!
 
 
@@ -478,6 +483,16 @@ Pipe Dreams:
    remains (Shotgun 35%, chaingun 30%, Supershot 15%, rocket
    launcher 15% and plasmagun 5%?)? Of course the weapon placement
    by the body is at a chance (15-20% chance?)
+
+-  Type of boss battles JohnnyRancid would like to see:
+      20+ revenants.
+      2-5 arch viles.
+      5-10 pain elementals
+      2 cyberdemons.
+      20+ hell barons or hell knights.
+      20+ cacodemons.
+      5-15 mancubi
+      5-15 arachnatrons
 
 ?? one-way routes ??
    -  for example: at along:3 fall-off -> along:4
