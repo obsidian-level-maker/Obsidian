@@ -299,9 +299,33 @@ Q1_ROOMS =
 
 Q1_THEMES =
 {
-  BASE =
+  TECH =
   {
-  },
+    building =
+    {
+      TECH_BASE=50,
+    },
+
+    ground =
+    {
+      TECH_GROUND=50,
+    },
+
+    hallway =
+    {
+      -- FIXME
+    },
+
+    exit =
+    {
+      -- FIXME
+    },
+
+    scenery =
+    {
+      -- FIXME
+    },
+  }, -- TECH
 }
 
 
@@ -463,7 +487,7 @@ function Quake1_setup()
 end
 
 
-UNFINISHED["quake1"] =
+OB_GAMES["quake1"] =
 {
   label = "Quake 1",
 
@@ -500,7 +524,7 @@ UNFINISHED["quake1"] =
 
 OB_THEMES["q1_base"] =
 {
-  ref = "BASE",
+  ref = "TECH",
   label = "Base",
 
   for_games = { quake1=1 },
