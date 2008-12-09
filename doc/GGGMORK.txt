@@ -1,0 +1,53 @@
+gggmork:
+
+I really like obhack gameplay (with challenging parameters) better than
+the majority of non-generated maps, so I don't want to suggest any
+ideas that make it worse :). Its kinda hard to guess what could improve
+it without testing, but I'd suspect traps/surprises would mostly be for
+the worse (in my opinion). The trap you mentioned would probably have
+an exploit (trigger the trap door to close on an enemies head so it
+reopens, or clear the room from far away before triggering it.. or it
+might be too hard anyway as being trapped with a mancubus + reverents
+or something could easily kill you, plus traps are more about
+memorization than skill).
+
+I'd guess gameplay tends to be more fun/challenging when rooms are more
+interconnected (dealing w/ enemies from multiple directions) instead of
+linear. But variety is also nice. Maybe have even harder parameters
+available (if you include cybers you might want to put a bunch of extra
+enemies in the cyber room because he'll just infight everone, but hard
+to know a good way to implement cybers without testing- maybe just have
+them random like everything else so each encounter will be unique).
+Maybe an option to start with a berzerk would be cool. Probably just
+ignore that previous comment I made as it was due to me playing overly
+cautious.
+
+I like how, in outdoor maps, non-deaf floating enemies from all over
+the map can often cross barriers to overwhelm you as a gang. And demons
+are fun as moving walls, often killing me indirectly.
+
+One note is that, for some stairs that have thin stepping surfaces,
+they block some ground enemies depending on enemy size. Not sure if
+making stairs less enemy-blocking would be for the better or worse.
+It could be fun to choose to have lots of viles or few viles etc, same
+for other monsters.
+
+
+Jodwin:
+
+One thing I often do when going on a short trip is generate a new
+obhack megawad with challenging options (hordes of monsters, little
+ammo, huge maps, pistol start...) and take that with me, those are
+always a blast to play. However most of the time the very beginning is
+ridiculously hard while the rest of the map...not so much. It's not
+really because of starting only with the pistol and having little ammo,
+but because if you start outside you'll suddenly be swarmed with cacos,
+pes and lost souls from half a way across the whole map. :P And once
+you get enough weaponry to take them out you already know that you've
+managed to kill monsters that you "should" have met like 20 minutes
+later, and those parts won't be as hard.
+
+So...I'm not saying that having some cacos coming is bad, without any
+of them it might be too easy, but I guess the generator could use at
+least some sound blocking lines more.
+
