@@ -918,17 +918,16 @@ static merge_segment_c *FindAlongSeg(merge_vertex_c *v1, merge_vertex_c *v2)
       return S;
   }
 
-  // Note: we can't ignore this problem, otherwise the boundary
-  //       of the brush could remain open, and hence the brush
-  //       would be spread into every region -- NOT GOOD!
-  Main_FatalError("CSG2: cannot find segment (angle:%1.1f at %1.0f,%1.0f)!\n",
-                  v_angle, v1->x, v1->y);
+  LogPrintf("CSG2: WARNING: cannot find segment (at %1.0f,%1.0f, angle:%1.3f)\n",
+            v1->x, v1->y, v_angle);
 
-  return NULL;  // not found
+  return NULL;  // not found ???
 }
 
 static void MarkBoundaryRegions(csg_brush_c *P, std::vector<merge_region_c *> & regions)
 {
+  bool incomplete = false;
+
   for (int k=0; k < (int)P->verts.size(); k++)
   {
     area_vert_c *v1 = P->verts[k];
@@ -943,7 +942,10 @@ static void MarkBoundaryRegions(csg_brush_c *P, std::vector<merge_region_c *> & 
     {
       merge_segment_c *S = FindAlongSeg(V, v2->partner);
       if (! S)
+      {
+        incomplete = true;
         break;
+      }
 
       if (S->start == V)
         S->b_sides.push_back(v1);
@@ -964,15 +966,23 @@ static void MarkBoundaryRegions(csg_brush_c *P, std::vector<merge_region_c *> & 
       V = S->Other(V);
     }
   }
+
+  // if we failed to find all the sides of the brush, then we
+  // cannot perform the floodfill in MarkInnerRegions() because
+  // the brush might be spread into EVERY region -- not good!
+  if (incomplete)
+    regions.clear();
 }
 
 static void MarkInnerRegions(csg_brush_c *P, std::vector<merge_region_c *> & regions)
 {
   int loops = 0;
 
-  for (;;)
+  // stop when it cannot spread any further
+  while (regions.size() > 0)
   {
     SYS_ASSERT(loops < 100);
+    loops++;
 
     std::vector<merge_region_c *> new_regs;
 
@@ -1004,12 +1014,6 @@ static void MarkInnerRegions(csg_brush_c *P, std::vector<merge_region_c *> & reg
         }
       }
     }
-
-    // stop when it cannot spread any further
-    if (new_regs.size() == 0)
-      return;
-
-    loops++;
 
     std::swap(regions, new_regs);
   }
