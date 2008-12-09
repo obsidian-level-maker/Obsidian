@@ -3,11 +3,6 @@ TODO
 ====
 
 
-seed = 34  :  overlapping segment error
-
-seed = 33  :  cannot find segment error
-
-
 DOORS (incl. small exit) : use proper lock type!
 
 
