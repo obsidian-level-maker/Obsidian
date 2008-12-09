@@ -3341,8 +3341,9 @@ local BRONZE_2 =
     223, 221, 219, 216, 213, 210
   };
 
- gui.set_colormap(1, BRONZE_2) -- DM_LEVEL_GFX_COLORS.silver)
- gui.wad_logo_gfx("O_BLT2EM", "fm", "BOLT", 64,64, 1)
+
+--- gui.set_colormap(1, BRONZE_2) -- DM_LEVEL_GFX_COLORS.silver)
+--- gui.wad_logo_gfx("O_BLT2EM", "fm", "BOLT", 64,64, 1)
 end
 
 function Doom_describe_levels()
