@@ -34,6 +34,9 @@
 #include "q1_structs.h"
 
 
+// extern void CSG2_Doom_TestBrushes(void);
+
+
 std::vector<csg_brush_c *> saved_all_brushes;
 
 
@@ -109,8 +112,8 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
 
   area_vert_c *kv = P->verts[k];
 
-  area_vert_c *pv = P->verts[(k + total - 1) % total];
   area_vert_c *nv = P->verts[(k + 1        ) % total];
+  area_vert_c *pv = P->verts[(k + total - 1) % total];
 
 ///fprintf(stderr, "ORIGINAL VERT[%d] @ (%1.0f %1.0f)  < (%1.0f %1.0f) > (%1.0f %1.0f)\n",
 ///k, kv->x, kv->y, pv->x, pv->y, nv->x, nv->y);
@@ -119,7 +122,7 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
   double p_angle = CalcAngle(kv->x, kv->y, pv->x, pv->y);
   double n_angle = CalcAngle(kv->x, kv->y, nv->x, nv->y);
 
-  double diff = n_angle - p_angle;
+  double diff = p_angle - n_angle;
 
   if (diff < 0)    diff += 360.0;
   if (diff >= 360) diff -= 360.0;
@@ -133,86 +136,49 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
   double p_nx, p_ny;
   double n_nx, n_ny;
 
-  CalcNormal(kv->x, kv->y, pv->x, pv->y, &p_nx, &p_ny);
-  CalcNormal(nv->x, nv->y, kv->x, kv->y, &n_nx, &n_ny);
+  CalcNormal(pv->x, pv->y, kv->x, kv->y, &p_nx, &p_ny);
+  CalcNormal(kv->x, kv->y, nv->x, nv->y, &n_nx, &n_ny);
 
-  double px1 = pv->x + p_nx * wd;
-  double py1 = pv->y + p_ny * wd;
-  double px2 = kv->x + p_nx * wd;
-  double py2 = kv->y + p_ny * wd;
-
-  double nx1 = nv->x + n_nx * wd;
-  double ny1 = nv->y + n_ny * wd;
-  double nx2 = kv->x + n_nx * wd;
-  double ny2 = kv->y + n_ny * wd;
-
-  // There are THREE cases we need to cover:
-  // -  angles equal or close to 180 degrees, e.g. colinear lines.
-  //    The parallel-ness means we cannot use the normal intersection
-  //    test to find the new point.  Instead we use the midpoint of
-  //    the two fattened vertices (one from each line).
-  //
-  // -  angles over 90 degrees simply use line intersection to find
-  //    the new fattened vertex.
-  //
-  // -  angles under 90 degrees would stick out too much if we used
-  //    the line intersection test.  These vertices need a "bevel",
-  //    hence they become TWO new vertices sitting on the bevel line.
-  //
-  //    The actual test angle is a fair bit less than 90, to prevent
-  //    creating very short bevels.
-  //
-
-  if (diff > 178.0)
+  // for angles close to 180 degrees (i.e. co-linear), merely
+  // replacing the old vertex is sufficient.
+  if (diff > 175.0)
   {
-    double x = kv->x + (p_nx + n_nx) / 2.0 * wd;
-    double y = kv->y + (p_ny + n_ny) / 2.0 * wd;
+    double x = kv->x + wd * (p_nx + n_nx) / 2.0;
+    double y = kv->y + wd * (p_ny + n_ny) / 2.0;
 
     P2->verts.push_back(new area_vert_c(P2, x, y));
 ///fprintf(stderr, "... HIG VERT --> (%1.4f %1.4f)\n", x, y);
-  }
-  else if (diff > 81.0)
-  {
-    double x, y;
 
-    CalcIntersection(nx1, ny1, nx2, ny2,
-                     px1, py1, px2, py2,  &x, &y);
-
-    P2->verts.push_back(new area_vert_c(P2, x, y));
-///fprintf(stderr, "... MID VERT --> (%1.4f %1.4f)\n", x, y);
+    return;
   }
-  else
+
+  // for lower angles, the ideal would be a curve (an arc of
+  // the circle of radius 'wd').  We emulate that ideal using
+  // between 1 to 3 new vertices.
+
+  double px = kv->x + wd * p_nx;
+  double py = kv->y + wd * p_ny;
+
+  P2->verts.push_back(new area_vert_c(P2, px, py));
+
+  if (diff < 88.0)
   {
-    // compute vector to bevel line (the bevel normal)
     double b_nx = p_nx + n_nx;
     double b_ny = p_ny + n_ny;
 
     double b_len = ComputeDist(0, 0, b_nx, b_ny);
     SYS_ASSERT(b_len > 0.01);
 
-    b_nx /= b_len;
-    b_ny /= b_len;
+    double bx = kv->x + wd * b_nx / b_len;
+    double by = kv->y + wd * b_ny / b_len;
 
-    double bx1 = kv->x + b_nx * wd;
-    double by1 = kv->y + b_ny * wd;
-
-    double bx2 = bx1 + b_ny;
-    double by2 = by1 - b_nx;
-
-    double x, y;
-
-    CalcIntersection(bx1, by1, bx2, by2,
-                     px1, py1, px2, py2, &x, &y);
-
-    P2->verts.push_back(new area_vert_c(P2, x, y));
-///fprintf(stderr, "... LOW VERT1 --> (%1.4f %1.4f)\n", x, y);
-
-    CalcIntersection(bx1, by1, bx2, by2,
-                     nx1, ny1, nx2, ny2, &x, &y);
-
-    P2->verts.push_back(new area_vert_c(P2, x, y));
-///fprintf(stderr, "... LOW VERT2 --> (%1.4f %1.4f)\n", x, y);
+    P2->verts.push_back(new area_vert_c(P2, bx, by));
   }
+
+  double nx = kv->x + wd * n_nx;
+  double ny = kv->y + wd * n_ny;
+
+  P2->verts.push_back(new area_vert_c(P2, nx, ny));
 }
 
 static void FattenBrushes(double wd, double fh, double ch)
@@ -891,6 +857,9 @@ CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
 
   SaveBrushes();
   FattenBrushes(pads[which][0], pads[which][1], pads[which][2]);
+
+//  if (which == 1)
+//   CSG2_Doom_TestBrushes();
 
   CSG2_MergeAreas();
 
