@@ -559,8 +559,8 @@ u16_t BSP_AddPlane(double x, double y, double z,
       bsp_planes.push_back(dp);
     }
 
-  fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
-                   (int)plane_idx, (int)bsp_planes.size());
+//  fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
+//                   (int)plane_idx, (int)bsp_planes.size());
 
     hashtab->push_back(plane_idx);
   }
