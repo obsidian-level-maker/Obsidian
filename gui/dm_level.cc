@@ -157,11 +157,14 @@ bool extrafloor_c::Match(const extrafloor_c *other) const
 }
 
 
-void CSG2_Doom_TestAreas(void)
+void CSG2_Doom_TestBrushes(void)
 {
   // for debugging only: each csg_brush_c becomes a single
   // sector on the map.
  
+  DM_StartWAD("test.wad");
+  DM_BeginLevel();
+
   for (unsigned int k = 0; k < all_brushes.size(); k++)
   {
     csg_brush_c *P = all_brushes[k];
@@ -187,13 +190,16 @@ void CSG2_Doom_TestAreas(void)
 
       DM_AddVertex(I_ROUND(v1->x), I_ROUND(v1->y));
 
-      DM_AddLinedef(vert_base+j1, vert_base+j2, side_idx, -1,
+      DM_AddLinedef(vert_base+j2, vert_base+j1, side_idx, -1,
                     0, 1 /*impassible*/, 0, NULL /* args */);
     }
   }
+
+  DM_EndLevel("MAP01");
+  DM_EndWAD();
 }
 
-void CSG2_Doom_TestRegions(void)
+void DM_TestRegions(void)
 {
   // for debugging only: each merge_region becomes a single
   // sector on the map.
@@ -957,9 +963,6 @@ void DM_WriteDoom(void)
   //    - mark border segments as unused
   //    - mark vertices with all unused segs as unused
   // 4) profit!
-
-//CSG2_Doom_TestAreas();
-//return;
 
   CSG2_MergeAreas();
 
