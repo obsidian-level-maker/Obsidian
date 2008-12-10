@@ -234,21 +234,9 @@ static void Mug_MakeSegments(csg_brush_c *P)
 
 static void Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V)
 {
-#if 0  // DEBUG CHECK
-  {
-    double d1 = MAX(fabs(S->start->x - V->x), fabs(S->start->y - V->y));
-    double d2 = MAX(fabs(S->end  ->x - V->x), fabs(S->end  ->y - V->y));
+  SYS_ASSERT(S->start != V);
+  SYS_ASSERT(S->end   != V);
 
-    if (d1 < EPSILON || d2 < EPSILON)
-    {
-      Main_FatalError("INTERNAL ERROR: Mug_SplitSegment bad split point\n"
-           "Segment = (%1.5f %1.5f) .. (%1.5f %1.5f)\n"
-           "Vertex  = (%1.5f %1.5f)\n",
-           S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
-    }
-  }
-#endif
-  
   merge_segment_c *NS = new merge_segment_c(V, S->end);
 
   S->end = V;
@@ -462,16 +450,25 @@ static void Mug_OverlapPass(void)
       double ix = bx1 + along * (bx2 - bx1);
       double iy = by1 + along * (by2 - by1);
 
+      merge_vertex_c * NV = Mug_AddVertex(ix, iy);
+
 #if 0
-fprintf(stderr, ".. pure cross-over at (%1.2f, %1.2f)\n", ix, iy);
-fprintf(stderr, "   A = (%1.0f,%1.0f) --> (%1.0f,%1.0f)\n", ax1,ay1, ax2,ay2);
-fprintf(stderr, "   B = (%1.0f,%1.0f) --> (%1.0f,%1.0f)\n", bx1,by1, bx2,by2);
+fprintf(stderr, "pure cross-over at (%1.6f, %1.6f)\n", ix, iy);
+fprintf(stderr, "   A = (%1.4f,%1.4f) --> (%1.4f,%1.4f)\n", ax1,ay1, ax2,ay2);
+fprintf(stderr, "   B = (%1.4f,%1.4f) --> (%1.4f,%1.4f)\n", bx1,by1, bx2,by2);
+fprintf(stderr, "   AP = %1.6f / %1.6f\n", ap1, ap2);
+fprintf(stderr, "   BP = %1.6f / %1.6f\n", bp1, bp2);
 #endif
 
-      merge_vertex_c * NV = Mug_AddVertex(ix, iy);
-      
-      Mug_SplitSegment(A, NV);
-      Mug_SplitSegment(B, NV);
+      // in very rare circumstances, the new vertex NV will be
+      // the same as one of the crossing lines (due to EPSILON
+      // matching).  Hence the ugly checks here...
+
+      if (NV != A->start && NV != A->end)
+        Mug_SplitSegment(A, NV);
+
+      if (NV != B->start && NV != B->end)
+        Mug_SplitSegment(B, NV);
     }
   }
 }
