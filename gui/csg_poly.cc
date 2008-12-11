@@ -1133,6 +1133,8 @@ static bool BrushContainsRegion(csg_brush_c *B, merge_region_c *R)
 
   // check each vertex of region against each half-plane of brush
 
+  // TODO: optimise by only testing one of a bunch of co-linear sides
+
   for (unsigned int k=0; k < B->verts.size(); k++)
   {
     area_vert_c *v1 = B->verts[k];
