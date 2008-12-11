@@ -30,6 +30,9 @@
 #include "ui_dialog.h"
 
 
+static int mug_changes = 0;
+
+
 void merge_vertex_c::AddSeg(merge_segment_c *seg)
 {
   for (unsigned int j=0; j < segs.size(); j++)
@@ -134,10 +137,8 @@ void merge_region_c::AddBrush(csg_brush_c *P)
 
 static std::vector<merge_segment_c *> mug_new_segs;
 
-#define VERTEX_HASH  256
+#define VERTEX_HASH  512
 static std::vector<merge_vertex_c *> * hashed_verts[VERTEX_HASH];
-
-static int mug_changes = 0;
 
 
 static void ClearVertexHash()
@@ -151,13 +152,16 @@ static void ClearVertexHash()
 
 static merge_vertex_c *Mug_AddVertex(double x, double y)
 {
+  // quantize position to 24.8 fixed point
+  int qx = I_ROUND(x * 256.0);
+  int qy = I_ROUND(y * 256.0);
+
+  x = qx / 256.0;
+  y = qy / 256.0;
+
   // check if already present.
   // for speed we use a hash-table
-  int hash;
-  hash = IntHash(       (I_ROUND(x+1.4) >> 6));
-  hash = IntHash(hash ^ (I_ROUND(y+1.4) >> 6));
-
-  hash = hash & (VERTEX_HASH-1);
+  int hash = IntHash(qx ^ IntHash(qy)) & (VERTEX_HASH-1);
   SYS_ASSERT(hash >= 0);
 
   if (! hashed_verts[hash])
@@ -179,32 +183,28 @@ static merge_vertex_c *Mug_AddVertex(double x, double y)
 
 static merge_segment_c *Mug_AddSegment(merge_vertex_c *start, merge_vertex_c *end)
 {
-  SYS_ASSERT(start != end);
+  // check for zero-length lines
+  if (start == end)
+    Main_FatalError("Line loop contains zero-length line! (%1.2f, %1.2f)\n",
+                    start->x, start->y);
 
   // check if already present
   merge_segment_c *S = start->FindSeg(end);
 
   if (S)
   {
-//  SYS_ASSERT(end->FindSeg(start) == S);
+    SYS_ASSERT(end->FindSeg(start) == S);
     return S;
   }
 
-// SYS_ASSERT(! end->FindSeg(start));
+   SYS_ASSERT(! end->FindSeg(start));
 
 ///--- for (int i=0; i < (int)mug_segments.size(); i++)
 ///--- if (mug_segments[i]->Match(start, end))
-///--- Main_FatalError("FUCK!!!!\n");
+///--- Main_FatalError("OUCH!!!!\n");
 
   S = new merge_segment_c(start, end);
 
-  // check for zero-length lines
-  double dist = MAX(fabs(start->x - end->x), fabs(start->y - end->y));
-
-  if (dist < EPSILON*2)
-      Main_FatalError("Line loop contains zero-length line! (%1.1f,%1.1f)\n",
-             start->x, start->y);
- 
   mug_segments.push_back(S);
 
   start->AddSeg(S);
@@ -220,15 +220,16 @@ static void Mug_MakeSegments(csg_brush_c *P)
     area_vert_c *v1 = P->verts[k];
     area_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
 
-    merge_vertex_c *new_v1 = Mug_AddVertex(v1->x, v1->y);
-    merge_vertex_c *new_v2 = Mug_AddVertex(v2->x, v2->y);
+    v1->partner = Mug_AddVertex(v1->x, v1->y);
+    v2->partner = Mug_AddVertex(v2->x, v2->y);
 
     // swap vertices so that segment faces inward
-    Mug_AddSegment(new_v2, new_v1);
+    merge_segment_c *S = Mug_AddSegment(v2->partner, v1->partner);
 
-    // associate the new vertex with the area_vert
-    v1->partner = new_v1;
-    v2->partner = new_v2;
+    if (S->start == v2->partner)
+      S->f_sides.push_back(v1);
+    else
+      S->b_sides.push_back(v1);
   }
 }
 
@@ -944,10 +945,10 @@ static void MarkBoundaryRegions(csg_brush_c *P, std::vector<merge_region_c *> & 
         break;
       }
 
-      if (S->start == V)
-        S->b_sides.push_back(v1);
-      else
-        S->f_sides.push_back(v1);
+//!!      if (S->start == V)
+//!!        S->b_sides.push_back(v1);
+//!!      else
+//!!        S->f_sides.push_back(v1);
 
       merge_region_c *R = (S->start == V) ? S->back : S->front;
 
