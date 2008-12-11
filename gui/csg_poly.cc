@@ -32,6 +32,8 @@
 
 static int mug_changes = 0;
 
+#define FINE_EPSILON  0.0002
+
 
 void merge_vertex_c::AddSeg(merge_segment_c *seg)
 {
@@ -72,6 +74,20 @@ merge_segment_c * merge_vertex_c::FindSeg(merge_vertex_c *other)
   return NULL;  // not found
 }
  
+
+///?? void merge_segment_c::ReplaceStart(merge_vertex_c *V)
+///?? {
+///??   start->RemoveSeg(this);
+///??   start = V;
+///??   start->AddSeg(this);
+///?? }
+///?? 
+///?? void merge_segment_c::ReplaceEnd(merge_vertex_c *V)
+///?? {
+///??   end->RemoveSeg(this);
+///??   end = V;
+///??   end->AddSeg(this);
+///?? }
 
 bool merge_segment_c::HasGap() const
 {
@@ -203,12 +219,12 @@ static void ClearVertexHash()
 
 static merge_vertex_c *Mug_AddVertex(double x, double y)
 {
-  // quantize position to 24.8 fixed point
-  int qx = I_ROUND(x * 256.0);
-  int qy = I_ROUND(y * 256.0);
+  // quantize position
+  int qx = I_ROUND(x / EPSILON);
+  int qy = I_ROUND(y / EPSILON);
 
-  x = qx / 256.0;
-  y = qy / 256.0;
+  x = qx * EPSILON;
+  y = qy * EPSILON;
 
   // check if already present.
   // for speed we use a hash-table
@@ -289,14 +305,16 @@ static void Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V)
   SYS_ASSERT(S->start != V);
   SYS_ASSERT(S->end   != V);
 
-  merge_segment_c *NS = new merge_segment_c(V, S->end);
+DebugPrintf("mug_change: split segment %p (%1.6f %1.6f) --> (%1.6f %1.6f) at (%1.6f %1.6f)\n", S,
+S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
 
-  S->end = V;
+  merge_segment_c *NS = new merge_segment_c(V, S->end);
 
   mug_new_segs.push_back(NS);
 
-  // update join info
-  NS->end->ReplaceSeg(S, NS);
+  // replace end vertex
+  S->end->ReplaceSeg(S, NS);
+  S->end = V;
 
   V->AddSeg(S);
   V->AddSeg(NS);
@@ -382,6 +400,10 @@ struct Compare_RegionMinX_pred
 
 static void Mug_OverlapPass(void)
 {
+  // TODO: consider using quadtrees so that vertical separation
+  //       can be used to reduce the number of segment/segment
+  //       tests even further.
+
   /* sort segments in order of minimum X coordinate */
   std::sort(mug_segments.begin(), mug_segments.end(),
             Compare_SegmentMinX_pred());
@@ -408,25 +430,25 @@ static void Mug_OverlapPass(void)
       double bx2 = B->end->x;
       double by2 = B->end->y;
 
-#if 1 // normal code
-      if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON)
+#if 0 // normal code
+      if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2)
         break;
 #else // non-sorted method (TESTING only)
-      if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON ||
-          MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON)
+      if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2 ||
+          MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON/2)
         continue;
 #endif
 
-      if (MIN(by1, by2) > MAX(ay1, ay2)+EPSILON ||
-          MIN(ay1, ay2) > MAX(by1, by2)+EPSILON)
+      if (MIN(by1, by2) > MAX(ay1, ay2)+EPSILON/2 ||
+          MIN(ay1, ay2) > MAX(by1, by2)+EPSILON/2)
         continue;
 
       /* to get here, the bounding boxes must touch or overlap.
        * now we perform the line-line intersection test.
        */
 
-///fprintf(stderr, "\nA = (%1.4f %1.4f) .. (%1.4f %1.4f)\n", ax1,ay1, ax2,ay2);
-///fprintf(stderr,   "B = (%1.4f %1.4f) .. (%1.4f %1.4f)\n", bx1,by1, bx2,by2);
+/// DebugPrintf("\nA = (%1.5f %1.5f) .. (%1.5f %1.5f)\n", ax1,ay1, ax2,ay2);
+/// DebugPrintf(  "B = (%1.5f %1.5f) .. (%1.5f %1.5f)\n", bx1,by1, bx2,by2);
 
       double ap1 = PerpDist(ax1,ay1, bx1,by1, bx2,by2);
       double ap2 = PerpDist(ax2,ay2, bx1,by1, bx2,by2);
@@ -434,23 +456,12 @@ static void Mug_OverlapPass(void)
       double bp1 = PerpDist(bx1,by1, ax1,ay1, ax2,ay2);
       double bp2 = PerpDist(bx2,by2, ax1,ay1, ax2,ay2);
 
-      // does A cross B-extended-to-infinity?
-      if ((ap1 >  EPSILON && ap2 >  EPSILON) ||
-          (ap1 < -EPSILON && ap2 < -EPSILON))
-        continue;
-
-      // does B cross A-extended-to-infinity?
-      if ((bp1 >  EPSILON && bp2 >  EPSILON) ||
-          (bp1 < -EPSILON && bp2 < -EPSILON))
-        continue;
-
-      // check if on the same line
-      if (fabs(bp1) <= EPSILON && fabs(bp2) <= EPSILON)
-      {
 #if 1
         // total overlap (same start + end points) ?
         if (A->Match(B))
         {
+DebugPrintf("mug_change: killed segment %p (%1.6f %1.6f) -> (%1.6f %1.6f)\n", B,
+B->start->x, B->start->y, B->end->x, B->end->y);
           A->MergeSides(B);
           B->Kill();
 
@@ -458,6 +469,10 @@ static void Mug_OverlapPass(void)
           continue;
         }
 #endif
+
+      // check if on the same line
+      if (fabs(bp1) <= FINE_EPSILON && fabs(bp2) <= FINE_EPSILON)
+      {
         // find vertices that split a segment
         double a1_along = 0.0;
         double a2_along = AlongDist(ax2,ay2, ax1,ay1, ax2,ay2);
@@ -469,79 +484,119 @@ static void Mug_OverlapPass(void)
         double b_min = MIN(b1_along, b2_along);
         double b_max = MAX(b1_along, b2_along);
 
-        if (b1_along > a1_along+EPSILON && b1_along < a2_along-EPSILON)
+        // doesn't touch, or merely connects?
+///??    if (b_max < a1_along + 2*EPSILON)
+///??      continue;
+///??
+///??    if (b_min > a2_along - 2*EPSILON)
+///??      continue;
+
+        if (b1_along > a1_along+1.7*EPSILON && b1_along < a2_along-1.7*EPSILON)
           Mug_SplitSegment(A, B->start);
 
-        else if (b2_along > a1_along+EPSILON && b2_along < a2_along-EPSILON)
+        else if (b2_along > a1_along+1.7*EPSILON && b2_along < a2_along-1.7*EPSILON)
           Mug_SplitSegment(A, B->end);
 
-        else if (a1_along > b_min+EPSILON && a1_along < b_max-EPSILON)
+        else if (a1_along > b_min+1.7*EPSILON && a1_along < b_max-1.7*EPSILON)
           Mug_SplitSegment(B, A->start);
 
-        else if (a2_along > b_min+EPSILON && a2_along < b_max-EPSILON)
+        else if (a2_along > b_min+1.7*EPSILON && a2_along < b_max-1.7*EPSILON)
           Mug_SplitSegment(B, A->end);
 
         // Note: it's possible one of the new (split) segments is
-        //       directly overlapping another.  This will be caught
-        //       and handled in the next pass.
+        //       directly overlapping another segment.  This will
+        //       be caught and handled in the next pass.
         continue;
       }
 
+
       // check for sharing a single vertex
-      // Note: **RELYING** on the fact that all vertices are unique
       if (A->start == B->start || A->start == B->end ||
           A->end   == B->start || A->end   == B->end)
         continue;
 
-      // check for T junction
-      if (fabs(bp1) <= EPSILON)
-      {
-        Mug_SplitSegment(A, B->start);
-        continue;
-      }
-      else if (fabs(bp2) <= EPSILON)
-      {
-        Mug_SplitSegment(A, B->end);
-        continue;
-      }
-      else if (fabs(ap1) <= EPSILON)
-      {
-        Mug_SplitSegment(B, A->start);
-        continue;
-      }
-      else if (fabs(ap2) <= EPSILON)
-      {
-        Mug_SplitSegment(B, A->end);
-        continue;
-      }
 
-      /* pure cross-over */
+      // does A cross B-extended-to-infinity?
+      if ((ap1 >  EPSILON/2 && ap2 >  EPSILON/2) ||
+          (ap1 < -EPSILON/2 && ap2 < -EPSILON/2))
+        continue;
+
+      // does B cross A-extended-to-infinity?
+      if ((bp1 >  EPSILON/2 && bp2 >  EPSILON/2) ||
+          (bp1 < -EPSILON/2 && bp2 < -EPSILON/2))
+        continue;
+
+
+      // compute intersection point
+      double ix, iy, along;
+
+      if (fabs(ap1 - ap2) > fabs(bp1 - bp2))
+      {
+        along = ap1 / (ap1 - ap2);
+
+        ix = ax1 + along * (ax2 - ax1);
+        iy = ay1 + along * (ay2 - ay1);
+      }
+      else
+      {
+        along = bp1 / (bp1 - bp2);
+
+        ix = bx1 + along * (bx2 - bx1);
+        iy = by1 + along * (by2 - by1);
+      }
       
       // add a new vertex at the intersection point
-      double along = bp1 / (bp1 - bp2);
-
-      double ix = bx1 + along * (bx2 - bx1);
-      double iy = by1 + along * (by2 - by1);
-
       merge_vertex_c * NV = Mug_AddVertex(ix, iy);
 
-#if 0
-fprintf(stderr, "pure cross-over at (%1.6f, %1.6f)\n", ix, iy);
-fprintf(stderr, "   A = (%1.4f,%1.4f) --> (%1.4f,%1.4f)\n", ax1,ay1, ax2,ay2);
-fprintf(stderr, "   B = (%1.4f,%1.4f) --> (%1.4f,%1.4f)\n", bx1,by1, bx2,by2);
-fprintf(stderr, "   AP = %1.6f / %1.6f\n", ap1, ap2);
-fprintf(stderr, "   BP = %1.6f / %1.6f\n", bp1, bp2);
+#if 1
+DebugPrintf("cross-over at (%1.6f %1.6f)\n", ix, iy);
+DebugPrintf("   A = (%1.6f %1.6f) --> (%1.6f %1.6f)\n", ax1,ay1, ax2,ay2);
+DebugPrintf("   B = (%1.6f %1.6f) --> (%1.6f %1.6f)\n", bx1,by1, bx2,by2);
+DebugPrintf("   AP = %1.7f / %1.7f\n", ap1, ap2);
+DebugPrintf("   BP = %1.7f / %1.7f\n", bp1, bp2);
+DebugPrintf("   NV at (%1.6f %1.6f)\n", NV->x, NV->y);
 #endif
 
-      // in very rare circumstances, the new vertex NV will be
-      // the same as one of the crossing lines (due to EPSILON
-      // matching).  Hence the extra checks...
 
-      if (NV != A->start && NV != A->end)
+      if ((ap1 < -EPSILON/2 && ap2 > EPSILON/2) ||
+          (ap2 < -EPSILON/2 && ap1 > EPSILON/2))
+      {
+//        NV != A->start && NV != A->end)
         Mug_SplitSegment(A, NV);
+      }
 
-      if (NV != B->start && NV != B->end)
+      if ((bp1 < -EPSILON/2 && bp2 > EPSILON/2) ||
+          (bp2 < -EPSILON/2 && bp1 > EPSILON/2))
+      {
+//      if (NV != B->start && NV != B->end)
         Mug_SplitSegment(B, NV);
+      }
+
+///---      if (fabs(bp1) <= EPSILON 
+///---      {
+///---        Mug_SplitSegment(A, NV);
+///---        continue;
+///---      }
+///---      else if (fabs(bp2) <= EPSILON)
+///---      {
+///---        Mug_SplitSegment(A, NV);
+///---        continue;
+///---      }
+///---      else if (fabs(ap1) <= EPSILON)
+///---      {
+///---        Mug_SplitSegment(B, NV);
+///---        continue;
+///---      }
+///---      else if (fabs(ap2) <= EPSILON)
+///---      {
+///---        Mug_SplitSegment(B, NV);
+///---        continue;
+///---      }
+
+///---      // in very rare circumstances, the new vertex NV will be
+///---      // the same as one of the crossing lines (due to EPSILON
+///---      // matching).  Hence the extra checks...
+
     }
   }
 }
@@ -552,7 +607,7 @@ static void Mug_FindOverlaps(void)
 
   do
   {
-    SYS_ASSERT(loops < 1000);
+    SYS_ASSERT(loops < 100);
 
     mug_changes = 0;
 
@@ -560,6 +615,8 @@ static void Mug_FindOverlaps(void)
     Mug_AdjustList();
 
     loops++;
+
+DebugPrintf("Mug_FindOverlaps: loop=%d changes=%d\n", loops, mug_changes);
 
   } while (mug_changes > 0);
 }
@@ -703,7 +760,7 @@ static void Mug_TraceSegLoops(void)
   // starting at a untraced seg and a particular vertex of
   // that seg, follow the segs around in the tightest loop
   // possible until we get back to the beginning.  The result
-  // will form a 'merged_area' (i.e. a "sector" for Doom).
+  // will form a 'merged_region' (== a sector in Doom).
   //
   // Note: if the average angle is > 180, then the sector
   //       faces outward (i.e. it's actually an island within
@@ -965,161 +1022,6 @@ static void Mug_RemoveIslands(void)
 
 //------------------------------------------------------------------------
 
-static merge_segment_c *FindAlongSeg(merge_vertex_c *v1, merge_vertex_c *v2)
-{
-  double v_angle = CalcAngle(v1->x, v1->y, v2->x, v2->y);
-
-  for (unsigned int k = 0; k < v1->segs.size(); k++)
-  {
-    merge_segment_c *S = v1->segs[k];
-
-    merge_vertex_c *other = S->Other(v1);
-
-    double s_angle = CalcAngle(v1->x, v1->y, other->x, other->y);
-
-    double diff = fabs(v_angle - s_angle);
-    
-    if (diff <= ANGLE_EPSILON)
-      return S;
-
-    // handle corner cases where one angle is very close to 0 and
-    // the other angle is very close to 360.
-    if (diff >= 360.0 - ANGLE_EPSILON)
-      return S;
-  }
-
-  LogPrintf("CSG2: WARNING: cannot find segment (at %1.0f,%1.0f, angle:%1.3f)\n",
-            v1->x, v1->y, v_angle);
-
-  return NULL;  // not found ???
-}
-
-static void MarkBoundaryRegions(csg_brush_c *P, std::vector<merge_region_c *> & regions)
-{
-  bool incomplete = false;
-
-  for (int k=0; k < (int)P->verts.size(); k++)
-  {
-    area_vert_c *v1 = P->verts[k];
-    area_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
-
-    SYS_ASSERT(v1->partner);
-    SYS_ASSERT(v2->partner);
-
-    merge_vertex_c *V = v1->partner;
-
-    while (V != v2->partner)
-    {
-      merge_segment_c *S = FindAlongSeg(V, v2->partner);
-      if (! S)
-      {
-        incomplete = true;
-        break;
-      }
-
-//!!      if (S->start == V)
-//!!        S->b_sides.push_back(v1);
-//!!      else
-//!!        S->f_sides.push_back(v1);
-
-      merge_region_c *R = (S->start == V) ? S->back : S->front;
-
-      if (R && ! R->HasBrush(P))
-      {
-        R->AddBrush(P);
-
-        regions.push_back(R);
-      }
-
-      S->border_of = P;
-
-      V = S->Other(V);
-    }
-  }
-
-  // if we failed to find all the sides of the brush, then we
-  // cannot perform the floodfill in MarkInnerRegions() because
-  // the brush might be spread into EVERY region -- not good!
-  if (incomplete)
-    regions.clear();
-}
-
-static void MarkInnerRegions(csg_brush_c *P, std::vector<merge_region_c *> & regions)
-{
-  int loops = 0;
-
-  // stop when it cannot spread any further
-  while (regions.size() > 0)
-  {
-    SYS_ASSERT(loops < 100);
-    loops++;
-
-    std::vector<merge_region_c *> new_regs;
-
-    for (unsigned k = 0; k < regions.size(); k++)
-    {
-      merge_region_c *R = regions[k];
-
-      for (unsigned j = 0; j < R->segs.size(); j++)
-      {
-        merge_segment_c *S = R->segs[j];
-
-        if (! (S->front && S->back))
-          continue;
-
-        // contain the virus
-        if (S->border_of == P)
-          continue;
-
-        bool got_back  = S->back ->HasBrush(P);
-        bool got_front = S->front->HasBrush(P);
-
-        if (got_back != got_front)
-        {
-          merge_region_c *R = got_back ? S->front : S->back;
-
-          R->AddBrush(P);
-
-          new_regs.push_back(R);
-        }
-      }
-    }
-
-    std::swap(regions, new_regs);
-  }
-}
-
-static void OLD_OLD_Mug_AssignAreas(void)
-{
-  // Algorithm:
-
-  // For each brush, iterate over each line in the loop.
-  // Since vertices are never removed (only added), we will
-  // always be able to find the first vertex of each line.
-  // Check each segment along the line and mark the merge_region_c
-  // on the correct side as belonging to our brush.
-  // 
-  // BUT WAIT, THERE'S MORE!
-  //
-  // The above logic will not find regions that are fully inside
-  // the brush (no vertices touching the outer line loop).
-  // However it is sufficient to simply "spread" the brush
-  // from each "infected" merge_region_c to every neighbour as
-  // long as the crossing segment is not part of the csg_brush_c
-  // boundary.
-
-  for (unsigned int j=0; j < all_brushes.size(); j++)
-  {
-    csg_brush_c *P = all_brushes[j];
-
-    std::vector<merge_region_c *> regions;
-
-    MarkBoundaryRegions(P, regions);
-
-    MarkInnerRegions(P, regions);
-  }
-}
-
 static bool BrushContainsRegion(csg_brush_c *B, merge_region_c *R)
 {
   // fast test for rectangular brushes
@@ -1149,10 +1051,10 @@ static bool BrushContainsRegion(csg_brush_c *B, merge_region_c *R)
     {
       merge_segment_c *S = R->segs[j];
 
-      if (PerpDist(S->start->x, S->start->y, m1->x, m1->y, m2->x, m2->y) > EPSILON*2)
+      if (PerpDist(S->start->x, S->start->y, m1->x, m1->y, m2->x, m2->y) > 2*EPSILON)
         return false;
 
-      if (PerpDist(S->end->x, S->end->y, m1->x, m1->y, m2->x, m2->y) > EPSILON*2)
+      if (PerpDist(S->end->x, S->end->y, m1->x, m1->y, m2->x, m2->y) > 2*EPSILON)
         return false;
     }
   }
@@ -1160,7 +1062,7 @@ static bool BrushContainsRegion(csg_brush_c *B, merge_region_c *R)
   return true;
 }
 
-static void Mug_AssignAreas(void)
+static void Mug_AssignBrushes(void)
 {
   // Algorithm:
   //
@@ -1169,6 +1071,10 @@ static void Mug_AssignAreas(void)
   //
   // We optimise this by iterating over the brush list and
   // region list in order of minimum X coordinate.
+
+  // TODO: consider using quadtrees so that vertical separation
+  //       can be used to reduce the number of brush/region
+  //       checks even further.
 
   unsigned int j, k;
 
@@ -1360,7 +1266,7 @@ static merge_segment_c *ClosestSegmentToPoint(double x, double y, bool *hit_vert
       break;
 
     // skip vertical segments (prevent division by zero)
-    if (fabs(S->start->x - S->end->x) < EPSILON*4)
+    if (fabs(S->start->x - S->end->x) < 2*EPSILON)
       continue;
 
     double iy = S->start->y + (S->end->y - S->start->y) * (x - S->start->x) / (S->end->x - S->start->x);
@@ -1624,7 +1530,7 @@ void CSG2_MergeAreas(void)
   Mug_TraceSegLoops();
   Mug_RemoveIslands();
 
-  Mug_AssignAreas();
+  Mug_AssignBrushes();
 
   Mug_DiscoverGaps();
   Mug_GapNeighbours();

@@ -143,8 +143,11 @@ const char * csg_brush_c::Validate()
 
     double diff = ang1 - ang2;
 
-    if (diff < 0)
-      diff += 360.0;
+    if (diff < 0)    diff += 360.0;
+    if (diff >= 360) diff -= 360.0;
+
+    if (diff > 180.1)
+      return "Line loop is not convex!";
 
     average_ang += diff;
 

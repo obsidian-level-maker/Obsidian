@@ -20,7 +20,7 @@
 #define __OBLIGE_CSG_MAIN_H__
 
 
-#define EPSILON  0.005
+#define EPSILON  0.05
 
 #define ANGLE_EPSILON  0.0003
 
@@ -292,11 +292,15 @@ public:
     return start;
   }
 
+  void ReplaceStart(merge_vertex_c *V);
+  void ReplaceEnd  (merge_vertex_c *V);
+
+  void MergeSides(merge_segment_c *other);
+
   void Kill();
   void Flip();
 
   bool HasGap() const;
-  void MergeSides(merge_segment_c *other);
 };
 
 
