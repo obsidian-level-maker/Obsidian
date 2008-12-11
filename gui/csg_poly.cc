@@ -96,6 +96,30 @@ void merge_segment_c::Flip()
   std::swap(f_sides, b_sides);
 }
 
+void merge_segment_c::MergeSides(merge_segment_c *other)
+{
+  unsigned int k;
+
+  if (start == other->start)
+  {
+    for (k = 0; k < other->f_sides.size(); k++)
+      f_sides.push_back(other->f_sides[k]);
+
+    for (k = 0; k < other->b_sides.size(); k++)
+      b_sides.push_back(other->b_sides[k]);
+  }
+  else
+  {
+    SYS_ASSERT(start == other->end);
+
+    for (k = 0; k < other->f_sides.size(); k++)
+      b_sides.push_back(other->f_sides[k]);
+
+    for (k = 0; k < other->b_sides.size(); k++)
+      f_sides.push_back(other->b_sides[k]);
+  }
+}
+
 
 double merge_region_c::MinGapZ() const
 {
@@ -245,11 +269,19 @@ static void Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V)
   mug_new_segs.push_back(NS);
 
   // update join info
-
   NS->end->ReplaceSeg(S, NS);
 
   V->AddSeg(S);
   V->AddSeg(NS);
+
+  // copy sides
+  unsigned int k;
+
+  for (k = 0; k < S->f_sides.size(); k++)
+    NS->f_sides.push_back(S->f_sides[k]);
+
+  for (k = 0; k < S->b_sides.size(); k++)
+    NS->b_sides.push_back(S->b_sides[k]);
 
   mug_changes++;
 }
@@ -384,7 +416,9 @@ static void Mug_OverlapPass(void)
         // total overlap (same start + end points) ?
         if (A->Match(B))
         {
+          A->MergeSides(B);
           B->Kill();
+
           mug_changes++;
           continue;
         }
@@ -412,13 +446,16 @@ static void Mug_OverlapPass(void)
         else if (a2_along > b_min+EPSILON && a2_along < b_max-EPSILON)
           Mug_SplitSegment(B, A->end);
 
+        // Note: it's possible one of the new (split) segments is
+        //       directly overlapping another.  This will be caught
+        //       and handled in the next pass.
         continue;
       }
 
       // check for sharing a single vertex
       // Note: **RELYING** on the fact that all vertices are unique
-      if (A->start->Match(B->start) || A->start->Match(B->end) ||
-          A->end  ->Match(B->start) || A->end  ->Match(B->end))
+      if (A->start == B->start || A->start == B->end ||
+          A->end   == B->start || A->end   == B->end)
         continue;
 
       // check for T junction
@@ -463,7 +500,7 @@ fprintf(stderr, "   BP = %1.6f / %1.6f\n", bp1, bp2);
 
       // in very rare circumstances, the new vertex NV will be
       // the same as one of the crossing lines (due to EPSILON
-      // matching).  Hence the ugly checks here...
+      // matching).  Hence the extra checks...
 
       if (NV != A->start && NV != A->end)
         Mug_SplitSegment(A, NV);
