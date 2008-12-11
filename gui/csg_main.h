@@ -293,6 +293,7 @@ public:
   void Flip();
 
   bool HasGap() const;
+  void MergeSides(merge_segment_c *other);
 };
 
 
