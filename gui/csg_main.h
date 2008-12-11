@@ -233,6 +233,7 @@ public:
   void RemoveSeg(merge_segment_c *seg);
 
   void ReplaceSeg(merge_segment_c *old_seg, merge_segment_c *new_seg);
+  bool HasSeg(merge_segment_c *seg) const;
 
   merge_segment_c * FindSeg(merge_vertex_c *other);
 };
@@ -390,6 +391,7 @@ public:
   double MinGapZ() const;
   double MaxGapZ() const;
 
+  bool HasSeg(merge_segment_c *seg) const;
   void AddSeg(merge_segment_c *seg);
 
   bool HasBrush(csg_brush_c *P) const;

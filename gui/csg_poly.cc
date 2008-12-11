@@ -65,6 +65,16 @@ void merge_vertex_c::ReplaceSeg(merge_segment_c *old_seg, merge_segment_c *new_s
   Main_FatalError("ReplaceSeg: does not exist!\n");
 }
 
+bool merge_vertex_c::HasSeg(merge_segment_c *seg) const
+{
+  for (unsigned int j=0; j < segs.size(); j++)
+    if (segs[j] == seg)
+      return true;
+
+  return false;  // nope
+}
+
+
 merge_segment_c * merge_vertex_c::FindSeg(merge_vertex_c *other)
 {
   for (unsigned int j=0; j < segs.size(); j++)
@@ -149,6 +159,15 @@ double merge_region_c::MaxGapZ() const
   SYS_ASSERT(gaps.size() > 0);
 
   return gaps[gaps.size() - 1]->GetZ2();
+}
+
+bool merge_region_c::HasSeg(merge_segment_c *seg) const
+{
+  for (unsigned int j=0; j < segs.size(); j++)
+    if (segs[j] == seg)
+      return true;
+
+  return false;  // nope
 }
 
 void merge_region_c::AddSeg(merge_segment_c *seg)
@@ -300,10 +319,10 @@ static void Mug_MakeSegments(csg_brush_c *P)
   }
 }
 
-static void Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V)
+static bool Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V)
 {
-  SYS_ASSERT(S->start != V);
-  SYS_ASSERT(S->end   != V);
+  if (V == S->start || V == S->end)
+    return false;
 
 DebugPrintf("mug_change: split segment %p (%1.6f %1.6f) --> (%1.6f %1.6f) at (%1.6f %1.6f)\n", S,
 S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
@@ -315,6 +334,9 @@ S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
   // replace end vertex
   S->end->ReplaceSeg(S, NS);
   S->end = V;
+
+SYS_ASSERT(! V->HasSeg(S));
+SYS_ASSERT(! V->HasSeg(NS));
 
   V->AddSeg(S);
   V->AddSeg(NS);
@@ -329,6 +351,8 @@ S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
     NS->b_sides.push_back(S->b_sides[k]);
 
   mug_changes++;
+
+  return true;
 }
 
 struct SegDead_pred
@@ -430,7 +454,7 @@ static void Mug_OverlapPass(void)
       double bx2 = B->end->x;
       double by2 = B->end->y;
 
-#if 0 // normal code
+#if 1 // normal code
       if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2)
         break;
 #else // non-sorted method (TESTING only)
@@ -491,17 +515,21 @@ B->start->x, B->start->y, B->end->x, B->end->y);
 ///??    if (b_min > a2_along - 2*EPSILON)
 ///??      continue;
 
-        if (b1_along > a1_along+1.7*EPSILON && b1_along < a2_along-1.7*EPSILON)
-          Mug_SplitSegment(A, B->start);
+        if (b1_along > a1_along+0.5*EPSILON && b1_along < a2_along-0.5*EPSILON)
+          if (Mug_SplitSegment(A, B->start))
+            continue;
 
-        else if (b2_along > a1_along+1.7*EPSILON && b2_along < a2_along-1.7*EPSILON)
-          Mug_SplitSegment(A, B->end);
+        if (b2_along > a1_along+0.5*EPSILON && b2_along < a2_along-0.5*EPSILON)
+          if (Mug_SplitSegment(A, B->end))
+            continue;
 
-        else if (a1_along > b_min+1.7*EPSILON && a1_along < b_max-1.7*EPSILON)
-          Mug_SplitSegment(B, A->start);
+        if (a1_along > b_min+0.5*EPSILON && a1_along < b_max-0.5*EPSILON)
+          if (Mug_SplitSegment(B, A->start))
+            continue;
 
-        else if (a2_along > b_min+1.7*EPSILON && a2_along < b_max-1.7*EPSILON)
-          Mug_SplitSegment(B, A->end);
+        if (a2_along > b_min+0.5*EPSILON && a2_along < b_max-0.5*EPSILON)
+          if (Mug_SplitSegment(B, A->end))
+            continue;
 
         // Note: it's possible one of the new (split) segments is
         //       directly overlapping another segment.  This will
@@ -557,18 +585,15 @@ DebugPrintf("   BP = %1.7f / %1.7f\n", bp1, bp2);
 DebugPrintf("   NV at (%1.6f %1.6f)\n", NV->x, NV->y);
 #endif
 
-
       if ((ap1 < -EPSILON/2 && ap2 > EPSILON/2) ||
           (ap2 < -EPSILON/2 && ap1 > EPSILON/2))
       {
-//        NV != A->start && NV != A->end)
         Mug_SplitSegment(A, NV);
       }
 
       if ((bp1 < -EPSILON/2 && bp2 > EPSILON/2) ||
           (bp2 < -EPSILON/2 && bp1 > EPSILON/2))
       {
-//      if (NV != B->start && NV != B->end)
         Mug_SplitSegment(B, NV);
       }
 
@@ -671,6 +696,13 @@ static void TraceNext(void)
     SYS_ASSERT(angle < 360.0 + ANGLE_EPSILON);
 
     // should never have two segments with same angle (pt 2)
+LogPrintf("T: (%1.4f %1.4f) --> (%1.4f %1.4f)\n",
+  T->start->x, T->start->y, T->end->x, T->end->y);
+if (best_seg)
+LogPrintf("best_seg: (%1.4f %1.4f) --> (%1.4f %1.4f)\n",
+  best_seg->start->x, best_seg->start->y,
+  best_seg->end->x, best_seg->end->y);
+LogPrintf("best_angle: %1.8f  angle: %1.8f\n", best_angle, angle);
     SYS_ASSERT(fabs(best_angle - angle) > ANGLE_EPSILON);
 
     if (angle < best_angle)
@@ -1107,6 +1139,7 @@ unsigned int orig_ff = first_reg;
       {
         if (k == first_reg)
           first_reg++;
+
         continue;
       }
 
