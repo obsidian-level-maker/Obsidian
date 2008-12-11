@@ -1120,11 +1120,42 @@ static void OLD_OLD_Mug_AssignAreas(void)
   }
 }
 
-static bool Mug_BrushContainsRegion(csg_brush_c *B, merge_region_c *R)
+static bool BrushContainsRegion(csg_brush_c *B, merge_region_c *R)
 {
-  // FIXME check each vertex of region against each half-plane of brush
+  // fast test for rectangular brushes
+  if (B->bflags & BRU_IF_Quad)
+  {
+    return (R->min_x >= B->min_x - EPSILON) &&
+           (R->min_y >= B->min_y - EPSILON) &&
+           (R->max_x <= B->max_x + EPSILON) &&
+           (R->max_y <= B->max_y + EPSILON);
+  }
 
-  return false; //!!!!!!
+  // check each vertex of region against each half-plane of brush
+
+  for (unsigned int k=0; k < B->verts.size(); k++)
+  {
+    area_vert_c *v1 = B->verts[k];
+    area_vert_c *v2 = B->verts[(k+1) % B->verts.size()];
+
+    merge_vertex_c *m1 = v1->partner;
+    merge_vertex_c *m2 = v2->partner;
+
+    // TODO: optimise : pick three/four vertices to test (min-x, max-x, min-y, max-y)
+
+    for (unsigned int j=0; j < R->segs.size(); j++)
+    {
+      merge_segment_c *S = R->segs[j];
+
+      if (PerpDist(S->start->x, S->start->y, m1->x, m1->y, m2->x, m2->y) > EPSILON*2)
+        return false;
+
+      if (PerpDist(S->end->x, S->end->y, m1->x, m1->y, m2->x, m2->y) > EPSILON*2)
+        return false;
+    }
+  }
+
+  return true;
 }
 
 static void Mug_AssignAreas(void)
@@ -1154,39 +1185,42 @@ static void Mug_AssignAreas(void)
   {
     csg_brush_c *B = all_brushes[j];
 
+unsigned int orig_ff = first_reg;
+
     for (k=first_reg; k < mug_regions.size(); k++)
     {
       merge_region_c *R = mug_regions[k];
 
+      // check whether bounding boxes _touch_
       if (R->min_x > B->max_x - EPSILON)
         break;
 
       if (R->max_x < B->min_x + EPSILON)
+      {
+        if (k == first_reg)
+          first_reg++;
         continue;
+      }
 
       if (R->min_y > B->max_y - EPSILON ||
           R->max_y < B->min_y + EPSILON)
         continue;
 
-if (R->min_x < B->min_x - EPSILON ||
-    R->max_x > B->max_x + EPSILON ||
-    R->min_y < B->min_y - EPSILON ||
-    R->max_y > B->max_y + EPSILON)
-continue;
-
-      // passed the bounding box test.
-      // (This is sufficient for box-shaped brushes)
-
       SYS_ASSERT(! R->HasBrush(B));
-/////      if (R->HasBrush(B))
-/////        continue;
 
-      if ((B->bflags & BRU_IF_Quad) || Mug_BrushContainsRegion(B, R))
+      if (BrushContainsRegion(B, R))
       {
         R->AddBrush(B);
       }
     }
+
+DebugPrintf("Brush %u/%u : checked %u regions\n", j, all_brushes.size(), k - orig_ff);
+
   }
+
+  // Double check using f_sides / b_sides
+ 
+  // FIXME
 }
 
 static void Mug_DiscoverGaps(void)
