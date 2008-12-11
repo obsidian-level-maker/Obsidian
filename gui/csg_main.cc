@@ -105,6 +105,8 @@ csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
   // FIXME: do_verts
 
   // FIXME: duplicate slopes
+
+  bflags &= ~ BRU_IF_Quad;
 }
 
 csg_brush_c::~csg_brush_c()
@@ -120,8 +122,12 @@ const char * csg_brush_c::Validate()
   if (verts.size() < 3)
     return "Line loop contains less than 3 vertices!";
 
+  // FIXME: make sure brush is convex (co-linear lines is OK)
+
   // make sure vertices are anti-clockwise
   double average_ang = 0;
+
+  bflags |= BRU_IF_Quad;
 
   for (unsigned int k = 0; k < verts.size(); k++)
   {
@@ -141,6 +147,12 @@ const char * csg_brush_c::Validate()
       diff += 360.0;
 
     average_ang += diff;
+
+    if (fabs(v1->x - v2->x) >= EPSILON &&
+        fabs(v1->y - v2->y) >= EPSILON)
+    {
+      bflags &= ~BRU_IF_Quad;
+    } 
   }
 
   average_ang /= (double)verts.size();

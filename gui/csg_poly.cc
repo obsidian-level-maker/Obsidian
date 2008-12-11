@@ -158,6 +158,33 @@ void merge_region_c::AddBrush(csg_brush_c *P)
   brushes.push_back(P);
 }
 
+void merge_region_c::ComputeBBox()
+{
+  min_x = +9e7;
+  min_y = +9e7;
+  max_x = -9e7;
+  max_y = -9e7;
+
+  SYS_ASSERT(segs.size() > 0);
+
+  for (unsigned int j = 0; j < segs.size(); j++)
+  {
+    merge_segment_c *S = segs[j];
+
+    if (S->start->x < min_x) min_x = S->start->x;
+    if (S->start->y < min_y) min_y = S->start->y;
+    
+    if (S->start->x > max_x) max_x = S->start->x;
+    if (S->start->y > max_y) max_y = S->start->y;
+
+    if (S->end->x < min_x) min_x = S->end->x;
+    if (S->end->y < min_y) min_y = S->end->y;
+
+    if (S->end->x > max_x) max_x = S->end->x;
+    if (S->end->y > max_y) max_y = S->end->y;
+  }
+}
+
 
 static std::vector<merge_segment_c *> mug_new_segs;
 
@@ -341,6 +368,14 @@ struct Compare_BrushZ1_pred
   inline bool operator() (const csg_brush_c *A, const csg_brush_c *B) const
   {
     return A->z1 < B->z1;
+  }
+};
+
+struct Compare_RegionMinX_pred
+{
+  inline bool operator() (const merge_region_c *A, const merge_region_c *B) const
+  {
+    return A->min_x < B->min_x;
   }
 };
 
@@ -1054,7 +1089,7 @@ static void MarkInnerRegions(csg_brush_c *P, std::vector<merge_region_c *> & reg
   }
 }
 
-static void Mug_AssignAreas(void)
+static void OLD_OLD_Mug_AssignAreas(void)
 {
   // Algorithm:
 
@@ -1085,6 +1120,74 @@ static void Mug_AssignAreas(void)
   }
 }
 
+static bool Mug_BrushContainsRegion(csg_brush_c *B, merge_region_c *R)
+{
+  // FIXME check each vertex of region against each half-plane of brush
+
+  return false; //!!!!!!
+}
+
+static void Mug_AssignAreas(void)
+{
+  // Algorithm:
+  //
+  // For each brush, check every region to see if it lies
+  // completely within the brush.
+  //
+  // We optimise this by iterating over the brush list and
+  // region list in order of minimum X coordinate.
+
+  unsigned int j, k;
+
+  for (k=0; k < mug_regions.size(); k++)
+    mug_regions[k]->ComputeBBox();
+
+  std::sort(all_brushes.begin(), all_brushes.end(),
+            Compare_BrushMinX_pred());
+
+  std::sort(mug_regions.begin(), mug_regions.end(),
+            Compare_RegionMinX_pred());
+
+  unsigned int first_reg = 0;
+
+  for (j=0; j < all_brushes.size(); j++)
+  {
+    csg_brush_c *B = all_brushes[j];
+
+    for (k=first_reg; k < mug_regions.size(); k++)
+    {
+      merge_region_c *R = mug_regions[k];
+
+      if (R->min_x > B->max_x - EPSILON)
+        break;
+
+      if (R->max_x < B->min_x + EPSILON)
+        continue;
+
+      if (R->min_y > B->max_y - EPSILON ||
+          R->max_y < B->min_y + EPSILON)
+        continue;
+
+if (R->min_x < B->min_x - EPSILON ||
+    R->max_x > B->max_x + EPSILON ||
+    R->min_y < B->min_y - EPSILON ||
+    R->max_y > B->max_y + EPSILON)
+continue;
+
+      // passed the bounding box test.
+      // (This is sufficient for box-shaped brushes)
+
+      SYS_ASSERT(! R->HasBrush(B));
+/////      if (R->HasBrush(B))
+/////        continue;
+
+      if ((B->bflags & BRU_IF_Quad) || Mug_BrushContainsRegion(B, R))
+      {
+        R->AddBrush(B);
+      }
+    }
+  }
+}
 
 static void Mug_DiscoverGaps(void)
 {

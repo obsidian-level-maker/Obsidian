@@ -109,6 +109,9 @@ typedef enum
   BRU_F_Door     = (1 << 4),  // (DOOM) close the created sector
   BRU_F_SkyClose = (1 << 5),  // (DOOM) almost close the sector
   BRU_F_RevDoor  = (1 << 6),  // (DOOM) 
+
+  // internal flags
+  BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box
 }
 brush_flags_e;
 
@@ -359,6 +362,9 @@ public:
   // gaps are in order from lowest to highest
   std::vector<merge_gap_c *> gaps;
 
+  double min_x, min_y;
+  double max_x, max_y;
+
   // this index is not used by the polygoniser code (csg_poly.cc),
   // only by the Doom conversion code.  -1 means "unused".
   int index;
@@ -384,6 +390,8 @@ public:
 
   bool HasBrush(csg_brush_c *P) const;
   void AddBrush(csg_brush_c *P);
+
+  void ComputeBBox();
 };
 
 
