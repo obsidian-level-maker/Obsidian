@@ -1,5 +1,5 @@
 ---------------------------------------------------------------
---  PLANNING : Single Player
+--  PLANNING (NEW!) : Single Player
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006-2008 Andrew Apted
@@ -34,26 +34,10 @@ class PLAN
 }
 
 
-class LAND
-{
-  lx, ly  -- coordinates in LAND_MAP
-
-  kind : keyword  -- "indoor", "ground", "hill", "valley", "liquid"
-                  -- can only be NIL while filling the LAND_MAP
-
-  room : ROOM  -- the room which covers this spot on the map.
-               -- Note: a single room can cover multiple spots.
-}
-
 --------------------------------------------------------------]]
 
 require 'defs'
 require 'util'
-
-
-LAND_W = 0
-LAND_H = 0
-LAND_MAP = {}
 
 
 PLAN_CLASS =
@@ -93,335 +77,7 @@ ROOM_CLASS =
 }
 
 
-function Landmap_Init()
-  LAND_MAP = array_2D(LAND_W, LAND_H)
-
-  for x = 1,LAND_W do for y = 1,LAND_H do
-    LAND_MAP[x][y] = { lx=x, ly=y }
-  end end
-end
-
-
-function Landmap_valid(x, y)
-  return (x >= 1) and (x <= LAND_W) and
-         (y >= 1) and (y <= LAND_H)
-end
-
-
-function Landmap_at_edge(x, y)
-  return (x == 1) or (x == LAND_W) or
-         (y == 1) or (y == LAND_H)
-end
-
-
-function Landmap_rand_visits()
-  local visits = {}
-  for x = 1,LAND_W do for y = 1,LAND_H do
-    table.insert(visits, { x=x, y=y })
-  end end -- x,y
-  rand_shuffle(visits)
-  return visits
-end
-
-
-function Landmap_DoLiquid(mirrored)
- 
-  -- Possible liquid patterns:
-  --   1. completely surrounded
-  --   2. partially surrounded (U shape)
-  --   3. river down the middle
-  --   4. pool in the middle
-
-  local extra = rand_irange(0,255)
-
-  function surround_mode(x, y)
-    if Landmap_at_edge(x, y) then
-      LAND_MAP[x][y].kind = "liquid"
-    end
-  end
-
-  function ushape_mode(x, y)
-    if (x == 1      and (extra % 4) == 0) or
-       (x == LAND_W and (extra % 4) == 1) or
-       (y == 1      and (extra % 4) == 2) or
-       (y == LAND_H and (extra % 4) == 3)
-    then
-      -- skip that side
-    else
-      surround_mode(x, y)
-    end
-  end
-
-  function river_mode(x, y)
-    if (extra % 2) == 0 then
-      if x == int((LAND_W+1)/2) then
-        LAND_MAP[x][y].kind = "liquid"
-      end
-    else
-      if y == int((LAND_H+1)/2) then
-        LAND_MAP[x][y].kind = "liquid"
-      end
-    end
-  end
-
-  function pool_mode(x, y)
-    local pw = 1
-    local ph = 1
-
-    if LAND_W >= 7 then pw = 2 end
-    if LAND_H >= 7 then ph = 2 end
-
-    local dx = math.abs(x - int((LAND_W+1)/2))
-    local dy = math.abs(y - int((LAND_H+1)/2))
-
-    if dx < pw and dy < ph then
-      LAND_MAP[x][y].kind = "liquid"
-    end
-  end
-
-
-  --- Landmap_DoLiquid ---
-
-  local what = rand_key_by_probs
-  {
-    none = 200,
-
---!!!!!    river    = 50,
---(disabled until teleporter logic is sorted out)
-
-    pool     = 50,
-    u_shape  = 50,
-    surround = 50,
-  }
-
-  if LAND_W <= 3 or LAND_H <= 3 or mirrored then
-    what = "none"
-  end
-
-  if what == "u_shape" or what == "surround" then
-    LAND_W = LAND_W + 2
-    LAND_H = LAND_H + 2
-  end
-
-  if not mirrored then
-    Landmap_Init()
-  end
-
-gui.debugf("Landmap_DoLiquid: what=%s\n", what)
-
-  for x = 1,LAND_W do for y = 1,LAND_H do
-    if what == "surround" then surround_mode(x, y) end
-    if what == "river"    then river_mode(x, y) end
-    if what == "u_shape"  then ushape_mode(x, y) end
-    if what == "pool"     then pool_mode(x, y) end
-  end end
-end
-
-
-function Landmap_DoGround()
-
-  local function fill_spot(x, y)
-    local FILLERS =
-    {
-      ground = 50, valley = 70, hill = 35,
-    }
-
-    FILLERS.none = 60*5  -- variable?  --!!!!!!!!
-
-    local near_lava = false
-    for dx = -1,1 do for dy = -1,1 do
-      if Landmap_valid(x+dx, y+dy) then
-        local L = LAND_MAP[x+dx][y+dy]
-        if L.kind == "liquid" then
-          near_lava = true
-        end
-      end
-    end end -- dx, dy
-
-    if near_lava then
-      FILLERS.valley = 400
-    end
-
-    local what = rand_key_by_probs(FILLERS)
-
-    if what ~= "none" then
-      LAND_MAP[x][y].kind = what
-    end
-  end
-
-  local function plant_seedlings()
-    for x = 1,LAND_W do
-      local poss_y = {}
-
-      for y = 1,LAND_H do
-        if not LAND_MAP[x][y].kind then
-          table.insert(poss_y, y)
-        end
-      end
-
-      if #poss_y > 0 then
-        local y = rand_element(poss_y)
-        fill_spot(x, y)
-      end
-    end
-  end
-
-  local NOLI_TANGERE =
-  {
-    liquid = true,
-    valley = true, ground = true, hill = true
-  }
-
-  local GROW_PROBS =
-  {
-    valley = 30, ground = 40, hill = 20,
-  }
-
-  local function try_grow_spot(x, y, dir)
-
-    local nx, ny = nudge_coord(x, y, dir)
-    if not Landmap_valid(nx, ny) then return false end
-     
-    local kind = LAND_MAP[x][y].kind
-    if not kind then return false end
-
-    if LAND_MAP[nx][ny].kind then return false end
-
-    if NOLI_TANGERE[kind] then
-      local ax, ay = nudge_coord(nx, ny, rotate_cw90(dir))
-      local bx, by = nudge_coord(nx, ny, rotate_ccw90(dir))
-
-      if Landmap_valid(ax, ay) and LAND_MAP[ax][ay].kind == kind then return false end
-      if Landmap_valid(bx, by) and LAND_MAP[bx][by].kind == kind then return false end
-    end
-
-    local prob = GROW_PROBS[LAND_MAP[x][y].kind] or 0
-
-    if not prob then return false end
-
-    if rand_odds(prob) then
-      LAND_MAP[nx][ny].kind = LAND_MAP[x][y].kind
-    end
-
-    -- NOTE: return true here even if did not install anything,
-    --       because we have "used up" our growing turn.
-    return true
-  end
-
-  local function grow_seedlings()
-    local x_order = {}
-    local y_order = {}
-    local d_order = {}
-
-    rand_shuffle(x_order, LAND_W)
-    for _,x in ipairs(x_order) do
-
-      rand_shuffle(y_order, LAND_H)
-      for _,y in ipairs(y_order) do
-
-        rand_shuffle(d_order, 4)
-        for _,d in ipairs(d_order) do
-          if try_grow_spot(x, y, d*2) then break; end
-        end
-      end
-    end
-  end
-
-
-  --- Landmap_DoGround ---
-
-  local SPURTS = rand_element { 0,2,5,12 }
-
-  if SPURTS > 0 then
-    plant_seedlings()
-    for loop = 1,SPURTS do
-      grow_seedlings()
-    end
-  end
-end
-
-
-function Landmap_DoIndoors()
-  for x = 1,LAND_W do for y = 1,LAND_H do
-    local L = LAND_MAP[x][y]
-    if not L.kind then
-      L.kind = "indoor"
-    end
-  end end -- x,y
-end
-
-
-function Landmap_Fill(mirrored)
-
-  local old_LW = LAND_W
-  local old_LH = LAND_H
-
-  local half_LW = int((LAND_W+1)/2)
-  local half_LH = int((LAND_H+1)/2)
-
-  if not mirrored and LAND_W >= 4 and rand_odds(15) then
-gui.debugf("(mirroring horizontally LAND_W=%d)\n", LAND_W)
-
-    Landmap_Init(LAND_W, LAND_H)
-
-    LAND_W = half_LW ; Landmap_Fill(true) ; LAND_W = old_LW
-
-    local swappers = {}
-
-    if rand_odds(25) then
-      swappers = { ground="valley", valley="hill", hill="ground" }
-    elseif rand_odds(25) then
-      swappers = { ground="hill", valley="ground", hill="valley" }
-    end
-
-    for x = half_LW+1, LAND_W do
-      for y = 1,LAND_H do
-        local L = LAND_MAP[LAND_W-x+1][y]
-        local N = LAND_MAP[x][y]
-
-        N.kind = swappers[L.kind] or L.kind
-      end
-    end
-
-    return -- ALL DONE
-  end 
- 
-  Landmap_DoLiquid(mirrored)
-  Landmap_DoGround()
-  Landmap_DoIndoors()
-end
-
-
-function Landmap_Dump()
-
-  local CHARS =
-  {
-    valley = "1",
-    ground = "2",
-    hill   = "3",
-
-    indoor   = "r",
-    liquid   = "~",
-    void     = "#",
-  }
-
-  local function land_char(L)
-    return (L.kind and CHARS[L.kind]) or "."
-  end
-
-  gui.debugf("Land Map\n")
-  for y = LAND_H,1,-1 do
-    local line = "  "
-    for x = 1,LAND_W do
-      line = line .. land_char(LAND_MAP[x][y])
-    end
-    gui.debugf("%s", line)
-  end
-  gui.debugf("\n")
-end
-
-
-function Landmap_CreateRooms()
+function Plan_CreateRooms()
   
   -- creates rooms out of contiguous areas on the land-map
 
@@ -1121,48 +777,78 @@ end
 
 
 function Plan_determine_size()
+  local W, H
+
   local ob_size = OB_CONFIG.size
 
   -- there is no real "progression" when making a single level
-  -- so used mixed mode instead.
+  -- hence use mixed mode instead.
   if ob_size == "prog" and OB_CONFIG.length == "single" then
     ob_size = "mixed"
   end
 
   if ob_size == "mixed" then
-    LAND_W = 3 + rand_index_by_probs { 2,4,6,10,6,4,2,1,1 }
-    LAND_H = 3 + rand_index_by_probs { 2,4,6,10,6,4,2 }
+    W = 3 + rand_index_by_probs { 2,4,6,10,6,4,2,1 }
+    H = 3 + rand_index_by_probs { 2,4,6,10,6,4,2 }
 
+    if W < H then W, H = H, W end
   else
     if ob_size == "prog" then
-      LAND_W = int(5.1 + LEVEL.ep_along * 6)
+      local n = 1 + int(LEVEL.ep_along * 8.9)
+      if n > 9 then n = 9 end
+
+      local SIZES = { 5,6,6, 7,7,7, 8,9,10 }
+
+      W = SIZES[n]
     else
-      local LAND_SIZES = { small=6, normal=8, large=11, xlarge=13 }
+      local SIZES = { small=6, normal=8, large=11 }
 
-      LAND_W = LAND_SIZES[ob_size]
+      W = SIZES[ob_size]
 
-      if not LAND_W then
+      if not W then
         error("Unknown size keyword: " .. tostring(ob_size))
       end
     end
 
-    LAND_H = LAND_W
+    H = W
 
-    if rand_odds(40) then LAND_W = LAND_W - 1 end
+    if rand_odds(40) then W = W - 1 end
 
-    if rand_odds(60) then LAND_H = LAND_H - 1 end
-    if rand_odds(60) then LAND_H = LAND_H - 1 end
-    if rand_odds(60) then LAND_H = LAND_H - 1 end
-
----    if rand_odds(50) then -- LAND_W < LAND_H then
----    end
+    if rand_odds(60) then H = H - 1 end
+    if rand_odds(60) then H = H - 1 end
   end
 
-  if LAND_W < LAND_H then
-    LAND_W, LAND_H = LAND_H, LAND_W
+  PLAN.W = W
+  PLAN.H = H
+
+  gui.printf("Land size: %dx%d\n", PLAN.W, PLAN.H)
+
+
+  -- initial sizes of rooms in each row and column
+  local rows = {}
+  local cols = {}
+
+  for x = 1, W do cols[x] = 3 end
+  for y = 1, H do rows[y] = 3 end
+
+  for i = 1,rand_irange(2,4) do
+    local x = rand_irange(1, W)
+    local y = rand_irange(1, H)
+
+    if cols[x] >= 3 then cols[x] = cols[x] + 1 end
+    if rows[y] >= 3 then rows[y] = rows[y] + 1 end
   end
 
-  gui.printf("Land size: %dx%d\n", LAND_W, LAND_H)
+  for i = 1,rand_irange(1,3) do
+    local x = rand_irange(1, W)
+    local y = rand_irange(1, H)
+
+    if cols[x] >= 3 then cols[x] = cols[x] - 1 end
+    if rows[y] >= 3 then rows[y] = rows[y] - 1 end
+  end
+
+  PLAN.row_W = rows
+  PLAN.col_H = cols
 end
 
 
@@ -1192,9 +878,8 @@ function Plan_rooms_sp()
 
   PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
 
-  Landmap_Fill()
-  Landmap_Dump()
-  Landmap_CreateRooms()
+
+  Plan_CreateRooms()
 
   Plan_CollectNeighbors()
   Plan_Nudge()
