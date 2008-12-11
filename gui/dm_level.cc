@@ -157,12 +157,15 @@ bool extrafloor_c::Match(const extrafloor_c *other) const
 }
 
 
+void DM_WriteDoom(void);  // forward
+
+
 void CSG2_Doom_TestBrushes(void)
 {
   // for debugging only: each csg_brush_c becomes a single
   // sector on the map.
  
-  DM_StartWAD("test.wad");
+  DM_StartWAD("brush_test.wad");
   DM_BeginLevel();
 
   for (unsigned int k = 0; k < all_brushes.size(); k++)
@@ -194,6 +197,19 @@ void CSG2_Doom_TestBrushes(void)
                     0, 1 /*impassible*/, 0, NULL /* args */);
     }
   }
+
+  DM_EndLevel("MAP01");
+  DM_EndWAD();
+}
+
+void CSG2_Doom_TestClip(void)
+{
+  // for Quake1 debugging only....
+
+  DM_StartWAD("clip_test.wad");
+  DM_BeginLevel();
+
+  DM_WriteDoom();
 
   DM_EndLevel("MAP01");
   DM_EndWAD();
@@ -964,10 +980,6 @@ void DM_WriteDoom(void)
   //    - mark vertices with all unused segs as unused
   // 4) profit!
 
-  CSG2_MergeAreas();
-
-  CSG2_MakeMiniMap();
-
 //CSG2_Doom_TestRegions();
 //return;
  
@@ -1127,6 +1139,9 @@ void doom_game_interface_c::EndLevel()
     Main_FatalError("Script problem: did not set level name!\n");
 
   DM_BeginLevel();
+
+  CSG2_MergeAreas();
+  CSG2_MakeMiniMap();
 
   DM_WriteDoom();
 
