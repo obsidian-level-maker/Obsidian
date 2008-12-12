@@ -141,15 +141,24 @@ require 'util'
 
 
 function Room_SetupTheme(R)
-  
+ 
+--!!!!
+if rand_odds(33) then R.outdoor = true end
+
+
   if not PLAN.outdoor_combos then
     PLAN.outdoor_combos = {}
+
+    for num = 1,2 do
+      local name = rand_key_by_probs(PLAN.theme.ground)
+      PLAN.outdoor_combos[num] = assert(GAME.combos[name]) 
+    end
   end
 
   if not PLAN.indoor_combos then
     PLAN.indoor_combos = {}
 
-    for num = 1,4 do
+    for num = 1,3 do
       local name = rand_key_by_probs(PLAN.theme.building)
       PLAN.indoor_combos[num] = assert(GAME.combos[name]) 
     end
@@ -157,21 +166,9 @@ function Room_SetupTheme(R)
 
 
   if R.outdoor then
-    if not PLAN.outdoor_combos[R.kind] then
-      local name = rand_key_by_probs(PLAN.theme.ground)
-      PLAN.outdoor_combos[R.kind] = assert(GAME.combos[name])
-    end
-
-    R.combo = PLAN.outdoor_combos[R.kind]
+    R.combo = rand_element(PLAN.outdoor_combos)
   else
-    assert(R.arena)
-
-    if not R.arena.indoor_combo then
-      R.arena.indoor_combo = PLAN.indoor_combos[rand_irange(1,4)]
-      assert(R.arena.indoor_combo)
-    end
-
-    R.combo = R.arena.indoor_combo
+    R.combo = rand_element(PLAN.indoor_combos)
   end
 end
 
@@ -1569,7 +1566,7 @@ function Rooms_lay_out()
   end
 
   for _,R in ipairs(PLAN.all_rooms) do
-    Room_LayItOut(R)
+--!!!!    Room_LayItOut(R)
   end
 
 end
