@@ -33,7 +33,7 @@ private:
   float prog_limit;
 
   Fl_Button *build;
-  Fl_Button *stop;
+  Fl_Button *about;
   Fl_Button *quit;
 
 public:

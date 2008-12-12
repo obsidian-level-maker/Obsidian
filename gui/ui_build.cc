@@ -54,7 +54,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   cy += 42;
 
-  Fl_Button *about = new Fl_Button(x+w - 88, cy, 74, 30, "About");
+  about = new Fl_Button(x+w - 88, cy, 74, 30, "About");
   about->callback(about_callback, this);
 
   add(about);
@@ -122,11 +122,13 @@ void UI_Build::Locked(bool value)
 {
   if (value)
   {
-    quit->deactivate();
+    build->deactivate();
+    about->deactivate();
   }
   else
   {
-    quit->activate();
+    build->activate();
+    about->activate();
   }
 }
 
@@ -191,15 +193,21 @@ void UI_Build::ProgSetButton(bool abort)
 {
   if (abort)
   {
-    build->callback(stop_callback, this);
-    build->label("Cancel");
-    build->labelcolor(ABORT_COLOR);
+    quit->callback(stop_callback, this);
+    quit->label("Cancel");
+    quit->labelcolor(ABORT_COLOR);
+    quit->labelfont(FL_HELVETICA_BOLD);
+
+    build->labelfont(FL_HELVETICA);
   }
   else
   {
-    build->label("Build...");
-    build->labelcolor(FL_FOREGROUND_COLOR);
-    build->callback(build_callback, this);
+    quit->label("Quit");
+    quit->labelcolor(FL_FOREGROUND_COLOR);
+    quit->labelfont(FL_HELVETICA);
+    quit->callback(quit_callback, this);
+
+    build->labelfont(FL_HELVETICA_BOLD);
   }
 }
 

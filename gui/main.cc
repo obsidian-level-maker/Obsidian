@@ -219,7 +219,7 @@ static int escape_key_handler(int event)
   }
 
   // let FLTK's default code kick in
-  // [we cannot mimic it since we don't have the 'window' ref]
+  // [we cannot mimic it because we lack the 'window' ref]
   return 0;
 }
 
