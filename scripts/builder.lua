@@ -702,6 +702,8 @@ end
 
 function make_diagonal(S, side, info, z1)
 
+-- do return end --!!!!
+
   local x1 = S.x1 + S.thick[4]
   local y1 = S.y1 + S.thick[2]
 
@@ -2768,7 +2770,7 @@ gui.printf("do_teleport\n")
 
       if B_kind == "wall" then --- and not could_lose_wall
         make_wall(S, side, f_tex, w_tex)
----     make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
+---     make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "ZZWOLF6")
       end
 
       if B_kind == "picture" then

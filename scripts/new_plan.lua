@@ -112,7 +112,7 @@ function Plan_CreateRooms()
 
   local function try_expand_room(x, y, bw, bh, R)
     
-    -- fits?
+    -- does it fit?
     if x+bw-1 > PLAN.W or y+bh-1 > PLAN.H then
       return false
     end
@@ -122,6 +122,7 @@ function Plan_CreateRooms()
       return false
     end
 
+    -- any other rooms in the way?
     for dx = 0,bw-1 do for dy = 0,bh-1 do
       if (dx > 0 or dy > 0) and room_map[x+dx][y+dy] then
         return false
@@ -135,6 +136,8 @@ function Plan_CreateRooms()
     for dx = 0,bw-1 do for dy = 0,bh-1 do
       room_map[x+dx][y+dy] = R
     end end
+
+    R.is_big = true
 
     return true
   end
@@ -153,8 +156,8 @@ function Plan_CreateRooms()
 
   room_map = array_2D(PLAN.W, PLAN.H)
 
-  local col_x = { 1 }
-  local col_y = { 1 }
+  local col_x = { 2 }  -- one border seed
+  local col_y = { 2 }
 
   for x = 2,PLAN.W do col_x[x] = col_x[x-1] + PLAN.col_W[x-1] end
   for y = 2,PLAN.H do col_y[y] = col_y[y-1] + PLAN.row_H[y-1] end
@@ -218,6 +221,8 @@ function Plan_CreateRooms()
       for ly = y,y+ROOM.lh-1 do
         ROOM.sy2 = ROOM.sy2 + PLAN.row_H[ly]
       end
+
+      ROOM.sw, ROOM.sh = box_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
 
       gui.debugf("%s\n", ROOM:tostr())
     end
@@ -295,6 +300,10 @@ function Plan_Nudge()
     end
   end
 
+  local function depth_after_nudge(R, side, grow)
+    return sel(side == 6 or side == 4, R.sw, R.sh) + grow
+  end
+
   local function allow_nudge(R, side, grow, N, list)
 
     -- above or below a sidewards nudge?
@@ -322,7 +331,9 @@ function Plan_Nudge()
 
     if N.no_nudge or N.nudges[10-side] then return false end
 
-    if volume_after_nudge(N, 10-side, -grow) < 3 then return false end
+---##   if volume_after_nudge(N, 10-side, -grow) < 3 then return false end
+
+    if depth_after_nudge(N, 10-side, -grow) < 2 then return false end
 
 --???    if side == 6 then assert(N.sx1 == R.sx2+1) end
 --???    if side == 4 then assert(N.sx2 == R.sx1-1) end
@@ -356,7 +367,8 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     if R.nudges[side] then return false end
 
     -- would get too small?
-    if volume_after_nudge(R, side, grow) < 3 then return false end
+---###    if volume_after_nudge(R, side, grow) < 3 then return false end
+    if depth_after_nudge(R, side, grow) < 2 then return false end
 
     -- side sits on border of the map?
 --[[
@@ -376,7 +388,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     end
 
     -- Nudge is OK!
-    gui.printf("Nudging Room (%d,%d) side:%d grow:%d\n", R.lx1, R.ly1, side, grow)
+    gui.printf("Nudging %s side:%d grow:%d\n", R:tostr(), side, grow)
 
     table.insert(push_list, { room=R, side=side, grow=grow })
 
@@ -403,14 +415,15 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     local rooms = {}
 
     for _,R in ipairs(PLAN.all_rooms) do
-      if R.lvol >= 2 then
+      if R.is_big then
+        R.lvolume = R.lw * R.lh + gui.random()
         table.insert(rooms, R)
       end
     end
 
     if #rooms == 0 then return end
 
-    table.sort(rooms, function(A, B) return A.lvol > B.lvol end)
+    table.sort(rooms, function(A, B) return A.lvolume > B.lvolume end)
 
     local sides = { 2,4,6,8 }
 
@@ -446,7 +459,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   local function nudge_the_rest()
     local rooms = {}
     for _,R in ipairs(PLAN.all_rooms) do
-      if R.lvol < 2 then
+      if not R.is_big then
         table.insert(rooms, R)
       end
     end
@@ -477,7 +490,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   nudge_the_rest()
 
   for _,R in ipairs(PLAN.all_rooms) do
-    gui.printf("Room (%d,%d)  seed size: %dx%d\n", R.lx1,R.ly1, R.sw,R.sh)
+    gui.printf("Final %s   seed size: %dx%d\n", R:tostr(), R.sw,R.sh)
   end
 end
 
@@ -596,7 +609,13 @@ function Plan_MakeSeeds()
   for _,R in ipairs(PLAN.all_rooms) do
     max_sx = math.max(max_sx, R.sx2)
     max_sy = math.max(max_sy, R.sy2)
+
+    R.svolume = R.sw * R.sh
   end
+
+  -- one border seed
+  max_sx = max_sx + 1
+  max_sy = max_sy + 1
 
   Seed_init(max_sx, max_sy, 1)
 
@@ -605,17 +624,10 @@ function Plan_MakeSeeds()
 
   for _,R in ipairs(PLAN.all_rooms) do
     border_up(R)
-
-    -- FIXME: should not be needed: maintain sw/sh along with sx1 etc
-    R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
-
-    R.svolume  = R.sw * R.sh
   end
 
   for _,R in ipairs(PLAN.scenic_rooms) do
     border_up_scenic(R)
-
-    R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
   end
 
   Seed_dump_fabs()
@@ -736,7 +748,7 @@ function Plan_rooms_sp()
 
   Plan_determine_size()
   Plan_CreateRooms()
---!!!!  Plan_Nudge()
+  Plan_Nudge()
 
   -- must create the seeds _AFTER_ nudging
   Plan_MakeSeeds()
