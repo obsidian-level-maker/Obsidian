@@ -81,149 +81,7 @@ function Plan_CreateRooms()
   
   -- creates rooms out of contiguous areas on the land-map
 
-  local room_map = array_2D(PLAN.W, PLAN.H)
-
-
-  local function walkable(L)
-    if L.kind == "liquid" then return false end
-    if L.kind == "void"   then return false end
-    return true
-  end
-
-  local function block_same(x1,y1, x2,y2)
-    if x1 > x2 then x1,x2 = x2,x1 end
-    if y1 > y2 then y1,y2 = y2,y1 end
-
-    if not Landmap_valid(x1,y1) then return false end
-    if not Landmap_valid(x2,y2) then return false end
-
-    local kind = LAND_MAP[x1][y1].kind
-
-    local corner
-
-    for x = x1,x2 do for y = y1,y2 do
-      if LAND_MAP[x][y].room then return false end
-      if LAND_MAP[x][y].kind ~= kind then return false end
-
-      -- this logic prevents creating only 1 room on the map
-      if LAND_MAP[x][y].corner then
-        if corner then return false end
-        corner = LAND_MAP[x][y].corner
-      end
-    end end -- x, y
-
-    return true
-  end
-
-  local BIG_BUILDING_PROBS =
-  {
-    { 40, 70, 15 },
-    { 70, 70,  6 },
-    { 15,  6,  3 },
-  }
-
-  local function prob_for_big_room(kind, w, h)
-    if kind == "indoor" then
-      if w >= 4 or h >= 4 then return 0 end
-      return BIG_BUILDING_PROBS[w][h]
-    else -- outdoor
-      if w * h >= 4 then return 0 end
-      return 100 * (w * h) * (w * h)
-    end
-  end
-
-  local function check_expansion(e_infos, e_probs, kind, x,y, dx,dy)
-    for w = 1,4 do
-      for h = sel(w==1,2,1),4 do
-        -- prevent duplicate entries for pure vertical / horizontal
-        if (w==1 and dx<0) or (h==1 and dy<0) then
-          -- nop
-        elseif block_same(x, y, x + (w-1)*dx, y + (h-1)*dy) then
-
-          local INFO =
-          {
-            x=x, y=y, dx=dx, dy=dy, w=w, h=h
-          }
-
-          table.insert(e_infos, INFO)
-          table.insert(e_probs, prob_for_big_room(kind, w, h))
-  gui.debugf("  (%d,%d) w:%d h:%d dx:%d dy:%d\n", x, y, w, h, dx, dy)
-        end
-      end -- h
-    end -- w
-  end
-
-  local function expand_room(ROOM, exp)
-    local x1, y1 = exp.x, exp.y
-
-    local x2 = x1 + (exp.w - 1)*exp.dx
-    local y2 = y1 + (exp.h - 1)*exp.dy
-
-    if x1 > x2 then x1,x2 = x2,x1 end
-    if y1 > y2 then y1,y2 = y2,y1 end
-
-    ROOM.lx1 = x1
-    ROOM.ly1 = y1
-    ROOM.lx2 = x2
-    ROOM.ly2 = y2
-
-    for x = x1,x2 do for y = y1,y2 do
-      LAND_MAP[x][y].room = ROOM
-    end end
-
-    ROOM.is_big = true
-  end
-
-  local function create_room(L, x, y)
-
-    local ROOM =
-    {
-      kind = L.kind,
-      group_id = 1 + #PLAN.all_rooms,
-      conns = {},
-      teleports = {},
-
-      lx1 = x, ly1 = y,
-      lx2 = x, ly2 = y,
-    }
-
-    set_class(ROOM, ROOM_CLASS)
-
-    if ROOM.kind ~= "indoor" then
-      ROOM.outdoor = true
-    end
-
-    table.insert(PLAN.all_rooms, ROOM)
-
-    local e_infos = { "none" }
-    local e_probs = { BIG_BUILDING_PROBS[1][1] }
-gui.debugf("Check expansions:\n{\n")
-
-    for dx = -1,1,2 do for dy = -1,1,2 do
-      check_expansion(e_infos, e_probs, ROOM.kind, x, y, dx, dy)
-    end end -- dx, dy
-gui.debugf("}\n")
-
-    local idx = rand_index_by_probs(e_probs)
-
-    local what = e_infos[idx]
-
-    if what == "none" then
-      L.room = ROOM
-    else
-      expand_room(ROOM, what)
-    end
-
-    ROOM.sx1 = ROOM.lx1*3-2
-    ROOM.sy1 = ROOM.ly1*3-2
-    ROOM.sx2 = ROOM.lx2*3
-    ROOM.sy2 = ROOM.ly2*3
-
-    ROOM.sw, ROOM.sh = box_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
-    ROOM.lw, ROOM.lh = box_size(ROOM.lx1, ROOM.ly1, ROOM.lx2, ROOM.ly2)
-
-    ROOM.lvol = ROOM.lw * ROOM.lh
-  end
+  local room_map
 
   local function valid_R(x, y)
     return 1 <= x and x <= PLAN.W and
@@ -290,6 +148,8 @@ gui.debugf("}\n")
 
 
   ---| Plan_CreateRooms |---
+
+  room_map = array_2D(PLAN.W, PLAN.H)
 
   local BIG_ROOMS =
   {
@@ -405,10 +265,6 @@ function Plan_Nudge()
   -- Big rooms must be handled first, because small rooms are
   -- never able to nudge a big border (one which touches three or
   -- more rooms).
-  --
-  -- We also give priority to "nasty corners", which have two indoor
-  -- areas diagonally opposite, and two outdoor areas diagonally
-  -- opposite (like a chess-board).
 
   local function volume_after_nudge(R, side, grow)
     if (side == 6 or side == 4) then
@@ -564,51 +420,6 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     return E, N, NE
   end
 
-  local function is_corner_nasty(R, E, N, NE)
-    assert(E and N)
-
-    -- has the corner already been nudged?
-
---[[ THIS CHECK TOO SIMPLE
-    if R.nudges[8] or E.nudges[8] or R.nudges[6] or N.nudges[6] then
-      return false
-    end
---]]
-
-    -- TODO: this check may be too simple....
-    if (R.kind == (NE and NE.kind) or N.kind ==  E.kind) and
-       (R.kind ~=  E.kind         and N.kind ~= (NE and NE.kind))
-    then
-      gui.printf("Nasty Corner @ (%d,%d) : %s %s | %s %s\n",
-                 R.sx2, R.sy2, R.kind, E.kind, N.kind, (NE and NE.kind) or "NIL")
-      return true
-    end
-
-    return false
-  end
-
-  local function nudge_nasty_corners()
-    local success
-
-    for _,R in ipairs(PLAN.all_rooms) do
-      local E, N, NE = get_NE_corner_rooms(R)
-      if N and E and NE and is_corner_nasty(R, E, N, NE) then
-        if rand_odds(50) then
-          success = try_nudge_room(R, 8) or try_nudge_room(R, 6) or
-                    try_nudge_room(E, 8) or try_nudge_room(N, 6)
-        else
-          success = try_nudge_room(R, 6) or try_nudge_room(R, 8) or
-                    try_nudge_room(N, 6) or try_nudge_room(E, 8)
-        end
-
-        if success then
-          R.nudges[6] = true; NE.nudges[4] = true
-          R.nudges[8] = true; NE.nudges[2] = true
-        end
-      end
-    end -- R in all_rooms
-  end
-
   local function nudge_the_rest()
     local rooms = {}
     for _,R in ipairs(PLAN.all_rooms) do
@@ -639,7 +450,6 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     R.nudges = {}
   end
 
-  nudge_nasty_corners()
   nudge_big_rooms()
   nudge_the_rest()
 
