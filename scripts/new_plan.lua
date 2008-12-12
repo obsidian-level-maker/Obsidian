@@ -227,8 +227,9 @@ gui.debugf("}\n")
 
 
   local function room_char(R)
-    if not R then return "." end
-    if R.is_scenic then return "/" end
+    if not R then return '.' end
+    if R.is_scenic then return '/' end
+--  if (R.lw == 1 or R.lh == 1) then return '%' end
     local n = 1 + (R.group_id % 62)
     return string.sub("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
   end
@@ -245,25 +246,88 @@ gui.debugf("}\n")
     gui.debugf("\n")
   end
 
+  local function try_expand_room(x, y, bw, bh, R)
+    
+    -- fits?
+    if x+bw-1 > PLAN.W or y+bh-1 > PLAN.H then
+      return false
+    end
+
+    -- never use whole width/height of map
+    if bw >= PLAN.W or bh >= PLAN.H then
+      return false
+    end
+
+    for dx = 0,bw-1 do for dy = 0,bh-1 do
+      if (dx > 0 or dy > 0) and room_map[x+dx][y+dy] then
+        return false
+      end
+    end end
+
+    -- actually expand the room
+    R.lw = bw
+    R.lh = bh
+
+    for dx = 0,bw-1 do for dy = 0,bh-1 do
+      room_map[x+dx][y+dy] = R
+    end end
+
+    return true
+  end
+
 
   ---| Plan_CreateRooms |---
 
+  local BIG_ROOMS =
+  {
+    [11] = 35,
+    [12] = 50, [22] = 90,
+    [23] = 15, [33] = 15
+  }
+
+  local visits = {}
+
   for x = 1,PLAN.W do for y = 1,PLAN.H do
-    local ROOM = { lw=1, lh=1, group_id=(y-1)*PLAN.W + x }
-
-    -- give top/left room and bottom/right room a 'corner' field to
-    -- prevent rooms in a small map from glomming into one big room.
-    if (x == 1 and y == 1) or (x == PLAN.W and y == PLAN.H) then
-      ROOM.corner = true
-    end
-
-    room_map[x][y] = ROOM
+    table.insert(visits, { x=x, y=y })
   end end
 
-  dump_rooms()
+  rand_shuffle(visits)
 
+  for group_id,vis in ipairs(visits) do
+    local x, y = vis.x, vis.y
+    
+    if not room_map[x][y] then
 
-  -- TODO: expand rooms
+      local ROOM = { lw=1, lh=1, group_id=group_id }
+
+---##      -- give top/left room and bottom/right room a 'corner' field to
+---##      -- prevent rooms in a small map from glomming into one big room.
+---##      if (x == 1 and y == 1) or (x == PLAN.W and y == PLAN.H) then
+---##        ROOM.corner = true
+---##      end
+
+      room_map[x][y] = ROOM
+
+      local big = rand_key_by_probs(BIG_ROOMS)
+
+      local big_w = int(big / 10)
+      local big_h = big % 10
+
+      if big_w > 1 or big_h > 1 then
+        if rand_odds(50) then big_w, big_h = big_h, big_w end
+        
+        -- prefer to put big rooms away from the edge
+        if (big_w >= 2 and big_h >= 2) and
+           (x == 1 or y == 1 or x == PLAN.W-big_w+1 or y == PLAN.H-big_h+1) and
+           rand_odds(80)
+        then
+          -- forget it
+        else
+          try_expand_room(x, y, big_w, big_h, ROOM)
+        end
+      end
+    end
+  end
 
   dump_rooms()
 end
