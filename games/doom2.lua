@@ -1710,6 +1710,8 @@ function Doom2_get_levels()
       sky_info = GAME.sky_info[episode],
     }
 
+    if LEV.ep_along > 1 then LEV.ep_along = 1 end
+
     LEV.toughness_factor = 1 + 1.5 * LEV.ep_along
 
     -- secret levels

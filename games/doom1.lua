@@ -3274,7 +3274,7 @@ function Doom1_get_levels()
         name  = string.format("E%dM%d", episode, map),
         patch = string.format("WILV%d%d", episode-1, map-1),
 
-        ep_along = (map - 1) / 8,
+        ep_along = map / MAP_NUM,
 
         theme = "TECH",
 

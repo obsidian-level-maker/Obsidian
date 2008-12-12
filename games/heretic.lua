@@ -1581,7 +1581,7 @@ function Heretic1_get_levels()
       {
         name = string.format("E%dM%d", episode, map),
 
-        ep_along = (map - 1) / MAP_NUM,
+        ep_along = map / MAP_NUM,
 
         theme_probs = theme_probs,
         sky_info = HC_SKY_INFO[episode],

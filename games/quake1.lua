@@ -436,7 +436,7 @@ function Quake1_get_levels()
       {
         name = string.format("e%dm%d", episode, map),
 
-        ep_along = (map - 1) / MAP_NUM,
+        ep_along = map / MAP_NUM,
 
         theme = "BASE",
 
