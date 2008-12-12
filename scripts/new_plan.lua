@@ -59,8 +59,8 @@ PLAN_CLASS =
 ROOM_CLASS =
 {
   tostr = function(self)
-    return string.format("ROOM[%s %d,%d..%d,%d]",
-        self.kind, self.sx1,self.sy1, self.sx2,self.sy2)
+    return string.format("ROOM_%s [%d,%d..%d,%d]",
+        self.id, self.sx1,self.sy1, self.sx2,self.sy2)
   end,
 
   contains_seed = function(self, x, y)
@@ -92,7 +92,7 @@ function Plan_CreateRooms()
     if not R then return '.' end
     if R.is_scenic then return '/' end
 --  if (R.lw == 1 or R.lh == 1) then return '%' end
-    local n = 1 + (R.group_id % 62)
+    local n = 1 + (R.id % 62)
     return string.sub("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
   end
 
@@ -151,6 +151,12 @@ function Plan_CreateRooms()
 
   room_map = array_2D(PLAN.W, PLAN.H)
 
+  local col_x = { 1 }
+  local col_y = { 1 }
+
+  for x = 2,PLAN.W do col_x[x] = col_x[x-1] + PLAN.col_W[x-1] end
+  for y = 2,PLAN.H do col_y[y] = col_y[y-1] + PLAN.row_H[y-1] end
+
   local BIG_ROOMS =
   {
     [11] = 35,
@@ -166,18 +172,14 @@ function Plan_CreateRooms()
 
   rand_shuffle(visits)
 
-  for group_id,vis in ipairs(visits) do
+  for id,vis in ipairs(visits) do
     local x, y = vis.x, vis.y
     
     if not room_map[x][y] then
 
-      local ROOM = { lw=1, lh=1, group_id=group_id }
+      local ROOM = { lw=1, lh=1, id=id }
 
----##      -- give top/left room and bottom/right room a 'corner' field to
----##      -- prevent rooms in a small map from glomming into one big room.
----##      if (x == 1 and y == 1) or (x == PLAN.W and y == PLAN.H) then
----##        ROOM.corner = true
----##      end
+      set_class(ROOM, ROOM_CLASS)
 
       room_map[x][y] = ROOM
 
@@ -199,6 +201,23 @@ function Plan_CreateRooms()
           try_expand_room(x, y, big_w, big_h, ROOM)
         end
       end
+
+      -- determine coverage on seed map
+      ROOM.sx1 = col_x[x]
+      ROOM.sy1 = col_y[y]
+
+      ROOM.sx2 = ROOM.sx1 - 1
+      ROOM.sy2 = ROOM.sy1 - 1
+
+      for lx = x,x+ROOM.lw-1 do
+        ROOM.sx2 = ROOM.sx2 + PLAN.col_W[lx]
+      end
+
+      for ly = y,y+ROOM.lh-1 do
+        ROOM.sy2 = ROOM.sy2 + PLAN.row_H[ly]
+      end
+
+      gui.debugf("%s\n", ROOM:tostr())
     end
   end
 
@@ -338,6 +357,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     if volume_after_nudge(R, side, grow) < 3 then return false end
 
     -- side sits on border of the map?
+--[[
     if (side == 2 and R.ly1 == 1) or
        (side == 4 and R.lx1 == 1) or
        (side == 6 and R.lx2 == LAND_W) or
@@ -345,6 +365,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     then
       return false
     end
+--]]
 
     local push_list = {}
 
@@ -567,7 +588,15 @@ function Plan_MakeSeeds()
 
   ---| Plan_MakeSeeds |---
 
-  Seed_init(LAND_W*3, LAND_H*3, 1)
+  local max_sx = 1
+  local max_sy = 1
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    max_sx = math.max(max_sx, R.sx2)
+    max_sy = math.max(max_sy, R.sy2)
+  end
+
+  Seed_init(max_sx, max_sy, 1)
 
   plant_rooms()
   fill_holes()
@@ -592,6 +621,17 @@ end
 
 
 function Plan_determine_size()
+
+  local function show_sizes(name, t, N)
+    name = name .. ": "
+    for i = 1,N do
+      name = name .. tostring(t[i]) .. " "
+    end
+    gui.debugf("%s\n", name)
+  end
+
+  ---| Plan_determine_size |---
+
   local W, H
 
   local ob_size = OB_CONFIG.size
@@ -662,6 +702,10 @@ function Plan_determine_size()
     if rows[y] >= 3 then rows[y] = rows[y] - 1 end
   end
 
+
+  show_sizes("col_W", cols, PLAN.W)
+  show_sizes("row_H", rows, PLAN.H)
+  
   PLAN.col_W = cols
   PLAN.row_H = rows
 end
@@ -690,7 +734,7 @@ function Plan_rooms_sp()
 
   Plan_determine_size()
   Plan_CreateRooms()
-  Plan_Nudge()
+--!!!!  Plan_Nudge()
 
   -- must create the seeds _AFTER_ nudging
   Plan_MakeSeeds()
