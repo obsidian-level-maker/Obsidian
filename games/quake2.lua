@@ -419,139 +419,6 @@ Q2_QUEST_LEN_PROBS =
   item   = { 30, 70, 70, 10 },  -- treasure
 }
 
-function wolfy_decide_quests(level_list, is_spear)
-
-  local function add_quest(L, kind, item, secret_prob)
-    secret_prob = 0 --FIXME !!!!
-
-    local len_probs = non_nil(Q2_QUEST_LEN_PROBS[kind])
-    local Quest =
-    {
-      kind = kind,
-      item = item,
-      want_len = 1 + rand_index_by_probs(len_probs),
-    }
-    if item == "secret" or (secret_prob and rand_odds(secret_prob)) then
-      Quest.is_secret = true
-      -- need at least one room in-between (for push-wall)
-      if Quest.want_len < 3 then Quest.want_len = 3 end
-    end
-    table.insert(L.quests, Quest)
-    return Quest
-  end
-
-  local gatling_maps =
-  {
-    [rand_irange(2,3)] = true,
-    [rand_irange(4,6)] = true,
-    [rand_irange(7,9)] = true,
-  }
-
-  for zzz,Level in ipairs(level_list) do
-
-    -- weapons and keys
-
-    if rand_odds(90 - 40 * ((Level.ep_along-1) % 3)) then
-      add_quest(Level, "weapon", "machine_gun", 35)
-    end
-
-    if gatling_maps[Level.ep_along] then
-      add_quest(Level, "weapon", "gatling_gun", 50)
-    end
-
-    local keys = rand_index_by_probs(Q2_KEY_NUM_PROBS[SETTINGS.size]) - 1
-
-    if keys >= 1 then
-      add_quest(Level, "key", "k_silver")
-    end
-
-    -- treasure
-
-    local ITEM_PROBS = { small=33, regular=45, large=66 }
-
-    for i = 1,sel(is_spear,4,6) do
-      if rand_odds(ITEM_PROBS[SETTINGS.size]) then
-        add_quest(Level, "item", "treasure", 50)
-      end
-    end
-
-    if is_spear and rand_odds(60) then
-      add_quest(Level, "item", "clip_25", 50)
-    end
-
-    -- bosses and exits
-
-    if Level.boss_kind then
-      local Q = add_quest(Level, "boss", Level.boss_kind)
-      Q.give_key = "k_gold"
-
-    elseif keys == 2 then
-      add_quest(Level, "key", "k_gold")
-    end
-
-    if Level.secret_exit then
---FIXME  add_quest(Level, "exit", "secret")
-    end
-
-    add_quest(Level, "exit", "normal")
-  end
-end
-
-function wolf3d_get_levels(episode)
-
-  local level_list = {}
-
-  local theme_probs = Q2_EPISODE_THEMES[episode]
-
-  local boss_kind = Q2_EPISODE_BOSSES[episode]
-  if SETTINGS.length ~= "full" then
-    boss_kind = Q2_EPISODE_BOSSES[rand_irange(1,6)]
-  end
-
-  local secret_kind = "pacman"
-
-  for map = 1,10 do
-    local Level =
-    {
-      name = string.format("E%dL%d", episode, map),
-
-      episode   = episode,
-      ep_along  = map,
-      ep_length = 10,
-
-      theme_probs = theme_probs,
-      sky_info = { color="blue", light=192 }, -- dummy
-
-      boss_kind   = (map == 9)  and boss_kind,
-      secret_kind = (map == 10) and secret_kind,
-
-      quests = {},
-
-      toughness_factor = sel(map==10, 1.1, 1 + (map-1) / 5),
-    }
-
-    if Q2_SECRET_EXITS[Level.name] then
-      Level.secret_exit = true
-    end
-
-    table.insert(level_list, Level)
-  end
-
-
-  local function dump_levels()
-    for idx,L in ipairs(level_list) do
-      gui.printf("Wolf3d episode [%d] map [%d] : %s\n", episode, idx, L.name)
-      show_quests(L.quests)
-    end
-  end
-
-  wolfy_decide_quests(level_list)
-
---  dump_levels()
-
-  return level_list
-end
-
 
 ------------------------------------------------------------
 
@@ -564,59 +431,64 @@ OB_THEMES["q2_base"] =
 
 ----------------------------------------------------------------
 
-function quake2_factory()
+function Quake2_get_levels()
+  local list = {}
 
-  return
-  {
-    quake_format = true,
+  local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
+  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
 
-    plan_size = 7,
-    cell_size = 7,
-    cell_min_size = 3,
+  if OB_CONFIG.length == "few" then MAP_NUM = 3 end
 
-    ERROR_TEX  = Q2_NO_TILE,
-    ERROR_FLAT = 99, -- dummy
-    SKY_TEX    = 77, -- dummy
+  for episode = 1,EP_NUM do
+    for map = 1,MAP_NUM do
 
-    episodes = 6,
-    level_func = wolf3d_get_levels,
+      local LEV =
+      {
+        name = string.format("u%dm%d", episode, map),
 
-    classes  = { "bj" },
+        ep_along = map / MAP_NUM,
 
-    things     = Q2_THINGS,
-    monsters   = Q2_MONSTERS,
-    bosses     = Q2_BOSSES,
-    mon_give   = Q2_MONSTER_GIVE,
-    weapons    = Q2_WEAPONS,
+        theme = "BASE",
 
-    pickups = Q2_PICKUPS,
-    pickup_stats = { "health", "bullet" },
+        toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 7),
+      }
 
-    initial_model = Q2_INITIAL_MODEL,
+      table.insert(list, LEV)
+    end -- for map
 
-    quests  = Q2_QUESTS,
+  end -- for episode
 
-    dm = {},
+  return list
+end
 
-    combos    = Q2_COMBOS,
-    exits     = Q2_EXITS,
-    hallways  = nil,
 
-    doors     = Q2_DOORS,
-    key_doors = Q2_KEY_DOORS,
+function Quake2_setup()
 
-    rooms     = Q2_ROOMS,
-    themes    = Q2_THEMES,
+  GAME.classes = { "marine" }
+  GAME.dm = {}
 
-    misc_fabs = Q2_MISC_PREFABS,
+  GAME.pickup_stats = { "health", "bullet" }
+  GAME.initial_model = Q2_INITIAL_MODEL
 
-    toughness_factor = 0.40,
+  Game_merge_tab("things",   Q2_THINGS)
+  Game_merge_tab("monsters", Q2_MONSTERS)
+  Game_merge_tab("bosses",   Q2_BOSSES)
+  Game_merge_tab("mon_give", Q2_MONSTER_GIVE)
+  Game_merge_tab("weapons",  Q2_WEAPONS)
 
-    room_heights = { [128]=50 },
-    space_range  = { 50, 90 },
-    door_probs = { combo_diff=90, normal=20, out_diff=1 },
-    window_probs = { out_diff=0, combo_diff=0, normal=0 },
-  }
+  Game_merge_tab("pickups", Q2_PICKUPS)
+  Game_merge_tab("quests",  Q2_QUESTS)
+
+  Game_merge_tab("combos", Q2_COMBOS)
+  Game_merge_tab("exits",  Q2_EXITS)
+
+  Game_merge_tab("key_doors", Q2_KEY_DOORS)
+
+  Game_merge_tab("rooms",  Q2_ROOMS)
+  Game_merge_tab("themes", Q2_THEMES)
+
+  Game_merge_tab("misc_fabs", Q2_MISC_PREFABS)
+
 end
 
 
