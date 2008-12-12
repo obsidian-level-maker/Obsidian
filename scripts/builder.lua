@@ -287,7 +287,7 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
   }
 
   local z_top = math.max(int((z1+z2) / 2), z1+128)
-  if z_top > z2-16 then z_top = z2-16 end
+---??  if z_top > z2-16 then z_top = z2-16 end
 
   transformed_brush2(T, arch_info, frame_coords, z_top, 2000)
 
@@ -1796,6 +1796,7 @@ function make_small_exit(R)
     },
     -2000, 2000)
 
+-- [[
     transformed_brush2(DT, exit_info,
     {
       { x=mx-68, y= -8 },
@@ -1804,6 +1805,7 @@ function make_small_exit(R)
       { x=mx-40, y=  8 },
     },
     c_h-16, 2000)
+--]]
   end
 
 
@@ -1991,14 +1993,14 @@ function make_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
 end
 
 
-function make_pedestal(S, z1)
+function make_pedestal(S, z1, top_tex)
   local mx = int((S.x1+S.x2) / 2)
   local my = int((S.y1+S.y2) / 2)
 
   transformed_brush2(nil,
   {
-    t_face = { texture="O_BLT2EM" },
-    b_face = { texture="O_BLT2EM" },
+    t_face = { texture=top_tex },
+    b_face = { texture=top_tex },
     w_face = { texture="BLAKWAL2", peg=true, y_offset=0 },
   },
   {
@@ -2765,8 +2767,8 @@ gui.printf("do_teleport\n")
             not (S.room.purpose or N.room.purpose)
 
       if B_kind == "wall" then --- and not could_lose_wall
----!!!!     make_wall(S, side, f_tex, w_tex)
-        make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
+        make_wall(S, side, f_tex, w_tex)
+---     make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
       end
 
       if B_kind == "picture" then
@@ -2898,8 +2900,7 @@ elseif CH == '=' then
 elseif CH == '!' then
   make_popup_trap(S, z1, {}, S.room.combo)
 
-elseif
-not S.is_start then --!!!!
+else
     transformed_brush2(nil,
     {
       t_face = { texture=f_tex },
@@ -2940,9 +2941,11 @@ end
 
 
 -- diagonal corners
-if not S.room.outdoor and not (S.room.kind == "hallway") then
+if (not S.room.outdoor or true) and not (S.room.kind == "hallway") and
+   not S.is_start
+then
   local z1
-  if S.conn then z1 = (S.conn.conn_h + 128) end
+  if S.conn then z1 = (S.conn.conn_h or S.floor_h or S.room.floor_h or 320) + 128 end
   local diag_info =
   {
     t_face = { texture=f_tex },
@@ -2976,9 +2979,9 @@ end
         name = tostring(GAME.things["player1"].id)
       })
 
-      -- make_pedestal(S, z1)
+      make_pedestal(S, z1, "FLAT22")
 
-      make_raising_start(S, 6, z1, R.combo)
+      -- make_raising_start(S, 6, z1, R.combo)
 
     elseif S.is_exit then
 
@@ -3007,7 +3010,7 @@ end
       })
     end
 
-    if S.layout and S.layout.pillar then
+    if S.layout and S.layout.pillar and not S.is_start then
       make_pillar(S, z1, z2, "TEKLITE")
     end
 
@@ -3017,9 +3020,6 @@ end
     end
 --]]
 
-    if S.room and S.sy == S.room.sy2 then
-      do_teleporter(S)
-    end
 
     if S.room and S.room.key_item and S.sx == S.room.sx2 and S.sy == S.room.sy2 then
       local KEYS = { 13,6,5,7015, 38,39,40, 7017 }
@@ -3046,10 +3046,12 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
 
   gui.ticker()
 
+--[[
   assert(PLAN.exit_room)
   if not PLAN.exit_room.outdoor then
     make_small_exit(PLAN.exit_room)
   end
+--]]
 
   for _,R in ipairs(PLAN.all_rooms or {}) do
     if R.kind == "stairwell" then

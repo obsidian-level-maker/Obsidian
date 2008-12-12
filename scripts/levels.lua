@@ -32,7 +32,7 @@ require 'defs'
 require 'util'
 
 require 'seeds'
-require 'plan_sp'
+require 'new_plan' -- 'plan_sp'
 require 'connect'
 require 'quests'
 require 'rooms'
@@ -149,6 +149,7 @@ function Level_Make(L, index, NUM)
     if gui.abort() then return "abort" end
     gui.progress(15)
 
+--[[
   Quest_assign()
     if gui.abort() then return "abort" end
     gui.progress(25)
@@ -156,7 +157,7 @@ function Level_Make(L, index, NUM)
   Rooms_height_up()
     if gui.abort() then return "abort" end
     gui.progress(30)
-
+--]]
   Rooms_lay_out()
     if gui.abort() then return "abort" end
     gui.progress(60)

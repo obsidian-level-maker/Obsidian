@@ -97,15 +97,17 @@ function Plan_CreateRooms()
   end
 
   local function dump_rooms()
-    gui.debugf("Room Map\n")
+    gui.printf("\n")
+    gui.printf("Room Map\n")
+
     for y = PLAN.H,1,-1 do
       local line = "  "
       for x = 1,PLAN.W do
         line = line .. room_char(room_map[x][y])
       end
-      gui.debugf("%s", line)
+      gui.printf("%s\n", line)
     end
-    gui.debugf("\n")
+    gui.printf("\n")
   end
 
   local function try_expand_room(x, y, bw, bh, R)
@@ -159,8 +161,8 @@ function Plan_CreateRooms()
 
   local BIG_ROOMS =
   {
-    [11] = 35,
-    [12] = 50, [22] = 90,
+    [11] = 30,
+    [12] = 90, [22] = 90,
     [23] = 15, [33] = 15
   }
 
@@ -177,7 +179,7 @@ function Plan_CreateRooms()
     
     if not room_map[x][y] then
 
-      local ROOM = { lw=1, lh=1, id=id }
+      local ROOM = { lw=1, lh=1, id=id, kind="indoor", conns={} }
 
       set_class(ROOM, ROOM_CLASS)
 
@@ -740,6 +742,10 @@ function Plan_rooms_sp()
   Plan_MakeSeeds()
 
   PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
+
+-- TEMP CRUD !!!!!
+local KK = PLAN.all_rooms[1]
+SEEDS[KK.sx2][KK.sy2][1].is_start = true
 
 end -- Plan_rooms_sp
 
