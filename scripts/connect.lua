@@ -629,8 +629,8 @@ function Connect_Rooms()
     if id1 > id2 then id1,id2 = id2,id1 end
 
     for _,R in ipairs(PLAN.all_rooms) do
-      if R.group_id == id2 then
-        R.group_id = id1
+      if R.c_group == id2 then
+        R.c_group = id1
       end
     end
   end
@@ -639,8 +639,8 @@ function Connect_Rooms()
     local result
     
     for _,R in ipairs(PLAN.all_rooms) do
-      if not result or result > R.group_id then
-        result = R.group_id
+      if not result or result > R.c_group then
+        result = R.c_group
       end
     end
 
@@ -651,7 +651,7 @@ function Connect_Rooms()
     local result = 0
 
     for _,R in ipairs(PLAN.all_rooms) do
-      if R.group_id == id then
+      if R.c_group == id then
         result = result + 1
       end
     end
@@ -663,10 +663,10 @@ function Connect_Rooms()
     assert(id1 ~= id2)
 
     for _,R in ipairs(PLAN.all_rooms) do
-      if R.group_id == id1 then
-        R.group_id = id2
-      elseif R.group_id == id2 then
-        R.group_id = id1
+      if R.c_group == id1 then
+        R.c_group = id2
+      elseif R.c_group == id2 then
+        R.c_group = id1
       end
     end
   end
@@ -690,10 +690,10 @@ function Connect_Rooms()
     end
 
 gui.debugf("connect_seeds R(%s,%s) S(%d,%d) grp:%d --> R(%s,%s) S(%d,%d) grp:%d\n",
-S.room.sx1,S.room.sy1, S.sx,S.sy, S.room.group_id,
-T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
+S.room.sx1,S.room.sy1, S.sx,S.sy, S.room.c_group,
+T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.c_group)
 
-    merge_groups(S.room.group_id, T.room.group_id)
+    merge_groups(S.room.c_group, T.room.c_group)
 
     local CONN = { dir=dir, src=S.room, dest=T.room, src_S=S, dest_S=T }
 
@@ -786,7 +786,7 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
           local nx, ny = nudge_coord(V.x, V.y, dir)
           local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
           if N and N.kind == L.kind and N.room and
-             N.room.group_id ~= L.room.group_id and
+             N.room.c_group ~= L.room.c_group and
              rand_odds(join_chance)
           then
             connect_land(L, N, dir)
@@ -865,12 +865,12 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
   end
 
   local function try_configuration(MORPH, R, K, config, long, deep)
-    assert(R.group_id)
+    assert(R.c_group)
 
     local groups_seen = {}
     local conns = {}
 
-    groups_seen[R.group_id] = true
+    groups_seen[R.c_group] = true
 
 -- gui.debugf("TRY configuration: %s\n", table_to_str(config))
 
@@ -911,9 +911,9 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
         hit_conns = hit_conns + 1
       else
         if not N.room or
-           not N.room.group_id or
+           not N.room.c_group or
            N.room.branch_kind or
-           groups_seen[N.room.group_id] or
+           groups_seen[N.room.c_group] or
            N.conn -- only one connection per seed!
         then
           return false
@@ -921,7 +921,7 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.group_id)
 
         -- OK --
 
-        groups_seen[N.room.group_id] = true
+        groups_seen[N.room.c_group] = true
 
         table.insert(conns, { S=S, N=N, dir=dir })
       end
@@ -980,8 +980,8 @@ gui.debugf("hit_conns = %d\n", hit_conns)
             local MORPH = ROT + SUB  -- the full morph
 
             if try_configuration(MORPH, R, K, CONF, long, deep) then
-              gui.debugf("Config %s (MORPH:%d) successful @ Room (%d,%d)\n",
-                         K, MORPH, R.lx1, R.ly1)
+              gui.debugf("Config %s (MORPH:%d) successful @ %s\n",
+                         K, MORPH, R:tostr())
               return true -- SUCCESS
             end
           end -- SUB
@@ -1009,7 +1009,7 @@ gui.debugf("Failed\n")
 
     for _,R in ipairs(rooms) do
       if (#R.conns <= 2) and rand_odds(99) then
-        gui.debugf("Branching BIG ROOM at L(%d,%d) k_score: %1.3f\n", R.lx1,R.ly1, R.k_score)
+        gui.debugf("Branching BIG %s k_score: %1.3f\n", R:tostr(), R.k_score)
 
         local kinds = {}
         for N,info in pairs(BIG_BRANCH_KINDS) do
@@ -1043,12 +1043,12 @@ gui.debugf("Failed\n")
     for index,N in ipairs(PLAN.all_rooms) do
       if N == R then
         table.remove(PLAN.all_rooms, index)
-        R.group_id = -1
+        R.c_group = -1
         break;
       end
     end
 
-    assert(R.group_id == -1)
+    assert(R.c_group == -1)
     
     table.insert(PLAN.scenic_rooms, R)
   end
@@ -1084,9 +1084,9 @@ gui.debugf("Failed\n")
     assert(N.room ~= R)
 
     if not N.room or
-       not N.room.group_id or
+       not N.room.c_group or
        N.room.kind == "scenic" or
-       N.room.group_id == R.group_id
+       N.room.c_group == R.c_group
     then
       return false
     end
@@ -1154,7 +1154,7 @@ gui.debugf("Failed\n")
       rebel_id, min_g = min_g, rebel_id
     end
 
-    local rebels = table_subset_w_field(list, "group_id", rebel_id)
+    local rebels = table_subset_w_field(list, "c_group", rebel_id)
     assert(#rebels > 0)
 
     -- try the least important rooms first
@@ -1177,8 +1177,8 @@ gui.debugf("Failed\n")
     local c_copy = shallow_copy(PLAN.all_conns)
 
     for _,C in ipairs(c_copy) do
-      if C.src.group_id == rebel_id then
-        assert(C.dest.group_id == rebel_id)
+      if C.src.c_group == rebel_id then
+        assert(C.dest.c_group == rebel_id)
         make_conn_scenic(C)
       end
     end
@@ -1200,11 +1200,11 @@ gui.debugf("Failed\n")
       local changed = false
 
       for _,R in ipairs(list) do
-        if R.group_id ~= min_g and R.kind ~= "scenic" then
+        if R.c_group ~= min_g and R.kind ~= "scenic" then
           if #R.conns == 0 then
             handle_isolate(R, join_chance)
           else
-            handle_rebel_group(list, R.group_id, min_g)
+            handle_rebel_group(list, R.c_group, min_g)
           end
 
           -- minimum group_id may have changed
@@ -1220,7 +1220,11 @@ gui.debugf("Failed\n")
 
   gui.printf("\n--==| Connect_Rooms |==--\n\n")
 
-  join_ground()
+  for c_group,R in ipairs(PLAN.all_rooms) do
+    R.c_group = c_group
+  end
+
+--!!!!  join_ground()
   branch_big_rooms()
   branch_the_rest()
 end
