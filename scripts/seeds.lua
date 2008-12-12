@@ -87,12 +87,17 @@ function Seed_init(W, H, D)
       {
         sx=x, sy=y, sz=z,
 
-        x1 = x * SIZE, x2 = (x+1) * SIZE,
-        y1 = y * SIZE, y2 = (y+1) * SIZE,
+        -- offset by 32 units so that DOOM flats align with a
+        -- 64x64 pedestal (etc) at the center of the seed.
+        x1 = (x-1) * SIZE + 32,
+        y1 = (y-1) * SIZE + 32,
 
         thick  = {},
         border = {},
       }
+
+      S.x2 = S.x1 + SIZE
+      S.y2 = S.y1 + SIZE
 
       set_class(S, SEED_CLASS)
 
