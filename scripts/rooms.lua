@@ -166,7 +166,7 @@ function Rooms_decide_hallways()
   
   for _,R in ipairs(PLAN.all_rooms) do
     if eval_hallway(R) then
-gui.debugf("  Made Hallway at (%d,%d)\n", R.lx1,R.ly1)
+gui.debugf("  Made Hallway @ %s\n", R:tostr())
       R.kind = "hallway"
       R.outdoor = nil
     end
@@ -182,7 +182,7 @@ gui.debugf("  Made Hallway at (%d,%d)\n", R.lx1,R.ly1)
 
       if rand_odds(REVERT_PROBS[rw]) then
         R.kind = "indoor"
-gui.debugf("Reverted HALLWAY @ (%d,%d)\n", R.lx1,R.ly1)
+gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       end
     end
   end

@@ -155,7 +155,7 @@ function Quest_decide_start_room(arena)
 
   for _,R in ipairs(arena.rooms) do
     R.start_cost = eval_room(R)
-    gui.debugf("Room L(%d,%d) : START COST : %1.4f\n", R.lx1,R.ly1, R.start_cost)
+    gui.debugf("%s : START COST : %1.4f\n", R:tostr(), R.start_cost)
   end
 
   arena.start = table_sorted_first(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
@@ -627,12 +627,14 @@ function Quest_assign()
 
   -- count branches in each room
   for _,R in ipairs(PLAN.all_rooms) do
+    R.teleports = {} --!!!!
+
     if R.kind ~= "scenic" then
       R.num_branch = #R.conns + #R.teleports
       if R.num_branch == 0 then
         error("Room exists with no connections!")
       end
-gui.printf("Room (%d,%d) branches:%d\n", R.lx1,R.ly1, R.num_branch)
+gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
     end
   end
 

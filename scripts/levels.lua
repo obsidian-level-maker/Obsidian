@@ -149,11 +149,11 @@ function Level_Make(L, index, NUM)
     if gui.abort() then return "abort" end
     gui.progress(15)
 
---[[
   Quest_assign()
     if gui.abort() then return "abort" end
     gui.progress(25)
 
+--[[
   Rooms_height_up()
     if gui.abort() then return "abort" end
     gui.progress(30)

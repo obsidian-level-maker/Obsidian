@@ -1552,10 +1552,10 @@ function make_exit_pillar(S, z1)
     w_face = { texture="SW1BLUE", peg=true, x_offset=0, y_offset=0 },
   },
   {
-    { x=mx+32, y=my+32, line_kind=11 },
     { x=mx+32, y=my-32, line_kind=11 },
-    { x=mx-32, y=my-32, line_kind=11 },
+    { x=mx+32, y=my+32, line_kind=11 },
     { x=mx-32, y=my+32, line_kind=11 },
+    { x=mx-32, y=my-32, line_kind=11 },
   },
   -2000, z1+128)
 end
@@ -1659,7 +1659,7 @@ function make_small_exit(R)
   T.border[10-side].kind = nil
   T.thick[10-side] = 24
 
-  local f_h = assert(C.conn_h)
+  local f_h = C.conn_h or T.floor_h or T.room.floor_h or 0
   local c_h = f_h + 128
 
   local inner_info =
@@ -3048,12 +3048,10 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
 
   gui.ticker()
 
---[[
   assert(PLAN.exit_room)
   if not PLAN.exit_room.outdoor then
     make_small_exit(PLAN.exit_room)
   end
---]]
 
   for _,R in ipairs(PLAN.all_rooms or {}) do
     if R.kind == "stairwell" then

@@ -755,9 +755,9 @@ function Plan_rooms_sp()
 
   PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
 
--- TEMP CRUD !!!!!
-local KK = PLAN.all_rooms[1]
-SEEDS[KK.sx2][KK.sy2][1].is_start = true
+
+---## local KK = PLAN.all_rooms[1]
+---## SEEDS[KK.sx2][KK.sy2][1].is_start = true
 
 end -- Plan_rooms_sp
 
