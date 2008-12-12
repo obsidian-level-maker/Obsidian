@@ -225,6 +225,10 @@ gui.debugf("}\n")
     ROOM.lvol = ROOM.lw * ROOM.lh
   end
 
+  local function valid_R(x, y)
+    return 1 <= x and x <= PLAN.W and
+           1 <= y and y <= PLAN.H
+  end
 
   local function room_char(R)
     if not R then return '.' end
@@ -273,6 +277,15 @@ gui.debugf("}\n")
     end end
 
     return true
+  end
+
+  local function add_neighbor(R, side, N)
+    -- check if already there
+    for _,O in ipairs(R.neighbors) do
+      if O == N then return end
+    end
+
+    table.insert(R.neighbors, N)
   end
 
 
@@ -330,6 +343,29 @@ gui.debugf("}\n")
   end
 
   dump_rooms()
+
+
+  -- determines neighboring rooms of each room
+  -- (including diagonals, which may touch after nudging)
+  
+  for x = 1,PLAN.W do for y = 1,PLAN.H do
+    local R = room_map[x][y]
+    
+    if not R.neighbors then
+      table.insert(PLAN.all_rooms, R)
+      R.neighbors = {}
+    end
+
+    for side = 1,9 do if side ~= 5 then
+      local nx, ny = nudge_coord(x, y, side)
+      if valid_R(nx, ny) then
+        local N = room_map[nx][ny]
+        if N ~= R then
+          add_neighbor(R, side, N)
+        end
+      end
+    end end -- for side / if ~= 5
+  end end -- for x, y
 end
 
 
@@ -356,39 +392,6 @@ function Room_side_coord(R, side, i)
   end
 
   return x, y
-end
-
-
-function Plan_CollectNeighbors()
-  -- Determines neighboring rooms of each room.
-  -- Big rooms can have multiple neighbors on some sides.
-  
-  for _,R in ipairs(PLAN.all_rooms) do
-    R.neighbors = { }
-  end
-
-  local function add_neighbor(R, side, N)
-    -- check if already there
-    for _,O in ipairs(R.neighbors) do
-      if O == N then return end
-    end
-
-    table.insert(R.neighbors, N)
-  end
-
-  for lx = 1,LAND_W do for ly = 1,LAND_H do
-    local L = LAND_MAP[lx][ly]
-    for side = 1,9 do if side ~= 5 then
-      local nx, ny = nudge_coord(lx, ly, side)
-      if Landmap_valid(nx, ny) then
-        local N = LAND_MAP[nx][ny]
-
-        if L.room and N.room and L.room ~= N.room then
-          add_neighbor(L.room, side, N.room)
-        end
-      end
-    end end -- side 1-9 except 5
-  end end -- lx, ly
 end
 
 
@@ -875,19 +878,14 @@ function Plan_rooms_sp()
 
   set_class(PLAN, PLAN_CLASS)
 
-
   Plan_determine_size()
-
-  PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
-
-
   Plan_CreateRooms()
-
-  Plan_CollectNeighbors()
   Plan_Nudge()
 
   -- must create the seeds _AFTER_ nudging
   Plan_MakeSeeds()
+
+  PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
 
 end -- Plan_rooms_sp
 
