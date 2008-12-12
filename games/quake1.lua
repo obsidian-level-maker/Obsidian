@@ -427,6 +427,8 @@ function Quake1_get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
 
+  if OB_CONFIG.length == "few" then MAP_NUM = 3 end
+
   for episode = 1,EP_NUM do
     for map = 1,MAP_NUM do
 

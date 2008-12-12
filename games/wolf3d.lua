@@ -700,6 +700,8 @@ function Wolf3d_get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 6, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 10)
 
+  if OB_CONFIG.length == "few" then MAP_NUM = 4 end
+
   for episode = 1,EP_NUM do
 
     local theme_probs = WF_EPISODE_THEMES[episode]

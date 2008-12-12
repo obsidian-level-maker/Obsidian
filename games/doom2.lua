@@ -1677,6 +1677,7 @@ function Doom2_get_levels()
   local MAP_NUM = 11
 
   if OB_CONFIG.length == "single" then MAP_NUM = 1  end
+  if OB_CONFIG.length == "few"    then MAP_NUM = 4  end
   if OB_CONFIG.length == "full"   then MAP_NUM = 32 end
 
   assert(GAME.sky_info)

@@ -2560,7 +2560,7 @@ DM_THEMES =
     building =
     {
       TECH_BASE=50,
-      TECH_GREEN=30,
+      TECH_GREEN=20,
       TECH_BROWN=30,
       INDY_SLAD=20,
       TECH_SILVER=10,
@@ -3258,6 +3258,8 @@ function Doom1_get_levels()
 
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
+
+  if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
   for episode = 1,EP_NUM do
 
