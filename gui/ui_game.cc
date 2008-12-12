@@ -279,6 +279,7 @@ const char * UI_Game::mode_syms[] =
 const char * UI_Game::length_syms[] =
 {
   "single",  "Single Level",
+  "few",     "A Few Maps",
   "episode", "One Episode",
   "full",    "Full Game",
 
