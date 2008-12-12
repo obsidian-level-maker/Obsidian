@@ -117,8 +117,8 @@ function Plan_CreateRooms()
       return false
     end
 
-    -- never use whole width/height of map
-    if bw >= PLAN.W or bh >= PLAN.H then
+    -- never use the whole map
+    if bw >= PLAN.W and bh >= PLAN.H then
       return false
     end
 
@@ -658,7 +658,7 @@ function Plan_determine_size()
 
       W = SIZES[n]
     else
-      local SIZES = { small=6, normal=8, large=11 }
+      local SIZES = { small=6, normal=8, large=10 }
 
       W = SIZES[ob_size]
 
@@ -667,7 +667,7 @@ function Plan_determine_size()
       end
     end
 
-    H = W
+    H = W-1
 
     if rand_odds(40) then W = W - 1 end
 
