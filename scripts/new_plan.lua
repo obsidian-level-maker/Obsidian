@@ -81,6 +81,9 @@ function Plan_CreateRooms()
   
   -- creates rooms out of contiguous areas on the land-map
 
+  local room_map = array_2D(PLAN.W, PLAN.H)
+
+
   local function walkable(L)
     if L.kind == "liquid" then return false end
     if L.kind == "void"   then return false end
@@ -222,88 +225,20 @@ gui.debugf("}\n")
     ROOM.lvol = ROOM.lw * ROOM.lh
   end
 
-  local function create_scenic(L, x, y)
 
-    local ROOM =
-    {
-      kind = "scenic",
-      scenic_kind = L.kind,
-      outdoor = true,
-      conns = {},
-      teleports = {},
-
-      lx1 = x, ly1 = y,
-      lx2 = x, ly2 = y,
-
-      floor_h = -32,
-      ceil_h  = 512,
-    }
-
-    set_class(ROOM, ROOM_CLASS)
-
-    if ROOM.scenic_kind ~= "indoor" then
-      ROOM.outdoor = true
-    end
-
-    table.insert(PLAN.scenic_rooms, ROOM)
-
-    ROOM.sx1 = ROOM.lx1*3-2
-    ROOM.sy1 = ROOM.ly1*3-2
-    ROOM.sx2 = ROOM.lx2*3
-    ROOM.sy2 = ROOM.ly2*3
-
-    ROOM.sw, ROOM.sh = box_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
-    ROOM.lw, ROOM.lh = box_size(ROOM.lx1, ROOM.ly1, ROOM.lx2, ROOM.ly2)
-
-    ROOM.lvol = ROOM.lw * ROOM.lh
-  end
-
-
-  local function assign_corners()
-    -- give top/left room and bottom/right room a 'corner' field to
-    -- prevent rooms in a small map from glomming into one big room.
-
-    local function top_left()
-      for y = LAND_H,1,-1 do for x = 1,LAND_W do
-        local L = LAND_MAP[x][y]
-        if L.kind and walkable(L) and not L.corner then
-          L.corner = 1
-          return;
-        end
-      end end -- y, x
-      error("No top-left corner!")
-    end
-
-    local function bottom_right()
-      for y = 1,LAND_H do for x = LAND_W,1,-1 do
-        local L = LAND_MAP[x][y]
-        if L.kind and walkable(L) and not L.corner then
-          L.corner = 2
-          return;
-        end
-      end end -- y, x
-      error("No bottom-right corner!")
-    end
-
-    --| assign_corners |--
-
-    top_left()
-    bottom_right()
-  end
-
-  local function room_char(L)
-    if not L.room then return "." end
-    if L.room.kind == "scenic" then return "~" end
-    local n = 1 + (L.room.group_id % 62)
+  local function room_char(R)
+    if not R then return "." end
+    if R.is_scenic then return "/" end
+    local n = 1 + (R.group_id % 62)
     return string.sub("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
   end
 
   local function dump_rooms()
     gui.debugf("Room Map\n")
-    for y = LAND_H,1,-1 do
+    for y = PLAN.H,1,-1 do
       local line = "  "
-      for x = 1,LAND_W do
-        line = line .. room_char(LAND_MAP[x][y])
+      for x = 1,PLAN.W do
+        line = line .. room_char(room_map[x][y])
       end
       gui.debugf("%s", line)
     end
@@ -311,21 +246,24 @@ gui.debugf("}\n")
   end
 
 
-  ---| Landmap_CreateRooms |---
+  ---| Plan_CreateRooms |---
 
-  assign_corners()
+  for x = 1,PLAN.W do for y = 1,PLAN.H do
+    local ROOM = { lw=1, lh=1, group_id=(y-1)*PLAN.W + x }
 
-  for _,V in ipairs(Landmap_rand_visits()) do
-    local L = LAND_MAP[V.x][V.y]
-    assert(L.kind)
-    if not L.room then
-      if walkable(L) then
-        create_room(L, V.x, V.y) 
-      else
-        create_scenic(L, V.x, V.y) 
-      end
+    -- give top/left room and bottom/right room a 'corner' field to
+    -- prevent rooms in a small map from glomming into one big room.
+    if (x == 1 and y == 1) or (x == PLAN.W and y == PLAN.H) then
+      ROOM.corner = true
     end
-  end
+
+    room_map[x][y] = ROOM
+  end end
+
+  dump_rooms()
+
+
+  -- TODO: expand rooms
 
   dump_rooms()
 end
@@ -825,8 +763,8 @@ function Plan_determine_size()
 
 
   -- initial sizes of rooms in each row and column
-  local rows = {}
   local cols = {}
+  local rows = {}
 
   for x = 1, W do cols[x] = 3 end
   for y = 1, H do rows[y] = 3 end
@@ -835,11 +773,11 @@ function Plan_determine_size()
     local x = rand_irange(1, W)
     local y = rand_irange(1, H)
 
-    if cols[x] >= 3 then cols[x] = cols[x] + 1 end
-    if rows[y] >= 3 then rows[y] = rows[y] + 1 end
+    cols[x] = cols[x] + 1
+    rows[y] = rows[y] + 1
   end
 
-  for i = 1,rand_irange(1,3) do
+  for i = 1,rand_irange(0,2) do
     local x = rand_irange(1, W)
     local y = rand_irange(1, H)
 
@@ -847,8 +785,8 @@ function Plan_determine_size()
     if rows[y] >= 3 then rows[y] = rows[y] - 1 end
   end
 
-  PLAN.row_W = rows
-  PLAN.col_H = cols
+  PLAN.col_W = cols
+  PLAN.row_H = rows
 end
 
 
