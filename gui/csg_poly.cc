@@ -695,7 +695,7 @@ static void TraceNext(void)
     SYS_ASSERT(angle > -ANGLE_EPSILON);
     SYS_ASSERT(angle < 360.0 + ANGLE_EPSILON);
 
-    // should never have two segments with same angle (pt 2)
+#if 0
 LogPrintf("T: (%1.4f %1.4f) --> (%1.4f %1.4f)\n",
   T->start->x, T->start->y, T->end->x, T->end->y);
 if (best_seg)
@@ -703,6 +703,8 @@ LogPrintf("best_seg: (%1.4f %1.4f) --> (%1.4f %1.4f)\n",
   best_seg->start->x, best_seg->start->y,
   best_seg->end->x, best_seg->end->y);
 LogPrintf("best_angle: %1.8f  angle: %1.8f\n", best_angle, angle);
+#endif
+    // should never have two segments with same angle (pt 2)
     SYS_ASSERT(fabs(best_angle - angle) > ANGLE_EPSILON);
 
     if (angle < best_angle)
