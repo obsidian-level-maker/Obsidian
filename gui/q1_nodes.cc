@@ -45,6 +45,11 @@ class qLeaf_c;
 class qNode_c;
 
 
+static qNode_c *Q_ROOT;
+
+static qLeaf_c *SOLID_LEAF;
+
+
 void DoAssignFaces(qNode_c *N, qSide_c *S);
 
 
@@ -300,7 +305,7 @@ public:
     merge_region_c *R = GetRegion();
 
     SYS_ASSERT(R);
-    SYS_ASSERT(gap >= 0 && gap < R->gaps.size());
+    SYS_ASSERT(gap >= 0 && gap < (int)R->gaps.size());
 
     return R->gaps[gap];
   }
@@ -380,6 +385,9 @@ public:
   qLeaf_c *back_l;   // back space : one of these is non-NULL
   qNode_c *back_n;
 
+  double min_x, min_y;
+  double max_x, max_y;
+
   // NB: faces are managed by qSide_c, we only store copies here
   std::vector<qFace_c *> faces;
 
@@ -388,6 +396,8 @@ public:
                           x(0), y(0), dx(0), dy(0),
                           front_l(NULL), front_n(NULL),
                           back_l(NULL),  back_n(NULL),
+                          min_x(0), min_y(0),
+                          max_x(0), max_y(0),
                           faces()
   { }
 
@@ -421,6 +431,59 @@ public:
       faces.push_back(S->faces[f]);
     }
   }
+
+  void BBoxFromChildren()
+  {
+    min_x = +9e5; max_x = -9e5;
+    min_y = +9e5; max_x = -9e5;
+
+    // TODO z coordinate
+
+    if (front_l == SOLID_LEAF)
+    {
+      // do nothing (???)
+    }
+    else if (front_l)
+    {
+      min_x = MIN(min_x, front_l->min_x);
+      min_y = MIN(min_y, front_l->min_y);
+      max_x = MAX(max_x, front_l->max_x);
+      max_y = MAX(max_y, front_l->max_y);
+    }
+    else
+    {
+      SYS_ASSERT(front_n);
+
+      min_x = MIN(min_x, front_n->min_x);
+      min_y = MIN(min_y, front_n->min_y);
+      max_x = MAX(max_x, front_n->max_x);
+      max_y = MAX(max_y, front_n->max_y);
+    }
+
+    if (back_l == SOLID_LEAF)
+    {
+      // do nothing (???)
+    }
+    else if (back_l)
+    {
+      min_x = MIN(min_x, back_l->min_x);
+      min_y = MIN(min_y, back_l->min_y);
+      max_x = MAX(max_x, back_l->max_x);
+      max_y = MAX(max_y, back_l->max_y);
+    }
+    else
+    {
+      SYS_ASSERT(back_n);
+
+      min_x = MIN(min_x, back_n->min_x);
+      min_y = MIN(min_y, back_n->min_y);
+      max_x = MAX(max_x, back_n->max_x);
+      max_y = MAX(max_y, back_n->max_y);
+    }
+
+    SYS_ASSERT(min_x <= max_x);
+    SYS_ASSERT(min_y <= max_y);
+  }
 };
 
 
@@ -432,11 +495,6 @@ void DoAssignFaces(qNode_c *N, qSide_c *S)
 
 
 //------------------------------------------------------------------------
-
-static qNode_c *Q_ROOT;
-
-static qLeaf_c *SOLID_LEAF;
-
 
 static double EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
 {
@@ -959,6 +1017,8 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
       Partition_Solid(leaf, &node->front_n, &node->front_l);
 
+      node->BBoxFromChildren();
+
       (*out_n) = node;
       return;
     }
@@ -982,6 +1042,8 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
       Partition_Solid(leaf, &node->front_n, &node->front_l);
 
+      node->BBoxFromChildren();
+
       (*out_n) = node;
       return;
   }
@@ -1001,6 +1063,8 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       // End of the road, folks!
       node->front_l = leaf;
       node-> back_l = SOLID_LEAF;
+
+      node->BBoxFromChildren();
 
       (*out_n) = node;
       return;
@@ -1030,6 +1094,8 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
     Partition_Z(top_leaf, &node->front_n, &node->front_l);
     Partition_Z(    leaf, &node->back_n,  &node->back_l);
+
+    node->BBoxFromChildren();
 
     *out_n = node;
     return;
@@ -1145,6 +1211,8 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
 
   Partition_XY(front_l, &node->front_n, &node->front_l);
   Partition_XY( back_l, &node-> back_n, &node-> back_l);
+
+  node->BBoxFromChildren();
 
   *out_n = node;
 }
@@ -1576,7 +1644,7 @@ static void MakeFloorFace(qFace_c *F, dface_t *face)
     GetExtents(min_x, min_y, max_x, max_y, &ext_W, &ext_H);
 
     static int foo; foo++;
-    face->styles[0] = (foo & 3); //!!!!!
+    face->styles[0] = 0; // (foo & 3); //!!!!!
 
     face->lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
   }
@@ -1730,11 +1798,13 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
   int b;
 
-  for (b = 0; b < 3; b++)
-  {
-    raw_lf.mins[b] = -3276; //!!!!!!!!!!!
-    raw_lf.maxs[b] = +3276;
-  }
+  raw_lf.mins[0] = I_ROUND(leaf->min_x)-16;
+  raw_lf.mins[1] = I_ROUND(leaf->min_y)-16;
+  raw_lf.mins[2] = -1000;  //!!!!
+
+  raw_lf.maxs[0] = I_ROUND(leaf->max_x)+16;
+  raw_lf.maxs[1] = I_ROUND(leaf->max_y)+16;
+  raw_lf.maxs[2] = 3000;  //!!!!
 
   memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
 
@@ -1807,11 +1877,13 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   raw_nd.firstface = 0;
   raw_nd.numfaces  = 0;
 
-  for (b = 0; b < 3; b++)
-  {
-    raw_nd.mins[b] = -3276;
-    raw_nd.maxs[b] = +3276;
-  }
+  raw_nd.mins[0] = I_ROUND(node->min_x)-32;
+  raw_nd.mins[1] = I_ROUND(node->min_y)-32;
+  raw_nd.mins[2] = -1000;  //!!!!
+
+  raw_nd.maxs[0] = I_ROUND(node->max_x)+32;
+  raw_nd.maxs[1] = I_ROUND(node->max_y)+32;
+  raw_nd.maxs[2] = 3000;  //!!!!
 
 
   // make faces [NOTE: must be done before recursing down]
