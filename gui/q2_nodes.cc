@@ -1796,11 +1796,13 @@ static s32_t MakeLeaf(qLeaf_c *leaf, dnode2_t *parent)
 
   int b;
 
-  for (b = 0; b < 3; b++)
-  {
-    raw_lf.mins[b] = -3276; //!!!!!!!!!!!
-    raw_lf.maxs[b] = +3276;
-  }
+  raw_lf.mins[0] = I_ROUND(leaf->min_x)-16;
+  raw_lf.mins[1] = I_ROUND(leaf->min_y)-16;
+  raw_lf.mins[2] = -1000;  //!!!!
+
+  raw_lf.maxs[0] = I_ROUND(leaf->max_x)+16;
+  raw_lf.maxs[1] = I_ROUND(leaf->max_y)+16;
+  raw_lf.maxs[2] = 3000;  //!!!!
 
   raw_lf.first_leafface = total_leaf_faces;
   raw_lf.num_leaffaces  = 0;
