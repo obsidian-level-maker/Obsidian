@@ -254,11 +254,6 @@ public:
   std::vector<area_vert_c *> f_sides;
   std::vector<area_vert_c *> b_sides;
 
-  // temporary value that is only used by Mug_AssignAreas(),
-  // and refers to the current csg_brush_c if this segment lies
-  // along it's border (just an efficient boolean test).
-  csg_brush_c *border_of;
-
   // this index is not used by the polygoniser code (csg_poly.cc),
   // only by the Doom conversion code.  -1 means "unused".
   int index;
@@ -266,7 +261,7 @@ public:
 public:
   merge_segment_c(merge_vertex_c *_v1, merge_vertex_c *_v2) :
       start(_v1), end(_v2), front(NULL), back(NULL),
-      f_sides(), b_sides(), border_of(NULL), index(-1)
+      f_sides(), b_sides(), index(-1)
   { }
 
   ~merge_segment_c()

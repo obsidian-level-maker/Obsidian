@@ -35,6 +35,7 @@
 
 
 // extern void CSG2_Doom_TestBrushes(void);
+extern void CSG2_Doom_TestClip(void);
 
 
 std::vector<csg_brush_c *> saved_all_brushes;
@@ -189,8 +190,8 @@ static void FattenBrushes(double wd, double fh, double ch)
 
     csg_brush_c *P2 = new csg_brush_c(P);  // clone it, except vertices
 
-    // !!!! TODO: if floor is sloped, split this poly into two halves
-    //            at the point where the (slope + fh) exceeds (z2 + fh)
+    // !!!! FIXME: if floor is sloped, split this poly into two halves
+    //             at the point where the (slope + fh) exceeds (z2 + fh)
 
     SYS_ASSERT(! P2->t_slope);
 
@@ -213,7 +214,6 @@ static void FattenBrushes(double wd, double fh, double ch)
 
     all_brushes.push_back(P2);
   }
-
 }
 
 
@@ -762,6 +762,36 @@ fprintf(stderr, "Using clip partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
 }
 
 
+static bool SameGaps(merge_segment_c *S)
+{
+  if (! S->front && ! S->back)
+    return true;
+
+  if (! S->front || ! S->back)
+    return false;
+
+  if (S->front->gaps.size() != S->back->gaps.size())
+    return false;
+
+  for (unsigned k = 0; k < S->front->gaps.size(); k++)
+  {
+    merge_gap_c *fg = S->front->gaps[k];
+    merge_gap_c *bg = S-> back->gaps[k];
+
+    // FIXME: take slopes into account!
+
+    if (fabs(fg->GetZ1() - bg->GetZ1()) > EPSILON)
+      return false;
+
+    if (fabs(fg->GetZ2() - bg->GetZ2()) > EPSILON)
+      return false;
+  }
+
+  // for clipping, this seg can be ignored
+  return true;
+}
+
+
 static void MakeClipSide(cpSideList_c& LEAF, merge_segment_c *seg, int side)
 {
   cpSide_c *S = new cpSide_c(seg, side); 
@@ -858,11 +888,13 @@ CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
   SaveBrushes();
   FattenBrushes(pads[which][0], pads[which][1], pads[which][2]);
 
-//  if (which == 1)
+//  if (which == 0)
 //   CSG2_Doom_TestBrushes();
 
   CSG2_MergeAreas();
 
+  if (which == 0)
+    CSG2_Doom_TestClip();
 
   cpSideList_c C_LEAF;
 
@@ -870,12 +902,17 @@ CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
   {
     merge_segment_c *S = mug_segments[i];
 
+    if (SameGaps(S))
+      continue;
+
     if (S->front && S->front->HasGap())
       MakeClipSide(C_LEAF, S, 0);
 
     if (S->back && S->back->HasGap())
       MakeClipSide(C_LEAF, S, 1);
   }
+
+  SYS_ASSERT(C_LEAF.size() > 0);
 
 
   cpNode_c *C_ROOT = Partition_XY(C_LEAF);
