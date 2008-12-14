@@ -94,9 +94,9 @@ function transformed_brush2(T, info, coords, z1, z2)
     end
   end
 
---for _,C in ipairs(coords) do
---  C.x, C.y = C.y, 4000-C.x
---end
+-- for _,C in ipairs(coords) do
+--  C.x, C.y = C.x-5001, C.y
+-- end
 
   gui.add_brush(info, coords, z1, z2)
 end

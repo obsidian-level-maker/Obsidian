@@ -500,6 +500,10 @@ OB_GAMES["quake1"] =
   caps =
   {
     -- TODO
+
+    -- need to place center of map around (0,0) since the quake
+    -- engine needs all coords to lie between -4000 and +4000.
+    center_map = true,
   },
 
   params =

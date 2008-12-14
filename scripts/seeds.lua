@@ -96,6 +96,12 @@ function Seed_init(W, H, D)
         border = {},
       }
 
+      -- adjustment needed for Quake 1
+      if CAPS.center_map then
+        S.x1 = S.x1 - int(SEED_W * SIZE / 2)
+        S.y1 = S.y1 - int(SEED_H * SIZE / 2)
+      end
+
       S.x2 = S.x1 + SIZE
       S.y2 = S.y1 + SIZE
 
