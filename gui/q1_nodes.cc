@@ -1928,8 +1928,6 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   }
 
 
-  // FIXME: fix endianness in raw_nd
-
   // -AJA- NOTE WELL: the Quake1 code assumes the root node is the
   //       very first one.  The following is a hack to achieve that.
   //       (Hopefully no other assumptions about node ordering exist
@@ -1947,6 +1945,8 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   if (index >= MAX_MAP_NODES)
     Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
                     MAX_MAP_NODES);
+
+  // FIXME: fix endianness in raw_nd
 
   q_nodes->Append(&raw_nd, sizeof(raw_nd));
 
@@ -1967,7 +1967,83 @@ static void CreateSolidLeaf(void)
 }
 
 
-void Q1_CreateSubModels(qLump_c *L)
+static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
+{
+  model->nodes[0] = total_nodes;
+
+  int mins[3], maxs[3];
+
+  mins[0] = I_ROUND(model->x1)-32;
+  mins[1] = I_ROUND(model->y1)-32;
+  mins[2] = I_ROUND(model->z1)-64;
+
+  maxs[0] = I_ROUND(model->x2)+32;
+  maxs[1] = I_ROUND(model->y2)+32;
+  maxs[2] = I_ROUND(model->z2)+64;
+
+  for (int face = 0; face < 6; face++)
+  {
+    dnode_t raw_nd;
+    dleaf_t raw_lf;
+
+    double v;
+    double dir;
+    bool flipped;
+
+    if (face < 2)  // PLANE_X
+    {
+      v = (face==0) ? model->x1 : model->x2;
+      dir = (face==0) ? -1 : 1;
+      raw_nd.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
+    }
+    else if (face < 4)  // PLANE_Y
+    {
+      v = (face==2) ? model->y1 : model->y2;
+      dir = (face==2) ? -1 : 1;
+      raw_nd.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
+    }
+    else  // PLANE_Z
+    {
+      v = (face==5) ? model->z1 : model->z2;
+      dir = (face==5) ? -1 : 1;
+      raw_nd.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
+    }
+
+    raw_nd.children[0] = -(leaf_base + face + 2);
+    raw_nd.children[1] = (face == 5) ? -1 : (model->nodes[0] + face + 1);
+
+    if (flipped)
+    {
+      u16_t tmp = raw_nd.children[0];
+      raw_nd.children[0] = raw_nd.children[1];
+      raw_nd.children[1] = tmp;
+    }
+
+    raw_nd.firstface = face_base + face;
+    raw_nd.numfaces  = 1;
+
+    for (int i = 0; i < 3; i++)
+    {
+      raw_lf.mins[i] = raw_nd.mins[i] = mins[i];
+      raw_lf.maxs[i] = raw_nd.maxs[i] = maxs[i];
+    }
+
+    raw_lf.contents = CONTENTS_EMPTY;
+    raw_lf.visofs = -1;
+
+    // MARK SURF !!!!!!
+
+    memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
+
+    // TODO: fix endianness
+
+    q_nodes->Append(&raw_nd, sizeof(raw_nd));
+    q_leafs->Append(&raw_lf, sizeof(raw_lf));
+  }
+}
+
+
+void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf)
 {
   for (unsigned int mm=0; mm < q1_all_mapmodels.size(); mm++)
   {
@@ -1983,14 +2059,20 @@ void Q1_CreateSubModels(qLump_c *L)
     smod.origin[1] = 0;
     smod.origin[2] = 0;
 
-    smod.visleafs  = 0;
-    smod.firstface = 0;
-    smod.numfaces  = 0;
+    smod.visleafs  = 6;
+    smod.firstface = first_face;
+    smod.numfaces  = 6;
 
-    //FIXME  MapModel_Nodes(model, &smod);
+    MapModel_Nodes(model, first_face, first_leaf);
+
+    first_face  += 6;
+    first_leaf  += 6;
+    total_nodes += 6;
 
     for (int h = 0; h < 4; h++)
+    {
       smod.headnode[h] = model->nodes[h];
+    }
 
     // TODO: fix endianness in model
     L->Append(&smod, sizeof(smod));
@@ -2050,7 +2132,7 @@ void Q1_CreateModel(void)
 
   lump->Append(&model, sizeof(model));
 
-  Q1_CreateSubModels(lump);
+  Q1_CreateSubModels(lump, model.numfaces, model.visleafs);
 }
 
 //--- editor settings ---
