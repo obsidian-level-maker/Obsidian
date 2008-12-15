@@ -380,6 +380,37 @@ function make_locked_door(S, side, z1, w_tex, key_tex)
 
   local KIND = 1
 
+-- QUAKE TEST
+  local m_ref = gui.q1_add_mapmodel(
+  {
+    y_face={ texture="edoor01_1" },
+    x_face={ texture="met5_1" },
+    z_face={ texture="met5_1" },
+  },
+  -1664+64,  -328-12, 0,
+  -1664+128, -328+12, 128)
+
+  gui.add_entity(0, 0, 0,
+                 { name="func_door", angle="180", sounds="2",
+                   model=assert(m_ref)
+                 })
+
+
+  m_ref = gui.q1_add_mapmodel(
+  {
+    y_face={ texture="edoor01_1" },
+    x_face={ texture="met5_1" },
+    z_face={ texture="met5_1" },
+  },
+  -1664+128, -328-12, 0,
+  -1664+192, -328+12, 128)
+
+  gui.add_entity(0, 0, 0,
+                 { name="func_door", angle="0", sounds="2",
+                   model=assert(m_ref)
+                 })
+
+--[[
   transformed_brush2(T, door_info,
   {
     { x=mx+64, y=my-8, line_kind=KIND },
@@ -388,6 +419,7 @@ function make_locked_door(S, side, z1, w_tex, key_tex)
     { x=mx-64, y=my-8, line_kind=KIND },
   },
   z1+64, 2000)
+--]]
 
 
   for pass = 1,2 do
@@ -1562,6 +1594,8 @@ end
 
 
 function make_outdoor_exit_switch(S, dir, f_h)
+
+do return end --!!!!!
 
   local DT, long = get_transform_for_seed_side(S, 10-dir)
   local deep = long
