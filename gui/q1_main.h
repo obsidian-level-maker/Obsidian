@@ -36,9 +36,9 @@ public:
   float x1, y1, z1;
   float x2, y2, z2;
 
-  area_face_c *d_face;  // door (front and back)
-  area_face_c *s_face;  // sides (left and right)
-  area_face_c *t_face;  // top and bottom
+  area_face_c *x_face;
+  area_face_c *y_face;
+  area_face_c *z_face;
 
   s32_t nodes[4];
 

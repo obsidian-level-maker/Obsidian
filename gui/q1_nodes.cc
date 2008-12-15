@@ -1959,7 +1959,7 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
   raw_fc.side = flipped ? 1 : 0;
  
 
-  const char *texture = "error";  // FIXME !!!!
+  const char *texture = "error";
 
   double s[4] = { 0.0, 0.0, 0.0, 0.0 };
   double t[4] = { 0.0, 0.0, 0.0, 0.0 };
@@ -1967,14 +1967,20 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
   if (face < 2)  // PLANE_X
   {
     s[1] = 1.0; t[2] = 1.0;
+
+    texture = model->x_face->tex.c_str();
   }
   else if (face < 4)  // PLANE_Y
   {
     s[0] = 1.0; t[2] = 1.0;
+
+    texture = model->y_face->tex.c_str();
   }
   else // PLANE_Z
   {
     s[0] = 1.0; t[1] = 1.0;
+
+    texture = model->z_face->tex.c_str();
   }
 
   int flags = CalcTextureFlag(texture);
@@ -2030,7 +2036,8 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
 
   if (! (flags & TEX_SPECIAL))
   {
-    raw_fc.styles[0] = 0;
+    static int foo = 0; foo++;
+    raw_fc.styles[0] = (foo & 3);
     raw_fc.lightofs  = 100;  //!!! flat lighting index
   }
 

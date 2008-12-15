@@ -40,7 +40,7 @@ std::vector<q1MapModel_c *> q1_all_mapmodels;
 q1MapModel_c::q1MapModel_c() :
     x1(0), y1(0), z1(0),
     x2(0), y2(0), z2(0),
-    d_face(NULL), s_face(NULL), t_face(NULL)
+    x_face(NULL), y_face(NULL), z_face(NULL)
 {
   for (int i = 0; i < 4; i++)
     nodes[i] = 0;
@@ -48,9 +48,9 @@ q1MapModel_c::q1MapModel_c() :
 
 q1MapModel_c::~q1MapModel_c()
 {
-  delete d_face;
-  delete s_face;
-  delete t_face;
+  delete x_face;
+  delete y_face;
+  delete z_face;
 }
 
 
@@ -486,9 +486,9 @@ int Q1_add_mapmodel(lua_State *L)
   // LUA: q1_add_mapmodel(info, x1,y1,z1, x2,y2,z2)
   //
   // info is a table containing:
-  //   t_face  : face for top and bottom
-  //   w_face  : face for front and back
-  //   s_face  : face for sides
+  //   x_face  : face table for X sides
+  //   y_face  : face table for Y sides
+  //   z_face  : face table for top and bottom
 
   q1MapModel_c *model = new q1MapModel_c();
 
@@ -505,13 +505,13 @@ int Q1_add_mapmodel(lua_State *L)
     return luaL_argerror(L, 1, "missing table: mapmodel info");
   }
 
-  lua_getfield(L, 1, "d_face");
-  lua_getfield(L, 1, "s_face");
-  lua_getfield(L, 1, "t_face");
+  lua_getfield(L, 1, "x_face");
+  lua_getfield(L, 1, "y_face");
+  lua_getfield(L, 1, "z_face");
 
-  model->d_face = Grab_Face(L, -3);
-  model->s_face = Grab_Face(L, -2);
-  model->t_face = Grab_Face(L, -1);
+  model->x_face = Grab_Face(L, -3);
+  model->y_face = Grab_Face(L, -2);
+  model->z_face = Grab_Face(L, -1);
 
   lua_pop(L, 3);
 
