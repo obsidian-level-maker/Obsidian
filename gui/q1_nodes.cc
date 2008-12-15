@@ -1966,11 +1966,11 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
 
   if (face < 2)  // PLANE_X
   {
-    s[0] = 1.0; t[2] = 1.0;
+    s[1] = 1.0; t[2] = 1.0;
   }
   else if (face < 4)  // PLANE_Y
   {
-    s[1] = 1.0; t[2] = 1.0;
+    s[0] = 1.0; t[2] = 1.0;
   }
   else // PLANE_Z
   {
@@ -1996,30 +1996,36 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
   if (face < 2)  // PLANE_X
   {
     double x = (face==0) ? model->x1 : model->x2;
+    double y1 = flipped  ? model->y2 : model->y1;
+    double y2 = flipped  ? model->y1 : model->y2;
 
     // Note: this assumes the plane is positive
-    DoAddEdge(x, model->y1, model->z1, x, model->y1, model->z2, &raw_fc);
-    DoAddEdge(x, model->y1, model->z2, x, model->y2, model->z2, &raw_fc);
-    DoAddEdge(x, model->y2, model->z2, x, model->y2, model->z1, &raw_fc);
-    DoAddEdge(x, model->y2, model->z1, x, model->y1, model->z1, &raw_fc);
+    DoAddEdge(x, y1, model->z1, x, y1, model->z2, &raw_fc);
+    DoAddEdge(x, y1, model->z2, x, y2, model->z2, &raw_fc);
+    DoAddEdge(x, y2, model->z2, x, y2, model->z1, &raw_fc);
+    DoAddEdge(x, y2, model->z1, x, y1, model->z1, &raw_fc);
   }
   else if (face < 4)  // PLANE_Y
   {
-    double y = (face==0) ? model->y1 : model->y2;
+    double y = (face==2) ? model->y1 : model->y2;
+    double x1 = flipped  ? model->x1 : model->x2;
+    double x2 = flipped  ? model->x2 : model->x1;
 
-    DoAddEdge(model->x1, y, model->z1, model->x1, y, model->z2, &raw_fc);
-    DoAddEdge(model->x1, y, model->z2, model->x2, y, model->z2, &raw_fc);
-    DoAddEdge(model->x2, y, model->z2, model->x2, y, model->z1, &raw_fc);
-    DoAddEdge(model->x2, y, model->z1, model->x1, y, model->z1, &raw_fc);
+    DoAddEdge(x1, y, model->z1, x1, y, model->z2, &raw_fc);
+    DoAddEdge(x1, y, model->z2, x2, y, model->z2, &raw_fc);
+    DoAddEdge(x2, y, model->z2, x2, y, model->z1, &raw_fc);
+    DoAddEdge(x2, y, model->z1, x1, y, model->z1, &raw_fc);
   }
   else // PLANE_Z
   {
     double z = (face==5) ? model->z1 : model->z2;
+    double x1 = flipped  ? model->x2 : model->x1;
+    double x2 = flipped  ? model->x1 : model->x2;
 
-    DoAddEdge(model->x1, model->y1, z, model->x1, model->y2, z, &raw_fc);
-    DoAddEdge(model->x1, model->y2, z, model->x2, model->y2, z, &raw_fc);
-    DoAddEdge(model->x2, model->y2, z, model->x2, model->y1, z, &raw_fc);
-    DoAddEdge(model->x2, model->y1, z, model->x1, model->y1, z, &raw_fc);
+    DoAddEdge(x1, model->y1, z, x1, model->y2, z, &raw_fc);
+    DoAddEdge(x1, model->y2, z, x2, model->y2, z, &raw_fc);
+    DoAddEdge(x2, model->y2, z, x2, model->y1, z, &raw_fc);
+    DoAddEdge(x2, model->y1, z, x1, model->y1, z, &raw_fc);
   }
 
   if (! (flags & TEX_SPECIAL))
