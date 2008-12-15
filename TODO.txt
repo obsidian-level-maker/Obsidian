@@ -3,6 +3,16 @@ TODO
 ====
 
 
+>>>  a segment with same front and back ????
+
+>>>  AssignBrushes: double checking using f/b_sides
+
+
+IDEA: rooms at/near edge of map have higher prob of being
+      outdoor than rooms at/near center of map
+      (e.g. 35% versus 5%).
+
+
 DOORS (incl. small exit) : use proper lock type!
 
 
@@ -205,9 +215,6 @@ REWRITE:
   - for rooms >= 3x3 and 3+ exits, properly create O or U shape path
   - occasionaly: height diff, spaced steps (two exit only)
   - rarely: make a maze (large room only)
-
-
-????  make brushes go counter-clockwise  ????
 
 
 QUAKE:
