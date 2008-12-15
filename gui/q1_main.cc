@@ -35,6 +35,9 @@
 #include "q1_structs.h"
 
 
+std::vector<q1MapModel_c *> q1_all_mapmodels;
+
+
 static char *level_name;
 
 
@@ -454,6 +457,52 @@ static void DummyTexInfo(void)
 
 //------------------------------------------------------------------------
 
+extern area_face_c * Grab_Face(lua_State *L, int stack_pos);
+
+int Q1_add_mapmodel(lua_State *L)
+{
+  // LUA: q1_add_mapmodel(x1,y1,z1, x2,y2,z2, info)
+  //
+  // info is a table containing:
+  //   t_face  : face for top and bottom
+  //   w_face  : face for front and back
+  //   s_face  : face for sides
+
+  q1MapModel_c *model = new q1MapModel_c();
+
+  model->x1 = luaL_checknumber(L, 1);
+  model->y1 = luaL_checknumber(L, 2);
+  model->z1 = luaL_checknumber(L, 3);
+
+  model->x2 = luaL_checknumber(L, 4);
+  model->y2 = luaL_checknumber(L, 5);
+  model->z2 = luaL_checknumber(L, 6);
+
+  if (lua_type(L, 7) != LUA_TTABLE)
+  {
+    return luaL_argerror(L, 7, "missing table: mapmodel info");
+  }
+
+  lua_getfield(L, 7, "d_face");
+  lua_getfield(L, 7, "s_face");
+  lua_getfield(L, 7, "t_face");
+
+  model->d_face = Grab_Face(L, -3);
+  model->s_face = Grab_Face(L, -2);
+  model->t_face = Grab_Face(L, -1);
+
+  lua_pop(L, 3);
+
+  // create model reference (for entity)
+  char ref_name[32];
+  sprintf(ref_name, "*%u", q1_all_mapmodels.size());
+
+  lua_pushstring(L, ref_name);
+  return 1;
+}
+
+
+//------------------------------------------------------------------------
 
 class quake1_game_interface_c : public game_interface_c
 {

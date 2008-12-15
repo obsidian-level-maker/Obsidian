@@ -28,6 +28,25 @@ game_interface_c * Quake1_GameObject(void);
 //------------------------------------------------------------------------
 
 class qLump_c;
+class area_face_c;
+
+class q1MapModel_c
+{
+public:
+  float x1, y1, z1;
+  float x2, y2, z2;
+
+  area_face_c *d_face;  // door (front and back)
+  area_face_c *s_face;  // sides (left and right)
+  area_face_c *t_face;  // top and bottom
+
+public:
+   q1MapModel_c();
+  ~q1MapModel_c();
+};
+
+extern std::vector<q1MapModel_c *> q1_all_mapmodels;
+
 
 u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4);
 

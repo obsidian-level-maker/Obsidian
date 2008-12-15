@@ -425,6 +425,8 @@ extern int DM_bex_add_music (lua_State *L);
 extern int DM_ddf_add_string(lua_State *L);
 extern int DM_ddf_add_music (lua_State *L);
 
+extern int Q1_add_mapmodel(lua_State *L);
+
 
 static const luaL_Reg gui_script_funcs[] =
 {
@@ -479,8 +481,8 @@ static const luaL_Reg gui_script_funcs[] =
   { "ddf_add_music",   DM_ddf_add_music  },
 
   // Quake functions
-  // [NONE YET]
- 
+  { "q1_add_mapmodel",   Q1_add_mapmodel },
+
   { NULL, NULL } // the end
 };
 

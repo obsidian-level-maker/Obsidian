@@ -376,7 +376,7 @@ static slope_plane_c * Grab_Slope(lua_State *L, int stack_pos)
 }
 
 
-static area_face_c * Grab_Face(lua_State *L, int stack_pos)
+area_face_c * Grab_Face(lua_State *L, int stack_pos)
 {
   if (stack_pos < 0)
     stack_pos += lua_gettop(L) + 1;
