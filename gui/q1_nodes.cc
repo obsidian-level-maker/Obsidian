@@ -1404,13 +1404,13 @@ static void DoAddEdge(double x1, double y1, double z1,
 
 static void DoAddSurf(u16_t index, dleaf_t *raw_lf )
 {
-    index = LE_U16(index);
+  index = LE_U16(index);
 
-    q_mark_surfs->Append(&index, 2);
+  q_mark_surfs->Append(&index, 2);
 
-    total_mark_surfs += 1;
+  total_mark_surfs += 1;
 
-    raw_lf->num_marksurf += 1;
+  raw_lf->num_marksurf += 1;
 }
 
 
@@ -1601,7 +1601,7 @@ static void MakeFloorFace(qFace_c *F, dface_t *face)
   face->texinfo = Q1_AddTexInfo(texture, flags, s, t);
 
   face->styles[0] = 0xFF;  // no lightmap
-  face->styles[1] = 0xFF;  // fairly bright
+  face->styles[1] = 0xFF;
   face->styles[2] = 0xFF;
   face->styles[3] = 0xFF;
 
@@ -1699,7 +1699,7 @@ static void MakeWallFace(qFace_c *F, dface_t *face)
   face->texinfo = Q1_AddTexInfo(texture, flags, s, t);
 
   face->styles[0] = 0xFF;  // no lightmap
-  face->styles[1] = 0xFF;  // fairly bright
+  face->styles[1] = 0xFF;
   face->styles[2] = 0xFF;
   face->styles[3] = 0xFF;
 
@@ -1710,21 +1710,10 @@ static void MakeWallFace(qFace_c *F, dface_t *face)
   face->firstedge = total_surf_edges;
   face->numedges  = 0;
 
-  if (true)
-  {
-    DoAddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  face);
-    DoAddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  face);
-    DoAddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  face);
-    DoAddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  face);
-  }
-  else
-  {
-    DoAddEdge(S->x1, S->y1, z1,  S->x2, S->y2, z1,  face);
-    DoAddEdge(S->x2, S->y2, z1,  S->x2, S->y2, z2,  face);
-    DoAddEdge(S->x2, S->y2, z2,  S->x1, S->y1, z2,  face);
-    DoAddEdge(S->x1, S->y1, z2,  S->x1, S->y1, z1,  face);
-  }
-
+  DoAddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  face);
+  DoAddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  face);
+  DoAddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  face);
+  DoAddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  face);
 
   if (! (flags & TEX_SPECIAL))
   {
@@ -1810,11 +1799,6 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
   raw_lf.first_marksurf = total_mark_surfs;
   raw_lf.num_marksurf   = 0;
-
-
-///---  // make faces for floor and ceiling
-///---  Floor_to_Face(leaf, &raw_lf, 0);
-///---  Floor_to_Face(leaf, &raw_lf, 1);
 
 
   // make faces
@@ -1967,6 +1951,86 @@ static void CreateSolidLeaf(void)
 }
 
 
+static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipped)
+{
+  dface_t raw_fc;
+
+  raw_fc.planenum = plane;
+  raw_fc.side = flipped ? 1 : 0;
+ 
+
+  const char *texture = "error";  // FIXME !!!!
+
+  double s[4] = { 0.0, 0.0, 0.0, 0.0 };
+  double t[4] = { 0.0, 0.0, 0.0, 0.0 };
+
+  if (face < 2)  // PLANE_X
+  {
+    s[0] = 1.0; t[2] = 1.0;
+  }
+  else if (face < 4)  // PLANE_Y
+  {
+    s[1] = 1.0; t[2] = 1.0;
+  }
+  else // PLANE_Z
+  {
+    s[0] = 1.0; t[1] = 1.0;
+  }
+
+  int flags = CalcTextureFlag(texture);
+
+  raw_fc.texinfo = Q1_AddTexInfo(texture, flags, s, t);
+
+  raw_fc.styles[0] = 0xFF;  // no lightmap
+  raw_fc.styles[1] = 0xFF;
+  raw_fc.styles[2] = 0xFF;
+  raw_fc.styles[3] = 0xFF;
+
+  raw_fc.lightofs = -1;  // no lightmap
+
+  // add the edges
+
+  raw_fc.firstedge = total_surf_edges;
+  raw_fc.numedges  = 0;
+
+  if (face < 2)  // PLANE_X
+  {
+    double x = (face==0) ? model->x1 : model->x2;
+
+    // Note: this assumes the plane is positive
+    DoAddEdge(x, model->y1, model->z1, x, model->y1, model->z2, &raw_fc);
+    DoAddEdge(x, model->y1, model->z2, x, model->y2, model->z2, &raw_fc);
+    DoAddEdge(x, model->y2, model->z2, x, model->y2, model->z1, &raw_fc);
+    DoAddEdge(x, model->y2, model->z1, x, model->y1, model->z1, &raw_fc);
+  }
+  else if (face < 4)  // PLANE_Y
+  {
+    double y = (face==0) ? model->y1 : model->y2;
+
+    DoAddEdge(model->x1, y, model->z1, model->x1, y, model->z2, &raw_fc);
+    DoAddEdge(model->x1, y, model->z2, model->x2, y, model->z2, &raw_fc);
+    DoAddEdge(model->x2, y, model->z2, model->x2, y, model->z1, &raw_fc);
+    DoAddEdge(model->x2, y, model->z1, model->x1, y, model->z1, &raw_fc);
+  }
+  else // PLANE_Z
+  {
+    double z = (face==5) ? model->z1 : model->z2;
+
+    DoAddEdge(model->x1, model->y1, z, model->x1, model->y2, z, &raw_fc);
+    DoAddEdge(model->x1, model->y2, z, model->x2, model->y2, z, &raw_fc);
+    DoAddEdge(model->x2, model->y2, z, model->x2, model->y1, z, &raw_fc);
+    DoAddEdge(model->x2, model->y1, z, model->x1, model->y1, z, &raw_fc);
+  }
+
+  if (! (flags & TEX_SPECIAL))
+  {
+    raw_fc.styles[0] = 0;
+    raw_fc.lightofs  = 100;  //!!! flat lighting index
+  }
+
+  q_faces->Append(&raw_fc, sizeof(raw_fc));
+}
+
 static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
 {
   model->nodes[0] = total_nodes;
@@ -2031,9 +2095,14 @@ static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
     raw_lf.contents = CONTENTS_EMPTY;
     raw_lf.visofs = -1;
 
-    // MARK SURF !!!!!!
+    raw_lf.first_marksurf = total_mark_surfs;
+    raw_lf.num_marksurf   = 0;
 
     memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
+
+    MapModel_Face(model, face, raw_nd.planenum, flipped);
+
+    DoAddSurf(raw_lf.first_marksurf, &raw_lf);
 
     // TODO: fix endianness
 
