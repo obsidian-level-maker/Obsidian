@@ -1969,9 +1969,32 @@ static void CreateSolidLeaf(void)
 
 void Q1_CreateSubModels(qLump_c *L)
 {
-  dmodel_t sub_mod;
+  for (unsigned int mm=0; mm < q1_all_mapmodels.size(); mm++)
+  {
+    q1MapModel_c *model = q1_all_mapmodels[mm];
 
-///  lump->Append(&sub_mod, sizeof(sub_mod));
+    dmodel_t smod;
+
+    smod.mins[0] = model->x1;  smod.maxs[0] = model->x2;
+    smod.mins[1] = model->y1;  smod.maxs[1] = model->y2;
+    smod.mins[2] = model->z1;  smod.maxs[2] = model->z2;
+
+    smod.origin[0] = 0;
+    smod.origin[1] = 0;
+    smod.origin[2] = 0;
+
+    smod.visleafs  = 0;
+    smod.firstface = 0;
+    smod.numfaces  = 0;
+
+    //FIXME  MapModel_Nodes(model, &smod);
+
+    for (int h = 0; h < 4; h++)
+      smod.headnode[h] = model->nodes[h];
+
+    // TODO: fix endianness in model
+    L->Append(&smod, sizeof(smod));
+  }
 }
 
 

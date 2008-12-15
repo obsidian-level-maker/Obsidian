@@ -83,9 +83,15 @@ void Q1_CreateEntities(void)
 
     lump->Printf("{\n");
 
-    // TODO: other models (doors etc) --> "model" "*45"
+    // write entity properties
+    std::map<std::string, std::string>::iterator MI;
+    for (MI = E->props.begin(); MI != E->props.end(); MI++)
+    {
+      if (StringCaseCmp(MI->first.c_str(), "name") == 0)
+        continue;
 
-    // FIXME: other entity properties
+      lump->KeyPair(MI->first.c_str(), "%s", MI->second.c_str());
+    }
 
     lump->KeyPair("origin", "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
     lump->KeyPair("classname", E->name.c_str());
@@ -477,7 +483,7 @@ extern area_face_c * Grab_Face(lua_State *L, int stack_pos);
 
 int Q1_add_mapmodel(lua_State *L)
 {
-  // LUA: q1_add_mapmodel(x1,y1,z1, x2,y2,z2, info)
+  // LUA: q1_add_mapmodel(info, x1,y1,z1, x2,y2,z2)
   //
   // info is a table containing:
   //   t_face  : face for top and bottom
@@ -486,28 +492,30 @@ int Q1_add_mapmodel(lua_State *L)
 
   q1MapModel_c *model = new q1MapModel_c();
 
-  model->x1 = luaL_checknumber(L, 1);
-  model->y1 = luaL_checknumber(L, 2);
-  model->z1 = luaL_checknumber(L, 3);
+  model->x1 = luaL_checknumber(L, 2);
+  model->y1 = luaL_checknumber(L, 3);
+  model->z1 = luaL_checknumber(L, 4);
 
-  model->x2 = luaL_checknumber(L, 4);
-  model->y2 = luaL_checknumber(L, 5);
-  model->z2 = luaL_checknumber(L, 6);
+  model->x2 = luaL_checknumber(L, 5);
+  model->y2 = luaL_checknumber(L, 6);
+  model->z2 = luaL_checknumber(L, 7);
 
-  if (lua_type(L, 7) != LUA_TTABLE)
+  if (lua_type(L, 1) != LUA_TTABLE)
   {
-    return luaL_argerror(L, 7, "missing table: mapmodel info");
+    return luaL_argerror(L, 1, "missing table: mapmodel info");
   }
 
-  lua_getfield(L, 7, "d_face");
-  lua_getfield(L, 7, "s_face");
-  lua_getfield(L, 7, "t_face");
+  lua_getfield(L, 1, "d_face");
+  lua_getfield(L, 1, "s_face");
+  lua_getfield(L, 1, "t_face");
 
   model->d_face = Grab_Face(L, -3);
   model->s_face = Grab_Face(L, -2);
   model->t_face = Grab_Face(L, -1);
 
   lua_pop(L, 3);
+
+  q1_all_mapmodels.push_back(model);
 
   // create model reference (for entity)
   char ref_name[32];

@@ -107,7 +107,7 @@ static void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
 
 
 static void FattenVertex(const csg_brush_c *P, unsigned int k,
-                         csg_brush_c *P2, double wd)
+                         csg_brush_c *P2, double pad_w)
 {
   unsigned int total = P->verts.size();
 
@@ -144,8 +144,8 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
   // replacing the old vertex is sufficient.
   if (diff > 175.0)
   {
-    double x = kv->x + wd * (p_nx + n_nx) / 2.0;
-    double y = kv->y + wd * (p_ny + n_ny) / 2.0;
+    double x = kv->x + pad_w * (p_nx + n_nx) / 2.0;
+    double y = kv->y + pad_w * (p_ny + n_ny) / 2.0;
 
     P2->verts.push_back(new area_vert_c(P2, x, y));
 ///fprintf(stderr, "... HIG VERT --> (%1.4f %1.4f)\n", x, y);
@@ -154,11 +154,11 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
   }
 
   // for lower angles, the ideal would be a curve (an arc of
-  // the circle of radius 'wd').  We emulate that ideal using
+  // the circle of radius 'pad_w').  We emulate that ideal using
   // between 1 to 3 new vertices.
 
-  double px = kv->x + wd * p_nx;
-  double py = kv->y + wd * p_ny;
+  double px = kv->x + pad_w * p_nx;
+  double py = kv->y + pad_w * p_ny;
 
   P2->verts.push_back(new area_vert_c(P2, px, py));
 
@@ -170,19 +170,19 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
     double b_len = ComputeDist(0, 0, b_nx, b_ny);
     SYS_ASSERT(b_len > 0.01);
 
-    double bx = kv->x + wd * b_nx / b_len;
-    double by = kv->y + wd * b_ny / b_len;
+    double bx = kv->x + pad_w * b_nx / b_len;
+    double by = kv->y + pad_w * b_ny / b_len;
 
     P2->verts.push_back(new area_vert_c(P2, bx, by));
   }
 
-  double nx = kv->x + wd * n_nx;
-  double ny = kv->y + wd * n_ny;
+  double nx = kv->x + pad_w * n_nx;
+  double ny = kv->y + pad_w * n_ny;
 
   P2->verts.push_back(new area_vert_c(P2, nx, ny));
 }
 
-static void FattenBrushes(double wd, double fh, double ch)
+static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 {
   for (unsigned int i = 0; i < saved_all_brushes.size(); i++)
   {
@@ -201,12 +201,12 @@ static void FattenBrushes(double wd, double fh, double ch)
 
     SYS_ASSERT(! P2->b_slope);
 
-    P2->z2 += fh;
-    P2->z1 -= ch;
+    P2->z2 += pad_t;
+    P2->z1 -= pad_b;
 
     for (unsigned int k = 0; k < P->verts.size(); k++)
     {
-      FattenVertex(P, k, P2, wd);
+      FattenVertex(P, k, P2, pad_w);
     }
 
     P2->ComputeBBox();
@@ -866,7 +866,7 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
 
 static void MapModel_Clip(qLump_c *L, s32_t base,
                           q1MapModel_c *model, int which,
-                          double pad_x, double pad_y, double pad_z)
+                          double pad_w, double pad_t, double pad_b)
 {
   model->nodes[which] = base;
 
@@ -880,19 +880,19 @@ static void MapModel_Clip(qLump_c *L, s32_t base,
 
     if (face < 2)  // PLANE_X
     {
-      v = (face==0) ? (model->x1 - pad_y) : (model->y2 + pad_y);
+      v = (face==0) ? (model->x1 - pad_w) : (model->x2 + pad_w);
       dir = (face==0) ? -1 : 1;
       clip.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
     }
     else if (face < 4)  // PLANE_Y
     {
-      v = (face==2) ? (model->y1 - pad_y) : (model->y2 + pad_y);
+      v = (face==2) ? (model->y1 - pad_w) : (model->y2 + pad_w);
       dir = (face==2) ? -1 : 1;
       clip.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
     }
     else  // PLANE_Z
     {
-      v = (face==5) ? (model->z1 - pad_z) : (model->z2 + pad_z);
+      v = (face==5) ? (model->z1 - pad_b) : (model->z2 + pad_t);
       dir = (face==5) ? -1 : 1;
       clip.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
     }
