@@ -40,6 +40,8 @@ public:
   area_face_c *s_face;  // sides (left and right)
   area_face_c *t_face;  // top and bottom
 
+  s32_t nodes[4];
+
 public:
    q1MapModel_c();
   ~q1MapModel_c();

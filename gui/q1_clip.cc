@@ -864,6 +864,56 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
 }
 
 
+static void MapModel_Clip(qLump_c *L, s32_t base,
+                          q1MapModel_c *model, int which,
+                          double pad_x, double pad_y, double pad_z)
+{
+  model->nodes[which] = base;
+
+  for (int face = 0; face < 6; face++)
+  {
+    dclipnode_t clip;
+
+    double v;
+    double dir;
+    bool flipped;
+
+    if (face < 2)  // PLANE_X
+    {
+      v = (face==0) ? (model->x1 - pad_y) : (model->y2 + pad_y);
+      dir = (face==0) ? -1 : 1;
+      clip.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
+    }
+    else if (face < 4)  // PLANE_Y
+    {
+      v = (face==2) ? (model->y1 - pad_y) : (model->y2 + pad_y);
+      dir = (face==2) ? -1 : 1;
+      clip.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
+    }
+    else  // PLANE_Z
+    {
+      v = (face==5) ? (model->z1 - pad_z) : (model->z2 + pad_z);
+      dir = (face==5) ? -1 : 1;
+      clip.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
+    }
+
+    clip.children[0] = CONTENTS_EMPTY;
+    clip.children[1] = (face == 5) ? CONTENTS_SOLID : base + face + 1;
+
+    if (flipped)
+    {
+      u16_t tmp = clip.children[0];
+      clip.children[0] = clip.children[1];
+      clip.children[1] = tmp;
+    }
+
+    // TODO: fix endianness in 'clip'
+
+    L->Append(&clip, sizeof(clip));
+  }
+}
+
+
 s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 {
 fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
@@ -925,16 +975,27 @@ CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
 
   AssignIndexes(C_ROOT, &cur_index);
 
-  if (cur_index >= MAX_MAP_CLIPNODES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d CLIPNODES\n",
-                    MAX_MAP_CLIPNODES);
-
   WriteClipNodes(q1_clip, C_ROOT);
 
   delete C_ROOT;
 
   CSG2_FreeMerges();
   RestoreBrushes();
+
+  
+  // write clip nodes for each MapModel
+  for (unsigned int mm=0; mm < q1_all_mapmodels.size(); mm++)
+  {
+    MapModel_Clip(q1_clip, cur_index,
+                  q1_all_mapmodels[mm], which+1,
+                  pads[which][0], pads[which][1], pads[which][2]);
+
+    cur_index += 6;
+  }
+
+  if (cur_index >= MAX_MAP_CLIPNODES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d CLIPNODES\n",
+                    MAX_MAP_CLIPNODES);
 
   return start_idx;
 }

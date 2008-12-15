@@ -1967,6 +1967,14 @@ static void CreateSolidLeaf(void)
 }
 
 
+void Q1_CreateSubModels(qLump_c *L)
+{
+  dmodel_t sub_mod;
+
+///  lump->Append(&sub_mod, sizeof(sub_mod));
+}
+
+
 void Q1_CreateModel(void)
 {
   qLump_c *lump = BSP_NewLump(LUMP_MODELS);
@@ -2018,6 +2026,8 @@ void Q1_CreateModel(void)
   // FIXME: fix endianness in model
 
   lump->Append(&model, sizeof(model));
+
+  Q1_CreateSubModels(lump);
 }
 
 //--- editor settings ---

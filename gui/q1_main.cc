@@ -37,6 +37,22 @@
 
 std::vector<q1MapModel_c *> q1_all_mapmodels;
 
+q1MapModel_c::q1MapModel_c() :
+    x1(0), y1(0), z1(0),
+    x2(0), y2(0), z2(0),
+    d_face(NULL), s_face(NULL), t_face(NULL)
+{
+  for (int i = 0; i < 4; i++)
+    nodes[i] = 0;
+}
+
+q1MapModel_c::~q1MapModel_c()
+{
+  delete d_face;
+  delete s_face;
+  delete t_face;
+}
+
 
 static char *level_name;
 
