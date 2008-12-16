@@ -173,22 +173,18 @@ Q2_COMBOS =
 {
   TECH_BASE =
   {
-    theme_probs = { TECH=50 },
-
-    wall  = "e1u1/exitdr01_2",
-    ceil  = "e1u1/grnx2_3",
-    floor = "e1u1/floor3_3",
+    wall  = "e1u1/wslt1_1",
+    floor = "e1u1/wtroof4_3",
+    ceil  = "e1u1/floor3_3",
   },
 
   TECH_GROUND =
   {
-    theme_probs = { TECH=50 },
-
     outdoor = true,
 
-    wall  = "e1u1/grnx3_2",
-    ceil  = "e1u1/grnx3_2",
-    floor = "e1u1/grnx3_2",
+    wall  = "e1u1/rocks16_2",
+    ceil  = "e1u1/grass1_4",
+    floor = "e1u1/grass1_4",
   },
 }
 
@@ -301,9 +297,33 @@ Q2_ROOMS =
 
 Q2_THEMES =
 {
-  BASE =
+  TECH =
   {
-  },
+    building =
+    {
+      TECH_BASE=50,
+    },
+
+    ground =
+    {
+      TECH_GROUND=50,
+    },
+
+    hallway =
+    {
+      -- FIXME
+    },
+
+    exit =
+    {
+      -- FIXME
+    },
+
+    scenery =
+    {
+      -- FIXME
+    },
+  }, -- TECH
 }
 
 
@@ -461,6 +481,17 @@ function Quake2_get_levels()
   return list
 end
 
+function Quake2_describe_levels()
+
+  -- FIXME handle themes properly !!!
+
+  local desc_list = Naming_generate("TECH", #GAME.all_levels, PARAMS.max_level_desc)
+
+  for index,LEV in ipairs(GAME.all_levels) do
+    LEV.description = desc_list[index]
+  end
+end
+
 
 function Quake2_setup()
 
@@ -492,7 +523,7 @@ function Quake2_setup()
 end
 
 
-UNFINISHED["quake2"] =
+OB_GAMES["quake2"] =
 {
   label = "Quake 2",
 
@@ -503,6 +534,9 @@ UNFINISHED["quake2"] =
   caps =
   {
     -- TODO
+
+    -- dunno if needed by Quake II, but it doesn't hurt
+    center_map = true,
   },
 
   params =
@@ -521,6 +555,8 @@ UNFINISHED["quake2"] =
 
   hooks =
   {
+    get_levels = Quake2_get_levels,
+    describe_levels = Quake1_describe_levels,
   },
 }
 
