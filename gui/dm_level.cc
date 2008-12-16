@@ -1096,6 +1096,11 @@ void doom_game_interface_c::Property(const char *key, const char *value)
   {
     level_name = StringDup(value);
   }
+  else if (StringCaseCmp(key, "description") == 0)
+  {
+    // ignored (for now)
+    // [another mechanism sets the description via BEX/DDF]
+  }
   else if (StringCaseCmp(key, "hexen_format") == 0)
   {
     if (value[0] == '0' || tolower(value[0]) == 'f')
