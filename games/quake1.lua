@@ -451,6 +451,17 @@ function Quake1_get_levels()
   return list
 end
 
+function Quake1_describe_levels()
+
+  -- FIXME handle themes properly !!!
+
+  local desc_list = Naming_generate("GOTHIC", #GAME.all_levels, PARAMS.max_level_desc)
+
+  for index,LEV in ipairs(GAME.all_levels) do
+    LEV.description = desc_list[index]
+  end
+end
+
 function Quake1_setup()
 
   GAME.classes = { "marine" }
@@ -524,6 +535,7 @@ OB_GAMES["quake1"] =
   hooks =
   {
     get_levels = Quake1_get_levels,
+    describe_levels = Quake1_describe_levels,
   },
 }
 
