@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-function Edge_set_level_name()
+function Edge_set_level_desc()
   assert(LEVEL.description)
   
   local id = string.format("%sDesc", LEVEL.name)
@@ -68,7 +68,7 @@ OB_ENGINES["edge"] =
 
   hooks =
   {
-    set_level_name = Edge_set_level_name,
+    set_level_desc = Edge_set_level_desc,
     remap_music    = Edge_remap_music,
   },
 }

@@ -33,7 +33,7 @@ OB_ENGINES["legacy"] =
 
   hooks =
   {
-    set_level_name = Boom_set_level_name,
+    set_level_desc = Boom_set_level_desc,
   },
 }
 
