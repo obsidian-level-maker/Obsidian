@@ -55,6 +55,7 @@ q1MapModel_c::~q1MapModel_c()
 
 
 static char *level_name;
+static char *description;
 
 
 void Q1_CreateEntities(void)
@@ -65,12 +66,15 @@ void Q1_CreateEntities(void)
 
   lump->Printf("{\n");
 
-  lump->KeyPair("_generated_by", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
+  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
   lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
 
-  lump->KeyPair("message",   "level created by Oblige");
+  if (description)
+    lump->KeyPair("message", description);
+  else
+    lump->KeyPair("message", "Oblige Level");
+
   lump->KeyPair("worldtype", "0");
-//lump->KeyPair("origin",    "0 0 0");
   lump->KeyPair("classname", "worldspawn");
 
   lump->Printf("}\n");
@@ -93,7 +97,9 @@ void Q1_CreateEntities(void)
       lump->KeyPair(MI->first.c_str(), "%s", MI->second.c_str());
     }
 
-    lump->KeyPair("origin", "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
+    if ((I_ROUND(E->x) | I_ROUND(E->y) | I_ROUND(E->z)) != 0)
+      lump->KeyPair("origin", "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
+
     lump->KeyPair("classname", E->name.c_str());
 
     lump->Printf("}\n");
@@ -583,7 +589,8 @@ bool quake1_game_interface_c::Finish(bool build_ok)
 
 void quake1_game_interface_c::BeginLevel()
 {
-  // nothing needed
+  level_name  = NULL;
+  description = NULL;
 }
 
 
@@ -592,6 +599,10 @@ void quake1_game_interface_c::Property(const char *key, const char *value)
   if (StringCaseCmp(key, "level_name") == 0)
   {
     level_name = StringDup(value);
+  }
+  else if (StringCaseCmp(key, "description") == 0)
+  {
+    description = StringDup(value);
   }
   else
   {
@@ -645,6 +656,11 @@ BSP_AddLightBlock(16, 32, solid_light);
   BSP_CloseLevel();
 
   // FREE STUFF !!!!
+
+  StringFree(level_name);
+
+  if (description)
+    StringFree(description);
 }
 
 
