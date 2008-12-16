@@ -158,6 +158,17 @@ function Level_Make(L, index, NUM)
     if gui.abort() then return "abort" end
     gui.progress(30)
 --]]
+  gui.begin_level()
+  gui.property("level_name", LEVEL.name);
+
+  if LEVEL.description then
+    if HOOKS.set_level_desc then
+       HOOKS.set_level_desc(LEVEL.description)
+    else
+      gui.property("description", LEVEL.description)
+    end
+  end
+
   Rooms_lay_out()
     if gui.abort() then return "abort" end
     gui.progress(60)
@@ -166,16 +177,11 @@ function Level_Make(L, index, NUM)
     if gui.abort() then return "abort" end
     gui.progress(100)
 
-  if LEVEL.description then
-    if HOOKS.set_level_name then
-       HOOKS.set_level_name()
-    end
+  gui.end_level()
 
-    if HOOKS.make_level_gfx then
-       HOOKS.make_level_gfx()
-    end
+  if HOOKS.make_level_gfx and LEVEL.description then
+     HOOKS.make_level_gfx(LEVEL.description)
   end
-
   -- intra-level cleanup
   if index < NUM then
     LEVEL = nil

@@ -3072,9 +3072,6 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
 
   gui.printf("\n---==| Builder |==---\n\n")
 
-  gui.begin_level()
-  gui.property("level_name", LEVEL.name);
-
   if PARAMS.error_tex then
     gui.property("error_tex",  PARAMS.error_tex)
     gui.property("error_flat", PARAMS.error_flat or PARAMS.error_tex)
@@ -3100,7 +3097,5 @@ gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
       end
     end
   end
-
-  gui.end_level()
 end
 
