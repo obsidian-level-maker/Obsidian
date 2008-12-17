@@ -403,9 +403,9 @@ public:
 class qNode_c
 {
 public:
-  // true if this node splits the tree by Z
+  // non-zero if this node splits the tree by Z
   // (with a horizontal upward-facing plane, i.e. dz = 1).
-  int z_splitter;
+  int dz;
 
   double z;
 
@@ -424,11 +424,11 @@ public:
   std::vector<qFace_c *> faces;
 
 public:
-  qNode_c(int _Zsplit) : z_splitter(_Zsplit), z(0),
-                          x(0), y(0), dx(0), dy(0),
-                          front_l(NULL), front_n(NULL),
-                          back_l(NULL),  back_n(NULL),
-                          faces()
+  qNode_c(int _dz = 0) : dz(_dz), z(0),
+                         x(0), y(0), dx(0), dy(0),
+                         front_l(NULL), front_n(NULL),
+                         back_l(NULL),  back_n(NULL),
+                         faces()
   { }
 
   ~qNode_c()
@@ -442,8 +442,7 @@ public:
 
   void Flip()
   {
-    if (z_splitter)
-      z_splitter = 3 - z_splitter;
+    dz = -dz;
 
     qLeaf_c *tmp_l = front_l; front_l = back_l; back_l = tmp_l;
     qNode_c *tmp_n = front_n; front_n = back_n; back_n = tmp_n;
@@ -958,6 +957,9 @@ static qLeaf_c *SolidLeaf(void /* BLAH */)
 
   L->contents = CONTENTS_SOLID;
 
+  L->min_x = L->min_y = -3000;
+  L->max_x = L->max_y = +3000;
+
   return L;
 }
 
@@ -973,7 +975,7 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 
     if (S->seg && ! S->on_node)
     {
-      qNode_c * node = new qNode_c(0 /* z_splitter */);
+      qNode_c * node = new qNode_c();
 
       node->x = S->x1;
       node->y = S->y1;
@@ -1022,7 +1024,7 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
   {
       leaf->ceil_on_node = true;
 
-      qNode_c * node = new qNode_c(2 /* z_splitter */);
+      qNode_c * node = new qNode_c(-1 /* dz */);
 
       node->z = gap->GetZ2();
 
@@ -1031,7 +1033,7 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       node->faces.push_back(ceil);
 
       node->back_l = SolidLeaf();
-      node->back_l->brushes.push_back(gap->b_brush);
+      node->back_l->brushes.push_back(gap->t_brush);
 
       Partition_Solid(leaf, &node->front_n, &node->front_l);
 
@@ -1044,7 +1046,7 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
   {
       leaf->floor_on_node = true;
   
-      qNode_c * node = new qNode_c(1 /* z_splitter */);
+      qNode_c * node = new qNode_c(+1 /* dz */);
 
       node->z = gap->GetZ1();
 
@@ -1053,7 +1055,7 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       node->faces.push_back(floor);
 
       node->back_l = SolidLeaf();
-      node->back_l->brushes.push_back(gap->t_brush);
+      node->back_l->brushes.push_back(gap->b_brush);
 
       // End of the road, folks!
       node->front_l = leaf;
@@ -1076,7 +1078,7 @@ static void Partition_Z(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
     // TODO: OPTIMISE THIS : too many nodes!  Use top of gaps[new_g-1] as
     //       the splitting plane.
 
-    qNode_c *node = new qNode_c(1 /* z_splitter */);
+    qNode_c *node = new qNode_c(+1 /* dz */);
 
     // choose height halfway between the two gaps (in the solid)
     node->z = (R->gaps[new_g-1]->GetZ2() + R->gaps[new_g]->GetZ1()) / 2.0;
@@ -1159,7 +1161,7 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
       return;
     }
 
-    node = new qNode_c(0 /* z_splitter */);
+    node = new qNode_c();
 
     if (l_width > l_height)
     {
@@ -1182,7 +1184,7 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
   else
   {
 // fprintf(stderr, "LEAF HAS SPLITTER %p \n", best_p);
-    node = new qNode_c(0 /* z_splitter */);
+    node = new qNode_c();
 
     node->x = best_p->x1;
     node->y = best_p->y1;
@@ -1542,10 +1544,10 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
 ///fprintf(stderr, "MakeFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
 
 
-  face->planenum = BSP_AddPlane(0, 0, z,
-                                0, 0, is_ceil ? -1 : +1);
+  // use same plane as node  (FIXME: transfer actual value in)
+  face->planenum = BSP_AddPlane(0, 0, z, 0, 0, +1);
 
-  face->side = 0;
+  face->side = is_ceil ? 1 : 0;
 
   const char *texture = is_ceil ? gap->CeilTex() : gap->FloorTex();
 
@@ -1834,12 +1836,13 @@ static s32_t RecursiveWriteNodes(qNode_c *node, dnode2_t *parent)
 
   int b;
 
-  if (node->z_splitter)
-    raw_nd.planenum = BSP_AddPlane(0, 0, node->z, 0, 0, (node->z_splitter==2) ? -1 : +1);
+  if (node->dz)
+    raw_nd.planenum = BSP_AddPlane(0, 0, node->z, 0, 0, node->dz);
   else
   {
     raw_nd.planenum = BSP_AddPlane(node->x, node->y, 0,
                                    node->dy, -node->dx, 0);
+  }
 
     // IMPORTANT!! Quake II assumes axis-aligned node planes are positive
     if (raw_nd.planenum & 1)
@@ -1847,7 +1850,6 @@ static s32_t RecursiveWriteNodes(qNode_c *node, dnode2_t *parent)
       node->Flip();
       raw_nd.planenum ^= 1;
     }
-  }
 
   raw_nd.firstface = 0;
   raw_nd.numfaces  = 0;
