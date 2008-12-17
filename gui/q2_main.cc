@@ -135,7 +135,7 @@ u16_t Q2_AddBrush(const csg_brush_c *A)
     area_vert_c *v2 = A->verts[(k+1) % A->verts.size()];
 
     side.planenum = BSP_AddPlane(v1->x, v1->y, 0,
-                                (v1->y - v2->y), (v2->x - v1->x), 0);
+                                (v2->y - v1->y), (v1->x - v2->x), 0);
 
     q2_brush_sides.push_back(side);
     brush.numsides++;
@@ -207,7 +207,8 @@ static bool MatchTexInfo(const texinfo2_t *A, const texinfo2_t *B)
   return true; // yay!
 }
 
-u16_t Q2_AddTexInfo(const char *texture, int flags, double *s4, double *t4)
+u16_t Q2_AddTexInfo(const char *texture, int flags, int value,
+                    double *s4, double *t4)
 {
 fprintf(stderr, "1 ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
 
@@ -226,7 +227,7 @@ fprintf(stderr, "1 ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
   strcpy(tin.texture, texture);
 
   tin.flags  = flags;
-  tin.value  = 0;
+  tin.value  = value;
   tin.anim_next = -1;
 
 fprintf(stderr, "D ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
@@ -477,9 +478,9 @@ BSP_AddLightBlock(16, 32, solid_light);
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
 
-  Q2_BuildBSP();
-
+  // this builds the bsp tree
   Q2_CreateModel();
+
   Q2_CreateTexInfo();
   Q2_CreateEntities();
 

@@ -228,6 +228,9 @@ public:
   // NB: faces are managed by qSide_c, we only store ptr-copies here
   std::vector<qFace_c *> faces;
 
+  // for SOLID leafs
+  std::vector<csg_brush_c *> brushes;
+
   bool floor_on_node;
   bool ceil_on_node;
 
@@ -235,7 +238,8 @@ public:
   qLeaf_c() : contents(CONTENTS_EMPTY), /* faces(), */ sides(),
               gap(0), numgap(0),
               min_x(0), min_y(0), max_x(0), max_y(0),
-              faces(), floor_on_node(false), ceil_on_node(false)
+              faces(), brushes(),
+              floor_on_node(false), ceil_on_node(false)
   { }
 
   ~qLeaf_c()
@@ -247,7 +251,8 @@ public:
           contents(other.contents), sides(), gap(_gap),
           min_x(other.min_x), min_y(other.min_y),
           max_x(other.max_x), max_y(other.max_y),
-          faces(), floor_on_node(false), ceil_on_node(false)
+          faces(), brushes(),
+          floor_on_node(false), ceil_on_node(false)
   {
     // copy the side pointers
     std::list<qSide_c *>::iterator SI;
@@ -469,8 +474,6 @@ static void DoAssignFaces(qNode_c *N, qSide_c *S)
 //------------------------------------------------------------------------
 
 static qNode_c *Q_ROOT;
-
-static qLeaf_c *SOLID_LEAF;
 
 
 static double EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
@@ -949,6 +952,15 @@ for (int kk=0; kk < 2; kk++)
 }
 
 
+static qLeaf_c *SolidLeaf(void /* BLAH */)
+{
+  qLeaf_c *L = new qLeaf_c();
+
+  L->contents = CONTENTS_SOLID;
+
+  return L;
+}
+
 static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
 {
   // handle sides first
@@ -969,6 +981,8 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       node->dx = S->x2 - S->x1;
       node->dy = S->y2 - S->y1;
 
+      node->back_l = SolidLeaf();
+
       // find _ALL_ sides that lie on the partition
       std::list<qSide_c *>::iterator TI;
 
@@ -988,9 +1002,11 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
         node->AssignFaces(T);
 
         T->on_node = node;
-      }
 
-      node->back_l = SOLID_LEAF;
+        // TEMP SHIT
+        if (T->faces.size() > 0 && T->faces[0]->from_brush)
+          node->back_l->brushes.push_back(T->faces[0]->from_brush);
+      }
 
       Partition_Solid(leaf, &node->front_n, &node->front_l);
 
@@ -1014,7 +1030,8 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       SYS_ASSERT(ceil);
       node->faces.push_back(ceil);
 
-      node->back_l = SOLID_LEAF;
+      node->back_l = SolidLeaf();
+      node->back_l->brushes.push_back(gap->b_brush);
 
       Partition_Solid(leaf, &node->front_n, &node->front_l);
 
@@ -1035,9 +1052,11 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
       SYS_ASSERT(floor);
       node->faces.push_back(floor);
 
+      node->back_l = SolidLeaf();
+      node->back_l->brushes.push_back(gap->t_brush);
+
       // End of the road, folks!
       node->front_l = leaf;
-      node-> back_l = SOLID_LEAF;
 
       (*out_n) = node;
       return;
@@ -1266,50 +1285,6 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
 }
 
 
-//------------------------------------------------------------------------
-
-
-void Q2_BuildBSP(void)
-{
-  // INPUTS:
-  //   all the stuff created by CSG_MergeAreas
-  //
-  // OUTPUTS:
-  //   a BSP tree consisting of nodes, leaves and faces
-
-  // ALGORITHM:
-  //   1. create a qSide list from every segment
-  //   2. while list is not yet convex:
-  //      (a) find a splitter side --> create qNode
-  //      (b) split list into front and back
-  //      (c) recursively handle front/back lists
-  //   3. perform Z splitting (the gaps)
-  //   4. perform solid splitting
-
-  SOLID_LEAF = new qLeaf_c();
-  SOLID_LEAF->contents = CONTENTS_SOLID;
-
-  qLeaf_c *begin = new qLeaf_c();
-
-  for (unsigned int i = 0; i < mug_segments.size(); i++)
-  {
-    merge_segment_c *S = mug_segments[i];
-
-    if (S->front && S->front->gaps.size() > 0)
-      MakeSide(begin, S, 0);
-
-    if (S->back && S->back->gaps.size() > 0)
-      MakeSide(begin, S, 1);
-  }
-
-  // NOTE WELL: we assume at least one partition (hence at least
-  //            one node).  The simplest possible map is already a
-  //            convex space (no partitions are needed) so in that
-  //            case we use an arbitrary splitter plane.
-
-fprintf(stderr, "Q2_BuildBSP BEGUN\n");
-  Partition_XY(begin, &Q_ROOT, NULL);
-}
 
 
 //------------------------------------------------------------------------
@@ -1522,11 +1497,8 @@ static csg_brush_c * PolyForSideTexture(merge_region_c *R, double z1, double z2)
 
 static int CalcTextureFlag(const char *tex_name)
 {
-///---  if (tex_name[0] == '*')
-///---    return TEX_SPECIAL;
-///---
-///---  if (strncmp(tex_name, "sky", 3) == 0)
-///---    return TEX_SPECIAL;
+  if (strstr(tex_name, "/sky"))
+    return SURF_SKY | SURF_NODRAW;
 
   return 0;
 }
@@ -1582,7 +1554,7 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
   double s[4] = { 1.0, 0.0, 0.0, 0.0 };
   double t[4] = { 0.0, 1.0, 0.0, 0.0 };
 
-  face->texinfo = Q2_AddTexInfo(texture, flags, s, t);
+  face->texinfo = Q2_AddTexInfo(texture, flags, 0, s, t);
 
   face->styles[0] = 0xFF;  // no lightmap
   face->styles[1] = 0xFF;  // fairly bright
@@ -1696,7 +1668,7 @@ static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
     s[1] = 1.0;
   }
 
-  face->texinfo = Q2_AddTexInfo(texture, flags, s, t);
+  face->texinfo = Q2_AddTexInfo(texture, flags, 0, s, t);
 
   face->styles[0] = 0xFF;  // no lightmap
   face->styles[1] = 0xFF;  // fairly bright
@@ -1782,27 +1754,27 @@ static void MakeFace(qFace_c *F, qNode_c *N)
 }
 
 
-static s32_t MakeLeaf(qLeaf_c *leaf, dnode2_t *parent)
+static s32_t WriteLeaf(qLeaf_c *leaf, dnode2_t *parent)
 {
-  if (leaf == SOLID_LEAF)
-    return -1;
-
-
   dleaf2_t raw_lf;
 
   raw_lf.contents = leaf->contents;
-  raw_lf.cluster  = 0;
   raw_lf.area     = 0;
+
+  if (leaf->contents == CONTENTS_SOLID)
+    raw_lf.cluster = -1;
+  else
+    raw_lf.cluster  = 0;
 
   int b;
 
   raw_lf.mins[0] = I_ROUND(leaf->min_x)-16;
   raw_lf.mins[1] = I_ROUND(leaf->min_y)-16;
-  raw_lf.mins[2] = -1000;  //!!!!
+  raw_lf.mins[2] = -2000;  //!!!!
 
   raw_lf.maxs[0] = I_ROUND(leaf->max_x)+16;
   raw_lf.maxs[1] = I_ROUND(leaf->max_y)+16;
-  raw_lf.maxs[2] = 3000;  //!!!!
+  raw_lf.maxs[2] = 2000;  //!!!!
 
   raw_lf.first_leafface = total_leaf_faces;
   raw_lf.num_leaffaces  = 0;
@@ -1811,18 +1783,28 @@ static s32_t MakeLeaf(qLeaf_c *leaf, dnode2_t *parent)
   raw_lf.num_leafbrushes  = 0;
 
 
-  // make faces
-  for (unsigned int n = 0; n < leaf->faces.size(); n++)
+  if (leaf->contents == CONTENTS_SOLID)
   {
-    qFace_c *F = leaf->faces[n];
+    // make brushes
+    for (unsigned int n = 0; n < leaf->brushes.size(); n++)
+    {
+      csg_brush_c *B = leaf->brushes[n];
 
-    // should have been in a node already
-    SYS_ASSERT(F->index >= 0);
+      DoCollisionBrush(B, &raw_lf);
+    }
+  }
+  else
+  {
+    // make faces
+    for (unsigned int n = 0; n < leaf->faces.size(); n++)
+    {
+      qFace_c *F = leaf->faces[n];
 
-    DoAddSurf(F->index, &raw_lf);
+      // should have been in a node already
+      SYS_ASSERT(F->index >= 0);
 
-    if (F->from_brush)
-      DoCollisionBrush(F->from_brush, &raw_lf);
+      DoAddSurf(F->index, &raw_lf);
+    }
   }
 
 
@@ -1846,8 +1828,7 @@ static s32_t MakeLeaf(qLeaf_c *leaf, dnode2_t *parent)
   return -(index+1);
 }
 
-
-static s32_t RecursiveMakeNodes(qNode_c *node, dnode2_t *parent)
+static s32_t RecursiveWriteNodes(qNode_c *node, dnode2_t *parent)
 {
   dnode2_t raw_nd;
 
@@ -1898,14 +1879,14 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode2_t *parent)
 
 
   if (node->front_n)
-    raw_nd.children[0] = RecursiveMakeNodes(node->front_n, &raw_nd);
+    raw_nd.children[0] = RecursiveWriteNodes(node->front_n, &raw_nd);
   else
-    raw_nd.children[0] = MakeLeaf(node->front_l, &raw_nd);
+    raw_nd.children[0] = WriteLeaf(node->front_l, &raw_nd);
 
   if (node->back_n)
-    raw_nd.children[1] = RecursiveMakeNodes(node->back_n, &raw_nd);
+    raw_nd.children[1] = RecursiveWriteNodes(node->back_n, &raw_nd);
   else
-    raw_nd.children[1] = MakeLeaf(node->back_l, &raw_nd);
+    raw_nd.children[1] = WriteLeaf(node->back_l, &raw_nd);
 
 
   if (parent)
@@ -1953,12 +1934,34 @@ static void CreateDummyLeaf(void)
   memset(&raw_lf, 0, sizeof(raw_lf));
 
   raw_lf.contents = CONTENTS_SOLID;
-  raw_lf.cluster  = -1;
-  raw_lf.area     = 0;
 
   q_leafs->Append(&raw_lf, sizeof(raw_lf));
 
   total_leafs++;
+}
+
+static void Q2_BuildBSP(void)
+{
+  qLeaf_c *begin = new qLeaf_c();
+
+  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  {
+    merge_segment_c *S = mug_segments[i];
+
+    if (S->front && S->front->gaps.size() > 0)
+      MakeSide(begin, S, 0);
+
+    if (S->back && S->back->gaps.size() > 0)
+      MakeSide(begin, S, 1);
+  }
+
+  // NOTE WELL: we assume at least one partition (hence at least
+  //            one node).  The simplest possible map is already a
+  //            convex space (no partitions are needed) so in that
+  //            case we use an arbitrary splitter plane.
+
+fprintf(stderr, "Q2_BuildBSP BEGUN\n");
+  Partition_XY(begin, &Q_ROOT, NULL);
 }
 
 
@@ -1987,7 +1990,9 @@ void Q2_CreateModel(void)
 
   CreateDummyLeaf();
 
-  RecursiveMakeNodes(Q_ROOT, NULL /* parent */);
+  Q2_BuildBSP();
+
+  RecursiveWriteNodes(Q_ROOT, NULL /* parent */);
 
 
   // set model bounding box

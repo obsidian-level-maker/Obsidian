@@ -1789,11 +1789,11 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
   raw_lf.mins[0] = I_ROUND(leaf->min_x)-16;
   raw_lf.mins[1] = I_ROUND(leaf->min_y)-16;
-  raw_lf.mins[2] = -1000;  //!!!!
+  raw_lf.mins[2] = -2000;  //!!!!
 
   raw_lf.maxs[0] = I_ROUND(leaf->max_x)+16;
   raw_lf.maxs[1] = I_ROUND(leaf->max_y)+16;
-  raw_lf.maxs[2] = 3000;  //!!!!
+  raw_lf.maxs[2] = 2000;  //!!!!
 
   memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
 
@@ -1863,11 +1863,11 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
 
   raw_nd.mins[0] = I_ROUND(node->min_x)-32;
   raw_nd.mins[1] = I_ROUND(node->min_y)-32;
-  raw_nd.mins[2] = -1000;  //!!!!
+  raw_nd.mins[2] = -2000;  //!!!!
 
   raw_nd.maxs[0] = I_ROUND(node->max_x)+32;
   raw_nd.maxs[1] = I_ROUND(node->max_y)+32;
-  raw_nd.maxs[2] = 3000;  //!!!!
+  raw_nd.maxs[2] = 2000;  //!!!!
 
 
   // make faces [NOTE: must be done before recursing down]

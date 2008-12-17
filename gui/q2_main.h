@@ -30,12 +30,11 @@ game_interface_c * Quake2_GameObject(void);
 class qLump_c;
 class csg_brush_c;
 
-u16_t Q2_AddTexInfo(const char *texture, int flags, double *s4, double *t4);
+u16_t Q2_AddTexInfo(const char *texture, int flags, int value,
+                    double *s4, double *t4);
 u16_t Q2_AddBrush(const csg_brush_c *A);
 
-// q1_bsp.cc
-
-void Q2_BuildBSP(void);
+// q2_nodes.cc
 
 void Q2_CreateModel(void);
 
