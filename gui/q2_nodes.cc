@@ -72,12 +72,13 @@ public:
 
   int index;  // final index into Faces lump
 
-  csg_brush_c *from_brush;  // ????
+  csg_brush_c *brush;
+  area_face_c *info;
 
 public:
    qFace_c(int _kind = WALL) :
           kind(_kind), side(NULL), leaf(NULL),
-          index(-1), from_brush(NULL)
+          index(-1), brush(NULL), info(NULL)
    { }
 
   ~qFace_c()
@@ -86,14 +87,14 @@ public:
    qFace_c(int _kind, int _gap, double _z1, double _z2) :
            kind(_kind), z1(_z1), z2(_z2), gap(_gap),
            side(NULL), leaf(NULL), index(-1),
-           from_brush(NULL)
+           brush(NULL), info(NULL)
    { }
 
    qFace_c(const qFace_c *other, qSide_c *new_side) :
            kind(other->kind), z1(other->z1), z2(other->z2),
            gap(other->gap), side(new_side),
            leaf(other->leaf), index(-1),
-           from_brush(other->from_brush)
+           brush(other->brush), info(other->info)
    { }
 };
 
@@ -451,13 +452,16 @@ public:
     dy = -dy;
   }
 
-  void AssignFaces(qSide_c *S)
+  void AssignFaces(qSide_c *S, qLeaf_c *back_l = NULL)
   {
     SYS_ASSERT(S->seg); // should never be a portal
 
     for (unsigned int f = 0; f < S->faces.size(); f++)
     {
       faces.push_back(S->faces[f]);
+
+      if (back_l && S->faces[f]->brush)
+        back_l->brushes.push_back(S->faces[f]->brush);
     }
   }
 };
@@ -1001,13 +1005,9 @@ static void Partition_Solid(qLeaf_c *leaf, qNode_c ** out_n, qLeaf_c ** out_l)
         if (! (fabs(a) <= Q_EPSILON && fabs(b) <= Q_EPSILON))
           continue;
 
-        node->AssignFaces(T);
+        node->AssignFaces(T, node->back_l);
 
         T->on_node = node;
-
-        // TEMP SHIT
-        if (T->faces.size() > 0 && T->faces[0]->from_brush)
-          node->back_l->brushes.push_back(T->faces[0]->from_brush);
       }
 
       Partition_Solid(leaf, &node->front_n, &node->front_l);
@@ -1211,7 +1211,8 @@ fprintf(stderr, "Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
 }
 
 
-static void DoAddFace(qSide_c *S, int gap, double z1, double z2)
+static void DoAddFace(qSide_c *S, csg_brush_c *B, area_face_c *AF,
+                      int gap, double z1, double z2)
 {
   SYS_ASSERT(z2 > z1);
 
@@ -1229,7 +1230,7 @@ static void DoAddFace(qSide_c *S, int gap, double z1, double z2)
       double nz1 = z1 + (z2 - z1) *  i    / (double)num;
       double nz2 = z1 + (z2 - z1) * (i+1) / (double)num;
 
-      DoAddFace(S, gap, nz1, nz2);
+      DoAddFace(S, B, AF, gap, nz1, nz2);
     }
 
     return;
@@ -1237,8 +1238,12 @@ static void DoAddFace(qSide_c *S, int gap, double z1, double z2)
 
   qFace_c *F = new qFace_c(qFace_c::WALL, gap, z1, z2);
 
+  F->brush = B;  // might be NULL (ARGH!)
+  F->info  = AF;
+
   S->AddFace(F);
 }
+
 
 static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
 {
@@ -1258,7 +1263,10 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
     // simple case: other side is completely solid
     if (RX == NULL || RX->gaps.size() == 0)
     {
-      DoAddFace(S, k, gz1, gz2);
+      csg_brush_c *B  = CSG2_FindSideBrush(seg, (gz1+gz2)/2.0, side==1);
+      area_face_c *AF = CSG2_FindSideFace( seg, (gz1+gz2)/2.0, side==1);
+
+      DoAddFace(S, B, AF, k, gz1, gz2);
 
 ///fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f) - (%1.0f,%1.0f)\n",
 ///        gz1, gz2, k, S->x1, S->y1, S->x2, S->y2);
@@ -1275,9 +1283,12 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
       if (sz1 < gz1) sz1 = gz1;
       if (sz2 > gz2) sz2 = gz2;
 
+      csg_brush_c *B  = CSG2_FindSideBrush(seg, (sz1+sz2)/2.0, side==1);
+      area_face_c *AF = CSG2_FindSideFace( seg, (sz1+sz2)/2.0, side==1);
+
       if (sz2 > sz1 + 0.99)  // don't create tiny faces
       {
-        DoAddFace(S, k, sz1, sz2);
+        DoAddFace(S, B, AF, k, sz1, sz2);
 
 ///fprintf(stderr, "Making face %1.0f..%1.0f gap:%u neighbour:%u (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
 ///        sz1, sz2, k, m, S->x1, S->y1, S->x2, S->y2, side);
@@ -1285,7 +1296,6 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
     }
   }
 }
-
 
 
 
@@ -1459,44 +1469,6 @@ static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf, bo
 }
 
 
-static csg_brush_c * PolyForSideTexture(merge_region_c *R, double z1, double z2)
-{
-  // find the brush which we will use for the side texture
-  // FIXME: duplicate code in dm_level : make one good function
-
-  csg_brush_c *MID = NULL;
-  double best_h = 0;
-
-  for (unsigned int j = 0; j < R->brushes.size(); j++)
-  {
-    csg_brush_c *A = R->brushes[j];
-
-    if (A->z2 < z1 + EPSILON)
-      continue;
-
-    if (A->z1 > z2 - EPSILON)
-      continue;
-
-    {
-      double h = A->z2 - A->z1;
-
-      // TODO: priorities
-
-//      if (MID && fabs(h - best_h) < EPSILON)
-//      { /* same height, prioritise */ }
-
-      if (h > best_h)
-      {
-        best_h = h;
-        MID = A;
-      }
-    }
-  }
-
-  return MID;
-}
-
-
 static int CalcTextureFlag(const char *tex_name)
 {
   if (strstr(tex_name, "/sky"))
@@ -1609,10 +1581,6 @@ static void MakeFloorFace(qFace_c *F, qNode_c *N, dface2_t *face)
     face->lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
   }
 
-
-  // collision brushes
-
-  F->from_brush = is_ceil ? gap->t_brush : gap->b_brush;
 }
 
 static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
@@ -1643,18 +1611,10 @@ static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
 
   const char *texture = "error";
 
-  merge_region_c *BACK = (S->side == 0) ? S->seg->back : S->seg->front;
-///fprintf(stderr, "BACK = %p\n", BACK);
-  if (BACK)
-  {
-    csg_brush_c *MID = PolyForSideTexture(BACK, z1, z2);
-    if (MID)
-    {
-      texture = MID->w_face->tex.c_str();
-
-      F->from_brush = MID;
-    }
-  }
+  if (F->info)
+    texture = F->info->tex.c_str();
+  else if (F->brush)
+    texture = F->brush->w_face->tex.c_str();
 
   int flags = CalcTextureFlag(texture);
 
