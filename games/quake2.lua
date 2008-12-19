@@ -523,7 +523,7 @@ function Quake2_setup()
 end
 
 
-OB_GAMES["quake2"] =
+UNFINISHED["quake2"] =
 {
   label = "Quake 2",
 
