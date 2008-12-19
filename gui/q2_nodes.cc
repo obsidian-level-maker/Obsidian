@@ -555,9 +555,9 @@ static double EvaluatePartition(qLeaf_c *leaf, qSide_c *part)
     front++;
   }
 
-///fprintf(stderr, "PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits:%d\n",
-///        part->x1, part->y1, part->x2, part->y2,
-///        back, front, splits);
+DebugPrintf("PARTITION CANDIDATE %p (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits:%d\n",
+        part, part->x1, part->y1, part->x2, part->y2,
+        back, front, splits);
 
 
   if (front == 0 || back == 0)
@@ -1129,7 +1129,7 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
   if (! best_p)
   {
     // current leaf is convex
-///fprintf(stderr, "LEAF %p IS CONVEX\n", leaf);
+DebugPrintf("LEAF %p IS CONVEX\n", leaf);
 
     leaf->ComputeBBox();
     
@@ -1143,7 +1143,7 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
 
     if (l_width > FACE_MAX_SIZE || l_height > FACE_MAX_SIZE)
     {
-///fprintf(stderr, "__ BUT TOO BIG: %1.0f x %1.0f\n", l_width , l_height);
+DebugPrintf("__ BUT TOO BIG: %1.0f x %1.0f\n", l_width , l_height);
 
       too_big = true;
     }
@@ -1194,7 +1194,7 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
   }
 
 
-fprintf(stderr, "Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
+DebugPrintf("Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
                  node->x, node->y,
                  node->x + node->dx, node->y + node->dy);
 
@@ -1215,6 +1215,17 @@ static void DoAddFace(qSide_c *S, csg_brush_c *B, area_face_c *AF,
                       int gap, double z1, double z2)
 {
   SYS_ASSERT(z2 > z1);
+
+
+DebugPrintf("BRUSH FOR FACE: seg (%1.0f %1.0f) -> (%1.0f %1.0f) z1:%1.0f z2:%1.0f\n",
+S->seg->start->x, S->seg->start->y, S->seg->end->x, S->seg->end->y,
+z1, z2);
+if (! B)
+DebugPrintf("--> NONE!\n");
+else
+DebugPrintf("--> %p z1:%1.0f z2:%1.0f bbox (%1.0f %1.0f) -> (%1.0f %1.0f)\n",
+B, B->z1, B->z2, B->min_x, B->min_y, B->max_x, B->max_y);
+
 
   // make sure face height does not exceed the limit
   if (z2 - z1 > FACE_MAX_SIZE)
@@ -1240,6 +1251,7 @@ static void DoAddFace(qSide_c *S, csg_brush_c *B, area_face_c *AF,
 
   F->brush = B;  // might be NULL (ARGH!)
   F->info  = AF;
+
 
   S->AddFace(F);
 }

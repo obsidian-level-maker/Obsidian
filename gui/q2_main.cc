@@ -183,8 +183,6 @@ static void ClearTexInfo(void)
     delete texinfo_hashtab[h];
     texinfo_hashtab[h] = NULL;
   }
-
-fprintf(stderr, "CLEAR TEX INFO: size now %d\n", (int)q2_texinfos.size());
 }
 
 static bool MatchTexInfo(const texinfo2_t *A, const texinfo2_t *B)
@@ -210,8 +208,6 @@ static bool MatchTexInfo(const texinfo2_t *A, const texinfo2_t *B)
 u16_t Q2_AddTexInfo(const char *texture, int flags, int value,
                     double *s4, double *t4)
 {
-fprintf(stderr, "1 ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
-
   // create texinfo structure
   texinfo2_t tin;
 
@@ -230,8 +226,6 @@ fprintf(stderr, "1 ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
   tin.value  = value;
   tin.anim_next = -1;
 
-fprintf(stderr, "D ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
-
   // find an existing texinfo.
   // For speed we use a hash-table.
   int hash = (int)StringHash(texture);
@@ -244,27 +238,23 @@ fprintf(stderr, "D ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
 
   std::vector<u16_t> *hashtab = texinfo_hashtab[hash];
 
-fprintf(stderr, "Hash Tab: %p  q2_texinfos: %p", hashtab, &q2_texinfos);
-fprintf(stderr, "W ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
-
   for (unsigned int i = 0; i < hashtab->size(); i++)
   {
     u16_t tin_idx = (*hashtab)[i];
 
     SYS_ASSERT(tin_idx < q2_texinfos.size());
 
-fprintf(stderr, "X ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
     if (MatchTexInfo(&tin, &q2_texinfos[tin_idx]))
-{ fprintf(stderr, "  MATCHED IN HASH\n");
+    {
       return tin_idx;  // found it
-}
+    }
   }
 
 
   // not found, so add new one
   u16_t tin_idx = q2_texinfos.size();
 
-fprintf(stderr, "TexInfo %d --> %d '%s' (%1.1f %1.1f %1.1f %1.1f) "
+DebugPrintf("TexInfo %d --> %d '%s' (%1.1f %1.1f %1.1f %1.1f) "
         "(%1.1f %1.1f %1.1f %1.1f)\n",
         tin_idx, flags, texture,
         s4[0], s4[1], s4[2], s4[3],
@@ -275,12 +265,9 @@ fprintf(stderr, "TexInfo %d --> %d '%s' (%1.1f %1.1f %1.1f %1.1f) "
     Main_FatalError("Quake2 build failure: exceeded limit of %d TEXINFOS\n",
                     MAX_MAP_TEXINFO);
 
-fprintf(stderr, "Y ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
   q2_texinfos.push_back(tin);
 
-fprintf(stderr, "JOO ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
   hashtab->push_back(tin_idx);
-fprintf(stderr, "Z ADD TEX INFO: size now %d\n", (int)q2_texinfos.size());
 
   return tin_idx;
 }
