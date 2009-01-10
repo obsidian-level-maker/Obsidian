@@ -690,6 +690,12 @@ function Plan_determine_size()
   PLAN.W = W
   PLAN.H = H
 
+if TESTING_QUAKE_II then
+  PLAN.W = 1
+  PLAN.H = 2
+  PLAN.join_all = true
+end
+
   gui.printf("Land size: %dx%d\n", PLAN.W, PLAN.H)
 
 

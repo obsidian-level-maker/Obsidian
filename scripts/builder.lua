@@ -380,7 +380,7 @@ function make_locked_door(S, side, z1, w_tex, key_tex)
 
   local KIND = 1
 
---[[ QUAKE TEST
+if TESTING_QUAKE1_DOORS then
   local m_ref = gui.q1_add_mapmodel(
   {
     y_face={ texture="edoor01_1" },
@@ -409,9 +409,7 @@ function make_locked_door(S, side, z1, w_tex, key_tex)
                  { name="func_door", angle="0", sounds="2",
                    model=assert(m_ref)
                  })
---]] -- END QUAKE TEST
-
---[[
+else
   transformed_brush2(T, door_info,
   {
     { x=mx+64, y=my-8, line_kind=KIND },
@@ -420,7 +418,7 @@ function make_locked_door(S, side, z1, w_tex, key_tex)
     { x=mx-64, y=my-8, line_kind=KIND },
   },
   z1+64, 2000)
---]]
+end
 
 
   for pass = 1,2 do

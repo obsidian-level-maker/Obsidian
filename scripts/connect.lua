@@ -1195,6 +1195,7 @@ gui.debugf("Failed\n")
     local list = shallow_copy(PLAN.all_rooms)
 
     local join_chance = rand_element { 10, 50, 90 }
+    if PLAN.join_all then join_chance = 100 end
 
     repeat
       local changed = false
@@ -1224,7 +1225,6 @@ gui.debugf("Failed\n")
     R.c_group = c_group
   end
 
---!!!!  join_ground()
   branch_big_rooms()
   branch_the_rest()
 end
