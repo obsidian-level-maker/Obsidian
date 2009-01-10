@@ -380,7 +380,7 @@ function make_locked_door(S, side, z1, w_tex, key_tex)
 
   local KIND = 1
 
--- QUAKE TEST
+--[[ QUAKE TEST
   local m_ref = gui.q1_add_mapmodel(
   {
     y_face={ texture="edoor01_1" },
@@ -409,6 +409,7 @@ function make_locked_door(S, side, z1, w_tex, key_tex)
                  { name="func_door", angle="0", sounds="2",
                    model=assert(m_ref)
                  })
+--]] -- END QUAKE TEST
 
 --[[
   transformed_brush2(T, door_info,
@@ -734,7 +735,7 @@ end
 
 function make_diagonal(S, side, info, z1)
 
--- do return end --!!!!
+do return end --!!!!
 
   local x1 = S.x1 + S.thick[4]
   local y1 = S.y1 + S.thick[2]
@@ -2637,6 +2638,124 @@ end
 
 
 ---==========================================================---
+
+
+function Builder_dummy()
+
+  gui.add_brush(
+  {
+    t_face = { texture="e1u1/floor3_3" },
+    b_face = { texture="e1u1/floor3_3" },
+    w_face = { texture="e1u1/floor3_3" },
+  },
+  {
+    { x=256, y=128 },
+    { x=256, y=384 },
+    { x=0, y=384 },
+    { x=0, y=128 },
+  },
+  -24, 0)
+
+  gui.add_brush(
+  {
+    t_face = { texture="e1u1/grnx2_3" },
+    b_face = { texture="e1u1/grnx2_3" },
+    w_face = { texture="e1u1/grnx2_3" },
+  },
+  {
+    { x=256, y=128 },
+    { x=256, y=384 },
+    { x=0, y=384 },
+    { x=0, y=128 },
+  },
+  192, 208)
+
+gui.add_brush(
+{
+  t_face = { texture="e1u1/grnx2_5" },
+  b_face = { texture="e1u1/grnx2_5" },
+  w_face = { texture="e1u1/grnx2_5" },
+},
+{
+  { x=136, y=160 },
+  { x=136, y=200 },
+  { x=120, y=200 },
+  { x=120, y=160 },
+},
+-2000, 4000)
+
+gui.add_brush(
+{
+  t_face = { texture="e1u1/grnx2_3" },
+  b_face = { texture="e1u1/grnx2_3" },
+  w_face = { texture="e1u1/grnx2_3" },
+},
+{
+  { x=136, y=128 },
+  { x=136, y=160 },
+  { x=120, y=160 },
+  { x=120, y=128 },
+},
+-2000, 4000)
+
+  gui.add_brush(
+  {
+    t_face = { texture="e1u1/wslt1_1" },
+    b_face = { texture="e1u1/wslt1_1" },
+    w_face = { texture="e1u1/wslt1_1" },
+  },
+  {
+    { x=32, y=128 },
+    { x=32, y=384 },
+    { x=0, y=384 },
+    { x=0, y=128 },
+  },
+  0, 192)
+
+  gui.add_brush(
+  {
+    t_face = { texture="e1u1/wslt1_2" },
+    b_face = { texture="e1u1/wslt1_2" },
+    w_face = { texture="e1u1/wslt1_2" },
+  },
+  {
+    { x=256, y=128 },
+    { x=256, y=384 },
+    { x=224, y=384 },
+    { x=224, y=128 },
+  },
+  0, 192)
+
+  gui.add_brush(
+  {
+    t_face = { texture="e1u1/wslt1_3" },
+    b_face = { texture="e1u1/wslt1_3" },
+    w_face = { texture="e1u1/wslt1_3" },
+  },
+  {
+    { x=256, y=128 },
+    { x=256, y=144 },
+    { x=0,   y=144 },
+    { x=0,   y=128 },
+  },
+  0, 192)
+
+  gui.add_brush(
+  {
+    t_face = { texture="e1u1/wslt1_4" },
+    b_face = { texture="e1u1/wslt1_4" },
+    w_face = { texture="e1u1/wslt1_4" },
+  },
+  {
+    { x=256, y=370 },
+    { x=256, y=384 },
+    { x=0,   y=384 },
+    { x=0,   y=370 },
+  },
+  0, 192)
+
+  gui.add_entity(64, 256, 64, { name="info_player_start" })
+end
 
 
 function Builder()
