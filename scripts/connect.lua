@@ -1107,7 +1107,7 @@ gui.debugf("Failed\n")
   end
 
   local function force_room_branch(R)
-    gui.debugf("Emergency connection in room S(%d,%d) %s\n", R.sx1, R.sy1, sel(R.parent, "SUB", ""))
+    gui.debugf("Emergency connection in %s\n", R:tostr())
 
     local try_list = {}
 
@@ -1144,7 +1144,7 @@ gui.debugf("Failed\n")
   end
 
   local function handle_isolate(R, join_chance)
-    if rand_odds(join_chance) or (R.parent and rand_odds(80)) then
+    if rand_odds(join_chance) or R.parent then
       if force_room_branch(R) then
         return -- OK
       end

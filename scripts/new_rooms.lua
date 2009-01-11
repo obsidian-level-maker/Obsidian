@@ -86,19 +86,20 @@ require 'util'
 
 function Room_SetupTheme(R)
  
+  --!!! TEMP CRUD to decide Outdoorsiness
   if R.outdoor == nil then
-    --!!! TEMP CRUD to decide Outdoorsiness
-    local outdoor_chance = 20
-    if R.sx1 <= 2 or R.sx2 >= SEED_W-1 then outdoor_chance = outdoor_chance + 25 end
-    if R.sy1 <= 2 or R.sy2 >= SEED_H-1 then outdoor_chance = outdoor_chance + 25 end
-    R.outdoor = rand_odds(outdoor_chance)
-
-    R.outdoor = false --!!!! TEMP
-    if R.children then R.outdoor = true end
-
     if R.parent then
       if R.parent.outdoor == nil then Room_SetupTheme(R.parent) end
-      R.outdoor = not R.parent.outdoor
+      R.outdoor = sel(R.parent.outdoor, false, rand_odds(25))
+
+    else
+      local outdoor_chance = 10
+
+      if R.sx1 <= 2 or R.sx2 >= SEED_W-1 then outdoor_chance = outdoor_chance + 25 end
+      if R.sy1 <= 2 or R.sy2 >= SEED_H-1 then outdoor_chance = outdoor_chance + 25 end
+      if R.children then outdoor_chance = 80 end
+
+      R.outdoor = rand_odds(outdoor_chance)
     end
   end
 
@@ -129,7 +130,7 @@ function Room_SetupTheme(R)
 end
 
 function Room_SetupTheme_Scenic(R)
-  -- find closest
+  -- find closest non-scenic room
   local mx = int((R.sx1 + R.sx2) / 2)
   local my = int((R.sy1 + R.sy2) / 2)
 
@@ -137,10 +138,11 @@ function Room_SetupTheme_Scenic(R)
     if Seed_valid(mx + dist, my, 1) then
       local S = SEEDS[mx + dist][my][1]
       if S.room and S.room.kind ~= "scenic" and
-         (not S.room.outdoor) == (not R.outdoor) and
          S.room.combo
+---      and (not S.room.outdoor) == (not R.outdoor)
       then
         R.combo = S.room.combo
+        R.outdoor = S.room.outdoor
         return
       end
     end
@@ -148,10 +150,11 @@ function Room_SetupTheme_Scenic(R)
     if Seed_valid(mx, my + dist, 1) then
       local S = SEEDS[mx][my + dist][1]
       if S.room and S.room.kind ~= "scenic" and
-         (not S.room.outdoor) == (not R.outdoor) and
          S.room.combo
+---      and (not S.room.outdoor) == (not R.outdoor)
       then
         R.combo = S.room.combo
+        R.outdoor = S.room.outdoor
         return
       end
     end
@@ -247,13 +250,13 @@ function Rooms_decide_hallways_II()
   -- Marks certain rooms to be hallways, using the following criteria:
   --   - indoor non-leaf room
   --   - prefer small rooms
-  --   - all neighbors are indoor
+  --   - prefer all neighbors are indoor
   --   - no purpose (not a start room, exit room, key room)
   --   - no teleporters
   --   - not the destination of a locked door (anti-climactic)
 
-  local HALL_SIZE_PROBS = { 99, 80, 55, 33, 10 }
-  local REVERT_PROBS    = {  0,  0, 25, 90, 90 }
+  local HALL_SIZE_PROBS = { 98, 84, 60, 40, 20, 10 }
+  local REVERT_PROBS    = {  0,  0, 25, 75, 90, 98 }
 
   local function eval_hallway(R)
     -- Wolf3D: the outdoor areas become hallways
@@ -273,7 +276,7 @@ function Rooms_decide_hallways_II()
 
     for _,C in ipairs(R.conns) do
       local N = C:neighbor(R)
-      if N.outdoor then
+      if N.outdoor and rand_odds(95) then
         return false
       end
 
@@ -282,11 +285,11 @@ function Rooms_decide_hallways_II()
       end
     end
 
-    local rw = math.min(R.sw, R.sh)
+    local min_d = math.min(R.sw, R.sh)
 
-    if rw > 5 then return false end
+    if min_d > 6 then return false end
 
-    return rand_odds(HALL_SIZE_PROBS[rw])
+    return rand_odds(HALL_SIZE_PROBS[min_d])
   end
 
   local function hallway_neighbors(R)
@@ -338,11 +341,11 @@ gui.debugf("  Made Hallway @ %s\n", R:tostr())
   -- hence look for them and revert them back to normal.
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hallway" and surrounded_by_halls(R) then
-      local rw = math.min(R.sw, R.sh)
+      local min_d = math.min(R.sw, R.sh)
 
-      assert(rw <= 5)
+      assert(min_d <= 6)
 
-      if rand_odds(REVERT_PROBS[rw]) then
+      if rand_odds(REVERT_PROBS[min_d]) then
         R.kind = "indoor"
 gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       end

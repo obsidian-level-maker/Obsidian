@@ -59,7 +59,8 @@ PLAN_CLASS =
 ROOM_CLASS =
 {
   tostr = function(self)
-    return string.format("ROOM_%s [%d,%d..%d,%d]",
+    return string.format("%s_%s [%d,%d..%d,%d]",
+        sel(self.parent, "SUB_ROOM", "ROOM"),
         self.id, self.sx1,self.sy1, self.sx2,self.sy2)
   end,
 
@@ -511,8 +512,8 @@ end
 function Plan_SubRooms()
   local id = PLAN.last_id + 1
 
-  --                    1  2  3  4  5   6   7   8   9+
-  local SUB_CHANCES = { 0, 0, 2, 8, 20, 30, 40, 50, 60 }
+  --                    1  2  3  4  5   6   7   8+
+  local SUB_CHANCES = { 0, 0, 1, 3, 10, 20, 30, 50 }
 
   local function can_fit(R, x, y, w, h)
     if w >= R.sw or h >= R.sh then return nil end
@@ -564,13 +565,13 @@ function Plan_SubRooms()
       for w = 2,6 do
         local prob = can_fit(parent, x, y, w, w)
         if prob then
-          local INFO = { x=x, y=y, w=w, h=w }
+          local INFO = { x=x, y=y, w=w, h=w, islandy=islandy }
 
           -- make rectangles sometimes
-          if INFO.w >= 3 and rand_odds(33) then
+          if INFO.w >= 3 and rand_odds(30) then
             INFO.w = INFO.w - 1
             if rand_odds(50) then INFO.x = INFO.x + 1 end
-          elseif INFO.h >= 3 and rand_odds(33) then
+          elseif INFO.h >= 3 and rand_odds(30) then
             INFO.h = INFO.h - 1
             if rand_odds(50) then INFO.y = INFO.y + 1 end
           end
@@ -604,6 +605,9 @@ function Plan_SubRooms()
     ROOM.sw, ROOM.sh = box_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
     ROOM.svolume = ROOM.sw * ROOM.sh
 
+    ROOM.is_island = (ROOM.sx1 > parent.sx1) and (ROOM.sx2 < parent.sx2) and
+                     (ROOM.sy1 > parent.sy1) and (ROOM.sy2 < parent.sy2)
+
     table.insert(PLAN.all_rooms, ROOM)
 
     if not parent.children then parent.children = {} end
@@ -620,22 +624,23 @@ function Plan_SubRooms()
 
   ---| Plan_SubRooms |---
 
-  PLAN.island_mode = rand_odds(33)
+  PLAN.island_mode = rand_odds(40)
   gui.debugf("Island mode: %s\n", sel(PLAN.island_mode, "TRUE", "false"))
 
   Seed_dump_rooms()
 
   for _,R in ipairs(PLAN.all_rooms) do
     if not R.parent then
-      local max_d = math.max(R.sw, R.sh)
-      if max_d > 9 then max_d = 9 end
+      local min_d = math.max(R.sw, R.sh)
+      if min_d > 8 then min_d = 8 end
 
-      if rand_odds(SUB_CHANCES[max_d]) then
+      if rand_odds(SUB_CHANCES[min_d]) then
         try_add_sub_room(R)
 
-        if max_d >= 6 and rand_odds(90) then try_add_sub_room(R) end
-        if max_d >= 7 and rand_odds(95) then try_add_sub_room(R) end
-        if max_d >= 8 and rand_odds(90) then try_add_sub_room(R) end
+        if min_d >= 5 and rand_odds(15) then try_add_sub_room(R) end
+        if min_d >= 6 and rand_odds(90) then try_add_sub_room(R) end
+        if min_d >= 7 and rand_odds(30) then try_add_sub_room(R) end
+        if min_d >= 8 and rand_odds(60) then try_add_sub_room(R) end
       end
     end
   end
