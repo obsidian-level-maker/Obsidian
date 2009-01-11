@@ -178,32 +178,31 @@ end
 
 
 function Seed_dump_rooms()
-  gui.printf("Seed room map:\n")
-
-  local ROOM_IDX = 0
-  local HALL_IDX = 0
-
-  local ROOMS = "BFGHIDKLPTQJY"
-  local HALLS = "acmunorvsewxz"
+  gui.printf("Seed Map:\n")
 
   local function seed_to_char(S)
     if not S then return "!" end
+    if not S.room then return "." end
 
-    if not S.room then
-      return "."
+    if S.room.is_scenic then return "/" end
+    if S.room.dump_char then return S.room.dump_char end
+
+    if S.room.parent then
+      local n = 1 + (S.room.id % 26)
+      return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
     end
 
-    if not S.room.dump_char then
-      if S.room.kind == "hall" then
-        S.room.dump_char = string.sub(HALLS, 1+HALL_IDX, 1+HALL_IDX)
-        HALL_IDX = (HALL_IDX + 1) % string.len(HALLS)
-      else
-        S.room.dump_char = string.sub(ROOMS, 1+ROOM_IDX, 1+ROOM_IDX)
-        ROOM_IDX = (ROOM_IDX + 1) % string.len(ROOMS)
-      end
-    end
-
-    return S.room.dump_char
+    local n = 1 + (S.room.id % 26)
+    return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+---###    if not S.room.dump_char then
+---###      if S.room.kind == "hall" then
+---###        S.room.dump_char = string.sub(HALLS, 1+HALL_IDX, 1+HALL_IDX)
+---###        HALL_IDX = (HALL_IDX + 1) % string.len(HALLS)
+---###      else
+---###        S.room.dump_char = string.sub(ROOMS, 1+ROOM_IDX, 1+ROOM_IDX)
+---###        ROOM_IDX = (ROOM_IDX + 1) % string.len(ROOMS)
+---###      end
+---###    end
   end
 
   for y = SEED_H,1,-1 do

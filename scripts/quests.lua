@@ -160,6 +160,8 @@ function Quest_decide_start_room(arena)
 
   arena.start = table_sorted_first(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
 
+  assert(#arena.start.conns > 0)
+
   gui.printf("Start room S(%d,%d)\n", arena.start.sx1, arena.start.sy1)
 
   -- update connections so that 'src' and 'dest' follow the natural
@@ -683,8 +685,12 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
   local START_R = PLAN.start_room
   assert(START_R)
 
-  local sx = int((START_R.sx1 + START_R.sx2) / 2.0)
-  local sy = int((START_R.sy1 + START_R.sy2) / 2.0)
+  local sx, sy
+
+  repeat
+    sx = rand_irange(START_R.sx1, START_R.sx2)
+    sy = rand_irange(START_R.sy1, START_R.sy2)
+  until SEEDS[sx][sy][1].room == START_R
 
   SEEDS[sx][sy][1].is_start = true
 

@@ -77,6 +77,7 @@ ROOM_CLASS =
 }
 
 
+
 function Plan_CreateRooms()
   
   -- creates rooms out of contiguous areas on the land-map
@@ -88,15 +89,21 @@ function Plan_CreateRooms()
            1 <= y and y <= PLAN.H
   end
 
-  local function room_char(R)
-    if not R then return '.' end
-    if R.is_scenic then return '/' end
---  if (R.lw == 1 or R.lh == 1) then return '%' end
-    local n = 1 + (R.id % 62)
-    return string.sub("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
-  end
-
   local function dump_rooms()
+    local function room_char(R)
+      if not R then return '.' end
+      if R.is_scenic then return '/' end
+  --  if (R.lw == 1 or R.lh == 1) then return '%' end
+---###      if R.parent then
+---###        local n = 1 + (R.id % 26)
+---###        return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
+---###      end
+      local n = 1 + (R.id % 26)
+      return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+    end
+
+    --- dump_rooms ---
+
     gui.printf("\n")
     gui.printf("Room Map\n")
 
@@ -164,9 +171,13 @@ function Plan_CreateRooms()
 
   local BIG_ROOMS =
   {
-    [11] = 30,
-    [12] = 90, [22] = 90,
-    [23] = 15, [33] = 15
+--    [11] = 30,
+--    [12] = 90, [22] = 90,
+--    [23] = 15, [33] = 15
+    [11] = 10,
+    [12] = 60, [22] = 200,
+    [23] = 40, [33] = 40,
+    [24] =  2, [34] = 5, [44] = 5,
   }
 
   local visits = {}
@@ -177,12 +188,15 @@ function Plan_CreateRooms()
 
   rand_shuffle(visits)
 
-  for id,vis in ipairs(visits) do
+  local id = 1
+
+  for _,vis in ipairs(visits) do
     local x, y = vis.x, vis.y
     
     if not room_map[x][y] then
 
       local ROOM = { lw=1, lh=1, id=id, kind="indoor", conns={} }
+      id = id + 1
 
       set_class(ROOM, ROOM_CLASS)
 
@@ -199,7 +213,7 @@ function Plan_CreateRooms()
         -- prefer to put big rooms away from the edge
         if (big_w >= 2 and big_h >= 2) and
            (x == 1 or y == 1 or x == PLAN.W-big_w+1 or y == PLAN.H-big_h+1) and
-           rand_odds(80)
+           rand_odds(70)
         then
           -- forget it
         else
@@ -227,6 +241,8 @@ function Plan_CreateRooms()
       gui.debugf("%s\n", ROOM:tostr())
     end
   end
+
+  PLAN.last_id = id
 
   dump_rooms()
 
@@ -489,11 +505,107 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   nudge_big_rooms()
   nudge_the_rest()
 
-  for _,R in ipairs(PLAN.all_rooms) do
-    gui.printf("Final %s   seed size: %dx%d\n", R:tostr(), R.sw,R.sh)
-  end
 end
 
+
+function Plan_SubRooms()
+  local id = PLAN.last_id + 1
+
+  --                    1  2  3  4  5   6   7   8   9+
+  local SUB_CHANCES = { 0, 0, 1, 3, 6, 10, 20, 30, 40 }
+
+  local function can_fit(R, x, y, w, h)
+    
+    if w >= R.sw or h >= R.sh then return false end
+    
+    -- TODO: allow sub rooms to touch an edge / corner !!!
+    if x <= R.sx1 or y <= R.sy1 then return false end
+
+    if x + w >= R.sx2 then return false end
+    if y + h >= R.sy2 then return false end
+
+    for sx = x,x+w-1 do for sy = y,y+h-1 do
+      local S = SEEDS[sx][sy][1]
+      if S.room ~= R then return false end
+    end end -- sx, sy
+
+    return true
+  end
+
+  local function try_add_sub_room(parent)
+    local infos = {}
+    local probs = {}
+    for x = parent.sx1,parent.sx2 do for y = parent.sy1,parent.sy2 do
+      for w = 2,6 do
+        if can_fit(parent, x, y, w, w) then
+          local prob = 20 + w * 20  -- IMPROVE !!!
+
+          table.insert(infos, { x=x, y=y, w=w, h=w })
+          table.insert(probs, prob)
+        end
+      end
+    end end -- x, y
+
+    if #infos == 0 then return end
+
+    local info = infos[rand_index_by_probs(probs)]
+
+    -- actually add it !
+
+    local ROOM = { lw=1, lh=1, id=id, kind="indoor", conns={} }
+    id = id + 1
+
+    set_class(ROOM, ROOM_CLASS)
+
+    ROOM.parent = parent
+    ROOM.neighbors = { }  -- ???
+
+    ROOM.sx1 = info.x
+    ROOM.sy1 = info.y
+
+    ROOM.sx2 = info.x + info.w - 1
+    ROOM.sy2 = info.y + info.h - 1
+
+    ROOM.sw, ROOM.sh = box_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
+    ROOM.svolume = ROOM.sw * ROOM.sh
+
+    table.insert(PLAN.all_rooms, ROOM)
+
+    if not parent.children then parent.children = {} end
+    table.insert(parent.children, ROOM)
+
+    -- update seed map
+    for sx = ROOM.sx1,ROOM.sx2 do
+      for sy = ROOM.sy1,ROOM.sy2 do
+        SEEDS[sx][sy][1].room = ROOM
+      end
+    end
+  end
+
+
+  ---| Plan_SubRooms |---
+
+  Seed_dump_rooms()
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if not R.parent then
+      local max_d = math.max(R.sw, R.sh)
+      if max_d > 9 then max_d = 9 end
+
+      if true then --!!!!!! rand_odds(SUB_CHANCES[max_d]) then
+        try_add_sub_room(R)
+
+        if max_d >= 6 and rand_odds(90) then try_add_sub_room(R) end
+        if max_d >= 7 and rand_odds(95) then try_add_sub_room(R) end
+        if max_d >= 8 and rand_odds(90) then try_add_sub_room(R) end
+      end
+    end
+  end
+
+  PLAN.last_id = id
+
+  Seed_dump_rooms()
+end
 
 
 function Plan_MakeSeeds()
@@ -546,33 +658,61 @@ function Plan_MakeSeeds()
     end -- for R
   end
 
+
+  ---| Plan_MakeSeeds |---
+
+  local max_sx = 1
+  local max_sy = 1
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    max_sx = math.max(max_sx, R.sx2)
+    max_sy = math.max(max_sy, R.sy2)
+
+    R.svolume = R.sw * R.sh
+  end
+
+  -- one border seed
+  max_sx = max_sx + 1
+  max_sy = max_sy + 1
+
+  Seed_init(max_sx, max_sy, 1)
+
+  plant_rooms()
+  fill_holes()
+
+  Seed_dump_fabs()
+end
+
+
+function Plan_BorderUp()
   local function border_up(R)
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y][1]
-      assert(S.room == R)
-      for dir = 2,8,2 do
-        local N = S:neighbor(dir)
+      if S.room == R then
+        for dir = 2,8,2 do
+          local N = S:neighbor(dir)
 
-        if not N then  -- edge of map
-          if S.room.outdoor then
-            S.border[dir].kind = "skyfence"
-            S.thick[dir] = 48
+          if not N then  -- edge of map
+            if S.room.outdoor then
+              S.border[dir].kind = "skyfence"
+              S.thick[dir] = 48
+            else
+              S.border[dir].kind = "wall"
+              S.border[dir].can_fake_sky = true
+              S.thick[dir] = 24
+            end
+
+          elseif N.room == R then
+            -- same room : do nothing
+           
+          elseif R.outdoor then
+            S.border[dir].kind = "fence"
+
           else
+            -- Note: windows (etc) are decided later
             S.border[dir].kind = "wall"
-            S.border[dir].can_fake_sky = true
             S.thick[dir] = 24
           end
-
-        elseif N.room == R then
-          -- same room : do nothing
-         
-        elseif R.outdoor then
-          S.border[dir].kind = "fence"
-
-        else
-          -- Note: windows (etc) are decided later
-          S.border[dir].kind = "wall"
-          S.thick[dir] = 24
         end
       end
     end end -- for x, y
@@ -601,27 +741,8 @@ function Plan_MakeSeeds()
   end
 
 
-  ---| Plan_MakeSeeds |---
-
-  local max_sx = 1
-  local max_sy = 1
-
-  for _,R in ipairs(PLAN.all_rooms) do
-    max_sx = math.max(max_sx, R.sx2)
-    max_sy = math.max(max_sy, R.sy2)
-
-    R.svolume = R.sw * R.sh
-  end
-
-  -- one border seed
-  max_sx = max_sx + 1
-  max_sy = max_sy + 1
-
-  Seed_init(max_sx, max_sy, 1)
-
-  plant_rooms()
-  fill_holes()
-
+  ---| Plan_BorderUp |---
+  
   for _,R in ipairs(PLAN.all_rooms) do
     border_up(R)
   end
@@ -629,8 +750,6 @@ function Plan_MakeSeeds()
   for _,R in ipairs(PLAN.scenic_rooms) do
     border_up_scenic(R)
   end
-
-  Seed_dump_fabs()
 end
 
 
@@ -703,15 +822,15 @@ end
   local cols = {}
   local rows = {}
 
-  for x = 1, W do cols[x] = 3 end
-  for y = 1, H do rows[y] = 3 end
+  for x = 1, W do cols[x] = rand_irange(3,4) end
+  for y = 1, H do rows[y] = rand_irange(3,4) end
 
-  for i = 1,rand_irange(2,4) do
+  for i = 1,rand_irange(0,4) do
     local x = rand_irange(1, W)
     local y = rand_irange(1, H)
 
-    cols[x] = cols[x] + 1
-    rows[y] = rows[y] + 1
+    if cols[x] <= 5 then cols[x] = cols[x] + 1 end
+    if rows[y] <= 5 then rows[y] = rows[y] + 1 end
   end
 
   for i = 1,rand_irange(0,2) do
@@ -759,7 +878,16 @@ function Plan_rooms_sp()
   -- must create the seeds _AFTER_ nudging
   Plan_MakeSeeds()
 
+  Plan_SubRooms()
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw,R.sh)
+  end
+
+  Plan_BorderUp()
+
   PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
+
 
 
 ---## local KK = PLAN.all_rooms[1]

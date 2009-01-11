@@ -1594,8 +1594,6 @@ end
 
 function make_outdoor_exit_switch(S, dir, f_h)
 
-do return end --!!!!!
-
   local DT, long = get_transform_for_seed_side(S, 10-dir)
   local deep = long
 
@@ -3174,7 +3172,8 @@ end
 --]]
 
 
-    if S.room and S.room.key_item and S.sx == S.room.sx2 and S.sy == S.room.sy2 then
+    if S.room and S.room.key_item and not S.room.did_key_item then
+      S.room.did_key_item = true
       local KEYS = { 13,6,5,7015, 38,39,40, 7017 }
 gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
       gui.add_entity(mx, my, z1+25,

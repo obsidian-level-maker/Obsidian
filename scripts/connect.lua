@@ -719,82 +719,82 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.c_group)
     return CONN
   end
 
-  local function connect_land(L, N, dir)
-
-    assert(L.room ~= N.room)
-
-    -- the middle seed of a 3x3 land block is always valid
-    -- (since we never nudge more than 1 seed in any direction).
-    -- So start there and find the border....
-
-    local sx = L.lx * 3 - 1
-    local sy = L.ly * 3 - 1
-
-    local R = SEEDS[sx][sy][1].room
-    assert(R)
-
-    while true do
-      local tx, ty = nudge_coord(sx, sy, dir)
-      assert(Seed_valid(tx, ty, 1))
-
-      if SEEDS[tx][ty][1].room ~= R then
-        break;
-      end
-
-      sx, sy = tx, ty
-    end
-
-    local tx, ty = nudge_coord(sx, sy, dir)
-
-    -- try moving to the side sometimes
-    if rand_odds(14) then
-      local ax, ay = dir_to_across(dir)
-      if rand_odds(50) then ax, ay = -ax, -ay end
-
-      if Seed_valid(sx+ax, sy+ay, 1) and
-         Seed_valid(tx+ax, ty+ay, 1) and
-         SEEDS[sx+ax][sy+ay][1].room == SEEDS[sx][sy][1].room and
-         SEEDS[tx+ax][ty+ay][1].room == SEEDS[tx][ty][1].room
-      then
-        sx, sy = sx+ax, sy+ay
-        tx, ty = tx+ax, ty+ay
-      end
-    end
-
-    local S = SEEDS[sx][sy][1]
-    local T = SEEDS[tx][ty][1]
-
-    if S.conn or T.conn then return false end
-
-    assert(T.sx == S.sx or T.sy == S.sy)
-
-    connect_seeds(S, T, dir)
-  end
+---##  local function connect_land(L, N, dir)
+---##
+---##    assert(L.room ~= N.room)
+---##
+---##    -- the middle seed of a 3x3 land block is always valid
+---##    -- (since we never nudge more than 1 seed in any direction).
+---##    -- So start there and find the border....
+---##
+---##    local sx = L.lx * 3 - 1
+---##    local sy = L.ly * 3 - 1
+---##
+---##    local R = SEEDS[sx][sy][1].room
+---##    assert(R)
+---##
+---##    while true do
+---##      local tx, ty = nudge_coord(sx, sy, dir)
+---##      assert(Seed_valid(tx, ty, 1))
+---##
+---##      if SEEDS[tx][ty][1].room ~= R then
+---##        break;
+---##      end
+---##
+---##      sx, sy = tx, ty
+---##    end
+---##
+---##    local tx, ty = nudge_coord(sx, sy, dir)
+---##
+---##    -- try moving to the side sometimes
+---##    if rand_odds(14) then
+---##      local ax, ay = dir_to_across(dir)
+---##      if rand_odds(50) then ax, ay = -ax, -ay end
+---##
+---##      if Seed_valid(sx+ax, sy+ay, 1) and
+---##         Seed_valid(tx+ax, ty+ay, 1) and
+---##         SEEDS[sx+ax][sy+ay][1].room == SEEDS[sx][sy][1].room and
+---##         SEEDS[tx+ax][ty+ay][1].room == SEEDS[tx][ty][1].room
+---##      then
+---##        sx, sy = sx+ax, sy+ay
+---##        tx, ty = tx+ax, ty+ay
+---##      end
+---##    end
+---##
+---##    local S = SEEDS[sx][sy][1]
+---##    local T = SEEDS[tx][ty][1]
+---##
+---##    if S.conn or T.conn then return false end
+---##
+---##    assert(T.sx == S.sx or T.sy == S.sy)
+---##
+---##    connect_seeds(S, T, dir)
+---##  end
 
   local function is_ground(L)
     return (L.kind == "valley") or (L.kind == "ground") or
            (L.kind == "hill")
   end
 
-  local function join_ground()
-    local join_chance = rand_element { 5, 30, 90 }
-
-    for _,V in ipairs(Landmap_rand_visits()) do
-      local L = LAND_MAP[V.x][V.y]
-      if is_ground(L) then
-        for dir = 2,8,2 do
-          local nx, ny = nudge_coord(V.x, V.y, dir)
-          local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
-          if N and N.kind == L.kind and N.room and
-             N.room.c_group ~= L.room.c_group and
-             rand_odds(join_chance)
-          then
-            connect_land(L, N, dir)
-          end
-        end -- for dir
-      end
-    end -- for V in visits
-  end
+---##  local function join_ground()
+---##    local join_chance = rand_element { 5, 30, 90 }
+---##
+---##    for _,V in ipairs(Landmap_rand_visits()) do
+---##      local L = LAND_MAP[V.x][V.y]
+---##      if is_ground(L) then
+---##        for dir = 2,8,2 do
+---##          local nx, ny = nudge_coord(V.x, V.y, dir)
+---##          local N = Landmap_valid(nx,ny) and LAND_MAP[nx][ny]
+---##          if N and N.kind == L.kind and N.room and
+---##             N.room.c_group ~= L.room.c_group and
+---##             rand_odds(join_chance)
+---##          then
+---##            connect_land(L, N, dir)
+---##          end
+---##        end -- for dir
+---##      end
+---##    end -- for V in visits
+---##  end
 
 
   local function morph_size(MORPH, R)
@@ -997,7 +997,7 @@ gui.debugf("Failed\n")
     local rooms = {}
 
     for _,R in ipairs(PLAN.all_rooms) do
-      if R.svolume >= 1 and (R.kind == "indoor") then
+      if R.svolume >= 1 and (R.kind == "indoor") and not R.parent then
         R.k_score = sel((R.sw%2)==1 and (R.sh%2)==1, 5, 0) + R.svolume + gui.random()
         table.insert(rooms, R)
       end
@@ -1107,17 +1107,25 @@ gui.debugf("Failed\n")
   end
 
   local function force_room_branch(R)
-    gui.debugf("Emergency connection in room S(%d,%d)\n", R.sx1, R.sy1)
+    gui.debugf("Emergency connection in room S(%d,%d) %s\n", R.sx1, R.sy1, sel(R.parent, "SUB", ""))
 
     local try_list = {}
 
     for x = R.sx1,R.sx2 do
-      table.insert(try_list, { x=x, y=R.sy1, dir=2 })
-      table.insert(try_list, { x=x, y=R.sy2, dir=8 })
+      if SEEDS[x][R.sy1][1].room == R then
+        table.insert(try_list, { x=x, y=R.sy1, dir=2 })
+      end
+      if SEEDS[x][R.sy2][1].room == R then
+        table.insert(try_list, { x=x, y=R.sy2, dir=8 })
+      end
     end
     for y = R.sy1,R.sy2 do
-      table.insert(try_list, { x=R.sx1, y=y, dir=4 })
-      table.insert(try_list, { x=R.sx2, y=y, dir=6 })
+      if SEEDS[R.sx1][y][1].room == R then
+        table.insert(try_list, { x=R.sx1, y=y, dir=4 })
+      end
+      if SEEDS[R.sx2][y][1].room == R then
+        table.insert(try_list, { x=R.sx2, y=y, dir=6 })
+      end
     end
 
     -- FIXME: find all possible, use best one

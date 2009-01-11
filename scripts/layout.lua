@@ -142,9 +142,21 @@ require 'util'
 
 function Room_SetupTheme(R)
  
---!!!!
-if rand_odds(33) then R.outdoor = true end
+  if R.outdoor == nil then
+    --!!! TEMP CRUD to decide Outdoorsiness
+    local outdoor_chance = 20
+    if R.sx1 <= 2 or R.sx2 >= SEED_W-1 then outdoor_chance = outdoor_chance + 25 end
+    if R.sy1 <= 2 or R.sy2 >= SEED_H-1 then outdoor_chance = outdoor_chance + 25 end
+    R.outdoor = rand_odds(outdoor_chance)
 
+    R.outdoor = false --!!!! TEMP
+    if R.children then R.outdoor = true end
+
+    if R.parent then
+      if R.parent.outdoor == nil then Room_SetupTheme(R.parent) end
+      R.outdoor = not R.parent.outdoor
+    end
+  end
 
   if not PLAN.outdoor_combos then
     PLAN.outdoor_combos = {}
