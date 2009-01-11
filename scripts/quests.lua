@@ -607,8 +607,11 @@ function Quest_add_keys()
       PLAN.exit_room = R
 
 -- TEMP CRUD
-local ex = int((R.sx1 + R.sx2) / 2.0)
-local ey = int((R.sy1 + R.sy2) / 2.0)
+local ex, ey
+repeat
+  ex = rand_irange(R.sx1, R.sx2)
+  ey = rand_irange(R.sy1, R.sy2)
+until SEEDS[ex][ey][1].room == R
 SEEDS[ex][ey][1].is_exit = true
 
     else

@@ -1144,7 +1144,7 @@ gui.debugf("Failed\n")
   end
 
   local function handle_isolate(R, join_chance)
-    if rand_odds(join_chance) then
+    if rand_odds(join_chance) or (R.parent and rand_odds(80)) then
       if force_room_branch(R) then
         return -- OK
       end
@@ -1174,6 +1174,7 @@ gui.debugf("Failed\n")
 
     for _,R in ipairs(rebels) do
       if force_room_branch(R) then
+        gui.debugf("Branched rebel group %d (now %d)\n", rebel_id, R.c_group)
         return -- OK
       end
     end
@@ -1204,6 +1205,7 @@ gui.debugf("Failed\n")
 
     local join_chance = rand_element { 10, 50, 90 }
     if PLAN.join_all then join_chance = 100 end
+    gui.debugf("Join Chance: %d\n", join_chance)
 
     repeat
       local changed = false

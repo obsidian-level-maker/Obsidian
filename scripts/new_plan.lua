@@ -512,24 +512,49 @@ function Plan_SubRooms()
   local id = PLAN.last_id + 1
 
   --                    1  2  3  4  5   6   7   8   9+
-  local SUB_CHANCES = { 0, 0, 1, 3, 6, 10, 20, 30, 40 }
+  local SUB_CHANCES = { 0, 0, 2, 8, 20, 30, 40, 50, 60 }
 
   local function can_fit(R, x, y, w, h)
-    
-    if w >= R.sw or h >= R.sh then return false end
-    
-    -- TODO: allow sub rooms to touch an edge / corner !!!
-    if x <= R.sx1 or y <= R.sy1 then return false end
+    if w >= R.sw or h >= R.sh then return nil end
 
-    if x + w >= R.sx2 then return false end
-    if y + h >= R.sy2 then return false end
+    if x+w > R.sx2 or y+h > R.sy2 then return nil end
 
+    local touches_wall = false
+    if x == R.sx1 or x+w == R.sx2 or y == R.sy1 or y+h == R.sy2 then
+      touches_wall = true
+    end
+    
     for sx = x,x+w-1 do for sy = y,y+h-1 do
       local S = SEEDS[sx][sy][1]
-      if S.room ~= R then return false end
+      if S.room ~= R then return nil end
     end end -- sx, sy
 
-    return true
+    local touches_other = false
+
+    for sx = x-1,x+w do for sy = y-1,y+h do
+      if Seed_valid(sx, sy, 1) then
+        local S = SEEDS[sx][sy][1]
+        if S.room and S.room.parent == R then
+          touches_other = true
+        end
+      end
+    end end -- sx, sy
+
+    -- if it touches the outside wall, make sure it does NOT touch
+    -- another sub-room (otherwise the room could be split into
+    -- two separated parts, which is bad).
+    -- TODO: smarter test
+    if touches_wall and touches_other then
+      return nil
+    end
+
+    if PLAN.island_mode then
+      if touches_wall  then return 10 end
+      if touches_other then return 40 end
+      return 200
+    end
+
+    return w * 5 * sel(touches_wall or touches_other, 2, 1)
   end
 
   local function try_add_sub_room(parent)
@@ -537,10 +562,20 @@ function Plan_SubRooms()
     local probs = {}
     for x = parent.sx1,parent.sx2 do for y = parent.sy1,parent.sy2 do
       for w = 2,6 do
-        if can_fit(parent, x, y, w, w) then
-          local prob = 20 + w * 20  -- IMPROVE !!!
+        local prob = can_fit(parent, x, y, w, w)
+        if prob then
+          local INFO = { x=x, y=y, w=w, h=w }
 
-          table.insert(infos, { x=x, y=y, w=w, h=w })
+          -- make rectangles sometimes
+          if INFO.w >= 3 and rand_odds(33) then
+            INFO.w = INFO.w - 1
+            if rand_odds(50) then INFO.x = INFO.x + 1 end
+          elseif INFO.h >= 3 and rand_odds(33) then
+            INFO.h = INFO.h - 1
+            if rand_odds(50) then INFO.y = INFO.y + 1 end
+          end
+
+          table.insert(infos, INFO)
           table.insert(probs, prob)
         end
       end
@@ -585,6 +620,9 @@ function Plan_SubRooms()
 
   ---| Plan_SubRooms |---
 
+  PLAN.island_mode = rand_odds(33)
+  gui.debugf("Island mode: %s\n", sel(PLAN.island_mode, "TRUE", "false"))
+
   Seed_dump_rooms()
 
   for _,R in ipairs(PLAN.all_rooms) do
@@ -592,7 +630,7 @@ function Plan_SubRooms()
       local max_d = math.max(R.sw, R.sh)
       if max_d > 9 then max_d = 9 end
 
-      if true then --!!!!!! rand_odds(SUB_CHANCES[max_d]) then
+      if rand_odds(SUB_CHANCES[max_d]) then
         try_add_sub_room(R)
 
         if max_d >= 6 and rand_odds(90) then try_add_sub_room(R) end
