@@ -1,5 +1,5 @@
 ---------------------------------------------------------------
---  PLANNING : Single Player
+--  PLANNING : Single Player [OBSOLETE CODE!]
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2006-2008 Andrew Apted
