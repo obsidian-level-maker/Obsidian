@@ -32,15 +32,14 @@ require 'defs'
 require 'util'
 
 require 'seeds'
-require 'new_plan' -- 'plan_sp'
+require 'new_plan'
 require 'connect'
 require 'quests'
-require 'rooms'
-require 'layout'
+require 'new_rooms'
 require 'builder'
 require 'naming'
 
--- require 'monsters'
+--!! require 'monsters'
 
 
 function Game_merge_tab(name, t)
@@ -141,6 +140,8 @@ function Level_Make(L, index, NUM)
 
   gui.at_level(LEVEL.name, index, NUM)
 
+  -- FIXME: invoke "level_start" signal
+
   Plan_rooms_sp()
     if gui.abort() then return "abort" end
     gui.progress(10)
@@ -153,11 +154,6 @@ function Level_Make(L, index, NUM)
     if gui.abort() then return "abort" end
     gui.progress(25)
 
---[[
-  Rooms_height_up()
-    if gui.abort() then return "abort" end
-    gui.progress(30)
---]]
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
 
@@ -169,7 +165,7 @@ function Level_Make(L, index, NUM)
     end
   end
 
-  Rooms_lay_out()
+  Rooms_lay_out_II()
     if gui.abort() then return "abort" end
     gui.progress(60)
 
@@ -179,9 +175,11 @@ function Level_Make(L, index, NUM)
 
   gui.end_level()
 
+  -- FIXME: invoke "level_finish" signal
   if HOOKS.make_level_gfx and LEVEL.description then
      HOOKS.make_level_gfx(LEVEL.description)
   end
+
   -- intra-level cleanup
   if index < NUM then
     LEVEL = nil
@@ -196,6 +194,8 @@ end
 
 
 function Level_MakeAll()
+
+  -- FIXME: invoke "all_start" signal
 
   assert(HOOKS.get_levels)
 
@@ -212,6 +212,7 @@ function Level_MakeAll()
     end
   end
 
+  -- FIXME: invoke "all_finish" signal
   if HOOKS.remap_music then
      HOOKS.remap_music()
   end

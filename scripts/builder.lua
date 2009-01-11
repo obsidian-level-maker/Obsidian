@@ -2234,8 +2234,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
 
     -- FIXME: need brushes to fill space at sides of each doorway
 
-    local x_h = B.conn_h  -- FIXME: if steep, offset both by 16
-    local y_h = A.conn_h
+    local x_h = B.conn_h or 0  -- FIXME: if steep, offset both by 16
+    local y_h = A.conn_h or 0
 
     local steps = int(math.abs(x_h - y_h) / 16)
     if steps < 5 then steps = 5 end
@@ -2296,8 +2296,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       w_face = { texture="STARGR1" },
     }
 
-    local h1 = A.conn_h
-    local h3 = B.conn_h
+    local h1 = A.conn_h or 0
+    local h3 = B.conn_h or 0
     local h2 = (h1 + h3) / 2
 
     local steps = int(math.abs(h2 - h1) / 16)
@@ -2394,8 +2394,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local rw, rh   = rx2 - rx1, ry2 - ry1
 
 
-    local h1 = A.conn_h
-    local h3 = B.conn_h
+    local h1 = A.conn_h or 0
+    local h3 = B.conn_h or 0
     local h2 = (h1 + h3) / 2
 
     local steps = int(math.abs(h2 - h1) / 16)
@@ -2550,8 +2550,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       w_face = { texture="STARGR1" },
     }
 
-    local h1 = A.conn_h
-    local h2 = B.conn_h
+    local h1 = A.conn_h or 0
+    local h2 = B.conn_h or 0
 
     local gap_h = 128
 
