@@ -512,8 +512,9 @@ end
 function Plan_SubRooms()
   local id = PLAN.last_id + 1
 
-  --                    1  2  3  4  5   6   7   8+
-  local SUB_CHANCES = { 0, 0, 1, 3, 10, 20, 30, 50 }
+  --                    1  2  3   4   5   6   7   8+
+  local SUB_CHANCES = { 0, 0, 1,  3, 10, 20, 30, 50 }
+  local SUB_HEAPS   = { 0, 0, 6, 20, 40, 60, 75, 90 }
 
   local function can_fit(R, x, y, w, h)
     if w >= R.sw or h >= R.sh then return nil end
@@ -555,7 +556,11 @@ function Plan_SubRooms()
       return 200
     end
 
-    return w * 5 * sel(touches_wall or touches_other, 2, 1)
+    -- probability based on volume ratio
+    local vr = w * h * 3 / R.svolume
+    if vr < 1 then vr = 1 / vr end
+
+    return 200 / (vr * vr)
   end
 
   local function try_add_sub_room(parent)
@@ -613,6 +618,8 @@ function Plan_SubRooms()
     if not parent.children then parent.children = {} end
     table.insert(parent.children, ROOM)
 
+    parent.svolume = parent.svolume - ROOM.svolume
+
     -- update seed map
     for sx = ROOM.sx1,ROOM.sx2 do
       for sy = ROOM.sy1,ROOM.sy2 do
@@ -625,22 +632,29 @@ function Plan_SubRooms()
   ---| Plan_SubRooms |---
 
   PLAN.island_mode = rand_odds(40)
-  gui.debugf("Island mode: %s\n", sel(PLAN.island_mode, "TRUE", "false"))
+  gui.debugf("Island mode: %s\n", bool_str(PLAN.island_mode))
+
+  PLAN.subroom_mode = rand_index_by_probs({ 30, 90, 5 }) - 1
+  gui.debugf("Subroom mode: %s\n", PLAN.subroom_mode)
 
   Seed_dump_rooms()
+
+  if PLAN.subroom_mode == 0 then return end
+
+  local chance_tab = sel(PLAN.subroom_mode == 1, SUB_CHANCES, SUB_HEAPS)
 
   for _,R in ipairs(PLAN.all_rooms) do
     if not R.parent then
       local min_d = math.max(R.sw, R.sh)
       if min_d > 8 then min_d = 8 end
 
-      if rand_odds(SUB_CHANCES[min_d]) then
+      if rand_odds(chance_tab[min_d]) then
         try_add_sub_room(R)
 
-        if min_d >= 5 and rand_odds(15) then try_add_sub_room(R) end
-        if min_d >= 6 and rand_odds(90) then try_add_sub_room(R) end
-        if min_d >= 7 and rand_odds(30) then try_add_sub_room(R) end
-        if min_d >= 8 and rand_odds(60) then try_add_sub_room(R) end
+        if min_d >= 5 and rand_odds(10) then try_add_sub_room(R) end
+        if min_d >= 6 and rand_odds(65) then try_add_sub_room(R) end
+        if min_d >= 7 and rand_odds(25) then try_add_sub_room(R) end
+        if min_d >= 8 and rand_odds(90) then try_add_sub_room(R) end
       end
     end
   end
