@@ -34,6 +34,12 @@ function dist(x1,y1, x2,y2)
   return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
 end
 
+function bool_str(n)
+  if n == nil   then return "nil"   end
+  if n == false then return "false" end
+  return "TRUE"
+end
+
 function low_high(a, b)
   if b < a then return b, a end
   return a, b
