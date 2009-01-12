@@ -388,6 +388,23 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
 end
 
 
+function Room_spot_for_wotsit(R, kind)
+  -- FIXME !!!! CRUD
+  local sx, sy, S
+
+  repeat
+    sx = rand_irange(R.sx1, R.sx2)
+    sy = rand_irange(R.sy1, R.sy2)
+
+    S = SEEDS[sx][sy][1]
+  until S.room == R and not S.has_wotsit
+
+  S.has_wotsit = true
+
+  return sx, sy, S
+end
+
+
 function Rooms_lay_out_II()
 
   gui.printf("\n--==| Rooms_lay_out II |==--\n\n")

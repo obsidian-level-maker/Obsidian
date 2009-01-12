@@ -42,7 +42,7 @@ class ARENA
                 -- room, or the string "EXIT" if this arena leads
                 -- to the exit room.
                 -- Never nil.
-  
+
   path : array(CONN)  -- full path of rooms from 'start' to 'target'
 
   target_item : FIXME
@@ -426,6 +426,7 @@ end
     rooms = {},
     conns = {},
     start = arena.start,
+    lock  = LOCK,
     target_item = LOCK.key_item,
   }
 
@@ -434,6 +435,7 @@ end
     rooms = {},
     conns = {},
     start = LOCK.conn.dest,
+    lock  = arena.lock,
     target_item = arena.target_item,
   }
 
@@ -509,7 +511,7 @@ function Quest_add_lock()
       return false
     end
 
-    -- Wolf3d: ensure two locked doors have perpendicular dirs
+    -- Wolf3d: require two locked doors to be perpendicular
     if CAPS.one_lock_tex and #PLAN.all_locks == 1 then
       local old_dir = PLAN.all_locks[1].conn.dir
       assert(old_dir and C.dir)
@@ -681,6 +683,59 @@ function Quest_order_by_visit()
 end
 
 
+function Quest_key_distances()
+  -- determine distance (approx) between key and the door it opens.
+  -- the biggest distances will use actual keys (which are limited)
+  -- whereas everything else will use switched doors.
+
+  local function lock_in_path(A, lock)
+    if table_empty(A.path) then
+      if A.start:has_lock(lock) then return 1 end
+    else
+      for c_idx,C in ipairs(A.path) do
+        if C.src:has_lock(lock) then
+          return 1 + #A.path - c_idx
+        end
+      end
+    end
+
+    if A.target:has_lock(lock) then return 0 end
+
+    return nil -- not here
+  end
+
+  local function dist_to_lock(arena_idx, lock)
+    local dist = 0
+
+    while arena_idx >= 1 do
+      local d = lock_in_path(PLAN.all_arenas[arena_idx], lock)
+      if d then
+        return dist + d  -- Yay!
+      end
+
+      -- try earler arena
+      dist = dist + #PLAN.all_arenas[arena_idx].path
+      arena_idx = arena_idx - 1
+    end
+
+    -- FIXME: SHOULD NOT HAPPEN (arenas in wrong order ???)
+    gui.printf("WARNING: Quest_key_distances: cannot find locked door")
+    return 22
+  end
+
+  ---| Quest_key_distances |---
+
+  gui.debugf("Key Distances:\n")
+
+  for index,A in ipairs(PLAN.all_arenas) do
+    if A.lock ~= "EXIT" then
+      A.lock.distance = dist_to_lock(index, A.lock)
+      gui.debugf("  Arena #%d : dist %d\n", index, A.lock.distance)
+    end
+  end
+end
+
+
 function Quest_assign()
 
   gui.printf("\n--==| Quest_assign |==--\n\n")
@@ -706,6 +761,7 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
     rooms = {},
     conns = shallow_copy(PLAN.all_conns),
     target_item = "EXIT",
+    lock = "EXIT",
   }
 
   for _,R in ipairs(PLAN.all_rooms) do
@@ -741,6 +797,8 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
   Quest_add_keys()
 
   Quest_order_by_visit()
+
+  Quest_key_distances()
 
 
   -- TEMP CRUD FOR BUILDER....
