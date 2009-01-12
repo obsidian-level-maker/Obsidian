@@ -70,6 +70,15 @@ ROOM_CLASS =
     return true
   end,
 
+  has_lock = function(self, lock)
+    for _,D in ipairs(self.conns) do
+      if D.lock == lock then
+        return true
+      end
+    end
+    return false
+  end,
+
   valid_T = function(self, x, y)
     if x < self.tx1 or x > self.tx2 then return false end
     if y < self.ty1 or y > self.ty2 then return false end
