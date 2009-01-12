@@ -478,17 +478,20 @@ end
   end
 
 
-  -- link in the newbies...
-  table.insert(PLAN.all_arenas, front_A)
-  table.insert(PLAN.all_arenas, back_A)
+  -- find oldie to replace with the newbies...
+  -- [this logic ensures the 'all_arenas' list stays in visit order]
 
-  -- remove the oldie....
+  local old_pos
   for index,A in ipairs(PLAN.all_arenas) do
-    if arena == A then
-      table.remove(PLAN.all_arenas, index)
-      break;
-    end
+    if arena == A then old_pos = index ; break end
   end
+  assert(old_pos)
+
+
+  table.insert(PLAN.all_arenas, old_pos+1, front_A)
+  table.insert(PLAN.all_arenas, old_pos+2, back_A)
+
+  table.remove(PLAN.all_arenas, old_pos)
 
   gui.debugf("Successful split, new sizes: %d+%d | %d+%d\n",
              #front_A.rooms, #front_A.conns,
@@ -623,6 +626,61 @@ R.key_item = arena.target_item
 end
 
 
+function Quest_order_by_visit()
+  -- put rooms in the 'all_rooms' list into the order which the
+  -- player will most likely visit them.
+
+  local visit_time = 1
+
+  local function visit_room(R, path, p_idx)
+    assert(not R.visit_time)
+
+    R.visit_time = visit_time
+    visit_time = visit_time + 1
+
+    for _,C in ipairs(R.conns) do
+      C.tmp_visit = 0
+
+      if C.src ~= R or C.lock then
+        -- ignore it
+      elseif C == path[p_idx] then
+        C.tmp_visit = 9  -- do path-to-key last
+      elseif C.dest.parent == R then
+        C.tmp_visit = 2 + gui.random()
+      else
+        C.tmp_visit = 4 + gui.random()
+      end
+    end
+
+    table.sort(R.conns, function(A,B) return A.tmp_visit < B.tmp_visit end)
+
+    for _,C in ipairs(R.conns) do
+      if C.src ~= R or C.lock then
+        -- ignore it
+      elseif C == path[p_idx] then
+        visit_room(C.dest, path, p_idx+1)
+      else
+        visit_room(C.dest, {}, 1)
+      end
+    end
+  end
+
+  ---| Quest_order_by_visit |---
+
+  for _,A in ipairs(PLAN.all_arenas) do
+    visit_room(A.start, A.path, 1)
+  end
+
+  table.sort(PLAN.all_rooms, function(A,B) return A.visit_time < B.visit_time end)
+
+  gui.debugf("Room Visit Order:\n")
+  for _,R in ipairs(PLAN.all_rooms) do
+    gui.debugf("  %d : %s %s %s\n",
+               R.visit_time, R:tostr(), R.kind, R.purpose or "-");
+  end
+end
+
+
 function Quest_assign()
 
   gui.printf("\n--==| Quest_assign |==--\n\n")
@@ -681,6 +739,8 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
   end
 
   Quest_add_keys()
+
+  Quest_order_by_visit()
 
 
   -- TEMP CRUD FOR BUILDER....
