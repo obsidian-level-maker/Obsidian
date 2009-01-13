@@ -57,13 +57,13 @@ DM_THINGS =
 
   --- PICKUPS ---
 
-  k_red     = { id=38, kind="pickup", r=20,h=16, pass=true },
-  k_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true },
-  k_blue    = { id=40, kind="pickup", r=20,h=16, pass=true },
+  kc_red     = { id=13, kind="pickup", r=20,h=16, pass=true },
+  kc_yellow  = { id=6,  kind="pickup", r=20,h=16, pass=true },
+  kc_blue    = { id=5,  kind="pickup", r=20,h=16, pass=true },
 
-  kc_blue   = { id=5,  kind="pickup", r=20,h=16, pass=true },
-  kc_yellow = { id=6,  kind="pickup", r=20,h=16, pass=true },
-  kc_red    = { id=13, kind="pickup", r=20,h=16, pass=true },
+  ks_red     = { id=38, kind="pickup", r=20,h=16, pass=true },
+  ks_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true },
+  ks_blue    = { id=40, kind="pickup", r=20,h=16, pass=true },
 
   shotty = { id=2001, kind="pickup", r=20,h=16, pass=true },
   super  = { id=  82, kind="pickup", r=20,h=16, pass=true },
@@ -1305,7 +1305,7 @@ DM_DOORS =
 
 DM_KEY_DOORS =
 {
-  k_blue =
+  kc_blue =
   {
     w=128, h=112,
 
@@ -1313,16 +1313,16 @@ DM_KEY_DOORS =
     
     skin =
     {
-      key_w="DOORBLU2",
+      key_w="DOORBLU",
       door_w="BIGDOOR4", door_c="FLOOR3_3",
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
-      door_kind=26, tag=0,  -- kind_once=32
+      door_kind=32, tag=0,  -- kind_mult=26
     }
   },
 
-  k_yellow =
+  kc_yellow =
   {
     w=128, h=112,
 
@@ -1330,16 +1330,16 @@ DM_KEY_DOORS =
 
     skin =
     {
-      key_w="DOORYEL2",
+      key_w="DOORYEL",
       door_w="BIGDOOR4", door_c="FLOOR3_3",
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
-      door_kind=27, tag=0, -- kind_once=34
+      door_kind=34, tag=0, -- kind_mult=27
     }
   },
 
-  k_red =
+  kc_red =
   {
     w=128, h=112,
 
@@ -1347,15 +1347,16 @@ DM_KEY_DOORS =
 
     skin =
     {
-      key_w="DOORRED2",
+      key_w="DOORRED",
       door_w="BIGDOOR4", door_c="FLOOR3_3",
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
-      door_kind=28, tag=0, -- kind_once=33
+      door_kind=33, tag=0, -- kind_mult=28
     }
   },
 
+  -- TODO: ks_*
 }
 
 DM_LIFTS =
@@ -2990,19 +2991,19 @@ DM_INITIAL_MODEL =
   }
 }
 
-DM_KEY_CARDS =
-{
-  red    = { pickup="kc_red",    tex="DOORRED", door_kind=33 },
-  blue   = { pickup="kc_blue",   tex="DOORBLU", door_kind=32 },
-  yellow = { pickup="kc_yellow", tex="DOORYEL", door_kind=34 },
-}
-
-DM_SKULL_KEYS =
-{
-  red    = { pickup="k_red",    tex="DOORRED2", door_kind=33 },
-  blue   = { pickup="k_blue",   tex="DOORBLU2", door_kind=32 },
-  yellow = { pickup="k_yellow", tex="DOORYEL2", door_kind=34 },
-}
+---## DM_KEY_CARDS =
+---## {
+---##   red_cd    = { pickup="kc_red",    tex="DOORRED", door_kind=33 },
+---##   blue_cd   = { pickup="kc_blue",   tex="DOORBLU", door_kind=32 },
+---##   yellow_cd = { pickup="kc_yellow", tex="DOORYEL", door_kind=34 },
+---## }
+---## 
+---## DM_SKULL_KEYS =
+---## {
+---##   red_sk    = { pickup="k_red",    tex="DOORRED2", door_kind=33 },
+---##   blue_sk   = { pickup="k_blue",   tex="DOORBLU2", door_kind=32 },
+---##   yellow_sk = { pickup="k_yellow", tex="DOORYEL2", door_kind=34 },
+---## }
 
 
 -----==============######################==============-----
@@ -3010,31 +3011,31 @@ DM_SKULL_KEYS =
 
 ---- QUEST STUFF ----------------
 
-D1_QUESTS =
-{
-  key =
-  {
-    k_blue=50, k_red=50, k_yellow=50
-  },
-
-  switch =
-  {
-    sw_blue=50, sw_hot=30,
-    sw_vine=10, sw_skin=40,
-    sw_metl=50, sw_gray=20,
-  },
-
-  weapon =
-  {
-    saw=10, launch=80, plasma=60, bfg=5
-  },
-
-  item =
-  {
-    blue_armor=40, invis=40, backpack=25,
-    berserk=20, goggle=5, invul=2, map=3
-  },
-}
+---## D1_QUESTS =
+---## {
+---##   key =
+---##   {
+---##     k_blue=50, k_red=50, k_yellow=50
+---##   },
+---## 
+---##   switch =
+---##   {
+---##     sw_blue=50, sw_hot=30,
+---##     sw_vine=10, sw_skin=40,
+---##     sw_metl=50, sw_gray=20,
+---##   },
+---## 
+---##   weapon =
+---##   {
+---##     saw=10, launch=80, plasma=60, bfg=5
+---##   },
+---## 
+---##   item =
+---##   {
+---##     blue_armor=40, invis=40, backpack=25,
+---##     berserk=20, goggle=5, invul=2, map=3
+---##   },
+---## }
 
 D1_COMBOS =
 {
@@ -3278,7 +3279,8 @@ function Doom1_get_levels()
 
         theme = "TECH",
 
-        keys = DM_KEY_CARDS,
+        keys = { "kc_red", "kc_blue", "kc_yellow" },
+        switches = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
 
         sky_info = D1_SKY_INFO[episode],
 
@@ -3394,10 +3396,12 @@ function Doom_common_setup()
   Game_merge_tab("crates", DM_CRATES)
 
   Game_merge_tab("liquids", DM_LIQUIDS)
-  Game_merge_tab("switches", DM_SWITCHES)
   Game_merge_tab("doors", DM_DOORS)
-  Game_merge_tab("key_doors", DM_KEY_DOORS)
   Game_merge_tab("lifts", DM_LIFTS)
+
+  Game_merge_tab("switch_infos", DM_SWITCHES)  -- FIXME: pull apart
+  Game_merge_tab("switch_doors", DM_SWITCHES)  -- FIXME: pull apart
+  Game_merge_tab("key_doors", DM_KEY_DOORS)
 
   Game_merge_tab("images", DM_IMAGES)
   Game_merge_tab("lights", DM_LIGHTS)

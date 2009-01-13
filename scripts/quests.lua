@@ -337,6 +337,7 @@ function Quest_lock_up_arena(arena)
 
     gui.debugf("  start room  S(%d,%d)\n",  A.start.sx1, A.start.sy1)
     gui.debugf("  target room S(%d,%d)\n", A.target.sx1, A.target.sy1)
+    -- NOTE: item not set yet!
     gui.debugf("  lock: %s %s\n", A.lock.kind or "????", A.lock.item or "????")
 
     gui.debugf("  PATH:\n")
@@ -380,9 +381,8 @@ function Quest_lock_up_arena(arena)
 
   local LOCK =
   {
-    -- FIXME: proper kind/item values
+    -- kind and item set later!
     kind = "KEY",
-    item = 1 + #PLAN.all_locks,
 
     conn = LC,
     tag  = PLAN:alloc_tag(),
@@ -611,10 +611,12 @@ repeat
 until SEEDS[ex][ey][1].room == R
 SEEDS[ex][ey][1].is_exit = true
 
-    else
-      R.purpose = "KEY"
--- TEMP CRUD
-R.key_item = arena.lock.item
+    elseif arena.lock.kind == "KEY" then
+      R.purpose = arena.lock.kind
+      R.key_item = arena.lock.item  -- BLEH!
+
+    elseif arena.lock.kind == "SWITCH" then
+      -- FIXME: SWITCH !!!!!
     end
   end
 end
@@ -720,9 +722,42 @@ function Quest_key_distances()
   gui.debugf("Key Distances:\n")
 
   for index,A in ipairs(PLAN.all_arenas) do
-    if A.lock.kind ~= "EXIT" then
-      A.lock.distance = dist_to_lock(index, A.lock)
-      gui.debugf("  Arena #%d : dist %d\n", index, A.lock.distance)
+    if A.lock.kind == "EXIT" then
+      A.lock.distance = 0
+    else
+      A.lock.distance = dist_to_lock(index, A.lock) + gui.random() / 5.0
+    end
+    gui.debugf("  Arena #%d : dist %1.2f\n", index, A.lock.distance)
+  end
+end
+
+
+function Quest_choose_keys()
+
+  table.sort(PLAN.all_locks, function(A,B) return A.distance > B.distance end)
+
+  local use_keys     = shallow_copy(LEVEL.keys or GAME.keys) 
+  local use_switches = shallow_copy(LEVEL.switches or GAME.switches)
+
+  rand_shuffle(use_keys)
+  rand_shuffle(use_switches)
+
+  -- use less keys when number of locked doors is small
+  local want_keys = #use_keys
+  while want_keys > 1 and (#PLAN.all_locks-1 < want_keys * 2) and rand_odds(80) do
+    want_keys = want_keys - 1
+  end
+
+  for i = 1,#PLAN.all_locks do
+    local LOCK = PLAN.all_locks[i]
+    if LOCK.kind ~= "EXIT" then
+      if i <= want_keys then
+        LOCK.kind = "KEY"
+        LOCK.item = use_keys[i]
+      else
+        LOCK.kind = "SWITCH"
+        LOCK.item = use_switches[1 + (i-1) % #use_switches]
+      end
     end
   end
 end
@@ -791,11 +826,11 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
     end
   end
 
-  Quest_add_keys()
-
   Quest_order_by_visit()
 
   Quest_key_distances()
+  Quest_choose_keys()
+  Quest_add_keys()
 
 
   -- TEMP CRUD FOR BUILDER....

@@ -1605,33 +1605,33 @@ D2_THEMES =
 
 ------------------------------------------------------------
 
-D2_QUESTS =
-{
-  key =
-  {
-    k_blue=50, k_red=50, k_yellow=50
-  },
-
-  switch =
-  {
-    sw_blue=50, sw_hot=30,
-    sw_vine=10, -- sw_skin=40,
-    sw_metl=50, sw_gray=20,
-    -- FIXME: sw_rock=10,
-    -- FIXME: sw_wood=30, 
-  },
-
-  weapon =
-  {
-    saw=10, super=40, launch=80, plasma=60, bfg=5
-  },
-
-  item =
-  {
-    blue_armor=40, invis=40, mega=25, backpack=25,
-    berserk=20, goggle=5, invul=2, map=3
-  },
-}
+---## D2_QUESTS =
+---## {
+---##   key =
+---##   {
+---##     k_blue=50, k_red=50, k_yellow=50
+---##   },
+---## 
+---##   switch =
+---##   {
+---##     sw_blue=50, sw_hot=30,
+---##     sw_vine=10, -- sw_skin=40,
+---##     sw_metl=50, sw_gray=20,
+---##     -- FIXME: sw_rock=10,
+---##     -- FIXME: sw_wood=30, 
+---##   },
+---## 
+---##   weapon =
+---##   {
+---##     saw=10, super=40, launch=80, plasma=60, bfg=5
+---##   },
+---## 
+---##   item =
+---##   {
+---##     blue_armor=40, invis=40, mega=25, backpack=25,
+---##     berserk=20, goggle=5, invul=2, map=3
+---##   },
+---## }
 
 D2_EPISODE_THEMES =
 {
@@ -1704,7 +1704,8 @@ function Doom2_get_levels()
 
       theme = "TECH",
 
-      keys = DM_KEY_CARDS,
+      keys = { "kc_red", "kc_blue", "kc_yellow" },
+      switches = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
 
       -- allow TNT and Plutonia to override the sky stuff
       sky_info = GAME.sky_info[episode],

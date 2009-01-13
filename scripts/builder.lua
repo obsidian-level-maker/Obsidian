@@ -311,7 +311,7 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
 end
 
 
-function make_locked_door(S, side, z1, w_tex, key_tex)
+function make_locked_door(S, side, z1, w_tex, info)
 
   local N = S:neighbor(side)
   assert(N)
@@ -329,12 +329,13 @@ function make_locked_door(S, side, z1, w_tex, key_tex)
   local mx = int(long / 2)
   local my = 0
 
+gui.debugf("INFO = %s\n", table_to_str(info,3))
   local door_h = 112
   local door_info =
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
-    w_face = { texture="BIGDOOR2", peg=true, x_offset=0, y_offset=0 },
+    w_face = { texture=assert(info.skin.door_w), peg=true, x_offset=0, y_offset=0 },
 --  w_face = { texture="PIPES", peg=true, x_offset=0, y_offset=0 },
     flag_door = true
   }
@@ -357,7 +358,7 @@ function make_locked_door(S, side, z1, w_tex, key_tex)
   {
     t_face = { texture="FLAT18" },
     b_face = { texture="FLAT18" },
-    w_face = { texture=key_tex, x_offset=0, y_offset=0 },
+    w_face = { texture=assert(info.skin.key_w), x_offset=0, y_offset=0 },
   }
 
   transformed_brush2(T, step_info,
@@ -2948,13 +2949,16 @@ gui.printf("do_teleport\n")
          not (S.conn and S.conn.already_made_lock)
       then
         local LOCK = assert(S.border[side].lock)
-        local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
-                            "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
-        local key_tex = LOCK_TEXS[LOCK.item] or "METAL"
-gui.printf("ADDING LOCK DOOR %s\n", key_tex)
-gui.printf(">> side:%d of %s\n", side, R:tostr())
+        local INFO
+        if LOCK.kind == "KEY" then
+          INFO = assert(GAME.key_doors[LOCK.item])
+        else
+          assert(LOCK.kind == "SWITCH")
+          INFO = assert(GAME.switch_doors[LOCK.item])
+          INFO = assert(INFO.door)
+        end
 
-        make_locked_door(S, side, z1, w_tex, key_tex)
+        make_locked_door(S, side, z1, w_tex, INFO)
         S.conn.already_made_lock = true
       end
 
@@ -3174,11 +3178,10 @@ end
 
     if S.room and S.room.key_item and not S.room.did_key_item then
       S.room.did_key_item = true
-      local KEYS = { 13,6,5,7015, 38,39,40, 7017 }
-gui.printf("ADDING KEY %d\n", KEYS[S.room.key_item] or 2014)
+gui.debugf("KEY ITEM = %s\n", S.room.key_item)
       gui.add_entity(mx, my, z1+25,
       {
-        name = tostring(KEYS[S.room.key_item] or 2014),
+        name = tostring(GAME.things[S.room.key_item].id),
       })
     end
   end
