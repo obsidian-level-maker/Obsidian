@@ -405,6 +405,61 @@ function Room_spot_for_wotsit(R, kind)
 end
 
 
+
+local function Room_layout_II(R)
+
+  local function make_fences()
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+        for side = 2,8,2 do
+          local N = S:neighbor(side)
+          if N and N.room and N.room ~= R and
+             not N.room.outdoor and
+             S.border[side].kind == "wall"
+          then
+gui.debugf("APPLIED FENCE @ (%d,%d) dir:%d N:%s\n", x, y, side, tostring(N))
+             S.border[side].kind = "fence"
+          end
+        end
+      end
+    end end -- for x,y
+  end
+
+  local function make_windows()
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and (x == R.sx1 or x == R.sx2 or y == R.sy1 or y == R.sy2) then
+        for side = 2,8,2 do
+          local N = S:neighbor(side)
+          if N and (N.sx < R.sx1 or N.sx > R.sx2 or N.sy < R.sy1 or N.sy > R.sy2) and
+             N.room and N.room.outdoor and
+             S.border[side].kind == "wall"
+          then
+gui.debugf("APPLIED WINDOW @ (%d,%d) dir:%d N:%s\n", x, y, side, tostring(N))
+             S.border[side].kind = "window"
+          end
+        end
+      end
+    end end -- for x,y
+  end
+
+
+  ---==| Room_layout_II |==---
+
+  if R.outdoor then
+    make_fences()
+  end
+
+  if R.kind == "indoor" then
+    make_windows()
+  end
+
+  -- ETC ETC !!!
+
+end
+
+
 function Rooms_lay_out_II()
 
   gui.printf("\n--==| Rooms_lay_out II |==--\n\n")
@@ -421,8 +476,7 @@ function Rooms_lay_out_II()
   Rooms_decide_hallways_II()
 
   for _,R in ipairs(PLAN.all_rooms) do
---!!!!    Room_LayItOut(R)
+    Room_layout_II(R)
   end
-
 end
 

@@ -2978,9 +2978,9 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "fence"
-         and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
+--!!!!     and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
       then
-        make_fence(S, side, R.floor_h, f_tex, w_tex)
+        make_fence(S, side, R.floor_h or z1, f_tex, w_tex)
       end
 
       if B_kind == "arch" then
