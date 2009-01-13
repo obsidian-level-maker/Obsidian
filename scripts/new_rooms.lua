@@ -102,10 +102,10 @@ function Rooms_decide_outdoors()
 
     -- room on edge of map?
     if R.sx1 <= 2 or R.sy1 <= 2 or R.sx2 >= SEED_W-1 or R.sy2 >= SEED_H-1 then
-      return rand_odds(40)
+      return rand_odds(35)
     end
 
-    return rand_odds(10)
+    return rand_odds(8)
   end
 
   ---| Rooms_decide_outdoors |---
@@ -294,7 +294,7 @@ function Rooms_decide_hallways_II()
 ---##       return (R.outdoor and R.num_branch >= 2)
 ---##     end
 
-    if R.outdoor or R.kind == "scenic" then
+    if R.outdoor or R.kind == "scenic" or R.children then
       return false
     end
 
@@ -447,15 +447,20 @@ local function Room_layout_II(R)
   local function make_fences()
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
-      if S.room == R then
-        for side = 2,8,2 do
+      for side = 2,8,2 do
+        if S.room == R and S.border[side].kind == "wall" then
           local N = S:neighbor(side)
-          if N and N.room and N.room ~= R and
-             not N.room.outdoor and
-             S.border[side].kind == "wall"
-          then
-gui.debugf("APPLIED FENCE @ (%d,%d) dir:%d N:%s\n", x, y, side, tostring(N))
+
+          if not (N and N.room) then
+            S.border[side].kind = "sky_fence"
+          end
+
+          if N and N.room and N.room ~= R and N.room.outdoor then
              S.border[side].kind = "fence"
+          end
+
+          if N and N.room and N.room ~= R and not N.room.outdoor then
+             S.border[side].kind = "mini_fence"
           end
         end
       end
@@ -483,11 +488,23 @@ gui.debugf("APPLIED WINDOW @ (%d,%d) dir:%d N:%s\n", x, y, side, tostring(N))
 
   ---==| Room_layout_II |==---
 
+  -- special stuff
+  if R.kind == "stairwell" then
+    Build_stairwell(R)
+    return
+  end
+
+  if R.purpose == "EXIT" and not R.outdoor and not R:has_any_lock() then
+    Build_small_exit(R)
+    return
+  end
+
+
   if R.outdoor then
     make_fences()
   end
 
-  if R.kind == "indoor" then
+  if R.kind == "indoor" and R.purpose ~= "EXIT" then
     make_windows()
   end
 

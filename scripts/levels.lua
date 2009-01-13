@@ -34,10 +34,10 @@ require 'util'
 require 'seeds'
 require 'new_plan'
 require 'connect'
-require 'quests'
-require 'new_rooms'
-require 'builder'
 require 'naming'
+require 'quests'
+require 'builder'
+require 'new_rooms'
 
 --!! require 'monsters'
 
@@ -164,6 +164,12 @@ function Level_Make(L, index, NUM)
       gui.property("description", LEVEL.description)
     end
   end
+
+  if PARAMS.error_tex then
+    gui.property("error_tex",  PARAMS.error_tex)
+    gui.property("error_flat", PARAMS.error_flat or PARAMS.error_tex)
+  end   
+
 
   Rooms_lay_out_II()
     if gui.abort() then return "abort" end

@@ -242,7 +242,7 @@ function make_sky_fence(S, side)
     { x=sx1, y=sy2 }, { x=sx1, y=sy1 },
   }
 
-  local z = math.max(PLAN.skyfence_h, (S.room.floor_h) + 64)
+  local z = math.max(PLAN.skyfence_h, (S.room.floor_h or 0) + 64)
 
   transformed_brush2(nil, wall_info,  w_coords, -4000, z)
   transformed_brush2(nil, wall2_info, s_coords, -4000, PLAN.skyfence_h - 64)
@@ -1722,7 +1722,7 @@ function make_outdoor_exit_switch(S, dir, f_h)
 end
 
 
-function make_small_exit(R)
+function Build_small_exit(R)
 
   assert(#R.conns == 1)
 
@@ -2203,7 +2203,7 @@ function make_popup_trap(S, z1, skin, combo)
 end
 
 
-function build_stairwell(R)
+function Build_stairwell(R)
 
   local function build_stairwell_90(R)
     assert(R.conns)
@@ -2977,18 +2977,21 @@ gui.printf("do_teleport\n")
         make_window(S, side, 192, z1+64, z2-32, f_tex, w_tex)
       end
 
-      if B_kind == "fence"
---!!!!     and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind)
-      then
+      if B_kind == "fence" then
+--!!!!     and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind then
         make_fence(S, side, R.floor_h or z1, f_tex, w_tex)
+      end
+
+      if B_kind == "mini_fence" then
+        -- do nothing
+      end
+
+      if B_kind == "sky_fence" then
+        make_sky_fence(S, side)
       end
 
       if B_kind == "arch" then
         make_archway(S, side, z1, z2, f_tex, w_tex) 
-      end
-
-      if B_kind == "skyfence" then
-        make_sky_fence(S, side)
       end
 
       if B_kind == "lock_door" and
@@ -3141,7 +3144,7 @@ end
 
 
 -- diagonal corners
-if (not S.room.outdoor or true) and not (S.room.kind == "hallway") and
+if (not S.room.outdoor or false) and not (S.room.kind == "hallway") and
    not S.is_start
 then
   local z1
@@ -3243,23 +3246,7 @@ gui.debugf("SWITCH ITEM = %s\n", S.room.do_switch)
 
   gui.printf("\n---==| Builder |==---\n\n")
 
-  if PARAMS.error_tex then
-    gui.property("error_tex",  PARAMS.error_tex)
-    gui.property("error_flat", PARAMS.error_flat or PARAMS.error_tex)
-  end   
-
   gui.ticker()
-
-  assert(PLAN.exit_room)
-  if not PLAN.exit_room.outdoor then
-    make_small_exit(PLAN.exit_room)
-  end
-
-  for _,R in ipairs(PLAN.all_rooms or {}) do
-    if R.kind == "stairwell" then
-      build_stairwell(R)
-    end
-  end
 
   for y = 1, SEED_H do
     for x = 1, SEED_W do
