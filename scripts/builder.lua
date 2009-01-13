@@ -311,7 +311,9 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
 end
 
 
-function make_locked_door(S, side, z1, w_tex, info)
+function make_locked_door(S, side, z1, w_tex, info, tag)
+
+  tag2 = nil  -- FIXME !!!
 
   local N = S:neighbor(side)
   assert(N)
@@ -337,7 +339,8 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
     b_face = { texture="FLAT1" },
     w_face = { texture=assert(info.skin.door_w), peg=true, x_offset=0, y_offset=0 },
 --  w_face = { texture="PIPES", peg=true, x_offset=0, y_offset=0 },
-    flag_door = true
+    flag_door = true,
+    sec_tag = tag,
   }
 
   local frame_info =
@@ -379,7 +382,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
   },
   z1+8+door_h, 2000)
 
-  local KIND = 1
+  local KIND = assert(info.skin.line_kind)
 
 if TESTING_QUAKE1_DOORS then
   local m_ref = gui.q1_add_mapmodel(
@@ -413,10 +416,10 @@ if TESTING_QUAKE1_DOORS then
 else
   transformed_brush2(T, door_info,
   {
-    { x=mx+64, y=my-8, line_kind=KIND },
-    { x=mx+64, y=my+8, line_kind=KIND },
-    { x=mx-64, y=my+8, line_kind=KIND },
-    { x=mx-64, y=my-8, line_kind=KIND },
+    { x=mx+64, y=my-8, line_kind=KIND, line_tag=tag2 },
+    { x=mx+64, y=my+8, line_kind=KIND, line_tag=tag2 },
+    { x=mx-64, y=my+8, line_kind=KIND, line_tag=tag2 },
+    { x=mx-64, y=my-8, line_kind=KIND, line_tag=tag2 },
   },
   z1+64, 2000)
 end
@@ -1590,6 +1593,49 @@ function make_exit_pillar(S, z1)
     { x=mx-32, y=my-32, line_kind=11 },
   },
   -2000, z1+128)
+end
+
+
+function make_small_switch(S, dir, f_h, info, tag)
+
+  local DT, long = get_transform_for_seed_side(S, 10-dir)
+  local deep = long
+
+  local mx = int(long / 2)
+  local my = int(deep / 2)
+
+
+  local switch_info =
+  {
+    w_face = { texture=assert(info.skin.side_w) },
+    t_face = { texture=assert(info.skin.switch_f) },
+    b_face = { texture=assert(info.skin.switch_f) },
+  }
+
+  local switch_face = { texture=assert(info.skin.switch_w), peg=true, x_offset=0, y_offset=0 }
+
+  transformed_brush2(DT, switch_info,
+  {
+    { x=mx-40, y=my-40 },
+    { x=mx+40, y=my-40 },
+    { x=mx+56, y=my-24 },
+    { x=mx+56, y=my+24 },
+    { x=mx+40, y=my+40 },
+    { x=mx-40, y=my+40 },
+    { x=mx-56, y=my+24 },
+    { x=mx-56, y=my-24 },
+  },
+  -2000, f_h+16)
+
+  transformed_brush2(DT, switch_info,
+  {
+    { x=mx+32, y=my-8 },
+    { x=mx+32, y=my+8, w_face = switch_face, line_kind=assert(info.skin.line_kind), line_tag=tag },
+    { x=mx-32, y=my+8 },
+    { x=mx-32, y=my-8, w_face = switch_face, line_kind=assert(info.skin.line_kind), line_tag=tag },
+  },
+  -2000, f_h+16+64)
+
 end
 
 
@@ -2955,10 +3001,9 @@ gui.printf("do_teleport\n")
         else
           assert(LOCK.kind == "SWITCH")
           INFO = assert(GAME.switch_doors[LOCK.item])
-          INFO = assert(INFO.door)
         end
 
-        make_locked_door(S, side, z1, w_tex, INFO)
+        make_locked_door(S, side, z1, w_tex, INFO, LOCK.tag)
         S.conn.already_made_lock = true
       end
 
@@ -3183,6 +3228,13 @@ gui.debugf("KEY ITEM = %s\n", S.room.key_item)
       {
         name = tostring(GAME.things[S.room.key_item].id),
       })
+    end
+    if S.room and S.room.do_switch and not S.room.did_switch then
+      local LOCK = assert(S.room.lock_for_item)
+      S.room.did_switch = true
+gui.debugf("SWITCH ITEM = %s\n", S.room.do_switch)
+      local INFO = assert(GAME.switch_infos[S.room.do_switch])
+      make_small_switch(S, 4, z1, INFO, LOCK.tag)
     end
   end
 

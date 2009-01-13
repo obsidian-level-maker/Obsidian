@@ -614,9 +614,12 @@ SEEDS[ex][ey][1].is_exit = true
     elseif arena.lock.kind == "KEY" then
       R.purpose = arena.lock.kind
       R.key_item = arena.lock.item  -- BLEH!
+      R.lock_for_item = arena.lock
 
     elseif arena.lock.kind == "SWITCH" then
-      -- FIXME: SWITCH !!!!!
+      R.purpose = arena.lock.kind
+      R.do_switch = arena.lock.item  -- BLEH!
+      R.lock_for_item = arena.lock
     end
   end
 end

@@ -1069,208 +1069,6 @@ DM_LIQUIDS =
   lava  = { floor="LAVA1",   wall="ROCKRED1", sec_kind=16, add_light=64 }, -- 20% damage
 }
 
-DM_SWITCHES =
-{
-  sw_blue =
-  {
-    switch =
-    {
-      prefab = "SWITCH_FLOOR",
-      skin =
-      {
-        switch_w="SW1BLUE", side_w="COMPBLUE",
-        switch_f="FLAT14", switch_h=64,
-
-        beam_w="WOOD1", beam_f="FLAT5_2",
-
-        x_offset=0, y_offset=56, kind=103,
-      }
-    },
-
-    switch2 =
-    {
-      prefab = "SWITCH_FLOOR_BEAM",
-      skin =
-      {
-        switch_w="SW1BLUE", side_w="COMPBLUE",
-        switch_f="FLAT14", switch_h=64,
-
-        beam_w="WOOD1", beam_f="FLAT5_2",
-
-        x_offset=0, y_offset=56, kind=103,
-      }
-    },
-
-    door =
-    {
-      w=128, h=112,
-      prefab = "DOOR_LIT_LOCKED",
-      skin =
-      {
-        key_w="COMPBLUE",
-        door_w="BIGDOOR3", door_c="FLOOR7_2",
-        step_w="STEP1",  track_w="DOORTRAK",
-        frame_f="FLAT1", frame_c="FLAT1",
-        door_h=112,
-        door_kind=0,
-      }
-    },
-  },
-
-  sw_hot =
-  {
-    switch =
-    {
-      prefab = "SWITCH_PILLAR",
-      skin =
-      {
-        switch_w="SW1HOT", wall="SP_HOT1", kind=103,
-      }
-    },
-
-    door =
-    {
-      w=128, h=112,
-      prefab = "DOOR_LIT_LOCKED",
-      skin =
-      {
-        key_w="SP_HOT1",
-        door_w="BIGDOOR3", door_c="FLOOR7_2",
-        step_w="STEP1",  track_w="DOORTRAK",
-        frame_f="FLAT1", frame_c="FLAT1",
-        door_h=112,
-        door_kind=0,
-      }
-    },
-
-    bars =
-    {
-      w=128, h=112,
-      prefab = "BARS_FENCE_DOOR",
-      environment = "outdoor",
-      skin =
-      {
-        door_w="BIGDOOR7", door_f="CEIL5_2",
-        side_w="METAL",
---      beam_w="SP_HOT1", beam_f="FLAT5_3",
-        door_kind=0,
-      }
-    },
-  },
-
-  sw_skin =
-  {
-    --FIXME: SKINBORD is doom1 only
-    switch =
-    {
-      prefab = "SWITCH_PILLAR",
-      skin =
-      {
-        switch_w="SW1SKIN", wall="SKINBORD", kind=103,
-      }
-    },
-
-    door =
-    {
-      w=128, h=112,
-      prefab = "DOOR_LIT_LOCKED",
-      skin =
-      {
-        key_w="SKINFACE",
-        door_w="BIGDOOR3", door_c="FLOOR7_2",
-        step_w="STEP1",  track_w="DOORTRAK",
-        frame_f="FLAT1", frame_c="FLAT1",
-        door_h=112,
-        door_kind=0,
-      }
-    },
-  },
-
-  sw_vine =
-  {
-    switch =
-    {
-      prefab = "SWITCH_PILLAR",
-      skin =
-      {
-        switch_w="SW1VINE", wall="GRAYVINE", kind=103,
-      }
-    },
-
-    door =
-    {
-      w=128, h=112,
-      prefab = "DOOR_LIT_LOCKED",
-      skin =
-      {
-        key_w="GRAYVINE",
-        door_w="BIGDOOR3", door_c="FLOOR7_2",
-        step_w="STEP1",  track_w="DOORTRAK",
-        frame_f="FLAT1", frame_c="FLAT1",
-        door_h=112,
-        door_kind=0,
-      }
-    },
-  },
-
-  sw_metl =
-  {
-    switch =
-    {
-      prefab = "SWITCH_CEILING",
-      environment = "indoor",
-      skin =
-      {
-        switch_w="SW1GARG", side_w="METAL",
-        switch_c="CEIL5_2", switch_h=56,
-
-        beam_w="SUPPORT3", beam_c="CEIL5_2",
-
-        x_offset=0, y_offset=64, kind=23,
-      }
-    },
-
-    door =
-    {
-      w=128, h=128,
-      prefab = "BARS_1",
-      skin =
-      {
-        bar_w="SUPPORT3", bar_f="CEIL5_2",
-        door_kind=0,
-      }
-    },
-  },
-
-  sw_gray =
-  {
-    switch =
-    {
-      prefab = "SWITCH_PILLAR",
-      skin =
-      {
-        switch_w="SW1GRAY1", wall="GRAY1", kind=23,
-      }
-    },
-
-    door =
-    {
-      w=128, h=128,
-      prefab = "BARS_2",
-      skin =
-      {
-        bar_w="GRAY7", bar_f="FLAT19",
-        door_kind=0
-      },
-    },
-
-  },
-
---FIXME: (not in doom1)  sw_rock = { wall="ROCK3",    switch="SW1ROCK",  floor="RROCK13", bars=true },
---FIXME:  sw_wood = { wall="WOODMET1", switch="SW1WDMET", floor="FLAT5_1", bars=true, stand_h=128 },
-
-}
-
 DM_DOORS =
 {
   -- Note: most of these with h=112 are really 128 pixels
@@ -1303,6 +1101,191 @@ DM_DOORS =
   d_small2 = { wall="DOOR3",    w=64, h=72 },
 }
 
+
+DM_SWITCH_INFOS =
+{
+  sw_blue =
+  {
+      prefab = "SWITCH_FLOOR",
+      skin =
+      {
+        switch_w="SW1BLUE", side_w="COMPBLUE",
+        switch_f="FLAT14", switch_h=64,
+
+        beam_w="WOOD1", beam_f="FLAT5_2",
+
+        x_offset=0, y_offset=56, line_kind=103,
+      }
+  },
+
+  sw_blue2 =
+    {
+      prefab = "SWITCH_FLOOR_BEAM",
+      skin =
+      {
+        switch_w="SW1BLUE", side_w="COMPBLUE",
+        switch_f="FLAT14", switch_h=64,
+
+        beam_w="WOOD1", beam_f="FLAT5_2",
+
+        x_offset=0, y_offset=56, line_kind=103,
+      }
+    },
+
+
+  sw_hot =
+  {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1HOT", side_w="SP_HOT1", line_kind=103,
+        switch_f="FLAT5_3",
+      }
+
+  },
+
+  sw_skin =
+  {
+    --FIXME: SKINBORD is doom1 only
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1SKIN", side_w="SKINBORD", line_kind=103,
+        switch_f="SFLR6_4",
+      }
+  },
+
+  sw_vine =
+  {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1VINE", side_w="GRAYVINE", line_kind=103,
+        switch_f="FLAT1",
+      }
+  },
+
+  sw_metl =
+  {
+      prefab = "SWITCH_CEILING",
+      environment = "indoor",
+      skin =
+      {
+        switch_w="SW1GARG", side_w="METAL",
+        switch_c="CEIL5_2", switch_h=56,
+
+        beam_w="SUPPORT3", beam_c="CEIL5_2",
+
+        x_offset=0, y_offset=64, line_kind=23,
+      }
+  },
+
+  sw_gray =
+  {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1GRAY1", side_w="GRAY1", line_kind=23,
+        switch_f="FLAT1",
+      }
+
+  },
+
+--FIXME: (not in doom1)  sw_rock = { wall="ROCK3",    switch="SW1ROCK",  floor="RROCK13", bars=true },
+--FIXME:  sw_wood = { wall="WOODMET1", switch="SW1WDMET", floor="FLAT5_1", bars=true, stand_h=128 },
+
+}
+
+DM_SWITCH_DOORS =
+{
+  sw_blue =
+  {
+      w=128, h=112,
+      prefab = "DOOR_LIT_LOCKED",
+      skin =
+      {
+        key_w="COMPBLUE",
+        door_w="BIGDOOR3", door_c="FLOOR7_2",
+        step_w="STEP1",  track_w="DOORTRAK",
+        frame_f="FLAT1", frame_c="FLAT1",
+        door_h=112,
+        line_kind=0,
+      }
+  },
+
+  sw_hot =
+  {
+      w=128, h=112,
+      prefab = "DOOR_LIT_LOCKED",
+      skin =
+      {
+        key_w="SP_HOT1",
+        door_w="BIGDOOR3", door_c="FLOOR7_2",
+        step_w="STEP1",  track_w="DOORTRAK",
+        frame_f="FLAT1", frame_c="FLAT1",
+        door_h=112,
+        line_kind=0,
+      }
+
+  },
+
+  sw_skin =
+  {
+      w=128, h=112,
+      prefab = "DOOR_LIT_LOCKED",
+      skin =
+      {
+        key_w="SKINFACE",
+        door_w="BIGDOOR3", door_c="FLOOR7_2",
+        step_w="STEP1",  track_w="DOORTRAK",
+        frame_f="FLAT1", frame_c="FLAT1",
+        door_h=112,
+        line_kind=0,
+      }
+  },
+
+  sw_vine =
+  {
+      w=128, h=112,
+      prefab = "DOOR_LIT_LOCKED",
+      skin =
+      {
+        key_w="GRAYVINE",
+        door_w="BIGDOOR3", door_c="FLOOR7_2",
+        step_w="STEP1",  track_w="DOORTRAK",
+        frame_f="FLAT1", frame_c="FLAT1",
+        door_h=112,
+        line_kind=0,
+      }
+  },
+
+  sw_metl =
+  {
+      w=128, h=128,
+      prefab = "BARS_1",
+      skin =
+      {
+        bar_w="SUPPORT3", bar_f="CEIL5_2",
+        line_kind=0,
+      }
+  },
+
+  sw_gray =
+  {
+      w=128, h=128,
+      prefab = "BARS_2",
+      skin =
+      {
+        bar_w="GRAY7", bar_f="FLAT19",
+        line_kind=0
+      },
+  },
+
+--FIXME: (not in doom1)  sw_rock = { wall="ROCK3",    switch="SW1ROCK",  floor="RROCK13", bars=true },
+--FIXME:  sw_wood = { wall="WOODMET1", switch="SW1WDMET", floor="FLAT5_1", bars=true, stand_h=128 },
+
+}
+
 DM_KEY_DOORS =
 {
   kc_blue =
@@ -1318,7 +1301,7 @@ DM_KEY_DOORS =
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
-      door_kind=32, tag=0,  -- kind_mult=26
+      line_kind=32, tag=0,  -- kind_mult=26
     }
   },
 
@@ -1335,7 +1318,7 @@ DM_KEY_DOORS =
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
-      door_kind=34, tag=0, -- kind_mult=27
+      line_kind=34, tag=0, -- kind_mult=27
     }
   },
 
@@ -1352,7 +1335,7 @@ DM_KEY_DOORS =
       step_w="STEP1",  track_w="DOORTRAK",
       frame_f="FLAT1", frame_c="FLAT1",
       door_h=112,
-      door_kind=33, tag=0, -- kind_mult=28
+      line_kind=33, tag=0, -- kind_mult=28
     }
   },
 
@@ -3399,8 +3382,8 @@ function Doom_common_setup()
   Game_merge_tab("doors", DM_DOORS)
   Game_merge_tab("lifts", DM_LIFTS)
 
-  Game_merge_tab("switch_infos", DM_SWITCHES)  -- FIXME: pull apart
-  Game_merge_tab("switch_doors", DM_SWITCHES)  -- FIXME: pull apart
+  Game_merge_tab("switch_infos", DM_SWITCH_INFOS)
+  Game_merge_tab("switch_doors", DM_SWITCH_DOORS)
   Game_merge_tab("key_doors", DM_KEY_DOORS)
 
   Game_merge_tab("images", DM_IMAGES)
