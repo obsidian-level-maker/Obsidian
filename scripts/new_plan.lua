@@ -72,9 +72,14 @@ ROOM_CLASS =
 
   has_lock = function(self, lock)
     for _,D in ipairs(self.conns) do
-      if D.lock == lock then
-        return true
-      end
+      if D.lock == lock then return true end
+    end
+    return false
+  end,
+
+  has_any_lock = function(self)
+    for _,D in ipairs(self.conns) do
+      if D.lock then return true end
     end
     return false
   end,
