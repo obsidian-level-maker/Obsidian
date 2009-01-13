@@ -1612,7 +1612,7 @@ function make_small_switch(S, dir, f_h, info, tag)
     b_face = { texture=assert(info.skin.switch_f) },
   }
 
-  local switch_face = { texture=assert(info.skin.switch_w), peg=true, x_offset=0, y_offset=0 }
+  local switch_face = { texture=assert(info.skin.switch_w), peg=true, x_offset=info.skin.x_offset or 0, y_offset=info.skin.y_offset or 0 }
 
   transformed_brush2(DT, switch_info,
   {

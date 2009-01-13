@@ -1138,20 +1138,23 @@ DM_SWITCH_INFOS =
       prefab = "SWITCH_PILLAR",
       skin =
       {
-        switch_w="SW1HOT", side_w="SP_HOT1", line_kind=103,
+        switch_w="SW1HOT", side_w="SP_HOT1",
         switch_f="FLAT5_3",
+        x_offset=0, y_offset=52,
+        line_kind=103,
       }
 
   },
 
   sw_skin =
   {
-    --FIXME: SKINBORD is doom1 only
       prefab = "SWITCH_PILLAR",
       skin =
       {
-        switch_w="SW1SKIN", side_w="SKINBORD", line_kind=103,
+        switch_w="SW1SKIN", side_w="SKSNAKE2",
         switch_f="SFLR6_4",
+        x_offset=0, y_offset=52,
+        line_kind=103,
       }
   },
 
@@ -1160,8 +1163,10 @@ DM_SWITCH_INFOS =
       prefab = "SWITCH_PILLAR",
       skin =
       {
-        switch_w="SW1VINE", side_w="GRAYVINE", line_kind=103,
+        switch_w="SW1VINE", side_w="GRAYVINE",
         switch_f="FLAT1",
+        x_offset=0, y_offset=64,
+        line_kind=103,
       }
   },
 
