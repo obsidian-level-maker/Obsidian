@@ -18,7 +18,7 @@
 
 --[[ *** CLASS INFORMATION ***
 
-class ARENA
+class ARENA  (( QUEST ))
 {
   -- an Arena is a group of rooms, generally with a locked door
   -- to a different arena (requiring the player to find the key
@@ -30,40 +30,34 @@ class ARENA
                        -- in this arena.  Note that teleporters always
                        -- go between rooms in the same arena
 
-  start : ROOM  -- room which player enters this arena
-                -- (map's start room for the very first arena)
-                -- Never nil.
+  start : ROOM   -- room which player enters this arena
+                 -- (map's start room for the very first arena)
+                 -- Never nil.
 
-  target : ROOM -- room containing the key/switch to exit this
-                -- arena, _OR_ the level's exit room itself.
-                -- Never nil.
+  target : ROOM  -- room containing the key/switch to exit this
+                 -- arena, _OR_ the level's exit room itself.
+                 -- Never nil.
 
-  lock : LOCK   -- what kind of key/switch will be in the 'target'
-                -- room, or the string "EXIT" if this arena leads
-                -- to the exit room.
-                -- Never nil.
+  lock : LOCK    -- lock info, which defines what the 'target' room
+                 -- will hold (key, switch or an EXIT).
+                 -- Never nil.
 
   path : array(CONN)  -- full path of rooms from 'start' to 'target'
 
-  target_item : FIXME
 }
 
 
 class LOCK
 {
-  conn : CONN   -- connection between two rooms (and two arenas)
-                -- which is locked (keyed door, lowering bars, etc)
+  kind : keyword  -- "KEY" or "SWITCH" or "EXIT"
+  item : string   -- what kind of key or switch (game specific)
 
-  kind : keyword  -- "KEY" or "SWITCH"
+  conn : CONN     -- connection between two rooms (and two arenas)
+                  -- which is locked (keyed door, lowering bars, etc)
 
-  item : string   -- denotes specific kind of key or switch
+  distance : number  -- number of rooms between key and door
 
   tag : number    -- tag number to use for a switched door
-
-  -- used while decided what locks to add:
-
-  branch_mode : keyword  -- "ON" or "OFF"
-
 }
 
 
@@ -343,7 +337,7 @@ function Quest_lock_up_arena(arena)
 
     gui.debugf("  start room  S(%d,%d)\n",  A.start.sx1, A.start.sy1)
     gui.debugf("  target room S(%d,%d)\n", A.target.sx1, A.target.sy1)
-    gui.debugf("  target item: %s\n", A.target_item or "??????")
+    gui.debugf("  lock: %s %s\n", A.lock.kind or "????", A.lock.item or "????")
 
     gui.debugf("  PATH:\n")
     gui.debugf("  {\n")
@@ -386,11 +380,12 @@ function Quest_lock_up_arena(arena)
 
   local LOCK =
   {
+    -- FIXME: proper kind/item values
+    kind = "KEY",
+    item = 1 + #PLAN.all_locks,
+
     conn = LC,
     tag  = PLAN:alloc_tag(),
-
-    -- TEMP CRUD
-    key_item = 1 + #PLAN.all_locks,
   }
 
   LC.lock = LOCK
@@ -427,7 +422,6 @@ end
     conns = {},
     start = arena.start,
     lock  = LOCK,
-    target_item = LOCK.key_item,
   }
 
   local back_A =
@@ -436,7 +430,6 @@ end
     conns = {},
     start = LOCK.conn.dest,
     lock  = arena.lock,
-    target_item = arena.target_item,
   }
 
 
@@ -605,9 +598,8 @@ function Quest_add_keys()
   for _,arena in ipairs(PLAN.all_arenas) do
     local R = arena.target
     assert(R)
-    assert(arena.target_item)
 
-    if arena.target_item == "EXIT" then
+    if arena.lock.kind == "EXIT" then
       R.purpose = "EXIT"
       PLAN.exit_room = R
 
@@ -622,7 +614,7 @@ SEEDS[ex][ey][1].is_exit = true
     else
       R.purpose = "KEY"
 -- TEMP CRUD
-R.key_item = arena.target_item
+R.key_item = arena.lock.item
     end
   end
 end
@@ -713,12 +705,12 @@ function Quest_key_distances()
         return dist + d  -- Yay!
       end
 
-      -- try earler arena
+      -- try earlier arena
       dist = dist + #PLAN.all_arenas[arena_idx].path
       arena_idx = arena_idx - 1
     end
 
-    -- FIXME: SHOULD NOT HAPPEN (arenas in wrong order ???)
+    -- FIXME: this may be normal, verify!
     gui.printf("WARNING: Quest_key_distances: cannot find locked door")
     return 22
   end
@@ -728,7 +720,7 @@ function Quest_key_distances()
   gui.debugf("Key Distances:\n")
 
   for index,A in ipairs(PLAN.all_arenas) do
-    if A.lock ~= "EXIT" then
+    if A.lock.kind ~= "EXIT" then
       A.lock.distance = dist_to_lock(index, A.lock)
       gui.debugf("  Arena #%d : dist %d\n", index, A.lock.distance)
     end
@@ -756,12 +748,17 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
     end
   end
 
+  local EXIT_LOCK =
+  {
+    kind = "EXIT",
+    item = "normal",
+  }
+
   local ARENA =
   {
     rooms = {},
     conns = shallow_copy(PLAN.all_conns),
-    target_item = "EXIT",
-    lock = "EXIT",
+    lock = EXIT_LOCK,
   }
 
   for _,R in ipairs(PLAN.all_rooms) do
@@ -772,7 +769,7 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
 
 
   PLAN.all_arenas = { ARENA }
-  PLAN.all_locks  = {}
+  PLAN.all_locks  = { EXIT_LOCK }
 
   Quest_decide_start_room(ARENA)
 

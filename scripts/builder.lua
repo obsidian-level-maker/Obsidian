@@ -357,7 +357,7 @@ function make_locked_door(S, side, z1, w_tex, key_tex)
   {
     t_face = { texture="FLAT18" },
     b_face = { texture="FLAT18" },
-    w_face = { texture=key_tex, x_offset=0 },
+    w_face = { texture=key_tex, x_offset=0, y_offset=0 },
   }
 
   transformed_brush2(T, step_info,
@@ -2950,7 +2950,7 @@ gui.printf("do_teleport\n")
         local LOCK = assert(S.border[side].lock)
         local LOCK_TEXS = { "DOORRED", "DOORYEL", "DOORBLU", "TEKGREN3",
                             "DOORRED2","DOORYEL2","DOORBLU2", "MARBFAC2" }
-        local key_tex = LOCK_TEXS[LOCK.key_item] or "METAL"
+        local key_tex = LOCK_TEXS[LOCK.item] or "METAL"
 gui.printf("ADDING LOCK DOOR %s\n", key_tex)
 gui.printf(">> side:%d of %s\n", side, R:tostr())
 
