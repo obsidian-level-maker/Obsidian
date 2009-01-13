@@ -84,25 +84,42 @@ require 'defs'
 require 'util'
 
 
-function Room_SetupTheme(R)
- 
-  --!!! TEMP CRUD to decide Outdoorsiness
-  if R.outdoor == nil then
-    if R.parent then
-      if R.parent.outdoor == nil then Room_SetupTheme(R.parent) end
-      R.outdoor = sel(R.parent.outdoor, false, rand_odds(25))
+function Rooms_decide_outdoors()
+  local function choose(R)
+    if R.parent and R.parent.outdoor then return false end
+    if R.parent then return rand_odds(5) end
 
-    else
-      local outdoor_chance = 10
-
-      if R.sx1 <= 2 or R.sx2 >= SEED_W-1 then outdoor_chance = outdoor_chance + 25 end
-      if R.sy1 <= 2 or R.sy2 >= SEED_H-1 then outdoor_chance = outdoor_chance + 25 end
-      if R.children then outdoor_chance = 80 end
-
-      R.outdoor = rand_odds(outdoor_chance)
+    if R.children then
+      if PLAN.sky_mode == "few" then
+        return rand_odds(33)
+      else
+        return rand_odds(80)
+      end
     end
+
+    if PLAN.sky_mode == "heaps" then return rand_odds(60) end
+    if PLAN.sky_mode == "few"   then return rand_odds(6) end
+
+    -- room on edge of map?
+    if R.sx1 <= 2 or R.sy1 <= 2 or R.sx2 >= SEED_W-1 or R.sy2 >= SEED_H-1 then
+      return rand_odds(40)
+    end
+
+    return rand_odds(10)
   end
 
+  ---| Rooms_decide_outdoors |---
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.outdoor == nil then
+      R.outdoor = choose(R)
+    end
+  end
+end
+
+
+function Room_SetupTheme(R)
+ 
   if not PLAN.outdoor_combos then
     PLAN.outdoor_combos = {}
 
@@ -130,6 +147,10 @@ function Room_SetupTheme(R)
 end
 
 function Room_SetupTheme_Scenic(R)
+  R.outdoor = true
+
+  --[[
+
   -- find closest non-scenic room
   local mx = int((R.sx1 + R.sx2) / 2)
   local my = int((R.sy1 + R.sy2) / 2)
@@ -142,7 +163,7 @@ function Room_SetupTheme_Scenic(R)
 ---      and (not S.room.outdoor) == (not R.outdoor)
       then
         R.combo = S.room.combo
-        R.outdoor = S.room.outdoor
+        -- R.outdoor = S.room.outdoor
         return
       end
     end
@@ -160,14 +181,22 @@ function Room_SetupTheme_Scenic(R)
     end
   end
 
-  -- fallback
-  local name
+  --]]
 
+  -- fallback
   if R.outdoor then
-    name = rand_key_by_probs(PLAN.theme.ground)
-    R.combo = assert(GAME.combos[name])
+    R.combo = rand_element(PLAN.outdoor_combos)
   else
-    R.combo = PLAN.indoor_combos[rand_irange(1,4)]
+    R.combo = rand_element(PLAN.indoor_combos)
+  end
+end
+
+function Rooms_choose_themes()
+  for _,R in ipairs(PLAN.all_rooms) do
+    Room_SetupTheme(R)
+  end
+  for _,R in ipairs(PLAN.scenic_rooms) do
+    Room_SetupTheme_Scenic(R)
   end
 end
 
@@ -256,13 +285,14 @@ function Rooms_decide_hallways_II()
   --   - not the destination of a locked door (anti-climactic)
 
   local HALL_SIZE_PROBS = { 98, 84, 60, 40, 20, 10 }
+  local HALL_SIZE_HEAPS = { 98, 95, 90, 70, 50, 30 }
   local REVERT_PROBS    = {  0,  0, 25, 75, 90, 98 }
 
   local function eval_hallway(R)
-    -- Wolf3D: the outdoor areas become hallways
-    if CAPS.no_sky then
-      return (R.outdoor and R.num_branch >= 2)
-    end
+---##     -- Wolf3D: the outdoor areas become hallways
+---##     if CAPS.no_sky then
+---##       return (R.outdoor and R.num_branch >= 2)
+---##     end
 
     if R.outdoor or R.kind == "scenic" then
       return false
@@ -288,6 +318,12 @@ function Rooms_decide_hallways_II()
     local min_d = math.min(R.sw, R.sh)
 
     if min_d > 6 then return false end
+
+    if PLAN.hallway_mode == "heaps" then
+      return rand_odds(HALL_SIZE_HEAPS[min_d])
+    end
+
+    if PLAN.hallway_mode == "few" and rand_odds(66) then return false end
 
     return rand_odds(HALL_SIZE_PROBS[min_d])
   end
@@ -466,13 +502,17 @@ function Rooms_lay_out_II()
 
   PLAN.theme = GAME.themes["TECH"] -- FIXME
 
-  for _,R in ipairs(PLAN.all_rooms) do
-    Room_SetupTheme(R)
-  end
-  for _,R in ipairs(PLAN.scenic_rooms) do
-    Room_SetupTheme_Scenic(R)
-  end
+  PLAN.sky_mode = rand_key_by_probs { few=20, some=70, heaps=10 }
+  gui.debugf("Sky Mode: %s\n", PLAN.sky_mode)
 
+  PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=20 }
+  gui.debugf("Hallway Mode: %s\n", PLAN.hallway_mode)
+
+  PLAN.cage_mode = rand_key_by_probs { none=50, few=20, some=50, heaps=5 }
+  gui.debugf("Cage Mode: %s\n", PLAN.cage_mode)
+
+  Rooms_decide_outdoors()
+  Rooms_choose_themes()
   Rooms_decide_hallways_II()
 
   for _,R in ipairs(PLAN.all_rooms) do

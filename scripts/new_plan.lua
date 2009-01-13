@@ -641,16 +641,16 @@ function Plan_SubRooms()
   ---| Plan_SubRooms |---
 
   PLAN.island_mode = rand_odds(40)
-  gui.debugf("Island mode: %s\n", bool_str(PLAN.island_mode))
+  gui.debugf("Island Mode: %s\n", bool_str(PLAN.island_mode))
 
-  PLAN.subroom_mode = rand_index_by_probs({ 30, 90, 5 }) - 1
-  gui.debugf("Subroom mode: %s\n", PLAN.subroom_mode)
+  PLAN.subroom_mode = rand_key_by_probs { none=40, some=80, heaps=5 }
+  gui.debugf("Subroom Mode: %s\n", PLAN.subroom_mode)
 
   Seed_dump_rooms()
 
-  if PLAN.subroom_mode == 0 then return end
+  if PLAN.subroom_mode == "none" then return end
 
-  local chance_tab = sel(PLAN.subroom_mode == 1, SUB_CHANCES, SUB_HEAPS)
+  local chance_tab = sel(PLAN.subroom_mode == "some", SUB_CHANCES, SUB_HEAPS)
 
   for _,R in ipairs(PLAN.all_rooms) do
     if not R.parent then
