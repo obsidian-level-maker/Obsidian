@@ -258,12 +258,13 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
   assert(N)
 
   local o_tex = w_tex
-  if not N.room.outdoor and N.room.kind ~= "hallway" then
+
+  if (S.room.outdoor and not N.room.outdoor) or
+     (S.room.kind == "hallway" and N.room.kind ~= "hallway" and not N.room.outdoor) then
     o_tex = N.room.combo.wall
-  end
-  if S.room.kind == "hallway" then
     w_tex = o_tex
   end
+
 
   local N_deep = N.thick[10-side]
 
@@ -283,7 +284,7 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
     { x=long, y=-N_deep },
     { x=long, y=deep },
     { x=0,    y=deep },
-    { x=0,    y=-N_deep },
+    { x=0,    y=-N_deep, w_face={ texture=o_tex } },
   }
 
   local z_top = math.max(int((z1+z2) / 2), z1+128)
@@ -319,8 +320,11 @@ function make_locked_door(S, side, z1, w_tex, info, tag)
   assert(N)
 
   local o_tex = w_tex
-  if not N.room.outdoor then
+
+  if (S.room.outdoor and not N.room.outdoor) or
+     (S.room.kind == "hallway" and N.room.kind ~= "hallway" and not N.room.outdoor) then
     o_tex = N.room.combo.wall
+    w_tex = o_tex
   end
 
 
@@ -2901,13 +2905,7 @@ gui.printf("do_teleport\n")
       end
 
 
-      if R.kind == "valley" or R.scenic_kind == "valley" then
-
-      elseif R.kind == "ground" or R.scenic_kind == "ground" then
-
-      elseif R.kind == "hill" or R.scenic_kind == "hill" then
-
-      elseif R.scenic_kind == "liquid" then
+      if R.scenic_kind == "liquid" then
         f_tex = "NUKAGE1"
         c_tex = PARAMS.sky_flat
         w_tex = "COMPBLUE"
