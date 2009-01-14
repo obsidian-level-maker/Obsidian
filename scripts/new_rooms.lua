@@ -484,12 +484,58 @@ local function Room_layout_II(R)
              N.room and (N.room.outdoor or R.parent) and
              S.border[side].kind == "wall"
           then
-gui.debugf("APPLIED WINDOW @ (%d,%d) dir:%d N:%s\n", x, y, side, tostring(N))
              S.border[side].kind = "window"
           end
         end
       end
     end end -- for x,y
+  end
+
+  local function add_purpose()
+    local sx, sy, S = Room_spot_for_wotsit(R, R.purpose)
+    local z1 = 0 --!!!!
+
+    local mx, my = S:mid_point()
+
+    if R.purpose == "START" then
+      if rand_odds(20) then
+        make_raising_start(S, 6, z1, R.combo)
+        gui.debugf("Raising Start made\n")
+        S.no_floor = true
+      else
+        make_pedestal(S, z1, "FLAT22")
+      end
+
+      gui.add_entity(mx, my, z1 + 35,
+      {
+        name = tostring(GAME.things["player1"].id)
+      })
+
+    elseif R.purpose == "EXIT" then
+      local CS = R.conns[1]:seed(R)
+      local dir = assert(CS.conn_dir)
+
+      if R.outdoor then
+        make_outdoor_exit_switch(S, dir, z1)
+      else
+        make_exit_pillar(S, z1)
+      end
+
+    elseif R.purpose == "KEY" then
+      make_pedestal(S, z1, "CEIL1_2")
+      gui.add_entity(mx, my, z1+40,
+      {
+        name = tostring(GAME.things[R.key_item].id),
+      })
+    elseif R.purpose == "SWITCH" then
+gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
+      local LOCK = assert(R.lock_for_item)  -- eww
+      local INFO = assert(GAME.switch_infos[R.do_switch])
+      make_small_switch(S, 4, z1, INFO, LOCK.tag)
+
+    else
+      error("Room_layout_II: unknown purpose! " .. tostring(R.purpose))
+    end
   end
 
 
@@ -509,6 +555,10 @@ gui.debugf("APPLIED WINDOW @ (%d,%d) dir:%d N:%s\n", x, y, side, tostring(N))
 
   make_fences()
   make_windows()
+
+  if R.purpose then
+    add_purpose()
+  end
 
   -- ETC ETC !!!
 

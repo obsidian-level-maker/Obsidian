@@ -65,6 +65,9 @@ SEED_CLASS =
     return SEEDS[nx][ny][1]
   end,
 
+  mid_point = function(self)
+    return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
+  end,
 }
 
 

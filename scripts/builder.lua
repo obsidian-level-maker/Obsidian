@@ -123,7 +123,7 @@ function get_transform_for_seed_center(S)
   local T = { }
 
   T.dx = S.x1 + S.thick[4]
-  T.dy = S.y1 + S.thick[8]
+  T.dy = S.y1 + S.thick[2]
 
   local long = S.x2 - S.thick[6] - T.dx
   local deep = S.y2 - S.thick[8] - T.dy
@@ -1584,7 +1584,7 @@ function make_exit_pillar(S, z1)
   {
     t_face = { texture="FLAT14" },
     b_face = { texture="FLAT14" },
-    w_face = { texture="SW1BLUE", peg=true, x_offset=0, y_offset=0 },
+    w_face = { texture="SW1SKULL", peg=true, x_offset=0, y_offset=0 },
   },
   {
     { x=mx+32, y=my-32, line_kind=11 },
@@ -2112,7 +2112,9 @@ function make_raising_start(S, face_dir, z1, combo)
 
   for side = 2,8,2 do
     S.thick[side] = S.thick[side] + 4
+  end
 
+  for side = 2,8,2 do
     local T, long, deep = get_transform_for_seed_side(S, side)
 
     local mx = int(long / 2)
@@ -3104,7 +3106,7 @@ elseif CH == '=' then
 elseif CH == '!' then
   make_popup_trap(S, z1, {}, S.room.combo)
 
-else
+elseif not S.no_floor then
     transformed_brush2(nil,
     {
       t_face = { texture=f_tex },
@@ -3179,28 +3181,7 @@ end
     if S.sy == R.sy2 then my = my - 48 end
     end
 
-    if S.is_start then
-      gui.add_entity(mx, my, z1 + 35,
-      {
-        name = tostring(GAME.things["player1"].id)
-      })
-
-      make_pedestal(S, z1, "FLAT22")
-
-      -- make_raising_start(S, 6, z1, R.combo)
-
-    elseif S.is_exit then
-
-      local CS = R.conns[1]:seed(R)
-      local dir = assert(CS.conn_dir)
-
-      if R.outdoor then
-        make_outdoor_exit_switch(S, dir, z1)
-      else
-        make_exit_pillar(S, z1)
-      end
-
-    elseif S.room and S.room.kind ~= "scenic" and
+    if S.room and S.room.kind ~= "scenic" and
            (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
 
@@ -3226,23 +3207,6 @@ end
     end
 --]]
 
-
-    if S.room and S.room.key_item and not S.room.did_key_item then
-      S.room.did_key_item = true
-gui.debugf("KEY ITEM = %s\n", S.room.key_item)
-      make_pedestal(S, z1, "CEIL1_2")
-      gui.add_entity(mx, my, z1+40,
-      {
-        name = tostring(GAME.things[S.room.key_item].id),
-      })
-    end
-    if S.room and S.room.do_switch and not S.room.did_switch then
-      local LOCK = assert(S.room.lock_for_item)
-      S.room.did_switch = true
-gui.debugf("SWITCH ITEM = %s\n", S.room.do_switch)
-      local INFO = assert(GAME.switch_infos[S.room.do_switch])
-      make_small_switch(S, 4, z1, INFO, LOCK.tag)
-    end
   end
 
 
