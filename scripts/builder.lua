@@ -3172,10 +3172,12 @@ end
     local mx = int((x1+x2) / 2)
     local my = int((y1+y2) / 2)
 
+    if DIAGONAL_CORNERS then
     if S.sx == R.sx1 then mx = mx + 48 end
     if S.sx == R.sx2 then mx = mx - 48 end
     if S.sy == R.sy1 then my = my + 48 end
     if S.sy == R.sy2 then my = my - 48 end
+    end
 
     if S.is_start then
       gui.add_entity(mx, my, z1 + 35,
@@ -3228,7 +3230,8 @@ end
     if S.room and S.room.key_item and not S.room.did_key_item then
       S.room.did_key_item = true
 gui.debugf("KEY ITEM = %s\n", S.room.key_item)
-      gui.add_entity(mx, my, z1+25,
+      make_pedestal(S, z1, "CEIL1_2")
+      gui.add_entity(mx, my, z1+40,
       {
         name = tostring(GAME.things[S.room.key_item].id),
       })
