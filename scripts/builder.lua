@@ -2974,7 +2974,8 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "window" then
-        make_window(S, side, 192, z1+64, z2-32, f_tex, w_tex)
+--!!!        make_window(S, side, 192, z1+64, z2-32, f_tex, w_tex)
+        make_window(S, side, 192, z1+32, z1+80, f_tex, w_tex)
       end
 
       if B_kind == "fence" then

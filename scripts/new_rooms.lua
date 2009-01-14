@@ -448,8 +448,11 @@ local function Room_layout_II(R)
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
       for side = 2,8,2 do
-        if S.room == R and S.border[side].kind == "wall" then
-          local N = S:neighbor(side)
+        local N = S:neighbor(side)
+
+        if S.room == R and S.border[side].kind == "wall"
+           and (R.outdoor or (N and N.room and N.room.parent == R))
+        then
 
           if not (N and N.room) then
             S.border[side].kind = "sky_fence"
@@ -468,13 +471,17 @@ local function Room_layout_II(R)
   end
 
   local function make_windows()
+    if not (R.kind == "indoor" and R.purpose ~= "EXIT") then
+      return
+    end
+
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
       if S.room == R and (x == R.sx1 or x == R.sx2 or y == R.sy1 or y == R.sy2) then
         for side = 2,8,2 do
           local N = S:neighbor(side)
           if N and (N.sx < R.sx1 or N.sx > R.sx2 or N.sy < R.sy1 or N.sy > R.sy2) and
-             N.room and N.room.outdoor and
+             N.room and (N.room.outdoor or R.parent) and
              S.border[side].kind == "wall"
           then
 gui.debugf("APPLIED WINDOW @ (%d,%d) dir:%d N:%s\n", x, y, side, tostring(N))
@@ -500,13 +507,8 @@ gui.debugf("APPLIED WINDOW @ (%d,%d) dir:%d N:%s\n", x, y, side, tostring(N))
   end
 
 
-  if R.outdoor then
-    make_fences()
-  end
-
-  if R.kind == "indoor" and R.purpose ~= "EXIT" then
-    make_windows()
-  end
+  make_fences()
+  make_windows()
 
   -- ETC ETC !!!
 
