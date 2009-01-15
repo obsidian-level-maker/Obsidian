@@ -32,12 +32,12 @@ require 'defs'
 require 'util'
 
 require 'seeds'
-require 'new_plan'
+require 'planner'
 require 'connect'
 require 'naming'
 require 'quests'
 require 'builder'
-require 'new_rooms'
+require 'rooms'
 
 --!! require 'monsters'
 
