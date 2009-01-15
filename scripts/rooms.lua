@@ -508,16 +508,10 @@ gui.printf("do_teleport\n")
     local x2 = S.x2
     local y2 = S.y2
 
-    -- FIXME CRUD GUNK SHIT POO !
-    if not S.floor_h and S.layout then
-      S.floor_h = S.layout.floor_h
-    end
-
     local z1 = S.floor_h or R.floor_h
     local z2 = S.ceil_h  or R.ceil_h
     local f_tex, c_tex, w_tex
     local sec_kind
-
 
 
       z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h or 0
@@ -661,7 +655,7 @@ gui.printf("do_teleport\n")
 
     -- floor and ceiling brushes
 
-if S.layout and S.layout.char == '#' then
+if S.kind == "void" then
 
     transformed_brush2(nil,
     {
@@ -675,7 +669,7 @@ if S.layout and S.layout.char == '#' then
     },
     2000, 2000);
 
-elseif S.layout and S.layout.char == '%' then
+elseif S.kind == "foobar" then
 
     transformed_brush2(nil,
     {
@@ -701,41 +695,44 @@ elseif S.layout and S.layout.char == '%' then
     },
     256, 2000);
 
-else
+elseif S.kind == "stair" then
 
-local CH = S.layout and S.layout.char
+  local CH = S.layout and S.layout.char
 
-local stair_info =
-{
-  t_face = { texture="FLAT1" },
-  b_face = { texture="FLAT1" },
-  w_face = { texture="STEP4" },
-}
+  local stair_info =
+  {
+    t_face = { texture="FLAT1" },
+    b_face = { texture="FLAT1" },
+    w_face = { texture="STEP4" },
+  }
 
-if CH == ">" then
-   make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z1, S.layout.stair_z2)
-elseif CH == "<" then
-   make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z2, S.layout.stair_z1)
-elseif CH == "^" then
-   make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z1, S.layout.stair_z2)
-elseif CH == "v" then
-   make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z2, S.layout.stair_z1)
-elseif CH == "L" or CH == "J" or
-       CH == "F" or CH == "T" then
+  if CH == ">" then
+     make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z1, S.layout.stair_z2)
+  elseif CH == "<" then
+     make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z2, S.layout.stair_z1)
+  elseif CH == "^" then
+     make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z1, S.layout.stair_z2)
+  elseif CH == "v" then
+     make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z2, S.layout.stair_z1)
+  elseif CH == "L" or CH == "J" or
+         CH == "F" or CH == "T" then
 
-   if (S.sx == S.room.sx1 or S.sx == S.room.sx2) and
-      (S.sy == S.room.sy1 or S.sy == S.room.sy2)
-   then
-     do_corner_ramp_CURVED(S, x1,y1, x2,y2, S.layout.stair_z1, S.layout.stair_z2)
-   else
-     make_low_curved_stair(S, S.layout.stair_z1, S.layout.stair_z2)
----###     do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, S.layout.stair_z1, S.layout.stair_z2)
-   end
+     local x_side = 4  --!!!!
+     local y_side = 2  --!!!!
 
-elseif CH == '=' then
+     if (S.sx == S.room.sx1 or S.sx == S.room.sx2) and
+        (S.sy == S.room.sy1 or S.sy == S.room.sy2)
+     then
+       Build_tall_curved_stair(S, x1,y1, x2,y2, x_side, y_side, S.layout.stair_z1, S.layout.stair_z2)
+     else
+       Build_low_curved_stair(S, x_side, y_side, S.layout.stair_z1, S.layout.stair_z2)
+     end
+  end
+
+elseif S.kind == "lift" then
   make_lift(S, 10-S.conn_dir, assert(S.layout.lift_h))
 
-elseif CH == '!' then
+elseif S.kind == "popup" then
   make_popup_trap(S, z1, {}, S.room.combo)
 
 elseif not S.no_floor then
@@ -753,29 +750,31 @@ elseif not S.no_floor then
     -2000, z1);
 end
 
-    transformed_brush2(nil,
-    {
-      t_face = { texture=c_tex },
-      b_face = { texture=c_tex },
-      w_face = { texture=w_tex },
-    },
-    {
-      { x=x2, y=y1 }, { x=x2, y=y2 },
-      { x=x1, y=y2 }, { x=x1, y=y1 },
-    },
-    z2, 4000)
 
-end -- layout_char ~= '#'
+    -- CEILING
+    if S.kind ~= "void" then
+      transformed_brush2(nil,
+      {
+        t_face = { texture=c_tex },
+        b_face = { texture=c_tex },
+        w_face = { texture=w_tex },
+      },
+      {
+        { x=x2, y=y1 }, { x=x2, y=y2 },
+        { x=x1, y=y2 }, { x=x1, y=y1 },
+      },
+      z2, 4000)
+    end
 
 
-if S.layout and S.layout.assign_stair and not S.layout.assign_stair.done then
-  local INFO = S.layout.assign_stair
-  if INFO.inner_h < INFO.outer_h then
-    do_outdoor_ramp_down(INFO, f_tex, w_tex)
-  else
-    do_outdoor_ramp_up(INFO, f_tex, w_tex)
-  end
-end
+---?? if S.layout and S.layout.assign_stair and not S.layout.assign_stair.done then
+---??   local INFO = S.layout.assign_stair
+---??   if INFO.inner_h < INFO.outer_h then
+---??     do_outdoor_ramp_down(INFO, f_tex, w_tex)
+---??   else
+---??     do_outdoor_ramp_up(INFO, f_tex, w_tex)
+---??   end
+---?? end
 
 
 -- diagonal corners

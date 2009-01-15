@@ -102,8 +102,10 @@ function transformed_brush2(T, info, coords, z1, z2)
 end
 
 
-function get_transform_for_seed_side(S, side)
+function get_transform_for_seed_side(S, side, thick)
   
+  if not thick then thick = S.thick[side] end
+
   local T = { }
 
   if side == 8 then T.rotate = 180 end
@@ -115,7 +117,7 @@ function get_transform_for_seed_side(S, side)
   if side == 6 then T.dx, T.dy = S.x2, S.y1 end
   if side == 8 then T.dx, T.dy = S.x2, S.y2 end
 
-  return T, PARAMS.seed_size, S.thick[side]
+  return T, PARAMS.seed_size, thick
 end
 
 function get_transform_for_seed_center(S)
@@ -968,7 +970,7 @@ function make_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
 end
 
 
-function do_corner_ramp_CURVED(S, x1,y1, x2,y2, x_h,y_h)
+function Build_tall_curved_stair(S, x1,y1, x2,y2, x_side,y_side, x_h,y_h)
   assert(x_h and y_h)
 
   local steps = int(math.abs(x_h-y_h) / 14 + 0.9)
@@ -986,13 +988,13 @@ function do_corner_ramp_CURVED(S, x1,y1, x2,y2, x_h,y_h)
   local dx0, dx1, dx2, dx3 = 16, 40, w-32, w
   local dy0, dy1, dy2, dy3 = 16, 40, h-32, h
 
-  if S.layout and (S.layout.char == "L" or S.layout.char == "F") then
+  if x_side == 6 then
     corn_x = x2
     dx0 = -dx0 ; dx1 = -dx1
     dx2 = -dx2 ; dx3 = -dx3
   end
 
-  if S.layout and (S.layout.char == "L" or S.layout.char == "J") then
+  if y_side == 8 then
     corn_y = y2
     dy0 = -dy0 ; dy1 = -dy1
     dy2 = -dy2 ; dy3 = -dy3
@@ -1012,6 +1014,8 @@ function do_corner_ramp_CURVED(S, x1,y1, x2,y2, x_h,y_h)
                    info, info, info)
 end
 
+
+--[[ NOT USED
 function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
   assert(x_h and y_h)
 
@@ -1081,9 +1085,11 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
       { x=x1,    y=y1 },
     }, -2000, pz)
   end
-
 end
+--]]
 
+
+--[[ NOT USED
 function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
   assert(x_h and y_h)
 
@@ -1191,9 +1197,10 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
   transformed_brush2(nil, info, pilla, -2000, pz)
   transformed_brush2(nil, info, mezza, -2000, m_h)
 end
+--]]
 
 
-function make_low_curved_stair(S, x_h, y_h)
+function Build_low_curved_stair(S, x_side,y_side, x_h,y_h)
 
   -- create transform
   local T =
@@ -1204,11 +1211,11 @@ function make_low_curved_stair(S, x_h, y_h)
   local long = S.x2 - S.x1
   local deep = S.y2 - S.y1
 
-  if S.layout.char == 'F' or S.layout.char == 'L' then
+  if x_side == 6 then
     T.mirror_x = long / 2
   end
 
-  if S.layout.char == 'J' or S.layout.char == 'L' then
+  if y_side == 8 then
     T.mirror_y = deep / 2
   end
 
@@ -2115,11 +2122,7 @@ function make_raising_start(S, face_dir, z1, combo)
   local tag = PLAN:alloc_tag()
 
   for side = 2,8,2 do
-    S.thick[side] = S.thick[side] + 4
-  end
-
-  for side = 2,8,2 do
-    local T, long, deep = get_transform_for_seed_side(S, side)
+    local T, long, deep = get_transform_for_seed_side(S, side, 48)
 
     local mx = int(long / 2)
 
