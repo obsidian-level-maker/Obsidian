@@ -114,6 +114,9 @@ function Rooms_decide_outdoors()
     if R.outdoor == nil then
       R.outdoor = choose(R)
     end
+    if R.outdoor and R.kind == "building" then
+      R.kind = "ground"
+    end
   end
 end
 
@@ -148,6 +151,7 @@ end
 
 function Room_SetupTheme_Scenic(R)
   R.outdoor = true
+  R.kind = "liquid"
 
   --[[
 
@@ -382,7 +386,7 @@ gui.debugf("  Made Hallway @ %s\n", R:tostr())
       assert(min_d <= 6)
 
       if rand_odds(REVERT_PROBS[min_d]) then
-        R.kind = "indoor"
+        R.kind = "building"
 gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       end
     end
@@ -807,22 +811,29 @@ local function Room_layout_II(R)
 
 
     local function max_junking(size)
-      if size >= 8 then return 3 end
+      if size < 2 then return 0 end
+
+      return size - 2
+
+--[[  if size >= 9 then return 3 end
+      if size >= 7 then return 3 end
       if size >= 5 then return 2 end
       if size >= 3 then return 1 end
       return 0
+--]]
     end
 
-    local function can_junk_side(pass, side, x_max, y_max)
+    local function can_junk_side(side, x_max, y_max)
       if limited[side] then return false end
+
+      local th = R.junk_thick[side]
+      if th >= 2 then return false end
 
       if side == 2 or side == 8 then
         if R.junk_thick[2] + R.junk_thick[8] >= y_max then return false end
       else
         if R.junk_thick[4] + R.junk_thick[6] >= x_max then return false end
       end
-
-      local th = R.junk_thick[side]
 
       local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
       local dx, dy = dir_to_delta(side)
@@ -853,31 +864,36 @@ local function Room_layout_II(R)
       x1, y1 = x1-dx*th, y1-dy*th
       x2, y2 = x2-dx*th, y2-dy*th
 
+      local did_change = false
+
       for x = x1,x2 do for y = y1,y2 do
         local S = SEEDS[x][y][1]
         if S.conn or S.pseudo_conn then
           SEEDS[x-dx][y-dy][1].pseudo_conn = true
         elseif S.kind == "walk" then
           S.kind = "void"
+          did_change = true
         end
       end end -- for x,y
 
-      R.junk_thick[side] = R.junk_thick[side] + 1
+      if did_change then
+        R.junk_thick[side] = R.junk_thick[side] + 1
+      end
     end
 
 
     --| junk_sides |--
 
-    local x_max = max_junking(R.sw) + 1
-    local y_max = max_junking(R.sh) + 1
+    local x_max = max_junking(R.sw)
+    local y_max = max_junking(R.sh)
 
 
     -- FIXME: probabilities !!!!
 
 
     -- FIXME: support 2nd pass
-    for pass = 1,2 do for side = 2,8,2 do
-      if can_junk_side(pass, side, x_max, y_max) then
+    for pass = 1,3 do for side = 2,8,2 do
+      if can_junk_side(side, x_max, y_max) then
         apply_junk_side(side)
       end
     end end -- pass, side
@@ -911,7 +927,7 @@ local function Room_layout_II(R)
   end
 
   local function make_windows()
-    if not (R.kind == "indoor" and R.purpose ~= "EXIT") then
+    if not (R.kind == "building" and R.purpose ~= "EXIT") then
       return
     end
 
@@ -995,7 +1011,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
   end
 
 
-  if R.kind == "indoor" and not R.children then
+  if R.kind == "building" and not R.children then
     junk_sides()
   end
 
@@ -1021,20 +1037,22 @@ function Rooms_lay_out_II()
   PLAN.theme = GAME.themes["TECH"] -- FIXME
 
   PLAN.sky_mode = rand_key_by_probs { few=20, some=70, heaps=10 }
-  gui.debugf("Sky Mode: %s\n", PLAN.sky_mode)
+  gui.printf("Sky Mode: %s\n", PLAN.sky_mode)
 
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=20 }
-  gui.debugf("Hallway Mode: %s\n", PLAN.hallway_mode)
+  gui.printf("Hallway Mode: %s\n", PLAN.hallway_mode)
 
-  PLAN.junk_mode = rand_key_by_probs { few=20, some=50, heaps=20 }
-  gui.debugf("Junk Mode: %s\n", PLAN.junk_mode)
+  PLAN.junk_mode = rand_key_by_probs { few=40, some=20, heaps=10 }
+  gui.printf("Junk Mode: %s\n", PLAN.junk_mode)
 
   PLAN.cage_mode = rand_key_by_probs { none=50, few=20, some=50, heaps=5 }
-  gui.debugf("Cage Mode: %s\n", PLAN.cage_mode)
+  gui.printf("Cage Mode: %s\n", PLAN.cage_mode)
 
   Rooms_decide_outdoors()
   Rooms_choose_themes()
   Rooms_decide_hallways_II()
+
+  Seed_dump_fabs()
 
   for _,R in ipairs(PLAN.all_rooms) do
     Room_layout_II(R)
@@ -1042,7 +1060,7 @@ function Rooms_lay_out_II()
   end
 
   for _,R in ipairs(PLAN.scenic_rooms) do
-    -- FIXME !!!  Room_build_scenic(R)
+    -- FIXME !!!  Room_do_scenic(R)
   end
 end
 
