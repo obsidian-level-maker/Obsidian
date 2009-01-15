@@ -433,9 +433,9 @@ function Room_spot_for_wotsit(R, kind)
     sy = rand_irange(R.sy1, R.sy2)
 
     S = SEEDS[sx][sy][1]
-  until S.room == R and not S.has_wotsit
+  until S.room == R and S.kind == "walk"
 
-  S.has_wotsit = true
+  S.kind = "purpose"
 
   return sx, sy, S
 end
@@ -757,7 +757,7 @@ end
     local my = int((y1+y2) / 2)
 
     if S.room and S.room.kind ~= "scenic" and
-       (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
+       (S.sx == S.room.sx1+2) and (S.sy == S.room.sy1+2) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
 
       local MON = next(GAME.monsters)
@@ -790,6 +790,99 @@ end
 
 
 local function Room_layout_II(R)
+
+  local function junk_sides()
+    -- Adds solid seeds (kind "void") to the edges of large rooms.
+    -- These seeds can be put to other uses later, such as: cages,
+    -- monster closets, or secrets.
+    --
+    -- The best side is on the largest axis (minimises number of
+    -- junked seeds), and prefer no connections on that side.
+    --
+    -- Usually only junk one side, sometimes two.
+
+    R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
+
+    local limited = { }
+
+
+    local function max_junking(size)
+      if size >= 8 then return 3 end
+      if size >= 5 then return 2 end
+      if size >= 3 then return 1 end
+      return 0
+    end
+
+    local function can_junk_side(pass, side, x_max, y_max)
+      if limited[side] then return false end
+
+      if side == 2 or side == 8 then
+        if R.junk_thick[2] + R.junk_thick[8] >= y_max then return false end
+      else
+        if R.junk_thick[4] + R.junk_thick[6] >= x_max then return false end
+      end
+
+      local th = R.junk_thick[side]
+
+      local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
+      local dx, dy = dir_to_delta(side)
+      x1, y1 = x1-dx*th, y1-dy*th
+      x2, y2 = x2-dx*th, y2-dy*th
+
+      for x = x1,x2 do for y = y1,y2 do
+        local S = SEEDS[x][y][1]
+        if S.room ~= R then return false end
+        if not (S.kind == "walk" or S.kind == "void") then return false end
+
+        -- FIXME: allow a connection (rarely) 
+---     if S.conn and is_perpendicular(S.conn_dirr, side) then return false end
+        if S.conn or S.pseudo_conn then
+---       limited[side] = 1
+          return true
+        end
+      end end -- for x,y
+
+      return true
+    end
+
+    local function apply_junk_side(side)
+      local th = R.junk_thick[side]
+
+      local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
+      local dx, dy = dir_to_delta(side)
+      x1, y1 = x1-dx*th, y1-dy*th
+      x2, y2 = x2-dx*th, y2-dy*th
+
+      for x = x1,x2 do for y = y1,y2 do
+        local S = SEEDS[x][y][1]
+        if S.conn or S.pseudo_conn then
+          SEEDS[x-dx][y-dy][1].pseudo_conn = true
+        elseif S.kind == "walk" then
+          S.kind = "void"
+        end
+      end end -- for x,y
+
+      R.junk_thick[side] = R.junk_thick[side] + 1
+    end
+
+
+    --| junk_sides |--
+
+    local x_max = max_junking(R.sw) + 1
+    local y_max = max_junking(R.sh) + 1
+
+
+    -- FIXME: probabilities !!!!
+
+
+    -- FIXME: support 2nd pass
+    for pass = 1,2 do for side = 2,8,2 do
+      if can_junk_side(pass, side, x_max, y_max) then
+        apply_junk_side(side)
+      end
+    end end -- pass, side
+  end
+
 
   local function make_fences()
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
@@ -824,7 +917,9 @@ local function Room_layout_II(R)
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
-      if S.room == R and (x == R.sx1 or x == R.sx2 or y == R.sy1 or y == R.sy2) then
+      if S.room == R and S.kind ~= "void" and
+         (x == R.sx1 or x == R.sx2 or y == R.sy1 or y == R.sy2)
+      then
         for side = 2,8,2 do
           local N = S:neighbor(side)
           if N and (N.sx < R.sx1 or N.sx > R.sx2 or N.sy < R.sy1 or N.sy > R.sy2) and
@@ -900,6 +995,11 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
   end
 
 
+  if R.kind == "indoor" and not R.children then
+    junk_sides()
+  end
+
+
   make_fences()
 
 
@@ -925,6 +1025,9 @@ function Rooms_lay_out_II()
 
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=20 }
   gui.debugf("Hallway Mode: %s\n", PLAN.hallway_mode)
+
+  PLAN.junk_mode = rand_key_by_probs { few=20, some=50, heaps=20 }
+  gui.debugf("Junk Mode: %s\n", PLAN.junk_mode)
 
   PLAN.cage_mode = rand_key_by_probs { none=50, few=20, some=50, heaps=5 }
   gui.debugf("Cage Mode: %s\n", PLAN.cage_mode)

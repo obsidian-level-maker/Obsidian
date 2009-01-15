@@ -24,6 +24,11 @@ class SEED
 
   room : ROOM
 
+  kind : keyword  -- main usage of seed:
+                  -- "walk", "void", "purpose",
+                  -- "stair", "curve_stair", "liquid"
+                  -- TODO: more ones
+
   border[DIR] : BORDER
 
   thick[DIR]  -- thickness of each border
@@ -31,8 +36,6 @@ class SEED
   x1, y1, x2, y2  -- 2D map coordinates
 
   floor_h, ceil_h -- floor and ceiling heights
-
-  layout : LAYOUT
 }
 
 

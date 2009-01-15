@@ -688,6 +688,7 @@ function Plan_MakeSeeds()
         local S = SEEDS[sx][sy][1]
         assert(not S.room) -- no overlaps please!
         S.room = R
+        S.kind = "walk"
       end end -- for sx,sy
     end -- for R
 
@@ -696,6 +697,8 @@ function Plan_MakeSeeds()
         local S = SEEDS[sx][sy][1]
         if not S.room then -- overlap is OK for scenics
           S.room = R
+          S.kind = "liquid"
+          S.f_tex = "LAVA1"  -- TEMP CRUD !!!!
         end
       end end -- for sx,sy
     end -- for R
