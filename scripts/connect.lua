@@ -930,8 +930,8 @@ gui.debugf("Failed\n")
 
     table.sort(rooms, function(A, B) return A.k_score > B.k_score end)
 
-    local big_bra_chance = rand_key_by_probs { [99] = 60, [50]=15, [10]=5 }
-    gui.printf("Big Branch Chance: %d\n", big_bra_chance)
+    local big_bra_chance = rand_key_by_probs { [99] = 80, [50]=15, [10]=5 }
+    gui.printf("Big Branch Mode: %d%%\n", big_bra_chance)
 
     for _,R in ipairs(rooms) do
       if (#R.conns <= 2) and rand_odds(big_bra_chance) then

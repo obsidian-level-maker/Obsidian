@@ -663,7 +663,7 @@ end
       {
         t_face = { texture=f_tex },
         b_face = { texture=f_tex },
-        w_face = { texture=w_tex },
+        w_face = { texture="ZZZFACE1" },
       },
       {
         { x=x2, y=y1 }, { x=x2, y=y2 },
@@ -807,32 +807,29 @@ local function Room_layout_II(R)
 
     R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
-    local limited = { }
+    local min_space = sel(R.sw + R.sh >= 12, 2, 3)
+    if PLAN.junk_mode == "few"   then min_space = rand_sel(60,3,4) end
+    if PLAN.junk_mode == "heaps" then min_space = 2 end
+
+    local JUNK_APPL_CHANCES = { few=20, some=45, heaps=90 }
+
+    local apply_prob = JUNK_APPL_CHANCES[PLAN.junk_mode]
 
 
     local function max_junking(size)
-      if size < 2 then return 0 end
+      if size < min_space then return 0 end
 
-      return size - 2
-
---[[  if size >= 9 then return 3 end
-      if size >= 7 then return 3 end
-      if size >= 5 then return 2 end
-      if size >= 3 then return 1 end
-      return 0
---]]
+      return size - min_space
     end
 
-    local function can_junk_side(side, x_max, y_max)
-      if limited[side] then return false end
+    local function eval_side(side, x_max, y_max)
 
       local th = R.junk_thick[side]
-      if th >= 2 then return false end
 
       if side == 2 or side == 8 then
-        if R.junk_thick[2] + R.junk_thick[8] >= y_max then return false end
+        if R.junk_thick[2] + R.junk_thick[8] >= y_max then return -1 end
       else
-        if R.junk_thick[4] + R.junk_thick[6] >= x_max then return false end
+        if R.junk_thick[4] + R.junk_thick[6] >= x_max then return -1 end
       end
 
       local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
@@ -840,20 +837,19 @@ local function Room_layout_II(R)
       x1, y1 = x1-dx*th, y1-dy*th
       x2, y2 = x2-dx*th, y2-dy*th
 
+      local hit_conn = 0
+
       for x = x1,x2 do for y = y1,y2 do
         local S = SEEDS[x][y][1]
-        if S.room ~= R then return false end
-        if not (S.kind == "walk" or S.kind == "void") then return false end
+        if S.room ~= R then return -1 end
+        if not (S.kind == "walk" or S.kind == "void") then return -1 end
 
-        -- FIXME: allow a connection (rarely) 
----     if S.conn and is_perpendicular(S.conn_dirr, side) then return false end
         if S.conn or S.pseudo_conn then
----       limited[side] = 1
-          return true
+          hit_conn = hit_conn + 1
         end
       end end -- for x,y
 
-      return true
+      return R.junk_thick[side] * 1.4 + hit_conn / 1.3 + gui.random()
     end
 
     local function apply_junk_side(side)
@@ -887,16 +883,22 @@ local function Room_layout_II(R)
     local x_max = max_junking(R.sw)
     local y_max = max_junking(R.sh)
 
+    for loop = 1,8 do
+      local evals = {}
 
-    -- FIXME: probabilities !!!!
-
-
-    -- FIXME: support 2nd pass
-    for pass = 1,3 do for side = 2,8,2 do
-      if can_junk_side(side, x_max, y_max) then
-        apply_junk_side(side)
+      for side = 2,8,2 do
+        local cost = eval_side(side, x_max, y_max)
+        if cost > 0 then
+          table.insert(evals, { side=side, cost=cost })
+        end
       end
-    end end -- pass, side
+
+      if #evals == 0 then break; end
+
+      table.sort(evals, function(A,B) return A.cost < B.cost end)
+
+      apply_junk_side(evals[1].side)
+    end
   end
 
 
@@ -1042,11 +1044,17 @@ function Rooms_lay_out_II()
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=20 }
   gui.printf("Hallway Mode: %s\n", PLAN.hallway_mode)
 
-  PLAN.junk_mode = rand_key_by_probs { few=40, some=20, heaps=10 }
+  PLAN.junk_mode = rand_key_by_probs { few=40, some=30, heaps=10 }
   gui.printf("Junk Mode: %s\n", PLAN.junk_mode)
 
   PLAN.cage_mode = rand_key_by_probs { none=50, few=20, some=50, heaps=5 }
   gui.printf("Cage Mode: %s\n", PLAN.cage_mode)
+
+
+--[[ !!!
+PLAN.sky_mode = "few"
+PLAN.hallway_mode = "few"
+PLAN.junk_mode = "few"    ]]
 
   Rooms_decide_outdoors()
   Rooms_choose_themes()
