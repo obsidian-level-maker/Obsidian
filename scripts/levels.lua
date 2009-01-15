@@ -173,11 +173,11 @@ function Level_Make(L, index, NUM)
 
   Rooms_lay_out_II()
     if gui.abort() then return "abort" end
-    gui.progress(60)
+    gui.progress(90)
 
-  Builder()
-    if gui.abort() then return "abort" end
-    gui.progress(100)
+---##  Builder()
+---##    if gui.abort() then return "abort" end
+---##    gui.progress(100)
 
   gui.end_level()
 
