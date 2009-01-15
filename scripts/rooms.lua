@@ -807,23 +807,21 @@ local function Room_layout_II(R)
 
     R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
-    local min_space = sel(R.sw + R.sh >= 12, 2, 3)
-    if PLAN.junk_mode == "few"   then min_space = rand_sel(60,3,4) end
-    if PLAN.junk_mode == "heaps" then min_space = 2 end
+    local min_space = 2
 
-    local JUNK_APPL_CHANCES = { few=20, some=45, heaps=90 }
+    local JUNK_MAX_COSTS = { few=0.7, some=1.2, heaps=2.5 }
+    local JUNK_MAX_LOOP  = { few=4,   some=7,   heaps=10 }
 
-    local apply_prob = JUNK_APPL_CHANCES[PLAN.junk_mode]
+    local max_cost = JUNK_MAX_COSTS[PLAN.junk_mode]
+    local max_loop = JUNK_MAX_LOOP [PLAN.junk_mode]
 
 
     local function max_junking(size)
       if size < min_space then return 0 end
-
       return size - min_space
     end
 
     local function eval_side(side, x_max, y_max)
-
       local th = R.junk_thick[side]
 
       if side == 2 or side == 8 then
@@ -849,7 +847,9 @@ local function Room_layout_II(R)
         end
       end end -- for x,y
 
-      return R.junk_thick[side] * 1.4 + hit_conn / 1.3 + gui.random()
+      -- FIXME: add a cost if side could be used for windows
+
+      return R.junk_thick[side] * 1.4 + hit_conn / 1.5 + gui.random()
     end
 
     local function apply_junk_side(side)
@@ -872,9 +872,7 @@ local function Room_layout_II(R)
         end
       end end -- for x,y
 
-      if did_change then
-        R.junk_thick[side] = R.junk_thick[side] + 1
-      end
+      R.junk_thick[side] = R.junk_thick[side] + 1
     end
 
 
@@ -883,21 +881,21 @@ local function Room_layout_II(R)
     local x_max = max_junking(R.sw)
     local y_max = max_junking(R.sh)
 
-    for loop = 1,8 do
+    for loop = 1,max_loop do
       local evals = {}
 
       for side = 2,8,2 do
         local cost = eval_side(side, x_max, y_max)
-        if cost > 0 then
+        if cost > 0 and cost < max_cost then
           table.insert(evals, { side=side, cost=cost })
         end
       end
 
-      if #evals == 0 then break; end
+      if #evals > 0 then
+        table.sort(evals, function(A,B) return A.cost < B.cost end)
 
-      table.sort(evals, function(A,B) return A.cost < B.cost end)
-
-      apply_junk_side(evals[1].side)
+        apply_junk_side(evals[1].side)
+      end
     end
   end
 
@@ -1050,11 +1048,6 @@ function Rooms_lay_out_II()
   PLAN.cage_mode = rand_key_by_probs { none=50, few=20, some=50, heaps=5 }
   gui.printf("Cage Mode: %s\n", PLAN.cage_mode)
 
-
---[[ !!!
-PLAN.sky_mode = "few"
-PLAN.hallway_mode = "few"
-PLAN.junk_mode = "few"    ]]
 
   Rooms_decide_outdoors()
   Rooms_choose_themes()
