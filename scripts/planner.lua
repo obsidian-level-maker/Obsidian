@@ -210,7 +210,7 @@ function Plan_CreateRooms()
     
     if not room_map[x][y] then
 
-      local ROOM = { lw=1, lh=1, id=id, kind="indoor", conns={} }
+      local ROOM = { lw=1, lh=1, id=id, kind="building", conns={} }
       id = id + 1
 
       set_class(ROOM, ROOM_CLASS)
@@ -607,7 +607,7 @@ function Plan_SubRooms()
 
     -- actually add it !
 
-    local ROOM = { lw=1, lh=1, id=id, kind="indoor", conns={} }
+    local ROOM = { lw=1, lh=1, id=id, kind="building", conns={} }
     id = id + 1
 
     set_class(ROOM, ROOM_CLASS)
@@ -645,11 +645,11 @@ function Plan_SubRooms()
 
   ---| Plan_SubRooms |---
 
-  PLAN.island_mode = rand_odds(40)
-  gui.debugf("Island Mode: %s\n", bool_str(PLAN.island_mode))
-
   PLAN.subroom_mode = rand_key_by_probs { none=40, some=80, heaps=5 }
-  gui.debugf("Subroom Mode: %s\n", PLAN.subroom_mode)
+  gui.printf("SubRoom Mode: %s\n", PLAN.subroom_mode)
+
+  PLAN.island_mode = rand_odds(40)
+  gui.printf("Island Mode: %s\n", bool_str(PLAN.island_mode))
 
   Seed_dump_rooms()
 
@@ -753,8 +753,6 @@ function Plan_MakeSeeds()
 
   plant_rooms()
   fill_holes()
-
-  Seed_dump_fabs()
 end
 
 
