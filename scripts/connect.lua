@@ -920,7 +920,7 @@ gui.debugf("Failed\n")
     local rooms = {}
 
     for _,R in ipairs(PLAN.all_rooms) do
-      if R.svolume >= 1 and (R.kind == "indoor") and not R.parent then
+      if R.svolume >= 1 and (R.kind == "building") and not R.parent then
         R.k_score = sel((R.sw%2)==1 and (R.sh%2)==1, 5, 0) + R.svolume + gui.random()
         table.insert(rooms, R)
       end
@@ -930,8 +930,11 @@ gui.debugf("Failed\n")
 
     table.sort(rooms, function(A, B) return A.k_score > B.k_score end)
 
+    local big_bra_chance = rand_key_by_probs { [99] = 60, [50]=15, [10]=5 }
+    gui.printf("Big Branch Chance: %d\n", big_bra_chance)
+
     for _,R in ipairs(rooms) do
-      if (#R.conns <= 2) and rand_odds(99) then
+      if (#R.conns <= 2) and rand_odds(big_bra_chance) then
         gui.debugf("Branching BIG %s k_score: %1.3f\n", R:tostr(), R.k_score)
 
         local kinds = {}
