@@ -97,15 +97,15 @@ function Rooms_decide_outdoors()
       end
     end
 
-    if PLAN.sky_mode == "heaps" then return rand_odds(60) end
-    if PLAN.sky_mode == "few"   then return rand_odds(6) end
+    if PLAN.sky_mode == "heaps" then return rand_odds(50) end
+    if PLAN.sky_mode == "few"   then return rand_odds(5) end
 
     -- room on edge of map?
     if R.sx1 <= 2 or R.sy1 <= 2 or R.sx2 >= SEED_W-1 or R.sy2 >= SEED_H-1 then
-      return rand_odds(35)
+      return rand_odds(27)
     end
 
-    return rand_odds(8)
+    return rand_odds(9)
   end
 
   ---| Rooms_decide_outdoors |---
