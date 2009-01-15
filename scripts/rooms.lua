@@ -489,19 +489,10 @@ gui.printf("do_teleport\n")
 
 
   local function build_seed(S)
-    assert(S)
 
     if S.already_built then
       return
     end
-
-    if not S.room then
-      return
-    end
-
-    local R = S.room
-
-    --- assert(R.kind ~= "scenic")
 
     local x1 = S.x1
     local y1 = S.y1
@@ -510,60 +501,23 @@ gui.printf("do_teleport\n")
 
     local z1 = S.floor_h or R.floor_h
     local z2 = S.ceil_h  or R.ceil_h
-    local f_tex, c_tex, w_tex
     local sec_kind
 
 
-      z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h or 0
-      z2 = z2 or S.room.ceil_h or 256
+    z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h or 0
+    z2 = z2 or S.room.ceil_h or 256
 
 -- z2 = 512
 
       assert(z1 and z2)
 
 
-      if R.combo then
-        f_tex = R.combo.floor
-        c_tex = sel(R.outdoor, PARAMS.sky_flat, R.combo.ceil)
-        w_tex = R.combo.wall
-      else
-        w_tex = "DBRAIN1"
-        f_tex = "LAVA1"
-        c_tex = f_tex
-      end
+    local w_tex = S.w_tex or R.combo.wall
+    local f_tex = S.f_tex or R.combo.floor
+    local c_tex = S.c_tex or sel(R.outdoor, PARAMS.sky_flat, R.combo.ceil)
 
 
-      if R.scenic_kind == "liquid" then
-        f_tex = "NUKAGE1"
-        c_tex = PARAMS.sky_flat
-        w_tex = "COMPBLUE"
-        sec_kind = 16
-
-      elseif R.kind == "hallway" then
-
-        f_tex = "FLOOR0_2"
-        c_tex = "FLAT4"
-
---!!!        make_hall_light(S, z2)
-
-----        f_tex = "FLAT23" ; c_tex = "FLAT23"
-
----     w_tex = "GRAY7"
-
-      elseif R.kind == "stairwell" then
-
-      else -- building
-      
-      end
-
-
-      if S.f_tex then f_tex = S.f_tex end
-      if S.c_tex then c_tex = S.c_tex end
-      if S.w_tex then w_tex = S.w_tex end
-
-
-
-    -- make sides
+    -- SIDES
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
@@ -585,7 +539,7 @@ gui.printf("do_teleport\n")
         B_kind = nil
       end
 
-      local could_lose_wall =
+      local could_lose_wall = -- FIXME: decide this in earlier code
             N and S.room and N.room and
             S.room.arena == N.room.arena and
             S.room.kind == N.room.kind and
@@ -653,131 +607,9 @@ gui.printf("do_teleport\n")
     if S.sides_only then return end
 
 
-    -- floor and ceiling brushes
+    -- DIAGONALS
 
-if S.kind == "void" then
-
-    transformed_brush2(nil,
-    {
-      t_face = { texture=f_tex },
-      b_face = { texture=f_tex },
-      w_face = { texture=w_tex },
-    },
-    {
-      { x=x2, y=y1 }, { x=x2, y=y2 },
-      { x=x1, y=y2 }, { x=x1, y=y1 },
-    },
-    2000, 2000);
-
-elseif S.kind == "foobar" then
-
-    transformed_brush2(nil,
-    {
-      t_face = { texture="NUKAGE1" },
-      b_face = { texture=f_tex },
-      w_face = { texture="SFALL1" },
-    },
-    {
-      { x=x2, y=y1 }, { x=x2, y=y2 },
-      { x=x1, y=y2 }, { x=x1, y=y1 },
-    },
-    -2000, -32);
-
-    transformed_brush2(nil,
-    {
-      t_face = { texture=f_tex },
-      b_face = { texture=f_tex },
-      w_face = { texture=w_tex },
-    },
-    {
-      { x=x2, y=y1 }, { x=x2, y=y2 },
-      { x=x1, y=y2 }, { x=x1, y=y1 },
-    },
-    256, 2000);
-
-elseif S.kind == "stair" then
-
-  local CH = S.layout and S.layout.char
-
-  local stair_info =
-  {
-    t_face = { texture="FLAT1" },
-    b_face = { texture="FLAT1" },
-    w_face = { texture="STEP4" },
-  }
-
-  if CH == ">" then
-     make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z1, S.layout.stair_z2)
-  elseif CH == "<" then
-     make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z2, S.layout.stair_z1)
-  elseif CH == "^" then
-     make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z1, S.layout.stair_z2)
-  elseif CH == "v" then
-     make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z2, S.layout.stair_z1)
-  elseif CH == "L" or CH == "J" or
-         CH == "F" or CH == "T" then
-
-     local x_side = 4  --!!!!
-     local y_side = 2  --!!!!
-
-     if (S.sx == S.room.sx1 or S.sx == S.room.sx2) and
-        (S.sy == S.room.sy1 or S.sy == S.room.sy2)
-     then
-       Build_tall_curved_stair(S, x1,y1, x2,y2, x_side, y_side, S.layout.stair_z1, S.layout.stair_z2)
-     else
-       Build_low_curved_stair(S, x_side, y_side, S.layout.stair_z1, S.layout.stair_z2)
-     end
-  end
-
-elseif S.kind == "lift" then
-  make_lift(S, 10-S.conn_dir, assert(S.layout.lift_h))
-
-elseif S.kind == "popup" then
-  make_popup_trap(S, z1, {}, S.room.combo)
-
-elseif not S.no_floor then
-    transformed_brush2(nil,
-    {
-      t_face = { texture=f_tex },
-      b_face = { texture=f_tex },
-      w_face = { texture=w_tex },
-      sec_kind = sec_kind,
-    },
-    {
-      { x=x2, y=y1 }, { x=x2, y=y2 },
-      { x=x1, y=y2 }, { x=x1, y=y1 },
-    },
-    -2000, z1);
-end
-
-
-    -- CEILING
-    if S.kind ~= "void" then
-      transformed_brush2(nil,
-      {
-        t_face = { texture=c_tex },
-        b_face = { texture=c_tex },
-        w_face = { texture=w_tex },
-      },
-      {
-        { x=x2, y=y1 }, { x=x2, y=y2 },
-        { x=x1, y=y2 }, { x=x1, y=y1 },
-      },
-      z2, 4000)
-    end
-
-
----?? if S.layout and S.layout.assign_stair and not S.layout.assign_stair.done then
----??   local INFO = S.layout.assign_stair
----??   if INFO.inner_h < INFO.outer_h then
----??     do_outdoor_ramp_down(INFO, f_tex, w_tex)
----??   else
----??     do_outdoor_ramp_up(INFO, f_tex, w_tex)
----??   end
----?? end
-
-
--- diagonal corners
+--[[ FIXME
 if (not S.room.outdoor or false) and not (S.room.kind == "hallway") and
    not S.is_start
 then
@@ -799,21 +631,133 @@ then
     make_diagonal(S, 9, diag_info, z1)
   end
 end
+--]]
 
 
+    -- CEILING
 
+    if S.kind ~= "void" then
+      transformed_brush2(nil,
+      {
+        t_face = { texture=c_tex },
+        b_face = { texture=c_tex },
+        w_face = { texture=w_tex },
+      },
+      {
+        { x=x2, y=y1 }, { x=x2, y=y2 },
+        { x=x1, y=y2 }, { x=x1, y=y1 },
+      },
+      z2, 4000)
+    end
+
+
+    -- FLOOR
+
+    if S.kind == "void" then
+
+      transformed_brush2(nil,
+      {
+        t_face = { texture=f_tex },
+        b_face = { texture=f_tex },
+        w_face = { texture=w_tex },
+      },
+      {
+        { x=x2, y=y1 }, { x=x2, y=y2 },
+        { x=x1, y=y2 }, { x=x1, y=y1 },
+      },
+      2000, 2000);
+
+    elseif S.kind == "foobar" then
+
+      transformed_brush2(nil,
+      {
+        t_face = { texture="NUKAGE1" },
+        b_face = { texture=f_tex },
+        w_face = { texture="SFALL1" },
+      },
+      {
+        { x=x2, y=y1 }, { x=x2, y=y2 },
+        { x=x1, y=y2 }, { x=x1, y=y1 },
+      },
+      -2000, -32);
+
+      transformed_brush2(nil,
+      {
+        t_face = { texture=f_tex },
+        b_face = { texture=f_tex },
+        w_face = { texture=w_tex },
+      },
+      {
+        { x=x2, y=y1 }, { x=x2, y=y2 },
+        { x=x1, y=y2 }, { x=x1, y=y1 },
+      },
+      256, 2000);
+
+    elseif S.kind == "stair" then
+
+  local CH = S.layout and S.layout.char
+
+      local stair_info =
+      {
+        t_face = { texture="FLAT1" },
+        b_face = { texture="FLAT1" },
+        w_face = { texture="STEP4" },
+      }
+
+      if S.stair_dir == 6 then
+         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z1, S.layout.stair_z2)
+      elseif S.stair_dir == 4 then
+         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z2, S.layout.stair_z1)
+      elseif S.stair_dir == 8 then
+         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z1, S.layout.stair_z2)
+      else assert(S.stair_dir == 2)
+         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z2, S.layout.stair_z1)
+      end
+
+    elseif S.kind == "curve_stair" then
+
+      if S.stair_in_corner then
+        Build_tall_curved_stair(S, x1,y1, x2,y2, S.x_side, S.y_side, S.x_height, S.y_height)
+      else
+        Build_low_curved_stair(S, S.x_side, S.y_side, S.x_height, S.y_height)
+      end
+
+    elseif S.kind == "lift" then
+      make_lift(S, 10-S.conn_dir, assert(S.layout.lift_h))
+
+    elseif S.kind == "popup" then
+      make_popup_trap(S, z1, {}, S.room.combo)
+
+    elseif not S.no_floor then
+
+      transformed_brush2(nil,
+      {
+        t_face = { texture=f_tex },
+        b_face = { texture=f_tex },
+        w_face = { texture=w_tex },
+        sec_kind = sec_kind,
+      },
+      {
+        { x=x2, y=y1 }, { x=x2, y=y2 },
+        { x=x1, y=y2 }, { x=x1, y=y1 },
+      },
+      -2000, z1);
+    end
+
+
+    -- MISCELLANEOUS
+
+    if S.has_pillar then
+      make_pillar(S, z1, z2, "TEKLITE")
+    end
+
+
+    -- TEMP SHIT
     local mx = int((x1+x2) / 2)
     local my = int((y1+y2) / 2)
 
-    if DIAGONAL_CORNERS then
-    if S.sx == R.sx1 then mx = mx + 48 end
-    if S.sx == R.sx2 then mx = mx - 48 end
-    if S.sy == R.sy1 then my = my + 48 end
-    if S.sy == R.sy2 then my = my - 48 end
-    end
-
     if S.room and S.room.kind ~= "scenic" and
-           (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
+       (S.sx == S.room.sx1) and (S.sy == S.room.sy1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
 
       local MON = next(GAME.monsters)
@@ -828,17 +772,7 @@ end
       })
     end
 
-    if S.layout and S.layout.pillar and not S.is_start then
-      make_pillar(S, z1, z2, "TEKLITE")
-    end
-
---[[ connection tester
-    if S.conn_dir then
-      make_arrow(S, S.conn_dir, z1)
-    end
---]]
-
-  end
+  end -- build_seed()
 
 
   ---==| Room_build_seeds |==---
@@ -846,7 +780,10 @@ end
   gui.printf("\n---==| Room_build_seeds |==---\n\n")
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    build_seed(SEEDS[x][y][1])
+    local S = SEEDS[x][y][1]
+    if S.room == R then
+      build_seed(S)
+    end
   end end -- x, y
 end
 
@@ -964,6 +901,8 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
 
   make_fences()
+
+
   make_windows()
 
   if R.purpose then
