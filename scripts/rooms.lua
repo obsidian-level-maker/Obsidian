@@ -26,6 +26,7 @@ class ROOM
   outdoor : bool  -- true for outdoor rooms
 
   conns : array(CONN)  -- connections with neighbor rooms
+  entry_conn : CONN
 
   branch_kind : keyword
 
@@ -40,8 +41,6 @@ class ROOM
   purpose : keyword   -- usually NIL, can be "EXIT" etc... (FIXME)
 
   arena : ARENA
-
-  from_room : ROOM  -- the room from which we enter this one
 
 
   --- plan_sp code only:
@@ -402,9 +401,9 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
     then
       local hall_nb = hallway_neighbors(R) 
 
-      local prob = 70
+      local prob = 80
       if hall_nb >= 2 then prob = 2  end
-      if hall_nb == 1 then prob = 30 end
+      if hall_nb == 1 then prob = 40 end
 
       if rand_odds(prob) then
         R.kind = "stairwell"
@@ -469,7 +468,7 @@ if idx < 1 then return end
     local x2 = mx + 32
     local y2 = my + 32
 
-    local z1 = (S.floor_h or S.room.floor_h) + 16
+    local z1 = (S.floor_h or R.floor_h) + 16
 
     local tag = sel(TELEP.src == S.room, TELEP.src_tag, TELEP.dest_tag)
     assert(tag)
@@ -951,7 +950,7 @@ function Room_layout_II(R)
 
   local function add_purpose()
     local sx, sy, S = Room_spot_for_wotsit(R, R.purpose)
-    local z1 = 0 --!!!!
+    local z1 = S.floor_h or R.floor_h
 
     local mx, my = S:mid_point()
 
@@ -996,11 +995,46 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     end
   end
 
+  local function stairwell_height_diff(focus_C)
+    local other_C = R.conns[2]
+    if other_C == focus_C then other_C = R.conns[1] end
+
+    assert(focus_C.conn_h)
+    assert(not other_C.conn_h)
+
+    other_C.conn_h = focus_C.conn_h
+
+    if rand_odds(7) then
+      -- no change
+    else
+      local delta = rand_element { -2,-2,-1, 1,2,2 }
+
+      other_C.conn_h = other_C.conn_h + delta * 64
+
+      if other_C.conn_h > 384 then other_C.conn_h = 384 end
+      if other_C.conn_h <   0 then other_C.conn_h =   0 end
+    end
+  end
+
 
   ---==| Room_layout_II |==---
 
+  local focus_C = R.entry_conn
+  if not focus_C then
+    focus_C = assert(R.conns[1])
+  end
+
+  if not focus_C.conn_h then
+gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
+    focus_C.conn_h = SKY_H - 256 --!!!!  rand_irange(1,3) * 128
+  end
+
+  R.floor_h = focus_C.conn_h  -- ??? BLEH
+
   -- special stuff
   if R.kind == "stairwell" then
+    stairwell_height_diff(focus_C)
+
     Build_stairwell(R)
     return
   end
@@ -1008,6 +1042,14 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
   if R.purpose == "EXIT" and not R.outdoor and not R:has_any_lock() then
     Build_small_exit(R)
     return
+  end
+
+
+  -- TEMP CRUD !!!
+  for _,C in ipairs(R.conns) do
+    if not C.conn_h then
+      C.conn_h = focus_C.conn_h + rand_irange(-1,1)*16
+    end
   end
 
 
