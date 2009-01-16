@@ -389,6 +389,7 @@ function Test_height_patterns()
         if ch == 'A' then return 10
     elseif ch == 'B' then return 11
     elseif ch == 'C' then return 12
+    elseif ch == 'D' then return 13
     else return 0 + (ch)
     end
   end
@@ -423,7 +424,7 @@ function Test_height_patterns()
 
     for y = #y_sizes,1,-1 do
       local y_num = pos_size(y_sizes, y)
-      local src = assert(info.structure[#y_sizes+1-y])
+      local src = assert(info.structure[#y_sizes+1 - y])
       local padded = pad_line(src, x_sizes)
       for i = 1,y_num do
         gui.printf("  %s\n", padded)
@@ -1177,6 +1178,158 @@ end
 end
 
 
+function Room_divide(R, new_h)
+  -- find a usable pattern in the HEIGHT_PATTERNS table and
+  -- apply it to the room.
+
+  assert(R.tx1)
+  local tw, th = box_size(R.tx1, R.ty1, R.tx2, R.ty2)
+
+  -- TODO: these little functions are duplicated in Test_height_patterns
+  local function pos_size(s, n)
+    local ch = string.sub(s, n, n)
+        if ch == 'A' then return 10
+    elseif ch == 'B' then return 11
+    elseif ch == 'C' then return 12
+    elseif ch == 'D' then return 13
+    else return 0 + (ch)
+    end
+  end
+
+  local function total_size(s)
+    local total = 0
+    for i = 1,#s do
+      total = total + pos_size(s, i)
+    end
+    return total
+  end
+
+  local function pad_line(src, x_sizes)
+    assert(#src == #x_sizes)
+
+    local padded = ""
+
+    for x = 1,#x_sizes do
+      local x_num = pos_size(x_sizes, x)
+      local ch = string.sub(src, x, x)
+
+      for i = 1,x_num do
+        padded = padded .. ch
+      end
+    end
+
+    return padded
+  end
+
+  local function matching_sizes(list, dim)
+    local result
+    
+    for _,sz in ipairs(list) do
+      if total_size(sz) == dim then
+        if not result then result = {} end
+        table.insert(result, sz)
+      end
+    end
+
+    return result
+  end
+
+  local function expand_structure(info, x_sizes, y_sizes)
+    local expanded = {}
+
+    for y = 1,#y_sizes do
+      local y_num = pos_size(y_sizes, y)
+      local src = info.structure[#y_sizes+1 - y]
+      local padded = pad_line(src, x_sizes)
+      for i = 1,y_num do
+        table.insert(expanded, 1, padded)
+      end
+    end
+
+    return expanded
+  end
+
+  local function does_fit(info, expanded, long, deep, tr, x_flip, y_flip)
+    return true --!!!!
+  end
+
+  local function install_it(info, expanded, long, deep, tr, x_flip, y_flip)
+gui.debugf("expanded = %s\n", table_to_str(expanded,3))
+    error("install_it NOT DONE")
+  end
+
+  local function try_install_pattern(name)
+    local info = assert(HEIGHT_PATTERNS[name])
+
+    local transposes = { false } --!!!! { false, true }
+    rand_shuffle(transposes)
+
+    for _,tr in ipairs(transposes) do
+      local long, deep = tw, th
+      if tr then long, deep = th, tw end
+
+      local x_sizes = matching_sizes(info.x_sizes, long)
+      local y_sizes = matching_sizes(info.y_sizes, deep)
+
+gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(tr), long, deep)
+      if x_sizes and y_sizes then
+        local xs = rand_element(x_sizes)
+        local ys = rand_element(y_sizes)
+
+        local expanded = expand_structure(info, xs, ys)
+
+        -- FIXME !!!!  test all four possibilities
+        local x_flip = rand_odds(0)
+        local y_flip = rand_odds(0)
+
+        -- FIXME prefer patterns where some of the connections touch
+        --       the old area and some touch the new area.
+
+        if does_fit(info, expanded, long, deep, tr, x_flip, y_flip) then
+          install_it(info, expanded, long, deep, tr, x_flip, y_flip)
+          return true  -- YES !!
+        end
+      end
+    end
+
+    return false
+  end
+
+
+  ---==| Room_divide |==---
+ 
+  if R.children then return false end
+
+  if R.kind == "hallway" or R.kind == "stairwell" then return false end
+
+  local try_fabs = {}
+  for name,info in pairs(HEIGHT_PATTERNS) do
+    -- TODO: symmetry matching
+    try_fabs[name] = info.prob or 50
+  end
+
+
+  for loop = 1,10 do
+    if table_empty(try_fabs) then
+      break;
+    end
+
+    local which = rand_key_by_probs(try_fabs)
+    try_fabs[which] = nil
+
+    gui.debugf("Trying pattern %s in %s (loop %d)......\n",
+               which, R:tostr(), loop)
+
+    if try_install_pattern(which) then
+      gui.debugf("SUCCESS with %s!\n", which)
+      return true
+    end
+  end
+
+  gui.debugf("FAILED to apply any room pattern.\n")
+  return false
+end
+
 
 function Room_layout_II(R)
 
@@ -1449,6 +1602,22 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   make_windows()
 
+
+  R.tx1 = R.sx1 + R.junk_thick[4]
+  R.ty1 = R.sy1 + R.junk_thick[2]
+  R.tx2 = R.sx2 - R.junk_thick[6]
+  R.ty2 = R.sy2 - R.junk_thick[8]
+
+  local delta = 64 * rand_element { -1, 1 }
+  if Room_divide(R, R.floor_h + delta) and
+     true
+----!!!!     Room_divide(R, R.floor_h + delta * 2) and
+----!!!!     Room_divide(R, R.floor_h + delta * 3)
+  then
+     -- Yay
+  end
+
+
   if R.purpose then
     add_purpose()
   end
@@ -1537,6 +1706,6 @@ function Rooms_lay_out_II()
     Room_do_scenic(R)
   end
 
-  Test_height_patterns()
+---  Test_height_patterns()
 end
 
