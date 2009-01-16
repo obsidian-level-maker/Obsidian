@@ -1254,8 +1254,47 @@ function Room_divide(R, new_h)
   end
 
   local function install_it(info, expanded, long, deep, tr, x_flip, y_flip)
-gui.debugf("expanded = %s\n", table_to_str(expanded,3))
-    error("install_it NOT DONE")
+
+    -- these vars compute the new area (where the dots are).
+    local nx_min, nx_max = 999, -999
+    local ny_min, ny_max = 999, -999
+
+    for i = 1,long do for j = 1,deep do
+      -- FIXME: proper coordinate translation !!
+      local x = R.tx1 + (i-1)
+      local y = R.ty1 + (j-1)
+
+      assert(Seed_valid(x, y, 1))
+      local S = SEEDS[x][y][1]
+
+      assert(S and S.room == R)
+
+----gui.debugf("long:%d deep:%d expanded:\n%s\n", long, deep, table_to_str(expanded,3))
+      local i2 = sel(x_flip, long+1-i, i)
+      local j2 = sel(y_flip, j, deep+1-j)
+
+      local ch = string.sub(expanded[j2], i2, i2)
+      assert(ch)
+
+      if ch == '#' then
+        -- do nothing, keep existing floor_h
+      elseif ch == '.' then
+        -- write in new height
+        S.floor_h = new_h
+
+        if S.conn then S.conn.conn_h = new_h end
+
+        nx_min = math.min(nx_min, x) ; nx_max = math.max(nx_max, x)
+        ny_min = math.min(ny_min, y) ; ny_max = math.max(ny_max, y)
+      else
+        -- FIXME !!!!!! STAIRS
+      end
+    end end -- i, j
+
+    assert(nx_max > 0)
+
+    R.tx1 = nx_min ; R.tx2 = nx_max
+    R.ty1 = ny_min ; R.ty2 = ny_max
   end
 
   local function try_install_pattern(name)
@@ -1279,8 +1318,8 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(tr), long, deep)
         local expanded = expand_structure(info, xs, ys)
 
         -- FIXME !!!!  test all four possibilities
-        local x_flip = rand_odds(0)
-        local y_flip = rand_odds(0)
+        local x_flip = rand_odds(50)
+        local y_flip = rand_odds(50)
 
         -- FIXME prefer patterns where some of the connections touch
         --       the old area and some touch the new area.
@@ -1344,8 +1383,6 @@ function Room_layout_II(R)
     -- Usually only junk one side, sometimes two.
 
     -- FIXME: occasionaly make ledge-cages in OUTDOOR rooms
-
-    R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
     local min_space = 2
 
@@ -1594,9 +1631,21 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
 
+  R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
+
   if R.kind == "building" and not R.children then
     junk_sides()
   end
+
+
+  -- MORE TEMP JUNK
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R then
+      if not S.floor_h then S.floor_h = R.floor_h end
+    end
+  end end -- x, y
+
 
   make_fences()
 
@@ -1608,11 +1657,10 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   R.tx2 = R.sx2 - R.junk_thick[6]
   R.ty2 = R.sy2 - R.junk_thick[8]
 
-  local delta = 64 * rand_element { -1, 1 }
+  local delta = 24 * rand_element { -1, 1 }
   if Room_divide(R, R.floor_h + delta) and
-     true
-----!!!!     Room_divide(R, R.floor_h + delta * 2) and
-----!!!!     Room_divide(R, R.floor_h + delta * 3)
+     Room_divide(R, R.floor_h + delta * 2) and
+     Room_divide(R, R.floor_h + delta * 3)
   then
      -- Yay
   end
