@@ -103,9 +103,10 @@ HEIGHT_PATTERNS =
 
     y_sizes =
     {
-      "111", "112", "113",
-      "211", "212", "213", "214", "215", "216",
-      "312", "313", "314", "315", "316", "317", "318", "319",
+      "011", "012", "013",
+      "112", "113", "114", "115",
+      "212", "213", "214", "215", "216",
+      "313", "314", "315", "316", "317", "318", "319",
       "413", "415", "416", "417", "418",
     },
   },
@@ -128,9 +129,10 @@ HEIGHT_PATTERNS =
 
     y_sizes =
     {
-      "111", "112", "113",
-      "211", "212", "213", "214", "215", "216",
-      "312", "313", "314", "315", "316", "317", "318", "319",
+      "011", "012", "013",
+      "112", "113", "114", "115",
+      "212", "213", "214", "215", "216",
+      "313", "314", "315", "316", "317", "318", "319",
       "413", "415", "416", "417", "418",
     },
   },
@@ -371,7 +373,102 @@ HEIGHT_PATTERNS =
     },
   },
 
+
+  -- TODO: T shape
+
+  -- TODO: H shape
+
+  -- TODO: Z shape
 }
+
+
+function Test_height_patterns()
+  
+  local function pos_size(s, n)
+    local ch = string.sub(s, n, n)
+        if ch == 'A' then return 10
+    elseif ch == 'B' then return 11
+    elseif ch == 'C' then return 12
+    else return 0 + (ch)
+    end
+  end
+
+  local function total_size(s)
+    local total = 0
+    for i = 1,#s do
+      total = total + pos_size(s, i)
+    end
+    return total
+  end
+
+  local function pad_line(src, x_sizes)
+    assert(#src == #x_sizes)
+
+    local padded = ""
+
+    for x = 1,#x_sizes do
+      local x_num = pos_size(x_sizes, x)
+      local ch = string.sub(src, x, x)
+
+      for i = 1,x_num do
+        padded = padded .. ch
+      end
+    end
+
+    return padded
+  end
+
+  local function dump_one_pattern(info, x_sizes, y_sizes)
+    assert(#info.structure == #y_sizes)
+
+    for y = #y_sizes,1,-1 do
+      local y_num = pos_size(y_sizes, y)
+      local src = assert(info.structure[#y_sizes+1-y])
+      local padded = pad_line(src, x_sizes)
+      for i = 1,y_num do
+        gui.printf("  %s\n", padded)
+      end
+    end
+
+    gui.printf("\n")
+  end
+
+  local function show_pattern(name, info, long, deep)
+    assert(info.structure)
+    assert(info.x_sizes)
+    assert(info.y_sizes)
+
+    gui.printf("==== %s %dx%d ==================\n\n", name, long, deep)
+
+    local count = 0
+
+    for _,ys in ipairs(info.y_sizes) do
+      if total_size(ys) == deep then
+        for _,xs in ipairs(info.x_sizes) do
+          if total_size(xs) == long then
+            dump_one_pattern(info, xs, ys)
+            count = count + 1
+          end
+        end -- xs
+      end
+    end -- ys
+
+    if count == 0 then
+      gui.printf("Unsupported size\n\n")
+    end
+  end
+
+  ---| dump_height_patterns |---
+  
+  for name,info in pairs(HEIGHT_PATTERNS) do
+    gui.printf("HEIGHT PATTERN: %s\n\n", name)
+
+    for deep = 2,11 do for long = 2,11 do
+      show_pattern(name, info, long, deep)
+    end end
+  end
+end
+
 
 
 function Rooms_decide_outdoors()
@@ -1439,5 +1536,7 @@ function Rooms_lay_out_II()
   for _,R in ipairs(PLAN.scenic_rooms) do
     Room_do_scenic(R)
   end
+
+  Test_height_patterns()
 end
 
