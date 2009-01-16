@@ -131,6 +131,7 @@ function Quest_decide_start_room(arena)
       end
       if R == C.src and not visited[C.dest] then
         natural_flow(C.dest, visited)
+        C.dest.from_room = C.src
       end
     end
 
@@ -140,6 +141,7 @@ function Quest_decide_start_room(arena)
       end
       if R == T.src and not visited[T.dest] then
         natural_flow(T.dest, visited)
+        T.dest.from_room = T.src
       end
     end
   end

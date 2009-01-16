@@ -63,6 +63,10 @@ OB_THEMES["mixed"] =
 }
 
 
+-- Room layout stuff
+SKY_H = 512
+
+
 -- Fight Simulator constants and tables
 
 PLAYER_ACCURACIES = { easy=0.50, medium=0.65, hard=0.80 }

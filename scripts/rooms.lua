@@ -41,6 +41,8 @@ class ROOM
 
   arena : ARENA
 
+  from_room : ROOM  -- the room from which we enter this one
+
 
   --- plan_sp code only:
 
@@ -509,7 +511,7 @@ gui.printf("do_teleport\n")
 
 
     z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h or 0
-    z2 = z2 or S.room.ceil_h or 256
+    z2 = z2 or S.room.ceil_h or SKY_H
 
 -- z2 = 512
 
@@ -781,8 +783,6 @@ end
 
   ---==| Room_build_seeds |==---
 
-  gui.printf("\n---==| Room_build_seeds |==---\n\n")
-
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
     if S.room == R then
@@ -793,7 +793,7 @@ end
 
 
 
-local function Room_layout_II(R)
+function Room_layout_II(R)
 
   local function junk_sides()
     -- Adds solid seeds (kind "void") to the edges of large rooms.
@@ -1015,9 +1015,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     junk_sides()
   end
 
-
   make_fences()
-
 
   make_windows()
 
@@ -1028,6 +1026,51 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
   -- ETC ETC !!!
 
 end
+
+
+
+function Room_do_scenic(R)
+
+  local function build_scenic_seed(S)
+    local z1 = -24
+    local z2  = SKY_H
+
+    transformed_brush2(nil,
+    {
+      t_face = { texture="NUKAGE1" },
+      b_face = { texture="NUKAGE1" },
+      w_face = { texture="SFALL1" },
+      sec_kind = 16,
+    },
+    {
+      { x=S.x2, y=S.y1 }, { x=S.x2, y=S.y2 },
+      { x=S.x1, y=S.y2 }, { x=S.x1, y=S.y1 },
+    },
+    -2000, z1);
+
+    transformed_brush2(nil,
+    {
+      t_face = { texture=PARAMS.sky_flat },
+      b_face = { texture=PARAMS.sky_flat },
+      w_face = { texture=PARAMS.sky_tex  },
+    },
+    {
+      { x=S.x2, y=S.y1 }, { x=S.x2, y=S.y2 },
+      { x=S.x1, y=S.y2 }, { x=S.x1, y=S.y1 },
+    },
+    z2, 2000)
+  end
+
+  ---| Room_do_scenic |---
+
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R then
+      build_scenic_seed(S)
+    end
+  end end -- x, y
+end
+
 
 
 function Rooms_lay_out_II()
@@ -1061,7 +1104,7 @@ function Rooms_lay_out_II()
   end
 
   for _,R in ipairs(PLAN.scenic_rooms) do
-    -- FIXME !!!  Room_do_scenic(R)
+    Room_do_scenic(R)
   end
 end
 
