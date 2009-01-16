@@ -222,6 +222,8 @@ function Plan_CreateRooms()
       local big_w = int(big / 10)
       local big_h = big % 10
 
+      -- FIXME !!!!!  prevent rooms bigger than 13 seeds
+
       if big_w > 1 or big_h > 1 then
         if rand_odds(50) then big_w, big_h = big_h, big_w end
         
@@ -397,9 +399,10 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     -- already moved this border?
     if R.nudges[side] then return false end
 
-    -- would get too small?
----###    if volume_after_nudge(R, side, grow) < 3 then return false end
-    if depth_after_nudge(R, side, grow) < 2 then return false end
+    -- would get too small?  or too big?
+    local new_d = depth_after_nudge(R, side, grow)
+
+    if new_d < 2 or new_d > 13 then return false end
 
     -- side sits on border of the map?
 --[[
