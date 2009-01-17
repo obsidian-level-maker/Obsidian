@@ -318,6 +318,8 @@ HEIGHT_PATTERNS =
       "11311", "11411", "11511", "11611", "11711", "11811", "11911",
       "21312", "21412", "21512", "21612", "21712",
     },
+
+    low_ceil = true,
   },
 
 
@@ -344,6 +346,8 @@ HEIGHT_PATTERNS =
       "11311", "11411", "11511", "11611", "11711", "11811", "11911",
       "21312", "21412", "21512", "21612", "21712",
     },
+
+    low_ceil = true,
   },
 
 
@@ -371,6 +375,8 @@ HEIGHT_PATTERNS =
       "11311", "11411", "11511", "11611", "11711", "11811", "11911",
       "21312", "21412", "21512", "21612", "21712",
     },
+
+    low_ceil = true,
   },
 
 
@@ -1083,8 +1089,6 @@ end
 
     elseif S.kind == "stair" then
 
-  local CH = S.layout and S.layout.char
-
       local stair_info =
       {
         t_face = { texture="FLAT1" },
@@ -1093,16 +1097,16 @@ end
       }
 
       if S.stair_dir == 6 then
-         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z1, S.layout.stair_z2)
+         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.stair_z1, S.stair_z2)
       elseif S.stair_dir == 4 then
-         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.layout.stair_z2, S.layout.stair_z1)
+         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.stair_z2, S.stair_z1)
       elseif S.stair_dir == 8 then
-         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z1, S.layout.stair_z2)
+         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.stair_z1, S.stair_z2)
       else assert(S.stair_dir == 2)
-         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.layout.stair_z2, S.layout.stair_z1)
+         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.stair_z2, S.stair_z1)
       end
 
-    elseif S.kind == "curve_stair" then
+    elseif S.kind == "turn_stair" then
 
       if S.stair_in_corner then
         Build_tall_curved_stair(S, x1,y1, x2,y2, S.x_side, S.y_side, S.x_height, S.y_height)
@@ -1291,8 +1295,8 @@ function Room_try_divide(R, div_lev, area, heights)
       end
     end
 
-    if T.transpose then
-      ch = assert(TRANSPOSE_STAIR_TAB[ch])
+    if T.transpose and TRANSPOSE_STAIR_TAB[ch] then
+      ch = TRANSPOSE_STAIR_TAB[ch]
     end
 
     return ch
@@ -1311,9 +1315,9 @@ function Room_try_divide(R, div_lev, area, heights)
       local S = SEEDS[x][y][1]
       assert(S and S.room == R)
 
-      local ch = string.sub(expanded[deep+1-j], i, i)
+      local ch = string.sub(T.expanded[T.deep+1-j], i, i)
       assert(ch)
-      ch = morph_stair(ch)
+      ch = morph_stair(T, ch)
 
       -- FIXME: TEST STUFF !!!
     end end -- for i, j
@@ -1331,21 +1335,44 @@ function Room_try_divide(R, div_lev, area, heights)
       local x, y = morph_coord(T, i, j)
       local S = SEEDS[x][y][1]
 
-      local ch = string.sub(expanded[deep+1-j], i, i)
-      ch = morph_ch(T, ch)
+      local ch = string.sub(T.expanded[T.deep+1-j], i, i)
+      ch = morph_stair(T, ch)
 
       if ch == '#' then
         S.floor_h = heights[1]
+
+        if S.conn then S.conn.conn_h = heights[1] end
+
       elseif ch == '.' then
         -- write in new height
----        S.floor_h = new_h
+        S.floor_h = heights[2]
 
-        if S.conn then S.conn.conn_h = new_h end
+        if S.conn then S.conn.conn_h = heights[2] end
 
         nx_min = math.min(nx_min, x) ; nx_max = math.max(nx_max, x)
         ny_min = math.min(ny_min, y) ; ny_max = math.max(ny_max, y)
-      else
-        -- FIXME !!!!!! STAIRS
+
+      elseif ch == '<' then
+        S.kind = "stair"
+        S.stair_dir = 4
+
+      elseif ch == '>' then
+        S.kind = "stair"
+        S.stair_dir = 6
+
+      elseif ch == '^' then
+        S.kind = "stair"
+        S.stair_dir = 8
+
+      elseif ch == 'v' then
+        S.kind = "stair"
+        S.stair_dir = 2
+
+      end
+
+      if S.kind == "stair" then
+        S.stair_z1 = assert(heights[2])
+        S.stair_z2 = assert(heights[1])
       end
     end end -- for i, j
 
@@ -1356,7 +1383,7 @@ function Room_try_divide(R, div_lev, area, heights)
     table.remove(new_hs, 1)
 
     -- recursive call
-    Room_try_divide(R, div_lev+1, new_a, new_hs)
+--!!!!!!    Room_try_divide(R, div_lev+1, new_a, new_hs)
   end
 
   local function try_install_pattern(name)
@@ -1375,7 +1402,7 @@ function Room_try_divide(R, div_lev, area, heights)
       T.x_sizes = matching_sizes(info.x_sizes, T.long)
       T.y_sizes = matching_sizes(info.y_sizes, T.deep)
 
-gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(tr), long, deep)
+gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
       if T.x_sizes and T.y_sizes then
         local xs = rand_element(T.x_sizes)
         local ys = rand_element(T.y_sizes)
@@ -1713,22 +1740,13 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
   if R.kind == "building" and not R.children then
-    junk_sides()
+--!!!!!!    junk_sides()
   end
 
 
   make_fences()
 
   make_windows()
-
-
-  -- MORE TEMP JUNK
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
-    if S.room == R then
-      if not S.floor_h then S.floor_h = R.floor_h ; S.f_tex = "LAVA1" end
-    end
-  end end -- for x,y
 
 
 
@@ -1746,6 +1764,16 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   local heights = { R.floor_h, R.floor_h + delta, R.floor_h + delta * 2, R.floor_h + delta * 3 }
 
   Room_try_divide(R, 1, area, heights)
+
+
+  -- MORE TEMP JUNK
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R then
+      if not S.floor_h then S.floor_h = R.floor_h ; S.f_tex = "LAVA1" end
+    end
+  end end -- for x,y
+
 
 
   if R.purpose then
