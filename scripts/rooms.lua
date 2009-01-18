@@ -1097,13 +1097,13 @@ end
       }
 
       if S.stair_dir == 6 then
-         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.stair_z1, S.stair_z2)
+         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.stair_z1, S.stair_z2, "exact")
       elseif S.stair_dir == 4 then
-         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.stair_z2, S.stair_z1)
+         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.stair_z2, S.stair_z1, "exact")
       elseif S.stair_dir == 8 then
-         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.stair_z1, S.stair_z2)
+         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.stair_z1, S.stair_z2, "exact")
       else assert(S.stair_dir == 2)
-         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.stair_z2, S.stair_z1)
+         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.stair_z2, S.stair_z1, "exact")
       end
 
     elseif S.kind == "turn_stair" then
@@ -1186,6 +1186,11 @@ function Room_try_divide(R, div_lev, area, heights)
   -- seed in the given 'area'.
 
   area.tw, area.th = box_size(area.x1, area.y1, area.x2, area.y2)
+
+gui.debugf("Room_try_divide @ %s  div_lev:%d\n", R:tostr(), div_lev)
+gui.debugf("Area: (%d,%d)..(%d,%d) heights: %d %d %d\n",
+area.x1, area.y1, area.x2, area.y2,
+heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
 
 
@@ -1287,8 +1292,8 @@ function Room_try_divide(R, div_lev, area, heights)
     end
 
     if T.y_flip then
-          if ch == '<' then ch = '>'
-      elseif ch == '>' then ch = '<'
+          if ch == 'v' then ch = '^'
+      elseif ch == '^' then ch = 'v'
       end
     end
 
@@ -1325,6 +1330,7 @@ function Room_try_divide(R, div_lev, area, heights)
 
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn
+      if C.conn_h then assert(C.conn_h == h) end
       C.conn_h = h
     end
   end
@@ -1334,6 +1340,10 @@ function Room_try_divide(R, div_lev, area, heights)
     -- the old area and some touch the new area.
 
     local score = 1 + gui.random()
+
+    local hash_c  = 0
+    local dot_c   = 0
+    local other_c = 0
 
     for i = 1,T.long do for j = 1,T.deep do
       local x, y = morph_coord(T, i, j)
@@ -1346,19 +1356,35 @@ function Room_try_divide(R, div_lev, area, heights)
       assert(ch)
       ch = morph_stair(T, ch)
 
-      if (S.conn or S.pseudo_conn or S.must_walk) and
-         not (ch == '#' or ch == '.' or ch == '/')
-      then
-        return -1
+      if (S.conn or S.pseudo_conn or S.must_walk) then
+            if ch == '#' then hash_c  = hash_c  + 1
+        elseif ch == '.' then dot_c   = dot_c   + 1
+        elseif ch == '/' then other_c = other_c + 1
+        else
+          return -1
+        end
       end
 
-      -- FIXME: TEST STUFF !!!
+      if S.conn == R.focus_conn then
+        T.has_focus = ch
+      end
     end end -- for i, j
+
+    -- big bonus if connections touch all three areas
+    score = score + math.min(hash_c, dot_c, other_c) * 100
+
+    score = score + math.min(hash_c, dot_c)   * 20
+    score = score + math.min(hash_c, other_c) * 5 
+
+---  if hash_c > 0 then score = score + 1 end
+
+    if not (T.has_focus == '#') then return -1 end --!!!!!!!!
 
     return score
   end
 
   local function install_it(T, hash_h)
+gui.debugf("install_it :  hash_h:%d\n", hash_h)
     for i = 1,T.long do for j = 1,T.deep do
       local x, y = morph_coord(T, i, j)
       local S = SEEDS[x][y][1]
@@ -1375,18 +1401,26 @@ function Room_try_divide(R, div_lev, area, heights)
       elseif ch == '<' then
         S.kind = "stair"
         S.stair_dir = 4
+        S.floor_h = hash_h
+        assert(not S.conn)
 
       elseif ch == '>' then
         S.kind = "stair"
         S.stair_dir = 6
+        S.floor_h = hash_h
+        assert(not S.conn)
 
       elseif ch == '^' then
         S.kind = "stair"
         S.stair_dir = 8
+        S.floor_h = hash_h
+        assert(not S.conn)
 
       elseif ch == 'v' then
         S.kind = "stair"
         S.stair_dir = 2
+        S.floor_h = hash_h
+        assert(not S.conn)
 
       elseif ch == 'S' then
         S.kind = "void"
@@ -1395,19 +1429,27 @@ function Room_try_divide(R, div_lev, area, heights)
 
       end
 
-      --!!!!!!!!!! setup stairs properly
+      -- setup stair heights
       if S.kind == "stair" then
-        S.stair_z1 = assert(hash_h - 64)  
-        S.stair_z2 = assert(hash_h)
+        local N = S:neighbor(S.stair_dir)
+gui.debugf("%s S(%d,%d) stair_dir:%d N(%d,%d)\n", R:tostr(), x, y, S.stair_dir, N.sx, N.sy)
+gui.debugf("T\n%s\n", table_to_str(T, 1))
+gui.debugf("expanded\n%s\n", table_to_str(T.expanded, 3))
+        assert(N)
+        assert(N.room == R)
+        assert(R:contains_seed(N.sx, N.sy))
+
+        S.stair_z1 = assert(hash_h)  
+        S.stair_z2 = assert(N.floor_h)
       end
     end end -- for i, j
   end
 
-  local function install_flat_floor()
+  local function install_flat_floor(h)
     for x = area.x1,area.x2 do for y = area.y1,area.y2 do
       local S = SEEDS[x][y][1]
       if S.room == R and not S.floor_h then
-        set_seed_floor(S, heights[1])
+        set_seed_floor(S, h)
       end
     end end -- for x, y
   end
@@ -1436,8 +1478,8 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
         expand_structure(T, info, xs, ys)
 
         for xf_n = 0,1 do for yf_n = 0,1 do
-          T.x_flip = (xf_n == 1)
-          T.y_flip = (yf_n == 1)
+          T.x_flip = (xf_n == 2) --!!!!
+          T.y_flip = (yf_n == 2) --!!!!
 
           T.score = eval_fab(T)
 
@@ -1452,20 +1494,30 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
       return false
     end
 
-    local good_T = table_sorted_first(possibles,
+    T = table_sorted_first(possibles,
         function(A,B) return A.score > B.score end)
 
     -- recursive sub-division
-    local sub_1 = find_sub_area(good_T, '.')
-    local sub_2 = find_sub_area(good_T, '/')
+    local sub_1 = find_sub_area(T, '.')
+    local sub_2 = find_sub_area(T, '/')
 
     local new_hs = shallow_copy(heights)
-    local hash_h = table.remove(new_hs, 1)
+
+    local hash_h
+
+gui.debugf("  new_hs: %d %d %d\n",
+new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
+
+    if T.has_focus == '#' then
+      hash_h = table.remove(new_hs, 1)
+    end
 
     if sub_1 then Room_try_divide(R, div_lev+1, sub_1, new_hs) end
     if sub_2 then Room_try_divide(R, div_lev+1, sub_2, new_hs) end
 
-    install_it(good_T, hash_h)
+    if not hash_h then error("WTF") end ---!!!! hash_h = heights[2] or heights[1] end
+
+    install_it(T, hash_h)
 
     return true  -- YES !!
   end
@@ -1511,8 +1563,11 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
 
   ---==| Room_divide |==---
  
-  if not do_try_divide() then
-    install_flat_floor()
+  if do_try_divide() then
+gui.debugf("Success (div_lev %d)\n\n", div_lev)
+  else
+gui.debugf("Failed (div_lev %d)\n\n", div_lev)
+    install_flat_floor(heights[1])
   end
 end
 
@@ -1755,6 +1810,9 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     focus_C = assert(R.conns[1])
   end
 
+  R.focus_conn = focus_C
+
+
   if not focus_C.conn_h then
 gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     focus_C.conn_h = SKY_H - 256 --!!!!  rand_irange(1,3) * 128
@@ -1776,14 +1834,6 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
 
-  -- TEMP CRUD !!!
-  for _,C in ipairs(R.conns) do
-    if not C.conn_h then
-      C.conn_h = focus_C.conn_h --##  + rand_irange(-1,1)*16
-    end
-  end
-
-
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
   if R.kind == "building" and not R.children then
@@ -1801,13 +1851,18 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   }
 
   -- FIXME: proper height selection
+  local base_h = focus_C.conn_h
   local delta = 64 * rand_element { -1, 1 }
-  if (R.floor_h >= 256 and delta > 0) or
-     (R.floor_h <= 128 and delta < 0) then delta = -delta end
-
-  local heights = { R.floor_h, R.floor_h + delta, R.floor_h + delta * 2, R.floor_h + delta * 3 }
+  if (base_h >= 256 and delta > 0) or
+     (base_h <= 128 and delta < 0) then delta = -delta end
+  local heights = { base_h, base_h + delta, base_h + delta * 2, base_h + delta * 3 }
 
   Room_try_divide(R, 1, area, heights)
+
+
+  for _,C in ipairs(R.conns) do
+    assert(C.conn_h)
+  end
 
 
   -- FIXME: ARGH, we don't know what heights on other side will be!!
