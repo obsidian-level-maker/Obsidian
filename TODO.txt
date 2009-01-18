@@ -3,6 +3,42 @@ TODO
 ====
 
 
++  fix archway heights when at end of a stairwell
+
++  spot_for_wotsit : prefer place with high div_lev
+
+
+
+Hallways:
+  - for two exits, create optimal path (L shape)
+  - for three exits (where two are opposite), optimal path (T shape)
+  - for rooms >= 3x3 and 3+ exits, properly create O or U shape path
+  - occasionaly: height diff, spaced steps (two exit only)
+  - rarely: make a maze (large room only)
+
+
+Fight Sim: reimplement monster-weapon preferences
+
+Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
+  
+  >>>  PREFS["rocket@shambler"] = 0.1
+       PREFS["launch@skull"] = 0.1
+       PREFS["shotty@imp"] = 3.0
+
+
+
+
+
+
+
+
+
+
+
+================================================================
+DETAILED TODO LIST
+================================================================
+
 Quake II:
   -  need to store wall brushes into a big list (qLeaf_c)
      and "split" them with Split_XY (if purely on one side,
@@ -24,14 +60,6 @@ Quakey:
 >>>  a segment with same front and back ????
 
 >>>  AssignBrushes: double checking using f/b_sides
-
-
-IDEA: rooms at/near edge of map have higher prob of being
-      outdoor than rooms at/near center of map
-      (e.g. 35% versus 5%).
-
-
-DOORS (incl. small exit) : use proper lock type!
 
 
 PILLAR PLACEMENT:
@@ -135,11 +163,7 @@ THEME SELECTION
     (i) secret levels can choose something whacky
     (ii) One-Episode: use 'epi_prob', group same themes together
     (iii) Full-Game: prefer episodes to have whole theme
-                     (with one or two breakers), and prefer
-                     theme to match sky
-
-
->>>> document classes (PLAN, SEED, ROOM, QUEST)
+                     and prefer theme to match sky
 
 
 Room Fitting Out
@@ -161,17 +185,6 @@ Room Fitting Out
 
 - pillars are good (except when too close to exits)
 
-
-
-IDEA:  liquid patterns: chance of "beaching" it
-
-
-Fight Sim: reimplement monster-weapon preferences
-Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
-  
-  >>>  PREFS["rocket@shambler"] = 0.1
-       PREFS["launch@skull"] = 0.1
-       PREFS["shotty@imp"] = 3.0
 
 
 Stairwells: more steps to ensure wall lengths <= 128 units
@@ -216,23 +229,6 @@ q2_nodes:
          _OR_: use bsp to chop em up
          _OR_: share a solid leaf for every empty leaf
    ALSO: handle co-planer sides (allowed by Oblige, maybe ok for Q2, not sure)
-
-
-REWRITE:
-
-- quest assignment
-
-  ? pick rooms for BOSS monsters
-  ? allocate seeds for teleporters,bosses,switches,items
-
-- create doors, stairs/lifts
-
-+ build Hallways:
-  - for two exits, create optimal path (L shape)
-  - for three exits (where two are opposite), optimal path (T shape)
-  - for rooms >= 3x3 and 3+ exits, properly create O or U shape path
-  - occasionaly: height diff, spaced steps (two exit only)
-  - rarely: make a maze (large room only)
 
 
 QUAKE:
@@ -344,7 +340,6 @@ SKY GENERATOR:
 
 DOOM
 
--  support keycards
 
 
 HERETIC:
@@ -442,13 +437,14 @@ Monsters:
 
 Miscellaneous:
 
--  make key doors open-and-stay-open.
-
 -  WINDOW_CROSS and WINDOW_CROSS_BIG: do a height check
    (prevent windows you can walk through).
 
 
-Pipe Dreams:
+
+----------------------------------------------------------------
+PIPE DREAMS
+----------------------------------------------------------------
 
 ++ better global architecture, room-in-a-room.
 
