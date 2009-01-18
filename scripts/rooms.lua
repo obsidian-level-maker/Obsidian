@@ -319,6 +319,7 @@ HEIGHT_PATTERNS =
       "21312", "21412", "21512", "21612", "21712",
     },
 
+    match_any = true,
     low_ceil = true,
   },
 
@@ -347,6 +348,7 @@ HEIGHT_PATTERNS =
       "21312", "21412", "21512", "21612", "21712",
     },
 
+    match_any = true,
     low_ceil = true,
   },
 
@@ -376,11 +378,89 @@ HEIGHT_PATTERNS =
       "21312", "21412", "21512", "21612", "21712",
     },
 
+    match_any = true,
     low_ceil = true,
   },
 
 
-  -- TODO: T shape
+  T1 =
+  {
+    structure =
+    {
+      "..#//",
+      "#^#^#",
+      "#####",
+    },
+
+    x_sizes =
+    {
+      "01110", "11111", "21112", "21212",
+      "31113", "31213", "41114", "41214",
+      "51115"
+    },
+
+    y_sizes =
+    {
+      "011", "012", "013", "014", "015", "016",
+      "112", "113", "114", "115", "116", "117", "118", "119",
+      "216", "217", "218", "219", "21A",
+    },
+  },
+
+  T2 =
+  {
+    prob=900,
+
+    structure =
+    {
+      "..#//",
+      "^###^",
+      "#####",
+    },
+
+    x_sizes =
+    {
+      "11111",
+      "12121", "12221",
+      "13131", "13231",
+      "14141", "14241",
+      "15151"
+    },
+
+    y_sizes =
+    {
+      "011", "012", "013", "014", "015", "016",
+      "112", "113", "114", "115", "116", "117", "118", "119",
+      "216", "217", "218", "219", "21A",
+    },
+  },
+
+  T3 =
+  {
+    structure =
+    {
+      ".</",
+      ".#/",
+      ".>/",
+      "###",
+    },
+
+    x_sizes =
+    {
+      "212", "313", "414", "515", "616",
+    },
+
+    y_sizes =
+    {
+      "1101", "1111", "1121", "1131", "1141", "1151",
+      "1161", "1171", "1181",
+      "2141", "2151", "2161", "2171", "2181", "2191",
+      "3171", "3181",
+    },
+  },
+
+
+
 
   -- TODO: H shape
 
@@ -1376,14 +1456,15 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
     -- there's little point having a height diff in a room when all
     -- the connections have the same height
-    if zero_num >= 2 and not R.purpose then return -1 end
+    if zero_num == 2 and not R.purpose and not T.info.match_any then return -1 end
 
     -- big bonus if connections touch all three areas
     score = score + math.min(hash_c, dot_c, other_c) * 20
 
 ---  if hash_c > 0 then score = score + 1 end
 
-    if not (T.has_focus == '#') then return -1 end --!!!!!!!!
+    --!!!!!!!! FIXME
+    if div_lev == 1 and not (T.has_focus == '#') then return -1 end
 
     return score
   end
@@ -1517,7 +1598,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
 gui.debugf("  new_hs: %d %d %d\n",
 new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
-    if T.has_focus == '#' then
+    if T.has_focus == '#' or not T.has_focus then
       hash_h = table.remove(new_hs, 1)
     end
 
@@ -1861,7 +1942,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   -- FIXME: proper height selection
   local base_h = focus_C.conn_h
-  local delta = 64 * rand_element { -1, 1 }
+  local delta = rand_element { 32,64,64,64,96 } * rand_element { -1, 1 }
   if (base_h >= 256 and delta > 0) or
      (base_h <= 128 and delta < 0) then delta = -delta end
   local heights = { base_h, base_h + delta, base_h + delta * 2, base_h + delta * 3 }
