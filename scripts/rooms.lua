@@ -1370,11 +1370,16 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
       end
     end end -- for i, j
 
-    -- big bonus if connections touch all three areas
-    score = score + math.min(hash_c, dot_c, other_c) * 100
+    local zero_num = sel(hash_c  == 0, 1, 0) +
+                     sel(dot_c   == 0, 1, 0) +
+                     sel(other_c == 0, 1, 0)
 
-    score = score + math.min(hash_c, dot_c)   * 20
-    score = score + math.min(hash_c, other_c) * 5 
+    -- there's little point having a height diff in a room when all
+    -- the connections have the same height
+    if zero_num >= 2 and not R.purpose then return -1 end
+
+    -- big bonus if connections touch all three areas
+    score = score + math.min(hash_c, dot_c, other_c) * 20
 
 ---  if hash_c > 0 then score = score + 1 end
 
@@ -1461,7 +1466,7 @@ gui.debugf("expanded\n%s\n", table_to_str(T.expanded, 3))
 
     local T = { info=info }
 
-    for tr_n = 0,0 do  --!!!! FIXME
+    for tr_n = 0,1 do
       T.transpose = (tr_n == 1)
 
       T.long = sel(T.transpose, area.th, area.tw)
@@ -1478,8 +1483,8 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
         expand_structure(T, info, xs, ys)
 
         for xf_n = 0,1 do for yf_n = 0,1 do
-          T.x_flip = (xf_n == 2) --!!!!
-          T.y_flip = (yf_n == 2) --!!!!
+          T.x_flip = (xf_n == 1)
+          T.y_flip = (yf_n == 1)
 
           T.score = eval_fab(T)
 
@@ -1494,8 +1499,12 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
       return false
     end
 
+gui.debugf("Possible patterns:\n%s\n", table_to_str(possibles, 2))
+
     T = table_sorted_first(possibles,
         function(A,B) return A.score > B.score end)
+
+gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
     -- recursive sub-division
     local sub_1 = find_sub_area(T, '.')
