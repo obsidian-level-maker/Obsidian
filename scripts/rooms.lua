@@ -129,7 +129,7 @@ HEIGHT_PATTERNS =
 
     y_sizes =
     {
-      "011", "012", "013",
+      "011", "111",
       "112", "113", "114", "115",
       "212", "213", "214", "215", "216",
       "313", "314", "315", "316", "317", "318", "319",
@@ -1182,11 +1182,10 @@ function Room_try_divide(R, div_lev, area, heights)
   -- find a usable pattern in the HEIGHT_PATTERNS table and
   -- apply it to the room.
 
-  local tw, th = box_size(area.x1, area.y1, area.x2, area.y2)
+  -- this function is responsible for setting floor_h in every
+  -- seed in the given 'area'.
 
-  if tw <= 2 and th <= 2 then return false end
-
-  if #heights < 2 then return false end
+  area.tw, area.th = box_size(area.x1, area.y1, area.x2, area.y2)
 
 
 
@@ -1239,19 +1238,17 @@ function Room_try_divide(R, div_lev, area, heights)
     return result
   end
 
-  local function expand_structure(info, x_sizes, y_sizes)
-    local expanded = {}
+  local function expand_structure(T, info, x_sizes, y_sizes)
+    T.expanded = {}
 
     for y = 1,#y_sizes do
       local y_num = pos_size(y_sizes, y)
       local src = info.structure[#y_sizes+1 - y]
       local padded = pad_line(src, x_sizes)
       for i = 1,y_num do
-        table.insert(expanded, 1, padded)
+        table.insert(T.expanded, 1, padded)
       end
     end
-
-    return expanded
   end
 
   local TRANSPOSE_DIR_TAB = { 1,4,7,2,5,8,3,6,9 }
@@ -1302,6 +1299,36 @@ function Room_try_divide(R, div_lev, area, heights)
     return ch
   end
 
+  local function find_sub_area(T, match_ch)
+    local x1, y1 = 999, 999
+    local x2, y2 =-9, -9
+
+    for i = 1,T.long do for j = 1,T.deep do
+      local x, y = morph_coord(T, i, j)
+      local ch = string.sub(T.expanded[T.deep+1-j], i, i)
+
+      if ch == match_ch then
+        if x < x1 then x1 = x end
+        if y < y1 then y1 = y end
+        if x > x2 then x2 = x end
+        if y > y2 then y2 = y end
+      end
+    end end -- for i, j
+
+    if x2 < 0 then return nil end
+
+    return { x1=x1, y1=y1, x2=x2, y2=y2 }
+  end
+
+  local function set_seed_floor(S, h)
+    S.floor_h = h
+
+    if S.conn or S.pseudo_conn then
+      local C = S.conn or S.pseudo_conn
+      C.conn_h = h
+    end
+  end
+
   local function eval_fab(T)
     -- prefer patterns where some of the connections touch
     -- the old area and some touch the new area.
@@ -1319,18 +1346,19 @@ function Room_try_divide(R, div_lev, area, heights)
       assert(ch)
       ch = morph_stair(T, ch)
 
+      if (S.conn or S.pseudo_conn or S.must_walk) and
+         not (ch == '#' or ch == '.' or ch == '/')
+      then
+        return -1
+      end
+
       -- FIXME: TEST STUFF !!!
     end end -- for i, j
 
     return score
   end
 
-  local function install_it(T)
-
-    -- these vars compute the new area (where the dots are).
-    local nx_min, nx_max = 999, -999
-    local ny_min, ny_max = 999, -999
-
+  local function install_it(T, hash_h)
     for i = 1,T.long do for j = 1,T.deep do
       local x, y = morph_coord(T, i, j)
       local S = SEEDS[x][y][1]
@@ -1338,19 +1366,11 @@ function Room_try_divide(R, div_lev, area, heights)
       local ch = string.sub(T.expanded[T.deep+1-j], i, i)
       ch = morph_stair(T, ch)
 
-      if ch == '#' then
-        S.floor_h = heights[1]
+      if ch == '.' or ch == '/' then
+        -- nothing to do, handled by recursive call
 
-        if S.conn then S.conn.conn_h = heights[1] end
-
-      elseif ch == '.' then
-        -- write in new height
-        S.floor_h = heights[2]
-
-        if S.conn then S.conn.conn_h = heights[2] end
-
-        nx_min = math.min(nx_min, x) ; nx_max = math.max(nx_max, x)
-        ny_min = math.min(ny_min, y) ; ny_max = math.max(ny_max, y)
+      elseif ch == '#' then
+        set_seed_floor(S, hash_h)
 
       elseif ch == '<' then
         S.kind = "stair"
@@ -1368,22 +1388,28 @@ function Room_try_divide(R, div_lev, area, heights)
         S.kind = "stair"
         S.stair_dir = 2
 
+      elseif ch == 'S' then
+        S.kind = "void"
+
+      -- TODO: other stuff (Liquids!!)
+
       end
 
+      --!!!!!!!!!! setup stairs properly
       if S.kind == "stair" then
-        S.stair_z1 = assert(heights[2])
-        S.stair_z2 = assert(heights[1])
+        S.stair_z1 = assert(hash_h - 64)  
+        S.stair_z2 = assert(hash_h)
       end
     end end -- for i, j
+  end
 
-    assert(nx_max > 0)
-
-    local new_a = { x1=nx_min, y1=ny_min, x2=nx_max, y2=ny_max }
-    local new_hs = shallow_copy(heights)
-    table.remove(new_hs, 1)
-
-    -- recursive call
---!!!!!!    Room_try_divide(R, div_lev+1, new_a, new_hs)
+  local function install_flat_floor()
+    for x = area.x1,area.x2 do for y = area.y1,area.y2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and not S.floor_h then
+        set_seed_floor(S, heights[1])
+      end
+    end end -- for x, y
   end
 
   local function try_install_pattern(name)
@@ -1396,8 +1422,8 @@ function Room_try_divide(R, div_lev, area, heights)
     for tr_n = 0,0 do  --!!!! FIXME
       T.transpose = (tr_n == 1)
 
-      T.long = sel(T.transpose, th, tw)
-      T.deep = sel(T.transpose, tw, th)
+      T.long = sel(T.transpose, area.th, area.tw)
+      T.deep = sel(T.transpose, area.tw, area.th)
 
       T.x_sizes = matching_sizes(info.x_sizes, T.long)
       T.y_sizes = matching_sizes(info.y_sizes, T.deep)
@@ -1407,7 +1433,7 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
         local xs = rand_element(T.x_sizes)
         local ys = rand_element(T.y_sizes)
 
-        T.expanded = expand_structure(info, xs, ys)
+        expand_structure(T, info, xs, ys)
 
         for xf_n = 0,1 do for yf_n = 0,1 do
           T.x_flip = (xf_n == 1)
@@ -1416,7 +1442,7 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
           T.score = eval_fab(T)
 
           if T.score > 0 then
-            table.insert(possibles, T)
+            table.insert(possibles, shallow_copy(T))
           end
         end end -- for xf_n, yf_n
       end 
@@ -1429,44 +1455,65 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
     local good_T = table_sorted_first(possibles,
         function(A,B) return A.score > B.score end)
 
-    install_it(good_T)
+    -- recursive sub-division
+    local sub_1 = find_sub_area(good_T, '.')
+    local sub_2 = find_sub_area(good_T, '/')
+
+    local new_hs = shallow_copy(heights)
+    local hash_h = table.remove(new_hs, 1)
+
+    if sub_1 then Room_try_divide(R, div_lev+1, sub_1, new_hs) end
+    if sub_2 then Room_try_divide(R, div_lev+1, sub_2, new_hs) end
+
+    install_it(good_T, hash_h)
 
     return true  -- YES !!
   end
 
 
+  local function do_try_divide()
+    if #heights < 2 then return false end
+
+    if area.tw <= 2 and area.th <= 2 then return false end
+
+    if R.children then return false end
+
+    if R.kind == "hallway" or R.kind == "stairwell" then return false end
+
+    local try_fabs = {}
+    for name,info in pairs(HEIGHT_PATTERNS) do
+      -- TODO: symmetry matching
+      try_fabs[name] = info.prob or 50
+    end
+
+
+    for loop = 1,10 do
+      if table_empty(try_fabs) then
+        break;
+      end
+
+      local which = rand_key_by_probs(try_fabs)
+      try_fabs[which] = nil
+
+      gui.debugf("Trying pattern %s in %s (loop %d)......\n",
+                 which, R:tostr(), loop)
+
+      if try_install_pattern(which) then
+        gui.debugf("SUCCESS with %s!\n", which)
+        return true
+      end
+    end
+
+    gui.debugf("FAILED to apply any room pattern.\n")
+    return false
+  end
+
+
   ---==| Room_divide |==---
  
-  if R.children then return false end
-
-  if R.kind == "hallway" or R.kind == "stairwell" then return false end
-
-  local try_fabs = {}
-  for name,info in pairs(HEIGHT_PATTERNS) do
-    -- TODO: symmetry matching
-    try_fabs[name] = info.prob or 50
+  if not do_try_divide() then
+    install_flat_floor()
   end
-
-
-  for loop = 1,10 do
-    if table_empty(try_fabs) then
-      break;
-    end
-
-    local which = rand_key_by_probs(try_fabs)
-    try_fabs[which] = nil
-
-    gui.debugf("Trying pattern %s in %s (loop %d)......\n",
-               which, R:tostr(), loop)
-
-    if try_install_pattern(which) then
-      gui.debugf("SUCCESS with %s!\n", which)
-      return true
-    end
-  end
-
-  gui.debugf("FAILED to apply any room pattern.\n")
-  return false
 end
 
 
@@ -1746,9 +1793,6 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   make_fences()
 
-  make_windows()
-
-
 
   local area =
   {
@@ -1766,14 +1810,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   Room_try_divide(R, 1, area, heights)
 
 
-  -- MORE TEMP JUNK
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
-    if S.room == R then
-      if not S.floor_h then S.floor_h = R.floor_h ; S.f_tex = "LAVA1" end
-    end
-  end end -- for x,y
-
+  -- FIXME: ARGH, we don't know what heights on other side will be!!
+  make_windows()
 
 
   if R.purpose then
@@ -1842,7 +1880,7 @@ function Rooms_lay_out_II()
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=20 }
   gui.printf("Hallway Mode: %s\n", PLAN.hallway_mode)
 
-  PLAN.junk_mode = rand_key_by_probs { few=40, some=30, heaps=10 }
+  PLAN.junk_mode = rand_key_by_probs { few=30, some=40, heaps=10 }
   gui.printf("Junk Mode: %s\n", PLAN.junk_mode)
 
   PLAN.cage_mode = rand_key_by_probs { none=50, few=20, some=50, heaps=5 }
