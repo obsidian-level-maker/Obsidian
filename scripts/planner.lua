@@ -860,11 +860,11 @@ function Plan_determine_size()
       local n = 1 + int(LEVEL.ep_along * 8.9)
       if n > 9 then n = 9 end
 
-      local SIZES = { 5,6,6, 7,7,7, 8,9,10 }
+      local SIZES = { 5,5,6, 6,7,7, 8,8,9 }
 
       W = SIZES[n]
     else
-      local SIZES = { small=6, normal=8, large=10 }
+      local SIZES = { small=5, normal=7, large=9 }
 
       W = SIZES[ob_size]
 
