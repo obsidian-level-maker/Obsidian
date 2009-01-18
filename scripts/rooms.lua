@@ -1999,8 +1999,29 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     return score
   end
 
+  local function setup_stair(S, dir, hash_h)
+    S.kind = "stair"
+    S.stair_dir = dir
+
+    assert(not S.conn)
+    S.floor_h = hash_h
+
+    local N = S:neighbor(S.stair_dir)
+    assert(N)
+    assert(N.room == R)
+    assert(R:contains_seed(N.sx, N.sy))
+
+    S.stair_z1 = assert(hash_h)  
+    S.stair_z2 = assert(N.floor_h)
+  end
+
   local function install_it(T, hash_h)
-gui.debugf("install_it :  hash_h:%d\n", hash_h)
+
+local ax,ay = morph_coord(T, 1,1)
+local bx,by = morph_coord(T, T.long,T.deep)
+gui.debugf("install_it :  hash_h:%d  (%d,%d)..(%d,%d)\n", hash_h,
+math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
+
     for i = 1,T.long do for j = 1,T.deep do
       local x, y = morph_coord(T, i, j)
       local S = SEEDS[x][y][1]
@@ -2015,28 +2036,16 @@ gui.debugf("install_it :  hash_h:%d\n", hash_h)
         set_seed_floor(S, hash_h)
 
       elseif ch == '<' then
-        S.kind = "stair"
-        S.stair_dir = 4
-        S.floor_h = hash_h
-        assert(not S.conn)
+        setup_stair(S, 4, hash_h)
 
       elseif ch == '>' then
-        S.kind = "stair"
-        S.stair_dir = 6
-        S.floor_h = hash_h
-        assert(not S.conn)
+        setup_stair(S, 6, hash_h)
 
       elseif ch == '^' then
-        S.kind = "stair"
-        S.stair_dir = 8
-        S.floor_h = hash_h
-        assert(not S.conn)
+        setup_stair(S, 8, hash_h)
 
       elseif ch == 'v' then
-        S.kind = "stair"
-        S.stair_dir = 2
-        S.floor_h = hash_h
-        assert(not S.conn)
+        setup_stair(S, 2, hash_h)
 
       elseif ch == 'S' then
         S.kind = "void"
@@ -2045,20 +2054,12 @@ gui.debugf("install_it :  hash_h:%d\n", hash_h)
 
       end
 
-      -- setup stair heights
-      if S.kind == "stair" then
-        local N = S:neighbor(S.stair_dir)
-gui.debugf("%s S(%d,%d) stair_dir:%d N(%d,%d)\n", R:tostr(), x, y, S.stair_dir, N.sx, N.sy)
-gui.debugf("T\n%s\n", table_to_str(T, 1))
-gui.debugf("expanded\n%s\n", table_to_str(T.expanded, 3))
-        assert(N)
-        assert(N.room == R)
-        assert(R:contains_seed(N.sx, N.sy))
+---## gui.debugf("%s S(%d,%d) stair_dir:%d N(%d,%d)\n", R:tostr(), x, y, S.stair_dir, N.sx, N.sy)
+---## gui.debugf("T\n%s\n", table_to_str(T, 1))
+---## gui.debugf("expanded\n%s\n", table_to_str(T.expanded, 3))
 
-        S.stair_z1 = assert(hash_h)  
-        S.stair_z2 = assert(N.floor_h)
-      end
     end end -- for i, j
+gui.debugf("end install_it\n")
   end
 
   local function install_flat_floor(h)
@@ -2186,9 +2187,9 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
   ---==| Room_divide |==---
  
   if do_try_divide() then
-gui.debugf("Success (div_lev %d)\n\n", div_lev)
+gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
   else
-gui.debugf("Failed (div_lev %d)\n\n", div_lev)
+gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
     install_flat_floor(heights[1])
   end
 end
