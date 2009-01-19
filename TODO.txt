@@ -3,10 +3,22 @@ TODO
 ====
 
 
+*  curved stairs!!
+
 +  fix archway heights when at end of a stairwell
 
-+  spot_for_wotsit : prefer place with high div_lev
++  handle try_divide + junk_sides :: flood fill around edge
 
++  void seeds: diagonalise cornery ones
+
+-  liquid areas / patterns  [separate from HEIGHT_PATTERNS ??]
+
+
+Pillar Placement:
+  Not just anywhere!
+  Must maintain symmetry!
+  Along room mid-X or mid-Y line ("roof support"), 1 or 2
+  Or a bunch along the longest walls (2+)
 
 
 Hallways:
@@ -60,13 +72,6 @@ Quakey:
 >>>  a segment with same front and back ????
 
 >>>  AssignBrushes: double checking using f/b_sides
-
-
-PILLAR PLACEMENT:
-  Not just anywhere!
-  Must maintain symmetry!
-  Along room mid-X or mid-Y line ("roof support"), 1 or 2
-  Or a bunch along the longest walls (2+)
 
 
 DOOM CSG: when x_offset is given, adjust it if the segment
@@ -522,6 +527,9 @@ PIPE DREAMS
      (c) doors that only open from one side (esp. via a switch)
      (d) lifts that go up (or down) into a hole
          (activated by a switch only on one side).
+
+-  have a table listing a quantized HSV for each texture/flat
+   and make compatibility decisions using it.
 
 
  ____________________
