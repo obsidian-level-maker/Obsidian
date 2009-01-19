@@ -1727,15 +1727,7 @@ end
         w_face = { texture="STEP4" },
       }
 
-      if S.stair_dir == 6 then
-         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.stair_z1, S.stair_z2, "exact")
-      elseif S.stair_dir == 4 then
-         make_ramp_x(stair_info, x1,x2,y1, x1,x2,y2, S.stair_z2, S.stair_z1, "exact")
-      elseif S.stair_dir == 8 then
-         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.stair_z1, S.stair_z2, "exact")
-      else assert(S.stair_dir == 2)
-         make_ramp_y(stair_info, x1,y1,y2, x2,y1,y2, S.stair_z2, S.stair_z1, "exact")
-      end
+      Build_niche_stair(S, stair_info)
 
     elseif S.kind == "turn_stair" then
 
@@ -2025,12 +2017,16 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     return score
   end
 
-  local function setup_stair(S, dir, hash_h)
+  local function setup_stair(S, dir, hash_h, f_tex)
     S.kind = "stair"
     S.stair_dir = dir
 
     assert(not S.conn)
     S.floor_h = hash_h
+
+    if not R.outdoor then
+      S.f_tex = f_tex
+    end
 
     local N = S:neighbor(S.stair_dir)
     assert(N)
@@ -2063,16 +2059,16 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
         S.div_lev = div_lev
 
       elseif ch == '<' then
-        setup_stair(S, 4, hash_h)
+        setup_stair(S, 4, hash_h, hash_ftex)
 
       elseif ch == '>' then
-        setup_stair(S, 6, hash_h)
+        setup_stair(S, 6, hash_h, hash_ftex)
 
       elseif ch == '^' then
-        setup_stair(S, 8, hash_h)
+        setup_stair(S, 8, hash_h, hash_ftex)
 
       elseif ch == 'v' then
-        setup_stair(S, 2, hash_h)
+        setup_stair(S, 2, hash_h, hash_ftex)
 
       elseif ch == 'S' then
         S.kind = "void"

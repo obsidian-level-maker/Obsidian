@@ -970,6 +970,88 @@ function make_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
 end
 
 
+function Build_niche_stair(S, stair_info)
+
+  for side = 2,8,2 do
+    S.thick[side] = 64
+  end
+
+  local T, long = get_transform_for_seed_side(S, S.stair_dir)
+  local deep = long
+
+  local z1 = S.stair_z2
+  local z2 = S.stair_z1
+
+  local niche_info =
+  {
+    t_face = { texture=S.f_tex or S.room.combo.floor },
+    b_face = { texture=S.f_tex or S.room.combo.floor },
+    w_face = { texture=S.room.combo.wall },
+  }
+
+  local W  = sel(z1 > z2, 48, 24)
+  local HB = sel(z1 > z2, 96, 64)
+  local HF = 40
+
+  transformed_brush2(T, niche_info,
+  {
+    { x = W, y = 0,    },
+    { x = W, y = deep, },
+    { x = 0, y = deep, },
+    { x = 0, y = 0,    },
+  },
+  -2000, z2)
+
+  transformed_brush2(T, niche_info,
+  {
+    { x = long,   y = 0,    },
+    { x = long,   y = deep, },
+    { x = long-W, y = deep, },
+    { x = long-W, y = 0,    },
+  },
+  -2000, z2)
+
+  transformed_brush2(T, niche_info,
+  {
+    { x = long-W, y = deep-HB, },
+    { x = long-W, y = deep,   },
+    { x =      W, y = deep,   },
+    { x =      W, y = deep-HB, },
+  },
+  -2000, z2)
+
+  transformed_brush2(T, stair_info,
+  {
+    { x = long-W, y = 0,  },
+    { x = long-W, y = HF, },
+    { x =      W, y = HF, },
+    { x =      W, y = 0,  },
+  },
+  -2000, z1)
+
+
+  local steps = int(math.abs(z2 - z1) / 14 + 0.9)
+
+  if steps < 2 then steps = 2 end
+
+  for i = 0,steps-1 do 
+    local z = z1 + (z2 - z1) * (i+1) / (steps+1)
+
+    local by = int(HF + (deep-HF-HB) * (i)   / steps)
+    local ty = int(HF + (deep-HF-HB) * (i+1) / steps)
+
+    transformed_brush2(T, stair_info,
+    {
+      { x=long-W, y=by },
+      { x=long-W, y=ty },
+      { x=     W, y=ty },
+      { x=     W, y=by },
+    },
+    -2000, int(z));
+  end
+end
+
+
 function Build_tall_curved_stair(S, x1,y1, x2,y2, x_side,y_side, x_h,y_h)
   assert(x_h and y_h)
 
