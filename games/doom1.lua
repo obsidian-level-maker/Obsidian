@@ -308,6 +308,19 @@ DM_COMBOS =
     floor = "FLOOR4_8",
     ceil  = "CEIL3_6",
 
+    floors = { "FLAT14",  "CEIL3_2", "FLAT3", "FLAT9",
+               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
+               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
+               "SLIME15",  "SLIME16"
+             },
+
+    ceilings = { "CEIL5_1",  "CEIL5_2",
+                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "FLAT1",    "FLAT4",    "FLAT18",
+                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
+                 "GRNLITE1", "TLITE6_5"
+               },
+
     pic_wd = "COMPSTA2",    -- "COMP2" for Doom 1 !!
     pic_wd_h = 64,
 
@@ -326,6 +339,20 @@ DM_COMBOS =
     wall  = "STARG2",
     floor = "FLOOR5_1",
     ceil  = "FLOOR4_5",
+
+    floors = { "FLAT14",  "CEIL3_2", "FLAT3", "FLAT9",
+               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
+               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
+               "SLIME15",  "SLIME16"
+             },
+
+    ceilings = { "CEIL5_1",  "CEIL5_2",
+                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "FLAT1",    "FLAT4",    "FLAT18",
+                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
+                 "GRNLITE1", "TLITE6_5"
+               },
+
 
     lift = "PLAT1",
     step = "STEP1",
@@ -351,6 +378,19 @@ DM_COMBOS =
     floor = "FLOOR0_1",
     ceil  = "FLAT3",
 
+    floors = { "FLAT14",  "CEIL3_2", "FLAT3", "FLAT9",
+               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
+               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
+               "SLIME15",  "SLIME16"
+             },
+
+    ceilings = { "CEIL5_1",  "CEIL5_2",
+                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "FLAT1",    "FLAT4",    "FLAT18",
+                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
+                 "GRNLITE1", "TLITE6_5"
+               },
+
     lift = "PLAT1",
     step = "STEP1",
     step_floor = "STEP1",
@@ -363,6 +403,19 @@ DM_COMBOS =
     wall  = "STARTAN2",  -- STARBR
     floor = "CEIL4_3",
     ceil  = "FLOOR5_1",
+
+    floors = { "FLAT14",  "CEIL3_2", "FLAT3", "FLAT9",
+               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
+               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
+               "SLIME15",  "SLIME16"
+             },
+
+    ceilings = { "CEIL5_1",  "CEIL5_2",
+                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "FLAT1",    "FLAT4",    "FLAT18",
+                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
+                 "GRNLITE1", "TLITE6_5"
+               },
 
     lift = "PLAT1",
     step = "STEP1",
@@ -516,6 +569,19 @@ DM_COMBOS =
     wall  = "SLADWALL",
     floor = "FLOOR0_5",
     ceil  = "CEIL5_1",
+
+    floors = { "FLAT14",  "CEIL3_2", "FLAT3", "FLAT9",
+               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
+               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
+               "SLIME15",  "SLIME16"
+             },
+
+    ceilings = { "CEIL5_1",  "CEIL5_2",
+                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "FLAT1",    "FLAT4",    "FLAT18",
+                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
+                 "GRNLITE1", "TLITE6_5"
+               },
 
 --  void = "SLADSKUL",
     step = "STEP1",

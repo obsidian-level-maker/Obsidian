@@ -1790,7 +1790,7 @@ end
 end
 
 
-function Room_try_divide(R, div_lev, area, heights)
+function Room_try_divide(R, div_lev, area, heights, f_texs)
   -- find a usable pattern in the HEIGHT_PATTERNS table and
   -- apply it to the room.
 
@@ -1937,13 +1937,18 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     return { x1=x1, y1=y1, x2=x2, y2=y2 }
   end
 
-  local function set_seed_floor(S, h)
+  local function set_seed_floor(S, h, f_tex)
     S.floor_h = h
+
+    if not R.outdoor then
+      S.f_tex = f_tex
+    end
 
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn
       if C.conn_h then assert(C.conn_h == h) end
       C.conn_h = h
+      C.conn_ftex = f_tex
     end
   end
 
@@ -2017,7 +2022,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     S.stair_z2 = assert(N.floor_h)
   end
 
-  local function install_it(T, hash_h)
+  local function install_it(T, hash_h, hash_ftex)
 
 local ax,ay = morph_coord(T, 1,1)
 local bx,by = morph_coord(T, T.long,T.deep)
@@ -2035,7 +2040,7 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
         -- nothing to do, handled by recursive call
 
       elseif ch == '#' then
-        set_seed_floor(S, hash_h)
+        set_seed_floor(S, hash_h, hash_ftex)
 
       elseif ch == '<' then
         setup_stair(S, 4, hash_h)
@@ -2064,11 +2069,11 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
 gui.debugf("end install_it\n")
   end
 
-  local function install_flat_floor(h)
+  local function install_flat_floor(h, f_tex)
     for x = area.x1,area.x2 do for y = area.y1,area.y2 do
       local S = SEEDS[x][y][1]
       if S.room == R and not S.floor_h then
-        set_seed_floor(S, h)
+        set_seed_floor(S, h, f_tex)
       end
     end end -- for x, y
   end
@@ -2125,22 +2130,25 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     local sub_2 = find_sub_area(T, '/')
 
     local new_hs = shallow_copy(heights)
+    local new_ft = shallow_copy(f_texs)
 
     local hash_h
+    local hash_ftex
 
 gui.debugf("  new_hs: %d %d %d\n",
 new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
     if T.has_focus == '#' or not T.has_focus then
       hash_h = table.remove(new_hs, 1)
+      hash_ftex = table.remove(new_ft, 1)
     end
 
-    if sub_1 then Room_try_divide(R, div_lev+1, sub_1, new_hs) end
-    if sub_2 then Room_try_divide(R, div_lev+1, sub_2, new_hs) end
+    if sub_1 then Room_try_divide(R, div_lev+1, sub_1, new_hs, new_ft) end
+    if sub_2 then Room_try_divide(R, div_lev+1, sub_2, new_hs, new_ft) end
 
     if not hash_h then error("WTF") end ---!!!! hash_h = heights[2] or heights[1] end
 
-    install_it(T, hash_h)
+    install_it(T, hash_h, hash_ftex)
 
     return true  -- YES !!
   end
@@ -2192,7 +2200,7 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
   else
 gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
-    install_flat_floor(heights[1])
+    install_flat_floor(heights[1], f_texs[1])
   end
 end
 
@@ -2481,8 +2489,15 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   if (base_h >= 256 and delta > 0) or
      (base_h <= 128 and delta < 0) then delta = -delta end
   local heights = { base_h, base_h + delta, base_h + delta * 2, base_h + delta * 3 }
+  local f_texs  = {}
+  if focus_C.conn_ftex then table.insert(f_texs, focus_C.conn_ftex) end
+  if R.combo.floors then
+    for i = 1,4 do
+      table.insert(f_texs, rand_element(R.combo.floors))
+    end
+  end
 
-  Room_try_divide(R, 1, area, heights)
+  Room_try_divide(R, 1, area, heights, f_texs)
 
 
   for _,C in ipairs(R.conns) do
