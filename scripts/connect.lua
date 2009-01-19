@@ -639,7 +639,7 @@ function Connect_Rooms()
     local result
     
     for _,R in ipairs(PLAN.all_rooms) do
-      if not result or result > R.c_group then
+      if not result or R.c_group < result then
         result = R.c_group
       end
     end
@@ -1083,13 +1083,15 @@ gui.debugf("Failed\n")
 
     -- if this group is bigger than the main group, swap them
     if group_size(rebel_id) > group_size(min_g) then
-      gui.debugf("Crowning rebel group %d -> %d\n", rebel_id, min_g)
+      gui.debugf("Crowning rebel group %d (x%d) -> %d (x%d)\n",
+          rebel_id, group_size(rebel_id), min_g, group_size(min_g))
+
       swap_groups(rebel_id, min_g)
-      rebel_id, min_g = min_g, rebel_id
     end
 
     local rebels = table_subset_w_field(list, "c_group", rebel_id)
     assert(#rebels > 0)
+    gui.debugf("#rebels : %d\n", #rebels)
 
     -- try the least important rooms first
     for _,R in ipairs(rebels) do
