@@ -1431,19 +1431,38 @@ end
 
 
 function Room_spot_for_wotsit(R, kind)
-  -- FIXME !!!! CRUD
-  local sx, sy, S
+  local spots = {}
 
-  repeat
-    sx = rand_irange(R.sx1, R.sx2)
-    sy = rand_irange(R.sy1, R.sy2)
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
 
-    S = SEEDS[sx][sy][1]
-  until S.room == R and S.kind == "walk"
+    if S.room == R and S.kind == "walk" then
+      local P = { x=x, y=y, S=S }
 
-  S.kind = "purpose"
+      P.score = gui.random() + (S.div_lev or 0) * 100
 
-  return sx, sy, S
+      if R.entry_conn then
+        local dx = math.abs(R.entry_conn.dest_S.sx - x)
+        local dy = math.abs(R.entry_conn.dest_S.sy - y)
+
+        P.score = P.score + 50 + dx + dy
+      end
+
+      table.insert(spots, P)
+    end
+  end end -- for x, y
+
+
+  local P = table_pick_best(spots,
+        function(A,B) return A.score > B.score end)
+
+  if not P then
+    error("No usable spots in room!")
+  end
+
+  P.S.kind = "purpose"
+
+  return P.x, P.y, P.S
 end
 
 
@@ -2041,6 +2060,7 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
 
       elseif ch == '#' then
         set_seed_floor(S, hash_h, hash_ftex)
+        S.div_lev = div_lev
 
       elseif ch == '<' then
         setup_stair(S, 4, hash_h)
@@ -2061,10 +2081,6 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
 
       end
 
----## gui.debugf("%s S(%d,%d) stair_dir:%d N(%d,%d)\n", R:tostr(), x, y, S.stair_dir, N.sx, N.sy)
----## gui.debugf("T\n%s\n", table_to_str(T, 1))
----## gui.debugf("expanded\n%s\n", table_to_str(T.expanded, 3))
-
     end end -- for i, j
 gui.debugf("end install_it\n")
   end
@@ -2074,6 +2090,7 @@ gui.debugf("end install_it\n")
       local S = SEEDS[x][y][1]
       if S.room == R and not S.floor_h then
         set_seed_floor(S, h, f_tex)
+        S.div_lev = div_lev
       end
     end end -- for x, y
   end
@@ -2120,7 +2137,7 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
 
 gui.debugf("Possible patterns:\n%s\n", table_to_str(possibles, 2))
 
-    T = table_sorted_first(possibles,
+    T = table_pick_best(possibles,
         function(A,B) return A.score > B.score end)
 
 gui.debugf("Chose pattern with score %1.4f\n", T.score)
