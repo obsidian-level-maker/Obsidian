@@ -154,7 +154,7 @@ function Quest_decide_start_room(arena)
     gui.debugf("%s : START COST : %1.4f\n", R:tostr(), R.start_cost)
   end
 
-  arena.start = table_sorted_first(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
+  arena.start = table_pick_best(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
 
   assert(#arena.start.conns > 0)
 
@@ -374,7 +374,7 @@ function Quest_lock_up_arena(arena)
 
   dump_locks(poss_locks)
 
-  local LC = table_sorted_first(poss_locks, function(X,Y) return X.lock_cost < Y.lock_cost end)
+  local LC = table_pick_best(poss_locks, function(X,Y) return X.lock_cost < Y.lock_cost end)
   assert(LC)
 
   gui.debugf("Lock conn has COST:%1.2f on_path:%s\n",
@@ -582,7 +582,7 @@ function Quest_add_lock()
 gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
   end
 
-  local arena = table_sorted_first(PLAN.all_arenas, function(X,Y) return X.split_score > Y.split_score end)
+  local arena = table_pick_best(PLAN.all_arenas, function(X,Y) return X.split_score > Y.split_score end)
 
   if arena.split_score < 0 then
     gui.debugf("No more locks could be made!\n")

@@ -154,7 +154,7 @@ function table_to_str(t, depth, prefix)
   return result
 end
 
-function table_sorted_first(list, comp)
+function table_pick_best(list, comp)
   assert(list)
 
   if not comp then
