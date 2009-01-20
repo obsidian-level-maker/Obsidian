@@ -1430,6 +1430,46 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
 end
 
 
+function Rooms_reckon_doors()
+  local function door_chance(R, N)
+    local door_probs = PLAN.theme.door_probs or
+                       GAME.door_probs
+
+    if (not R.outdoor) ~= (not N.outdoor) then
+      return assert(door_probs.out_diff)
+
+    elseif R.combo ~= N.combo then
+      return assert(door_probs.combo_diff)
+
+    else
+      return assert(door_probs.normal)
+    end
+  end
+
+  ---| Rooms_reckon_doors |---
+
+  for _,C in ipairs(PLAN.all_conns) do
+    for who = 1,2 do
+      local S = sel(who == 1, C.src_S, C.dest_S)
+      assert(S)
+
+      if S.conn_dir then
+        local B = S.border[S.conn_dir]
+
+        if B.kind == "arch" and not B.tried_door then
+          B.tried_door = true
+
+          local prob = door_chance(C.src, C.dest)
+          if rand_odds(prob) then
+            B.kind = "door"
+          end
+        end
+      end
+    end -- for who
+  end -- for C
+end
+
+
 function Room_spot_for_wotsit(R, kind)
   local spots = {}
 
@@ -1611,9 +1651,15 @@ end --]]
         Build_archway(S, side, z1, z_top, f_tex, w_tex) 
       end
 
-      if B_kind == "lock_door" and
-         not (S.conn and S.conn.already_made_lock)
-      then
+      if B_kind == "door" and not S.conn.already_made_lock then
+        local INFO = assert(GAME.door_fabs["silver_lit"])
+
+        make_locked_door(S, side, z1, w_tex, INFO, 0)
+
+        S.conn.already_made_lock = true
+      end
+
+      if B_kind == "lock_door" and not S.conn.already_made_lock then
         local LOCK = assert(S.border[side].lock)
         local INFO
         if LOCK.kind == "KEY" then
@@ -2761,6 +2807,7 @@ PLAN.junk_mode = "heaps"  ]]
   Rooms_decide_outdoors()
   Rooms_choose_themes()
   Rooms_decide_hallways_II()
+  Rooms_reckon_doors()
 
   Seed_dump_fabs()
 

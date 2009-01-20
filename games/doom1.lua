@@ -2301,11 +2301,12 @@ DM_DOOR_PREFABS =
     skin =
     {
       door_w="BIGDOOR2", door_c="FLAT1",
-      lite_w="LITE5", step_w="STEP1",
+      lite_w="LITE3", step_w="STEP1",
+      key_w="LITE3",
       frame_f="FLAT1", frame_c="TLITE6_6",
       track_w="DOORTRAK",
       door_h=112,
-      door_kind=1, tag=0,
+      line_kind=1, tag=0,
     },
 
     theme_probs = { INDUSTRIAL=70,TECH=70,URBAN=10 },
