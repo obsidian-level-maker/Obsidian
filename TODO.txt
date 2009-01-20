@@ -3,13 +3,15 @@ TODO
 ====
 
 
-*  curved stairs!!
-
-+  fix archway heights when at end of a stairwell
-
 +  handle try_divide + junk_sides :: flood fill around edge
 
 +  void seeds: diagonalise cornery ones
+
+-  sometimes divide room when has_focus == '.'
+
+-  decide and maintain symmetry in Room_try_divide
+   -  if pattern has '/', then DON'T recurse to fill it,
+      INSTEAD copy and reflect what was done in '.' side
 
 -  liquid areas / patterns  [separate from HEIGHT_PATTERNS ??]
 
@@ -36,7 +38,6 @@ Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
   >>>  PREFS["rocket@shambler"] = 0.1
        PREFS["launch@skull"] = 0.1
        PREFS["shotty@imp"] = 3.0
-
 
 
 
