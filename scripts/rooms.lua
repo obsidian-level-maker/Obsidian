@@ -1606,7 +1606,9 @@ end --]]
       end
 
       if B_kind == "arch" then
-        make_archway(S, side, z1, z2, f_tex, w_tex) 
+        local z_top = assert(S.conn and S.conn.conn_h) + 128
+
+        Build_archway(S, side, z1, z_top, f_tex, w_tex) 
       end
 
       if B_kind == "lock_door" and
@@ -2589,7 +2591,25 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   if R.kind == "stairwell" then
     stairwell_height_diff(focus_C)
 
-    Build_stairwell(R)
+    local WELL_TEX = { "BROWN1", "GRAY1", "STARGR1", "METAL4" }
+    if not PLAN.well_tex then
+      PLAN.well_tex = rand_element(WELL_TEX)
+    end
+
+    local wall_info =
+    {
+      t_face = { texture="FLOOR7_1" },
+      b_face = { texture="FLOOR7_1" },
+      w_face = { texture=PLAN.well_tex },
+    }
+    local flat_info =
+    {
+      t_face = { texture="FLAT1" },
+      b_face = { texture="FLOOR7_1" },
+      w_face = { texture="BROWN1" },
+    }
+
+    Build_stairwell(R, wall_info, flat_info)
     return
   end
 
@@ -2716,7 +2736,7 @@ function Rooms_lay_out_II()
 
 --!!!!!
 PLAN.sky_mode = "few"
-PLAN.hallway_mode = "few"
+PLAN.hallway_mode = "heaps"
 PLAN.junk_mode = "heaps"
 
   Rooms_decide_outdoors()

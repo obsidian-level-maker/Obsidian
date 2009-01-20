@@ -254,7 +254,7 @@ function make_sky_fence(S, side)
 end
 
 
-function make_archway(S, side, z1, z2, f_tex, w_tex)
+function Build_archway(S, side, z1, z2, f_tex, w_tex)
 
   local N = S:neighbor(side)
   assert(N)
@@ -289,10 +289,8 @@ function make_archway(S, side, z1, z2, f_tex, w_tex)
     { x=0,    y=-N_deep, w_face={ texture=o_tex } },
   }
 
-  local z_top = math.max(int((z1+z2) / 2), z1+128)
----??  if z_top > z2-16 then z_top = z2-16 end
+  transformed_brush2(T, arch_info, frame_coords, z2, 2000)
 
-  transformed_brush2(T, arch_info, frame_coords, z_top, 2000)
 
   local break_tex = w_tex
   if o_tex ~= w_tex then break_tex = "LITE5" end
@@ -1838,12 +1836,20 @@ function Build_small_exit(R)
   local f_h = C.conn_h or T.floor_h or T.room.floor_h or 0
   local c_h = f_h + 128
 
+  local w_tex = rand_element { "METAL2",  "STARTAN2", "STARG1",
+                               "TEKWALL4","PIPEWAL2", "SILVER2",
+                               "TEKGRN1", "SPACEW2",  "STARBR2" }
+
+  local c_tex = rand_element { "TLITE6_6", "TLITE6_5", "FLAT17",
+                               "FLOOR1_7", "GRNLITE1", "CEIL4_3" }
+
+  local f_tex = rand_element { "FLOOR0_3", "FLOOR5_2" }
+
   local inner_info =
   {
---  w_face = { texture="STARTAN2" },
-    w_face = { texture="METAL2" },
-    t_face = { texture="FLOOR5_2" },
-    b_face = { texture="TLITE6_6" },
+    w_face = { texture=w_tex },
+    t_face = { texture=f_tex },
+    b_face = { texture=c_tex },
   }
 
   local out_combo = T.room.combo
@@ -1989,6 +1995,10 @@ function Build_small_exit(R)
 
   -- make switch
 
+  local sw_tex = rand_element { "SW1METAL", "SW1LION", "SW1BRN2", "SW1BRNGN",
+                                "SW1GRAY",  "SW1MOD1", "SW1SLAD", "SW1STRTN",
+                                "SW1TEK",   "SW1STON1" }
+
   local WT
   WT, long, deep = get_transform_for_seed_side(S, 10-side)
 
@@ -2001,7 +2011,7 @@ function Build_small_exit(R)
     { x=long, y=0 },
     { x=long, y=16 },
     { x=mx+swit_W/2+8, y=16, w_face={ texture="DOORSTOP", x_offset=0 } },
-    { x=mx+swit_W/2,   y=16, w_face={ texture="SW1METAL", x_offset=0, y_offset=0 }, line_kind=11 },
+    { x=mx+swit_W/2,   y=16, w_face={ texture=sw_tex,     x_offset=0, y_offset=0 }, line_kind=11 },
     { x=mx-swit_W/2,   y=16, w_face={ texture="DOORSTOP", x_offset=0 } },
     { x=mx-swit_W/2-8, y=16 },
     { x=0, y=16 },
@@ -2299,7 +2309,7 @@ function make_popup_trap(S, z1, skin, combo)
 end
 
 
-function Build_stairwell(R)
+function Build_stairwell(R, wall_info, flat_info)
 
   local function build_stairwell_90(R)
     assert(R.conns)
@@ -2383,18 +2393,11 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local steps = int(math.abs(x_h - y_h) / 16)
     if steps < 5 then steps = 5 end
 
-    local info =
-    {
-      t_face = { texture="FLAT10" },
-      b_face = { texture="FLAT10" },
-      w_face = { texture="BROWN1" },
-    }
-
     make_curved_hall(steps, ax, by,
                      dx0, dx1, dx2, dx3,
                      dy0, dy1, dy2, dy3,
                      x_h, y_h, 128,
-                     info, info, info)
+                     wall_info, flat_info, flat_info)
   end
 
   local function build_stairwell_180(R)
@@ -2470,14 +2473,14 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                        -dx0, -dx1, -dx2, -dx3,
                        dy0, dy1, dy2, dy3,
                        h1, h2, 128,
-                       info, info, info)
+                       wall_info, flat_info, flat_info)
 
       -- right side
       make_curved_hall(steps, corn_x, corn_y,
                        dx0, dx1, dx2, dx3,
                        dy0, dy1, dy2, dy3,
                        h3, h2, 128,
-                       info, info, info)
+                       wall_info, flat_info, flat_info)
     else
       local dy0 = corn_y - AS.y2 + 16
       local dy3 = corn_y - AS.y1 - 16
@@ -2501,15 +2504,14 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                        dx0, dx1, dx2, dx3,
                        -dy0, -dy1, -dy2, -dy3,
                        h2, h1, 128,
-                       info, info, info)
+                       wall_info, flat_info, flat_info)
 
       -- top section
       make_curved_hall(steps, corn_x, corn_y,
                        dx0, dx1, dx2, dx3,
                        dy0, dy1, dy2, dy3,
                        h2, h3, 128,
-                       info, info, info)
-
+                       wall_info, flat_info, flat_info)
     end
   end
 
@@ -2544,13 +2546,6 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local steps = int(math.abs(h2 - h1) / 16)
     if steps < 5 then steps = 5 end
 
-    local info =
-    {
-      t_face = { texture="FLOOR3_3" },
-      b_face = { texture="FLOOR3_3" },
-      w_face = { texture="STARBR2" },
-    }
-
 
     if AS.conn_dir == 2 or AS.conn_dir == 8 then
 
@@ -2579,7 +2574,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                        -dx0, -dx1, -dx2, -dx3,
                        dy0, dy1, dy2, dy3,
                        h1, h2, 128,
-                       info, info, info)
+                       wall_info, flat_info, flat_info)
 
       -- right side
       corn_y = (ry1 + ry2) - corn_y
@@ -2593,7 +2588,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                        dx0, dx1, dx2, dx3,
                        -dy0, -dy1, -dy2, -dy3,
                        h3, h2, 128,
-                       info, info, info)
+                       wall_info, flat_info, flat_info)
+
     else
       local corn_y = (AS.y2 + BS.y1) / 2
       local corn_x = sel(AS.conn_dir == 4, rx1, rx2)
@@ -2620,7 +2616,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                        dx0, dx1, dx2, dx3,
                        -dy0, -dy1, -dy2, -dy3,
                        h2, h1, 128,
-                       info, info, info)
+                       wall_info, flat_info, flat_info)
 
       -- top section
       corn_x = (rx1 + rx2) - corn_x
@@ -2634,7 +2630,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                        -dx0, -dx1, -dx2, -dx3,
                        dy0, dy1, dy2, dy3,
                        h2, h3, 128,
-                       info, info, info)
+                       wall_info, flat_info, flat_info)
     end
   end
 
@@ -2686,13 +2682,6 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       }
     end
 
-    local info =
-    {
-      t_face = { texture="FLOOR0_6" },
-      b_face = { texture="FLOOR0_1" },
-      w_face = { texture="STARGR1" },
-    }
-
     local h1 = A.conn_h or 0
     local h2 = B.conn_h or 0
 
@@ -2708,13 +2697,13 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local f_h = h1 + (h2 - h1) * (i-1) / (steps-1)
       local c_h = f_h + gap_h
 
-      transformed_brush2(nil, info, step_coords(p0,p1, 0/6, 1/6), -2000,2000)
-      transformed_brush2(nil, info, step_coords(p0,p1, 5/6, 6/6), -2000,2000)
+      transformed_brush2(nil, wall_info, step_coords(p0,p1, 0/6, 1/6), -2000,2000)
+      transformed_brush2(nil, wall_info, step_coords(p0,p1, 5/6, 6/6), -2000,2000)
 
       local coords = step_coords(p0,p1, 1/6, 5/6)
 
-      transformed_brush2(nil, info, coords, -2000,f_h)
-      transformed_brush2(nil, info, coords,  c_h,2000)
+      transformed_brush2(nil, flat_info, coords, -2000,f_h)
+      transformed_brush2(nil, flat_info, coords,  c_h,2000)
     end
   end
 
@@ -2757,22 +2746,6 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
 
 
   mark_room_as_done(R)
-
-  -- create outer walls
---[[   ???????
-  for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-    local S = SEEDS[sx][sy][1]
-
-    for dir = 2,8,2 do
-      local N = S:neighbor(dir)
-
-      if not N or N.room ~= R then
-        S.thick[dir] = 16
-        S.borders[dir] = { kind="solid" }
-      end
-    end
-  end end
---]]
 end
 
 
