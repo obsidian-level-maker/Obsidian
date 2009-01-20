@@ -2218,11 +2218,64 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
     end
   end
 
+  local function try_convert_low_stair(S, x, y, dir)
+    if S.kind ~= "stair" then return end
+
+    local high_z = math.max(S.stair_z1, S.stair_z2)
+
+    local B = S:neighbor(10-dir)
+    if B and B.room == S.room and B.kind == "stair" then return end
+
+    if dir == 2 or dir == 8 then
+      
+      for other = 4,6,2 do
+        local N1 = S:neighbor(other)
+        local N2 = S:neighbor(10-other)
+
+        if (not N1 or N1.room ~= S.room or N1.kind == "void" or N1.floor_h >= high_z+32)
+           and not (N1 and N1.kind == "stair") and
+           (N2 and N2.room == S.room and N2.kind == "walk" and N2.floor_h == high_z)
+        then
+          S.kind = "curve_stair"
+          S.stair_kind = "low"
+          S.y_side = dir
+          S.y_height = S.stair_z1
+          S.x_side = 10-other
+          S.x_height = S.stair_z2
+
+          gui.debugf("LOW CURVE STAIR @ SEED (%d,%d)\n", S.sx, S.sy)
+        end
+      end
+
+    else -- dir == 4 or dir == 6
+
+      for other = 2,8,6 do
+        local N1 = S:neighbor(other)
+        local N2 = S:neighbor(10-other)
+
+        if (not N1 or N1.room ~= S.room or N1.kind == "void" or N1.floor_h >= high_z+32)
+           and not (N1 and N1.kind == "stair") and
+           (N2 and N2.room == S.room and N2.kind == "walk" and N2.floor_h == high_z)
+        then
+          S.kind = "curve_stair"
+          S.stair_kind = "low"
+          S.x_side = dir
+          S.x_height = S.stair_z1
+          S.y_side = 10-other
+          S.y_height = S.stair_z2
+
+          gui.debugf("LOW CURVE STAIR @ SEED (%d,%d)\n", S.sx, S.sy)
+        end
+      end
+    end
+  end
+
   local function choose_corner_stairs()
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
       if S.room == R and S.kind == "stair" then
         try_convert_tall_stair(S, x, y, S.stair_dir)
+        try_convert_low_stair(S, x, y, S.stair_dir)
       end
     end end -- for x, y
   end
@@ -2259,7 +2312,11 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
       if try_install_pattern(which) then
         gui.debugf("SUCCESS with %s!\n", which)
-        choose_corner_stairs()
+
+        if div_lev == 1 then
+          choose_corner_stairs()
+        end
+
         return true
       end
     end
