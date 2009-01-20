@@ -47,6 +47,14 @@ FD_MONSTER_LIST =
   spider = 0,
 }
 
+FD_MISSING_SCENERY =
+{
+  hang_arm_pair = 1,
+  hang_leg_pair = 1,
+  hang_leg_gone = 1,
+  hang_leg      = 1,
+}
+
 FD_LIQUIDS =
 {
   water = { floor="FWATER1", wall="WFALL1" },
@@ -87,6 +95,22 @@ function Freedoom_setup()
   for name,quality in pairs(FD_MONSTER_LIST) do
     if quality < 1 then
       GAME.monsters[name] = nil
+    end
+  end
+
+  -- FreeDOOM is lacking some scenery sprites
+
+  for name,_ in pairs(FD_MISSING_SCENERY) do
+    for _,R in ipairs(GAME.rooms) do
+      if R.scenery then
+        R.scenery[name] = nil
+      end
+    end
+
+    for _,C in ipairs(GAME.combos) do
+      if C.scenery == name then
+        C.scenery = nil
+      end
     end
   end
 end
