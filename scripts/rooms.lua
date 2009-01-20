@@ -1810,7 +1810,7 @@ end
 end
 
 
-function Room_try_divide(R, div_lev, area, heights, f_texs)
+function Room_try_divide(R, is_top, div_lev, area, heights, f_texs)
   -- find a usable pattern in the HEIGHT_PATTERNS table and
   -- apply it to the room.
 
@@ -1976,7 +1976,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     -- prefer patterns where some of the connections touch
     -- the old area and some touch the new area.
 
-    local score = 1 + gui.random()
+    local score = 10 + gui.random()
 
     local hash_c  = 0
     local dot_c   = 0
@@ -2018,10 +2018,13 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     -- big bonus if connections touch all three areas
     score = score + math.min(hash_c, dot_c, other_c) * 20
 
----  if hash_c > 0 then score = score + 1 end
+    if is_top and T.has_focus and not (T.has_focus == '#') then
+      -- when the focus hits a '.' or '/' area, it stops further
+      -- recursion, which is bad for big rooms.
+      if area.tw * area.th > 7*7 then return -1 end
 
-    --!!!!!!!! FIXME
-    if div_lev == 1 and not (T.has_focus == '#') then return -1 end
+      ---  score = score - 0.2
+    end
 
     return score
   end
@@ -2046,7 +2049,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     S.stair_z2 = assert(N.floor_h)
   end
 
-  local function install_it(T, hash_h, hash_ftex)
+  local function install_it(T, hash_h, hash_ftex, hash_lev)
 
 local ax,ay = morph_coord(T, 1,1)
 local bx,by = morph_coord(T, T.long,T.deep)
@@ -2065,7 +2068,7 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
 
       elseif ch == '#' then
         set_seed_floor(S, hash_h, hash_ftex)
-        S.div_lev = div_lev
+        S.div_lev = hash_lev
 
       elseif ch == '<' then
         setup_stair(S, 4, hash_h, hash_ftex)
@@ -2153,9 +2156,11 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
     local new_hs = shallow_copy(heights)
     local new_ft = shallow_copy(f_texs)
+    local new_lev
 
     local hash_h
     local hash_ftex
+    local hash_lev
 
 gui.debugf("  new_hs: %d %d %d\n",
 new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
@@ -2163,14 +2168,27 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
     if T.has_focus == '#' or not T.has_focus then
       hash_h = table.remove(new_hs, 1)
       hash_ftex = table.remove(new_ft, 1)
+      hash_lev  = div_lev
+      new_lev   = div_lev + 1
+    else
+      hash_h = assert(heights[2])
+      hash_ftex = assert(f_texs[2])
+      hash_lev  = div_lev + 1
+      new_lev   = div_lev
+
+      -- NOTE: no further recursion is possible (since there's only
+      --       one height in the new_hs table).  Fixing this would
+      --       be nice but is REALLY HARD.
+      new_hs = { heights[1] }
+      new_ft = { f_texs[1] }
     end
 
-    if sub_1 then Room_try_divide(R, div_lev+1, sub_1, new_hs, new_ft) end
-    if sub_2 then Room_try_divide(R, div_lev+1, sub_2, new_hs, new_ft) end
+    if sub_1 then Room_try_divide(R, false, new_lev, sub_1, new_hs, new_ft) end
+    if sub_2 then Room_try_divide(R, false, new_lev, sub_2, new_hs, new_ft) end
 
-    if not hash_h then error("WTF") end ---!!!! hash_h = heights[2] or heights[1] end
+    assert(hash_h)
 
-    install_it(T, hash_h, hash_ftex)
+    install_it(T, hash_h, hash_ftex, hash_lev)
 
     return true  -- YES !!
   end
@@ -2288,7 +2306,7 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
     if area.tw <= 2 and area.th <= 2 then return false end
 
--- if div_lev >= 2 then return false end
+-- if not is_top then return false end
 
     if R.children then return false end
 
@@ -2315,7 +2333,7 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
       if try_install_pattern(which) then
         gui.debugf("SUCCESS with %s!\n", which)
 
-        if div_lev == 1 then
+        if is_top then
           choose_corner_stairs()
         end
 
@@ -2648,8 +2666,9 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
       table.insert(f_texs, rand_element(R.combo.floors))
     end
   end
+  while #f_texs < 4 do table.insert(f_texs, f_texs[1]) end
 
-  Room_try_divide(R, 1, area, heights, f_texs)
+  Room_try_divide(R, true, 1, area, heights, f_texs)
 
 
   for _,C in ipairs(R.conns) do
@@ -2734,10 +2753,10 @@ function Rooms_lay_out_II()
   gui.printf("Cage Mode: %s\n", PLAN.cage_mode)
 
 
---!!!!!
+--[[ !!!!!
 PLAN.sky_mode = "few"
 PLAN.hallway_mode = "heaps"
-PLAN.junk_mode = "heaps"
+PLAN.junk_mode = "heaps"  ]]
 
   Rooms_decide_outdoors()
   Rooms_choose_themes()

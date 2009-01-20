@@ -1837,7 +1837,7 @@ function Build_small_exit(R)
   local c_h = f_h + 128
 
   local w_tex = rand_element { "METAL2",  "STARTAN2", "STARG1",
-                               "TEKWALL4","PIPEWAL2", "SILVER2",
+                               "TEKWALL4","PIPEWAL2",
                                "TEKGRN1", "SPACEW2",  "STARBR2" }
 
   local c_tex = rand_element { "TLITE6_6", "TLITE6_5", "FLAT17",
