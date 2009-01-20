@@ -1542,6 +1542,13 @@ gui.printf("do_teleport\n")
     local c_tex = S.c_tex or sel(R.outdoor, PARAMS.sky_flat, R.combo.ceil)
 
 
+--[[
+if not R.outdoor and S.sx > R.sx1+1 and S.sx < R.sx2-1 and S.sy > R.sy1+1 and S.sy < R.sy2-1 then
+  z2 = z2 + 32
+  c_tex = PARAMS.sky_flat
+end --]]
+
+
     -- SIDES
 
     for side = 2,8,2 do
@@ -1729,10 +1736,10 @@ end
 
       Build_niche_stair(S, stair_info)
 
-    elseif S.kind == "turn_stair" then
+    elseif S.kind == "curve_stair" then
 
-      if S.stair_in_corner then
-        Build_tall_curved_stair(S, x1,y1, x2,y2, S.x_side, S.y_side, S.x_height, S.y_height)
+      if S.stair_kind == "tall" then
+        Build_tall_curved_stair(S, S.x_side, S.y_side, S.x_height, S.y_height)
       else
         Build_low_curved_stair(S, S.x_side, S.y_side, S.x_height, S.y_height)
       end
@@ -2166,6 +2173,60 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
     return true  -- YES !!
   end
 
+  local function try_convert_tall_stair(S, x, y, dir)
+    local B = S:neighbor(10-dir)
+
+    if B and B.room == S.room and B.kind ~= "void" then
+      return  -- not possible
+    end
+
+    if dir == 2 or dir == 8 then
+      
+      for other = 4,6,2 do
+        local N = S:neighbor(other)
+
+        if not N or N.room ~= S.room or N.kind == "void" then
+
+          S.kind = "curve_stair"
+          S.stair_kind = "tall"
+          S.y_side = dir
+          S.y_height = S.stair_z1
+          S.x_side = 10-other
+          S.x_height = S.stair_z2
+
+          gui.debugf("TALL CURVE STAIR @ SEED (%d,%d)\n", S.sx, S.sy)
+        end
+      end
+
+    else -- dir == 4 or dir == 6
+
+      for other = 2,8,6 do
+        local N = S:neighbor(other)
+
+        if not N or N.room ~= S.room or N.kind == "void" then
+
+          S.kind = "curve_stair"
+          S.stair_kind = "tall"
+          S.x_side = dir
+          S.x_height = S.stair_z1
+          S.y_side = 10-other
+          S.y_height = S.stair_z2
+
+          gui.debugf("TALL CURVE STAIR @ SEED (%d,%d)\n", S.sx, S.sy)
+        end
+      end
+    end
+  end
+
+  local function choose_corner_stairs()
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and S.kind == "stair" then
+        try_convert_tall_stair(S, x, y, S.stair_dir)
+      end
+    end end -- for x, y
+  end
+
 
   local function do_try_divide()
     if #heights < 2 then return false end
@@ -2198,6 +2259,7 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
       if try_install_pattern(which) then
         gui.debugf("SUCCESS with %s!\n", which)
+        choose_corner_stairs()
         return true
       end
     end
@@ -2519,7 +2581,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
 
   -- FIXME: ARGH, we don't know what heights on other side will be!!
-  make_windows()
+--!!!!  make_windows()
 
 
   if R.purpose then

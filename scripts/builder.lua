@@ -1052,7 +1052,7 @@ function Build_niche_stair(S, stair_info)
 end
 
 
-function Build_tall_curved_stair(S, x1,y1, x2,y2, x_side,y_side, x_h,y_h)
+function Build_tall_curved_stair(S, x_side,y_side, x_h,y_h)
   assert(x_h and y_h)
 
   local steps = int(math.abs(x_h-y_h) / 14 + 0.9)
@@ -1060,6 +1060,9 @@ function Build_tall_curved_stair(S, x1,y1, x2,y2, x_side,y_side, x_h,y_h)
   if steps < 4 then
     steps = 4
   end
+
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
 
   local w = x2 - x1 + 1
   local h = y2 - y1 + 1
@@ -1082,11 +1085,13 @@ function Build_tall_curved_stair(S, x1,y1, x2,y2, x_side,y_side, x_h,y_h)
     dy2 = -dy2 ; dy3 = -dy3
   end
 
+  local w_tex = S.w_tex or S.room.combo.wall
+
   local info =
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
-    w_face = { texture="SLADWALL" },
+    w_face = { texture=w_tex },
   }
 
   make_curved_hall(steps, corn_x, corn_y,
