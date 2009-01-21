@@ -1842,8 +1842,8 @@ end --]]
 
       if B_kind == "wall" then
         if liquid_wall then
-          local z_top = z1 + 96
-          if z_top < N.floor_h+64 then z_top = N.floor_h+64 end
+          local z_top = z1 + 80
+          if z_top < N.floor_h+48 then z_top = N.floor_h+48 end
           Build_archway(S, side, z1, z_top, f_tex, w_tex) 
         else
           make_wall(S, side, f_tex, w_tex)
