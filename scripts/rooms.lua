@@ -2239,6 +2239,62 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
     return true  -- YES !!
   end
 
+
+
+
+  local function do_try_divide()
+    if #heights < 2 then return false end
+
+    if area.tw <= 2 and area.th <= 2 then return false end
+
+-- if not is_top then return false end
+
+    if R.children then return false end
+
+    if R.kind == "hallway" or R.kind == "stairwell" then return false end
+
+    local try_fabs = {}
+    for name,info in pairs(HEIGHT_PATTERNS) do
+      -- TODO: symmetry matching
+      try_fabs[name] = info.prob or 50
+    end
+
+
+    for loop = 1,10 do
+      if table_empty(try_fabs) then
+        break;
+      end
+
+      local which = rand_key_by_probs(try_fabs)
+      try_fabs[which] = nil
+
+      gui.debugf("Trying pattern %s in %s (loop %d)......\n",
+                 which, R:tostr(), loop)
+
+      if try_install_pattern(which) then
+        gui.debugf("SUCCESS with %s!\n", which)
+        return true
+      end
+    end
+
+    gui.debugf("FAILED to apply any room pattern.\n")
+    return false
+  end
+
+
+  ---==| Room_divide |==---
+ 
+  if do_try_divide() then
+gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
+  else
+gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
+    install_flat_floor(heights[1], f_texs[1])
+  end
+end
+
+
+function Room_choose_corner_stairs(R)
+
   local function try_convert_tall_stair(S, x, y, dir)
     local B = S:neighbor(10-dir)
 
@@ -2336,70 +2392,15 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
     end
   end
 
-  local function choose_corner_stairs()
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      if S.room == R and S.kind == "stair" then
-        try_convert_tall_stair(S, x, y, S.stair_dir)
-        try_convert_low_stair(S, x, y, S.stair_dir)
-      end
-    end end -- for x, y
-  end
+  ---| Rooms_choose_corner_stairs |---
 
-
-  local function do_try_divide()
-    if #heights < 2 then return false end
-
-    if area.tw <= 2 and area.th <= 2 then return false end
-
--- if not is_top then return false end
-
-    if R.children then return false end
-
-    if R.kind == "hallway" or R.kind == "stairwell" then return false end
-
-    local try_fabs = {}
-    for name,info in pairs(HEIGHT_PATTERNS) do
-      -- TODO: symmetry matching
-      try_fabs[name] = info.prob or 50
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R and S.kind == "stair" then
+      try_convert_tall_stair(S, x, y, S.stair_dir)
+      try_convert_low_stair(S, x, y, S.stair_dir)
     end
-
-
-    for loop = 1,10 do
-      if table_empty(try_fabs) then
-        break;
-      end
-
-      local which = rand_key_by_probs(try_fabs)
-      try_fabs[which] = nil
-
-      gui.debugf("Trying pattern %s in %s (loop %d)......\n",
-                 which, R:tostr(), loop)
-
-      if try_install_pattern(which) then
-        gui.debugf("SUCCESS with %s!\n", which)
-
-        if is_top then
-          choose_corner_stairs()
-        end
-
-        return true
-      end
-    end
-
-    gui.debugf("FAILED to apply any room pattern.\n")
-    return false
-  end
-
-
-  ---==| Room_divide |==---
- 
-  if do_try_divide() then
-gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
-  else
-gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
-    install_flat_floor(heights[1], f_texs[1])
-  end
+  end end -- for x, y
 end
 
 
@@ -2717,6 +2718,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   while #f_texs < 4 do table.insert(f_texs, f_texs[1] or R.combo.floor) end
 
   Room_try_divide(R, true, 1, area, heights, f_texs)
+
+  Room_choose_corner_stairs(R)
 
 
   for _,C in ipairs(R.conns) do
