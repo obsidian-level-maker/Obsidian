@@ -2403,7 +2403,7 @@ gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
 end
 
 
-function Room_layout_II(R)
+function Room_layout_one(R)
 
   local function junk_sides()
     -- Adds solid seeds (kind "void") to the edges of large rooms.
@@ -2608,7 +2608,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       make_small_switch(S, 4, z1, INFO, LOCK.tag)
 
     else
-      error("Room_layout_II: unknown purpose! " .. tostring(R.purpose))
+      error("Room_layout_one: unknown purpose! " .. tostring(R.purpose))
     end
   end
 
@@ -2634,7 +2634,9 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
   end
 
 
-  ---==| Room_layout_II |==---
+  ---==| Room_layout_one |==---
+
+gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
   local focus_C = R.entry_conn
   if not focus_C then
@@ -2712,7 +2714,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
       table.insert(f_texs, rand_element(R.combo.floors))
     end
   end
-  while #f_texs < 4 do table.insert(f_texs, f_texs[1]) end
+  while #f_texs < 4 do table.insert(f_texs, f_texs[1] or R.combo.floor) end
 
   Room_try_divide(R, true, 1, area, heights, f_texs)
 
@@ -2807,12 +2809,12 @@ PLAN.junk_mode = "heaps"  ]]
   Rooms_decide_outdoors()
   Rooms_choose_themes()
   Rooms_decide_hallways_II()
-  Rooms_reckon_doors()
+--!!!!  Rooms_reckon_doors()
 
   Seed_dump_fabs()
 
   for _,R in ipairs(PLAN.all_rooms) do
-    Room_layout_II(R)
+    Room_layout_one(R)
     Room_build_seeds(R)
   end
 
