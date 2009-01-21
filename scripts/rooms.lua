@@ -1165,6 +1165,54 @@ HEIGHT_PATTERNS =
 
     match_any = true,
   },
+
+  LIQUID_WOW_I =
+  {
+    prob = 55555,
+
+    structure =
+    {
+      "~~~#~~~",
+      "~##v##~",
+      "~#...#~",
+      "~#...#~",
+      "~#...#~",
+      "~##^##~",
+      "~~~#~~~",
+    },
+
+    x_sizes = { "1111111", "1121211", "1131311", "1141411",
+                "2111112", "2121212", "2131312" },
+
+    y_sizes = { "1110111", "1111111", "1121211", "1131311", "1141411",
+                "2111112", "2121212", "2131312" },
+
+    match_any = true,
+  },
+
+  LIQUID_WOW_X =
+  {
+    prob = 33333,
+
+    structure =
+    {
+      "~~~#~~~",
+      "~##v##~",
+      "~#...#~",
+      "#>...<#",
+      "~#...#~",
+      "~##^##~",
+      "~~~#~~~",
+    },
+
+    x_sizes = { "1111111", "1121211", "1131311", "1141411",
+                "2111112", "2121212", "2131312" },
+
+    y_sizes = { "1111111", "1121211", "1131311", "1141411",
+                "2111112", "2121212", "2131312" },
+
+    match_any = true,
+  },
 }
 
 
@@ -1786,9 +1834,21 @@ end --]]
             not (S.room.hallway or N.room.hallway) and
             not (S.room.purpose or N.room.purpose)
 
-      if B_kind == "wall" then --- and not could_lose_wall
-        make_wall(S, side, f_tex, w_tex)
----     make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "ZZWOLF6")
+      local liquid_wall =
+            N and S.room and N.room and
+            S.kind == "liquid" and N.kind == "liquid"
+----!!!!    and S.room.arena == N.room.arena
+      
+
+      if B_kind == "wall" then
+        if liquid_wall then
+          local z_top = z1 + 96
+          if z_top < N.floor_h+64 then z_top = N.floor_h+64 end
+          Build_archway(S, side, z1, z_top, f_tex, w_tex) 
+        else
+          make_wall(S, side, f_tex, w_tex)
+---       make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "ZZWOLF6")
+        end
       end
 
       if B_kind == "picture" then
@@ -1800,7 +1860,7 @@ end --]]
         make_window(S, side, 192, z1+32, z1+80, f_tex, w_tex)
       end
 
-      if B_kind == "fence" then   --FIXME: R.fence_h
+      if B_kind == "fence" and not liquid_wall then   --FIXME: R.fence_h
 --!!!!     and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind then
         make_fence(S, side, R.floor_h or z1, f_tex, w_tex)
       end
@@ -2998,6 +3058,9 @@ PLAN.junk_mode = "heaps"  ]]
 
   for _,R in ipairs(PLAN.all_rooms) do
     Room_layout_one(R)
+  end
+
+  for _,R in ipairs(PLAN.all_rooms) do
     Room_build_seeds(R)
   end
 
