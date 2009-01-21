@@ -997,6 +997,174 @@ HEIGHT_PATTERNS =
       "2111112", "2112112", "2113112", "2114112", "2115112",
     },
   },
+
+
+  LIQUID_I =
+  {
+    prob = 4000,
+
+    structure =
+    {
+      "~#~",
+    },
+
+    x_sizes = { "111", "212", "313", "323" },
+    y_sizes = { "1", "2", "3", "4", "5", "6", "7",
+                "8", "9", "A" },
+
+    match_any = true,
+  },
+
+  LIQUID_L =
+  {
+    prob = 40,
+
+    structure =
+    {
+      "#~",
+      "##",
+    },
+
+    x_sizes = { "12", "13", "14", "15", "25", "26", "27", "28" },
+    y_sizes = { "12", "13", "14", "15", "25", "26", "27", "28" },
+
+    match_any = true,
+  },
+
+  LIQUID_L2 =
+  {
+    prob = 9000,
+
+    structure =
+    {
+      "~#",
+      "~~",
+    },
+
+    x_sizes = { "22", "23", "24", "34", "35", "36", "37", "38" },
+    y_sizes = { "22", "23", "24", "34", "35", "36", "37", "38" },
+
+    match_any = true,
+  },
+
+  LIQUID_O =
+  {
+    prob = 4000,
+
+    structure =
+    {
+      "###",
+      "#~#",
+      "###",
+    },
+
+    x_sizes = { "131", "141", "151", "242", "252", "262" },
+    y_sizes = { "131", "141", "151", "242", "252", "262" },
+
+    match_any = true,
+  },
+
+  LIQUID_U =
+  {
+    prob = 4000,
+
+    structure =
+    {
+      "#~#",
+      "###",
+    },
+
+    x_sizes = { "121", "131", "141", "151", "242", "252" },
+    y_sizes = { "12", "13", "14", "15", "25", "26", "27", "37" },
+
+    match_any = true,
+  },
+
+  LIQUID_E =
+  {
+    prob = 4000,
+
+    structure =
+    {
+      "##",
+      "#~",
+      "##",
+      "#~",
+      "##",
+    },
+
+    x_sizes = { "12", "13", "14", "15", "25", "26", "27" },
+    y_sizes = { "12121", "13131", "14141" },
+
+    match_any = true,
+  },
+
+  LIQUID_S =
+  {
+    prob = 14000,
+
+    structure =
+    {
+      "~##",
+      "~#~",
+      "##~",
+    },
+
+    x_sizes = { "112", "212", "213", "313", "314", "414" },
+    y_sizes = { "111", "121", "131", "141", "151", "161" },
+
+    match_any = true,
+  },
+
+  LIQUID_X =
+  {
+    prob = 4000,
+
+    structure =
+    {
+      "~#~",
+      "###",
+      "~#~",
+    },
+
+    x_sizes = { "212", "313", "414", "515", "616", },
+    y_sizes = { "212", "313", "414", "515", "616", },
+
+    match_any = true,
+  },
+
+  LIQUID_T =
+  {
+    prob = 4000,
+
+    structure =
+    {
+      "###",
+      "~#~",
+    },
+
+    x_sizes = { "111", "212", "313", "414" },
+    y_sizes = { "21", "31", "41", "51", "52", "62", "72" },
+
+    match_any = true,
+  },
+
+  LIQUID_H =
+  {
+    prob = 4000,
+
+    structure =
+    {
+      "#~#",
+      "###",
+      "#~#",
+    },
+
+    x_sizes = { "121", "131", "141", "151", "242", "252" },
+    y_sizes = { "111", "212", "313", "414" },
+
+    match_any = true,
+  },
 }
 
 
@@ -1800,6 +1968,11 @@ end
 
     elseif not S.no_floor then
 
+      if S.kind == "liquid" then
+        f_tex = "NUKAGE3"
+        sec_kind = 16
+      end
+
       transformed_brush2(nil,
       {
         t_face = { texture=f_tex },
@@ -2138,7 +2311,9 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
       elseif ch == 'S' then
         S.kind = "void"
 
-      -- TODO: other stuff (Liquids!!)
+      elseif ch == '~' then
+        S.kind = "liquid"
+        S.floor_h = hash_h - 64
 
       end
 
