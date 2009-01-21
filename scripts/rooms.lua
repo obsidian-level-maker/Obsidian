@@ -606,7 +606,7 @@ HEIGHT_PATTERNS =
   {
     structure =
     {
-      "..#//",
+      "..#``",
       "#^#^#",
       "#####",
     },
@@ -630,7 +630,7 @@ HEIGHT_PATTERNS =
   {
     structure =
     {
-      "..#//",
+      "..#``",
       "^###^",
       "#####",
     },
@@ -656,9 +656,9 @@ HEIGHT_PATTERNS =
   {
     structure =
     {
-      ".</",
-      ".#/",
-      ".>/",
+      ".<`",
+      ".#`",
+      ".>`",
       "###",
     },
 
@@ -680,9 +680,9 @@ HEIGHT_PATTERNS =
   {
     structure =
     {
-      ".#>/",
-      ".##/",
-      ".<#/",
+      ".#>`",
+      ".##`",
+      ".<#`",
       "####",
     },
 
@@ -707,7 +707,7 @@ HEIGHT_PATTERNS =
     {
       "#####",
       "###v#",
-      "..#//",
+      "..#``",
       "#^###",
       "#####",
     },
@@ -733,7 +733,7 @@ HEIGHT_PATTERNS =
     {
       "#####",
       "#v#v#",
-      "..#//",
+      "..#``",
       "#^#^#",
       "#####",
     },
@@ -757,7 +757,7 @@ HEIGHT_PATTERNS =
     {
       "#####",
       "v####",
-      "..#//",
+      "..#``",
       "####^",
       "#####",
     },
@@ -783,7 +783,7 @@ HEIGHT_PATTERNS =
     {
       "#####",
       "v###v",
-      "..#//",
+      "..#``",
       "^###^",
       "#####",
     },
@@ -806,9 +806,9 @@ HEIGHT_PATTERNS =
     structure =
     {
       "###",
-      ".</",
-      ".#/",
-      ".>/",
+      ".<`",
+      ".#`",
+      ".>`",
       "###",
     },
 
@@ -829,9 +829,9 @@ HEIGHT_PATTERNS =
     structure =
     {
       "####",
-      ".#>/",
-      ".##/",
-      ".<#/",
+      ".#>`",
+      ".##`",
+      ".<#`",
       "####",
     },
 
@@ -854,9 +854,9 @@ HEIGHT_PATTERNS =
     {
       "..###",
       "..#v#",
-      "..#//",
-      "#^#//",
-      "###//",
+      "..#``",
+      "#^#``",
+      "###``",
     },
 
     x_sizes =
@@ -878,9 +878,9 @@ HEIGHT_PATTERNS =
     {
       "..###",
       "..##v",
-      "..#//",
-      "^##//",
-      "###//",
+      "..#``",
+      "^##``",
+      "###``",
     },
 
     x_sizes =
@@ -904,9 +904,9 @@ HEIGHT_PATTERNS =
     {
       "..<##",
       "..##v",
-      "..#//",
-      "^##//",
-      "##>//",
+      "..#``",
+      "^##``",
+      "##>``",
     },
 
     x_sizes =
@@ -927,9 +927,9 @@ HEIGHT_PATTERNS =
     {
       ".<#",
       ".##",
-      ".#/",
-      "##/",
-      "#>/",
+      ".#`",
+      "##`",
+      "#>`",
     },
 
     x_sizes =
@@ -950,12 +950,12 @@ HEIGHT_PATTERNS =
     structure =
     {
       ".##",
-      ".#/",
-      ".</",
-      ".#/",
-      ".>/",
-      ".#/",
-      "##/",
+      ".#`",
+      ".<`",
+      ".#`",
+      ".>`",
+      ".#`",
+      "##`",
     },
 
     x_sizes =
@@ -977,12 +977,12 @@ HEIGHT_PATTERNS =
     structure =
     {
       ".###",
-      ".##/",
-      ".<#/",
-      ".##/",
-      ".#>/",
-      ".##/",
-      "###/",
+      ".##`",
+      ".<#`",
+      ".##`",
+      ".#>`",
+      ".##`",
+      "###`",
     },
 
     x_sizes =
@@ -1938,8 +1938,11 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
   local TRANSPOSE_STAIR_TAB =
   {
-    ['<'] = 'v', ['v'] = '<',
-    ['>'] = '^', ['^'] = '>',
+    ['<'] = 'v',  ['v']  = '<',
+    ['>'] = '^',  ['^']  = '>',
+    ['/'] = '\\', ['\\'] = '/',
+    ['-'] = '|',  ['|']  = '-',
+    ['!'] = '=',  ['=']  = '!',
   }
 
   local function morph_coord(T, i, j)
@@ -1962,16 +1965,20 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     return dir
   end
 
-  local function morph_stair(T, ch)
+  local function morph_char(T, ch)
     if T.x_flip then
           if ch == '<' then ch = '>'
       elseif ch == '>' then ch = '<'
+      elseif ch == '/'  then ch = '\\'
+      elseif ch == '\\' then ch = '/'
       end
     end
 
     if T.y_flip then
           if ch == 'v' then ch = '^'
       elseif ch == '^' then ch = 'v'
+      elseif ch == '/'  then ch = '\\'
+      elseif ch == '\\' then ch = '/'
       end
     end
 
@@ -2037,12 +2044,12 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
       local ch = string.sub(T.expanded[T.deep+1-j], i, i)
       assert(ch)
-      ch = morph_stair(T, ch)
+      ch = morph_char(T, ch)
 
       if (S.conn or S.pseudo_conn or S.must_walk) then
             if ch == '#' then hash_c  = hash_c  + 1
         elseif ch == '.' then dot_c   = dot_c   + 1
-        elseif ch == '/' then other_c = other_c + 1
+        elseif ch == '`' then other_c = other_c + 1
         else
           return -1
         end
@@ -2065,7 +2072,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     score = score + math.min(hash_c, dot_c, other_c) * 20
 
     if is_top and T.has_focus and not (T.has_focus == '#') then
-      -- when the focus hits a '.' or '/' area, it stops further
+      -- when the focus hits a '.' or '`' area, it stops further
       -- recursion, which is bad for big rooms.
       if area.tw * area.th > 7*7 then return -1 end
 
@@ -2107,9 +2114,9 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
       local S = SEEDS[x][y][1]
 
       local ch = string.sub(T.expanded[T.deep+1-j], i, i)
-      ch = morph_stair(T, ch)
+      ch = morph_char(T, ch)
 
-      if ch == '.' or ch == '/' then
+      if ch == '.' or ch == '`' then
         -- nothing to do, handled by recursive call
 
       elseif ch == '#' then
@@ -2198,7 +2205,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
     -- recursive sub-division
     local sub_1 = find_sub_area(T, '.')
-    local sub_2 = find_sub_area(T, '/')
+    local sub_2 = find_sub_area(T, '`')
 
     local new_hs = shallow_copy(heights)
     local new_ft = shallow_copy(f_texs)
@@ -2224,7 +2231,7 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
       -- NOTE: no further recursion is possible (since there's only
       --       one height in the new_hs table).  Fixing this would
-      --       be nice but is REALLY HARD.
+      --       be nice but REALLY HARD.
       new_hs = { heights[1] }
       new_ft = { f_texs[1] }
     end
@@ -2238,8 +2245,6 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
     return true  -- YES !!
   end
-
-
 
 
   local function do_try_divide()
