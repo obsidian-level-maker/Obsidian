@@ -753,16 +753,31 @@ function Quest_choose_keys()
     want_keys = want_keys - 1
   end
 
-  for i = 1,#PLAN.all_locks do
-    local LOCK = PLAN.all_locks[i]
-    if LOCK.kind ~= "EXIT" then
-      if i <= want_keys then
-        LOCK.kind = "KEY"
-        LOCK.item = use_keys[i]
-      else
-        LOCK.kind = "SWITCH"
-        LOCK.item = use_switches[1 + (i-1) % #use_switches]
-      end
+  -- assign keys first (to locks with biggest distance from key to door)
+  local cur_k = 1
+
+  for _,LOCK in ipairs(PLAN.all_locks) do
+    if cur_k > want_keys then
+      break;
+    end
+
+    if not LOCK.item then
+      LOCK.kind = "KEY"
+      LOCK.item = use_keys[cur_k]
+      cur_k = cur_k + 1
+    end
+  end
+
+  -- assign switches second (random spread)
+  rand_shuffle(PLAN.all_locks)
+
+  local cur_sw = 0
+
+  for _,LOCK in ipairs(PLAN.all_locks) do
+    if not LOCK.item then
+      LOCK.kind = "SWITCH"
+      LOCK.item = use_switches[1 + cur_sw % #use_switches]
+      cur_sw = cur_sw + 1
     end
   end
 end
