@@ -1398,7 +1398,14 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
     if R.children then return false end
 
-    if R.kind == "hallway" or R.kind == "stairwell" then return false end
+    if R.kind == "hallway"   then return false end
+    if R.kind == "stairwell" then return false end
+
+    -- some chance of not dividing at all
+    local skip_prob = 53 - (area.tw + area.th) * 3.5
+    if skip_prob > 0 and rand_odds(skip_prob) then
+      return false
+    end
 
     local liq_mul = 1.0
     if PLAN.liquid_mode == "few"   then liq_mul = 0.2 end
