@@ -1298,9 +1298,7 @@ gui.debugf("end install_it\n")
   end
 
 
-  local function try_install_pattern(name)
-    local info = assert(HEIGHT_FABS[name])
-
+  local function try_install_pattern(name, info)
     local possibles = {}
 
     local T = { info=info }
@@ -1402,10 +1400,18 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
     if R.kind == "hallway" or R.kind == "stairwell" then return false end
 
+    local liq_mul = 1.0
+    if PLAN.liquid_mode == "few"   then liq_mul = 0.2 end
+    if PLAN.liquid_mode == "heaps" then liq_mul = 8.0 end
+
     local try_fabs = {}
     for name,info in pairs(HEIGHT_FABS) do
       -- TODO: symmetry matching
       try_fabs[name] = info.prob or 50
+    end
+    for name,info in pairs(LIQUID_FABS) do
+      -- TODO: symmetry matching
+      try_fabs[name] = (info.prob or 50) * liq_mul
     end
 
 
@@ -1417,10 +1423,13 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
       local which = rand_key_by_probs(try_fabs)
       try_fabs[which] = nil
 
+      local info = HEIGHT_FABS[which] or LIQUID_FABS[which]
+      assert(info)
+
       gui.debugf("Trying pattern %s in %s (loop %d)......\n",
                  which, R:tostr(), loop)
 
-      if try_install_pattern(which) then
+      if try_install_pattern(which, info) then
         gui.debugf("SUCCESS with %s!\n", which)
         return true
       end
@@ -1915,7 +1924,7 @@ function Rooms_lay_out_II()
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=20 }
   gui.printf("Hallway Mode: %s\n", PLAN.hallway_mode)
 
-  PLAN.liquid_mode = rand_key_by_probs { few=10, some=40, heaps=10 }
+  PLAN.liquid_mode = rand_key_by_probs { few=15, some=60, heaps=20 }
   gui.printf("Liquid Mode: %s\n", PLAN.liquid_mode)
 
   PLAN.junk_mode = rand_key_by_probs { few=40, some=30, heaps=10 }
