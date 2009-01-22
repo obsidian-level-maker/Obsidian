@@ -1863,7 +1863,7 @@ function Build_small_exit(R)
   local out_info =
   {
     w_face = out_face,
-    t_face = { texture=T.room.combo.floor },
+    t_face = { texture=C.conn_ftex or f_tex },
     b_face = { texture=out_combo.ceil },
   }
 
