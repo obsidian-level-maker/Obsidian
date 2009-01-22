@@ -752,7 +752,9 @@ end --]]
         make_sky_fence(S, side)
       end
 
-      if B_kind == "arch" then
+      -- FIXME: scenic check should not be here
+      --        [happens because make_scenic() does not fix borders]
+      if B_kind == "arch" and R.kind ~= "scenic" then
         local z_top = assert(S.conn and S.conn.conn_h) + 128
 
         Build_archway(S, side, z1, z_top, f_tex, w_tex) 
@@ -1708,7 +1710,7 @@ function Room_layout_one(R)
     end end -- for x,y
   end
 
-  local function make_windows()
+  local function choose_windows()
     if not (R.kind == "building" and R.purpose ~= "EXIT") then
       return
     end
@@ -1722,7 +1724,8 @@ function Room_layout_one(R)
           local N = S:neighbor(side)
           if N and (N.sx < R.sx1 or N.sx > R.sx2 or N.sy < R.sy1 or N.sy > R.sy2) and
              N.room and (N.room.outdoor or R.parent) and
-             S.border[side].kind == "wall"
+             S.border[side].kind == "wall" and
+             rand_odds(25) 
           then
              S.border[side].kind = "window"
           end
@@ -1893,7 +1896,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
 
   -- FIXME: ARGH, we don't know what heights on other side will be!!
-  make_windows()
+  -- NOTE TOO: windows override "liquid arches" -- FIX
+  choose_windows()
 
 
   if R.purpose then
@@ -1924,6 +1928,7 @@ function Rooms_lay_out_II()
   gui.printf("\n--==| Rooms_lay_out II |==--\n\n")
 
   PLAN.theme = GAME.themes["TECH"] -- FIXME
+
 
   PLAN.sky_mode = rand_key_by_probs { few=20, some=70, heaps=10 }
   gui.printf("Sky Mode: %s\n", PLAN.sky_mode)

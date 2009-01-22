@@ -123,6 +123,8 @@ function Quest_decide_start_room(arena)
   end
 
   local function natural_flow(R, visited)
+    assert(R.kind ~= "scenic")
+
     visited[R] = true
 
     for _,C in ipairs(R.conns) do

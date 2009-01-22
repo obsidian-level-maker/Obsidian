@@ -672,6 +672,8 @@ function Connect_Rooms()
   end
 
   local function connect_seeds(S, T, dir)
+    assert(not (S.room and S.room.kind == "scenic"))
+    assert(not (T.room and T.room.kind == "scenic"))
 
     if (S.room.outdoor and T.room.outdoor) then
       S.border[dir].kind    = nil
@@ -835,6 +837,7 @@ T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.c_group)
       else
         if not N.room or
            not N.room.c_group or
+           N.room.kind == "scenic" or
            N.room.branch_kind or
            groups_seen[N.room.c_group] or
            N.conn -- only one connection per seed!
@@ -1089,21 +1092,26 @@ gui.debugf("Failed\n")
       swap_groups(rebel_id, min_g)
     end
 
+    local join_chance = 99
+    if PLAN.scenic_mode == "heaps" then join_chance = 33 end
+
     local rebels = table_subset_w_field(list, "c_group", rebel_id)
     assert(#rebels > 0)
     gui.debugf("#rebels : %d\n", #rebels)
 
-    -- try the least important rooms first
-    for _,R in ipairs(rebels) do
-      R.rebel_cost = sel(R.symmetry, 500, 0) + R.svolume + gui.random()
-    end
+    if rand_odds(join_chance) then
+      -- try the least important rooms first
+      for _,R in ipairs(rebels) do
+        R.rebel_cost = sel(R.symmetry, 500, 0) + R.svolume + gui.random()
+      end
 
-    table.sort(rebels, function(A,B) return A.rebel_cost < B.rebel_cost end)
+      table.sort(rebels, function(A,B) return A.rebel_cost < B.rebel_cost end)
 
-    for _,R in ipairs(rebels) do
-      if force_room_branch(R) then
-        gui.debugf("Branched rebel group %d (now %d)\n", rebel_id, R.c_group)
-        return -- OK
+      for _,R in ipairs(rebels) do
+        if force_room_branch(R) then
+          gui.debugf("Branched rebel group %d (now %d)\n", rebel_id, R.c_group)
+          return -- OK
+        end
       end
     end
 
@@ -1131,8 +1139,11 @@ gui.debugf("Failed\n")
     -- use a copy since PLAN.all_rooms may be modified
     local list = shallow_copy(PLAN.all_rooms)
 
-    local join_chance = rand_element { 10, 50, 90 }
+    local join_chance = 50
+    if PLAN.scenic_mode == "few"   then join_chance = 95 end
+    if PLAN.scenic_mode == "heaps" then join_chance =  5 end
     if PLAN.join_all then join_chance = 100 end
+
     gui.debugf("Join Chance: %d\n", join_chance)
 
     repeat
@@ -1154,6 +1165,37 @@ gui.debugf("Failed\n")
     until not changed
   end
 
+  local function has_scenic_neigbour(R)
+    for _,N in ipairs(R.neighbors) do
+      if N.kind == "scenic" then return true end
+    end
+    return false
+  end
+    
+  local function sprinkle_scenics()
+    -- select some rooms as scenic rooms
+    if PLAN.scenic_mode == "few" then return end
+
+    local side_prob = sel(PLAN.scenic_mode == "heaps", 60, 10)
+    local mid_prob  = sel(PLAN.scenic_mode == "heaps", 20, 3)
+
+    local list = shallow_copy(PLAN.all_rooms)
+    rand_shuffle(list)
+
+    for _,R in ipairs(list) do
+      local is_side
+      if R.sx1 <= 2 or R.sy1 <= 2 or R.sx2 >= SEED_W-1 or R.sy2 >= SEED_H-1 then
+        is_side = true
+      end
+
+      if rand_odds(sel(is_side, side_prob, mid_prob)) and
+         not has_scenic_neigbour(R)
+      then
+        make_scenic(R)
+      end
+    end -- for R
+  end
+
 
   --==| Connect_Rooms |==--
 
@@ -1163,7 +1205,20 @@ gui.debugf("Failed\n")
     R.c_group = c_group
   end
 
+
+  PLAN.scenic_mode = rand_key_by_probs { few=30, some=50, heaps=10 }
+  gui.printf("Scenic Mode: %s\n", PLAN.scenic_mode)
+
+  sprinkle_scenics()
+
+
   branch_big_rooms()
   branch_the_rest()
+
+---#  for _,R in ipairs(PLAN.all_rooms) do assert(R.kind ~= "scenic") end
+---#  for _,C in ipairs(PLAN.all_conns) do
+---#    assert(C.src.kind ~= "scenic")
+---#    assert(C.dest.kind ~= "scenic")
+---#  end
 end
 
