@@ -802,7 +802,7 @@ function Plan_BorderUp()
         for dir = 2,8,2 do
           local N = S:neighbor(dir)
           if not N then
-            if S.room.outdoor then
+            if R.outdoor then
               S.border[dir].kind = "skyfence"
               S.thick[dir] = 48
             else

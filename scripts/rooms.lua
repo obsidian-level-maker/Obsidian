@@ -163,10 +163,18 @@ function Test_height_fabs()
     end
   end
 
-  ---| dump_height_patterns |---
+  ---| Test_height_fabs |---
   
   for name,info in pairs(HEIGHT_FABS) do
-    gui.printf("HEIGHT PATTERN: %s\n\n", name)
+    gui.printf("HEIGHT FAB: %s\n\n", name)
+
+    for deep = 2,11 do for long = 2,11 do
+      show_pattern(name, info, long, deep)
+    end end
+  end
+
+  for name,info in pairs(LIQUID_FABS) do
+    gui.printf("LIQUID FAB: %s\n\n", name)
 
     for deep = 2,11 do for long = 2,11 do
       show_pattern(name, info, long, deep)
@@ -243,7 +251,7 @@ end
 
 function Room_SetupTheme_Scenic(R)
   R.outdoor = true
-  R.kind = "liquid"
+---###  R.kind = "scenic"
 
   --[[
 
@@ -668,6 +676,7 @@ gui.printf("do_teleport\n")
     local c_tex = S.c_tex or sel(R.outdoor, PARAMS.sky_flat, R.combo.ceil)
 
 
+
 --[[
 if not R.outdoor and S.sx > R.sx1+1 and S.sx < R.sx2-1 and S.sy > R.sy1+1 and S.sy < R.sy2-1 then
   z2 = z2 + 32
@@ -710,7 +719,7 @@ end --]]
 ----!!!!    and S.room.arena == N.room.arena
       
 
-      if B_kind == "wall" then
+      if B_kind == "wall" and R.kind ~= "scenic" then
         if liquid_wall then
           local z_top = z1 + 80
           if z_top < N.floor_h+48 then z_top = N.floor_h+48 end
@@ -930,7 +939,7 @@ end
     local my = int((y1+y2) / 2)
 
     if S.room and S.room.kind ~= "scenic" and
-       (S.sx == S.room.sx1+2) and (S.sy == S.room.sy1+2) then
+       (S.sx == S.room.sx1+1) and (S.sy == S.room.sy1+1) then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
 
       local MON = next(GAME.monsters)
@@ -1868,7 +1877,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
 
   -- FIXME: ARGH, we don't know what heights on other side will be!!
---!!!!  make_windows()
+  make_windows()
 
 
   if R.purpose then
@@ -1881,44 +1890,13 @@ end
 
 
 
-function Room_do_scenic(R)
-
-  local function build_scenic_seed(S)
-    local z1 = -24
-    local z2  = SKY_H
-
-    transformed_brush2(nil,
-    {
-      t_face = { texture="NUKAGE1" },
-      b_face = { texture="NUKAGE1" },
-      w_face = { texture="SFALL1" },
-      sec_kind = 16,
-    },
-    {
-      { x=S.x2, y=S.y1 }, { x=S.x2, y=S.y2 },
-      { x=S.x1, y=S.y2 }, { x=S.x1, y=S.y1 },
-    },
-    -2000, z1);
-
-    transformed_brush2(nil,
-    {
-      t_face = { texture=PARAMS.sky_flat },
-      b_face = { texture=PARAMS.sky_flat },
-      w_face = { texture=PARAMS.sky_tex  },
-    },
-    {
-      { x=S.x2, y=S.y1 }, { x=S.x2, y=S.y2 },
-      { x=S.x1, y=S.y2 }, { x=S.x1, y=S.y1 },
-    },
-    z2, 2000)
-  end
-
-  ---| Room_do_scenic |---
+function Room_layout_scenic(R)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
     if S.room == R then
-      build_scenic_seed(S)
+      S.kind = "liquid"
+      S.floor_h = -24
     end
   end end -- for x,y
 end
@@ -1959,18 +1937,17 @@ PLAN.junk_mode = "heaps"  ]]
 
   Seed_dump_fabs()
 
+  for _,R in ipairs(PLAN.scenic_rooms) do
+    Room_layout_scenic(R)
+  end
+
   for _,R in ipairs(PLAN.all_rooms) do
     Room_layout_one(R)
   end
 
-  for _,R in ipairs(PLAN.all_rooms) do
-    Room_build_seeds(R)
-  end
+  for _,R in ipairs(PLAN.scenic_rooms) do Room_build_seeds(R) end
+  for _,R in ipairs(PLAN.all_rooms)    do Room_build_seeds(R) end
 
-  for _,R in ipairs(PLAN.scenic_rooms) do
-    Room_do_scenic(R)
-  end
-
----  Test_height_fabs()
+--  Test_height_fabs()
 end
 
