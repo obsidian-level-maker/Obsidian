@@ -60,6 +60,11 @@ SEED_D = 0
 
 SEED_CLASS =
 {
+  tostr = function(self)
+    return string.format("SEED [%d,%d,%s]",
+        self.sx, self.sy, self.kind or "-")
+  end,
+
   neighbor = function(self, dir)
     local nx, ny = nudge_coord(self.sx, self.sy, dir)
     if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
