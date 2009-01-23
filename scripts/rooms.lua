@@ -713,7 +713,7 @@ end --]]
             not (S.room.hallway or N.room.hallway) and
             not (S.room.purpose or N.room.purpose)
 
-      local liquid_wall =
+      local liquid_wall =  -- FIXME: decide earlier, kind = "liquid_arch"
             N and S.room and N.room and
             S.kind == "liquid" and N.kind == "liquid"
 ----!!!!    and S.room.arena == N.room.arena
@@ -907,12 +907,21 @@ end
     elseif S.kind == "popup" then
       make_popup_trap(S, z1, {}, S.room.combo)
 
-    elseif not S.no_floor then
+    elseif S.kind == "liquid" then
+      transformed_brush2(nil,
+      {
+        t_face = { texture="NUKAGE3" },
+        b_face = { texture="NUKAGE3" },
+        w_face = { texture="SFALL3"  },
+        sec_kind = 16,
+      },
+      {
+        { x=x2, y=y1 }, { x=x2, y=y2 },
+        { x=x1, y=y2 }, { x=x1, y=y1 },
+      },
+      -2000, z1);
 
-      if S.kind == "liquid" then
-        f_tex = "NUKAGE3"
-        sec_kind = 16
-      end
+    elseif not S.no_floor then
 
       transformed_brush2(nil,
       {
