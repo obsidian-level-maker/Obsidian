@@ -564,6 +564,69 @@ function Rooms_reckon_doors()
 end
 
 
+function Rooms_reckon_windows()
+  -- NOTE TOO: windows override "liquid arches" -- FIX
+
+  local function choose_fences(R)
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      for side = 2,8,2 do
+        local N = S:neighbor(side)
+
+        if S.room == R and S.border[side].kind == "wall"
+           and (R.outdoor or (N and N.room and N.room.parent == R))
+        then
+
+          if not (N and N.room) then
+            S.border[side].kind = "sky_fence"
+          end
+
+          if N and N.room and N.room ~= R and N.room.outdoor then
+             S.border[side].kind = "fence"
+          end
+
+          if N and N.room and N.room ~= R and not N.room.outdoor then
+             S.border[side].kind = "mini_fence"
+          end
+        end
+      end
+    end end -- for x,y
+  end
+
+  local function choose_windows(R)
+    if not (R.kind == "building" and R.purpose ~= "EXIT") then
+      return
+    end
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and S.kind ~= "void" and
+         (x == R.sx1 or x == R.sx2 or y == R.sy1 or y == R.sy2)
+      then
+        for side = 2,8,2 do
+          local N = S:neighbor(side)
+          if N and (N.sx < R.sx1 or N.sx > R.sx2 or N.sy < R.sy1 or N.sy > R.sy2) and
+             N.room and (N.room.outdoor or R.parent) and
+             S.border[side].kind == "wall" and
+             rand_odds(25) 
+          then
+             S.border[side].kind = "window"
+          end
+        end
+      end
+    end end -- for x,y
+  end
+
+
+  ---| Rooms_reckon_windows |---
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    choose_fences(R)
+    choose_windows(R)
+  end
+end
+
+
 function Room_spot_for_wotsit(R, kind)
   local spots = {}
 
@@ -1693,56 +1756,6 @@ function Room_layout_one(R)
   end
 
 
-  local function make_fences()
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      for side = 2,8,2 do
-        local N = S:neighbor(side)
-
-        if S.room == R and S.border[side].kind == "wall"
-           and (R.outdoor or (N and N.room and N.room.parent == R))
-        then
-
-          if not (N and N.room) then
-            S.border[side].kind = "sky_fence"
-          end
-
-          if N and N.room and N.room ~= R and N.room.outdoor then
-             S.border[side].kind = "fence"
-          end
-
-          if N and N.room and N.room ~= R and not N.room.outdoor then
-             S.border[side].kind = "mini_fence"
-          end
-        end
-      end
-    end end -- for x,y
-  end
-
-  local function choose_windows()
-    if not (R.kind == "building" and R.purpose ~= "EXIT") then
-      return
-    end
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      if S.room == R and S.kind ~= "void" and
-         (x == R.sx1 or x == R.sx2 or y == R.sy1 or y == R.sy2)
-      then
-        for side = 2,8,2 do
-          local N = S:neighbor(side)
-          if N and (N.sx < R.sx1 or N.sx > R.sx2 or N.sy < R.sy1 or N.sy > R.sy2) and
-             N.room and (N.room.outdoor or R.parent) and
-             S.border[side].kind == "wall" and
-             rand_odds(25) 
-          then
-             S.border[side].kind = "window"
-          end
-        end
-      end
-    end end -- for x,y
-  end
-
   local function add_purpose()
     local sx, sy, S = Room_spot_for_wotsit(R, R.purpose)
     local z1 = S.floor_h or R.floor_h
@@ -1870,9 +1883,6 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
 
-  make_fences()
-
-
   local area =
   {
     x1 = R.sx1 + R.junk_thick[4], y1 = R.sy1 + R.junk_thick[2],
@@ -1902,11 +1912,6 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   for _,C in ipairs(R.conns) do
     assert(C.conn_h)
   end
-
-
-  -- FIXME: ARGH, we don't know what heights on other side will be!!
-  -- NOTE TOO: windows override "liquid arches" -- FIX
-  choose_windows()
 
 
   if R.purpose then
@@ -1957,12 +1962,13 @@ function Rooms_lay_out_II()
 
 --[[ !!!!!
 PLAN.sky_mode = "few"
-PLAN.hallway_mode = "heaps"
-PLAN.junk_mode = "heaps"  ]]
+PLAN.hallway_mode = "heaps" ]]
+PLAN.junk_mode = "heaps"
 
   Rooms_decide_outdoors()
   Rooms_choose_themes()
   Rooms_decide_hallways_II()
+
 --!!!!  Rooms_reckon_doors()
 
   Seed_dump_fabs()
@@ -1974,6 +1980,8 @@ PLAN.junk_mode = "heaps"  ]]
   for _,R in ipairs(PLAN.all_rooms) do
     Room_layout_one(R)
   end
+
+  Rooms_reckon_windows()
 
   for _,R in ipairs(PLAN.scenic_rooms) do Room_build_seeds(R) end
   for _,R in ipairs(PLAN.all_rooms)    do Room_build_seeds(R) end
