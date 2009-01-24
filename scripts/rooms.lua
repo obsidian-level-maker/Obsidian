@@ -579,17 +579,24 @@ function Rooms_reckon_windows()
 
           if not (N and N.room) then
             S.border[side].kind = "sky_fence"
-          end
 
-          if N and N.room and N.room ~= R and N.room.outdoor then
+          elseif N.kind == "liquid" and R.outdoor and
+            (S.kind == "liquid" or N.room.arena == S.room.arena)
+          then
+            S.border[side].kind = nil
+
+          elseif N.room == R then  --!!!! or N.room.arena == S.room.arena
+            -- nothing needed
+
+          elseif N.room.outdoor then
              S.border[side].kind = "fence"
-          end
 
-          if N and N.room and N.room ~= R and not N.room.outdoor then
-             S.border[side].kind = "mini_fence"
+          else
+             -- the other border will be a solid wall or window
+             S.border[side].kind = nil
           end
         end
-      end
+      end -- for side
     end end -- for x,y
   end
 
@@ -605,6 +612,14 @@ function Rooms_reckon_windows()
       then
         for side = 2,8,2 do
           local N = S:neighbor(side)
+
+          -- liquid arches are a kind of window
+          if S.room == R and S.border[side].kind == "wall" and
+             N and N.room and N.kind == "liquid" and S.kind == "liquid"
+          then
+            S.border[side].kind = "liquid_arch"
+          end
+
           if N and (N.sx < R.sx1 or N.sx > R.sx2 or N.sy < R.sy1 or N.sy > R.sy2) and
              N.room and (N.room.outdoor or R.parent) and
              S.border[side].kind == "wall" and
@@ -776,21 +791,15 @@ end --]]
             not (S.room.hallway or N.room.hallway) and
             not (S.room.purpose or N.room.purpose)
 
-      local liquid_wall =  -- FIXME: decide earlier, kind = "liquid_arch"
-            N and S.room and N.room and
-            S.kind == "liquid" and N.kind == "liquid"
-----!!!!    and S.room.arena == N.room.arena
-      
 
       if B_kind == "wall" and R.kind ~= "scenic" then
-        if liquid_wall then
-          local z_top = z1 + 80
-          if z_top < N.floor_h+48 then z_top = N.floor_h+48 end
-          Build_archway(S, side, z1, z_top, f_tex, w_tex) 
-        else
-          make_wall(S, side, f_tex, w_tex)
----       make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "ZZWOLF6")
-        end
+        make_wall(S, side, f_tex, w_tex)
+      end
+
+      if B_kind == "liquid_arch" then
+        local z_top = z1 + 80
+        if z_top < N.floor_h+48 then z_top = N.floor_h+48 end
+        Build_archway(S, side, z1, z_top, f_tex, w_tex) 
       end
 
       if B_kind == "picture" then
@@ -802,13 +811,9 @@ end --]]
         make_window(S, side, 192, z1+32, z1+80, f_tex, w_tex)
       end
 
-      if B_kind == "fence" and not liquid_wall then   --FIXME: R.fence_h
---!!!!     and not (N and S.room and N.room and S.room.arena == N.room.arena and S.room.kind == N.room.kind then
+      if B_kind == "fence"  then
+        --FIXME: put suitable R.fence_h
         make_fence(S, side, R.floor_h or z1, f_tex, w_tex)
-      end
-
-      if B_kind == "mini_fence" then
-        -- do nothing
       end
 
       if B_kind == "sky_fence" then
@@ -1960,10 +1965,10 @@ function Rooms_lay_out_II()
   gui.printf("Cage Mode: %s\n", PLAN.cage_mode)
 
 
---[[ !!!!!
-PLAN.sky_mode = "few"
-PLAN.hallway_mode = "heaps" ]]
-PLAN.junk_mode = "heaps"
+--[[ PLAN.hallway_mode = "heaps"
+PLAN.sky_mode = "heaps"
+PLAN.liquid_mode = "heaps"
+PLAN.junk_mode = "heaps" ]]
 
   Rooms_decide_outdoors()
   Rooms_choose_themes()

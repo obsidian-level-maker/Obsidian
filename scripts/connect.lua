@@ -1093,7 +1093,7 @@ gui.debugf("Failed\n")
     end
 
     local join_chance = 99
-    if PLAN.scenic_mode == "heaps" then join_chance = 33 end
+    if PLAN.scenic_mode == "heaps" then join_chance = 51 end
 
     local rebels = table_subset_w_field(list, "c_group", rebel_id)
     assert(#rebels > 0)
