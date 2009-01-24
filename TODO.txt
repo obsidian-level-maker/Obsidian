@@ -3,17 +3,20 @@ TODO
 ====
 
 
++  good determination of heights[] for try_divide
+   - outdoor: 32, 48 or 64 increments
+   - indoor: 64, 96 or 128 increments
+   - See: misc/rooms_02, determine_floor_h()
+
 +  handle try_divide + junk_sides :: flood fill around edge
 
-+  void seeds: diagonalise cornery ones
-
--  sometimes divide room when has_focus == '.'
-
 -  decide and maintain symmetry in Room_try_divide
-   -  if pattern has '/', then DON'T recurse to fill it,
+   -  if pattern has ':' then DON'T recurse to fill it,
       INSTEAD copy and reflect what was done in '.' side
 
--  liquid areas / patterns  [separate from HEIGHT_PATTERNS ??]
+      OR: don't worry about it :-)
+
+-  void seeds: diagonalise cornery ones
 
 
 Pillar Placement:
@@ -74,6 +77,8 @@ Quakey:
 
 >>>  AssignBrushes: double checking using f/b_sides
 
+
+DOOM CSG: merge linedefs where possible
 
 DOOM CSG: when x_offset is given, adjust it if the segment
           does not match the whole area-vert extent.
@@ -181,7 +186,6 @@ Room Fitting Out
     for y symmetry, should be on top-most column
     for xy symmetry, either is good but top-right seed is ideal
 
-
 - no height diff
   - sometimes make Walkway-Over-Nukage
   - sometimes have a nukage pit
@@ -288,9 +292,7 @@ General:
 
 -  Deathmatch: implement DM-Equipment module
 
--  FreeDoom: some scenery items (hanging gore) have no sprites
-
-?  put all important constants/tables into defs.lua
+?  put important constants/tables into defs.lua
 
 
 GUI / C++:
@@ -305,14 +307,6 @@ GUI / C++:
 
 -  on serious script errors: remember it, so that we
    don't try calling into LUA to write the config.
-
--  Batch mode:
-   .  -b(atch) builds then quits
-   .  -o(utput) for output filename
-   .  set parameters via command-line : xxx=aaa yyy=bbb (non-options)
-   .  option to read a different config file: -c(onfig)
-   .  never writes the config file
-   ?? what to do on error ??
 
 -  improve icon for Win32 executable.
 
@@ -346,6 +340,8 @@ SKY GENERATOR:
 
 DOOM
 
+-  make light level of windows (esp. outdoor -> outdoor)
+   slightly lower than surrounds.
 
 
 HERETIC:
@@ -429,14 +425,8 @@ Monsters:
 -  monster adjustment: don't just increase toughness, actually
    create _more_ monsters.
 
--  battle_in_cell: arrange it so that cells could be visited
-   in any area (as much as possible).  Allow e.g. multiple
-   starting cells, "forked" paths (path splits and rejoins)...
-
-   IDEA: treat groups of cells (esp: multi starts and forked
+-  IDEA: treat groups of rooms (esp: multi starts and forked
          paths) as a SINGLE BATTLE ARENA.
-
--  idea: horde_size depends on (pl_weap.fp - monst.fp)
 
 -  cage monsters: don't put hitscan snipers up really high.
 
@@ -530,7 +520,15 @@ PIPE DREAMS
          (activated by a switch only on one side).
 
 -  have a table listing a quantized HSV for each texture/flat
-   and make compatibility decisions using it.
+   and make aesthetic decisions using it.
+
+-  Batch mode:
+   .  -b(atch) builds then quits
+   .  -o(utput) for output filename
+   .  set parameters via command-line : xxx=aaa yyy=bbb (non-options)
+   .  option to read a different config file: -c(onfig)
+   .  never writes the config file
+   ?? what to do on error ??
 
 
  ____________________
