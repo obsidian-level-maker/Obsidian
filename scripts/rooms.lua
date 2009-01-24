@@ -1501,7 +1501,7 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
     end
 
 
-    for loop = 1,10 do
+    for loop = 1,16 do
       if table_empty(try_fabs) then
         break;
       end
