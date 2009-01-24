@@ -1373,7 +1373,6 @@ gui.debugf("end install_it\n")
       end
 
     end end -- for i, j
-gui.debugf("end install_it\n")
   end
 
 
@@ -1468,6 +1467,19 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
   end
 
 
+  local function add_fab_list(try_fabs, fabs, mul)
+    for name,info in pairs(fabs) do
+      -- TODO: symmetry matching
+      if (info.environment == "indoor"  and R.outdoor) or
+         (info.environment == "outdoor" and not R.outdoor)
+      then
+        -- skip it, wrong environment
+      else
+        try_fabs[name] = (info.prob or 50) * mul
+      end
+    end
+  end
+
   local function do_try_divide()
     if #heights < 2 then return false end
 
@@ -1491,14 +1503,9 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
     if PLAN.liquid_mode == "heaps" then liq_mul = 8.0 end
 
     local try_fabs = {}
-    for name,info in pairs(HEIGHT_FABS) do
-      -- TODO: symmetry matching
-      try_fabs[name] = info.prob or 50
-    end
-    for name,info in pairs(LIQUID_FABS) do
-      -- TODO: symmetry matching
-      try_fabs[name] = (info.prob or 50) * liq_mul
-    end
+
+    add_fab_list(try_fabs, HEIGHT_FABS, 1.0)
+    add_fab_list(try_fabs, LIQUID_FABS, liq_mul)
 
 
     for loop = 1,16 do

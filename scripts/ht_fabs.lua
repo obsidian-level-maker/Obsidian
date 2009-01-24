@@ -1174,6 +1174,7 @@ HEIGHT_FABS =
   SOLID_A1 =
   {
     prob = 50,
+    environment = "indoor",
     
     structure =
     {
@@ -1191,6 +1192,7 @@ HEIGHT_FABS =
   SOLID_A2 =
   {
     prob = 30,
+    environment = "indoor",
     
     structure =
     {
@@ -1208,6 +1210,7 @@ HEIGHT_FABS =
   SOLID_A3 =
   {
     prob = 20,
+    environment = "indoor",
     
     structure =
     {
@@ -1227,6 +1230,7 @@ HEIGHT_FABS =
   SOLID_C1 =
   {
     prob = 200,
+    environment = "indoor",
     
     structure =
     {
@@ -1244,6 +1248,7 @@ HEIGHT_FABS =
   SOLID_C2 =
   {
     prob = 20,
+    environment = "indoor",
 
     structure =
     {
