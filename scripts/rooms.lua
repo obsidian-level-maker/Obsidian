@@ -581,7 +581,8 @@ function Rooms_reckon_windows()
             S.border[side].kind = "sky_fence"
 
           elseif N.kind == "liquid" and R.outdoor and
-            (S.kind == "liquid" or N.room.arena == S.room.arena)
+            (S.kind == "liquid" or --!!!! N.room.kind == "scenic"
+             N.room.arena == S.room.arena)
           then
             S.border[side].kind = nil
 
@@ -813,11 +814,11 @@ end --]]
 
       if B_kind == "fence"  then
         --FIXME: put suitable R.fence_h
-        make_fence(S, side, R.floor_h or z1, f_tex, w_tex)
+        Build_fence(S, side, (R.floor_h or z1)+30, f_tex, w_tex)
       end
 
       if B_kind == "sky_fence" then
-        make_sky_fence(S, side)
+        Build_sky_fence(S, side)
       end
 
       -- FIXME: scenic check should not be here
@@ -1467,15 +1468,16 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
   end
 
 
-  local function add_fab_list(try_fabs, fabs, mul)
+  local function add_fab_list(probs, infos, fabs, mul)
     for name,info in pairs(fabs) do
-      -- TODO: symmetry matching
       if (info.environment == "indoor"  and R.outdoor) or
          (info.environment == "outdoor" and not R.outdoor)
       then
         -- skip it, wrong environment
       else
-        try_fabs[name] = (info.prob or 50) * mul
+        -- TODO: symmetry matching
+        infos[name] = info
+        probs[name] = (info.prob or 50) * mul
       end
     end
   end
@@ -1502,27 +1504,28 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
     if PLAN.liquid_mode == "few"   then liq_mul = 0.2 end
     if PLAN.liquid_mode == "heaps" then liq_mul = 8.0 end
 
-    local try_fabs = {}
+    local f_probs = {}
+    local f_infos = {}
 
-    add_fab_list(try_fabs, HEIGHT_FABS, 1.0)
-    add_fab_list(try_fabs, LIQUID_FABS, liq_mul)
+    add_fab_list(f_probs, f_infos, HEIGHT_FABS, 1.0)
+    add_fab_list(f_probs, f_infos, SOLID_FABS,  4.0)
+    add_fab_list(f_probs, f_infos, LIQUID_FABS, liq_mul)
 
 
-    for loop = 1,16 do
-      if table_empty(try_fabs) then
+    local try_count = 8 + R.sw + R.sh
+
+    for loop = 1,try_count do
+      if table_empty(f_probs) then
         break;
       end
 
-      local which = rand_key_by_probs(try_fabs)
-      try_fabs[which] = nil
-
-      local info = HEIGHT_FABS[which] or LIQUID_FABS[which]
-      assert(info)
+      local which = rand_key_by_probs(f_probs)
+      f_probs[which] = nil
 
       gui.debugf("Trying pattern %s in %s (loop %d)......\n",
                  which, R:tostr(), loop)
 
-      if try_install_pattern(which, info) then
+      if try_install_pattern(which, f_infos[which]) then
         gui.debugf("SUCCESS with %s!\n", which)
         return true
       end

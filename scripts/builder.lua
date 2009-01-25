@@ -182,7 +182,7 @@ function get_wall_coords(S, side, thick)
 end
 
 
-function make_sky_fence(S, side)
+function Build_sky_fence(S, side)
   
   local wall_info =
   {
@@ -2038,7 +2038,7 @@ function make_wall(S, side, f_tex, w_tex)
 end
 
 
-function make_fence(S, side, z1, f_tex, w_tex)
+function Build_fence(S, side, fence_h, f_tex, w_tex)
   transformed_brush2(nil,
   {
     t_face = { texture=f_tex },
@@ -2046,7 +2046,7 @@ function make_fence(S, side, z1, f_tex, w_tex)
     w_face = { texture=w_tex },
   },
   get_wall_coords(S, side),
-  -2000, z1+36)
+  -2000, fence_h)
 end
 
 
