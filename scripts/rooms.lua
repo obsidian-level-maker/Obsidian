@@ -1495,10 +1495,13 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
     if R.kind == "stairwell" then return false end
 
     -- some chance of not dividing at all
-    local skip_prob = 53 - (area.tw + area.th) * 3.5
+    local skip_prob = 50 - (area.tw + area.th) * 4
     if skip_prob > 0 and rand_odds(skip_prob) then
       return false
     end
+
+    local sol_mul = 4.0
+    if PLAN.junk_mode == "heaps" then sol_mul = 10.0 end
 
     local liq_mul = 1.0
     if PLAN.liquid_mode == "few"   then liq_mul = 0.2 end
@@ -1508,7 +1511,7 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
     local f_infos = {}
 
     add_fab_list(f_probs, f_infos, HEIGHT_FABS, 1.0)
-    add_fab_list(f_probs, f_infos, SOLID_FABS,  4.0)
+    add_fab_list(f_probs, f_infos, SOLID_FABS,  sol_mul)
     add_fab_list(f_probs, f_infos, LIQUID_FABS, liq_mul)
 
 
@@ -1839,6 +1842,63 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     end
   end
 
+  local function flood_fill_for_junk()
+    -- sets the floor_h (etc) for seeds in a junked side
+    -- (which are ignored by Room_try_divide).
+
+    gui.debugf("flood_fill_for_junk @ %s\n", R:tostr())
+
+    local unset_list = {}
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and S.kind == "walk" and not S.floor_h then
+        if S.conn and S.conn.conn_h then
+          S.floor_h = S.conn.conn_h
+          S.f_tex   = S.conn.conn_ftex
+        else
+          table.insert(unset_list, S)
+        end
+      end
+    end end -- for x, y
+
+    local SIDES = { 2,4,6,8 }
+
+    gui.debugf("  unset num: %d\n", #unset_list);
+
+    while #unset_list > 0 do
+      local new_list = {}
+
+      for _,S in ipairs(unset_list) do
+        local did_fix = false
+        rand_shuffle(SIDES)
+        for _,side in ipairs(SIDES) do
+          local N = S:neighbor(side)
+          if N and N.room and N.room == R and N.floor_h and
+             (N.kind == "walk" or N.kind == "stair")
+          then
+            S.floor_h = N.floor_h
+            S.f_tex   = N.f_tex
+            did_fix   = true
+            break;
+          end
+        end
+
+        if not did_fix then
+          table.insert(new_list, S)
+        end
+      end
+
+      gui.debugf("  unset count now: %d\n", #new_list);
+
+      if #new_list > 0 and #new_list == #unset_list then
+        error("flood_fill_for_junk failed")
+      end
+
+      unset_list = new_list
+    end
+  end
+
 
   ---==| Room_layout_one |==---
 
@@ -1894,7 +1954,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
   if R.kind == "building" and not R.children then
---!!!!!!    junk_sides()
+    junk_sides()
   end
 
 
@@ -1921,10 +1981,13 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   Room_try_divide(R, true, 1, area, heights, f_texs)
 
+  flood_fill_for_junk()
+
   Room_choose_corner_stairs(R)
 
 
   for _,C in ipairs(R.conns) do
+if not C.conn_h then gui.debugf("CONN LACK H @ %s\n", C.src_S:tostr()) ; C.conn_h = 0 end
     assert(C.conn_h)
   end
 
@@ -1977,8 +2040,8 @@ function Rooms_lay_out_II()
 
 --[[ PLAN.hallway_mode = "heaps"
 PLAN.sky_mode = "heaps"
-PLAN.liquid_mode = "heaps"
-PLAN.junk_mode = "heaps" ]]
+PLAN.liquid_mode = "heaps" ]]
+PLAN.junk_mode = "heaps"
 
   Rooms_decide_outdoors()
   Rooms_choose_themes()
