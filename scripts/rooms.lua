@@ -779,7 +779,7 @@ end --]]
             S:neighbor(side).layout.char == '#')
          )
       then
-        make_detailed_hall(S, side, z1, z2)
+        Build_detailed_hall(S, side, z1, z2)
 
         S.border[side].kind = nil
         B_kind = nil
@@ -794,7 +794,7 @@ end --]]
 
 
       if B_kind == "wall" and R.kind ~= "scenic" then
-        make_wall(S, side, f_tex, w_tex)
+        Build_wall(S, side, f_tex, w_tex)
       end
 
       if B_kind == "liquid_arch" then
@@ -804,12 +804,12 @@ end --]]
       end
 
       if B_kind == "picture" then
-        make_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
+        Build_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
       end
 
       if B_kind == "window" then
---!!!        make_window(S, side, 192, z1+64, z2-32, f_tex, w_tex)
-        make_window(S, side, 192, z1+32, z1+80, f_tex, w_tex)
+--!!!        Build_window(S, side, 192, z1+64, z2-32, f_tex, w_tex)
+        Build_window(S, side, 192, z1+32, z1+80, f_tex, w_tex)
       end
 
       if B_kind == "fence"  then
@@ -832,7 +832,7 @@ end --]]
       if B_kind == "door" and not S.conn.already_made_lock then
         local INFO = assert(GAME.door_fabs["silver_lit"])
 
-        make_locked_door(S, side, z1, w_tex, INFO, 0)
+        Build_locked_door(S, side, z1, w_tex, INFO, 0)
 
         S.conn.already_made_lock = true
       end
@@ -847,16 +847,16 @@ end --]]
           INFO = assert(GAME.switch_doors[LOCK.item])
         end
 
-        make_locked_door(S, side, z1, w_tex, INFO, LOCK.tag)
+        Build_locked_door(S, side, z1, w_tex, INFO, LOCK.tag)
         S.conn.already_made_lock = true
       end
 
       if B_kind == "bars" and
          not (S.conn and S.conn.already_made_lock)
       then
----     make_lowering_bars(S, side, z1, "FLAT23", "SUPPORT2")
----     make_lowering_bars(S, side, z1, "CEIL5_2", "SUPPORT3")
-        make_lowering_bars(S, side, z1, "FLAT5_2", "WOOD9")
+---     Build_lowering_bars(S, side, z1, "FLAT23", "SUPPORT2")
+---     Build_lowering_bars(S, side, z1, "CEIL5_2", "SUPPORT3")
+        Build_lowering_bars(S, side, z1, "FLAT5_2", "WOOD9")
         S.conn.already_made_lock = true
       end
     end -- for side
@@ -880,13 +880,13 @@ then
     w_face = { texture=w_tex },
   }
   if S.sx == S.room.sx1 and S.sy == S.room.sy1 then
-    make_diagonal(S, 1, diag_info, z1)
+    Build_diagonal(S, 1, diag_info, z1)
   elseif S.sx == S.room.sx2 and S.sy == S.room.sy1 then
-    make_diagonal(S, 3, diag_info, z1)
+    Build_diagonal(S, 3, diag_info, z1)
   elseif S.sx == S.room.sx1 and S.sy == S.room.sy2 then
-    make_diagonal(S, 7, diag_info, z1)
+    Build_diagonal(S, 7, diag_info, z1)
   elseif S.sx == S.room.sx2 and S.sy == S.room.sy2 then
-    make_diagonal(S, 9, diag_info, z1)
+    Build_diagonal(S, 9, diag_info, z1)
   end
 end
 --]]
@@ -971,10 +971,10 @@ end
       end
 
     elseif S.kind == "lift" then
-      make_lift(S, 10-S.conn_dir, assert(S.layout.lift_h))
+      Build_lift(S, 10-S.conn_dir, assert(S.layout.lift_h))
 
     elseif S.kind == "popup" then
-      make_popup_trap(S, z1, {}, S.room.combo)
+      Build_popup_trap(S, z1, {}, S.room.combo)
 
     elseif S.kind == "liquid" then
       transformed_brush2(nil,
@@ -1010,7 +1010,7 @@ end
     -- MISCELLANEOUS
 
     if S.has_pillar then
-      make_pillar(S, z1, z2, "TEKLITE")
+      Build_pillar(S, z1, z2, "TEKLITE")
     end
 
 
@@ -1782,11 +1782,11 @@ function Room_layout_one(R)
 
     if R.purpose == "START" then
       if rand_odds(20) then
-        make_raising_start(S, 6, z1, R.combo)
+        Build_raising_start(S, 6, z1, R.combo)
         gui.debugf("Raising Start made\n")
         S.no_floor = true
       else
-        make_pedestal(S, z1, "FLAT22")
+        Build_pedestal(S, z1, "FLAT22")
       end
 
       gui.add_entity(mx, my, z1 + 35,
@@ -1799,13 +1799,13 @@ function Room_layout_one(R)
       local dir = assert(CS.conn_dir)
 
       if R.outdoor then
-        make_outdoor_exit_switch(S, dir, z1)
+        Build_outdoor_exit_switch(S, dir, z1)
       else
-        make_exit_pillar(S, z1)
+        Build_exit_pillar(S, z1)
       end
 
     elseif R.purpose == "KEY" then
-      make_pedestal(S, z1, "CEIL1_2")
+      Build_pedestal(S, z1, "CEIL1_2")
       gui.add_entity(mx, my, z1+40,
       {
         name = tostring(GAME.things[R.key_item].id),
@@ -1814,7 +1814,7 @@ function Room_layout_one(R)
 gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       local LOCK = assert(R.lock_for_item)  -- eww
       local INFO = assert(GAME.switch_infos[R.do_switch])
-      make_small_switch(S, 4, z1, INFO, LOCK.tag)
+      Build_small_switch(S, 4, z1, INFO, LOCK.tag)
 
     else
       error("Room_layout_one: unknown purpose! " .. tostring(R.purpose))
@@ -1954,7 +1954,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
   if R.kind == "building" and not R.children then
-    junk_sides()
+--!!!!!    junk_sides()
   end
 
 

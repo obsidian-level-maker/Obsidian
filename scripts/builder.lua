@@ -312,7 +312,7 @@ function Build_archway(S, side, z1, z2, f_tex, w_tex)
 end
 
 
-function make_locked_door(S, side, z1, w_tex, info, tag)
+function Build_locked_door(S, side, z1, w_tex, info, tag)
 
   tag2 = nil  -- FIXME !!!
 
@@ -453,7 +453,7 @@ end
 end
 
 
-function make_lowering_bars(S, side, z1, f_tex, w_tex)
+function Build_lowering_bars(S, side, z1, f_tex, w_tex)
 
   local T, long, deep = get_transform_for_seed_side(S, side)
 
@@ -491,7 +491,7 @@ function make_lowering_bars(S, side, z1, f_tex, w_tex)
 end
 
 
-function make_hall_light(S, z2)
+function Build_hall_light(S, z2)
 
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
@@ -597,7 +597,7 @@ function make_hall_light(S, z2)
 end
 
 
-function make_detailed_hall(S, side, z1, z2)
+function Build_detailed_hall(S, side, z1, z2)
 
   local function get_hall_coords(thickness)
 
@@ -681,7 +681,7 @@ function make_detailed_hall(S, side, z1, z2)
 end
 
 
-function make_weird_hall(S, side, z1, z2)
+function Build_weird_hall(S, side, z1, z2)
 
   local function get_hall_coords(thickness)
 
@@ -739,7 +739,7 @@ function make_weird_hall(S, side, z1, z2)
 end
 
 
-function make_diagonal(S, side, info, z1)
+function Build_diagonal(S, side, info, z1)
 
 do return end --!!!!
 
@@ -787,7 +787,7 @@ do return end --!!!!
 end
 
 
-function make_arrow(S, dir, f_h)
+function Build_arrow(S, dir, f_h)
  
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
@@ -810,11 +810,11 @@ function make_arrow(S, dir, f_h)
 end
 
 
-function make_curved_hall(steps, corn_x, corn_y,
-                          dx0, dx1, dx2, dx3,
-                          dy0, dy1, dy2, dy3,
-                          x_h, y_h, gap_h,
-                          wall_info, floor_info, ceil_info)
+function Build_curved_hall(steps, corn_x, corn_y,
+                           dx0, dx1, dx2, dx3,
+                           dy0, dy1, dy2, dy3,
+                           x_h, y_h, gap_h,
+                           wall_info, floor_info, ceil_info)
 
 gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
            corn_x,corn_y, dx0,dx1,dx2,dx3, dy0,dy1,dy2,dy3);
@@ -870,7 +870,7 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
     end
   end
 
-  --| make_curved_hall |--
+  --| Build_curved_hall |--
 
   assert(steps >= 2)
 
@@ -892,7 +892,7 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
 end
 
 
-function make_ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
+function Build_ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
   assert(az and bz)
 
   local steps = int(math.abs(az-bz) / 14 + 0.9)
@@ -930,7 +930,7 @@ function make_ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
 end
 
 
-function make_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
+function Build_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
   assert(az and bz)
 
   local steps = int(math.abs(az-bz) / 14 + 0.9)
@@ -1092,16 +1092,16 @@ function Build_tall_curved_stair(S, x_side,y_side, x_h,y_h)
     w_face = { texture=w_tex },
   }
 
-  make_curved_hall(steps, corn_x, corn_y,
-                   dx0, dx1, dx2, dx3,
-                   dy0, dy1, dy2, dy3,
-                   x_h, y_h, 256,
-                   info, info, info)
+  Build_curved_hall(steps, corn_x, corn_y,
+                    dx0, dx1, dx2, dx3,
+                    dy0, dy1, dy2, dy3,
+                    x_h, y_h, 256,
+                    info, info, info)
 end
 
 
 --[[ NOT USED
-function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
+function Build_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
   assert(x_h and y_h)
 
   local d_h = sel(x_h < y_h, 1, -1)
@@ -1120,8 +1120,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   if S.layout and S.layout.char == "L" then
 
-    make_ramp_y(info, x1,y1,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
-    make_ramp_x(info, x1,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
+    Build_ramp_y(info, x1,y1,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    Build_ramp_x(info, x1,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
 
     transformed_brush2(nil, info,
     {
@@ -1133,8 +1133,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "J" then
 
-    make_ramp_y(info, x1+pw,y2-ph,y2, x2,y1,y2, m_h-d_h*4, x_h, "exact")
-    make_ramp_x(info, x1,x2,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
+    Build_ramp_y(info, x1+pw,y2-ph,y2, x2,y1,y2, m_h-d_h*4, x_h, "exact")
+    Build_ramp_x(info, x1,x2,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
 
     transformed_brush2(nil, info,
     {
@@ -1146,8 +1146,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "F" then
 
-    make_ramp_y(info, x1,y1,y2, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
-    make_ramp_x(info, x2-pw,x2,y1+ph, x1,x2,y2, m_h+d_h*4, y_h, "exact")
+    Build_ramp_y(info, x1,y1,y2, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    Build_ramp_x(info, x2-pw,x2,y1+ph, x1,x2,y2, m_h+d_h*4, y_h, "exact")
 
     transformed_brush2(nil, info,
     {
@@ -1159,8 +1159,8 @@ function do_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "T" then
 
-    make_ramp_y(info, x1+pw,y1,y1+ph, x2,y1,y2, x_h, m_h-d_h*4, "exact")
-    make_ramp_x(info, x1,x1+pw,y1+ph, x1,x2,y2, y_h, m_h+d_h*4, "exact")
+    Build_ramp_y(info, x1+pw,y1,y1+ph, x2,y1,y2, x_h, m_h-d_h*4, "exact")
+    Build_ramp_x(info, x1,x1+pw,y1+ph, x1,x2,y2, y_h, m_h+d_h*4, "exact")
 
     transformed_brush2(nil, info,
     {
@@ -1175,7 +1175,7 @@ end
 
 
 --[[ NOT USED
-function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
+function Build_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
   assert(x_h and y_h)
 
   local d_h = sel(x_h < y_h, 1, -1)
@@ -1196,8 +1196,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   if S.layout and S.layout.char == "L" then
 
-    make_ramp_y(info, x1,y2-ph,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
-    make_ramp_x(info, x2-pw,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
+    Build_ramp_y(info, x1,y2-ph,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    Build_ramp_x(info, x2-pw,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
 
     pilla =
     {
@@ -1217,8 +1217,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "J" then
 
-    make_ramp_y(info, x1+pw,y2-ph,y2, x2,y2-ph,y2, m_h-d_h*4, x_h, "exact")
-    make_ramp_x(info, x1,x1+pw,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
+    Build_ramp_y(info, x1+pw,y2-ph,y2, x2,y2-ph,y2, m_h-d_h*4, x_h, "exact")
+    Build_ramp_x(info, x1,x1+pw,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
 
     pilla =
     {
@@ -1238,8 +1238,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "F" then
 
-    make_ramp_y(info, x1,y1,y1+ph, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
-    make_ramp_x(info, x2-pw,x2,y1+ph, x2-pw,x2,y2, m_h+d_h*4, y_h, "exact")
+    Build_ramp_y(info, x1,y1,y1+ph, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    Build_ramp_x(info, x2-pw,x2,y1+ph, x2-pw,x2,y2, m_h+d_h*4, y_h, "exact")
 
     pilla =
     {
@@ -1259,8 +1259,8 @@ function do_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
 
   elseif S.layout and S.layout.char == "T" then
 
-    make_ramp_y(info, x1+pw,y1,y1+ph, x2,y1,y1+ph, x_h, m_h-d_h*4, "exact")
-    make_ramp_x(info, x1,x1+pw,y1+ph, x1,x1+pw,y2, y_h, m_h+d_h*4, "exact")
+    Build_ramp_y(info, x1+pw,y1,y1+ph, x2,y1,y1+ph, x_h, m_h-d_h*4, "exact")
+    Build_ramp_x(info, x1,x1+pw,y1+ph, x1,x1+pw,y2, y_h, m_h+d_h*4, "exact")
 
     pilla =
     {
@@ -1402,7 +1402,7 @@ cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
 end
 
 
-function do_outdoor_ramp_down(ST, f_tex, w_tex)
+function Build_outdoor_ramp_down(ST, f_tex, w_tex)
   local conn_dir = assert(ST.S.conn_dir)
 
   local oh  = ST.outer_h
@@ -1427,46 +1427,46 @@ function do_outdoor_ramp_down(ST, f_tex, w_tex)
     w_face = { texture=w_tex },
   }
 
-gui.debugf("do_outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
+gui.debugf("Build_outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 
   if conn_dir == 6 then
     ix1 = ix2-96
-    make_ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
+    Build_ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
 
   elseif conn_dir == 4 then
     ix2 = ix1 + 96
-    make_ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
+    Build_ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
 
   elseif conn_dir == 8 then
     iy1 = iy2-96
-    make_ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+    Build_ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
 
   elseif conn_dir == 2 then
     iy2 = iy1 + 96
-    make_ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
+    Build_ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
   end
 
 
   if is_horiz(conn_dir) then
     if iy2+64 < oy2 then
-      make_ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
+      Build_ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
     end
     if iy1-64 > oy1 then
-      make_ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+      Build_ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
     end
   else -- is_vert
     if ix2+64 < ox2 then
-      make_ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
+      Build_ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
     end
     if ix1-64 > ox1 then
-      make_ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
+      Build_ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
     end
   end
 
   ST.done = true
 end
 
-function do_outdoor_ramp_up(ST, f_tex, w_tex)
+function Build_outdoor_ramp_up(ST, f_tex, w_tex)
   local conn_dir = assert(ST.S.conn_dir)
 
   local oh  = ST.outer_h
@@ -1491,7 +1491,7 @@ function do_outdoor_ramp_up(ST, f_tex, w_tex)
     w_face = { texture=w_tex },
   }
 
-gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
+gui.debugf("Build_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 
   if conn_dir == 6 then
     ix1 = ix2 - 64
@@ -1547,7 +1547,7 @@ gui.debugf("do_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn
 end
 
 
-function make_lift(S, side, lift_h)
+function Build_lift(S, side, lift_h)
 
   local tag = PLAN:alloc_tag()
 
@@ -1615,7 +1615,7 @@ function mark_room_as_done(R)
 end
 
 
-function make_pillar(S, z1, z2, p_tex)
+function Build_pillar(S, z1, z2, p_tex)
   
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
@@ -1671,7 +1671,7 @@ function make_pillar(S, z1, z2, p_tex)
 end
 
 
-function make_exit_pillar(S, z1)
+function Build_exit_pillar(S, z1)
 
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
@@ -1692,7 +1692,7 @@ function make_exit_pillar(S, z1)
 end
 
 
-function make_small_switch(S, dir, f_h, info, tag)
+function Build_small_switch(S, dir, f_h, info, tag)
 
   local DT, long = get_transform_for_seed_side(S, 10-dir)
   local deep = long
@@ -1735,7 +1735,7 @@ function make_small_switch(S, dir, f_h, info, tag)
 end
 
 
-function make_outdoor_exit_switch(S, dir, f_h)
+function Build_outdoor_exit_switch(S, dir, f_h)
 
   local DT, long = get_transform_for_seed_side(S, 10-dir)
   local deep = long
@@ -2026,7 +2026,7 @@ function Build_small_exit(R)
 end
 
 
-function make_wall(S, side, f_tex, w_tex)
+function Build_wall(S, side, f_tex, w_tex)
   transformed_brush2(nil,
   {
     t_face = { texture=f_tex },
@@ -2050,7 +2050,7 @@ function Build_fence(S, side, fence_h, f_tex, w_tex)
 end
 
 
-function make_window(S, side, width, z1, z2, f_tex, w_tex)
+function Build_window(S, side, width, z1, z2, f_tex, w_tex)
 
   local wall_info =
   {
@@ -2100,7 +2100,7 @@ function make_window(S, side, width, z1, z2, f_tex, w_tex)
 end
 
 
-function make_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
+function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
 
   local T, long, deep = get_transform_for_seed_side(S, side)
 
@@ -2181,7 +2181,7 @@ function make_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
 end
 
 
-function make_pedestal(S, z1, top_tex)
+function Build_pedestal(S, z1, top_tex)
   local mx = int((S.x1+S.x2) / 2)
   local my = int((S.y1+S.y2) / 2)
 
@@ -2198,7 +2198,7 @@ function make_pedestal(S, z1, top_tex)
   -2000, z1+8)
 end
 
-function make_raising_start(S, face_dir, z1, combo)
+function Build_raising_start(S, face_dir, z1, combo)
 
   local info =
   {
@@ -2264,7 +2264,7 @@ function make_raising_start(S, face_dir, z1, combo)
 end
 
 
-function make_popup_trap(S, z1, skin, combo)
+function Build_popup_trap(S, z1, skin, combo)
 
   local info =
   {
@@ -2393,11 +2393,11 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local steps = int(math.abs(x_h - y_h) / 16)
     if steps < 5 then steps = 5 end
 
-    make_curved_hall(steps, ax, by,
-                     dx0, dx1, dx2, dx3,
-                     dy0, dy1, dy2, dy3,
-                     x_h, y_h, 128,
-                     wall_info, flat_info, flat_info)
+    Build_curved_hall(steps, ax, by,
+                      dx0, dx1, dx2, dx3,
+                      dy0, dy1, dy2, dy3,
+                      x_h, y_h, 128,
+                      wall_info, flat_info, flat_info)
   end
 
   local function build_stairwell_180(R)
@@ -2469,18 +2469,18 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       end
 
       -- left side
-      make_curved_hall(steps, corn_x, corn_y,
-                       -dx0, -dx1, -dx2, -dx3,
-                       dy0, dy1, dy2, dy3,
-                       h1, h2, 128,
-                       wall_info, flat_info, flat_info)
+      Build_curved_hall(steps, corn_x, corn_y,
+                        -dx0, -dx1, -dx2, -dx3,
+                        dy0, dy1, dy2, dy3,
+                        h1, h2, 128,
+                        wall_info, flat_info, flat_info)
 
       -- right side
-      make_curved_hall(steps, corn_x, corn_y,
-                       dx0, dx1, dx2, dx3,
-                       dy0, dy1, dy2, dy3,
-                       h3, h2, 128,
-                       wall_info, flat_info, flat_info)
+      Build_curved_hall(steps, corn_x, corn_y,
+                        dx0, dx1, dx2, dx3,
+                        dy0, dy1, dy2, dy3,
+                        h3, h2, 128,
+                        wall_info, flat_info, flat_info)
     else
       local dy0 = corn_y - AS.y2 + 16
       local dy3 = corn_y - AS.y1 - 16
@@ -2500,18 +2500,18 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       end
 
       -- bottom section
-      make_curved_hall(steps, corn_x, corn_y,
-                       dx0, dx1, dx2, dx3,
-                       -dy0, -dy1, -dy2, -dy3,
-                       h2, h1, 128,
-                       wall_info, flat_info, flat_info)
+      Build_curved_hall(steps, corn_x, corn_y,
+                        dx0, dx1, dx2, dx3,
+                        -dy0, -dy1, -dy2, -dy3,
+                        h2, h1, 128,
+                        wall_info, flat_info, flat_info)
 
       -- top section
-      make_curved_hall(steps, corn_x, corn_y,
-                       dx0, dx1, dx2, dx3,
-                       dy0, dy1, dy2, dy3,
-                       h2, h3, 128,
-                       wall_info, flat_info, flat_info)
+      Build_curved_hall(steps, corn_x, corn_y,
+                        dx0, dx1, dx2, dx3,
+                        dy0, dy1, dy2, dy3,
+                        h2, h3, 128,
+                        wall_info, flat_info, flat_info)
     end
   end
 
@@ -2570,11 +2570,11 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       end
 
       -- left side
-      make_curved_hall(steps, corn_x, corn_y,
-                       -dx0, -dx1, -dx2, -dx3,
-                       dy0, dy1, dy2, dy3,
-                       h1, h2, 128,
-                       wall_info, flat_info, flat_info)
+      Build_curved_hall(steps, corn_x, corn_y,
+                        -dx0, -dx1, -dx2, -dx3,
+                        dy0, dy1, dy2, dy3,
+                        h1, h2, 128,
+                        wall_info, flat_info, flat_info)
 
       -- right side
       corn_y = (ry1 + ry2) - corn_y
@@ -2584,11 +2584,11 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local dx1 = dx0 + 32
       local dx2 = dx3 - 32
 
-      make_curved_hall(steps, corn_x, corn_y,
-                       dx0, dx1, dx2, dx3,
-                       -dy0, -dy1, -dy2, -dy3,
-                       h3, h2, 128,
-                       wall_info, flat_info, flat_info)
+      Build_curved_hall(steps, corn_x, corn_y,
+                        dx0, dx1, dx2, dx3,
+                        -dy0, -dy1, -dy2, -dy3,
+                        h3, h2, 128,
+                        wall_info, flat_info, flat_info)
 
     else
       local corn_y = (AS.y2 + BS.y1) / 2
@@ -2612,11 +2612,11 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       end
 
       -- bottom section
-      make_curved_hall(steps, corn_x, corn_y,
-                       dx0, dx1, dx2, dx3,
-                       -dy0, -dy1, -dy2, -dy3,
-                       h2, h1, 128,
-                       wall_info, flat_info, flat_info)
+      Build_curved_hall(steps, corn_x, corn_y,
+                        dx0, dx1, dx2, dx3,
+                        -dy0, -dy1, -dy2, -dy3,
+                        h2, h1, 128,
+                        wall_info, flat_info, flat_info)
 
       -- top section
       corn_x = (rx1 + rx2) - corn_x
@@ -2626,11 +2626,11 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local dy1 = dy0 + 32
       local dy2 = dy3 - 32
 
-      make_curved_hall(steps, corn_x, corn_y,
-                       -dx0, -dx1, -dx2, -dx3,
-                       dy0, dy1, dy2, dy3,
-                       h2, h3, 128,
-                       wall_info, flat_info, flat_info)
+      Build_curved_hall(steps, corn_x, corn_y,
+                        -dx0, -dx1, -dx2, -dx3,
+                        dy0, dy1, dy2, dy3,
+                        h2, h3, 128,
+                        wall_info, flat_info, flat_info)
     end
   end
 
