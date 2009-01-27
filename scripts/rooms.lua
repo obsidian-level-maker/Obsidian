@@ -1384,9 +1384,9 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
       ch = morph_char(T, ch)
 
       if (S.conn or S.pseudo_conn or S.must_walk) then
-            if ch == '#' then hash_c  = hash_c  + 1
-        elseif ch == '.' then dot_c   = dot_c   + 1
-        elseif ch == ':' then other_c = other_c + 1
+            if ch == '.' then hash_c  = hash_c  + 1
+        elseif ch == '1' then dot_c   = dot_c   + 1
+        elseif ch == '2' then other_c = other_c + 1
         else
           return -1
         end
@@ -1408,7 +1408,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     -- big bonus if connections touch all three areas
     score = score + math.min(hash_c, dot_c, other_c) * 20
 
-    if is_top and T.has_focus and not (T.has_focus == '#') then
+    if is_top and T.has_focus and not (T.has_focus == '.') then
       -- when the focus hits a '.' or ':' area, it stops further
       -- recursion, which is bad for big rooms.
       if area.tw * area.th > 7*7 then return -1 end
@@ -1453,10 +1453,10 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
       local ch = string.sub(T.expanded[T.deep+1-j], i, i)
       ch = morph_char(T, ch)
 
-      if ch == '.' or ch == ':' then
+      if is_digit(ch) then
         -- nothing to do, handled by recursive call
 
-      elseif ch == '#' then
+      elseif ch == '.' then
         set_seed_floor(S, hash_h, hash_ftex)
         S.div_lev = hash_lev
 
@@ -1568,8 +1568,8 @@ gui.debugf("Possible patterns:\n%s\n", table_to_str(possibles, 2))
 gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
     -- recursive sub-division
-    local sub_1 = find_sub_area(T, '.')
-    local sub_2 = find_sub_area(T, ':')
+    local sub_1 = find_sub_area(T, '1')
+    local sub_2 = find_sub_area(T, '2')
 
     local new_hs = shallow_copy(heights)
     local new_ft = shallow_copy(f_texs)
@@ -1582,7 +1582,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
 gui.debugf("  new_hs: %d %d %d\n",
 new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
-    if T.has_focus == '#' or not T.has_focus then
+    if T.has_focus == '.' or not T.has_focus then
       hash_h = table.remove(new_hs, 1)
       hash_ftex = table.remove(new_ft, 1)
       hash_lev  = div_lev
@@ -1602,8 +1602,14 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
     mark_stair_dests(T)
 
-    if sub_1 then Room_try_divide(R, false, new_lev, sub_1, new_hs, new_ft) end
-    if sub_2 then Room_try_divide(R, false, new_lev, sub_2, new_hs, new_ft) end
+    if info.subs then
+      for s_idx,s_dat in ipairs(info.subs) do
+        local s_area = find_sub_area(T, tostring(s_idx))
+        assert(s_area)
+
+        Room_try_divide(R, false, new_lev, s_area, new_hs, new_ft)
+      end
+    end
 
     assert(hash_h)
 
@@ -2188,7 +2194,7 @@ PLAN.sky_mode = "heaps"
 PLAN.liquid_mode = "heaps" ]]
 PLAN.junk_mode = "heaps"
 
-  Test_room_fabs()
+---  Test_room_fabs()
 
 
   Rooms_decide_outdoors()
