@@ -269,7 +269,7 @@ bool UI_Game::ParseValue(const char *key, const char *value)
 const char * UI_Game::mode_syms[] =
 {
   "sp",   "Single Player",
-  "coop", "Co-op",
+//FIXME  "coop", "Co-op",
 //FIXME  "dm",   "Deathmatch",
 // "ctf",  "Capture Flag",
 
