@@ -1700,8 +1700,8 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
     if R.children then return false end
 
-    if R.kind == "hallway"   then return false end
-    if R.kind == "stairwell" then return false end
+    assert(R.kind ~= "hallway")
+    assert(R.kind ~= "stairwell")
 
     -- some chance of not dividing at all
     local skip_prob = 50 - (area.tw + area.th) * 4
@@ -1868,6 +1868,88 @@ function Room_choose_corner_stairs(R)
     end
   end end -- for x, y
 end
+
+
+function Room_set_floor_minmax(R)
+  local min_h =  9e9
+  local max_h = -9e9
+
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R and 
+       (S.kind == "walk" or S.kind == "purpose")
+    then
+      assert(S.floor_h)
+
+      min_h = math.min(min_h, S.floor_h)
+      max_h = math.max(max_h, S.floor_h)
+    end
+  end end -- for x, y
+
+  assert(min_h <= max_h)
+
+  R.floor_min_h = min_h
+  R.floor_max_h = max_h
+
+  R.fence_h  = R.floor_max_h + 30
+  R.liquid_h = R.floor_min_h - 48
+
+---#    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+---#      local S = SEEDS[x][y][1]
+---#      if S.room == R and S.kind == "liquid" then
+---#        S.floor_h = R.liquid_h
+---#      end
+---#    end end -- for x, y
+end
+
+
+function Room_layout_scenic(R)
+
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R then
+      S.kind = "liquid"
+---#  S.floor_h = -24
+    end
+  end end -- for x,y
+
+  R.liquid_h = -24   -- TODO: better value (min of neighbors)
+end
+
+
+function Room_layout_hallway(R)
+
+  local function make_O()
+    for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
+      local S = SEEDS[x][y][1]
+      S.kind = "void"
+    end end -- for x, y
+  end
+
+  ---| Room_layout_hallway |---
+
+  local entry_C = assert(R.entry_conn)
+  local h = assert(entry_C.conn_h)
+
+  -- FIXME: SHAPES !!!!!!
+  make_O()
+
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    assert(S.room == R)
+    if S.kind == "walk" then
+      S.floor_h = h
+      S.f_tex = "FWATER1"
+    end
+  end end -- for x, y
+
+  Room_set_floor_minmax(R)
+
+  for _,C in ipairs(R.conns) do
+    C.conn_h = h
+  end
+end
+
 
 
 function Room_layout_one(R)
@@ -2182,38 +2264,6 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     return g_info.hts
   end
 
-  local function set_floor_min_max()
-    local min_h =  9e9
-    local max_h = -9e9
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      if S.room == R and 
-         (S.kind == "walk" or S.kind == "purpose")
-      then
-        assert(S.floor_h)
-
-        min_h = math.min(min_h, S.floor_h)
-        max_h = math.max(max_h, S.floor_h)
-      end
-    end end -- for x, y
-
-    assert(min_h <= max_h)
-
-    R.floor_min_h = min_h
-    R.floor_max_h = max_h
-
-    R.fence_h  = R.floor_max_h + 30
-    R.liquid_h = R.floor_min_h - 48
-
----#    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
----#      local S = SEEDS[x][y][1]
----#      if S.room == R and S.kind == "liquid" then
----#        S.floor_h = R.liquid_h
----#      end
----#    end end -- for x, y
-  end
-
 
   ---==| Room_layout_one |==---
 
@@ -2229,7 +2279,7 @@ gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
   if not focus_C.conn_h then
 gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
-    focus_C.conn_h = SKY_H - 256 --!!!!  rand_irange(1,3) * 128
+    focus_C.conn_h = SKY_H - rand_irange(4,7) * 64
   end
 
   R.floor_h = focus_C.conn_h  -- ??? BLEH
@@ -2260,6 +2310,11 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     return
   end
 
+  if R.kind == "hallway" then
+    Room_layout_hallway(R, focus_C.conn_h)
+    return
+  end
+
   if R.purpose == "EXIT" and not R.outdoor and not R:has_any_lock() then
     Build_small_exit(R)
     return
@@ -2286,13 +2341,12 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
 ---  flood_fill_for_junk()
 
-  set_floor_min_max()
+  Room_set_floor_minmax(R)
 
   Room_choose_corner_stairs(R)
 
 
   for _,C in ipairs(R.conns) do
-if not C.conn_h then gui.debugf("CONN LACK H @ %s\n", C.src_S:tostr()) ; C.conn_h = 0 end
     assert(C.conn_h)
   end
 
@@ -2307,29 +2361,14 @@ end
 
 
 
-function Room_layout_scenic(R)
+function Rooms_all_lay_out()
 
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
-    if S.room == R then
-      S.kind = "liquid"
----#  S.floor_h = -24
-    end
-  end end -- for x,y
-
-  R.liquid_h = -24   -- TODO: better value (min of neighbors)
-end
-
-
-
-function Rooms_lay_out_II()
-
-  gui.printf("\n--==| Rooms_lay_out II |==--\n\n")
+  gui.printf("\n--==| Rooms_all_lay_out |==--\n\n")
 
   PLAN.theme = GAME.themes["TECH"] -- FIXME
 
 
-  PLAN.sky_mode = rand_key_by_probs { few=20, some=80, heaps=20 }
+  PLAN.sky_mode = rand_key_by_probs { few=20, some=90, heaps=20 }
   gui.printf("Sky Mode: %s\n", PLAN.sky_mode)
 
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=30 }

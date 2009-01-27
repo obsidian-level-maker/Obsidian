@@ -170,14 +170,9 @@ function Level_Make(L, index, NUM)
     gui.property("error_flat", PARAMS.error_flat or PARAMS.error_tex)
   end   
 
-
-  Rooms_lay_out_II()
+  Rooms_all_lay_out()
     if gui.abort() then return "abort" end
     gui.progress(90)
-
----##  Builder()
----##    if gui.abort() then return "abort" end
----##    gui.progress(100)
 
   gui.end_level()
 
