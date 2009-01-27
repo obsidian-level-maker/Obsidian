@@ -21,13 +21,11 @@ HEIGHT_FABS =
 {
   I1 =
   {
-    sub_areas = 1,
-
     structure =
     {
+      "111",
+      ".^.",
       "...",
-      "#^#",
-      "###",
     },
 
     x_sizes =
@@ -44,41 +42,49 @@ HEIGHT_FABS =
       "314", "315", "316", "317", "318", "319",
     },
 
+    subs =
+    {
+      { height=1 },
+    },
+
     symmetry = "x",
   },
 
   I1_b =
   {
-    sub_areas = 1,
 
     structure =
     {
+      "111",
+      "^.^",
       "...",
-      "^#^",
-      "###",
     },
 
     x_sizes =
     {
       "111", "121", "131", "141", "151", "161", "171",
-      "181", "191", "1A1", "1B1",
+      "181", "191",
     },
 
     y_sizes =
     {
-      -- "011",
       "012", "013",
       "112", "113", "114", "115", "116", "117",
       "213", "214", "215", "216", "217", "218", "219", "21A",
       "314", "315", "316", "317", "318", "319",
     },
 
+    subs =
+    {
+      { height=1 },
+    },
+
     symmetry = "x",
   },
 
+--[[
   I2 =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -115,7 +121,6 @@ HEIGHT_FABS =
 
   L1 =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -143,7 +148,6 @@ HEIGHT_FABS =
 
   L1_b =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -172,7 +176,6 @@ HEIGHT_FABS =
   {
     prob = 20,
 
-    sub_areas = 1,
 
     structure =
     {
@@ -203,7 +206,6 @@ HEIGHT_FABS =
 
   M1 =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -232,7 +234,6 @@ HEIGHT_FABS =
 
   M2 =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -270,7 +271,6 @@ HEIGHT_FABS =
   {
     prob = 20,
 
-    sub_areas = 1,
 
     structure =
     {
@@ -300,7 +300,6 @@ HEIGHT_FABS =
   {
     prob = 10,
 
-    sub_areas = 1,
 
     structure =
     {
@@ -330,7 +329,6 @@ HEIGHT_FABS =
   {
     prob = 20,
 
-    sub_areas = 1,
 
     structure =
     {
@@ -359,7 +357,6 @@ HEIGHT_FABS =
 
   U1 =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -387,7 +384,6 @@ HEIGHT_FABS =
 
   U1_b =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -416,7 +412,6 @@ HEIGHT_FABS =
 
   U2 =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -444,7 +439,6 @@ HEIGHT_FABS =
 
   U2_b =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -470,21 +464,19 @@ HEIGHT_FABS =
 
     symmetry = "x",
   },
-
+--]]
 
   O1 =
   {
     prob = 25,
 
-    sub_areas = 1,
-
     structure =
     {
-      "#####",
-      "#####",
-      "#...#",
-      "##^##",
-      "#####",
+      ".....",
+      ".....",
+      ".111.",
+      "..^..",
+      ".....",
     },
 
     x_sizes =
@@ -500,14 +492,19 @@ HEIGHT_FABS =
       "21312", "21412", "21512", "21612", "21712",
     },
 
+    subs =
+    {
+      { height=1 },
+    },
+
     symmetry = "x",
     match_any = true,
     low_ceil = true,
   },
 
+--[[
   O1_b =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -538,7 +535,6 @@ HEIGHT_FABS =
 
   O2 =
   {
-    sub_areas = 1,
 
     structure =
     {
@@ -572,7 +568,6 @@ HEIGHT_FABS =
   {
     prob = 10,
 
-    sub_areas = 1,
 
     structure =
     {
@@ -606,7 +601,6 @@ HEIGHT_FABS =
   {
     prob = 25,
 
-    sub_areas = 2,
 
     structure =
     {
@@ -644,7 +638,6 @@ HEIGHT_FABS =
   {
     prob = 25,
 
-    sub_areas = 2,
 
     structure =
     {
@@ -682,7 +675,6 @@ HEIGHT_FABS =
 
   T1 =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -707,16 +699,16 @@ HEIGHT_FABS =
 
     symmetry = "x",
   },
+--]]
 
   T2 =
   {
-    sub_areas = 2,
 
     structure =
     {
-      "..#::",
-      "^###^",
-      "#####",
+      "11.22",
+      "^...^",
+      ".....",
     },
 
     x_sizes =
@@ -735,12 +727,18 @@ HEIGHT_FABS =
       "216", "217", "218", "219", "21A",
     },
 
+    subs =
+    {
+      { height=1 },
+      { height=1 },
+    },
+
     symmetry = "x",
   },
 
+--[[
   T3 =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -766,7 +764,6 @@ HEIGHT_FABS =
 
   T3_b =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -794,7 +791,6 @@ HEIGHT_FABS =
   {
     prob = 10,
 
-    sub_areas = 2,
 
     structure =
     {
@@ -820,19 +816,18 @@ HEIGHT_FABS =
     symmetry = "x",
   },
 
-
+--]]
 
   H1 =
   {
-    sub_areas = 2,
 
     structure =
     {
-      "#####",
-      "###v#",
-      "..#::",
-      "#^###",
-      "#####",
+      ".....",
+      "...v.",
+      "11.22",
+      ".^...",
+      ".....",
     },
 
     x_sizes =
@@ -848,13 +843,19 @@ HEIGHT_FABS =
     },
 
     symmetry = "R",
+
+    subs =
+    {
+      { height=1 },
+      { height=1 },
+    },
   },
 
+--[[
   H1_b =
   {
     prob = 20,
 
-    sub_areas = 2,
 
     structure =
     {
@@ -882,7 +883,6 @@ HEIGHT_FABS =
 
   H2 =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -912,7 +912,6 @@ HEIGHT_FABS =
   {
     prob = 20,
 
-    sub_areas = 2,
 
     structure =
     {
@@ -940,7 +939,6 @@ HEIGHT_FABS =
 
   H3 =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -967,7 +965,6 @@ HEIGHT_FABS =
 
   H3_b =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -995,7 +992,6 @@ HEIGHT_FABS =
 
   S1 =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -1023,7 +1019,6 @@ HEIGHT_FABS =
 
   S2 =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -1053,7 +1048,6 @@ HEIGHT_FABS =
   {
     prob = 10,
 
-    sub_areas = 2,
 
     structure =
     {
@@ -1080,7 +1074,6 @@ HEIGHT_FABS =
 
   S3 =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -1108,7 +1101,6 @@ HEIGHT_FABS =
 
   S4 =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -1139,7 +1131,6 @@ HEIGHT_FABS =
 
   S4_b =
   {
-    sub_areas = 2,
 
     structure =
     {
@@ -1166,6 +1157,7 @@ HEIGHT_FABS =
 
     symmetry = "R",
   },
+--]]
 }
 
 
@@ -1181,13 +1173,13 @@ SOLID_FABS =
     
     structure =
     {
-      "###",
-      "#S#",
-      "###",
+      "...",
+      ".S.",
+      "...",
     },
 
     x_sizes = { "212", "313", "414", "323" },
-    y_sizes = { "212", "313" },
+    y_sizes = { "111", "212", "313" },
 
     symmetry = "xy",
   },
@@ -1199,12 +1191,12 @@ SOLID_FABS =
     
     structure =
     {
-      "#####",
-      "#S#S#",
-      "#####",
+      ".....",
+      ".S.S.",
+      ".....",
     },
 
-    x_sizes = { "21112", "21212", "31113" },
+    x_sizes = { "11211", "21112", "21212", "21312" },
     y_sizes = { "212", "313" },
 
     symmetry = "xy",
@@ -1217,15 +1209,15 @@ SOLID_FABS =
     
     structure =
     {
-      "#####",
-      "#S#S#",
-      "#####",
-      "#S#S#",
-      "#####",
+      ".....",
+      ".S.S.",
+      ".....",
+      ".S.S.",
+      ".....",
     },
 
-    x_sizes = { "11111", "21112", "21212", "31113" },
-    y_sizes = { "11111", "21112", "21212", "31113" },
+    x_sizes = { "11111", "12121", "21212", "21312" },
+    y_sizes = { "11111", "12121", "21212", "21312" },
 
     symmetry = "xy",
   },
@@ -1237,13 +1229,32 @@ SOLID_FABS =
     
     structure =
     {
-      "S#S",
-      "###",
-      "S#S",
+      "S.S",
+      "...",
+      "S.S",
     },
 
     x_sizes = { "121", "131", "141", "151" },
-    y_sizes = { "111", "121", "131", "141" },
+    y_sizes = { "111", "121", "131" },
+
+    symmetry = "xy",
+  },
+
+--[[
+  SOLID_D1 =
+  {
+    prob = 300,
+    environment = "indoor",
+
+    structure =
+    {
+      "/.\\",
+      "...",
+      "\\./",
+    },
+
+    x_sizes = { "121", "131", "141", "151" },
+    y_sizes = { "111", "121", "131" },
 
     symmetry = "xy",
   },
@@ -1355,7 +1366,6 @@ SOLID_FABS =
   {
     prob = 100,
     environment = "indoor",
-    sub_areas = 1,
     
     structure =
     {
@@ -1404,7 +1414,6 @@ SOLID_FABS =
   {
     prob = 20,
     environment = "indoor",
-    sub_areas = 1,
 
     structure =
     {
@@ -1421,6 +1430,7 @@ SOLID_FABS =
     y_sizes = { "11111", "11211", "11311", "11411",
                 "12121", "12221", "12321", "12421", "12521" },
   },
+--]]
 }
 
 
@@ -1433,7 +1443,7 @@ LIQUID_FABS =
   {
     structure =
     {
-      "~#~",
+      "~.~",
     },
 
     x_sizes = { "111", "212", "313", "323" },
@@ -1451,8 +1461,8 @@ LIQUID_FABS =
 
     structure =
     {
-      "#~",
-      "##",
+      ".~",
+      "..",
     },
 
     x_sizes = { "12", "13", "14", "15", "25", "26", "27", "28" },
@@ -1467,7 +1477,7 @@ LIQUID_FABS =
 
     structure =
     {
-      "~#",
+      "~.",
       "~~",
     },
 
@@ -1483,9 +1493,9 @@ LIQUID_FABS =
 
     structure =
     {
-      "###",
-      "#~#",
-      "###",
+      "...",
+      ".~.",
+      "...",
     },
 
     x_sizes = { "131", "141", "151", "242", "252", "262" },
@@ -1501,8 +1511,8 @@ LIQUID_FABS =
 
     structure =
     {
-      "#~#",
-      "###",
+      ".~.",
+      "...",
     },
 
     x_sizes = { "121", "131", "141", "151", "242", "252" },
@@ -1518,11 +1528,11 @@ LIQUID_FABS =
 
     structure =
     {
-      "##",
-      "#~",
-      "##",
-      "#~",
-      "##",
+      "..",
+      ".~",
+      "..",
+      ".~",
+      "..",
     },
 
     x_sizes = { "12", "13", "14", "15", "25", "26", "27" },
@@ -1538,9 +1548,9 @@ LIQUID_FABS =
 
     structure =
     {
-      "~##",
-      "~#~",
-      "##~",
+      "~..",
+      "~.~",
+      "..~",
     },
 
     x_sizes = { "112", "212", "213", "313", "314", "414" },
@@ -1555,9 +1565,9 @@ LIQUID_FABS =
 
     structure =
     {
-      "~#~",
-      "###",
-      "~#~",
+      "~.~",
+      "...",
+      "~.~",
     },
 
     x_sizes = { "212", "313", "414", "515", "616", },
@@ -1573,8 +1583,8 @@ LIQUID_FABS =
 
     structure =
     {
-      "###",
-      "~#~",
+      "...",
+      "~.~",
     },
 
     x_sizes = { "111", "212", "313", "414" },
@@ -1590,9 +1600,9 @@ LIQUID_FABS =
 
     structure =
     {
-      "#~#",
-      "###",
-      "#~#",
+      ".~.",
+      "...",
+      ".~.",
     },
 
     x_sizes = { "121", "131", "141", "151", "242", "252" },
@@ -1602,11 +1612,11 @@ LIQUID_FABS =
     match_any = true,
   },
 
+--[[
   LIQ_WOW_2 =
   {
     prob = 900,
 
-    sub_areas = 1,
 
     structure =
     {
@@ -1633,7 +1643,6 @@ LIQUID_FABS =
   {
     prob = 600,
 
-    sub_areas = 1,
 
     structure =
     {
@@ -1655,6 +1664,7 @@ LIQUID_FABS =
     symmetry = "xy",
     match_any = true,
   },
+--]]
 }
 
 
