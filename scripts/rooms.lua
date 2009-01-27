@@ -547,15 +547,23 @@ function Rooms_decide_hallways_II()
 
     if #R.teleports > 0 then return false end
     if R.num_branch < 2 then return false end
-    if R.num_branch > 5 then return false end
+    if R.num_branch > 4 then return false end
+
+    local outdoor_chance = 5
+    local lock_chance    = 50
+
+    if PLAN.hallway_mode == "heaps" then
+      outdoor_chance = 50
+      lock_chance = 90
+    end
 
     for _,C in ipairs(R.conns) do
       local N = C:neighbor(R)
-      if N.outdoor and rand_odds(95) then
+      if N.outdoor and not rand_odds(outdoor_chance) then
         return false
       end
 
-      if C.dest == R and C.lock and rand_odds(50) then
+      if C.dest == R and C.lock and not rand_odds(lock_chance) then
         return false
       end
     end
@@ -568,7 +576,8 @@ function Rooms_decide_hallways_II()
       return rand_odds(HALL_SIZE_HEAPS[min_d])
     end
 
-    if PLAN.hallway_mode == "few" and rand_odds(66) then return false end
+    if PLAN.hallway_mode == "few" and rand_odds(66) then
+      return false end
 
     return rand_odds(HALL_SIZE_PROBS[min_d])
   end
@@ -671,6 +680,9 @@ end
 
 function Rooms_reckon_doors()
   local function door_chance(R, N)
+
+do return 1 end --!!!!!!
+
     local door_probs = PLAN.theme.door_probs or
                        GAME.door_probs
 
@@ -701,6 +713,10 @@ function Rooms_reckon_doors()
           local prob = door_chance(C.src, C.dest)
           if rand_odds(prob) then
             B.kind = "door"
+          
+          elseif (PLAN.fence_mode == "none" or PLAN.fence_mode == "few") and
+                 C.src.outdoor and C.dest.outdoor then
+            B.kind = nil
           end
         end
       end
@@ -731,8 +747,12 @@ function Rooms_reckon_windows()
           then
             S.border[side].kind = nil
 
-          elseif N.room == R then  --!!!! or N.room.arena == S.room.arena
+          elseif N.room == R or (PLAN.fence_mode == "none" and
+                    N.room.arena == S.room.arena)
+            ---??   and N.room.combo == S.room.combo)
+          then
             -- nothing needed
+            S.border[side].kind = nil
 
           elseif N.room.outdoor then
              S.border[side].kind = "fence"
@@ -2309,10 +2329,10 @@ function Rooms_lay_out_II()
   PLAN.theme = GAME.themes["TECH"] -- FIXME
 
 
-  PLAN.sky_mode = rand_key_by_probs { few=20, some=70, heaps=10 }
+  PLAN.sky_mode = rand_key_by_probs { few=20, some=80, heaps=20 }
   gui.printf("Sky Mode: %s\n", PLAN.sky_mode)
 
-  PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=20 }
+  PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=30 }
   gui.printf("Hallway Mode: %s\n", PLAN.hallway_mode)
 
   PLAN.liquid_mode = rand_key_by_probs { few=15, some=60, heaps=20 }
@@ -2321,25 +2341,27 @@ function Rooms_lay_out_II()
   PLAN.junk_mode = rand_key_by_probs { few=40, some=30, heaps=10 }
   gui.printf("Junk Mode: %s\n", PLAN.junk_mode)
 
-  PLAN.cage_mode = rand_key_by_probs { none=50, few=20, some=50, heaps=5 }
+  PLAN.cage_mode = rand_key_by_probs { none=50, some=50, heaps=6 }
   gui.printf("Cage Mode: %s\n", PLAN.cage_mode)
 
+  PLAN.fence_mode = rand_key_by_probs { none=30, few=30, some=30 }
+  gui.printf("Fence Mode: %s\n", PLAN.fence_mode)
 
---[[ PLAN.hallway_mode = "heaps"
+
+--[[
 PLAN.sky_mode = "heaps"
-PLAN.liquid_mode = "heaps" ]]
 PLAN.junk_mode = "few"
-PLAN.liquid_mode = "few"
-PLAN.hallway_mode = "few"
+PLAN.liquid_mode = "few"  ]]
+PLAN.hallway_mode = "heaps"
 
 ---  Test_room_fabs()
 
 
   Rooms_decide_outdoors()
   Rooms_choose_themes()
-  Rooms_decide_hallways_II()
 
---!!!!  Rooms_reckon_doors()
+  Rooms_decide_hallways_II()
+  Rooms_reckon_doors()
 
   Seed_dump_fabs()
 
