@@ -936,12 +936,11 @@ end --]]
       local B_kind = S.border[side].kind
 
       -- hallway hack
-      if R.kind == "hallway" and not (S.layout and S.layout.char == '#') and
+      if R.kind == "hallway" and not (S.kind == "void") and
          ( (B_kind == "wall")
           or
            (S:neighbor(side) and S:neighbor(side).room == R and
-            S:neighbor(side).layout and
-            S:neighbor(side).layout.char == '#')
+            S:neighbor(side).kind == "void")
          )
       then
         Build_detailed_hall(S, side, z1, z2)
@@ -2080,10 +2079,34 @@ function Room_layout_one(R)
         Build_pedestal(S, z1, "FLAT22")
       end
 
+      local angle = 0  -- FIXME
+      local dist = 56
+
       gui.add_entity(mx, my, z1 + 35,
       {
-        name = tostring(GAME.things["player1"].id)
+        name = tostring(GAME.things["player1"].id),
+        angle = angle,
       })
+
+      if GAME.things["player2"] then
+        gui.add_entity(mx - dist, my, z1 + 35,
+        {
+          name = tostring(GAME.things["player2"].id),
+          angle = angle,
+        })
+
+        gui.add_entity(mx + dist, my, z1 + 35,
+        {
+          name = tostring(GAME.things["player3"].id),
+          angle = angle,
+        })
+
+        gui.add_entity(mx, my - dist, z1 + 35,
+        {
+          name = tostring(GAME.things["player4"].id),
+          angle = angle,
+        })
+      end
 
     elseif R.purpose == "EXIT" then
       local CS = R.conns[1]:seed(R)
