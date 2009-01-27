@@ -1080,6 +1080,13 @@ end --]]
 
     -- FLOOR
 
+    local step_info =
+    {
+      t_face = { texture="FLAT1" },
+      b_face = { texture="FLAT1" },
+      w_face = { texture="STEP4", peg=true, y_offset=0 },
+    }
+
     if S.kind == "void" then
 
       transformed_brush2(nil,
@@ -1122,21 +1129,14 @@ end --]]
 
     elseif S.kind == "stair" then
 
-      local stair_info =
-      {
-        t_face = { texture="FLAT1" },
-        b_face = { texture="FLAT1" },
-        w_face = { texture="STEP4" },
-      }
-
-      Build_niche_stair(S, stair_info)
+      Build_niche_stair(S, step_info)
 
     elseif S.kind == "curve_stair" then
 
       if S.stair_kind == "tall" then
-        Build_tall_curved_stair(S, S.x_side, S.y_side, S.x_height, S.y_height)
+        Build_tall_curved_stair(S, step_info, S.x_side, S.y_side, S.x_height, S.y_height)
       else
-        Build_low_curved_stair(S, S.x_side, S.y_side, S.x_height, S.y_height)
+        Build_low_curved_stair(S, step_info, S.x_side, S.y_side, S.x_height, S.y_height)
       end
 
     elseif S.kind == "lift" then
@@ -1691,7 +1691,7 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
       return false
     end
 
-    local sol_mul = 4.0
+    local sol_mul = 1.0 ---!!!!!! 4.0
     if PLAN.junk_mode == "heaps" then sol_mul = 10.0 end
 
     local liq_mul = 1.0
@@ -2090,6 +2090,80 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     end
   end
 
+  local function select_floor_texs(focus_C)
+    local f_texs  = {}
+
+    if focus_C.conn_ftex then
+      table.insert(f_texs, focus_C.conn_ftex)
+    end
+
+    if R.combo.floors then
+      for i = 1,4 do
+        table.insert(f_texs, rand_element(R.combo.floors))
+      end
+    end
+    
+    while #f_texs < 4 do
+      table.insert(f_texs, f_texs[1] or R.combo.floor)
+    end
+
+    return f_texs
+  end
+
+  local INDOOR_DELTAS  = { [64]=30, [96]=5,  [128]=10, [192]=2 }
+  local OUTDOOR_DELTAS = { [48]=50, [96]=25, [144]=2 }
+
+  local function select_heights(focus_C)
+
+    local function gen_group(base_h, num, dir)
+      local list = {}
+      local delta_tab = sel(R.outdoor, OUTDOOR_DELTAS, INDOOR_DELTAS)
+
+      for i = 1,num do
+        table.insert(list, base_h)
+        local delta = rand_key_by_probs(delta_tab)
+        base_h = base_h + dir * delta
+      end
+
+      return list
+    end
+
+
+    ---| select_heights |---
+
+    local base_h = focus_C.conn_h
+
+    -- determine vertical momentum
+    local mom_z = 0
+    if R.entry_conn then
+      local C2 = R.entry_conn.src.entry_conn
+      if C2 and C2.conn_h and C2.conn_h ~= base_h then
+        mom_z = sel(C2.conn_h < base_h, 1, -1)
+      end 
+      gui.debugf("Vertical momentum @ %s = %d\n", R:tostr(), mom_z)
+    end
+
+    local groups = {}
+
+    for i = 1,10 do
+      local dir = rand_sel(50, 1, -1)
+      local hts = gen_group(base_h, 4, dir)
+
+      local cost = math.abs(base_h - hts[4]) + gui.random()
+      
+      if dir ~= mom_z    then cost = cost + 100 end
+      if hts[4] <= 0     then cost = cost + 200 end
+      if hts[4] >= SKY_H then cost = cost + 300 end
+
+      table.insert(groups, { hts=hts, dir=dir, cost=cost })
+    end
+
+    local g_info = table_pick_best(groups,
+                      function(A,B) return A.cost < B.cost end)
+
+    return g_info.hts
+  end
+
 
   ---==| Room_layout_one |==---
 
@@ -2155,24 +2229,12 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     x2 = R.sx2 - R.junk_thick[6], y2 = R.sy2 - R.junk_thick[8],
   }
 
-  -- FIXME: proper height selection
-  local base_h = focus_C.conn_h
-  local delta = rand_element { 32,64,64,64,96 } * rand_element { -1, 1 }
-  if (base_h >= 256 and delta > 0) or
-     (base_h <= 128 and delta < 0) then delta = -delta end
-  local heights = { base_h, base_h + delta, base_h + delta * 2, base_h + delta * 3 }
-  local f_texs  = {}
-  if focus_C.conn_ftex then table.insert(f_texs, focus_C.conn_ftex) end
-  if R.combo.floors then
-    for i = 1,4 do
-      table.insert(f_texs, rand_element(R.combo.floors))
-    end
-  end
-  while #f_texs < 4 do table.insert(f_texs, f_texs[1] or R.combo.floor) end
+  local heights = select_heights(focus_C)
+  local f_texs  = select_floor_texs(focus_C)
 
   Room_try_divide(R, true, 1, area, heights, f_texs)
 
-  flood_fill_for_junk()
+---  flood_fill_for_junk()
 
   Room_choose_corner_stairs(R)
 
@@ -2232,7 +2294,9 @@ function Rooms_lay_out_II()
 --[[ PLAN.hallway_mode = "heaps"
 PLAN.sky_mode = "heaps"
 PLAN.liquid_mode = "heaps" ]]
-PLAN.junk_mode = "heaps"
+PLAN.junk_mode = "few"
+PLAN.liquid_mode = "few"
+PLAN.hallway_mode = "few"
 
 ---  Test_room_fabs()
 

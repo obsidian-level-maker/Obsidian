@@ -1048,7 +1048,7 @@ function Build_niche_stair(S, stair_info)
 end
 
 
-function Build_tall_curved_stair(S, x_side,y_side, x_h,y_h)
+function Build_tall_curved_stair(S, step_info, x_side,y_side, x_h,y_h)
   assert(x_h and y_h)
 
   local steps = int(math.abs(x_h-y_h) / 14 + 0.9)
@@ -1094,7 +1094,7 @@ function Build_tall_curved_stair(S, x_side,y_side, x_h,y_h)
                     dx0, dx1, dx2, dx3,
                     dy0, dy1, dy2, dy3,
                     x_h, y_h, 256,
-                    info, info, info)
+                    info, step_info, info)
 end
 
 
@@ -1283,7 +1283,7 @@ end
 --]]
 
 
-function Build_low_curved_stair(S, x_side,y_side, x_h,y_h)
+function Build_low_curved_stair(S, step_info, x_side,y_side, x_h,y_h)
 
   -- create transform
   local T =
@@ -1309,13 +1309,6 @@ function Build_low_curved_stair(S, x_side,y_side, x_h,y_h)
   if steps < 4 then
     steps = 4
   end
-
-  local step_info =
-  {
-    b_face = { texture="FLAT1" },
-    t_face = { texture="FLAT1" },
-    w_face = { texture="STEP1", peg=true, y_offset=0 },
-  }
 
   local corn_coords =
   {
