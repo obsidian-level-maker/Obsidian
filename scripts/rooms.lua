@@ -86,7 +86,7 @@ require 'util'
 require 'ht_fabs'
 
 
-function Test_height_fabs()
+function Test_room_fabs()
   
   local function pos_size(s, n)
     local ch = string.sub(s, n, n)
@@ -163,23 +163,145 @@ function Test_height_fabs()
     end
   end
 
-  ---| Test_height_fabs |---
+  local function check_lines(info)
+    local width = #info.structure[1]
+
+    for _,line in ipairs(info.structure) do
+      if #line ~= width then
+        error("Bad structure (uneven widths)")
+      end
+    end
+  end
+
+  local function check_subs(info)
+    local used_subs = {}
+
+    -- first check the digits in the structure
+    for y,line in ipairs(info.structure) do
+      for x = 1,#line do
+        local ch = string.sub(line, x, x)
+        if ch == '0' then error("Invalid sub '0'") end
+        if is_digit(ch) then
+          local s_idx = 0 + ch  -- convert to number
+          assert(s_idx >= 1 and s_idx <= 9)
+          if not (info.subs and info.subs[s_idx]) then
+            error("Missing subs entry [" .. ch .. "]")
+          end
+          used_subs[s_idx] = 1
+        end
+      end -- for x
+    end -- for y
+
+    -- now check that each entry in info.subs is used
+    for s_idx,_ in pairs(info.subs or {}) do
+      if not used_subs[s_idx] then
+        gui.printf("WARNING: sub entry %s is unused!\n", s_idx)
+      end
+    end
+  end
+
+  local function match_x_char(LC, RC)
+    if LC == '<'  then return (RC == '>') end
+    if LC == '>'  then return (RC == '<') end
+    if LC == '/'  then return (RC == '\\') end
+    if LC == '\\' then return (RC == '/') end
+
+    -- having different sub-areas is OK
+    if is_digit(LC) and is_digit(RC) then return true end
+
+    return (LC == RC)
+  end
+
+  local function match_y_char(TC, BC)
+    if TC == '^'  then return (BC == 'v') end
+    if TC == 'v'  then return (BC == '^') end
+    if TC == '/'  then return (BC == '\\') end
+    if TC == '\\' then return (BC == '/') end
+
+    -- having different sub-areas is OK
+    if is_digit(TC) and is_digit(BC) then return true end
+
+    return (TC == BC)
+  end
+
+  local function check_string_sym(mesg, s)
+    local half_x = int(#s / 2)
+
+    for x = 1,half_x do
+      local x2 = #s+1 - x
+      local LC = string.sub(s, x, x)
+      local RC = string.sub(s, x2, x2)
+
+      if not match_x_char(LC, RC) then
+        error("Broken symmetry: " .. mesg)
+      end
+    end
+  end
+
+  local function check_vert_sym(top, bottom)
+    assert(#top == #bottom)
+
+    for x = 1,#top do
+      local TC = string.sub(top, x, x)
+      local BC = string.sub(bottom, x, x)
+
+      if not match_y_char(TC, BC) then
+        error("Broken symmetry: " .. mesg)
+      end
+    end
+  end
+
+  local function check_symmetry(info)
+    -- Note: while it is techniclly possible to create a symmetrical
+    -- pattern using non-symmetrical structure or size strings, we
+    -- do not allow for that here.
+
+    if info.symmetry == "x" or info.symmetry == "xy" then
+      for _,line in ipairs(info.structure) do
+        check_string_sym("structure X", line)
+      end
+      for _,xs in ipairs(info.x_sizes) do
+        check_string_sym("x_size", xs)
+      end
+    end
+
+    if info.symmetry == "y" or info.symmetry == "xy" then
+      local half_y = int (#info.structure / 2)
+      for y = 1,half_y do
+        local top    = info.structure[y]
+        local bottom = info.structure[#info.structure+1-y]
+
+        check_vert_sym(top, bottom)
+      end
+
+      for _,ys in ipairs(info.y_sizes) do
+        check_string_sym("y_size", ys)
+      end
+    end
+  end
+
+  local function show_fab_list(f_name, f_table)
+    for name,info in pairs(f_table) do
+      gui.printf("%s FAB: %s\n\n", f_name, name)
+
+      check_lines(info)
+      check_subs(info)
+      check_symmetry(info)
+
+      for deep = 2,11 do for long = 2,11 do
+        show_pattern(name, info, long, deep)
+      end end
+    end
+  end
+
+
+  ---| Test_room_fabs |---
   
-  for name,info in pairs(HEIGHT_FABS) do
-    gui.printf("HEIGHT FAB: %s\n\n", name)
+  show_fab_list("HEIGHT", HEIGHT_FABS)
+  show_fab_list("SOLID",  SOLID_FABS)
+  show_fab_list("LIQUID", LIQUID_FABS)
 
-    for deep = 2,11 do for long = 2,11 do
-      show_pattern(name, info, long, deep)
-    end end
-  end
-
-  for name,info in pairs(LIQUID_FABS) do
-    gui.printf("LIQUID FAB: %s\n\n", name)
-
-    for deep = 2,11 do for long = 2,11 do
-      show_pattern(name, info, long, deep)
-    end end
-  end
+  error("TEST SUCCESSFUL")
 end
 
 
@@ -2043,6 +2165,9 @@ PLAN.sky_mode = "heaps"
 PLAN.liquid_mode = "heaps" ]]
 PLAN.junk_mode = "heaps"
 
+  Test_room_fabs()
+
+
   Rooms_decide_outdoors()
   Rooms_choose_themes()
   Rooms_decide_hallways_II()
@@ -2063,7 +2188,5 @@ PLAN.junk_mode = "heaps"
 
   for _,R in ipairs(PLAN.scenic_rooms) do Room_build_seeds(R) end
   for _,R in ipairs(PLAN.all_rooms)    do Room_build_seeds(R) end
-
---  Test_height_fabs()
 end
 
