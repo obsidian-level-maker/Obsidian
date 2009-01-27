@@ -308,7 +308,7 @@ DM_COMBOS =
     floor = "FLOOR4_8",
     ceil  = "CEIL3_6",
 
-    floors = { "FLAT14",  "CEIL3_2", "FLAT3", "FLAT9",
+    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
                "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
                "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
                "SLIME15",  "SLIME16"
@@ -340,7 +340,7 @@ DM_COMBOS =
     floor = "FLOOR5_1",
     ceil  = "FLOOR4_5",
 
-    floors = { "FLAT14",  "CEIL3_2", "FLAT3", "FLAT9",
+    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
                "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
                "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
                "SLIME15",  "SLIME16"
@@ -378,7 +378,7 @@ DM_COMBOS =
     floor = "FLOOR0_1",
     ceil  = "FLAT3",
 
-    floors = { "FLAT14",  "CEIL3_2", "FLAT3", "FLAT9",
+    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
                "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
                "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
                "SLIME15",  "SLIME16"
@@ -404,7 +404,7 @@ DM_COMBOS =
     floor = "CEIL4_3",
     ceil  = "FLOOR5_1",
 
-    floors = { "FLAT14",  "CEIL3_2", "FLAT3", "FLAT9",
+    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
                "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
                "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
                "SLIME15",  "SLIME16"
@@ -570,7 +570,7 @@ DM_COMBOS =
     floor = "FLOOR0_5",
     ceil  = "CEIL5_1",
 
-    floors = { "FLAT14",  "CEIL3_2", "FLAT3", "FLAT9",
+    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
                "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
                "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
                "SLIME15",  "SLIME16"
