@@ -739,9 +739,7 @@ function Build_weird_hall(S, side, z1, z2)
 end
 
 
-function Build_diagonal(S, side, info, z1)
-
-do return end --!!!!
+function Build_diagonal(S, dir, info, z1)
 
   local x1 = S.x1 + S.thick[4]
   local y1 = S.y1 + S.thick[2]
@@ -751,28 +749,28 @@ do return end --!!!!
 
   local coords
 
-  if side == 9 then
+  if dir == 9 then
     coords =
     {
       { x=x1, y=y2 },
       { x=x2, y=y1 },
       { x=x2, y=y2 },
     }
-  elseif side == 7 then
+  elseif dir == 7 then
     coords =
     {
       { x=x1, y=y1 },
       { x=x2, y=y2 },
       { x=x1, y=y2 },
     }
-  elseif side == 3 then
+  elseif dir == 3 then
     coords =
     {
       { x=x2, y=y2 },
       { x=x1, y=y1 },
       { x=x2, y=y1 },
     }
-  elseif side == 1 then
+  elseif dir == 1 then
     coords =
     {
       { x=x2, y=y1 },

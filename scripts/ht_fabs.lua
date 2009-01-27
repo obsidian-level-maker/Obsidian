@@ -1224,7 +1224,7 @@ SOLID_FABS =
 
   SOLID_C1 =
   {
-    prob = 200,
+    prob = 100,
     environment = "indoor",
     
     structure =
@@ -1243,7 +1243,7 @@ SOLID_FABS =
 --[[
   SOLID_D1 =
   {
-    prob = 300,
+    prob = 900,
     environment = "indoor",
 
     structure =
@@ -1253,7 +1253,7 @@ SOLID_FABS =
       "\\./",
     },
 
-    x_sizes = { "121", "131", "141", "151" },
+    x_sizes = { "111", "121", "131", "141", "151" },
     y_sizes = { "111", "121", "131" },
 
     symmetry = "xy",

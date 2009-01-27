@@ -1012,29 +1012,53 @@ end --]]
 
     -- DIAGONALS
 
---[[ FIXME
-if (not S.room.outdoor or false) and not (S.room.kind == "hallway") and
-   not S.is_start
-then
-  local z1
-  if S.conn then z1 = (S.conn.conn_h or S.floor_h or S.room.floor_h or 320) + 128 end
-  local diag_info =
-  {
-    t_face = { texture=f_tex },
-    b_face = { texture=c_tex },
-    w_face = { texture=w_tex },
-  }
-  if S.sx == S.room.sx1 and S.sy == S.room.sy1 then
-    Build_diagonal(S, 1, diag_info, z1)
-  elseif S.sx == S.room.sx2 and S.sy == S.room.sy1 then
-    Build_diagonal(S, 3, diag_info, z1)
-  elseif S.sx == S.room.sx1 and S.sy == S.room.sy2 then
-    Build_diagonal(S, 7, diag_info, z1)
-  elseif S.sx == S.room.sx2 and S.sy == S.room.sy2 then
-    Build_diagonal(S, 9, diag_info, z1)
-  end
-end
---]]
+    local diag_L  -- can be "void" or a seed reference
+    local diag_R
+
+    if S.kind == "diagonal" then
+      for side = 2,8,2 do
+        local who = "L"
+            if side == 6 then who = "R"
+        elseif side == 2 and S.diag_kind == '/'  then who = "R"
+        elseif side == 8 and S.diag_kind == '\\' then who = "R"
+        end
+
+        local N = S:neighbor(side)
+
+        if not (N and N.room and N.room == R) or (N and N.kind == "void") then
+          if who == "L" then diag_L = "void" else diag_R = "void" end
+
+        elseif N.kind == "liquid" then
+          if who == "L" then
+            if not diag_L then diag_L = "liquid" end
+          else
+            if not diag_R then diag_R = "liquid" end
+          end
+
+        elseif N.kind ~= "cage" and N.floor_h
+---     elseif N.kind == "walk" or N.kind == "stair" or
+---            N.kind == "lift" or N.kind == "purpose" or
+---            N.kind == "popup"
+        then
+          if who == "L" then
+            if not diag_L or diag_L == "liquid" then diag_L = N
+            elseif diag_L == "void" then -- no change
+            elseif diag_L.floor_h < N.floor_h then diag_L = N
+            end
+          else
+            if not diag_R or diag_R == "liquid" then diag_R = N
+            elseif diag_R == "void" then -- no change
+            elseif diag_R.floor_h < N.floor_h then diag_R = N
+            end
+          end
+        end
+      end
+
+      assert(diag_L or diag_R)
+
+      diag_L = diag_L or diag_R
+      diag_R = diag_R or diag_L
+    end
 
 
     -- CEILING
@@ -1153,6 +1177,18 @@ end
 
 
     -- MISCELLANEOUS
+
+    if S.kind == "diagonal" then
+      local diag_info =
+      {
+        t_face = { texture=f_tex },
+        b_face = { texture=c_tex },
+        w_face = { texture=w_tex },
+      }
+      local dir = 1  --!!!!
+
+      Build_diagonal(S, dir, diag_info)
+    end
 
     if S.has_pillar then
       Build_pillar(S, z1, z2, "TEKLITE")
@@ -1471,6 +1507,10 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
 
       elseif ch == '^' then
         setup_stair(S, 8, hash_h, hash_ftex)
+
+      elseif ch == '/' or ch == '\\' then
+        S.kind = "diagonal"
+        S.diag_kind = ch
 
       elseif ch == 'S' then
         S.kind = "void"
