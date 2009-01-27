@@ -548,13 +548,21 @@ function Plan_SubRooms()
       if S.room ~= R then return nil end
     end end -- sx, sy
 
-    local touches_other = false
+    local touches_other = nil
 
     for sx = x-1,x+w do for sy = y-1,y+h do
       if Seed_valid(sx, sy, 1) then
         local S = SEEDS[sx][sy][1]
         if S.room and S.room.parent == R then
-          touches_other = true
+
+          -- don't allow new sub-room to touch more than one
+          -- existing sub-room, since it is possible to split
+          -- the room into separate parts that way.
+          if touches_other and touches_other ~= S.room then
+            return nil
+          end
+
+          touches_other = S.room
         end
       end
     end end -- sx, sy
