@@ -943,8 +943,7 @@ end --]]
       end
 
       if B_kind == "liquid_arch" then
-        local z_top = z1 + 80
-        if z_top < N.floor_h+48 then z_top = N.floor_h+48 end
+        local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
         Build_archway(S, side, z1, z_top, f_tex, w_tex) 
       end
 
@@ -958,8 +957,7 @@ end --]]
       end
 
       if B_kind == "fence"  then
-        --FIXME: put suitable R.fence_h
-        Build_fence(S, side, (R.floor_h or z1)+30, f_tex, w_tex)
+        Build_fence(S, side, R.fence_h or ((R.floor_h or z1)+30), f_tex, w_tex)
       end
 
       if B_kind == "sky_fence" then
@@ -1157,7 +1155,7 @@ end --]]
         { x=x2, y=y1 }, { x=x2, y=y2 },
         { x=x1, y=y2 }, { x=x1, y=y1 },
       },
-      -2000, z1);
+      -2000, assert(R.liquid_h));
 
     elseif not S.no_floor then
 
@@ -1517,7 +1515,7 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
 
       elseif ch == '~' then
         S.kind = "liquid"
-        S.floor_h = hash_h - 64
+---#    S.floor_h = hash_h - 64
 
       end
 
@@ -2164,6 +2162,38 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     return g_info.hts
   end
 
+  local function set_floor_min_max()
+    local min_h =  9e9
+    local max_h = -9e9
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and 
+         (S.kind == "walk" or S.kind == "purpose")
+      then
+        assert(S.floor_h)
+
+        min_h = math.min(min_h, S.floor_h)
+        max_h = math.max(max_h, S.floor_h)
+      end
+    end end -- for x, y
+
+    assert(min_h <= max_h)
+
+    R.floor_min_h = min_h
+    R.floor_max_h = max_h
+
+    R.fence_h  = R.floor_max_h + 30
+    R.liquid_h = R.floor_min_h - 48
+
+---#    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+---#      local S = SEEDS[x][y][1]
+---#      if S.room == R and S.kind == "liquid" then
+---#        S.floor_h = R.liquid_h
+---#      end
+---#    end end -- for x, y
+  end
+
 
   ---==| Room_layout_one |==---
 
@@ -2236,6 +2266,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
 ---  flood_fill_for_junk()
 
+  set_floor_min_max()
+
   Room_choose_corner_stairs(R)
 
 
@@ -2261,9 +2293,11 @@ function Room_layout_scenic(R)
     local S = SEEDS[x][y][1]
     if S.room == R then
       S.kind = "liquid"
-      S.floor_h = -24
+---#  S.floor_h = -24
     end
   end end -- for x,y
+
+  R.liquid_h = -24   -- TODO: better value (min of neighbors)
 end
 
 
