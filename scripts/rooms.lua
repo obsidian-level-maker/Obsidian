@@ -187,12 +187,35 @@ function Test_room_fabs()
           if not (info.subs and info.subs[s_idx]) then
             error("Missing subs entry [" .. ch .. "]")
           end
-          used_subs[s_idx] = 1
+
+          -- determine 2D extent of sub-area
+          local P = used_subs[s_idx]
+          if not P then
+            P = { x1=x, x2=x, y1=y, y2=y, ch=ch }
+            used_subs[s_idx] = P
+          else
+            P.x1 = math.min(P.x1, x)
+            P.y1 = math.min(P.y1, y)
+
+            P.x2 = math.max(P.x2, x)
+            P.y2 = math.max(P.y2, y)
+          end
         end
       end -- for x
     end -- for y
 
-    -- now check that each entry in info.subs is used
+    -- now make sure each sub-area is a full rectangle shape
+    for _,P in ipairs(used_subs) do
+      for x = P.x1,P.x2 do for y = P.y1,P.y2 do
+        local line = info.structure[y]
+        local ch = string.sub(line, x, x)
+        if ch ~= P.ch then
+          error("Bad shape for sub area (not a full rectangle)")
+        end
+      end end -- for x, y
+    end
+
+    -- check that each entry in info.subs is used
     for s_idx,_ in pairs(info.subs or {}) do
       if not used_subs[s_idx] then
         gui.printf("WARNING: sub entry %s is unused!\n", s_idx)
