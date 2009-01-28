@@ -1942,20 +1942,56 @@ function Room_layout_hallway(R)
     end end -- for x, y
   end
 
+  local function make_L()
+    local C1 = R.conns[1]
+    local C2 = R.conns[2]
+
+    local S1 = C1:seed(R)
+    local S2 = C2:seed(R)
+
+    local x1 = math.min(S1.sx, S2.sx)
+    local y1 = math.min(S1.sy, S2.sy)
+    local x2 = math.max(S1.sx, S2.sx)
+    local y2 = math.max(S1.sy, S2.sy)
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if x < x1 or x > x2 or y < y1 or y > y2 or
+         not (x == S1.sx or y == S2.sy)
+      then
+        S.kind = "void"
+      end
+   end end -- for x, y
+  end
+
+  local function fallback()
+    error("No fallback!")
+  end
+
+
   ---| Room_layout_hallway |---
 
   local entry_C = assert(R.entry_conn)
   local h = assert(entry_C.conn_h)
 
+  local tw, th = R.sw, R.sh
+
   -- FIXME: SHAPES !!!!!!
-  make_O()
+
+  if tw >= 1 and th >= 1 and (#R.conns >= 3 or rand_odds(10)) then
+    make_O()
+  elseif #R.conns == 2 then
+    make_L()
+  else
+    fallback()
+  end
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
     assert(S.room == R)
     if S.kind == "walk" then
       S.floor_h = h
-      S.f_tex = "FWATER1"
+      S.f_tex = "FLAT4"
     end
   end end -- for x, y
 
@@ -2431,7 +2467,8 @@ function Rooms_all_lay_out()
 PLAN.sky_mode = "heaps"
 PLAN.junk_mode = "few"
 PLAN.liquid_mode = "few"  ]]
-PLAN.hallway_mode = "few"
+PLAN.sky_mode = "few"
+PLAN.hallway_mode = "heaps"
 
 ---  Test_room_fabs()
 
