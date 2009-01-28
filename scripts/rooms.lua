@@ -1921,15 +1921,31 @@ end
 
 function Room_layout_scenic(R)
 
+  local min_floor = 1000
+
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
     if S.room == R then
       S.kind = "liquid"
----#  S.floor_h = -24
+      for side = 2,8,2 do
+        local N = S:neighbor(side)
+        if not (N and N.room) then
+          S.border[side].kind = "sky_fence"
+        elseif N.floor_h then
+          min_floor = math.min(min_floor, N.floor_h)
+        end
+      end
     end
   end end -- for x,y
 
-  R.liquid_h = -24   -- TODO: better value (min of neighbors)
+  if min_floor < 999 then
+    local h1 = rand_irange(1,6)
+    local h2 = rand_irange(1,6)
+
+    R.liquid_h = min_floor - (h1 + h2) * 16
+  else
+    R.liquid_h = -24
+  end
 end
 
 
@@ -2481,12 +2497,12 @@ PLAN.hallway_mode = "heaps"
 
   Seed_dump_fabs()
 
-  for _,R in ipairs(PLAN.scenic_rooms) do
-    Room_layout_scenic(R)
-  end
-
   for _,R in ipairs(PLAN.all_rooms) do
     Room_layout_one(R)
+  end
+
+  for _,R in ipairs(PLAN.scenic_rooms) do
+    Room_layout_scenic(R)
   end
 
   Rooms_reckon_windows()
