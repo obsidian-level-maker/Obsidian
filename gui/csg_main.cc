@@ -251,7 +251,7 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
 
 void CSG2_MakeMiniMap(void)
 {
-  int scale = 32*2;
+  int scale = 48;
 
   double min_x, min_y, min_z;
   double max_x, max_y, max_z;
