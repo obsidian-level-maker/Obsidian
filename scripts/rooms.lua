@@ -1246,7 +1246,7 @@ end --]]
 end
 
 
-function Room_try_divide(R, is_top, div_lev, area, heights, f_texs)
+function Room_try_divide(R, is_top, div_lev, recurse, area, heights, f_texs)
   -- find a usable pattern in the HEIGHT_FABS table and
   -- apply it to the room.
 
@@ -1322,6 +1322,14 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
         table.insert(T.expanded, 1, padded)
       end
     end
+  end
+
+  local function plain_walk(ch)
+    return ch == '.' or is_digit(ch)
+  end
+
+  local function can_walk(ch)
+    return not (ch == 'S' or ch == '~' or ch == '/' or ch == '\\')
   end
 
   local TRANSPOSE_DIR_TAB = { 1,4,7,2,5,8,3,6,9 }
@@ -1410,20 +1418,32 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn
       if C.conn_h then assert(C.conn_h == h) end
+
       C.conn_h = h
       C.conn_ftex = f_tex
     end
   end
 
   local function eval_fab(T)
-    -- prefer patterns where some of the connections touch
-    -- the old area and some touch the new area.
 
-    local score = 10 + gui.random()
+gui.debugf("eval_fab...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table_to_str(T.expanded,3))
+-- gui.debugf("T = %s\n\n", table_to_str(T,1))
+-- gui.debugf("expanded = %s\n\n", table_to_str(T.expanded,3))
 
-    local hash_c  = 0
-    local dot_c   = 0
-    local other_c = 0
+    T.has_focus = false
+
+    -- check if enough heights are available
+    if T.info.subs then
+      for _,sub in ipairs(T.info.subs) do
+        if (sub.height + 1) > #heights then
+gui.debugf("NOT ENOUGH HEIGHTS\n")
+return -1 end
+      end
+    end
+
+    local score = gui.random() * 99
+
+    local matches = {}
 
     for i = 1,T.long do for j = 1,T.deep do
       local x, y = morph_coord(T, i, j)
@@ -1437,38 +1457,46 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
       ch = morph_char(T, ch)
 
       if (S.conn or S.pseudo_conn or S.must_walk) then
-            if ch == '.' then hash_c  = hash_c  + 1
-        elseif ch == '1' then dot_c   = dot_c   + 1
-        elseif ch == '2' then other_c = other_c + 1
-        else
+        if not plain_walk(ch) then
+gui.debugf("CONN no have PLAIN WALK\n")
           return -1
+        end
+
+        if is_digit(ch) then
+          local s_idx = (0 + ch)
+          matches[s_idx] = (matches[s_idx] or 0) + 1
+---??     score = score + 20
         end
       end
 
-      if S.conn == R.focus_conn then
-        T.has_focus = ch
+      if ch == '.' and S.conn == R.focus_conn then
+        T.has_focus = true
       end
     end end -- for i, j
 
-    local zero_num = sel(hash_c  == 0, 1, 0) +
-                     sel(dot_c   == 0, 1, 0) +
-                     sel(other_c == 0, 1, 0)
-
-    -- there's little point having a height diff in a room when all
-    -- the connections have the same height
---!!!!!! FIXME   if zero_num == 2 and not R.purpose and not T.info.match_any then return -1 end
-
-    -- big bonus if connections touch all three areas
-    score = score + math.min(hash_c, dot_c, other_c) * 20
-
-    if is_top and T.has_focus and not (T.has_focus == '.') then
-      -- when the focus hits a '.' or ':' area, it stops further
-      -- recursion, which is bad for big rooms.
-      if area.tw * area.th > 7*7 then return -1 end
-
-      ---  score = score - 0.2
+    -- for top-level pattern we require focus seed to hit a '.'
+    if is_top and not T.has_focus then
+gui.debugf("FOCUS not touch dot\n");
+      return -1
     end
 
+    -- check sub-area matches
+    if T.info.subs then
+---# for s_idx,sub in ipairs(T.info.subs) do
+---# gui.debugf("Sub #%d : match=%s current=%s\n", s_idx, tostring(sub.match), tostring(matches[s_idx]))
+---# end
+
+      for s_idx,sub in ipairs(T.info.subs) do
+        if sub.match == "one"  and not matches[s_idx] then return -1 end
+        if sub.match == "none" and     matches[s_idx] then return -1 end
+
+        if sub.match == "any" and matches[s_idx] then
+          score = score + 100
+        end
+      end
+    end
+
+gui.debugf("OK : score = %1.4f\n", score)
     return score
   end
 
@@ -1492,12 +1520,15 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     S.stair_z2 = assert(N.floor_h)
   end
 
-  local function install_it(T, hash_h, hash_ftex, hash_lev)
+  local function install_fab(T, hash_h, hash_ftex, hash_lev)
 
 local ax,ay = morph_coord(T, 1,1)
 local bx,by = morph_coord(T, T.long,T.deep)
-gui.debugf("install_it :  hash_h:%d  (%d,%d)..(%d,%d)\n", hash_h,
+gui.debugf("install_fab :  hash_h:%d  (%d,%d)..(%d,%d)\n", hash_h,
 math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
+
+--gui.debugf("T = %s\n\n", table_to_str(T,1))
+--gui.debugf("expanded = %s\n\n", table_to_str(T.expanded,3))
 
     for i = 1,T.long do for j = 1,T.deep do
       local x, y = morph_coord(T, i, j)
@@ -1539,7 +1570,7 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
       end
 
     end end -- for i, j
-gui.debugf("end install_it\n")
+gui.debugf("end install_fab\n")
   end
 
   local function install_flat_floor(h, f_tex)
@@ -1576,6 +1607,19 @@ gui.debugf("end install_it\n")
       end
 
     end end -- for i, j
+  end
+
+  local function clip_heights(tab, where)
+    assert(tab and #tab >= 1)
+
+    local new_tab = shallow_copy(tab)
+
+    for i = 1,where do
+      table.remove(new_tab, 1)
+    end
+
+    assert(#new_tab >= 1)
+    return new_tab
   end
 
 
@@ -1625,52 +1669,26 @@ gui.debugf("Possible patterns:\n%s\n", table_to_str(possibles, 2))
 gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
     -- recursive sub-division
-    local sub_1 = find_sub_area(T, '1')
-    local sub_2 = find_sub_area(T, '2')
-
-    local new_hs = shallow_copy(heights)
-    local new_ft = shallow_copy(f_texs)
-    local new_lev
-
-    local hash_h
-    local hash_ftex
-    local hash_lev
-
-gui.debugf("  new_hs: %d %d %d\n",
-new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
-
-    if T.has_focus == '.' or not T.has_focus then
-      hash_h = table.remove(new_hs, 1)
-      hash_ftex = table.remove(new_ft, 1)
-      hash_lev  = div_lev
-      new_lev   = div_lev + 1
-    else
-      hash_h = assert(heights[2])
-      hash_ftex = assert(f_texs[2])
-      hash_lev  = div_lev + 1
-      new_lev   = div_lev
-
-      -- NOTE: no further recursion is possible (since there's only
-      --       one height in the new_hs table).  Fixing this would
-      --       be nice but REALLY HARD.
-      new_hs = { heights[1] }
-      new_ft = { f_texs[1] }
-    end
 
     mark_stair_dests(T)
 
     if info.subs then
-      for s_idx,s_dat in ipairs(info.subs) do
-        local s_area = find_sub_area(T, tostring(s_idx))
-        assert(s_area)
+      for s_idx,sub in ipairs(info.subs) do
+        local new_area = find_sub_area(T, tostring(s_idx))
+        assert(new_area)
 
-        Room_try_divide(R, false, new_lev, s_area, new_hs, new_ft)
+        local new_hs = clip_heights(heights, sub.height)
+        local new_ft = clip_heights(f_texs,  sub.height)
+
+        local new_recurse = sub.recurse or true
+
+        Room_try_divide(R, false, div_lev+1, new_recurse, new_area, new_hs, new_ft)
       end
     end
 
-    assert(hash_h)
+    assert(heights[1])
 
-    install_it(T, hash_h, hash_ftex, hash_lev)
+    install_fab(T, heights[1], f_texs[1], div_lev)
 
     return true  -- YES !!
   end
@@ -1691,11 +1709,6 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
   end
 
   local function do_try_divide()
-    if #heights < 2 then return false end
-
-    if area.tw <= 2 and area.th <= 2 then return false end
-
--- if not is_top then return false end
 
     if R.children then return false end
 
@@ -1708,8 +1721,8 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
       return false
     end
 
-    local sol_mul = 1.0 ---!!!!!! 4.0
-    if PLAN.junk_mode == "heaps" then sol_mul = 10.0 end
+    local sol_mul = 3.0
+    if PLAN.junk_mode == "heaps" then sol_mul = 6.0 end
 
     local liq_mul = 1.0
     if PLAN.liquid_mode == "few"   then liq_mul = 0.2 end
@@ -1749,7 +1762,7 @@ new_hs[1] or -1, new_hs[2] or -1, new_hs[3] or -1)
 
   ---==| Room_divide |==---
  
-  if do_try_divide() then
+  if recurse and do_try_divide() then
 gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
   else
 gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
@@ -2360,7 +2373,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   local heights = select_heights(focus_C)
   local f_texs  = select_floor_texs(focus_C)
 
-  Room_try_divide(R, true, 1, area, heights, f_texs)
+  Room_try_divide(R, true, 1, true, area, heights, f_texs)
 
 ---  flood_fill_for_junk()
 
@@ -2406,7 +2419,7 @@ function Rooms_all_lay_out()
   PLAN.cage_mode = rand_key_by_probs { none=50, some=50, heaps=6 }
   gui.printf("Cage Mode: %s\n", PLAN.cage_mode)
 
-  PLAN.fence_mode = rand_key_by_probs { none=30, few=30, some=30 }
+  PLAN.fence_mode = rand_key_by_probs { none=30, few=30, some=10 }
   gui.printf("Fence Mode: %s\n", PLAN.fence_mode)
 
 
@@ -2414,7 +2427,7 @@ function Rooms_all_lay_out()
 PLAN.sky_mode = "heaps"
 PLAN.junk_mode = "few"
 PLAN.liquid_mode = "few"  ]]
-PLAN.hallway_mode = "heaps"
+PLAN.hallway_mode = "few"
 
 ---  Test_room_fabs()
 

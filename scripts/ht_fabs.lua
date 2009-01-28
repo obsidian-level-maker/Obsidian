@@ -44,7 +44,7 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1 },
+      { height=1, match="one" },
     },
 
     symmetry = "x",
@@ -76,7 +76,7 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1 },
+      { height=1, match="one" },
     },
 
     symmetry = "x",
@@ -494,11 +494,10 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1 },
+      { height=1, match="any" },
     },
 
     symmetry = "x",
-    match_any = true,
     low_ceil = true,
   },
 
@@ -729,8 +728,8 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1 },
-      { height=1 },
+      { height=1, match="one" },
+      { height=1, match="any" },
     },
 
     symmetry = "x",
@@ -846,8 +845,8 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1 },
-      { height=1 },
+      { height=1, match="one" },
+      { height=1, match="any" },
     },
   },
 
@@ -1222,6 +1221,37 @@ SOLID_FABS =
     symmetry = "xy",
   },
 
+  SOLID_CSUB1 =
+  {
+    prob = 5000,
+    environment = "indoor",
+    
+    structure =
+    {
+      "S1S",
+      ".1.",
+      ">1<",
+      ".1.",
+      "S1S",
+    },
+
+    x_sizes = {        "121", "131", "141", "151", "161",
+                "171", "181", "191", "1A1", "1B1" },
+
+    y_sizes = { "10101",
+                "11111", "11211", "12121", "12221",
+                "13131", "13231", "14141", "14241",
+                "24142" },
+
+    symmetry = "xy",
+
+    subs =
+    {
+      { height=0, match="any" },
+    }
+  },
+
+--[[
   SOLID_C1 =
   {
     prob = 100,
@@ -1240,7 +1270,6 @@ SOLID_FABS =
     symmetry = "xy",
   },
 
---[[
   SOLID_D1 =
   {
     prob = 900,
