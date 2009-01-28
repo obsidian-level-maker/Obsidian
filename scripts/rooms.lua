@@ -748,11 +748,17 @@ function Rooms_reckon_windows()
             S.border[side].kind = nil
 
           elseif N.room == R or (PLAN.fence_mode == "none" and
-                    N.room.arena == S.room.arena)
+                 N.room.arena == S.room.arena)
             ---??   and N.room.combo == S.room.combo)
           then
             -- nothing needed
             S.border[side].kind = nil
+
+          elseif N.room.outdoor and not R.outdoor and
+                 (R.sx1 <= N.sx and N.sx <= R.sx2) and
+                 (R.sy1 <= N.sy and N.sy <= R.sy2)
+          then
+             S.border[side].kind = "window"
 
           elseif N.room.outdoor then
              S.border[side].kind = "fence"
@@ -1482,13 +1488,11 @@ gui.debugf("FOCUS not touch dot\n");
 
     -- check sub-area matches
     if T.info.subs then
----# for s_idx,sub in ipairs(T.info.subs) do
----# gui.debugf("Sub #%d : match=%s current=%s\n", s_idx, tostring(sub.match), tostring(matches[s_idx]))
----# end
-
       for s_idx,sub in ipairs(T.info.subs) do
-        if sub.match == "one"  and not matches[s_idx] then return -1 end
-        if sub.match == "none" and     matches[s_idx] then return -1 end
+        if sub.match == "one"  and not matches[s_idx] and
+           not (R.kind == "purpose") then return -1 end
+
+        if sub.match == "none" and matches[s_idx] then return -1 end
 
         if sub.match == "any" and matches[s_idx] then
           score = score + 100
@@ -1724,9 +1728,9 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     local sol_mul = 3.0
     if PLAN.junk_mode == "heaps" then sol_mul = 6.0 end
 
-    local liq_mul = 1.0
-    if PLAN.liquid_mode == "few"   then liq_mul = 0.2 end
-    if PLAN.liquid_mode == "heaps" then liq_mul = 8.0 end
+    local liq_mul = 0.6
+    if PLAN.liquid_mode == "few"   then liq_mul = 0.1 end
+    if PLAN.liquid_mode == "heaps" then liq_mul = 7.0 end
 
     local f_probs = {}
     local f_infos = {}
