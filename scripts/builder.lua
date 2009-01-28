@@ -1664,6 +1664,10 @@ end
 
 function Build_exit_pillar(S, z1)
 
+  local dir = 2  -- FIXME
+
+  local DT, long = get_transform_for_seed_side(S, 10-dir)
+
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
 
@@ -1680,6 +1684,30 @@ function Build_exit_pillar(S, z1)
     { x=mx-32, y=my-32, line_kind=11 },
   },
   -2000, z1+128)
+
+
+  local exit_info =
+  {
+    w_face = { texture="COMPSPAN" },
+    t_face = { texture="CEIL5_1" },
+    b_face = { texture="CEIL5_1" },
+  }
+
+  local exit_face = { texture="EXITSIGN", peg=true, x_offset=0, y_offset=0 }
+ 
+  for pass=1,4 do
+    DT.mirror_x = sel((pass % 2)==1, nil, long/2)
+    DT.mirror_y = sel(pass >= 3,     nil, long/2)
+
+    transformed_brush2(DT, exit_info,
+    {
+      { x=60+8,  y=60+24 },
+      { x=60+0,  y=60+16, w_face=exit_face },
+      { x=60+28, y=60+0  },
+      { x=60+36, y=60+8  },
+    },
+    -2000, z1+16)
+  end
 end
 
 
