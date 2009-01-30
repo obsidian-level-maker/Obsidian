@@ -36,12 +36,16 @@ class SEED
   x1, y1, x2, y2  -- 2D map coordinates
 
   floor_h, ceil_h -- floor and ceiling heights
+  f_tex,   c_tex  -- floor and ceiling textures
 }
 
 
 class BORDER
 {
-  kind  : "solid" | "view" | "walk"
+  kind  : nil (when not decided yet)
+          "nothing", "straddle",
+          "wall", "fence", "sky_fence", "window",
+          "arch", "door", "locked_door",
 
   other : SEED  -- seed we are connected to, or nil 
 
