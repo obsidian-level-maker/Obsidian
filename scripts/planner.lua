@@ -767,75 +767,6 @@ function Plan_MakeSeeds()
 end
 
 
-function Plan_BorderUp()
-  local function border_up(R)
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y][1]
-      if S.room == R then
-        for dir = 2,8,2 do
-          local N = S:neighbor(dir)
-
-          if not N then  -- edge of map
-            if S.room.outdoor then
-              S.border[dir].kind = "skyfence"
-              S.thick[dir] = 48
-            else
-              S.border[dir].kind = "wall"
-              S.border[dir].can_fake_sky = true
-              S.thick[dir] = 24
-            end
-
-          elseif N.room == R then
-            -- same room : do nothing
-           
-          elseif R.outdoor then
-            S.border[dir].kind = "fence"
-
-          else
-            -- Note: windows (etc) are decided later
-            S.border[dir].kind = "wall"
-            S.thick[dir] = 24
-          end
-        end
-      end
-    end end -- for x, y
-  end
-
-  local function border_up_scenic(R)
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y][1]
-      if S.room ~= R then
-        -- skip different room
-      else
-        for dir = 2,8,2 do
-          local N = S:neighbor(dir)
-          if not N then
-            if R.outdoor then
-              S.border[dir].kind = "skyfence"
-              S.thick[dir] = 48
-            else
-              S.border[dir].kind = "wall"
-              S.thick[dir] = 24
-            end
-          end
-        end -- for dir
-      end
-    end end -- for x, y
-  end
-
-
-  ---| Plan_BorderUp |---
-  
-  for _,R in ipairs(PLAN.all_rooms) do
-    border_up(R)
-  end
-
-  for _,R in ipairs(PLAN.scenic_rooms) do
-    border_up_scenic(R)
-  end
-end
-
-
 function Plan_determine_size()
 
   local function show_sizes(name, t, N)
@@ -967,7 +898,6 @@ function Plan_rooms_sp()
     gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw,R.sh)
   end
 
-  Plan_BorderUp()
 
   PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
 

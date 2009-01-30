@@ -670,8 +670,8 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       if S.border[S.conn_dir].kind == "arch" or
          T.border[T.conn_dir].kind == "arch"
       then
-        S.border[S.conn_dir].kind = nil
-        T.border[T.conn_dir].kind = nil
+        S.border[S.conn_dir].kind = "nothing"
+        T.border[T.conn_dir].kind = "nothing"
       end
     end
   end -- for C
@@ -681,7 +681,7 @@ end
 function Rooms_reckon_doors()
   local function door_chance(R, N)
 
-do return 1 end --!!!!!!
+do return 5 end --!!!!!!
 
     local door_probs = PLAN.theme.door_probs or
                        GAME.door_probs
@@ -716,7 +716,7 @@ do return 1 end --!!!!!!
           
           elseif (PLAN.fence_mode == "none" or PLAN.fence_mode == "few") and
                  C.src.outdoor and C.dest.outdoor then
-            B.kind = nil
+            B.kind = "nothing"
           end
         end
       end
@@ -725,8 +725,71 @@ do return 1 end --!!!!!!
 end
 
 
-function Rooms_reckon_windows()
-  -- NOTE TOO: windows override "liquid arches" -- FIX
+function Rooms_border_up()
+
+  -- FIXME : windows override "liquid arches"
+
+  local function border_up(R)
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+        for side = 2,8,2 do
+          if not S.border[side].kind then
+
+            local N = S:neighbor(side)
+            if not (N and N.room) then  -- edge of map
+              if R.outdoor then
+                S.border[side].kind = "sky_fence"
+                S.thick[side] = 48
+              else
+                S.border[side].kind = "wall"
+                S.border[side].can_fake_sky = true
+                S.thick[side] = 24
+              end
+
+            elseif N.room == R then
+              -- same room : do nothing
+              S.border[side].kind = "nothing"
+             
+            elseif R.outdoor then
+              S.border[side].kind = "fence"
+
+            else
+              -- Note: windows (etc) are decided later
+              S.border[side].kind = "wall"
+              S.thick[side] = 24
+            end
+
+          end
+        end -- for side
+      end
+    end end -- for x, y
+  end
+
+  local function border_up_scenic(R)
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+        for side = 2,8,2 do
+
+          if not S.border[side].kind then
+            local N = S:neighbor(side)
+            if not (N and N.room) then  -- edge of map
+              if R.outdoor then
+                S.border[side].kind = "sky_fence"
+                S.thick[side] = 48
+              else
+                S.border[side].kind = "wall"
+                S.thick[side] = 24
+              end
+            end
+          end
+
+        end -- for dir
+      end
+    end end -- for x, y
+  end
+
 
   local function choose_fences(R)
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
@@ -740,19 +803,20 @@ function Rooms_reckon_windows()
 
           if not (N and N.room) then
             S.border[side].kind = "sky_fence"
+            S.thick[side] = 48
 
           elseif N.kind == "liquid" and R.outdoor and
             (S.kind == "liquid" or --!!!! N.room.kind == "scenic"
              N.room.arena == S.room.arena)
           then
-            S.border[side].kind = nil
+            S.border[side].kind = "nothing"
 
           elseif N.room == R or (PLAN.fence_mode == "none" and
                  N.room.arena == S.room.arena)
             ---??   and N.room.combo == S.room.combo)
           then
             -- nothing needed
-            S.border[side].kind = nil
+            S.border[side].kind = "nothing"
 
           elseif N.room.outdoor and not R.outdoor and
                  (R.sx1 <= N.sx and N.sx <= R.sx2) and
@@ -765,7 +829,7 @@ function Rooms_reckon_windows()
 
           else
              -- the other border will be a solid wall or window
-             S.border[side].kind = nil
+             S.border[side].kind = "nothing"
           end
         end
       end -- for side
@@ -805,11 +869,16 @@ function Rooms_reckon_windows()
   end
 
 
-  ---| Rooms_reckon_windows |---
-
+  ---| Rooms_border_up |---
+  
   for _,R in ipairs(PLAN.all_rooms) do
+    border_up(R)
     choose_fences(R)
     choose_windows(R)
+  end
+
+  for _,R in ipairs(PLAN.scenic_rooms) do
+    border_up_scenic(R)
   end
 end
 
@@ -1929,9 +1998,7 @@ function Room_layout_scenic(R)
       S.kind = "liquid"
       for side = 2,8,2 do
         local N = S:neighbor(side)
-        if not (N and N.room) then
-          S.border[side].kind = "sky_fence"
-        elseif N.floor_h then
+        if N and N.room and N.floor_h then
           min_floor = math.min(min_floor, N.floor_h)
         end
       end
@@ -2483,8 +2550,8 @@ function Rooms_all_lay_out()
 PLAN.sky_mode = "heaps"
 PLAN.junk_mode = "few"
 PLAN.liquid_mode = "few"  ]]
-PLAN.sky_mode = "few"
-PLAN.hallway_mode = "heaps"
+PLAN.sky_mode = "heaps"
+PLAN.hallway_mode = "few"
 
 ---  Test_room_fabs()
 
@@ -2505,7 +2572,7 @@ PLAN.hallway_mode = "heaps"
     Room_layout_scenic(R)
   end
 
-  Rooms_reckon_windows()
+  Rooms_border_up()
 
   for _,R in ipairs(PLAN.scenic_rooms) do Room_build_seeds(R) end
   for _,R in ipairs(PLAN.all_rooms)    do Room_build_seeds(R) end
