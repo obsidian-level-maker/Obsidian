@@ -211,6 +211,10 @@ function Build_sky_fence(S, side)
   local sx1, sy1 = S.x1, S.y1
   local sx2, sy2 = S.x2, S.y2
 
+  if S.thick[side] < 17 then
+    error("Sky fence not setup properly (thick <= 16)")
+  end
+
   if side == 4 then
     wx2 = wx1 + S.thick[4]
     sx2 = wx1 + 16
@@ -336,7 +340,7 @@ function Build_locked_door(S, side, z1, w_tex, info, tag)
   local my = 0
 
 gui.debugf("INFO = %s\n", table_to_str(info,3))
-  local door_h = 112
+  local door_h = info.skin.door_h or 112
   local door_info =
   {
     t_face = { texture="FLAT1" },
@@ -2801,33 +2805,35 @@ function Builder_dummy()
   },
   192, 208)
 
-gui.add_brush(
-{
-  t_face = { texture="e1u1/grnx2_5" },
-  b_face = { texture="e1u1/grnx2_5" },
-  w_face = { texture="e1u1/grnx2_5" },
-},
-{
-  { x=136, y=160 },
-  { x=136, y=200 },
-  { x=120, y=200 },
-  { x=120, y=160 },
-},
--2000, 4000)
+  if false then
+    gui.add_brush(
+    {
+      t_face = { texture="e1u1/grnx2_5" },
+      b_face = { texture="e1u1/grnx2_5" },
+      w_face = { texture="e1u1/grnx2_5" },
+    },
+    {
+      { x=136, y=160 },
+      { x=136, y=200 },
+      { x=120, y=200 },
+      { x=120, y=160 },
+    },
+    -2000, 4000)
 
-gui.add_brush(
-{
-  t_face = { texture="e1u1/grnx2_3" },
-  b_face = { texture="e1u1/grnx2_3" },
-  w_face = { texture="e1u1/grnx2_3" },
-},
-{
-  { x=136, y=128 },
-  { x=136, y=160 },
-  { x=120, y=160 },
-  { x=120, y=128 },
-},
--2000, 4000)
+    gui.add_brush(
+    {
+      t_face = { texture="e1u1/grnx2_3" },
+      b_face = { texture="e1u1/grnx2_3" },
+      w_face = { texture="e1u1/grnx2_3" },
+    },
+    {
+      { x=136, y=128 },
+      { x=136, y=160 },
+      { x=120, y=160 },
+      { x=120, y=128 },
+    },
+    -2000, 4000)
+  end
 
   gui.add_brush(
   {
