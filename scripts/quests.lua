@@ -104,8 +104,7 @@ require 'util'
 function Quest_decide_start_room(arena)
 
   local function eval_room(R)
-    -- small preference for indoor rooms
-    local cost = sel(R.outdoor, 0, 15)
+    local cost = 0
 
     -- preference for leaf rooms
     cost = cost + 40 * ((#R.conns) ^ 0.6)
@@ -299,9 +298,9 @@ function Quest_lock_up_arena(arena)
 
     local cost = math.abs(C.src_tvol - C.dest_tvol * 2)
 
-    if C.src.outdoor and C.dest.outdoor then
-      cost = cost + 40
-    end
+---##    if C.src.outdoor and C.dest.outdoor then
+---##      cost = cost + 40
+---##    end
 
     if not C.on_path then
       cost = cost + 10
@@ -498,12 +497,6 @@ function Quest_add_lock()
       if not is_perpendicular(old_dir, C.dir) then
         return false
       end
-    end
-
-    -- don't add locked door between two outdoor areas at
-    -- differing heights.
-    if C.src.outdoor and C.dest.outdoor and C.src.kind ~= C.dest.kind then
-      return false
     end
 
     return true

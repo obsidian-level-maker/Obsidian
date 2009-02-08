@@ -675,13 +675,8 @@ function Connect_Rooms()
     assert(not (S.room and S.room.kind == "scenic"))
     assert(not (T.room and T.room.kind == "scenic"))
 
-    if S.room.outdoor then
-      S.border[dir].kind    = "straddle"
-      T.border[10-dir].kind = "arch"
-    else
-      S.border[dir].kind    = "arch"
-      T.border[10-dir].kind = "straddle"
-    end
+    S.border[dir].kind    = "arch"
+    T.border[10-dir].kind = "straddle"
 
     S.thick[dir] = 24
     T.thick[10-dir] = 24
