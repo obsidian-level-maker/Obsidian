@@ -397,24 +397,6 @@ function Quest_lock_up_arena(arena)
   table.insert(PLAN.all_locks, LOCK)
 
 
--- temp crud for debugging
--- [[ FIXME !!!!!!
-do
- local AS = LC.src_S
- local BS = LC.dest_S
- if AS and AS.conn_dir and AS.border[AS.conn_dir].kind == "arch" then
-   AS.border[AS.conn_dir].kind = "lock_door"
-   AS.border[AS.conn_dir].lock = LOCK
- elseif BS and BS.conn_dir and BS.border[BS.conn_dir].kind == "arch" then
-   BS.border[BS.conn_dir].kind = "lock_door"
-   BS.border[BS.conn_dir].lock = LOCK
- else
-   AS.border[AS.conn_dir].kind = "bars"
-   AS.border[AS.conn_dir].lock = LOCK
-   BS.border[BS.conn_dir].kind = nil
- end
-end
---]]
 
   --- perform split ---
 

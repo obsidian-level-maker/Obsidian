@@ -457,7 +457,7 @@ end
 end
 
 
-function Build_lowering_bars(S, side, z1, f_tex, w_tex)
+function Build_lowering_bars(S, side, z1, f_tex, w_tex, tag)
 
   local T, long, deep = get_transform_for_seed_side(S, side)
 
@@ -474,6 +474,7 @@ function Build_lowering_bars(S, side, z1, f_tex, w_tex)
     t_face = { texture=f_tex },
     b_face = { texture=f_tex },
     w_face = { texture=w_tex, peg=true, x_offset=0, y_offset=0 },
+    sec_tag = tag,
   }
 
   local mx1 = 8 + side_gap + bar_w/2
@@ -1841,7 +1842,7 @@ function Build_outdoor_exit_switch(S, dir, f_h)
 end
 
 
-function Build_small_exit(R)
+function Build_small_exit(R, item_name)
 
   assert(#R.conns == 1)
 
@@ -1849,12 +1850,9 @@ function Build_small_exit(R)
   local S = C:seed(R)
   local T = C:seed(C:neighbor(R))
 
-  local side = S.conn_dir
+  gui.debugf("Building small exit @ %s\n", S:tostr())
 
-  -- update border info
-  S.border[side].kind = nil
-  T.border[10-side].kind = nil
-  T.thick[10-side] = 24
+  local side = S.conn_dir
 
   local f_h = C.conn_h or T.floor_h or T.room.floor_h or 0
   local c_h = f_h + 128
@@ -2046,6 +2044,11 @@ function Build_small_exit(R)
   C.already_made_lock = true
 
   mark_room_as_done(R)
+
+
+  if item_name then
+    gui.add_entity(DT.dx + long/2, DT.dy + long/2, f_h+25, { name=item_name })
+  end
 end
 
 

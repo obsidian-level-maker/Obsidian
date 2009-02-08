@@ -675,21 +675,16 @@ function Connect_Rooms()
     assert(not (S.room and S.room.kind == "scenic"))
     assert(not (T.room and T.room.kind == "scenic"))
 
-    if (S.room.outdoor and T.room.outdoor) then
-      S.border[dir].kind    = nil
-      T.border[10-dir].kind = nil
+    if S.room.outdoor then
+      S.border[dir].kind    = "straddle"
+      T.border[10-dir].kind = "arch"
     else
-      if S.room.outdoor then
-        S.border[dir].kind    = "STRADDLE"
-        T.border[10-dir].kind = "arch"
-      else
-        S.border[dir].kind    = "arch"
-        T.border[10-dir].kind = "STRADDLE"
-      end
-
-      S.thick[dir] = 24
-      T.thick[10-dir] = 24
+      S.border[dir].kind    = "arch"
+      T.border[10-dir].kind = "straddle"
     end
+
+    S.thick[dir] = 24
+    T.thick[10-dir] = 24
 
 gui.debugf("connect_seeds R(%s,%s) S(%d,%d) grp:%d --> R(%s,%s) S(%d,%d) grp:%d\n",
 S.room.sx1,S.room.sy1, S.sx,S.sy, S.room.c_group,
