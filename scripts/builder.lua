@@ -474,6 +474,11 @@ function Build_lowering_bars(S, side, z1, skin, tag)
   local mx1 = 8 + side_gap + bar_w/2
   local mx2 = long - 8 - side_gap - bar_w/2
 
+  local z_top = z1 + skin.bar_h
+  if S.room.fence_h then
+    z_top = math.max(z_top, S.room.fence_h + 16)
+  end
+
   for i = 1,num_bars do
     local mx = mx1 + (mx2 - mx1) * (i-1) / (num_bars-1)
     local my = 0
@@ -485,7 +490,7 @@ function Build_lowering_bars(S, side, z1, skin, tag)
       { x=mx-bar_w/2, y=my+bar_w/2 },
       { x=mx-bar_w/2, y=my-bar_w/2 },
     },
-    -2000, z1 + skin.bar_h)
+    -2000, z_top)
   end
 end
 

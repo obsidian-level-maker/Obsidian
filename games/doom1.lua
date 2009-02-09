@@ -1258,7 +1258,31 @@ DM_SWITCH_INFOS =
       {
         switch_w="SW1WOOD", side_w="WOOD9",
         switch_f="FLAT5_2",
-        x_offset=0, y_offset=64,
+        x_offset=0, y_offset=56,
+        line_kind=23,
+      }
+  },
+
+  bar_silver =
+  {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1COMM", side_w="SHAWN2",
+        switch_f="FLAT23",
+        x_offset=0, y_offset=0,
+        line_kind=23,
+      }
+  },
+
+  bar_metal =
+  {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1MET2", side_w="METAL2",
+        switch_f="CEIL5_2",
+        x_offset=0, y_offset=0,
         line_kind=23,
       }
   },
@@ -1359,6 +1383,28 @@ DM_SWITCH_DOORS =
       {
         bar_w="WOOD9",
         bar_f="FLAT5_2",
+        bar_h=64,
+        line_kind=0,
+      }
+  },
+
+  bar_silver =
+  {
+      skin =
+      {
+        bar_w="SUPPORT2",
+        bar_f="FLAT23",
+        bar_h=64,
+        line_kind=0,
+      }
+  },
+
+  bar_metal =
+  {
+      skin =
+      {
+        bar_w="SUPPORT3",
+        bar_f="CEIL5_2",
         bar_h=64,
         line_kind=0,
       }
@@ -3359,6 +3405,7 @@ function Doom1_get_levels()
 
         key_list = { "kc_red", "kc_blue", "kc_yellow" },
         switch_list = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
+        bar_list = { "bar_wood", "bar_silver", "bar_metal" },
 
         sky_info = D1_SKY_INFO[episode],
 

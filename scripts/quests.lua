@@ -712,6 +712,7 @@ function Quest_choose_keys()
 
   local use_keys     = shallow_copy(LEVEL.key_list or GAME.key_list) 
   local use_switches = shallow_copy(LEVEL.switch_list or GAME.switch_list)
+  local use_bars     = shallow_copy(LEVEL.bar_list or GAME.bar_list)
 
   rand_shuffle(use_keys)
   rand_shuffle(use_switches)
@@ -747,7 +748,7 @@ function Quest_choose_keys()
       LOCK.kind = "SWITCH"
 
       if LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
-        LOCK.item = "bar_wood"
+        LOCK.item = rand_element(use_bars)
       else
         LOCK.item = use_switches[1 + cur_sw % #use_switches]
         cur_sw = cur_sw + 1

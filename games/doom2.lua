@@ -1706,6 +1706,7 @@ function Doom2_get_levels()
 
       key_list = { "kc_red", "kc_blue", "kc_yellow" },
       switch_list = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
+      bar_list = { "bar_wood", "bar_silver", "bar_metal" },
 
       -- allow TNT and Plutonia to override the sky stuff
       sky_info = GAME.sky_info[episode],

@@ -1103,12 +1103,7 @@ end --]]
          not (S.conn and S.conn.already_made_lock)
       then
         local LOCK = assert(S.border[side].lock)
-        local INFO = GAME.switch_doors["bar_wood"]
-        assert(INFO)
-
---- TODO: bar_silver, bar_metal
----     Build_lowering_bars(S, side, z1, "FLAT23", "SUPPORT2")
----     Build_lowering_bars(S, side, z1, "CEIL5_2", "SUPPORT3")
+        local INFO = assert(GAME.switch_doors[LOCK.item])
 
         Build_lowering_bars(S, side, z1, INFO.skin, LOCK.tag)
         S.conn.already_made_lock = true
