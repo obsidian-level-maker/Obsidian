@@ -258,18 +258,10 @@ function Build_sky_fence(S, side)
 end
 
 
-function Build_archway(S, side, z1, z2, f_tex, w_tex)
+function Build_archway(S, side, z1, z2, f_tex, w_tex, o_tex)
 
   local N = S:neighbor(side)
   assert(N)
-
-  local o_tex = w_tex
-
-  if (S.room.outdoor and not N.room.outdoor) or
-     (S.room.kind == "hallway" and N.room.kind ~= "hallway" and not N.room.outdoor) then
-    o_tex = N.room.combo.wall
-    w_tex = o_tex
-  end
 
 
   local N_deep = N.thick[10-side]

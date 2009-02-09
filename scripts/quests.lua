@@ -818,8 +818,6 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
   Quest_order_by_visit()
 
   Quest_key_distances()
-  Quest_choose_keys()
-  Quest_add_keys()
 
 
   -- TEMP CRUD FOR BUILDER....

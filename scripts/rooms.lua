@@ -331,6 +331,11 @@ end
 
 function Rooms_decide_outdoors()
   local function choose(R)
+    -- FIXME: preference for start room (etc?) to be indoor
+
+    -- !!! FIXME: preference for KEY locked doors not to go
+    --            Outdoor --> Outdoor.
+
     if R.parent and R.parent.outdoor then return false end
     if R.parent then return rand_odds(5) end
 
@@ -369,7 +374,7 @@ function Rooms_decide_outdoors()
 end
 
 
-function Room_SetupTheme(R)
+function Room_setup_theme(R)
  
   if not PLAN.outdoor_combos then
     PLAN.outdoor_combos = {}
@@ -397,7 +402,7 @@ function Room_SetupTheme(R)
   end
 end
 
-function Room_SetupTheme_Scenic(R)
+function Room_setup_theme_Scenic(R)
   R.outdoor = true
 ---###  R.kind = "scenic"
 
@@ -445,10 +450,10 @@ end
 
 function Rooms_choose_themes()
   for _,R in ipairs(PLAN.all_rooms) do
-    Room_SetupTheme(R)
+    Room_setup_theme(R)
   end
   for _,R in ipairs(PLAN.scenic_rooms) do
-    Room_SetupTheme_Scenic(R)
+    Room_setup_theme_Scenic(R)
   end
 end
 
@@ -682,17 +687,17 @@ end
 
 
 function Rooms_reckon_doors()
-  local function door_chance(R, N)
+  local function door_chance(R1, R2)
 
 do return 5 end --!!!!!!
 
     local door_probs = PLAN.theme.door_probs or
                        GAME.door_probs
 
-    if (not R.outdoor) ~= (not N.outdoor) then
+    if (not R1.outdoor) ~= (not R2.outdoor) then
       return assert(door_probs.out_diff)
 
-    elseif R.combo ~= N.combo then
+    elseif R1.combo ~= R2.combo then
       return assert(door_probs.combo_diff)
 
     else
@@ -706,11 +711,22 @@ do return 5 end --!!!!!!
   for _,C in ipairs(PLAN.all_conns) do
     for who = 1,2 do
       local S = sel(who == 1, C.src_S, C.dest_S)
-      local D = sel(who == 2, C.src_S, C.dest_S)
+      local N = sel(who == 2, C.src_S, C.dest_S)
       assert(S)
 
       if S.conn_dir then
-        local B = S.border[S.conn_dir]
+        local B  = S.border[S.conn_dir]
+        local B2 = N.border[10 - S.conn_dir]
+
+        -- ensure when going from outside to inside that the arch/door
+        -- is made using the building combo (NOT the outdoor combo)
+        if S.room.outdoor and not N.room.outdoor and B.kind == "arch" then
+          -- swap borders
+          S, N = N, S
+
+          S.border[S.conn_dir] = B
+          N.border[10 - S.conn_dir] = B2
+        end
 
         if B.kind == "arch" and not B.tried_door then
           B.tried_door = true
@@ -721,7 +737,7 @@ do return 5 end --!!!!!!
             B.kind = "lock_door"
             B.lock = S.conn.lock
 
---!!!!        if S.room.outdoor and D.room.outdoor and B.lock.kind == "SWITCH" then
+--!!!!        if S.room.outdoor and N.room.outdoor and B.lock.kind == "SWITCH" then
 --!!!!          B.kind = "bars"
 --!!!!        end
 
@@ -733,6 +749,7 @@ do return 5 end --!!!!!!
             B.kind = "nothing"
           end
         end
+
       end
     end -- for who
   end -- for C
@@ -1027,7 +1044,7 @@ end --]]
 
       if B_kind == "liquid_arch" then
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
-        Build_archway(S, side, z1, z_top, f_tex, w_tex) 
+        Build_archway(S, side, z1, z_top, f_tex, w_tex, w_tex) 
       end
 
       if B_kind == "picture" then
@@ -1047,12 +1064,16 @@ end --]]
         Build_sky_fence(S, side)
       end
 
-      -- FIXME: scenic check should not be here
-      --        [happens because make_scenic() does not fix borders]
-      if B_kind == "arch" and R.kind ~= "scenic" then
+      if B_kind == "arch" then
         local z_top = assert(S.conn and S.conn.conn_h) + 128
 
-        Build_archway(S, side, z1, z_top, f_tex, w_tex) 
+        local N = S:neighbor(side)
+        local o_tex = w_tex
+        if not N.room.outdoor then
+          o_tex = N.w_tex or N.room.combo.wall
+        end
+
+        Build_archway(S, side, z1, z_top, f_tex, w_tex, o_tex) 
       end
 
       if B_kind == "door" and not S.conn.already_made_lock then
@@ -1844,6 +1865,9 @@ function Room_choose_corner_stairs(R)
       return  -- not possible
     end
 
+    -- they look crappy outside
+    if S.room.outdoor then return end
+
     if dir == 2 or dir == 8 then
       
       for other = 4,6,2 do
@@ -2548,6 +2572,9 @@ PLAN.hallway_mode = "few"
 
   Rooms_decide_outdoors()
   Rooms_choose_themes()
+
+  Quest_choose_keys()
+  Quest_add_keys()
 
   Rooms_decide_hallways_II()
   Rooms_reckon_doors()
