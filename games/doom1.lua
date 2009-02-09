@@ -3334,8 +3334,8 @@ function Doom1_get_levels()
 
         theme = "TECH",
 
-        keys = { "kc_red", "kc_blue", "kc_yellow" },
-        switches = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
+        key_list = { "kc_red", "kc_blue", "kc_yellow" },
+        switch_list = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
 
         sky_info = D1_SKY_INFO[episode],
 

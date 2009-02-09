@@ -298,9 +298,9 @@ function Quest_lock_up_arena(arena)
 
     local cost = math.abs(C.src_tvol - C.dest_tvol * 2)
 
----##    if C.src.outdoor and C.dest.outdoor then
----##      cost = cost + 40
----##    end
+    if C.src.outdoor and C.dest.outdoor then
+      cost = cost + 40
+    end
 
     if not C.on_path then
       cost = cost + 10
@@ -582,14 +582,6 @@ function Quest_add_keys()
       R.purpose = "EXIT"
       PLAN.exit_room = R
 
--- TEMP CRUD
-local ex, ey
-repeat
-  ex = rand_irange(R.sx1, R.sx2)
-  ey = rand_irange(R.sy1, R.sy2)
-until SEEDS[ex][ey][1].room == R
-SEEDS[ex][ey][1].is_exit = true
-
     elseif arena.lock.kind == "KEY" then
       R.purpose = arena.lock.kind
       R.key_item = arena.lock.item  -- BLEH!
@@ -718,8 +710,8 @@ function Quest_choose_keys()
 
   table.sort(PLAN.all_locks, function(A,B) return A.distance > B.distance end)
 
-  local use_keys     = shallow_copy(LEVEL.keys or GAME.keys) 
-  local use_switches = shallow_copy(LEVEL.switches or GAME.switches)
+  local use_keys     = shallow_copy(LEVEL.key_list or GAME.key_list) 
+  local use_switches = shallow_copy(LEVEL.switch_list or GAME.switch_list)
 
   rand_shuffle(use_keys)
   rand_shuffle(use_switches)

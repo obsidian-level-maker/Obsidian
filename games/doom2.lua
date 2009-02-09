@@ -1704,8 +1704,8 @@ function Doom2_get_levels()
 
       theme = "TECH",
 
-      keys = { "kc_red", "kc_blue", "kc_yellow" },
-      switches = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
+      key_list = { "kc_red", "kc_blue", "kc_yellow" },
+      switch_list = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
 
       -- allow TNT and Plutonia to override the sky stuff
       sky_info = GAME.sky_info[episode],
