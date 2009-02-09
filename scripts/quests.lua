@@ -745,8 +745,13 @@ function Quest_choose_keys()
   for _,LOCK in ipairs(PLAN.all_locks) do
     if not LOCK.item then
       LOCK.kind = "SWITCH"
-      LOCK.item = use_switches[1 + cur_sw % #use_switches]
-      cur_sw = cur_sw + 1
+
+      if LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
+        LOCK.item = "bar_wood"
+      else
+        LOCK.item = use_switches[1 + cur_sw % #use_switches]
+        cur_sw = cur_sw + 1
+      end
     end
   end
 end

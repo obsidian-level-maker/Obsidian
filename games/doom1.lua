@@ -1251,7 +1251,19 @@ DM_SWITCH_INFOS =
       }
   },
 
-  sw_gray =
+  bar_wood =
+  {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1WOOD", side_w="WOOD9",
+        switch_f="FLAT5_2",
+        x_offset=0, y_offset=64,
+        line_kind=23,
+      }
+  },
+
+  bar_gray =
   {
       prefab = "SWITCH_PILLAR",
       skin =
@@ -1341,7 +1353,18 @@ DM_SWITCH_DOORS =
       }
   },
 
-  sw_gray =
+  bar_wood =
+  {
+      skin =
+      {
+        bar_w="WOOD9",
+        bar_f="FLAT5_2",
+        bar_h=64,
+        line_kind=0,
+      }
+  },
+
+  bar_gray =
   {
       w=128, h=128,
       prefab = "BARS_2",

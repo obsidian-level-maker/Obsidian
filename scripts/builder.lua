@@ -449,7 +449,7 @@ end
 end
 
 
-function Build_lowering_bars(S, side, z1, f_tex, w_tex, tag)
+function Build_lowering_bars(S, side, z1, skin, tag)
 
   local T, long, deep = get_transform_for_seed_side(S, side)
 
@@ -463,9 +463,11 @@ function Build_lowering_bars(S, side, z1, f_tex, w_tex, tag)
 
   local bar_info =
   {
-    t_face = { texture=f_tex },
-    b_face = { texture=f_tex },
-    w_face = { texture=w_tex, peg=true, x_offset=0, y_offset=0 },
+    t_face = { texture=skin.bar_f },
+    b_face = { texture=skin.bar_f },
+    w_face = { texture=skin.bar_w, peg=true,
+               x_offset=skin.x_offset or 0,
+               y_offset=skin.y_offset or 0 },
     sec_tag = tag,
   }
 
@@ -483,7 +485,7 @@ function Build_lowering_bars(S, side, z1, f_tex, w_tex, tag)
       { x=mx-bar_w/2, y=my+bar_w/2 },
       { x=mx-bar_w/2, y=my-bar_w/2 },
     },
-    -2000, z1+64)
+    -2000, z1 + skin.bar_h)
   end
 end
 

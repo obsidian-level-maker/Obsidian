@@ -737,9 +737,10 @@ do return 5 end --!!!!!!
             B.kind = "lock_door"
             B.lock = S.conn.lock
 
---!!!!        if S.room.outdoor and N.room.outdoor and B.lock.kind == "SWITCH" then
---!!!!          B.kind = "bars"
---!!!!        end
+            -- FIXME: smells like a hack!!
+            if B.lock.item and string.sub(B.lock.item, 1, 4) == "bar_" then
+              B.kind = "bars"
+            end
 
           elseif rand_odds(prob) then
             B.kind = "door"
@@ -1102,10 +1103,14 @@ end --]]
          not (S.conn and S.conn.already_made_lock)
       then
         local LOCK = assert(S.border[side].lock)
+        local INFO = GAME.switch_doors["bar_wood"]
+        assert(INFO)
 
+--- TODO: bar_silver, bar_metal
 ---     Build_lowering_bars(S, side, z1, "FLAT23", "SUPPORT2")
 ---     Build_lowering_bars(S, side, z1, "CEIL5_2", "SUPPORT3")
-        Build_lowering_bars(S, side, z1, "FLAT5_2", "WOOD9", LOCK.tag)
+
+        Build_lowering_bars(S, side, z1, INFO.skin, LOCK.tag)
         S.conn.already_made_lock = true
       end
     end -- for side
