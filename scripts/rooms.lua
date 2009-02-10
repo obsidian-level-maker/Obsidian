@@ -331,13 +331,18 @@ end
 
 function Rooms_decide_outdoors()
   local function choose(R)
-    -- FIXME: preference for start room (etc?) to be indoor
-
-    -- !!! FIXME: preference for KEY locked doors not to go
-    --            Outdoor --> Outdoor.
+    -- small preference for start/exit rooms to be indoor
+    if R.purpose and rand_odds(25) then return false end
 
     if R.parent and R.parent.outdoor then return false end
     if R.parent then return rand_odds(5) end
+
+    -- preference for KEY locked doors to have at least one
+    -- indoor room on one side.  60% on each side --> 84% that
+    -- one of the sides will be indoor.
+    if R:has_lock_kind("KEY") and rand_odds(60) then
+      return false
+    end
 
     if R.children then
       if PLAN.sky_mode == "few" then
