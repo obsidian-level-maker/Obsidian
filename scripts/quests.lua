@@ -385,7 +385,7 @@ function Quest_lock_up_arena(arena)
   local LOCK =
   {
     -- kind and item set later!
-    kind = "KEY",
+    kind = "UNSET",
 
     conn = LC,
     tag  = PLAN:alloc_tag(),
@@ -688,7 +688,7 @@ function Quest_key_distances()
 
     -- FIXME: this may be normal, verify!
     gui.printf("WARNING: Quest_key_distances: cannot find locked door")
-    return 22
+    return 12
   end
 
   ---| Quest_key_distances |---
@@ -699,16 +699,27 @@ function Quest_key_distances()
     if A.lock.kind == "EXIT" then
       A.lock.distance = 0
     else
-      A.lock.distance = dist_to_lock(index, A.lock) + gui.random() / 5.0
+      A.lock.distance = 2 + dist_to_lock(index, A.lock) 
     end
-    gui.debugf("  Arena #%d : dist %1.2f\n", index, A.lock.distance)
+    gui.debugf("  Arena #%d : lock_dist %1.1f\n", index, A.lock.distance)
   end
 end
 
 
 function Quest_choose_keys()
 
-  table.sort(PLAN.all_locks, function(A,B) return A.distance > B.distance end)
+  for _,LOCK in ipairs(PLAN.all_locks) do
+    LOCK.kscore = LOCK.distance
+
+    -- prefer not to use KEY doors between two Outside rooms
+    if LOCK.conn and LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
+      LOCK.kscore = 1
+    end
+
+    LOCK.kscore = LOCK.kscore + gui.random() / 5.0
+  end
+
+  table.sort(PLAN.all_locks, function(A,B) return A.kscore > B.kscore end)
 
   local use_keys     = shallow_copy(LEVEL.key_list or GAME.key_list) 
   local use_switches = shallow_copy(LEVEL.switch_list or GAME.switch_list)

@@ -331,18 +331,19 @@ end
 
 function Rooms_decide_outdoors()
   local function choose(R)
-    -- small preference for start/exit rooms to be indoor
-    if R.purpose and rand_odds(25) then return false end
-
     if R.parent and R.parent.outdoor then return false end
     if R.parent then return rand_odds(5) end
 
+--[[ DISABLED -- KEYS/SWITCHES NOT DECIDED YET
     -- preference for KEY locked doors to have at least one
-    -- indoor room on one side.  60% on each side --> 84% that
+    -- indoor room on one side.  50% on each side --> 75% that
     -- one of the sides will be indoor.
-    if R:has_lock_kind("KEY") and rand_odds(60) then
+    if R:has_lock_kind("KEY") and rand_odds(50) then
       return false
     end
+--]]
+
+    if R:has_any_lock() and rand_odds(20) then return false end
 
     if R.children then
       if PLAN.sky_mode == "few" then
@@ -357,10 +358,10 @@ function Rooms_decide_outdoors()
 
     -- room on edge of map?
     if R.sx1 <= 2 or R.sy1 <= 2 or R.sx2 >= SEED_W-1 or R.sy2 >= SEED_H-1 then
-      return rand_odds(27)
+      return rand_odds(30)
     end
 
-    return rand_odds(9)
+    return rand_odds(10)
   end
 
   ---| Rooms_decide_outdoors |---
