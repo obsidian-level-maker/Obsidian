@@ -1791,6 +1791,10 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
          (info.environment == "outdoor" and not R.outdoor)
       then
         -- skip it, wrong environment
+      elseif (info.z_direction == "up"   and #heights >= 2 and heights[1] > heights[2]) or
+             (info.z_direction == "down" and #heights >= 2 and heights[1] < heights[2])
+      then
+        -- skip it, wrong z_direction
       else
         -- TODO: symmetry matching
         infos[name] = info
@@ -2548,7 +2552,7 @@ function Rooms_all_lay_out()
   PLAN.theme = GAME.themes["TECH"] -- FIXME
 
 
-  PLAN.sky_mode = rand_key_by_probs { few=20, some=90, heaps=20 }
+  PLAN.sky_mode = rand_key_by_probs { few=15, some=90, heaps=30 }
   gui.printf("Sky Mode: %s\n", PLAN.sky_mode)
 
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=30 }
