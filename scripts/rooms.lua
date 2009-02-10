@@ -1072,7 +1072,7 @@ end --]]
       end
 
       if B_kind == "arch" then
-        local z_top = assert(S.conn and S.conn.conn_h) + 128
+        local z = assert(S.conn and S.conn.conn_h)
 
         local N = S:neighbor(side)
         local o_tex = w_tex
@@ -1080,13 +1080,13 @@ end --]]
           o_tex = N.w_tex or N.room.combo.wall
         end
 
-        Build_archway(S, side, z1, z_top, f_tex, w_tex, o_tex) 
+        Build_archway(S, side, z, z+128, f_tex, w_tex, o_tex) 
       end
 
       if B_kind == "door" and not S.conn.already_made_lock then
         local INFO = assert(GAME.door_fabs["silver_lit"])
 
-        Build_locked_door(S, side, z1, w_tex, INFO, 0)
+        Build_locked_door(S, side, S.conn.conn_h, w_tex, INFO, 0)
 
         S.conn.already_made_lock = true
       end
@@ -1101,7 +1101,7 @@ end --]]
           INFO = assert(GAME.switch_doors[LOCK.item])
         end
 
-        Build_locked_door(S, side, z1, w_tex, INFO, LOCK.tag)
+        Build_locked_door(S, side, S.conn.conn_h, w_tex, INFO, LOCK.tag)
         S.conn.already_made_lock = true
       end
 
