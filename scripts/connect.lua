@@ -970,6 +970,20 @@ gui.debugf("Failed\n")
     assert(R.c_group == -1)
     
     table.insert(PLAN.scenic_rooms, R)
+
+    -- remove any arches (from connect_seeds)
+
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      for side = 2,8,2 do
+        local S = SEEDS[x][y][1]
+        if S.room == R then
+          local B = S.border[side]
+          if B.kind == "arch" then
+            B.kind = nil
+          end
+        end
+      end
+    end end -- for x, y
   end
 
   local function make_conn_scenic(C)
