@@ -537,7 +537,7 @@ function Plan_SubRooms()
   local id = PLAN.last_id + 1
 
   --                    1  2  3   4   5   6   7   8+
-  local SUB_CHANCES = { 0, 0, 1,  3, 10, 20, 30, 50 }
+  local SUB_CHANCES = { 0, 0, 1,  3,  6, 10, 20, 30 }
   local SUB_HEAPS   = { 0, 0, 6, 20, 40, 60, 75, 90 }
 
   local function can_fit(R, x, y, w, h)
