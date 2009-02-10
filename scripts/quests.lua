@@ -582,6 +582,10 @@ function Quest_add_keys()
       R.purpose = "EXIT"
       PLAN.exit_room = R
 
+      if R.kind == "building" and not R:has_any_lock() and R.svolume < 25 then
+        R.kind = "smallexit"
+      end
+
     elseif arena.lock.kind == "KEY" then
       R.purpose = arena.lock.kind
       R.key_item = arena.lock.item  -- BLEH!

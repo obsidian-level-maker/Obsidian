@@ -373,9 +373,9 @@ function Rooms_decide_outdoors()
     if R.outdoor and R.kind == "building" then
       R.kind = "ground"
     end
-    if R.purpose == "EXIT" and not R.outdoor and not R:has_any_lock() then
-      R.kind = "smallexit"
-    end
+---###    if R.purpose == "EXIT" and not R.outdoor and not R:has_any_lock() then
+---###      R.kind = "smallexit"
+---###    end
   end
 end
 
