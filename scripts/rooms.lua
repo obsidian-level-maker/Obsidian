@@ -1185,6 +1185,25 @@ end --]]
         { x=x1, y=y2 }, { x=x1, y=y1 },
       },
       z2, 4000)
+
+      if R.kind == "hallway" and PLAN.hall_lights then
+        local x_num, y_num = 0,0
+
+        for side = 2,8,2 do
+          local N = S:neighbor(side)
+          if N and N.room == R and N.kind ~= "void" then
+            if side == 2 or side == 8 then
+              y_num = y_num + 1
+            else
+              x_num = x_num + 1
+            end
+          end
+        end
+
+        if x_num == 1 and y_num == 1 then
+          Build_hall_light(S, z2)
+        end
+      end
     end
 
 
@@ -2079,6 +2098,20 @@ function Room_layout_hallway(R)
 
   ---| Room_layout_hallway |---
 
+  local HALL_TEX   = { "BROWN1", "BROWNGRN", "GRAY1", "STARBR2" }
+  local HALL_FLOOR = { "FLAT4", "CEIL5_1", "FLOOR1_1", "FLOOR3_3",  }
+  local HALL_CEIL  = { "FLAT4", "CEIL5_1", "CEIL3_5", "CEIL3_3" }
+
+  if not PLAN.hall_tex then
+    PLAN.hall_tex   = rand_element(HALL_TEX)
+    PLAN.hall_floor = rand_element(HALL_FLOOR)
+    PLAN.hall_ceil  = rand_element(HALL_CEIL)
+
+    PLAN.hall_trim   = rand_odds(50)
+    PLAN.hall_lights = rand_odds(50)
+  end
+
+
   local entry_C = assert(R.entry_conn)
   local h = assert(entry_C.conn_h)
 
@@ -2094,12 +2127,28 @@ function Room_layout_hallway(R)
     fallback()
   end
 
+  local height = 128
+  local is_sky = false
+  if rand_odds(30) then
+    height = 192
+  elseif rand_odds(10) then
+    height = 256
+    is_sky = true
+  end
+
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
     assert(S.room == R)
     if S.kind == "walk" then
       S.floor_h = h
-      S.f_tex = "FLAT4"
+      S.ceil_h = h + height
+
+      S.f_tex = PLAN.hall_floor
+      S.c_tex = PLAN.hall_ceil
+
+      if is_sky then
+        S.c_tex = PARAMS.sky_flat
+      end
     end
   end end -- for x, y
 
@@ -2574,8 +2623,8 @@ function Rooms_all_lay_out()
 --[[
 PLAN.junk_mode = "few"
 PLAN.liquid_mode = "few"  ]]
-PLAN.sky_mode = "heaps"
-PLAN.hallway_mode = "few"
+PLAN.sky_mode = "few"
+PLAN.hallway_mode = "heaps"
 
 ---  Test_room_fabs()
 

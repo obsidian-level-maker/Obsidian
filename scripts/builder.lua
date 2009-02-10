@@ -638,21 +638,23 @@ function Build_detailed_hall(S, side, z1, z2)
   end
 
 
-  transformed_brush2(nil,
-  {
-    t_face = { texture="CEIL5_2" },
-    b_face = { texture="CEIL5_2" },
-    w_face = { texture="METAL" },
-  },
-  get_hall_coords(32), -2000, z1 + 32)
+  if PLAN.hall_trim then
+    transformed_brush2(nil,
+    {
+      t_face = { texture="CEIL5_2" },
+      b_face = { texture="CEIL5_2" },
+      w_face = { texture="METAL" },
+    },
+    get_hall_coords(32), -2000, z1 + 32)
 
-  transformed_brush2(nil,
-  {
-    t_face = { texture="CEIL5_2" },
-    b_face = { texture="CEIL5_2" },
-    w_face = { texture="METAL" },
-  },
-  get_hall_coords(32), z2 - 32, 2000)
+    transformed_brush2(nil,
+    {
+      t_face = { texture="CEIL5_2" },
+      b_face = { texture="CEIL5_2" },
+      w_face = { texture="METAL" },
+    },
+    get_hall_coords(32), z2 - 32, 2000)
+  end
 
 
   transformed_brush2(nil,
@@ -676,7 +678,7 @@ function Build_detailed_hall(S, side, z1, z2)
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
-    w_face = { texture="GRAY7" },
+    w_face = { texture=PLAN.hall_tex or "GRAY7" },
   },
   get_hall_coords(24), -2000, 2000)
 
