@@ -30,8 +30,8 @@ class ROOM
 
   branch_kind : keyword
 
-  symmetry : keyword   -- symmetry of connections, or NIL
-                       -- keywords are "x", "y", "xy", "r", "t"
+  symmetry : keyword   -- symmetry of room, or NIL
+                       -- keywords are "x", "y", "xy"
 
   sx1, sy1, sx2, sy2  -- \ Seed range
   sw, sh, svolume     -- /
@@ -49,11 +49,6 @@ class ROOM
 
   group_id : number  -- traversibility group
 
-  --- layout code only:
-
-  tx1, ty1, tx2, ty2, tw, th  -- Seed range for layouting
-
-  layout_symmetry : keyword  -- can be "none", "x", "y", "xy"
 }
 
 
@@ -689,6 +684,137 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       end
     end
   end -- for C
+end
+
+
+function Rooms_setup_symmetry()
+  -- The 'symmetry' field of each room already has a value
+  -- (from the big-branch connection system).  Here we choose
+  -- whether to keep that, expand it (rare) or discard it.
+  --
+  -- The new value applies to everything made in the room
+  -- (as much as possible) from now on.
+
+  local function check_size(R, sym)
+    if (sym == "x" or sym == "xy") and (R.sw < 2) then return false end
+    if (sym == "y" or sym == "xy") and (R.sh < 2) then return false end
+
+    -- two seeds for each connection
+    local count = #R.conns * 2
+
+    -- one seed for purpose (key/switch/etc)
+    if R.purpose or #R.conns == 1 then
+      count = count + 1
+    end
+
+    -- one seed for each row/column (space for monsters etc)
+    count = count + math.max(R.sw, R.sh)
+
+    if count > R.svolume then
+      return false
+    end
+
+    return true --OK--
+  end
+
+  local function decide_layout_symmetry(R)
+    R.conn_symmetry = R.symmetry
+
+    -- We discard 'R' rotate and 'T' transpose symmetry (for now...)
+    if not (R.symmetry == "x" or R.symmetry == "y" or R.symmetry == "xy") then
+      R.symmetry = nil
+    end
+
+    local SYM_LIST = { "x", "y", "xy" }
+
+    local syms  = { "none" }
+    local probs = { 100 }    -- FIXME !!!! PLAN.symmetry_mode
+
+    for _,sym in ipairs(SYM_LIST) do
+      if check_size(R, sym) then
+        local prob = 0
+
+        -- check if possible
+
+        if R.symmetry == sym then
+          prob = sel(sym == "xy", 6000, 400)
+
+        elseif R.symmetry == "xy" then
+          -- TODO: take width/height into account
+          prob = 100
+
+        elseif sym == "xy" and not R.symmetry then
+          -- never upgrade from NONE --> XY symmetry
+          
+        elseif sym == "xy" then
+          prob = 20
+
+        else
+          -- TODO: take width/height into account
+          prob = 40
+        end
+
+        if prob > 0 then
+          table.insert(syms, sym)
+          table.insert(probs, prob)
+        end
+      end
+    end
+
+    local index = rand_index_by_probs(probs)
+
+    R.symmetry = sel(index > 1, syms[index], nil)
+
+    gui.debugf("Final symmetry @ %s --> %s\n", R:tostr(),
+               tostring(R.symmetry))
+  end
+
+  local function mirror_horizontally(R)
+    assert(R.sw >= 2)
+
+    R.mirror_x = true
+
+    for y = R.sy1, R.sy2 do
+      for dx = 0, int((R.sw-2) / 2) do
+        local LS = SEEDS[R.sx1 + dx][y][1]
+        local RS = SEEDS[R.sx2 - dx][y][1]
+
+        LS.x_peer = RS
+        RS.x_peer = LS
+      end
+    end
+  end
+
+  local function mirror_vertically(R)
+    assert(R.sh >= 2)
+
+    R.mirror_y = true
+
+    for x = R.sx1, R.sx2 do
+      for dy = 0, int((R.sh-2) / 2) do
+        local BS = SEEDS[x][R.sy1 + dy][1]
+        local TS = SEEDS[x][R.sy2 - dy][1]
+
+        BS.y_peer = TS
+        TS.y_peer = BS
+      end
+    end
+  end
+
+
+  --| Rooms_setup_symmetry |--
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    decide_layout_symmetry(R)
+
+    if R.symmetry == "x" or R.symmetry == "xy" then
+      mirror_horizontally(R)
+    end
+
+    if R.symmetry == "y" or R.symmetry == "xy" then
+      mirror_vertically(R)
+    end
+  end
 end
 
 
@@ -2636,6 +2762,7 @@ PLAN.hallway_mode = "heaps"
   Quest_add_keys()
 
   Rooms_decide_hallways_II()
+  Rooms_setup_symmetry()
   Rooms_reckon_doors()
 
   Seed_dump_fabs()

@@ -91,8 +91,8 @@ CONN_CLASS =
 --   "x"  mirrored horizontally (i.e. left side = right side)
 --   "y"  mirrored vertically
 --   "xy" mirrored both horizontally and vertically
---   "r"  rotation symmetry (180 degrees)
---   "t"  transpose symmetry (square rooms only)
+--   "R"  rotation symmetry (180 degrees)
+--   "T"  transpose symmetry (square rooms only)
 --
 
 
@@ -495,13 +495,13 @@ BIG_BRANCH_KINDS =
   PA = { conn=2, prob= 8, func=branch_gen_PA, symmetry="y" },
 
   -- pass through, rotation symmetry
-  PR = { conn=2, prob=50, func=branch_gen_PR, symmetry="r" },
+  PR = { conn=2, prob=50, func=branch_gen_PR, symmetry="R" },
 
   -- pass through, garden variety
   PX = { conn=2, prob= 3, func=branch_gen_PX },
 
   -- L shape for square room (transpose symmetrical)
-  LS = { conn=2, prob=100, func=branch_gen_LS, symmetry="t" },
+  LS = { conn=2, prob=100, func=branch_gen_LS, symmetry="T" },
 
   -- L shape, garden variety
   LX = { conn=2, prob= 3, func=branch_gen_LX },
@@ -542,7 +542,7 @@ BIG_BRANCH_KINDS =
   HT = { conn=4, prob= 60, func=branch_gen_HT, symmetry="x" },
 
   -- Swastika shape
-  SW = { conn=4, prob= 100, func=branch_gen_SW, symmetry="r" },
+  SW = { conn=4, prob= 100, func=branch_gen_SW, symmetry="R" },
 
   -- F shape with two exits on each wall
   F4 = { conn=4, prob=  5, func=branch_gen_F4 },

@@ -229,7 +229,7 @@ HEIGHT_FABS =
       "21612", "21712",
     },
 
-    -- symmetry = "r",
+    -- symmetry = "R",
   },
 
   M2 =
@@ -729,7 +729,7 @@ HEIGHT_FABS =
     subs =
     {
       { height=1, match="one" },
-      { height=1, match="any" },
+      { height=1, match="any", sym_fill=1 },
     },
 
     symmetry = "x",
