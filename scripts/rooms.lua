@@ -368,9 +368,6 @@ function Rooms_decide_outdoors()
     if R.outdoor and R.kind == "building" then
       R.kind = "ground"
     end
----###    if R.purpose == "EXIT" and not R.outdoor and not R:has_any_lock() then
----###      R.kind = "smallexit"
----###    end
   end
 end
 
@@ -1238,6 +1235,9 @@ end --]]
         end
 
         Build_archway(S, side, z, z+128, f_tex, w_tex, o_tex) 
+
+        assert(not S.conn.already_made_lock)
+        S.conn.already_made_lock = true
       end
 
       if B_kind == "door" then
@@ -1286,7 +1286,7 @@ end --]]
 
         Build_lowering_bars(S, side, z1, INFO.skin, LOCK.tag)
 
-        assert(S.conn and not S.conn.already_made_lock)
+        assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
       end
     end -- for side

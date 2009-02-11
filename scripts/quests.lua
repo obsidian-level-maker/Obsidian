@@ -574,6 +574,21 @@ end
 
 function Quest_add_keys()
 
+  local function make_small_exit(R)
+    R.kind = "smallexit"
+
+    local C = assert(R.conns[1])
+
+    local S = C.src_S
+    local T = C.dest_S
+
+    local B1 = S.border[S.conn_dir]
+    local B2 = T.border[T.conn_dir]
+
+    B1.kind = "straddle"
+    B2.kind = "straddle"
+  end
+
   for _,arena in ipairs(PLAN.all_arenas) do
     local R = arena.target
     assert(R)
@@ -583,7 +598,7 @@ function Quest_add_keys()
       PLAN.exit_room = R
 
       if R.kind == "building" and not R:has_any_lock() and R.svolume < 25 then
-        R.kind = "smallexit"
+        make_small_exit(R)
       end
 
     elseif arena.lock.kind == "KEY" then

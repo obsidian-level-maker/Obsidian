@@ -2048,6 +2048,7 @@ function Build_small_exit(R, item_name)
   -2000, 2000)
 
 
+  assert(not C.already_made_lock)
   C.already_made_lock = true
 
   mark_room_as_done(R)
