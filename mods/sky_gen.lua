@@ -20,9 +20,9 @@
 function Doom_generate_skies()
   local sky_list =  -- FIXME !!!! game specific
   {
-    { patch="RSKY1", test=0xc4 },
-    { patch="RSKY2", test=0 },
-    { patch="RSKY3", test=0xb8 },
+    { patch="RSKY1" },
+    { patch="RSKY2" },
+    { patch="RSKY3" },
   }
 
   local STAR_COLS =
@@ -70,14 +70,29 @@ function Doom_generate_skies()
     47, 45, 43, 41, 39, 37, 35, 33
   }
 
-  gui.set_colormap(1, GREY_CLOUDS)
-  gui.set_colormap(2, BROWN_HILLS)
+
+  local back_gs = { "stars", GREY_CLOUDS, BLUE_CLOUDS, HELL_CLOUDS }
+  local fore_gs = { "none",  BROWN_HILLS, GREEN_HILLS, HELL_HILLS  }
+
+  rand_shuffle(back_gs)
+  rand_shuffle(fore_gs)
 
   for num,sky in ipairs(sky_list) do
-    gui.fsky_create(256, 128, sky.test)
---  gui.fskt_add_stars  { seed=num+9, colmap=2 }
-    gui.fsky_add_clouds { seed=num+1, colmap=1, squish=2.0 }
-    gui.fsky_add_hills  { seed=num+5, colmap=2, max_h=0.6 }
+    gui.fsky_create(256, 128, 0)
+
+    if back_gs[num] == "stars" then
+      gui.set_colormap(1, STAR_COLS)
+      gui.fsky_add_stars  { seed=num+9, colmap=1 }
+    else
+      gui.set_colormap(1, back_gs[num])
+      gui.fsky_add_clouds { seed=num+1, colmap=1, squish=2.0 }
+    end
+
+    if fore_gs[num] ~= "none" then
+      gui.set_colormap(2, fore_gs[num])
+      gui.fsky_add_hills  { seed=num+5, colmap=2, max_h=0.6 }
+    end
+
     gui.fsky_write(sky.patch)
   end
 end
