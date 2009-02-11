@@ -94,9 +94,13 @@ function transformed_brush2(T, info, coords, z1, z2)
     end
   end
 
--- for _,C in ipairs(coords) do
---  C.x, C.y = C.x-5001, C.y
--- end
+  --[[
+  gui.debugf("{\n")
+  for _,C in ipairs(coords) do
+    gui.debugf("  (%1.3f %1.3f)\n", C.x, C.y)
+  end
+  gui.debugf("}\n")
+  --]]
 
   gui.add_brush(info, coords, z1, z2)
 end
@@ -287,6 +291,8 @@ function Build_archway(S, side, z1, z2, f_tex, w_tex, o_tex)
 
   transformed_brush2(T, arch_info, frame_coords, z2, 2000)
 
+
+  assert(deep > 17 or N_deep > 17)
 
   local break_tex = w_tex
   if o_tex ~= w_tex then break_tex = "LITE5" end
@@ -1604,9 +1610,9 @@ function mark_room_as_done(R)
     if S.room == R then
       S.sides_only = true
 
-      for dir = 2,8,2 do
-        S.thick[dir] = 16
-      end
+---???      for dir = 2,8,2 do
+---???        S.thick[dir] = 16
+---???      end
     end
   end end
 end
