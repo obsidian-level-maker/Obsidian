@@ -96,6 +96,23 @@ ROOM_CLASS =
     if y < self.ty1 or y > self.ty2 then return false end
     return true
   end,
+
+  conn_area = function(self)
+    local lx, ly = 999,999
+    local hx, hy = 0,0
+
+    for _,C in ipairs(self.conns) do
+      local S = C:seed(self)
+      lx = math.min(lx, S.sx)
+      ly = math.min(ly, S.sy)
+      hx = math.max(hx, S.sx)
+      hy = math.max(hy, S.sy)
+    end
+
+    assert(lx <= hx and ly <= hy)
+
+    return lx,ly, hx,hy
+  end,
 }
 
 

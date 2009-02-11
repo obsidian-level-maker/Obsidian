@@ -456,24 +456,6 @@ function Rooms_choose_themes()
 end
 
 
-function calc_conn_area(R)
-  local lx, ly = 999,999
-  local hx, hy = 0,0
-
-  for _,C in ipairs(R.conns) do
-    local S = C:seed(R)
-    lx = math.min(lx, S.sx)
-    ly = math.min(ly, S.sy)
-    hx = math.max(hx, S.sx)
-    hy = math.max(hy, S.sy)
-  end
-
-  assert(lx <= hx and ly <= hy)
-
-  return lx,ly, hx,hy
-end
-
-
 function dump_layout(R)
 
   local function outside_seed(x, y)
@@ -2265,6 +2247,18 @@ end
 
 function Room_layout_hallway(R)
 
+  local tx1,ty1, tx2,ty2 = R:conn_area()
+  local tw = tx2 - tx1 + 1
+  local th = ty2 - ty1 + 1
+
+  local function T_fill()
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      if x < tx1 or x > tx2 or y < ty1 or y > ty2 then
+        SEEDS[x][y][1].kind = "void"
+      end
+    end end -- for x, y
+  end
+
   local function make_O()
     for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
       local S = SEEDS[x][y][1]
@@ -2279,23 +2273,46 @@ function Room_layout_hallway(R)
     local S1 = C1:seed(R)
     local S2 = C2:seed(R)
 
-    local x1 = math.min(S1.sx, S2.sx)
-    local y1 = math.min(S1.sy, S2.sy)
-    local x2 = math.max(S1.sx, S2.sx)
-    local y2 = math.max(S1.sy, S2.sy)
+    if rand_odds(50) then S1,S2 = S2,S1 end
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      if x < x1 or x > x2 or y < y1 or y > y2 or
+      if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
          not (x == S1.sx or y == S2.sy)
       then
-        S.kind = "void"
+        SEEDS[x][y][1].kind = "void"
       end
-   end end -- for x, y
+    end end -- for x, y
   end
 
-  local function fallback()
-    error("No fallback!")
+  local function criss_cross()
+    -- block out seeds that don't "trace" from a connection
+    local used_x = {}
+    local used_y = {}
+
+    for _,C in ipairs(R.conns) do
+      local S = C:seed(R)
+      if is_vert(S.conn_dir) then
+        used_x[S.sx] = 1
+      else
+        used_y[S.sy] = 1
+      end
+    end
+
+    -- all connections are parallel => fail
+    if table_empty(used_x) or table_empty(used_y) then
+      make_O()
+      return
+    end
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
+         not (used_x[x] or used_y[y])
+      then
+        SEEDS[x][y][1].kind = "void"
+      end
+    end end -- for x, y
+
+    return true
   end
 
 
@@ -2318,17 +2335,26 @@ function Room_layout_hallway(R)
   local entry_C = assert(R.entry_conn)
   local h = assert(entry_C.conn_h)
 
-  local tw, th = R.sw, R.sh
+  local O_CHANCES = { 0, 10, 40, 70 }
+  local o_prob = O_CHANCES[math.min(4, #R.conns)]
 
-  -- FIXME: SHAPES !!!!!!
+  -- FIXME: more shapes (U, S)
 
-  if tw >= 1 and th >= 1 and (#R.conns >= 3 or rand_odds(10)) then
+  gui.debugf("Hall conn area: (%d,%d) .. (%d,%d)\n", tx1,ty1, tx2,ty2)
+
+  if R.sw >= 3 and R.sh >= 3 and rand_odds(o_prob) then
     make_O()
+
+  elseif tw == 1 or th == 1 then
+    T_fill()
+
   elseif #R.conns == 2 then
     make_L()
+
   else
-    fallback()
+    criss_cross()
   end
+
 
   local height = 128
   local is_sky = false
