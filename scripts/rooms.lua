@@ -819,21 +819,33 @@ end
 
 
 function Rooms_reckon_doors()
+  local DEFAULT_PROBS = {}
+
   local function door_chance(R1, R2)
-
-do return 5 end --!!!!!!
-
     local door_probs = PLAN.theme.door_probs or
-                       GAME.door_probs
+                       GAME.door_probs or
+                       DEFAULT_PROBS
 
-    if (not R1.outdoor) ~= (not R2.outdoor) then
-      return assert(door_probs.out_diff)
+    if R1.outdoor and R2.outdoor then
+      return door_probs.out_both or 0
+
+    elseif R1.outdoor or R2.outdoor then
+      return door_probs.out_diff or 80
+
+    elseif R1.kind == "stairwell" or R2.kind == "stairwell" then
+      return door_probs.stairwell or 1
+
+    elseif R1.kind == "hallway" and R2.kind == "hallway" then
+      return door_probs.hall_both or 2
+
+    elseif R1.kind == "hallway" or R2.kind == "hallway" then
+      return door_probs.hall_diff or 60
 
     elseif R1.combo ~= R2.combo then
-      return assert(door_probs.combo_diff)
+      return door_probs.combo_diff or 40
 
     else
-      return assert(door_probs.normal)
+      return door_probs.normal or 20
     end
   end
 

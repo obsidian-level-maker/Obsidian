@@ -3552,8 +3552,8 @@ function Doom_common_setup()
   GAME.diff_probs = { [0]=20, [16]=20, [32]=80, [64]=60, [96]=20 }
   GAME.bump_probs = { [0]=40, [16]=20, [32]=20, [64]=10 }
 
-  GAME.door_probs   = { out_diff=75, combo_diff=50, normal=15 }
-  GAME.window_probs = { out_diff=75, combo_diff=60, normal=35 }
+---  GAME.door_probs   = { out_diff=77, combo_diff=33, normal=11 }
+---  GAME.window_probs = { out_diff=75, combo_diff=60, normal=35 }
 
   GAME.hallway_probs = { 20, 30, 41, 53, 66 }
   GAME.shack_prob    = 25
