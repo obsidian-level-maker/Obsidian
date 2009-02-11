@@ -314,20 +314,20 @@ function Build_archway(S, side, z1, z2, f_tex, w_tex, o_tex)
 end
 
 
-function Build_locked_door(S, side, z1, w_tex, info, tag)
+function Build_locked_door(S, side, z1, w_tex, o_tex, info, tag)
 
   tag2 = nil  -- FIXME !!!
 
   local N = S:neighbor(side)
   assert(N)
 
-  local o_tex = w_tex
-
-  if (S.room.outdoor and not N.room.outdoor) or
-     (S.room.kind == "hallway" and N.room.kind ~= "hallway" and not N.room.outdoor) then
-    o_tex = N.room.combo.wall
-    w_tex = o_tex
-  end
+---##  local o_tex = w_tex
+---##
+---##  if (S.room.outdoor and not N.room.outdoor) or
+---##     (S.room.kind == "hallway" and N.room.kind ~= "hallway" and not N.room.outdoor) then
+---##    o_tex = N.room.combo.wall
+---##    w_tex = o_tex
+---##  end
 
 
   local DY = 24

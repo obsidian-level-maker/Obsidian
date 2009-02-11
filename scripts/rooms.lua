@@ -875,7 +875,10 @@ function Rooms_reckon_doors()
 
         -- ensure when going from outside to inside that the arch/door
         -- is made using the building combo (NOT the outdoor combo)
-        if S.room.outdoor and not N.room.outdoor and B.kind == "arch" then
+        if B.kind == "arch" and
+           ((S.room.outdoor and not N.room.outdoor) or
+            (S.room == N.room.parent))
+        then
           -- swap borders
           S, N = N, S
 
@@ -952,7 +955,12 @@ function Rooms_border_up()
         S.border[side].kind = "nothing"
       end
 
-    else
+    else -- R1 indoor
+
+      if R2.parent == R1 and not R2.outdoor then
+        S.border[side].kind = "nothing"
+        return
+      end
 
       S.border[side].kind = "wall"
       S.thick[side] = 24
@@ -1225,22 +1233,32 @@ end --]]
 
         local N = S:neighbor(side)
         local o_tex = w_tex
-        if not N.room.outdoor then
+        if not N.room.outdoor and N.room ~= R.parent then
           o_tex = N.w_tex or N.room.combo.wall
         end
 
         Build_archway(S, side, z, z+128, f_tex, w_tex, o_tex) 
       end
 
-      if B_kind == "door" and not S.conn.already_made_lock then
+      if B_kind == "door" then
+        local z = assert(S.conn and S.conn.conn_h)
         local INFO = assert(GAME.door_fabs["silver_lit"])
 
-        Build_locked_door(S, side, S.conn.conn_h, w_tex, INFO, 0)
+        local N = S:neighbor(side)
+        local o_tex = w_tex
+        if not N.room.outdoor and N.room ~= R.parent then
+          o_tex = N.w_tex or N.room.combo.wall
+        end
 
+        Build_locked_door(S, side, z, w_tex, o_tex, INFO, 0)
+
+        assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
       end
 
-      if B_kind == "lock_door" and not S.conn.already_made_lock then
+      if B_kind == "lock_door" then
+        local z = assert(S.conn and S.conn.conn_h)
+
         local LOCK = assert(S.border[side].lock)
         local INFO
         if LOCK.kind == "KEY" then
@@ -1250,17 +1268,25 @@ end --]]
           INFO = assert(GAME.switch_doors[LOCK.item])
         end
 
-        Build_locked_door(S, side, S.conn.conn_h, w_tex, INFO, LOCK.tag)
+        local N = S:neighbor(side)
+        local o_tex = w_tex
+        if not N.room.outdoor and N.room ~= R.parent then
+          o_tex = N.w_tex or N.room.combo.wall
+        end
+
+        Build_locked_door(S, side, S.conn.conn_h, w_tex, o_tex, INFO, LOCK.tag)
+
+        assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
       end
 
-      if B_kind == "bars" and
-         not (S.conn and S.conn.already_made_lock)
-      then
+      if B_kind == "bars" then
         local LOCK = assert(S.border[side].lock)
         local INFO = assert(GAME.switch_doors[LOCK.item])
 
         Build_lowering_bars(S, side, z1, INFO.skin, LOCK.tag)
+
+        assert(S.conn and not S.conn.already_made_lock)
         S.conn.already_made_lock = true
       end
     end -- for side
