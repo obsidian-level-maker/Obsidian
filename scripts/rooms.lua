@@ -1693,12 +1693,26 @@ gui.debugf("eval_fab...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table
 
     T.has_focus = false
 
+    -- check symmetry
+    local info_sym = T.info.symmetry
+    if info_sym == "R" then info_sym = nil end
+    if T.transpose then
+          if info_sym == "x" then info_sym = "y"
+      elseif info_sym == "y" then info_sym = "x"
+      end
+    end
+
+    if not (not R.symmetry or R.symmetry == info_sym or info_sym == "xy") then
+gui.debugf("SYMMETRY MISMATCH (%s ~= %s\n", R.symmetry or "NONE", info_sym or "NONE")
+      return -1
+    end
+
     -- check if enough heights are available
     if T.info.subs then
       for _,sub in ipairs(T.info.subs) do
         if (sub.height + 1) > #heights then
 gui.debugf("NOT ENOUGH HEIGHTS\n")
-return -1 end
+return -2 end
       end
     end
 
@@ -1720,7 +1734,7 @@ return -1 end
       if (S.conn or S.pseudo_conn or S.must_walk) then
         if not plain_walk(ch) then
 gui.debugf("CONN no have PLAIN WALK\n")
-          return -1
+          return -3
         end
 
         if is_digit(ch) then
@@ -1738,16 +1752,16 @@ gui.debugf("CONN no have PLAIN WALK\n")
     -- for top-level pattern we require focus seed to hit a '.'
     if is_top and not T.has_focus then
 gui.debugf("FOCUS not touch dot\n");
-      return -1
+      return -4
     end
 
     -- check sub-area matches
     if T.info.subs then
       for s_idx,sub in ipairs(T.info.subs) do
         if sub.match == "one"  and not matches[s_idx] and
-           not (R.kind == "purpose") then return -1 end
+           not (R.kind == "purpose") then return -5 end
 
-        if sub.match == "none" and matches[s_idx] then return -1 end
+        if sub.match == "none" and matches[s_idx] then return -5 end
 
         if sub.match == "any" and matches[s_idx] then
           score = score + 100
@@ -1953,18 +1967,33 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
   end
 
 
+  local function can_use_fab(info)
+    if (info.environment == "indoor"  and R.outdoor) or
+       (info.environment == "outdoor" and not R.outdoor)
+    then
+      return false -- wrong environment
+    end
+
+    if (info.z_direction == "up"   and (#heights < 2 or (heights[1] > heights[2]))) or
+       (info.z_direction == "down" and (#heights < 2 or (heights[1] < heights[2])))
+    then
+      return false -- wrong z_direction
+    end
+
+    -- enough symmetry?
+    -- [NOTE: because of transposing, treat "x" == "y" here]
+    if not R.symmetry then return true end
+    if info.symmetry == "xy" then return true end
+
+    if R.symmetry == "xy" then return false end
+    if not info.symmetry or info.symmetry == "R" then return false end
+
+    return true --OK--
+  end
+
   local function add_fab_list(probs, infos, fabs, mul)
     for name,info in pairs(fabs) do
-      if (info.environment == "indoor"  and R.outdoor) or
-         (info.environment == "outdoor" and not R.outdoor)
-      then
-        -- skip it, wrong environment
-      elseif (info.z_direction == "up"   and #heights >= 2 and heights[1] > heights[2]) or
-             (info.z_direction == "down" and #heights >= 2 and heights[1] < heights[2])
-      then
-        -- skip it, wrong z_direction
-      else
-        -- TODO: symmetry matching
+      if can_use_fab(info) then
         infos[name] = info
         probs[name] = (info.prob or 50) * mul
       end
@@ -1972,7 +2001,6 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
   end
 
   local function do_try_divide()
-
     if R.children then return false end
 
     assert(R.kind ~= "hallway")
@@ -2777,7 +2805,7 @@ PLAN.junk_mode = "few"
 PLAN.liquid_mode = "few"
 PLAN.sky_mode = "few"
 PLAN.hallway_mode = "heaps" ]]
-PLAN.symmetry_mode = "some"
+PLAN.symmetry_mode = "heaps"
 
 ---  Test_room_fabs()
 
