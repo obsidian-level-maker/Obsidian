@@ -58,16 +58,11 @@ CONN_CLASS =
   end,
 
   tostr = function(self)
-    if self.conn_h then
-      return string.format("CONN%s[%d,%d -> %d,%d h:%s]",
-             sel(self.lock, "-LOCK", ""),
-             self.src.sx1, self.src.sy1, self.dest.sx1, self.dest.sy1,
-             self.conn_h)
-    else
-      return string.format("CONN%s[%d,%d -> %d,%d]",
-             sel(self.lock, "-LOCK", ""),
-             self.src.sx1, self.src.sy1, self.dest.sx1, self.dest.sy1)
-    end
+    return string.format("CONN [%d,%d -> %d,%d %sh:%s]",
+           self.src_S.sx,  self.src_S.sy,
+           self.dest_S.sx, self.dest_S.sy,
+           sel(self.lock, "LOCK ", ""),
+           tostring(self.conn_h))
   end,
 }
 
@@ -672,8 +667,8 @@ function Connect_Rooms()
   end
 
   local function connect_seeds(S, T, dir)
-    assert(not (S.room and S.room.kind == "scenic"))
-    assert(not (T.room and T.room.kind == "scenic"))
+    assert(S.room and not (S.room.kind == "scenic"))
+    assert(T.room and not (T.room.kind == "scenic"))
 
     S.border[dir].kind    = "arch"
     T.border[10-dir].kind = "straddle"
@@ -681,9 +676,9 @@ function Connect_Rooms()
     S.thick[dir] = 24
     T.thick[10-dir] = 24
 
-gui.debugf("connect_seeds R(%s,%s) S(%d,%d) grp:%d --> R(%s,%s) S(%d,%d) grp:%d\n",
-S.room.sx1,S.room.sy1, S.sx,S.sy, S.room.c_group,
-T.room.sx1,T.room.sy1, T.sx,T.sy, T.room.c_group)
+gui.debugf("connect_seeds S(%d,%d) ROOM_%d grp:%d --> S(%d,%d) ROOM_%d grp:%d\n",
+S.sx,S.sy, S.room.id, S.room.c_group,
+T.sx,T.sy, T.room.id, T.room.c_group)
 
     merge_groups(S.room.c_group, T.room.c_group)
 
