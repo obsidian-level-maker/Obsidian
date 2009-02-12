@@ -1992,6 +1992,12 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
       return false -- wrong z_direction
     end
 
+    if (info.level == "top" and not is_top) or
+       (info.level == "sub" and is_top)
+    then
+      return false -- wrong level
+    end
+
     -- enough symmetry?
     -- [NOTE: because of transposing, treat "x" == "y" here]
     if not R.symmetry then return true end
