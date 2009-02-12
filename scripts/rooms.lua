@@ -2836,7 +2836,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
   if R.kind == "smallexit" then
-    Build_small_exit(R, "2011")
+    local item = tostring(GAME.things["medikit"].id)
+    Build_small_exit(R, item)
     return
   end
 

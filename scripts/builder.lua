@@ -34,6 +34,37 @@ class TRANSFORM
 }
 --]]
 
+function transformed_coord(T, x, y)
+
+  if not T then T = {} end
+
+  -- handle mirroring first
+  if T.mirror_x then
+    x = T.mirror_x * 2 - x
+  end
+
+  if T.mirror_y then
+    y = T.mirror_y * 2 - y
+  end
+
+  -- handle rotation
+  if T.rotate and T.rotate ~= 0 then
+    local cos_R = math.cos(T.rotate * math.pi / 180.0)
+    local sin_R = math.sin(T.rotate * math.pi / 180.0)
+
+    x, y = x * cos_R - y * sin_R, y * cos_R + x * sin_R
+  end
+
+  -- handle translation last
+  if T.dx or T.dy then
+    x = x + (T.dx or 0)
+    y = y + (T.dy or 0)
+  end
+
+  return x, y
+end
+
+
 function transformed_brush2(T, info, coords, z1, z2)
 
   if not T then T = {} end
@@ -1902,37 +1933,37 @@ function Build_small_exit(R, item_name)
 
   transformed_brush2(DT, out_info,
   {
-    { x=long, y=0 },
-    { x=long, y=48 },
-    { x=0, y=48 },
-    { x=0, y=0 },
+    { x=long-8, y=0 },
+    { x=long-8, y=48 },
+    { x=8, y=48 },
+    { x=8, y=0 },
   },
   -2000, f_h)
 
   transformed_brush2(DT, out_info,
   {
-    { x=long, y=-24 },
-    { x=long, y=48 },
-    { x=0, y=48 },
-    { x=0, y=-24 },
+    { x=long-8, y=-24 },
+    { x=long-8, y=48 },
+    { x=8, y=48 },
+    { x=8, y=-24 },
   },
   c_h, 2000)
 
   transformed_brush2(DT, inner_info,
   {
-    { x=long, y=48 },
-    { x=long, y=long },
-    { x=0, y=long },
-    { x=0, y=48 },
+    { x=long-8, y=48 },
+    { x=long-8, y=long-8 },
+    { x=8, y=long-8 },
+    { x=8, y=48 },
   },
   -2000, f_h)
 
   transformed_brush2(DT, inner_info,
   {
-    { x=long, y=48 },
-    { x=long, y=long },
-    { x=0, y=long },
-    { x=0, y=48 },
+    { x=long-8, y=48 },
+    { x=long-8, y=long-8 },
+    { x=8, y=long-8 },
+    { x=8, y=48 },
   },
   c_h, 2000)
 
@@ -1940,8 +1971,8 @@ function Build_small_exit(R, item_name)
   S.thick[side] = 80
   S.thick[10 - side] = 32
 
-  S.thick[rotate_cw90(side)] = 16
-  S.thick[rotate_ccw90(side)] = 16
+  S.thick[rotate_cw90(side)]  = 32
+  S.thick[rotate_ccw90(side)] = 32
 
 
   transformed_brush2(nil, inner_info, get_wall_coords(S, rotate_cw90(side)),  -2000, 2000)
@@ -1989,26 +2020,26 @@ function Build_small_exit(R, item_name)
 
   local key_tex = "LITE5"
 
-  if C.lock then
-    key_tex = "DOORBLU" -- !!!!!! FIXME
-  end
+  assert(not C.lock)
+---##  if C.lock then
+---##    key_tex = "DOORBLU"
+---##  end
 
   for pass = 1,2 do
     if pass == 2 then DT.mirror_x = mx end
 
     transformed_brush2(DT, inner_info,
     {
+      { x=0,     y=80,  w_face=out_face },
       { x=0,     y=-24, w_face=out_face },
       { x=mx-96, y=-24, w_face=out_face },
       { x=mx-32, y=32,  w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
       { x=mx-32, y=48,  w_face={ texture="DOORTRAK", peg=true } },
       { x=mx-32, y=64,  w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
       { x=mx-32, y=80  },
-      { x=0,     y=80  },
     },
     -2000, 2000)
 
--- [[
     transformed_brush2(DT, exit_info,
     {
       { x=mx-68, y= -8 },
@@ -2017,7 +2048,6 @@ function Build_small_exit(R, item_name)
       { x=mx-40, y=  8 },
     },
     c_h-16, 2000)
---]]
   end
 
 
@@ -2055,7 +2085,8 @@ function Build_small_exit(R, item_name)
 
 
   if item_name then
-    gui.add_entity(DT.dx + long/2, DT.dy + long/2, f_h+25, { name=item_name })
+    local ex, ey = transformed_coord(WT, mx, 96)
+    gui.add_entity(ex, ey, f_h+25, { name=item_name })
   end
 end
 
