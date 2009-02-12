@@ -764,33 +764,29 @@ function Rooms_setup_symmetry()
   end
 
   local function mirror_horizontally(R)
-    assert(R.sw >= 2)
+    if R.sw >= 2 then
+      for y = R.sy1, R.sy2 do
+        for dx = 0, int((R.sw-2) / 2) do
+          local LS = SEEDS[R.sx1 + dx][y][1]
+          local RS = SEEDS[R.sx2 - dx][y][1]
 
-    R.mirror_x = true
-
-    for y = R.sy1, R.sy2 do
-      for dx = 0, int((R.sw-2) / 2) do
-        local LS = SEEDS[R.sx1 + dx][y][1]
-        local RS = SEEDS[R.sx2 - dx][y][1]
-
-        LS.x_peer = RS
-        RS.x_peer = LS
+          LS.x_peer = RS
+          RS.x_peer = LS
+        end
       end
     end
   end
 
   local function mirror_vertically(R)
-    assert(R.sh >= 2)
+    if R.sh >= 2 then
+      for x = R.sx1, R.sx2 do
+        for dy = 0, int((R.sh-2) / 2) do
+          local BS = SEEDS[x][R.sy1 + dy][1]
+          local TS = SEEDS[x][R.sy2 - dy][1]
 
-    R.mirror_y = true
-
-    for x = R.sx1, R.sx2 do
-      for dy = 0, int((R.sh-2) / 2) do
-        local BS = SEEDS[x][R.sy1 + dy][1]
-        local TS = SEEDS[x][R.sy2 - dy][1]
-
-        BS.y_peer = TS
-        TS.y_peer = BS
+          BS.y_peer = TS
+          TS.y_peer = BS
+        end
       end
     end
   end
@@ -802,12 +798,16 @@ function Rooms_setup_symmetry()
     decide_layout_symmetry(R)
 
     if R.symmetry == "x" or R.symmetry == "xy" then
-      mirror_horizontally(R)
+      R.mirror_x = true
     end
 
     if R.symmetry == "y" or R.symmetry == "xy" then
-      mirror_vertically(R)
+      R.mirror_y = true
     end
+
+    -- we ALWAYS setup the x_peer / y_peer refs
+    mirror_horizontally(R)
+    mirror_vertically(R)
   end
 end
 
@@ -1518,7 +1518,7 @@ end --]]
 end
 
 
-function Room_try_divide(R, is_top, div_lev, recurse, area, heights, f_texs)
+function Room_try_divide(R, is_top, div_lev, recurse, req_sym, area, heights, f_texs)
   -- find a usable pattern in the HEIGHT_FABS table and
   -- apply it to the room.
 
@@ -1689,15 +1689,15 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn
-      if C.conn_h then assert(C.conn_h == h) end
+      if C.conn_h then assert(C.conn_h == S.floor_h) end
 
-      C.conn_h = h
+      C.conn_h = S.floor_h
       C.conn_ftex = f_tex
     end
   end
 
-  local function eval_fab(T)
 
+  local function eval_fab(T)
 gui.debugf("eval_fab...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table_to_str(T.expanded,3))
 -- gui.debugf("T = %s\n\n", table_to_str(T,1))
 -- gui.debugf("expanded = %s\n\n", table_to_str(T.expanded,3))
@@ -1713,8 +1713,8 @@ gui.debugf("eval_fab...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table
       end
     end
 
-    if not (not R.symmetry or R.symmetry == info_sym or info_sym == "xy") then
-gui.debugf("SYMMETRY MISMATCH (%s ~= %s\n", R.symmetry or "NONE", info_sym or "NONE")
+    if not (not req_sym or req_sym == info_sym or info_sym == "xy") then
+gui.debugf("SYMMETRY MISMATCH (%s ~= %s\n", req_sym or "NONE", info_sym or "NONE")
       return -1
     end
 
@@ -1868,6 +1868,105 @@ gui.debugf("end install_fab\n")
     end end -- for x, y
   end
 
+
+  local function mirror_seed(S, N, sym)
+    -- S : destination
+    -- N : source (peer)
+
+    if N.kind == "walk" and not N.floor_h then
+gui.debugf("S =\n%s\n\n", table_to_str(S, 1))
+gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
+      error("mirror_seed : peer not setup yet!")
+    end
+
+    S.kind    = assert(N.kind)
+    S.div_lev = N.div_lev
+
+    S.floor_h = N.floor_h
+    S.ceil_h  = N.ceil_h
+
+    S.f_tex   = "LAVA1" or N.f_tex
+    S.c_tex   = N.c_tex
+    S.w_tex   = N.w_tex
+
+    -- NB: logic copied from set_seed_floor()
+    if S.conn or S.pseudo_conn then
+      local C = S.conn or S.pseudo_conn
+      if C.conn_h then assert(C.conn_h == S.floor_h) end
+
+      C.conn_h = S.floor_h
+      if S.f_tex then C.conn_ftex = S.f_tex end
+    end
+
+    if N.diag_kind then
+      S.diag_kind = sel(N.diag_kind == '/', '\\', '/')
+    end
+
+    if N.kind == "stair" then
+      S.stair_z1 = assert(N.stair_z1) + 16
+      S.stair_z2 = assert(N.stair_z2)
+
+      S.stair_dir = assert(N.stair_dir)
+
+      if sym == "x" and is_horiz(S.stair_dir) then
+        S.stair_dir = 10 - S.stair_dir
+      end
+
+      if sym == "y" and is_vert(S.stair_dir) then
+        S.stair_dir = 10 - S.stair_dir
+      end
+    end
+  end
+
+  local function symmetry_fill(T, box)
+    gui.debugf("Symmetry fill @ %s : (%d %d) -> (%d %d)\n",
+               R:tostr(), box.x1, box.y1, box.x2, box.y2)
+
+gui.debugf("Fab.symmetry = %s\n", tostring(T.info.symmetry))
+gui.debugf("Room.symmetry = %s\n", tostring(R.symmetry))
+gui.debugf("Transposed : %s\n", bool_str(T.transpose))
+
+    -- TODO: support "xy" symmetrical fabs
+    assert(T.info.symmetry == "x" or T.info.symmetry == "y")
+
+    local do_x = (T.info.symmetry == "x")
+    local do_y = (T.info.symmetry == "y")
+
+    if T.transpose then do_x,do_y = do_y,do_x end
+
+---##    local mx = (box.x1 + box.x2) / 2 - 0.1
+---##    local my = (box.y1 + box.y2) / 2 - 0.1
+
+    for x = box.x1,box.x2 do for y = box.y1,box.y2 do
+      local S = SEEDS[x][y][1]
+      assert(S and S.room == R)
+
+      if S.kind == "walk" and not S.floor_h then
+        if do_x then
+          local nx = area.x2 - (x - area.x1)
+          assert(Seed_valid(nx, y, 1))
+
+          local N = SEEDS[nx][y][1]
+          assert(N and N.room == R)
+
+          mirror_seed(S, N, "x")
+
+        elseif do_y then
+          local ny = area.y2 - (y - area.y1)
+          assert(Seed_valid(x, ny, 1))
+
+          local N = SEEDS[x][ny][1]
+          assert(N and N.room == R)
+
+          mirror_seed(S, N, "y")
+
+        else
+          error("symmetry_fill : no peer to copy!")
+        end
+      end
+    end end -- for x, y
+  end
+
   local function mark_stair_dests(T)
 
     for i = 1,T.long do for j = 1,T.deep do
@@ -1907,7 +2006,6 @@ gui.debugf("end install_fab\n")
     return new_tab
   end
 
-
   local function try_install_pattern(name, info)
     local possibles = {}
 
@@ -1922,7 +2020,7 @@ gui.debugf("end install_fab\n")
       T.x_sizes = matching_sizes(info.x_sizes, T.long)
       T.y_sizes = matching_sizes(info.y_sizes, T.deep)
 
-gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.tranpose), T.long, T.deep)
+gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.transpose), T.long, T.deep)
       if T.x_sizes and T.y_sizes then
         local xs = rand_element(T.x_sizes)
         local ys = rand_element(T.y_sizes)
@@ -1962,12 +2060,18 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
         local new_area = find_sub_area(T, tostring(s_idx))
         assert(new_area)
 
-        local new_hs = clip_heights(heights, sub.height)
-        local new_ft = clip_heights(f_texs,  sub.height)
+        if sub.sym_fill and (req_sym or rand_odds(50)) then --!!!!
+          symmetry_fill(T, new_area)
+        else
+          local new_hs = clip_heights(heights, sub.height)
+          local new_ft = clip_heights(f_texs,  sub.height)
 
-        local new_recurse = sub.recurse or true
+          local new_recurse = sub.recurse or true
+          local new_sym = sel(sub.drop_sym, nil, req_sym)
 
-        Room_try_divide(R, false, div_lev+1, new_recurse, new_area, new_hs, new_ft)
+          Room_try_divide(R, false, div_lev+1, new_recurse,
+                          new_sym, new_area, new_hs, new_ft)
+        end
       end
     end
 
@@ -2000,10 +2104,10 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
     -- enough symmetry?
     -- [NOTE: because of transposing, treat "x" == "y" here]
-    if not R.symmetry then return true end
+    if not req_sym then return true end
     if info.symmetry == "xy" then return true end
 
-    if R.symmetry == "xy" then return false end
+    if req_sym == "xy" then return false end
     if not info.symmetry or info.symmetry == "R" then return false end
 
     return true --OK--
@@ -2466,8 +2570,8 @@ function Room_layout_one(R)
       for x = x1,x2 do for y = y1,y2 do
         for who = 1,3 do
           local S = SEEDS[x][y][1]
-          if who == 2 then S = S.x_peer end
-          if who == 3 then S = S.y_peer end
+          if who == 2 then S = R.mirror_x and S.x_peer end
+          if who == 3 then S = R.mirror_y and S.y_peer end
 
           if S then
             if S.room ~= R then return false end
@@ -2499,8 +2603,8 @@ function Room_layout_one(R)
       for x = x1,x2 do for y = y1,y2 do
         for who = 1,3 do
           local S = SEEDS[x][y][1]
-          if who == 2 then S = S.x_peer end
-          if who == 3 then S = S.y_peer end
+          if who == 2 then S = R.mirror_x and S.x_peer end
+          if who == 3 then S = R.mirror_y and S.y_peer end
 
           if S then
             if S.conn or S.pseudo_conn then
@@ -2574,7 +2678,7 @@ function Room_layout_one(R)
     local mx, my = S:mid_point()
 
     if R.purpose == "START" then
-      if rand_odds(20) then
+      if rand_odds(10) then
         Build_raising_start(S, 6, z1, R.combo)
         gui.debugf("Raising Start made\n")
         S.no_floor = true
@@ -2864,7 +2968,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   local heights = select_heights(focus_C)
   local f_texs  = select_floor_texs(focus_C)
 
-  Room_try_divide(R, true, 1, true, area, heights, f_texs)
+  Room_try_divide(R, true, 1, true, R.symmetry, area, heights, f_texs)
 
 ---??  flood_fill_for_junk()
 
@@ -2919,10 +3023,10 @@ function Rooms_all_lay_out()
 
 --[[
 PLAN.liquid_mode = "few"
-PLAN.hallway_mode = "heaps" ]]
+PLAN.hallway_mode = "heaps"
 PLAN.symmetry_mode = "some"
 PLAN.junk_mode = "some"
-PLAN.sky_mode = "few"
+PLAN.sky_mode = "some" ]]
 
 ---  Test_room_fabs()
 

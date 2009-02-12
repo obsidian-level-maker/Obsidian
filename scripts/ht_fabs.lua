@@ -728,7 +728,7 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1, match="one" },
+      { height=1, match="one", drop_sym=1 },
       { height=1, match="any", sym_fill=1 },
     },
 
@@ -845,8 +845,8 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1, match="one" },
-      { height=1, match="any" },
+      { height=1, match="one", drop_sym=1 },
+      { height=1, match="any", drop_sym=1 },
     },
   },
 
