@@ -650,7 +650,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
 
   -- we don't need archways where two hallways connect
   for _,C in ipairs(PLAN.all_conns) do
-    if C.src.kind == "hallway" and C.dest.kind == "hallway" then
+    if not C.lock and C.src.kind == "hallway" and C.dest.kind == "hallway" then
       local S = C.src_S
       local T = C.dest_S
       local dir = S.conn_dir
@@ -1181,7 +1181,6 @@ end --]]
             N and S.room and N.room and
             S.room.arena == N.room.arena and
             S.room.kind == N.room.kind and
-            not (S.room.hallway or N.room.hallway) and
             not (S.room.purpose or N.room.purpose)
 
 
@@ -1828,6 +1827,7 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
       elseif ch == '.' then
         set_seed_floor(S, hash_h, hash_ftex)
         S.div_lev = hash_lev
+--- if true then S.ceil_h = S.floor_h + 256 ; S.c_tex = "FLAT10" end
 
       elseif ch == '<' then
         setup_stair(S, 4, hash_h, hash_ftex)
@@ -2613,7 +2613,7 @@ function Room_layout_one(R)
 
     elseif R.purpose == "EXIT" then
       local CS = R.conns[1]:seed(R)
-      local dir = assert(CS.conn_dir)
+      local dir = dir_for_wotsit(S)
 
       if R.outdoor then
         Build_outdoor_exit_switch(S, dir, z1)
