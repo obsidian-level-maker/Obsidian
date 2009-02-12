@@ -2544,6 +2544,23 @@ function Room_layout_one(R)
   end
 
 
+  local function dir_for_wotsit(S)
+    local dirs  = {}
+  
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+      if N and N.room == R and N.kind == "walk" then
+        table.insert(dirs, dir)
+      end
+    end
+
+    if #dirs == 1 then return dirs[1] end
+
+    if #dirs > 1 then return rand_element(dirs) end
+
+    return rand_irange(1,4)*2
+  end
+
   local function add_purpose()
     local sx, sy, S = Room_spot_for_wotsit(R, R.purpose)
     local z1 = S.floor_h or R.floor_h
@@ -2608,7 +2625,7 @@ function Room_layout_one(R)
 gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       local LOCK = assert(R.lock_for_item)  -- eww
       local INFO = assert(GAME.switch_infos[R.do_switch])
-      Build_small_switch(S, 4, z1, INFO, LOCK.tag)
+      Build_small_switch(S, dir_for_wotsit(S), z1, INFO, LOCK.tag)
 
     else
       error("Room_layout_one: unknown purpose! " .. tostring(R.purpose))
@@ -2880,7 +2897,7 @@ function Rooms_all_lay_out()
   PLAN.liquid_mode = rand_key_by_probs { few=15, some=60, heaps=20 }
   gui.printf("Liquid Mode: %s\n", PLAN.liquid_mode)
 
-  PLAN.junk_mode = rand_key_by_probs { few=40, some=30, heaps=10 }
+  PLAN.junk_mode = rand_key_by_probs { few=10, some=60, heaps=20 }
   gui.printf("Junk Mode: %s\n", PLAN.junk_mode)
 
   PLAN.cage_mode = rand_key_by_probs { none=50, some=50, heaps=6 }
@@ -2896,8 +2913,8 @@ function Rooms_all_lay_out()
 --[[
 PLAN.liquid_mode = "few"
 PLAN.hallway_mode = "heaps" ]]
-PLAN.symmetry_mode = "heaps"
-PLAN.junk_mode = "heaps"
+PLAN.symmetry_mode = "some"
+PLAN.junk_mode = "some"
 PLAN.sky_mode = "few"
 
 ---  Test_room_fabs()
