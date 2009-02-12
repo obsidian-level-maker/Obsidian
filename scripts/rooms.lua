@@ -766,6 +766,8 @@ function Rooms_setup_symmetry()
   local function mirror_horizontally(R)
     assert(R.sw >= 2)
 
+    R.mirror_x = true
+
     for y = R.sy1, R.sy2 do
       for dx = 0, int((R.sw-2) / 2) do
         local LS = SEEDS[R.sx1 + dx][y][1]
@@ -779,6 +781,8 @@ function Rooms_setup_symmetry()
 
   local function mirror_vertically(R)
     assert(R.sh >= 2)
+
+    R.mirror_y = true
 
     for x = R.sx1, R.sx2 do
       for dy = 0, int((R.sh-2) / 2) do
@@ -2399,34 +2403,53 @@ function Room_layout_one(R)
     --
     -- The best side is on the largest axis (minimises number of
     -- junked seeds), and prefer no connections on that side.
-    --
-    -- Usually only junk one side, sometimes two.
+    -- Each side is only junked once.
 
     -- FIXME: occasionaly make ledge-cages in OUTDOOR rooms
 
-    local min_space = 2
-
-    local JUNK_MAX_COSTS = { few=0.7, some=1.2, heaps=2.5 }
-    local JUNK_MAX_LOOP  = { few=4,   some=7,   heaps=10 }
-
-    local max_cost = JUNK_MAX_COSTS[PLAN.junk_mode]
-    local max_loop = JUNK_MAX_LOOP [PLAN.junk_mode]
+    local JUNK_PROBS = { 0, 0,  3, 12, 20, 30, 40, 50 }
+    local JUNK_HEAPS = { 0, 0, 50, 75, 99, 99, 99, 99 }
 
 
-    local function max_junking(size)
-      if size < min_space then return 0 end
-      return size - min_space
-    end
+---##    local function max_junking(size)
+---##      if size < min_space then return 0 end
+---##      return size - min_space
+---##    end
 
-    local function eval_side(side, x_max, y_max)
+    local function eval_side(side)
       local th = R.junk_thick[side]
 
-      if side == 2 or side == 8 then
-        if R.junk_thick[2] + R.junk_thick[8] >= y_max then return -1 end
-      else
-        if R.junk_thick[4] + R.junk_thick[6] >= x_max then return -1 end
+---##       if side == 2 or side == 8 then
+---##         if R.junk_thick[2] + R.junk_thick[8] >= y_max then return -1 end
+---##       else
+---##         if R.junk_thick[4] + R.junk_thick[6] >= x_max then return -1 end
+---##       end
+
+      if PLAN.junk_mode == "few" and rand_odds(70) then
+        return false
       end
 
+      -- size checking
+      local long = R.sw - R.junk_thick[4] - R.junk_thick[6]
+      local deep = R.sh - R.junk_thick[2] - R.junk_thick[8]
+
+      if R.mirror_x then long = int((long+3) / 2) end
+      if R.mirror_y then deep = int((deep+3) / 2) end
+
+      if is_vert(side) then long,deep = deep,long end
+
+      if long <= 2 then return false end
+
+      long = math.min(long, 8)
+
+      local prob = JUNK_PROBS[long]
+      if PLAN.junk_mode == "heaps" then prob = JUNK_HEAPS[long] end
+
+      assert(prob)
+      if not rand_odds(prob) then return false end
+
+
+      -- connection checking
       local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
       local dx, dy = dir_to_delta(side)
       x1, y1 = x1-dx*th, y1-dy*th
@@ -2435,18 +2458,26 @@ function Room_layout_one(R)
       local hit_conn = 0
 
       for x = x1,x2 do for y = y1,y2 do
-        local S = SEEDS[x][y][1]
-        if S.room ~= R then return -1 end
-        if not (S.kind == "walk" or S.kind == "void") then return -1 end
+        for who = 1,3 do
+          local S = SEEDS[x][y][1]
+          if who == 2 then S = S.x_peer end
+          if who == 3 then S = S.y_peer end
 
-        if S.conn or S.pseudo_conn then
-          hit_conn = hit_conn + 1
-        end
+          if S then
+            if S.room ~= R then return false end
+            if not (S.kind == "walk" or S.kind == "void") then return false end
+
+            if S.conn or S.pseudo_conn then
+              hit_conn = hit_conn + 1
+            end
+          end
+        end -- for who
       end end -- for x,y
 
-      -- FIXME: add a cost if side could be used for windows
+      -- Cannot allow "gaps" for connections (yet....)
+      if hit_conn > 0 then return false end
 
-      return R.junk_thick[side] * 1.4 + hit_conn / 1.5 + gui.random()
+      return true
     end
 
     local function apply_junk_side(side)
@@ -2457,47 +2488,57 @@ function Room_layout_one(R)
       x1, y1 = x1-dx*th, y1-dy*th
       x2, y2 = x2-dx*th, y2-dy*th
 
-      local did_change = false
       local p_conns = {}
 
       for x = x1,x2 do for y = y1,y2 do
-        local S = SEEDS[x][y][1]
-        if S.conn or S.pseudo_conn then
-          local P = { x=x-dx, y=y-dy, conn=S.conn or S.pseudo_conn }
-          table.insert(p_conns, P)
-        elseif S.kind == "walk" then
-          S.kind = "void"
-          did_change = true
-        end
+        for who = 1,3 do
+          local S = SEEDS[x][y][1]
+          if who == 2 then S = S.x_peer end
+          if who == 3 then S = S.y_peer end
+
+          if S then
+            if S.conn or S.pseudo_conn then
+              error("Junked CONN!")
+--??              local P = { x=x-dx, y=y-dy, conn=S.conn or S.pseudo_conn }
+--??              table.insert(p_conns, P)
+            elseif S.kind == "walk" then
+              S.kind = "void"
+            end
+          end
+        end -- for who
       end end -- for x,y
 
-      for _,P in ipairs(p_conns) do
-        SEEDS[P.x][P.y][1].pseudo_conn = P.conn
-      end
+--??      for _,P in ipairs(p_conns) do
+--??        SEEDS[P.x][P.y][1].pseudo_conn = P.conn
+--??      end
 
       R.junk_thick[side] = R.junk_thick[side] + 1
+
+      gui.debugf("Junked side:%d @ %s\n", side, R:tostr())
+
+      if (is_horiz(side) and R.mirror_x) or
+         (is_vert(side) and R.mirror_y)
+      then
+        side = 10 - side
+
+        R.junk_thick[side] = R.junk_thick[side] + 1
+
+        gui.debugf("and Junked mirrored side:%d\n", side)
+      end
     end
 
 
     --| junk_sides |--
 
-    local x_max = max_junking(R.sw)
-    local y_max = max_junking(R.sh)
+    local SIDES = { 2,4 }
+    if not R.mirror_x then table.insert(SIDES,6) end
+    if not R.mirror_y then table.insert(SIDES,8) end
 
-    for loop = 1,max_loop do
-      local evals = {}
+    rand_shuffle(SIDES)
 
-      for side = 2,8,2 do
-        local cost = eval_side(side, x_max, y_max)
-        if cost > 0 and cost < max_cost then
-          table.insert(evals, { side=side, cost=cost })
-        end
-      end
-
-      if #evals > 0 then
-        table.sort(evals, function(A,B) return A.cost < B.cost end)
-
-        apply_junk_side(evals[1].side)
+    for _,side in ipairs(SIDES) do
+      if eval_side(side) then
+        apply_junk_side(side)
       end
     end
   end
@@ -2786,7 +2827,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
   if R.kind == "building" and not R.children then
---!!!!!    junk_sides()
+    junk_sides()
   end
 
 
@@ -2801,7 +2842,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   Room_try_divide(R, true, 1, true, area, heights, f_texs)
 
----  flood_fill_for_junk()
+---??  flood_fill_for_junk()
 
   Room_set_floor_minmax(R)
 
@@ -2853,11 +2894,11 @@ function Rooms_all_lay_out()
 
 
 --[[
-PLAN.junk_mode = "few"
 PLAN.liquid_mode = "few"
-PLAN.sky_mode = "few"
 PLAN.hallway_mode = "heaps" ]]
 PLAN.symmetry_mode = "heaps"
+PLAN.junk_mode = "heaps"
+PLAN.sky_mode = "few"
 
 ---  Test_room_fabs()
 
