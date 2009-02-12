@@ -65,7 +65,7 @@ function transformed_coord(T, x, y)
 end
 
 
-function transformed_brush2(T, info, coords, z1, z2)
+function transformed_brush(T, info, coords, z1, z2)
 
   if not T then T = {} end
 
@@ -285,11 +285,11 @@ function Build_sky_fence(S, side)
 
   local z = math.max(PLAN.skyfence_h, (S.room.floor_h or 0) + 64)
 
-  transformed_brush2(nil, wall_info,  w_coords, -4000, z)
-  transformed_brush2(nil, wall2_info, s_coords, -4000, PLAN.skyfence_h - 64)
+  transformed_brush(nil, wall_info,  w_coords, -4000, z)
+  transformed_brush(nil, wall2_info, s_coords, -4000, PLAN.skyfence_h - 64)
 
-  transformed_brush2(nil, sky_info,  w_coords, 512, 4096)
-  transformed_brush2(nil, sky2_info, s_coords, 510, 4096)
+  transformed_brush(nil, sky_info,  w_coords, 512, 4096)
+  transformed_brush(nil, sky2_info, s_coords, 510, 4096)
 end
 
 
@@ -320,7 +320,7 @@ function Build_archway(S, side, z1, z2, f_tex, w_tex, o_tex)
     { x=0,    y=-N_deep, w_face={ texture=o_tex } },
   }
 
-  transformed_brush2(T, arch_info, frame_coords, z2, 2000)
+  transformed_brush(T, arch_info, frame_coords, z2, 2000)
 
 
   assert(deep > 17 or N_deep > 17)
@@ -331,7 +331,7 @@ function Build_archway(S, side, z1, z2, f_tex, w_tex, o_tex)
   for pass = 1,2 do
     if pass == 2 then T.mirror_x = mx end
 
-    transformed_brush2(T, arch_info,
+    transformed_brush(T, arch_info,
     {
       { x=0,     y=-N_deep,    w_face= {texture=o_tex} },
       { x=24+16, y=-N_deep,    w_face= {texture=o_tex} },
@@ -401,7 +401,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
     w_face = { texture=assert(info.skin.key_w), x_offset=0, y_offset=0 },
   }
 
-  transformed_brush2(T, step_info,
+  transformed_brush(T, step_info,
   {
     { x=long, y=my-DY },
     { x=long, y=my+DY },
@@ -410,7 +410,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
   },
   -2000, z1+8)
 
-  transformed_brush2(T, frame_info,
+  transformed_brush(T, frame_info,
   {
     { x=long, y=my-DY },
     { x=long, y=my+DY },
@@ -451,7 +451,7 @@ if TESTING_QUAKE1_DOORS then
                    model=assert(m_ref)
                  })
 else
-  transformed_brush2(T, door_info,
+  transformed_brush(T, door_info,
   {
     { x=mx+64, y=my-8, line_kind=KIND, line_tag=tag2 },
     { x=mx+64, y=my+8, line_kind=KIND, line_tag=tag2 },
@@ -465,7 +465,7 @@ end
   for pass = 1,2 do
     if pass == 2 then T.mirror_x = mx end
 
-    transformed_brush2(T, key_info,
+    transformed_brush(T, key_info,
     {
       { x=mx-64,    y=my-8, w_face={ texture="DOORTRAK", peg=true } },
       { x=mx-64,    y=my+8  },
@@ -474,7 +474,7 @@ end
     },
     -2000, 2000)
 
-    transformed_brush2(T, frame_info,
+    transformed_brush(T, frame_info,
     {
       { x=mx-64-18, y=my-DY },
       { x=mx-64-18, y=my+DY },
@@ -520,7 +520,7 @@ function Build_lowering_bars(S, side, z1, skin, tag)
     local mx = mx1 + (mx2 - mx1) * (i-1) / (num_bars-1)
     local my = 0
 
-    transformed_brush2(T, bar_info,
+    transformed_brush(T, bar_info,
     {
       { x=mx+bar_w/2, y=my-bar_w/2 },
       { x=mx+bar_w/2, y=my+bar_w/2 },
@@ -537,7 +537,7 @@ function Build_hall_light(S, z2)
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
 
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture="CEIL5_2" },
     b_face = { texture="TLITE6_5" },
@@ -559,7 +559,7 @@ function Build_hall_light(S, z2)
     w_face = { texture="METAL" },
   }
 
-  transformed_brush2(nil, metal_info,
+  transformed_brush(nil, metal_info,
   {
     { x = mx-32, y = my-40 },
     { x = mx-32, y = my+40 },
@@ -568,7 +568,7 @@ function Build_hall_light(S, z2)
   },
   z2-16, 2000)
 
-  transformed_brush2(nil, metal_info,
+  transformed_brush(nil, metal_info,
   {
     { x = mx+40, y = my-40 },
     { x = mx+40, y = my+40 },
@@ -577,7 +577,7 @@ function Build_hall_light(S, z2)
   },
   z2-16, 2000)
 
-  transformed_brush2(nil, metal_info,
+  transformed_brush(nil, metal_info,
   {
     { x = mx+40, y = my-40 },
     { x = mx+40, y = my-32 },
@@ -586,7 +586,7 @@ function Build_hall_light(S, z2)
   },
   z2-16, 2000)
 
-  transformed_brush2(nil, metal_info,
+  transformed_brush(nil, metal_info,
   {
     { x = mx+40, y = my+32 },
     { x = mx+40, y = my+40 },
@@ -598,7 +598,7 @@ function Build_hall_light(S, z2)
 
 --[[ connecting spokes....
 
-  transformed_brush2(nil, metal_info,
+  transformed_brush(nil, metal_info,
   {
     { x = mx+4, y = my+40 },
     { x = mx+4, y = S.y2  },
@@ -607,7 +607,7 @@ function Build_hall_light(S, z2)
   },
   z2-10, 2000)
 
-  transformed_brush2(nil, metal_info,
+  transformed_brush(nil, metal_info,
   {
     { x = mx+4, y = S.y1  },
     { x = mx+4, y = my-40 },
@@ -616,7 +616,7 @@ function Build_hall_light(S, z2)
   },
   z2-10, 2000)
 
-  transformed_brush2(nil, metal_info,
+  transformed_brush(nil, metal_info,
   {
     { x = mx-40, y = my-4, },
     { x = mx-40, y = my+4, },
@@ -625,7 +625,7 @@ function Build_hall_light(S, z2)
   },
   z2-10, 2000)
 
-  transformed_brush2(nil, metal_info,
+  transformed_brush(nil, metal_info,
   {
     { x = S.x2 , y = my-4, },
     { x = S.x2 , y = my+4, },
@@ -676,7 +676,7 @@ function Build_detailed_hall(S, side, z1, z2)
 
 
   if PLAN.hall_trim then
-    transformed_brush2(nil,
+    transformed_brush(nil,
     {
       t_face = { texture="CEIL5_2" },
       b_face = { texture="CEIL5_2" },
@@ -684,7 +684,7 @@ function Build_detailed_hall(S, side, z1, z2)
     },
     get_hall_coords(32), -2000, z1 + 32)
 
-    transformed_brush2(nil,
+    transformed_brush(nil,
     {
       t_face = { texture="CEIL5_2" },
       b_face = { texture="CEIL5_2" },
@@ -694,7 +694,7 @@ function Build_detailed_hall(S, side, z1, z2)
   end
 
 
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
@@ -702,7 +702,7 @@ function Build_detailed_hall(S, side, z1, z2)
   },
   get_hall_coords(64), -2000, z1 + 6)
 
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
@@ -711,7 +711,7 @@ function Build_detailed_hall(S, side, z1, z2)
   get_hall_coords(64), z2 - 6, 2000)
 
 
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture="FLAT1" },
     b_face = { texture="FLAT1" },
@@ -768,16 +768,16 @@ function Build_weird_hall(S, side, z1, z2)
     w_face = { texture="SHAWN2" },
   }
 
-  transformed_brush2(nil, metal, get_hall_coords(24), -2000, 2000)
+  transformed_brush(nil, metal, get_hall_coords(24), -2000, 2000)
 
-  transformed_brush2(nil, metal, get_hall_coords(32), -2000, z1 + 32)
-  transformed_brush2(nil, metal, get_hall_coords(32), z2 - 32, 2000)
+  transformed_brush(nil, metal, get_hall_coords(32), -2000, z1 + 32)
+  transformed_brush(nil, metal, get_hall_coords(32), z2 - 32, 2000)
 
-  transformed_brush2(nil, metal, get_hall_coords(48), -2000, z1 + 18)
-  transformed_brush2(nil, metal, get_hall_coords(48), z2 - 18, 2000)
+  transformed_brush(nil, metal, get_hall_coords(48), -2000, z1 + 18)
+  transformed_brush(nil, metal, get_hall_coords(48), z2 - 18, 2000)
 
-  transformed_brush2(nil, metal, get_hall_coords(64), -2000, z1 + 6)
-  transformed_brush2(nil, metal, get_hall_coords(64), z2 - 6, 2000)
+  transformed_brush(nil, metal, get_hall_coords(64), -2000, z1 + 6)
+  transformed_brush(nil, metal, get_hall_coords(64), z2 - 6, 2000)
 
 end
 
@@ -824,7 +824,7 @@ function Build_diagonal(S, dir, info, z1)
     error("WTF dir")
   end
 
-  transformed_brush2(nil, info, coords, z1 or -4000, 4000)
+  transformed_brush(nil, info, coords, z1 or -4000, 4000)
 end
 
 
@@ -836,7 +836,7 @@ function Build_arrow(S, dir, f_h)
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_delta(rotate_cw90(dir))
 
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture="FWATER1" },
     b_face = { texture="FWATER1" },
@@ -922,13 +922,13 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
     local f_h = x_h + (y_h - x_h) * (i-1) / (steps-1)
     local c_h = f_h + gap_h
 
-    transformed_brush2(nil, wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -2000,2000)
-    transformed_brush2(nil, wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -2000,2000)
+    transformed_brush(nil, wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -2000,2000)
+    transformed_brush(nil, wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -2000,2000)
 
     local coords = arc_coords(p0,p1, dx1,dx2, dy1,dy2)
 
-    transformed_brush2(nil, floor_info, coords, -2000, f_h)
-    transformed_brush2(nil, ceil_info,  coords, c_h, 2000)
+    transformed_brush(nil, floor_info, coords, -2000, f_h)
+    transformed_brush(nil, ceil_info,  coords, c_h, 2000)
   end
 end
 
@@ -959,7 +959,7 @@ function Build_ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
     bx3 = int(bx3) ; tx3 = int(tx3)
     bx4 = int(bx4) ; tx4 = int(tx4)
 
-    transformed_brush2(nil, skin,
+    transformed_brush(nil, skin,
     {
       { x=bx4, y=y1 },
       { x=tx4, y=y2 },
@@ -997,7 +997,7 @@ function Build_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
     ly3 = int(ly3) ; ry3 = int(ry3)
     ly4 = int(ly4) ; ry4 = int(ry4)
 
-    transformed_brush2(nil, skin,
+    transformed_brush(nil, skin,
     {
       { x=x2, y=ry3 },
       { x=x2, y=ry4 },
@@ -1032,7 +1032,7 @@ function Build_niche_stair(S, stair_info)
   local HB = sel(z1 > z2, 96, 64)
   local HF = 40
 
-  transformed_brush2(T, niche_info,
+  transformed_brush(T, niche_info,
   {
     { x = W, y = 0,    },
     { x = W, y = deep, },
@@ -1041,7 +1041,7 @@ function Build_niche_stair(S, stair_info)
   },
   -2000, z2)
 
-  transformed_brush2(T, niche_info,
+  transformed_brush(T, niche_info,
   {
     { x = long,   y = 0,    },
     { x = long,   y = deep, },
@@ -1050,7 +1050,7 @@ function Build_niche_stair(S, stair_info)
   },
   -2000, z2)
 
-  transformed_brush2(T, niche_info,
+  transformed_brush(T, niche_info,
   {
     { x = long-W, y = deep-HB, },
     { x = long-W, y = deep,   },
@@ -1059,7 +1059,7 @@ function Build_niche_stair(S, stair_info)
   },
   -2000, z2)
 
-  transformed_brush2(T, stair_info,
+  transformed_brush(T, stair_info,
   {
     { x = long-W, y = 0,  },
     { x = long-W, y = HF, },
@@ -1079,7 +1079,7 @@ function Build_niche_stair(S, stair_info)
     local by = int(HF + (deep-HF-HB) * (i)   / steps)
     local ty = int(HF + (deep-HF-HB) * (i+1) / steps)
 
-    transformed_brush2(T, stair_info,
+    transformed_brush(T, stair_info,
     {
       { x=long-W, y=by },
       { x=long-W, y=ty },
@@ -1164,7 +1164,7 @@ function Build_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
     Build_ramp_y(info, x1,y1,y2, x2-pw,y2-ph,y2, m_h-d_h*4, x_h, "exact")
     Build_ramp_x(info, x1,x2,y1, x2-pw,x2,y2-ph, m_h+d_h*4, y_h, "exact")
 
-    transformed_brush2(nil, info,
+    transformed_brush(nil, info,
     {
       { x=x2,    y=y2-ph },
       { x=x2,    y=y2 },
@@ -1177,7 +1177,7 @@ function Build_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
     Build_ramp_y(info, x1+pw,y2-ph,y2, x2,y1,y2, m_h-d_h*4, x_h, "exact")
     Build_ramp_x(info, x1,x2,y1, x1,x1+pw,y2-ph, y_h, m_h+d_h*4, "exact")
 
-    transformed_brush2(nil, info,
+    transformed_brush(nil, info,
     {
       { x=x1+pw, y=y2-ph },
       { x=x1+pw, y=y2 },
@@ -1190,7 +1190,7 @@ function Build_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
     Build_ramp_y(info, x1,y1,y2, x2-pw,y1,y1+ph, x_h, m_h-d_h*4, "exact")
     Build_ramp_x(info, x2-pw,x2,y1+ph, x1,x2,y2, m_h+d_h*4, y_h, "exact")
 
-    transformed_brush2(nil, info,
+    transformed_brush(nil, info,
     {
       { x=x2,    y=y1 },
       { x=x2,    y=y1+ph },
@@ -1203,7 +1203,7 @@ function Build_corner_ramp_JAGGY(S, x1,y1, x2,y2, x_h,y_h)
     Build_ramp_y(info, x1+pw,y1,y1+ph, x2,y1,y2, x_h, m_h-d_h*4, "exact")
     Build_ramp_x(info, x1,x1+pw,y1+ph, x1,x2,y2, y_h, m_h+d_h*4, "exact")
 
-    transformed_brush2(nil, info,
+    transformed_brush(nil, info,
     {
       { x=x1+pw, y=y1 },
       { x=x1+pw, y=y1+ph },
@@ -1320,8 +1320,8 @@ function Build_corner_ramp_STRAIGHT(S, x1,y1, x2,y2, x_h,y_h)
     }
   end
 
-  transformed_brush2(nil, info, pilla, -2000, pz)
-  transformed_brush2(nil, info, mezza, -2000, m_h)
+  transformed_brush(nil, info, pilla, -2000, pz)
+  transformed_brush(nil, info, mezza, -2000, m_h)
 end
 --]]
 
@@ -1394,7 +1394,7 @@ gui.debugf("DEL (%1.3f %1.3f)  (%1.3f %1.3f)\n", dx1, dy1, dx2,dy2)
 
 gui.debugf("(%d,%d) .. (%d,%d) .. (%d,%d) .. (%d,%d)\n",
 cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
-    transformed_brush2(T, step_info,
+    transformed_brush(T, step_info,
     {
       { x=fx1, y=fy1 },
       { x=fx2, y=fy2 },
@@ -1414,9 +1414,9 @@ cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
 
   local h3 = math.max(x_h, y_h)
 
-  transformed_brush2(T, mat_info, corn_coords, -2000, h3)
+  transformed_brush(T, mat_info, corn_coords, -2000, h3)
 
-  transformed_brush2(T, mat_info,
+  transformed_brush(T, mat_info,
   {
     { x=long, y=deep-bord_W },
     { x=long, y=deep },
@@ -1425,7 +1425,7 @@ cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
   },
   -2000, h3)
 
-  transformed_brush2(T, mat_info,
+  transformed_brush(T, mat_info,
   {
     { x=long, y=0 },
     { x=long, y=deep },
@@ -1567,7 +1567,7 @@ gui.debugf("Build_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, c
     nx2 = int(nx2) ; ny2 = int(ny2)
     z   = int(z)
 
-    transformed_brush2(nil, info,
+    transformed_brush(nil, info,
     {
       { x=nx2, y=ny1 },
       { x=nx2, y=ny2 },
@@ -1613,7 +1613,7 @@ function Build_lift(S, side, lift_h)
   lift_coords[3].line_tag = tag
   lift_coords[4].line_tag = tag
 
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture="STEP2" },
     b_face = { texture="STEP2" },
@@ -1624,7 +1624,7 @@ function Build_lift(S, side, lift_h)
 
   local step_coords = get_wall_coords(S, 10-side, 128)
 
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture=S.room.combo.floor },
     b_face = { texture=S.room.combo.floor },
@@ -1655,7 +1655,7 @@ function Build_pillar(S, z1, z2, p_tex)
   local my = int((S.y1 + S.y2)/2)
   local mz = int((z1 + z2)/2)
 
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture="CEIL5_2" },
     b_face = { texture="CEIL5_2" },
@@ -1668,7 +1668,7 @@ function Build_pillar(S, z1, z2, p_tex)
   -2000, 2000)
 
   for pass = 1,2 do
-    transformed_brush2(nil,
+    transformed_brush(nil,
     {
       t_face = { texture="CEIL5_2" },
       b_face = { texture="CEIL5_2" },
@@ -1682,7 +1682,7 @@ function Build_pillar(S, z1, z2, p_tex)
     sel(pass == 2,  2000, z1+32)
     )
 
-    transformed_brush2(nil,
+    transformed_brush(nil,
     {
       t_face = { texture="FLAT1" },
       b_face = { texture="FLAT1" },
@@ -1714,7 +1714,7 @@ function Build_exit_pillar(S, z1)
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
 
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture="FLAT14" },
     b_face = { texture="FLAT14" },
@@ -1742,7 +1742,7 @@ function Build_exit_pillar(S, z1)
     DT.mirror_x = sel((pass % 2)==1, nil, long/2)
     DT.mirror_y = sel(pass >= 3,     nil, long/2)
 
-    transformed_brush2(DT, exit_info,
+    transformed_brush(DT, exit_info,
     {
       { x=60+8,  y=60+24 },
       { x=60+0,  y=60+16, w_face=exit_face },
@@ -1772,7 +1772,7 @@ function Build_small_switch(S, dir, f_h, info, tag)
 
   local switch_face = { texture=assert(info.skin.switch_w), peg=true, x_offset=info.skin.x_offset or 0, y_offset=info.skin.y_offset or 0 }
 
-  transformed_brush2(DT, switch_info,
+  transformed_brush(DT, switch_info,
   {
     { x=mx-40, y=my-40 },
     { x=mx+40, y=my-40 },
@@ -1785,7 +1785,7 @@ function Build_small_switch(S, dir, f_h, info, tag)
   },
   -2000, f_h+16)
 
-  transformed_brush2(DT, switch_info,
+  transformed_brush(DT, switch_info,
   {
     { x=mx+32, y=my-8 },
     { x=mx+32, y=my+8, w_face = switch_face, line_kind=assert(info.skin.line_kind), line_tag=tag },
@@ -1813,7 +1813,7 @@ function Build_outdoor_exit_switch(S, dir, f_h)
     b_face = { texture="CEIL5_1" },
   }
 
-  transformed_brush2(DT, podium,
+  transformed_brush(DT, podium,
   {
     { x=long-32, y=32 },
     { x=long-32, y=deep-32 },
@@ -1832,7 +1832,7 @@ function Build_outdoor_exit_switch(S, dir, f_h)
 
   local switch_face = { texture="SW1COMM", peg=true, x_offset=0, y_offset=0 }
 
-  transformed_brush2(DT, switch_info,
+  transformed_brush(DT, switch_info,
   {
     { x=mx-40, y=my-40 },
     { x=mx+40, y=my-40 },
@@ -1845,7 +1845,7 @@ function Build_outdoor_exit_switch(S, dir, f_h)
   },
   -2000, f_h+16)
 
-  transformed_brush2(DT, switch_info,
+  transformed_brush(DT, switch_info,
   {
     { x=mx+32, y=my-8 },
     { x=mx+32, y=my+8, w_face = switch_face, line_kind=11 },
@@ -1868,7 +1868,7 @@ function Build_outdoor_exit_switch(S, dir, f_h)
     DT.mirror_x = sel((pass % 2)==1, nil, long/2)
     DT.mirror_y = sel(pass >= 3,     nil, deep/2)
 
-    transformed_brush2(DT, exit_info,
+    transformed_brush(DT, exit_info,
     {
       { x=48+8,  y=48+24 },
       { x=48+0,  y=48+16, w_face=exit_face },
@@ -1931,7 +1931,7 @@ function Build_small_exit(R, item_name)
   local mx = int(long / 2)
 
 
-  transformed_brush2(DT, out_info,
+  transformed_brush(DT, out_info,
   {
     { x=long-8, y=0 },
     { x=long-8, y=48 },
@@ -1940,7 +1940,7 @@ function Build_small_exit(R, item_name)
   },
   -2000, f_h)
 
-  transformed_brush2(DT, out_info,
+  transformed_brush(DT, out_info,
   {
     { x=long-8, y=-24 },
     { x=long-8, y=48 },
@@ -1949,7 +1949,7 @@ function Build_small_exit(R, item_name)
   },
   c_h, 2000)
 
-  transformed_brush2(DT, inner_info,
+  transformed_brush(DT, inner_info,
   {
     { x=long-8, y=48 },
     { x=long-8, y=long-8 },
@@ -1958,7 +1958,7 @@ function Build_small_exit(R, item_name)
   },
   -2000, f_h)
 
-  transformed_brush2(DT, inner_info,
+  transformed_brush(DT, inner_info,
   {
     { x=long-8, y=48 },
     { x=long-8, y=long-8 },
@@ -1975,8 +1975,8 @@ function Build_small_exit(R, item_name)
   S.thick[rotate_ccw90(side)] = 32
 
 
-  transformed_brush2(nil, inner_info, get_wall_coords(S, rotate_cw90(side)),  -2000, 2000)
-  transformed_brush2(nil, inner_info, get_wall_coords(S, rotate_ccw90(side)), -2000, 2000)
+  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_cw90(side)),  -2000, 2000)
+  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_ccw90(side)), -2000, 2000)
 
 
   -- make door
@@ -1989,7 +1989,7 @@ function Build_small_exit(R, item_name)
     flag_door = true,
   }
 
-  transformed_brush2(DT, door_info,
+  transformed_brush(DT, door_info,
   {
     { x=mx+32, y=48, line_kind=1 },
     { x=mx+32, y=64, line_kind=1 },
@@ -2000,7 +2000,7 @@ function Build_small_exit(R, item_name)
 
   inner_info.b_face = { texture="FLAT1" }
 
-  transformed_brush2(DT, inner_info,
+  transformed_brush(DT, inner_info,
   {
     { x=mx+32, y=32 },
     { x=mx+32, y=80 },
@@ -2028,7 +2028,7 @@ function Build_small_exit(R, item_name)
   for pass = 1,2 do
     if pass == 2 then DT.mirror_x = mx end
 
-    transformed_brush2(DT, inner_info,
+    transformed_brush(DT, inner_info,
     {
       { x=0,     y=80,  w_face=out_face },
       { x=0,     y=-24, w_face=out_face },
@@ -2040,7 +2040,7 @@ function Build_small_exit(R, item_name)
     },
     -2000, 2000)
 
-    transformed_brush2(DT, exit_info,
+    transformed_brush(DT, exit_info,
     {
       { x=mx-68, y= -8 },
       { x=mx-60, y=-16, w_face=exit_face },
@@ -2064,7 +2064,7 @@ function Build_small_exit(R, item_name)
   local swit_W = 64
 
 
-  transformed_brush2(WT, inner_info,
+  transformed_brush(WT, inner_info,
   {
     { x=long, y=0 },
     { x=long, y=16 },
@@ -2092,7 +2092,7 @@ end
 
 
 function Build_wall(S, side, f_tex, w_tex)
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture=f_tex },
     b_face = { texture=f_tex },
@@ -2104,7 +2104,7 @@ end
 
 
 function Build_fence(S, side, fence_h, f_tex, w_tex)
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture=f_tex },
     b_face = { texture=f_tex },
@@ -2131,7 +2131,7 @@ function Build_window(S, side, width, z1, z2, f_tex, w_tex)
 
   local mx = int(long/2)
 
-  transformed_brush2(T, wall_info,
+  transformed_brush(T, wall_info,
   {
     { x=mx+width/2, y=0 },
     { x=mx+width/2, y=deep },
@@ -2140,7 +2140,7 @@ function Build_window(S, side, width, z1, z2, f_tex, w_tex)
   },
   -2000, z1)
 
-  transformed_brush2(T, wall_info,
+  transformed_brush(T, wall_info,
   {
     { x=mx+width/2, y=0 },
     { x=mx+width/2, y=deep },
@@ -2153,7 +2153,7 @@ function Build_window(S, side, width, z1, z2, f_tex, w_tex)
   for pass = 1,2 do
     if pass == 2 then T.mirror_x = mx end
 
-    transformed_brush2(T, wall_info,
+    transformed_brush(T, wall_info,
     {
       { x=mx-width/2, y=0, w_face = side_face },
       { x=mx-width/2, y=deep },
@@ -2189,7 +2189,7 @@ function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
 
   local y2 = my+4
 
-  transformed_brush2(T, wall_info,
+  transformed_brush(T, wall_info,
   {
     { x=long, y=0 },
     { x=long, y=my-4 },
@@ -2198,7 +2198,7 @@ function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
   },
   -2000, 2000)
 
-  transformed_brush2(T, pic_info,
+  transformed_brush(T, pic_info,
   {
     { x=long-4, y=my-4 },
     { x=long-4, y=my+4 },
@@ -2207,7 +2207,7 @@ function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
   },
   -2000, 2000)
 
-  transformed_brush2(T, wall_info,
+  transformed_brush(T, wall_info,
   {
     { x=mx-width/2, y=y2 },
     { x=mx-width/2, y=deep },
@@ -2216,7 +2216,7 @@ function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
   },
   -2000, 2000)
 
-  transformed_brush2(T, wall_info,
+  transformed_brush(T, wall_info,
   {
     { x=long, y=y2 },
     { x=long, y=deep },
@@ -2226,7 +2226,7 @@ function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
   -2000, 2000)
 
 
-  transformed_brush2(T, wall_info,
+  transformed_brush(T, wall_info,
   {
     { x=mx+width/2, y=y2 },
     { x=mx+width/2, y=deep },
@@ -2235,7 +2235,7 @@ function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
   },
   -2000, z1)
 
-  transformed_brush2(T, wall_info,
+  transformed_brush(T, wall_info,
   {
     { x=mx+width/2, y=y2 },
     { x=mx+width/2, y=deep },
@@ -2250,7 +2250,7 @@ function Build_pedestal(S, z1, top_tex)
   local mx = int((S.x1+S.x2) / 2)
   local my = int((S.y1+S.y2) / 2)
 
-  transformed_brush2(nil,
+  transformed_brush(nil,
   {
     t_face = { texture=top_tex },
     b_face = { texture=top_tex },
@@ -2289,7 +2289,7 @@ function Build_raising_start(S, face_dir, z1, combo)
     local mx = int(long / 2)
 
     if side == face_dir then
-      transformed_brush2(T, info,
+      transformed_brush(T, info,
       {
         { x=long,  y=0 },
         { x=long,  y=deep },
@@ -2301,7 +2301,7 @@ function Build_raising_start(S, face_dir, z1, combo)
       -2000, z1)
     
     else
-      transformed_brush2(T, info,
+      transformed_brush(T, info,
       {
         { x=long, y=0 },
         { x=long, y=deep },
@@ -2318,7 +2318,7 @@ function Build_raising_start(S, face_dir, z1, combo)
 
   info.sec_tag = tag
 
-  transformed_brush2(T, info,
+  transformed_brush(T, info,
   {
     { x=long, y=0,   },
     { x=long, y=deep },
@@ -2343,7 +2343,7 @@ function Build_popup_trap(S, z1, skin, combo)
 
     local T, long, deep = get_transform_for_seed_side(S, side)
 
-    transformed_brush2(T, info,
+    transformed_brush(T, info,
     {
       { x=long, y=0 },
       { x=long, y=deep, w_face={ texture="-" } },
@@ -2361,7 +2361,7 @@ function Build_popup_trap(S, z1, skin, combo)
 
   info.sec_tag = tag
 
-  transformed_brush2(T, info,
+  transformed_brush(T, info,
   {
     { x=long, y=0,    line_kind=19, line_tag=tag },
     { x=long, y=deep, line_kind=19, line_tag=tag },
@@ -2762,13 +2762,13 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local f_h = h1 + (h2 - h1) * (i-1) / (steps-1)
       local c_h = f_h + gap_h
 
-      transformed_brush2(nil, wall_info, step_coords(p0,p1, 0/6, 1/6), -2000,2000)
-      transformed_brush2(nil, wall_info, step_coords(p0,p1, 5/6, 6/6), -2000,2000)
+      transformed_brush(nil, wall_info, step_coords(p0,p1, 0/6, 1/6), -2000,2000)
+      transformed_brush(nil, wall_info, step_coords(p0,p1, 5/6, 6/6), -2000,2000)
 
       local coords = step_coords(p0,p1, 1/6, 5/6)
 
-      transformed_brush2(nil, flat_info, coords, -2000,f_h)
-      transformed_brush2(nil, flat_info, coords,  c_h,2000)
+      transformed_brush(nil, flat_info, coords, -2000,f_h)
+      transformed_brush(nil, flat_info, coords,  c_h,2000)
     end
   end
 

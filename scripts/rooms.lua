@@ -1100,7 +1100,7 @@ if idx < 1 then return end
 
 
 gui.printf("do_teleport\n")
-    transformed_brush2(nil,
+    transformed_brush(nil,
     {
       t_face = { texture="GATE3" },
       b_face = { texture="GATE3" },
@@ -1335,7 +1335,7 @@ end --]]
     -- CEILING
 
     if S.kind ~= "void" then
-      transformed_brush2(nil,
+      transformed_brush(nil,
       {
         t_face = { texture=c_tex },
         b_face = { texture=c_tex },
@@ -1379,7 +1379,7 @@ end --]]
 
     if S.kind == "void" then
 
-      transformed_brush2(nil,
+      transformed_brush(nil,
       {
         t_face = { texture=f_tex },
         b_face = { texture=f_tex },
@@ -1393,7 +1393,7 @@ end --]]
 
     elseif S.kind == "foobar" then
 
-      transformed_brush2(nil,
+      transformed_brush(nil,
       {
         t_face = { texture="NUKAGE1" },
         b_face = { texture=f_tex },
@@ -1405,7 +1405,7 @@ end --]]
       },
       -2000, -32);
 
-      transformed_brush2(nil,
+      transformed_brush(nil,
       {
         t_face = { texture=f_tex },
         b_face = { texture=f_tex },
@@ -1436,7 +1436,7 @@ end --]]
       Build_popup_trap(S, z1, {}, S.room.combo)
 
     elseif S.kind == "liquid" then
-      transformed_brush2(nil,
+      transformed_brush(nil,
       {
         t_face = { texture="NUKAGE3" },
         b_face = { texture="NUKAGE3" },
@@ -1451,7 +1451,7 @@ end --]]
 
     elseif not S.no_floor then
 
-      transformed_brush2(nil,
+      transformed_brush(nil,
       {
         t_face = { texture=f_tex },
         b_face = { texture=f_tex },
