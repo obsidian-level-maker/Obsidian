@@ -2996,6 +2996,12 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
         S.usage = "pillar"
         S.pillar_tex = sel(ch == '1', "TEKLITE", "SILVER2")
       end
+
+-- EXPERIMENT !!!!
+if S.room == R then
+S.ceil_h = math.max((S.floor_h or 0)+96, 512-64)
+S.c_tex = S.room.combo.floor or S.f_tex
+end
     end end -- for x, y
   end
 
