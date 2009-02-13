@@ -1696,6 +1696,37 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end
   end
 
+  local function setup_stair(S, dir, hash_h, f_tex)
+    local N = S:neighbor(dir)
+    assert(N)
+    assert(N.room == R)
+    assert(R:contains_seed(N.sx, N.sy))
+
+    S.stair_z1 = assert(hash_h)  
+    S.stair_z2 = assert(N.floor_h)
+
+    -- check if a stair is really needed
+    if math.abs(S.stair_z1 - S.stair_z2) < 21 then
+      hash_h = int((S.stair_z1 + S.stair_z2) / 2)
+
+      S.kind = "walk"
+      S.stair_z1 = nil
+      S.stair_z2 = nil
+
+      return set_seed_floor(S, hash_h, f_tex)
+    end
+
+    S.kind = "stair"
+    S.stair_dir = dir
+
+    assert(not S.conn)
+    S.floor_h = hash_h
+
+    if not R.outdoor then
+      S.f_tex = f_tex
+    end
+  end
+
 
   local function eval_fab(T)
 gui.debugf("eval_fab...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table_to_str(T.expanded,3))
@@ -1784,26 +1815,6 @@ gui.debugf("OK : score = %1.4f\n", score)
     return score
   end
 
-  local function setup_stair(S, dir, hash_h, f_tex)
-    S.kind = "stair"
-    S.stair_dir = dir
-
-    assert(not S.conn)
-    S.floor_h = hash_h
-
-    if not R.outdoor then
-      S.f_tex = f_tex
-    end
-
-    local N = S:neighbor(S.stair_dir)
-    assert(N)
-    assert(N.room == R)
-    assert(R:contains_seed(N.sx, N.sy))
-
-    S.stair_z1 = assert(hash_h)  
-    S.stair_z2 = assert(N.floor_h)
-  end
-
   local function install_fab(T, hash_h, hash_ftex, hash_lev)
 
 local ax,ay = morph_coord(T, 1,1)
@@ -1885,7 +1896,7 @@ gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
     S.floor_h = N.floor_h
     S.ceil_h  = N.ceil_h
 
-    S.f_tex   = "LAVA1" or N.f_tex
+    S.f_tex   = N.f_tex
     S.c_tex   = N.c_tex
     S.w_tex   = N.w_tex
 
@@ -1903,7 +1914,7 @@ gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
     end
 
     if N.kind == "stair" then
-      S.stair_z1 = assert(N.stair_z1) + 16
+      S.stair_z1 = assert(N.stair_z1)
       S.stair_z2 = assert(N.stair_z2)
 
       S.stair_dir = assert(N.stair_dir)
