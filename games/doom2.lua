@@ -135,7 +135,7 @@ D2_COMBOS =
 
   ---- TECH -----------------
 
-  TECH_BLUECARPET =
+  TECH_TEKGREN =
   {
     theme_probs = { TECH=20 },
     mat_pri = 4,
@@ -143,6 +143,20 @@ D2_COMBOS =
     wall  = "TEKGREN2",
     floor = "FLOOR1_1",
     ceil  = "FLAT4",
+
+    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
+               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
+               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
+               "SLIME15",  "SLIME16"
+             },
+
+    ceilings = { "CEIL5_1",  "CEIL5_2",
+                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "FLAT1",    "FLAT4",    "FLAT18",
+                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
+                 "GRNLITE1", "TLITE6_5"
+               },
+
 
     step = "STEP1",
     pillar = "TEKLITE2",  -- TODO: doom 1: "COMPUTE1"

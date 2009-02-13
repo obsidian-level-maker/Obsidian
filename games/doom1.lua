@@ -424,6 +424,127 @@ DM_COMBOS =
     scenery = "tech_column",
   },
 
+  TECH_GRAY =
+  {
+    wall  = "GRAY7",
+    floor = "FLOOR0_5",
+    ceil  = "FLAT1",
+
+    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
+               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
+               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
+               "SLIME15",  "SLIME16"
+             },
+
+    ceilings = { "CEIL5_1",  "CEIL5_2",
+                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "FLAT1",    "FLAT4",    "FLAT18",
+                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
+                 "GRNLITE1", "TLITE6_5"
+               },
+
+    lift = "SUPPORT3",
+    pic_wd = "REDWALL",
+
+--  lift_floor = "FLOOR4_8",
+
+    scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
+
+    sc_fabs = { crate_rotnar_GRAY2=30, other=50 },
+  },
+
+  TECH_METAL =
+  {
+    wall  = "METAL2",
+    floor = "CEIL5_1",
+    ceil  = "CEIL5_2",
+
+    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
+               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
+               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
+               "SLIME15",  "SLIME16"
+             },
+
+    ceilings = { "CEIL5_1",  "CEIL5_2",
+                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "FLAT1",    "FLAT4",    "FLAT18",
+                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
+                 "GRNLITE1", "TLITE6_5"
+               },
+
+    lift = "SUPPORT3",
+    pic_wd = "REDWALL",
+
+--  lift_floor = "FLOOR4_8",
+
+    scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
+
+    sc_fabs = { crate_rotnar_GRAY2=30, other=50 },
+  },
+
+  INDY_PIPES =  -- UNUSED (looks bad)
+  {
+    wall  = "PIPE2",
+    floor = "FLAT1_1",
+    ceil  = "FLAT1_1",
+
+    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
+               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
+               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
+               "SLIME15",  "SLIME16"
+             },
+
+    ceilings = { "CEIL5_1",  "CEIL5_2",
+                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "FLAT1",    "FLAT4",    "FLAT18",
+                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
+                 "GRNLITE1", "TLITE6_5"
+               },
+
+    step = "STEP1",
+    lift = "SUPPORT3",
+    pic_wd = "REDWALL",
+
+--  lift_floor = "FLOOR4_8",
+
+    scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
+
+    wall_fabs = { solid_PIPE4=20, other=30 },
+  },
+
+  TECH_SLAD =
+  {
+    wall  = "SLADWALL",
+    floor = "FLOOR0_5",
+    ceil  = "CEIL5_1",
+
+    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
+               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
+               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
+               "SLIME15",  "SLIME16"
+             },
+
+    ceilings = { "CEIL5_1",  "CEIL5_2",
+                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "FLAT1",    "FLAT4",    "FLAT18",
+                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
+                 "GRNLITE1", "TLITE6_5"
+               },
+
+--  void = "SLADSKUL",
+    step = "STEP1",
+
+    vista_support = "DOORSTOP",
+
+    scenery = "burning_barrel",
+    good_liquid = "nukage",
+
+    sc_fabs = { pillar_rnd_sm_POIS=50, other=30 },
+
+    wall_fabs = { solid_SLADSKUL=30, other=50 },
+  },
+
+
   ---- HELL ----------
 
   HELL_MARBLE =
@@ -562,77 +683,6 @@ DM_COMBOS =
 --  lift_floor = "FLOOR4_8",
 
     wall_fabs = { solid_CEMENT4=20, solid_CEMENT5=20, other=50 },
-  },
-
-  INDY_SLAD =
-  {
-    wall  = "SLADWALL",
-    floor = "FLOOR0_5",
-    ceil  = "CEIL5_1",
-
-    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
-               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
-               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
-               "SLIME15",  "SLIME16"
-             },
-
-    ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
-                 "FLAT1",    "FLAT4",    "FLAT18",
-                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
-                 "GRNLITE1", "TLITE6_5"
-               },
-
---  void = "SLADSKUL",
-    step = "STEP1",
-
-    vista_support = "DOORSTOP",
-
-    scenery = "burning_barrel",
-    good_liquid = "nukage",
-
-    sc_fabs = { pillar_rnd_sm_POIS=50, other=30 },
-
-    wall_fabs = { solid_SLADSKUL=30, other=50 },
-  },
-
-  INDY_GRAY =
-  {
-    theme_probs = { INDUSTRIAL=50 },
-    mat_pri = 3,
-
-    wall  = "GRAY7",
-    floor = "FLOOR0_5",
-    ceil  = "FLAT1",
-
-    lift = "SUPPORT3",
-    pic_wd = "REDWALL",
-
---  lift_floor = "FLOOR4_8",
-
-    scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
-
-    sc_fabs = { crate_rotnar_GRAY2=30, other=50 },
-  },
-
-  INDY_PIPES =
-  {
-    theme_probs = { INDUSTRIAL=45 },
-    mat_pri = 4,
-
-    wall  = "PIPE2",
-    floor = "FLAT1_1",
-    ceil  = "FLAT1_1",
-
-    step = "STEP1",
-    lift = "SUPPORT3",
-    pic_wd = "REDWALL",
-
---  lift_floor = "FLOOR4_8",
-
-    scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
-
-    wall_fabs = { solid_PIPE4=20, other=30 },
   },
 
   INDY_ICKY =
@@ -2684,11 +2734,14 @@ DM_THEMES =
   {
     building =
     {
-      TECH_BASE=50,
+      TECH_BASE=35,
       TECH_GREEN=20,
-      TECH_BROWN=30,
-      INDY_SLAD=20,
+      TECH_BROWN=20,
+      TECH_SLAD=20,
       TECH_SILVER=10,
+      TECH_GRAY=10,
+      TECH_METAL=15,
+      TECH_TEKGREN=10,  -- FIXME: DOOM II ONLY !!!!!
     },
 
     ground =
