@@ -303,7 +303,11 @@ void CSG2_MakeMiniMap(void)
       }
       else if (fabs(f1 - f2) > 24.5)
       {
-        r = 0; g = 255; b = 192;
+        r = 0; g = 255; b = 160;
+      }
+      else if (fabs(c1 - c2) > 30.5)
+      {
+        r = 96; g = 192; b = 255;
       }
       else
       {
