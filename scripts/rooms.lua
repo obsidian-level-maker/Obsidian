@@ -1479,8 +1479,8 @@ end --]]
       Build_diagonal(S, dir, diag_info)
     end
 
-    if S.has_pillar then
-      Build_pillar(S, z1, z2, "TEKLITE")
+    if S.usage == "pillar" then
+      Build_pillar(S, z1, z2, S.pillar_tex)
     end
 
 
@@ -2662,6 +2662,14 @@ function Room_layout_one(R)
         apply_junk_side(side)
       end
     end
+
+    R.tx1 = R.sx1 + R.junk_thick[4]
+    R.ty1 = R.sy1 + R.junk_thick[2]
+
+    R.tx2 = R.sx2 - R.junk_thick[6]
+    R.ty2 = R.sy2 - R.junk_thick[8]
+
+    R.tw, R.th = box_size(R.tx1, R.ty1, R.tx2, R.ty2)
   end
 
 
@@ -2905,6 +2913,138 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     return g_info.hts
   end
 
+  local PILLAR_PATTERNS =
+  {
+     "-2-",
+     "1-1",
+     "111",
+
+     "-1-1-",
+     "1-2-1",
+
+     "1--1",
+     "1111",
+
+     "--1-1--",
+     "-1---1-",
+     "-1-2-1-",
+     "1--2--1",
+     "1-2-2-1",
+
+     "-1--1-",
+     "2-11-2",
+
+     "--1--1--",
+     "1-2--2-1",
+
+     "--1-2-1--",
+     "-1--2--1-",
+     "-1-2-2-1-",
+     "1---2---1",
+     "2-1---1-2",
+
+     "--1--2--1--",
+     "-1---2---1-",
+     "-1-1---1-1-",
+     "1----2----1",
+     "2--1---1--2",
+  }
+
+  local function can_pillar_pattern(side, offset, pat)
+    local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
+    local pos = 1
+
+    x1,y1 = nudge_coord(x1, y1, 10-side, offset)
+    x2,y2 = nudge_coord(x2, y2, 10-side, offset)
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+
+      local ch = string.sub(pat, pos, pos)
+      pos = pos + 1
+      assert(ch)
+
+      if ch == '-' then
+        if S.usage == "pillar" then return false end
+      else
+        assert(is_digit(ch))
+        if S.kind ~= "walk" or S.room ~= R or S.usage or
+           S.conn or S.pseudo_conn or S.must_walk
+        then
+          return false
+        end
+      end
+    end end -- for x, y
+
+    return true --OK--
+  end
+
+  local function make_pillar_pattern(side, offset, pat)
+    local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
+    local pos = 1
+
+    x1,y1 = nudge_coord(x1, y1, 10-side, offset)
+    x2,y2 = nudge_coord(x2, y2, 10-side, offset)
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+
+      local ch = string.sub(pat, pos, pos)
+      pos = pos + 1
+
+      if is_digit(ch) then
+        S.usage = "pillar"
+        S.pillar_tex = sel(ch == '1', "TEKLITE", "SILVER2")
+      end
+    end end -- for x, y
+  end
+
+  local function add_pillars()
+    if R.parent then return end
+
+    local SIDES = { 2, 4 }
+    rand_shuffle(SIDES)
+
+    for _,side in ipairs(SIDES) do for offset = 0,1 do
+      local long, deep = R.tw, R.th
+      if is_horiz(side) then long,deep = deep,long end
+
+      if deep >= 3+offset*2 and long >= 3 then
+        local lists = { {}, {} }
+
+        for where = 1,2 do
+          for _,pat in ipairs(PILLAR_PATTERNS) do
+            if #pat == long and
+               can_pillar_pattern(sel(where==1,side,10-side), offset, pat)
+            then
+              table.insert(lists[where], pat)
+            end
+          end -- for pat
+        end -- for where
+
+        if #lists[1] > 0 and #lists[2] > 0 then
+          local pat1
+          local pat2
+
+          -- preference for same pattern
+          for loop = 1,3 do
+            pat1 = rand_element(lists[1])
+            pat2 = rand_element(lists[2])
+            if pat1 == pat2 then break; end
+          end
+
+          gui.debugf("Pillar patterns @ %s : %d=%s | %d=%s\n",
+                     R:tostr(), side, pat1, 10-side, pat2)
+
+          make_pillar_pattern(side,    offset, pat1)
+          make_pillar_pattern(10-side, offset, pat2)
+
+          return --OK--
+        end
+      end
+    end end -- for side, offset
+  end
+
 
   ---==| Room_layout_one |==---
 
@@ -2963,6 +3103,10 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
 
+  R.tx1, R.ty1 = R.sx1, R.sy1
+  R.tx2, R.ty2 = R.sx2, R.sy2
+  R.tw,  R.th  = R.sw,  R.sh
+
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
   if R.kind == "building" and not R.children then
@@ -2972,8 +3116,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   local area =
   {
-    x1 = R.sx1 + R.junk_thick[4], y1 = R.sy1 + R.junk_thick[2],
-    x2 = R.sx2 - R.junk_thick[6], y2 = R.sy2 - R.junk_thick[8],
+    x1 = R.tx1, y1 = R.ty1,
+    x2 = R.tx2, y2 = R.ty2,
   }
 
   local heights = select_heights(focus_C)
@@ -2983,19 +3127,23 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
 ---??  flood_fill_for_junk()
 
-  Room_set_floor_minmax(R)
-
-  Room_choose_corner_stairs(R)
-
-
   for _,C in ipairs(R.conns) do
     assert(C.conn_h)
   end
 
 
+  Room_set_floor_minmax(R)
+
+  Room_choose_corner_stairs(R)
+
   if R.purpose then
     add_purpose()
   end
+
+  if R.kind == "building" then
+    add_pillars()
+  end
+
 
   -- ETC ETC !!!
 
@@ -3032,12 +3180,12 @@ function Rooms_all_lay_out()
   gui.printf("Symmetry Mode: %s\n", PLAN.symmetry_mode)
 
 
---[[
+--[[ ]]
 PLAN.liquid_mode = "few"
-PLAN.hallway_mode = "heaps"
+PLAN.hallway_mode = "few"
 PLAN.symmetry_mode = "some"
 PLAN.junk_mode = "some"
-PLAN.sky_mode = "some" ]]
+PLAN.sky_mode = "few"
 
 ---  Test_room_fabs()
 
