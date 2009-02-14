@@ -782,46 +782,54 @@ function Build_weird_hall(S, side, z1, z2)
 end
 
 
-function Build_diagonal(S, dir, info, z1)
+function Build_diagonal(S, side, info, z1)
 
-  local x1 = S.x1 + S.thick[4]
-  local y1 = S.y1 + S.thick[2]
+  local function get_thick(wsd)
+    if S.border[wsd].kind == "wall" then
+      return S.thick[wsd]
+    end
 
-  local x2 = S.x2 - S.thick[6]
-  local y2 = S.y2 - S.thick[8]
+    return 0
+  end
+
+  local x1 = S.x1 + get_thick(4)
+  local y1 = S.y1 + get_thick(2)
+
+  local x2 = S.x2 - get_thick(6)
+  local y2 = S.y2 - get_thick(8)
 
   local coords
 
-  if dir == 9 then
-    coords =
-    {
-      { x=x1, y=y2 },
-      { x=x2, y=y1 },
-      { x=x2, y=y2 },
-    }
-  elseif dir == 7 then
-    coords =
-    {
-      { x=x1, y=y1 },
-      { x=x2, y=y2 },
-      { x=x1, y=y2 },
-    }
-  elseif dir == 3 then
-    coords =
-    {
-      { x=x2, y=y2 },
-      { x=x1, y=y1 },
-      { x=x2, y=y1 },
-    }
-  elseif dir == 1 then
+  if side == 9 then
     coords =
     {
       { x=x2, y=y1 },
+      { x=x2, y=y2 },
+      { x=x1, y=y2 },
+    }
+  elseif side == 7 then
+    coords =
+    {
       { x=x1, y=y2 },
       { x=x1, y=y1 },
+      { x=x2, y=y2 },
+    }
+  elseif side == 3 then
+    coords =
+    {
+      { x=x2, y=y1 },
+      { x=x2, y=y2 },
+      { x=x1, y=y1 },
+    }
+  elseif side == 1 then
+    coords =
+    {
+      { x=x1, y=y2 },
+      { x=x1, y=y1 },
+      { x=x2, y=y1 },
     }
   else
-    error("WTF dir")
+    error("bad side for Build_diagonal")
   end
 
   transformed_brush(nil, info, coords, z1 or -4000, 4000)

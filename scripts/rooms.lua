@@ -1282,58 +1282,51 @@ end --]]
 
     -- DIAGONALS
 
-    local diag_L  -- can be "void" or a seed reference
-    local diag_R
-
     if S.kind == "diagonal" then
-      for side = 2,8,2 do
-        local who = "L"
-            if side == 6 then who = "R"
-        elseif side == 2 and S.diag_kind == '/'  then who = "R"
-        elseif side == 8 and S.diag_kind == '\\' then who = "R"
-        end
+      local voids = {}
 
+      for side = 2,8,2 do
         local N = S:neighbor(side)
 
         if not (N and N.room and N.room == R) or (N and N.kind == "void") then
-          if who == "L" then diag_L = "void" else diag_R = "void" end
-
-        elseif N.kind == "liquid" then
-          if who == "L" then
-            if not diag_L then diag_L = "liquid" end
-          else
-            if not diag_R then diag_R = "liquid" end
-          end
-
-        elseif N.kind ~= "cage" and N.floor_h
----     elseif N.kind == "walk" or N.kind == "stair" or
----            N.kind == "lift" or N.kind == "purpose" or
----            N.kind == "popup"
-        then
-          if who == "L" then
-            if not diag_L or diag_L == "liquid" then diag_L = N
-            elseif diag_L == "void" then -- no change
-            elseif diag_L.floor_h < N.floor_h then diag_L = N
-            end
-          else
-            if not diag_R or diag_R == "liquid" then diag_R = N
-            elseif diag_R == "void" then -- no change
-            elseif diag_R.floor_h < N.floor_h then diag_R = N
-            end
-          end
+          voids[side] = true
         end
       end
 
-      assert(diag_L or diag_R)
+      if table_empty(voids) then
+        -- TODO: diagonals with two non-VOID parts
+        S.kind = "walk"
 
-      diag_L = diag_L or diag_R
-      diag_R = diag_R or diag_L
+      elseif (voids[2] and voids[8]) or (voids[4] and voids[6]) then
+        S.kind = "void"
+
+      else
+        local d_side
+
+        if S.diag_kind == '/' then
+          d_side = 7
+          if voids[2] or voids[6] then d_side = 3 end
+
+        else assert(S.diag_kind == '\\')
+          d_side = 1
+          if voids[8] or voids[6] then d_side = 9 end
+        end
+
+        local diag_info =
+        {
+          t_face = { texture=f_tex },
+          b_face = { texture=c_tex },
+          w_face = { texture=w_tex },
+        }
+
+        Build_diagonal(S, d_side, diag_info)
+      end
     end
 
 
     -- CEILING
 
-    if S.kind ~= "void" then
+    if S.kind ~= "void" and not S.no_ceil then
       transformed_brush(nil,
       {
         t_face = { texture=c_tex },
@@ -1465,19 +1458,7 @@ end --]]
     end
 
 
-    -- MISCELLANEOUS
-
-    if S.kind == "diagonal" then
-      local diag_info =
-      {
-        t_face = { texture=f_tex },
-        b_face = { texture=c_tex },
-        w_face = { texture=w_tex },
-      }
-      local dir = 1  --!!!!
-
-      Build_diagonal(S, dir, diag_info)
-    end
+    -- PREFABS
 
     if S.usage == "pillar" then
       Build_pillar(S, z1, z2, S.pillar_tex)
@@ -1600,17 +1581,12 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     return ch == '.' or is_digit(ch)
   end
 
-  local function can_walk(ch)
-    return not (ch == 'S' or ch == '~' or ch == '/' or ch == '\\')
-  end
-
   local TRANSPOSE_DIR_TAB = { 1,4,7,2,5,8,3,6,9 }
 
   local TRANSPOSE_STAIR_TAB =
   {
     ['<'] = 'v',  ['v']  = '<',
     ['>'] = '^',  ['^']  = '>',
-    ['/'] = '\\', ['\\'] = '/',
     ['-'] = '|',  ['|']  = '-',
     ['!'] = '=',  ['=']  = '!',
   }
@@ -1727,6 +1703,25 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end
   end
 
+---#  local function has_void_neighbor(T, S, i, j)
+---#    for side = 2,8,2 do
+---#      -- check the room
+---#      local N = S:neighbor(side)
+---#      if not (N and N.room and N.room == R) then return true end
+---#      if N and N.kind == "void" then return true end
+---#
+---#      -- check the pattern
+---#      i, j = nudge_coord(i, j, side)
+---#
+---#      if (1 <= i and i <= T.long) and (1 <= j and j <= T.deep) then
+---#        local ch = string.sub(T.expanded[T.deep+1-j], i, i)
+---#        if ch == 'S' then return true end
+---#      end
+---#    end
+---#
+---#    return false
+---#  end
+
 
   local function eval_fab(T)
 gui.debugf("eval_fab...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table_to_str(T.expanded,3))
@@ -1754,7 +1749,7 @@ gui.debugf("SYMMETRY MISMATCH (%s ~= %s\n", req_sym or "NONE", info_sym or "NONE
       for _,sub in ipairs(T.info.subs) do
         if (sub.height + 1) > #heights then
 gui.debugf("NOT ENOUGH HEIGHTS\n")
-return -2 end
+        return -1 end
       end
     end
 
@@ -1776,7 +1771,7 @@ return -2 end
       if (S.conn or S.pseudo_conn or S.must_walk) then
         if not plain_walk(ch) then
 gui.debugf("CONN no have PLAIN WALK\n")
-          return -3
+          return -1
         end
 
         if is_digit(ch) then
@@ -1789,21 +1784,25 @@ gui.debugf("CONN no have PLAIN WALK\n")
       if ch == '.' and S.conn == R.focus_conn then
         T.has_focus = true
       end
+
+---#      if (ch == '/' or ch == '\\') and not has_void_neighbor(T, S, i,j) then
+---#        return -1
+---#      end
     end end -- for i, j
 
     -- for top-level pattern we require focus seed to hit a '.'
     if is_top and not T.has_focus then
 gui.debugf("FOCUS not touch dot\n");
-      return -4
+      return -1
     end
 
     -- check sub-area matches
     if T.info.subs then
       for s_idx,sub in ipairs(T.info.subs) do
         if sub.match == "one"  and not matches[s_idx] and
-           not (R.kind == "purpose") then return -5 end
+           not (R.kind == "purpose") then return -1 end
 
-        if sub.match == "none" and matches[s_idx] then return -5 end
+        if sub.match == "none" and matches[s_idx] then return -1 end
 
         if sub.match == "any" and matches[s_idx] then
           score = score + 100
@@ -1853,6 +1852,8 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
         setup_stair(S, 8, hash_h, hash_ftex)
 
       elseif ch == '/' or ch == '\\' then
+        set_seed_floor(S, hash_h, hash_ftex)
+
         S.kind = "diagonal"
         S.diag_kind = ch
 
@@ -1860,8 +1861,8 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
         S.kind = "void"
 
       elseif ch == '~' then
+        -- NOTE: floor_h for liquids is determined later
         S.kind = "liquid"
----#    S.floor_h = hash_h - 64
 
       end
 
@@ -2086,8 +2087,10 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
       end
     end
 
+
     assert(heights[1])
 
+    -- this must occur after sub-division (for stairs)
     install_fab(T, heights[1], f_texs[1], div_lev)
 
     return true  -- YES !!
