@@ -61,8 +61,8 @@ function Doom_generate_skies()
 
   local ORANGE_CLOUDS =
   {
-    190, 188, 235, 232,
-    221, 218, 216, 214, 211,
+    234, 232,
+    222, 220, 218, 216, 214, 211,
   }
 
 
