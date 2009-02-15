@@ -219,10 +219,12 @@ function Test_room_fabs()
   end
 
   local function match_x_char(LC, RC)
-    if LC == '<'  then return (RC == '>') end
-    if LC == '>'  then return (RC == '<') end
-    if LC == '/'  then return (RC == '\\') end
-    if LC == '\\' then return (RC == '/') end
+    if LC == '<' then return (RC == '>') end
+    if LC == '>' then return (RC == '<') end
+    if LC == '/' then return (RC == '%') end
+    if LC == '%' then return (RC == '/') end
+    if LC == 'Z' then return (RC == 'N') end
+    if LC == 'N' then return (RC == 'Z') end
 
     -- having different sub-areas is OK
     if is_digit(LC) and is_digit(RC) then return true end
@@ -231,10 +233,12 @@ function Test_room_fabs()
   end
 
   local function match_y_char(TC, BC)
-    if TC == '^'  then return (BC == 'v') end
-    if TC == 'v'  then return (BC == '^') end
-    if TC == '/'  then return (BC == '\\') end
-    if TC == '\\' then return (BC == '/') end
+    if TC == '^' then return (BC == 'v') end
+    if TC == 'v' then return (BC == '^') end
+    if TC == '/' then return (BC == '%') end
+    if TC == '%' then return (BC == '/') end
+    if LC == 'Z' then return (RC == 'N') end
+    if LC == 'N' then return (RC == 'Z') end
 
     -- having different sub-areas is OK
     if is_digit(TC) and is_digit(BC) then return true end
@@ -1307,7 +1311,7 @@ end --]]
           d_side = 7
           if voids[2] or voids[6] then d_side = 3 end
 
-        else assert(S.diag_kind == '\\')
+        else assert(S.diag_kind == '%')
           d_side = 1
           if voids[8] or voids[6] then d_side = 9 end
         end
@@ -1615,16 +1619,20 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     if T.x_flip then
           if ch == '<' then ch = '>'
       elseif ch == '>' then ch = '<'
-      elseif ch == '/'  then ch = '\\'
-      elseif ch == '\\' then ch = '/'
+      elseif ch == '/' then ch = '%'
+      elseif ch == '%' then ch = '/'
+      elseif ch == 'Z' then ch = 'N'
+      elseif ch == 'N' then ch = 'Z'
       end
     end
 
     if T.y_flip then
           if ch == 'v' then ch = '^'
       elseif ch == '^' then ch = 'v'
-      elseif ch == '/'  then ch = '\\'
-      elseif ch == '\\' then ch = '/'
+      elseif ch == '/' then ch = '%'
+      elseif ch == '%' then ch = '/'
+      elseif ch == 'Z' then ch = 'N'
+      elseif ch == 'N' then ch = 'Z'
       end
     end
 
@@ -1770,7 +1778,7 @@ gui.debugf("NOT ENOUGH HEIGHTS\n")
 
       if (S.conn or S.pseudo_conn or S.must_walk) then
         if not plain_walk(ch) then
-gui.debugf("CONN no have PLAIN WALK\n")
+gui.debugf("CONN needs PLAIN WALK\n")
           return -1
         end
 
@@ -1785,9 +1793,6 @@ gui.debugf("CONN no have PLAIN WALK\n")
         T.has_focus = true
       end
 
----#      if (ch == '/' or ch == '\\') and not has_void_neighbor(T, S, i,j) then
----#        return -1
----#      end
     end end -- for i, j
 
     -- for top-level pattern we require focus seed to hit a '.'
@@ -1851,7 +1856,7 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
       elseif ch == '^' then
         setup_stair(S, 8, hash_h, hash_ftex)
 
-      elseif ch == '/' or ch == '\\' then
+      elseif ch == '/' or ch == '%' then
         set_seed_floor(S, hash_h, hash_ftex)
 
         S.kind = "diagonal"
@@ -1864,6 +1869,8 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
         -- NOTE: floor_h for liquids is determined later
         S.kind = "liquid"
 
+      else
+        error("unknown symbol in room fab: '" .. tostring(ch) .. "'")
       end
 
     end end -- for i, j
@@ -1910,8 +1917,11 @@ gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
       if S.f_tex then C.conn_ftex = S.f_tex end
     end
 
-    if N.diag_kind then
-      S.diag_kind = sel(N.diag_kind == '/', '\\', '/')
+    if N.kind == "diagonal" then
+          if N.diag_kind == '/' then S.diag_kind = '%'
+      elseif N.diag_kind == '%' then S.diag_kind = '/'
+      else error("WTF diagonal")
+      end
     end
 
     if N.kind == "stair" then
