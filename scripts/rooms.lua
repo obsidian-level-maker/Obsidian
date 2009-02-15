@@ -1287,43 +1287,79 @@ end --]]
     -- DIAGONALS
 
     if S.kind == "diagonal" then
-      local voids = {}
+      local d_left
+      local d_right
 
-      for side = 2,8,2 do
-        local N = S:neighbor(side)
+      local N4 = S:neighbor(4)
+      local N6 = S:neighbor(6)
 
-        if not (N and N.room and N.room == R) or (N and N.kind == "void") then
-          voids[side] = true
-        end
+      if not (N4 and N4.room and N4.room == R) or (N4 and N4.kind == "void") then
+        d_left = "void"
+      elseif N4.kind == "walk" and N4.floor_h then
+        d_left = "ledge"
       end
 
-      if table_empty(voids) then
-        -- TODO: diagonals with two non-VOID parts
-        S.kind = "walk"
+      if not (N6 and N6.room and N6.room == R) or (N6 and N6.kind == "void") then
+        d_right = "void"
+      elseif N6.kind == "walk" and N6.floor_h then
+        d_right = "ledge"
+      end
 
-      elseif (voids[2] and voids[8]) or (voids[4] and voids[6]) then
+
+      local diag_info =
+      {
+        t_face = { texture=f_tex },
+        b_face = { texture=c_tex },
+        w_face = { texture=w_tex },
+      }
+
+      if d_left == "void" and d_right == "void" then
         S.kind = "void"
 
-      else
+      elseif d_left == d_right then
+        S.kind = "walk"
+
+      elseif d_left == "void" or d_right == "void" then
         local d_side
 
         if S.diag_kind == '/' then
-          d_side = 7
-          if voids[2] or voids[6] then d_side = 3 end
+          d_side = sel(d_left == "void", 7, 3)
 
         else assert(S.diag_kind == '%')
-          d_side = 1
-          if voids[8] or voids[6] then d_side = 9 end
+          d_side = sel(d_left == "void", 1, 9)
         end
 
-        local diag_info =
-        {
-          t_face = { texture=f_tex },
-          b_face = { texture=c_tex },
-          w_face = { texture=w_tex },
-        }
-
         Build_diagonal(S, d_side, diag_info)
+
+      elseif d_left == "ledge" or d_right == "ledge" then
+        local d_side
+
+        if S.diag_kind == '/' then
+          d_side = sel(d_left == "ledge", 7, 3)
+
+        else assert(S.diag_kind == '%')
+          d_side = sel(d_left == "ledge", 1, 9)
+        end
+
+        local ledge_h
+
+        if d_left == "ledge" then
+          ledge_h = assert(N4 and N4.floor_h)
+        else
+          ledge_h = assert(N6 and N6.floor_h)
+        end
+
+        Build_diagonal(S, d_side, diag_info, ledge_h)
+
+      else
+        error("WTF diagonals: " .. tostring(d_left) .. " + " .. tostring(d_right))
+      end
+
+
+      if S.kind == "diagonal" or S.kind == "walk" then
+        if S.diag_foobie == '~' then
+          S.kind = "liquid"
+        end
       end
     end
 
@@ -1680,7 +1716,14 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end
   end
 
-  local function setup_stair(S, dir, hash_h, f_tex)
+  local function setup_stair(S, ch, hash_h, f_tex)
+    local dir
+    if ch == 'v' then dir = 2 end
+    if ch == '<' then dir = 4 end
+    if ch == '>' then dir = 6 end
+    if ch == '^' then dir = 8 end
+    assert(dir)
+
     local N = S:neighbor(dir)
     assert(N)
     assert(N.room == R)
@@ -1777,6 +1820,8 @@ gui.debugf("NOT ENOUGH HEIGHTS\n")
       ch = morph_char(T, ch)
 
       if (S.conn or S.pseudo_conn or S.must_walk) then
+        -- TODO: if stair is "flat" (dest height == '.' height) then
+        --       allow connection to sit on it.
         if not plain_walk(ch) then
 gui.debugf("CONN needs PLAIN WALK\n")
           return -1
@@ -1839,38 +1884,33 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
       if is_digit(ch) then
         -- nothing to do, handled by recursive call
 
-      elseif ch == '.' then
-        set_seed_floor(S, hash_h, hash_ftex)
-        S.div_lev = hash_lev
---- if true then S.ceil_h = S.floor_h + 256 ; S.c_tex = "FLAT10" end
-
-      elseif ch == '<' then
-        setup_stair(S, 4, hash_h, hash_ftex)
-
-      elseif ch == '>' then
-        setup_stair(S, 6, hash_h, hash_ftex)
-
-      elseif ch == 'v' then
-        setup_stair(S, 2, hash_h, hash_ftex)
-
-      elseif ch == '^' then
-        setup_stair(S, 8, hash_h, hash_ftex)
-
-      elseif ch == '/' or ch == '%' then
-        set_seed_floor(S, hash_h, hash_ftex)
-
-        S.kind = "diagonal"
-        S.diag_kind = ch
-
-      elseif ch == 'S' then
-        S.kind = "void"
-
-      elseif ch == '~' then
-        -- NOTE: floor_h for liquids is determined later
-        S.kind = "liquid"
-
       else
-        error("unknown symbol in room fab: '" .. tostring(ch) .. "'")
+        if ch == '.' then
+          set_seed_floor(S, hash_h, hash_ftex)
+          S.div_lev = hash_lev
+  --- if true then S.ceil_h = S.floor_h + 256 ; S.c_tex = "FLAT10" end
+
+        elseif ch == '<' or ch == '>' or
+               ch == 'v' or ch == '^' then
+          setup_stair(S, ch, hash_h, hash_ftex)
+
+        elseif ch == '/' or ch == '%' then
+          set_seed_floor(S, hash_h, hash_ftex)
+
+          S.kind = "diagonal"
+          S.diag_kind = ch
+          S.diag_foobie = T.info.foobie
+
+        elseif ch == 'S' then
+          S.kind = "void"
+
+        elseif ch == '~' then
+          -- NOTE: floor_h for liquids is determined later
+          S.kind = "liquid"
+
+        else
+          error("unknown symbol in room fab: '" .. tostring(ch) .. "'")
+        end
       end
 
     end end -- for i, j
@@ -3200,7 +3240,7 @@ function Rooms_all_lay_out()
 
 
 --[[ ]]
-PLAN.liquid_mode = "few"
+PLAN.liquid_mode = "heaps"
 PLAN.hallway_mode = "few"
 PLAN.symmetry_mode = "some"
 PLAN.junk_mode = "some"

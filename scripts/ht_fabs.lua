@@ -1491,7 +1491,7 @@ SOLID_FABS =
 
   DIAG_C1 =
   {
-    prob = 9000,
+    prob = 900,
     environment = "indoor",
     
     structure =
@@ -1692,6 +1692,26 @@ LIQUID_FABS =
     symmetry = "x",
     match_any = true,
   },
+
+  LIQ_T_NICE =
+  {
+    prob = 19150,
+
+    structure =
+    {
+      ".....",
+      "~%./~",
+      "~~.~~",
+    },
+
+    x_sizes = { "11111", "21112", "31113" },
+    y_sizes = { "111", "211", "311", "411", "511", "512" },
+
+    symmetry = "x",
+    match_any = true,
+    foobie = '~',
+  },
+
 
   LIQ_H =
   {

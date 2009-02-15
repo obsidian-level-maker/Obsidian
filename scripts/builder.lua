@@ -782,8 +782,13 @@ function Build_weird_hall(S, side, z1, z2)
 end
 
 
-function Build_diagonal(S, side, info, z1)
+function Build_diagonal(S, side, info, floor_h, ceil_h)
 
+  -- floor_h and ceil_h are usually absent, which makes a
+  -- totally solid diagonal piece.  One of them can be given
+  -- but not both to make a diagonal floor or ceiling piece.
+  assert(not (floor_h and ceil_h))
+  
   local function get_thick(wsd)
     if S.border[wsd].kind == "wall" then
       return S.thick[wsd]
@@ -832,7 +837,7 @@ function Build_diagonal(S, side, info, z1)
     error("bad side for Build_diagonal")
   end
 
-  transformed_brush(nil, info, coords, z1 or -4000, 4000)
+  transformed_brush(nil, info, coords, ceil_h or -4000, floor_h or 4000)
 end
 
 
