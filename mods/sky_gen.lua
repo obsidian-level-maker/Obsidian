@@ -90,6 +90,11 @@ function Doom_generate_skies()
     47, 45, 43, 41, 39, 37, 35, 33
   }
 
+  local BLACK_HILLS =
+  {
+    0, 0, 0
+  }
+
 
   local back_gs = { "stars", GREY_CLOUDS, DARK_CLOUDS,
                     BLUE_CLOUDS, HELL_CLOUDS, ORANGE_CLOUDS }
@@ -99,6 +104,10 @@ function Doom_generate_skies()
 
   rand_shuffle(back_gs)
   rand_shuffle(fore_gs)
+
+  if rand_odds(10) then
+    table.insert(fore_gs, rand_irange(1,3), BLACK_HILLS)
+  end
 
   for num,sky in ipairs(sky_list) do
     gui.fsky_create(256, 128, 0)
