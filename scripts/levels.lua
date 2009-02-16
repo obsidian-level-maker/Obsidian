@@ -37,6 +37,7 @@ require 'connect'
 require 'naming'
 require 'quests'
 require 'builder'
+require 'layout'
 require 'rooms'
 
 --!! require 'monsters'
