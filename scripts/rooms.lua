@@ -58,20 +58,25 @@ class ROOM
 Room Layouting Notes
 ====================
 
-IDEAS:
 
-- height diffs:
-  - basic (if all else fails) algorithm:
-    flood fill heights from conn seeds to remaining seeds
-    [BUT: floor_h of room]
-    add a stair seed at some meeting spots
+DIAGONALS:
+   How they work:
 
-    if height diff is huge, deserves more seeds
+   1. basic model: seed is a liquid or walk area which has an
+      extra piece stuck in it (the diagonal) which is
+      either totally solid or same as a neighbouring higher floor.
+      We first build the extra bit, then convert the seed to what
+      it should be (change S.kind from "diagonal" --> "liquid" or "walk")
+      and build the ceiling/floor normally.
 
-  - patterns:
-    (a) L shape is nice
-    (b) U shape is possible
-    (c) plain side fill (two deep if room is big)
+   2. The '/' and '%' in patterns go horizontally, whereas
+      the 'Z' and 'N' go vertically.  If the pattern is
+      transposed then we exchange '/' with 'Z', '%' with 'N'.
+
+   3. once the room is fully laid out, then we can process
+      these diagonals and determine the main seed info
+      (e.g. liquid) and the Stuckie piece (e.g. void).
+
 
 --------------------------------------------------------------]]
 
@@ -457,62 +462,6 @@ function Rooms_choose_themes()
   for _,R in ipairs(PLAN.scenic_rooms) do
     Room_setup_theme_Scenic(R)
   end
-end
-
-
-function dump_layout(R)
-
-  local function outside_seed(x, y)
-    for dir = 2,8,2 do
-      local sx, sy = nudge_coord(x, y, dir)
-      if R:valid_T(sx, sy) then
-        local T = SEEDS[sx][sy][1]
-        if T.conn_dirs and T.conn_dirs[10-dir] then
-          return '*'
-        end
-      end
-    end
-      
-    for _,C in ipairs(R.conns) do
-      local S = C:seed(R)
-      local ox, oy = nudge_coord(S.sx, S.sy, S.conn_dir)
-      if ox == x and oy == y then
-        return '+'
-      end
-    end
-
-    return ' '
-  end
-
-  local function inside_seed(x, y)
-    local S = SEEDS[x][y][1]
-    assert(S and S.room == R)
-
-    if S.layout then
-      return S.layout.char
-    end
-
-    return '.'
-  end
-
-
-  --| dump_layout |--
-
-  gui.debugf("Room %s @ (%d,%d) Layout:\n", R.kind, R.sx1, R.sy1)
-
-  for y = R.ty2+1, R.ty1-1, -1 do
-    line = ""
-    for x = R.tx1-1, R.tx2+1 do
-      if x < R.tx1 or x > R.tx2 or y < R.ty1 or y > R.ty2 then
-        line = line .. outside_seed(x, y)
-      else
-        line = line .. inside_seed(x, y)
-      end
-    end
-    gui.debugf(" %s\n", line)
-  end
-
-  gui.debugf("\n");
 end
 
 
@@ -1166,7 +1115,6 @@ end --]]
 
       local B_kind = S.border[side].kind
 
-
       -- hallway hack
       if R.kind == "hallway" and not (S.kind == "void") and
          ( (B_kind == "wall")
@@ -1322,10 +1270,10 @@ end --]]
       elseif d_left == "void" or d_right == "void" then
         local d_side
 
-        if S.diag_kind == '/' then
+        if S.diag_char == '/' then
           d_side = sel(d_left == "void", 7, 3)
 
-        else assert(S.diag_kind == '%')
+        else assert(S.diag_char == '%')
           d_side = sel(d_left == "void", 1, 9)
         end
 
@@ -1334,10 +1282,10 @@ end --]]
       elseif d_left == "ledge" or d_right == "ledge" then
         local d_side
 
-        if S.diag_kind == '/' then
+        if S.diag_char == '/' then
           d_side = sel(d_left == "ledge", 7, 3)
 
-        else assert(S.diag_kind == '%')
+        else assert(S.diag_char == '%')
           d_side = sel(d_left == "ledge", 1, 9)
         end
 
@@ -1623,10 +1571,12 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
   local TRANSPOSE_DIR_TAB = { 1,4,7,2,5,8,3,6,9 }
 
-  local TRANSPOSE_STAIR_TAB =
+  local TRANSPOSE_CHAR_TAB =
   {
     ['<'] = 'v',  ['v']  = '<',
     ['>'] = '^',  ['^']  = '>',
+    ['/'] = 'Z',  ['Z']  = '/',
+    ['%'] = 'N',  ['N']  = '%',
     ['-'] = '|',  ['|']  = '-',
     ['!'] = '=',  ['=']  = '!',
   }
@@ -1672,8 +1622,8 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
       end
     end
 
-    if T.transpose and TRANSPOSE_STAIR_TAB[ch] then
-      ch = TRANSPOSE_STAIR_TAB[ch]
+    if T.transpose and TRANSPOSE_CHAR_TAB[ch] then
+      ch = TRANSPOSE_CHAR_TAB[ch]
     end
 
     return ch
@@ -1898,7 +1848,7 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
           set_seed_floor(S, hash_h, hash_ftex)
 
           S.kind = "diagonal"
-          S.diag_kind = ch
+          S.diag_char = ch
           S.diag_foobie = T.info.foobie
 
         elseif ch == 'S' then
@@ -1958,8 +1908,8 @@ gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
     end
 
     if N.kind == "diagonal" then
-          if N.diag_kind == '/' then S.diag_kind = '%'
-      elseif N.diag_kind == '%' then S.diag_kind = '/'
+          if N.diag_char == '/' then S.diag_char = '%'
+      elseif N.diag_char == '%' then S.diag_char = '/'
       else error("WTF diagonal")
       end
     end
