@@ -447,6 +447,50 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     return ch
   end
 
+  local function convert_structure(T, info, x_sizes, y_sizes)
+
+    local function morph_coord2(T, i, j)
+      if T.x_flip then i = T.long+1 - i end
+      if T.y_flip then j = T.deep+1 - j end
+
+      if T.transpose then i,j = j,i end
+
+      return i, j
+    end
+
+    T.structure = array_2D(area.tw, area.th)
+
+    local cur_j = 1
+
+    for j = 1,#y_sizes do
+      local j_num = pos_size(y_sizes, j)
+      local src = info.structure[#y_sizes+1 - j]
+      
+      local cur_i = 1
+
+      for i = 1,#x_sizes do
+        local i_num = pos_size(x_sizes, i)
+        local ch = string.sub(src, i, i)
+
+        for di = 0,i_num-1 do for dj = 0,j_num-1 do
+          local x, y = morph_coord2(T, cur_i+di, cur_j+dj)
+          T.structure[x][y] = { char=ch }
+        end end -- for di, dj
+
+        cur_i = cur_i + i_num
+      end -- for i
+
+      cur_j = cur_j + j_num
+    end -- for j
+
+
+    -- testing
+    for x = 1,area.tw do for y = 1,area.th do
+      assert(T.structure[x][y])
+    end end --]]
+  end
+
+
   local function find_sub_area(T, match_ch)
     local x1, y1 = 999, 999
     local x2, y2 =-9, -9
