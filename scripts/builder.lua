@@ -191,7 +191,7 @@ end
 
 
 
-function get_wall_coords(S, side, thick)
+function get_wall_coords(S, side, thick, pad)
   assert(side ~= 5)
 
   local x1, y1 = S.x1, S.y1
@@ -199,18 +199,22 @@ function get_wall_coords(S, side, thick)
 
   if side == 4 or side == 1 or side == 7 then
     x2 = x1 + (thick or S.thick[4])
+    if pad then x1 = x1 + pad end
   end
 
   if side == 6 or side == 3 or side == 9 then
     x1 = x2 - (thick or S.thick[6])
+    if pad then x2 = x2 - pad end
   end
 
   if side == 2 or side == 1 or side == 3 then
     y2 = y1 + (thick or S.thick[2])
+    if pad then y1 = y1 + pad end
   end
 
   if side == 8 or side == 7 or side == 9 then
     y1 = y2 - (thick or S.thick[8])
+    if pad then y2 = y2 - pad end
   end
 
   return rect_coords(x1,y1, x2,y2)
@@ -1940,7 +1944,7 @@ function Build_small_exit(R, item_name)
   }
 
 
-  local DT, long, deep = get_transform_for_seed_side(S, side)
+  local DT, long = get_transform_for_seed_side(S, side)
   local mx = int(long / 2)
 
 
@@ -1982,14 +1986,14 @@ function Build_small_exit(R, item_name)
 
 
   S.thick[side] = 80
-  S.thick[10 - side] = 32
 
-  S.thick[rotate_cw90(side)]  = 32
-  S.thick[rotate_ccw90(side)] = 32
+---##  S.thick[10 - side] = 32
+---##  S.thick[rotate_cw90(side)]  = 32
+---##  S.thick[rotate_ccw90(side)] = 32
 
 
-  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_cw90(side)),  -2000, 2000)
-  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_ccw90(side)), -2000, 2000)
+  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_cw90(side),  32, 8),  -2000, 2000)
+  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_ccw90(side), 32, 8), -2000, 2000)
 
 
   -- make door
@@ -2071,7 +2075,7 @@ function Build_small_exit(R, item_name)
                                 "SW1TEK",   "SW1STON1" }
 
   local WT
-  WT, long, deep = get_transform_for_seed_side(S, 10-side)
+  WT, long = get_transform_for_seed_side(S, 10-side)
 
   mx = int(long / 2)
   local swit_W = 64
@@ -2079,14 +2083,14 @@ function Build_small_exit(R, item_name)
 
   transformed_brush(WT, inner_info,
   {
-    { x=long, y=0 },
-    { x=long, y=16 },
-    { x=mx+swit_W/2+8, y=16, w_face={ texture="DOORSTOP", x_offset=0 } },
-    { x=mx+swit_W/2,   y=16, w_face={ texture=sw_tex,     x_offset=0, y_offset=0 }, line_kind=11 },
-    { x=mx-swit_W/2,   y=16, w_face={ texture="DOORSTOP", x_offset=0 } },
-    { x=mx-swit_W/2-8, y=16 },
-    { x=0, y=16 },
-    { x=0, y=0 },
+    { x=long-8, y=8 },
+    { x=long-8, y=32 },
+    { x=mx+swit_W/2+8, y=32, w_face={ texture="DOORSTOP", x_offset=0 } },
+    { x=mx+swit_W/2,   y=32, w_face={ texture=sw_tex,     x_offset=0, y_offset=0 }, line_kind=11 },
+    { x=mx-swit_W/2,   y=32, w_face={ texture="DOORSTOP", x_offset=0 } },
+    { x=mx-swit_W/2-8, y=32 },
+    { x=8, y=32 },
+    { x=8, y=8 },
   },
   -2000, 2000)
 
