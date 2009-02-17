@@ -471,6 +471,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
       for i = 1,#x_sizes do
         local i_num = pos_size(x_sizes, i)
         local ch = string.sub(src, i, i)
+        ch = morph_char(T, ch)
 
         for di = 0,i_num-1 do for dj = 0,j_num-1 do
           local x, y = morph_coord2(T, cur_i+di, cur_j+dj)
@@ -484,7 +485,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end -- for j
 
 
-    -- testing
+    -- [[ testing
     for x = 1,area.tw do for y = 1,area.th do
       assert(T.structure[x][y])
     end end --]]
@@ -542,7 +543,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     assert(R:contains_seed(N.sx, N.sy))
 
     S.stair_z1 = assert(hash_h)  
-    S.stair_z2 = assert(N.floor_h)
+    S.stair_z2 = assert(N.floor_h or 3)  --!!!!!!
 
     -- check if a stair is really needed
     if math.abs(S.stair_z1 - S.stair_z2) < 21 then
@@ -676,11 +677,11 @@ gui.debugf("OK : score = %1.4f\n", score)
     return score
   end
 
-  local function install_fab(T, hash_h, hash_ftex, hash_lev)
+  local function install_fab(T, want_subs, hash_lev)
 
 local ax,ay = morph_coord(T, 1,1)
 local bx,by = morph_coord(T, T.long,T.deep)
-gui.debugf("install_fab :  hash_h:%d  (%d,%d)..(%d,%d)\n", hash_h,
+gui.debugf("install_fab :  hash_h:%d  (%d,%d)..(%d,%d)\n", heights[1],
 math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
 
 --gui.debugf("T = %s\n\n", table_to_str(T,1))
@@ -693,23 +694,37 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
       local ch = string.sub(T.expanded[T.deep+1-j], i, i)
       ch = morph_char(T, ch)
 
-      if is_digit(ch) then
-        -- FIXME !!!!!!  set floor unless recursing
+      local hash_h    = assert(heights[1])
+      local hash_ftex = assert(f_texs[1])
 
-      else
-        if ch == '.' then
-          set_seed_floor(S, hash_h, hash_ftex)
-          S.div_lev = hash_lev
+      do
+        if ch == '.' or is_digit(ch) then
+          if is_digit(ch) then
+            local s_idx = 0 + ch
+            if want_subs[s_idx] then
+              local sub = assert(T.info.subs[s_idx])
+              hash_h = assert(heights[1 + sub.height])
+              hash_ftex = f_texs[1 + sub.height]
+            else
+              ch = nil
+            end
+          end
+
+          if ch then
+            set_seed_floor(S, hash_h, hash_ftex)
+            S.div_lev = hash_lev
   --- if true then S.ceil_h = S.floor_h + 256 ; S.c_tex = "FLAT10" end
+          end
 
         elseif ch == '<' or ch == '>' or
                ch == 'v' or ch == '^' then
           setup_stair(S, ch, hash_h, hash_ftex)
 
-        elseif ch == '/' or ch == '%' then
+        elseif ch == '/' or ch == '%' or
+               ch == 'Z' or ch == 'N' then
           set_seed_floor(S, hash_h, hash_ftex)
 
-          S.kind = "diagonal"
+--!!!!          S.kind = "diagonal"
           S.diag_char = ch
           S.diag_foobie = T.info.foobie
 
@@ -901,6 +916,8 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.transpose), T.long, T.deep)
 
         expand_structure(T, info, xs, ys)
 
+        convert_structure(T, info, xs, ys)
+
         for xf_n = 0,1 do for yf_n = 0,1 do
           T.x_flip = (xf_n == 1)
           T.y_flip = (yf_n == 1)
@@ -928,6 +945,8 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     -- recursive sub-division
 
     mark_stair_dests(T)
+
+    local want_subs = {}
 
     if info.subs then
       for s_idx,sub in ipairs(info.subs) do
@@ -957,15 +976,15 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
           end
 
           Layout_try_pattern(R, false, div_lev+1, new_sym, new_area, new_hs, new_ft)
+        else
+          want_subs[s_idx] = true
         end
       end
     end
 
 
-    assert(heights[1])
-
     -- this must occur after sub-division (for stairs)
-    install_fab(T, heights[1], f_texs[1], div_lev)
+    install_fab(T, want_subs, div_lev)
 
     return true  -- YES !!
   end
@@ -1063,7 +1082,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
   ---==| Layout_try_pattern |==---
  
-  if recurse and do_try_divide() then
+  if do_try_divide() then
 gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
   else
 gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
@@ -1197,6 +1216,7 @@ function Layout_set_floor_minmax(R)
     if S.room == R and 
        (S.kind == "walk" or S.kind == "purpose")
     then
+if not S.floor_h then S.floor_h = 2 end --!!!!!!
       assert(S.floor_h)
 
       min_h = math.min(min_h, S.floor_h)
@@ -2013,6 +2033,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 ---??  flood_fill_for_junk()
 
   for _,C in ipairs(R.conns) do
+if not C.conn_h then C.conn_h = 1 end --!!!!!
     assert(C.conn_h)
   end
 
