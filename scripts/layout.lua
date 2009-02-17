@@ -52,6 +52,12 @@ TRANSPOSE_CHARS =
   ['F'] = 'J', ['J'] = 'F',
 }
 
+STAIR_DIRS =
+{
+  ['<'] = 4, ['>'] = 6,
+  ['v'] = 2, ['^'] = 8,
+}
+
 
 function Test_room_fabs()
   
@@ -462,10 +468,42 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end -- for j
 
 
-    -- [[ testing
-    for x = 1,area.tw do for y = 1,area.th do
-      assert(T.structure[x][y])
-    end end --]]
+    -- analyse stairs
+
+    for ex = 1,area.tw do for ey = 1,area.th do
+      local E = assert(T.structure[ex][ey])
+      local ch = E.char
+
+      if ch == '<' or ch == '>' or ch == 'v' or ch == '^' then
+        E.dir = STAIR_DIRS[ch]
+
+        -- determine source height of stair.
+        -- (dest height is simply in the pointed-to seed)
+        local SIDES = {}
+        
+        table.insert(SIDES, 10 - E.dir)  -- try back first
+        table.insert(SIDES, rotate_ccw90(E.dir))
+        table.insert(SIDES, rotate_cw90 (E.dir))
+
+        for _,side in ipairs(SIDES) do
+          local N
+          local nx, ny = nudge_coord(side, ex, ey)
+
+          if (1 <= nx and nx <= area.tw) and (1 <= ny and ny <= area.th) then
+            N = T.structure[nx][ny]
+          end
+
+          if N and (N.char == '.' or is_digit(N.char)) then
+            E.stair_src = N.char
+            break;
+          end
+        end -- for side
+
+        if not E.stair_src then
+          error("Stair in pattern lacks a walkable neighbor!")
+        end
+      end
+    end end -- for ex, ey
   end
 
 
@@ -492,7 +530,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     return { x1=x1, y1=y1, x2=x2, y2=y2 }
   end
 
-  local function set_seed_floor(S, h, f_tex)
+  local function setup_floor(S, h, f_tex)
     S.floor_h = h
 
     if not R.outdoor then
@@ -508,42 +546,37 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end
   end
 
-  local function setup_stair(S, ch, hash_h, f_tex)
-    local dir
-    if ch == 'v' then dir = 2 end
-    if ch == '<' then dir = 4 end
-    if ch == '>' then dir = 6 end
-    if ch == '^' then dir = 8 end
-    assert(dir)
-
-    local N = S:neighbor(dir)
-    assert(N)
-    assert(N.room == R)
-    assert(R:contains_seed(N.sx, N.sy))
-
-    S.stair_z1 = assert(hash_h)  
-    S.stair_z2 = assert(N.floor_h or 3)  --!!!!!!
-
-    -- check if a stair is really needed
-    if math.abs(S.stair_z1 - S.stair_z2) < 21 then
-      hash_h = int((S.stair_z1 + S.stair_z2) / 2)
-
-      S.kind = "walk"
-      S.stair_z1 = nil
-      S.stair_z2 = nil
-
-      return set_seed_floor(S, hash_h, f_tex)
-    end
+  local function setup_stair(T, S, E, hash_h, f_tex)
+    assert(not S.conn)
 
     S.kind = "stair"
-    S.stair_dir = dir
+    S.stair_dir = assert(E.dir)
 
-    assert(not S.conn)
     S.floor_h = hash_h
 
     if not R.outdoor then
       S.f_tex = f_tex
     end
+
+    
+    -- determine height "around" the stair (source).
+    -- the destination is done in process_stair()
+    assert(E.stair_src)
+    if E.stair_src == '.' then
+      S.stair_z1 = hash_h
+    else
+      local s_idx = 0 + E.stair_src
+      local sub = assert(T.info.subs[s_idx])
+      S.stair_z1 = assert(heights[1 + sub.height])
+    end
+
+
+    local N = S:neighbor(S.stair_dir)
+
+    assert(N and N.room == R)
+    assert(R:contains_seed(N.sx, N.sy))
+
+    N.must_walk = true
   end
 
 ---#  local function has_void_neighbor(T, S, i, j)
@@ -566,8 +599,8 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 ---#  end
 
 
-  local function eval_fab(T)
--- gui.debugf("eval_fab...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table_to_str(T.expanded,3))
+  local function eval_pattern(T)
+-- gui.debugf("eval_pattern...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table_to_str(T.expanded,3))
 -- gui.debugf("T = %s\n\n", table_to_str(T,1))
 -- gui.debugf("expanded = %s\n\n", table_to_str(T.expanded,3))
 
@@ -605,12 +638,11 @@ gui.debugf("NOT ENOUGH HEIGHTS\n")
       local y = area.y1 + ey - 1
       assert(Seed_valid(x, y, 1))
 
-gui.debugf("EXY: (%d %d) --> XY (%d %d) in %s\n", ex, ey, x, y, R:tostr())
       local S = SEEDS[x][y][1]
       assert(S and S.room == R)
 
-      local ch = T.structure[ex][ey].char
-      assert(ch)
+      local E  = T.structure[ex][ey]
+      local ch = assert(E.char)
 
       if (S.conn or S.pseudo_conn or S.must_walk) then
         -- TODO: if stair is "flat" (dest height == '.' height) then
@@ -657,7 +689,8 @@ gui.debugf("OK : score = %1.4f\n", score)
     return score
   end
 
-  local function install_fab(T, want_subs, hash_lev)
+
+  local function install_pattern(T, want_subs, hash_lev)
 
 gui.debugf("install_fab :  hash_h:%d  (%d,%d)..(%d,%d)\n", heights[1],
 area.x1, area.y1, area.x2, area.y2)
@@ -670,7 +703,8 @@ area.x1, area.y1, area.x2, area.y2)
       local y = area.y1 + ey - 1
 
       local S = SEEDS[x][y][1]
-      local ch = T.structure[ex][ey].char
+      local E  = T.structure[ex][ey]
+      local ch = E.char
 
       local hash_h    = assert(heights[1])
       local hash_ftex = assert(f_texs[1])
@@ -689,18 +723,18 @@ area.x1, area.y1, area.x2, area.y2)
           end
 
           if ch then
-            set_seed_floor(S, hash_h, hash_ftex)
+            setup_floor(S, hash_h, hash_ftex)
             S.div_lev = hash_lev
   --- if true then S.ceil_h = S.floor_h + 256 ; S.c_tex = "FLAT10" end
           end
 
-        elseif ch == '<' or ch == '>' or
-               ch == 'v' or ch == '^' then
-          setup_stair(S, ch, hash_h, hash_ftex)
+        elseif ch == '<' or ch == '>' or ch == 'v' or ch == '^' then
+          setup_stair(T, S, E, hash_h, hash_ftex)
 
-        elseif ch == '/' or ch == '%' or
-               ch == 'Z' or ch == 'N' then
-          set_seed_floor(S, hash_h, hash_ftex)
+        --TODO curvy stairs: 'L' 'F' 'J' 'T'
+
+        elseif ch == '/' or ch == '%' or ch == 'Z' or ch == 'N' then
+          setup_floor(S, hash_h, hash_ftex)
 
 --!!!!          S.kind = "diagonal"
           S.diag_char = ch
@@ -714,7 +748,7 @@ area.x1, area.y1, area.x2, area.y2)
           S.kind = "liquid"
 
         else
-          error("unknown symbol in room fab: '" .. tostring(ch) .. "'")
+          error("unknown symbol in room pat: '" .. tostring(ch) .. "'")
         end
       end
 
@@ -726,7 +760,7 @@ gui.debugf("end install_fab\n")
     for x = area.x1,area.x2 do for y = area.y1,area.y2 do
       local S = SEEDS[x][y][1]
       if S.room == R and not S.floor_h then
-        set_seed_floor(S, h, f_tex)
+        setup_floor(S, h, f_tex)
         S.div_lev = div_lev
       end
     end end -- for x, y
@@ -753,7 +787,7 @@ gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
     S.c_tex   = N.c_tex
     S.w_tex   = N.w_tex
 
-    -- NB: logic copied from set_seed_floor()
+    -- NB: connection logic copied from setup_floor()
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn
       if C.conn_h then assert(C.conn_h == S.floor_h) end
@@ -763,17 +797,19 @@ gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
     end
 
     if N.kind == "diagonal" then
-          if N.diag_char == '/' then S.diag_char = '%'
-      elseif N.diag_char == '%' then S.diag_char = '/'
-      else error("WTF diagonal")
+      if sym == "x" then
+        S.diag_char = X_MIRROR_CHARS[N.diag_char]
+
+      else assert(sym == "y")
+        S.diag_char = Y_MIRROR_CHARS[N.diag_char]
       end
     end
 
     if N.kind == "stair" then
-      S.stair_z1 = assert(N.stair_z1)
-      S.stair_z2 = assert(N.stair_z2)
-
       S.stair_dir = assert(N.stair_dir)
+
+---### S.stair_z1 = assert(N.stair_z1)
+---### S.stair_z2 = assert(N.stair_z2)
 
       if sym == "x" and is_horiz(S.stair_dir) then
         S.stair_dir = 10 - S.stair_dir
@@ -834,31 +870,31 @@ gui.debugf("Transposed : %s\n", bool_str(T.transpose))
     end end -- for x, y
   end
 
-  local function mark_stair_dests(T)
-
-    for ex = 1,area.tw do for ey = 1,area.th do
-      local x = area.x1 + ex - 1
-      local y = area.y1 + ey - 1
-
-      local S = SEEDS[x][y][1]
-      local ch = T.structure[ex][ey].char
-
-      local dir
-          if ch == '<' then dir = 4
-      elseif ch == '>' then dir = 6
-      elseif ch == 'v' then dir = 2
-      elseif ch == '^' then dir = 8
-      end
-
-      if dir then
-        local N = S:neighbor(dir)
-        assert(N and N.room == R)
-        
-        N.must_walk = true
-      end
-
-    end end -- for ex, ey
-  end
+---#  local function mark_stair_dests(T)
+---#
+---#    for ex = 1,area.tw do for ey = 1,area.th do
+---#      local x = area.x1 + ex - 1
+---#      local y = area.y1 + ey - 1
+---#
+---#      local S = SEEDS[x][y][1]
+---#      local ch = T.structure[ex][ey].char
+---#
+---#      local dir
+---#          if ch == '<' then dir = 4
+---#      elseif ch == '>' then dir = 6
+---#      elseif ch == 'v' then dir = 2
+---#      elseif ch == '^' then dir = 8
+---#      end
+---#
+---#      if dir then
+---#        local N = S:neighbor(dir)
+---#        assert(N and N.room == R)
+---#        
+---#        N.must_walk = true
+---#      end
+---#
+---#    end end -- for ex, ey
+---#  end
 
   local function clip_heights(tab, where)
     assert(tab and #tab >= 1)
@@ -873,7 +909,7 @@ gui.debugf("Transposed : %s\n", bool_str(T.transpose))
     return new_tab
   end
 
-  local function try_install_pattern(name, info)
+  local function try_one_pattern(name, info)
     local possibles = {}
 
     local T = { info=info }
@@ -898,7 +934,7 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.transpose), T.long, T.deep)
           T.x_flip = (xf_n == 1)
           T.y_flip = (yf_n == 1)
 
-          T.score = eval_fab(T)
+          T.score = eval_pattern(T)
 
           if T.score > 0 then
             table.insert(possibles, shallow_copy(T))
@@ -918,10 +954,11 @@ gui.debugf("Possible patterns:\n%s\n", table_to_str(possibles, 2))
 
 gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
+    install_pattern(T, want_subs, div_lev)
+
+---### mark_stair_dests(T)
+
     -- recursive sub-division
-
-    mark_stair_dests(T)
-
     local want_subs = {}
 
     if info.subs then
@@ -957,10 +994,6 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
         end
       end
     end
-
-
-    -- this must occur after sub-division (for stairs)
-    install_fab(T, want_subs, div_lev)
 
     return true  -- YES !!
   end
@@ -1045,7 +1078,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
       gui.debugf("Trying pattern %s in %s (loop %d)......\n",
                  which, R:tostr(), loop)
 
-      if try_install_pattern(which, f_infos[which]) then
+      if try_one_pattern(which, f_infos[which]) then
         gui.debugf("SUCCESS with %s!\n", which)
         return true
       end
@@ -1788,6 +1821,55 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     return g_info.hts
   end
 
+  local function post_processing()
+    -- this function sets up some stuff after the room patterns
+    -- have been installed.  In particular it:
+    -- (1) determines heights for stairs
+    -- (2) handles diagonal seeds
+
+    local function process_stair(S)
+
+      local N = S:neighbor(S.stair_dir)
+
+      assert(N and N.room == R)
+      assert(R:contains_seed(N.sx, N.sy))
+
+      -- source height already determined (in setup_stair)
+      assert(S.stair_z1)
+
+      S.stair_z2 = assert(N.floor_h)
+
+      -- check if a stair is really needed
+      if math.abs(S.stair_z1 - S.stair_z2) < 21 then
+        S.kind = "walk"
+        S.floor_h = int((S.stair_z1 + S.stair_z2) / 2)
+
+        S.f_tex = N.f_tex
+        S.w_tex = N.w_tex
+
+        S.stair_dir = nil
+        S.stair_z1  = nil
+        S.stair_z2  = nil
+      end
+    end
+
+    local function process_diagonal(S)
+      -- FIXME
+    end
+
+
+    ---| post_processing |---
+
+    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+      local S = SEEDS[x][y][1]
+      if S and S.room == R then
+        if S.kind == "stair" then process_stair(S) end
+        if S.kind == "diagonal" then process_diagonal(S) end
+      end
+    end end -- for x, y
+  end
+
+
   local PILLAR_PATTERNS =
   {
      "-2-",
@@ -2007,6 +2089,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   Layout_try_pattern(R, true, 1, R.symmetry, area, heights, f_texs)
 
 ---??  flood_fill_for_junk()
+
+  post_processing()
 
   for _,C in ipairs(R.conns) do
 if not C.conn_h then C.conn_h = 1 end --!!!!!
