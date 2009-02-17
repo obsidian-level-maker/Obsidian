@@ -44,7 +44,7 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1, match="one" },
+      { height=1, match="one", recurse=1 },
     },
 
     symmetry = "x",
@@ -76,7 +76,7 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1, match="one" },
+      { height=1, match="one", recurse=1 },
     },
 
     symmetry = "x",
@@ -494,7 +494,7 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1, match="any" },
+      { height=1, match="any", recurse=1 },
     },
 
     symmetry = "x",
@@ -728,7 +728,7 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1, match="one", drop_sym=1 },
+      { height=1, match="one", recurse=1 },
       { height=1, match="any", sym_fill=1 },
     },
 
@@ -845,8 +845,8 @@ HEIGHT_FABS =
 
     subs =
     {
-      { height=1, match="one", drop_sym=1 },
-      { height=1, match="any", drop_sym=1 },
+      { height=1, match="one", recurse=1 },
+      { height=1, match="any", recurse=1 },
     },
   },
 
@@ -1247,7 +1247,7 @@ SOLID_FABS =
 
     subs =
     {
-      { height=0, match="any" },
+      { height=0, match="any", recurse=1 },
     }
   },
 
@@ -1274,7 +1274,7 @@ SOLID_FABS =
 
     subs =
     {
-      { height=0, match="any" },
+      { height=0, match="any", recurse=1 },
     }
   },
 
