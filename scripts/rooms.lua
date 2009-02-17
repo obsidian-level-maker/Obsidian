@@ -1204,9 +1204,9 @@ end --]]
 end
 
 
-function Rooms_all_lay_out()
+function Rooms_build_all()
 
-  gui.printf("\n--==| Rooms_all_lay_out |==--\n\n")
+  gui.printf("\n--==| Rooms_build_all |==--\n\n")
 
   PLAN.theme = GAME.themes["TECH"] -- FIXME
 
