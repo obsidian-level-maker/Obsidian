@@ -546,13 +546,13 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end
   end
 
-  local function setup_stair(T, S, E, hash_h, f_tex)
+  local function setup_stair(T, S, E, h, f_tex)
     assert(not S.conn)
 
     S.kind = "stair"
     S.stair_dir = assert(E.dir)
 
-    S.floor_h = hash_h
+    S.floor_h = h
 
     if not R.outdoor then
       S.f_tex = f_tex
@@ -563,12 +563,14 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     -- the destination is done in process_stair()
     assert(E.stair_src)
     if E.stair_src == '.' then
-      S.stair_z1 = hash_h
+      S.stair_z1 = h
     else
       local s_idx = 0 + E.stair_src
       local sub = assert(T.info.subs[s_idx])
-      S.stair_z1 = assert(heights[1 + sub.height])
+      S.stair_z1 = heights[1 + sub.height]
     end
+
+    assert(S.stair_z1)
 
 
     local N = S:neighbor(S.stair_dir)
@@ -807,9 +809,9 @@ gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
 
     if N.kind == "stair" then
       S.stair_dir = assert(N.stair_dir)
+      S.stair_z1  = assert(N.stair_z1)
 
----### S.stair_z1 = assert(N.stair_z1)
----### S.stair_z2 = assert(N.stair_z2)
+---## S.stair_z2  = assert(N.stair_z2)
 
       if sym == "x" and is_horiz(S.stair_dir) then
         S.stair_dir = 10 - S.stair_dir
@@ -1836,7 +1838,6 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     -- (2) handles diagonal seeds
 
     local function process_stair(S)
-
       local N = S:neighbor(S.stair_dir)
 
       assert(N and N.room == R)
@@ -2115,7 +2116,7 @@ if not C.conn_h then C.conn_h = 1 end --!!!!!
   end
 
   if R.kind == "building" then
-    add_pillars()
+--!!!!!!!    add_pillars()
   end
 
 
