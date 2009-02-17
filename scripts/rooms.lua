@@ -1256,11 +1256,11 @@ PLAN.sky_mode = "few"
   Seed_dump_fabs()
 
   for _,R in ipairs(PLAN.all_rooms) do
-    Room_layout_one(R)
+    Layout_one(R)
   end
 
   for _,R in ipairs(PLAN.scenic_rooms) do
-    Room_layout_scenic(R)
+    Layout_scenic(R)
   end
 
   Rooms_border_up()

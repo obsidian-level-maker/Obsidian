@@ -267,7 +267,7 @@ function Test_room_fabs()
 end
 
 
-function Room_spot_for_wotsit(R, kind)
+function Layout_spot_for_wotsit(R, kind)
   local spots = {}
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
@@ -303,7 +303,7 @@ function Room_spot_for_wotsit(R, kind)
 end
 
 
-function Room_try_divide(R, is_top, div_lev, recurse, req_sym, area, heights, f_texs)
+function Layout_try_pattern(R, is_top, div_lev, recurse, req_sym, area, heights, f_texs)
   -- find a usable pattern in the HEIGHT_FABS table and
   -- apply it to the room.
 
@@ -312,7 +312,7 @@ function Room_try_divide(R, is_top, div_lev, recurse, req_sym, area, heights, f_
 
   area.tw, area.th = box_size(area.x1, area.y1, area.x2, area.y2)
 
-gui.debugf("Room_try_divide @ %s  div_lev:%d\n", R:tostr(), div_lev)
+gui.debugf("Layout_try_pattern @ %s  div_lev:%d\n", R:tostr(), div_lev)
 gui.debugf("Area: (%d,%d)..(%d,%d) heights: %d %d %d\n",
 area.x1, area.y1, area.x2, area.y2,
 heights[1] or -1, heights[2] or -1, heights[3] or -1)
@@ -897,8 +897,8 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
           local new_recurse = sub.recurse or true
           local new_sym = sel(sub.drop_sym, nil, req_sym)
 
-          Room_try_divide(R, false, div_lev+1, new_recurse,
-                          new_sym, new_area, new_hs, new_ft)
+          Layout_try_pattern(R, false, div_lev+1, new_recurse,
+                             new_sym, new_area, new_hs, new_ft)
         end
       end
     end
@@ -1003,7 +1003,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
   end
 
 
-  ---==| Room_divide |==---
+  ---==| Layout_try_pattern |==---
  
   if recurse and do_try_divide() then
 gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
@@ -1014,7 +1014,7 @@ gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
 end
 
 
-function Room_choose_corner_stairs(R)
+function Layout_choose_corner_stairs(R)
 
   local function try_convert_tall_stair(S, x, y, dir)
     local B = S:neighbor(10-dir)
@@ -1116,7 +1116,7 @@ function Room_choose_corner_stairs(R)
     end
   end
 
-  ---| Rooms_choose_corner_stairs |---
+  ---| Layout_choose_corner_stairs |---
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
@@ -1128,7 +1128,7 @@ function Room_choose_corner_stairs(R)
 end
 
 
-function Room_set_floor_minmax(R)
+function Layout_set_floor_minmax(R)
   local min_h =  9e9
   local max_h = -9e9
 
@@ -1161,7 +1161,7 @@ function Room_set_floor_minmax(R)
 end
 
 
-function Room_layout_scenic(R)
+function Layout_scenic(R)
 
   local min_floor = 1000
 
@@ -1189,7 +1189,7 @@ function Room_layout_scenic(R)
 end
 
 
-function Room_layout_hallway(R)
+function Layout_hallway(R)
 
   local tx1,ty1, tx2,ty2 = R:conn_area()
   local tw = tx2 - tx1 + 1
@@ -1260,7 +1260,7 @@ function Room_layout_hallway(R)
   end
 
 
-  ---| Room_layout_hallway |---
+  ---| Layout_hallway |---
 
   local HALL_TEX   = { "BROWN1", "BROWNGRN", "GRAY1", "STARBR2" }
   local HALL_FLOOR = { "FLAT4", "CEIL5_1", "FLOOR1_1", "FLOOR3_3",  }
@@ -1325,7 +1325,7 @@ function Room_layout_hallway(R)
     end
   end end -- for x, y
 
-  Room_set_floor_minmax(R)
+  Layout_set_floor_minmax(R)
 
   for _,C in ipairs(R.conns) do
     C.conn_h = h
@@ -1334,7 +1334,7 @@ end
 
 
 
-function Room_layout_one(R)
+function Layout_one(R)
 
   local function junk_sides()
     -- Adds solid seeds (kind "void") to the edges of large rooms.
@@ -1510,7 +1510,7 @@ function Room_layout_one(R)
   end
 
   local function add_purpose()
-    local sx, sy, S = Room_spot_for_wotsit(R, R.purpose)
+    local sx, sy, S = Layout_spot_for_wotsit(R, R.purpose)
     local z1 = S.floor_h or R.floor_h
 
     local mx, my = S:mid_point()
@@ -1576,7 +1576,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       Build_small_switch(S, dir_for_wotsit(S), z1, INFO, LOCK.tag)
 
     else
-      error("Room_layout_one: unknown purpose! " .. tostring(R.purpose))
+      error("Layout_one: unknown purpose! " .. tostring(R.purpose))
     end
   end
 
@@ -1603,7 +1603,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
   local function flood_fill_for_junk()
     -- sets the floor_h (etc) for seeds in a junked side
-    -- (which are ignored by Room_try_divide).
+    -- (which are ignored by Layout_try_pattern).
 
     gui.debugf("flood_fill_for_junk @ %s\n", R:tostr())
 
@@ -1871,7 +1871,7 @@ end
   end
 
 
-  ---==| Room_layout_one |==---
+  ---==| Layout_one |==---
 
 gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
@@ -1917,7 +1917,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
   if R.kind == "hallway" then
-    Room_layout_hallway(R, focus_C.conn_h)
+    Layout_hallway(R, focus_C.conn_h)
     return
   end
 
@@ -1948,7 +1948,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   local heights = select_heights(focus_C)
   local f_texs  = select_floor_texs(focus_C)
 
-  Room_try_divide(R, true, 1, true, R.symmetry, area, heights, f_texs)
+  Layout_try_pattern(R, true, 1, true, R.symmetry, area, heights, f_texs)
 
 ---??  flood_fill_for_junk()
 
@@ -1957,9 +1957,9 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
 
-  Room_set_floor_minmax(R)
+  Layout_set_floor_minmax(R)
 
-  Room_choose_corner_stairs(R)
+  Layout_choose_corner_stairs(R)
 
   if R.purpose then
     add_purpose()
