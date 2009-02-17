@@ -1223,7 +1223,7 @@ SOLID_FABS =
 
   SOLID_CSUB1 =
   {
-    prob = 5000,
+    prob = 500,
     environment = "indoor",
     
     structure =
@@ -1238,7 +1238,7 @@ SOLID_FABS =
     x_sizes = {        "121", "131", "141", "151", "161",
                 "171", "181", "191", "1A1", "1B1" },
 
-    y_sizes = { "10101",
+    y_sizes = { ---!?!?  "10101",
                 "11111", "11211", "12121", "12221",
                 "13131", "13231", "14141", "14241",
                 "24142" },
@@ -1743,7 +1743,7 @@ LIQUID_FABS =
 
   LIQ_T_NICE =
   {
-    prob = 19150,
+    prob = 191,
 
     structure =
     {
