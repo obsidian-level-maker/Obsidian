@@ -394,32 +394,9 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     return result
   end
 
-  local function expand_structure(T, info, x_sizes, y_sizes)
-    T.expanded = {}
-
-    for y = 1,#y_sizes do
-      local y_num = pos_size(y_sizes, y)
-      local src = info.structure[#y_sizes+1 - y]
-      local padded = pad_line(src, x_sizes)
-      for i = 1,y_num do
-        table.insert(T.expanded, 1, padded)
-      end
-    end
-  end
 
   local function plain_walk(ch)
     return ch == '.' or is_digit(ch)
-  end
-
-  local function morph_coord(T, i, j)
-    if T.x_flip then i = T.long+1 - i end
-    if T.y_flip then j = T.deep+1 - j end
-
-    if T.transpose then
-      i, j = j, i
-    end
-
-    return area.x1 + i-1, area.y1 + j-1
   end
 
   local function morph_dir(T, dir)
@@ -449,6 +426,8 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
   local function convert_structure(T, info, x_sizes, y_sizes)
 
+    T.structure = array_2D(area.tw, area.th)
+
     local function morph_coord2(T, i, j)
       if T.x_flip then i = T.long+1 - i end
       if T.y_flip then j = T.deep+1 - j end
@@ -457,8 +436,6 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
       return i, j
     end
-
-    T.structure = array_2D(area.tw, area.th)
 
     local cur_j = 1
 
@@ -496,9 +473,11 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     local x1, y1 = 999, 999
     local x2, y2 =-9, -9
 
-    for i = 1,T.long do for j = 1,T.deep do
-      local x, y = morph_coord(T, i, j)
-      local ch = string.sub(T.expanded[T.deep+1-j], i, i)
+    for ex = 1,area.tw do for ey = 1,area.th do
+      local x  = area.x1 + ex-1
+      local y  = area.y1 + ey-1
+
+      local ch = T.structure[ex][ey].char
 
       if ch == match_ch then
         if x < x1 then x1 = x end
@@ -506,7 +485,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
         if x > x2 then x2 = x end
         if y > y2 then y2 = y end
       end
-    end end -- for i, j
+    end end -- for ex, ey
 
     if x2 < 0 then return nil end
 
@@ -588,7 +567,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
 
   local function eval_fab(T)
-gui.debugf("eval_fab...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table_to_str(T.expanded,3))
+-- gui.debugf("eval_fab...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table_to_str(T.expanded,3))
 -- gui.debugf("T = %s\n\n", table_to_str(T,1))
 -- gui.debugf("expanded = %s\n\n", table_to_str(T.expanded,3))
 
@@ -621,16 +600,17 @@ gui.debugf("NOT ENOUGH HEIGHTS\n")
 
     local matches = {}
 
-    for i = 1,T.long do for j = 1,T.deep do
-      local x, y = morph_coord(T, i, j)
+    for ex = 1,area.tw do for ey = 1,area.th do
+      local x = area.x1 + ex - 1
+      local y = area.y1 + ey - 1
       assert(Seed_valid(x, y, 1))
 
+gui.debugf("EXY: (%d %d) --> XY (%d %d) in %s\n", ex, ey, x, y, R:tostr())
       local S = SEEDS[x][y][1]
       assert(S and S.room == R)
 
-      local ch = string.sub(T.expanded[T.deep+1-j], i, i)
+      local ch = T.structure[ex][ey].char
       assert(ch)
-      ch = morph_char(T, ch)
 
       if (S.conn or S.pseudo_conn or S.must_walk) then
         -- TODO: if stair is "flat" (dest height == '.' height) then
@@ -651,7 +631,7 @@ gui.debugf("CONN needs PLAIN WALK\n")
         T.has_focus = true
       end
 
-    end end -- for i, j
+    end end -- for ex, ey
 
     -- for top-level pattern we require focus seed to hit a '.'
     if is_top and not T.has_focus then
@@ -679,20 +659,18 @@ gui.debugf("OK : score = %1.4f\n", score)
 
   local function install_fab(T, want_subs, hash_lev)
 
-local ax,ay = morph_coord(T, 1,1)
-local bx,by = morph_coord(T, T.long,T.deep)
 gui.debugf("install_fab :  hash_h:%d  (%d,%d)..(%d,%d)\n", heights[1],
-math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
+area.x1, area.y1, area.x2, area.y2)
 
 --gui.debugf("T = %s\n\n", table_to_str(T,1))
 --gui.debugf("expanded = %s\n\n", table_to_str(T.expanded,3))
 
-    for i = 1,T.long do for j = 1,T.deep do
-      local x, y = morph_coord(T, i, j)
-      local S = SEEDS[x][y][1]
+    for ex = 1,area.tw do for ey = 1,area.th do
+      local x = area.x1 + ex - 1
+      local y = area.y1 + ey - 1
 
-      local ch = string.sub(T.expanded[T.deep+1-j], i, i)
-      ch = morph_char(T, ch)
+      local S = SEEDS[x][y][1]
+      local ch = T.structure[ex][ey].char
 
       local hash_h    = assert(heights[1])
       local hash_ftex = assert(f_texs[1])
@@ -740,7 +718,7 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
         end
       end
 
-    end end -- for i, j
+    end end -- for ex, ey
 gui.debugf("end install_fab\n")
   end
 
@@ -858,12 +836,12 @@ gui.debugf("Transposed : %s\n", bool_str(T.transpose))
 
   local function mark_stair_dests(T)
 
-    for i = 1,T.long do for j = 1,T.deep do
-      local x, y = morph_coord(T, i, j)
-      local S = SEEDS[x][y][1]
+    for ex = 1,area.tw do for ey = 1,area.th do
+      local x = area.x1 + ex - 1
+      local y = area.y1 + ey - 1
 
-      local ch = string.sub(T.expanded[T.deep+1-j], i, i)
-      ch = morph_char(T, ch)
+      local S = SEEDS[x][y][1]
+      local ch = T.structure[ex][ey].char
 
       local dir
           if ch == '<' then dir = 4
@@ -879,7 +857,7 @@ gui.debugf("Transposed : %s\n", bool_str(T.transpose))
         N.must_walk = true
       end
 
-    end end -- for i, j
+    end end -- for ex, ey
   end
 
   local function clip_heights(tab, where)
@@ -913,8 +891,6 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.transpose), T.long, T.deep)
       if T.x_sizes and T.y_sizes then
         local xs = rand_element(T.x_sizes)
         local ys = rand_element(T.y_sizes)
-
-        expand_structure(T, info, xs, ys)
 
         convert_structure(T, info, xs, ys)
 
