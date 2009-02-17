@@ -487,7 +487,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
         for _,side in ipairs(SIDES) do
           local N
-          local nx, ny = nudge_coord(side, ex, ey)
+          local nx, ny = nudge_coord(ex, ey, side)
 
           if (1 <= nx and nx <= area.tw) and (1 <= ny and ny <= area.th) then
             N = T.structure[nx][ny]
@@ -954,44 +954,52 @@ gui.debugf("Possible patterns:\n%s\n", table_to_str(possibles, 2))
 
 gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
+    -- determine fill mode of each sub-area
+    local want_subs = {}
+    local sym_fills = {}
+
+    for s_idx,sub in ipairs(info.subs or {}) do
+      if sub.sym_fill and (req_sym or rand_odds(50)) then
+        sym_fills[s_idx] = true
+      elseif sub.recurse or sub.sym_fill then
+        -- recursive fill
+      else
+        want_subs[s_idx] = true
+      end
+    end
+
     install_pattern(T, want_subs, div_lev)
 
----### mark_stair_dests(T)
 
     -- recursive sub-division
-    local want_subs = {}
 
-    if info.subs then
-      for s_idx,sub in ipairs(info.subs) do
-        local new_area = find_sub_area(T, tostring(s_idx))
-        assert(new_area)
+    for s_idx,sub in ipairs(info.subs or {}) do
+      local new_area = find_sub_area(T, tostring(s_idx))
+      assert(new_area)
 
-        if sub.sym_fill and (req_sym or rand_odds(50)) then
-          symmetry_fill(T, new_area)
+      if sym_fills[s_idx] then
+        symmetry_fill(T, new_area)
 
-        elseif sub.recurse or sub.sym_fill then
-          local new_hs = clip_heights(heights, sub.height)
-          local new_ft = clip_heights(f_texs,  sub.height)
+      elseif sub.recurse or sub.sym_fill then
+        local new_hs = clip_heights(heights, sub.height)
+        local new_ft = clip_heights(f_texs,  sub.height)
 
-          local new_sym = req_sym
+        local new_sym = req_sym
 
-          -- drop symmetry requirement??
-          if (new_sym == "x" or new_sym == "xy") and
-             ((new_area.x1 + new_area.x2) ~= (area.x1 + area.x2))
-          then
-            new_sym = nil
-          end
-
-          if (new_sym == "y" or new_sym == "xy") and
-             ((new_area.y1 + new_area.y2) ~= (area.y1 + area.y2))
-          then
-            new_sym = nil
-          end
-
-          Layout_try_pattern(R, false, div_lev+1, new_sym, new_area, new_hs, new_ft)
-        else
-          want_subs[s_idx] = true
+        -- drop symmetry requirement??
+        if (new_sym == "x" or new_sym == "xy") and
+           ((new_area.x1 + new_area.x2) ~= (area.x1 + area.x2))
+        then
+          new_sym = nil
         end
+
+        if (new_sym == "y" or new_sym == "xy") and
+           ((new_area.y1 + new_area.y2) ~= (area.y1 + area.y2))
+        then
+          new_sym = nil
+        end
+
+        Layout_try_pattern(R, false, div_lev+1, new_sym, new_area, new_hs, new_ft)
       end
     end
 
@@ -1061,8 +1069,8 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     local f_infos = {}
 
     add_fab_list(f_probs, f_infos, HEIGHT_FABS, 1.0)
-    add_fab_list(f_probs, f_infos, SOLID_FABS,  sol_mul)
-    add_fab_list(f_probs, f_infos, LIQUID_FABS, liq_mul)
+--!!!!!!    add_fab_list(f_probs, f_infos, SOLID_FABS,  sol_mul)
+--!!!!!!    add_fab_list(f_probs, f_infos, LIQUID_FABS, liq_mul)
 
 
     local try_count = 8 + R.sw + R.sh
