@@ -21,6 +21,38 @@ require 'util'
 require 'ht_fabs'
 
 
+X_MIRROR_CHARS =
+{
+  ['<'] = '>', ['>'] = '<',
+  ['/'] = '%', ['%'] = '/',
+  ['Z'] = 'N', ['N'] = 'Z',
+  ['L'] = 'J', ['J'] = 'L',
+  ['F'] = 'T', ['T'] = 'F',
+}
+
+Y_MIRROR_CHARS =
+{
+  ['v'] = '^', ['^'] = 'v',
+  ['/'] = '%', ['%'] = '/',
+  ['Z'] = 'N', ['N'] = 'Z',
+  ['L'] = 'F', ['F'] = 'L',
+  ['J'] = 'T', ['T'] = 'J',
+}
+
+TRANSPOSE_DIRS = { 1,4,7,2,5,8,3,6,9 }
+
+TRANSPOSE_CHARS =
+{
+  ['<'] = 'v', ['v'] = '<',
+  ['>'] = '^', ['^'] = '>',
+  ['/'] = 'Z', ['Z'] = '/',
+  ['%'] = 'N', ['N'] = '%',
+  ['-'] = '|', ['|'] = '-',
+  ['!'] = '=', ['='] = '!',
+  ['F'] = 'J', ['J'] = 'F',
+}
+
+
 function Test_room_fabs()
   
   local function pos_size(s, n)
@@ -159,12 +191,9 @@ function Test_room_fabs()
   end
 
   local function match_x_char(LC, RC)
-    if LC == '<' then return (RC == '>') end
-    if LC == '>' then return (RC == '<') end
-    if LC == '/' then return (RC == '%') end
-    if LC == '%' then return (RC == '/') end
-    if LC == 'Z' then return (RC == 'N') end
-    if LC == 'N' then return (RC == 'Z') end
+    if X_MIRROR_CHARS[LC] then
+      return RC == X_MIRROR_CHARS[LC]
+    end
 
     -- having different sub-areas is OK
     if is_digit(LC) and is_digit(RC) then return true end
@@ -173,12 +202,9 @@ function Test_room_fabs()
   end
 
   local function match_y_char(TC, BC)
-    if TC == '^' then return (BC == 'v') end
-    if TC == 'v' then return (BC == '^') end
-    if TC == '/' then return (BC == '%') end
-    if TC == '%' then return (BC == '/') end
-    if LC == 'Z' then return (RC == 'N') end
-    if LC == 'N' then return (RC == 'Z') end
+    if Y_MIRROR_CHARS[LC] then
+      return RC == Y_MIRROR_CHARS[LC]
+    end
 
     -- having different sub-areas is OK
     if is_digit(TC) and is_digit(BC) then return true end
@@ -303,7 +329,7 @@ function Layout_spot_for_wotsit(R, kind)
 end
 
 
-function Layout_try_pattern(R, is_top, div_lev, recurse, req_sym, area, heights, f_texs)
+function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
   -- find a usable pattern in the HEIGHT_FABS table and
   -- apply it to the room.
 
@@ -385,18 +411,6 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     return ch == '.' or is_digit(ch)
   end
 
-  local TRANSPOSE_DIR_TAB = { 1,4,7,2,5,8,3,6,9 }
-
-  local TRANSPOSE_CHAR_TAB =
-  {
-    ['<'] = 'v',  ['v']  = '<',
-    ['>'] = '^',  ['^']  = '>',
---!!!!!    ['/'] = 'Z',  ['Z']  = '/',
---!!!!!    ['%'] = 'N',  ['N']  = '%',
-    ['-'] = '|',  ['|']  = '-',
-    ['!'] = '=',  ['=']  = '!',
-  }
-
   local function morph_coord(T, i, j)
     if T.x_flip then i = T.long+1 - i end
     if T.y_flip then j = T.deep+1 - j end
@@ -412,34 +426,22 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     if T.x_flip and is_horiz(dir) then dir = 10-dir end
     if T.y_flip and is_vert(dir)  then dir = 10-dir end
 
-    if T.transpose then dir = TRANSPOSE_DIR_TAB[dir] end
+    if T.transpose then dir = TRANSPOSE_DIRS[dir] end
 
     return dir
   end
 
   local function morph_char(T, ch)
     if T.x_flip then
-          if ch == '<' then ch = '>'
-      elseif ch == '>' then ch = '<'
-      elseif ch == '/' then ch = '%'
-      elseif ch == '%' then ch = '/'
-      elseif ch == 'Z' then ch = 'N'
-      elseif ch == 'N' then ch = 'Z'
-      end
+      ch = X_MIRROR_CHARS[ch] or ch
     end
 
     if T.y_flip then
-          if ch == 'v' then ch = '^'
-      elseif ch == '^' then ch = 'v'
-      elseif ch == '/' then ch = '%'
-      elseif ch == '%' then ch = '/'
-      elseif ch == 'Z' then ch = 'N'
-      elseif ch == 'N' then ch = 'Z'
-      end
+      ch = Y_MIRROR_CHARS[ch] or ch
     end
 
-    if T.transpose and TRANSPOSE_CHAR_TAB[ch] then
-      ch = TRANSPOSE_CHAR_TAB[ch]
+    if T.transpose then
+      ch = TRANSPOSE_CHARS[ch] or ch
     end
 
     return ch
@@ -648,7 +650,7 @@ math.min(ax,bx), math.min(ay,by), math.max(ax,bx), math.max(ay,by))
       ch = morph_char(T, ch)
 
       if is_digit(ch) then
-        -- nothing to do, handled by recursive call
+        -- FIXME !!!!!!  set floor unless recursing
 
       else
         if ch == '.' then
@@ -888,17 +890,29 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
         local new_area = find_sub_area(T, tostring(s_idx))
         assert(new_area)
 
-        if sub.sym_fill and (req_sym or rand_odds(50)) then --!!!!
+        if sub.sym_fill and (req_sym or rand_odds(50)) then
           symmetry_fill(T, new_area)
-        else
+
+        elseif sub.recurse or sub.sym_fill then
           local new_hs = clip_heights(heights, sub.height)
           local new_ft = clip_heights(f_texs,  sub.height)
 
-          local new_recurse = sub.recurse or true
-          local new_sym = sel(sub.drop_sym, nil, req_sym)
+          local new_sym = req_sym
 
-          Layout_try_pattern(R, false, div_lev+1, new_recurse,
-                             new_sym, new_area, new_hs, new_ft)
+          -- drop symmetry requirement??
+          if (new_sym == "x" or new_sym == "xy") and
+             ((new_area.x1 + new_area.x2) ~= (area.x1 + area.x2))
+          then
+            new_sym = nil
+          end
+
+          if (new_sym == "y" or new_sym == "xy") and
+             ((new_area.y1 + new_area.y2) ~= (area.y1 + area.y2))
+          then
+            new_sym = nil
+          end
+
+          Layout_try_pattern(R, false, div_lev+1, new_sym, new_area, new_hs, new_ft)
         end
       end
     end
@@ -1014,6 +1028,7 @@ gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
 end
 
 
+--[[
 function Layout_choose_corner_stairs(R)
 
   local function try_convert_tall_stair(S, x, y, dir)
@@ -1126,6 +1141,7 @@ function Layout_choose_corner_stairs(R)
     end
   end end -- for x, y
 end
+--]]
 
 
 function Layout_set_floor_minmax(R)
@@ -1948,7 +1964,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   local heights = select_heights(focus_C)
   local f_texs  = select_floor_texs(focus_C)
 
-  Layout_try_pattern(R, true, 1, true, R.symmetry, area, heights, f_texs)
+  Layout_try_pattern(R, true, 1, R.symmetry, area, heights, f_texs)
 
 ---??  flood_fill_for_junk()
 
@@ -1959,7 +1975,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   Layout_set_floor_minmax(R)
 
-  Layout_choose_corner_stairs(R)
+---  Layout_choose_corner_stairs(R)
 
   if R.purpose then
     add_purpose()
