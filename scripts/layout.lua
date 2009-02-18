@@ -437,7 +437,6 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     local stru_w = #x_sizes
     local stru_h = #y_sizes
 
-
     local function morph_coord2(T, i, j)
       if T.x_flip then i = T.long+1 - i end
       if T.y_flip then j = T.deep+1 - j end
@@ -451,11 +450,13 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
       -- determine source height of stair.
       -- (dest height is simply in the pointed-to seed)
 
+      local dir = assert(STAIR_DIRS[ch])
+
       local SIDES =
       {
-        10 - E.dir,  -- try back first
-        rotate_ccw90(E.dir),
-        rotate_cw90 (E.dir)
+        10 - dir,  -- try back first
+        rotate_ccw90(dir),
+        rotate_cw90 (dir)
       }
 
       for _,side in ipairs(SIDES) do
@@ -1852,6 +1853,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     -- (2) handles diagonal seeds
 
     local function process_stair(S)
+
       local N = S:neighbor(S.stair_dir)
 
       assert(N and N.room == R)
