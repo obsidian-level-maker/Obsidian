@@ -952,24 +952,6 @@ end --]]
     -- DIAGONALS
 
     if S.kind == "diagonal" then
-      local d_left
-      local d_right
-
-      local N4 = S:neighbor(4)
-      local N6 = S:neighbor(6)
-
-      if not (N4 and N4.room and N4.room == R) or (N4 and N4.kind == "void") then
-        d_left = "void"
-      elseif N4.kind == "walk" and N4.floor_h then
-        d_left = "ledge"
-      end
-
-      if not (N6 and N6.room and N6.room == R) or (N6 and N6.kind == "void") then
-        d_right = "void"
-      elseif N6.kind == "walk" and N6.floor_h then
-        d_right = "ledge"
-      end
-
 
       local diag_info =
       {
@@ -978,53 +960,18 @@ end --]]
         w_face = { texture=w_tex },
       }
 
-      if d_left == "void" and d_right == "void" then
-        S.kind = "void"
+      Build_diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
 
-      elseif d_left == d_right then
-        S.kind = "walk"
+      S.kind    = assert(S.diag_new_kind)
 
-      elseif d_left == "void" or d_right == "void" then
-        local d_side
-
-        if S.diag_char == '/' then
-          d_side = sel(d_left == "void", 7, 3)
-
-        else assert(S.diag_char == '%')
-          d_side = sel(d_left == "void", 1, 9)
-        end
-
-        Build_diagonal(S, d_side, diag_info)
-
-      elseif d_left == "ledge" or d_right == "ledge" then
-        local d_side
-
-        if S.diag_char == '/' then
-          d_side = sel(d_left == "ledge", 7, 3)
-
-        else assert(S.diag_char == '%')
-          d_side = sel(d_left == "ledge", 1, 9)
-        end
-
-        local ledge_h
-
-        if d_left == "ledge" then
-          ledge_h = assert(N4 and N4.floor_h)
-        else
-          ledge_h = assert(N6 and N6.floor_h)
-        end
-
-        Build_diagonal(S, d_side, diag_info, ledge_h)
-
-      else
-        error("WTF diagonals: " .. tostring(d_left) .. " + " .. tostring(d_right))
+      if S.diag_new_z then
+        S.floor_h = S.diag_new_z
+        z1 = S.floor_h
       end
-
-
-      if S.kind == "diagonal" or S.kind == "walk" then
-        if S.diag_foobie == '~' then
-          S.kind = "liquid"
-        end
+      
+      if S.diag_new_ftex then
+        S.f_tex = S.diag_new_ftex
+        f_tex = S.f_tex
       end
     end
 
@@ -1175,14 +1122,13 @@ end --]]
     local my = int((y1+y2) / 2)
 
     if S.room and S.room.kind ~= "scenic" and
-       (S.sx == S.room.sx1+1) and (S.sy == S.room.sy1+1) then
+       S.kind == "walk" and not S.usage and not S.content and
+       not S.purpose
+    then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
 
-      local MON = next(GAME.monsters)
+      local MON = GAME.things["candle"]
       assert(MON)
-      MON = GAME.things[MON]
-      assert(MON)
-      assert(MON.id)
 
       gui.add_entity(mx, my, z1 + 25,
       {

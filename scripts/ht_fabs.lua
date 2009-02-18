@@ -1491,7 +1491,7 @@ SOLID_FABS =
 
   DIAG_C1 =
   {
-    prob = 900,
+    prob = 3900,
     environment = "indoor",
     
     structure =
@@ -1757,7 +1757,6 @@ LIQUID_FABS =
 
     symmetry = "x",
     match_any = true,
-    foobie = '~',
   },
 
 

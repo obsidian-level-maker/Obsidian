@@ -753,11 +753,8 @@ area.x1, area.y1, area.x2, area.y2)
         --TODO curvy stairs: 'L' 'F' 'J' 'T'
 
         elseif ch == '/' or ch == '%' or ch == 'Z' or ch == 'N' then
-          setup_floor(S, hash_h, hash_ftex)
-
---!!!!          S.kind = "diagonal"
+          S.kind = "diagonal"
           S.diag_char = ch
-          S.diag_foobie = T.info.foobie
 
         elseif ch == 'S' then
           S.kind = "void"
@@ -1080,16 +1077,16 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     local sol_mul = 3.0
     if PLAN.junk_mode == "heaps" then sol_mul = 6.0 end
 
-    local liq_mul = 0.6
-    if PLAN.liquid_mode == "few"   then liq_mul = 0.1 end
-    if PLAN.liquid_mode == "heaps" then liq_mul = 7.0 end
+    local liq_mul = 0.5
+    if PLAN.liquid_mode == "few"   then liq_mul = 0.07 end
+    if PLAN.liquid_mode == "heaps" then liq_mul = 7.0  end
 
     local f_probs = {}
     local f_infos = {}
 
     add_fab_list(f_probs, f_infos, HEIGHT_FABS, 1.0)
---!!!!!!    add_fab_list(f_probs, f_infos, SOLID_FABS,  sol_mul)
---!!!!!!    add_fab_list(f_probs, f_infos, LIQUID_FABS, liq_mul)
+    add_fab_list(f_probs, f_infos, SOLID_FABS,  sol_mul)
+    add_fab_list(f_probs, f_infos, LIQUID_FABS, liq_mul)
 
 
     local try_count = 8 + R.sw + R.sh
@@ -1879,8 +1876,83 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       end
     end
 
+    local function diag_neighbor(N)
+      if not (N and N.room and N.room == R) then
+        return "void"
+      end
+
+      if N.kind == "void" or N.kind == "liquid" then
+        return N.kind
+      end
+
+      return "walk", assert(N.floor_h), N.f_tex
+    end
+
+    local DIAG_CORNER_TAB =
+    {
+      ["L/"] = 7, ["L%"] = 1, ["LZ"] = 3, ["LN"] = 1,
+      ["H/"] = 3, ["H%"] = 9, ["HZ"] = 7, ["HN"] = 9,
+    }
+
     local function process_diagonal(S)
-      -- FIXME
+gui.debugf("Processing diagonal @ %s\n", S:tostr())
+      local low, high
+
+      if S.diag_char == 'Z' or S.diag_char == 'N' then
+        low  = S:neighbor(2)
+        high = S:neighbor(8)
+      else
+        low  = S:neighbor(4)
+        high = S:neighbor(6)
+      end
+
+      local l_kind, l_z, l_ftex
+      local h_kind, h_z, h_ftex
+
+      l_kind, l_z, l_ftex = diag_neighbor(low)
+      h_kind, h_z, h_ftex = diag_neighbor(high)
+
+      if l_kind == "void" and h_kind == "void" then
+gui.debugf("BOTH VOID\n")
+        S.kind = "void"
+        return
+      end
+
+      if l_kind == "liquid" and h_kind == "liquid" then
+gui.debugf("BOTH LIQUID\n")
+        S.kind = "liquid"
+        return
+      end
+
+      if l_kind == "walk" and h_kind == "walk" and math.abs(l_z-h_z) < 0.5 then
+gui.debugf("BOTH SAME HEIGHT\n")
+        S.kind = "walk"
+        S.floor_h = l_z
+        return
+      end
+
+      local who_solid
+
+          if l_kind == "void"   then who_solid = 'L'
+      elseif h_kind == "void"   then who_solid = 'H'
+      elseif l_kind == "liquid" then who_solid = 'H'
+      elseif h_kind == "liquid" then who_solid = 'L'
+      else
+        who_solid = sel(l_z > h_z, 'L', 'H')
+      end
+
+      S.stuckie_side = DIAG_CORNER_TAB[who_solid .. S.diag_char]
+      assert(S.stuckie_side)
+
+      S.stuckie_kind = sel(who_solid == 'L', l_kind, h_kind)
+      S.stuckie_z    = sel(who_solid == 'L', l_z   , h_z)
+      S.stuckie_ftex = sel(who_solid == 'L', l_ftex, h_ftex)
+
+      S.diag_new_kind = sel(who_solid == 'L', h_kind, l_kind)
+      S.diag_new_z    = sel(who_solid == 'L', h_z   , l_z)
+      S.diag_new_ftex = sel(who_solid == 'L', h_ftex, l_ftex)
+
+      assert(S.diag_new_kind ~= "void")
     end
 
 
@@ -1890,6 +1962,14 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       local S = SEEDS[x][y][1]
       if S and S.room == R then
         if S.kind == "stair" then process_stair(S) end
+      end
+    end end -- for x, y
+
+    -- need to do diagonals AFTER stairs
+
+    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+      local S = SEEDS[x][y][1]
+      if S and S.room == R then
         if S.kind == "diagonal" then process_diagonal(S) end
       end
     end end -- for x, y
