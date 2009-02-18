@@ -302,26 +302,36 @@ end
 function Layout_spot_for_wotsit(R, kind)
   local spots = {}
 
+  -- for symmetrical rooms, prefer a centred item
+  local bonus_x, bonus_y
+
+  if R.mirror_x and R.tw >= 3 then bonus_x = int((R.tx1 + R.tx2) / 2) end
+  if R.mirror_y and R.th >= 3 then bonus_y = int((R.ty1 + R.ty2) / 2) end
+
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
 
     if S.room == R and S.kind == "walk" then
       local P = { x=x, y=y, S=S }
 
-      P.score = gui.random() + (S.div_lev or 0) * 100
+      P.score = gui.random() + (S.div_lev or 0) * 20
 
       if R.entry_conn then
         local dx = math.abs(R.entry_conn.dest_S.sx - x)
         local dy = math.abs(R.entry_conn.dest_S.sy - y)
 
-        P.score = P.score + 50 + dx + dy
+        P.score = P.score + dx + dy
       end
+
+      if x == bonus_x then P.score = P.score + 15 end
+      if y == bonus_y then P.score = P.score + 15 end
 
       table.insert(spots, P)
     end
   end end -- for x, y
 
 
+  -- FIXME: no need to store spots
   local P = table_pick_best(spots,
         function(A,B) return A.score > B.score end)
 

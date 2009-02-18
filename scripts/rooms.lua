@@ -955,7 +955,7 @@ end --]]
 
       local diag_info =
       {
-        t_face = { texture=f_tex },
+        t_face = { texture=S.stuckie_ftex or f_tex },
         b_face = { texture=c_tex },
         w_face = { texture=w_tex },
       }
