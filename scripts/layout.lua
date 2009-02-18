@@ -434,6 +434,10 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
     T.structure = array_2D(area.tw, area.th)
 
+    local stru_w = #x_sizes
+    local stru_h = #y_sizes
+
+
     local function morph_coord2(T, i, j)
       if T.x_flip then i = T.long+1 - i end
       if T.y_flip then j = T.deep+1 - j end
@@ -443,22 +447,66 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
       return i, j
     end
 
+    local function analyse_stair(E, ch, i, j)
+      -- determine source height of stair.
+      -- (dest height is simply in the pointed-to seed)
+
+      local SIDES =
+      {
+        10 - E.dir,  -- try back first
+        rotate_ccw90(E.dir),
+        rotate_cw90 (E.dir)
+      }
+
+      for _,side in ipairs(SIDES) do
+        local nch
+        local nx, ny = nudge_coord(i, j, side)
+
+        if (1 <= nx and nx <= stru_w) and (1 <= ny and ny <= stru_h) then
+          local src = info.structure[stru_h+1 - ny]
+          nch = string.sub(src, nx, nx)
+        end
+
+        if nch and (nch == '.' or is_digit(nch)) then
+          E.stair_src = nch
+          break;
+        end
+      end -- for side
+
+      if not E.stair_src then
+        error("Stair in pattern lacks a walkable neighbor!")
+      end
+    end
+
+
+    ---| convert_structure |---
+
     local cur_j = 1
 
-    for j = 1,#y_sizes do
+    for j = 1,stru_h do
       local j_num = pos_size(y_sizes, j)
-      local src = info.structure[#y_sizes+1 - j]
+      local src = info.structure[stru_h+1 - j]
       
       local cur_i = 1
 
-      for i = 1,#x_sizes do
+      for i = 1,stru_w do
         local i_num = pos_size(x_sizes, i)
         local ch = string.sub(src, i, i)
-        ch = morph_char(T, ch)
+        local mc = morph_char(T, ch)
 
         for di = 0,i_num-1 do for dj = 0,j_num-1 do
           local x, y = morph_coord2(T, cur_i+di, cur_j+dj)
-          T.structure[x][y] = { char=ch }
+          assert(1 <= x and x <= area.tw)
+          assert(1 <= y and y <= area.th)
+
+          local E = { char=mc }
+
+          if ch == '<' or ch == '>' or ch == 'v' or ch == '^' then
+            E.dir = STAIR_DIRS[mc]
+            analyse_stair(E, ch, i, j)
+          end
+
+          T.structure[x][y] = E
         end end -- for di, dj
 
         cur_i = cur_i + i_num
@@ -468,42 +516,11 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end -- for j
 
 
-    -- analyse stairs
-
+    --[[ Testing
     for ex = 1,area.tw do for ey = 1,area.th do
       local E = assert(T.structure[ex][ey])
-      local ch = E.char
-
-      if ch == '<' or ch == '>' or ch == 'v' or ch == '^' then
-        E.dir = STAIR_DIRS[ch]
-
-        -- determine source height of stair.
-        -- (dest height is simply in the pointed-to seed)
-        local SIDES = {}
-        
-        table.insert(SIDES, 10 - E.dir)  -- try back first
-        table.insert(SIDES, rotate_ccw90(E.dir))
-        table.insert(SIDES, rotate_cw90 (E.dir))
-
-        for _,side in ipairs(SIDES) do
-          local N
-          local nx, ny = nudge_coord(ex, ey, side)
-
-          if (1 <= nx and nx <= area.tw) and (1 <= ny and ny <= area.th) then
-            N = T.structure[nx][ny]
-          end
-
-          if N and (N.char == '.' or is_digit(N.char)) then
-            E.stair_src = N.char
-            break;
-          end
-        end -- for side
-
-        if not E.stair_src then
-          error("Stair in pattern lacks a walkable neighbor!")
-        end
-      end
     end end -- for ex, ey
+    --]]
   end
 
 
