@@ -293,9 +293,7 @@ function Test_room_fabs()
 
   ---| Test_room_fabs |---
   
-  show_fab_list("HEIGHT", HEIGHT_FABS)
-  show_fab_list("SOLID",  SOLID_FABS)
-  show_fab_list("LIQUID", LIQUID_FABS)
+  show_fab_list("ROOM", ROOM_PATTERNS)
 
   error("TEST SUCCESSFUL")
 end
@@ -348,7 +346,7 @@ end
 
 
 function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
-  -- find a usable pattern in the HEIGHT_FABS table and
+  -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
 
   -- this function is responsible for setting floor_h in every
@@ -623,7 +621,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 ---#
 ---#      if (1 <= i and i <= T.long) and (1 <= j and j <= T.deep) then
 ---#        local ch = string.sub(T.expanded[T.deep+1-j], i, i)
----#        if ch == 'S' then return true end
+---#        if ch == '#' then return true end
 ---#      end
 ---#    end
 ---#
@@ -769,7 +767,7 @@ area.x1, area.y1, area.x2, area.y2)
           S.kind = "diagonal"
           S.diag_char = ch
 
-        elseif ch == 'S' then
+        elseif ch == '#' then
           S.kind = "void"
 
         elseif ch == '~' then
@@ -1066,11 +1064,17 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     return true --OK--
   end
 
-  local function add_fab_list(probs, infos, fabs, mul)
+  local function add_fab_list(probs, infos, fabs, sol_mul, liq_mul)
     for name,info in pairs(fabs) do
       if can_use_fab(info) then
         infos[name] = info
-        probs[name] = (info.prob or 50) * mul
+        probs[name] = info.prob or 50
+
+        if info.kind == "solid" then
+          probs[name] = probs[name] * sol_mul
+        elseif info.kind == "liquid" then
+          probs[name] = probs[name] * liq_mul
+        end
       end
     end
   end
@@ -1088,18 +1092,16 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     end
 
     local sol_mul = 3.0
-    if PLAN.junk_mode == "heaps" then sol_mul = 6.0 end
+    if PLAN.junk_mode == "heaps" then sol_mul = 5.0 end
 
-    local liq_mul = 0.5
-    if PLAN.liquid_mode == "few"   then liq_mul = 0.07 end
-    if PLAN.liquid_mode == "heaps" then liq_mul = 7.0  end
+    local liq_mul = 0.7
+    if PLAN.liquid_mode == "few"   then liq_mul = 0.1 end
+    if PLAN.liquid_mode == "heaps" then liq_mul = 7.0 end
 
     local f_probs = {}
     local f_infos = {}
 
-    add_fab_list(f_probs, f_infos, HEIGHT_FABS, 1.0)
-    add_fab_list(f_probs, f_infos, SOLID_FABS,  sol_mul)
-    add_fab_list(f_probs, f_infos, LIQUID_FABS, liq_mul)
+    add_fab_list(f_probs, f_infos, ROOM_PATTERNS, sol_mul, liq_mul)
 
 
     local try_count = 8 + R.sw + R.sh
