@@ -179,14 +179,16 @@ function Test_room_fabs()
 
     -- now make sure each sub-area is a full rectangle shape
     for _,P in ipairs(used_subs) do
-      for x = P.x1,P.x2 do for y = P.y1,P.y2 do
-        local line = info.structure[y]
-        local ch = string.sub(line, x, x)
-        if ch ~= P.ch then
-          error("Bad shape for sub area (not a full rectangle)")
-        end
-      end end -- for x, y
-    end
+      if P.recurse then
+        for x = P.x1,P.x2 do for y = P.y1,P.y2 do
+          local line = info.structure[y]
+          local ch = string.sub(line, x, x)
+          if ch ~= P.ch then
+            error("Bad shape for sub area (not a full rectangle)")
+          end
+        end end -- for x, y
+      end
+    end -- for P
 
     -- check that each entry in info.subs is used
     for s_idx,_ in pairs(info.subs or {}) do
@@ -208,8 +210,8 @@ function Test_room_fabs()
   end
 
   local function match_y_char(TC, BC)
-    if Y_MIRROR_CHARS[LC] then
-      return RC == Y_MIRROR_CHARS[LC]
+    if Y_MIRROR_CHARS[BC] then
+      return TC == Y_MIRROR_CHARS[BC]
     end
 
     -- having different sub-areas is OK
@@ -240,7 +242,7 @@ function Test_room_fabs()
       local BC = string.sub(bottom, x, x)
 
       if not match_y_char(TC, BC) then
-        error("Broken symmetry: " .. mesg)
+        error("Broken vertical symmetry")
       end
     end
   end
