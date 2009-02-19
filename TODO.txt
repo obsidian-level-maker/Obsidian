@@ -2,21 +2,31 @@
 TODO
 ====
 
+-  more (fancier) room patterns
 
-+  good determination of heights[] for try_divide
-   - outdoor: 32, 48 or 64 increments
-   - indoor: 64, 96 or 128 increments
-   - See: misc/rooms_02, determine_floor_h()
+-  support for curve stairs ('L' 'F' etc)
+   - mark both neighbors as "must_walk"
 
-+  handle try_divide + junk_sides :: flood fill around edge
+-  reduce BIG_BRANCH probs for 4+ connections
 
--  decide and maintain symmetry in Room_try_divide
-   -  if pattern has ':' then DON'T recurse to fill it,
-      INSTEAD copy and reflect what was done in '.' side
+-  L shape solid pattern
 
-      OR: don't worry about it :-)
+-  Junk sides
+   (f) sometimes allow one gap for a connection
+   (g) ensure floor_fill works OK
+   (h) use in rooms with children (no touching them)
 
--  void seeds: diagonalise cornery ones
+-  IDEA: junk a side with a connection, and the little "bridge"
+         seed can become a stairway.
+
+-  BUG: lowering bars can bypass-able
+
+DONE  spot_for_wotsit : try to centre in a symmetrical room
+
+PUNTED  the "stairs" in patterns that do not change height
+        should allow a connection / must_walk on them.
+
+-  monster-behind-door surprise: use fast open-only door
 
 
 Pillar Placement:
@@ -54,6 +64,11 @@ Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
 ================================================================
 DETAILED TODO LIST
 ================================================================
+
+
+POLISH:
+  - mark end of big tables with a comment (like D1_WALL_PREFABS)
+
 
 Quake II:
   -  need to store wall brushes into a big list (qLeaf_c)
@@ -355,6 +370,8 @@ HERETIC:
 
 HEXEN:
 
++  need exit teleporter in final Hub.
+
 -  put 'fighter only' bit on fighter's weapons, etc..
 
 +  bug report: some doors close and never open.
@@ -431,12 +448,6 @@ Monsters:
 -  cage monsters: don't put hitscan snipers up really high.
 
 
-Miscellaneous:
-
--  WINDOW_CROSS and WINDOW_CROSS_BIG: do a height check
-   (prevent windows you can walk through).
-
-
 
 ----------------------------------------------------------------
 PIPE DREAMS
@@ -459,14 +470,6 @@ PIPE DREAMS
 -  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
 
 -  a mod for Eternal III
-
--  CTF maps (boomctf) :
-
-      5130 = "Blue flag";
-      5131 = "Red flag";
-
-      5080 = "Blue Start"      
-      5081 = "Red Start"
 
 -  Rooms that lock you in and you have to find the switch on
    the other side of the room to get out.  All "normal" exits
@@ -529,6 +532,14 @@ PIPE DREAMS
    .  option to read a different config file: -c(onfig)
    .  never writes the config file
    ?? what to do on error ??
+
+-  CTF maps (boomctf) :
+
+      5130 = "Blue flag";
+      5131 = "Red flag";
+
+      5080 = "Blue Start"      
+      5081 = "Red Start"
 
 
  ____________________
