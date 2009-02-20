@@ -97,7 +97,9 @@ function Test_room_fabs()
   end
 
   local function dump_one_pattern(info, x_sizes, y_sizes)
-    assert(#info.structure == #y_sizes)
+    if (#info.structure ~= #y_sizes) then
+      error("Pattern " .. info.name .. " has bad y_size")
+    end
 
     for y = #y_sizes,1,-1 do
       local y_num = pos_size(y_sizes, y)
@@ -1049,6 +1051,10 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
 
   local function can_use_fab(info)
+    if not info.prob then
+      return false
+    end
+
     if (info.environment == "indoor"  and R.outdoor) or
        (info.environment == "outdoor" and not R.outdoor)
     then
@@ -1082,7 +1088,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     for name,info in pairs(fabs) do
       if can_use_fab(info) then
         infos[name] = info
-        probs[name] = assert(info.prob)
+        probs[name] = info.prob
 
         if info.kind == "solid" then
           probs[name] = probs[name] * sol_mul

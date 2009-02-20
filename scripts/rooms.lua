@@ -405,7 +405,7 @@ function Rooms_setup_symmetry()
       if R.sw <= 4 then prob = prob / 2 end
 
       if R.sw > R.sh * 3.1 then return 0 end
-      if R.sw > R.sh * 2.1 then prob = prob / 4 end
+      if R.sw > R.sh * 2.1 then prob = prob / 3 end
     end
 
     if new_sym == "y" or new_sym == "xy" then
@@ -413,7 +413,7 @@ function Rooms_setup_symmetry()
       if R.sh <= 4 then prob = prob / 2 end
 
       if R.sh > R.sw * 3.1 then return 0 end
-      if R.sh > R.sw * 2.1 then prob = prob / 4 end
+      if R.sh > R.sw * 2.1 then prob = prob / 3 end
     end
 
     return prob
