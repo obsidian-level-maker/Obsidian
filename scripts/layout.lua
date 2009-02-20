@@ -637,9 +637,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
 
   local function eval_pattern(T)
--- gui.debugf("eval_pattern...\nT =\n%s\n\nexpanded=\n%s\n\n", table_to_str(T,1), table_to_str(T.expanded,3))
--- gui.debugf("T = %s\n\n", table_to_str(T,1))
--- gui.debugf("expanded = %s\n\n", table_to_str(T.expanded,3))
+gui.debugf("eval_pattern %s\n", T.info.name)
 
     T.has_focus = false
 
@@ -707,6 +705,8 @@ gui.debugf("FOCUS not touch dot\n");
       return -1
     end
 
+gui.debugf("matches: { %s %s }\n", tostring(matches[1]), tostring(matches[2]))
+
     -- check sub-area matches
     if T.info.subs then
       for s_idx,sub in ipairs(T.info.subs) do
@@ -716,7 +716,7 @@ gui.debugf("FOCUS not touch dot\n");
         if sub.match == "none" and matches[s_idx] then return -1 end
 
         if sub.match == "any" and matches[s_idx] then
-          score = score + 100
+          score = score + 100 * matches[s_idx]
         end
       end
     end
@@ -962,11 +962,18 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.transpose), T.long, T.deep)
         local xs = rand_element(T.x_sizes)
         local ys = rand_element(T.y_sizes)
 
-        convert_structure(T, info, xs, ys)
+        local xf_tot = 1
+        local yf_tot = 1
 
-        for xf_n = 0,1 do for yf_n = 0,1 do
+        -- for symmetrical patterns no need to try the flipped version
+        if T.info.symmetry == "x" or T.info.symmetry == "xy" then xf_tot = 0 end
+        if T.info.symmetry == "y" or T.info.symmetry == "xy" then yf_tot = 0 end
+
+        for xf_n = 0,xf_tot do for yf_n = 0,yf_tot do
           T.x_flip = (xf_n == 1)
           T.y_flip = (yf_n == 1)
+
+          convert_structure(T, info, xs, ys)
 
           T.score = eval_pattern(T)
 
@@ -1111,7 +1118,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     add_fab_list(f_probs, f_infos, ROOM_PATTERNS, sol_mul, liq_mul)
 
 
-    local try_count = 12 + R.sw + R.sh
+    local try_count = 10 + area.tw + area.th
 
     for loop = 1,try_count do
       if table_empty(f_probs) then
