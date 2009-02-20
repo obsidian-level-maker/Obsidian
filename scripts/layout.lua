@@ -580,8 +580,6 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     S.kind = "stair"
     S.stair_dir = assert(E.dir)
 
-    S.floor_h = h
-
     if not R.outdoor then
       S.f_tex = f_tex
     end
@@ -599,6 +597,8 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end
 
     assert(S.stair_z1)
+
+    S.floor_h = S.stair_z1
 
 
     local N = S:neighbor(S.stair_dir)
@@ -638,7 +638,6 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
     -- check symmetry
     local info_sym = T.info.symmetry
-    if info_sym == "R" then info_sym = nil end
     if T.transpose then
           if info_sym == "x" then info_sym = "y"
       elseif info_sym == "y" then info_sym = "x"
@@ -1059,7 +1058,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     if info.symmetry == "xy" then return true end
 
     if req_sym == "xy" then return false end
-    if not info.symmetry or info.symmetry == "R" then return false end
+    if not info.symmetry then return false end
 
     return true --OK--
   end
@@ -1085,11 +1084,11 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     assert(R.kind ~= "hallway")
     assert(R.kind ~= "stairwell")
 
-    -- some chance of not dividing at all
+    --[[ some chance of not dividing at all
     local skip_prob = 50 - (area.tw + area.th) * 4
     if skip_prob > 0 and rand_odds(skip_prob) then
       return false
-    end
+    end --]]
 
     local sol_mul = 3.0
     if PLAN.junk_mode == "heaps" then sol_mul = 5.0 end
@@ -1104,7 +1103,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     add_fab_list(f_probs, f_infos, ROOM_PATTERNS, sol_mul, liq_mul)
 
 
-    local try_count = 8 + R.sw + R.sh
+    local try_count = 12 + R.sw + R.sh
 
     for loop = 1,try_count do
       if table_empty(f_probs) then
@@ -1717,9 +1716,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
     other_C.conn_h = focus_C.conn_h
 
-    if rand_odds(7) then
-      -- no change
-    else
+    if true then
       local delta = rand_element { -2,-2,-1, 1,2,2 }
 
       other_C.conn_h = other_C.conn_h + delta * 64
@@ -1899,6 +1896,10 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
       if N.kind == "void" or N.kind == "liquid" then
         return N.kind
+      end
+
+      if N.kind == "diagonal" then
+        return "void"
       end
 
       return "walk", assert(N.floor_h), N.f_tex

@@ -126,6 +126,11 @@ function Level_Setup()
   if CAPS.pack_sidedefs then
     gui.property("pack_sidedefs", "1")
   end
+
+
+  -- miscellanous stuff
+  name_it_up(ROOM_PATTERNS)
+  expand_copies(ROOM_PATTERNS)
 end
 
 
