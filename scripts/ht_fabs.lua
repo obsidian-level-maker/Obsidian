@@ -582,6 +582,7 @@ LIQUID_O =
 LIQUID_O2 =
 {
   kind = "liquid",
+  environment = "indoor",
   prob = 300,
 
   structure =
@@ -599,11 +600,27 @@ LIQUID_O2 =
   symmetry = "xy",
 },
 
+LIQUID_O2_OUT =
+{
+  copy = "LIQUID_O2",
 
-LIQUID_U =
+  environment = "outdoor",
+
+  structure =
+  {
+    ".....",
+    "./~%.",
+    ".~~~.",
+    ".%~/.",
+    ".....",
+  },
+},
+
+
+LIQUID_U1 =
 {
   kind = "liquid",
-  prob = 50,
+  prob = 30,
 
   structure =
   {
@@ -611,8 +628,8 @@ LIQUID_U =
     "...",
   },
 
-  x_sizes = { "121", "131", "141", "151", "242", "252" },
-  y_sizes = { "12", "13", "14", "15", "25", "26", "27", "37" },
+  x_sizes = { "121", "131", "141" },
+  y_sizes = { "12", "13", "14" },
 
   symmetry = "x",
 },
@@ -658,6 +675,41 @@ LIQUID_U3 =
     { height=1, match="any" },
     { height=2, match="one" },
   }
+},
+
+LIQUID_U4 =
+{
+  kind = "liquid",
+  environment = "indoor",
+  prob = 5000,
+
+  structure =
+  {
+    "./~%.",
+    ".~~~.",
+    ".%~/.",
+    "%.../",
+  },
+
+  x_sizes = { "11111", "11211", "11311" },
+  y_sizes = { "1101", "1111", "1121", "1131" },
+
+  symmetry = "x",
+},
+
+LIQUID_U4_OUT =
+{
+  copy = "LIQUID_U4",
+
+  environment = "outdoor",
+
+  structure =
+  {
+    "./~%.",
+    ".~~~.",
+    ".%~/.",
+    ".....",
+  },
 },
 
 LIQUID_E =
@@ -917,6 +969,71 @@ LIQUID_H =
 -----------------------
 --  HEIGHT CHANGERS  --
 -----------------------
+
+HEIGHT_I1 =
+{
+  prob = 5000,
+
+  structure =
+  {
+    "111",
+    ".^.",
+    "...",
+  },
+
+  x_sizes = { "011", "111", "112" },
+  y_sizes = { "012", "111", "112" },
+
+  subs =
+  {
+    { height=1, match="any" },
+  },
+},
+
+HEIGHT_I2 =
+{
+  prob = 1000,
+
+  structure =
+  {
+    "111",
+    "^.^",
+    "...",
+  },
+
+  x_sizes = { "101", "111", "121", },
+  y_sizes = { "012", "111", "112", "212" },
+
+  subs =
+  {
+    { height=1, match="any" },
+  },
+
+  symmetry = "x",
+},
+
+HEIGHT_I3 =
+{
+  prob = 5000,
+
+  structure =
+  {
+    "/111%",
+    "11111",
+    "Z.^.N",
+    ".....",
+  },
+
+  x_sizes = { "10101", "11111", "12121" },
+  y_sizes = { "1111", "1121" },
+
+  subs =
+  {
+    { height=1, match="any" },
+  },
+
+  symmetry = "x",
+},
 
 HEIGHT_CURV_1 =
 {
