@@ -1027,7 +1027,7 @@ end --]]
       {
         t_face = { texture=f_tex },
         b_face = { texture=f_tex },
-        w_face = { texture="ZZZFACE1" },
+        w_face = { texture=w_tex },  --- "ZZZFACE1"
       },
       {
         { x=x2, y=y1 }, { x=x2, y=y2 },

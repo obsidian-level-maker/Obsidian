@@ -1067,7 +1067,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     for name,info in pairs(fabs) do
       if can_use_fab(info) then
         infos[name] = info
-        probs[name] = info.prob or 50
+        probs[name] = assert(info.prob)
 
         if info.kind == "solid" then
           probs[name] = probs[name] * sol_mul
@@ -1090,12 +1090,12 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
       return false
     end --]]
 
-    local sol_mul = 3.0
-    if PLAN.junk_mode == "heaps" then sol_mul = 5.0 end
+    local sol_mul = 1.0
+    if PLAN.junk_mode == "heaps" then sol_mul = 3.0 end
 
-    local liq_mul = 0.7
-    if PLAN.liquid_mode == "few"   then liq_mul = 0.1 end
-    if PLAN.liquid_mode == "heaps" then liq_mul = 7.0 end
+    local liq_mul = 1.0
+    if PLAN.liquid_mode == "few"   then liq_mul = 0.2 end
+    if PLAN.liquid_mode == "heaps" then liq_mul = 9.0 end
 
     local f_probs = {}
     local f_infos = {}
