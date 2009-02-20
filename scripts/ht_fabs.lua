@@ -36,28 +36,6 @@ PLAIN =
   symmetry = "xy",
 },
 
-TEST_CURVE =
-{
-  kind = "solid",
-  prob = 99999,
-
-  structure =
-  {
-    "F.T",
-    "111",
-    "L.J",
-  },
-
-  x_sizes = { "111", "121", "131", "141", "151", "161" },
-  y_sizes = { "111", "121", "131", "141", "151", "161" },
-
-  subs =
-  {
-    { height=1, match="any" },
-  }
-},
-
-
 
 ---------------------------
 --  SOLID and DIAGONALS  --
@@ -728,6 +706,28 @@ LIQUID_H =
 -----------------------
 --  HEIGHT CHANGERS  --
 -----------------------
+
+HEIGHT_CURV_1 =
+{
+  kind = "solid",
+  prob = 999,
+
+  structure =
+  {
+    "F.T",
+    "111",
+    "L.J",
+  },
+
+  x_sizes = { "121", "131", "141" },
+  y_sizes = { "121", "131", "141" },
+
+  subs =
+  {
+    { height=1, match="any" },
+  }
+},
+
 
 
 
@@ -2221,7 +2221,33 @@ S4_b =
 --]]
 
 
-LIQUID_WOW_2 =
+RECURSE_DIAG_L_SHAPE =
+{
+  prob = 99999,
+  environment = "indoor",
+
+  structure =
+  {
+    "/...%",
+    ".v...",
+    "111..",
+    "111<.",
+    "111./",
+  },
+
+  x_sizes = { "11011", "11111", "11211", "11311", "11411",
+              "11511", "11611", "11711", "11811", "11911" },
+
+  y_sizes = { "11011", "11111", "11211", "11311", "11411",
+              "11511", "11611", "11711", "11811", "11911" },
+
+  subs =
+  {
+    { height=1, match="any", recurse=1 }
+  }
+},
+
+RECURSE_LIQ_WOW_2 =
 {
   kind = "liquid",
   prob = 900,
@@ -2252,7 +2278,7 @@ LIQUID_WOW_2 =
   }
 },
 
-LIQUID_WOW_4 =
+RECURSE_LIQ_WOW_4 =
 {
   kind = "liquid",
   prob = 600,
