@@ -161,13 +161,31 @@ DIAG_C2 =
   symmetry = "xy",
 },
 
+SOLID_C3 =
+{
+  kind = "solid",
+  environment = "indoor",
+  prob = 2000,
+  
+  structure =
+  {
+    "#.#.#",
+    ".....",
+    "#.#.#",
+  },
 
---[[ !!!!
+  x_sizes = { "11111", "11211", "12121" },
+  y_sizes = { "121", "131" },
+
+  symmetry = "xy",
+},
+
+
 SOLID_T1 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 40,
+  pork = 40,
   
   structure =
   {
@@ -185,7 +203,7 @@ DIAG_T1 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 80,
+  pork = 80,
  
   structure =
   {
@@ -203,7 +221,7 @@ SOLID_OPP1 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 100,
+  pork = 100,
   
   structure =
   {
@@ -220,7 +238,7 @@ DIAG_OPP1 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 900,
+  pork = 900,
   
   structure =
   {
@@ -237,7 +255,7 @@ SOLID_L1 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 2000,
+  pork = 2000,
   
   structure =
   {
@@ -253,7 +271,7 @@ DIAG_L1 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 1000,
+  pork = 1000,
   
   structure =
   {
@@ -271,7 +289,7 @@ DIAG_L2 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 2000,
+  pork = 2000,
   
   structure =
   {
@@ -285,10 +303,30 @@ DIAG_L2 =
   y_sizes = { "1011", "1111", "1211" },
 },
 
---]]
+DIAG_X_HMMM =
+{
+  kind = "solid",
+  environment = "indoor",
+  prob = 999,
+
+  structure =
+  {
+    ".%#/.",
+    "%.../",
+    "#...#",
+    "/...%",
+    "./#%.",
+  },
+
+  x_sizes = { "11011", "11111", "11211" },
+  y_sizes = { "11011", "11111", "11211" },
+
+  symmetry = "xy",
+},
 
 
---[[
+--[[  -- TO BE REDONE or SCRAPPED
+
 SOLID_D1 =
 {
   kind = "solid",
@@ -309,114 +347,6 @@ SOLID_D1 =
 },
 
 
-SOLID_C3 =
-{
-  kind = "solid",
-  environment = "indoor",
-  prob = 20,
-  
-  structure =
-  {
-    "#.#.#",
-    ".....",
-    "#.#.#",
-  },
-
-  x_sizes = { "11111", "12121", "12221", "13131" },
-  y_sizes = { "121", "131", "141", "151" },
-
-  symmetry = "xy",
-},
-
-SOLID_C5 =
-{
-  kind = "solid",
-  environment = "indoor",
-  prob = 80,
-
-  structure =
-  {
-    "#...#",
-    ".....",
-    "..#..",
-    ".....",
-    "#...#",
-  },
-
-  x_sizes = { "11111", "12121", "13131" },
-  y_sizes = { "11111", "12121", "13131" },
-
-  symmetry = "xy",
-},
-
-SOLID_T1 =
-{
-  kind = "solid",
-  environment = "indoor",
-  prob = 30,
-  
-  structure =
-  {
-    "#...#",
-    ".....",
-    "..#..",
-  },
-
-  x_sizes = { "10101", "11111", "12121", "12221", "13131" },
-  y_sizes = { "121", "131", "141", "151" },
-
-  symmetry = "x",
-},
-
-SOLID_TSUB =
-{
-  kind = "solid",
-  environment = "indoor",
-  prob = 100,
-  
-  structure =
-  {
-    "#.v.#",
-    ".111.",
-    ">111<",
-    ".111.",
-    ".Z#N.",
-  },
-
-  x_sizes = { "11111",
-              "12121", "12221",
-              "13131", "13231",
-              "14141", "14241" },
-
-  y_sizes = { "11101", "11111",
-              "12111", "12121",
-              "13121", "13131", "13231",
-              "14131", "14141", "14241" },
-
-  symmetry = "x",
-},
-
-
-SOLID_X1 =
-{
-  kind = "solid",
-  environment = "indoor",
-  prob = 10,
-
-  structure =
-  {
-    "..#..",
-    ".....",
-    "#...#",
-    ".....",
-    "..#..",
-  },
-
-  x_sizes = { "11111", "11211", "12121", "12221" },
-  y_sizes = { "11111", "11211", "12121", "12221" },
-
-  symmetry = "xy",
-},
 
 SOLID_XSUB4 =
 {
@@ -475,11 +405,10 @@ DIAG_HT_BIG =
 --   LIQUIDS   --
 -----------------
 
--- [[ !!!!
 LIQUID_I =
 {
   kind = "liquid",
-  prob = 50,
+  pork = 50,
 
   structure =
   {
@@ -497,7 +426,7 @@ LIQUID_I =
 LIQUID_L =
 {
   kind = "liquid",
-  prob = 5,
+  pork = 5,
 
   structure =
   {
@@ -512,7 +441,7 @@ LIQUID_L =
 LIQUID_L2 =
 {
   kind = "liquid",
-  prob = 190,
+  pork = 190,
 
   structure =
   {
@@ -528,7 +457,7 @@ LIQUID_L3 =
 {
   kind = "liquid",
   environment = "indoor",
-  prob = 555,
+  pork = 555,
 
   structure =
   {
@@ -564,7 +493,7 @@ LIQUID_L3_OUT =
 LIQUID_O =
 {
   kind = "liquid",
-  prob = 190,
+  pork = 190,
 
   structure =
   {
@@ -583,7 +512,7 @@ LIQUID_O2 =
 {
   kind = "liquid",
   environment = "indoor",
-  prob = 300,
+  pork = 300,
 
   structure =
   {
@@ -620,7 +549,7 @@ LIQUID_O2_OUT =
 LIQUID_U1 =
 {
   kind = "liquid",
-  prob = 30,
+  pork = 30,
 
   structure =
   {
@@ -637,7 +566,7 @@ LIQUID_U1 =
 LIQUID_U2 =
 {
   kind = "liquid",
-  prob = 300,
+  pork = 300,
 
   structure =
   {
@@ -659,7 +588,7 @@ LIQUID_U2 =
 LIQUID_U3 =
 {
   kind = "liquid",
-  prob = 300,
+  pork = 300,
 
   structure =
   {
@@ -681,7 +610,7 @@ LIQUID_U4 =
 {
   kind = "liquid",
   environment = "indoor",
-  prob = 500,
+  pork = 500,
 
   structure =
   {
@@ -715,7 +644,7 @@ LIQUID_U4_OUT =
 LIQUID_E =
 {
   kind = "liquid",
-  prob = 110,
+  pork = 110,
 
   structure =
   {
@@ -735,7 +664,7 @@ LIQUID_E =
 LIQUID_E2 =
 {
   kind = "liquid",
-  prob = 200,
+  pork = 200,
 
   structure =
   {
@@ -762,7 +691,7 @@ LIQUID_E2 =
 LIQUID_E3 =
 {
   kind = "liquid",
-  prob = 999,
+  pork = 999,
 
   structure =
   {
@@ -788,7 +717,7 @@ LIQUID_E3 =
 LIQUID_E4 =
 {
   kind = "liquid",
-  prob = 999,
+  pork = 999,
 
   structure =
   {
@@ -811,7 +740,7 @@ LIQUID_E4 =
 LIQUID_S =
 {
   kind = "liquid",
-  prob = 200,
+  pork = 200,
 
   structure =
   {
@@ -827,7 +756,7 @@ LIQUID_S =
 LIQUID_S2 =
 {
   kind = "liquid",
-  prob = 200,
+  pork = 200,
 
   structure =
   {
@@ -852,7 +781,7 @@ LIQUID_S2 =
 LIQUID_S_BIG =
 {
   kind = "liquid",
-  prob = 50,
+  pork = 50,
 
   structure =
   {
@@ -869,7 +798,7 @@ LIQUID_S_BIG =
 LIQUID_S3_BIG =
 {
   kind = "liquid",
-  prob = 999,
+  pork = 999,
 
   structure =
   {
@@ -893,7 +822,7 @@ LIQUID_S3_BIG =
 LIQUID_CROSS_1 =
 {
   kind = "liquid",
-  prob = 3000,
+  pork = 300,
 
   structure =
   {
@@ -912,7 +841,7 @@ LIQUID_CROSS_2 =
 {
   kind = "liquid",
   environment = "indoor",
-  prob = 30000,
+  pork = 300,
 
   structure =
   {
@@ -962,7 +891,9 @@ LIQUID_CROSS_2_OUT =
   },
 },
 
---[[
+
+--[[  TO BE REVISED
+
 LIQUID_T =
 {
   kind = "liquid",
@@ -1017,7 +948,7 @@ LIQUID_H =
   symmetry = "xy",
 },
 
---]]
+--]]  -- end TO BE REDONE
 
 
 -----------------------
@@ -1209,7 +1140,7 @@ SOLID_REC_C2 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 1000,
+  prob = 900,
   
   structure =
   {
@@ -1237,7 +1168,7 @@ SOLID_REC_C3 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 1000,
+  prob = 900,
   
   structure =
   {
@@ -1266,7 +1197,7 @@ SOLID_REC_C4 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 1000,
+  prob = 900,
   
   structure =
   {
@@ -1293,7 +1224,7 @@ SOLID_REC_C4 =
 SOLID_REC_HT_C1 =
 {
   copy = "SOLID_REC_C1",
-  prob = 5000,
+  prob = 950,
   
   subs =
   {
@@ -1304,7 +1235,7 @@ SOLID_REC_HT_C1 =
 SOLID_REC_HT_C2 =
 {
   copy = "SOLID_REC_C2",
-  prob = 5000,
+  prob = 950,
   
   subs =
   {
@@ -1315,7 +1246,7 @@ SOLID_REC_HT_C2 =
 SOLID_REC_HT_C3 =
 {
   copy = "SOLID_REC_C3",
-  prob = 5000,
+  prob = 950,
   
   subs =
   {
@@ -1326,7 +1257,7 @@ SOLID_REC_HT_C3 =
 SOLID_REC_HT_C4 =
 {
   copy = "SOLID_REC_C4",
-  prob = 5000,
+  prob = 950,
   
   subs =
   {
@@ -1338,7 +1269,7 @@ DIAG_REC_C1 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 1000,
+  prob = 900,
   
   structure =
   {
@@ -1367,7 +1298,7 @@ DIAG_REC_C3 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 1000,
+  prob = 900,
   
   structure =
   {
@@ -1396,7 +1327,7 @@ DIAG_REC_C4 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 1000,
+  prob = 900,
   
   structure =
   {
@@ -1422,7 +1353,7 @@ DIAG_REC_C4 =
 DIAG_REC_HT_C1 =
 {
   copy = "DIAG_REC_C1",
-  prob = 5000,
+  prob = 950,
   
   subs =
   {
@@ -1433,7 +1364,7 @@ DIAG_REC_HT_C1 =
 DIAG_REC_HT_C3 =
 {
   copy = "DIAG_REC_C3",
-  prob = 5000,
+  prob = 950,
   
   subs =
   {
@@ -1444,7 +1375,7 @@ DIAG_REC_HT_C3 =
 DIAG_REC_HT_C4 =
 {
   copy = "DIAG_REC_C4",
-  prob = 5000,
+  prob = 950,
   
   subs =
   {
@@ -1564,33 +1495,71 @@ RECURSE_I3_OUT =
 },
 
 
---[[ !!!!
+RECURSE_SOLID_T =
+{
+  kind = "solid",
+  environment = "indoor",
+  prob = 9999,
+  
+  structure =
+  {
+    "#..v..#",
+    ".11111.",
+    ">11111<",
+    ".11111.",
+    ".Z###N.",
+  },
+
+  x_sizes = { "1101011", "1111111", "1112111",
+              "1121211", "1122211", "1131311",
+              "1132311", "1141411" },
+
+  y_sizes = { "10111", "11101", "11111",
+              "12101", "10121", "11121", "12111", "12121", 
+              "13111", "11131", "12131", "13131", "13231",
+              "14111", "11141", "14141", "14241" },
+
+  symmetry = "x",
+
+  subs =
+  {
+    { height=1, match="any", recurse=1 },
+  },
+},
+
 
 RECURSE_L1 =
 {
-  prob = 4000,
+  prob = 2000,
 
   structure =
   {
-    ".11",
-    "..^",
-    "...",
+    ".111",
+    "..^.",
+    "....",
   },
 
   x_sizes =
   {
-    "111", "121", "131", "141", "151", "161",
-    "221", "231", "241", "251", "261", "271", "281", "291", "2A1",
-    "341", "351", "361", "371", "381", "391",
-    "441", "461", "481",
+    "1012", "1013", "1014", "1015", "1016", "1017",
+    "1018", "1019", "101A", "101B",
+
+    "1210", "1310", "1410", "1510", "1610", "1710", 
+    "1810", "1910", "1A10", "1B10",
+
+    "1111", "1112", "1212", "1213", "1313", "1314",
+    "1414", "1415", "1515", "1516",
+
+    "2015", "2016", "2017", "2018", "2019", "201A",
+    "2510", "2610", "2710", "2810", "2910", "2A10",
+    "2212", "2312", "2313", "2413", "2414", "2514", "2515",
   },
 
   y_sizes =
   {
-    "011", "012", "013", "014",
-    "112", "113", "114", "115", "116", "117", "118", "119", "11A",
-    "214", "216", "217", "218", "219", "21A",
-    "316", "317", "318", "319",
+    "013", "014", "015", "016", "017",
+    "113", "114", "115", "116", "117",
+    "118", "119", "11A", "11B",
   },
 
   subs =
@@ -1599,41 +1568,9 @@ RECURSE_L1 =
   }
 },
 
-RECURSE_L1_B =
-{
-  prob = 50,
 
-  structure =
-  {
-    ".11",
-    ".^.",
-    "...",
-  },
+--[[ TO BE REVISITED...
 
-  x_sizes =
-  {
-    "111", "112", "113", "114", "115", "116",
-    "212", "213", "214", "215", "216", "217", "218", "219", "21A",
-    "314", "315", "316", "317", "318", "319",
-  },
-
-  y_sizes =
-  {
-    "011", "012", "013", "014",
-    "112", "113", "114", "115", "116", "117", "118", "119", "11A",
-    "214", "216", "217", "218", "219", "21A",
-    "316", "317", "318", "319",
-  },
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-  }
-},
---]]
-
-
---[[
 L2 =
 {
   prob = 20,
@@ -1926,7 +1863,8 @@ U2_B =
 
   symmetry = "x",
 },
---]]
+--]]  -- end TO BE REVISITED
+
 
 RECURSE_O1 =
 {
@@ -1963,7 +1901,7 @@ RECURSE_O1 =
   low_ceil = true,
 },
 
---[[
+--[[  TO BE REVISED
 O1_B =
 {
   prob = 50,
@@ -2157,7 +2095,8 @@ T1 =
 
   symmetry = "x",
 },
---]]
+--]]  -- end TO BE REVISED
+
 
 RECURSE_T2 =
 {
@@ -2195,7 +2134,8 @@ RECURSE_T2 =
   symmetry = "x",
 },
 
---[[
+
+--[[  TO BE PROCESSED
 T3 =
 {
   prob = 50,
@@ -2277,11 +2217,12 @@ T3_D =
   symmetry = "x",
 },
 
---]]
+--]]  -- end TO BE PROCESSED
+--
 
 H1 =
 {
-  prob = 50,
+  prob = 90,
 
   structure =
   {
@@ -2300,7 +2241,7 @@ H1 =
 
   y_sizes =
   {
-    "01110", "01210", "01410", "01510", "01610", "01710", "01810",
+    "01110", "01210", "01410", "01510",
     "11411", "11511", "11611", "11711", "11811", "11911"
   },
 
@@ -2311,7 +2252,7 @@ H1 =
   },
 },
 
---[[
+--[[   TO BE REIMPLEMENTED
 H1_B =
 {
   prob = 20,
@@ -2607,7 +2548,7 @@ S4_B =
     "2111112", "2112112", "2113112", "2114112", "2115112",
   },
 },
---]]
+--]]  -- end TO BE REIMPLEMENTED
 
 
 RECURSE_DIAG_L_SHAPE =
@@ -2639,7 +2580,7 @@ RECURSE_DIAG_L_SHAPE =
 RECURSE_LIQ_WOW_2 =
 {
   kind = "liquid",
-  prob = 900,
+  pork = 900,
 
   structure =
   {
@@ -2669,7 +2610,7 @@ RECURSE_LIQ_WOW_2 =
 RECURSE_LIQ_WOW_4 =
 {
   kind = "liquid",
-  prob = 600,
+  pork = 600,
 
   structure =
   {
