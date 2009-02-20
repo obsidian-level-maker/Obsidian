@@ -475,7 +475,7 @@ DIAG_HT_BIG =
 --   LIQUIDS   --
 -----------------
 
---[[ !!!!
+-- [[ !!!!
 LIQUID_I =
 {
   kind = "liquid",
@@ -580,11 +580,65 @@ LIQUID_E =
     "..",
   },
 
-  x_sizes = { "12", "13", "14", "15", "25", "26", "27" },
-  y_sizes = { "12121", "13131", "14141" },
+  x_sizes = { "12", "13", "14" },
+  y_sizes = { "12121", "13131" },
 
   symmetry = "y",
   match_any = true,
+},
+
+LIQUID_E2 =
+{
+  kind = "liquid",
+  prob = 200,
+
+  structure =
+  {
+    "..",
+    "v~",
+    "1~",
+    "11",
+    "1~",
+    "^~",
+    "..",
+  },
+
+  x_sizes = { "12", "13", "14" },
+  y_sizes = { "1111111", "1112111", "1121211", "1122211" },
+
+  symmetry = "y",
+  match_any = true,
+
+  subs =
+  {
+    { height=1, match="any" },
+  }
+},
+
+LIQUID_E3 =
+{
+  kind = "liquid",
+  prob = 999,
+
+  structure =
+  {
+    "..",
+    "v~",
+    "1~",
+    "11",
+    "1~",
+    "v~",
+    "22",
+  },
+
+  x_sizes = { "12", "13", "14" },
+  y_sizes = { "1111111", "1112111", "1121211", "1122211" },
+
+  subs =
+  {
+    { height=1, match="any" },
+    { height=2, match="one" },
+  }
 },
 
 LIQUID_S =
@@ -599,10 +653,35 @@ LIQUID_S =
     "..~",
   },
 
-  x_sizes = { "112", "212", "213", "313", "314" },
+  x_sizes = { "112", "212", "213", "313" },
   y_sizes = { "111", "121", "131", "141" },
 
   match_any = true,
+},
+
+LIQUID_S2 =
+{
+  kind = "liquid",
+  prob = 200,
+
+  structure =
+  {
+    "~11",
+    "~1~",
+    "~v~",
+    "~.~",
+    "..~",
+  },
+
+  x_sizes = { "112", "212", "213", "313" },
+
+  y_sizes = { "10101", "11101", "10111",
+              "11111", "12111", "11121", "12121" },
+
+  subs =
+  {
+    { height=1, match="any" },
+  }
 },
 
 LIQUID_S_BIG =
@@ -619,11 +698,36 @@ LIQUID_S_BIG =
 
   x_sizes = { "11111", "12111", "12121", "13121", "13131" },
               
-  y_sizes = { "111", "121", "131", "141", "151" },
+  y_sizes = { "111", "121", "131", "141" },
 
   match_any = true,
 },
 
+LIQUID_S3_BIG =
+{
+  kind = "liquid",
+  prob = 999,
+
+  structure =
+  {
+    ".~~11>2",
+    ".~~1~~2",
+    ".>11~~2",
+  },
+
+  x_sizes = { "1101011", "1111011", "1111111",
+              "1121111", "1121211" },
+
+  y_sizes = { "111", "121", "131", "141" },
+
+  subs =
+  {
+    { height=1, match="any" },
+    { height=2, match="one" },
+  }
+},
+
+--[[
 LIQUID_X =  -- TODO: big one with diagonals
 {
   kind = "liquid",
@@ -2223,7 +2327,7 @@ S4_b =
 
 RECURSE_DIAG_L_SHAPE =
 {
-  prob = 99999,
+  prob = 999,
   environment = "indoor",
 
   structure =
