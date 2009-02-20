@@ -1172,15 +1172,21 @@ function Rooms_build_all()
   PLAN.cage_mode = rand_key_by_probs { none=50, some=50, heaps=6 }
   gui.printf("Cage Mode: %s\n", PLAN.cage_mode)
 
+  PLAN.pillar_mode = rand_key_by_probs { few=10, some=70, heaps=20 }
+  gui.printf("Pillar Mode: %s\n", PLAN.pillar_mode)
+
   PLAN.fence_mode = rand_key_by_probs { none=30, few=30, some=10 }
   gui.printf("Fence Mode: %s\n", PLAN.fence_mode)
+
+  PLAN.window_mode = rand_key_by_probs { few=30, some=90, heaps=10 }
+  gui.printf("Window Mode: %s\n", PLAN.window_mode)
 
   PLAN.symmetry_mode = rand_key_by_probs { few=30, some=60, heaps=10 }
   gui.printf("Symmetry Mode: %s\n", PLAN.symmetry_mode)
 
 
 --[[ ]]
-PLAN.liquid_mode = "heaps"
+PLAN.liquid_mode = "some"
 PLAN.hallway_mode = "few"
 PLAN.symmetry_mode = "some"
 PLAN.junk_mode = "some"
