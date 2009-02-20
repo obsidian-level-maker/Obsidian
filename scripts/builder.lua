@@ -1111,7 +1111,7 @@ end
 function Build_tall_curved_stair(S, step_info, x_side,y_side, x_h,y_h)
   assert(x_h and y_h)
 
-  local steps = int(math.abs(x_h-y_h) / 14 + 0.9)
+  local steps = int(math.abs(y_h-x_h) / 14 + 0.9)
 
   if steps < 4 then
     steps = 4
@@ -1153,7 +1153,7 @@ function Build_tall_curved_stair(S, step_info, x_side,y_side, x_h,y_h)
   Build_curved_hall(steps, corn_x, corn_y,
                     dx0, dx1, dx2, dx3,
                     dy0, dy1, dy2, dy3,
-                    x_h, y_h, 256,
+                    y_h, x_h, 256,
                     info, step_info, info)
 end
 
@@ -1364,7 +1364,7 @@ function Build_low_curved_stair(S, step_info, x_side,y_side, x_h,y_h)
 
   local bord_W = 16
 
-  local steps = 2 * int(math.abs(x_h-y_h) / 28 + 0.9)
+  local steps = 2 * int(math.abs(y_h-x_h) / 28 + 0.9)
 
   if steps < 4 then
     steps = 4
@@ -1381,7 +1381,7 @@ function Build_low_curved_stair(S, step_info, x_side,y_side, x_h,y_h)
 
   for i = steps,1,-1 do
     
-    local z = x_h + (y_h - x_h) * (i-1) / (steps-1)
+    local z = y_h + (x_h - y_h) * (i-1) / (steps-1)
 
     local ang1 = (math.pi / 2.0) * (i-1) / steps
     local ang2 = (math.pi / 2.0) * (i  ) / steps

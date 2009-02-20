@@ -36,6 +36,28 @@ PLAIN =
   symmetry = "xy",
 },
 
+TEST_CURVE =
+{
+  kind = "solid",
+  prob = 99999,
+
+  structure =
+  {
+    "F.T",
+    "111",
+    "L.J",
+  },
+
+  x_sizes = { "111", "121", "131", "141", "151", "161" },
+  y_sizes = { "111", "121", "131", "141", "151", "161" },
+
+  subs =
+  {
+    { height=1, match="any" },
+  }
+},
+
+
 
 ---------------------------
 --  SOLID and DIAGONALS  --

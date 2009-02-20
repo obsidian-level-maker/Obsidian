@@ -609,24 +609,31 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     N.must_walk = true
   end
 
----#  local function has_void_neighbor(T, S, i, j)
----#    for side = 2,8,2 do
----#      -- check the room
----#      local N = S:neighbor(side)
----#      if not (N and N.room and N.room == R) then return true end
----#      if N and N.kind == "void" then return true end
----#
----#      -- check the pattern
----#      i, j = nudge_coord(i, j, side)
----#
----#      if (1 <= i and i <= T.long) and (1 <= j and j <= T.deep) then
----#        local ch = string.sub(T.expanded[T.deep+1-j], i, i)
----#        if ch == '#' then return true end
----#      end
----#    end
----#
----#    return false
----#  end
+  local function setup_curve_stair(S, E, ch, h, f_tex)
+    assert(not S.conn)
+
+    S.kind = "curve_stair"
+
+    S.x_side = sel(ch == 'L' or ch == 'F', 6, 4)
+    S.y_side = sel(ch == 'L' or ch == 'J', 8, 2)
+
+    if not R.outdoor then
+      S.f_tex = f_tex
+    end
+
+---???  S.floor_h = h
+
+    for pass = 1,2 do
+      local dir = sel(pass == 1, S.x_side, S.y_side)
+
+      local N = S:neighbor(dir)
+
+      assert(N and N.room == R)
+      assert(R:contains_seed(N.sx, N.sy))
+
+      N.must_walk = true
+    end
+  end
 
 
   local function eval_pattern(T)
@@ -760,7 +767,8 @@ area.x1, area.y1, area.x2, area.y2)
         elseif ch == '<' or ch == '>' or ch == 'v' or ch == '^' then
           setup_stair(T, S, E, hash_h, hash_ftex)
 
-        --TODO curvy stairs: 'L' 'F' 'J' 'T'
+        elseif ch == 'L' or ch == 'F' or ch == 'J' or ch == 'T' then
+          setup_curve_stair(S, E, ch, hash_h, hash_ftex)
 
         elseif ch == '/' or ch == '%' or ch == 'Z' or ch == 'N' then
           S.kind = "diagonal"
@@ -1136,122 +1144,6 @@ gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
     install_flat_floor(heights[1], f_texs[1])
   end
 end
-
-
---[[
-function Layout_choose_corner_stairs(R)
-
-  local function try_convert_tall_stair(S, x, y, dir)
-    local B = S:neighbor(10-dir)
-
-    if B and B.room == S.room and B.kind ~= "void" then
-      return  -- not possible
-    end
-
-    -- they look crappy outside
-    if S.room.outdoor then return end
-
-    if dir == 2 or dir == 8 then
-      
-      for other = 4,6,2 do
-        local N = S:neighbor(other)
-
-        if not N or N.room ~= S.room or N.kind == "void" then
-
-          S.kind = "curve_stair"
-          S.stair_kind = "tall"
-          S.y_side = dir
-          S.y_height = S.stair_z1
-          S.x_side = 10-other
-          S.x_height = S.stair_z2
-
-          gui.debugf("TALL CURVE STAIR @ SEED (%d,%d)\n", S.sx, S.sy)
-        end
-      end
-
-    else -- dir == 4 or dir == 6
-
-      for other = 2,8,6 do
-        local N = S:neighbor(other)
-
-        if not N or N.room ~= S.room or N.kind == "void" then
-
-          S.kind = "curve_stair"
-          S.stair_kind = "tall"
-          S.x_side = dir
-          S.x_height = S.stair_z1
-          S.y_side = 10-other
-          S.y_height = S.stair_z2
-
-          gui.debugf("TALL CURVE STAIR @ SEED (%d,%d)\n", S.sx, S.sy)
-        end
-      end
-    end
-  end
-
-  local function try_convert_low_stair(S, x, y, dir)
-    if S.kind ~= "stair" then return end
-
-    local high_z = math.max(S.stair_z1, S.stair_z2)
-
-    local B = S:neighbor(10-dir)
-    if B and B.room == S.room and B.kind == "stair" then return end
-
-    if dir == 2 or dir == 8 then
-      
-      for other = 4,6,2 do
-        local N1 = S:neighbor(other)
-        local N2 = S:neighbor(10-other)
-
-        if (not N1 or N1.room ~= S.room or N1.kind == "void" or N1.floor_h >= high_z+32)
-           and not (N1 and N1.kind == "stair") and
-           (N2 and N2.room == S.room and N2.kind == "walk" and N2.floor_h == high_z)
-        then
-          S.kind = "curve_stair"
-          S.stair_kind = "low"
-          S.y_side = dir
-          S.y_height = S.stair_z1
-          S.x_side = 10-other
-          S.x_height = S.stair_z2
-
-          gui.debugf("LOW CURVE STAIR @ SEED (%d,%d)\n", S.sx, S.sy)
-        end
-      end
-
-    else -- dir == 4 or dir == 6
-
-      for other = 2,8,6 do
-        local N1 = S:neighbor(other)
-        local N2 = S:neighbor(10-other)
-
-        if (not N1 or N1.room ~= S.room or N1.kind == "void" or N1.floor_h >= high_z+32)
-           and not (N1 and N1.kind == "stair") and
-           (N2 and N2.room == S.room and N2.kind == "walk" and N2.floor_h == high_z)
-        then
-          S.kind = "curve_stair"
-          S.stair_kind = "low"
-          S.x_side = dir
-          S.x_height = S.stair_z1
-          S.y_side = 10-other
-          S.y_height = S.stair_z2
-
-          gui.debugf("LOW CURVE STAIR @ SEED (%d,%d)\n", S.sx, S.sy)
-        end
-      end
-    end
-  end
-
-  ---| Layout_choose_corner_stairs |---
-
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
-    if S.room == R and S.kind == "stair" then
-      try_convert_tall_stair(S, x, y, S.stair_dir)
-      try_convert_low_stair(S, x, y, S.stair_dir)
-    end
-  end end -- for x, y
-end
---]]
 
 
 function Layout_set_floor_minmax(R)
@@ -1876,18 +1768,50 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       S.stair_z2 = assert(N.floor_h)
 
       -- check if a stair is really needed
-      if math.abs(S.stair_z1 - S.stair_z2) < 21 then
+      if math.abs(S.stair_z1 - S.stair_z2) < 17 then
         S.kind = "walk"
         S.floor_h = int((S.stair_z1 + S.stair_z2) / 2)
 
         S.f_tex = N.f_tex
         S.w_tex = N.w_tex
-
-        S.stair_dir = nil
-        S.stair_z1  = nil
-        S.stair_z2  = nil
       end
     end
+
+    local function process_curve_stair(S)
+      local NX = S:neighbor(S.x_side)
+      local NY = S:neighbor(S.y_side)
+
+      S.x_height = assert(NX.floor_h)
+      S.y_height = assert(NY.floor_h)
+
+      S.floor_h = math.max(S.x_height, S.y_height)
+
+      -- check if a stair is really needed
+      if math.abs(S.x_height - S.y_height) < 17 then
+        S.kind = "walk"
+        S.floor_h = int((S.x_height + S.y_height) / 2)
+
+        S.f_tex = NX.f_tex or NY.f_tex
+        S.w_tex = NX.w_tex or NY.w_tex
+
+        return
+      end
+
+      -- determine if can use tall stair
+
+      if not R.outdoor then
+        local OX = S:neighbor(10 - S.x_side)
+        local OY = S:neighbor(10 - S.y_side)
+
+        local x_void = not (OX and OX.room and OX.room == R) or (OX.kind == "void")
+        local y_void = not (OY and OY.room and OY.room == R) or (OY.kind == "void")
+
+        if x_void and y_void then
+          S.stair_kind = "tall"
+        end
+      end
+    end
+
 
     local function diag_neighbor(N)
       if not (N and N.room and N.room == R) then
@@ -1978,7 +1902,11 @@ gui.debugf("BOTH SAME HEIGHT\n")
     for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
       local S = SEEDS[x][y][1]
       if S and S.room == R then
-        if S.kind == "stair" then process_stair(S) end
+        if S.kind == "stair" then
+          process_stair(S)
+        elseif S.kind == "curve_stair" then
+          process_curve_stair(S)
+        end
       end
     end end -- for x, y
 
@@ -1987,7 +1915,9 @@ gui.debugf("BOTH SAME HEIGHT\n")
     for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
       local S = SEEDS[x][y][1]
       if S and S.room == R then
-        if S.kind == "diagonal" then process_diagonal(S) end
+        if S.kind == "diagonal" then
+          process_diagonal(S)
+        end
       end
     end end -- for x, y
   end
