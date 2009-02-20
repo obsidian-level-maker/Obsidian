@@ -642,7 +642,7 @@ LIQUID_U2 =
 LIQUID_U3 =
 {
   kind = "liquid",
-  prob = 9999,
+  prob = 300,
 
   structure =
   {
@@ -730,6 +730,29 @@ LIQUID_E3 =
   {
     { height=1, match="any" },
     { height=2, match="one" },
+  }
+},
+
+LIQUID_E4 =
+{
+  kind = "liquid",
+  prob = 999,
+
+  structure =
+  {
+    "111",
+    "1~~",
+    "1<.",
+    "1~~",
+    "111",
+  },
+
+  x_sizes = { "111", "112", "113" },
+  y_sizes = { "11111", "12111", "12121"  },
+
+  subs =
+  {
+    { height=1, match="any" },
   }
 },
 
