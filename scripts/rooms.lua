@@ -1181,6 +1181,9 @@ function Rooms_build_all()
   PLAN.window_mode = rand_key_by_probs { few=30, some=90, heaps=10 }
   gui.printf("Window Mode: %s\n", PLAN.window_mode)
 
+  PLAN.picture_mode = rand_key_by_probs { few=10, some=50, heaps=10 }
+  gui.printf("Picture Mode: %s\n", PLAN.picture_mode)
+
   PLAN.symmetry_mode = rand_key_by_probs { few=30, some=60, heaps=10 }
   gui.printf("Symmetry Mode: %s\n", PLAN.symmetry_mode)
 
