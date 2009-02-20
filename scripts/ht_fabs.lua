@@ -44,8 +44,8 @@ PLAIN =
 SOLID_P1 =
 {
   kind = "solid",
-  prob = 60,
   environment = "indoor",
+  prob = 60,
   
   structure =
   {
@@ -63,8 +63,8 @@ SOLID_P1 =
 SOLID_P2 =
 {
   kind = "solid",
-  prob = 40,
   environment = "indoor",
+  prob = 40,
   
   structure =
   {
@@ -82,8 +82,8 @@ SOLID_P2 =
 SOLID_P3 =
 {
   kind = "solid",
-  prob = 20,
   environment = "indoor",
+  prob = 20,
   
   structure =
   {
@@ -103,8 +103,8 @@ SOLID_P3 =
 SOLID_C1 =
 {
   kind = "solid",
-  prob = 1,
   environment = "indoor",
+  prob = 1,
   
   structure =
   {
@@ -122,8 +122,8 @@ SOLID_C1 =
 DIAG_C1 =
 {
   kind = "solid",
-  prob = 9,
   environment = "indoor",
+  prob = 9,
   
   structure =
   {
@@ -143,8 +143,8 @@ DIAG_C1 =
 DIAG_C2 =
 {
   kind = "solid",
-  prob = 9,
   environment = "indoor",
+  prob = 9,
   
   structure =
   {
@@ -166,8 +166,8 @@ DIAG_C2 =
 SOLID_T1 =
 {
   kind = "solid",
-  prob = 40,
   environment = "indoor",
+  prob = 40,
   
   structure =
   {
@@ -184,8 +184,8 @@ SOLID_T1 =
 DIAG_T1 =
 {
   kind = "solid",
-  prob = 80,
   environment = "indoor",
+  prob = 80,
  
   structure =
   {
@@ -202,8 +202,8 @@ DIAG_T1 =
 SOLID_OPP1 =
 {
   kind = "solid",
-  prob = 100,
   environment = "indoor",
+  prob = 100,
   
   structure =
   {
@@ -219,8 +219,8 @@ SOLID_OPP1 =
 DIAG_OPP1 =
 {
   kind = "solid",
-  prob = 900,
   environment = "indoor",
+  prob = 900,
   
   structure =
   {
@@ -236,8 +236,8 @@ DIAG_OPP1 =
 SOLID_L1 =
 {
   kind = "solid",
-  prob = 2000,
   environment = "indoor",
+  prob = 2000,
   
   structure =
   {
@@ -252,8 +252,8 @@ SOLID_L1 =
 DIAG_L1 =
 {
   kind = "solid",
-  prob = 1000,
   environment = "indoor",
+  prob = 1000,
   
   structure =
   {
@@ -270,8 +270,8 @@ DIAG_L1 =
 DIAG_L2 =
 {
   kind = "solid",
-  prob = 2000,
   environment = "indoor",
+  prob = 2000,
   
   structure =
   {
@@ -292,8 +292,8 @@ DIAG_L2 =
 SOLID_D1 =
 {
   kind = "solid",
-  prob = 900,
   environment = "indoor",
+  prob = 900,
 
   structure =
   {
@@ -312,8 +312,8 @@ SOLID_D1 =
 SOLID_C3 =
 {
   kind = "solid",
-  prob = 20,
   environment = "indoor",
+  prob = 20,
   
   structure =
   {
@@ -331,8 +331,8 @@ SOLID_C3 =
 SOLID_C5 =
 {
   kind = "solid",
-  prob = 80,
   environment = "indoor",
+  prob = 80,
 
   structure =
   {
@@ -352,8 +352,8 @@ SOLID_C5 =
 SOLID_T1 =
 {
   kind = "solid",
-  prob = 30,
   environment = "indoor",
+  prob = 30,
   
   structure =
   {
@@ -371,8 +371,8 @@ SOLID_T1 =
 SOLID_TSUB =
 {
   kind = "solid",
-  prob = 100,
   environment = "indoor",
+  prob = 100,
   
   structure =
   {
@@ -400,8 +400,8 @@ SOLID_TSUB =
 SOLID_X1 =
 {
   kind = "solid",
-  prob = 10,
   environment = "indoor",
+  prob = 10,
 
   structure =
   {
@@ -420,8 +420,8 @@ SOLID_X1 =
 
 SOLID_XSUB4 =
 {
-  prob = 20,
   environment = "indoor",
+  prob = 20,
 
   structure =
   {
@@ -443,8 +443,8 @@ SOLID_XSUB4 =
 
 DIAG_HT_BIG =
 {
-  prob = 5,
   environment = "indoor",
+  prob = 5,
  
   structure =
   {
@@ -492,7 +492,6 @@ LIQUID_I =
               "8", "9", "A" },
 
   symmetry = "xy",
-  match_any = true,
 },
 
 LIQUID_L =
@@ -508,8 +507,6 @@ LIQUID_L =
 
   x_sizes = { "12", "13", "14", "15", "25", "26", "27", "28" },
   y_sizes = { "12", "13", "14", "15", "25", "26", "27", "28" },
-
-  match_any = true,
 },
 
 LIQUID_L2 =
@@ -525,9 +522,44 @@ LIQUID_L2 =
 
   x_sizes = { "22", "23", "24", "34", "35", "36", "37", "38" },
   y_sizes = { "22", "23", "24", "34", "35", "36", "37", "38" },
-
-  match_any = true,
 },
+
+LIQUID_L3 =
+{
+  kind = "liquid",
+  environment = "indoor",
+  prob = 555,
+
+  structure =
+  {
+    "1~%",
+    "1~~",
+    "L..",
+  },
+
+  x_sizes = { "111", "121", "131" },
+  y_sizes = { "111", "121", "131" },
+
+  subs =
+  {
+    { height=1, match="any" }
+  }
+},
+
+LIQUID_L3_OUT =
+{
+  copy = "LIQUID_L3",
+
+  environment = "outdoor",
+
+  structure =
+  {
+    "1~~",
+    "1~~",
+    "L..",
+  },
+},
+
 
 LIQUID_O =
 {
@@ -545,7 +577,6 @@ LIQUID_O =
   y_sizes = { "131", "141", "151", "242", "252", "262" },
 
   symmetry = "xy",
-  match_any = true,
 },
 
 LIQUID_U =
@@ -563,7 +594,6 @@ LIQUID_U =
   y_sizes = { "12", "13", "14", "15", "25", "26", "27", "37" },
 
   symmetry = "x",
-  match_any = true,
 },
 
 LIQUID_E =
@@ -584,7 +614,6 @@ LIQUID_E =
   y_sizes = { "12121", "13131" },
 
   symmetry = "y",
-  match_any = true,
 },
 
 LIQUID_E2 =
@@ -607,7 +636,6 @@ LIQUID_E2 =
   y_sizes = { "1111111", "1112111", "1121211", "1122211" },
 
   symmetry = "y",
-  match_any = true,
 
   subs =
   {
@@ -655,8 +683,6 @@ LIQUID_S =
 
   x_sizes = { "112", "212", "213", "313" },
   y_sizes = { "111", "121", "131", "141" },
-
-  match_any = true,
 },
 
 LIQUID_S2 =
@@ -699,8 +725,6 @@ LIQUID_S_BIG =
   x_sizes = { "11111", "12111", "12121", "13121", "13131" },
               
   y_sizes = { "111", "121", "131", "141" },
-
-  match_any = true,
 },
 
 LIQUID_S3_BIG =
@@ -744,7 +768,6 @@ LIQUID_X =  -- TODO: big one with diagonals
   y_sizes = { "212", "313", "414", "515", "616", },
 
   symmetry = "xy",
-  match_any = true,
 },
 
 LIQUID_T =
@@ -762,7 +785,6 @@ LIQUID_T =
   y_sizes = { "21", "31", "41", "51", "52", "62", "72" },
 
   symmetry = "x",
-  match_any = true,
 },
 
 LIQUID_T_NICE =
@@ -781,7 +803,6 @@ LIQUID_T_NICE =
   y_sizes = { "211", "311", "411", "511" },
 
   symmetry = "x",
-  match_any = true,
 },
 
 
@@ -801,7 +822,6 @@ LIQUID_H =
   y_sizes = { "111", "212", "313", "414" },
 
   symmetry = "xy",
-  match_any = true,
 },
 
 --]]
@@ -842,8 +862,8 @@ HEIGHT_CURV_1 =
 SOLID_CSUB =
 {
   kind = "solid",
-  prob = 100,
   environment = "indoor",
+  prob = 100,
   
   structure =
   {
@@ -871,8 +891,8 @@ SOLID_CSUB =
 SOLID_CSUB4 =
 {
   kind = "solid",
-  prob = 100,
   environment = "indoor",
+  prob = 100,
   
   structure =
   {
@@ -900,8 +920,8 @@ SOLID_CSUB4 =
 SOLID_REC_C1 =
 {
   kind = "solid",
-  prob = 500,
   environment = "indoor",
+  prob = 500,
   
   structure =
   {
@@ -930,8 +950,8 @@ SOLID_REC_C1 =
 SOLID_REC_C2 =
 {
   kind = "solid",
-  prob = 1000,
   environment = "indoor",
+  prob = 1000,
   
   structure =
   {
@@ -958,8 +978,8 @@ SOLID_REC_C2 =
 SOLID_REC_C3 =
 {
   kind = "solid",
-  prob = 1000,
   environment = "indoor",
+  prob = 1000,
   
   structure =
   {
@@ -987,8 +1007,8 @@ SOLID_REC_C3 =
 SOLID_REC_C4 =
 {
   kind = "solid",
-  prob = 1000,
   environment = "indoor",
+  prob = 1000,
   
   structure =
   {
@@ -1059,8 +1079,8 @@ SOLID_REC_HT_C4 =
 DIAG_REC_C1 =
 {
   kind = "solid",
-  prob = 1000,
   environment = "indoor",
+  prob = 1000,
   
   structure =
   {
@@ -1088,8 +1108,8 @@ DIAG_REC_C1 =
 DIAG_REC_C3 =
 {
   kind = "solid",
-  prob = 1000,
   environment = "indoor",
+  prob = 1000,
   
   structure =
   {
@@ -1117,8 +1137,8 @@ DIAG_REC_C3 =
 DIAG_REC_C4 =
 {
   kind = "solid",
-  prob = 1000,
   environment = "indoor",
+  prob = 1000,
   
   structure =
   {
@@ -1209,7 +1229,7 @@ RECURSE_I1 =
   symmetry = "x",
 },
 
-RECURSE_I1_b =
+RECURSE_I1_B =
 {
   prob = 50,
 
@@ -1309,7 +1329,7 @@ RECURSE_L1 =
   }
 },
 
-RECURSE_L1_b =
+RECURSE_L1_B =
 {
   prob = 50,
 
@@ -1466,7 +1486,7 @@ M3 =
   symmetry = "x",
 },
 
-M3_b =
+M3_B =
 {
   prob = 10,
 
@@ -1494,7 +1514,7 @@ M3_b =
   symmetry = "xy",
 },
 
-M3_c =
+M3_C =
 {
   prob = 20,
 
@@ -1551,7 +1571,7 @@ U1 =
   symmetry = "x",
 },
 
-U1_b =
+U1_B =
 {
   prob = 50,
 
@@ -1608,7 +1628,7 @@ U2 =
   symmetry = "x",
 },
 
-U2_b =
+U2_B =
 {
   prob = 50,
 
@@ -1674,7 +1694,7 @@ RECURSE_O1 =
 },
 
 --[[
-O1_b =
+O1_B =
 {
   prob = 50,
 
@@ -1702,7 +1722,6 @@ O1_b =
   },
 
   symmetry = "xy",
-  match_any = true,
   low_ceil = true,
 },
 
@@ -1734,11 +1753,10 @@ O2 =
     "21312", "21412", "21512", "21612", "21712",
   },
 
-  match_any = true,
   low_ceil = true,
 },
 
-O2_b =
+O2_B =
 {
   prob = 10,
 
@@ -1767,7 +1785,6 @@ O2_b =
   },
 
   symmetry = "xy",
-  match_any = true,
   low_ceil = true,
 },
 
@@ -1803,7 +1820,6 @@ O_DOUBLE_1 =
     "21312", "21412", "21512", "21612", "21712",
   },
 
-  match_any = true,
   low_ceil = true,
 },
 
@@ -1839,7 +1855,6 @@ O_DOUBLE_2 =
   },
 
   symmetry = "xy",
-  match_any = true,
   low_ceil = true,
 },
 
@@ -1937,7 +1952,7 @@ T3 =
   },
 },
 
-T3_b =
+T3_B =
 {
   prob = 50,
 
@@ -1963,7 +1978,7 @@ T3_b =
   },
 },
 
-T3_d =
+T3_D =
 {
   prob = 10,
 
@@ -2027,7 +2042,7 @@ H1 =
 },
 
 --[[
-H1_b =
+H1_B =
 {
   prob = 20,
 
@@ -2082,7 +2097,7 @@ H2 =
   },
 },
 
-H2_b =
+H2_B =
 {
   prob = 20,
 
@@ -2136,7 +2151,7 @@ H3 =
   },
 },
 
-H3_b =
+H3_B =
 {
   prob = 50,
 
@@ -2214,7 +2229,7 @@ S2 =
   },
 },
 
-S2_b =
+S2_B =
 {
   prob = 10,
 
@@ -2295,7 +2310,7 @@ S4 =
   },
 },
 
-S4_b =
+S4_B =
 {
   prob = 50,
 
@@ -2327,8 +2342,8 @@ S4_b =
 
 RECURSE_DIAG_L_SHAPE =
 {
-  prob = 999,
   environment = "indoor",
+  prob = 999,
 
   structure =
   {
@@ -2374,7 +2389,6 @@ RECURSE_LIQ_WOW_2 =
               "2111112", "2121212", "2131312" },
 
   symmetry = "xy",
-  match_any = true,
 
   subs =
   {
@@ -2405,7 +2419,6 @@ RECURSE_LIQ_WOW_4 =
               "2111112", "2121212", "2131312" },
 
   symmetry = "xy",
-  match_any = true,
 
   subs =
   {
