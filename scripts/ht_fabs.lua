@@ -617,6 +617,49 @@ LIQUID_U =
   symmetry = "x",
 },
 
+LIQUID_U2 =
+{
+  kind = "liquid",
+  prob = 300,
+
+  structure =
+  {
+    "1~1",
+    "L.J",
+  },
+
+  x_sizes = { "111", "121", "131", "141" },
+  y_sizes = { "12",  "13", "14" },
+
+  symmetry = "x",
+
+  subs =
+  {
+    { height=1, match="one" }
+  }
+},
+
+LIQUID_U3 =
+{
+  kind = "liquid",
+  prob = 9999,
+
+  structure =
+  {
+    ".~2",
+    "L1J",
+  },
+
+  x_sizes = { "121", "131", "141" },
+  y_sizes = { "11", "12",  "13", "14" },
+
+  subs =
+  {
+    { height=1, match="any" },
+    { height=2, match="one" },
+  }
+},
+
 LIQUID_E =
 {
   kind = "liquid",
