@@ -401,38 +401,22 @@ function Rooms_setup_symmetry()
     local prob = 200
 
     if new_sym == "x" or new_sym == "xy" then
-      if R.sw == 4 then prob = prob / 2 end
-      if R.sw == 3 then prob = prob / 5 end
---    if R.sw == 2 then prob = prob / 10 end
       if R.sw <= 2 then return 0 end
+      if R.sw <= 4 then prob = prob / 2 end
+
+      if R.sw > R.sh * 3.1 then return 0 end
+      if R.sw > R.sh * 2.1 then prob = prob / 4 end
     end
 
     if new_sym == "y" or new_sym == "xy" then
-      if R.sh == 4 then prob = prob / 2 end
-      if R.sh == 3 then prob = prob / 5 end
---    if R.sh == 2 then prob = prob / 10 end
       if R.sh <= 2 then return 0 end
+      if R.sh <= 4 then prob = prob / 2 end
+
+      if R.sh > R.sw * 3.1 then return 0 end
+      if R.sh > R.sw * 2.1 then prob = prob / 4 end
     end
 
     return prob
-
-    --[[ OLD LOGIC -- USEFUL??
-    -- two seeds for each connection
-    local count = #R.conns * 2
-
-    -- one seed for purpose (key/switch/etc)
-    if R.purpose or #R.conns == 1 then
-      count = count + 1
-    end
-
-    -- one seed for each row/column (space for monsters etc)
-    count = count + math.max(R.sw, R.sh)
-
-    if count > R.svolume then
-      return false
-    end
-
-    return true --OK--  ]]
   end
 
   local function decide_layout_symmetry(R)
