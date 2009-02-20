@@ -890,11 +890,10 @@ LIQUID_S3_BIG =
   }
 },
 
---[[
-LIQUID_X =  -- TODO: big one with diagonals
+LIQUID_CROSS_1 =
 {
   kind = "liquid",
-  prob = 300,
+  prob = 3000,
 
   structure =
   {
@@ -903,12 +902,67 @@ LIQUID_X =  -- TODO: big one with diagonals
     "~.~",
   },
 
-  x_sizes = { "212", "313", "414", "515", "616", },
-  y_sizes = { "212", "313", "414", "515", "616", },
+  x_sizes = { "111", "212", "313", "414" },
+  y_sizes = { "212", "313" },
 
   symmetry = "xy",
 },
 
+LIQUID_CROSS_2 =
+{
+  kind = "liquid",
+  environment = "indoor",
+  prob = 30000,
+
+  structure =
+  {
+    "/~~.~~%",
+    "~~~.~~~",
+    "~~/.%~~",
+    ".......",
+    "~~%./~~",
+    "~~~.~~~",
+    "%~~.~~/",
+  },
+
+  x_sizes =
+  {
+    "1011101",
+    "1111111", "1112111",
+    "1211121", "1212121",
+    "1311131",
+  },
+
+  y_sizes =
+  {
+    "1011101",
+    "1111111", "1112111",
+    "1211121", "1212121",
+    "1311131",
+  },
+
+  symmetry = "xy",
+},
+
+LIQUID_CROSS_2_OUT =
+{
+  copy = "LIQUID_CROSS_2",
+
+  environment = "outdoor",
+
+  structure =
+  {
+    "~~~.~~~",
+    "~~~.~~~",
+    "~~/.%~~",
+    ".......",
+    "~~%./~~",
+    "~~~.~~~",
+    "~~~.~~~",
+  },
+},
+
+--[[
 LIQUID_T =
 {
   kind = "liquid",
@@ -1463,7 +1517,8 @@ RECURSE_I2 =
 
 RECURSE_I3 =
 {
-  prob = 9900,
+  environment = "indoor",
+  prob = 300,
 
   structure =
   {
