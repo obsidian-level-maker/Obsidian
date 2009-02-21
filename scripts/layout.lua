@@ -222,11 +222,23 @@ function Test_room_fabs()
     return (TC == BC)
   end
 
-  local function check_string_sym(mesg, s)
+  local function check_size_sym(mesg, s)
     local half_x = int(#s / 2)
 
     for x = 1,half_x do
-      local x2 = #s+1 - x
+      local x2 = #s - (x-1)
+
+      if string.sub(s, x, x) ~= string.sub(s, x2, x2) then
+        error("Broken size symmetry: " .. s)
+      end
+    end
+  end
+
+  local function check_horiz_sym(mesg, s)
+    local half_x = int(#s / 2)
+
+    for x = 1,half_x do
+      local x2 = #s - (x-1)
       local LC = string.sub(s, x, x)
       local RC = string.sub(s, x2, x2)
 
@@ -256,10 +268,10 @@ function Test_room_fabs()
 
     if info.symmetry == "x" or info.symmetry == "xy" then
       for _,line in ipairs(info.structure) do
-        check_string_sym("structure X", line)
+        check_horiz_sym("structure X", line)
       end
       for _,xs in ipairs(info.x_sizes) do
-        check_string_sym("x_size", xs)
+        check_size_sym("x_size", xs)
       end
     end
 
@@ -273,7 +285,7 @@ function Test_room_fabs()
       end
 
       for _,ys in ipairs(info.y_sizes) do
-        check_string_sym("y_size", ys)
+        check_size_sym("y_size", ys)
       end
     end
   end
@@ -410,11 +422,6 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end
 
     return result
-  end
-
-
-  local function plain_walk(ch)
-    return ch == '.' or is_digit(ch)
   end
 
   local function morph_dir(T, dir)
@@ -637,6 +644,17 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
     end
   end
 
+  local function dump_structure(T)
+    gui.debugf("T.structure =\n")
+    for y = 1,area.th do
+      local line = ""
+      for x = 1,area.tw do
+        line = line .. T.structure[x][y].char
+      end
+      gui.debugf("   %s\n", line)
+    end
+  end
+
 
   local function eval_pattern(T)
 gui.debugf("eval_pattern %s\n", T.info.name)
@@ -681,9 +699,7 @@ gui.debugf("NOT ENOUGH HEIGHTS\n")
       local ch = assert(E.char)
 
       if (S.conn or S.pseudo_conn or S.must_walk) then
-        -- TODO: if stair is "flat" (dest height == '.' height) then
-        --       allow connection to sit on it.
-        if not plain_walk(ch) then
+        if not (ch == '.' or is_digit(ch)) then
 gui.debugf("CONN needs PLAIN WALK\n")
           return -1
         end
@@ -730,11 +746,11 @@ gui.debugf("OK : score = %1.4f\n", score)
 
   local function install_pattern(T, want_subs, hash_lev)
 
-gui.debugf("install_fab :  hash_h:%d  (%d,%d)..(%d,%d)\n", heights[1],
+gui.debugf("install_pattern %s :  hash_h:%d  (%d,%d)..(%d,%d)\n",
+T.info.name, heights[1],
 area.x1, area.y1, area.x2, area.y2)
 
---gui.debugf("T = %s\n\n", table_to_str(T,1))
---gui.debugf("expanded = %s\n\n", table_to_str(T.expanded,3))
+-- dump_structure(T)
 
     for ex = 1,area.tw do for ey = 1,area.th do
       local x = area.x1 + ex - 1
@@ -905,32 +921,6 @@ gui.debugf("Transposed : %s\n", bool_str(T.transpose))
       end
     end end -- for x, y
   end
-
----#  local function mark_stair_dests(T)
----#
----#    for ex = 1,area.tw do for ey = 1,area.th do
----#      local x = area.x1 + ex - 1
----#      local y = area.y1 + ey - 1
----#
----#      local S = SEEDS[x][y][1]
----#      local ch = T.structure[ex][ey].char
----#
----#      local dir
----#          if ch == '<' then dir = 4
----#      elseif ch == '>' then dir = 6
----#      elseif ch == 'v' then dir = 2
----#      elseif ch == '^' then dir = 8
----#      end
----#
----#      if dir then
----#        local N = S:neighbor(dir)
----#        assert(N and N.room == R)
----#        
----#        N.must_walk = true
----#      end
----#
----#    end end -- for ex, ey
----#  end
 
   local function clip_heights(tab, where)
     assert(tab and #tab >= 1)
@@ -1782,7 +1772,12 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       -- source height already determined (in setup_stair)
       assert(S.stair_z1)
 
-      S.stair_z2 = assert(N.floor_h)
+      if not N.floor_h then
+        gui.debugf("Bad stair @ %s in %s\n", S:tostr(), S.room:tostr())
+        error("Bad stair : destination not walkable")
+      end
+
+      S.stair_z2 = N.floor_h
 
       -- check if a stair is really needed
       if math.abs(S.stair_z1 - S.stair_z2) < 17 then
