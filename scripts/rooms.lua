@@ -618,7 +618,7 @@ function Rooms_border_up()
       end
 
       if N.kind == "liquid" and
-        (S.kind == "liquid" or --!!!! N.room.kind == "scenic"
+        (S.kind == "liquid" or --!!! N.room.kind == "scenic"
          R1.arena == R2.arena)
       then
         S.border[side].kind = "nothing"
@@ -1147,7 +1147,7 @@ function Rooms_build_all()
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=30 }
   gui.printf("Hallway Mode: %s\n", PLAN.hallway_mode)
 
-  PLAN.liquid_mode = rand_key_by_probs { few=20, some=30, heaps=10 }
+  PLAN.liquid_mode = rand_key_by_probs { few=20, some=35, heaps=10 }
   gui.printf("Liquid Mode: %s\n", PLAN.liquid_mode)
 
   PLAN.junk_mode = rand_key_by_probs { few=10, some=60, heaps=20 }
@@ -1156,7 +1156,7 @@ function Rooms_build_all()
   PLAN.cage_mode = rand_key_by_probs { none=50, some=50, heaps=6 }
   gui.printf("Cage Mode: %s\n", PLAN.cage_mode)
 
-  PLAN.pillar_mode = rand_key_by_probs { few=10, some=70, heaps=20 }
+  PLAN.pillar_mode = rand_key_by_probs { few=30, some=60, heaps=20 }
   gui.printf("Pillar Mode: %s\n", PLAN.pillar_mode)
 
   PLAN.fence_mode = rand_key_by_probs { none=30, few=30, some=10 }
@@ -1175,12 +1175,12 @@ function Rooms_build_all()
   gui.printf("Favored Shape: %s\n", PLAN.favor_shape)
 
 
---[[ ]]
+--[[
 PLAN.liquid_mode = "some"
-PLAN.hallway_mode = "few"
+PLAN.hallway_mode = "some"
 PLAN.symmetry_mode = "some"
 PLAN.junk_mode = "some"
-PLAN.sky_mode = "few"
+PLAN.sky_mode = "some"  ]]
 
 ---  Test_room_fabs()
 

@@ -2037,6 +2037,9 @@ end
   local function add_pillars()
     if R.parent then return end
 
+    -- FIXME this is too crude!
+    if PLAN.pillar_mode == "few" then return end
+
     local SIDES = { 2, 4 }
     rand_shuffle(SIDES)
 
