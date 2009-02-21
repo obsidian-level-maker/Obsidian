@@ -319,6 +319,7 @@ void CSG2_MakeMiniMap(void)
   }
 
   // entities
+#if 0
   for (unsigned k = 0; k < all_entities.size(); k++)
   {
     entity_info_c *E = all_entities[k];
@@ -328,6 +329,7 @@ void CSG2_MakeMiniMap(void)
 
     main_win->build_box->mini_map->DrawEntity(x,y, 255,255,0);
   }
+#endif
 
   main_win->build_box->mini_map->MapFinish();
 }
