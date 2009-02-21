@@ -335,52 +335,6 @@ DIAG_X_HMMM =
 },
 
 
---[[  -- TO BE REDONE or SCRAPPED
-
-SOLID_D1 =
-{
-  kind = "solid",
-  environment = "indoor",
-  prob = 900,
-
-  structure =
-  {
-    "/.%",
-    "...",
-    "%./",
-  },
-
-  x_sizes = { "111", "121", "131", "141", "151" },
-  y_sizes = { "111", "121", "131" },
-
-  symmetry = "xy",
-},
-
-
-
-SOLID_XSUB4 =
-{
-  environment = "indoor",
-  prob = 20,
-
-  structure =
-  {
-    "..#v.",
-    ">111.",
-    "#111#",
-    ".111<",
-    ".^#..",
-  },
-
-  x_sizes = { "11111", "11211", "11311", "11411",
-              "12121", "12221", "12321", "12421", "12521" },
-
-  y_sizes = { "11111", "11211", "11311", "11411",
-              "12121", "12221", "12321", "12421", "12521" },
-},
---]]  -- end TO BE REVISED OR SCRAPPED
-
-
 DIAG_HT_BIG =
 {
   environment = "indoor",
@@ -921,12 +875,11 @@ LIQUID_CROSS_2_OUT =
 },
 
 
---[[  TO BE REVISED
-
-LIQUID_T =
+LIQUID_T1 =
 {
   kind = "liquid",
-  prob = 150,
+  shape = "T",
+  prob = 250,
 
   structure =
   {
@@ -934,8 +887,8 @@ LIQUID_T =
     "~.~",
   },
 
-  x_sizes = { "111", "212", "313", "414" },
-  y_sizes = { "21", "31", "41", "51", "52", "62", "72" },
+  x_sizes = { "212", "313" },
+  y_sizes = { "21", "31", "41", "51" },
 
   symmetry = "x",
 },
@@ -943,7 +896,8 @@ LIQUID_T =
 LIQUID_T_NICE =
 {
   kind = "liquid",
-  prob = 191,
+  shape = "T",
+  prob = 591,
 
   structure =
   {
@@ -952,8 +906,8 @@ LIQUID_T_NICE =
     "~~.~~",
   },
 
-  x_sizes = { "11111", "21112", "31113"  },
-  y_sizes = { "211", "311", "411", "511" },
+  x_sizes = { "11111", "21112"  },
+  y_sizes = { "211", "311", "411" },
 
   symmetry = "x",
 },
@@ -1604,7 +1558,7 @@ RECURSE_L1 =
 RECURSE_U1 =
 {
   shape = "U",
-  prob = 8850,
+  prob = 85,
 
   structure =
   {
@@ -1635,7 +1589,7 @@ RECURSE_U1 =
 RECURSE_U2 =
 {
   shape = "U",
-  prob = 8850,
+  prob = 85,
 
   structure =
   {
