@@ -913,10 +913,10 @@ LIQUID_T_NICE =
 },
 
 
-LIQUID_H =
+LIQUID_H1 =
 {
   kind = "liquid",
-  prob = 110,
+  prob = 921,
 
   structure =
   {
@@ -925,13 +925,11 @@ LIQUID_H =
     ".~.",
   },
 
-  x_sizes = { "121", "131", "141", "151", "242", "252" },
-  y_sizes = { "111", "212", "313", "414" },
+  x_sizes = { "121", "131", "141" },
+  y_sizes = { "111", "212", "313" },
 
   symmetry = "xy",
 },
-
---]]  -- end TO BE REDONE
 
 
 -----------------------
