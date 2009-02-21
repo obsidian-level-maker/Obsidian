@@ -244,7 +244,7 @@ DIAG_OPP1 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 900,
+  prob = 400,
   
   structure =
   {
@@ -279,7 +279,7 @@ DIAG_L1 =
   kind = "solid",
   shape = "L",
   environment = "indoor",
-  prob = 1000,
+  prob = 600,
   
   structure =
   {
@@ -298,7 +298,7 @@ DIAG_L2 =
   kind = "solid",
   shape = "L",
   environment = "indoor",
-  prob = 1000,
+  prob = 300,
   
   structure =
   {
@@ -1067,7 +1067,7 @@ SOLID_CSUB =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 100,
+  prob = 200,
   
   structure =
   {
@@ -1096,7 +1096,7 @@ SOLID_CSUB4 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 100,
+  prob = 300,
   
   structure =
   {

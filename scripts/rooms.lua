@@ -1147,7 +1147,7 @@ function Rooms_build_all()
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=30 }
   gui.printf("Hallway Mode: %s\n", PLAN.hallway_mode)
 
-  PLAN.liquid_mode = rand_key_by_probs { few=15, some=60, heaps=20 }
+  PLAN.liquid_mode = rand_key_by_probs { few=20, some=30, heaps=10 }
   gui.printf("Liquid Mode: %s\n", PLAN.liquid_mode)
 
   PLAN.junk_mode = rand_key_by_probs { few=10, some=60, heaps=20 }

@@ -1124,7 +1124,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     add_fab_list(f_probs, f_infos, ROOM_PATTERNS, sol_mul, liq_mul)
 
 
-    local try_count = 10 + area.tw + area.th
+    local try_count = 12 + area.tw + area.th
 
     for loop = 1,try_count do
       if table_empty(f_probs) then
