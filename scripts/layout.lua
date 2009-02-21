@@ -1168,7 +1168,6 @@ function Layout_set_floor_minmax(R)
     if S.room == R and 
        (S.kind == "walk" or S.kind == "purpose")
     then
-if not S.floor_h then S.floor_h = 2 end --!!!!!!
       assert(S.floor_h)
 
       min_h = math.min(min_h, S.floor_h)
@@ -2166,21 +2165,18 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   post_processing()
 
   for _,C in ipairs(R.conns) do
-if not C.conn_h then C.conn_h = 1 end --!!!!!
     assert(C.conn_h)
   end
 
 
   Layout_set_floor_minmax(R)
 
----  Layout_choose_corner_stairs(R)
-
   if R.purpose then
     add_purpose()
   end
 
   if R.kind == "building" then
---!!!!!!!    add_pillars()
+    add_pillars()
   end
 
 
