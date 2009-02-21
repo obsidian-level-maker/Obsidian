@@ -522,37 +522,37 @@ BIG_BRANCH_KINDS =
 
 
   -- Cross shape, all stems perfectly centered
-  XC = { conn=4, prob=2000, func=branch_gen_XC, symmetry="xy" },
+  XC = { conn=4, prob=1800, func=branch_gen_XC, symmetry="xy" },
 
   -- Cross shape, centered main stem, leeway for side stems
-  XT = { conn=4, prob=300, func=branch_gen_XT, symmetry="x" },
+  XT = { conn=4, prob=200, func=branch_gen_XT, symmetry="x" },
 
   -- Cross shape, no stems are centered
-  XX = { conn=4, prob=100, func=branch_gen_XX },
+  XX = { conn=4, prob= 50, func=branch_gen_XX },
 
   -- H shape, parallel entries/exits at the four corners
-  HP = { conn=4, prob= 60, func=branch_gen_HP, symmetry="x" },
+  HP = { conn=4, prob= 40, func=branch_gen_HP, symmetry="x" },
 
   -- like HP but exits are perpendicular to entry dir
-  HT = { conn=4, prob= 60, func=branch_gen_HT, symmetry="x" },
+  HT = { conn=4, prob= 40, func=branch_gen_HT, symmetry="x" },
 
   -- Swastika shape
-  SW = { conn=4, prob= 100, func=branch_gen_SW, symmetry="R" },
+  SW = { conn=4, prob= 50, func=branch_gen_SW, symmetry="R" },
 
   -- F shape with two exits on each wall
   F4 = { conn=4, prob=  5, func=branch_gen_F4 },
 
 
   -- five-way star shapes
-  KY = { conn=5, prob=150, func=branch_gen_KY, symmetry="x" },
-  KT = { conn=5, prob=150, func=branch_gen_KT, symmetry="x" },
+  KY = { conn=5, prob=110, func=branch_gen_KY, symmetry="x" },
+  KT = { conn=5, prob=110, func=branch_gen_KT, symmetry="x" },
 
   -- two exits at bottom and three at top, all parallel
   M5 = { conn=5, prob= 40, func=branch_gen_M5, symmetry="x" },
 
 
   -- gigantic six-way shapes
-  GG = { conn=6, prob=350, func=branch_gen_GG, symmetry="x" },
+  GG = { conn=6, prob=250, func=branch_gen_GG, symmetry="x" },
 }
 
 
@@ -918,7 +918,7 @@ gui.debugf("Failed\n")
 
     table.sort(rooms, function(A, B) return A.k_score > B.k_score end)
 
-    local big_bra_chance = rand_key_by_probs { [99] = 80, [50]=15, [10]=5 }
+    local big_bra_chance = rand_key_by_probs { [99] = 80, [50]=12, [10]=3 }
     gui.printf("Big Branch Mode: %d%%\n", big_bra_chance)
 
     for _,R in ipairs(rooms) do
