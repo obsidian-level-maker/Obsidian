@@ -819,25 +819,25 @@ gui.debugf("end install_fab\n")
   end
 
 
-  local function mirror_seed(S, N, sym)
-    -- S : destination
-    -- N : source (peer)
+  local function mirror_seed(S, OT, sym)
+    -- S  : destination
+    -- OT : other (source)
 
-    if N.kind == "walk" and not N.floor_h then
-gui.debugf("S =\n%s\n\n", table_to_str(S, 1))
-gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
+    if OT.kind == "walk" and not OT.floor_h then
+gui.debugf("S  =\n%s\n\n", table_to_str(S,  1))
+gui.debugf("OT =\n%s\n\n", table_to_str(OT, 1))
       error("mirror_seed : peer not setup yet!")
     end
 
-    S.kind    = assert(N.kind)
-    S.div_lev = N.div_lev
+    S.kind    = assert(OT.kind)
+    S.div_lev = OT.div_lev
 
-    S.floor_h = N.floor_h
-    S.ceil_h  = N.ceil_h
+    S.floor_h = OT.floor_h
+    S.ceil_h  = OT.ceil_h
 
-    S.f_tex   = N.f_tex
-    S.c_tex   = N.c_tex
-    S.w_tex   = N.w_tex
+    S.f_tex   = OT.f_tex
+    S.c_tex   = OT.c_tex
+    S.w_tex   = OT.w_tex
 
     -- NB: connection logic copied from setup_floor()
     if S.conn or S.pseudo_conn then
@@ -848,20 +848,18 @@ gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
       if S.f_tex then C.conn_ftex = S.f_tex end
     end
 
-    if N.kind == "diagonal" then
+    if OT.kind == "diagonal" then
       if sym == "x" then
-        S.diag_char = X_MIRROR_CHARS[N.diag_char]
+        S.diag_char = X_MIRROR_CHARS[OT.diag_char]
 
       else assert(sym == "y")
-        S.diag_char = Y_MIRROR_CHARS[N.diag_char]
+        S.diag_char = Y_MIRROR_CHARS[OT.diag_char]
       end
     end
 
-    if N.kind == "stair" then
-      S.stair_dir = assert(N.stair_dir)
-      S.stair_z1  = assert(N.stair_z1)
-
----## S.stair_z2  = assert(N.stair_z2)
+    if OT.kind == "stair" then
+      S.stair_dir = assert(OT.stair_dir)
+      S.stair_z1  = assert(OT.stair_z1)
 
       if sym == "x" and is_horiz(S.stair_dir) then
         S.stair_dir = 10 - S.stair_dir
@@ -870,6 +868,14 @@ gui.debugf("N =\n%s\n\n", table_to_str(N, 1))
       if sym == "y" and is_vert(S.stair_dir) then
         S.stair_dir = 10 - S.stair_dir
       end
+    end
+
+    if OT.kind == "curve_stair" then
+      S.x_side = assert(OT.x_side)
+      S.y_side = assert(OT.y_side)
+
+      if sym == "x" then S.x_side = 10 - S.x_side end
+      if sym == "y" then S.y_side = 10 - S.y_side end
     end
   end
 
@@ -1790,6 +1796,8 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     end
 
     local function process_curve_stair(S)
+      assert(S.x_side and S.y_side)
+
       local NX = S:neighbor(S.x_side)
       local NY = S:neighbor(S.y_side)
 
