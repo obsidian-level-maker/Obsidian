@@ -1013,6 +1013,7 @@ HEIGHT_I2 =
 
 HEIGHT_I3 =
 {
+  environment = "indoor",
   prob = 500,
 
   structure =
@@ -1032,6 +1033,21 @@ HEIGHT_I3 =
   },
 
   symmetry = "x",
+},
+
+HEIGHT_I3_OUT =
+{
+  copy = "HEIGHT_I3",
+
+  environment = "outdoor",
+
+  structure =
+  {
+    "11111",
+    "11111",
+    "Z.^.N",
+    ".....",
+  },
 },
 
 HEIGHT_CURV_1 =
@@ -2437,7 +2453,6 @@ RECURSE_WOW_LIQUID_O4 =
     { height=1, match="any", recurse=1 }
   }
 },
-
 
 
 } -- end of ROOM_PATTERNS
