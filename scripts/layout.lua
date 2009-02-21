@@ -1095,6 +1095,10 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
         elseif info.kind == "liquid" then
           probs[name] = probs[name] * liq_mul
         end
+
+        if info.shape == PLAN.favor_shape then
+          probs[name] = probs[name] * 20.0
+        end
       end
     end
   end

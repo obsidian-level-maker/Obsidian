@@ -1171,6 +1171,9 @@ function Rooms_build_all()
   PLAN.symmetry_mode = rand_key_by_probs { few=30, some=60, heaps=10 }
   gui.printf("Symmetry Mode: %s\n", PLAN.symmetry_mode)
 
+  PLAN.favor_shape = rand_key_by_probs { none=80, L=5, T=5, O=5, S=5, X=5 }
+  gui.printf("Favored Shape: %s\n", PLAN.favor_shape)
+
 
 --[[ ]]
 PLAN.liquid_mode = "some"

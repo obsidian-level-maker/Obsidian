@@ -44,6 +44,7 @@ PLAIN =
 SOLID_P1 =
 {
   kind = "solid",
+  shape = "P",
   environment = "indoor",
   prob = 60,
   
@@ -63,6 +64,7 @@ SOLID_P1 =
 SOLID_P2 =
 {
   kind = "solid",
+  shape = "P",
   environment = "indoor",
   prob = 40,
   
@@ -82,6 +84,7 @@ SOLID_P2 =
 SOLID_P3 =
 {
   kind = "solid",
+  shape = "P",
   environment = "indoor",
   prob = 20,
   
@@ -122,6 +125,7 @@ SOLID_C1 =
 DIAG_C1 =
 {
   kind = "solid",
+  shape = "O",
   environment = "indoor",
   prob = 9,
   
@@ -184,6 +188,7 @@ SOLID_C3 =
 SOLID_T1 =
 {
   kind = "solid",
+  shape = "T",
   environment = "indoor",
   pork = 40,
   
@@ -202,6 +207,7 @@ SOLID_T1 =
 DIAG_T1 =
 {
   kind = "solid",
+  shape = "T",
   environment = "indoor",
   pork = 80,
  
@@ -254,6 +260,7 @@ DIAG_OPP1 =
 SOLID_L1 =
 {
   kind = "solid",
+  shape = "L",
   environment = "indoor",
   pork = 2000,
   
@@ -270,6 +277,7 @@ SOLID_L1 =
 DIAG_L1 =
 {
   kind = "solid",
+  shape = "L",
   environment = "indoor",
   pork = 1000,
   
@@ -288,6 +296,7 @@ DIAG_L1 =
 DIAG_L2 =
 {
   kind = "solid",
+  shape = "L",
   environment = "indoor",
   pork = 2000,
   
@@ -306,6 +315,7 @@ DIAG_L2 =
 DIAG_X_HMMM =
 {
   kind = "solid",
+  shape = "X",
   environment = "indoor",
   prob = 300,
 
@@ -426,6 +436,7 @@ LIQUID_I =
 LIQUID_L =
 {
   kind = "liquid",
+  shape = "L",
   pork = 5,
 
   structure =
@@ -441,6 +452,7 @@ LIQUID_L =
 LIQUID_L2 =
 {
   kind = "liquid",
+  shape = "L",
   pork = 190,
 
   structure =
@@ -456,6 +468,7 @@ LIQUID_L2 =
 LIQUID_L3 =
 {
   kind = "liquid",
+  shape = "L",
   environment = "indoor",
   pork = 555,
 
@@ -493,6 +506,7 @@ LIQUID_L3_OUT =
 LIQUID_O =
 {
   kind = "liquid",
+  shape = "O",
   pork = 190,
 
   structure =
@@ -511,6 +525,7 @@ LIQUID_O =
 LIQUID_O2 =
 {
   kind = "liquid",
+  shape = "O",
   environment = "indoor",
   pork = 300,
 
@@ -549,6 +564,7 @@ LIQUID_O2_OUT =
 LIQUID_U1 =
 {
   kind = "liquid",
+  shape = "U",
   pork = 30,
 
   structure =
@@ -566,6 +582,7 @@ LIQUID_U1 =
 LIQUID_U2 =
 {
   kind = "liquid",
+  shape = "U",
   pork = 300,
 
   structure =
@@ -588,6 +605,7 @@ LIQUID_U2 =
 LIQUID_U3 =
 {
   kind = "liquid",
+  shape = "U",
   pork = 300,
 
   structure =
@@ -609,6 +627,7 @@ LIQUID_U3 =
 LIQUID_U4 =
 {
   kind = "liquid",
+  shape = "U",
   environment = "indoor",
   pork = 500,
 
@@ -644,6 +663,7 @@ LIQUID_U4_OUT =
 LIQUID_E =
 {
   kind = "liquid",
+  shape = "E",
   pork = 110,
 
   structure =
@@ -664,6 +684,7 @@ LIQUID_E =
 LIQUID_E2 =
 {
   kind = "liquid",
+  shape = "E",
   pork = 200,
 
   structure =
@@ -691,6 +712,7 @@ LIQUID_E2 =
 LIQUID_E3 =
 {
   kind = "liquid",
+  shape = "E",
   pork = 999,
 
   structure =
@@ -717,6 +739,7 @@ LIQUID_E3 =
 LIQUID_E4 =
 {
   kind = "liquid",
+  shape = "E",
   pork = 999,
 
   structure =
@@ -740,6 +763,7 @@ LIQUID_E4 =
 LIQUID_S =
 {
   kind = "liquid",
+  shape = "S",
   pork = 200,
 
   structure =
@@ -756,6 +780,7 @@ LIQUID_S =
 LIQUID_S2 =
 {
   kind = "liquid",
+  shape = "S",
   pork = 200,
 
   structure =
@@ -781,6 +806,7 @@ LIQUID_S2 =
 LIQUID_S_BIG =
 {
   kind = "liquid",
+  shape = "S",
   pork = 50,
 
   structure =
@@ -798,6 +824,7 @@ LIQUID_S_BIG =
 LIQUID_S3_BIG =
 {
   kind = "liquid",
+  shape = "S",
   pork = 999,
 
   structure =
@@ -822,6 +849,7 @@ LIQUID_S3_BIG =
 LIQUID_CROSS_1 =
 {
   kind = "liquid",
+  shape = "X",
   pork = 300,
 
   structure =
@@ -840,6 +868,7 @@ LIQUID_CROSS_1 =
 LIQUID_CROSS_2 =
 {
   kind = "liquid",
+  shape = "X",
   environment = "indoor",
   pork = 300,
 
@@ -1023,6 +1052,7 @@ HEIGHT_I3 =
 HEIGHT_CURV_1 =
 {
   kind = "solid",
+  shape = "O",
   prob = 999,
 
   structure =
@@ -1498,6 +1528,7 @@ RECURSE_I3_OUT =
 RECURSE_SOLID_T =
 {
   kind = "solid",
+  shape = "T",
   environment = "indoor",
   prob = 999,
   
@@ -1530,6 +1561,7 @@ RECURSE_SOLID_T =
 
 RECURSE_L1 =
 {
+  shape = "L",
   prob = 300,
 
   structure =
@@ -1868,6 +1900,7 @@ U2_B =
 
 RECURSE_O1 =
 {
+  shape = "O",
   prob = 100,
 
   structure =
@@ -1902,6 +1935,7 @@ RECURSE_O1 =
 
 RECURSE_O1_DIAG =
 {
+  shape = "O",
   environment = "indoor",
   prob = 300,
 
@@ -1968,6 +2002,7 @@ RECURSE_O2_DIAG =
 
 RECURSE_O3 =
 {
+  shape = "O",
   prob = 100,
 
   structure =
@@ -1999,6 +2034,7 @@ RECURSE_O3 =
 
 RECURSE_O3_DIAG =
 {
+  shape = "O",
   environment = "indoor",
   prob = 200,
 
@@ -2067,6 +2103,7 @@ RECURSE_O4_DIAG =
 
 RECURSE_DOUBLE_O1 =
 {
+  shape = "O",
   prob = 550,
 
   structure =
@@ -2100,6 +2137,7 @@ RECURSE_DOUBLE_O1 =
 
 RECURSE_DOUBLE_O2 =
 {
+  shape = "O",
   prob = 950,
 
   structure =
@@ -2167,6 +2205,7 @@ T1 =
 
 RECURSE_T1 =
 {
+  shape = "T",
   prob = 950,
 
   structure =
@@ -2201,6 +2240,7 @@ RECURSE_T1 =
 
 RECURSE_T1_DIAG =
 {
+  shape = "T",
   prob = 650,
 
   structure =
@@ -2234,6 +2274,7 @@ RECURSE_T1_DIAG =
 
 RECURSE_T1_NOSYM =
 {
+  shape = "T",
   prob = 350,
 
   structure =
@@ -2266,6 +2307,7 @@ RECURSE_T1_NOSYM =
 
 RECURSE_T3 =
 {
+  shape = "T",
   prob = 599,
 
   structure =
@@ -2300,6 +2342,7 @@ RECURSE_T3 =
 
 RECURSE_T3_NOSYM =
 {
+  shape = "T",
   prob = 1000,
 
   structure =
@@ -2332,6 +2375,7 @@ RECURSE_T3_NOSYM =
 
 RECURSE_H1 =
 {
+  shape = "H",
   prob = 90,
 
   structure =
@@ -2663,6 +2707,7 @@ S4_B =
 
 RECURSE_DIAG_L_SHAPE =
 {
+  shape = "L",
   environment = "indoor",
   prob = 999,
 
@@ -2690,6 +2735,7 @@ RECURSE_DIAG_L_SHAPE =
 RECURSE_LIQ_WOW_2 =
 {
   kind = "liquid",
+  shape = "O",
   pork = 900,
 
   structure =
@@ -2720,6 +2766,7 @@ RECURSE_LIQ_WOW_2 =
 RECURSE_LIQ_WOW_4 =
 {
   kind = "liquid",
+  shape = "O",
   pork = 600,
 
   structure =
