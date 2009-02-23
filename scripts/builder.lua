@@ -1807,7 +1807,7 @@ function Build_small_switch(S, dir, f_h, info, tag)
     { x=mx+32, y=my-8 },
     { x=mx+32, y=my+8, w_face = switch_face, line_kind=assert(info.skin.line_kind), line_tag=tag },
     { x=mx-32, y=my+8 },
-    { x=mx-32, y=my-8 }, ---## w_face = switch_face, line_kind=assert(info.skin.line_kind), line_tag=tag },
+    { x=mx-32, y=my-8 },
   },
   -2000, f_h+16+64)
 

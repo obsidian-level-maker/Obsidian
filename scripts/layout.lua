@@ -917,11 +917,12 @@ gui.debugf("Transposed : %s\n", bool_str(T.transpose))
 
           if pass == 1 then
             -- check that copy is possible
-            -- (Note: most of the time it's OK)
+            -- (Note: most of the time it is OK)
             if (S.conn or S.pseudo_conn or S.must_walk) and
                not (OT.kind == "walk")
             then
 gui.debugf("symmetry_fill FAILED  S:%s ~= OT:%s\n", S:tostr(), OT:tostr())
+              R.symmetry = nil
               return false
             end
 
