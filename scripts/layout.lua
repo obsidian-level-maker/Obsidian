@@ -887,45 +887,54 @@ gui.debugf("Fab.symmetry = %s\n", tostring(T.info.symmetry))
 gui.debugf("Room.symmetry = %s\n", tostring(R.symmetry))
 gui.debugf("Transposed : %s\n", bool_str(T.transpose))
 
-    -- TODO: support "xy" symmetrical fabs
-    assert(T.info.symmetry == "x" or T.info.symmetry == "y")
-
     local do_x = (T.info.symmetry == "x")
     local do_y = (T.info.symmetry == "y")
 
+    -- TODO: support "xy" symmetrical fabs
+    assert(do_x or do_y)
+
     if T.transpose then do_x,do_y = do_y,do_x end
 
----##    local mx = (box.x1 + box.x2) / 2 - 0.1
----##    local my = (box.y1 + box.y2) / 2 - 0.1
+    -- first pass is merely a test
+    for pass = 1,2 do
+      for x = box.x1,box.x2 do for y = box.y1,box.y2 do
+        local S = SEEDS[x][y][1]
+        assert(S and S.room == R)
 
-    for x = box.x1,box.x2 do for y = box.y1,box.y2 do
-      local S = SEEDS[x][y][1]
-      assert(S and S.room == R)
+        if S.kind == "walk" and not S.floor_h then
+          local ox, oy = x, y
 
-      if S.kind == "walk" and not S.floor_h then
-        if do_x then
-          local nx = area.x2 - (x - area.x1)
-          assert(Seed_valid(nx, y, 1))
+          if do_x then
+            ox = area.x2 - (x - area.x1)
+          elseif do_y then
+            oy = area.y2 - (y - area.y1)
+          end
 
-          local N = SEEDS[nx][y][1]
-          assert(N and N.room == R)
+          assert(Seed_valid(ox, oy, 1))
 
-          mirror_seed(S, N, "x")
+          local OT = SEEDS[ox][oy][1]
+          assert(OT and OT.room == R)
 
-        elseif do_y then
-          local ny = area.y2 - (y - area.y1)
-          assert(Seed_valid(x, ny, 1))
+          if pass == 1 then
+            -- check that copy is possible
+            -- (Note: most of the time it's OK)
+            if (S.conn or S.pseudo_conn or S.must_walk) and
+               not (OT.kind == "walk")
+            then
+gui.debugf("symmetry_fill FAILED  S:%s ~= OT:%s\n", S:tostr(), OT:tostr())
+              return false
+            end
 
-          local N = SEEDS[x][ny][1]
-          assert(N and N.room == R)
-
-          mirror_seed(S, N, "y")
-
-        else
-          error("symmetry_fill : no peer to copy!")
+          elseif do_x then
+            mirror_seed(S, OT, "x")
+          elseif do_y then
+            mirror_seed(S, OT, "y")
+          end
         end
-      end
-    end end -- for x, y
+      end end -- for x, y
+    end -- for pass
+
+    return true  --OK--
   end
 
   local function clip_heights(tab, where)
@@ -1016,8 +1025,8 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
       local new_area = find_sub_area(T, tostring(s_idx))
       assert(new_area)
 
-      if sym_fills[s_idx] then
-        symmetry_fill(T, new_area)
+      if sym_fills[s_idx] and symmetry_fill(T, new_area) then
+        -- OK, symmetry fill worked
 
       elseif sub.recurse or sub.sym_fill then
         local new_hs = clip_heights(heights, sub.height)
@@ -2168,6 +2177,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   post_processing()
 
   for _,C in ipairs(R.conns) do
+-- if not C.conn_h then gui.debugf("CONN_H NOT SET @ %s\n", C.src_S:tostr()) ; C.conn_h = 1 ; C.src_S.f_tex = "LAVA1" end --!!!!!!!
     assert(C.conn_h)
   end
 
