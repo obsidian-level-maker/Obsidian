@@ -518,7 +518,7 @@ LIQUID_O4 =
 {
   kind = "liquid",
   shape = "O",
-  prob = 600,
+  prob = 400,
 
   structure =
   {
@@ -1101,7 +1101,30 @@ HEIGHT_CURV_1 =
   }
 },
 
+HEIGHT_CURV_2 =
+{
+  kind = "solid",
+  shape = "O",
+  level = "top",
+  prob = 3000,  -- very rarely occurs
 
+  structure =
+  {
+    "F2T",
+    "121",
+    "1.1",
+    "L.J",
+  },
+
+  x_sizes = { "121", "131", "141", "151", },
+  y_sizes = { "1201", "1211", "1301", "1311" },
+
+  subs =
+  {
+    { height=1, match="any" },
+    { height=2, match="one" },
+  }
+},
 
 
 --------------------------
