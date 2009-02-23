@@ -34,7 +34,7 @@ NAMING_THEMES =
       ["%b %n"]    = 60, ["%t %b %n"]    = 17,
       ["%a %b %n"] = 40, ["%t %a %b %n"] = 5,
 
-      ["%s"] = 29,
+      ["%s"] = 16,
     },
 
     lexicon =
@@ -247,7 +247,7 @@ NAMING_THEMES =
       ["%p's %a %n"]    = 4,
       ["%p's %n of %h"] = 4,
 
-      ["%s"] = 18,
+      ["%s"] = 10,
     },
 
     lexicon =
@@ -470,7 +470,7 @@ NAMING_THEMES =
       ["%t %n of %h"] = 12,
       ["%a %n of %h"] = 7,
 
-      ["%s"] = 18,
+      ["%s"] = 10,
     },
 
     lexicon =
