@@ -2,46 +2,18 @@
 TODO
 ====
 
--  more (fancier) room patterns
+>>  fill_symmetry: test if possible first (e.g. diagonal sitting
+    on a conn / must_walk).  If not, fallback to normal recursion.
 
--  support for curve stairs ('L' 'F' etc)
-   - mark both neighbors as "must_walk"
-
--  reduce BIG_BRANCH probs for 4+ connections
-
--  L shape solid pattern
-
--  Junk sides
-   (f) sometimes allow one gap for a connection
-   (g) ensure floor_fill works OK
-   (h) use in rooms with children (no touching them)
-
--  IDEA: junk a side with a connection, and the little "bridge"
-         seed can become a stairway.
-
--  BUG: lowering bars can bypass-able
-
-DONE  spot_for_wotsit : try to centre in a symmetrical room
-
-PUNTED  the "stairs" in patterns that do not change height
-        should allow a connection / must_walk on them.
-
--  monster-behind-door surprise: use fast open-only door
+-  review / improve 'emergency' connections
 
 
-Pillar Placement:
-  Not just anywhere!
-  Must maintain symmetry!
-  Along room mid-X or mid-Y line ("roof support"), 1 or 2
-  Or a bunch along the longest walls (2+)
+Pillars:
+  - central one (big, can walk under)
 
 
 Hallways:
-  - for two exits, create optimal path (L shape)
-  - for three exits (where two are opposite), optimal path (T shape)
-  - for rooms >= 3x3 and 3+ exits, properly create O or U shape path
-  - occasionaly: height diff, spaced steps (two exit only)
-  - rarely: make a maze (large room only)
+  - rarely and big room (3+ conn) : make a maze
 
 
 Fight Sim: reimplement monster-weapon preferences
@@ -52,6 +24,7 @@ Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
        PREFS["launch@skull"] = 0.1
        PREFS["shotty@imp"] = 3.0
 
+-  monster-behind-door surprise: use fast open-only door
 
 
 
@@ -93,11 +66,13 @@ Quakey:
 >>>  AssignBrushes: double checking using f/b_sides
 
 
-DOOM CSG: merge linedefs where possible
+DOOM CSG:
 
-DOOM CSG: when x_offset is given, adjust it if the segment
-          does not match the whole area-vert extent.
-          [not needed for 'natural' X offset]
++  merge linedefs where possible
+
+-  when x_offset is given, adjust it if the segment
+   does not match the whole area-vert extent.
+   [not needed for 'natural' X offset]
 
 
 NAME GENERATOR
@@ -195,20 +170,23 @@ THEME SELECTION
 Room Fitting Out
 ----------------
 
->>> deciding PURPOSE seed
-    
-    for x symmetry, should be on right-most column
-    for y symmetry, should be on top-most column
-    for xy symmetry, either is good but top-right seed is ideal
+-  can_fab_list: do preliminary size check (e.g. min/max)
 
-- no height diff
-  - sometimes make Walkway-Over-Nukage
-  - sometimes have a nukage pit
-  
+-  Junk sides
+   (f) sometimes allow one gap for a connection
+   (g) ensure floor_fill works OK
+   (h) use in rooms with children (no touching them)
+
+-  IDEA: junk a side with a connection, and the little "bridge"
+         seed can become a stairway.
+
+-  BUG: lowering bars can bypass-able
+
+-  ability to use patterns with heights both HIGHER and LOWER
+   than the '.' entry connection.  (maybe: height=-1 in subs)
+
 - ceilings:
   - big room with no sky neighbours: have a huge sky hole
-
-- pillars are good (except when too close to exits)
 
 
 
