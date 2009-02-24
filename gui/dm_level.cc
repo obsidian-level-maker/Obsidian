@@ -369,8 +369,13 @@ static void CreateOneSector(merge_region_c *R)
   sec->f_tex = B->t_face->tex;
   sec->c_tex = T->b_face->tex;
 
-  sec->light = (sec->c_tex[1] == '_') ? 208 : 160;  // FIXME: TEMP HACK
-  sec->mark  = MAX(B->mark, T->mark);
+  // FIXME: TEMP HACK
+  if (T->bflags & BRU_F_Sky)
+    sec->light = 192;
+  else
+    sec->light = 144;
+
+  sec->mark = MAX(B->mark, T->mark);
 
   if (B->sec_kind > 0)
   {
