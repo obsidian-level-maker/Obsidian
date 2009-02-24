@@ -544,7 +544,7 @@ function Build_hall_light(S, z2)
   transformed_brush(nil,
   {
     t_face = { texture="CEIL5_2" },
-    b_face = { texture="TLITE6_5" },
+    b_face = { texture="TLITE6_5", light=0.90 },
     w_face = { texture="METAL" },
   },
   {
@@ -559,7 +559,7 @@ function Build_hall_light(S, z2)
   local metal_info =
   {
     t_face = { texture="CEIL5_2" },
-    b_face = { texture="CEIL5_2" },
+    b_face = { texture="CEIL5_2", light=0.72 },
     w_face = { texture="METAL" },
   }
 
