@@ -373,7 +373,9 @@ static void CreateOneSector(merge_region_c *R)
   if (T->bflags & BRU_F_Sky)
     sec->light = 192;
   else
-    sec->light = 144;
+    sec->light = (int)(256 * MAX(T->b_face->light, B->t_face->light));
+
+  sec->light = MAX(144, MIN(255, sec->light));
 
   sec->mark = MAX(B->mark, T->mark);
 
