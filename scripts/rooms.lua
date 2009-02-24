@@ -680,6 +680,57 @@ function Rooms_border_up()
 end
 
 
+function Room_make_ceiling(R)
+
+  local function outdoor_ceiling()
+    assert(R.floor_max_h)
+    if R.floor_max_h > SKY_H - 128 then
+      R.ceil_h = R.floor_max_h + 128
+    end
+  end
+
+  local function indoor_ceiling()
+    assert(R.floor_max_h)
+
+    local avg_h = int((R.floor_min_h + R.floor_max_h) / 2)
+    local min_h = R.floor_max_h + 128
+
+    local approx_size = (2 * math.min(R.sw, R.sh) + math.max(R.sw, R.sh)) / 3.0
+    local tallness = (approx_size + rand_range(-0.5,1.5)) * 64.0
+
+    if tallness < 128 then tallness = 128 end
+    if tallness > 448 then tallness = 448 end
+
+    R.tallness = int(tallness / 32.0) * 32
+
+    gui.debugf("Tallness @ %s --> %d\n", R:tostr(), R.tallness)
+ 
+    R.ceil_h = math.max(min_h, avg_h + R.tallness)
+
+    -- TEMP RUBBISH
+    if not R.children then
+      for x = R.sx1+2,R.sx2-2 do for y = R.sy1+2,R.sy2-2 do
+        local S = SEEDS[x][y][1]
+        if S.room == R then
+          S.ceil_h = R.ceil_h + 64
+          S.c_tex  = PARAMS.sky_flat
+        end
+      end end -- for x, y
+    end
+  end
+
+
+  ---| Room_make_ceiling |---
+
+  if R.kind == "ground" then
+    outdoor_ceiling()
+  
+  elseif R.kind == "building" then
+    indoor_ceiling()
+  end
+end
+
+
 function Room_build_seeds(R)
 
   local function do_teleporter(S)
@@ -738,24 +789,8 @@ gui.printf("do_teleport\n")
     local x2 = S.x2
     local y2 = S.y2
 
-    local z1 = S.floor_h or R.floor_h
-    local z2 = S.ceil_h  or R.ceil_h
-    local sec_kind
-
-
---[[ TEST CRUD
-    local gg_x = 1 - math.abs(R.sx1 + R.sx2 - S.sx * 2) / R.sw
-    local gg_y = 1 - math.abs(R.sy1 + R.sy2 - S.sy * 2) / R.sh
-
-    local K_z = SKY_H
-    if not S.room.outdoor and R.floor_max_h then
-      K_z = R.floor_max_h + 64 + math.min(gg_x, gg_y) * 192
-    end
---]]
-
-    z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h or 0
-    z2 = z2 or S.room.ceil_h or SKY_H
---  z2 = z2 or sel(S.room.outdoor, SKY_H, K_z)
+    local z1 = S.floor_h or R.floor_h or (S.conn and S.conn.conn_h) or 0
+    local z2 = S.ceil_h  or R.ceil_h or SKY_H
 
     assert(z1 and z2)
 
@@ -764,13 +799,7 @@ gui.printf("do_teleport\n")
     local f_tex = S.f_tex or R.combo.floor
     local c_tex = S.c_tex or sel(R.outdoor, PARAMS.sky_flat, R.combo.ceil)
 
-
-
---[[
-if not R.outdoor and S.sx > R.sx1+1 and S.sx < R.sx2-1 and S.sy > R.sy1+1 and S.sy < R.sy2-1 then
-  z2 = z2 + 32
-  c_tex = PARAMS.sky_flat
-end --]]
+    local sec_kind
 
 
     -- SIDES
@@ -1157,10 +1186,12 @@ PLAN.favor_shape = "none" ]]
 
   for _,R in ipairs(PLAN.all_rooms) do
     Layout_one(R)
+    Room_make_ceiling(R)
   end
 
   for _,R in ipairs(PLAN.scenic_rooms) do
     Layout_scenic(R)
+    Room_make_ceiling(R)
   end
 
   Rooms_border_up()
