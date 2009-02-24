@@ -232,9 +232,9 @@ function Build_sky_fence(S, side)
 
   local sky_info =
   {
-    t_face = { texture="F_SKY1" },
-    b_face = { texture="F_SKY1" },
-    w_face = { texture="-" },
+    t_face = { texture=PARAMS.sky_flat },
+    b_face = { texture=PARAMS.sky_flat },
+    w_face = { texture=PARAMS.sky_tex },
   }
 
   local wall2_info = shallow_copy(wall_info)
