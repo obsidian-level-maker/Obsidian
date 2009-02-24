@@ -2,12 +2,28 @@
 TODO
 ====
 
->>  fill_symmetry: test if possible first (e.g. diagonal sitting
-    on a conn / must_walk).  If not, fallback to normal recursion.
-
 -  review / improve 'emergency' connections
 
 
+Ceilings:
+  - have a "central" area for a square or round area
+    which is raised and uses SKY or light or normal ceiling.
+    Also might use a trim (with beams to side of room)
+    or a computer texture on the sides.
+
+  - or put several small light fittings/sky holes with
+    various patterns (see v0.85), e.g. 2x2 or dice 5.
+
+  - have "peripheral" area where ceiling is as low as possible
+    (one side, or two opps, or U shape).
+
+  - or a criss-cross of beams, especially with pillars or
+    low opposite sides.
+
+  - if pillar rows have offset=1, good candidate for low opps
+    (i.e. the offset=0 rows).
+
+ 
 Pillars:
   - central one (big, can walk under)
 
