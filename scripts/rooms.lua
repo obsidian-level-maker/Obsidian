@@ -641,54 +641,9 @@ function Rooms_border_up()
       -- liquid arches are a kind of window
       if S.kind == "liquid" and N.kind == "liquid" then
         S.border[side].kind = "liquid_arch"
-      end
-
-      --[[ choose_fences(R)
-
-      if R.outdoor or (N2.room.parent == R) then
-
-
-
-        elseif N.room.outdoor and not R.outdoor and
-               (R.sx1 <= N.sx and N.sx <= R.sx2) and
-               (R.sy1 <= N.sy and N.sy <= R.sy2)
-        then
-           S.border[side].kind = "window"
-
-        elseif N.room.outdoor then
-           S.border[side].kind = "fence"
-
-        else
-           -- the other border will be a solid wall or window
-           S.border[side].kind = "nothing"
-        end
-      end  --]]
-
-
-    end
-
-  -- choose_windows(R)
-
---FIXME
---[[
-    if R1.kind == "building" then
-
-      if S.room == R and S.kind ~= "void" and
-         (x == R.sx1 or x == R.sx2 or y == R.sy1 or y == R.sy2)
-      then
-       
-
-          if N and (N.sx < R.sx1 or N.sx > R.sx2 or N.sy < R.sy1 or N.sy > R.sy2) and
-             N.room and (N.room.outdoor or R.parent) and
-             S.border[side].kind == "wall" and
-             rand_odds(25) 
-          then
-             S.border[side].kind = "window"
-          end
-        
+        return
       end
     end
---]]
   end
 
 
@@ -788,12 +743,21 @@ gui.printf("do_teleport\n")
     local sec_kind
 
 
+--[[ TEST CRUD
+    local gg_x = 1 - math.abs(R.sx1 + R.sx2 - S.sx * 2) / R.sw
+    local gg_y = 1 - math.abs(R.sy1 + R.sy2 - S.sy * 2) / R.sh
+
+    local K_z = SKY_H
+    if not S.room.outdoor and R.floor_max_h then
+      K_z = R.floor_max_h + 64 + math.min(gg_x, gg_y) * 192
+    end
+--]]
+
     z1 = z1 or (S.conn and S.conn.conn_h) or S.room.floor_h or 0
     z2 = z2 or S.room.ceil_h or SKY_H
+--  z2 = z2 or sel(S.room.outdoor, SKY_H, K_z)
 
--- z2 = 512
-
-      assert(z1 and z2)
+    assert(z1 and z2)
 
 
     local w_tex = S.w_tex or R.combo.wall
@@ -830,13 +794,6 @@ end --]]
         B_kind = nil
       end
 
-      local could_lose_wall = -- FIXME: decide this in earlier code
-            N and S.room and N.room and
-            S.room.arena == N.room.arena and
-            S.room.kind == N.room.kind and
-            not (S.room.purpose or N.room.purpose)
-
-
       if B_kind == "wall" and R.kind ~= "scenic" then
         Build_wall(S, side, f_tex, w_tex)
       end
@@ -851,7 +808,6 @@ end --]]
       end
 
       if B_kind == "window" then
---!!!        Build_window(S, side, 192, z1+64, z2-32, f_tex, w_tex)
         Build_window(S, side, 192, z1+32, z1+80, f_tex, w_tex)
       end
 
@@ -968,6 +924,7 @@ end --]]
         t_face = { texture=c_tex },
         b_face = { texture=c_tex },
         w_face = { texture=w_tex },
+        flag_sky = sel(c_tex == PARAMS.sky_flat, true, false),
       },
       {
         { x=x2, y=y1 }, { x=x2, y=y2 },
@@ -1180,7 +1137,8 @@ PLAN.liquid_mode = "some"
 PLAN.hallway_mode = "some"
 PLAN.symmetry_mode = "some"
 PLAN.junk_mode = "some"
-PLAN.sky_mode = "some"  ]]
+PLAN.sky_mode = "some"
+PLAN.favor_shape = "none" ]]
 
 ---  Test_room_fabs()
 
