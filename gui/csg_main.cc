@@ -64,7 +64,8 @@ double slope_plane_c::GetAngle() const
 
 
 area_face_c::area_face_c() :
-      tex(), x_offset(FVAL_NONE), y_offset(FVAL_NONE), peg(false)
+      tex(), light(0),
+      x_offset(FVAL_NONE), y_offset(FVAL_NONE), peg(false)
 { }
 
 area_face_c::~area_face_c()
@@ -396,18 +397,20 @@ area_face_c * Grab_Face(lua_State *L, int stack_pos)
   area_face_c *F = new area_face_c();
 
   lua_getfield(L, stack_pos, "texture");
+  lua_getfield(L, stack_pos, "light");
   lua_getfield(L, stack_pos, "x_offset");
   lua_getfield(L, stack_pos, "y_offset");
   lua_getfield(L, stack_pos, "peg");
 
-  F->tex = std::string(luaL_checkstring(L, -4));
+  F->tex = std::string(luaL_checkstring(L, -5));
 
+  if (! lua_isnil(L, -4)) F->light    = luaL_checknumber(L, -4);
   if (! lua_isnil(L, -3)) F->x_offset = luaL_checknumber(L, -3);
   if (! lua_isnil(L, -2)) F->y_offset = luaL_checknumber(L, -2);
 
   if (lua_toboolean(L, -1)) F->peg = true;
 
-  lua_pop(L, 4);
+  lua_pop(L, 5);
 
   // FIXME: store every face in the 'all_faces' list
 
@@ -449,26 +452,26 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
   lua_pop(L, 3);
 
   lua_getfield(L, stack_pos, "flag_liquid");
+  lua_getfield(L, stack_pos, "flag_sky");
   lua_getfield(L, stack_pos, "flag_detail");
   lua_getfield(L, stack_pos, "flag_noclip");
 
-  if (lua_toboolean(L, -3)) B->bflags |= BRU_F_Liquid;
+  if (lua_toboolean(L, -4)) B->bflags |= BRU_F_Liquid;
+  if (lua_toboolean(L, -3)) B->bflags |= BRU_F_Sky;
   if (lua_toboolean(L, -2)) B->bflags |= BRU_F_Detail;
   if (lua_toboolean(L, -1)) B->bflags |= BRU_F_NoClip;
 
-  lua_pop(L, 3);
+  lua_pop(L, 4);
 
   lua_getfield(L, stack_pos, "flag_door");
-  lua_getfield(L, stack_pos, "flag_skyclose");
   lua_getfield(L, stack_pos, "flag_revdoor");
+  lua_getfield(L, stack_pos, "flag_skyclose");
 
   if (lua_toboolean(L, -3)) B->bflags |= BRU_F_Door;
-  if (lua_toboolean(L, -2)) B->bflags |= BRU_F_SkyClose;
-  if (lua_toboolean(L, -1)) B->bflags |= BRU_F_RevDoor;
+  if (lua_toboolean(L, -2)) B->bflags |= BRU_F_RevDoor;
+  if (lua_toboolean(L, -1)) B->bflags |= BRU_F_SkyClose;
  
   lua_pop(L, 3);
-
-  // TODO: lighting ???
 
   return B;
 }

@@ -63,6 +63,8 @@ class area_face_c
 public:
   std::string tex;
 
+  double light;
+
   double x_offset;
   double y_offset;
 
@@ -103,12 +105,13 @@ public:
 typedef enum
 {
   BRU_F_Liquid   = (1 << 0),
-  BRU_F_Detail   = (1 << 1),  // skipped when vis-ing
-  BRU_F_NoClip   = (1 << 2),  // objects/shots can pass through
+  BRU_F_Sky      = (1 << 1),
+  BRU_F_Detail   = (1 << 2),  // skipped when vis-ing
+  BRU_F_NoClip   = (1 << 3),  // objects/shots can pass through
 
   BRU_F_Door     = (1 << 4),  // (DOOM) close the created sector
-  BRU_F_SkyClose = (1 << 5),  // (DOOM) almost close the sector
-  BRU_F_RevDoor  = (1 << 6),  // (DOOM) 
+  BRU_F_RevDoor  = (1 << 5),  // (DOOM) close by moving floor up
+  BRU_F_SkyClose = (1 << 6),  // (DOOM) almost close the sector
 
   // internal flags
   BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box
