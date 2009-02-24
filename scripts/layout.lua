@@ -744,7 +744,7 @@ gui.debugf("OK : score = %1.4f\n", score)
   end
 
 
-  local function install_pattern(T, want_subs, hash_lev)
+  local function install_pattern(T, want_subs)
 
 gui.debugf("install_pattern %s :  hash_h:%d  (%d,%d)..(%d,%d)\n",
 T.info.name, heights[1],
@@ -763,6 +763,9 @@ area.x1, area.y1, area.x2, area.y2)
       local hash_h    = assert(heights[1])
       local hash_ftex = assert(f_texs[1])
 
+      -- Note: any recursion will overwrite this value
+      S.div_lev = div_lev
+
       do
         if ch == '.' or is_digit(ch) then
           if is_digit(ch) then
@@ -778,8 +781,6 @@ area.x1, area.y1, area.x2, area.y2)
 
           if ch then
             setup_floor(S, hash_h, hash_ftex)
-            S.div_lev = hash_lev
-  --- if true then S.ceil_h = S.floor_h + 256 ; S.c_tex = "FLAT10" end
           end
 
         elseif ch == '<' or ch == '>' or ch == 'v' or ch == '^' then
@@ -1017,7 +1018,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
       end
     end
 
-    install_pattern(T, want_subs, div_lev)
+    install_pattern(T, want_subs)
 
 
     -- recursive sub-division
@@ -2192,9 +2193,5 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   if R.kind == "building" then
     add_pillars()
   end
-
-
-  -- ETC ETC !!!
-
 end
 
