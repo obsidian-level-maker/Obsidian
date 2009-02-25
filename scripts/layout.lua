@@ -2036,12 +2036,6 @@ gui.debugf("BOTH SAME HEIGHT\n")
         S.usage = "pillar"
         S.pillar_tex = sel(ch == '1', "TEKLITE", "SILVER2")
       end
-
--- EXPERIMENT !!!!
-if S.room == R then
-S.ceil_h = math.max((S.floor_h or 0)+96, 512-64)
-S.c_tex = S.room.combo.floor or S.f_tex
-end
     end end -- for x, y
   end
 
@@ -2071,6 +2065,9 @@ end
           end -- for pat
         end -- for where
 
+        -- FIXME: maintain symmetry : limit to symmetrical patterns
+        --        and on certain sides we require the same pattern.
+
         if #lists[1] > 0 and #lists[2] > 0 then
           local pat1
           local pat2
@@ -2087,6 +2084,12 @@ end
 
           make_pillar_pattern(side,    offset, pat1)
           make_pillar_pattern(10-side, offset, pat2)
+
+          R.pillar_rows =
+          { 
+            { side=side,    offset=offset },
+            { side=10-side, offset=offset },
+          }
 
           return --OK--
         end
