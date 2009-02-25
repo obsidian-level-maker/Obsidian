@@ -2853,7 +2853,9 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
   local diag_h = int(mh / 4)
 
 
-  transformed_brush(nil, inner_info, rect_coords(x1,y1,x2,y2), inner_z, EXTREME_H)
+  if inner_info then
+    transformed_brush(nil, inner_info, rect_coords(x1,y1,x2,y2), inner_z, EXTREME_H)
+  end
 
 
   transformed_brush(nil, outer_info, rect_coords(ox1,oy1,  x1,oy2), outer_z, EXTREME_H)
@@ -2882,7 +2884,7 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
 
   -- TRIM --
 
-  local w = 24
+  local w = 8 * int(1 + math.max(mw,mh) / 120)
 
   if trim and kind == "square" then
     transformed_brush(nil, trim, rect_coords(x1-w,y1-w, x1+4,y2+w), outer_z-24, EXTREME_H)
@@ -2892,21 +2894,63 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
     transformed_brush(nil, trim, rect_coords(x1+4,y2-4, x2-4,y2+w), outer_z-24, EXTREME_H)
   end
 
-  -- TODO: trim on round holes!
+  if trim and kind == "round" then
+    transformed_brush(nil, trim, rect_coords(x1-w,y1+diag_h, x1+4,y2-diag_h), outer_z-24, EXTREME_H)
+    transformed_brush(nil, trim, rect_coords(x2-4,y1+diag_h, x2+w,y2-diag_h), outer_z-24, EXTREME_H)
+
+    transformed_brush(nil, trim, rect_coords(x1+diag_w,y1-w, x2-diag_w,y1+4), outer_z-24, EXTREME_H)
+    transformed_brush(nil, trim, rect_coords(x1+diag_w,y2-4, x2-diag_w,y2+w), outer_z-24, EXTREME_H)
+
+    transformed_brush(nil, trim,  -- top left
+    {
+      { x=x1-w, y=y2-diag_h },
+      { x=x1+4, y=y2-diag_h },
+      { x=x1+diag_w, y=y2-4 },
+      { x=x1+diag_w, y=y2+w },
+    },
+    outer_z-24, EXTREME_H)
+
+    transformed_brush(nil, trim,  -- top right
+    {
+      { x=x2-diag_w, y=y2+w },
+      { x=x2-diag_w, y=y2-4 },
+      { x=x2-4, y=y2-diag_h },
+      { x=x2+w, y=y2-diag_h },
+    },
+    outer_z-24, EXTREME_H)
+
+    transformed_brush(nil, trim,  -- bottom left
+    {
+      { x=x1+4, y=y1+diag_h },
+      { x=x1-w, y=y1+diag_h },
+      { x=x1+diag_w, y=y1-w },
+      { x=x1+diag_w, y=y1+4 },
+    },
+    outer_z-24, EXTREME_H)
+
+    transformed_brush(nil, trim,  -- bottom right
+    {
+      { x=x2-diag_w, y=y1+4 },
+      { x=x2-diag_w, y=y1-w },
+      { x=x2+w, y=y1+diag_h },
+      { x=x2-4, y=y1+diag_h },
+    },
+    outer_z-24, EXTREME_H)
+  end
 
 
   -- SPOKES --
 
-  w = 12
+  w = 6 * int(1 + math.max(mw,mh) / 192)
 
   if spokes then
-    local pw = 24
+    local pw = w * 2
 
-    transformed_brush(nil, spokes, rect_coords(ox1,my-w, x1+pw,my+w), outer_z-16, EXTREME_H)
-    transformed_brush(nil, spokes, rect_coords(x2-pw,my-w, ox2,my+w), outer_z-16, EXTREME_H)
+    transformed_brush(nil, spokes, rect_coords(ox1,my-w, x1+pw,my+w), outer_z-32, EXTREME_H)
+    transformed_brush(nil, spokes, rect_coords(x2-pw,my-w, ox2,my+w), outer_z-32, EXTREME_H)
 
-    transformed_brush(nil, spokes, rect_coords(mx-w,oy1, mx+w,y1+pw), outer_z-16, EXTREME_H)
-    transformed_brush(nil, spokes, rect_coords(mx-w,y2-pw, mx+w,oy2), outer_z-16, EXTREME_H)
+    transformed_brush(nil, spokes, rect_coords(mx-w,oy1, mx+w,y1+pw), outer_z-32, EXTREME_H)
+    transformed_brush(nil, spokes, rect_coords(mx-w,y2-pw, mx+w,oy2), outer_z-32, EXTREME_H)
   end
 
 
