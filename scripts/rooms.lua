@@ -720,6 +720,38 @@ function Room_make_ceiling(R)
         end
       end end -- for x, y
     end
+
+    if R.id == 13 then
+      local outer_info =
+      {
+        t_face = { texture="FLAT1" },
+        b_face = { texture="FLAT1" },
+        w_face = { texture="GRAY7" },
+      }
+
+      local inner_info =
+      {
+        t_face = { texture="TLITE6_6" },
+        b_face = { texture="F_SKY1", light=0.9 },
+        w_face = { texture="METAL" },
+      }
+
+      local metal =
+      {
+        t_face = { texture="CEIL5_2" },
+        b_face = { texture="CEIL5_2" },
+        w_face = { texture="METAL" },
+      }
+
+      local w = 192
+      local h = 256
+
+      Build_sky_hole(R.sx1,R.sy1, R.sx2,R.sy2,
+                     "round", w, h,
+                     outer_info, R.ceil_h,
+                     inner_info, R.ceil_h + 32,
+                     nil, metal)
+    end
   end
 
 

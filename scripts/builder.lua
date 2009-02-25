@@ -156,7 +156,6 @@ function get_transform_for_seed_side(S, side, thick)
 end
 
 function get_transform_for_seed_center(S)
-  
   local T = { }
 
   T.dx = S.x1 + S.thick[4]
@@ -189,6 +188,39 @@ function boxwh_coords(x, y, w, h)
   }
 end
 
+function diagonal_coords(side, x1,y1, x2,y2)
+  if side == 9 then
+    return
+    {
+      { x=x2, y=y1 },
+      { x=x2, y=y2 },
+      { x=x1, y=y2 },
+    }
+  elseif side == 7 then
+    return
+    {
+      { x=x1, y=y2 },
+      { x=x1, y=y1 },
+      { x=x2, y=y2 },
+    }
+  elseif side == 3 then
+    return
+    {
+      { x=x2, y=y1 },
+      { x=x2, y=y2 },
+      { x=x1, y=y1 },
+    }
+  elseif side == 1 then
+    return
+    {
+      { x=x1, y=y2 },
+      { x=x1, y=y1 },
+      { x=x2, y=y1 },
+    }
+  else
+    error("bad side for diagonal_coords: " .. tostring(side))
+  end
+end
 
 
 function get_wall_coords(S, side, thick, pad)
@@ -807,41 +839,8 @@ function Build_diagonal(S, side, info, floor_h, ceil_h)
   local x2 = S.x2 - get_thick(6)
   local y2 = S.y2 - get_thick(8)
 
-  local coords
 
-  if side == 9 then
-    coords =
-    {
-      { x=x2, y=y1 },
-      { x=x2, y=y2 },
-      { x=x1, y=y2 },
-    }
-  elseif side == 7 then
-    coords =
-    {
-      { x=x1, y=y2 },
-      { x=x1, y=y1 },
-      { x=x2, y=y2 },
-    }
-  elseif side == 3 then
-    coords =
-    {
-      { x=x2, y=y1 },
-      { x=x2, y=y2 },
-      { x=x1, y=y1 },
-    }
-  elseif side == 1 then
-    coords =
-    {
-      { x=x1, y=y2 },
-      { x=x1, y=y1 },
-      { x=x2, y=y1 },
-    }
-  else
-    error("bad side for Build_diagonal")
-  end
-
-  transformed_brush(nil, info, coords, ceil_h or -4000, floor_h or 4000)
+  transformed_brush(nil, info, diagonal_coords(side,x1,y1,x2,y2), ceil_h or -4000, floor_h or 4000)
 end
 
 
@@ -2828,6 +2827,93 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
 
 
   mark_room_as_done(R)
+end
+
+
+function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
+                        outer_info, outer_z,
+                        inner_info, inner_z,
+                        trim, spokes)
+
+  local ox1 = SEEDS[sx1][sy1][1].x1
+  local oy1 = SEEDS[sx1][sy1][1].y1
+  local ox2 = SEEDS[sx2][sy2][1].x2
+  local oy2 = SEEDS[sx2][sy2][1].y2
+
+  local mx = (ox1 + ox2) / 2
+  local my = (oy1 + oy2) / 2
+
+  local x1, y1 = mx-mw/2, my-mh/2
+  local x2, y2 = mx+mw/2, my+mh/2
+
+  assert(ox1 < x1 and x1 < mx and mx < x2 and x2 < ox2)
+  assert(oy1 < y1 and y1 < my and my < y2 and y2 < oy2)
+
+  local diag_w = int(mw / 4)
+  local diag_h = int(mh / 4)
+
+
+  transformed_brush(nil, inner_info, rect_coords(x1,y1,x2,y2), inner_z, EXTREME_H)
+
+
+  transformed_brush(nil, outer_info, rect_coords(ox1,oy1,  x1,oy2), outer_z, EXTREME_H)
+  transformed_brush(nil, outer_info, rect_coords( x2,oy1, ox2,oy2), outer_z, EXTREME_H)
+  transformed_brush(nil, outer_info, rect_coords( x1,oy1,  x2, y1), outer_z, EXTREME_H)
+  transformed_brush(nil, outer_info, rect_coords( x1, y2,  x2,oy2), outer_z, EXTREME_H)
+
+  if kind == "round" then
+    transformed_brush(nil, outer_info,
+                      diagonal_coords(1, x1, y1, x1+diag_w, y1+diag_h),
+                      outer_z, EXTREME_H)
+
+    transformed_brush(nil, outer_info,
+                      diagonal_coords(3, x2-diag_w, y1, x2, y1+diag_h),
+                      outer_z, EXTREME_H)
+
+    transformed_brush(nil, outer_info,
+                      diagonal_coords(7, x1, y2-diag_h, x1+diag_w, y2),
+                      outer_z, EXTREME_H)
+
+    transformed_brush(nil, outer_info,
+                      diagonal_coords(9, x2-diag_w, y2-diag_h, x2, y2),
+                      outer_z, EXTREME_H)
+  end
+
+
+  -- TRIM --
+
+  local w = 24
+
+  if trim and kind == "square" then
+    transformed_brush(nil, trim, rect_coords(x1-w,y1-w, x1+4,y2+w), outer_z-24, EXTREME_H)
+    transformed_brush(nil, trim, rect_coords(x2-4,y1-w, x2+w,y2+w), outer_z-24, EXTREME_H)
+
+    transformed_brush(nil, trim, rect_coords(x1+4,y1-w, x2-4,y1+4), outer_z-24, EXTREME_H)
+    transformed_brush(nil, trim, rect_coords(x1+4,y2-4, x2-4,y2+w), outer_z-24, EXTREME_H)
+  end
+
+  -- TODO: trim on round holes!
+
+
+  -- SPOKES --
+
+  w = 12
+
+  if spokes then
+    local pw = 24
+
+    transformed_brush(nil, spokes, rect_coords(ox1,my-w, x1+pw,my+w), outer_z-16, EXTREME_H)
+    transformed_brush(nil, spokes, rect_coords(x2-pw,my-w, ox2,my+w), outer_z-16, EXTREME_H)
+
+    transformed_brush(nil, spokes, rect_coords(mx-w,oy1, mx+w,y1+pw), outer_z-16, EXTREME_H)
+    transformed_brush(nil, spokes, rect_coords(mx-w,y2-pw, mx+w,oy2), outer_z-16, EXTREME_H)
+  end
+
+
+  -- mark seeds so we don't build normal ceiling there
+  for x = sx1,sx2 do for y = sy1,sy2 do
+    SEEDS[x][y][1].no_ceil = true
+  end end -- for x,y
 end
 
 
