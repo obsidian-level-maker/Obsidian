@@ -695,8 +695,11 @@ function Room_make_ceiling(R)
     local avg_h = int((R.floor_min_h + R.floor_max_h) / 2)
     local min_h = R.floor_max_h + 128
 
-    local approx_size = (2 * math.min(R.sw, R.sh) + math.max(R.sw, R.sh)) / 3.0
-    local tallness = (approx_size + rand_range(-0.5,1.5)) * 64.0
+    local tw = R.tw or R.sw
+    local th = R.th or R.sh
+
+    local approx_size = (2 * math.min(tw, th) + math.max(tw, th)) / 3.0
+    local tallness = (approx_size + rand_range(-0.6,1.6)) * 64.0
 
     if tallness < 128 then tallness = 128 end
     if tallness > 448 then tallness = 448 end
@@ -708,7 +711,7 @@ function Room_make_ceiling(R)
     R.ceil_h = math.max(min_h, avg_h + R.tallness)
 
     -- TEMP RUBBISH
-    if not R.children then
+    if false then
       for x = R.sx1+2,R.sx2-2 do for y = R.sy1+2,R.sy2-2 do
         local S = SEEDS[x][y][1]
         if S.room == R then
