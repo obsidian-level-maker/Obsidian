@@ -66,6 +66,8 @@ OB_THEMES["mixed"] =
 -- Room layout stuff
 SKY_H = 512
 
+EXTREME_H = 4000
+
 
 -- Fight Simulator constants and tables
 
