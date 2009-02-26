@@ -966,7 +966,7 @@ function Room_make_ceiling(R)
       if S.room == R then
       
         S.c_tex   = c_tex
-        S.c_light = 0.8
+        S.c_light = 0.75
 
       end -- if S.room == R
     end end -- for x, y
@@ -1004,20 +1004,144 @@ function Room_make_ceiling(R)
     R.has_central_pillar = true
   end
 
+  local function central_niceness()
+    local nice = 2
+
+    for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
+      local S = SEEDS[x][y][1]
+      
+      if S.room ~= R then return 0 end
+      
+      if S.kind == "void" or ---#  S.kind == "diagonal" or
+         S.stair_kind == "tall" or S.content == "pillar"
+      then
+        nice = 1
+      end
+    end end -- for x, y
+
+    return nice
+  end
+
+  local function criss_cross_beams()
+    -- !!! FIXME: criss_cross_beams
+  end
+
+  local function simple_outer_trim()
+    -- !!! FIXME: simple_outer_trim
+  end
+
   local function do_central_area()
     calc_central_area()
 
-    if R.has_periph_pillars and rand_odds(33) then
-      fill_xyz("F_SKY1")
+    local has_sky_nb = R:has_sky_neighbor()
+
+    if R.has_periph_pillars and not has_sky_nb and rand_odds(16) then
+      fill_xyz(PARAMS.sky_flat)
       return
     end
 
 
+    if R.cw <= 4 and R.ch <= 4 and rand_odds(1) then
+      criss_cross_beams()
+      return
+    end
+
+    
+    if R.cw <= 3 and R.ch <= 3 and rand_odds(20) then
+      simple_outer_trim()
+      return
+    end
+
+
+    -- shrink central area until there are nothing which will
+    -- get in the way of a ceiling prefab.
+    local nice = central_niceness()
+
+gui.debugf("Original @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
+
+    while nice < 2 and (R.cw >= 3 or R.ch >= 3) do
+      
+      if R.cw > R.ch or (R.cw == R.ch and rand_odds(50)) then
+        assert(R.cw >= 3)
+        R.cx1 = R.cx1 + 1
+        R.cx2 = R.cx2 - 1
+      else
+        assert(R.ch >= 3)
+        R.cy1 = R.cy1 + 1
+        R.cy2 = R.cy2 - 1
+      end
+
+      R.cw, R.ch = box_size(R.cx1, R.cy1, R.cx2, R.cy2)
+
+      nice = central_niceness()
+    end
+      
+gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
+
+
     add_central_pillar()
 
+    if nice ~= 2 then return end
 
-    -- FIXME: do_central_area
+      local ceil_info =
+      {
+        t_face = { texture=R.combo.ceil },
+        b_face = { texture=R.combo.ceil },
+        w_face = { texture=R.combo.wall },
+      }
 
+      local sky_info =
+      {
+        t_face = { texture=PARAMS.sky_flat },
+        b_face = { texture=PARAMS.sky_flat, light=0.75 },
+        w_face = { texture=PARAMS.sky_tex },
+      }
+
+      local brown_info =
+      {
+        t_face = { texture="CEIL3_3" },
+        b_face = { texture="CEIL3_3" },
+        w_face = { texture="STARTAN2" },
+      }
+
+      local light_info =
+      {
+        t_face = { texture="CEIL5_2" },
+        b_face = { texture=rand_element({ "TLITE6_5", "TLITE6_6", "GRNLITE1", "FLAT17" }),
+                   light=0.9 },
+        w_face = { texture="METAL" },
+      }
+
+      local metal =
+      {
+        t_face = { texture="CEIL5_2" },
+        b_face = { texture="CEIL5_2" },
+        w_face = { texture="METAL" },
+      }
+
+      local silver =
+      {
+        t_face = { texture="FLAT23" },
+        b_face = { texture="FLAT23" },
+        w_face = { texture="SHAWN2" },
+      }
+
+    if R.cw == 1 or R.ch == 1 then
+      fill_xyz(light_info.b_face.texture)
+      return
+    end
+
+    local shape = rand_sel(20, "square", "round")
+
+    local w = 96 + 140 * (R.cw - 1)
+    local h = 96 + 140 * (R.ch - 1)
+    local z = (R.cw + R.ch) * 8
+
+    Build_sky_hole(R.cx1,R.cy1, R.cx2,R.cy2, shape, w, h,
+                   ceil_info, R.ceil_h,
+                   sel(not has_sky_nb and not R.parent and rand_odds(50), sky_info,
+                       rand_sel(75, light_info, brown_info)), R.ceil_h + z,
+                   metal, nil)
   end
 
   local function indoor_ceiling()
@@ -1046,50 +1170,8 @@ function Room_make_ceiling(R)
 
     do_central_area()
 
---[[ TEMP RUBBISH
-
-    if false then
-      for x = R.sx1+2,R.sx2-2 do for y = R.sy1+2,R.sy2-2 do
-        local S = SEEDS[x][y][1]
-        if S.room == R then
-          S.ceil_h = R.ceil_h + 64
-          S.c_tex  = PARAMS.sky_flat
-        end
-      end end -- for x, y
-    end
-
-      local outer_info =
-      {
-        t_face = { texture="FLAT1" },
-        b_face = { texture="FLAT1" },
-        w_face = { texture="GRAY7", y_offset=0 },
-      }
-
-      local inner_info =
-      {
-        t_face = { texture="CEIL3_3" },
-        b_face = { texture="F_SKY1", light=0.7 },
-        w_face = { texture="METAL" },
-      }
-
-      local metal =
-      {
-        t_face = { texture="CEIL5_2" },
-        b_face = { texture="CEIL5_2" },
-        w_face = { texture="METAL" },
-      }
-
-      local silver =
-      {
-        t_face = { texture="FLAT23" },
-        b_face = { texture="FLAT23" },
-        w_face = { texture="SHAWN2" },
-      }
-
+--[[
     if R.tx1 and R.tw >= 7 and R.th >= 7 then
-      local w = 96 + 140 * (R.tx2 - R.tx1)
-      local h = 96 + 140 * (R.ty2 - R.ty1)
-      local z = (R.tw + R.th) * 8
 
       Build_sky_hole(R.tx1,R.ty1, R.tx2,R.ty2,
                      "round", w, h,
@@ -1133,7 +1215,7 @@ function Room_make_ceiling(R)
       for x = R.tx1+1, R.tx2-1, 2 do
         for y = R.ty1+1, R.ty2-1, 2 do
           local S = SEEDS[x][y][1]
-          if not (S.kind == "solid" or S.kind == "diagonal") then
+          if not (S.kind == "void" or S.kind == "diagonal") then
             Build_sky_hole(x,y, x,y, "square", 160,160,
                            metal,      R.ceil_h+16,
                            inner_info, R.ceil_h+32,
@@ -1299,7 +1381,7 @@ gui.printf("do_teleport\n")
           o_tex = N.w_tex or N.room.combo.wall
         end
 
-        Build_locked_door(S, side, z, w_tex, o_tex, INFO, 0)
+        Build_door(S, side, z, w_tex, o_tex, INFO, 0)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -1323,7 +1405,7 @@ gui.printf("do_teleport\n")
           o_tex = N.w_tex or N.room.combo.wall
         end
 
-        Build_locked_door(S, side, S.conn.conn_h, w_tex, o_tex, INFO, LOCK.tag)
+        Build_door(S, side, S.conn.conn_h, w_tex, o_tex, INFO, LOCK.tag)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -1377,8 +1459,8 @@ gui.printf("do_teleport\n")
       transformed_brush(nil,
       {
         t_face = { texture=c_tex },
-        b_face = { texture=c_tex },
-        w_face = { texture=w_tex },
+        b_face = { texture=c_tex, light=S.c_light },
+        w_face = { texture=S.u_tex or w_tex },
         flag_sky = sel(c_tex == PARAMS.sky_flat, true, false),
       },
       {
