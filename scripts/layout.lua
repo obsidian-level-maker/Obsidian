@@ -2005,10 +2005,10 @@ gui.debugf("BOTH SAME HEIGHT\n")
       assert(ch)
 
       if ch == '-' then
-        if S.usage == "pillar" then return false end
+        if S.content == "pillar" then return false end
       else
         assert(is_digit(ch))
-        if S.kind ~= "walk" or S.room ~= R or S.usage or
+        if S.kind ~= "walk" or S.room ~= R or S.content or
            S.conn or S.pseudo_conn or S.must_walk
         then
           return false
@@ -2033,7 +2033,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
       pos = pos + 1
 
       if is_digit(ch) then
-        S.usage = "pillar"
+        S.content = "pillar"
         S.pillar_tex = sel(ch == '1', "TEKLITE", "SILVER2")
       end
     end end -- for x, y

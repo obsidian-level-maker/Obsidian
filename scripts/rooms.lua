@@ -961,6 +961,25 @@ function Room_make_ceiling(R)
     end end -- for x, y
   end
 
+  local function add_central_pillar()
+    if R.tw >= 5 and R.th >= 5 and
+       R.cw >= 3 and (R.cw % 2) == 1 and
+       R.ch >= 3 and (R.ch % 2) == 1
+    then
+      local mx = R.cx1 + int(R.cw / 2)
+      local my = R.cy1 + int(R.ch / 2)
+
+      local S = SEEDS[mx][my][1]
+
+      if S.room == R and rand_odds(90) and not S.content and
+         (S.kind == "walk" or S.kind == "liquid")
+      then
+        S.content = "pillar"
+        S.pillar_tex = rand_sel(80, "LITEBLU4", "REDWALL")
+      end
+    end
+  end
+
   local function do_central_area()
     calc_central_area()
 
@@ -968,6 +987,7 @@ function Room_make_ceiling(R)
       fill_xyz("F_SKY1")
       return
     end
+
 
     -- FIXME: do_central_area
   end
@@ -1460,7 +1480,7 @@ gui.printf("do_teleport\n")
 
     -- PREFABS
 
-    if S.usage == "pillar" then
+    if S.content == "pillar" then
       Build_pillar(S, z1, z2, S.pillar_tex)
     end
 
@@ -1470,8 +1490,7 @@ gui.printf("do_teleport\n")
     local my = int((y1+y2) / 2)
 
     if S.room and S.room.kind ~= "scenic" and
-       S.kind == "walk" and not S.usage and not S.content and
-       not S.purpose
+       S.kind == "walk" and not S.content and not S.purpose
     then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
 
