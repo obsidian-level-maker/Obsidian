@@ -582,6 +582,11 @@ function box_size(x1, y1, x2, y2)
   return (x2-x1+1), (y2-y1+1)
 end
 
+function box_aspect(w, h)
+  assert(w > 0 and h > 0)
+  return math.max(w, h) / math.min(w, h)
+end
+
 function box_contains_point(x1,y1,x2,y2, tx,ty)
   return (x1 <= tx) and (tx <= x2) and
          (y1 <= ty) and (ty <= y2)
