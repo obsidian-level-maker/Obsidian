@@ -381,20 +381,12 @@ function Build_archway(S, side, z1, z2, f_tex, w_tex, o_tex)
 end
 
 
-function Build_locked_door(S, side, z1, w_tex, o_tex, info, tag)
+function Build_door(S, side, z1, w_tex, o_tex, info, tag)
 
   tag2 = nil  -- FIXME !!!
 
   local N = S:neighbor(side)
   assert(N)
-
----##  local o_tex = w_tex
----##
----##  if (S.room.outdoor and not N.room.outdoor) or
----##     (S.room.kind == "hallway" and N.room.kind ~= "hallway" and not N.room.outdoor) then
----##    o_tex = N.room.combo.wall
----##    w_tex = o_tex
----##  end
 
 
   local DY = 24
@@ -409,7 +401,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
   local door_info =
   {
     t_face = { texture="FLAT1" },
-    b_face = { texture="FLAT1" },
+    b_face = { texture="FLAT1", light=0.85 },
     w_face = { texture=assert(info.skin.door_w), peg=true, x_offset=0, y_offset=0 },
 --  w_face = { texture="PIPES", peg=true, x_offset=0, y_offset=0 },
     flag_door = true,
@@ -419,7 +411,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
   local frame_info =
   {
     t_face = { texture="FLAT18" },
-    b_face = { texture="FLAT18" },
+    b_face = { texture="FLAT18", light=0.85 },
     w_face = { texture=w_tex },
   }
 
@@ -444,7 +436,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
     { x=0,    y=my+DY },
     { x=0,    y=my-DY },
   },
-  -2000, z1+8)
+  -EXTREME_H, z1+8)
 
   transformed_brush(T, frame_info,
   {
@@ -453,7 +445,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
     { x=0,    y=my+DY },
     { x=0,    y=my-DY, w_face = {texture=o_tex} },
   },
-  z1+8+door_h, 2000)
+  z1+8+door_h, EXTREME_H)
 
   local KIND = assert(info.skin.line_kind)
 
@@ -494,7 +486,7 @@ else
     { x=mx-64, y=my+8, line_kind=KIND, line_tag=tag2 },
     { x=mx-64, y=my-8, line_kind=KIND, line_tag=tag2 },
   },
-  z1+64, 2000)
+  z1+64, EXTREME_H)
 end
 
 
@@ -508,7 +500,7 @@ end
       { x=mx-64-18, y=my+DY },
       { x=mx-64-18, y=my-DY },
     },
-    -2000, 2000)
+    -EXTREME_H, EXTREME_H)
 
     transformed_brush(T, frame_info,
     {
@@ -517,7 +509,7 @@ end
       { x=0,        y=my+DY },
       { x=0,        y=my-DY, w_face={ texture=o_tex } },
     },
-    -2000, 2000)
+    -EXTREME_H, EXTREME_H)
   end
 end
 
