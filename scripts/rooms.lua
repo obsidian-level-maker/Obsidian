@@ -801,7 +801,7 @@ function Room_make_ceiling(R)
         local PER_0 = merge_periphs(side, 0)
         local PER_1 = merge_periphs(side, 1)
 
-        if PER_0 and PER_1 and rand_odds(10) then
+        if PER_0 and PER_1 and rand_odds(sel(PER_1.pillars, 70, 10)) then
           PER_0 = nil
         end
 
