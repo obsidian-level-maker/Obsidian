@@ -2271,14 +2271,7 @@ function Build_pedestal(S, z1, top_tex)
   -2000, z1+8)
 end
 
-function Build_raising_start(S, face_dir, z1, combo)
-
-  local info =
-  {
-    t_face = { texture=combo.floor },
-    b_face = { texture=combo.floor },
-    w_face = { texture=combo.wall  },
-  }
+function Build_raising_start(S, face_dir, z1, info)
 
   local sw_tex = "SW1COMP"
   local sw_face =

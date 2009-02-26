@@ -1557,8 +1557,16 @@ function Layout_one(R)
 
     if R.purpose == "START" then
       if rand_odds(10) then
-        Build_raising_start(S, 6, z1, R.combo)
         gui.debugf("Raising Start made\n")
+
+        local info =
+        {
+          t_face = { texture=S.f_tex or R.combo.floor },
+          b_face = { texture=S.f_tex or R.combo.floor },
+          w_face = { texture=S.w_tex or R.combo.wall  },
+        }
+
+        Build_raising_start(S, 6, z1, info)
         S.no_floor = true
       else
         Build_pedestal(S, z1, "FLAT22")
