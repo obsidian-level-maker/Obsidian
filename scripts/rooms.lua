@@ -726,6 +726,51 @@ function Room_make_ceiling(R)
     return drop_z
   end
 
+  local function add_periph_pillars(side, offset)
+    local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
+
+    if is_vert(side) then x2 = x2-1 else y2 = y2-1 end
+
+    local x_dir = sel(side == 6, -1, 1)
+    local y_dir = sel(side == 8, -1, 1)
+
+    local metal =
+    {
+      t_face = { texture="CEIL5_2" },
+      b_face = { texture="CEIL5_2" },
+      w_face = { texture="SUPPORT3", x_offset=0 },
+    }
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+
+      -- check if all neighbors are in same room
+      local count = 0
+
+      for dx = 0,1 do for dy = 0,1 do
+        local nx = x + dx * x_dir
+        local ny = y + dy * y_dir
+
+        if Seed_valid(nx, ny, 1) and SEEDS[nx][ny][1].room == R then
+          count = count + 1
+        end
+      end end -- for dx,dy
+
+      if count == 4 then
+        local w = 12
+
+        local px = sel(x_dir < 0, S.x1, S.x2)
+        local py = sel(y_dir < 0, S.y1, S.y2)
+
+        transformed_brush(nil, metal,
+            rect_coords(px-w, py-w, px+w, py+w),
+            -EXTREME_H, EXTREME_H)
+        
+        R.has_periph_pillars = true
+      end
+    end end -- for x, y
+  end
+
   local function create_periph_info(side, offset)
     local t_size = sel(is_horiz(side), R.tw, R.th)
 
@@ -812,6 +857,10 @@ function Room_make_ceiling(R)
         R.periphs[side][1] = PER_1 ; R.periphs[10-side][1] = PER_1
         R.periphs[side][2] = nil   ; R.periphs[10-side][2] = nil
 
+        if idx==1 and PER_0 and not R.pillar_rows and rand_odds(50) then
+          add_periph_pillars(side)
+          add_periph_pillars(10-side)
+        end
       else
         -- Funky mode
 
@@ -831,6 +880,14 @@ function Room_make_ceiling(R)
         if PER_1 then PER_1.drop_z = PER_1.max_drop / idx / 2 end
 
         R.periphs[keep][2] = nil
+
+        if idx==1 and PER_0 and not R.pillar_rows and rand_odds(75) then
+          add_periph_pillars(keep)
+
+        --??  if PER_1 and rand_odds(10) then
+        --??    add_periph_pillars(keep, 1)
+        --??  end
+        end
       end
     end
   end
@@ -888,17 +945,33 @@ function Room_make_ceiling(R)
           S.ceil_h = R.ceil_h - drop_z
         end
 
-        if (R.cx1 <= x and x <= R.cx2) and 
-           (R.cy1 <= y and y <= R.cy2)
-        then
-          S.c_tex   = "TLITE6_5"
-          S.c_light = 0.8
-        end
+      end -- if S.room == R
+    end end -- for x, y
+  end
+
+  local function fill_xyz(c_tex)
+    for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+      
+        S.c_tex   = c_tex
+        S.c_light = 0.8
 
       end -- if S.room == R
     end end -- for x, y
   end
-  
+
+  local function do_central_area()
+    calc_central_area()
+
+    if R.has_periph_pillars and rand_odds(33) then
+      fill_xyz("F_SKY1")
+      return
+    end
+
+    -- FIXME: do_central_area
+  end
+
   local function indoor_ceiling()
     assert(R.floor_max_h)
 
@@ -921,8 +994,9 @@ function Room_make_ceiling(R)
     R.ceil_h = math.max(min_h, avg_h + R.tallness)
 
     decide_periphs()
-    calc_central_area()
     install_periphs()
+
+    do_central_area()
 
 --[[ TEMP RUBBISH
 
