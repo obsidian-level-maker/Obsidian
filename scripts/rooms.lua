@@ -703,9 +703,18 @@ function Room_make_ceiling(R)
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
       if S.room == R then
-        
+
+        local f_h
         if S.kind == "walk" then
-          local diff_h = (S.ceil_h or R.ceil_h) - (S.floor_h + 144)
+          f_h = S.floor_h
+        elseif S.kind == "stair" then
+          f_h = math.max(S.stair_z1, S.stair_z2)
+        elseif S.kind == "curve_stair" then
+          f_h = math.max(S.x_height, S.y_height)
+        end
+
+        if f_h then
+          local diff_h = (S.ceil_h or R.ceil_h) - (f_h + 144)
 
           if diff_h > 0 and (not drop_z or diff_h < drop_z) then
             drop_z = diff_h
@@ -724,7 +733,7 @@ function Room_make_ceiling(R)
 
     local drop_z = get_max_drop(side, offset)
 
-    if not drop_z or drop_z < 22 then return nil end
+    if not drop_z or drop_z < 30 then return nil end
 
     local PER = { max_drop=drop_z }
 
@@ -775,10 +784,12 @@ function Room_make_ceiling(R)
     end
 
 
-    local SIDES = { 2, 4 }
-
+    local SIDES = { 2,4 }
     if (R.th > R.tw) or (R.th == R.tw and rand_odds(50)) then
-      SIDES = { 4, 2 }
+      SIDES = { 4,2 }
+    end
+    if rand_odds(10) then  -- swap 'em
+      SIDES[1], SIDES[2] = SIDES[2], SIDES[1]
     end
 
     for idx,side in ipairs(SIDES) do
@@ -789,6 +800,10 @@ function Room_make_ceiling(R)
         -- Symmetrical mode
         local PER_0 = merge_periphs(side, 0)
         local PER_1 = merge_periphs(side, 1)
+
+        if PER_0 and PER_1 and rand_odds(10) then
+          PER_0 = nil
+        end
 
         if PER_0 then PER_0.drop_z = PER_0.max_drop / idx end
         if PER_1 then PER_1.drop_z = PER_1.max_drop / idx / 2 end
@@ -807,6 +822,10 @@ function Room_make_ceiling(R)
 
         local PER_0 = R.periphs[keep][0]
         local PER_1 = R.periphs[keep][1]
+
+        if PER_0 and PER_1 and rand_odds(5) then
+          PER_0 = nil
+        end
 
         if PER_0 then PER_0.drop_z = PER_0.max_drop / idx end
         if PER_1 then PER_1.drop_z = PER_1.max_drop / idx / 2 end
