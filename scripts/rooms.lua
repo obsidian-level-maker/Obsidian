@@ -769,6 +769,14 @@ function Room_make_ceiling(R)
             -EXTREME_H, EXTREME_H)
         
         R.has_periph_pillars = true
+
+        -- mark seeds [crude way to prevent stuck masterminds]
+        for dx = 0,1 do for dy = 0,1 do
+          local nx = x + dx * x_dir
+          local ny = y + dy * y_dir
+
+          SEEDS[nx][ny][1].solid_corner = true
+        end end -- for dx,dy
       end
     end end -- for x, y
   end
@@ -965,22 +973,35 @@ function Room_make_ceiling(R)
   end
 
   local function add_central_pillar()
-    if R.tw >= 5 and R.th >= 5 and
-       R.cw >= 3 and (R.cw % 2) == 1 and
-       R.ch >= 3 and (R.ch % 2) == 1
-    then
-      local mx = R.cx1 + int(R.cw / 2)
-      local my = R.cy1 + int(R.ch / 2)
+    -- big rooms only
+    if R.tw < 5 or R.th < 5 then return end
 
-      local S = SEEDS[mx][my][1]
+    -- centred only
+    if R.cw < 3 or R.ch < 3 then return end
+    if (R.cw % 2) == 0 or (R.ch % 2) == 0 then return end
 
-      if S.room == R and rand_odds(90) and not S.content and
-         (S.kind == "walk" or S.kind == "liquid")
-      then
-        S.content = "pillar"
-        S.pillar_tex = rand_sel(80, "LITEBLU4", "REDWALL")
+    local mx = R.cx1 + int(R.cw / 2)
+    local my = R.cy1 + int(R.ch / 2)
+
+    local S = SEEDS[mx][my][1]
+
+    -- seed is usable?
+    if S.room ~= R or S.content then return end
+    if not (S.kind == "walk" or S.kind == "liquid") then return end
+
+    -- neighbors the same?
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+      if not (N and N.room == S.room and N.kind == S.kind) then
+        return
       end
     end
+
+    -- OK !!
+    S.content = "pillar"
+    S.pillar_tex = rand_sel(20, "LITEBLU4", "REDWALL")
+
+    R.has_central_pillar = true
   end
 
   local function do_central_area()
@@ -992,7 +1013,11 @@ function Room_make_ceiling(R)
     end
 
 
+    add_central_pillar()
+
+
     -- FIXME: do_central_area
+
   end
 
   local function indoor_ceiling()
