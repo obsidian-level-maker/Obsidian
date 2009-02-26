@@ -325,7 +325,7 @@ function Layout_spot_for_wotsit(R, kind)
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
 
-    if S.room == R and S.kind == "walk" then
+    if S.room == R and S.kind == "walk" and not S.content then
       local P = { x=x, y=y, S=S }
 
       P.score = gui.random() + (S.div_lev or 0) * 20
@@ -353,7 +353,7 @@ function Layout_spot_for_wotsit(R, kind)
     error("No usable spots in room!")
   end
 
-  P.S.kind = "purpose"
+  P.S.content = "wotsit"
 
   return P.x, P.y, P.S
 end
@@ -1176,9 +1176,7 @@ function Layout_set_floor_minmax(R)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
-    if S.room == R and 
-       (S.kind == "walk" or S.kind == "purpose")
-    then
+    if S.room == R and S.kind == "walk" then
       assert(S.floor_h)
 
       min_h = math.min(min_h, S.floor_h)

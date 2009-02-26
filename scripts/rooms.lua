@@ -716,7 +716,9 @@ function Room_make_ceiling(R)
         if f_h then
           local diff_h = (S.ceil_h or R.ceil_h) - (f_h + 144)
 
-          if diff_h > 0 and (not drop_z or diff_h < drop_z) then
+          if diff_h < 1 then return nil end
+
+          if not drop_z or (diff_h < drop_z) then
             drop_z = diff_h
           end
         end
@@ -842,7 +844,8 @@ function Room_make_ceiling(R)
          R.pillar_rows and is_parallel(R.pillar_rows[1].side, side) or
          rand_odds(50)
       then
-        -- Symmetrical mode
+        --- Symmetrical Mode ---
+
         local PER_0 = merge_periphs(side, 0)
         local PER_1 = merge_periphs(side, 1)
 
@@ -862,7 +865,7 @@ function Room_make_ceiling(R)
           add_periph_pillars(10-side)
         end
       else
-        -- Funky mode
+        --- Funky Mode ---
 
         -- pick one side to use   [FIXME]
         local keep = rand_sel(50, side, 10-side)
@@ -1490,7 +1493,7 @@ gui.printf("do_teleport\n")
     local my = int((y1+y2) / 2)
 
     if S.room and S.room.kind ~= "scenic" and
-       S.kind == "walk" and not S.content and not S.purpose
+       S.kind == "walk" and not S.content
     then
       -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
 
