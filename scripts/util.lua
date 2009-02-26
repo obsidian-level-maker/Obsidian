@@ -619,11 +619,13 @@ function get_long_deep(dir, w, h)
   end
 end
 
-function side_coords(side, x1,y1, x2,y2)
-  if side == 2 then return x1,y1, x2,y1 end
-  if side == 4 then return x1,y1, x1,y2 end
-  if side == 6 then return x2,y1, x2,y2 end
-  if side == 8 then return x1,y2, x2,y2 end
+function side_coords(side, x1,y1, x2,y2, ofs)
+  if not ofs then ofs = 0 end
+
+  if side == 2 then return x1,y1+ofs, x2,y1+ofs end
+  if side == 8 then return x1,y2-ofs, x2,y2-ofs end
+  if side == 4 then return x1+ofs,y1, x1+ofs,y2 end
+  if side == 6 then return x2-ofs,y1, x2-ofs,y2 end
 
   error ("side_coords: bad side " .. side)
 end
