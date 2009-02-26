@@ -689,6 +689,197 @@ function Room_make_ceiling(R)
     end
   end
 
+  local function periph_size(PER)
+    if PER[2] then return 3 end
+    if PER[1] then return 2 end
+    if PER[0] then return 1 end
+    return 0
+  end
+
+  local function get_max_drop(side, offset)
+    local drop_z
+    local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+        
+        if S.kind == "walk" then
+          local diff_h = (S.ceil_h or R.ceil_h) - (S.floor_h + 144)
+
+          if diff_h > 0 and (not drop_z or diff_h < drop_z) then
+            drop_z = diff_h
+          end
+        end
+      end
+    end end -- for x, y
+
+    return drop_z
+  end
+
+  local function create_periph_info(side, offset)
+    local t_size = sel(is_horiz(side), R.tw, R.th)
+
+    if t_size < (3+offset*2) then return nil end
+
+    local drop_z = get_max_drop(side, offset)
+
+    if not drop_z or drop_z < 22 then return nil end
+
+    local PER = { max_drop=drop_z }
+
+    if t_size == (3+offset*2) then
+      PER.tight = true
+    end
+
+    if R.pillar_rows then
+      for _,row in ipairs(R.pillar_rows) do
+        if row.side == side and row.offset == offset then
+          PER.pillars = true
+        end
+      end
+    end
+
+    return PER
+  end
+
+  local function merge_periphs(side, offset)
+    local P1 = R.periphs[side][offset]
+    local P2 = R.periphs[10-side][offset]
+
+    if not (P1 and P2) then return nil end
+
+    if P1.tight and rand_odds(90) then return nil end
+
+    return
+    {
+      max_drop = math.min(P1.max_drop, P2.max_drop),
+      pillars  = P1.pillars or P2.pillars
+    }
+  end
+
+  local function decide_periphs()
+    -- a "periph" is a side of the room where we might lower
+    -- the ceiling height.  There is a "outer" one (touches the
+    -- wall) and an "inner" one (next to the outer one).
+
+    R.periphs = {}
+
+    for side = 2,8,2 do
+      R.periphs[side] = {}
+
+      for offset = 0,2 do
+        local PER = create_periph_info(side, offset)
+        R.periphs[side][offset] = PER
+      end
+    end
+
+
+    local SIDES = { 2, 4 }
+
+    if (R.th > R.tw) or (R.th == R.tw and rand_odds(50)) then
+      SIDES = { 4, 2 }
+    end
+
+    for idx,side in ipairs(SIDES) do
+      if (R.symmetry == "xy" or R.symmetry == sel(side==2, "y", "x")) or
+         R.pillar_rows and is_parallel(R.pillar_rows[1].side, side) or
+         rand_odds(50)
+      then
+        -- Symmetrical mode
+        local PER_0 = merge_periphs(side, 0)
+        local PER_1 = merge_periphs(side, 1)
+
+        if PER_0 then PER_0.drop_z = PER_0.max_drop / idx end
+        if PER_1 then PER_1.drop_z = PER_1.max_drop / idx / 2 end
+
+        R.periphs[side][0] = PER_0 ; R.periphs[10-side][0] = PER_0
+        R.periphs[side][1] = PER_1 ; R.periphs[10-side][1] = PER_1
+        R.periphs[side][2] = nil   ; R.periphs[10-side][2] = nil
+
+      else
+        -- Funky mode
+
+        -- pick one side to use   [FIXME]
+        local keep = rand_sel(50, side, 10-side)
+
+        for n = 0,2 do R.periphs[10-keep][n] = nil end
+
+        local PER_0 = R.periphs[keep][0]
+        local PER_1 = R.periphs[keep][1]
+
+        if PER_0 then PER_0.drop_z = PER_0.max_drop / idx end
+        if PER_1 then PER_1.drop_z = PER_1.max_drop / idx / 2 end
+
+        R.periphs[keep][2] = nil
+      end
+    end
+  end
+
+  local function calc_central_area()
+    R.cx1, R.cy1 = R.tx1, R.ty1
+    R.cx2, R.cy2 = R.tx2, R.ty2
+
+    for side = 2,8,2 do
+      local w = periph_size(R.periphs[side])
+
+          if side == 4 then R.cx1 = R.cx1 + w
+      elseif side == 6 then R.cx2 = R.cx2 - w
+      elseif side == 2 then R.cy1 = R.cy1 + w
+      elseif side == 8 then R.cy2 = R.cy2 - w
+      end
+    end
+
+    R.cw, R.ch = box_size(R.cx1, R.cy1, R.cx2, R.cy2)
+
+    assert(R.cw >= 1)
+    assert(R.ch >= 1)
+  end
+
+  local function install_periphs()
+    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+      
+        local PX, PY
+
+            if x == R.tx1   then PX = R.periphs[4][0]
+        elseif x == R.tx2   then PX = R.periphs[6][0]
+        elseif x == R.tx1+1 then PX = R.periphs[4][1]
+        elseif x == R.tx2-1 then PX = R.periphs[6][1]
+        elseif x == R.tx1+2 then PX = R.periphs[4][2]
+        elseif x == R.tx2-2 then PX = R.periphs[6][2]
+        end
+
+            if y == R.ty1   then PY = R.periphs[2][0]
+        elseif y == R.ty2   then PY = R.periphs[8][0]
+        elseif y == R.ty1+1 then PY = R.periphs[2][1]
+        elseif y == R.ty2-1 then PY = R.periphs[8][1]
+        elseif y == R.ty1+2 then PY = R.periphs[2][2]
+        elseif y == R.ty2-2 then PY = R.periphs[8][2]
+        end
+
+        if PX and not PX.drop_z then PX = nil end
+        if PY and not PY.drop_z then PY = nil end
+
+        if PX or PY then
+          local drop_z = math.max((PX and PX.drop_z) or 0,
+                                  (PY and PY.drop_z) or 0)
+
+          S.ceil_h = R.ceil_h - drop_z
+        end
+
+        if (R.cx1 <= x and x <= R.cx2) and 
+           (R.cy1 <= y and y <= R.cy2)
+        then
+          S.c_tex   = "TLITE6_5"
+          S.c_light = 0.8
+        end
+
+      end -- if S.room == R
+    end end -- for x, y
+  end
+  
   local function indoor_ceiling()
     assert(R.floor_max_h)
 
@@ -710,7 +901,12 @@ function Room_make_ceiling(R)
  
     R.ceil_h = math.max(min_h, avg_h + R.tallness)
 
-    -- TEMP RUBBISH
+    decide_periphs()
+    calc_central_area()
+    install_periphs()
+
+--[[ TEMP RUBBISH
+
     if false then
       for x = R.sx1+2,R.sx2-2 do for y = R.sy1+2,R.sy2-2 do
         local S = SEEDS[x][y][1]
@@ -721,18 +917,17 @@ function Room_make_ceiling(R)
       end end -- for x, y
     end
 
-    if R.id == 13 then
       local outer_info =
       {
         t_face = { texture="FLAT1" },
         b_face = { texture="FLAT1" },
-        w_face = { texture="GRAY7" },
+        w_face = { texture="GRAY7", y_offset=0 },
       }
 
       local inner_info =
       {
-        t_face = { texture="TLITE6_6" },
-        b_face = { texture="F_SKY1", light=0.9 },
+        t_face = { texture="CEIL3_3" },
+        b_face = { texture="F_SKY1", light=0.7 },
         w_face = { texture="METAL" },
       }
 
@@ -743,15 +938,70 @@ function Room_make_ceiling(R)
         w_face = { texture="METAL" },
       }
 
-      local w = 192
-      local h = 256
+      local silver =
+      {
+        t_face = { texture="FLAT23" },
+        b_face = { texture="FLAT23" },
+        w_face = { texture="SHAWN2" },
+      }
 
-      Build_sky_hole(R.sx1,R.sy1, R.sx2,R.sy2,
+    if R.tx1 and R.tw >= 7 and R.th >= 7 then
+      local w = 96 + 140 * (R.tx2 - R.tx1)
+      local h = 96 + 140 * (R.ty2 - R.ty1)
+      local z = (R.tw + R.th) * 8
+
+      Build_sky_hole(R.tx1,R.ty1, R.tx2,R.ty2,
                      "round", w, h,
                      outer_info, R.ceil_h,
-                     inner_info, R.ceil_h + 32,
-                     nil, metal)
+                     nil, R.ceil_h , ---  + z,
+                     metal, nil)
+
+      w = 96 + 110 * (R.tx2 - R.tx1 - 4)
+      h = 96 + 110 * (R.ty2 - R.ty1 - 4)
+
+      outer_info.b_face.texture = "F_SKY1"
+      outer_info.b_face.light = 0.8
+
+      Build_sky_hole(R.tx1+2,R.ty1+2, R.tx2-2,R.ty2-2,
+                     "round", w, h,
+                     outer_info, R.ceil_h + 96,
+                     inner_info, R.ceil_h + 104,
+                     metal, silver)
     end
+
+    if R.tx1 and R.tw == 4 and R.th == 4 then
+      local w = 256
+      local h = 256
+
+      for dx = 0,1 do for dy = 0,0 do
+        local tx1 = R.tx1 + dx * 2
+        local ty1 = R.ty1 + dy * 2
+
+        local tx2 = R.tx1 + dx * 2 + 1
+        local ty2 = R.ty1 + dy * 2 + 3
+
+        Build_sky_hole(tx1,ty1, tx2,ty2,
+                       "square", w, h,
+                       outer_info, R.ceil_h,
+                       inner_info, R.ceil_h + 36,
+                       metal, metal)
+      end end -- for dx, dy
+    end
+
+    if R.tx1 and (R.tw == 3 or R.tw == 5) and (R.th == 3 or R.th == 5) then
+      for x = R.tx1+1, R.tx2-1, 2 do
+        for y = R.ty1+1, R.ty2-1, 2 do
+          local S = SEEDS[x][y][1]
+          if not (S.kind == "solid" or S.kind == "diagonal") then
+            Build_sky_hole(x,y, x,y, "square", 160,160,
+                           metal,      R.ceil_h+16,
+                           inner_info, R.ceil_h+32,
+                           nil, silver)
+          end
+        end -- for y
+      end -- for x
+    end
+--]]
   end
 
 
@@ -1198,11 +1448,11 @@ function Rooms_build_all()
 
 --[[
 PLAN.liquid_mode = "some"
-PLAN.hallway_mode = "some"
 PLAN.symmetry_mode = "some"
 PLAN.junk_mode = "some"
-PLAN.sky_mode = "some"
 PLAN.favor_shape = "none" ]]
+PLAN.hallway_mode = "few"
+PLAN.sky_mode = "few"
 
 ---  Test_room_fabs()
 
