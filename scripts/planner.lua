@@ -91,6 +91,14 @@ ROOM_CLASS =
     return false
   end,
 
+  has_sky_neighbor = function(self)
+    for _,D in ipairs(self.conns) do
+      local N = D:neighbor(self)
+      if N.outdoor then return true end
+    end
+    return false
+  end,
+
   valid_T = function(self, x, y)
     if x < self.tx1 or x > self.tx2 then return false end
     if y < self.ty1 or y > self.ty2 then return false end
