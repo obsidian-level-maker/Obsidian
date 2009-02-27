@@ -1365,7 +1365,7 @@ gui.printf("do_teleport\n")
           o_tex = N.w_tex or N.room.combo.wall
         end
 
-        Build_archway(S, side, z, z+128, f_tex, w_tex, o_tex) 
+        Build_archway(S, side, z, z+112, f_tex, w_tex, o_tex) 
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
