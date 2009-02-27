@@ -1131,7 +1131,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
       return
     end
 
-    local shape = rand_sel(20, "square", "round")
+    local shape = rand_sel(30, "square", "round")
 
     local w = 96 + 140 * (R.cw - 1)
     local h = 96 + 140 * (R.ch - 1)
@@ -1139,7 +1139,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     Build_sky_hole(R.cx1,R.cy1, R.cx2,R.cy2, shape, w, h,
                    ceil_info, R.ceil_h,
-                   sel(not has_sky_nb and not R.parent and rand_odds(50), sky_info,
+                   sel(not has_sky_nb and not R.parent and rand_odds(60), sky_info,
                        rand_sel(75, light_info, brown_info)), R.ceil_h + z,
                    metal, nil)
   end
@@ -1634,8 +1634,11 @@ function Rooms_build_all()
   PLAN.theme = GAME.themes["TECH"] -- FIXME
 
 
-  PLAN.sky_mode = rand_key_by_probs { few=15, some=90, heaps=30 }
-  gui.printf("Sky Mode: %s\n", PLAN.sky_mode)
+  PLAN.sky_mode = OB_CONFIG.outdoors
+  if not PLAN.sky_mode or PLAN.sky_mode == "mixed" then
+    PLAN.sky_mode = rand_key_by_probs { few=30, some=60, heaps=20 }
+  end
+  gui.printf("Sky Mode: '%s'\n", PLAN.sky_mode)
 
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=30 }
   gui.printf("Hallway Mode: %s\n", PLAN.hallway_mode)
@@ -1672,9 +1675,9 @@ function Rooms_build_all()
 PLAN.liquid_mode = "some"
 PLAN.symmetry_mode = "some"
 PLAN.junk_mode = "some"
-PLAN.favor_shape = "none" ]]
+PLAN.favor_shape = "none"
 PLAN.hallway_mode = "few"
-PLAN.sky_mode = "few"
+PLAN.sky_mode = "few" ]]
 
 ---  Test_room_fabs()
 

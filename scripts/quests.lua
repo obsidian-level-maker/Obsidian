@@ -254,12 +254,12 @@ end
 function Quest_num_keys(num_rooms)
   local PUZZLE_NUMS = { less=16, normal=10, more=5, mixed=10  }
 
-  if not PUZZLE_NUMS[OB_CONFIG.puzzles] then
-    gui.printf("Puzzles disabled\n")
-    return 0
-  end
+---  if not PUZZLE_NUMS[OB_CONFIG.puzzles] then
+---    gui.printf("Puzzles disabled\n")
+---    return 0
+---  end
 
-  local approx = num_rooms / PUZZLE_NUMS[OB_CONFIG.puzzles] +
+  local approx = num_rooms / 8 +  ---  PUZZLE_NUMS[OB_CONFIG.puzzles] +
                  gui.random() * gui.random() * 4
 
   local result = int(approx)
