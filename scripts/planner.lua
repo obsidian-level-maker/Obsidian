@@ -828,7 +828,11 @@ function Plan_determine_size()
     if W < H then W, H = H, W end
   else
     if ob_size == "prog" then
-      local n = 1 + int(LEVEL.ep_along * 8.9)
+      local n = 1 + LEVEL.ep_along * 8.9
+      if OB_CONFIG.length == "few" then n = n * 2 - 1 end
+
+      n = int(n)
+      if n < 1 then n = 1 end
       if n > 9 then n = 9 end
 
       local SIZES = { 5,5,6, 6,7,7, 8,8,9 }
