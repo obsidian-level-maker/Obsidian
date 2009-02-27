@@ -1280,7 +1280,7 @@ gui.printf("do_teleport\n")
       { x=x2, y=y1 }, { x=x2, y=y2 },
       { x=x1, y=y2 }, { x=x1, y=y1 },
     },
-    -2000, z1)
+    -EXTREME_H, z1)
 
     gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25, { name="14" })
   end
@@ -1467,7 +1467,7 @@ gui.printf("do_teleport\n")
         { x=x2, y=y1 }, { x=x2, y=y2 },
         { x=x1, y=y2 }, { x=x1, y=y1 },
       },
-      z2, 4000)
+      z2, EXTREME_H)
 
       if R.kind == "hallway" and PLAN.hall_lights then
         local x_num, y_num = 0,0
@@ -1511,7 +1511,7 @@ gui.printf("do_teleport\n")
         { x=x2, y=y1 }, { x=x2, y=y2 },
         { x=x1, y=y2 }, { x=x1, y=y1 },
       },
-      2000, 2000);
+      EXTREME_H, EXTREME_H);
 
     elseif S.kind == "foobar" then
 
@@ -1525,7 +1525,7 @@ gui.printf("do_teleport\n")
         { x=x2, y=y1 }, { x=x2, y=y2 },
         { x=x1, y=y2 }, { x=x1, y=y1 },
       },
-      -2000, -32);
+      -EXTREME_H, -32);
 
       transformed_brush(nil,
       {
@@ -1537,7 +1537,7 @@ gui.printf("do_teleport\n")
         { x=x2, y=y1 }, { x=x2, y=y2 },
         { x=x1, y=y2 }, { x=x1, y=y1 },
       },
-      256, 2000);
+      256, EXTREME_H);
 
     elseif S.kind == "stair" then
 
@@ -1569,7 +1569,7 @@ gui.printf("do_teleport\n")
         { x=x2, y=y1 }, { x=x2, y=y2 },
         { x=x1, y=y2 }, { x=x1, y=y1 },
       },
-      -2000, assert(R.liquid_h));
+      -EXTREME_H, assert(R.liquid_h));
 
     elseif not S.no_floor then
 
@@ -1584,7 +1584,7 @@ gui.printf("do_teleport\n")
         { x=x2, y=y1 }, { x=x2, y=y2 },
         { x=x1, y=y2 }, { x=x1, y=y1 },
       },
-      -2000, z1);
+      -EXTREME_H, z1);
     end
 
 
