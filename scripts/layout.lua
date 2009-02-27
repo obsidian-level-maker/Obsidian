@@ -1571,7 +1571,7 @@ function Layout_one(R)
         Build_raising_start(S, 6, z1, info)
         S.no_floor = true
       else
-        Build_pedestal(S, z1, "FLAT22")
+        Build_pedestal(S, z1, "O_BOLT", "CEMENT2")
       end
 
       local angle = 0  -- FIXME
@@ -1614,7 +1614,8 @@ function Layout_one(R)
       end
 
     elseif R.purpose == "KEY" then
-      Build_pedestal(S, z1, "CEIL1_2")
+      Build_pedestal(S, z1, "CEIL1_2", "BLAKWAL2")
+
       gui.add_entity(mx, my, z1+40,
       {
         name = tostring(GAME.things[R.key_item].id),

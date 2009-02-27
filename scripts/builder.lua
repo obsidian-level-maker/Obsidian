@@ -2254,15 +2254,15 @@ function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
 end
 
 
-function Build_pedestal(S, z1, top_tex)
+function Build_pedestal(S, z1, f_tex, w_tex)
   local mx = int((S.x1+S.x2) / 2)
   local my = int((S.y1+S.y2) / 2)
 
   transformed_brush(nil,
   {
-    t_face = { texture=top_tex },
-    b_face = { texture=top_tex },
-    w_face = { texture="BLAKWAL2", peg=true, y_offset=0 },
+    t_face = { texture=f_tex },
+    b_face = { texture=f_tex },
+    w_face = { texture=w_tex, peg=true, y_offset=0 },
   },
   {
     { x=mx+32, y=my-32 }, { x=mx+32, y=my+32 },

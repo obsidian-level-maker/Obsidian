@@ -3490,6 +3490,54 @@ DM_LEVEL_GFX_COLORS =
   iron   = { 0,7,5, 111,109,107,104,101,98,94,90,86,81 },
 }
 
+function Doom_make_cool_gfx()
+  local GREEN =
+  {
+    0, 7, 127, 126, 125, 124, 123,
+    122, 120, 118, 116, 113
+  }
+
+  local BRONZE_2 =
+  {
+    0, 2, 191, 189, 187, 235, 233,
+    223, 221, 219, 216, 213, 210
+  }
+
+  local RED =
+  {
+    0, 2, 188,185,184,183,182,181,
+    180,179,178,177,176,175,174,173
+  }
+
+
+  local colmaps =
+  {
+    BRONZE_2, GREEN, RED,
+
+    DM_LEVEL_GFX_COLORS.gold,
+    DM_LEVEL_GFX_COLORS.silver,
+    DM_LEVEL_GFX_COLORS.iron,
+  }
+
+  rand_shuffle(colmaps)
+
+  gui.set_colormap(1, colmaps[1])
+  gui.set_colormap(2, colmaps[2])
+  gui.set_colormap(3, colmaps[3])
+  gui.set_colormap(4, DM_LEVEL_GFX_COLORS.iron)
+
+  -- patches (CEMENT1 .. CEMENT4)
+  gui.wad_logo_gfx("WALL52_1", "p", "PILL",   128,128, 1)
+  gui.wad_logo_gfx("WALL53_1", "p", "BOLT",   128,128, 2)
+  gui.wad_logo_gfx("WALL55_1", "p", "RELIEF", 128,128, 3)
+  gui.wad_logo_gfx("WALL54_1", "p", "CARVE",  128,128, 4)
+
+  -- flats
+  gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
+  gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
+  gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
+end
+
 function Doom_make_level_gfx()
   assert(LEVEL.description)
   assert(LEVEL.patch)
@@ -3507,29 +3555,9 @@ function Doom_make_level_gfx()
   gui.set_colormap(1, GAME.level_gfx_colors)
 
   gui.wad_name_gfx(LEVEL.patch, LEVEL.description, 1)
-
-
-local GREENS =
-{
-  0, 7,
-  127, 126, 125, 124, 123, 122, 120, 118, 116, 113
-}
-
-local BRONZE_2 =
-  {
-    0, 2,
-    191, 189, 187,
-    235, 233,
-    223, 221, 219, 216, 213, 210
-  };
-
-
---- gui.set_colormap(1, BRONZE_2) -- DM_LEVEL_GFX_COLORS.silver)
---- gui.wad_logo_gfx("O_BLT2EM", "fm", "BOLT", 64,64, 1)
 end
 
 function Doom_describe_levels()
-
   -- FIXME handle themes properly !!!
 
   local desc_list = Naming_generate("TECH", #GAME.all_levels, PARAMS.max_level_desc)
@@ -3537,6 +3565,9 @@ function Doom_describe_levels()
   for index,LEV in ipairs(GAME.all_levels) do
     LEV.description = desc_list[index]
   end
+
+
+  Doom_make_cool_gfx()
 end
 
 
