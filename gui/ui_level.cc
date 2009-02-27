@@ -91,18 +91,6 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  detail = new UI_RChoice(x+ 78, cy, 114, 24, "Detail: ");
-  detail->align(FL_ALIGN_LEFT);
-  detail->selection_color(MY_GREEN);
-  detail->callback(callback_Detail, this);
-
-  setup_Detail();
-
-  add(detail);
-
-  cy += detail->h() + 6;
-
-
   light = new UI_RChoice(x+ 78, cy, 114, 24, "Lighting: ");
   light->align(FL_ALIGN_LEFT);
   light->selection_color(MY_GREEN);
@@ -113,6 +101,18 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   add(light);
 
   cy += light->h() + 6;
+
+
+  detail = new UI_RChoice(x+ 78, cy, 114, 24, "Detail: ");
+  detail->align(FL_ALIGN_LEFT);
+  detail->selection_color(MY_GREEN);
+  detail->callback(callback_Detail, this);
+
+  setup_Detail();
+
+  add(detail);
+
+  cy += detail->h() + 6;
 
 
   DebugPrintf("UI_Level: final h = %d\n", cy - y);
