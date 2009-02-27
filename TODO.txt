@@ -2,7 +2,10 @@
 TODO
 ====
 
--  review / improve 'emergency' connections
+
+++  DOOM CSG: fix x_offset and y_offset values
+
+++  DOOM CSG: merge linedefs where possible
 
 
 Ceilings:
@@ -25,7 +28,7 @@ Ceilings:
 
  
 Pillars:
-  - central one (big, can walk under)
+  - central one (coordinate with ceilings)
 
 
 Hallways:
@@ -39,6 +42,10 @@ Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
   >>>  PREFS["rocket@shambler"] = 0.1
        PREFS["launch@skull"] = 0.1
        PREFS["shotty@imp"] = 3.0
+
+Misc:
+
+-  review / improve 'emergency' connections
 
 -  monster-behind-door surprise: use fast open-only door
 
@@ -82,13 +89,7 @@ Quakey:
 >>>  AssignBrushes: double checking using f/b_sides
 
 
-DOOM CSG:
-
-+  merge linedefs where possible
-
--  when x_offset is given, adjust it if the segment
-   does not match the whole area-vert extent.
-   [not needed for 'natural' X offset]
+CSG IDEA: clipping rectangles
 
 
 NAME GENERATOR
@@ -332,8 +333,6 @@ GUI / C++:
 
 
 SKY GENERATOR:
-
->>>  provide an API to the Lua code
 
 -  background part: GRADIENT or CLOUDS or STARS
 
