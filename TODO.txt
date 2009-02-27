@@ -20,19 +20,37 @@ Ceilings:
   - have "peripheral" area where ceiling is as low as possible
     (one side, or two opps, or U shape).
 
-  - or a criss-cross of beams, especially with pillars or
+  + or a criss-cross of beams, especially with pillars or
     low opposite sides.
 
   - if pillar rows have offset=1, good candidate for low opps
     (i.e. the offset=0 rows).
 
- 
-Pillars:
-  - central one (coordinate with ceilings)
+
+Windows:
+  - where is best??
 
 
-Hallways:
-  - rarely and big room (3+ conn) : make a maze
+Pictures:
+  - ceiling huggers (esp. PILL)
+  - thin glowing light recesses
+  - COMPSTAx, SILVER3
+  - SPACEW3, SHAWN1, GRAYPOIS
+  - SLADPOIS or BRNPOIS in "liquid" rooms
+
+
+Monsters:
+  -  add some monsters
+  -  cages & ledges
+  -  monster closets
+  -  pop-ups 
+  -  teleport-in
+  -  facing entry door [blaze D1]
+
+
+Pickups:
+  -  add weapons & powerups
+  -  add health & ammo & armor
 
 
 Fight Sim: reimplement monster-weapon preferences
@@ -48,8 +66,6 @@ Misc:
 -  review / improve 'emergency' connections
 
 -  monster-behind-door surprise: use fast open-only door
-
-
 
 
 
@@ -89,7 +105,11 @@ Quakey:
 >>>  AssignBrushes: double checking using f/b_sides
 
 
-CSG IDEA: clipping rectangles
+CSG IDEA: clipping rectangles (typically a room)
+
+
+Hallways:
+  - rarely and big room (3+ conn) : make a maze
 
 
 NAME GENERATOR
