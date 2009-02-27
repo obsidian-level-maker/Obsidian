@@ -1813,7 +1813,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       end
 
       -- check if too high, make a lift instead
-      if math.abs(S.stair_z1 - S.stair_z2) > 130 then
+      if math.abs(S.stair_z1 - S.stair_z2) > 110 then
         S.kind = "lift"
       end
     end
