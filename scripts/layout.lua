@@ -1571,7 +1571,7 @@ function Layout_one(R)
         Build_raising_start(S, 6, z1, info)
         S.no_floor = true
       else
-        Build_pedestal(S, z1, "O_BOLT", "CEMENT2")
+        Build_pedestal(S, z1, "O_BOLT", "CEMENT2", -8)
       end
 
       local angle = 0  -- FIXME
@@ -1814,6 +1814,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       end
 
       -- check if too high, make a lift instead
+      -- TODO: "lifty" mode, use > 55 or whatever
       if math.abs(S.stair_z1 - S.stair_z2) > 110 then
         S.kind = "lift"
       end

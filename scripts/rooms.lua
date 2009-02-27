@@ -1104,11 +1104,12 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
         w_face = { texture="STARTAN2" },
       }
 
+      local lights = { "TLITE6_5", "TLITE6_6", "GRNLITE1", "FLAT17", "CEIL3_4" }
+
       local light_info =
       {
         t_face = { texture="CEIL5_2" },
-        b_face = { texture=rand_element({ "TLITE6_5", "TLITE6_6", "GRNLITE1", "FLAT17" }),
-                   light=0.9 },
+        b_face = { texture=rand_element(lights), light=0.85 },
         w_face = { texture="METAL" },
       }
 
@@ -1554,11 +1555,13 @@ gui.printf("do_teleport\n")
     elseif S.kind == "lift" then
       local lift_info =
       {
-        t_face = { texture="STEP2" },
-        b_face = { texture="STEP2" },
+        t_face = { texture="FLAT20" },
+        b_face = { texture="FLAT20" },
         w_face = { texture="SUPPORT2", peg=true },
       }
-      Build_lift(S, lift_info)
+      local tag = PLAN:alloc_tag()
+
+      Build_lift(S, lift_info, tag)
 
     elseif S.kind == "popup" then
       Build_popup_trap(S, z1, {}, S.room.combo)

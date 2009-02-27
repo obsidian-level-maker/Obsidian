@@ -1591,30 +1591,34 @@ gui.debugf("Build_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, c
 end
 
 
-function Build_lift(S, lift_info)
+function Build_lift(S, lift_info, tag)
 
   local side = S.stair_dir
 
-  local low_h  = math.min(S.stair_z1)
-  local high_h = math.min(S.stair_z2)
+  local low_z  = S.stair_z1
+  local high_z = S.stair_z2
 
-  local tag = PLAN:alloc_tag()
+  if low_z > high_z then
+    low_z, high_z = high_z, low_z
+    side = 10 - side
+  end
+
 
   local kinds = {}
 
   for dir = 2,8,2 do
     local N = S:neighbor(dir)
-    if N then
-      local nz = N.floor_h or high_h
----???      if dir == 10-side then nz = S.conn.conn_h end
 
-      if nz < high_h-15 then
-        kinds[dir] = 62
-      else
-        kinds[dir] = 88
-      end
+    kinds[dir] = 88  -- default action: walk to lower
+
+    if (dir == 10-side) or
+       (is_perpendicular(dir, side) and N and N.room == S.room
+        and N.floor_h and N.floor_h < high_z - 15)
+    then
+      kinds[dir] = 62  -- switch to lower
     end
   end
+
 
   local lift_coords = get_wall_coords(S, side, 128)
 
@@ -1630,9 +1634,10 @@ function Build_lift(S, lift_info)
 
   lift_info.sec_tag = tag
 
-  transformed_brush(nil, lift_info, lift_coords, -EXTREME_H, high_h)
+  transformed_brush(nil, lift_info, lift_coords, -EXTREME_H, high_z)
 
-  local step_coords = get_wall_coords(S, 10-side, 128)
+
+  local front_coords = get_wall_coords(S, 10-side, 128)
 
   transformed_brush(nil,
   {
@@ -1640,7 +1645,7 @@ function Build_lift(S, lift_info)
     b_face = { texture=S.f_tex or S.room.combo.floor },
     w_face = { texture=S.w_tex or S.room.combo.wall },
   },
-  step_coords, -EXTREME_H, low_h);
+  front_coords, -EXTREME_H, low_z);
 end
 
 
@@ -2254,7 +2259,7 @@ function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
 end
 
 
-function Build_pedestal(S, z1, f_tex, w_tex)
+function Build_pedestal(S, z1, f_tex, w_tex, y_offset)
   local mx = int((S.x1+S.x2) / 2)
   local my = int((S.y1+S.y2) / 2)
 
@@ -2262,7 +2267,7 @@ function Build_pedestal(S, z1, f_tex, w_tex)
   {
     t_face = { texture=f_tex },
     b_face = { texture=f_tex },
-    w_face = { texture=w_tex, peg=true, y_offset=0 },
+    w_face = { texture=w_tex, peg=true, y_offset=y_offset or 0 },
   },
   {
     { x=mx+32, y=my-32 }, { x=mx+32, y=my+32 },
