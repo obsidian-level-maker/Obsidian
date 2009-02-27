@@ -1308,6 +1308,27 @@ gui.printf("do_teleport\n")
     local f_tex = S.f_tex or R.combo.floor
     local c_tex = S.c_tex or sel(R.outdoor, PARAMS.sky_flat, R.combo.ceil)
 
+    if R.kind == "hallway" then
+      w_tex = assert(PLAN.hall_tex)
+    elseif R.kind == "stairwell" then
+      w_tex = assert(PLAN.well_tex)
+    end
+
+    local o_tex = w_tex
+
+    if S.conn_dir then
+      local N = S:neighbor(S.conn_dir)
+
+      if N.room.kind == "hallway" then
+        o_tex = PLAN.hall_tex
+      elseif N.room.kind == "stairwell" then
+        o_tex = PLAN.well_tex
+      elseif not N.room.outdoor and N.room ~= R.parent then
+        o_tex = N.w_tex or N.room.combo.wall
+      end
+    end
+
+
     local sec_kind
 
 
@@ -1360,13 +1381,7 @@ gui.printf("do_teleport\n")
       if B_kind == "arch" then
         local z = assert(S.conn and S.conn.conn_h)
 
-        local N = S:neighbor(side)
-        local o_tex = w_tex
-        if not N.room.outdoor and N.room ~= R.parent then
-          o_tex = N.w_tex or N.room.combo.wall
-        end
-
-        Build_archway(S, side, z, z+112, f_tex, w_tex, o_tex) 
+        Build_archway(S, side, z, z+112, f_tex, w_tex, o_tex or w_tex) 
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -1376,13 +1391,7 @@ gui.printf("do_teleport\n")
         local z = assert(S.conn and S.conn.conn_h)
         local INFO = assert(GAME.door_fabs["silver_lit"])
 
-        local N = S:neighbor(side)
-        local o_tex = w_tex
-        if not N.room.outdoor and N.room ~= R.parent then
-          o_tex = N.w_tex or N.room.combo.wall
-        end
-
-        Build_door(S, side, z, w_tex, o_tex, INFO, 0)
+        Build_door(S, side, z, w_tex, o_tex or w_tex, INFO, 0)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -1400,13 +1409,7 @@ gui.printf("do_teleport\n")
           INFO = assert(GAME.switch_doors[LOCK.item])
         end
 
-        local N = S:neighbor(side)
-        local o_tex = w_tex
-        if not N.room.outdoor and N.room ~= R.parent then
-          o_tex = N.w_tex or N.room.combo.wall
-        end
-
-        Build_door(S, side, S.conn.conn_h, w_tex, o_tex, INFO, LOCK.tag)
+        Build_door(S, side, S.conn.conn_h, w_tex, o_tex or w_tex, INFO, LOCK.tag)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -1685,8 +1688,8 @@ PLAN.liquid_mode = "some"
 PLAN.symmetry_mode = "some"
 PLAN.junk_mode = "some"
 PLAN.favor_shape = "none"
-PLAN.hallway_mode = "few"
-PLAN.sky_mode = "few" ]]
+PLAN.hallway_mode = "heaps"
+PLAN.sky_mode = "few"  ]]
 
 ---  Test_room_fabs()
 
