@@ -707,7 +707,7 @@ function Room_make_ceiling(R)
         local f_h
         if S.kind == "walk" then
           f_h = S.floor_h
-        elseif S.kind == "stair" then
+        elseif S.kind == "stair" or S.kind == "lift" then
           f_h = math.max(S.stair_z1, S.stair_z2)
         elseif S.kind == "curve_stair" then
           f_h = math.max(S.x_height, S.y_height)
@@ -1517,9 +1517,9 @@ gui.printf("do_teleport\n")
 
       transformed_brush(nil,
       {
-        t_face = { texture="NUKAGE1" },
+        t_face = { texture="LAVA1" },
         b_face = { texture=f_tex },
-        w_face = { texture="SFALL1" },
+        w_face = { texture="DBRAIN1" },
       },
       {
         { x=x2, y=y1 }, { x=x2, y=y2 },
@@ -1552,7 +1552,13 @@ gui.printf("do_teleport\n")
       end
 
     elseif S.kind == "lift" then
-      Build_lift(S, 10-S.conn_dir, assert(S.layout.lift_h))
+      local lift_info =
+      {
+        t_face = { texture="STEP2" },
+        b_face = { texture="STEP2" },
+        w_face = { texture="SUPPORT2", peg=true },
+      }
+      Build_lift(S, lift_info)
 
     elseif S.kind == "popup" then
       Build_popup_trap(S, z1, {}, S.room.combo)

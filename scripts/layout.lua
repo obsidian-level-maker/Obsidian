@@ -858,6 +858,8 @@ gui.debugf("OT =\n%s\n\n", table_to_str(OT, 1))
       end
     end
 
+    assert(OT.kind ~= "lift")
+
     if OT.kind == "stair" then
       S.stair_dir = assert(OT.stair_dir)
       S.stair_z1  = assert(OT.stair_z1)
@@ -1342,7 +1344,7 @@ function Layout_hallway(R)
 
   local height = 128
   local is_sky = false
-  if rand_odds(30) then
+  if rand_odds(20) then
     height = 192
   elseif rand_odds(10) then
     height = 256
@@ -1808,6 +1810,11 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
         S.f_tex = N.f_tex
         S.w_tex = N.w_tex
+      end
+
+      -- check if too high, make a lift instead
+      if math.abs(S.stair_z1 - S.stair_z2) > 130 then
+        S.kind = "lift"
       end
     end
 

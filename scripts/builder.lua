@@ -1591,7 +1591,12 @@ gui.debugf("Build_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, c
 end
 
 
-function Build_lift(S, side, lift_h)
+function Build_lift(S, lift_info)
+
+  local side = S.stair_dir
+
+  local low_h  = math.min(S.stair_z1)
+  local high_h = math.min(S.stair_z2)
 
   local tag = PLAN:alloc_tag()
 
@@ -1600,10 +1605,10 @@ function Build_lift(S, side, lift_h)
   for dir = 2,8,2 do
     local N = S:neighbor(dir)
     if N then
-      local nz = N.floor_h or N.room.floor_h or lift_h
-      if dir == 10-side then nz = S.conn.conn_h end
+      local nz = N.floor_h or high_h
+---???      if dir == 10-side then nz = S.conn.conn_h end
 
-      if nz < lift_h-15 then
+      if nz < high_h-15 then
         kinds[dir] = 62
       else
         kinds[dir] = 88
@@ -1623,24 +1628,19 @@ function Build_lift(S, side, lift_h)
   lift_coords[3].line_tag = tag
   lift_coords[4].line_tag = tag
 
-  transformed_brush(nil,
-  {
-    t_face = { texture="STEP2" },
-    b_face = { texture="STEP2" },
-    w_face = { texture="SUPPORT2", peg=true },
-    sec_tag = tag,
-  },
-  lift_coords, -EXTREME_H, lift_h)
+  lift_info.sec_tag = tag
+
+  transformed_brush(nil, lift_info, lift_coords, -EXTREME_H, high_h)
 
   local step_coords = get_wall_coords(S, 10-side, 128)
 
   transformed_brush(nil,
   {
-    t_face = { texture=S.room.combo.floor },
-    b_face = { texture=S.room.combo.floor },
-    w_face = { texture=S.room.combo.wall },
+    t_face = { texture=S.f_tex or S.room.combo.floor },
+    b_face = { texture=S.f_tex or S.room.combo.floor },
+    w_face = { texture=S.w_tex or S.room.combo.wall },
   },
-  step_coords, -EXTREME_H, S.conn.conn_h);
+  step_coords, -EXTREME_H, low_h);
 end
 
 
