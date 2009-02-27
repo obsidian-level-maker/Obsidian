@@ -850,10 +850,10 @@ function Plan_determine_size()
 
     H = W-1
 
-    if rand_odds(40) then W = W - 1 end
+    if rand_odds(30) then W = W - 1 end
+    if rand_odds(70) then H = H - 1 end
 
-    if rand_odds(60) then H = H - 1 end
-    if rand_odds(60) then H = H - 1 end
+    if W >= 6 and rand_odds(50) then H = H - 1 end
   end
 
   PLAN.W = W
@@ -936,11 +936,6 @@ function Plan_rooms_sp()
 
 
   PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
-
-
-
----## local KK = PLAN.all_rooms[1]
----## SEEDS[KK.sx2][KK.sy2][1].is_start = true
 
 end -- Plan_rooms_sp
 
