@@ -24,7 +24,7 @@ class UI_Play : public Fl_Group
 public: // private:
 
   UI_RChoice *mons;
-  UI_RChoice *puzzles;
+  UI_RChoice *powers;
   UI_RChoice *traps;
 
   UI_RChoice *health;
@@ -49,7 +49,7 @@ public:
 private:
 
   void setup_Monsters();
-  void setup_Puzzles ();
+  void setup_Powers  ();
   void setup_Traps   ();
   void setup_Health  ();
   void setup_Ammo    ();
@@ -59,13 +59,13 @@ private:
   static void notify_Mode(const char *name, void *priv_dat);
 
   static void callback_Monsters(Fl_Widget *, void*);
-  static void callback_Puzzles (Fl_Widget *, void*);
+  static void callback_Powers  (Fl_Widget *, void*);
   static void callback_Traps   (Fl_Widget *, void*);
   static void callback_Health  (Fl_Widget *, void*);
   static void callback_Ammo    (Fl_Widget *, void*);
 
   static const char * monster_syms[];
-  static const char * puzzle_syms[];
+  static const char * power_syms[];
   static const char * trap_syms[];
   static const char * health_syms[];
 };

@@ -334,29 +334,31 @@ function ob_read_all_config(all_opts)
     gui.config_line(string.format(fmt, ...))
   end
 
+  local unknown = "XXX"
+
   do_line("-- Game Settings --");
 
   do_line("seed = %d",   OB_CONFIG.seed or 0)
-  do_line("game = %s",   OB_CONFIG.game)
-  do_line("mode = %s",   OB_CONFIG.mode)
-  do_line("engine = %s", OB_CONFIG.engine)
-  do_line("length = %s", OB_CONFIG.length)
+  do_line("game = %s",   OB_CONFIG.game or unknown)
+  do_line("mode = %s",   OB_CONFIG.mode or unknown)
+  do_line("engine = %s", OB_CONFIG.engine or unknown)
+  do_line("length = %s", OB_CONFIG.length or unknown)
   do_line("")
 
   do_line("-- Level Architecture --");
-  do_line("theme = %s",   OB_CONFIG.theme)
-  do_line("size = %s",    OB_CONFIG.size)
-  do_line("detail = %s",  OB_CONFIG.detail)
-  do_line("heights = %s", OB_CONFIG.heights)
-  do_line("light = %s",   OB_CONFIG.light)
+  do_line("theme = %s",   OB_CONFIG.theme or unknown)
+  do_line("size = %s",    OB_CONFIG.size or unknown)
+  do_line("outdoors = %s",OB_CONFIG.outdoors or unknown)
+  do_line("detail = %s",  OB_CONFIG.detail or unknown)
+  do_line("light = %s",   OB_CONFIG.light or unknown)
   do_line("")
 
   do_line("-- Playing Style --");
-  do_line("mons = %s",    OB_CONFIG.mons)
-  do_line("puzzles = %s", OB_CONFIG.puzzles)
-  do_line("traps = %s",   OB_CONFIG.traps)
-  do_line("health = %s",  OB_CONFIG.health)
-  do_line("ammo = %s",    OB_CONFIG.ammo)
+  do_line("mons = %s",    OB_CONFIG.mons or unknown)
+  do_line("traps = %s",   OB_CONFIG.traps or unknown)
+  do_line("powers = %s",  OB_CONFIG.powers or unknown)
+  do_line("health = %s",  OB_CONFIG.health or unknown)
+  do_line("ammo = %s",    OB_CONFIG.ammo or unknown)
   do_line("")
 
   do_line("-- Custom Modules --");
@@ -369,7 +371,7 @@ function ob_read_all_config(all_opts)
   for name,def in pairs(OB_MODULES) do
     if def.options and (all_opts or def.enabled) then
       for o_name,opt in pairs(def.options) do
-        do_line("%s.%s = %s", name, o_name, opt.value or "XXX")
+        do_line("%s.%s = %s", name, o_name, opt.value or unknown)
       end
     end
   end

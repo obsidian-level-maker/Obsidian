@@ -26,9 +26,9 @@ public: /// private:
   UI_RChoice *theme;
 
   UI_RChoice *size;
-  UI_RChoice *detail;
+  UI_RChoice *outdoors;
 
-  UI_RChoice *heights;
+  UI_RChoice *detail;
   UI_RChoice *light;
 
 
@@ -50,19 +50,19 @@ public:
 private:
 
   void setup_Size();
+  void setup_Outdoors();
   void setup_Detail();
-  void setup_Heights();
   void setup_Light();
 
   static void callback_Size   (Fl_Widget *, void*);
   static void callback_Theme  (Fl_Widget *, void*);
+  static void callback_Outdoors(Fl_Widget *, void*);
   static void callback_Detail (Fl_Widget *, void*);
-  static void callback_Heights(Fl_Widget *, void*);
   static void callback_Light  (Fl_Widget *, void*);
 
   static const char * size_syms[];
+  static const char * outdoor_syms[];
   static const char * detail_syms[];
-  static const char * height_syms[];
   static const char * light_syms[];
 };
 

@@ -77,6 +77,20 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += theme->h() + 6;
 
 
+  outdoors = new UI_RChoice(x+ 78, cy, 114, 24, "Outdoors: ");
+  outdoors->align(FL_ALIGN_LEFT);
+  outdoors->selection_color(MY_GREEN);
+  outdoors->callback(callback_Outdoors, this);
+
+  setup_Outdoors();
+
+  add(outdoors);
+
+  cy += outdoors->h() + 6;
+
+  cy += 10;
+
+
   detail = new UI_RChoice(x+ 78, cy, 114, 24, "Detail: ");
   detail->align(FL_ALIGN_LEFT);
   detail->selection_color(MY_GREEN);
@@ -87,20 +101,6 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   add(detail);
 
   cy += detail->h() + 6;
-
-  cy += 10;
-
-
-  heights = new UI_RChoice(x+ 78, cy, 114, 24, "Heights: ");
-  heights->align(FL_ALIGN_LEFT);
-  heights->selection_color(MY_GREEN);
-  heights->callback(callback_Heights, this);
-
-  setup_Heights();
-
-  add(heights);
-
-  cy += heights->h() + 6;
 
 
   light = new UI_RChoice(x+ 78, cy, 114, 24, "Lighting: ");
@@ -134,16 +134,16 @@ void UI_Level::Locked(bool value)
   {
     theme  ->deactivate();
     size   ->deactivate();
+    outdoors->deactivate();
     detail ->deactivate();
-    heights->deactivate();
     light  ->deactivate();
   }
   else
   {
     theme  ->activate();
     size   ->activate();
+    outdoors->activate();
     detail ->activate();
-    heights->activate();
     light  ->activate();
   }
 }
@@ -172,11 +172,11 @@ void UI_Level::callback_Detail(Fl_Widget *w, void *data)
   ob_set_config("detail", that->detail->GetID());
 }
  
-void UI_Level::callback_Heights(Fl_Widget *w, void *data)
+void UI_Level::callback_Outdoors(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  ob_set_config("heights", that->heights->GetID());
+  ob_set_config("outdoors", that->outdoors->GetID());
 }
  
 void UI_Level::callback_Light(Fl_Widget *w, void *data)
@@ -190,10 +190,10 @@ void UI_Level::Defaults()
 {
   // Note: theme handled by LUA code (ob_init)
 
-  ParseValue("size",    "small");
-  ParseValue("detail",  "normal");
-  ParseValue("heights", "mixed");
-  ParseValue("light",   "mixed");
+  ParseValue("size",     "small");
+  ParseValue("outdoors", "mixed");
+  ParseValue("detail",   "normal");
+  ParseValue("light",    "mixed");
 }
  
 bool UI_Level::ParseValue(const char *key, const char *value)
@@ -214,10 +214,10 @@ bool UI_Level::ParseValue(const char *key, const char *value)
     return true;
   }
 
-  if (StringCaseCmp(key, "heights") == 0)
+  if (StringCaseCmp(key, "outdoors") == 0)
   {
-    heights->SetID(value);
-    callback_Heights(NULL, this);
+    outdoors->SetID(value);
+    callback_Outdoors(NULL, this);
     return true;
   }
 
@@ -248,23 +248,23 @@ const char * UI_Level::size_syms[] =
   NULL, NULL
 };
 
+const char * UI_Level::outdoor_syms[] =
+{
+  "few",    "Rare",
+  "some",   "Normal",
+  "heaps",  "Abundant",
+
+  "mixed",  "Mix It Up",
+
+  NULL, NULL
+};
+
 const char * UI_Level::detail_syms[] =
 {
   "kein",   "NONE",
   "low",    "Low",
   "normal", "Medium",
   "high",   "High",
-
-  NULL, NULL
-};
-
-const char * UI_Level::height_syms[] =
-{
-  "gentle", "Gentle",
-  "normal", "Normal",
-  "wild",   "Wild",
-
-  "mixed",  "Mix It Up",
 
   NULL, NULL
 };
@@ -299,12 +299,12 @@ void UI_Level::setup_Detail()
   }
 }
 
-void UI_Level::setup_Heights()
+void UI_Level::setup_Outdoors()
 {
-  for (int i = 0; height_syms[i]; i += 2)
+  for (int i = 0; outdoor_syms[i]; i += 2)
   {
-    heights->AddPair(height_syms[i], height_syms[i+1]);
-    heights->ShowOrHide(height_syms[i], 1);
+    outdoors->AddPair(outdoor_syms[i], outdoor_syms[i+1]);
+    outdoors->ShowOrHide(outdoor_syms[i], 1);
   }
 }
 

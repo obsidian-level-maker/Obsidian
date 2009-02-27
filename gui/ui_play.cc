@@ -68,18 +68,6 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += 10;
 
 
-  puzzles = new UI_RChoice(x+ 82, cy, 110, 24, "Puzzles: ");
-  puzzles->align(FL_ALIGN_LEFT);
-  puzzles->selection_color(MY_RED);
-  puzzles->callback(callback_Puzzles, this);
-
-  setup_Puzzles();
-
-  add(puzzles);
-
-  cy += puzzles->h() + 6;
-
-
   traps = new UI_RChoice(x+ 82, cy, 110, 24, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
   traps->selection_color(MY_RED);
@@ -90,6 +78,19 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   add(traps);
 
   cy += traps->h() + 6;
+
+
+  powers = new UI_RChoice(x+ 82, cy, 110, 24, "Powerups: ");
+  powers->align(FL_ALIGN_LEFT);
+  powers->selection_color(MY_RED);
+  powers->callback(callback_Powers, this);
+
+  setup_Powers();
+
+  add(powers);
+
+  cy += powers->h() + 6;
+
 
   cy += 10;
 
@@ -138,7 +139,7 @@ void UI_Play::Locked(bool value)
   if (value)
   {
     mons  ->deactivate();
-    puzzles->deactivate();
+    powers->deactivate();
     traps ->deactivate();
     health->deactivate();
     ammo  ->deactivate();
@@ -146,7 +147,7 @@ void UI_Play::Locked(bool value)
   else
   {
     mons  ->activate();
-    puzzles->activate();
+    powers->activate();
     traps ->activate();
     health->activate();
     ammo  ->activate();
@@ -166,15 +167,13 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
 
   if (strcmp(mode, "dm") == 0)
   {
-    play->mons->label   ("Players: ");
-    play->puzzles->label("Weapons: ");
-    play->traps->label  ("Powerups: ");
+    play->mons->label ("Players: ");
+    play->traps->label("Weapons: ");
   }
   else
   {
-    play->mons->label   ("Monsters: ");
-    play->puzzles->label("Puzzles: ");
-    play->traps->label  ("Traps: ");
+    play->mons->label ("Monsters: ");
+    play->traps->label("Traps: ");
   }
 
   play->redraw();
@@ -190,11 +189,11 @@ void UI_Play::callback_Monsters(Fl_Widget *w, void *data)
   ob_set_config("mons", that->mons->GetID());
 }
 
-void UI_Play::callback_Puzzles(Fl_Widget *w, void *data)
+void UI_Play::callback_Powers(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
 
-  ob_set_config("puzzles", that->puzzles->GetID());
+  ob_set_config("powers", that->powers->GetID());
 }
 
 void UI_Play::callback_Traps(Fl_Widget *w, void *data)
@@ -221,7 +220,7 @@ void UI_Play::callback_Ammo(Fl_Widget *w, void *data)
 void UI_Play::Defaults()
 {
   ParseValue("mons",    "mixed");
-  ParseValue("puzzles", "normal");
+  ParseValue("powers", "normal");
   ParseValue("traps",   "mixed");
   ParseValue("health",  "normal");
   ParseValue("ammo",    "normal");
@@ -236,10 +235,10 @@ bool UI_Play::ParseValue(const char *key, const char *value)
     return true;
   }
 
-  if (StringCaseCmp(key, "puzzles") == 0)
+  if (StringCaseCmp(key, "powers") == 0)
   {
-    puzzles->SetID(value);
-    callback_Puzzles(NULL, this);
+    powers->SetID(value);
+    callback_Powers(NULL, this);
     return true;
   }
 
@@ -286,23 +285,9 @@ const char * UI_Play::monster_syms[] =
   NULL, NULL
 };
 
-const char * UI_Play::puzzle_syms[] =
-{
-  // also used for: Weapons (DM)
-
-  "kein",   "NONE",
-  "less",   "Less",
-  "normal", "Normal",
-  "more",   "More",
-
-  "mixed",  "Mix It Up",
-
-  NULL, NULL
-};
-
 const char * UI_Play::trap_syms[] =
 {
-  // also used for: Powerups (DM)
+  // also used for: Powers, Weapons (DM)
 
   "kein",   "NONE",  
   "less",   "Less",  
@@ -337,12 +322,12 @@ void UI_Play::setup_Monsters()
   }
 }
 
-void UI_Play::setup_Puzzles()
+void UI_Play::setup_Powers()
 {
-  for (int i = 0; puzzle_syms[i]; i += 2)
+  for (int i = 0; trap_syms[i]; i += 2)
   {
-    puzzles->AddPair(puzzle_syms[i], puzzle_syms[i+1]);
-    puzzles->ShowOrHide(puzzle_syms[i], 1);
+    powers->AddPair(trap_syms[i], trap_syms[i+1]);
+    powers->ShowOrHide(trap_syms[i], 1);
   }
 }
 
