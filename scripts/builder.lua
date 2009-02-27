@@ -2259,7 +2259,7 @@ function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
 end
 
 
-function Build_pedestal(S, z1, f_tex, w_tex, y_offset)
+function Build_pedestal(S, z1, f_tex, w_tex, x_ofs, y_ofs)
   local mx = int((S.x1+S.x2) / 2)
   local my = int((S.y1+S.y2) / 2)
 
@@ -2267,7 +2267,7 @@ function Build_pedestal(S, z1, f_tex, w_tex, y_offset)
   {
     t_face = { texture=f_tex },
     b_face = { texture=f_tex },
-    w_face = { texture=w_tex, peg=true, y_offset=y_offset or 0 },
+    w_face = { texture=w_tex, peg=true, x_offset=x_ofs or 0, y_offset=y_ofs or 0 },
   },
   {
     { x=mx+32, y=my-32 }, { x=mx+32, y=my+32 },

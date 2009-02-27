@@ -1571,7 +1571,7 @@ function Layout_one(R)
         Build_raising_start(S, 6, z1, info)
         S.no_floor = true
       else
-        Build_pedestal(S, z1, "O_BOLT", "CEMENT2", -8)
+        Build_pedestal(S, z1, "O_BOLT", "CEMENT2", 36, -8)
       end
 
       local angle = 0  -- FIXME
