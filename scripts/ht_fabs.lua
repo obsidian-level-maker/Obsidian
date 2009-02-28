@@ -46,7 +46,7 @@ SOLID_P1 =
   kind = "solid",
   shape = "P",
   environment = "indoor",
-  prob = 100,
+  prob = 130,
   
   structure =
   {
@@ -66,7 +66,7 @@ SOLID_P2 =
   kind = "solid",
   shape = "P",
   environment = "indoor",
-  prob = 60,
+  prob = 70,
   
   structure =
   {
@@ -86,7 +86,7 @@ SOLID_P3 =
   kind = "solid",
   shape = "P",
   environment = "indoor",
-  prob = 20,
+  prob = 30,
   
   structure =
   {
@@ -127,7 +127,7 @@ DIAG_C1 =
   kind = "solid",
   shape = "O",
   environment = "indoor",
-  prob = 990,
+  prob = 500,
   
   structure =
   {
@@ -148,7 +148,7 @@ DIAG_C2 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 900,
+  prob = 600,
   
   structure =
   {
@@ -163,6 +163,26 @@ DIAG_C2 =
   y_sizes = { "111", "121", "131" },
 
   symmetry = "xy",
+},
+
+DIAG_C3 =
+{
+  kind = "solid",
+  environment = "indoor",
+  prob = 500,
+  
+  structure =
+  {
+    "/#.#%",
+    ".....",
+    "%#...",
+  },
+
+  x_sizes = { "10101", "10201",
+              "11101", "11201", "11301", "11401",
+              "12201", "12301", "12111" },
+
+  y_sizes = { "111", "121", "131" },
 },
 
 SOLID_C3 =
@@ -244,8 +264,8 @@ DIAG_OPP1 =
 {
   kind = "solid",
   environment = "indoor",
-  prob = 400,
-  
+  prob = 300,
+ 
   structure =
   {
     "..%",
@@ -1000,7 +1020,7 @@ LIQUID_H1 =
 
 HEIGHT_I1 =
 {
-  prob = 500,
+  prob = 600,
 
   structure =
   {
@@ -1076,6 +1096,46 @@ HEIGHT_I3_OUT =
     "11111",
     "Z.^.N",
     ".....",
+  },
+},
+
+HEIGHT_L1 =
+{
+  prob = 300,
+
+  structure =
+  {
+    ".11",
+    ".>1",
+    "...",
+  },
+
+  x_sizes = { "012", "013", "112" },
+  y_sizes = { "110", "210", "111" },
+
+  subs =
+  {
+    { height=1, match="any" },
+  },
+},
+
+HEIGHT_L2 =
+{
+  prob = 600,
+
+  structure =
+  {
+    "11",
+    "F1",
+    "..",
+  },
+
+  x_sizes = { "12", "13" },
+  y_sizes = { "110", "210", "111" },
+
+  subs =
+  {
+    { height=1, match="any" },
   },
 },
 
@@ -1615,7 +1675,7 @@ RECURSE_T_SOLID =
 RECURSE_L1 =
 {
   shape = "L",
-  prob = 300,
+  prob = 500,
 
   structure =
   {
@@ -1642,6 +1702,7 @@ RECURSE_L1 =
 
   y_sizes =
   {
+    "012",
     "013", "014", "015", "016", "017",
     "113", "114", "115", "116", "117",
     "118", "119", "11A", "11B",
