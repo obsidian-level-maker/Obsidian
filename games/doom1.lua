@@ -306,7 +306,7 @@ DM_COMBOS =
   {
     wall  = "STARTAN3",
     floor = "FLOOR4_8",
-    ceil  = "CEIL3_6",
+    ceil  = "CEIL3_5",
 
     floors = { "FLAT14",  "CEIL3_2", "FLAT9",
                "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
@@ -315,7 +315,7 @@ DM_COMBOS =
              },
 
     ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "CEIL3_3",  "CEIL3_5",
                  "FLAT1",    "FLAT4",    "FLAT18",
                  "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
                  "GRNLITE1", "TLITE6_5"
@@ -347,7 +347,7 @@ DM_COMBOS =
              },
 
     ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "CEIL3_3",  "CEIL3_5",
                  "FLAT1",    "FLAT4",    "FLAT18",
                  "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
                  "GRNLITE1", "TLITE6_5"
@@ -385,7 +385,7 @@ DM_COMBOS =
              },
 
     ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "CEIL3_3",  "CEIL3_5",
                  "FLAT1",    "FLAT4",    "FLAT18",
                  "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
                  "GRNLITE1", "TLITE6_5"
@@ -411,7 +411,7 @@ DM_COMBOS =
              },
 
     ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "CEIL3_3",  "CEIL3_5",
                  "FLAT1",    "FLAT4",    "FLAT18",
                  "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
                  "GRNLITE1", "TLITE6_5"
@@ -437,7 +437,7 @@ DM_COMBOS =
              },
 
     ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "CEIL3_3",  "CEIL3_5",
                  "FLAT1",    "FLAT4",    "FLAT18",
                  "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
                  "GRNLITE1", "TLITE6_5"
@@ -466,7 +466,7 @@ DM_COMBOS =
              },
 
     ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "CEIL3_3",  "CEIL3_5",
                  "FLAT1",    "FLAT4",    "FLAT18",
                  "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
                  "GRNLITE1", "TLITE6_5"
@@ -495,7 +495,7 @@ DM_COMBOS =
              },
 
     ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "CEIL3_3",  "CEIL3_5",
                  "FLAT1",    "FLAT4",    "FLAT18",
                  "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
                  "GRNLITE1", "TLITE6_5"
@@ -525,7 +525,7 @@ DM_COMBOS =
              },
 
     ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",  "CEIL3_6",
+                 "CEIL3_3",  "CEIL3_5",
                  "FLAT1",    "FLAT4",    "FLAT18",
                  "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
                  "GRNLITE1", "TLITE6_5"
