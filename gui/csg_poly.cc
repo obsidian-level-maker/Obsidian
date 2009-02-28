@@ -725,16 +725,10 @@ LogPrintf("best_angle: %1.8f  angle: %1.8f\n", best_angle, angle);
 static void TraceSegment(merge_segment_c *S, int side)
 {
 #if 0
-fprintf(stderr, "TraceSegment (%1.1f,%1.1f) .. (%1.1f,%1.1f) side:%d\n",
-S->start->x, S->start->y,
-S->end->x, S->end->y, side);
+DebugPrintf("TraceSegment %p (%1.1f,%1.1f) .. (%1.1f,%1.1f) side:%d\n",
+S, S->start->x, S->start->y, S->end->x, S->end->y, side);
 #endif
   
-  merge_region_c *R = new merge_region_c();
-
-  mug_regions.push_back(R);
-
-
   trace_seg  = S;
   trace_vert = S->start;
   trace_side = side;
@@ -743,36 +737,51 @@ S->end->x, S->end->y, side);
  
   int count = 0;
 
+  merge_region_c *R = new merge_region_c();
+
   do
   {
     TraceNext();
 
 #if 0
-fprintf(stderr, "  CUR SEG (%1.1f,%1.1f) .. (%1.1f,%1.1f)\n",
+DebugPrintf("  CUR SEG %p (%1.1f,%1.1f) .. (%1.1f,%1.1f)\n",
+trace_seg,
 trace_seg->start->x, trace_seg->start->y,
 trace_seg->end->x, trace_seg->end->y);
 
-fprintf(stderr, "  CUR VERT: %s\n",
+DebugPrintf("  CUR VERT: %s\n",
 (trace_vert == trace_seg->start) ? "start" :
 (trace_vert == trace_seg->end) ? "end" : "FUCKED");
 #endif
 
     if ((trace_vert == trace_seg->start) == (side == 0))
     {
-      // TODO: this assert indicates we hit some dead-end or
-      //       non-returning loop.  Make it a mere WARNING.
-      SYS_ASSERT(! trace_seg->front);
-      trace_seg->front = R;
+      // hit some dead-end or non-returning loop??
+      // FIXME: SHOULD.. NOT.. HAPPEN !!
+      if (trace_seg->front or trace_seg->back == R)
+      {
+        LogPrintf("WARNING: TraceSegment failure near (%1.0f,%1.0f) .. (%1.0f,%1.0f)\n",
+                  S->start->x, S->start->y, S->end->x, S->end->y);
+        return;                  
+      }
 
-      R->AddSeg(trace_seg);
+      trace_seg->front = R;
     }
     else
     {
-      SYS_ASSERT(! trace_seg->back);
-      trace_seg->back = R;
+      // hit some dead-end or non-returning loop??
+      // FIXME: SHOULD.. NOT.. HAPPEN !!
+      if (trace_seg->back or trace_seg->front == R)
+      {
+        LogPrintf("WARNING: TraceSegment failure near (%1.0f,%1.0f) .. (%1.0f,%1.0f)\n",
+                  S->start->x, S->start->y, S->end->x, S->end->y);
+        return;                  
+      }
 
-      R->AddSeg(trace_seg);
+      trace_seg->back = R;
     }
+
+    R->AddSeg(trace_seg);
 
     count++;
 
@@ -784,7 +793,11 @@ fprintf(stderr, "  CUR VERT: %s\n",
 
   R->faces_out = (trace_angles / count) > 180.0;
 
-//fprintf(stderr, "DONE\n\n");
+  mug_regions.push_back(R);
+
+#if 0
+DebugPrintf("DONE\n\n");
+#endif
 }
 
 static void Mug_TraceSegLoops(void)
