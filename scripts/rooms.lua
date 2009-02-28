@@ -960,11 +960,12 @@ function Room_make_ceiling(R)
     end end -- for x, y
   end
 
-  local function fill_xyz(c_tex)
+  local function fill_xyz(c_tex, ch)
     for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
       local S = SEEDS[x][y][1]
       if S.room == R then
       
+        S.ceil_h  = ch
         S.c_tex   = c_tex
         S.c_light = 0.75
 
@@ -1036,7 +1037,7 @@ function Room_make_ceiling(R)
     local has_sky_nb = R:has_sky_neighbor()
 
     if R.has_periph_pillars and not has_sky_nb and rand_odds(16) then
-      fill_xyz(PARAMS.sky_flat)
+      fill_xyz(PARAMS.sky_flat, R.ceil_h)
       return
     end
 
@@ -1128,7 +1129,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
       }
 
     if R.cw == 1 or R.ch == 1 then
-      fill_xyz(light_info.b_face.texture)
+      fill_xyz(light_info.b_face.texture, R.ceil_h + 32)
       return
     end
 
