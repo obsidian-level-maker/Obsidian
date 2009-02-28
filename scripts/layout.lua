@@ -1059,10 +1059,43 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
   end
 
 
+  local function set_pattern_min_max(info)
+    local min_size =  999
+    local max_size = -999
+
+    for pass = 1,2 do
+      local sizes = sel(pass == 1, info.x_sizes, info.y_sizes)
+      
+      for _,sz_str in ipairs(sizes) do
+        local w = total_size(sz_str)
+        
+        min_size = math.min(min_size, w)
+        max_size = math.max(max_size, w)
+      end
+    end
+
+    info.min_size = min_size
+    info.max_size = max_size
+
+gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
+  end
+
   local function can_use_fab(info)
     if not info.prob then
       return false
     end
+
+    -- check if too big or too small
+    if not info.min_size then
+      set_pattern_min_max(info)
+    end
+
+    if info.min_size > math.max(area.tw, area.th) or
+       info.max_size < math.min(area.tw, area.th)
+    then
+      return false
+    end
+
 
     if (info.environment == "indoor"  and R.outdoor) or
        (info.environment == "outdoor" and not R.outdoor)
@@ -1137,7 +1170,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     add_fab_list(f_probs, f_infos, ROOM_PATTERNS, sol_mul, liq_mul)
 
 
-    local try_count = 12 + area.tw + area.th
+    local try_count = 8 + area.tw + area.th
 
     for loop = 1,try_count do
       if table_empty(f_probs) then
@@ -1727,8 +1760,8 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     return f_texs
   end
 
-  local INDOOR_DELTAS  = { [64]=30, [96]=5,  [128]=10, [192]=2 }
-  local OUTDOOR_DELTAS = { [48]=50, [96]=25, [144]=2 }
+  local INDOOR_DELTAS  = { [48]=2, [64]=20, [96]=20, [128]=20, [160]=2 }
+  local OUTDOOR_DELTAS = { [32]=2, [48]=30, [80]=30, [128]=2 }
 
   local function select_heights(focus_C)
 
@@ -1756,7 +1789,13 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       local C2 = R.entry_conn.src.entry_conn
       if C2 and C2.conn_h and C2.conn_h ~= base_h then
         mom_z = sel(C2.conn_h < base_h, 1, -1)
-      end 
+      end
+
+      if mom_z == 0 then
+        if base_h <= 128 then mom_z = 1 end
+        if base_h >= SKY_H-128 then mom_z = -1 end
+      end
+
       gui.debugf("Vertical momentum @ %s = %d\n", R:tostr(), mom_z)
     end
 
@@ -1766,11 +1805,13 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       local dir = rand_sel(50, 1, -1)
       local hts = gen_group(base_h, 4, dir)
 
-      local cost = math.abs(base_h - hts[4]) + gui.random()
-      
-      if dir ~= mom_z    then cost = cost + 100 end
-      if hts[4] <= 0     then cost = cost + 200 end
-      if hts[4] >= SKY_H then cost = cost + 300 end
+      local cost = math.abs(base_h - hts[4])
+
+      cost = cost + gui.random() * 40
+
+      if dir ~= mom_z       then cost = cost + 100 end
+      if hts[4] <= -100     then cost = cost + 200 end
+      if hts[4] >= SKY_H+60 then cost = cost + 300 end
 
       table.insert(groups, { hts=hts, dir=dir, cost=cost })
     end
