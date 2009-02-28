@@ -494,7 +494,6 @@ function ob_build_cool_shit()
 
   gui.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
 
-  gui.printf("SEED = %d\n\n", OB_CONFIG.seed)
   gui.printf("Settings =\n%s\n", table_to_str(OB_CONFIG))
 
   gui.ticker()
