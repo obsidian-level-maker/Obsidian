@@ -1019,7 +1019,16 @@ function Build_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
 end
 
 
-function Build_niche_stair(S, stair_info)
+function Build_niche_stair(S, skin)
+
+  local step_info =
+  {
+    t_face = { texture=assert(skin.top_f) },
+    b_face = { texture=      (skin.top_f) },
+    w_face = { texture=assert(skin.side_w) },
+  }
+
+  local step_face = { texture=assert(skin.step_w), peg=true, y_offset=0 }
 
   for side = 2,8,2 do
     S.thick[side] = 64
@@ -1044,19 +1053,19 @@ function Build_niche_stair(S, stair_info)
 
   transformed_brush(T, niche_info,
   {
-    { x = W, y = 0,    },
-    { x = W, y = deep, },
-    { x = 0, y = deep, },
-    { x = 0, y = 0,    },
+    { x=W, y=0,    },
+    { x=W, y=deep, },
+    { x=0, y=deep, },
+    { x=0, y=0,    },
   },
   -EXTREME_H, z2)
 
   transformed_brush(T, niche_info,
   {
-    { x = long,   y = 0,    },
-    { x = long,   y = deep, },
-    { x = long-W, y = deep, },
-    { x = long-W, y = 0,    },
+    { x=long,   y=0,    },
+    { x=long,   y=deep, },
+    { x=long-W, y=deep, },
+    { x=long-W, y=0,    },
   },
   -EXTREME_H, z2)
 
@@ -1069,12 +1078,12 @@ function Build_niche_stair(S, stair_info)
   },
   -EXTREME_H, z2)
 
-  transformed_brush(T, stair_info,
+  transformed_brush(T, step_info,
   {
-    { x = long-W, y = 0,  },
-    { x = long-W, y = HF, },
-    { x =      W, y = HF, },
-    { x =      W, y = 0,  },
+    { x=long-W, y=0,  },
+    { x=long-W, y=HF, w_face=step_face },
+    { x=     W, y=HF, },
+    { x=     W, y=0,  w_face=step_face },
   },
   -EXTREME_H, z1)
 
@@ -1089,20 +1098,29 @@ function Build_niche_stair(S, stair_info)
     local by = int(HF + (deep-HF-HB) * (i)   / steps)
     local ty = int(HF + (deep-HF-HB) * (i+1) / steps)
 
-    transformed_brush(T, stair_info,
+    transformed_brush(T, step_info,
     {
       { x=long-W, y=by },
-      { x=long-W, y=ty },
+      { x=long-W, y=ty, w_face=step_face },
       { x=     W, y=ty },
-      { x=     W, y=by },
+      { x=     W, y=by, w_face=step_face },
     },
     -EXTREME_H, int(z));
   end
 end
 
 
-function Build_tall_curved_stair(S, step_info, x_side,y_side, x_h,y_h)
+function Build_tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
   assert(x_h and y_h)
+
+  local step_info =
+  {
+    t_face = { texture=assert(skin.top_f) },
+    b_face = { texture=      (skin.top_f) },
+    w_face = { texture=assert(skin.side_w) },
+  }
+
+  local step_face = { texture=assert(skin.step_w), peg=true, y_offset=0 }
 
   local steps = int(math.abs(y_h-x_h) / 14 + 0.9)
 
@@ -1336,7 +1354,16 @@ end
 --]]
 
 
-function Build_low_curved_stair(S, step_info, x_side,y_side, x_h,y_h)
+function Build_low_curved_stair(S, skin, x_side,y_side, x_h,y_h)
+
+  local step_info =
+  {
+    t_face = { texture=assert(skin.top_f) },
+    b_face = { texture=      (skin.top_f) },
+    w_face = { texture=assert(skin.side_w) },
+  }
+
+  local step_face = { texture=assert(skin.step_w), peg=true, y_offset=0 }
 
   -- create transform
   local T =
@@ -1591,7 +1618,14 @@ gui.debugf("Build_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, c
 end
 
 
-function Build_lift(S, lift_info, tag)
+function Build_lift(S, skin, tag)
+
+  local lift_info =
+  {
+    t_face = { texture=assert(skin.top_f) },
+    b_face = { texture=      (skin.top_f) },
+    w_face = { texture=assert(skin.side_w), peg=true },
+  }
 
   local side = S.stair_dir
 
@@ -1637,13 +1671,21 @@ function Build_lift(S, lift_info, tag)
   transformed_brush(nil, lift_info, lift_coords, -EXTREME_H, high_z)
 
 
+  local f_tex = S.f_tex or S.room.combo.floor
+  local w_tex = S.w_tex or S.room.combo.wall
+
+  local T = S:neighbor(10-side)
+  if T and T.room == S.room and T.kind == "walk" and T.f_tex then
+    f_tex = T.f_tex
+  end
+
   local front_coords = get_wall_coords(S, 10-side, 128)
 
   transformed_brush(nil,
   {
-    t_face = { texture=S.f_tex or S.room.combo.floor },
-    b_face = { texture=S.f_tex or S.room.combo.floor },
-    w_face = { texture=S.w_tex or S.room.combo.wall },
+    t_face = { texture=f_tex },
+    b_face = { texture=f_tex },
+    w_face = { texture=w_tex },
   },
   front_coords, -EXTREME_H, low_z);
 end

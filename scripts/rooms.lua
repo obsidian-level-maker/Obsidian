@@ -1494,14 +1494,27 @@ gui.printf("do_teleport\n")
     end
 
 
-    -- FLOOR
+local STEP_SKINS =
+{
+  { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
+  { step_w="STEP6", side_w="STUCCO",   top_f="FLAT5" },
+  { step_w="STEP3", side_w="COMPSPAN", top_f="CEIL5_1" },
+  { step_w="STEP1", side_w="COMPBLUE", top_f="FLAT14" },
 
-    local step_info =
-    {
-      t_face = { texture="FLAT1" },
-      b_face = { texture="FLAT1" },
-      w_face = { texture="STEP4", peg=true, y_offset=0 },
-    }
+--  { step_w="STEP3", side_w="BROWNHUG", top_f="ROCK10" },
+--  { step_w="STEP2", side_w="STUCCO",   top_f="FLOOR4_6" },
+}
+local LIFT_SKINS =
+{
+  { side_w="SUPPORT2", top_f="FLAT20" },
+}
+if not PLAN.step_skin then
+  PLAN.step_skin = rand_element(STEP_SKINS)
+  PLAN.lift_skin = LIFT_SKINS[1]
+end
+
+
+    -- FLOOR
 
     if S.kind == "void" then
 
@@ -1509,7 +1522,7 @@ gui.printf("do_teleport\n")
       {
         t_face = { texture=f_tex },
         b_face = { texture=f_tex },
-        w_face = { texture=w_tex },  --- "ZZZFACE1"
+        w_face = { texture="ZZZFACE1" },  -- FIXME w_tex
       },
       {
         { x=x2, y=y1 }, { x=x2, y=y2 },
@@ -1545,26 +1558,20 @@ gui.printf("do_teleport\n")
 
     elseif S.kind == "stair" then
 
-      Build_niche_stair(S, step_info)
+      Build_niche_stair(S, PLAN.step_skin)
 
     elseif S.kind == "curve_stair" then
 
       if S.stair_kind == "tall" then
-        Build_tall_curved_stair(S, step_info, S.x_side, S.y_side, S.x_height, S.y_height)
+        Build_tall_curved_stair(S, PLAN.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
       else
-        Build_low_curved_stair(S, step_info, S.x_side, S.y_side, S.x_height, S.y_height)
+        Build_low_curved_stair(S, PLAN.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
       end
 
     elseif S.kind == "lift" then
-      local lift_info =
-      {
-        t_face = { texture="FLAT20" },
-        b_face = { texture="FLAT20" },
-        w_face = { texture="SUPPORT2", peg=true },
-      }
       local tag = PLAN:alloc_tag()
 
-      Build_lift(S, lift_info, tag)
+      Build_lift(S, PLAN.lift_skin, tag)
 
     elseif S.kind == "popup" then
       Build_popup_trap(S, z1, {}, S.room.combo)
