@@ -1078,17 +1078,35 @@ function Build_niche_stair(S, skin)
   },
   -EXTREME_H, z2)
 
-  transformed_brush(T, step_info,
-  {
-    { x=long-W, y=0,  },
-    { x=long-W, y=HF, w_face=step_face },
-    { x=     W, y=HF, },
-    { x=     W, y=0,  w_face=step_face },
-  },
-  -EXTREME_H, z1)
+
+  if S.stair_z1 > S.stair_z2 then
+    local f_tex = S.f_tex or S.room.combo.floor
+    local w_tex = S.w_tex or S.room.combo.wall
+
+    local S2 = S:neighbor(S.stair_dir)
+    if S2 and S2.room == S.room and S2.kind == "walk" and S2.f_tex then
+      f_tex = S2.f_tex
+    end
+
+    transformed_brush(T,
+    {
+      t_face = { texture=f_tex },
+      b_face = { texture=f_tex },
+      w_face = { texture=w_tex },
+    },
+    {
+      { x=long-W, y=0,  },
+      { x=long-W, y=HF, },
+      { x=     W, y=HF, },
+      { x=     W, y=0,  },
+    },
+    -EXTREME_H, z1)
+  else
+    HF = 0
+  end
 
 
-  local steps = int(math.abs(z2 - z1) / 14 + 0.9)
+  local steps = int(math.abs(z2 - z1) / 15 + 0.9)
 
   if steps < 2 then steps = 2 end
 
@@ -1674,9 +1692,9 @@ function Build_lift(S, skin, tag)
   local f_tex = S.f_tex or S.room.combo.floor
   local w_tex = S.w_tex or S.room.combo.wall
 
-  local T = S:neighbor(10-side)
-  if T and T.room == S.room and T.kind == "walk" and T.f_tex then
-    f_tex = T.f_tex
+  local S2 = S:neighbor(10-side)
+  if S2 and S2.room == S.room and S2.kind == "walk" and S2.f_tex then
+    f_tex = S2.f_tex
   end
 
   local front_coords = get_wall_coords(S, 10-side, 128)
