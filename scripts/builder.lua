@@ -1715,10 +1715,6 @@ function mark_room_as_done(R)
     
     if S.room == R then
       S.sides_only = true
-
----???      for dir = 2,8,2 do
----???        S.thick[dir] = 16
----???      end
     end
   end end
 end
@@ -1997,7 +1993,7 @@ function Build_small_exit(R, item_name)
   local out_info =
   {
     w_face = out_face,
-    t_face = { texture=C.conn_ftex or f_tex },
+    t_face = { texture=T.f_tex or C.conn_ftex or f_tex },
     b_face = { texture=out_combo.ceil },
   }
 
@@ -2006,52 +2002,24 @@ function Build_small_exit(R, item_name)
   local mx = int(long / 2)
 
 
-  transformed_brush(DT, out_info,
-  {
-    { x=long-8, y=0 },
-    { x=long-8, y=48 },
-    { x=8, y=48 },
-    { x=8, y=0 },
-  },
-  -EXTREME_H, f_h)
+  transformed_brush(DT, out_info, rect_coords(8,0, long-8,48),
+                    -EXTREME_H, f_h)
+  transformed_brush(DT, out_info, rect_coords(8,-24, long-8,48),
+                    c_h, EXTREME_H)
 
-  transformed_brush(DT, out_info,
-  {
-    { x=long-8, y=-24 },
-    { x=long-8, y=48 },
-    { x=8, y=48 },
-    { x=8, y=-24 },
-  },
-  c_h, EXTREME_H)
-
-  transformed_brush(DT, inner_info,
-  {
-    { x=long-8, y=48 },
-    { x=long-8, y=long-8 },
-    { x=8, y=long-8 },
-    { x=8, y=48 },
-  },
-  -EXTREME_H, f_h)
-
-  transformed_brush(DT, inner_info,
-  {
-    { x=long-8, y=48 },
-    { x=long-8, y=long-8 },
-    { x=8, y=long-8 },
-    { x=8, y=48 },
-  },
-  c_h, EXTREME_H)
+  transformed_brush(DT, inner_info, rect_coords(8,48, long-8,long-8),
+                    -EXTREME_H, f_h)
+  transformed_brush(DT, inner_info, rect_coords(8,48, long-8,long-8),
+                    c_h, EXTREME_H)
 
 
   S.thick[side] = 80
 
----##  S.thick[10 - side] = 32
----##  S.thick[rotate_cw90(side)]  = 32
----##  S.thick[rotate_ccw90(side)] = 32
 
-
-  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_cw90(side),  32, 8), -EXTREME_H, EXTREME_H)
-  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_ccw90(side), 32, 8), -EXTREME_H, EXTREME_H)
+  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_cw90(side),  32, 8),
+                    -EXTREME_H, EXTREME_H)
+  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_ccw90(side), 32, 8),
+                    -EXTREME_H, EXTREME_H)
 
 
   -- make door
@@ -2096,9 +2064,6 @@ function Build_small_exit(R, item_name)
   local key_tex = "LITE5"
 
   assert(not C.lock)
----##  if C.lock then
----##    key_tex = "DOORBLU"
----##  end
 
   for pass = 1,2 do
     if pass == 2 then DT.mirror_x = mx end

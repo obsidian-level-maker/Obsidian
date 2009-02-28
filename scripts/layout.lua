@@ -570,9 +570,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
   local function setup_floor(S, h, f_tex)
     S.floor_h = h
 
-    if not R.outdoor then
-      S.f_tex = f_tex
-    end
+    S.f_tex = sel(R.outdoor, R.combo.floor, f_tex)
 
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn
