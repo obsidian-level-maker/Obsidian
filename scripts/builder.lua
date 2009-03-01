@@ -2203,84 +2203,85 @@ function Build_window(S, side, width, z1, z2, f_tex, w_tex)
 end
 
 
-function Build_picture(S, side, width, z1, z2, f_tex, w_tex, pic)
+function Build_picture(S, side, count, skin, z1, z2, w_tex, f_tex)
 
   local T, long, deep = get_transform_for_seed_side(S, side)
 
   local wall_info =
   {
+    w_face = { texture=w_tex },
     t_face = { texture=f_tex },
     b_face = { texture=f_tex },
-    w_face = { texture=w_tex },
   }
+
+  local side_face = { texture=skin.side_w or w_tex }
+
 
   local pic_info =
   {
+    w_face = { texture=skin.pic_w,
+               x_offset=skin.x_offset, y_offset=skin.y_offset, peg=skin.peg },
     t_face = { texture=f_tex },
     b_face = { texture=f_tex },
-    w_face = { texture=pic, x_offset=0, y_offset=0 },
   }
 
 
+  if not z2 then
+    z2 = z1 + assert(skin.height)
+  end
+
+  local WD  = assert(skin.width)
+  local HT  = assert(skin.depth)
+  local gap = skin.gap or WD
+
+  local total_w = WD + (count - 1) * gap
+  assert(total_w < PARAMS.seed_size-24)
+
   local mx = int(long/2)
-  local my = int(deep/2)
-
-  local y2 = my+4
-
-  transformed_brush(T, wall_info,
-  {
-    { x=long, y=0 },
-    { x=long, y=my-4 },
-    { x=0, y=my-4 },
-    { x=0, y=0 },
-  },
-  -EXTREME_H, EXTREME_H)
-
-  transformed_brush(T, pic_info,
-  {
-    { x=long-4, y=my-4 },
-    { x=long-4, y=my+4 },
-    { x=4, y=my+4 },
-    { x=4, y=my-4 },
-  },
-  -EXTREME_H, EXTREME_H)
-
-  transformed_brush(T, wall_info,
-  {
-    { x=mx-width/2, y=y2 },
-    { x=mx-width/2, y=deep },
-    { x=0, y=deep },
-    { x=0, y=y2 },
-  },
-  -EXTREME_H, EXTREME_H)
-
-  transformed_brush(T, wall_info,
-  {
-    { x=long, y=y2 },
-    { x=long, y=deep },
-    { x=mx+width/2, y=deep },
-    { x=mx+width/2, y=y2 },
-  },
-  -EXTREME_H, EXTREME_H)
+  local my = deep - HT
 
 
-  transformed_brush(T, wall_info,
-  {
-    { x=mx+width/2, y=y2 },
-    { x=mx+width/2, y=deep },
-    { x=mx-width/2, y=deep },
-    { x=mx-width/2, y=y2 },
-  },
-  -EXTREME_H, z1)
+  -- wall around picture
+  transformed_brush(T, wall_info, rect_coords(0,0, long,my-4),
+                    -EXTREME_H, EXTREME_H)
+  transformed_brush(T, wall_info, rect_coords(0,my-4, 8,deep),
+                    -EXTREME_H, EXTREME_H)
+  transformed_brush(T, wall_info, rect_coords(long-8,my-4, long,deep),
+                    -EXTREME_H, EXTREME_H)
 
-  transformed_brush(T, wall_info,
-  {
-    { x=mx+width/2, y=y2 },
-    { x=mx+width/2, y=deep },
-    { x=mx-width/2, y=deep },
-    { x=mx-width/2, y=y2 },
-  },
-  z2, EXTREME_H)
+
+  for n = 0,count do
+    local x = mx-total_w/2 + n * (WD+gap)
+
+    -- picture itself
+    if n < count then
+      transformed_brush(T, pic_info, rect_coords(x,my-4, x+WD,my),
+                        -EXTREME_H, EXTREME_H)
+    end
+
+    -- side wall
+    local x1 = sel(n == 0, 8, x - gap)
+    local x2 = sel(n == count, long-8, x)
+
+    transformed_brush(T, wall_info,
+    {
+      { x=x2, y=my-4, w_face=side_face },
+      { x=x2, y=deep },
+      { x=x1, y=deep, w_face=side_face },
+      { x=x1, y=my-4 },
+    },
+    -EXTREME_H, EXTREME_H)
+  end
+
+
+  -- top and bottom
+  wall_info.t_face.texture = skin.top_f or f_tex
+  wall_info.b_face.texture = skin.top_f or f_tex
+
+  local coords = rect_coords(mx-total_w/2,my-4, mx+total_w/2,deep)
+
+  transformed_brush(T, wall_info, coords, -EXTREME_H, z1)
+  transformed_brush(T, wall_info, coords, z2,  EXTREME_H)
 end
 
 

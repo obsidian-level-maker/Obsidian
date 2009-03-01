@@ -1364,7 +1364,14 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "picture" then
-        Build_picture(S, side, 128, z1+64, z1+192, f_tex, w_tex, "SPACEW3")
+        local skin =
+        {
+          pic_w="COMPSTA1", width=128,
+          height=64, x_offset=0, y_offset=0,
+          side_w="DOORSTOP", depth=8, 
+          top_f="FLAT23",
+        }
+        Build_picture(S, side, 1, skin, z1+32, nil, w_tex, f_tex)
       end
 
       if B_kind == "window" then
