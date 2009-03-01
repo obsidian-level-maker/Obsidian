@@ -1366,12 +1366,21 @@ gui.printf("do_teleport\n")
       if B_kind == "picture" then
         local skin =
         {
-          pic_w="COMPSTA1", width=128,
+          pic_w="COMPSTA1", width=64,
           height=64, x_offset=0, y_offset=0,
           side_w="DOORSTOP", depth=8, 
-          top_f="FLAT23",
+          top_f="FLAT23"
         }
-        Build_picture(S, side, 1, skin, z1+32, nil, w_tex, f_tex)
+        local lite =
+        {
+          count=3,
+          pic_w="LITE5", width=16, height=64,
+          x_offset=0, y_offset=0,
+          side_w="DOORSTOP", depth=8, 
+          top_f="FLAT23", gap=32,
+          sec_kind=8, light=0.9,
+        }
+        Build_picture(S, side, lite, z1+32, nil, w_tex, f_tex)
       end
 
       if B_kind == "window" then

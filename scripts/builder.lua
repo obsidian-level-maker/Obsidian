@@ -2203,7 +2203,9 @@ function Build_window(S, side, width, z1, z2, f_tex, w_tex)
 end
 
 
-function Build_picture(S, side, count, skin, z1, z2, w_tex, f_tex)
+function Build_picture(S, side, skin, z1, z2, w_tex, f_tex)
+
+  local count = skin.count or 1
 
   local T, long, deep = get_transform_for_seed_side(S, side)
 
@@ -2234,8 +2236,8 @@ function Build_picture(S, side, count, skin, z1, z2, w_tex, f_tex)
   local HT  = assert(skin.depth)
   local gap = skin.gap or WD
 
-  local total_w = WD + (count - 1) * gap
-  assert(total_w < PARAMS.seed_size-24)
+  local total_w = count * WD + (count - 1) * gap
+  assert(total_w < PARAMS.seed_size-28)
 
   local mx = int(long/2)
   local my = deep - HT
@@ -2263,6 +2265,7 @@ function Build_picture(S, side, count, skin, z1, z2, w_tex, f_tex)
     local x1 = sel(n == 0, 8, x - gap)
     local x2 = sel(n == count, long-8, x)
 
+gui.debugf("x1..x2 : %d,%d\n", x1,x2)
     transformed_brush(T, wall_info,
     {
       { x=x2, y=my-4, w_face=side_face },
@@ -2277,6 +2280,9 @@ function Build_picture(S, side, count, skin, z1, z2, w_tex, f_tex)
   -- top and bottom
   wall_info.t_face.texture = skin.top_f or f_tex
   wall_info.b_face.texture = skin.top_f or f_tex
+
+  wall_info.b_face.light = skin.light
+  wall_info.sec_kind = skin.sec_kind
 
   local coords = rect_coords(mx-total_w/2,my-4, mx+total_w/2,deep)
 
