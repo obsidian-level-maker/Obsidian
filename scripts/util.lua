@@ -165,15 +165,15 @@ function table_pick_best(list, comp)
     return nil
   end
 
-  local cur = list[1]
+  local cur = 1
 
   for idx = 2,#list do
-    if not comp(cur, list[idx]) then
-      cur = list[idx]
+    if not comp(list[cur], list[idx]) then
+      cur = idx
     end
   end
 
-  return cur
+  return list[cur], cur
 end
 
 function shallow_merge(dest, src)
