@@ -1225,12 +1225,12 @@ function Layout_set_floor_minmax(R)
   R.fence_h  = R.floor_max_h + 30
   R.liquid_h = R.floor_min_h - 48
 
----#    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
----#      local S = SEEDS[x][y][1]
----#      if S.room == R and S.kind == "liquid" then
----#        S.floor_h = R.liquid_h
----#      end
----#    end end -- for x, y
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R and S.kind == "liquid" then
+      S.floor_h = R.liquid_h
+    end
+  end end -- for x, y
 end
 
 
@@ -1259,6 +1259,13 @@ function Layout_scenic(R)
   else
     R.liquid_h = -24
   end
+
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R and S.kind == "liquid" then
+      S.floor_h = R.liquid_h
+    end
+  end end -- for x, y
 end
 
 
@@ -1902,12 +1909,12 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
         return "void"
       end
 
-      if N.kind == "void" or N.kind == "liquid" then
-        return N.kind
+      if N.kind == "void" or N.kind == "diagonal" then
+        return "void"
       end
 
-      if N.kind == "diagonal" then
-        return "void"
+      if N.kind == "liquid" then
+        return "liquid", assert(N.floor_h), N.f_tex
       end
 
       return "walk", assert(N.floor_h), N.f_tex
@@ -2231,7 +2238,10 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   Layout_try_pattern(R, true, 1, R.symmetry, area, heights, f_texs)
 
+
 ---??  flood_fill_for_junk()
+
+  Layout_set_floor_minmax(R)
 
   post_processing()
 
@@ -2240,8 +2250,6 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     assert(C.conn_h)
   end
 
-
-  Layout_set_floor_minmax(R)
 
   if R.purpose then
     add_purpose()

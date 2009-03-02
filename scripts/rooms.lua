@@ -679,9 +679,8 @@ function Rooms_border_up()
           S.stair_kind == "tall")
       then
         for side = 2,8,2 do
-          local N = S:neighbor(side)
-          if N and N.room ~= R then
-            table.insert(list, { S=S, N=N, side=side })
+          if S.border[side].kind == "wall" then
+            table.insert(list, { S=S, side=side })
           end
         end -- for side
       end
@@ -690,32 +689,110 @@ function Rooms_border_up()
     return list
   end
 
-  local function can_make_window(S, N, side)
-gui.debugf("can_make_window @ %s side:%d\n", S:tostr(), side)
-gui.debugf("  BORDER KIND = %s\n", tostring(S.border[side].kind))
-    if S.border[side].kind ~= "wall" then return false end
-    
-gui.debugf("  IS WALL\n")
-    if not (N and N.room and N.room.outdoor) then return false end
+---## local function can_make_window(S, side)
+---##    return true
+---##  end
 
-gui.debugf("  N IS OUTDOOR --> OK!\n")
-    return true
+  local function score_window_side(R, side, border_list)
+    local min_c1, max_f1 = 999, -999
+    local min_c2, max_f2 = 999, -999
+
+    local scenics = 0
+
+    for _,bd in ipairs(border_list) do
+      local S = bd.S
+      local N = S:neighbor(side)
+
+      if (bd.side == side) and S.floor_h and
+         (N and N.room and N.room.outdoor) and N.floor_h
+      -- (N.kind == "walk" or N.kind == "liquid")
+      then
+        if N.kind == "scenic" then scenics = scenics + 1 end
+        
+        min_c1 = math.min(min_c1, assert(S.ceil_h or R.ceil_h))
+        min_c2 = SKY_H
+
+        max_f1 = math.max(max_f1, S.floor_h)
+        max_f2 = math.max(max_f2, N.floor_h)
+      end 
+    end  -- for bd
+
+
+    -- nothing possible??
+    if max_f1 < -900 then return end
+
+    local min_c = math.min(min_c1, min_c2)
+    local max_f = math.max(max_f1, max_f2)
+
+    if min_c - max_f < 95 then return end
+
+    local score = (max_f1 - max_f2)
+
+    score = score + gui.random() * 10
+
+    if scenics > 0 then score = score + 100 end
+
+    return
+    {
+      side=side, score=score,
+      min_c=min_c, max_f=max_f,
+      kind="all",
+    }
+  end
+
+  local function add_windows(R, info, border_list)
+    -- FIXME: TEMP
+
+    if info.kind == "flank" then
+      for _,S in ipairs(info.flank_seeds) do
+        S.border[info.side].kind = "window"
+      end -- for S
+
+      return
+    end
+
+    for _,bd in ipairs(border_list) do
+      local S    = bd.S
+      local side = bd.side
+
+      if side == info.side then
+        if (info.kind == "all") or
+           (info.kind == "rand" and rand_odds(info.chance))
+        then
+          S.border[side].kind = "window"
+          S.border[side].win_z1 = info.max_f + 32
+          S.border[side].win_z2 = info.min_c - 24
+        end
+      end
+    end
   end
 
   local function decide_windows(R, border_list)
     if R.kind ~= "building" then return end
+    if R.semi_outdoor then return end
 
-    for _,bd in ipairs(border_list) do
-      if can_make_window(bd.S, bd.N, bd.side) then
-gui.debugf("  MADE WINDOW\n")
-        bd.S.border[bd.side].kind = "window"
+    local poss = {}
+
+    for side = 2,8,2 do
+      local info = score_window_side(R, side, border_list)
+      if info then
+        table.insert(poss, info)
+      end
+    end
+
+    for loop = 1,2 do
+      local best = table_pick_best(poss,
+          function(A,B) return A.score > B.score end)
+
+      if best and best.score > 0 then
+        add_windows(R, best, border_list)
+        best.score = -1
       end
     end
   end
 
   local function decide_pictures(R, border_list)
     if R.kind ~= "building" then return end
-
     if R.semi_outdoor then return end
 
     for _,bd in ipairs(border_list) do
@@ -1446,7 +1523,10 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "window" then
-        Build_window(S, side, 192, z1+32, z1+80, f_tex, w_tex)
+        local z1 = S.border[side].win_z1
+        local z2 = S.border[side].win_z2
+
+        Build_window(S, side, 192, 64, z1, z2, f_tex, w_tex)
       end
 
       if B_kind == "fence"  then
@@ -1522,7 +1602,7 @@ gui.printf("do_teleport\n")
 
       Build_diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
 
-      S.kind    = assert(S.diag_new_kind)
+      S.kind = assert(S.diag_new_kind)
 
       if S.diag_new_z then
         S.floor_h = S.diag_new_z
@@ -1579,9 +1659,6 @@ local STEP_SKINS =
   { step_w="STEP6", side_w="STUCCO",   top_f="FLAT5" },
   { step_w="STEP3", side_w="COMPSPAN", top_f="CEIL5_1" },
   { step_w="STEP1", side_w="BROWNHUG", top_f="RROCK10" },
-
---  { step_w="STEP3", side_w="BROWNHUG", top_f="ROCK10" },
---  { step_w="STEP2", side_w="STUCCO",   top_f="FLOOR4_6" },
 }
 local LIFT_SKINS =
 {
@@ -1667,7 +1744,7 @@ end
         { x=x2, y=y1 }, { x=x2, y=y2 },
         { x=x1, y=y2 }, { x=x1, y=y1 },
       },
-      -EXTREME_H, assert(R.liquid_h));
+      -EXTREME_H, z1)
 
     elseif not S.no_floor then
 
@@ -1682,7 +1759,7 @@ end
         { x=x2, y=y1 }, { x=x2, y=y2 },
         { x=x1, y=y2 }, { x=x1, y=y1 },
       },
-      -EXTREME_H, z1);
+      -EXTREME_H, z1)
     end
 
 
@@ -1756,7 +1833,7 @@ function Rooms_build_all()
   PLAN.fence_mode = rand_key_by_probs { none=30, few=30, some=10 }
   gui.printf("Fence Mode: %s\n", PLAN.fence_mode)
 
-  PLAN.window_mode = rand_key_by_probs { few=30, some=90, heaps=10 }
+  PLAN.window_mode = rand_key_by_probs { few=20, some=50, heaps=10 }
   gui.printf("Window Mode: %s\n", PLAN.window_mode)
 
   PLAN.picture_mode = rand_key_by_probs { few=10, some=50, heaps=10 }

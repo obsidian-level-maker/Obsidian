@@ -144,8 +144,6 @@ function material_to_info(name)
     error("No such material: " .. tostring(name))
   end
 
-  -- TODO: cache results (MUST CLEAR CACHE BEFORE EACH BUILD)
-
   return
   {
     w_face = { texture=assert(mat[1]) },
