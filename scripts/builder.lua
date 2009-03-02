@@ -2136,8 +2136,7 @@ function Build_fence(S, side, fence_h, f_tex, w_tex)
 end
 
 
-function Build_window(S, side, width, z1, z2, f_tex, w_tex)
-
+function Build_window(S, side, width, mid_w, z1, z2, f_tex, w_tex)
   local wall_info =
   {
     t_face = { texture=f_tex },
@@ -2152,25 +2151,28 @@ function Build_window(S, side, width, z1, z2, f_tex, w_tex)
 
   local mx = int(long/2)
 
-  transformed_brush(T, wall_info,
-  {
-    { x=mx+width/2, y=0 },
-    { x=mx+width/2, y=deep },
-    { x=mx-width/2, y=deep },
-    { x=mx-width/2, y=0 },
-  },
-  -EXTREME_H, z1)
 
-  transformed_brush(T, wall_info,
-  {
-    { x=mx+width/2, y=0 },
-    { x=mx+width/2, y=deep },
-    { x=mx-width/2, y=deep },
-    { x=mx-width/2, y=0 },
-  },
-  z2, EXTREME_H)
+  -- top and bottom
+  local coords = rect_coords(mx-width/2, 0, mx+width/2, deep)
+
+  transformed_brush(T, wall_info, coords, -EXTREME_H, z1)
+  transformed_brush(T, wall_info, coords, z2,  EXTREME_H)
 
 
+  -- center piece
+  if mid_w then
+    transformed_brush(T, wall_info,
+    {
+      { x=mx+mid_w/2, y=0,    w_face = side_face },
+      { x=mx+mid_w/2, y=deep },
+      { x=mx-mid_w/2, y=deep, w_face = side_face },
+      { x=mx-mid_w/2, y=0 },
+    },
+    -EXTREME_H, EXTREME_H)
+  end
+
+
+  -- sides pieces
   for pass = 1,2 do
     if pass == 2 then T.mirror_x = mx end
 
