@@ -992,73 +992,31 @@ COMMON_HALLWAYS =
   },
 }
 
----- BASE MATERIALS ------------
 
-COMMON_MATS =
+COMMON_MATERIALS =  -- FIXME: SOME ARE DOOM2 only!
 {
-  METAL =
-  {
-    mat_pri = 5,
+  metal   = { "METAL",    "CEIL5_2"  },
+  hexmet  = { "METAL1",   "FLOOR4_8" },
+  dark    = { "COMPSPAN", "CEIL5_1"  },
+  shiny   = { "SHAWN2",   "FLAT23"   },
 
-    wall  = "METAL",
-    void  = "METAL1",
-    floor = "CEIL5_2",
-    ceil  = "CEIL5_2",
-  },
+  stone   = { "STONE2",   "MFLR8_1"  },
+  bigbrik = { "BIGBRIK1", "RROCK14"  },
+  rock    = { "ROCK3",    "RROCK13"  },
 
-  ARCH =
-  {
-    wall  = "METAL",
-    void  = "METAL1",
-    floor = "CEIL5_2",
-    ceil  = "CEIL5_2",
-  },
+  sand    = { "ASHWALL2", "MFLR8_4"  },
+  grass   = { "ZIMMER2",  "GRASS2"   },
+  dirt    = { "ASHWALL4", "FLAT10"   },
+  stucco  = { "STUCCO",   "FLAT5_5"  },
 
-  SHINY =
-  {
-    wall  = "SHAWN2",
-    void  = "SHAWN1",
-    floor = "FLAT23",
-    ceil  = "FLAT23",
-  },
+  wood    = { "WOOD12",   "FLAT5_2"  },
+  marble  = { "MARBLE1",  "FLOOR7_2" },
+  gray    = { "GRAY7",    "FLAT1"    },  
+  brown   = { "BROWNHUG", "FLOOR7_1" },
 
-  STEP =
-  {
-    wall  = "STEP1",
-    floor = "FLAT1",
-  },
-
-  LIFT =
-  {
-    wall  = "SUPPORT2",
-    floor = "STEP2"
-  },
-
-  CAGE =
-  {
-    wall  = "METAL",
-    floor = "CEIL5_2",
-    ceil  = "TLITE6_4",
-  },
-
-  TRACK =
-  {
-    wall  = "DOORTRAK",
-    floor = "FLOOR6_2",
-  },
-
-  DOOR_FRAME =
-  {
-    wall  = "LITE5",
-    floor = "FLAT1",
-    ceil  = "TLITE6_6",
-  },
-
-  SW_FRAME =
-  {
-    wall  = "LITE5",
-    floor = "TLITE6_6",
-  },
+  black   = { "BLAKWAL1", "O_BLACK"  },
+  blue    = { "COMPBLUE", "FLAT14"   },
+  red     = { "REDWALL",  "FLAT5_3"  },
 }
 
 --- PEDESTALS --------------
@@ -3602,11 +3560,11 @@ function Doom_common_setup()
 
   Game_merge_tab("combos", COMMON_COMBOS)
   Game_merge_tab("exits", COMMON_EXITS)
-  Game_merge_tab("hallways", COMMON_HALLWAYS)
+  Game_merge_tab("hallways",  COMMON_HALLWAYS)
+  Game_merge_tab("materials", COMMON_MATERIALS)
 
   Game_merge_tab("hangs", COMMON_OVERHANGS)
   Game_merge_tab("pedestals", COMMON_PEDESTALS)
-  Game_merge_tab("mats", COMMON_MATS)
   Game_merge_tab("crates", COMMON_CRATES)
 
   Game_merge_tab("liquids", COMMON_LIQUIDS)

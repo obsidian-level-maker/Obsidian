@@ -630,15 +630,8 @@ DOOM2_HALLWAYS =
   },
 }
 
-DOOM2_MATS =
+DOOM2_MATERIALS =
 {
-  ARCH =
-  {
-    wall  = "METAL",
-    void  = "METAL1",
-    floor = "SLIME14",
-    ceil  = "SLIME14",
-  },
 }
 
 DOOM2_OVERHANGS =
@@ -1765,10 +1758,10 @@ function Doom2_setup(game)
   Game_merge_tab("combos",   DOOM2_COMBOS)
   Game_merge_tab("hallways", DOOM2_HALLWAYS)
   Game_merge_tab("exits",    DOOM2_EXITS)
+  Game_merge_tab("materials",DOOM2_MATERIALS)
 
   Game_merge_tab("hangs",    DOOM2_OVERHANGS)
   Game_merge_tab("crates",   DOOM2_CRATES)
-  Game_merge_tab("mats",     DOOM2_MATS)
   Game_merge_tab("doors",    DOOM2_DOORS)
   Game_merge_tab("lights",   DOOM2_LIGHTS)
   Game_merge_tab("liquids",  DOOM2_LIQUIDS)
