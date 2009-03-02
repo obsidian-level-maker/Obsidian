@@ -22,7 +22,7 @@
 --
 ----------------------------------------------------------------
 
-HC_THINGS =
+HERETIC_THINGS =
 {
   --- special stuff ---
   player1 = { id=1, kind="other", r=16,h=56 },
@@ -145,7 +145,7 @@ HC_THINGS =
   env_wind   = { id=42, kind="other", r=20,h=16, pass=true },
 }
 
-HC_LINE_TYPES =  -- NOTE: only includes differences to DOOM
+HERETIC_LINE_TYPES =  -- NOTE: only includes differences to DOOM
 {
   A1_scroll_right = { kind=99 },
   W1_secret_exit  = { kind=105 }, -- FIXME: correct?
@@ -154,7 +154,7 @@ HC_LINE_TYPES =  -- NOTE: only includes differences to DOOM
   PR_green_door = { kind=28 },
 }
 
-HC_SECTOR_TYPES =
+HERETIC_SECTOR_TYPES =
 {
   secret   = { kind=9 },
   friction = { kind=15 },
@@ -172,7 +172,7 @@ HC_SECTOR_TYPES =
 
 ----------------------------------------------------------------
 
-HC_PALETTE =
+HERETIC_PALETTE =
 {
     0,  0,  0,   2,  2,  2,  16, 16, 16,  24, 24, 24,  31, 31, 31,
    36, 36, 36,  44, 44, 44,  48, 48, 48,  55, 55, 55,  63, 63, 63,
@@ -231,7 +231,7 @@ HC_PALETTE =
 
 ----------------------------------------------------------------
 
-HC_COMBOS =
+HERETIC_COMBOS =
 {
   ---- INDOOR ------------
 
@@ -726,7 +726,7 @@ HC_COMBOS =
   
 }
 
-HC_EXITS =
+HERETIC_EXITS =
 {
   METAL =
   {
@@ -775,7 +775,7 @@ HC_EXITS =
   },
 }
 
-HC_HALLWAYS =
+HERETIC_HALLWAYS =
 {
  
   -- Hall with set stone walls 
@@ -872,7 +872,7 @@ HC_HALLWAYS =
 
 ---- BASE MATERIALS ------------
 
-HC_MATS =
+HERETIC_MATS =
 {
   METAL =
   {
@@ -912,7 +912,7 @@ HC_MATS =
 
 --- PEDESTALS --------------
 
-HC_PEDESTALS =
+HERETIC_PEDESTALS =
 {
   PLAYER =
   {
@@ -938,7 +938,7 @@ HC_PEDESTALS =
 
 ---- OVERHANGS ------------
 
-HC_OVERHANGS =
+HERETIC_OVERHANGS =
 {
   WOOD =
   {
@@ -950,7 +950,7 @@ HC_OVERHANGS =
 
 ---- MISC STUFF ------------
 
-HC_LIQUIDS =
+HERETIC_LIQUIDS =
 {
   water  = { floor="FLTFLWW1", wall="WATRWAL1" },
   lava   = { floor="FLATHUH1", wall="LAVAFL1", sec_kind=16 },
@@ -958,7 +958,7 @@ HC_LIQUIDS =
   sludge = { floor="FLTSLUD1", wall="LAVA1",   sec_kind=7 },
 }
 
-HC_SWITCHES =
+HERETIC_SWITCHES =
 {
   sw_demon =
   {
@@ -1045,7 +1045,7 @@ HC_SWITCHES =
   },
 }
 
-HC_DOORS =
+HERETIC_DOORS =
 {
   d_demon = { prefab="DOOR", w=128, h=128,
 
@@ -1065,7 +1065,7 @@ HC_DOORS =
 --  d_stone  = { wall="DOORSTON", w=64,  h=128 },
 }
 
-HC_KEY_DOORS =
+HERETIC_KEY_DOORS =
 {
   k_blue =
   {
@@ -1122,12 +1122,12 @@ HC_KEY_DOORS =
   },
 }
 
-HC_LIFTS =
+HERETIC_LIFTS =
 {
   slow = { kind=62,  walk=88 },
 }
 
-HC_DOOR_PREFABS =
+HERETIC_DOOR_PREFABS =
 {
   d_wood =
   {
@@ -1146,7 +1146,7 @@ HC_DOOR_PREFABS =
   },
 }
 
-HC_WALL_PREFABS =
+HERETIC_WALL_PREFABS =
 {
   wall_pic_GLASS1 =
   {
@@ -1163,7 +1163,7 @@ HC_WALL_PREFABS =
   },
 }
 
-HC_MISC_PREFABS =
+HERETIC_MISC_PREFABS =
 {
   pedestal_PLAYER =
   {
@@ -1216,7 +1216,7 @@ HC_MISC_PREFABS =
   },
 }
 
-HC_DEATHMATCH_EXITS =
+HERETIC_DEATHMATCH_EXITS =
 {
   exit_dm_METAL =
   {
@@ -1235,29 +1235,29 @@ HC_DEATHMATCH_EXITS =
   },
 }
 
-HC_RAILS =
+HERETIC_RAILS =
 {
   r_1 = { wall="WDGAT64", w=128, h=64  },
   r_2 = { wall="WDGAT64", w=128, h=128 },  -- FIXME!!
 }
 
-HC_IMAGES =
+HERETIC_IMAGES =
 {
   { wall = "GRSKULL2", w=128, h=128, glow=true },
   { wall = "GRSKULL1", w=64,  h=64,  floor="FLOOR27" }
 }
 
-HC_LIGHTS =
+HERETIC_LIGHTS =
 {
   round = { floor="FLOOR26",  side="ORNGRAY" },
 }
 
-HC_WALL_LIGHTS =
+HERETIC_WALL_LIGHTS =
 {
   redwall = { wall="REDWALL", w=32 },
 }
 
-HC_PICS =
+HERETIC_PICS =
 {
   skull3 = { wall="GRSKULL3", w=128, h=128 },
   glass1 = { wall="STNGLS1",  w=128, h=128 },
@@ -1265,7 +1265,7 @@ HC_PICS =
 
 ---- QUEST STUFF ----------------
 
-HC_QUESTS =
+HERETIC_QUESTS =
 {
   key =
   {
@@ -1290,7 +1290,7 @@ HC_QUESTS =
   },
 }
 
-HC_ROOMS =
+HERETIC_ROOMS =
 {
   PLAIN =
   {
@@ -1311,7 +1311,7 @@ HC_ROOMS =
   -- TODO: check in-game level names for ideas
 }
 
-HC_THEMES =
+HERETIC_THEMES =
 {
   --- City (E1 Castle) is both indoors and outdoors
   CITY =
@@ -1362,7 +1362,7 @@ HC_THEMES =
 
 }
 
-HC_QUEST_LEN_PROBS =
+HERETIC_QUEST_LEN_PROBS =
 {
   ----------  2   3   4   5   6   7   8  9  10  -------
 
@@ -1378,7 +1378,7 @@ HC_QUEST_LEN_PROBS =
 
 ------------------------------------------------------------
 
-HC_MONSTERS =
+HERETIC_MONSTERS =
 {
   gargoyle   = { prob=30, hp=20,  dm= 5, cage_fallback=10, float=true, melee=true },
   fire_garg  = { prob=10, hp=80,  dm= 8, float=true },
@@ -1399,7 +1399,7 @@ HC_MONSTERS =
   pod = { prob=5, hp=45, dm=2, melee=true, passive=true },
 }
 
-HC_BOSSES =
+HERETIC_BOSSES =
 {
   -- dm values are crap
   Ironlich    = { prob= 4, hp=700,  dm=99, float=true },
@@ -1407,7 +1407,7 @@ HC_BOSSES =
   D_Sparil    = { prob= 1, hp=2000, dm=99, },
 }
 
-HC_WEAPONS =
+HERETIC_WEAPONS =
 {
   staff      = { rate=2.5, dm=12, pref= 1, melee=true, held=true },
   gauntlets  = { rate=5.2, dm= 8, pref= 7, melee=true, },
@@ -1428,7 +1428,7 @@ HC_WEAPONS =
   -- OBLIGE cannot properly model it.
 }
 
-HC_PICKUPS =
+HERETIC_PICKUPS =
 {
   -- FIXME: the ammo 'give' numbers are CRAP!
   crystal = { stat="crystal", give=5,  },
@@ -1454,7 +1454,7 @@ HC_PICKUPS =
   shield2 = { stat="armor", give=200, prob=10 },
 }
 
-HC_NICENESS =
+HERETIC_NICENESS =
 {
   w1 = { weapon="crossbow",  quest=1, prob=70, always=true  },
 
@@ -1467,7 +1467,7 @@ HC_NICENESS =
   p1 = { pickup="torch",   prob=2.0 },
 }
 
-HC_DEATHMATCH =
+HERETIC_DEATHMATCH =
 {
   weapons =
   {
@@ -1501,7 +1501,7 @@ HC_DEATHMATCH =
   cluster = {}
 }
 
-HC_INITIAL_MODEL =
+HERETIC_INITIAL_MODEL =
 {
   cleric =
   {
@@ -1515,7 +1515,7 @@ HC_INITIAL_MODEL =
 
 ------------------------------------------------------------
 
-HC_EPISODE_THEMES =
+HERETIC_EPISODE_THEMES =
 {
   { CITY=5 },
   { CAVE=5 },
@@ -1526,7 +1526,7 @@ HC_EPISODE_THEMES =
   { CITY=5, EGYPT=5 },
 }
 
-HC_SECRET_EXITS =
+HERETIC_SECRET_EXITS =
 {
   E1M6 = true,
   E2M4 = true,
@@ -1536,7 +1536,7 @@ HC_SECRET_EXITS =
   E5M3 = true,
 }
 
-HC_EPISODE_BOSSES =
+HERETIC_EPISODE_BOSSES =
 {
   "Ironlich",
   "Maulotaur",
@@ -1546,7 +1546,7 @@ HC_EPISODE_BOSSES =
   "Maulotaur",
 }
 
-HC_SKY_INFO =
+HERETIC_SKY_INFO =
 {
   { color="gray",  light=176 },
   { color="red",   light=192 },
@@ -1569,11 +1569,11 @@ function Heretic1_get_levels()
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
   for episode = 1,EP_NUM do
-    local theme_probs = HC_EPISODE_THEMES[episode]
+    local theme_probs = HERETIC_EPISODE_THEMES[episode]
 
     -- If we only make a single map or episode, use the castle or hell theme
     if OB_CONFIG.length ~= "full" then
-      theme_probs = HC_EPISODE_THEMES[rand_irange(1,4)]
+      theme_probs = HERETIC_EPISODE_THEMES[rand_irange(1,4)]
     end
 
     for map = 1,MAP_NUM do
@@ -1584,15 +1584,15 @@ function Heretic1_get_levels()
         ep_along = map / MAP_NUM,
 
         theme_probs = theme_probs,
-        sky_info = HC_SKY_INFO[episode],
+        sky_info = HERETIC_SKY_INFO[episode],
 
-        boss_kind   = (map == 8) and HC_EPISODE_BOSSES[episode],
+        boss_kind   = (map == 8) and HERETIC_EPISODE_BOSSES[episode],
         secret_kind = (map == 9) and "plain",
 
         toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 7),
       }
 
-      if HC_SECRET_EXITS[LEV.name] then
+      if HERETIC_SECRET_EXITS[LEV.name] then
         LEV.secret_exit = true
       end
 
@@ -1609,50 +1609,50 @@ function Heretic1_setup()
 
   GAME.classes  = { "cleric" },
 
-  Game_merge_tab("things",   HC_THINGS)
-  Game_merge_tab("monsters", HC_MONSTERS)
-  Game_merge_tab("bosses",   HC_BOSSES)
+  Game_merge_tab("things",   HERETIC_THINGS)
+  Game_merge_tab("monsters", HERETIC_MONSTERS)
+  Game_merge_tab("bosses",   HERETIC_BOSSES)
 
-  Game_merge_tab("weapons",  HC_WEAPONS)
-  Game_merge_tab("pickups",  HC_PICKUPS)
-  Game_merge_tab("niceness", HC_NICENESS)
+  Game_merge_tab("weapons",  HERETIC_WEAPONS)
+  Game_merge_tab("pickups",  HERETIC_PICKUPS)
+  Game_merge_tab("niceness", HERETIC_NICENESS)
 
   GAME.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
                         "runes", "flame_orb", "mace_orb" },
 
-  Game_merge_tab("initial_model", HC_INITIAL_MODEL)
+  Game_merge_tab("initial_model", HERETIC_INITIAL_MODEL)
 
-  Game_merge_tab("quests", HC_QUESTS)
+  Game_merge_tab("quests", HERETIC_QUESTS)
 
-  Game_merge_tab("dm", HC_DEATHMATCH)
-  Game_merge_tab("dm_exits", HC_DEATHMATCH_EXITS)
+  Game_merge_tab("dm", HERETIC_DEATHMATCH)
+  Game_merge_tab("dm_exits", HERETIC_DEATHMATCH_EXITS)
 
-  Game_merge_tab("combos", HC_COMBOS)
-  Game_merge_tab("exits", HC_EXITS)
-  Game_merge_tab("hallways", HC_HALLWAYS)
+  Game_merge_tab("combos", HERETIC_COMBOS)
+  Game_merge_tab("exits", HERETIC_EXITS)
+  Game_merge_tab("hallways", HERETIC_HALLWAYS)
 
-  Game_merge_tab("rooms",  HC_ROOMS)
-  Game_merge_tab("themes", HC_THEMES)
+  Game_merge_tab("rooms",  HERETIC_ROOMS)
+  Game_merge_tab("themes", HERETIC_THEMES)
 
-  Game_merge_tab("hangs", HC_OVERHANGS)
-  Game_merge_tab("pedestals", HC_PEDESTALS)
-  Game_merge_tab("mats",  HC_MATS)
-  Game_merge_tab("rails", HC_RAILS)
+  Game_merge_tab("hangs", HERETIC_OVERHANGS)
+  Game_merge_tab("pedestals", HERETIC_PEDESTALS)
+  Game_merge_tab("mats",  HERETIC_MATS)
+  Game_merge_tab("rails", HERETIC_RAILS)
 
-  Game_merge_tab("liquids", HC_LIQUIDS)
-  Game_merge_tab("switches", HC_SWITCHES)
-  Game_merge_tab("doors", HC_DOORS)
-  Game_merge_tab("key_doors", HC_KEY_DOORS)
-  Game_merge_tab("lifts", HC_LIFTS)
+  Game_merge_tab("liquids", HERETIC_LIQUIDS)
+  Game_merge_tab("switches", HERETIC_SWITCHES)
+  Game_merge_tab("doors", HERETIC_DOORS)
+  Game_merge_tab("key_doors", HERETIC_KEY_DOORS)
+  Game_merge_tab("lifts", HERETIC_LIFTS)
 
-  Game_merge_tab("pics", HC_PICS)
-  Game_merge_tab("images", HC_IMAGES)
-  Game_merge_tab("lights", HC_LIGHTS)
-  Game_merge_tab("wall_lights", HC_WALL_LIGHTS)
+  Game_merge_tab("pics", HERETIC_PICS)
+  Game_merge_tab("images", HERETIC_IMAGES)
+  Game_merge_tab("lights", HERETIC_LIGHTS)
+  Game_merge_tab("wall_lights", HERETIC_WALL_LIGHTS)
 
-  Game_merge_tab("door_fabs", HC_DOOR_PREFABS)
-  Game_merge_tab("wall_fabs", HC_WALL_PREFABS)
-  Game_merge_tab("misc_fabs", HC_MISC_PREFABS)
+  Game_merge_tab("door_fabs", HERETIC_DOOR_PREFABS)
+  Game_merge_tab("wall_fabs", HERETIC_WALL_PREFABS)
+  Game_merge_tab("misc_fabs", HERETIC_MISC_PREFABS)
 
   GAME.toughness_factor = 0.80  -- FIXME: PARAMS
 

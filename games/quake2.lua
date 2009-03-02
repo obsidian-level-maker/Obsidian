@@ -17,7 +17,7 @@
 ----------------------------------------------------------------
 
 
-Q2_THINGS =
+QUAKE2_THINGS =
 {
   -- players
   player1 = { id="info_player_start", kind="other", r=16,h=56 },
@@ -110,7 +110,7 @@ Q2_THINGS =
 
 ----------------------------------------------------------------
 
-Q2_PALETTE =
+QUAKE2_PALETTE =
 {
     0,  0,  0,  15, 15, 15,  31, 31, 31,  47, 47, 47,  63, 63, 63,
    75, 75, 75,  91, 91, 91, 107,107,107, 123,123,123, 139,139,139,
@@ -169,7 +169,7 @@ Q2_PALETTE =
 
 ----------------------------------------------------------------
 
-Q2_COMBOS =
+QUAKE2_COMBOS =
 {
   TECH_BASE =
   {
@@ -188,18 +188,18 @@ Q2_COMBOS =
   },
 }
 
-Q2_EXITS =
+QUAKE2_EXITS =
 {
 }
 
 
-Q2_KEY_DOORS =
+QUAKE2_KEY_DOORS =
 {
   k_silver = { door_kind="door_silver", door_side=14 },
   k_gold   = { door_kind="door_gold",   door_side=14 },
 }
 
-Q2_MISC_PREFABS =
+QUAKE2_MISC_PREFABS =
 {
 }
 
@@ -207,7 +207,7 @@ Q2_MISC_PREFABS =
 
 ---- QUEST STUFF ----------------
 
-Q2_QUESTS =
+QUAKE2_QUESTS =
 {
   key = { k_red=60, k_blue=30, },
 
@@ -228,7 +228,7 @@ Q2_QUESTS =
 }
 
 
-Q2_ROOMS =
+QUAKE2_ROOMS =
 {
   PLAIN =
   {
@@ -295,7 +295,7 @@ Q2_ROOMS =
   },
 }
 
-Q2_THEMES =
+QUAKE2_THEMES =
 {
   TECH =
   {
@@ -329,7 +329,7 @@ Q2_THEMES =
 
 ----------------------------------------------------------------
 
-Q2_MONSTERS =
+QUAKE2_MONSTERS =
 {
   guard      = { prob=20, hp= 20, dm=4 },
   guard_sg   = { prob=70, hp= 30, dm=10, hitscan=true },
@@ -355,15 +355,15 @@ Q2_MONSTERS =
   tank_cmdr  = { prob= 2, hp=1000,dm=160 },
 }
 
-Q2_BOSSES =
+QUAKE2_BOSSES =
 {
 }
 
-Q2_MONSTER_GIVE =
+QUAKE2_MONSTER_GIVE =
 {
 }
 
-Q2_WEAPONS =
+QUAKE2_WEAPONS =
 {
   pistol   = { rate=1.7, dm=10, pref= 1 },
   shotty   = { rate=0.6, dm=40, pref=20, ammo="shell",  per=1  },
@@ -388,7 +388,7 @@ Q2_WEAPONS =
   -- monster, it's all in the splash baby.
 }
 
-Q2_PICKUPS =
+QUAKE2_PICKUPS =
 {
   first_aid = { stat="health", give=25 },
   good_food = { stat="health", give=10 },
@@ -399,7 +399,7 @@ Q2_PICKUPS =
   clip_8  =   { stat="bullet", give=8 },
 }
 
-Q2_INITIAL_MODEL =
+QUAKE2_INITIAL_MODEL =
 {
   player =
   {
@@ -411,7 +411,7 @@ Q2_INITIAL_MODEL =
 
 ------------------------------------------------------------
 
-Q2_EPISODE_THEMES =
+QUAKE2_EPISODE_THEMES =
 {
   { BASE=7, },
   { BASE=6, },
@@ -419,14 +419,14 @@ Q2_EPISODE_THEMES =
   { BASE=6, },
 }
 
-Q2_KEY_NUM_PROBS =
+QUAKE2_KEY_NUM_PROBS =
 {
   small   = { 90, 50, 20 },
   regular = { 40, 90, 40 },
   large   = { 20, 50, 90 },
 }
 
-Q2_QUEST_LEN_PROBS =
+QUAKE2_QUEST_LEN_PROBS =
 {
   ----------  2   3   4   5   6   7   8   9  10  11  12  -------
 
@@ -499,26 +499,26 @@ function Quake2_setup()
   GAME.dm = {}
 
   GAME.pickup_stats = { "health", "bullet" }
-  GAME.initial_model = Q2_INITIAL_MODEL
+  GAME.initial_model = QUAKE2_INITIAL_MODEL
 
-  Game_merge_tab("things",   Q2_THINGS)
-  Game_merge_tab("monsters", Q2_MONSTERS)
-  Game_merge_tab("bosses",   Q2_BOSSES)
-  Game_merge_tab("mon_give", Q2_MONSTER_GIVE)
-  Game_merge_tab("weapons",  Q2_WEAPONS)
+  Game_merge_tab("things",   QUAKE2_THINGS)
+  Game_merge_tab("monsters", QUAKE2_MONSTERS)
+  Game_merge_tab("bosses",   QUAKE2_BOSSES)
+  Game_merge_tab("mon_give", QUAKE2_MONSTER_GIVE)
+  Game_merge_tab("weapons",  QUAKE2_WEAPONS)
 
-  Game_merge_tab("pickups", Q2_PICKUPS)
-  Game_merge_tab("quests",  Q2_QUESTS)
+  Game_merge_tab("pickups", QUAKE2_PICKUPS)
+  Game_merge_tab("quests",  QUAKE2_QUESTS)
 
-  Game_merge_tab("combos", Q2_COMBOS)
-  Game_merge_tab("exits",  Q2_EXITS)
+  Game_merge_tab("combos", QUAKE2_COMBOS)
+  Game_merge_tab("exits",  QUAKE2_EXITS)
 
-  Game_merge_tab("key_doors", Q2_KEY_DOORS)
+  Game_merge_tab("key_doors", QUAKE2_KEY_DOORS)
 
-  Game_merge_tab("rooms",  Q2_ROOMS)
-  Game_merge_tab("themes", Q2_THEMES)
+  Game_merge_tab("rooms",  QUAKE2_ROOMS)
+  Game_merge_tab("themes", QUAKE2_THEMES)
 
-  Game_merge_tab("misc_fabs", Q2_MISC_PREFABS)
+  Game_merge_tab("misc_fabs", QUAKE2_MISC_PREFABS)
 
 end
 

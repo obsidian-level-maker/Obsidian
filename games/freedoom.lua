@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-FD_MONSTER_LIST =
+FREEDOOM_MONSTER_LIST =
 {
   ---| fairly good |---
 
@@ -47,7 +47,7 @@ FD_MONSTER_LIST =
   spider = 0,
 }
 
-FD_MISSING_SCENERY =
+FREEDOOM_MISSING_SCENERY =
 {
   hang_arm_pair = 1,
   hang_leg_pair = 1,
@@ -55,12 +55,12 @@ FD_MISSING_SCENERY =
   hang_leg      = 1,
 }
 
-FD_LIQUIDS =
+FREEDOOM_LIQUIDS =
 {
   water = { floor="FWATER1", wall="WFALL1" },
 }
 
-FD_SKY_INFO =
+FREEDOOM_SKY_INFO =
 {
   { color="brown",  light=192 },
   { color="black",  light=160 },
@@ -76,23 +76,23 @@ function Freedoom_setup()
 
   -- the FreeDOOM IWAD contains both Doom 1 and Doom 2 textures
 
----!!! Game_merge_tab(GAME.combos,   D1_COMBOS)
----!!! Game_merge_tab(GAME.exits,    D1_EXITS)
----!!! Game_merge_tab(GAME.hallways, D1_HALLWAYS)
+---!!! Game_merge_tab(GAME.combos,   DOOM1_COMBOS)
+---!!! Game_merge_tab(GAME.exits,    DOOM1_EXITS)
+---!!! Game_merge_tab(GAME.hallways, DOOM1_HALLWAYS)
 ---!!!
----!!! Game_merge_tab(GAME.rails,   D1_RAILS)
+---!!! Game_merge_tab(GAME.rails,   DOOM1_RAILS)
 ---!!!
----!!! Game_merge_tab(GAME.hangs,   D1_OVERHANGS)
----!!! Game_merge_tab(GAME.mats,    D1_MATS)
----!!! Game_merge_tab(GAME.crates,  D1_CRATES)
+---!!! Game_merge_tab(GAME.hangs,   DOOM1_OVERHANGS)
+---!!! Game_merge_tab(GAME.mats,    DOOM1_MATS)
+---!!! Game_merge_tab(GAME.crates,  DOOM1_CRATES)
 ---!!!
----!!! Game_merge_tab(GAME.liquids, D1_LIQUIDS, FD_LIQUIDS)
+---!!! Game_merge_tab(GAME.liquids, DOOM1_LIQUIDS, FREEDOOM_LIQUIDS)
 
-  GAME.sky_info = FD_SKY_INFO
+  GAME.sky_info = FREEDOOM_SKY_INFO
 
   -- FreeDOOM is lacking many monster sprites
 
-  for name,quality in pairs(FD_MONSTER_LIST) do
+  for name,quality in pairs(FREEDOOM_MONSTER_LIST) do
     if quality < 1 then
       GAME.monsters[name] = nil
     end
@@ -100,7 +100,7 @@ function Freedoom_setup()
 
   -- FreeDOOM is lacking some scenery sprites
 
-  for name,_ in pairs(FD_MISSING_SCENERY) do
+  for name,_ in pairs(FREEDOOM_MISSING_SCENERY) do
     for _,R in ipairs(GAME.rooms) do
       if R.scenery then
         R.scenery[name] = nil

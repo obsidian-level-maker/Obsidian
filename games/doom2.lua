@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-D2_COMBOS =
+DOOM2_COMBOS =
 {
   ---- URBAN ------------
 
@@ -417,7 +417,7 @@ D2_COMBOS =
   },
 }
 
-D2_EXITS =
+DOOM2_EXITS =
 {
   METAL =
   {
@@ -513,7 +513,7 @@ D2_EXITS =
   },
 }
 
-D2_HALLWAYS =
+DOOM2_HALLWAYS =
 {
   PANEL =
   {
@@ -630,7 +630,7 @@ D2_HALLWAYS =
   },
 }
 
-D2_MATS =
+DOOM2_MATS =
 {
   ARCH =
   {
@@ -641,7 +641,7 @@ D2_MATS =
   },
 }
 
-D2_OVERHANGS =
+DOOM2_OVERHANGS =
 {
   METAL =
   {
@@ -681,7 +681,7 @@ D2_OVERHANGS =
 
 }
 
-D2_DOORS =
+DOOM2_DOORS =
 {
   d_thin1  = { wall="SPCDOOR1", w=64, h=112 },
   d_thin2  = { wall="SPCDOOR2", w=64, h=112 },
@@ -690,7 +690,7 @@ D2_DOORS =
   d_weird  = { wall="SPCDOOR4", w=64, h=112 },
 }
 
-D2_CRATES =
+DOOM2_CRATES =
 {
   MODWALL =
   {
@@ -719,27 +719,27 @@ D2_CRATES =
   },
 }
 
-D2_RAILS =
+DOOM2_RAILS =
 {
   r_1 = { wall="MIDBARS3", w=128, h=72  },
   r_2 = { wall="MIDGRATE", w=128, h=128 },
 }
 
-D2_LIGHTS =
+DOOM2_LIGHTS =
 {
   green1 = { floor="GRNLITE1", side="TEKGREN2" },
 }
 
-D2_LIQUIDS =
+DOOM2_LIQUIDS =
 {
 --###  slime = { floor="SLIME01", wall="BLODRIP1", sec_kind=7 }  -- 5% damage
 }
 
-D2_SCENERY =
+DOOM2_SCENERY =
 {
 }
 
-D2_SCENERY_PREFABS =
+DOOM2_SCENERY_PREFABS =
 {
   billboard_NAZI =
   {
@@ -1046,7 +1046,7 @@ D2_SCENERY_PREFABS =
 }
 
 
-D2_FEATURE_PREFABS =
+DOOM2_FEATURE_PREFABS =
 {
   overhang3_METAL6 =
   {
@@ -1345,7 +1345,7 @@ D2_FEATURE_PREFABS =
   },
 }
 
-D2_WALL_PREFABS =
+DOOM2_WALL_PREFABS =
 {
   solid_STUCCO2 =
   {
@@ -1427,7 +1427,7 @@ D2_WALL_PREFABS =
   },
 }
 
-D2_DOOR_PREFABS =
+DOOM2_DOOR_PREFABS =
 {
   spacey =
   {
@@ -1462,7 +1462,7 @@ D2_DOOR_PREFABS =
   },
 }
 
-D2_MISC_PREFABS =
+DOOM2_MISC_PREFABS =
 {
   fence_wire_STD =
   {
@@ -1497,7 +1497,7 @@ D2_MISC_PREFABS =
   },
 }
 
-D2_ROOMS =
+DOOM2_ROOMS =
 {
   PLANT =
   {
@@ -1613,13 +1613,13 @@ D2_ROOMS =
   -- TODO: check in-game level names for ideas
 }
 
-D2_THEMES =
+DOOM2_THEMES =
 {
 }
 
 ------------------------------------------------------------
 
----## D2_QUESTS =
+---## DOOM2_QUESTS =
 ---## {
 ---##   key =
 ---##   {
@@ -1647,7 +1647,7 @@ D2_THEMES =
 ---##   },
 ---## }
 
-D2_EPISODE_THEMES =
+DOOM2_EPISODE_THEMES =
 {
   { URBAN=4, INDUSTRIAL=3, TECH=3, NATURE=9, CAVE=2, HELL=2 },
   { URBAN=9, INDUSTRIAL=5, TECH=7, NATURE=4, CAVE=2, HELL=4 },
@@ -1657,19 +1657,19 @@ D2_EPISODE_THEMES =
   { URBAN=5, INDUSTRIAL=4, TECH=6, NATURE=5, CAVE=4, HELL=6 },
 }
 
-D2_SECRET_KINDS =
+DOOM2_SECRET_KINDS =
 {
   MAP31 = "wolfy",
   MAP32 = "wolfy",
 }
 
-D2_SECRET_EXITS =
+DOOM2_SECRET_EXITS =
 {
   MAP15 = true,
   MAP31 = true,
 }
 
-D2_LEVEL_BOSSES =
+DOOM2_LEVEL_BOSSES =
 {
   MAP07 = "mancubus",
   MAP20 = "Mastermind",
@@ -1677,7 +1677,7 @@ D2_LEVEL_BOSSES =
   MAP32 = "keen",
 }
 
-D2_SKY_INFO =
+DOOM2_SKY_INFO =
 {
   { color="brown",  light=192 },
   { color="gray",   light=192 }, -- bright clouds + dark buildings
@@ -1703,9 +1703,9 @@ function Doom2_get_levels()
     if map >= 21 then episode = 3 end
     if map >= 31 then episode = 2 end
 
-    local theme_probs = D2_EPISODE_THEMES[episode]
+    local theme_probs = DOOM2_EPISODE_THEMES[episode]
     if OB_CONFIG.length ~= "full" then
-      theme_probs = D2_EPISODE_THEMES[4]
+      theme_probs = DOOM2_EPISODE_THEMES[4]
     end
     assert(theme_probs)
 
@@ -1735,9 +1735,9 @@ function Doom2_get_levels()
       LEV.theme = "WOLF"
     end
 
----!!! LEV.boss_kind   = D2_LEVEL_BOSSES[LEV.name]
-    LEV.secret_kind = D2_SECRET_KINDS[LEV.name]
-    LEV.secret_exit = D2_SECRET_EXITS[LEV.name]
+---!!! LEV.boss_kind   = DOOM2_LEVEL_BOSSES[LEV.name]
+    LEV.secret_kind = DOOM2_SECRET_KINDS[LEV.name]
+    LEV.secret_exit = DOOM2_SECRET_EXITS[LEV.name]
 
     table.insert(list, LEV)
   end
@@ -1754,30 +1754,30 @@ function Doom2_setup(game)
 
 ---  T.episodes   = 3
 
-  GAME.quests   = D2_QUESTS
-  GAME.sky_info = D2_SKY_INFO
-  GAME.rails    = D2_RAILS
+  GAME.quests   = DOOM2_QUESTS
+  GAME.sky_info = DOOM2_SKY_INFO
+  GAME.rails    = DOOM2_RAILS
 
-  Game_merge_tab("themes",   D2_THEMES)
-  Game_merge_tab("rooms",    D2_ROOMS)
-  Game_merge_tab("monsters", D2_MONSTERS)
+  Game_merge_tab("themes",   DOOM2_THEMES)
+  Game_merge_tab("rooms",    DOOM2_ROOMS)
+  Game_merge_tab("monsters", DOOM2_MONSTERS)
 
-  Game_merge_tab("combos",   D2_COMBOS)
-  Game_merge_tab("hallways", D2_HALLWAYS)
-  Game_merge_tab("exits",    D2_EXITS)
+  Game_merge_tab("combos",   DOOM2_COMBOS)
+  Game_merge_tab("hallways", DOOM2_HALLWAYS)
+  Game_merge_tab("exits",    DOOM2_EXITS)
 
-  Game_merge_tab("hangs",    D2_OVERHANGS)
-  Game_merge_tab("crates",   D2_CRATES)
-  Game_merge_tab("mats",     D2_MATS)
-  Game_merge_tab("doors",    D2_DOORS)
-  Game_merge_tab("lights",   D2_LIGHTS)
-  Game_merge_tab("liquids",  D2_LIQUIDS)
+  Game_merge_tab("hangs",    DOOM2_OVERHANGS)
+  Game_merge_tab("crates",   DOOM2_CRATES)
+  Game_merge_tab("mats",     DOOM2_MATS)
+  Game_merge_tab("doors",    DOOM2_DOORS)
+  Game_merge_tab("lights",   DOOM2_LIGHTS)
+  Game_merge_tab("liquids",  DOOM2_LIQUIDS)
 
-  Game_merge_tab("sc_fabs",   D2_SCENERY_PREFABS)
-  Game_merge_tab("feat_fabs", D2_FEATURE_PREFABS)
-  Game_merge_tab("wall_fabs", D2_WALL_PREFABS)
-  Game_merge_tab("door_fabs", D2_DOOR_PREFABS)
-  Game_merge_tab("misc_fabs", D2_MISC_PREFABS)
+  Game_merge_tab("sc_fabs",   DOOM2_SCENERY_PREFABS)
+  Game_merge_tab("feat_fabs", DOOM2_FEATURE_PREFABS)
+  Game_merge_tab("wall_fabs", DOOM2_WALL_PREFABS)
+  Game_merge_tab("door_fabs", DOOM2_DOOR_PREFABS)
+  Game_merge_tab("misc_fabs", DOOM2_MISC_PREFABS)
 end
 
 

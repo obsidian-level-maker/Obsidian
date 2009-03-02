@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-DM_THINGS =
+DOOM_THINGS =
 {
   --- PLAYERS ---
 
@@ -176,7 +176,7 @@ DM_THINGS =
 }
 
 
-DM_LINE_TYPES =
+DOOM_LINE_TYPES =
 {
   --- general ---
 
@@ -220,7 +220,7 @@ DM_LINE_TYPES =
   WR_blaze_lift = { kind=120 },
 }
 
-DM_SECTOR_TYPES =
+DOOM_SECTOR_TYPES =
 {
   secret = { kind=9 },
 
@@ -239,7 +239,7 @@ DM_SECTOR_TYPES =
 
 ----------------------------------------------------------------
 
-DM_PALETTE =
+DOOM_PALETTE =
 {
     0,  0,  0,  31, 23, 11,  23, 15,  7,  75, 75, 75, 255,255,255,
    27, 27, 27,  19, 19, 19,  11, 11, 11,   7,  7,  7,  47, 55, 31,
@@ -298,7 +298,7 @@ DM_PALETTE =
 
 ----------------------------------------------------------------
 
-DM_COMBOS =
+COMMON_COMBOS =
 {
   ---- TECH ------------
 
@@ -738,7 +738,7 @@ DM_COMBOS =
   },
 }
 
-DM_EXITS =
+COMMON_EXITS =
 {
   TECH =
   {
@@ -935,7 +935,7 @@ DM_EXITS =
 
 }
 
-DM_HALLWAYS =
+COMMON_HALLWAYS =
 {
   BROWN1 =
   {
@@ -994,7 +994,7 @@ DM_HALLWAYS =
 
 ---- BASE MATERIALS ------------
 
-DM_MATS =
+COMMON_MATS =
 {
   METAL =
   {
@@ -1063,7 +1063,7 @@ DM_MATS =
 
 --- PEDESTALS --------------
 
-DM_PEDESTALS =
+COMMON_PEDESTALS =
 {
   PLAYER =
   {
@@ -1089,7 +1089,7 @@ DM_PEDESTALS =
 
 ---- OVERHANGS ------------
 
-DM_OVERHANGS =
+COMMON_OVERHANGS =
 {
   METAL =
   {
@@ -1122,7 +1122,7 @@ DM_OVERHANGS =
 
 ---- CRATES ------------
 
-DM_CRATES =
+COMMON_CRATES =
 {
   CRATE1 =
   {
@@ -1177,7 +1177,7 @@ DM_CRATES =
 
 ---- ARCH STUFF ------------
 
-DM_LIQUIDS =
+COMMON_LIQUIDS =
 {
   water = { floor="FWATER1", wall="FIREMAG1" },
   blood = { floor="BLOOD1",  wall="BFALL1",   sec_kind=7 }, --  5% damage
@@ -1185,7 +1185,7 @@ DM_LIQUIDS =
   lava  = { floor="LAVA1",   wall="ROCKRED1", sec_kind=16, add_light=64 }, -- 20% damage
 }
 
-DM_DOORS =
+COMMON_DOORS =
 {
   -- Note: most of these with h=112 are really 128 pixels
   --       tall, but work fine when truncated.
@@ -1202,7 +1202,7 @@ DM_DOORS =
                }
              },
 
---[[ !!! DM_DOORS
+--[[ !!! COMMON_DOORS
   d_uac    = { wall="BIGDOOR1", w=128, h=72  },  -- actual height is 96
   d_big1   = { wall="BIGDOOR2", w=128, h=112 },
   d_big2   = { wall="BIGDOOR3", w=128, h=112 },
@@ -1218,7 +1218,7 @@ DM_DOORS =
 }
 
 
-DM_SWITCH_INFOS =
+COMMON_SWITCH_INFOS =
 {
   sw_blue =
   {
@@ -1353,7 +1353,7 @@ DM_SWITCH_INFOS =
 
 }
 
-DM_SWITCH_DOORS =
+COMMON_SWITCH_DOORS =
 {
   sw_blue =
   {
@@ -1476,7 +1476,7 @@ DM_SWITCH_DOORS =
 
 }
 
-DM_KEY_DOORS =
+COMMON_KEY_DOORS =
 {
   kc_blue =
   {
@@ -1532,19 +1532,19 @@ DM_KEY_DOORS =
   -- TODO: ks_*
 }
 
-DM_LIFTS =
+COMMON_LIFTS =
 {
   slow = { kind=62,  walk=88  },
   fast = { kind=123, walk=120 },
 }
 
-DM_IMAGES =
+COMMON_IMAGES =
 {
   { wall = "CEMENT1", w=128, h=128, glow=true },
   { wall = "CEMENT2", w=64,  h=64,  floor="MFLR8_3" }
 }
 
-DM_LIGHTS =
+COMMON_LIGHTS =
 {
   metal = { floor="CEIL1_2",  side="METAL" },
   wood  = { floor="CEIL1_3",  side="WOOD1" },
@@ -1561,7 +1561,7 @@ DM_LIGHTS =
 }
 
 
-DM_SCENERY_PREFABS =
+COMMON_SCENERY_PREFABS =
 {
   pillar_COMPWERD =
   {
@@ -1878,7 +1878,7 @@ DM_SCENERY_PREFABS =
 
 }
 
-DM_FEATURE_PREFABS =
+COMMON_FEATURE_PREFABS =
 {
   pillar_rnd_med_COMPSTA =
   {
@@ -2221,7 +2221,7 @@ DM_FEATURE_PREFABS =
   },
 }
 
-DM_WALL_PREFABS =
+COMMON_WALL_PREFABS =
 {
   solid_CEMENT4 =
   {
@@ -2381,7 +2381,7 @@ DM_WALL_PREFABS =
   },
 }
 
-DM_ARCH_PREFABS =
+COMMON_ARCH_PREFABS =
 {
   arch_fence =
   {
@@ -2398,7 +2398,7 @@ DM_ARCH_PREFABS =
   },
 }
 
-DM_DOOR_PREFABS =
+COMMON_DOOR_PREFABS =
 {
   backup_plan =
   {
@@ -2501,7 +2501,7 @@ DM_DOOR_PREFABS =
  
 }
 
-DM_WINDOW_PREFABS =
+COMMON_WINDOW_PREFABS =
 {
   window_narrow =
   {
@@ -2522,7 +2522,7 @@ DM_WINDOW_PREFABS =
   },
 }
 
-DM_MISC_PREFABS =
+COMMON_MISC_PREFABS =
 {
   pedestal_PLAYER =
   {
@@ -2629,7 +2629,7 @@ DM_MISC_PREFABS =
   },
 }
 
-DM_DEATHMATCH_EXITS =
+COMMON_DEATHMATCH_EXITS =
 {
   exit_deathmatch_TECH =
   {
@@ -2682,7 +2682,7 @@ DM_DEATHMATCH_EXITS =
 
 
 
-DM_ROOMS =
+COMMON_ROOMS =
 {
   PLAIN =
   {
@@ -2728,7 +2728,7 @@ DM_ROOMS =
 
 }
 
-DM_THEMES =
+COMMON_THEMES =
 {
   TECH =
   {
@@ -2770,7 +2770,7 @@ DM_THEMES =
   -- TODO: HELL
 }
 
-DM_THEMES_OLD =
+COMMON_THEMES_OLD =
 {
 --[[  
    (a) nature  (outdoor, grassy/rocky/muddy, water)
@@ -2936,7 +2936,7 @@ DM_THEMES_OLD =
   },
 }
 
-DM_QUEST_LEN_PROBS =
+COMMON_QUEST_LEN_PROBS =
 {
   ----------  2   3   4   5   6   7   8  9  10  -------
 
@@ -2963,7 +2963,7 @@ DM_QUEST_LEN_PROBS =
 -- melee   : monster only has melee attack
 -- hitscan : monster uses a hitscan attack (e.g. shotgun)
 
-DM_MONSTERS =
+COMMON_MONSTERS =
 {
   -- FIXME: probs for CLOSET/DEPOT
   zombie    = { prob=60, hp=20,  dm=4,  cage_fallback=14, hitscan=true, },
@@ -2982,7 +2982,7 @@ DM_MONSTERS =
   barrel    = { prob=17, hp=10,  dm=2,  melee=true, passive=true },
 }
 
-D2_MONSTERS =
+DOOM2_MONSTERS =
 {
   gunner    = { prob=17, hp=70,  dm=40, hitscan=true, cage_prob=70, },
   ss_dude   = { prob=0.1,hp=50,  dm=15, hitscan=true, cage_prob=1 },
@@ -2996,14 +2996,14 @@ D2_MONSTERS =
   pain      = { prob=14, hp=400, dm=88, float=true },
 }
 
-DM_BOSSES =
+COMMON_BOSSES =
 {
   -- special monsters (only for boss levels)
   Cyberdemon = { hp=4000,dm=150, },
   Mastermind = { hp=3000,dm=200, hitscan=true },
 }
 
-DM_MONSTER_GIVE =
+COMMON_MONSTER_GIVE =
 {
   zombie   = { { ammo="bullet", give=10 } },
   shooter  = { { weapon="shotty" } },
@@ -3022,7 +3022,7 @@ DM_MONSTER_GIVE =
 -- held  : true if already held at level start
 -- melee : true if weapon is melee-only
 
-DM_WEAPONS =
+COMMON_WEAPONS =
 {
   fist    = { rate=1.5, dm=10, pref=1,  melee=true, held=true },
   saw     = { rate=8.7, dm=10, pref=5,  melee=true, },
@@ -3050,7 +3050,7 @@ DM_WEAPONS =
 -- sometimes a certain weapon is preferred against a certain monster.
 -- These values are multiplied with the weapon's "pref" field.
 
-DM_MONSTER_WEAPON_PREFS =
+COMMON_MONSTER_WEAPON_PREFS =
 {
   zombie  = { shotty=6.0 },
   shooter = { shotty=6.0 },
@@ -3069,7 +3069,7 @@ DM_MONSTER_WEAPON_PREFS =
 -- Pickup List
 -- ===========
 
-DM_PICKUPS =
+COMMON_PICKUPS =
 {
   bullets    = { stat="bullet", give=10, prob=10 },
   bullet_box = { stat="bullet", give=50, prob=70, clu_max=1 },
@@ -3099,7 +3099,7 @@ DM_PICKUPS =
   -- Note 2: the BACKPACK is a quest item
 }
 
-DM_NICENESS =
+COMMON_NICENESS =
 {
   w1 = { weapon="shotty", quest=1, prob=70, always=true  },
   w2 = { weapon="chain",  quest=3, prob=20, always=false },
@@ -3112,7 +3112,7 @@ DM_NICENESS =
 -- DeathMatch stuff
 -- ================
 
-DM_DEATHMATCH =
+COMMON_DEATHMATCH =
 {
   weapons =
   {
@@ -3155,7 +3155,7 @@ DM_DEATHMATCH =
   },
 }
 
-DM_INITIAL_MODEL =
+COMMON_INITIAL_MODEL =
 {
   doomguy =
   {
@@ -3168,14 +3168,14 @@ DM_INITIAL_MODEL =
   }
 }
 
----## DM_KEY_CARDS =
+---## COMMON_KEY_CARDS =
 ---## {
 ---##   red_cd    = { pickup="kc_red",    tex="DOORRED", door_kind=33 },
 ---##   blue_cd   = { pickup="kc_blue",   tex="DOORBLU", door_kind=32 },
 ---##   yellow_cd = { pickup="kc_yellow", tex="DOORYEL", door_kind=34 },
 ---## }
 ---## 
----## DM_SKULL_KEYS =
+---## COMMON_SKULL_KEYS =
 ---## {
 ---##   red_sk    = { pickup="k_red",    tex="DOORRED2", door_kind=33 },
 ---##   blue_sk   = { pickup="k_blue",   tex="DOORBLU2", door_kind=32 },
@@ -3188,7 +3188,7 @@ DM_INITIAL_MODEL =
 
 ---- QUEST STUFF ----------------
 
----## D1_QUESTS =
+---## DOOM1_QUESTS =
 ---## {
 ---##   key =
 ---##   {
@@ -3214,7 +3214,7 @@ DM_INITIAL_MODEL =
 ---##   },
 ---## }
 
-D1_COMBOS =
+DOOM1_COMBOS =
 {
   ---- TECH ------------
 
@@ -3250,15 +3250,15 @@ D1_COMBOS =
 
 }
 
-D1_EXITS =
+DOOM1_EXITS =
 {
 }
 
-D1_HALLWAYS =
+DOOM1_HALLWAYS =
 {
 }
 
-D1_CRATES =
+DOOM1_CRATES =
 {
   COMPUTER =
   {
@@ -3284,13 +3284,13 @@ D1_CRATES =
   },
 }
 
-D1_RAILS =
+DOOM1_RAILS =
 {
   r_1 = { wall="BRNSMALC", w=128, h=64  },
   r_2 = { wall="MIDGRATE", w=128, h=128 },
 }
 
-D1_WALL_PREFABS =
+DOOM1_WALL_PREFABS =
 {
   wall_pic_COMP2 =
   {
@@ -3339,7 +3339,7 @@ D1_WALL_PREFABS =
 
 }
 
-D1_ROOMS =
+DOOM1_ROOMS =
 {
   PLANT =
   {
@@ -3396,7 +3396,7 @@ D1_ROOMS =
 
 ------------------------------------------------------------
 
-D1_EPISODE_THEMES =
+DOOM1_EPISODE_THEMES =
 {
   { URBAN=5, INDUSTRIAL=5, TECH=9, CAVE=2, HELL=2 },
   { URBAN=9, INDUSTRIAL=5, TECH=4, CAVE=2, HELL=4 },
@@ -3407,7 +3407,7 @@ D1_EPISODE_THEMES =
   { URBAN=5, INDUSTRIAL=4, TECH=6, CAVE=4, HELL=6 },
 }
 
-D1_SECRET_EXITS =
+DOOM1_SECRET_EXITS =
 {
   E1M3 = true,
   E2M5 = true,
@@ -3415,7 +3415,7 @@ D1_SECRET_EXITS =
   E4M2 = true,
 }
 
-D1_EPISODE_BOSSES =
+DOOM1_EPISODE_BOSSES =
 {
   "baron", -- the Bruiser Brothers
   "Cyberdemon",
@@ -3423,7 +3423,7 @@ D1_EPISODE_BOSSES =
   "Mastermind",
 }
 
-D1_SKY_INFO =
+DOOM1_SKY_INFO =
 {
   { color="white",  light=192 },
   { color="red",    light=176 },
@@ -3441,9 +3441,9 @@ function Doom1_get_levels()
 
   for episode = 1,EP_NUM do
 
-    local theme_probs = D1_EPISODE_THEMES[episode]
+    local theme_probs = DOOM1_EPISODE_THEMES[episode]
     if OB_CONFIG.length ~= "full" then
-      theme_probs = D1_EPISODE_THEMES[5]
+      theme_probs = DOOM1_EPISODE_THEMES[5]
     end
 
     for map = 1,MAP_NUM do
@@ -3460,15 +3460,15 @@ function Doom1_get_levels()
         switch_list = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
         bar_list = { "bar_wood", "bar_silver", "bar_metal" },
 
-        sky_info = D1_SKY_INFO[episode],
+        sky_info = DOOM1_SKY_INFO[episode],
 
-        boss_kind   = (map == 8) and D1_EPISODE_BOSSES[episode],
+        boss_kind   = (map == 8) and DOOM1_EPISODE_BOSSES[episode],
         secret_kind = (map == 9) and "plain",
 
         toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 5),
       }
 
-      if D1_SECRET_EXITS[LEV.name] then
+      if DOOM1_SECRET_EXITS[LEV.name] then
         LEV.secret_exit = true
         LEV.ep_along = 0.5
       end
@@ -3482,7 +3482,7 @@ function Doom1_get_levels()
 end
 
 
-DM_LEVEL_GFX_COLORS =
+COMMON_LEVEL_GFX_COLORS =
 {
   gold   = { 0,47,44, 167,166,165,164,163,162,161,160, 225 },
   silver = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 },
@@ -3514,9 +3514,9 @@ function Doom_make_cool_gfx()
   {
     BRONZE_2, GREEN, RED,
 
-    DM_LEVEL_GFX_COLORS.gold,
-    DM_LEVEL_GFX_COLORS.silver,
-    DM_LEVEL_GFX_COLORS.iron,
+    COMMON_LEVEL_GFX_COLORS.gold,
+    COMMON_LEVEL_GFX_COLORS.silver,
+    COMMON_LEVEL_GFX_COLORS.iron,
   }
 
   rand_shuffle(colmaps)
@@ -3524,7 +3524,7 @@ function Doom_make_cool_gfx()
   gui.set_colormap(1, colmaps[1])
   gui.set_colormap(2, colmaps[2])
   gui.set_colormap(3, colmaps[3])
-  gui.set_colormap(4, DM_LEVEL_GFX_COLORS.iron)
+  gui.set_colormap(4, COMMON_LEVEL_GFX_COLORS.iron)
   gui.set_colormap(5, { 0,0 })
 
   -- patches (CEMENT1 .. CEMENT4)
@@ -3554,7 +3554,7 @@ function Doom_make_level_gfx()
       gold=12, silver=3, bronze=8, iron=10
     })
 
-    GAME.level_gfx_colors = assert(DM_LEVEL_GFX_COLORS[kind])
+    GAME.level_gfx_colors = assert(COMMON_LEVEL_GFX_COLORS[kind])
   end
 
   gui.set_colormap(1, GAME.level_gfx_colors)
@@ -3582,54 +3582,54 @@ function Doom_common_setup()
 
   GAME.classes = { "marine" },
 
-  Game_merge_tab("monsters", DM_MONSTERS)
-  Game_merge_tab("bosses",   DM_BOSSES)
-  Game_merge_tab("weapons",  DM_WEAPONS)
+  Game_merge_tab("monsters", COMMON_MONSTERS)
+  Game_merge_tab("bosses",   COMMON_BOSSES)
+  Game_merge_tab("weapons",  COMMON_WEAPONS)
 
-  Game_merge_tab("things", DM_THINGS)
+  Game_merge_tab("things", DOOM_THINGS)
 
-  Game_merge_tab("mon_give", DM_MONSTER_GIVE)
-  Game_merge_tab("mon_weap_prefs", DM_MONSTER_WEAPON_PREFS)
-  Game_merge_tab("initial_model", DM_INITIAL_MODEL)
+  Game_merge_tab("mon_give", COMMON_MONSTER_GIVE)
+  Game_merge_tab("mon_weap_prefs", COMMON_MONSTER_WEAPON_PREFS)
+  Game_merge_tab("initial_model", COMMON_INITIAL_MODEL)
 
-  Game_merge_tab("pickups", DM_PICKUPS)
-  Game_merge_tab("niceness", DM_NICENESS)
+  Game_merge_tab("pickups", COMMON_PICKUPS)
+  Game_merge_tab("niceness", COMMON_NICENESS)
 
   GAME.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" },
 
-  Game_merge_tab("dm", DM_DEATHMATCH)
-  Game_merge_tab("dm_exits", DM_DEATHMATCH_EXITS)
+  Game_merge_tab("dm", COMMON_DEATHMATCH)
+  Game_merge_tab("dm_exits", COMMON_DEATHMATCH_EXITS)
 
-  Game_merge_tab("combos", DM_COMBOS)
-  Game_merge_tab("exits", DM_EXITS)
-  Game_merge_tab("hallways", DM_HALLWAYS)
+  Game_merge_tab("combos", COMMON_COMBOS)
+  Game_merge_tab("exits", COMMON_EXITS)
+  Game_merge_tab("hallways", COMMON_HALLWAYS)
 
-  Game_merge_tab("hangs", DM_OVERHANGS)
-  Game_merge_tab("pedestals", DM_PEDESTALS)
-  Game_merge_tab("mats", DM_MATS)
-  Game_merge_tab("crates", DM_CRATES)
+  Game_merge_tab("hangs", COMMON_OVERHANGS)
+  Game_merge_tab("pedestals", COMMON_PEDESTALS)
+  Game_merge_tab("mats", COMMON_MATS)
+  Game_merge_tab("crates", COMMON_CRATES)
 
-  Game_merge_tab("liquids", DM_LIQUIDS)
-  Game_merge_tab("doors", DM_DOORS)
-  Game_merge_tab("lifts", DM_LIFTS)
+  Game_merge_tab("liquids", COMMON_LIQUIDS)
+  Game_merge_tab("doors", COMMON_DOORS)
+  Game_merge_tab("lifts", COMMON_LIFTS)
 
-  Game_merge_tab("switch_infos", DM_SWITCH_INFOS)
-  Game_merge_tab("switch_doors", DM_SWITCH_DOORS)
-  Game_merge_tab("key_doors", DM_KEY_DOORS)
+  Game_merge_tab("switch_infos", COMMON_SWITCH_INFOS)
+  Game_merge_tab("switch_doors", COMMON_SWITCH_DOORS)
+  Game_merge_tab("key_doors", COMMON_KEY_DOORS)
 
-  Game_merge_tab("images", DM_IMAGES)
-  Game_merge_tab("lights", DM_LIGHTS)
-  Game_merge_tab("rooms",  DM_ROOMS)
-  Game_merge_tab("themes", DM_THEMES)
+  Game_merge_tab("images", COMMON_IMAGES)
+  Game_merge_tab("lights", COMMON_LIGHTS)
+  Game_merge_tab("rooms",  COMMON_ROOMS)
+  Game_merge_tab("themes", COMMON_THEMES)
 
-  Game_merge_tab("sc_fabs",   DM_SCENERY_PREFABS)
-  Game_merge_tab("feat_fabs", DM_FEATURE_PREFABS)
-  Game_merge_tab("wall_fabs", DM_WALL_PREFABS)
+  Game_merge_tab("sc_fabs",   COMMON_SCENERY_PREFABS)
+  Game_merge_tab("feat_fabs", COMMON_FEATURE_PREFABS)
+  Game_merge_tab("wall_fabs", COMMON_WALL_PREFABS)
 
-  Game_merge_tab("door_fabs", DM_DOOR_PREFABS)
-  Game_merge_tab("arch_fabs", DM_ARCH_PREFABS)
-  Game_merge_tab("win_fabs",  DM_WINDOW_PREFABS)
-  Game_merge_tab("misc_fabs", DM_MISC_PREFABS)
+  Game_merge_tab("door_fabs", COMMON_DOOR_PREFABS)
+  Game_merge_tab("arch_fabs", COMMON_ARCH_PREFABS)
+  Game_merge_tab("win_fabs",  COMMON_WINDOW_PREFABS)
+  Game_merge_tab("misc_fabs", COMMON_MISC_PREFABS)
 
   GAME.toughness_factor = 1.00  -- FIXME PARAMS
 
@@ -3655,16 +3655,16 @@ function Doom1_setup()
 
 ---  T.episodes   = 4
 
-  GAME.quests = D1_QUESTS
+  GAME.quests = DOOM1_QUESTS
 
-  Game_merge_tab("rooms",     D1_ROOMS)
-  Game_merge_tab("combos",    D1_COMBOS)
-  Game_merge_tab("exits",     D1_EXITS)
-  Game_merge_tab("hallways",  D1_HALLWAYS)
-  Game_merge_tab("crates",    D1_CRATES)
-  Game_merge_tab("wall_fabs", D1_WALL_PREFABS)
+  Game_merge_tab("rooms",     DOOM1_ROOMS)
+  Game_merge_tab("combos",    DOOM1_COMBOS)
+  Game_merge_tab("exits",     DOOM1_EXITS)
+  Game_merge_tab("hallways",  DOOM1_HALLWAYS)
+  Game_merge_tab("crates",    DOOM1_CRATES)
+  Game_merge_tab("wall_fabs", DOOM1_WALL_PREFABS)
 
-  GAME.rails = D1_RAILS
+  GAME.rails = DOOM1_RAILS
 
   -- remove DOOM2-only weapons and items --
 

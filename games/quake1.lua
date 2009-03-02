@@ -17,7 +17,7 @@
 ----------------------------------------------------------------
 
 
-Q1_THINGS =
+QUAKE1_THINGS =
 {
   -- players
   player1 = { id="info_player_start", kind="other", r=16,h=56 },
@@ -97,7 +97,7 @@ Q1_THINGS =
 
 ----------------------------------------------------------------
 
-Q1_PALETTE =
+QUAKE1_PALETTE =
 {
     0,  0,  0,  15, 15, 15,  31, 31, 31,  47, 47, 47,  63, 63, 63,
    75, 75, 75,  91, 91, 91, 107,107,107, 123,123,123, 139,139,139,
@@ -156,7 +156,7 @@ Q1_PALETTE =
 
 ----------------------------------------------------------------
 
-Q1_COMBOS =
+QUAKE1_COMBOS =
 {
   TECH_BASE =
   {
@@ -178,7 +178,7 @@ Q1_COMBOS =
   }
 }
 
-Q1_EXITS =
+QUAKE1_EXITS =
 {
   ELEVATOR =  -- FIXME: not needed, remove
   {
@@ -188,13 +188,13 @@ Q1_EXITS =
 }
 
 
-Q1_KEY_DOORS =
+QUAKE1_KEY_DOORS =
 {
   k_silver = { door_kind="door_silver", door_side=14 },
   k_gold   = { door_kind="door_gold",   door_side=14 },
 }
 
-Q1_MISC_PREFABS =
+QUAKE1_MISC_PREFABS =
 {
   elevator =
   {
@@ -209,7 +209,7 @@ Q1_MISC_PREFABS =
 
 ---- QUEST STUFF ----------------
 
-Q1_QUESTS =
+QUAKE1_QUESTS =
 {
   key = { k_silver=60, k_gold=30, },
 
@@ -230,7 +230,7 @@ Q1_QUESTS =
 }
 
 
-Q1_ROOMS =
+QUAKE1_ROOMS =
 {
   PLAIN =
   {
@@ -297,7 +297,7 @@ Q1_ROOMS =
   },
 }
 
-Q1_THEMES =
+QUAKE1_THEMES =
 {
   TECH =
   {
@@ -331,7 +331,7 @@ Q1_THEMES =
 
 ----------------------------------------------------------------
 
-Q1_MONSTERS =
+QUAKE1_MONSTERS =
 {
   dog      = { prob=10, hp=25,  dm=5,  melee=true },
   fish     = { prob= 0, hp=25,  dm=3,  melee=true },
@@ -350,15 +350,15 @@ Q1_MONSTERS =
   shambler = { prob=10, hp=600, dm=30, hitscan=true, immunity={ rocket=0.5, grenade=0.5 } },
 }
 
-Q1_BOSSES =
+QUAKE1_BOSSES =
 {
 }
 
-Q1_MONSTER_GIVE =
+QUAKE1_MONSTER_GIVE =
 {
 }
 
-Q1_WEAPONS =
+QUAKE1_WEAPONS =
 {
   axe      = { rate=2.0, dm=20, pref= 1, melee=true,           held=true },
   pistol   = { rate=2.0, dm=20, pref=10, ammo="shell",  per=1, held=true },
@@ -383,14 +383,14 @@ Q1_WEAPONS =
   -- the first one, or (b) the first one is killed.
 }
 
-Q1_PICKUPS =
+QUAKE1_PICKUPS =
 {
   first_aid = { stat="health", give=25 },
   good_food = { stat="health", give=10 },
 
 }
 
-Q1_INITIAL_MODEL =
+QUAKE1_INITIAL_MODEL =
 {
   player =
   {
@@ -402,7 +402,7 @@ Q1_INITIAL_MODEL =
 
 ------------------------------------------------------------
 
-Q1_EPISODE_THEMES =
+QUAKE1_EPISODE_THEMES =
 {
   { BASE=7, },
   { BASE=6, },
@@ -410,7 +410,7 @@ Q1_EPISODE_THEMES =
   { BASE=6, },
 }
 
-Q1_KEY_NUM_PROBS =
+QUAKE1_KEY_NUM_PROBS =
 {
   small   = { 90, 50, 20 },
   regular = { 40, 90, 40 },
@@ -468,28 +468,28 @@ function Quake1_setup()
   GAME.dm = {}
 
   GAME.pickup_stats = { "health", "bullet" }
-  GAME.initial_model = Q1_INITIAL_MODEL
+  GAME.initial_model = QUAKE1_INITIAL_MODEL
 
-  Game_merge_tab("things",   Q1_THINGS)
-  Game_merge_tab("monsters", Q1_MONSTERS)
-  Game_merge_tab("bosses",   Q1_BOSSES)
-  Game_merge_tab("mon_give", Q1_MONSTER_GIVE)
-  Game_merge_tab("weapons",  Q1_WEAPONS)
+  Game_merge_tab("things",   QUAKE1_THINGS)
+  Game_merge_tab("monsters", QUAKE1_MONSTERS)
+  Game_merge_tab("bosses",   QUAKE1_BOSSES)
+  Game_merge_tab("mon_give", QUAKE1_MONSTER_GIVE)
+  Game_merge_tab("weapons",  QUAKE1_WEAPONS)
 
-  Game_merge_tab("pickups", Q1_PICKUPS)
-  Game_merge_tab("quests",  Q1_QUESTS)
+  Game_merge_tab("pickups", QUAKE1_PICKUPS)
+  Game_merge_tab("quests",  QUAKE1_QUESTS)
 
-  Game_merge_tab("combos", Q1_COMBOS)
-  Game_merge_tab("exits",  Q1_EXITS)
+  Game_merge_tab("combos", QUAKE1_COMBOS)
+  Game_merge_tab("exits",  QUAKE1_EXITS)
 --  hallways  nil,
 
---  Game_merge_tab("doors", Q1_DOORS)
-  Game_merge_tab("key_doors", Q1_KEY_DOORS)
+--  Game_merge_tab("doors", QUAKE1_DOORS)
+  Game_merge_tab("key_doors", QUAKE1_KEY_DOORS)
 
-  Game_merge_tab("rooms",  Q1_ROOMS)
-  Game_merge_tab("themes", Q1_THEMES)
+  Game_merge_tab("rooms",  QUAKE1_ROOMS)
+  Game_merge_tab("themes", QUAKE1_THEMES)
 
-  Game_merge_tab("misc_fabs", Q1_MISC_PREFABS)
+  Game_merge_tab("misc_fabs", QUAKE1_MISC_PREFABS)
 
   GAME.toughness_factor = 0.40
 

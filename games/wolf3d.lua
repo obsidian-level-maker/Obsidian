@@ -21,7 +21,7 @@ WF_NO_TILE = 48
 WF_NO_OBJ  = 0
 
 
-WF_THINGS =
+WOLF_THINGS =
 {
   -- players
   player1 = { kind="other", r=30, h=60,
@@ -172,7 +172,7 @@ WF_THINGS =
   marble_column = { kind="scenery", id=71, r=30, h=60, add_mode="island" },
 }
 
-WF_TILE_NUMS =
+WOLF_TILE_NUMS =
 {
   area_min = 108,
   area_max = 143,
@@ -190,7 +190,7 @@ WF_TILE_NUMS =
 
 ----------------------------------------------------------------
 
-WF_COMBOS =
+WOLF_COMBOS =
 {
   WOOD =
   {
@@ -282,7 +282,7 @@ WF_COMBOS =
   },
 }
 
-WF_EXITS =
+WOLF_EXITS =
 {
   ELEVATOR =  -- FIXME: not needed, remove
   {
@@ -292,13 +292,13 @@ WF_EXITS =
 }
 
 
-WF_KEY_DOORS =
+WOLF_KEY_DOORS =
 {
   k_silver = { door_kind="door_silver", door_side=14 },
   k_gold   = { door_kind="door_gold",   door_side=14 },
 }
 
-WF_MISC_PREFABS =
+WOLF_MISC_PREFABS =
 {
   elevator =
   {
@@ -313,7 +313,7 @@ WF_MISC_PREFABS =
 
 ---- QUEST STUFF ----------------
 
-WF_QUESTS =
+WOLF_QUESTS =
 {
   key = { k_silver=60, k_gold=30, },
 
@@ -334,7 +334,7 @@ WF_QUESTS =
 }
 
 
-WF_ROOMS =
+WOLF_ROOMS =
 {
   PLAIN =
   {
@@ -401,7 +401,7 @@ WF_ROOMS =
   },
 }
 
-WF_THEMES =
+WOLF_THEMES =
 {
   -- Main Themes:
   --
@@ -490,7 +490,7 @@ WF_THEMES =
 
 ----------------------------------------------------------------
 
-WF_MONSTERS =
+WOLF_MONSTERS =
 {
   dog     = { prob=20, hp=1,   dm=5,  melee=true, },
   guard   = { prob=60, hp=25,  dm=10, hitscan=true, cage_fallback=10 },
@@ -502,7 +502,7 @@ WF_MONSTERS =
   fake_hitler = { prob=0, hp=350, dm=50 },
 }
 
-WF_BOSSES =
+WOLF_BOSSES =
 {
   -- FIXME: hit-points are just averages of skill 2 and 3
  
@@ -519,7 +519,7 @@ WF_BOSSES =
   Hitler     = { hp=1100, dm=60, hitscan=true },
 }
 
-WF_MONSTER_GIVE =
+WOLF_MONSTER_GIVE =
 {
   guard   = { { ammo="bullet", give=4 } },
   officer = { { ammo="bullet", give=4 } },
@@ -528,7 +528,7 @@ WF_MONSTER_GIVE =
   ss_dude = { { weapon="machine_gun" } },
 }
 
-WF_WEAPONS =
+WOLF_WEAPONS =
 {
   knife       = { rate=3.0, dm= 7, pref= 1, melee=true, held=true },
   pistol      = { rate=3.0, dm=17, pref=10, ammo="bullet", per=1, held=true },
@@ -541,7 +541,7 @@ WF_WEAPONS =
   -- Therefore this hack should maintain ammo balance.
 }
 
-WF_PICKUPS =
+WOLF_PICKUPS =
 {
   first_aid = { stat="health", give=25 },
   good_food = { stat="health", give=10 },
@@ -552,7 +552,7 @@ WF_PICKUPS =
   clip_8  =   { stat="bullet", give=8 },
 }
 
-WF_INITIAL_MODEL =
+WOLF_INITIAL_MODEL =
 {
   bj =
   {
@@ -564,7 +564,7 @@ WF_INITIAL_MODEL =
 
 ------------------------------------------------------------
 
-WF_EPISODE_THEMES =
+WOLF_EPISODE_THEMES =
 {
   { CELLS=7, BUNKER=5, CAVE=3 },
   { CELLS=6, BUNKER=8, CAVE=4 },
@@ -575,7 +575,7 @@ WF_EPISODE_THEMES =
   { CELLS=6, BUNKER=8, CAVE=4 },
 }
 
-WF_SECRET_EXITS =
+WOLF_SECRET_EXITS =
 {
   E1L1 = true,
   E2L1 = true,
@@ -586,7 +586,7 @@ WF_SECRET_EXITS =
   E6L3 = true,
 }
 
-WF_EPISODE_BOSSES =
+WOLF_EPISODE_BOSSES =
 {
   "Hans",
   "Schabbs",
@@ -596,14 +596,14 @@ WF_EPISODE_BOSSES =
   "Fatface",
 }
 
-WF_KEY_NUM_PROBS =
+WOLF_KEY_NUM_PROBS =
 {
   small   = { 90, 50, 20 },
   regular = { 40, 90, 40 },
   large   = { 20, 50, 90 },
 }
 
-WF_QUEST_LEN_PROBS =
+WOLF_QUEST_LEN_PROBS =
 {
   ----------  2   3   4   5   6   7   8   9  10  11  12  -------
 
@@ -621,7 +621,7 @@ function wolfy_decide_quests(level_list, is_spear)
   local function add_quest(L, kind, item, secret_prob)
     secret_prob = 0 --FIXME !!!!
 
-    local len_probs = non_nil(WF_QUEST_LEN_PROBS[kind])
+    local len_probs = non_nil(WOLF_QUEST_LEN_PROBS[kind])
     local Quest =
     {
       kind = kind,
@@ -656,7 +656,7 @@ function wolfy_decide_quests(level_list, is_spear)
       add_quest(Level, "weapon", "gatling_gun", 50)
     end
 
-    local keys = rand_index_by_probs(WF_KEY_NUM_PROBS[SETTINGS.size]) - 1
+    local keys = rand_index_by_probs(WOLF_KEY_NUM_PROBS[SETTINGS.size]) - 1
 
     if keys >= 1 then
       add_quest(Level, "key", "k_silver")
@@ -704,11 +704,11 @@ function Wolf3d_get_levels()
 
   for episode = 1,EP_NUM do
 
-    local theme_probs = WF_EPISODE_THEMES[episode]
+    local theme_probs = WOLF_EPISODE_THEMES[episode]
 
-    local boss_kind = WF_EPISODE_BOSSES[episode]
+    local boss_kind = WOLF_EPISODE_BOSSES[episode]
     if OB_CONFIG.length ~= "full" then
-      boss_kind = WF_EPISODE_BOSSES[rand_irange(1,6)]
+      boss_kind = WOLF_EPISODE_BOSSES[rand_irange(1,6)]
     end
 
     local secret_kind = "pacman"
@@ -731,7 +731,7 @@ function Wolf3d_get_levels()
         toughness_factor = sel(map==10, 1.1, 1 + (map-1) / 5),
       }
 
-      if WF_SECRET_EXITS[Level.name] then
+      if WOLF_SECRET_EXITS[Level.name] then
         Level.secret_exit = true
       end
 
@@ -765,28 +765,28 @@ function Wolf3d_setup()
   GAME.pickup_stats = { "health", "bullet" }
   GAME.hallways  = nil
 
-  Game_merge_tab("things",   WF_THINGS)
-  Game_merge_tab("monsters", WF_MONSTERS)
-  Game_merge_tab("bosses",   WF_BOSSES)
-  Game_merge_tab("mon_give", WF_MONSTER_GIVE)
+  Game_merge_tab("things",   WOLF_THINGS)
+  Game_merge_tab("monsters", WOLF_MONSTERS)
+  Game_merge_tab("bosses",   WOLF_BOSSES)
+  Game_merge_tab("mon_give", WOLF_MONSTER_GIVE)
 
-  Game_merge_tab("weapons",  WF_WEAPONS)
-  Game_merge_tab("pickups", WF_PICKUPS)
+  Game_merge_tab("weapons",  WOLF_WEAPONS)
+  Game_merge_tab("pickups", WOLF_PICKUPS)
 
-  Game_merge_tab("initial_model", WF_INITIAL_MODEL)
+  Game_merge_tab("initial_model", WOLF_INITIAL_MODEL)
 
-  Game_merge_tab("quests", WF_QUESTS)
+  Game_merge_tab("quests", WOLF_QUESTS)
 
-  Game_merge_tab("combos", WF_COMBOS)
-  Game_merge_tab("exits",  WF_EXITS)
+  Game_merge_tab("combos", WOLF_COMBOS)
+  Game_merge_tab("exits",  WOLF_EXITS)
 
---??  Game_merge_tab("doors", WF_DOORS)
-  Game_merge_tab("key_doors", WF_KEY_DOORS)
+--??  Game_merge_tab("doors", WOLF_DOORS)
+  Game_merge_tab("key_doors", WOLF_KEY_DOORS)
 
-  Game_merge_tab("rooms",  WF_ROOMS)
-  Game_merge_tab("themes", WF_THEMES)
+  Game_merge_tab("rooms",  WOLF_ROOMS)
+  Game_merge_tab("themes", WOLF_THEMES)
 
-  Game_merge_tab("misc_fabs", WF_MISC_PREFABS)
+  Game_merge_tab("misc_fabs", WOLF_MISC_PREFABS)
 
   GAME.toughness_factor = 0.40
 

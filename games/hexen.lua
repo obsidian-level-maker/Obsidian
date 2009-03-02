@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-XN_THINGS =
+HEXEN_THINGS =
 {
   --- players
   player1 = { id=1, kind="other", r=16,h=64 },
@@ -229,7 +229,7 @@ XN_THINGS =
   snd_metal2 = { id=1409, kind="other", r=16,h=16, pass=true },
 }
 
-XN_LINE_TYPES =
+HEXEN_LINE_TYPES =
 {
   -- FIXME: speeds (16) and delays (64) are just guesses!!
 
@@ -278,7 +278,7 @@ XN_LINE_TYPES =
   WR_blaze_lift = { kind=62, args={ "tag", 32, 64 } },
 }
 
-XN_SECTOR_TYPES =
+HEXEN_SECTOR_TYPES =
 {
   -- FIXME
 }
@@ -286,7 +286,7 @@ XN_SECTOR_TYPES =
 
 ----------------------------------------------------------------
 
-XN_PALETTE =
+HEXEN_PALETTE =
 {
     2,  2,  2,   4,  4,  4,  15, 15, 15,  19, 19, 19,  27, 27, 27,
    28, 28, 28,  33, 33, 33,  39, 39, 39,  45, 45, 45,  51, 51, 51,
@@ -345,7 +345,7 @@ XN_PALETTE =
 
 ----------------------------------------------------------------
 
-XN_COMBOS =
+HEXEN_COMBOS =
 {
   ---- CAVE ------------
 
@@ -669,7 +669,7 @@ XN_COMBOS =
   
 }
 
-XN_EXITS =
+HEXEN_EXITS =
 {
   STEEL =
   {
@@ -688,7 +688,7 @@ XN_EXITS =
 
 }
 
-XN_HALLWAYS =
+HEXEN_HALLWAYS =
 {
   -- FIXME !!! hallway themes
 }
@@ -696,7 +696,7 @@ XN_HALLWAYS =
 
 ---- BASE MATERIALS ------------
 
-XN_MATS =
+HEXEN_MATS =
 {
   METAL =
   {
@@ -734,7 +734,7 @@ XN_MATS =
 
 ---- PEDESTALS ------------
 
-XN_PEDESTALS =
+HEXEN_PEDESTALS =
 {
   PLAYER =
   {
@@ -761,7 +761,7 @@ XN_PEDESTALS =
 
 ---- OVERHANGS ------------
 
-XN_OVERHANGS =
+HEXEN_OVERHANGS =
 {
   WOOD =
   {
@@ -774,7 +774,7 @@ XN_OVERHANGS =
 
 ---- MISC STUFF ------------
 
-XN_LIQUIDS =
+HEXEN_LIQUIDS =
 {
   water = { floor="X_005", wall="X_WATER1" },
   lava  = { floor="X_001", wall="X_FIRE01" },
@@ -782,7 +782,7 @@ XN_LIQUIDS =
 --- slime = { floor="X_009", wall="X_SWMP1" },
 }
 
-XN_SWITCHES =
+HEXEN_SWITCHES =
 {
   sw_cow =
   {
@@ -971,7 +971,7 @@ XN_SWITCHES =
   },
 }
 
-XN_DOORS =
+HEXEN_DOORS =
 {
   d_big2   = { prefab="DOOR", w=128, h=128,
 
@@ -998,7 +998,7 @@ XN_DOORS =
   d_wood3  = { wall="D_WD10",   w=64,  h=128 },
 }
 
-XN_KEY_DOORS =
+HEXEN_KEY_DOORS =
 {
   k_emerald =
   {
@@ -1165,31 +1165,31 @@ XN_KEY_DOORS =
 
 }
 
-XN_RAILS =
+HEXEN_RAILS =
 {
   r_1 = { wall="GATE03", w=64, h=64  },
   r_2 = { wall="GATE02", w=64, h=128 },
 }
 
-XN_IMAGES =
+HEXEN_IMAGES =
 {
   { wall = "BRASS3", w=128, h=128, glow=true },
   { wall = "BRASS4", w=64,  h=64,  floor="F_016" }
 }
 
-XN_LIGHTS =
+HEXEN_LIGHTS =
 {
   l1 = { floor="F_081", side="FIRE07" },
   l2 = { floor="F_084", side="FIRE07" },
   l3 = { floor="X_012", side="FIRE07" },
 }
 
-XN_WALL_LIGHTS =
+HEXEN_WALL_LIGHTS =
 {
   fire = { wall="X_FIRE01", w=16 },
 }
 
-XN_PICS =
+HEXEN_PICS =
 {
   cave12 = { wall = "CAVE12",   w=128, h=128 },
   forest = { wall = "FOREST03", w=128, h=128 },
@@ -1205,7 +1205,7 @@ XN_PICS =
 
 ---- QUEST STUFF ----------------
 
-XN_ROOMS =
+HEXEN_ROOMS =
 {
   PLAIN =
   {
@@ -1226,7 +1226,7 @@ XN_ROOMS =
   -- TODO: check in-game level names for ideas
 }
 
-XN_THEMES =
+HEXEN_THEMES =
 {
   CAVE =
   {
@@ -1304,7 +1304,7 @@ XN_THEMES =
 }
 
 
-XN_LIFTS =
+HEXEN_LIFTS =
 {
   slow =
   {
@@ -1320,7 +1320,7 @@ XN_LIFTS =
 }
 
 
-XN_DOOR_PREFABS =
+HEXEN_DOOR_PREFABS =
 {
   winnow =
   {
@@ -1355,85 +1355,8 @@ XN_DOOR_PREFABS =
   },
 }
 
----#XN_ITEM_PREFABS =
----#{
----#  weap_2 =
----#  {
----#    prefab = "HEXEN_TRIPLE_PED",
----#
----#    skin =
----#    {
----#      ped_f="F_084", ped_w="CASTLE07",
----#      ped_h=8,
----#
----#      item_F_t="f_axe",  -- FIXME: flag as Fighter-only
----#      item_C_t="c_staff",
----#      item_M_t="m_cone",
----#    }
----#  },
----#
----#  weap_3 =
----#  {
----#    prefab = "HEXEN_TRIPLE_PED",
----#
----#    skin =
----#    {
----#      ped_f="F_084", ped_w="CASTLE07",
----#      ped_h=8,
----#
----#      item_F_t="f_hammer",
----#      item_C_t="c_fire",
----#      item_M_t="m_blitz",
----#    }
----#  },
----#
----#  piece_1 =
----#  {
----#    prefab = "HEXEN_TRIPLE_PED",
----#
----#    skin =
----#    {
----#      ped_f="F_084", ped_w="CASTLE07",
----#      ped_h=8,
----#
----#      item_F_t="f1_hilt",
----#      item_C_t="c1_shaft",
----#      item_M_t="m1_stick",
----#    }
----#  },
----#
----#  piece_2 =
----#  {
----#    prefab = "HEXEN_TRIPLE_PED",
----#
----#    skin =
----#    {
----#      ped_f="F_084", ped_w="CASTLE07",
----#      ped_h=8,
----#
----#      item_F_t="f2_cross",
----#      item_C_t="c2_cross",
----#      item_M_t="m2_stub",
----#    }
----#  },
----#
----#  piece_3 =
----#  {
----#    prefab = "HEXEN_TRIPLE_PED",
----#
----#    skin =
----#    {
----#      ped_f="F_084", ped_w="CASTLE07",
----#      ped_h=8,
----#
----#      item_F_t="f3_blade",
----#      item_C_t="c3_arc",
----#      item_M_t="m3_skull",
----#    }
----#  },
----#}
 
-XN_WALL_PREFABS =
+HEXEN_WALL_PREFABS =
 {
   solid_SEWER02 =
   {
@@ -1446,7 +1369,7 @@ XN_WALL_PREFABS =
   },
 }
 
-XN_MISC_PREFABS =
+HEXEN_MISC_PREFABS =
 {
   -- Note: pedestal_PLAYER intentionally omitted
 
@@ -1518,7 +1441,7 @@ XN_MISC_PREFABS =
   },
 }
 
-XN_SCENERY_PREFABS =
+HEXEN_SCENERY_PREFABS =
 {
   pillar_rnd_PILLAR01 =
   {
@@ -1548,7 +1471,7 @@ XN_SCENERY_PREFABS =
   },
 }
 
--- XN_DEATHMATCH_EXITS =
+-- HEXEN_DEATHMATCH_EXITS =
 -- {
 --   exit_dm_GREEN =
 --   {
@@ -1569,7 +1492,7 @@ XN_SCENERY_PREFABS =
 --   },
 -- }
 
-XN_INITIAL_MODEL =
+HEXEN_INITIAL_MODEL =
 {
   fighter =
   {
@@ -1593,7 +1516,7 @@ XN_INITIAL_MODEL =
   },
 }
 
-XN_MONSTERS =
+HEXEN_MONSTERS =
 {
   ettin      = { prob=60, hp=170, dm= 6, melee=true },
   afrit      = { prob=40, hp=80,  dm=20, float=true },
@@ -1610,7 +1533,7 @@ XN_MONSTERS =
   reiver     = { prob= 5, hp=150, dm=50, float=true },
 }
 
-XN_BOSSES =
+HEXEN_BOSSES =
 {
   -- dm values are crap
   Wyvern     = { hp=640, dm=60, float=true },
@@ -1618,7 +1541,7 @@ XN_BOSSES =
   Korax      = { hp=5000,dm=90, },
 }
 
-XN_WEAPONS =
+HEXEN_WEAPONS =
 {
   -- FIXME: splash damage stuff!!
   c_mace    = { rate=1.6, dm=32, pref=10, held=true, melee=true,     held=true, },
@@ -1651,21 +1574,21 @@ XN_WEAPONS =
   -- nothing but guesses.
 }
 
-XN_WEAPON_NAMES =
+HEXEN_WEAPON_NAMES =
 {
   fighter = { "f_gaunt", "f_axe",   "f_hammer", "f_quietus" },
   cleric  = { "c_mace",  "c_staff", "c_fire",   "c_wraith"  },
   mage    = { "m_wand",  "m_cone",  "m_blitz",  "m_scourge" },
 }
 
-XN_WEAPON_PIECES =
+HEXEN_WEAPON_PIECES =
 {
   fighter = { "f1_hilt",  "f2_cross", "f3_blade" },
   cleric  = { "c1_shaft", "c2_cross", "c3_arc"   },
   mage    = { "m1_stick", "m2_stub",  "m3_skull" },
 }
 
-XN_PICKUPS =
+HEXEN_PICKUPS =
 {
   h_vial  = { stat="health", give=10,  prob=70 },
   h_flask = { stat="health", give=25,  prob=25 },
@@ -1682,7 +1605,7 @@ XN_PICKUPS =
   dual_mana  = { stat="dual_mana",  give=20 },
 }
 
-XN_NICENESS =
+HEXEN_NICENESS =
 {
   a1 = { pickup="ar_mesh",   prob=3 },
   a2 = { pickup="ar_shield", prob=3 },
@@ -1694,7 +1617,7 @@ XN_NICENESS =
   p3 = { pickup="torch",     prob=2 },
 }
 
-XN_DEATHMATCH =
+HEXEN_DEATHMATCH =
 {
   weapons =
   {
@@ -1728,12 +1651,12 @@ XN_DEATHMATCH =
 
 ------------------------------------------------------------
 
-XN_THEME_LIST =
+HEXEN_THEME_LIST =
 {
   "CAVE", "DUNGEON", "ICE", "SWAMP", "VILLAGE"
 }
 
-XN_SKY_INFO =
+HEXEN_SKY_INFO =
 {
   { color="orange", light=176 },
   { color="blue",   light=144 },
@@ -1742,7 +1665,7 @@ XN_SKY_INFO =
   { color="gray",   light=176, foggy=true },
 }
 
-XN_KEY_PAIRS =
+HEXEN_KEY_PAIRS =
 {
   { key_A="k_emerald", key_B="k_cave" },
   { key_A="k_silver",  key_B="k_swamp" },
@@ -1751,62 +1674,62 @@ XN_KEY_PAIRS =
   { key_A="k_horn",    key_B="k_castle" },
 }
 
-XN_LEVELS =
+HEXEN_LEVELS =
 {
   --- Cluster 1 ---
   {
-    { map=1, sky_info=XN_SKY_INFO[3] },
-    { map=2, sky_info=XN_SKY_INFO[4] },
-    { map=3, sky_info=XN_SKY_INFO[4] },
-    { map=4, sky_info=XN_SKY_INFO[4] },
-    { map=5, sky_info=XN_SKY_INFO[4] },
-    { map=6, sky_info=XN_SKY_INFO[4], boss_kind="centaur2" },
+    { map=1, sky_info=HEXEN_SKY_INFO[3] },
+    { map=2, sky_info=HEXEN_SKY_INFO[4] },
+    { map=3, sky_info=HEXEN_SKY_INFO[4] },
+    { map=4, sky_info=HEXEN_SKY_INFO[4] },
+    { map=5, sky_info=HEXEN_SKY_INFO[4] },
+    { map=6, sky_info=HEXEN_SKY_INFO[4], boss_kind="centaur2" },
   },
 
   --- Cluster 2 ---
   {
-    { map=13, sky_info=XN_SKY_INFO[1] },
-    { map= 8, sky_info=XN_SKY_INFO[5] },
-    { map= 9, sky_info=XN_SKY_INFO[1] },
-    { map=10, sky_info=XN_SKY_INFO[1] },
-    { map=11, sky_info=XN_SKY_INFO[5] },
-    { map=12, sky_info=XN_SKY_INFO[1], boss_kind="Wyvern" },
+    { map=13, sky_info=HEXEN_SKY_INFO[1] },
+    { map= 8, sky_info=HEXEN_SKY_INFO[5] },
+    { map= 9, sky_info=HEXEN_SKY_INFO[1] },
+    { map=10, sky_info=HEXEN_SKY_INFO[1] },
+    { map=11, sky_info=HEXEN_SKY_INFO[5] },
+    { map=12, sky_info=HEXEN_SKY_INFO[1], boss_kind="Wyvern" },
   },
 
   --- Cluster 3 ---
   {
     -- Note: MAP30 is never used (FIXME: super-secret level)
 
-    { map=27, sky_info=XN_SKY_INFO[4] },
-    { map=28, sky_info=XN_SKY_INFO[4] },
-    { map=31, sky_info=XN_SKY_INFO[4] },
-    { map=32, sky_info=XN_SKY_INFO[5] },
-    { map=33, sky_info=XN_SKY_INFO[4] },
-    { map=34, sky_info=XN_SKY_INFO[4], boss_kind="Heresiarch" },
+    { map=27, sky_info=HEXEN_SKY_INFO[4] },
+    { map=28, sky_info=HEXEN_SKY_INFO[4] },
+    { map=31, sky_info=HEXEN_SKY_INFO[4] },
+    { map=32, sky_info=HEXEN_SKY_INFO[5] },
+    { map=33, sky_info=HEXEN_SKY_INFO[4] },
+    { map=34, sky_info=HEXEN_SKY_INFO[4], boss_kind="Heresiarch" },
   },
 
   --- Cluster 4 ---
   {
-    { map=21, sky_info=XN_SKY_INFO[3] }, 
-    { map=22, sky_info=XN_SKY_INFO[3] }, 
-    { map=23, sky_info=XN_SKY_INFO[3] }, 
-    { map=24, sky_info=XN_SKY_INFO[3] }, 
-    { map=25, sky_info=XN_SKY_INFO[3] }, 
-    { map=26, sky_info=XN_SKY_INFO[3], boss_kind="Heresiarch" },
+    { map=21, sky_info=HEXEN_SKY_INFO[3] }, 
+    { map=22, sky_info=HEXEN_SKY_INFO[3] }, 
+    { map=23, sky_info=HEXEN_SKY_INFO[3] }, 
+    { map=24, sky_info=HEXEN_SKY_INFO[3] }, 
+    { map=25, sky_info=HEXEN_SKY_INFO[3] }, 
+    { map=26, sky_info=HEXEN_SKY_INFO[3], boss_kind="Heresiarch" },
   },
 
   --- Cluster 5 ---
   {
-    { map=35, sky_info=XN_SKY_INFO[3] },
-    { map=36, sky_info=XN_SKY_INFO[3] },
-    { map=37, sky_info=XN_SKY_INFO[4] },
-    { map=38, sky_info=XN_SKY_INFO[3] },
-    { map=39, sky_info=XN_SKY_INFO[3] },
-    { map=40, sky_info=XN_SKY_INFO[4], boss_kind="Korax" },
+    { map=35, sky_info=HEXEN_SKY_INFO[3] },
+    { map=36, sky_info=HEXEN_SKY_INFO[3] },
+    { map=37, sky_info=HEXEN_SKY_INFO[4] },
+    { map=38, sky_info=HEXEN_SKY_INFO[3] },
+    { map=39, sky_info=HEXEN_SKY_INFO[3] },
+    { map=40, sky_info=HEXEN_SKY_INFO[4], boss_kind="Korax" },
   },
 }
 
-XN_QUEST_LEN_PROBS =
+HEXEN_QUEST_LEN_PROBS =
 {
   ----------  2   3   4   5   6   7   8   9  10  -------
 
@@ -1827,14 +1750,14 @@ function hexen_get_levels(episode)
 
   local level_list = {}
 
-  local source_levels = XN_LEVELS[episode]
+  local source_levels = HEXEN_LEVELS[episode]
   assert(#source_levels == 6)
 
   local theme_mapping = { 1,2,3,4,5 }
   rand_shuffle(theme_mapping)
 
-  local key_A = XN_KEY_PAIRS[episode].key_A
-  local key_B = XN_KEY_PAIRS[episode].key_B
+  local key_A = HEXEN_KEY_PAIRS[episode].key_A
+  local key_B = HEXEN_KEY_PAIRS[episode].key_B
   assert(key_A and key_B)
 
   for map = 1,6 do
@@ -1861,7 +1784,7 @@ function hexen_get_levels(episode)
       -- secret level is a mixture
       Level.theme_probs = { ICE=3,SWAMP=4,DUNGEON=5,CAVE=6,VILLAGE=7 }
     else
-      local th_name = XN_THEME_LIST[theme_mapping[sel(map==6, 5, map)]]
+      local th_name = HEXEN_THEME_LIST[theme_mapping[sel(map==6, 5, map)]]
       Level.theme_probs = { [th_name] = 5 }
     end
 
@@ -1884,7 +1807,7 @@ function hexen_get_levels(episode)
     for xxx,CL in ipairs(GAME.classes) do
       table.insert(quest.assumed_stuff,
       {
-        weapon = XN_WEAPON_NAMES[CL][wp]
+        weapon = HEXEN_WEAPON_NAMES[CL][wp]
       })
     end
   end
@@ -1894,7 +1817,7 @@ function hexen_get_levels(episode)
 
     local L = level_list[map]
 
-    local len_probs = assert(XN_QUEST_LEN_PROBS[kind])
+    local len_probs = assert(HEXEN_QUEST_LEN_PROBS[kind])
 
     local Quest =
     {
@@ -1983,7 +1906,7 @@ function hexen_get_levels(episode)
 
   for xxx,CL in ipairs(GAME.classes) do
     for piece = 1,3 do
-      local name = assert(XN_WEAPON_PIECES[CL][piece])
+      local name = assert(HEXEN_WEAPON_PIECES[CL][piece])
       add_quest(4, "weapon", name, "sub")
     end
   end
@@ -1999,8 +1922,8 @@ function hexen_get_levels(episode)
   -- weapon quests
 
   for xxx,CL in ipairs(GAME.classes) do
-    local weap_2 = assert(XN_WEAPON_NAMES[CL][2])
-    local weap_3 = assert(XN_WEAPON_NAMES[CL][3])
+    local weap_2 = assert(HEXEN_WEAPON_NAMES[CL][2])
+    local weap_3 = assert(HEXEN_WEAPON_NAMES[CL][3])
 
     add_quest(rand_index_by_probs { 7, 1, 1 }, "weapon", weap_2, "sub")
     add_quest(rand_index_by_probs { 2, 7, 7 }, "weapon", weap_3, "sub")
@@ -2075,7 +1998,7 @@ function Hexen1_setup()
 
   gui.property("hexen_format", "true")
 
-  rand_shuffle(XN_KEY_PAIRS)
+  rand_shuffle(HEXEN_KEY_PAIRS)
 
   return
   {
@@ -2094,46 +2017,46 @@ function Hexen1_setup()
 
     classes  = { "fighter", "cleric", "mage" },
 
-    things   = XN_THINGS,
-    monsters = XN_MONSTERS,
-    bosses   = XN_BOSSES,
-    weapons  = XN_WEAPONS,
+    things   = HEXEN_THINGS,
+    monsters = HEXEN_MONSTERS,
+    bosses   = HEXEN_BOSSES,
+    weapons  = HEXEN_WEAPONS,
 
-    dm = XN_DEATHMATCH,
+    dm = HEXEN_DEATHMATCH,
 
-    pickups = XN_PICKUPS,
+    pickups = HEXEN_PICKUPS,
     pickup_stats = { "health", "blue_mana", "green_mana" },
-    niceness = XN_NICENESS,
+    niceness = HEXEN_NICENESS,
 
-    initial_model = XN_INITIAL_MODEL,
+    initial_model = HEXEN_INITIAL_MODEL,
 
-    combos    = XN_COMBOS,
-    exits     = XN_EXITS,
-    hallways  = XN_HALLWAYS,
+    combos    = HEXEN_COMBOS,
+    exits     = HEXEN_EXITS,
+    hallways  = HEXEN_HALLWAYS,
 
-    rooms     = XN_ROOMS,
-    themes    = XN_THEMES,
+    rooms     = HEXEN_ROOMS,
+    themes    = HEXEN_THEMES,
 
-    hangs     = XN_OVERHANGS,
-    pedestals = XN_PEDESTALS,
-    mats      = XN_MATS,
-    rails     = XN_RAILS,
+    hangs     = HEXEN_OVERHANGS,
+    pedestals = HEXEN_PEDESTALS,
+    mats      = HEXEN_MATS,
+    rails     = HEXEN_RAILS,
 
-    liquids   = XN_LIQUIDS,
-    switches  = XN_SWITCHES,
-    doors     = XN_DOORS,
-    key_doors = XN_KEY_DOORS,
-    lifts     = XN_LIFTS,
+    liquids   = HEXEN_LIQUIDS,
+    switches  = HEXEN_SWITCHES,
+    doors     = HEXEN_DOORS,
+    key_doors = HEXEN_KEY_DOORS,
+    lifts     = HEXEN_LIFTS,
 
-    pics      = XN_PICS,
-    images    = XN_IMAGES,
-    lights    = XN_LIGHTS,
-    wall_lights = XN_WALL_LIGHTS,
+    pics      = HEXEN_PICS,
+    images    = HEXEN_IMAGES,
+    lights    = HEXEN_LIGHTS,
+    wall_lights = HEXEN_WALL_LIGHTS,
 
-    door_fabs = XN_DOOR_PREFABS,
-    wall_fabs = XN_WALL_PREFABS,
-    sc_fabs   = XN_SCENERY_PREFABS,
-    misc_fabs = XN_MISC_PREFABS,
+    door_fabs = HEXEN_DOOR_PREFABS,
+    wall_fabs = HEXEN_WALL_PREFABS,
+    sc_fabs   = HEXEN_SCENERY_PREFABS,
+    misc_fabs = HEXEN_MISC_PREFABS,
 
     toughness_factor = 0.66,
 
