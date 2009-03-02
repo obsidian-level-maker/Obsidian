@@ -845,7 +845,9 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
     Quest_add_lock()
   end
 
-  for _,A in ipairs(PLAN.all_arenas) do
+  for id,A in ipairs(PLAN.all_arenas) do
+    A.id = id
+
     for _,R in ipairs(A.rooms) do
       R.arena = A
     end
@@ -854,23 +856,6 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
   Quest_order_by_visit()
 
   Quest_key_distances()
-
-
-  -- TEMP CRUD FOR BUILDER....
-
-  local START_R = PLAN.start_room
-  assert(START_R)
-
-  local sx, sy
-
-  repeat
-    sx = rand_irange(START_R.sx1, START_R.sx2)
-    sy = rand_irange(START_R.sy1, START_R.sy2)
-  until SEEDS[sx][sy][1].room == START_R
-
-  SEEDS[sx][sy][1].is_start = true
-
-  gui.printf("Start seed @ (%d,%d)\n", sx, sy)
 
 end
 
