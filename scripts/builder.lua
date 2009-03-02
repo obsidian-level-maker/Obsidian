@@ -1135,7 +1135,7 @@ function Build_tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
   {
     t_face = { texture=assert(skin.top_f) },
     b_face = { texture=      (skin.top_f) },
-    w_face = { texture=assert(skin.side_w) },
+    w_face = { texture=assert(skin.step_w) },
   }
 
   local step_face = { texture=assert(skin.step_w), peg=true, y_offset=0 }
@@ -1378,7 +1378,7 @@ function Build_low_curved_stair(S, skin, x_side,y_side, x_h,y_h)
   {
     t_face = { texture=assert(skin.top_f) },
     b_face = { texture=      (skin.top_f) },
-    w_face = { texture=assert(skin.side_w) },
+    w_face = { texture=assert(skin.step_w) },
   }
 
   local step_face = { texture=assert(skin.step_w), peg=true, y_offset=0 }
