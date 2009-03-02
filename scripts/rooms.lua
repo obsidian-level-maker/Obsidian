@@ -697,17 +697,46 @@ function Rooms_border_up()
     local min_c1, max_f1 = 999, -999
     local min_c2, max_f2 = 999, -999
 
+    local total   = 0
     local scenics = 0
+    local doors   = 0
+    local futures = 0
+
+    local info = { side=side, seeds={} }
+
+    for _,C in ipairs(R.conns) do
+      local S = C:seed(R)
+
+      -- never any windows near a locked door
+      if S.border[side].kind == "lock_door" then
+        return nil
+      end
+
+      if S.border[side].kind == "door" then
+        doors = doors + 1
+      end
+    end
+
 
     for _,bd in ipairs(border_list) do
       local S = bd.S
       local N = S:neighbor(side)
 
+      total = total + 1
+
       if (bd.side == side) and S.floor_h and
          (N and N.room and N.room.outdoor) and N.floor_h
       -- (N.kind == "walk" or N.kind == "liquid")
       then
-        if N.kind == "scenic" then scenics = scenics + 1 end
+        table.insert(info.seeds, S)
+
+        if N.kind == "scenic" then
+          scenics = scenics + 1
+        end
+
+        if S.room.arena and N.room.arena and (S.room.arena.id < N.room.arena.id) then
+          futures = futures + 1
+        end
         
         min_c1 = math.min(min_c1, assert(S.ceil_h or R.ceil_h))
         min_c2 = SKY_H
@@ -719,7 +748,9 @@ function Rooms_border_up()
 
 
     -- nothing possible??
-    if max_f1 < -900 then return end
+    local usable = #info.seeds
+
+    if usable == 0 then return end
 
     local min_c = math.min(min_c1, min_c2)
     local max_f = math.max(max_f1, max_f2)
@@ -732,17 +763,24 @@ function Rooms_border_up()
 
     if scenics > 0 then score = score + 100 end
 
-    return
-    {
-      side=side, score=score,
-      min_c=min_c, max_f=max_f,
-      kind="all",
-    }
+    info.kind  = "wtf"
+    info.score = score
+    info.min_c = min_c
+    info.max_f = max_f
+
+    return info
   end
 
   local function add_windows(R, info, border_list)
-    -- FIXME: TEMP
+    local side = info.side
 
+    for _,S in ipairs(info.seeds) do
+      S.border[side].kind = "window"
+      S.border[side].win_z1 = info.max_f + 32
+      S.border[side].win_z2 = info.min_c - 24
+    end -- for S
+
+    --[[
     if info.kind == "flank" then
       for _,S in ipairs(info.flank_seeds) do
         S.border[info.side].kind = "window"
@@ -765,6 +803,7 @@ function Rooms_border_up()
         end
       end
     end
+    --]]
   end
 
   local function decide_windows(R, border_list)
@@ -1526,7 +1565,7 @@ gui.printf("do_teleport\n")
         local z1 = S.border[side].win_z1
         local z2 = S.border[side].win_z2
 
-        Build_window(S, side, 192, 64, z1, z2, f_tex, w_tex)
+        Build_window(S, side, 192, nil, z1, z2, f_tex, w_tex)
       end
 
       if B_kind == "fence"  then
