@@ -1179,19 +1179,8 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
         w_face = { texture="METAL" },
       }
 
-      local metal =
-      {
-        t_face = { texture="CEIL5_2" },
-        b_face = { texture="CEIL5_2" },
-        w_face = { texture="METAL" },
-      }
-
-      local silver =
-      {
-        t_face = { texture="FLAT23" },
-        b_face = { texture="FLAT23" },
-        w_face = { texture="SHAWN2" },
-      }
+      local metal = material_to_info("metal")
+      local shiny = material_to_info("shiny")
 
     if R.cw == 1 or R.ch == 1 then
       fill_xyz(light_info.b_face.texture, R.ceil_h + 32)

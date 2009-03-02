@@ -137,6 +137,24 @@ function transformed_brush(T, info, coords, z1, z2)
 end
 
 
+function material_to_info(name)
+  local mat = GAME.materials[name]
+
+  if not mat then
+    error("No such material: " .. tostring(name))
+  end
+
+  -- TODO: cache results (MUST CLEAR CACHE BEFORE EACH BUILD)
+
+  return
+  {
+    w_face = { texture=assert(mat[1]) },
+    t_face = { texture=assert(mat[2]) },
+    b_face = { texture=assert(mat[2]) },
+  }
+end
+
+
 function get_transform_for_seed_side(S, side, thick)
   
   if not thick then thick = S.thick[side] end
@@ -257,16 +275,16 @@ function Build_sky_fence(S, side)
   
   local wall_info =
   {
+    w_face = { texture="BROWN144" },
     t_face = { texture="FLOOR7_1" },
     b_face = { texture="FLOOR7_1" },
-    w_face = { texture="BROWN144" },
   }
 
   local sky_info =
   {
+    w_face = { texture=PARAMS.sky_tex },
     t_face = { texture=PARAMS.sky_flat },
     b_face = { texture=PARAMS.sky_flat },
-    w_face = { texture=PARAMS.sky_tex },
   }
 
   local wall2_info = shallow_copy(wall_info)
@@ -704,39 +722,19 @@ function Build_detailed_hall(S, side, z1, z2)
 
 
   if PLAN.hall_trim then
-    transformed_brush(nil,
-    {
-      t_face = { texture="CEIL5_2" },
-      b_face = { texture="CEIL5_2" },
-      w_face = { texture="METAL" },
-    },
-    get_hall_coords(32), -EXTREME_H, z1 + 32)
+    transformed_brush(nil, material_to_info("metal"),
+        get_hall_coords(32), -EXTREME_H, z1 + 32)
 
-    transformed_brush(nil,
-    {
-      t_face = { texture="CEIL5_2" },
-      b_face = { texture="CEIL5_2" },
-      w_face = { texture="METAL" },
-    },
-    get_hall_coords(32), z2 - 32, EXTREME_H)
+    transformed_brush(nil, material_to_info("metal"),
+        get_hall_coords(32), z2 - 32, EXTREME_H)
   end
 
 
-  transformed_brush(nil,
-  {
-    t_face = { texture="FLAT1" },
-    b_face = { texture="FLAT1" },
-    w_face = { texture="GRAY7" },
-  },
-  get_hall_coords(64), -EXTREME_H, z1 + 6)
+  transformed_brush(nil, material_to_info("gray"),
+      get_hall_coords(64), -EXTREME_H, z1 + 6)
 
-  transformed_brush(nil,
-  {
-    t_face = { texture="FLAT1" },
-    b_face = { texture="FLAT1" },
-    w_face = { texture="GRAY7" },
-  },
-  get_hall_coords(64), z2 - 6, EXTREME_H)
+  transformed_brush(nil, material_to_info("gray"),
+      get_hall_coords(64), z2 - 6, EXTREME_H)
 
 
   transformed_brush(nil,
@@ -1460,12 +1458,7 @@ cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
   end
 
 
-  local mat_info =
-  {
-    b_face = { texture="CEIL5_2" },
-    t_face = { texture="CEIL5_2" },
-    w_face = { texture="METAL" },
-  }
+  local mat_info = material_to_info("metal")
 
   local h3 = math.max(x_h, y_h)
 
@@ -1739,12 +1732,7 @@ function Build_pillar(S, z1, z2, p_tex)
   -EXTREME_H, EXTREME_H)
 
   for pass = 1,2 do
-    transformed_brush(nil,
-    {
-      t_face = { texture="CEIL5_2" },
-      b_face = { texture="CEIL5_2" },
-      w_face = { texture="METAL" },
-    },
+    transformed_brush(nil, material_to_info("metal"),
     {
       { x=mx+40, y=my-40 }, { x=mx+40, y=my+40 },
       { x=mx-40, y=my+40 }, { x=mx-40, y=my-40 },
@@ -1753,12 +1741,7 @@ function Build_pillar(S, z1, z2, p_tex)
     sel(pass == 2,  EXTREME_H, z1+32)
     )
 
-    transformed_brush(nil,
-    {
-      t_face = { texture="FLAT1" },
-      b_face = { texture="FLAT1" },
-      w_face = { texture="GRAY7" },
-    },
+    transformed_brush(nil, material_to_info("gray"),
     {
       { x=mx-40, y=my-56 },
       { x=mx+40, y=my-56 },
