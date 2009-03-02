@@ -618,8 +618,8 @@ function Rooms_border_up()
       end
 
       if N.kind == "liquid" and
-        (S.kind == "liquid" or --!!! N.room.kind == "scenic"
-         R1.arena == R2.arena)
+        (S.kind == "liquid" or R1.arena == R2.arena)
+        --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
       then
         S.border[side].kind = "nothing"
       end
@@ -669,6 +669,63 @@ function Rooms_border_up()
   end
 
 
+  local function get_all_borders(R)
+    local list = {}
+
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and not
+         (S.kind == "void" or S.kind == "diagonal" or
+          S.stair_kind == "tall")
+      then
+        for side = 2,8,2 do
+          local N = S:neighbor(side)
+          if N and N.room ~= R then
+            table.insert(list, { S=S, N=N, side=side })
+          end
+        end -- for side
+      end
+    end end -- for x, y
+
+    return list
+  end
+
+  local function can_make_window(S, N, side)
+gui.debugf("can_make_window @ %s side:%d\n", S:tostr(), side)
+gui.debugf("  BORDER KIND = %s\n", tostring(S.border[side].kind))
+    if S.border[side].kind ~= "wall" then return false end
+    
+gui.debugf("  IS WALL\n")
+    if not (N and N.room and N.room.outdoor) then return false end
+
+gui.debugf("  N IS OUTDOOR --> OK!\n")
+    return true
+  end
+
+  local function decide_windows(R, border_list)
+    if R.kind ~= "building" then return end
+
+    for _,bd in ipairs(border_list) do
+      if can_make_window(bd.S, bd.N, bd.side) then
+gui.debugf("  MADE WINDOW\n")
+        bd.S.border[bd.side].kind = "window"
+      end
+    end
+  end
+
+  local function decide_pictures(R, border_list)
+    if R.kind ~= "building" then return end
+
+    if R.semi_outdoor then return end
+
+    for _,bd in ipairs(border_list) do
+      if bd.S.border[bd.side].kind == "wall" then
+        bd.S.border[bd.side].kind = "picture"
+      end
+    end
+  end
+
+
   ---| Rooms_border_up |---
   
   for _,R in ipairs(PLAN.all_rooms) do
@@ -676,6 +733,13 @@ function Rooms_border_up()
   end
   for _,R in ipairs(PLAN.scenic_rooms) do
     border_up(R)
+  end
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    local border_list = get_all_borders(R)
+
+    decide_windows( R, border_list)
+    decide_pictures(R, border_list)
   end
 end
 
@@ -1038,6 +1102,7 @@ function Room_make_ceiling(R)
 
     if R.has_periph_pillars and not has_sky_nb and rand_odds(16) then
       fill_xyz(PARAMS.sky_flat, R.ceil_h)
+      R.semi_outdoor = true
       return
     end
 
@@ -1364,23 +1429,31 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "picture" then
-        local skin =
+        local compsta =
         {
-          pic_w="COMPSTA1", width=64,
-          height=64, x_offset=0, y_offset=0,
+          pic_w="COMPSTA1", width=128, height=64,
+          x_offset=0, y_offset=0,
           side_w="DOORSTOP", depth=8, 
           top_f="FLAT23"
         }
         local lite =
         {
-          count=3,
+          count=3, gap=32,
           pic_w="LITE5", width=16, height=64,
           x_offset=0, y_offset=0,
           side_w="DOORSTOP", depth=8, 
-          top_f="FLAT23", gap=32,
+          top_f="FLAT23",
           sec_kind=8, light=0.9,
         }
-        Build_picture(S, side, lite, z1+32, nil, w_tex, f_tex)
+        local silver3 =
+        {
+          count=2, gap=32,
+          pic_w="SILVER3", width=64, height=96,
+          x_offset=0, y_offset=16,
+          side_w="DOORSTOP", depth=8, 
+          top_f="FLAT23"
+        }
+        Build_picture(S, side, silver3, z1+32, nil, w_tex, f_tex)
       end
 
       if B_kind == "window" then
@@ -1516,7 +1589,7 @@ local STEP_SKINS =
   { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
   { step_w="STEP6", side_w="STUCCO",   top_f="FLAT5" },
   { step_w="STEP3", side_w="COMPSPAN", top_f="CEIL5_1" },
-  { step_w="STEP1", side_w="COMPBLUE", top_f="FLAT14" },
+  { step_w="STEP1", side_w="BROWNHUG", top_f="RROCK10" },
 
 --  { step_w="STEP3", side_w="BROWNHUG", top_f="ROCK10" },
 --  { step_w="STEP2", side_w="STUCCO",   top_f="FLOOR4_6" },
