@@ -1398,7 +1398,7 @@ function Build_low_curved_stair(S, skin, x_side,y_side, x_h,y_h)
 
   local bord_W = 16
 
-  local steps = 2 * int(math.abs(y_h-x_h) / 28 + 0.9)
+  local steps = 2 * int(math.abs(y_h-x_h) / 30 + 0.9)
 
   if steps < 4 then
     steps = 4
@@ -1414,8 +1414,7 @@ function Build_low_curved_stair(S, skin, x_side,y_side, x_h,y_h)
 
 
   for i = steps,1,-1 do
-    
-    local z = y_h + (x_h - y_h) * (i-1) / (steps-1)
+    local z = y_h + (x_h - y_h) * (i) / (steps+1)
 
     local ang1 = (math.pi / 2.0) * (i-1) / steps
     local ang2 = (math.pi / 2.0) * (i  ) / steps
