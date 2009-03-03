@@ -673,7 +673,7 @@ function Rooms_border_up()
   end
 
 
-  local function get_all_borders(R)
+  local function get_border_list(R)
     local list = {}
 
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
@@ -789,7 +789,7 @@ function Rooms_border_up()
 
 
     -- implement the window_mode
-    if (PLAN.window_mode == "few"  and score < 360) or
+    if (PLAN.window_mode == "few"  and score < 350) or
        (PLAN.window_mode == "some" and score < 260)
     then
       return nil
@@ -880,15 +880,81 @@ function Rooms_border_up()
     end
   end
 
+
   local function decide_pictures(R, border_list)
     if R.kind ~= "building" then return end
     if R.semi_outdoor then return end
 
+    -- filter border list to remove symmetrical peers, seeds
+    -- with pillars, etc..
+    local new_list = {}
+
     for _,bd in ipairs(border_list) do
-      if bd.S.border[bd.side].kind == "wall" then
---!!!        bd.S.border[bd.side].kind = "picture"
+      local S = bd.S
+      local side = bd.side
+
+      assert(S.kind ~= "void")
+
+      if (R.mirror_x and S.x_peer and S.sx > S.x_peer.sx) or
+         (R.mirror_y and S.y_peer and S.sy > S.y_peer.sy) or
+         (S.content == "pillar")
+      then
+        -- skip it
+      else
+        table.insert(new_list, bd)
       end
     end
+
+
+    -- deice how many pictures we want
+    local perc = rand_element { 20,30,40 }
+
+--[[ !!!
+    if PLAN.picture_mode == "heaps" then perc = perc * 2 end
+    if PLAN.picture_mode == "few"   then perc = 10 end
+--]]
+
+    local count = int(#border_list * perc / 100)
+
+    gui.debugf("Picture count @ %s --> %d\n", R:tostr(), count)
+
+    if R.mirror_x then count = int(count / 2) + 1 end
+    if R.mirror_y then count = int(count / 2) end
+
+
+    rand_shuffle(new_list)
+
+    for index,bd in ipairs(new_list) do
+      if index > count then break end
+
+      for dx = 1,sel(R.mirror_x, 2, 1) do
+        for dy = 1,sel(R.mirror_y, 2, 1) do
+          local S    = bd.S
+          local side = bd.side
+
+          if dx == 2 then
+            S = S.x_peer
+            if not S then break; end
+            if is_horiz(side) then side = 10-side end
+          end
+
+          if S and dy == 2 then
+            S = S.y_peer
+            if not S then break; end
+            if is_vert(side) then side = 10-side end
+          end
+
+          local B = S.border[side]
+
+          if B.kind == "wall" then
+            B.kind = "picture"
+            B.foo = ((dx-1) * 2) + dy
+            -- FIXME: decide what
+          end
+
+        end -- for dy
+      end -- for dx
+    end -- for bd
   end
 
 
@@ -902,10 +968,8 @@ function Rooms_border_up()
   end
 
   for _,R in ipairs(PLAN.all_rooms) do
-    local border_list = get_all_borders(R)
-
-    decide_windows( R, border_list)
-    decide_pictures(R, border_list)
+    decide_windows( R, get_border_list(R))
+    decide_pictures(R, get_border_list(R))
   end
 end
 
@@ -1584,6 +1648,8 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "picture" then
+        local B = S.border[side]
+
         local compsta =
         {
           pic_w="COMPSTA1", width=128, height=64,
@@ -1602,13 +1668,32 @@ gui.printf("do_teleport\n")
         }
         local silver3 =
         {
-          count=2, gap=32,
+          count=1, gap=32,
           pic_w="SILVER3", width=64, height=96,
           x_offset=0, y_offset=16,
           side_w="DOORSTOP", depth=8, 
-          top_f="FLAT23"
+          top_f="FLAT23",
+          sec_kind=8, light=0.9,
         }
-        Build_picture(S, side, silver3, z1+32, nil, w_tex, f_tex)
+        local pois1 =
+        {
+          count=2, gap=32,
+          pic_w="BRNPOIS", width=64, height=56,
+          x_offset=0, y_offset=48,
+          side_w="METAL", top_f="CEIL5_2", depth=8, 
+        }
+        local pois2 =
+        {
+          count=1, gap=32,
+          pic_w="GRAYPOIS", width=64, height=64,
+          x_offset=0, y_offset=0,
+          side_w="DOORSTOP", top_f="FLAT23",
+          depth=8, 
+        }
+        local FOOS = { silver3, lite, compsta, pois2 }
+
+        gui.debugf("FOO = %s\n", tostring(B.foo))
+        Build_picture(S, side, assert(FOOS[B.foo]), z1+32, nil, w_tex, f_tex)
       end
 
       if B_kind == "window" then
@@ -1928,7 +2013,7 @@ function Rooms_build_all()
   PLAN.picture_mode = rand_key_by_probs { few=10, some=50, heaps=10 }
   gui.printf("Picture Mode: %s\n", PLAN.picture_mode)
 
-  PLAN.symmetry_mode = rand_key_by_probs { few=30, some=60, heaps=10 }
+  PLAN.symmetry_mode = rand_key_by_probs { few=20, some=60, heaps=20 }
   gui.printf("Symmetry Mode: %s\n", PLAN.symmetry_mode)
 
   PLAN.favor_shape = rand_key_by_probs { none=80, L=5, T=5, O=5, S=5, X=5 }

@@ -159,7 +159,7 @@ function Quest_decide_start_room(arena)
 
   assert(#arena.start.conns > 0)
 
-  gui.printf("Start room S(%d,%d)\n", arena.start.sx1, arena.start.sy1)
+  gui.printf("Start room: %s\n", arena.start:tostr())
 
   -- update connections so that 'src' and 'dest' follow the natural
   -- flow of the level, i.e. player always walks src -> dest (except
