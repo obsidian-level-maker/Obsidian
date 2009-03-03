@@ -611,7 +611,11 @@ function Rooms_border_up()
 
 
     if R1.outdoor then
-      S.border[side].kind = "fence"
+      if R2.outdoor then
+        S.border[side].kind = "fence"
+      else
+        S.border[side].kind = "nothing"
+      end
 
       if N.kind == "smallexit" then
         S.border[side].kind = "nothing"
@@ -701,19 +705,27 @@ function Rooms_border_up()
     local scenics = 0
     local doors   = 0
     local futures = 0
+    local entry   = 0
 
     local info = { side=side, seeds={} }
 
     for _,C in ipairs(R.conns) do
       local S = C:seed(R)
+      local B = S.border[side]
 
-      -- never any windows near a locked door
-      if S.border[side].kind == "lock_door" then
-        return nil
-      end
+      if S.conn_dir == side then
+        -- never any windows near a locked door
+        if B.kind == "lock_door" then
+          return nil
+        end
 
-      if S.border[side].kind == "door" then
-        doors = doors + 1
+        if B.kind == "door" or B.kind == "arch" then
+          doors = doors + 1
+        end
+
+        if C == R.entry_conn then
+          entry = 1
+        end
       end
     end
 
@@ -757,16 +769,64 @@ function Rooms_border_up()
 
     if min_c - max_f < 95 then return end
 
-    local score = (max_f1 - max_f2)
+    local score = 200 + gui.random() * 20
 
-    score = score + gui.random() * 10
+    -- primary score is floor drop off
+    score = score + (max_f1 - max_f2)
 
-    if scenics > 0 then score = score + 100 end
+    score = score + (min_c  - max_f) / 8
+    score = score - usable * 22
 
-    info.kind  = "wtf"
+    if scenics >= 1 then score = score + 120 end
+    if entry   == 0 then score = score + 60 end
+
+    if doors   == 0 then score = score + 20 end
+    if futures == 0 then score = score + 10 end
+
+    gui.debugf("Window score @ %s ^%d --> %d\n", R:tostr(), side, score)
+
     info.score = score
-    info.min_c = min_c
-    info.max_f = max_f
+
+
+    -- implement the window_mode
+    if (PLAN.window_mode == "few"  and score < 360) or
+       (PLAN.window_mode == "some" and score < 260)
+    then
+      return nil
+    end
+
+
+    -- determine height of window
+    if (min_c - max_f) >= 192 and rand_odds(20) then
+      info.z1 = max_f + 64
+      info.z2 = min_c - 64
+      info.is_tall = true
+    elseif (min_c - max_f) >= 160 and rand_odds(60) then
+      info.z1 = max_f + 32
+      info.z2 = min_c - 24
+      info.is_tall = true
+    elseif (max_f1 < max_f2) and rand_odds(30) then
+      info.z1 = min_c - 80
+      info.z2 = min_c - 32
+    else
+      info.z1 = max_f + 32
+      info.z2 = max_f + 80
+    end
+
+    -- determine width & doubleness
+    local thin_chance = math.min(6, usable) * 20 - 40
+    local dbl_chance  = 80 - math.min(3, usable) * 20
+
+    if usable >= 3 and rand_odds(thin_chance) then
+      info.width = 64
+    elseif usable <= 3 and rand_odds(dbl_chance) then
+      info.width = 192
+      info.mid_w = 64
+    elseif info.is_tall then
+      info.width = rand_sel(80, 128, 192)
+    else
+      info.width = rand_sel(20, 128, 192)
+    end
 
     return info
   end
@@ -776,34 +836,24 @@ function Rooms_border_up()
 
     for _,S in ipairs(info.seeds) do
       S.border[side].kind = "window"
-      S.border[side].win_z1 = info.max_f + 32
-      S.border[side].win_z2 = info.min_c - 24
+
+      S.border[side].win_width = info.width
+      S.border[side].win_mid_w = info.mid_w
+      S.border[side].win_z1    = info.z1
+      S.border[side].win_z2    = info.z2
     end -- for S
+  end
 
-    --[[
-    if info.kind == "flank" then
-      for _,S in ipairs(info.flank_seeds) do
-        S.border[info.side].kind = "window"
-      end -- for S
+  local function pick_best_side(poss)
+    local best
 
-      return
-    end
-
-    for _,bd in ipairs(border_list) do
-      local S    = bd.S
-      local side = bd.side
-
-      if side == info.side then
-        if (info.kind == "all") or
-           (info.kind == "rand" and rand_odds(info.chance))
-        then
-          S.border[side].kind = "window"
-          S.border[side].win_z1 = info.max_f + 32
-          S.border[side].win_z2 = info.min_c - 24
-        end
+    for side = 2,8,2 do
+      if poss[side] and (not best or poss[best].score < poss[side].score) then
+        best = side
       end
     end
-    --]]
+
+    return best
   end
 
   local function decide_windows(R, border_list)
@@ -813,19 +863,19 @@ function Rooms_border_up()
     local poss = {}
 
     for side = 2,8,2 do
-      local info = score_window_side(R, side, border_list)
-      if info then
-        table.insert(poss, info)
-      end
+      poss[side] = score_window_side(R, side, border_list)
     end
 
     for loop = 1,2 do
-      local best = table_pick_best(poss,
-          function(A,B) return A.score > B.score end)
+      local best = pick_best_side(poss)
 
-      if best and best.score > 0 then
-        add_windows(R, best, border_list)
-        best.score = -1
+      if best then
+        add_windows(R, poss[best], border_list)
+
+        poss[best] = nil
+
+        -- remove the opposite side too
+        poss[10-best] = nil
       end
     end
   end
@@ -836,7 +886,7 @@ function Rooms_border_up()
 
     for _,bd in ipairs(border_list) do
       if bd.S.border[bd.side].kind == "wall" then
-        bd.S.border[bd.side].kind = "picture"
+--!!!        bd.S.border[bd.side].kind = "picture"
       end
     end
   end
@@ -1562,10 +1612,10 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "window" then
-        local z1 = S.border[side].win_z1
-        local z2 = S.border[side].win_z2
+        local B = S.border[side]
 
-        Build_window(S, side, 192, nil, z1, z2, f_tex, w_tex)
+        Build_window(S, side, B.win_width, B.win_mid_w,
+                     B.win_z1, B.win_z2, f_tex, w_tex)
       end
 
       if B_kind == "fence"  then
@@ -1872,7 +1922,7 @@ function Rooms_build_all()
   PLAN.fence_mode = rand_key_by_probs { none=30, few=30, some=10 }
   gui.printf("Fence Mode: %s\n", PLAN.fence_mode)
 
-  PLAN.window_mode = rand_key_by_probs { few=20, some=50, heaps=10 }
+  PLAN.window_mode = rand_key_by_probs { few=20, some=50, heaps=30 }
   gui.printf("Window Mode: %s\n", PLAN.window_mode)
 
   PLAN.picture_mode = rand_key_by_probs { few=10, some=50, heaps=10 }
