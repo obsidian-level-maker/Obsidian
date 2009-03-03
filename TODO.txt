@@ -27,12 +27,9 @@ Ceilings:
     (i.e. the offset=0 rows).
 
 
-Windows:
-  - where is best??
-
 
 Pictures:
-  - ceiling huggers (esp. PILL)
+  - "billboards" (esp. PILL)
   - thin glowing light recesses
   - COMPSTAx, SILVER3
   - SPACEW3, SHAWN1, GRAYPOIS
@@ -68,6 +65,9 @@ Misc:
 -  monster-behind-door surprise: use fast open-only door
 
 
+Sourceforge:
+
+-  two new categorys:  'Packs'  and  'Testing'.
 
 
 
@@ -76,6 +76,19 @@ Misc:
 ================================================================
 DETAILED TODO LIST
 ================================================================
+
+
+Windows:
+  - better patterns:
+    (1) flank door mode
+    (2) every second seed mode
+
+  - put in indoor children rooms which don't connect to parent
+
+
+Hallways:
+  - rarely and big room (3+ conn) : make a maze
+
 
 
 POLISH:
@@ -106,10 +119,6 @@ Quakey:
 
 
 CSG IDEA: clipping rectangles (typically a room)
-
-
-Hallways:
-  - rarely and big room (3+ conn) : make a maze
 
 
 NAME GENERATOR
