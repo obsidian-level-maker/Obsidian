@@ -378,7 +378,7 @@ function Build_archway(S, side, z1, z2, f_tex, w_tex, o_tex)
   assert(deep > 17 or N_deep > 17)
 
   local break_tex = w_tex
-  if o_tex ~= w_tex then break_tex = "LITE5" end
+  if o_tex ~= w_tex then break_tex = "DOORTRAK" end
 
   for pass = 1,2 do
     if pass == 2 then T.mirror_x = mx end
