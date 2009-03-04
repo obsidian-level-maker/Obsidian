@@ -703,6 +703,21 @@ static int NaturalXOffset(merge_segment_c *G, int side)
   return I_ROUND(- along);
 }
 
+static int CalcXOffset(merge_segment_c *G, int side, area_vert_c *V, double x_offset) 
+{
+  double along = 0;
+  
+  if (V)
+  {
+    if (side == 0)
+      along = ComputeDist(V->x, V->y, G->start->x, G->start->y);
+    else
+      along = ComputeDist(V->x, V->y, G->end->x, G->end->y);
+  }
+
+  return (int)(along + x_offset);
+}
+
 
 static int WriteSidedef(merge_segment_c *G, int side,
                         merge_region_c *F, merge_region_c *B,
@@ -731,8 +746,11 @@ static int WriteSidedef(merge_segment_c *G, int side,
     double fz = (S->f_h + BS->f_h) / 2.0;
     double cz = (S->c_h + BS->c_h) / 2.0;
 
-    area_face_c *lower_W = CSG2_FindSideFace(G, fz, side == 1);
-    area_face_c *upper_W = CSG2_FindSideFace(G, cz, side == 1);
+    area_vert_c *l_vert = CSG2_FindSideVertex(G, fz, side == 1, true);
+    area_vert_c *u_vert = CSG2_FindSideVertex(G, cz, side == 1, true);
+
+    area_face_c *lower_W = CSG2_FindSideFace(G, fz, side == 1, l_vert);
+    area_face_c *upper_W = CSG2_FindSideFace(G, cz, side == 1, u_vert);
 
     area_face_c *rail_W = spec ? spec->rail : NULL;
 
@@ -750,11 +768,11 @@ static int WriteSidedef(merge_segment_c *G, int side,
     }
 
     if (rail_W && rail_W->x_offset != FVAL_NONE)
-      x_offset = (int)rail_W->x_offset;
+      x_offset = CalcXOffset(G, side, spec, rail_W->x_offset);
     else if (lower_W && lower_W->x_offset != FVAL_NONE)
-      x_offset = (int)lower_W->x_offset;
+      x_offset = CalcXOffset(G, side, l_vert, lower_W->x_offset);
     else if (upper_W && upper_W->x_offset != FVAL_NONE)
-      x_offset = (int)upper_W->x_offset;
+      x_offset = CalcXOffset(G, side, u_vert, upper_W->x_offset);
 
     if (rail_W && rail_W->y_offset != FVAL_NONE)
       y_offset = (int)rail_W->y_offset;
@@ -763,11 +781,12 @@ static int WriteSidedef(merge_segment_c *G, int side,
     else if (upper_W && upper_W->y_offset != FVAL_NONE)
       y_offset = (int)upper_W->y_offset;
   }
-  else
+  else  // one-sided line
   {
     double mz = (S->f_h + S->c_h) / 2.0;
 
-    area_face_c *mid_W = CSG2_FindSideFace(G, mz, side == 1);
+    area_vert_c *m_vert = CSG2_FindSideVertex(G, mz, side == 1, true);
+    area_face_c *mid_W  = CSG2_FindSideFace(  G, mz, side == 1, m_vert);
 
     if (mid_W && mid_W->peg)
       *l_peg = true;
@@ -775,7 +794,7 @@ static int WriteSidedef(merge_segment_c *G, int side,
     mid = mid_W ? mid_W->tex.c_str() : error_tex ? error_tex : "-";
 
     if (mid_W && mid_W->x_offset != FVAL_NONE)
-      x_offset = (int)mid_W->x_offset;
+      x_offset = CalcXOffset(G, side, m_vert, mid_W->x_offset);
 
     if (mid_W && mid_W->y_offset != FVAL_NONE)
       y_offset = (int)mid_W->y_offset;

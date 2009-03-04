@@ -819,9 +819,11 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
   return exact ? NULL : best;
 }
 
-area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front)
+area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
+                                area_vert_c *V)
 {
-  area_vert_c *V = CSG2_FindSideVertex(G, z, is_front, true);
+  if (! V)
+    V = CSG2_FindSideVertex(G, z, is_front, true);
 
   if (V)
   {

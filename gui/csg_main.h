@@ -422,7 +422,8 @@ area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact = false);
 csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
                                  bool is_front, bool exact = false);
-area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front);
+area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
+                                area_vert_c *V = NULL);
 
 void CSG2_MakeMiniMap(void);
 
