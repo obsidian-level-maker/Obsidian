@@ -2296,6 +2296,30 @@ function Build_pedestal(S, z1, f_tex, w_tex, x_ofs, y_ofs)
   -EXTREME_H, z1+8)
 end
 
+function Build_lowering_pedestal(S, z1, skin)
+  local mx = int((S.x1+S.x2) / 2)
+  local my = int((S.y1+S.y2) / 2)
+
+  local tag = PLAN:alloc_tag()
+
+  transformed_brush(nil,
+  {
+    t_face = { texture=assert(skin.top_f) },
+    b_face = { texture=      (skin.top_f) },
+    w_face = { texture=assert(skin.side_w),
+               peg=skin.peg, skin.x_offset, skin.y_offset },
+    sec_tag = tag,
+  },
+  {
+    { x=mx+32, y=my-32, line_kind=skin.line_kind, line_tag=tag },
+    { x=mx+32, y=my+32, line_kind=skin.line_kind, line_tag=tag },
+    { x=mx-32, y=my+32, line_kind=skin.line_kind, line_tag=tag },
+    { x=mx-32, y=my-32, line_kind=skin.line_kind, line_tag=tag },
+  },
+  -EXTREME_H, z1)
+end
+
+
 function Build_raising_start(S, face_dir, z1, info)
 
   local sw_tex = "SW1COMP"

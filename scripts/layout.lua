@@ -1590,6 +1590,22 @@ function Layout_one(R)
     return rand_irange(1,4)*2
   end
 
+  local function player_angle(S)
+    if R.sh > R.sw then
+      if S.sy > (R.sy1 + R.sy2) / 2 then 
+        return 270
+      else
+        return 90
+      end
+    else
+      if S.sx > (R.sx1 + R.sx2) / 2 then 
+        return 180
+      else
+        return 0
+      end
+    end
+  end
+
   local function add_purpose()
     local sx, sy, S = Layout_spot_for_wotsit(R, R.purpose)
     local z1 = S.floor_h or R.floor_h
@@ -1613,7 +1629,7 @@ function Layout_one(R)
         Build_pedestal(S, z1, "O_BOLT", "CEMENT2", 36, -8)
       end
 
-      local angle = 0  -- FIXME
+      local angle = player_angle(S)
       local dist = 56
 
       gui.add_entity(mx, my, z1 + 35,
@@ -1653,9 +1669,18 @@ function Layout_one(R)
       end
 
     elseif R.purpose == "KEY" then
-      Build_pedestal(S, z1, "CEIL1_2", "BLAKWAL2")
+      local lp_skin =
+      {
+        side_w="SW1PANEL",  -- SW1WOOD
+        top_f="CEIL1_3",
+        x_offset=0, y_offset=0, peg=true,
+        line_kind=23,
+      }
 
-      gui.add_entity(mx, my, z1+40,
+      --!!!! Build_pedestal(S, z1, "CEIL1_2", "BLAKWAL2")
+      Build_lowering_pedestal(S, z1+96, lp_skin)
+
+      gui.add_entity(mx, my, z1+40+96, --!!!!
       {
         name = tostring(GAME.things[R.key_item].id),
       })
