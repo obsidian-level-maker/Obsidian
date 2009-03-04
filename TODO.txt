@@ -5,35 +5,12 @@ TODO
 
 ++  DOOM CSG: fix x_offset and y_offset values
 
-++  DOOM CSG: merge linedefs where possible
-
 
 Ceilings:
-  - have a "central" area for a square or round area
-    which is raised and uses SKY or light or normal ceiling.
-    Also might use a trim (with beams to side of room)
-    or a computer texture on the sides.
-
-  - or put several small light fittings/sky holes with
-    various patterns (see v0.85), e.g. 2x2 or dice 5.
-
-  - have "peripheral" area where ceiling is as low as possible
-    (one side, or two opps, or U shape).
-
-  + or a criss-cross of beams, especially with pillars or
-    low opposite sides.
-
-  - if pillar rows have offset=1, good candidate for low opps
-    (i.e. the offset=0 rows).
-
-
-
-Pictures:
-  - "billboards" (esp. PILL)
-  - thin glowing light recesses
-  - COMPSTAx, SILVER3
-  - SPACEW3, SHAWN1, GRAYPOIS
-  - SLADPOIS or BRNPOIS in "liquid" rooms
+  - don't always trim the sky hole
+  
+  - put several small light fittings/sky holes with
+    simple patterns (e.g. inner 2x2 seeds, or outer corners)
 
 
 Monsters:
@@ -78,6 +55,9 @@ DETAILED TODO LIST
 ================================================================
 
 
+++  DOOM CSG: merge linedefs where possible
+
+
 Windows:
   - better patterns:
     (1) flank door mode
@@ -89,6 +69,17 @@ Windows:
 Hallways:
   - rarely and big room (3+ conn) : make a maze
 
+
+Ceilings:
+  + or a criss-cross of beams, especially with pillars or
+    low opposite sides.  [NOTE: can mess up lifts!]
+
+  - mega sky holes (two in one, esp. outer has F_SKY1)
+
+
+Pictures:
+  - implement "billboards", pictures which jut down from the
+    ceiling (above doors and low periphs).
 
 
 POLISH:
