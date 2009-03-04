@@ -904,7 +904,7 @@ function Rooms_border_up()
       pic_w="LITE5", width=16, height=64,
       x_offset=0, y_offset=0,
       side_w="DOORSTOP", top_f="FLAT23", depth=8, 
-      sec_kind=8, light=0.9,
+      sec_kind=8, light=0.9,  -- oscillate
     }
     local liteblu4 =
     {
@@ -914,13 +914,21 @@ function Rooms_border_up()
       side_w="LITEBLU4", top_f="FLAT14", depth=8, 
       sec_kind=8, light=0.9,
     }
+    local redwall =
+    {
+      count=2, gap=48,
+      pic_w="REDWALL", width=16, height=128, raise=20,
+      x_offset=0, y_offset=0,
+      side_w="REDWALL", top_f="FLAT5_3", depth=8, 
+      sec_kind=8, light=0.99,
+    }
     local silver3 =
     {
       count=1, gap=32,
       pic_w="SILVER3", width=64, height=96,
       x_offset=0, y_offset=16,
       side_w="DOORSTOP", top_f="FLAT23", depth=8, 
-      light=0.9,
+      light=0.8,
     }
     local shawn1 =
     {
@@ -981,7 +989,7 @@ function Rooms_border_up()
     
     --------------------
 
-    if rand_odds(sel(PLAN.has_logo,4,50)) then
+    if rand_odds(sel(PLAN.has_logo,7,40)) then
       PLAN.has_logo = true
       return rand_sel(50, carve, pill)
     end
@@ -990,15 +998,17 @@ function Rooms_border_up()
       return rand_sel(70, pois1, pois2)
     end
 
-    if v_space > 170 and rand_odds(30) then
-      return silver3
+    if v_space >= 160 and rand_odds(30) then
+      return rand_sel(80, silver3, redwall)
     end
 
-    if rand_odds(5) then
+    if rand_odds(10) then
+      return shawn1
+    elseif rand_odds(4) then
       return rand_sel(60, tekwall1, tekwall4)
     end
 
-    if rand_odds(66) then
+    if rand_odds(64) then
       if rand_odds(5) then
         compsta1.sec_kind = 1
         compsta2.sec_kind = 1
@@ -1097,6 +1107,8 @@ function Rooms_border_up()
         if pics[2].pic_w ~= pics[1].pic_w then break; end
       end
     end
+
+    gui.debugf("Selected pics: %s %s\n", pics[1].pic_w, pics[2].pic_w)
 
 
     for loop = 1,count do
