@@ -2239,8 +2239,14 @@ function Build_picture(S, side, skin, z1, z2, w_tex, f_tex)
 
     -- picture itself
     if n < count then
-      transformed_brush(T, pic_info, rect_coords(x,my-4, x+WD,my),
-                        -EXTREME_H, EXTREME_H)
+      transformed_brush(T, pic_info,
+      {
+        { x=x+WD, y=my-4, line_kind=skin.line_kind },
+        { x=x+WD, y=my,   line_kind=skin.line_kind },
+        { x=x,    y=my,   line_kind=skin.line_kind },
+        { x=x,    y=my-4, line_kind=skin.line_kind },
+      },
+      -EXTREME_H, EXTREME_H)
     end
 
     -- side wall
