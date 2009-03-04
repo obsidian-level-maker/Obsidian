@@ -884,19 +884,34 @@ function Rooms_border_up()
   local function select_picture(R, v_space, index)
 
     -- FIXME: move into GAME !!!
-    local compsta =
+    local compsta1 =
     {
-      pic_w=rand_sel(50,"COMPSTA1","COMPSTA2"), width=128, height=52,
+      pic_w="COMPSTA1", width=128, height=52,
       x_offset=0, y_offset=0,
       side_w="DOORSTOP", depth=8, 
       top_f="FLAT23", light=0.8,
     }
-    local lite =
+    local compsta2 =
+    {
+      pic_w="COMPSTA2", width=128, height=52,
+      x_offset=0, y_offset=0,
+      side_w="DOORSTOP", depth=8, 
+      top_f="FLAT23", light=0.8,
+    }
+    local lite5 =
     {
       count=3, gap=32,
-      pic_w=rand_sel(75,"LITEBLU4","LITE5"), width=16, height=64,
+      pic_w="LITE5", width=16, height=64,
       x_offset=0, y_offset=0,
       side_w="DOORSTOP", top_f="FLAT23", depth=8, 
+      sec_kind=8, light=0.9,
+    }
+    local liteblu4 =
+    {
+      count=3, gap=32,
+      pic_w="LITEBLU4", width=16, height=64,
+      x_offset=0, y_offset=0,
+      side_w="LITEBLU4", top_f="FLAT14", depth=8, 
       sec_kind=8, light=0.9,
     }
     local silver3 =
@@ -905,7 +920,7 @@ function Rooms_border_up()
       pic_w="SILVER3", width=64, height=96,
       x_offset=0, y_offset=16,
       side_w="DOORSTOP", top_f="FLAT23", depth=8, 
-      sec_kind=8, light=0.9,
+      light=0.9,
     }
     local shawn1 =
     {
@@ -930,10 +945,19 @@ function Rooms_border_up()
       side_w="METAL", top_f="CEIL5_2", depth=8, 
       light=0.7,
     }
-    local tekwall =
+    local tekwall1 =
     {
       count=1,
-      pic_w=rand_sel(50,"TEKWALL1","TEKWALL4"), width=128, height=80,
+      pic_w="TEKWALL1", width=160, height=80,
+      x_offset=0, y_offset=24,
+      side_w="METAL", top_f="CEIL5_2", depth=8, 
+      line_kind=48, -- scroll
+      light=0.7,
+    }
+    local tekwall4 =
+    {
+      count=1,
+      pic_w="TEKWALL4", width=128, height=80,
       x_offset=0, y_offset=24,
       side_w="METAL", top_f="CEIL5_2", depth=8, 
       line_kind=48, -- scroll
@@ -957,7 +981,7 @@ function Rooms_border_up()
     
     --------------------
 
-    if rand_odds(sel(PLAN.has_logo,2,50)) then
+    if rand_odds(sel(PLAN.has_logo,4,50)) then
       PLAN.has_logo = true
       return rand_sel(50, carve, pill)
     end
@@ -971,14 +995,17 @@ function Rooms_border_up()
     end
 
     if rand_odds(5) then
-      return tekwall
+      return rand_sel(60, tekwall1, tekwall4)
     end
 
     if rand_odds(66) then
-      if rand_odds(5) then compsta.sec_kind = 1 end
-      return compsta
+      if rand_odds(5) then
+        compsta1.sec_kind = 1
+        compsta2.sec_kind = 1
+      end
+      return rand_sel(50, compsta1, compsta2)
     else
-      return lite
+      return rand_sel(50, lite5, liteblu4)
     end
   end
 
