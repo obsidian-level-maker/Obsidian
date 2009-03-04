@@ -502,7 +502,7 @@ else
     { x=mx-64, y=my+8, line_kind=KIND, line_tag=tag2 },
     { x=mx-64, y=my-8, line_kind=KIND, line_tag=tag2 },
   },
-  z1+64, EXTREME_H)
+  z1+16, EXTREME_H)
 end
 
 
@@ -2019,7 +2019,7 @@ function Build_small_exit(R, item_name)
     { x=mx-32, y=64, line_kind=1 },
     { x=mx-32, y=48, line_kind=1 },
   },
-  f_h+36, EXTREME_H)
+  f_h+16, EXTREME_H)
 
   inner_info.b_face = { texture="FLAT1" }
 

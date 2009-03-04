@@ -2108,7 +2108,7 @@ function Rooms_build_all()
 
   PLAN.sky_mode = OB_CONFIG.outdoors
   if not PLAN.sky_mode or PLAN.sky_mode == "mixed" then
-    PLAN.sky_mode = rand_key_by_probs { few=30, some=60, heaps=20 }
+    PLAN.sky_mode = rand_key_by_probs { few=30, some=60, heaps=30 }
   end
   gui.printf("Sky Mode: '%s'\n", PLAN.sky_mode)
 
