@@ -324,8 +324,8 @@ static bool Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V)
   if (V == S->start || V == S->end)
     return false;
 
-DebugPrintf("mug_change: split segment %p (%1.6f %1.6f) --> (%1.6f %1.6f) at (%1.6f %1.6f)\n", S,
-S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
+// DebugPrintf("mug_change: split segment %p (%1.6f %1.6f) --> (%1.6f %1.6f) at (%1.6f %1.6f)\n", S,
+// S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
 
   merge_segment_c *NS = new merge_segment_c(V, S->end);
 
@@ -484,8 +484,9 @@ static void Mug_OverlapPass(void)
         // total overlap (same start + end points) ?
         if (A->Match(B))
         {
-DebugPrintf("mug_change: killed segment %p (%1.6f %1.6f) -> (%1.6f %1.6f)\n", B,
-B->start->x, B->start->y, B->end->x, B->end->y);
+// DebugPrintf("mug_change: killed segment %p (%1.6f %1.6f) -> (%1.6f %1.6f)\n", B,
+// B->start->x, B->start->y, B->end->x, B->end->y);
+
           A->MergeSides(B);
           B->Kill();
 
@@ -576,7 +577,7 @@ B->start->x, B->start->y, B->end->x, B->end->y);
       // add a new vertex at the intersection point
       merge_vertex_c * NV = Mug_AddVertex(ix, iy);
 
-#if 1
+#if 0
 DebugPrintf("cross-over at (%1.6f %1.6f)\n", ix, iy);
 DebugPrintf("   A = (%1.6f %1.6f) --> (%1.6f %1.6f)\n", ax1,ay1, ax2,ay2);
 DebugPrintf("   B = (%1.6f %1.6f) --> (%1.6f %1.6f)\n", bx1,by1, bx2,by2);
@@ -1170,7 +1171,7 @@ unsigned int orig_ff = first_reg;
       }
     }
 
-DebugPrintf("Brush %u/%u : checked %u regions\n", j, all_brushes.size(), k - orig_ff);
+// DebugPrintf("Brush %u/%u : checked %u regions\n", j, all_brushes.size(), k - orig_ff);
 
   }
 
