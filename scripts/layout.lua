@@ -797,6 +797,7 @@ area.x1, area.y1, area.x2, area.y2)
         elseif ch == '~' then
           -- NOTE: floor_h for liquids is determined later
           S.kind = "liquid"
+          R.has_liquid = true
 
         else
           error("unknown symbol in room pat: '" .. tostring(ch) .. "'")
@@ -2256,7 +2257,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
   if R.kind == "building" then
-    add_pillars()
+--!!!!!!    add_pillars()
   end
 end
 

@@ -881,19 +881,112 @@ function Rooms_border_up()
   end
 
 
+  local function select_picture(R, v_space, index)
+
+    -- FIXME: move into GAME !!!
+    local compsta =
+    {
+      pic_w="COMPSTA1", width=128, height=52,
+      x_offset=0, y_offset=0,
+      side_w="DOORSTOP", depth=8, 
+      top_f="FLAT23", light=0.8,
+    }
+    local lite =
+    {
+      count=3, gap=32,
+      pic_w="LITE5", width=16, height=64,
+      x_offset=0, y_offset=0,
+      side_w="DOORSTOP", depth=8, 
+      top_f="FLAT23",
+      sec_kind=8, light=0.9,
+    }
+    local silver3 =
+    {
+      count=1, gap=32,
+      pic_w="SILVER3", width=64, height=96,
+      x_offset=0, y_offset=16,
+      side_w="DOORSTOP", depth=8, 
+      top_f="FLAT23",
+      sec_kind=8, light=0.9,
+    }
+    local pois1 =
+    {
+      count=2, gap=32,
+      pic_w="BRNPOIS", width=64, height=56,
+      x_offset=0, y_offset=48,
+      side_w="METAL", top_f="CEIL5_2", depth=8, 
+    }
+    local pois2 =
+    {
+      count=1, gap=32,
+      pic_w="GRAYPOIS", width=64, height=64,
+      x_offset=0, y_offset=0,
+      side_w="DOORSTOP", top_f="FLAT23",
+      depth=8, 
+    }
+    
+    if R.has_liquid and index == 1 and rand_odds(75) then
+      return rand_sel(70, pois1, pois2)
+    end
+
+    if v_space > 170 and rand_odds(30) then
+      return silver3
+    end
+
+    if rand_odds(50) then
+      if rand_odds(50) then compsta.pic_w = "COMPSTA2" end
+      return compsta
+    else
+      if rand_odds(25) then lite.pic_w = "LITEBLU4" end
+      return lite
+    end
+  end
+
+  local function install_pic(R, bd, skin)
+    -- handles symmetry
+
+    for dx = 1,sel(R.mirror_x, 2, 1) do
+      for dy = 1,sel(R.mirror_y, 2, 1) do
+        local S    = bd.S
+        local side = bd.side
+
+        if dx == 2 then
+          S = S.x_peer
+          if not S then break; end
+          if is_horiz(side) then side = 10-side end
+        end
+
+        if S and dy == 2 then
+          S = S.y_peer
+          if not S then break; end
+          if is_vert(side) then side = 10-side end
+        end
+
+        local B = S.border[side]
+
+        if B.kind == "wall" then
+          B.kind = "picture"
+          B.pic_skin = skin
+          B.pic_z1 = S.floor_h + 32
+        end
+
+      end -- for dy
+    end -- for dx
+  end
+
   local function decide_pictures(R, border_list)
     if R.kind ~= "building" then return end
     if R.semi_outdoor then return end
 
     -- filter border list to remove symmetrical peers, seeds
-    -- with pillars, etc..
+    -- with pillars, etc..  Also determine vertical space.
     local new_list = {}
+
+    local v_space = 999
 
     for _,bd in ipairs(border_list) do
       local S = bd.S
       local side = bd.side
-
-      assert(S.kind ~= "void")
 
       if (R.mirror_x and S.x_peer and S.sx > S.x_peer.sx) or
          (R.mirror_y and S.y_peer and S.sy > S.y_peer.sy) or
@@ -902,8 +995,13 @@ function Rooms_border_up()
         -- skip it
       else
         table.insert(new_list, bd)
+
+        local h = (S.ceil_h or R.ceil_h) - S.floor_h
+        v_space = math.min(v_space, h)
       end
     end
+
+    if #new_list == 0 then return end
 
 
     -- deice how many pictures we want
@@ -922,39 +1020,29 @@ function Rooms_border_up()
     if R.mirror_y then count = int(count / 2) end
 
 
-    rand_shuffle(new_list)
+    local pics = {}
+    pics[1] = select_picture(R, v_space, 1)
+    pics[2] = pics[1]
 
-    for index,bd in ipairs(new_list) do
-      if index > count then break end
+    if #border_list >= 12 then
+      for loop = 1,4 do
+        pics[2] = select_picture(R, v_space, 2)
+        -- want a different pic
+        if pics[2] ~= pics[1] then break; end
+      end
+    end
 
-      for dx = 1,sel(R.mirror_x, 2, 1) do
-        for dy = 1,sel(R.mirror_y, 2, 1) do
-          local S    = bd.S
-          local side = bd.side
 
-          if dx == 2 then
-            S = S.x_peer
-            if not S then break; end
-            if is_horiz(side) then side = 10-side end
-          end
+    for loop = 1,count do
+      if #new_list == 0 then break; end
 
-          if S and dy == 2 then
-            S = S.y_peer
-            if not S then break; end
-            if is_vert(side) then side = 10-side end
-          end
+      -- FIXME !!!! SELECT GOOD ONE
+      local b_index = rand_irange(1, #new_list)
 
-          local B = S.border[side]
-
-          if B.kind == "wall" then
-            B.kind = "picture"
-            B.foo = ((dx-1) * 2) + dy
-            -- FIXME: decide what
-          end
-
-        end -- for dy
-      end -- for dx
-    end -- for bd
+      local bd = table.remove(new_list, b_index)
+      
+      install_pic(R, bd, pics[1 + (loop-1) % 2])
+    end -- for loop
   end
 
 
@@ -1650,50 +1738,7 @@ gui.printf("do_teleport\n")
       if B_kind == "picture" then
         local B = S.border[side]
 
-        local compsta =
-        {
-          pic_w="COMPSTA1", width=128, height=64,
-          x_offset=0, y_offset=0,
-          side_w="DOORSTOP", depth=8, 
-          top_f="FLAT23"
-        }
-        local lite =
-        {
-          count=3, gap=32,
-          pic_w="LITE5", width=16, height=64,
-          x_offset=0, y_offset=0,
-          side_w="DOORSTOP", depth=8, 
-          top_f="FLAT23",
-          sec_kind=8, light=0.9,
-        }
-        local silver3 =
-        {
-          count=1, gap=32,
-          pic_w="SILVER3", width=64, height=96,
-          x_offset=0, y_offset=16,
-          side_w="DOORSTOP", depth=8, 
-          top_f="FLAT23",
-          sec_kind=8, light=0.9,
-        }
-        local pois1 =
-        {
-          count=2, gap=32,
-          pic_w="BRNPOIS", width=64, height=56,
-          x_offset=0, y_offset=48,
-          side_w="METAL", top_f="CEIL5_2", depth=8, 
-        }
-        local pois2 =
-        {
-          count=1, gap=32,
-          pic_w="GRAYPOIS", width=64, height=64,
-          x_offset=0, y_offset=0,
-          side_w="DOORSTOP", top_f="FLAT23",
-          depth=8, 
-        }
-        local FOOS = { silver3, lite, compsta, pois2 }
-
-        gui.debugf("FOO = %s\n", tostring(B.foo))
-        Build_picture(S, side, assert(FOOS[B.foo]), z1+32, nil, w_tex, f_tex)
+        Build_picture(S, side, B.pic_skin, B.pic_z1, B.pic_z2, w_tex, f_tex)
       end
 
       if B_kind == "window" then
