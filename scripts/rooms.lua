@@ -886,7 +886,7 @@ function Rooms_border_up()
     -- FIXME: move into GAME !!!
     local compsta =
     {
-      pic_w="COMPSTA1", width=128, height=52,
+      pic_w=rand_sel(50,"COMPSTA1","COMPSTA2"), width=128, height=52,
       x_offset=0, y_offset=0,
       side_w="DOORSTOP", depth=8, 
       top_f="FLAT23", light=0.8,
@@ -894,10 +894,9 @@ function Rooms_border_up()
     local lite =
     {
       count=3, gap=32,
-      pic_w="LITE5", width=16, height=64,
+      pic_w=rand_sel(75,"LITEBLU4","LITE5"), width=16, height=64,
       x_offset=0, y_offset=0,
-      side_w="DOORSTOP", depth=8, 
-      top_f="FLAT23",
+      side_w="DOORSTOP", top_f="FLAT23", depth=8, 
       sec_kind=8, light=0.9,
     }
     local silver3 =
@@ -905,9 +904,40 @@ function Rooms_border_up()
       count=1, gap=32,
       pic_w="SILVER3", width=64, height=96,
       x_offset=0, y_offset=16,
-      side_w="DOORSTOP", depth=8, 
-      top_f="FLAT23",
+      side_w="DOORSTOP", top_f="FLAT23", depth=8, 
       sec_kind=8, light=0.9,
+    }
+    local shawn1 =
+    {
+      count=1,
+      pic_w="SHAWN1", width=128, height=72,
+      x_offset=-4, y_offset=0,
+      side_w="DOORSTOP", top_f="FLAT23", depth=8, 
+    }
+    local pill =
+    {
+      count=1,
+      pic_w="CEMENT1", width=128, height=32, raise=16,
+      x_offset=0, y_offset=0,
+      side_w="METAL", top_f="CEIL5_2", depth=8, 
+      light=0.7,
+    }
+    local carve =
+    {
+      count=1,
+      pic_w="CEMENT4", width=64, height=64,
+      x_offset=0, y_offset=0,
+      side_w="METAL", top_f="CEIL5_2", depth=8, 
+      light=0.7,
+    }
+    local tekwall =
+    {
+      count=1,
+      pic_w=rand_sel(50,"TEKWALL1","TEKWALL4"), width=128, height=80,
+      x_offset=0, y_offset=24,
+      side_w="METAL", top_f="CEIL5_2", depth=8, 
+      line_kind=48, -- scroll
+      light=0.7,
     }
     local pois1 =
     {
@@ -925,6 +955,13 @@ function Rooms_border_up()
       depth=8, 
     }
     
+    --------------------
+
+    if rand_odds(sel(PLAN.has_logo,2,50)) then
+      PLAN.has_logo = true
+      return rand_sel(50, carve, pill)
+    end
+
     if R.has_liquid and index == 1 and rand_odds(75) then
       return rand_sel(70, pois1, pois2)
     end
@@ -933,11 +970,14 @@ function Rooms_border_up()
       return silver3
     end
 
-    if rand_odds(50) then
-      if rand_odds(50) then compsta.pic_w = "COMPSTA2" end
+    if rand_odds(5) then
+      return tekwall
+    end
+
+    if rand_odds(66) then
+      if rand_odds(5) then compsta.sec_kind = 1 end
       return compsta
     else
-      if rand_odds(25) then lite.pic_w = "LITEBLU4" end
       return lite
     end
   end
@@ -967,7 +1007,7 @@ function Rooms_border_up()
         if B.kind == "wall" then
           B.kind = "picture"
           B.pic_skin = skin
-          B.pic_z1 = S.floor_h + 32
+          B.pic_z1 = S.floor_h + (skin.raise or 32)
         end
 
       end -- for dy
@@ -1007,10 +1047,8 @@ function Rooms_border_up()
     -- deice how many pictures we want
     local perc = rand_element { 20,30,40 }
 
---[[ !!!
-    if PLAN.picture_mode == "heaps" then perc = perc * 2 end
+    if PLAN.picture_mode == "heaps" then perc = 50 end
     if PLAN.picture_mode == "few"   then perc = 10 end
---]]
 
     local count = int(#border_list * perc / 100)
 
@@ -1020,15 +1058,16 @@ function Rooms_border_up()
     if R.mirror_y then count = int(count / 2) end
 
 
+    -- select one or two pictures to use
     local pics = {}
     pics[1] = select_picture(R, v_space, 1)
     pics[2] = pics[1]
 
     if #border_list >= 12 then
-      for loop = 1,4 do
+      -- prefer a different pic for #2
+      for loop = 1,3 do
         pics[2] = select_picture(R, v_space, 2)
-        -- want a different pic
-        if pics[2] ~= pics[1] then break; end
+        if pics[2].pic_w ~= pics[1].pic_w then break; end
       end
     end
 
@@ -1036,7 +1075,7 @@ function Rooms_border_up()
     for loop = 1,count do
       if #new_list == 0 then break; end
 
-      -- FIXME !!!! SELECT GOOD ONE
+      -- FIXME !!!! SELECT GOOD SPOT
       local b_index = rand_irange(1, #new_list)
 
       local bd = table.remove(new_list, b_index)

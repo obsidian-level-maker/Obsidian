@@ -2257,7 +2257,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
   if R.kind == "building" then
---!!!!!!    add_pillars()
+    add_pillars()
   end
 end
 
