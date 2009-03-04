@@ -967,6 +967,34 @@ static void WriteLinedefs(void)
 }
 
 
+static void CheckThingOption(const char *name, const char *value,
+                             int *options)
+{
+  bool enable = ! (value[0] == '0' || tolower(value[0]) == 'f');
+
+  // skill flags default to 1, hence only need to clear them
+  if (StringCaseCmp(name, "skill_easy") == 0 && !enable)
+    *options &= ~MTF_Easy;
+  if (StringCaseCmp(name, "skill_normal") == 0 && !enable)
+    *options &= ~MTF_Normal;
+  if (StringCaseCmp(name, "skill_hard") == 0 && !enable)
+    *options &= ~MTF_Hard;
+
+  // mode flags are negated (1 means "no")
+  if (StringCaseCmp(name, "mode_sp") == 0 && !enable)
+    *options |= ~MTF_NotSP;
+  if (StringCaseCmp(name, "mode_coop") == 0 && !enable)
+    *options |= ~MTF_NotCOOP;
+  if (StringCaseCmp(name, "mode_dm") == 0 && !enable)
+    *options |= ~MTF_NotDM;
+
+  // other flags...
+  if (StringCaseCmp(name, "flag_ambush") == 0 && enable)
+    *options |= MTF_Ambush;
+  
+  // TODO: HEXEN FLAGS
+}
+
 static void WriteThings(void)
 {
   // ??? first iterate over entity lists in merge_gaps
@@ -983,15 +1011,34 @@ static void WriteThings(void)
       continue;
     }
 
-    // FIXME!!!! thing height
-    double h = 0;
+    double h = 0; // FIXME!!! proper height (above ground)
+
+
+    // parse entity properties
+    int angle   = 0;
+    int options = 7;
+    int tid     = 0;
+    int special = 0;
+
+    std::map<std::string, std::string>::iterator MI;
+    for (MI = E->props.begin(); MI != E->props.end(); MI++)
+    {
+      const char *name  = MI->first.c_str();
+      const char *value = MI->second.c_str();
+
+      if (StringCaseCmp(name, "angle") == 0)
+        angle = atoi(value);
+      else if (StringCaseCmp(name, "tid") == 0)
+        tid = atoi(value);
+      else if (StringCaseCmp(name, "special") == 0)
+        special = atoi(value);
+      else
+        CheckThingOption(name, value, &options);
+    }
 
     DM_AddThing(I_ROUND(E->x), I_ROUND(E->y), I_ROUND(h), type,
-                   0, /* FIXME: angle */
-                   7, /* FIXME: options */
-                   0, /* FIXME: tid */
-                   0, /* FIXME: special */
-                   NULL /* FIXME: args */);
+                angle, options, tid, special,
+                NULL /* FIXME: args */);
   }
 }
 
