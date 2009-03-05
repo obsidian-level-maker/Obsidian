@@ -1041,7 +1041,7 @@ function Rooms_border_up()
 
         local B = S.border[side]
 
-        if B.kind == "wall" then
+        if B.kind == "wall" and S.floor_h then
           B.kind = "picture"
           B.pic_skin = skin
           B.pic_z1 = S.floor_h + (skin.raise or 32)
@@ -1067,7 +1067,7 @@ function Rooms_border_up()
 
       if (R.mirror_x and S.x_peer and S.sx > S.x_peer.sx) or
          (R.mirror_y and S.y_peer and S.sy > S.y_peer.sy) or
-         (S.content == "pillar")
+         (S.content == "pillar") or (S.kind == "lift")
       then
         -- skip it
       else
