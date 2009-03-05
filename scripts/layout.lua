@@ -1609,6 +1609,7 @@ function Layout_one(R)
   local function add_purpose()
     local sx, sy, S = Layout_spot_for_wotsit(R, R.purpose)
     local z1 = S.floor_h or R.floor_h
+    local z2 = S.ceil_h  or R.ceil_h or SKY_H
 
     local mx, my = S:mid_point()
 
@@ -1671,16 +1672,21 @@ function Layout_one(R)
     elseif R.purpose == "KEY" then
       local lp_skin =
       {
-        side_w="SW1PANEL",  -- SW1WOOD
-        top_f="CEIL1_3",
+        side_w="WOOD9", top_f="CEIL1_3",
         x_offset=0, y_offset=0, peg=true,
         line_kind=23,
       }
 
-      --!!!! Build_pedestal(S, z1, "CEIL1_2", "BLAKWAL2")
-      Build_lowering_pedestal(S, z1+96, lp_skin)
+      local z = math.max(z1+80, R.floor_max_h+40)
+      if z > z2-32 then z = z2-32 end
 
-      gui.add_entity(mx, my, z1+40+96, --!!!!
+      if rand_odds(10) then
+        Build_lowering_pedestal(S, z, lp_skin)
+      else
+        Build_pedestal(S, z1, "CEIL1_2", "BLAKWAL2")
+      end
+
+      gui.add_entity(mx, my, z + 35,
       {
         name = tostring(GAME.things[R.key_item].id),
       })
