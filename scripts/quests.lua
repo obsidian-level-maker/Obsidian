@@ -804,7 +804,7 @@ function Quest_assign()
       if R.num_branch == 0 then
         error("Room exists with no connections!")
       end
-gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
+gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
     end
   end
 
@@ -844,6 +844,8 @@ gui.printf("%s branches:%d\n", R:tostr(), R.num_branch)
   for i = 1,PLAN.max_keys do
     Quest_add_lock()
   end
+
+  gui.printf("Total arenas: %d\n", #PLAN.all_arenas)
 
   for id,A in ipairs(PLAN.all_arenas) do
     A.id = id
