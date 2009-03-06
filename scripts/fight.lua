@@ -121,9 +121,7 @@ function fight_simulator(monsters, weapons, skill, ammos)
     local W = weapons[wp_idx]
     assert(W)
 
-    local time = 2.0
-
-    return W, time
+    return W
   end
 
 
@@ -263,10 +261,13 @@ function fight_simulator(monsters, weapons, skill, ammos)
   monsters_shoot(0.5)
 
   while #active_mon > 0 do
-    local W, time = select_weapon()
-    player_shoot(W, time)
-    monsters_shoot(time)
-    remove_dead_mon()
+    local W = select_weapon()
+
+    for loop = 1,rand_irange(2,8) do
+      player_shoot(W, 2.0)
+      monsters_shoot( 2.0)
+      remove_dead_mon()
+    end
   end
 
   -- Hexen fixup for double-mana weapons
