@@ -1723,18 +1723,19 @@ function Doom2_get_levels()
 
     LEV.toughness_factor = 1 + 1.5 * LEV.ep_along
 
+    if LEV.ep_along > 0.44 and rand_odds(sel(MAP_NUM > 7, 50, 90)) then
+      LEV.allow_bfg = true
+    end
+
     -- secret levels
     if map == 31 or map == 32 then
       LEV.theme = "WOLF"
+      LEV.allow_bfg = true
     end
 
 ---!!! LEV.boss_kind   = DOOM2_LEVEL_BOSSES[LEV.name]
     LEV.secret_kind = DOOM2_SECRET_KINDS[LEV.name]
     LEV.secret_exit = DOOM2_SECRET_EXITS[LEV.name]
-
-    if LEV.ep_along > 0.44 and rand_odds(sel(MAP_NUM > 7, 30, 60)) then
-      LEV.allow_bfg = true
-    end
 
     table.insert(list, LEV)
   end

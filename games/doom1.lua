@@ -3002,7 +3002,7 @@ COMMON_WEAPONS =
                                 
   berserk =
   {
-    pref=8, add_prob=10, start_prob=20,
+    pref=8, add_prob=6, start_prob=20,
     rate=1.5, dm=50, melee=true,
   },
 
@@ -3015,21 +3015,21 @@ COMMON_WEAPONS =
 
   chain =
   {
-    pref=80, add_prob=50, start_prob=30,
+    pref=80, add_prob=35, start_prob=30,
     rate=8.5, dm=10,
     ammo="bullet", per=1, give=20,
   },
 
   shotty =
   {
-    pref=110, add_prob=50, start_prob=80,
+    pref=110, add_prob=10, start_prob=80,
     rate=0.9, dm=70, splash={ 0,10 },
     ammo="shell",  per=1, give=8,
   },
 
   super =
   {
-    pref=70, add_prob=25, start_prob=3,
+    pref=70, add_prob=20, start_prob=3,
     rate=0.6, dm=170, splash={ 0,30 },
     ammo="shell", per=2, give=8,
   },
@@ -3043,14 +3043,14 @@ COMMON_WEAPONS =
 
   plasma =
   {
-    pref=80, add_prob=25, start_prob=3,
+    pref=80, add_prob=15, start_prob=3,
     rate=11, dm=20,
     ammo="cell", per=1, give=40,
   },
 
   bfg =
   {
-    pref=20, add_prob=1,
+    pref=20, add_prob=25,
     rate=0.8, dm=300, splash={60,45,30,30,20,10},
     ammo="cell", per=40, give=40,
   },
@@ -3062,8 +3062,12 @@ COMMON_WEAPONS =
   -- which makes fist do much more damage.  The effect lasts till
   -- the end of the level, so a weapon is a pretty good fit.
   --
+  -- Shotgun has a fairly low add_prob, since it is likely the
+  -- player will have encountered a shotgun zombie and already
+  -- have that weapon.
+  --
   -- Supershotgun is not present in DOOM 1.  It is removed from
-  -- the weapon table by doom1_factory().
+  -- the weapon table in the Doom1_setup() function.
 }
 
 -- sometimes a certain weapon is preferred against a certain monster.
@@ -3487,12 +3491,13 @@ function Doom1_get_levels()
         toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 5),
       }
 
+      if LEV.ep_along > 0.44 and rand_odds(sel(MAP_NUM > 7, 50, 90)) then
+        LEV.allow_bfg = true
+      end
+
       if DOOM1_SECRET_EXITS[LEV.name] then
         LEV.secret_exit = true
         LEV.ep_along = 0.5
-      end
-
-      if LEV.ep_along > 0.44 and rand_odds(sel(MAP_NUM > 7, 30, 60)) then
         LEV.allow_bfg = true
       end
 
