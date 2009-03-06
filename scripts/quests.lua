@@ -788,6 +788,75 @@ function Quest_choose_keys()
 end
 
 
+function Quest_add_weapons()
+ 
+  PLAN.added_weapons = {}
+
+  local function do_start_weapon(arena)
+    local name_tab = {}
+
+    for name,info in pairs(GAME.weapons) do
+      if info.start_prob then
+        name_tab[name] = info.start_prob
+      end
+    end
+
+    if not LEVEL.allow_bfg then name_tab["bfg"] = nil end
+
+    if table_empty(name_tab) then
+      gui.debugf("Start weapon: NONE!!\n")
+      return
+    end
+
+    local weapon = rand_key_by_probs(name_tab)
+
+    gui.debugf("Start weapon: %s\n", weapon)
+
+    PLAN.added_weapons[weapon] = true
+    
+    arena.weapon = weapon
+    arena.start.weapon = weapon
+  end
+
+  local function do_new_weapon(arena)
+    local name_tab = {}
+
+    for name,info in pairs(GAME.weapons) do
+      if info.add_prob and not PLAN.added_weapons[name] then
+        name_tab[name] = info.add_prob
+      end
+    end
+
+    if not LEVEL.allow_bfg then name_tab["bfg"] = nil end
+
+    if table_empty(name_tab) then
+      gui.debugf("New weapon @ ARENA_%d: NONE\n", arena.id)
+      return
+    end
+
+    local weapon = rand_key_by_probs(name_tab)
+
+    gui.debugf("New weapon @ ARENA_%d: %s\n", arena.id, weapon)
+
+    PLAN.added_weapons[weapon] = true
+    
+    arena.weapon = weapon
+    arena.start.weapon = weapon  -- FIXME!!!!
+  end
+
+
+  ---| Quest_add_weapons |---
+
+  for index,A in ipairs(PLAN.all_arenas) do
+    if index == 1  then
+      do_start_weapon(A)
+    elseif (index == 2) or rand_odds(sel((index % 2) == 1, 80, 20)) then
+      do_new_weapon(A)
+    end
+  end
+end
+
+
 function Quest_assign()
 
   gui.printf("\n--==| Quest_assign |==--\n\n")
@@ -859,5 +928,6 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
 
   Quest_key_distances()
 
+  Quest_add_weapons()
 end
 
