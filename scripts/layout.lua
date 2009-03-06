@@ -340,6 +340,8 @@ function Layout_spot_for_wotsit(R, kind)
       if x == bonus_x then P.score = P.score + 15 end
       if y == bonus_y then P.score = P.score + 15 end
 
+      if not S.conn then P.score = P.score + 40 end
+
       table.insert(spots, P)
     end
   end end -- for x, y
@@ -1343,6 +1345,10 @@ function Layout_hallway(R)
 
   ---| Layout_hallway |---
 
+  R.tx1, R.ty1 = R.sx1, R.sy1
+  R.tx2, R.ty2 = R.sx2, R.sy2
+  R.tw,  R.th  = R.sw,  R.sh
+
   local HALL_TEX   = { "BROWN1", "BROWNGRN", "GRAY1", "STARBR2" }
   local HALL_FLOOR = { "FLAT4", "CEIL5_1", "FLOOR1_1", "FLOOR3_3",  }
   local HALL_CEIL  = { "FLAT4", "CEIL5_1", "CEIL3_5", "CEIL3_3" }
@@ -1699,6 +1705,37 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     else
       error("Layout_one: unknown purpose! " .. tostring(R.purpose))
     end
+  end
+
+  local function add_weapon()
+    local sx, sy, S = Layout_spot_for_wotsit(R, "WEAPON")
+    local z1 = S.floor_h or R.floor_h
+    local z2 = S.ceil_h  or R.ceil_h or SKY_H
+
+    local mx, my = S:mid_point()
+
+    local lp_skin =
+    {
+      side_w="PIPEWAL1", top_f="CEIL1_2",
+      x_offset=0, y_offset=0, peg=true,
+      line_kind=23,
+    }
+
+    local z = math.max(z1+80, R.floor_max_h+40)
+    if z > z2-32 then z = z2-32 end
+
+    if R.kind == "hallway" or R == PLAN.start_room then
+      -- nothing!
+    elseif rand_odds(40) then
+      Build_lowering_pedestal(S, z, lp_skin)
+    else
+      Build_pedestal(S, z1, "CEIL1_2", "BLAKWAL2")
+    end
+
+    gui.add_entity(mx, my, z + 35,
+    {
+      name = tostring(GAME.things[R.weapon].id),
+    })
   end
 
   local function stairwell_height_diff(focus_C)
@@ -2238,6 +2275,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   if R.kind == "hallway" then
     Layout_hallway(R, focus_C.conn_h)
+    if R.weapon then add_weapon() end
     return
   end
 
@@ -2283,9 +2321,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
 
-  if R.purpose then
-    add_purpose()
-  end
+  if R.purpose then add_purpose() end
+  if R.weapon  then add_weapon()  end
 
   if R.kind == "building" then
     add_pillars()

@@ -180,6 +180,8 @@ function Level_Make(L, index, NUM)
     if gui.abort() then return "abort" end
     gui.progress(90)
 
+--- Builder_dummy()
+
   gui.end_level()
 
   -- FIXME: invoke "level_finish" signal
