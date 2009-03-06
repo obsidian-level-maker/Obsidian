@@ -146,12 +146,7 @@ function fight_simulator(monsters, weapons, skill, ammos)
   end
 
   local function player_shoot(W, time)
-    hurt_mon(1, W, W.dm * time * shoot_accuracy)
-
----##     -- shotguns can hit multiple monsters
----##     if W.spread then
----##       hurt_mon(2, W, W.dm * time * shoot_accuracy * W.spread)
----##     end 
+    hurt_mon(1, W, W.damage * time * shoot_accuracy)
 
     -- simulate splash damage | shotgun spread
     if W.splash then
@@ -166,42 +161,45 @@ function fight_simulator(monsters, weapons, skill, ammos)
 
 
   local function monster_hit_player(M, idx, time)
-    -- how likely the monster is to hit the player
-    local dist_ratio
     local info = M.info
 
-    if info.no_dist then
-      dist_ratio = 1.0
-    elseif info.melee then
-      dist_ratio = MELEE_RATIOS[idx]
-    elseif info.hitscan then
-      dist_ratio = HITSCAN_RATIOS[idx]
-    else
-      dist_ratio = MISSILE_RATIOS[idx]
-    end
-
-    -- monster is too far away to hurt player?
-    if not dist_ratio then return end
-
-    -- how often the monster fights the player (instead of running
-    -- around or being in a pain state).
-    local active_ratio = info.active or 0.5
+    -- how likely the monster is to hit the player
+    -- (depends on distance between them).
+    local hit_ratio
 
     -- how well the player can dodge the monster's attack
     -- TODO: take 'cover' and/or 'space' into account here
     local dodge_ratio
 
+
     if info.no_dist then
-      dodge_ratio = 1.0
-    elseif info.melee then
-      dodge_ratio = 1.0 - MELEE_DODGES[skill]
-    elseif info.hitscan then
-      dodge_ratio = 1.0 - HITSCAN_DODGES[idx]
+      hit_ratio   = 1.0
+      dodge_ratio = 0.0
+
+    elseif info.attack == "melee" then
+      hit_ratio   = MELEE_RATIOS[idx]
+      dodge_ratio = MELEE_DODGES[idx]
+
+    elseif info.attack == "hitscan" then
+      hit_ratio   = HITSCAN_RATIOS[idx]
+      dodge_ratio = HITSCAN_DODGES[idx]
+
+    elseif info.attack == "missile" then
+      hit_ratio   = MISSILE_RATIOS[idx]
+      dodge_ratio = MISSILE_DODGES[idx]
+
     else
-      dodge_ratio = 1.0 - MISSILE_DODGES[idx]
+      error("Unknown monster attack kind: " .. tostring(info.attack))
     end
 
-    local damage = info.dm * time * dist_ratio * active_ratio * dodge_ratio
+    -- monster is too far away to hurt player?
+    if not hit_ratio then return end
+
+    -- how often the monster fights the player (instead of running
+    -- around or being in a pain state).
+    local active_ratio = info.active or 0.5
+
+    local damage = info.damage * time * hit_ratio * active_ratio * (1.0 - dodge_ratio)
 
     ammos.health = ammos.health + damage
   end
@@ -231,8 +229,8 @@ function fight_simulator(monsters, weapons, skill, ammos)
     end
 
     -- monster on monster action!
-    local dm1 = M.info.dm * (M.info.active or 0.5) * time
-    local dm2 = N.info.dm * (N.info.active or 0.5) * time
+    local dm1 = M.info.damage * (M.info.active or 0.5) * time
+    local dm2 = N.info.damage * (N.info.active or 0.5) * time
 
     local factor = 0.2 -- assume it happens rarely
 
@@ -257,7 +255,7 @@ function fight_simulator(monsters, weapons, skill, ammos)
   ammos.health = 0
 
   for _,info in ipairs(monsters) do
-    table.insert(active_mon, { info=info, health=info.hp })
+    table.insert(active_mon, { info=info, health=info.health })
   end
 
   -- let the monsters throw the first punch (albeit a weak one)
