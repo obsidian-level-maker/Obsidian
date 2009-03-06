@@ -809,11 +809,10 @@ function Quest_add_weapons()
     end
 
     local weapon = rand_key_by_probs(name_tab)
-
     gui.debugf("Start weapon: %s\n", weapon)
 
     PLAN.added_weapons[weapon] = true
-    
+
     arena.weapon = weapon
     arena.start.weapon = weapon
   end
@@ -830,18 +829,39 @@ function Quest_add_weapons()
     if not LEVEL.allow_bfg then name_tab["bfg"] = nil end
 
     if table_empty(name_tab) then
-      gui.debugf("New weapon @ ARENA_%d: NONE\n", arena.id)
+      gui.debugf("No weapon @ ARENA_%d\n", arena.id)
       return
     end
 
     local weapon = rand_key_by_probs(name_tab)
 
-    gui.debugf("New weapon @ ARENA_%d: %s\n", arena.id, weapon)
-
     PLAN.added_weapons[weapon] = true
-    
+
     arena.weapon = weapon
-    arena.start.weapon = weapon  -- FIXME!!!!
+
+    -- Select a room to put the weapon in.
+    -- This is very simplistic, either the start room of the
+    -- arena or a neighboring room.
+    local R = arena.start
+    local neighbors = {}
+
+    for _,C in ipairs(R.conns) do
+      local N = C:neighbor(R)
+      if N.arena == R.arena and not N.purpose then
+        table.insert(neighbors, N)
+      end
+    end
+
+    if #neighbors >= 1 and rand_odds(75) then
+      -- prevent using this weapon in first room
+      R.skip_weapon = weapon
+
+      R = rand_element(neighbors)
+    end
+
+    R.weapon = weapon
+
+    gui.debugf("New weapon: %s @ %s ARENA_%d\n", weapon, R:tostr(), arena.id)
   end
 
 
