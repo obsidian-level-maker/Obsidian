@@ -1732,6 +1732,10 @@ function Doom2_get_levels()
     LEV.secret_kind = DOOM2_SECRET_KINDS[LEV.name]
     LEV.secret_exit = DOOM2_SECRET_EXITS[LEV.name]
 
+    if LEV.ep_along > 0.44 and rand_odds(sel(MAP_NUM > 7, 30, 60)) then
+      LEV.allow_bfg = true
+    end
+
     table.insert(list, LEV)
   end
 
