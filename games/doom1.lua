@@ -51,7 +51,7 @@ DOOM_THINGS =
   ss_dude   = { id=84, kind="monster", r=20, h=56 },
   keen      = { id=72, kind="monster", r=16, h=72, ceil=true },
 
-  -- bosses
+  -- bosses --
   Mastermind = { id=7,  kind="monster", r=128,h=100 },
   Cyberdemon = { id=16, kind="monster", r=40, h=110 },
 
@@ -2913,60 +2913,156 @@ COMMON_QUEST_LEN_PROBS =
 -- Monster list
 -- ============
 --
--- prob : usage probability (relative to other monsters)
--- hp   : health points
--- dm   : damage can inflict per second (rough approx)
+-- prob       : free-range probability
+-- guard_prob : probability when guarding an item
+-- cage_prob  : cage probability [absent = never]
+-- trap_prob  : trap/surprise probability
+--
+-- health : hit points of monster
+-- damage : damage can inflict per second (rough approx)
+-- attack : kind of attack (hitscan | missile | melee)
 --
 -- float   : monster floats (flys)
 -- melee   : monster only has melee attack
 -- hitscan : monster uses a hitscan attack (e.g. shotgun)
+--
+-- NOTES:
+--
+-- Some monsters (e.g. IMP) have both a close-range melee
+-- attack and a longer range missile attack.  This is not
+-- modelled, we just pick the one with the most damage.
+--
+-- Archvile attack is not a real hitscan, but for modelling
+-- purposes that is a reasonable approximation.
+--
+-- Similarly the Pain Elemental attack is not a real missile
+-- but actually a Lost Soul.  We cannot model that (yet).
 
 COMMON_MONSTERS =
 {
-  -- FIXME: probs for CLOSET/DEPOT
-  zombie    = { prob=60, hp=20,  dm=4,  cage_fallback=14, hitscan=true, },
-  shooter   = { prob=40, hp=30,  dm=10, cage_prob= 8, hitscan=true, },
+  zombie =
+  {
+    prob=60, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=20, damage=4, attack="hitscan",
+    give={ { ammo="bullet", per=10 } },
+  },
 
-  imp       = { prob=80, hp=60,  dm=20, cage_prob=50, },
-  caco      = { prob=80, hp=400, dm=45, cage_prob=14, float=true },
-  baron     = { prob=50, hp=1000,dm=45, cage_prob= 3, },
+  shooter =
+  {
+    prob=40, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=30, damage=10, attack="hitscan",
+    give={ { weapon="shotty" } },
+  },
 
-  -- MELEE only monsters
-  demon     = { prob=45, hp=150, dm=25, cage_prob=66,melee=true },
-  spectre   = { prob=20, hp=150, dm=25, cage_prob=40,melee=true, invis=true },
-  skull     = { prob=14, hp=100, dm=7,  cage_prob= 2, melee=true, float=true },
- 
-  -- FIXME: not really a monster [MOVE OUTTA HERE]
-  barrel    = { prob=17, hp=10,  dm=2,  melee=true, passive=true },
+  imp =
+  {
+    prob=80, guard_prob=11, cage_prob=50, trap_prob=20,
+    health=60, damage=20, attack="missile",
+  },
+
+  skull =
+  {
+    prob=14, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=100, damage=7, attack="melee",
+    float=true
+  },
+
+  demon =
+  {
+    prob=45, guard_prob=31, trap_prob=61,
+    health=150, damage=25, attack="melee",
+  },
+
+  spectre =
+  {
+    prob=20, guard_prob=11, trap_prob=61,
+    health=150, damage=25, attack="melee",
+    invis=true
+  },
+
+  caco =
+  {
+    prob=80, guard_prob=61, cage_prob=21, trap_prob=21,
+    health=400, damage=45, attack="missile",
+    float=true
+  },
+
+  baron =
+  {
+    prob=50, guard_prob=11, cage_prob=3, trap_prob=11,
+    health=1000, damage=45, attack="missile",
+  },
 }
+
 
 DOOM2_MONSTERS =
 {
-  gunner    = { prob=17, hp=70,  dm=40, hitscan=true, cage_prob=70, },
-  ss_dude   = { prob=0.1,hp=50,  dm=15, hitscan=true, cage_prob=1 },
+  gunner =
+  {
+    prob=11, guard_prob=21, cage_prob=71, trap_prob=41,
+    health=70, damage=40, attack="hitscan",
+    give={ { weapon="chain" } },
+  },
 
-  revenant  = { prob=70, hp=300, dm=55, cage_prob=50, },
-  knight    = { prob=70, hp=500, dm=45, cage_prob=50, },
-  mancubus  = { prob=95, hp=600, dm=80, cage_prob=88, },
+  revenant =
+  {
+    prob=70, guard_prob=41, cage_prob=51, trap_prob=41,
+    health=300, damage=55, attack="missile",
+  },
 
-  arach     = { prob=36, hp=500, dm=70, cage_prob=95, },
-  vile      = { prob=20, hp=700, dm=40, cage_prob=12, hitscan=true, no_dist=true },
-  pain      = { prob=14, hp=400, dm=88, float=true },
+  knight =
+  {
+    prob=70, guard_prob=41, cage_prob=11, trap_prob=41,
+    health=500, damage=45, attack="missile",
+  },
+
+  mancubus =
+  {
+    prob=95, guard_prob=41, cage_prob=11, trap_prob=41,
+    health=600, damage=80, attack="missile",
+  },
+
+  arach =
+  {
+    prob=36, guard_prob=21, cage_prob=11, trap_prob=21,
+    health=500, damage=70, attack="missile",
+  },
+
+  vile =
+  {
+    prob=20, guard_prob=11, cage_prob=21, trap_prob=31,
+    health=700, damage=40, attack="hitscan", no_dist=true,
+  },
+
+  pain =
+  {
+    prob=14, trap_prob=11,
+    health=400, damage=88, attack="missile",
+    float=true
+  },
+
+  ss_dude =
+  {
+    -- not generated in normal levels
+    health=50, damage=15, attack="hitscan",
+  },
 }
 
+
+-- special monsters (only for boss levels)
 COMMON_BOSSES =
 {
-  -- special monsters (only for boss levels)
-  Cyberdemon = { hp=4000,dm=150, },
-  Mastermind = { hp=3000,dm=200, hitscan=true },
+  Cyberdemon =
+  {
+    hp=4000, damage=150, attack="missile",
+  },
+
+  Mastermind =
+  {
+    hp=3000, dm=200, attack="hitscan",
+  },
 }
 
-COMMON_MONSTER_GIVE =
-{
-  zombie   = { { ammo="bullet", give=10 } },
-  shooter  = { { weapon="shotty" } },
-  gunner   = { { weapon="chain" } }
-}
 
 -- Weapon list
 -- ===========
@@ -2977,98 +3073,97 @@ COMMON_MONSTER_GIVE =
 -- held       : true if already held at level start
 --
 -- rate   : firing rate (shots per second)
--- dm     : damage can inflict per shot
--- melee  : true if weapon is melee-only
+-- damage : damage can inflict per shot
+-- attack : kind of attack (hitscan | missile | melee)
 -- splash : splash damage done to monsters (1st, 2nd, etc)
 --
 -- ammo  : ammo type [absent for no ammo weapons]
 -- per   : ammo per shot
 -- give  : ammo given when weapon is picked up
 --
+-- NOTES:
+--
+-- Berserk is not really an extra weapon, but a powerup
+-- which makes fist do much more damage.  The effect lasts till
+-- the end of the level, so a weapon is a pretty good fit.
+--
+-- Shotgun has a fairly low add_prob, since it is likely the
+-- player will have encountered a shotgun zombie and already
+-- have that weapon.
+--
+-- Supershotgun is not present in DOOM 1.  It is removed from
+-- the weapon table in the Doom1_setup() function.
 
 COMMON_WEAPONS =
 {
   fist =
   {
     held=true,
-    rate=1.5, dm=10, melee=true,
+    rate=1.5, damage=10, attack="melee",
   },
 
   saw =
   {
     pref=5, add_prob=2, start_prob=10,
-    rate=8.7, dm=10, melee=true,
+    rate=8.7, damage=10, attack="melee",
   },
                                 
   berserk =
   {
     pref=8, add_prob=6, start_prob=20,
-    rate=1.5, dm=50, melee=true,
+    rate=1.5, damage=50, attack="melee",
   },
 
   pistol =
   {
     pref=10, held=true,
-    rate=1.8, dm=10,
+    rate=1.8, damage=10, attack="hitscan",
     ammo="bullet", per=1,
   },
 
   chain =
   {
     pref=80, add_prob=35, start_prob=30,
-    rate=8.5, dm=10,
+    rate=8.5, damage=10, attack="hitscan",
     ammo="bullet", per=1, give=20,
   },
 
   shotty =
   {
     pref=110, add_prob=10, start_prob=80,
-    rate=0.9, dm=70, splash={ 0,10 },
+    rate=0.9, damage=70, attack="hitscan", splash={ 0,10 },
     ammo="shell",  per=1, give=8,
   },
 
   super =
   {
     pref=70, add_prob=20, start_prob=3,
-    rate=0.6, dm=170, splash={ 0,30 },
+    rate=0.6, damage=170, attack="hitscan", splash={ 0,30 },
     ammo="shell", per=2, give=8,
   },
 
   launch =
   {
     pref=60, add_prob=25, start_prob=3,
-    rate=1.7, dm=80, splash={ 50,20,5 },
+    rate=1.7, damage=80, attack="missile", splash={ 50,20,5 },
     ammo="rocket", per=1, give=2,
   },
 
   plasma =
   {
     pref=80, add_prob=15, start_prob=3,
-    rate=11, dm=20,
+    rate=11, damage=20, attack="missile",
     ammo="cell", per=1, give=40,
   },
 
   bfg =
   {
     pref=20, add_prob=25,
-    rate=0.8, dm=300, splash={60,45,30,30,20,10},
+    rate=0.8, damage=300, attack="missile", splash={60,45,30,30,20,10},
     ammo="cell", per=40, give=40,
   },
-
-
-  -- Notes:
-  --
-  -- Berserk is not really an extra weapon, but a powerup
-  -- which makes fist do much more damage.  The effect lasts till
-  -- the end of the level, so a weapon is a pretty good fit.
-  --
-  -- Shotgun has a fairly low add_prob, since it is likely the
-  -- player will have encountered a shotgun zombie and already
-  -- have that weapon.
-  --
-  -- Supershotgun is not present in DOOM 1.  It is removed from
-  -- the weapon table in the Doom1_setup() function.
 }
+
 
 -- sometimes a certain weapon is preferred against a certain monster.
 -- These values are multiplied with the weapon's "pref" field.
@@ -3608,22 +3703,20 @@ end
 
 function Doom_common_setup()
 
-  GAME.classes = { "marine" },
+  GAME.classes = { "doomguy" }
+
+  GAME.initial_model = COMMON_INITIAL_MODEL
+
+  GAME.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" }
+
+  Game_merge_tab("things", DOOM_THINGS)
 
   Game_merge_tab("monsters", COMMON_MONSTERS)
   Game_merge_tab("bosses",   COMMON_BOSSES)
   Game_merge_tab("weapons",  COMMON_WEAPONS)
 
-  Game_merge_tab("things", DOOM_THINGS)
-
-  Game_merge_tab("mon_give", COMMON_MONSTER_GIVE)
-  Game_merge_tab("mon_weap_prefs", COMMON_MONSTER_WEAPON_PREFS)
-  Game_merge_tab("initial_model", COMMON_INITIAL_MODEL)
-
   Game_merge_tab("pickups", COMMON_PICKUPS)
   Game_merge_tab("niceness", COMMON_NICENESS)
-
-  GAME.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" },
 
   Game_merge_tab("dm", COMMON_DEATHMATCH)
   Game_merge_tab("dm_exits", COMMON_DEATHMATCH_EXITS)
@@ -3658,6 +3751,7 @@ function Doom_common_setup()
   Game_merge_tab("arch_fabs", COMMON_ARCH_PREFABS)
   Game_merge_tab("win_fabs",  COMMON_WINDOW_PREFABS)
   Game_merge_tab("misc_fabs", COMMON_MISC_PREFABS)
+
 
   GAME.toughness_factor = 1.00  -- FIXME PARAMS
 
