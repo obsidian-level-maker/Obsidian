@@ -2971,29 +2971,90 @@ COMMON_MONSTER_GIVE =
 -- Weapon list
 -- ===========
 --
--- rate  : firing rate (shots per second)
--- dm    : damage can inflict per shot
--- ammo  : ammo type [nil for no ammo weapons]
+-- pref       : usage preference [absent = never]
+-- add_prob   : probabiliiy of adding into level [absent = never]
+-- start_prob : chance of appearing in start room
+-- held       : true if already held at level start
+--
+-- rate   : firing rate (shots per second)
+-- dm     : damage can inflict per shot
+-- melee  : true if weapon is melee-only
+-- splash : splash damage done to monsters (1st, 2nd, etc)
+--
+-- ammo  : ammo type [absent for no ammo weapons]
 -- per   : ammo per shot
 -- give  : ammo given when weapon is picked up
--- pref  : usage preference
--- held  : true if already held at level start
--- melee : true if weapon is melee-only
+--
 
 COMMON_WEAPONS =
 {
-  fist    = { rate=1.5, dm=10, pref=1,  melee=true, held=true },
-  saw     = { rate=8.7, dm=10, pref=5,  melee=true, },
-  berserk = { rate=1.5, dm=50, pref=8,  melee=true, },
+  fist =
+  {
+    held=true,
+    rate=1.5, dm=10, melee=true,
+  },
 
-  pistol  = { rate=1.8, dm=10, pref=10, ammo="bullet", per=1, held=true },
-  shotty  = { rate=0.9, dm=70, pref=110,ammo="shell",  per=1, give=8, splash={ 0,10 } },
-  super   = { rate=0.6, dm=170,pref=70, ammo="shell",  per=2, give=8, splash={ 0,30 } },
-  chain   = { rate=8.5, dm=10 ,pref=80, ammo="bullet", per=1, give=20 },
-                                                                    
-  launch  = { rate=1.7, dm=80, pref=60, ammo="rocket", per=1, give=2, splash={50,20,5} },
-  plasma  = { rate=11,  dm=20, pref=80, ammo="cell",   per=1, give=40 },
-  bfg     = { rate=0.8, dm=400,pref=30, ammo="cell",   per=40,give=40, splash={60,45,30,30,20,10} },
+  saw =
+  {
+    pref=5, add_prob=2, start_prob=10,
+    rate=8.7, dm=10, melee=true,
+  },
+                                
+  berserk =
+  {
+    pref=8, add_prob=10, start_prob=20,
+    rate=1.5, dm=50, melee=true,
+  },
+
+  pistol =
+  {
+    pref=10, held=true,
+    rate=1.8, dm=10,
+    ammo="bullet", per=1,
+  },
+
+  chain =
+  {
+    pref=80, add_prob=50, start_prob=30,
+    rate=8.5, dm=10,
+    ammo="bullet", per=1, give=20,
+  },
+
+  shotty =
+  {
+    pref=110, add_prob=50, start_prob=80,
+    rate=0.9, dm=70, splash={ 0,10 },
+    ammo="shell",  per=1, give=8,
+  },
+
+  super =
+  {
+    pref=70, add_prob=25, start_prob=3,
+    rate=0.6, dm=170, splash={ 0,30 },
+    ammo="shell", per=2, give=8,
+  },
+
+  launch =
+  {
+    pref=60, add_prob=25, start_prob=3,
+    rate=1.7, dm=80, splash={ 50,20,5 },
+    ammo="rocket", per=1, give=2,
+  },
+
+  plasma =
+  {
+    pref=80, add_prob=25, start_prob=3,
+    rate=11, dm=20,
+    ammo="cell", per=1, give=40,
+  },
+
+  bfg =
+  {
+    pref=20, add_prob=1,
+    rate=0.8, dm=300, splash={60,45,30,30,20,10},
+    ammo="cell", per=40, give=40,
+  },
+
 
   -- Notes:
   --
@@ -3001,7 +3062,7 @@ COMMON_WEAPONS =
   -- which makes fist do much more damage.  The effect lasts till
   -- the end of the level, so a weapon is a pretty good fit.
   --
-  -- Supershotgun is not present in Doom 1.  It is removed from
+  -- Supershotgun is not present in DOOM 1.  It is removed from
   -- the weapon table by doom1_factory().
 }
 
@@ -3120,9 +3181,9 @@ COMMON_INITIAL_MODEL =
     -- Note: bullet numbers are understated (should be 50)
     -- so that the player isn't forced to empty the pistol.
 
-    health=100, armor=0,
-    bullet=20, shell=0, rocket=0, cell=0,
-    fist=true, pistol=true,
+    health=100,
+    ammo = { bullet=20, shell=0, rocket=0, cell=0 },
+    weapons = { fist=true, pistol=true },
   }
 }
 
@@ -3429,6 +3490,10 @@ function Doom1_get_levels()
       if DOOM1_SECRET_EXITS[LEV.name] then
         LEV.secret_exit = true
         LEV.ep_along = 0.5
+      end
+
+      if LEV.ep_along > 0.44 and rand_odds(sel(MAP_NUM > 7, 30, 60)) then
+        LEV.allow_bfg = true
       end
 
       table.insert(list, LEV)
