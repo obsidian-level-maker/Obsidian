@@ -864,6 +864,28 @@ function Quest_add_weapons()
     gui.debugf("New weapon: %s @ %s ARENA_%d\n", weapon, R:tostr(), arena.id)
   end
 
+  local function set_room_weapons(arena)
+    -- This sets all the weapons which COULD be used in each room.
+    -- The actual weapons to use will often be reduced.
+
+    local base_set = shallow_copy(PLAN.added_weapons)
+
+    for name,info in pairs(GAME.weapons) do
+      if info.held and info.pref then
+        base_set[name] = true
+      end
+    end
+
+    for _,R in ipairs(arena.rooms) do
+      R.weapon_set = base_set
+
+      if R.skip_weapon then
+        R.weapon_set = shallow_copy(base_set)
+        R.weapon_set[R.skip_weapon] = nil
+      end
+    end
+  end
+
 
   ---| Quest_add_weapons |---
 
@@ -873,6 +895,8 @@ function Quest_add_weapons()
     elseif (index == 2) or rand_odds(sel((index % 2) == 1, 80, 20)) then
       do_new_weapon(A)
     end
+
+    set_room_weapons(A)
   end
 end
 
