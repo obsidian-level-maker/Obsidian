@@ -3279,8 +3279,8 @@ COMMON_INITIAL_MODEL =
     -- so that the player isn't forced to empty the pistol.
 
     health = 100,
-    ammo = { bullet=20, shell=0, rocket=0, cell=0 },
     weapons = { fist=1, pistol=1 },
+    ammo = { bullet=20, shell=0, rocket=0, cell=0 },
   }
 }
 

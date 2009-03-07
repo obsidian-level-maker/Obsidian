@@ -68,7 +68,7 @@ HERETIC_THINGS =
 
   crystal    = { id=10, kind="pickup", r=20,h=16, pass=true },
   geode      = { id=12, kind="pickup", r=20,h=16, pass=true },
-  arrows     = { id=18, kind="pickup", r=20,h=16, pass=true },
+  arrow      = { id=18, kind="pickup", r=20,h=16, pass=true },
   quiver     = { id=19, kind="pickup", r=20,h=16, pass=true },
   claw_orb1  = { id=54, kind="pickup", r=20,h=16, pass=true },
   claw_orb2  = { id=55, kind="pickup", r=20,h=16, pass=true },
@@ -1505,7 +1505,7 @@ HERETIC_WEAPONS =
   {          
     pref=90, add_prob=10, start_prob=70,
     rate=1.3, damage=20, attack="missile",
-    ammo="arrows", per=1, give=4, splash={0,5}
+    ammo="arrow", per=1, give=4, splash={0,5}
   },         
 
   claw =
@@ -1550,13 +1550,13 @@ HERETIC_PICKUPS =
   -- FIXME: the ammo 'give' numbers are CRAP!
   crystal = { stat="crystal", give=5,  },
   geode   = { stat="crystal", give=20, },
-  arrows  = { stat="arrows",  give=5,  },
-  quiver  = { stat="arrows",  give=20, },
+  arrow   = { stat="arrow",   give=5,  },
+  quiver  = { stat="arrow",   give=20, },
 
   claw_orb1 = { stat="claw_orb", give=5,  },
   claw_orb2 = { stat="claw_orb", give=20, },
-  runes1    = { stat="runes",    give=5,  },
-  runes2    = { stat="runes",    give=20, },
+  runes1    = { stat="rune",     give=5,  },
+  runes2    = { stat="rune",     give=20, },
 
   flame_orb1 = { stat="flame_orb", give=5,  },
   flame_orb2 = { stat="flame_orb", give=20, },
@@ -1600,7 +1600,7 @@ HERETIC_DEATHMATCH =
   ammo =
   { 
     crystal=10, geode=20,
-    arrows=20, quiver=60,
+    arrow=20, quiver=60,
     claw_orb1=10, claw_orb2=40,
     runes1=10, runes2=30,
     flame_orb1=10, flame_orb2=30,
@@ -1624,11 +1624,10 @@ HERETIC_INITIAL_MODEL =
   cleric =
   {
     health = 100,
-
-    ammo = { crystal=30, arrows=0, runes=0,
+    weapons = { staff=1, wand=1 },
+    ammo = { crystal=30, arrow=0, rune=0,
              claw_orb=0, flame_orb=0, mace_orb=0 },
 
-    weapons = { staff=1, wand=1 },
   }
 }
 

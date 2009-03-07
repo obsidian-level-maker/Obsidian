@@ -1498,22 +1498,22 @@ HEXEN_INITIAL_MODEL =
   fighter =
   {
     health = 100,
-    ammo = { blue_mana=0, green_mana=0 },
     weapons = { f_gaunt=1 },
+    ammo = { blue_mana=0, green_mana=0 },
   },
 
   cleric =
   {
     health = 100,
-    ammo = { blue_mana=0, green_mana=0 },
     weapons = { c_mace=1 },
+    ammo = { blue_mana=0, green_mana=0 },
   },
 
   mage =
   {
     health = 100,
-    ammo = { blue_mana=0, green_mana=0 },
     weapons = { m_wand=1 },
+    ammo = { blue_mana=0, green_mana=0 },
   },
 }
 
