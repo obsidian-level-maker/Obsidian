@@ -143,7 +143,9 @@ function fight_simulator(monsters, weapons, skill, ammos)
     end
   end
 
-  local function player_shoot(W, time)
+  local function player_shoot(W)
+    local time = 1 / W.rate
+
     hurt_mon(1, W, W.damage * time * shoot_accuracy)
 
     -- simulate splash damage | shotgun spread
@@ -153,8 +155,10 @@ function fight_simulator(monsters, weapons, skill, ammos)
 
     -- update ammo counter
     if W.info.ammo then
-      ammos[W.info.ammo] = (ammos[W.info.ammo] or 0) + W.per * time
+      ammos[W.info.ammo] = (ammos[W.info.ammo] or 0) + W.per
     end
+
+    return time
   end
 
 
@@ -263,9 +267,14 @@ function fight_simulator(monsters, weapons, skill, ammos)
   while #active_mon > 0 do
     local W = select_weapon()
 
-    for loop = 1,rand_irange(2,8) do
-      player_shoot(W, 2.0)
-      monsters_shoot( 2.0)
+    local shots = int(rand_range(2.0, 8.0) * W.rate + 0.5)
+
+    if shots < 2  then shots = 2  end
+    if shots > 30 then shots = 30 end
+
+    for loop = 1,shots do
+      local time = player_shoot(W)
+      monsters_shoot(time)
       remove_dead_mon()
     end
   end
