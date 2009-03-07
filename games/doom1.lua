@@ -3070,7 +3070,6 @@ COMMON_BOSSES =
 -- pref       : usage preference [absent = never]
 -- add_prob   : probabiliiy of adding into level [absent = never]
 -- start_prob : chance of appearing in start room
--- held       : true if already held at level start
 --
 -- rate   : firing rate (shots per second)
 -- damage : damage can inflict per shot
@@ -3098,7 +3097,6 @@ COMMON_WEAPONS =
 {
   fist =
   {
-    held=true,
     rate=1.5, damage=10, attack="melee",
   },
 
@@ -3116,7 +3114,7 @@ COMMON_WEAPONS =
 
   pistol =
   {
-    pref=10, held=true,
+    pref=10,
     rate=1.8, damage=10, attack="hitscan",
     ammo="bullet", per=1,
   },
