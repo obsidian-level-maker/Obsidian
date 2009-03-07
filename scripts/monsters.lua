@@ -29,6 +29,9 @@ Main usages:
 (d) traps (triggered closets, teleport in)
 (e) surprises (behind entry door, closests on back path)
 
+
+IDEAS:
+
 Free range monsters make up the bulk of the level, and are
 subject to the palette.  The palette applies to a fair size
 of a map, on "small" setting --> 1 palette only, upto 2 on
@@ -56,4 +59,69 @@ only 1 monster each time over the course of an EPISODE
 
 require 'defs'
 require 'util'
+
+
+function Player_init()
+  PLAN.hmodels = {}
+
+  for _,SK in ipairs(SKILLS) do
+    local hm_set = deep_copy(GAME.initial_model)
+
+    for CL,hmodel in pairs(hm_set) do
+      hmodel.skill = SK
+      hmodel.class = CL
+    end -- for CL
+
+    PLAN.hmodels[SK] = hm_set
+  end -- for SK
+end
+
+function Player_give_weapon(weapon, to_CL)
+  gui.debugf("Giving weapon: %s\n", weapon)
+
+  for _,SK in ipairs(SKILLS) do
+    for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+      if not to_CL or (to_CL == CL) then
+        hmodel.weapons[weapon] = true
+      end
+    end -- for CL
+  end -- for SK
+end
+
+
+function Monsters_in_room(R)
+  -- FIXME: monsters
+
+  gui.debugf("Monsters_in_room @ %s\n", R:tostr())
+end
+
+
+function Monsters_do_pickups()
+  -- FIXME: pickups
+end
+
+
+function Monsters_add_some()
+  
+  gui.printf("\n--==| Monsters_add_some |==--\n\n")
+
+  Player_init()
+
+  if PLAN.start_room.weapon then
+    Player_give_weapon(PLAN.start_room.weapon)
+  end
+
+  local cur_arena = 1
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.arena.weapon and (R.arena.id > cur_arena) and not R.skip_weapon then
+      cur_arena = R.arena.id
+      Player_give_weapon(R.arena.weapon)
+    end
+
+    Monsters_in_room(R)
+  end -- for R
+
+  Monsters_do_pickups()
+end
 

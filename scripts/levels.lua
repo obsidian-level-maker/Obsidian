@@ -39,8 +39,8 @@ require 'quests'
 require 'builder'
 require 'layout'
 require 'rooms'
-
---!! require 'monsters'
+require 'fight'
+require 'monsters'
 
 
 function Game_merge_tab(name, t)
@@ -177,6 +177,10 @@ function Level_Make(L, index, NUM)
   end   
 
   Rooms_build_all()
+    if gui.abort() then return "abort" end
+    gui.progress(80)
+
+  Monsters_add_some()
     if gui.abort() then return "abort" end
     gui.progress(90)
 
