@@ -1586,15 +1586,27 @@ HEXEN_MONSTERS =
     health=150, damage=50, attack="missile",
     float=true,
   },
-}
 
 
-HEXEN_BOSSES =
-{
-  -- dm values are crap
-  Wyvern     = { health=640, damage=60, float=true },
-  Heresiarch = { health=5000,damage=70, },
-  Korax      = { health=5000,damage=90, },
+  ---| HEXEN_BOSSES |---
+
+  -- FIXME: proper damage and attack fields
+
+  Wyvern =
+  {
+    health=640, damage=60,
+    float=true,
+  },
+
+  Heresiarch =
+  {
+    health=5000, damage=70,
+  },
+
+  Korax =
+  {
+    health=5000, damage=90,
+  },
 }
 
 
@@ -2155,7 +2167,6 @@ function Hexen1_setup()
 
     things   = HEXEN_THINGS,
     monsters = HEXEN_MONSTERS,
-    bosses   = HEXEN_BOSSES,
     weapons  = HEXEN_WEAPONS,
 
     dm = HEXEN_DEATHMATCH,

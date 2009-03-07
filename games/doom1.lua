@@ -3038,7 +3038,7 @@ DOOM2_MONSTERS =
   {
     prob=14, trap_prob=11,
     health=400, damage=88, attack="missile",
-    float=true
+    float=true,
   },
 
   ss_dude =
@@ -3046,22 +3046,21 @@ DOOM2_MONSTERS =
     -- not generated in normal levels
     health=50, damage=15, attack="hitscan",
   },
-}
 
 
--- special monsters (only for boss levels)
-COMMON_BOSSES =
-{
+  ---| DOOM BOSSES |---
+
   Cyberdemon =
   {
-    hp=4000, damage=150, attack="missile",
+    health=4000, damage=150, attack="missile",
   },
 
   Mastermind =
   {
-    hp=3000, dm=200, attack="hitscan",
+    health=3000, damage=200, attack="hitscan",
   },
 }
+
 
 
 -- Weapon list
@@ -3711,7 +3710,6 @@ function Doom_common_setup()
   Game_merge_tab("things", DOOM_THINGS)
 
   Game_merge_tab("monsters", COMMON_MONSTERS)
-  Game_merge_tab("bosses",   COMMON_BOSSES)
   Game_merge_tab("weapons",  COMMON_WEAPONS)
 
   Game_merge_tab("pickups", COMMON_PICKUPS)

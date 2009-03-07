@@ -1457,15 +1457,27 @@ HERETIC_MONSTERS =
     prob=30, guard_prob=11, cage_prob=11, trap_prob=11,
     health=280, damage=25, attack="missile",
   },
-}
 
 
-HERETIC_BOSSES =
-{
-  -- damage values are crap
-  Ironlich    = { prob= 4, health=700,  damage=99, float=true },
-  Maulotaur   = { prob= 1, health=3000, damage=99, },
-  D_Sparil    = { prob= 1, health=2000, damage=99, },
+  ---| HERETIC_BOSSES |---
+
+  -- FIXME: damage values are crap, need 'attack' type
+
+  Ironlich =
+  {
+    health=700,  damage=99,
+    float=true,
+  },
+
+  Maulotaur =
+  {
+    health=3000, damage=99,
+  },
+
+  D_Sparil =
+  {
+    health=2000, damage=99,
+  },
 }
 
 
@@ -1719,7 +1731,6 @@ function Heretic1_setup()
 
   Game_merge_tab("things",   HERETIC_THINGS)
   Game_merge_tab("monsters", HERETIC_MONSTERS)
-  Game_merge_tab("bosses",   HERETIC_BOSSES)
 
   Game_merge_tab("weapons",  HERETIC_WEAPONS)
   Game_merge_tab("pickups",  HERETIC_PICKUPS)
