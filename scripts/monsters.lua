@@ -82,7 +82,7 @@ function Player_give_weapon(weapon, to_CL)
   for _,SK in ipairs(SKILLS) do
     for CL,hmodel in pairs(PLAN.hmodels[SK]) do
       if not to_CL or (to_CL == CL) then
-        hmodel.weapons[weapon] = true
+        hmodel.weapons[weapon] = 1
       end
     end -- for CL
   end -- for SK

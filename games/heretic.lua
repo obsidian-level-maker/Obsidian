@@ -1493,7 +1493,7 @@ HERETIC_WEAPONS =
   {          
     pref=90, add_prob=10, start_prob=70,
     rate=1.3, damage=20, attack="missile",
-    ammo="arrow", per=1, give=4, splash={0,5}
+    ammo="arrows", per=1, give=4, splash={0,5}
   },         
 
   claw =
@@ -1538,8 +1538,8 @@ HERETIC_PICKUPS =
   -- FIXME: the ammo 'give' numbers are CRAP!
   crystal = { stat="crystal", give=5,  },
   geode   = { stat="crystal", give=20, },
-  arrows  = { stat="arrow",   give=5,  },
-  quiver  = { stat="arrow",   give=20, },
+  arrows  = { stat="arrows",  give=5,  },
+  quiver  = { stat="arrows",  give=20, },
 
   claw_orb1 = { stat="claw_orb", give=5,  },
   claw_orb2 = { stat="claw_orb", give=20, },
@@ -1606,14 +1606,17 @@ HERETIC_DEATHMATCH =
   cluster = {}
 }
 
+
 HERETIC_INITIAL_MODEL =
 {
   cleric =
   {
-    health=100, armor=0,
-    crystal=30, arrow=0, runes=0,
-    claw_orb=0, flame_orb=0, mace_orb=0,
-    staff=true, wand=true,
+    health = 100,
+
+    ammo = { crystal=30, arrows=0, runes=0,
+             claw_orb=0, flame_orb=0, mace_orb=0 },
+
+    weapons = { staff=1, wand=1 },
   }
 }
 

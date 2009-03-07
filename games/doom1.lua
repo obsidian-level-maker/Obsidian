@@ -3271,6 +3271,7 @@ COMMON_DEATHMATCH =
   },
 }
 
+
 COMMON_INITIAL_MODEL =
 {
   doomguy =
@@ -3278,9 +3279,9 @@ COMMON_INITIAL_MODEL =
     -- Note: bullet numbers are understated (should be 50)
     -- so that the player isn't forced to empty the pistol.
 
-    health=100,
+    health = 100,
     ammo = { bullet=20, shell=0, rocket=0, cell=0 },
-    weapons = { fist=true, pistol=true },
+    weapons = { fist=1, pistol=1 },
   }
 }
 
