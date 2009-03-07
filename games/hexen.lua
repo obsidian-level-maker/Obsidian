@@ -1516,29 +1516,84 @@ HEXEN_INITIAL_MODEL =
   },
 }
 
+
 HEXEN_MONSTERS =
 {
-  ettin      = { prob=60, hp=170, dm= 6, melee=true },
-  afrit      = { prob=40, hp=80,  dm=20, float=true },
-  centaur1   = { prob=40, hp=200, dm=12, melee=true },
-  centaur2   = { prob=20, hp=250, dm=20, },
+  ettin =
+  {
+    prob=60, guard_prob=11, trap_prob=11,
+    health=170, damage= 6, attack="melee",
+  },
 
-  serpent1   = { prob=0.1,hp=90,  dm=10, melee=true },
-  serpent2   = { prob=0.1,hp=90,  dm=16, },
-  iceguy     = { prob=1,  hp=120, dm=16, },
+  afrit =
+  {
+    prob=40, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=80,  damage=20, attack="missile",
+    float=true,
+  },
 
-  demon1     = { prob=30, hp=250, dm=35, cage_fallback=2 },
-  demon2     = { prob=20, hp=250, dm=35, },
-  bishop     = { prob=20, hp=130, dm=24, float=true },
-  reiver     = { prob= 5, hp=150, dm=50, float=true },
+  centaur1 =
+  {
+    prob=40, guard_prob=11, trap_prob=11,
+    health=200, damage=12, attack="melee",
+  },
+
+  centaur2 =
+  {
+    prob=20, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=250, damage=20, attack="missile"
+  },
+
+  serpent1 =
+  {
+    health=90,  damage=10, attack="melee"
+  },
+
+  serpent2 =
+  {
+    health=90,  damage=16, attack="missile",
+  },
+
+  iceguy =
+  {
+    prob=3, guard_prob=11, trap_prob=11,
+    health=120, damage=16, attack="missile",
+  },
+
+  demon1 =
+  {
+    prob=30, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=250, damage=35, attack="missile",
+  },
+
+  demon2 =
+  {
+    prob=20, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=250, damage=35, attack="missile",
+  },
+
+  bishop =
+  {
+    prob=20, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=130, damage=24, attack="missile",
+    float=true,
+  },
+
+  reiver =
+  {
+    prob=5, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=150, damage=50, attack="missile",
+    float=true,
+  },
 }
+
 
 HEXEN_BOSSES =
 {
   -- dm values are crap
-  Wyvern     = { hp=640, dm=60, float=true },
-  Heresiarch = { hp=5000,dm=70, },
-  Korax      = { hp=5000,dm=90, },
+  Wyvern     = { health=640, damage=60, float=true },
+  Heresiarch = { health=5000,damage=70, },
+  Korax      = { health=5000,damage=90, },
 }
 
 

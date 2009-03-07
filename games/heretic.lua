@@ -1380,31 +1380,92 @@ HERETIC_QUEST_LEN_PROBS =
 
 HERETIC_MONSTERS =
 {
-  gargoyle   = { prob=30, hp=20,  dm= 5, cage_fallback=10, float=true, melee=true },
-  fire_garg  = { prob=10, hp=80,  dm= 8, float=true },
-  mummy      = { prob=60, hp=80,  dm= 8, melee=true },
-  mummy_inv  = { prob=10, hp=80,  dm= 8, melee=true, invis=true },
-  sabreclaw  = { prob=25, hp=150, dm=12, melee=true },
+  gargoyle =
+  {
+    prob=30, guard_prob=1, trap_prob=1,
+    health=20, damage=5, attack="melee",
+    float=true,
+  },
 
-  knight     = { prob=70, hp=200, dm=12, },
-  knight_inv = { prob=10, hp=200, dm=14, invis=true },
-  leader     = { prob=70, hp=100, dm=16, },
-  leader_inv = { prob=10, hp=100, dm=16, invis=true },
+  fire_garg =
+  {
+    prob=10, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=80, damage=8, attack="missile",
+    float=true,
+  },
 
-  disciple   = { prob=25, hp=180, dm=20, float=true },
-  weredragon = { prob=30, hp=220, dm=25, },
-  ophidian   = { prob=30, hp=280, dm=25, },
+  mummy =
+  {
+    prob=60, guard_prob=11, trap_prob=11,
+    health=80, damage=8, attack="melee",
+  },
 
-  -- FIXME: not really a monster [MOVE OUTTA HERE]
-  pod = { prob=5, hp=45, dm=2, melee=true, passive=true },
+  mummy_inv =
+  {
+    prob=10, trap_prob=21,
+    health=80, damage=8, attack="melee",
+    invis=true,
+  },
+
+  sabreclaw =
+  {
+    prob=25, guard_prob=11, trap_prob=11,
+    health=150, damage=12, attack="melee",
+  },
+
+  knight =
+  {
+    prob=70, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=200, damage=12, attack="missile",
+  },
+
+  knight_inv =
+  {
+    prob=10, trap_prob=21,
+    health=200, damage=14, attack="missile",
+    invis=true,
+  },
+
+  leader =
+  {
+    prob=70, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=100, damage=16, attack="missile",
+  },
+
+  leader_inv =
+  {
+    prob=10, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=100, damage=16, attack="missile",
+    invis=true,
+  },
+
+  disciple =
+  {
+    prob=25, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=180, damage=20, attack="missile",
+    float=true,
+  },
+
+  weredragon =
+  {
+    prob=30, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=220, damage=25, attack="missile",
+  },
+
+  ophidian =
+  {
+    prob=30, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=280, damage=25, attack="missile",
+  },
 }
+
 
 HERETIC_BOSSES =
 {
-  -- dm values are crap
-  Ironlich    = { prob= 4, hp=700,  dm=99, float=true },
-  Maulotaur   = { prob= 1, hp=3000, dm=99, },
-  D_Sparil    = { prob= 1, hp=2000, dm=99, },
+  -- damage values are crap
+  Ironlich    = { prob= 4, health=700,  damage=99, float=true },
+  Maulotaur   = { prob= 1, health=3000, damage=99, },
+  D_Sparil    = { prob= 1, health=2000, damage=99, },
 }
 
 
