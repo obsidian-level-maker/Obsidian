@@ -331,50 +331,186 @@ QUAKE2_THEMES =
 
 QUAKE2_MONSTERS =
 {
-  guard      = { prob=20, hp= 20, dm=4 },
-  guard_sg   = { prob=70, hp= 30, dm=10, hitscan=true },
-  guard_mg   = { prob=70, hp= 30, dm=10, hitscan=true },
-  enforcer   = { prob=50, hp=100, dm=10, hitscan=true },
+  guard =
+  {
+    prob=20, guard_prob=3, trap_prob=3, cage_prob=3,
+    health=20, damage=4, attack="missile",
+  },
 
-  flyer      = { prob=90, hp= 50, dm=5 },
-  shark      = { prob= 0, hp= 50, dm=5, melee=true },
-  parasite   = { prob=10, hp=175, dm=10 },
+  guard_sg =
+  {
+    prob=70, guard_prob=11, trap_prob=11, cage_prob=11,
+    health=30, damage=10, attack="hitscan",
+  },
 
-  maiden     = { prob=50, hp=175, dm=30 },
-  technician = { prob=50, hp=200, dm=8 },
-  beserker   = { prob=50, hp=240, dm=18, melee=true },
-  icarus     = { prob=70, hp=240, dm=5 },
+  guard_mg =
+  {
+    prob=70, guard_prob=11, trap_prob=11, cage_prob=11,
+    health=30, damage=10, attack="hitscan",
+  },
 
-  medic      = { prob=30, hp=300, dm=21 },
-  mutant     = { prob=30, hp=300, dm=24, melee=true },
-  brain      = { prob=20, hp=300, dm=17, melee=true },
-  grenader   = { prob=10, hp=400, dm=30 },
-  gladiator  = { prob=10, hp=400, dm=40 },
+  enforcer =
+  {
+    prob=50, guard_prob=11, trap_prob=11, cage_prob=11,
+    health=100, damage=10, attack="hitscan",
+  },
 
-  tank       = { prob= 3, hp=750, dm=160 },
-  tank_cmdr  = { prob= 2, hp=1000,dm=160 },
+  flyer =
+  {
+    prob=90, guard_prob=11, trap_prob=11,
+    health=50, damage=5, attack="missile",
+    float=true,
+  },
+
+  shark =
+  {
+    health=50, damage=5, attack="melee",
+  },
+
+  parasite =
+  {
+    prob=10, guard_prob=11, trap_prob=21,
+    health=175, damage=10, attack="missile",
+  },
+
+  maiden =
+  {
+    prob=50, guard_prob=21, trap_prob=21, cage_prob=11,
+    health=175, damage=30, attack="missile",
+  },
+
+  technician =
+  {
+    prob=50, guard_prob=11, trap_prob=11,
+    health=200, damage=8, attack="missile",
+    float=true,
+  },
+
+  beserker =
+  {
+    prob=50, guard_prob=11, trap_prob=11, cage_prob=11,
+    health=240, damage=18, attack="melee",
+  },
+
+  icarus =
+  {
+    prob=70, guard_prob=11, trap_prob=21,
+    health=240, damage=5, attack="missile",
+    float=true,
+  },
+
+  medic =
+  {
+    prob=30, guard_prob=11, trap_prob=11, cage_prob=11,
+    health=300, damage=21, attack="missile",
+  },
+
+  mutant =
+  {
+    prob=30, guard_prob=11, trap_prob=11, cage_prob=11,
+    health=300, damage=24, attack="melee",
+  },
+
+  brain =
+  {
+    prob=20, guard_prob=11, trap_prob=31,
+    health=300, damage=17, attack="melee",
+  },
+
+  grenader =
+  {
+    prob=10, guard_prob=11, trap_prob=11, cage_prob=11,
+    health=400, damage=30, attack="missile",
+  },
+
+  gladiator =
+  {
+    prob=10, guard_prob=11, trap_prob=11, cage_prob=11,
+    health=400, damage=40, attack="missile",
+  },
+
+  tank =
+  {
+    health=750, damage=160, attack="missile",
+  },
+
+  tank_cmdr =
+  {
+    health=1000, damage=160, attack="missile",
+  },
 }
 
-QUAKE2_BOSSES =
-{
-}
-
-QUAKE2_MONSTER_GIVE =
-{
-}
 
 QUAKE2_WEAPONS =
 {
-  pistol   = { rate=1.7, dm=10, pref= 1 },
-  shotty   = { rate=0.6, dm=40, pref=20, ammo="shell",  per=1  },
-  ssg      = { rate=0.8, dm=88, pref=70, ammo="shell",  per=2, splash={0,8} },
-  machine  = { rate=6.0, dm=8,  pref=20, ammo="bullet", per=1  },
-  chain    = { rate=14,  dm=8,  pref=90, ammo="bullet", per=1  },
-  grenade  = { rate=0.7, dm=5,  pref=15, ammo="grenade",per=1, splash={60,15,3}  },
-  rocket   = { rate=1.1, dm=90, pref=30, ammo="rocket", per=1, splash={0,20,6,2} },
-  hyper    = { rate=5.0, dm=20, pref=60, ammo="slug",   per=1  },
-  rail     = { rate=0.6, dm=140,pref=50, ammo="cell",   per=1, splash={0,25,5} },
-  bfg      = { rate=0.3, dm=200,pref=20, ammo="cell",   per=50, splash={0,50,40,30,20,10,10} },
+  blaster =
+  {
+    rate=1.7, damage=10, attack="missile",
+  },
+
+  shotty =
+  {
+    pref=20, add_prob=10, start_prob=40,
+    rate=0.6, damage=40, attack="hitscan",
+    ammo="shell",  per=1,
+  },
+
+  ssg =
+  {
+    pref=70, add_prob=50, start_prob=10,
+    rate=0.8, damage=88, attack="hitscan", splash={0,8},
+    ammo="shell", per=2,
+  },
+
+  machine =
+  {
+    pref=20, add_prob=30, start_prob=30,
+    rate=6.0, damage=8, attack="hitscan",
+    ammo="bullet", per=1,
+  },
+
+  chain =
+  {
+    pref=90, add_prob=15, start_prob=5,
+    rate=14, damage=8, attack="hitscan",
+    ammo="bullet", per=1,
+  },
+
+  grenade =
+  {
+    pref=15, add_prob=25, start_prob=15,
+    rate=0.7, damage=5, attack="missile", splash={60,15,3},
+    ammo="grenade", per=1,
+  },
+
+  rocket =
+  {
+    pref=30, add_prob=20, start_prob=3,
+    rate=1.1, damage=90, attack="missile", splash={0,20,6,2},
+    ammo="rocket", per=1,
+  },
+
+  hyper =
+  {
+    pref=60, add_prob=20,
+    rate=5.0, damage=20, attack="missile",
+    ammo="slug", per=1,
+  },
+
+  rail =
+  {
+    pref=50, add_prob=10,
+    rate=0.6, damage=140, attack="hitscan",
+    ammo="cell", per=1, splash={0,25,5},
+  },
+
+  bfg =
+  {
+    pref=20, add_prob=15,
+    rate=0.3, damage=200, attack="missile", splash={0,50,40,30,20,10,10},
+    ammo="cell", per=50,
+  },
+
 
   -- Notes:
   --
@@ -390,21 +526,17 @@ QUAKE2_WEAPONS =
 
 QUAKE2_PICKUPS =
 {
-  first_aid = { stat="health", give=25 },
-  good_food = { stat="health", give=10 },
-  dog_food  = { stat="health", give=4  },
-
-  -- NOTE: no "gibs" here, they are fairly insignificant
-
-  clip_8  =   { stat="bullet", give=8 },
+  -- FIXME
 }
+
 
 QUAKE2_INITIAL_MODEL =
 {
-  player =
+  quakeguy =
   {
-    health=100, armor=0, bullet=8,
-    knife=true, pistol=true
+    health = 100,
+    weapons = { blaster=1 },
+    ammo = { shell=0, bullet=0, rocket=0, grenade=0, slug=0, cell=0 },
   }
 }
 
@@ -503,8 +635,6 @@ function Quake2_setup()
 
   Game_merge_tab("things",   QUAKE2_THINGS)
   Game_merge_tab("monsters", QUAKE2_MONSTERS)
-  Game_merge_tab("bosses",   QUAKE2_BOSSES)
-  Game_merge_tab("mon_give", QUAKE2_MONSTER_GIVE)
   Game_merge_tab("weapons",  QUAKE2_WEAPONS)
 
   Game_merge_tab("pickups", QUAKE2_PICKUPS)
