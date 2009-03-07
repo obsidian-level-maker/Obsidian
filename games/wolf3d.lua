@@ -530,8 +530,8 @@ WOLF_MONSTER_GIVE =
 
 WOLF_WEAPONS =
 {
-  knife       = { rate=3.0, dm= 7, pref= 1, melee=true, held=true },
-  pistol      = { rate=3.0, dm=17, pref=10, ammo="bullet", per=1, held=true },
+  knife       = { rate=3.0, dm= 7, pref= 1, melee=true, },
+  pistol      = { rate=3.0, dm=17, pref=10, ammo="bullet", per=1, },
   machine_gun = { rate=8.0, dm=17, pref=20, ammo="bullet", per=1, give=4, },
   gatling_gun = { rate=16,  dm=17, pref=30, ammo="bullet", per=1, give=6, },
 

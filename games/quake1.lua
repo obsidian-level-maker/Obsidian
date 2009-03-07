@@ -360,8 +360,8 @@ QUAKE1_MONSTER_GIVE =
 
 QUAKE1_WEAPONS =
 {
-  axe      = { rate=2.0, dm=20, pref= 1, melee=true,           held=true },
-  pistol   = { rate=2.0, dm=20, pref=10, ammo="shell",  per=1, held=true },
+  axe      = { rate=2.0, dm=20, pref= 1, melee=true, },
+  pistol   = { rate=2.0, dm=20, pref=10, ammo="shell",  per=1, },
   ssg      = { rate=1.4, dm=45, pref=50, ammo="shell",  per=2, splash={0,3} },
   grenade  = { rate=1.5, dm= 5, pref=10, ammo="rocket", per=1, splash={60,15,3} },
   rocket   = { rate=1.2, dm=80, pref=30, ammo="rocket", per=1, splash={0,20,6,2} },
