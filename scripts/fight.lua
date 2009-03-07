@@ -195,7 +195,7 @@ function fight_simulator(monsters, weapons, skill, ammos)
 
     -- how often the monster fights the player (instead of running
     -- around or being in a pain state).
-    local active_ratio = info.active or 0.5
+    local active_ratio = info.activity or 0.5
 
     local damage = info.damage * time * hit_ratio * active_ratio * (1.0 - dodge_ratio)
 
@@ -227,10 +227,10 @@ function fight_simulator(monsters, weapons, skill, ammos)
     end
 
     -- monster on monster action!
-    local dm1 = M.info.damage * (M.info.active or 0.5) * time
-    local dm2 = N.info.damage * (N.info.active or 0.5) * time
+    local dm1 = M.info.damage * (M.info.activity or 0.5) * time
+    local dm2 = N.info.damage * (N.info.activity or 0.5) * time
 
-    local factor = 0.2 -- assume it happens rarely
+    local factor = 0.25 -- assume it happens rarely
 
     M.health = M.health - dm2 * factor
     N.health = N.health - dm1 * factor
