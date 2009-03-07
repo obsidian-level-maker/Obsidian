@@ -492,54 +492,121 @@ WOLF_THEMES =
 
 WOLF_MONSTERS =
 {
-  dog     = { prob=20, hp=1,   dm=5,  melee=true, },
-  guard   = { prob=60, hp=25,  dm=10, hitscan=true, cage_fallback=10 },
-  officer = { prob=30, hp=50,  dm=20, hitscan=true, },
-  mutant  = { prob=10, hp=55,  dm=35, hitscan=true, },
-  ss_dude = { prob=60, hp=100, dm=30, hitscan=true, },
+  dog =
+  {
+    prob=20, guard_prob=5, trap_prob=1,
+    health=1, damage=5, attack="melee",
+  },
 
-  -- [FIXME: MOVE OUTTA HERE]
-  fake_hitler = { prob=0, hp=350, dm=50 },
-}
+  guard =
+  {
+    prob=60, guard_prob=20, trap_prob=3,
+    health=25, damage=10, attack="hitscan",
+    give={ { ammo="bullet", count=4 } },
+  },
 
-WOLF_BOSSES =
-{
+  officer =
+  {
+    prob=30, guard_prob=50, trap_prob=10,
+    health=50,  damage=20, attack="hitscan",
+    give={ { ammo="bullet", count=4 } },
+  },
+
+  mutant =
+  {
+    prob=20, guard_prob=20, trap_prob=20,
+    health=55,  damage=35, attack="hitscan",
+    give={ { ammo="bullet", count=4 } },
+  },
+
+  ss_dude =
+  {
+    prob=5, guard_prob=60, trap_prob=20,
+    health=100, damage=30, attack="hitscan",
+    give={ { weapon="machine_gun" } },
+  },
+
+  fake_hitler =
+  {
+    health=350, damage=50, attack="missile",
+  },
+
+  --| WOLF_BOSSES |--
+
   -- FIXME: hit-points are just averages of skill 2 and 3
  
-  -- Note: dm values are crap, but it doesn't matter much because
-  --       these guys are the last thing you fight in the episode.
+  -- FIXME: proper damage values
 
-  Hans       = { hp=1000, dm=40, hitscan=true, give_key="k_gold" },
-  Gretel     = { hp=1000, dm=50, hitscan=true, give_key="k_gold" },
-  Fatface    = { hp=1000, dm=50, hitscan=true },
-  Giftmacher = { hp=1000, dm=50 },
-  Schabbs    = { hp=1250, dm=60 },
+  Hans =
+  {
+    health=1000, damage=40, attack="hitscan",
+    give={ {key="k_gold"} }
+  },
+
+  Gretel =
+  {
+    health=1000, damage=50, attack="hitscan",
+    give={ {key="k_gold"} }
+  },
+
+  Fatface =
+  {
+    health=1000, damage=50, attack="hitscan",
+  },
+
+  Giftmacher =
+  {
+    health=1000, damage=50, attack="missile",
+  },
+
+  Schabbs =
+  {
+    health=1250, damage=60, attack="missile",
+  },
 
   -- this includes both Hitlers (in and out of the armor suit)
-  Hitler     = { hp=1100, dm=60, hitscan=true },
+  Hitler =
+  {
+    health=1100, damage=60, attack="hitscan"
+  },
 }
 
-WOLF_MONSTER_GIVE =
-{
-  guard   = { { ammo="bullet", give=4 } },
-  officer = { { ammo="bullet", give=4 } },
-  mutant  = { { ammo="bullet", give=4 } },
-
-  ss_dude = { { weapon="machine_gun" } },
-}
 
 WOLF_WEAPONS =
 {
-  knife       = { rate=3.0, dm= 7, pref= 1, melee=true, },
-  pistol      = { rate=3.0, dm=17, pref=10, ammo="bullet", per=1, },
-  machine_gun = { rate=8.0, dm=17, pref=20, ammo="bullet", per=1, give=4, },
-  gatling_gun = { rate=16,  dm=17, pref=30, ammo="bullet", per=1, give=6, },
+  knife =
+  {
+    pref=1,
+    rate=3.0, damage= 7, attack="melee",
+  },
+
+  pistol =
+  {
+    pref=10,
+    rate=3.0, damage=17, attack="hitscan",
+    ammo="bullet", per=1,
+  },
+
+  machine_gun =
+  {
+    pref=20, add_prob=20,
+    rate=8.0, damage=17, attack="hitscan",
+    ammo="bullet", per=1, give=4,
+  },
+
+  gatling_gun =
+  {
+    pref=30, add_prob=10,
+    rate=16,  damage=17, attack="hitscan",
+    ammo="bullet", per=1, give=6,
+  },
 
   -- Note: machine_gun actually gives _6_ bullets.
   -- However we don't model the fact that the SS_DUDE only
   -- drops a 4-bullet clip if you already have the machine gun.
   -- Therefore this hack should maintain ammo balance.
 }
+
 
 WOLF_PICKUPS =
 {
@@ -556,8 +623,9 @@ WOLF_INITIAL_MODEL =
 {
   bj =
   {
-    health=100, armor=0, bullet=8,
-    knife=true, pistol=true
+    health = 100,
+    ammo = { bullet=8 },
+    weapons = { knife=1, pistol=1 },
   }
 }
 
