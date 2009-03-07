@@ -1407,18 +1407,61 @@ HERETIC_BOSSES =
   D_Sparil    = { prob= 1, hp=2000, dm=99, },
 }
 
+
 HERETIC_WEAPONS =
 {
-  staff      = { rate=2.5, dm=12, pref= 1, melee=true, },
-  gauntlets  = { rate=5.2, dm= 8, pref= 7, melee=true, },
+  staff =
+  {
+    rate=2.5, damage=12, attack="melee",
+  },         
 
-  wand       = { rate=3.1, dm=10, pref=15, ammo="crystal",   per=1, },
-  crossbow   = { rate=1.3, dm=20, pref=90, ammo="arrow",     per=1, give=4, splash={0,5} },
-  claw       = { rate=2.9, dm=16, pref=60, ammo="claw_orb",  per=1, give=4, },
+  wand =
+  {          
+    pref=10,
+    rate=3.1, damage=10, attack="hitscan",
+    ammo="crystal", per=1,
+  },         
 
-  hellstaff  = { rate=8.7, dm=12, pref=50, ammo="runes",     per=1, give=4, },
-  phoenix    = { rate=1.7, dm=80, pref=50, ammo="flame_orb", per=1, give=4, },
-  firemace   = { rate=8.7, dm= 8, pref=35, ammo="mace_orb",  per=1, give=4, },
+  gauntlets =
+  {          
+    pref=10, add_prob=5, start_prob=10,
+    rate=5.2, damage=8, attack="melee",
+  },         
+
+  crossbow =
+  {          
+    pref=90, add_prob=10, start_prob=70,
+    rate=1.3, damage=20, attack="missile",
+    ammo="arrow", per=1, give=4, splash={0,5}
+  },         
+
+  claw =
+  {          
+    pref=60, add_prob=20, start_prob=20,
+    rate=2.9, damage=16, attack="missile",
+    ammo="claw_orb", per=1, give=4,
+  },         
+
+  hellstaff =
+  {          
+    pref=50, add_prob=20, start_prob=5,
+    rate=8.7, damage=12, attack="missile",
+    ammo="runes", per=1, give=4,
+  },         
+
+  phoenix =
+  {          
+    pref=50, add_prob=20, start_prob=5,
+    rate=1.7, damage=80, attack="missile",
+    ammo="flame_orb", per=1, give=4,
+  },         
+
+  firemace =
+  {          
+    pref=35, add_prob=20, start_prob=5,
+    rate=8.7, damage=8, attack="missile",
+    ammo="mace_orb", per=1, give=4,
+  },
 
   -- Notes:
   --
@@ -1427,6 +1470,7 @@ HERETIC_WEAPONS =
   -- Since that artifact can be used at any time by the player,
   -- OBLIGE cannot properly model it.
 }
+
 
 HERETIC_PICKUPS =
 {
