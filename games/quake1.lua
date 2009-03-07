@@ -34,7 +34,7 @@ QUAKE1_THINGS =
   fiend    = { id="monster_demon1",   kind="monster", r=32, h=80, },
 
   knight   = { id="monster_knight",   kind="monster", r=32, h=80, },
-  h_knight = { id="monster_hell_knight", kind="monster", r=32, h=80, },
+  hell_knt = { id="monster_hell_knight", kind="monster", r=32, h=80, },
   ogre     = { id="monster_ogre",     kind="monster", r=32, h=80, },
   fish     = { id="monster_fish",     kind="monster", r=32, h=80, },
   scrag    = { id="monster_wizard",   kind="monster", r=32, h=80, },
@@ -333,26 +333,85 @@ QUAKE1_THEMES =
 
 QUAKE1_MONSTERS =
 {
-  dog      = { prob=10, hp=25,  dm=5,  melee=true },
-  fish     = { prob= 0, hp=25,  dm=3,  melee=true },
-  grunt    = { prob=80, hp=30,  dm=14, hitscan=true },
-  enforcer = { prob=40, hp=80,  dm=18 },
+  dog =
+  {
+    prob=10, guard_prob=1, trap_prob=1,
+    health=25, damage=5, attack="melee",
+  },
 
-  zombie   = { prob=10, hp=60,  dm=8,  melee=true },
-  scrag    = { prob=60, hp=80,  dm=18 },
-  spawn    = { prob=10, hp=80,  dm=10, melee=true },
-  knight   = { prob=60, hp=75,  dm=9,  melee=true },
+  fish =
+  {
+    health=25, damage=3, attack="melee",
+  },
 
-  h_knight = { prob=30, hp=250, dm=30 },
-  ogre     = { prob=40, hp=200, dm=15 },
-  fiend    = { prob=10, hp=300, dm=20, melee=true },
-  vore     = { prob=10, hp=400, dm=25 },
-  shambler = { prob=10, hp=600, dm=30, hitscan=true, immunity={ rocket=0.5, grenade=0.5 } },
+  grunt =
+  {
+    prob=80, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=30, damage=14, attack="hitscan",
+  },
+
+  enforcer =
+  {
+    prob=40, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=80, damage=18, attack="missile",
+  },
+
+  zombie =
+  {
+    prob=10, guard_prob=1, cage_prob=11,
+    health=60, damage=8,  attack="melee",
+  },
+
+  scrag =
+  {
+    prob=60, guard_prob=11, cage_prob=11, trap_prob=11,
+    health=80, damage=18, attack="missile",
+  },
+
+  spawn =
+  {
+    prob=10, trap_prob=11,
+    health=80, damage=10, attack="melee",
+  },
+
+  knight =
+  {
+    prob=60, guard_prob=1, cage_prob=11, trap_prob=11,
+    health=75, damage=9,  attack="melee",
+  },
+
+  hell_knt =
+  {
+    prob=30, guard_prob=31, cage_prob=11, trap_prob=21,
+    health=250, damage=30, attack="missile",
+  },
+
+  ogre =
+  {
+    prob=40, guard_prob=21, cage_prob=11, trap_prob=31,
+    health=200, damage=15, attack="missile",
+  },
+
+  fiend =
+  {
+    prob=10, guard_prob=51, trap_prob=31,
+    health=300, damage=20, attack="melee",
+  },
+
+  vore =
+  {
+    prob=10, guard_prob=31, cage_prob=11, trap_prob=31,
+    health=400, damage=25, attack="missile",
+  },
+
+  shambler =
+  {
+    prob=10, guard_prob=31, cage_prob=11, trap_prob=21,
+    health=600, damage=30, attack="hitscan",
+    immunity={ rocket=0.5, grenade=0.5 },
+  },
 }
 
-QUAKE1_BOSSES =
-{
-}
 
 QUAKE1_MONSTER_GIVE =
 {
@@ -360,19 +419,65 @@ QUAKE1_MONSTER_GIVE =
 
 QUAKE1_WEAPONS =
 {
-  axe      = { rate=2.0, dm=20, pref= 1, melee=true, },
-  pistol   = { rate=2.0, dm=20, pref=10, ammo="shell",  per=1, },
-  ssg      = { rate=1.4, dm=45, pref=50, ammo="shell",  per=2, splash={0,3} },
-  grenade  = { rate=1.5, dm= 5, pref=10, ammo="rocket", per=1, splash={60,15,3} },
-  rocket   = { rate=1.2, dm=80, pref=30, ammo="rocket", per=1, splash={0,20,6,2} },
-  nailgun  = { rate=5.0, dm= 8, pref=50, ammo="nail",   per=1 },
-  nailgun2 = { rate=5.0, dm=18, pref=80, ammo="nail",   per=2 },
-  zapper   = { rate=10,  dm=30, pref=30, ammo="cell",   per=1, splash={0,4} },
+  axe =
+  {
+    rate=2.0, damage=20, attack="melee",
+  },
+
+  pistol =
+  {
+    pref=10,
+    rate=2.0, damage=20, attack="hitscan",
+    ammo="shell", per=1,
+  },
+
+  ssg =
+  {
+    pref=50, add_prob=40,
+    rate=1.4, damage=45, attack="hitscan", splash={0,3},
+    ammo="shell", per=2,
+  },
+
+  grenade =
+  {
+    pref=10, add_prob=15,
+    rate=1.5, damage= 5, attack="missile", splash={60,15,3},
+    ammo="rocket", per=1,
+  },
+
+  rocket =
+  {
+    pref=30, add_prob=10,
+    rate=1.2, damage=80, attack="missile", splash={0,20,6,2},
+    ammo="rocket", per=1,
+  },
+
+  nailgun =
+  {
+    pref=50, add_prob=30,
+    rate=5.0, damage=8, attack="missile",
+    ammo="nail", per=1
+  },
+
+  nailgun2 =
+  {
+    pref=80, add_prob=10,
+    rate=5.0, damage=18, attack="missile",
+    ammo="nail", per=2,
+  },
+
+  zapper =
+  {
+    pref=30, add_prob=2,
+    rate=10, damage=30, attack="hitscan", splash={0,4},
+    ammo="cell", per=1,
+  },
+
 
   -- Notes:
   --
-  -- Grenade damage (for a direct hit) is really zero, and all
-  -- of the actual damage comes from splash.
+  -- Grenade damage (for a direct hit) is really zero, all of
+  -- the actual damage comes from splash.
   --
   -- Rocket splash damage does not hurt the monster that was
   -- directly hit by the rocket.
@@ -383,19 +488,21 @@ QUAKE1_WEAPONS =
   -- the first one, or (b) the first one is killed.
 }
 
+
 QUAKE1_PICKUPS =
 {
-  first_aid = { stat="health", give=25 },
-  good_food = { stat="health", give=10 },
-
+  -- FIXME
+  h_10 = { stat="health", give=10 },
 }
+
 
 QUAKE1_INITIAL_MODEL =
 {
-  player =
+  quakeguy =
   {
-    health=100, armor=0, bullet=8,
-    knife=true, pistol=true
+    health = 100,
+    weapons = { axe=1, pistol=1 },
+    ammo = { shell=20, nail=0, rocket=0, cell=0 },
   }
 }
 
@@ -472,8 +579,6 @@ function Quake1_setup()
 
   Game_merge_tab("things",   QUAKE1_THINGS)
   Game_merge_tab("monsters", QUAKE1_MONSTERS)
-  Game_merge_tab("bosses",   QUAKE1_BOSSES)
-  Game_merge_tab("mon_give", QUAKE1_MONSTER_GIVE)
   Game_merge_tab("weapons",  QUAKE1_WEAPONS)
 
   Game_merge_tab("pickups", QUAKE1_PICKUPS)
