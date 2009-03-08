@@ -47,32 +47,33 @@ SKULLTAG_MONSTERS =
 
   darkimp =
   {
-    prob=35, guard_prob=11, trap_prob=11, cage_prob=40,
+    prob=55, guard_prob=11, trap_prob=11, cage_prob=40,
     health=120, damage=30, attack="missile",
+  },
+
+  superguy =
+  {
+    prob=33, guard_prob=21, trap_prob=11, cage_prob=30,
+    health=120, damage=65, attack="hitscan",
+    give={ {weapon="super"} },
   },
 
   bldemon =
   {
     prob=25, guard_prob=11, trap_prob=31,
-    health=300, damage=25, attack="melee"
-  },
-
-  superguy =
-  {
-    prob=20, guard_prob=21, trap_prob=11, cage_prob=30,
-    health=120, damage=65, attack="hitscan",
+    health=300, damage=25, attack="melee",
   },
 
   cacolant =
   {
     prob=25, guard_prob=21, trap_prob=11,
     health=800, damage=55, attack="missile",
-    float=true
+    float=true,
   },
 
   hectebus =
   {
-    prob=45, guard_prob=21, trap_prob=21, cage_prob=88,
+    prob=35, guard_prob=21, trap_prob=21, cage_prob=88,
     health=1200, damage=120, attack="missile",
   },
 
@@ -80,7 +81,7 @@ SKULLTAG_MONSTERS =
   {
     prob=15, guard_prob=21, trap_prob=11,
     health=1200, damage=65, attack="missile",
-    float=true
+    float=true,
   },
 
   belphegor =
@@ -93,32 +94,36 @@ SKULLTAG_MONSTERS =
 
 SKULLTAG_WEAPONS =
 {
-  bfg10k =
+  minigun =
   {
-    pref=15,
-    rate=1.2, damage=300, attack="missile",
-    ammo="cell", per=5,  give=40,
+    pref=85,
+    rate=15, damage=10, attack="hitscan",
+    ammo="bullet", per=1,
+    give={ {ammo="bullet",count=20} },
   },
 
   glaunch =
   {
     pref=50,
-    rate=1.7, damage=90, attack="missile",
-    ammo="rocket", per=1, give=2,
+    rate=1.7, damage=90, attack="missile", --FIXME splash damage
+    ammo="rocket", per=1,
+    give={ {ammo="rocket",count=2} },
   },
 
   railgun =
   {
     pref=20,
     rate=3, damage=200, attack="hitscan",
-    ammo="cell", per=10, give=40,
+    ammo="cell", per=10,
+    give={ {ammo="cell",count=40} },
   },
 
-  minigun =
+  bfg10k =
   {
-    pref=85,
-    rate=15, damage=10, attack="hitscan",
-    ammo="bullet", per=1, give=20,
+    pref=15,
+    rate=1.2, damage=300, attack="missile", --FIXME splash damage
+    ammo="cell", per=5,
+    give={ {ammo="cell",count=40} },
   },
 }
 
@@ -129,11 +134,11 @@ SKULLTAG_PICKUPS =
 }
 
 
--- TODO monster/weapon prefs
+-- TODO MONSTER/WEAPON PREFS
 --  hectebus = { super=2.0, lauch=2.0, railgun=1.5 },
 --  belphegor = { launch=1.5, plasma=1.5, bfg=1.0, railgun=1.5 },
---  darkimp     = { chain=2.0, shotty=6.0, minigun=1.0 },
---  cacolant   = { super=2.0, launch=0.7, railgun=1.0, minigun=0.4 },
+--  darkimp   = { chain=2.0, shotty=6.0, minigun=1.0 },
+--  cacolant  = { super=2.0, launch=0.7, railgun=1.0, minigun=0.4 },
 --  abaddon   = { super=2.0, launch=1.33, railgun=1.5 },
 --  bldemon   = { super=3.0, launch=0.4 },
 --  superguy  = { shotty=4.0, super=4.0, chain=3.0, railgun=0.3 }
