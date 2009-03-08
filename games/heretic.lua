@@ -76,8 +76,8 @@ HERETIC_THINGS =
   runes2     = { id=21, kind="pickup", r=20,h=16, pass=true },
   flame_orb1 = { id=22, kind="pickup", r=20,h=16, pass=true },
   flame_orb2 = { id=23, kind="pickup", r=20,h=16, pass=true },
-  mace_orbs  = { id=13, kind="pickup", r=20,h=16, pass=true },
-  mace_pile  = { id=16, kind="pickup", r=20,h=16, pass=true },
+  mace_orb1  = { id=13, kind="pickup", r=20,h=16, pass=true },
+  mace_orb2  = { id=16, kind="pickup", r=20,h=16, pass=true },
 
   h_vial  = { id=81, kind="pickup", r=20,h=16, pass=true },
   h_flask = { id=82, kind="pickup", r=20,h=16, pass=true },
@@ -1486,54 +1486,59 @@ HERETIC_WEAPONS =
   staff =
   {
     rate=2.5, damage=12, attack="melee",
-  },         
+  },
 
   wand =
-  {          
+  {
     pref=10,
     rate=3.1, damage=10, attack="hitscan",
     ammo="crystal", per=1,
-  },         
+  },
 
   gauntlets =
-  {          
+  {
     pref=10, add_prob=5, start_prob=10,
     rate=5.2, damage=8, attack="melee",
-  },         
+  },
 
   crossbow =
-  {          
+  {
     pref=90, add_prob=10, start_prob=70,
-    rate=1.3, damage=20, attack="missile",
-    ammo="arrow", per=1, give=4, splash={0,5}
-  },         
+    rate=1.3, damage=20, attack="missile", splash={0,5},
+    ammo="arrow", per=1,
+    give={ {ammo="arrow",count=10} },
+  },
 
   claw =
-  {          
+  {
     pref=60, add_prob=20, start_prob=20,
     rate=2.9, damage=16, attack="missile",
-    ammo="claw_orb", per=1, give=4,
-  },         
+    ammo="claw_orb", per=1,
+    give={ {ammo="claw_orb",count=30} },
+  },
 
-  hellstaff =
-  {          
+  hellstaff =  -- aka skullrod
+  {
     pref=50, add_prob=20, start_prob=5,
     rate=8.7, damage=12, attack="missile",
-    ammo="runes", per=1, give=4,
-  },         
+    ammo="runes", per=1,
+    give={ {ammo="runes",count=50} },
+  },
 
   phoenix =
-  {          
+  {
     pref=50, add_prob=20, start_prob=5,
     rate=1.7, damage=80, attack="missile",
-    ammo="flame_orb", per=1, give=4,
-  },         
+    ammo="flame_orb", per=1,
+    give={ {ammo="flame_orb",count=2} },
+  },
 
   firemace =
-  {          
+  {
     pref=35, add_prob=20, start_prob=5,
     rate=8.7, damage=8, attack="missile",
-    ammo="mace_orb", per=1, give=4,
+    ammo="mace_orb", per=1,
+    give={ {ammo="mace_orb",count=50} },
   },
 
   -- Notes:
@@ -1547,42 +1552,117 @@ HERETIC_WEAPONS =
 
 HERETIC_PICKUPS =
 {
-  -- FIXME: the ammo 'give' numbers are CRAP!
-  crystal = { stat="crystal", give=5,  },
-  geode   = { stat="crystal", give=20, },
-  arrow   = { stat="arrow",   give=5,  },
-  quiver  = { stat="arrow",   give=20, },
+  -- HEALTH --
 
-  claw_orb1 = { stat="claw_orb", give=5,  },
-  claw_orb2 = { stat="claw_orb", give=20, },
-  runes1    = { stat="rune",     give=5,  },
-  runes2    = { stat="rune",     give=20, },
+  h_vial =
+  {
+    prob=70, cluster={ 1,4 },
+    give={ {health=10} },
+  },
 
-  flame_orb1 = { stat="flame_orb", give=5,  },
-  flame_orb2 = { stat="flame_orb", give=20, },
-  mace_orbs  = { stat="mace_orb",  give=5,  },
-  mace_pile  = { stat="mace_orb",  give=20, },
+  h_flask =
+  {
+    prob=25,
+    give={ {health=25} },
+  },
 
-  h_vial  = { stat="health", give=10,  prob=70 },
-  h_flask = { stat="health", give=25,  prob=25 },
-  h_urn   = { stat="health", give=100, prob=5, clu_max=1 },
+  h_urn =
+  {
+    prob=5,
+    give={ {health=100} },
+  },
 
-  shield1 = { stat="armor", give=100, prob=70 },
-  shield2 = { stat="armor", give=200, prob=10 },
+
+  -- ARMOR --
+
+  shield1 =
+  {
+    prob=20,
+    give={ {health=50} },
+  },
+
+  shield2 =
+  {
+    prob=5,
+    give={ {health=100} },
+  },
+
+
+  -- AMMO --
+
+  crystal =
+  {
+    cluster={ 1,4 },
+    give={ {ammo="crystal",count=10} },
+  },
+
+  geode =
+  {
+    give={ {ammo="crystal",count=50} },
+  },
+
+  arrow =
+  {
+    cluster={ 1,3 },
+    give={ {ammo="arrow",count=5} },
+  },
+
+  quiver =
+  {
+    give={ {ammo="arrow",count=20} },
+  },
+
+  claw_orb1 =
+  {
+    cluster={ 1,3 },
+    give={ {ammo="claw_orb",count=10} },
+  },
+
+  claw_orb2 =
+  {
+    give={ {ammo="claw_orb",count=25} },
+  },
+
+  runes1 =
+  {
+    cluster={ 1,4 },
+    give={ {ammo="rune",count=20} },
+  },
+
+  runes2 =
+  {
+    give={ {ammo="rune",count=100} },
+  },
+
+  flame_orb1 =
+  {
+    cluster={ 2,5 },
+    give={ {ammo="flame_orb",count=1} },
+  },
+
+  flame_orb2 =
+  {
+    give={ {ammo="flame_orb",count=10} },
+  },
+
+  mace_orb1 =
+  {
+    cluster={ 1,4 },
+    give={ {ammo="mace_orb",count=20} },
+  },
+
+  mace_orb2 =
+  {
+    give={ {ammo="mace_orb",count=100} },
+  },
 }
 
-HERETIC_NICENESS =
+
+HERETIC_ITEMS =
 {
-  w1 = { weapon="crossbow",  quest=1, prob=70, always=true  },
-
-  w3 = { weapon="gauntlets", quest=1, prob=33, always=false },
-  w4 = { weapon="gauntlets", quest=3, prob=50, always=false },
-
-  a1 = { pickup="shield1", prob=2.0 },
-  a2 = { pickup="shield2", prob=0.7 },
-
-  p1 = { pickup="torch",   prob=2.0 },
+  p1 = { pickup="torch", prob=2.0 },
 }
+
 
 HERETIC_DEATHMATCH =
 {
@@ -1730,10 +1810,8 @@ function Heretic1_setup()
 
   Game_merge_tab("things",   HERETIC_THINGS)
   Game_merge_tab("monsters", HERETIC_MONSTERS)
-
   Game_merge_tab("weapons",  HERETIC_WEAPONS)
   Game_merge_tab("pickups",  HERETIC_PICKUPS)
-  Game_merge_tab("niceness", HERETIC_NICENESS)
 
   GAME.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
                         "runes", "flame_orb", "mace_orb" },
