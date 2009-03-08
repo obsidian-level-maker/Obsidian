@@ -273,7 +273,7 @@ const char * UI_Play::monster_syms[] =
 {
   // also used for: Players (DM)
 
-  "kein",   "NONE",
+  "NONE",   "NONE",
   "scarce", "Scarce",
   "less",   "Less",
   "normal", "Normal",
@@ -289,7 +289,7 @@ const char * UI_Play::trap_syms[] =
 {
   // also used for: Powers, Weapons (DM)
 
-  "kein",   "NONE",  
+  "NONE",   "NONE",  
   "less",   "Less",  
   "normal", "Normal",
   "more",   "More", 
@@ -303,7 +303,7 @@ const char * UI_Play::health_syms[] =
 {
   // also used for: Ammo
 
-  "kein",   "NONE",
+  "NONE",   "NONE",
   "scarce", "Scarce",
   "less",   "Less",
   "normal", "Normal",

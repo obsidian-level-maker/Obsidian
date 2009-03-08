@@ -261,7 +261,7 @@ const char * UI_Level::outdoor_syms[] =
 
 const char * UI_Level::detail_syms[] =
 {
-  "kein",   "NONE",
+  "NONE",   "NONE",
   "low",    "Low",
   "normal", "Medium",
   "high",   "High",
@@ -271,7 +271,7 @@ const char * UI_Level::detail_syms[] =
 
 const char * UI_Level::light_syms[] =
 {
-  "kein",   "NONE",
+  "NONE",   "NONE",
   "dark",   "Dark",
   "normal", "Normal",
   "bright", "Bright",
