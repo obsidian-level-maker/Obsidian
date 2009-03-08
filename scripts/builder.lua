@@ -417,7 +417,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
   local door_info =
   {
     t_face = { texture="FLAT1" },
-    b_face = { texture="FLAT1", light=0.85 },
+    b_face = { texture="FLAT1", light=0.7 },
     w_face = { texture=assert(info.skin.door_w), peg=true, x_offset=0, y_offset=0 },
 --  w_face = { texture="PIPES", peg=true, x_offset=0, y_offset=0 },
     flag_door = true,
@@ -427,7 +427,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
   local frame_info =
   {
     t_face = { texture="FLAT18" },
-    b_face = { texture="FLAT18", light=0.85 },
+    b_face = { texture="FLAT18", light=0.7 },
     w_face = { texture=w_tex },
   }
 
