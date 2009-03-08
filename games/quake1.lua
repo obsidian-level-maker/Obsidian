@@ -67,12 +67,14 @@ QUAKE1_THINGS =
   yellow_armor = { id="item_armor2",   kind="pickup", r=30, h=30, pass=true },
   red_armor    = { id="item_armorInv", kind="pickup", r=30, h=30, pass=true },
 
-  -- TODO: ammo quantity is controlled by 'spawnflags'
-
-  cell_box   = { id="item_cells",   kind="pickup", r=30, h=30, pass=true },
-  shell_box  = { id="item_shells",  kind="pickup", r=30, h=30, pass=true },
-  nail_box   = { id="item_spikes",  kind="pickup", r=30, h=30, pass=true },
-  rocket_box = { id="item_rockets", kind="pickup", r=30, h=30, pass=true },
+  shell_20  = { id="item_shells",  spawnflags=0, kind="pickup", r=30, h=30, pass=true },
+  shell_40  = { id="item_shells",  spawnflags=1, kind="pickup", r=30, h=30, pass=true },
+  nail_25   = { id="item_spikes",  spawnflags=0, kind="pickup", r=30, h=30, pass=true },
+  nail_50   = { id="item_spikes",  spawnflags=1, kind="pickup", r=30, h=30, pass=true },
+  rocket_5  = { id="item_rockets", spawnflags=0, kind="pickup", r=30, h=30, pass=true },
+  rocket_10 = { id="item_rockets", spawnflags=1, kind="pickup", r=30, h=30, pass=true },
+  cell_6    = { id="item_cells",   spawnflags=0, kind="pickup", r=30, h=30, pass=true },
+  cell_12   = { id="item_cells",   spawnflags=1, kind="pickup", r=30, h=30, pass=true },
 
   suit   = { id="item_artifact_envirosuit",      kind="pickup", r=30, h=30, pass=true },
   invis  = { id="item_artifact_invisibility",    kind="pickup", r=30, h=30, pass=true },
@@ -83,7 +85,8 @@ QUAKE1_THINGS =
   explode_sm = { id="misc_explobox2", kind="scenery", r=30, h=80, },
   explode_bg = { id="misc_explobox2", kind="scenery", r=30, h=40, },
 
-  torch      = { id="light_torch_small_walltorch", kind="scenery", r=30, h=60, pass=true },
+  crucified  = { id="monster_zombie", spawnflags=1, kind="scenery", r=32, h=64, },
+  torch      = { id="light_torch_small_walltorch",  kind="scenery", r=30, h=60, pass=true },
 
   -- ambient sounds
   snd_computer = { id="ambient_comp_hum",  kind="scenery", r=30, h=30, pass=true },
@@ -503,19 +506,19 @@ QUAKE1_PICKUPS =
 
   heal_10 =
   {
-    prob=5, cluster={1, 2},
+    prob=20, cluster={ 1,2 },
     give={ {health=8} },   -- real amount is 5-10 units
   },
 
   heal_25 =
   {
-    prob=15,
+    prob=50,
     give={ {health=25} },
   },
 
   mega =
   {
-    prob=1, big_item=true,
+    prob=3, big_item=true,
     give={ {health=70} },  -- gives 100 but it rots aways
   },
 
@@ -523,13 +526,13 @@ QUAKE1_PICKUPS =
 
   green_armor =
   {
-    prob=4,
+    prob=9,
     give={ {health=30} },
   },
 
   yellow_armor =
   {
-    prob=2,
+    prob=3,
     give={ {health=90} },
   },
 
@@ -541,6 +544,45 @@ QUAKE1_PICKUPS =
 
   -- AMMO --
 
+  shell_20 =
+  {
+    give={ {ammo="shell",count=20} },
+  },
+
+  shell_40 =
+  {
+    give={ {ammo="shell",count=40} },
+  },
+
+  nail_25 =
+  {
+    give={ {ammo="nail",count=25} },
+  },
+
+  nail_50 =
+  {
+    give={ {ammo="nail",count=50} },
+  },
+
+  rocket_5 =
+  {
+    give={ {ammo="rocket",count=5} },
+  },
+
+  rocket_10 =
+  {
+    give={ {ammo="rocket",count=10} },
+  },
+
+  cell_6 =
+  {
+    give={ {ammo="cell",count=6} },
+  },
+
+  cell_12 =
+  {
+    give={ {ammo="cell",count=12} },
+  },
 }
 
 
