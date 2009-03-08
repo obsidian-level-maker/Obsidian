@@ -41,7 +41,7 @@
 
 #define TICKER_TIME  40 /* ms */
 
-#define CONFIG_FILENAME  "CONFIG.cfg"
+#define CONFIG_FILENAME  "CONFIG.txt"
 #define LOG_FILENAME     "LOGS.txt"
 
 
@@ -84,7 +84,7 @@ static void ShowInfo(void)
 void Determine_WorkingPath(const char *argv0)
 {
   // firstly find the "Working directory", and set it as the
-  // current directory.  That's the place where the CONFIG.cfg
+  // current directory.  That's the place where the CONFIG.txt
   // and LOGS.txt files are, as well the temp files.
 
 #ifndef FHS_INSTALL
@@ -325,7 +325,7 @@ int main(int argc, char **argv)
   if (ArgvFind('t', "terminal") >= 0)
     LogEnableTerminal();
 
-  LogPrintf(OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2008 Andrew Apted\n\n");
+  LogPrintf(OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2009 Andrew Apted\n\n");
 
   LogPrintf("working_path: [%s]\n",   working_path);
   LogPrintf("install_path: [%s]\n\n", install_path);

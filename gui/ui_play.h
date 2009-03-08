@@ -40,7 +40,7 @@ public:
   
   void Defaults();
 
-  // this is only for reading the CONFIG.CFG file.
+  // this is only for reading the CONFIG file.
   // parse the name and store the value in the appropriate
   // widget, also sending it to the Lua code.
   // Returns false if the key was unknown.
