@@ -16,7 +16,6 @@
 --
 ----------------------------------------------------------------
 
-
 QUAKE2_THINGS =
 {
   -- players
@@ -101,6 +100,7 @@ QUAKE2_THINGS =
   barrel      = { id="misc_explobox", kind="scenery", r=20, h=40, pass=true },
   dead_dude   = { id="misc_deadsoldier", kind="scenery", r=20, h=60, pass=true },
   insane_dude = { id="misc_insane",  kind="scenery", r=20, h=60, pass=true },
+  -- FIXME: varieties of insane_dude!
 
   -- special
 
@@ -486,7 +486,7 @@ QUAKE2_WEAPONS =
     pref=20, add_prob=10, start_prob=40,
     rate=0.6, damage=40, attack="hitscan",
     ammo="shell",  per=1,
-    give={ {ammo="shell",count=10 },
+    give={ {ammo="shell",count=10} },
   },
 
   ssg =
@@ -494,7 +494,7 @@ QUAKE2_WEAPONS =
     pref=70, add_prob=50, start_prob=10,
     rate=0.8, damage=88, attack="hitscan", splash={0,8},
     ammo="shell", per=2,
-    give={ {ammo="shell",count=10 },
+    give={ {ammo="shell",count=10} },
   },
 
   machine =
@@ -502,7 +502,7 @@ QUAKE2_WEAPONS =
     pref=20, add_prob=30, start_prob=30,
     rate=6.0, damage=8, attack="hitscan",
     ammo="bullet", per=1,
-    give={ {ammo="bullet",count=50 },
+    give={ {ammo="bullet",count=50} },
   },
 
   chain =
@@ -510,7 +510,7 @@ QUAKE2_WEAPONS =
     pref=90, add_prob=15, start_prob=5,
     rate=14, damage=8, attack="hitscan",
     ammo="bullet", per=1,
-    give={ {ammo="bullet",count=50 },
+    give={ {ammo="bullet",count=50} },
   },
 
   grenade =
@@ -566,18 +566,71 @@ QUAKE2_WEAPONS =
   -- monster, it's all in the splash baby.
 }
 
+
 QUAKE2_PICKUPS =
 {
+  -- HEALTH --
+
+  heal_2 =
+  {
+    prob=10, cluster={ 3,9 },
+    give={ {health=2} },
+  },
+
+  heal_10 =
+  {
+    prob=20,
+    give={ {health=10} },
+  },
+
+  heal_25 =
+  {
+    prob=50,
+    give={ {health=25} },
+  },
+
+  heal_100 =
+  {
+    prob=5,
+    give={ {health=70} },
+  },
+
+  -- ARMOR --
+
+  armor_2 =
+  {
+    prob=7, cluster={ 3,9 },
+    give={ {health=1} },
+  },
+
+  armor_25 =  -- (jacket)
+  {
+    prob=7,
+    give={ {health=8} },
+  },
+
+  armor_50 =  -- (combat)
+  {
+    prob=15,
+    give={ {health=25} },
+  },
+
+  armor_100 =  -- (body)
+  {
+    prob=15,
+    give={ {health=80} },
+  },
+
   -- AMMO --
 
   am_bullet =
   {
-    give={ {ammo="bullet",count=50 },
+    give={ {ammo="bullet",count=50} },
   },
 
   am_shell =
   {
-    give={ {ammo="shell",count=10 },
+    give={ {ammo="shell",count=10} },
   },
 
   am_grenade =
@@ -599,6 +652,17 @@ QUAKE2_PICKUPS =
   {
     give={ {ammo="cell",count=50} },
   },
+
+  -- Notes:
+  --
+  -- Megahealth only gives 70 instead of 100, since excess
+  -- health rots away over time.
+  --
+  -- Each kind of Armor in Quake2 has two protection values, one
+  -- for normal attacks (bullets or missiles) and one for energy
+  -- attacks (blaster or bfg).  Since very few monsters use an
+  -- energy attack (Technician only one??) we only use the normal
+  -- protection value.
 }
 
 
