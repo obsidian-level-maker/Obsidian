@@ -348,12 +348,14 @@ QUAKE1_MONSTERS =
   {
     prob=80, guard_prob=11, cage_prob=11, trap_prob=11,
     health=30, damage=14, attack="hitscan",
+    give={ {ammo="shell",count=5} },
   },
 
   enforcer =
   {
     prob=40, guard_prob=11, cage_prob=11, trap_prob=11,
     health=80, damage=18, attack="missile",
+    give={ {ammo="cell",count=5} },
   },
 
   zombie =
@@ -390,6 +392,7 @@ QUAKE1_MONSTERS =
   {
     prob=40, guard_prob=21, cage_prob=11, trap_prob=31,
     health=200, damage=15, attack="missile",
+    give={ {ammo="rocket",count=2} },
   },
 
   fiend =
@@ -413,10 +416,6 @@ QUAKE1_MONSTERS =
 }
 
 
-QUAKE1_MONSTER_GIVE =
-{
-}
-
 QUAKE1_WEAPONS =
 {
   axe =
@@ -436,6 +435,7 @@ QUAKE1_WEAPONS =
     pref=50, add_prob=40,
     rate=1.4, damage=45, attack="hitscan", splash={0,3},
     ammo="shell", per=2,
+    give={ {ammo="shell",count=5} },
   },
 
   grenade =
@@ -443,6 +443,7 @@ QUAKE1_WEAPONS =
     pref=10, add_prob=15,
     rate=1.5, damage= 5, attack="missile", splash={60,15,3},
     ammo="rocket", per=1,
+    give={ {ammo="rocket",count=5} },
   },
 
   rocket =
@@ -450,13 +451,15 @@ QUAKE1_WEAPONS =
     pref=30, add_prob=10,
     rate=1.2, damage=80, attack="missile", splash={0,20,6,2},
     ammo="rocket", per=1,
+    give={ {ammo="rocket",count=5} },
   },
 
   nailgun =
   {
     pref=50, add_prob=30,
     rate=5.0, damage=8, attack="missile",
-    ammo="nail", per=1
+    ammo="nail", per=1,
+    give={ {ammo="nail",count=30} },
   },
 
   nailgun2 =
@@ -464,6 +467,7 @@ QUAKE1_WEAPONS =
     pref=80, add_prob=10,
     rate=5.0, damage=18, attack="missile",
     ammo="nail", per=2,
+    give={ {ammo="nail",count=30} },
   },
 
   zapper =
@@ -471,6 +475,7 @@ QUAKE1_WEAPONS =
     pref=30, add_prob=2,
     rate=10, damage=30, attack="hitscan", splash={0,4},
     ammo="cell", per=1,
+    give={ {ammo="cell",count=15} },
   },
 
 
