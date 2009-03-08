@@ -2,7 +2,7 @@
 //  COOKIE : Save/Load user settings
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker (C) 2006-2008 Andrew Apted
+//  Oblige Level Maker (C) 2006-2009 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -187,7 +187,7 @@ bool Cookie_Save(const char *filename)
 
   // header...
   fprintf(cookie_fp, "-- CONFIG FILE : OBLIGE %s\n", OBLIGE_VERSION); 
-  fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2008 Andrew Apted\n");
+  fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2009 Andrew Apted\n");
   fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
   std::vector<std::string> lines;

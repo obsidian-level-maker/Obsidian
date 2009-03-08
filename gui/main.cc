@@ -2,7 +2,7 @@
 //  Main program
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker (C) 2006-2008 Andrew Apted
+//  Oblige Level Maker (C) 2006-2009 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -58,7 +58,7 @@ static void ShowInfo(void)
 {
   printf(
     "\n"
-    "** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2008 Andrew Apted **\n"
+    "** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2009 Andrew Apted **\n"
     "\n"
   );
 
