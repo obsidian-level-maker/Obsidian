@@ -59,12 +59,15 @@ QUAKE1_THINGS =
   nailgun2 = { id="weapon_supernailgun",    kind="pickup", r=30, h=30, pass=true },
   zapper   = { id="weapon_lightning",       kind="pickup", r=30, h=30, pass=true },
 
-  health       = { id="item_health",   kind="pickup", r=30, h=30, pass=true },
+  heal_25 = { id="item_health", spawnflags=0, kind="pickup", r=30, h=30, pass=true },
+  heal_10 = { id="item_health", spawnflags=1, kind="pickup", r=30, h=30, pass=true },
+  mega    = { id="item_health", spawnflags=2, kind="pickup", r=30, h=30, pass=true },
+
   green_armor  = { id="item_armor1",   kind="pickup", r=30, h=30, pass=true },
   yellow_armor = { id="item_armor2",   kind="pickup", r=30, h=30, pass=true },
   red_armor    = { id="item_armorInv", kind="pickup", r=30, h=30, pass=true },
 
-  -- TODO: health and ammo quantity is controlled by 'spawnflags'
+  -- TODO: ammo quantity is controlled by 'spawnflags'
 
   cell_box   = { id="item_cells",   kind="pickup", r=30, h=30, pass=true },
   shell_box  = { id="item_shells",  kind="pickup", r=30, h=30, pass=true },
@@ -496,8 +499,48 @@ QUAKE1_WEAPONS =
 
 QUAKE1_PICKUPS =
 {
-  -- FIXME
-  h_10 = { stat="health", give=10 },
+  -- HEALTH --
+
+  heal_10 =
+  {
+    prob=5, cluster={1, 2},
+    give={ {health=8} },   -- real amount is 5-10 units
+  },
+
+  heal_25 =
+  {
+    prob=15,
+    give={ {health=25} },
+  },
+
+  mega =
+  {
+    prob=1, big_item=true,
+    give={ {health=70} },  -- gives 100 but it rots aways
+  },
+
+  -- ARMOR --
+
+  green_armor =
+  {
+    prob=4,
+    give={ {health=30} },
+  },
+
+  yellow_armor =
+  {
+    prob=2,
+    give={ {health=90} },
+  },
+
+  red_armor =
+  {
+    prob=1,
+    give={ {health=160} },
+  },
+
+  -- AMMO --
+
 }
 
 
@@ -579,14 +622,15 @@ function Quake1_setup()
   GAME.classes = { "marine" }
   GAME.dm = {}
 
-  GAME.pickup_stats = { "health", "bullet" }
+--???  GAME.pickup_stats = { "health", "bullet" }
+  
   GAME.initial_model = QUAKE1_INITIAL_MODEL
 
   Game_merge_tab("things",   QUAKE1_THINGS)
   Game_merge_tab("monsters", QUAKE1_MONSTERS)
   Game_merge_tab("weapons",  QUAKE1_WEAPONS)
+  Game_merge_tab("pickups",  QUAKE1_PICKUPS)
 
-  Game_merge_tab("pickups", QUAKE1_PICKUPS)
   Game_merge_tab("quests",  QUAKE1_QUESTS)
 
   Game_merge_tab("combos", QUAKE1_COMBOS)
