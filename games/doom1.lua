@@ -3109,6 +3109,7 @@ COMMON_WEAPONS =
   {
     pref=8, add_prob=6, start_prob=20,
     rate=1.5, damage=50, attack="melee",
+    give={ {health=100} },
   },
 
   pistol =
@@ -3122,42 +3123,48 @@ COMMON_WEAPONS =
   {
     pref=80, add_prob=35, start_prob=30,
     rate=8.5, damage=10, attack="hitscan",
-    ammo="bullet", per=1, give=20,
+    ammo="bullet", per=1,
+    give={ {ammo="bullet",count=20} },
   },
 
   shotty =
   {
     pref=110, add_prob=10, start_prob=80,
     rate=0.9, damage=70, attack="hitscan", splash={ 0,10 },
-    ammo="shell",  per=1, give=8,
+    ammo="shell", per=1,
+    give={ {ammo="shell",count=8} },
   },
 
   super =
   {
     pref=70, add_prob=20, start_prob=3,
     rate=0.6, damage=170, attack="hitscan", splash={ 0,30 },
-    ammo="shell", per=2, give=8,
+    ammo="shell", per=2,
+    give={ {ammo="shell",count=8} },
   },
 
   launch =
   {
     pref=60, add_prob=25, start_prob=3,
     rate=1.7, damage=80, attack="missile", splash={ 50,20,5 },
-    ammo="rocket", per=1, give=2,
+    ammo="rocket", per=1,
+    give={ {ammo="rocket",count=2} },
   },
 
   plasma =
   {
     pref=80, add_prob=15, start_prob=3,
     rate=11, damage=20, attack="missile",
-    ammo="cell", per=1, give=40,
+    ammo="cell", per=1,
+    give={ {ammo="cell",count=40} },
   },
 
   bfg =
   {
     pref=20, add_prob=25,
     rate=0.8, damage=300, attack="missile", splash={60,45,30,30,20,10},
-    ammo="cell", per=40, give=40,
+    ammo="cell", per=40,
+    give={ {ammo="cell",count=40} },
   },
 }
 
@@ -3186,42 +3193,121 @@ COMMON_MONSTER_WEAPON_PREFS =
 
 COMMON_PICKUPS =
 {
-  bullets    = { stat="bullet", give=10, prob=10 },
-  bullet_box = { stat="bullet", give=50, prob=70, clu_max=1 },
-  shells     = { stat="shell",  give= 4, prob=30 },
-  shell_box  = { stat="shell",  give=20, prob=70, clu_max=3 },
+  -- HEALTH --
 
-  rockets    = { stat="rocket", give= 1, prob=20 },
-  rocket_box = { stat="rocket", give= 5, prob=70, clu_max=1 },
-  cells      = { stat="cell",   give=20, prob=30 },
-  cell_pack  = { stat="cell",   give=100,prob=70, clu_max=1 },
+  potion =
+  {
+    prob=1, cluster={ 4,9 },
+    give={ {health=1} },
+  },
 
-  potion   = { stat="health", give=1,  prob=20 },
-  stimpack = { stat="health", give=10, prob=40 },
-  medikit  = { stat="health", give=25, prob=70, clu_max=1 },
-  soul     = { stat="health", give=100,prob=15, clu_max=1, limit=200 },
+  stimpack =
+  {
+    prob=10, cluster={ 1,4 },
+    give={ {health=10} },
+  },
 
-  -- BERSERK and MEGA are quest items
+  medikit =
+  {
+    prob=40,
+    give={ {health=25} },
+  },
 
-  helmet = { stat="health", give=1, prob=7 }, -- FIXME
+  soul =
+  {
+    prob=10,
+    give={ {health=150} },
+  },
 
-  green_armor = { stat="armor", give= 100, limit=100, clu_max=1 },
-  blue_armor  = { stat="armor", give= 200, limit=200, clu_max=1 },
+  mega =
+  {
+    prob=2,
+    give={ {health=200} },
+  },
 
-  -- Note: armor is handled with special code, since
-  --       BLUE ARMOR is a quest item.
+  -- ARMOR --
 
-  -- Note 2: the BACKPACK is a quest item
+  helmet =
+  {
+    prob=5, cluster={ 4,9 },
+    give={ {health=1} },
+  },
+
+  green_armor =
+  {
+    prob=5,
+    give={ {health=30} },
+  },
+
+  blue_armor =
+  {
+    prob=5,
+    give={ {health=90} },
+  },
+
+  -- AMMO --
+
+  bullets =
+  {
+    prob=10, cluster={ 2,4 },
+    give={ {ammo="bullet",count=10} },
+  },
+
+  bullet_box =
+  {
+    prob=70,
+    give={ {ammo="bullet", count=50} },
+  },
+
+  shells =
+  {
+    prob=30, cluster={ 2,4 },
+    give={ {ammo="shell",count=4} },
+  },
+
+  shell_box =
+  {
+    prob=50,
+    give={ {ammo="shell",count=20} },
+  },
+
+  rockets =
+  {
+    prob=10, cluster={ 4,9 },
+    give={ {ammo="rocket",count=1} },
+  },
+
+  rocket_box =
+  {
+    prob=50,
+    give={ {ammo="rocket",count=5} },
+  },
+
+  cells =
+  {
+    prob=20, cluster={ 2,4 },
+    give={ {ammo="cell",count=20} },
+  },
+
+  cell_pack =
+  {
+    prob=40,
+    give={ {ammo="cell",count=100} },
+  },
+
+
+  -- NOTES:
+  --
+  -- Berserk is handled as a WEAPON instead of a pickup.
+  --
+  -- Backpack is handled as a POWERUP.
+  --
+  -- Armor (all types) is modelled as health, because it merely
+  -- saves the player's health when you are hit with damage.
+  -- The BLUE jacket saves 50% of damage, hence it is roughly
+  -- equivalent to 100 units of health.
 }
 
-COMMON_NICENESS =
-{
-  w1 = { weapon="shotty", quest=1, prob=70, always=true  },
-  w2 = { weapon="chain",  quest=3, prob=20, always=false },
-  w3 = { weapon="plasma", quest=5, prob=35, always=true  },
-
-  p1 = { pickup="green_armor", prob=2.0 },
-}
 
 
 -- DeathMatch stuff
@@ -3705,15 +3791,13 @@ function Doom_common_setup()
 
   GAME.initial_model = COMMON_INITIAL_MODEL
 
-  GAME.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" }
+--???  GAME.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" }
 
   Game_merge_tab("things", DOOM_THINGS)
 
   Game_merge_tab("monsters", COMMON_MONSTERS)
   Game_merge_tab("weapons",  COMMON_WEAPONS)
-
-  Game_merge_tab("pickups", COMMON_PICKUPS)
-  Game_merge_tab("niceness", COMMON_NICENESS)
+  Game_merge_tab("pickups",  COMMON_PICKUPS)
 
   Game_merge_tab("dm", COMMON_DEATHMATCH)
   Game_merge_tab("dm_exits", COMMON_DEATHMATCH_EXITS)
