@@ -34,7 +34,7 @@ OB_MODULES["dm_equip_doom"] =
 
       choices =
       {
-        { id="NONE",   label="NONE" },
+        { id="none",   label="NONE" },
         { id="saw",    label="Chainsaw" },
         { id="shotty", label="Shotgun" },
         { id="ssg",    label="SSG" },
