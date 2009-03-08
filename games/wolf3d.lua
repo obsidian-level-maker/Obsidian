@@ -69,7 +69,7 @@ WOLF_THINGS =
   good_food = { kind="pickup", id=47, r=30, h=60, pass=true },
   dog_food  = { kind="pickup", id=29, r=30, h=60, pass=true },
 
-  clip_8      = { kind="pickup", id=49, r=30, h=60, pass=true },
+  clip        = { kind="pickup", id=49, r=30, h=60, pass=true },
   machine_gun = { kind="pickup", id=50, r=30, h=60, pass=true },
   gatling_gun = { kind="pickup", id=51, r=30, h=60, pass=true },
 
@@ -362,7 +362,7 @@ WOLF_ROOMS =
   {
     scenery = { barrel=70, bed=40, },
 
-    pickups = { first_aid=50, good_food=90, clip_8=70 },
+    pickups = { first_aid=50, good_food=90, clip=70 },
     pickup_rate = 66,
   },
 
@@ -591,14 +591,16 @@ WOLF_WEAPONS =
   {
     pref=20, add_prob=20,
     rate=8.0, damage=17, attack="hitscan",
-    ammo="bullet", per=1, give=4,
+    ammo="bullet", per=1,
+    give={ {ammo="bullet",give=4} },
   },
 
   gatling_gun =
   {
     pref=30, add_prob=90,
     rate=16,  damage=17, attack="hitscan",
-    ammo="bullet", per=1, give=6,
+    ammo="bullet", per=1,
+    give={ {ammo="bullet",give=6} },
   },
 
   -- Note: machine_gun actually gives _6_ bullets.
@@ -610,14 +612,29 @@ WOLF_WEAPONS =
 
 WOLF_PICKUPS =
 {
-  first_aid = { stat="health", give=25 },
-  good_food = { stat="health", give=10 },
-  dog_food  = { stat="health", give=4  },
-
   -- NOTE: no "gibs" here, they are fairly insignificant
 
-  clip_8  =   { stat="bullet", give=8 },
+  first_aid =
+  {
+    give={ {health=25} },
+  },
+
+  good_food =
+  {
+    give={ {health=10} },
+  },
+
+  dog_food =
+  {
+    give={ {health=4} },
+  },
+
+  clip =
+  {
+    give={ {ammo="bullet",count=8} },
+  },
 }
+
 
 WOLF_INITIAL_MODEL =
 {
