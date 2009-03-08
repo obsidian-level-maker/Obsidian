@@ -2,7 +2,7 @@
 -- GAME DEF : Wolfenstein 3D
 ----------------------------------------------------------------
 --
---  Oblige Level Maker (C) 2006,2007 Andrew Apted
+--  Oblige Level Maker (C) 2006-2009 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -577,7 +577,7 @@ WOLF_WEAPONS =
   knife =
   {
     pref=1,
-    rate=3.0, damage= 7, attack="melee",
+    rate=3.0, damage=7, attack="melee",
   },
 
   pistol =
@@ -596,7 +596,7 @@ WOLF_WEAPONS =
 
   gatling_gun =
   {
-    pref=30, add_prob=10,
+    pref=30, add_prob=90,
     rate=16,  damage=17, attack="hitscan",
     ammo="bullet", per=1, give=6,
   },

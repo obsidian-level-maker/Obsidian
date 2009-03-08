@@ -2,7 +2,7 @@
 -- GAME DEF : Doom I
 ----------------------------------------------------------------
 --
---  Oblige Level Maker (C) 2006-2008 Andrew Apted
+--  Oblige Level Maker (C) 2006-2009 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -2944,7 +2944,7 @@ COMMON_MONSTERS =
   {
     prob=60, guard_prob=11, cage_prob=11, trap_prob=11,
     health=20, damage=4, attack="hitscan",
-    give={ { ammo="bullet", per=10 } },
+    give={ { ammo="bullet", count=10 } },
   },
 
   shooter =

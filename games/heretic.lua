@@ -2,7 +2,7 @@
 -- GAME DEF : Heretic
 ----------------------------------------------------------------
 --
---  Oblige Level Maker (C) 2006-2008 Andrew Apted
+--  Oblige Level Maker (C) 2006-2009 Andrew Apted
 --                     (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
