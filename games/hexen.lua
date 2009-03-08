@@ -1776,27 +1776,27 @@ HEXEN_PICKUPS =
   {
     prob=10,
     give={ {health=150} },
-    class="fighter"
+    best_class="fighter",
   },
 
   ar_shield =
   {
     prob=10,
     give={ {health=150} },
-    class="cleric" 
+    best_class="cleric",
   },
 
   ar_amulet =
   {
     prob=10,
     give={ {health=150} },
-    class="mage"   
+    best_class="mage",
   },
 
   ar_helmet =
   {
-    prob=20,
-    give={ {health=60} },
+    prob=10,
+    give={ {health=60} },  -- rough average
   },
 
   -- AMMO --
@@ -1819,10 +1819,10 @@ HEXEN_PICKUPS =
 
   -- NOTES:
   --
-  -- Armor gives different amounts (and it seems different decay
-  -- rates) for each player class.  We cannot model that, instead
-  -- we produce the best type of armor for each class, and the
-  -- left over one (the HELMET) is for any class (fudged).
+  -- Armor gives different amounts (and different decay rates)
+  -- for each player class.  We cannot model that completely.
+  -- Instead the 'best_class' gets the full amount and all
+  -- other classes get half the amount.
 }
 
 
