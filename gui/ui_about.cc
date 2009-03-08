@@ -74,9 +74,9 @@ private:
 
 const char *UI_About::Text =
   "Oblige is a random level generator for\n"
-  "DOOM, Heretic & Hexen\n"
+  "DOOM II (more games soon)\n"
   "\n"
-  "Copyright (C) 2006-2008 Andrew Apted\n"
+  "Copyright (C) 2006-2009 Andrew Apted\n"
   "\n"
   "This program is free software, and may be\n"
   "distributed and modified under the terms of\n"
