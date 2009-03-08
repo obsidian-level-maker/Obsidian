@@ -1616,15 +1616,16 @@ HEXEN_WEAPONS =
   {
     pref=10,
     rate=1.6, damage=32, attack="melee",
-    class = "cleric",
+    class="cleric",
   },
 
   c_staff =
   {
     pref=30, add_prob=10,
     rate=3.5, damage=36, attack="missile",
-    ammo="blue_mana",  per=1,
-    class = "cleric",
+    ammo="blue_mana", per=1,
+    give={ {ammo="blue_mana",count=25} },
+    class="cleric",
   },
 
   c_fire =
@@ -1632,16 +1633,18 @@ HEXEN_WEAPONS =
     pref=60, add_prob=10,
     rate=1.6, damage=64, attack="missile",
     ammo="green_mana", per=4,
-    class = "cleric",
+    give={ {ammo="green_mana",count=25} },
+    class="cleric",
   },
 
   c_wraith =
   {
     pref=20,
     rate=1.7, damage=200, attack="missile", splash={ 50,35,20,1 },
-    ammo="dual_mana",  per=18,
-    class = "cleric",
+    ammo="dual_mana", per=18,
+    class="cleric",
   },
+
 
   f_gaunt =
   {
@@ -1655,6 +1658,7 @@ HEXEN_WEAPONS =
     pref=30, add_prob=10,
     rate=1.6, damage=70, attack="melee",
     ammo="blue_mana", per=2, 
+    give={ {ammo="blue_mana",count=25} },
     class="fighter",
   },
 
@@ -1663,6 +1667,7 @@ HEXEN_WEAPONS =
     pref=60, add_prob=10,
     rate=1.1, damage=100, attack="missile",
     ammo="green_mana", per=3,
+    give={ {ammo="green_mana",count=25} },
     class="fighter",
   },
 
@@ -1673,6 +1678,7 @@ HEXEN_WEAPONS =
     ammo="dual_mana", per=14,
     class="fighter",
   },
+
 
   m_wand =
   {
@@ -1686,6 +1692,7 @@ HEXEN_WEAPONS =
     pref=30, add_prob=10,
     rate=1.1, damage=30, attack="missile",
     ammo="blue_mana", per=3,
+    give={ {ammo="blue_mana",count=25} },
     class="mage",
   },
 
@@ -1694,6 +1701,7 @@ HEXEN_WEAPONS =
     pref=60, add_prob=10,
     rate=1.0, damage=80, attack="missile",
     ammo="green_mana", per=5,
+    give={ {ammo="green_mana",count=25} },
     class="mage",
   },
 
@@ -1713,21 +1721,24 @@ HEXEN_WEAPONS =
   --
   -- Some weapons have both melee and projectile modes (e.g. the
   -- Fighter's hammer will throw a hammer when no monsters are in
-  -- melee range).  The damage value then is somewhere in between
-  -- the projectile damage and melee damage.
+  -- melee range).  The damage value is somewhere in-between.
+  --
+  -- The big weapons are not found lying around the level, rather
+  -- the player must find three pieces to make them.  Hence they
+  -- have no 'add_prob' value.
   --
   -- Exactly how much damage the BIG weapons can do depends a lot
-  -- on how many monsters are in view.  The damage values above are
-  -- nothing but guesses.
+  -- on how many monsters are in view.  The damage values above
+  -- are just guesses.
 }
 
 
-HEXEN_WEAPON_NAMES =
-{
-  fighter = { "f_gaunt", "f_axe",   "f_hammer", "f_quietus" },
-  cleric  = { "c_mace",  "c_staff", "c_fire",   "c_wraith"  },
-  mage    = { "m_wand",  "m_cone",  "m_blitz",  "m_scourge" },
-}
+---## HEXEN_WEAPON_NAMES =
+---## {
+---##   fighter = { "f_gaunt", "f_axe",   "f_hammer", "f_quietus" },
+---##   cleric  = { "c_mace",  "c_staff", "c_fire",   "c_wraith"  },
+---##   mage    = { "m_wand",  "m_cone",  "m_blitz",  "m_scourge" },
+---## }
 
 HEXEN_WEAPON_PIECES =
 {
@@ -1736,30 +1747,87 @@ HEXEN_WEAPON_PIECES =
   mage    = { "m1_stick", "m2_stub",  "m3_skull" },
 }
 
+
 HEXEN_PICKUPS =
 {
-  h_vial  = { stat="health", give=10,  prob=70 },
-  h_flask = { stat="health", give=25,  prob=25 },
-  h_urn   = { stat="health", give=100, prob=5, max_clu=1 },
+  -- HEALTH --
 
-  -- FIXME: these give values are CRAP!
-  ar_mesh   = { stat="armor", give=100, prob=50 },
-  ar_shield = { stat="armor", give=100, prob=70 },
-  ar_helmet = { stat="armor", give=100, prob=90 },
-  ar_amulet = { stat="armor", give=100, prob=50 },
+  h_vial =
+  {
+    prob=70, cluster={ 1,4 },
+    give={ {health=10} },
+  },
 
-  blue_mana  = { stat="blue_mana",  give=10 },
-  green_mana = { stat="green_mana", give=10 },
-  dual_mana  = { stat="dual_mana",  give=20 },
+  h_flask =
+  {
+    prob=25,
+    give={ {health=25} }, 
+  },
+
+  h_urn =
+  {
+    prob=5,
+    give={ {health=100} }, 
+  },
+
+  -- ARMOR --
+
+  ar_mesh =
+  {
+    prob=10,
+    give={ {health=150} },
+    class="fighter"
+  },
+
+  ar_shield =
+  {
+    prob=10,
+    give={ {health=150} },
+    class="cleric" 
+  },
+
+  ar_amulet =
+  {
+    prob=10,
+    give={ {health=150} },
+    class="mage"   
+  },
+
+  ar_helmet =
+  {
+    prob=20,
+    give={ {health=60} },
+  },
+
+  -- AMMO --
+
+  blue_mana =
+  {
+    give={ {ammo="blue_mana",count=15} },
+  },
+
+  green_mana =
+  {
+    give={ {ammo="green_mana",count=15} },
+  },
+
+  dual_mana =
+  {
+    give={ {ammo="blue_mana", count=20},
+           {ammo="green_mana",count=20} },
+  },
+
+  -- NOTES:
+  --
+  -- Armor gives different amounts (and it seems different decay
+  -- rates) for each player class.  We cannot model that, instead
+  -- we produce the best type of armor for each class, and the
+  -- left over one (the HELMET) is for any class (fudged).
 }
 
-HEXEN_NICENESS =
-{
-  a1 = { pickup="ar_mesh",   prob=3 },
-  a2 = { pickup="ar_shield", prob=3 },
-  a3 = { pickup="ar_helmet", prob=3 },
-  a4 = { pickup="ar_amulet", prob=3 },
 
+HEXEN_ITEMS =
+{
   p1 = { pickup="flechette", prob=9 },
   p2 = { pickup="bracer",    prob=5 },
   p3 = { pickup="torch",     prob=2 },
@@ -2168,12 +2236,11 @@ function Hexen1_setup()
     things   = HEXEN_THINGS,
     monsters = HEXEN_MONSTERS,
     weapons  = HEXEN_WEAPONS,
+    pickups  = HEXEN_PICKUPS,
 
     dm = HEXEN_DEATHMATCH,
 
-    pickups = HEXEN_PICKUPS,
-    pickup_stats = { "health", "blue_mana", "green_mana" },
-    niceness = HEXEN_NICENESS,
+--???  pickup_stats = { "health", "blue_mana", "green_mana" },
 
     initial_model = HEXEN_INITIAL_MODEL,
 
