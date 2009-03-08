@@ -68,7 +68,7 @@ QUAKE2_THINGS =
   machine  = { id="weapon_machinegun",      kind="pickup", r=16, h=32, pass=true },
   chain    = { id="weapon_chaingun",        kind="pickup", r=16, h=32, pass=true },
   grenade  = { id="weapon_grenadelauncher", kind="pickup", r=16, h=32, pass=true },
-  rocket   = { id="weapon_rocketlauncher",  kind="pickup", r=16, h=32, pass=true },
+  launcher = { id="weapon_rocketlauncher",  kind="pickup", r=16, h=32, pass=true },
   hyper    = { id="weapon_hyperblaster",    kind="pickup", r=16, h=32, pass=true },
   rail     = { id="weapon_railgun",         kind="pickup", r=16, h=32, pass=true },
   bfg      = { id="weapon_bfg",             kind="pickup", r=16, h=32, pass=true },
@@ -431,6 +431,7 @@ QUAKE2_MONSTERS =
 
   tank =
   {
+    prob=2,
     health=750, damage=160, attack="missile",
   },
 
@@ -438,6 +439,38 @@ QUAKE2_MONSTERS =
   {
     health=1000, damage=160, attack="missile",
   },
+
+  ---| BOSSES |---
+
+  -- FIXME: damage values and attack kinds?
+
+  Super_tank =
+  {
+    health=1500, damage=200,
+  },
+
+  Huge_flyer =
+  {
+    health=2000, damage=200,
+    -- FIXME: immune to laser (??)
+  },
+
+  Jorg =
+  {
+    health=3000, damage=200,
+  },
+
+  Makron =
+  {
+    health=3000, damage=200,
+  },
+
+  -- NOTES:
+  --
+  -- Dropped items are not endemic to types of monsters, but can
+  -- be specified for each monster entity with the "item" keyword.
+  -- This could be used for lots of cool stuff (e.g. kill a boss
+  -- monster to get a needed key) -- another TODO feature.
 }
 
 
@@ -453,6 +486,7 @@ QUAKE2_WEAPONS =
     pref=20, add_prob=10, start_prob=40,
     rate=0.6, damage=40, attack="hitscan",
     ammo="shell",  per=1,
+    give={ {ammo="shell",count=10 },
   },
 
   ssg =
@@ -460,6 +494,7 @@ QUAKE2_WEAPONS =
     pref=70, add_prob=50, start_prob=10,
     rate=0.8, damage=88, attack="hitscan", splash={0,8},
     ammo="shell", per=2,
+    give={ {ammo="shell",count=10 },
   },
 
   machine =
@@ -467,6 +502,7 @@ QUAKE2_WEAPONS =
     pref=20, add_prob=30, start_prob=30,
     rate=6.0, damage=8, attack="hitscan",
     ammo="bullet", per=1,
+    give={ {ammo="bullet",count=50 },
   },
 
   chain =
@@ -474,6 +510,7 @@ QUAKE2_WEAPONS =
     pref=90, add_prob=15, start_prob=5,
     rate=14, damage=8, attack="hitscan",
     ammo="bullet", per=1,
+    give={ {ammo="bullet",count=50 },
   },
 
   grenade =
@@ -481,27 +518,31 @@ QUAKE2_WEAPONS =
     pref=15, add_prob=25, start_prob=15,
     rate=0.7, damage=5, attack="missile", splash={60,15,3},
     ammo="grenade", per=1,
+    give={ {ammo="grenade",count=5} },
   },
 
-  rocket =
+  launcher =
   {
     pref=30, add_prob=20, start_prob=3,
     rate=1.1, damage=90, attack="missile", splash={0,20,6,2},
     ammo="rocket", per=1,
-  },
-
-  hyper =
-  {
-    pref=60, add_prob=20,
-    rate=5.0, damage=20, attack="missile",
-    ammo="slug", per=1,
+    give={ {ammo="rocket",count=5} },
   },
 
   rail =
   {
     pref=50, add_prob=10,
     rate=0.6, damage=140, attack="hitscan",
-    ammo="cell", per=1, splash={0,25,5},
+    ammo="slug", per=1, splash={0,25,5},
+    give={ {ammo="slug",count=10} },
+  },
+
+  hyper =
+  {
+    pref=60, add_prob=20,
+    rate=5.0, damage=20, attack="missile",
+    ammo="cell", per=1,
+    give={ {ammo="cell",count=50} },
   },
 
   bfg =
@@ -509,6 +550,7 @@ QUAKE2_WEAPONS =
     pref=20, add_prob=15,
     rate=0.3, damage=200, attack="missile", splash={0,50,40,30,20,10,10},
     ammo="cell", per=50,
+    give={ {ammo="cell",count=50} },
   },
 
 
@@ -518,7 +560,7 @@ QUAKE2_WEAPONS =
   -- This is modelled with a splash damage table.
   --
   -- Railgun can pass through multiple enemies.  We assume
-  -- the player doesn't manage to do it very often.
+  -- the player doesn't manage to do it very often :-).
   --
   -- Grenades don't do any direct damage when they hit a
   -- monster, it's all in the splash baby.
@@ -526,7 +568,37 @@ QUAKE2_WEAPONS =
 
 QUAKE2_PICKUPS =
 {
-  -- FIXME
+  -- AMMO --
+
+  am_bullet =
+  {
+    give={ {ammo="bullet",count=50 },
+  },
+
+  am_shell =
+  {
+    give={ {ammo="shell",count=10 },
+  },
+
+  am_grenade =
+  {
+    give={ {ammo="grenade",count=5} },
+  },
+
+  am_rocket =
+  {
+    give={ {ammo="rocket",count=5} },
+  },
+
+  am_slug = 
+  {
+    give={ {ammo="slug",count=10} },
+  },
+
+  am_cell =
+  {
+    give={ {ammo="cell",count=50} },
+  },
 }
 
 
@@ -536,7 +608,7 @@ QUAKE2_INITIAL_MODEL =
   {
     health = 100,
     weapons = { blaster=1 },
-    ammo = { shell=0, bullet=0, rocket=0, grenade=0, slug=0, cell=0 },
+    ammo = { bullet=0, shell=0, grenade=0, rocket=0, slug=0, cell=0 },
   }
 }
 
@@ -627,17 +699,15 @@ end
 
 function Quake2_setup()
 
-  GAME.classes = { "marine" }
   GAME.dm = {}
 
-  GAME.pickup_stats = { "health", "bullet" }
   GAME.initial_model = QUAKE2_INITIAL_MODEL
 
   Game_merge_tab("things",   QUAKE2_THINGS)
   Game_merge_tab("monsters", QUAKE2_MONSTERS)
   Game_merge_tab("weapons",  QUAKE2_WEAPONS)
+  Game_merge_tab("pickups",  QUAKE2_PICKUPS)
 
-  Game_merge_tab("pickups", QUAKE2_PICKUPS)
   Game_merge_tab("quests",  QUAKE2_QUESTS)
 
   Game_merge_tab("combos", QUAKE2_COMBOS)
