@@ -2922,9 +2922,8 @@ COMMON_QUEST_LEN_PROBS =
 -- damage : damage can inflict per second (rough approx)
 -- attack : kind of attack (hitscan | missile | melee)
 --
--- float   : monster floats (flys)
--- melee   : monster only has melee attack
--- hitscan : monster uses a hitscan attack (e.g. shotgun)
+-- float  : true if monster floats (flys)
+-- invis  : true if invisible (or partially)
 --
 -- NOTES:
 --
@@ -2936,7 +2935,9 @@ COMMON_QUEST_LEN_PROBS =
 -- purposes that is a reasonable approximation.
 --
 -- Similarly the Pain Elemental attack is not a real missile
--- but actually a Lost Soul.  We cannot model that (yet).
+-- but actually a Lost Soul.  Also the numbers of lost souls
+-- is limited on the level (to 20 or so).  Hence the damage
+-- value is a rough guess / completely bogus.
 
 COMMON_MONSTERS =
 {
@@ -2977,14 +2978,14 @@ COMMON_MONSTERS =
   {
     prob=20, guard_prob=11, trap_prob=61,
     health=150, damage=25, attack="melee",
-    invis=true
+    invis=true,
   },
 
   caco =
   {
     prob=80, guard_prob=61, cage_prob=21, trap_prob=21,
     health=400, damage=45, attack="missile",
-    float=true
+    float=true,
   },
 
   baron =
@@ -3037,7 +3038,7 @@ DOOM2_MONSTERS =
   pain =
   {
     prob=14, trap_prob=11,
-    health=400, damage=88, attack="missile",
+    health=400, damage=60, attack="missile",
     float=true,
   },
 
