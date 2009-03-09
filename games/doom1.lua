@@ -3110,7 +3110,7 @@ COMMON_WEAPONS =
   {
     pref=8, add_prob=6, start_prob=20,
     rate=1.5, damage=50, attack="melee",
-    give={ {health=100} },
+    give={ {health=70} },
   },
 
   pistol =
