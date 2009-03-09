@@ -1528,7 +1528,7 @@ HEXEN_MONSTERS =
 
   afrit =
   {
-    prob=40, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=40, guard_prob=11, trap_prob=11, cage_prob=11,
     health=80,  damage=20, attack="missile",
     float=true,
   },
@@ -1541,7 +1541,7 @@ HEXEN_MONSTERS =
 
   centaur2 =
   {
-    prob=20, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=20, guard_prob=11, trap_prob=11, cage_prob=11,
     health=250, damage=20, attack="missile"
   },
 
@@ -1563,26 +1563,26 @@ HEXEN_MONSTERS =
 
   demon1 =
   {
-    prob=30, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=30, guard_prob=11, trap_prob=11, cage_prob=11,
     health=250, damage=35, attack="missile",
   },
 
   demon2 =
   {
-    prob=20, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=20, guard_prob=11, trap_prob=11, cage_prob=11,
     health=250, damage=35, attack="missile",
   },
 
   bishop =
   {
-    prob=20, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=20, guard_prob=11, trap_prob=11, cage_prob=11,
     health=130, damage=24, attack="missile",
     float=true,
   },
 
   reiver =
   {
-    prob=5, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=5, guard_prob=11, trap_prob=11, cage_prob=11,
     health=150, damage=50, attack="missile",
     float=true,
   },

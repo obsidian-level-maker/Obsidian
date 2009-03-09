@@ -2943,27 +2943,27 @@ COMMON_MONSTERS =
 {
   zombie =
   {
-    prob=60, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=60, guard_prob=11, trap_prob=11, cage_prob=11,
     health=20, damage=4, attack="hitscan",
     give={ {ammo="bullet",count=5} },
   },
 
   shooter =
   {
-    prob=40, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=40, guard_prob=11, trap_prob=11, cage_prob=11,
     health=30, damage=10, attack="hitscan",
     give={ {weapon="shotty"}, {ammo="shell",count=4} },
   },
 
   imp =
   {
-    prob=80, guard_prob=11, cage_prob=50, trap_prob=20,
+    prob=80, guard_prob=11, trap_prob=20, cage_prob=50,
     health=60, damage=20, attack="missile",
   },
 
   skull =
   {
-    prob=14, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=14, guard_prob=11, trap_prob=11, cage_prob=11,
     health=100, damage=7, attack="melee",
     float=true,
   },
@@ -2983,14 +2983,14 @@ COMMON_MONSTERS =
 
   caco =
   {
-    prob=80, guard_prob=61, cage_prob=21, trap_prob=21,
+    prob=80, guard_prob=61, trap_prob=21, cage_prob=21,
     health=400, damage=45, attack="missile",
     float=true,
   },
 
   baron =
   {
-    prob=50, guard_prob=11, cage_prob=3, trap_prob=11,
+    prob=50, guard_prob=11, trap_prob=11, cage_prob=3,
     health=1000, damage=45, attack="missile",
   },
 }
@@ -3000,38 +3000,38 @@ DOOM2_MONSTERS =
 {
   gunner =
   {
-    prob=11, guard_prob=21, cage_prob=71, trap_prob=41,
+    prob=11, guard_prob=21, trap_prob=41, cage_prob=71,
     health=70, damage=40, attack="hitscan",
     give={ {weapon="chain"}, {ammo="bullet",count=10} },
   },
 
   revenant =
   {
-    prob=70, guard_prob=41, cage_prob=51, trap_prob=41,
+    prob=70, guard_prob=41, trap_prob=41, cage_prob=51,
     health=300, damage=55, attack="missile",
   },
 
   knight =
   {
-    prob=70, guard_prob=41, cage_prob=11, trap_prob=41,
+    prob=70, guard_prob=41, trap_prob=41, cage_prob=11,
     health=500, damage=45, attack="missile",
   },
 
   mancubus =
   {
-    prob=95, guard_prob=41, cage_prob=11, trap_prob=41,
+    prob=95, guard_prob=41, trap_prob=41, cage_prob=11,
     health=600, damage=80, attack="missile",
   },
 
   arach =
   {
-    prob=36, guard_prob=21, cage_prob=11, trap_prob=21,
+    prob=36, guard_prob=21, trap_prob=21, cage_prob=11,
     health=500, damage=70, attack="missile",
   },
 
   vile =
   {
-    prob=20, guard_prob=11, cage_prob=21, trap_prob=31,
+    prob=20, guard_prob=11, trap_prob=31, cage_prob=21,
     health=700, damage=40, attack="hitscan", no_dist=true,
   },
 

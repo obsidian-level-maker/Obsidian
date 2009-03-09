@@ -352,14 +352,14 @@ QUAKE1_MONSTERS =
 
   grunt =
   {
-    prob=80, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=80, guard_prob=11, trap_prob=11, cage_prob=11,
     health=30, damage=14, attack="hitscan",
     give={ {ammo="shell",count=5} },
   },
 
   enforcer =
   {
-    prob=40, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=40, guard_prob=11, trap_prob=11, cage_prob=11,
     health=80, damage=18, attack="missile",
     give={ {ammo="cell",count=5} },
   },
@@ -372,7 +372,7 @@ QUAKE1_MONSTERS =
 
   scrag =
   {
-    prob=60, guard_prob=11, cage_prob=11, trap_prob=11,
+    prob=60, guard_prob=11, trap_prob=11, cage_prob=11,
     health=80, damage=18, attack="missile",
   },
 
@@ -384,19 +384,19 @@ QUAKE1_MONSTERS =
 
   knight =
   {
-    prob=60, guard_prob=1, cage_prob=11, trap_prob=11,
+    prob=60, guard_prob=1, trap_prob=11, cage_prob=11,
     health=75, damage=9,  attack="melee",
   },
 
   hell_knt =
   {
-    prob=30, guard_prob=31, cage_prob=11, trap_prob=21,
+    prob=30, guard_prob=31, trap_prob=21, cage_prob=11,
     health=250, damage=30, attack="missile",
   },
 
   ogre =
   {
-    prob=40, guard_prob=21, cage_prob=11, trap_prob=31,
+    prob=40, guard_prob=21, trap_prob=31, cage_prob=11,
     health=200, damage=15, attack="missile",
     give={ {ammo="rocket",count=2} },
   },
@@ -409,13 +409,13 @@ QUAKE1_MONSTERS =
 
   vore =
   {
-    prob=10, guard_prob=31, cage_prob=11, trap_prob=31,
+    prob=10, guard_prob=31, trap_prob=31, cage_prob=11,
     health=400, damage=25, attack="missile",
   },
 
   shambler =
   {
-    prob=10, guard_prob=31, cage_prob=11, trap_prob=21,
+    prob=10, guard_prob=31, trap_prob=21, cage_prob=11,
     health=600, damage=30, attack="hitscan",
     immunity={ rocket=0.5, grenade=0.5 },
   },
