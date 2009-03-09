@@ -2944,14 +2944,14 @@ COMMON_MONSTERS =
   {
     prob=60, guard_prob=11, cage_prob=11, trap_prob=11,
     health=20, damage=4, attack="hitscan",
-    give={ { ammo="bullet", count=10 } },
+    give={ {ammo="bullet",count=5} },
   },
 
   shooter =
   {
     prob=40, guard_prob=11, cage_prob=11, trap_prob=11,
     health=30, damage=10, attack="hitscan",
-    give={ { weapon="shotty" } },
+    give={ {weapon="shotty"}, {ammo="shell",count=4} },
   },
 
   imp =
@@ -2964,7 +2964,7 @@ COMMON_MONSTERS =
   {
     prob=14, guard_prob=11, cage_prob=11, trap_prob=11,
     health=100, damage=7, attack="melee",
-    float=true
+    float=true,
   },
 
   demon =
@@ -3001,7 +3001,7 @@ DOOM2_MONSTERS =
   {
     prob=11, guard_prob=21, cage_prob=71, trap_prob=41,
     health=70, damage=40, attack="hitscan",
-    give={ { weapon="chain" } },
+    give={ {weapon="chain"}, {ammo="bullet",count=10} },
   },
 
   revenant =
@@ -3045,6 +3045,7 @@ DOOM2_MONSTERS =
   {
     -- not generated in normal levels
     health=50, damage=15, attack="hitscan",
+    give={ {ammo="bullet",count=5} },
   },
 
 
