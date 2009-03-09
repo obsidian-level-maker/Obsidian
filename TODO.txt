@@ -3,9 +3,6 @@ TODO
 ====
 
 
-++  DOOM CSG: fix x_offset and y_offset values
-
-
 Ceilings:
   - don't always trim the sky hole
   
@@ -15,6 +12,8 @@ Ceilings:
 
 Monsters:
   -  add some monsters
+     - decide the monster 'palette' for each arena
+
   -  cages & ledges
   -  monster closets
   -  pop-ups 
@@ -39,13 +38,6 @@ Misc:
 
 -  review / improve 'emergency' connections
 
--  monster-behind-door surprise: use fast open-only door
-
-
-Sourceforge:
-
--  two new categorys:  'Packs'  and  'Testing'.
-
 
 
 
@@ -55,7 +47,15 @@ DETAILED TODO LIST
 ================================================================
 
 
+!!  CSG CODE: do a proper face-creation pass (merge_face_c list
+              in each merge_segment_c ?) and get proper brush
+              and area_vert references.
+              Hence remove the CSG2_FindXXX rubbish.
+              
+
 ++  DOOM CSG: merge linedefs where possible
+
++   DOOM CSG: fix y_offset values
 
 
 Windows:
