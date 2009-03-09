@@ -502,28 +502,28 @@ WOLF_MONSTERS =
   {
     prob=60, guard_prob=20, trap_prob=3,
     health=25, damage=10, attack="hitscan",
-    give={ { ammo="bullet", count=4 } },
+    give={ {ammo="bullet",count=4} },
   },
 
   officer =
   {
     prob=30, guard_prob=50, trap_prob=10,
     health=50,  damage=20, attack="hitscan",
-    give={ { ammo="bullet", count=4 } },
+    give={ {ammo="bullet",count=4} },
   },
 
   mutant =
   {
     prob=20, guard_prob=20, trap_prob=20,
     health=55,  damage=35, attack="hitscan",
-    give={ { ammo="bullet", count=4 } },
+    give={ {ammo="bullet",count=4} },
   },
 
   ss_dude =
   {
     prob=5, guard_prob=60, trap_prob=20,
     health=100, damage=30, attack="hitscan",
-    give={ { weapon="machine_gun" } },
+    give={ {weapon="machine_gun"}, {ammo="bullet",count=4} },
   },
 
   fake_hitler =
@@ -569,6 +569,14 @@ WOLF_MONSTERS =
   {
     health=1100, damage=60, attack="hitscan"
   },
+
+  -- NOTES:
+  --
+  -- The SS only drops a machine gun (which gives _6_ bullets)
+  -- when you don't already have it, otherwise he drops a _4_
+  -- bullet clip.  To maintain ammo balance, we assume it is
+  -- always 4 bullets.
+
 }
 
 
@@ -592,7 +600,7 @@ WOLF_WEAPONS =
     pref=20, add_prob=20,
     rate=8.0, damage=17, attack="hitscan",
     ammo="bullet", per=1,
-    give={ {ammo="bullet",give=4} },
+    give={ {ammo="bullet",give=6} },
   },
 
   gatling_gun =
@@ -602,11 +610,6 @@ WOLF_WEAPONS =
     ammo="bullet", per=1,
     give={ {ammo="bullet",give=6} },
   },
-
-  -- Note: machine_gun actually gives _6_ bullets.
-  -- However we don't model the fact that the SS_DUDE only
-  -- drops a 4-bullet clip if you already have the machine gun.
-  -- Therefore this hack should maintain ammo balance.
 }
 
 
