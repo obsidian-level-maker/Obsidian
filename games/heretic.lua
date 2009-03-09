@@ -1398,31 +1398,36 @@ HERETIC_MONSTERS =
   {
     prob=60, guard_prob=11, trap_prob=11,
     health=80, damage=8, attack="melee",
+    give={ {ammo="crystal",count=1} },
   },
 
   mummy_inv =
   {
     prob=10, trap_prob=21,
     health=80, damage=8, attack="melee",
+    give={ {ammo="crystal",count=1} },
     invis=true,
   },
 
-  sabreclaw =
+  sabreclaw =  -- MT_CLINK
   {
     prob=25, guard_prob=11, trap_prob=11,
     health=150, damage=12, attack="melee",
+    give={ {ammo="rune",count=6} },
   },
 
   knight =
   {
     prob=70, guard_prob=11, cage_prob=11, trap_prob=11,
     health=200, damage=12, attack="missile",
+    give={ {ammo="arrow",count=1.6} },
   },
 
   knight_inv =
   {
     prob=10, trap_prob=21,
     health=200, damage=14, attack="missile",
+    give={ {ammo="arrow",count=1.6} },
     invis=true,
   },
 
@@ -1430,32 +1435,37 @@ HERETIC_MONSTERS =
   {
     prob=70, guard_prob=11, cage_prob=11, trap_prob=11,
     health=100, damage=16, attack="missile",
+    give={ {ammo="crystal",count=1} },
   },
 
   leader_inv =
   {
     prob=10, guard_prob=11, cage_prob=11, trap_prob=11,
     health=100, damage=16, attack="missile",
+    give={ {ammo="crystal",count=1} },
     invis=true,
   },
 
-  disciple =
+  disciple =  -- MT_WIZARD
   {
     prob=25, guard_prob=11, cage_prob=11, trap_prob=11,
     health=180, damage=20, attack="missile",
+    give={ {ammo="claw_orb",count=3} },
     float=true,
   },
 
-  weredragon =
+  weredragon =  -- MT_BEAST
   {
     prob=30, guard_prob=11, cage_prob=11, trap_prob=11,
     health=220, damage=25, attack="missile",
+    give={ {ammo="arrow",count=3} },
   },
 
-  ophidian =
+  ophidian =  -- MT_SNAKE
   {
     prob=30, guard_prob=11, cage_prob=11, trap_prob=11,
     health=280, damage=25, attack="missile",
+    give={ {ammo="flame_orb",count=1.6} },
   },
 
 
@@ -1463,21 +1473,31 @@ HERETIC_MONSTERS =
 
   -- FIXME: damage values are crap, need 'attack' type
 
-  Ironlich =
+  Ironlich =  -- MT_HEAD
   {
-    health=700,  damage=99,
+    health=700, damage=60,
+    give={ {ammo="claw_orb",count=3} },
     float=true,
   },
 
   Maulotaur =
   {
-    health=3000, damage=99,
+    health=3000, damage=80,
+    give={ {ammo="flame_orb",count=3},
+           {health=10} },  -- occasionally drops an Urn
   },
 
   D_Sparil =
   {
-    health=2000, damage=99,
+    health=2000, damage=100,
   },
+
+  -- NOTES
+  --
+  -- Most monsters who drop an item after death only do so 33%
+  -- of the time (randomly).  The give amounts are therefore
+  -- just an average.  Some of them also (but rarely) drop
+  -- artifacts (egg/tome) -- this is not modelled.
 }
 
 
@@ -1509,7 +1529,7 @@ HERETIC_WEAPONS =
     give={ {ammo="arrow",count=10} },
   },
 
-  claw =
+  claw =  -- aka blaster
   {
     pref=60, add_prob=20, start_prob=20,
     rate=2.9, damage=16, attack="missile",
@@ -1521,8 +1541,8 @@ HERETIC_WEAPONS =
   {
     pref=50, add_prob=20, start_prob=5,
     rate=8.7, damage=12, attack="missile",
-    ammo="runes", per=1,
-    give={ {ammo="runes",count=50} },
+    ammo="rune", per=1,
+    give={ {ammo="rune",count=50} },
   },
 
   phoenix =
@@ -1541,12 +1561,16 @@ HERETIC_WEAPONS =
     give={ {ammo="mace_orb",count=50} },
   },
 
-  -- Notes:
+  -- NOTES:
   --
   -- No information here about weapons when the Tome-Of-Power is
   -- being used (such as different firing rates and ammo usage).
   -- Since that artifact can be used at any time by the player,
   -- OBLIGE cannot properly model it.
+  --
+  -- The Firemace can be placed in upto 8 different spots, but
+  -- only one is spawned (at a spot chosen randomly) when the
+  -- level is loaded.
 }
 
 
@@ -1568,8 +1592,11 @@ HERETIC_PICKUPS =
 
   h_urn =
   {
+    -- could actually give upto 99 health points, but the player
+    -- will usually waste a lot of it (since their health is
+    -- limited to 100).
     prob=5,
-    give={ {health=100} },
+    give={ {health=70} },
   },
 
 
@@ -1813,8 +1840,8 @@ function Heretic1_setup()
   Game_merge_tab("weapons",  HERETIC_WEAPONS)
   Game_merge_tab("pickups",  HERETIC_PICKUPS)
 
-  GAME.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
-                        "runes", "flame_orb", "mace_orb" },
+--???  GAME.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
+--???                        "rune", "flame_orb", "mace_orb" },
 
   Game_merge_tab("initial_model", HERETIC_INITIAL_MODEL)
 
