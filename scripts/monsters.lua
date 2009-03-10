@@ -89,38 +89,68 @@ function Player_give_weapon(weapon, to_CL)
 end
 
 
-function Monsters_in_room(R)
-  -- FIXME: monsters
-
-  gui.debugf("Monsters_in_room @ %s\n", R:tostr())
-end
-
-
 function Monsters_do_pickups()
   -- FIXME: pickups
 end
 
 
-function Monsters_add_some()
+function Monsters_in_room(R)
+
+  gui.debugf("Monsters_in_room @ %s\n", R:tostr())
+
+do return end --FIXME !!!!!!
+
+  add_monsters()
+
+  R.fight_result = {}
+
+  for _,SK in ipairs(SKILLS) do
+
+    R.fight_result[SK] = {}
+
+    local mon_list = collect_monsters(SK)
+
+    for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+
+      local weap_list = collect_weapons(hmodel)
+      local ammos = {}
+
+      Fight_simulator(mon_list, weap_list, SK, ammos)
+
+      give_monster_drops(mon_list, hmodel, ammos)
+    
+      R.fight_result[SK][CL] = ammos
+
+    end -- for CL
+  end -- for SK
+end
+
+
+function Monsters_make_battles()
   
-  gui.printf("\n--==| Monsters_add_some |==--\n\n")
+  gui.printf("\n--==| Monsters_make_battles |==--\n\n")
 
   Player_init()
 
-  if PLAN.start_room.weapon then
-    Player_give_weapon(PLAN.start_room.weapon)
-  end
+  local cur_arena = -1
 
-  local cur_arena = 1
+  -- Rooms have been sorted into a visitation order, so we
+  -- simply visit them one-by-one and insert some monsters
+  -- and simulate each battle.
 
   for _,R in ipairs(PLAN.all_rooms) do
     if R.arena.weapon and (R.arena.id > cur_arena) and not R.skip_weapon then
-      cur_arena = R.arena.id
       Player_give_weapon(R.arena.weapon)
+      cur_arena = R.arena.id
     end
 
     Monsters_in_room(R)
   end -- for R
+
+  -- Wehn all monsters have been chosen and all battles
+  -- (including cages and traps) have been simulated, then
+  -- we can decide what pickups to add (the easy part) and
+  -- _where_ to place them (the hard part).
 
   Monsters_do_pickups()
 end

@@ -77,7 +77,7 @@ require 'defs'
 require 'util'
 
 
-function fight_simulator(monsters, weapons, skill, ammos)
+function Fight_simulator(monsters, weapons, skill, ammos)
 
   local active_mon = {}
 
@@ -252,7 +252,7 @@ function fight_simulator(monsters, weapons, skill, ammos)
   end
 
 
-  ---===| fight_simulator |===---
+  ---==| Fight_simulator |==---
 
   ammos.health = 0
 

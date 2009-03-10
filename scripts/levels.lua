@@ -180,7 +180,7 @@ function Level_Make(L, index, NUM)
     if gui.abort() then return "abort" end
     gui.progress(80)
 
-  Monsters_add_some()
+  Monsters_make_battles()
     if gui.abort() then return "abort" end
     gui.progress(90)
 
