@@ -711,7 +711,7 @@ int CSG2_add_brush(lua_State *L)
 }
 
 
-// LUA: add_entity(name, x, y, z, props)
+// LUA: add_entity(name, x, y, z, [props])
 //
 // props is a table:
 //   angle
@@ -730,46 +730,41 @@ int CSG2_add_brush(lua_State *L)
 //
 int CSG2_add_entity(lua_State *L)
 {
+  int nargs = lua_gettop(L);
+
   const char *name = luaL_checkstring(L,1);
 
   double x = luaL_checknumber(L,2);
   double y = luaL_checknumber(L,3);
   double z = luaL_checknumber(L,4);
 
-  if (lua_type(L, 5) != LUA_TTABLE)
-  {
-    luaL_argerror(L, 5, "missing table: entity info");
-    return 0; /* NOT REACHED */
-  }
-
-///--  const char *name;
-///--
-///--  lua_getfield(L, 4, "name");
-///--  name = luaL_checkstring(L,-1);
-///--  lua_pop(L, 1);
-
-
   entity_info_c *E = new entity_info_c(name, x, y, z);
 
 
   // grab properties
 
-  for (lua_pushnil(L) ; lua_next(L, 5) != 0 ; lua_pop(L,1))
+  if (nargs >= 5)
   {
-    // skip keys which are not strings
-    if (lua_type(L, -2) != LUA_TSTRING)
-      continue;
+    if (lua_type(L, 5) != LUA_TTABLE)
+      return luaL_argerror(L, 5, "bad property table");
 
-    // validate the value
-    if (lua_type(L, -1) != LUA_TSTRING && lua_type(L, -1) != LUA_TNUMBER)
-      luaL_error(L, "gui.add_entity: property is not a string or number");
+    for (lua_pushnil(L) ; lua_next(L, 5) != 0 ; lua_pop(L,1))
+    {
+      // skip keys which are not strings
+      if (lua_type(L, -2) != LUA_TSTRING)
+        continue;
 
-    const char *p_key   = lua_tostring(L, -2);
-    const char *p_value = lua_tostring(L, -1);
+      // validate the value
+      if (lua_type(L, -1) != LUA_TSTRING && lua_type(L, -1) != LUA_TNUMBER)
+        luaL_error(L, "gui.add_entity: property is not a string or number");
 
-    SYS_ASSERT(p_value);
+      const char *p_key   = lua_tostring(L, -2);
+      const char *p_value = lua_tostring(L, -1);
 
-    E->props[p_key] = std::string(p_value);
+      SYS_ASSERT(p_value);
+
+      E->props[p_key] = std::string(p_value);
+    }
   }
 
   all_entities.push_back(E);
