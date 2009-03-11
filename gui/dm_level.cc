@@ -370,7 +370,7 @@ static void CreateOneSector(merge_region_c *R)
   sec->c_tex = T->b_face->tex;
 
   // FIXME: TEMP CRUD
-  if (T->bflags & BRU_F_Sky)
+  if (T->bkind == BKIND_Sky)
     sec->light = 192;
   else
   {
@@ -989,7 +989,7 @@ static void CheckThingOption(const char *name, const char *value,
     *options |= ~MTF_NotDM;
 
   // other flags...
-  if (StringCaseCmp(name, "flag_ambush") == 0 && enable)
+  if (StringCaseCmp(name, "ambush") == 0 && enable)
     *options |= MTF_Ambush;
   
   // TODO: HEXEN FLAGS
