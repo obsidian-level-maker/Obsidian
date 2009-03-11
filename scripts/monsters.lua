@@ -219,8 +219,84 @@ function Monsters_in_room(R)
     return palette
   end
 
+  local function try_add_mon_seed(mon)
+    local info = assert(GAME.monsters[mon])
+
+    -- FIXME: IMPROVE THIS SHITE !!!
+
+    -- FIXME: check vertical room!
+
+    -- FIXME: symmetry
+
+    for pass = 1,2 do
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and not S.content and
+         not (S.conn == R.entry_conn) and S.floor_h and
+         (S.kind == "walk" or (info.float and S.kind == "liquid")) and
+         (pass == 2 or rand_odds(25))
+      then
+        S.content = "monster"
+        S.monster = mon
+        return true
+      end
+    end end -- for x, y
+    end -- for pass
+
+    return false
+  end
+
   local function create_monster_map(palette)
-    -- FIXME
+    -- assign at least one seed to each monster
+    for mon,_ in pairs(palette) do
+      try_add_mon_seed(mon)
+    end
+
+    repeat
+      local mon = rand_key_by_probs(palette)
+      
+      if not try_add_mon_seed(mon) then
+        palette[mon] = nil
+      end
+    until table_empty(palette)
+  end
+
+  local function do_add_mon(chance, S, x, y, mon, info, thing)
+    if not rand_odds(chance) then
+      return
+    end
+
+    -- FIXME: angle
+
+    gui.add_entity(x, y, S.floor_h + 25,
+    {
+      name = tostring(thing.id),
+      flag_ambush = 1,
+      angle = 0,
+    })
+  end
+
+  local function fill_monster_map(qty)
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and S.content == "monster" then
+        local info  = assert(GAME.monsters[S.monster])
+        local thing = assert(GAME.things[S.monster])
+
+        assert(thing.r <= 72)  -- i.e. not a "big" monster
+
+        local mx, my = S:mid_point()
+        
+        if thing.r >= 35 then
+          do_add_mon(qty, S, mx, my, S.monster, info, thing)
+        else
+          do_add_mon(qty, S, mx-36, my-36, S.monster, info, thing)
+          do_add_mon(qty, S, mx-36, my+36, S.monster, info, thing)
+          do_add_mon(qty, S, mx+36, my-36, S.monster, info, thing)
+          do_add_mon(qty, S, mx+36, my+36, S.monster, info, thing)
+        end
+      end
+    end end -- for x, y
   end
 
   local function add_monsters()
@@ -236,7 +312,7 @@ function Monsters_in_room(R)
       qty = PLAN.mixed_mons_qty
     end
 
-    -- FIXME
+    fill_monster_map(qty)
   end
 
 
