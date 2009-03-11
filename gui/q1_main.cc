@@ -91,9 +91,6 @@ void Q1_CreateEntities(void)
     std::map<std::string, std::string>::iterator MI;
     for (MI = E->props.begin(); MI != E->props.end(); MI++)
     {
-      if (StringCaseCmp(MI->first.c_str(), "name") == 0)
-        continue;
-
       lump->KeyPair(MI->first.c_str(), "%s", MI->second.c_str());
     }
 
@@ -268,10 +265,9 @@ static void Q1_CreateMipTex(void)
   delete[] offsets;
 }
 
+#if 0  /* TEMP DUMMY STUFF */
 static void DummyMipTex(void)
 {
-  /* TEMP DUMMY STUFF */
-
   // 0 = "error"
   // 1 = "gray"
 
@@ -332,6 +328,7 @@ static void DummyMipTex(void)
     }
   }
 }
+#endif
 
 //------------------------------------------------------------------------
 
@@ -433,10 +430,9 @@ static void Q1_CreateTexInfo(void)
 }
 
 
+#if 0  /* TEMP DUMMY STUFF */
 static void DummyTexInfo(void)
 {
-  /* TEMP DUMMY STUFF */
-
   // 0 = "error" on PLANE_X / PLANE_ANYX
   // 1 = "error" on PLANE_Y / PLANE_ANYY
   // 2 = "error" on PLANE_Z / PLANE_ANYZ
@@ -481,6 +477,7 @@ static void DummyTexInfo(void)
     lump->Append(&tex, sizeof(tex));
   }
 }
+#endif
 
 
 //------------------------------------------------------------------------
