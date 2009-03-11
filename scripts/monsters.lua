@@ -96,7 +96,8 @@ function Player_calc_firepower()
   -- We assume all skills have the same weapons.
   --
   -- If there are different classes (Hexen) then the result
-  -- will be an average of each class.
+  -- will be an average of each class, as all classes face
+  -- the same monsters.
 
   local function get_firepower(hmodel)
     local firepower = 0 
@@ -115,7 +116,8 @@ function Player_calc_firepower()
 
       local pref = info.pref or 1
 
-gui.debugf("  weapon:%s dm:%1.1f pref:%1.1f\n", weapon, dm, pref)
+---   gui.debugf("  weapon:%s dm:%1.1f pref:%1.1f\n", weapon, dm, pref)
+
       firepower = firepower + dm * pref
       divisor   = divisor + pref
     end
@@ -158,13 +160,63 @@ function Monsters_in_room(R)
   }
 
   local function select_monsters()
-    -- FIXME: guard monster!!!
-    
+    -- FIXME: guard monsters !!!
+
     local fp = Player_calc_firepower()
 
     gui.debugf("Firepower = %1.3f\n", fp)
     
-    -- FIXME
+    local list = {}
+    gui.debugf("Monster list:\n")
+
+    for name,info in pairs(GAME.monsters) do
+      if info.prob then
+        local time   = info.health / fp
+        local damage = info.damage * time
+        local prob   = info.prob
+
+---     gui.debugf("  %s --> %1.2f seconds  @ %1.1f damage\n", name, info.health / fp, damage)
+
+        if time <= PARAMS.mon_time_max and damage <= PARAMS.mon_damage_max then
+          if time < PARAMS.mon_time_low then
+            prob = prob * time / PARAMS.mon_time_low
+          end
+          if damage > PARAMS.mon_damage_high then
+            local diff =   PARAMS.mon_damage_max - PARAMS.mon_damage_high
+            prob = prob * (PARAMS.mon_damage_max - damage) / diff
+          end
+
+          list[name] = prob
+          gui.debugf("  %s --> prob:%1.1f\n", name, prob)
+        end
+      end
+    end
+
+    assert(not table_empty(list))
+
+    -- how many kinds??   FIXME: better calc!
+    local num_kinds
+        if R.svolume >= 81 then num_kinds = 4
+    elseif R.svolume >= 36 then num_kinds = 3
+    elseif R.svolume >= 10 then num_kinds = 2
+    else num_kinds = 1
+    end
+
+    local palette = {}
+
+    gui.debugf("Monster palette:\n")
+
+    for i = 1,num_kinds do
+      local mon = rand_key_by_probs(list)
+      palette[mon] = list[mon]  --- GAME.monsters[mon].prob
+
+      gui.debugf("  #%d %s\n", i, mon)
+
+      list[mon] = nil
+      if table_empty(list) then break; end
+    end
+
+    return palette
   end
 
   local function create_monster_map(palette)
@@ -247,7 +299,7 @@ function Monsters_make_battles()
     Monsters_in_room(R)
   end -- for R
 
-  -- Wehn all monsters have been chosen and all battles
+  -- Once all monsters have been chosen and all battles
   -- (including cages and traps) have been simulated, then
   -- we can decide what pickups to add (the easy part) and
   -- _where_ to place them (the hard part).
