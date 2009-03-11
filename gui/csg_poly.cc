@@ -1141,7 +1141,7 @@ static void Mug_AssignBrushes(void)
   {
     csg_brush_c *B = all_brushes[j];
 
-unsigned int orig_ff = first_reg;
+// unsigned int orig_ff = first_reg;
 
     for (k=first_reg; k < mug_regions.size(); k++)
     {

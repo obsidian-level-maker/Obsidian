@@ -126,6 +126,7 @@ static void WritePatches()
   ClearPatches();
 }
 
+#if 0
 static void DM_OldWritePatches()
 {
   // !!! TODO !!!
@@ -137,68 +138,20 @@ static void DM_OldWritePatches()
   // Let Lua code specify name of data/ wad and lump/patch
   // names to merge.  Have this code in dm_extra.cc
 
+  const char *filename = StringPrintf("%s/data/%s.lmp", install_path, ext_patches[i]);
 
-  static const char *patch_names[3][2] =
-  {
-/* !!!! */    { "WALL52_X", "WALL53_1" },  // Doom    : CEMENT1,  CEMENT2
-    { "WALL00",   "WALL42"   },  // Heretic : GRSKULL2, CHAINSD
-    { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
-  };
+  int length;
 
-  const char *game_str = main_win->game_box->game->GetID();
-  
-  int game = 0;
-  if (strcmp(game_str, "heretic") == 0)
-    game = 1;
-  if (strcmp(game_str, "hexen") == 0)
-    game = 2;
+  u8_t *data = FileLoad(filename, &length);
 
-#if 0  // FIXME: REPLACE OLD METHOD
-  for (int what=0; what < 2; what++)
-  {
-    // Heretic's WALL42 patch is only 64 wide
-    int patch_w = (game == 1 && what == 1) ? 64 : 128;
+  if (! data)
+    Main_FatalError("Missing data file: %s.lmp", ext_patches[i]);
 
-    int length;
-    const byte *pat = Image_MakePatch(what, &length, patch_w, game_str);
+  DM_WriteLump(ext_patches[i], data, length);
 
-    DM_WriteLump(patch_names[game][what], pat, length);
-
-    Image_FreePatch(pat);
-  }
-#endif
-
-  // load some patches from external files (DOOM only)
-  if (game == 0)
-  {
-    static const char *ext_patches[] =
-    {
-      "W74A_1",   "W74A_2", "W74B_1",         // FIREMAGx (water)
-      "WALL64_2", "W64B_1", "W64B_2",         // ROCKREDx (lava)
-      "RP2_1",    "RP2_2",  "RP2_3", "RP2_4", // BLODRIPx (blood)
-      "TP5_1",    "TP5_2",  "TP5_3", "TP5_4", // BLODGRx  (nukage)
-
-      NULL // end marker
-    };
-
-    for (int i=0; ext_patches[i]; i++)
-    {
-      const char *filename = StringPrintf("%s/data/%s.lmp", install_path, ext_patches[i]);
-
-      int length;
-
-      u8_t *data = FileLoad(filename, &length);
-
-      if (! data)
-        Main_FatalError("Missing data file: %s.lmp", ext_patches[i]);
-
-      DM_WriteLump(ext_patches[i], data, length);
-
-      FileFree(data);
-    }
-  }
-
+  FileFree(data);
 }
+#endif
 
 
 static void ClearFlats()
