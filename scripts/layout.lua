@@ -1617,6 +1617,8 @@ function Layout_one(R)
     local z1 = S.floor_h or R.floor_h
     local z2 = S.ceil_h  or R.ceil_h or SKY_H
 
+    R.guard_spot = S
+
     local mx, my = S:mid_point()
 
     if R.purpose == "START" then
@@ -1711,6 +1713,10 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     local sx, sy, S = Layout_spot_for_wotsit(R, "WEAPON")
     local z1 = S.floor_h or R.floor_h
     local z2 = S.ceil_h  or R.ceil_h or SKY_H
+
+    if not R.guard_spot then
+      R.guard_spot = S
+    end
 
     local mx, my = S:mid_point()
 
