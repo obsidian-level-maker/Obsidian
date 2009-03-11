@@ -11,6 +11,48 @@ Ceilings:
 
 
 Monsters:
+  +  add guard monsters first, seeds around the purpose
+     (or the weapon).
+
+  +  "monster map" :
+     (1) select 1-4 types of monster to use in room (palette)
+         (and a pref for each one)
+
+         (a) palette might not include guard monster
+             (bump chance way down)
+
+         (b) from player's current weapons determine a 'firepower'
+             value (average of classes in Hexen).
+             This is roughly how much damage can be done per sec.
+
+             Hence we know how long each kind of monster would
+             take to kill.  TOO LONG = skip monster,
+             TOO SHORT = skip or bump chance way down.
+
+     (2) repeat
+         (a) pick a monster from that palette
+         (b) find a seed for it, otherwise remove from palette
+         until palette is empty
+         (c) for 2nd+ pass, use more seeds for big monsters
+
+  +  once we have the monster map, all we need then is some
+     idea of QUANTITIES.
+
+     +  the skill level controls how many monsters to add.
+        Each monster is always present in "hard" and may be
+        omitted for lower skills.  Maybe: medium keep 75%,
+        easy keep 50%.  (always keep at least one).
+
+     +  the GUI 'Monsters' setting not only controls how many
+        monsters, but also affects difficulty, though quantity
+        is more significant than the difficulty adjustment.
+
+  -  decide level-wide monster palette (no monsters are used
+     which are not in this palette).  Could save big monsters
+     (arach, mancubus) for later levels and omit small ones
+     (esp. pistol zombie).  Perhaps have a palette for each
+     usage kind (free-range, guard, trap, cage) ??
+
   -  add some monsters
      - decide the monster 'palette' for each arena
 
@@ -202,6 +244,24 @@ THEME SELECTION
     (ii) One-Episode: use 'epi_prob', group same themes together
     (iii) Full-Game: prefer episodes to have whole theme
                      and prefer theme to match sky
+
+
+EXTRA GRAPHICS
+
+   { "WALL52_X", "WALL53_1" },  // Doom    : CEMENT1,  CEMENT2
+   { "WALL00",   "WALL42"   },  // Heretic : GRSKULL2, CHAINSD
+   { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
+
+   static const char *ext_patches[] =
+   {
+     "W74A_1",   "W74A_2", "W74B_1",         // FIREMAGx (water)
+     "WALL64_2", "W64B_1", "W64B_2",         // ROCKREDx (lava)
+     "RP2_1",    "RP2_2",  "RP2_3", "RP2_4", // BLODRIPx (blood)
+     "TP5_1",    "TP5_2",  "TP5_3", "TP5_4", // BLODGRx  (nukage)
+
+     NULL // end marker
+   }
+
 
 
 Room Fitting Out
