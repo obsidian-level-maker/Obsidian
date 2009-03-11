@@ -3083,9 +3083,9 @@ DOOM2_MONSTERS =
 --
 -- NOTES:
 --
--- Berserk is not really an extra weapon, but a powerup
--- which makes fist do much more damage.  The effect lasts till
--- the end of the level, so a weapon is a pretty good fit.
+-- Berserk is not really an extra weapon, but a powerup which
+-- makes fist do much more damage.  The effect lasts until the
+-- end of the level, so a weapon is a pretty good fit.
 --
 -- Shotgun has a fairly low add_prob, since it is likely the
 -- player will have encountered a shotgun zombie and already
@@ -3110,7 +3110,7 @@ COMMON_WEAPONS =
   berserk =
   {
     pref=8, add_prob=6, start_prob=20,
-    rate=1.5, damage=50, attack="melee",
+    rate=1.5, damage=90, attack="melee",
     give={ {health=70} },
   },
 
@@ -3131,7 +3131,7 @@ COMMON_WEAPONS =
 
   shotty =
   {
-    pref=110, add_prob=10, start_prob=80,
+    pref=100, add_prob=10, start_prob=80,
     rate=0.9, damage=70, attack="hitscan", splash={ 0,10 },
     ammo="shell", per=1,
     give={ {ammo="shell",count=8} },
@@ -3155,7 +3155,7 @@ COMMON_WEAPONS =
 
   plasma =
   {
-    pref=80, add_prob=15, start_prob=3,
+    pref=120, add_prob=13, start_prob=3,
     rate=11, damage=20, attack="missile",
     ammo="cell", per=1,
     give={ {ammo="cell",count=40} },
