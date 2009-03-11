@@ -1819,6 +1819,12 @@ OB_GAMES["doom2"] =
     max_level_desc = 28,
 
     palette_mons = 5,
+
+    mon_damage_max  = 400,
+    mon_damage_high = 100,
+
+    mon_time_max = 10,
+    mon_time_low = 0.4,
   },
 
   hooks =
