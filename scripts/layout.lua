@@ -1641,30 +1641,18 @@ function Layout_one(R)
       local angle = player_angle(S)
       local dist = 56
 
-      gui.add_entity(mx, my, z1 + 35,
-      {
-        name = tostring(GAME.things["player1"].id),
-        angle = angle,
-      })
+      gui.add_entity(tostring(GAME.things["player1"].id),
+                     mx, my, z1 + 35, { angle=angle })
 
       if GAME.things["player2"] then
-        gui.add_entity(mx - dist, my, z1 + 35,
-        {
-          name = tostring(GAME.things["player2"].id),
-          angle = angle,
-        })
+        gui.add_entity(tostring(GAME.things["player2"].id),
+                       mx - dist, my, z1 + 35, { angle=angle })
 
-        gui.add_entity(mx + dist, my, z1 + 35,
-        {
-          name = tostring(GAME.things["player3"].id),
-          angle = angle,
-        })
+        gui.add_entity(tostring(GAME.things["player3"].id),
+                       mx + dist, my, z1 + 35, { angle=angle })
 
-        gui.add_entity(mx, my - dist, z1 + 35,
-        {
-          name = tostring(GAME.things["player4"].id),
-          angle = angle,
-        })
+        gui.add_entity(tostring(GAME.things["player4"].id),
+                       mx, my - dist, z1 + 35, { angle=angle })
       end
 
     elseif R.purpose == "EXIT" then
@@ -1694,10 +1682,9 @@ function Layout_one(R)
         Build_pedestal(S, z1, "CEIL1_2", "BLAKWAL2")
       end
 
-      gui.add_entity(mx, my, z + 35,
-      {
-        name = tostring(GAME.things[R.key_item].id),
-      })
+      gui.add_entity(tostring(GAME.things[R.key_item].id),
+                     mx, my, z + 35)
+
     elseif R.purpose == "SWITCH" then
 gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       local LOCK = assert(R.lock_for_item)  -- eww
@@ -1738,10 +1725,8 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       Build_pedestal(S, z1, "CEIL1_2", "BLAKWAL2")
     end
 
-    gui.add_entity(mx, my, z + 35,
-    {
-      name = tostring(GAME.things[R.weapon].id),
-    })
+    gui.add_entity(tostring(GAME.things[R.weapon].id),
+                   mx, my, z + 35)
   end
 
   local function stairwell_height_diff(focus_C)

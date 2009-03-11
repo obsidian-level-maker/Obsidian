@@ -475,8 +475,8 @@ if TESTING_QUAKE1_DOORS then
   -1664+64,  -328-12, 0,
   -1664+128, -328+12, 128)
 
-  gui.add_entity(0, 0, 0,
-                 { name="func_door", angle="180", sounds="2",
+  gui.add_entity("func_door", 0, 0, 0,
+                 { angle="180", sounds="2",
                    model=assert(m_ref)
                  })
 
@@ -490,8 +490,8 @@ if TESTING_QUAKE1_DOORS then
   -1664+128, -328-12, 0,
   -1664+192, -328+12, 128)
 
-  gui.add_entity(0, 0, 0,
-                 { name="func_door", angle="0", sounds="2",
+  gui.add_entity("func_door", 0, 0, 0,
+                 { angle="0", sounds="2",
                    model=assert(m_ref)
                  })
 else
@@ -2106,7 +2106,7 @@ function Build_small_exit(R, item_name)
 
   if item_name then
     local ex, ey = transformed_coord(WT, mx, 96)
-    gui.add_entity(ex, ey, f_h+25, { name=item_name })
+    gui.add_entity(item_name, ex, ey, f_h+25)
   end
 end
 
@@ -2420,7 +2420,8 @@ function Build_popup_trap(S, z1, skin, combo)
   },
   -EXTREME_H, z1)
 
-  gui.add_entity(T.dx + long/2, T.dy + deep/2, z1+25, { name="66" })
+  -- FIXME: specify entity as parameter
+  gui.add_entity("66", T.dx + long/2, T.dy + deep/2, z1+25)
 end
 
 
@@ -3114,6 +3115,6 @@ function Builder_dummy()
   },
   0, 192)
 
-  gui.add_entity(64, 256, 64, { name="info_player_start" })
+  gui.add_entity("info_player_start", 64, 256, 64)
 end
 

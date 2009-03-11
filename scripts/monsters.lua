@@ -268,11 +268,10 @@ function Monsters_in_room(R)
 
     -- FIXME: angle
 
-    gui.add_entity(x, y, S.floor_h + 25,
+    gui.add_entity(tostring(thing.id), x, y, S.floor_h + 25,
     {
-      name = tostring(thing.id),
-      flag_ambush = 1,
       angle = 0,
+      ambush = 1,
     })
   end
 

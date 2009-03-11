@@ -1734,7 +1734,7 @@ gui.printf("do_teleport\n")
     },
     -EXTREME_H, z1)
 
-    gui.add_entity((x1+x2)/2, (y1+y2)/2, z1 + 25, { name="14" })
+    gui.add_entity("14", (x1+x2)/2, (y1+y2)/2, z1 + 25)
   end
 
 
@@ -1918,10 +1918,10 @@ gui.printf("do_teleport\n")
     if S.kind ~= "void" and not S.no_ceil then
       transformed_brush(nil,
       {
+        kind = sel(c_tex == PARAMS.sky_flat, "sky", nil),
         t_face = { texture=c_tex },
         b_face = { texture=c_tex, light=S.c_light },
         w_face = { texture=S.u_tex or w_tex },
-        flag_sky = sel(c_tex == PARAMS.sky_flat, true, false),
       },
       {
         { x=x2, y=y1 }, { x=x2, y=y2 },
@@ -2067,23 +2067,25 @@ end
     end
 
 
-    -- TEMP SHIT
-    local mx = int((x1+x2) / 2)
-    local my = int((y1+y2) / 2)
-
-    if S.room and S.room.kind ~= "scenic" and
-       S.kind == "walk" and not S.content
-    then
-      -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
-
-      local MON = GAME.things["candle"]
-      assert(MON)
-
-      gui.add_entity(mx, my, z1 + 25,
-      {
-        name = tostring(MON.id)
-      })
-    end
+---##    -- TEMP SHITE
+---##    local mx = int((x1+x2) / 2)
+---##    local my = int((y1+y2) / 2)
+---##
+---##    if S.room and S.room.kind ~= "scenic" and
+---##       S.kind == "walk" and not S.content
+---##    then
+---##      -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
+---##
+---##      local MON = GAME.things["candle"]
+---##      assert(MON)
+---##
+---##      local 
+---##
+---##      gui.add_entity(mx, my, z1 + 25,
+---##      {
+---##        name = tostring(MON.id)
+---##      })
+---##    end
 
   end -- build_seed()
 
