@@ -3103,13 +3103,13 @@ COMMON_WEAPONS =
 
   saw =
   {
-    pref=5, add_prob=2, start_prob=10,
+    pref=4, add_prob=2, start_prob=10,
     rate=8.7, damage=10, attack="melee",
   },
-                                
+
   berserk =
   {
-    pref=8, add_prob=6, start_prob=20,
+    pref=10, add_prob=6, start_prob=20,
     rate=1.5, damage=90, attack="melee",
     give={ {health=70} },
   },
@@ -3123,7 +3123,7 @@ COMMON_WEAPONS =
 
   chain =
   {
-    pref=80, add_prob=35, start_prob=30,
+    pref=70, add_prob=35, start_prob=30,
     rate=8.5, damage=10, attack="hitscan",
     ammo="bullet", per=1,
     give={ {ammo="bullet",count=20} },
@@ -3131,7 +3131,7 @@ COMMON_WEAPONS =
 
   shotty =
   {
-    pref=100, add_prob=10, start_prob=80,
+    pref=70, add_prob=10, start_prob=80,
     rate=0.9, damage=70, attack="hitscan", splash={ 0,10 },
     ammo="shell", per=1,
     give={ {ammo="shell",count=8} },
@@ -3147,7 +3147,7 @@ COMMON_WEAPONS =
 
   launch =
   {
-    pref=60, add_prob=25, start_prob=3,
+    pref=50, add_prob=25, start_prob=3,
     rate=1.7, damage=80, attack="missile", splash={ 50,20,5 },
     ammo="rocket", per=1,
     give={ {ammo="rocket",count=2} },
@@ -3155,7 +3155,7 @@ COMMON_WEAPONS =
 
   plasma =
   {
-    pref=120, add_prob=13, start_prob=3,
+    pref=90, add_prob=13, start_prob=3,
     rate=11, damage=20, attack="missile",
     ammo="cell", per=1,
     give={ {ammo="cell",count=40} },
@@ -3163,7 +3163,7 @@ COMMON_WEAPONS =
 
   bfg =
   {
-    pref=20, add_prob=25,
+    pref=30, add_prob=25,
     rate=0.8, damage=300, attack="missile", splash={60,45,30,30,20,10},
     ammo="cell", per=40,
     give={ {ammo="cell",count=40} },
