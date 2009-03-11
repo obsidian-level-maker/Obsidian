@@ -104,9 +104,16 @@ public:
 
 typedef enum
 {
-  BRU_F_Liquid   = (1 << 0),
-  BRU_F_Sky      = (1 << 1),
-  BRU_F_Detail   = (1 << 2),  // skipped when vis-ing
+  BKIND_Solid = 0,
+  BKIND_Liquid,
+  BKIND_Sky,
+  BKIND_Detail,
+  BKIND_Clip,
+}
+brush_kind_e;
+
+typedef enum
+{
   BRU_F_NoClip   = (1 << 3),  // objects/shots can pass through
 
   BRU_F_Door     = (1 << 4),  // (DOOM) close the created sector
@@ -122,8 +129,9 @@ brush_flags_e;
 class csg_brush_c
 {
   // This represents a "brush" in Quake terms, a solid area
-  // on the map with out-facing sides and top/bottom.
-  // Unlike quake brushes, these don't have to be convex
+  // on the map with out-facing sides and top/bottom.  Like
+  // quake brushes, these must be convex, but co-linear sides
+  // are allowed.
 
 public:
   std::vector<area_vert_c *> verts;
@@ -132,6 +140,7 @@ public:
   double max_x, max_y;
 
   // AREA INFO
+  int bkind;
   int bflags;
 
   area_face_c *b_face;
@@ -166,25 +175,12 @@ public:
 };
 
 
-typedef enum
-{
-  ENT_F_Player    = (1 << 0),
-  ENT_F_Monster   = (1 << 1),
-  ENT_F_Light     = (1 << 2),
-  EMT_F_Temp      = (1 << 3),  // temporary, don't store in the map
-  ENT_F_Written   = (1 << 4),
-}
-entity_flags_e;
-
-
 class entity_info_c
 {
 public:
   std::string name;
 
   double x, y, z;
-
-  int eflags;
 
   std::map<std::string, std::string> props;
 

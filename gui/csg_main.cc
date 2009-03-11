@@ -192,7 +192,6 @@ entity_info_c::entity_info_c(const char *_name, double xpos, double ypos,
                              double zpos, int _flags) :
     name(_name),
     x(xpos), y(ypos), z(zpos),
-    eflags(_flags),
     props()
 { }
 
@@ -383,6 +382,29 @@ static slope_plane_c * Grab_Slope(lua_State *L, int stack_pos)
 }
 
 
+int Grab_BrushKind(lua_State *L, int stack_pos)
+{
+  if (stack_pos < 0)
+    stack_pos += lua_gettop(L) + 1;
+
+  if (lua_isnil(L, stack_pos))
+    return BKIND_Solid;
+
+  if (lua_type(L, stack_pos) != LUA_TSTRING)
+    return luaL_error(L, "gui.add_brush: bad kind field");
+
+  const char *kind = lua_tostring(L, stack_pos);
+
+  if (StringCaseCmp(kind, "solid")  == 0) return BKIND_Solid;
+  if (StringCaseCmp(kind, "liquid") == 0) return BKIND_Liquid;
+  if (StringCaseCmp(kind, "sky")    == 0) return BKIND_Sky;
+  if (StringCaseCmp(kind, "detail") == 0) return BKIND_Detail;
+  if (StringCaseCmp(kind, "clip")   == 0) return BKIND_Clip;
+
+  return luaL_error(L, "gui.add_brush: unknown kind '%s'", kind);
+}
+
+
 area_face_c * Grab_Face(lua_State *L, int stack_pos)
 {
   if (stack_pos < 0)
@@ -431,6 +453,10 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 
   csg_brush_c *B = new csg_brush_c();
 
+  lua_getfield(L, stack_pos, "kind");
+
+  B->bkind = Grab_BrushKind(L, -1);
+
   lua_getfield(L, stack_pos, "t_face");
   lua_getfield(L, stack_pos, "b_face");
   lua_getfield(L, stack_pos, "w_face");
@@ -451,27 +477,17 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 
   lua_pop(L, 3);
 
-  lua_getfield(L, stack_pos, "flag_liquid");
-  lua_getfield(L, stack_pos, "flag_sky");
-  lua_getfield(L, stack_pos, "flag_detail");
   lua_getfield(L, stack_pos, "flag_noclip");
-
-  if (lua_toboolean(L, -4)) B->bflags |= BRU_F_Liquid;
-  if (lua_toboolean(L, -3)) B->bflags |= BRU_F_Sky;
-  if (lua_toboolean(L, -2)) B->bflags |= BRU_F_Detail;
-  if (lua_toboolean(L, -1)) B->bflags |= BRU_F_NoClip;
-
-  lua_pop(L, 4);
-
   lua_getfield(L, stack_pos, "flag_door");
   lua_getfield(L, stack_pos, "flag_revdoor");
   lua_getfield(L, stack_pos, "flag_skyclose");
 
+  if (lua_toboolean(L, -4)) B->bflags |= BRU_F_NoClip;
   if (lua_toboolean(L, -3)) B->bflags |= BRU_F_Door;
   if (lua_toboolean(L, -2)) B->bflags |= BRU_F_RevDoor;
   if (lua_toboolean(L, -1)) B->bflags |= BRU_F_SkyClose;
  
-  lua_pop(L, 3);
+  lua_pop(L, 4);
 
   return B;
 }
@@ -695,48 +711,50 @@ int CSG2_add_brush(lua_State *L)
 }
 
 
-// LUA: add_entity(x, y, z, props)
+// LUA: add_entity(name, x, y, z, props)
 //
 // props is a table:
-//   name   : entity type name
-//   light  : amount of light emitted
-//
-//   flag_xxx : various CSG flags
-//
 //   angle
-//   options (DOOM, HEXEN)
-//   args (HEXEN only)
-//   ...
+//   ambush
+//
+//   mode_sp
+//   mode_coop
+//   mode_dm
+//   mode_ctf
+//
+//   skill_easy
+//   skill_medium
+//   skill_hard
+//
+//   light : amount of light emitted
 //
 int CSG2_add_entity(lua_State *L)
 {
-  double x = luaL_checknumber(L,1);
-  double y = luaL_checknumber(L,2);
-  double z = luaL_checknumber(L,3);
+  const char *name = luaL_checkstring(L,1);
 
-  if (lua_type(L, 4) != LUA_TTABLE)
+  double x = luaL_checknumber(L,2);
+  double y = luaL_checknumber(L,3);
+  double z = luaL_checknumber(L,4);
+
+  if (lua_type(L, 5) != LUA_TTABLE)
   {
-    luaL_argerror(L, 4, "missing table: entity info");
+    luaL_argerror(L, 5, "missing table: entity info");
     return 0; /* NOT REACHED */
   }
 
-  const char *name;
+///--  const char *name;
+///--
+///--  lua_getfield(L, 4, "name");
+///--  name = luaL_checkstring(L,-1);
+///--  lua_pop(L, 1);
 
-  lua_getfield(L, 4, "name");
-  name = luaL_checkstring(L,-1);
-  lua_pop(L, 1);
 
-
-  int eflags = 0;
-
-  // FIXME: grab some flags
-
-  entity_info_c *E = new entity_info_c(name, x, y, z, eflags);
+  entity_info_c *E = new entity_info_c(name, x, y, z);
 
 
   // grab properties
 
-  for (lua_pushnil(L) ; lua_next(L, 4) != 0 ; lua_pop(L,1))
+  for (lua_pushnil(L) ; lua_next(L, 5) != 0 ; lua_pop(L,1))
   {
     // skip keys which are not strings
     if (lua_type(L, -2) != LUA_TSTRING)
