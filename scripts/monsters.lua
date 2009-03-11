@@ -88,6 +88,62 @@ function Player_give_weapon(weapon, to_CL)
   end -- for SK
 end
 
+function Player_calc_firepower()
+  -- The 'firepower' is (roughly) how much damage per second
+  -- the player would normally do using their current set of
+  -- weapons.
+  --
+  -- We assume all skills have the same weapons.
+  --
+  -- If there are different classes (Hexen) then the result
+  -- will be an average of each class.
+
+  local function get_firepower(hmodel)
+    local firepower = 0 
+    local divisor   = 0
+
+    for weapon,_ in pairs(hmodel.weapons) do
+      local info = assert(GAME.weapons[weapon])
+
+      local dm = info.damage * info.rate
+      if info.splash then dm = dm + info.splash[1] end
+
+      -- melee attacks are hard to use
+      if info.attack == "melee" then
+        dm = dm / 3.0
+      end
+
+      local pref = info.pref or 1
+
+gui.debugf("  weapon:%s dm:%1.1f pref:%1.1f\n", weapon, dm, pref)
+      firepower = firepower + dm * pref
+      divisor   = divisor + pref
+    end
+
+    if divisor == 0 then
+      error("Player_calc_firepower: no weapons???")
+    end
+
+    return firepower / divisor
+  end
+
+  ---| Player_calc_firepower |---
+
+  local fp_total  = 0
+  local class_num = 0
+
+  local SK = SKILLS[1]
+
+  for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+    fp_total = fp_total + get_firepower(hmodel)
+    class_num = class_num + 1
+  end -- for CL
+
+  assert(class_num > 0)
+
+  return fp_total / class_num
+end
+
 
 function Monsters_do_pickups()
   -- FIXME: pickups
@@ -96,13 +152,55 @@ end
 
 function Monsters_in_room(R)
 
+  local MONSTER_QUANTITIES =
+  {
+     scarce=10, less=20, normal=30, more=45, heaps=60
+  }
+
+  local function select_monsters()
+    -- FIXME: guard monster!!!
+    
+    local fp = Player_calc_firepower()
+
+    gui.debugf("Firepower = %1.3f\n", fp)
+    
+    -- FIXME
+  end
+
+  local function create_monster_map(palette)
+    -- FIXME
+  end
+
+  local function add_monsters()
+
+    local palette = select_monsters()
+
+    create_monster_map(palette)
+
+    local qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
+
+    -- handled "mixed" setting
+    if not qty then
+      qty = PLAN.mixed_mons_qty
+    end
+
+    -- FIXME
+  end
+
+
+  ---| Monsters_in_room |---
+
   gui.debugf("Monsters_in_room @ %s\n", R:tostr())
 
-do return end --FIXME !!!!!!
+  R.fight_result = {}
+
+  if OB_CONFIG.mons == "none" then
+    return
+  end
 
   add_monsters()
 
-  R.fight_result = {}
+do return end --FIXME !!!!!!
 
   for _,SK in ipairs(SKILLS) do
 
@@ -129,6 +227,8 @@ end
 function Monsters_make_battles()
   
   gui.printf("\n--==| Monsters_make_battles |==--\n\n")
+
+  PLAN.mixed_mons_qty = 30 + rand_skew() * 20
 
   Player_init()
 
