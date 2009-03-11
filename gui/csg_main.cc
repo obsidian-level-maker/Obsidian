@@ -738,11 +738,18 @@ int CSG2_add_entity(lua_State *L)
 
   for (lua_pushnil(L) ; lua_next(L, 4) != 0 ; lua_pop(L,1))
   {
+    // skip keys which are not strings
     if (lua_type(L, -2) != LUA_TSTRING)
-      continue; // skip keys which are not strings
+      continue;
+
+    // validate the value
+    if (lua_type(L, -1) != LUA_TSTRING && lua_type(L, -1) != LUA_TNUMBER)
+      luaL_error(L, "gui.add_entity: property is not a string or number");
 
     const char *p_key   = lua_tostring(L, -2);
     const char *p_value = lua_tostring(L, -1);
+
+    SYS_ASSERT(p_value);
 
     E->props[p_key] = std::string(p_value);
   }
