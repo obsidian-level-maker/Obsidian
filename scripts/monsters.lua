@@ -37,9 +37,6 @@ subject to the palette.  The palette applies to a fair size
 of a map, on "small" setting --> 1 palette only, upto 2 on
 "regular", between 2-3 on "large" maps.
 
-[Palette probably needs to handle "families", e.g. Baron
-and Hellknight, Mummy and Leader]
-
 Trap and Surprise monsters can use any monster (actually
 better when different from palette and different from
 previous traps/surprises).
@@ -48,12 +45,6 @@ Cages and Guarding monsters should have a smaller and
 longer-term palette, changing about 4 times less often
 than the free-range palette.  MORE PRECISELY: palette
 evolves about same rate IN TERMS OF # MONSTERS ADDED.
-
-Evolving a palette: replace some monsters with different
-ones.  Especially replace weaker with stronger (we assume
-the player will have better weapons).  Probably replace
-only 1 monster each time over the course of an EPISODE
-(faster and/or more palettes when making SINGLE maps).
 
 --------------------------------------------------------------]]
 
@@ -159,6 +150,40 @@ function Monsters_in_room(R)
      scarce=10, less=20, normal=30, more=45, heaps=60
   }
 
+  local MONSTER_TOUGHNESS =
+  {
+    scarce=0.8, less=0.8, normal=1.0, more=1.2, heaps=1.2
+  }
+
+
+  local function is_big(mon)
+    return GAME.things[mon].r >= 35
+  end
+
+  local function calc_toughness()
+    -- determine a "toughness" value, where 1.0 is normal and
+    -- higher values (upto ~ 3.0) produces tougher monsters.
+
+    local toughness = MONSTER_TOUGHNESS[OB_CONFIG.mons] or
+                      PLAN.mixed_mons_tough  -- "mixed" setting
+
+    -- each level gets progressively tougher
+    if LEVEL.toughness then
+      toughness = toughness * LEVEL.toughness
+    elseif OB_CONFIG.length ~= "single" then
+      toughness = toughness * (1 + LEVEL.ep_along * 1.5)
+    end
+
+    -- ??? each arena gets progressively tougher
+    --
+    -- assert(arena.id >= 1)
+    -- local ar_factor = 1 + (math.min(arena.id,10) - 1) / 15.0
+    -- toughness = toughness * ar_factor
+
+    return toughness
+  end
+
+
   local function select_monsters()
     -- FIXME: guard monsters !!!
 
@@ -219,46 +244,89 @@ function Monsters_in_room(R)
     return palette
   end
 
-  local function try_add_mon_seed(mon)
-    local info = assert(GAME.monsters[mon])
+  local function add_mon_spot(S, x, y, mon, info)
+    local SPOT =
+    {
+      S=S, x=x, y=y, mon=mon, info=info
+    }
+    table.insert(R.monster_spots, SPOT)
+  end
 
-    -- FIXME: IMPROVE THIS SHITE !!!
+  local function try_occupy_seed(S, palette, totals)
+    if S.content or S.no_monster then return end
 
-    -- FIXME: check vertical room!
+    -- keep entryway clear [TODO: more space in big rooms]
+    if S.conn == R.entry_conn then return end
 
-    -- FIXME: symmetry
+    if S.diag_new_kind then return end
+    if not S.floor_h then return end
 
-    for pass = 1,2 do
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      if S.room == R and not S.content and
-         not (S.conn == R.entry_conn) and S.floor_h and
-         (S.kind == "walk" or (info.float and S.kind == "liquid")) and
-         (pass == 2 or rand_odds(25))
-      then
-        S.content = "monster"
-        S.monster = mon
-        return true
-      end
-    end end -- for x, y
-    end -- for pass
+    -- preliminary check on type
+    if not (S.kind == "walk" or S.kind == "liquid") then return end
 
-    return false
+    local mon   = rand_key_by_probs(palette)
+    local info  = GAME.monsters[mon]
+    local thing = GAME.things[mon]
+
+    if not (S.kind == "walk" or info.float) then
+      -- FIXME: try other monsters
+      return
+    end
+
+    -- check if fits vertically
+    local ceil_h = S.ceil_h or R.ceil_h or SKY_H
+    if thing.h >= (ceil_h - S.floor_h - 1) then
+      -- FIXME: try other monsters
+      return
+    end
+
+    local fatty = is_big(mon)
+
+---#    S.content = "monster"   (not actually there yet)
+---#    S.monster = mon
+
+    totals[mon] = totals[mon] + sel(fatty, 4, 1)
+
+    -- create spots
+    local mx, my = S:mid_point()
+    
+    if fatty then
+      add_mon_spot(S, mx, my, mon, info)
+    else
+      add_mon_spot(S, mx-36, my-36, mon, info)
+      add_mon_spot(S, mx-36, my+36, mon, info)
+      add_mon_spot(S, mx+36, my-36, mon, info)
+      add_mon_spot(S, mx+36, my+36, mon, info)
+    end
   end
 
   local function create_monster_map(palette)
-    -- assign at least one seed to each monster
-    for mon,_ in pairs(palette) do
-      try_add_mon_seed(mon)
+    R.monster_spots = {}
+
+    -- adjust probs in palette to account for monster size,
+    -- i.e. we can fit 4 imps in a seed but only one mancubus,
+    -- hence imps should occur less often (per seed).
+
+    local pal_2  = {}
+    local totals = {}
+
+    for mon,prob in pairs(palette) do
+      pal_2[mon]  = prob * sel(is_big(mon), 3, 1)
+      totals[mon] = 0
     end
 
-    repeat
-      local mon = rand_key_by_probs(palette)
-      
-      if not try_add_mon_seed(mon) then
-        palette[mon] = nil
+    -- FIXME: symmetry
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+
+      if S.room == R then
+        try_occupy_seed(S, pal_2, totals)
       end
-    until table_empty(palette)
+    end end -- for x, y
+    
+    -- FIXME: make sure each monster has at least one seed
+
   end
 
   local function do_add_mon(chance, S, x, y, mon, info, thing)
@@ -300,16 +368,14 @@ function Monsters_in_room(R)
 
   local function add_monsters()
 
+    R.toughness = calc_toughness()
+
     local palette = select_monsters()
 
     create_monster_map(palette)
 
-    local qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
-
-    -- handled "mixed" setting
-    if not qty then
-      qty = PLAN.mixed_mons_qty
-    end
+    local qty = MONSTER_QUANTITIES[OB_CONFIG.mons] or
+                PLAN.mixed_mons_qty  -- the "mixed" setting
 
     fill_monster_map(qty)
   end
@@ -319,11 +385,21 @@ function Monsters_in_room(R)
 
   gui.debugf("Monsters_in_room @ %s\n", R:tostr())
 
+  R.monster_list = {}
   R.fight_result = {}
 
   if OB_CONFIG.mons == "none" then
     return
   end
+
+  if R.purpose == "START" then
+    return
+  end
+
+  if R.kind == "stairwell" or R.kind == "scenic" then
+    return
+  end
+
 
   add_monsters()
 
@@ -355,7 +431,8 @@ function Monsters_make_battles()
   
   gui.printf("\n--==| Monsters_make_battles |==--\n\n")
 
-  PLAN.mixed_mons_qty = 30 + rand_skew() * 20
+  PLAN.mixed_mons_qty   = 30 + rand_skew() * 20
+  PLAN.mixed_mons_tough = rand_range(0.8, 1.2)
 
   Player_init()
 
