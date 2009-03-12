@@ -147,7 +147,7 @@ function Monsters_in_room(R)
 
   local MONSTER_QUANTITIES =
   {
-     scarce=10, less=20, normal=30, more=45, heaps=60
+     scarce=10, less=18, normal=25, more=32, heaps=42
   }
 
   local MONSTER_TOUGHNESS =
@@ -400,6 +400,16 @@ function Monsters_in_room(R)
     end
   end
 
+  local function how_many_dudes(mon, count, qty)
+    if count <= 1 then return count end
+
+    local vari = int((count+2) / 4)
+    count = count + rand_irange(-vari, vari)
+
+    count = int(count * qty / 100)
+    return math.max(1, count)
+  end
+
   local function place_monster(spot)
     local thing = GAME.things[spot.monster]
 
@@ -413,8 +423,22 @@ function Monsters_in_room(R)
   end
 
   local function fill_monster_map(qty)
+    local totals  = {}
+    local actuals = {}
+
     for _,spot in ipairs(R.monster_spots) do
-      place_monster(spot)
+      totals[spot.monster] = (totals[spot.monster] or 0) + 1
+    end
+
+    for mon,count in pairs(totals) do
+      actuals[mon] = how_many_dudes(mon, count, qty)
+    end
+
+    for _,spot in ipairs(R.monster_spots) do
+      if (actuals[spot.monster] or 0) >= 1 then
+        actuals[spot.monster] = actuals[spot.monster] - 1
+        place_monster(spot)
+      end
     end
   end
 
