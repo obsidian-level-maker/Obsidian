@@ -2379,7 +2379,7 @@ function Build_raising_start(S, face_dir, z1, info)
 end
 
 
-function Build_popup_trap(S, z1, skin, combo)
+function Build_popup_trap(S, z1, skin, combo, monster)
 
   local info =
   {
@@ -2420,8 +2420,7 @@ function Build_popup_trap(S, z1, skin, combo)
   },
   -EXTREME_H, z1)
 
-  -- FIXME: specify entity as parameter
-  gui.add_entity("66", T.dx + long/2, T.dy + deep/2, z1+25)
+  gui.add_entity(monster, T.dx + long/2, T.dy + deep/2, z1+25, { ambush=1 })
 end
 
 
