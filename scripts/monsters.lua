@@ -184,8 +184,10 @@ function Monsters_in_room(R)
   end
 
 
-  local function select_monsters()
+  local function select_monsters(tougness)
     -- FIXME: guard monsters !!!
+
+    -- FIXME: toughness !!!
 
     local fp = Player_calc_firepower()
 
@@ -247,9 +249,22 @@ function Monsters_in_room(R)
   local function add_mon_spot(S, x, y, mon, info)
     local SPOT =
     {
-      S=S, x=x, y=y, mon=mon, info=info
+      S=S, x=x, y=y, monster=mon, info=info
     }
     table.insert(R.monster_spots, SPOT)
+  end
+
+  local function add_spot_group(S, mon, info)
+    local mx, my = S:mid_point()
+
+    if is_big(mon) then
+      add_mon_spot(S, mx, my, mon, info)
+    else
+      add_mon_spot(S, mx-36, my-36, mon, info)
+      add_mon_spot(S, mx-36, my+36, mon, info)
+      add_mon_spot(S, mx+36, my-36, mon, info)
+      add_mon_spot(S, mx+36, my+36, mon, info)
+    end
   end
 
   local function try_occupy_seed(S, palette, totals)
@@ -280,24 +295,56 @@ function Monsters_in_room(R)
       return
     end
 
-    local fatty = is_big(mon)
-
----#    S.content = "monster"   (not actually there yet)
----#    S.monster = mon
-
-    totals[mon] = totals[mon] + sel(fatty, 4, 1)
-
     -- create spots
-    local mx, my = S:mid_point()
-    
-    if fatty then
-      add_mon_spot(S, mx, my, mon, info)
-    else
-      add_mon_spot(S, mx-36, my-36, mon, info)
-      add_mon_spot(S, mx-36, my+36, mon, info)
-      add_mon_spot(S, mx+36, my-36, mon, info)
-      add_mon_spot(S, mx+36, my+36, mon, info)
+    add_spot_group(S, mon, info)
+
+    totals[mon] = totals[mon] + 1
+  end
+
+  local function steal_a_seed(mon, totals)
+    local victim
+
+    for name,count in pairs(totals) do
+      if name ~= mon and (count >= 2) and (not victim or count > totals[victim]) then
+        victim = name
+      end
     end
+
+    if not victim then
+      gui.debugf("steal_a_seed(%s): nobody to steal from!\n", mon)
+      return
+    end
+
+    gui.debugf("steal_a_seed(%s): stealing from %s\n", mon, victim)
+
+    local qty = 1
+    if totals[victim] >= 10 then qty = 2 end
+
+    for loop = 1,qty do
+      local victim_S
+
+      local old_list = R.monster_spots
+      R.monster_spots = {}
+
+      for _,spot in ipairs(old_list) do
+        if victim_S and spot.S == victim_S then
+          -- skip other spots in the same seed
+        elseif not victim_S and spot.monster == victim then
+          add_spot_group(spot.S, mon, GAME.monsters[mon])
+          victim_S = spot.S
+
+          totals[mon]    = totals[mon] + 1
+          totals[victim] = totals[victim] - 1
+        else
+          table.insert(R.monster_spots, spot)
+        end
+      end
+
+      -- should have worked
+      assert(victim_S)
+    end
+
+    rand_shuffle(R.monster_spots)
   end
 
   local function create_monster_map(palette)
@@ -324,9 +371,20 @@ function Monsters_in_room(R)
         try_occupy_seed(S, pal_2, totals)
       end
     end end -- for x, y
-    
-    -- FIXME: make sure each monster has at least one seed
 
+    rand_shuffle(R.monster_spots)
+    
+    -- make sure each monster has at least one seed
+    for mon,_ in pairs(palette) do
+      if totals[mon] == 0 then
+        steal_a_seed(mon, totals)
+      end
+    end
+
+    gui.debugf("Monster map totals:\n")
+    for mon,count in pairs(totals) do
+      gui.debugf("  %s = %d seeds\n", mon, count)
+    end
   end
 
   local function do_add_mon(chance, S, x, y, mon, info, thing)
@@ -368,16 +426,16 @@ function Monsters_in_room(R)
 
   local function add_monsters()
 
-    R.toughness = calc_toughness()
+    local toughness = calc_toughness()
 
-    local palette = select_monsters()
+    local palette = select_monsters(toughness)
 
     create_monster_map(palette)
 
     local qty = MONSTER_QUANTITIES[OB_CONFIG.mons] or
                 PLAN.mixed_mons_qty  -- the "mixed" setting
 
-    fill_monster_map(qty)
+--!!!!    fill_monster_map(qty)
   end
 
 
@@ -396,7 +454,9 @@ function Monsters_in_room(R)
     return
   end
 
-  if R.kind == "stairwell" or R.kind == "scenic" then
+  if R.kind == "stairwell" or R.kind == "smallexit" or
+     R.kind == "scenic"
+  then
     return
   end
 
