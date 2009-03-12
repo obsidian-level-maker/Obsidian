@@ -222,11 +222,10 @@ function Monsters_in_room(R)
     assert(not table_empty(list))
 
     -- how many kinds??   FIXME: better calc!
-    local num_kinds
+    local num_kinds = 1
         if R.svolume >= 81 then num_kinds = 4
     elseif R.svolume >= 36 then num_kinds = 3
     elseif R.svolume >= 10 then num_kinds = 2
-    else num_kinds = 1
     end
 
     local palette = {}
@@ -244,6 +243,24 @@ function Monsters_in_room(R)
     end
 
     return palette
+  end
+
+  local function monster_fits(S, mon, info)
+    -- check seed kind
+    -- (floating monsters can go in more places)
+    if not (S.kind == "walk" or info.float) then
+      return false
+    end
+
+    -- check if fits vertically
+    local ceil_h = S.ceil_h or R.ceil_h or SKY_H
+    local thing  = assert(GAME.things[mon])
+
+    if thing.h >= (ceil_h - S.floor_h - 1) then
+      return false
+    end
+
+    return true
   end
 
   local function add_mon_spot(S, x, y, mon, info)
@@ -283,15 +300,8 @@ function Monsters_in_room(R)
     local info  = GAME.monsters[mon]
     local thing = GAME.things[mon]
 
-    if not (S.kind == "walk" or info.float) then
-      -- FIXME: try other monsters
-      return
-    end
-
-    -- check if fits vertically
-    local ceil_h = S.ceil_h or R.ceil_h or SKY_H
-    if thing.h >= (ceil_h - S.floor_h - 1) then
-      -- FIXME: try other monsters
+    if not monster_fits(S, mon, info) then
+      -- ??? try the other monsters
       return
     end
 
@@ -329,7 +339,9 @@ function Monsters_in_room(R)
       for _,spot in ipairs(old_list) do
         if victim_S and spot.S == victim_S then
           -- skip other spots in the same seed
-        elseif not victim_S and spot.monster == victim then
+        elseif not victim_S and spot.monster == victim and
+               monster_fits(spot.S, spot.monster, spot.info)
+        then
           add_spot_group(spot.S, mon, GAME.monsters[mon])
           victim_S = spot.S
 
@@ -340,8 +352,9 @@ function Monsters_in_room(R)
         end
       end
 
-      -- should have worked
-      assert(victim_S)
+      -- may not have worked (different requirements)
+      gui.debugf("  loop:%d %s\n", loop, sel(victim_S, "OK", "FAILED"))
+      if not victim_S then break; end
     end
 
     rand_shuffle(R.monster_spots)
@@ -387,41 +400,22 @@ function Monsters_in_room(R)
     end
   end
 
-  local function do_add_mon(chance, S, x, y, mon, info, thing)
-    if not rand_odds(chance) then
-      return
-    end
+  local function place_monster(spot)
+    local thing = GAME.things[spot.monster]
 
     -- FIXME: angle
 
-    gui.add_entity(tostring(thing.id), x, y, S.floor_h + 25,
+    gui.add_entity(tostring(thing.id), spot.x, spot.y, spot.S.floor_h + 25,
     {
-      angle = 0,
-      ambush = 1,
+      angle  = spot.angle  or 0,
+      ambush = spot.ambush or 1,
     })
   end
 
   local function fill_monster_map(qty)
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      if S.room == R and S.content == "monster" then
-        local info  = assert(GAME.monsters[S.monster])
-        local thing = assert(GAME.things[S.monster])
-
-        assert(thing.r <= 72)  -- i.e. not a "big" monster
-
-        local mx, my = S:mid_point()
-        
-        if thing.r >= 35 then
-          do_add_mon(qty, S, mx, my, S.monster, info, thing)
-        else
-          do_add_mon(qty, S, mx-36, my-36, S.monster, info, thing)
-          do_add_mon(qty, S, mx-36, my+36, S.monster, info, thing)
-          do_add_mon(qty, S, mx+36, my-36, S.monster, info, thing)
-          do_add_mon(qty, S, mx+36, my+36, S.monster, info, thing)
-        end
-      end
-    end end -- for x, y
+    for _,spot in ipairs(R.monster_spots) do
+      place_monster(spot)
+    end
   end
 
   local function add_monsters()
@@ -435,7 +429,7 @@ function Monsters_in_room(R)
     local qty = MONSTER_QUANTITIES[OB_CONFIG.mons] or
                 PLAN.mixed_mons_qty  -- the "mixed" setting
 
---!!!!    fill_monster_map(qty)
+    fill_monster_map(qty)
   end
 
 
