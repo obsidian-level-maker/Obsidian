@@ -188,7 +188,7 @@ function Monsters_in_room(R)
     if LEVEL.toughness then
       toughness = toughness * LEVEL.toughness
     elseif OB_CONFIG.length ~= "single" then
-      toughness = toughness * (1 + LEVEL.ep_along * 2.0)
+      toughness = toughness * (1 + LEVEL.ep_along * 3.0)
     end
 
     -- less emphasis within a level, since each arena naturally
@@ -196,11 +196,11 @@ function Monsters_in_room(R)
     if R.arena.id == 1 then
       toughness = toughness * 0.8
     elseif R.arena.id >= (#PLAN.all_arenas - 1) then
-      toughness = toughness * 1.3
+      toughness = toughness * 1.4
     end
 
     if R.kind == "hallway" then
-      toughness = toughness * 0.7
+      toughness = toughness * 0.5
     end
 
     gui.debugf("Toughness = %1.3f\n", toughness)
