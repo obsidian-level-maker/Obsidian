@@ -143,6 +143,8 @@ function Monsters_init()
     info.name  = name
     info.thing = assert(GAME.things[name])
   end
+
+  PLAN.mon_stats = {}
 end
 
 
@@ -165,12 +167,16 @@ function Monsters_in_room(R)
 
 
   local function is_big(mon)
-    return GAME.things[mon].r >= 35
+    return GAME.things[mon].r > 34
+  end
+
+  local function is_huge(mon)
+    return GAME.things[mon].r > 64
   end
 
   local function calc_toughness()
     -- determine a "toughness" value, where 1.0 is normal and
-    -- higher values (upto ~ 3.0) produces tougher monsters.
+    -- higher values (upto ~ 4.0) produces tougher monsters.
 
     local toughness = MONSTER_TOUGHNESS[OB_CONFIG.mons] or
                       PLAN.mixed_mons_tough  -- "mixed" setting
@@ -179,26 +185,70 @@ function Monsters_in_room(R)
     if LEVEL.toughness then
       toughness = toughness * LEVEL.toughness
     elseif OB_CONFIG.length ~= "single" then
-      toughness = toughness * (1 + LEVEL.ep_along * 1.5)
+      toughness = toughness * (1 + LEVEL.ep_along * 3.0)
     end
 
-    -- ??? each arena gets progressively tougher
-    --
-    -- assert(arena.id >= 1)
-    -- local ar_factor = 1 + (math.min(arena.id,10) - 1) / 15.0
-    -- toughness = toughness * ar_factor
+    -- within a level, each arena naturally gets tougher
+    -- due to the player picking up new weapons.
+
+    gui.debugf("Toughness = %1.3f\n", toughness)
 
     return toughness
   end
 
 
-  local function select_monsters(tougness)
+  local function prob_for_mon(info, fp, toughness)
+
+    local name = info.name
+    local prob = info.prob
+
+    if LEVEL.monster_prefs then
+      prob = prob * (LEVEL.monster_prefs[name] or 1)
+    end
+
+    if PLAN.theme.monster_prefs then
+      prob = prob * (PLAN.theme.monster_prefs[name] or 1)
+    end
+
+    if R.room_type and R.room_type.monster_prefs then
+      prob = prob * (R.room_type.theme.monster_prefs[name] or 1)
+    end
+
+    if prob == 0 then return 0 end
+
+
+    local time   = info.health / fp
+    local damage = info.damage * time
+
+    gui.debugf("  %s --> damage:%1.1f (%1.1f)  time:%1.2f\n", name, damage, damage/toughness, time)
+
+    if time >= PARAMS.mon_time_max then return 0 end
+
+    -- adjust damage by toughness factor
+    damage = damage / toughness
+
+    if damage >= PARAMS.mon_damage_max then return 0 end
+
+    if damage > PARAMS.mon_damage_high then
+      local diff =   PARAMS.mon_damage_max - PARAMS.mon_damage_high
+      prob = prob * (PARAMS.mon_damage_max - damage) / diff
+    end
+
+    if damage < PARAMS.mon_damage_low then
+      prob = prob * (damage / PARAMS.mon_damage_low)
+    end
+
+    if info.invis and R.outdoor then
+      prob = prob * 3
+    end
+
+    return prob
+  end
+
+  local function select_monsters(toughness)
     -- FIXME: guard monsters !!!
 
-    -- FIXME: toughness !!!
-
     local fp = Player_calc_firepower()
-
     gui.debugf("Firepower = %1.3f\n", fp)
     
     local list = {}
@@ -208,41 +258,17 @@ function Monsters_in_room(R)
 
     for name,info in pairs(GAME.monsters) do
       if info.prob then
-        local time   = info.health / fp
-        local damage = info.damage * time
-        local prob   = info.prob
 
-        -- just in case we end up with no monsters, have a fallback
-        if not fallback or prob < fallback.prob then
+        -- just in case we end up with no monsters
+        if not fallback or info.prob < fallback.prob then
           fallback = info
         end
 
---[[ !!!! NOT READY FOR THIS YET
+        local prob = prob_for_mon(info, fp, toughness)
 
-        if LEVEL.monster_prefs then
-          prob = prob * (LEVEL.monster_prefs[name] or 1)
-        end
-
-        if PLAN.theme.monster_prefs then
-          prob = prob * (PLAN.theme.monster_prefs[name] or 1)
-        end
---]]
-
----     gui.debugf("  %s --> %1.2f seconds  @ %1.1f damage\n", name, info.health / fp, damage)
-
-        if time <= PARAMS.mon_time_max and damage <= PARAMS.mon_damage_max then
-          if time < PARAMS.mon_time_low then
-            prob = prob * time / PARAMS.mon_time_low
-          end
-          if damage > PARAMS.mon_damage_high then
-            local diff =   PARAMS.mon_damage_max - PARAMS.mon_damage_high
-            prob = prob * (PARAMS.mon_damage_max - damage) / diff
-          end
-
-          if prob > 0 then
-            list[name] = prob
-            gui.debugf("  %s --> prob:%1.1f\n", name, prob)
-          end
+        if prob > 0 then
+          list[name] = prob
+          gui.debugf("  %s --> prob:%1.1f\n", name, prob)
         end
       end
     end
@@ -271,6 +297,7 @@ function Monsters_in_room(R)
       palette[mon] = list[mon]  --- GAME.monsters[mon].prob
 
       gui.debugf("  #%d %s\n", i, mon)
+      PLAN.mon_stats[mon] = (PLAN.mon_stats[mon] or 0) + 1
 
       list[mon] = nil
       if table_empty(list) then break; end
@@ -437,7 +464,7 @@ function Monsters_in_room(R)
   local function how_many_dudes(mon, count, qty)
     if count <= 1 then return count end
 
-    local vari = int((count+2) / 4)
+    local vari = int((count+3) / 5)
     count = count + rand_irange(-vari, vari)
 
     count = int(count * qty / 100)
@@ -539,11 +566,36 @@ do return end --FIXME !!!!!!
 end
 
 
+function Monsters_show_stats()
+  local total = 0
+  for _,count in pairs(PLAN.mon_stats) do
+    total = total + count
+  end
+
+  local function get_stat(mon)
+    local num = PLAN.mon_stats[mon] or 0
+    local div = int(num * 99.8 / total)
+    if div == 0 and num > 0 then div = 1 end
+    return string.format("%02d", div)
+  end
+
+  if total == 0 then
+    gui.debugf("STATS  no monsters at all\n")
+  else
+    gui.debugf("STATS  zsi:%s,%s,%s  crk:%s,%s,%s  mvb:%s,%s,%s  gap:%s,%s,%s\n",
+               get_stat("zombie"), get_stat("shooter"), get_stat("imp"),
+               get_stat("caco"), get_stat("revenant"), get_stat("knight"),
+               get_stat("mancubus"), get_stat("vile"), get_stat("baron"),
+               get_stat("gunner"), get_stat("arach"), get_stat("pain"))
+  end
+end
+
+
 function Monsters_make_battles()
   
   gui.printf("\n--==| Monsters_make_battles |==--\n\n")
 
-  PLAN.mixed_mons_qty   = 30 + rand_skew() * 20
+  PLAN.mixed_mons_qty   = 25 + rand_skew() * 12
   PLAN.mixed_mons_tough = rand_range(0.8, 1.2)
 
   Player_init()
@@ -564,6 +616,8 @@ function Monsters_make_battles()
 
     Monsters_in_room(R)
   end -- for R
+
+  Monsters_show_stats()
 
   -- Once all monsters have been chosen and all battles
   -- (including cages and traps) have been simulated, then

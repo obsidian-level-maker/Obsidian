@@ -2743,7 +2743,7 @@ COMMON_THEMES =
 
     monster_prefs =
     {
-      zombie=3.0, shooter=4.0, arach=2.0,
+--!!!!      zombie=2.0, shooter=3.0, arach=2.0,
     },
   }, -- TECH
 
@@ -2839,14 +2839,14 @@ COMMON_MONSTERS =
 {
   zombie =
   {
-    prob=40, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=40, cage_prob=11,
     health=20, damage=4, attack="hitscan",
     give={ {ammo="bullet",count=5} },
   },
 
   shooter =
   {
-    prob=60, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=50, guard_prob=11, trap_prob=11, cage_prob=11,
     health=30, damage=10, attack="hitscan",
     give={ {weapon="shotty"}, {ammo="shell",count=4} },
   },
@@ -2859,7 +2859,7 @@ COMMON_MONSTERS =
 
   skull =
   {
-    prob=20, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=20, trap_prob=11, cage_prob=11,
     health=100, damage=7, attack="melee",
     float=true,
   },
@@ -2872,7 +2872,7 @@ COMMON_MONSTERS =
 
   spectre =
   {
-    prob=5, guard_prob=11, trap_prob=61,
+    prob=4, guard_prob=11, trap_prob=61,
     health=150, damage=25, attack="melee",
     invis=true,
   },
@@ -2896,15 +2896,15 @@ DOOM2_MONSTERS =
 {
   gunner =
   {
-    prob=21, guard_prob=21, trap_prob=41, cage_prob=71,
-    health=70, damage=40, attack="hitscan",
+    prob=18, guard_prob=21, trap_prob=41, cage_prob=71,
+    health=70, damage=50, attack="hitscan",
     give={ {weapon="chain"}, {ammo="bullet",count=10} },
   },
 
   revenant =
   {
     prob=50, guard_prob=41, trap_prob=41, cage_prob=51,
-    health=300, damage=55, attack="missile",
+    health=300, damage=70, attack="missile",
   },
 
   knight =
@@ -2916,7 +2916,7 @@ DOOM2_MONSTERS =
   mancubus =
   {
     prob=33, guard_prob=41, trap_prob=41, cage_prob=11,
-    health=600, damage=80, attack="missile",
+    health=600, damage=70, attack="missile",
   },
 
   arach =
@@ -2927,14 +2927,14 @@ DOOM2_MONSTERS =
 
   vile =
   {
-    prob=10, guard_prob=11, trap_prob=31, cage_prob=21,
+    prob=12, guard_prob=11, trap_prob=31, cage_prob=21,
     health=700, damage=40, attack="hitscan", no_dist=true,
   },
 
   pain =
   {
-    prob=5, trap_prob=11,
-    health=400, damage=60, attack="missile",
+    prob=6, trap_prob=11,
+    health=400, damage=50, attack="missile",
     float=true,
   },
 

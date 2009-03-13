@@ -1707,7 +1707,7 @@ function Doom2_get_levels()
       name  = string.format("MAP%02d", map),
       patch = string.format("CWILV%02d", map-1),
 
-      ep_along = ((map - 1) % 10) / 9.0,
+      ep_along = ((map - 1) % 11) / 10.0,
 
       theme = "TECH",
 
@@ -1719,7 +1719,11 @@ function Doom2_get_levels()
       sky_info = GAME.sky_info[episode],
     }
 
-    if LEV.ep_along > 1 then LEV.ep_along = 1 end
+    if OB_CONFIG.length == "few" then
+      LEV.ep_along = (map-1) / (MAP_NUM - 1)
+    end
+
+    assert(LEV.ep_along <= 1)
 
     LEV.toughness_factor = 1 + 1.5 * LEV.ep_along
 
@@ -1820,11 +1824,10 @@ OB_GAMES["doom2"] =
 
     palette_mons = 5,
 
-    mon_damage_max  = 400,
+    mon_time_max = 12,
+    mon_damage_max  = 200,
     mon_damage_high = 100,
-
-    mon_time_max = 10,
-    mon_time_low = 0.4,
+    mon_damage_low  =   1,
   },
 
   hooks =
