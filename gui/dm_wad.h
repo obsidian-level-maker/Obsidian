@@ -143,7 +143,7 @@ raw_thing_t;
 typedef enum
 {
    MTF_Easy    = 1,
-   MTF_Normal  = 2,
+   MTF_Medium  = 2,
    MTF_Hard    = 4,
    MTF_Ambush  = 8,
 

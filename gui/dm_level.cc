@@ -975,8 +975,8 @@ static void CheckThingOption(const char *name, const char *value,
   // skill flags default to 1, hence only need to clear them
   if (StringCaseCmp(name, "skill_easy") == 0 && !enable)
     *options &= ~MTF_Easy;
-  if (StringCaseCmp(name, "skill_normal") == 0 && !enable)
-    *options &= ~MTF_Normal;
+  if (StringCaseCmp(name, "skill_medium") == 0 && !enable)
+    *options &= ~MTF_Medium;
   if (StringCaseCmp(name, "skill_hard") == 0 && !enable)
     *options &= ~MTF_Hard;
 
