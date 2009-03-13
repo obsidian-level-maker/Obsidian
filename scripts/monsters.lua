@@ -138,6 +138,14 @@ function Player_calc_firepower()
 end
 
 
+function Monsters_init()
+  for name,info in pairs(GAME.monsters) do
+    info.name  = name
+    info.thing = assert(GAME.things[name])
+  end
+end
+
+
 function Monsters_do_pickups()
   -- FIXME: pickups
 end
@@ -196,11 +204,29 @@ function Monsters_in_room(R)
     local list = {}
     gui.debugf("Monster list:\n")
 
+    local fallback
+
     for name,info in pairs(GAME.monsters) do
       if info.prob then
         local time   = info.health / fp
         local damage = info.damage * time
         local prob   = info.prob
+
+        -- just in case we end up with no monsters, have a fallback
+        if not fallback or prob < fallback.prob then
+          fallback = info
+        end
+
+--[[ !!!! NOT READY FOR THIS YET
+
+        if LEVEL.monster_prefs then
+          prob = prob * (LEVEL.monster_prefs[name] or 1)
+        end
+
+        if PLAN.theme.monster_prefs then
+          prob = prob * (PLAN.theme.monster_prefs[name] or 1)
+        end
+--]]
 
 ---     gui.debugf("  %s --> %1.2f seconds  @ %1.1f damage\n", name, info.health / fp, damage)
 
@@ -213,13 +239,21 @@ function Monsters_in_room(R)
             prob = prob * (PARAMS.mon_damage_max - damage) / diff
           end
 
-          list[name] = prob
-          gui.debugf("  %s --> prob:%1.1f\n", name, prob)
+          if prob > 0 then
+            list[name] = prob
+            gui.debugf("  %s --> prob:%1.1f\n", name, prob)
+          end
         end
       end
     end
 
-    assert(not table_empty(list))
+    assert(fallback)
+
+    if table_empty(list) then
+      gui.printf("Empty monster palette @ %s : using %s\n",
+                 R:tostr(), fallback.name)
+      list[fallback.name] = 50
+    end
 
     -- how many kinds??   FIXME: better calc!
     local num_kinds = 1
@@ -513,6 +547,8 @@ function Monsters_make_battles()
   PLAN.mixed_mons_tough = rand_range(0.8, 1.2)
 
   Player_init()
+
+  Monsters_init()
 
   local cur_arena = -1
 
