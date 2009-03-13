@@ -2853,7 +2853,7 @@ COMMON_MONSTERS =
 
   imp =
   {
-    prob=75, guard_prob=11, trap_prob=20, cage_prob=50,
+    prob=60, guard_prob=11, trap_prob=20, cage_prob=50,
     health=60, damage=20, attack="missile",
   },
 

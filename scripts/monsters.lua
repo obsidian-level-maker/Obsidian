@@ -160,7 +160,7 @@ function Monsters_in_room(R)
 
   local MONSTER_QUANTITIES =
   {
-     scarce=10, less=16, normal=22, more=30, heaps=40
+     scarce=11, less=18, normal=25, more=33, heaps=45
   }
 
   local MONSTER_TOUGHNESS =
@@ -474,13 +474,26 @@ function Monsters_in_room(R)
   end
 
   local function how_many_dudes(mon, count, qty)
+    local info = GAME.monsters[mon]
+
     if count <= 1 then return count end
 
-    local vari = int((count+3) / 5)
-    count = count + rand_irange(-vari, vari)
+    count = count * (qty / 100.0)
 
-    count = int(count * qty / 100)
-    return math.max(1, count)
+    -- adjust quantity based on monster's health
+    if info.health > PARAMS.mon_hard_health then
+      count = count / math.sqrt(info.health / PARAMS.mon_hard_health)
+    end
+
+    count = math.max(1, int(count))
+
+    -- some random variation
+    if count >= 3 then
+      local diff = int((count+1) / 4)
+      count = count + rand_irange(-diff,diff)
+    end
+
+    return count
   end
 
   local function place_monster(spot, index)
