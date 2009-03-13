@@ -145,6 +145,9 @@ function Monsters_init()
   end
 
   PLAN.mon_stats = {}
+
+  PLAN.mixed_mons_qty   = 24 + rand_skew() * 10
+  PLAN.mixed_mons_tough = rand_range(0.9, 1.1)
 end
 
 
@@ -157,12 +160,12 @@ function Monsters_in_room(R)
 
   local MONSTER_QUANTITIES =
   {
-     scarce=10, less=18, normal=25, more=32, heaps=42
+     scarce=10, less=16, normal=22, more=30, heaps=40
   }
 
   local MONSTER_TOUGHNESS =
   {
-    scarce=0.8, less=0.8, normal=1.0, more=1.2, heaps=1.2
+    scarce=0.8, less=0.9, normal=1.0, more=1.1, heaps=1.2
   }
 
 
@@ -185,11 +188,20 @@ function Monsters_in_room(R)
     if LEVEL.toughness then
       toughness = toughness * LEVEL.toughness
     elseif OB_CONFIG.length ~= "single" then
-      toughness = toughness * (1 + LEVEL.ep_along * 3.0)
+      toughness = toughness * (1 + LEVEL.ep_along * 2.0)
     end
 
-    -- within a level, each arena naturally gets tougher
-    -- due to the player picking up new weapons.
+    -- less emphasis within a level, since each arena naturally
+    -- get tougher as the player picks up new weapons.
+    if R.arena.id == 1 then
+      toughness = toughness * 0.8
+    elseif R.arena.id >= (#PLAN.all_arenas - 1) then
+      toughness = toughness * 1.3
+    end
+
+    if R.kind == "hallway" then
+      toughness = toughness * 0.7
+    end
 
     gui.debugf("Toughness = %1.3f\n", toughness)
 
@@ -471,7 +483,7 @@ function Monsters_in_room(R)
     return math.max(1, count)
   end
 
-  local function place_monster(spot)
+  local function place_monster(spot, index)
     local thing = GAME.things[spot.monster]
 
     -- FIXME: angle
@@ -480,6 +492,10 @@ function Monsters_in_room(R)
     {
       angle  = spot.angle  or 0,
       ambush = spot.ambush or 1,
+
+      skill_hard   = 1,
+      skill_medium = sel(index % 3 > 0,  1, 0),
+      skill_easy   = sel(index % 3 == 1, 1, 0),
     })
   end
 
@@ -495,10 +511,10 @@ function Monsters_in_room(R)
       actuals[mon] = how_many_dudes(mon, count, qty)
     end
 
-    for _,spot in ipairs(R.monster_spots) do
+    for index,spot in ipairs(R.monster_spots) do
       if (actuals[spot.monster] or 0) >= 1 then
+        place_monster(spot, actuals[spot.monster])
         actuals[spot.monster] = actuals[spot.monster] - 1
-        place_monster(spot)
       end
     end
   end
@@ -594,9 +610,6 @@ end
 function Monsters_make_battles()
   
   gui.printf("\n--==| Monsters_make_battles |==--\n\n")
-
-  PLAN.mixed_mons_qty   = 25 + rand_skew() * 12
-  PLAN.mixed_mons_tough = rand_range(0.8, 1.2)
 
   Player_init()
 
