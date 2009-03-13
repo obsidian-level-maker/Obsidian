@@ -2723,9 +2723,34 @@ COMMON_THEMES =
     {
       -- FIXME
     },
+
+    monster_prefs =
+    {
+      zombie=3.0, shooter=4.0, arach=2.0,
+    },
   }, -- TECH
 
-  -- TODO: HELL
+  HELL =
+  {
+    -- TODO: HELL THEME
+
+    monster_prefs =
+    {
+      zombie=0.1, shooter=0.3, arach=0.5,
+      skull=3.0,  vile=2.0, mancubus=2.0,
+    },
+  },
+
+  URBAN =
+  {
+    -- TODO: URBAN THEME
+
+    monster_prefs =
+    {
+      caco=2.0, revenant=1.5, baron=3.0, knight=2.0,
+    },
+  },
+
 }
 
 COMMON_THEMES_OLD =
