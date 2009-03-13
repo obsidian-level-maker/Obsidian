@@ -2688,6 +2688,18 @@ COMMON_ROOMS =
 
 COMMON_THEMES =
 {
+--[[  
+   (a) nature  (outdoor, grassy/rocky/muddy, water)
+   (b) urban   (outdoor, bricks/concrete,  slime)
+
+   (c) gothic     (indoor, gstone, blood, castles) 
+   (d) tech       (indoor, computers, lights, lifts) 
+   (e) cave       (indoor, rocky/ashy, darkness, lava)
+   (f) industrial (indoor, machines, lifts, crates, nukage)
+
+   (h) hell    (indoor+outdoor, fire/lava, bodies, blood)
+--]]
+
   TECH =
   {
     building =
@@ -2719,6 +2731,11 @@ COMMON_THEMES =
       -- FIXME
     },
 
+    room_types =
+    {
+      -- FIXME  COMPUTER  WAREHOUSE  PUMP
+    },
+
     scenery =
     {
       -- FIXME
@@ -2734,6 +2751,11 @@ COMMON_THEMES =
   {
     -- TODO: HELL THEME
 
+    room_types =
+    {
+      -- FIXME  TORTURE  PRISON
+    },
+
     monster_prefs =
     {
       zombie=0.1, shooter=0.3, arach=0.5,
@@ -2745,6 +2767,11 @@ COMMON_THEMES =
   {
     -- TODO: URBAN THEME
 
+    room_types =
+    {
+      -- FIXME  PRISON  WAREHOUSE
+    },
+
     monster_prefs =
     {
       caco=2.0, revenant=1.5, baron=3.0, knight=2.0,
@@ -2755,181 +2782,25 @@ COMMON_THEMES =
 
 COMMON_THEMES_OLD =
 {
---[[  
-   (a) nature  (outdoor, grassy/rocky/muddy, water)
-   (b) urban   (outdoor, bricks/concrete,  slime)
-
-   (c) gothic     (indoor, gstone, blood, castles) 
-   (d) tech       (indoor, computers, lights, lifts) 
-   (e) cave       (indoor, rocky/ashy, darkness, lava)
-   (f) industrial (indoor, machines, lifts, crates, nukage)
-
-   (h) hell    (indoor+outdoor, fire/lava, bodies, blood)
---]]
-
-  URBAN =
-  {
-    room_probs=
-    {
-      PLAIN=40, WAREHOUSE2=10, WAREHOUSE=10, PRISON=5,
-    },
-
-    exit_probs=
-    {
-      STONE=70, BROWN=50,
-    },
-
-    monster_prefs =
-    {
-      zombie=2.0, shooter=2.0, gunner=2.0,
-    },
-  },
-
-
-  INDUSTRIAL =
-  {
-    room_probs=
-    {
-      PLAIN=30, PLANT=90, WAREHOUSE=50, COMPUTER=5,
-    },
-
-    exit_probs=
-    {
-      BROWN=50, TECH=20, STONE=10, BLUE=5,
-    },
-
-    monster_prefs =
-    {
-      caco=2.0, barrel=4.0,
-    },
-  },
-
-
-  TECH =
-  {
-    room_probs=
-    {
-      PLAIN=20, COMPUTER=25, WAREHOUSE=5,
-    },
-
-    exit_probs=
-    {
-      TECH=50, BLUE=50, STARTAN=50, BROWN=5,
-    },
-
-    monster_prefs =
-    {
-      zombie=2.0, shooter=2.0, gunner=2.0,
-      barrel=2.7,
-    },
-  },
-
-
   NATURE =
   {
-    room_probs=
-    {
-      PLAIN=50,
-    },
-
-    exit_probs=
-    {
-      STONE=40, BROWN=20,
-    },
-
-    monster_prefs =
-    {
-      demon=2.5, knight=2.0, baron=2.0, pain=2.0,
-      barrel=0.5,
-    },
-
     door_probs   = { out_diff=75, combo_diff=10, normal=5 },
     window_probs = { out_diff=75, combo_diff=40, normal=40 },
-    space_range  = { 50, 90 },
 
     prefer_stairs = true,
-    trim_mode = "rough_hew",
   },
-
 
   CAVE =
   {
-    room_probs=
-    {
-      PLAIN=25, WAREHOUSE2=10, TORTURE=5, PRISON=20
-    },
-
-    exit_probs=
-    {
-      BROWN=50, STONE=10,
-    },
-
-    room_heights = { [96]=50, [128]=50 },
-
-    monster_prefs =
-    {
-      imp=3.0, skull=2.0, revenant=2.0,
-      barrel=0.5,
-    },
+    cave_heights = { [96]=50, [128]=50 },
 
     diff_probs = { [0]=10, [16]=40, [32]=80, [64]=60, [96]=20 },
     bump_probs = { [0]=5, [16]=30, [32]=30, [64]=20 },
     door_probs   = { out_diff=10, combo_diff= 3, normal=1 },
     window_probs = { out_diff=20, combo_diff=30, normal=5 },
-    space_range  = { 1, 50 },
 
     prefer_stairs = true,
-    trim_mode = "rough_hew",
   },
-
-
-  HELL =
-  {
-    room_probs=
-    {
-      PLAIN=20, TORTURE=25, PRISON=10,
-    },
-
-    exit_probs=
-    {
-      STONE=10, BROWN=10, BLOODY=50,
-    },
-
-    monster_prefs =
-    {
-      zombie=0.2, shooter=0.5, gunner=0.5,
-      spectre=2.0, vile=2.0, arach=2.0,
-    },
-  },
-
-
-  WOLF =
-  {
-    room_probs=
-    {
-      PLAIN=50,
-    },
-
-    monster_prefs =
-    {
-      -- the SS guard normally has a very low probability, hence
-      -- we need a very large multiplier to make him dominant.
-      ss_dude=5000,
-    },
-  },
-}
-
-COMMON_QUEST_LEN_PROBS =
-{
-  ----------  2   3   4   5   6   7   8  9  10  -------
-
-  key    = {  0, 17, 50, 90, 65, 30, 10, 2 },
-  exit   = {  0, 17, 50, 90, 65, 30, 10, 2 },
-
-  switch = {  0, 50, 90, 50, 25, 5, 1 },
-
-  weapon = { 25, 90, 50, 10, 2 },
-  item   = { 15, 70, 70, 15, 2 },
 }
 
 
@@ -2968,27 +2839,27 @@ COMMON_MONSTERS =
 {
   zombie =
   {
-    prob=50, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=40, guard_prob=11, trap_prob=11, cage_prob=11,
     health=20, damage=4, attack="hitscan",
     give={ {ammo="bullet",count=5} },
   },
 
   shooter =
   {
-    prob=50, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=60, guard_prob=11, trap_prob=11, cage_prob=11,
     health=30, damage=10, attack="hitscan",
     give={ {weapon="shotty"}, {ammo="shell",count=4} },
   },
 
   imp =
   {
-    prob=70, guard_prob=11, trap_prob=20, cage_prob=50,
+    prob=75, guard_prob=11, trap_prob=20, cage_prob=50,
     health=60, damage=20, attack="missile",
   },
 
   skull =
   {
-    prob=14, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=20, guard_prob=11, trap_prob=11, cage_prob=11,
     health=100, damage=7, attack="melee",
     float=true,
   },
@@ -3001,7 +2872,7 @@ COMMON_MONSTERS =
 
   spectre =
   {
-    prob=10, guard_prob=11, trap_prob=61,
+    prob=5, guard_prob=11, trap_prob=61,
     health=150, damage=25, attack="melee",
     invis=true,
   },
@@ -3038,13 +2909,13 @@ DOOM2_MONSTERS =
 
   knight =
   {
-    prob=70, guard_prob=41, trap_prob=41, cage_prob=11,
+    prob=60, guard_prob=41, trap_prob=41, cage_prob=11,
     health=500, damage=45, attack="missile",
   },
 
   mancubus =
   {
-    prob=35, guard_prob=41, trap_prob=41, cage_prob=11,
+    prob=33, guard_prob=41, trap_prob=41, cage_prob=11,
     health=600, damage=80, attack="missile",
   },
 
@@ -3056,7 +2927,7 @@ DOOM2_MONSTERS =
 
   vile =
   {
-    prob=5, guard_prob=11, trap_prob=31, cage_prob=21,
+    prob=10, guard_prob=11, trap_prob=31, cage_prob=21,
     health=700, damage=40, attack="hitscan", no_dist=true,
   },
 
