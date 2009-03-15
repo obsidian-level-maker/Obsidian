@@ -3,11 +3,11 @@ TODO
 ====
 
 
-Ceilings:
-  - don't always trim the sky hole
-  
-  - put several small light fittings/sky holes with
-    simple patterns (e.g. inner 2x2 seeds, or outer corners)
+Pickups:
+  -  add weapons
+  -  add health & ammo & armor
+  -  ammo for start room weapon
+  -  add powerups
 
 
 Monsters:
@@ -29,33 +29,25 @@ Monsters:
              take to kill.  TOO LONG = skip monster,
              TOO SHORT = skip or bump chance way down.
 
-     (2) repeat
-         (a) pick a monster from that palette
-         (b) find a seed for it, otherwise remove from palette
-         until palette is empty
-         (c) for 2nd+ pass, use more seeds for big monsters
-
   +  once we have the monster map, all we need then is some
      idea of QUANTITIES.
 
      +  the skill level controls how many monsters to add.
         Each monster is always present in "hard" and may be
-        omitted for lower skills.  Maybe: medium keep 75%,
-        easy keep 50%.  (always keep at least one).
+        omitted for lower skills.  Maybe: medium keep 66%,
+        easy keep 33%.  (always keep at least one).
 
      +  the GUI 'Monsters' setting not only controls how many
         monsters, but also affects difficulty, though quantity
         is more significant than the difficulty adjustment.
 
-  -  decide level-wide monster palette (no monsters are used
+  #  decide level-wide monster palette (no monsters are used
      which are not in this palette).  Could save big monsters
      (arach, mancubus) for later levels and omit small ones
      (esp. pistol zombie).  Perhaps have a palette for each
      usage kind (free-range, guard, trap, cage) ??
 
-  -  add some monsters
-     - decide the monster 'palette' for each arena
-
+  #  add some monsters
   -  cages & ledges
   -  monster closets
   -  pop-ups 
@@ -63,9 +55,11 @@ Monsters:
   -  facing entry door [blaze D1]
 
 
-Pickups:
-  -  add weapons & powerups
-  -  add health & ammo & armor
+Ceilings:
+  - put several small light fittings/sky holes with
+    simple patterns (e.g. inner 2x2 seeds, or outer corners)
+
+  - don't always trim the sky hole
 
 
 Fight Sim: reimplement monster-weapon preferences
