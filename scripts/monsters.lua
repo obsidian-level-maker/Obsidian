@@ -602,7 +602,7 @@ function Monsters_in_room(R)
     return
   end
 
-  if R.purpose == "START" then
+  if R.purpose == "START" and not R.has_raising_start then
     return
   end
 
