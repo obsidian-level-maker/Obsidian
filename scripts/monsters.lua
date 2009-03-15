@@ -540,15 +540,42 @@ function Monsters_in_room(R)
     return count
   end
 
+  local function monster_angle(S)
+    -- TODO: sometimes make all monsters (or a certain type) face
+    --       the same direction, or look towards the entrance, or
+    --       towards the guard_spot.
+
+    if rand_odds(20) then
+      return rand_irange(0,7) * 45
+    end
+
+    local delta = rand_irange(-1,1) * 45
+
+    if R.sh > R.sw then
+      if S.sy > (R.sy1 + R.sy2) / 2 then 
+        return 270 + delta
+      else
+        return 90 + delta
+      end
+    else
+      if S.sx > (R.sx1 + R.sx2) / 2 then 
+        return 180 + delta
+      else
+        return sel(delta < 0, 315, delta)
+      end
+    end
+  end
+
   local function place_monster(spot, index)
     local thing = GAME.things[spot.monster]
 
-    -- FIXME: angle
+    local angle  = monster_angle(spot.S)
+    local ambush = rand_sel(92, 1, 0)
 
     gui.add_entity(tostring(thing.id), spot.x, spot.y, spot.S.floor_h + 25,
     {
-      angle  = spot.angle  or 0,
-      ambush = spot.ambush or 1,
+      angle  = spot.angle  or angle,
+      ambush = spot.ambush or ambush,
 
       skill_hard   = 1,
       skill_medium = sel(index % 3 > 0,  1, 0),
