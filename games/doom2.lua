@@ -1822,7 +1822,7 @@ OB_GAMES["doom2"] =
     -- not reflect any buffer limits in Doom ports.
     max_level_desc = 28,
 
-    palette_mons = 5,
+    skip_monsters = { 3,5 },
 
     mon_time_max = 12,
     mon_hard_health = 150,

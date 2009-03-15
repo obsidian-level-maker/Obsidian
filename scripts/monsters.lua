@@ -150,6 +150,44 @@ function Monsters_init()
   PLAN.mixed_mons_tough = rand_range(0.9, 1.1)
 end
 
+function Monsters_global_palette()
+  -- Decides which monsters we will use on this level.
+  -- Easiest way is to pick some monsters NOT to use.
+
+  if not PARAMS.skip_monsters then return end
+
+  -- if already have level prefs, don't overwrite
+  if LEVEL.monster_prefs then return end
+
+  LEVEL.monster_prefs = {}
+
+  -- sometimes promote a particular monster
+  if rand_odds(25) then
+    gui.debugf("Promoting monster: %s\n", list[#list])
+    LEVEL.monster_prefs[list[#list]] = 4.0
+  end
+
+  -- sometimes allow the whole damn lot
+  if LEVEL.ep_along >= 0.5 and rand_odds(15) then return end
+
+  local list = {}
+  for name,info in pairs(GAME.monsters) do
+    if info.prob then
+      table.insert(list, name)
+    end
+  end
+
+  rand_shuffle(list)
+
+  local count = rand_irange(PARAMS.skip_monsters[1], PARAMS.skip_monsters[2])
+  assert(count < #list)
+
+  for i = 1,count do
+    LEVEL.monster_prefs[list[i]] = 0
+    gui.debugf("Skipping monster: %s\n", list[i])
+  end
+end
+
 
 function Monsters_do_pickups()
   -- FIXME: pickups
@@ -188,7 +226,7 @@ function Monsters_in_room(R)
     if LEVEL.toughness then
       toughness = toughness * LEVEL.toughness
     elseif OB_CONFIG.length ~= "single" then
-      toughness = toughness * (1 + LEVEL.ep_along * 3.0)
+      toughness = toughness * (1 + LEVEL.ep_along * 2.6)
     end
 
     -- less emphasis within a level, since each arena naturally
@@ -196,7 +234,7 @@ function Monsters_in_room(R)
     if R.arena.id == 1 then
       toughness = toughness * 0.8
     elseif R.arena.id >= (#PLAN.all_arenas - 1) then
-      toughness = toughness * 1.4
+      toughness = toughness * 1.5
     end
 
     if R.kind == "hallway" then
@@ -627,6 +665,7 @@ function Monsters_make_battles()
   Player_init()
 
   Monsters_init()
+  Monsters_global_palette()
 
   local cur_arena = -1
 

@@ -3811,7 +3811,7 @@ UNFINISHED["doom1"] =
 
     max_level_desc = 28,
 
-    palette_mons = 3,
+    skip_monsters = { 1,3 },
   },
 
   hooks =
