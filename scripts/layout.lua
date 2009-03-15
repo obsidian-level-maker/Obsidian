@@ -1656,6 +1656,14 @@ function Layout_one(R)
                        mx, my - dist, z1 + 35, { angle=angle })
       end
 
+      -- never put monsters next to the start spot
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
+        if N and N.room == R then
+          N.no_monster = true
+        end
+      end
+
     elseif R.purpose == "EXIT" then
       local CS = R.conns[1]:seed(R)
       local dir = dir_for_wotsit(S)
