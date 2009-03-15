@@ -2889,6 +2889,19 @@ COMMON_MONSTERS =
     prob=20, guard_prob=11, trap_prob=11, cage_prob=3,
     health=1000, damage=45, attack="missile",
   },
+
+
+  ---| DOOM BOSSES |---
+
+  Cyberdemon =
+  {
+    health=4000, damage=150, attack="missile",
+  },
+
+  Mastermind =
+  {
+    health=3000, damage=200, attack="hitscan",
+  },
 }
 
 
@@ -2944,19 +2957,6 @@ DOOM2_MONSTERS =
     -- not generated in normal levels
     health=50, damage=15, attack="hitscan",
     give={ {ammo="bullet",count=5} },
-  },
-
-
-  ---| DOOM BOSSES |---
-
-  Cyberdemon =
-  {
-    health=4000, damage=150, attack="missile",
-  },
-
-  Mastermind =
-  {
-    health=3000, damage=200, attack="hitscan",
   },
 }
 
