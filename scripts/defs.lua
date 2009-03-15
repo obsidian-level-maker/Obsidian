@@ -71,6 +71,11 @@ EXTREME_H = 4000
 
 -- Fight Simulator constants and tables
 
+HEALTH_AMMO_ADJUSTS =
+{
+  none=0, scarce=0.4, less=0.7, normal=1.0, more=1.5, heaps=2.5,
+}
+
 PLAYER_ACCURACIES = { easy=0.50, medium=0.65, hard=0.80 }
 
 HITSCAN_RATIOS = { 1.0, 0.8, 0.6, 0.4, 0.2, 0.1 }

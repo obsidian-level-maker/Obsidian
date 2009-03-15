@@ -691,7 +691,22 @@ function Monsters_in_room(R)
     end
   end
 
-  local function adjust_for_hmodel(ammos, hmodel)
+  local function user_adjust_result(ammos)
+    -- apply the user's health/ammo adjustments here
+
+    local heal_mul = 1.00 * HEALTH_AMMO_ADJUSTS[OB_CONFIG.health]
+    local ammo_mul = 1.00 * HEALTH_AMMO_ADJUSTS[OB_CONFIG.ammo]
+
+    for name,qty in pairs(ammos) do
+      if name == "health" then
+        ammos[name] = ammos.health * heal_mul
+      else
+        ammos[name] = qty * ammo_mul
+      end
+    end
+  end
+
+  local function subtract_gotten_stuff(ammos, hmodel)
     if ammos.health > 0 and hmodel.health > 0 then
       local min_h = math.min(hmodel.health, ammos.health)
 
@@ -699,10 +714,11 @@ function Monsters_in_room(R)
       ammos .health = ammos. health - min_h
     end
 
-    for name,h_qty in pairs(hmodel.ammos) do
-      local am_qty = ammos[name] or 0
-      if am_qty > 0 and h_qty > 0 then
-        local min_q = math.min(am_qty, h_qty)
+    for name,got_qty in pairs(hmodel.ammos) do
+      local ammo_qty = ammos[name] or 0
+      if ammo_qty > 0 and got_qty > 0 then
+        local min_q = math.min(ammo_qty, got_qty)
+
         hmodel.ammos[name] = hmodel.ammos[name] - min_q
                ammos[name] =        ammos[name] - min_q
       end
@@ -747,31 +763,24 @@ function Monsters_in_room(R)
         local weap_list = collect_weapons(hmodel)
         local ammos = {}
 
-        if SK == "medium" then
-          gui.debugf("Fight simulator @ %s:\n", R:tostr())
-          gui.debugf("weapons = \n")
-          for _,info in ipairs(weap_list) do
-            gui.debugf("  %s\n", info.name)
-          end
+        gui.debugf("Fight simulator @ %s  SK:%s\n", R:tostr(), SK)
+        gui.debugf("weapons = \n")
+        for _,info in ipairs(weap_list) do
+          gui.debugf("  %s\n", info.name)
         end
 
         Fight_simulator(mon_list, weap_list, SK, ammos)
+        gui.debugf("raw result = \n%s\n", table_to_str(ammos,1))
 
-        if SK == "medium" then
-          gui.debugf("raw result = \n%s\n", table_to_str(ammos,1))
-        end
+        user_adjust_result(ammos)
+        gui.debugf("adjusted result = \n%s\n", table_to_str(ammos,1))
 
         give_monster_drops(mon_list, hmodel)
 
-        -- take into account stuff the player already has and
-        -- stuff the player got during the battle.
-        adjust_for_hmodel(ammos, hmodel)
+        subtract_gotten_stuff(ammos, hmodel)
 
         R.fight_result[SK][CL] = ammos
-
-        if SK == "medium" then
-          gui.debugf("adjusted result = \n%s\n", table_to_str(ammos,1))
-        end
+        gui.debugf("final result = \n%s\n", table_to_str(ammos,1))
       end -- for CL
 
     end
