@@ -3114,13 +3114,13 @@ COMMON_PICKUPS =
 
   soul =
   {
-    prob=10,
+    prob=10, big_item=true,
     give={ {health=150} },
   },
 
   mega =
   {
-    prob=2,
+    prob=2, big_item=true,
     give={ {health=200} },
   },
 
@@ -3134,13 +3134,13 @@ COMMON_PICKUPS =
 
   green_armor =
   {
-    prob=5,
+    prob=5, big_item=true,
     give={ {health=30} },
   },
 
   blue_armor =
   {
-    prob=5,
+    prob=5, big_item=true,
     give={ {health=90} },
   },
 
