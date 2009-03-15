@@ -3000,7 +3000,7 @@ COMMON_WEAPONS =
 
   saw =
   {
-    pref=4, add_prob=2, start_prob=10,
+    add_prob=2, start_prob=10,
     rate=8.7, damage=10, attack="melee",
   },
 
