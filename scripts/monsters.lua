@@ -79,6 +79,31 @@ function Player_give_weapon(weapon, to_CL)
   end -- for SK
 end
 
+function Player_give_stuff(hmodel, give_list)
+  for _,give in ipairs(give_list) do
+    if give.health then
+      gui.debugf("Giving [%s/%s] health: %d\n",
+                 hmodel.class, hmodel.skill, give.health)
+      hmodel.health = hmodel.health + give.health
+
+    elseif give.ammo then
+      gui.debugf("Giving [%s/%s] ammo: %dx %s\n",
+                 hmodel.class, hmodel.skill, give.count, give.ammo)
+
+      local count = assert(hmodel.ammos[give.ammo])
+      hmodel.ammos[give.ammo] = count + give.count
+
+    elseif give.weapon then
+      gui.debugf("Giving [%s/%s] weapon: %s\n",
+                 hmodel.class, hmodel.skill, give.weapon)
+
+      hmodel.weapons[give.weapon] = 1
+    else
+      error("Bad give item : not health, ammo or weapon")
+    end
+  end
+end
+
 function Player_calc_firepower()
   -- The 'firepower' is (roughly) how much damage per second
   -- the player would normally do using their current set of
@@ -143,6 +168,8 @@ function Monsters_init()
     info.name  = name
     info.thing = assert(GAME.things[name])
   end
+
+  name_it_up(GAME.weapons)
 
   PLAN.mon_stats = {}
 
@@ -566,11 +593,32 @@ function Monsters_in_room(R)
     end
   end
 
+  local function add_to_list(SK, spot)
+    if not R.monster_list[SK] then
+      R.monster_list[SK] = {}
+    end
+
+    table.insert(R.monster_list[SK], spot.info)
+  end
+
   local function place_monster(spot, index)
     local thing = GAME.things[spot.monster]
 
     local angle  = monster_angle(spot.S)
     local ambush = rand_sel(92, 1, 0)
+
+    -- minimum skill needed for the monster to appear
+    local skill
+
+    if true then
+      skill = 3 ; add_to_list(SKILLS[skill], spot)
+    end
+    if (index % 3) > 0 then
+      skill = 2 ; add_to_list(SKILLS[skill], spot)
+    end
+    if (index % 3) == 1 then
+      skill = 1 ; add_to_list(SKILLS[skill], spot)
+    end
 
     gui.add_entity(tostring(thing.id), spot.x, spot.y, spot.S.floor_h + 25,
     {
@@ -578,9 +626,11 @@ function Monsters_in_room(R)
       ambush = spot.ambush or ambush,
 
       skill_hard   = 1,
-      skill_medium = sel(index % 3 > 0,  1, 0),
-      skill_easy   = sel(index % 3 == 1, 1, 0),
+      skill_medium = sel(skill >= 2, 1, 0),
+      skill_easy   = sel(skill >= 1, 1, 0),
     })
+
+    spot.S.content = "monster"
   end
 
   local function fill_monster_map(qty)
@@ -604,7 +654,6 @@ function Monsters_in_room(R)
   end
 
   local function add_monsters()
-
     local toughness = calc_toughness()
 
     local palette = select_monsters(toughness)
@@ -615,6 +664,49 @@ function Monsters_in_room(R)
                 PLAN.mixed_mons_qty  -- the "mixed" setting
 
     fill_monster_map(qty)
+  end
+
+  local function collect_weapons(hmodel)
+    local list = {}
+
+    for name,_ in pairs(hmodel.weapons) do
+      local info = assert(GAME.weapons[name])
+      if info.pref then
+        table.insert(list, info)
+      end
+    end
+
+    if #list == 0 then
+      error("No usable weapons???")
+    end
+
+    return list
+  end
+
+  local function give_monster_drops(mon_list, hmodel)
+    for _,info in ipairs(mon_list) do
+      if info.give then
+        Player_give_stuff(hmodel, info.give)
+      end
+    end
+  end
+
+  local function adjust_for_hmodel(ammos, hmodel)
+    if ammos.health > 0 and hmodel.health > 0 then
+      local min_h = math.min(hmodel.health, ammos.health)
+
+      hmodel.health = hmodel.health - min_h
+      ammos .health = ammos. health - min_h
+    end
+
+    for name,h_qty in pairs(hmodel.ammos) do
+      local am_qty = ammos[name] or 0
+      if am_qty > 0 and h_qty > 0 then
+        local min_q = math.min(am_qty, h_qty)
+        hmodel.ammos[name] = hmodel.ammos[name] - min_q
+               ammos[name] =        ammos[name] - min_q
+      end
+    end
   end
 
 
@@ -642,26 +734,47 @@ function Monsters_in_room(R)
 
   add_monsters()
 
-do return end --FIXME !!!!!!
+
+  -- simulate the battle!!
 
   for _,SK in ipairs(SKILLS) do
-
     R.fight_result[SK] = {}
 
-    local mon_list = collect_monsters(SK)
+    local mon_list = R.monster_list[SK]
+    if mon_list and #mon_list >= 1 then
 
-    for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+      for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+        local weap_list = collect_weapons(hmodel)
+        local ammos = {}
 
-      local weap_list = collect_weapons(hmodel)
-      local ammos = {}
+        if SK == "medium" then
+          gui.debugf("Fight simulator @ %s:\n", R:tostr())
+          gui.debugf("weapons = \n")
+          for _,info in ipairs(weap_list) do
+            gui.debugf("  %s\n", info.name)
+          end
+        end
 
-      Fight_simulator(mon_list, weap_list, SK, ammos)
+        Fight_simulator(mon_list, weap_list, SK, ammos)
 
-      give_monster_drops(mon_list, hmodel, ammos)
-    
-      R.fight_result[SK][CL] = ammos
+        if SK == "medium" then
+          gui.debugf("raw result = \n%s\n", table_to_str(ammos,1))
+        end
 
-    end -- for CL
+        give_monster_drops(mon_list, hmodel)
+
+        -- take into account stuff the player already has and
+        -- stuff the player got during the battle.
+        adjust_for_hmodel(ammos, hmodel)
+
+        R.fight_result[SK][CL] = ammos
+
+        if SK == "medium" then
+          gui.debugf("adjusted result = \n%s\n", table_to_str(ammos,1))
+        end
+      end -- for CL
+
+    end
   end -- for SK
 end
 
@@ -707,7 +820,7 @@ function Monsters_make_battles()
   -- and simulate each battle.
 
   for _,R in ipairs(PLAN.all_rooms) do
-    if R.arena.weapon and (R.arena.id > cur_arena) and not R.skip_weapon then
+    if R.arena.weapon and (R.arena.id > cur_arena) then  ---??? and not R.skip_weapon then
       Player_give_weapon(R.arena.weapon)
       cur_arena = R.arena.id
     end

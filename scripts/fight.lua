@@ -79,22 +79,22 @@ require 'util'
 
 function Fight_simulator(monsters, weapons, skill, ammos)
 
-  local active_mon = {}
+  local active_mons = {}
 
   local shoot_accuracy = PLAYER_ACCURACIES[skill]
 
 
   local function remove_dead_mon()
-    for i = #active_mon,1,-1 do
-      if active_mon[i].health <= 0 then
-        table.remove(active_mon, i)
+    for i = #active_mons,1,-1 do
+      if active_mons[i].health <= 0 then
+        table.remove(active_mons, i)
       end
     end
   end
 
   local function select_weapon()
 
-    local first_mon = active_mon[1].info.name
+    local first_mon = active_mons[1].info.name
     assert(first_mon)
 
     -- preferred weapon based on monster
@@ -126,7 +126,7 @@ function Fight_simulator(monsters, weapons, skill, ammos)
 
 
   local function hurt_mon(idx, W, damage)
-    local M = active_mon[idx]
+    local M = active_mons[idx]
 
     if not M then return end
 
@@ -154,8 +154,8 @@ function Fight_simulator(monsters, weapons, skill, ammos)
     end
 
     -- update ammo counter
-    if W.info.ammo then
-      ammos[W.info.ammo] = (ammos[W.info.ammo] or 0) + W.per
+    if W.ammo then
+      ammos[W.ammo] = (ammos[W.ammo] or 0) + W.per
     end
 
     return time
@@ -180,19 +180,21 @@ function Fight_simulator(monsters, weapons, skill, ammos)
 
     elseif info.attack == "melee" then
       hit_ratio   = MELEE_RATIOS[idx]
-      dodge_ratio = MELEE_DODGES[idx]
+      dodge_ratio = MELEE_DODGES[skill]
 
     elseif info.attack == "hitscan" then
       hit_ratio   = HITSCAN_RATIOS[idx]
-      dodge_ratio = HITSCAN_DODGES[idx]
+      dodge_ratio = HITSCAN_DODGES[skill]
 
     elseif info.attack == "missile" then
       hit_ratio   = MISSILE_RATIOS[idx]
-      dodge_ratio = MISSILE_DODGES[idx]
+      dodge_ratio = MISSILE_DODGES[skill]
 
     else
       error("Unknown monster attack kind: " .. tostring(info.attack))
     end
+
+    assert(dodge_ratio)
 
     -- monster is too far away to hurt player?
     if not hit_ratio then return end
@@ -241,7 +243,7 @@ function Fight_simulator(monsters, weapons, skill, ammos)
   end
 
   local function monsters_shoot(time)
-    for idx,M in ipairs(active_mon) do
+    for idx,M in ipairs(active_mons) do
       if M.health > 0 then
         monster_hit_player(M, idx, time)
         if idx >= 2 then
@@ -257,14 +259,14 @@ function Fight_simulator(monsters, weapons, skill, ammos)
   ammos.health = 0
 
   for _,info in ipairs(monsters) do
-    table.insert(active_mon, { info=info, health=info.health })
+    table.insert(active_mons, { info=info, health=info.health })
   end
 
   -- let the monsters throw the first punch (albeit a weak one)
   -- IDEA: can pass in a 'surprise_time' value
   monsters_shoot(0.5)
 
-  while #active_mon > 0 do
+  while #active_mons > 0 do
     local W = select_weapon()
 
     local shots = int(rand_range(2.0, 8.0) * W.rate + 0.5)
