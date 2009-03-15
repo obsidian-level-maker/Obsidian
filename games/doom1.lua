@@ -3265,7 +3265,7 @@ COMMON_INITIAL_MODEL =
 
     health = 100,
     weapons = { fist=1, pistol=1 },
-    ammo = { bullet=20, shell=0, rocket=0, cell=0 },
+    ammos = { bullet=20, shell=0, rocket=0, cell=0 },
   }
 }
 

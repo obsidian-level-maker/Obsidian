@@ -672,7 +672,7 @@ QUAKE2_INITIAL_MODEL =
   {
     health = 100,
     weapons = { blaster=1 },
-    ammo = { bullet=0, shell=0, grenade=0, rocket=0, slug=0, cell=0 },
+    ammos = { bullet=0, shell=0, grenade=0, rocket=0, slug=0, cell=0 },
   }
 }
 

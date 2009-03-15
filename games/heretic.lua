@@ -1732,8 +1732,8 @@ HERETIC_INITIAL_MODEL =
   {
     health = 100,
     weapons = { staff=1, wand=1 },
-    ammo = { crystal=30, arrow=0, rune=0,
-             claw_orb=0, flame_orb=0, mace_orb=0 },
+    ammos = { crystal=30, arrow=0, rune=0,
+              claw_orb=0, flame_orb=0, mace_orb=0 },
 
   }
 }

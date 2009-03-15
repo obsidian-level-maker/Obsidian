@@ -645,7 +645,7 @@ WOLF_INITIAL_MODEL =
   {
     health = 100,
     weapons = { knife=1, pistol=1 },
-    ammo = { bullet=8 },
+    ammos = { bullet=8 },
   }
 }
 

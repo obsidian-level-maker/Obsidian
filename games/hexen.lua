@@ -1499,21 +1499,21 @@ HEXEN_INITIAL_MODEL =
   {
     health = 100,
     weapons = { f_gaunt=1 },
-    ammo = { blue_mana=0, green_mana=0 },
+    ammos = { blue_mana=0, green_mana=0 },
   },
 
   cleric =
   {
     health = 100,
     weapons = { c_mace=1 },
-    ammo = { blue_mana=0, green_mana=0 },
+    ammos = { blue_mana=0, green_mana=0 },
   },
 
   mage =
   {
     health = 100,
     weapons = { m_wand=1 },
-    ammo = { blue_mana=0, green_mana=0 },
+    ammos = { blue_mana=0, green_mana=0 },
   },
 }
 
