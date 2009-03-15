@@ -2929,13 +2929,14 @@ DOOM2_MONSTERS =
   {
     prob=12, guard_prob=11, trap_prob=31, cage_prob=21,
     health=700, damage=40, attack="hitscan", no_dist=true,
+    never_promote=true,
   },
 
   pain =
   {
     prob=6, trap_prob=11,
     health=400, damage=50, attack="missile",
-    float=true,
+    float=true, never_promote=true,
   },
 
   ss_dude =

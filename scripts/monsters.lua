@@ -161,15 +161,6 @@ function Monsters_global_palette()
 
   LEVEL.monster_prefs = {}
 
-  -- sometimes promote a particular monster
-  if rand_odds(25) then
-    gui.debugf("Promoting monster: %s\n", list[#list])
-    LEVEL.monster_prefs[list[#list]] = 4.0
-  end
-
-  -- sometimes allow the whole damn lot
-  if LEVEL.ep_along >= 0.5 and rand_odds(15) then return end
-
   local list = {}
   for name,info in pairs(GAME.monsters) do
     if info.prob then
@@ -178,6 +169,21 @@ function Monsters_global_palette()
   end
 
   rand_shuffle(list)
+
+  -- sometimes promote a particular monster
+  if rand_odds(25) then
+    local promote = list[#list]
+    local info = GAME.monsters[promote]
+    if not info.never_promote then
+      gui.debugf("Promoting monster: %s\n", promote)
+      LEVEL.monster_prefs[promote] = 4.0
+    end
+  end
+
+---??  -- sometimes allow the whole damn lot
+---??  if LEVEL.ep_along >= 0.5 and rand_odds(15) then
+---??    return
+---??  end
 
   local count = rand_irange(PARAMS.skip_monsters[1], PARAMS.skip_monsters[2])
   assert(count < #list)
@@ -226,7 +232,7 @@ function Monsters_in_room(R)
     if LEVEL.toughness then
       toughness = toughness * LEVEL.toughness
     elseif OB_CONFIG.length ~= "single" then
-      toughness = toughness * (1 + LEVEL.ep_along * 2.6)
+      toughness = toughness * (1 + LEVEL.ep_along * 2.4)
     end
 
     -- less emphasis within a level, since each arena naturally
