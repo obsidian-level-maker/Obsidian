@@ -1975,7 +1975,7 @@ end
       {
         t_face = { texture=f_tex },
         b_face = { texture=f_tex },
-        w_face = { texture="ZZZFACE1" },  -- FIXME w_tex
+        w_face = { texture="TEKWALL6" },  -- FIXME w_tex
       },
       {
         { x=x2, y=y1 }, { x=x2, y=y2 },
@@ -2110,14 +2110,14 @@ function Rooms_build_all()
 
   PLAN.sky_mode = OB_CONFIG.outdoors
   if not PLAN.sky_mode or PLAN.sky_mode == "mixed" then
-    PLAN.sky_mode = rand_key_by_probs { few=30, some=60, heaps=30 }
+    PLAN.sky_mode = rand_key_by_probs { few=20, some=60, heaps=40 }
   end
   gui.printf("Sky Mode: '%s'\n", PLAN.sky_mode)
 
   PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=30 }
   gui.printf("Hallway Mode: %s\n", PLAN.hallway_mode)
 
-  PLAN.liquid_mode = rand_key_by_probs { few=20, some=35, heaps=10 }
+  PLAN.liquid_mode = rand_key_by_probs { few=30, some=50, heaps=20 }
   gui.printf("Liquid Mode: %s\n", PLAN.liquid_mode)
 
   PLAN.junk_mode = rand_key_by_probs { few=10, some=60, heaps=20 }
