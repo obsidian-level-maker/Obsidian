@@ -313,7 +313,7 @@ public:
     merge_region_c *R = GetRegion();
 
     SYS_ASSERT(R);
-    SYS_ASSERT(gap >= 0 && gap < R->gaps.size());
+    SYS_ASSERT(gap >= 0 && gap < (int)R->gaps.size());
 
     return R->gaps[gap];
   }
@@ -704,6 +704,7 @@ static void AddIntersection(std::vector<intersection_c *>& cut_list,
   cut_list.push_back(K);
 }
 
+#if 0
 static void DumpIntersections(std::vector<intersection_c *>& cut_list)
 {
   static const char *closed_names[4] =
@@ -725,6 +726,7 @@ fprintf(stderr, "(%1.1f %1.1f) along:%8.3f closed:%s\n",
 
 fprintf(stderr, "\n");
 }
+#endif
 
 static void MergeIntersections(std::vector<intersection_c *>& cut_list)
 {
@@ -1605,7 +1607,7 @@ static void MakeWallFace(qFace_c *F, qNode_c *N, dface2_t *face)
   qLeaf_c *leaf = F->leaf;
   SYS_ASSERT(leaf);
 
-  merge_gap_c *gap = R->gaps.at(F->gap);
+///  merge_gap_c *gap = R->gaps.at(F->gap);
 
   double z1 = F->z1;
   double z2 = F->z2;

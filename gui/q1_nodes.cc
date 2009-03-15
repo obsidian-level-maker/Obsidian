@@ -721,6 +721,7 @@ static void AddIntersection(std::vector<intersection_c *>& cut_list,
   cut_list.push_back(K);
 }
 
+#if 0
 static void DumpIntersections(std::vector<intersection_c *>& cut_list)
 {
   static const char *closed_names[4] =
@@ -742,6 +743,7 @@ fprintf(stderr, "(%1.1f %1.1f) along:%8.3f closed:%s\n",
 
 fprintf(stderr, "\n");
 }
+#endif
 
 static void MergeIntersections(std::vector<intersection_c *>& cut_list)
 {
@@ -1657,7 +1659,7 @@ static void MakeWallFace(qFace_c *F, dface_t *face)
   merge_region_c *R = S->GetRegion();
   SYS_ASSERT(R);
 
-  merge_gap_c *gap  = R->gaps.at(F->gap);
+///  merge_gap_c *gap = R->gaps.at(F->gap);
 
   double z1 = F->z1;
   double z2 = F->z2;
