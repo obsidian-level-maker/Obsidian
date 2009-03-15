@@ -1622,7 +1622,7 @@ function Layout_one(R)
     local mx, my = S:mid_point()
 
     if R.purpose == "START" then
-      if rand_odds(10) then
+      if R.svolume >= 24 and rand_odds(35) then
         gui.debugf("Raising Start made\n")
 
         local info =
@@ -1634,6 +1634,7 @@ function Layout_one(R)
 
         Build_raising_start(S, 6, z1, info)
         S.no_floor = true
+        R.has_raising_start = true
       else
         Build_pedestal(S, z1, "O_BOLT", "CEMENT2", 36, -8)
       end
