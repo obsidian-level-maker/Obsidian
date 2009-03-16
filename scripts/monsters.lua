@@ -337,7 +337,7 @@ function Monsters_do_pickups()
       local score
 
       if S.room == R and S.kind == "walk" and
-         not S.purpose and not (S.content == "pillar")
+         (not S.content or S.content == "monster")
       then
         score = eval_big_spot(S)
         if score >= 0 then
