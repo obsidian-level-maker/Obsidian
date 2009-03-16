@@ -299,21 +299,42 @@ function Monsters_do_pickups()
     local item_tab = {}
 
     for name,info in pairs(GAME.pickups) do
-      if (stat == "health" and info.give[1].health) or
+      if info.prob and
+         (stat == "health" and info.give[1].health) or
          (info.give[1].ammo == stat)
       then
-        local prob = assert(info.prob)
+        item_tab[name] = info.prob
 
-        -- FIXME: better calc
-
-        item_tab[name] = prob
+---###    local each_qty = info.give[1].health or info.give[1].count
+---###    local min_num  = (info.cluster and info.cluster[1]) or 1
+---###    local max_num  = (info.cluster and info.cluster[2]) or 1
+---###    if each_qty * max_num > qty then prob = prob / 20 end
       end
     end
 
     assert(not table_empty(item_tab))
     local name = rand_key_by_probs(item_tab)
+    local info = GAME.pickups[name]
 
-    return GAME.pickups[name]
+    local count = 1
+    
+    if info.cluster then
+      local each_qty = info.give[1].health or info.give[1].count
+      local min_num  = info.cluster[1]
+      local max_num  = info.cluster[2]
+
+      --- count = rand_irange(min_num, max_num)
+
+      if min_num * each_qty >= qty then
+        count = 1
+      elseif max_num * each_qty <= qty then
+        count = max_num - rand_sel(20,1,0)
+      else
+        count = 1 + int(qty / each_qty)
+      end
+    end
+
+    return GAME.pickups[name], count
   end
 
   local function select_pickups(R, stat, qty, hmodel)
@@ -331,14 +352,14 @@ gui.debugf("Initial = %s:%1.1f\n", stat, hmodel.ammos[stat])
     local item_list = {}
 
     while qty > 0 do
-      local item = decide_pickup(stat, qty)
-      table.insert(item_list, item)
+      local item, count = decide_pickup(stat, qty)
+      table.insert(item_list, { item=item, count=count })
       
       if stat == "health" then
-        qty = qty - item.give[1].health
+        qty = qty - item.give[1].health * count
       else
         assert(item.give[1].ammo)
-        qty = qty - item.give[1].count
+        qty = qty - item.give[1].count * count
       end
     end
 
@@ -366,8 +387,10 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
         local item_list = select_pickups(R, stat, qty, hmodel)
 
         gui.debugf("Item list for %s:%1.1f [%s/%s] @ %s\n", stat,qty, CL,SK, R:tostr())
-        for _,info in ipairs(item_list) do
-          gui.debugf("   %s (%d)\n", info.name, info.give[1].health or info.give[1].count)
+        for _,pair in ipairs(item_list) do
+          local item = pair.item
+          gui.debugf("   %dx %s (%d)\n", pair.count, item.name,
+                     item.give[1].health or item.give[1].count)
         end
 
         -- FIXME add them into room
