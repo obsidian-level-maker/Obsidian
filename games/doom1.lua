@@ -3096,31 +3096,31 @@ COMMON_PICKUPS =
 
   potion =
   {
-    prob=2, cluster={ 4,9 },
+    prob=20, cluster={ 4,9 },
     give={ {health=1} },
   },
 
   stimpack =
   {
-    prob=20, cluster={ 2,5 },
+    prob=60, cluster={ 2,5 },
     give={ {health=10} },
   },
 
   medikit =
   {
-    prob=40, cluster={ 1,3 },
+    prob=100, cluster={ 1,3 },
     give={ {health=25} },
   },
 
   soul =
   {
-    prob=10, big_item=true,
+    prob=3, big_item=true,
     give={ {health=150} },
   },
 
   mega =
   {
-    prob=2, big_item=true,
+    prob=1, big_item=true,
     give={ {health=200} },
   },
 
@@ -3128,7 +3128,7 @@ COMMON_PICKUPS =
 
   helmet =
   {
-    prob=5, armor=true, cluster={ 4,9 },
+    prob=10, armor=true, cluster={ 4,9 },
     give={ {health=1} },
   },
 
@@ -3140,7 +3140,7 @@ COMMON_PICKUPS =
 
   blue_armor =
   {
-    prob=5, armor=true, big_item=true,
+    prob=2, armor=true, big_item=true,
     give={ {health=90} },
   },
 
