@@ -1493,27 +1493,24 @@ HEXEN_SCENERY_PREFABS =
 -- }
 
 
-HEXEN_INITIAL_MODEL =
+HEXEN_PLAYER_MODEL =
 {
   fighter =
   {
-    health = 100,
+    stats   = { health=0, blue_mana=0, green_mana=0 },
     weapons = { f_gaunt=1 },
-    ammos = { blue_mana=0, green_mana=0 },
   },
 
   cleric =
   {
-    health = 100,
+    stats   = { health=0, blue_mana=0, green_mana=0 },
     weapons = { c_mace=1 },
-    ammos = { blue_mana=0, green_mana=0 },
   },
 
   mage =
   {
-    health = 100,
+    stats   = { health=0, blue_mana=0, green_mana=0 },
     weapons = { m_wand=1 },
-    ammos = { blue_mana=0, green_mana=0 },
   },
 }
 
@@ -2200,6 +2197,8 @@ function Hexen1_setup()
 
   gui.property("hexen_format", "true")
 
+  GAME.player_model = HEXEN_PLAYER_MODEL,
+
   rand_shuffle(HEXEN_KEY_PAIRS)
 
   return
@@ -2225,10 +2224,6 @@ function Hexen1_setup()
     pickups  = HEXEN_PICKUPS,
 
     dm = HEXEN_DEATHMATCH,
-
---???  pickup_stats = { "health", "blue_mana", "green_mana" },
-
-    initial_model = HEXEN_INITIAL_MODEL,
 
     combos    = HEXEN_COMBOS,
     exits     = HEXEN_EXITS,

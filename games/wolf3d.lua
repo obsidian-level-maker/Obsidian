@@ -639,13 +639,12 @@ WOLF_PICKUPS =
 }
 
 
-WOLF_INITIAL_MODEL =
+WOLF_PLAYER_MODEL =
 {
   bj =
   {
-    health = 100,
-    weapons = { knife=1, pistol=1 },
-    ammos = { bullet=8 },
+    stats   = { health=0, bullet=8 },
+    weapons = { pistol=1, knife=1  },
   }
 }
 
@@ -835,10 +834,10 @@ end
 
 function Wolf3d_setup()
 
-  GAME.classes  = { "bj" }
+  GAME.player_model = WOLF_PLAYER_MODEL
+
   GAME.dm = {}
 
-  GAME.pickup_stats = { "health", "bullet" }
   GAME.hallways  = nil
 
   Game_merge_tab("things",   WOLF_THINGS)
@@ -848,8 +847,6 @@ function Wolf3d_setup()
 
   Game_merge_tab("weapons",  WOLF_WEAPONS)
   Game_merge_tab("pickups", WOLF_PICKUPS)
-
-  Game_merge_tab("initial_model", WOLF_INITIAL_MODEL)
 
   Game_merge_tab("quests", WOLF_QUESTS)
 

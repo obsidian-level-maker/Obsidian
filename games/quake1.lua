@@ -586,13 +586,12 @@ QUAKE1_PICKUPS =
 }
 
 
-QUAKE1_INITIAL_MODEL =
+QUAKE1_PLAYER_MODEL =
 {
   quakeguy =
   {
-    health = 100,
-    weapons = { axe=1, pistol=1 },
-    ammos = { shell=20, nail=0, rocket=0, cell=0 },
+    stats   = { health=0, shell=0, nail=0, rocket=0, cell=0 },
+    weapons = { pistol=1, axe=1 },
   }
 }
 
@@ -661,12 +660,9 @@ end
 
 function Quake1_setup()
 
-  GAME.classes = { "marine" }
-  GAME.dm = {}
+  GAME.player_model = QUAKE1_PLAYER_MODEL
 
---???  GAME.pickup_stats = { "health", "bullet" }
-  
-  GAME.initial_model = QUAKE1_INITIAL_MODEL
+  GAME.dm = {}
 
   Game_merge_tab("things",   QUAKE1_THINGS)
   Game_merge_tab("monsters", QUAKE1_MONSTERS)

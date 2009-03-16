@@ -1726,15 +1726,13 @@ HERETIC_DEATHMATCH =
 }
 
 
-HERETIC_INITIAL_MODEL =
+HERETIC_PLAYER_MODEL =
 {
   cleric =
   {
-    health = 100,
-    weapons = { staff=1, wand=1 },
-    ammos = { crystal=30, arrow=0, rune=0,
+    stats = { health=0, crystal=0, arrow=0, rune=0,
               claw_orb=0, flame_orb=0, mace_orb=0 },
-
+    weapons = { staff=1, wand=1 },
   }
 }
 
@@ -1833,17 +1831,12 @@ end
 
 function Heretic1_setup()
 
-  GAME.classes  = { "cleric" },
+  GAME.player_model = HERETIC_PLAYER_MODEL
 
   Game_merge_tab("things",   HERETIC_THINGS)
   Game_merge_tab("monsters", HERETIC_MONSTERS)
   Game_merge_tab("weapons",  HERETIC_WEAPONS)
   Game_merge_tab("pickups",  HERETIC_PICKUPS)
-
---???  GAME.pickup_stats = { "health", "crystal", "arrow", "claw_orb",
---???                        "rune", "flame_orb", "mace_orb" },
-
-  Game_merge_tab("initial_model", HERETIC_INITIAL_MODEL)
 
   Game_merge_tab("quests", HERETIC_QUESTS)
 

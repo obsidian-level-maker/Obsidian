@@ -3256,16 +3256,12 @@ COMMON_DEATHMATCH =
 }
 
 
-COMMON_INITIAL_MODEL =
+COMMON_PLAYER_MODEL =
 {
   doomguy =
   {
-    -- Note: bullet numbers are understated (should be 50)
-    -- so that the player isn't forced to empty the pistol.
-
-    health = 100,
-    weapons = { fist=1, pistol=1 },
-    ammos = { bullet=20, shell=0, rocket=0, cell=0 },
+    stats   = { health=0, bullet=0, shell=0, rocket=0, cell=0 },
+    weapons = { pistol=1, fist=1 },
   }
 }
 
@@ -3686,11 +3682,7 @@ end
 
 function Doom_common_setup()
 
-  GAME.classes = { "doomguy" }
-
-  GAME.initial_model = COMMON_INITIAL_MODEL
-
---???  GAME.pickup_stats = { "health", "bullet", "shell", "rocket", "cell" }
+  GAME.player_model = COMMON_PLAYER_MODEL
 
   Game_merge_tab("things", DOOM_THINGS)
 

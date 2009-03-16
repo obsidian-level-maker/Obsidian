@@ -666,13 +666,12 @@ QUAKE2_PICKUPS =
 }
 
 
-QUAKE2_INITIAL_MODEL =
+QUAKE2_PLAYER_MODEL =
 {
   quakeguy =
   {
-    health = 100,
+    stats   = { health=0, bullet=0, shell=0, grenade=0, rocket=0, slug=0, cell=0 },
     weapons = { blaster=1 },
-    ammos = { bullet=0, shell=0, grenade=0, rocket=0, slug=0, cell=0 },
   }
 }
 
@@ -750,9 +749,9 @@ end
 
 function Quake2_setup()
 
-  GAME.dm = {}
+  GAME.player_model = QUAKE2_PLAYER_MODEL
 
-  GAME.initial_model = QUAKE2_INITIAL_MODEL
+  GAME.dm = {}
 
   Game_merge_tab("things",   QUAKE2_THINGS)
   Game_merge_tab("monsters", QUAKE2_MONSTERS)
