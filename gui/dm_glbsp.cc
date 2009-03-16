@@ -192,16 +192,21 @@ bool DM_BuildNodes(const char *filename, const char *out_name)
 
   if (ret != GLBSP_E_OK)
   {
-    // check info failed (unlikely to happen)
+    // check info failure (unlikely to happen)
     GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
-    GB_PrintMsg("Reason: %s\n", nb_comms.message);
+    GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
 
     return false;
   }
 
   ret = GlbspBuildNodes(&nb_info, &edge_build_funcs, &nb_comms);
 
-  if (ret != GLBSP_E_OK)
+  if (ret == GLBSP_E_Cancelled)
+  {
+    GB_PrintMsg("Building CANCELLED.\n\n");
+    return false;
+  }
+  else if (ret != GLBSP_E_OK)
   {
     // build nodes failed
     GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
