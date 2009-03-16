@@ -914,6 +914,7 @@ function Quest_find_storage_rooms()
     if R.kind ~= "scenic" and #R.conns == 1 and
        not R.purpose and not R.weapon
     then
+      R.is_storage = true
       table.insert(R.arena.storage_rooms, R)
       gui.debugf("Storage room @ %s in ARENA_%d\n", R:tostr(), R.arena.id)
     end

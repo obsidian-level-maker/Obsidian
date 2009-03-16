@@ -223,7 +223,83 @@ end
 
 
 function Monsters_do_pickups()
-  -- FIXME: pickups
+
+  local function distribute(R, qty, D)  -- Dest
+    for _,SK in ipairs(SKILLS) do
+      R.fight_result[SK] = R.fight_result[SK] or {}
+      D.fight_result[SK] = D.fight_result[SK] or {}
+
+      for CL,ammos in pairs(R.fight_result[SK]) do
+        D.fight_result[SK][CL] = D.fight_result[SK][CL] or {}
+        local dest_am = D.fight_result[SK][CL]
+
+        for stat,count in pairs(ammos) do
+          if count > 0 then
+            dest_am[stat] = (dest_am[stat] or 0) + count*qty
+            ammos[stat]   = count * (1-qty)
+
+            gui.debugf("Distributing %s:%d  [%s/%s]  ROOM_%d --> ROOM_%d\n",
+                       stat, count*qty,  CL, SK,  R.id, D.id)
+          end
+        end
+      end -- for CL
+    end -- for SK
+  end
+
+  local function get_storage_prefs(arena)
+    local ratios = {}
+
+    for i = 1, #arena.storage_rooms do
+      ratios[i] = rand_irange(2,5)
+    end
+
+    return ratios, arena.storage_rooms
+  end
+
+  local function get_previous_prefs(R)
+    local room_list = {}
+    local ratios = {}
+
+    local PREV = R
+
+    while PREV.entry_conn and #room_list < 4 do
+      PREV = PREV.entry_conn:neighbor(PREV)
+
+      local qty = rand_irange(3,5) / (1 + #room_list)
+
+      table.insert(room_list, PREV)
+      table.insert(ratios, qty)
+    end
+
+    return ratios, room_list
+  end
+
+  local function distribute_to_list(R, qty, ratios, room_list)
+    assert(#ratios == #room_list)
+
+    local total = 0
+
+    for i = 1,#ratios do
+      total = total + ratios[i]
+    end
+
+    for i = 1,#ratios do
+      distribute(R, qty * ratios[i] / total, room_list[i])
+    end
+  end
+
+  local function distribute_fight_results(R)
+    distribute_to_list(R, 0.4, get_previous_prefs(R))
+    distribute_to_list(R, 0.4, get_storage_prefs(R.arena))
+  end
+
+  ---| Monsters_do_pickups |---
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    distribute_fight_results(R)
+  end
+
+  -- FIXME: add pickups !!!!
 end
 
 
