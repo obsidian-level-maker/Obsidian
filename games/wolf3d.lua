@@ -643,7 +643,7 @@ WOLF_PLAYER_MODEL =
 {
   bj =
   {
-    stats   = { health=0, bullet=8 },
+    stats   = { health=0, bullet=0 },
     weapons = { pistol=1, knife=1  },
   }
 }
