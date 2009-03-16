@@ -899,6 +899,28 @@ function Quest_add_weapons()
 end
 
 
+function Quest_find_storage_rooms()
+  -- a "storage room" is a dead-end room which does not contain
+  -- anything special (keys, switches or weapons).  We place some
+  -- of the ammo and health needed by the player elsewhere into
+  -- these rooms to encourage exploration (i.e. to make these
+  -- rooms not totally useless).
+
+  for _,A in ipairs(PLAN.all_arenas) do
+    A.storage_rooms = {}
+  end
+
+  for _,R in ipairs(PLAN.all_rooms) do
+    if R.kind ~= "scenic" and #R.conns == 1 and
+       not R.purpose and not R.weapon
+    then
+      table.insert(R.arena.storage_rooms, R)
+      gui.debugf("Storage room @ %s in ARENA_%d\n", R:tostr(), R.arena.id)
+    end
+  end
+end
+
+
 function Quest_assign()
 
   gui.printf("\n--==| Quest_assign |==--\n\n")
@@ -967,9 +989,9 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
   end
 
   Quest_order_by_visit()
-
   Quest_key_distances()
 
   Quest_add_weapons()
+  Quest_find_storage_rooms()
 end
 
