@@ -3128,19 +3128,19 @@ COMMON_PICKUPS =
 
   helmet =
   {
-    prob=5, cluster={ 4,9 },
+    prob=5, armor=true, cluster={ 4,9 },
     give={ {health=1} },
   },
 
   green_armor =
   {
-    prob=5, big_item=true,
+    prob=5, armor=true, big_item=true,
     give={ {health=30} },
   },
 
   blue_armor =
   {
-    prob=5, big_item=true,
+    prob=5, armor=true, big_item=true,
     give={ {health=90} },
   },
 
