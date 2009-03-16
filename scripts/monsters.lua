@@ -164,12 +164,13 @@ end
 
 
 function Monsters_init()
+  name_it_up(GAME.monsters)
+  name_it_up(GAME.weapons)
+  name_it_up(GAME.pickups)
+
   for name,info in pairs(GAME.monsters) do
-    info.name  = name
     info.thing = assert(GAME.things[name])
   end
-
-  name_it_up(GAME.weapons)
 
   PLAN.mon_stats = {}
 
@@ -238,7 +239,7 @@ function Monsters_do_pickups()
             dest_am[stat] = (dest_am[stat] or 0) + count*qty
             ammos[stat]   = count * (1-qty)
 
-            gui.debugf("Distributing %s:%d  [%s/%s]  ROOM_%d --> ROOM_%d\n",
+            gui.debugf("Distributing %s:%1.1f  [%s/%s]  ROOM_%d --> ROOM_%d\n",
                        stat, count*qty,  CL, SK,  R.id, D.id)
           end
         end
@@ -293,13 +294,107 @@ function Monsters_do_pickups()
     distribute_to_list(R, 0.4, get_storage_prefs(R.arena))
   end
 
+
+  local function decide_pickup(stat, qty)
+    local item_tab = {}
+
+    for name,info in pairs(GAME.pickups) do
+      if (stat == "health" and info.give[1].health) or
+         (info.give[1].ammo == stat)
+      then
+        local prob = assert(info.prob)
+
+        -- FIXME: better calc
+
+        item_tab[name] = prob
+      end
+    end
+
+    assert(not table_empty(item_tab))
+    local name = rand_key_by_probs(item_tab)
+
+    return GAME.pickups[name]
+  end
+
+  local function select_pickups(R, stat, qty, hmodel)
+    -- subtract any previous gotten stuff
+    if stat == "health" then
+gui.debugf("\nInitial = %s:%1.1f\n", stat, hmodel.health)
+      qty = qty - hmodel.health
+      hmodel.health = 0
+    else
+gui.debugf("Initial = %s:%1.1f\n", stat, hmodel.ammos[stat])
+      qty = qty - hmodel.ammos[stat]
+      hmodel.ammos[stat] = 0
+    end
+
+    local item_list = {}
+
+    while qty > 0 do
+      local item = decide_pickup(stat, qty)
+      table.insert(item_list, item)
+      
+      if stat == "health" then
+        qty = qty - item.give[1].health
+      else
+        assert(item.give[1].ammo)
+        qty = qty - item.give[1].count
+      end
+    end
+
+    -- accumulate any excess quantity into the hmodel
+    if qty < 0 then
+gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
+      if stat == "health" then
+        hmodel.health = hmodel.health - qty
+      else
+        hmodel.ammos[stat] = assert(hmodel.ammos[stat]) - qty
+      end
+    end
+
+    return item_list
+  end
+
+  local function pickups_for_hmodel(R, SK, CL, hmodel)
+    if not R.fight_result[SK] then return end
+
+    local ammos = R.fight_result[SK][CL]
+    if not ammos then return end
+
+    for stat,qty in pairs(ammos) do
+      if qty > 0 then
+        local item_list = select_pickups(R, stat, qty, hmodel)
+
+        gui.debugf("Item list for %s:%1.1f [%s/%s] @ %s\n", stat,qty, CL,SK, R:tostr())
+        for _,info in ipairs(item_list) do
+          gui.debugf("   %s (%d)\n", info.name, info.give[1].health or info.give[1].count)
+        end
+
+        -- FIXME add them into room
+      end
+    end
+  end
+
+  local function pickups_in_room(R)
+    -- FIXME: if R.weapon then add_ammo_for_weapon end
+
+    for _,SK in ipairs(SKILLS) do
+      for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+        pickups_for_hmodel(R, SK, CL, hmodel)
+      end -- for CL
+    end -- for SK
+  end
+
+
   ---| Monsters_do_pickups |---
 
   for _,R in ipairs(PLAN.all_rooms) do
     distribute_fight_results(R)
   end
 
-  -- FIXME: add pickups !!!!
+  for _,R in ipairs(PLAN.all_rooms) do
+    pickups_in_room(R)
+  end
 end
 
 
