@@ -56,7 +56,7 @@ function Player_init()
   PLAN.hmodels = {}
 
   for _,SK in ipairs(SKILLS) do
-    local hm_set = deep_copy(GAME.initial_model)
+    local hm_set = deep_copy(GAME.player_model)
 
     for CL,hmodel in pairs(hm_set) do
       hmodel.skill = SK
@@ -84,14 +84,14 @@ function Player_give_stuff(hmodel, give_list)
     if give.health then
       gui.debugf("Giving [%s/%s] health: %d\n",
                  hmodel.class, hmodel.skill, give.health)
-      hmodel.health = hmodel.health + give.health
+      hmodel.stats.health = hmodel.stats.health + give.health
 
     elseif give.ammo then
       gui.debugf("Giving [%s/%s] ammo: %dx %s\n",
                  hmodel.class, hmodel.skill, give.count, give.ammo)
 
-      local count = assert(hmodel.ammos[give.ammo])
-      hmodel.ammos[give.ammo] = count + give.count
+      local count = assert(hmodel.stats[give.ammo])
+      hmodel.stats[give.ammo] = count + give.count
 
     elseif give.weapon then
       gui.debugf("Giving [%s/%s] weapon: %s\n",
@@ -227,17 +227,13 @@ function Monsters_do_pickups()
 
   local function distribute(R, qty, D)  -- Dest
     for _,SK in ipairs(SKILLS) do
-      R.fight_result[SK] = R.fight_result[SK] or {}
-      D.fight_result[SK] = D.fight_result[SK] or {}
+      for CL,stats in pairs(R.fight_stats[SK]) do
+        local dest_am = D.fight_stats[SK][CL]
 
-      for CL,ammos in pairs(R.fight_result[SK]) do
-        D.fight_result[SK][CL] = D.fight_result[SK][CL] or {}
-        local dest_am = D.fight_result[SK][CL]
-
-        for stat,count in pairs(ammos) do
+        for stat,count in pairs(stats) do
           if count > 0 then
-            dest_am[stat] = (dest_am[stat] or 0) + count*qty
-            ammos[stat]   = count * (1-qty)
+            dest_am[stat] = (dest_am[stat] or 0) + count * qty
+            stats[stat]   = count * (1-qty)
 
             gui.debugf("Distributing %s:%1.1f  [%s/%s]  ROOM_%d --> ROOM_%d\n",
                        stat, count*qty,  CL, SK,  R.id, D.id)
@@ -289,7 +285,7 @@ function Monsters_do_pickups()
     end
   end
 
-  local function distribute_fight_results(R)
+  local function distribute_fight_stats(R)
     distribute_to_list(R, 0.4, get_previous_prefs(R))
     distribute_to_list(R, 0.4, get_storage_prefs(R.arena))
   end
@@ -338,16 +334,11 @@ function Monsters_do_pickups()
   end
 
   local function select_pickups(R, stat, qty, hmodel)
+gui.debugf("Initial = %s:%1.1f\n", stat, hmodel.stats[stat])
+
     -- subtract any previous gotten stuff
-    if stat == "health" then
-gui.debugf("\nInitial = %s:%1.1f\n", stat, hmodel.health)
-      qty = qty - hmodel.health
-      hmodel.health = 0
-    else
-gui.debugf("Initial = %s:%1.1f\n", stat, hmodel.ammos[stat])
-      qty = qty - hmodel.ammos[stat]
-      hmodel.ammos[stat] = 0
-    end
+    qty = qty - hmodel.stats[stat]
+    hmodel.stats[stat] = 0
 
     local item_list = {}
 
@@ -366,23 +357,16 @@ gui.debugf("Initial = %s:%1.1f\n", stat, hmodel.ammos[stat])
     -- accumulate any excess quantity into the hmodel
     if qty < 0 then
 gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
-      if stat == "health" then
-        hmodel.health = hmodel.health - qty
-      else
-        hmodel.ammos[stat] = assert(hmodel.ammos[stat]) - qty
-      end
+      hmodel.stats[stat] = assert(hmodel.stats[stat]) - qty
     end
 
     return item_list
   end
 
   local function pickups_for_hmodel(R, SK, CL, hmodel)
-    if not R.fight_result[SK] then return end
+    local stats = R.fight_stats[SK][CL]
 
-    local ammos = R.fight_result[SK][CL]
-    if not ammos then return end
-
-    for stat,qty in pairs(ammos) do
+    for stat,qty in pairs(stats) do
       if qty > 0 then
         local item_list = select_pickups(R, stat, qty, hmodel)
 
@@ -412,7 +396,7 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   ---| Monsters_do_pickups |---
 
   for _,R in ipairs(PLAN.all_rooms) do
-    distribute_fight_results(R)
+    distribute_fight_stats(R)
   end
 
   for _,R in ipairs(PLAN.all_rooms) do
@@ -860,6 +844,20 @@ function Monsters_in_room(R)
     fill_monster_map(qty)
   end
 
+
+  local function make_empty_stats()
+    local stats = {}
+
+    for _,SK in ipairs(SKILLS) do
+      stats[SK] = {}
+      for CL,_ in pairs(GAME.player_model) do
+        stats[SK][CL] = {}
+      end
+    end
+
+    return stats
+  end
+
   local function collect_weapons(hmodel)
     local list = {}
 
@@ -885,36 +883,25 @@ function Monsters_in_room(R)
     end
   end
 
-  local function user_adjust_result(ammos)
+  local function user_adjust_result(stats)
     -- apply the user's health/ammo adjustments here
 
     local heal_mul = 1.00 * HEALTH_AMMO_ADJUSTS[OB_CONFIG.health]
     local ammo_mul = 1.00 * HEALTH_AMMO_ADJUSTS[OB_CONFIG.ammo]
 
-    for name,qty in pairs(ammos) do
-      if name == "health" then
-        ammos[name] = ammos.health * heal_mul
-      else
-        ammos[name] = qty * ammo_mul
-      end
+    for name,qty in pairs(stats) do
+      stats[name] = qty * sel(name == "health", heal_mul, ammo_mul)
     end
   end
 
-  local function subtract_gotten_stuff(ammos, hmodel)
-    if ammos.health > 0 and hmodel.health > 0 then
-      local min_h = math.min(hmodel.health, ammos.health)
+  local function subtract_gotten_stuff(stats, hmodel)
+    for name,got_qty in pairs(hmodel.stats) do
+      local st_qty = stats[name] or 0
+      if st_qty > 0 and got_qty > 0 then
+        local min_q = math.min(st_qty, got_qty)
 
-      hmodel.health = hmodel.health - min_h
-      ammos .health = ammos. health - min_h
-    end
-
-    for name,got_qty in pairs(hmodel.ammos) do
-      local ammo_qty = ammos[name] or 0
-      if ammo_qty > 0 and got_qty > 0 then
-        local min_q = math.min(ammo_qty, got_qty)
-
-        hmodel.ammos[name] = hmodel.ammos[name] - min_q
-               ammos[name] =        ammos[name] - min_q
+        hmodel.stats[name] = hmodel.stats[name] - min_q
+               stats[name] =        stats[name] - min_q
       end
     end
   end
@@ -925,7 +912,7 @@ function Monsters_in_room(R)
   gui.debugf("Monsters_in_room @ %s\n", R:tostr())
 
   R.monster_list = {}
-  R.fight_result = {}
+  R.fight_stats  = make_empty_stats()
 
   if OB_CONFIG.mons == "none" then
     return
@@ -948,14 +935,12 @@ function Monsters_in_room(R)
   -- simulate the battle!!
 
   for _,SK in ipairs(SKILLS) do
-    R.fight_result[SK] = {}
-
     local mon_list = R.monster_list[SK]
     if mon_list and #mon_list >= 1 then
 
       for CL,hmodel in pairs(PLAN.hmodels[SK]) do
         local weap_list = collect_weapons(hmodel)
-        local ammos = {}
+        local stats = R.fight_stats[SK][CL]
 
         gui.debugf("Fight simulator @ %s  SK:%s\n", R:tostr(), SK)
         gui.debugf("weapons = \n")
@@ -963,18 +948,17 @@ function Monsters_in_room(R)
           gui.debugf("  %s\n", info.name)
         end
 
-        Fight_simulator(mon_list, weap_list, SK, ammos)
-        gui.debugf("raw result = \n%s\n", table_to_str(ammos,1))
+        Fight_simulator(mon_list, weap_list, SK, stats)
+        gui.debugf("raw result = \n%s\n", table_to_str(stats,1))
 
-        user_adjust_result(ammos)
-        gui.debugf("adjusted result = \n%s\n", table_to_str(ammos,1))
+        user_adjust_result(stats)
+        gui.debugf("adjusted result = \n%s\n", table_to_str(stats,1))
 
         give_monster_drops(mon_list, hmodel)
 
-        subtract_gotten_stuff(ammos, hmodel)
+        subtract_gotten_stuff(stats, hmodel)
 
-        R.fight_result[SK][CL] = ammos
-        gui.debugf("final result = \n%s\n", table_to_str(ammos,1))
+        gui.debugf("final result = \n%s\n", table_to_str(stats,1))
       end -- for CL
 
     end

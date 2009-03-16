@@ -29,12 +29,12 @@ Inputs:
    skill    : skill level
 
 Output:
-   health   : health that player needs to survive the battle
-   ammos    : ammo quantities required by the player
+   stats    : health that player needs to survive the battle
+              + ammo quantities required by the player
 
 Notes:
 
-*  Health result is stored in the 'ammos' table.  All the
+*  Health result is stored in the 'stats' table.  All the
    values are >= 0 and can be partial (like 3.62 rockets).
 
 *  Armor is not directly modelled.  Instead you can assume
@@ -77,7 +77,7 @@ require 'defs'
 require 'util'
 
 
-function Fight_simulator(monsters, weapons, skill, ammos)
+function Fight_simulator(monsters, weapons, skill, stats)
 
   local active_mons = {}
 
@@ -155,7 +155,7 @@ function Fight_simulator(monsters, weapons, skill, ammos)
 
     -- update ammo counter
     if W.ammo then
-      ammos[W.ammo] = (ammos[W.ammo] or 0) + W.per
+      stats[W.ammo] = (stats[W.ammo] or 0) + W.per
     end
 
     return time
@@ -205,7 +205,7 @@ function Fight_simulator(monsters, weapons, skill, ammos)
 
     local damage = info.damage * time * hit_ratio * active_ratio * (1.0 - dodge_ratio)
 
-    ammos.health = ammos.health + damage
+    stats.health = stats.health + damage
   end
 
   local function monster_infight(M, N, time)
@@ -256,7 +256,7 @@ function Fight_simulator(monsters, weapons, skill, ammos)
 
   ---==| Fight_simulator |==---
 
-  ammos.health = 0
+  stats.health = 0
 
   for _,info in ipairs(monsters) do
     table.insert(active_mons, { info=info, health=info.health })
@@ -282,10 +282,10 @@ function Fight_simulator(monsters, weapons, skill, ammos)
   end
 
   -- Hexen fixup for double-mana weapons
-  if ammos.dual_mana then
-    ammos.blue_mana  = (ammos.blue_mana  or 0) + ammos.dual_mana
-    ammos.green_mana = (ammos.green_mana or 0) + ammos.dual_mana
-    ammos.dual_mana  = nil
+  if stats.dual_mana then
+    stats.blue_mana  = (stats.blue_mana  or 0) + stats.dual_mana
+    stats.green_mana = (stats.green_mana or 0) + stats.dual_mana
+    stats.dual_mana  = nil
   end
 end
 
