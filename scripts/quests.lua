@@ -594,8 +594,7 @@ function Quest_add_keys()
     assert(R)
 
     if arena.lock.kind == "EXIT" then
-      R.purpose = "EXIT"
-      PLAN.exit_room = R
+      assert(PLAN.exit_room == R)
 
       if R.kind == "building" and not R:has_any_lock() and R.svolume < 25 then
         make_small_exit(R)
@@ -988,6 +987,12 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
       R.arena = A
     end
   end
+
+  PLAN.exit_room = PLAN.all_arenas[#PLAN.all_arenas].target
+  PLAN.exit_room.purpose = "EXIT"
+
+  gui.printf("Exit room: %s\n", PLAN.exit_room:tostr())
+
 
   Quest_order_by_visit()
   Quest_key_distances()
