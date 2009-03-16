@@ -291,6 +291,68 @@ function Monsters_do_pickups()
   end
 
 
+  local function eval_big_spot(S)
+    local score = gui.random()
+
+    -- FIXME: eval_big_spot
+
+    return score
+  end
+
+  local function eval_small_spot(S)
+    local score = gui.random()
+
+    -- FIXME: eval_small_spot
+
+    return score
+  end
+
+  local function create_pickup_map(R)
+    -- Creates a map over the room of which seeds we can place
+    -- pickup items in.  We distinguish two types: 'big' items
+    -- (Mega Health or Blue Armor) and 'small' items:
+    --
+    -- 1. big items prefer to have a seed for itself, and
+    --    somewhere near to the centre of the room.
+    --
+    -- 2. small items prefer to sit next to walls (or ledges)
+    --    and be grouped in clusters.
+    --
+    -- To achieve this, our map will consist of two lists (big
+    -- and small) of seeds, sorted into best --> worst order
+    -- (with a healthy dose of randomness of course).  As we
+    -- process each item, we pick a seed from the appropriate
+    -- list and that seed will (from then on) only be used for
+    -- either big or small items.
+
+    R.big_spots = {}
+    R.small_spots = {}
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      local score
+
+      if S.room == R and S.kind == "walk" and not S.purpose then
+        score = eval_big_spot(S)
+        if score >= 0 then
+          table.insert(R.big_spots, { S=S, score=score })
+        end
+
+        score = eval_small_spot(S)
+        if score >= 0 then
+          table.insert(R.small_spots, { S=S, score=score })
+        end
+      end
+    end end -- for x, y
+
+    if #R.big_spots == 0 or #R.small_spots == 0 then
+      error("No usable spots for Health/Ammo ??")
+    end
+
+    table.sort(R.big_spots,   function(A,B) return A.score > B.score end)
+    table.sort(R.small_spots, function(A,B) return A.score > B.score end)
+  end
+
   local function decide_pickup(stat, qty)
     local item_tab = {}
 
@@ -373,8 +435,8 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
         gui.debugf("Item list for %s:%1.1f [%s/%s] @ %s\n", stat,qty, CL,SK, R:tostr())
         for _,pair in ipairs(item_list) do
           local item = pair.item
-          gui.debugf("   %dx %s (%d)\n", pair.count, item.name,
-                     item.give[1].health or item.give[1].count)
+          gui.debugf("   %dx %s (%d) @ %s\n", pair.count, item.name,
+                     item.give[1].health or item.give[1].count, SK)
         end
 
         -- FIXME add them into room
@@ -383,7 +445,9 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   end
 
   local function pickups_in_room(R)
-    -- FIXME: if R.weapon then add_ammo_for_weapon end
+    -- FIXME !!!!  if R.weapon then add_ammo_for_weapon end
+
+    create_pickup_map(R)
 
     for _,SK in ipairs(SKILLS) do
       for CL,hmodel in pairs(PLAN.hmodels[SK]) do

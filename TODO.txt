@@ -4,10 +4,21 @@ TODO
 
 
 Pickups:
-  -  add weapons
-  -  add health & ammo & armor
-  -  ammo for start room weapon
-  -  add powerups
+!!  ammo for room/arena weapon
+
+  -  big_items:
+     +  NxN (prefer 1) per seed
+     +  far from entry door
+     +  away from walls, div_lev >= 2
+     +  not next to wall or ledge 
+     +  not under monster
+
+  -  normal items:
+     +  N rows (prefer 1) per seed
+     +  next to walls and ledges
+     +  away from entry door
+
+  -  create_pickup_map: big vs small
 
 
 Monsters:
@@ -60,6 +71,10 @@ Ceilings:
     simple patterns (e.g. inner 2x2 seeds, or outer corners)
 
   - don't always trim the sky hole
+
+
+Pickups:
+  -  add some powerups
 
 
 Fight Sim: reimplement monster-weapon preferences
