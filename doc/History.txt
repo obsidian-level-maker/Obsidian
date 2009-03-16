@@ -3,7 +3,7 @@ History of Oblige
 -----------------
 
 Oblige I was the very first version, begun around MAY 2005.
-It was written in pure C++ and with a very limited architecture.
+It was written in pure C++ and with very limited architecture.
 
 
 Oblige II started development in JUNE 2006.
@@ -11,15 +11,14 @@ LUA scripts with a C++ GUI frontend.
 
 
 Oblige III is the latest big rewrite that has been
-worked on (in dribs and drabs) since the 0.94 public
-release (JULY 2007).
+worked on since the 0.94 public release (JULY 2007).
 
 
-
-public release 0.81  :  2007-01-21
-public release 0.85  :  2007-02-19
-public release 0.94  :  2007-07-05
-public release 0.97  :  2008-05-30
+Public Releases:
+   v0.81  :  2007-01-21
+   v0.85  :  2007-02-19
+   v0.94  :  2007-07-05
+   v0.97  :  2008-05-30
 
 
 Release 0.85 Changes:
