@@ -3096,19 +3096,19 @@ COMMON_PICKUPS =
 
   potion =
   {
-    prob=1, cluster={ 4,9 },
+    prob=2, cluster={ 4,9 },
     give={ {health=1} },
   },
 
   stimpack =
   {
-    prob=10, cluster={ 1,4 },
+    prob=20, cluster={ 2,5 },
     give={ {health=10} },
   },
 
   medikit =
   {
-    prob=40,
+    prob=40, cluster={ 1,3 },
     give={ {health=25} },
   },
 
@@ -3148,25 +3148,25 @@ COMMON_PICKUPS =
 
   bullets =
   {
-    prob=10, cluster={ 2,4 },
+    prob=10, cluster={ 2,5 },
     give={ {ammo="bullet",count=10} },
   },
 
   bullet_box =
   {
-    prob=70,
+    prob=40, cluster={ 1,3 },
     give={ {ammo="bullet", count=50} },
   },
 
   shells =
   {
-    prob=30, cluster={ 2,4 },
+    prob=20, cluster={ 2,5 },
     give={ {ammo="shell",count=4} },
   },
 
   shell_box =
   {
-    prob=50,
+    prob=40, cluster={ 1,3 },
     give={ {ammo="shell",count=20} },
   },
 
@@ -3178,19 +3178,19 @@ COMMON_PICKUPS =
 
   rocket_box =
   {
-    prob=50,
+    prob=40, cluster={ 1,3 },
     give={ {ammo="rocket",count=5} },
   },
 
   cells =
   {
-    prob=20, cluster={ 2,4 },
+    prob=20, cluster={ 2,5 },
     give={ {ammo="cell",count=20} },
   },
 
   cell_pack =
   {
-    prob=40,
+    prob=40, cluster={ 1,2 },
     give={ {ammo="cell",count=100} },
   },
 
