@@ -2941,7 +2941,7 @@ DOOM2_MONSTERS =
   vile =
   {
     prob=12, guard_prob=11, trap_prob=31, cage_prob=21,
-    health=700, damage=40, attack="hitscan", no_dist=true,
+    health=700, damage=40, attack="hitscan",  ---??? no_dist=true,
     never_promote=true,
   },
 
