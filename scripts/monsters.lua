@@ -286,8 +286,15 @@ function Monsters_do_pickups()
   end
 
   local function distribute_fight_stats(R)
-    distribute_to_list(R, 0.4, get_previous_prefs(R))
-    distribute_to_list(R, 0.4, get_storage_prefs(R.arena))
+    if R.is_storage then return end
+
+    if R.purpose == "EXIT" then
+      distribute_to_list(R, 0.9, get_previous_prefs(R))
+      distribute_to_list(R, 0.9, get_storage_prefs(R.arena))
+    else 
+      distribute_to_list(R, 0.4, get_previous_prefs(R))
+      distribute_to_list(R, 0.4, get_storage_prefs(R.arena))
+    end
   end
 
 
@@ -332,7 +339,9 @@ function Monsters_do_pickups()
       local S = SEEDS[x][y][1]
       local score
 
-      if S.room == R and S.kind == "walk" and not S.purpose then
+      if S.room == R and S.kind == "walk" and
+         not S.purpose and not (S.content == "pillar")
+      then
         score = eval_big_spot(S)
         if score >= 0 then
           table.insert(R.big_spots, { S=S, score=score })
@@ -425,6 +434,45 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
     return item_list
   end
 
+  local function place_item(S, item_name, SK)
+    local thing = assert(GAME.things[item_name])
+
+    local mx, my = S:mid_point()
+
+    mx = mx + rand_irange(-100, 100)
+    my = my + rand_irange(-100, 100)
+
+    gui.add_entity(tostring(thing.id), mx, my, S.floor_h + 25,
+    {
+      skill_hard   = sel(SK == "hard",   1, 0),
+      skill_medium = sel(SK == "medium", 1, 0),
+      skill_easy   = sel(SK == "easy",   1, 0),
+    })
+  end
+
+  local function fill_pickup_map(R, item_list, SK, CL)
+    
+    -- FIXME: TEMP RUBBISH !!!
+
+    for _,pair in ipairs(item_list) do
+      local item  = pair.item
+      local count = pair.count
+      local spot
+
+      if item.big_item then
+        spot = table.remove(R.big_spots, 1)
+        table.insert(R.big_spots, spot)
+      else
+        spot = table.remove(R.small_spots, 1)
+        table.insert(R.small_spots, spot)
+      end
+
+      for i = 1,count do
+        place_item(spot.S, item.name, SK)
+      end
+    end
+  end
+
   local function pickups_for_hmodel(R, SK, CL, hmodel)
     local stats = R.fight_stats[SK][CL]
 
@@ -439,13 +487,15 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
                      item.give[1].health or item.give[1].count, SK)
         end
 
-        -- FIXME add them into room
+        fill_pickup_map(R, item_list, SK, CL)
       end
     end
   end
 
   local function pickups_in_room(R)
-    -- FIXME !!!!  if R.weapon then add_ammo_for_weapon end
+    if R.weapon then
+      -- FIXME !!!!  add ammo for weapon
+    end
 
     create_pickup_map(R)
 
@@ -460,11 +510,15 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   ---| Monsters_do_pickups |---
 
   for _,R in ipairs(PLAN.all_rooms) do
-    distribute_fight_stats(R)
+    if not (R.kind == "stairwell" or R.kind == "smallexit") then
+      distribute_fight_stats(R)
+    end
   end
 
   for _,R in ipairs(PLAN.all_rooms) do
-    pickups_in_room(R)
+    if not (R.kind == "stairwell" or R.kind == "smallexit") then
+      pickups_in_room(R)
+    end
   end
 end
 
@@ -986,11 +1040,11 @@ function Monsters_in_room(R)
     return
   end
 
-  if R.kind == "stairwell" or R.kind == "smallexit" or
-     R.kind == "scenic"
-  then
+  if R.kind == "stairwell" or R.kind == "smallexit" then
     return
   end
+
+  assert(R.kind ~= "scenic")
 
 
   add_monsters()
