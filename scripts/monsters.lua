@@ -259,7 +259,7 @@ function Monsters_do_pickups()
 
     local PREV = R
 
-    while PREV.entry_conn and #room_list < 4 do
+    while PREV.entry_conn and #room_list < 3 do
       PREV = PREV.entry_conn:neighbor(PREV)
 
       local qty = rand_irange(3,5) / (1 + #room_list)
@@ -288,12 +288,9 @@ function Monsters_do_pickups()
   local function distribute_fight_stats(R)
     if R.is_storage then return end
 
-    if R.purpose == "EXIT" then
-      distribute_to_list(R, 0.9, get_previous_prefs(R))
-      distribute_to_list(R, 0.9, get_storage_prefs(R.arena))
-    else 
-      distribute_to_list(R, 0.4, get_previous_prefs(R))
-      distribute_to_list(R, 0.4, get_storage_prefs(R.arena))
+    do
+      distribute_to_list(R, 0.33, get_previous_prefs(R))
+      distribute_to_list(R, 0.33, get_storage_prefs(R.arena))
     end
   end
 
