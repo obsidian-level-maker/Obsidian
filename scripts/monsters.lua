@@ -359,6 +359,135 @@ function Monsters_do_pickups()
     table.sort(R.small_spots, function(A,B) return A.score > B.score end)
   end
 
+
+  local function add_big_spot(R, S, score)
+    local mx, my = S:mid_point()
+    table.insert(R.big_spots, { S=S, x=mx, y=my, score=score })
+  end
+
+  local function add_small_spots(R, S, side, count, score)
+    local mx, my = S:mid_point()
+    local dist = 40
+
+    for i = 1,count do
+      if side == 4 then mx = S.x1 + S.thick[4] + i*dist end
+      if side == 6 then mx = S.x2 - S.thick[6] - i*dist end
+      if side == 2 then my = S.y1 + S.thick[2] + i*dist end
+      if side == 8 then my = S.y2 - S.thick[8] - i*dist end
+
+      local dir = rotate_cw90(side)
+
+      table.insert(R.small_spots, { S=S, x=mx, y=my, dir=dir, score=score })
+
+      -- the rows further away from the wall should only be
+      -- used when absolutely necessary.
+      score = score - 100
+    end
+  end
+
+  local function try_add_big_spot(R, S)
+    local score = gui.random()
+
+    if S.div_lev >= 2 then score = score + 10 end
+
+    if S.sx > (R.tx1 or R.sx1) and S.sx < (R.tx2 or R.sx2) then score = score + 2.4 end
+    if S.sy > (R.ty1 or R.sy1) and S.sy < (R.ty2 or R.sy2) then score = score + 2.4 end
+
+    if not S.content then score = score + 1 end
+
+    add_big_spot(R, S, score)
+  end
+
+  local function try_add_small_spot(R, S)
+    local score = gui.random()
+
+    if R.entry_conn then
+      local e_dist
+      if is_vert(R.entry_conn.dir) then
+        e_dist = math.abs(R.entry_conn.dest_S.sy - S.sy)
+      else
+        e_dist = math.abs(R.entry_conn.dest_S.sx - S.sx)
+      end
+
+      score = score + e_dist / 2.5
+    end
+
+    local walls = {}
+
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+      if not N then
+        walls[side] = 1
+      elseif N.room ~= S.room then
+        if not S.conn then walls[side] = 2 end
+      elseif N.kind == "void" then
+        walls[side] = 3
+      elseif N.kind == "walk" and N.floor_h > S.floor_h then
+        walls[side] = 4
+      end
+    end -- for side
+
+    if table_empty(walls) then return end
+
+    if walls[4] and walls[6] then
+      add_small_spots(R, S, 4, 2, score)
+      add_small_spots(R, S, 6, 2, score - 0.3)
+
+    elseif walls[2] and walls[8] then
+      add_small_spots(R, S, 2, 2, score)
+      add_small_spots(R, S, 8, 2, score - 0.3)
+
+    else
+      while true do
+        local side = rand_irange(1,4) * 2
+        if walls[side] then
+          add_small_spots(R, S, side, 4, score)
+          break;
+        end
+      end
+    end
+  end
+
+  local function find_pickup_spots(R)
+    gui.debugf("Find pickup spots @ %s\n", R:tostr())
+
+    R.big_spots = {}
+    R.small_spots = {}
+
+    local emerg_big
+    local emerg_small
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      local score
+
+      if S.room == R and S.kind == "walk" and
+         (not S.content or S.content == "monster")
+      then
+        try_add_big_spot(R, S)
+        try_add_small_spot(R, S)
+
+        if not emerg_big then emerg_big = S end
+        emerg_small = S
+      end
+    end end -- for x, y
+
+    assert(emerg_big and emerg_small)
+
+    if #R.big_spots == 0 then
+      gui.debugf("No big spots found : using emergency\n")
+      add_big_spot(R, emerg_big)
+    end
+
+    if #R.small_spots == 0 then
+      gui.debugf("No small spots found : using emergency\n")
+      add_small_spots(R, emerg_small, 2, 4, 0)
+    end
+
+    table.sort(R.big_spots,   function(A,B) return A.score > B.score end)
+    table.sort(R.small_spots, function(A,B) return A.score > B.score end)
+  end
+
   local function decide_pickup(stat, qty)
     local item_tab = {}
 
@@ -412,7 +541,7 @@ gui.debugf("Initial = %s:%1.1f\n", stat, hmodel.stats[stat])
 
     while qty > 0 do
       local item, count = decide_pickup(stat, qty)
-      table.insert(item_list, { item=item, count=count })
+      table.insert(item_list, { item=item, count=count, SK=hmodel.skill })
       
       if stat == "health" then
         qty = qty - item.give[1].health * count
@@ -450,6 +579,8 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   local function fill_pickup_map(R, item_list, SK, CL)
     
     -- FIXME: TEMP RUBBISH !!!
+
+do return end
 
     for _,pair in ipairs(item_list) do
       local item  = pair.item
@@ -494,7 +625,7 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
       -- FIXME !!!!  add ammo for weapon
     end
 
-    create_pickup_map(R)
+    find_pickup_spots(R)
 
     for _,SK in ipairs(SKILLS) do
       for CL,hmodel in pairs(PLAN.hmodels[SK]) do
