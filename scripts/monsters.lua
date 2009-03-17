@@ -354,9 +354,6 @@ function Monsters_do_pickups()
     if #R.big_spots == 0 or #R.small_spots == 0 then
       error("No usable spots for Health/Ammo ??")
     end
-
-    table.sort(R.big_spots,   function(A,B) return A.score > B.score end)
-    table.sort(R.small_spots, function(A,B) return A.score > B.score end)
   end
 
 
@@ -483,7 +480,9 @@ function Monsters_do_pickups()
       gui.debugf("No small spots found : using emergency\n")
       add_small_spots(R, emerg_small, 2, 4, 0)
     end
+  end
 
+  local function sort_spots(R)
     table.sort(R.big_spots,   function(A,B) return A.score > B.score end)
     table.sort(R.small_spots, function(A,B) return A.score > B.score end)
   end
@@ -560,15 +559,10 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
     return item_list
   end
 
-  local function place_item(S, item_name, SK)
+  local function place_item(S, item_name, x, y, SK)
     local thing = assert(GAME.things[item_name])
 
-    local mx, my = S:mid_point()
-
-    mx = mx + rand_irange(-100, 100)
-    my = my + rand_irange(-100, 100)
-
-    gui.add_entity(tostring(thing.id), mx, my, S.floor_h + 25,
+    gui.add_entity(tostring(thing.id), x, y, S.floor_h + 25,
     {
       skill_hard   = sel(SK == "hard",   1, 0),
       skill_medium = sel(SK == "medium", 1, 0),
@@ -576,11 +570,41 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
     })
   end
 
-  local function fill_pickup_map(R, item_list, SK, CL)
-    
-    -- FIXME: TEMP RUBBISH !!!
+  local function place_big_item(spot, item, SK)
+    local x, y = spot.x, spot.y
 
-do return end
+    -- assume big spots will sometimes run out (and be reused),
+    -- so don't put multiple items at exactly the same place.
+    x = x + rand_irange(-32, 32)
+    y = y + rand_irange(-32, 32)
+
+    place_item(spot.S, item, x, y, SK)
+  end
+
+  local function place_small_item(spot, item, count, SK)
+    local x1, y1 = spot.x, spot.y
+    local x2, y2 = spot.x, spot.y
+
+    if count == 1 then
+      place_item(spot.S, item, x1,y1, SK)
+      return
+    end
+
+    if is_vert(spot.dir) then
+      y1, y2 = y1-56, y2+56
+    else
+      x1, x2 = x1-56, x2+56
+    end
+
+    for i = 1,count do
+      local x = x1 + (x2 - x1) * (i-1) / (count-1)
+      local y = y1 + (y2 - y1) * (i-1) / (count-1)
+
+      place_item(spot.S, item, x, y, SK)
+    end
+  end
+
+  local function place_item_list(R, item_list, SK, CL)
 
     for _,pair in ipairs(item_list) do
       local item  = pair.item
@@ -590,18 +614,21 @@ do return end
       if item.big_item then
         spot = table.remove(R.big_spots, 1)
         table.insert(R.big_spots, spot)
+
+        assert(count == 1)
+        place_big_item(spot, item.name, SK, CL)
       else
         spot = table.remove(R.small_spots, 1)
         table.insert(R.small_spots, spot)
-      end
 
-      for i = 1,count do
-        place_item(spot.S, item.name, SK)
+        place_small_item(spot, item.name, count, SK, CL)
       end
     end
   end
 
   local function pickups_for_hmodel(R, SK, CL, hmodel)
+    sort_spots(R)
+
     local stats = R.fight_stats[SK][CL]
 
     for stat,qty in pairs(stats) do
@@ -615,16 +642,12 @@ do return end
                      item.give[1].health or item.give[1].count, SK)
         end
 
-        fill_pickup_map(R, item_list, SK, CL)
+        place_item_list(R, item_list, SK, CL)
       end
     end
   end
 
   local function pickups_in_room(R)
-    if R.weapon then
-      -- FIXME !!!!  add ammo for weapon
-    end
-
     find_pickup_spots(R)
 
     for _,SK in ipairs(SKILLS) do
@@ -858,7 +881,6 @@ function Monsters_in_room(R)
     -- keep entryway clear [TODO: more space in big rooms]
     if S.conn == R.entry_conn then return end
 
-    if S.diag_new_kind then return end
     if not S.floor_h then return end
 
     -- preliminary check on type
