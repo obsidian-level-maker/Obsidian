@@ -2067,25 +2067,10 @@ end
     end
 
 
----##    -- TEMP SHITE
----##    local mx = int((x1+x2) / 2)
----##    local my = int((y1+y2) / 2)
----##
----##    if S.room and S.room.kind ~= "scenic" and
----##       S.kind == "walk" and not S.content
----##    then
----##      -- THIS IS ESSENTIAL (for now) TO PREVENT FILLING by CSG
----##
----##      local MON = GAME.things["candle"]
----##      assert(MON)
----##
----##      local 
----##
----##      gui.add_entity(mx, my, z1 + 25,
----##      {
----##        name = tostring(MON.id)
----##      })
----##    end
+    -- restore diagonal kind for monster/item code
+    if S.diag_new_kind then
+      S.kind = "diagonal"
+    end
 
   end -- build_seed()
 
