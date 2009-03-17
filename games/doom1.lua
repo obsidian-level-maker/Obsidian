@@ -2723,12 +2723,41 @@ COMMON_THEMES =
 
     hallway =
     {
-      -- FIXME
+      walls =
+      {
+        BROWN1=50, BROWNGRN=50, GRAY1=50, STARBR2=50
+      },
+
+      floors =
+      {
+        FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
+      },
+
+      ceils =
+      {
+        FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
+      },
     },
 
     exit =
     {
-      -- FIXME
+      walls =
+      {
+        METAL2=50,   STARTAN2=50, STARG1=50,
+        TEKWALL4=50, PIPEWAL2=50,
+        TEKGREN1=50, SPACEW2=50,  STARBR2=50
+      },
+
+      floors =
+      {
+        FLOOR0_3=50, FLOOR5_2=50
+      },
+
+      ceils =
+      {
+        TLITE6_6=50, TLITE6_5=50, FLAT17=50,
+        FLOOR1_7=50, GRNLITE1=50, CEIL4_3=50
+      },
     },
 
     room_types =

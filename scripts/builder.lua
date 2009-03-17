@@ -1946,14 +1946,10 @@ function Build_small_exit(R, item_name)
   local f_h = C.conn_h or T.floor_h or T.room.floor_h or 0
   local c_h = f_h + 128
 
-  local w_tex = rand_element { "METAL2",  "STARTAN2", "STARG1",
-                               "TEKWALL4","PIPEWAL2",
-                               "TEKGREN1", "SPACEW2",  "STARBR2" }
-
-  local c_tex = rand_element { "TLITE6_6", "TLITE6_5", "FLAT17",
-                               "FLOOR1_7", "GRNLITE1", "CEIL4_3" }
-
-  local f_tex = rand_element { "FLOOR0_3", "FLOOR5_2" }
+  local xt_info = assert(PLAN.theme.exit)
+  local w_tex = rand_key_by_probs(xt_info.walls)
+  local f_tex = rand_key_by_probs(xt_info.floors)
+  local c_tex = rand_key_by_probs(xt_info.ceils)
 
   local inner_info =
   {

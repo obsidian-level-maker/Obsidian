@@ -1349,14 +1349,12 @@ function Layout_hallway(R)
   R.tx2, R.ty2 = R.sx2, R.sy2
   R.tw,  R.th  = R.sw,  R.sh
 
-  local HALL_TEX   = { "BROWN1", "BROWNGRN", "GRAY1", "STARBR2" }
-  local HALL_FLOOR = { "FLAT4", "CEIL5_1", "FLOOR1_1", "FLOOR3_3",  }
-  local HALL_CEIL  = { "FLAT4", "CEIL5_1", "CEIL3_5", "CEIL3_3" }
-
   if not PLAN.hall_tex then
-    PLAN.hall_tex   = rand_element(HALL_TEX)
-    PLAN.hall_floor = rand_element(HALL_FLOOR)
-    PLAN.hall_ceil  = rand_element(HALL_CEIL)
+    local info = assert(PLAN.theme.hallway)
+
+    PLAN.hall_tex   = rand_key_by_probs(info.walls)
+    PLAN.hall_floor = rand_key_by_probs(info.floors)
+    PLAN.hall_ceil  = rand_key_by_probs(info.ceils)
 
     PLAN.hall_trim   = rand_odds(50)
     PLAN.hall_lights = rand_odds(50)
