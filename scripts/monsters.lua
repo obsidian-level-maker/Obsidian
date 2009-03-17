@@ -385,7 +385,7 @@ function Monsters_do_pickups()
   local function try_add_big_spot(R, S)
     local score = gui.random()
 
-    if S.div_lev >= 2 then score = score + 10 end
+    if S.div_lev and S.div_lev >= 2 then score = score + 10 end
 
     if S.sx > (R.tx1 or R.sx1) and S.sx < (R.tx2 or R.sx2) then score = score + 2.4 end
     if S.sy > (R.ty1 or R.sy1) and S.sy < (R.ty2 or R.sy2) then score = score + 2.4 end
