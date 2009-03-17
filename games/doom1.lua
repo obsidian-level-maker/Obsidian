@@ -3000,7 +3000,7 @@ COMMON_WEAPONS =
 
   saw =
   {
-    add_prob=2, start_prob=10,
+    pref=3, add_prob=2,  ---??? start_prob=10,
     rate=8.7, damage=10, attack="melee",
   },
 
@@ -3013,7 +3013,7 @@ COMMON_WEAPONS =
 
   pistol =
   {
-    pref=10,
+    pref=5,
     rate=1.8, damage=10, attack="hitscan",
     ammo="bullet", per=1,
   },
