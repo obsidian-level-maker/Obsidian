@@ -199,12 +199,12 @@ function Monsters_global_palette()
   rand_shuffle(list)
 
   -- sometimes promote a particular monster
-  if rand_odds(25) then
+  if rand_odds(30) then
     local promote = list[#list]
     local info = GAME.monsters[promote]
     if not info.never_promote then
       gui.debugf("Promoting monster: %s\n", promote)
-      LEVEL.monster_prefs[promote] = 4.0
+      LEVEL.monster_prefs[promote] = 3.3
     end
   end
 
