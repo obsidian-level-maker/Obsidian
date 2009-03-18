@@ -3,24 +3,6 @@ TODO
 ====
 
 
-Pickups:
-!!  ammo for room/arena weapon
-
-  -  big_items:
-     +  NxN (prefer 1) per seed
-     +  far from entry door
-     +  away from walls, div_lev >= 2
-     +  not next to wall or ledge 
-     +  not under monster
-
-  -  normal items:
-     +  N rows (prefer 1) per seed
-     +  next to walls and ledges
-     +  away from entry door
-
-  -  create_pickup_map: big vs small
-
-
 Monsters:
   +  add guard monsters first, seeds around the purpose
      (or the weapon).
@@ -81,9 +63,6 @@ Fight Sim: reimplement monster-weapon preferences
 
 Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
   
-  >>>  PREFS["rocket@shambler"] = 0.1
-       PREFS["launch@skull"] = 0.1
-       PREFS["shotty@imp"] = 3.0
 
 Misc:
 
@@ -101,8 +80,9 @@ DETAILED TODO LIST
 !!  CSG CODE: do a proper face-creation pass (merge_face_c list
               in each merge_segment_c ?) and get proper brush
               and area_vert references.
+
               Hence remove the CSG2_FindXXX rubbish.
-              
+
 
 ++  DOOM CSG: merge linedefs where possible
 
