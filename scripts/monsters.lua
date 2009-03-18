@@ -1108,7 +1108,7 @@ function Monsters_in_room(R)
   local function user_adjust_result(stats)
     -- apply the user's health/ammo adjustments here
 
-    local heal_mul = 1.00 * HEALTH_AMMO_ADJUSTS[OB_CONFIG.health]
+    local heal_mul = 0.70 * HEALTH_AMMO_ADJUSTS[OB_CONFIG.health]
     local ammo_mul = 1.00 * HEALTH_AMMO_ADJUSTS[OB_CONFIG.ammo]
 
     for name,qty in pairs(stats) do
