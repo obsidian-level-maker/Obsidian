@@ -295,68 +295,6 @@ function Monsters_do_pickups()
   end
 
 
-  local function eval_big_spot(S)
-    local score = gui.random()
-
-    -- FIXME: eval_big_spot
-
-    return score
-  end
-
-  local function eval_small_spot(S)
-    local score = gui.random()
-
-    -- FIXME: eval_small_spot
-
-    return score
-  end
-
-  local function create_pickup_map(R)
-    -- Creates a map over the room of which seeds we can place
-    -- pickup items in.  We distinguish two types: 'big' items
-    -- (Mega Health or Blue Armor) and 'small' items:
-    --
-    -- 1. big items prefer to have a seed for itself, and
-    --    somewhere near to the centre of the room.
-    --
-    -- 2. small items prefer to sit next to walls (or ledges)
-    --    and be grouped in clusters.
-    --
-    -- To achieve this, our map will consist of two lists (big
-    -- and small) of seeds, sorted into best --> worst order
-    -- (with a healthy dose of randomness of course).  As we
-    -- process each item, we pick a seed from the appropriate
-    -- list and that seed will (from then on) only be used for
-    -- either big or small items.
-
-    R.big_spots = {}
-    R.small_spots = {}
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      local score
-
-      if S.room == R and S.kind == "walk" and
-         (not S.content or S.content == "monster")
-      then
-        score = eval_big_spot(S)
-        if score >= 0 then
-          table.insert(R.big_spots, { S=S, score=score })
-        end
-
-        score = eval_small_spot(S)
-        if score >= 0 then
-          table.insert(R.small_spots, { S=S, score=score })
-        end
-      end
-    end end -- for x, y
-
-    if #R.big_spots == 0 or #R.small_spots == 0 then
-      error("No usable spots for Health/Ammo ??")
-    end
-  end
-
-
   local function add_big_spot(R, S, score)
     local mx, my = S:mid_point()
     table.insert(R.big_spots, { S=S, x=mx, y=my, score=score })
@@ -446,7 +384,21 @@ function Monsters_do_pickups()
   end
 
   local function find_pickup_spots(R)
-    gui.debugf("Find pickup spots @ %s\n", R:tostr())
+    -- Creates a map over the room of which seeds we can place
+    -- pickup items in.  We distinguish two types: 'big' items
+    -- (Mega Health or Blue Armor) and 'small' items:
+    --
+    -- 1. big items prefer to have a seed for itself, and
+    --    somewhere near to the centre of the room.
+    --
+    -- 2. small items prefer to sit next to walls (or ledges)
+    --    and be grouped in clusters.
+    --
+    -- To achieve this, our map will consist of two lists (big
+    -- and small) of seeds, sorted into best --> worst order
+    -- (with a healthy dose of randomness of course).
+
+    gui.debugf("find_pickup_spots @ %s\n", R:tostr())
 
     R.big_spots = {}
     R.small_spots = {}
@@ -518,7 +470,7 @@ function Monsters_do_pickups()
       --- count = rand_irange(min_num, max_num)
 
       if min_num * each_qty >= qty then
-        count = 1
+        count = min_num
       elseif max_num * each_qty <= qty then
         count = max_num - rand_sel(20,1,0)
       else
@@ -529,18 +481,16 @@ function Monsters_do_pickups()
     return GAME.pickups[name], count
   end
 
-  local function select_pickups(R, stat, qty, hmodel)
+  local function select_pickups(R, item_list, stat, qty, hmodel)
 gui.debugf("Initial = %s:%1.1f\n", stat, hmodel.stats[stat])
 
     -- subtract any previous gotten stuff
     qty = qty - hmodel.stats[stat]
     hmodel.stats[stat] = 0
 
-    local item_list = {}
-
     while qty > 0 do
       local item, count = decide_pickup(stat, qty)
-      table.insert(item_list, { item=item, count=count, SK=hmodel.skill })
+      table.insert(item_list, { item=item, count=count, SK=hmodel.skill, rand=gui.random() })
       
       if stat == "health" then
         qty = qty - item.give[1].health * count
@@ -555,8 +505,6 @@ gui.debugf("Initial = %s:%1.1f\n", stat, hmodel.stats[stat])
 gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
       hmodel.stats[stat] = assert(hmodel.stats[stat]) - qty
     end
-
-    return item_list
   end
 
   local function place_item(S, item_name, x, y, SK)
@@ -590,10 +538,12 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
       return
     end
 
+    local away = sel(count == 2, 20, 56)
+
     if is_vert(spot.dir) then
-      y1, y2 = y1-56, y2+56
+      y1, y2 = y1-away, y2+away
     else
-      x1, x2 = x1-56, x2+56
+      x1, x2 = x1-away, x2+away
     end
 
     for i = 1,count do
@@ -605,7 +555,6 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   end
 
   local function place_item_list(R, item_list, SK, CL)
-
     for _,pair in ipairs(item_list) do
       local item  = pair.item
       local count = pair.count
@@ -627,13 +576,13 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   end
 
   local function pickups_for_hmodel(R, SK, CL, hmodel)
-    sort_spots(R)
+    local item_list = {}
 
     local stats = R.fight_stats[SK][CL]
 
     for stat,qty in pairs(stats) do
       if qty > 0 then
-        local item_list = select_pickups(R, stat, qty, hmodel)
+        select_pickups(R, item_list, stat, qty, hmodel)
 
         gui.debugf("Item list for %s:%1.1f [%s/%s] @ %s\n", stat,qty, CL,SK, R:tostr())
         for _,pair in ipairs(item_list) do
@@ -641,10 +590,15 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
           gui.debugf("   %dx %s (%d) @ %s\n", pair.count, item.name,
                      item.give[1].health or item.give[1].count, SK)
         end
-
-        place_item_list(R, item_list, SK, CL)
       end
     end
+
+    sort_spots(R)
+
+    -- place large clusters before small ones
+    table.sort(item_list, function(A,B) return (A.count + A.rand) > (B.count + B.rand) end)
+
+    place_item_list(R, item_list, SK, CL)
   end
 
   local function pickups_in_room(R)

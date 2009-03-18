@@ -3125,7 +3125,7 @@ COMMON_PICKUPS =
 
   potion =
   {
-    prob=20, cluster={ 4,9 },
+    prob=20, cluster={ 4,7 },
     give={ {health=1} },
   },
 
@@ -3157,7 +3157,7 @@ COMMON_PICKUPS =
 
   helmet =
   {
-    prob=10, armor=true, cluster={ 4,9 },
+    prob=10, armor=true, cluster={ 4,7 },
     give={ {health=1} },
   },
 
@@ -3201,7 +3201,7 @@ COMMON_PICKUPS =
 
   rockets =
   {
-    prob=10, cluster={ 4,9 },
+    prob=10, cluster={ 4,7 },
     give={ {ammo="rocket",count=1} },
   },
 
