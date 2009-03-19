@@ -897,7 +897,7 @@ static void MapModel_Clip(qLump_c *L, s32_t base,
       clip.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
     }
 
-    clip.children[0] = CONTENTS_EMPTY;
+    clip.children[0] = (u16_t) CONTENTS_EMPTY;
     clip.children[1] = (face == 5) ? CONTENTS_SOLID : base + face + 1;
 
     if (flipped)
