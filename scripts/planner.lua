@@ -822,8 +822,8 @@ function Plan_determine_size()
   end
 
   if ob_size == "mixed" then
-    W = 3 + rand_index_by_probs { 2,4,6,10,6,4,2,1 }
-    H = 3 + rand_index_by_probs { 2,4,6,10,6,4,2 }
+    W = 3 + rand_index_by_probs { 2,4,6,6,4,3,2,1 }
+    H = 2 + rand_index_by_probs { 2,4,6,6,4,3,2 }
 
     if W < H then W, H = H, W end
   else
