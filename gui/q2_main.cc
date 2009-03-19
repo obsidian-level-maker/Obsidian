@@ -446,7 +446,7 @@ void quake2_game_interface_c::EndLevel()
   sprintf(entry_in_pak, "maps/%s.bsp", level_name);
 
   if (! BSP_OpenLevel("maps/base1.bsp", 2))
-    return; //!!!!!! FUCK
+    return; //!!!!!! ARGH
 
   ClearBrushes();
   ClearTexInfo();

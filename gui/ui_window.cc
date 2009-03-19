@@ -106,8 +106,7 @@ void UI_MainWin::Locked(bool value)
   build_box->Locked(value);
   level_box->Locked(value);
   play_box ->Locked(value);
-
-//!!!!  mod_box   ->Locked(value);
+  mod_box  ->Locked(value);
 }
 
 //--- editor settings ---
