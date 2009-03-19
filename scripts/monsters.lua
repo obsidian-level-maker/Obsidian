@@ -421,7 +421,13 @@ function Monsters_do_pickups()
       end
     end end -- for x, y
 
-    assert(emerg_big and emerg_small)
+    -- luckily this is very rare
+    if not emerg_small then
+      gui.printf("No spots for pickups in %s\n", R:tostr())
+      return false
+    end
+
+    assert(emerg_big)
 
     if #R.big_spots == 0 then
       gui.debugf("No big spots found : using emergency\n")
@@ -432,6 +438,8 @@ function Monsters_do_pickups()
       gui.debugf("No small spots found : using emergency\n")
       add_small_spots(R, emerg_small, 2, 4, 0)
     end
+
+    return true
   end
 
   local function sort_spots(R)
@@ -602,13 +610,13 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   end
 
   local function pickups_in_room(R)
-    find_pickup_spots(R)
-
-    for _,SK in ipairs(SKILLS) do
-      for CL,hmodel in pairs(PLAN.hmodels[SK]) do
-        pickups_for_hmodel(R, SK, CL, hmodel)
-      end -- for CL
-    end -- for SK
+    if find_pickup_spots(R) then
+      for _,SK in ipairs(SKILLS) do
+        for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+          pickups_for_hmodel(R, SK, CL, hmodel)
+        end -- for CL
+      end -- for SK
+    end
   end
 
 
