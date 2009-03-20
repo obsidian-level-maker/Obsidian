@@ -9,12 +9,12 @@ PROGRAM=../Oblige.exe
 
 CXX=i586-mingw32msvc-g++
 
-LIB_LOC=/home/aapted/ebuild
+LIB_LOC=../win32_lib
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.1.x-r5989
+FLTK_DIR=$(LIB_LOC)/fltk-1.1.9
 LUA_DIR=$(LIB_LOC)/lua-5.1.2
 ZLIB_DIR=$(LIB_LOC)/zlib-1.2.3
-GLBSP_DIR=$(LIB_LOC)/glbsp-2.24-source
+GLBSP_DIR=$(LIB_LOC)/glbsp-2.24
 
 # operating system choices: UNIX WIN32
 OS=WIN32
@@ -83,12 +83,12 @@ OBJS=	main.o      \
 	ui_build.o  \
 	ui_chooser.o \
 	ui_dialog.o \
-	ui_game.o  \
-	ui_level.o \
+	ui_game.o   \
+	ui_level.o  \
 	ui_map.o    \
 	ui_module.o \
 	ui_rchoice.o \
-	ui_play.o \
+	ui_play.o   \
 	ui_window.o
 
 
@@ -99,11 +99,11 @@ all: $(PROGRAM)
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
 
+stripped: $(PROGRAM)
+	i586-mingw32msvc-strip --strip-unneeded $(PROGRAM)
+
 oblige_res.o: oblige.rc
 	i586-mingw32msvc-windres $^ -o $@
-
-bin: all
-	i586-mingw32msvc-strip --strip-unneeded $(PROGRAM)
 
 .PHONY: all clean bin
 
