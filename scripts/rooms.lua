@@ -1929,7 +1929,7 @@ gui.printf("do_teleport\n")
       },
       z2, EXTREME_H)
 
-      if R.kind == "hallway" and PLAN.hall_lights then
+      if R.kind == "hallway" and PLAN.hall_lights and not R.hall_sky then
         local x_num, y_num = 0,0
 
         for side = 2,8,2 do

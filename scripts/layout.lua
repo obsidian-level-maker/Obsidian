@@ -1386,12 +1386,11 @@ function Layout_hallway(R)
 
 
   local height = 128
-  local is_sky = false
   if rand_odds(20) then
     height = 192
   elseif rand_odds(10) then
     height = 256
-    is_sky = true
+    R.hall_sky = true
   end
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
@@ -1404,7 +1403,7 @@ function Layout_hallway(R)
       S.f_tex = PLAN.hall_floor
       S.c_tex = PLAN.hall_ceil
 
-      if is_sky then
+      if R.hall_sky then
         S.c_tex = PARAMS.sky_flat
       end
     end
