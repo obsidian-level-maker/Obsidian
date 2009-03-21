@@ -1131,15 +1131,23 @@ function Build_tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
   {
     t_face = { texture=assert(skin.top_f) },
     b_face = { texture=      (skin.top_f) },
-    w_face = { texture=assert(skin.step_w) },
+    w_face = { texture=assert(skin.step_w), peg=true, y_offset=0 },
   }
 
-  local step_face = { texture=assert(skin.step_w), peg=true, y_offset=0 }
-
-  local steps = int(math.abs(y_h-x_h) / 14 + 0.9)
+  local diff_h = math.abs(y_h - x_h)
+  local steps  = int(diff_h / 14 + 0.9)
 
   if steps < 4 then
     steps = 4
+  end
+
+  -- make sure there is a visible step at the bottom
+  if x_h+24 < y_h then
+    x_h = x_h + diff_h / (steps+2)
+    y_h = y_h - diff_h / (steps+2)
+  elseif y_h+24 < x_h then
+    y_h = y_h + diff_h / (steps+2)
+    x_h = x_h - diff_h / (steps+2)
   end
 
   local x1, y1 = S.x1, S.y1
@@ -1374,10 +1382,8 @@ function Build_low_curved_stair(S, skin, x_side,y_side, x_h,y_h)
   {
     t_face = { texture=assert(skin.top_f) },
     b_face = { texture=      (skin.top_f) },
-    w_face = { texture=assert(skin.step_w) },
+    w_face = { texture=assert(skin.step_w), peg=true, y_offset=0 },
   }
-
-  local step_face = { texture=assert(skin.step_w), peg=true, y_offset=0 }
 
   -- create transform
   local T =
