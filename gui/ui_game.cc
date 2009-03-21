@@ -240,7 +240,7 @@ void UI_Game::Defaults()
   FreshSeed();
 
   ParseValue("mode", "sp");
-  ParseValue("length", "single");
+  ParseValue("length", "few");
 }
 
 bool UI_Game::ParseValue(const char *key, const char *value)

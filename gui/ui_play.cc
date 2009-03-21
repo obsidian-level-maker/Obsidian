@@ -219,8 +219,8 @@ void UI_Play::callback_Ammo(Fl_Widget *w, void *data)
 
 void UI_Play::Defaults()
 {
-  ParseValue("mons",    "mixed");
-  ParseValue("powers", "normal");
+  ParseValue("mons",    "normal");
+  ParseValue("powers",  "normal");
   ParseValue("traps",   "mixed");
   ParseValue("health",  "normal");
   ParseValue("ammo",    "normal");
