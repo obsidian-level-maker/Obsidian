@@ -362,19 +362,18 @@ function ob_read_all_config(all_opts)
   do_line("")
 
   do_line("-- Custom Modules --");
+
   for name,def in pairs(OB_MODULES) do
     do_line("%s.self = %s", name, sel(def.enabled, "true", "false"))
-  end
-  do_line("")
 
-  do_line("-- Module Options --");
-  for name,def in pairs(OB_MODULES) do
+    -- module options
     if def.options and (all_opts or def.enabled) then
       for o_name,opt in pairs(def.options) do
         do_line("%s.%s = %s", name, o_name, opt.value or unknown)
       end
     end
   end
+
   do_line("")
 end
 
