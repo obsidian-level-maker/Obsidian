@@ -1818,14 +1818,14 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       table.insert(f_texs, focus_C.conn_ftex)
     end
 
-    if R.combo.floors then
-      for i = 1,4 do
+    for i = 1,4 do
+      if R.combo.floors then
         table.insert(f_texs, rand_element(R.combo.floors))
+      elseif PLAN.theme.floors then
+        table.insert(f_texs, rand_key_by_probs(PLAN.theme.floors))
+      else
+        table.insert(f_texs, f_texs[1] or R.combo.floor)
       end
-    end
-    
-    while #f_texs < 4 do
-      table.insert(f_texs, f_texs[1] or R.combo.floor)
     end
 
     return f_texs
