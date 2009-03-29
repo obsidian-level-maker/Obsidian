@@ -668,7 +668,7 @@ function Monsters_in_room(R)
     if LEVEL.toughness then
       toughness = toughness * LEVEL.toughness
     elseif OB_CONFIG.length ~= "single" then
-      toughness = toughness * (1 + LEVEL.ep_along * 2.4)
+      toughness = toughness * (1 + LEVEL.ep_along * 2.1)
     end
 
     -- less emphasis within a level, since each arena naturally
@@ -676,7 +676,7 @@ function Monsters_in_room(R)
     if R.arena.id == 1 then
       toughness = toughness * 0.8
     elseif R.arena.id >= (#PLAN.all_arenas - 1) then
-      toughness = toughness * 1.5
+      toughness = toughness * 1.4
     end
 
     if R.kind == "hallway" then
@@ -737,6 +737,28 @@ function Monsters_in_room(R)
     return prob
   end
 
+  local function number_of_kinds(fp)
+    local size = (R.tw or R.sw) + (R.th or R.sh)
+    local num  = int(size / 5.0 + 0.5 + gui.random() * 0.75)
+
+    if num < 1 then num = 1 end
+    if num > 3 then num = 3 end
+
+    local ONE_MORE_CHANCES = { normal=25, more=50, heaps=99 }
+
+    local bump_prob = ONE_MORE_CHANCES[OB_CONFIG.mons] or 15
+
+    if rand_odds(bump_prob) then
+      num = num + 1
+    end
+
+    if fp >= 40 and rand_odds(bump_prob / 4) then
+      num = num + 1
+    end
+
+    return num
+  end
+
   local function select_monsters(toughness)
     -- FIXME: guard monsters !!!
 
@@ -773,16 +795,11 @@ function Monsters_in_room(R)
       list[fallback.name] = 50
     end
 
-    -- how many kinds??   FIXME: better calc!
-    local num_kinds = 1
-        if R.svolume >= 81 then num_kinds = 4
-    elseif R.svolume >= 36 then num_kinds = 3
-    elseif R.svolume >= 10 then num_kinds = 2
-    end
+    local num_kinds = number_of_kinds(fp)
 
     local palette = {}
 
-    gui.debugf("Monster palette:\n")
+    gui.debugf("Monster palette: (%d kinds)\n", num_kinds)
 
     for i = 1,num_kinds do
       local mon = rand_key_by_probs(list)
