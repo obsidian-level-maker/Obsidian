@@ -829,9 +829,11 @@ function Plan_determine_size()
       if n < 1 then n = 1 end
       if n > 9 then n = 9 end
 
-      local SIZES = { 5,5,6, 6,7,7, 8,8,9 }
+      local WIDTHS  = { 5,5,5, 5,6,7, 7,8,9 }
+      local HEIGHTS = { 3,3,4, 4,5,5, 6,7,7 }
 
-      W = SIZES[n]
+      W = WIDTHS[n]
+      H = HEIGHTS[n]
     else
       local SIZES = { small=5, normal=7, large=9 }
 
@@ -840,14 +842,14 @@ function Plan_determine_size()
       if not W then
         error("Unknown size keyword: " .. tostring(ob_size))
       end
+
+      H = W-1
+
+      if rand_odds(30) then W = W - 1 end
+      if rand_odds(70) then H = H - 1 end
+
+      if W >= 6 and rand_odds(50) then H = H - 1 end
     end
-
-    H = W-1
-
-    if rand_odds(30) then W = W - 1 end
-    if rand_odds(70) then H = H - 1 end
-
-    if W >= 6 and rand_odds(50) then H = H - 1 end
   end
 
   PLAN.W = W
