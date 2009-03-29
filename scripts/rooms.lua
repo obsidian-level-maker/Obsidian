@@ -1970,11 +1970,15 @@ local STEP_SKINS =
 }
 local LIFT_SKINS =
 {
-  { side_w="SUPPORT2", top_f="FLAT20" },
+  shiny = 
+  {
+    side_w="SUPPORT2", top_f="FLAT20",
+    walk_kind=88, switch_kind=62,
+  },
 }
 if not PLAN.step_skin then
   PLAN.step_skin = rand_element(STEP_SKINS)
-  PLAN.lift_skin = LIFT_SKINS[1]
+  PLAN.lift_skin = LIFT_SKINS.shiny
 end
 
 

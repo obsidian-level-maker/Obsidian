@@ -1633,12 +1633,14 @@ end
 
 
 function Build_lift(S, skin, tag)
+  assert(skin.walk_kind)
+  assert(skin.switch_kind)
 
   local lift_info =
   {
     t_face = { texture=assert(skin.top_f) },
     b_face = { texture=      (skin.top_f) },
-    w_face = { texture=assert(skin.side_w), peg=true },
+    w_face = { texture=assert(skin.side_w) },
   }
 
   local side = S.stair_dir
@@ -1652,37 +1654,18 @@ function Build_lift(S, skin, tag)
   end
 
 
-  local kinds = {}
+  local switch_dirs = {}
 
   for dir = 2,8,2 do
     local N = S:neighbor(dir)
-
-    kinds[dir] = 88  -- default action: walk to lower
 
     if (dir == 10-side) or
        (is_perpendicular(dir, side) and N and N.room == S.room
         and N.floor_h and N.floor_h < high_z - 15)
     then
-      kinds[dir] = 62  -- switch to lower
+      switch_dirs[dir] = true
     end
   end
-
-
-  local lift_coords = get_wall_coords(S, side, 128)
-
-  lift_coords[1].line_kind = kinds[6]
-  lift_coords[2].line_kind = kinds[8]
-  lift_coords[3].line_kind = kinds[4]
-  lift_coords[4].line_kind = kinds[2]
-
-  lift_coords[1].line_tag = tag
-  lift_coords[2].line_tag = tag
-  lift_coords[3].line_tag = tag
-  lift_coords[4].line_tag = tag
-
-  lift_info.sec_tag = tag
-
-  transformed_brush(nil, lift_info, lift_coords, -EXTREME_H, high_z - 16)
 
 
   local f_tex = S.f_tex or S.room.combo.floor
@@ -1692,6 +1675,32 @@ function Build_lift(S, skin, tag)
   if S2 and S2.room == S.room and S2.kind == "walk" and S2.f_tex then
     f_tex = S2.f_tex
   end
+
+
+  local sw_face = { texture=skin.side_w, y_offset=0, peg=true }
+
+  local coords = get_wall_coords(S, side, 128)
+
+  -- FIXME: there must be a better way....
+  coords[1].line_kind = sel(switch_dirs[6], skin.switch_kind, skin.walk_kind)
+  coords[2].line_kind = sel(switch_dirs[8], skin.switch_kind, skin.walk_kind)
+  coords[3].line_kind = sel(switch_dirs[4], skin.switch_kind, skin.walk_kind)
+  coords[4].line_kind = sel(switch_dirs[2], skin.switch_kind, skin.walk_kind)
+
+  if switch_dirs[6] then coords[1].w_face = sw_face end
+  if switch_dirs[8] then coords[2].w_face = sw_face end
+  if switch_dirs[4] then coords[3].w_face = sw_face end
+  if switch_dirs[2] then coords[4].w_face = sw_face end
+
+  coords[1].line_tag = tag
+  coords[2].line_tag = tag
+  coords[3].line_tag = tag
+  coords[4].line_tag = tag
+
+  lift_info.sec_tag = tag
+
+  transformed_brush(nil, lift_info, coords, -EXTREME_H, high_z - 8)
+
 
   local front_coords = get_wall_coords(S, 10-side, 128)
 
