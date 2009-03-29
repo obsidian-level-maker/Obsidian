@@ -684,7 +684,7 @@ end
 
 function Build_detailed_hall(S, side, z1, z2)
 
-  local function get_hall_coords(thickness)
+  local function get_hall_coords(thickness, pad)
 
     ---### S.thick[side] = thickness
 
@@ -711,7 +711,7 @@ function Build_detailed_hall(S, side, z1, z2)
 
     end
 
-    local res = get_wall_coords(S, side, thickness)
+    local res = get_wall_coords(S, side, thickness, pad)
 
     S.x1,S.y1, S.x2,S.y2 = ox1, oy1, ox2, oy2
     
@@ -721,18 +721,18 @@ function Build_detailed_hall(S, side, z1, z2)
 
   if PLAN.hall_trim then
     transformed_brush(nil, material_to_info("metal"),
-        get_hall_coords(32), -EXTREME_H, z1 + 32)
+        get_hall_coords(32, 8), -EXTREME_H, z1 + 32)
 
     transformed_brush(nil, material_to_info("metal"),
-        get_hall_coords(32), z2 - 32, EXTREME_H)
+        get_hall_coords(32, 8), z2 - 32, EXTREME_H)
   end
 
 
   transformed_brush(nil, material_to_info("gray"),
-      get_hall_coords(64), -EXTREME_H, z1 + 6)
+      get_hall_coords(64, 8), -EXTREME_H, z1 + 6)
 
   transformed_brush(nil, material_to_info("gray"),
-      get_hall_coords(64), z2 - 6, EXTREME_H)
+      get_hall_coords(64, 8), z2 - 6, EXTREME_H)
 
 
   transformed_brush(nil,
@@ -741,7 +741,7 @@ function Build_detailed_hall(S, side, z1, z2)
     b_face = { texture="FLAT1" },
     w_face = { texture=PLAN.hall_tex or "GRAY7" },
   },
-  get_hall_coords(24), -EXTREME_H, EXTREME_H)
+  get_hall_coords(24, 0), -EXTREME_H, EXTREME_H)
 
 
   -- TODO : corners
