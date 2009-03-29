@@ -57,10 +57,13 @@ STYLE_LIST =
   pillars    = { few=30, some=60, heaps=20 },
   beams      = { few=50, some=30, heaps=5  },
 
-  windows    = { few=20, some=50, heaps=30 },
+  windows    = { few=20, some=50, heaps=20 },
   pictures   = { few=10, some=50, heaps=10 },
   cages      = { none=50, some=50, heaps=6 },
   fences     = { none=30, few=30, some=10 },
+
+  lt_trim    = { none=40, some=20, heaps=10 },
+  lt_spokes  = { none=90, some=20, heaps=5 },
 
   favor_shape = { none=80, L=5, T=5, O=5, S=5, X=5 },
 }
@@ -160,7 +163,7 @@ end
 
 
 function Level_styles()
-  for name,prob_tab in ipairs(STYLE_LIST) do
+  for name,prob_tab in pairs(STYLE_LIST) do
     STYLE[name] = rand_key_by_probs(prob_tab)
   end
 
