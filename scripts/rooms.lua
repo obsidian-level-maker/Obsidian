@@ -1575,8 +1575,19 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
         w_face = { texture="METAL" },
       }
 
-      local metal = material_to_info("metal")
-      local shiny = material_to_info("shiny")
+    local trim   = material_to_info("metal")
+    local spokes = material_to_info("shiny")
+
+    if STYLE.lt_swapped ~= "none" then
+      trim, spokes = spokes, trim
+    end
+
+    if STYLE.lt_trim == "none" or (STYLE.lt_trim == "some" and rand_odds(50)) then
+      trim = nil
+    end
+    if STYLE.lt_spokes == "none" or (STYLE.lt_spokes == "some" and rand_odds(70)) then
+      spokes = nil
+    end
 
     if R.cw == 1 or R.ch == 1 then
       fill_xyz(light_info.b_face.texture, R.ceil_h + 32)
@@ -1593,7 +1604,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
                    ceil_info, R.ceil_h,
                    sel(not has_sky_nb and not R.parent and rand_odds(60), sky_info,
                        rand_sel(75, light_info, brown_info)), R.ceil_h + z,
-                   metal, nil)
+                   trim, spokes)
   end
 
   local function indoor_ceiling()

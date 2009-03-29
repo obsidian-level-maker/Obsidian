@@ -1682,7 +1682,7 @@ function Build_lift(S, skin, tag)
 
   lift_info.sec_tag = tag
 
-  transformed_brush(nil, lift_info, lift_coords, -EXTREME_H, high_z)
+  transformed_brush(nil, lift_info, lift_coords, -EXTREME_H, high_z - 16)
 
 
   local f_tex = S.f_tex or S.room.combo.floor
@@ -2922,20 +2922,22 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
 
   local w = 8 * int(1 + math.max(mw,mh) / 120)
 
-  if trim and kind == "square" then
-    transformed_brush(nil, trim, rect_coords(x1-w,y1-w, x1+4,y2+w), outer_z-24, EXTREME_H)
-    transformed_brush(nil, trim, rect_coords(x2-4,y1-w, x2+w,y2+w), outer_z-24, EXTREME_H)
+  local trim_h = 4 * int(1 + math.min(mw,mh) / 120)
 
-    transformed_brush(nil, trim, rect_coords(x1+4,y1-w, x2-4,y1+4), outer_z-24, EXTREME_H)
-    transformed_brush(nil, trim, rect_coords(x1+4,y2-4, x2-4,y2+w), outer_z-24, EXTREME_H)
+  if trim and kind == "square" then
+    transformed_brush(nil, trim, rect_coords(x1-w,y1-w, x1+4,y2+w), outer_z-trim_h, EXTREME_H)
+    transformed_brush(nil, trim, rect_coords(x2-4,y1-w, x2+w,y2+w), outer_z-trim_h, EXTREME_H)
+
+    transformed_brush(nil, trim, rect_coords(x1+4,y1-w, x2-4,y1+4), outer_z-trim_h, EXTREME_H)
+    transformed_brush(nil, trim, rect_coords(x1+4,y2-4, x2-4,y2+w), outer_z-trim_h, EXTREME_H)
   end
 
   if trim and kind == "round" then
-    transformed_brush(nil, trim, rect_coords(x1-w,y1+diag_h, x1+4,y2-diag_h), outer_z-24, EXTREME_H)
-    transformed_brush(nil, trim, rect_coords(x2-4,y1+diag_h, x2+w,y2-diag_h), outer_z-24, EXTREME_H)
+    transformed_brush(nil, trim, rect_coords(x1-w,y1+diag_h, x1+4,y2-diag_h), outer_z-trim_h, EXTREME_H)
+    transformed_brush(nil, trim, rect_coords(x2-4,y1+diag_h, x2+w,y2-diag_h), outer_z-trim_h, EXTREME_H)
 
-    transformed_brush(nil, trim, rect_coords(x1+diag_w,y1-w, x2-diag_w,y1+4), outer_z-24, EXTREME_H)
-    transformed_brush(nil, trim, rect_coords(x1+diag_w,y2-4, x2-diag_w,y2+w), outer_z-24, EXTREME_H)
+    transformed_brush(nil, trim, rect_coords(x1+diag_w,y1-w, x2-diag_w,y1+4), outer_z-trim_h, EXTREME_H)
+    transformed_brush(nil, trim, rect_coords(x1+diag_w,y2-4, x2-diag_w,y2+w), outer_z-trim_h, EXTREME_H)
 
     transformed_brush(nil, trim,  -- top left
     {
@@ -2944,7 +2946,7 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
       { x=x1+diag_w, y=y2-4 },
       { x=x1+diag_w, y=y2+w },
     },
-    outer_z-24, EXTREME_H)
+    outer_z-trim_h, EXTREME_H)
 
     transformed_brush(nil, trim,  -- top right
     {
@@ -2953,7 +2955,7 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
       { x=x2-4, y=y2-diag_h },
       { x=x2+w, y=y2-diag_h },
     },
-    outer_z-24, EXTREME_H)
+    outer_z-trim_h, EXTREME_H)
 
     transformed_brush(nil, trim,  -- bottom left
     {
@@ -2962,7 +2964,7 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
       { x=x1+diag_w, y=y1-w },
       { x=x1+diag_w, y=y1+4 },
     },
-    outer_z-24, EXTREME_H)
+    outer_z-trim_h, EXTREME_H)
 
     transformed_brush(nil, trim,  -- bottom right
     {
@@ -2971,7 +2973,7 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
       { x=x2+w, y=y1+diag_h },
       { x=x2-4, y=y1+diag_h },
     },
-    outer_z-24, EXTREME_H)
+    outer_z-trim_h, EXTREME_H)
   end
 
 
@@ -2981,12 +2983,13 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
 
   if spokes then
     local pw = w * 2
+    local K = 16
 
-    transformed_brush(nil, spokes, rect_coords(ox1,my-w, x1+pw,my+w), outer_z-32, EXTREME_H)
-    transformed_brush(nil, spokes, rect_coords(x2-pw,my-w, ox2,my+w), outer_z-32, EXTREME_H)
+    transformed_brush(nil, spokes, rect_coords(ox1+K,my-w, x1+pw,my+w), outer_z-trim_h*1.5, EXTREME_H)
+    transformed_brush(nil, spokes, rect_coords(x2-pw,my-w, ox2-K,my+w), outer_z-trim_h*1.5, EXTREME_H)
 
-    transformed_brush(nil, spokes, rect_coords(mx-w,oy1, mx+w,y1+pw), outer_z-32, EXTREME_H)
-    transformed_brush(nil, spokes, rect_coords(mx-w,y2-pw, mx+w,oy2), outer_z-32, EXTREME_H)
+    transformed_brush(nil, spokes, rect_coords(mx-w,oy1+K, mx+w,y1+pw), outer_z-trim_h*1.5, EXTREME_H)
+    transformed_brush(nil, spokes, rect_coords(mx-w,y2-pw, mx+w,oy2-K), outer_z-trim_h*1.5, EXTREME_H)
   end
 
 
