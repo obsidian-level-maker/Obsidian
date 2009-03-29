@@ -1092,7 +1092,7 @@ gui.debugf("Failed\n")
     end
 
     local join_chance = 99
-    if PLAN.scenic_mode == "heaps" then join_chance = 51 end
+    if STYLE.scenics == "heaps" then join_chance = 51 end
 
     local rebels = table_subset_w_field(list, "c_group", rebel_id)
     assert(#rebels > 0)
@@ -1139,8 +1139,8 @@ gui.debugf("Failed\n")
     local list = shallow_copy(PLAN.all_rooms)
 
     local join_chance = 50
-    if PLAN.scenic_mode == "few"   then join_chance = 95 end
-    if PLAN.scenic_mode == "heaps" then join_chance =  5 end
+    if STYLE.scenics == "few"   then join_chance = 95 end
+    if STYLE.scenics == "heaps" then join_chance =  5 end
     if PLAN.join_all then join_chance = 100 end
 
     gui.debugf("Join Chance: %d\n", join_chance)
@@ -1173,10 +1173,10 @@ gui.debugf("Failed\n")
     
   local function sprinkle_scenics()
     -- select some rooms as scenic rooms
-    if PLAN.scenic_mode == "few" then return end
+    if STYLE.scenics == "few" then return end
 
-    local side_prob = sel(PLAN.scenic_mode == "heaps", 60, 10)
-    local mid_prob  = sel(PLAN.scenic_mode == "heaps", 20, 3)
+    local side_prob = sel(STYLE.scenics == "heaps", 60, 10)
+    local mid_prob  = sel(STYLE.scenics == "heaps", 20, 3)
 
     local list = shallow_copy(PLAN.all_rooms)
     rand_shuffle(list)
@@ -1204,9 +1204,6 @@ gui.debugf("Failed\n")
     R.c_group = c_group
   end
 
-
-  PLAN.scenic_mode = rand_key_by_probs { few=30, some=50, heaps=10 }
-  gui.printf("Scenic Mode: %s\n", PLAN.scenic_mode)
 
   sprinkle_scenics()
 

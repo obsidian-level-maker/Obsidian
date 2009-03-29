@@ -43,6 +43,29 @@ require 'fight'
 require 'monsters'
 
 
+STYLE_LIST =
+{
+  skies      = { few=20, some=60, heaps=40 },
+  hallways   = { few=10, some=90, heaps=30 },
+  liquids    = { few=30, some=50, heaps=20 },
+  scenics    = { few=30, some=50, heaps=10 },
+  subrooms   = { none=40, some=80, heaps=5 },
+  islands    = { few=60, heaps=40 },
+
+  junk       = { few=10, some=60, heaps=20 },
+  symmetry   = { few=20, some=60, heaps=20 },
+  pillars    = { few=30, some=60, heaps=20 },
+  beams      = { few=50, some=30, heaps=5  },
+
+  windows    = { few=20, some=50, heaps=30 },
+  pictures   = { few=10, some=50, heaps=10 },
+  cages      = { none=50, some=50, heaps=6 },
+  fences     = { none=30, few=30, some=10 },
+
+  favor_shape = { none=80, L=5, T=5, O=5, S=5, X=5 },
+}
+
+
 function Game_merge_tab(name, t)
   if not t then
     error("Missing table for Game_merge_tab: " .. tostring(name))
@@ -60,6 +83,7 @@ function Level_CleanUp()
   GAME   = {}
   CAPS   = {}
   PARAMS = {}
+  STYLE  = {}
   HOOKS  = {}
 
   LEVEL = nil
@@ -68,6 +92,7 @@ function Level_CleanUp()
 
   collectgarbage("collect")
 end
+
 
 
 function Level_Setup()
@@ -134,6 +159,20 @@ function Level_Setup()
 end
 
 
+function Level_styles()
+  for name,prob_tab in ipairs(STYLE_LIST) do
+    STYLE[name] = rand_key_by_probs(prob_tab)
+  end
+
+  -- GUI overrides...
+  if OB_CONFIG.outdoors and OB_CONFIG.outdoors ~= "mixed" then
+    STYLE.sky = OB_CONFIG.outdoors
+  end
+  
+  gui.printf("\nStyles = \n%s\n\n", table_to_str(STYLE, 1))
+end
+
+
 function Level_Make(L, index, NUM)
   LEVEL = L
 
@@ -147,6 +186,8 @@ function Level_Make(L, index, NUM)
   gui.at_level(LEVEL.name, index, NUM)
 
   -- FIXME: invoke "level_start" signal
+
+  Level_styles()
 
   Plan_rooms_sp()
     if gui.abort() then return "abort" end

@@ -103,15 +103,15 @@ function Rooms_decide_outdoors()
     if R:has_any_lock() and rand_odds(20) then return false end
 
     if R.children then
-      if PLAN.sky_mode == "few" then
+      if STYLE.skies == "few" then
         return rand_odds(33)
       else
         return rand_odds(80)
       end
     end
 
-    if PLAN.sky_mode == "heaps" then return rand_odds(50) end
-    if PLAN.sky_mode == "few"   then return rand_odds(5) end
+    if STYLE.skies == "heaps" then return rand_odds(50) end
+    if STYLE.skies == "few"   then return rand_odds(5) end
 
     -- room on edge of map?
     if R.sx1 <= 2 or R.sy1 <= 2 or R.sx2 >= SEED_W-1 or R.sy2 >= SEED_H-1 then
@@ -246,7 +246,7 @@ function Rooms_decide_hallways_II()
     local outdoor_chance = 5
     local lock_chance    = 50
 
-    if PLAN.hallway_mode == "heaps" then
+    if STYLE.hallways == "heaps" then
       outdoor_chance = 50
       lock_chance = 90
     end
@@ -266,11 +266,11 @@ function Rooms_decide_hallways_II()
 
     if min_d > 6 then return false end
 
-    if PLAN.hallway_mode == "heaps" then
+    if STYLE.hallways == "heaps" then
       return rand_odds(HALL_SIZE_HEAPS[min_d])
     end
 
-    if PLAN.hallway_mode == "few" and rand_odds(66) then
+    if STYLE.hallways == "few" and rand_odds(66) then
       return false end
 
     return rand_odds(HALL_SIZE_PROBS[min_d])
@@ -432,8 +432,8 @@ function Rooms_setup_symmetry()
     local syms  = { "none" }
     local probs = { 100 }
 
-    if PLAN.symmetry_mode == "few"   then probs[1] = 500 end
-    if PLAN.symmetry_mode == "heaps" then probs[1] = 10  end
+    if STYLE.symmetry == "few"   then probs[1] = 500 end
+    if STYLE.symmetry == "heaps" then probs[1] = 10  end
 
     for _,sym in ipairs(SYM_LIST) do
       local p1 = prob_for_size(R, sym)
@@ -576,7 +576,7 @@ function Rooms_reckon_doors()
           elseif rand_odds(prob) then
             B.kind = "door"
           
-          elseif (PLAN.fence_mode == "none" or PLAN.fence_mode == "few") and
+          elseif (STYLE.fences == "none" or STYLE.fences == "few") and
                  C.src.outdoor and C.dest.outdoor then
             B.kind = "nothing"
           end
@@ -628,7 +628,7 @@ function Rooms_border_up()
         S.border[side].kind = "nothing"
       end
 
-      if PLAN.fence_mode == "none" and R1.arena == R2.arena then
+      if STYLE.fences == "none" and R1.arena == R2.arena then
         S.border[side].kind = "nothing"
       end
 
@@ -788,9 +788,9 @@ function Rooms_border_up()
     info.score = score
 
 
-    -- implement the window_mode
-    if (PLAN.window_mode == "few"  and score < 350) or
-       (PLAN.window_mode == "some" and score < 260)
+    -- implement the window style
+    if (STYLE.windows == "few"  and score < 350) or
+       (STYLE.windows == "some" and score < 260)
     then
       return nil
     end
@@ -1084,8 +1084,8 @@ function Rooms_border_up()
     -- deice how many pictures we want
     local perc = rand_element { 20,30,40 }
 
-    if PLAN.picture_mode == "heaps" then perc = 50 end
-    if PLAN.picture_mode == "few"   then perc = 10 end
+    if STYLE.pictures == "heaps" then perc = 50 end
+    if STYLE.pictures == "few"   then perc = 10 end
 
     local count = int(#border_list * perc / 100)
 
@@ -2092,54 +2092,7 @@ function Rooms_build_all()
 
   PLAN.theme = GAME.themes["TECH"] -- FIXME
 
-
-  PLAN.sky_mode = OB_CONFIG.outdoors
-  if not PLAN.sky_mode or PLAN.sky_mode == "mixed" then
-    PLAN.sky_mode = rand_key_by_probs { few=20, some=60, heaps=40 }
-  end
-  gui.printf("Sky Mode: '%s'\n", PLAN.sky_mode)
-
-  PLAN.hallway_mode = rand_key_by_probs { few=10, some=90, heaps=30 }
-  gui.printf("Hallway Mode: %s\n", PLAN.hallway_mode)
-
-  PLAN.liquid_mode = rand_key_by_probs { few=30, some=50, heaps=20 }
-  gui.printf("Liquid Mode: %s\n", PLAN.liquid_mode)
-
-  PLAN.junk_mode = rand_key_by_probs { few=10, some=60, heaps=20 }
-  gui.printf("Junk Mode: %s\n", PLAN.junk_mode)
-
-  PLAN.cage_mode = rand_key_by_probs { none=50, some=50, heaps=6 }
-  gui.printf("Cage Mode: %s\n", PLAN.cage_mode)
-
-  PLAN.pillar_mode = rand_key_by_probs { few=30, some=60, heaps=20 }
-  gui.printf("Pillar Mode: %s\n", PLAN.pillar_mode)
-
-  PLAN.fence_mode = rand_key_by_probs { none=30, few=30, some=10 }
-  gui.printf("Fence Mode: %s\n", PLAN.fence_mode)
-
-  PLAN.window_mode = rand_key_by_probs { few=20, some=50, heaps=30 }
-  gui.printf("Window Mode: %s\n", PLAN.window_mode)
-
-  PLAN.picture_mode = rand_key_by_probs { few=10, some=50, heaps=10 }
-  gui.printf("Picture Mode: %s\n", PLAN.picture_mode)
-
-  PLAN.symmetry_mode = rand_key_by_probs { few=20, some=60, heaps=20 }
-  gui.printf("Symmetry Mode: %s\n", PLAN.symmetry_mode)
-
-  PLAN.favor_shape = rand_key_by_probs { none=80, L=5, T=5, O=5, S=5, X=5 }
-  gui.printf("Favored Shape: %s\n", PLAN.favor_shape)
-
-
---[[
-PLAN.liquid_mode = "some"
-PLAN.symmetry_mode = "some"
-PLAN.junk_mode = "some"
-PLAN.favor_shape = "none"
-PLAN.hallway_mode = "heaps"
-PLAN.sky_mode = "few"  ]]
-
 ---  Test_room_fabs()
-
 
   Rooms_decide_outdoors()
   Rooms_choose_themes()

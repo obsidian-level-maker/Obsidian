@@ -1139,7 +1139,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
           probs[name] = probs[name] * liq_mul
         end
 
-        if info.shape == PLAN.favor_shape then
+        if info.shape == STYLE.favor_shape then
           probs[name] = probs[name] * 20.0
         end
       end
@@ -1159,11 +1159,11 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
     end --]]
 
     local sol_mul = 1.0
-    if PLAN.junk_mode == "heaps" then sol_mul = 3.0 end
+    if STYLE.junk == "heaps" then sol_mul = 3.0 end
 
     local liq_mul = 1.0
-    if PLAN.liquid_mode == "few"   then liq_mul = 0.2 end
-    if PLAN.liquid_mode == "heaps" then liq_mul = 9.0 end
+    if STYLE.liquids == "few"   then liq_mul = 0.2 end
+    if STYLE.liquids == "heaps" then liq_mul = 9.0 end
 
     local f_probs = {}
     local f_infos = {}
@@ -1449,7 +1449,7 @@ function Layout_one(R)
 ---##         if R.junk_thick[4] + R.junk_thick[6] >= x_max then return -1 end
 ---##       end
 
-      if PLAN.junk_mode == "few" and rand_odds(70) then
+      if STYLE.junk == "few" and rand_odds(70) then
         return false
       end
 
@@ -1467,7 +1467,7 @@ function Layout_one(R)
       long = math.min(long, 8)
 
       local prob = JUNK_PROBS[long]
-      if PLAN.junk_mode == "heaps" then prob = JUNK_HEAPS[long] end
+      if STYLE.junk == "heaps" then prob = JUNK_HEAPS[long] end
 
       assert(prob)
       if not rand_odds(prob) then return false end
@@ -2170,7 +2170,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
     if R.parent then return end
 
     -- FIXME this is too crude!
-    if PLAN.pillar_mode == "few" then return end
+    if STYLE.pillars == "few" then return end
 
     local SIDES = { 2, 4 }
     rand_shuffle(SIDES)
