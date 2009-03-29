@@ -2632,10 +2632,10 @@ COMMON_THEMES =
     {
       TECH_BASE=25,
       TECH_GREEN=20,
-      TECH_BROWN=20,
-      TECH_SLAD=20,
+      TECH_BROWN=18,
+      TECH_SLAD=18,
 
-      TECH_METAL=15,
+      TECH_METAL=13,
       TECH_SILVER=10,
       TECH_GRAY=10,
       TECH_LITEBROWN=5,
@@ -2692,20 +2692,20 @@ COMMON_THEMES =
       URBAN_STONE=30,
       URBAN_BROWN=20,
 
-      CAVE_ASH=4,
+      CAVE_ASH=5,
 
       -- FIXME: DOOM II ONLY !!!!!
-      NAT_TANROCK5=8,
-      NAT_MUDDY=4,
-      NAT_SWAMP=4,
-      URBAN_GREENBRK=4,
+      NAT_TANROCK5=10,
+      NAT_MUDDY=5,
+      NAT_SWAMP=5,
+      URBAN_GREENBRK=5,
     },
 
     hallway =
     {
       walls =
       {
-        BROWN1=50, BROWNGRN=50, GRAY1=50, STARBR2=50
+        BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
       },
 
       floors =
