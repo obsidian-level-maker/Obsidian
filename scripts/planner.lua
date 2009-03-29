@@ -140,11 +140,6 @@ function Plan_CreateRooms()
     local function room_char(R)
       if not R then return '.' end
       if R.is_scenic then return '/' end
-  --  if (R.lw == 1 or R.lh == 1) then return '%' end
----###      if R.parent then
----###        local n = 1 + (R.id % 26)
----###        return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
----###      end
       local n = 1 + (R.id % 26)
       return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
     end
@@ -164,36 +159,20 @@ function Plan_CreateRooms()
     gui.printf("\n")
   end
 
-  local function try_expand_room(x, y, bw, bh, R)
-    
-    -- does it fit?
-    if x+bw-1 > PLAN.W or y+bh-1 > PLAN.H then
-      return false
+  local function calc_width(bx, big_w)
+    local w = 0
+    for x = bx,bx+big_w-1 do
+      w = w + PLAN.col_W[x]
     end
+    return w
+  end
 
-    -- never use the whole map
-    if bw >= PLAN.W and bh >= PLAN.H then
-      return false
+  local function calc_height(by, big_h)
+    local h = 0
+    for y = by,by+big_h-1 do
+      h = h + PLAN.row_H[y]
     end
-
-    -- any other rooms in the way?
-    for dx = 0,bw-1 do for dy = 0,bh-1 do
-      if (dx > 0 or dy > 0) and room_map[x+dx][y+dy] then
-        return false
-      end
-    end end
-
-    -- actually expand the room
-    R.lw = bw
-    R.lh = bh
-
-    for dx = 0,bw-1 do for dy = 0,bh-1 do
-      room_map[x+dx][y+dy] = R
-    end end
-
-    R.is_big = true
-
-    return true
+    return h
   end
 
   local function add_neighbor(R, side, N)
@@ -205,10 +184,63 @@ function Plan_CreateRooms()
     table.insert(R.neighbors, N)
   end
 
+  local function choose_big_size(bx, by)
+    local raw = rand_key_by_probs(BIG_ROOM_TABLE)
+
+    local big_w = int(raw / 10)
+    local big_h =    (raw % 10)
+
+    if rand_odds(50) then
+      big_w, big_h = big_h, big_w
+    end
+
+    -- make sure it fits
+    if bx+big_w-1 > PLAN.W then big_w = PLAN.W - bx + 1 end
+    if by+big_h-1 > PLAN.H then big_h = PLAN.H - by + 1 end
+
+    assert(big_w > 0 and big_h > 0)
+
+    -- prefer to put big rooms away from the edge
+    if (bx == 1 or bx+big_w-1 == PLAN.W or
+        by == 1 or by+big_h-1 == PLAN.H)
+        and rand_odds(70)
+    then
+      big_w, big_h = 1, 1
+    end
+
+    -- prevent excessively large rooms 
+    while calc_width(bx, big_w) > 11 do
+      big_w = big_w - 1
+    end
+
+    while calc_height(by, big_h) > 11 do
+      big_h = big_h - 1
+    end
+
+    -- never use the whole map
+    if big_w >= PLAN.W and big_h >= PLAN.H then
+      big_w = big_w - 1
+      big_h = big_h - 1
+    end
+
+    assert(big_w > 0 and big_h > 0)
+
+    -- any other rooms in the way?
+    for x = bx,bx+big_w-1 do for y=by,by+big_h-1 do
+      if room_map[x][y] then
+        return 1, 1
+      end
+    end end
+
+    return big_w, big_h
+  end
+
 
   ---| Plan_CreateRooms |---
 
   room_map = array_2D(PLAN.W, PLAN.H)
+
+  local id = 1
 
   local col_x = { 2 }  -- one border seed
   local col_y = { 2 }
@@ -216,16 +248,6 @@ function Plan_CreateRooms()
   for x = 2,PLAN.W do col_x[x] = col_x[x-1] + PLAN.col_W[x-1] end
   for y = 2,PLAN.H do col_y[y] = col_y[y-1] + PLAN.row_H[y-1] end
 
-  local BIG_ROOMS =
-  {
---    [11] = 30,
---    [12] = 90, [22] = 90,
---    [23] = 15, [33] = 15
-    [11] = 10,
-    [12] = 60, [22] = 200,
-    [23] = 40, [33] = 40,
-    [24] =  2, [34] = 5, [44] = 5,
-  }
 
   local visits = {}
 
@@ -235,57 +257,33 @@ function Plan_CreateRooms()
 
   rand_shuffle(visits)
 
-  local id = 1
-
   for _,vis in ipairs(visits) do
-    local x, y = vis.x, vis.y
+    local bx, by = vis.x, vis.y
     
-    if not room_map[x][y] then
-
-      local ROOM = { lw=1, lh=1, id=id, kind="building", conns={} }
+    if not room_map[bx][by] then
+      local ROOM = { id=id, kind="building", conns={}, }
       id = id + 1
 
       set_class(ROOM, ROOM_CLASS)
 
-      room_map[x][y] = ROOM
+      local big_w, big_h = choose_big_size(bx, by)
 
-      local big = rand_key_by_probs(BIG_ROOMS)
-
-      local big_w = int(big / 10)
-      local big_h = big % 10
-
-      -- FIXME !!!!!  prevent rooms bigger than 13 seeds
-
-      if big_w > 1 or big_h > 1 then
-        if rand_odds(50) then big_w, big_h = big_h, big_w end
-        
-        -- prefer to put big rooms away from the edge
-        if (big_w >= 2 and big_h >= 2) and
-           (x == 1 or y == 1 or x == PLAN.W-big_w+1 or y == PLAN.H-big_h+1) and
-           rand_odds(70)
-        then
-          -- forget it
-        else
-          try_expand_room(x, y, big_w, big_h, ROOM)
-        end
-      end
+      ROOM.big_w = big_w
+      ROOM.big_h = big_h
 
       -- determine coverage on seed map
-      ROOM.sx1 = col_x[x]
-      ROOM.sy1 = col_y[y]
+      ROOM.sw = calc_width (bx, big_w)
+      ROOM.sh = calc_height(by, big_h)
 
-      ROOM.sx2 = ROOM.sx1 - 1
-      ROOM.sy2 = ROOM.sy1 - 1
+      ROOM.sx1 = col_x[bx]
+      ROOM.sy1 = col_y[by]
 
-      for lx = x,x+ROOM.lw-1 do
-        ROOM.sx2 = ROOM.sx2 + PLAN.col_W[lx]
-      end
+      ROOM.sx2 = ROOM.sx1 + ROOM.sw - 1
+      ROOM.sy2 = ROOM.sy1 + ROOM.sh - 1
 
-      for ly = y,y+ROOM.lh-1 do
-        ROOM.sy2 = ROOM.sy2 + PLAN.row_H[ly]
-      end
-
-      ROOM.sw, ROOM.sh = box_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
+      for x = bx,bx+big_w-1 do for y = by,by+big_h-1 do
+        room_map[x][y] = ROOM
+      end end
 
       gui.debugf("%s\n", ROOM:tostr())
     end
@@ -347,15 +345,13 @@ end
 
 
 function Plan_Nudge()
-  
   -- This resizes rooms by moving certain borders either one seed
   -- outward or one seed inward.  There are various constraints,
   -- in particular each room must remain a rectangle shape (so we
   -- disallow nudges that would create an L shaped room).
   --
   -- Big rooms must be handled first, because small rooms are
-  -- never able to nudge a big border (one which touches three or
-  -- more rooms).
+  -- never able to nudge a big border.
 
   local function volume_after_nudge(R, side, grow)
     if (side == 6 or side == 4) then
@@ -481,15 +477,15 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     local rooms = {}
 
     for _,R in ipairs(PLAN.all_rooms) do
-      if R.is_big then
-        R.lvolume = R.lw * R.lh + gui.random()
+      if R.big_w > 1 or R.big_h > 1 then
+        R.big_volume = R.big_w * R.big_h
         table.insert(rooms, R)
       end
     end
 
     if #rooms == 0 then return end
 
-    table.sort(rooms, function(A, B) return A.lvolume > B.lvolume end)
+    table.sort(rooms, function(A, B) return A.big_volume > B.big_volume end)
 
     local sides = { 2,4,6,8 }
 
@@ -525,7 +521,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   local function nudge_the_rest()
     local rooms = {}
     for _,R in ipairs(PLAN.all_rooms) do
-      if not R.is_big then
+      if R.big_w == 1 and R.big_h == 1 then
         table.insert(rooms, R)
       end
     end
@@ -607,7 +603,7 @@ function Plan_SubRooms()
       return nil
     end
 
-    if PLAN.island_mode then
+    if STYLE.islands == "heaps" then
       if touches_wall  then return 10 end
       if touches_other then return 40 end
       return 200
@@ -649,8 +645,12 @@ function Plan_SubRooms()
     local info = infos[rand_index_by_probs(probs)]
 
     -- actually add it !
+    local ROOM =
+    {
+      id=id, kind="building", conns={},
+      big_w=1, big_h=1,
+    }
 
-    local ROOM = { lw=1, lh=1, id=id, kind="building", conns={} }
     id = id + 1
 
     set_class(ROOM, ROOM_CLASS)
@@ -688,17 +688,11 @@ function Plan_SubRooms()
 
   ---| Plan_SubRooms |---
 
-  PLAN.subroom_mode = rand_key_by_probs { none=40, some=80, heaps=5 }
-  gui.printf("SubRoom Mode: %s\n", PLAN.subroom_mode)
-
-  PLAN.island_mode = rand_odds(40)
-  gui.printf("Island Mode: %s\n", bool_str(PLAN.island_mode))
-
   Seed_dump_rooms()
 
-  if PLAN.subroom_mode == "none" then return end
+  if STYLE.subrooms == "none" then return end
 
-  local chance_tab = sel(PLAN.subroom_mode == "some", SUB_CHANCES, SUB_HEAPS)
+  local chance_tab = sel(STYLE.subrooms == "some", SUB_CHANCES, SUB_HEAPS)
 
   for _,R in ipairs(PLAN.all_rooms) do
     if not R.parent then
@@ -872,6 +866,16 @@ end
   local cols = {}
   local rows = {}
 
+  for x = 1,W do
+    cols[x] = rand_index_by_probs(ROOM_SIZE_TABLE)
+  end
+
+  for y = 1,H do
+    rows[y] = rand_index_by_probs(ROOM_SIZE_TABLE)
+  end
+
+
+  --[[ PREVIOUS CODE
   for x = 1, W do cols[x] = rand_irange(3,4) end
   for y = 1, H do rows[y] = rand_irange(3,4) end
 
@@ -890,6 +894,7 @@ end
     if cols[x] >= 3 then cols[x] = cols[x] - 1 end
     if rows[y] >= 3 then rows[y] = rows[y] - 1 end
   end
+  --]]
 
 
   show_sizes("col_W", cols, PLAN.W)

@@ -19,6 +19,7 @@
 GAME   = {}
 CAPS   = {}
 PARAMS = {}
+STYLE  = {}
 HOOKS  = {}
 
 LEVEL = {}
@@ -67,6 +68,16 @@ OB_THEMES["mixed"] =
 SKY_H = 512
 
 EXTREME_H = 4000
+
+ROOM_SIZE_TABLE = { 0,4,9,7,2 }
+
+BIG_ROOM_TABLE =
+{
+  [11] = 40,
+  [12] = 60, [22] = 150,
+  [23] = 40, [33] = 60,
+  [34] = 2,  [44] = 2,
+}
 
 
 -- Fight Simulator constants and tables
