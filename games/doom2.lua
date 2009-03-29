@@ -301,20 +301,21 @@ DOOM2_COMBOS =
     bad_liquid = "nukage",
   },
 
-  NAT_TANROCK7 =
+  NAT_TANROCK5 =
   {
     theme_probs = { NATURE=30 },
     outdoor = true,
     mat_pri = 3,
 
-    wall = "TANROCK7",
+    wall = "TANROCK5",
+    floor = "RROCK04",
+    ceil  = "RROCK04",
+
     void = "ZIMMER4",
     step = "STEP6",
     lift = "SUPPORT3",
     piller = "ASHWALL7",
 
-    floor = "RROCK04",
-    ceil  = "RROCK04",
   --  lift_floor = "FLOOR4_8",
 
     scenery = { burnt_tree=5, big_tree=5 },

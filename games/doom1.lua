@@ -308,19 +308,6 @@ COMMON_COMBOS =
     floor = "FLOOR4_8",
     ceil  = "CEIL3_5",
 
-    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
-               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
-               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
-               "SLIME15",  "SLIME16"
-             },
-
-    ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",
-                 "FLAT1",    "FLAT4",    "FLAT18",
-                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
-                 "GRNLITE1", "TLITE6_5"
-               },
-
     pic_wd = "COMPSTA2",    -- "COMP2" for Doom 1 !!
     pic_wd_h = 64,
 
@@ -339,19 +326,6 @@ COMMON_COMBOS =
     wall  = "STARG2",
     floor = "FLOOR5_1",
     ceil  = "FLOOR4_5",
-
-    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
-               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
-               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
-               "SLIME15",  "SLIME16"
-             },
-
-    ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",
-                 "FLAT1",    "FLAT4",    "FLAT18",
-                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
-                 "GRNLITE1", "TLITE6_5"
-               },
 
 
     lift = "PLAT1",
@@ -378,19 +352,6 @@ COMMON_COMBOS =
     floor = "FLOOR0_1",
     ceil  = "FLAT3",
 
-    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
-               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
-               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
-               "SLIME15",  "SLIME16"
-             },
-
-    ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",
-                 "FLAT1",    "FLAT4",    "FLAT18",
-                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
-                 "GRNLITE1", "TLITE6_5"
-               },
-
     lift = "PLAT1",
     step = "STEP1",
     step_floor = "STEP1",
@@ -400,22 +361,22 @@ COMMON_COMBOS =
 
   TECH_BROWN =
   {
-    wall  = "STARTAN2",  -- STARBR
-    floor = "CEIL4_3",
+    wall  = "STARTAN2",
+    floor = "FLOOR5_1",
     ceil  = "FLOOR5_1",
 
-    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
-               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
-               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
-               "SLIME15",  "SLIME16"
-             },
+    lift = "PLAT1",
+    step = "STEP1",
+    step_floor = "STEP1",
 
-    ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",
-                 "FLAT1",    "FLAT4",    "FLAT18",
-                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
-                 "GRNLITE1", "TLITE6_5"
-               },
+    scenery = "tech_column",
+  },
+
+  TECH_BROWNER =
+  {
+    wall  = "STARBR2",
+    floor = "FLOOR5_1",
+    ceil  = "FLOOR5_1",
 
     lift = "PLAT1",
     step = "STEP1",
@@ -430,19 +391,6 @@ COMMON_COMBOS =
     floor = "FLOOR0_5",
     ceil  = "FLAT1",
 
-    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
-               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
-               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
-               "SLIME15",  "SLIME16"
-             },
-
-    ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",
-                 "FLAT1",    "FLAT4",    "FLAT18",
-                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
-                 "GRNLITE1", "TLITE6_5"
-               },
-
     lift = "SUPPORT3",
     pic_wd = "REDWALL",
 
@@ -451,6 +399,19 @@ COMMON_COMBOS =
     scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
 
     sc_fabs = { crate_rotnar_GRAY2=30, other=50 },
+  },
+
+  TECH_LITEBROWN =
+  {
+    wall  = "BROWN1",
+    ceil  = "FLOOR0_1",
+    floor = "FLOOR0_1",
+
+    lift = "PLAT1",
+    step = "STEP1",
+    step_floor = "STEP1",
+
+    scenery = "tech_column",
   },
 
   TECH_METAL =
@@ -459,19 +420,6 @@ COMMON_COMBOS =
     floor = "CEIL5_1",
     ceil  = "CEIL5_2",
 
-    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
-               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
-               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
-               "SLIME15",  "SLIME16"
-             },
-
-    ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",
-                 "FLAT1",    "FLAT4",    "FLAT18",
-                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
-                 "GRNLITE1", "TLITE6_5"
-               },
-
     lift = "SUPPORT3",
     pic_wd = "REDWALL",
 
@@ -482,24 +430,15 @@ COMMON_COMBOS =
     sc_fabs = { crate_rotnar_GRAY2=30, other=50 },
   },
 
+  TECH_DARKGREEN = { wall="BROWNGRN", floor="CEIL5_1",  ceil="CEIL5_1" },
+  TECH_DARKBROWN = { wall="BROWN96",  floor="FLOOR7_1", ceil="FLOOR7_1" },
+  TECH_METAL1    = { wall="METAL1",   floor="FLAT4",    ceil="FLAT4" },
+
   INDY_PIPES =  -- UNUSED (looks bad)
   {
     wall  = "PIPE2",
     floor = "FLAT1_1",
     ceil  = "FLAT1_1",
-
-    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
-               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
-               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
-               "SLIME15",  "SLIME16"
-             },
-
-    ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",
-                 "FLAT1",    "FLAT4",    "FLAT18",
-                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
-                 "GRNLITE1", "TLITE6_5"
-               },
 
     step = "STEP1",
     lift = "SUPPORT3",
@@ -517,19 +456,6 @@ COMMON_COMBOS =
     wall  = "SLADWALL",
     floor = "FLOOR0_5",
     ceil  = "CEIL5_1",
-
-    floors = { "FLAT14",  "CEIL3_2", "FLAT9",
-               "FLOOR0_1", "FLOOR0_3", "FLOOR0_7", "FLOOR3_3",
-               "FLOOR4_5", "FLOOR4_6", "FLOOR4_8", "FLOOR5_2",
-               "SLIME15",  "SLIME16"
-             },
-
-    ceilings = { "CEIL5_1",  "CEIL5_2",
-                 "CEIL3_3",  "CEIL3_5",
-                 "FLAT1",    "FLAT4",    "FLAT18",
-                 "FLOOR0_2", "FLOOR4_1", "FLOOR5_1",
-                 "GRNLITE1", "TLITE6_5"
-               },
 
 --  void = "SLADSKUL",
     step = "STEP1",
@@ -2704,21 +2630,75 @@ COMMON_THEMES =
   {
     building =
     {
-      TECH_BASE=35,
+      TECH_BASE=25,
       TECH_GREEN=20,
       TECH_BROWN=20,
       TECH_SLAD=20,
+
+      TECH_METAL=15,
       TECH_SILVER=10,
       TECH_GRAY=10,
-      TECH_METAL=15,
-      TECH_TEKGREN=10,  -- FIXME: DOOM II ONLY !!!!!
+      TECH_LITEBROWN=5,
+      TECH_BROWNER=5,
+
+      TECH_DARKGREEN=10,
+      TECH_DARKBROWN=5,
+      TECH_METAL1=1,
+
+      -- FIXME: DOOM II ONLY !!!!!
+      TECH_TEKGREN=10,
+    },
+
+    floors =
+    {
+      FLOOR0_1=50,
+      FLOOR0_3=50,
+      FLOOR0_7=50,
+      FLOOR3_3=50,
+      
+      FLOOR4_5=50,
+      FLOOR4_6=50,
+      FLOOR4_8=50,
+      FLOOR5_2=50,
+      
+      CEIL3_2=50,
+      FLAT9=50,
+      FLAT14=50,
+      SLIME15=50,
+      SLIME16=50,
+    },
+
+    ceilings =
+    {
+      CEIL5_1=50,
+      CEIL5_2=50,
+      CEIL3_3=50,
+      CEIL3_5=50,
+      
+      FLAT1=50,
+      FLAT4=50,
+      FLAT18=50,
+      FLOOR0_2=50,
+      FLOOR4_1=50,
+      FLOOR5_1=50,
+      
+      GRNLITE1=1,
+      TLITE6_5=1,
     },
 
     ground =
     {
-      TECH_GROUND=50,
-      URBAN_STONE=40,
+      TECH_GROUND=40,
+      URBAN_STONE=30,
       URBAN_BROWN=20,
+
+      CAVE_ASH=4,
+
+      -- FIXME: DOOM II ONLY !!!!!
+      NAT_TANROCK5=8,
+      NAT_MUDDY=4,
+      NAT_SWAMP=4,
+      URBAN_GREENBRK=4,
     },
 
     hallway =
