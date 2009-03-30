@@ -399,6 +399,8 @@ end
 
 function Build_door(S, side, z1, w_tex, o_tex, info, tag)
 
+  local skin = assert(info.skin)
+
   tag2 = nil  -- FIXME !!!
 
   local N = S:neighbor(side)
@@ -416,9 +418,9 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
   local door_h = info.skin.door_h or 112
   local door_info =
   {
-    t_face = { texture="FLAT1" },
-    b_face = { texture="FLAT1", light=0.7 },
-    w_face = { texture=assert(info.skin.door_w), peg=true, x_offset=0, y_offset=0 },
+    t_face = { texture=skin.door_c },
+    b_face = { texture=assert(skin.door_c), light=0.7 },
+    w_face = { texture=assert(skin.door_w), peg=true, x_offset=0, y_offset=0 },
 --  w_face = { texture="PIPES", peg=true, x_offset=0, y_offset=0 },
     flag_door = true,
     sec_tag = tag,
@@ -426,16 +428,16 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
 
   local frame_info =
   {
-    t_face = { texture="FLAT18" },
-    b_face = { texture="FLAT18", light=0.7 },
+    t_face = { texture=skin.frame_c or "FLAT18" },
+    b_face = { texture=skin.frame_c or "FLAT18", light=0.7 },
     w_face = { texture=w_tex },
   }
 
   local step_info =
   {
-    t_face = { texture="FLAT18" },
-    b_face = { texture="FLAT18" },
-    w_face = { texture="STEP4" },
+    t_face = { texture=skin.step_f or "FLAT18" },
+    b_face = { texture=skin.step_f or "FLAT18" },
+    w_face = { texture=skin.step_w or "STEP4" },
   }
 
   local key_info =
@@ -1838,6 +1840,9 @@ function Build_small_switch(S, dir, f_h, info, tag)
 
   local switch_face = { texture=assert(info.skin.switch_w), peg=true, x_offset=info.skin.x_offset or 0, y_offset=info.skin.y_offset or 0 }
 
+  local base_h   = info.skin.base_h or 12
+  local switch_h = info.skin.switch_h or 64
+
   transformed_brush(DT, switch_info,
   {
     { x=mx-40, y=my-40 },
@@ -1849,7 +1854,7 @@ function Build_small_switch(S, dir, f_h, info, tag)
     { x=mx-56, y=my+24 },
     { x=mx-56, y=my-24 },
   },
-  -EXTREME_H, f_h+16)
+  -EXTREME_H, f_h+base_h)
 
   transformed_brush(DT, switch_info,
   {
@@ -1858,8 +1863,7 @@ function Build_small_switch(S, dir, f_h, info, tag)
     { x=mx-32, y=my+8 },
     { x=mx-32, y=my-8 },
   },
-  -EXTREME_H, f_h+16+64)
-
+  -EXTREME_H, f_h+base_h+switch_h)
 end
 
 
