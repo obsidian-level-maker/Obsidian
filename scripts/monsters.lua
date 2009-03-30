@@ -301,14 +301,20 @@ function Monsters_do_pickups()
   end
 
   local function add_small_spots(R, S, side, count, score)
-    local mx, my = S:mid_point()
     local dist = 40
 
     for i = 1,count do
+      local mx, my = S:mid_point()
+
       if side == 4 then mx = S.x1 + S.thick[4] + i*dist end
       if side == 6 then mx = S.x2 - S.thick[6] - i*dist end
       if side == 2 then my = S.y1 + S.thick[2] + i*dist end
       if side == 8 then my = S.y2 - S.thick[8] - i*dist end
+
+      if side == 1 then mx, my = mx + i*dist, my + i*dist end
+      if side == 3 then mx, my = mx - i*dist, my + i*dist end
+      if side == 7 then mx, my = mx + i*dist, my - i*dist end
+      if side == 9 then mx, my = mx - i*dist, my - i*dist end
 
       local dir = rotate_cw90(side)
 
@@ -383,6 +389,14 @@ function Monsters_do_pickups()
     end
   end
 
+  local function try_add_diagonal_spot(R, S)
+    if S.diag_new_kind ~= "walk" then return end
+
+    local score = 80 + gui.random()
+
+    add_small_spots(R, S, S.stuckie_side, 2, score)
+  end
+
   local function find_pickup_spots(R)
     -- Creates a map over the room of which seeds we can place
     -- pickup items in.  We distinguish two types: 'big' items
@@ -418,6 +432,10 @@ function Monsters_do_pickups()
 
         if not emerg_big then emerg_big = S end
         emerg_small = S
+      end
+
+      if S.room == R and S.kind == "diagonal" then
+        try_add_diagonal_spot(R, S)
       end
     end end -- for x, y
 
@@ -547,11 +565,20 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
     end
 
     local away = sel(count == 2, 20, 56)
+    local dir  = spot.dir
 
-    if is_vert(spot.dir) then
+    if is_vert(dir) then
       y1, y2 = y1-away, y2+away
-    else
+    elseif is_horiz(dir) then
       x1, x2 = x1-away, x2+away
+    elseif dir == 1 or dir == 9 then
+      x1, y1 = x1-away, y1-away
+      x2, y2 = x2+away, y2+away
+    elseif dir == 3 or dir == 7 then
+      x1, y1 = x1-away, y1+away
+      x2, y2 = x2+away, y2-away
+    else
+      error("place_small_item: bad dir: " .. tostring(dir))
     end
 
     for i = 1,count do
