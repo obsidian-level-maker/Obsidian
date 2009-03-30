@@ -686,6 +686,18 @@ end
 
 function Build_detailed_hall(S, side, z1, z2)
 
+  local function compat_neighbor(side)
+    local N = S:neighbor(side)
+
+    if not N or not N.room then return false end
+
+    if N.room == S.room then return true end
+
+    if N.room.kind == "hallway" then return true end
+
+    return false
+  end
+
   local function get_hall_coords(thickness, pad)
 
     ---### S.thick[side] = thickness
@@ -693,25 +705,14 @@ function Build_detailed_hall(S, side, z1, z2)
     local ox1, oy1, ox2, oy2 = S.x1,S.y1, S.x2,S.y2
 
     if (side == 4 or side == 6) then
-
-      if S:neighbor(2) and S:neighbor(2).room == S.room then
-        S.y1 = S.y1 - thickness
-      end
-
-      if S:neighbor(8) and S:neighbor(8).room == S.room then
-        S.y2 = S.y2 + thickness
-      end
-
+      if compat_neighbor(2) then S.y1 = S.y1 - thickness end
+      if compat_neighbor(8) then S.y2 = S.y2 + thickness end
     else
-      if S:neighbor(4) and S:neighbor(4).room == S.room then
-        S.x1 = S.x1 - thickness
-      end
-
-      if S:neighbor(6) and S:neighbor(6).room == S.room then
-        S.x2 = S.x2 + thickness
-      end
-
+      if compat_neighbor(4) then S.x1 = S.x1 - thickness end
+      if compat_neighbor(6) then S.x2 = S.x2 + thickness end
     end
+
+    if compat_neighbor(side) then pad = 0 end
 
     local res = get_wall_coords(S, side, thickness, pad)
 
