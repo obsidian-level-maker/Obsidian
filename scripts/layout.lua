@@ -1578,17 +1578,37 @@ function Layout_one(R)
 
   local function dir_for_wotsit(S)
     local dirs  = {}
+    local missing_dir
   
     for dir = 2,8,2 do
       local N = S:neighbor(dir)
-      if N and N.room == R and N.kind == "walk" then
+      if N and N.room == R and N.kind == "walk" and
+         N.floor_h and math.abs(N.floor_h - S.floor_h) < 17
+      then
         table.insert(dirs, dir)
+      else
+        missing_dir = dir
       end
     end
 
     if #dirs == 1 then return dirs[1] end
 
-    if #dirs > 1 then return rand_element(dirs) end
+    if #dirs == 3 then return 10 - missing_dir end
+
+    if S.room.entry_conn then
+      local entry_S = S.room.entry_conn:seed(S.room)
+      local exit_dir = assert(entry_S.conn_dir)
+
+      if #dirs == 0 then return exit_dir end
+
+      for _,dir in ipairs(dirs) do
+        if dir == exit_dir then return exit_dir end
+      end
+    end
+
+    if #dirs > 0 then
+      return rand_element(dirs)
+    end
 
     return rand_irange(1,4)*2
   end
