@@ -1185,6 +1185,30 @@ COMMON_SWITCH_INFOS =
       }
   },
 
+  sw_wood =
+  {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1WOOD", side_w="WOOD9",
+        switch_f="FLAT5_2",
+        x_offset=0, y_offset=56,
+        line_kind=103,
+      }
+  },
+
+  sw_marble =
+  {
+      prefab = "SWITCH_PILLAR",
+      skin =
+      {
+        switch_w="SW1GSTON", side_w="GSTONE1",
+        switch_f="FLOOR7_2",
+        x_offset=0, y_offset=56,
+        line_kind=103,
+      }
+  },
+
   bar_wood =
   {
       prefab = "SWITCH_PILLAR",
@@ -1247,8 +1271,8 @@ COMMON_SWITCH_DOORS =
       {
         key_w="COMPBLUE",
         door_w="BIGDOOR3", door_c="FLOOR7_2",
-        step_w="STEP1",  track_w="DOORTRAK",
-        frame_f="FLAT1", frame_c="FLAT1",
+        step_w="COMPBLUE",  track_w="DOORTRAK",
+        step_f="FLAT14", frame_c="FLAT14",
         door_h=112,
         line_kind=0,
       }
@@ -1260,10 +1284,10 @@ COMMON_SWITCH_DOORS =
       prefab = "DOOR_LIT_LOCKED",
       skin =
       {
-        key_w="SP_HOT1",
-        door_w="BIGDOOR3", door_c="FLOOR7_2",
-        step_w="STEP1",  track_w="DOORTRAK",
-        frame_f="FLAT1", frame_c="FLAT1",
+        key_w="REDWALL",
+        door_w="BIGDOOR2", door_c="FLAT1",
+        step_w="REDWALL",  track_w="DOORTRAK",
+        step_f="FLAT5_3", frame_c="FLAT5_3",
         door_h=112,
         line_kind=0,
       }
@@ -1279,7 +1303,7 @@ COMMON_SWITCH_DOORS =
         key_w="SKINFACE",
         door_w="BIGDOOR3", door_c="FLOOR7_2",
         step_w="STEP1",  track_w="DOORTRAK",
-        frame_f="FLAT1", frame_c="FLAT1",
+        step_f="FLAT1", frame_c="FLAT1",
         door_h=112,
         line_kind=0,
       }
@@ -1294,11 +1318,42 @@ COMMON_SWITCH_DOORS =
         key_w="GRAYVINE",
         door_w="BIGDOOR3", door_c="FLOOR7_2",
         step_w="STEP1",  track_w="DOORTRAK",
-        frame_f="FLAT1", frame_c="FLAT1",
+        step_f="FLAT1", frame_c="FLAT1",
         door_h=112,
         line_kind=0,
       }
   },
+
+  sw_wood =
+  {
+      w=128, h=112,
+      prefab = "DOOR_LIT_LOCKED",
+      skin =
+      {
+        key_w="WOOD1",
+        door_w="BIGDOOR7", door_c="CEIL5_2",
+        step_w="WOOD12",  track_w="DOORTRAK",
+        step_f="FLAT5_2", frame_c="FLAT5_2",
+        door_h=112,
+        line_kind=0,
+      }
+  },
+
+  sw_marble =
+  {
+      w=128, h=112,
+      prefab = "DOOR_LIT_LOCKED",
+      skin =
+      {
+        key_w="GSTONE1",
+        door_w="BIGDOOR2", door_c="FLAT1",
+        step_w="GSTONE1",  track_w="DOORTRAK",
+        step_f="FLOOR7_2", frame_c="FLOOR7_2",
+        door_h=112,
+        line_kind=0,
+      }
+  },
+
 
   sw_metl =
   {
@@ -1371,9 +1426,9 @@ COMMON_KEY_DOORS =
     skin =
     {
       key_w="DOORBLU",
-      door_w="BIGDOOR4", door_c="FLOOR3_3",
-      step_w="STEP1",  track_w="DOORTRAK",
-      frame_f="FLAT1", frame_c="FLAT1",
+      door_w="BIGDOOR3", door_c="FLOOR7_2",
+      step_w="STEP4",  track_w="DOORTRAK",
+      step_f="FLAT18", frame_c="FLAT18",
       door_h=112,
       line_kind=32, tag=0,  -- kind_mult=26
     }
@@ -1389,8 +1444,8 @@ COMMON_KEY_DOORS =
     {
       key_w="DOORYEL",
       door_w="BIGDOOR4", door_c="FLOOR3_3",
-      step_w="STEP1",  track_w="DOORTRAK",
-      frame_f="FLAT1", frame_c="FLAT1",
+      step_w="STEP4",  track_w="DOORTRAK",
+      step_f="FLAT18", frame_c="FLAT4",
       door_h=112,
       line_kind=34, tag=0, -- kind_mult=27
     }
@@ -1405,9 +1460,9 @@ COMMON_KEY_DOORS =
     skin =
     {
       key_w="DOORRED",
-      door_w="BIGDOOR4", door_c="FLOOR3_3",
-      step_w="STEP1",  track_w="DOORTRAK",
-      frame_f="FLAT1", frame_c="FLAT1",
+      door_w="BIGDOOR2", door_c="FLAT1",
+      step_w="STEP4",  track_w="DOORTRAK",
+      step_f="FLAT18", frame_c="FLAT18",
       door_h=112,
       line_kind=33, tag=0, -- kind_mult=28
     }
@@ -2303,10 +2358,10 @@ COMMON_DOOR_PREFABS =
 
     skin =
     {
-      door_w="BIGDOOR1", door_c="FLAT1",
-      lite_w="LITE3", step_w="STEP1",
       key_w="LITE3",
-      frame_f="FLAT1", frame_c="TLITE6_6",
+      door_w="BIGDOOR1", door_c="FLAT1",
+      step_w="STEP4", step_f="FLAT18",
+      frame_c="FLAT18", -- frame_c="TLITE6_6",
       track_w="DOORTRAK",
       door_h=72,
       line_kind=1, tag=0,
@@ -2688,8 +2743,8 @@ COMMON_THEMES =
 
     ground =
     {
-      TECH_GROUND=40,
-      URBAN_STONE=30,
+      TECH_GROUND=30,
+      URBAN_STONE=20,
       URBAN_BROWN=20,
 
       CAVE_ASH=5,
@@ -3563,7 +3618,7 @@ function Doom1_get_levels()
         theme = "TECH",
 
         key_list = { "kc_red", "kc_blue", "kc_yellow" },
-        switch_list = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
+        switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
         bar_list = { "bar_wood", "bar_silver", "bar_metal" },
 
         sky_info = DOOM1_SKY_INFO[episode],

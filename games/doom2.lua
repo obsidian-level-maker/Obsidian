@@ -1713,7 +1713,7 @@ function Doom2_get_levels()
       theme = "TECH",
 
       key_list = { "kc_red", "kc_blue", "kc_yellow" },
-      switch_list = { "sw_blue", "sw_vine", "sw_hot", "sw_skin" },
+      switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
       bar_list = { "bar_wood", "bar_silver", "bar_metal" },
 
       -- allow TNT and Plutonia to override the sky stuff
