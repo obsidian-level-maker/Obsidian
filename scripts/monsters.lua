@@ -695,7 +695,7 @@ function Monsters_in_room(R)
     if LEVEL.toughness then
       toughness = toughness * LEVEL.toughness
     elseif OB_CONFIG.length ~= "single" then
-      toughness = toughness * (1 + LEVEL.ep_along * 2.1)
+      toughness = toughness * (1 + LEVEL.ep_along * 2.2)
     end
 
     -- less emphasis within a level, since each arena naturally
@@ -771,7 +771,7 @@ function Monsters_in_room(R)
     if num < 1 then num = 1 end
     if num > 4 then num = 4 end
 
-    local ONE_MORE_CHANCES = { normal=30, more=50, heaps=90 }
+    local ONE_MORE_CHANCES = { normal=30, more=50, heaps=80 }
 
     local bump_prob = ONE_MORE_CHANCES[OB_CONFIG.mons] or 20
 
