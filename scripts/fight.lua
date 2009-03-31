@@ -259,8 +259,16 @@ function Fight_simulator(monsters, weapons, skill, stats)
   stats.health = 0
 
   for _,info in ipairs(monsters) do
-    table.insert(active_mons, { info=info, health=info.health })
+    local MON =
+    {
+      info=info, health=info.health,
+      power=info.damage + info.health/100 + gui.random(),
+    }
+    table.insert(active_mons, MON)
   end
+
+  -- put toughest monster first, weakest last.
+  table.sort(active_mons, function(A,B) return A.power > B.power end)
 
   -- let the monsters throw the first punch (albeit a weak one)
   -- IDEA: can pass in a 'surprise_time' value
