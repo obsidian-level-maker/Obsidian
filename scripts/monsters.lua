@@ -766,22 +766,22 @@ function Monsters_in_room(R)
 
   local function number_of_kinds(fp)
     local size = (R.tw or R.sw) + (R.th or R.sh)
-    local num  = int(size / 5.0 + 0.5 + gui.random() * 0.75)
+    local num  = int(size / 5.0 + 0.55 + gui.random())
 
     if num < 1 then num = 1 end
-    if num > 3 then num = 3 end
+    if num > 4 then num = 4 end
 
-    local ONE_MORE_CHANCES = { normal=25, more=50, heaps=99 }
+    local ONE_MORE_CHANCES = { normal=30, more=50, heaps=90 }
 
-    local bump_prob = ONE_MORE_CHANCES[OB_CONFIG.mons] or 15
+    local bump_prob = ONE_MORE_CHANCES[OB_CONFIG.mons] or 20
 
     if rand_odds(bump_prob) then
       num = num + 1
     end
 
-    if fp >= 40 and rand_odds(bump_prob / 4) then
-      num = num + 1
-    end
+    ---  if fp >= 40 and rand_odds(bump_prob / 4) then
+    ---    num = num + 1
+    ---  end
 
     return num
   end
