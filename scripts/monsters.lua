@@ -1065,7 +1065,7 @@ function Monsters_in_room(R)
     if true then
       skill = 3 ; add_to_list(SKILLS[skill], spot)
     end
-    if (index % 3) > 0 then
+    if (index % 3) >= 1 then
       skill = 2 ; add_to_list(SKILLS[skill], spot)
     end
     if (index % 3) == 1 then
@@ -1078,8 +1078,8 @@ function Monsters_in_room(R)
       ambush = spot.ambush or ambush,
 
       skill_hard   = 1,
-      skill_medium = sel(skill >= 2, 1, 0),
-      skill_easy   = sel(skill >= 1, 1, 0),
+      skill_medium = sel(skill <= 2, 1, 0),
+      skill_easy   = sel(skill <= 1, 1, 0),
     })
 
     spot.S.content = "monster"
