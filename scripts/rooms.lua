@@ -1721,7 +1721,7 @@ local CRATE_SKINS =
   { side_w="COMPWERD", top_f="CEIL5_1" },
   { side_w="MODWALL",  top_f="FLAT19" },
 
-  { side_w="WOOD4",    top_f="CEIL1_1" },
+  { side_w="WOOD3",    top_f="CEIL1_1" },
   { side_w="ICKWALL4", top_f="FLAT19" },
 }
 
@@ -1766,7 +1766,7 @@ local CRATE_SKINS =
     {
       t_face = { texture=skin.top_f },
       b_face = { texture=skin.top_f },
-      w_face = { texture=skin.side_w, x_offset=0, y_offset=0 },
+      w_face = { texture=skin.side_w, x_offset=0, y_offset=0, peg=true },
     },
     {
       { x=x2, y=y1 }, { x=x2, y=y2 },
@@ -1788,17 +1788,17 @@ local CRATE_SKINS =
   if R.outdoor then
     skin = CRATE_SKINS[rand_irange(6,7)]
   else
-    skin = CRATE_SKINS[rand_index_by_probs { 9,9, 5,3,1 }]
+    skin = CRATE_SKINS[rand_index_by_probs { 5,5, 9,7,1 }]
   end
 
   local chance
 
   if STYLE.crates == "heaps" then
-    chance = sel(R.indoor, 45, 25)
-    if rand_odds(30) then chance = chance * 2 end
+    chance = sel(R.outdoor, 25, 40)
+    if rand_odds(20) then chance = chance * 2 end
   else
-    chance = sel(R.indoor, 20, 10)
-    if rand_odds(10) then chance = chance * 4 end
+    chance = sel(R.outdoor, 15, 25)
+    if rand_odds(10) then chance = chance * 3 end
   end
 
   for _,spot in ipairs(find_spots()) do
