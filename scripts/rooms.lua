@@ -1707,6 +1707,108 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 end
 
 
+function Room_add_crates(R)
+
+  -- NOTE: temporary crap!
+  -- (might be slightly useful for finding big spots for masterminds)
+
+local CRATE_SKINS =
+{
+  { side_w="CRATE1", top_f="CRATOP2" },
+  { side_w="CRATE2", top_f="CRATOP1" },
+  
+  { side_w="SPACEW3",  top_f="CEIL5_1" },
+  { side_w="COMPWERD", top_f="CEIL5_1" },
+  { side_w="MODWALL",  top_f="FLAT19" },
+
+  { side_w="WOOD4",    top_f="CEIL1_1" },
+  { side_w="ICKWALL4", top_f="FLAT19" },
+}
+
+  local function test_spot(S, x, y)
+    for dx = 0,1 do for dy = 0,1 do
+      local N = SEEDS[x+dx][y+dy][1]
+      if not N or N.room ~= S.room then return false end
+
+      if N.kind ~= "walk" or not N.floor_h then return false end
+
+      if math.abs(N.floor_h - S.floor_h) > 0.5 then return false end
+    end end -- for dx, dy
+
+    return true
+  end
+
+  local function find_spots()
+    local list = {}
+
+    for x = R.tx1, R.tx2-1 do for y = R.ty1, R.ty2-1 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and S.kind == "walk" and S.floor_h then
+        if test_spot(S, x, y) then
+          table.insert(list, { S=S, x=x, y=y })
+        end
+      end
+    end end -- for x, y
+
+    return list
+  end
+
+  local function add_crate(spot, skin)
+    spot.S.solid_corner = true
+
+    local x1 = spot.S.x2 - 32
+    local y1 = spot.S.y2 - 32
+    local x2 = x1 + 64
+    local y2 = y1 + 64
+
+    -- FIXME: move to a Build_crate() function
+    transformed_brush(nil,
+    {
+      t_face = { texture=skin.top_f },
+      b_face = { texture=skin.top_f },
+      w_face = { texture=skin.side_w, x_offset=0, y_offset=0 },
+    },
+    {
+      { x=x2, y=y1 }, { x=x2, y=y2 },
+      { x=x1, y=y2 }, { x=x1, y=y1 },
+    },
+    -EXTREME_H, spot.S.floor_h + (skin.h or 64))
+  end
+
+
+  --| Room_add_crates |--
+
+  if STYLE.crates == "none" then return end
+
+  if R.kind == "stairwell" or R.kind == "smallexit" then
+    return
+  end
+
+  local skin
+  if R.outdoor then
+    skin = CRATE_SKINS[rand_irange(6,7)]
+  else
+    skin = CRATE_SKINS[rand_index_by_probs { 9,9, 5,3,1 }]
+  end
+
+  local chance
+
+  if STYLE.crates == "heaps" then
+    chance = sel(R.indoor, 45, 25)
+    if rand_odds(30) then chance = chance * 2 end
+  else
+    chance = sel(R.indoor, 20, 10)
+    if rand_odds(10) then chance = chance * 4 end
+  end
+
+  for _,spot in ipairs(find_spots()) do
+    if rand_odds(chance) then
+      add_crate(spot, skin)
+    end
+  end
+end
+
+
 function Room_build_seeds(R)
 
   local function do_teleporter(S)
@@ -2129,6 +2231,7 @@ function Rooms_build_all()
   for _,R in ipairs(PLAN.all_rooms) do
     Layout_one(R)
     Room_make_ceiling(R)
+    Room_add_crates(R)
   end
 
   for _,R in ipairs(PLAN.scenic_rooms) do
