@@ -170,7 +170,7 @@ function Level_styles()
 
   -- GUI overrides...
   if OB_CONFIG.outdoors and OB_CONFIG.outdoors ~= "mixed" then
-    STYLE.sky = OB_CONFIG.outdoors
+    STYLE.skies = OB_CONFIG.outdoors
   end
   
   gui.printf("\nStyles = \n%s\n\n", table_to_str(STYLE, 1))
