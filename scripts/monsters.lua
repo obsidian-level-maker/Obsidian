@@ -1281,7 +1281,7 @@ function Monsters_make_battles()
   -- and simulate each battle.
 
   for _,R in ipairs(PLAN.all_rooms) do
-    if R.arena.weapon and (R.arena.id > cur_arena) then  ---??? and not R.skip_weapon then
+    if R.arena.weapon and (R.arena.id > cur_arena) then
       Player_give_weapon(R.arena.weapon)
       cur_arena = R.arena.id
     end

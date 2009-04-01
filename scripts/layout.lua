@@ -1753,6 +1753,8 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
     gui.add_entity(tostring(GAME.things[R.weapon].id),
                    mx, my, z + 35)
+
+    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", R.weapon, mx, my, z)
   end
 
   local function stairwell_height_diff(focus_C)

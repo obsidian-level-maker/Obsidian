@@ -852,37 +852,12 @@ function Quest_add_weapons()
     end
 
     if #neighbors >= 1 and rand_odds(75) then
-      -- prevent using this weapon in first room
-      R.skip_weapon = weapon
-
       R = rand_element(neighbors)
     end
 
     R.weapon = weapon
 
     gui.debugf("New weapon: %s @ %s ARENA_%d\n", weapon, R:tostr(), arena.id)
-  end
-
-  local function bogus_room_weapons(arena)
-    -- This determines all the weapons which COULD be used in each
-    -- room.  The actual weapon set may be smaller.
-
-    local base_set = shallow_copy(PLAN.added_weapons)
-
-    for name,info in pairs(GAME.weapons) do
-      if info.held and info.pref then
-        base_set[name] = true
-      end
-    end
-
-    for _,R in ipairs(arena.rooms) do
-      R.weapon_set = base_set
-
-      if R.skip_weapon then
-        R.weapon_set = shallow_copy(base_set)
-        R.weapon_set[R.skip_weapon] = nil
-      end
-    end
   end
 
 

@@ -343,6 +343,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
   -- decide stairwells
   for _,R in ipairs(PLAN.all_rooms) do
     if R.kind == "hallway" and R.num_branch == 2 and
+       not R.purpose and not R.weapon and
        stairwell_neighbors(R) == 0 and
        locked_neighbors(R) == 0
     then
