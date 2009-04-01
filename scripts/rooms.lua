@@ -155,11 +155,15 @@ function Room_setup_theme(R)
   end
 
 
-  if R.outdoor then
-    R.combo = rand_element(PLAN.outdoor_combos)
-  else
+  if not R.outdoor then
     R.combo = rand_element(PLAN.indoor_combos)
+    return
   end
+
+  if not R.arena.outdoor_combo then
+    R.arena.outdoor_combo = rand_element(PLAN.outdoor_combos)
+  end
+  R.combo = R.arena.outdoor_combo
 end
 
 function Room_setup_theme_Scenic(R)
