@@ -1719,7 +1719,7 @@ local CRATE_SKINS =
   
   { side_w="SPACEW3",  top_f="CEIL5_1" },
   { side_w="COMPWERD", top_f="CEIL5_1" },
-  { side_w="MODWALL",  top_f="FLAT19" },
+  { side_w="MODWALL3", top_f="FLAT19" },
 
   { side_w="WOOD3",    top_f="CEIL1_1" },
   { side_w="ICKWALL4", top_f="FLAT19" },
