@@ -2093,11 +2093,18 @@ end
 
     if S.kind == "void" then
 
+      if S.solid_feature and PLAN.theme.corners then
+        if not PLAN.corner_tex or true then
+          PLAN.corner_tex = rand_key_by_probs(PLAN.theme.corners)
+        end
+        w_tex = PLAN.corner_tex
+      end
+
       transformed_brush(nil,
       {
         t_face = { texture=f_tex },
         b_face = { texture=f_tex },
-        w_face = { texture="TEKWALL6" },  -- FIXME w_tex
+        w_face = { texture=w_tex },
       },
       {
         { x=x2, y=y1 }, { x=x2, y=y2 },

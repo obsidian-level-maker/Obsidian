@@ -59,6 +59,8 @@ SOLID_P1 =
   y_sizes = { "111", "212" },
 
   symmetry = "xy",
+
+  solid_feature = true,
 },
 
 SOLID_P2 =
@@ -79,6 +81,8 @@ SOLID_P2 =
   y_sizes = { "111", "212" },
 
   symmetry = "xy",
+
+  solid_feature = true,
 },
 
 SOLID_P3 =
@@ -101,6 +105,8 @@ SOLID_P3 =
   y_sizes = { "11111", "11211" },
 
   symmetry = "xy",
+
+  solid_feature = true,
 },
 
 SOLID_C1 =
@@ -120,6 +126,8 @@ SOLID_C1 =
   y_sizes = { "111", "121", "131" },
 
   symmetry = "xy",
+
+  solid_feature = true,
 },
 
 DIAG_C1 =
@@ -202,6 +210,8 @@ SOLID_C3 =
   y_sizes = { "121", "131" },
 
   symmetry = "xy",
+
+  solid_feature = true,
 },
 
 
@@ -222,6 +232,8 @@ SOLID_T1 =
   y_sizes = { "21", "31", "41" },
 
   symmetry = "x",
+
+  solid_feature = true,
 },
 
 DIAG_T1 =
@@ -258,6 +270,8 @@ SOLID_OPP1 =
 
   x_sizes = { "111", "121", "131" },
   y_sizes = { "101", "111", "121", "131" },
+
+  solid_feature = true,
 },
 
 DIAG_OPP1 =
@@ -1214,6 +1228,8 @@ SOLID_CSUB =
   y_sizes = { "121", "131", "141", "151", "161", "171",
               "181", "191", "1A1", "1B1" },
 
+  solid_feature = true,
+
   subs =
   {
     { height=1, match="any", recurse=1 },
@@ -1242,6 +1258,8 @@ SOLID_CSUB4 =
               "13131", "13231", "14141", "14241" },
 
   symmetry = "xy",
+
+  solid_feature = true,
 
   subs =
   {
@@ -1273,6 +1291,8 @@ SOLID_REC_C1 =
 
   symmetry = "xy",
 
+  solid_feature = true,
+
   subs =
   {
     { height=0, match="any", recurse=1 },
@@ -1300,6 +1320,8 @@ SOLID_REC_C2 =
   y_sizes = { "11011", "11111", "11211", "11311",
               "11411", "11511", "11611", "11711",
               "21512", "21612", "21712" },
+
+  solid_feature = true,
 
   subs =
   {
@@ -1330,6 +1352,8 @@ SOLID_REC_C3 =
 
   symmetry = "xy",
 
+  solid_feature = true,
+
   subs =
   {
     { height=0, match="any", recurse=1 },
@@ -1357,6 +1381,8 @@ SOLID_REC_C4 =
   y_sizes = { "11011", "11111", "11211", "11311",
               "11411", "11511", "11611", "11711",
               "21512", "21612", "21712" },
+
+  solid_feature = true,
 
   subs =
   {
@@ -2278,6 +2304,8 @@ RECURSE_T3 =
 
   symmetry = "x",
 
+  solid_feature = true,
+
   subs =
   {
     { height=1, match="one", recurse=1 },
@@ -2309,6 +2337,8 @@ RECURSE_T3_NOSYM =
     "1111", "1121", "1131", "1141", "1151",
     "2151", "2161", "2171", "2181", "2191",
   },
+
+  solid_feature = true,
 
   subs =
   {

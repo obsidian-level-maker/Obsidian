@@ -795,6 +795,7 @@ area.x1, area.y1, area.x2, area.y2)
 
         elseif ch == '#' then
           S.kind = "void"
+          S.solid_feature = T.info.solid_feature
 
         elseif ch == '~' then
           -- NOTE: floor_h for liquids is determined later
@@ -2073,6 +2074,9 @@ gui.debugf("BOTH SAME HEIGHT\n")
       S.diag_new_ftex = sel(who_solid == 'L', h_ftex, l_ftex)
 
       assert(S.diag_new_kind ~= "void")
+
+      if low  and  low.room == R then  low.solid_feature = nil end
+      if high and high.room == R then high.solid_feature = nil end
     end
 
 

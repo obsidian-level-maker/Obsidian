@@ -2741,6 +2741,17 @@ COMMON_THEMES =
       TLITE6_5=1,
     },
 
+    corners =
+    {
+      TEKWALL6=80,
+      METAL1=50,
+      STARGR1=50,
+      METAL7=20,
+      TEKWALL4=5,
+      COMPTALL=1,
+      TEKBRON1=1,
+    },
+
     ground =
     {
       TECH_GROUND=30,
