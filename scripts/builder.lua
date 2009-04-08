@@ -280,6 +280,7 @@ function Build_sky_fence(S, side)
 
   local sky_info =
   {
+    kind = "sky",
     w_face = { texture=PARAMS.sky_tex },
     t_face = { texture=PARAMS.sky_flat },
     b_face = { texture=PARAMS.sky_flat },
