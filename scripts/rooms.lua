@@ -1488,12 +1488,87 @@ function Room_make_ceiling(R)
     return nice
   end
 
-  local function criss_cross_beams()
-    -- !!! FIXME: criss_cross_beams
+  local function add_xx_beam(dir, x1,y1, x2,y2)
+    local skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light }
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+      local ceil_h = S.ceil_h or R.ceil_h
+
+      if ceil_h and S.kind ~= "void" then
+        -- Build_criss_cross_beam(S, dir, x, y, ceil_h - 16, skin)
+        Build_ceil_light(S, ceil_h, skin)
+      end
+    end end -- for x, y
   end
 
-  local function simple_outer_trim()
-    -- !!! FIXME: simple_outer_trim
+  local function decide_xx_beam_pattern(low, high)
+    -- FIXME
+  end
+
+  local function criss_cross_beams()
+    if R.children then return false end
+
+    if not R.arena.ceil_light then
+      R.arena.ceil_light = rand_key_by_probs(PLAN.theme.ceil_lights)
+    end
+
+    R.lite_w = 64
+    R.lite_h = 64
+
+    if R.cw > R.ch or (R.cw == R.ch and rand_odds(50)) then
+      if rand_odds(20) then R.lite_h = 192 end
+      if rand_odds(10) then R.lite_h = 128 end
+      if rand_odds(30) then R.lite_h = R.lite_w end
+
+      for x = R.cx1, R.cx2 do
+        add_xx_beam(8, x, R.ty1, x, R.ty2)
+      end
+    else
+      if rand_odds(20) then R.lite_w = 192 end
+      if rand_odds(10) then R.lite_w = 128 end
+      if rand_odds(30) then R.lite_w = R.lite_h end
+
+      for y = R.cy1, R.cy2 do
+        add_xx_beam(6, R.tx1, y, R.tx2, y)
+      end
+    end
+
+    return true
+  end
+
+  local function corner_supports()
+    local SIDES = { 1, 7, 3, 9 }
+
+    -- first pass only checks if possible
+    for loop = 1,2 do
+      local poss = 0
+
+      for where = 1,4 do
+        local cx = sel((where <= 2), R.tx1, R.tx2)
+        local cy = sel((where % 2) == 1, R.ty1, R.ty2)
+        local S = SEEDS[cx][cy][1]
+        if S.room == R and not S.conn and
+           (S.kind == "walk" or S.kind == "liquid")
+        then
+
+          poss = poss + 1
+
+          if loop == 2 then
+            local skin = { w=24, beam_w="SUPPORT2", beam_f="FLAT23", x_offset=0 }
+            if R.has_lift or (R.id % 5) == 4 then
+              skin = { w=24, beam_w="SUPPORT3", beam_f="CEIL5_2", x_offset=0 }
+            end
+            Build_corner_beam(S, SIDES[where], skin)
+          end
+
+        end
+      end
+
+      if poss < 3 then return false end
+    end
+
+    return true
   end
 
   local function do_central_area()
@@ -1508,15 +1583,12 @@ function Room_make_ceiling(R)
     end
 
 
-    if R.cw <= 4 and R.ch <= 4 and rand_odds(1) then
-      criss_cross_beams()
-      return
+    if (R.tw * R.th) <= 18 and rand_odds(30) then
+      if corner_supports() and rand_odds(30) then return end
     end
 
-    
-    if R.cw <= 3 and R.ch <= 3 and rand_odds(20) then
-      simple_outer_trim()
-      return
+    if rand_odds(99) then
+      if criss_cross_beams() then return end
     end
 
 
@@ -2062,7 +2134,7 @@ gui.printf("do_teleport\n")
         end
 
         if x_num == 1 and y_num == 1 then
-          Build_hall_light(S, z2)
+          Build_ceil_light(S, z2, { lite_f=PLAN.hall_lite_ftex })
         end
       end
     end
@@ -2094,10 +2166,10 @@ end
     if S.kind == "void" then
 
       if S.solid_feature and PLAN.theme.corners then
-        if not PLAN.corner_tex or true then
-          PLAN.corner_tex = rand_key_by_probs(PLAN.theme.corners)
+        if not R.corner_tex then
+          R.corner_tex = rand_key_by_probs(PLAN.theme.corners)
         end
-        w_tex = PLAN.corner_tex
+        w_tex = R.corner_tex
       end
 
       transformed_brush(nil,

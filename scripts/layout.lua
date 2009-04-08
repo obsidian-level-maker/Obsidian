@@ -1359,6 +1359,7 @@ function Layout_hallway(R)
 
     PLAN.hall_trim   = rand_odds(50)
     PLAN.hall_lights = rand_odds(50)
+    PLAN.hall_lite_ftex = rand_key_by_probs(PLAN.theme.ceil_lights)
   end
 
 
@@ -1952,6 +1953,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       -- TODO: "lifty" mode, use > 55 or whatever
       if math.abs(S.stair_z1 - S.stair_z2) > 110 then
         S.kind = "lift"
+        S.room.has_lift = true
       end
     end
 

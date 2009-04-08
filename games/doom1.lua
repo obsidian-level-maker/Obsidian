@@ -327,7 +327,6 @@ COMMON_COMBOS =
     floor = "FLOOR5_1",
     ceil  = "FLOOR4_5",
 
-
     lift = "PLAT1",
     step = "STEP1",
     step_floor = "STEP1",
@@ -430,9 +429,26 @@ COMMON_COMBOS =
     sc_fabs = { crate_rotnar_GRAY2=30, other=50 },
   },
 
-  TECH_DARKGREEN = { wall="BROWNGRN", floor="CEIL5_1",  ceil="CEIL5_1" },
-  TECH_DARKBROWN = { wall="BROWN96",  floor="FLOOR7_1", ceil="FLOOR7_1" },
-  TECH_METAL1    = { wall="METAL1",   floor="FLAT4",    ceil="FLAT4" },
+  TECH_DARKGREEN =
+  {
+    wall="BROWNGRN",
+    floor="CEIL5_1",
+    ceil="CEIL5_1",
+  },
+
+  TECH_DARKBROWN =
+  {
+    wall="BROWN96",
+    floor="FLOOR7_1",
+    ceil="FLOOR7_1",
+  },
+
+  TECH_METAL1 =
+  {
+    wall="METAL1",
+    floor="FLAT4",
+    ceil="FLAT4",
+  },
 
   INDY_PIPES =  -- UNUSED (looks bad)
   {
@@ -2743,13 +2759,18 @@ COMMON_THEMES =
 
     corners =
     {
-      TEKWALL6=80,
-      METAL1=50,
-      STARGR1=50,
-      METAL7=20,
-      TEKWALL4=5,
-      COMPTALL=1,
-      TEKBRON1=1,
+      TEKWALL6=60, STARGR1=40,
+      METAL7=40,   METAL1=20,
+      TEKWALL4=5,  COMPTALL=2,
+      TEKBRON1=2,  COMPBLUE=1,
+    },
+
+    ceil_lights =
+    {
+      TLITE6_5=60, TLITE6_6=30,
+      TLITE6_1=30, FLOOR1_7=30,
+      FLAT2=20,    CEIL3_4=10,
+      FLAT22=10,   GRNLITE1=10,
     },
 
     ground =
