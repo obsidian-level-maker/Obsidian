@@ -703,6 +703,8 @@ T.sx,T.sy, T.room.id, T.room.c_group)
     table.insert(S.room.conns, CONN)
     table.insert(T.room.conns, CONN)
 
+    PLAN.branched_one = true
+
     return CONN
   end
 
@@ -1072,7 +1074,7 @@ gui.debugf("Failed\n")
   end
 
   local function handle_isolate(R, join_chance)
-    if rand_odds(join_chance) or R.parent then
+    if rand_odds(join_chance) or R.parent or not PLAN.branched_one then
       if force_room_branch(R) then
         return -- OK
       end
@@ -1140,7 +1142,7 @@ gui.debugf("Failed\n")
 
     local join_chance = 50
     if STYLE.scenics == "few"   then join_chance = 95 end
-    if STYLE.scenics == "heaps" then join_chance =  5 end
+    if STYLE.scenics == "heaps" then join_chance = 10 end
     if PLAN.join_all then join_chance = 100 end
 
     gui.debugf("Join Chance: %d\n", join_chance)
@@ -1200,16 +1202,18 @@ gui.debugf("Failed\n")
 
   gui.printf("\n--==| Connect_Rooms |==--\n\n")
 
+  PLAN.branched_one = false
+
   for c_group,R in ipairs(PLAN.all_rooms) do
     R.c_group = c_group
   end
 
-
   sprinkle_scenics()
-
 
   branch_big_rooms()
   branch_the_rest()
+
+  gui.debugf("BRANCHED ONE: %s\n", bool_str(PLAN.branched_one))
 
 ---#  for _,R in ipairs(PLAN.all_rooms) do assert(R.kind ~= "scenic") end
 ---#  for _,C in ipairs(PLAN.all_conns) do
