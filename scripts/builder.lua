@@ -1786,8 +1786,8 @@ function Build_exit_pillar(S, z1)
 
   transformed_brush(nil,
   {
-    t_face = { texture="FLAT14" },
-    b_face = { texture="FLAT14" },
+    t_face = { texture="FLAT5_6" },
+    b_face = { texture="FLAT5_6" },
     w_face = { texture="SW1SKULL", peg=true, x_offset=0, y_offset=0 },
   },
   {
