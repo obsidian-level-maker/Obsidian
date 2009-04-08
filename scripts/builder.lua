@@ -579,7 +579,11 @@ function Build_lowering_bars(S, side, z1, skin, tag)
 end
 
 
-function Build_hall_light(S, z2)
+function Build_ceil_light(S, z2, skin)
+  assert(skin)
+  
+  local w = (skin.w or 64) / 2
+  local h = (skin.h or 64) / 2
 
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
@@ -587,14 +591,14 @@ function Build_hall_light(S, z2)
   transformed_brush(nil,
   {
     t_face = { texture="CEIL5_2" },
-    b_face = { texture="TLITE6_5", light=0.90 },
+    b_face = { texture=skin.lite_f or "TLITE6_5", light=0.90 },
     w_face = { texture="METAL" },
   },
   {
-    { x = mx+32, y = my-32 },
-    { x = mx+32, y = my+32 },
-    { x = mx-32, y = my+32 },
-    { x = mx-32, y = my-32 },
+    { x = mx+w, y = my-h },
+    { x = mx+w, y = my+h },
+    { x = mx-w, y = my+h },
+    { x = mx-w, y = my-h },
   },
   z2-12, EXTREME_H)
 
@@ -608,37 +612,37 @@ function Build_hall_light(S, z2)
 
   transformed_brush(nil, metal_info,
   {
-    { x = mx-32, y = my-40 },
-    { x = mx-32, y = my+40 },
-    { x = mx-40, y = my+40 },
-    { x = mx-40, y = my-40 },
+    { x = mx-w,     y = my-(h+8) },
+    { x = mx-w,     y = my+(h+8) },
+    { x = mx-(w+8), y = my+(h+8) },
+    { x = mx-(w+8), y = my-(h+8) },
   },
   z2-16, EXTREME_H)
 
   transformed_brush(nil, metal_info,
   {
-    { x = mx+40, y = my-40 },
-    { x = mx+40, y = my+40 },
-    { x = mx+32, y = my+40 },
-    { x = mx+32, y = my-40 },
+    { x = mx+(w+8), y = my-(h+8) },
+    { x = mx+(w+8), y = my+(h+8) },
+    { x = mx+w,     y = my+(h+8) },
+    { x = mx+w,     y = my-(h+8) },
   },
   z2-16, EXTREME_H)
 
   transformed_brush(nil, metal_info,
   {
-    { x = mx+40, y = my-40 },
-    { x = mx+40, y = my-32 },
-    { x = mx-40, y = my-32 },
-    { x = mx-40, y = my-40 },
+    { x = mx+(w+8), y = my-(h+8) },
+    { x = mx+(w+8), y = my-h },
+    { x = mx-(w+8), y = my-h },
+    { x = mx-(w+8), y = my-(h+8) },
   },
   z2-16, EXTREME_H)
 
   transformed_brush(nil, metal_info,
   {
-    { x = mx+40, y = my+32 },
-    { x = mx+40, y = my+40 },
-    { x = mx-40, y = my+40 },
-    { x = mx-40, y = my+32 },
+    { x = mx+(w+8), y = my+h },
+    { x = mx+(w+8), y = my+(h+8) },
+    { x = mx-(w+8), y = my+(h+8) },
+    { x = mx-(w+8), y = my+h },
   },
   z2-16, EXTREME_H)
  
@@ -1821,6 +1825,29 @@ function Build_exit_pillar(S, z1)
     },
     -EXTREME_H, z1+16)
   end
+end
+
+
+function Build_corner_beam(S, side, skin)
+  -- FIXME: at this stage the thick[] values are not decided yet
+
+  local x1 = S.x1 + 24 -- S.thick[4]
+  local y1 = S.y1 + 24 -- S.thick[2]
+  local x2 = S.x2 - 24 -- S.thick[6]
+  local y2 = S.y2 - 24 -- S.thick[8]
+
+  local w = assert(skin.w)
+
+  if side == 1 or side == 7 then x2 = x1 + w else x1 = x2 - w end
+  if side == 1 or side == 3 then y2 = y1 + w else y1 = y2 - w end
+  
+  transformed_brush(nil,
+  {
+    t_face = { texture=assert(skin.beam_f) },
+    b_face = { texture=assert(skin.beam_f) },
+    w_face = { texture=assert(skin.beam_w), x_offset=skin.x_offset, y_offset=skin.y_offset },
+  },
+  rect_coords(x1,y1, x2,y2), -EXTREME_H, EXTREME_H)
 end
 
 
