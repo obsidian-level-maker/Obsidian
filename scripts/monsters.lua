@@ -597,12 +597,14 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
 
       if item.big_item then
         spot = table.remove(R.big_spots, 1)
+        spot.used = true
         table.insert(R.big_spots, spot)
 
         assert(count == 1)
         place_big_item(spot, item.name, SK, CL)
       else
         spot = table.remove(R.small_spots, 1)
+        spot.used = true
         table.insert(R.small_spots, spot)
 
         place_small_item(spot, item.name, count, SK, CL)
@@ -1085,7 +1087,19 @@ function Monsters_in_room(R)
     spot.S.content = "monster"
   end
 
-  local function fill_monster_map(qty)
+  local function place_barrel(spot)
+    if spot.S.conn or spot.S.kind ~= "walk" then
+      return
+    end
+
+    local thing = GAME.things["barrel"]
+
+    gui.add_entity(tostring(thing.id), spot.x, spot.y, spot.S.floor_h + 25)
+
+    spot.S.content = "monster"  -- allow items to exist here
+  end
+
+  local function fill_monster_map(qty, barrel_chance)
     local totals  = {}
     local actuals = {}
 
@@ -1101,6 +1115,8 @@ function Monsters_in_room(R)
       if (actuals[spot.monster] or 0) >= 1 then
         place_monster(spot, actuals[spot.monster])
         actuals[spot.monster] = actuals[spot.monster] - 1
+      elseif rand_odds(barrel_chance) then
+        place_barrel(spot)
       end
     end
   end
@@ -1115,7 +1131,12 @@ function Monsters_in_room(R)
     local qty = MONSTER_QUANTITIES[OB_CONFIG.mons] or
                 PLAN.mixed_mons_qty  -- the "mixed" setting
 
-    fill_monster_map(qty)
+    local barrel_chance = sel(R.outdoor, 2, 20)
+    if R.kind == "hallway" then barrel_chance = 5 end
+    if STYLE.barrels == "heaps" or rand_odds(10) then barrel_chance = barrel_chance * 3 + 10 end
+    if STYLE.barrels == "few"   or rand_odds(30) then barrel_chance = barrel_chance / 4 end
+
+    fill_monster_map(qty, barrel_chance)
   end
 
 

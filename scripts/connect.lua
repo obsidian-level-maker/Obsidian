@@ -1213,8 +1213,6 @@ gui.debugf("Failed\n")
   branch_big_rooms()
   branch_the_rest()
 
-  gui.debugf("BRANCHED ONE: %s\n", bool_str(PLAN.branched_one))
-
 ---#  for _,R in ipairs(PLAN.all_rooms) do assert(R.kind ~= "scenic") end
 ---#  for _,C in ipairs(PLAN.all_conns) do
 ---#    assert(C.src.kind ~= "scenic")
