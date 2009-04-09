@@ -1493,7 +1493,11 @@ function Room_make_ceiling(R)
       local S = SEEDS[x][y][1]
       assert(S.room == R)
 
-      if mode == "light" and S.kind == "diagonal" then
+      if S.kind == "lift" or S.kind == "tall_stair" then
+        return false
+      end
+
+      if mode == "light" and (S.kind == "diagonal") then
         return false
       end
     end end -- for x, y
@@ -1501,45 +1505,80 @@ function Room_make_ceiling(R)
     return true
   end
 
-  local function add_cross_beam(dir, x1,y1, x2,y2)
-    local skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light }
+  local function add_cross_beam(dir, x1,y1, x2,y2, mode)
+    local skin
+    
+    if mode == "light" then
+      skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light }
+    end
 
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
       local ceil_h = S.ceil_h or R.ceil_h
 
       if ceil_h and S.kind ~= "void" then
-        -- Build_criss_cross_beam(S, dir, x, y, ceil_h - 16, skin)
-        Build_ceil_light(S, ceil_h, skin)
+        if mode == "light" then
+          Build_ceil_light(S, ceil_h, skin)
+        else
+          Build_cross_beam(S, dir, 64, ceil_h - 16, R.combo.beam_mat or "metal")
+        end
       end
     end end -- for x, y
   end
 
-  local function decide_cross_beam_pattern(low, high)
-    -- FIXME
+  local function decide_beam_pattern(poss, total, mode)
+    if table_empty(poss) then return false end
+
+    return true  -- FIXME !!!!!!
   end
 
-  local function criss_cross_beams()
+  local function criss_cross_beams(mode)
     if R.children then return false end
 
     R.lite_w = 64
     R.lite_h = 64
 
+    local poss = {}
+
     if R.cw > R.ch or (R.cw == R.ch and rand_odds(50)) then
+      -- vertical beams
+
       if rand_odds(20) then R.lite_h = 192 end
       if rand_odds(10) then R.lite_h = 128 end
       if rand_odds(30) then R.lite_h = R.lite_w end
 
       for x = R.cx1, R.cx2 do
-        add_cross_beam(8, x, R.ty1, x, R.ty2)
+        poss[x - R.cx1 + 1] = test_cross_beam(8, x, R.ty1, x, R.ty2, mode)
       end
-    else
+
+      if not decide_beam_pattern(poss, R.cx2 - R.cx1 + 1, mode) then
+        return false
+      end
+
+      for x = R.cx1, R.cx2 do
+        if poss[x - R.cx1 + 1] then
+          add_cross_beam(8, x, R.ty1, x, R.ty2)
+        end
+      end
+
+    else -- horizontal beams
+
       if rand_odds(20) then R.lite_w = 192 end
       if rand_odds(10) then R.lite_w = 128 end
       if rand_odds(30) then R.lite_w = R.lite_h end
 
       for y = R.cy1, R.cy2 do
-        add_cross_beam(6, R.tx1, y, R.tx2, y)
+        poss[y - R.cy1 + 1] = test_cross_beam(6, R.tx1, y, R.tx2, y, mode)
+      end
+
+      if not decide_beam_pattern(poss, R.cy2 - R.cy1 + 1, mode) then
+        return false
+      end
+
+      for y = R.cy1, R.cy2 do
+        if poss[y - R.cy1 + 1] then
+          add_cross_beam(6, R.tx1, y, R.tx2, y, mode)
+        end
       end
     end
 
@@ -1601,7 +1640,7 @@ function Room_make_ceiling(R)
       R.arena.ceil_light = rand_key_by_probs(PLAN.theme.ceil_lights)
     end
 
-    if rand_odds(99) then
+    if rand_odds(1) then
       if criss_cross_beams("light") then return end
     end
 

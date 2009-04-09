@@ -26,8 +26,8 @@ class SEED
 
   kind : keyword  -- main usage of seed:
                   -- "walk", "void", "diagonal",
-                  -- "stair", "curve_stair", "liquid"
-                  -- "purpose"
+                  -- "stair", "curve_stair", "tall_stair",
+                  -- "liquid"
 
   content : keyword  -- normally nil, but can be:
                      -- "pillar"

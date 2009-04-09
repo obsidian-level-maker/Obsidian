@@ -1851,6 +1851,32 @@ function Build_corner_beam(S, side, skin)
 end
 
 
+function Build_cross_beam(S, dir, w, beam_z, mat)
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  -- FIXME: at this stage the thick[] values are not decided yet
+  if S.sx == S.room.sx1 then x1 = x1 + 24 elseif is_horiz(dir) then x1 = x1 - 24 end
+  if S.sx == S.room.sx2 then x2 = x2 - 24 elseif is_horiz(dir) then x2 = x2 + 24 end
+  if S.sy == S.room.sy1 then y1 = y1 + 24 elseif is_vert(dir)  then y1 = y1 - 24 end
+  if S.sy == S.room.sy2 then y2 = y2 - 24 elseif is_vert(dir)  then y2 = y2 + 24 end
+
+  local mx = int((x1 + x2) / 2)
+  local my = int((y1 + y2) / 2)
+
+  local info = material_to_info(mat)
+
+  local coords
+  if is_vert(dir) then
+    coords = rect_coords(mx-w/2, y1, mx+w/2, y2)
+  else
+    coords = rect_coords(x1, my-w/2, x2, my+w/2)
+  end
+
+  transformed_brush(nil, info, coords, beam_z, EXTREME_H)
+end
+
+
 function Build_small_switch(S, dir, f_h, info, tag)
 
   local DT, long = get_transform_for_seed_side(S, 10-dir)

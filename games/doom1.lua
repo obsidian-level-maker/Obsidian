@@ -422,6 +422,8 @@ COMMON_COMBOS =
     lift = "SUPPORT3",
     pic_wd = "REDWALL",
 
+    beam_mat = "shiny",
+
 --  lift_floor = "FLOOR4_8",
 
     scenery = { green_pillar=5, green_column=5, green_column_hrt=5 },
@@ -2767,7 +2769,7 @@ COMMON_THEMES =
 
     ceil_lights =
     {
-      TLITE6_5=60, TLITE6_6=30,
+      TLITE6_5=50, TLITE6_6=30,
       TLITE6_1=30, FLOOR1_7=30,
       FLAT2=20,    CEIL3_4=10,
       FLAT22=10,   GRNLITE1=10,
