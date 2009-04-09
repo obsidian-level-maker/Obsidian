@@ -436,6 +436,8 @@ COMMON_COMBOS =
     wall="BROWNGRN",
     floor="CEIL5_1",
     ceil="CEIL5_1",
+
+    beam_mat = "shiny",
   },
 
   TECH_DARKBROWN =
@@ -443,6 +445,8 @@ COMMON_COMBOS =
     wall="BROWN96",
     floor="FLOOR7_1",
     ceil="FLOOR7_1",
+
+    beam_mat = "shiny",
   },
 
   TECH_METAL1 =
@@ -450,6 +454,8 @@ COMMON_COMBOS =
     wall="METAL1",
     floor="FLAT4",
     ceil="FLAT4",
+
+    beam_mat = "shiny",
   },
 
   INDY_PIPES =  -- UNUSED (looks bad)
@@ -474,6 +480,8 @@ COMMON_COMBOS =
     wall  = "SLADWALL",
     floor = "FLOOR0_5",
     ceil  = "CEIL5_1",
+
+    beam_mat = "shiny",
 
 --  void = "SLADSKUL",
     step = "STEP1",

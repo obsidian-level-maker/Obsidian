@@ -55,7 +55,7 @@ STYLE_LIST =
   junk       = { few=10, some=60, heaps=20 },
   symmetry   = { few=20, some=60, heaps=20 },
   pillars    = { few=30, some=60, heaps=20 },
-  beams      = { few=50, some=30, heaps=5  },
+  beams      = { few=25, some=50, heaps=5  },
   barrels    = { few=50, some=50, heaps=10 },
 
   windows    = { few=20, some=50, heaps=20 },

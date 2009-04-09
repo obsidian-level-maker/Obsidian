@@ -1489,6 +1489,8 @@ function Room_make_ceiling(R)
   end
 
   local function test_cross_beam(dir, x1,y1, x2,y2, mode)
+    -- FIXME: count usable spots, return false for zero
+
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
       assert(S.room == R)
@@ -1518,7 +1520,9 @@ function Room_make_ceiling(R)
 
       if ceil_h and S.kind ~= "void" then
         if mode == "light" then
-          Build_ceil_light(S, ceil_h, skin)
+          if S.content ~= "pillar" then
+            Build_ceil_light(S, ceil_h, skin)
+          end
         else
           Build_cross_beam(S, dir, 64, ceil_h - 16, R.combo.beam_mat or "metal")
         end
@@ -1529,7 +1533,8 @@ function Room_make_ceiling(R)
   local function decide_beam_pattern(poss, total, mode)
     if table_empty(poss) then return false end
 
-    return true  -- FIXME !!!!!!
+    -- FIXME !!!
+    return true
   end
 
   local function criss_cross_beams(mode)
@@ -1631,8 +1636,8 @@ function Room_make_ceiling(R)
     end
 
 
-    if (R.tw * R.th) <= 18 and rand_odds(30) then
-      if corner_supports() and rand_odds(30) then return end
+    if (R.tw * R.th) <= 18 and rand_odds(20) then
+      if corner_supports() and rand_odds(35) then return end
     end
 
 
@@ -1640,12 +1645,16 @@ function Room_make_ceiling(R)
       R.arena.ceil_light = rand_key_by_probs(PLAN.theme.ceil_lights)
     end
 
-    if rand_odds(1) then
-      if criss_cross_beams("light") then return end
+    local beam_chance = 25
+    if STYLE.beams == "few"   then beam_chance =  5 end
+    if STYLE.beams == "heaps" then beam_chance = 75 end
+
+    if rand_odds(beam_chance) then
+      if criss_cross_beams("beam") then return end
     end
 
-    if rand_odds(99) then
-      if criss_cross_beams("beam")  then return end
+    if rand_odds(42) then
+      if criss_cross_beams("light") then return end
     end
 
 
