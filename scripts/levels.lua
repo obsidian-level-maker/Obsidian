@@ -174,6 +174,13 @@ function Level_styles()
   if OB_CONFIG.outdoors and OB_CONFIG.outdoors ~= "mixed" then
     STYLE.skies = OB_CONFIG.outdoors
   end
+
+  -- per level overrides...
+  if LEVEL.style then
+    for name,value in pairs(LEVEL.style) do
+      STYLE[name] = value
+    end
+  end
   
   gui.printf("\nStyles = \n%s\n\n", table_to_str(STYLE, 1))
 end
