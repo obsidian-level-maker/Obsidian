@@ -3022,7 +3022,7 @@ DOOM2_MONSTERS =
 
   revenant =
   {
-    prob=50, guard_prob=41, trap_prob=41, cage_prob=51,
+    prob=44, guard_prob=41, trap_prob=41, cage_prob=51,
     health=300, damage=70, attack="missile",
   },
 
