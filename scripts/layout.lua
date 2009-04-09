@@ -1989,7 +1989,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
         local y_void = not (OY and OY.room and OY.room == R) or (OY.kind == "void")
 
         if x_void and y_void then
-          S.stair_kind = "tall"
+          S.kind = "tall_stair"
         end
       end
     end

@@ -685,7 +685,7 @@ function Rooms_border_up()
       local S = SEEDS[x][y][1]
       if S.room == R and not
          (S.kind == "void" or S.kind == "diagonal" or
-          S.stair_kind == "tall")
+          S.kind == "tall_stair")
       then
         for side = 2,8,2 do
           if S.border[side].kind == "wall" then
@@ -1174,7 +1174,7 @@ function Room_make_ceiling(R)
           f_h = S.floor_h
         elseif S.kind == "stair" or S.kind == "lift" then
           f_h = math.max(S.stair_z1, S.stair_z2)
-        elseif S.kind == "curve_stair" then
+        elseif S.kind == "curve_stair" or S.kind == "tall_stair" then
           f_h = math.max(S.x_height, S.y_height)
         end
 
@@ -1479,7 +1479,7 @@ function Room_make_ceiling(R)
       if S.room ~= R then return 0 end
       
       if S.kind == "void" or ---#  S.kind == "diagonal" or
-         S.stair_kind == "tall" or S.content == "pillar"
+         S.kind == "tall_stair" or S.content == "pillar"
       then
         nice = 1
       end
@@ -1488,7 +1488,20 @@ function Room_make_ceiling(R)
     return nice
   end
 
-  local function add_xx_beam(dir, x1,y1, x2,y2)
+  local function test_cross_beam(dir, x1,y1, x2,y2, mode)
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+      assert(S.room == R)
+
+      if mode == "light" and S.kind == "diagonal" then
+        return false
+      end
+    end end -- for x, y
+
+    return true
+  end
+
+  local function add_cross_beam(dir, x1,y1, x2,y2)
     local skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light }
 
     for x = x1,x2 do for y = y1,y2 do
@@ -1502,16 +1515,12 @@ function Room_make_ceiling(R)
     end end -- for x, y
   end
 
-  local function decide_xx_beam_pattern(low, high)
+  local function decide_cross_beam_pattern(low, high)
     -- FIXME
   end
 
   local function criss_cross_beams()
     if R.children then return false end
-
-    if not R.arena.ceil_light then
-      R.arena.ceil_light = rand_key_by_probs(PLAN.theme.ceil_lights)
-    end
 
     R.lite_w = 64
     R.lite_h = 64
@@ -1522,7 +1531,7 @@ function Room_make_ceiling(R)
       if rand_odds(30) then R.lite_h = R.lite_w end
 
       for x = R.cx1, R.cx2 do
-        add_xx_beam(8, x, R.ty1, x, R.ty2)
+        add_cross_beam(8, x, R.ty1, x, R.ty2)
       end
     else
       if rand_odds(20) then R.lite_w = 192 end
@@ -1530,7 +1539,7 @@ function Room_make_ceiling(R)
       if rand_odds(30) then R.lite_w = R.lite_h end
 
       for y = R.cy1, R.cy2 do
-        add_xx_beam(6, R.tx1, y, R.tx2, y)
+        add_cross_beam(6, R.tx1, y, R.tx2, y)
       end
     end
 
@@ -1587,8 +1596,17 @@ function Room_make_ceiling(R)
       if corner_supports() and rand_odds(30) then return end
     end
 
+
+    if not R.arena.ceil_light then
+      R.arena.ceil_light = rand_key_by_probs(PLAN.theme.ceil_lights)
+    end
+
     if rand_odds(99) then
-      if criss_cross_beams() then return end
+      if criss_cross_beams("light") then return end
+    end
+
+    if rand_odds(99) then
+      if criss_cross_beams("beam")  then return end
     end
 
 
@@ -2211,20 +2229,16 @@ end
       256, EXTREME_H);
 
     elseif S.kind == "stair" then
-
       Build_niche_stair(S, PLAN.step_skin)
 
     elseif S.kind == "curve_stair" then
+      Build_low_curved_stair(S, PLAN.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
-      if S.stair_kind == "tall" then
-        Build_tall_curved_stair(S, PLAN.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
-      else
-        Build_low_curved_stair(S, PLAN.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
-      end
+    elseif S.kind == "tall_stair" then
+      Build_tall_curved_stair(S, PLAN.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
     elseif S.kind == "lift" then
       local tag = PLAN:alloc_tag()
-
       Build_lift(S, PLAN.lift_skin, tag)
 
     elseif S.kind == "popup" then
