@@ -269,7 +269,7 @@ function get_wall_coords(S, side, thick, pad)
 end
 
 
-function Build_sky_fence(S, side)
+function Build_sky_fence(S, side, z)
   
   local wall_info =
   {
@@ -335,8 +335,6 @@ function Build_sky_fence(S, side)
     { x=sx2, y=sy1 }, { x=sx2, y=sy2 },
     { x=sx1, y=sy2 }, { x=sx1, y=sy1 },
   }
-
-  local z = math.max(PLAN.skyfence_h, (S.room.floor_h or 0) + 64)
 
   transformed_brush(nil, wall_info,  w_coords, -EXTREME_H, z)
   transformed_brush(nil, wall2_info, s_coords, -EXTREME_H, PLAN.skyfence_h - 64)

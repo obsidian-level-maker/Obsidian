@@ -1718,6 +1718,12 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
         w_face = { texture="METAL" },
       }
 
+      -- lighting effects
+          if rand_odds(8) then light_info.sec_kind = 8
+      elseif rand_odds(4) then light_info.sec_kind = 3
+      elseif rand_odds(2) then light_info.sec_kind = 2
+      end
+
     local trim   = material_to_info("metal")
     local spokes = material_to_info("shiny")
 
@@ -2087,7 +2093,8 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "sky_fence" then
-        Build_sky_fence(S, side)
+        local z = math.max(PLAN.skyfence_h, (S.room.floor_max_h or S.room.floor_h or 400) + 48)
+        Build_sky_fence(S, side, z)
       end
 
       if B_kind == "arch" then
