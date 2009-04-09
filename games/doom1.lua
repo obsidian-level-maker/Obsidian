@@ -3659,6 +3659,8 @@ function Doom1_get_levels()
         secret_kind = (map == 9) and "plain",
 
         toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 5),
+
+        style = {},
       }
 
       if LEV.ep_along > 0.44 and rand_odds(sel(MAP_NUM > 7, 50, 90)) then

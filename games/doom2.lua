@@ -1704,6 +1704,8 @@ function Doom2_get_levels()
 
       -- allow TNT and Plutonia to override the sky stuff
       sky_info = GAME.sky_info[episode],
+
+      style = {},
     }
 
     if OB_CONFIG.length == "few" then
@@ -1722,6 +1724,10 @@ function Doom2_get_levels()
     if map == 31 or map == 32 then
       LEV.theme = "WOLF"
       LEV.allow_bfg = true
+    end
+
+    if map == 23 then
+      LEV.style.barrels = "heaps"
     end
 
 ---!!! LEV.boss_kind   = DOOM2_LEVEL_BOSSES[LEV.name]
