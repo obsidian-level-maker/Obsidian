@@ -177,15 +177,17 @@ function Arena_Doom_MAP30()
     for i=-1,1 do
       local hx = face_x + i * 192
       local hy = face_y - 96
-      local item = sel(i == 0, "soul", "mega")
+      local item = "mega" -- sel(i == 0, "soul", "mega")
 
       gui.add_entity(tostring(GAME.things[item].id), hx, hy, 0)
 
+      --[[
       hx = face_x + i * 128
       hy = face_y - 240
       item = sel(i == 0, "plasma", "cell_pack")
 
       gui.add_entity(tostring(GAME.things[item].id), hx, hy, 0)
+      --]]
 
       if i ~= 0 then
         local tx = face_x + i * 240
@@ -201,7 +203,7 @@ function Arena_Doom_MAP30()
         hx = face_x + i * 128
         hy = room_y + 64
 
-        gui.add_entity(tostring(GAME.things["cell_pack"].id), hx, hy, 0)
+        gui.add_entity(tostring(GAME.things["medikit"].id), hx, hy, 0)
       end
     end
   end
