@@ -37,6 +37,7 @@ require 'connect'
 require 'naming'
 require 'quests'
 require 'builder'
+require 'arenas'
 require 'layout'
 require 'rooms'
 require 'fight'
@@ -202,17 +203,19 @@ function Level_Make(L, index, NUM)
 
   Level_styles()
 
-  Plan_rooms_sp()
-    if gui.abort() then return "abort" end
-    gui.progress(10)
+  if not LEVEL.arena_func then
+    Plan_rooms_sp()
+      if gui.abort() then return "abort" end
+      gui.progress(10)
 
-  Connect_Rooms()
-    if gui.abort() then return "abort" end
-    gui.progress(15)
+    Connect_Rooms()
+      if gui.abort() then return "abort" end
+      gui.progress(15)
 
-  Quest_assign()
-    if gui.abort() then return "abort" end
-    gui.progress(25)
+    Quest_assign()
+      if gui.abort() then return "abort" end
+      gui.progress(25)
+  end
 
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
@@ -230,15 +233,19 @@ function Level_Make(L, index, NUM)
     gui.property("error_flat", PARAMS.error_flat or PARAMS.error_tex)
   end   
 
-  Rooms_build_all()
-    if gui.abort() then return "abort" end
-    gui.progress(80)
+  if LEVEL.arena_func then
+    LEVEL.arena_func()
+      if gui.abort() then return "abort" end
+      gui.progress(50)
+  else
+    Rooms_build_all()
+      if gui.abort() then return "abort" end
+      gui.progress(80)
 
-  Monsters_make_battles()
-    if gui.abort() then return "abort" end
-    gui.progress(90)
-
---- Builder_dummy()
+    Monsters_make_battles()
+      if gui.abort() then return "abort" end
+      gui.progress(90)
+  end
 
   gui.end_level()
 

@@ -1730,6 +1730,11 @@ function Doom2_get_levels()
       LEV.style.barrels = "heaps"
     end
 
+    if map == 30 then
+      LEV.arena_func = Arena_Doom_MAP30
+      LEV.description = "The Ultimate Obscenity"
+    end
+
 ---!!! LEV.boss_kind   = DOOM2_LEVEL_BOSSES[LEV.name]
     LEV.secret_kind = DOOM2_SECRET_KINDS[LEV.name]
     LEV.secret_exit = DOOM2_SECRET_EXITS[LEV.name]

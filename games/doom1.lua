@@ -3784,7 +3784,9 @@ function Doom_describe_levels()
   local desc_list = Naming_generate("TECH", #GAME.all_levels, PARAMS.max_level_desc)
 
   for index,LEV in ipairs(GAME.all_levels) do
-    LEV.description = desc_list[index]
+    if not LEV.description then
+      LEV.description = desc_list[index]
+    end
   end
 
 
