@@ -34,7 +34,7 @@ function Arena_add_players(x, y, z, angle)
                    x + dist, y, z, { angle=angle })
 
     gui.add_entity(tostring(GAME.things["player4"].id),
-                   x, y - dist, z, { angle=angle })
+                   x - dist, y + dist, z, { angle=angle })
   end
 end
 
@@ -47,6 +47,8 @@ function Arena_Doom_MAP30()
   local room_y  = face_y - 1600
   local room_x1 = face_x - 768
   local room_x2 = face_x + 768
+
+  local ledge_y = room_y + 600
 
   local function make_face()
 
@@ -143,7 +145,7 @@ function Arena_Doom_MAP30()
     local y2 = face_y
 
     local z1 = 0
-    local z2 = 512-32
+    local z2 = 512-96
 
     local info =
     {
@@ -170,14 +172,37 @@ function Arena_Doom_MAP30()
     transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), -EXTREME_H, z1)
     transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), z2, EXTREME_H)
 
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y1+600), -EXTREME_H, 128)
+    transformed_brush(nil, info, rect_coords(x1,y1, x2,ledge_y), -EXTREME_H, 128)
 
     for i=-1,1 do
-      local hx = face_x + i * 256
+      local hx = face_x + i * 192
       local hy = face_y - 96
-      local item = sel(i == 0, "blue_armor", "mega")
+      local item = sel(i == 0, "soul", "mega")
 
       gui.add_entity(tostring(GAME.things[item].id), hx, hy, 0)
+
+      hx = face_x + i * 128
+      hy = face_y - 240
+      item = sel(i == 0, "plasma", "cell_pack")
+
+      gui.add_entity(tostring(GAME.things[item].id), hx, hy, 0)
+
+      if i ~= 0 then
+        local tx = face_x + i * 240
+        local ty = room_y + 250
+
+        gui.add_entity(tostring(GAME.things["brain_target"].id), tx, ty, 0)
+
+        tx = face_x + i * 400
+        ty = ledge_y + 400
+
+        gui.add_entity(tostring(GAME.things["brain_target"].id), tx, ty, 0)
+
+        hx = face_x + i * 128
+        hy = room_y + 64
+
+        gui.add_entity(tostring(GAME.things["cell_pack"].id), hx, hy, 0)
+      end
     end
   end
 
@@ -218,18 +243,90 @@ function Arena_Doom_MAP30()
       gui.add_entity(tostring(GAME.things["Cyberdemon"].id),
                      mx, my, z, { angle=angle })
 
-      gui.add_entity(tostring(GAME.things["launch"].id),
-                     mx, my, z, { angle=angle })
+      if i <= 2 then
+        gui.add_entity(tostring(GAME.things["launch"].id),
+                       mx, my, z, { angle=angle })
+      end
 
-      for side = 2,8,2 do
-        local rx, ry = nudge_coord(mx, my, side, 40)
+      for side = 1,9 do if side ~= 5 then
+        local dist = sel((side % 2) == 0, 1.4, 1) * 36
+        local rx, ry = nudge_coord(mx, my, side, dist)
         gui.add_entity(tostring(GAME.things["rockets"].id),
                        rx, ry, z, { angle=angle })
-      end
+      end end -- for side
+    end
+  end
+
+  local function make_lifts()
+    for i = 1,2 do
+      local x1 = sel(i == 1, room_x1+64,     room_x2-64-128)
+      local x2 = sel(i == 1, room_x1+64+128, room_x2-64)
+
+      local y1 = ledge_y + 32
+      local y2 = y1 + 128
+
+      local z = 128
+
+      local lift =
+      {
+        t_face = { texture="FLAT5_6" },
+        b_face = { texture="FLAT5_6" },
+        w_face = { texture="SKSPINE1", x_offset=0, y_offset=0, peg=true },
+        sec_tag = 1,
+      }
+
+      transformed_brush(nil, lift,
+      {
+        { x=x2, y=y1, line_kind=62, line_tag=1 },
+        { x=x2, y=y2, line_kind=62, line_tag=1 },
+        { x=x1, y=y2, line_kind=62, line_tag=1 },
+        { x=x1, y=y1, line_kind=62, line_tag=1 },
+      },
+      -EXTREME_H, z)
     end
   end
 
   local function make_platform()
+    local x1 = face_x-32
+    local x2 = face_x+32
+
+    local info =
+    {
+      t_face = { texture="FLAT5_2" },
+      b_face = { texture="FLAT5_2" },
+      w_face = { texture="WOOD1", y_offset=0, peg=true },
+    }
+
+    transformed_brush(nil, info,
+        rect_coords(x1, ledge_y-108, x2, ledge_y+360),
+        -EXTREME_H, 240)
+
+
+    local y1 = ledge_y - 200
+    local y2 = y1 + 64
+
+    local lift =
+    {
+      t_face = { texture="FLAT5_2" },
+      b_face = { texture="FLAT5_2" },
+      w_face = { texture="WOODMET2", x_offset=0, y_offset=0, peg=true },
+      sec_tag = 2,
+    }
+
+    transformed_brush(nil, lift,
+    {
+      { x=x2, y=y1, line_kind=123, line_tag=2 },
+      { x=x2, y=y2, line_kind=123, line_tag=2 },
+      { x=x1, y=y2, line_kind=123, line_tag=2 },
+      { x=x1, y=y1, line_kind=123, line_tag=2 },
+    },
+    -EXTREME_H, 240)
+
+
+    local tx = face_x
+    local ty = ledge_y + 160
+
+    gui.add_entity(tostring(GAME.things["brain_target"].id), tx, ty, 0)
   end
 
 
@@ -238,7 +335,10 @@ function Arena_Doom_MAP30()
   make_face()
   make_hole()
   make_room()
+
   make_cybers()
+  make_lifts()
+  make_platform()
 
   Arena_add_players(face_x, face_y - 512, 0, 90)
 end
