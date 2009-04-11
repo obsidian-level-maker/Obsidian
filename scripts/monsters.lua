@@ -847,7 +847,9 @@ function Monsters_in_room(R)
   local function monster_fits(S, mon, info)
     -- check seed kind
     -- (floating monsters can go in more places)
-    if not (S.kind == "walk" or info.float) then
+    if S.kind == "walk" or (S.kind == "liquid" and info.float) then
+      -- OK
+    else
       return false
     end
 
@@ -891,9 +893,6 @@ function Monsters_in_room(R)
 
     if not S.floor_h then return end
 
-    -- preliminary check on type
-    if not (S.kind == "walk" or S.kind == "liquid") then return end
-
     local mon   = rand_key_by_probs(palette)
     local info  = GAME.monsters[mon]
     local thing = GAME.things[mon]
@@ -925,6 +924,8 @@ function Monsters_in_room(R)
 
     gui.debugf("steal_a_seed(%s): stealing from %s\n", mon, victim)
 
+    local new_info = GAME.monsters[mon]
+
     local qty = 1
     if totals[victim] >= 10 then qty = 2 end
 
@@ -938,9 +939,9 @@ function Monsters_in_room(R)
         if victim_S and spot.S == victim_S then
           -- skip other spots in the same seed
         elseif not victim_S and spot.monster == victim and
-               monster_fits(spot.S, spot.monster, spot.info)
+               monster_fits(spot.S, mon, new_info)
         then
-          add_spot_group(spot.S, mon, GAME.monsters[mon])
+          add_spot_group(spot.S, mon, new_info)
           victim_S = spot.S
 
           totals[mon]    = totals[mon] + 1
