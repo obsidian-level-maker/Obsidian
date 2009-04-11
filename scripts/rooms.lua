@@ -628,12 +628,16 @@ function Rooms_border_up()
 
       if N.kind == "liquid" and
         (S.kind == "liquid" or R1.arena == R2.arena)
+        and (STYLE.dm_liquid == "nukage")
         --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
       then
         S.border[side].kind = "nothing"
       end
 
-      if STYLE.fences == "none" and R1.arena == R2.arena then
+      if STYLE.fences == "none" and R1.arena == R2.arena and
+         (S.kind ~= "liquid" or STYLE.dm_liquid == "nukage" or
+          S.floor_h == N.floor_h)
+      then
         S.border[side].kind = "nothing"
       end
 
@@ -648,7 +652,9 @@ function Rooms_border_up()
       S.thick[side] = 24
 
       -- liquid arches are a kind of window
-      if S.kind == "liquid" and N.kind == "liquid" then
+      if S.kind == "liquid" and N.kind == "liquid" and
+         (STYLE.dm_liquid == "nukage" or (S.floor_h == N.floor_h))
+      then
         S.border[side].kind = "liquid_arch"
         return
       end
@@ -1495,7 +1501,7 @@ function Room_make_ceiling(R)
       local S = SEEDS[x][y][1]
       assert(S.room == R)
 
-      if S.kind == "lift" or S.kind == "tall_stair" then
+      if S.kind == "lift" or S.kind == "tall_stair" or S.raising_start then
         return false
       end
 
@@ -2300,13 +2306,23 @@ end
       Build_popup_trap(S, z1, {}, S.room.combo)
 
     elseif S.kind == "liquid" then
-      transformed_brush(nil,
+      -- FIXME: game specific
+      local nukage =
       {
         t_face = { texture="NUKAGE3" },
         b_face = { texture="NUKAGE3" },
         w_face = { texture="SFALL3"  },
         sec_kind = 16,
-      },
+      }
+      local lava =
+      {
+        t_face = { texture="LAVA1" },
+        b_face = { texture="LAVA1" },
+        w_face = { texture="ROCKRED1"  },
+        sec_kind = 16,
+      }
+
+      transformed_brush(nil, sel(STYLE.dm_liquid == "nukage", nukage, lava),
       {
         { x=x2, y=y1 }, { x=x2, y=y2 },
         { x=x1, y=y2 }, { x=x1, y=y1 },
