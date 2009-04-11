@@ -345,3 +345,96 @@ function Arena_Doom_MAP30()
   Arena_add_players(face_x, face_y - 512, 0, 90)
 end
 
+
+function Arena_Doom_MAP07()
+  
+  local function make_room(x1,y1, x2,y2, z)
+    local info =
+    {
+      t_face = { texture="MFLR8_3" },
+      b_face = { texture="F_SKY1"  },
+      w_face = { texture="ROCK4"  },
+    }
+
+    transformed_brush(nil, info, rect_coords(x1-32,y1, x1,y2),
+                      -EXTREME_H, EXTREME_H)
+    transformed_brush(nil, info, rect_coords(x2,y1, x2+32,y2),
+                      -EXTREME_H, EXTREME_H)
+
+    transformed_brush(nil, info, rect_coords(x1,y1-32, x2,y1),
+                      -EXTREME_H, EXTREME_H)
+    transformed_brush(nil, info, rect_coords(x1,y2, x2,y2+32),
+                      -EXTREME_H, EXTREME_H)
+
+    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2),
+                      -EXTREME_H, 0)
+    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2),
+                      z, EXTREME_H)
+  end
+
+  local function make_beam(x1,y1, x2,y2, z)
+    local info =
+    {
+      t_face = { texture="FLOOR4_8" },
+      b_face = { texture="FLOOR4_8"  },
+      w_face = { texture="METAL1"  },
+    }
+
+    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2),
+                      z, EXTREME_H)
+  end
+
+  local function make_pillar(x, y, w, z, entity)
+    local info =
+    {
+      t_face = { texture="CEIL5_2" },
+      b_face = { texture="CEIL5_2"  },
+      w_face = { texture="METAL6", x_offset=0, y_offset=0, peg=true },
+    }
+
+    transformed_brush(nil, info, rect_coords(x-w,y-w, x+w,y+w),
+                      -EXTREME_H, z)
+
+    if entity then
+      gui.add_entity(tostring(GAME.things[entity].id),
+                     x, y, z, { angle=rand_irange(0,3)*90 })
+    end 
+  end
+
+
+  ---| Arena_Doom_MAP07 |---
+
+  local sky_h = 512
+  local manc_h = 64
+
+  make_room(0,0, 2560,2560, sky_h)
+
+  make_beam(256*0.5,256*2.0, 256*9.5,256*3.0, sky_h-64)
+  make_beam(256*0.5,256*7.0, 256*9.5,256*8.0, sky_h-64)
+  make_beam(256*2.0,256*0.5, 256*3.0,256*9.5, sky_h-64)
+  make_beam(256*7.0,256*0.5, 256*8.0,256*9.5, sky_h-64)
+
+  make_pillar(256*2.5, 256*2.5, 96, sky_h)
+  make_pillar(256*7.5, 256*2.5, 96, sky_h)
+  make_pillar(256*2.5, 256*7.5, 96, sky_h)
+  make_pillar(256*7.5, 256*7.5, 96, sky_h)
+
+  make_pillar(256*4.0, 256*2.5, 64, manc_h, "mancubus")
+  make_pillar(256*5.0, 256*2.5, 64, manc_h, "mancubus")
+  make_pillar(256*6.0, 256*2.5, 64, manc_h, "mancubus")
+
+  make_pillar(256*4.0, 256*7.5, 64, manc_h, "mancubus")
+  make_pillar(256*5.0, 256*7.5, 64, manc_h, "mancubus")
+  make_pillar(256*6.0, 256*7.5, 64, manc_h, "mancubus")
+
+  make_pillar(256*2.5, 256*4.0, 64, manc_h, "mancubus")
+  make_pillar(256*2.5, 256*5.0, 64, manc_h, "mancubus")
+  make_pillar(256*2.5, 256*6.0, 64, manc_h, "mancubus")
+
+  make_pillar(256*7.5, 256*4.0, 64, manc_h, "mancubus")
+  make_pillar(256*7.5, 256*5.0, 64, manc_h, "mancubus")
+  make_pillar(256*7.5, 256*6.0, 64, manc_h, "mancubus")
+
+  Arena_add_players(1200, 100, 0, 90)
+end
+
