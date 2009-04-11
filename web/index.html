@@ -4,7 +4,7 @@
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
   <meta name="robots" content="all">
 
-  <title> OBLIGE Home </title>
+  <title> OBLIGE 3 Home </title>
 
   <script type="text/javascript"></script>
 
@@ -15,18 +15,23 @@
 
 <body>
 
-<h1>OBLIGE Level Maker</h1>
+<h1>OBLIGE Level Maker <font color="#8c4">V3</font></h1>
 
-by Andrew Apted. &nbsp; November 2008
+by Andrew Apted. &nbsp; April 2009
 
 
 <h2>INTRODUCTION</h2>
 
-OBLIGE is a random level maker for the following games:
-DOOM&nbsp;1, DOOM&nbsp;2, Final&nbsp;DOOM, FreeDOOM,
-Wolfenstein-3D, Heretic&nbsp;1 and Hexen&nbsp;1.
-These games all share the same basic level structure
-(except for Wolf3d which is much more limited).
+OBLIGE III is a random level maker for various games,
+only DOOM 2 currently.
+Version 3 was a big rewrite of the code, and not
+everything that used to be supported (like all the
+other games) has been added back yet.
+
+<p>
+Check out <a href="http://oblige.sourceforge.net/index_v2.html">Oblige II</a>
+if you are interested in a Heretic or Hexen map generator,
+or if you just want to see what the previous version was like.
 
 <p>
 OBLIGE will have the following features which set it apart
@@ -39,113 +44,44 @@ from existing programs (like the famous
   <li>easy to use GUI interface (no messing with command lines)
   <li>built-in node builder, so the created levels are ready to play
   <li>uses the LUA scripting language for easy customisation
-  <li>can create Deathmatch levels
-  <li>Heretic and Hexen support!
+  <li>more games, like Heretic, Hexen and Quake!
 </ul>
 
 
-<h2>NEWS</h2>
-
-<b>22-Nov-2008</b>:
-Another blog about current developments:
-<a href="http://oblige.sourceforge.net/devel_2.html">Development II</a>
-
-<p>
-<b>30-May-2008</b>:
-Released Oblige 0.97 which is a small update to 0.94.
-
-<p>
-<b>13-Mar-2008</b>:
-Added a summary of recent development:
-<a href="http://oblige.sourceforge.net/update.html">Devel Notes</a>
-
-<p>
-<b>05-Jul-2007</b>:
-Oblige 0.94 was released.
-
-
-<h2>STATUS</h2>
-
-<p>
-OBLIGE 0.97 is the current version.
-The GUI interface is simple but very usable.
-The battle simulator produces reasonable
-ammo and health to fight the monsters in the map.
-
-<p>
-<i>See below for the status of each game</i>
-
-<p>
-There is still a lot to do however.
-There is no support (yet) for the special levels, such as the
-end-of-episode levels of DOOM&nbsp;1 and the end-of-game level (MAP30)
-of DOOM&nbsp;2.
-Other desirable features are: nicer (non-square) architecture,
-player teleporters, and better lighting.
-
-
-<h2>CHANGES IN 0.97</h2>
+<h2>VERSION 3.39 INFO</h2>
 
 <PRE>
-+  greatly improved Heretic themes (Sam Trenholme)
-+  fixed the stair-building error (Sam)
-+  add some Cyberdemons into DOOM maps
+The good:
 
--  don't put monsters or things on crates
--  don't put blaze doors in Heretic maps (Sam)
--  add a few armor helmets in DOOM maps (Enhas)
--  removed the Archvile from FreeDoom maps (Enhas)
--  prevent cross windows being passable (Enhas)
--  don't use shiny Wolf-3d door in Nature theme
++ nicer GUI interface
++ name generator
++ sky generator
+
++ big rooms!
++ symmetrical rooms
++ room-in-a-room
++ diagonal walls
+
+The bad:
+
+- only one supported game: DOOM 2
+- only one available theme: TECH
+- no traps, no cages
+- no secrets, no powerups
+- very limited scenery
+
+The ugly:
+
+- the MAP07 and MAP30 arenas
+- common glitches on outside borders
+- occasional wrong textures or misalignments
+- lousy crates all over the place
 </PRE>
 
 
-<h2>CHANGES IN 0.94</h2>
+<h2>SCREENSHOT</h2>
 
-<PRE>
-+  new prefab system, lots of cool prefabs.
-+  new theme system for more consistent levels.
-+  different sized rooms.
-+  greatly improved Hexen support.
-
--  new adjustments for level size and puzzles.
--  adjustments for deathmatch games.
--  secret areas and levels.
--  balconies.
-
--  experimental Wolfenstein-3D support.
--  later levels get progressively harder.
--  slightly better Heretic maps.
--  more DOOM themes.
-</PRE>
-
-<i>Note: some things also broke in this release, e.g. traps</i> :-(
-
-
-<h2>CHANGES IN 0.85</h2>
-
-<PRE>
-+  Hallways!  Crates!  New Exits!
-+  better algorithm for choosing floor/ceiling heights.
-+  user adjustments for health/ammo/monsters/traps.
-+  current settings are remembered when you quit.
-
--  support for FreeDOOM, TNT Evilution and Plutonia.
--  levels are watermarked with some Oblige logos.
--  delete temporary wad when build has finished.
--  collect all log messages into a file (LOGS.txt).
--  removed the unnecessary menu bar.
-
--  fixed the (rare) non-working switches and lifts.
--  surprise traps: improved placement, fairer monsters.
--  tweaked battle simulation to provide more ammo.
--  neater placement for health and ammo items.
-</pre>
-
-
-<h2>SCREENSHOTS</h2>
-
-<img src="money_shot.jpg" width="648" height="736"
+<img src="stuckie.jpg" width="640" height="480"
      alt="Picture">
 
 
@@ -154,8 +90,8 @@ player teleporters, and better lighting.
 The graphical interface for OBLIGE is quite easy to use.
 
 <p>
-At the top is the <b>Settings</b> panel, which contains the most
-important settings.
+The top left corner is the <b>Settings</b> panel,
+which contains the most important settings.
 
 <p>
 The first control is the "SEED" number.
@@ -171,9 +107,15 @@ Other settings include:
   <li>the "Length" of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
 </ul>
 
-In the <b>Adjustments</b> panel you can control the size of
-the created levels, as well as how much health,
-ammunition and how many monsters and puzzles are added.
+In the <b>Level Architecture</b> panel you can control the
+size of the created levels, select a theme, as well as how
+much outdoors the levels will have.  [Note that the 'Lighting'
+and 'Detail' buttons don't do anything yet]
+
+<p>
+The <b>Playing Style</b> panel lets you control the
+how many monsters and traps are added. as well as
+how much health and ammunition.
 OBLIGE also implements the different skill levels
 for each map (e.g. Hurt-me-Plenty vs Ultra-Violence).
 
@@ -189,10 +131,10 @@ a dialog box.
 OBLIGE simply creates the output files in the same folder where
 it is installed. These files are called <b>GAMEMAPS.WL6</b> and
 <b>MAPHEAD.WL6</b> and you need to copy them into your
-Wolf3d folder (after making a backup!).
+Wolf3d folder (be sure to make a backup first!).
 
 <p>
-To exit, press the "Quit" button in the bottom right corner.
+To exit, press the "Quit" button in the bottom left panel.
 
 <p>
 The levels created by OBLIGE are ready to play.  There is no
@@ -206,53 +148,45 @@ architecture which OBLIGE creates.  For example, you might
 get the "Visplane Overflow" error which quits the game.
 
 
-<h2>STATUS OF EACH GAME</h2>
-
-<b>DOOM 1</b>: fairly well tested and working well.
-<p>
-
-<b>DOOM 2</b>: the most well tested game and produces the best results.
-<p>
-
-<b>HERETIC</b>: tested and working quite well, though
-very lacking in different themes and scenery.
-<p>
-
-<b>HEXEN</b>: tested and works pretty well (greatly improved
-since the last v0.85 release). The sequence of hubs is not
-working properly yet.
-<p>
-
-<b>WOLF 3D</b>: very buggy and incomplete at the moment.
-It lacks : pushwall secrets, patrolling enemies,
-treasure rooms, proper episode endings, and may create
-levels with too many actors or static objects.
-
-
 <h2>DOWNLOAD</h2>
 
 <b>Windows Package</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige-097-win.zip">oblige-097-win.zip</a> (600 KB)
+<a href="http://downloads.sourceforge.net/oblige/oblige-339-win.zip">oblige-339-win.zip</a> (??? KB)
 
 <p>
 <b>Linux Package</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige-097-linux.tar.gz">oblige-097-linux.tar.gz</a> (460 KB)
+<a href="http://downloads.sourceforge.net/oblige/oblige-339-linux.tar.gz">oblige-339-linux.tar.gz</a> (??? KB)
 
 <p>
 <b>Source Code</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige-097-src.zip">oblige-097-src.zip</a> (410 KB)
+<a href="http://downloads.sourceforge.net/oblige/oblige-339-src.zip">oblige-339-src.zip</a> (??? KB)
 
 <p>
 <b>Older Versions</b>: click here to
 <a href="http://sourceforge.net/project/showfiles.php?group_id=176314">Browse all Files</a>.
 
+
 <h2>ACKNOWLEDGEMENTS</h2>
-Thanks to Sam Trenholme for much expanded the Heretic themes
-and various fixes.  Check out his "ObHack" modification for
-even more interesting stuff.
+
+Thanks to Sam Trenholme for much expanded Heretic themes
+and various fixes, and for beta-testing Oblige III.
+Check out his "ObHack" modification for even more
+interesting stuff.
 
 <p>
-Thanks to Enhas for his improvements.
+Thanks to JohnnyRancid for beta-testing Oblige III,
+for big help with the level-name generator,
+and creating heaps of DOOM prefabs.
+
+<p>
+Thanks to Chris Pisarczyk and Esselfortium for very
+detailed feedback and bug reports on OBLIGE.  These guys
+have even made their own Oblige mods -- they must be
+nutters like me :-D
+
+<p>
+I appreciate the feedback received from the other "OB3"
+beta-testers: gggmork and Csonicgo.
 
 <p>
 Big thanks to Derek "Dittohead" Braun for making a whole swag of
@@ -260,16 +194,12 @@ Prefab structures, which kicked off some big improvements to the
 way OBLIGE builds stuff.
 
 <p>
-Thanks to JohnnyRancid who also created heaps of prefabs for
-OBLIGE.
+Thanks to Enhas and DoomJedi for their help.
 
 <p>
-Thanks to DoomJedi for his help.
-
-<p>
-I'm grateful to everyone who provided positive feedback,
-bug reports and ideas for improvements, both in email and
-on the various forums. Cheers guys!
+Finally I'm grateful to everyone who provided positive
+feedback, bug reports and ideas for improvements, both in
+email and on the various forums. Cheers guys!
 
 <p>
 OBLIGE uses the cool FLTK widget library
@@ -282,7 +212,7 @@ OBLIGE uses the cool FLTK widget library
 OBLIGE Level Maker
 
 <p>
-Copyright (C) 2006-2008 Andrew Apted
+Copyright (C) 2006-2009 Andrew Apted
 
 <p>
 OBLIGE is free software; you can redistribute it and/or
@@ -312,13 +242,13 @@ http://oblige.sourceforge.net/</a>
 
 <p>
 Project page:
-<a href="http://sourceforge.net/projects/oblige/">
-http://sourceforge.net/projects/oblige/</a>
+<a href="http://sourceforge.net/projects/oblige">
+http://sourceforge.net/projects/oblige</a>
 
 <div class="logo">
 Hosted by:&nbsp;
 
-      <a HREF="http://sourceforge.net">
+      <a HREF="http://sourceforge.net/projects/oblige">
         <img src="http://sourceforge.net/sflogo.php?group_id=176314&amp;type=4" 
          width="125" height="37" alt="SourceForge.net" 
          align="MIDDLE" border="0" hspace="1">
