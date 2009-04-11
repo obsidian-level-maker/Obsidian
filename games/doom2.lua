@@ -1730,7 +1730,9 @@ function Doom2_get_levels()
       LEV.style.barrels = "heaps"
     end
 
-    if map == 30 then
+    if map == 7 then
+      LEV.arena_func = Arena_Doom_MAP07
+    elseif map == 30 then
       LEV.arena_func = Arena_Doom_MAP30
       LEV.description = "The Ultimate Obscenity"
     end

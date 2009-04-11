@@ -371,6 +371,21 @@ function Arena_Doom_MAP07()
     transformed_brush(nil, info, rect_coords(x1,y1, x2,y2),
                       z, EXTREME_H)
 
+    -- lower skies at edges
+    local z2 = 256
+
+    transformed_brush(nil, info, rect_coords(x1,y1, x1+16,y2),
+                      z2, EXTREME_H)
+    transformed_brush(nil, info, rect_coords(x2-16,y1, x2,y2),
+                      z2, EXTREME_H)
+
+    transformed_brush(nil, info, rect_coords(x1,y1, x2,y1+16),
+                      z2, EXTREME_H)
+    transformed_brush(nil, info, rect_coords(x1,y2-16, x2,y2),
+                      z2, EXTREME_H)
+
+    -- ITEMS --
+
     gui.add_entity(tostring(GAME.things["medikit"].id), x1+96, y1+96, 0)
     gui.add_entity(tostring(GAME.things["medikit"].id), x2-96, y1+96, 0)
     gui.add_entity(tostring(GAME.things["medikit"].id), x1+96, y2-96, 0)
@@ -436,7 +451,7 @@ function Arena_Doom_MAP07()
     {
       t_face = { texture="CRATOP2" },
       b_face = { texture="CRATOP2" },
-      w_face = { texture="SW1SKIN", peg=true, x_offset=0, y_offset=32 },
+      w_face = { texture="SW1SKIN", peg=true, x_offset=0, y_offset=48 },
     },
     {
       { x=mx+32, y=my-32, line_kind=11 },
