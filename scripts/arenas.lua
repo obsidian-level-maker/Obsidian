@@ -356,20 +356,50 @@ function Arena_Doom_MAP07()
       w_face = { texture="ROCK4"  },
     }
 
-    transformed_brush(nil, info, rect_coords(x1-32,y1, x1,y2),
+    transformed_brush(nil, info, rect_coords(x1-64,y1, x1,y2),
                       -EXTREME_H, EXTREME_H)
-    transformed_brush(nil, info, rect_coords(x2,y1, x2+32,y2),
+    transformed_brush(nil, info, rect_coords(x2,y1, x2+64,y2),
                       -EXTREME_H, EXTREME_H)
 
-    transformed_brush(nil, info, rect_coords(x1,y1-32, x2,y1),
+    transformed_brush(nil, info, rect_coords(x1,y1-64, x2,y1),
                       -EXTREME_H, EXTREME_H)
-    transformed_brush(nil, info, rect_coords(x1,y2, x2,y2+32),
+    transformed_brush(nil, info, rect_coords(x1,y2, x2,y2+64),
                       -EXTREME_H, EXTREME_H)
 
     transformed_brush(nil, info, rect_coords(x1,y1, x2,y2),
                       -EXTREME_H, 0)
     transformed_brush(nil, info, rect_coords(x1,y1, x2,y2),
                       z, EXTREME_H)
+
+    gui.add_entity(tostring(GAME.things["medikit"].id), x1+96, y1+96, 0)
+    gui.add_entity(tostring(GAME.things["medikit"].id), x2-96, y1+96, 0)
+    gui.add_entity(tostring(GAME.things["medikit"].id), x1+96, y2-96, 0)
+    gui.add_entity(tostring(GAME.things["medikit"].id), x2-96, y2-96, 0)
+
+    local step =
+    {
+      t_face = { texture="FLOOR5_2" },
+      b_face = { texture="FLOOR5_2" },
+      w_face = { texture="BROWN1", y_offset=0, peg=true },
+    }
+
+    transformed_brush(nil, step, rect_coords(256*4,256*4, 256*6,256*6), -16, 16)
+
+    -- lower right corner
+    local ITEM_MAP =
+    {
+      { "soul",         "mercury_lamp", "cell_pack" },
+      { "mercury_lamp", "cell_pack",    "barrel"    },
+      { "cell_pack",    "barrel",       "plasma"    },
+    }
+
+    for ix = -2,2 do for iy = -2,2 do
+      local mx = 256*5 + ix * 160
+      local my = 256*5 + iy * 160
+      local item = ITEM_MAP[1 + math.abs(iy)][1 + math.abs(ix)]
+
+      gui.add_entity(tostring(GAME.things[item].id), mx, my, 0)
+    end end -- for ix, iy
   end
 
   local function make_beam(x1,y1, x2,y2, z)
@@ -401,6 +431,55 @@ function Arena_Doom_MAP07()
     end 
   end
 
+  local function make_exit_switch(mx, my)
+    transformed_brush(nil,
+    {
+      t_face = { texture="CRATOP2" },
+      b_face = { texture="CRATOP2" },
+      w_face = { texture="SW1SKIN", peg=true, x_offset=0, y_offset=32 },
+    },
+    {
+      { x=mx+32, y=my-32, line_kind=11 },
+      { x=mx+32, y=my+32, line_kind=11 },
+      { x=mx-32, y=my+32, line_kind=11 },
+      { x=mx-32, y=my-32, line_kind=11 },
+    },
+    -EXTREME_H, 8+72)
+
+    local step =
+    {
+      t_face = { texture="FLOOR5_2" },
+      b_face = { texture="FLOOR5_2" },
+      w_face = { texture="BROWN1", y_offset=0, peg=true },
+    }
+
+
+    local x1 = mx-160
+    local x2 = mx+160
+
+    local y1 = my-96
+    local y2 = my+96
+
+    transformed_brush(nil, step, rect_coords(x1,y1, x2,y2), -16, 8)
+
+
+    local wall =
+    {
+      t_face = { texture="RROCK13" },
+      b_face = { texture="RROCK13" },
+      w_face = { texture="ROCK2", peg=true },
+      sec_tag = 666,
+    }
+
+    local wall_h = 36
+
+    transformed_brush(nil, wall, rect_coords(x1-16,y1-16, x1,y2+16), -EXTREME_H, wall_h)
+    transformed_brush(nil, wall, rect_coords(x2,y1-16, x2+16,y2+16), -EXTREME_H, wall_h)
+
+    transformed_brush(nil, wall, rect_coords(x1,y1-16, x2,y1), -EXTREME_H, wall_h)
+    transformed_brush(nil, wall, rect_coords(x1,y2, x2,y2+16), -EXTREME_H, wall_h)
+  end
+
 
   ---| Arena_Doom_MAP07 |---
 
@@ -409,10 +488,12 @@ function Arena_Doom_MAP07()
 
   make_room(0,0, 2560,2560, sky_h)
 
-  make_beam(256*0.5,256*2.0, 256*9.5,256*3.0, sky_h-64)
-  make_beam(256*0.5,256*7.0, 256*9.5,256*8.0, sky_h-64)
-  make_beam(256*2.0,256*0.5, 256*3.0,256*9.5, sky_h-64)
-  make_beam(256*7.0,256*0.5, 256*8.0,256*9.5, sky_h-64)
+  make_exit_switch(256*5, 2560-256)
+
+  make_beam(256*0.5,256*2.0, 256*9.5,256*3.0, sky_h-128)
+  make_beam(256*0.5,256*7.0, 256*9.5,256*8.0, sky_h-128)
+  make_beam(256*2.0,256*0.5, 256*3.0,256*9.5, sky_h-128)
+  make_beam(256*7.0,256*0.5, 256*8.0,256*9.5, sky_h-128)
 
   make_pillar(256*2.5, 256*2.5, 96, sky_h)
   make_pillar(256*7.5, 256*2.5, 96, sky_h)
