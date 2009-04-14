@@ -1725,9 +1725,12 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
       }
 
       -- lighting effects
-          if rand_odds(10) then light_info.sec_kind = 8
-      elseif rand_odds(6)  then light_info.sec_kind = 3
-      elseif rand_odds(3)  then light_info.sec_kind = 2
+      -- (They can break lifts, hence the check here)
+      if not R.has_lift then
+            if rand_odds(10) then light_info.sec_kind = 8
+        elseif rand_odds(6)  then light_info.sec_kind = 3
+        elseif rand_odds(3)  then light_info.sec_kind = 2
+        end
       end
 
     local trim   = material_to_info("metal")
