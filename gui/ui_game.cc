@@ -148,7 +148,8 @@ void UI_Game::FreshSeed()
 {
   u32_t val = (u32_t)time(NULL);
 
-  SetSeed((val/86400)*1000 + (val/11)%500);
+  // fresh seeds are always even
+  SetSeed((val/86400)*1000 + ((val/11)%500)*2);
 }
 
 void UI_Game::BumpSeed()
@@ -157,7 +158,8 @@ void UI_Game::BumpSeed()
 
   val += 7 + (IntHash(TimeGetMillies()) % 25);
 
-  SetSeed(val);
+  // bumped seeds are always odd
+  SetSeed(val | 1);
 }
 
 void UI_Game::callback_Seed(Fl_Widget *w, void *data)
