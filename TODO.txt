@@ -3,6 +3,10 @@ TODO
 ====
 
 
+DONE: Never use that low 'join_chance' for branch_the_rest.
+
+
+
 Monsters:
   +  add guard monsters first, seeds around the purpose
      (or the weapon).

@@ -1094,7 +1094,7 @@ gui.debugf("Failed\n")
     end
 
     local join_chance = 99
-    if STYLE.scenics == "heaps" then join_chance = 51 end
+    if STYLE.scenics == "heaps" then join_chance = 66 end
 
     local rebels = table_subset_w_field(list, "c_group", rebel_id)
     assert(#rebels > 0)
@@ -1140,9 +1140,9 @@ gui.debugf("Failed\n")
     -- use a copy since PLAN.all_rooms may be modified
     local list = shallow_copy(PLAN.all_rooms)
 
-    local join_chance = 50
+    local join_chance = 65
     if STYLE.scenics == "few"   then join_chance = 95 end
-    if STYLE.scenics == "heaps" then join_chance = 10 end
+    if STYLE.scenics == "heaps" then join_chance = 40 end
     if PLAN.join_all then join_chance = 100 end
 
     gui.debugf("Join Chance: %d\n", join_chance)
