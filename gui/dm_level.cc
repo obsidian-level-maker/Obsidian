@@ -383,27 +383,20 @@ static void CreateOneSector(merge_region_c *R)
 
   sec->mark = MAX(B->mark, T->mark);
 
+  // floors have priority over ceilings
   if (B->sec_kind > 0)
-  {
     sec->special = B->sec_kind;
-    sec->tag     = B->sec_tag;
-  }
   else if (T->sec_kind > 0)
-  {
     sec->special = T->sec_kind;
-    sec->tag     = T->sec_tag;
-  }
   else
-  {
     sec->special = 0;
 
-    if (B->sec_tag > 0)
-      sec->tag = B->sec_tag;
-    else if (T->sec_tag > 0)
-      sec->tag = T->sec_tag;
-    else
-      sec->tag = 0;
-  }
+  if (B->sec_tag > 0)
+    sec->tag = B->sec_tag;
+  else if (T->sec_tag > 0)
+    sec->tag = T->sec_tag;
+  else
+    sec->tag = 0;
 
 
   R->index = (int)dm_sectors.size();
