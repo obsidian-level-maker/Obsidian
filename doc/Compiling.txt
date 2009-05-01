@@ -2,8 +2,45 @@
 COMPILING NOTES
 ===============
 
-(still being written...)
+Oblige uses makefiles for building:
 
+-  Makefile.local for the Linux binary
+-  Makefile.xming for the Win32 EXE
+
+These makefiles require GNU make.
+
+I personally compile the Win32 binaries on Linux using what's
+called a "Cross Compiler".  The Ubuntu package is "mingw32".
+That means I don't need to reboot out of Linux in order to
+compile Win32 binaries.  Plus compiling stuff in Windows
+always seems to be a major pain in the arse.
+
+Sorry, but if you want to compile the Win32 binary under
+Windows then you are on your own.
+
+
+REQUIRED LIBRARIES
+==================
+
+Lua : v5.1.2 (or a later 5.1.x)
+  http://www.lua.org/
+
+FLTK (Fast Light Tool Kit) : v1.1.9 (or a later 1.1.x)
+  http://www.fltk.org/
+
+glBSP : v2.24
+  http://glbsp.sourceforge.net/
+
+glBSP requires: zlib (v1.2.3 or later)
+  http://www.gzip.org/zlib
+
+FLTK may require: libpng, jpeglib, zlib
+  http://libpng.org/
+  http://www.jpeg.org/jpeg/index.html
+
+
+BUILDING HINTS
+==============
 
 Lua-5.1.2:
   (1) edit src/Makefile to use 'g++' instead of 'gcc'.
