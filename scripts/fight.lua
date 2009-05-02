@@ -137,20 +137,18 @@ function Fight_simulator(monsters, weapons, skill, stats)
     M.health = M.health - damage
   end
 
-  local function splash_mons(W, list, time)
+  local function splash_mons(W, list)
     for idx,damage in ipairs(list) do
-      hurt_mon(idx, W, damage * time)
+      hurt_mon(idx, W, damage)
     end
   end
 
   local function player_shoot(W)
-    local time = 1 / W.rate
-
-    hurt_mon(1, W, W.damage * time * shoot_accuracy)
+    hurt_mon(1, W, W.damage * shoot_accuracy)
 
     -- simulate splash damage | shotgun spread
     if W.splash then
-      splash_mons(W, W.splash, time)
+      splash_mons(W, W.splash)
     end
 
     -- update ammo counter
@@ -158,7 +156,7 @@ function Fight_simulator(monsters, weapons, skill, stats)
       stats[W.ammo] = (stats[W.ammo] or 0) + W.per
     end
 
-    return time
+    return 1 / W.rate
   end
 
 
