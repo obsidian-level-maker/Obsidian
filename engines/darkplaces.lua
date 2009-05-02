@@ -24,6 +24,8 @@ OB_ENGINES["darky"] =
 
   caps =
   {
+    dirty_yucky_blood_everywhere = true,
+
     -- TODO
   },
 }

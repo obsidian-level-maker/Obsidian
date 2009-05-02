@@ -18,7 +18,7 @@
 
 OB_ENGINES["vavoom"] =
 {
-  label = "Vavoom 1.29",
+  label = "Vavoom 1.30",
 
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1, strife=1 },
 
