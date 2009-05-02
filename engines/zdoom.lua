@@ -29,7 +29,30 @@ OB_ENGINES["zdoom"] =
 }
 
 
--- TODO OB_ENGINES["gzdoom"]
+OB_ENGINES["gzdoom"] =
+{
+  label = "GZDoom 1.2",
+  priority = -1,  -- keep at bottom with ZDoom
 
--- TODO OB_ENGINES["skulltag"]
+  for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
+
+  caps =
+  {
+    -- TODO
+  },
+}
+
+
+OB_ENGINES["skulltag"] =
+{
+  label = "Skulltag 97D3",
+  priority = -2,  -- keep at bottom with ZDoom
+
+  for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
+
+  caps =
+  {
+    -- TODO
+  },
+}
 
