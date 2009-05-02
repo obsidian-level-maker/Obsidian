@@ -3,10 +3,6 @@ WISH-LIST
 =========
 
 
-DONE: Never use that low 'join_chance' for branch_the_rest.
-
-
-
 Monsters:
   +  add guard monsters first, seeds around the purpose
      (or the weapon).
@@ -76,23 +72,6 @@ Misc:
 
 
 
-================================================================
-DETAILED TODO LIST
-================================================================
-
-
-!!  CSG CODE: do a proper face-creation pass (merge_face_c list
-              in each merge_segment_c ?) and get proper brush
-              and area_vert references.
-
-              Hence remove the CSG2_FindXXX rubbish.
-
-
-++  DOOM CSG: merge linedefs where possible
-
-+   DOOM CSG: fix y_offset values
-
-
 Windows:
   - better patterns:
     (1) flank door mode
@@ -121,30 +100,9 @@ POLISH:
   - mark end of big tables with a comment (like D1_WALL_PREFABS)
 
 
-Quake II:
-  -  need to store wall brushes into a big list (qLeaf_c)
-     and "split" them with Split_XY (if purely on one side,
-     move to that side, otherwise keep in both sides).
-
-     when get to solid wall leaf, keep the ones that match
-     that wall (i.e. not completely in front of wall).
-
-
-Quakey:
-  +  create 'worldspawn' entity via Lua code
-     (hence don't need gui.property("description"))
-
-  +  merge Q#_CreateEntities into a common function
-
-  -  dface_t == dface2_t, move into common ??
-
-
 >>>  a segment with same front and back ????
 
 >>>  AssignBrushes: double checking using f/b_sides
-
-
-CSG IDEA: clipping rectangles (typically a room)
 
 
 NAME GENERATOR
@@ -308,29 +266,13 @@ LEGACY: gui.property("solid_exfloor", 281)
         gui.property("liquid_exfloor", 280)  -- 301
 
 
-q1_nodes:
-  -  floor_leaf --> leaf
-  ?? move floor/ceiling faces into leaf.faces (instead of leaf.floor)
-
-q2_nodes:
-   use cluster=-1 for SOLID leafs
-
-   create a solid leaf for each area_poly
-   (can sometimes have 2+ area_polys per solid leaf, walls with stacked brushes)
-   NOTE: need CONVEX brush sides : if not convex, find closest
-         concave point to face and "chop" there
-         _OR_: use bsp to chop em up
-         _OR_: share a solid leaf for every empty leaf
-   ALSO: handle co-planer sides (allowed by Oblige, maybe ok for Q2, not sure)
-
-
 QUAKE:
 
 + fix bounding boxes for everything (especially Leafs)
 
 + create faces from stacked brushes behind a gap (cf. oa_dm7)
 
-- clipping hulls:
+- clipping hulls
 
 ++ grab Q1 textures directly from PAK files
    - read/modify FOLDERS.cfg file
@@ -343,8 +285,6 @@ QUAKE:
 ++ perform lighting
 
 ++ perform visibility
-
-  ?? convert portal sides into portal faces
 
 
 DOOM ENTITY PROPS:
@@ -369,13 +309,7 @@ General:
 
 +  create special BOSS levels (e.g. E1M8, MAP30)
 
-+  get traps (closets / depots) working again.
-
--  make the EASY skill much easier (less monsters)
-
--  Deathmatch: implement DM-Equipment module
-
-?  put important constants/tables into defs.lua
+-  put important constants/tables into defs.lua
 
 
 GUI / C++:
@@ -391,8 +325,6 @@ GUI / C++:
 -  on serious script errors: remember it, so that we
    don't try calling into LUA to write the config.
 
--  improve icon for Win32 executable.
-
 -  ideas for remaining button (YYY) :
    -  Secrets   (would be useless for DM)
    -  Powerups
@@ -400,9 +332,6 @@ GUI / C++:
    -  Lighting adjustment
    -  Big monster adjustment
    -  Linearity
-
--  make sure target dir is writable _before_ making levels.
-   (have a "CheckDirWritable" function?)
 
 
 SKY GENERATOR:
@@ -519,7 +448,7 @@ Monsters:
 PIPE DREAMS
 ----------------------------------------------------------------
 
-++ better global architecture, room-in-a-room.
++  better global architecture
 
 +  teleporters!
 
