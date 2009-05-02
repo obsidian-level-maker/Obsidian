@@ -208,11 +208,6 @@ function Monsters_global_palette()
     end
   end
 
----??  -- sometimes allow the whole damn lot
----??  if LEVEL.ep_along >= 0.5 and rand_odds(15) then
----??    return
----??  end
-
   local count = rand_irange(PARAMS.skip_monsters[1], PARAMS.skip_monsters[2])
   assert(count < #list)
 
@@ -1182,8 +1177,11 @@ function Monsters_in_room(R)
   local function user_adjust_result(stats)
     -- apply the user's health/ammo adjustments here
 
-    local heal_mul = 0.70 * HEALTH_AMMO_ADJUSTS[OB_CONFIG.health]
-    local ammo_mul = 1.00 * HEALTH_AMMO_ADJUSTS[OB_CONFIG.ammo]
+    local heal_mul = HEALTH_AMMO_ADJUSTS[OB_CONFIG.health]
+    local ammo_mul = HEALTH_AMMO_ADJUSTS[OB_CONFIG.ammo]
+
+    heal_mul = heal_mul * (PARAMS.health_factor or 1)
+    ammo_mul = ammo_mul * (PARAMS.ammo_factor or 1)
 
     for name,qty in pairs(stats) do
       stats[name] = qty * sel(name == "health", heal_mul, ammo_mul)

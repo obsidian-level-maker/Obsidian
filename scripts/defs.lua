@@ -87,11 +87,11 @@ HEALTH_AMMO_ADJUSTS =
   none=0, scarce=0.4, less=0.7, normal=1.0, more=1.5, heaps=2.5,
 }
 
-PLAYER_ACCURACIES = { easy=0.60, medium=0.75, hard=0.85 }
+PLAYER_ACCURACIES = { easy=0.65, medium=0.75, hard=0.85 }
 
 HITSCAN_RATIOS = { 1.0, 0.8, 0.6, 0.4, 0.2, 0.1 }
-MISSILE_RATIOS = { 1.0, 0.5, 0.2, 0.05 }
-MELEE_RATIOS   = { 1.0, 0.2 }
+MISSILE_RATIOS = { 1.0, 0.3, 0.1 }
+MELEE_RATIOS   = { 1.0, 0.1 }
 
 HITSCAN_DODGES = { easy=0.05, medium=0.15, hard=0.25 }
 MISSILE_DODGES = { easy=0.75, medium=0.90, hard=0.90 }
