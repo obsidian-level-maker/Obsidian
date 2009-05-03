@@ -68,8 +68,10 @@ Misc:
 
 -  review / improve 'emergency' connections
 
+-  small arena-ish boss levels to break up megawads,
+   e.g. DOOM 2 at MAP16 and MAP24  (JR)
 
-
+-  "Progressive" mode for monsters  (Enhas)
 
 
 Windows:

@@ -19,6 +19,9 @@ CSG CODE:
 
 +   DOOM: merge linedefs where possible
 
+?   generalize the "CloseDoor" system with brush Y deltas?
+    Could also be (ab)used to easily make inset features.
+
 
 CSG IDEA: clipping rectangles (typically a room)
 
