@@ -1593,10 +1593,6 @@ DOOM2_ROOMS =
   -- TODO: check in-game level names for ideas
 }
 
-DOOM2_THEMES =
-{
-}
-
 ------------------------------------------------------------
 
 ---## DOOM2_QUESTS =
@@ -1811,8 +1807,8 @@ OB_GAMES["doom2"] =
   {
     seed_size = 256,
 
-    sky_tex    = "-",
     sky_flat   = "F_SKY1",
+    sky_tex    = "-",
 
     error_tex  = "METAL"   or "FIREBLU1",
     error_flat = "CEIL5_1" or "SFLR6_4",
@@ -1831,8 +1827,8 @@ OB_GAMES["doom2"] =
     mon_damage_high = 100,
     mon_damage_low  =   1,
 
-    ammo_factor   = 0.9,
-    health_factor = 0.8,
+    ammo_factor   = 0.7,
+    health_factor = 0.7,
   },
 
   hooks =

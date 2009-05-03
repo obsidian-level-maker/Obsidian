@@ -2731,9 +2731,6 @@ COMMON_THEMES =
       TECH_DARKGREEN=10,
       TECH_DARKBROWN=8,
       TECH_METAL1=1,
-
-      -- FIXME: DOOM II ONLY !!!!!
-      TECH_TEKGREN=10,
     },
 
     floors =
@@ -2751,8 +2748,6 @@ COMMON_THEMES =
       CEIL3_2=50,
       FLAT9=50,
       FLAT14=50,
-      SLIME15=50,
-      SLIME16=50,
     },
 
     ceilings =
@@ -2796,12 +2791,6 @@ COMMON_THEMES =
       URBAN_BROWN=20,
 
       CAVE_ASH=5,
-
-      -- FIXME: DOOM II ONLY !!!!!
-      NAT_TANROCK5=10,
-      NAT_MUDDY=5,
-      NAT_SWAMP=5,
-      URBAN_GREENBRK=5,
     },
 
     hallway =
@@ -2889,8 +2878,33 @@ COMMON_THEMES =
       caco=2.0, revenant=1.5, baron=3.0, knight=2.0,
     },
   },
-
 }
+
+DOOM2_THEMES =
+{
+  TECH =
+  {
+    building =
+    {
+      TECH_TEKGREN=10,
+    },
+
+    ground =
+    {
+      NAT_TANROCK5=10,
+      NAT_MUDDY=5,
+      NAT_SWAMP=5,
+      URBAN_GREENBRK=5,
+    },
+
+    floors =
+    {
+      SLIME15=50,
+      SLIME16=50,
+    },
+  },
+}
+
 
 COMMON_THEMES_OLD =
 {
@@ -3886,7 +3900,7 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["doom1"] =
+OB_GAMES["doom1"] =
 {
   label = "Doom 1",
 
@@ -3912,15 +3926,25 @@ UNFINISHED["doom1"] =
   {
     seed_size = 256,
 
-    sky_tex    = "-",
     sky_flat   = "F_SKY1",
+    sky_tex    = "-",
 
     error_tex  = "METAL"   or "FIREBLU1",
     error_flat = "CEIL5_1" or "SFLR6_4",
 
     max_level_desc = 28,
 
-    skip_monsters = { 1,3 },
+    skip_monsters = { 2,3 },
+
+    mon_time_max = 12,
+    mon_hard_health = 200,
+
+    mon_damage_max  = 200,
+    mon_damage_high = 100,
+    mon_damage_low  =   1,
+
+    ammo_factor   = 0.7,
+    health_factor = 0.7,
   },
 
   hooks =
