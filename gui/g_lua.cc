@@ -621,7 +621,7 @@ void Script_LoadFromDir(const char *subdir)
 
   const char *path = StringPrintf("%s/%s", install_path, subdir);
 
-  LogPrintf("Loading extra scripts from: [%s]\n", path);
+  LogPrintf("Loading scripts from: [%s]\n", path);
 
   std::vector<const char*> file_list;
 
