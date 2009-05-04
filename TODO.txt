@@ -2,6 +2,12 @@
 TODO
 ====
 
+WEBSITE: link to "browse SVN"
+
+
++  add quantity adjustment field to MONSTER tables
+
+
 General
 +  get traps (closets / depots) working again.
 
