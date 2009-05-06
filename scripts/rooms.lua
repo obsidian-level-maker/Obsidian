@@ -2225,10 +2225,14 @@ gui.printf("do_teleport\n")
 local STEP_SKINS =
 {
   { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
-  { step_w="STEP6", side_w="STUCCO",   top_f="FLAT5" },
   { step_w="STEP3", side_w="COMPSPAN", top_f="CEIL5_1" },
   { step_w="STEP1", side_w="BROWNHUG", top_f="RROCK10" },
 }
+if OB_CONFIG.game == "doom2" then  -- FIXME !!!
+table.insert(STEP_SKINS,
+  { step_w="STEP6", side_w="STUCCO",   top_f="FLAT5" } )
+end
+
 local LIFT_SKINS =
 {
   shiny = 
@@ -2314,7 +2318,7 @@ end
       {
         t_face = { texture="NUKAGE3" },
         b_face = { texture="NUKAGE3" },
-        w_face = { texture="SFALL3"  },
+        w_face = { texture="SFALL3"  },  -- FIXME: DOOM2 only !!!
         sec_kind = 16,
       }
       local lava =
