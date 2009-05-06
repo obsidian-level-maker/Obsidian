@@ -71,21 +71,13 @@ function Arena_Doom_MAP30()
       local z1 = sel(fy <= 3, -EXTREME_H, 3*128)
       local z2 = fy * 128
 
-      local info =
-      {
-        t_face = { texture="CEIL5_1" },
-        b_face = { texture="CEIL5_1", light=0.75 },
-        w_face = { texture=FACE_TEX[fy][fx] },  --!! x_offset=0, y_offset=0, peg=true }
-      }
+      local info = get_mat("CEIL5_1")
+      info.b_face.light = 0.75
+      info.w_face.texture = FACE_TEX[fy][fx]
 
       if (fx == 2 and fy == 3) then
         transformed_brush(nil, info, rect_coords(x1,y1, face_x-32,y2), z1,z2)
-        
-        -- info.w_face.x_offset=(face_x+32-x1)
         transformed_brush(nil, info, rect_coords(face_x+32,y1, x2,y2), z1,z2)
-
-        -- info.w_face.x_offset=(face_x-32-x1)
-        -- info.w_face.y_offset=32
         transformed_brush(nil, info, rect_coords(face_x-32,y1, face_x+32,y2), 256+32,z2)
       else
         transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), z1, z2)
@@ -103,12 +95,8 @@ function Arena_Doom_MAP30()
     local z1 = 256 + 1
     local z2 = 256 + 31
 
-    local info =
-    {
-      t_face = { texture="BLOOD1" },
-      b_face = { texture="BLOOD1", light=0.99 },
-      w_face = { texture="BFALL1", x_offset=0, y_offset=0, peg=true },
-    }
+    local info = add_pegging(get_mat("BFALL1"))
+    info.b_face.light = 0.99
 
     transformed_brush(nil, info, rect_coords(x1-32,y1, x1,y2), z1-32, z2+32)
     transformed_brush(nil, info, rect_coords(x2,y1, x2+32,y2), z1-32, z2+32)
@@ -147,12 +135,7 @@ function Arena_Doom_MAP30()
     local z1 = 0
     local z2 = 512-96
 
-    local info =
-    {
-      t_face = { texture="RROCK08" },
-      b_face = { texture="RROCK08" },
-      w_face = { texture="SP_HOT1" },
-    }
+    local info = get_mat("SP_HOT1", "RROCK05")
 
     transformed_brush(nil, info, rect_coords(x1-32,y1, x1,y2),
                       -EXTREME_H, EXTREME_H)
@@ -224,20 +207,9 @@ function Arena_Doom_MAP30()
 
       local angle = sel((i % 2) == 1, 180, 0)
 
-      local info =
-      {
-        t_face = { texture="FLOOR4_8" },
-        b_face = { texture="FLOOR4_8" },
-        w_face = { texture="METAL1" },
-      }
+      local info = get_mat("FLOOR4_8")
+      local step = add_pegging(get_mat("FLOOR5_2"))
 
-      local step =
-      {
-        t_face = { texture="FLOOR5_2" },
-        b_face = { texture="FLOOR5_2" },
-        w_face = { texture="BROWN1", y_offset=0, peg=true },
-      }
-      
       transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), -EXTREME_H, z + 32)
 
       transformed_brush(nil, step, rect_coords(x1,y3-32, x2,y3+32), -EXTREME_H, z + 16)
@@ -269,13 +241,8 @@ function Arena_Doom_MAP30()
 
       local z = 128
 
-      local lift =
-      {
-        t_face = { texture="FLAT5_6" },
-        b_face = { texture="FLAT5_6" },
-        w_face = { texture="SKSPINE1", x_offset=0, y_offset=0, peg=true },
-        sec_tag = 1,
-      }
+      local lift = add_pegging(get_mat("SKSPINE1"))
+      lift.sec_tag = 1
 
       transformed_brush(nil, lift,
       {
@@ -292,12 +259,7 @@ function Arena_Doom_MAP30()
     local x1 = face_x-32
     local x2 = face_x+32
 
-    local info =
-    {
-      t_face = { texture="FLAT5_2" },
-      b_face = { texture="FLAT5_2" },
-      w_face = { texture="WOOD1", y_offset=0, peg=true },
-    }
+    local info = add_pegging(get_mat("WOOD1"))
 
     transformed_brush(nil, info,
         rect_coords(x1, ledge_y-108, x2, ledge_y+360),
@@ -307,13 +269,8 @@ function Arena_Doom_MAP30()
     local y1 = ledge_y - 200
     local y2 = y1 + 64
 
-    local lift =
-    {
-      t_face = { texture="FLAT5_2" },
-      b_face = { texture="FLAT5_2" },
-      w_face = { texture="WOODMET2", x_offset=0, y_offset=0, peg=true },
-      sec_tag = 2,
-    }
+    local lift = add_pegging(get_mat("WOODMET2", "FLAT5_2"))
+    lift.sec_tag = 2
 
     transformed_brush(nil, lift,
     {
@@ -349,39 +306,35 @@ end
 function Arena_Doom_MAP07()
   
   local function make_room(x1,y1, x2,y2, z)
-    local info =
-    {
-      t_face = { texture="MFLR8_3" },
-      b_face = { texture="F_SKY1"  },
-      w_face = { texture="ROCK4"  },
-    }
+    local wall = get_mat("ROCK4", "MFLR8_3")
+    local sky  = get_sky()
 
-    transformed_brush(nil, info, rect_coords(x1-64,y1, x1,y2),
+    transformed_brush(nil, wall, rect_coords(x1-64,y1, x1,y2),
                       -EXTREME_H, EXTREME_H)
-    transformed_brush(nil, info, rect_coords(x2,y1, x2+64,y2),
+    transformed_brush(nil, wall, rect_coords(x2,y1, x2+64,y2),
                       -EXTREME_H, EXTREME_H)
 
-    transformed_brush(nil, info, rect_coords(x1,y1-64, x2,y1),
+    transformed_brush(nil, wall, rect_coords(x1,y1-64, x2,y1),
                       -EXTREME_H, EXTREME_H)
-    transformed_brush(nil, info, rect_coords(x1,y2, x2,y2+64),
+    transformed_brush(nil, wall, rect_coords(x1,y2, x2,y2+64),
                       -EXTREME_H, EXTREME_H)
 
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2),
+    transformed_brush(nil, wall, rect_coords(x1,y1, x2,y2),
                       -EXTREME_H, 0)
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2),
+    transformed_brush(nil, get_sky(), rect_coords(x1,y1, x2,y2),
                       z, EXTREME_H)
 
     -- lower skies at edges
     local z2 = 256
 
-    transformed_brush(nil, info, rect_coords(x1,y1, x1+16,y2),
+    transformed_brush(nil, sky, rect_coords(x1,y1, x1+16,y2),
                       z2, EXTREME_H)
-    transformed_brush(nil, info, rect_coords(x2-16,y1, x2,y2),
+    transformed_brush(nil, sky, rect_coords(x2-16,y1, x2,y2),
                       z2, EXTREME_H)
 
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y1+16),
+    transformed_brush(nil, sky, rect_coords(x1,y1, x2,y1+16),
                       z2, EXTREME_H)
-    transformed_brush(nil, info, rect_coords(x1,y2-16, x2,y2),
+    transformed_brush(nil, sky, rect_coords(x1,y2-16, x2,y2),
                       z2, EXTREME_H)
 
     -- ITEMS --
@@ -391,12 +344,7 @@ function Arena_Doom_MAP07()
     gui.add_entity(tostring(GAME.things["medikit"].id), x1+96, y2-96, 0)
     gui.add_entity(tostring(GAME.things["medikit"].id), x2-96, y2-96, 0)
 
-    local step =
-    {
-      t_face = { texture="FLOOR5_2" },
-      b_face = { texture="FLOOR5_2" },
-      w_face = { texture="BROWN1", y_offset=0, peg=true },
-    }
+    local step = add_pegging(get_mat("FLOOR5_2"))
 
     transformed_brush(nil, step, rect_coords(256*4,256*4, 256*6,256*6), -16, 16)
 
@@ -418,27 +366,13 @@ function Arena_Doom_MAP07()
   end
 
   local function make_beam(x1,y1, x2,y2, z)
-    local info =
-    {
-      t_face = { texture="FLOOR4_8" },
-      b_face = { texture="FLOOR4_8"  },
-      w_face = { texture="METAL1"  },
-    }
-
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2),
-                      z, EXTREME_H)
+    transformed_brush(nil, get_mat("FLOOR4_8"),
+        rect_coords(x1,y1, x2,y2), z, EXTREME_H)
   end
 
   local function make_pillar(x, y, w, z, entity)
-    local info =
-    {
-      t_face = { texture="CEIL5_2" },
-      b_face = { texture="CEIL5_2"  },
-      w_face = { texture="METAL6", x_offset=0, y_offset=0, peg=true },
-    }
-
-    transformed_brush(nil, info, rect_coords(x-w,y-w, x+w,y+w),
-                      -EXTREME_H, z)
+    transformed_brush(nil, add_pegging(get_mat("METAL6")),
+        rect_coords(x-w,y-w, x+w,y+w), -EXTREME_H, z)
 
     if entity then
       gui.add_entity(tostring(GAME.things[entity].id),
@@ -447,12 +381,10 @@ function Arena_Doom_MAP07()
   end
 
   local function make_exit_switch(mx, my)
-    transformed_brush(nil,
-    {
-      t_face = { texture="CRATOP2" },
-      b_face = { texture="CRATOP2" },
-      w_face = { texture="SW1SKIN", peg=true, x_offset=0, y_offset=48 },
-    },
+    local info = get_mat("SW1SKIN")
+    add_pegging(info, 0, 48)
+
+    transformed_brush(nil, info,
     {
       { x=mx+32, y=my-32, line_kind=11 },
       { x=mx+32, y=my+32, line_kind=11 },
@@ -461,13 +393,7 @@ function Arena_Doom_MAP07()
     },
     -EXTREME_H, 8+72)
 
-    local step =
-    {
-      t_face = { texture="FLOOR5_2" },
-      b_face = { texture="FLOOR5_2" },
-      w_face = { texture="BROWN1", y_offset=0, peg=true },
-    }
-
+    local step = add_pegging(get_mat("FLOOR5_2"))
 
     local x1 = mx-160
     local x2 = mx+160
@@ -478,13 +404,9 @@ function Arena_Doom_MAP07()
     transformed_brush(nil, step, rect_coords(x1,y1, x2,y2), -16, 8)
 
 
-    local wall =
-    {
-      t_face = { texture="RROCK13" },
-      b_face = { texture="RROCK13" },
-      w_face = { texture="ROCK2", peg=true },
-      sec_tag = 666,
-    }
+    local wall = get_mat("ROCK2")
+    wall.w_face.peg = true
+    wall.sec_tag = 666
 
     local wall_h = 36
 

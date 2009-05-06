@@ -617,10 +617,6 @@ DOOM2_HALLWAYS =
   },
 }
 
-DOOM2_MATERIALS =
-{
-}
-
 DOOM2_OVERHANGS =
 {
   METAL =
@@ -1812,6 +1808,7 @@ OB_GAMES["doom2"] =
 
     error_tex  = "METAL"   or "FIREBLU1",
     error_flat = "CEIL5_1" or "SFLR6_4",
+    error_mat  = "METAL",
 
     -- this is roughly how many characters can fit on the
     -- intermission screens (the CWILVxx patches).  It does

@@ -428,7 +428,7 @@ COMMON_COMBOS =
     lift = "SUPPORT3",
     pic_wd = "REDWALL",
 
-    beam_mat = "shiny",
+    beam_mat = "FLAT23",
 
 --  lift_floor = "FLOOR4_8",
 
@@ -443,7 +443,7 @@ COMMON_COMBOS =
     floor="CEIL5_1",
     ceil="CEIL5_1",
 
-    beam_mat = "shiny",
+    beam_mat = "FLAT23",
   },
 
   TECH_DARKBROWN =
@@ -452,7 +452,7 @@ COMMON_COMBOS =
     floor="FLOOR7_1",
     ceil="FLOOR7_1",
 
-    beam_mat = "shiny",
+    beam_mat = "FLAT23",
   },
 
   TECH_METAL1 =
@@ -461,7 +461,7 @@ COMMON_COMBOS =
     floor="FLAT4",
     ceil="FLAT4",
 
-    beam_mat = "shiny",
+    beam_mat = "FLAT23",
   },
 
   INDY_PIPES =  -- UNUSED (looks bad)
@@ -487,7 +487,7 @@ COMMON_COMBOS =
     floor = "FLOOR0_5",
     ceil  = "CEIL5_1",
 
-    beam_mat = "shiny",
+    beam_mat = "FLAT23",
 
 --  void = "SLADSKUL",
     step = "STEP1",
@@ -951,31 +951,657 @@ COMMON_HALLWAYS =
 }
 
 
-COMMON_MATERIALS =  -- FIXME: SOME ARE DOOM2 only!
+
+COMMON_MATERIALS =
 {
-  metal   = { "METAL",    "CEIL5_2"  },
-  hexmet  = { "METAL1",   "FLOOR4_8" },
-  dark    = { "COMPSPAN", "CEIL5_1"  },
-  shiny   = { "SHAWN2",   "FLAT23"   },
+  -- textures with best-matching flat
 
-  stone   = { "STONE2",   "MFLR8_1"  },
-  bigbrik = { "BIGBRIK1", "RROCK14"  },
-  rock    = { "ROCK3",    "RROCK13"  },
+  BIGDOOR1 = { "BIGDOOR1", "FLAT23" },
+  BIGDOOR2 = { "BIGDOOR2", "FLAT1" },
+  BIGDOOR3 = { "BIGDOOR3", "FLOOR7_2" },
+  BIGDOOR4 = { "BIGDOOR4", "FLOOR3_3" },
+  BIGDOOR5 = { "BIGDOOR5", "FLAT5_2" },
+  BIGDOOR6 = { "BIGDOOR6", "CEIL5_2" },
+  BIGDOOR7 = { "BIGDOOR7", "CEIL5_2" },
 
-  sand    = { "ASHWALL2", "MFLR8_4"  },
-  grass   = { "ZIMMER2",  "GRASS2"   },
-  dirt    = { "ASHWALL4", "FLAT10"   },
-  stucco  = { "STUCCO",   "FLAT5_5"  },
+  BLODRIP1 = { "BLODRIP1", "FLOOR0_1" },
+  BROWN1   = { "BROWN1",   "FLOOR0_1" },
+  BROWN144 = { "BROWN144", "FLOOR7_1" },
+  BROWN96  = { "BROWN96",  "FLOOR7_1" },
+  BROWNHUG = { "BROWNHUG", "FLOOR7_1" },
+  BROWNPIP = { "BROWNPIP", "FLOOR0_1" },
+  BROWNGRN = { "BROWNGRN", "FLAT1" },  -- poor match
+  BROVINE2 = { "BROVINE2", "FLAT1" },  -- poor match
+  BRNPOIS  = { "BRNPOIS",  "FLAT1" },  -- poor match
 
-  wood    = { "WOOD12",   "FLAT5_2"  },
-  marble  = { "MARBLE1",  "FLOOR7_2" },
-  gray    = { "GRAY7",    "FLAT1"    },  
-  brown   = { "BROWNHUG", "FLOOR7_1" },
+  COMPBLUE = { "COMPBLUE", "FLAT14" },
+  COMPSPAN = { "COMPSPAN", "CEIL5_1" },
+  COMPSTA1 = { "COMPSTA1", "FLAT23" },
+  COMPSTA2 = { "COMPSTA2", "FLAT23" },
+  COMPTALL = { "COMPTALL", "CEIL5_1" },
+  COMPWERD = { "COMPWERD", "CEIL5_1" },
+  CRATE1   = { "CRATE1",   "CRATOP2" },
+  CRATE2   = { "CRATE2",   "CRATOP1" },
+  CRATELIT = { "CRATELIT", "CRATOP1" },
+  CRATINY  = { "CRATINY",  "CRATOP1" },
+  CRATWIDE = { "CRATWIDE", "CRATOP1" },
 
-  black   = { "BLAKWAL1", "O_BLACK"  },
-  blue    = { "COMPBLUE", "FLAT14"   },
-  red     = { "REDWALL",  "FLAT5_3"  },
+  DOOR1    = { "DOOR1",    "FLAT23" },
+  DOOR3    = { "DOOR3",    "FLAT23" },
+  DOORBLU  = { "DOORBLU",  "FLAT23" },
+  DOORRED  = { "DOORRED",  "FLAT23" },
+  DOORYEL  = { "DOORYEL",  "FLAT23" },
+  DOORBLU2 = { "DOORBLU2", "CRATOP2" },
+  DOORRED2 = { "DOORRED2", "CRATOP2" },
+  DOORYEL2 = { "DOORYEL2", "CRATOP2" },
+  DOORSTOP = { "DOORSTOP", "FLAT23" },
+  DOORTRAK = { "DOORTRAK", "FLAT23" },
+  EXITDOOR = { "EXITDOOR", "FLAT5_5" },
+  EXITSIGN = { "EXITSIGN", "CEIL5_1" },
+  EXITSTON = { "EXITSTON", "MFLR8_1" },
+
+  FIREWALL = { "FIREWALL", "LAVA1" },
+  GRAY1    = { "GRAY1",    "FLAT18" },
+  GRAY2    = { "GRAY2",    "FLAT18" },
+  GRAY4    = { "GRAY4",    "FLAT18" },
+  GRAY5    = { "GRAY5",    "FLAT18" },
+  GRAY7    = { "GRAY7",    "FLAT18"   },  
+  GRAYBIG  = { "GRAYBIG",  "FLAT18" },
+  GRAYPOIS = { "GRAYPOIS", "FLAT18" },
+  GRAYTALL = { "GRAYTALL", "FLAT18" },
+  GRAYVINE = { "GRAYVINE", "FLAT18" },
+
+  GSTFONT1 = { "GSTFONT1", "DEM1_5" },
+  GSTGARG  = { "GSTGARG",  "DEM1_5" },
+  GSTLION  = { "GSTLION",  "DEM1_5" },
+  GSTONE1  = { "GSTONE1",  "DEM1_5" },
+  GSTONE2  = { "GSTONE2",  "DEM1_5" },
+  GSTSATYR = { "GSTSATYR", "DEM1_5" },
+  GSTVINE1 = { "GSTVINE1", "DEM1_5" },
+  GSTVINE2 = { "GSTVINE2", "DEM1_5" },
+
+  ICKWALL1 = { "ICKWALL1", "FLAT19" },
+  ICKWALL2 = { "ICKWALL2", "FLAT19" },
+  ICKWALL3 = { "ICKWALL3", "FLAT19" },
+  ICKWALL4 = { "ICKWALL4", "FLAT19" },
+  ICKWALL5 = { "ICKWALL5", "FLAT19" },
+  ICKWALL7 = { "ICKWALL7", "FLAT19" },
+
+  LITE3    = { "LITE3",    "FLAT19" },
+  LITE5    = { "LITE5",    "FLAT19" },
+  LITEBLU1 = { "LITEBLU1", "FLAT23" },
+  LITEBLU4 = { "LITEBLU4", "FLAT1" },
+
+  MARBLE1  = { "MARBLE1",  "FLOOR7_2" },
+  MARBLE2  = { "MARBLE2",  "FLOOR7_2" },
+  MARBLE3  = { "MARBLE3",  "FLOOR7_2" },
+  MARBFAC2 = { "MARBFAC2", "FLOOR7_2" },
+  MARBFAC3 = { "MARBFAC3", "FLOOR7_2" },
+  MARBFACE = { "MARBFACE", "FLOOR7_2" },
+  MARBLOD1 = { "MARBLOD1", "FLOOR7_2" },
+
+  METAL    = { "METAL",    "CEIL5_2"  },
+  METAL1   = { "METAL1",   "FLOOR4_8" },
+  NUKE24   = { "NUKE24",   "FLOOR7_1" },
+  NUKEDGE1 = { "NUKEDGE1", "FLOOR7_1" },
+  NUKEPOIS = { "NUKEPOIS", "FLOOR7_1" },
+  PIPE1    = { "PIPE1",    "FLOOR4_5" },
+  PIPE2    = { "PIPE2",    "FLOOR4_5" },
+  PIPE4    = { "PIPE4",    "FLOOR4_5" },
+  PIPE6    = { "PIPE6",    "FLOOR4_5" },
+  PLAT1    = { "PLAT1",    "FLAT4" },
+  ROCKRED1 = { "ROCKRED1", "FLOOR6_1" },  -- better in DOOM2
+  REDWALL  = { "REDWALL",  "FLAT5_3" },
+
+  SHAWN1   = { "SHAWN1",   "FLAT23" },
+  SHAWN2   = { "SHAWN2",   "FLAT23" },
+  SHAWN3   = { "SHAWN3",   "FLAT23" },
+  SKIN2    = { "SKIN2",    "SFLR6_4" },
+  SKINEDGE = { "SKINEDGE", "SFLR6_4" },
+  SKINFACE = { "SKINFACE", "SFLR6_4" },
+  SKINCUT  = { "SKINCUT",  "CEIL5_2" },
+  SKINLOW  = { "SKINLOW",  "FLAT5_2" },
+  SKINMET1 = { "SKINMET1", "CEIL5_2" },
+  SKINMET2 = { "SKINMET2", "CEIL5_2" },
+  SKINSCAB = { "SKINSCAB", "CEIL5_2" },
+  SKINSYMB = { "SKINSYMB", "CEIL5_2" },
+  SKSNAKE1 = { "SKSNAKE1", "SFLR6_1" },
+  SKSNAKE2 = { "SKSNAKE2", "SFLR6_4" },
+  SKSPINE1 = { "SKSPINE1", "FLAT5_6" },
+  SKSPINE2 = { "SKSPINE2", "FLAT5_6" },
+  SLADPOIS = { "SLADPOIS", "FLAT4" },  -- poor match
+  SLADSKUL = { "SLADSKUL", "FLAT4" },  -- poor match
+  SLADWALL = { "SLADWALL", "FLAT4" },  -- poor match
+  SP_DUDE1 = { "SP_DUDE1", "DEM1_5" },
+  SP_DUDE2 = { "SP_DUDE2", "DEM1_5" },
+  SP_DUDE4 = { "SP_DUDE4", "DEM1_5" },
+  SP_DUDE5 = { "SP_DUDE5", "DEM1_5" },
+  SP_FACE1 = { "SP_FACE1", "CRATOP2" },
+  SP_HOT1  = { "SP_HOT1",  "FLAT5_3" },
+  SP_ROCK1 = { "SP_ROCK1", "MFLR8_3" },  -- poor match
+
+  STARG1   = { "STARG1",   "FLAT1" },  -- poor match
+  STARG2   = { "STARG2",   "FLAT1" },  -- poor match
+  STARG3   = { "STARG3",   "FLAT1" },  -- poor match
+  STARGR1  = { "STARGR1",  "FLAT3" },
+  STARGR2  = { "STARGR2",  "FLAT3" },
+  STARBR2  = { "STARBR2",  "FLOOR0_2" },
+  STARTAN2 = { "STARTAN2", "FLOOR4_1" },
+  STARTAN3 = { "STARTAN3", "FLOOR4_5" },  -- poor match
+
+  STEP1    = { "STEP1",    "FLOOR7_1" },
+  STEP2    = { "STEP2",    "FLOOR4_6" },
+  STEP3    = { "STEP3",    "CEIL5_1" },
+  STEP4    = { "STEP4",    "FLAT19" },
+  STEP5    = { "STEP5",    "FLOOR7_1" },
+  STEP6    = { "STEP6",    "FLAT5" },
+  STEPLAD1 = { "STEPLAD1", "FLOOR7_1" },
+  STEPTOP  = { "STEPTOP",  "FLOOR7_1" },
+
+  STONE    = { "STONE",    "FLAT1" },
+  STONE2   = { "STONE2",   "MFLR8_1" },
+  STONE3   = { "STONE3",   "MFLR8_1" },
+  SUPPORT2 = { "SUPPORT2", "FLAT23" },
+  SUPPORT3 = { "SUPPORT3", "CEIL5_2" },
+
+  TEKWALL1 = { "TEKWALL1",  "CEIL5_1" },  -- poor match
+  TEKWALL4 = { "TEKWALL4",  "CEIL5_1" },  -- poor match
+  WOOD1    = { "WOOD1",     "FLAT5_2" },
+  WOOD12   = { "WOOD12",    "FLAT5_2"  },
+  WOOD3    = { "WOOD3",     "FLAT5_1" },
+  WOOD4    = { "WOOD4",     "FLAT5_2" },
+  WOOD5    = { "WOOD5",     "CEIL5_2" },
+  WOODGARG = { "WOODGARG",  "FLAT5_2" },
+
+  SW1BLUE  = { "SW1BLUE",  "FLAT14" },
+  SW1BRCOM = { "SW1BRCOM", "FLOOR7_1" },
+  SW1BRN2  = { "SW1BRN2",  "FLOOR0_1" },
+  SW1BRNGN = { "SW1BRNGN", "FLOOR3_3" }, -- poor match
+  SW1BROWN = { "SW1BROWN", "FLOOR7_1" },
+  SW1COMM  = { "SW1COMM",  "FLAT23" },
+  SW1COMP  = { "SW1COMP",  "CEIL5_1" },
+  SW1DIRT  = { "SW1DIRT",  "FLOOR7_1" },
+  SW1EXIT  = { "SW1EXIT",  "FLAT19" },
+  SW1GARG  = { "SW1GARG",  "CEIL5_2" },
+  SW1GRAY  = { "SW1GRAY",  "FLAT19" },
+  SW1GRAY1 = { "SW1GRAY1", "FLAT19" },
+
+  SW1GSTON = { "SW1GSTON", "FLOOR7_2" },
+  SW1HOT   = { "SW1HOT",   "FLOOR1_7" },
+  SW1LION  = { "SW1LION",  "CEIL5_2" },
+  SW1METAL = { "SW1METAL", "FLOOR4_8" },
+  SW1PIPE  = { "SW1PIPE",  "FLOOR4_5" },
+  SW1SATYR = { "SW1SATYR", "CEIL5_2" },
+  SW1SKIN  = { "SW1SKIN",  "CRATOP2" },
+  SW1SLAD  = { "SW1SLAD",  "FLAT4" },  -- poor match
+  SW1STON1 = { "SW1STON1", "MFLR8_1" },
+  SW1STRTN = { "SW1STRTN", "FLOOR4_1" },
+  SW1VINE  = { "SW1VINE",  "FLAT1" },
+  SW1WOOD  = { "SW1WOOD",  "FLAT5_2" },
+  
+
+---??? possible special use (e.g. WATER/NUKAGE/LAVA falls)
+--FIREBLU1
+--FIRELAVA
+--FIREMAG1
+
+
+  -- flats with closest texture
+
+  BLOOD1   = { "ROCKRED1", "BLOOD1" },  -- better in DOOM2
+
+  CEIL1_1  = { "WOOD1",    "CEIL1_1" },
+  CEIL1_3  = { "WOOD1",    "CEIL1_3" },
+  CEIL1_2  = { "METAL",    "CEIL1_2" },
+  CEIL3_1  = { "STARBR2",  "CEIL3_1" },
+  CEIL3_2  = { "STARTAN2", "CEIL3_2" },
+  CEIL3_3  = { "STARTAN2", "CEIL3_3" },
+  CEIL3_4  = { "STARTAN2", "CEIL3_4" },
+  CEIL3_5  = { "STONE2",   "CEIL3_5" },
+  CEIL3_6  = { "STONE2",   "CEIL3_6" },
+  CEIL4_1  = { "COMPBLUE", "CEIL4_1" },
+  CEIL4_2  = { "COMPBLUE", "CEIL4_2" },
+  CEIL4_3  = { "COMPBLUE", "CEIL4_3" },
+  CEIL5_1  = { "COMPSPAN", "CEIL5_1" },
+  CEIL5_2  = { "METAL",    "CEIL5_2" },
+  COMP01   = { "GRAY1",    "COMP01" },
+  CONS1_1  = { "COMPWERD", "CONS1_1" },  -- poor match
+  CONS1_5  = { "COMPWERD", "CONS1_5" },  -- poor match
+  CONS1_7  = { "COMPWERD", "CONS1_7" },  -- poor match
+
+  DEM1_1   = { "MARBLE1",  "DEM1_1" },
+  DEM1_2   = { "MARBLE1",  "DEM1_2" },
+  DEM1_3   = { "MARBLE1",  "DEM1_3" },
+  DEM1_4   = { "MARBLE1",  "DEM1_4" },
+  DEM1_5   = { "MARBLE1",  "DEM1_5" },
+  DEM1_6   = { "MARBLE1",  "DEM1_6" },
+
+  FLAT1    = { "GRAY1",    "FLAT1" },
+  FLAT1_1  = { "BROWN1", "FLAT1_1" },  -- poor match
+  FLAT1_2  = { "BROWN1", "FLAT1_2" },  -- poor match
+  FLAT1_3  = { "BROWN1", "FLAT1_3" },  -- poor match
+  FLAT2    = { "GRAY1",    "FLAT2" },
+  FLAT3    = { "GRAY4", "FLAT3" },
+  FLAT4    = { "COMPSPAN", "FLAT4" },  -- poor match
+  FLAT5    = { "BROWNHUG", "FLAT5" },
+  FLAT5_1  = { "WOOD1", "FLAT5_1" },
+  FLAT5_2  = { "WOOD1", "FLAT5_2" },
+  FLAT5_3  = { "REDWALL", "FLAT5_3" },
+  FLAT5_4  = { "STONE", "FLAT5_4" },
+  FLAT5_5  = { "BROWN1", "FLAT5_5" },
+  FLAT5_6  = { "SP_FACE1", "FLAT5_6" },  -- better in DOOM1
+  FLAT8    = { "STARBR2", "FLAT8" },
+  FLAT9    = { "GRAY4", "FLAT9" },
+  FLAT10   = { "FLAT10",   "BROWNHUG" },  -- better in DOOM2
+  FLAT14   = { "COMPBLUE", "FLAT14" },
+  FLAT17   = { "GRAY1",    "FLAT17" },
+  FLAT18   = { "GRAY1",    "FLAT18" },
+  FLAT19   = { "GRAY1",    "FLAT19" },
+  FLAT20   = { "SHAWN2",   "FLAT20" },
+  FLAT22   = { "SHAWN2",   "FLAT22" },
+  FLAT23   = { "SHAWN2",   "FLAT23" },
+
+  FLOOR0_1 = { "STARTAN2", "FLOOR0_1" },
+  FLOOR0_2 = { "STARBR2",  "FLOOR0_2" },
+  FLOOR0_3 = { "GRAY1",    "FLOOR0_3" },
+  FLOOR0_5 = { "GRAY1",    "FLOOR0_5" },
+  FLOOR0_6 = { "GRAY1",    "FLOOR0_6" },
+  FLOOR0_7 = { "GRAY1",    "FLOOR0_7" },
+  FLOOR1_1 = { "COMPBLUE", "FLOOR1_1" },
+  FLOOR1_6 = { "REDWALL",  "FLOOR1_6" },
+  FLOOR1_7 = { "REDWALL",  "FLOOR1_7" },
+  FLOOR3_3 = { "BROWN1",   "FLOOR3_3" },  -- poor match
+  FLOOR4_1 = { "STARTAN2", "FLOOR4_1" },
+  FLOOR4_5 = { "STARTAN2", "FLOOR4_5" },
+  FLOOR4_6 = { "STARTAN2", "FLOOR4_6" },
+  FLOOR4_8 = { "METAL1",   "FLOOR4_8" },
+  FLOOR5_1 = { "METAL1",   "FLOOR5_1" },
+  FLOOR5_2 = { "BROWNHUG", "FLOOR5_2" },
+  FLOOR5_3 = { "BROWNHUG", "FLOOR5_3" },
+  FLOOR5_4 = { "BROWNHUG", "FLOOR5_4" },
+  FLOOR6_1 = { "REDWALL",  "FLOOR6_1" },  -- poor match
+  FLOOR7_1 = { "BROWNHUG", "FLOOR7_1" },
+  FLOOR7_2 = { "MARBLE1",  "FLOOR7_2" },
+  FWATER1  = { "COMPBLUE", "FWATER1" },
+
+  GATE1    = { "GATE1",    "METAL" },
+  GATE2    = { "GATE2",    "METAL" },
+  GATE3    = { "GATE3",    "METAL" },
+  GATE4    = { "GATE4",    "METAL" },
+  LAVA1    = { "ROCKRED1", "LAVA1" },
+  MFLR8_1  = { "STONE2",   "MFLR8_1" },
+  MFLR8_2  = { "BROWNHUG", "MFLR8_2" },
+  MFLR8_3  = { "SP_ROCK1", "MFLR8_3" },  -- poor match
+  NUKAGE1  = { "GSTVINE2", "NUKAGE1" },  -- better in DOOM2
+  SFLR6_1  = { "SKSNAKE1", "SFLR6_1" },
+  SFLR6_4  = { "SKSNAKE2", "SFLR6_4" },
+  SFLR7_1  = { "SKSNAKE1", "SFLR7_1" },
+  SFLR7_4  = { "SKSNAKE1", "SFLR7_4" },
+  STEP_I   = { "SHAWN2",   "STEP1" },
+  STEP_H   = { "SHAWN2",   "STEP2" },
+  TLITE6_1 = { "METAL",    "TLITE6_1" },
+  TLITE6_4 = { "METAL",    "TLITE6_4" },
+  TLITE6_5 = { "METAL",    "TLITE6_5" },
+  TLITE6_6 = { "METAL",    "TLITE6_6" },
+
+
+  -- Oblige stuff
+  O_PILL   = { "CEMENT1",  "O_PILL" },
+  O_BOLT   = { "CEMENT2",  "O_BOLT" },
+  O_RELIEF = { "CEMENT3",  "O_RELIEF" },
+  O_CARVE  = { "CEMENT4",  "O_CARVE" },
+
+
+  -- Missing stuff:
+  --   F_SKY    : handled using PARAMS.sky_flat
+  --   CEMENT#  : used by OBLIGE for various logos
+  --   SKY1/2/3 : not very useful
+  --   ZZZFACE# : not generally useful (OK to hard-code)
+  --
+  -- Mid-masked (railing) textures are in separate tables.
+  --
+  -- Note too that STEP1/2 are ambiguous, the flats are quite
+  -- different to the textures, hence renamed flats: STEP_I/H.
 }
+
+
+
+DOOM1_MATERIALS =
+{
+  -- textures with best-matching flat
+
+  ASHWALL  = { "ASHWALL",  "FLOOR6_2" },
+  BLODGR1  = { "BLODGR1",  "FLOOR0_1" },
+  BROVINE  = { "BROVINE",  "FLOOR0_1" },
+  BRNPOIS2 = { "BRNPOIS2", "FLOOR7_1" },
+  BROWNWEL = { "BROWNWEL", "FLOOR7_1" },
+
+  COMP2    = { "COMP2",    "CEIL5_1" },
+  COMPOHSO = { "COMPOHSO", "FLOOR7_1" },
+  COMPTILE = { "COMPTILE", "CEIL5_1" },
+  COMPUTE1 = { "COMPUTE1", "FLAT19" },
+  COMPUTE2 = { "COMPUTE2", "CEIL5_1" },
+  COMPUTE3 = { "COMPUTE3", "CEIL5_1" },
+  DOORHI   = { "DOORHI",   "FLAT19" },
+  GRAYDANG = { "GRAYDANG", "FLAT19" },
+  ICKDOOR1 = { "ICKDOOR1", "FLAT19" },
+  ICKWALL6 = { "ICKWALL6", "FLAT18" },
+
+  LITE2    = { "LITE2",    "FLOOR0_1" },
+  LITE4    = { "LITE4",    "FLAT19" },
+  LITE96   = { "LITE96",   "FLOOR7_1" },
+  LITEBLU2 = { "LITEBLU2", "FLAT23" },
+  LITEBLU3 = { "LITEBLU3", "FLAT23" },
+  LITEMET  = { "LITEMET",  "FLOOR4_8" },
+  LITERED  = { "LITERED",  "FLOOR1_6" },
+  LITESTON = { "LITESTON", "MFLR8_1" },
+
+  NUKESLAD = { "NUKESLAD", "FLAT4" },  -- poor match
+  PLANET1  = { "PLANET1",  "FLAT23" },
+  REDWALL1 = { "REDWALL1", "FLOOR1_6" },
+  ROCKRED1 = { "ROCKRED1", "RROCK01" },
+  SKINBORD = { "SKINBORD", "FLAT5_5" },
+  SKINTEK1 = { "SKINTEK1", "FLAT5_5" },  -- poor match
+  SKINTEK2 = { "SKINTEK2", "FLAT5_5" },  -- poor match
+  SKULWAL3 = { "SKULWAL3", "FLAT5_6" },
+  SKULWALL = { "SKULWALL", "FLAT5_6" },
+  SLADRIP1 = { "SLADRIP1", "FLAT4" },  -- poor match
+  SP_DUDE3 = { "SP_DUDE3", "DEM1_5" },
+  SP_DUDE6 = { "SP_DUDE6", "DEM1_5" },
+  SP_ROCK1 = { "SP_ROCK1", "MFLR8_3" },  -- poor match
+  STARTAN1 = { "STARTAN1", "FLOOR4_1" },
+  STONGARG = { "STONGARG", "MFLR8_1" },
+  STONPOIS = { "STONPOIS", "FLAT5_4" },
+  TEKWALL2 = { "TEKWALL2", "CEIL5_1" },  -- poor match
+  TEKWALL3 = { "TEKWALL3", "CEIL5_1" },  -- poor match
+  TEKWALL5 = { "TEKWALL5", "CEIL5_1" },  -- poor match
+  WOODSKUL = { "WOODSKUL", "FLAT5_2" },
+
+
+  -- flats with closest texture
+
+  FLAT5_6  = { "SKULWALL", "FLAT5_6" },
+  FLAT5_7  = { "ASHWALL",  "FLAT5_7" },
+  FLAT5_8  = { "ASHWALL",  "FLAT5_8" },
+  FLOOR6_2 = { "ASHWALL",  "FLOOR6_2" },
+  MFLR8_4  = { "MFLR8_4",  "ASHWALL" },
+}
+
+
+
+DOOM2_MATERIALS =
+{
+  -- textures with best-matching flat
+
+  ASHWALL2 = { "ASHWALL2", "MFLR8_4" },
+  ASHWALL3 = { "ASHWALL3", "FLAT10" },
+  ASHWALL4 = { "ASHWALL4", "FLAT10" },
+  ASHWALL6 = { "ASHWALL6", "RROCK20" },
+  ASHWALL7 = { "ASHWALL7", "RROCK18" },
+  BFALL1   = { "BFALL1",   "BLOOD1" },
+  BIGBRIK1 = { "BIGBRIK1", "RROCK14" },
+  BIGBRIK3 = { "BIGBRIK3", "RROCK14" },
+  BIGBRIK2 = { "BIGBRIK2", "MFLR8_1" },
+  BLAKWAL1 = { "BLAKWAL1", "CEIL5_1" },
+  BLAKWAL2 = { "BLAKWAL2", "CEIL5_1" },
+
+  BRICK1   = { "BRICK1",   "RROCK10" },
+  BRICK2   = { "BRICK2",   "RROCK10" },
+  BRICK3   = { "BRICK3",   "FLAT5_5" },
+  BRICK4   = { "BRICK4",   "FLAT5_5" },
+  BRICK5   = { "BRICK5",   "RROCK10" },
+  BRICK6   = { "BRICK6",   "FLOOR5_4" },
+  BRICK7   = { "BRICK7",   "FLOOR5_4" },
+  BRICK8   = { "BRICK8",   "FLOOR5_4" },
+  BRICK9   = { "BRICK9",   "FLOOR5_4" },
+  BRICK10  = { "BRICK10",  "SLIME13" },
+  BRICK11  = { "BRICK11",  "FLAT5_3" },
+  BRICK12  = { "BRICK12",  "FLAT5_5" },  -- poor match
+  BRONZE1  = { "BRONZE1",  "FLOOR7_1" },
+  BRONZE2  = { "BRONZE2",  "FLOOR7_1" },
+  BRONZE3  = { "BRONZE3",  "FLOOR7_1" },
+  BRONZE4  = { "BRONZE4",  "FLOOR7_1" },
+  BRICKLIT = { "BRICKLIT", "RROCK10" },
+  BRWINDOW = { "BRWINDOW", "RROCK10" },
+  BSTONE1  = { "BSTONE1",  "RROCK11" },
+  BSTONE2  = { "BSTONE2",  "RROCK12" },
+  BSTONE3  = { "BSTONE3",  "RROCK12" },
+
+  CRACKLE2 = { "CRACKLE2", "RROCK01" },
+  CRACKLE4 = { "CRACKLE4", "RROCK02" },
+  CRATE3   = { "CRATE3",   "CRATOP1" },
+  DBRAIN1  = { "DBRAIN1",  "LAVA1" },
+  MARBFAC4 = { "MARBFAC4", "DEM1_5" },
+  MARBGRAY = { "MARBGRAY", "DEM1_5" },
+  METAL2   = { "METAL2",   "CEIL5_2" },
+  METAL3   = { "METAL3",   "CEIL5_2" },
+  METAL4   = { "METAL4",   "CEIL5_2" },
+  METAL5   = { "METAL5",   "CEIL5_2" },
+  METAL6   = { "METAL6",   "CEIL5_2" },
+  METAL7   = { "METAL7",   "CEIL5_2" },
+
+  MODWALL1 = { "MODWALL1", "MFLR8_4" },
+  MODWALL2 = { "MODWALL2", "MFLR8_4" },
+  MODWALL3 = { "MODWALL3", "FLAT19" },
+  MODWALL4 = { "MODWALL4", "FLAT18" },
+
+  PANBLACK = { "PANBLACK", "RROCK09" },
+  PANBLUE  = { "PANBLUE",  "RROCK09" },
+  PANBOOK  = { "PANBOOK",  "RROCK09" },
+  PANRED   = { "PANRED",   "RROCK09" },
+  PANBORD1 = { "PANBORD1", "RROCK09" },
+  PANBORD2 = { "PANBORD2", "RROCK09" },
+  PANCASE1 = { "PANCASE1", "RROCK09" },
+  PANCASE2 = { "PANCASE2", "RROCK09" },
+  PANEL1   = { "PANEL1",   "RROCK09" },
+  PANEL2   = { "PANEL2",   "RROCK09" },
+  PANEL3   = { "PANEL3",   "RROCK09" },
+  PANEL4   = { "PANEL4",   "RROCK09" },
+  PANEL5   = { "PANEL5",   "RROCK09" },
+  PANEL6   = { "PANEL6",   "RROCK09" },
+  PANEL7   = { "PANEL7",   "RROCK09" },
+  PANEL8   = { "PANEL8",   "RROCK09" },
+  PANEL9   = { "PANEL9",   "RROCK09" },
+  PIPES    = { "PIPES",    "FLOOR3_3" },
+  PIPEWAL1 = { "PIPEWAL1", "RROCK03" },  -- poor match
+  PIPEWAL2 = { "PIPEWAL2", "RROCK03" },  -- poor match
+  ROCK1    = { "ROCK1",    "RROCK13" },
+  ROCK2    = { "ROCK2",    "GRNROCK" },
+  ROCK3    = { "ROCK3",    "RROCK13" },
+  ROCK4    = { "ROCK4",    "RROCK11" },
+  ROCK5    = { "ROCK5",    "RROCK11" },
+
+  SFALL1   = { "SFALL1",   "NUKAGE1" },
+  SILVER1  = { "SILVER1",  "FLAT23" },
+  SILVER2  = { "SILVER2",  "FLAT22" },
+  SILVER3  = { "SILVER3",  "FLAT23" },
+  SK_LEFT  = { "SK_LEFT",  "FLAT5_6" },  -- poor match
+  SK_RIGHT = { "SK_RIGHT", "FLAT5_6" },  -- poor match
+  SLOPPY1  = { "SLOPPY1",  "FLAT5_6" },  -- poor match
+  SLOPPY2  = { "SLOPPY2",  "FLAT5_6" },  -- poor match
+  SP_DUDE7 = { "SP_DUDE7", "FLOOR5_4" },
+  SP_DUDE8 = { "SP_DUDE8", "FLOOR5_4" },
+  SP_FACE2 = { "SP_FACE2", "FLAT5_6" },
+
+  SPACEW2  = { "SPACEW2",  "CEIL3_3" },
+  SPACEW3  = { "SPACEW3",  "CEIL5_1" },
+  SPACEW4  = { "SPACEW4",  "SLIME16" },
+  SPCDOOR1 = { "SPCDOOR1", "FLOOR0_1" },
+  SPCDOOR2 = { "SPCDOOR2", "FLAT19" },
+  SPCDOOR3 = { "SPCDOOR3", "FLAT19" },
+  SPCDOOR4 = { "SPCDOOR4", "FLOOR0_1" },
+  STONE4   = { "STONE4",   "FLAT5_4" },
+  STONE5   = { "STONE5",   "FLAT5_4" },
+  STONE6   = { "STONE6",   "RROCK11" },
+  STONE7   = { "STONE7",   "RROCK11" },
+  STUCCO   = { "STUCCO",   "FLAT5_5" },
+  STUCCO1  = { "STUCCO1",  "FLAT5_5" },
+  STUCCO2  = { "STUCCO2",  "FLAT5_5" },
+  STUCCO3  = { "STUCCO3",  "FLAT5_5" },
+
+  TANROCK2 = { "TANROCK2", "FLOOR3_3" },
+  TANROCK3 = { "TANROCK3", "RROCK11" },
+  TANROCK4 = { "TANROCK4", "RROCK09" },
+  TANROCK5 = { "TANROCK5", "RROCK18" },
+  TANROCK7 = { "TANROCK7", "RROCK15" },
+  TANROCK8 = { "TANROCK8", "RROCK09" },
+  TEKBRON1 = { "TEKBRON1", "FLOOR0_1" },
+  TEKBRON2 = { "TEKBRON2", "FLOOR0_1" },
+  TEKLITE  = { "TEKLITE",  "FLOOR5_2" },
+  TEKLITE2 = { "TEKLITE2", "FLOOR5_2" },
+  TEKWALL6 = { "TEKWALL6", "CEIL5_1" },  -- poor match
+
+  TEKGREN1 = { "TEKGREN1", "RROCK20" },  -- poor match
+  TEKGREN2 = { "TEKGREN2", "RROCK20" },  -- poor match
+  TEKGREN3 = { "TEKGREN3", "RROCK20" },  -- poor match
+  TEKGREN4 = { "TEKGREN4", "RROCK20" },  -- poor match
+  TEKGREN5 = { "TEKGREN5", "RROCK20" },  -- poor match
+
+  WOOD6    = { "WOOD6",    "FLAT5_2" },
+  WOOD7    = { "WOOD7",    "FLAT5_2" },
+  WOOD8    = { "WOOD8",    "FLAT5_2" },
+  WOOD9    = { "WOOD9",    "FLAT5_2" },
+  WOOD10   = { "WOOD10",   "FLAT5_1" },
+  WOOD12   = { "WOOD12",   "FLAT5_2" },
+  WOODVERT = { "WOODVERT", "FLAT5_2" },
+  WOODMET1 = { "WOODMET1", "CEIL5_2" },
+  WOODMET2 = { "WOODMET2", "CEIL5_2" },
+  WOODMET3 = { "WOODMET3", "CEIL5_2" },
+  WOODMET4 = { "WOODMET4", "CEIL5_2" },
+
+  ZIMMER1  = { "ZIMMER1",  "RROCK20" },
+  ZIMMER2  = { "ZIMMER2",  "RROCK20" },
+  ZIMMER3  = { "ZIMMER3",  "RROCK18" },
+  ZIMMER4  = { "ZIMMER4",  "RROCK18" },
+  ZIMMER5  = { "ZIMMER5",  "RROCK16" },
+  ZIMMER7  = { "ZIMMER7",  "RROCK20" },
+  ZIMMER8  = { "ZIMMER8",  "MFLR8_3" },
+                          
+  ZDOORB1  = { "ZDOORB1",  "FLAT23" },
+  ZDOORF1  = { "ZDOORF1",  "FLAT23" },
+  ZELDOOR  = { "ZELDOOR",  "FLAT23" },
+  ZZWOLF1  = { "ZZWOLF1",  "FLAT18" },
+  ZZWOLF2  = { "ZZWOLF2",  "FLAT18" },
+  ZZWOLF3  = { "ZZWOLF3",  "FLAT18" },
+  ZZWOLF4  = { "ZZWOLF4",  "FLAT18" },
+  ZZWOLF5  = { "ZZWOLF5",  "FLAT5_1" },
+  ZZWOLF6  = { "ZZWOLF6",  "FLAT5_1" },
+  ZZWOLF7  = { "ZZWOLF7",  "FLAT5_1" },
+  ZZWOLF9  = { "ZZWOLF9",  "FLAT14" },
+  ZZWOLF10 = { "ZZWOLF10", "FLAT23" },
+  ZZWOLF11 = { "ZZWOLF11", "FLAT5_3" },
+  ZZWOLF12 = { "ZZWOLF12", "FLAT5_3" },
+  ZZWOLF13 = { "ZZWOLF13", "FLAT5_3" },
+
+  SW1BRIK  = { "SW1BRIK",  "MFLR8_1" },
+  SW1MARB  = { "SW1MARB",  "DEM1_5" },
+  SW1MET2  = { "SW1MET2",  "CEIL5_2" },
+  SW1MOD1  = { "SW1MOD1",  "MFLR8_4" },
+  SW1PANEL = { "SW1PANEL", "CEIL1_1" },
+  SW1ROCK  = { "SW1ROCK",  "RROCK13" },
+  SW1SKULL = { "SW1SKULL", "FLAT5_6" },
+  SW1STON6 = { "SW1STON6", "RROCK11" },
+  SW1TEK   = { "SW1TEK",   "RROCK20" },
+  SW1WDMET = { "SW1WDMET", "CEIL5_2" },
+  SW1ZIM   = { "SW1ZIM",   "RROCK20" },
+
+
+  -- flats with closest texture
+
+  BLOOD1   = { "BFALL1",   "BLOOD1" },
+  CONS1_1  = { "COMPUTE1", "CONS1_1" },
+  CONS1_5  = { "COMPUTE1", "CONS1_5" },
+  CONS1_7  = { "COMPUTE1", "CONS1_7" },
+
+  FLAT1_1  = { "BSTONE2",  "FLAT1_1" },
+  FLAT1_2  = { "BSTONE2",  "FLAT1_2" },
+  FLAT1_3  = { "BSTONE2",  "FLAT1_3" },
+  FLAT10   = { "ASHWALL4", "FLAT10" },
+  FLAT22   = { "SILVER2",  "FLAT22" },
+  FLAT5_5  = { "STUCCO",   "FLAT5_5"  },
+  FLAT5_7  = { "ASHWALL2", "FLAT5_7" },
+  FLAT5_8  = { "ASHWALL2", "FLAT5_8" },
+  FLOOR6_2 = { "ASHWALL2", "FLOOR6_2" },
+  GRASS2   = { "ZIMMER2",  "GRASS2"   },
+  GRNROCK  = { "ROCK2",    "GRNROCK" },
+  GRNLITE1 = { "TEKGREN2", "GRNLITE1" },
+  MFLR8_4  = { "MFLR8_4",  "ASHWALL" },
+  NUKAGE1  = { "SFALL1",   "NUKAGE1" },
+
+  RROCK01  = { "CRACKLE2", "RROCK01" },
+  RROCK02  = { "CRACKLE4", "RROCK02" },
+  RROCK03  = { "ASHWALL3", "RROCK03" },  -- poor match
+  RROCK04  = { "ASHWALL3", "RROCK04" },
+  RROCK05  = { "ROCKRED1", "RROCK05" },  -- poor match
+  RROCK09  = { "TANROCK4", "RROCK09" },
+  RROCK10  = { "BRICK1",   "RROCK10" },
+  RROCK11  = { "BSTONE1",  "RROCK11" },
+  RROCK12  = { "BSTONE2",  "RROCK12" },
+  RROCK13  = { "ROCK3",    "RROCK13" },
+  RROCK14  = { "BIGBRIK1", "RROCK14" },
+  RROCK15  = { "TANROCK7", "RROCK15" },
+  RROCK16  = { "ZIMMER5",  "RROCK16" },
+  RROCK17  = { "ZIMMER3",  "RROCK17" },
+  RROCK18  = { "ZIMMER3",  "RROCK18" },
+  RROCK19  = { "ZIMMER2",  "RROCK19" },
+  RROCK20  = { "ZIMMER7",  "RROCK20" },
+
+  SLIME01  = { "ZIMMER3",  "SLIME01" },  -- poor match
+  SLIME05  = { "ZIMMER3",  "SLIME05" },  -- poor match
+  SLIME09  = { "ROCKRED1", "SLIME09" },  -- poor match
+  SLIME13  = { "BRICK10",  "SLIME13" },
+  SLIME14  = { "METAL2",   "SLIME14" },  -- poor match
+  SLIME15  = { "COMPSPAN", "SLIME15" },  -- poor match
+  SLIME16  = { "SPACEW4",  "SLIME16" },
+}
+
+
+COMMON_RAILS =
+{
+--BRNSMAL1
+--BRNSMAL2
+--BRNSMALC
+--BRNSMALL
+--BRNSMALR
+--MIDBRN1
+--MIDGRATE
+}
+
+DOOM1_RAILS =
+{
+--BRNBIGC
+--BRNBIGL
+--BRNBIGR
+--MIDVINE1
+--MIDVINE2
+}
+
+DOOM2_RAILS =
+{
+--MIDBARS1
+--MIDBARS3
+--MIDBRONZ
+--MIDSPACE
+}
+
+
+DOOM_SANITY_MAP =
+{
+  -- liquids kill the player, so keep them recognisable
+  LAVA1   = "FWATER1",
+  FWATER1 = "NUKAGE1",
+  NUKAGE1 = "LAVA1",
+  SFALL1  = "BFALL1",
+  BFALL1  = "SFALL1",
+
+  -- these textures may not tile well vertically
+  STEP1 = "STEP4", STEP2 = "STEP5", STEP3 = "STEP6",
+  STEP4 = "STEP1", STEP5 = "STEP2", STEP6 = "STEP3",
+
+  STEPLAD1 = "STEPLAD1",
+  STEPTOP  = "STEPTOP",
+}
+
 
 --- PEDESTALS --------------
 
@@ -1393,7 +2019,7 @@ COMMON_SWITCH_DOORS =
       prefab = "BARS_1",
       skin =
       {
-        bar_w="SUPPORT3", bar_f="CEIL5_2",
+        bar_w="SUPPORT3",
         line_kind=0,
       }
   },
@@ -1414,7 +2040,6 @@ COMMON_SWITCH_DOORS =
       skin =
       {
         bar_w="SUPPORT2",
-        bar_f="FLAT23",
         bar_h=64,
         line_kind=0,
       }
@@ -1425,7 +2050,6 @@ COMMON_SWITCH_DOORS =
       skin =
       {
         bar_w="SUPPORT3",
-        bar_f="CEIL5_2",
         bar_h=64,
         line_kind=0,
       }
@@ -2848,6 +3472,7 @@ COMMON_THEMES =
     },
   }, -- TECH
 
+
   HELL =
   {
     -- TODO: HELL THEME
@@ -2863,6 +3488,7 @@ COMMON_THEMES =
       skull=3.0,  vile=2.0, mancubus=2.0,
     },
   },
+
 
   URBAN =
   {
@@ -3768,9 +4394,9 @@ function Doom_make_cool_gfx()
   gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
   gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
 
-  -- blackness (BLAKWAL1)
-  gui.wad_logo_gfx("RW34_1",   "p", "BOLT", 64,128, 5)
-  gui.wad_logo_gfx("O_BLACK",  "f", "BOLT", 64,64,  5)
+---##  -- blackness (BLAKWAL1)
+---##  gui.wad_logo_gfx("RW34_1",   "p", "BOLT", 64,128, 5)
+---##  gui.wad_logo_gfx("O_BLACK",  "f", "BOLT", 64,64,  5)
 end
 
 function Doom_make_level_gfx()
@@ -3931,6 +4557,7 @@ OB_GAMES["doom1"] =
 
     error_tex  = "METAL"   or "FIREBLU1",
     error_flat = "CEIL5_1" or "SFLR6_4",
+    error_mat  = "METAL",
 
     max_level_desc = 28,
 

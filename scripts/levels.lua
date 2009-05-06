@@ -217,6 +217,8 @@ function Level_Make(L, index, NUM)
     Quest_assign()
       if gui.abort() then return "abort" end
       gui.progress(25)
+  else
+    PLAN = {}
   end
 
   gui.begin_level()

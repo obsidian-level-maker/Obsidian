@@ -1406,7 +1406,7 @@ function Layout_hallway(R)
       S.c_tex = PLAN.hall_ceil
 
       if R.hall_sky then
-        S.c_tex = PARAMS.sky_flat
+        S.is_sky = true
       end
     end
   end end -- for x, y
@@ -1641,27 +1641,28 @@ function Layout_one(R)
     local mx, my = S:mid_point()
 
     if R.purpose == "START" then
-      if R.svolume >= 24 and rand_odds(35) then
+      local angle = player_angle(S)
+      local dist = 56
+
+      if R.svolume >= 20 and rand_odds(30) then
         gui.debugf("Raising Start made\n")
 
-        local info =
+        local skin =
         {
-          t_face = { texture=S.f_tex or R.combo.floor },
-          b_face = { texture=S.f_tex or R.combo.floor },
-          w_face = { texture=S.w_tex or R.combo.wall  },
+          f_tex = S.f_tex or R.combo.floor,
+          switch_w = "SW1COMP",
         }
 
-        Build_raising_start(S, 6, z1, info)
+        Build_raising_start(S, 6, z1, skin)
+        angle = 0
 
         S.no_floor = true
         S.raising_start = true
         R.has_raising_start = true
       else
-        Build_pedestal(S, z1, "O_BOLT", "CEMENT2", 36, -8)
+        local skin = { floor="O_BOLT", x_offset=36, y_offset=-8, peg=true }
+        Build_pedestal(S, z1, skin)
       end
-
-      local angle = player_angle(S)
-      local dist = 56
 
       gui.add_entity(tostring(GAME.things["player1"].id),
                      mx, my, z1 + 35, { angle=angle })
@@ -1690,15 +1691,22 @@ function Layout_one(R)
       local dir = dir_for_wotsit(S)
 
       if R.outdoor then
-        Build_outdoor_exit_switch(S, dir, z1)
+        local skin = { podium="CEIL5_1", base="SHAWN2",
+                       switch_w="SW1COMM", exit_w="EXITSIGN" }
+
+        Build_outdoor_exit_switch(S, dir, z1, skin)
       else
-        Build_exit_pillar(S, z1)
+        local skin = { h=128, switch_w="SW1SKULL",
+                       exit_w="EXITSIGN", exit_h=16,
+                       exitside="COMPSPAN" }
+
+        Build_exit_pillar(S, z1, skin)
       end
 
     elseif R.purpose == "KEY" then
       local lp_skin =
       {
-        side_w="WOOD9", top_f="CEIL1_3",
+        wall="WOOD9", floor="CEIL1_3",
         x_offset=0, y_offset=0, peg=true,
         line_kind=23,
       }
@@ -1711,7 +1719,8 @@ function Layout_one(R)
       elseif rand_odds(10) then
         Build_lowering_pedestal(S, z, lp_skin)
       else
-        Build_pedestal(S, z1, "CEIL1_2", "METAL") -- "BLAKWAL2"
+        local skin = { floor="CEIL1_2" }
+        Build_pedestal(S, z1, skin)
       end
 
       gui.add_entity(tostring(GAME.things[R.key_item].id),
@@ -1721,7 +1730,7 @@ function Layout_one(R)
 gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       local LOCK = assert(R.lock_for_item)  -- eww
       local INFO = assert(GAME.switch_infos[R.do_switch])
-      Build_small_switch(S, dir_for_wotsit(S), z1, INFO, LOCK.tag)
+      Build_small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
 
     else
       error("Layout_one: unknown purpose! " .. tostring(R.purpose))
@@ -1741,7 +1750,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
     local lp_skin =
     {
-      side_w="PIPEWAL1", top_f="CEIL1_2",
+      wall="PIPEWAL1", floor="CEIL1_2",
       x_offset=0, y_offset=0, peg=true,
       line_kind=23,
     }
@@ -1754,7 +1763,8 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     elseif rand_odds(40) then
       Build_lowering_pedestal(S, z, lp_skin)
     else
-      Build_pedestal(S, z1, "CEIL1_2", "METAL") -- "BLAKWAL2"
+      local skin = { floor="CEIL1_2" }
+      Build_pedestal(S, z1, skin)
     end
 
     gui.add_entity(tostring(GAME.things[R.weapon].id),
@@ -2285,20 +2295,9 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
       PLAN.well_tex = rand_element(WELL_TEX)
     end
 
-    local wall_info =
-    {
-      t_face = { texture="FLOOR7_1" },
-      b_face = { texture="FLOOR7_1" },
-      w_face = { texture=PLAN.well_tex },
-    }
-    local flat_info =
-    {
-      t_face = { texture="FLAT1" },
-      b_face = { texture="FLOOR7_1" },
-      w_face = { texture="BROWN1" },
-    }
+    local skin = { wall=PLAN.well_tex, floor="FLAT1", ceil="FLOOR7_1" }
 
-    Build_stairwell(R, wall_info, flat_info)
+    Build_stairwell(R, skin)
     return
   end
 

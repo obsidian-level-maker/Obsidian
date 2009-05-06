@@ -899,22 +899,22 @@ function Rooms_border_up()
     {
       pic_w="COMPSTA1", width=128, height=52,
       x_offset=0, y_offset=0,
-      side_w="DOORSTOP", depth=8, 
-      top_f="FLAT23", light=0.8,
+      side_t="DOORSTOP", depth=8, 
+      floor="SHAWN2", light=0.8,
     }
     local compsta2 =
     {
       pic_w="COMPSTA2", width=128, height=52,
       x_offset=0, y_offset=0,
-      side_w="DOORSTOP", depth=8, 
-      top_f="FLAT23", light=0.8,
+      side_t="DOORSTOP", depth=8, 
+      floor="SHAWN2", light=0.8,
     }
     local lite5 =
     {
       count=3, gap=32,
       pic_w="LITE5", width=16, height=64,
       x_offset=0, y_offset=0,
-      side_w="DOORSTOP", top_f="FLAT23", depth=8, 
+      side_t="DOORSTOP", floor="SHAWN2", depth=8, 
       sec_kind=8, light=0.9,  -- oscillate
     }
     local liteblu4 =
@@ -922,7 +922,7 @@ function Rooms_border_up()
       count=3, gap=32,
       pic_w="LITEBLU4", width=16, height=64,
       x_offset=0, y_offset=0,
-      side_w="LITEBLU4", top_f="FLAT14", depth=8, 
+      side_t="LITEBLU4", floor="FLAT14", depth=8, 
       sec_kind=8, light=0.9,
     }
     local redwall =
@@ -930,7 +930,7 @@ function Rooms_border_up()
       count=2, gap=48,
       pic_w="REDWALL", width=16, height=128, raise=20,
       x_offset=0, y_offset=0,
-      side_w="REDWALL", top_f="FLAT5_3", depth=8, 
+      side_t="REDWALL", floor="FLAT5_3", depth=8, 
       sec_kind=8, light=0.99,
     }
     local silver3 =
@@ -938,7 +938,7 @@ function Rooms_border_up()
       count=1, gap=32,
       pic_w="SILVER3", width=64, height=96,
       x_offset=0, y_offset=16,
-      side_w="DOORSTOP", top_f="FLAT23", depth=8, 
+      side_t="DOORSTOP", floor="SHAWN2", depth=8, 
       light=0.8,
     }
     local shawn1 =
@@ -946,22 +946,22 @@ function Rooms_border_up()
       count=1,
       pic_w="SHAWN1", width=128, height=72,
       x_offset=-4, y_offset=0,
-      side_w="DOORSTOP", top_f="FLAT23", depth=8, 
+      side_t="DOORSTOP", floor="SHAWN2", depth=8, 
     }
     local pill =
     {
       count=1,
-      pic_w="CEMENT1", width=128, height=32, raise=16,
+      pic_w="O_PILL", width=128, height=32, raise=16,
       x_offset=0, y_offset=0,
-      side_w="METAL", top_f="CEIL5_2", depth=8, 
+      side_t="METAL", floor="CEIL5_2", depth=8, 
       light=0.7,
     }
     local carve =
     {
       count=1,
-      pic_w="CEMENT4", width=64, height=64,
+      pic_w="O_CARVE", width=64, height=64,
       x_offset=0, y_offset=0,
-      side_w="METAL", top_f="CEIL5_2", depth=8, 
+      side_t="METAL", floor="CEIL5_2", depth=8, 
       light=0.7,
     }
     local tekwall1 =
@@ -969,7 +969,7 @@ function Rooms_border_up()
       count=1,
       pic_w="TEKWALL1", width=160, height=80,
       x_offset=0, y_offset=24,
-      side_w="METAL", top_f="CEIL5_2", depth=8, 
+      side_t="METAL", floor="CEIL5_2", depth=8, 
       line_kind=48, -- scroll
       light=0.7,
     }
@@ -978,7 +978,7 @@ function Rooms_border_up()
       count=1,
       pic_w="TEKWALL4", width=128, height=80,
       x_offset=0, y_offset=24,
-      side_w="METAL", top_f="CEIL5_2", depth=8, 
+      side_t="METAL", floor="CEIL5_2", depth=8, 
       line_kind=48, -- scroll
       light=0.7,
     }
@@ -987,17 +987,17 @@ function Rooms_border_up()
       count=2, gap=32,
       pic_w="BRNPOIS", width=64, height=56,
       x_offset=0, y_offset=48,
-      side_w="METAL", top_f="CEIL5_2", depth=8, 
+      side_t="METAL", floor="CEIL5_2", depth=8, 
     }
     local pois2 =
     {
       count=1, gap=32,
       pic_w="GRAYPOIS", width=64, height=64,
       x_offset=0, y_offset=0,
-      side_w="DOORSTOP", top_f="FLAT23",
+      side_t="DOORSTOP", floor="SHAWN2",
       depth=8, 
     }
-    
+
     --------------------
 
     if rand_odds(sel(PLAN.has_logo,7,40)) then
@@ -1207,12 +1207,7 @@ function Room_make_ceiling(R)
     local x_dir = sel(side == 6, -1, 1)
     local y_dir = sel(side == 8, -1, 1)
 
-    local metal =
-    {
-      t_face = { texture="CEIL5_2" },
-      b_face = { texture="CEIL5_2" },
-      w_face = { texture="SUPPORT3", x_offset=0 },
-    }
+    local metal = add_pegging(get_mat("SUPPORT3"))
 
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
@@ -1431,14 +1426,15 @@ function Room_make_ceiling(R)
     end end -- for x, y
   end
 
-  local function fill_xyz(c_tex, ch)
+  local function fill_xyz(ch, is_sky, c_tex, c_light)
     for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
       local S = SEEDS[x][y][1]
       if S.room == R then
       
         S.ceil_h  = ch
+        S.is_sky  = is_sky
         S.c_tex   = c_tex
-        S.c_light = 0.75
+        S.c_light = c_light
 
       end -- if S.room == R
     end end -- for x, y
@@ -1517,7 +1513,7 @@ function Room_make_ceiling(R)
     local skin
     
     if mode == "light" then
-      skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light }
+      skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light, trim="METAL" }
     end
 
     for x = x1,x2 do for y = y1,y2 do
@@ -1530,7 +1526,7 @@ function Room_make_ceiling(R)
             Build_ceil_light(S, ceil_h, skin)
           end
         else
-          Build_cross_beam(S, dir, 64, ceil_h - 16, R.combo.beam_mat or "metal")
+          Build_cross_beam(S, dir, 64, ceil_h - 16, R.combo.beam_mat or "METAL")
         end
       end
     end end -- for x, y
@@ -1614,9 +1610,9 @@ function Room_make_ceiling(R)
           poss = poss + 1
 
           if loop == 2 then
-            local skin = { w=24, beam_w="SUPPORT2", beam_f="FLAT23", x_offset=0 }
+            local skin = { w=24, beam_w="SUPPORT2", x_offset=0 }
             if R.has_lift or (R.id % 5) == 4 then
-              skin = { w=24, beam_w="SUPPORT3", beam_f="CEIL5_2", x_offset=0 }
+              skin = { w=24, beam_w="SUPPORT3", x_offset=0 }
             end
             Build_corner_beam(S, SIDES[where], skin)
           end
@@ -1636,7 +1632,7 @@ function Room_make_ceiling(R)
     local has_sky_nb = R:has_sky_neighbor()
 
     if R.has_periph_pillars and not has_sky_nb and rand_odds(16) then
-      fill_xyz(PARAMS.sky_flat, R.ceil_h)
+      fill_xyz(R.ceil_h, true)
       R.semi_outdoor = true
       return
     end
@@ -1694,35 +1690,14 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     if nice ~= 2 then return end
 
-      local ceil_info =
-      {
-        t_face = { texture=R.combo.ceil },
-        b_face = { texture=R.combo.ceil },
-        w_face = { texture=R.combo.wall },
-      }
-
-      local sky_info =
-      {
-        t_face = { texture=PARAMS.sky_flat },
-        b_face = { texture=PARAMS.sky_flat, light=0.75 },
-        w_face = { texture=PARAMS.sky_tex },
-      }
-
-      local brown_info =
-      {
-        t_face = { texture="CEIL3_3" },
-        b_face = { texture="CEIL3_3" },
-        w_face = { texture="STARTAN2" },
-      }
+      local ceil_info  = get_mat(R.combo.ceil)
+      local sky_info   = get_sky()
+      local brown_info = get_mat("CEIL3_3")
 
       local lights = { "TLITE6_5", "TLITE6_6", "GRNLITE1", "FLAT17", "CEIL3_4" }
 
-      local light_info =
-      {
-        t_face = { texture="CEIL5_2" },
-        b_face = { texture=rand_element(lights), light=0.85 },
-        w_face = { texture="METAL" },
-      }
+      local light_info = get_mat(rand_element(lights))
+      light_info.b_face.light = 0.85
 
       -- lighting effects
       -- (They can break lifts, hence the check here)
@@ -1733,8 +1708,8 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
         end
       end
 
-    local trim   = material_to_info("metal")
-    local spokes = material_to_info("shiny")
+    local trim   = "METAL"
+    local spokes = "SHAWN2"
 
     if STYLE.lt_swapped ~= "none" then
       trim, spokes = spokes, trim
@@ -1748,7 +1723,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     end
 
     if R.cw == 1 or R.ch == 1 then
-      fill_xyz(light_info.b_face.texture, R.ceil_h + 32)
+      fill_xyz(R.ceil_h+32, false, light_info.b_face.texture, 0.75)
       return
     end
 
@@ -1906,28 +1881,6 @@ local CRATE_SKINS =
     return list
   end
 
-  local function add_crate(spot, skin)
-    spot.S.solid_corner = true
-
-    local x1 = spot.S.x2 - 32
-    local y1 = spot.S.y2 - 32
-    local x2 = x1 + 64
-    local y2 = y1 + 64
-
-    -- FIXME: move to a Build_crate() function
-    transformed_brush(nil,
-    {
-      t_face = { texture=skin.top_f },
-      b_face = { texture=skin.top_f },
-      w_face = { texture=skin.side_w, x_offset=0, y_offset=0, peg=true },
-    },
-    {
-      { x=x2, y=y1 }, { x=x2, y=y2 },
-      { x=x1, y=y2 }, { x=x1, y=y1 },
-    },
-    -EXTREME_H, spot.S.floor_h + (skin.h or 64))
-  end
-
 
   --| Room_add_crates |--
 
@@ -1956,7 +1909,9 @@ local CRATE_SKINS =
 
   for _,spot in ipairs(find_spots()) do
     if rand_odds(chance) then
-      add_crate(spot, skin)
+      spot.S.solid_corner = true
+      local z_top = spot.S.floor_h + (skin.h or 64)
+      Build_crate(spot.S.x2, spot.S.y2, z_top, skin)
     end
   end
 end
@@ -1991,19 +1946,11 @@ if idx < 1 then return end
 
 
 gui.printf("do_teleport\n")
-    transformed_brush(nil,
-    {
-      t_face = { texture="GATE3" },
-      b_face = { texture="GATE3" },
-      w_face = { texture="METAL" },
+    local gate_info = get_mat("GATE3")
+    gate_info.sec_tag = tag
 
-      sec_tag = tag,
-    },
-    {
-      { x=x2, y=y1 }, { x=x2, y=y2 },
-      { x=x1, y=y2 }, { x=x1, y=y1 },
-    },
-    -EXTREME_H, z1)
+    transformed_brush(nil, gate_info,
+        rect_coords(x1,y1, x2,y2), -EXTREME_H, z1)
 
     gui.add_entity("14", (x1+x2)/2, (y1+y2)/2, z1 + 25)
   end
@@ -2069,50 +2016,59 @@ gui.printf("do_teleport\n")
             S:neighbor(side).kind == "void")
          )
       then
-        Build_detailed_hall(S, side, z1, z2)
+        local skin = { wall=PLAN.hall_tex, trim1="GRAY7", trim2="METAL" }
+        Build_detailed_hall(S, side, z1, z2, skin)
 
         S.border[side].kind = nil
         B_kind = nil
       end
 
       if B_kind == "wall" and R.kind ~= "scenic" then
-        Build_wall(S, side, f_tex, w_tex)
-      end
-
-      if B_kind == "liquid_arch" then
-        local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
-        Build_archway(S, side, z1, z_top, f_tex, w_tex, w_tex) 
-      end
-
-      if B_kind == "picture" then
-        local B = S.border[side]
-
-        Build_picture(S, side, B.pic_skin, B.pic_z1, B.pic_z2, w_tex, f_tex)
+        Build_wall(S, side, w_tex)
       end
 
       if B_kind == "window" then
         local B = S.border[side]
+        local skin = { wall=w_tex, floor=f_tex, side_t="DOORSTOP" }
 
         Build_window(S, side, B.win_width, B.win_mid_w,
-                     B.win_z1, B.win_z2, f_tex, w_tex)
+                     B.win_z1, B.win_z2, skin)
+      end
+
+      if B_kind == "picture" then
+        local B = S.border[side]
+        B.pic_skin.wall = w_tex
+
+        Build_picture(S, side, B.pic_z1, B.pic_z2, B.pic_skin)
       end
 
       if B_kind == "fence"  then
-        Build_fence(S, side, R.fence_h or ((R.floor_h or z1)+30), f_tex, w_tex)
+        local skin = { h=30, wall=w_tex, floor=f_tex }
+        Build_fence(S, side, R.fence_h or ((R.floor_h or z1)+skin.h), skin)
       end
 
       if B_kind == "sky_fence" then
         local z = math.max(PLAN.skyfence_h, (S.room.floor_max_h or S.room.floor_h or 400) + 48)
-        Build_sky_fence(S, side, z)
+        local skin = { fence_w="BROWN144" }
+
+        Build_sky_fence(S, side, z, skin)
       end
 
       if B_kind == "arch" then
         local z = assert(S.conn and S.conn.conn_h)
+        local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t="DOORTRAK" }
 
-        Build_archway(S, side, z, z+112, f_tex, w_tex, o_tex or w_tex) 
+        Build_archway(S, side, z, z+112, skin)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
+      end
+
+      if B_kind == "liquid_arch" then
+        local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t="DOORTRAK" }
+        local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
+
+        Build_archway(S, side, z1, z_top, skin)
       end
 
       if B_kind == "door" then
@@ -2162,12 +2118,7 @@ gui.printf("do_teleport\n")
 
     if S.kind == "diagonal" then
 
-      local diag_info =
-      {
-        t_face = { texture=S.stuckie_ftex or f_tex },
-        b_face = { texture=c_tex },
-        w_face = { texture=w_tex },
-      }
+      local diag_info = get_mat(w_tex, S.stuckie_ftex, c_tex)
 
       Build_diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
 
@@ -2187,21 +2138,24 @@ gui.printf("do_teleport\n")
 
     -- CEILING
 
-    if S.kind ~= "void" and not S.no_ceil then
-      transformed_brush(nil,
-      {
-        kind = sel(c_tex == PARAMS.sky_flat, "sky", nil),
-        t_face = { texture=c_tex },
-        b_face = { texture=c_tex, light=S.c_light },
-        w_face = { texture=S.u_tex or w_tex },
-      },
-      {
-        { x=x2, y=y1 }, { x=x2, y=y2 },
-        { x=x1, y=y2 }, { x=x1, y=y1 },
-      },
-      z2, EXTREME_H)
+    -- FIXME: remove c_tex check
+    if S.kind ~= "void" and not S.no_ceil and 
+       (S.is_sky or c_tex == PARAMS.sky_flat)
+    then
 
-      if R.kind == "hallway" and PLAN.hall_lights and not R.hall_sky then
+      transformed_brush(nil, get_sky(),
+        rect_coords(x1,y1, x2,y2), z2, EXTREME_H)
+
+    elseif S.kind ~= "void" and not S.no_ceil then
+      local info = get_mat(S.u_tex or c_tex, c_tex)
+      info.b_face.light = S.c_light
+
+      transformed_brush(nil, info,
+        rect_coords(x1,y1, x2,y2), z2, EXTREME_H)
+
+
+      -- FIXME: this does not belong here
+      if R.kind == "hallway" and PLAN.hall_lights then
         local x_num, y_num = 0,0
 
         for side = 2,8,2 do
@@ -2216,7 +2170,7 @@ gui.printf("do_teleport\n")
         end
 
         if x_num == 1 and y_num == 1 then
-          Build_ceil_light(S, z2, { lite_f=PLAN.hall_lite_ftex })
+          Build_ceil_light(S, z2, { lite_f=PLAN.hall_lite_ftex, trim="METAL" })
         end
       end
     end
@@ -2258,46 +2212,13 @@ end
         w_tex = R.corner_tex
       end
 
-      transformed_brush(nil,
-      {
-        t_face = { texture=f_tex },
-        b_face = { texture=f_tex },
-        w_face = { texture=w_tex },
-      },
-      {
-        { x=x2, y=y1 }, { x=x2, y=y2 },
-        { x=x1, y=y2 }, { x=x1, y=y1 },
-      },
-      EXTREME_H, EXTREME_H);
-
-    elseif S.kind == "foobar" then
-
-      transformed_brush(nil,
-      {
-        t_face = { texture="LAVA1" },
-        b_face = { texture=f_tex },
-        w_face = { texture="DBRAIN1" },
-      },
-      {
-        { x=x2, y=y1 }, { x=x2, y=y2 },
-        { x=x1, y=y2 }, { x=x1, y=y1 },
-      },
-      -EXTREME_H, -32);
-
-      transformed_brush(nil,
-      {
-        t_face = { texture=f_tex },
-        b_face = { texture=f_tex },
-        w_face = { texture=w_tex },
-      },
-      {
-        { x=x2, y=y1 }, { x=x2, y=y2 },
-        { x=x1, y=y2 }, { x=x1, y=y1 },
-      },
-      256, EXTREME_H);
+      transformed_brush(nil, get_mat(w_tex),
+        rect_coords(x1,y1, x2,y2), EXTREME_H, EXTREME_H);
 
     elseif S.kind == "stair" then
-      Build_niche_stair(S, PLAN.step_skin)
+      local skin2 = { wall=S.room.combo.wall, floor=S.f_tex or S.room.combo.floor }
+
+      Build_niche_stair(S, PLAN.step_skin, skin2)
 
     elseif S.kind == "curve_stair" then
       Build_low_curved_stair(S, PLAN.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
@@ -2314,49 +2235,30 @@ end
 
     elseif S.kind == "liquid" then
       -- FIXME: game specific
-      local nukage =
-      {
-        t_face = { texture="NUKAGE3" },
-        b_face = { texture="NUKAGE3" },
-        w_face = { texture="SFALL3"  },  -- FIXME: DOOM2 only !!!
-        sec_kind = 16,
-      }
-      local lava =
-      {
-        t_face = { texture="LAVA1" },
-        b_face = { texture="LAVA1" },
-        w_face = { texture="ROCKRED1"  },
-        sec_kind = 16,
-      }
+      local nukage = get_mat("NUKAGE1")
+      nukage.sec_kind = 16
+
+      local lava = get_mat("LAVA1")
+      lava.sec_kind = 16
 
       transformed_brush(nil, sel(STYLE.dm_liquid == "nukage", nukage, lava),
-      {
-        { x=x2, y=y1 }, { x=x2, y=y2 },
-        { x=x1, y=y2 }, { x=x1, y=y1 },
-      },
-      -EXTREME_H, z1)
+        rect_coords(x1,y1, x2,y2), -EXTREME_H, z1)
 
     elseif not S.no_floor then
 
-      transformed_brush(nil,
-      {
-        t_face = { texture=f_tex },
-        b_face = { texture=f_tex },
-        w_face = { texture=w_tex },
-        sec_kind = sec_kind,
-      },
-      {
-        { x=x2, y=y1 }, { x=x2, y=y2 },
-        { x=x1, y=y2 }, { x=x1, y=y1 },
-      },
-      -EXTREME_H, z1)
+      local info = get_mat(S.l_tex or w_tex, f_tex)
+      info.sec_kind = sec_kind
+
+      transformed_brush(nil, info,
+        rect_coords(x1,y1, x2,y2), -EXTREME_H, z1)
     end
 
 
     -- PREFABS
 
     if S.content == "pillar" then
-      Build_pillar(S, z1, z2, S.pillar_tex)
+      local skin = { pillar=S.pillar_tex, trim1="METAL", trim2="GRAY7" }
+      Build_pillar(S, z1, z2, skin)
     end
 
 
