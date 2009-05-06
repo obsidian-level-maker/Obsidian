@@ -1706,10 +1706,12 @@ function Layout_one(R)
       local z = math.max(z1+80, R.floor_max_h+40)
       if z > z2-32 then z = z2-32 end
 
-      if rand_odds(10) then
+      if rand_odds(2) then
+        -- nothing
+      elseif rand_odds(10) then
         Build_lowering_pedestal(S, z, lp_skin)
       else
-        Build_pedestal(S, z1, "CEIL1_2", "BLAKWAL2")
+        Build_pedestal(S, z1, "CEIL1_2", "METAL") -- "BLAKWAL2"
       end
 
       gui.add_entity(tostring(GAME.things[R.key_item].id),
@@ -1752,7 +1754,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     elseif rand_odds(40) then
       Build_lowering_pedestal(S, z, lp_skin)
     else
-      Build_pedestal(S, z1, "CEIL1_2", "BLAKWAL2")
+      Build_pedestal(S, z1, "CEIL1_2", "METAL") -- "BLAKWAL2"
     end
 
     gui.add_entity(tostring(GAME.things[R.weapon].id),
