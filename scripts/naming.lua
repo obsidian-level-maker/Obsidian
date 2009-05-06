@@ -69,7 +69,7 @@ NAMING_THEMES =
         Fantastic=3, Incredible=3, Amazing=3,
         Wondrous=3,
 
-        Decrepid=20, Run_Down=10, Devastated=3,
+        Decrepit=20, Run_Down=10, Devastated=3,
         Lost=20, Ruined=10, Forgotten=15, Failed=10,
         Ravished=10, Broken=3, Dead=3,
         Dirty=10, Filthy=5, Faulty=5,
@@ -276,7 +276,7 @@ NAMING_THEMES =
 
         -- condition
         Old=15, Ancient=15, Eternal=5,
-        Decrepid=3, Desolate=10,
+        Decrepit=3, Desolate=10,
         Lost=10, Ruined=5, Forgotten=10,
         Ravished=5, Barren=5, Deadly=3,
         Dirty=5, Filthy=5, Stinking=5,
@@ -496,7 +496,7 @@ NAMING_THEMES =
 
         -- condition
         Old=10, Ancient=20, Eternal=7,
-        Decrepid=20, Lost=10, Forgotten=10,
+        Decrepit=20, Lost=10, Forgotten=10,
         Ravished=10, Barren=20, Deadly=5,
         Stagnant=10, Rancid=15, Rotten=3,
         Flooded=5, Sunken=3, Far_flung=5,
