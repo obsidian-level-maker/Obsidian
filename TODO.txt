@@ -2,10 +2,30 @@
 TODO
 ====
 
+Materials:
+
++  Build_door
++  Build_small_exit
++  Build_popup_trap
+
+
 WEBSITE: link to "browse SVN"
 
 
 +  add quantity adjustment field to MONSTER tables
+
+
++  transform for brushes : make it stateful (cf. OpenGL)
+
+-  transformed_quad() for rectangle brushes
+
+*  special theme: Psychedelic
+
+-  implement Chris's boss maps
+
+-  use 'xxx_t' instead of 'xxx_w' in skin tables
+
+-  more variety in monster density: how_many_dudes()
 
 
 General
