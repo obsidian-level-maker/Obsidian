@@ -1069,7 +1069,7 @@ function Build_niche_stair(S, skin, skin2)
     end
 
     transformed_brush(T, get_mat(w_tex, f_tex),
-      rect_coords(long-W,0, W,HF), -EXTREME_H, z1)
+      rect_coords(W,0, long-W,HF), -EXTREME_H, z1)
   else
     HF = 0
   end
