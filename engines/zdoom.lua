@@ -18,7 +18,7 @@
 
 OB_ENGINES["zdoom"] =
 {
-  label = "ZDoom 2.20",
+  label = "ZDoom 2.31",
 
   for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
 
