@@ -1593,10 +1593,23 @@ DOOM_SANITY_MAP =
   NUKAGE1 = "LAVA1",
   SFALL1  = "BFALL1",
   BFALL1  = "SFALL1",
+  WFALL1  = "LFALL1",
+  LFALL1  = "WFALL1",
+  SLIME01 = "SLIME09",
+  SLIME05 = "SLIME09",
+  SLIME09 = "SLIME01",
+
+  -- keep keyed doors recognisable
+  DOORBLU  = "DOORBLU2",
+  DOORBLU2 = "DOORBLU",
+  DOORRED  = "DOORRED2",
+  DOORRED2 = "DOORRED",
+  DOORYEL  = "DOORYEL2",
+  DOORYEL2 = "DOORYEL",
 
   -- these textures may not tile well vertically
   STEP1 = "STEP4", STEP2 = "STEP5", STEP3 = "STEP6",
-  STEP4 = "STEP1", STEP5 = "STEP2", STEP6 = "STEP3",
+  STEP4 = "STEP3", STEP5 = "STEP2", STEP6 = "STEP1",
 
   STEPLAD1 = "STEPLAD1",
   STEPTOP  = "STEPTOP",
