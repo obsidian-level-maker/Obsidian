@@ -2370,6 +2370,37 @@ end
 
 ------------------------------------------------------------
 
+OB_THEMES["dm_tech"] =
+{
+  ref = "TECH",
+  label = "Tech",
+  for_games = { doom1=1, doom2=1, freedoom=1 },
+}
+
+UNFINISHED["dm_hell"] =
+{
+  ref = "HELL",
+  label = "Hell",
+  for_games = { doom1=1, doom2=1, freedoom=1 },
+}
+
+UNFINISHED["d2_urban"] =
+{
+  ref = "URBAN",
+  label = "City",
+  for_games = { doom2=1, freedoom=1 },
+}
+
+UNFINISHED["d2_wolf"] =
+{
+  ref = "WOLF",
+  label = "Wolfenstein",
+  for_games = { doom2=1, freedoom=1 },
+}
+
+
+------------------------------------------------------------
+
 OB_GAMES["doom1"] =
 {
   label = "Doom 1",
@@ -2474,37 +2505,5 @@ OB_GAMES["doom2"] =
     describe_levels = Doom_describe_levels,
     make_level_gfx  = Doom_make_level_gfx,
   },
-}
-
-
-------------------------------------------------------------
-
-
-OB_THEMES["dm_tech"] =
-{
-  ref = "TECH",
-  label = "Tech",
-  for_games = { doom1=1, doom2=1, freedoom=1 },
-}
-
-UNFINISHED["dm_hell"] =
-{
-  ref = "HELL",
-  label = "Hell",
-  for_games = { doom1=1, doom2=1, freedoom=1 },
-}
-
-UNFINISHED["d2_urban"] =
-{
-  ref = "URBAN",
-  label = "City",
-  for_games = { doom2=1, freedoom=1 },
-}
-
-UNFINISHED["d2_wolf"] =
-{
-  ref = "WOLF",
-  label = "Wolfenstein",
-  for_games = { doom2=1, freedoom=1 },
 }
 
