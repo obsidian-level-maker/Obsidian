@@ -145,30 +145,6 @@ HERETIC_THINGS =
   env_wind   = { id=42, kind="other", r=20,h=16, pass=true },
 }
 
-HERETIC_LINE_TYPES =  -- NOTE: only includes differences to DOOM
-{
-  A1_scroll_right = { kind=99 },
-  W1_secret_exit  = { kind=105 }, -- FIXME: correct?
-
-  P1_green_door = { kind=33 },
-  PR_green_door = { kind=28 },
-}
-
-HERETIC_SECTOR_TYPES =
-{
-  secret   = { kind=9 },
-  friction = { kind=15 },
-
-  random_off = { kind=1 },
-  blink_fast = { kind=2 },
-  blink_slow = { kind=3 },
-  glow       = { kind=8 },
-
-  damage_5  = { kind=7 },
-  damage_10 = { kind=5 },
-  damage_20 = { kind=16 },
-}
-
 
 ----------------------------------------------------------------
 
