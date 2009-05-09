@@ -516,10 +516,10 @@ COMMON_MATERIALS =
   FLOOR7_2 = { "MARBLE1",  "FLOOR7_2" },
   FWATER1  = { "COMPBLUE", "FWATER1" },
 
-  GATE1    = { "GATE1",    "METAL" },
-  GATE2    = { "GATE2",    "METAL" },
-  GATE3    = { "GATE3",    "METAL" },
-  GATE4    = { "GATE4",    "METAL" },
+  GATE1    = { "METAL",    "GATE1" },
+  GATE2    = { "METAL",    "GATE2" },
+  GATE3    = { "METAL",    "GATE3" },
+  GATE4    = { "METAL",    "GATE4" },
   LAVA1    = { "ROCKRED1", "LAVA1" },
   MFLR8_1  = { "STONE2",   "MFLR8_1" },
   MFLR8_2  = { "BROWNHUG", "MFLR8_2" },
@@ -616,7 +616,7 @@ DOOM1_MATERIALS =
   FLAT5_7  = { "ASHWALL",  "FLAT5_7" },
   FLAT5_8  = { "ASHWALL",  "FLAT5_8" },
   FLOOR6_2 = { "ASHWALL",  "FLOOR6_2" },
-  MFLR8_4  = { "MFLR8_4",  "ASHWALL" },
+  MFLR8_4  = { "ASHWALL",  "MFLR8_4" },
 }
 
 
@@ -2192,6 +2192,8 @@ end
 function Doom_common_setup()
 
   GAME.player_model = COMMON_PLAYER_MODEL
+
+  GAME.sanity_map = DOOM_SANITY_MAP
 
   Game_merge_tab("things", DOOM_THINGS)
 
