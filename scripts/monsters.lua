@@ -664,7 +664,7 @@ function Monsters_in_room(R)
 
   local MONSTER_QUANTITIES =
   {
-     scarce=11, less=18, normal=25, more=33, heaps=45
+     scarce=10, less=16, normal=25, more=37, heaps=54
   }
 
   local MONSTER_TOUGHNESS =
