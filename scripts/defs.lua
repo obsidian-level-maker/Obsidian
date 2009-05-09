@@ -63,6 +63,13 @@ OB_THEMES["mixed"] =
   priority = -99,  -- bottom most
 }
 
+OB_THEMES["psycho"] =
+{
+  label = "Psychedelic",
+  priority = -98,
+}
+
+
 
 -- Room layout stuff
 SKY_H = 512

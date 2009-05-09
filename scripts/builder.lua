@@ -137,9 +137,48 @@ function transformed_brush(T, info, coords, z1, z2)
 end
 
 
-function safe_get_mat(name)
+function psychedelic_mat(name)
+  if GAME.sanity_map and GAME.sanity_map[name] then
+    return GAME.sanity_map[name]
+  end
 
---- TODO: "Psychedelic" mode
+  if not PLAN.psycho_map then
+    -- build the psychedelic mapping --
+
+    local m_before = {}
+    local m_after  = {}
+
+    for m,_ in pairs(GAME.materials) do
+      if not (GAME.sanity_map and GAME.sanity_map[m]) and
+         not (string.sub(m,1,3) == "SW1") and
+         not (string.sub(m,1,3) == "BUT")
+      then
+        table.insert(m_before, m)
+        table.insert(m_after,  m)
+      end
+    end
+
+    rand_shuffle(m_after)
+
+    PLAN.psycho_map = {}
+
+    for i = 1,#m_before do
+      PLAN.psycho_map[m_before[i]] = m_after[i]
+    end
+  end
+
+  if PLAN.psycho_map[name] then
+    return PLAN.psycho_map[name]
+  end
+
+  return name
+end
+
+
+function safe_get_mat(name)
+  if OB_CONFIG.theme == "psycho" then
+    name = psychedelic_mat(name)
+  end
 
   local mat = GAME.materials[name]
 
