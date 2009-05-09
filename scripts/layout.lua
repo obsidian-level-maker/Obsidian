@@ -1737,7 +1737,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     end
   end
 
-  local function add_weapon()
+  local function add_weapon(weapon)
     local sx, sy, S = Layout_spot_for_wotsit(R, "WEAPON")
     local z1 = S.floor_h or R.floor_h
     local z2 = S.ceil_h  or R.ceil_h or SKY_H
@@ -1767,10 +1767,10 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       Build_pedestal(S, z1, skin)
     end
 
-    gui.add_entity(tostring(GAME.things[R.weapon].id),
+    gui.add_entity(tostring(GAME.things[weapon].id),
                    mx, my, z + 35)
 
-    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", R.weapon, mx, my, z)
+    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z)
   end
 
   local function stairwell_height_diff(focus_C)
@@ -2303,7 +2303,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   if R.kind == "hallway" then
     Layout_hallway(R, focus_C.conn_h)
-    if R.weapon then add_weapon() end
+    if R.weapon then add_weapon(R.weapon) end
     return
   end
 
@@ -2350,7 +2350,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
 
   if R.purpose then add_purpose() end
-  if R.weapon  then add_weapon()  end
+  if R.weapon  then add_weapon(R.weapon)  end
 
   if R.kind == "building" then
     add_pillars()

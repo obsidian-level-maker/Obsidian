@@ -1457,7 +1457,7 @@ COMMON_MONSTERS =
 
   spectre =
   {
-    prob=4, guard_prob=11, trap_prob=61,
+    prob=4, guard_prob=11, trap_prob=61, crazy_prob=20,
     health=150, damage=25, attack="melee",
     invis=true,
   },
@@ -1480,11 +1480,13 @@ COMMON_MONSTERS =
 
   Cyberdemon =
   {
+    crazy_prob=15,
     health=4000, damage=150, attack="missile",
   },
 
   Mastermind =
   {
+    --!! crazy_prob=5,
     health=3000, damage=200, attack="hitscan",
   },
 }
@@ -1507,7 +1509,7 @@ DOOM2_MONSTERS =
 
   knight =
   {
-    prob=60, guard_prob=41, trap_prob=41, cage_prob=11,
+    prob=60, guard_prob=41, trap_prob=41, cage_prob=11, crazy_prob=40,
     health=500, damage=45, attack="missile",
   },
 
@@ -1532,7 +1534,7 @@ DOOM2_MONSTERS =
 
   pain =
   {
-    prob=6, trap_prob=11,
+    prob=6, trap_prob=11, crazy_prob=15,
     health=400, damage=50, attack="missile",
     float=true, never_promote=true,
   },
@@ -1540,6 +1542,7 @@ DOOM2_MONSTERS =
   ss_dude =
   {
     -- not generated in normal levels
+    crazy_prob=20,
     health=50, damage=15, attack="hitscan",
     give={ {ammo="bullet",count=5} },
   },
@@ -1585,7 +1588,7 @@ COMMON_WEAPONS =
 
   saw =
   {
-    pref=3, add_prob=2,  ---??? start_prob=10,
+    pref=3, add_prob=2,  start_prob=1,
     rate=8.7, damage=10, attack="melee",
   },
 
@@ -1645,7 +1648,7 @@ COMMON_WEAPONS =
 
   bfg =
   {
-    pref=30, add_prob=25,
+    pref=30, add_prob=25, start_prob=0.1,
     rate=0.8, damage=300, attack="missile", splash={60,45,30,30,20,10},
     ammo="cell", per=40,
     give={ {ammo="cell",count=40} },

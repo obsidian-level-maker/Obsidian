@@ -797,6 +797,14 @@ function Quest_add_weapons()
     for name,info in pairs(GAME.weapons) do
       if info.start_prob then
         name_tab[name] = info.start_prob
+
+        if OB_CONFIG.mons == "crazy" then
+          if info.attack == "melee" then
+            name_tab[name] = nil
+          else
+            name_tab[name] = 50
+          end
+        end
       end
     end
 

@@ -664,7 +664,7 @@ function Monsters_in_room(R)
 
   local MONSTER_QUANTITIES =
   {
-     scarce=10, less=16, normal=25, more=37, heaps=54
+     scarce=10, less=16, normal=25, more=37, heaps=55, crazy=60,
   }
 
   local MONSTER_TOUGHNESS =
@@ -776,14 +776,52 @@ function Monsters_in_room(R)
       num = num + 1
     end
 
-    ---  if fp >= 40 and rand_odds(bump_prob / 4) then
-    ---    num = num + 1
-    ---  end
-
     return num
   end
 
+  local function crazy_monster_palette()
+    local size = (R.tw or R.sw) + (R.th or R.sh)
+    local num_kinds = int(size / 2)
+
+    local list = {}
+
+    for name,info in pairs(GAME.monsters) do
+      local prob = info.crazy_prob or info.prob
+
+      if prob and LEVEL.monster_prefs then
+        prob = prob * (LEVEL.monster_prefs[name] or 1)
+      end
+
+      if prob and prob > 0 then
+        list[name] = prob
+      end
+    end
+
+    assert(not table_empty(list))
+
+    local palette = {}
+
+    gui.debugf("Monster palette: (%d kinds)\n", num_kinds)
+
+    for i = 1,num_kinds do
+      local mon = rand_key_by_probs(list)
+      palette[mon] = list[mon]
+
+      gui.debugf("  #%d %s\n", i, mon)
+      PLAN.mon_stats[mon] = (PLAN.mon_stats[mon] or 0) + 1
+
+      list[mon] = nil
+      if table_empty(list) then break; end
+    end
+
+    return palette
+  end
+
   local function select_monsters(toughness)
+    if OB_CONFIG.mons == "crazy" then
+      return crazy_monster_palette()
+    end
+
     -- FIXME: guard monsters !!!
 
     local fp = Player_calc_firepower()
@@ -827,7 +865,7 @@ function Monsters_in_room(R)
 
     for i = 1,num_kinds do
       local mon = rand_key_by_probs(list)
-      palette[mon] = list[mon]  --- GAME.monsters[mon].prob
+      palette[mon] = list[mon]
 
       gui.debugf("  #%d %s\n", i, mon)
       PLAN.mon_stats[mon] = (PLAN.mon_stats[mon] or 0) + 1
@@ -1126,6 +1164,10 @@ function Monsters_in_room(R)
 
     local qty = MONSTER_QUANTITIES[OB_CONFIG.mons] or
                 PLAN.mixed_mons_qty  -- the "mixed" setting
+
+    if OB_CONFIG.mons == "crazy" then
+      qty = rand_irange(20,80)
+    end
 
     local barrel_chance = sel(R.outdoor, 2, 20)
     if R.kind == "hallway" then barrel_chance = 5 end
