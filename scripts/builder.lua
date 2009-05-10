@@ -1095,7 +1095,7 @@ function Build_niche_stair(S, skin, skin2)
     rect_coords(long-W,0, long,deep), -EXTREME_H, z2)
 
   transformed_brush(T, niche_info,
-    rect_coords(long-W,deep-HB, long,deep), -EXTREME_H, z2)
+    rect_coords(W,deep-HB, long-W,deep), -EXTREME_H, z2)
 
 
   if S.stair_z1 > S.stair_z2 then
