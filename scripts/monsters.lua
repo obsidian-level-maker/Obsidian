@@ -1166,7 +1166,7 @@ function Monsters_in_room(R)
                 PLAN.mixed_mons_qty  -- the "mixed" setting
 
     if OB_CONFIG.mons == "crazy" then
-      qty = rand_irange(20,80)
+      qty = 10 * rand_index_by_probs { 1,2,5, 7,7,7, 5,2,1 }
     end
 
     local barrel_chance = sel(R.outdoor, 2, 20)
