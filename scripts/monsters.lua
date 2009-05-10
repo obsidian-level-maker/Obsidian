@@ -1029,19 +1029,15 @@ function Monsters_in_room(R)
     count = count * (qty / 100.0)
 
     -- adjust quantity based on monster's health
-    if info.health > PARAM.mon_hard_health then
-      count = count / math.sqrt(info.health / PARAM.mon_hard_health)
+    if info.density then
+      count = count * info.density
     end
-
-    count = math.max(1, int(count))
-
+ 
     -- some random variation
-    if count >= 3 then
-      local diff = int((count+1) / 4)
-      count = count + rand_irange(-diff,diff)
-    end
+    count = count * rand_range(MON_VARIATION_LOW, MON_VARIATION_HIGH)
+    count = count + gui.random() ^ 2
 
-    return count
+    return math.max(1, int(count))
   end
 
   local function monster_angle(S)
@@ -1155,7 +1151,7 @@ function Monsters_in_room(R)
                 PLAN.mixed_mons_qty  -- the "mixed" setting
 
     if OB_CONFIG.mons == "crazy" then
-      qty = 10 * rand_index_by_probs { 0,1,4, 7,7,7, 4,2,1 }
+      qty = rand_irange(30,80)
     end
 
     local barrel_chance = sel(R.outdoor, 2, 20)

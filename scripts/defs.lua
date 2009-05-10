@@ -91,13 +91,16 @@ BIG_ROOM_TABLE =
 
 MONSTER_QUANTITIES =
 {
-  scarce=10, less=16, normal=25, more=37, heaps=55
+  scarce=10, less=18, normal=27, more=40, heaps=60
 }
 
 MONSTER_TOUGHNESS =
 {
   scarce=0.8, less=0.9, normal=1.0, more=1.1, heaps=1.2
 }
+
+MON_VARIATION_LOW  = 0.5
+MON_VARIATION_HIGH = 1.5
 
 
 -- Fight Simulator constants and tables

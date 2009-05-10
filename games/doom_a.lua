@@ -1447,7 +1447,7 @@ COMMON_MONSTERS =
   {
     prob=20, trap_prob=11, cage_prob=11,
     health=100, damage=7, attack="melee",
-    float=true,
+    density=0.7, float=true,
   },
 
   demon =
@@ -1467,13 +1467,14 @@ COMMON_MONSTERS =
   {
     prob=40, guard_prob=61, trap_prob=21, cage_prob=21,
     health=400, damage=35, attack="missile",
-    float=true,
+    density=0.6, float=true,
   },
 
   baron =
   {
     prob=20, guard_prob=11, trap_prob=11, cage_prob=3,
     health=1000, damage=45, attack="missile",
+    density=0.3,
   },
 
 
@@ -1483,12 +1484,14 @@ COMMON_MONSTERS =
   {
     crazy_prob=15,
     health=4000, damage=150, attack="missile",
+    density=0.1,
   },
 
   Mastermind =
   {
     --!! crazy_prob=5,
     health=3000, damage=200, attack="hitscan",
+    density=0.1,
   },
 }
 
@@ -1506,38 +1509,42 @@ DOOM2_MONSTERS =
   {
     prob=44, guard_prob=41, trap_prob=41, cage_prob=51,
     health=300, damage=70, attack="missile",
+    density=0.6,
   },
 
   knight =
   {
     prob=60, guard_prob=41, trap_prob=41, cage_prob=11, crazy_prob=40,
     health=500, damage=45, attack="missile",
+    density=0.4,
   },
 
   mancubus =
   {
     prob=33, guard_prob=41, trap_prob=41, cage_prob=11,
     health=600, damage=70, attack="missile",
+    density=0.4,
   },
 
   arach =
   {
     prob=25, guard_prob=21, trap_prob=21, cage_prob=11,
     health=500, damage=70, attack="missile",
+    density=0.5,
   },
 
   vile =
   {
     prob=12, guard_prob=11, trap_prob=31, cage_prob=21,
     health=700, damage=40, attack="hitscan",  ---??? no_dist=true,
-    never_promote=true,
+    density=0.2, never_promote=true,
   },
 
   pain =
   {
     prob=6, trap_prob=11, crazy_prob=15,
     health=400, damage=50, attack="missile",
-    float=true, never_promote=true,
+    density=0.2,never_promote=true, float=true, 
   },
 
   ss_dude =
@@ -2383,7 +2390,6 @@ OB_GAMES["doom1"] =
     skip_monsters = { 2,3 },
 
     mon_time_max = 12,
-    mon_hard_health = 200,
 
     mon_damage_max  = 200,
     mon_damage_high = 100,
