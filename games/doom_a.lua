@@ -817,7 +817,7 @@ DOOM2_MATERIALS =
   GRASS2   = { "ZIMMER2",  "GRASS2"   },
   GRNROCK  = { "ROCK2",    "GRNROCK" },
   GRNLITE1 = { "TEKGREN2", "GRNLITE1" },
-  MFLR8_4  = { "MFLR8_4",  "ASHWALL" },
+  MFLR8_4  = { "ASHWALL2", "MFLR8_4" },
   NUKAGE1  = { "SFALL1",   "NUKAGE1" },
 
   RROCK01  = { "CRACKLE2", "RROCK01" },
@@ -912,6 +912,7 @@ DOOM_SANITY_MAP =
   DOORRED2 = "DOORRED",
   DOORYEL  = "DOORYEL2",
   DOORYEL2 = "DOORYEL",
+  EXITSIGN = "EXITSIGN",
 
   -- these textures may not tile well vertically
   STEP1 = "STEP4", STEP2 = "STEP5", STEP3 = "STEP6",
