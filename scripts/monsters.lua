@@ -662,17 +662,6 @@ end
 
 function Monsters_in_room(R)
 
-  local MONSTER_QUANTITIES =
-  {
-     scarce=10, less=16, normal=25, more=37, heaps=55,
-  }
-
-  local MONSTER_TOUGHNESS =
-  {
-    scarce=0.8, less=0.9, normal=1.0, more=1.1, heaps=1.2
-  }
-
-
   local function is_big(mon)
     return GAME.things[mon].r > 34
   end
@@ -1166,7 +1155,7 @@ function Monsters_in_room(R)
                 PLAN.mixed_mons_qty  -- the "mixed" setting
 
     if OB_CONFIG.mons == "crazy" then
-      qty = 10 * rand_index_by_probs { 1,2,5, 7,7,7, 5,2,1 }
+      qty = 10 * rand_index_by_probs { 0,1,4, 7,7,7, 4,2,1 }
     end
 
     local barrel_chance = sel(R.outdoor, 2, 20)

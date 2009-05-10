@@ -87,6 +87,19 @@ BIG_ROOM_TABLE =
 }
 
 
+-- Monster stuff
+
+MONSTER_QUANTITIES =
+{
+  scarce=10, less=16, normal=25, more=37, heaps=55
+}
+
+MONSTER_TOUGHNESS =
+{
+  scarce=0.8, less=0.9, normal=1.0, more=1.1, heaps=1.2
+}
+
+
 -- Fight Simulator constants and tables
 
 HEALTH_AMMO_ADJUSTS =
