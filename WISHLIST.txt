@@ -2,6 +2,7 @@
 WISH-LIST
 =========
 
+CSG IDEA: clipping rectangles (typically a room)
 
 Monsters:
   +  add guard monsters first, seeds around the purpose

@@ -2,6 +2,12 @@
 TODO
 ====
 
+!! TRANSFORM changes
+
++  remaining uses of transformed_brush
++  add a Trans_entity() function
+
+
 Materials:
 
 +  Build_door
@@ -9,23 +15,14 @@ Materials:
 +  Build_popup_trap
 
 
-WEBSITE: link to "browse SVN"
+upload WEBSITE change
 
-
-+  add quantity adjustment field to MONSTER tables
-
-
-+  transform for brushes : make it stateful (cf. OpenGL)
-
--  transformed_quad() for rectangle brushes
-
-*  special theme: Psychedelic
 
 -  implement Chris's boss maps
 
--  use 'xxx_t' instead of 'xxx_w' in skin tables
+?  use 'xxx_t' instead of 'xxx_w' in skin tables
 
--  more variety in monster density: how_many_dudes()
+-  Psychedelic theme: affect skies too
 
 
 General
@@ -45,11 +42,8 @@ CSG CODE:
 
 +   DOOM: merge linedefs where possible
 
-?   generalize the "CloseDoor" system with brush Y deltas?
-    Could also be (ab)used to easily make inset features.
-
-
-CSG IDEA: clipping rectangles (typically a room)
+DONE: generalize the "CloseDoor" system with brush Y deltas?
+      Could also be (ab)used to easily make inset features.
 
 
 Quake II:
@@ -73,4 +67,19 @@ q1_nodes:
   ?? move floor/ceiling faces into leaf.faces (instead of leaf.floor)
 
 
+
+CHANGES (since 3.39)
+====================
+
++ fixed fight sim (too much chaingun/plasma ammo)
+- fixed non-working lifts and pedestals
+- fixed rare bug: levels reduced to 2 rooms
+
++ new Material system
+- reorganised DOOM code : doom_a and doom_b 
+- new just-for-kicks theme 'Psychedelic'
+- new choice for Monsters: 'Crazy' 
+
+- added 'density' field to MONSTER tables.
+>> transform stuff
 
