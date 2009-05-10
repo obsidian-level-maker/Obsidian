@@ -1230,9 +1230,7 @@ function Room_make_ceiling(R)
         local px = sel(x_dir < 0, S.x1, S.x2)
         local py = sel(y_dir < 0, S.y1, S.y2)
 
-        transformed_brush(nil, metal,
-            rect_coords(px-w, py-w, px+w, py+w),
-            -EXTREME_H, EXTREME_H)
+        Trans_quad(metal, px-w, py-w, px+w, py+w, -EXTREME_H, EXTREME_H)
         
         R.has_periph_pillars = true
 
@@ -1949,8 +1947,7 @@ gui.printf("do_teleport\n")
     local gate_info = get_mat("GATE3")
     gate_info.sec_tag = tag
 
-    transformed_brush(nil, gate_info,
-        rect_coords(x1,y1, x2,y2), -EXTREME_H, z1)
+    Trans_quad(gate_info, x1,y1, x2,y2, -EXTREME_H, z1)
 
     gui.add_entity("14", (x1+x2)/2, (y1+y2)/2, z1 + 25)
   end
@@ -2144,15 +2141,13 @@ gui.printf("do_teleport\n")
        (S.is_sky or c_tex == PARAM.sky_flat)
     then
 
-      transformed_brush(nil, get_sky(),
-        rect_coords(x1,y1, x2,y2), z2, EXTREME_H)
+      Trans_quad(get_sky(), x1,y1, x2,y2, z2, EXTREME_H)
 
     elseif S.kind ~= "void" and not S.no_ceil then
       local info = get_mat(S.u_tex or c_tex, c_tex)
       info.b_face.light = S.c_light
 
-      transformed_brush(nil, info,
-        rect_coords(x1,y1, x2,y2), z2, EXTREME_H)
+      Trans_quad(info, x1,y1, x2,y2, z2, EXTREME_H)
 
 
       -- FIXME: this does not belong here
@@ -2213,8 +2208,7 @@ end
         w_tex = R.corner_tex
       end
 
-      transformed_brush(nil, get_mat(w_tex),
-        rect_coords(x1,y1, x2,y2), EXTREME_H, EXTREME_H);
+      Trans_quad(get_mat(w_tex), x1,y1, x2,y2, EXTREME_H, EXTREME_H);
 
     elseif S.kind == "stair" then
       local skin2 = { wall=S.room.combo.wall, floor=S.f_tex or S.room.combo.floor }
@@ -2242,16 +2236,15 @@ end
       local lava = get_mat("LAVA1")
       lava.sec_kind = 16
 
-      transformed_brush(nil, sel(STYLE.dm_liquid == "nukage", nukage, lava),
-        rect_coords(x1,y1, x2,y2), -EXTREME_H, z1)
+      Trans_quad(sel(STYLE.dm_liquid == "nukage", nukage, lava),
+        x1,y1, x2,y2, -EXTREME_H, z1)
 
     elseif not S.no_floor then
 
       local info = get_mat(S.l_tex or w_tex, f_tex)
       info.sec_kind = sec_kind
 
-      transformed_brush(nil, info,
-        rect_coords(x1,y1, x2,y2), -EXTREME_H, z1)
+      Trans_quad(info, x1,y1, x2,y2, -EXTREME_H, z1)
     end
 
 

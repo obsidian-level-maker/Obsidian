@@ -21,78 +21,72 @@ require 'util'
 require 'seeds'
 
 
---[[
-class TRANSFORM
+TRANSFORM =
 {
-  mirror_x : number  -- flip horizontally (about given X)
-  mirror_y : number  -- flip vertically (about given Y)
+  -- mirror_x  : flip horizontally (about given X)
+  -- mirror_y  : flip vertically (about given Y)
 
-  rotate   : number   -- angle in degrees, counter-clockwise
+  -- scale_x   : scaling factor
+  -- scale_y
 
-  dx : number   -- translation, i.e. new origin coords
-  dy : number   --
+  -- rotate    : angle in degrees, counter-clockwise,
+  --             rotates about the origin
+
+  -- add_x     : translation, i.e. new origin coords
+  -- add_y
 }
---]]
 
-function transformed_coord(T, x, y)
 
-  if not T then T = {} end
+function Trans_clear()
+  TRANSFORM = {}
+end
+
+-- function Trans_
+
+
+function Trans_coord(x, y)
 
   -- handle mirroring first
-  if T.mirror_x then
-    x = T.mirror_x * 2 - x
-  end
+  if TRANSFORM.mirror_x then x = TRANSFORM.mirror_x * 2 - x end
+  if TRANSFORM.mirror_y then y = TRANSFORM.mirror_y * 2 - y end
 
-  if T.mirror_y then
-    y = T.mirror_y * 2 - y
-  end
+  -- handle scaling
+  x = x * (TRANSFORM.scale_x or 1)
+  y = y * (TRANSFORM.scale_y or 1)
 
   -- handle rotation
-  if T.rotate and T.rotate ~= 0 then
-    local cos_R = math.cos(T.rotate * math.pi / 180.0)
-    local sin_R = math.sin(T.rotate * math.pi / 180.0)
+  if TRANSFORM.rotate then
+    local cos_R = math.cos(TRANSFORM.rotate * math.pi / 180.0)
+    local sin_R = math.sin(TRANSFORM.rotate * math.pi / 180.0)
 
     x, y = x * cos_R - y * sin_R, y * cos_R + x * sin_R
   end
 
   -- handle translation last
-  if T.dx or T.dy then
-    x = x + (T.dx or 0)
-    y = y + (T.dy or 0)
-  end
+  x = x + (TRANSFORM.add_x or 0)
+  y = y + (TRANSFORM.add_y or 0)
 
   return x, y
 end
 
 
-function transformed_brush(T, info, coords, z1, z2)
-
-  if not T then T = {} end
-
-  coords = deep_copy(coords)
-
-  -- TODO !!!  apply transforms to slopes (z1 or z2 == table)
-
-  -- handle mirroring first
+function Trans_brush(info, coords, z1, z2)
+  -- check mirroring
   local reverse_it = false
 
-  if T.mirror_x then
-    for _,C in ipairs(coords) do
-      C.x = T.mirror_x * 2 - C.x
-    end
-    reverse_it = not reverse_it
-  end
+  if TRANSFORM.mirror_x then reverse_it = not reverse_it end
+  if TRANSFORM.mirror_y then reverse_it = not reverse_it end
 
-  if T.mirror_y then
-    for _,C in ipairs(coords) do
-      C.y = T.mirror_y * 2 - C.y
-    end
-    reverse_it = not reverse_it
+  -- apply transform
+  coords = deep_copy(coords)
+
+  for _,C in ipairs(coords) do
+    C.x, C.y = Trans_coord(C.x, C.y)
   end
 
   if reverse_it then
     -- make sure side properties (w_face, line_kind, etc)
-    -- are associated with the correct vertex
+    -- are associated with the correct vertex....
     local x1 = coords[1].x
     local y1 = coords[1].y
 
@@ -106,34 +100,30 @@ function transformed_brush(T, info, coords, z1, z2)
 
     table_reverse(coords)
   end
+  
 
-  -- handle rotation
-  if T.rotate and T.rotate ~= 0 then
-    local cos_R = math.cos(T.rotate * math.pi / 180.0)
-    local sin_R = math.sin(T.rotate * math.pi / 180.0)
-
-    for _,C in ipairs(coords) do
-      C.x, C.y = C.x * cos_R - C.y * sin_R, C.y * cos_R + C.x * sin_R
-    end
-  end
-
-  -- handle translation last
-  if T.dx or T.dy then
-    for _,C in ipairs(coords) do
-      C.x = C.x + (T.dx or 0)
-      C.y = C.y + (T.dy or 0)
-    end
-  end
-
-  --[[
+--[[
   gui.debugf("{\n")
   for _,C in ipairs(coords) do
     gui.debugf("  (%1.3f %1.3f)\n", C.x, C.y)
   end
   gui.debugf("}\n")
-  --]]
+--]]
+
+  -- TODO !!!  transform slope coords (z1 or z2 == table)
 
   gui.add_brush(info, coords, z1, z2)
+end
+
+-- !!!!!!! TEMP SHITE
+function transformed_brush(T, info, coords, z1, z2)
+  TRANSFORM = T
+  Trans_brush(info, coords, z1, z2)
+  Trans_clear()
+end
+
+function Trans_quad(info, x1,y1, x2,y2, z1,z2)
+  Trans_brush(info, rect_coords(x1,y1, x2,y2), z1,z2)
 end
 
 
@@ -245,10 +235,10 @@ function get_transform_for_seed_side(S, side, thick)
   if side == 4 then T.rotate = 270 end
   if side == 6 then T.rotate =  90 end
 
-  if side == 2 then T.dx, T.dy = S.x1, S.y1 end
-  if side == 4 then T.dx, T.dy = S.x1, S.y2 end
-  if side == 6 then T.dx, T.dy = S.x2, S.y1 end
-  if side == 8 then T.dx, T.dy = S.x2, S.y2 end
+  if side == 2 then T.add_x, T.add_y = S.x1, S.y1 end
+  if side == 4 then T.add_x, T.add_y = S.x1, S.y2 end
+  if side == 6 then T.add_x, T.add_y = S.x2, S.y1 end
+  if side == 8 then T.add_x, T.add_y = S.x2, S.y2 end
 
   return T, PARAM.seed_size, thick
 end
@@ -256,11 +246,11 @@ end
 function get_transform_for_seed_center(S)
   local T = { }
 
-  T.dx = S.x1 + S.thick[4]
-  T.dy = S.y1 + S.thick[2]
+  T.add_x = S.x1 + S.thick[4]
+  T.add_y = S.y1 + S.thick[2]
 
-  local long = S.x2 - S.thick[6] - T.dx
-  local deep = S.y2 - S.thick[8] - T.dy
+  local long = S.x2 - S.thick[6] - T.add_x
+  local deep = S.y2 - S.thick[8] - T.add_y
 
   return T, long, deep
 end
@@ -401,13 +391,13 @@ function Build_sky_fence(S, side, z_top, z_low, skin)
     { x=sx1, y=sy2 }, { x=sx1, y=sy1 },
   }
 
-  transformed_brush(nil, wall_info, w_coords, -EXTREME_H, z_top)
-  transformed_brush(nil, wall_info, s_coords, -EXTREME_H, z_low)
+  Trans_brush(wall_info, w_coords, -EXTREME_H, z_top)
+  Trans_brush(wall_info, s_coords, -EXTREME_H, z_low)
 
   sky_back.delta_z = (z_low+4) - (SKY_H-2)
 
-  transformed_brush(nil, sky_info, w_coords, SKY_H,   EXTREME_H)
-  transformed_brush(nil, sky_back, s_coords, SKY_H-2, EXTREME_H)
+  Trans_brush(sky_info, w_coords, SKY_H,   EXTREME_H)
+  Trans_brush(sky_back, s_coords, SKY_H-2, EXTREME_H)
 end
 
 
@@ -649,7 +639,7 @@ function Build_ceil_light(S, z2, skin)
   local light_info = get_mat(skin.lite_f)
   light_info.b_face.light = 0.90
 
-  transformed_brush(nil, light_info,
+  Trans_brush(light_info,
   {
     { x = mx+w, y = my-h },
     { x = mx+w, y = my+h },
@@ -662,7 +652,7 @@ function Build_ceil_light(S, z2, skin)
   local trim_info = get_mat(skin.trim)
   trim_info.b_face.light = 0.72
 
-  transformed_brush(nil, trim_info,
+  Trans_brush(trim_info,
   {
     { x = mx-w,     y = my-(h+8) },
     { x = mx-w,     y = my+(h+8) },
@@ -671,7 +661,7 @@ function Build_ceil_light(S, z2, skin)
   },
   z2-16, EXTREME_H)
 
-  transformed_brush(nil, trim_info,
+  Trans_brush(trim_info,
   {
     { x = mx+(w+8), y = my-(h+8) },
     { x = mx+(w+8), y = my+(h+8) },
@@ -680,7 +670,7 @@ function Build_ceil_light(S, z2, skin)
   },
   z2-16, EXTREME_H)
 
-  transformed_brush(nil, trim_info,
+  Trans_brush(trim_info,
   {
     { x = mx+(w+8), y = my-(h+8) },
     { x = mx+(w+8), y = my-h },
@@ -689,7 +679,7 @@ function Build_ceil_light(S, z2, skin)
   },
   z2-16, EXTREME_H)
 
-  transformed_brush(nil, trim_info,
+  Trans_brush(trim_info,
   {
     { x = mx+(w+8), y = my+h },
     { x = mx+(w+8), y = my+(h+8) },
@@ -701,7 +691,7 @@ function Build_ceil_light(S, z2, skin)
 
 --[[ connecting spokes....
 
-  transformed_brush(nil, trim_info,
+  Trans_brush(trim_info,
   {
     { x = mx+4, y = my+40 },
     { x = mx+4, y = S.y2  },
@@ -710,7 +700,7 @@ function Build_ceil_light(S, z2, skin)
   },
   z2-10, EXTREME_H)
 
-  transformed_brush(nil, trim_info,
+  Trans_brush(trim_info,
   {
     { x = mx+4, y = S.y1  },
     { x = mx+4, y = my-40 },
@@ -719,7 +709,7 @@ function Build_ceil_light(S, z2, skin)
   },
   z2-10, EXTREME_H)
 
-  transformed_brush(nil, trim_info,
+  Trans_brush(trim_info,
   {
     { x = mx-40, y = my-4, },
     { x = mx-40, y = my+4, },
@@ -728,7 +718,7 @@ function Build_ceil_light(S, z2, skin)
   },
   z2-10, EXTREME_H)
 
-  transformed_brush(nil, trim_info,
+  Trans_brush(trim_info,
   {
     { x = S.x2 , y = my-4, },
     { x = S.x2 , y = my+4, },
@@ -780,22 +770,22 @@ function Build_detailed_hall(S, side, z1, z2, skin)
 
 
   if PLAN.hall_trim then
-    transformed_brush(nil, get_mat(skin.trim2),
+    Trans_brush(get_mat(skin.trim2),
         get_hall_coords(32, 8), -EXTREME_H, z1 + 32)
 
-    transformed_brush(nil, get_mat(skin.trim2),
+    Trans_brush(get_mat(skin.trim2),
         get_hall_coords(32, 8), z2 - 32, EXTREME_H)
   end
 
 
-  transformed_brush(nil, get_mat(skin.trim1),
+  Trans_brush(get_mat(skin.trim1),
       get_hall_coords(64, 8), -EXTREME_H, z1 + 6)
 
-  transformed_brush(nil, get_mat(skin.trim1),
+  Trans_brush(get_mat(skin.trim1),
       get_hall_coords(64, 8), z2 - 6, EXTREME_H)
 
 
-  transformed_brush(nil, get_mat(skin.wall),
+  Trans_brush(get_mat(skin.wall),
       get_hall_coords(24, 0), -EXTREME_H, EXTREME_H)
 
 
@@ -842,16 +832,16 @@ function Build_weird_hall(S, side, z1, z2)
 
   local info = get_mat("SHAWN2")
 
-  transformed_brush(nil, info, get_hall_coords(24), -EXTREME_H, EXTREME_H)
+  Trans_brush(info, get_hall_coords(24), -EXTREME_H, EXTREME_H)
 
-  transformed_brush(nil, info, get_hall_coords(32), -EXTREME_H, z1 + 32)
-  transformed_brush(nil, info, get_hall_coords(32), z2 - 32, EXTREME_H)
+  Trans_brush(info, get_hall_coords(32), -EXTREME_H, z1 + 32)
+  Trans_brush(info, get_hall_coords(32), z2 - 32, EXTREME_H)
 
-  transformed_brush(nil, info, get_hall_coords(48), -EXTREME_H, z1 + 18)
-  transformed_brush(nil, info, get_hall_coords(48), z2 - 18, EXTREME_H)
+  Trans_brush(info, get_hall_coords(48), -EXTREME_H, z1 + 18)
+  Trans_brush(info, get_hall_coords(48), z2 - 18, EXTREME_H)
 
-  transformed_brush(nil, info, get_hall_coords(64), -EXTREME_H, z1 + 6)
-  transformed_brush(nil, info, get_hall_coords(64), z2 - 6, EXTREME_H)
+  Trans_brush(info, get_hall_coords(64), -EXTREME_H, z1 + 6)
+  Trans_brush(info, get_hall_coords(64), z2 - 6, EXTREME_H)
 
 end
 
@@ -878,7 +868,7 @@ function Build_diagonal(S, side, info, floor_h, ceil_h)
   local y2 = S.y2 - get_thick(8)
 
 
-  transformed_brush(nil, info,
+  Trans_brush(info,
       diagonal_coords(side,x1,y1,x2,y2),
       ceil_h or -EXTREME_H, floor_h or EXTREME_H)
 end
@@ -892,7 +882,7 @@ function Build_arrow(S, dir, f_h)
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_delta(rotate_cw90(dir))
 
-  transformed_brush(nil, get_mat("FWATER1"),
+  Trans_brush(get_mat("FWATER1"),
   {
     { x = mx - ax*20,  y = my - ay * 20  },
     { x = mx + ax*20,  y = my + ay * 20  },
@@ -973,13 +963,13 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
     local f_h = x_h + (y_h - x_h) * (i-1) / (steps-1)
     local c_h = f_h + gap_h
 
-    transformed_brush(nil, wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -EXTREME_H,EXTREME_H)
-    transformed_brush(nil, wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -EXTREME_H,EXTREME_H)
+    Trans_brush(wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -EXTREME_H,EXTREME_H)
+    Trans_brush(wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -EXTREME_H,EXTREME_H)
 
     local coords = arc_coords(p0,p1, dx1,dx2, dy1,dy2)
 
-    transformed_brush(nil, floor_info, coords, -EXTREME_H, f_h)
-    transformed_brush(nil, ceil_info,  coords, c_h, EXTREME_H)
+    Trans_brush(floor_info, coords, -EXTREME_H, f_h)
+    Trans_brush(ceil_info,  coords, c_h, EXTREME_H)
   end
 end
 
@@ -1010,7 +1000,7 @@ function Build_ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
     bx3 = int(bx3) ; tx3 = int(tx3)
     bx4 = int(bx4) ; tx4 = int(tx4)
 
-    transformed_brush(nil, skin,
+    Trans_brush(skin,
     {
       { x=bx4, y=y1 },
       { x=tx4, y=y2 },
@@ -1048,7 +1038,7 @@ function Build_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
     ly3 = int(ly3) ; ry3 = int(ry3)
     ly4 = int(ly4) ; ry4 = int(ry4)
 
-    transformed_brush(nil, skin,
+    Trans_brush(skin,
     {
       { x=x2, y=ry3 },
       { x=x2, y=ry4 },
@@ -1410,7 +1400,7 @@ gui.debugf("Build_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, c
     nx2 = int(nx2) ; ny2 = int(ny2)
     z   = int(z)
 
-    transformed_brush(nil, info,
+    Trans_brush(info,
     {
       { x=nx2, y=ny1 },
       { x=nx2, y=ny2 },
@@ -1486,12 +1476,12 @@ function Build_lift(S, skin, tag)
 
   lift_info.sec_tag = tag
 
-  transformed_brush(nil, lift_info, coords, -EXTREME_H, high_z - 8)
+  Trans_brush(lift_info, coords, -EXTREME_H, high_z - 8)
 
 
   local front_coords = get_wall_coords(S, 10-side, 128)
 
-  transformed_brush(nil, get_mat(w_tex, f_tex),
+  Trans_brush(get_mat(w_tex, f_tex),
     front_coords, -EXTREME_H, low_z);
 end
 
@@ -1513,7 +1503,7 @@ function Build_pillar(S, z1, z2, skin)
   local my = int((S.y1 + S.y2)/2)
   local mz = int((z1 + z2)/2)
 
-  transformed_brush(nil, add_pegging(get_mat(skin.pillar)),
+  Trans_brush(add_pegging(get_mat(skin.pillar)),
   {
     { x=mx+32, y=my-32 }, { x=mx+32, y=my+32 },
     { x=mx-32, y=my+32 }, { x=mx-32, y=my-32 },
@@ -1521,7 +1511,7 @@ function Build_pillar(S, z1, z2, skin)
   -EXTREME_H, EXTREME_H)
 
   for pass = 1,2 do
-    transformed_brush(nil, get_mat(skin.trim2),
+    Trans_brush(get_mat(skin.trim2),
     {
       { x=mx+40, y=my-40 }, { x=mx+40, y=my+40 },
       { x=mx-40, y=my+40 }, { x=mx-40, y=my-40 },
@@ -1530,7 +1520,7 @@ function Build_pillar(S, z1, z2, skin)
     sel(pass == 2,  EXTREME_H, z1+32)
     )
 
-    transformed_brush(nil, get_mat(skin.trim1),
+    Trans_brush(get_mat(skin.trim1),
     {
       { x=mx-40, y=my-56 },
       { x=mx+40, y=my-56 },
@@ -1565,7 +1555,7 @@ function Build_corner_beam(S, side, skin)
 
   add_pegging(info, skin.x_offset, skin.y_offset, false)
 
-  transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), -EXTREME_H, EXTREME_H)
+  Trans_quad(info, x1,y1, x2,y2, -EXTREME_H, EXTREME_H)
 end
 
 
@@ -1589,7 +1579,7 @@ function Build_cross_beam(S, dir, w, beam_z, mat)
     coords = rect_coords(x1, my-w/2, x2, my+w/2)
   end
 
-  transformed_brush(nil, get_mat(mat), coords, beam_z, EXTREME_H)
+  Trans_brush(get_mat(mat), coords, beam_z, EXTREME_H)
 end
 
 
@@ -1640,7 +1630,7 @@ function Build_exit_pillar(S, z1, skin)
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
 
-  transformed_brush(nil, add_pegging(get_mat(skin.switch_w)),
+  Trans_brush(add_pegging(get_mat(skin.switch_w)),
   {
     { x=mx+32, y=my-32, line_kind=11 },
     { x=mx+32, y=my+32, line_kind=11 },
@@ -1796,9 +1786,9 @@ function Build_small_exit(R, item_name)
   S.thick[side] = 80
 
 
-  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_cw90(side),  32, 8),
+  Trans_brush(inner_info, get_wall_coords(S, rotate_cw90(side),  32, 8),
                     -EXTREME_H, EXTREME_H)
-  transformed_brush(nil, inner_info, get_wall_coords(S, rotate_ccw90(side), 32, 8),
+  Trans_brush(inner_info, get_wall_coords(S, rotate_ccw90(side), 32, 8),
                     -EXTREME_H, EXTREME_H)
 
 
@@ -1905,21 +1895,21 @@ function Build_small_exit(R, item_name)
 
 
   if item_name then
-    local ex, ey = transformed_coord(WT, mx, 96)
+    local ex, ey = Trans_coord(mx, 96)
     gui.add_entity(item_name, ex, ey, f_h+25)
   end
 end
 
 
 function Build_wall(S, side, mat)
-  transformed_brush(nil, get_mat(mat),
+  Trans_brush(get_mat(mat),
       get_wall_coords(S, side),
       -EXTREME_H, EXTREME_H)
 end
 
 
 function Build_fence(S, side, fence_h, skin)
-  transformed_brush(nil, get_mat(skin.wall, skin.floor),
+  Trans_brush(get_mat(skin.wall, skin.floor),
     get_wall_coords(S, side), -EXTREME_H, fence_h)
 end
 
@@ -2062,9 +2052,7 @@ function Build_pedestal(S, z1, skin)
 
   add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
 
-  transformed_brush(nil, info,
-      rect_coords(mx-32,my-32, mx+32,my+32),
-      -EXTREME_H, z1+8)
+  Trans_quad(info, mx-32,my-32, mx+32,my+32, -EXTREME_H, z1+8)
 end
 
 function Build_lowering_pedestal(S, z1, skin)
@@ -2078,7 +2066,7 @@ function Build_lowering_pedestal(S, z1, skin)
   add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
   info.sec_tag = tag
 
-  transformed_brush(nil, info,
+  Trans_brush(info,
   {
     { x=mx+32, y=my-32, line_kind=skin.line_kind, line_tag=tag },
     { x=mx+32, y=my+32, line_kind=skin.line_kind, line_tag=tag },
@@ -2092,7 +2080,7 @@ end
 function Build_crate(x, y, z_top, skin)
   local info = add_pegging(get_mat(skin.side_w))
 
-  transformed_brush(nil, info,
+  Trans_brush(info,
     rect_coords(x-32,y-32, x+32,y+32),
     -EXTREME_H, z_top)
 end
@@ -2199,6 +2187,7 @@ function Build_popup_trap(S, z1, skin, combo, monster)
   },
   -EXTREME_H, z1)
 
+  -- FIXME
   gui.add_entity(monster, T.dx + long/2, T.dy + deep/2, z1+25, { ambush=1 })
 end
 
@@ -2589,13 +2578,13 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local f_h = h1 + (h2 - h1) * (i-1) / (steps-1)
       local c_h = f_h + gap_h
 
-      transformed_brush(nil, wall_info, step_coords(p0,p1, 0/6, 1/6), -EXTREME_H,EXTREME_H)
-      transformed_brush(nil, wall_info, step_coords(p0,p1, 5/6, 6/6), -EXTREME_H,EXTREME_H)
+      Trans_brush(wall_info, step_coords(p0,p1, 0/6, 1/6), -EXTREME_H,EXTREME_H)
+      Trans_brush(wall_info, step_coords(p0,p1, 5/6, 6/6), -EXTREME_H,EXTREME_H)
 
       local coords = step_coords(p0,p1, 1/6, 5/6)
 
-      transformed_brush(nil, floor_info, coords, -EXTREME_H,f_h)
-      transformed_brush(nil, ceil_info,  coords,  c_h,EXTREME_H)
+      Trans_brush(floor_info, coords, -EXTREME_H,f_h)
+      Trans_brush(ceil_info,  coords,  c_h,EXTREME_H)
     end
   end
 
@@ -2665,29 +2654,29 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
 
 
   if inner_info then
-    transformed_brush(nil, inner_info, rect_coords(x1,y1,x2,y2), inner_z, EXTREME_H)
+    Trans_quad(inner_info, x1,y1,x2,y2, inner_z, EXTREME_H)
   end
 
 
-  transformed_brush(nil, outer_info, rect_coords(ox1,oy1,  x1,oy2), outer_z, EXTREME_H)
-  transformed_brush(nil, outer_info, rect_coords( x2,oy1, ox2,oy2), outer_z, EXTREME_H)
-  transformed_brush(nil, outer_info, rect_coords( x1,oy1,  x2, y1), outer_z, EXTREME_H)
-  transformed_brush(nil, outer_info, rect_coords( x1, y2,  x2,oy2), outer_z, EXTREME_H)
+  Trans_quad(outer_info, ox1,oy1,  x1,oy2, outer_z, EXTREME_H)
+  Trans_quad(outer_info,  x2,oy1, ox2,oy2, outer_z, EXTREME_H)
+  Trans_quad(outer_info,  x1,oy1,  x2, y1, outer_z, EXTREME_H)
+  Trans_quad(outer_info,  x1, y2,  x2,oy2, outer_z, EXTREME_H)
 
   if kind == "round" then
-    transformed_brush(nil, outer_info,
+    Trans_brush(outer_info,
                       diagonal_coords(1, x1, y1, x1+diag_w, y1+diag_h),
                       outer_z, EXTREME_H)
 
-    transformed_brush(nil, outer_info,
+    Trans_brush(outer_info,
                       diagonal_coords(3, x2-diag_w, y1, x2, y1+diag_h),
                       outer_z, EXTREME_H)
 
-    transformed_brush(nil, outer_info,
+    Trans_brush(outer_info,
                       diagonal_coords(7, x1, y2-diag_h, x1+diag_w, y2),
                       outer_z, EXTREME_H)
 
-    transformed_brush(nil, outer_info,
+    Trans_brush(outer_info,
                       diagonal_coords(9, x2-diag_w, y2-diag_h, x2, y2),
                       outer_z, EXTREME_H)
   end
@@ -2702,21 +2691,21 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
   local trim_h = 4 * int(1 + math.min(mw,mh) / 120)
 
   if trim and kind == "square" then
-    transformed_brush(nil, trim, rect_coords(x1-w,y1-w, x1+4,y2+w), outer_z-trim_h, EXTREME_H)
-    transformed_brush(nil, trim, rect_coords(x2-4,y1-w, x2+w,y2+w), outer_z-trim_h, EXTREME_H)
+    Trans_quad(trim, x1-w,y1-w, x1+4,y2+w, outer_z-trim_h, EXTREME_H)
+    Trans_quad(trim, x2-4,y1-w, x2+w,y2+w, outer_z-trim_h, EXTREME_H)
 
-    transformed_brush(nil, trim, rect_coords(x1+4,y1-w, x2-4,y1+4), outer_z-trim_h, EXTREME_H)
-    transformed_brush(nil, trim, rect_coords(x1+4,y2-4, x2-4,y2+w), outer_z-trim_h, EXTREME_H)
+    Trans_quad(trim, x1+4,y1-w, x2-4,y1+4, outer_z-trim_h, EXTREME_H)
+    Trans_quad(trim, x1+4,y2-4, x2-4,y2+w, outer_z-trim_h, EXTREME_H)
   end
 
   if trim and kind == "round" then
-    transformed_brush(nil, trim, rect_coords(x1-w,y1+diag_h, x1+4,y2-diag_h), outer_z-trim_h, EXTREME_H)
-    transformed_brush(nil, trim, rect_coords(x2-4,y1+diag_h, x2+w,y2-diag_h), outer_z-trim_h, EXTREME_H)
+    Trans_quad(trim, x1-w,y1+diag_h, x1+4,y2-diag_h, outer_z-trim_h, EXTREME_H)
+    Trans_quad(trim, x2-4,y1+diag_h, x2+w,y2-diag_h, outer_z-trim_h, EXTREME_H)
 
-    transformed_brush(nil, trim, rect_coords(x1+diag_w,y1-w, x2-diag_w,y1+4), outer_z-trim_h, EXTREME_H)
-    transformed_brush(nil, trim, rect_coords(x1+diag_w,y2-4, x2-diag_w,y2+w), outer_z-trim_h, EXTREME_H)
+    Trans_quad(trim, x1+diag_w,y1-w, x2-diag_w,y1+4, outer_z-trim_h, EXTREME_H)
+    Trans_quad(trim, x1+diag_w,y2-4, x2-diag_w,y2+w, outer_z-trim_h, EXTREME_H)
 
-    transformed_brush(nil, trim,  -- top left
+    Trans_brush(trim,  -- top left
     {
       { x=x1-w, y=y2-diag_h },
       { x=x1+4, y=y2-diag_h },
@@ -2725,7 +2714,7 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
     },
     outer_z-trim_h, EXTREME_H)
 
-    transformed_brush(nil, trim,  -- top right
+    Trans_brush(trim,  -- top right
     {
       { x=x2-diag_w, y=y2+w },
       { x=x2-diag_w, y=y2-4 },
@@ -2734,7 +2723,7 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
     },
     outer_z-trim_h, EXTREME_H)
 
-    transformed_brush(nil, trim,  -- bottom left
+    Trans_brush(trim,  -- bottom left
     {
       { x=x1+4, y=y1+diag_h },
       { x=x1-w, y=y1+diag_h },
@@ -2743,7 +2732,7 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
     },
     outer_z-trim_h, EXTREME_H)
 
-    transformed_brush(nil, trim,  -- bottom right
+    Trans_brush(trim,  -- bottom right
     {
       { x=x2-diag_w, y=y1+4 },
       { x=x2-diag_w, y=y1-w },
@@ -2764,11 +2753,11 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
     local pw = w * 2
     local K = 16
 
-    transformed_brush(nil, spokes, rect_coords(ox1+K,my-w, x1+pw,my+w), outer_z-trim_h*1.5, EXTREME_H)
-    transformed_brush(nil, spokes, rect_coords(x2-pw,my-w, ox2-K,my+w), outer_z-trim_h*1.5, EXTREME_H)
+    Trans_quad(spokes, ox1+K,my-w, x1+pw,my+w, outer_z-trim_h*1.5, EXTREME_H)
+    Trans_quad(spokes, x2-pw,my-w, ox2-K,my+w, outer_z-trim_h*1.5, EXTREME_H)
 
-    transformed_brush(nil, spokes, rect_coords(mx-w,oy1+K, mx+w,y1+pw), outer_z-trim_h*1.5, EXTREME_H)
-    transformed_brush(nil, spokes, rect_coords(mx-w,y2-pw, mx+w,oy2-K), outer_z-trim_h*1.5, EXTREME_H)
+    Trans_quad(spokes, mx-w,oy1+K, mx+w,y1+pw, outer_z-trim_h*1.5, EXTREME_H)
+    Trans_quad(spokes, mx-w,y2-pw, mx+w,oy2-K, outer_z-trim_h*1.5, EXTREME_H)
   end
 
 

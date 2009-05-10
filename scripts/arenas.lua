@@ -76,11 +76,11 @@ function Arena_Doom_MAP30()
       info.w_face.texture = FACE_TEX[fy][fx]
 
       if (fx == 2 and fy == 3) then
-        transformed_brush(nil, info, rect_coords(x1,y1, face_x-32,y2), z1,z2)
-        transformed_brush(nil, info, rect_coords(face_x+32,y1, x2,y2), z1,z2)
-        transformed_brush(nil, info, rect_coords(face_x-32,y1, face_x+32,y2), 256+32,z2)
+        Trans_quad(info, x1,y1, face_x-32,y2, z1,z2)
+        Trans_quad(info, face_x+32,y1, x2,y2, z1,z2)
+        Trans_quad(info, face_x-32,y1, face_x+32,y2, 256+32,z2)
       else
-        transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), z1, z2)
+        Trans_quad(info, x1,y1, x2,y2, z1, z2)
       end
     end end -- for fx, fy
   end
@@ -98,11 +98,11 @@ function Arena_Doom_MAP30()
     local info = add_pegging(get_mat("BFALL1"))
     info.b_face.light = 0.99
 
-    transformed_brush(nil, info, rect_coords(x1-32,y1, x1,y2), z1-32, z2+32)
-    transformed_brush(nil, info, rect_coords(x2,y1, x2+32,y2), z1-32, z2+32)
+    Trans_quad(info, x1-32,y1, x1,y2, z1-32, z2+32)
+    Trans_quad(info, x2,y1, x2+32,y2, z1-32, z2+32)
 
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), z1-32, z1)
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), z2, z2+32)
+    Trans_quad(info, x1,y1, x2,y2, z1-32, z1)
+    Trans_quad(info, x1,y1, x2,y2, z2, z2+32)
 
     gui.add_entity(tostring(GAME.things["brain_shooter"].id),
                    face_x, y1+24, z1, { angle=270 })
@@ -112,13 +112,13 @@ function Arena_Doom_MAP30()
     y1 = y2
     y2 = y1 + 128
 
-    transformed_brush(nil, info, rect_coords(x1-32,y1, x1,y2), z1-32, z2+32)
-    transformed_brush(nil, info, rect_coords(x2,y1, x2+32,y2), z1-32, z2+32)
+    Trans_quad(info, x1-32,y1, x1,y2, z1-32, z2+32)
+    Trans_quad(info, x2,y1, x2+32,y2, z1-32, z2+32)
 
-    transformed_brush(nil, info, rect_coords(x1,y2, x2,y2+32), z1-32, z2+32)
+    Trans_quad(info, x1,y2, x2,y2+32, z1-32, z2+32)
 
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), z1-32, z1)
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), z2, z2+32)
+    Trans_quad(info, x1,y1, x2,y2, z1-32, z1)
+    Trans_quad(info, x1,y1, x2,y2, z2, z2+32)
 
     gui.add_entity(tostring(GAME.things["brain_boss"].id),
                    face_x, y2-48, z1, { angle=270 })
@@ -137,25 +137,18 @@ function Arena_Doom_MAP30()
 
     local info = get_mat("SP_HOT1", "RROCK05")
 
-    transformed_brush(nil, info, rect_coords(x1-32,y1, x1,y2),
-                      -EXTREME_H, EXTREME_H)
+    Trans_quad(info, x1-32,y1, x1,y2, -EXTREME_H, EXTREME_H)
+    Trans_quad(info, x2,y1, x2+32,y2, -EXTREME_H, EXTREME_H)
+    Trans_quad(info, x1,y1-32, x2,y1, -EXTREME_H, EXTREME_H)
 
-    transformed_brush(nil, info, rect_coords(x2,y1, x2+32,y2),
-                      -EXTREME_H, EXTREME_H)
+    Trans_quad(info, x1,y2-24, face_x-384,y2+32, -EXTREME_H, EXTREME_H)
 
-    transformed_brush(nil, info, rect_coords(x1,y1-32, x2,y1),
-                      -EXTREME_H, EXTREME_H)
+    Trans_quad(info, face_x+384,y2-24, x2,y2+32, -EXTREME_H, EXTREME_H)
 
-    transformed_brush(nil, info, rect_coords(x1,y2-24, face_x-384,y2+32),
-                      -EXTREME_H, EXTREME_H)
+    Trans_quad(info, x1,y1, x2,y2, -EXTREME_H, z1)
+    Trans_quad(info, x1,y1, x2,y2, z2, EXTREME_H)
 
-    transformed_brush(nil, info, rect_coords(face_x+384,y2-24, x2,y2+32),
-                      -EXTREME_H, EXTREME_H)
-
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), -EXTREME_H, z1)
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), z2, EXTREME_H)
-
-    transformed_brush(nil, info, rect_coords(x1,y1, x2,ledge_y), -EXTREME_H, 128)
+    Trans_quad(info, x1,y1, x2,ledge_y, -EXTREME_H, 128)
 
     for i=-1,1 do
       local hx = face_x + i * 192
@@ -210,9 +203,9 @@ function Arena_Doom_MAP30()
       local info = get_mat("FLOOR4_8")
       local step = add_pegging(get_mat("FLOOR5_2"))
 
-      transformed_brush(nil, info, rect_coords(x1,y1, x2,y2), -EXTREME_H, z + 32)
+      Trans_quad(info, x1,y1, x2,y2, -EXTREME_H, z + 32)
 
-      transformed_brush(nil, step, rect_coords(x1,y3-32, x2,y3+32), -EXTREME_H, z + 16)
+      Trans_quad(step, x1,y3-32, x2,y3+32, -EXTREME_H, z + 16)
 
       gui.add_entity(tostring(GAME.things["Cyberdemon"].id),
                      mx, my, z, { angle=angle })
@@ -244,7 +237,7 @@ function Arena_Doom_MAP30()
       local lift = add_pegging(get_mat("SKSPINE1"))
       lift.sec_tag = 1
 
-      transformed_brush(nil, lift,
+      Trans_brush(lift,
       {
         { x=x2, y=y1, line_kind=62, line_tag=1 },
         { x=x2, y=y2, line_kind=62, line_tag=1 },
@@ -261,8 +254,7 @@ function Arena_Doom_MAP30()
 
     local info = add_pegging(get_mat("WOOD1"))
 
-    transformed_brush(nil, info,
-        rect_coords(x1, ledge_y-108, x2, ledge_y+360),
+    Trans_quad(info, x1, ledge_y-108, x2, ledge_y+360,
         -EXTREME_H, 240)
 
 
@@ -272,7 +264,7 @@ function Arena_Doom_MAP30()
     local lift = add_pegging(get_mat("WOODMET2", "FLAT5_2"))
     lift.sec_tag = 2
 
-    transformed_brush(nil, lift,
+    Trans_brush(lift,
     {
       { x=x2, y=y1, line_kind=123, line_tag=2 },
       { x=x2, y=y2, line_kind=123, line_tag=2 },
@@ -309,33 +301,23 @@ function Arena_Doom_MAP07()
     local wall = get_mat("ROCK4", "MFLR8_3")
     local sky  = get_sky()
 
-    transformed_brush(nil, wall, rect_coords(x1-64,y1, x1,y2),
-                      -EXTREME_H, EXTREME_H)
-    transformed_brush(nil, wall, rect_coords(x2,y1, x2+64,y2),
-                      -EXTREME_H, EXTREME_H)
+    Trans_quad(wall, x1-64,y1, x1,y2, -EXTREME_H, EXTREME_H)
+    Trans_quad(wall, x2,y1, x2+64,y2, -EXTREME_H, EXTREME_H)
 
-    transformed_brush(nil, wall, rect_coords(x1,y1-64, x2,y1),
-                      -EXTREME_H, EXTREME_H)
-    transformed_brush(nil, wall, rect_coords(x1,y2, x2,y2+64),
-                      -EXTREME_H, EXTREME_H)
+    Trans_quad(wall, x1,y1-64, x2,y1, -EXTREME_H, EXTREME_H)
+    Trans_quad(wall, x1,y2, x2,y2+64, -EXTREME_H, EXTREME_H)
 
-    transformed_brush(nil, wall, rect_coords(x1,y1, x2,y2),
-                      -EXTREME_H, 0)
-    transformed_brush(nil, get_sky(), rect_coords(x1,y1, x2,y2),
-                      z, EXTREME_H)
+    Trans_quad(wall, x1,y1, x2,y2, -EXTREME_H, 0)
+    Trans_quad(sky,  x1,y1, x2,y2, z, EXTREME_H)
 
     -- lower skies at edges
     local z2 = 256
 
-    transformed_brush(nil, sky, rect_coords(x1,y1, x1+16,y2),
-                      z2, EXTREME_H)
-    transformed_brush(nil, sky, rect_coords(x2-16,y1, x2,y2),
-                      z2, EXTREME_H)
+    Trans_quad(sky, x1,y1, x1+16,y2, z2, EXTREME_H)
+    Trans_quad(sky, x2-16,y1, x2,y2, z2, EXTREME_H)
 
-    transformed_brush(nil, sky, rect_coords(x1,y1, x2,y1+16),
-                      z2, EXTREME_H)
-    transformed_brush(nil, sky, rect_coords(x1,y2-16, x2,y2),
-                      z2, EXTREME_H)
+    Trans_quad(sky, x1,y1, x2,y1+16, z2, EXTREME_H)
+    Trans_quad(sky, x1,y2-16, x2,y2, z2, EXTREME_H)
 
     -- ITEMS --
 
@@ -346,7 +328,7 @@ function Arena_Doom_MAP07()
 
     local step = add_pegging(get_mat("FLOOR5_2"))
 
-    transformed_brush(nil, step, rect_coords(256*4,256*4, 256*6,256*6), -16, 16)
+    Trans_quad(step, 256*4,256*4, 256*6,256*6, -16, 16)
 
     -- lower right corner
     local ITEM_MAP =
@@ -366,13 +348,12 @@ function Arena_Doom_MAP07()
   end
 
   local function make_beam(x1,y1, x2,y2, z)
-    transformed_brush(nil, get_mat("FLOOR4_8"),
-        rect_coords(x1,y1, x2,y2), z, EXTREME_H)
+    Trans_quad(get_mat("FLOOR4_8"), x1,y1, x2,y2, z, EXTREME_H)
   end
 
   local function make_pillar(x, y, w, z, entity)
-    transformed_brush(nil, add_pegging(get_mat("METAL6")),
-        rect_coords(x-w,y-w, x+w,y+w), -EXTREME_H, z)
+    Trans_quad(add_pegging(get_mat("METAL6")),
+        x-w,y-w, x+w,y+w, -EXTREME_H, z)
 
     if entity then
       gui.add_entity(tostring(GAME.things[entity].id),
@@ -384,7 +365,7 @@ function Arena_Doom_MAP07()
     local info = get_mat("SW1SKIN")
     add_pegging(info, 0, 48)
 
-    transformed_brush(nil, info,
+    Trans_brush(info,
     {
       { x=mx+32, y=my-32, line_kind=11 },
       { x=mx+32, y=my+32, line_kind=11 },
@@ -401,7 +382,7 @@ function Arena_Doom_MAP07()
     local y1 = my-96
     local y2 = my+96
 
-    transformed_brush(nil, step, rect_coords(x1,y1, x2,y2), -16, 8)
+    Trans_quad(step, x1,y1, x2,y2, -16, 8)
 
 
     local wall = get_mat("ROCK2")
@@ -410,11 +391,11 @@ function Arena_Doom_MAP07()
 
     local wall_h = 36
 
-    transformed_brush(nil, wall, rect_coords(x1-16,y1-16, x1,y2+16), -EXTREME_H, wall_h)
-    transformed_brush(nil, wall, rect_coords(x2,y1-16, x2+16,y2+16), -EXTREME_H, wall_h)
+    Trans_quad(wall, x1-16,y1-16, x1,y2+16, -EXTREME_H, wall_h)
+    Trans_quad(wall, x2,y1-16, x2+16,y2+16, -EXTREME_H, wall_h)
 
-    transformed_brush(nil, wall, rect_coords(x1,y1-16, x2,y1), -EXTREME_H, wall_h)
-    transformed_brush(nil, wall, rect_coords(x1,y2, x2,y2+16), -EXTREME_H, wall_h)
+    Trans_quad(wall, x1,y1-16, x2,y1, -EXTREME_H, wall_h)
+    Trans_quad(wall, x1,y2, x2,y2+16, -EXTREME_H, wall_h)
   end
 
 
