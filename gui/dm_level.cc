@@ -353,8 +353,8 @@ static void CreateOneSector(merge_region_c *R)
 
   sector_info_c *sec = new sector_info_c;
 
-  sec->f_h = I_ROUND(B->z2);
-  sec->c_h = I_ROUND(T->z1);
+  sec->f_h = I_ROUND(B->z2 + B->delta_z);
+  sec->c_h = I_ROUND(T->z1 + T->delta_z);
 
   if (sec->c_h < sec->f_h)
       sec->c_h = sec->f_h;

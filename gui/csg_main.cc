@@ -90,7 +90,8 @@ csg_brush_c::csg_brush_c() :
      bflags(0),
      b_face(NULL), t_face(NULL), w_face(NULL),
      z1(-1), z2(-1), b_slope(NULL), t_slope(NULL),
-     sec_kind(0), sec_tag(0), mark(0)
+     delta_z(0), mark(0),
+     sec_kind(0), sec_tag(0)
 { }
 
 csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
@@ -100,8 +101,8 @@ csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
       w_face(other->w_face),
       z1(other->z1), z2(other->z2),
       b_slope(NULL), t_slope(NULL),
-      sec_kind(other->sec_kind), sec_tag(other->sec_tag),
-      mark(other->mark)
+      delta_z(other->delta_z), mark(other->mark),
+      sec_kind(other->sec_kind), sec_tag(other->sec_tag)
 {
   // FIXME: do_verts
 
@@ -398,6 +399,8 @@ int Grab_BrushKind(lua_State *L, int stack_pos)
   if (StringCaseCmp(kind, "solid")  == 0) return BKIND_Solid;
   if (StringCaseCmp(kind, "liquid") == 0) return BKIND_Liquid;
   if (StringCaseCmp(kind, "sky")    == 0) return BKIND_Sky;
+
+  if (StringCaseCmp(kind, "rail")   == 0) return BKIND_Rail;
   if (StringCaseCmp(kind, "detail") == 0) return BKIND_Detail;
   if (StringCaseCmp(kind, "clip")   == 0) return BKIND_Clip;
 
@@ -467,15 +470,17 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 
   lua_pop(L, 3);
 
+  lua_getfield(L, stack_pos, "delta_z");
+  lua_getfield(L, stack_pos, "mark");
   lua_getfield(L, stack_pos, "sec_kind");
   lua_getfield(L, stack_pos, "sec_tag");
-  lua_getfield(L, stack_pos, "mark");
 
-  if (lua_isnumber(L, -3)) B->sec_kind = lua_tointeger(L, -3);
-  if (lua_isnumber(L, -2)) B->sec_tag  = lua_tointeger(L, -2);
-  if (lua_isnumber(L, -1)) B->mark     = lua_tointeger(L, -1);
+  if (lua_isnumber(L, -4)) B->delta_z  = lua_tonumber (L, -4);
+  if (lua_isnumber(L, -3)) B->mark     = lua_tointeger(L, -3);
+  if (lua_isnumber(L, -2)) B->sec_kind = lua_tointeger(L, -2);
+  if (lua_isnumber(L, -1)) B->sec_tag  = lua_tointeger(L, -1);
 
-  lua_pop(L, 3);
+  lua_pop(L, 4);
 
   lua_getfield(L, stack_pos, "flag_noclip");
   lua_getfield(L, stack_pos, "flag_door");
@@ -660,12 +665,17 @@ int CSG2_property(lua_State *L)
 // LUA: add_brush(info, loop, z1, z2)
 //
 // info is a table:
+//    kind           : brush kind, default to "solid"
+//                     can also be "liquid", "sky", "rail", etc
+//
 //    t_face, b_face : top and bottom faces
 //    w_face         : default side face
 //
 //    flag_xxx       : various CSG flags (e.g. Liquid)
 //
+//    delta_z        : a post-CSG height adjustment
 //    mark           : separating number
+//
 //    sec_kind       : DOOM sector type
 //    sec_tag        : DOOM sector tag
 //

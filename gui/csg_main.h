@@ -107,6 +107,8 @@ typedef enum
   BKIND_Solid = 0,
   BKIND_Liquid,
   BKIND_Sky,
+
+  BKIND_Rail,
   BKIND_Detail,
   BKIND_Clip,
 }
@@ -156,8 +158,14 @@ public:
   slope_plane_c *b_slope;
   slope_plane_c *t_slope;
 
-  int sec_kind, sec_tag;
+  // this moves the whole brush up or down _after_ all the CSG
+  // construction has been done.  It's purpose is to ease the
+  // creation of features inset into the floor or ceiling.
+  // Yes it's a hack, but a very useful one!
+  double delta_z;
+
   int mark;
+  int sec_kind, sec_tag;
 
 public:
    csg_brush_c();
