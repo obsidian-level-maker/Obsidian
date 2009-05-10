@@ -18,7 +18,7 @@
 
 GAME   = {}
 CAPS   = {}
-PARAMS = {}
+PARAM  = {}
 STYLE  = {}
 HOOKS  = {}
 

@@ -1975,7 +1975,7 @@ gui.printf("do_teleport\n")
 
     local w_tex = S.w_tex or R.combo.wall
     local f_tex = S.f_tex or R.combo.floor
-    local c_tex = S.c_tex or sel(R.outdoor, PARAMS.sky_flat, R.combo.ceil)
+    local c_tex = S.c_tex or sel(R.outdoor, PARAM.sky_flat, R.combo.ceil)
 
     if R.kind == "hallway" then
       w_tex = assert(PLAN.hall_tex)
@@ -2140,7 +2140,7 @@ gui.printf("do_teleport\n")
 
     -- FIXME: remove c_tex check
     if S.kind ~= "void" and not S.no_ceil and 
-       (S.is_sky or c_tex == PARAMS.sky_flat)
+       (S.is_sky or c_tex == PARAM.sky_flat)
     then
 
       transformed_brush(nil, get_sky(),

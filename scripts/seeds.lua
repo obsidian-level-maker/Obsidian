@@ -95,7 +95,7 @@ function Seed_init(W, H, D)
 
   SEEDS = array_2D(W, H)
 
-  local SIZE = assert(PARAMS.seed_size)
+  local SIZE = assert(PARAM.seed_size)
 
   for x = 1,W do for y = 1,H do
     SEEDS[x][y] = {}

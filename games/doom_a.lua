@@ -545,7 +545,7 @@ COMMON_MATERIALS =
 
 
   -- Missing stuff:
-  --   F_SKY    : handled using PARAMS.sky_flat
+  --   F_SKY    : handled using PARAM.sky_flat
   --   CEMENT#  : used by OBLIGE for various logos
   --   SKY1/2/3 : not very useful
   --   ZZZFACE# : not generally useful (OK to hard-code)
@@ -2175,7 +2175,7 @@ end
 function Doom_describe_levels()
   -- FIXME handle themes properly !!!
 
-  local desc_list = Naming_generate("TECH", #GAME.all_levels, PARAMS.max_level_desc)
+  local desc_list = Naming_generate("TECH", #GAME.all_levels, PARAM.max_level_desc)
 
   for index,LEV in ipairs(GAME.all_levels) do
     if not LEV.description then
@@ -2237,7 +2237,7 @@ function Doom_common_setup()
   Game_merge_tab("misc_fabs", COMMON_MISC_PREFABS)
 
 
-  GAME.toughness_factor = 1.00  -- FIXME PARAMS
+  GAME.toughness_factor = 1.00  -- FIXME PARAM
 
   GAME.depot_info = { teleport_kind=97 }
 

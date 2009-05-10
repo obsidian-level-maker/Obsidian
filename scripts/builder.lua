@@ -184,7 +184,7 @@ function safe_get_mat(name)
 
   if not mat then
     gui.printf("\nLACKING MATERIAL : %s\n\n", name)
-    mat = assert(GAME.materials[PARAMS.error_mat])
+    mat = assert(GAME.materials[PARAM.error_mat])
 
     -- prevent further messages
     GAME.materials[name] = mat
@@ -220,9 +220,9 @@ function get_sky()
   return
   {
     kind = "sky",
-    w_face = { texture=PARAMS.sky_tex },
-    t_face = { texture=PARAMS.sky_flat or PARAMS.sky_tex },
-    b_face = { texture=PARAMS.sky_flat or PARAMS.sky_tex, light=PLAN.sky_light or 0.75 },
+    w_face = { texture=PARAM.sky_tex },
+    t_face = { texture=PARAM.sky_flat or PARAM.sky_tex },
+    b_face = { texture=PARAM.sky_flat or PARAM.sky_tex, light=PLAN.sky_light or 0.75 },
   }
 end
 
@@ -250,7 +250,7 @@ function get_transform_for_seed_side(S, side, thick)
   if side == 6 then T.dx, T.dy = S.x2, S.y1 end
   if side == 8 then T.dx, T.dy = S.x2, S.y2 end
 
-  return T, PARAMS.seed_size, thick
+  return T, PARAM.seed_size, thick
 end
 
 function get_transform_for_seed_center(S)
@@ -2000,7 +2000,7 @@ function Build_picture(S, side, z1, z2, skin)
   local gap = skin.gap or WD
 
   local total_w = count * WD + (count - 1) * gap
-  assert(total_w < PARAMS.seed_size-28)
+  assert(total_w < PARAM.seed_size-28)
 
   local mx = int(long/2)
   local my = deep - HT

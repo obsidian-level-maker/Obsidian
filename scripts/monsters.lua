@@ -182,7 +182,7 @@ function Monsters_global_palette()
   -- Decides which monsters we will use on this level.
   -- Easiest way is to pick some monsters NOT to use.
 
-  if not PARAMS.skip_monsters then return end
+  if not PARAM.skip_monsters then return end
 
   -- if already have level prefs, don't overwrite
   if LEVEL.monster_prefs then return end
@@ -208,7 +208,7 @@ function Monsters_global_palette()
     end
   end
 
-  local count = rand_irange(PARAMS.skip_monsters[1], PARAMS.skip_monsters[2])
+  local count = rand_irange(PARAM.skip_monsters[1], PARAM.skip_monsters[2])
   assert(count < #list)
 
   for i = 1,count do
@@ -727,20 +727,20 @@ function Monsters_in_room(R)
 
     gui.debugf("  %s --> damage:%1.1f (%1.1f)  time:%1.2f\n", name, damage, damage/toughness, time)
 
-    if time >= PARAMS.mon_time_max then return 0 end
+    if time >= PARAM.mon_time_max then return 0 end
 
     -- adjust damage by toughness factor
     damage = damage / toughness
 
-    if damage >= PARAMS.mon_damage_max then return 0 end
+    if damage >= PARAM.mon_damage_max then return 0 end
 
-    if damage > PARAMS.mon_damage_high then
-      local diff =   PARAMS.mon_damage_max - PARAMS.mon_damage_high
-      prob = prob * (PARAMS.mon_damage_max - damage) / diff
+    if damage > PARAM.mon_damage_high then
+      local diff =   PARAM.mon_damage_max - PARAM.mon_damage_high
+      prob = prob * (PARAM.mon_damage_max - damage) / diff
     end
 
-    if damage < PARAMS.mon_damage_low then
-      prob = prob * (damage / PARAMS.mon_damage_low)
+    if damage < PARAM.mon_damage_low then
+      prob = prob * (damage / PARAM.mon_damage_low)
     end
 
     if info.invis and R.outdoor then
@@ -1029,8 +1029,8 @@ function Monsters_in_room(R)
     count = count * (qty / 100.0)
 
     -- adjust quantity based on monster's health
-    if info.health > PARAMS.mon_hard_health then
-      count = count / math.sqrt(info.health / PARAMS.mon_hard_health)
+    if info.health > PARAM.mon_hard_health then
+      count = count / math.sqrt(info.health / PARAM.mon_hard_health)
     end
 
     count = math.max(1, int(count))
@@ -1211,8 +1211,8 @@ function Monsters_in_room(R)
     local heal_mul = HEALTH_AMMO_ADJUSTS[OB_CONFIG.health]
     local ammo_mul = HEALTH_AMMO_ADJUSTS[OB_CONFIG.ammo]
 
-    heal_mul = heal_mul * (PARAMS.health_factor or 1)
-    ammo_mul = ammo_mul * (PARAMS.ammo_factor or 1)
+    heal_mul = heal_mul * (PARAM.health_factor or 1)
+    ammo_mul = ammo_mul * (PARAM.ammo_factor or 1)
 
     for name,qty in pairs(stats) do
       stats[name] = qty * sel(name == "health", heal_mul, ammo_mul)

@@ -1846,7 +1846,7 @@ function Heretic1_setup()
   Game_merge_tab("wall_fabs", HERETIC_WALL_PREFABS)
   Game_merge_tab("misc_fabs", HERETIC_MISC_PREFABS)
 
-  GAME.toughness_factor = 0.80  -- FIXME: PARAMS
+  GAME.toughness_factor = 0.80  -- FIXME: PARAM
 
   GAME.depot_info  = { teleport_kind=97 }
 

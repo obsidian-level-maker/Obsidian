@@ -91,13 +91,13 @@ end
 function Level_CleanUp()
   GAME   = {}
   CAPS   = {}
-  PARAMS = {}
+  PARAM  = {}
   STYLE  = {}
   HOOKS  = {}
 
-  LEVEL = nil
-  PLAN  = nil
-  SEEDS = nil
+  LEVEL  = nil
+  PLAN   = nil
+  SEEDS  = nil
 
   collectgarbage("collect")
 end
@@ -118,7 +118,7 @@ function Level_Setup()
   end
 
   if game.caps   then shallow_merge(CAPS,   game.caps) end
-  if game.params then shallow_merge(PARAMS, game.params) end
+  if game.params then shallow_merge(PARAM,  game.params) end
   if game.hooks  then shallow_merge(HOOKS,  game.hooks) end
 
   assert(game.setup_func)
@@ -134,7 +134,7 @@ function Level_Setup()
   end
 
   if engine.caps   then shallow_merge(CAPS,   engine.caps) end
-  if engine.params then shallow_merge(PARAMS, engine.params) end
+  if engine.params then shallow_merge(PARAM,  engine.params) end
   if engine.hooks  then shallow_merge(HOOKS,  engine.hooks) end
 
   if engine.setup_func then
@@ -147,7 +147,7 @@ function Level_Setup()
   for _,mod in pairs(OB_MODULES) do
     if mod.enabled then
       if mod.caps   then shallow_merge(CAPS,   mod.caps) end
-      if mod.params then shallow_merge(PARAMS, mod.params) end
+      if mod.params then shallow_merge(PARAM,  mod.params) end
       if mod.hooks  then shallow_merge(HOOKS,  mod.hooks) end
 
       if mod.setup_func then
@@ -232,9 +232,9 @@ function Level_Make(L, index, NUM)
     end
   end
 
-  if PARAMS.error_tex then
-    gui.property("error_tex",  PARAMS.error_tex)
-    gui.property("error_flat", PARAMS.error_flat or PARAMS.error_tex)
+  if PARAM.error_tex then
+    gui.property("error_tex",  PARAM.error_tex)
+    gui.property("error_flat", PARAM.error_flat or PARAM.error_tex)
   end   
 
   if LEVEL.arena_func then

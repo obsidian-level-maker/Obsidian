@@ -651,7 +651,7 @@ function Quake1_describe_levels()
 
   -- FIXME handle themes properly !!!
 
-  local desc_list = Naming_generate("GOTHIC", #GAME.all_levels, PARAMS.max_level_desc)
+  local desc_list = Naming_generate("GOTHIC", #GAME.all_levels, PARAM.max_level_desc)
 
   for index,LEV in ipairs(GAME.all_levels) do
     LEV.description = desc_list[index]
