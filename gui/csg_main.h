@@ -118,10 +118,6 @@ typedef enum
 {
   BRU_F_NoClip   = (1 << 3),  // objects/shots can pass through
 
-  BRU_F_Door     = (1 << 4),  // (DOOM) close the created sector
-  BRU_F_RevDoor  = (1 << 5),  // (DOOM) close by moving floor up
-  BRU_F_SkyClose = (1 << 6),  // (DOOM) almost close the sector
-
   // internal flags
   BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box
 }

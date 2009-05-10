@@ -359,13 +359,6 @@ static void CreateOneSector(merge_region_c *R)
   if (sec->c_h < sec->f_h)
       sec->c_h = sec->f_h;
 
-  if ((B->bflags | T->bflags) & BRU_F_Door)
-    sec->c_h = sec->f_h;
-  else if ((B->bflags | T->bflags) & BRU_F_RevDoor)
-    sec->f_h = sec->c_h;
-  else if ((B->bflags | T->bflags) & BRU_F_SkyClose)
-    sec->c_h = sec->f_h + 2;
-
   sec->f_tex = B->t_face->tex;
   sec->c_tex = T->b_face->tex;
 
