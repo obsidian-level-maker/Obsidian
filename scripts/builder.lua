@@ -351,17 +351,11 @@ function get_wall_coords(S, side, thick, pad)
 end
 
 
-function Build_sky_fence(S, side, z, skin)
-  
+function Build_sky_fence(S, side, z_top, z_low, skin)
   local wall_info = get_mat(skin.fence_w, skin.fence_f)
 
   local sky_info = get_sky()
-
-  local wall2_info = shallow_copy(wall_info)
-  local  sky2_info = shallow_copy(sky_info)
-
-  wall2_info.flag_skyclose = true
-   sky2_info.flag_skyclose = true
+  local sky_back = get_sky()
 
 
   local wx1, wy1 = S.x1, S.y1
@@ -407,11 +401,13 @@ function Build_sky_fence(S, side, z, skin)
     { x=sx1, y=sy2 }, { x=sx1, y=sy1 },
   }
 
-  transformed_brush(nil, wall_info,  w_coords, -EXTREME_H, z)
-  transformed_brush(nil, wall2_info, s_coords, -EXTREME_H, PLAN.skyfence_h - 64)
+  transformed_brush(nil, wall_info, w_coords, -EXTREME_H, z_top)
+  transformed_brush(nil, wall_info, s_coords, -EXTREME_H, z_low)
 
-  transformed_brush(nil, sky_info,  w_coords, SKY_H,   EXTREME_H)
-  transformed_brush(nil, sky2_info, s_coords, SKY_H-2, EXTREME_H)
+  sky_back.delta_z = (z_low+4) - (SKY_H-2)
+
+  transformed_brush(nil, sky_info, w_coords, SKY_H,   EXTREME_H)
+  transformed_brush(nil, sky_back, s_coords, SKY_H-2, EXTREME_H)
 end
 
 
@@ -489,8 +485,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
     t_face = { texture=skin.door_c },
     b_face = { texture=assert(skin.door_c), light=0.7 },
     w_face = { texture=assert(skin.door_w), peg=true, x_offset=0, y_offset=0 },
---  w_face = { texture="PIPES", peg=true, x_offset=0, y_offset=0 },
-    flag_door = true,
+    delta_z = -8,
     sec_tag = tag,
   }
 
@@ -1814,7 +1809,7 @@ function Build_small_exit(R, item_name)
     w_face = { texture="EXITDOOR", peg=true, x_offset=0, y_offset=0 },
     t_face = { texture="FLAT5_5" },
     b_face = { texture="FLAT5_5" },
-    flag_door = true,
+    delta_z = -8,
   }
 
   transformed_brush(DT, door_info,
@@ -1824,7 +1819,7 @@ function Build_small_exit(R, item_name)
     { x=mx-32, y=64, line_kind=1 },
     { x=mx-32, y=48, line_kind=1 },
   },
-  f_h+16, EXTREME_H)
+  f_h+8, EXTREME_H)
 
   inner_info.b_face = { texture="FLAT1" }
 

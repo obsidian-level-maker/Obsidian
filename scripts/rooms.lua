@@ -2048,10 +2048,11 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "sky_fence" then
-        local z = math.max(PLAN.skyfence_h, (S.room.floor_max_h or S.room.floor_h or 400) + 48)
+        local z_top = math.max(PLAN.skyfence_h, (S.room.floor_max_h or S.room.floor_h or 400) + 48)
+        local z_low = PLAN.skyfence_h - 64
         local skin = { fence_w="BROWN144" }
 
-        Build_sky_fence(S, side, z, skin)
+        Build_sky_fence(S, side, z_top, z_low, skin)
       end
 
       if B_kind == "arch" then
