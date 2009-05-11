@@ -699,6 +699,25 @@ function Monsters_in_room(R)
     return toughness
   end
 
+  local function calc_quantity()
+    local qty
+
+    if LEVEL.quantity then
+      qty = LEVEL.quantity
+
+    elseif OB_CONFIG.mons == "crazy" then
+      qty = rand_irange(30,80)
+
+    else
+      qty = MONSTER_QUANTITIES[OB_CONFIG.mons] or
+            PLAN.mixed_mons_qty  -- the "mixed" setting
+    end
+
+    gui.debugf("Quantity = %1.0f\n", qty)
+
+    return qty
+  end
+
 
   local function prob_for_mon(info, fp, toughness)
 
@@ -1137,16 +1156,11 @@ function Monsters_in_room(R)
   local function add_monsters()
     local toughness = calc_toughness()
 
+    local qty = calc_quantity()
+
     local palette = select_monsters(toughness)
 
     create_monster_map(palette)
-
-    local qty = MONSTER_QUANTITIES[OB_CONFIG.mons] or
-                PLAN.mixed_mons_qty  -- the "mixed" setting
-
-    if OB_CONFIG.mons == "crazy" then
-      qty = rand_irange(30,80)
-    end
 
     local barrel_chance = sel(R.outdoor, 2, 20)
     if R.kind == "hallway" then barrel_chance = 5 end
