@@ -2227,7 +2227,8 @@ end
 
     elseif S.kind == "popup" then
       -- FIXME: monster!!
-      Build_popup_trap(S, z1, {}, S.room.combo, "revenant")
+      local skin = { wall=w_tex, floor=f_tex }
+      Build_popup_trap(S, z1, skin, "revenant")
 
     elseif S.kind == "liquid" then
       -- FIXME: game specific

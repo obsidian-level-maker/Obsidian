@@ -2300,7 +2300,34 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
   if R.kind == "smallexit" then
-    Build_small_exit(R, "medikit")  -- FIXME: game specific
+    local C = R.conns[1]
+    local T = C:seed(C:neighbor(R))
+    local out_combo = T.room.combo
+    if T.room.outdoor then out_combo = R.combo end
+
+    local skin =  -- FIXME: game specific
+    {
+      door = "EXITDOOR",
+      exit = "EXITSIGN",
+      exitside = "SHAWN2",
+      frame_c = "FLAT1",
+      key_w = "LITE5",
+      track = "DOORTRAK",
+      item = "medikit",
+      break_w = "DOORSTOP",
+    }
+    local skin2 =
+    {
+      wall = out_combo.wall,
+      floor = T.f_tex or C.conn_ftex,
+      ceil = out_combo.ceil,
+    }
+    --!!!!!! FIXME game/theme specific
+    skin.switch = rand_element { "SW1METAL", "SW1LION", "SW1BRN2", "SW1BRNGN",
+                                "SW1GRAY",  "SW1MOD1", "SW1SLAD", "SW1STRTN",
+                                "SW1TEK",   "SW1STON1" }
+
+    Build_small_exit(R, PLAN.theme.exit, skin, skin2)
     return
   end
 

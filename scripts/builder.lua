@@ -1753,8 +1753,8 @@ function Build_outdoor_exit_switch(S, dir, f_h, skin)
 end
 
 
-function Build_small_exit(R, item_name)
-
+function Build_small_exit(R, xt_info, skin, skin2)
+  assert(xt_info)
   assert(#R.conns == 1)
 
   local C = R.conns[1]
@@ -1768,38 +1768,18 @@ function Build_small_exit(R, item_name)
   local f_h = C.conn_h or T.floor_h or T.room.floor_h or 0
   local c_h = f_h + 128
 
-  local xt_info = assert(PLAN.theme.exit)
   local w_tex = rand_key_by_probs(xt_info.walls)
   local f_tex = rand_key_by_probs(xt_info.floors)
   local c_tex = rand_key_by_probs(xt_info.ceils)
 
-  local inner_info =
-  {
-    w_face = { texture=w_tex },
-    t_face = { texture=f_tex },
-    b_face = { texture=c_tex },
-  }
+  local inner_info = get_mat(w_tex, f_tex, c_tex)
 
-  local out_combo = T.room.combo
-
-  if T.room.outdoor then
-    out_combo = R.combo
-  end
-
-  local out_face = { texture=out_combo.wall }
-
-  local out_info =
-  {
-    w_face = out_face,
-    t_face = { texture=T.f_tex or C.conn_ftex or f_tex },
-    b_face = { texture=out_combo.ceil },
-  }
+  local out_info = get_mat(skin2.wall, skin2.floor, skin2.ceil)
 
 
   local DT, long = get_transform_for_seed_side(S, side)
   local mx = int(long / 2)
 
-  
   Trans_set(DT)
 
   Trans_quad(out_info, 8,0,   long-8,48, -EXTREME_H, f_h)
@@ -1813,7 +1793,6 @@ function Build_small_exit(R, item_name)
 
   S.thick[side] = 80
 
-
   Trans_brush(inner_info, get_wall_coords(S, rotate_cw90(side),  32, 8),
                     -EXTREME_H, EXTREME_H)
   Trans_brush(inner_info, get_wall_coords(S, rotate_ccw90(side), 32, 8),
@@ -1822,13 +1801,8 @@ function Build_small_exit(R, item_name)
 
   -- make door
 
-  local door_info =
-  {
-    w_face = { texture="EXITDOOR", peg=true, x_offset=0, y_offset=0 },
-    t_face = { texture="FLAT5_5" },
-    b_face = { texture="FLAT5_5" },
-    delta_z = -8,
-  }
+  local door_info = add_pegging(get_mat(skin.door))
+  door_info.delta_z = -8
 
   Trans_set(DT)
 
@@ -1841,49 +1815,45 @@ function Build_small_exit(R, item_name)
   },
   f_h+8, EXTREME_H)
 
-  inner_info.b_face = { texture="FLAT1" }
+  local frame_i = get_mat(skin.frame_c)
+  inner_info.b_face = frame_i.b_face
 
   Trans_brush(inner_info,
   {
     { x=mx+32, y=32 },
     { x=mx+32, y=80 },
     { x=mx-32, y=80 },
-    { x=mx-32, y=32, w_face=out_face },
+    { x=mx-32, y=32, w_face = out_info.w_face },
   },
   f_h+72, EXTREME_H)
 
-  local exit_info =
-  {
-    w_face = { texture="SHAWN2" },
-    t_face = { texture="FLAT23" },
-    b_face = { texture="FLAT23" },
-  }
+  local exit_side = get_mat(skin.exitside)
+  local exit_info = add_pegging(get_mat(skin.exit))
 
-  local exit_face = { texture="EXITSIGN", x_offset=0, y_offset=0 }
-
-  local key_tex = "LITE5"
+  local key_i   = add_pegging(get_mat(skin.key_w))
+  local track_i = add_pegging(get_mat(skin.track))
 
   assert(not C.lock)
 
   for pass = 1,2 do
     if pass == 2 then TRANSFORM.mirror_x = mx end
 
-    Trans_brush(inner_info,
+    Trans_brush(out_info,
     {
-      { x=0,     y=80,  w_face=out_face },
-      { x=0,     y=-24, w_face=out_face },
-      { x=mx-96, y=-24, w_face=out_face },
-      { x=mx-32, y=32,  w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
-      { x=mx-32, y=48,  w_face={ texture="DOORTRAK", peg=true } },
-      { x=mx-32, y=64,  w_face={ texture=key_tex, x_offset=0, y_offset=0 } },
-      { x=mx-32, y=80  },
+      { x=0,     y=80  },
+      { x=0,     y=-24 },
+      { x=mx-96, y=-24 },
+      { x=mx-32, y=32,  w_face = key_i.w_face },
+      { x=mx-32, y=48,  w_face = track_i.w_face },
+      { x=mx-32, y=64,  w_face = key_i.w_face },
+      { x=mx-32, y=80,  w_face = inner_info.w_face },
     },
     -EXTREME_H, EXTREME_H)
 
-    Trans_brush(exit_info,
+    Trans_brush(exit_side,
     {
       { x=mx-68, y= -8 },
-      { x=mx-60, y=-16, w_face=exit_face },
+      { x=mx-60, y=-16, w_face = exit_info.w_face },
       { x=mx-32, y=  0 },
       { x=mx-40, y=  8 },
     },
@@ -1895,16 +1865,14 @@ function Build_small_exit(R, item_name)
 
   -- make switch
 
-  --!!!!!! FIXME game/theme specific
-  local sw_tex = rand_element { "SW1METAL", "SW1LION", "SW1BRN2", "SW1BRNGN",
-                                "SW1GRAY",  "SW1MOD1", "SW1SLAD", "SW1STRTN",
-                                "SW1TEK",   "SW1STON1" }
-
   local WT
   WT, long = get_transform_for_seed_side(S, 10-side)
 
   mx = int(long / 2)
   local swit_W = 64
+
+  local switch_i = add_pegging(get_mat(skin.switch), 0, 0, false)
+  local break_i  = add_pegging(get_mat(skin.break_w))
 
   Trans_set(WT)
 
@@ -1912,9 +1880,9 @@ function Build_small_exit(R, item_name)
   {
     { x=long-8, y=8 },
     { x=long-8, y=32 },
-    { x=mx+swit_W/2+8, y=32, w_face={ texture="DOORSTOP", x_offset=0 } },
-    { x=mx+swit_W/2,   y=32, w_face={ texture=sw_tex,     x_offset=0, y_offset=0 }, line_kind=11 },
-    { x=mx-swit_W/2,   y=32, w_face={ texture="DOORSTOP", x_offset=0 } },
+    { x=mx+swit_W/2+8, y=32, w_face = break_i.w_face },
+    { x=mx+swit_W/2,   y=32, w_face = switch_i.w_face, line_kind=11 },
+    { x=mx-swit_W/2,   y=32, w_face = break_i.w_face },
     { x=mx-swit_W/2-8, y=32 },
     { x=8, y=32 },
     { x=8, y=8 },
@@ -1928,8 +1896,8 @@ function Build_small_exit(R, item_name)
   mark_room_as_done(R)
 
 
-  if item_name then
-    Trans_entity(item_name, mx, 96, f_h)
+  if skin.item_name then
+    Trans_entity(skin.item_name, mx, 96, f_h)
   end
 
   Trans_clear()
@@ -2124,7 +2092,6 @@ end
 
 
 function Build_raising_start(S, face_dir, z1, skin)
-
   local info = get_mat(skin.f_tex)
 
   local sw_face =
@@ -2163,27 +2130,21 @@ function Build_raising_start(S, face_dir, z1, skin)
     Trans_clear()
   end
 
-  z1 = z1 - 128
-
-  local T, long, deep = get_transform_for_seed_center(S)
 
   info.sec_tag = tag
 
+  local T, long, deep = get_transform_for_seed_center(S)
+
   Trans_set(T)
 
-  Trans_quad(info, 0,0, long,deep, -EXTREME_H, z1)
+  Trans_quad(info, 0,0, long,deep, -EXTREME_H, z1 - 128)
 
   Trans_clear()
 end
 
 
-function Build_popup_trap(S, z1, skin, combo, monster)
-  local info =
-  {
-    t_face = { texture=combo.floor },
-    b_face = { texture=combo.floor },
-    w_face = { texture=combo.wall  },
-  }
+function Build_popup_trap(S, z, skin, monster)
+  local info = get_mat(skin.wall, skin.floor)
 
   for side = 2,8,2 do
     S.thick[side] = S.thick[side] + 4
@@ -2199,29 +2160,25 @@ function Build_popup_trap(S, z1, skin, combo, monster)
       { x=0,    y=deep },
       { x=0,    y=0 },
     },
-    -EXTREME_H, z1)
+    -EXTREME_H, z)
 
     Trans_clear()
   end
 
-  z1 = z1 - 384
-
-  local tag = PLAN:alloc_tag()
+  info.sec_tag = PLAN:alloc_tag()
 
   local T, long, deep = get_transform_for_seed_center(S)
-
-  info.sec_tag = tag
 
   Trans_set(T)
 
   Trans_brush(info,
   {
-    { x=long, y=0,    line_kind=19, line_tag=tag },
-    { x=long, y=deep, line_kind=19, line_tag=tag },
-    { x=0,    y=deep, line_kind=19, line_tag=tag },
-    { x=0,    y=0,    line_kind=19, line_tag=tag },
+    { x=long, y=0,    line_kind=19, line_tag=info.sec_tag },
+    { x=long, y=deep, line_kind=19, line_tag=info.sec_tag },
+    { x=0,    y=deep, line_kind=19, line_tag=info.sec_tag },
+    { x=0,    y=0,    line_kind=19, line_tag=info.sec_tag },
   },
-  -EXTREME_H, z1)
+  -EXTREME_H, z - 256)
 
   Trans_entity(monster, long/2, deep/2, z1, { ambush=1 })
 
