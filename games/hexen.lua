@@ -1921,8 +1921,6 @@ function hexen_get_levels(episode)
       boss_kind = Src.boss_kind,
 
       quests = {}, gates = {},
-
-      toughness_factor = 1 + (episode-1) / 3,
     }
 
     if map == 5 or OB_CONFIG.length == "single" then
@@ -2198,8 +2196,6 @@ function Hexen1_setup()
     wall_fabs = HEXEN_WALL_PREFABS,
     sc_fabs   = HEXEN_SCENERY_PREFABS,
     misc_fabs = HEXEN_MISC_PREFABS,
-
-    toughness_factor = 0.66,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },

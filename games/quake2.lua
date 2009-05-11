@@ -723,8 +723,6 @@ function Quake2_get_levels()
         ep_along = map / MAP_NUM,
 
         theme = "BASE",
-
-        toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 7),
       }
 
       table.insert(list, LEV)

@@ -802,8 +802,6 @@ function Wolf3d_get_levels()
         secret_kind = (map == 10) and secret_kind,
 
         quests = {},
-
-        toughness_factor = sel(map==10, 1.1, 1 + (map-1) / 5),
       }
 
       if WOLF_SECRET_EXITS[Level.name] then
@@ -860,8 +858,6 @@ function Wolf3d_setup()
   Game_merge_tab("themes", WOLF_THEMES)
 
   Game_merge_tab("misc_fabs", WOLF_MISC_PREFABS)
-
-  GAME.toughness_factor = 0.40
 
   GAME.room_heights = { [128]=50 }
   GAME.space_range  = { 50, 90 }

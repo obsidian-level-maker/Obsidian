@@ -635,8 +635,6 @@ function Quake1_get_levels()
         ep_along = map / MAP_NUM,
 
         theme = "BASE",
-
-        toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 7),
       }
 
       table.insert(list, LEV)
@@ -682,8 +680,6 @@ function Quake1_setup()
   Game_merge_tab("themes", QUAKE1_THEMES)
 
   Game_merge_tab("misc_fabs", QUAKE1_MISC_PREFABS)
-
-  GAME.toughness_factor = 0.40
 
   GAME.room_heights = { [128]=50 }
   GAME.space_range  = { 50, 90 }

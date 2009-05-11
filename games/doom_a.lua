@@ -1998,8 +1998,6 @@ function Doom1_get_levels()
         boss_kind   = (map == 8) and DOOM1_EPISODE_BOSSES[episode],
         secret_kind = (map == 9) and "plain",
 
-        toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 5),
-
         style = {},
       }
 
@@ -2080,8 +2078,6 @@ function Doom2_get_levels()
 
       style = {},
     }
-
-    LEV.toughness_factor = 1 + 1.5 * LEV.ep_along
 
     if LEV.ep_along > 0.44 and rand_odds(sel(MAP_NUM > 7, 50, 90)) then
       LEV.allow_bfg = true
@@ -2259,8 +2255,6 @@ function Doom_common_setup()
   Game_merge_tab("win_fabs",  COMMON_WINDOW_PREFABS)
   Game_merge_tab("misc_fabs", COMMON_MISC_PREFABS)
 
-
-  GAME.toughness_factor = 1.00  -- FIXME PARAM
 
   GAME.depot_info = { teleport_kind=97 }
 

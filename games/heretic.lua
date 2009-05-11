@@ -1788,8 +1788,6 @@ function Heretic1_get_levels()
 
         boss_kind   = (map == 8) and HERETIC_EPISODE_BOSSES[episode],
         secret_kind = (map == 9) and "plain",
-
-        toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 7),
       }
 
       if HERETIC_SECRET_EXITS[LEV.name] then
@@ -1845,8 +1843,6 @@ function Heretic1_setup()
   Game_merge_tab("door_fabs", HERETIC_DOOR_PREFABS)
   Game_merge_tab("wall_fabs", HERETIC_WALL_PREFABS)
   Game_merge_tab("misc_fabs", HERETIC_MISC_PREFABS)
-
-  GAME.toughness_factor = 0.80  -- FIXME: PARAM
 
   GAME.depot_info  = { teleport_kind=97 }
 
