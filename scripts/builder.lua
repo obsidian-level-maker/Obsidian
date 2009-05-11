@@ -1071,11 +1071,9 @@ end
 
 
 function Build_niche_stair(S, skin, skin2)
-
   local step_info = get_mat(skin.side_w, skin.top_f)
 
-  local front_info = get_mat(skin.step_w)
-  add_pegging(front_info)
+  local front_info = add_pegging(get_mat(skin.step_w))
 
   for side = 2,8,2 do
     S.thick[side] = 64
@@ -1200,14 +1198,14 @@ end
 
 
 function Build_low_curved_stair(S, skin, x_side,y_side, x_h,y_h)
-
   local step_info = get_mat(skin.step_w, skin.top_f)
   add_pegging(step_info)
 
   -- create transform
   local T =
   {
-    dx = S.x1, dy = S.y1,
+    add_x = S.x1,
+    add_y = S.y1,
   }
 
   local long = S.x2 - S.x1
@@ -1274,16 +1272,16 @@ cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
 
   local mat_info = get_mat("METAL")
 
-  local h3 = math.max(x_h, y_h)
+  local z3 = math.max(x_h, y_h)
 
   transformed_brush(T, mat_info,
-    rect_coords(0,0, 32,32), -EXTREME_H, h3)
+    rect_coords(0,0, 32,32), -EXTREME_H, z3)
 
   transformed_brush(T, mat_info,
-    rect_coords(0,deep-bord_W, long,deep), -EXTREME_H, h3)
+    rect_coords(0,deep-bord_W, long,deep), -EXTREME_H, z3)
 
   transformed_brush(T, mat_info,
-    rect_coords(long-bord_W,0, long,deep), -EXTREME_H, h3)
+    rect_coords(long-bord_W,0, long,deep), -EXTREME_H, z3)
 end
 
 
@@ -1915,8 +1913,11 @@ function Build_small_exit(R, item_name)
 
 
   if item_name then
+    TRANSFORM = WT
     Trans_entity(item_name, mx, 96, f_h)
   end
+
+  Trans_clear()
 end
 
 
