@@ -471,9 +471,7 @@ function Build_archway(S, side, z1, z2, skin)
 end
 
 
-function Build_door(S, side, z1, w_tex, o_tex, info, tag)
-
-  local skin = assert(info.skin)
+function Build_door(S, side, z1, skin, skin2, tag)
 
   tag2 = nil  -- FIXME !!!
 
@@ -488,37 +486,23 @@ function Build_door(S, side, z1, w_tex, o_tex, info, tag)
   local mx = int(long / 2)
   local my = 0
 
-gui.debugf("INFO = %s\n", table_to_str(info,3))
-  local door_h = info.skin.door_h or 112
-  local door_info =
-  {
-    t_face = { texture=skin.door_c },
-    b_face = { texture=assert(skin.door_c), light=0.7 },
-    w_face = { texture=assert(skin.door_w), peg=true, x_offset=0, y_offset=0 },
-    delta_z = -8,
-    sec_tag = tag,
-  }
+  local door_h = skin.door_h or 112
+gui.printf("SKIN = %s\n", table_to_str(skin,2))
+  local door_info = add_pegging(get_mat(skin.door_w))
 
-  local frame_info =
-  {
-    t_face = { texture=skin.frame_c or "FLAT18" },
-    b_face = { texture=skin.frame_c or "FLAT18", light=0.7 },
-    w_face = { texture=w_tex },
-  }
+  door_info.b_face.light = 0.7
+  door_info.sec_tag = tag
+  door_info.delta_z = -8
 
-  local step_info =
-  {
-    t_face = { texture=skin.step_f or "FLAT18" },
-    b_face = { texture=skin.step_f or "FLAT18" },
-    w_face = { texture=skin.step_w or "STEP4" },
-  }
+  local out_info = get_mat(skin2.outer)
 
-  local key_info =
-  {
-    t_face = { texture="FLAT18" },
-    b_face = { texture="FLAT18" },
-    w_face = { texture=assert(info.skin.key_w), x_offset=0, y_offset=0 },
-  }
+  local frame_info = get_mat(skin2.inner, skin.frame_c)
+  frame_info.b_face.light = 0.7
+
+  local step_info = get_mat(skin.step_w)
+
+  local key_info = add_pegging(get_mat(skin.key_w))
+
 
   TRANSFORM = T
 
@@ -529,11 +513,11 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
     { x=long, y=my-DY },
     { x=long, y=my+DY },
     { x=0,    y=my+DY },
-    { x=0,    y=my-DY, w_face = {texture=o_tex} },
+    { x=0,    y=my-DY, w_face = out_info.w_face },
   },
   z1+8+door_h, EXTREME_H)
 
-  local KIND = assert(info.skin.line_kind)
+  local KIND = assert(skin.line_kind)
 
   Trans_brush(door_info,
   {
@@ -544,13 +528,15 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
   },
   z1+16, EXTREME_H)
 
+  local track_i = add_pegging(get_mat(skin.track))
+
 
   for pass = 1,2 do
     if pass == 2 then TRANSFORM.mirror_x = mx end
 
     Trans_brush(key_info,
     {
-      { x=mx-64,    y=my-8, w_face={ texture="DOORTRAK", peg=true } },
+      { x=mx-64,    y=my-8, w_face = track_i.w_face },
       { x=mx-64,    y=my+8  },
       { x=mx-64-18, y=my+DY },
       { x=mx-64-18, y=my-DY },
@@ -562,7 +548,7 @@ gui.debugf("INFO = %s\n", table_to_str(info,3))
       { x=mx-64-18, y=my-DY },
       { x=mx-64-18, y=my+DY },
       { x=0,        y=my+DY },
-      { x=0,        y=my-DY, w_face={ texture=o_tex } },
+      { x=0,        y=my-DY, w_face = out_info.w_face },
     },
     -EXTREME_H, EXTREME_H)
   end
@@ -1301,12 +1287,7 @@ function Build_outdoor_ramp_down(ST, f_tex, w_tex)
   local ix2 = ST.S.x2
   local iy2 = ST.S.y2
 
-  local info =
-  {
-    b_face = { texture=f_tex },
-    t_face = { texture=f_tex },
-    w_face = { texture=w_tex },
-  }
+  local info = get_mat(w_tex, f_tex)
 
 gui.debugf("Build_outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 
@@ -1366,12 +1347,7 @@ function Build_outdoor_ramp_up(ST, f_tex, w_tex)
   local ix2 = ST.S.x2
   local iy2 = ST.S.y2
 
-  local info =
-  {
-    b_face = { texture=f_tex },
-    t_face = { texture=f_tex },
-    w_face = { texture=w_tex },
-  }
+  local info = get_mat(w_tex, f_tex)
 
 gui.debugf("Build_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 

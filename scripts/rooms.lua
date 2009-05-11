@@ -2073,7 +2073,14 @@ gui.printf("do_teleport\n")
         local z = assert(S.conn and S.conn.conn_h)
         local INFO = assert(GAME.door_fabs["silver_lit"])
 
-        Build_door(S, side, z, w_tex, o_tex or w_tex, INFO, 0)
+        local skin  = INFO.skin
+        local skin2 = { inner=w_tex, outer=o_tex }
+
+        skin.track = "DOORTRAK"
+        skin.frame_c = "FLAT18"
+        assert(skin.step_w)  -- skin,step_w  = "STEP4"
+
+        Build_door(S, side, z, skin, skin2, 0)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -2091,7 +2098,12 @@ gui.printf("do_teleport\n")
           INFO = assert(GAME.switch_doors[LOCK.item])
         end
 
-        Build_door(S, side, S.conn.conn_h, w_tex, o_tex or w_tex, INFO, LOCK.tag)
+        local skin = INFO.skin
+        skin.track = "DOORTRAK"
+
+        local skin2 = { inner=w_tex, outer=o_tex }
+
+        Build_door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
