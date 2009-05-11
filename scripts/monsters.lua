@@ -678,7 +678,7 @@ function Monsters_in_room(R)
     -- each level gets progressively tougher
     if LEVEL.toughness then
       toughness = toughness * LEVEL.toughness
-    elseif OB_CONFIG.length ~= "single" then
+    else
       toughness = toughness * (1 + LEVEL.ep_along * 2.4)
     end
 

@@ -1974,12 +1974,18 @@ function Doom1_get_levels()
     end
 
     for map = 1,MAP_NUM do
+      local ep_along = map / MAP_NUM
+
+      if MAP_NUM == 1 or map == 9 then
+        ep_along = 0.5
+      end
+
       local LEV =
       {
         name  = string.format("E%dM%d", episode, map),
         patch = string.format("WILV%d%d", episode-1, map-1),
 
-        ep_along = map / MAP_NUM,
+        ep_along = ep_along,
 
         theme = "TECH",
 
@@ -2028,11 +2034,27 @@ function Doom2_get_levels()
   assert(GAME.sky_info)
 
   for map = 1,MAP_NUM do
-    local episode = 1
+    local episode
+    local ep_along
 
-    if map >= 12 then episode = 2 end
-    if map >= 21 then episode = 3 end
-    if map >= 31 then episode = 2 end
+    if map >= 31 then
+      episode = 2 ; ep_along = 0.5
+    elseif map >= 21 then
+      episode = 3 ; ep_along = (map - 20) / 10
+    elseif map >= 12 then
+      episode = 2 ; ep_along = (map - 11) / 9
+    else
+      episode = 1 ; ep_along = map / 11
+    end
+
+    if OB_CONFIG.length == "single" then
+      ep_along = 0.5
+    elseif OB_CONFIG.length == "few" then
+      ep_along = map / MAP_NUM
+    end
+
+    assert(ep_along <= 1)
+
 
     local theme_probs = DOOM2_EPISODE_THEMES[episode]
     if OB_CONFIG.length ~= "full" then
@@ -2045,7 +2067,7 @@ function Doom2_get_levels()
       name  = string.format("MAP%02d", map),
       patch = string.format("CWILV%02d", map-1),
 
-      ep_along = ((map - 1) % 11) / 10.0,
+      ep_along = ep_along,
 
       theme = "TECH",
 
@@ -2058,12 +2080,6 @@ function Doom2_get_levels()
 
       style = {},
     }
-
-    if OB_CONFIG.length == "few" then
-      LEV.ep_along = (map-1) / (MAP_NUM - 1)
-    end
-
-    assert(LEV.ep_along <= 1)
 
     LEV.toughness_factor = 1 + 1.5 * LEV.ep_along
 
