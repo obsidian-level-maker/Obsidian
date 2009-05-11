@@ -747,7 +747,7 @@ int CSG2_add_entity(lua_State *L)
 
   // grab properties
 
-  if (nargs >= 5)
+  if (nargs >= 5 && lua_type(L, 5) != LUA_TNIL)
   {
     if (lua_type(L, 5) != LUA_TTABLE)
       return luaL_argerror(L, 5, "bad property table");
