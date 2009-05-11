@@ -529,9 +529,7 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   end
 
   local function place_item(S, item_name, x, y, SK)
-    local thing = assert(GAME.things[item_name])
-
-    gui.add_entity(tostring(thing.id), x, y, S.floor_h + 25,
+    Trans_entity(item_name, x, y, S.floor_h,
     {
       skill_hard   = sel(SK == "hard",   1, 0),
       skill_medium = sel(SK == "medium", 1, 0),
@@ -1075,8 +1073,6 @@ function Monsters_in_room(R)
   end
 
   local function place_monster(spot, index)
-    local thing = GAME.things[spot.monster]
-
     local angle  = monster_angle(spot.S)
     local ambush = rand_sel(92, 1, 0)
 
@@ -1093,7 +1089,7 @@ function Monsters_in_room(R)
       skill = 1 ; add_to_list(SKILLS[skill], spot)
     end
 
-    gui.add_entity(tostring(thing.id), spot.x, spot.y, spot.S.floor_h + 25,
+    Trans_entity(spot.monster, spot.x, spot.y, spot.S.floor_h,
     {
       angle  = spot.angle  or angle,
       ambush = spot.ambush or ambush,
@@ -1111,9 +1107,7 @@ function Monsters_in_room(R)
       return
     end
 
-    local thing = GAME.things["barrel"]
-
-    gui.add_entity(tostring(thing.id), spot.x, spot.y, spot.S.floor_h + 25)
+    Trans_entity("barrel", spot.x, spot.y, spot.S.floor_h)
 
     spot.S.content = "monster"  -- allow items to exist here
   end

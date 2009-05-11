@@ -1664,18 +1664,12 @@ function Layout_one(R)
         Build_pedestal(S, z1, skin)
       end
 
-      gui.add_entity(tostring(GAME.things["player1"].id),
-                     mx, my, z1 + 35, { angle=angle })
+      Trans_entity("player1", mx, my, z1, { angle=angle })
 
       if GAME.things["player2"] then
-        gui.add_entity(tostring(GAME.things["player2"].id),
-                       mx - dist, my, z1 + 35, { angle=angle })
-
-        gui.add_entity(tostring(GAME.things["player3"].id),
-                       mx + dist, my, z1 + 35, { angle=angle })
-
-        gui.add_entity(tostring(GAME.things["player4"].id),
-                       mx, my - dist, z1 + 35, { angle=angle })
+        Trans_entity("player2", mx - dist, my, z1, { angle=angle })
+        Trans_entity("player3", mx + dist, my, z1, { angle=angle })
+        Trans_entity("player4", mx, my - dist, z1, { angle=angle })
       end
 
       -- never put monsters next to the start spot
@@ -1723,8 +1717,7 @@ function Layout_one(R)
         Build_pedestal(S, z1, skin)
       end
 
-      gui.add_entity(tostring(GAME.things[R.key_item].id),
-                     mx, my, z + 35)
+      Trans_entity(R.key_item, mx, my, z)
 
     elseif R.purpose == "SWITCH" then
 gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
@@ -1767,8 +1760,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       Build_pedestal(S, z1, skin)
     end
 
-    gui.add_entity(tostring(GAME.things[weapon].id),
-                   mx, my, z + 35)
+    Trans_entity(weapon, mx, my, z)
 
     gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z)
   end
@@ -2308,8 +2300,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
   if R.kind == "smallexit" then
-    local item = tostring(GAME.things["medikit"].id)
-    Build_small_exit(R, item)
+    Build_small_exit(R, "medikit")  -- FIXME: game specific
     return
   end
 

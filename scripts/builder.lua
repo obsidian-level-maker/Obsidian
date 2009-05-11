@@ -126,6 +126,26 @@ function Trans_quad(info, x1,y1, x2,y2, z1,z2)
   Trans_brush(info, rect_coords(x1,y1, x2,y2), z1,z2)
 end
 
+function Trans_entity(name, x, y, z, props)
+  assert(name)
+
+  local info = GAME.things[name]
+  if not info then
+    error("THINGS table is missing info for: " .. tostring(name))
+  end
+  assert(info.id)
+
+  if info.delta_z then
+    z = z + info.delta_z
+  elseif PARAM.entity_delta_z then
+    z = z + PARAM.entity_delta_z
+  end
+
+  x, y = Trans_coord(x, y)
+
+  gui.add_entity(tostring(info.id), x, y, z, props)
+end
+
 
 function psychedelic_mat(name)
   if GAME.sanity_map and GAME.sanity_map[name] then
@@ -1895,8 +1915,7 @@ function Build_small_exit(R, item_name)
 
 
   if item_name then
-    local ex, ey = Trans_coord(mx, 96)
-    gui.add_entity(item_name, ex, ey, f_h+25)
+    Trans_entity(item_name, mx, 96, f_h)
   end
 end
 
@@ -2187,8 +2206,7 @@ function Build_popup_trap(S, z1, skin, combo, monster)
   },
   -EXTREME_H, z1)
 
-  -- FIXME
-  gui.add_entity(monster, T.dx + long/2, T.dy + deep/2, z1+25, { ambush=1 })
+  Trans_entity(monster, long/2, deep/2, z1, { ambush=1 })
 end
 
 

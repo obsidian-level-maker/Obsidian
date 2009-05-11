@@ -23,18 +23,12 @@ require 'util'
 function Arena_add_players(x, y, z, angle)
   local dist = 40
 
-  gui.add_entity(tostring(GAME.things["player1"].id),
-                 x, y, z, { angle=angle })
+  Trans_entity("player1", x, y, z, { angle=angle })
 
   if GAME.things["player2"] then
-    gui.add_entity(tostring(GAME.things["player2"].id),
-                   x - dist, y, z, { angle=angle })
-
-    gui.add_entity(tostring(GAME.things["player3"].id),
-                   x + dist, y, z, { angle=angle })
-
-    gui.add_entity(tostring(GAME.things["player4"].id),
-                   x - dist, y + dist, z, { angle=angle })
+    Trans_entity("player2", x - dist, y, z, { angle=angle })
+    Trans_entity("player3", x + dist, y, z, { angle=angle })
+    Trans_entity("player4", x - dist, y + dist, z, { angle=angle })
   end
 end
 
@@ -104,8 +98,7 @@ function Arena_Doom_MAP30()
     Trans_quad(info, x1,y1, x2,y2, z1-32, z1)
     Trans_quad(info, x1,y1, x2,y2, z2, z2+32)
 
-    gui.add_entity(tostring(GAME.things["brain_shooter"].id),
-                   face_x, y1+24, z1, { angle=270 })
+    Trans_entity("brain_shooter", face_x, y1+24, z1, { angle=270 })
 
     z1 = z1 - 96
 
@@ -120,8 +113,7 @@ function Arena_Doom_MAP30()
     Trans_quad(info, x1,y1, x2,y2, z1-32, z1)
     Trans_quad(info, x1,y1, x2,y2, z2, z2+32)
 
-    gui.add_entity(tostring(GAME.things["brain_boss"].id),
-                   face_x, y2-48, z1, { angle=270 })
+    Trans_entity("brain_boss", face_x, y2-48, z1, { angle=270 })
 
   end
 
@@ -155,31 +147,31 @@ function Arena_Doom_MAP30()
       local hy = face_y - 96
       local item = "mega" -- sel(i == 0, "soul", "mega")
 
-      gui.add_entity(tostring(GAME.things[item].id), hx, hy, 0)
+      Trans_entity(item, hx, hy, 0)
 
       --[[
       hx = face_x + i * 128
       hy = face_y - 240
       item = sel(i == 0, "plasma", "cell_pack")
 
-      gui.add_entity(tostring(GAME.things[item].id), hx, hy, 0)
+      Trans_entity(item, hx, hy, 0)
       --]]
 
       if i ~= 0 then
         local tx = face_x + i * 240
         local ty = room_y + 250
 
-        gui.add_entity(tostring(GAME.things["brain_target"].id), tx, ty, 0)
+        Trans_entity("brain_target", tx, ty, 0)
 
         tx = face_x + i * 400
         ty = ledge_y + 400
 
-        gui.add_entity(tostring(GAME.things["brain_target"].id), tx, ty, 0)
+        Trans_entity("brain_target", tx, ty, 0)
 
         hx = face_x + i * 128
         hy = room_y + 64
 
-        gui.add_entity(tostring(GAME.things["medikit"].id), hx, hy, 0)
+        Trans_entity("medikit", hx, hy, 0)
       end
     end
   end
@@ -207,19 +199,16 @@ function Arena_Doom_MAP30()
 
       Trans_quad(step, x1,y3-32, x2,y3+32, -EXTREME_H, z + 16)
 
-      gui.add_entity(tostring(GAME.things["Cyberdemon"].id),
-                     mx, my, z, { angle=angle })
+      Trans_entity("Cyberdemon", mx, my, z, { angle=angle })
 
       if i <= 2 then
-        gui.add_entity(tostring(GAME.things["launch"].id),
-                       mx, my, z, { angle=angle })
+        Trans_entity("launch", mx, my, z, { angle=angle })
       end
 
       for side = 1,9 do if side ~= 5 then
         local dist = sel((side % 2) == 0, 1.4, 1) * 36
         local rx, ry = nudge_coord(mx, my, side, dist)
-        gui.add_entity(tostring(GAME.things["rockets"].id),
-                       rx, ry, z, { angle=angle })
+        Trans_entity("rockets", rx, ry, z, { angle=angle })
       end end -- for side
     end
   end
@@ -277,7 +266,7 @@ function Arena_Doom_MAP30()
     local tx = face_x
     local ty = ledge_y + 160
 
-    gui.add_entity(tostring(GAME.things["brain_target"].id), tx, ty, 0)
+    Trans_entity("brain_target", tx, ty, 0)
   end
 
 
@@ -321,10 +310,10 @@ function Arena_Doom_MAP07()
 
     -- ITEMS --
 
-    gui.add_entity(tostring(GAME.things["medikit"].id), x1+96, y1+96, 0)
-    gui.add_entity(tostring(GAME.things["medikit"].id), x2-96, y1+96, 0)
-    gui.add_entity(tostring(GAME.things["medikit"].id), x1+96, y2-96, 0)
-    gui.add_entity(tostring(GAME.things["medikit"].id), x2-96, y2-96, 0)
+    Trans_entity("medikit", x1+96, y1+96, 0)
+    Trans_entity("medikit", x2-96, y1+96, 0)
+    Trans_entity("medikit", x1+96, y2-96, 0)
+    Trans_entity("medikit", x2-96, y2-96, 0)
 
     local step = add_pegging(get_mat("FLOOR5_2"))
 
@@ -343,7 +332,7 @@ function Arena_Doom_MAP07()
       local my = 256*5 + iy * 160
       local item = ITEM_MAP[1 + math.abs(iy)][1 + math.abs(ix)]
 
-      gui.add_entity(tostring(GAME.things[item].id), mx, my, 0)
+      Trans_entity(item, mx, my, 0)
     end end -- for ix, iy
   end
 
@@ -356,8 +345,7 @@ function Arena_Doom_MAP07()
         x-w,y-w, x+w,y+w, -EXTREME_H, z)
 
     if entity then
-      gui.add_entity(tostring(GAME.things[entity].id),
-                     x, y, z, { angle=rand_irange(0,3)*90 })
+      Trans_entity(entity, x, y, z, { angle=rand_irange(0,3)*90 })
     end 
   end
 

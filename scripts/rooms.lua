@@ -2226,7 +2226,8 @@ end
       Build_lift(S, PLAN.lift_skin, tag)
 
     elseif S.kind == "popup" then
-      Build_popup_trap(S, z1, {}, S.room.combo)
+      -- FIXME: monster!!
+      Build_popup_trap(S, z1, {}, S.room.combo, "revenant")
 
     elseif S.kind == "liquid" then
       -- FIXME: game specific
