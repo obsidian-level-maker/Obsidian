@@ -2405,7 +2405,7 @@ OB_GAMES["doom1"] =
     mon_damage_high = 100,
     mon_damage_low  =   1,
 
-    ammo_factor   = 0.7,
+    ammo_factor   = 0.8,
     health_factor = 0.7,
   },
 
@@ -2455,7 +2455,7 @@ OB_GAMES["doom2"] =
     mon_damage_high = 100,
     mon_damage_low  =   1,
 
-    ammo_factor   = 0.7,
+    ammo_factor   = 0.8,
     health_factor = 0.7,
   },
 
