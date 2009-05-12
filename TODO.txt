@@ -2,18 +2,6 @@
 TODO
 ====
 
-!! TRANSFORM changes
-
-+  remaining uses of transformed_brush
-+  add a Trans_entity() function
-
-
-Materials:
-
-+  Build_door
-+  Build_small_exit
-+  Build_popup_trap
-
 
 upload WEBSITE change
 
