@@ -295,401 +295,369 @@ HEXEN_MATERIALS =
 {
   -- textures --
 
-BOOKS01
-BOOKS02
-BOOKS03
-BOOKS04
-BOSSK1
-BOSSK2
-BRASS1
-BRASS3
-BRASS4
-CASTLE01
-CASTLE02
-CASTLE03
-CASTLE04
-CASTLE05
-CASTLE06
-CASTLE07
-CASTLE08
-CASTLE11
+  BOOKS01  = { "BOOKS01",  "        " },
+  BOOKS02  = { "BOOKS02",  "        " },
+  BOOKS03  = { "BOOKS03",  "        " },
+  BOOKS04  = { "BOOKS04",  "        " },
+  BRASS1   = { "BRASS1",   "        " },
+  BRASS3   = { "BRASS3",   "        " },
+  BRASS4   = { "BRASS4",   "        " },
+  CASTLE01 = { "CASTLE01", "        " },
+  CASTLE02 = { "CASTLE02", "        " },
+  CASTLE03 = { "CASTLE03", "        " },
+  CASTLE04 = { "CASTLE04", "        " },
+  CASTLE05 = { "CASTLE05", "        " },
+  CASTLE06 = { "CASTLE06", "        " },
+  CASTLE07 = { "CASTLE07", "        " },
+  CASTLE08 = { "CASTLE08", "        " },
+  CASTLE11 = { "CASTLE11", "        " },
 
-CAVE01
-CAVE02
-CAVE03
-CAVE04
-CAVE05
-CAVE06
-CAVE07
-CAVE12
-CHAP1
-CHAP2
-CHAP3
-CLOCKA
-CRATE01
-CRATE02
-CRATE03
-CRATE04
-CRATE05
+  CAVE01   = { "CAVE01",   "        " },
+  CAVE02   = { "CAVE02",   "        " },
+  CAVE03   = { "CAVE03",   "        " },
+  CAVE04   = { "CAVE04",   "        " },
+  CAVE05   = { "CAVE05",   "        " },
+  CAVE06   = { "CAVE06",   "        " },
+  CAVE07   = { "CAVE07",   "        " },
+  CAVE12   = { "CAVE12",   "        " },
+  CHAP1    = { "CHAP1",    "        " },
+  CHAP2    = { "CHAP2",    "        " },
+  CHAP3    = { "CHAP3",    "        " },
+  CLOCKA   = { "CLOCKA",   "        " },
+  CRATE01  = { "CRATE01",  "        " },
+  CRATE02  = { "CRATE02",  "        " },
+  CRATE03  = { "CRATE03",  "        " },
+  CRATE04  = { "CRATE04",  "        " },
+  CRATE05  = { "CRATE05",  "        " },
 
-D_AXE
-D_BRASS1
-D_BRASS2
-D_CAST
-D_CAVE
-D_CAVE2
-D_DUNGEO
-D_END1
-D_END2
-D_END3
-D_END4
-D_ENDBR
-D_ENDSLV
-D_FIRE
-D_RUST
-D_SILKEY
-D_SILVER
-D_SLV1
-D_SLV2
-D_STEEL
-D_SWAMP
-D_SWAMP2
-D_WASTE
-D_WD01
-D_WD02
-D_WD03
-D_WD04
-D_WD05
-D_WD06
-D_WD07
-D_WD08
-D_WD09
-D_WD10
-D_WINNOW
-DOOR51
+  D_AXE    = { "D_AXE",    "        " },
+  D_BRASS1 = { "D_BRASS1", "        " },
+  D_BRASS2 = { "D_BRASS2", "        " },
+  D_CAST   = { "D_CAST",   "        " },
+  D_CAVE   = { "D_CAVE",   "        " },
+  D_CAVE2  = { "D_CAVE2",  "        " },
+  D_DUNGEO = { "D_DUNGEO", "        " },
+  D_END1   = { "D_END1",   "        " },
+  D_END2   = { "D_END2",   "        " },
+  D_END3   = { "D_END3",   "        " },
+  D_END4   = { "D_END4",   "        " },
+  D_ENDBR  = { "D_ENDBR",  "        " },
+  D_ENDSLV = { "D_ENDSLV", "        " },
+  D_FIRE   = { "D_FIRE",   "        " },
+  D_RUST   = { "D_RUST",   "        " },
+  D_SILKEY = { "D_SILKEY", "        " },
+  D_SILVER = { "D_SILVER", "        " },
+  D_SLV1   = { "D_SLV1",   "        " },
+  D_SLV2   = { "D_SLV2",   "        " },
+  D_STEEL  = { "D_STEEL",  "        " },
+  D_SWAMP  = { "D_SWAMP",  "        " },
+  D_SWAMP2 = { "D_SWAMP2", "        " },
+  D_WASTE  = { "D_WASTE",  "        " },
+  D_WD01   = { "D_WD01",   "        " },
+  D_WD02   = { "D_WD02",   "        " },
+  D_WD03   = { "D_WD03",   "        " },
+  D_WD04   = { "D_WD04",   "        " },
+  D_WD05   = { "D_WD05",   "        " },
+  D_WD06   = { "D_WD06",   "        " },
+  D_WD07   = { "D_WD07",   "        " },
+  D_WD08   = { "D_WD08",   "        " },
+  D_WD09   = { "D_WD09",   "        " },
+  D_WD10   = { "D_WD10",   "        " },
+  D_WINNOW = { "D_WINNOW", "        " },
+  DOOR51   = { "DOOR51",   "        " },
 
-FIRE01
-FIRE02
-FIRE03
-FIRE04
-FIRE05
-FIRE06
-FIRE07
-FIRE08
-FIRE09
-FIRE10
-FIRE11
-FIRE12
-FIRE14
-FIRE15
-FIRE17
+  FIRE01   = { "FIRE01",   "        " },
+  FIRE02   = { "FIRE02",   "        " },
+  FIRE03   = { "FIRE03",   "        " },
+  FIRE04   = { "FIRE04",   "        " },
+  FIRE05   = { "FIRE05",   "        " },
+  FIRE06   = { "FIRE06",   "        " },
+  FIRE07   = { "FIRE07",   "        " },
+  FIRE08   = { "FIRE08",   "        " },
+  FIRE09   = { "FIRE09",   "        " },
+  FIRE10   = { "FIRE10",   "        " },
+  FIRE11   = { "FIRE11",   "        " },
+  FIRE12   = { "FIRE12",   "        " },
+  FIRE14   = { "FIRE14",   "        " },
+  FIRE15   = { "FIRE15",   "        " },
+  FIRE17   = { "FIRE17",   "        " },
 
-FOREST01
-FOREST02
-FOREST03
-FOREST04
-FOREST05
-FOREST07
-FOREST10
-FOREST11
-FORPUZ1
-FORPUZ2
-FORPUZ3
+  FOREST01 = { "FOREST01", "        " },
+  FOREST02 = { "FOREST02", "        " },
+  FOREST03 = { "FOREST03", "        " },
+  FOREST04 = { "FOREST04", "        " },
+  FOREST05 = { "FOREST05", "        " },
+  FOREST07 = { "FOREST07", "        " },
+  FOREST10 = { "FOREST10", "        " },
+  FOREST11 = { "FOREST11", "        " },
+  FORPUZ1  = { "FORPUZ1",  "        " },
+  FORPUZ2  = { "FORPUZ2",  "        " },
+  FORPUZ3  = { "FORPUZ3",  "        " },
 
-GEAR01
-GEAR02
-GEAR03
-GEAR04
-GEAR05
-GEAR0A
-GEAR0B
-GEARW
-GEARX
-GEARY
-GEARZ
-GILO1
-GILO2
+  GEARW    = { "GEARW",    "        " },
+  GEARX    = { "GEARX",    "        " },
+  GEARY    = { "GEARY",    "        " },
+  GEARZ    = { "GEARZ",    "        " },
+  GILO1    = { "GILO1",    "        " },
+  GILO2    = { "GILO2",    "        " },
 
-GLASS01
-GLASS02
-GLASS03
-GLASS04
-GLASS05
-GLASS06
-GRAVE01
-GRAVE03
-GRAVE04
-GRAVE05
-GRAVE06
-GRAVE07
-GRAVE08
+  GLASS01  = { "GLASS01",  "        " },
+  GLASS02  = { "GLASS02",  "        " },
+  GLASS03  = { "GLASS03",  "        " },
+  GLASS04  = { "GLASS04",  "        " },
+  GLASS05  = { "GLASS05",  "        " },
+  GLASS06  = { "GLASS06",  "        " },
+  GRAVE01  = { "GRAVE01",  "        " },
+  GRAVE03  = { "GRAVE03",  "        " },
+  GRAVE04  = { "GRAVE04",  "        " },
+  GRAVE05  = { "GRAVE05",  "        " },
+  GRAVE06  = { "GRAVE06",  "        " },
+  GRAVE07  = { "GRAVE07",  "        " },
+  GRAVE08  = { "GRAVE08",  "        " },
 
-ICE01
-ICE02
-ICE03
-ICE06
-MONK01
-MONK02
-MONK03
-MONK04
-MONK05
-MONK06
-MONK07
-MONK08
-MONK09
-MONK11
-MONK12
-MONK14
-MONK15
-MONK16
-MONK17
-MONK18
-MONK19
-MONK21
-MONK22
-MONK23
+  ICE01    = { "ICE01",    "        " },
+  ICE02    = { "ICE02",    "        " },
+  ICE03    = { "ICE03",    "        " },
+  ICE06    = { "ICE06",    "        " },
+  MONK01   = { "MONK01",   "        " },
+  MONK02   = { "MONK02",   "        " },
+  MONK03   = { "MONK03",   "        " },
+  MONK04   = { "MONK04",   "        " },
+  MONK05   = { "MONK05",   "        " },
+  MONK06   = { "MONK06",   "        " },
+  MONK07   = { "MONK07",   "        " },
+  MONK08   = { "MONK08",   "        " },
+  MONK09   = { "MONK09",   "        " },
+  MONK11   = { "MONK11",   "        " },
+  MONK12   = { "MONK12",   "        " },
+  MONK14   = { "MONK14",   "        " },
+  MONK15   = { "MONK15",   "        " },
+  MONK16   = { "MONK16",   "        " },
+  MONK17   = { "MONK17",   "        " },
+  MONK18   = { "MONK18",   "        " },
+  MONK19   = { "MONK19",   "        " },
+  MONK21   = { "MONK21",   "        " },
+  MONK22   = { "MONK22",   "        " },
+  MONK23   = { "MONK23",   "        " },
 
-PILLAR01
-PILLAR02
-PLANET1
-PLANET2
-PLAT01
-PLAT02
-PRTL02
-PRTL03
-PRTL04
-PRTL05
-PRTL06
-PUZZLE1
-PUZZLE10
-PUZZLE11
-PUZZLE12
-PUZZLE2
-PUZZLE3
-PUZZLE4
-PUZZLE5
-PUZZLE6
-PUZZLE7
-PUZZLE8
-PUZZLE9
+  PILLAR01 = { "PILLAR01", "        " },
+  PILLAR02 = { "PILLAR02", "        " },
+  PLANET1  = { "PLANET1",  "        " },
+  PLANET2  = { "PLANET2",  "        " },
+  PLAT01   = { "PLAT01",   "        " },
+  PLAT02   = { "PLAT02",   "        " },
+  PRTL02   = { "PRTL02",   "        " },
+  PRTL03   = { "PRTL03",   "        " },
+  PRTL04   = { "PRTL04",   "        " },
+  PRTL05   = { "PRTL05",   "        " },
+  PRTL06   = { "PRTL06",   "        " },
+  PUZZLE1  = { "PUZZLE1",  "        " },
+  PUZZLE10 = { "PUZZLE10", "        " },
+  PUZZLE11 = { "PUZZLE11", "        " },
+  PUZZLE12 = { "PUZZLE12", "        " },
+  PUZZLE2  = { "PUZZLE2",  "        " },
+  PUZZLE3  = { "PUZZLE3",  "        " },
+  PUZZLE4  = { "PUZZLE4",  "        " },
+  PUZZLE5  = { "PUZZLE5",  "        " },
+  PUZZLE6  = { "PUZZLE6",  "        " },
+  PUZZLE7  = { "PUZZLE7",  "        " },
+  PUZZLE8  = { "PUZZLE8",  "        " },
+  PUZZLE9  = { "PUZZLE9",  "        " },
 
-S_01
-S_02
-S_04
-S_05
-S_06
-S_07
-S_09
-S_11
-S_12
-S_13
-SEWER01
-SEWER02
-SEWER05
-SEWER06
-SEWER07
-SEWER08
-SEWER09
-SEWER10
-SEWER11
-SEWER12
-SEWER13
+  S_01     = { "S_01",     "        " },
+  S_02     = { "S_02",     "        " },
+  S_04     = { "S_04",     "        " },
+  S_05     = { "S_05",     "        " },
+  S_06     = { "S_06",     "        " },
+  S_07     = { "S_07",     "        " },
+  S_09     = { "S_09",     "        " },
+  S_11     = { "S_11",     "        " },
+  S_12     = { "S_12",     "        " },
+  S_13     = { "S_13",     "        " },
+  SEWER01  = { "SEWER01",  "        " },
+  SEWER02  = { "SEWER02",  "        " },
+  SEWER05  = { "SEWER05",  "        " },
+  SEWER06  = { "SEWER06",  "        " },
+  SEWER07  = { "SEWER07",  "        " },
+  SEWER08  = { "SEWER08",  "        " },
+  SEWER09  = { "SEWER09",  "        " },
+  SEWER10  = { "SEWER10",  "        " },
+  SEWER11  = { "SEWER11",  "        " },
+  SEWER12  = { "SEWER12",  "        " },
+  SEWER13  = { "SEWER13",  "        " },
 
-SPAWN01
-SPAWN02
-SPAWN03
-SPAWN04
-SPAWN05
-SPAWN06
-SPAWN07
-SPAWN08
-SPAWN09
-SPAWN10
-SPAWN11
-SPAWN12
-SPAWN13
-STEEL01
-STEEL02
-STEEL05
-STEEL06
-STEEL07
-STEEL08
-SWAMP01
-SWAMP03
-SWAMP04
-SWAMP06
+  SPAWN01  = { "SPAWN01",  "        " },
+  SPAWN05  = { "SPAWN05",  "        " },
+  SPAWN08  = { "SPAWN08",  "        " },
+  SPAWN11  = { "SPAWN11",  "        " },
+  SPAWN13  = { "SPAWN13",  "        " },
+  STEEL01  = { "STEEL01",  "        " },
+  STEEL02  = { "STEEL02",  "        " },
+  STEEL05  = { "STEEL05",  "        " },
+  STEEL06  = { "STEEL06",  "        " },
+  STEEL07  = { "STEEL07",  "        " },
+  STEEL08  = { "STEEL08",  "        " },
+  SWAMP01  = { "SWAMP01",  "        " },
+  SWAMP03  = { "SWAMP03",  "        " },
+  SWAMP04  = { "SWAMP04",  "        " },
+  SWAMP06  = { "SWAMP06",  "        " },
 
-T2_STEP
-TOMB01
-TOMB02
-TOMB03
-TOMB04
-TOMB05
-TOMB06
-TOMB07
-TOMB08
-TOMB09
-TOMB10
-TOMB11
-TOMB12
-TPORT1
-VALVE1
-VALVE2
-VILL01
-VILL04
-VILL05
+  T2_STEP  = { "T2_STEP",  "        " },
+  TOMB01   = { "TOMB01",   "        " },
+  TOMB02   = { "TOMB02",   "        " },
+  TOMB03   = { "TOMB03",   "        " },
+  TOMB04   = { "TOMB04",   "        " },
+  TOMB05   = { "TOMB05",   "        " },
+  TOMB06   = { "TOMB06",   "        " },
+  TOMB07   = { "TOMB07",   "        " },
+  TOMB08   = { "TOMB08",   "        " },
+  TOMB09   = { "TOMB09",   "        " },
+  TOMB10   = { "TOMB10",   "        " },
+  TOMB11   = { "TOMB11",   "        " },
+  TOMB12   = { "TOMB12",   "        " },
+  TPORT1   = { "TPORT1",   "        " },
+  VALVE1   = { "VALVE1",   "        " },
+  VALVE2   = { "VALVE2",   "        " },
+  VILL01   = { "VILL01",   "        " },
+  VILL04   = { "VILL04",   "        " },
+  VILL05   = { "VILL05",   "        " },
 
-WASTE01
-WASTE02
-WASTE03
-WASTE04
-WINN01
-WINNOW02
-WOOD01
-WOOD02
-WOOD03
-WOOD04
+  WASTE01  = { "WASTE01",  "        " },
+  WASTE02  = { "WASTE02",  "        " },
+  WASTE03  = { "WASTE03",  "        " },
+  WASTE04  = { "WASTE04",  "        " },
+  WINN01   = { "WINN01",   "        " },
+  WINNOW02 = { "WINNOW02", "        " },
+  WOOD01   = { "WOOD01",   "        " },
+  WOOD02   = { "WOOD02",   "        " },
+  WOOD03   = { "WOOD03",   "        " },
+  WOOD04   = { "WOOD04",   "        " },
 
-X_FAC01
-X_FIRE01
-X_SWMP1
-X_SWR1
-X_WATER1
+  X_FAC01  = { "X_FAC01",  "        " },
+  X_FIRE01 = { "X_FIRE01", "        " },
+  X_SWMP1  = { "X_SWMP1",  "        " },
+  X_SWR1   = { "X_SWR1",   "        " },
+  X_WATER1 = { "X_WATER1", "        " },
 
-SW51_OFF
-SW51_ON
-SW52_OFF
-SW52_ON
-SW53_DN
-SW53_MD
-SW53_UP
-SW_1_DN
-SW_1_MD
-SW_1_UP
-SW_2_DN
-SW_2_MD
-SW_2_UP
-SW_EL1
-SW_EL2
-SW_EL3
-SW_EL4
-SW_EL5
-SW_OL1
-SW_OL2
-SW_OL3
-SW_OL4
-SW_OL5
+  BOSSK1   = { "BOSSK1",   "        " },
+  GEAR01   = { "GEAR01",   "        " },
+  SW51_OFF = { "SW51_OFF", "        " },
+  SW52_OFF = { "SW52_OFF", "        " },
+  SW53_UP  = { "SW53_UP",  "        " },
+  SW_1_UP  = { "SW_1_UP",  "        " },
+  SW_2_UP  = { "SW_2_UP",  "        " },
+  SW_EL1   = { "SW_EL1",   "        " },
+  SW_OL1   = { "SW_OL1",   "        " },
 
 
   -- flats --
 
-F_001
-F_002
-F_003
-F_004
-F_005
-F_006
-F_007
-F_008
-F_009
-F_010
-F_011
-F_012
-F_013
-F_014
-F_015
-F_017
-F_018
-F_019
-F_020
-F_021
-F_022
-F_023
-F_024
-F_025
-F_027
-F_028
-F_029
-F_030
-F_031
-F_032
-F_033
-F_034
-F_037
-F_038
-F_039
-F_040
-F_041
-F_042
-F_043
-F_044
-F_045
-F_046
-F_047
-F_048
-F_049
-F_050
-F_051
-F_052
-F_053
-F_054
-F_055
-F_057
-F_058
-F_059
-F_061
-F_062
-F_063
-F_064
-F_065
-F_066
-F_067
-F_068
-F_069
-F_070
-F_071
-F_072
-F_073
-F_074
-F_075
-F_076
-F_077
-F_078
-F_081
-F_082
-F_083
-F_084
-F_085
-F_086
-F_087
-F_088
-F_089
-F_091
-F_092
-F_A501
-F_SKY
+  F_001 = { "        ", "F_001" },
+  F_002 = { "        ", "F_002" },
+  F_003 = { "        ", "F_003" },
+  F_004 = { "        ", "F_004" },
+  F_005 = { "        ", "F_005" },
+  F_006 = { "        ", "F_006" },
+  F_007 = { "        ", "F_007" },
+  F_008 = { "        ", "F_008" },
+  F_009 = { "        ", "F_009" },
+  F_010 = { "        ", "F_010" },
+  F_011 = { "        ", "F_011" },
+  F_012 = { "        ", "F_012" },
+  F_013 = { "        ", "F_013" },
+  F_014 = { "        ", "F_014" },
+  F_015 = { "        ", "F_015" },
+  F_017 = { "        ", "F_017" },
+  F_018 = { "        ", "F_018" },
+  F_019 = { "        ", "F_019" },
+  F_020 = { "        ", "F_020" },
+  F_021 = { "        ", "F_021" },
+  F_022 = { "        ", "F_022" },
+  F_023 = { "        ", "F_023" },
+  F_024 = { "        ", "F_024" },
+  F_025 = { "        ", "F_025" },
+  F_027 = { "        ", "F_027" },
+  F_028 = { "        ", "F_028" },
+  F_029 = { "        ", "F_029" },
+  F_030 = { "        ", "F_030" },
+  F_031 = { "        ", "F_031" },
+  F_032 = { "        ", "F_032" },
+  F_033 = { "        ", "F_033" },
+  F_034 = { "        ", "F_034" },
+  F_037 = { "        ", "F_037" },
+  F_038 = { "        ", "F_038" },
+  F_039 = { "        ", "F_039" },
+  F_040 = { "        ", "F_040" },
+  F_041 = { "        ", "F_041" },
+  F_042 = { "        ", "F_042" },
+  F_043 = { "        ", "F_043" },
+  F_044 = { "        ", "F_044" },
+  F_045 = { "        ", "F_045" },
+  F_046 = { "        ", "F_046" },
+  F_047 = { "        ", "F_047" },
+  F_048 = { "        ", "F_048" },
+  F_049 = { "        ", "F_049" },
+  F_050 = { "        ", "F_050" },
+  F_051 = { "        ", "F_051" },
+  F_052 = { "        ", "F_052" },
+  F_053 = { "        ", "F_053" },
+  F_054 = { "        ", "F_054" },
+  F_055 = { "        ", "F_055" },
+  F_057 = { "        ", "F_057" },
+  F_058 = { "        ", "F_058" },
+  F_059 = { "        ", "F_059" },
 
-X_001
-X_002
-X_003
-X_004
-X_005
-X_006
-X_007
-X_008
-X_009
-X_010
-X_011
-X_012
-X_013
-X_014
-X_015
-X_016
+  F_061 = { "        ", "F_061" },
+  F_062 = { "        ", "F_062" },
+  F_063 = { "        ", "F_063" },
+  F_064 = { "        ", "F_064" },
+  F_065 = { "        ", "F_065" },
+  F_066 = { "        ", "F_066" },
+  F_067 = { "        ", "F_067" },
+  F_068 = { "        ", "F_068" },
+  F_069 = { "        ", "F_069" },
+  F_070 = { "        ", "F_070" },
+  F_071 = { "        ", "F_071" },
+  F_072 = { "        ", "F_072" },
+  F_073 = { "        ", "F_073" },
+  F_074 = { "        ", "F_074" },
+  F_075 = { "        ", "F_075" },
+  F_076 = { "        ", "F_076" },
+  F_077 = { "        ", "F_077" },
+  F_078 = { "        ", "F_078" },
+  F_081 = { "        ", "F_081" },
+  F_082 = { "        ", "F_082" },
+  F_083 = { "        ", "F_083" },
+  F_084 = { "        ", "F_084" },
+  F_085 = { "        ", "F_085" },
+  F_086 = { "        ", "F_086" },
+  F_087 = { "        ", "F_087" },
+  F_088 = { "        ", "F_088" },
+  F_089 = { "        ", "F_089" },
+  F_091 = { "        ", "F_091" },
+  F_092 = { "        ", "F_092" },
+  F_A501 ={ "        ", "F_A501" },
+
+  X_001 = { "        ", "X_001" },
+  X_002 = { "        ", "X_002" },
+  X_003 = { "        ", "X_003" },
+  X_004 = { "        ", "X_004" },
+  X_005 = { "        ", "X_005" },
+  X_006 = { "        ", "X_006" },
+  X_007 = { "        ", "X_007" },
+  X_008 = { "        ", "X_008" },
+  X_009 = { "        ", "X_009" },
+  X_010 = { "        ", "X_010" },
+  X_011 = { "        ", "X_011" },
+  X_012 = { "        ", "X_012" },
+  X_013 = { "        ", "X_013" },
+  X_014 = { "        ", "X_014" },
+  X_015 = { "        ", "X_015" },
+  X_016 = { "        ", "X_016" },
 }
 
 HEXEN_RAILS =
 {
-
 -- GATE01
 -- GATE02
 -- GATE03
