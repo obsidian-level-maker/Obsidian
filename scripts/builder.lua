@@ -487,7 +487,6 @@ function Build_door(S, side, z1, skin, skin2, tag)
   local my = 0
 
   local door_h = skin.door_h or 112
-gui.printf("SKIN = %s\n", table_to_str(skin,2))
   local door_info = add_pegging(get_mat(skin.door_w))
 
   door_info.b_face.light = 0.7
@@ -797,6 +796,7 @@ function Build_detailed_hall(S, side, z1, z2, skin)
 end
 
 
+-- NOT ACTUALLY USED:
 function Build_weird_hall(S, side, z1, z2)
 
   local function get_hall_coords(thickness)
