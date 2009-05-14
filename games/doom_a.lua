@@ -1489,9 +1489,9 @@ COMMON_MONSTERS =
 
   Mastermind =
   {
-    --!! crazy_prob=5,
+    crazy_prob=15,
     health=3000, damage=200, attack="hitscan",
-    density=0.1,
+    density=0.2,
   },
 }
 
@@ -2391,7 +2391,7 @@ OB_GAMES["doom1"] =
     seed_size = 256,
 
     sky_flat   = "F_SKY1",
-    sky_tex    = "-",
+    sky_tex    = "CEMENT3",
 
     error_tex  = "METAL"   or "FIREBLU1",
     error_flat = "CEIL5_1" or "SFLR6_4",
@@ -2437,7 +2437,7 @@ OB_GAMES["doom2"] =
     seed_size = 256,
 
     sky_flat   = "F_SKY1",
-    sky_tex    = "-",
+    sky_tex    = "CEMENT3",
 
     error_tex  = "METAL"   or "FIREBLU1",
     error_flat = "CEIL5_1" or "SFLR6_4",
