@@ -2100,7 +2100,7 @@ function Build_raising_start(S, face_dir, z1, skin)
       -EXTREME_H, z1)
     
     else
-      Trans_quad(T, info, 0,0, long,deep, -EXTREME_H, z1)
+      Trans_quad(info, 0,0, long,deep, -EXTREME_H, z1)
     end
 
     Trans_clear()
