@@ -1493,7 +1493,7 @@ COMMON_MONSTERS =
 
   Mastermind =
   {
-    crazy_prob=15,
+    crazy_prob=18,
     health=3000, damage=100, attack="hitscan",
     density=0.2,
   },
@@ -2300,6 +2300,7 @@ function Doom1_setup()
   GAME.dm.weapons["super"] = nil
 
   GAME.monsters["Cyberdemon"].crazy_prob = 8
+  GAME.monsters["Mastermind"].crazy_prob = 12
 end
 
 
