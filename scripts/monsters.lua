@@ -665,7 +665,7 @@ function Monsters_in_room(R)
   end
 
   local function is_huge(mon)
-    return GAME.things[mon].r > 64
+    return GAME.things[mon].r > 66
   end
 
   local function calc_toughness()
@@ -884,6 +884,15 @@ function Monsters_in_room(R)
   end
 
   local function monster_fits(S, mon, info)
+    if S.content or S.no_monster or not S.floor_h then
+      return false
+    end
+
+    -- keep entryway clear
+    if R.entry_conn and S.conn == R.entry_conn then
+      return false
+    end
+
     -- check seed kind
     -- (floating monsters can go in more places)
     if S.kind == "walk" or (S.kind == "liquid" and info.float) then
@@ -900,6 +909,10 @@ function Monsters_in_room(R)
       return false
     end
 
+    if is_huge(mon) and S.solid_corner then
+      return false
+    end
+
     return true
   end
 
@@ -912,9 +925,18 @@ function Monsters_in_room(R)
   end
 
   local function add_spot_group(S, mon, info)
+    local sx, sy = S.sx, S.sy
     local mx, my = S:mid_point()
 
-    if is_big(mon) then
+    if is_huge(mon) then
+      add_mon_spot(S, S.x2, S.y2, mon, info)
+
+      -- prevent other seeds in 2x2 group from being used
+      SEEDS[sx+1][sy+0][1].no_monster = true
+      SEEDS[sx+0][sy+1][1].no_monster = true
+      SEEDS[sx+1][sy+1][1].no_monster = true
+
+    elseif is_big(mon) then
       add_mon_spot(S, mx, my, mon, info)
     else
       add_mon_spot(S, mx-36, my-36, mon, info)
@@ -924,30 +946,46 @@ function Monsters_in_room(R)
     end
   end
 
-  local function try_occupy_seed(S, palette, totals)
-    if S.content or S.no_monster then return end
-
-    -- keep entryway clear [TODO: more space in big rooms]
-    if S.conn == R.entry_conn then return end
-
-    if not S.floor_h then return end
-
-    local mon   = rand_key_by_probs(palette)
+  local function try_occupy_seed(S, x, y, mon, totals)
     local info  = GAME.monsters[mon]
     local thing = GAME.things[mon]
 
-    if not monster_fits(S, mon, info) then
-      -- ??? try the other monsters
-      return
+    local sx2, sy2 = x, y
+    if is_huge(mon) then
+      sx2, sy2 = x+1, y+1
     end
+
+    for sx = x,sx2 do for sy = y,sy2 do
+      local S2 = SEEDS[sx][sy][1]
+      if S2.room ~= S.room then
+        return false
+      end
+
+      if not monster_fits(S2, mon, info) then
+        return false
+      end
+
+      -- ensure no floor difference for huge monsters
+      if sx > x or sy > y then
+        local diff = math.abs((S.floor_h or 0) - (S2.floor_h or 0))
+        if diff > 1 then return false end
+      end
+    end end -- sx, sy
 
     -- create spots
     add_spot_group(S, mon, info)
 
     totals[mon] = totals[mon] + 1
+
+    return true
   end
 
   local function steal_a_seed(mon, totals)
+    if is_huge(mon) then
+      -- monster requires 2x2 seeds, but we cannot steal that
+      return
+    end
+
     local victim
 
     for name,count in pairs(totals) do
@@ -971,6 +1009,7 @@ function Monsters_in_room(R)
     for loop = 1,qty do
       local victim_S
 
+      -- recreate the spot list
       local old_list = R.monster_spots
       R.monster_spots = {}
 
@@ -1009,17 +1048,31 @@ function Monsters_in_room(R)
     local totals = {}
 
     for mon,prob in pairs(palette) do
-      pal_2[mon]  = prob * sel(is_big(mon), 3, 1)
+      pal_2[mon]  = prob
       totals[mon] = 0
+
+      if is_big(mon) and not is_huge(mon) then
+        pal_2[mon] = pal_2[mon] * 3
+      end
     end
 
-    -- FIXME: symmetry
+    -- TODO: sometimes maintain symmetry
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
 
-      if S.room == R then
-        try_occupy_seed(S, pal_2, totals)
+      if S.room == R and S.floor_h and not S.no_monster then
+        local try_pal = shallow_copy(pal_2)
+
+        -- try other monsters if the first doesn't fit
+        while not table_empty(try_pal) do
+          local mon = rand_key_by_probs(try_pal)
+          try_pal[mon] = nil
+
+          if try_occupy_seed(S, x, y, mon, totals) then
+            break;
+          end
+        end
       end
     end end -- for x, y
 

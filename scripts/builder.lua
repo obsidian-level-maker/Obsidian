@@ -156,7 +156,7 @@ function psychedelic_mat(name)
 
     for m,_ in pairs(GAME.materials) do
       if not (GAME.sanity_map and GAME.sanity_map[m]) and
-         not (string.sub(m,1,3) == "SW1") and
+         not (string.sub(m,1,2) == "SW") and
          not (string.sub(m,1,3) == "BUT")
       then
         table.insert(m_before, m)
