@@ -22,7 +22,7 @@ OB_ENGINES["fitz"] =
 
   for_games = { quake1=1 },
 
-  caps =
+  param =
   {
     colored_lighting = true,
     global_fog = true,

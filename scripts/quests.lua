@@ -264,7 +264,7 @@ function Quest_num_keys(num_rooms)
 
   local result = int(approx)
 
-  if CAPS.one_lock_tex then -- FIXME !!!! TEMP CRUD
+  if PARAM.one_lock_tex then -- FIXME !!!! TEMP CRUD
     result = math.min(2, result)
   end
 
@@ -490,7 +490,7 @@ function Quest_add_lock()
     end
 
     -- Wolf3d: require two locked doors to be perpendicular
-    if CAPS.one_lock_tex and #PLAN.all_locks == 1 then
+    if PARAM.one_lock_tex and #PLAN.all_locks == 1 then
       local old_dir = PLAN.all_locks[1].conn.dir
       assert(old_dir and C.dir)
 

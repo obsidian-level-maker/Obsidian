@@ -22,7 +22,7 @@ OB_ENGINES["zdoom"] =
 
   for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
 
-  caps =
+  param =
   {
     -- TODO
   },
@@ -36,7 +36,7 @@ OB_ENGINES["gzdoom"] =
 
   for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
 
-  caps =
+  param =
   {
     -- TODO
   },
@@ -50,7 +50,7 @@ OB_ENGINES["skulltag"] =
 
   for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
 
-  caps =
+  param =
   {
     -- TODO
   },

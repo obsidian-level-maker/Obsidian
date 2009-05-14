@@ -2068,16 +2068,13 @@ UNFINISHED["quake2"] =
 
   setup_func = Quake2_setup,
 
-  caps =
+  param =
   {
     -- TODO
 
     -- dunno if needed by Quake II, but it doesn't hurt
     center_map = true,
-  },
 
-  params =
-  {
     seed_size = 240,
 
     sky_tex  = "e1u1/sky1",

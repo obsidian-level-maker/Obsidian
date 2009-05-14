@@ -115,7 +115,7 @@ function Seed_init(W, H, D)
       }
 
       -- adjustment needed for Quake 1
-      if CAPS.center_map then
+      if PARAM.center_map then
         S.x1 = S.x1 - int(SEED_W * SIZE / 2)
         S.y1 = S.y1 - int(SEED_H * SIZE / 2)
       end

@@ -22,7 +22,7 @@ OB_ENGINES["darky"] =
 
   for_games = { quake1=1 },
 
-  caps =
+  param =
   {
     dirty_yucky_blood_everywhere = true,
 

@@ -211,7 +211,7 @@ function Fight_simulator(monsters, weapons, skill, stats)
     --        accidentally hits (and hurt) another, but the other
     --        monster doesn't retaliate.
 
-    if not CAPS.infighting then
+    if not PARAM.infighting then
       return
     end
 

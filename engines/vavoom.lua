@@ -22,7 +22,7 @@ OB_ENGINES["vavoom"] =
 
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1, strife=1 },
 
-  caps =
+  param =
   {
     -- TODO
   },

@@ -2378,7 +2378,7 @@ OB_GAMES["doom1"] =
 
   setup_func = Doom1_setup,
 
-  caps =
+  param =
   {
     rails = true,
     switches = true,
@@ -2388,10 +2388,7 @@ OB_GAMES["doom1"] =
 
     pack_sidedefs = true,
     custom_flats = true,
-  },
 
-  params =
-  {
     seed_size = 256,
 
     sky_flat   = "F_SKY1",
@@ -2434,10 +2431,17 @@ OB_GAMES["doom2"] =
 
   setup_func = Doom2_setup,
 
-  caps = OB_GAMES.doom1.caps,
-
-  params =
+  param =
   {
+    rails = true,
+    switches = true,
+    liquids = true,
+    teleporters = true,
+    infighting = true,
+
+    pack_sidedefs = true,
+    custom_flats = true,
+
     seed_size = 256,
 
     sky_flat   = "F_SKY1",

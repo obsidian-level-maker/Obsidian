@@ -967,15 +967,23 @@ function Wolf3d_setup()
 end
 
 
+function Spear_setup()
+  Wolf3d_setup()
+
+  -- !!!! FIXME Spear_setup
+end
+
+
 UNFINISHED["wolf3d"] =
 {
   label = "Wolfenstein 3D",
-
   format = "wolf3d",
+
+  priority = -1,  -- keep at bottom
 
   setup_func = Wolf3d_setup,
 
-  caps =
+  param =
   {
      no_height = true,
      no_sky = true,
@@ -986,14 +994,29 @@ UNFINISHED["wolf3d"] =
      tiered_skills = true,
      four_dirs = true,
      sealed_start = true,
-  },
 
-  params =
-  {
     seed_size = 192,  -- actually 3 blocks
 
     palette_mons = 2,
   },
+
+  hooks =
+  {
+    get_levels = Wolf3d_get_levels,
+  },
+}
+
+
+UNFINISHED["spear"] =
+{
+  label = "Spear of Destiny",
+  format = "wolf3d",
+
+  priority = -2,  -- keep at bottom (with Wolf3d)
+
+  setup_func = Spear_setup,
+
+  param = UNFINISHED["wolf3d"].param,
 
   hooks =
   {

@@ -57,7 +57,7 @@ OB_ENGINES["edge"] =
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
 
-  caps =
+  param =
   {
     boom_lines = true,
     boom_sectors = true,

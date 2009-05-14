@@ -90,7 +90,6 @@ end
 
 function Level_CleanUp()
   GAME   = {}
-  CAPS   = {}
   PARAM  = {}
   STYLE  = {}
   HOOKS  = {}
@@ -117,8 +116,7 @@ function Level_Setup()
     error("UNKNOWN GAME: " .. tostring(OB_CONFIG.game))
   end
 
-  if game.caps   then shallow_merge(CAPS,   game.caps) end
-  if game.params then shallow_merge(PARAM,  game.params) end
+  if game.param  then shallow_merge(PARAM,  game.param) end
   if game.hooks  then shallow_merge(HOOKS,  game.hooks) end
 
   assert(game.setup_func)
@@ -133,8 +131,7 @@ function Level_Setup()
     error("UNKNOWN ENGINE: " .. tostring(OB_CONFIG.engine))
   end
 
-  if engine.caps   then shallow_merge(CAPS,   engine.caps) end
-  if engine.params then shallow_merge(PARAM,  engine.params) end
+  if engine.param  then shallow_merge(PARAM,  engine.param) end
   if engine.hooks  then shallow_merge(HOOKS,  engine.hooks) end
 
   if engine.setup_func then
@@ -146,8 +143,7 @@ function Level_Setup()
 
   for _,mod in pairs(OB_MODULES) do
     if mod.enabled then
-      if mod.caps   then shallow_merge(CAPS,   mod.caps) end
-      if mod.params then shallow_merge(PARAM,  mod.params) end
+      if mod.param  then shallow_merge(PARAM,  mod.param) end
       if mod.hooks  then shallow_merge(HOOKS,  mod.hooks) end
 
       if mod.setup_func then
@@ -157,7 +153,7 @@ function Level_Setup()
   end -- for mod
 
 
-  if CAPS.pack_sidedefs then
+  if PARAM.pack_sidedefs then
     gui.property("pack_sidedefs", "1")
   end
 

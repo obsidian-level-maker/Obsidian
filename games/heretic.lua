@@ -2023,7 +2023,7 @@ UNFINISHED["heretic"] =
 
   setup_func = Heretic1_setup,
 
-  caps =
+  param =
   {
     rails = true,
     switches = true,
@@ -2034,16 +2034,14 @@ UNFINISHED["heretic"] =
     noblaze_door = true,
 
     custom_flats = true,
-  },
 
-  params =
-  {
     seed_size = 256,
 
-    sky_tex    = "-",
+    sky_tex    = "-",  --!!!
     sky_flat   = "F_SKY1",
     error_tex  = "DRIPWALL",
     error_flat = "FLOOR09",
+    error_mat  = "DRIPWALL",
 
     max_level_desc = 28,
 

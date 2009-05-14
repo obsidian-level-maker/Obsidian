@@ -124,16 +124,13 @@ UNFINISHED["freedoom"] =
 
   setup_func = Freedoom_setup,
 
-  caps =
+  param =
   {
     rails = true,
     switches = true,
     liquids = true,
     teleporters = true,
-  },
 
-  params =
-  {
     seed_size = 256,
 
     palette_mons = 4,

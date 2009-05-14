@@ -2608,7 +2608,7 @@ UNFINISHED["hexen"] =
 
   setup_func = Hexen1_setup,
 
-  caps =
+  param =
   {
     rails = true,
     switches = true,
@@ -2621,10 +2621,7 @@ UNFINISHED["hexen"] =
     polyobjs = true,
     three_part_weapons = true,
     ACS_script = true,
-  },
 
-  params =
-  {
     seed_size = 256,
 
     max_level_desc = 28,
