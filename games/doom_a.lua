@@ -1482,7 +1482,7 @@ COMMON_MONSTERS =
 
   Cyberdemon =
   {
-    crazy_prob=15,
+    crazy_prob=12,
     health=4000, damage=150, attack="missile",
     density=0.1,
   },
@@ -2294,6 +2294,8 @@ function Doom1_setup()
   GAME.weapons["super"] = nil 
 
   GAME.dm.weapons["super"] = nil
+
+  GAME.monsters["Cyberdemon"].crazy_prob = 8
 end
 
 
