@@ -214,8 +214,8 @@ WOLF_MATERIALS =
   BR_STONE1 = { 0x2c },
   BR_STONE2 = { 0x2d },
   ELEVATOR  = { 0x15 },
-  DEAD_ELEV = { 0x16 },
-  ENTR_ELEV = { 0x0d },
+  ELEV_DEAD = { 0x16 },
+  ELEV_ENTR = { 0x0d },
 
   GBRK_VENT = { 0x25 },
   GBRK_MAP  = { 0x2b },
@@ -277,19 +277,16 @@ SPEAR_MATERIALS =
 
 -- FIXME: UNSORTED or SPECIAL --
 
+--- DOOR      = { 0x5a, 0x5b }
+--- DOOR_GOLD = { 0x5c, 0x5d }
+--- DOOR_SILV = { 0x5e, 0x5f }
+--  DOOR_ELEV = { 0x64, 0x65 }
+--  ELEV_SECR = { 0x6b }
+--
 --- 0x55 Dead elevator rails    | Elevator
---- 0x5a Unlocked door-E/W      | Unlocked door-E/W
---- 0x5b Unlocked door-N/S      | Unlocked door-N/S
---- 0x5c Locked door-E/W        | Locked door-E/W
---- 0x5d Locked door-N/S        | Locked door-N/S
---- 0x5e Locked door-E/W        | Locked door-E/W
---- 0x5f Locked door-N/S        | Locked door-N/S
 --- 0x60 Stuck door-N/S holo    | Stuck door-N/S holo
 --- 0x61 Stuck door-E/W holo    | Stuck door-E/W holo
---- 0x64 Elevator door-E/W      | Elevator door-E/W
---- 0x65 Elevator door-N/S      | Elev dr-E/W (SOD)
 --- 0x6a Deaf guard             | Floor (deaf guard)
---- 0x6b Secret elevator        | Elev Flr to secret
 
 
 ----------------------------------------------------------------
