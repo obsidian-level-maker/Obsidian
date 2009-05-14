@@ -188,6 +188,110 @@ WOLF_TILE_NUMS =
   door_elevator = { 100, 101 },
 }
 
+
+----------------------------------------------------------------
+
+WOLF_MATERIALS =
+{
+  -- common stuff --
+
+  BLU_BRIK  = { 0x28 },
+  BLU_SKUL  = { 0x22 },
+  BLU_SWAST = { 0x24 },
+  BLU_STON1 = { 0x08 },
+  BLU_STON2 = { 0x09 },
+  BLU_CELL  = { 0x05 },
+  BLU_SKELE = { 0x07 },
+  BLU_SIGN  = { 0x29 },
+
+  BR_BRICK1 = { 0x2a },
+  BR_BRICK2 = { 0x2e },
+  BR_FLAG   = { 0x2f },
+  BR_CAVE1  = { 0x1d },
+  BR_CAVE2  = { 0x1e },
+  BR_CAVE3  = { 0x1f },
+  BR_CAVE4  = { 0x20 },
+  BR_STONE1 = { 0x2c },
+  BR_STONE2 = { 0x2d },
+  ELEVATOR  = { 0x15 },
+  DEAD_ELEV = { 0x16 },
+  ENTR_ELEV = { 0x0d },
+
+  GBRK_VENT = { 0x25 },
+  GBRK_MAP  = { 0x2b },
+  GBRICK1   = { 0x23 },
+  GBRICK2   = { 0x27 },
+  GR_STAIN  = { 0x21 },
+  GSTONE1   = { 0x01 },
+  GSTONE2   = { 0x02 },
+  GSTONE3   = { 0x1b },
+  GSTN_EAGL = { 0x06 },
+  GSTN_HIT1 = { 0x04 },
+  GSTN_HIT2 = { 0x31 },
+  GSTN_MOS1 = { 0x18 },
+  GSTN_MOS2 = { 0x1a },
+  GSTN_FLAG = { 0x03 },
+  GSTN_SIGN = { 0x1c },
+  SKYWALL   = { 0x10 },
+
+  PURP_BLOD = { 0x19 },
+  PURP_STON = { 0x13 },
+  RED_BRIK  = { 0x11 },
+  RED_EAGLE = { 0x14 },
+  RED_MULTI = { 0x26 },
+  RED_WREAT = { 0x12 },
+  STEL_SIGN = { 0x0e },
+  STEL_PLAT = { 0x0f },
+  WOOD1     = { 0x0c },
+  WOOD2     = { 0x30 },
+  WOOD_CROS = { 0x17 },
+  WOOD_EAGL = { 0x0a },
+  WOOD_HITL = { 0x0b },
+
+  -- wolf3d only --
+
+  JAM_DOOR1 = { 0x32 },
+  JAM_DOOR2 = { 0x35 },
+  DOOR_SIDE = { 0x33 },
+}
+
+
+SPEAR_MATERIALS =
+{
+  BRN_CONC  = { 0x3e },
+  CONCRETE1 = { 0x39 },
+  CONCRETE2 = { 0x36 },
+  CONCRETE3 = { 0x37 },
+  ELEVATOR2 = { 0x3c },
+  PURP_BRIK = { 0x3f },
+  WHIT_PANL = { 0x3d },
+
+  SP_BLOOD  = { 0x38 },
+  SP_BROWN1 = { 0x3a },
+  SP_BROWN2 = { 0x3b },
+  SP_GRAY1  = { 0x32 },
+  SP_GRAY2  = { 0x33 },
+  SPGR_FLAG = { 0x34 },
+  SPGR_WRET = { 0x35 },
+}
+
+-- FIXME: UNSORTED or SPECIAL --
+
+--- 0x55 Dead elevator rails    | Elevator
+--- 0x5a Unlocked door-E/W      | Unlocked door-E/W
+--- 0x5b Unlocked door-N/S      | Unlocked door-N/S
+--- 0x5c Locked door-E/W        | Locked door-E/W
+--- 0x5d Locked door-N/S        | Locked door-N/S
+--- 0x5e Locked door-E/W        | Locked door-E/W
+--- 0x5f Locked door-N/S        | Locked door-N/S
+--- 0x60 Stuck door-N/S holo    | Stuck door-N/S holo
+--- 0x61 Stuck door-E/W holo    | Stuck door-E/W holo
+--- 0x64 Elevator door-E/W      | Elevator door-E/W
+--- 0x65 Elevator door-N/S      | Elev dr-E/W (SOD)
+--- 0x6a Deaf guard             | Floor (deaf guard)
+--- 0x6b Secret elevator        | Elev Flr to secret
+
+
 ----------------------------------------------------------------
 
 WOLF_COMBOS =
