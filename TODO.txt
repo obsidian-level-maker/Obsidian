@@ -3,6 +3,9 @@ TODO
 ====
 
 
+>>>  remove CAPS, just use PARAMS
+
+
 upload WEBSITE change
 
 
@@ -63,11 +66,13 @@ CHANGES (since 3.39)
 - fixed non-working lifts and pedestals
 - fixed rare bug: levels reduced to 2 rooms
 
-+ new Material system
-- reorganised DOOM code : doom_a and doom_b 
++ better name generator (courtesy JohnnyRancid)
 - new just-for-kicks theme 'Psychedelic'
 - new choice for Monsters: 'Crazy' 
+- support for huge monsters in maps
 
-- added 'density' field to MONSTER tables.
->> transform stuff
++ new Material system
+- reorganised DOOM code : doom_a and doom_b 
+- added 'density' field to MONSTER tables
+- cleaner brush/entity transformations
 
