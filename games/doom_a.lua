@@ -1417,9 +1417,13 @@ COMMON_THEMES_OLD =
 -- purposes that is a reasonable approximation.
 --
 -- Similarly the Pain Elemental attack is not a real missile
--- but actually a Lost Soul.  Also the numbers of lost souls
--- is limited on the level (to 20 or so).  Hence the damage
--- value is a rough guess / completely bogus.
+-- but actually a Lost Soul.  It spawns at least three (when
+-- killed), hence the health is set to 700 instead of 400.
+-- Damage value is a rough guess / completely bogus.
+--
+-- Spider Mastermind damage has been lowered (from 200),
+-- since it was creating way too much health in levels.
+--
 
 COMMON_MONSTERS =
 {
@@ -1490,7 +1494,7 @@ COMMON_MONSTERS =
   Mastermind =
   {
     crazy_prob=15,
-    health=3000, damage=200, attack="hitscan",
+    health=3000, damage=100, attack="hitscan",
     density=0.2,
   },
 }
@@ -1543,7 +1547,7 @@ DOOM2_MONSTERS =
   pain =
   {
     prob=6, trap_prob=11, crazy_prob=15,
-    health=400, damage=50, attack="missile",
+    health=700, damage=20, attack="missile",
     density=0.2,never_promote=true, float=true, 
   },
 
