@@ -680,6 +680,7 @@ HERETIC_COMBOS =
  
   }, 
 
+
   --- Looks obnoxious outdoors; disabled
   ROOTO =
   {
@@ -710,6 +711,7 @@ HERETIC_COMBOS =
 --  void = "CTYSTUC4",
 
   },
+
   
   ODISCO2 = 
   {
@@ -862,6 +864,7 @@ HERETIC_COMBOS =
   },
   
 }
+
 
 HERETIC_EXITS =
 {
@@ -1276,7 +1279,7 @@ HERETIC_DOOR_PREFABS =
       track_w="METL2",
       frame_f="FLOOR04",
       door_h=128,
-      door_kind=1, tag=0,
+      line_kind=1, tag=0,
     },
 
   theme_probs = { CITY=20 },
@@ -1444,6 +1447,120 @@ HERETIC_ROOMS =
 
 HERETIC_THEMES =
 {
+  TECH =
+  {
+    building =
+    {
+      GOLD=50,
+      WOOD=50,
+      MOSSY=50,
+      BLOCK=50,
+      CAVE1=20,
+      CAVE2=20,
+      HUT=20,
+      DISCO2=20,
+      PHAROAH=20,
+    },
+
+    floors =
+    {
+      FLOOR00=50,
+      FLOOR01=50,
+      FLOOR02=50,
+      FLOOR03=50,
+      FLOOR04=50,
+      FLOOR05=50,
+    },
+
+    ceilings =
+    {
+      FLOOR16=50,
+      FLOOR17=50,
+      FLOOR18=50,
+      FLOOR19=50,
+    },
+
+    corners =
+    {
+      METL1=10,
+    },
+
+    ceil_lights =
+    {
+      FLOOR11=50,
+    },
+
+    ground =
+    {
+      CAVEO1=20,
+      CAVEO2=20,
+      CAVEMUD=20,
+      ODISCO1=20,
+      ODISCO2=20,
+      SANDY=20,
+      SANDZ=20,
+      MUDDY=20,
+      STONY=20,
+    },
+
+    hallway =
+    {
+      walls =
+      {
+        BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
+      },
+
+      floors =
+      {
+        FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
+      },
+
+      ceils =
+      {
+        FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
+      },
+    },
+
+    exit =
+    {
+      walls =
+      {
+        METAL2=50,   STARTAN2=50, STARG1=50,
+        TEKWALL4=50, PIPEWAL2=50,
+        TEKGREN1=50, SPACEW2=50,  STARBR2=50
+      },
+
+      floors =
+      {
+        FLOOR0_3=50, FLOOR5_2=50
+      },
+
+      ceils =
+      {
+        TLITE6_6=50, TLITE6_5=50, FLAT17=50,
+        FLOOR1_7=50, GRNLITE1=50, CEIL4_3=50
+      },
+    },
+
+    room_types =
+    {
+      -- FIXME
+    },
+
+    scenery =
+    {
+      -- FIXME
+    },
+
+    monster_prefs =
+    {
+    },
+  }, -- TECH
+
+
+
+--[[ FIXME: good old stuff
+
   --- City (E1 Castle) is both indoors and outdoors
   CITY =
   {
@@ -1491,6 +1608,7 @@ HERETIC_THEMES =
     has_outdoors = true,
   },
 
+--]]
 }
 
 HERETIC_QUEST_LEN_PROBS =
@@ -1750,67 +1868,73 @@ HERETIC_PICKUPS =
 
   crystal =
   {
-    cluster={ 1,4 },
+    prob=20, cluster={ 1,4 },
     give={ {ammo="crystal",count=10} },
   },
 
   geode =
   {
+    prob=40,
     give={ {ammo="crystal",count=50} },
   },
 
   arrow =
   {
-    cluster={ 1,3 },
+    prob=20, cluster={ 1,3 },
     give={ {ammo="arrow",count=5} },
   },
 
   quiver =
   {
+    prob=40,
     give={ {ammo="arrow",count=20} },
   },
 
   claw_orb1 =
   {
-    cluster={ 1,3 },
+    prob=20, cluster={ 1,3 },
     give={ {ammo="claw_orb",count=10} },
   },
 
   claw_orb2 =
   {
+    prob=40,
     give={ {ammo="claw_orb",count=25} },
   },
 
   runes1 =
   {
-    cluster={ 1,4 },
+    prob=20, cluster={ 1,4 },
     give={ {ammo="rune",count=20} },
   },
 
   runes2 =
   {
+    prob=40,
     give={ {ammo="rune",count=100} },
   },
 
   flame_orb1 =
   {
-    cluster={ 2,5 },
+    prob=20, cluster={ 2,5 },
     give={ {ammo="flame_orb",count=1} },
   },
 
   flame_orb2 =
   {
+    prob=40,
     give={ {ammo="flame_orb",count=10} },
   },
 
   mace_orb1 =
   {
-    cluster={ 1,4 },
+    prob=20, cluster={ 1,4 },
     give={ {ammo="mace_orb",count=20} },
   },
 
   mace_orb2 =
   {
+    prob=40,
     give={ {ammo="mace_orb",count=100} },
   },
 }
@@ -1943,6 +2067,10 @@ function Heretic1_get_levels()
 
         boss_kind   = (map == 8) and HERETIC_EPISODE_BOSSES[episode],
         secret_kind = (map == 9) and "plain",
+
+        key_list = { "foo" },
+        switch_list = { "foo" },
+        bar_list = { "foo" },
       }
 
       if HERETIC_SECRET_EXITS[LEV.name] then
@@ -1972,6 +2100,7 @@ function Heretic1_setup()
   Game_merge_tab("dm", HERETIC_DEATHMATCH)
   Game_merge_tab("dm_exits", HERETIC_DEATHMATCH_EXITS)
 
+  Game_merge_tab("materials", HERETIC_MATERIALS)
   Game_merge_tab("combos", HERETIC_COMBOS)
   Game_merge_tab("exits", HERETIC_EXITS)
   Game_merge_tab("hallways", HERETIC_HALLWAYS)
@@ -2015,7 +2144,7 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["heretic"] =
+OB_GAMES["heretic"] =
 {
   label = "Heretic",
 
@@ -2037,7 +2166,7 @@ UNFINISHED["heretic"] =
 
     seed_size = 256,
 
-    sky_tex    = "-",  --!!!
+    sky_tex    = "DRIPWALL",
     sky_flat   = "F_SKY1",
     error_tex  = "DRIPWALL",
     error_flat = "FLOOR09",
@@ -2045,7 +2174,16 @@ UNFINISHED["heretic"] =
 
     max_level_desc = 28,
 
-    palette_mons = 3,
+    skip_monsters = { 2,3 },
+
+    mon_time_max = 12,
+
+    mon_damage_max  = 200,
+    mon_damage_high = 100,
+    mon_damage_low  =   1,
+
+    ammo_factor   = 0.8,
+    health_factor = 0.7,
   },
 
   hooks =
