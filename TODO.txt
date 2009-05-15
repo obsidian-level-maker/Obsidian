@@ -3,17 +3,9 @@ TODO
 ====
 
 
->>>  remove CAPS, just use PARAMS
-
-
-upload WEBSITE change
-
-
--  implement Chris's boss maps
+-  implement Chris's & JR's boss maps
 
 ?  use 'xxx_t' instead of 'xxx_w' in skin tables
-
--  Psychedelic theme: affect skies too
 
 
 General
