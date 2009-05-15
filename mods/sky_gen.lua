@@ -121,6 +121,24 @@ function Doom_generate_skies()
      85, 84, 83, 81
   }
 
+  local SKY_CLOUDS =
+  {
+    194, 195, 196, 197, 199, 201
+  }
+
+  local PURPLE_CLOUDS =
+  {
+    254, 253, 252, 251, 250, 251, 252, 253, 254
+  }
+
+  local RAINBOW_CLOUDS =
+  {
+    191, 186, 181, 176,
+    231, 161, 164, 167,
+    242, 207, 204, 199,
+    115, 119, 123, 127
+  }
+
   -- hill colors --
 
   local BLACK_HILLS =
@@ -167,7 +185,7 @@ function Doom_generate_skies()
                     RED_CLOUDS, ORANGE_CLOUDS, HELLISH_CLOUDS,
                     BROWN_CLOUDS, BROWNISH_CLOUDS, YELLOW_CLOUDS,
                     GREEN_CLOUDS, JADE_CLOUDS, DARKRED_CLOUDS,
-                    PEACH_CLOUDS, WHITE_CLOUDS,
+                    PEACH_CLOUDS, WHITE_CLOUDS, SKY_CLOUDS,
                   }
 
   local fore_gs = { "none",  "none", "none",
@@ -175,6 +193,15 @@ function Doom_generate_skies()
                     HELL_HILLS, DARKBROWN_HILLS, GREENISH_HILLS,
                     BLACK_HILLS,
                   }
+
+  if OB_CONFIG.theme == "psycho" then
+    back_gs = { PURPLE_CLOUDS, PURPLE_CLOUDS,
+                RAINBOW_CLOUDS, RAINBOW_CLOUDS,
+                GREEN_CLOUDS, YELLOW_CLOUDS, HELLISH_CLOUDS,
+              }
+    fore_gs = back_gs
+  end
+
 
   rand_shuffle(back_gs)
   rand_shuffle(fore_gs)
