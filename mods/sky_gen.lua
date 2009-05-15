@@ -139,6 +139,11 @@ function Doom_generate_skies()
     115, 119, 123, 127
   }
 
+  local BLACK_N_WHITE =
+  {
+    0, 4, 0, 4, 0, 4, 0, 4
+  }
+
   -- hill colors --
 
   local BLACK_HILLS =
@@ -197,7 +202,8 @@ function Doom_generate_skies()
   if OB_CONFIG.theme == "psycho" then
     back_gs = { PURPLE_CLOUDS, PURPLE_CLOUDS,
                 RAINBOW_CLOUDS, RAINBOW_CLOUDS,
-                GREEN_CLOUDS, YELLOW_CLOUDS, HELLISH_CLOUDS,
+                GREEN_CLOUDS, YELLOW_CLOUDS,
+                HELLISH_CLOUDS, BLACK_N_WHITE,
               }
     fore_gs = back_gs
   end
