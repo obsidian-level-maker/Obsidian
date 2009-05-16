@@ -1979,6 +1979,7 @@ function Doom1_get_levels()
 
     for map = 1,MAP_NUM do
       local ep_along = map / MAP_NUM
+      local map_id = episode * 10 + map
 
       if MAP_NUM == 1 or map == 9 then
         ep_along = 0.5
@@ -2013,6 +2014,18 @@ function Doom1_get_levels()
         LEV.secret_exit = true
         LEV.ep_along = 0.5
         LEV.allow_bfg = true
+      end
+
+      if map_id == 18 then
+        -- FIXME
+      elseif map_id == 28 or map_id == 46 then
+        LEV.arena_func = Arena_Doom_E2M8
+      elseif map_id == 38 or map_id == 48 then
+        -- FIXME
+      end
+
+      if LEV.arena_func then
+        LEV.name_theme = "BOSS"
       end
 
       table.insert(list, LEV)
@@ -2099,9 +2112,16 @@ function Doom2_get_levels()
 
     if map == 7 then
       LEV.arena_func = Arena_Doom_MAP07
+    elseif map == 17 then  -- 16..18
+      -- FIXME
+    elseif map == 24 then  -- or 25
+      -- FIXME
     elseif map == 30 then
       LEV.arena_func = Arena_Doom_MAP30
-      LEV.description = "The Ultimate Obscenity"
+    end
+
+    if LEV.arena_func then
+      LEV.name_theme = "BOSS"
     end
 
 ---!!! LEV.boss_kind   = DOOM2_LEVEL_BOSSES[LEV.name]
