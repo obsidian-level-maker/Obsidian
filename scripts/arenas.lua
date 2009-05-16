@@ -442,8 +442,13 @@ function Arena_Doom_E2M8()
 
   local OUTER_TEXS =
   {
-    "BROVINE2", "BROVINE", "BROWNGRN", "SP_HOT1",  "GRAYVINE",
+    "BROVINE2", "BROWNGRN", "SP_HOT1",  "GRAYVINE",
   }
+
+  -- the BROVINE texture only exists in DOOM I
+  if GAME.materials["BROVINE"] then
+    table.insert(OUTER_TEXS, "BROVINE")
+  end
 
   local DIRT_TEXS =
   {
@@ -452,7 +457,7 @@ function Arena_Doom_E2M8()
 
   local FENCE_TEXS =
   {
-    "BROWNHUG", "STONE", "SP_ROCK1", 
+    "BROWNHUG", "STONE", "SP_ROCK1", "WOOD1",
   }
 
   local outer_i = get_mat(rand_element(OUTER_TEXS))
