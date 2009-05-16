@@ -425,3 +425,104 @@ function Arena_Doom_MAP07()
   Arena_add_players(1200, 100, 0, 90)
 end
 
+
+function Arena_Doom_E2M8()
+  -- this arena was designed by Chris Pisarcyk
+
+  local total_w = 3088
+  local total_h = 2768
+
+  local mid_w = total_w / 2
+  local mid_h = total_h / 2
+
+  local mid_x = 0
+  local mid_y = mid_h
+
+
+  local function make_room()
+    local floor_i = get_mat("FLOOR7_1")
+    local wall_i  = get_mat("BROWNHUG")
+    local sky_i   = get_sky()
+
+    local x1, y1 = -mid_w, 0
+    local x2, y2 =  mid_w, total_h
+    
+    Trans_quad(floor_i, x1, y1, x2, y2, -EXTREME_H, -16)
+    Trans_quad(sky_i,   x1, y1, x2, y2, -16+768, EXTREME_H)
+
+    Trans_quad(wall_i, x1-32, y1-32, x1, y2+32, -EXTREME_H, EXTREME_H)
+    Trans_quad(wall_i, x2, y1-32, x2+32, y2+32, -EXTREME_H, EXTREME_H)
+    Trans_quad(wall_i, x1, y1-32, x2, y1, -EXTREME_H, EXTREME_H)
+    Trans_quad(wall_i, x1, y2, x2, y2+32, -EXTREME_H, EXTREME_H)
+
+    Trans_quad(sky_i, x1, y1, x1+32, y2, -16+320, EXTREME_H)
+    Trans_quad(sky_i, x2-32, y1, x2, y2, -16+320, EXTREME_H)
+    Trans_quad(sky_i, x1+32, y1, x2-32, y1+32, -16+320, EXTREME_H)
+    Trans_quad(sky_i, x1+32, y2-32, x2-32, y2, -16+320, EXTREME_H)
+  end
+
+  local function make_buns()
+    local floor_i = get_mat("FLOOR7_2")
+    local wall_i  = get_mat("GSTONE1")
+    local outer_i = get_mat("BROVINE2")
+
+    for i = 1,2 do
+      TRANSFORM.mirror_y = sel(i==2, mid_y, nil)
+      
+      Trans_quad(floor_i, mid_x-160, mid_y+144, mid_x+160, mid_y+288, -EXTREME_H, 16)
+      Trans_quad(floor_i, mid_x-160, mid_y+144, mid_x+160, mid_y+288, 232, EXTREME_H)
+
+      Trans_quad(outer_i, mid_x-600, mid_y+144, mid_x-440, mid_y+368, -EXTREME_H, EXTREME_H)
+      Trans_quad(outer_i, mid_x+440, mid_y+144, mid_x+600, mid_y+368, -EXTREME_H, EXTREME_H)
+
+      Trans_brush(outer_i,
+      {
+        { x=mid_x+600, y=mid_y+368 },
+        { x=mid_x+560, y=mid_y+440 },
+        { x=mid_x+450, y=mid_y+508 },
+        { x=mid_x+320, y=mid_y+556 },
+        { x=mid_x+108, y=mid_y+584 },
+
+        { x=mid_x-108, y=mid_y+584 },
+        { x=mid_x-320, y=mid_y+556 },
+        { x=mid_x-450, y=mid_y+508 },
+        { x=mid_x-560, y=mid_y+440 },
+        { x=mid_x-600, y=mid_y+368 },
+      },
+      -EXTREME_H, EXTREME_H)
+    end
+  end
+
+  local function add_players()
+    for i = 1,4 do
+      local x = mid_x + sel(i >= 3,   120, -120)
+      local y = mid_y + sel((i%2)==1, 104, -104)
+
+      local angle = sel(i >= 3, 180, 0)
+
+      Trans_entity("player" .. tostring(i), x, y, 0, { angle=angle })
+      Trans_entity("backpack", x, y, 0)
+    end
+
+    Trans_entity("soul", mid_x, mid_y, 0)
+  end
+
+  local function add_cybies()
+    local y = 300
+
+    if rand_odds(50) then y = total_h - y end
+
+    Trans_entity("Cyberdemon", 0, y, 0)
+  end
+
+  
+  ---| Arena_Doom_E2M8 |---
+
+  make_room()
+  make_buns()
+
+  add_players()
+  add_cybies()
+end  
+
+
