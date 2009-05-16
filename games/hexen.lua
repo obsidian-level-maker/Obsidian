@@ -1035,44 +1035,6 @@ HEXEN_HALLWAYS =
 }
 
 
----- BASE MATERIALS ------------
-
-HEXEN_MATS =
-{
-  METAL =
-  {
-    mat_pri = 5,
-
-    wall  = "PLAT01", void = "PLAT01",
-    floor = "F_065",  ceil = "F_065",
-  },
-
-  STEP =
-  {
-    wall  = "S_09",
-    floor = "F_014",
-  },
-
-  LIFT =
-  {
-    wall  = "PLAT02",
-    floor = "F_065"
-  },
-
-  TRACK =
-  {
-    wall  = "STEEL08",
-    floor = "F_008",
-  },
-
-  DOOR_FRAME =
-  {
-    wall  = nil,  -- this means: use plain wall
-    floor = "F_009",
-    ceil  = "F_009",
-  },
-}
-
 ---- PEDESTALS ------------
 
 HEXEN_PEDESTALS =
@@ -2567,7 +2529,6 @@ function Hexen1_setup()
 
     hangs     = HEXEN_OVERHANGS,
     pedestals = HEXEN_PEDESTALS,
-    mats      = HEXEN_MATS,
     rails     = HEXEN_RAILS,
 
     liquids   = HEXEN_LIQUIDS,

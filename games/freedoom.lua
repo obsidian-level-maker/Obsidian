@@ -76,14 +76,13 @@ function Freedoom_setup()
 
   -- the FreeDOOM IWAD contains both Doom 1 and Doom 2 textures
 
+---!!! Game_merge_tab(GAME.materials, DOOM1_MATERIALS)
+---!!! Game_merge_tab(GAME.rails,   DOOM1_RAILS)
 ---!!! Game_merge_tab(GAME.combos,   DOOM1_COMBOS)
 ---!!! Game_merge_tab(GAME.exits,    DOOM1_EXITS)
 ---!!! Game_merge_tab(GAME.hallways, DOOM1_HALLWAYS)
 ---!!!
----!!! Game_merge_tab(GAME.rails,   DOOM1_RAILS)
----!!!
 ---!!! Game_merge_tab(GAME.hangs,   DOOM1_OVERHANGS)
----!!! Game_merge_tab(GAME.mats,    DOOM1_MATS)
 ---!!! Game_merge_tab(GAME.crates,  DOOM1_CRATES)
 ---!!!
 ---!!! Game_merge_tab(GAME.liquids, DOOM1_LIQUIDS, FREEDOOM_LIQUIDS)
