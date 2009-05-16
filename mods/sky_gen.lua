@@ -187,7 +187,7 @@ function Doom_generate_skies()
 
   local back_gs = { "stars", "stars",
                     GREY_CLOUDS, DARK_CLOUDS, BLUE_CLOUDS,
-                    RED_CLOUDS, ORANGE_CLOUDS, HELLISH_CLOUDS,
+                    HELL_CLOUDS, ORANGE_CLOUDS, HELLISH_CLOUDS,
                     BROWN_CLOUDS, BROWNISH_CLOUDS, YELLOW_CLOUDS,
                     GREEN_CLOUDS, JADE_CLOUDS, DARKRED_CLOUDS,
                     PEACH_CLOUDS, WHITE_CLOUDS, SKY_CLOUDS,
