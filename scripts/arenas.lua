@@ -438,42 +438,99 @@ function Arena_Doom_E2M8()
   local mid_x = 0
   local mid_y = mid_h
 
+  local sky_i = get_sky()
+
 
   local function make_room()
     local floor_i = get_mat("FLOOR7_1")
     local wall_i  = get_mat("BROWNHUG")
-    local sky_i   = get_sky()
 
     local x1, y1 = -mid_w, 0
     local x2, y2 =  mid_w, total_h
+    local z1 = -18
     
-    Trans_quad(floor_i, x1, y1, x2, y2, -EXTREME_H, -16)
-    Trans_quad(sky_i,   x1, y1, x2, y2, -16+768, EXTREME_H)
+    Trans_quad(floor_i, x1, y1, x2, y2, -EXTREME_H, z1)
+    Trans_quad(sky_i,   x1, y1, x2, y2, z1+768, EXTREME_H)
 
     Trans_quad(wall_i, x1-32, y1-32, x1, y2+32, -EXTREME_H, EXTREME_H)
     Trans_quad(wall_i, x2, y1-32, x2+32, y2+32, -EXTREME_H, EXTREME_H)
     Trans_quad(wall_i, x1, y1-32, x2, y1, -EXTREME_H, EXTREME_H)
     Trans_quad(wall_i, x1, y2, x2, y2+32, -EXTREME_H, EXTREME_H)
 
-    Trans_quad(sky_i, x1, y1, x1+32, y2, -16+320, EXTREME_H)
-    Trans_quad(sky_i, x2-32, y1, x2, y2, -16+320, EXTREME_H)
-    Trans_quad(sky_i, x1+32, y1, x2-32, y1+32, -16+320, EXTREME_H)
-    Trans_quad(sky_i, x1+32, y2-32, x2-32, y2, -16+320, EXTREME_H)
+    Trans_quad(sky_i, x1, y1, x1+32, y2, z1+320, EXTREME_H)
+    Trans_quad(sky_i, x2-32, y1, x2, y2, z1+320, EXTREME_H)
+    Trans_quad(sky_i, x1+32, y1, x2-32, y1+32, z1+320, EXTREME_H)
+    Trans_quad(sky_i, x1+32, y2-32, x2-32, y2, z1+320, EXTREME_H)
   end
 
   local function make_buns()
     local floor_i = get_mat("FLOOR7_2")
     local wall_i  = get_mat("GSTONE1")
     local outer_i = get_mat("BROVINE2")
+    local brown_i = get_mat("BROWNGRN")
+    local supp_i  = add_pegging(get_mat("SUPPORT3"))
+
+    local gun, ammo
+
+    if rand_sel(50) then
+      gun = "chain"  ; ammo = "bullet_box"
+    else
+      gun = "shotty" ; ammo = "shell_box"
+    end
 
     for i = 1,2 do
-      TRANSFORM.mirror_y = sel(i==2, mid_y, nil)
+      TRANSFORM.mirror_y = sel(i==1, mid_y, nil)
       
+      -- curved niche --
+
       Trans_quad(floor_i, mid_x-160, mid_y+144, mid_x+160, mid_y+288, -EXTREME_H, 16)
       Trans_quad(floor_i, mid_x-160, mid_y+144, mid_x+160, mid_y+288, 232, EXTREME_H)
 
-      Trans_quad(outer_i, mid_x-600, mid_y+144, mid_x-440, mid_y+368, -EXTREME_H, EXTREME_H)
-      Trans_quad(outer_i, mid_x+440, mid_y+144, mid_x+600, mid_y+368, -EXTREME_H, EXTREME_H)
+      Trans_brush(wall_i,
+      {
+        { x=mid_x-160, y=mid_y+144 },
+        { x=mid_x- 80, y=mid_y+216 },
+        { x=mid_x- 80, y=mid_y+368 },
+        { x=mid_x-160, y=mid_y+368 },
+      },
+      -EXTREME_H, EXTREME_H)
+
+      Trans_brush(wall_i,
+      {
+        { x=mid_x-80, y=mid_y+216 },
+        { x=mid_x   , y=mid_y+248 },
+        { x=mid_x   , y=mid_y+368 },
+        { x=mid_x-80, y=mid_y+368 },
+      },
+      -EXTREME_H, EXTREME_H)
+
+      Trans_brush(wall_i,
+      {
+        { x=mid_x+80, y=mid_y+368 },
+        { x=mid_x   , y=mid_y+368 },
+        { x=mid_x   , y=mid_y+248 },
+        { x=mid_x+80, y=mid_y+216 },
+      },
+      -EXTREME_H, EXTREME_H)
+
+      Trans_brush(wall_i,
+      {
+        { x=mid_x+160, y=mid_y+368 },
+        { x=mid_x+ 80, y=mid_y+368 },
+        { x=mid_x+ 80, y=mid_y+216 },
+        { x=mid_x+160, y=mid_y+144 },
+      },
+      -EXTREME_H, EXTREME_H)
+
+      Trans_entity(gun, mid_x, mid_y+224, 16)
+
+      Trans_entity(ammo, mid_x-96, mid_y+184, 16)
+      Trans_entity(ammo, mid_x-48, mid_y+184, 16)
+      Trans_entity(ammo, mid_x   , mid_y+184, 16)
+      Trans_entity(ammo, mid_x+48, mid_y+184, 16)
+      Trans_entity(ammo, mid_x+96, mid_y+184, 16)
+
+      -- outer walls --
 
       Trans_brush(outer_i,
       {
@@ -491,6 +548,125 @@ function Arena_Doom_E2M8()
       },
       -EXTREME_H, EXTREME_H)
     end
+  end
+
+  local function make_meat()
+    local floor_i = get_mat("MARBLE2", "FLOOR7_2")
+    local wall_i  = get_mat("GSTONE1")
+    local outer_i = get_mat("BROVINE2")
+    local brown_i = get_mat("BROWNGRN", "FLOOR7_1")
+    local supp_i  = add_pegging(get_mat("SUPPORT3"))
+    local door_i  = add_pegging(get_mat("MARBFACE"))
+    local track_i = add_pegging(get_mat("DOORSTOP"))
+
+    door_i.delta_z = -8
+
+    for i = 1,2 do
+      TRANSFORM.mirror_x = sel(i==1, mid_x, nil)
+
+      -- floor and ceiling --
+
+      Trans_quad(floor_i, mid_x-440, mid_y-144, mid_x, mid_y+144, -EXTREME_H, 0)
+
+      Trans_quad(brown_i, mid_x-416, mid_y-144, mid_x-224, mid_y+144, 192, EXTREME_H)
+
+      Trans_entity("launch", mid_x-320, mid_y, 0)
+
+      -- walls --
+
+      for j = 1,2 do
+        TRANSFORM.mirror_y = sel(j==1, mid_y, nil)
+
+        Trans_quad(outer_i, mid_x-600, mid_y+144, mid_x-440, mid_y+368, -EXTREME_H, EXTREME_H)
+
+        Trans_quad(brown_i, mid_x-416, mid_y+144, mid_x-224, mid_y+160, -EXTREME_H, EXTREME_H)
+      end
+
+      -- doorways --
+
+      Trans_brush(outer_i,
+      {
+        { x=mid_x-416, y=mid_y-64, w_face=brown_i.w_face },
+        { x=mid_x-416, y=mid_y+64 },
+        { x=mid_x-440, y=mid_y+64 },
+        { x=mid_x-440, y=mid_y-64 },
+      },
+      128, EXTREME_H)
+
+      Trans_brush(brown_i,
+      {
+        { x=mid_x-160, y=mid_y-64, w_face=wall_i.w_face },
+        { x=mid_x-160, y=mid_y+64 },
+        { x=mid_x-224, y=mid_y+64 },
+        { x=mid_x-224, y=mid_y-64 },
+      },
+      128, EXTREME_H)
+
+      Trans_brush(door_i,
+      {
+        { x=mid_x-184, y=mid_y-64, line_kind=1 },
+        { x=mid_x-184, y=mid_y+64, line_kind=1 },
+        { x=mid_x-200, y=mid_y+64, line_kind=1 },
+        { x=mid_x-200, y=mid_y-64, line_kind=1 },
+      },
+      0+8, EXTREME_H)
+
+      for j = 1,2 do
+        TRANSFORM.mirror_y = sel(j==1, mid_y, nil)
+
+        Trans_brush(brown_i,
+        {
+          { x=mid_x-440, y=mid_y+160, w_face=outer_i.w_face },
+          { x=mid_x-440, y=mid_y+64,  w_face=supp_i.w_face  },
+          { x=mid_x-416, y=mid_y+64  },
+          { x=mid_x-416, y=mid_y+160 },
+        },
+        -EXTREME_H, EXTREME_H)
+
+        Trans_brush(wall_i,
+        {
+          { x=mid_x-224, y=mid_y+160, w_face=brown_i.w_face },
+          { x=mid_x-224, y=mid_y+64,  w_face=brown_i.w_face },
+          { x=mid_x-200, y=mid_y+64,  w_face=track_i.w_face },
+          { x=mid_x-184, y=mid_y+64  },
+          { x=mid_x-160, y=mid_y+64  },
+          { x=mid_x-160, y=mid_y+160 },
+        },
+        -EXTREME_H, EXTREME_H)
+      
+        -- rockets --
+
+        Trans_entity("rocket_box", mid_x-384, mid_y+128, 0)
+        Trans_entity("rocket_box", mid_x-352, mid_y+112, 0)
+        Trans_entity("rocket_box", mid_x-320, mid_y+100, 0)
+        Trans_entity("rocket_box", mid_x-288, mid_y+112, 0)
+        Trans_entity("rocket_box", mid_x-256, mid_y+128, 0)
+      end
+    end
+
+    -- central ceiling --
+
+    local beam_i = get_mat("METAL")
+
+    Trans_quad(sky_i, mid_x-160, mid_y-144, mid_x+160, mid_y+144, 384, EXTREME_H)
+
+    Trans_brush(beam_i,
+    {
+      { x=mid_x-160, y=mid_y-144 },
+      { x=mid_x+160, y=mid_y+128 },
+      { x=mid_x+160, y=mid_y+144 },
+      { x=mid_x-160, y=mid_y-128 },
+    },
+    320, EXTREME_H)
+
+    Trans_brush(beam_i,
+    {
+      { x=mid_x-160, y=mid_y+128 },
+      { x=mid_x+160, y=mid_y-144 },
+      { x=mid_x+160, y=mid_y-128 },
+      { x=mid_x-160, y=mid_y+144 },
+    },
+    320, EXTREME_H)
   end
 
   local function add_players()
@@ -520,6 +696,7 @@ function Arena_Doom_E2M8()
 
   make_room()
   make_buns()
+  make_meat()
 
   add_players()
   add_cybies()
