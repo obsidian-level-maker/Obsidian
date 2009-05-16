@@ -438,6 +438,8 @@ function Arena_Doom_E2M8()
   local mid_x = 0
   local mid_y = mid_h
 
+  local floor_z = -18
+
   local OUTER_TEXS =
   {
     "BROVINE2", "BROVINE", "BROWNGRN", "SP_HOT1",  "GRAYVINE",
@@ -463,20 +465,19 @@ function Arena_Doom_E2M8()
   local function make_room()
     local x1, y1 = -mid_w, 0
     local x2, y2 =  mid_w, total_h
-    local z1 = -18
     
-    Trans_quad(dirt_i, x1, y1, x2, y2, -EXTREME_H, z1)
-    Trans_quad(sky_i,  x1, y1, x2, y2, z1+768, EXTREME_H)
+    Trans_quad(dirt_i, x1, y1, x2, y2, -EXTREME_H, floor_z)
+    Trans_quad(sky_i,  x1, y1, x2, y2, floor_z+768, EXTREME_H)
 
     Trans_quad(fence_i, x1-32, y1-32, x1, y2+32, -EXTREME_H, EXTREME_H)
     Trans_quad(fence_i, x2, y1-32, x2+32, y2+32, -EXTREME_H, EXTREME_H)
     Trans_quad(fence_i, x1, y1-32, x2, y1, -EXTREME_H, EXTREME_H)
     Trans_quad(fence_i, x1, y2, x2, y2+32, -EXTREME_H, EXTREME_H)
 
-    Trans_quad(sky_i, x1, y1, x1+32, y2, z1+320, EXTREME_H)
-    Trans_quad(sky_i, x2-32, y1, x2, y2, z1+320, EXTREME_H)
-    Trans_quad(sky_i, x1+32, y1, x2-32, y1+32, z1+320, EXTREME_H)
-    Trans_quad(sky_i, x1+32, y2-32, x2-32, y2, z1+320, EXTREME_H)
+    Trans_quad(sky_i, x1, y1, x1+32, y2, floor_z+320, EXTREME_H)
+    Trans_quad(sky_i, x2-32, y1, x2, y2, floor_z+320, EXTREME_H)
+    Trans_quad(sky_i, x1+32, y1, x2-32, y1+32, floor_z+320, EXTREME_H)
+    Trans_quad(sky_i, x1+32, y2-32, x2-32, y2, floor_z+320, EXTREME_H)
   end
 
   local function make_buns()
@@ -575,7 +576,7 @@ function Arena_Doom_E2M8()
 
     door_i.delta_z = -8
 
-    local torch = rand_element { "blue_torch", "green_torch", "blue_torch" }
+    local torch = rand_element { "blue_torch", "green_torch", "red_torch" }
 
     for i = 1,2 do
       TRANSFORM.mirror_x = sel(i==1, mid_x, nil)
@@ -689,6 +690,76 @@ function Arena_Doom_E2M8()
     320, EXTREME_H)
   end
 
+  local function pole_coord(quadrant, k, angle)
+    local sgn_x = sel(quadrant >= 3, -1, 1)
+    local sgn_y = sel((quadrant%2) == 1, -1, 1)
+
+    local x = mid_x + ((k+4.1)*160) * sgn_x * math.cos(angle * math.pi / 180)
+    local y = mid_y + ((k+4.1)*140) * sgn_y * math.sin(angle * math.pi / 180)
+
+    return x, y
+  end
+
+  local function make_posts()
+    -- FP!
+
+    local OBJECTS =
+    {
+      "blue_torch_sm", "green_torch_sm", "red_torch_sm",
+      "green_pillar",  "red_pillar",  "candelabra",
+      "burnt_tree",    "tech_column", "skull_pole",
+    }
+
+    local MONSTERS =
+    {
+      "skull", "demon", "zombie",
+    }
+
+    local PILLARS =
+    {
+      "MARBFACE", "MARBFAC2", "MARBFAC3",
+    }
+
+    local object  = rand_element(OBJECTS)
+    local monster = rand_element(MONSTERS)
+
+    local PATTERNS =
+    {
+      "mBmTm", "mTmmB",
+      "BmBmB", "mBmBm",
+      "TmBmT", "BmTmB",
+    }
+
+    local pattern = rand_element(PATTERNS)
+
+
+    for quadrant = 1,4 do
+      for k = 1,5 do
+        local ang_step = 10
+        local prof_ch = string.sub(pattern, k, k)
+
+        if prof_ch == 'T' then ang_step = 3 end
+        
+        for angle = 10,80,ang_step do
+          local x,y = pole_coord(quadrant, k, angle)
+        
+          if prof_ch == 'T' then
+            Trans_entity(object, x, y, floor_z)
+
+          elseif (prof_ch == 'm') and rand_odds(15) then
+            Trans_entity(monster, x, y, floor_z)
+
+          elseif (prof_ch == 'B') and rand_odds(30) then
+            local pillar_i = get_mat(rand_element(PILLARS))
+            add_pegging(pillar_i)
+            Trans_quad(pillar_i, x-64,y-64, x+64,y+64, -EXTREME_H, floor_z + 256)
+
+          end
+        end -- for angle
+      end -- for k
+    end -- for quadrant
+  end
+
   local function add_players()
     for i = 1,4 do
       local x = mid_x + sel(i >= 3,   120, -120)
@@ -708,7 +779,7 @@ function Arena_Doom_E2M8()
 
     if rand_odds(50) then y = total_h - y end
 
-    Trans_entity("Cyberdemon", 0, y, 0)
+    Trans_entity("Cyberdemon", 0, y, floor_z)
   end
 
   
@@ -717,6 +788,7 @@ function Arena_Doom_E2M8()
   make_room()
   make_buns()
   make_meat()
+  make_posts()
 
   add_players()
   add_cybies()
