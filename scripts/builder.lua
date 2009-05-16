@@ -1872,8 +1872,8 @@ function Build_small_exit(R, xt_info, skin, skin2)
   mark_room_as_done(R)
 
 
-  if skin.item_name then
-    Trans_entity(skin.item_name, mx, 96, f_h)
+  if skin.items then
+    Trans_entity(rand_element(skin.items), mx, 96, f_h)
   end
 
   Trans_clear()

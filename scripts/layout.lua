@@ -2313,8 +2313,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
       frame_c = "FLAT1",
       key_w = "LITE5",
       track = "DOORTRAK",
-      item = "medikit",
       break_w = "DOORSTOP",
+      items = { "medikit" },
     }
     local skin2 =
     {
