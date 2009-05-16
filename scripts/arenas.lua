@@ -438,24 +438,40 @@ function Arena_Doom_E2M8()
   local mid_x = 0
   local mid_y = mid_h
 
+  local OUTER_TEXS =
+  {
+    "BROVINE2", "BROVINE", "BROWNGRN", "SP_HOT1",  "GRAYVINE",
+  }
+
+  local DIRT_TEXS =
+  {
+    "FLOOR7_1", "MFLR8_2", "MFLR8_3", "MFLR8_4", "FWATER1", "FLAT5_7",
+  }
+
+  local FENCE_TEXS =
+  {
+    "BROWNHUG", "STONE", "SP_ROCK1", 
+  }
+
+  local outer_i = get_mat(rand_element(OUTER_TEXS))
+  local dirt_i  = get_mat(rand_element(DIRT_TEXS))
+  local fence_i = get_mat(rand_element(FENCE_TEXS))
+
   local sky_i = get_sky()
 
 
   local function make_room()
-    local floor_i = get_mat("FLOOR7_1")
-    local wall_i  = get_mat("BROWNHUG")
-
     local x1, y1 = -mid_w, 0
     local x2, y2 =  mid_w, total_h
     local z1 = -18
     
-    Trans_quad(floor_i, x1, y1, x2, y2, -EXTREME_H, z1)
-    Trans_quad(sky_i,   x1, y1, x2, y2, z1+768, EXTREME_H)
+    Trans_quad(dirt_i, x1, y1, x2, y2, -EXTREME_H, z1)
+    Trans_quad(sky_i,  x1, y1, x2, y2, z1+768, EXTREME_H)
 
-    Trans_quad(wall_i, x1-32, y1-32, x1, y2+32, -EXTREME_H, EXTREME_H)
-    Trans_quad(wall_i, x2, y1-32, x2+32, y2+32, -EXTREME_H, EXTREME_H)
-    Trans_quad(wall_i, x1, y1-32, x2, y1, -EXTREME_H, EXTREME_H)
-    Trans_quad(wall_i, x1, y2, x2, y2+32, -EXTREME_H, EXTREME_H)
+    Trans_quad(fence_i, x1-32, y1-32, x1, y2+32, -EXTREME_H, EXTREME_H)
+    Trans_quad(fence_i, x2, y1-32, x2+32, y2+32, -EXTREME_H, EXTREME_H)
+    Trans_quad(fence_i, x1, y1-32, x2, y1, -EXTREME_H, EXTREME_H)
+    Trans_quad(fence_i, x1, y2, x2, y2+32, -EXTREME_H, EXTREME_H)
 
     Trans_quad(sky_i, x1, y1, x1+32, y2, z1+320, EXTREME_H)
     Trans_quad(sky_i, x2-32, y1, x2, y2, z1+320, EXTREME_H)
@@ -466,13 +482,12 @@ function Arena_Doom_E2M8()
   local function make_buns()
     local floor_i = get_mat("FLOOR7_2")
     local wall_i  = get_mat("GSTONE1")
-    local outer_i = get_mat("BROVINE2")
     local brown_i = get_mat("BROWNGRN")
     local supp_i  = add_pegging(get_mat("SUPPORT3"))
 
     local gun, ammo
 
-    if rand_sel(50) then
+    if rand_odds(50) then
       gun = "chain"  ; ammo = "bullet_box"
     else
       gun = "shotty" ; ammo = "shell_box"
@@ -553,13 +568,14 @@ function Arena_Doom_E2M8()
   local function make_meat()
     local floor_i = get_mat("MARBLE2", "FLOOR7_2")
     local wall_i  = get_mat("GSTONE1")
-    local outer_i = get_mat("BROVINE2")
     local brown_i = get_mat("BROWNGRN", "FLOOR7_1")
     local supp_i  = add_pegging(get_mat("SUPPORT3"))
     local door_i  = add_pegging(get_mat("MARBFACE"))
     local track_i = add_pegging(get_mat("DOORSTOP"))
 
     door_i.delta_z = -8
+
+    local torch = rand_element { "blue_torch", "green_torch", "blue_torch" }
 
     for i = 1,2 do
       TRANSFORM.mirror_x = sel(i==1, mid_x, nil)
@@ -634,12 +650,16 @@ function Arena_Doom_E2M8()
         },
         -EXTREME_H, EXTREME_H)
       
+        -- torches --
+
+        Trans_entity(torch, mid_x-460, mid_y+120, -16)
+
         -- rockets --
 
-        Trans_entity("rocket_box", mid_x-384, mid_y+128, 0)
-        Trans_entity("rocket_box", mid_x-352, mid_y+112, 0)
+        Trans_entity("rocket_box", mid_x-384, mid_y+ 72, 0)
+        Trans_entity("rocket_box", mid_x-352, mid_y+ 86, 0)
         Trans_entity("rocket_box", mid_x-320, mid_y+100, 0)
-        Trans_entity("rocket_box", mid_x-288, mid_y+112, 0)
+        Trans_entity("rocket_box", mid_x-288, mid_y+114, 0)
         Trans_entity("rocket_box", mid_x-256, mid_y+128, 0)
       end
     end
