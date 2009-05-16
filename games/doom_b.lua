@@ -2306,7 +2306,7 @@ COMMON_DOOR_PREFABS =
       door_w="BIGDOOR1", door_c="FLAT1",
       step_w="STEP4", step_f="FLAT18",
       frame_c="FLAT18", -- frame_c="TLITE6_6",
-      track_w="DOORTRAK",
+      track="DOORTRAK",
       door_h=72,
       line_kind=1, tag=0,
     },

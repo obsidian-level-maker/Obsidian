@@ -2026,7 +2026,8 @@ gui.printf("do_teleport\n")
 
       if B_kind == "window" then
         local B = S.border[side]
-        local skin = { wall=w_tex, floor=f_tex, side_t="DOORSTOP" }
+        local skin = { wall=w_tex, side_t="DOORSTOP" }
+        -- skin.floor = f_tex
 
         Build_window(S, side, B.win_width, B.win_mid_w,
                      B.win_z1, B.win_z2, skin)
@@ -2071,14 +2072,15 @@ gui.printf("do_teleport\n")
 
       if B_kind == "door" then
         local z = assert(S.conn and S.conn.conn_h)
-        local INFO = assert(GAME.door_fabs["silver_lit"])
+        local INFO = assert(GAME.door_fabs["silver_lit"]) -- FIXME
 
         local skin  = INFO.skin
         local skin2 = { inner=w_tex, outer=o_tex }
 
-        skin.track = "DOORTRAK"
         skin.frame_c = "FLAT18"
-        assert(skin.step_w)  -- skin,step_w  = "STEP4"
+        assert(skin.track)
+        assert(skin.key_w)
+        assert(skin.step_w)
 
         Build_door(S, side, z, skin, skin2, 0)
 

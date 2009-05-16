@@ -252,6 +252,8 @@ end
 
 
 function Quest_num_keys(num_rooms)
+  if PARAM.no_keys then return 0 end
+
   local PUZZLE_NUMS = { less=16, normal=10, more=5, mixed=10  }
 
 ---  if not PUZZLE_NUMS[OB_CONFIG.puzzles] then

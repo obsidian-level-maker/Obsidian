@@ -223,6 +223,7 @@ HERETIC_MATERIALS =
   BRWNRCKS = { "BRWNRCKS", "FLOOR17" },
   CELTIC   = { "CELTIC",   "FLOOR06" },
   CHAINMAN = { "CHAINMAN", "FLAT520" },
+  CHAINSD  = { "CHAINSD",  "FLAT520" },
   CSTLMOSS = { "CSTLMOSS", "FLOOR03" },
   CSTLRCK  = { "CSTLRCK",  "FLOOR03" },
   CTYSTCI1 = { "CTYSTCI1", "FLOOR11" },
@@ -289,7 +290,6 @@ HERETIC_MATERIALS =
   WOODWL   = { "WOODWL",   "FLOOR10" },
 
 --- logos???
---CHAINSD
 --GRSKULL2
 
   -- flats --
@@ -320,7 +320,7 @@ HERETIC_MATERIALS =
   FLOOR05  = { "MOSSROCK", "FLOOR05"  },
   FLOOR06  = { "SANDSQ2",  "FLOOR06"  },
   FLOOR07  = { "MOSAIC1",  "FLOOR07"  },  -- poor match
-  FLOOR08  = { "ORNGRAY",  "FLOOR08"  },
+  FLOOR08  = { "CHAINSD",  "FLOOR08"  },
   FLOOR09  = { "REDWALL",  "FLOOR09"  },
   FLOOR10  = { "WOODWL",   "FLOOR10"  },
   FLOOR11  = { "WOODWL",   "FLOOR11"  },
@@ -330,12 +330,12 @@ HERETIC_MATERIALS =
   FLOOR18  = { "GRNBLOK1", "FLOOR18"  },
   FLOOR19  = { "GRNBLOK1", "FLOOR19"  },
   FLOOR20  = { "SQPEB2",   "FLOOR20"  },
-  FLOOR21  = { "ORNGRAY",  "FLOOR21"  },
-  FLOOR22  = { "ORNGRAY",  "FLOOR22"  },
-  FLOOR23  = { "ORNGRAY",  "FLOOR23"  },
-  FLOOR24  = { "ORNGRAY",  "FLOOR24"  },
+  FLOOR21  = { "CHAINSD",  "FLOOR21"  },
+  FLOOR22  = { "CHAINSD",  "FLOOR22"  },
+  FLOOR23  = { "CHAINSD",  "FLOOR23"  },
+  FLOOR24  = { "CHAINSD",  "FLOOR24"  },
   FLOOR25  = { "SPINE2",   "FLOOR25"  },
-  FLOOR26  = { "ORNGRAY",  "FLOOR26"  },
+  FLOOR26  = { "CHAINSD",  "FLOOR26"  },
   FLOOR27  = { "SANDSQ2",  "FLOOR27"  },
   FLOOR28  = { "METL2",    "FLOOR28"  },
   FLOOR29  = { "METL1",    "FLOOR29"  },
@@ -344,7 +344,7 @@ HERETIC_MATERIALS =
   FLTFLWW1 = { "WATRWAL1", "FLTFLWW1" },
   FLTLAVA1 = { "LAVA1",    "FLTLAVA1" },  -- poor match
   FLTSLUD1 = { "LAVA1",    "FLTSLUD1" },  -- poor match
-  FLTTELE1 = { "ORNGRAY",  "FLTTELE1" },
+  FLTTELE1 = { "CHAINSD",  "FLTTELE1" },
   FLTWAWA1 = { "WATRWAL1", "FLTWAWA1" },  -- poor match
 }
 
@@ -1010,45 +1010,7 @@ HERETIC_HALLWAYS =
 }
 
 
----- BASE MATERIALS ------------
 
-HERETIC_MATS =
-{
-  METAL =
-  {
-    mat_pri = 5,
-
-    wall  = "METL2",
-    void  = "METL1",
-    floor = "FLOOR28",
-    ceil  = "FLOOR28",
-  },
-
-  STEP =
-  {
-    wall  = "SNDPLAIN",
-    floor = "FLOOR27",
-  },
-
-  LIFT =
-  {
-    wall = "DOORSTON",
-    floor = "FLOOR08"
-  },
-
-  TRACK =
-  {
-    wall  = "METL2",
-    floor = "FLOOR28",
-  },
-
-  DOOR_FRAME =
-  {
-    wall  = nil,  -- this means: use plain wall
-    floor = "FLOOR04",
-    ceil  = "FLOOR04",
-  },
-}
 
 --- PEDESTALS --------------
 
@@ -1276,8 +1238,8 @@ HERETIC_DOOR_PREFABS =
     skin =
     {
       door_w="DOORWOOD", door_c="FLOOR10",
-      track_w="METL2",
-      frame_f="FLOOR04",
+      track="METL2", frame_f="FLOOR04",
+      step_w="CHAINSD", key_w="CHAINSD",
       door_h=128,
       line_kind=1, tag=0,
     },
@@ -2110,7 +2072,6 @@ function Heretic1_setup()
 
   Game_merge_tab("hangs", HERETIC_OVERHANGS)
   Game_merge_tab("pedestals", HERETIC_PEDESTALS)
-  Game_merge_tab("mats",  HERETIC_MATS)
   Game_merge_tab("rails", HERETIC_RAILS)
 
   Game_merge_tab("liquids", HERETIC_LIQUIDS)
@@ -2127,6 +2088,10 @@ function Heretic1_setup()
   Game_merge_tab("door_fabs", HERETIC_DOOR_PREFABS)
   Game_merge_tab("wall_fabs", HERETIC_WALL_PREFABS)
   Game_merge_tab("misc_fabs", HERETIC_MISC_PREFABS)
+
+  -- FIXME: temp crap
+  GAME.door_fabs["silver_lit"] = GAME.door_fabs["d_wood"]
+  GAME.materials["NUKAGE1"] = GAME.materials["FLTSLUD1"]
 
   GAME.depot_info  = { teleport_kind=97 }
 
@@ -2162,15 +2127,18 @@ OB_GAMES["heretic"] =
     prefer_stairs = true,
     noblaze_door = true,
 
+    no_keys = true,  --!!!! FIXME
+
     custom_flats = true,
 
     seed_size = 256,
 
-    sky_tex    = "DRIPWALL",
+    sky_tex    = "MOSAIC1",
     sky_flat   = "F_SKY1",
-    error_tex  = "DRIPWALL",
-    error_flat = "FLOOR09",
-    error_mat  = "DRIPWALL",
+
+    error_tex  = "WOODWL",
+    error_flat = "FLOOR10",
+    error_mat  = "WOODWL",
 
     max_level_desc = 28,
 
