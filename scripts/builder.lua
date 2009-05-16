@@ -1445,7 +1445,7 @@ function Build_lift(S, skin, tag)
   end
 
 
-  local sw_face = { texture=skin.side_w, y_offset=0, peg=true }
+  local sw_info = add_pegging(get_mat(skin.side_w))
 
   local coords = get_wall_coords(S, side, 128)
 
@@ -1455,10 +1455,10 @@ function Build_lift(S, skin, tag)
   coords[3].line_kind = sel(switch_dirs[4], skin.switch_kind, skin.walk_kind)
   coords[4].line_kind = sel(switch_dirs[2], skin.switch_kind, skin.walk_kind)
 
-  if switch_dirs[6] then coords[1].w_face = sw_face end
-  if switch_dirs[8] then coords[2].w_face = sw_face end
-  if switch_dirs[4] then coords[3].w_face = sw_face end
-  if switch_dirs[2] then coords[4].w_face = sw_face end
+  if switch_dirs[6] then coords[1].w_face = sw_info.w_face end
+  if switch_dirs[8] then coords[2].w_face = sw_info.w_face end
+  if switch_dirs[4] then coords[3].w_face = sw_info.w_face end
+  if switch_dirs[2] then coords[4].w_face = sw_info.w_face end
 
   coords[1].line_tag = tag
   coords[2].line_tag = tag
@@ -2070,13 +2070,7 @@ end
 function Build_raising_start(S, face_dir, z1, skin)
   local info = get_mat(skin.f_tex)
 
-  local sw_face =
-  {
-    texture = assert(skin.switch_w),
-    x_offset = 0,
-    y_offset = 0,
-    peg = true,
-  }
+  local sw_info = add_pegging(get_mat(skin.switch_w))
 
   local tag = PLAN:alloc_tag()
 
@@ -2092,7 +2086,7 @@ function Build_raising_start(S, face_dir, z1, skin)
       {
         { x=long,  y=0 },
         { x=long,  y=deep },
-        { x=mx+32, y=deep, w_face=sw_face, line_kind=18, line_tag=tag },
+        { x=mx+32, y=deep, w_face=sw_info.w_face, line_kind=18, line_tag=tag },
         { x=mx-32, y=deep },
         { x=0,     y=deep },
         { x=0,     y=0 },
