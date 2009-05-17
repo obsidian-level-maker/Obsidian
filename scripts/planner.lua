@@ -40,20 +40,17 @@ require 'defs'
 require 'util'
 
 
-PLAN_CLASS =
-{
-  alloc_tag = function(self)
-    local result = self.free_tag
-    self.free_tag = self.free_tag + 1
-    return result
-  end,
+function alloc_tag()
+  local result = PLAN.free_tag
+  PLAN.free_tag = PLAN.free_tag + 1
+  return result
+end
   
-  alloc_mark = function(self)
-    local result = self.free_mark
-    self.free_mark = self.free_mark + 1
-    return result
-  end,
-}
+function alloc_mark()
+  local result = PLAN.free_mark
+  PLAN.free_mark = PLAN.free_mark + 1
+  return result
+end
 
 
 ROOM_CLASS =
@@ -925,8 +922,6 @@ function Plan_rooms_sp()
     free_tag  = 1,
     free_mark = 1,
   }
-
-  set_class(PLAN, PLAN_CLASS)
 
   Plan_determine_size()
   Plan_CreateRooms()

@@ -2236,7 +2236,7 @@ end
       Build_tall_curved_stair(S, PLAN.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
     elseif S.kind == "lift" then
-      local tag = PLAN:alloc_tag()
+      local tag = alloc_tag()
       Build_lift(S, PLAN.lift_skin, tag)
 
     elseif S.kind == "popup" then

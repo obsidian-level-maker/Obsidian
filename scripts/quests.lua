@@ -390,7 +390,7 @@ function Quest_lock_up_arena(arena)
     kind = "UNSET",
 
     conn = LC,
-    tag  = PLAN:alloc_tag(),
+    tag  = alloc_tag(),
   }
 
   LC.lock = LOCK
