@@ -452,12 +452,12 @@ function Arena_Doom_E1M8()
 
   local INNER_FLATS =
   {
-    "FLOOR6_2", "FLOOR6_1", "DEM1_6", "MFLR8_1",
+    "FLOOR6_2", "FLOOR6_1", "DEM1_6", "MFLR8_2",
   }
 
   local BUILDING_TEXS =
   {
-    "STONE2", "STONE3", "SP_HOT1",
+    "STONE2", "STONE3", -- "SP_HOT1",
   }
 
   local dirt_i  = get_mat(rand_element(DIRT_TEXS))
@@ -560,7 +560,7 @@ function Arena_Doom_E1M8()
       {
         {  96, 880,   96,  800 },
         { 296, 880,  360,  800 },
-        { 206, 1008, 360, 1088 },
+        { 296, 1008, 360, 1088 },
         { 144, 1008, 144, 1160 },
         {  96, 1008,  96, 1400 },
       },
@@ -581,7 +581,7 @@ function Arena_Doom_E1M8()
 
       Trans_strip(sky_i,
       {
-        {  344,  832,  360,  800 },
+        {  380,  832,  360,  800 },
         {  792,  912,  808,  880 },
         {  952, 1096,  984, 1064 },
         { 1136, 1416, 1168, 1416 },
@@ -646,7 +646,7 @@ function Arena_Doom_E1M8()
 
   local function make_baron_room()
     local floor_i = get_mat(rand_element(INNER_FLATS))
-    local nuke_i  = get_mat("NUKAGE1")
+    local ceil_i  = get_mat("NUKAGE1")
 
     local inner_i = get_mat(rand_element(INNER_TEXS))
     add_pegging(inner_i)
@@ -664,7 +664,7 @@ function Arena_Doom_E1M8()
       { -376, 1640, -408, 1640 },
       {  -64, 1424,  -96, 1400 },
     },
-    -EXTREME_H, 320-8)
+    -EXTREME_H, 312)
 
     local coords =
     {
@@ -679,7 +679,7 @@ function Arena_Doom_E1M8()
     }
 
     Trans_brush(floor_i, coords, -EXTREME_H, 128)
-    Trans_brush(nuke_i,  coords, 304, EXTREME_H)
+    Trans_brush(ceil_i,  coords, 304, EXTREME_H)
 
     local marbfac_i = add_pegging(get_mat(FACE_TEXS[2]))
 
@@ -705,6 +705,40 @@ function Arena_Doom_E1M8()
     Trans_entity("bullet_box",  308, 1912, 128)
     Trans_entity("shells",      -32, 2170, 128)
     Trans_entity("shells",       32, 2170, 128)
+
+    Trans_entity("blue_armor",    0, 1860, 128)
+    Trans_entity("rocket_box",    0, 1740, 128)
+    Trans_entity("rocket_box",    0, 1660, 128)
+    Trans_entity("launch",        0, 1600, 128)
+  end
+
+  local function make_hall()
+    Trans_quad(floor_i, -64, 616, 64, 1344, -EXTREME_H, 0)
+    Trans_quad(ceil_i,  -64, 616, 64, 1344, 128, EXTREME_H)
+
+    Trans_quad(ceil_i,  -64, 1344, 64, 1424, 256, EXTREME_H)
+
+    local red_i  = get_mat("REDWALL1")
+
+    Trans_quad(red_i, -64, 1408,  64, 1424, -EXTREME_H, 128)
+    Trans_quad(red_i, -80, 1344, -64, 1408, -EXTREME_H, EXTREME_H)
+    Trans_quad(red_i,  64, 1344,  80, 1408, -EXTREME_H, EXTREME_H)
+
+    local lift_i = add_pegging(get_mat("PLAT1", "FLAT3"))
+    lift_i.sec_tag = 1
+    lift_i.sec_kind = 8
+    lift_i.t_face.light = 1.00
+    lift_i.delta_z = 4
+
+    Trans_brush(lift_i,
+    {
+      { x= 64, y=1408 },  --???
+      { x=-64, y=1408 },
+      { x=-64, y=1344, line_kind=62, line_tag=1 },
+      { x= 64, y=1344 },
+    },
+    -EXTREME_H, 124)
+
   end
 
   local function add_players()
@@ -725,6 +759,7 @@ function Arena_Doom_E1M8()
   Trans_quad(sky_i,  -1200, 0, 1200, 3600, 320, EXTREME_H)
 
   make_start()
+  make_hall()
   make_outdoor()
   make_dark_hole()
   make_baron_room()
