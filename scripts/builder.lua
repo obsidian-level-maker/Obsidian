@@ -122,6 +122,22 @@ function Trans_quad(info, x1,y1, x2,y2, z1,z2)
   Trans_brush(info, rect_coords(x1,y1, x2,y2), z1,z2)
 end
 
+function Trans_strip(info, strip, z1, z2)
+  for i = 1, #strip - 1 do
+    local a = strip[i]
+    local b = strip[i+1]
+
+    Trans_brush(info,
+    {
+      { x = a[1], y = a[2] },
+      { x = a[3], y = a[4] },
+      { x = b[3], y = b[4] },
+      { x = b[1], y = b[2] },
+    },
+    z1, z2)
+  end
+end
+
 function Trans_entity(name, x, y, z, props)
   assert(name)
 
