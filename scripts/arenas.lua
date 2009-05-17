@@ -438,13 +438,12 @@ function Arena_Doom_E1M8()
 
   local FENCE_TEXS =
   {
-    "BROWNHUG", "ASHWALL", "STONE", "WOOD3",
+    "BROWNHUG", "STONE", "WOOD3",
   }
 
-  local BUILDING_TEXS =
-  {
-    "STONE2", "STONE3", "SP_HOT1",
-  }
+  if GAME.materials["ASHWALL"] then
+    table.insert(FENCE_TEXS, "ASHWALL")
+  end
 
   local INNER_TEXS =
   {
@@ -456,21 +455,106 @@ function Arena_Doom_E1M8()
     "FLOOR6_2", "FLOOR6_1", "DEM1_6", "MFLR8_1",
   }
 
+  local BUILDING_TEXS =
+  {
+    "STONE2", "STONE3", "SP_HOT1",
+  }
+
   local dirt_i  = get_mat(rand_element(DIRT_TEXS))
   local fence_i = get_mat(rand_element(FENCE_TEXS))
-  local build_i = get_mat(rand_element(BUILDING_TEXS))
+  fence_i.w_face.y_offset = 0
+
   local inner_i = get_mat(rand_element(INNER_TEXS), rand_element(INNER_FLATS))
+  local nuke_i  = get_mat("NUKAGE1")
+
+  local build_i = get_mat(rand_element(BUILDING_TEXS))
+  local floor_i = get_mat("FLOOR4_8")
+  local ceil_i  = get_mat("CEIL3_5")
 
   local sky_i = get_sky()
 
 
+  local function make_start()
+
+    -- fence --
+
+    Trans_quad(fence_i, -584, -32, -552, 632, -EXTREME_H, EXTREME_H)
+    Trans_quad(fence_i,  552, -32,  584, 632, -EXTREME_H, EXTREME_H)
+    Trans_quad(fence_i, -552, -32,  552,   0, -EXTREME_H, EXTREME_H)
+
+    Trans_brush(sky_i,
+    {
+      { x=-552, y=616 }, { x=-552, y=0 },
+      { x=-536, y=0 }, { x=-536, y=600 },
+    },
+    96, EXTREME_H)
+
+    Trans_brush(sky_i,
+    {
+      { x=536, y=600 }, { x=536, y=0 },
+      { x=552, y=0 }, { x=552, y=616 },
+    },
+    96, EXTREME_H)
+
+    Trans_quad(sky_i, -552, 0, 552, 16, 96, EXTREME_H)
+
+    -- building --
+
+    Trans_quad(build_i, -552, 616, -64, 632, -EXTREME_H, EXTREME_H)
+    Trans_quad(build_i,   64, 616, 552, 632, -EXTREME_H, EXTREME_H)
+
+    Trans_quad(floor_i, -168, 416, 168, 616, -EXTREME_H, 0)
+    Trans_quad(ceil_i,  -168, 416, 168, 616, 128, EXTREME_H)
+
+    local lite_i = get_mat("LITE5")
+    local window_i = deep_copy(build_i)
+    window_i.b_face.light = 0.9
+
+    for i = 1,2 do
+      TRANSFORM.mirror_x = sel(i==1, 0, nil)
+
+      Trans_brush(build_i,
+      {
+        { x=168, y=616 },
+        { x=168, y=600, w_face = lite_i.w_face },
+        { x=176, y=600 },
+        { x=176, y=616 },
+      },
+      -EXTREME_H, EXTREME_H)
+
+      Trans_brush(build_i,
+      {
+        { x=176, y=408 },
+        { x=176, y=448, w_face = lite_i.w_face },
+        { x=168, y=448 },
+        { x=168, y=408 },
+      },
+      -EXTREME_H, EXTREME_H)
+
+      Trans_brush(build_i,
+      {
+        { x=152, y=416, w_face = lite_i.w_face },
+        { x=152, y=408 },
+        { x=168, y=408 },
+        { x=168, y=416 },
+      },
+      -EXTREME_H, EXTREME_H)
+
+      Trans_quad(build_i,  168, 448, 176, 600, -EXTREME_H, 40)
+      Trans_quad(window_i, 168, 448, 176, 600, 88, EXTREME_H)
+    end
+
+    Trans_quad(build_i,  -152, 408, 152, 416, -EXTREME_H, 40)
+    Trans_quad(window_i, -152, 408, 152, 416, 88, EXTREME_H)
+  end
+
   local function add_players()
     for i = 1,4 do
-      local x = (i - 2.5) * 40
-      local y = 464
+      local x = (i - 2.5) * 72
+      local y = 448
 
       Trans_entity("player" .. tostring(i), x, y, 0, { angle=90 })
-      Trans_entity("medikit", x, y + 100 , 0)
+      Trans_entity("medikit", x, y + 128 , 0)
     end
   end
 
@@ -480,6 +564,8 @@ function Arena_Doom_E1M8()
   -- outer floor --
   Trans_quad(dirt_i, -1200, 0, 1200, 3600, -EXTREME_H, -32)
   Trans_quad(sky_i,  -1200, 0, 1200, 3600, 320, EXTREME_H)
+
+  make_start()
 
 
   add_players()
