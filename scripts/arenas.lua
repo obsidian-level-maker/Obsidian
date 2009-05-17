@@ -426,6 +426,66 @@ function Arena_Doom_MAP07()
 end
 
 
+function Arena_Doom_E1M8()
+  -- this arena was designed by Chris Pisarcyk
+
+
+  local DIRT_TEXS =
+  {
+    "FLOOR7_1", "MFLR8_2", "FWATER1",
+    "FLAT10",   "FLAT1_2", "FLOOR6_2",
+  }
+
+  local FENCE_TEXS =
+  {
+    "BROWNHUG", "ASHWALL", "STONE", "WOOD3",
+  }
+
+  local BUILDING_TEXS =
+  {
+    "STONE2", "STONE3", "SP_HOT1",
+  }
+
+  local INNER_TEXS =
+  {
+    "BROWNGRN", "BROWN96", "ICKWALL3", "SKINMET2",
+  }
+
+  local INNER_FLATS =
+  {
+    "FLOOR6_2", "FLOOR6_1", "DEM1_6", "MFLR8_1",
+  }
+
+  local dirt_i  = get_mat(rand_element(DIRT_TEXS))
+  local fence_i = get_mat(rand_element(FENCE_TEXS))
+  local build_i = get_mat(rand_element(BUILDING_TEXS))
+  local inner_i = get_mat(rand_element(INNER_TEXS), rand_element(INNER_FLATS))
+
+  local sky_i = get_sky()
+
+
+  local function add_players()
+    for i = 1,4 do
+      local x = (i - 2.5) * 40
+      local y = 464
+
+      Trans_entity("player" .. tostring(i), x, y, 0, { angle=90 })
+      Trans_entity("medikit", x, y + 100 , 0)
+    end
+  end
+
+
+  ---| Arena_Doom_E1M8 |---
+  
+  -- outer floor --
+  Trans_quad(dirt_i, -1200, 0, 1200, 3600, -EXTREME_H, -32)
+  Trans_quad(sky_i,  -1200, 0, 1200, 3600, 320, EXTREME_H)
+
+
+  add_players()
+end
+
+
 function Arena_Doom_E2M8()
   -- this arena was designed by Chris Pisarcyk
 
