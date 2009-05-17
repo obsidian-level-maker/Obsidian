@@ -2305,6 +2305,8 @@ function Doom1_setup()
   GAME.quests = DOOM1_QUESTS
 
   Game_merge_tab("rooms",     DOOM1_ROOMS)
+
+  Game_merge_tab("materials", DOOM1_MATERIALS)
   Game_merge_tab("combos",    DOOM1_COMBOS)
   Game_merge_tab("exits",     DOOM1_EXITS)
   Game_merge_tab("hallways",  DOOM1_HALLWAYS)
@@ -2338,10 +2340,10 @@ function Doom2_setup(game)
   Game_merge_tab("rooms",    DOOM2_ROOMS)
   Game_merge_tab("monsters", DOOM2_MONSTERS)
 
+  Game_merge_tab("materials",DOOM2_MATERIALS)
   Game_merge_tab("combos",   DOOM2_COMBOS)
   Game_merge_tab("hallways", DOOM2_HALLWAYS)
   Game_merge_tab("exits",    DOOM2_EXITS)
-  Game_merge_tab("materials",DOOM2_MATERIALS)
 
   Game_merge_tab("hangs",    DOOM2_OVERHANGS)
   Game_merge_tab("crates",   DOOM2_CRATES)
