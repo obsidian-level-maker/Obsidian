@@ -464,9 +464,6 @@ function Arena_Doom_E1M8()
   local fence_i = get_mat(rand_element(FENCE_TEXS))
   fence_i.w_face.y_offset = 0
 
-  local inner_i = get_mat(rand_element(INNER_TEXS), rand_element(INNER_FLATS))
-  local nuke_i  = get_mat("NUKAGE1")
-
   local build_i = get_mat(rand_element(BUILDING_TEXS))
   local floor_i = get_mat("FLOOR4_8")
   local ceil_i  = get_mat("CEIL3_5")
@@ -603,6 +600,81 @@ function Arena_Doom_E1M8()
     -EXTREME_H, -32+4)
   end
 
+  local function make_dark_hole()
+    local dark_i = get_mat("CEIL5_1")
+    dark_i.sec_tag = 9
+    dark_i.sec_kind = 11
+
+    Trans_quad(dark_i, -192, 3072, 192, 3296, -EXTREME_H, 32)
+    Trans_quad(dark_i, -192, 3072, 192, 3296, 144, EXTREME_H)
+
+    Trans_strip(dark_i,
+    {
+      {  192, 3072,  202, 3062 },
+      {  192, 3296,  202, 3306 },
+      { -192, 3296, -202, 3306 },
+      { -192, 3072, -202, 3062 },
+      {  192, 3072,  202, 3062 },
+    },
+    -EXTREME_H, EXTREME_H)
+
+    Trans_entity("teleport_spot", 0, 3184, 32)
+
+    -- monsters --
+
+    local MONSTERS =
+    {
+      "demon", "shooter", "imp", "skull"
+    }
+
+    for y = -1,1 do
+      for x = -2,2 do if x ~= 0 then
+        local ex = x * 64
+        local ey = 3184 + y * 64
+
+        Trans_entity(rand_element(MONSTERS), ex, ey, 32)
+      end end -- for x
+    end -- for y
+  end
+
+  local function make_baron_room()
+    local floor_i = get_mat(rand_element(INNER_FLATS))
+    local nuke_i  = get_mat("NUKAGE1")
+
+    local inner_i = get_mat(rand_element(INNER_TEXS))
+    add_pegging(inner_i)
+    inner_i.sec_tag = 666
+    inner_i.delta_z = 8
+
+    Trans_strip(inner_i,
+    {
+      {   64, 1424,   96, 1400 },
+      {  376, 1640,  408, 1640 },
+      {  376, 2008,  408, 2008 },
+      {  128, 2224,  128, 2264 },
+      { -128, 2224, -128, 2264 },
+      { -376, 2008, -408, 2008 },
+      { -376, 1640, -408, 1640 },
+      {  -64, 1424,  -96, 1400 },
+    },
+    -EXTREME_H, 320-8)
+
+    local coords =
+    {
+      { x=  64, y=1424 },
+      { x= 376, y=1640 },
+      { x= 376, y=2008 },
+      { x= 128, y=2224 },
+      { x=-128, y=2224 },
+      { x=-376, y=2008 },
+      { x=-376, y=1640 },
+      { x= -64, y=1424 },
+    }
+
+    Trans_brush(floor_i, coords, -EXTREME_H, 128)
+    Trans_brush(nuke_i,  coords, 304, EXTREME_H)
+  end
+
   local function add_players()
     for i = 1,4 do
       local x = (i - 2.5) * 72
@@ -622,6 +694,8 @@ function Arena_Doom_E1M8()
 
   make_start()
   make_outdoor()
+  make_dark_hole()
+  make_baron_room()
 
 
   add_players()
