@@ -1189,7 +1189,7 @@ function Quake1_get_levels()
 
         ep_along = map / MAP_NUM,
 
-        theme = "BASE",
+        theme_ref = "BASE",
       }
 
       table.insert(list, LEV)

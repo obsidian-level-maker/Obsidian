@@ -123,7 +123,7 @@ function Rooms_decide_outdoors()
 
   ---| Rooms_decide_outdoors |---
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     if R.outdoor == nil then
       R.outdoor = choose(R)
     end
@@ -136,32 +136,32 @@ end
 
 function Room_setup_theme(R)
  
-  if not PLAN.outdoor_combos then
-    PLAN.outdoor_combos = {}
+  if not LEVEL.outdoor_combos then
+    LEVEL.outdoor_combos = {}
 
     for num = 1,2 do
-      local name = rand_key_by_probs(PLAN.theme.ground)
-      PLAN.outdoor_combos[num] = assert(GAME.combos[name]) 
+      local name = rand_key_by_probs(LEVEL.theme.ground)
+      LEVEL.outdoor_combos[num] = assert(GAME.combos[name]) 
     end
   end
 
-  if not PLAN.indoor_combos then
-    PLAN.indoor_combos = {}
+  if not LEVEL.indoor_combos then
+    LEVEL.indoor_combos = {}
 
     for num = 1,3 do
-      local name = rand_key_by_probs(PLAN.theme.building)
-      PLAN.indoor_combos[num] = assert(GAME.combos[name]) 
+      local name = rand_key_by_probs(LEVEL.theme.building)
+      LEVEL.indoor_combos[num] = assert(GAME.combos[name]) 
     end
   end
 
 
   if not R.outdoor then
-    R.combo = rand_element(PLAN.indoor_combos)
+    R.combo = rand_element(LEVEL.indoor_combos)
     return
   end
 
   if not R.arena.outdoor_combo then
-    R.arena.outdoor_combo = rand_element(PLAN.outdoor_combos)
+    R.arena.outdoor_combo = rand_element(LEVEL.outdoor_combos)
   end
   R.combo = R.arena.outdoor_combo
 end
@@ -206,17 +206,17 @@ function Room_setup_theme_Scenic(R)
 
   -- fallback
   if R.outdoor then
-    R.combo = rand_element(PLAN.outdoor_combos)
+    R.combo = rand_element(LEVEL.outdoor_combos)
   else
-    R.combo = rand_element(PLAN.indoor_combos)
+    R.combo = rand_element(LEVEL.indoor_combos)
   end
 end
 
 function Rooms_choose_themes()
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     Room_setup_theme(R)
   end
-  for _,R in ipairs(PLAN.scenic_rooms) do
+  for _,R in ipairs(LEVEL.scenic_rooms) do
     Room_setup_theme_Scenic(R)
   end
 end
@@ -317,7 +317,7 @@ function Rooms_decide_hallways_II()
 
   ---| Room_decide_hallways |---
   
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     if eval_hallway(R) then
 gui.debugf("  Made Hallway @ %s\n", R:tostr())
       R.kind = "hallway"
@@ -327,7 +327,7 @@ gui.debugf("  Made Hallway @ %s\n", R:tostr())
 
   -- large rooms which are surrounded by hallways are wasted,
   -- hence look for them and revert them back to normal.
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     if R.kind == "hallway" and surrounded_by_halls(R) then
       local min_d = math.min(R.sw, R.sh)
 
@@ -341,7 +341,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
   end
 
   -- decide stairwells
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     if R.kind == "hallway" and R.num_branch == 2 and
        not R.purpose and not R.weapon and
        stairwell_neighbors(R) == 0 and
@@ -360,7 +360,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
   end -- for R
 
   -- we don't need archways where two hallways connect
-  for _,C in ipairs(PLAN.all_conns) do
+  for _,C in ipairs(LEVEL.all_conns) do
     if not C.lock and C.src.kind == "hallway" and C.dest.kind == "hallway" then
       local S = C.src_S
       local T = C.dest_S
@@ -489,7 +489,7 @@ function Rooms_setup_symmetry()
 
   --| Rooms_setup_symmetry |--
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     decide_layout_symmetry(R)
 
     if R.symmetry == "x" or R.symmetry == "xy" then
@@ -511,7 +511,7 @@ function Rooms_reckon_doors()
   local DEFAULT_PROBS = {}
 
   local function door_chance(R1, R2)
-    local door_probs = PLAN.theme.door_probs or
+    local door_probs = LEVEL.theme.door_probs or
                        GAME.door_probs or
                        DEFAULT_PROBS
 
@@ -541,7 +541,7 @@ function Rooms_reckon_doors()
 
   ---| Rooms_reckon_doors |---
 
-  for _,C in ipairs(PLAN.all_conns) do
+  for _,C in ipairs(LEVEL.all_conns) do
     for who = 1,2 do
       local S = sel(who == 1, C.src_S, C.dest_S)
       local N = sel(who == 2, C.src_S, C.dest_S)
@@ -1000,8 +1000,8 @@ function Rooms_border_up()
 
     --------------------
 
-    if rand_odds(sel(PLAN.has_logo,7,40)) then
-      PLAN.has_logo = true
+    if rand_odds(sel(LEVEL.has_logo,7,40)) then
+      LEVEL.has_logo = true
       return rand_sel(50, carve, pill)
     end
 
@@ -1137,14 +1137,14 @@ function Rooms_border_up()
 
   ---| Rooms_border_up |---
   
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     border_up(R)
   end
-  for _,R in ipairs(PLAN.scenic_rooms) do
+  for _,R in ipairs(LEVEL.scenic_rooms) do
     border_up(R)
   end
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     decide_windows( R, get_border_list(R))
     decide_pictures(R, get_border_list(R))
   end
@@ -1642,7 +1642,7 @@ function Room_make_ceiling(R)
 
 
     if not R.arena.ceil_light then
-      R.arena.ceil_light = rand_key_by_probs(PLAN.theme.ceil_lights)
+      R.arena.ceil_light = rand_key_by_probs(LEVEL.theme.ceil_lights)
     end
 
     local beam_chance = 25
@@ -1975,9 +1975,9 @@ gui.printf("do_teleport\n")
     local c_tex = S.c_tex or sel(R.outdoor, PARAM.sky_flat, R.combo.ceil)
 
     if R.kind == "hallway" then
-      w_tex = assert(PLAN.hall_tex)
+      w_tex = assert(LEVEL.hall_tex)
     elseif R.kind == "stairwell" then
-      w_tex = assert(PLAN.well_tex)
+      w_tex = assert(LEVEL.well_tex)
     end
 
     local o_tex = w_tex
@@ -1986,9 +1986,9 @@ gui.printf("do_teleport\n")
       local N = S:neighbor(S.conn_dir)
 
       if N.room.kind == "hallway" then
-        o_tex = PLAN.hall_tex
+        o_tex = LEVEL.hall_tex
       elseif N.room.kind == "stairwell" then
-        o_tex = PLAN.well_tex
+        o_tex = LEVEL.well_tex
       elseif not N.room.outdoor and N.room ~= R.parent then
         o_tex = N.w_tex or N.room.combo.wall
       end
@@ -2013,7 +2013,7 @@ gui.printf("do_teleport\n")
             S:neighbor(side).kind == "void")
          )
       then
-        local skin = { wall=PLAN.hall_tex, trim1="GRAY7", trim2="METAL" }
+        local skin = { wall=LEVEL.hall_tex, trim1="GRAY7", trim2="METAL" }
         Build_detailed_hall(S, side, z1, z2, skin)
 
         S.border[side].kind = nil
@@ -2046,8 +2046,8 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "sky_fence" then
-        local z_top = math.max(PLAN.skyfence_h, (S.room.floor_max_h or S.room.floor_h or 400) + 48)
-        local z_low = PLAN.skyfence_h - 64
+        local z_top = math.max(LEVEL.skyfence_h, (S.room.floor_max_h or S.room.floor_h or 400) + 48)
+        local z_low = LEVEL.skyfence_h - 64
         local skin = { fence_w="BROWN144" }
 
         Build_sky_fence(S, side, z_top, z_low, skin)
@@ -2165,7 +2165,7 @@ gui.printf("do_teleport\n")
 
 
       -- FIXME: this does not belong here
-      if R.kind == "hallway" and PLAN.hall_lights then
+      if R.kind == "hallway" and LEVEL.hall_lights then
         local x_num, y_num = 0,0
 
         for side = 2,8,2 do
@@ -2180,7 +2180,7 @@ gui.printf("do_teleport\n")
         end
 
         if x_num == 1 and y_num == 1 then
-          Build_ceil_light(S, z2, { lite_f=PLAN.hall_lite_ftex, trim="METAL" })
+          Build_ceil_light(S, z2, { lite_f=LEVEL.hall_lite_ftex, trim="METAL" })
         end
       end
     end
@@ -2205,9 +2205,9 @@ local LIFT_SKINS =
     walk_kind=88, switch_kind=62,
   },
 }
-if not PLAN.step_skin then
-  PLAN.step_skin = rand_element(STEP_SKINS)
-  PLAN.lift_skin = LIFT_SKINS.shiny
+if not LEVEL.step_skin then
+  LEVEL.step_skin = rand_element(STEP_SKINS)
+  LEVEL.lift_skin = LIFT_SKINS.shiny
 end
 
 
@@ -2215,9 +2215,9 @@ end
 
     if S.kind == "void" then
 
-      if S.solid_feature and PLAN.theme.corners then
+      if S.solid_feature and LEVEL.theme.corners then
         if not R.corner_tex then
-          R.corner_tex = rand_key_by_probs(PLAN.theme.corners)
+          R.corner_tex = rand_key_by_probs(LEVEL.theme.corners)
         end
         w_tex = R.corner_tex
       end
@@ -2227,17 +2227,17 @@ end
     elseif S.kind == "stair" then
       local skin2 = { wall=S.room.combo.wall, floor=S.f_tex or S.room.combo.floor }
 
-      Build_niche_stair(S, PLAN.step_skin, skin2)
+      Build_niche_stair(S, LEVEL.step_skin, skin2)
 
     elseif S.kind == "curve_stair" then
-      Build_low_curved_stair(S, PLAN.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
+      Build_low_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
     elseif S.kind == "tall_stair" then
-      Build_tall_curved_stair(S, PLAN.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
+      Build_tall_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
     elseif S.kind == "lift" then
       local tag = alloc_tag()
-      Build_lift(S, PLAN.lift_skin, tag)
+      Build_lift(S, LEVEL.lift_skin, tag)
 
     elseif S.kind == "popup" then
       -- FIXME: monster!!
@@ -2295,8 +2295,6 @@ function Rooms_build_all()
 
   gui.printf("\n--==| Rooms_build_all |==--\n\n")
 
-  PLAN.theme = GAME.themes["TECH"] -- FIXME
-
 ---  Test_room_fabs()
 
   Rooms_decide_outdoors()
@@ -2311,20 +2309,20 @@ function Rooms_build_all()
 
   Seed_dump_fabs()
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     Layout_one(R)
     Room_make_ceiling(R)
     Room_add_crates(R)
   end
 
-  for _,R in ipairs(PLAN.scenic_rooms) do
+  for _,R in ipairs(LEVEL.scenic_rooms) do
     Layout_scenic(R)
     Room_make_ceiling(R)
   end
 
   Rooms_border_up()
 
-  for _,R in ipairs(PLAN.scenic_rooms) do Room_build_seeds(R) end
-  for _,R in ipairs(PLAN.all_rooms)    do Room_build_seeds(R) end
+  for _,R in ipairs(LEVEL.scenic_rooms) do Room_build_seeds(R) end
+  for _,R in ipairs(LEVEL.all_rooms)    do Room_build_seeds(R) end
 end
 

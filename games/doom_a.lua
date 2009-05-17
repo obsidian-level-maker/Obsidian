@@ -1992,7 +1992,7 @@ function Doom1_get_levels()
 
         ep_along = ep_along,
 
-        theme = "TECH",
+        theme_ref = "TECH",
 
         key_list = { "kc_red", "kc_blue", "kc_yellow" },
         switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
@@ -2084,7 +2084,7 @@ function Doom2_get_levels()
 
       ep_along = ep_along,
 
-      theme = "TECH",
+      theme_ref = "TECH",
 
       key_list = { "kc_red", "kc_blue", "kc_yellow" },
       switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
@@ -2102,7 +2102,7 @@ function Doom2_get_levels()
 
     -- secret levels
     if map == 31 or map == 32 then
-      LEV.theme = "WOLF"
+      LEV.theme_ref = "WOLF"
       LEV.allow_bfg = true
     end
 

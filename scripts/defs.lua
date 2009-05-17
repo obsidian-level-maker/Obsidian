@@ -18,12 +18,11 @@
 
 GAME   = {}
 PARAM  = {}
-STYLE  = {}
 HOOKS  = {}
+STYLE  = {}
 
-LEVEL = {}
-PLAN  = {}
-SEEDS = {}
+LEVEL  = {}
+SEEDS  = {}
 
 SKILLS = { "easy", "medium", "hard" }
    

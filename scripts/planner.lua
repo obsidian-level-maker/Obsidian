@@ -18,7 +18,7 @@
 
 --[[ *** CLASS INFORMATION ***
 
-class PLAN
+class LEVEL
 {
   all_rooms  : array(ROOM) 
   all_conns  : array(CONN)
@@ -41,14 +41,14 @@ require 'util'
 
 
 function alloc_tag()
-  local result = PLAN.free_tag
-  PLAN.free_tag = PLAN.free_tag + 1
+  local result = LEVEL.free_tag
+  LEVEL.free_tag = LEVEL.free_tag + 1
   return result
 end
   
 function alloc_mark()
-  local result = PLAN.free_mark
-  PLAN.free_mark = PLAN.free_mark + 1
+  local result = LEVEL.free_mark
+  LEVEL.free_mark = LEVEL.free_mark + 1
   return result
 end
 
@@ -129,8 +129,8 @@ function Plan_CreateRooms()
   local room_map
 
   local function valid_R(x, y)
-    return 1 <= x and x <= PLAN.W and
-           1 <= y and y <= PLAN.H
+    return 1 <= x and x <= LEVEL.W and
+           1 <= y and y <= LEVEL.H
   end
 
   local function dump_rooms()
@@ -146,9 +146,9 @@ function Plan_CreateRooms()
     gui.printf("\n")
     gui.printf("Room Map\n")
 
-    for y = PLAN.H,1,-1 do
+    for y = LEVEL.H,1,-1 do
       local line = "  "
-      for x = 1,PLAN.W do
+      for x = 1,LEVEL.W do
         line = line .. room_char(room_map[x][y])
       end
       gui.printf("%s\n", line)
@@ -159,7 +159,7 @@ function Plan_CreateRooms()
   local function calc_width(bx, big_w)
     local w = 0
     for x = bx,bx+big_w-1 do
-      w = w + PLAN.col_W[x]
+      w = w + LEVEL.col_W[x]
     end
     return w
   end
@@ -167,7 +167,7 @@ function Plan_CreateRooms()
   local function calc_height(by, big_h)
     local h = 0
     for y = by,by+big_h-1 do
-      h = h + PLAN.row_H[y]
+      h = h + LEVEL.row_H[y]
     end
     return h
   end
@@ -192,14 +192,14 @@ function Plan_CreateRooms()
     end
 
     -- make sure it fits
-    if bx+big_w-1 > PLAN.W then big_w = PLAN.W - bx + 1 end
-    if by+big_h-1 > PLAN.H then big_h = PLAN.H - by + 1 end
+    if bx+big_w-1 > LEVEL.W then big_w = LEVEL.W - bx + 1 end
+    if by+big_h-1 > LEVEL.H then big_h = LEVEL.H - by + 1 end
 
     assert(big_w > 0 and big_h > 0)
 
     -- prefer to put big rooms away from the edge
-    if (bx == 1 or bx+big_w-1 == PLAN.W or
-        by == 1 or by+big_h-1 == PLAN.H)
+    if (bx == 1 or bx+big_w-1 == LEVEL.W or
+        by == 1 or by+big_h-1 == LEVEL.H)
         and rand_odds(70)
     then
       big_w, big_h = 1, 1
@@ -215,7 +215,7 @@ function Plan_CreateRooms()
     end
 
     -- never use the whole map
-    if big_w >= PLAN.W and big_h >= PLAN.H then
+    if big_w >= LEVEL.W and big_h >= LEVEL.H then
       big_w = big_w - 1
       big_h = big_h - 1
     end
@@ -235,20 +235,20 @@ function Plan_CreateRooms()
 
   ---| Plan_CreateRooms |---
 
-  room_map = array_2D(PLAN.W, PLAN.H)
+  room_map = array_2D(LEVEL.W, LEVEL.H)
 
   local id = 1
 
   local col_x = { 2 }  -- one border seed
   local col_y = { 2 }
 
-  for x = 2,PLAN.W do col_x[x] = col_x[x-1] + PLAN.col_W[x-1] end
-  for y = 2,PLAN.H do col_y[y] = col_y[y-1] + PLAN.row_H[y-1] end
+  for x = 2,LEVEL.W do col_x[x] = col_x[x-1] + LEVEL.col_W[x-1] end
+  for y = 2,LEVEL.H do col_y[y] = col_y[y-1] + LEVEL.row_H[y-1] end
 
 
   local visits = {}
 
-  for x = 1,PLAN.W do for y = 1,PLAN.H do
+  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
     table.insert(visits, { x=x, y=y })
   end end
 
@@ -286,7 +286,7 @@ function Plan_CreateRooms()
     end
   end
 
-  PLAN.last_id = id
+  LEVEL.last_id = id
 
   dump_rooms()
 
@@ -294,11 +294,11 @@ function Plan_CreateRooms()
   -- determines neighboring rooms of each room
   -- (including diagonals, which may touch after nudging)
   
-  for x = 1,PLAN.W do for y = 1,PLAN.H do
+  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
     local R = room_map[x][y]
     
     if not R.neighbors then
-      table.insert(PLAN.all_rooms, R)
+      table.insert(LEVEL.all_rooms, R)
       R.neighbors = {}
     end
 
@@ -473,7 +473,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   local function nudge_big_rooms()
     local rooms = {}
 
-    for _,R in ipairs(PLAN.all_rooms) do
+    for _,R in ipairs(LEVEL.all_rooms) do
       if R.big_w > 1 or R.big_h > 1 then
         R.big_volume = R.big_w * R.big_h
         table.insert(rooms, R)
@@ -517,7 +517,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
 
   local function nudge_the_rest()
     local rooms = {}
-    for _,R in ipairs(PLAN.all_rooms) do
+    for _,R in ipairs(LEVEL.all_rooms) do
       if R.big_w == 1 and R.big_h == 1 then
         table.insert(rooms, R)
       end
@@ -541,7 +541,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
 
   ---| Plan_Nudge |---
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     R.nudges = {}
   end
 
@@ -552,7 +552,7 @@ end
 
 
 function Plan_SubRooms()
-  local id = PLAN.last_id + 1
+  local id = LEVEL.last_id + 1
 
   --                    1  2  3   4   5   6   7   8+
   local SUB_CHANCES = { 0, 0, 1,  3,  6, 10, 20, 30 }
@@ -667,7 +667,7 @@ function Plan_SubRooms()
     ROOM.is_island = (ROOM.sx1 > parent.sx1) and (ROOM.sx2 < parent.sx2) and
                      (ROOM.sy1 > parent.sy1) and (ROOM.sy2 < parent.sy2)
 
-    table.insert(PLAN.all_rooms, ROOM)
+    table.insert(LEVEL.all_rooms, ROOM)
 
     if not parent.children then parent.children = {} end
     table.insert(parent.children, ROOM)
@@ -691,7 +691,7 @@ function Plan_SubRooms()
 
   local chance_tab = sel(STYLE.subrooms == "some", SUB_CHANCES, SUB_HEAPS)
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     if not R.parent then
       local min_d = math.max(R.sw, R.sh)
       if min_d > 8 then min_d = 8 end
@@ -707,7 +707,7 @@ function Plan_SubRooms()
     end
   end
 
-  PLAN.last_id = id
+  LEVEL.last_id = id
 
   Seed_dump_rooms()
 end
@@ -716,7 +716,7 @@ end
 function Plan_MakeSeeds()
 
   local function plant_rooms()
-    for _,R in ipairs(PLAN.all_rooms) do
+    for _,R in ipairs(LEVEL.all_rooms) do
       for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
         assert(Seed_valid(sx, sy, 1))
         local S = SEEDS[sx][sy][1]
@@ -726,7 +726,7 @@ function Plan_MakeSeeds()
       end end -- for sx,sy
     end -- for R
 
-    for _,R in ipairs(PLAN.scenic_rooms) do
+    for _,R in ipairs(LEVEL.scenic_rooms) do
       for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
         local S = SEEDS[sx][sy][1]
         if not S.room then -- overlap is OK for scenics
@@ -739,7 +739,7 @@ function Plan_MakeSeeds()
   end
 
   local function fill_holes()
-    local sc_list = shallow_copy(PLAN.scenic_rooms)
+    local sc_list = shallow_copy(LEVEL.scenic_rooms)
     rand_shuffle(sc_list)
 
     for _,R in ipairs(sc_list) do
@@ -772,7 +772,7 @@ function Plan_MakeSeeds()
   local max_sx = 1
   local max_sy = 1
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     max_sx = math.max(max_sx, R.sx2)
     max_sy = math.max(max_sy, R.sy2)
 
@@ -849,16 +849,16 @@ function Plan_determine_size()
     end
   end
 
-  PLAN.W = W
-  PLAN.H = H
+  LEVEL.W = W
+  LEVEL.H = H
 
 if TESTING_QUAKE_II then
-  PLAN.W = 1
-  PLAN.H = 2
-  PLAN.join_all = true
+  LEVEL.W = 1
+  LEVEL.H = 2
+  LEVEL.join_all = true
 end
 
-  gui.printf("Land size: %dx%d\n", PLAN.W, PLAN.H)
+  gui.printf("Land size: %dx%d\n", LEVEL.W, LEVEL.H)
 
 
   -- initial sizes of rooms in each row and column
@@ -896,11 +896,11 @@ end
   --]]
 
 
-  show_sizes("col_W", cols, PLAN.W)
-  show_sizes("row_H", rows, PLAN.H)
+  show_sizes("col_W", cols, LEVEL.W)
+  show_sizes("row_H", rows, LEVEL.H)
   
-  PLAN.col_W = cols
-  PLAN.row_H = rows
+  LEVEL.col_W = cols
+  LEVEL.row_H = rows
 end
 
 
@@ -910,18 +910,14 @@ function Plan_rooms_sp()
 
   assert(LEVEL.ep_along)
 
-  -- create the global 'PLAN' object
-  PLAN =
-  {
-    all_rooms = {},
-    all_conns = {},
+  LEVEL.all_rooms = {}
+  LEVEL.all_conns = {}
 
-    scenic_rooms = {},
-    scenic_conns = {},
+  LEVEL.scenic_rooms = {}
+  LEVEL.scenic_conns = {}
 
-    free_tag  = 1,
-    free_mark = 1,
-  }
+  LEVEL.free_tag  = 1
+  LEVEL.free_mark = 1
 
   Plan_determine_size()
   Plan_CreateRooms()
@@ -932,12 +928,12 @@ function Plan_rooms_sp()
 
   Plan_SubRooms()
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw,R.sh)
   end
 
 
-  PLAN.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
+  LEVEL.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
 
 end -- Plan_rooms_sp
 

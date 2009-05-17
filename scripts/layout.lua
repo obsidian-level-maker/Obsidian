@@ -1350,16 +1350,16 @@ function Layout_hallway(R)
   R.tx2, R.ty2 = R.sx2, R.sy2
   R.tw,  R.th  = R.sw,  R.sh
 
-  if not PLAN.hall_tex then
-    local info = assert(PLAN.theme.hallway)
+  if not LEVEL.hall_tex then
+    local info = assert(LEVEL.theme.hallway)
 
-    PLAN.hall_tex   = rand_key_by_probs(info.walls)
-    PLAN.hall_floor = rand_key_by_probs(info.floors)
-    PLAN.hall_ceil  = rand_key_by_probs(info.ceils)
+    LEVEL.hall_tex   = rand_key_by_probs(info.walls)
+    LEVEL.hall_floor = rand_key_by_probs(info.floors)
+    LEVEL.hall_ceil  = rand_key_by_probs(info.ceils)
 
-    PLAN.hall_trim   = rand_odds(50)
-    PLAN.hall_lights = rand_odds(50)
-    PLAN.hall_lite_ftex = rand_key_by_probs(PLAN.theme.ceil_lights)
+    LEVEL.hall_trim   = rand_odds(50)
+    LEVEL.hall_lights = rand_odds(50)
+    LEVEL.hall_lite_ftex = rand_key_by_probs(LEVEL.theme.ceil_lights)
   end
 
 
@@ -1402,8 +1402,8 @@ function Layout_hallway(R)
       S.floor_h = h
       S.ceil_h = h + height
 
-      S.f_tex = PLAN.hall_floor
-      S.c_tex = PLAN.hall_ceil
+      S.f_tex = LEVEL.hall_floor
+      S.c_tex = LEVEL.hall_ceil
 
       if R.hall_sky then
         S.is_sky = true
@@ -1751,7 +1751,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     local z = math.max(z1+80, R.floor_max_h+40)
     if z > z2-32 then z = z2-32 end
 
-    if R.kind == "hallway" or R == PLAN.start_room then
+    if R.kind == "hallway" or R == LEVEL.start_room then
       -- nothing!
     elseif rand_odds(40) then
       Build_lowering_pedestal(S, z, lp_skin)
@@ -1851,8 +1851,8 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     for i = 1,4 do
       if R.combo.floors then
         table.insert(f_texs, rand_element(R.combo.floors))
-      elseif PLAN.theme.floors then
-        table.insert(f_texs, rand_key_by_probs(PLAN.theme.floors))
+      elseif LEVEL.theme.floors then
+        table.insert(f_texs, rand_key_by_probs(LEVEL.theme.floors))
       else
         table.insert(f_texs, f_texs[1] or R.combo.floor)
       end
@@ -2283,11 +2283,11 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     stairwell_height_diff(focus_C)
 
     local WELL_TEX = { "BROWN1", "GRAY1", "STARGR1", "METAL4" }
-    if not PLAN.well_tex then
-      PLAN.well_tex = rand_element(WELL_TEX)
+    if not LEVEL.well_tex then
+      LEVEL.well_tex = rand_element(WELL_TEX)
     end
 
-    local skin = { wall=PLAN.well_tex, floor="FLAT1", ceil="FLOOR7_1" }
+    local skin = { wall=LEVEL.well_tex, floor="FLAT1", ceil="FLOOR7_1" }
 
     Build_stairwell(R, skin)
     return
@@ -2327,7 +2327,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
                                 "SW1GRAY",  "SW1MOD1", "SW1SLAD", "SW1STRTN",
                                 "SW1TEK",   "SW1STON1" }
 
-    Build_small_exit(R, PLAN.theme.exit, skin, skin2)
+    Build_small_exit(R, LEVEL.theme.exit, skin, skin2)
     return
   end
 

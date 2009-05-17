@@ -623,7 +623,7 @@ function Connect_Rooms()
   local function merge_groups(id1, id2)
     if id1 > id2 then id1,id2 = id2,id1 end
 
-    for _,R in ipairs(PLAN.all_rooms) do
+    for _,R in ipairs(LEVEL.all_rooms) do
       if R.c_group == id2 then
         R.c_group = id1
       end
@@ -633,7 +633,7 @@ function Connect_Rooms()
   local function min_group_id()
     local result
     
-    for _,R in ipairs(PLAN.all_rooms) do
+    for _,R in ipairs(LEVEL.all_rooms) do
       if not result or R.c_group < result then
         result = R.c_group
       end
@@ -645,7 +645,7 @@ function Connect_Rooms()
   local function group_size(id)
     local result = 0
 
-    for _,R in ipairs(PLAN.all_rooms) do
+    for _,R in ipairs(LEVEL.all_rooms) do
       if R.c_group == id then
         result = result + 1
       end
@@ -657,7 +657,7 @@ function Connect_Rooms()
   local function swap_groups(id1, id2)
     assert(id1 ~= id2)
 
-    for _,R in ipairs(PLAN.all_rooms) do
+    for _,R in ipairs(LEVEL.all_rooms) do
       if R.c_group == id1 then
         R.c_group = id2
       elseif R.c_group == id2 then
@@ -698,12 +698,12 @@ T.sx,T.sy, T.room.id, T.room.c_group)
     S.conn_peer = T
     T.conn_peer = S
 
-    table.insert(PLAN.all_conns, CONN)
+    table.insert(LEVEL.all_conns, CONN)
 
     table.insert(S.room.conns, CONN)
     table.insert(T.room.conns, CONN)
 
-    PLAN.branched_one = true
+    LEVEL.branched_one = true
 
     return CONN
   end
@@ -909,7 +909,7 @@ gui.debugf("Failed\n")
   local function branch_big_rooms()
     local rooms = {}
 
-    for _,R in ipairs(PLAN.all_rooms) do
+    for _,R in ipairs(LEVEL.all_rooms) do
       if R.svolume >= 1 and (R.kind == "building") and not R.parent then
         R.k_score = sel((R.sw%2)==1 and (R.sh%2)==1, 5, 0) + R.svolume + gui.random()
         table.insert(rooms, R)
@@ -956,9 +956,9 @@ gui.debugf("Failed\n")
 
     -- move the room to the scenic list
 
-    for index,N in ipairs(PLAN.all_rooms) do
+    for index,N in ipairs(LEVEL.all_rooms) do
       if N == R then
-        table.remove(PLAN.all_rooms, index)
+        table.remove(LEVEL.all_rooms, index)
         R.c_group = -1
         break;
       end
@@ -966,7 +966,7 @@ gui.debugf("Failed\n")
 
     assert(R.c_group == -1)
     
-    table.insert(PLAN.scenic_rooms, R)
+    table.insert(LEVEL.scenic_rooms, R)
 
     -- remove any arches (from connect_seeds)
 
@@ -986,9 +986,9 @@ gui.debugf("Failed\n")
   local function make_conn_scenic(C)
     local found
 
-    for index,N in ipairs(PLAN.all_conns) do
+    for index,N in ipairs(LEVEL.all_conns) do
       if N == C then
-        table.remove(PLAN.all_conns, index)
+        table.remove(LEVEL.all_conns, index)
         found = true
         break;
       end
@@ -996,7 +996,7 @@ gui.debugf("Failed\n")
 
     assert(found)
 
-    table.insert(PLAN.scenic_conns, C)
+    table.insert(LEVEL.scenic_conns, C)
 
     ---## C.src_S.conn  = nil; C.src_S.conn_dir  = nil
     ---## C.dest_S.conn = nil; C.dest_S.conn_dir = nil
@@ -1074,7 +1074,7 @@ gui.debugf("Failed\n")
   end
 
   local function handle_isolate(R, join_chance)
-    if rand_odds(join_chance) or R.parent or not PLAN.branched_one then
+    if rand_odds(join_chance) or R.parent or not LEVEL.branched_one then
       if force_room_branch(R) then
         return -- OK
       end
@@ -1120,7 +1120,7 @@ gui.debugf("Failed\n")
     gui.debugf("Killing rebel group %d (%d rooms)\n", rebel_id, #rebels)
 
     -- use a copy since we modify the original list
-    local c_copy = shallow_copy(PLAN.all_conns)
+    local c_copy = shallow_copy(LEVEL.all_conns)
 
     for _,C in ipairs(c_copy) do
       if C.src.c_group == rebel_id then
@@ -1137,13 +1137,13 @@ gui.debugf("Failed\n")
   local function branch_the_rest()
     local min_g = min_group_id()
 
-    -- use a copy since PLAN.all_rooms may be modified
-    local list = shallow_copy(PLAN.all_rooms)
+    -- use a copy since LEVEL.all_rooms may be modified
+    local list = shallow_copy(LEVEL.all_rooms)
 
     local join_chance = 65
     if STYLE.scenics == "few"   then join_chance = 95 end
     if STYLE.scenics == "heaps" then join_chance = 40 end
-    if PLAN.join_all then join_chance = 100 end
+    if LEVEL.join_all then join_chance = 100 end
 
     gui.debugf("Join Chance: %d\n", join_chance)
 
@@ -1180,7 +1180,7 @@ gui.debugf("Failed\n")
     local side_prob = sel(STYLE.scenics == "heaps", 60, 10)
     local mid_prob  = sel(STYLE.scenics == "heaps", 20, 3)
 
-    local list = shallow_copy(PLAN.all_rooms)
+    local list = shallow_copy(LEVEL.all_rooms)
     rand_shuffle(list)
 
     for _,R in ipairs(list) do
@@ -1202,9 +1202,9 @@ gui.debugf("Failed\n")
 
   gui.printf("\n--==| Connect_Rooms |==--\n\n")
 
-  PLAN.branched_one = false
+  LEVEL.branched_one = false
 
-  for c_group,R in ipairs(PLAN.all_rooms) do
+  for c_group,R in ipairs(LEVEL.all_rooms) do
     R.c_group = c_group
   end
 
@@ -1213,8 +1213,8 @@ gui.debugf("Failed\n")
   branch_big_rooms()
   branch_the_rest()
 
----#  for _,R in ipairs(PLAN.all_rooms) do assert(R.kind ~= "scenic") end
----#  for _,C in ipairs(PLAN.all_conns) do
+---#  for _,R in ipairs(LEVEL.all_rooms) do assert(R.kind ~= "scenic") end
+---#  for _,C in ipairs(LEVEL.all_conns) do
 ---#    assert(C.src.kind ~= "scenic")
 ---#    assert(C.dest.kind ~= "scenic")
 ---#  end

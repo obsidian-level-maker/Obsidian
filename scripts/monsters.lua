@@ -53,7 +53,7 @@ require 'util'
 
 
 function Player_init()
-  PLAN.hmodels = {}
+  LEVEL.hmodels = {}
 
   for _,SK in ipairs(SKILLS) do
     local hm_set = deep_copy(GAME.player_model)
@@ -63,7 +63,7 @@ function Player_init()
       hmodel.class = CL
     end -- for CL
 
-    PLAN.hmodels[SK] = hm_set
+    LEVEL.hmodels[SK] = hm_set
   end -- for SK
 end
 
@@ -71,7 +71,7 @@ function Player_give_weapon(weapon, to_CL)
   gui.debugf("Giving weapon: %s\n", weapon)
 
   for _,SK in ipairs(SKILLS) do
-    for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+    for CL,hmodel in pairs(LEVEL.hmodels[SK]) do
       if not to_CL or (to_CL == CL) then
         hmodel.weapons[weapon] = 1
       end
@@ -152,7 +152,7 @@ function Player_calc_firepower()
 
   local SK = SKILLS[1]
 
-  for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+  for CL,hmodel in pairs(LEVEL.hmodels[SK]) do
     fp_total = fp_total + get_firepower(hmodel)
     class_num = class_num + 1
   end -- for CL
@@ -172,10 +172,10 @@ function Monsters_init()
     info.thing = assert(GAME.things[name])
   end
 
-  PLAN.mon_stats = {}
+  LEVEL.mon_stats = {}
 
-  PLAN.mixed_mons_qty   = 24 + rand_skew() * 10
-  PLAN.mixed_mons_tough = rand_range(0.9, 1.1)
+  LEVEL.mixed_mons_qty   = 24 + rand_skew() * 10
+  LEVEL.mixed_mons_tough = rand_range(0.9, 1.1)
 end
 
 function Monsters_global_palette()
@@ -634,7 +634,7 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   local function pickups_in_room(R)
     if find_pickup_spots(R) then
       for _,SK in ipairs(SKILLS) do
-        for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+        for CL,hmodel in pairs(LEVEL.hmodels[SK]) do
           pickups_for_hmodel(R, SK, CL, hmodel)
         end -- for CL
       end -- for SK
@@ -644,13 +644,13 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
 
   ---| Monsters_do_pickups |---
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     if not (R.kind == "stairwell" or R.kind == "smallexit") then
       distribute_fight_stats(R)
     end
   end
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     if not (R.kind == "stairwell" or R.kind == "smallexit") then
       pickups_in_room(R)
     end
@@ -673,7 +673,7 @@ function Monsters_in_room(R)
     -- higher values (upto ~ 4.0) produces tougher monsters.
 
     local toughness = MONSTER_TOUGHNESS[OB_CONFIG.mons] or
-                      PLAN.mixed_mons_tough  -- "mixed" setting
+                      LEVEL.mixed_mons_tough  -- "mixed" setting
 
     -- each level gets progressively tougher
     if LEVEL.toughness then
@@ -686,7 +686,7 @@ function Monsters_in_room(R)
     -- get tougher as the player picks up new weapons.
     if R.arena.id == 1 then
       toughness = toughness * 0.8
-    elseif R.arena.id >= (#PLAN.all_arenas - 1) then
+    elseif R.arena.id >= (#LEVEL.all_arenas - 1) then
       toughness = toughness * 1.4
     end
 
@@ -710,7 +710,7 @@ function Monsters_in_room(R)
 
     else
       qty = MONSTER_QUANTITIES[OB_CONFIG.mons] or
-            PLAN.mixed_mons_qty  -- the "mixed" setting
+            LEVEL.mixed_mons_qty  -- the "mixed" setting
     end
 
     gui.debugf("Quantity = %1.0f\n", qty)
@@ -728,8 +728,8 @@ function Monsters_in_room(R)
       prob = prob * (LEVEL.monster_prefs[name] or 1)
     end
 
-    if PLAN.theme.monster_prefs then
-      prob = prob * (PLAN.theme.monster_prefs[name] or 1)
+    if LEVEL.theme.monster_prefs then
+      prob = prob * (LEVEL.theme.monster_prefs[name] or 1)
     end
 
     if R.room_type and R.room_type.monster_prefs then
@@ -814,7 +814,7 @@ function Monsters_in_room(R)
       palette[mon] = list[mon]
 
       gui.debugf("  #%d %s\n", i, mon)
-      PLAN.mon_stats[mon] = (PLAN.mon_stats[mon] or 0) + 1
+      LEVEL.mon_stats[mon] = (LEVEL.mon_stats[mon] or 0) + 1
 
       list[mon] = nil
       if table_empty(list) then break; end
@@ -874,7 +874,7 @@ function Monsters_in_room(R)
       palette[mon] = list[mon]
 
       gui.debugf("  #%d %s\n", i, mon)
-      PLAN.mon_stats[mon] = (PLAN.mon_stats[mon] or 0) + 1
+      LEVEL.mon_stats[mon] = (LEVEL.mon_stats[mon] or 0) + 1
 
       list[mon] = nil
       if table_empty(list) then break; end
@@ -1320,7 +1320,7 @@ function Monsters_in_room(R)
     local mon_list = R.monster_list[SK]
     if mon_list and #mon_list >= 1 then
 
-      for CL,hmodel in pairs(PLAN.hmodels[SK]) do
+      for CL,hmodel in pairs(LEVEL.hmodels[SK]) do
         local weap_list = collect_weapons(hmodel)
         local stats = R.fight_stats[SK][CL]
 
@@ -1350,12 +1350,12 @@ end
 
 function Monsters_show_stats()
   local total = 0
-  for _,count in pairs(PLAN.mon_stats) do
+  for _,count in pairs(LEVEL.mon_stats) do
     total = total + count
   end
 
   local function get_stat(mon)
-    local num = PLAN.mon_stats[mon] or 0
+    local num = LEVEL.mon_stats[mon] or 0
     local div = int(num * 99.8 / total)
     if div == 0 and num > 0 then div = 1 end
     return string.format("%02d", div)
@@ -1388,7 +1388,7 @@ function Monsters_make_battles()
   -- simply visit them one-by-one and insert some monsters
   -- and simulate each battle.
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     if R.arena.weapon and (R.arena.id > cur_arena) then
       Player_give_weapon(R.arena.weapon)
       cur_arena = R.arena.id

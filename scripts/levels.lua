@@ -91,11 +91,10 @@ end
 function Level_CleanUp()
   GAME   = {}
   PARAM  = {}
-  STYLE  = {}
   HOOKS  = {}
+  STYLE  = {}
 
   LEVEL  = nil
-  PLAN   = nil
   SEEDS  = nil
 
   collectgarbage("collect")
@@ -199,23 +198,9 @@ function Level_Make(L, index, NUM)
 
   -- FIXME: invoke "level_start" signal
 
+  LEVEL.theme = GAME.themes["TECH"] -- FIXME
+
   Level_styles()
-
-  if not LEVEL.arena_func then
-    Plan_rooms_sp()
-      if gui.abort() then return "abort" end
-      gui.progress(10)
-
-    Connect_Rooms()
-      if gui.abort() then return "abort" end
-      gui.progress(15)
-
-    Quest_assign()
-      if gui.abort() then return "abort" end
-      gui.progress(25)
-  else
-    PLAN = {}
-  end
 
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
@@ -233,11 +218,24 @@ function Level_Make(L, index, NUM)
     gui.property("error_flat", PARAM.error_flat or PARAM.error_tex)
   end   
 
+
   if LEVEL.arena_func then
     LEVEL.arena_func()
       if gui.abort() then return "abort" end
       gui.progress(50)
   else
+    Plan_rooms_sp()
+      if gui.abort() then return "abort" end
+      gui.progress(10)
+
+    Connect_Rooms()
+      if gui.abort() then return "abort" end
+      gui.progress(15)
+
+    Quest_assign()
+      if gui.abort() then return "abort" end
+      gui.progress(25)
+
     Rooms_build_all()
       if gui.abort() then return "abort" end
       gui.progress(80)
@@ -257,7 +255,6 @@ function Level_Make(L, index, NUM)
   -- intra-level cleanup
   if index < NUM then
     LEVEL = nil
-    PLAN  = nil
     SEEDS = nil
 
     collectgarbage("collect")

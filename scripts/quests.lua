@@ -395,7 +395,7 @@ function Quest_lock_up_arena(arena)
 
   LC.lock = LOCK
 
-  table.insert(PLAN.all_locks, LOCK)
+  table.insert(LEVEL.all_locks, LOCK)
 
 
 
@@ -464,16 +464,16 @@ function Quest_lock_up_arena(arena)
   -- [this logic ensures the 'all_arenas' list stays in visit order]
 
   local old_pos
-  for index,A in ipairs(PLAN.all_arenas) do
+  for index,A in ipairs(LEVEL.all_arenas) do
     if arena == A then old_pos = index ; break end
   end
   assert(old_pos)
 
 
-  table.insert(PLAN.all_arenas, old_pos+1, front_A)
-  table.insert(PLAN.all_arenas, old_pos+2, back_A)
+  table.insert(LEVEL.all_arenas, old_pos+1, front_A)
+  table.insert(LEVEL.all_arenas, old_pos+2, back_A)
 
-  table.remove(PLAN.all_arenas, old_pos)
+  table.remove(LEVEL.all_arenas, old_pos)
 
   gui.debugf("Successful split, new sizes: %d+%d | %d+%d\n",
              #front_A.rooms, #front_A.conns,
@@ -492,8 +492,8 @@ function Quest_add_lock()
     end
 
     -- Wolf3d: require two locked doors to be perpendicular
-    if PARAM.one_lock_tex and #PLAN.all_locks == 1 then
-      local old_dir = PLAN.all_locks[1].conn.dir
+    if PARAM.one_lock_tex and #LEVEL.all_locks == 1 then
+      local old_dir = LEVEL.all_locks[1].conn.dir
       assert(old_dir and C.dir)
 
       if not is_perpendicular(old_dir, C.dir) then
@@ -547,21 +547,21 @@ function Quest_add_lock()
 
   --| Quest_add_lock |--
 
-  for _,C in ipairs(PLAN.all_conns) do
+  for _,C in ipairs(LEVEL.all_conns) do
     C.can_lock = conn_is_lockable(C)
   end
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     R.is_junction = room_is_junction(R)
   end
 
   -- choose arena to add the locked door into
-  for _,A in ipairs(PLAN.all_arenas) do
+  for _,A in ipairs(LEVEL.all_arenas) do
     A.split_score = eval_arena(A)
 gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
   end
 
-  local arena = table_pick_best(PLAN.all_arenas, function(X,Y) return X.split_score > Y.split_score end)
+  local arena = table_pick_best(LEVEL.all_arenas, function(X,Y) return X.split_score > Y.split_score end)
 
   if arena.split_score < 0 then
     gui.debugf("No more locks could be made!\n")
@@ -591,12 +591,12 @@ function Quest_add_keys()
     B2.kind = "straddle"
   end
 
-  for _,arena in ipairs(PLAN.all_arenas) do
+  for _,arena in ipairs(LEVEL.all_arenas) do
     local R = arena.target
     assert(R)
 
     if arena.lock.kind == "EXIT" then
-      assert(PLAN.exit_room == R)
+      assert(LEVEL.exit_room == R)
 
       if R.kind == "building" and not R:has_any_lock() and R.svolume < 25 then
         make_small_exit(R)
@@ -657,14 +657,14 @@ function Quest_order_by_visit()
 
   ---| Quest_order_by_visit |---
 
-  for _,A in ipairs(PLAN.all_arenas) do
+  for _,A in ipairs(LEVEL.all_arenas) do
     visit_room(A.start, A.path, 1)
   end
 
-  table.sort(PLAN.all_rooms, function(A,B) return A.visit_time < B.visit_time end)
+  table.sort(LEVEL.all_rooms, function(A,B) return A.visit_time < B.visit_time end)
 
   gui.debugf("Room Visit Order:\n")
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     gui.debugf("  %d : %s %s %s\n",
                R.visit_time, R:tostr(), R.kind, R.purpose or "-");
   end
@@ -696,13 +696,13 @@ function Quest_key_distances()
     local dist = 0
 
     while arena_idx >= 1 do
-      local d = lock_in_path(PLAN.all_arenas[arena_idx], lock)
+      local d = lock_in_path(LEVEL.all_arenas[arena_idx], lock)
       if d then
         return dist + d  -- Yay!
       end
 
       -- try earlier arena
-      dist = dist + #PLAN.all_arenas[arena_idx].path
+      dist = dist + #LEVEL.all_arenas[arena_idx].path
       arena_idx = arena_idx - 1
     end
 
@@ -715,7 +715,7 @@ function Quest_key_distances()
 
   gui.debugf("Key Distances:\n")
 
-  for index,A in ipairs(PLAN.all_arenas) do
+  for index,A in ipairs(LEVEL.all_arenas) do
     if A.lock.kind == "EXIT" then
       A.lock.distance = 0
     else
@@ -728,7 +728,7 @@ end
 
 function Quest_choose_keys()
 
-  for _,LOCK in ipairs(PLAN.all_locks) do
+  for _,LOCK in ipairs(LEVEL.all_locks) do
     LOCK.kscore = LOCK.distance
 
     -- prefer not to use KEY doors between two Outside rooms
@@ -739,7 +739,7 @@ function Quest_choose_keys()
     LOCK.kscore = LOCK.kscore + gui.random() / 5.0
   end
 
-  table.sort(PLAN.all_locks, function(A,B) return A.kscore > B.kscore end)
+  table.sort(LEVEL.all_locks, function(A,B) return A.kscore > B.kscore end)
 
   local use_keys     = shallow_copy(LEVEL.key_list or GAME.key_list) 
   local use_switches = shallow_copy(LEVEL.switch_list or GAME.switch_list)
@@ -750,14 +750,14 @@ function Quest_choose_keys()
 
   -- use less keys when number of locked doors is small
   local want_keys = #use_keys
-  while want_keys > 1 and (#PLAN.all_locks-1 < want_keys * 2) and rand_odds(80) do
+  while want_keys > 1 and (#LEVEL.all_locks-1 < want_keys * 2) and rand_odds(80) do
     want_keys = want_keys - 1
   end
 
   -- assign keys first (to locks with biggest distance from key to door)
   local cur_k = 1
 
-  for _,LOCK in ipairs(PLAN.all_locks) do
+  for _,LOCK in ipairs(LEVEL.all_locks) do
     if cur_k > want_keys then
       break;
     end
@@ -770,11 +770,11 @@ function Quest_choose_keys()
   end
 
   -- assign switches second (random spread)
-  rand_shuffle(PLAN.all_locks)
+  rand_shuffle(LEVEL.all_locks)
 
   local cur_sw = 0
 
-  for _,LOCK in ipairs(PLAN.all_locks) do
+  for _,LOCK in ipairs(LEVEL.all_locks) do
     if not LOCK.item then
       LOCK.kind = "SWITCH"
 
@@ -791,7 +791,7 @@ end
 
 function Quest_add_weapons()
  
-  PLAN.added_weapons = {}
+  LEVEL.added_weapons = {}
 
   local function do_start_weapon(arena)
     local name_tab = {}
@@ -820,7 +820,7 @@ function Quest_add_weapons()
     local weapon = rand_key_by_probs(name_tab)
     gui.debugf("Start weapon: %s\n", weapon)
 
-    PLAN.added_weapons[weapon] = true
+    LEVEL.added_weapons[weapon] = true
 
     arena.weapon = weapon
     arena.start.weapon = weapon
@@ -830,7 +830,7 @@ function Quest_add_weapons()
     local name_tab = {}
 
     for name,info in pairs(GAME.weapons) do
-      if info.add_prob and not PLAN.added_weapons[name] then
+      if info.add_prob and not LEVEL.added_weapons[name] then
         name_tab[name] = info.add_prob
       end
     end
@@ -844,7 +844,7 @@ function Quest_add_weapons()
 
     local weapon = rand_key_by_probs(name_tab)
 
-    PLAN.added_weapons[weapon] = true
+    LEVEL.added_weapons[weapon] = true
 
     arena.weapon = weapon
 
@@ -873,7 +873,7 @@ function Quest_add_weapons()
 
   ---| Quest_add_weapons |---
 
-  for index,A in ipairs(PLAN.all_arenas) do
+  for index,A in ipairs(LEVEL.all_arenas) do
     if index == 1  then
       do_start_weapon(A)
     elseif (index == 2) or rand_odds(sel((index % 2) == 1, 80, 20)) then
@@ -890,11 +890,11 @@ function Quest_find_storage_rooms()
   -- these rooms to encourage exploration (i.e. to make these
   -- rooms not totally useless).
 
-  for _,A in ipairs(PLAN.all_arenas) do
+  for _,A in ipairs(LEVEL.all_arenas) do
     A.storage_rooms = {}
   end
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     if R.kind ~= "scenic" and #R.conns == 1 and
        not R.purpose and not R.weapon
     then
@@ -911,10 +911,10 @@ function Quest_assign()
   gui.printf("\n--==| Quest_assign |==--\n\n")
 
   -- need at least a START room and an EXIT room
-  assert(#PLAN.all_rooms >= 2)
+  assert(#LEVEL.all_rooms >= 2)
 
   -- count branches in each room
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     R.teleports = {} --!!!!
 
     if R.kind ~= "scenic" then
@@ -935,37 +935,37 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
   local ARENA =
   {
     rooms = {},
-    conns = shallow_copy(PLAN.all_conns),
+    conns = shallow_copy(LEVEL.all_conns),
     lock = EXIT_LOCK,
   }
 
-  for _,R in ipairs(PLAN.all_rooms) do
+  for _,R in ipairs(LEVEL.all_rooms) do
     if R.kind ~= "scenic" then
       table.insert(ARENA.rooms, R)
     end
   end
 
 
-  PLAN.all_arenas = { ARENA }
-  PLAN.all_locks  = { EXIT_LOCK }
+  LEVEL.all_arenas = { ARENA }
+  LEVEL.all_locks  = { EXIT_LOCK }
 
   Quest_decide_start_room(ARENA)
 
-  PLAN.start_room = PLAN.all_arenas[1].start
-  PLAN.start_room.purpose = "START"
+  LEVEL.start_room = LEVEL.all_arenas[1].start
+  LEVEL.start_room.purpose = "START"
 
-  PLAN.max_keys = Quest_num_keys(#ARENA.rooms)
+  LEVEL.max_keys = Quest_num_keys(#ARENA.rooms)
 
 
   Quest_initial_path(ARENA)
 
-  for i = 1,PLAN.max_keys do
+  for i = 1,LEVEL.max_keys do
     Quest_add_lock()
   end
 
-  gui.printf("Total arenas: %d\n", #PLAN.all_arenas)
+  gui.printf("Total arenas: %d\n", #LEVEL.all_arenas)
 
-  for id,A in ipairs(PLAN.all_arenas) do
+  for id,A in ipairs(LEVEL.all_arenas) do
     A.id = id
 
     for _,R in ipairs(A.rooms) do
@@ -973,10 +973,10 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
     end
   end
 
-  PLAN.exit_room = PLAN.all_arenas[#PLAN.all_arenas].target
-  PLAN.exit_room.purpose = "EXIT"
+  LEVEL.exit_room = LEVEL.all_arenas[#LEVEL.all_arenas].target
+  LEVEL.exit_room.purpose = "EXIT"
 
-  gui.printf("Exit room: %s\n", PLAN.exit_room:tostr())
+  gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
 
 
   Quest_order_by_visit()

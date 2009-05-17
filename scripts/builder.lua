@@ -164,7 +164,7 @@ function psychedelic_mat(name)
     return GAME.sanity_map[name]
   end
 
-  if not PLAN.psycho_map then
+  if not LEVEL.psycho_map then
     -- build the psychedelic mapping --
 
     local m_before = {}
@@ -182,15 +182,15 @@ function psychedelic_mat(name)
 
     rand_shuffle(m_after)
 
-    PLAN.psycho_map = {}
+    LEVEL.psycho_map = {}
 
     for i = 1,#m_before do
-      PLAN.psycho_map[m_before[i]] = m_after[i]
+      LEVEL.psycho_map[m_before[i]] = m_after[i]
     end
   end
 
-  if PLAN.psycho_map[name] then
-    return PLAN.psycho_map[name]
+  if LEVEL.psycho_map[name] then
+    return LEVEL.psycho_map[name]
   end
 
   return name
@@ -244,7 +244,7 @@ function get_sky()
     kind = "sky",
     w_face = { texture=PARAM.sky_tex },
     t_face = { texture=PARAM.sky_flat or PARAM.sky_tex },
-    b_face = { texture=PARAM.sky_flat or PARAM.sky_tex, light=PLAN.sky_light or 0.75 },
+    b_face = { texture=PARAM.sky_flat or PARAM.sky_tex, light=LEVEL.sky_light or 0.75 },
   }
 end
 
@@ -788,7 +788,7 @@ function Build_detailed_hall(S, side, z1, z2, skin)
   end
 
 
-  if PLAN.hall_trim then
+  if LEVEL.hall_trim then
     Trans_brush(get_mat(skin.trim2),
         get_hall_coords(32, 8), -EXTREME_H, z1 + 32)
 
