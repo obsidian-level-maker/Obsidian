@@ -423,41 +423,6 @@ function rand_key_by_probs(tab)
 end
 
 
-----====| CELL/BLOCK UTILITIES |====----
-
-function valid_cell(cx, cy)
-  return not (cx < 1 or cy < 1 or cx > PLAN.w or cy > PLAN.h)
-end
-
-function valid_block(bx, by)
-  return not (bx < 1 or by < 1 or bx > PLAN.blk_w or by > PLAN.blk_h)
-end
-
-function valid_cell_block(c, x, y)
-  return
-    (c.bx1 <= x and x <= c.bx2) and
-    (c.by1 <= y and y <= c.by2)
-end
-
-function valid_chunk(kx,ky)
-  return 1 <= kx and kx <= 3 and
-         1 <= ky and ky <= 3
-end
-
-function valid_chunk_block(K, x, y)
-  return
-    (K.x1 <= x and x <= K.x2) and
-    (K.y1 <= y and y <= K.y2)
-end
-
-
--- convert position into block/sub-block pair,
--- where all the index values start at 1
-function div_mod(x, mod)
-  x = x - 1
-  return 1 + int(x / mod), 1 + (x % mod)
-end
-
 function dir_to_delta(dir)
   if dir == 1 then return -1, -1 end
   if dir == 2 then return  0, -1 end
@@ -642,19 +607,5 @@ function corner_coords(side, x1,y1, x2,y2)
   if side == 9 then return x2,y2 end
 
   error ("corner_coords: bad side " .. side)
-end
-
-function neighbour_by_side(c, dir)
-  local dx, dy = dir_to_delta(dir)
-  if valid_cell(c.x + dx, c.y + dy) then
-    return PLAN.cells[c.x + dx][c.y + dy]
-  end
-end
-
-function chunk_neighbour(c, K, dir)
-  local dx, dy = dir_to_delta(dir)
-  if valid_chunk(K.kx + dx, K.ky + dy) then
-    return c.chunks[K.kx+dx][K.ky+dy]
-  end
 end
 
