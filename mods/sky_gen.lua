@@ -240,7 +240,7 @@ OB_MODULES["sky_gen_doom"] =
 {
   label = "Sky Generator (DOOM)",
 
-  for_games = { doom2=1, doom1=1, freedoom=1 },
+  for_games = { doom2=1, freedoom=1 },
 
   hooks =
   {
