@@ -470,6 +470,13 @@ function Arena_Doom_E1M8()
 
   local sky_i = get_sky()
 
+  local FACE_TEXS =
+  {
+    "MARBFACE", "MARBFAC2", "MARBFAC3", "SP_DUDE1",
+  }
+
+  rand_shuffle(FACE_TEXS)
+
 
   local function make_start()
 
@@ -673,6 +680,31 @@ function Arena_Doom_E1M8()
 
     Trans_brush(floor_i, coords, -EXTREME_H, 128)
     Trans_brush(nuke_i,  coords, 304, EXTREME_H)
+
+    local marbfac_i = add_pegging(get_mat(FACE_TEXS[2]))
+
+    Trans_brush(get_mat("MARBLE3"),
+    {
+      { x=-64, y=1976 },
+      { x=-64, y=1912, w_face=marbfac_i.w_face },
+      { x= 64, y=1912 },
+      { x= 64, y=1976, w_face=marbfac_i.w_face },
+    },
+    -EXTREME_H, 256)
+
+    for i = 1,4 do
+      local x = sel(i >= 3, -160, 160)
+      local y = sel((i%2) == 0, 1568, 2128)
+      local angle = sel(i >= 3, 0, 180)
+
+      Trans_entity("baron",    x, y, 128, { angle=angle })
+      Trans_entity("stimpack", x, y, 128)
+    end
+
+    Trans_entity("bullet_box", -308, 1912, 128)
+    Trans_entity("bullet_box",  308, 1912, 128)
+    Trans_entity("shells",      -32, 2170, 128)
+    Trans_entity("shells",       32, 2170, 128)
   end
 
   local function add_players()
