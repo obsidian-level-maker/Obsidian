@@ -548,6 +548,61 @@ function Arena_Doom_E1M8()
     Trans_quad(window_i, -152, 408, 152, 416, 88, EXTREME_H)
   end
 
+  local function make_outdoor()
+    for i = 1,2 do
+      TRANSFORM.mirror_x = sel(i==1, 0, nil)
+
+      Trans_strip(build_i,
+      {
+        {  96, 880,   96,  800 },
+        { 296, 880,  360,  800 },
+        { 206, 1008, 360, 1088 },
+        { 144, 1008, 144, 1160 },
+        {  96, 1008,  96, 1400 },
+      },
+      -EXTREME_H, EXTREME_H)
+
+      Trans_strip(fence_i,
+      {
+        {  360,  800,  360,  770 },
+        {  808,  880,  808,  850 },
+        {  984, 1064, 1000, 1032 },
+        { 1168, 1416, 1200, 1416 },
+        { 1168, 2064, 1200, 2064 },
+        {  936, 2560,  968, 2592 },
+        {  512, 2848,  512, 2880 },
+        {    0, 2944,    0, 3008 },
+      },
+      -EXTREME_H, EXTREME_H)
+
+      Trans_strip(sky_i,
+      {
+        {  344,  832,  360,  800 },
+        {  792,  912,  808,  880 },
+        {  952, 1096,  984, 1064 },
+        { 1136, 1416, 1168, 1416 },
+        { 1136, 2064, 1168, 2064 },
+        {  904, 2528,  936, 2560 },
+        {  512, 2816,  512, 2848 },
+        {    0, 2912,    0, 2944 },
+      },
+      96, EXTREME_H)
+    end
+
+    -- teleporter --
+
+    local gate_i = get_mat("GATE4")
+
+    Trans_brush(gate_i,
+    {
+      { x= 64, y=2752, line_kind=97, line_tag=9 },
+      { x=-64, y=2752, line_kind=97, line_tag=9 },
+      { x=-64, y=2624, line_kind=97, line_tag=9 },
+      { x= 64, y=2624, line_kind=97, line_tag=9 },
+    },
+    -EXTREME_H, -32+4)
+  end
+
   local function add_players()
     for i = 1,4 do
       local x = (i - 2.5) * 72
@@ -566,6 +621,7 @@ function Arena_Doom_E1M8()
   Trans_quad(sky_i,  -1200, 0, 1200, 3600, 320, EXTREME_H)
 
   make_start()
+  make_outdoor()
 
 
   add_players()
