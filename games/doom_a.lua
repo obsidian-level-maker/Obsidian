@@ -2017,7 +2017,7 @@ function Doom1_get_levels()
       end
 
       if map_id == 18 then
-        -- FIXME
+        LEV.arena_func = Arena_Doom_E1M8
       elseif map_id == 28 or map_id == 46 then
         LEV.arena_func = Arena_Doom_E2M8
       elseif map_id == 38 or map_id == 48 then
