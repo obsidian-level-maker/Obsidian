@@ -148,7 +148,7 @@ SKULLTAG_PICKUPS =
 --  superguy  = { shotty=4.0, super=4.0, chain=3.0, railgun=0.3 }
 
 
-function Skulltag_add_things()
+function Skulltag_mons_setup()
   Game_merge_tab("things",  SKULLTAG_THINGS)
 
   Game_merge_tab("monsters", SKULLTAG_MONSTERS)
@@ -157,7 +157,7 @@ function Skulltag_add_things()
 end
 
 
-OB_MODULES["skulltag_mons"] =
+OB_MODULES["sktag_mons"] =
 {
   label = "Skulltag Monsters and Items",
 
@@ -165,6 +165,6 @@ OB_MODULES["skulltag_mons"] =
   for_modes = { sp=1, coop=1 },
   for_engines = { skulltag=1 },
 
-  setup_func = Skulltag_add_things,
+  setup_func = Skulltag_mons_setup,
 }
 

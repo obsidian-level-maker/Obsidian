@@ -611,7 +611,7 @@ function Test_Branch_Gen(name)
 end
 
 
-function Connect_Rooms()
+function Connect_rooms()
 
   -- Guidelines:
   -- 1. prefer a "wide" bond between ground areas of same kind.
@@ -1198,9 +1198,9 @@ gui.debugf("Failed\n")
   end
 
 
-  --==| Connect_Rooms |==--
+  --==| Connect_rooms |==--
 
-  gui.printf("\n--==| Connect_Rooms |==--\n\n")
+  gui.printf("\n--==| Connect_rooms |==--\n\n")
 
   LEVEL.branched_one = false
 
