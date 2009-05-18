@@ -96,7 +96,7 @@ SKULLTAG_WEAPONS =
 {
   minigun =
   {
-    pref=85,
+    pref=85, add_prob=40,  start_prob=20,
     rate=15, damage=10, attack="hitscan",
     ammo="bullet", per=1,
     give={ {ammo="bullet",count=20} },
@@ -104,7 +104,7 @@ SKULLTAG_WEAPONS =
 
   glaunch =
   {
-    pref=50,
+    pref=50, add_prob=40,  start_prob=20,
     rate=1.7, damage=90, attack="missile", --FIXME splash damage
     ammo="rocket", per=1,
     give={ {ammo="rocket",count=2} },
@@ -112,7 +112,7 @@ SKULLTAG_WEAPONS =
 
   railgun =
   {
-    pref=20,
+    pref=20, add_prob=20, start_prob=7,
     rate=3, damage=200, attack="hitscan",
     ammo="cell", per=10,
     give={ {ammo="cell",count=40} },
@@ -120,7 +120,7 @@ SKULLTAG_WEAPONS =
 
   bfg10k =
   {
-    pref=15,
+    pref=15, add_prob=2, start_prob=0.2,
     rate=1.2, damage=300, attack="missile", --FIXME splash damage
     ammo="cell", per=5,
     give={ {ammo="cell",count=40} },
@@ -130,7 +130,11 @@ SKULLTAG_WEAPONS =
 
 SKULLTAG_PICKUPS =
 {
-  red_armor = { stat="armor", give= 200, limit=200, clu_max=1 },
+  red_armor =
+  {
+    prob=2, armor=true, big_item=true,
+    give={ {health=90} },
+  },
 }
 
 
@@ -144,15 +148,23 @@ SKULLTAG_PICKUPS =
 --  superguy  = { shotty=4.0, super=4.0, chain=3.0, railgun=0.3 }
 
 
-UNFINISHED["skulltag_mons"] =
+function Skulltag_add_things()
+  Game_merge_tab("things",  SKULLTAG_THINGS)
+
+  Game_merge_tab("monsters", SKULLTAG_MONSTERS)
+  Game_merge_tab("weapons",  SKULLTAG_WEAPONS)
+  Game_merge_tab("pickups",  SKULLTAG_PICKUPS)
+end
+
+
+OB_MODULES["skulltag_mons"] =
 {
-  label = "Skulltag Monsters",
+  label = "Skulltag Monsters and Items",
 
   for_games = { doom2=1, freedoom=1 },
   for_modes = { sp=1, coop=1 },
   for_engines = { skulltag=1 },
 
-  -- !!! FIXME: hook functions
-
+  setup_func = Skulltag_add_things,
 }
 
