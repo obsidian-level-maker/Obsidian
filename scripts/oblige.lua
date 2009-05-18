@@ -487,7 +487,6 @@ end
 
 
 function ob_build_cool_shit()
- 
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
@@ -497,13 +496,11 @@ function ob_build_cool_shit()
 
   gui.ticker()
 
+  Game_setup()
 
-  Level_Setup()
+  local abort = Game_make_all()
 
-  local abort = Level_MakeAll()
-
-  Level_CleanUp()
-
+  Game_clean_up()
 
   if aborted then
     gui.printf("\n~~~~~~~ Build Aborted! ~~~~~~~\n\n")

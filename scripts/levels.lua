@@ -88,7 +88,7 @@ function Game_merge_tab(name, t)
 end
 
 
-function Level_CleanUp()
+function Game_clean_up()
   GAME   = {}
   PARAM  = {}
   HOOKS  = {}
@@ -102,13 +102,9 @@ end
 
 
 
-function Level_Setup()
+function Game_setup()
 
-  Level_CleanUp()
-
-  -- setup RNG for whole-game random choices
-  gui.rand_seed(OB_CONFIG.seed)
-
+  Game_clean_up()
 
   local game = OB_GAMES[OB_CONFIG.game]
   if not game then
@@ -118,7 +114,12 @@ function Level_Setup()
   if game.param  then shallow_merge(PARAM,  game.param) end
   if game.hooks  then shallow_merge(HOOKS,  game.hooks) end
 
-  assert(game.setup_func)
+  -- setup RNG for whole-game random choices
+  gui.rand_seed(OB_CONFIG.seed + 0)
+
+  if not game.setup_func then
+    error("Game is missing the setup_func!")
+  end
 
   game.setup_func(game)
 
@@ -134,19 +135,21 @@ function Level_Setup()
   if engine.hooks  then shallow_merge(HOOKS,  engine.hooks) end
 
   if engine.setup_func then
-     engine.setup_func(engine)
+    gui.rand_seed(OB_CONFIG.seed + 1)
+    engine.setup_func(engine)
   end
 
 
   -- FIXME: ordering of modules
 
   for _,mod in pairs(OB_MODULES) do
-    if mod.enabled then
+    if mod.enabled and mod.shown then
       if mod.param  then shallow_merge(PARAM,  mod.param) end
       if mod.hooks  then shallow_merge(HOOKS,  mod.hooks) end
 
       if mod.setup_func then
-         mod.setup_func(mod)
+        gui.rand_seed(OB_CONFIG.seed + 2)
+        mod.setup_func(mod)
       end
     end
   end -- for mod
@@ -184,7 +187,7 @@ function Level_styles()
 end
 
 
-function Level_Make(L, index, NUM)
+function Level_make(L, index, NUM)
   LEVEL = L
 
   assert(LEVEL)
@@ -228,7 +231,7 @@ function Level_Make(L, index, NUM)
       if gui.abort() then return "abort" end
       gui.progress(10)
 
-    Connect_Rooms()
+    Connect_rooms()
       if gui.abort() then return "abort" end
       gui.progress(15)
 
@@ -264,7 +267,7 @@ function Level_Make(L, index, NUM)
 end
 
 
-function Level_MakeAll()
+function Game_make_all()
 
   -- FIXME: invoke "all_start" signal
 
@@ -278,7 +281,7 @@ function Level_MakeAll()
   end
 
   for index,L in ipairs(GAME.all_levels) do
-    if Level_Make(L, index, #GAME.all_levels) == "abort" then
+    if Level_make(L, index, #GAME.all_levels) == "abort" then
       return "abort"
     end
   end
