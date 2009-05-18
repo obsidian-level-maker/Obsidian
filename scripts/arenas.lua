@@ -438,12 +438,8 @@ function Arena_Doom_E1M8()
 
   local FENCE_TEXS =
   {
-    "BROWNHUG", "STONE", "WOOD3",
+    "ASHWALL", "BROWNHUG", "STONE", "WOOD3",
   }
-
-  if GAME.materials["ASHWALL"] then
-    table.insert(FENCE_TEXS, "ASHWALL")
-  end
 
   local INNER_TEXS =
   {
@@ -718,7 +714,7 @@ function Arena_Doom_E1M8()
 
     Trans_quad(ceil_i,  -64, 1344, 64, 1424, 256, EXTREME_H)
 
-    local red_i  = get_mat("REDWALL1")
+    local red_i = get_mat("REDWALL1")
 
     Trans_quad(red_i, -64, 1408,  64, 1424, -EXTREME_H, 128)
     Trans_quad(red_i, -80, 1344, -64, 1408, -EXTREME_H, EXTREME_H)
@@ -739,6 +735,9 @@ function Arena_Doom_E1M8()
     },
     -EXTREME_H, 124)
 
+    -- FIXME !!!! TEMP
+    Trans_quad(build_i, -128, 632, -64, 800, -EXTREME_H, EXTREME_H)
+    Trans_quad(build_i,   64, 632, 128, 800, -EXTREME_H, EXTREME_H)
   end
 
   local function add_players()
