@@ -469,22 +469,22 @@ COMMON_MATERIALS =
   DEM1_6   = { "MARBLE1",  "DEM1_6" },
 
   FLAT1    = { "GRAY1",    "FLAT1" },
-  FLAT1_1  = { "BROWN1", "FLAT1_1" },  -- poor match
-  FLAT1_2  = { "BROWN1", "FLAT1_2" },  -- poor match
-  FLAT1_3  = { "BROWN1", "FLAT1_3" },  -- poor match
+  FLAT1_1  = { "BROWN1",   "FLAT1_1" },  -- poor match
+  FLAT1_2  = { "BROWN1",   "FLAT1_2" },  -- poor match
+  FLAT1_3  = { "BROWN1",   "FLAT1_3" },  -- poor match
   FLAT2    = { "GRAY1",    "FLAT2" },
-  FLAT3    = { "GRAY4", "FLAT3" },
+  FLAT3    = { "GRAY4",    "FLAT3" },
   FLAT4    = { "COMPSPAN", "FLAT4" },  -- poor match
   FLAT5    = { "BROWNHUG", "FLAT5" },
-  FLAT5_1  = { "WOOD1", "FLAT5_1" },
-  FLAT5_2  = { "WOOD1", "FLAT5_2" },
-  FLAT5_3  = { "REDWALL", "FLAT5_3" },
-  FLAT5_4  = { "STONE", "FLAT5_4" },
-  FLAT5_5  = { "BROWN1", "FLAT5_5" },
+  FLAT5_1  = { "WOOD1",    "FLAT5_1" },
+  FLAT5_2  = { "WOOD1",    "FLAT5_2" },
+  FLAT5_3  = { "REDWALL",  "FLAT5_3" },
+  FLAT5_4  = { "STONE",    "FLAT5_4" },
+  FLAT5_5  = { "BROWN1",   "FLAT5_5" },
   FLAT5_6  = { "SP_FACE1", "FLAT5_6" },  -- better in DOOM1
-  FLAT8    = { "STARBR2", "FLAT8" },
-  FLAT9    = { "GRAY4", "FLAT9" },
-  FLAT10   = { "FLAT10",   "BROWNHUG" },  -- better in DOOM2
+  FLAT8    = { "STARBR2",  "FLAT8" },
+  FLAT9    = { "GRAY4",    "FLAT9" },
+  FLAT10   = { "BROWNHUG", "FLAT10" },  -- better in DOOM2
   FLAT14   = { "COMPBLUE", "FLAT14" },
   FLAT17   = { "GRAY1",    "FLAT17" },
   FLAT18   = { "GRAY1",    "FLAT18" },
@@ -625,7 +625,7 @@ DOOM2_MATERIALS =
 {
   -- textures with best-matching flat
 
-  ASHWALL2 = { "ASHWALL2", "MFLR8_4" },
+  ASHWALL  = { "ASHWALL2", "MFLR8_4" },  -- compatibility name
   ASHWALL3 = { "ASHWALL3", "FLAT10" },
   ASHWALL4 = { "ASHWALL4", "FLAT10" },
   ASHWALL6 = { "ASHWALL6", "RROCK20" },

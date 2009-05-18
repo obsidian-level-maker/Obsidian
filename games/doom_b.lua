@@ -643,7 +643,7 @@ DOOM2_COMBOS =
     theme_probs = { CAVE=30 },
     mat_pri = 2,
 
-    wall  = "ASHWALL2",
+    wall  = "ASHWALL",
     floor = "FLOOR6_2",
     ceil  = "FLAT5_8",
 
@@ -689,7 +689,7 @@ DOOM2_COMBOS =
     mat_pri = 2,
 
     wall = "ZIMMER7",
-    step = "ASHWALL2",
+    step = "ASHWALL",
 
     floor = "RROCK19",
     ceil  = "RROCK19",
@@ -707,7 +707,7 @@ DOOM2_COMBOS =
     mat_pri = 2,
 
     wall = "ZIMMER8",
-    step = "ASHWALL2",
+    step = "ASHWALL",
 
     floor = "GRASS2",
     ceil  = "GRASS2",
