@@ -43,8 +43,6 @@
 // WAD2_CloseWrite
 
 
-#define LogPrintf  printf
-
 typedef std::map<std::string, int> miptex_database_t;
 
 static miptex_database_t tex_db;
@@ -120,7 +118,7 @@ static void ExtractMipTex(read_func_F read_func)
     if (tex_db.find((const char *)mip.name) != tex_db.end())
       continue;
 
-    printf("  Copying %d/%d : %s\n", i+1, num_miptex, mip.name);
+    LogPrintf("  Copying %d/%d : %s\n", i+1, num_miptex, mip.name);
 
     // sanity check
     SYS_ASSERT(mip.width  <= 2048);
@@ -176,12 +174,14 @@ void TEX_ExtractDone()
 
 void TEX_ExtractFromPAK(const char *filename)
 {
-  printf("--------------------------------------------------\n");
+  LogPrintf("--------------------------------------------------\n");
 
   if (! PAK_OpenRead(filename))
   {
-    FatalError("Could not open pak file: %s", filename);
+    FatalError("No such file: %s", filename);
   }
+
+  LogPrintf("\n");
 
   std::vector<int> maps;
 
@@ -191,17 +191,18 @@ void TEX_ExtractFromPAK(const char *filename)
   {
     pak_entry = maps[m];
 
-    printf("\n");
-    printf("Processing map %d/%d : %s\n", m+1, (int)maps.size(),
+    LogPrintf("Processing map %d/%d : %s\n", m+1, (int)maps.size(),
            PAK_EntryName(pak_entry));
 
     ExtractMipTex(pak_reader);
+
+    LogPrintf("\n");
   }
 
   PAK_CloseRead();
 
-  printf("--------------------------------------------------\n");
-  printf("\n");
+  LogPrintf("--------------------------------------------------\n");
+  LogPrintf("\n");
 }
 
 //--- editor settings ---

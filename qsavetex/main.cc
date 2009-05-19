@@ -18,50 +18,88 @@
 
 #include "main.h"
 
-/// #include <time.h>
-
 #include "im_tex.h"
 #include "pakfile.h"
 
 
-#define VERSION  "0.71"
+#define VERSION  "0.72"
 
 
-const char * output_name = "quake_tex.wad";
+static const char * output_name = "quake_tex.wad";
+
+static FILE *log_file;
+
+
+void LogInit(const char *filename)
+{
+  log_file = fopen(filename, "w");
+
+  LogPrintf("\n");
+  LogPrintf("QSAVETEX LOG\n");
+  LogPrintf("============\n\n");
+}
+
+
+void LogClose(void)
+{
+  fflush(log_file);
+
+  LogPrintf("\n\n=== END LOG ===\n");
+
+  if (log_file)
+  {
+    fclose(log_file);
+    log_file = NULL;
+  }
+}
+
+
+void LogPrintf(const char *str, ...)
+{
+  if (log_file)
+  {
+    va_list args;
+
+    va_start(args, str);
+    vfprintf(log_file, str, args);
+    va_end(args);
+
+    fflush(log_file);
+  }
+}
 
 
 void FatalError(const char *message, ...)
 {
-  fprintf(stdout, "FATAL ERROR: ");
+  if (log_file)
+  {
+    LogPrintf("\nFATAL ERROR OCCURRED:\n\n");
 
-  va_list argptr;
+    va_list argptr;
 
-  va_start(argptr, message);
-  vfprintf(stdout, message, argptr);
-  va_end(argptr);
+    va_start(argptr, message);
+    vfprintf(log_file, message, argptr);
+    va_end(argptr);
 
-  fprintf(stdout, "\n");
-  fflush(stdout);
+    LogClose();
+  }
 
   exit(9);
 }
 
 
-void ShowTitle(void)
+//------------------------------------------------------------------------
+
+void ShowHelp(void)
 {
   printf("\n");
   printf("**** QSAVETEX v" VERSION "  (C) 2009 Andrew Apted ****\n");
   printf("\n");
-}
-
-
-void ShowUsage(void)
-{
   printf("USAGE: qsavetex\n");
   printf("\n");
 
   printf("OPTIONS:\n");
-  printf("   -h  -help        show this help text\n");
+  printf("   -h  -help    show this help text\n");
   printf("\n");
 
   printf("This program is free software, under the terms of the GNU General\n");
@@ -100,12 +138,6 @@ int HandleOption(int argc, char **argv)
 }
 
 
-void AddInputFile(const char *filename)
-{
-  // input_names.push_back(std::string(filename));
-}
-
-
 int main(int argc, char **argv)
 {
   // skip program name itself
@@ -117,20 +149,19 @@ int main(int argc, char **argv)
        StringCaseCmp(argv[0], "-help") == 0 ||
        StringCaseCmp(argv[0], "--help") == 0))
   {
-    ShowTitle();
-    ShowUsage();
-    exit(1);
+    ShowHelp();
+    return 1;
   }
 
-  
+
+  LogInit("qsavetex.log");
+
   const char *working_path = GetExecutablePath(argv[0]);
   if (! working_path)
     working_path = ".";
 
   FileChangeDir(working_path);
 
-
-  ShowTitle();
 
   // handle command-line arguments
   while (argc > 0)
@@ -145,17 +176,14 @@ int main(int argc, char **argv)
       continue;
     }
 
-    AddInputFile(argv[0]);
-
-    argv++;
-    argc--;
+    argv++; argc--;
   }
 
 
   if (! WAD2_OpenWrite(output_name))
-    FatalError("Could not create texture file: %s", output_name);
+    FatalError("Could not create file: %s", output_name);
 
-  printf("\n");
+  LogPrintf("\n");
 
   TEX_ExtractStart();
 
@@ -164,8 +192,11 @@ int main(int argc, char **argv)
 
   TEX_ExtractDone();
 
-
   WAD2_CloseWrite();
+
+
+  LogPrintf("\nSuccess!");
+  LogClose();
 
   return 0;
 }

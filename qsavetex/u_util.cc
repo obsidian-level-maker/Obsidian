@@ -79,7 +79,7 @@ char *StringNew(int length)
   char *s = (char *) calloc(length + 1, 1);
 
   if (! s)
-    AssertFail("Out of memory (%d bytes for string)\n", length);
+    FatalError("Out of memory (%d bytes for string)\n", length);
 
   return s;
 }
@@ -89,7 +89,7 @@ char *StringDup(const char *orig)
   char *s = strdup(orig);
 
   if (! s)
-    AssertFail("Out of memory (copy string)\n");
+    FatalError("Out of memory (copy string)\n");
 
   return s;
 }
@@ -111,7 +111,7 @@ char *StringPrintf(const char *str, ...)
 
     buf = (char*)realloc(buf, buf_size);
     if (!buf)
-      AssertFail("Out of memory (formatting string)");
+      FatalError("Out of memory (formatting string)");
 
     va_start(args, str);
     out_len = vsnprintf(buf, buf_size, str, args);

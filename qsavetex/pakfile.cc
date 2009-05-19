@@ -23,8 +23,6 @@
 #include "pakfile.h"
 
 
-#define LogPrintf  printf
-
 
 //------------------------------------------------------------------------
 //  PAK READING

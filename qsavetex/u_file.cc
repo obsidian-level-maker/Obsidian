@@ -301,7 +301,7 @@ u8_t *FileLoad(const char *filename, int *length)
   u8_t *data = (u8_t *) malloc(*length + 1);
 
   if (! data)
-    AssertFail("Out of memory (%d bytes for FileLoad)\n", *length);
+    FatalError("Out of memory (%d bytes for FileLoad)\n", *length);
 
   // ensure buffer is NUL-terminated
   data[*length] = 0;

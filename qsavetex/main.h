@@ -48,6 +48,8 @@
 #include "u_file.h"
 
 
+void LogPrintf(const char *str, ...);
+
 void FatalError(const char *str, ...);
 
 
