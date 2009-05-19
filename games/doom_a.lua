@@ -2318,6 +2318,7 @@ function Doom1_setup()
   -- remove DOOM2-only weapons and items --
 
   GAME.weapons["super"] = nil 
+  GAME.pickups["mega"]  = nil
 
   GAME.dm.weapons["super"] = nil
 
