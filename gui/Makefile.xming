@@ -70,7 +70,6 @@ OBJS=	main.o      \
 	q1_clip.o   \
 	q1_main.o   \
 	q1_nodes.o  \
-	q1_tex.o    \
 	q2_main.o   \
 	q2_nodes.o  \
 	q_bsp.o     \

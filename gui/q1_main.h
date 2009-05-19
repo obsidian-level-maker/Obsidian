@@ -58,10 +58,6 @@ void Q1_BuildBSP(void);
 
 void Q1_CreateModel(void);
 
-// q1_tex.cc
-
-bool Quake1_ExtractTextures(void);
-
 // q1_clip.cc
 
 s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip);

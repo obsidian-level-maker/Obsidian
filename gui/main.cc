@@ -384,9 +384,6 @@ int main(int argc, char **argv)
     }
   }
  
-#if 0
-Quake1_ExtractTextures();
-#endif
 
   try
   {
