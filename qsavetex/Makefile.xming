@@ -29,8 +29,7 @@ LDFLAGS=-Xlinker --warn-common
 
 # ----- OBJECTS and LIBRARIES ------------------------------------------
 
-OBJS=	u_assert.o \
-	u_file.o   \
+OBJS=	u_file.o   \
 	u_util.o   \
 	im_tex.o   \
 	pakfile.o  \
