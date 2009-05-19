@@ -64,8 +64,8 @@ end
 
 ----====| TABLE UTILITIES |====----
 
--- special value for deep_merge()
-REMOVE_TOKEN = "__REMOVE__"
+-- special value for deep_merge() and deep_copy()
+REMOVE_ME = "__REMOVE__"
 
 function table_size(t)
   local count = 0;
@@ -180,6 +180,7 @@ function shallow_merge(dest, src)
   for k,v in pairs(src) do
     dest[k] = v
   end
+
   return dest
 end
 
@@ -209,16 +210,20 @@ end
 function deep_merge(dest, src, _curdepth)
   _curdepth = _curdepth or 1
 
+  if _curdepth > 10 then
+    error("deep_copy failure: loop detected")
+  end
+
   for k,v in pairs(src) do
     if type(v) == "table" then
-      if type(dest[k]) ~= "table" then  -- handles nil too
-        dest[k] = {}
+      -- the type check handles non-existing fields too.
+      -- the # checks mean we merely copy a list (NOT merge it).
+      if type(dest[k]) == "table" and #v == 0 and #dest[k] == 0 then
+        deep_merge(dest[k], v, _curdepth+1)
+      else
+        dest[k] = deep_merge({}, v, _curdepth+1)
       end
-      if _curdepth > 10 then
-        error("deep_merge/copy failure: loop detected")
-      end
-      deep_merge(dest[k], v, _curdepth+1)
-    elseif v == REMOVE_TOKEN then
+    elseif v == REMOVE_ME then
       dest[k] = nil
     else
       dest[k] = v
