@@ -2,7 +2,7 @@
 //  Texture Extraction
 //------------------------------------------------------------------------
 // 
-//  Copyright (c) 2008  Andrew J Apted
+//  Copyright (c) 2008-2009  Andrew J Apted
 // 
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
