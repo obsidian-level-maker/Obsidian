@@ -178,7 +178,11 @@ end
 
 function shallow_merge(dest, src)
   for k,v in pairs(src) do
-    dest[k] = v
+    if v == REMOVE_ME then
+      dest[k] = nil
+    else
+      dest[k] = v
+    end
   end
 
   return dest
@@ -186,18 +190,6 @@ end
 
 function shallow_copy(t)
   return t and shallow_merge({}, t)
-end
-
-function copy_and_merge(orig, t1, t2, t3, t4)
-  local result = {}
-  shallow_merge(result, orig)
-
-  if t1 then shallow_merge(result, t1) end
-  if t2 then shallow_merge(result, t2) end
-  if t3 then shallow_merge(result, t3) end
-  if t4 then shallow_merge(result, t4) end
-
-  return result
 end
 
 function merge_missing(dest, src)
