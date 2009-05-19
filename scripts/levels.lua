@@ -101,66 +101,82 @@ function Game_clean_up()
 end
 
 
-
-function Game_setup()
-
-  Game_clean_up()
+local function Game_sort_modules()
+  GAME.module_list = {}
 
   local game = OB_GAMES[OB_CONFIG.game]
   if not game then
     error("UNKNOWN GAME: " .. tostring(OB_CONFIG.game))
   end
 
-  if game.param  then shallow_merge(PARAM,  game.param) end
-  if game.hooks  then shallow_merge(HOOKS,  game.hooks) end
-
-  -- setup RNG for whole-game random choices
-  gui.rand_seed(OB_CONFIG.seed + 0)
-
-  if not game.setup_func then
-    error("Game is missing the setup_func!")
-  end
-
-  game.setup_func(game)
-
-  GAME.format = game.format
-
-
   local engine = OB_ENGINES[OB_CONFIG.engine]
   if not engine then
     error("UNKNOWN ENGINE: " .. tostring(OB_CONFIG.engine))
   end
 
-  if engine.param  then shallow_merge(PARAM,  engine.param) end
-  if engine.hooks  then shallow_merge(HOOKS,  engine.hooks) end
-
-  if engine.setup_func then
-    gui.rand_seed(OB_CONFIG.seed + 1)
-    engine.setup_func(engine)
-  end
-
-
-  -- FIXME: ordering of modules
+  -- find all the visible & enabled modules
 
   for _,mod in pairs(OB_MODULES) do
     if mod.enabled and mod.shown then
-      if mod.param  then shallow_merge(PARAM,  mod.param) end
-      if mod.hooks  then shallow_merge(HOOKS,  mod.hooks) end
+      table.insert(GAME.module_list, mod)
+    end
+  end
 
-      if mod.setup_func then
-        gui.rand_seed(OB_CONFIG.seed + 2)
-        mod.setup_func(mod)
-      end
+  -- sort them : lowest -> highest priority, because later
+  -- entries can override things done by earlier ones.
+
+  local function module_sorter(A, B)
+    if A.priority or B.priority then
+      return (A.priority or 0) < (B.priority or 0)
+    end
+
+    return A.label < B.label
+  end
+
+  if #GAME.module_list > 1 then
+    table.sort(GAME.module_list, module_sorter)
+  end
+ 
+  -- first entry must be the game def, and second entry must be
+  -- the engine def.  NOTE: neither of these are real modules.
+
+  table.insert(GAME.module_list, 1, game)
+  table.insert(GAME.module_list, 2, engine)
+end
+
+
+function Game_setup()
+
+  Game_clean_up()
+
+  Game_sort_modules()
+
+
+  local game = GAME.module_list[1]
+
+  if not game.setup_func then
+    error("Game is missing the setup_func!")
+  end
+
+  GAME.format = game.format
+
+
+  for index,mod in ipairs(GAME.module_list) do
+    if mod.param  then shallow_merge(PARAM,  mod.param) end
+    if mod.hooks  then shallow_merge(HOOKS,  mod.hooks) end
+
+    if mod.setup_func then
+      gui.rand_seed(OB_CONFIG.seed + index)
+      mod.setup_func(mod)
     end
   end -- for mod
 
 
+  -- miscellanous stuff
   if PARAM.pack_sidedefs then
     gui.property("pack_sidedefs", "1")
   end
 
-
-  -- miscellanous stuff
   name_it_up(ROOM_PATTERNS)
   expand_copies(ROOM_PATTERNS)
 end
