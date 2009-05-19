@@ -24,8 +24,12 @@
 
 #define VERSION  "0.72"
 
+#define LOG_FILE  "qsavetex_log.txt"
 
-static const char * output_name = "quake_tex.wad";
+#define QUAKE1_OUTPUT  "quake_tex.wad";
+
+
+static const char * output_name = QUAKE1_OUTPUT;
 
 static FILE *log_file;
 
@@ -84,7 +88,7 @@ void FatalError(const char *message, ...)
 
   if (FileDelete(output_name))
   {
-    LogPrintf("\nDeleted incomplete output file.\n");
+    LogPrintf("\n\n(deleted incomplete output file)\n");
   }
 
   LogClose();
@@ -159,7 +163,7 @@ int main(int argc, char **argv)
   }
 
 
-  LogInit("qsavetex.log");
+  LogInit(LOG_FILE);
 
   const char *working_path = GetExecutablePath(argv[0]);
   if (! working_path)
@@ -200,7 +204,7 @@ int main(int argc, char **argv)
   WAD2_CloseWrite();
 
 
-  LogPrintf("\nSUCCESS!");
+  LogPrintf("\nSuccess!");
   LogClose();
 
   return 0;
