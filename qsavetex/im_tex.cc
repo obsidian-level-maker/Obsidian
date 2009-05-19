@@ -58,12 +58,18 @@ static bool pak_reader(int offset, int length, void *buffer)
 }
 
 
+static void Mip_Error(const char *what)
+{
+  FatalError("Error reading data (%s)\n", what);
+}
+
+
 static void ExtractMipTex(read_func_F read_func)
 {
   dheader_t bsp;
 
   if (! read_func(0, sizeof(bsp), &bsp))
-    FatalError("dheader_t");
+    Mip_Error("dheader_t");
 
   bsp.version = LE_S32(bsp.version);
 
@@ -75,7 +81,7 @@ static void ExtractMipTex(read_func_F read_func)
 
   // check version in header (for sanity)
   if (bsp.version < 0x17 || bsp.version > 0x1F)
-    FatalError("bad version in BSP");
+    FatalError("Bad BSP version number: 0x%02x\n", bsp.version);
 
   // no textures?
   if (tex_total == 0)
@@ -84,7 +90,7 @@ static void ExtractMipTex(read_func_F read_func)
   dmiptexlump_t header;
 
   if (! read_func(tex_start, sizeof(header), &header))
-    FatalError("dmiptexlump_t");
+    Mip_Error("dmiptexlump_t");
 
   int num_miptex = LE_S32(header.num_miptex);
 
@@ -93,7 +99,7 @@ static void ExtractMipTex(read_func_F read_func)
     u32_t data_ofs;
 
     if (! read_func(tex_start + 4 + i*4, 4, &data_ofs))
-      FatalError("data_ofs");
+      Mip_Error("data_ofs");
 
     data_ofs = LE_U32(data_ofs);
 
@@ -104,7 +110,7 @@ static void ExtractMipTex(read_func_F read_func)
     miptex_t mip;
 
     if (! read_func(tex_start + data_ofs, sizeof(miptex_t), &mip))
-      FatalError("miptex_t");
+      Mip_Error("miptex_t");
 
     mip.width  = LE_U32(mip.width);
     mip.height = LE_U32(mip.height);
@@ -148,7 +154,7 @@ static void ExtractMipTex(read_func_F read_func)
       int count = MIN(pixels, 1024);
 
       if (! read_func(tex_start + data_ofs, count, buffer))
-        FatalError("pixels");
+        Mip_Error("pixels");
 
       WAD2_AppendData(buffer, count);
 
@@ -178,7 +184,7 @@ void TEX_ExtractFromPAK(const char *filename)
 
   if (! PAK_OpenRead(filename))
   {
-    FatalError("No such file: %s", filename);
+    FatalError("No such file: %s\n", filename);
   }
 
   LogPrintf("\n");

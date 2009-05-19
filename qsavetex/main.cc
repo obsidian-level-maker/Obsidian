@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  QSAVETEX Main program
+//  QSAVETEX : Main program
 //------------------------------------------------------------------------
 // 
 //  Copyright (c) 2009  Andrew J Apted
@@ -42,13 +42,13 @@ void LogInit(const char *filename)
 
 void LogClose(void)
 {
-  fflush(log_file);
-
-  LogPrintf("\n\n=== END LOG ===\n");
+  LogPrintf("\n");
 
   if (log_file)
   {
+    fflush(log_file);
     fclose(log_file);
+
     log_file = NULL;
   }
 }
@@ -71,18 +71,23 @@ void LogPrintf(const char *str, ...)
 
 void FatalError(const char *message, ...)
 {
+  LogPrintf("\nFATAL ERROR OCCURRED:\n\n");
+
   if (log_file)
   {
-    LogPrintf("\nFATAL ERROR OCCURRED:\n\n");
-
     va_list argptr;
 
     va_start(argptr, message);
     vfprintf(log_file, message, argptr);
     va_end(argptr);
-
-    LogClose();
   }
+
+  if (FileDelete(output_name))
+  {
+    LogPrintf("\nDeleted incomplete output file.\n");
+  }
+
+  LogClose();
 
   exit(9);
 }
@@ -181,7 +186,7 @@ int main(int argc, char **argv)
 
 
   if (! WAD2_OpenWrite(output_name))
-    FatalError("Could not create file: %s", output_name);
+    FatalError("Could not create file: %s\n", output_name);
 
   LogPrintf("\n");
 
@@ -195,7 +200,7 @@ int main(int argc, char **argv)
   WAD2_CloseWrite();
 
 
-  LogPrintf("\nSuccess!");
+  LogPrintf("\nSUCCESS!");
   LogClose();
 
   return 0;

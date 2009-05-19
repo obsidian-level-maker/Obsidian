@@ -111,7 +111,7 @@ char *StringPrintf(const char *str, ...)
 
     buf = (char*)realloc(buf, buf_size);
     if (!buf)
-      FatalError("Out of memory (formatting string)");
+      FatalError("Out of memory (formatting string)\n");
 
     va_start(args, str);
     out_len = vsnprintf(buf, buf_size, str, args);
