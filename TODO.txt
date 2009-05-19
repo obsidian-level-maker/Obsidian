@@ -3,6 +3,36 @@ TODO
 ====
 
 
+!!!  simplify setting up GAME stuff:
+  
+  hooks =
+  {
+    bleh_func = Foobie_bleh,
+  }
+
+  tables =
+  {
+    things = DOOM_THINGS,
+
+    monsters = { COMMON_MONSTERS, DOOM2_MONSTERS },
+
+    themes = { COMMON_THEMES, DOOM2_THEMES },
+    
+  }
+
+  tables2 = { monsters=DOOM2_MONSTERS, .... }
+
+
+  SHALLOW MERGE FOR:  things, monsters, weapons, pickups,
+                      materials, rails, liquids,
+                      combos,
+                      
+                      ??? prefab-skins,
+
+  DEEP MERGE FOR: themes, rooms
+
+
+
 -  rework Build_small_exit to only use a single transform,
 
 -  implement Chris's & JR's boss maps
@@ -42,6 +72,9 @@ General
 
 
 CSG CODE:
+
+!!!! DOOM: build sidedefs/linedefs in memory !!!!
+
 !!  proper quantization, remove degenerate segments / brushes 
 
 !!  do a proper face-creation pass (merge_face_c list
@@ -53,9 +86,6 @@ CSG CODE:
 !!  DOOM: fix y_offset values
 
 +   DOOM: merge linedefs where possible
-
-DONE: generalize the "CloseDoor" system with brush Y deltas?
-      Could also be (ab)used to easily make inset features.
 
 
 Quake II:
@@ -100,4 +130,8 @@ CHANGES (since 3.39)
 + new boss arena for E2M8 (thanks Mr. Chris)
 - more color schemes for skies (JohnnyRancid)
 - beginnings of support for DOOM I
+- new module "Skulltag Monsters" (thanks Chris)
+
++ new program for extracting Quake textures
+
 

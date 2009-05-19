@@ -275,19 +275,15 @@ QUAKE:
 
 + create faces from stacked brushes behind a gap (cf. oa_dm7)
 
-- clipping hulls
-
-++ grab Q1 textures directly from PAK files
-   - read/modify FOLDERS.cfg file
-   ??? code to check if data/quake_tex.wad exists
-   ? gui.property("extra_tex_wad", "data/oq_tex.wad")
-   ? gui.property("needed_pak",  "pak0.pak")
-
-- create "oblige" logo miptex [.wal for QuakeII]
-
 ++ perform lighting
 
 ++ perform visibility
+
+- clipping hulls
+
+- gui.quake_add_wad("data/quake_tex.wad")
+
+- create "oblige" logo miptex [.wal for QuakeII]
 
 
 DOOM ENTITY PROPS:
@@ -307,10 +303,9 @@ QUAKE1 ENTITY PROPS:
   next stop
 
 
-
 General:
 
-+  create special BOSS levels (e.g. E1M8, MAP30)
+>>>  create special BOSS levels (e.g. E1M8, MAP30)
 
 -  put important constants/tables into defs.lua
 
