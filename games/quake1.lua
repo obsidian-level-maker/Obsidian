@@ -1173,8 +1173,6 @@ QUAKE1_KEY_NUM_PROBS =
 ----------------------------------------------------------------
 
 function Quake1_get_levels()
-  local list = {}
-
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
 
@@ -1192,12 +1190,10 @@ function Quake1_get_levels()
         theme_ref = "BASE",
       }
 
-      table.insert(list, LEV)
+      table.insert(GAME.all_levels, LEV)
     end -- for map
 
   end -- for episode
-
-  return list
 end
 
 function Quake1_describe_levels()
@@ -1243,6 +1239,15 @@ function Quake1_setup()
 end
 
 
+OB_THEMES["q1_base"] =
+{
+  ref = "TECH",
+  label = "Base",
+
+  for_games = { quake1=1 },
+}
+
+
 UNFINISHED["quake1"] =
 {
   label = "Quake 1",
@@ -1250,6 +1255,8 @@ UNFINISHED["quake1"] =
   format = "quake1",
 
   setup_func = Quake1_setup,
+
+  levels_start_func = Quake1_get_levels,
 
   param =
   {
@@ -1274,17 +1281,7 @@ UNFINISHED["quake1"] =
 
   hooks =
   {
-    get_levels = Quake1_get_levels,
     describe_levels = Quake1_describe_levels,
   },
-}
-
-
-OB_THEMES["q1_base"] =
-{
-  ref = "TECH",
-  label = "Base",
-
-  for_games = { quake1=1 },
 }
 

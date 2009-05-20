@@ -871,8 +871,6 @@ function wolfy_decide_quests(level_list, is_spear)
 end
 
 function Wolf3d_get_levels()
-  local list = {}
-
   local EP_NUM  = sel(OB_CONFIG.length == "full", 6, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 10)
 
@@ -909,7 +907,7 @@ function Wolf3d_get_levels()
         Level.secret_exit = true
       end
 
-      table.insert(list, Level)
+      table.insert(GAME.all_levels, Level)
     end -- for map
 
   end -- for episode
@@ -925,7 +923,6 @@ function Wolf3d_get_levels()
 
 --  dump_levels()
 
-  return list
 end
 
 
@@ -983,6 +980,8 @@ UNFINISHED["wolf3d"] =
 
   setup_func = Wolf3d_setup,
 
+  levels_start_func = Wolf3d_get_levels,
+
   param =
   {
      no_height = true,
@@ -999,11 +998,6 @@ UNFINISHED["wolf3d"] =
 
     palette_mons = 2,
   },
-
-  hooks =
-  {
-    get_levels = Wolf3d_get_levels,
-  },
 }
 
 
@@ -1016,11 +1010,8 @@ UNFINISHED["spear"] =
 
   setup_func = Spear_setup,
 
-  param = UNFINISHED["wolf3d"].param,
+  levels_start_func = Spear_get_levels,
 
-  hooks =
-  {
-    get_levels = Wolf3d_get_levels,
-  },
+  param = UNFINISHED["wolf3d"].param,
 }
 

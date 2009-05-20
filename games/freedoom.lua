@@ -115,6 +115,11 @@ function Freedoom_setup()
 end
 
 
+function Freedoom_get_levels()
+  Doom2_get_levels()
+end
+
+
 UNFINISHED["freedoom"] =
 {
   label = "FreeDoom 0.6",
@@ -122,6 +127,8 @@ UNFINISHED["freedoom"] =
   format = "doom",
 
   setup_func = Freedoom_setup,
+
+  levels_start_func = Freedoom_get_levels,
 
   param =
   {
@@ -133,11 +140,6 @@ UNFINISHED["freedoom"] =
     seed_size = 256,
 
     palette_mons = 4,
-  },
-
-  hooks =
-  {
-    get_levels = Doom2_get_levels,
   },
 }
 

@@ -91,7 +91,6 @@ end
 function Game_clean_up()
   GAME   = {}
   PARAM  = {}
-  HOOKS  = {}
   STYLE  = {}
 
   LEVEL  = nil
@@ -170,7 +169,6 @@ function Game_setup()
 
   for index,mod in ipairs(GAME.all_modules) do
     if mod.param  then shallow_merge(PARAM,  mod.param) end
-    if mod.hooks  then shallow_merge(HOOKS,  mod.hooks) end
   end -- for mod
 
   Game_invoke_hook("setup_func", OB_CONFIG.seed)

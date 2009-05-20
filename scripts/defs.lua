@@ -18,9 +18,7 @@
 
 GAME   = {}
 PARAM  = {}
-HOOKS  = {}
 STYLE  = {}
-
 LEVEL  = {}
 SEEDS  = {}
 

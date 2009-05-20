@@ -1995,8 +1995,6 @@ OB_THEMES["q2_base"] =
 ----------------------------------------------------------------
 
 function Quake2_get_levels()
-  local list = {}
-
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
 
@@ -2014,12 +2012,10 @@ function Quake2_get_levels()
         theme_ref = "BASE",
       }
 
-      table.insert(list, LEV)
+      table.insert(GAME.all_levels, LEV)
     end -- for map
 
   end -- for episode
-
-  return list
 end
 
 function Quake2_describe_levels()
@@ -2068,6 +2064,8 @@ UNFINISHED["quake2"] =
 
   setup_func = Quake2_setup,
 
+  levels_start_func = Quake2_get_levels,
+
   param =
   {
     -- TODO
@@ -2089,7 +2087,6 @@ UNFINISHED["quake2"] =
 
   hooks =
   {
-    get_levels = Quake2_get_levels,
     describe_levels = Quake1_describe_levels,
   },
 }

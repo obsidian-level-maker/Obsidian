@@ -219,8 +219,9 @@ function Fight_simulator(monsters, weapons, skill, stats)
       return
     end
 
-    if HOOKS.check_infight then
-      if not HOOKS.check_infight(M.info, N.info) then
+    -- FIXME: provide a table-based way instead !!!!
+    if GAME.check_infight_func then
+      if not GAME.check_infight_func(M.info, N.info) then
         return
       end
     else

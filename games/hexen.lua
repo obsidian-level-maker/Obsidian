@@ -2240,7 +2240,7 @@ HEXEN_LEVELS =
 }
 
 
-function hexen_get_levels(episode)
+function hexen_do_get_levels(episode)
 
   -- NOTE: see doc/Quests.txt for structure of Hexen episodes
 
@@ -2488,7 +2488,7 @@ function hexen_get_levels(episode)
 end
 
 
-function Hexen1_setup()
+function Hexen_setup()
 
   gui.property("hexen_format", "true")
 
@@ -2561,41 +2561,6 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["hexen"] =
-{
-  label = "Hexen",
-
-  format = "doom",
-
-  setup_func = Hexen1_setup,
-
-  param =
-  {
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    infighting  =  true,
-    prefer_stairs = true,
-     
-    hubs = true,
-    polyobjs = true,
-    three_part_weapons = true,
-    ACS_script = true,
-
-    seed_size = 256,
-
-    max_level_desc = 28,
-
-    palette_mons = 3,
-  },
-
-  hooks =
-  {
-  },
-}
-
-
 OB_THEMES["xn_cave"] =
 {
   ref = "CAVE",
@@ -2629,5 +2594,38 @@ OB_THEMES["xn_village"] =
   ref = "VILLAGE",
   label = "Village",
   for_games = { hexen=1 },
+}
+
+
+UNFINISHED["hexen"] =
+{
+  label = "Hexen",
+
+  format = "doom",
+
+  setup_func = Hexen_setup,
+
+  levels_start_func = Hexen_get_levels,
+
+  param =
+  {
+    rails = true,
+    switches = true,
+    liquids = true,
+    teleporters = true,
+    infighting  =  true,
+    prefer_stairs = true,
+     
+    hubs = true,
+    polyobjs = true,
+    three_part_weapons = true,
+    ACS_script = true,
+
+    seed_size = 256,
+
+    max_level_desc = 28,
+
+    palette_mons = 3,
+  },
 }
 
