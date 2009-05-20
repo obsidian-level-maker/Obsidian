@@ -233,9 +233,9 @@ function get_mat(wall, floor, ceil)
 
   return
   {
-    w_face = { texture=w_mat[1] },
-    t_face = { texture=f_mat[2] or f_mat[1] },
-    b_face = { texture=c_mat[2] or c_mat[1] },
+    w_face = { texture=w_mat.t },
+    t_face = { texture=f_mat.f or f_mat.t },
+    b_face = { texture=c_mat.f or c_mat.t },
   }
 end
 
