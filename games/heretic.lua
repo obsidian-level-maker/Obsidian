@@ -211,141 +211,141 @@ HERETIC_MATERIALS =
 {
   -- textures --
 
-  BANNER1  = { "BANNER1",  "FLOOR03" },
-  BANNER2  = { "BANNER2",  "FLOOR03" },
-  BANNER3  = { "BANNER3",  "FLAT520" },
-  BANNER4  = { "BANNER4",  "FLAT520" },
-  BANNER5  = { "BANNER5",  "FLOOR25" },
-  BANNER6  = { "BANNER6",  "FLOOR25" },
-  BANNER7  = { "BANNER7",  "FLOOR00" },
-  BANNER8  = { "BANNER8",  "FLOOR00" },
-  BLUEFRAG = { "BLUEFRAG", "FLOOR16" },
-  BRWNRCKS = { "BRWNRCKS", "FLOOR17" },
-  CELTIC   = { "CELTIC",   "FLOOR06" },
-  CHAINMAN = { "CHAINMAN", "FLAT520" },
-  CHAINSD  = { "CHAINSD",  "FLAT520" },
-  CSTLMOSS = { "CSTLMOSS", "FLOOR03" },
-  CSTLRCK  = { "CSTLRCK",  "FLOOR03" },
-  CTYSTCI1 = { "CTYSTCI1", "FLOOR11" },
-  CTYSTCI2 = { "CTYSTCI2", "FLOOR11" },
-  CTYSTCI4 = { "CTYSTCI4", "FLOOR11" },
-  CTYSTUC1 = { "CTYSTUC1", "FLOOR11" }, -- poor match
-  CTYSTUC2 = { "CTYSTUC2", "FLOOR11" }, -- poor match
-  CTYSTUC3 = { "CTYSTUC3", "FLOOR11" }, -- poor match
-  CTYSTUC4 = { "CTYSTUC4", "FLOOR11" }, -- poor match
-  CTYSTUC5 = { "CTYSTUC5", "FLOOR11" }, -- poor match
-  DMNMSK   = { "DMNMSK",   "FLAT521" },
-  DOOREXIT = { "DOOREXIT", "FLAT520" },
-  DOORSTON = { "DOORSTON", "FLOOR30" },
-  DOORWOOD = { "DOORWOOD", "FLAT507" },
-  DRIPWALL = { "DRIPWALL", "FLOOR27" },
+  BANNER1  = { t="BANNER1",  f="FLOOR03" },
+  BANNER2  = { t="BANNER2",  f="FLOOR03" },
+  BANNER3  = { t="BANNER3",  f="FLAT520" },
+  BANNER4  = { t="BANNER4",  f="FLAT520" },
+  BANNER5  = { t="BANNER5",  f="FLOOR25" },
+  BANNER6  = { t="BANNER6",  f="FLOOR25" },
+  BANNER7  = { t="BANNER7",  f="FLOOR00" },
+  BANNER8  = { t="BANNER8",  f="FLOOR00" },
+  BLUEFRAG = { t="BLUEFRAG", f="FLOOR16" },
+  BRWNRCKS = { t="BRWNRCKS", f="FLOOR17" },
+  CELTIC   = { t="CELTIC",   f="FLOOR06" },
+  CHAINMAN = { t="CHAINMAN", f="FLAT520" },
+  CHAINSD  = { t="CHAINSD",  f="FLAT520" },
+  CSTLMOSS = { t="CSTLMOSS", f="FLOOR03" },
+  CSTLRCK  = { t="CSTLRCK",  f="FLOOR03" },
+  CTYSTCI1 = { t="CTYSTCI1", f="FLOOR11" },
+  CTYSTCI2 = { t="CTYSTCI2", f="FLOOR11" },
+  CTYSTCI4 = { t="CTYSTCI4", f="FLOOR11" },
+  CTYSTUC1 = { t="CTYSTUC1", f="FLOOR11" }, -- poor match
+  CTYSTUC2 = { t="CTYSTUC2", f="FLOOR11" }, -- poor match
+  CTYSTUC3 = { t="CTYSTUC3", f="FLOOR11" }, -- poor match
+  CTYSTUC4 = { t="CTYSTUC4", f="FLOOR11" }, -- poor match
+  CTYSTUC5 = { t="CTYSTUC5", f="FLOOR11" }, -- poor match
+  DMNMSK   = { t="DMNMSK",   f="FLAT521" },
+  DOOREXIT = { t="DOOREXIT", f="FLAT520" },
+  DOORSTON = { t="DOORSTON", f="FLOOR30" },
+  DOORWOOD = { t="DOORWOOD", f="FLAT507" },
+  DRIPWALL = { t="DRIPWALL", f="FLOOR27" },
 
-  GRNBLOK1 = { "GRNBLOK1", "FLOOR19" },
-  GRNBLOK2 = { "GRNBLOK2", "FLOOR19" },
-  GRNBLOK3 = { "GRNBLOK3", "FLOOR19" },
-  GRNBLOK4 = { "GRNBLOK4", "FLOOR19" },
-  GRSKULL1 = { "GRSKULL1", "FLAT521" },
-  GRSKULL3 = { "GRSKULL3", "FLAT521" },
-  GRSTNPB  = { "GRSTNPB",  "FLAT520" },
-  GRSTNPBV = { "GRSTNPBV", "FLAT520" },
-  GRSTNPBW = { "GRSTNPBW", "FLAT520" },
-  HORSES1  = { "HORSES1",  "FLAT520" },
-  LAVA1    = { "LAVA1",    "FLTLAVA1" },
-  LAVAFL1  = { "LAVAFL1",  "FLATHUH1" },
-  LOOSERCK = { "LOOSERCK", "FLOOR04" },  -- poor match
-  METL1    = { "METL1",    "FLOOR29" },
-  METL2    = { "METL2",    "FLOOR28" },
-  MOSAIC1  = { "MOSAIC1",  "FLAT502" },
-  MOSAIC2  = { "MOSAIC2",  "FLAT502" },
-  MOSAIC3  = { "MOSAIC3",  "FLAT502" },
-  MOSAIC4  = { "MOSAIC4",  "FLAT502" },
-  MOSAIC5  = { "MOSAIC5",  "FLAT502" },
-  MOSSRCK1 = { "MOSSRCK1", "FLOOR05" },
-  ORNGRAY  = { "ORNGRAY",  "FLAT504" },
+  GRNBLOK1 = { t="GRNBLOK1", f="FLOOR19" },
+  GRNBLOK2 = { t="GRNBLOK2", f="FLOOR19" },
+  GRNBLOK3 = { t="GRNBLOK3", f="FLOOR19" },
+  GRNBLOK4 = { t="GRNBLOK4", f="FLOOR19" },
+  GRSKULL1 = { t="GRSKULL1", f="FLAT521" },
+  GRSKULL3 = { t="GRSKULL3", f="FLAT521" },
+  GRSTNPB  = { t="GRSTNPB",  f="FLAT520" },
+  GRSTNPBV = { t="GRSTNPBV", f="FLAT520" },
+  GRSTNPBW = { t="GRSTNPBW", f="FLAT520" },
+  HORSES1  = { t="HORSES1",  f="FLAT520" },
+  LAVA1    = { t="LAVA1",    f="FLTLAVA1" },
+  LAVAFL1  = { t="LAVAFL1",  f="FLATHUH1" },
+  LOOSERCK = { t="LOOSERCK", f="FLOOR04" },  -- poor match
+  METL1    = { t="METL1",    f="FLOOR29" },
+  METL2    = { t="METL2",    f="FLOOR28" },
+  MOSAIC1  = { t="MOSAIC1",  f="FLAT502" },
+  MOSAIC2  = { t="MOSAIC2",  f="FLAT502" },
+  MOSAIC3  = { t="MOSAIC3",  f="FLAT502" },
+  MOSAIC4  = { t="MOSAIC4",  f="FLAT502" },
+  MOSAIC5  = { t="MOSAIC5",  f="FLAT502" },
+  MOSSRCK1 = { t="MOSSRCK1", f="FLOOR05" },
+  ORNGRAY  = { t="ORNGRAY",  f="FLAT504" },
 
-  RCKSNMUD = { "RCKSNMUD", "FLOOR01" },  -- poor match
-  REDWALL  = { "REDWALL",  "FLOOR09" },
-  ROOTWALL = { "ROOTWALL", "FLAT506" },
-  SAINT1   = { "SAINT1",   "FLAT523" },
-  SANDSQ2  = { "SANDSQ2",  "FLOOR06" },
-  SKULLSB1 = { "SKULLSB1", "FLOOR30" },
-  SKULLSB2 = { "SKULLSB2", "FLOOR30" },
-  SNDBLCKS = { "SNDBLCKS", "FLOOR06" },
-  SNDCHNKS = { "SNDCHNKS", "FLAT522" },
-  SNDPLAIN = { "SNDPLAIN", "FLOOR25" },
-  SPINE1   = { "SPINE1",   "FLOOR25" },
-  SPINE2   = { "SPINE2",   "FLOOR25" },
-  SQPEB1   = { "SQPEB1",   "FLAT504" },
-  SQPEB2   = { "SQPEB2",   "FLOOR27" },  -- poor match
-  STNGLS1  = { "STNGLS1",  "FLOOR30" },  -- poor match
-  STNGLS2  = { "STNGLS2",  "FLOOR30" },  -- poor match
-  STNGLS3  = { "STNGLS3",  "FLOOR30" },  -- poor match
-  SW1OFF   = { "SW1OFF",   "FLOOR28" },
-  SW1ON    = { "SW1ON",    "FLOOR28" },
-  TMBSTON1 = { "TMBSTON1", "FLAT521" },
-  TMBSTON2 = { "TMBSTON2", "FLAT521" },
-  TRISTON1 = { "TRISTON1", "FLOOR00" },
-  TRISTON2 = { "TRISTON2", "FLOOR17" },
-  WATRWAL1 = { "WATRWAL1", "FLTFLWW1" },
-  WOODWL   = { "WOODWL",   "FLOOR10" },
+  RCKSNMUD = { t="RCKSNMUD", f="FLOOR01" },  -- poor match
+  REDWALL  = { t="REDWALL",  f="FLOOR09" },
+  ROOTWALL = { t="ROOTWALL", f="FLAT506" },
+  SAINT1   = { t="SAINT1",   f="FLAT523" },
+  SANDSQ2  = { t="SANDSQ2",  f="FLOOR06" },
+  SKULLSB1 = { t="SKULLSB1", f="FLOOR30" },
+  SKULLSB2 = { t="SKULLSB2", f="FLOOR30" },
+  SNDBLCKS = { t="SNDBLCKS", f="FLOOR06" },
+  SNDCHNKS = { t="SNDCHNKS", f="FLAT522" },
+  SNDPLAIN = { t="SNDPLAIN", f="FLOOR25" },
+  SPINE1   = { t="SPINE1",   f="FLOOR25" },
+  SPINE2   = { t="SPINE2",   f="FLOOR25" },
+  SQPEB1   = { t="SQPEB1",   f="FLAT504" },
+  SQPEB2   = { t="SQPEB2",   f="FLOOR27" },  -- poor match
+  STNGLS1  = { t="STNGLS1",  f="FLOOR30" },  -- poor match
+  STNGLS2  = { t="STNGLS2",  f="FLOOR30" },  -- poor match
+  STNGLS3  = { t="STNGLS3",  f="FLOOR30" },  -- poor match
+  SW1OFF   = { t="SW1OFF",   f="FLOOR28" },
+  SW1ON    = { t="SW1ON",    f="FLOOR28" },
+  TMBSTON1 = { t="TMBSTON1", f="FLAT521" },
+  TMBSTON2 = { t="TMBSTON2", f="FLAT521" },
+  TRISTON1 = { t="TRISTON1", f="FLOOR00" },
+  TRISTON2 = { t="TRISTON2", f="FLOOR17" },
+  WATRWAL1 = { t="WATRWAL1", f="FLTFLWW1" },
+  WOODWL   = { t="WOODWL",   f="FLOOR10" },
 
 --- logos???
 --GRSKULL2
 
   -- flats --
 
-  FLAT500  = { "SQPEB1",   "FLAT500"  },
-  FLAT502  = { "BLUEFRAG", "FLAT502"  },
-  FLAT503  = { "SQPEB1",   "FLAT503"  },
-  FLAT504  = { "SQPEB1",   "FLAT504"  },
-  FLAT506  = { "ROOTWALL", "FLAT506"  },
-  FLAT507  = { "DOORWOOD", "FLAT507"  },
-  FLAT508  = { "DOORWOOD", "FLAT508"  },
-  FLAT509  = { "LOOSERCK", "FLAT509"  },  -- poor match
-  FLAT510  = { "BRWNRCKS", "FLAT510"  },  -- poor match
-  FLAT512  = { "GRNBLOK1", "FLAT512"  },
-  FLAT513  = { "GRNBLOK1", "FLAT513"  },
-  FLAT516  = { "LOOSERCK", "FLAT516"  },  -- poor match
-  FLAT517  = { "BLUEFRAG", "FLAT517"  },  -- poor match
-  FLAT520  = { "CSTLRCK",  "FLAT520"  },
-  FLAT521  = { "SQPEB1",   "FLAT521"  },
-  FLAT522  = { "SNDCHNKS", "FLAT522"  },
-  FLAT523  = { "GRSTNPB",  "FLAT523"  },  -- poor match
-  FLATHUH1 = { "LAVAFL1",  "FLATHUH1" },
+  FLAT500  = { t="SQPEB1",   f="FLAT500"  },
+  FLAT502  = { t="BLUEFRAG", f="FLAT502"  },
+  FLAT503  = { t="SQPEB1",   f="FLAT503"  },
+  FLAT504  = { t="SQPEB1",   f="FLAT504"  },
+  FLAT506  = { t="ROOTWALL", f="FLAT506"  },
+  FLAT507  = { t="DOORWOOD", f="FLAT507"  },
+  FLAT508  = { t="DOORWOOD", f="FLAT508"  },
+  FLAT509  = { t="LOOSERCK", f="FLAT509"  },  -- poor match
+  FLAT510  = { t="BRWNRCKS", f="FLAT510"  },  -- poor match
+  FLAT512  = { t="GRNBLOK1", f="FLAT512"  },
+  FLAT513  = { t="GRNBLOK1", f="FLAT513"  },
+  FLAT516  = { t="LOOSERCK", f="FLAT516"  },  -- poor match
+  FLAT517  = { t="BLUEFRAG", f="FLAT517"  },  -- poor match
+  FLAT520  = { t="CSTLRCK",  f="FLAT520"  },
+  FLAT521  = { t="SQPEB1",   f="FLAT521"  },
+  FLAT522  = { t="SNDCHNKS", f="FLAT522"  },
+  FLAT523  = { t="GRSTNPB",  f="FLAT523"  },  -- poor match
+  FLATHUH1 = { t="LAVAFL1",  f="FLATHUH1" },
 
-  FLOOR00  = { "TRISTON1", "FLOOR00"  },
-  FLOOR01  = { "LOOSERCK", "FLOOR01"  },  -- poor match
-  FLOOR03  = { "CSTLRCK",  "FLOOR03"  },
-  FLOOR04  = { "CSTLRCK",  "FLOOR04"  },
-  FLOOR05  = { "MOSSROCK", "FLOOR05"  },
-  FLOOR06  = { "SANDSQ2",  "FLOOR06"  },
-  FLOOR07  = { "MOSAIC1",  "FLOOR07"  },  -- poor match
-  FLOOR08  = { "CHAINSD",  "FLOOR08"  },
-  FLOOR09  = { "REDWALL",  "FLOOR09"  },
-  FLOOR10  = { "WOODWL",   "FLOOR10"  },
-  FLOOR11  = { "WOODWL",   "FLOOR11"  },
-  FLOOR12  = { "WOODWL",   "FLOOR12"  },
-  FLOOR16  = { "BLUEFRAG", "FLOOR16"  },
-  FLOOR17  = { "BRWNRCKS", "FLOOR17"  },
-  FLOOR18  = { "GRNBLOK1", "FLOOR18"  },
-  FLOOR19  = { "GRNBLOK1", "FLOOR19"  },
-  FLOOR20  = { "SQPEB2",   "FLOOR20"  },
-  FLOOR21  = { "CHAINSD",  "FLOOR21"  },
-  FLOOR22  = { "CHAINSD",  "FLOOR22"  },
-  FLOOR23  = { "CHAINSD",  "FLOOR23"  },
-  FLOOR24  = { "CHAINSD",  "FLOOR24"  },
-  FLOOR25  = { "SPINE2",   "FLOOR25"  },
-  FLOOR26  = { "CHAINSD",  "FLOOR26"  },
-  FLOOR27  = { "SANDSQ2",  "FLOOR27"  },
-  FLOOR28  = { "METL2",    "FLOOR28"  },
-  FLOOR29  = { "METL1",    "FLOOR29"  },
-  FLOOR30  = { "METL1",    "FLOOR30"  },
+  FLOOR00  = { t="TRISTON1", f="FLOOR00"  },
+  FLOOR01  = { t="LOOSERCK", f="FLOOR01"  },  -- poor match
+  FLOOR03  = { t="CSTLRCK",  f="FLOOR03"  },
+  FLOOR04  = { t="CSTLRCK",  f="FLOOR04"  },
+  FLOOR05  = { t="MOSSROCK", f="FLOOR05"  },
+  FLOOR06  = { t="SANDSQ2",  f="FLOOR06"  },
+  FLOOR07  = { t="MOSAIC1",  f="FLOOR07"  },  -- poor match
+  FLOOR08  = { t="CHAINSD",  f="FLOOR08"  },
+  FLOOR09  = { t="REDWALL",  f="FLOOR09"  },
+  FLOOR10  = { t="WOODWL",   f="FLOOR10"  },
+  FLOOR11  = { t="WOODWL",   f="FLOOR11"  },
+  FLOOR12  = { t="WOODWL",   f="FLOOR12"  },
+  FLOOR16  = { t="BLUEFRAG", f="FLOOR16"  },
+  FLOOR17  = { t="BRWNRCKS", f="FLOOR17"  },
+  FLOOR18  = { t="GRNBLOK1", f="FLOOR18"  },
+  FLOOR19  = { t="GRNBLOK1", f="FLOOR19"  },
+  FLOOR20  = { t="SQPEB2",   f="FLOOR20"  },
+  FLOOR21  = { t="CHAINSD",  f="FLOOR21"  },
+  FLOOR22  = { t="CHAINSD",  f="FLOOR22"  },
+  FLOOR23  = { t="CHAINSD",  f="FLOOR23"  },
+  FLOOR24  = { t="CHAINSD",  f="FLOOR24"  },
+  FLOOR25  = { t="SPINE2",   f="FLOOR25"  },
+  FLOOR26  = { t="CHAINSD",  f="FLOOR26"  },
+  FLOOR27  = { t="SANDSQ2",  f="FLOOR27"  },
+  FLOOR28  = { t="METL2",    f="FLOOR28"  },
+  FLOOR29  = { t="METL1",    f="FLOOR29"  },
+  FLOOR30  = { t="METL1",    f="FLOOR30"  },
 
-  FLTFLWW1 = { "WATRWAL1", "FLTFLWW1" },
-  FLTLAVA1 = { "LAVA1",    "FLTLAVA1" },  -- poor match
-  FLTSLUD1 = { "LAVA1",    "FLTSLUD1" },  -- poor match
-  FLTTELE1 = { "CHAINSD",  "FLTTELE1" },
-  FLTWAWA1 = { "WATRWAL1", "FLTWAWA1" },  -- poor match
+  FLTFLWW1 = { t="WATRWAL1", f="FLTFLWW1" },
+  FLTLAVA1 = { t="LAVA1",    f="FLTLAVA1" },  -- poor match
+  FLTSLUD1 = { t="LAVA1",    f="FLTSLUD1" },  -- poor match
+  FLTTELE1 = { t="CHAINSD",  f="FLTTELE1" },
+  FLTWAWA1 = { t="WATRWAL1", f="FLTWAWA1" },  -- poor match
 }
 
 HERETIC_RAILS =
