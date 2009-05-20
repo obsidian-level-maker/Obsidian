@@ -229,6 +229,20 @@ function deep_copy(t)
   return t and deep_merge({}, t)
 end
 
+function deepish_merge(dest, src)
+  for k,v in pairs(src) do
+    if v == REMOVE_ME then
+      dest[k] = nil
+    elseif type(v) == "table" then
+      dest[k] = deep_copy(v)
+    else
+      dest[k] = v
+    end
+  end
+
+  return dest
+end
+
 function name_it_up(LIST)
   for name,info in pairs(LIST) do
     info.name = name
