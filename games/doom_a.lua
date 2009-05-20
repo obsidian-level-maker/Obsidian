@@ -2230,45 +2230,6 @@ function Doom_common_setup()
 
   GAME.sanity_map = DOOM_SANITY_MAP
 
-  Game_merge_tab("things", DOOM_THINGS)
-
-  Game_merge_tab("monsters", COMMON_MONSTERS)
-  Game_merge_tab("weapons",  COMMON_WEAPONS)
-  Game_merge_tab("pickups",  COMMON_PICKUPS)
-
-  Game_merge_tab("dm", COMMON_DEATHMATCH)
-  Game_merge_tab("dm_exits", COMMON_DEATHMATCH_EXITS)
-
-  Game_merge_tab("combos", COMMON_COMBOS)
-  Game_merge_tab("exits", COMMON_EXITS)
-  Game_merge_tab("hallways",  COMMON_HALLWAYS)
-  Game_merge_tab("materials", COMMON_MATERIALS)
-
-  Game_merge_tab("hangs", COMMON_OVERHANGS)
-  Game_merge_tab("pedestals", COMMON_PEDESTALS)
-  Game_merge_tab("crates", COMMON_CRATES)
-
-  Game_merge_tab("liquids", COMMON_LIQUIDS)
-  Game_merge_tab("doors", COMMON_DOORS)
-  Game_merge_tab("lifts", COMMON_LIFTS)
-
-  Game_merge_tab("switch_infos", COMMON_SWITCH_INFOS)
-  Game_merge_tab("switch_doors", COMMON_SWITCH_DOORS)
-  Game_merge_tab("key_doors", COMMON_KEY_DOORS)
-
-  Game_merge_tab("images", COMMON_IMAGES)
-  Game_merge_tab("lights", COMMON_LIGHTS)
-  Game_merge_tab("rooms",  COMMON_ROOMS)
-  Game_merge_tab("themes", COMMON_THEMES)
-
-  Game_merge_tab("sc_fabs",   COMMON_SCENERY_PREFABS)
-  Game_merge_tab("feat_fabs", COMMON_FEATURE_PREFABS)
-  Game_merge_tab("wall_fabs", COMMON_WALL_PREFABS)
-
-  Game_merge_tab("door_fabs", COMMON_DOOR_PREFABS)
-  Game_merge_tab("arch_fabs", COMMON_ARCH_PREFABS)
-  Game_merge_tab("win_fabs",  COMMON_WINDOW_PREFABS)
-  Game_merge_tab("misc_fabs", COMMON_MISC_PREFABS)
 
 
   GAME.depot_info = { teleport_kind=97 }
@@ -2295,14 +2256,6 @@ function Doom1_setup()
 
   GAME.quests = DOOM1_QUESTS
 
-  Game_merge_tab("rooms",     DOOM1_ROOMS)
-
-  Game_merge_tab("materials", DOOM1_MATERIALS)
-  Game_merge_tab("combos",    DOOM1_COMBOS)
-  Game_merge_tab("exits",     DOOM1_EXITS)
-  Game_merge_tab("hallways",  DOOM1_HALLWAYS)
-  Game_merge_tab("crates",    DOOM1_CRATES)
-  Game_merge_tab("wall_fabs", DOOM1_WALL_PREFABS)
 
   GAME.rails = DOOM1_RAILS
 
@@ -2328,26 +2281,6 @@ function Doom2_setup(game)
   GAME.sky_info = DOOM2_SKY_INFO
   GAME.rails    = DOOM2_RAILS
 
-  Game_merge_tab("themes",   DOOM2_THEMES)
-  Game_merge_tab("rooms",    DOOM2_ROOMS)
-  Game_merge_tab("monsters", DOOM2_MONSTERS)
-
-  Game_merge_tab("materials",DOOM2_MATERIALS)
-  Game_merge_tab("combos",   DOOM2_COMBOS)
-  Game_merge_tab("hallways", DOOM2_HALLWAYS)
-  Game_merge_tab("exits",    DOOM2_EXITS)
-
-  Game_merge_tab("hangs",    DOOM2_OVERHANGS)
-  Game_merge_tab("crates",   DOOM2_CRATES)
-  Game_merge_tab("doors",    DOOM2_DOORS)
-  Game_merge_tab("lights",   DOOM2_LIGHTS)
-  Game_merge_tab("liquids",  DOOM2_LIQUIDS)
-
-  Game_merge_tab("sc_fabs",   DOOM2_SCENERY_PREFABS)
-  Game_merge_tab("feat_fabs", DOOM2_FEATURE_PREFABS)
-  Game_merge_tab("wall_fabs", DOOM2_WALL_PREFABS)
-  Game_merge_tab("door_fabs", DOOM2_DOOR_PREFABS)
-  Game_merge_tab("misc_fabs", DOOM2_MISC_PREFABS)
 end
 
 
@@ -2434,6 +2367,60 @@ OB_GAMES["doom1"] =
     describe_levels = Doom_describe_levels,
     make_level_gfx  = Doom_make_level_gfx,
   },
+
+  tables =
+  {
+    "things", DOOM_THINGS,
+
+    "monsters", COMMON_MONSTERS,
+    "weapons",  COMMON_WEAPONS,
+    "pickups",  COMMON_PICKUPS,
+
+    "dm", COMMON_DEATHMATCH,
+--- "dm_exits", COMMON_DEATHMATCH_EXITS,
+
+    "combos", COMMON_COMBOS,
+    "exits", COMMON_EXITS,
+    "hallways",  COMMON_HALLWAYS,
+    "materials", COMMON_MATERIALS,
+
+    "hangs", COMMON_OVERHANGS,
+    "pedestals", COMMON_PEDESTALS,
+    "crates", COMMON_CRATES,
+
+    "liquids", COMMON_LIQUIDS,
+    "doors", COMMON_DOORS,
+    "lifts", COMMON_LIFTS,
+
+    "switch_infos", COMMON_SWITCH_INFOS,
+    "switch_doors", COMMON_SWITCH_DOORS,
+    "key_doors", COMMON_KEY_DOORS,
+
+    "images", COMMON_IMAGES,
+    "lights", COMMON_LIGHTS,
+    "rooms",  COMMON_ROOMS,
+    "themes", COMMON_THEMES,
+
+    "sc_fabs",   COMMON_SCENERY_PREFABS,
+    "feat_fabs", COMMON_FEATURE_PREFABS,
+    "wall_fabs", COMMON_WALL_PREFABS,
+
+    "door_fabs", COMMON_DOOR_PREFABS,
+    "arch_fabs", COMMON_ARCH_PREFABS,
+    "win_fabs",  COMMON_WINDOW_PREFABS,
+    "misc_fabs", COMMON_MISC_PREFABS,
+
+    ---------
+
+    "rooms",     DOOM1_ROOMS,
+
+    "materials", DOOM1_MATERIALS,
+    "combos",    DOOM1_COMBOS,
+    "exits",     DOOM1_EXITS,
+    "hallways",  DOOM1_HALLWAYS,
+    "crates",    DOOM1_CRATES,
+    "wall_fabs", DOOM1_WALL_PREFABS,
+  },
 }
 
 
@@ -2490,6 +2477,73 @@ OB_GAMES["doom2"] =
   {
     describe_levels = Doom_describe_levels,
     make_level_gfx  = Doom_make_level_gfx,
+  },
+
+  tables =
+  {
+    "things", DOOM_THINGS,
+
+    "monsters", COMMON_MONSTERS,
+    "weapons",  COMMON_WEAPONS,
+    "pickups",  COMMON_PICKUPS,
+
+    "dm", COMMON_DEATHMATCH,
+--- "dm_exits", COMMON_DEATHMATCH_EXITS,
+
+    "combos", COMMON_COMBOS,
+    "exits", COMMON_EXITS,
+    "hallways",  COMMON_HALLWAYS,
+    "materials", COMMON_MATERIALS,
+
+    "hangs", COMMON_OVERHANGS,
+    "pedestals", COMMON_PEDESTALS,
+    "crates", COMMON_CRATES,
+
+    "liquids", COMMON_LIQUIDS,
+    "doors", COMMON_DOORS,
+    "lifts", COMMON_LIFTS,
+
+    "switch_infos", COMMON_SWITCH_INFOS,
+    "switch_doors", COMMON_SWITCH_DOORS,
+    "key_doors", COMMON_KEY_DOORS,
+
+    "images", COMMON_IMAGES,
+    "lights", COMMON_LIGHTS,
+    "rooms",  COMMON_ROOMS,
+    "themes", COMMON_THEMES,
+
+    "sc_fabs",   COMMON_SCENERY_PREFABS,
+    "feat_fabs", COMMON_FEATURE_PREFABS,
+    "wall_fabs", COMMON_WALL_PREFABS,
+
+    "door_fabs", COMMON_DOOR_PREFABS,
+    "arch_fabs", COMMON_ARCH_PREFABS,
+    "win_fabs",  COMMON_WINDOW_PREFABS,
+    "misc_fabs", COMMON_MISC_PREFABS,
+
+    ---------
+
+    "monsters", DOOM2_MONSTERS,
+
+    "themes",   DOOM2_THEMES,
+    "rooms",    DOOM2_ROOMS,
+
+    "materials",DOOM2_MATERIALS,
+    "combos",   DOOM2_COMBOS,
+    "hallways", DOOM2_HALLWAYS,
+    "exits",    DOOM2_EXITS,
+
+    "hangs",    DOOM2_OVERHANGS,
+    "crates",   DOOM2_CRATES,
+    "doors",    DOOM2_DOORS,
+    "lights",   DOOM2_LIGHTS,
+    "liquids",  DOOM2_LIQUIDS,
+
+    "sc_fabs",   DOOM2_SCENERY_PREFABS,
+    "feat_fabs", DOOM2_FEATURE_PREFABS,
+    "wall_fabs", DOOM2_WALL_PREFABS,
+    "door_fabs", DOOM2_DOOR_PREFABS,
+    "misc_fabs", DOOM2_MISC_PREFABS,
   },
 }
 
