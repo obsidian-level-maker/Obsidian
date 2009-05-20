@@ -1500,8 +1500,6 @@ HEXEN_PICS =
 }
 
 
----- QUEST STUFF ----------------
-
 HEXEN_ROOMS =
 {
   PLAIN =

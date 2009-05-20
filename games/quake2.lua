@@ -1498,9 +1498,6 @@ QUAKE2_MISC_PREFABS =
 
 
 
----- QUEST STUFF ----------------
-
-
 QUAKE2_ROOMS =
 {
   PLAIN =

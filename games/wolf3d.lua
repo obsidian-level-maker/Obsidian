@@ -412,9 +412,6 @@ WOLF_MISC_PREFABS =
 
 
 
----- QUEST STUFF ----------------
-
-
 WOLF_ROOMS =
 {
   PLAIN =
