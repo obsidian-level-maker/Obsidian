@@ -1768,27 +1768,6 @@ HEXEN_SCENERY_PREFABS =
   },
 }
 
--- HEXEN_DEATHMATCH_EXITS =
--- {
---   exit_dm_GREEN =
---   {
---     prefab = "EXIT_DEATHMATCH",
--- 
---     skin = { wall="FOREST05", front_w="FOREST05",
---              floor="F_009", ceil="F_009",
---              switch_w="SW51_OFF", side_w="FIRE07", switch_f="F_013",
---              frame_f="F_048", frame_c="F_048",
---              door_w="D_BRASS1", door_c="F_075",
--- 
---              inside_h=160, door_h=128,
---              switch_yo=0,  tag=0,
--- 
---              door_kind  ={ id=12, act="S1", args={0, 16, 64} },
---              switch_kind={ id=
---            },
---   },
--- }
-
 
 HEXEN_PLAYER_MODEL =
 {
@@ -2125,37 +2104,6 @@ HEXEN_ITEMS =
   p1 = { pickup="flechette", prob=9 },
   p2 = { pickup="bracer",    prob=5 },
   p3 = { pickup="torch",     prob=2 },
-}
-
-HEXEN_DEATHMATCH =
-{
-  weapons =
-  {
-    c_staff=40, c_fire  =40,
-    f_axe  =40, f_hammer=40,
-    m_cone =40, m_blitz =40,
-  },
-
-  health =
-  { 
-    h_vial=50, h_flask=50, h_urn=5
-  },
-
-  ammo =
-  { 
-    blue_mana=50, green_mana=50, dual_mana=80, krater=1
-  },
-
-  items =
-  {
-    ar_mesh=100, ar_shield=100, ar_helmet=100, ar_amulet=100,
-
-    flechette=30, bracer=20, incant=3, boots=8,
-    wings=3, chaos=10, banish=10, repulser=10,
-    torch=10, porkies=20, defender=1,
-  },
-
-  cluster = {}
 }
 
 
@@ -2517,8 +2465,6 @@ function Hexen_setup()
     monsters = HEXEN_MONSTERS,
     weapons  = HEXEN_WEAPONS,
     pickups  = HEXEN_PICKUPS,
-
-    dm = HEXEN_DEATHMATCH,
 
     combos    = HEXEN_COMBOS,
     exits     = HEXEN_EXITS,

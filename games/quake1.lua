@@ -770,26 +770,6 @@ QUAKE1_MISC_PREFABS =
 
 ---- QUEST STUFF ----------------
 
-QUAKE1_QUESTS =
-{
-  key = { k_silver=60, k_gold=30, },
-
-  switch = { },
-
-  weapon = { machine_gun=50, gatling_gun=20, },
-
-  item =
-  {
-    crown = 50, chest = 50, cross = 50, chalice = 50,
-    one_up = 2,
-  },
-
-  exit =
-  {
-    elevator=50
-  }
-}
-
 
 QUAKE1_ROOMS =
 {
@@ -1211,14 +1191,11 @@ function Quake1_setup()
 
   GAME.player_model = QUAKE1_PLAYER_MODEL
 
-  GAME.dm = {}
-
   Game_merge_tab("things",   QUAKE1_THINGS)
   Game_merge_tab("monsters", QUAKE1_MONSTERS)
   Game_merge_tab("weapons",  QUAKE1_WEAPONS)
   Game_merge_tab("pickups",  QUAKE1_PICKUPS)
 
-  Game_merge_tab("quests",  QUAKE1_QUESTS)
 
   Game_merge_tab("combos", QUAKE1_COMBOS)
   Game_merge_tab("exits",  QUAKE1_EXITS)

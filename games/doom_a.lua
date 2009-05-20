@@ -1808,53 +1808,6 @@ COMMON_PICKUPS =
 
 
 
--- DeathMatch stuff
--- ================
-
-COMMON_DEATHMATCH =
-{
-  weapons =
-  {
-    shotty=60, super=40, chain=40, launch=40,
-    plasma=20, saw=10, bfg=3
-  },
-
-  health =
-  { 
-    potion=30, stimpack=60, medikit=20,
-    helmet=20
-  },
-
-  ammo =
-  { 
-    bullets=5,  bullet_box=30,
-    shells=60,  shell_box=5,
-    rockets=10, rocket_box=20,
-    cells=40,   cell_pack=1,
-  },
-
-  items =
-  {
-    invis=40, goggle=10, berserk=50,
-    soul=5, green_armor=40, blue_armor=5,
-  },
-
-  max_clu =
-  {
-    potion = 8, helmet = 8,
-    stimpack = 4, medikit = 2,
-    bullets = 4, shells = 4,
-    rockets = 4,
-  },
-
-  min_clu =
-  {
-    potion = 3, helmet = 3,
-    bullets = 2, rockets = 2,
-  },
-}
-
-
 COMMON_PLAYER_MODEL =
 {
   doomguy =
@@ -2254,8 +2207,6 @@ function Doom1_setup()
 
 ---  T.episodes   = 4
 
-  GAME.quests = DOOM1_QUESTS
-
 
   GAME.rails = DOOM1_RAILS
 
@@ -2263,8 +2214,6 @@ function Doom1_setup()
 
   GAME.weapons["super"] = nil 
   GAME.pickups["mega"]  = nil
-
-  GAME.dm.weapons["super"] = nil
 
   GAME.monsters["Cyberdemon"].crazy_prob = 8
   GAME.monsters["Mastermind"].crazy_prob = 12
@@ -2277,7 +2226,6 @@ function Doom2_setup(game)
 
 ---  T.episodes   = 3
 
-  GAME.quests   = DOOM2_QUESTS
   GAME.sky_info = DOOM2_SKY_INFO
   GAME.rails    = DOOM2_RAILS
 
@@ -2376,13 +2324,11 @@ OB_GAMES["doom1"] =
     "weapons",  COMMON_WEAPONS,
     "pickups",  COMMON_PICKUPS,
 
-    "dm", COMMON_DEATHMATCH,
---- "dm_exits", COMMON_DEATHMATCH_EXITS,
-
+    "materials", COMMON_MATERIALS,
+    "rails", COMMON_RAILS,
     "combos", COMMON_COMBOS,
     "exits", COMMON_EXITS,
     "hallways",  COMMON_HALLWAYS,
-    "materials", COMMON_MATERIALS,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
@@ -2415,6 +2361,7 @@ OB_GAMES["doom1"] =
     "rooms",     DOOM1_ROOMS,
 
     "materials", DOOM1_MATERIALS,
+    "rails",     DOOM1_RAILS,
     "combos",    DOOM1_COMBOS,
     "exits",     DOOM1_EXITS,
     "hallways",  DOOM1_HALLWAYS,
@@ -2487,13 +2434,11 @@ OB_GAMES["doom2"] =
     "weapons",  COMMON_WEAPONS,
     "pickups",  COMMON_PICKUPS,
 
-    "dm", COMMON_DEATHMATCH,
---- "dm_exits", COMMON_DEATHMATCH_EXITS,
-
+    "materials", COMMON_MATERIALS,
+    "rails",     COMMON_MATERIALS,
     "combos", COMMON_COMBOS,
     "exits", COMMON_EXITS,
     "hallways",  COMMON_HALLWAYS,
-    "materials", COMMON_MATERIALS,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
@@ -2529,6 +2474,7 @@ OB_GAMES["doom2"] =
     "rooms",    DOOM2_ROOMS,
 
     "materials",DOOM2_MATERIALS,
+    "rails",    DOOM2_RAILS,
     "combos",   DOOM2_COMBOS,
     "hallways", DOOM2_HALLWAYS,
     "exits",    DOOM2_EXITS,

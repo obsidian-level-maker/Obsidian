@@ -1318,24 +1318,6 @@ HERETIC_MISC_PREFABS =
   },
 }
 
-HERETIC_DEATHMATCH_EXITS =
-{
-  exit_dm_METAL =
-  {
-    prefab = "EXIT_DEATHMATCH",
-
-    skin = { wall="METL2", front_w="METL2",
-             floor="FLAT502", ceil="FLAT502",
-             switch_w="SW2OFF", side_w="METL2", switch_f="FLOOR03",
-             frame_f="FLAT504", frame_c="FLAT504", -- step_w="STEP1",
-             door_w="DOOREXIT", door_c="FLOOR08", -- track_w="DOORTRAK",
-
-             inside_h=128, door_h=96,
-             switch_yo=32,
-             door_kind=1, tag=0, switch_kind=11
-           },
-  },
-}
 
 HERETIC_IMAGES =
 {
@@ -1361,30 +1343,6 @@ HERETIC_PICS =
 
 ---- QUEST STUFF ----------------
 
-HERETIC_QUESTS =
-{
-  key =
-  {
-    k_blue=30, k_green=45, k_yellow=60
-  },
-
-  switch =
-  {
-    sw_demon=60, sw_green=45, sw_celtic=30,
-  },
-
-  weapon =
-  {
-    claw=60, hellstaff=40,
-    phoenix=40, firemace=20
-  },
-
-  item =
-  {
-    shadow=60, bag=50, wings=40, ovum=30,
-    bomb=25, tome=20, chaos=15,
-  },
-}
 
 HERETIC_ROOMS =
 {
@@ -1908,41 +1866,6 @@ HERETIC_ITEMS =
 }
 
 
-HERETIC_DEATHMATCH =
-{
-  weapons =
-  {
-    gauntlets=10, crossbow=60,
-    claw=30, hellstaff=30, phoenix=30
-  },
-
-  health =
-  { 
-    h_vial=70, h_flask=25, h_urn=5
-  },
-
-  ammo =
-  { 
-    crystal=10, geode=20,
-    arrow=20, quiver=60,
-    claw_orb1=10, claw_orb2=40,
-    runes1=10, runes2=30,
-    flame_orb1=10, flame_orb2=30,
-  },
-
-  items =
-  {
-    shield1=70, shield2=10,
-    bag=10, torch=10,
-    wings=50, ovum=50,
-    bomb=30, chaos=30,
-    shadow=50, tome=30,
-  },
-
-  cluster = {}
-}
-
-
 HERETIC_PLAYER_MODEL =
 {
   cleric =
@@ -2052,11 +1975,6 @@ function Heretic1_setup()
   Game_merge_tab("monsters", HERETIC_MONSTERS)
   Game_merge_tab("weapons",  HERETIC_WEAPONS)
   Game_merge_tab("pickups",  HERETIC_PICKUPS)
-
-  Game_merge_tab("quests", HERETIC_QUESTS)
-
-  Game_merge_tab("dm", HERETIC_DEATHMATCH)
-  Game_merge_tab("dm_exits", HERETIC_DEATHMATCH_EXITS)
 
   Game_merge_tab("materials", HERETIC_MATERIALS)
   Game_merge_tab("combos", HERETIC_COMBOS)

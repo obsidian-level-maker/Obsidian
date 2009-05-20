@@ -414,26 +414,6 @@ WOLF_MISC_PREFABS =
 
 ---- QUEST STUFF ----------------
 
-WOLF_QUESTS =
-{
-  key = { k_silver=60, k_gold=30, },
-
-  switch = { },
-
-  weapon = { machine_gun=50, gatling_gun=20, },
-
-  item =
-  {
-    crown = 50, chest = 50, cross = 50, chalice = 50,
-    one_up = 2,
-  },
-
-  exit =
-  {
-    elevator=50
-  }
-}
-
 
 WOLF_ROOMS =
 {
@@ -932,8 +912,6 @@ function Wolf3d_setup()
 
   GAME.player_model = WOLF_PLAYER_MODEL
 
-  GAME.dm = {}
-
   GAME.hallways  = nil
 
   Game_merge_tab("things",   WOLF_THINGS)
@@ -943,8 +921,6 @@ function Wolf3d_setup()
 
   Game_merge_tab("weapons",  WOLF_WEAPONS)
   Game_merge_tab("pickups", WOLF_PICKUPS)
-
-  Game_merge_tab("quests", WOLF_QUESTS)
 
   Game_merge_tab("combos", WOLF_COMBOS)
   Game_merge_tab("exits",  WOLF_EXITS)
