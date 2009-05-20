@@ -143,7 +143,8 @@ function Trans_entity(name, x, y, z, props)
 
   local info = GAME.things[name]
   if not info then
-    error("THINGS table is missing info for: " .. tostring(name))
+    gui.printf("\nLACKING ENTITY : %s\n\n", name)
+    return
   end
   assert(info.id)
 
