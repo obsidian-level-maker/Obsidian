@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  MODULE: Skulltag Monsters
+--  MODULE: Skulltag Monsters and Items
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker (C) 2009 Andrew Apted

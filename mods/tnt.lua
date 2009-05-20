@@ -267,7 +267,7 @@ UNFINISHED["tnt"] =
 
   for_games = { doom2=1 },
 
-  conflicts = { new_iwad=1 },
+  conflicts = { IWAD=1 },
 
   mod_func = tnt_modifier,
 }
