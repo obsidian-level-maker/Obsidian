@@ -399,7 +399,6 @@ COMMON_MATERIALS =
   TEKWALL1 = { "TEKWALL1",  "CEIL5_1" },  -- poor match
   TEKWALL4 = { "TEKWALL4",  "CEIL5_1" },  -- poor match
   WOOD1    = { "WOOD1",     "FLAT5_2" },
-  WOOD12   = { "WOOD12",    "FLAT5_2"  },
   WOOD3    = { "WOOD3",     "FLAT5_1" },
   WOOD4    = { "WOOD4",     "FLAT5_2" },
   WOOD5    = { "WOOD5",     "CEIL5_2" },
