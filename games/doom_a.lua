@@ -1962,8 +1962,6 @@ DOOM2_SKY_INFO =
 
 
 function Doom1_get_levels()
-  local list = {}
-
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
 
@@ -2016,29 +2014,25 @@ function Doom1_get_levels()
       end
 
       if map_id == 18 then
-        LEV.arena_func = Arena_Doom_E1M8
+        LEV.build_func = Arena_Doom_E1M8
       elseif map_id == 28 or map_id == 46 then
-        LEV.arena_func = Arena_Doom_E2M8
+        LEV.build_func = Arena_Doom_E2M8
       elseif map_id == 38 or map_id == 48 then
         -- FIXME
       end
 
-      if LEV.arena_func then
+      if LEV.build_func then
         LEV.name_theme = "BOSS"
       end
 
-      table.insert(list, LEV)
+      table.insert(GAME.all_levels, LEV)
     end -- for map
 
   end -- for episode
-
-  return list
 end
 
 
 function Doom2_get_levels()
-  local list = {}
-
   local MAP_NUM = 11
 
   if OB_CONFIG.length == "single" then MAP_NUM = 1  end
@@ -2110,16 +2104,16 @@ function Doom2_get_levels()
     end
 
     if map == 7 then
-      LEV.arena_func = Arena_Doom_MAP07
+      LEV.build_func = Arena_Doom_MAP07
     elseif map == 17 then  -- 16..18
       -- FIXME
     elseif map == 24 then  -- or 25
       -- FIXME
     elseif map == 30 then
-      LEV.arena_func = Arena_Doom_MAP30
+      LEV.build_func = Arena_Doom_MAP30
     end
 
-    if LEV.arena_func then
+    if LEV.build_func then
       LEV.name_theme = "BOSS"
     end
 
@@ -2127,10 +2121,8 @@ function Doom2_get_levels()
     LEV.secret_kind = DOOM2_SECRET_KINDS[LEV.name]
     LEV.secret_exit = DOOM2_SECRET_EXITS[LEV.name]
 
-    table.insert(list, LEV)
+    table.insert(GAME.all_levels, LEV)
   end
-
-  return list
 end
 
 
@@ -2401,6 +2393,8 @@ OB_GAMES["doom1"] =
 
   setup_func = Doom1_setup,
 
+  levels_start_func = Doom1_get_levels,
+
   param =
   {
     rails = true,
@@ -2437,8 +2431,6 @@ OB_GAMES["doom1"] =
 
   hooks =
   {
-    get_levels = Doom1_get_levels,
-
     describe_levels = Doom_describe_levels,
     make_level_gfx  = Doom_make_level_gfx,
   },
@@ -2453,6 +2445,8 @@ OB_GAMES["doom2"] =
   priority = 99, -- keep at top
 
   setup_func = Doom2_setup,
+
+  levels_start_func = Doom2_get_levels,
 
   param =
   {
@@ -2494,8 +2488,6 @@ OB_GAMES["doom2"] =
 
   hooks =
   {
-    get_levels = Doom2_get_levels,
-
     describe_levels = Doom_describe_levels,
     make_level_gfx  = Doom_make_level_gfx,
   },

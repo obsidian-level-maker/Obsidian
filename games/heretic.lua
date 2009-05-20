@@ -2002,8 +2002,6 @@ HERETIC_SKY_INFO =
 ------------------------------------------------------------
 
 function Heretic1_get_levels()
-  local list = {}
-
   local EP_NUM  = sel(OB_CONFIG.length == "full", 5, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
 
@@ -2039,12 +2037,10 @@ function Heretic1_get_levels()
         LEV.secret_exit = true
       end
 
-      table.insert(list, LEV)
+      table.insert(GAME.all_levels, LEV)
     end -- for map
 
   end -- for episode
-
-  return list
 end
 
 
@@ -2153,6 +2149,8 @@ OB_GAMES["heretic"] =
 
   setup_func = Heretic1_setup,
 
+  levels_start_func = Heretic1_get_levels,
+
   param =
   {
     rails = true,
@@ -2188,11 +2186,6 @@ OB_GAMES["heretic"] =
 
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  hooks =
-  {
-    get_levels = Heretic1_get_levels,
   },
 }
 
