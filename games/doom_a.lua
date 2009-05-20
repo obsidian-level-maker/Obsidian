@@ -1553,7 +1553,7 @@ DOOM2_MONSTERS =
   ss_dude =
   {
     -- not generated in normal levels
-    crazy_prob=20,
+    crazy_prob=7,
     health=50, damage=15, attack="hitscan",
     give={ {ammo="bullet",count=5} },
   },
