@@ -2451,7 +2451,7 @@ function Hexen_setup()
     cell_min_size = 6,
 
     SKY_TEX    = "F_SKY",
-    ERROR_TEX  = "ABADONE",
+    ERROR_TEX  = "WASTE01",
     ERROR_FLAT = "F_033",
 
     episodes   = 5,
@@ -2459,37 +2459,6 @@ function Hexen_setup()
 
     classes  = { "fighter", "cleric", "mage" },
 
-    things   = HEXEN_THINGS,
-    monsters = HEXEN_MONSTERS,
-    weapons  = HEXEN_WEAPONS,
-    pickups  = HEXEN_PICKUPS,
-
-    combos    = HEXEN_COMBOS,
-    exits     = HEXEN_EXITS,
-    hallways  = HEXEN_HALLWAYS,
-
-    rooms     = HEXEN_ROOMS,
-    themes    = HEXEN_THEMES,
-
-    hangs     = HEXEN_OVERHANGS,
-    pedestals = HEXEN_PEDESTALS,
-    rails     = HEXEN_RAILS,
-
-    liquids   = HEXEN_LIQUIDS,
-    switches  = HEXEN_SWITCHES,
-    doors     = HEXEN_DOORS,
-    key_doors = HEXEN_KEY_DOORS,
-    lifts     = HEXEN_LIFTS,
-
-    pics      = HEXEN_PICS,
-    images    = HEXEN_IMAGES,
-    lights    = HEXEN_LIGHTS,
-    wall_lights = HEXEN_WALL_LIGHTS,
-
-    door_fabs = HEXEN_DOOR_PREFABS,
-    wall_fabs = HEXEN_WALL_PREFABS,
-    sc_fabs   = HEXEN_SCENERY_PREFABS,
-    misc_fabs = HEXEN_MISC_PREFABS,
 
     room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
     space_range  = { 20, 90 },
@@ -2570,6 +2539,42 @@ UNFINISHED["hexen"] =
     max_level_desc = 28,
 
     palette_mons = 3,
+  },
+
+  tables =
+  {
+    "things",     HEXEN_THINGS,
+    "monsters",   HEXEN_MONSTERS,
+    "weapons",    HEXEN_WEAPONS,
+    "pickups",    HEXEN_PICKUPS,
+
+    "materials",  HEXEN_MATERIALS,
+    "combos",     HEXEN_COMBOS,
+    "exits",      HEXEN_EXITS,
+    "hallways",   HEXEN_HALLWAYS,
+
+    "rooms",      HEXEN_ROOMS,
+    "themes",     HEXEN_THEMES,
+
+    "hangs",      HEXEN_OVERHANGS,
+    "pedestals",  HEXEN_PEDESTALS,
+    "rails",      HEXEN_RAILS,
+
+    "liquids",    HEXEN_LIQUIDS,
+    "switches",   HEXEN_SWITCHES,
+    "doors",      HEXEN_DOORS,
+    "key_doors",  HEXEN_KEY_DOORS,
+    "lifts",      HEXEN_LIFTS,
+
+    "pics",       HEXEN_PICS,
+    "images",     HEXEN_IMAGES,
+    "lights",     HEXEN_LIGHTS,
+    "wall_lights", HEXEN_WALL_LIGHTS,
+
+    "door_fabs",  HEXEN_DOOR_PREFABS,
+    "wall_fabs",  HEXEN_WALL_PREFABS,
+    "sc_fabs",    HEXEN_SCENERY_PREFABS,
+    "misc_fabs",  HEXEN_MISC_PREFABS,
   },
 }
 

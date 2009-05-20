@@ -16,7 +16,6 @@
 --
 ----------------------------------------------------------------
 
-
 QUAKE1_THINGS =
 {
   -- players
@@ -1188,24 +1187,6 @@ function Quake1_setup()
 
   GAME.player_model = QUAKE1_PLAYER_MODEL
 
-  Game_merge_tab("things",   QUAKE1_THINGS)
-  Game_merge_tab("monsters", QUAKE1_MONSTERS)
-  Game_merge_tab("weapons",  QUAKE1_WEAPONS)
-  Game_merge_tab("pickups",  QUAKE1_PICKUPS)
-
-
-  Game_merge_tab("combos", QUAKE1_COMBOS)
-  Game_merge_tab("exits",  QUAKE1_EXITS)
---  hallways  nil,
-
---  Game_merge_tab("doors", QUAKE1_DOORS)
-  Game_merge_tab("key_doors", QUAKE1_KEY_DOORS)
-
-  Game_merge_tab("rooms",  QUAKE1_ROOMS)
-  Game_merge_tab("themes", QUAKE1_THEMES)
-
-  Game_merge_tab("misc_fabs", QUAKE1_MISC_PREFABS)
-
   GAME.room_heights = { [128]=50 }
   GAME.space_range  = { 50, 90 }
   GAME.door_probs = { combo_diff=90, normal=20, out_diff=1 }
@@ -1250,12 +1231,29 @@ UNFINISHED["quake1"] =
     max_level_desc = 20,
 
     palette_mons = 4,
-
   },
 
   hooks =
   {
     describe_levels = Quake1_describe_levels,
+  },
+
+  tables =
+  {
+    "things",   QUAKE1_THINGS,
+    "monsters", QUAKE1_MONSTERS,
+    "weapons",  QUAKE1_WEAPONS,
+    "pickups",  QUAKE1_PICKUPS,
+
+    "materials", QUAKE1_MATERIALS,
+    "combos", QUAKE1_COMBOS,
+    "exits",  QUAKE1_EXITS,
+
+    "themes", QUAKE1_THEMES,
+    "rooms",  QUAKE1_ROOMS,
+
+    "key_doors", QUAKE1_KEY_DOORS,
+    "misc_fabs", QUAKE1_MISC_PREFABS,
   },
 }
 

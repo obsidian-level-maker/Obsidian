@@ -911,25 +911,6 @@ function Wolf3d_setup()
 
   GAME.hallways  = nil
 
-  Game_merge_tab("things",   WOLF_THINGS)
-  Game_merge_tab("monsters", WOLF_MONSTERS)
-  Game_merge_tab("bosses",   WOLF_BOSSES)
-  Game_merge_tab("mon_give", WOLF_MONSTER_GIVE)
-
-  Game_merge_tab("weapons",  WOLF_WEAPONS)
-  Game_merge_tab("pickups", WOLF_PICKUPS)
-
-  Game_merge_tab("combos", WOLF_COMBOS)
-  Game_merge_tab("exits",  WOLF_EXITS)
-
---??  Game_merge_tab("doors", WOLF_DOORS)
-  Game_merge_tab("key_doors", WOLF_KEY_DOORS)
-
-  Game_merge_tab("rooms",  WOLF_ROOMS)
-  Game_merge_tab("themes", WOLF_THEMES)
-
-  Game_merge_tab("misc_fabs", WOLF_MISC_PREFABS)
-
   GAME.room_heights = { [128]=50 }
   GAME.space_range  = { 50, 90 }
   GAME.door_probs = { combo_diff=90, normal=20, out_diff=1 }
@@ -971,6 +952,28 @@ UNFINISHED["wolf3d"] =
 
     palette_mons = 2,
   },
+
+  tables =
+  {
+    "things",   WOLF_THINGS,
+    "monsters", WOLF_MONSTERS,
+    "bosses",   WOLF_BOSSES,
+    "mon_give", WOLF_MONSTER_GIVE,
+
+    "weapons",  WOLF_WEAPONS,
+    "pickups", WOLF_PICKUPS,
+
+    "materials", WOLF_MATERIALS,
+    "combos", WOLF_COMBOS,
+    "exits",  WOLF_EXITS,
+
+    "key_doors", WOLF_KEY_DOORS,
+
+    "rooms",  WOLF_ROOMS,
+    "themes", WOLF_THEMES,
+
+    "misc_fabs", WOLF_MISC_PREFABS,
+  },
 }
 
 
@@ -986,5 +989,10 @@ UNFINISHED["spear"] =
   levels_start_func = Spear_get_levels,
 
   param = UNFINISHED["wolf3d"].param,
+
+  tables =
+  {
+    -- FIXME
+  },
 }
 

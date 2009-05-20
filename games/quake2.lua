@@ -2015,21 +2015,6 @@ function Quake2_setup()
 
   GAME.player_model = QUAKE2_PLAYER_MODEL
 
-  Game_merge_tab("things",   QUAKE2_THINGS)
-  Game_merge_tab("monsters", QUAKE2_MONSTERS)
-  Game_merge_tab("weapons",  QUAKE2_WEAPONS)
-  Game_merge_tab("pickups",  QUAKE2_PICKUPS)
-
-  Game_merge_tab("combos", QUAKE2_COMBOS)
-  Game_merge_tab("exits",  QUAKE2_EXITS)
-
-  Game_merge_tab("key_doors", QUAKE2_KEY_DOORS)
-
-  Game_merge_tab("rooms",  QUAKE2_ROOMS)
-  Game_merge_tab("themes", QUAKE2_THEMES)
-
-  Game_merge_tab("misc_fabs", QUAKE2_MISC_PREFABS)
-
 end
 
 
@@ -2065,6 +2050,24 @@ UNFINISHED["quake2"] =
   hooks =
   {
     describe_levels = Quake1_describe_levels,
+  },
+
+  tables =
+  {
+    "things",   QUAKE2_THINGS,
+    "monsters", QUAKE2_MONSTERS,
+    "weapons",  QUAKE2_WEAPONS,
+    "pickups",  QUAKE2_PICKUPS,
+
+    "materials", QUAKE2_MATERIALS,
+    "combos", QUAKE2_COMBOS,
+    "exits",  QUAKE2_EXITS,
+
+    "themes", QUAKE2_THEMES,
+    "rooms",  QUAKE2_ROOMS,
+
+    "key_doors", QUAKE2_KEY_DOORS,
+    "misc_fabs", QUAKE2_MISC_PREFABS,
   },
 }
 

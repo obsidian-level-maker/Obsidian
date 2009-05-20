@@ -1971,37 +1971,6 @@ function Heretic1_setup()
 
   GAME.player_model = HERETIC_PLAYER_MODEL
 
-  Game_merge_tab("things",   HERETIC_THINGS)
-  Game_merge_tab("monsters", HERETIC_MONSTERS)
-  Game_merge_tab("weapons",  HERETIC_WEAPONS)
-  Game_merge_tab("pickups",  HERETIC_PICKUPS)
-
-  Game_merge_tab("materials", HERETIC_MATERIALS)
-  Game_merge_tab("combos", HERETIC_COMBOS)
-  Game_merge_tab("exits", HERETIC_EXITS)
-  Game_merge_tab("hallways", HERETIC_HALLWAYS)
-
-  Game_merge_tab("rooms",  HERETIC_ROOMS)
-  Game_merge_tab("themes", HERETIC_THEMES)
-
-  Game_merge_tab("hangs", HERETIC_OVERHANGS)
-  Game_merge_tab("pedestals", HERETIC_PEDESTALS)
-  Game_merge_tab("rails", HERETIC_RAILS)
-
-  Game_merge_tab("liquids", HERETIC_LIQUIDS)
-  Game_merge_tab("switches", HERETIC_SWITCHES)
-  Game_merge_tab("doors", HERETIC_DOORS)
-  Game_merge_tab("key_doors", HERETIC_KEY_DOORS)
-  Game_merge_tab("lifts", HERETIC_LIFTS)
-
-  Game_merge_tab("pics", HERETIC_PICS)
-  Game_merge_tab("images", HERETIC_IMAGES)
-  Game_merge_tab("lights", HERETIC_LIGHTS)
-  Game_merge_tab("wall_lights", HERETIC_WALL_LIGHTS)
-
-  Game_merge_tab("door_fabs", HERETIC_DOOR_PREFABS)
-  Game_merge_tab("wall_fabs", HERETIC_WALL_PREFABS)
-  Game_merge_tab("misc_fabs", HERETIC_MISC_PREFABS)
 
   -- FIXME: temp crap
   GAME.door_fabs["silver_lit"] = GAME.door_fabs["d_wood"]
@@ -2104,6 +2073,41 @@ OB_GAMES["heretic"] =
 
     ammo_factor   = 0.8,
     health_factor = 0.7,
+  },
+
+  tables =
+  {
+    "things",   HERETIC_THINGS,
+    "monsters", HERETIC_MONSTERS,
+    "weapons",  HERETIC_WEAPONS,
+    "pickups",  HERETIC_PICKUPS,
+
+    "materials", HERETIC_MATERIALS,
+    "combos", HERETIC_COMBOS,
+    "exits", HERETIC_EXITS,
+    "hallways", HERETIC_HALLWAYS,
+
+    "rooms",  HERETIC_ROOMS,
+    "themes", HERETIC_THEMES,
+
+    "hangs", HERETIC_OVERHANGS,
+    "pedestals", HERETIC_PEDESTALS,
+    "rails", HERETIC_RAILS,
+
+    "liquids", HERETIC_LIQUIDS,
+    "switches", HERETIC_SWITCHES,
+    "doors", HERETIC_DOORS,
+    "key_doors", HERETIC_KEY_DOORS,
+    "lifts", HERETIC_LIFTS,
+
+    "pics", HERETIC_PICS,
+    "images", HERETIC_IMAGES,
+    "lights", HERETIC_LIGHTS,
+    "wall_lights", HERETIC_WALL_LIGHTS,
+
+    "door_fabs", HERETIC_DOOR_PREFABS,
+    "wall_fabs", HERETIC_WALL_PREFABS,
+    "misc_fabs", HERETIC_MISC_PREFABS,
   },
 }
 
