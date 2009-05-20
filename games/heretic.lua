@@ -2109,6 +2109,42 @@ end
 
 ------------------------------------------------------------
 
+OB_THEMES["hc_city"] =
+{
+  ref = "CITY",
+  label = "City",
+  for_games = { heretic=1 },
+}
+
+OB_THEMES["hc_cave"] =
+{
+  ref = "CAVE",
+  label = "Cave",
+  for_games = { heretic=1 },
+}
+
+OB_THEMES["hc_dome"] =
+{
+  ref = "DOME",
+  label = "Dome",
+  for_games = { heretic=1 },
+}
+
+OB_THEMES["hc_egypt"] =
+{
+  ref = "EGYPT",
+  label = "Egypt",
+  for_games = { heretic=1 },
+}
+
+OB_THEMES["hc_garish"] =
+{
+  ref = "GARISH",
+  label = "Garish",
+  for_games = { heretic=1 },
+}
+
+
 OB_GAMES["heretic"] =
 {
   label = "Heretic",
@@ -2158,41 +2194,5 @@ OB_GAMES["heretic"] =
   {
     get_levels = Heretic1_get_levels,
   },
-}
-
-
-OB_THEMES["hc_city"] =
-{
-  ref = "CITY",
-  label = "City",
-  for_games = { heretic=1 },
-}
-
-OB_THEMES["hc_cave"] =
-{
-  ref = "CAVE",
-  label = "Cave",
-  for_games = { heretic=1 },
-}
-
-OB_THEMES["hc_dome"] =
-{
-  ref = "DOME",
-  label = "Dome",
-  for_games = { heretic=1 },
-}
-
-OB_THEMES["hc_egypt"] =
-{
-  ref = "EGYPT",
-  label = "Egypt",
-  for_games = { heretic=1 },
-}
-
-OB_THEMES["hc_garish"] =
-{
-  ref = "GARISH",
-  label = "Garish",
-  for_games = { heretic=1 },
 }
 
