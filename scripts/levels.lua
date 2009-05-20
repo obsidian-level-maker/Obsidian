@@ -102,7 +102,7 @@ end
 
 
 local function Game_sort_modules()
-  GAME.module_list = {}
+  GAME.all_modules = {}
 
   local game = OB_GAMES[OB_CONFIG.game]
   if not game then
@@ -118,7 +118,7 @@ local function Game_sort_modules()
 
   for _,mod in pairs(OB_MODULES) do
     if mod.enabled and mod.shown then
-      table.insert(GAME.module_list, mod)
+      table.insert(GAME.all_modules, mod)
     end
   end
 
@@ -133,15 +133,26 @@ local function Game_sort_modules()
     return A.label < B.label
   end
 
-  if #GAME.module_list > 1 then
-    table.sort(GAME.module_list, module_sorter)
+  if #GAME.all_modules > 1 then
+    table.sort(GAME.all_modules, module_sorter)
   end
  
   -- first entry must be the game def, and second entry must be
   -- the engine def.  NOTE: neither of these are real modules.
 
-  table.insert(GAME.module_list, 1, game)
-  table.insert(GAME.module_list, 2, engine)
+  table.insert(GAME.all_modules, 1, game)
+  table.insert(GAME.all_modules, 2, engine)
+end
+
+
+function Game_invoke_hook(name, rseed, ...)
+  for index,mod in ipairs(GAME.all_modules) do
+    local func = mod[name]
+    if func then
+      if rseed then gui.rand_seed(rseed) end
+      func(...)
+    end
+  end -- for mod
 end
 
 
@@ -152,24 +163,17 @@ function Game_setup()
   Game_sort_modules()
 
 
-  local game = GAME.module_list[1]
+  local game = GAME.all_modules[1]
 
-  if not game.setup_func then
-    error("Game is missing the setup_func!")
-  end
-
-  GAME.format = game.format
+  GAME.format = assert(game.format)
 
 
-  for index,mod in ipairs(GAME.module_list) do
+  for index,mod in ipairs(GAME.all_modules) do
     if mod.param  then shallow_merge(PARAM,  mod.param) end
     if mod.hooks  then shallow_merge(HOOKS,  mod.hooks) end
-
-    if mod.setup_func then
-      gui.rand_seed(OB_CONFIG.seed + index)
-      mod.setup_func(mod)
-    end
   end -- for mod
+
+  Game_invoke_hook("setup_func", OB_CONFIG.seed)
 
 
   -- miscellanous stuff
@@ -203,33 +207,72 @@ function Level_styles()
 end
 
 
+function Level_build_it()
+  -- does the level have a custom build function (e.g. Arenas) ?
+  if LEVEL.build_func then
+    LEVEL.build_func()
+    if gui.abort() then return "abort" end
+
+    gui.progress(90)
+    return "ok"
+  end
+
+  Plan_rooms_sp()
+    if gui.abort() then return "abort" end
+    gui.progress(10)
+
+  Connect_rooms()
+    if gui.abort() then return "abort" end
+    gui.progress(30)
+
+  Quest_assign()
+    if gui.abort() then return "abort" end
+    gui.progress(50)
+
+  Rooms_build_all()
+    if gui.abort() then return "abort" end
+    gui.progress(70)
+
+  Monsters_make_battles()
+    if gui.abort() then return "abort" end
+    gui.progress(90)
+
+  return "ok"
+end
+
+
 function Level_make(L, index, NUM)
   LEVEL = L
 
   assert(LEVEL)
   assert(LEVEL.name)
 
-  gui.rand_seed(OB_CONFIG.seed * 100 + index)
-
   gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
 
   gui.at_level(LEVEL.name, index, NUM)
 
-  -- FIXME: invoke "level_start" signal
-
   LEVEL.theme = GAME.themes["TECH"] -- FIXME
 
-  Level_styles()
+  LEVEL.seed = OB_CONFIG.seed * 100 + index
+
 
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
 
+  Game_invoke_hook("begin_level_func", LEVEL.seed)
+
+
+  gui.rand_seed(LEVEL.seed)
+
+  Level_styles()
+
+
   if LEVEL.description then
-    if HOOKS.set_level_desc then
-       HOOKS.set_level_desc(LEVEL.description)
-    else
+---!!!    if HOOKS.set_level_desc then
+---!!!       HOOKS.set_level_desc(LEVEL.description)
+---!!!    else
       gui.property("description", LEVEL.description)
-    end
+---!!!    end
   end
 
   if PARAM.error_tex then
@@ -238,38 +281,23 @@ function Level_make(L, index, NUM)
   end   
 
 
-  if LEVEL.arena_func then
-    LEVEL.arena_func()
-      if gui.abort() then return "abort" end
-      gui.progress(50)
-  else
-    Plan_rooms_sp()
-      if gui.abort() then return "abort" end
-      gui.progress(10)
+  gui.rand_seed(LEVEL.seed)
 
-    Connect_rooms()
-      if gui.abort() then return "abort" end
-      gui.progress(15)
-
-    Quest_assign()
-      if gui.abort() then return "abort" end
-      gui.progress(25)
-
-    Rooms_build_all()
-      if gui.abort() then return "abort" end
-      gui.progress(80)
-
-    Monsters_make_battles()
-      if gui.abort() then return "abort" end
-      gui.progress(90)
+  local res = Level_build_it()
+  if res == "abort" then
+    return res
   end
+
+
+  Game_invoke_hook("end_level_func", LEVEL.seed)
 
   gui.end_level()
 
-  -- FIXME: invoke "level_finish" signal
-  if HOOKS.make_level_gfx and LEVEL.description then
-     HOOKS.make_level_gfx(LEVEL.description)
-  end
+
+---!!!  -- FIXME: invoke "level_finish" signal
+---!!!  if HOOKS.make_level_gfx and LEVEL.description then
+---!!!     HOOKS.make_level_gfx(LEVEL.description)
+---!!!  end
 
   -- intra-level cleanup
   if index < NUM then
@@ -285,16 +313,18 @@ end
 
 function Game_make_all()
 
-  -- FIXME: invoke "all_start" signal
+  GAME.all_levels = {}
 
-  assert(HOOKS.get_levels)
+  Game_invoke_hook("levels_start_func", OB_CONFIG.seed)
 
-  GAME.all_levels = HOOKS.get_levels()
-  assert(#GAME.all_levels > 0)
-
-  if HOOKS.describe_levels then
-     HOOKS.describe_levels()
+  if #GAME.all_levels == 0 then
+    error("Level list is empty!")
   end
+
+
+---!!!  if HOOKS.describe_levels then
+---!!!     HOOKS.describe_levels()
+---!!!  end
 
   for index,L in ipairs(GAME.all_levels) do
     if Level_make(L, index, #GAME.all_levels) == "abort" then
@@ -302,14 +332,12 @@ function Game_make_all()
     end
   end
 
-  -- FIXME: invoke "all_finish" signal
-  if HOOKS.remap_music then
-     HOOKS.remap_music()
-  end
+  Game_invoke_hook("levels_done_func", OB_CONFIG.seed)
 
-  if HOOKS.generate_skies then
-     HOOKS.generate_skies()
-  end
+---!!!  -- FIXME: invoke "all_finish" signal
+---!!!  if HOOKS.remap_music then
+---!!!     HOOKS.remap_music()
+---!!!  end
 
   return "ok"
 end
