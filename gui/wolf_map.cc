@@ -300,8 +300,8 @@ int WF_wolf_block(lua_State *L)
       break;
 
     default:
-      Main_FatalError("Script problem: wolf_block: bad plane %d\n", plane);
-      break; /* NOT REACHED */
+      // other planes are silently ignored
+      break;
   }
 
   return 0;
