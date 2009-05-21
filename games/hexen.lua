@@ -2471,6 +2471,13 @@ function Hexen_setup()
   }
 end
 
+function Hexen_begin_level()
+  -- set the description here
+  if not LEVEL.description and LEVEL.name_theme then
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
+  end
+end
+
 
 ------------------------------------------------------------
 
@@ -2517,8 +2524,8 @@ UNFINISHED["hexen"] =
   format = "doom",
 
   setup_func = Hexen_setup,
-
   levels_start_func = Hexen_get_levels,
+  begin_level_func = Hexen_begin_level,
 
   param =
   {
@@ -2536,7 +2543,7 @@ UNFINISHED["hexen"] =
 
     seed_size = 256,
 
-    max_level_desc = 28,
+    max_name_length = 28,
 
     palette_mons = 3,
   },

@@ -1173,17 +1173,6 @@ function Quake1_get_levels()
   end -- for episode
 end
 
-function Quake1_describe_levels()
-
-  -- FIXME handle themes properly !!!
-
-  local desc_list = Naming_generate("GOTHIC", #GAME.all_levels, PARAM.max_level_desc)
-
-  for index,LEV in ipairs(GAME.all_levels) do
-    LEV.description = desc_list[index]
-  end
-end
-
 function Quake1_setup()
 
   GAME.player_model = QUAKE1_PLAYER_MODEL
@@ -1193,6 +1182,14 @@ function Quake1_setup()
   GAME.door_probs = { combo_diff=90, normal=20, out_diff=1 }
   GAME.window_probs = { out_diff=0, combo_diff=0, normal=0 }
 end
+
+function Quake1_begin_level()
+  -- set the description here
+  if not LEVEL.description and LEVEL.name_theme then
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
+  end
+end
+
 
 
 OB_THEMES["q1_base"] =
@@ -1211,8 +1208,8 @@ UNFINISHED["quake1"] =
   format = "quake1",
 
   setup_func = Quake1_setup,
-
   levels_start_func = Quake1_get_levels,
+  begin_level_func = Quake1_begin_level,
 
   param =
   {
@@ -1229,14 +1226,9 @@ UNFINISHED["quake1"] =
 
     -- the name buffer in Quake can fit 39 characters, however
     -- the on-screen space for the name is much less.
-    max_level_desc = 20,
+    max_name_length = 20,
 
     palette_mons = 4,
-  },
-
-  hooks =
-  {
-    describe_levels = Quake1_describe_levels,
   },
 
   tables =

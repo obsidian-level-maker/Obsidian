@@ -195,7 +195,8 @@ function Game_setup()
     end
   end -- for mod
 
-  Game_invoke_hook("setup_func", OB_CONFIG.seed)
+  Game_invoke_hook("setup_func",  OB_CONFIG.seed)
+  Game_invoke_hook("setup2_func", OB_CONFIG.seed)
 
 
   -- miscellanous stuff
@@ -281,13 +282,13 @@ function Level_make(L, index, NUM)
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
 
-  Game_invoke_hook("begin_level_func", LEVEL.seed)
+  Game_invoke_hook("begin_level_func",  LEVEL.seed)
+  Game_invoke_hook("begin_level2_func", LEVEL.seed)
 
-
-  gui.rand_seed(LEVEL.seed)
-
-  Level_styles()
-
+  if PARAM.error_tex then
+    gui.property("error_tex",  PARAM.error_tex)
+    gui.property("error_flat", PARAM.error_flat or PARAM.error_tex)
+  end   
 
   if LEVEL.description then
 ---!!!    if HOOKS.set_level_desc then
@@ -297,11 +298,10 @@ function Level_make(L, index, NUM)
 ---!!!    end
   end
 
-  if PARAM.error_tex then
-    gui.property("error_tex",  PARAM.error_tex)
-    gui.property("error_flat", PARAM.error_flat or PARAM.error_tex)
-  end   
 
+  gui.rand_seed(LEVEL.seed)
+
+  Level_styles()
 
   gui.rand_seed(LEVEL.seed)
 
@@ -311,7 +311,8 @@ function Level_make(L, index, NUM)
   end
 
 
-  Game_invoke_hook("end_level_func", LEVEL.seed)
+  Game_invoke_hook("end_level_func",  LEVEL.seed)
+  Game_invoke_hook("end_level2_func", LEVEL.seed)
 
   gui.end_level()
 
@@ -337,16 +338,12 @@ function Game_make_all()
 
   GAME.all_levels = {}
 
-  Game_invoke_hook("levels_start_func", OB_CONFIG.seed)
+  Game_invoke_hook("levels_start_func",  OB_CONFIG.seed)
+  Game_invoke_hook("levels_start2_func", OB_CONFIG.seed)
 
   if #GAME.all_levels == 0 then
     error("Level list is empty!")
   end
-
-
----!!!  if HOOKS.describe_levels then
----!!!     HOOKS.describe_levels()
----!!!  end
 
   for index,L in ipairs(GAME.all_levels) do
     if Level_make(L, index, #GAME.all_levels) == "abort" then
@@ -354,9 +351,9 @@ function Game_make_all()
     end
   end
 
-  Game_invoke_hook("levels_done_func", OB_CONFIG.seed)
+  Game_invoke_hook("all_done_func",  OB_CONFIG.seed)
+  Game_invoke_hook("all_done2_func", OB_CONFIG.seed)
 
----!!!  -- FIXME: invoke "all_finish" signal
 ---!!!  if HOOKS.remap_music then
 ---!!!     HOOKS.remap_music()
 ---!!!  end

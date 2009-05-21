@@ -1943,6 +1943,7 @@ function Doom1_get_levels()
         ep_along = ep_along,
 
         theme_ref = "TECH",
+        name_theme = "TECH",
 
         key_list = { "kc_red", "kc_blue", "kc_yellow" },
         switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
@@ -2031,6 +2032,7 @@ function Doom2_get_levels()
       ep_along = ep_along,
 
       theme_ref = "TECH",
+      name_theme = "TECH",
 
       key_list = { "kc_red", "kc_blue", "kc_yellow" },
       switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
@@ -2122,7 +2124,6 @@ function Doom_make_cool_gfx()
   gui.set_colormap(2, colmaps[2])
   gui.set_colormap(3, colmaps[3])
   gui.set_colormap(4, COMMON_LEVEL_GFX_COLORS.iron)
-  gui.set_colormap(5, { 0,0 })
 
   -- patches (CEMENT1 .. CEMENT4)
   gui.wad_logo_gfx("WALL52_1", "p", "PILL",   128,128, 1)
@@ -2134,10 +2135,6 @@ function Doom_make_cool_gfx()
   gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
   gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
   gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
-
----##  -- blackness (BLAKWAL1)
----##  gui.wad_logo_gfx("RW34_1",   "p", "BOLT", 64,128, 5)
----##  gui.wad_logo_gfx("O_BLACK",  "f", "BOLT", 64,64,  5)
 end
 
 function Doom_make_level_gfx()
@@ -2159,18 +2156,23 @@ function Doom_make_level_gfx()
   gui.wad_name_gfx(LEVEL.patch, LEVEL.description, 1)
 end
 
-function Doom_describe_levels()
-  -- FIXME handle themes properly !!!
-
-  local desc_list = Naming_generate("TECH", #GAME.all_levels, PARAM.max_level_desc)
-
-  for index,LEV in ipairs(GAME.all_levels) do
-    if not LEV.description then
-      LEV.description = desc_list[index]
-    end
+function Doom_begin_level()
+  -- set the description here
+  if not LEVEL.description and LEVEL.name_theme then
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
+end
 
+function Doom_end_level()
+gui.printf("Doom_end_level: desc=%s patch=%s\n",
+           tostring(LEVEL.description),
+           tostring(LEVEL.patch))
+  if LEVEL.description and LEVEL.patch then
+    Doom_make_level_gfx()
+  end
+end
 
+function Doom_all_done()
   Doom_make_cool_gfx()
 end
 
@@ -2272,9 +2274,12 @@ OB_GAMES["doom1"] =
 
   priority = 98, -- keep at second spot
 
-  setup_func = Doom1_setup,
-
+  setup_func        = Doom1_setup,
   levels_start_func = Doom1_get_levels,
+
+  begin_level_func  = Doom_begin_level,
+  end_level_func    = Doom_end_level,
+  all_done_func     = Doom_all_done,
 
   param =
   {
@@ -2296,7 +2301,7 @@ OB_GAMES["doom1"] =
     error_flat = "CEIL5_1" or "SFLR6_4",
     error_mat  = "METAL",
 
-    max_level_desc = 28,
+    max_name_length = 28,
 
     skip_monsters = { 2,3 },
 
@@ -2308,12 +2313,6 @@ OB_GAMES["doom1"] =
 
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  hooks =
-  {
-    describe_levels = Doom_describe_levels,
-    make_level_gfx  = Doom_make_level_gfx,
   },
 
   tables =
@@ -2378,9 +2377,12 @@ OB_GAMES["doom2"] =
 
   priority = 99, -- keep at top
 
-  setup_func = Doom2_setup,
-
+  setup_func        = Doom2_setup,
   levels_start_func = Doom2_get_levels,
+
+  begin_level_func  = Doom_begin_level,
+  end_level_func    = Doom_end_level,
+  all_done_func     = Doom_all_done,
 
   param =
   {
@@ -2405,7 +2407,7 @@ OB_GAMES["doom2"] =
     -- this is roughly how many characters can fit on the
     -- intermission screens (the CWILVxx patches).  It does
     -- not reflect any buffer limits in Doom ports.
-    max_level_desc = 28,
+    max_name_length = 28,
 
     skip_monsters = { 4,5 },
 
@@ -2418,12 +2420,6 @@ OB_GAMES["doom2"] =
 
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  hooks =
-  {
-    describe_levels = Doom_describe_levels,
-    make_level_gfx  = Doom_make_level_gfx,
   },
 
   tables =

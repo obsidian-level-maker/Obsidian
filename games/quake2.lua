@@ -1975,6 +1975,12 @@ OB_THEMES["q2_base"] =
 
 ----------------------------------------------------------------
 
+function Quake2_setup()
+
+  GAME.player_model = QUAKE2_PLAYER_MODEL
+
+end
+
 function Quake2_get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
@@ -1999,22 +2005,11 @@ function Quake2_get_levels()
   end -- for episode
 end
 
-function Quake2_describe_levels()
-
-  -- FIXME handle themes properly !!!
-
-  local desc_list = Naming_generate("TECH", #GAME.all_levels, PARAM.max_level_desc)
-
-  for index,LEV in ipairs(GAME.all_levels) do
-    LEV.description = desc_list[index]
+function Quake2_begin_level()
+  -- set the description here
+  if not LEVEL.description and LEVEL.name_theme then
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
-end
-
-
-function Quake2_setup()
-
-  GAME.player_model = QUAKE2_PLAYER_MODEL
-
 end
 
 
@@ -2025,8 +2020,8 @@ UNFINISHED["quake2"] =
   format = "quake2",
 
   setup_func = Quake2_setup,
-
   levels_start_func = Quake2_get_levels,
+  begin_level_func = Quake2_begin_level,
 
   param =
   {
@@ -2042,14 +2037,9 @@ UNFINISHED["quake2"] =
 
     -- the name buffer in Quake II is huge, but this value
     -- reflects the on-screen space (in the computer panel)
-    max_level_desc = 24,
+    max_name_length = 24,
 
     palette_mons = 4,
-  },
-
-  hooks =
-  {
-    describe_levels = Quake1_describe_levels,
   },
 
   tables =

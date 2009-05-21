@@ -1154,12 +1154,12 @@ function Name_choose_one(DEF, seen_words, max_len)
 end
 
 
-function Naming_generate(theme, count, max_len)
+function Naming_gen_list(theme, count, max_len)
  
   local defs = deep_copy(NAMING_THEMES)
 
-  if GAME.name_themes then
-    deep_merge(defs, GAME.name_themes)
+  if GAME.naming_themes then
+    deep_merge(defs, GAME.naming_themes)
   end
  
   local DEF = defs[theme]
@@ -1177,6 +1177,19 @@ function Naming_generate(theme, count, max_len)
   end
 
   return list
+end
+
+
+function Naming_grab_one(theme)
+  if not GAME.name_cache then
+    GAME.name_cache = {}
+  end
+
+  if not GAME.name_cache[theme] or table_empty(GAME.name_cache[theme]) then
+    GAME.name_cache[theme] = Naming_gen_list(theme, 30, PARAM.max_name_length)
+  end
+
+  return table.remove(GAME.name_cache[theme], 1)
 end
 
 

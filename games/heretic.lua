@@ -1924,7 +1924,7 @@ HERETIC_SKY_INFO =
 
 ------------------------------------------------------------
 
-function Heretic1_get_levels()
+function Heretic_get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 5, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
 
@@ -1967,7 +1967,7 @@ function Heretic1_get_levels()
 end
 
 
-function Heretic1_setup()
+function Heretic_setup()
 
   GAME.player_model = HERETIC_PLAYER_MODEL
 
@@ -1988,6 +1988,14 @@ function Heretic1_setup()
   GAME.hallway_probs = { 20, 30, 41, 53, 66 }
   GAME.window_probs = { out_diff=80, combo_diff=50, normal=30 }
 end
+
+function Heretic_begin_level()
+  -- set the description here
+  if not LEVEL.description and LEVEL.name_theme then
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
+  end
+end
+
 
 
 ------------------------------------------------------------
@@ -2034,9 +2042,9 @@ OB_GAMES["heretic"] =
 
   format = "doom",
 
-  setup_func = Heretic1_setup,
-
-  levels_start_func = Heretic1_get_levels,
+  setup_func = Heretic_setup,
+  levels_start_func = Heretic_get_levels,
+  begin_level_func = Heretic_begin_level,
 
   param =
   {
@@ -2061,7 +2069,7 @@ OB_GAMES["heretic"] =
     error_flat = "FLOOR10",
     error_mat  = "WOODWL",
 
-    max_level_desc = 28,
+    max_name_length = 28,
 
     skip_monsters = { 2,3 },
 
