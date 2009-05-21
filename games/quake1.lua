@@ -1078,41 +1078,49 @@ QUAKE1_PICKUPS =
 
   shell_20 =
   {
+    prob=10,
     give={ {ammo="shell",count=20} },
   },
 
   shell_40 =
   {
+    prob=20,
     give={ {ammo="shell",count=40} },
   },
 
   nail_25 =
   {
+    prob=10,
     give={ {ammo="nail",count=25} },
   },
 
   nail_50 =
   {
+    prob=20,
     give={ {ammo="nail",count=50} },
   },
 
   rocket_5 =
   {
+    prob=10,
     give={ {ammo="rocket",count=5} },
   },
 
   rocket_10 =
   {
+    prob=20,
     give={ {ammo="rocket",count=10} },
   },
 
   cell_6 =
   {
+    prob=10,
     give={ {ammo="cell",count=6} },
   },
 
   cell_12 =
   {
+    prob=20,
     give={ {ammo="cell",count=12} },
   },
 }
@@ -1169,6 +1177,10 @@ function Quake1_get_levels()
         ep_along = map / MAP_NUM,
 
         theme_ref = "BASE",
+
+        key_list = { "foo" },
+        switch_list = { "foo" },
+        bar_list = { "foo" },
       }
 
       table.insert(GAME.all_levels, LEV)
@@ -1195,7 +1207,7 @@ OB_THEMES["q1_base"] =
 }
 
 
-UNFINISHED["quake1"] =
+OB_GAMES["quake1"] =
 {
   label = "Quake 1",
   format = "quake1",
@@ -1214,14 +1226,28 @@ UNFINISHED["quake1"] =
 
     seed_size = 240,
 
+    no_keys = true,  --!!!! FIXME
+
     sky_tex  = "sky4",
     sky_flat = "sky4",
+
+    error_mat = "METAL1_1",
+
+    entity_delta_z = 24,
 
     -- the name buffer in Quake can fit 39 characters, however
     -- the on-screen space for the name is much less.
     max_name_length = 20,
 
-    palette_mons = 4,
+    skip_monsters = { 2,4 },
+
+    mon_time_max = 12,
+    mon_damage_max  = 200,
+    mon_damage_high = 100,
+    mon_damage_low  =   1,
+
+    ammo_factor   = 0.8,
+    health_factor = 0.7,
   },
 
   tables =

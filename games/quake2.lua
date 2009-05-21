@@ -787,13 +787,13 @@ QUAKE2_MATERIALS =
   METAL10_1  = { t="e1u2/metal10_1" },
   METAL10_3  = { t="e1u2/metal10_3" },
   METAL1_1   = { t="e1u1/metal1_1" },
-  METAL1_1   = { t="e1u2/metal1_1" },
-  METAL1_1   = { t="e2u3/metal1_1" },
+  METAL1_1B  = { t="e1u2/metal1_1" },
+  METAL1_1C  = { t="e2u3/metal1_1" },
   METAL11_3  = { t="e1u2/metal11_3" },
   METAL11_4  = { t="e1u2/metal11_4" },
   METAL1_2   = { t="e1u1/metal1_2" },
-  METAL1_2   = { t="e1u2/metal1_2" },
-  METAL1_2   = { t="e2u3/metal1_2" },
+  METAL1_2B  = { t="e1u2/metal1_2" },
+  METAL1_2C  = { t="e2u3/metal1_2" },
   METAL12_1  = { t="e1u2/metal12_1" },
   METAL12_2  = { t="e1u2/metal12_2" },
   METAL12_4  = { t="e1u2/metal12_4" },
@@ -1895,31 +1895,37 @@ QUAKE2_PICKUPS =
 
   am_bullet =
   {
+    prob=20,
     give={ {ammo="bullet",count=50} },
   },
 
   am_shell =
   {
+    prob=20,
     give={ {ammo="shell",count=10} },
   },
 
   am_grenade =
   {
+    prob=20,
     give={ {ammo="grenade",count=5} },
   },
 
   am_rocket =
   {
+    prob=20,
     give={ {ammo="rocket",count=5} },
   },
 
   am_slug = 
   {
+    prob=20,
     give={ {ammo="slug",count=10} },
   },
 
   am_cell =
   {
+    prob=20,
     give={ {ammo="cell",count=50} },
   },
 
@@ -1995,6 +2001,10 @@ function Quake2_get_levels()
         ep_along = map / MAP_NUM,
 
         theme_ref = "BASE",
+
+        key_list = { "foo" },
+        switch_list = { "foo" },
+        bar_list = { "foo" },
       }
 
       table.insert(GAME.all_levels, LEV)
@@ -2032,11 +2042,25 @@ UNFINISHED["quake2"] =
     sky_tex  = "e1u1/sky1",
     sky_flat = "e1u1/sky1",
 
+    error_mat = "METAL1_1",
+
+    no_keys = true,  --!!!! FIXME
+
+    entity_delta_z = 24,
+
     -- the name buffer in Quake II is huge, but this value
     -- reflects the on-screen space (in the computer panel)
     max_name_length = 24,
 
-    palette_mons = 4,
+    skip_monsters = { 3,5 },
+
+    mon_time_max = 12,
+    mon_damage_max  = 200,
+    mon_damage_high = 100,
+    mon_damage_low  =   1,
+
+    ammo_factor   = 0.8,
+    health_factor = 0.7,
   },
 
   tables =

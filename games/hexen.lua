@@ -2067,16 +2067,19 @@ HEXEN_PICKUPS =
 
   blue_mana =
   {
+    prob=20,
     give={ {ammo="blue_mana",count=15} },
   },
 
   green_mana =
   {
+    prob=20,
     give={ {ammo="green_mana",count=15} },
   },
 
   dual_mana =
   {
+    prob=10,
     give={ {ammo="blue_mana", count=20},
            {ammo="green_mana",count=20} },
   },

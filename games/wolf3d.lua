@@ -695,21 +695,25 @@ WOLF_PICKUPS =
 
   first_aid =
   {
+    prob=30,
     give={ {health=25} },
   },
 
   good_food =
   {
+    prob=20,
     give={ {health=10} },
   },
 
   dog_food =
   {
+    prob=5,
     give={ {health=4} },
   },
 
   clip =
   {
+    prob=20,
     give={ {ammo="bullet",count=8} },
   },
 }
