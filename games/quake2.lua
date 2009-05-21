@@ -1976,9 +1976,7 @@ OB_THEMES["q2_base"] =
 ----------------------------------------------------------------
 
 function Quake2_setup()
-
-  GAME.player_model = QUAKE2_PLAYER_MODEL
-
+  -- nothing needed
 end
 
 function Quake2_get_levels()
@@ -2016,7 +2014,6 @@ end
 UNFINISHED["quake2"] =
 {
   label = "Quake 2",
-
   format = "quake2",
 
   setup_func = Quake2_setup,
@@ -2044,7 +2041,9 @@ UNFINISHED["quake2"] =
 
   tables =
   {
-    "things",   QUAKE2_THINGS,
+    "things", QUAKE2_THINGS,
+    "player_model", QUAKE2_PLAYER_MODEL,
+
     "monsters", QUAKE2_MONSTERS,
     "weapons",  QUAKE2_WEAPONS,
     "pickups",  QUAKE2_PICKUPS,

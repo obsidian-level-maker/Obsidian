@@ -1149,6 +1149,10 @@ QUAKE1_KEY_NUM_PROBS =
 
 ----------------------------------------------------------------
 
+function Quake1_setup()
+  -- nothing to do
+end
+
 function Quake1_get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
@@ -1173,16 +1177,6 @@ function Quake1_get_levels()
   end -- for episode
 end
 
-function Quake1_setup()
-
-  GAME.player_model = QUAKE1_PLAYER_MODEL
-
-  GAME.room_heights = { [128]=50 }
-  GAME.space_range  = { 50, 90 }
-  GAME.door_probs = { combo_diff=90, normal=20, out_diff=1 }
-  GAME.window_probs = { out_diff=0, combo_diff=0, normal=0 }
-end
-
 function Quake1_begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
@@ -1204,7 +1198,6 @@ OB_THEMES["q1_base"] =
 UNFINISHED["quake1"] =
 {
   label = "Quake 1",
-
   format = "quake1",
 
   setup_func = Quake1_setup,
@@ -1233,7 +1226,9 @@ UNFINISHED["quake1"] =
 
   tables =
   {
-    "things",   QUAKE1_THINGS,
+    "things", QUAKE1_THINGS,
+    "player_model", QUAKE1_PLAYER_MODEL,
+
     "monsters", QUAKE1_MONSTERS,
     "weapons",  QUAKE1_WEAPONS,
     "pickups",  QUAKE1_PICKUPS,

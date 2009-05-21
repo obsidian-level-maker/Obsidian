@@ -365,6 +365,11 @@ HERETIC_RAILS =
 --WEB3_M
 }
 
+HERETIC_SANITY_MAP =
+{
+  -- FIXME
+}
+
 
 ----------------------------------------------------------------
 
@@ -929,7 +934,6 @@ HERETIC_HALLWAYS =
 	
     floor = "FLOOR03",
     ceil  = "FLOOR03",
-	trim_mode = "guillotine",	
 	
   },
 
@@ -944,7 +948,6 @@ HERETIC_HALLWAYS =
 	
     floor = "FLOOR00",
     ceil  = "FLOOR00",
-	trim_mode = "guillotine",	
 	
   },
 
@@ -959,7 +962,6 @@ HERETIC_HALLWAYS =
 	
     floor = "FLAT506",
     ceil  = "FLAT506",
-	trim_mode = "guillotine",	
 	
   },
 
@@ -974,7 +976,6 @@ HERETIC_HALLWAYS =
 	
     floor = "FLOOR27",
     ceil  = "FLOOR10",
-	trim_mode = "guillotine",	
 	
   },
 
@@ -989,7 +990,6 @@ HERETIC_HALLWAYS =
 	
     floor = "FLOOR06",
     ceil  = "FLOOR06",
-	trim_mode = "guillotine",	
 	
   },
 
@@ -1004,7 +1004,6 @@ HERETIC_HALLWAYS =
 	
     floor = "FLTWAWA1",
     ceil  = "FLAT502",
-	trim_mode = "guillotine",	
 	
   }
 }
@@ -1924,6 +1923,16 @@ HERETIC_SKY_INFO =
 
 ------------------------------------------------------------
 
+function Heretic_setup()
+
+  -- FIXME: temp crap
+  GAME.door_fabs["silver_lit"] = GAME.door_fabs["d_wood"]
+  GAME.materials["NUKAGE1"] = GAME.materials["FLTSLUD1"]
+    
+---???  GAME.door_probs   = { out_diff=75, combo_diff=50, normal=15 }
+---???  GAME.window_probs = { out_diff=80, combo_diff=50, normal=30 }
+end
+
 function Heretic_get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 5, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
@@ -1966,28 +1975,6 @@ function Heretic_get_levels()
   end -- for episode
 end
 
-
-function Heretic_setup()
-
-  GAME.player_model = HERETIC_PLAYER_MODEL
-
-
-  -- FIXME: temp crap
-  GAME.door_fabs["silver_lit"] = GAME.door_fabs["d_wood"]
-  GAME.materials["NUKAGE1"] = GAME.materials["FLTSLUD1"]
-
-  GAME.depot_info  = { teleport_kind=97 }
-
-  GAME.room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 }
-  GAME.space_range  = { 20, 90 }
-    
-  GAME.diff_probs = { [0]=20, [16]=40, [32]=80, [64]=30, [96]=5 }
-  GAME.bump_probs = { [0]=30, [16]=30, [32]=20, [64]=5 }
-    
-  GAME.door_probs   = { out_diff=75, combo_diff=50, normal=15 }
-  GAME.hallway_probs = { 20, 30, 41, 53, 66 }
-  GAME.window_probs = { out_diff=80, combo_diff=50, normal=30 }
-end
 
 function Heretic_begin_level()
   -- set the description here
@@ -2085,12 +2072,16 @@ OB_GAMES["heretic"] =
 
   tables =
   {
-    "things",   HERETIC_THINGS,
+    "things", HERETIC_THINGS,
+    "player_model", HERETIC_PLAYER_MODEL,
+
     "monsters", HERETIC_MONSTERS,
     "weapons",  HERETIC_WEAPONS,
     "pickups",  HERETIC_PICKUPS,
 
     "materials", HERETIC_MATERIALS,
+    "rails", HERETIC_RAILS,
+
     "combos", HERETIC_COMBOS,
     "exits", HERETIC_EXITS,
     "hallways", HERETIC_HALLWAYS,
@@ -2100,7 +2091,6 @@ OB_GAMES["heretic"] =
 
     "hangs", HERETIC_OVERHANGS,
     "pedestals", HERETIC_PEDESTALS,
-    "rails", HERETIC_RAILS,
 
     "liquids", HERETIC_LIQUIDS,
     "switches", HERETIC_SWITCHES,

@@ -1150,7 +1150,6 @@ COMMON_HALLWAYS =
     ceil  = "CEIL5_2",
 
     theme_probs = { INDUSTRIAL=50,URBAN=20 },
-    trim_mode = "guillotine",
   },
 
   SP_ROCK =
@@ -1168,7 +1167,6 @@ COMMON_HALLWAYS =
     arch = "arch_arched",
 
     theme_probs = { HELL=70,CAVE=30 },
-    trim_mode = "rough_hew",
   },
 
   BLUECARPET =
@@ -1188,7 +1186,6 @@ COMMON_HALLWAYS =
 
     theme_probs = { TECH=80,INDUSTRIAL=30 },
     well_lit = true,
-    trim_mode = "guillotine",
   },
 }
 
@@ -1211,7 +1208,6 @@ DOOM2_HALLWAYS =
     ceil  = "FLAT5_5",
 
     theme_probs = { URBAN=70 },
-    trim_mode = "guillotine",
   },
 
   BRICK =
@@ -1227,7 +1223,6 @@ DOOM2_HALLWAYS =
     ceil  = "FLAT5_4",
 
     theme_probs = { URBAN=70,NATURE=10,HELL=10 },
-    trim_mode = "guillotine",
   },
 
   BSTONE =
@@ -1242,7 +1237,6 @@ DOOM2_HALLWAYS =
     step = "METAL",
     pillar = "BSTONE3",
 
-    trim_mode = "guillotine",
   },
 
   WOOD =
@@ -1258,7 +1252,6 @@ DOOM2_HALLWAYS =
     ceil  = "MFLR8_2",
 
     theme_probs = { URBAN=30 },
-    trim_mode = "guillotine",
   },
 
   METAL =
@@ -1274,7 +1267,6 @@ DOOM2_HALLWAYS =
     ceil  = "CEIL5_1",
 
     theme_probs = { INDUSTRIAL=70,TECH=30 },
-    trim_mode = "guillotine",
   },
 
   TEKGREN =
@@ -1291,7 +1283,6 @@ DOOM2_HALLWAYS =
     well_lit = true,
 
     theme_probs = { TECH=80,INDUSTRIAL=40 },
-    trim_mode = "guillotine",
 
     wall_fabs = { solid_TEKGREN5=30, other=50 },
   },
@@ -1309,7 +1300,6 @@ DOOM2_HALLWAYS =
     ceil  = "FLAT5_4",
 
     theme_probs = { INDUSTRIAL=70 },
-    trim_mode = "guillotine",
   },
 }
 

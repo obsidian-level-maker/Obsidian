@@ -543,8 +543,6 @@ WOLF_THEMES =
     {
       mutant=6.0, officer=2.0,
     },
-
-    trim_mode = "rough_hew",
   },
 
 --[[
@@ -847,6 +845,7 @@ function wolfy_decide_quests(level_list, is_spear)
   end
 end
 
+
 function Wolf3d_get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 6, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 10)
@@ -907,21 +906,13 @@ end
 
 function Wolf3d_setup()
 
-  GAME.player_model = WOLF_PLAYER_MODEL
-
-  GAME.hallways  = nil
-
-  GAME.room_heights = { [128]=50 }
-  GAME.space_range  = { 50, 90 }
-  GAME.door_probs = { combo_diff=90, normal=20, out_diff=1 }
-  GAME.window_probs = { out_diff=0, combo_diff=0, normal=0 }
+---???  GAME.door_probs = { combo_diff=90, normal=20, out_diff=1 }
+---???  GAME.window_probs = { out_diff=0, combo_diff=0, normal=0 }
 end
 
 
 function Spear_setup()
-  Wolf3d_setup()
-
-  -- !!!! FIXME Spear_setup
+  -- nothing needed (yet)
 end
 
 
@@ -933,7 +924,6 @@ UNFINISHED["wolf3d"] =
   priority = -1,  -- keep at bottom
 
   setup_func = Wolf3d_setup,
-
   levels_start_func = Wolf3d_get_levels,
 
   param =
@@ -956,6 +946,8 @@ UNFINISHED["wolf3d"] =
   tables =
   {
     "things",   WOLF_THINGS,
+    "player_model", WOLF_PLAYER_MODEL,
+
     "monsters", WOLF_MONSTERS,
     "bosses",   WOLF_BOSSES,
     "mon_give", WOLF_MONSTER_GIVE,
@@ -967,12 +959,10 @@ UNFINISHED["wolf3d"] =
     "combos", WOLF_COMBOS,
     "exits",  WOLF_EXITS,
 
-    "key_doors", WOLF_KEY_DOORS,
-
-    "rooms",  WOLF_ROOMS,
     "themes", WOLF_THEMES,
+    "rooms",  WOLF_ROOMS,
 
-    "misc_fabs", WOLF_MISC_PREFABS,
+    "key_doors", WOLF_KEY_DOORS,
   },
 }
 
@@ -985,7 +975,6 @@ UNFINISHED["spear"] =
   priority = -2,  -- keep at bottom (with Wolf3d)
 
   setup_func = Spear_setup,
-
   levels_start_func = Spear_get_levels,
 
   param = UNFINISHED["wolf3d"].param,

@@ -890,7 +890,7 @@ DOOM2_RAILS =
 --]]
 
 
-DOOM_SANITY_MAP =
+COMMON_SANITY_MAP =
 {
   -- liquids kill the player, so keep them recognisable
   LAVA1   = "FWATER1",
@@ -1379,8 +1379,6 @@ COMMON_THEMES_OLD =
   {
     cave_heights = { [96]=50, [128]=50 },
 
-    diff_probs = { [0]=10, [16]=40, [32]=80, [64]=60, [96]=20 },
-    bump_probs = { [0]=5, [16]=30, [32]=30, [64]=20 },
     door_probs   = { out_diff=10, combo_diff= 3, normal=1 },
     window_probs = { out_diff=20, combo_diff=30, normal=5 },
 
@@ -1587,8 +1585,6 @@ DOOM2_MONSTERS =
 -- player will have encountered a shotgun zombie and already
 -- have that weapon.
 --
--- Supershotgun is not present in DOOM 1.  It is removed from
--- the weapon table in the Doom1_setup() function.
 
 COMMON_WEAPONS =
 {
@@ -1633,14 +1629,6 @@ COMMON_WEAPONS =
     give={ {ammo="shell",count=8} },
   },
 
-  super =
-  {
-    pref=70, add_prob=20, start_prob=10,
-    rate=0.6, damage=170, attack="hitscan", splash={ 0,30 },
-    ammo="shell", per=2,
-    give={ {ammo="shell",count=8} },
-  },
-
   launch =
   {
     pref=50, add_prob=25, start_prob=10,
@@ -1663,6 +1651,17 @@ COMMON_WEAPONS =
     rate=0.8, damage=300, attack="missile", splash={60,45,30,30,20,10},
     ammo="cell", per=40,
     give={ {ammo="cell",count=40} },
+  },
+}
+
+DOOM2_WEAPONS =
+{
+  super =
+  {
+    pref=70, add_prob=20, start_prob=10,
+    rate=0.6, damage=170, attack="hitscan", splash={ 0,30 },
+    ammo="shell", per=2,
+    give={ {ammo="shell",count=8} },
   },
 }
 
@@ -1715,12 +1714,6 @@ COMMON_PICKUPS =
   {
     prob=3, big_item=true,
     give={ {health=150} },
-  },
-
-  mega =
-  {
-    prob=1, big_item=true,
-    give={ {health=200} },
   },
 
   -- ARMOR --
@@ -1798,7 +1791,7 @@ COMMON_PICKUPS =
   --
   -- Berserk is handled as a WEAPON instead of a pickup.
   --
-  -- Backpack is handled as a POWERUP.
+  -- The backpack is handled as a POWERUP.
   --
   -- Armor (all types) is modelled as health, because it merely
   -- saves the player's health when you are hit with damage.
@@ -1806,6 +1799,14 @@ COMMON_PICKUPS =
   -- equivalent to 100 units of health.
 }
 
+DOOM2_PICKUPS =
+{
+  mega =
+  {
+    prob=1, big_item=true,
+    give={ {health=200} },
+  },
+}
 
 
 COMMON_PLAYER_MODEL =
@@ -1816,23 +1817,6 @@ COMMON_PLAYER_MODEL =
     weapons = { pistol=1, fist=1 },
   }
 }
-
----## COMMON_KEY_CARDS =
----## {
----##   red_cd    = { pickup="kc_red",    tex="DOORRED", door_kind=33 },
----##   blue_cd   = { pickup="kc_blue",   tex="DOORBLU", door_kind=32 },
----##   yellow_cd = { pickup="kc_yellow", tex="DOORYEL", door_kind=34 },
----## }
----## 
----## COMMON_SKULL_KEYS =
----## {
----##   red_sk    = { pickup="k_red",    tex="DOORRED2", door_kind=33 },
----##   blue_sk   = { pickup="k_blue",   tex="DOORBLU2", door_kind=32 },
----##   yellow_sk = { pickup="k_yellow", tex="DOORYEL2", door_kind=34 },
----## }
-
-
------==============######################==============-----
 
 
 ------------------------------------------------------------
@@ -1912,6 +1896,20 @@ DOOM2_SKY_INFO =
   { color="gray",   light=192 }, -- bright clouds + dark buildings
   { color="red",    light=192 },
 }
+
+
+function Doom1_setup()
+
+  -- tweak monster probabilities
+
+  GAME.monsters["Cyberdemon"].crazy_prob = 8
+  GAME.monsters["Mastermind"].crazy_prob = 12
+end
+
+function Doom2_setup()
+
+  ---### GAME.sky_info = DOOM2_SKY_INFO
+end
 
 
 function Doom1_get_levels()
@@ -2179,63 +2177,6 @@ end
 
 ------------------------------------------------------------
 
-function Doom_common_setup()
-
-  GAME.player_model = COMMON_PLAYER_MODEL
-
-  GAME.sanity_map = DOOM_SANITY_MAP
-
-
-
-  GAME.depot_info = { teleport_kind=97 }
-
-  GAME.room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 }
-  GAME.space_range  = { 20, 90 }
-
-  GAME.diff_probs = { [0]=20, [16]=20, [32]=80, [64]=60, [96]=20 }
-  GAME.bump_probs = { [0]=40, [16]=20, [32]=20, [64]=10 }
-
----  GAME.door_probs   = { out_diff=77, combo_diff=33, normal=11 }
----  GAME.window_probs = { out_diff=75, combo_diff=60, normal=35 }
-
-  GAME.hallway_probs = { 20, 30, 41, 53, 66 }
-  GAME.shack_prob    = 25
-end
-
-
-function Doom1_setup()
-
-  Doom_common_setup()
-
----  T.episodes   = 4
-
-
-  GAME.rails = DOOM1_RAILS
-
-  -- remove DOOM2-only weapons and items --
-
-  GAME.weapons["super"] = nil 
-  GAME.pickups["mega"]  = nil
-
-  GAME.monsters["Cyberdemon"].crazy_prob = 8
-  GAME.monsters["Mastermind"].crazy_prob = 12
-end
-
-
-function Doom2_setup(game)
-
-  Doom_common_setup()
-
----  T.episodes   = 3
-
-  GAME.sky_info = DOOM2_SKY_INFO
-  GAME.rails    = DOOM2_RAILS
-
-end
-
-
-------------------------------------------------------------
-
 OB_THEMES["dm_tech"] =
 {
   ref = "TECH",
@@ -2317,14 +2258,19 @@ OB_GAMES["doom1"] =
 
   tables =
   {
+    ---- common stuff ----
+
     "things", DOOM_THINGS,
+    "player_model", COMMON_PLAYER_MODEL,
 
     "monsters", COMMON_MONSTERS,
     "weapons",  COMMON_WEAPONS,
     "pickups",  COMMON_PICKUPS,
 
-    "materials", COMMON_MATERIALS,
-    "rails", COMMON_RAILS,
+    "materials",  COMMON_MATERIALS,
+    "rails",      COMMON_RAILS,
+    "sanity_map", COMMON_SANITY_MAP,
+
     "combos", COMMON_COMBOS,
     "exits", COMMON_EXITS,
     "hallways",  COMMON_HALLWAYS,
@@ -2355,7 +2301,7 @@ OB_GAMES["doom1"] =
     "win_fabs",  COMMON_WINDOW_PREFABS,
     "misc_fabs", COMMON_MISC_PREFABS,
 
-    ---------
+    ---- DOOM I stuff ----
 
     "rooms",     DOOM1_ROOMS,
 
@@ -2369,6 +2315,7 @@ OB_GAMES["doom1"] =
   },
 }
 
+------------------------------------------------------------
 
 OB_GAMES["doom2"] =
 {
@@ -2412,7 +2359,6 @@ OB_GAMES["doom2"] =
     skip_monsters = { 4,5 },
 
     mon_time_max = 12,
-    mon_hard_health = 200,
 
     mon_damage_max  = 200,
     mon_damage_high = 100,
@@ -2424,14 +2370,19 @@ OB_GAMES["doom2"] =
 
   tables =
   {
+    ---- common stuff ----
+
     "things", DOOM_THINGS,
+    "player_model", COMMON_PLAYER_MODEL,
 
     "monsters", COMMON_MONSTERS,
     "weapons",  COMMON_WEAPONS,
     "pickups",  COMMON_PICKUPS,
 
-    "materials", COMMON_MATERIALS,
-    "rails",     COMMON_MATERIALS,
+    "materials",  COMMON_MATERIALS,
+    "rails",      COMMON_RAILS,
+    "sanity_map", COMMON_SANITY_MAP,
+
     "combos", COMMON_COMBOS,
     "exits", COMMON_EXITS,
     "hallways",  COMMON_HALLWAYS,
@@ -2462,9 +2413,11 @@ OB_GAMES["doom2"] =
     "win_fabs",  COMMON_WINDOW_PREFABS,
     "misc_fabs", COMMON_MISC_PREFABS,
 
-    ---------
+    ---- DOOM II stuff ----
 
     "monsters", DOOM2_MONSTERS,
+    "weapons",  DOOM2_WEAPONS,
+    "pickups",  DOOM2_PICKUPS,
 
     "themes",   DOOM2_THEMES,
     "rooms",    DOOM2_ROOMS,

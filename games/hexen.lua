@@ -827,8 +827,6 @@ HEXEN_COMBOS =
       ice_stal_F_small  = 30, ice_stal_C_small  = 30,
       ice_stal_F_tiny   = 20, ice_stal_C_tiny   = 20,
     },
-
-    trim_mode = "rough_hew",
   },
 
   ICE2 =
@@ -1535,13 +1533,8 @@ HEXEN_THEMES =
       demon1=3.0, demon2=3.0
     },
 
-    diff_probs = { [0]=10, [16]=40, [32]=80, [64]=60, [96]=20 },
-    bump_probs = { [0]=5, [16]=30, [32]=30, [64]=20 },
     door_probs   = { out_diff=10, combo_diff= 3, normal=1 },
     window_probs = { out_diff=30, combo_diff=30, normal=5 },
-    space_range  = { 1, 50 },
-
-    trim_mode = "rough_hew",
   },
 
   DUNGEON =
@@ -2459,13 +2452,6 @@ function Hexen_setup()
 
     classes  = { "fighter", "cleric", "mage" },
 
-
-    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
-    space_range  = { 20, 90 },
-    
-    diff_probs = { [0]=20, [16]=40, [32]=80, [64]=30, [96]=5 },
-    bump_probs = { [0]=30, [16]=30, [32]=20, [64]=5 },
-    
     door_probs   = { out_diff=75, combo_diff=50, normal=15 },
     window_probs = { out_diff=80, combo_diff=50, normal=30 },
   }
