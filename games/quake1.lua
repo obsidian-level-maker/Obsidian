@@ -719,23 +719,21 @@ QUAKE1_MATERIALS =
 
 QUAKE1_COMBOS =
 {
-  TECH_BASE =
-  {
-    theme_probs = { TECH=80 },
-
-    wall  = "tech05_2",
-    floor = "metflor2_1",
-    ceil  = "tlight09",
-  },
+  TECH_BASE1 = { wall = "TECH06_1" },
+  TECH_BASE2 = { wall = "TECH08_2" },
+  TECH_BASE3 = { wall = "TECH09_3" },
+  TECH_BASE4 = { wall = "TECH13_2" },
+  TECH_BASE5 = { wall = "TECH14_1" },
+  TECH_BASE6 = { wall = "TWALL1_4" },
+  TECH_BASE7 = { wall = "TWALL2_3" },
 
   TECH_GROUND =
   {
-    theme_probs = { TECH=80 },
     outdoor = true,
 
-    wall  = "ground1_6",
-    floor = "ground1_6",
-    ceil  = "ground1_6",
+    wall  = "GROUND1_6",
+    floor = "GROUND1_6",
+    ceil  = "GROUND1_6",
   }
 }
 
@@ -841,12 +839,44 @@ QUAKE1_THEMES =
   {
     building =
     {
-      TECH_BASE=50,
+      TECH_BASE1=50,
+      TECH_BASE2=50,
+      TECH_BASE3=50,
+      TECH_BASE4=50,
+      TECH_BASE5=50,
+      TECH_BASE6=50,
+      TECH_BASE7=50,
     },
 
     ground =
     {
       TECH_GROUND=50,
+    },
+
+    floors =
+    {
+      FLOOR01_5=50,
+      METAL2_4=50,
+      METFLOR2_1=50,
+      MMETAL1_1=50,
+
+      SFLOOR4_1=50,
+      SFLOOR4_5=50,
+      SFLOOR4_6=50,
+      SFLOOR4_7=50,
+    },
+
+    ceilings =
+    {
+      FLOOR01_5=50,
+      METAL2_4=50,
+      METFLOR2_1=50,
+      MMETAL1_1=50,
+
+      SFLOOR4_1=50,
+      SFLOOR4_5=50,
+      SFLOOR4_6=50,
+      SFLOOR4_7=50,
     },
 
     hallway =
@@ -1178,9 +1208,9 @@ function Quake1_get_levels()
 
         theme_ref = "BASE",
 
-        key_list = { "foo" },
-        switch_list = { "foo" },
-        bar_list = { "foo" },
+--        key_list = { "foo" },
+  --      switch_list = { "foo" },
+    --    bar_list = { "foo" },
       }
 
       table.insert(GAME.all_levels, LEV)
