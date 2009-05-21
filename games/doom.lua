@@ -1947,7 +1947,7 @@ function Doom1_get_levels()
         switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
         bar_list = { "bar_wood", "bar_silver", "bar_metal" },
 
-        sky_info = DOOM1_SKY_INFO[episode],
+        --!! sky_info = DOOM1_SKY_INFO[episode],
 
         boss_kind   = (map == 8) and DOOM1_EPISODE_BOSSES[episode],
         secret_kind = (map == 9) and "plain",
@@ -1991,7 +1991,7 @@ function Doom2_get_levels()
   if OB_CONFIG.length == "few"    then MAP_NUM = 4  end
   if OB_CONFIG.length == "full"   then MAP_NUM = 32 end
 
-  assert(GAME.sky_info)
+--!!   assert(GAME.sky_info)
 
   for map = 1,MAP_NUM do
     local episode
@@ -2037,7 +2037,7 @@ function Doom2_get_levels()
       bar_list = { "bar_wood", "bar_silver", "bar_metal" },
 
       -- allow TNT and Plutonia to override the sky stuff
-      sky_info = GAME.sky_info[episode],
+--!!       sky_info = GAME.sky_info[episode],
 
       style = {},
     }
