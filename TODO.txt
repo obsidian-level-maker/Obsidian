@@ -3,36 +3,6 @@ TODO
 ====
 
 
-!!!  simplify setting up GAME stuff:
-  
-  hooks =
-  {
-    bleh_func = Foobie_bleh,
-  }
-
-  tables =
-  {
-    things = DOOM_THINGS,
-
-    monsters = { COMMON_MONSTERS, DOOM2_MONSTERS },
-
-    themes = { COMMON_THEMES, DOOM2_THEMES },
-    
-  }
-
-  tables2 = { monsters=DOOM2_MONSTERS, .... }
-
-
-  SHALLOW MERGE FOR:  things, monsters, weapons, pickups,
-                      materials, rails, liquids,
-                      combos,
-                      
-                      ??? prefab-skins,
-
-  DEEP MERGE FOR: themes, rooms
-
-
-
 -  rework Build_small_exit to only use a single transform,
 
 -  implement Chris's & JR's boss maps
@@ -133,5 +103,5 @@ CHANGES (since 3.39)
 - new module "Skulltag Monsters" (thanks Chris)
 
 + new program for extracting Quake textures
-
+- worked on the module system
 
