@@ -16,34 +16,33 @@
 --
 ----------------------------------------------------------------
 
-function Boom_set_level_desc()
-  assert(LEVEL.description)
-  
-  local id
+function Boom_end_level()
+  if LEVEL.description then
+    local id
 
-  if string.sub(LEVEL.name, 1, 1) == 'E' then
+    if string.sub(LEVEL.name, 1, 1) == 'E' then
 
-    -- Doom I : HUSTR_ExMy
-    id = "HUSTR_" .. LEVEL.name
+      -- Doom I : HUSTR_ExMy
+      id = "HUSTR_" .. LEVEL.name
 
-  else
-    local pos = 4
-    if string.sub(LEVEL.name, pos, pos) == '0' then
-      pos = pos + 1
+    else
+      local pos = 4
+      if string.sub(LEVEL.name, pos, pos) == '0' then
+        pos = pos + 1
+      end
+
+      -- Doom II : HUSTR_%d
+      id = "HUSTR_" .. string.sub(LEVEL.name, pos)
     end
 
-    -- Doom II : HUSTR_%d
-    id = "HUSTR_" .. string.sub(LEVEL.name, pos)
+    local text = LEVEL.name .. ": " .. LEVEL.description;
+
+    gui.bex_add_string(id, text)
   end
-
-  local text = LEVEL.name .. ": " .. LEVEL.description;
-
-  gui.bex_add_string(id, text)
 end
 
 
 ----------------------------------------------------------------
-
 
 OB_ENGINES["boom"] =
 {
@@ -52,15 +51,12 @@ OB_ENGINES["boom"] =
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
 
+  end_level_func = Boom_end_level,
+
   param =
   {
     boom_lines = true,
     boom_sectors = true,
-  },
-
-  hooks =
-  {
-    set_level_desc = Boom_set_level_desc,
   },
 }
 

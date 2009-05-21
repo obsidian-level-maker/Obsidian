@@ -16,11 +16,18 @@
 --
 ----------------------------------------------------------------
 
+function Legacy_end_level()
+  Boom_end_level()
+end
+
+
 OB_ENGINES["legacy"] =
 {
   label = "Legacy 1.42",
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
+
+  end_level_func = Legacy_end_level,
 
   param =
   {
@@ -29,11 +36,6 @@ OB_ENGINES["legacy"] =
 
     extra_floors = true,
     liquid_floors = true,
-  },
-
-  hooks =
-  {
-    set_level_desc = Boom_set_level_desc,
   },
 }
 

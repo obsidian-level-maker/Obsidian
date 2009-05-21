@@ -16,20 +16,22 @@
 --
 ----------------------------------------------------------------
 
+function Eternity_end_level()
+  Boom_end_level()
+end
+
+
 OB_ENGINES["eternity"] =
 {
   label = "Eternity 3.33",
 
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
 
+  end_level_func = Eternity_end_level,
+
   param =
   {
     -- TODO
-  },
-
-  hooks =
-  {
-    set_level_desc = Boom_set_level_desc,
   },
 }
 
