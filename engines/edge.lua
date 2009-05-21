@@ -16,15 +16,6 @@
 --
 ----------------------------------------------------------------
 
-function Edge_set_level_desc()
-  assert(LEVEL.description)
-  
-  local id = string.format("%sDesc", LEVEL.name)
-  local text = LEVEL.name .. ": " .. LEVEL.description;
-
-  gui.ddf_add_string(id, text)
-end
-
 function Edge_remap_music()
   
   -- FIXME: game specific!!!
@@ -49,6 +40,15 @@ end
 
 ----------------------------------------------------------------
 
+function Edge_end_level()
+  if LEVEL.description then
+    local id = string.format("%sDesc", LEVEL.name)
+    local text = LEVEL.name .. ": " .. LEVEL.description;
+
+    gui.ddf_add_string(id, text)
+  end
+end
+
 
 OB_ENGINES["edge"] =
 {
@@ -56,6 +56,8 @@ OB_ENGINES["edge"] =
   priority = 90,
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
+
+  end_level_func = Edge_end_level,
 
   param =
   {
@@ -67,12 +69,6 @@ OB_ENGINES["edge"] =
     thing_exfloor_flags = true,
 
     mirrors = true,
-  },
-
-  hooks =
-  {
-    set_level_desc = Edge_set_level_desc,
-    remap_music    = Edge_remap_music,
   },
 }
 
