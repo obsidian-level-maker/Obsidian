@@ -529,12 +529,28 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   end
 
   local function place_item(S, item_name, x, y, SK)
-    Trans_entity(item_name, x, y, S.floor_h,
-    {
-      skill_hard   = sel(SK == "hard",   1, 0),
-      skill_medium = sel(SK == "medium", 1, 0),
-      skill_easy   = sel(SK == "easy",   1, 0),
-    })
+    local props
+
+    if GAME.format == "quake1" then
+      props = {}
+
+      if SK == "easy" then
+        props.spawnflags = 512+1024
+      elseif SK == "medium" then
+        props.spawnflags = 256+1024
+      elseif SK == "hard" then
+        props.spawnflags = 256+512
+      end
+    else
+      props =
+      {
+        skill_hard   = sel(SK == "hard",   1, 0),
+        skill_medium = sel(SK == "medium", 1, 0),
+        skill_easy   = sel(SK == "easy",   1, 0),
+      }
+    end
+
+    Trans_entity(item_name, x, y, S.floor_h, props)
   end
 
   local function place_big_item(spot, item, SK)
@@ -1161,15 +1177,24 @@ function Monsters_in_room(R)
       skill = 1 ; add_to_list(SKILLS[skill], spot)
     end
 
-    Trans_entity(spot.monster, spot.x, spot.y, spot.S.floor_h,
-    {
-      angle  = spot.angle  or angle,
-      ambush = spot.ambush or ambush,
+    local props = { angle = spot.angle or angle }
 
-      skill_hard   = 1,
-      skill_medium = sel(skill <= 2, 1, 0),
-      skill_easy   = sel(skill <= 1, 1, 0),
-    })
+    if GAME.format == "quake1" then
+      props.spawnflags = 0
+
+      if props.ambush then props.spawnflags = props.spawnflags + 1 end
+
+      if (skill > 1) then props.spawnflags = props.spawnflags + 256 end
+      if (skill > 2) then props.spawnflags = props.spawnflags + 512 end
+    else
+      props.ambush = spot.ambush or ambush
+
+      props.skill_hard   = 1
+      props.skill_medium = sel(skill <= 2, 1, 0)
+      props.skill_easy   = sel(skill <= 1, 1, 0)
+    end
+
+    Trans_entity(spot.monster, spot.x, spot.y, spot.S.floor_h, props)
 
     spot.S.content = "monster"
   end
