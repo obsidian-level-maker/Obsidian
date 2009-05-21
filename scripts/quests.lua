@@ -727,6 +727,8 @@ end
 
 
 function Quest_choose_keys()
+  -- there is always at least one "lock" (for EXIT room)
+  if #LEVEL.all_locks <= 1 then return end
 
   for _,LOCK in ipairs(LEVEL.all_locks) do
     LOCK.kscore = LOCK.distance
