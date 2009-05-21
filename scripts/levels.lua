@@ -37,9 +37,11 @@ require 'connect'
 require 'naming'
 require 'quests'
 require 'builder'
+
 require 'arenas'
 require 'layout'
 require 'rooms'
+require 'tiler'
 require 'fight'
 require 'monsters'
 
@@ -231,6 +233,9 @@ end
 
 
 function Level_build_it()
+
+do Tiler_tester(); return "ok"; end
+
   -- does the level have a custom build function (e.g. Arenas) ?
   if LEVEL.build_func then
     LEVEL.build_func()

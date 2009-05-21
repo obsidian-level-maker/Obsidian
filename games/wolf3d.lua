@@ -920,7 +920,7 @@ function Spear_setup()
 end
 
 
-UNFINISHED["wolf3d"] =
+OB_GAMES["wolf3d"] =
 {
   label = "Wolfenstein 3D",
   format = "wolf3d",
@@ -932,6 +932,8 @@ UNFINISHED["wolf3d"] =
 
   param =
   {
+    tiled = true,
+
      no_height = true,
      no_sky = true,
      one_lock_tex = true,
@@ -944,7 +946,13 @@ UNFINISHED["wolf3d"] =
 
     seed_size = 192,  -- actually 3 blocks
 
-    palette_mons = 2,
+    mon_time_max = 12,
+    mon_damage_max  = 200,
+    mon_damage_high = 100,
+    mon_damage_low  =   1,
+
+    ammo_factor   = 0.8,
+    health_factor = 0.7,
   },
 
   tables =
@@ -953,9 +961,6 @@ UNFINISHED["wolf3d"] =
     "player_model", WOLF_PLAYER_MODEL,
 
     "monsters", WOLF_MONSTERS,
-    "bosses",   WOLF_BOSSES,
-    "mon_give", WOLF_MONSTER_GIVE,
-
     "weapons",  WOLF_WEAPONS,
     "pickups", WOLF_PICKUPS,
 
@@ -981,7 +986,7 @@ UNFINISHED["spear"] =
   setup_func = Spear_setup,
   levels_start_func = Spear_get_levels,
 
-  param = UNFINISHED["wolf3d"].param,
+  param = OB_GAMES["wolf3d"].param,
 
   tables =
   {
