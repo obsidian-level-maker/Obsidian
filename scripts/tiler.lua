@@ -89,7 +89,7 @@ function Tiler_do_basic_room(R, wall, floor)
         local B_kind = S.border[side].kind
         if B_kind == "door" then
           do_door(S, side, 90, 91)
-        elseif B_kind == "arch" or B_kind == "straddle" then
+        elseif B_kind == "arch" or B_kind == "straddle" or B_kind == "nothing" then
           do_door(S, side, floor, floor)
         end
       end
