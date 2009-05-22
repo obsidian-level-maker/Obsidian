@@ -996,7 +996,7 @@ OB_GAMES["wolf3d"] =
     seed_size = 192,  -- actually 3 blocks
     seed_limit = 21,  -- 64 / 3
 
-    error_mat = "SKYWALL",
+    error_mat = "WOOD2",
 
     no_keys = true, --!!!!
 
