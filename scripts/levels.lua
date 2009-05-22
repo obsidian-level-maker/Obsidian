@@ -234,8 +234,6 @@ end
 
 function Level_build_it()
 
-do Tiler_tester(); return "ok"; end
-
   -- does the level have a custom build function (e.g. Arenas) ?
   if LEVEL.build_func then
     LEVEL.build_func()
@@ -260,6 +258,11 @@ do Tiler_tester(); return "ok"; end
   Rooms_build_all()
     if gui.abort() then return "abort" end
     gui.progress(70)
+
+  if PARAM.tiled then
+    Tiler_layout_all()
+    return "ok" --!!!! FIXME
+  end
 
   Monsters_make_battles()
     if gui.abort() then return "abort" end

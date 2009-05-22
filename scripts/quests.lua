@@ -492,8 +492,8 @@ function Quest_add_lock()
     end
 
     -- Wolf3d: require two locked doors to be perpendicular
-    if PARAM.one_lock_tex and #LEVEL.all_locks == 1 then
-      local old_dir = LEVEL.all_locks[1].conn.dir
+    if PARAM.one_lock_tex and #LEVEL.all_locks == 2 then
+      local old_dir = LEVEL.all_locks[1].conn.dir -- FIXME !!!
       assert(old_dir and C.dir)
 
       if not is_perpendicular(old_dir, C.dir) then

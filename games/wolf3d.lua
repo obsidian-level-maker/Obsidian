@@ -293,6 +293,11 @@ SPEAR_MATERIALS =
 
 WOLF_COMBOS =
 {
+  TMP_WOOD   = { wall="WOOD1" },
+  TMP_GSTONE = { wall="GSTONE1" },
+  TMP_BLUE   = { wall="BLU_STON1" },
+  TMP_RED    = { wall="RED_BRIK" },
+
   WOOD =
   {
     mat_pri = 5,
@@ -487,6 +492,49 @@ WOLF_THEMES =
   -- 2. CELLS  --> blue_stone, dogs, skeletons 
   -- 3. CAVE   --> cave/rock tex, vines, mutants
 
+  TECH =
+  {
+    building =
+    {
+      TMP_BLUE=50,
+      TMP_GSTONE=30,
+      TMP_RED=30,
+      TMP_WOOD=30,
+    },
+
+    floors = { },
+
+    ceilings = { },
+
+    ground =
+    {
+      TMP_WOOD=30,
+    },
+
+    hallway =
+    {
+    },
+
+    exit =
+    {
+    },
+
+    room_types =
+    {
+      -- FIXME  COMPUTER  WAREHOUSE  PUMP
+    },
+
+    scenery =
+    {
+      -- FIXME
+    },
+
+    monster_prefs =
+    {
+    },
+  }, -- TECH
+
+  --[[  FIXME FIXME
   BUNKER =
   {
     room_probs =
@@ -544,6 +592,7 @@ WOLF_THEMES =
       mutant=6.0, officer=2.0,
     },
   },
+  --]]
 
 --[[
   SECRET =
@@ -945,6 +994,10 @@ OB_GAMES["wolf3d"] =
      sealed_start = true,
 
     seed_size = 192,  -- actually 3 blocks
+
+    error_mat = "SKYWALL",
+
+    no_keys = true, --!!!!
 
     mon_time_max = 12,
     mon_damage_max  = 200,
