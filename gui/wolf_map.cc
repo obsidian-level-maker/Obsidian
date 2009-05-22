@@ -138,60 +138,6 @@ int rle_compress_plane(u16_t *plane, int src_len)
 
 
 //------------------------------------------------------------------------
-
-static void WF_DumpMap(void)
-{
-  static char *turning_points = ">/^\\</v\\";
-//static char *player_angles  = "^>v<";
-
-  bool show_floors = false;
-
-  int x, y;
-  char line_buf[80];
-
-  for (y = 0; y < 64; y++)
-  {
-    for (x = 0; x < 64; x++)
-    {
-      int tile = solid_plane[PL_START+y*64+x];
-      int obj  = thing_plane[PL_START+y*64+x];
-
-      int ch;
-
-      if (tile == NO_TILE)
-        ch = '#';
-      else if (obj >= 19 && obj <= 22)
-        ch = 'p'; // player_angles[obj-19];
-      else if (tile < 52)
-        ch = 'A' + (tile / 2);
-      else if (tile < 64)
-        ch = (show_floors ? 'A' : '1') + ((tile - 52) / 2);
-      else if (90 <= tile && tile <= 101)
-        ch = '+';
-      else if (show_floors && 108 <= tile && tile <= 143)
-        ch = '0' + ((tile - 108) % 10);
-      else if (obj == NO_OBJ)
-        ch = '.';
-      else if ((obj >= 43 && obj <= 56) || obj == 29)
-        ch = '$'; // pickup
-      else if ((obj >= 23 && obj <= 71) || obj == 124)
-        ch = '%'; // scenery
-      else if (obj >= 108)
-        ch = 'm'; // monster
-      else if (90 <= obj && obj <= 97)
-        ch = turning_points[obj - 90];
-      else
-        ch = '?';
-
-      line_buf[x] = ch;
-    }
-
-    line_buf[64] = 0;
-
-    DebugPrintf("%s\n", line_buf);
-  }
-}
-
 static void WF_WritePlane(u16_t *plane, int *offset, int *length)
 {
   *offset = (int)ftell(map_fp);
@@ -305,6 +251,95 @@ int WF_wolf_block(lua_State *L)
   }
 
   return 0;
+}
+
+//------------------------------------------------------------------------
+
+static void WF_DumpMap(void)
+{
+  static char *turning_points = ">/^\\</v\\";
+//static char *player_angles  = "^>v<";
+
+  bool show_floors = false;
+
+  int x, y;
+  char line_buf[80];
+
+  for (y = 0; y < 64; y++)
+  {
+    for (x = 0; x < 64; x++)
+    {
+      int tile = solid_plane[PL_START+y*64+x];
+      int obj  = thing_plane[PL_START+y*64+x];
+
+      int ch;
+
+      if (tile == NO_TILE)
+        ch = '#';
+      else if (obj >= 19 && obj <= 22)
+        ch = 'p'; // player_angles[obj-19];
+      else if (tile < 52)
+        ch = 'A' + (tile / 2);
+      else if (tile < 64)
+        ch = (show_floors ? 'A' : '1') + ((tile - 52) / 2);
+      else if (90 <= tile && tile <= 101)
+        ch = '+';
+      else if (show_floors && 108 <= tile && tile <= 143)
+        ch = '0' + ((tile - 108) % 10);
+      else if (obj == NO_OBJ)
+        ch = '.';
+      else if ((obj >= 43 && obj <= 56) || obj == 29)
+        ch = '$'; // pickup
+      else if ((obj >= 23 && obj <= 71) || obj == 124)
+        ch = '%'; // scenery
+      else if (obj >= 108)
+        ch = 'm'; // monster
+      else if (90 <= obj && obj <= 97)
+        ch = turning_points[obj - 90];
+      else
+        ch = '?';
+
+      line_buf[x] = ch;
+    }
+
+    line_buf[64] = 0;
+
+    DebugPrintf("%s\n", line_buf);
+  }
+}
+
+static void WF_MakeMiniMap(void)
+{
+  int scale = 96;
+
+  int map_W = main_win->build_box->mini_map->GetWidth();
+  int map_H = main_win->build_box->mini_map->GetHeight();
+
+  main_win->build_box->mini_map->MapBegin();
+
+  for (int y = 0; y < 64; y++)
+  for (int x = 0; x < 64; x++)
+  {
+    int tile = solid_plane[PL_START+y*64+x];
+    int obj  = thing_plane[PL_START+y*64+x];
+
+    byte r, g, b;
+
+    if (tile == NO_TILE)
+      continue;
+
+    if (tile >= 90)
+      r = g = b = 80;
+    else
+      r = g = b= 224;
+
+    int bx = map_W/2 - 48 + x*2;
+    int by = map_H/2 + 80 - y*2;
+
+    main_win->build_box->mini_map->DrawBox(bx, by, bx+1, by+1, r, g, b);
+  }
+
+  main_win->build_box->mini_map->MapFinish();
 }
 
 
@@ -448,6 +483,7 @@ void wolf_game_interface_c::BeginLevel()
 void wolf_game_interface_c::EndLevel()
 {
   WF_DumpMap();
+  WF_MakeMiniMap();
 
   WF_WriteMap();
   WF_WriteHead();
