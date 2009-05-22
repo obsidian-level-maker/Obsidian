@@ -128,6 +128,25 @@ void UI_MiniMap::DrawPixel(int x, int y, byte r, byte g, byte b)
 }
 
 
+void UI_MiniMap::DrawBox(int x1, int y1, int x2, int y2,
+                         byte r, byte g, byte b)
+{
+  if (x1 < 0) x1 = 0;
+  if (y1 < 0) y1 = 0;
+
+  if (x2 >= map_W) x2 = map_W - 1;
+  if (y2 >= map_H) y2 = map_H - 1;
+
+  // fully clipped?
+  if (x1 > x2 || y1 > y2)
+    return;
+
+  for (int y = y1; y <= y2; y++)
+    for (int x = x1; x <= x2; x++)
+      RawPixel(x, y, r, g, b);
+}
+
+
 void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2,
                           byte r, byte g, byte b)
 {
