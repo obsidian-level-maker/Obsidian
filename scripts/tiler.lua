@@ -75,9 +75,9 @@ function Tiler_do_basic_room(R, wall, floor)
     tx, ty = nudge_coord(tx, ty, side)
     
     if side == 2 or side == 8 then
-      gui.wolf_block(tx, ty, 1, tile_ew)
-    else
       gui.wolf_block(tx, ty, 1, tile_ns)
+    else
+      gui.wolf_block(tx, ty, 1, tile_ew)
     end
   end
 
