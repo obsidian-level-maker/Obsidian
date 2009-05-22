@@ -367,6 +367,9 @@ bool wolf_game_interface_c::Start()
 
   write_errors_seen = 0;
 
+  main_win->build_box->ProgInit(1);
+  main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
+
   return true;
 }
 
