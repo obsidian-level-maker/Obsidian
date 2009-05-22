@@ -1254,7 +1254,8 @@ OB_GAMES["quake1"] =
     -- engine needs all coords to lie between -4000 and +4000.
     center_map = true,
 
-    seed_size = 240,
+    seed_size  = 240,
+    seed_limit = 30,
 
     no_keys = true,  --!!!! FIXME
 

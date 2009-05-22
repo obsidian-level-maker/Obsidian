@@ -2038,6 +2038,7 @@ UNFINISHED["quake2"] =
     center_map = true,
 
     seed_size = 240,
+    seed_limit = 32,
 
     sky_tex  = "e1u1/sky1",
     sky_flat = "e1u1/sky1",

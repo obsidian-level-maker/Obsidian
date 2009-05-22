@@ -800,6 +800,33 @@ function Plan_determine_size()
     gui.debugf("%s\n", name)
   end
 
+  local function get_column_sizes(W, limit)
+    local cols = {}
+
+    assert(2 + W*2 <= limit)
+
+    for loop = 1,100 do
+      local total = 2  -- border seeds around level
+
+      for x = 1,W do
+        cols[x] = rand_index_by_probs(ROOM_SIZE_TABLE)
+        total = total + cols[x]
+      end
+
+      if total <= limit then
+        return cols  -- OK!
+      end
+    end
+
+    -- emergency fallback
+    gui.printf("Using emergency column sizes.\n")
+
+    for x = 1,W do cols[x] = 2 end
+
+    return cols
+  end
+
+
   ---| Plan_determine_size |---
 
   local W, H
@@ -849,6 +876,12 @@ function Plan_determine_size()
     end
   end
 
+  -- adjustment for Wolf3d
+  if PARAM.tiled then
+    W = W - int(W / 4) ; if W > 8 then W = 8 end
+    H = H - int(H / 4) ; if H > 8 then H = 8 end
+  end
+
   LEVEL.W = W
   LEVEL.H = H
 
@@ -865,42 +898,16 @@ end
   local cols = {}
   local rows = {}
 
-  for x = 1,W do
-    cols[x] = rand_index_by_probs(ROOM_SIZE_TABLE)
-  end
+  local limit = PARAM.seed_limit or 38
 
-  for y = 1,H do
-    rows[y] = rand_index_by_probs(ROOM_SIZE_TABLE)
-  end
-
-
-  --[[ PREVIOUS CODE
-  for x = 1, W do cols[x] = rand_irange(3,4) end
-  for y = 1, H do rows[y] = rand_irange(3,4) end
-
-  for i = 1,rand_irange(0,4) do
-    local x = rand_irange(1, W)
-    local y = rand_irange(1, H)
-
-    if cols[x] <= 5 then cols[x] = cols[x] + 1 end
-    if rows[y] <= 5 then rows[y] = rows[y] + 1 end
-  end
-
-  for i = 1,rand_irange(0,2) do
-    local x = rand_irange(1, W)
-    local y = rand_irange(1, H)
-
-    if cols[x] >= 3 then cols[x] = cols[x] - 1 end
-    if rows[y] >= 3 then rows[y] = rows[y] - 1 end
-  end
-  --]]
-
-
-  show_sizes("col_W", cols, LEVEL.W)
-  show_sizes("row_H", rows, LEVEL.H)
+  cols = get_column_sizes(W, limit)
+  rows = get_column_sizes(W, limit)
   
   LEVEL.col_W = cols
   LEVEL.row_H = rows
+
+  show_sizes("col_W", cols, LEVEL.W)
+  show_sizes("row_H", rows, LEVEL.H)
 end
 
 
