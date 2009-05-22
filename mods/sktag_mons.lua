@@ -35,7 +35,9 @@ SKULLTAG_THINGS =
   minigun = { id=5014, kind="pickup", r=20,h=16, pass=true },
 
   -- pickups
-  red_armor = { id=5040, kind="pickup", r=20,h=16, pass=true },
+  max_potion = { id=5090, kind="pickup", r=20,h=16, pass=true },
+  max_helmet = { id=5091, kind="pickup", r=20,h=16, pass=true },
+  red_armor  = { id=5040, kind="pickup", r=20,h=16, pass=true },
 }
 
 
@@ -130,6 +132,18 @@ SKULLTAG_WEAPONS =
 
 SKULLTAG_PICKUPS =
 {
+  max_potion =
+  {
+    prob=1, cluster={ 1,2 },
+    give={ {health=1} },
+  },
+
+  max_helmet =
+  {
+    prob=1, armor=true, cluster={ 1,2 },
+    give={ {health=1} },
+  },
+
   red_armor =
   {
     prob=2, armor=true, big_item=true,
