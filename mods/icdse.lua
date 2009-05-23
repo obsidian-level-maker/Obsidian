@@ -16,6 +16,28 @@
 --
 ----------------------------------------------------------------
 
+-- === NOTES ===
+--
+-- The Ammo in Immoral Conduct is a bit different than
+-- standard DOOM, there is a couple new ones and some
+-- existing ones have a new meaning.  The most important
+-- are:
+--     bullets  -> bullets
+--     shells   -> shells
+--     rockets  -> grenades
+--     cells    -> rifle ammo
+--
+--     gas      -> flak shells (new)
+--     nails    -> knives (new)
+--     pellets  -> satchel charges (new)
+--
+-- (Knives and Charges are not modelled by OBLIGE).
+--
+-- The "Silencer" is another starting weapon, but I assume
+-- it's equivalent to the pistol and hence is not modelled.
+--
+
+
 ICDSE_THINGS =
 {
   -- players
@@ -93,6 +115,16 @@ ICDSE_POWERUPS =
 }
 
 
+ICDSE_PLAYER_MODEL =
+{
+  doomguy =
+  {
+    stats   = { health=0, flak=0, bullet=0, shell=0, rocket=0, cell=0 },
+    weapons = { pistol=1, fist=1 },
+  }
+}
+
+
 OB_MODULES["icdse"] =
 {
   label = "Immoral Conduct - Special Edition",
@@ -107,6 +139,8 @@ OB_MODULES["icdse"] =
     "monsters", ICDSE_MONSTERS,
     "weapons",  ICDSE_WEAPONS,
     "pickups",  ICDSE_PICKUPS,
+
+    "player_model", ICDSE_PLAYER_MODEL,
   },
 }
 
