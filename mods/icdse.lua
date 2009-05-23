@@ -34,14 +34,20 @@ ICDSE_THINGS =
   revolver    = { id=4446, kind="pickup", r=20,h=16, pass=true },
   minigun     = { id=2999, kind="pickup", r=20,h=16, pass=true },
 
-  -- pickups : TODO
-  
+  pistol_pair   = { id=2018, kind="pickup", r=20,h=16, pass=true },
+  uzi_pair      = { id=2022, kind="pickup", r=20,h=16, pass=true },
+  upgraded_shot = { id=2006, kind="pickup", r=20,h=16, pass=true },
+  gren_launch   = { id=  17, kind="pickup", r=20,h=16, pass=true },
+  satchel       = { id=2010, kind="pickup", r=20,h=16, pass=true },
+
+  -- pickups
+  flak_shells   = { id=2024, kind="pickup", r=20,h=16, pass=true },
 }
 
 
 ICDSE_MONSTERS =
 {
-  enhanced_trooper =
+  uzi_trooper =
   {
     prob=30, guard_prob=21, trap_prob=11, cage_prob=30,
     health=120, damage=65, attack="hitscan",
@@ -54,19 +60,36 @@ ICDSE_MONSTERS =
     health=100, damage=15, attack="melee",
   },
 
-  -- FIXME : the rest
+  -- FIXME 
 }
 
 
 ICDSE_WEAPONS =
 {
-  -- TODO
+  bfg = REMOVE_ME,   -- became: upgraded_shotgun
+
+  -- FIXME
 }
 
 
 ICDSE_PICKUPS =
 {
-  -- TODO
+  green_armor = REMOVE_ME,  -- became: pistol_pair
+  rocket      = REMOVE_ME,  -- became: satchel
+  cell_box    = REMOVE_ME,  -- became: gren_launch
+
+  flak_shells =
+  {
+    prob=20, cluster={ 2,5 },
+    give={ {ammo="flak",count=4} },
+  },
+}
+
+
+ICDSE_POWERUPS =
+{
+  invul = REMOVE_ME,  -- became: uzi_pair
+  invis = REMOVE_ME,  -- became: flak_shells
 }
 
 
