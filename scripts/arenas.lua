@@ -1157,11 +1157,68 @@ function Arena_Cave_Test()
 
   local SKY_H = 256
 
+  local MAX_BLOCK_W = 128
+
+  local warp_points = array_2D(100, 100)
+
+  local function setup_warp()
+    for y = 1,100 do for x = 1,100 do
+
+      local dx = rand_irange(-24, 24)
+      local dy = rand_irange(-24, 24)
+
+      if x > 1 then
+        dx = dx + warp_points[x-1][y].dx / 2
+        dy = dy + warp_points[x-1][y].dy / 2
+      end
+      if y > 1 then
+        dx = dx + warp_points[x][y-1].dx / 2
+        dy = dy + warp_points[x][y-1].dy / 2
+      end
+
+      warp_points[x][y] = { dx=dx, dy=dy }
+    end end -- for x, y
+  end
+
+
   local function warp_coord(x, y)
+    --[[
+    local wx = int(x/128)
+    local wy = int(y/128)
+
+    local nx, ny = 0, 0
+
+    for i = 1,2 do for j = 1,2 do
+      local f_i = int(x) % 128
+      local f_j = int(y) % 128
+
+      if i == 1 then f_i = 128 - f_i end
+      if j == 1 then f_j = 128 - f_j end
+
+      local factor = (f_i / 128.0) * (f_j / 128.0)
+
+      nx = nx + factor * warp_points[wx+i][wy+j].dx
+      ny = ny + factor * warp_points[wx+i][wy+j].dy
+
+    end end -- for i, k
+
+    x = x + nx
+    y = y + ny
+    --]]
+
     return { x=int(x), y=int(y) }
   end
 
   local function raw_warp_block(floor_i, x1, y1, x2, y2, z1, z2)
+
+    -- HACKITY HACK : skip double piece if inside void piece
+    if z1 and
+       box_contains_point(WX1,WY1,WX2,WY2, x1,y1) and
+       box_contains_point(WX1,WY1,WX2,WY2, x2,y2)
+    then
+      return
+    end
+
     local coords =
     {
       warp_coord(x2,y1),
@@ -1169,6 +1226,12 @@ function Arena_Cave_Test()
       warp_coord(x1,y2),
       warp_coord(x1,y1),
     }
+
+--[[
+gui.printf("BEFORE: (%d %d) -> (%d, %d)\n", x1,y1, x2,y2)
+gui.printf("AFTER:  (%d %d) (%d %d) (%d %d) (%d %d)\n",
+coords[1].x, coords[1].y, coords[2].x, coords[2].y,
+coords[3].x, coords[3].y, coords[4].x, coords[4].y)  ]]
 
     if z1 then
       Trans_brush(floor_i, coords, -EXTREME_H, z1)
@@ -1179,14 +1242,14 @@ function Arena_Cave_Test()
   end
 
   local function warp_block(floor_i, x1, y1, x2, y2, z1, z2)
-    if (x2 - x1) > 2444 then
-      local subs = int((x2 - x1) / 24) + 1
+    if (x2 - x1) > MAX_BLOCK_W then
+      local subs = int((x2 - x1) / MAX_BLOCK_W) + 1
 
       for i = 1,subs do
         local nx1 = x1 + (x2 - x1) * (i-1) / subs
         local nx2 = x1 + (x2 - x1) * (i  ) / subs
 
-        assert(nx2 - nx1 <= 24)
+        assert(nx2 - nx1 <= MAX_BLOCK_W)
 
         warp_block(floor_i, nx1, y1, nx2, y2, z1, z2)
       end
@@ -1194,14 +1257,14 @@ function Arena_Cave_Test()
       return
     end
 
-    if (y2 - y1) > 2444 then
-      local subs = int((y2 - y1) / 24) + 1
+    if (y2 - y1) > MAX_BLOCK_W then
+      local subs = int((y2 - y1) / MAX_BLOCK_W) + 1
 
       for i = 1,subs do
         local ny1 = y1 + (y2 - y1) * (i-1) / subs
         local ny2 = y1 + (y2 - y1) * (i  ) / subs
 
-        assert(ny2 - ny1 <= 24)
+        assert(ny2 - ny1 <= MAX_BLOCK_W)
 
         warp_block(floor_i, x1, ny1, x2, ny2, z1, z2)
       end
@@ -1226,8 +1289,8 @@ function Arena_Cave_Test()
     local pchar = get_pattern(px, py)
 
     if pchar == '#' then
-      local x1, y1 = (px-1)*320, (py-1)*320
-      local x2, y2 = px*320, py*320
+      local x1, y1 = px*320, py*320
+      local x2, y2 = (px+1)*320, (py+1)*320
 
       if get_pattern(nudge_coord(px, py, 4)) == '.' then x1 = x1+48 end
       if get_pattern(nudge_coord(px, py, 6)) == '.' then x2 = x2-48 end
@@ -1236,26 +1299,21 @@ function Arena_Cave_Test()
 
       warp_block(get_mat("ASHWALL4"), x1,y1, x2,y2)
 
+      WX1, WY1, WX2, WY2 = x1,y1, x2,y2
+-- [[
       warp_block(get_mat("RROCK04"), x1-32, y1-32, x2+32, y2+32, 32, SKY_H-128)
       warp_block(get_mat("RROCK09"), x1-64, y1-64, x2+64, y2+64, 24, SKY_H-96)
       warp_block(get_mat("FLAT5_7"), x1-112, y1-112, x2+112, y2+112, 16, SKY_H-64)
       warp_block(get_mat("FLAT10"),  x1-144, y1-144, x2+144, y2+144, 8, SKY_H-32)
+--]]
       return
     end
-
---[[
-    for side = 1,9 do if side ~= 5 then
-      local nx, ny = nudge_coord(px, py, side)
-      local nchar = get_pattern(nx, ny)  -- assumes nx,ny is valid
-      
-      if nchar == '#' then
-        
-
-    end end -- for side
---]]
   end
 
+
   ---| Arena_Cave_Test |---
+
+  setup_warp()
 
   Trans_quad(get_mat("LAVA1"), -256, -256, 4096, 3072, -EXTREME_H, 0)
   Trans_quad(get_sky(),        -256, -256, 4096, 3072, SKY_H, EXTREME_H)
@@ -1267,6 +1325,6 @@ function Arena_Cave_Test()
     do_block(px, py)
   end end -- for px, py
 
-  Arena_add_players(384, 384, 0, 90)
+  Arena_add_players(320*2.5, 320*2.5, 0, 90)
 end
 
