@@ -1142,3 +1142,126 @@ function Arena_Doom_E2M8()
 end  
 
 
+function Arena_Cave_Test()
+
+  local pattern =
+  {
+    "##########",
+    "#...#....#",
+    "#.#.#.##.#",
+    "#........#",
+    "#.###.#..#",
+    "#..#.....#",
+    "##########",
+  }
+
+  local SKY_H = 256
+
+  local function warp_coord(x, y)
+    return { x=int(x), y=int(y) }
+  end
+
+  local function raw_warp_block(floor_i, x1, y1, x2, y2, z1, z2)
+    local coords =
+    {
+      warp_coord(x2,y1),
+      warp_coord(x2,y2),
+      warp_coord(x1,y2),
+      warp_coord(x1,y1),
+    }
+
+    if z1 then
+      Trans_brush(floor_i, coords, -EXTREME_H, z1)
+      Trans_brush(floor_i, coords, z2, EXTREME_H)
+    else
+      Trans_brush(floor_i, coords, -EXTREME_H, EXTREME_H)
+    end
+  end
+
+  local function warp_block(floor_i, x1, y1, x2, y2, z1, z2)
+    if (x2 - x1) > 2444 then
+      local subs = int((x2 - x1) / 24) + 1
+
+      for i = 1,subs do
+        local nx1 = x1 + (x2 - x1) * (i-1) / subs
+        local nx2 = x1 + (x2 - x1) * (i  ) / subs
+
+        assert(nx2 - nx1 <= 24)
+
+        warp_block(floor_i, nx1, y1, nx2, y2, z1, z2)
+      end
+
+      return
+    end
+
+    if (y2 - y1) > 2444 then
+      local subs = int((y2 - y1) / 24) + 1
+
+      for i = 1,subs do
+        local ny1 = y1 + (y2 - y1) * (i-1) / subs
+        local ny2 = y1 + (y2 - y1) * (i  ) / subs
+
+        assert(ny2 - ny1 <= 24)
+
+        warp_block(floor_i, x1, ny1, x2, ny2, z1, z2)
+      end
+
+      return
+    end
+
+    raw_warp_block(floor_i, x1, y1, x2, y2, z1, z2)
+  end
+
+  local function get_pattern(px, py)
+    if py < 1 or py > #pattern then return '#' end
+
+    local pline = pattern[#pattern-py+1]
+
+    if px < 1 or px > #pline then return '#' end
+
+    return string.sub(pline, px, px)
+  end
+
+  local function do_block(px, py)
+    local pchar = get_pattern(px, py)
+
+    if pchar == '#' then
+      local x1, y1 = (px-1)*256+32, (py-1)*256+32
+      local x2, y2 = px*256-32, py*256-32
+
+      warp_block(get_mat("ASHWALL4"), x1,y1, x2,y2)
+
+      warp_block(get_mat("RROCK04"), x1-24, y1-24, x2+24, y2+24, 32, SKY_H-96)
+      warp_block(get_mat("RROCK09"), x1-48, y1-48, x2+48, y2+48, 24, SKY_H-64)
+      warp_block(get_mat("FLAT5_7"), x1-72, y1-72, x2+72, y2+72, 16, SKY_H-32)
+      warp_block(get_mat("FLAT10"),  x1-108, y1-108, x2+108, y2+108, 8, SKY_H+108)
+      return
+    end
+
+--[[
+    for side = 1,9 do if side ~= 5 then
+      local nx, ny = nudge_coord(px, py, side)
+      local nchar = get_pattern(nx, ny)  -- assumes nx,ny is valid
+      
+      if nchar == '#' then
+        
+
+    end end -- for side
+--]]
+  end
+
+  ---| Arena_Cave_Test |---
+
+  Trans_quad(get_mat("LAVA1"), -256, -256, 3072, 3072, -EXTREME_H, 0)
+  Trans_quad(get_sky(),        -256, -256, 3072, 3072, SKY_H, EXTREME_H)
+
+  local pw = #pattern[1]
+  local ph = #pattern
+
+  for px = 1,pw do for py = 1,ph do
+    do_block(px, py)
+  end end -- for px, py
+
+  Arena_add_players(384, 384, 0, 90)
+end
+
