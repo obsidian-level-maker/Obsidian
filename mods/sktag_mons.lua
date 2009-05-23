@@ -4,6 +4,7 @@
 --
 --  Oblige Level Maker (C) 2009 Andrew Apted
 --                     (C) 2009 Chris Pisarczyk
+--                     (C) 2009 Enhas
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -57,39 +58,41 @@ SKULLTAG_MONSTERS =
   {
     prob=33, guard_prob=21, trap_prob=11, cage_prob=30,
     health=120, damage=65, attack="hitscan",
-    give={ {weapon="super"} },
+    give={ {weapon="super"}, {ammo="shell",count=4} },
   },
 
   bldemon =
   {
-    prob=25, guard_prob=11, trap_prob=31,
+    prob=20, guard_prob=11, trap_prob=31,
     health=300, damage=25, attack="melee",
   },
 
   cacolant =
   {
-    prob=25, guard_prob=21, trap_prob=11,
+    prob=25, guard_prob=21, trap_prob=11, cage_prob=11, crazy_prob=10,
     health=800, damage=55, attack="missile",
-    float=true,
+    density=0.6, float=true,
   },
 
   hectebus =
   {
     prob=35, guard_prob=21, trap_prob=21, cage_prob=88,
     health=1200, damage=120, attack="missile",
+    density=0.4,
   },
 
   abaddon =
   {
-    prob=15, guard_prob=21, trap_prob=11,
+    prob=15, guard_prob=21, trap_prob=11, cage_prob=5, crazy_prob=25,
     health=1200, damage=65, attack="missile",
-    float=true,
+    density=0.6, float=true,
   },
 
   belphegor =
   {
-    prob=15, guard_prob=21, trap_prob=21, cage_prob=5,
+    prob=15, guard_prob=21, trap_prob=21, cage_prob=5, crazy_prob=25,
     health=1500, damage=80, attack="missile",
+    density=0.3,
   },
 }
 
@@ -153,7 +156,7 @@ SKULLTAG_PICKUPS =
 
 
 -- TODO MONSTER/WEAPON PREFS
---  hectebus = { super=2.0, lauch=2.0, railgun=1.5 },
+--  hectebus = { super=2.0, launch=2.0, railgun=1.5 },
 --  belphegor = { launch=1.5, plasma=1.5, bfg=1.0, railgun=1.5 },
 --  darkimp   = { chain=2.0, shotty=6.0, minigun=1.0 },
 --  cacolant  = { super=2.0, launch=0.7, railgun=1.0, minigun=0.4 },
