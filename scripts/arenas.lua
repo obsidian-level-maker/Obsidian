@@ -1226,15 +1226,20 @@ function Arena_Cave_Test()
     local pchar = get_pattern(px, py)
 
     if pchar == '#' then
-      local x1, y1 = (px-1)*256+32, (py-1)*256+32
-      local x2, y2 = px*256-32, py*256-32
+      local x1, y1 = (px-1)*320, (py-1)*320
+      local x2, y2 = px*320, py*320
+
+      if get_pattern(nudge_coord(px, py, 4)) == '.' then x1 = x1+48 end
+      if get_pattern(nudge_coord(px, py, 6)) == '.' then x2 = x2-48 end
+      if get_pattern(nudge_coord(px, py, 2)) == '.' then y1 = y1+48 end
+      if get_pattern(nudge_coord(px, py, 8)) == '.' then y2 = y2-48 end
 
       warp_block(get_mat("ASHWALL4"), x1,y1, x2,y2)
 
-      warp_block(get_mat("RROCK04"), x1-24, y1-24, x2+24, y2+24, 32, SKY_H-96)
-      warp_block(get_mat("RROCK09"), x1-48, y1-48, x2+48, y2+48, 24, SKY_H-64)
-      warp_block(get_mat("FLAT5_7"), x1-72, y1-72, x2+72, y2+72, 16, SKY_H-32)
-      warp_block(get_mat("FLAT10"),  x1-108, y1-108, x2+108, y2+108, 8, SKY_H+108)
+      warp_block(get_mat("RROCK04"), x1-32, y1-32, x2+32, y2+32, 32, SKY_H-128)
+      warp_block(get_mat("RROCK09"), x1-64, y1-64, x2+64, y2+64, 24, SKY_H-96)
+      warp_block(get_mat("FLAT5_7"), x1-112, y1-112, x2+112, y2+112, 16, SKY_H-64)
+      warp_block(get_mat("FLAT10"),  x1-144, y1-144, x2+144, y2+144, 8, SKY_H-32)
       return
     end
 
@@ -1252,8 +1257,8 @@ function Arena_Cave_Test()
 
   ---| Arena_Cave_Test |---
 
-  Trans_quad(get_mat("LAVA1"), -256, -256, 3072, 3072, -EXTREME_H, 0)
-  Trans_quad(get_sky(),        -256, -256, 3072, 3072, SKY_H, EXTREME_H)
+  Trans_quad(get_mat("LAVA1"), -256, -256, 4096, 3072, -EXTREME_H, 0)
+  Trans_quad(get_sky(),        -256, -256, 4096, 3072, SKY_H, EXTREME_H)
 
   local pw = #pattern[1]
   local ph = #pattern
