@@ -1456,13 +1456,13 @@ COMMON_MONSTERS =
 
   demon =
   {
-    prob=35, guard_prob=31, trap_prob=61,
+    prob=35, guard_prob=31, trap_prob=31,
     health=150, damage=25, attack="melee",
   },
 
   spectre =
   {
-    prob=4, guard_prob=11, trap_prob=61, crazy_prob=20,
+    replaces="demon", replace_prob=25, trap_prob=51, crazy_prob=21,
     health=150, damage=25, attack="melee",
     invis=true,
   },

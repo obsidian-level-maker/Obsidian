@@ -39,7 +39,7 @@ QUAKE1_THINGS =
   scrag    = { id="monster_wizard",   kind="monster", r=32, h=80, },
 
   shambler = { id="monster_shambler", kind="monster", r=32, h=80, },
-  spawn    = { id="monster_tarbaby",  kind="monster", r=32, h=80, },
+  tarbaby  = { id="monster_tarbaby",  kind="monster", r=32, h=80, },
   vore     = { id="monster_shalrath", kind="monster", r=32, h=80, },
   zombie   = { id="monster_zombie",   kind="monster", r=32, h=80, },
 
@@ -907,7 +907,9 @@ QUAKE1_MONSTERS =
 {
   dog =
   {
-    prob=10, guard_prob=1, trap_prob=1,
+    -- we use 'replaces' here to simulate the way dogs
+    -- usually appear with grunts.
+    replaces="grunt", replace_prob=30, trap_prob=30,
     health=25, damage=5, attack="melee",
   },
 
@@ -942,10 +944,11 @@ QUAKE1_MONSTERS =
     health=80, damage=18, attack="missile",
   },
 
-  spawn =
+  tarbaby =
   {
-    prob=10, trap_prob=11,
+    prob=1,
     health=80, damage=10, attack="melee",
+    density=0.3,
   },
 
   knight =

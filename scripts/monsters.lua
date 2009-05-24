@@ -176,6 +176,21 @@ function Monsters_init()
 
   LEVEL.mixed_mons_qty   = 24 + rand_skew() * 10
   LEVEL.mixed_mons_tough = rand_range(0.9, 1.1)
+
+  -- build replacement table --
+
+  LEVEL.mon_replacement = {}
+
+  for name,info in pairs(GAME.monsters) do
+    if info.replaces then
+      local other = info.replaces
+      assert(info.replace_prob)
+      if not LEVEL.mon_replacement[other] then
+        LEVEL.mon_replacement[other] = { [other]=90 }
+      end
+      LEVEL.mon_replacement[other][name] = info.replace_prob
+    end
+  end
 end
 
 function Monsters_global_palette()
@@ -197,7 +212,7 @@ function Monsters_global_palette()
   rand_shuffle(list)
 
   -- sometimes promote a particular monster
-  if rand_odds(40) then
+  if rand_odds(30) then
     local promote = list[#list]
     local info = GAME.monsters[promote]
     if not info.never_promote then
@@ -377,7 +392,7 @@ function Monsters_do_pickups()
       add_small_spots(R, S, 8, 2, score - 0.3)
 
     else
-      while true do
+      for loop = 1,100 do
         local side = rand_irange(1,4) * 2
         if walls[side] then
           add_small_spots(R, S, side, 4, score)
@@ -815,6 +830,9 @@ function Monsters_in_room(R)
 
       if prob and LEVEL.monster_prefs then
         prob = prob * (LEVEL.monster_prefs[name] or 1)
+        if info.replaces then
+          prob = prob * (LEVEL.monster_prefs[info.replaces] or 1)
+        end
       end
 
       if prob and prob > 0 then
@@ -889,13 +907,20 @@ function Monsters_in_room(R)
     gui.debugf("Monster palette: (%d kinds)\n", num_kinds)
 
     for i = 1,num_kinds do
-      local mon = rand_key_by_probs(list)
-      palette[mon] = list[mon]
+      local mon  = rand_key_by_probs(list)
+      local prob = list[mon]
+      list[mon] = nil
+
+      -- sometimes replace it completely (e.g. all demons become spectres)
+      if rand_odds(25) and LEVEL.mon_replacement[mon] then
+        mon = rand_key_by_probs(LEVEL.mon_replacement[mon])
+      end
+
+      palette[mon] = prob
 
       gui.debugf("  #%d %s\n", i, mon)
       LEVEL.mon_stats[mon] = (LEVEL.mon_stats[mon] or 0) + 1
 
-      list[mon] = nil
       if table_empty(list) then break; end
     end
 
@@ -1155,29 +1180,38 @@ function Monsters_in_room(R)
     end
   end
 
-  local function add_to_list(SK, spot)
+  local function add_to_list(SK, info)
     if not R.monster_list[SK] then
       R.monster_list[SK] = {}
     end
 
-    table.insert(R.monster_list[SK], spot.info)
+    table.insert(R.monster_list[SK], info)
   end
 
   local function place_monster(spot, index)
     local angle  = monster_angle(spot.S)
     local ambush = rand_sel(92, 1, 0)
 
+    local mon  = spot.monster
+    local info = spot.info
+
+    -- handle replacements
+    if LEVEL.mon_replacement[mon] and not R.no_replacement then
+      mon  = rand_key_by_probs(LEVEL.mon_replacement[mon])
+      info = assert(GAME.monsters[mon])
+    end
+
     -- minimum skill needed for the monster to appear
     local skill
 
     if true then
-      skill = 3 ; add_to_list(SKILLS[skill], spot)
+      skill = 3 ; add_to_list(SKILLS[skill], info)
     end
     if (index % 3) >= 1 then
-      skill = 2 ; add_to_list(SKILLS[skill], spot)
+      skill = 2 ; add_to_list(SKILLS[skill], info)
     end
     if (index % 3) == 1 then
-      skill = 1 ; add_to_list(SKILLS[skill], spot)
+      skill = 1 ; add_to_list(SKILLS[skill], info)
     end
 
     local props = { angle = spot.angle or angle }
@@ -1197,7 +1231,7 @@ function Monsters_in_room(R)
       props.skill_easy   = sel(skill <= 1, 1, 0)
     end
 
-    Trans_entity(spot.monster, spot.x, spot.y, spot.S.floor_h, props)
+    Trans_entity(mon, spot.x, spot.y, spot.S.floor_h, props)
 
     spot.S.content = "monster"
   end
@@ -1247,6 +1281,11 @@ function Monsters_in_room(R)
     if R.kind == "hallway" then barrel_chance = 5 end
     if STYLE.barrels == "heaps" or rand_odds(10) then barrel_chance = barrel_chance * 3 + 10 end
     if STYLE.barrels == "few"   or rand_odds(30) then barrel_chance = barrel_chance / 4 end
+
+    -- sometimes prevent monster replacements
+    if rand_odds(40) then
+      R.no_replacement = true
+    end
 
     fill_monster_map(qty, barrel_chance)
   end

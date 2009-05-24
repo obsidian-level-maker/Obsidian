@@ -1809,6 +1809,7 @@ HEXEN_MONSTERS =
 
   centaur2 =
   {
+    -- not using 'replaces' here, centaur2 is much tougher
     prob=20, guard_prob=11, trap_prob=11, cage_prob=11,
     health=250, damage=20, attack="missile"
   },
@@ -1820,6 +1821,7 @@ HEXEN_MONSTERS =
 
   serpent2 =
   {
+    replaces="serpent1", replace_prob=33,
     health=90,  damage=16, attack="missile",
   },
 
@@ -1837,7 +1839,7 @@ HEXEN_MONSTERS =
 
   demon2 =
   {
-    prob=20, guard_prob=11, trap_prob=11, cage_prob=11,
+    replaces="demon1", replace_prob=40,
     health=250, damage=35, attack="missile",
   },
 

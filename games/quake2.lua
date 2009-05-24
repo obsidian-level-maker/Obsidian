@@ -1619,7 +1619,7 @@ QUAKE2_MONSTERS =
 
   guard_mg =
   {
-    prob=70, guard_prob=11, trap_prob=11, cage_prob=11,
+    replaces="guard_sg", replace_prob=50,
     health=30, damage=10, attack="hitscan",
   },
 

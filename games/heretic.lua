@@ -1575,7 +1575,7 @@ HERETIC_MONSTERS =
 
   mummy_inv =
   {
-    prob=10, trap_prob=21,
+    replaces="mummy", replace_prob=15, trap_prob=30,
     health=80, damage=8, attack="melee",
     give={ {ammo="crystal",count=1} },
     invis=true,
@@ -1597,7 +1597,7 @@ HERETIC_MONSTERS =
 
   knight_inv =
   {
-    prob=10, trap_prob=21,
+    replaces="knight", replace_prob=15, trap_prob=30,
     health=200, damage=14, attack="missile",
     give={ {ammo="arrow",count=1.6} },
     invis=true,
@@ -1612,7 +1612,7 @@ HERETIC_MONSTERS =
 
   leader_inv =
   {
-    prob=10, guard_prob=11, trap_prob=11, cage_prob=11,
+    replaces="leader", replace_prob=15, trap_prob=20,
     health=100, damage=16, attack="missile",
     give={ {ammo="crystal",count=1} },
     invis=true,
