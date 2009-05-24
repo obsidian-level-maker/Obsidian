@@ -1850,7 +1850,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
     for i = 1,4 do
       if R.combo.floors then
-        table.insert(f_texs, rand_element(R.combo.floors))
+        table.insert(f_texs, rand_key_by_probs(R.combo.floors))
       elseif LEVEL.theme.floors then
         table.insert(f_texs, rand_key_by_probs(LEVEL.theme.floors))
       else
@@ -2322,7 +2322,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
       floor = T.f_tex or C.conn_ftex,
       ceil = out_combo.ceil,
     }
-    --!!!!!! FIXME game/theme specific
+    --!!!! FIXME game/theme specific
     skin.switch = rand_element { "SW1METAL", "SW1LION", "SW1BRN2", "SW1BRNGN",
                                 "SW1GRAY",  "SW1MOD1", "SW1SLAD", "SW1STRTN",
                                 "SW1TEK",   "SW1STON1" }
@@ -2362,7 +2362,6 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   post_processing()
 
   for _,C in ipairs(R.conns) do
--- if not C.conn_h then gui.debugf("CONN_H NOT SET @ %s\n", C.src_S:tostr()) ; C.conn_h = 1 ; C.src_S.f_tex = "LAVA1" end --!!!!!!!
     assert(C.conn_h)
   end
 

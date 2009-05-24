@@ -316,7 +316,7 @@ function Rooms_decide_hallways_II()
 
 
   ---| Room_decide_hallways |---
-  
+
   for _,R in ipairs(LEVEL.all_rooms) do
     if eval_hallway(R) then
 gui.debugf("  Made Hallway @ %s\n", R:tostr())
@@ -345,7 +345,8 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
     if R.kind == "hallway" and R.num_branch == 2 and
        not R.purpose and not R.weapon and
        stairwell_neighbors(R) == 0 and
-       locked_neighbors(R) == 0
+       locked_neighbors(R) == 0 and
+       not PARAM.tiled
     then
       local hall_nb = hallway_neighbors(R) 
 
@@ -1759,10 +1760,14 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
  
     R.ceil_h = math.max(min_h, avg_h + R.tallness)
 
+    R.ceil_tex = rand_key_by_probs(LEVEL.theme.ceilings)
+
+-- [[
     decide_periphs()
     install_periphs()
 
     do_central_area()
+--]]
 
 --[[
     if R.tx1 and R.tw >= 7 and R.th >= 7 then
@@ -1972,7 +1977,7 @@ gui.printf("do_teleport\n")
 
     local w_tex = S.w_tex or R.combo.wall
     local f_tex = S.f_tex or R.combo.floor
-    local c_tex = S.c_tex or sel(R.outdoor, PARAM.sky_flat, R.combo.ceil)
+    local c_tex = S.c_tex or sel(R.outdoor, PARAM.sky_flat, R.ceil_tex)
 
     if R.kind == "hallway" then
       w_tex = assert(LEVEL.hall_tex)
@@ -2158,7 +2163,7 @@ gui.printf("do_teleport\n")
       Trans_quad(get_sky(), x1,y1, x2,y2, z2, EXTREME_H)
 
     elseif S.kind ~= "void" and not S.no_ceil then
-      local info = get_mat(S.u_tex or c_tex, c_tex)
+      local info = get_mat(S.u_tex or c_tex or w_tex, c_tex)
       info.b_face.light = S.c_light
 
       Trans_quad(info, x1,y1, x2,y2, z2, EXTREME_H)
@@ -2308,6 +2313,12 @@ function Rooms_build_all()
   Rooms_reckon_doors()
 
   Seed_dump_fabs()
+
+  if PARAM.tiled then
+    -- this is as far as we go for TILE based games
+    -- (code in tiler.lua will now kick in).
+    return
+  end
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_one(R)
