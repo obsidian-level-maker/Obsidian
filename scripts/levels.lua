@@ -198,6 +198,8 @@ end
 
 
 function Level_styles()
+  gui.rand_seed(LEVEL.seed)
+
   for name,prob_tab in pairs(STYLE_LIST) do
     STYLE[name] = rand_key_by_probs(prob_tab)
   end
@@ -219,6 +221,7 @@ end
 
 
 function Level_build_it()
+  gui.rand_seed(LEVEL.seed)
 
   -- does the level have a custom build function (e.g. Arenas) ?
   if LEVEL.build_func then
@@ -279,25 +282,18 @@ function Level_make(L, index, NUM)
   Game_invoke_hook("begin_level_func",  LEVEL.seed)
   Game_invoke_hook("begin_level2_func", LEVEL.seed)
 
-  if PARAM.error_tex then
-    gui.property("error_tex",  PARAM.error_tex)
-    gui.property("error_flat", PARAM.error_flat or PARAM.error_tex)
-  end   
+
+  local error_mat = assert(GAME.materials["_ERROR"])
+
+  gui.property("error_tex",  error_mat.t)
+  gui.property("error_flat", error_mat.f or error_mat.t)
 
   if LEVEL.description then
----!!!    if HOOKS.set_level_desc then
----!!!       HOOKS.set_level_desc(LEVEL.description)
----!!!    else
-      gui.property("description", LEVEL.description)
----!!!    end
+    gui.property("description", LEVEL.description)
   end
 
 
-  gui.rand_seed(LEVEL.seed)
-
   Level_styles()
-
-  gui.rand_seed(LEVEL.seed)
 
   local res = Level_build_it()
   if res == "abort" then
@@ -310,11 +306,6 @@ function Level_make(L, index, NUM)
 
   gui.end_level()
 
-
----!!!  -- FIXME: invoke "level_finish" signal
----!!!  if HOOKS.make_level_gfx and LEVEL.description then
----!!!     HOOKS.make_level_gfx(LEVEL.description)
----!!!  end
 
   -- intra-level cleanup
   if index < NUM then

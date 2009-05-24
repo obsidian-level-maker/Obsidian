@@ -246,6 +246,10 @@ DOOM_PALETTE =
 
 COMMON_MATERIALS =
 {
+  -- special materials --
+  _ERROR = { t="METAL",   f="CEIL5_2" },
+  _SKY   = { t="CEMENT3", f="F_SKY1" },
+
   -- textures with best-matching flat
 
   BIGDOOR1 = { t="BIGDOOR1", f="FLAT23" },
@@ -544,7 +548,6 @@ COMMON_MATERIALS =
 
 
   -- Missing stuff:
-  --   F_SKY    : handled using PARAM.sky_flat
   --   CEMENT#  : used by OBLIGE for various logos
   --   SKY1/2/3 : not very useful
   --   ZZZFACE# : not generally useful (OK to hard-code)
@@ -2236,13 +2239,6 @@ OB_GAMES["doom1"] =
 
     seed_size = 256,
 
-    sky_flat   = "F_SKY1",
-    sky_tex    = "CEMENT3",
-
-    error_tex  = "METAL"   or "FIREBLU1",
-    error_flat = "CEIL5_1" or "SFLR6_4",
-    error_mat  = "METAL",
-
     max_name_length = 28,
 
     skip_monsters = { 26,40 },
@@ -2345,13 +2341,6 @@ OB_GAMES["doom2"] =
     custom_flats = true,
 
     seed_size = 256,
-
-    sky_flat   = "F_SKY1",
-    sky_tex    = "CEMENT3",
-
-    error_tex  = "METAL"   or "FIREBLU1",
-    error_flat = "CEIL5_1" or "SFLR6_4",
-    error_mat  = "METAL",
 
     -- this is roughly how many characters can fit on the
     -- intermission screens (the CWILVxx patches).  It does

@@ -293,6 +293,10 @@ HEXEN_PALETTE =
 
 HEXEN_MATERIALS =
 {
+  -- special materials --
+  _ERROR = { t="WASTE01", f="F_033" },
+  _SKY   = { t="WASTE01", f="F_SKY" },
+
   -- textures --
 
   BOOKS01  = { t="BOOKS01",  f="F_092" },
@@ -2512,13 +2516,6 @@ UNFINISHED["hexen"] =
     ACS_script = true,
 
     seed_size = 256,
-
-    sky_flat   = "F_SKY",
-    sky_tex    = "WASTE01",
-
-    error_tex  = "WASTE01",
-    error_flat = "F_033",
-    error_mat  = "WASTE01",
 
     max_name_length = 28,
 

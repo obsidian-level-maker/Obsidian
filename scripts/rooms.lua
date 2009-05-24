@@ -1695,7 +1695,8 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
       local lights = { "TLITE6_5", "TLITE6_6", "GRNLITE1", "FLAT17", "CEIL3_4" }
 
-      local light_info = get_mat(rand_element(lights))
+      local light_name = rand_element(lights)
+      local light_info = get_mat(light_name)
       light_info.b_face.light = 0.85
 
       -- lighting effects
@@ -1722,7 +1723,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     end
 
     if R.cw == 1 or R.ch == 1 then
-      fill_xyz(R.ceil_h+32, false, light_info.b_face.texture, 0.75)
+      fill_xyz(R.ceil_h+32, false, light_name, 0.75)
       return
     end
 
@@ -1977,7 +1978,7 @@ gui.printf("do_teleport\n")
 
     local w_tex = S.w_tex or R.combo.wall
     local f_tex = S.f_tex or R.combo.floor
-    local c_tex = S.c_tex or sel(R.outdoor, PARAM.sky_flat, R.ceil_tex)
+    local c_tex = S.c_tex or sel(R.outdoor, "_SKY", R.ceil_tex)
 
     if R.kind == "hallway" then
       w_tex = assert(LEVEL.hall_tex)
@@ -2135,7 +2136,7 @@ gui.printf("do_teleport\n")
 
     if S.kind == "diagonal" then
 
-      local diag_info = get_mat(w_tex, S.stuckie_ftex, c_tex)
+      local diag_info = get_mat(w_tex, S.stuckie_ftex) ---### , c_tex)
 
       Build_diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
 
@@ -2155,9 +2156,8 @@ gui.printf("do_teleport\n")
 
     -- CEILING
 
-    -- FIXME: remove c_tex check
     if S.kind ~= "void" and not S.no_ceil and 
-       (S.is_sky or c_tex == PARAM.sky_flat)
+       (S.is_sky or c_tex == "_SKY")
     then
 
       Trans_quad(get_sky(), x1,y1, x2,y2, z2, EXTREME_H)

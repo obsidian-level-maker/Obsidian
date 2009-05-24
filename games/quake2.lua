@@ -171,6 +171,10 @@ QUAKE2_PALETTE =
 
 QUAKE2_MATERIALS =
 {
+  -- special materials --
+  _ERROR = { t="e1u1/metal1_1" },
+  _SKY   = { t="e1u1/sky1" },
+
   AIRDUC1_1  = { t="e1u3/airduc1_1" },
   AIRDUC1_2  = { t="e1u3/airduc1_2" },
   AIRDUC1_3  = { t="e1u3/airduc1_3" },
@@ -2040,11 +2044,6 @@ UNFINISHED["quake2"] =
 
     seed_size = 240,
     seed_limit = 32,
-
-    sky_tex  = "e1u1/sky1",
-    sky_flat = "e1u1/sky1",
-
-    error_mat = "METAL1_1",
 
     no_keys = true,  --!!!! FIXME
 

@@ -193,6 +193,11 @@ WOLF_TILE_NUMS =
 
 WOLF_MATERIALS =
 {
+  -- special materials --
+
+  _ERROR = { t=0x30 },
+  _SKY   = { t=0x10 },
+
   -- common stuff --
 
   BLU_BRIK  = { t=0x28 },
@@ -232,7 +237,6 @@ WOLF_MATERIALS =
   GSTN_MOS2 = { t=0x1a },
   GSTN_FLAG = { t=0x03 },
   GSTN_SIGN = { t=0x1c },
-  SKYWALL   = { t=0x10 },
 
   PURP_BLOD = { t=0x19 },
   PURP_STON = { t=0x13 },
@@ -995,8 +999,6 @@ OB_GAMES["wolf3d"] =
 
     seed_size = 192,  -- actually 3 blocks
     seed_limit = 21,  -- 64 / 3
-
-    error_mat = "WOOD2",
 
     no_keys = true, --!!!!
 

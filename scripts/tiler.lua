@@ -104,7 +104,7 @@ function Tiler_layout_room(R)
 
   if not mat then
     gui.printf("LACKING MATERIAL : %s\n", tostring(R.combo.wall))
-    mat = assert(GAME.materials[PARAM.error_mat])
+    mat = assert(GAME.materials["_ERROR"])
   end
 
   assert(mat.t)

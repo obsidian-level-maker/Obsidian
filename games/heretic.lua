@@ -209,6 +209,10 @@ HERETIC_PALETTE =
 
 HERETIC_MATERIALS =
 {
+  -- special materials --
+  _ERROR = { t="WOODWL",  f="FLOOR10" },
+  _SKY   = { t="MOSAIC1", f="F_SKY1"  },
+
   -- textures --
 
   BANNER1  = { t="BANNER1",  f="FLOOR03" },
@@ -2048,13 +2052,6 @@ OB_GAMES["heretic"] =
     custom_flats = true,
 
     seed_size = 256,
-
-    sky_tex    = "MOSAIC1",
-    sky_flat   = "F_SKY1",
-
-    error_tex  = "WOODWL",
-    error_flat = "FLOOR10",
-    error_mat  = "WOODWL",
 
     max_name_length = 28,
 

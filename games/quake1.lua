@@ -163,6 +163,10 @@ QUAKE1_PALETTE =
 
 QUAKE1_MATERIALS =
 {
+  -- special materials --
+  _ERROR = { t="METAL1_1" },
+  _SKY   = { t="sky4" },
+
   ADOOR01_2  = { t="adoor01_2" },
   ADOOR02_2  = { t="adoor02_2" },
   ADOOR03_2  = { t="adoor03_2" },
@@ -1259,11 +1263,6 @@ OB_GAMES["quake"] =
     seed_limit = 30,
 
     no_keys = true,  --!!!! FIXME
-
-    sky_tex  = "sky4",
-    sky_flat = "sky4",
-
-    error_mat = "METAL1_1",
 
     entity_delta_z = 24,
 

@@ -128,13 +128,6 @@ UNFINISHED["freedoom"] =
 
     seed_size = 256,
 
-    sky_flat   = "F_SKY1",
-    sky_tex    = "CEMENT3",
-
-    error_tex  = "METAL"   or "FIREBLU1",
-    error_flat = "CEIL5_1" or "SFLR6_4",
-    error_mat  = "METAL",
-
     -- this is roughly how many characters can fit on the
     -- intermission screens (the CWILVxx patches).  It does
     -- not reflect any buffer limits in Doom ports.

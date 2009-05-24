@@ -173,6 +173,7 @@ function psychedelic_mat(name)
 
     for m,_ in pairs(GAME.materials) do
       if not (GAME.sanity_map and GAME.sanity_map[m]) and
+         not (string.sub(m,1,1) == "_") and
          not (string.sub(m,1,2) == "SW") and
          not (string.sub(m,1,3) == "BUT")
       then
@@ -207,7 +208,7 @@ function safe_get_mat(name)
 
   if not mat then
     gui.printf("\nLACKING MATERIAL : %s\n\n", name)
-    mat = assert(GAME.materials[PARAM.error_mat])
+    mat = assert(GAME.materials["_ERROR"])
 
     -- prevent further messages
     GAME.materials[name] = mat
@@ -240,12 +241,14 @@ function get_mat(wall, floor, ceil)
 end
 
 function get_sky()
+  local mat = assert(GAME.materials["_SKY"])
+
   return
   {
     kind = "sky",
-    w_face = { texture=PARAM.sky_tex },
-    t_face = { texture=PARAM.sky_flat or PARAM.sky_tex },
-    b_face = { texture=PARAM.sky_flat or PARAM.sky_tex, light=LEVEL.sky_light or 0.75 },
+    w_face = { texture=mat.t },
+    t_face = { texture=mat.f or mat.t },
+    b_face = { texture=mat.f or mat.t, light=LEVEL.sky_light or 0.75 },
   }
 end
 
