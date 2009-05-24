@@ -90,6 +90,12 @@ end
 
 
 function Game_merge_tab(name, tab)
+  assert(name)
+
+  if not tab then
+    error("No such table: " .. tostring(name))
+  end
+
   local DEEP_TABLES = { themes=true, rooms=true }
 
   if not GAME[name] then
@@ -178,11 +184,6 @@ function Game_setup()
       for i = 1,#mod.tables,2 do
         local name = mod.tables[i]
         local tab  = mod.tables[i+1]
-
-        assert(name)
-        if not tab then
-          error("No such table: " .. tostring(name))
-        end
 
         Game_merge_tab(name, tab)
       end
