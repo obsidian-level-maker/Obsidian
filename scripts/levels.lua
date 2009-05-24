@@ -77,19 +77,6 @@ STYLE_LIST =
 }
 
 
-function Game_merge_tab(name, t)
-  if not t then
-    error("Missing table for Game_merge_tab: " .. tostring(name))
-  end
-
-  if not GAME[name] then
-    GAME[name] = {}
-  end
-
-  deep_merge(GAME[name], t)
-end
-
-
 function Game_clean_up()
   GAME   = {}
   PARAM  = {}
@@ -102,7 +89,20 @@ function Game_clean_up()
 end
 
 
-local function Game_sort_modules()
+function Game_merge_tab(name, tab)
+  local DEEP_TABLES = { themes=true, rooms=true }
+
+  if not GAME[name] then
+    GAME[name] = deep_copy(tab)
+  elseif DEEP_TABLES[name] then
+    deep_merge(GAME[name], tab)
+  else
+    deepish_merge(GAME[name], tab)
+  end
+end
+
+
+function Game_sort_modules()
   GAME.all_modules = {}
 
   local game = OB_GAMES[OB_CONFIG.game]
@@ -169,8 +169,6 @@ function Game_setup()
   GAME.format = assert(game.format)
 
 
-  local DEEP_TABLES = { themes=true, rooms=true }
-
   for index,mod in ipairs(GAME.all_modules) do
     if mod.param then
       shallow_merge(PARAM, mod.param)
@@ -186,13 +184,7 @@ function Game_setup()
           error("No such table: " .. tostring(name))
         end
 
-        if not GAME[name] then
-          GAME[name] = deep_copy(tab)
-        elseif DEEP_TABLES[name] then
-          deep_merge(GAME[name], tab)
-        else
-          deepish_merge(GAME[name], tab)
-        end
+        Game_merge_tab(name, tab)
       end
     end
   end -- for mod
