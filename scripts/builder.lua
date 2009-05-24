@@ -156,6 +156,10 @@ function Trans_entity(name, x, y, z, props)
 
   x, y = Trans_coord(x, y)
 
+  if info.spawnflags then
+    props.spawnflags = (props.spawnflags or 0) + info.spawnflags
+  end
+
   gui.add_entity(tostring(info.id), x, y, z, props)
 end
 
