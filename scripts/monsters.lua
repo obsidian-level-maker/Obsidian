@@ -182,8 +182,6 @@ function Monsters_global_palette()
   -- Decides which monsters we will use on this level.
   -- Easiest way is to pick some monsters NOT to use.
 
-  if not PARAM.skip_monsters then return end
-
   -- if already have level prefs, don't overwrite
   if LEVEL.monster_prefs then return end
 
@@ -199,21 +197,26 @@ function Monsters_global_palette()
   rand_shuffle(list)
 
   -- sometimes promote a particular monster
-  if rand_odds(30) then
+  if rand_odds(40) then
     local promote = list[#list]
     local info = GAME.monsters[promote]
     if not info.never_promote then
       gui.debugf("Promoting monster: %s\n", promote)
       LEVEL.monster_prefs[promote] = 3.3
+      table.remove(list, #list)
     end
   end
 
-  local count = rand_irange(PARAM.skip_monsters[1], PARAM.skip_monsters[2])
-  assert(count < #list)
+  if PARAM.skip_monsters and #list > 2 then
+    local perc  = rand_range(PARAM.skip_monsters[1], PARAM.skip_monsters[2])
+    local count = int(#list * perc / 100 + gui.random())
 
-  for i = 1,count do
-    LEVEL.monster_prefs[list[i]] = 0
-    gui.debugf("Skipping monster: %s\n", list[i])
+    if count >= #list then count = #list - 1 end
+
+    for i = 1,count do
+      LEVEL.monster_prefs[list[i]] = 0
+      gui.debugf("Skipping monster: %s\n", list[i])
+    end
   end
 end
 

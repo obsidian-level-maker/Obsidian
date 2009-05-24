@@ -2053,7 +2053,7 @@ UNFINISHED["quake2"] =
     -- reflects the on-screen space (in the computer panel)
     max_name_length = 24,
 
-    skip_monsters = { 3,5 },
+    skip_monsters = { 30,50 },
 
     mon_time_max = 12,
     mon_damage_max  = 200,

@@ -1270,7 +1270,7 @@ OB_GAMES["quake1"] =
     -- the on-screen space for the name is much less.
     max_name_length = 20,
 
-    skip_monsters = { 2,4 },
+    skip_monsters = { 20,30 },
 
     mon_time_max = 12,
     mon_damage_max  = 200,

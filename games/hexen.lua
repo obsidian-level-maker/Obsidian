@@ -2534,7 +2534,16 @@ UNFINISHED["hexen"] =
 
     max_name_length = 28,
 
-    palette_mons = 3,
+    skip_monsters = { 20,30 },
+
+    mon_time_max = 12,
+
+    mon_damage_max  = 200,
+    mon_damage_high = 100,
+    mon_damage_low  =   1,
+
+    ammo_factor   = 0.8,
+    health_factor = 0.7,
   },
 
   tables =

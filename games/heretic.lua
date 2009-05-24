@@ -2058,7 +2058,7 @@ OB_GAMES["heretic"] =
 
     max_name_length = 28,
 
-    skip_monsters = { 2,3 },
+    skip_monsters = { 20,30 },
 
     mon_time_max = 12,
 

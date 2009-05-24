@@ -2244,7 +2244,7 @@ OB_GAMES["doom1"] =
 
     max_name_length = 28,
 
-    skip_monsters = { 2,3 },
+    skip_monsters = { 26,40 },
 
     mon_time_max = 12,
 
@@ -2356,7 +2356,7 @@ OB_GAMES["doom2"] =
     -- not reflect any buffer limits in Doom ports.
     max_name_length = 28,
 
-    skip_monsters = { 4,5 },
+    skip_monsters = { 30,44 },
 
     mon_time_max = 12,
 
