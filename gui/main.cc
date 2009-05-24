@@ -244,7 +244,7 @@ void Build_Cool_Shit()
     else if (StringCaseCmp(format, "wolf3d") == 0)
       game_object = Wolf_GameObject();
 
-    else if (StringCaseCmp(format, "quake1") == 0)
+    else if (StringCaseCmp(format, "quake") == 0)
       game_object = Quake1_GameObject();
 
     else if (StringCaseCmp(format, "quake2") == 0)

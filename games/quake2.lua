@@ -2024,7 +2024,6 @@ end
 UNFINISHED["quake2"] =
 {
   label = "Quake 2",
-  format = "quake2",
 
   setup_func = Quake2_setup,
   levels_start_func = Quake2_get_levels,
@@ -2032,6 +2031,8 @@ UNFINISHED["quake2"] =
 
   param =
   {
+    format = "quake2",
+
     -- TODO
 
     -- dunno if needed by Quake II, but it doesn't hurt

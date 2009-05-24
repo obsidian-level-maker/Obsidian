@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-DOOM_THINGS =
+COMMON_THINGS =
 {
   --- PLAYERS ---
 
@@ -2211,7 +2211,6 @@ UNFINISHED["d2_wolf"] =
 OB_GAMES["doom1"] =
 {
   label = "Doom 1",
-  format = "doom",
 
   priority = 98, -- keep at second spot
 
@@ -2224,6 +2223,8 @@ OB_GAMES["doom1"] =
 
   param =
   {
+    format = "doom",
+
     rails = true,
     switches = true,
     liquids = true,
@@ -2260,9 +2261,9 @@ OB_GAMES["doom1"] =
   {
     ---- common stuff ----
 
-    "things", DOOM_THINGS,
     "player_model", COMMON_PLAYER_MODEL,
 
+    "things",   COMMON_THINGS,
     "monsters", COMMON_MONSTERS,
     "weapons",  COMMON_WEAPONS,
     "pickups",  COMMON_PICKUPS,
@@ -2320,7 +2321,6 @@ OB_GAMES["doom1"] =
 OB_GAMES["doom2"] =
 {
   label = "Doom 2",
-  format = "doom",
 
   priority = 99, -- keep at top
 
@@ -2333,6 +2333,8 @@ OB_GAMES["doom2"] =
 
   param =
   {
+    format = "doom",
+
     rails = true,
     switches = true,
     liquids = true,
@@ -2372,9 +2374,9 @@ OB_GAMES["doom2"] =
   {
     ---- common stuff ----
 
-    "things", DOOM_THINGS,
     "player_model", COMMON_PLAYER_MODEL,
 
+    "things",   COMMON_THINGS,
     "monsters", COMMON_MONSTERS,
     "weapons",  COMMON_WEAPONS,
     "pickups",  COMMON_PICKUPS,

@@ -478,11 +478,15 @@ end
 
 
 function ob_game_format()
-
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
-  return OB_GAMES[OB_CONFIG.game]["format"]
+  local game = OB_GAMES[OB_CONFIG.game]
+
+  assert(game)
+  assert(game.param)
+
+  return assert(game.param.format)
 end
 
 

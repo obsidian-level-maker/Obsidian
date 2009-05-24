@@ -534,7 +534,7 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   local function place_item(S, item_name, x, y, SK)
     local props
 
-    if GAME.format == "quake1" then
+    if PARAM.format == "quake" then
       props = {}
 
       if SK == "easy" then
@@ -1182,7 +1182,7 @@ function Monsters_in_room(R)
 
     local props = { angle = spot.angle or angle }
 
-    if GAME.format == "quake1" then
+    if PARAM.format == "quake" then
       props.spawnflags = 0
 
       if props.ambush then props.spawnflags = props.spawnflags + 1 end

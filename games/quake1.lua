@@ -1233,14 +1233,13 @@ OB_THEMES["q1_base"] =
   ref = "TECH",
   label = "Base",
 
-  for_games = { quake1=1 },
+  for_games = { quake=1 },
 }
 
 
-OB_GAMES["quake1"] =
+OB_GAMES["quake"] =
 {
-  label = "Quake 1",
-  format = "quake1",
+  label = "Quake",
 
   setup_func = Quake1_setup,
   levels_start_func = Quake1_get_levels,
@@ -1248,6 +1247,8 @@ OB_GAMES["quake1"] =
 
   param =
   {
+    format = "quake",
+
     -- TODO
 
     -- need to put center of map around (0,0) since the quake
@@ -1283,9 +1284,9 @@ OB_GAMES["quake1"] =
 
   tables =
   {
-    "things", QUAKE1_THINGS,
     "player_model", QUAKE1_PLAYER_MODEL,
 
+    "things", QUAKE1_THINGS,
     "monsters", QUAKE1_MONSTERS,
     "weapons",  QUAKE1_WEAPONS,
     "pickups",  QUAKE1_PICKUPS,

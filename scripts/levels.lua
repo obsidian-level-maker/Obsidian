@@ -164,16 +164,9 @@ end
 
 
 function Game_setup()
-
   Game_clean_up()
 
   Game_sort_modules()
-
-
-  local game = GAME.all_modules[1]
-
-  GAME.format = assert(game.format)
-
 
   for index,mod in ipairs(GAME.all_modules) do
     if mod.param then

@@ -72,7 +72,6 @@ FREEDOOM_SKY_INFO =
 
 function Freedoom_setup()
 
-
   GAME.sky_info = FREEDOOM_SKY_INFO
 
   -- FreeDOOM is lacking many monster sprites
@@ -110,32 +109,56 @@ UNFINISHED["freedoom"] =
 {
   label = "FreeDoom 0.6",
 
-  format = "doom",
-
   setup_func = Freedoom_setup,
 
   levels_start_func = Freedoom_get_levels,
 
   param =
   {
+    format = "doom",
+
     rails = true,
     switches = true,
     liquids = true,
     teleporters = true,
+    infighting = true,
+
+    pack_sidedefs = true,
+    custom_flats = true,
 
     seed_size = 256,
 
-    palette_mons = 4,
+    sky_flat   = "F_SKY1",
+    sky_tex    = "CEMENT3",
+
+    error_tex  = "METAL"   or "FIREBLU1",
+    error_flat = "CEIL5_1" or "SFLR6_4",
+    error_mat  = "METAL",
+
+    -- this is roughly how many characters can fit on the
+    -- intermission screens (the CWILVxx patches).  It does
+    -- not reflect any buffer limits in Doom ports.
+    max_name_length = 28,
+
+    skip_monsters = { 30,44 },
+
+    mon_time_max = 12,
+
+    mon_damage_max  = 200,
+    mon_damage_high = 100,
+    mon_damage_low  =   1,
+
+    ammo_factor   = 0.8,
+    health_factor = 0.7,
   },
 
   tables =
   {
-    -- FIXME: doom COMMON stuff
+    -- FIXME: common stuff
 
     -- FIXME: doom 2 stuff
     
     -- FIXME: doom 1 stuff
   },
 }
-
 

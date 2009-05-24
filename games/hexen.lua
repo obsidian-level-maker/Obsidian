@@ -2434,30 +2434,9 @@ function Hexen_setup()
 
   gui.property("hexen_format", "true")
 
-  GAME.player_model = HEXEN_PLAYER_MODEL,
-
   rand_shuffle(HEXEN_KEY_PAIRS)
 
-  return
-  {
-    hexen_format = true,
-
-    plan_size = 9,
-    cell_size = 9,
-    cell_min_size = 6,
-
-    SKY_TEX    = "F_SKY",
-    ERROR_TEX  = "WASTE01",
-    ERROR_FLAT = "F_033",
-
-    episodes   = 5,
-    level_func = hexen_get_levels,
-
-    classes  = { "fighter", "cleric", "mage" },
-
-    door_probs   = { out_diff=75, combo_diff=50, normal=15 },
-    window_probs = { out_diff=80, combo_diff=50, normal=30 },
-  }
+--  classes  = { "fighter", "cleric", "mage" },
 end
 
 function Hexen_begin_level()
@@ -2510,14 +2489,16 @@ UNFINISHED["hexen"] =
 {
   label = "Hexen",
 
-  format = "doom",
-
   setup_func = Hexen_setup,
   levels_start_func = Hexen_get_levels,
   begin_level_func = Hexen_begin_level,
 
   param =
   {
+    -- hexen format is a variation on the Doom format,
+    -- and is enabled by the setup function.
+    format = "doom",
+
     rails = true,
     switches = true,
     liquids = true,
@@ -2531,6 +2512,13 @@ UNFINISHED["hexen"] =
     ACS_script = true,
 
     seed_size = 256,
+
+    sky_flat   = "F_SKY",
+    sky_tex    = "WASTE01",
+
+    error_tex  = "WASTE01",
+    error_flat = "F_033",
+    error_mat  = "WASTE01",
 
     max_name_length = 28,
 
@@ -2548,6 +2536,8 @@ UNFINISHED["hexen"] =
 
   tables =
   {
+    "player_model", HEXEN_PLAYER_MODEL,
+
     "things",     HEXEN_THINGS,
     "monsters",   HEXEN_MONSTERS,
     "weapons",    HEXEN_WEAPONS,

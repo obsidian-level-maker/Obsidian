@@ -2027,14 +2027,14 @@ OB_GAMES["heretic"] =
 {
   label = "Heretic",
 
-  format = "doom",
-
   setup_func = Heretic_setup,
   levels_start_func = Heretic_get_levels,
   begin_level_func = Heretic_begin_level,
 
   param =
   {
+    format = "doom",
+
     rails = true,
     switches = true,
     liquids = true,
@@ -2072,9 +2072,9 @@ OB_GAMES["heretic"] =
 
   tables =
   {
-    "things", HERETIC_THINGS,
     "player_model", HERETIC_PLAYER_MODEL,
 
+    "things", HERETIC_THINGS,
     "monsters", HERETIC_MONSTERS,
     "weapons",  HERETIC_WEAPONS,
     "pickups",  HERETIC_PICKUPS,

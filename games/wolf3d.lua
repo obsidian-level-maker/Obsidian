@@ -972,7 +972,6 @@ end
 OB_GAMES["wolf3d"] =
 {
   label = "Wolfenstein 3D",
-  format = "wolf3d",
 
   priority = -1,  -- keep at bottom
 
@@ -981,17 +980,18 @@ OB_GAMES["wolf3d"] =
 
   param =
   {
-    tiled = true,
+    format = "wolf3d",
+    tiled  = true,
 
-     no_height = true,
-     no_sky = true,
-     one_lock_tex = true,
-     elevator_exit = true,
-     blocky_items = true,
-     blocky_doors = true,
-     tiered_skills = true,
-     four_dirs = true,
-     sealed_start = true,
+    no_height = true,
+    no_sky = true,
+    one_lock_tex = true,
+    elevator_exit = true,
+    blocky_items = true,
+    blocky_doors = true,
+    tiered_skills = true,
+    four_dirs = true,
+    sealed_start = true,
 
     seed_size = 192,  -- actually 3 blocks
     seed_limit = 21,  -- 64 / 3
