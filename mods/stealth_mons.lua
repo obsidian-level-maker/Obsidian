@@ -17,6 +17,8 @@
 --
 ----------------------------------------------------------------
 
+-- NOTE: Only Doom II supported for now.
+
 STEALTH_THINGS_EDGE =
 {
   stealth_arach    = { id=4050, kind="monster", r=66,h=64 },
@@ -52,14 +54,12 @@ STEALTH_THINGS_ZDOOM =
 
 STEALTH_MONSTERS =
 {
-  -- FIXME: Only Doom II supported for now.
-
   -- These are basically the same as the ones in doom.lua,
-  -- only their probabilites are lower (cut by 3/4).
+  -- but with some different trap_prob or crazy_prob values.
 
   stealth_zombie =
   {
-    prob=10, cage_prob=11, crazy_prob=0.5,
+    replaces="zombie", replace_prob=30, crazy_prob=0.5,
     health=20, damage=4, attack="hitscan",
     give={ {ammo="bullet",count=5} },
     invis=true,
@@ -67,7 +67,7 @@ STEALTH_MONSTERS =
 
   stealth_shooter =
   {
-    prob=12, guard_prob=11, trap_prob=11, cage_prob=11,
+    replaces="shooter", replace_prob=20, crazy_prob=11,
     health=30, damage=10, attack="hitscan",
     give={ {weapon="shotty"}, {ammo="shell",count=4} },
     invis=true,
@@ -75,37 +75,35 @@ STEALTH_MONSTERS =
 
   stealth_imp =
   {
-    prob=15, guard_prob=11, trap_prob=20, cage_prob=50, crazy_prob=25,
+    replaces="imp", replace_prob=40, trap_prob=20, crazy_prob=25,
     health=60, damage=20, attack="missile",
     invis=true,
   },
 
   stealth_demon =
   {
-    prob=8, guard_prob=31, trap_prob=61,
+    replaces="demon", replace_prob=40, trap_prob=61, crazy_prob=30,
     health=150, damage=25, attack="melee",
     invis=true,
   },
 
   stealth_caco =
   {
-    prob=10, guard_prob=61, trap_prob=21, cage_prob=21,
+    replaces="caco", replace_prob=25, crazy_prob=41,
     health=400, damage=35, attack="missile",
-    density=0.6, float=true,
-    invis=true,
+    invis=true, float=true, density=0.6,
   },
 
   stealth_baron =
   {
-    prob=5, guard_prob=11, trap_prob=11, cage_prob=3,
+    replaces="baron", replace_prob=20, crazy_prob=10,
     health=1000, damage=45, attack="missile",
-    density=0.3,
-    invis=true,
+    invis=true, density=0.3,
   },
   
   stealth_gunner =
   {
-    prob=4, guard_prob=21, trap_prob=41, cage_prob=71,
+    replaces="gunner", replace_prob=20, crazy_prob=21,
     health=70, damage=50, attack="hitscan",
     give={ {weapon="chain"}, {ammo="bullet",count=10} },
     invis=true,
@@ -113,39 +111,35 @@ STEALTH_MONSTERS =
 
   stealth_revenant =
   {
-    prob=11, guard_prob=41, trap_prob=41, cage_prob=51, crazy_prob=20,
+    replaces="gunner", replace_prob=30, crazy_prob=40,
     health=300, damage=70, attack="missile",
-    density=0.6,
-    invis=true,
+    invis=true, density=0.6,
   },
 
   stealth_knight =
   {
-    prob=15, guard_prob=41, trap_prob=41, cage_prob=11,
+    replaces="knight", replace_prob=25, crazy_prob=11,
     health=500, damage=45, attack="missile",
-    density=0.4,
-    invis=true,
+    invis=true, density=0.4,
   },
 
   stealth_mancubus =
   {
-    prob=8, guard_prob=41, trap_prob=41, cage_prob=11,
+    replaces="mancubus", replace_prob=25, trap_prob=30, crazy_prob=31,
     health=600, damage=70, attack="missile",
-    density=0.4,
-    invis=true,
+    invis=true, density=0.4,
   },
 
   stealth_arach =
   {
-    prob=6, guard_prob=21, trap_prob=21, cage_prob=11,
+    replaces="arach", replace_prob=25, crazy_prob=11,
     health=500, damage=70, attack="missile",
-    density=0.5,
-    invis=true,
+    invis=true, density=0.5,
   },
 
   stealth_vile =
   {
-    prob=3, guard_prob=11, trap_prob=31, cage_prob=21, crazy_prob=5,
+    replaces="arach", replace_prob=10, trap_prob=30, crazy_prob=5,
     health=700, damage=40, attack="hitscan",
     density=0.2, never_promote=true,
     invis=true,
