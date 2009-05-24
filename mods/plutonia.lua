@@ -1,8 +1,8 @@
 ----------------------------------------------------------------
--- GAME DEF : Plutonia Experiment (Final DOOM)
+--  MODULE : Plutonia Experiment (Final DOOM)
 ----------------------------------------------------------------
 --
---  Oblige Level Maker (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2009 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License

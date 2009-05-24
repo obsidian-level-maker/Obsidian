@@ -2,9 +2,9 @@
 --  MODULE: Skulltag Monsters and Items
 ----------------------------------------------------------------
 --
---  Oblige Level Maker (C) 2009 Andrew Apted
---                     (C) 2009 Chris Pisarczyk
---                     (C) 2009 Enhas
+--  Copyright (C) 2009 Andrew Apted
+--            (C) 2009 Chris Pisarczyk
+--            (C) 2009 Enhas
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
