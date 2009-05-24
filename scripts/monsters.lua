@@ -1283,7 +1283,7 @@ function Monsters_in_room(R)
     if STYLE.barrels == "few"   or rand_odds(30) then barrel_chance = barrel_chance / 4 end
 
     -- sometimes prevent monster replacements
-    if rand_odds(40) then
+    if rand_odds(40) or OB_CONFIG.mons == "crazy" then
       R.no_replacement = true
     end
 
