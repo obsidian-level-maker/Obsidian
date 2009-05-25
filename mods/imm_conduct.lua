@@ -46,7 +46,6 @@
 -- taking cover somewhere while the weapon reloads).
 --
 
-
 ICDSE_THINGS =
 {
   -- players
@@ -112,7 +111,7 @@ ICDSE_MONSTERS =
 
 ICDSE_WEAPONS =
 {
-  bfg = REMOVE_ME,  -- became: upgraded_shotgun
+  bfg = REMOVE_ME,  -- became: flak_shotty
 
   fist =  -- knife
   {
@@ -148,14 +147,13 @@ ICDSE_WEAPONS =
     give={ {ammo="shell",count=8} },
   },
 
---[[ this is UPGRADE to the shotgun - not supported yet
+  -- Note: weapon upgrades (like this) are not supported yet
   flak_shotty =
   {
-    pref=30, add_prob=20,
+    pref=30, upgrades="shotty",
     rate=0.9, damage=100, attack="hitscan", splash={ 0,50,50 },
     give={ {ammo="flak",count=24} },
   },
---]]
 
   super =  -- double barrel
   {
@@ -197,14 +195,31 @@ ICDSE_WEAPONS =
     give={ {ammo="rocket",count=5} },
   },
 
+  satchel =
+  {
+    pref=5, add_prob=5, start_prob=5,
+    rate=1.4, damage=1, attack="missile", splash={ 0,15,5 },
+    ammo="charge", per=1,
+    give={ {ammo="charge",count=1} },
+  },
+
   launch =  -- assault rifle
   {
+    pref=50, add_prob=30, start_prob=30,
+    rate=2.3, damage=54, attack="hitscan",
+    ammo="cell", per=3,
+    give={ {ammo="cell",count=45} },
   },
 
   plasma =  -- SIG-COW
   {
+    pref=40, add_prob=20, start_prob=20,
+    rate=2.6, damage=26, attack="hitscan",
+    ammo="cell", per=1,
+    give={ {ammo="cell",count=30} },
   },
 
+--[[ TODO
   minigun  =
   {
   },
@@ -220,12 +235,6 @@ ICDSE_WEAPONS =
   revolver =
   {
   },
-
---[[ TODO
-  satchel =
-  {
-    ammo="charge", per=1,
-  },
 --]]
 }
 
@@ -234,10 +243,8 @@ ICDSE_PICKUPS =
 {
   green_armor = REMOVE_ME,  -- became: pistol_pair
   cell_box    = REMOVE_ME,  -- became: gren_launch
+  rocket_box  = REMOVE_ME,  -- became: h_grenades
   rocket      = REMOVE_ME,  -- became: satchel
-
--- WEAPON and PICKUP are the same : THIS PROVIDES THE AMMO
---   rocket_box  = REMOVE_ME,  -- became: h_grenades
 
   flak_shells =
   {
@@ -245,7 +252,19 @@ ICDSE_PICKUPS =
     give={ {ammo="flak",count=4} },
   },
 
-  --?? satchel : give={ {ammo="charge"},count=### },
+  -- the next two are both weapons AND pickups! --
+
+  h_grenades =
+  {
+    prob=20, cluster={ 1,2 },
+    give={ {ammo="rocket",count=5} },
+  },
+
+  satchel =
+  {
+    prob=20, cluster={ 1,3 },
+    give={ {ammo="charge",count=1} },
+  },
 }
 
 
@@ -260,7 +279,8 @@ ICDSE_PLAYER_MODEL =
 {
   doomguy =
   {
-    stats   = { health=0, flak=0, bullet=0, shell=0, rocket=0, cell=0 },
+    stats   = { health=0, flak=0, charge=0,
+                bullet=0, shell=0, rocket=0, cell=0 },
     weapons = { pistol=1, fist=1 },
   }
 }
