@@ -219,23 +219,37 @@ ICDSE_WEAPONS =
     give={ {ammo="cell",count=30} },
   },
 
---[[ TODO
   minigun  =
   {
+    pref=50, add_prob=15, start_prob=30,
+    rate=8.0, damage=17, attack="hitscan",
+    ammo="cell", per=1,
+    give={ {ammo="cell",count=100} },
   },
 
   sawed_off =
   {
+    pref=20, add_prob=25, start_prob=30,
+    rate=0.9, damage=80, attack="hitscan",
+    ammo="shell", per=1,
+    give={ {ammo="shell",count=6} },
   },
 
   beretta =
   {
+    pref=10, add_prob=15, start_prob=10,
+    rate=2.9, damage=12, attack="hitscan",
+    ammo="bullet", per=1,
+    give={ {ammo="bullet",count=30} },
   },
 
   revolver =
   {
+    pref=10, add_prob=25, start_prob=20,
+    rate=1.4, damage=32, attack="hitscan",
+    ammo="bullet", per=1,
+    give={ {ammo="bullet",count=12} },
   },
---]]
 }
 
 
@@ -286,7 +300,7 @@ ICDSE_PLAYER_MODEL =
 }
 
 
-OB_MODULES["icdse"] =
+OB_MODULES["imm_conduct"] =
 {
   label = "Immoral Conduct - Special Edition",
 
