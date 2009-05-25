@@ -2,6 +2,10 @@
 WISH-LIST
 =========
 
+MAP32: find and kill all the Keens to open the door to the exit.
+       perhaps use Psychedelic theme and a lower qty Crazy mode.
+
+
 CSG IDEA: clipping rectangles (typically a room)
 
 Monsters:
