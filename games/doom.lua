@@ -1824,94 +1824,70 @@ COMMON_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-DOOM1_EPISODE_THEMES =
+DOOM1_EPISODES =
 {
-  { URBAN=5, INDUSTRIAL=5, TECH=9, CAVE=2, HELL=2 },
-  { URBAN=9, INDUSTRIAL=5, TECH=4, CAVE=2, HELL=4 },
-  { URBAN=1, INDUSTRIAL=1, TECH=1, CAVE=5, HELL=9 },
-  { URBAN=4, INDUSTRIAL=2, TECH=2, CAVE=4, HELL=7 },
+  episode1 =
+  {
+    theme = "TECH",
+    sky_light = 0.85,
+    secret_exits = { "E1M3" },
+  },
 
-  -- this entry used for a single episode or level
-  { URBAN=5, INDUSTRIAL=4, TECH=6, CAVE=4, HELL=6 },
+  episode2 =
+  {
+    theme = "TECH",
+    sky_light = 0.65,
+    secret_exits = { "E2M5" },
+  },
+
+  episode3 =
+  {
+    theme = "HELL",
+    sky_light = 0.75,
+    secret_exits = { "E3M6" },
+  },
+
+  episode4 =
+  {
+    theme = "HELL",
+    sky_light = 0.75,
+    secret_exits = { "E4M2" },
+  },
 }
 
-DOOM2_EPISODE_THEMES =
+DOOM2_EPISODES =
 {
-  { URBAN=4, INDUSTRIAL=3, TECH=3, NATURE=9, CAVE=2, HELL=2 },
-  { URBAN=9, INDUSTRIAL=5, TECH=7, NATURE=4, CAVE=2, HELL=4 },
-  { URBAN=3, INDUSTRIAL=2, TECH=5, NATURE=3, CAVE=6, HELL=8 },
+  episode1 =
+  {
+    theme = "TECH",
+    sky_light = 0.75,
+  },
 
-  -- this entry used for a single episode or level
-  { URBAN=5, INDUSTRIAL=4, TECH=6, NATURE=5, CAVE=4, HELL=6 },
-}
+  episode2 =
+  {
+    theme = "URBAN",
+    sky_light = 0.50,
+    secret_exits = { "MAP16", "MAP31" },
+  },
 
-
-DOOM1_SECRET_EXITS =
-{
-  E1M3 = true,
-  E2M5 = true,
-  E3M6 = true,
-  E4M2 = true,
-}
-
-DOOM2_SECRET_EXITS =
-{
-  MAP15 = true,
-  MAP31 = true,
-}
-
-DOOM2_SECRET_KINDS =
-{
-  MAP31 = "wolfy",
-  MAP32 = "wolfy",
-}
-
-
-
-DOOM1_EPISODE_BOSSES =
-{
-  "baron", -- the Bruiser Brothers
-  "Cyberdemon",
-  "Mastermind",
-  "Mastermind",
-}
-
-DOOM2_LEVEL_BOSSES =
-{
-  MAP07 = "mancubus",
-  MAP20 = "Mastermind",
-  MAP30 = "boss_brain",
-  MAP32 = "keen",
-}
-
-
-DOOM1_SKY_INFO =
-{
-  { color="white",  light=192 },
-  { color="red",    light=176 },
-  { color="red",    light=192 },
-  { color="orange", light=192 },
-}
-
-DOOM2_SKY_INFO =
-{
-  { color="brown",  light=192 },
-  { color="gray",   light=192 }, -- bright clouds + dark buildings
-  { color="red",    light=192 },
+  episode3 =
+  {
+    theme = "HELL",
+    sky_light = 0.75,
+  },
 }
 
 
 function Doom1_setup()
-
   -- tweak monster probabilities
 
   GAME.monsters["Cyberdemon"].crazy_prob = 8
   GAME.monsters["Mastermind"].crazy_prob = 12
 end
 
-function Doom2_setup()
 
-  ---### GAME.sky_info = DOOM2_SKY_INFO
+function Doom2_setup()
+  -- nothing needed
 end
 
 
@@ -1922,17 +1898,15 @@ function Doom1_get_levels()
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
   for episode = 1,EP_NUM do
-
-    local theme_probs = DOOM1_EPISODE_THEMES[episode]
-    if OB_CONFIG.length ~= "full" then
-      theme_probs = DOOM1_EPISODE_THEMES[5]
-    end
+    local ep_info = DOOM1_EPISODES["episode" .. episode]
+    assert(ep_info)
 
     for map = 1,MAP_NUM do
       local ep_along = map / MAP_NUM
-      local map_id = episode * 10 + map
 
-      if MAP_NUM == 1 or map == 9 then
+      if MAP_NUM == 1 then
+        ep_along = rand_range(0.3, 0.7);
+      elseif map == 9 then
         ep_along = 0.5
       end
 
@@ -1941,7 +1915,9 @@ function Doom1_get_levels()
         name  = string.format("E%dM%d", episode, map),
         patch = string.format("WILV%d%d", episode-1, map-1),
 
+        episode  = episode,
         ep_along = ep_along,
+        ep_info  = ep_info,
 
         theme_ref = "TECH",
         name_theme = "TECH",
@@ -1952,7 +1928,6 @@ function Doom1_get_levels()
 
         --!! sky_info = DOOM1_SKY_INFO[episode],
 
-        boss_kind   = (map == 8) and DOOM1_EPISODE_BOSSES[episode],
         secret_kind = (map == 9) and "plain",
 
         style = {},
@@ -1962,17 +1937,18 @@ function Doom1_get_levels()
         LEV.allow_bfg = true
       end
 
+--[[ FIXME
       if DOOM1_SECRET_EXITS[LEV.name] then
         LEV.secret_exit = true
         LEV.ep_along = 0.5
         LEV.allow_bfg = true
       end
-
-      if map_id == 18 then
+--]]
+      if LEV.name == "E1M8" then
         LEV.build_func = Arena_Doom_E1M8
-      elseif map_id == 28 or map_id == 46 then
+      elseif LEV.name == "E2M8" or LEV.name == "E4M6" then
         LEV.build_func = Arena_Doom_E2M8
-      elseif map_id == 38 or map_id == 48 then
+      elseif LEV.name == "E3M8" or LEV.name == "E4M8" then
         -- FIXME
       end
 
@@ -2010,6 +1986,13 @@ function Doom2_get_levels()
       episode = 1 ; ep_along = map / 11
     end
 
+    if MAP_NUM == 1 then
+      ep_along = rand_range(0.3, 0.7)
+    end
+
+    local ep_info = DOOM2_EPISODES["episode" .. episode]
+    assert(ep_info)
+
     if OB_CONFIG.length == "single" then
       ep_along = 0.5
     elseif OB_CONFIG.length == "few" then
@@ -2018,19 +2001,14 @@ function Doom2_get_levels()
 
     assert(ep_along <= 1)
 
-
-    local theme_probs = DOOM2_EPISODE_THEMES[episode]
-    if OB_CONFIG.length ~= "full" then
-      theme_probs = DOOM2_EPISODE_THEMES[4]
-    end
-    assert(theme_probs)
-
     local LEV =
     {
       name  = string.format("MAP%02d", map),
       patch = string.format("CWILV%02d", map-1),
 
+      episode  = episode,
       ep_along = ep_along,
+      ep_info  = ep_info,
 
       theme_ref = "TECH",
       name_theme = "TECH",
@@ -2072,10 +2050,6 @@ function Doom2_get_levels()
     if LEV.build_func then
       LEV.name_theme = "BOSS"
     end
-
----!!! LEV.boss_kind   = DOOM2_LEVEL_BOSSES[LEV.name]
-    LEV.secret_kind = DOOM2_SECRET_KINDS[LEV.name]
-    LEV.secret_exit = DOOM2_SECRET_EXITS[LEV.name]
 
     table.insert(GAME.all_levels, LEV)
   end
@@ -2300,6 +2274,7 @@ OB_GAMES["doom1"] =
 
     ---- DOOM I stuff ----
 
+    "episodes",  DOOM1_EPISODES,
     "rooms",     DOOM1_ROOMS,
 
     "materials", DOOM1_MATERIALS,
@@ -2405,6 +2380,8 @@ OB_GAMES["doom2"] =
     "misc_fabs", COMMON_MISC_PREFABS,
 
     ---- DOOM II stuff ----
+
+    "episodes", DOOM2_EPISODES,
 
     "monsters", DOOM2_MONSTERS,
     "weapons",  DOOM2_WEAPONS,

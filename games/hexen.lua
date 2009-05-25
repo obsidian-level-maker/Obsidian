@@ -2109,18 +2109,48 @@ HEXEN_ITEMS =
 
 ------------------------------------------------------------
 
+HEXEN_EPISODES =
+{
+  episode1 =
+  {
+    theme = "DUNGEON",
+    sky_light = 0.65,
+    maps = { 1, 2, 3, 4, 5, 6 },
+  },
+
+  episode2 =
+  {
+    theme = "DUNGEON",
+    sky_light = 0.75,
+    maps = { 13, 8, 9, 10, 11, 12 },
+  },
+
+  episode3 =
+  {
+    theme = "DUNGEON",
+    sky_light = 0.50,
+    -- Note: map 30 is never used
+    maps = { 27, 28, 31, 32, 33, 34 },
+  },
+
+  episode4 =
+  {
+    theme = "DUNGEON",
+    sky_light = 0.75,
+    maps = { 21, 22, 23, 24, 25, 26 },
+  },
+
+  episode5 =
+  {
+    theme = "DUNGEON",
+    sky_light = 0.65,
+    maps={ 35, 36, 37, 38, 39, 40 },
+  },
+}
+
 HEXEN_THEME_LIST =
 {
   "CAVE", "DUNGEON", "ICE", "SWAMP", "VILLAGE"
-}
-
-HEXEN_SKY_INFO =
-{
-  { color="orange", light=176 },
-  { color="blue",   light=144 },
-  { color="blue",   light=192, lightning=true },
-  { color="red",    light=192 },
-  { color="gray",   light=176, foggy=true },
 }
 
 HEXEN_KEY_PAIRS =
@@ -2130,61 +2160,6 @@ HEXEN_KEY_PAIRS =
   { key_A="k_steel",   key_B="k_rusty" },
   { key_A="k_fire",    key_B="k_dungeon" },
   { key_A="k_horn",    key_B="k_castle" },
-}
-
-HEXEN_LEVELS =
-{
-  --- Cluster 1 ---
-  {
-    { map=1, sky_info=HEXEN_SKY_INFO[3] },
-    { map=2, sky_info=HEXEN_SKY_INFO[4] },
-    { map=3, sky_info=HEXEN_SKY_INFO[4] },
-    { map=4, sky_info=HEXEN_SKY_INFO[4] },
-    { map=5, sky_info=HEXEN_SKY_INFO[4] },
-    { map=6, sky_info=HEXEN_SKY_INFO[4], boss_kind="centaur2" },
-  },
-
-  --- Cluster 2 ---
-  {
-    { map=13, sky_info=HEXEN_SKY_INFO[1] },
-    { map= 8, sky_info=HEXEN_SKY_INFO[5] },
-    { map= 9, sky_info=HEXEN_SKY_INFO[1] },
-    { map=10, sky_info=HEXEN_SKY_INFO[1] },
-    { map=11, sky_info=HEXEN_SKY_INFO[5] },
-    { map=12, sky_info=HEXEN_SKY_INFO[1], boss_kind="Wyvern" },
-  },
-
-  --- Cluster 3 ---
-  {
-    -- Note: MAP30 is never used (FIXME: super-secret level)
-
-    { map=27, sky_info=HEXEN_SKY_INFO[4] },
-    { map=28, sky_info=HEXEN_SKY_INFO[4] },
-    { map=31, sky_info=HEXEN_SKY_INFO[4] },
-    { map=32, sky_info=HEXEN_SKY_INFO[5] },
-    { map=33, sky_info=HEXEN_SKY_INFO[4] },
-    { map=34, sky_info=HEXEN_SKY_INFO[4], boss_kind="Heresiarch" },
-  },
-
-  --- Cluster 4 ---
-  {
-    { map=21, sky_info=HEXEN_SKY_INFO[3] }, 
-    { map=22, sky_info=HEXEN_SKY_INFO[3] }, 
-    { map=23, sky_info=HEXEN_SKY_INFO[3] }, 
-    { map=24, sky_info=HEXEN_SKY_INFO[3] }, 
-    { map=25, sky_info=HEXEN_SKY_INFO[3] }, 
-    { map=26, sky_info=HEXEN_SKY_INFO[3], boss_kind="Heresiarch" },
-  },
-
-  --- Cluster 5 ---
-  {
-    { map=35, sky_info=HEXEN_SKY_INFO[3] },
-    { map=36, sky_info=HEXEN_SKY_INFO[3] },
-    { map=37, sky_info=HEXEN_SKY_INFO[4] },
-    { map=38, sky_info=HEXEN_SKY_INFO[3] },
-    { map=39, sky_info=HEXEN_SKY_INFO[3] },
-    { map=40, sky_info=HEXEN_SKY_INFO[4], boss_kind="Korax" },
-  },
 }
 
 
@@ -2547,8 +2522,9 @@ UNFINISHED["hexen"] =
     "exits",      HEXEN_EXITS,
     "hallways",   HEXEN_HALLWAYS,
 
-    "rooms",      HEXEN_ROOMS,
+    "episodes",   HEXEN_EPISODES,
     "themes",     HEXEN_THEMES,
+    "rooms",      HEXEN_ROOMS,
 
     "hangs",      HEXEN_OVERHANGS,
     "pedestals",  HEXEN_PEDESTALS,

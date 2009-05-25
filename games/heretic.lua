@@ -1882,46 +1882,47 @@ HERETIC_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-HERETIC_EPISODE_THEMES =
+HERETIC_EPISODES =
 {
-  { CITY=5 },
-  { CAVE=5 },
-  { DOME=5 },
+  episode1 =
+  {
+    boss = "Ironlich",
+    theme = "CITY",
+    sky_light = 0.65,
+    secret_exits = { "E1M6" },
+  },
 
-  { EGYPT=5 },
-  { GARISH=5 },
-  { CITY=5, EGYPT=5 },
-}
+  episode2 =
+  {
+    boss = "Maulotaur",
+    theme = "CITY",
+    sky_light = 0.75,
+    secret_exits = { "E2M4" },
+  },
 
-HERETIC_SECRET_EXITS =
-{
-  E1M6 = true,
-  E2M4 = true,
-  E3M4 = true,
+  episode3 =
+  {
+    boss = "D_sparil",
+    theme = "CITY",
+    sky_light = 0.75,
+    secret_exits = { "E3M4" },
+  },
 
-  E4M4 = true,
-  E5M3 = true,
-}
+  episode4 =
+  {
+    boss = "Ironlich",
+    theme = "CITY",
+    sky_light = 0.50,
+    secret_exits = { "E4M4" },
+  },
 
-HERETIC_EPISODE_BOSSES =
-{
-  "Ironlich",
-  "Maulotaur",
-  "D_sparil",
-  "Ironlich",
-  "Maulotaur",
-  "Maulotaur",
-}
-
-HERETIC_SKY_INFO =
-{
-  { color="gray",  light=176 },
-  { color="red",   light=192 },
-  { color="blue",  light=176 },
-
-  { color="gray",  light=176 },
-  { color="blue",  light=176 },
-  { color="gray",  light=176 },
+  episode5 =
+  {
+    boss = "Maulotaur",
+    theme = "CITY",
+    sky_light = 0.65,
+    secret_exits = { "E5M3" },
+  },
 }
 
 
@@ -1956,6 +1957,7 @@ function Heretic_get_levels()
       {
         name = string.format("E%dM%d", episode, map),
 
+        episode  = episode,
         ep_along = map / MAP_NUM,
 
         theme_probs = theme_probs,
@@ -1986,7 +1988,6 @@ function Heretic_begin_level()
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
 end
-
 
 
 ------------------------------------------------------------
@@ -2070,7 +2071,7 @@ OB_GAMES["heretic"] =
   tables =
   {
     "player_model", HERETIC_PLAYER_MODEL,
-
+    
     "things", HERETIC_THINGS,
     "monsters", HERETIC_MONSTERS,
     "weapons",  HERETIC_WEAPONS,
@@ -2083,8 +2084,9 @@ OB_GAMES["heretic"] =
     "exits", HERETIC_EXITS,
     "hallways", HERETIC_HALLWAYS,
 
-    "rooms",  HERETIC_ROOMS,
-    "themes", HERETIC_THEMES,
+    "episodes", HERETIC_EPISODES,
+    "themes",   HERETIC_THEMES,
+    "rooms",    HERETIC_ROOMS,
 
     "hangs", HERETIC_OVERHANGS,
     "pedestals", HERETIC_PEDESTALS,

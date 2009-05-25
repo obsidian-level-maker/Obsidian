@@ -784,37 +784,57 @@ WOLF_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-WOLF_EPISODE_THEMES =
+WOLF_EPISODES =
 {
-  { CELLS=7, BUNKER=5, CAVE=3 },
-  { CELLS=6, BUNKER=8, CAVE=4 },
-  { CELLS=6, BUNKER=8, CAVE=4 },
+  episode1 =
+  {
+    boss = "Hans",
+    theme = "BUNKER",
+    sky_light = 0.75,
+    secret_exits = { "E1L1" },
+  },
 
-  { CELLS=6, BUNKER=8, CAVE=4 },
-  { CELLS=6, BUNKER=8, CAVE=4 },
-  { CELLS=6, BUNKER=8, CAVE=4 },
+  episode2 =
+  {
+    boss = "Schabbs",
+    theme = "BUNKER",
+    sky_light = 0.75,
+    secret_exits = { "E2L1" },
+  },
+
+  episode3 =
+  {
+    boss = "Hitler",
+    theme = "BUNKER",
+    sky_light = 0.75,
+    secret_exits = { "E3L7" },
+  },
+
+  episode4 =
+  {
+    boss = "Giftmacher",
+    theme = "BUNKER",
+    sky_light = 0.75,
+    secret_exits = { "E4L3" },
+  },
+
+  episode5 =
+  {
+    boss = "Gretel",
+    theme = "BUNKER",
+    sky_light = 0.75,
+    secret_exits = { "E5L5" },
+  },
+
+  episode6 =
+  {
+    boss = "Fatface",
+    theme = "BUNKER",
+    sky_light = 0.75,
+    secret_exits = { "E6L3" },
+  },
 }
 
-WOLF_SECRET_EXITS =
-{
-  E1L1 = true,
-  E2L1 = true,
-  E3L7 = true,
-
-  E4L3 = true,
-  E5L5 = true,
-  E6L3 = true,
-}
-
-WOLF_EPISODE_BOSSES =
-{
-  "Hans",
-  "Schabbs",
-  "Hitler",
-  "Giftmacher",
-  "Gretel",
-  "Fatface",
-}
 
 WOLF_KEY_NUM_PROBS =
 {
