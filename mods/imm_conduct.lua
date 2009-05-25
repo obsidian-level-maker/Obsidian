@@ -20,8 +20,8 @@
 --
 -- The Ammo in Immoral Conduct is a bit different than
 -- standard DOOM, there is a couple new ones and some
--- existing ones have a new meaning.  The most important
--- are:
+-- existing ones have new meaning.  The most important are:
+--
 --     bullets  -> bullets
 --     shells   -> shells
 --     rockets  -> grenades
@@ -71,18 +71,32 @@ ICDSE_MONSTERS =
 {
   uzi_trooper =
   {
-    prob=30, guard_prob=21, trap_prob=11, cage_prob=30,
-    health=120, damage=65, attack="hitscan",
+    prob=20, guard_prob=21, trap_prob=11,
+    health=40, damage=30, attack="hitscan",
+    give={ {weapon="launch"}, {ammo="bullet",count=20} },
+  },
+
+  super_shooter =
+  {
+    prob=20, guard_prob=21, trap_prob=11,
+    health=50, damage=70, attack="hitscan",
     give={ {weapon="super"}, {ammo="shell",count=4} },
+    density=0.5,
+  },
+
+  m16_zombie =
+  {
+    prob=20, guard_prob=21, trap_prob=11,
+    health=100, damage=40, attack="hitscan",
+    give={ {weapon="launch"}, {ammo="rocket",count=2} },
   },
 
   chainsaw_zombie =
   {
     prob=20, guard_prob=11, trap_prob=31,
-    health=100, damage=15, attack="melee",
+    health=100, damage=40, attack="melee",
+    give={ {weapon="saw"} },
   },
-
-  -- FIXME 
 }
 
 
