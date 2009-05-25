@@ -20,7 +20,7 @@ OB_ENGINES["fitz"] =
 {
   label = "FitzQuake",
 
-  for_games = { quake1=1 },
+  for_games = { quake=1 },
 
   param =
   {
