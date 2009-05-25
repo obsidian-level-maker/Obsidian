@@ -49,6 +49,7 @@ ZDOOM_MARINE_MONSTERS =
     prob=0.5,
     health=100, damage=4, attack="melee",
     never_promote=true,
+    density=0.2,
   },
 
   marine_berserk =
@@ -56,6 +57,7 @@ ZDOOM_MARINE_MONSTERS =
     prob=3, trap_prob=3,
     health=100, damage=40, attack="melee",
     never_promote=true,
+    density=0.2,
   },
 
   marine_saw =
@@ -63,13 +65,15 @@ ZDOOM_MARINE_MONSTERS =
     prob=2, trap_prob=2,
     health=100, damage=15, attack="melee",
     never_promote=true,
+    density=0.2,
   },
 
   marine_pistol =
   {
-    prob=6, cage_prob=2,
+    prob=6, guard_prob=2, trap_prob=2, cage_prob=2,
     health=100, damage=8, attack="hitscan",
     never_promote=true,
+    density=0.5,
   },
 
   marine_shotty =
@@ -77,6 +81,7 @@ ZDOOM_MARINE_MONSTERS =
     prob=4, guard_prob=3, trap_prob=3, cage_prob=2,
     health=100, damage=10, attack="hitscan",
     never_promote=true,
+    density=0.4,
   },
 
   marine_ssg =
@@ -84,6 +89,7 @@ ZDOOM_MARINE_MONSTERS =
     prob=3, guard_prob=2, trap_prob=2, cage_prob=1,
     health=100, damage=65, attack="hitscan",
     never_promote=true,
+    density=0.3,
   },
 
   marine_chain =
@@ -91,6 +97,7 @@ ZDOOM_MARINE_MONSTERS =
     prob=3, guard_prob=3, trap_prob=3, cage_prob=2,
     health=100, damage=50, attack="hitscan",
     never_promote=true,
+    density=0.3,
   },
 
   marine_rocket =
@@ -98,6 +105,7 @@ ZDOOM_MARINE_MONSTERS =
     prob=2, guard_prob=2, trap_prob=1, cage_prob=2, crazy_prob=10,
     health=100, damage=100, attack="missile",
     never_promote=true,
+    density=0.2,
   },
 
   marine_plasma =
@@ -105,6 +113,7 @@ ZDOOM_MARINE_MONSTERS =
     prob=2, guard_prob=1, trap_prob=1, cage_prob=2, crazy_prob=6,
     health=100, damage=70, attack="missile",
     never_promote=true,
+    density=0.2,
   },
 
   marine_rail =
@@ -112,6 +121,7 @@ ZDOOM_MARINE_MONSTERS =
     prob=1, guard_prob=1, trap_prob=1, cage_prob=1,
     health=100, damage=100, attack="hitscan",
     never_promote=true,
+    density=0.1,
   },
 
   marine_bfg =
@@ -119,6 +129,7 @@ ZDOOM_MARINE_MONSTERS =
     prob=1, guard_prob=1, trap_prob=1, cage_prob=1,
     health=100, damage=100, attack="missile",
     never_promote=true,
+    density=0.1,
   },
 }
 

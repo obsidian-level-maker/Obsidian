@@ -52,6 +52,7 @@ SKULLTAG_MONSTERS =
   {
     prob=55, guard_prob=11, trap_prob=11, cage_prob=40,
     health=120, damage=30, attack="missile",
+    density=0.6,
   },
 
   superguy =
@@ -59,43 +60,44 @@ SKULLTAG_MONSTERS =
     prob=33, guard_prob=21, trap_prob=11, cage_prob=30,
     health=120, damage=65, attack="hitscan",
     give={ {weapon="super"}, {ammo="shell",count=4} },
+    density=0.5,
   },
 
   bldemon =
   {
     prob=20, guard_prob=11, trap_prob=31,
     health=300, damage=25, attack="melee",
+    density=0.5,
   },
 
   cacolant =
   {
     prob=25, guard_prob=21, trap_prob=11, cage_prob=11, crazy_prob=10,
     health=800, damage=55, attack="missile",
-    density=0.6, float=true,
+    density=0.4, float=true,
   },
 
   hectebus =
   {
     prob=35, guard_prob=21, trap_prob=21, cage_prob=88,
     health=1200, damage=120, attack="missile",
-    density=0.4,
+    density=0.2,
   },
 
   abaddon =
   {
     prob=15, guard_prob=21, trap_prob=11, cage_prob=5, crazy_prob=25,
     health=1200, damage=65, attack="missile",
-    density=0.6, float=true,
+    density=0.2, float=true,
   },
 
   belphegor =
   {
     prob=15, guard_prob=21, trap_prob=21, cage_prob=5, crazy_prob=25,
     health=1500, damage=80, attack="missile",
-    density=0.3,
+    density=0.2,
   },
 }
-
 
 SKULLTAG_WEAPONS =
 {
@@ -125,7 +127,7 @@ SKULLTAG_WEAPONS =
 
   bfg10k =
   {
-    pref=15, add_prob=2, start_prob=0.2,
+    pref=15, add_prob=2, start_prob=0.1,
     rate=1.2, damage=300, attack="missile", --FIXME splash damage
     ammo="cell", per=5,
     give={ {ammo="cell",count=40} },
