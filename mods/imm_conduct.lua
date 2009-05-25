@@ -63,9 +63,10 @@ ICDSE_THINGS =
   pistol_pair = { id=2018, kind="pickup", r=20,h=16, pass=true },
   uzi_pair    = { id=2022, kind="pickup", r=20,h=16, pass=true },
   flak_shotty = { id=2006, kind="pickup", r=20,h=16, pass=true },
+  h_grenades  = { id=2046, kind="pickup", r=20,h=16, pass=true },
   gren_launch = { id=  17, kind="pickup", r=20,h=16, pass=true },
-  satchel     = { id=2010, kind="pickup", r=20,h=16, pass=true },
 
+  satchel     = { id=2010, kind="pickup", r=20,h=16, pass=true },
   minigun     = { id=2999, kind="pickup", r=20,h=16, pass=true },
   sawed_off   = { id=4444, kind="pickup", r=20,h=16, pass=true },
   beretta     = { id=4445, kind="pickup", r=20,h=16, pass=true },
@@ -133,7 +134,7 @@ ICDSE_WEAPONS =
 
   pistol_pair =
   {
-    pref=12, add_prob=10, start_prob=20,
+    pref=15, add_prob=10, start_prob=20,
     rate=3.0, damage=30, attack="hitscan",
     ammo="bullet", per=2,
     give={ {ammo="bullet",count=12} },
@@ -141,13 +142,13 @@ ICDSE_WEAPONS =
 
   shotty =
   {
-    pref=40, add_prob=20, start_prob=60,
+    pref=50, add_prob=20, start_prob=60,
     rate=1.0, damage=80, attack="hitscan", splash={ 0,10 },
     ammo="shell", per=1,
     give={ {ammo="shell",count=8} },
   },
 
---[[ this is UPGRADE to the shotgun - so not supported yet
+--[[ this is UPGRADE to the shotgun - not supported yet
   flak_shotty =
   {
     pref=30, add_prob=20,
@@ -158,22 +159,42 @@ ICDSE_WEAPONS =
 
   super =  -- double barrel
   {
+    pref=12, add_prob=10, start_prob=10,
+    rate=0.53, damage=60, attack="hitscan", splash={ 0,20 },
+    ammo="shell", per=2,
+    give={ {ammo="shell",count=2} },
   },
 
   chain =  -- uzi
   {
+    pref=25, add_prob=10, start_prob=10,
+    rate=7.0, damage=10, attack="hitscan",
+    ammo="bullet", per=1,
+    give={ {ammo="bullet",count=30} },
   },
 
   uzi_pair =
   {
+    pref=30, add_prob=10, start_prob=20,
+    rate=5.6, damage=20, attack="hitscan",
+    ammo="bullet", per=2,
+    give={ {ammo="bullet",count=60} },
   },
 
   h_grenades =
   {
+    pref=8, add_prob=2, start_prob=2,
+    rate=0.7, damage=1, attack="missile", splash={ 60,30,10 },
+    ammo="rocket", per=1,
+    give={ {ammo="rocket",count=5} },
   },
 
   gren_launch =
   {
+    pref=15, add_prob=10, start_prob=20,
+    rate=1.4, damage=20, attack="missile", splash={ 55,40,25,10 },
+    ammo="rocket", per=1,
+    give={ {ammo="rocket",count=5} },
   },
 
   launch =  -- assault rifle
@@ -181,10 +202,6 @@ ICDSE_WEAPONS =
   },
 
   plasma =  -- SIG-COW
-  {
-  },
-
-  satchel =
   {
   },
 
@@ -203,20 +220,32 @@ ICDSE_WEAPONS =
   revolver =
   {
   },
+
+--[[ TODO
+  satchel =
+  {
+    ammo="charge", per=1,
+  },
+--]]
 }
 
 
 ICDSE_PICKUPS =
 {
   green_armor = REMOVE_ME,  -- became: pistol_pair
-  rocket      = REMOVE_ME,  -- became: satchel
   cell_box    = REMOVE_ME,  -- became: gren_launch
+  rocket      = REMOVE_ME,  -- became: satchel
+
+-- WEAPON and PICKUP are the same : THIS PROVIDES THE AMMO
+--   rocket_box  = REMOVE_ME,  -- became: h_grenades
 
   flak_shells =
   {
     prob=20, cluster={ 2,5 },
     give={ {ammo="flak",count=4} },
   },
+
+  --?? satchel : give={ {ammo="charge"},count=### },
 }
 
 
