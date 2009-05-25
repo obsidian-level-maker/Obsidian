@@ -1933,10 +1933,8 @@ function Heretic_setup()
   -- FIXME: temp crap
   GAME.door_fabs["silver_lit"] = GAME.door_fabs["d_wood"]
   GAME.materials["NUKAGE1"] = GAME.materials["FLTSLUD1"]
-    
----???  GAME.door_probs   = { out_diff=75, combo_diff=50, normal=15 }
----???  GAME.window_probs = { out_diff=80, combo_diff=50, normal=30 }
 end
+
 
 function Heretic_get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 5, 1)
@@ -1945,12 +1943,8 @@ function Heretic_get_levels()
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
   for episode = 1,EP_NUM do
-    local theme_probs = HERETIC_EPISODE_THEMES[episode]
-
-    -- If we only make a single map or episode, use the castle or hell theme
-    if OB_CONFIG.length ~= "full" then
-      theme_probs = HERETIC_EPISODE_THEMES[rand_irange(1,4)]
-    end
+    local ep_info = HERETIC_EPISODES["episode" .. episode]
+    assert(ep_info)
 
     for map = 1,MAP_NUM do
       local LEV =
@@ -1959,21 +1953,12 @@ function Heretic_get_levels()
 
         episode  = episode,
         ep_along = map / MAP_NUM,
-
-        theme_probs = theme_probs,
-        sky_info = HERETIC_SKY_INFO[episode],
-
-        boss_kind   = (map == 8) and HERETIC_EPISODE_BOSSES[episode],
-        secret_kind = (map == 9) and "plain",
+        ep_info  = ep_info,
 
         key_list = { "foo" },
         switch_list = { "foo" },
         bar_list = { "foo" },
       }
-
-      if HERETIC_SECRET_EXITS[LEV.name] then
-        LEV.secret_exit = true
-      end
 
       table.insert(GAME.all_levels, LEV)
     end -- for map

@@ -2022,13 +2022,18 @@ function Quake2_get_levels()
   if OB_CONFIG.length == "few" then MAP_NUM = 3 end
 
   for episode = 1,EP_NUM do
+    local ep_info = QUAKE2_EPISODES["episode" .. episode]
+    assert(ep_info)
+
     for map = 1,MAP_NUM do
 
       local LEV =
       {
         name = string.format("u%dm%d", episode, map),
 
+        episode  = episode,
         ep_along = map / MAP_NUM,
+        ep_info  = ep_info,
 
         theme_ref = "BASE",
 

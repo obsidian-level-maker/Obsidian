@@ -1214,6 +1214,7 @@ function Quake1_setup()
   -- nothing to do
 end
 
+
 function Quake1_get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
@@ -1221,15 +1222,18 @@ function Quake1_get_levels()
   if OB_CONFIG.length == "few" then MAP_NUM = 3 end
 
   for episode = 1,EP_NUM do
+    local ep_info = QUAKE1_EPISODES["episode" .. episode]
+    assert(ep_info)
+
     for map = 1,MAP_NUM do
 
       local LEV =
       {
         name = string.format("e%dm%d", episode, map),
 
+        episode  = episode,
         ep_along = map / MAP_NUM,
-
-        theme_ref = "BASE",
+        ep_info  = ep_info,
 
 --        key_list = { "foo" },
   --      switch_list = { "foo" },

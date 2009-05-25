@@ -930,8 +930,8 @@ function Wolf3d_get_levels()
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
   for episode = 1,EP_NUM do
-
-    local theme_probs = WOLF_EPISODE_THEMES[episode]
+    local ep_info = WOLF_EPISODES["episode" .. episode]
+    assert(ep_info)
 
     local boss_kind = WOLF_EPISODE_BOSSES[episode]
     if OB_CONFIG.length ~= "full" then
@@ -947,13 +947,7 @@ function Wolf3d_get_levels()
 
         ep_along = ((map - 1) % 10) / 9,
 
-        theme_probs = theme_probs,
-        sky_info = { color="blue", light=192 }, -- dummy
-
-        boss_kind   = (map == 9)  and boss_kind,
-        secret_kind = (map == 10) and secret_kind,
-
-        quests = {},
+        styles = {},
       }
 
       if WOLF_SECRET_EXITS[Level.name] then

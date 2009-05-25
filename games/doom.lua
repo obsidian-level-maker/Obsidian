@@ -1915,8 +1915,6 @@ function Doom1_get_levels()
         switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
         bar_list = { "bar_wood", "bar_silver", "bar_metal" },
 
-        --!! sky_info = DOOM1_SKY_INFO[episode],
-
         secret_kind = (map == 9) and "plain",
 
         style = {},
@@ -1926,13 +1924,6 @@ function Doom1_get_levels()
         LEV.allow_bfg = true
       end
 
---[[ FIXME
-      if DOOM1_SECRET_EXITS[LEV.name] then
-        LEV.secret_exit = true
-        LEV.ep_along = 0.5
-        LEV.allow_bfg = true
-      end
---]]
       if LEV.name == "E1M8" then
         LEV.build_func = Arena_Doom_E1M8
       elseif LEV.name == "E2M8" or LEV.name == "E4M6" then
@@ -1962,6 +1953,7 @@ function Doom2_get_levels()
 --!!   assert(GAME.sky_info)
 
   for map = 1,MAP_NUM do
+    -- determine episode from map number
     local episode
     local ep_along
 
@@ -1979,15 +1971,14 @@ function Doom2_get_levels()
       ep_along = rand_range(0.3, 0.7)
     end
 
-    local ep_info = DOOM2_EPISODES["episode" .. episode]
-    assert(ep_info)
-
     if OB_CONFIG.length == "single" then
       ep_along = 0.5
     elseif OB_CONFIG.length == "few" then
       ep_along = map / MAP_NUM
     end
 
+    local ep_info = DOOM2_EPISODES["episode" .. episode]
+    assert(ep_info)
     assert(ep_along <= 1)
 
     local LEV =
@@ -2005,9 +1996,6 @@ function Doom2_get_levels()
       key_list = { "kc_red", "kc_blue", "kc_yellow" },
       switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
       bar_list = { "bar_wood", "bar_silver", "bar_metal" },
-
-      -- allow TNT and Plutonia to override the sky stuff
---!!       sky_info = GAME.sky_info[episode],
 
       style = {},
     }
