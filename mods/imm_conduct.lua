@@ -36,6 +36,15 @@
 -- The "Silencer" is another starting weapon, but I assume
 -- it's equivalent to the pistol and hence is not modelled.
 --
+-- Many weapons have cool secondary attacks, often using
+-- different ammo.  This is not modelled, on the assumption
+-- that they are less effective than the primary attack.
+--
+-- For weapons that have reloading sequences when the clip
+-- runs out.  This is handled by decreasing the rate by a
+-- small amount (in practise the player would usually be
+-- taking cover somewhere while the weapon reloads).
+--
 
 
 ICDSE_THINGS =
@@ -102,27 +111,50 @@ ICDSE_MONSTERS =
 
 ICDSE_WEAPONS =
 {
-  bfg = REMOVE_ME,   -- became: upgraded_shotgun
+  bfg = REMOVE_ME,  -- became: upgraded_shotgun
 
   fist =  -- knife
   {
+    rate=1.0, damage=25, attack="melee",
+  },
+
+  saw =
+  {
+    pref=3, add_prob=2, start_prob=1,
+    rate=6, damage=15, attack="melee",
   },
 
   pistol =
   {
+    pref=8,
+    rate=4.0, damage=15, attack="hitscan",
+    ammo="bullet", per=1,
   },
 
   pistol_pair =
   {
+    pref=12, add_prob=10, start_prob=20,
+    rate=3.0, damage=30, attack="hitscan",
+    ammo="bullet", per=2,
+    give={ {ammo="bullet",count=12} },
   },
 
   shotty =
   {
+    pref=40, add_prob=20, start_prob=60,
+    rate=1.0, damage=80, attack="hitscan", splash={ 0,10 },
+    ammo="shell", per=1,
+    give={ {ammo="shell",count=8} },
   },
 
+--[[ this is UPGRADE to the shotgun - so not supported yet
   flak_shotty =
   {
+    pref=30, add_prob=20,
+    rate=0.9, damage=100, attack="hitscan", splash={ 0,50,50 },
+    give={ {ammo="flak",count=24} },
   },
+--]]
 
   super =  -- double barrel
   {
