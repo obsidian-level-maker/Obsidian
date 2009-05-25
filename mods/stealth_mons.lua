@@ -111,7 +111,7 @@ STEALTH_MONSTERS =
 
   stealth_revenant =
   {
-    replaces="gunner", replace_prob=30, crazy_prob=40,
+    replaces="revenant", replace_prob=30, crazy_prob=40,
     health=300, damage=70, attack="missile",
     invis=true, density=0.6,
   },
@@ -139,7 +139,7 @@ STEALTH_MONSTERS =
 
   stealth_vile =
   {
-    replaces="arach", replace_prob=10, trap_prob=30, crazy_prob=5,
+    replaces="vile", replace_prob=10, trap_prob=30, crazy_prob=5,
     health=700, damage=40, attack="hitscan",
     density=0.2, never_promote=true,
     invis=true,
