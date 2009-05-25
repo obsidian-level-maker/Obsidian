@@ -973,7 +973,7 @@ function Spear_setup()
 end
 
 
-OB_GAMES["wolf3d"] =
+UNFINISHED["wolf3d"] =
 {
   label = "Wolfenstein 3D",
 
@@ -1042,7 +1042,7 @@ UNFINISHED["spear"] =
   setup_func = Spear_setup,
   levels_start_func = Spear_get_levels,
 
-  param = OB_GAMES["wolf3d"].param,
+  param = UNFINISHED["wolf3d"].param,
 
   tables =
   {
