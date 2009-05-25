@@ -1175,21 +1175,32 @@ QUAKE1_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-QUAKE1_EPISODE_THEMES =
+QUAKE1_EPISODES =
 {
-  { BASE=7, },
-  { BASE=6, },
-  { BASE=6, },
-  { BASE=6, },
-}
+  episode1 =
+  {
+    theme = "TECH",
+    sky_light = 0.75,
+  },
 
-QUAKE1_KEY_NUM_PROBS =
-{
-  small   = { 90, 50, 20 },
-  regular = { 40, 90, 40 },
-  large   = { 20, 50, 90 },
-}
+  episode2 =
+  {
+    theme = "TECH",
+    sky_light = 0.75,
+  },
 
+  episode3 =
+  {
+    theme = "TECH",
+    sky_light = 0.75,
+  },
+
+  episode4 =
+  {
+    theme = "TECH",
+    sky_light = 0.75,
+  },
+}
 
 
 ----------------------------------------------------------------
@@ -1297,8 +1308,9 @@ UNFINISHED["quake"] =
     "combos", QUAKE1_COMBOS,
     "exits",  QUAKE1_EXITS,
 
-    "themes", QUAKE1_THEMES,
-    "rooms",  QUAKE1_ROOMS,
+    "episodes", QUAKE1_EPISODES,
+    "themes",   QUAKE1_THEMES,
+    "rooms",    QUAKE1_ROOMS,
 
     "key_doors", QUAKE1_KEY_DOORS,
     "misc_fabs", QUAKE1_MISC_PREFABS,

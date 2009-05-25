@@ -1958,19 +1958,37 @@ QUAKE2_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-QUAKE2_EPISODE_THEMES =
+QUAKE2_EPISODES =
 {
-  { BASE=7, },
-  { BASE=6, },
-  { BASE=6, },
-  { BASE=6, },
-}
+  episode1 =
+  {
+    theme = "TECH",
+    sky_light = 0.75,
+  },
 
-QUAKE2_KEY_NUM_PROBS =
-{
-  small   = { 90, 50, 20 },
-  regular = { 40, 90, 40 },
-  large   = { 20, 50, 90 },
+  episode2 =
+  {
+    theme = "TECH",
+    sky_light = 0.75,
+  },
+
+  episode3 =
+  {
+    theme = "TECH",
+    sky_light = 0.75,
+  },
+  
+  episode4 =
+  {
+    theme = "TECH",
+    sky_light = 0.75,
+  },
+
+  episode5 =
+  {
+    theme = "TECH",
+    sky_light = 0.75,
+  },
 }
 
 
@@ -2077,6 +2095,7 @@ UNFINISHED["quake2"] =
     "combos", QUAKE2_COMBOS,
     "exits",  QUAKE2_EXITS,
 
+    "episodes", QUAKE2_EPISODES,
     "themes", QUAKE2_THEMES,
     "rooms",  QUAKE2_ROOMS,
 
